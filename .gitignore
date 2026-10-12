@@ -1,0 +1,4 @@
+work/
+result*
+__pycache__/
+.direnv
