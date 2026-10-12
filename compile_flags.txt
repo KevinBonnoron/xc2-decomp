@@ -1,0 +1,7 @@
+-xc++
+--target=aarch64-none-elf
+-std=c++14
+-fno-exceptions
+-fno-rtti
+-Iinclude
+-Isrc/application/BF2
