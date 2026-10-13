@@ -2,7 +2,8 @@
 """Compile sources and compare functions against the original game binary.
 
 Usage:
-  check                                   check every function defined in src/
+  check                                   check every function defined in src/ and show the game progress
+  check --readme                          same, and update the progress section of README.md
   check <scope>                           check every function of a class or namespace, list the missing ones
   check <symbol>                          diff one function, its source file is found automatically
   check <symbol> <source.cpp> [flags...]  diff one function from a given file
@@ -57,6 +58,8 @@ STRUCTOR_VARIANT = re.compile(r"(<_ZN\w*?[0-9][A-Za-z_][A-Za-z0-9_]*)(C|D)2(E)")
 INCLUDE_CPP = re.compile(r'^#include "([^"]+\.cpp)"', re.M)
 MEM_OPERAND = re.compile(r"\[(\w+)(?:, #(-?0x[0-9a-f]+))?\]")
 SHT_NOBITS = 8
+README_START = "<!-- progress -->"
+README_END = "<!-- /progress -->"
 
 color = sys.stdout.isatty() and "NO_COLOR" not in os.environ
 
@@ -395,7 +398,36 @@ def check_all(demangled, scope=None):
     if scope:
         summary += f", {len(missing)} left to decompile in {scope}"
     print(paint(summary, "1;32" if matched == len(rows) and not failed else "1;31"))
-    return matched == len(rows) and not failed
+    return matched == len(rows) and not failed, [f for f, _, target, mine in rows if target == mine]
+
+
+def game_progress(matched):
+    sizes = {}
+    names = {}
+    for line in run(["llvm-nm", "--defined-only", "-S", TARGET_ELF]).splitlines():
+        parts = line.split()
+        if len(parts) == 4 and parts[2] in "TtWw":
+            addr = int(parts[0], 16)
+            sizes[addr] = int(parts[1], 16)
+            names[parts[3]] = addr
+    done = {names[f] for f in matched if f in names}
+    return len(done), len(sizes), sum(sizes[a] for a in done), sum(sizes.values())
+
+
+def progress_text(matched):
+    funcs, total_funcs, size, total_size = game_progress(matched)
+    return (f"{funcs:,} / {total_funcs:,} functions ({funcs / total_funcs:.3%}), "
+            f"{size:,} / {total_size:,} bytes of code ({size / total_size:.3%})")
+
+
+def update_readme(text):
+    path = os.path.join(ROOT, "README.md")
+    readme = open(path).read()
+    block = f"{README_START}\n{text}\n{README_END}"
+    updated = re.sub(re.escape(README_START) + ".*?" + re.escape(README_END), lambda _: block, readme, flags=re.S)
+    if updated == readme and block not in readme:
+        sys.exit(f"README.md has no {README_START} ... {README_END} section")
+    open(path, "w").write(updated)
 
 
 def main():
@@ -403,17 +435,23 @@ def main():
     if args and args[0] in ("-h", "--help"):
         print(__doc__)
         return
+    readme = "--readme" in args
+    args = [a for a in args if a != "--readme"]
     known = sorted(target_symbols())
     demangled = demangle(known)
     if not args:
-        ok = check_all(demangled)
+        ok, matched = check_all(demangled)
+        text = progress_text(matched)
+        print(paint(f"Game progress: {text}", "1"))
+        if readme:
+            update_readme(text)
     else:
         name = args[0]
         symbol = resolve_symbol(name, demangled)
         if symbol:
             ok = diff_one(symbol, args[1] if len(args) > 1 else None, args[2:])
         elif any(in_scope(d, name) for d in demangled.values()):
-            ok = check_all(demangled, name)
+            ok, _ = check_all(demangled, name)
         else:
             sys.exit(f"no function, class or namespace named {name} in the game binary")
     sys.exit(0 if ok else 1)
