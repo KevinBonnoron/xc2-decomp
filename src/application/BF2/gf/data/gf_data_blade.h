@@ -1,6 +1,7 @@
 #pragma once
 
 namespace gf {
+
 class GfDataBlade {
 public:
   static bool isHikariCurrent();
@@ -8,4 +9,5 @@ public:
   static bool isHomuriNameHikari();
   static void setHomuriNameHikari(bool homuriNameHikari);
 };
+
 } // namespace gf

@@ -2,11 +2,19 @@
 #include "types.h"
 
 namespace gf {
+
 class GfDataBladeCreate {
 public:
-  void resetAssureCount();
-  uint getAssureCount();
-  void resetAssurePoint();
-  uint getAssurePoint();
+  static u32 getRareBladeAppearType();
+  static void setRareBladeAppearType(u32 rareBladeAppearType);
+
+  static void addAssurePoint(u32 amount);
+  static u32 getAssurePoint();
+  static void resetAssurePoint();
+
+  static void addAssureCount(u32 amount);
+  static u32 getAssureCount();
+  static void resetAssureCount();
 };
+
 } // namespace gf
