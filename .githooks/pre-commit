@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+if command -v format >/dev/null; then
+  exec format --staged
+fi
+exec nix develop -c format --staged

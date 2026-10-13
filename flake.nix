@@ -38,8 +38,30 @@
         hash = "sha256-ykik3vTLyd1q8/Rs4dwr2QPSbHrVE4f1eIStHqpY5C8=";
       };
 
-      diffFunc = pkgs.writeShellScriptBin "diff-func" ''
-        exec ${pkgs.python3}/bin/python3 "$(git rev-parse --show-toplevel)/tools/diff_func.py" "$@"
+      check = pkgs.writeShellScriptBin "check" ''
+        exec ${pkgs.python3}/bin/python3 "$(git rev-parse --show-toplevel)/tools/check.py" "$@"
+      '';
+
+      format = pkgs.writeShellScriptBin "format" ''
+        cd "$(git rev-parse --show-toplevel)"
+        if [ "''${1:-}" != "--staged" ]; then
+          find src include -name '*.h' -o -name '*.cpp' | xargs ${pkgs.clang-tools}/bin/clang-format -i
+          exit
+        fi
+        files=$(git diff --cached --name-only --diff-filter=ACMR -- 'src/*.h' 'src/*.cpp' 'include/*.h' 'include/*.cpp')
+        [ -n "$files" ] || exit 0
+        partial=$(git diff --name-only -- $files)
+        if [ -n "$partial" ]; then
+          echo "format: these files also have unstaged changes, stage or stash them before committing:" >&2
+          echo "$partial" >&2
+          exit 1
+        fi
+        ${pkgs.clang-tools}/bin/clang-format -i $files
+        git add $files
+      '';
+
+      setup = pkgs.writeShellScriptBin "setup" ''
+        exec ${pkgs.bash}/bin/bash "$(git rev-parse --show-toplevel)/tools/setup.sh" "$@"
       '';
     in
     {
@@ -47,13 +69,18 @@
         packages = with pkgs; [
           clang391
           clang401
-          diffFunc
+          check
+          format
+          setup
           ghidra
           hactool
           python3
           llvmPackages.bintools
         ];
 
+        shellHook = ''
+          git config core.hooksPath .githooks
+        '';
       };
     };
 }
