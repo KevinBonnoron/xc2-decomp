@@ -2,9 +2,11 @@
 #include "types.h"
 
 namespace gf {
+
 class GfGameFlag {
 public:
-  static uint getLocal(uint param_1, int param_2);
-  static void setLocal(uint param_1, int param_2, uint value);
+  static u32 getLocal(u32 size, int index);
+  static void setLocal(u32 size, int index, u32 value);
 };
+
 } // namespace gf

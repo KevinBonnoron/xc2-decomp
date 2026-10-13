@@ -2,11 +2,14 @@
 #include "types.h"
 
 namespace gf {
+
 struct SDataGame {
   u8 _0[0x10ad48];
-  uint assurePoint;
-  uint assureCount;
-  u8 _1[0x12d];
+  u32 assurePoint;
+  u32 assureCount;
+  u16 rareBladeAppearType;
+  u8 _10ad52[0x10ae7d - 0x10ad52];
   u8 hikariCurrent;
 };
+
 } // namespace gf
