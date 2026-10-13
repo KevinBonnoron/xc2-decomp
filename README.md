@@ -19,6 +19,14 @@ Version 1.0.0 is used because its executable still ships its dynamic symbol tabl
 
 The original source paths (`C:/Monolithsoft/BF2/prog/application/BF2/...`) appear in assertion strings, and `src/application/BF2/` mirrors that layout.
 
+## Progress
+
+<!-- progress -->
+31 / 48,739 functions (0.064%), 2,372 / 10,024,304 bytes of code (0.024%)
+<!-- /progress -->
+
+Counted over the named functions of `main`, as reported by `check`. Run `check --readme` to update this section.
+
 ## Requirements
 
 - [Nix](https://nixos.org/) with flakes enabled. The dev shell provides everything else: the original compiler, LLVM tools, hactool, Ghidra, Python.
@@ -39,7 +47,8 @@ setup
 ## Checking functions
 
 ```sh
-check                                       # every function defined in src/
+check                                       # every function defined in src/, and the overall progress
+check --readme                              # same, and update the progress in this README
 check gf::GfDataBladeCreate                 # one class or namespace, and the functions left to do
 check gf::GfDataBlade::setHikariCurrent     # side by side diff of one function
 ```
