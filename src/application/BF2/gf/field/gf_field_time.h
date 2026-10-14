@@ -19,6 +19,7 @@ public:
   const GameTime &getGameTime() const;
   void setTimeRangeBit(u32 timeRangeBits);
   u32 getTimeRangeBits() const;
+  const ElapseTime &getElapseTime() const;
 };
 
 } // namespace gf
