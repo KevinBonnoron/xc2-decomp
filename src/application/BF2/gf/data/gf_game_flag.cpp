@@ -1,4 +1,6 @@
 #include "gf/data/gf_game_flag.h"
+#include "gf/data/gf_data_game.h"
+#include "gf/data/gf_data_manager.h"
 #include "gf/event/gf_event.h"
 #include "gf/gf_allocator.h"
 
@@ -128,5 +130,7 @@ u32 GfGameFlag::getMaxFlag(int size) {
     return 0;
   }
 }
+
+void GfGameFlag::clear() { __builtin_memset(&GfDataManager::getDataGame()->gameFlag, 0, sizeof(GameFlag)); }
 
 } // namespace gf
