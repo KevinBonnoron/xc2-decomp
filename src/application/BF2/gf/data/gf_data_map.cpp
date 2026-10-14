@@ -23,17 +23,6 @@ enum {
   SCENARIO_FLAG_ARCADIA_DESTROY = 0x1f65,
 };
 
-enum {
-  MAP_AVARITIA = 3,
-  MAP_GULA = 6,
-  MAP_INVIDIA = 9,
-  MAP_SUPERBIA = 10,
-  MAP_ARCADIA = 12,
-  MAP_LUXURIA = 13,
-  MAP_LIBERALITAS = 14,
-  MAP_ELPIS = 15,
-};
-
 constexpr u32 ZONE_COUNT = 8;
 constexpr u32 ZONE_ELPIS = 8;
 constexpr u32 TIME_RANGE_COUNT = 9;

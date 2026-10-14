@@ -21,6 +21,17 @@ enum WEATHERID {
 
 enum CLOUD_SEA {};
 
+enum {
+  MAP_AVARITIA = 3,
+  MAP_GULA = 6,
+  MAP_INVIDIA = 9,
+  MAP_SUPERBIA = 10,
+  MAP_ARCADIA = 12,
+  MAP_LUXURIA = 13,
+  MAP_LIBERALITAS = 14,
+  MAP_ELPIS = 15,
+};
+
 struct SDataMap {
   mm::Vec3 driverSavePos[3];
   mm::Vec3 bladeSavePos[3];

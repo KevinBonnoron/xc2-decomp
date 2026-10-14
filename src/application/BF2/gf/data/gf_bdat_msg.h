@@ -27,6 +27,7 @@ public:
   static u8 *getFpBtlHanaRole();
   static u8 *getFpBtlHanaAtr();
   static u8 *getFpBtlHanaNArts();
+  static u8 *getFpFieldSkill();
 };
 
 } // namespace gf

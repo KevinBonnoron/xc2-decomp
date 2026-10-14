@@ -156,7 +156,7 @@ u16 GfDataDriver::getDefaultWpnType(const SDataDriver &dataDriver) {
 
   mm::mtl::FixedVector<u16, 32> weaponTypes;
   bool isFound = getDriverEquipWpnType(weaponTypes, dataDriver.id);
-  return isFound ? weaponTypes[0] : 0;
+  return isFound ? *weaponTypes.begin() : 0;
 }
 
 u32 GfDataDriver::getDriverArtsID(u32 driver, u32 blade, u32 index) {

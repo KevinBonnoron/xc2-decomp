@@ -51,4 +51,12 @@ bool GfDataBlade::isHomuriNameHikari() {
 
 void GfDataBlade::setHomuriNameHikari(bool homuriNameHikari) { GfGameFlag::setLocal(1, FLAG_BLADE_HOMURI_NAME_HIKARI, homuriNameHikari); }
 
+u32 GfDataBlade::getBladePower(u32 blade) {
+  if (blade == 0) {
+    return 0;
+  }
+
+  return getBladePower(*getSDataBlade(blade));
+}
+
 } // namespace gf

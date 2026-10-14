@@ -10,11 +10,23 @@ public:
   FixedVector() : mSize(0) {}
   ~FixedVector() { clear(); }
 
-  T &operator[](size_t index) { return mData[index]; }
-  const T &operator[](size_t index) const { return mData[index]; }
+  T &operator[](size_t index) {
+    MM_ASSERT(index < size());
+    return *reinterpret_cast<T *>(mBuffer + index * sizeof(T));
+  }
+
+  const T &operator[](size_t index) const {
+    MM_ASSERT(index < size());
+    return *reinterpret_cast<const T *>(mBuffer + index * sizeof(T));
+  }
+
   size_t size() const { return mSize; }
   size_t capacity() const { return N; }
   bool empty() const { return mSize == 0; }
+  T *begin() { return reinterpret_cast<T *>(mBuffer); }
+  const T *begin() const { return reinterpret_cast<const T *>(mBuffer); }
+  T *end() { return begin() + size(); }
+  const T *end() const { return begin() + size(); }
 
   void clear() {
     if (mSize != 0) {
@@ -24,12 +36,12 @@ public:
 
   void push_back(const T &value) {
     MM_ASSERT(size() < capacity());
-    mData[mSize] = value;
+    begin()[mSize] = value;
     mSize++;
   }
 
 private:
-  T mData[N];
+  alignas(T) unsigned char mBuffer[sizeof(T) * N];
   size_t mSize;
 };
 

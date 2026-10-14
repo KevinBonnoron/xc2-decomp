@@ -36,6 +36,8 @@ public:
   u32 getBTL_HanaChipsetNCondParts(u32 hana, u32 slot) const;
   u32 getBTL_HanaPowerPowerNum(u32 rank, u32 hana) const;
   u32 getBTL_HanaPowerEtherNum(u32 rank, u32 hana) const;
+
+  u32 getWildcardDatavalueU2(u32 wildcard) const;
 };
 
 } // namespace gf
