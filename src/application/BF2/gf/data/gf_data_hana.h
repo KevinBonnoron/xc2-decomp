@@ -59,6 +59,7 @@ public:
   static u32 getAttribute(u32 blade);
   static u16 getArtsEnhance(u32 blade, u32 slot);
   static EquipHana *getEquipParts(u32 blade);
+  static void setEquipParts(u32 blade, const EquipHana &equipParts);
   static u32 getParmor(u32 blade);
   static u32 getEarmor(u32 blade);
   static u32 getHpMaxRev(u32 blade);
