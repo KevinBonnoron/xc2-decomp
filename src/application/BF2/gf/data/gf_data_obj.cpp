@@ -36,6 +36,9 @@ constexpr u32 EXTRA_PARTS_COUNT = 4;
 constexpr u32 ARMOR_MAX = 100;
 constexpr f32 PERCENT = 0.01f;
 constexpr f32 PERCENT_SCALE = 100.0f;
+constexpr u32 DRIVER_HP_MAX = 9999;
+constexpr u32 DRIVER_STATUS_MAX = 999;
+constexpr u32 RATE_MAX = 100;
 
 enum {
   ENHANCE_EFFECT_NONE,
@@ -177,6 +180,44 @@ u32 DataObjDriver::getBdatId() const { return id; }
 u32 DataObjDriver::getDataType() const { return data->activate; }
 
 u32 DataObjDriver::getHp() const { return GfObjUtil::getHp(handle); }
+
+static void applyDriverEnhance(u32 &value, const SDataDriver &dataDriver, u32 percentEffect, u32 addEffect) {
+  mm::mtl::FixedVector<u16, 64> enhances;
+  GfDataDriver::getValidEnhance(enhances, dataDriver);
+  GfBdatBtl *bdatBattle = GfBdatBtl::get();
+  f32 base = value;
+  if (enhances.size() != 0) {
+    u16 *enhance = enhances.begin();
+    u16 *end = enhances.end();
+    do {
+      if (bdatBattle->getBTL_EnhanceEnhanceEffect(*enhance) == addEffect) {
+        base += bdatBattle->getBTL_EnhanceParam1(*enhance);
+      }
+    } while (++enhance != end);
+  }
+
+  f32 percent = 0.0f;
+  if (enhances.size() != 0) {
+    u16 *enhance = enhances.begin();
+    u16 *end = enhances.end();
+    do {
+      if (bdatBattle->getBTL_EnhanceEnhanceEffect(*enhance) == percentEffect) {
+        percent += bdatBattle->getBTL_EnhanceParam1(*enhance) * PERCENT;
+      }
+    } while (++enhance != end);
+  }
+
+  value = base + base * percent;
+}
+
+u32 DataObjDriver::getHpMax(bool isVirtual) const {
+  SDataDriver *dataDriver = get(isVirtual);
+  u32 hpMax = dataDriver->hpMax;
+  applyDriverEnhance(hpMax, *dataDriver, ENHANCE_EFFECT_HP_MAX_PERCENT, ENHANCE_EFFECT_HP_MAX_ADD);
+  f32 rate = GfDataDriver::getHpMaxRev(*dataDriver) * PERCENT;
+  hpMax += static_cast<u32>(hpMax * rate);
+  return hpMax > DRIVER_HP_MAX ? DRIVER_HP_MAX : hpMax;
+}
 
 u32 DataObjDriver::getLevel(bool isVirtual) const {
   u32 level = GfDataDriver::getLevel(*get(isVirtual));
@@ -356,6 +397,71 @@ void DataObjDriver::setDriverArtsLevel(u32 arts, u32 level) {
 
 u32 DataObjDriver::getClass(bool isVirtual) const { return GfDataDriver::getClass(*get(isVirtual)); }
 
+u32 DataObjDriver::getStrength(bool isVirtual) const {
+  SDataDriver *dataDriver = get(isVirtual);
+  u32 strength = get(isVirtual)->strength;
+  applyDriverEnhance(strength, *dataDriver, ENHANCE_EFFECT_STRENGTH_PERCENT, ENHANCE_EFFECT_STRENGTH_ADD);
+  f32 rate = GfDataDriver::getStrengthRev(*dataDriver) * PERCENT;
+  strength += static_cast<u32>(strength * rate);
+  if (strength > DRIVER_STATUS_MAX) {
+    strength = DRIVER_STATUS_MAX;
+  }
+
+  return strength;
+}
+
+u32 DataObjDriver::getPowerEther(bool isVirtual) const {
+  SDataDriver *dataDriver = get(isVirtual);
+  u32 powerEther = get(isVirtual)->powerEther;
+  applyDriverEnhance(powerEther, *dataDriver, ENHANCE_EFFECT_POWER_ETHER_PERCENT, ENHANCE_EFFECT_POWER_ETHER_ADD);
+  f32 rate = GfDataDriver::getPowEtherRev(*dataDriver) * PERCENT;
+  powerEther += static_cast<u32>(powerEther * rate);
+  if (powerEther > DRIVER_STATUS_MAX) {
+    powerEther = DRIVER_STATUS_MAX;
+  }
+
+  return powerEther;
+}
+
+u32 DataObjDriver::getDex(bool isVirtual) const {
+  SDataDriver *dataDriver = get(isVirtual);
+  u32 dex = get(isVirtual)->dex;
+  applyDriverEnhance(dex, *dataDriver, ENHANCE_EFFECT_DEX_PERCENT, ENHANCE_EFFECT_DEX_ADD);
+  f32 rate = GfDataDriver::getDexRev(*dataDriver) * PERCENT;
+  dex += static_cast<u32>(dex * rate);
+  if (dex > DRIVER_STATUS_MAX) {
+    dex = DRIVER_STATUS_MAX;
+  }
+
+  return dex;
+}
+
+u32 DataObjDriver::getAgility(bool isVirtual) const {
+  SDataDriver *dataDriver = get(isVirtual);
+  u32 agility = get(isVirtual)->agility;
+  applyDriverEnhance(agility, *dataDriver, ENHANCE_EFFECT_AGILITY_PERCENT, ENHANCE_EFFECT_AGILITY_ADD);
+  f32 rate = GfDataDriver::getAgilityRev(*dataDriver) * PERCENT;
+  agility += static_cast<u32>(agility * rate);
+  if (agility > DRIVER_STATUS_MAX) {
+    agility = DRIVER_STATUS_MAX;
+  }
+
+  return agility;
+}
+
+u32 DataObjDriver::getLuck(bool isVirtual) const {
+  SDataDriver *dataDriver = get(isVirtual);
+  u32 luck = get(isVirtual)->luck;
+  applyDriverEnhance(luck, *dataDriver, ENHANCE_EFFECT_LUCK_PERCENT, ENHANCE_EFFECT_LUCK_ADD);
+  f32 rate = GfDataDriver::getLuckRev(*dataDriver) * PERCENT;
+  luck += static_cast<u32>(luck * rate);
+  if (luck > DRIVER_STATUS_MAX) {
+    luck = DRIVER_STATUS_MAX;
+  }
+
+  return luck;
+}
+
 u32 DataObjDriver::getPArmor(bool isVirtual) const {
   SDataDriver *dataDriver = get(isVirtual);
   u32 blade = getBlade(isVirtual, -1);
@@ -456,6 +562,31 @@ u32 DataObjBlade::getEArmor(bool isVirtual) const {
   return eArmor;
 }
 
+u32 DataObjDriver::getCriticalRate(bool isVirtual) const {
+  SDataDriver *dataDriver = get(isVirtual);
+  u32 criticalRate = get(isVirtual)->criticalRate;
+  u32 blade = getBlade(isVirtual, -1);
+  {
+    DataObjBlade dataObjBlade(blade);
+    if (blade == 0 || dataObjBlade.get(true)->id == 0) {
+      return criticalRate;
+    }
+
+    int slot = getBladeSet(isVirtual);
+    if (slot >= 0 && virtualEquipWeapons[slot] != 0) {
+      dataObjBlade.setVirtualEquipWpn(virtualEquipWeapons[slot], slot);
+    }
+
+    criticalRate += dataObjBlade.getCriticalRate(isVirtual);
+  }
+
+  if (criticalRate > RATE_MAX) {
+    criticalRate = RATE_MAX;
+  }
+
+  return criticalRate;
+}
+
 u32 DataObjBlade::getCriticalRate(bool isVirtual) const {
   u32 criticalRate = 0;
   GfBdatItem *bdatItem = GfBdatItem::get();
@@ -467,6 +598,31 @@ u32 DataObjBlade::getCriticalRate(bool isVirtual) const {
   applyBladeEnhance(
       criticalRate, *get(isVirtual), ENHANCE_EFFECT_CRITICAL_RATE_PERCENT, ENHANCE_EFFECT_CRITICAL_RATE_ADD, isVirtualSetting() | menuParam);
   return criticalRate;
+}
+
+u32 DataObjDriver::getGuardRate(bool isVirtual) const {
+  SDataDriver *dataDriver = get(isVirtual);
+  u32 guardRate = get(isVirtual)->guardRate;
+  u32 blade = getBlade(isVirtual, -1);
+  {
+    DataObjBlade dataObjBlade(blade);
+    if (blade == 0 || dataObjBlade.get(true)->id == 0) {
+      return guardRate;
+    }
+
+    int slot = getBladeSet(isVirtual);
+    if (slot >= 0 && virtualEquipWeapons[slot] != 0) {
+      dataObjBlade.setVirtualEquipWpn(virtualEquipWeapons[slot], slot);
+    }
+
+    guardRate += dataObjBlade.getGuardRate(isVirtual);
+  }
+
+  if (guardRate > RATE_MAX) {
+    guardRate = RATE_MAX;
+  }
+
+  return guardRate;
 }
 
 u32 DataObjBlade::getGuardRate(bool isVirtual) const {
