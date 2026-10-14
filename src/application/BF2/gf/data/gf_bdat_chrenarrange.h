@@ -1,5 +1,6 @@
 #pragma once
 #include "gf/data/gf_bdat_wrapper.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -7,7 +8,13 @@ namespace gf {
 
 class GfBdatChrEnArrange : public mm::mtl::PtrSingleton<GfBdatChrEnArrange>, public GfBdatRefresh {
 public:
+  GfBdatChrEnArrange();
+  virtual ~GfBdatChrEnArrange();
+  void destroyFP();
+  void createFP();
+  void bdatRefresh() override;
   u32 getChrEnArrangeStart() const;
+  u32 getChrEnArrangeEnd() const;
   u32 getChrEnArrangeParamID(u32 id) const;
   u32 getChrEnArrangeEnemyBladeID(u32 id) const;
   u32 getChrEnArrangeBladeID(u32 id) const;
@@ -73,11 +80,11 @@ public:
   u32 getChrEnArrangeWeatherSet(u32 id) const;
   u32 getChrEnArrangeDriverLev(u32 id) const;
   u32 getBTL_EnBookStart() const;
+  u32 getBTL_EnBookEnd() const;
   u32 getBTL_EnBookBaseEnemyID(u32 id) const;
   u32 getBTL_EnBookBOOK_POP_TIME(u32 id) const;
   u32 getBTL_EnBookBOOK_popWeather(u32 id) const;
-
-  u32 getChrEnArrangeEnd() const;
+  bool searchByEnParamId(mm::mtl::FixedVector<u16, 128> &arranges, u32 paramId) const;
 
 private:
   CBdatWrapper *mChrEnArrange;
