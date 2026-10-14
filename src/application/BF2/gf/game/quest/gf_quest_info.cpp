@@ -21,12 +21,6 @@ namespace gf {
 namespace {
 
 enum {
-  TASK_TYPE_COLLECT = 3,
-  TASK_TYPE_USE = 4,
-  TASK_TYPE_CONDITION = 10,
-};
-
-enum {
   CONDITION_TYPE_ENVIRONMENT = 3,
 };
 

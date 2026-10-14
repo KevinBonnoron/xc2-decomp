@@ -18,13 +18,6 @@ enum {
   STATS_WAIT_CONTROLL_FREE_THIRD = 0x25,
 };
 
-enum {
-  TASK_TYPE_BATTLE = 1,
-  TASK_TYPE_COLLECT = 4,
-  TASK_TYPE_USE = 6,
-  TASK_TYPE_GIMMICK = 11,
-};
-
 constexpr u32 ACHIEVEMENT_TYPE_COUNT_PER_TYPE = 3;
 constexpr u32 ACHIEVEMENT_LAST = 9;
 constexpr u32 TOTAL_COUNT_STATS_COUNT = 64;
@@ -130,9 +123,9 @@ bool GfDataAchievement::isAddAchievementBonusCount(const AchievQuest &achievQues
   QuestTaskParam taskParam(GfDataQuest::getListNextQuestA(achievQuest.quest), 0, TASK_STATE_NONE);
   switch (taskParam.taskType) {
   case TASK_TYPE_BATTLE:
-  case TASK_TYPE_COLLECT:
   case TASK_TYPE_USE:
-  case TASK_TYPE_GIMMICK:
+  case TASK_TYPE_TALK:
+  case TASK_TYPE_FIELD_SKILL_COUNT:
     return true;
   default:
     return false;

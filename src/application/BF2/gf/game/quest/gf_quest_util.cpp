@@ -20,12 +20,6 @@ namespace gf {
 namespace {
 
 enum {
-  TASK_TYPE_COLLECT = 3,
-  TASK_TYPE_TALK = 6,
-  TASK_TYPE_FIELD_SKILL_COUNT = 11,
-};
-
-enum {
   CONDITION_TYPE_PARTY = 6,
 };
 
