@@ -1,6 +1,7 @@
 #pragma once
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
+#include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "mm_mtl/fixed_array.h"
@@ -17,7 +18,8 @@ struct SDataGame {
   u8 _00002a[0x00002c - 0x00002a];
   SDataDriver drivers[16];
   SDataBlade blades[422];
-  u8 _0e9884[0x1097e4 - 0x0e9884];
+  u8 _0e9884[0x0e98d8 - 0x0e9884];
+  SDataItemBox itemBox;
   QuestID scenario;
   QuestID select;
   u8 _1097ec[0x1097f0 - 0x1097ec];
@@ -53,6 +55,7 @@ static_assert(offsetof(SDataGame, startChapterSave) == 0x000026, "");
 static_assert(offsetof(SDataGame, eventChapterSave) == 0x000028, "");
 static_assert(offsetof(SDataGame, drivers) == 0x00002c, "");
 static_assert(offsetof(SDataGame, blades) == 0x005a2c, "");
+static_assert(offsetof(SDataGame, itemBox) == 0x0e98d8, "");
 static_assert(offsetof(SDataGame, scenario) == 0x1097e4, "");
 static_assert(offsetof(SDataGame, select) == 0x1097e8, "");
 static_assert(offsetof(SDataGame, map) == 0x1097f0, "");
