@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate the BDAT accessor sources (gf_bdat_*.cpp/.h) from the game's own code.
 
-Usage: gen_bdat.py <namespace tag> <class> <file stem>
+Usage: gen_bdat.py <namespace tag> <class> <file stem> [--namespace-only]
        gen_bdat.py bbt GfBdatBtl gf_bdat_btl
 
 The game's BDAT accessors are generated code: for each column, a `_gfbXX::initColumn`
@@ -156,7 +156,8 @@ def demangled_name(mangled):
 
 
 def main():
-    tag, cls, stem = sys.argv[1:]
+    tag, cls, stem = sys.argv[1:4]
+    namespace_only = "--namespace-only" in sys.argv[4:]
     ns = f"_gf{tag}"
     syms = symbols()
     prefix = f"_ZN2gf6{ns}"
@@ -199,7 +200,9 @@ def main():
             tables[mangled] = imm(load.split("#")[1].rstrip("]"))
 
     direct = {s for e in entries if e[0] == "init" and len(code[e[4]]) <= 10 for s in e[3]}
-    write(cls, ns, stem, statics, entries, methods, tables, code, direct)
+    if namespace_only:
+        methods, tables = [], {}
+    write(cls, ns, stem, statics, entries, methods, tables, code, direct, namespace_only)
 
 
 def static_name(statics, addr):
@@ -208,11 +211,12 @@ def static_name(statics, addr):
     return f"s_members[{statics[addr][0]}]"
 
 
-def write(cls, ns, stem, statics, entries, methods, tables, code, direct):
+def write(cls, ns, stem, statics, entries, methods, tables, code, direct, namespace_only=False):
     out = []
     w = out.append
     w(f'#include "gf/data/{stem}.h"')
     w('#include "bdat.h"')
+    w('#include "gf/data/gf_bdat_wrapper.h"')
     w("")
     w("namespace gf {")
     w(f"namespace {ns} {{")
@@ -307,6 +311,8 @@ def write(cls, ns, stem, statics, entries, methods, tables, code, direct):
             w("")
     w("} // namespace gf")
     open(os.path.join(ROOT, "src", "application", "BF2", "gf", "data", stem + ".cpp"), "w").write("\n".join(out) + "\n")
+    if namespace_only:
+        return
 
     header = [
         "#pragma once",
