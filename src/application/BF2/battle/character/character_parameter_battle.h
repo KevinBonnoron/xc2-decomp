@@ -91,6 +91,9 @@ public:
   u16 resistantAttributeFlags;
   u8 _5a0[0x5a5 - 0x5a0];
   u8 elementalComboId;
+  u8 _5a6[0x5df - 0x5a6];
+  u8 : 1;
+  u8 isBattle : 1;
 };
 
 static_assert(offsetof(CharacterParameter, buddy) == 0x10, "");

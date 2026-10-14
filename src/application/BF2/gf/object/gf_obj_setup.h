@@ -42,7 +42,12 @@ static_assert(offsetof(GfObjSetup, fixedBlade) == 0x58, "");
 class GfObjSetupMap : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
+
+  u8 _5c[0x6c - 0x5c];
+  u32 bdatId;
 };
+
+static_assert(offsetof(GfObjSetupMap, bdatId) == 0x6c, "");
 
 class GfObjSetupMob : public GfObjSetup {
 public:
@@ -70,7 +75,8 @@ public:
 
   virtual u32 getEnArrangeID() const;
 
-  u8 _5c[0x70 - 0x5c];
+  u8 _5c[0x6c - 0x5c];
+  u32 enParamId;
   u32 enArrangeId;
   u8 _74[0xa0 - 0x74];
   SDataEnemy *dataEnemy;
@@ -80,6 +86,7 @@ public:
   SDataBlade *dataBlade;
 };
 
+static_assert(offsetof(GfObjSetupEnemy, enParamId) == 0x6c, "");
 static_assert(offsetof(GfObjSetupEnemy, enArrangeId) == 0x70, "");
 static_assert(offsetof(GfObjSetupEnemy, dataEnemy) == 0xa0, "");
 static_assert(offsetof(GfObjSetupEnemy, blade) == 0xb8, "");

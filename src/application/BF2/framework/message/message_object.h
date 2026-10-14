@@ -17,6 +17,8 @@ public:
   virtual ~MessageObject();
   virtual bool recieveMessage(MessageObject *sender, Message &message);
 
+  bool sendMessage(MessageObject *receiver, Message &message) { return receiver->recieveMessage(this, message); }
+
   u8 _08[0x18 - 0x08];
 };
 
