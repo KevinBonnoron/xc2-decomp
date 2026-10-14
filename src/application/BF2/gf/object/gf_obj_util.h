@@ -14,6 +14,7 @@ public:
   static const char *getMotionResourceName(GF_OBJ_HANDLE *handle);
   static u32 getHp(GF_OBJ_HANDLE *handle);
   static bool testFlag(GF_OBJ_HANDLE *handle, u32 flag);
+  static bool isTrinityBlade(GF_OBJ_HANDLE *handle);
 
   template <typename T> static T *getObjSetup(GF_OBJ_HANDLE *handle) {
     GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
