@@ -5,6 +5,11 @@ namespace mtl {
 
 template <int N> class FixStr {
 public:
+  FixStr() {
+    mData[0] = 0;
+    mLength = 0;
+  }
+
   FixStr &operator=(const char *string) {
     mLength = __builtin_strlen(string);
     __builtin_strcpy(mData, string);
@@ -12,6 +17,8 @@ public:
   }
 
   void format(const char *format, ...);
+
+  const char *c_str() const { return mData; }
 
 private:
   char mData[N];
