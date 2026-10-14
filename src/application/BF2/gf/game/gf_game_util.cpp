@@ -3,8 +3,10 @@
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_chrdr.h"
 #include "gf/data/gf_bdat_maplist.h"
+#include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_develop.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_driver_skill.h"
 #include "gf/data/gf_data_enemy.h"
@@ -26,6 +28,7 @@
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_util.h"
+#include "gf/request/gf_req_scom.h"
 #include "gf/util/gf_util.h"
 #include <stdarg.h>
 
@@ -33,6 +36,11 @@ namespace gf {
 
 enum {
   FLAG_GAME_CLEAR = 0xbdcd,
+};
+
+enum {
+  NATION_IYASAKI = 5,
+  NATION_ARCADIA = 6,
 };
 
 enum {
@@ -237,6 +245,15 @@ void GfGameUtil::addSP(u32 driver, int skillPoint) {
       GfDataDriver::addSkillPoint(driver, skillPoint);
     }
   }
+}
+
+void GfGameUtil::setDevelopLevelForDebug(u32 nation, u32 level) {
+  if (nation == 0 || GfDataDevelop::getLevel(nation) >= level) {
+    return;
+  }
+
+  GfDataDevelop::setPoint(nation, QuestListAcc::get()->getFLD_DevelopmentLevelValue(level + 2));
+  SCOM_LEVELUP_DEVELOP::create();
 }
 
 u16 GfGameUtil::getAntiBladeAreaBdatId() { return GfFieldGimmick::getBdatIdOfActiveGmkAntiBladeArea(); }
@@ -540,6 +557,12 @@ u32 GfGameUtil::execAddCommonBlade(const SDataBlade &dataBlade) {
   return blade;
 }
 
+void GfGameUtil::execAddDevelopPointArcadia2Iyasaki() {
+  u32 point = GfDataDevelop::getPoint(NATION_ARCADIA);
+  GfDataDevelop::resetPoint(NATION_ARCADIA);
+  SCOM_ADD_DEVELOP::create(NATION_IYASAKI, point);
+}
+
 void GfGameUtil::dispRexCrystal(GF_OBJ_HANDLE *handle, bool isDisp) {
   GfObjAcc objAcc(handle);
   int mesh = objAcc.getExtMeshIdx("cc_rex");
@@ -659,6 +682,27 @@ bool GfGameUtil::setupSaveAchievementPopup(u32 blade, u32 achievement, u32 level
   }
 
   return true;
+}
+
+void GfGameUtil::execSaveAchievementPopup(u32 blade) {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  u32 &popupNum = dataGame->achievementPopupNum;
+  for (u32 index = 0; index < popupNum;) {
+    SDataAchievementPopup &popup = dataGame->achievementPopups[index];
+    if (popup.blade != blade) {
+      index++;
+      continue;
+    }
+
+    SCOM_POPUP::createAchievement(blade, popup.achievement, popup.level);
+    if (index >= popupNum) {
+      popupNum--;
+      break;
+    }
+
+    popup = dataGame->achievementPopups[popupNum - 1];
+    popupNum--;
+  }
 }
 
 } // namespace gf
