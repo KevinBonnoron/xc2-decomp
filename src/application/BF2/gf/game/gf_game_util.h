@@ -37,6 +37,9 @@ public:
   static void addWpForObject(u32 driver, u32 weaponType, int weaponPoint);
   static void addSP(u32 driver, int skillPoint);
   static void setDevelopLevelForDebug(u32 nation, u32 level);
+  static u32 getTrustRank(u32 blade);
+  static void addTrustPoint(u32 blade, u32 trustPoint);
+  static void setAchievementReleaseLevel(u32 blade, u32 line, u32 level);
   static u16 getAntiBladeAreaBdatId();
   static bool getGmkTargetPointPos(mm::Vec3 &position, u32 gimmick);
   static bool getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle);
