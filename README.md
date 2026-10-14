@@ -56,9 +56,13 @@ check                                       # every function defined in src/, an
 check --readme                              # same, and update the progress in this README
 check gf::GfDataBladeCreate                 # one class or namespace, and the functions left to do
 check gf::GfDataBlade::setHikariCurrent     # side by side diff of one function
+check 0x710028c7ec src/application/BF2/gf/data/gf_data_obj.cpp unknown001
+                                            # diff a function the game has no symbol for
 ```
 
 `check` compiles `src/`, disassembles both your function and the original, and prints `MATCH` or a colored diff. It exits with an error when something does not match.
+
+Functions local to their source file (`static`, anonymous namespace) have no symbol in the game. A call to one of them shows as `<local>` on both sides: in the game, a branch to an address outside every named function; in your object, a branch to a function it defines that is local or unknown to the game. Any local function matches any other there, so check each local function on its own, by its game address and its name in your file. The game side of that diff ends at the next named function or at the next address called by a `bl`.
 
 ## Compiler
 
