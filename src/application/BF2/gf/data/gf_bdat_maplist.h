@@ -75,6 +75,7 @@ public:
   u32 getTimeInfoStart() const;
   u32 getTimeInfomsg(u32 id) const;
 
+  u32 getMaplistEnd() const;
   u32 getMaplistw_ON_cndID(u32 map, u32 weather) const;
   u32 getMaplistw_OFF_cndID(u32 map, u32 weather) const;
   u32 getMaplistw_time_BNS(u32 map, u32 weather) const;

@@ -58,6 +58,9 @@ struct SDataGame {
   u8 _10ae83[0x10ae84 - 0x10ae83];
   SDataSavedEvent savedEvents[500];
   u32 savedEventNum;
+  u8 _1171d8[0x117690 - 0x1171d8];
+
+  SDataGame();
 };
 
 static_assert(offsetof(SDataGame, money) == 0x0, "");
@@ -94,5 +97,6 @@ static_assert(offsetof(SDataGame, collectFlagNewVersion) == 0x10ae80, "");
 static_assert(offsetof(SDataGame, cameraSide) == 0x10ae82, "");
 static_assert(offsetof(SDataGame, savedEvents) == 0x10ae84, "");
 static_assert(offsetof(SDataGame, savedEventNum) == 0x1171d4, "");
+static_assert(sizeof(SDataGame) == 0x117690, "");
 
 } // namespace gf

@@ -7,6 +7,7 @@ enum AMOVE { AMOVE_WALK, AMOVE_SWIM };
 
 class GfDataUtil {
 public:
+  static void initializeSaveDataDriverAndBlade();
   static void setupEventDriverAndBlade();
 
   static u32 getMoney();
