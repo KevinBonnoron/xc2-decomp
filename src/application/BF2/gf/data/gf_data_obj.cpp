@@ -13,9 +13,11 @@
 #include "gf/data/gf_data_npc.h"
 #include "gf/data/gf_data_party.h"
 #include "gf/event/gf_event.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/util/gf_equip_util.h"
@@ -856,6 +858,11 @@ u32 DataObjBlade::getEyeRotControl() const { return get(false)->eyeRotControl; }
 
 DataObjPcWpn::DataObjPcWpn(u32 id) : handle(INVALID_HANDLE), id(id) {}
 
+DataObjPcWpn::DataObjPcWpn(GF_OBJ_HANDLE *handle) : handle(handle) {
+  GfObjAcc objAcc(handle);
+  id = objAcc.getPcWeaponId();
+}
+
 DataObjPcWpn::~DataObjPcWpn() {}
 
 bool DataObjPcWpn::isValid() const { return id != 0; }
@@ -866,13 +873,62 @@ bool DataObjPcWpn::getName(u8 *&bdat, u32 &textId) const { return GfDataItem::ge
 
 u32 DataObjPcWpn::getBdatId() const { return id; }
 
+u32 DataObjPcWpn::getAttribute(bool, int slot) const {
+  if (handle == INVALID_HANDLE) {
+    return 0;
+  }
+
+  int member = GfObjUtil::getObjSetup(handle)->partyMember;
+  if (member == -1) {
+    return 0;
+  }
+
+  DataParamAcc paramAcc(GfGameParty::getHandleBlade(member, slot));
+  return paramAcc.getAttribute(-1, false);
+}
+
 u32 DataObjPcWpn::getEquipWeapon(bool, int) const { return id; }
 
 u32 DataObjPcWpn::getWeaponType(bool, int) const { return GfBdatItem::get()->getPcWpnWpnType(getBdatId()); }
 
+int DataObjPcWpn::getBladeSet(bool isVirtual) const {
+  if (handle == INVALID_HANDLE) {
+    return -1;
+  }
+
+  int member = GfObjUtil::getObjSetup(handle)->partyMember;
+  if (member == -1) {
+    return -1;
+  }
+
+  u32 driver = GfDataParty::getDriver(member);
+  if (driver == 0) {
+    return -1;
+  }
+
+  int maxSetBladeNum = GfDataDriver::getMaxSetBladeNum(driver);
+  for (int slot = 0; slot < maxSetBladeNum; slot++) {
+    u32 blade = GfDataDriver::getBlade(driver, slot);
+    if (blade == 0) {
+      continue;
+    }
+
+    DataObjBlade dataObjBlade(blade);
+    if (dataObjBlade.getEquipWeapon(isVirtual, -1) == getBdatId()) {
+      return slot;
+    }
+  }
+
+  return -1;
+}
+
 u32 DataObjPcWpn::getWeaponDamage(bool) const { return GfBdatItem::get()->getPcWpnDamage(getBdatId()); }
 
 u32 DataObjPcWpn::getWeaponStability(bool) const { return GfBdatItem::get()->getPcWpnStability(getBdatId()); }
+
+DataObjNpc::DataObjNpc(GF_OBJ_HANDLE *handle) : handle(handle), id(0) {
+  id = mm::mtl::dynamicCast<GfObjSetupNpc>(GfObjManager::getObjInfo(handle)->setup)->id;
+}
 
 DataObjNpc::DataObjNpc(u32 id) : handle(INVALID_HANDLE), id(id) {}
 
@@ -898,6 +954,10 @@ u32 DataObjNpc::getFootStepEffect() const { return GfDataNpc::getFootStepEffect(
 
 u32 DataObjNpc::getEyeRotControl() const { return GfDataNpc::getEyeRotControl(getBdatId()); }
 
+DataObjMap::DataObjMap(GF_OBJ_HANDLE *handle) : handle(handle), id(0) {
+  id = mm::mtl::dynamicCast<GfObjSetupMap>(GfObjManager::getObjInfo(handle)->setup)->id;
+}
+
 DataObjMap::DataObjMap(u32 id) : handle(INVALID_HANDLE), id(id) {}
 
 bool DataObjMap::isValid() const { return id != 0; }
@@ -905,6 +965,10 @@ bool DataObjMap::isValid() const { return id != 0; }
 const char *DataObjMap::getName() const { return GfBdatMaplist::get()->getMaplistresource(getBdatId()); }
 
 u32 DataObjMap::getBdatId() const { return id; }
+
+DataObjMob::DataObjMob(GF_OBJ_HANDLE *handle) : handle(handle), id(0) {
+  id = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(handle)->setup)->id;
+}
 
 DataObjMob::DataObjMob(u32 id) : handle(INVALID_HANDLE), id(id) {}
 
@@ -928,6 +992,10 @@ u32 DataObjMob::getFootStep() const { return GfDataMob::getFootStep(getBdatId())
 
 u32 DataObjMob::getFootStepEffect() const { return GfDataMob::getFootStepEffect(getBdatId()); }
 
+DataObjUiObj::DataObjUiObj(GF_OBJ_HANDLE *handle) : handle(handle), id(0) {
+  id = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(handle)->setup)->id;
+}
+
 DataObjUiObj::DataObjUiObj(u32 id) : handle(INVALID_HANDLE), id(id) {}
 
 bool DataObjUiObj::isValid() const { return id != 0; }
@@ -943,6 +1011,12 @@ const char *DataObjUiObj::getMotionResourceName() const { return GfBdatRsc::get(
 u32 DataObjUiObj::getBdatId() const { return id; }
 
 bool DataObjUiObj::isDispInitExtraParts(u32) const { return false; }
+
+DataObjGmk::DataObjGmk(GF_OBJ_HANDLE *handle) : handle(handle), id(0) {
+  GfObjSetupGimmick *setup = mm::mtl::dynamicCast<GfObjSetupGimmick>(GfObjManager::getObjInfo(handle)->setup);
+  id = setup->id;
+  gimmickType = setup->gimmickType;
+}
 
 DataObjGmk::DataObjGmk(u32 id, GimmickType gimmickType) : handle(INVALID_HANDLE), id(id), gimmickType(gimmickType) {}
 
@@ -977,6 +1051,8 @@ bool DataObjGmk::isDispInitExtraParts(u32) const {
 
   return GfBdatRsc::get()->getRSC_MapObjListExtraParts1(getBdatId()) != 0;
 }
+
+DataObjBelonging::DataObjBelonging(GF_OBJ_HANDLE *handle) : handle(handle) { GfObjUtil::getObjSetup<GfObjSetupBelonging>(handle); }
 
 bool DataObjBelonging::isValid() const { return handle != INVALID_HANDLE; }
 
