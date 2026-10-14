@@ -1,5 +1,7 @@
 #include "gf/data/gf_bdat_chrenarrange.h"
 #include "bdat.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/gf_allocator.h"
 
 namespace gf {
 namespace _gfbcb {
@@ -906,7 +908,112 @@ u32 getBTL_EnBookBOOK_popWeather(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbcb
 
+enum {
+  BDAT_BTL_EN_BOOK = 0x26,
+  BDAT_CHR_EN_ARRANGE = 0x79,
+};
+
+GfBdatChrEnArrange::GfBdatChrEnArrange() : unknown10(nullptr), unknown18(nullptr) { bdatRefresh(); }
+
+GfBdatChrEnArrange::~GfBdatChrEnArrange() { destroyFP(); }
+
+void GfBdatChrEnArrange::destroyFP() {
+  if (unknown10 != nullptr) {
+    delete unknown10;
+    unknown10 = nullptr;
+  }
+
+  if (unknown18 != nullptr) {
+    delete unknown18;
+    unknown18 = nullptr;
+  }
+}
+
+#define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
+
+void GfBdatChrEnArrange::createFP() {
+// The line numbers passed to the allocator decide between mov and orr.
+#line 60
+  unknown10 = NEW_BDAT_WRAPPER(BDAT_CHR_EN_ARRANGE);
+  unknown18 = NEW_BDAT_WRAPPER(BDAT_BTL_EN_BOOK);
+}
+
+void GfBdatChrEnArrange::bdatRefresh() {
+  destroyFP();
+  createFP();
+  _gfbcb::initChrEnArrangeParamID(*unknown10);
+  _gfbcb::initChrEnArrangeEnemyBladeID(*unknown10);
+  _gfbcb::initChrEnArrangeBladeID(*unknown10);
+  _gfbcb::initChrEnArrangeBladeAtr(*unknown10);
+  _gfbcb::initChrEnArrangeExtraParts(*unknown10);
+  _gfbcb::initChrEnArrangeName(*unknown10);
+  _gfbcb::initChrEnArrangeDebug_Name(*unknown10);
+  _gfbcb::initChrEnArrangeLv(*unknown10);
+  _gfbcb::initChrEnArrangeLvRand(*unknown10);
+  _gfbcb::initChrEnArrangeHpOver(*unknown10);
+  _gfbcb::initChrEnArrangeExpRev(*unknown10);
+  _gfbcb::initChrEnArrangeGoldRev(*unknown10);
+  _gfbcb::initChrEnArrangeWPRev(*unknown10);
+  _gfbcb::initChrEnArrangeSPRev(*unknown10);
+  _gfbcb::initChrEnArrangeDropTableID(*unknown10);
+  _gfbcb::initChrEnArrangeDropTableID2(*unknown10);
+  _gfbcb::initChrEnArrangeDropTableID3(*unknown10);
+  _gfbcb::initChrEnArrangePreciousID(*unknown10);
+  _gfbcb::initChrEnArrangeScale(*unknown10);
+  _gfbcb::initChrEnArrangeChrSize(*unknown10);
+  _gfbcb::initChrEnArrangeTurnSize(*unknown10);
+  _gfbcb::initChrEnArrangeFlagNamed(*unknown10);
+  _gfbcb::initChrEnArrangeFlagmBoss(*unknown10);
+  _gfbcb::initChrEnArrangeFlagChild(*unknown10);
+  _gfbcb::initChrEnArrangeFlagFAOff(*unknown10);
+  _gfbcb::initChrEnArrangeFlagNoEcSkip(*unknown10);
+  _gfbcb::initChrEnArrangeFlagLinkType(*unknown10);
+  _gfbcb::initChrEnArrangeFlagChrColiOff(*unknown10);
+  _gfbcb::initChrEnArrangeFlagNoTarget(*unknown10);
+  _gfbcb::initChrEnArrangeFlagHikariSP4(*unknown10);
+  _gfbcb::initChrEnArrangeFlagHomuri(*unknown10);
+  _gfbcb::initChrEnArrangeFlagHikari(*unknown10);
+  _gfbcb::initChrEnArrangeFlagNoNaviMesh(*unknown10);
+  _gfbcb::initChrEnArrangeFlagFixed(*unknown10);
+  _gfbcb::initChrEnArrangeFlagDropFront(*unknown10);
+  _gfbcb::initChrEnArrangeFlagNoWarp(*unknown10);
+  _gfbcb::initChrEnArrangeFlagIgnoreLevPow(*unknown10);
+  _gfbcb::initChrEnArrangeFlagAlwaysAttack(*unknown10);
+  _gfbcb::initChrEnArrangeFlagPGMax(*unknown10);
+  _gfbcb::initChrEnArrangeFlagSalvage(*unknown10);
+  _gfbcb::initChrEnArrangeLinkRadius(*unknown10);
+  _gfbcb::initChrEnArrangeDetects(*unknown10);
+  _gfbcb::initChrEnArrangeSearchRange(*unknown10);
+  _gfbcb::initChrEnArrangeSearchAngle(*unknown10);
+  _gfbcb::initChrEnArrangeSearchRadius(*unknown10);
+  _gfbcb::initChrEnArrangeBatInterval(*unknown10);
+  _gfbcb::initChrEnArrangeBatArea(*unknown10);
+  _gfbcb::initChrEnArrangeBatAreaType(*unknown10);
+  _gfbcb::initChrEnArrangeAiGroup(*unknown10);
+  _gfbcb::initChrEnArrangeAiGroupNum(*unknown10);
+  _gfbcb::initChrEnArrangeBookID(*unknown10);
+  _gfbcb::initChrEnArrangeEnhanceID1(*unknown10);
+  _gfbcb::initChrEnArrangeEnhanceID2(*unknown10);
+  _gfbcb::initChrEnArrangeEnhanceID3(*unknown10);
+  _gfbcb::initChrEnArrangeParamRev(*unknown10);
+  _gfbcb::initChrEnArrangeRstDebuffRev(*unknown10);
+  _gfbcb::initChrEnArrangeHealPotTypeRev(*unknown10);
+  _gfbcb::initChrEnArrangeSummonID(*unknown10);
+  _gfbcb::initChrEnArrangeBGMID(*unknown10);
+  _gfbcb::initChrEnArrangeSeEnvID(*unknown10);
+  _gfbcb::initChrEnArrangeZoneID(*unknown10);
+  _gfbcb::initChrEnArrangeTimeSet(*unknown10);
+  _gfbcb::initChrEnArrangeWeatherSet(*unknown10);
+  _gfbcb::initChrEnArrangeDriverLev(*unknown10);
+  _gfbcb::initBTL_EnBookBaseEnemyID(*unknown18);
+  _gfbcb::initBTL_EnBookBOOK_POP_TIME(*unknown18);
+  _gfbcb::initBTL_EnBookBOOK_popWeather(*unknown18);
+}
+
 u32 GfBdatChrEnArrange::getChrEnArrangeStart() const { return Bdat::getIdTop(unknown10->data); }
+
+u32 GfBdatChrEnArrange::getChrEnArrangeEnd() const { return Bdat::getIdTop(unknown10->data) + Bdat::getIdCount(unknown10->data); }
 
 u32 GfBdatChrEnArrange::getChrEnArrangeParamID(u32 id) const { return _gfbcb::getChrEnArrangeParamID(*unknown10, id); }
 
@@ -1038,10 +1145,22 @@ u32 GfBdatChrEnArrange::getChrEnArrangeDriverLev(u32 id) const { return _gfbcb::
 
 u32 GfBdatChrEnArrange::getBTL_EnBookStart() const { return Bdat::getIdTop(unknown18->data); }
 
+u32 GfBdatChrEnArrange::getBTL_EnBookEnd() const { return Bdat::getIdTop(unknown18->data) + Bdat::getIdCount(unknown18->data); }
+
 u32 GfBdatChrEnArrange::getBTL_EnBookBaseEnemyID(u32 id) const { return _gfbcb::getBTL_EnBookBaseEnemyID(*unknown18, id); }
 
 u32 GfBdatChrEnArrange::getBTL_EnBookBOOK_POP_TIME(u32 id) const { return _gfbcb::getBTL_EnBookBOOK_POP_TIME(*unknown18, id); }
 
 u32 GfBdatChrEnArrange::getBTL_EnBookBOOK_popWeather(u32 id) const { return _gfbcb::getBTL_EnBookBOOK_popWeather(*unknown18, id); }
+
+bool GfBdatChrEnArrange::searchByEnParamId(mm::mtl::FixedVector<u16, 128> &arranges, u32 paramId) const {
+  for (u32 id = getChrEnArrangeStart(), end = getChrEnArrangeEnd(); id < end; id++) {
+    if (getChrEnArrangeParamID(id) == paramId) {
+      arranges.push_back(id);
+    }
+  }
+
+  return !arranges.empty();
+}
 
 } // namespace gf
