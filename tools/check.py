@@ -190,13 +190,15 @@ def data_label(raw):
     return "data"
 
 
-def target_label(addr, load64, image, syms):
+def target_label(addr, load64, image, syms, scalar=False):
     found = syms.covering(addr)
     if found:
         name, offset = found
         if name.startswith("__got_"):
             return "got:" + name[len("__got_"):]
         return name + (f"+{offset:#x}" if offset else "")
+    if scalar:
+        return "data"
     if load64:
         pointer = image.read(addr, 8)
         if len(pointer) == 8 and struct.unpack("<Q", pointer)[0] in syms.exact:
@@ -206,16 +208,22 @@ def target_label(addr, load64, image, syms):
     return data_label(image.read(addr, 1024))
 
 
-def object_label(rtype, target, image):
+def object_label(rtype, target, image, scalar=False):
     if "GOT" in rtype:
         return "got:" + target
     match = re.fullmatch(r"(.+?)([+-]0x[0-9a-f]+)?", target)
     sym, addend = match.group(1), int(match.group(2) or "0", 16)
-    if writable(sym):
+    if writable(sym) or scalar and sym.startswith("."):
         return "data"
     if sym.startswith("."):
         return data_label(image.read(addend, 1024, section=sym))
     return sym + (f"+{addend:#x}" if addend else "")
+
+
+def is_scalar_load(text):
+    """A float or vector load reads a literal, never a string, even when its bytes look printable."""
+    op, _, args = text.partition("\t")
+    return op in ("ldr", "ldur", "ldp") and args[:1] in ("b", "h", "s", "d", "q")
 
 
 def with_label(text, label):
@@ -256,7 +264,7 @@ def objdump(path, symbols, relocs, local_functions=(), address=None):
             continue
         reloc = RELOC.match(line)
         if reloc and lines:
-            lines[-1] = with_label(lines[-1], object_label(reloc.group(1), reloc.group(2), image))
+            lines[-1] = with_label(lines[-1], object_label(reloc.group(1), reloc.group(2), image, is_scalar_load(lines[-1])))
             continue
         insn = INSN.match(line)
         if insn:
@@ -337,7 +345,7 @@ def resolve_pages(lines, image, syms):
                 pages.pop(r, None)
             continue
         adrp_index, page = pages[base]
-        label = target_label(page + imm, op == "ldr" and regs[0].startswith("x"), image, syms)
+        label = target_label(page + imm, op == "ldr" and regs[0].startswith("x"), image, syms, is_scalar_load(text))
         if adrp_index not in labeled:
             lines[adrp_index] = with_label(lines[adrp_index], label)
             labeled.add(adrp_index)
