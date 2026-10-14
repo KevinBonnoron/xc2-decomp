@@ -2,7 +2,9 @@
 """Compile sources and compare functions against the original game binary.
 
 Usage:
-  check                                   check every function defined in src/ and show the game progress
+  check                                   check every function defined in src/ and show the game progress,
+                                          listing only the functions that do not match
+  check -v                                same, and list every function
   check --readme                          same, and update the progress section of README.md
   check <scope>                           check every function of a class or namespace, list the missing ones
   check <symbol>                          diff one function, its source file is found automatically
@@ -510,7 +512,7 @@ def diff_unnamed(address, source, name, extra, known):
     return print_diff(target, mine)
 
 
-def check_all(demangled, scope=None):
+def check_all(demangled, scope=None, verbose=True):
     rows = []
     with tempfile.TemporaryDirectory() as tmp:
         objects, errors = compile_all(tmp)
@@ -533,7 +535,7 @@ def check_all(demangled, scope=None):
     rows.sort(key=lambda r: (r[2] != r[3], r[1], demangled[r[0]]))
     mismatches = [r for r in rows if r[2] != r[3]]
     width = max((len(n) for n in [demangled[f] for f, *_ in rows] + missing), default=0)
-    for f, source, target, mine in rows:
+    for f, source, target, mine in rows if verbose else mismatches:
         status = paint("MATCH   ", "32") if target == mine else paint("NO MATCH", "31")
         print(f"{status}  {demangled[f]:<{width}}  {len(target):>4} insns  {source}")
     for m in missing:
@@ -590,11 +592,12 @@ def main():
         print(__doc__)
         return
     readme = "--readme" in args
-    args = [a for a in args if a != "--readme"]
+    verbose = any(a in ("-v", "--verbose") for a in args)
+    args = [a for a in args if a not in ("--readme", "-v", "--verbose")]
     known = sorted(target_symbols())
     demangled = demangle(known)
     if not args:
-        ok, matched = check_all(demangled)
+        ok, matched = check_all(demangled, verbose=verbose)
         text = progress_text(matched)
         print(paint(f"Game progress: {text}", "1"))
         if readme and ok:
