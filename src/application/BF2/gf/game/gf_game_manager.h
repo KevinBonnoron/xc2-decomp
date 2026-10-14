@@ -23,6 +23,7 @@ public:
   static bool isEvent(bool isIncludeSequentialPlay);
   static OwnerBonus *getOwnerBonus();
   static bool isChangeNormalHomuraForce(u32 blade);
+  static u32 getMapZoneID();
 };
 
 } // namespace gf
