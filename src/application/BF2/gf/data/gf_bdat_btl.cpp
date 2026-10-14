@@ -1,6 +1,8 @@
 #include "gf/data/gf_bdat_btl.h"
 #include "bdat.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/gf_allocator.h"
 
 namespace gf {
 namespace _gfbbt {
@@ -6059,7 +6061,683 @@ const char *getVo_Field_FilterChangeFile(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbbt
 
+enum {
+  BDAT_BTL_ARTS_DR = 0x1,
+  BDAT_BTL_ARTS_BL = 0x2,
+  BDAT_BTL_ARTS_BL_SP = 0x4,
+  BDAT_BTL_BL_KIZUNA_LINK_SET = 0xc,
+  BDAT_BTL_BL_KIZUNA_LINK = 0xd,
+  BDAT_BTL_BL_PERSONALITY = 0xe,
+  BDAT_BTL_BUFF = 0x11,
+  BDAT_BTL_CLASS = 0x18,
+  BDAT_BTL_ENHANCE = 0x27,
+  BDAT_BTL_ENHANCE_EFF = 0x28,
+  BDAT_BTL_GROW = 0x2a,
+  BDAT_BTL_LV_REV = 0x2f,
+  BDAT_BTL_SKILL_DR = 0x36,
+  BDAT_BTL_SKILL_BL = 0x37,
+  BDAT_BTL_WPN_EN = 0x3d,
+  BDAT_BTL_TEST_SETTING = 0x3e,
+  BDAT_BTL_HANA_BASE = 0x3f,
+  BDAT_BTL_HANA_POWER = 0x40,
+  BDAT_BTL_HANA_CHIPSET = 0x41,
+  BDAT_VO_FIELD_FILTER = 0x4d,
+  BDAT_FLD_WILDCARD_DATA = 0x6a,
+};
+
+GfBdatBtl::GfBdatBtl()
+    : mArtsDr(nullptr), mArtsBl(nullptr), mArtsBlSp(nullptr), mGrow(nullptr), mLv_Rev(nullptr), mWpn_En(nullptr), mBTL_Class(nullptr),
+      mBTL_Enhance(nullptr), mBTL_EnhanceEff(nullptr), mBTL_Skill_Bl(nullptr), mBTL_Skill_Dr(nullptr), mBTL_Buff(nullptr),
+      mBTL_Bl_Personality(nullptr), mBTL_Bl_KizunaLink(nullptr), mBTL_Bl_KizunaLinkSet(nullptr), mBTL_TestSetting(nullptr), mBTL_HanaBase(nullptr),
+      mBTL_HanaPower(nullptr), mBTL_HanaChipset(nullptr), mWildcardData(nullptr), mVo_Field_Filter(nullptr) {
+  bdatRefresh();
+}
+
+GfBdatBtl::~GfBdatBtl() { destroyFP(); }
+
+void GfBdatBtl::destroyFP() {
+  if (mArtsDr != nullptr) {
+    delete mArtsDr;
+    mArtsDr = nullptr;
+  }
+
+  if (mArtsBl != nullptr) {
+    delete mArtsBl;
+    mArtsBl = nullptr;
+  }
+
+  if (mArtsBlSp != nullptr) {
+    delete mArtsBlSp;
+    mArtsBlSp = nullptr;
+  }
+
+  if (mGrow != nullptr) {
+    delete mGrow;
+    mGrow = nullptr;
+  }
+
+  if (mLv_Rev != nullptr) {
+    delete mLv_Rev;
+    mLv_Rev = nullptr;
+  }
+
+  if (mWpn_En != nullptr) {
+    delete mWpn_En;
+    mWpn_En = nullptr;
+  }
+
+  if (mBTL_Class != nullptr) {
+    delete mBTL_Class;
+    mBTL_Class = nullptr;
+  }
+
+  if (mBTL_Enhance != nullptr) {
+    delete mBTL_Enhance;
+    mBTL_Enhance = nullptr;
+  }
+
+  if (mBTL_EnhanceEff != nullptr) {
+    delete mBTL_EnhanceEff;
+    mBTL_EnhanceEff = nullptr;
+  }
+
+  if (mBTL_Skill_Bl != nullptr) {
+    delete mBTL_Skill_Bl;
+    mBTL_Skill_Bl = nullptr;
+  }
+
+  if (mBTL_Skill_Dr != nullptr) {
+    delete mBTL_Skill_Dr;
+    mBTL_Skill_Dr = nullptr;
+  }
+
+  if (mBTL_Buff != nullptr) {
+    delete mBTL_Buff;
+    mBTL_Buff = nullptr;
+  }
+
+  if (mBTL_Bl_Personality != nullptr) {
+    delete mBTL_Bl_Personality;
+    mBTL_Bl_Personality = nullptr;
+  }
+
+  if (mBTL_Bl_KizunaLink != nullptr) {
+    delete mBTL_Bl_KizunaLink;
+    mBTL_Bl_KizunaLink = nullptr;
+  }
+
+  if (mBTL_Bl_KizunaLinkSet != nullptr) {
+    delete mBTL_Bl_KizunaLinkSet;
+    mBTL_Bl_KizunaLinkSet = nullptr;
+  }
+
+  if (mBTL_TestSetting != nullptr) {
+    delete mBTL_TestSetting;
+    mBTL_TestSetting = nullptr;
+  }
+
+  if (mBTL_HanaBase != nullptr) {
+    delete mBTL_HanaBase;
+    mBTL_HanaBase = nullptr;
+  }
+
+  if (mBTL_HanaPower != nullptr) {
+    delete mBTL_HanaPower;
+    mBTL_HanaPower = nullptr;
+  }
+
+  if (mBTL_HanaChipset != nullptr) {
+    delete mBTL_HanaChipset;
+    mBTL_HanaChipset = nullptr;
+  }
+
+  if (mWildcardData != nullptr) {
+    delete mWildcardData;
+    mWildcardData = nullptr;
+  }
+
+  if (mVo_Field_Filter != nullptr) {
+    delete mVo_Field_Filter;
+    mVo_Field_Filter = nullptr;
+  }
+}
+
+#define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
+
+void GfBdatBtl::createFP() {
+  mArtsDr = NEW_BDAT_WRAPPER(BDAT_BTL_ARTS_DR);
+  mArtsBl = NEW_BDAT_WRAPPER(BDAT_BTL_ARTS_BL);
+  mArtsBlSp = NEW_BDAT_WRAPPER(BDAT_BTL_ARTS_BL_SP);
+  mGrow = NEW_BDAT_WRAPPER(BDAT_BTL_GROW);
+  mLv_Rev = NEW_BDAT_WRAPPER(BDAT_BTL_LV_REV);
+  mWpn_En = NEW_BDAT_WRAPPER(BDAT_BTL_WPN_EN);
+  mBTL_Class = NEW_BDAT_WRAPPER(BDAT_BTL_CLASS);
+  mBTL_Enhance = NEW_BDAT_WRAPPER(BDAT_BTL_ENHANCE);
+  mBTL_EnhanceEff = NEW_BDAT_WRAPPER(BDAT_BTL_ENHANCE_EFF);
+  mBTL_Skill_Bl = NEW_BDAT_WRAPPER(BDAT_BTL_SKILL_BL);
+  mBTL_Skill_Dr = NEW_BDAT_WRAPPER(BDAT_BTL_SKILL_DR);
+  mBTL_Buff = NEW_BDAT_WRAPPER(BDAT_BTL_BUFF);
+  mBTL_Bl_Personality = NEW_BDAT_WRAPPER(BDAT_BTL_BL_PERSONALITY);
+  mBTL_Bl_KizunaLink = NEW_BDAT_WRAPPER(BDAT_BTL_BL_KIZUNA_LINK);
+  mBTL_Bl_KizunaLinkSet = NEW_BDAT_WRAPPER(BDAT_BTL_BL_KIZUNA_LINK_SET);
+  mBTL_TestSetting = NEW_BDAT_WRAPPER(BDAT_BTL_TEST_SETTING);
+  mBTL_HanaBase = NEW_BDAT_WRAPPER(BDAT_BTL_HANA_BASE);
+  mBTL_HanaPower = NEW_BDAT_WRAPPER(BDAT_BTL_HANA_POWER);
+  mBTL_HanaChipset = NEW_BDAT_WRAPPER(BDAT_BTL_HANA_CHIPSET);
+  mWildcardData = NEW_BDAT_WRAPPER(BDAT_FLD_WILDCARD_DATA);
+  mVo_Field_Filter = NEW_BDAT_WRAPPER(BDAT_VO_FIELD_FILTER);
+}
+
+void GfBdatBtl::bdatRefresh() {
+  destroyFP();
+  createFP();
+  _gfbbt::initArtsDrName(*mArtsDr);
+  _gfbbt::initArtsDrDebugName(*mArtsDr);
+  _gfbbt::initArtsDrCaption(*mArtsDr);
+  _gfbbt::initArtsDrDriver(*mArtsDr);
+  _gfbbt::initArtsDrWpnType(*mArtsDr);
+  _gfbbt::initArtsDrActNo(*mArtsDr);
+  _gfbbt::initArtsDrArtsType(*mArtsDr);
+  _gfbbt::initArtsDrArtsBuff(*mArtsDr);
+  _gfbbt::initArtsDrAtrType(*mArtsDr);
+  _gfbbt::initArtsDrFlagNormal(*mArtsDr);
+  _gfbbt::initArtsDrFlagPierce(*mArtsDr);
+  _gfbbt::initArtsDrFlagNoRepelled(*mArtsDr);
+  _gfbbt::initArtsDrNextArts(*mArtsDr);
+  _gfbbt::initArtsDrTarget(*mArtsDr);
+  _gfbbt::initArtsDrDistance(*mArtsDr);
+  _gfbbt::initArtsDrRangeType(*mArtsDr);
+  _gfbbt::initArtsDrRadius(*mArtsDr);
+  _gfbbt::initArtsDrLength(*mArtsDr);
+  _gfbbt::initArtsDrHate(*mArtsDr);
+  _gfbbt::initArtsDrHitRevise(*mArtsDr);
+  _gfbbt::initArtsDrCriRevise(*mArtsDr);
+  _gfbbt::initArtsDrBulletID(*mArtsDr);
+  _gfbbt::initArtsDrBulletNum(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm1(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm2(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm3(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm4(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm5(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm6(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm7(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm8(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm9(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm10(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm11(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm12(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm13(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm14(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm15(*mArtsDr);
+  _gfbbt::initArtsDrHitFrm16(*mArtsDr);
+  _gfbbt::initArtsDrEfp1(*mArtsDr);
+  _gfbbt::initArtsDrEfp2(*mArtsDr);
+  _gfbbt::initArtsDrEfp3(*mArtsDr);
+  _gfbbt::initArtsDrEfp4(*mArtsDr);
+  _gfbbt::initArtsDrEfp5(*mArtsDr);
+  _gfbbt::initArtsDrEfp6(*mArtsDr);
+  _gfbbt::initArtsDrEfp7(*mArtsDr);
+  _gfbbt::initArtsDrEfp8(*mArtsDr);
+  _gfbbt::initArtsDrEfp9(*mArtsDr);
+  _gfbbt::initArtsDrEfp10(*mArtsDr);
+  _gfbbt::initArtsDrEfp11(*mArtsDr);
+  _gfbbt::initArtsDrEfp12(*mArtsDr);
+  _gfbbt::initArtsDrEfp13(*mArtsDr);
+  _gfbbt::initArtsDrEfp14(*mArtsDr);
+  _gfbbt::initArtsDrEfp15(*mArtsDr);
+  _gfbbt::initArtsDrEfp16(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID1(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID2(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID3(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID4(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID5(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID6(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID7(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID8(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID9(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID10(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID11(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID12(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID13(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID14(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID15(*mArtsDr);
+  _gfbbt::initArtsDrHitDirID16(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt1(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt2(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt3(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt4(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt5(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt6(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt7(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt8(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt9(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt10(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt11(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt12(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt13(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt14(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt15(*mArtsDr);
+  _gfbbt::initArtsDrDmgRt16(*mArtsDr);
+  _gfbbt::initArtsDrReAct1(*mArtsDr);
+  _gfbbt::initArtsDrReAct2(*mArtsDr);
+  _gfbbt::initArtsDrReAct3(*mArtsDr);
+  _gfbbt::initArtsDrReAct4(*mArtsDr);
+  _gfbbt::initArtsDrReAct5(*mArtsDr);
+  _gfbbt::initArtsDrReAct6(*mArtsDr);
+  _gfbbt::initArtsDrReAct7(*mArtsDr);
+  _gfbbt::initArtsDrReAct8(*mArtsDr);
+  _gfbbt::initArtsDrReAct9(*mArtsDr);
+  _gfbbt::initArtsDrReAct10(*mArtsDr);
+  _gfbbt::initArtsDrReAct11(*mArtsDr);
+  _gfbbt::initArtsDrReAct12(*mArtsDr);
+  _gfbbt::initArtsDrReAct13(*mArtsDr);
+  _gfbbt::initArtsDrReAct14(*mArtsDr);
+  _gfbbt::initArtsDrReAct15(*mArtsDr);
+  _gfbbt::initArtsDrReAct16(*mArtsDr);
+  _gfbbt::initArtsDrMoveCancelFrm(*mArtsDr);
+  _gfbbt::initArtsDrDmgMgn1(*mArtsDr);
+  _gfbbt::initArtsDrDmgMgn2(*mArtsDr);
+  _gfbbt::initArtsDrDmgMgn3(*mArtsDr);
+  _gfbbt::initArtsDrDmgMgn4(*mArtsDr);
+  _gfbbt::initArtsDrDmgMgn5(*mArtsDr);
+  _gfbbt::initArtsDrDmgMgn6(*mArtsDr);
+  _gfbbt::initArtsDrRecast1(*mArtsDr);
+  _gfbbt::initArtsDrRecast2(*mArtsDr);
+  _gfbbt::initArtsDrRecast3(*mArtsDr);
+  _gfbbt::initArtsDrRecast4(*mArtsDr);
+  _gfbbt::initArtsDrRecast5(*mArtsDr);
+  _gfbbt::initArtsDrRecast6(*mArtsDr);
+  _gfbbt::initArtsDrAtrNum(*mArtsDr);
+  _gfbbt::initArtsDrEnhance1(*mArtsDr);
+  _gfbbt::initArtsDrEnhance2(*mArtsDr);
+  _gfbbt::initArtsDrEnhance3(*mArtsDr);
+  _gfbbt::initArtsDrEnhance4(*mArtsDr);
+  _gfbbt::initArtsDrEnhance5(*mArtsDr);
+  _gfbbt::initArtsDrEnhance6(*mArtsDr);
+  _gfbbt::initArtsDrReleaseLv1(*mArtsDr);
+  _gfbbt::initArtsDrReleaseLv2(*mArtsDr);
+  _gfbbt::initArtsDrReleaseLv3(*mArtsDr);
+  _gfbbt::initArtsDrReleaseLv4(*mArtsDr);
+  _gfbbt::initArtsDrReleaseLv5(*mArtsDr);
+  _gfbbt::initArtsDrNeedWP2(*mArtsDr);
+  _gfbbt::initArtsDrNeedWP3(*mArtsDr);
+  _gfbbt::initArtsDrNeedWP4(*mArtsDr);
+  _gfbbt::initArtsDrNeedWP5(*mArtsDr);
+  _gfbbt::initArtsDrUI(*mArtsDr);
+  _gfbbt::initArtsDrPriority(*mArtsDr);
+  _gfbbt::initArtsBlName(*mArtsBl);
+  _gfbbt::initArtsBlDebugName(*mArtsBl);
+  _gfbbt::initArtsBlCaption(*mArtsBl);
+  _gfbbt::initArtsBlWpnType(*mArtsBl);
+  _gfbbt::initArtsBlCmnBlType(*mArtsBl);
+  _gfbbt::initArtsBlSpLv(*mArtsBl);
+  _gfbbt::initArtsBlActNo(*mArtsBl);
+  _gfbbt::initArtsBlArtsType(*mArtsBl);
+  _gfbbt::initArtsBlArtsBuff(*mArtsBl);
+  _gfbbt::initArtsBlFlagcommon(*mArtsBl);
+  _gfbbt::initArtsBlFlagPierce(*mArtsBl);
+  _gfbbt::initArtsBlTarget(*mArtsBl);
+  _gfbbt::initArtsBlDistance(*mArtsBl);
+  _gfbbt::initArtsBlRangeType(*mArtsBl);
+  _gfbbt::initArtsBlRadius(*mArtsBl);
+  _gfbbt::initArtsBlLength(*mArtsBl);
+  _gfbbt::initArtsBlAtr(*mArtsBl);
+  _gfbbt::initArtsBlHate(*mArtsBl);
+  _gfbbt::initArtsBlHitRevise(*mArtsBl);
+  _gfbbt::initArtsBlCriRevise(*mArtsBl);
+  _gfbbt::initArtsBlBulletID(*mArtsBl);
+  _gfbbt::initArtsBlBulletNum(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm1(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm2(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm3(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm4(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm5(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm6(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm7(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm8(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm9(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm10(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm11(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm12(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm13(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm14(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm15(*mArtsBl);
+  _gfbbt::initArtsBlHitFrm16(*mArtsBl);
+  _gfbbt::initArtsBlEfp1(*mArtsBl);
+  _gfbbt::initArtsBlEfp2(*mArtsBl);
+  _gfbbt::initArtsBlEfp3(*mArtsBl);
+  _gfbbt::initArtsBlEfp4(*mArtsBl);
+  _gfbbt::initArtsBlEfp5(*mArtsBl);
+  _gfbbt::initArtsBlEfp6(*mArtsBl);
+  _gfbbt::initArtsBlEfp7(*mArtsBl);
+  _gfbbt::initArtsBlEfp8(*mArtsBl);
+  _gfbbt::initArtsBlEfp9(*mArtsBl);
+  _gfbbt::initArtsBlEfp10(*mArtsBl);
+  _gfbbt::initArtsBlEfp11(*mArtsBl);
+  _gfbbt::initArtsBlEfp12(*mArtsBl);
+  _gfbbt::initArtsBlEfp13(*mArtsBl);
+  _gfbbt::initArtsBlEfp14(*mArtsBl);
+  _gfbbt::initArtsBlEfp15(*mArtsBl);
+  _gfbbt::initArtsBlEfp16(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID1(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID2(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID3(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID4(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID5(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID6(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID7(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID8(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID9(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID10(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID11(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID12(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID13(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID14(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID15(*mArtsBl);
+  _gfbbt::initArtsBlHitDirID16(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt1(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt2(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt3(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt4(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt5(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt6(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt7(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt8(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt9(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt10(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt11(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt12(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt13(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt14(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt15(*mArtsBl);
+  _gfbbt::initArtsBlDmgRt16(*mArtsBl);
+  _gfbbt::initArtsBlReAct1(*mArtsBl);
+  _gfbbt::initArtsBlReAct2(*mArtsBl);
+  _gfbbt::initArtsBlReAct3(*mArtsBl);
+  _gfbbt::initArtsBlReAct4(*mArtsBl);
+  _gfbbt::initArtsBlReAct5(*mArtsBl);
+  _gfbbt::initArtsBlReAct6(*mArtsBl);
+  _gfbbt::initArtsBlReAct7(*mArtsBl);
+  _gfbbt::initArtsBlReAct8(*mArtsBl);
+  _gfbbt::initArtsBlReAct9(*mArtsBl);
+  _gfbbt::initArtsBlReAct10(*mArtsBl);
+  _gfbbt::initArtsBlReAct11(*mArtsBl);
+  _gfbbt::initArtsBlReAct12(*mArtsBl);
+  _gfbbt::initArtsBlReAct13(*mArtsBl);
+  _gfbbt::initArtsBlReAct14(*mArtsBl);
+  _gfbbt::initArtsBlReAct15(*mArtsBl);
+  _gfbbt::initArtsBlReAct16(*mArtsBl);
+  _gfbbt::initArtsBlDmgMgn1(*mArtsBl);
+  _gfbbt::initArtsBlDmgMgn2(*mArtsBl);
+  _gfbbt::initArtsBlDmgMgn3(*mArtsBl);
+  _gfbbt::initArtsBlDmgMgn4(*mArtsBl);
+  _gfbbt::initArtsBlDmgMgn5(*mArtsBl);
+  _gfbbt::initArtsBlDmgMgn6(*mArtsBl);
+  _gfbbt::initArtsBlAtrNum(*mArtsBl);
+  _gfbbt::initArtsBlEnhance1(*mArtsBl);
+  _gfbbt::initArtsBlEnhance2(*mArtsBl);
+  _gfbbt::initArtsBlEnhance3(*mArtsBl);
+  _gfbbt::initArtsBlEnhance4(*mArtsBl);
+  _gfbbt::initArtsBlEnhance5(*mArtsBl);
+  _gfbbt::initArtsBlEnhance6(*mArtsBl);
+  _gfbbt::initArtsBlBtnType(*mArtsBl);
+  _gfbbt::initArtsBlBtnChal1(*mArtsBl);
+  _gfbbt::initArtsBlUI(*mArtsBl);
+  _gfbbt::initArtsBlSpName(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDebugName(*mArtsBlSp);
+  _gfbbt::initArtsBlSpCaption(*mArtsBlSp);
+  _gfbbt::initArtsBlSpWpnType(*mArtsBlSp);
+  _gfbbt::initArtsBlSpCmnBlType(*mArtsBlSp);
+  _gfbbt::initArtsBlSpActNoDr(*mArtsBlSp);
+  _gfbbt::initArtsBlSpActNoBl(*mArtsBlSp);
+  _gfbbt::initArtsBlSpActNoBl2(*mArtsBlSp);
+  _gfbbt::initArtsBlSpBuddyDr(*mArtsBlSp);
+  _gfbbt::initArtsBlSpAddBl(*mArtsBlSp);
+  _gfbbt::initArtsBlSpActType(*mArtsBlSp);
+  _gfbbt::initArtsBlSpPC01(*mArtsBlSp);
+  _gfbbt::initArtsBlSpPC02(*mArtsBlSp);
+  _gfbbt::initArtsBlSpPC03(*mArtsBlSp);
+  _gfbbt::initArtsBlSpPC06(*mArtsBlSp);
+  _gfbbt::initArtsBlSpArtsType(*mArtsBlSp);
+  _gfbbt::initArtsBlSpArtsBuff(*mArtsBlSp);
+  _gfbbt::initArtsBlSpFlagPierce(*mArtsBlSp);
+  _gfbbt::initArtsBlSpFlagNoMove(*mArtsBlSp);
+  _gfbbt::initArtsBlSpTarget(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDistance(*mArtsBlSp);
+  _gfbbt::initArtsBlSpRangeType(*mArtsBlSp);
+  _gfbbt::initArtsBlSpRadius(*mArtsBlSp);
+  _gfbbt::initArtsBlSpLength(*mArtsBlSp);
+  _gfbbt::initArtsBlSpAtr(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHate(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitRevise(*mArtsBlSp);
+  _gfbbt::initArtsBlSpCriRevise(*mArtsBlSp);
+  _gfbbt::initArtsBlSpBulletID(*mArtsBlSp);
+  _gfbbt::initArtsBlSpBulletEffID(*mArtsBlSp);
+  _gfbbt::initArtsBlSpBulletNum(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm1(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm2(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm3(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm4(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm5(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm6(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm7(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm8(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm9(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm10(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm11(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm12(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm13(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm14(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm15(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitFrm16(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp1(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp2(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp3(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp4(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp5(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp6(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp7(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp8(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp9(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp10(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp11(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp12(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp13(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp14(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp15(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEfp16(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID1(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID2(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID3(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID4(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID5(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID6(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID7(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID8(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID9(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID10(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID11(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID12(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID13(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID14(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID15(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitDirID16(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt1(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt2(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt3(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt4(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt5(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt6(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt7(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt8(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt9(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt10(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt11(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt12(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt13(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt14(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt15(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgRt16(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct1(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct2(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct3(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct4(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct5(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct6(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct7(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct8(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct9(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct10(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct11(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct12(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct13(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct14(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct15(*mArtsBlSp);
+  _gfbbt::initArtsBlSpReAct16(*mArtsBlSp);
+  _gfbbt::initArtsBlSpDmgMgn(*mArtsBlSp);
+  _gfbbt::initArtsBlSpRecast(*mArtsBlSp);
+  _gfbbt::initArtsBlSpAtrNum(*mArtsBlSp);
+  _gfbbt::initArtsBlSpEnhance(*mArtsBlSp);
+  _gfbbt::initArtsBlSpBtnType(*mArtsBlSp);
+  _gfbbt::initArtsBlSpBtnChal1(*mArtsBlSp);
+  _gfbbt::initArtsBlSpCamera1(*mArtsBlSp);
+  _gfbbt::initArtsBlSpCamera2(*mArtsBlSp);
+  _gfbbt::initArtsBlSpCamera3(*mArtsBlSp);
+  _gfbbt::initArtsBlSpCameraCT1(*mArtsBlSp);
+  _gfbbt::initArtsBlSpCameraCT2(*mArtsBlSp);
+  _gfbbt::initArtsBlSpCameraEndf(*mArtsBlSp);
+  _gfbbt::initArtsBlSpHitEff(*mArtsBlSp);
+  _gfbbt::initGrowLevelExp(*mGrow);
+  _gfbbt::initGrowEnemyExp(*mGrow);
+  _gfbbt::initGrowEnemyWP(*mGrow);
+  _gfbbt::initGrowEnemySP(*mGrow);
+  _gfbbt::initGrowEnemyGold(*mGrow);
+  _gfbbt::initGrowGoldDivide(*mGrow);
+  _gfbbt::initLv_RevExpRevHigh(*mLv_Rev);
+  _gfbbt::initLv_RevExpRevLow(*mLv_Rev);
+  _gfbbt::initLv_RevDamageRevHigh(*mLv_Rev);
+  _gfbbt::initLv_RevDamageRevLow(*mLv_Rev);
+  _gfbbt::initWpn_EnRscR(*mWpn_En);
+  _gfbbt::initWpn_EnRscL(*mWpn_En);
+  _gfbbt::initWpn_EnTypeRange(*mWpn_En);
+  _gfbbt::initWpn_EnDamage(*mWpn_En);
+  _gfbbt::initWpn_EnStability(*mWpn_En);
+  _gfbbt::initBTL_ClassName(*mBTL_Class);
+  _gfbbt::initBTL_ClassRole1(*mBTL_Class);
+  _gfbbt::initBTL_ClassRole2(*mBTL_Class);
+  _gfbbt::initBTL_ClassRole3(*mBTL_Class);
+  _gfbbt::initBTL_ClassDamageDown(*mBTL_Class);
+  _gfbbt::initBTL_ClassDamageUP(*mBTL_Class);
+  _gfbbt::initBTL_ClassHealUP(*mBTL_Class);
+  _gfbbt::initBTL_ClassAutoHate(*mBTL_Class);
+  _gfbbt::initBTL_ClassArtsHate(*mBTL_Class);
+  _gfbbt::initBTL_EnhanceEnhanceEffect(*mBTL_Enhance);
+  _gfbbt::initBTL_EnhanceParam1(*mBTL_Enhance);
+  _gfbbt::initBTL_EnhanceParam2(*mBTL_Enhance);
+  _gfbbt::initBTL_EnhanceCaption(*mBTL_Enhance);
+  _gfbbt::initBTL_EnhanceEffCategory(*mBTL_EnhanceEff);
+  _gfbbt::initBTL_EnhanceEffIcon(*mBTL_EnhanceEff);
+  _gfbbt::initBTL_EnhanceEffFlagCondition(*mBTL_EnhanceEff);
+  _gfbbt::initBTL_EnhanceEffFlagUI(*mBTL_EnhanceEff);
+  _gfbbt::initBTL_EnhanceEffParam(*mBTL_EnhanceEff);
+  _gfbbt::initBTL_EnhanceEffName(*mBTL_EnhanceEff);
+  _gfbbt::initBTL_EnhanceEffDirect(*mBTL_EnhanceEff);
+  _gfbbt::initBTL_Skill_BlName(*mBTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlDebugName(*mBTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlEnhance1(*mBTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlEnhance2(*mBTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlEnhance3(*mBTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlEnhance4(*mBTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlEnhance5(*mBTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlFlagcommon(*mBTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlTank(*mBTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlAttacker(*mBTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlHealer(*mBTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlUI(*mBTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_DrName(*mBTL_Skill_Dr);
+  _gfbbt::initBTL_Skill_DrDebugName(*mBTL_Skill_Dr);
+  _gfbbt::initBTL_Skill_DrEnhance(*mBTL_Skill_Dr);
+  _gfbbt::initBTL_Skill_DrUI(*mBTL_Skill_Dr);
+  _gfbbt::initBTL_BuffName(*mBTL_Buff);
+  _gfbbt::initBTL_BuffDebugName(*mBTL_Buff);
+  _gfbbt::initBTL_BuffCaption(*mBTL_Buff);
+  _gfbbt::initBTL_BuffBaseNum(*mBTL_Buff);
+  _gfbbt::initBTL_BuffBaseTime(*mBTL_Buff);
+  _gfbbt::initBTL_BuffBaseRecast(*mBTL_Buff);
+  _gfbbt::initBTL_BuffBaseProb(*mBTL_Buff);
+  _gfbbt::initBTL_BuffInterval(*mBTL_Buff);
+  _gfbbt::initBTL_BuffEffect(*mBTL_Buff);
+  _gfbbt::initBTL_BuffIcon(*mBTL_Buff);
+  _gfbbt::initBTL_Bl_PersonalityFlagcommon(*mBTL_Bl_Personality);
+  _gfbbt::initBTL_Bl_PersonalityKizunaBase(*mBTL_Bl_Personality);
+  _gfbbt::initBTL_Bl_PersonalityVoiceID(*mBTL_Bl_Personality);
+  _gfbbt::initBTL_Bl_KizunaLinkLinkNum(*mBTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkDeadNum(*mBTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkAppStNum(*mBTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkAppEndNum(*mBTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkAppCond(*mBTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkAppCondNum(*mBTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkReJudgef(*mBTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkSpActType(*mBTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkSpActNum(*mBTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkSpActf(*mBTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkStandDir(*mBTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkSetKizunaLink1(*mBTL_Bl_KizunaLinkSet);
+  _gfbbt::initBTL_Bl_KizunaLinkSetKizunaLink2(*mBTL_Bl_KizunaLinkSet);
+  _gfbbt::initBTL_Bl_KizunaLinkSetLinkChType(*mBTL_Bl_KizunaLinkSet);
+  _gfbbt::initBTL_Bl_KizunaLinkSetLinkChNum(*mBTL_Bl_KizunaLinkSet);
+  _gfbbt::initBTL_Bl_KizunaLinkSetVoiceID(*mBTL_Bl_KizunaLinkSet);
+  _gfbbt::initBTL_TestSettingDr1(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr1Lv(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr1Bl1(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr1Bl2(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr1Bl3(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr2(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr2Lv(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr2Bl1(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr2Bl2(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr2Bl3(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr3(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr3Lv(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr3Bl1(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr3Bl2(*mBTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr3Bl3(*mBTL_TestSetting);
+  _gfbbt::initBTL_HanaBaseNCondNum(*mBTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseECondNum(*mBTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseNArtsNum(*mBTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseCircuit1Num(*mBTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseCircuit2Num(*mBTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseCircuit3Num(*mBTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseCircuit4Num(*mBTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseCircuit5Num(*mBTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseCircuit6Num(*mBTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseUI(*mBTL_HanaBase);
+  _gfbbt::initBTL_HanaPowerPowerNum1(*mBTL_HanaPower);
+  _gfbbt::initBTL_HanaPowerPowerNum2(*mBTL_HanaPower);
+  _gfbbt::initBTL_HanaPowerPowerNum3(*mBTL_HanaPower);
+  _gfbbt::initBTL_HanaPowerEtherNum1(*mBTL_HanaPower);
+  _gfbbt::initBTL_HanaPowerEtherNum2(*mBTL_HanaPower);
+  _gfbbt::initBTL_HanaPowerEtherNum3(*mBTL_HanaPower);
+  _gfbbt::initBTL_HanaChipsetRoleParts(*mBTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetAtrParts(*mBTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetNArtsParts1(*mBTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetNArtsParts2(*mBTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetNArtsParts3(*mBTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetNCondParts1(*mBTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetNCondParts2(*mBTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetNCondParts3(*mBTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetUI(*mBTL_HanaChipset);
+  _gfbbt::initWildcardDatavalueF4(*mWildcardData);
+  _gfbbt::initWildcardDatavalueU2(*mWildcardData);
+  _gfbbt::initVo_Field_FilterTargetFile(*mVo_Field_Filter);
+  _gfbbt::initVo_Field_FilterCondition(*mVo_Field_Filter);
+  _gfbbt::initVo_Field_FilterChangeFile(*mVo_Field_Filter);
+}
+
 u32 GfBdatBtl::getArtsDrStart() const { return Bdat::getIdTop(mArtsDr->data); }
+
+u32 GfBdatBtl::getArtsDrEnd() const { return Bdat::getIdTop(mArtsDr->data) + Bdat::getIdCount(mArtsDr->data); }
 
 u32 GfBdatBtl::getArtsDrName(u32 id) const { return _gfbbt::getArtsDrName(*mArtsDr, id); }
 
@@ -6329,7 +7007,159 @@ u32 GfBdatBtl::getArtsDrUI(u32 id) const { return _gfbbt::getArtsDrUI(*mArtsDr, 
 
 u32 GfBdatBtl::getArtsDrPriority(u32 id) const { return _gfbbt::getArtsDrPriority(*mArtsDr, id); }
 
+u32 GfBdatBtl::getArtsDrHitFrm(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsDrHitFrm1,
+                                                              _gfbbt::getArtsDrHitFrm2,
+                                                              _gfbbt::getArtsDrHitFrm3,
+                                                              _gfbbt::getArtsDrHitFrm4,
+                                                              _gfbbt::getArtsDrHitFrm5,
+                                                              _gfbbt::getArtsDrHitFrm6,
+                                                              _gfbbt::getArtsDrHitFrm7,
+                                                              _gfbbt::getArtsDrHitFrm8,
+                                                              _gfbbt::getArtsDrHitFrm9,
+                                                              _gfbbt::getArtsDrHitFrm10,
+                                                              _gfbbt::getArtsDrHitFrm11,
+                                                              _gfbbt::getArtsDrHitFrm12,
+                                                              _gfbbt::getArtsDrHitFrm13,
+                                                              _gfbbt::getArtsDrHitFrm14,
+                                                              _gfbbt::getArtsDrHitFrm15,
+                                                              _gfbbt::getArtsDrHitFrm16};
+  return getters[index](*mArtsDr, id);
+}
+
+u32 GfBdatBtl::getArtsDrEfp(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsDrEfp1,
+                                                              _gfbbt::getArtsDrEfp2,
+                                                              _gfbbt::getArtsDrEfp3,
+                                                              _gfbbt::getArtsDrEfp4,
+                                                              _gfbbt::getArtsDrEfp5,
+                                                              _gfbbt::getArtsDrEfp6,
+                                                              _gfbbt::getArtsDrEfp7,
+                                                              _gfbbt::getArtsDrEfp8,
+                                                              _gfbbt::getArtsDrEfp9,
+                                                              _gfbbt::getArtsDrEfp10,
+                                                              _gfbbt::getArtsDrEfp11,
+                                                              _gfbbt::getArtsDrEfp12,
+                                                              _gfbbt::getArtsDrEfp13,
+                                                              _gfbbt::getArtsDrEfp14,
+                                                              _gfbbt::getArtsDrEfp15,
+                                                              _gfbbt::getArtsDrEfp16};
+  return getters[index](*mArtsDr, id);
+}
+
+u32 GfBdatBtl::getArtsDrHitDirID(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsDrHitDirID1,
+                                                              _gfbbt::getArtsDrHitDirID2,
+                                                              _gfbbt::getArtsDrHitDirID3,
+                                                              _gfbbt::getArtsDrHitDirID4,
+                                                              _gfbbt::getArtsDrHitDirID5,
+                                                              _gfbbt::getArtsDrHitDirID6,
+                                                              _gfbbt::getArtsDrHitDirID7,
+                                                              _gfbbt::getArtsDrHitDirID8,
+                                                              _gfbbt::getArtsDrHitDirID9,
+                                                              _gfbbt::getArtsDrHitDirID10,
+                                                              _gfbbt::getArtsDrHitDirID11,
+                                                              _gfbbt::getArtsDrHitDirID12,
+                                                              _gfbbt::getArtsDrHitDirID13,
+                                                              _gfbbt::getArtsDrHitDirID14,
+                                                              _gfbbt::getArtsDrHitDirID15,
+                                                              _gfbbt::getArtsDrHitDirID16};
+  return getters[index](*mArtsDr, id);
+}
+
+u32 GfBdatBtl::getArtsDrDmgRt(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsDrDmgRt1,
+                                                              _gfbbt::getArtsDrDmgRt2,
+                                                              _gfbbt::getArtsDrDmgRt3,
+                                                              _gfbbt::getArtsDrDmgRt4,
+                                                              _gfbbt::getArtsDrDmgRt5,
+                                                              _gfbbt::getArtsDrDmgRt6,
+                                                              _gfbbt::getArtsDrDmgRt7,
+                                                              _gfbbt::getArtsDrDmgRt8,
+                                                              _gfbbt::getArtsDrDmgRt9,
+                                                              _gfbbt::getArtsDrDmgRt10,
+                                                              _gfbbt::getArtsDrDmgRt11,
+                                                              _gfbbt::getArtsDrDmgRt12,
+                                                              _gfbbt::getArtsDrDmgRt13,
+                                                              _gfbbt::getArtsDrDmgRt14,
+                                                              _gfbbt::getArtsDrDmgRt15,
+                                                              _gfbbt::getArtsDrDmgRt16};
+  return getters[index](*mArtsDr, id);
+}
+
+u32 GfBdatBtl::getArtsDrReAct(u32 arts, u32 level) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsDrReAct1,
+                                                              _gfbbt::getArtsDrReAct2,
+                                                              _gfbbt::getArtsDrReAct3,
+                                                              _gfbbt::getArtsDrReAct4,
+                                                              _gfbbt::getArtsDrReAct5,
+                                                              _gfbbt::getArtsDrReAct6,
+                                                              _gfbbt::getArtsDrReAct7,
+                                                              _gfbbt::getArtsDrReAct8,
+                                                              _gfbbt::getArtsDrReAct9,
+                                                              _gfbbt::getArtsDrReAct10,
+                                                              _gfbbt::getArtsDrReAct11,
+                                                              _gfbbt::getArtsDrReAct12,
+                                                              _gfbbt::getArtsDrReAct13,
+                                                              _gfbbt::getArtsDrReAct14,
+                                                              _gfbbt::getArtsDrReAct15,
+                                                              _gfbbt::getArtsDrReAct16};
+  return getters[level](*mArtsDr, arts);
+}
+
+u32 GfBdatBtl::getArtsDrDmgMgn(u32 arts, u32 level) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsDrDmgMgn1,
+                                                              _gfbbt::getArtsDrDmgMgn2,
+                                                              _gfbbt::getArtsDrDmgMgn3,
+                                                              _gfbbt::getArtsDrDmgMgn4,
+                                                              _gfbbt::getArtsDrDmgMgn5,
+                                                              _gfbbt::getArtsDrDmgMgn6};
+  return getters[level](*mArtsDr, arts);
+}
+
+u32 GfBdatBtl::getArtsDrRecast(u32 arts, u32 level) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsDrRecast1,
+                                                              _gfbbt::getArtsDrRecast2,
+                                                              _gfbbt::getArtsDrRecast3,
+                                                              _gfbbt::getArtsDrRecast4,
+                                                              _gfbbt::getArtsDrRecast5,
+                                                              _gfbbt::getArtsDrRecast6};
+  return getters[level](*mArtsDr, arts);
+}
+
+u32 GfBdatBtl::getArtsDrEnhance(u32 arts, u32 level) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsDrEnhance1,
+                                                              _gfbbt::getArtsDrEnhance2,
+                                                              _gfbbt::getArtsDrEnhance3,
+                                                              _gfbbt::getArtsDrEnhance4,
+                                                              _gfbbt::getArtsDrEnhance5,
+                                                              _gfbbt::getArtsDrEnhance6};
+  return getters[level](*mArtsDr, arts);
+}
+
+u32 GfBdatBtl::getArtsDrReleaseLv(u32 arts, u32 level) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsDrReleaseLv1,
+                                                              _gfbbt::getArtsDrReleaseLv1,
+                                                              _gfbbt::getArtsDrReleaseLv2,
+                                                              _gfbbt::getArtsDrReleaseLv3,
+                                                              _gfbbt::getArtsDrReleaseLv4,
+                                                              _gfbbt::getArtsDrReleaseLv5};
+  return getters[level](*mArtsDr, arts);
+}
+
+u32 GfBdatBtl::getArtsDrNeedWP(u32 arts, u32 level) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsDrNeedWP2,
+                                                              _gfbbt::getArtsDrNeedWP2,
+                                                              _gfbbt::getArtsDrNeedWP2,
+                                                              _gfbbt::getArtsDrNeedWP3,
+                                                              _gfbbt::getArtsDrNeedWP4,
+                                                              _gfbbt::getArtsDrNeedWP5};
+  return getters[level](*mArtsDr, arts);
+}
+
 u32 GfBdatBtl::getArtsBlStart() const { return Bdat::getIdTop(mArtsBl->data); }
+
+u32 GfBdatBtl::getArtsBlEnd() const { return Bdat::getIdTop(mArtsBl->data) + Bdat::getIdCount(mArtsBl->data); }
 
 u32 GfBdatBtl::getArtsBlName(u32 id) const { return _gfbbt::getArtsBlName(*mArtsBl, id); }
 
@@ -6567,7 +7397,129 @@ u32 GfBdatBtl::getArtsBlBtnChal1(u32 id) const { return _gfbbt::getArtsBlBtnChal
 
 u32 GfBdatBtl::getArtsBlUI(u32 id) const { return _gfbbt::getArtsBlUI(*mArtsBl, id); }
 
+u32 GfBdatBtl::getArtsBlHitFrm(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlHitFrm1,
+                                                              _gfbbt::getArtsBlHitFrm2,
+                                                              _gfbbt::getArtsBlHitFrm3,
+                                                              _gfbbt::getArtsBlHitFrm4,
+                                                              _gfbbt::getArtsBlHitFrm5,
+                                                              _gfbbt::getArtsBlHitFrm6,
+                                                              _gfbbt::getArtsBlHitFrm7,
+                                                              _gfbbt::getArtsBlHitFrm8,
+                                                              _gfbbt::getArtsBlHitFrm9,
+                                                              _gfbbt::getArtsBlHitFrm10,
+                                                              _gfbbt::getArtsBlHitFrm11,
+                                                              _gfbbt::getArtsBlHitFrm12,
+                                                              _gfbbt::getArtsBlHitFrm13,
+                                                              _gfbbt::getArtsBlHitFrm14,
+                                                              _gfbbt::getArtsBlHitFrm15,
+                                                              _gfbbt::getArtsBlHitFrm16};
+  return getters[index](*mArtsBl, id);
+}
+
+u32 GfBdatBtl::getArtsBlEfp(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlEfp1,
+                                                              _gfbbt::getArtsBlEfp2,
+                                                              _gfbbt::getArtsBlEfp3,
+                                                              _gfbbt::getArtsBlEfp4,
+                                                              _gfbbt::getArtsBlEfp5,
+                                                              _gfbbt::getArtsBlEfp6,
+                                                              _gfbbt::getArtsBlEfp7,
+                                                              _gfbbt::getArtsBlEfp8,
+                                                              _gfbbt::getArtsBlEfp9,
+                                                              _gfbbt::getArtsBlEfp10,
+                                                              _gfbbt::getArtsBlEfp11,
+                                                              _gfbbt::getArtsBlEfp12,
+                                                              _gfbbt::getArtsBlEfp13,
+                                                              _gfbbt::getArtsBlEfp14,
+                                                              _gfbbt::getArtsBlEfp15,
+                                                              _gfbbt::getArtsBlEfp16};
+  return getters[index](*mArtsBl, id);
+}
+
+u32 GfBdatBtl::getArtsBlHitDirID(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlHitDirID1,
+                                                              _gfbbt::getArtsBlHitDirID2,
+                                                              _gfbbt::getArtsBlHitDirID3,
+                                                              _gfbbt::getArtsBlHitDirID4,
+                                                              _gfbbt::getArtsBlHitDirID5,
+                                                              _gfbbt::getArtsBlHitDirID6,
+                                                              _gfbbt::getArtsBlHitDirID7,
+                                                              _gfbbt::getArtsBlHitDirID8,
+                                                              _gfbbt::getArtsBlHitDirID9,
+                                                              _gfbbt::getArtsBlHitDirID10,
+                                                              _gfbbt::getArtsBlHitDirID11,
+                                                              _gfbbt::getArtsBlHitDirID12,
+                                                              _gfbbt::getArtsBlHitDirID13,
+                                                              _gfbbt::getArtsBlHitDirID14,
+                                                              _gfbbt::getArtsBlHitDirID15,
+                                                              _gfbbt::getArtsBlHitDirID16};
+  return getters[index](*mArtsBl, id);
+}
+
+u32 GfBdatBtl::getArtsBlDmgRt(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlDmgRt1,
+                                                              _gfbbt::getArtsBlDmgRt2,
+                                                              _gfbbt::getArtsBlDmgRt3,
+                                                              _gfbbt::getArtsBlDmgRt4,
+                                                              _gfbbt::getArtsBlDmgRt5,
+                                                              _gfbbt::getArtsBlDmgRt6,
+                                                              _gfbbt::getArtsBlDmgRt7,
+                                                              _gfbbt::getArtsBlDmgRt8,
+                                                              _gfbbt::getArtsBlDmgRt9,
+                                                              _gfbbt::getArtsBlDmgRt10,
+                                                              _gfbbt::getArtsBlDmgRt11,
+                                                              _gfbbt::getArtsBlDmgRt12,
+                                                              _gfbbt::getArtsBlDmgRt13,
+                                                              _gfbbt::getArtsBlDmgRt14,
+                                                              _gfbbt::getArtsBlDmgRt15,
+                                                              _gfbbt::getArtsBlDmgRt16};
+  return getters[index](*mArtsBl, id);
+}
+
+u32 GfBdatBtl::getArtsBlReAct(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlReAct1,
+                                                              _gfbbt::getArtsBlReAct2,
+                                                              _gfbbt::getArtsBlReAct3,
+                                                              _gfbbt::getArtsBlReAct4,
+                                                              _gfbbt::getArtsBlReAct5,
+                                                              _gfbbt::getArtsBlReAct6,
+                                                              _gfbbt::getArtsBlReAct7,
+                                                              _gfbbt::getArtsBlReAct8,
+                                                              _gfbbt::getArtsBlReAct9,
+                                                              _gfbbt::getArtsBlReAct10,
+                                                              _gfbbt::getArtsBlReAct11,
+                                                              _gfbbt::getArtsBlReAct12,
+                                                              _gfbbt::getArtsBlReAct13,
+                                                              _gfbbt::getArtsBlReAct14,
+                                                              _gfbbt::getArtsBlReAct15,
+                                                              _gfbbt::getArtsBlReAct16};
+  return getters[index](*mArtsBl, id);
+}
+
+u32 GfBdatBtl::getArtsBlDmgMgn(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlDmgMgn1,
+                                                              _gfbbt::getArtsBlDmgMgn2,
+                                                              _gfbbt::getArtsBlDmgMgn3,
+                                                              _gfbbt::getArtsBlDmgMgn4,
+                                                              _gfbbt::getArtsBlDmgMgn5,
+                                                              _gfbbt::getArtsBlDmgMgn6};
+  return getters[index](*mArtsBl, id);
+}
+
+u32 GfBdatBtl::getArtsBlEnhance(u32 arts, u32 level) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlEnhance1,
+                                                              _gfbbt::getArtsBlEnhance2,
+                                                              _gfbbt::getArtsBlEnhance3,
+                                                              _gfbbt::getArtsBlEnhance4,
+                                                              _gfbbt::getArtsBlEnhance5,
+                                                              _gfbbt::getArtsBlEnhance6};
+  return getters[level](*mArtsBl, arts);
+}
+
 u32 GfBdatBtl::getArtsBlSpStart() const { return Bdat::getIdTop(mArtsBlSp->data); }
+
+u32 GfBdatBtl::getArtsBlSpEnd() const { return Bdat::getIdTop(mArtsBlSp->data) + Bdat::getIdCount(mArtsBlSp->data); }
 
 u32 GfBdatBtl::getArtsBlSpName(u32 id) const { return _gfbbt::getArtsBlSpName(*mArtsBlSp, id); }
 
@@ -6817,7 +7769,109 @@ u32 GfBdatBtl::getArtsBlSpCameraEndf(u32 id) const { return _gfbbt::getArtsBlSpC
 
 u32 GfBdatBtl::getArtsBlSpHitEff(u32 id) const { return _gfbbt::getArtsBlSpHitEff(*mArtsBlSp, id); }
 
+u32 GfBdatBtl::getArtsBlSpHitFrm(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlSpHitFrm1,
+                                                              _gfbbt::getArtsBlSpHitFrm2,
+                                                              _gfbbt::getArtsBlSpHitFrm3,
+                                                              _gfbbt::getArtsBlSpHitFrm4,
+                                                              _gfbbt::getArtsBlSpHitFrm5,
+                                                              _gfbbt::getArtsBlSpHitFrm6,
+                                                              _gfbbt::getArtsBlSpHitFrm7,
+                                                              _gfbbt::getArtsBlSpHitFrm8,
+                                                              _gfbbt::getArtsBlSpHitFrm9,
+                                                              _gfbbt::getArtsBlSpHitFrm10,
+                                                              _gfbbt::getArtsBlSpHitFrm11,
+                                                              _gfbbt::getArtsBlSpHitFrm12,
+                                                              _gfbbt::getArtsBlSpHitFrm13,
+                                                              _gfbbt::getArtsBlSpHitFrm14,
+                                                              _gfbbt::getArtsBlSpHitFrm15,
+                                                              _gfbbt::getArtsBlSpHitFrm16};
+  return getters[index](*mArtsBlSp, id);
+}
+
+u32 GfBdatBtl::getArtsBlSpEfp(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlSpEfp1,
+                                                              _gfbbt::getArtsBlSpEfp2,
+                                                              _gfbbt::getArtsBlSpEfp3,
+                                                              _gfbbt::getArtsBlSpEfp4,
+                                                              _gfbbt::getArtsBlSpEfp5,
+                                                              _gfbbt::getArtsBlSpEfp6,
+                                                              _gfbbt::getArtsBlSpEfp7,
+                                                              _gfbbt::getArtsBlSpEfp8,
+                                                              _gfbbt::getArtsBlSpEfp9,
+                                                              _gfbbt::getArtsBlSpEfp10,
+                                                              _gfbbt::getArtsBlSpEfp11,
+                                                              _gfbbt::getArtsBlSpEfp12,
+                                                              _gfbbt::getArtsBlSpEfp13,
+                                                              _gfbbt::getArtsBlSpEfp14,
+                                                              _gfbbt::getArtsBlSpEfp15,
+                                                              _gfbbt::getArtsBlSpEfp16};
+  return getters[index](*mArtsBlSp, id);
+}
+
+u32 GfBdatBtl::getArtsBlSpHitDirID(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlSpHitDirID1,
+                                                              _gfbbt::getArtsBlSpHitDirID2,
+                                                              _gfbbt::getArtsBlSpHitDirID3,
+                                                              _gfbbt::getArtsBlSpHitDirID4,
+                                                              _gfbbt::getArtsBlSpHitDirID5,
+                                                              _gfbbt::getArtsBlSpHitDirID6,
+                                                              _gfbbt::getArtsBlSpHitDirID7,
+                                                              _gfbbt::getArtsBlSpHitDirID8,
+                                                              _gfbbt::getArtsBlSpHitDirID9,
+                                                              _gfbbt::getArtsBlSpHitDirID10,
+                                                              _gfbbt::getArtsBlSpHitDirID11,
+                                                              _gfbbt::getArtsBlSpHitDirID12,
+                                                              _gfbbt::getArtsBlSpHitDirID13,
+                                                              _gfbbt::getArtsBlSpHitDirID14,
+                                                              _gfbbt::getArtsBlSpHitDirID15,
+                                                              _gfbbt::getArtsBlSpHitDirID16};
+  return getters[index](*mArtsBlSp, id);
+}
+
+u32 GfBdatBtl::getArtsBlSpDmgRt(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlSpDmgRt1,
+                                                              _gfbbt::getArtsBlSpDmgRt2,
+                                                              _gfbbt::getArtsBlSpDmgRt3,
+                                                              _gfbbt::getArtsBlSpDmgRt4,
+                                                              _gfbbt::getArtsBlSpDmgRt5,
+                                                              _gfbbt::getArtsBlSpDmgRt6,
+                                                              _gfbbt::getArtsBlSpDmgRt7,
+                                                              _gfbbt::getArtsBlSpDmgRt8,
+                                                              _gfbbt::getArtsBlSpDmgRt9,
+                                                              _gfbbt::getArtsBlSpDmgRt10,
+                                                              _gfbbt::getArtsBlSpDmgRt11,
+                                                              _gfbbt::getArtsBlSpDmgRt12,
+                                                              _gfbbt::getArtsBlSpDmgRt13,
+                                                              _gfbbt::getArtsBlSpDmgRt14,
+                                                              _gfbbt::getArtsBlSpDmgRt15,
+                                                              _gfbbt::getArtsBlSpDmgRt16};
+  return getters[index](*mArtsBlSp, id);
+}
+
+u32 GfBdatBtl::getArtsBlSpReAct(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlSpReAct1,
+                                                              _gfbbt::getArtsBlSpReAct2,
+                                                              _gfbbt::getArtsBlSpReAct3,
+                                                              _gfbbt::getArtsBlSpReAct4,
+                                                              _gfbbt::getArtsBlSpReAct5,
+                                                              _gfbbt::getArtsBlSpReAct6,
+                                                              _gfbbt::getArtsBlSpReAct7,
+                                                              _gfbbt::getArtsBlSpReAct8,
+                                                              _gfbbt::getArtsBlSpReAct9,
+                                                              _gfbbt::getArtsBlSpReAct10,
+                                                              _gfbbt::getArtsBlSpReAct11,
+                                                              _gfbbt::getArtsBlSpReAct12,
+                                                              _gfbbt::getArtsBlSpReAct13,
+                                                              _gfbbt::getArtsBlSpReAct14,
+                                                              _gfbbt::getArtsBlSpReAct15,
+                                                              _gfbbt::getArtsBlSpReAct16};
+  return getters[index](*mArtsBlSp, id);
+}
+
 u32 GfBdatBtl::getGrowStart() const { return Bdat::getIdTop(mGrow->data); }
+
+u32 GfBdatBtl::getGrowEnd() const { return Bdat::getIdTop(mGrow->data) + Bdat::getIdCount(mGrow->data); }
 
 u32 GfBdatBtl::getGrowLevelExp(u32 id) const { return _gfbbt::getGrowLevelExp(*mGrow, id); }
 
@@ -6833,6 +7887,8 @@ u32 GfBdatBtl::getGrowGoldDivide(u32 id) const { return _gfbbt::getGrowGoldDivid
 
 u32 GfBdatBtl::getLv_RevStart() const { return Bdat::getIdTop(mLv_Rev->data); }
 
+u32 GfBdatBtl::getLv_RevEnd() const { return Bdat::getIdTop(mLv_Rev->data) + Bdat::getIdCount(mLv_Rev->data); }
+
 u32 GfBdatBtl::getLv_RevExpRevHigh(u32 id) const { return _gfbbt::getLv_RevExpRevHigh(*mLv_Rev, id); }
 
 u32 GfBdatBtl::getLv_RevExpRevLow(u32 id) const { return _gfbbt::getLv_RevExpRevLow(*mLv_Rev, id); }
@@ -6842,6 +7898,8 @@ u32 GfBdatBtl::getLv_RevDamageRevHigh(u32 id) const { return _gfbbt::getLv_RevDa
 u32 GfBdatBtl::getLv_RevDamageRevLow(u32 id) const { return _gfbbt::getLv_RevDamageRevLow(*mLv_Rev, id); }
 
 u32 GfBdatBtl::getWpn_EnStart() const { return Bdat::getIdTop(mWpn_En->data); }
+
+u32 GfBdatBtl::getWpn_EnEnd() const { return Bdat::getIdTop(mWpn_En->data) + Bdat::getIdCount(mWpn_En->data); }
 
 u32 GfBdatBtl::getWpn_EnRscR(u32 id) const { return _gfbbt::getWpn_EnRscR(*mWpn_En, id); }
 
@@ -6854,6 +7912,8 @@ u32 GfBdatBtl::getWpn_EnDamage(u32 id) const { return _gfbbt::getWpn_EnDamage(*m
 u32 GfBdatBtl::getWpn_EnStability(u32 id) const { return _gfbbt::getWpn_EnStability(*mWpn_En, id); }
 
 u32 GfBdatBtl::getBTL_ClassStart() const { return Bdat::getIdTop(mBTL_Class->data); }
+
+u32 GfBdatBtl::getBTL_ClassEnd() const { return Bdat::getIdTop(mBTL_Class->data) + Bdat::getIdCount(mBTL_Class->data); }
 
 u32 GfBdatBtl::getBTL_ClassName(u32 id) const { return _gfbbt::getBTL_ClassName(*mBTL_Class, id); }
 
@@ -6873,7 +7933,14 @@ s32 GfBdatBtl::getBTL_ClassAutoHate(u32 id) const { return _gfbbt::getBTL_ClassA
 
 s32 GfBdatBtl::getBTL_ClassArtsHate(u32 id) const { return _gfbbt::getBTL_ClassArtsHate(*mBTL_Class, id); }
 
+u32 GfBdatBtl::getBTL_ClassRole(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getBTL_ClassRole1, _gfbbt::getBTL_ClassRole2, _gfbbt::getBTL_ClassRole3};
+  return getters[index](*mBTL_Class, id);
+}
+
 u32 GfBdatBtl::getBTL_EnhanceStart() const { return Bdat::getIdTop(mBTL_Enhance->data); }
+
+u32 GfBdatBtl::getBTL_EnhanceEnd() const { return Bdat::getIdTop(mBTL_Enhance->data) + Bdat::getIdCount(mBTL_Enhance->data); }
 
 u32 GfBdatBtl::getBTL_EnhanceEnhanceEffect(u32 id) const { return _gfbbt::getBTL_EnhanceEnhanceEffect(*mBTL_Enhance, id); }
 
@@ -6884,6 +7951,8 @@ f32 GfBdatBtl::getBTL_EnhanceParam2(u32 id) const { return _gfbbt::getBTL_Enhanc
 u32 GfBdatBtl::getBTL_EnhanceCaption(u32 id) const { return _gfbbt::getBTL_EnhanceCaption(*mBTL_Enhance, id); }
 
 u32 GfBdatBtl::getBTL_EnhanceEffStart() const { return Bdat::getIdTop(mBTL_EnhanceEff->data); }
+
+u32 GfBdatBtl::getBTL_EnhanceEffEnd() const { return Bdat::getIdTop(mBTL_EnhanceEff->data) + Bdat::getIdCount(mBTL_EnhanceEff->data); }
 
 u32 GfBdatBtl::getBTL_EnhanceEffCategory(u32 id) const { return _gfbbt::getBTL_EnhanceEffCategory(*mBTL_EnhanceEff, id); }
 
@@ -6900,6 +7969,8 @@ u32 GfBdatBtl::getBTL_EnhanceEffName(u32 id) const { return _gfbbt::getBTL_Enhan
 u32 GfBdatBtl::getBTL_EnhanceEffDirect(u32 id) const { return _gfbbt::getBTL_EnhanceEffDirect(*mBTL_EnhanceEff, id); }
 
 u32 GfBdatBtl::getBTL_Skill_BlStart() const { return Bdat::getIdTop(mBTL_Skill_Bl->data); }
+
+u32 GfBdatBtl::getBTL_Skill_BlEnd() const { return Bdat::getIdTop(mBTL_Skill_Bl->data) + Bdat::getIdCount(mBTL_Skill_Bl->data); }
 
 u32 GfBdatBtl::getBTL_Skill_BlName(u32 id) const { return _gfbbt::getBTL_Skill_BlName(*mBTL_Skill_Bl, id); }
 
@@ -6925,7 +7996,18 @@ u32 GfBdatBtl::getBTL_Skill_BlHealer(u32 id) const { return _gfbbt::getBTL_Skill
 
 u32 GfBdatBtl::getBTL_Skill_BlUI(u32 id) const { return _gfbbt::getBTL_Skill_BlUI(*mBTL_Skill_Bl, id); }
 
+u32 GfBdatBtl::getBTL_Skill_BlEnhance(u32 skill, u32 level) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getBTL_Skill_BlEnhance1,
+                                                              _gfbbt::getBTL_Skill_BlEnhance2,
+                                                              _gfbbt::getBTL_Skill_BlEnhance3,
+                                                              _gfbbt::getBTL_Skill_BlEnhance4,
+                                                              _gfbbt::getBTL_Skill_BlEnhance5};
+  return getters[level](*mBTL_Skill_Bl, skill);
+}
+
 u32 GfBdatBtl::getBTL_Skill_DrStart() const { return Bdat::getIdTop(mBTL_Skill_Dr->data); }
+
+u32 GfBdatBtl::getBTL_Skill_DrEnd() const { return Bdat::getIdTop(mBTL_Skill_Dr->data) + Bdat::getIdCount(mBTL_Skill_Dr->data); }
 
 u32 GfBdatBtl::getBTL_Skill_DrName(u32 id) const { return _gfbbt::getBTL_Skill_DrName(*mBTL_Skill_Dr, id); }
 
@@ -6936,6 +8018,8 @@ u32 GfBdatBtl::getBTL_Skill_DrEnhance(u32 id) const { return _gfbbt::getBTL_Skil
 u32 GfBdatBtl::getBTL_Skill_DrUI(u32 id) const { return _gfbbt::getBTL_Skill_DrUI(*mBTL_Skill_Dr, id); }
 
 u32 GfBdatBtl::getBTL_BuffStart() const { return Bdat::getIdTop(mBTL_Buff->data); }
+
+u32 GfBdatBtl::getBTL_BuffEnd() const { return Bdat::getIdTop(mBTL_Buff->data) + Bdat::getIdCount(mBTL_Buff->data); }
 
 u32 GfBdatBtl::getBTL_BuffName(u32 id) const { return _gfbbt::getBTL_BuffName(*mBTL_Buff, id); }
 
@@ -6959,6 +8043,8 @@ u32 GfBdatBtl::getBTL_BuffIcon(u32 id) const { return _gfbbt::getBTL_BuffIcon(*m
 
 u32 GfBdatBtl::getBTL_Bl_PersonalityStart() const { return Bdat::getIdTop(mBTL_Bl_Personality->data); }
 
+u32 GfBdatBtl::getBTL_Bl_PersonalityEnd() const { return Bdat::getIdTop(mBTL_Bl_Personality->data) + Bdat::getIdCount(mBTL_Bl_Personality->data); }
+
 bool GfBdatBtl::isBTL_Bl_PersonalityFlagcommon(u32 id) const { return _gfbbt::isBTL_Bl_PersonalityFlagcommon(*mBTL_Bl_Personality, id); }
 
 u32 GfBdatBtl::getBTL_Bl_PersonalityKizunaBase(u32 id) const { return _gfbbt::getBTL_Bl_PersonalityKizunaBase(*mBTL_Bl_Personality, id); }
@@ -6966,6 +8052,8 @@ u32 GfBdatBtl::getBTL_Bl_PersonalityKizunaBase(u32 id) const { return _gfbbt::ge
 u32 GfBdatBtl::getBTL_Bl_PersonalityVoiceID(u32 id) const { return _gfbbt::getBTL_Bl_PersonalityVoiceID(*mBTL_Bl_Personality, id); }
 
 u32 GfBdatBtl::getBTL_Bl_KizunaLinkStart() const { return Bdat::getIdTop(mBTL_Bl_KizunaLink->data); }
+
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkEnd() const { return Bdat::getIdTop(mBTL_Bl_KizunaLink->data) + Bdat::getIdCount(mBTL_Bl_KizunaLink->data); }
 
 u32 GfBdatBtl::getBTL_Bl_KizunaLinkLinkNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkLinkNum(*mBTL_Bl_KizunaLink, id); }
 
@@ -6991,6 +8079,10 @@ u32 GfBdatBtl::getBTL_Bl_KizunaLinkStandDir(u32 id) const { return _gfbbt::getBT
 
 u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetStart() const { return Bdat::getIdTop(mBTL_Bl_KizunaLinkSet->data); }
 
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetEnd() const {
+  return Bdat::getIdTop(mBTL_Bl_KizunaLinkSet->data) + Bdat::getIdCount(mBTL_Bl_KizunaLinkSet->data);
+}
+
 u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetKizunaLink1(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetKizunaLink1(*mBTL_Bl_KizunaLinkSet, id); }
 
 u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetKizunaLink2(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetKizunaLink2(*mBTL_Bl_KizunaLinkSet, id); }
@@ -7002,6 +8094,8 @@ u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetLinkChNum(u32 id) const { return _gfbbt::g
 u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetVoiceID(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetVoiceID(*mBTL_Bl_KizunaLinkSet, id); }
 
 u32 GfBdatBtl::getBTL_TestSettingStart() const { return Bdat::getIdTop(mBTL_TestSetting->data); }
+
+u32 GfBdatBtl::getBTL_TestSettingEnd() const { return Bdat::getIdTop(mBTL_TestSetting->data) + Bdat::getIdCount(mBTL_TestSetting->data); }
 
 u32 GfBdatBtl::getBTL_TestSettingDr1(u32 id) const { return _gfbbt::getBTL_TestSettingDr1(*mBTL_TestSetting, id); }
 
@@ -7033,7 +8127,39 @@ u32 GfBdatBtl::getBTL_TestSettingDr3Bl2(u32 id) const { return _gfbbt::getBTL_Te
 
 u32 GfBdatBtl::getBTL_TestSettingDr3Bl3(u32 id) const { return _gfbbt::getBTL_TestSettingDr3Bl3(*mBTL_TestSetting, id); }
 
+u32 GfBdatBtl::getBTL_TestSettingDr(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbbt::getBTL_TestSettingDr1, _gfbbt::getBTL_TestSettingDr2, _gfbbt::getBTL_TestSettingDr3};
+  return getters[index](*mBTL_TestSetting, id);
+}
+
+u32 GfBdatBtl::getBTL_TestSettingDrLv(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbbt::getBTL_TestSettingDr1Lv, _gfbbt::getBTL_TestSettingDr2Lv, _gfbbt::getBTL_TestSettingDr3Lv};
+  return getters[index](*mBTL_TestSetting, id);
+}
+
+u32 GfBdatBtl::getBTL_TestSettingDrBl1(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbbt::getBTL_TestSettingDr1Bl1, _gfbbt::getBTL_TestSettingDr2Bl1, _gfbbt::getBTL_TestSettingDr3Bl1};
+  return getters[index](*mBTL_TestSetting, id);
+}
+
+u32 GfBdatBtl::getBTL_TestSettingDrBl2(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbbt::getBTL_TestSettingDr1Bl2, _gfbbt::getBTL_TestSettingDr2Bl2, _gfbbt::getBTL_TestSettingDr3Bl2};
+  return getters[index](*mBTL_TestSetting, id);
+}
+
+u32 GfBdatBtl::getBTL_TestSettingDrBl3(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbbt::getBTL_TestSettingDr1Bl3, _gfbbt::getBTL_TestSettingDr2Bl3, _gfbbt::getBTL_TestSettingDr3Bl3};
+  return getters[index](*mBTL_TestSetting, id);
+}
+
 u32 GfBdatBtl::getBTL_HanaBaseStart() const { return Bdat::getIdTop(mBTL_HanaBase->data); }
+
+u32 GfBdatBtl::getBTL_HanaBaseEnd() const { return Bdat::getIdTop(mBTL_HanaBase->data) + Bdat::getIdCount(mBTL_HanaBase->data); }
 
 u32 GfBdatBtl::getBTL_HanaBaseNCondNum(u32 id) const { return _gfbbt::getBTL_HanaBaseNCondNum(*mBTL_HanaBase, id); }
 
@@ -7055,7 +8181,19 @@ u32 GfBdatBtl::getBTL_HanaBaseCircuit6Num(u32 id) const { return _gfbbt::getBTL_
 
 const char *GfBdatBtl::getBTL_HanaBaseUI(u32 id) const { return _gfbbt::getBTL_HanaBaseUI(*mBTL_HanaBase, id); }
 
+u32 GfBdatBtl::getBTL_HanaBaseCircuitNum(u32 hana, u32 circuit) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getBTL_HanaBaseCircuit1Num,
+                                                              _gfbbt::getBTL_HanaBaseCircuit2Num,
+                                                              _gfbbt::getBTL_HanaBaseCircuit3Num,
+                                                              _gfbbt::getBTL_HanaBaseCircuit4Num,
+                                                              _gfbbt::getBTL_HanaBaseCircuit5Num,
+                                                              _gfbbt::getBTL_HanaBaseCircuit6Num};
+  return getters[circuit](*mBTL_HanaBase, hana);
+}
+
 u32 GfBdatBtl::getBTL_HanaPowerStart() const { return Bdat::getIdTop(mBTL_HanaPower->data); }
+
+u32 GfBdatBtl::getBTL_HanaPowerEnd() const { return Bdat::getIdTop(mBTL_HanaPower->data) + Bdat::getIdCount(mBTL_HanaPower->data); }
 
 u32 GfBdatBtl::getBTL_HanaPowerPowerNum1(u32 id) const { return _gfbbt::getBTL_HanaPowerPowerNum1(*mBTL_HanaPower, id); }
 
@@ -7069,7 +8207,21 @@ u32 GfBdatBtl::getBTL_HanaPowerEtherNum2(u32 id) const { return _gfbbt::getBTL_H
 
 u32 GfBdatBtl::getBTL_HanaPowerEtherNum3(u32 id) const { return _gfbbt::getBTL_HanaPowerEtherNum3(*mBTL_HanaPower, id); }
 
+u32 GfBdatBtl::getBTL_HanaPowerPowerNum(u32 rank, u32 hana) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbbt::getBTL_HanaPowerPowerNum1, _gfbbt::getBTL_HanaPowerPowerNum2, _gfbbt::getBTL_HanaPowerPowerNum3};
+  return getters[hana](*mBTL_HanaPower, rank);
+}
+
+u32 GfBdatBtl::getBTL_HanaPowerEtherNum(u32 rank, u32 hana) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbbt::getBTL_HanaPowerEtherNum1, _gfbbt::getBTL_HanaPowerEtherNum2, _gfbbt::getBTL_HanaPowerEtherNum3};
+  return getters[hana](*mBTL_HanaPower, rank);
+}
+
 u32 GfBdatBtl::getBTL_HanaChipsetStart() const { return Bdat::getIdTop(mBTL_HanaChipset->data); }
+
+u32 GfBdatBtl::getBTL_HanaChipsetEnd() const { return Bdat::getIdTop(mBTL_HanaChipset->data) + Bdat::getIdCount(mBTL_HanaChipset->data); }
 
 u32 GfBdatBtl::getBTL_HanaChipsetRoleParts(u32 id) const { return _gfbbt::getBTL_HanaChipsetRoleParts(*mBTL_HanaChipset, id); }
 
@@ -7089,13 +8241,29 @@ u32 GfBdatBtl::getBTL_HanaChipsetNCondParts3(u32 id) const { return _gfbbt::getB
 
 const char *GfBdatBtl::getBTL_HanaChipsetUI(u32 id) const { return _gfbbt::getBTL_HanaChipsetUI(*mBTL_HanaChipset, id); }
 
+u32 GfBdatBtl::getBTL_HanaChipsetNArtsParts(u32 hana, u32 slot) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbbt::getBTL_HanaChipsetNArtsParts1, _gfbbt::getBTL_HanaChipsetNArtsParts2, _gfbbt::getBTL_HanaChipsetNArtsParts3};
+  return getters[slot](*mBTL_HanaChipset, hana);
+}
+
+u32 GfBdatBtl::getBTL_HanaChipsetNCondParts(u32 hana, u32 slot) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbbt::getBTL_HanaChipsetNCondParts1, _gfbbt::getBTL_HanaChipsetNCondParts2, _gfbbt::getBTL_HanaChipsetNCondParts3};
+  return getters[slot](*mBTL_HanaChipset, hana);
+}
+
 u32 GfBdatBtl::getWildcardDataStart() const { return Bdat::getIdTop(mWildcardData->data); }
+
+u32 GfBdatBtl::getWildcardDataEnd() const { return Bdat::getIdTop(mWildcardData->data) + Bdat::getIdCount(mWildcardData->data); }
 
 f32 GfBdatBtl::getWildcardDatavalueF4(u32 id) const { return _gfbbt::getWildcardDatavalueF4(*mWildcardData, id); }
 
 u32 GfBdatBtl::getWildcardDatavalueU2(u32 id) const { return _gfbbt::getWildcardDatavalueU2(*mWildcardData, id); }
 
 u32 GfBdatBtl::getVo_Field_FilterStart() const { return Bdat::getIdTop(mVo_Field_Filter->data); }
+
+u32 GfBdatBtl::getVo_Field_FilterEnd() const { return Bdat::getIdTop(mVo_Field_Filter->data) + Bdat::getIdCount(mVo_Field_Filter->data); }
 
 const char *GfBdatBtl::getVo_Field_FilterTargetFile(u32 id) const { return _gfbbt::getVo_Field_FilterTargetFile(*mVo_Field_Filter, id); }
 
