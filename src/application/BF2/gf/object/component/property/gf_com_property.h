@@ -11,7 +11,7 @@ struct GF_OBJ_HANDLE;
 
 class GfStatusProperty : public mm::mtl::ReferenceObject {
 public:
-  GfStatusProperty(u32 hp) : maxHp(hp), hp(hp), limitHp(0), invincible(false), _19(), disableAutoHeal(false) {}
+  GfStatusProperty(u32 hp) : maxHp(hp), hp(hp), limitHp(0), invincible(false), _19(), disableAutoHeal(false), _1b() {}
 
   u32 maxHp;
   u32 hp;
@@ -19,6 +19,7 @@ public:
   bool invincible;
   u8 _19[0x1a - 0x19];
   bool disableAutoHeal;
+  u8 _1b[0x1c - 0x1b];
 };
 
 static_assert(offsetof(GfStatusProperty, maxHp) == 0x0c, "");
@@ -61,6 +62,30 @@ static_assert(offsetof(GfComProperty, status) == 0x10, "");
 static_assert(offsetof(GfComProperty, target) == 0x18, "");
 static_assert(offsetof(GfComProperty, alpha) == 0x20, "");
 static_assert(offsetof(GfComProperty, debugFlags) == 0x30, "");
+
+enum {
+  HEAL_TYPE_FULL = 1,
+};
+
+struct MsgObjectHealHp : fw::Message {
+  MsgObjectHealHp(u32 hp, u32 healType)
+      : fw::Message(0x1000033, 0x20), hp(hp), healType(healType), position(nullptr), healer(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), _20(),
+        isRevive(false), isHpMax(false), isHealed(false) {}
+
+  u32 hp;
+  u32 healType;
+  const mm::Vec3 *position;
+  GF_OBJ_HANDLE *healer;
+  u8 _20[0x21 - 0x20];
+  bool isRevive;
+  bool isHpMax;
+  bool isHealed;
+};
+
+static_assert(offsetof(MsgObjectHealHp, position) == 0x10, "");
+static_assert(offsetof(MsgObjectHealHp, healer) == 0x18, "");
+static_assert(offsetof(MsgObjectHealHp, isRevive) == 0x21, "");
+static_assert(offsetof(MsgObjectHealHp, isHealed) == 0x23, "");
 
 struct MsgObjectAlpha : fw::Message {
   MsgObjectAlpha(OBJ_ALPHA type, f32 alpha) : fw::Message(0x100003a, 0x20), type(type), alpha(alpha) {}

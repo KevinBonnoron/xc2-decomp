@@ -22,33 +22,5 @@ private:
   int m_RefCount;
 };
 
-template <typename T> class IntrusivePtr {
-public:
-  IntrusivePtr() : mPtr(nullptr) {}
-
-  ~IntrusivePtr() {
-    if (mPtr != nullptr) {
-      mPtr->release();
-    }
-  }
-
-  IntrusivePtr &operator=(T *ptr) {
-    if (ptr != nullptr) {
-      ptr->addRef();
-    }
-    T *old = mPtr;
-    mPtr = ptr;
-    if (old != nullptr) {
-      old->release();
-    }
-    return *this;
-  }
-
-  T *get() const { return mPtr; }
-
-private:
-  T *mPtr;
-};
-
 } // namespace mtl
 } // namespace mm
