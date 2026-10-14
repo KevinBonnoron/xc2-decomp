@@ -46,8 +46,9 @@ static_assert(sizeof(GfMemberInfo) == 0x40, "");
 class GfSelectBlade {
 public:
   struct Member {
-    u8 bladeIndices[3];
-    u8 defaultBladeIndices[3];
+    u8 currentIndex;
+    u8 changeIndices[2];
+    u8 defaultIndices[3];
   };
 
   static void setupBattleStart(u32 partyId);
@@ -60,7 +61,7 @@ public:
   static int resetCurrentBlade(GF_OBJ_HANDLE *handle);
   static void resetDefaultBladeForDebug(GF_OBJ_HANDLE *handle);
   static int getCurrentBladeIndex(GF_OBJ_HANDLE *handle);
-  static int getChangeBladeIndex(GF_OBJ_HANDLE *handle, CHANGE_BLADE change);
+  static int getChangeBladeIndex(GF_OBJ_HANDLE *handle, CHANGE_BLADE changeBlade);
   static void setBladeSetID(GF_OBJ_HANDLE *handle, int slot);
   static int getBladeSetID(GF_OBJ_HANDLE *handle, int slot);
   static int getDefBladeIndexForDebug(u32 partyId, int index);
