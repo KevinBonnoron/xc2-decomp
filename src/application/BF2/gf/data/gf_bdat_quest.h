@@ -75,6 +75,7 @@ public:
 
   QuestID getQuestID() const;
   qlist_iterator operator++();
+  bool operator!=(const qlist_iterator &other) const { return index != other.index; }
 
   QuestListAcc *questListAcc;
   QTYPE type;
@@ -88,6 +89,7 @@ public:
 
   tlist_iterator operator++();
   u16 getPurposeID() const;
+  bool operator!=(const tlist_iterator &other) const { return index != other.index; }
 
   QuestListAcc *questListAcc;
   QTYPE type;
