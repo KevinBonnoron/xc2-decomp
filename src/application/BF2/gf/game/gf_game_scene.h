@@ -29,6 +29,7 @@ public:
   void setDamageCharacter(GF_OBJ_HANDLE *handle);
   void setCameraAvtivateOneTime();
   void setRideOn(u32 partyId);
+  void addMoneyLog();
 
   void setPlayerStopFlag(PLSTOP flag, bool isStop);
   bool isPlayerStopFlag(PLSTOP flag);

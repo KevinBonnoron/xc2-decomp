@@ -4,6 +4,7 @@
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+struct ParamObj;
 struct QuestID;
 
 enum SCOM_TYPE {
@@ -30,7 +31,10 @@ public:
 class SCOM_POPUP {
 public:
   static void createQuest(QuestID quest);
+  static void createDevelop(u32 location, u32 level);
+  static void createAffinity(u32 blade, u32 driver, u32 trustRank);
   static bool createAchievement(u32 blade, u32 achievement, u32 level);
+  static void createIdea(u32 driver, u32 idea, u32 level);
   static void createArts(u32 driver, u32 arts);
 };
 
@@ -62,6 +66,21 @@ public:
 class SCOM_BATTLE_TASK_RESET {
 public:
   static void create();
+};
+
+class SCOM_FIELD_VOICE {
+public:
+  static void createLevelup(const ParamObj &paramObj);
+};
+
+class SCOM_MAXIMUM_HEAL {
+public:
+  static void create(GF_OBJ_HANDLE *handle);
+};
+
+class SCOM_ADD_IDEA {
+public:
+  static void create(GF_OBJ_HANDLE *handle, u32 idea, int point);
 };
 
 class GfReqSmallCom {
