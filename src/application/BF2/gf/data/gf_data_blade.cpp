@@ -47,8 +47,6 @@ enum {
   BLADE_DUMMY_REGULAR_FIRST = 1012,
   BLADE_DUMMY_REGULAR_SECOND = 1013,
   BLADE_DUMMY_RARE = 1073,
-  BLADE_REAL_ALIAS = 1050,
-  BLADE_REAL_ALIAS_TARGET = 1022,
 };
 
 constexpr u32 BLADE_REGULAR_COUNT = BLADE_REGULAR_END - BLADE_REGULAR_FIRST;
@@ -347,7 +345,7 @@ bool GfDataBlade::isValid(u32 blade) { return blade - BLADE_REGULAR_FIRST < BLAD
 
 bool GfDataBlade::isActivateDriver(u32 blade) { return getSDataBlade(blade)->setDriver != 0; }
 
-u16 GfDataBlade::getSetDriver(u32 blade) {
+u32 GfDataBlade::getSetDriver(u32 blade) {
   if (blade == 0) {
     return 0;
   }
@@ -501,11 +499,11 @@ u32 GfDataBlade::getBladeWeaponByRank(u32 blade, u32 chip) {
   return 0;
 }
 
-const char *GfDataBlade::getResourceNameModel(u32 blade) { return getSDataBlade(blade)->resourceNameModel; }
+const char *GfDataBlade::getResourceNameModel(u32 blade) { return getSDataBlade(blade)->resourceNameModel.c_str(); }
 
-const char *GfDataBlade::getResourceNameMotion(u32 blade) { return getSDataBlade(blade)->resourceNameMotion; }
+const char *GfDataBlade::getResourceNameMotion(u32 blade) { return getSDataBlade(blade)->resourceNameMotion.c_str(); }
 
-const char *GfDataBlade::getResourceNameAddMotion(u32 blade) { return getSDataBlade(blade)->resourceNameAddMotion; }
+const char *GfDataBlade::getResourceNameAddMotion(u32 blade) { return getSDataBlade(blade)->resourceNameAddMotion.c_str(); }
 
 const char *GfDataBlade::getDebugName(u32 blade) {
   if (isCommonBlade(blade)) {

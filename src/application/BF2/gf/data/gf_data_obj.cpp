@@ -693,9 +693,9 @@ void DataObjBlade::setupVirtualParam() {
   }
 }
 
-const char *DataObjBlade::getModelResourceName() const { return get(false)->resourceNameModel; }
+const char *DataObjBlade::getModelResourceName() const { return get(false)->resourceNameModel.c_str(); }
 
-const char *DataObjBlade::getMotionResourceName() const { return get(false)->resourceNameMotion; }
+const char *DataObjBlade::getMotionResourceName() const { return get(false)->resourceNameMotion.c_str(); }
 
 const char *DataObjBlade::getEffectResourceName() const { return get(false)->resourceNameEffect; }
 
@@ -1105,9 +1105,9 @@ const char *DataObjEnemyBlade::getName() const { return GfDataBlade::getName(set
 
 bool DataObjEnemyBlade::getName(u8 *&bdat, u32 &textId) const { return GfDataBlade::getName(bdat, textId, setupEnemy->blade); }
 
-const char *DataObjEnemyBlade::getModelResourceName() const { return dataBlade->resourceNameModel; }
+const char *DataObjEnemyBlade::getModelResourceName() const { return dataBlade->resourceNameModel.c_str(); }
 
-const char *DataObjEnemyBlade::getMotionResourceName() const { return dataBlade->resourceNameMotion; }
+const char *DataObjEnemyBlade::getMotionResourceName() const { return dataBlade->resourceNameMotion.c_str(); }
 
 const char *DataObjEnemyBlade::getEffectResourceName() const { return dataBlade->resourceNameEffect; }
 

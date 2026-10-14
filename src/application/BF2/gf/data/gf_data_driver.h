@@ -109,10 +109,14 @@ public:
   static u32 getBattleExpNextLevel(const SDataDriver &dataDriver);
   static void calcDriverBaseParamByLevel(SDataDriver &dataDriver);
   static u32 getLevel(u32 driver);
+  static bool isActivateParty(u32 driver);
   static int getMaxSetBladeNum(u32 driver);
   static u32 getBlade(u32 driver, int slot);
+  static void unsetBlade(u32 blade);
   static SDataPouch *getPouchData(u32 driver, u32 slot);
   static int getBladeSet(u32 driver);
+  static bool isActivateReserver(u32 driver);
+  static bool isActivateUnuse(u32 driver);
   static void setLevel(SDataDriver &dataDriver, u32 level);
   static void setLevel(u32 driver, u32 level);
   static void setExp(u32 driver, u32 exp);

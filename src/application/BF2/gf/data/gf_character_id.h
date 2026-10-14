@@ -22,6 +22,8 @@ enum {
   BLADE_HANA_JS = 1005,
   BLADE_HANA_JK = 1006,
   BLADE_HANA_JD = 1007,
+  BLADE_REAL_ALIAS_TARGET = 1022,
+  BLADE_REAL_ALIAS = 1050,
 };
 
 } // namespace gf
