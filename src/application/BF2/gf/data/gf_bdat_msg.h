@@ -36,6 +36,8 @@ public:
   static u8 *getFpBlBuffMs();
   static u8 *getFpBlBuffCap();
   static u8 *getFpLandmark();
+  static u8 *getFpBlArtsMs();
+  static u8 *getFpBlSpArtsMs();
 };
 
 } // namespace gf

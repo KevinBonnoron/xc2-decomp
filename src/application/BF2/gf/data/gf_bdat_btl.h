@@ -544,6 +544,8 @@ public:
   u32 getBTL_HanaPowerPowerNum(u32 rank, u32 hana) const;
   u32 getBTL_HanaPowerEtherNum(u32 rank, u32 hana) const;
   u32 getBTL_Skill_BlEnhance(u32 skill, u32 level) const;
+  u32 getArtsBlEnd() const;
+  u32 getArtsBlEnhance(u32 arts, u32 level) const;
 
 private:
   CBdatWrapper *unknown10; // Inferred label: mArtsDr; original member name unknown.
