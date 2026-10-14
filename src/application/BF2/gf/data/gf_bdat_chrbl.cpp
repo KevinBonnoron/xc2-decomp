@@ -1,6 +1,8 @@
 #include "gf/data/gf_bdat_chrbl.h"
 #include "bdat.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/gf_allocator.h"
 
 namespace gf {
 namespace _gfbcb {
@@ -1272,7 +1274,139 @@ const char *getChrBlMnuVoice3(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbcb
 
+enum {
+  BDAT_CHR_BL = 0x78,
+};
+
+GfBdatChrBl::GfBdatChrBl() : mChrBl(nullptr) { bdatRefresh(); }
+
+GfBdatChrBl::~GfBdatChrBl() { destroyFP(); }
+
+void GfBdatChrBl::destroyFP() {
+  if (mChrBl != nullptr) {
+    delete mChrBl;
+    mChrBl = nullptr;
+  }
+}
+
+#define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
+
+void GfBdatChrBl::createFP() { mChrBl = NEW_BDAT_WRAPPER(BDAT_CHR_BL); }
+
+void GfBdatChrBl::bdatRefresh() {
+  destroyFP();
+  createFP();
+  _gfbcb::initChrBlName(*mChrBl);
+  _gfbcb::initChrBlDebugName(*mChrBl);
+  _gfbcb::initChrBlRace(*mChrBl);
+  _gfbcb::initChrBlRotateLimitPitch(*mChrBl);
+  _gfbcb::initChrBlRotateLimitRoll(*mChrBl);
+  _gfbcb::initChrBlGender(*mChrBl);
+  _gfbcb::initChrBlQuestRace(*mChrBl);
+  _gfbcb::initChrBlModel(*mChrBl);
+  _gfbcb::initChrBlMotion(*mChrBl);
+  _gfbcb::initChrBlAddMotion(*mChrBl);
+  _gfbcb::initChrBlCondition(*mChrBl);
+  _gfbcb::initChrBlModel2(*mChrBl);
+  _gfbcb::initChrBlMotion2(*mChrBl);
+  _gfbcb::initChrBlStill(*mChrBl);
+  _gfbcb::initChrBlVoice(*mChrBl);
+  _gfbcb::initChrBlClipEvent(*mChrBl);
+  _gfbcb::initChrBlCom_SE(*mChrBl);
+  _gfbcb::initChrBlSePack(*mChrBl);
+  _gfbcb::initChrBlCom_Eff(*mChrBl);
+  _gfbcb::initChrBlCom_Vo(*mChrBl);
+  _gfbcb::initChrBlOffsetID(*mChrBl);
+  _gfbcb::initChrBlEyeRot(*mChrBl);
+  _gfbcb::initChrBlChestHeight(*mChrBl);
+  _gfbcb::initChrBlLandingHeight(*mChrBl);
+  _gfbcb::initChrBlFootStep(*mChrBl);
+  _gfbcb::initChrBlFootStepEffect(*mChrBl);
+  _gfbcb::initChrBlWeaponType(*mChrBl);
+  _gfbcb::initChrBlScale(*mChrBl);
+  _gfbcb::initChrBlWpnScale(*mChrBl);
+  _gfbcb::initChrBlFlagOnlyWpn(*mChrBl);
+  _gfbcb::initChrBlPrivateWpnR(*mChrBl);
+  _gfbcb::initChrBlPrivateWpnL(*mChrBl);
+  _gfbcb::initChrBlPrivateWpnR_Driver(*mChrBl);
+  _gfbcb::initChrBlPrivateWpnL_Driver(*mChrBl);
+  _gfbcb::initChrBlWpnrOut(*mChrBl);
+  _gfbcb::initChrBlWpnlOut(*mChrBl);
+  _gfbcb::initChrBlOrbNum(*mChrBl);
+  _gfbcb::initChrBlAtr(*mChrBl);
+  _gfbcb::initChrBlPersonality(*mChrBl);
+  _gfbcb::initChrBlCoolTime(*mChrBl);
+  _gfbcb::initChrBlDefWeapon(*mChrBl);
+  _gfbcb::initChrBlBArts1(*mChrBl);
+  _gfbcb::initChrBlBArts2(*mChrBl);
+  _gfbcb::initChrBlBArts3(*mChrBl);
+  _gfbcb::initChrBlBartsEx(*mChrBl);
+  _gfbcb::initChrBlBartsEx2(*mChrBl);
+  _gfbcb::initChrBlNArts1(*mChrBl);
+  _gfbcb::initChrBlNArtsRecastRev1(*mChrBl);
+  _gfbcb::initChrBlNArts2(*mChrBl);
+  _gfbcb::initChrBlNArtsRecastRev2(*mChrBl);
+  _gfbcb::initChrBlNArts3(*mChrBl);
+  _gfbcb::initChrBlNArtsRecastRev3(*mChrBl);
+  _gfbcb::initChrBlBSkill1(*mChrBl);
+  _gfbcb::initChrBlBSkill2(*mChrBl);
+  _gfbcb::initChrBlBSkill3(*mChrBl);
+  _gfbcb::initChrBlPArmor(*mChrBl);
+  _gfbcb::initChrBlEArmor(*mChrBl);
+  _gfbcb::initChrBlHpMaxRev(*mChrBl);
+  _gfbcb::initChrBlStrengthRev(*mChrBl);
+  _gfbcb::initChrBlPowEtherRev(*mChrBl);
+  _gfbcb::initChrBlDexRev(*mChrBl);
+  _gfbcb::initChrBlAgilityRev(*mChrBl);
+  _gfbcb::initChrBlLuckRev(*mChrBl);
+  _gfbcb::initChrBlBKLSet(*mChrBl);
+  _gfbcb::initChrBlFSkill1(*mChrBl);
+  _gfbcb::initChrBlFSkill2(*mChrBl);
+  _gfbcb::initChrBlFSkill3(*mChrBl);
+  _gfbcb::initChrBlArtsAchievement1(*mChrBl);
+  _gfbcb::initChrBlArtsAchievement2(*mChrBl);
+  _gfbcb::initChrBlArtsAchievement3(*mChrBl);
+  _gfbcb::initChrBlSkillAchievement1(*mChrBl);
+  _gfbcb::initChrBlSkillAchievement2(*mChrBl);
+  _gfbcb::initChrBlSkillAchievement3(*mChrBl);
+  _gfbcb::initChrBlFskillAchivement1(*mChrBl);
+  _gfbcb::initChrBlFskillAchivement2(*mChrBl);
+  _gfbcb::initChrBlFskillAchivement3(*mChrBl);
+  _gfbcb::initChrBlKeyAchievement(*mChrBl);
+  _gfbcb::initChrBlIdeaBlue(*mChrBl);
+  _gfbcb::initChrBlIdeaRed(*mChrBl);
+  _gfbcb::initChrBlIdeaWhite(*mChrBl);
+  _gfbcb::initChrBlIdeaBlack(*mChrBl);
+  _gfbcb::initChrBlFavoriteCategory1(*mChrBl);
+  _gfbcb::initChrBlFavoriteCategory2(*mChrBl);
+  _gfbcb::initChrBlFavoriteItem1(*mChrBl);
+  _gfbcb::initChrBlFavoriteItem2(*mChrBl);
+  _gfbcb::initChrBlCreateEventID(*mChrBl);
+  _gfbcb::initChrBlNormalTalk(*mChrBl);
+  _gfbcb::initChrBlCollisionId(*mChrBl);
+  _gfbcb::initChrBlBladeSize(*mChrBl);
+  _gfbcb::initChrBlMemorySlot(*mChrBl);
+  _gfbcb::initChrBlEventAsset(*mChrBl);
+  _gfbcb::initChrBlCenterBone(*mChrBl);
+  _gfbcb::initChrBlCamBone(*mChrBl);
+  _gfbcb::initChrBlMerceName(*mChrBl);
+  _gfbcb::initChrBlReleaseLock(*mChrBl);
+  _gfbcb::initChrBlCreateInfo(*mChrBl);
+  _gfbcb::initChrBlExtraParts1(*mChrBl);
+  _gfbcb::initChrBlExtraParts2(*mChrBl);
+  _gfbcb::initChrBlExtraParts3(*mChrBl);
+  _gfbcb::initChrBlExtraParts4(*mChrBl);
+  _gfbcb::initChrBlMnuCastName(*mChrBl);
+  _gfbcb::initChrBlMnuIlustName(*mChrBl);
+  _gfbcb::initChrBlMnuVoice1(*mChrBl);
+  _gfbcb::initChrBlMnuVoice2(*mChrBl);
+  _gfbcb::initChrBlMnuVoice3(*mChrBl);
+}
+
 u32 GfBdatChrBl::getChrBlStart() const { return Bdat::getIdTop(mChrBl->data); }
+
+u32 GfBdatChrBl::getChrBlEnd() const { return Bdat::getIdTop(mChrBl->data) + Bdat::getIdCount(mChrBl->data); }
 
 u32 GfBdatChrBl::getChrBlName(u32 id) const { return _gfbcb::getChrBlName(*mChrBl, id); }
 
@@ -1483,5 +1617,77 @@ const char *GfBdatChrBl::getChrBlMnuVoice1(u32 id) const { return _gfbcb::getChr
 const char *GfBdatChrBl::getChrBlMnuVoice2(u32 id) const { return _gfbcb::getChrBlMnuVoice2(*mChrBl, id); }
 
 const char *GfBdatChrBl::getChrBlMnuVoice3(u32 id) const { return _gfbcb::getChrBlMnuVoice3(*mChrBl, id); }
+
+u32 GfBdatChrBl::getChrBlIdea(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbcb::getChrBlIdeaBlue, _gfbcb::getChrBlIdeaRed, _gfbcb::getChrBlIdeaWhite, _gfbcb::getChrBlIdeaBlack};
+  return getters[index](*mChrBl, id);
+}
+
+u32 GfBdatChrBl::getChrBlBArts(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbcb::getChrBlBArts1, _gfbcb::getChrBlBArts2, _gfbcb::getChrBlBArts3};
+  return getters[index](*mChrBl, id);
+}
+
+u32 GfBdatChrBl::getChrBlBSkill(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbcb::getChrBlBSkill1, _gfbcb::getChrBlBSkill2, _gfbcb::getChrBlBSkill3};
+  return getters[index](*mChrBl, id);
+}
+
+u32 GfBdatChrBl::getChrBlFSkill(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbcb::getChrBlFSkill1, _gfbcb::getChrBlFSkill2, _gfbcb::getChrBlFSkill3};
+  return getters[index](*mChrBl, id);
+}
+
+u32 GfBdatChrBl::getChrBlNArts(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbcb::getChrBlNArts1, _gfbcb::getChrBlNArts2, _gfbcb::getChrBlNArts3};
+  return getters[index](*mChrBl, id);
+}
+
+u32 GfBdatChrBl::getChrBlNArtsRecastRev(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbcb::getChrBlNArtsRecastRev1, _gfbcb::getChrBlNArtsRecastRev2, _gfbcb::getChrBlNArtsRecastRev3};
+  return getters[index](*mChrBl, id);
+}
+
+u32 GfBdatChrBl::getChrBlArtsAchievement(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbcb::getChrBlArtsAchievement1, _gfbcb::getChrBlArtsAchievement2, _gfbcb::getChrBlArtsAchievement3};
+  return getters[index](*mChrBl, id);
+}
+
+u32 GfBdatChrBl::getChrBlSkillAchievement(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbcb::getChrBlSkillAchievement1, _gfbcb::getChrBlSkillAchievement2, _gfbcb::getChrBlSkillAchievement3};
+  return getters[index](*mChrBl, id);
+}
+
+u32 GfBdatChrBl::getChrBlFskillAchievement(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbcb::getChrBlFskillAchivement1, _gfbcb::getChrBlFskillAchivement2, _gfbcb::getChrBlFskillAchivement3};
+  return getters[index](*mChrBl, id);
+}
+
+u32 GfBdatChrBl::getChrBlFavoriteCategory(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbcb::getChrBlFavoriteCategory1, _gfbcb::getChrBlFavoriteCategory2};
+  return getters[index](*mChrBl, id);
+}
+
+u32 GfBdatChrBl::getChrBlFavoriteItem(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbcb::getChrBlFavoriteItem1, _gfbcb::getChrBlFavoriteItem2};
+  return getters[index](*mChrBl, id);
+}
+
+u32 GfBdatChrBl::getChrBlExtraParts(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbcb::getChrBlExtraParts1, _gfbcb::getChrBlExtraParts2, _gfbcb::getChrBlExtraParts3, _gfbcb::getChrBlExtraParts4};
+  return getters[index](*mChrBl, id);
+}
+
+const char *GfBdatChrBl::getChrBlMnuVoice(u32 id, u32 index) const {
+  static const char *(*const getters[])(const CBdatWrapper &,
+                                        u32) = {_gfbcb::getChrBlMnuVoice1, _gfbcb::getChrBlMnuVoice2, _gfbcb::getChrBlMnuVoice3};
+  return getters[index](*mChrBl, id);
+}
 
 } // namespace gf
