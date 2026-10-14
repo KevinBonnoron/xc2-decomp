@@ -45,7 +45,10 @@ struct SDataDriver {
   SDataDriverSkillRow skillRows[5];
   SDataDriverSkillRow hiddenSkillRows[5];
   u16 level;
-  u8 _096[0x0b0 - 0x096];
+  u8 _096[0x0a2 - 0x096];
+  u16 pArmor;
+  u16 eArmor;
+  u8 _0a6[0x0b0 - 0x0a6];
   u32 exp;
   u32 battleExp;
   u32 skillPoint;
@@ -77,6 +80,8 @@ static_assert(offsetof(SDataDriver, blades) == 0x026, "");
 static_assert(offsetof(SDataDriver, skillRows) == 0x030, "");
 static_assert(offsetof(SDataDriver, hiddenSkillRows) == 0x062, "");
 static_assert(offsetof(SDataDriver, level) == 0x094, "");
+static_assert(offsetof(SDataDriver, pArmor) == 0x0a2, "");
+static_assert(offsetof(SDataDriver, eArmor) == 0x0a4, "");
 static_assert(offsetof(SDataDriver, exp) == 0x0b0, "");
 static_assert(offsetof(SDataDriver, battleExp) == 0x0b4, "");
 static_assert(offsetof(SDataDriver, skillPoint) == 0x0b8, "");
@@ -95,6 +100,13 @@ static_assert(sizeof(SDataDriver) == 0x5a0, "");
 class GfDataDriver {
 public:
   static SDataDriver *getSDataDriver(u32 driver);
+  static const char *getName(u32 driver);
+  static bool getName(u8 *&bdat, u32 &textId, u32 driver);
+  static int getRuleSetBlade(u32 driver, u32 blade, int slot);
+  static u32 getFavorite(u32 driver, FAVORITE favorite);
+  static void setEquipBlade(u32 driver, bool isEquip, int slot);
+  static u32 getExpNextLevel(const SDataDriver &dataDriver);
+  static u32 getBattleExpNextLevel(const SDataDriver &dataDriver);
   static void calcDriverBaseParamByLevel(SDataDriver &dataDriver);
   static u32 getLevel(u32 driver);
   static int getMaxSetBladeNum(u32 driver);

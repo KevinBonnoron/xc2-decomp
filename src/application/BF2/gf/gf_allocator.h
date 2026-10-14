@@ -10,6 +10,7 @@ public:
 };
 
 enum ALLOCATOR {
+  ALLOCATOR_DEFAULT = 0,
   ALLOCATOR_SYSTEM = 1,
   ALLOCATOR_BDAT = 4,
 };

@@ -12,13 +12,15 @@ enum GfIdea {};
 
 struct SDataBladeArts {
   u16 id;
-  u8 _02[0x06 - 0x02];
+  u16 artsH;
+  u8 _04[0x06 - 0x04];
   u8 achievReleaseLevel;
   u8 level;
   u8 levelMax;
   u8 _09[0x0c - 0x09];
 };
 
+static_assert(offsetof(SDataBladeArts, artsH) == 0x02, "");
 static_assert(offsetof(SDataBladeArts, achievReleaseLevel) == 0x06, "");
 static_assert(offsetof(SDataBladeArts, level) == 0x07, "");
 static_assert(offsetof(SDataBladeArts, levelMax) == 0x08, "");
@@ -36,6 +38,13 @@ static_assert(offsetof(SDataBladeSkill, achievReleaseLevel) == 0x02, "");
 static_assert(offsetof(SDataBladeSkill, level) == 0x03, "");
 static_assert(offsetof(SDataBladeSkill, levelMax) == 0x04, "");
 static_assert(sizeof(SDataBladeSkill) == 0x06, "");
+
+struct SDataBladeAchievement {
+  u16 achievement;
+  u8 _002[0x090 - 0x002];
+};
+
+static_assert(sizeof(SDataBladeAchievement) == 0x090, "");
 
 struct SDataBladeFavorite {
   u16 category;
@@ -82,11 +91,20 @@ struct SDataBlade {
   u32 trustPoint;
   GfIdea trustRank;
   mm::mtl::FixedArray<SDataBladeArts, 3> arts;
-  u8 _060[0x09c - 0x060];
+  mm::mtl::FixedArray<SDataBladeArts, 3> nArts;
+  u16 artsEx;
+  u16 artsExH;
+  u8 _088[0x090 - 0x088];
+  u16 artsEx2;
+  u16 artsEx2H;
+  u8 _094[0x09c - 0x094];
   mm::mtl::FixedArray<SDataBladeSkill, 3> skills;
   mm::mtl::FixedArray<SDataBladeSkill, 3> fieldSkills;
-  mm::mtl::FixedArray<u8, 6> extraParts;
-  u8 _0c6[0x664 - 0x0c6];
+  mm::mtl::FixedArray<u8, 4> extraParts;
+  mm::mtl::FixedArray<SDataBladeAchievement, 3> artsAchievements;
+  mm::mtl::FixedArray<SDataBladeAchievement, 3> skillAchievements;
+  mm::mtl::FixedArray<SDataBladeAchievement, 3> fieldSkillAchievements;
+  SDataBladeAchievement keyAchievement;
   u16 keyReleaseLevel;
   mm::mtl::FixedArray<SDataBladeFavorite, 2> favorites;
   u8 _676[0x678 - 0x676];
@@ -97,11 +115,14 @@ struct SDataBlade {
   u16 openCircuit;
   u8 race;
   u8 gender;
-  u8 _70a[0x70c - 0x70a];
+  u16 iconData;
   char resourceNameModel[0x28];
   char resourceNameMotion[0x28];
   char resourceNameAddMotion[0x770 - 0x75c];
-  char voiceStr[0x7fc - 0x770];
+  char voiceStr[0x7ac - 0x770];
+  char resourceNameEffect[0x28];
+  char centerBone[0x14];
+  char camBone[0x14];
   char sePack[0x820 - 0x7fc];
   u8 size;
   u8 weaponType;
@@ -110,9 +131,12 @@ struct SDataBlade {
   u8 personality;
   u8 _825[0x826 - 0x825];
   u8 eyeRotControl;
-  u8 _827[0x82c - 0x827];
+  u8 _827[0x828 - 0x827];
+  u16 coolTime;
+  u8 _82a[0x82c - 0x82a];
   u16 weapon;
-  u8 _82e[0x832 - 0x82e];
+  u16 chestHeight;
+  u16 landingHeight;
   u16 name;
   u16 nameListCategory;
   u16 scale;
@@ -145,6 +169,9 @@ struct SDataBlade {
   u8 unselect;
   u8 kizunaringComplete;
   u8 _8a2[0x8a4 - 0x8a2];
+
+  SDataBlade();
+  SDataBlade &operator=(const SDataBlade &other);
 };
 
 static_assert(offsetof(SDataBlade, activate) == 0x000, "");
@@ -155,9 +182,16 @@ static_assert(offsetof(SDataBlade, bornTime) == 0x008, "");
 static_assert(offsetof(SDataBlade, trustPoint) == 0x034, "");
 static_assert(offsetof(SDataBlade, trustRank) == 0x038, "");
 static_assert(offsetof(SDataBlade, arts) == 0x03c, "");
+static_assert(offsetof(SDataBlade, nArts) == 0x060, "");
+static_assert(offsetof(SDataBlade, artsEx) == 0x084, "");
+static_assert(offsetof(SDataBlade, artsEx2) == 0x090, "");
 static_assert(offsetof(SDataBlade, skills) == 0x09c, "");
 static_assert(offsetof(SDataBlade, fieldSkills) == 0x0ae, "");
 static_assert(offsetof(SDataBlade, extraParts) == 0x0c0, "");
+static_assert(offsetof(SDataBlade, artsAchievements) == 0x0c4, "");
+static_assert(offsetof(SDataBlade, skillAchievements) == 0x274, "");
+static_assert(offsetof(SDataBlade, fieldSkillAchievements) == 0x424, "");
+static_assert(offsetof(SDataBlade, keyAchievement) == 0x5d4, "");
 static_assert(offsetof(SDataBlade, keyReleaseLevel) == 0x664, "");
 static_assert(offsetof(SDataBlade, favorites) == 0x666, "");
 static_assert(offsetof(SDataBlade, equipOrbs) == 0x678, "");
@@ -167,10 +201,14 @@ static_assert(offsetof(SDataBlade, equipPowerRank) == 0x704, "");
 static_assert(offsetof(SDataBlade, openCircuit) == 0x706, "");
 static_assert(offsetof(SDataBlade, race) == 0x708, "");
 static_assert(offsetof(SDataBlade, gender) == 0x709, "");
+static_assert(offsetof(SDataBlade, iconData) == 0x70a, "");
 static_assert(offsetof(SDataBlade, resourceNameModel) == 0x70c, "");
 static_assert(offsetof(SDataBlade, resourceNameMotion) == 0x734, "");
 static_assert(offsetof(SDataBlade, resourceNameAddMotion) == 0x75c, "");
 static_assert(offsetof(SDataBlade, voiceStr) == 0x770, "");
+static_assert(offsetof(SDataBlade, resourceNameEffect) == 0x7ac, "");
+static_assert(offsetof(SDataBlade, centerBone) == 0x7d4, "");
+static_assert(offsetof(SDataBlade, camBone) == 0x7e8, "");
 static_assert(offsetof(SDataBlade, sePack) == 0x7fc, "");
 static_assert(offsetof(SDataBlade, size) == 0x820, "");
 static_assert(offsetof(SDataBlade, weaponType) == 0x821, "");
@@ -178,7 +216,10 @@ static_assert(offsetof(SDataBlade, equipOrbMax) == 0x822, "");
 static_assert(offsetof(SDataBlade, attribute) == 0x823, "");
 static_assert(offsetof(SDataBlade, personality) == 0x824, "");
 static_assert(offsetof(SDataBlade, eyeRotControl) == 0x826, "");
+static_assert(offsetof(SDataBlade, coolTime) == 0x828, "");
 static_assert(offsetof(SDataBlade, weapon) == 0x82c, "");
+static_assert(offsetof(SDataBlade, chestHeight) == 0x82e, "");
+static_assert(offsetof(SDataBlade, landingHeight) == 0x830, "");
 static_assert(offsetof(SDataBlade, name) == 0x832, "");
 static_assert(offsetof(SDataBlade, nameListCategory) == 0x834, "");
 static_assert(offsetof(SDataBlade, scale) == 0x836, "");
@@ -207,7 +248,7 @@ static_assert(sizeof(SDataBlade) == 0x8a4, "");
 class GfDataBlade {
 public:
   static void setCreator(u32 blade, u32 creator);
-  static u16 getCreator(u32 blade);
+  static u32 getCreator(u32 blade);
   static void setActivateDriver(u32 bladeId, int slot, u32 driverId, u32 option);
   static SDataBlade *getSDataBlade(u32 blade);
   static u32 getBladeID(u32 index);
@@ -237,7 +278,7 @@ public:
   static bool getName(u8 *&bdat, u32 &textId, u32 blade);
   static const char *getCommonBladeName(u32 nameList);
   static bool getCommonBladeName(u8 *&bdat, u32 &textId, u32 nameList);
-  static u16 getFavorite(u32 blade, FAVORITE favorite);
+  static u32 getFavorite(u32 blade, FAVORITE favorite);
   static u32 getAchievementQuestPrefix(u32 blade, u32 line, u32 level);
   static bool isValid(u32 blade);
   static bool isActivateDriver(u32 blade);
@@ -280,7 +321,7 @@ public:
   static const char *getDebugName(u32 blade);
   static u8 getRace(u32 blade);
   static u8 getGender(u32 blade);
-  static u8 getQuestRace(u32 blade);
+  static u32 getQuestRace(u32 blade);
   static bool isOperable(u32 blade);
   static bool isAnimal(u32 blade);
   static bool isMale(u32 blade);
@@ -294,7 +335,7 @@ public:
   static u32 getBladePower(u32 blade);
   static f32 getWpnScale(u32 blade);
   static f32 getScale(u32 blade);
-  static u16 getOffsetID(u32 blade);
+  static u32 getOffsetID(u32 blade);
   static u16 getMountPoint(u32 blade);
   static u16 getMountObject(u32 blade);
   static u8 getSize(u32 blade);
@@ -312,7 +353,8 @@ public:
   static void setBladeWeapon(u32 blade, u32 weapon);
   static void setAttributeForDebug(u32 blade, u8 attribute);
   static SDataBladeArts *getArts(u32 blade, u32 slot);
-  static u16 getArtsEnhance(u32 blade, u32 slot);
+  static SDataBladeArts *getNArts(u32 blade, u32 slot);
+  static u32 getArtsEnhance(u32 blade, u32 slot);
   static SDataBladeSkill *getSkill(u32 blade, u32 slot);
   static u32 getCreateEvent(u32 blade);
   static u16 getNormalTalk(u32 blade);
@@ -332,8 +374,8 @@ public:
   static u32 getLuckRev(u32 blade);
   static u32 getBookedItemInfo(u32 blade);
   static bool isUsedFavorite(u32 blade, FAVORITE favorite);
-  static u8 getFootStep(u32 blade);
-  static u8 getFootStepEffect(u32 blade);
+  static u32 getFootStep(u32 blade);
+  static u32 getFootStepEffect(u32 blade);
   static bool isBladeID(u32 blade);
   static bool isReleaseLock(u32 blade);
   static bool getMercenaryName(u8 *&bdat, u32 &textId, u32 blade);

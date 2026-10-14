@@ -74,7 +74,7 @@ void GfDataBlade::setCreator(u32 blade, u32 creator) {
   }
 }
 
-u16 GfDataBlade::getCreator(u32 blade) {
+u32 GfDataBlade::getCreator(u32 blade) {
   if (blade == 0) {
     return 0;
   }
@@ -323,7 +323,7 @@ bool GfDataBlade::getCommonBladeName(u8 *&bdat, u32 &textId, u32 nameList) {
   return textId != 0;
 }
 
-u16 GfDataBlade::getFavorite(u32 blade, FAVORITE favorite) {
+u32 GfDataBlade::getFavorite(u32 blade, FAVORITE favorite) {
   if (blade == 0) {
     return 0;
   }
@@ -536,7 +536,7 @@ u8 GfDataBlade::getGender(u32 blade) {
   return getSDataBlade(blade)->gender;
 }
 
-u8 GfDataBlade::getQuestRace(u32 blade) {
+u32 GfDataBlade::getQuestRace(u32 blade) {
   if (blade == 0) {
     return QUEST_RACE_HUMAN;
   }
@@ -637,7 +637,7 @@ f32 GfDataBlade::getScale(u32 blade) {
   return getSDataBlade(blade)->scale * SCALE_PERCENT;
 }
 
-u16 GfDataBlade::getOffsetID(u32 blade) {
+u32 GfDataBlade::getOffsetID(u32 blade) {
   if (blade == 0) {
     return 0;
   }
@@ -784,7 +784,7 @@ void GfDataBlade::setAttributeForDebug(u32 blade, u8 attribute) {
 
 SDataBladeArts *GfDataBlade::getArts(u32 blade, u32 slot) { return &getSDataBlade(blade)->arts[slot]; }
 
-u16 GfDataBlade::getArtsEnhance(u32 blade, u32 slot) {
+u32 GfDataBlade::getArtsEnhance(u32 blade, u32 slot) {
   if (blade - BLADE_HANA_JS < BLADE_HANA_COUNT) {
     return getSDataBlade(blade)->equipHana.arts[slot].enhance;
   }
@@ -909,9 +909,9 @@ bool GfDataBlade::isUsedFavorite(u32 blade, FAVORITE favorite) {
   }
 }
 
-u8 GfDataBlade::getFootStep(u32 blade) { return getSDataBlade(blade)->footStep; }
+u32 GfDataBlade::getFootStep(u32 blade) { return getSDataBlade(blade)->footStep; }
 
-u8 GfDataBlade::getFootStepEffect(u32 blade) { return getSDataBlade(blade)->footStepEffect; }
+u32 GfDataBlade::getFootStepEffect(u32 blade) { return getSDataBlade(blade)->footStepEffect; }
 
 bool GfDataBlade::isBladeID(u32 blade) { return blade - BLADE_REGULAR_FIRST < BLADE_COUNT; }
 
