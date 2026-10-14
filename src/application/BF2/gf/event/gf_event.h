@@ -32,6 +32,7 @@ public:
   static void callPartyIDMemberOK(bool isOK, u32 partyId);
   static void callPartyDriver(GF_OBJ_HANDLE *handle, u32 partyId, bool isEnter);
   static void callPartyChange();
+  static void callSwapFormation(u32 playerId, u32 otherPlayerId);
 };
 
 } // namespace gf

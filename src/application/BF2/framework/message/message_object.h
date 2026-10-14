@@ -13,6 +13,7 @@ struct Message {
 
 class MessageObject {
 public:
+  MessageObject();
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual ~MessageObject();
   virtual bool recieveMessage(MessageObject *sender, Message &message);

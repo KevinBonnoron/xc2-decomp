@@ -1,4 +1,5 @@
 #pragma once
+#include "mm/mm_std_base.h"
 
 namespace mm {
 namespace mtl {
@@ -28,6 +29,14 @@ public:
     T *ptr = mPtr;
     mPtr = other.mPtr;
     other.mPtr = ptr;
+  }
+
+  T *operator->() const {
+    if (mPtr == 0) {
+      mm::MMStdBase::mmAssert("_ptr != 0", __FILE__, __LINE__);
+    }
+
+    return mPtr;
   }
 
   T *get() const { return mPtr; }
