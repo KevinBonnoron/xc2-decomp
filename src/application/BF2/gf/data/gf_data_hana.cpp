@@ -166,6 +166,10 @@ void GfDataHana::setOpenCircuit(u32 blade, u32 circuit, bool openCircuit) {
 
 u32 GfDataHana::getOpenCircuitEther(u32 blade, u32 circuit) { return GfBdatBtl::get()->getBTL_HanaBaseCircuitNum(blade - HANA_BASE_FIRST, circuit); }
 
+void GfDataHana::setEquipParts(u32 blade, const EquipHana &equipParts) {
+  __builtin_memcpy(&GfDataBlade::getSDataBlade(blade)->equipHana, &equipParts, sizeof(EquipHana));
+}
+
 void GfDataHana::setEquipRoleParts(u32 blade, u32 parts, GfItemHandle handle) {
   SDataBlade *dataBlade = GfDataBlade::getSDataBlade(blade);
   GfItemHandle roleHandle = handle;
