@@ -9,6 +9,7 @@ public:
   static u32 getCurrentMapWeatherBit(bool isPrevious);
   static void setMapWeatherID(WEATHERID weather);
   static CLOUD_SEA getCloudSea(u32 map);
+  static bool isWeatherSE();
 };
 
 } // namespace gf
