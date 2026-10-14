@@ -37,6 +37,31 @@ constexpr u32 ARMOR_MAX = 100;
 constexpr f32 PERCENT = 0.01f;
 constexpr f32 PERCENT_SCALE = 100.0f;
 
+enum {
+  ENHANCE_EFFECT_NONE,
+  ENHANCE_EFFECT_HP_MAX_PERCENT,
+  ENHANCE_EFFECT_STRENGTH_PERCENT,
+  ENHANCE_EFFECT_POWER_ETHER_PERCENT,
+  ENHANCE_EFFECT_DEX_PERCENT,
+  ENHANCE_EFFECT_AGILITY_PERCENT,
+  ENHANCE_EFFECT_LUCK_PERCENT,
+  ENHANCE_EFFECT_CRITICAL_RATE_PERCENT,
+  ENHANCE_EFFECT_P_ARMOR_PERCENT,
+  ENHANCE_EFFECT_E_ARMOR_PERCENT,
+  ENHANCE_EFFECT_GUARD_RATE_PERCENT,
+  ENHANCE_EFFECT_HP_MAX_ADD,
+  ENHANCE_EFFECT_STRENGTH_ADD,
+  ENHANCE_EFFECT_POWER_ETHER_ADD,
+  ENHANCE_EFFECT_DEX_ADD,
+  ENHANCE_EFFECT_AGILITY_ADD,
+  ENHANCE_EFFECT_LUCK_ADD,
+  ENHANCE_EFFECT_CRITICAL_RATE_ADD,
+  ENHANCE_EFFECT_P_ARMOR_ADD,
+  ENHANCE_EFFECT_E_ARMOR_ADD,
+  ENHANCE_EFFECT_GUARD_RATE_ADD,
+  ENHANCE_EFFECT_ARMOR_ADD = 146,
+};
+
 DataObjDriver::DataObjDriver(u32 id) : data(nullptr), handle(INVALID_HANDLE), virtualData(nullptr), virtualEquipWeapons(), menuParam(false) {
   setup(id);
 }
@@ -358,6 +383,48 @@ void DataObjBlade::setVirtualEquipWpn(u32 weapon, int) {
   }
 }
 
+static void unknown002(u32 &value, SDataBlade &dataBlade, u32 percentEffect, u32 addEffect, bool isVirtual) { // Inferred role: applyBladeEnhance; original function name unknown.
+  mm::mtl::FixedVector<u16, 64> enhances;
+  GfDataBlade::getValidEnhance(enhances, dataBlade, isVirtual);
+  GfBdatBtl *bdatBattle = GfBdatBtl::get();
+  f32 base = value;
+  if (enhances.size() != 0) {
+    u16 *enhance = enhances.begin();
+    u16 *end = enhances.end();
+    do {
+      if (bdatBattle->getBTL_EnhanceEnhanceEffect(*enhance) == addEffect) {
+        base += bdatBattle->getBTL_EnhanceParam1(*enhance);
+      }
+    } while (++enhance != end);
+  }
+
+  f32 percent = 0.0f;
+  if (enhances.size() != 0) {
+    u16 *enhance = enhances.begin();
+    u16 *end = enhances.end();
+    do {
+      if (bdatBattle->getBTL_EnhanceEnhanceEffect(*enhance) == percentEffect) {
+        percent += bdatBattle->getBTL_EnhanceParam1(*enhance) * PERCENT;
+      }
+    } while (++enhance != end);
+  }
+
+  value = base + base * percent;
+}
+
+u32 DataObjBlade::getPArmor(bool isVirtual) const {
+  u32 pArmor = GfDataBlade::getParmor(getBdatId());
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  u32 weapon = getEquipWeapon(isVirtual, -1);
+  if (weapon != 0) {
+    pArmor += bdatItem->getPcWpnPArmor(weapon);
+  }
+
+  unknown002(pArmor, *get(isVirtual), ENHANCE_EFFECT_P_ARMOR_PERCENT, ENHANCE_EFFECT_P_ARMOR_ADD, isVirtualSetting() | menuParam);
+  unknown002(pArmor, *get(isVirtual), ENHANCE_EFFECT_NONE, ENHANCE_EFFECT_ARMOR_ADD, isVirtualSetting() | menuParam);
+  return pArmor;
+}
+
 u32 DataObjDriver::getEArmor(bool isVirtual) const {
   SDataDriver *dataDriver = get(isVirtual);
   u32 blade = getBlade(isVirtual, -1);
@@ -374,6 +441,44 @@ u32 DataObjDriver::getEArmor(bool isVirtual) const {
   u32 bladeEArmor = dataObjBlade.getEArmor(isVirtual);
   u32 eArmor = dataDriver->eArmor + bladeEArmor;
   return eArmor > ARMOR_MAX ? ARMOR_MAX : eArmor;
+}
+
+u32 DataObjBlade::getEArmor(bool isVirtual) const {
+  u32 eArmor = GfDataBlade::getEarmor(getBdatId());
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  u32 weapon = getEquipWeapon(isVirtual, -1);
+  if (weapon != 0) {
+    eArmor += bdatItem->getPcWpnEArmor(weapon);
+  }
+
+  unknown002(eArmor, *get(isVirtual), ENHANCE_EFFECT_E_ARMOR_PERCENT, ENHANCE_EFFECT_E_ARMOR_ADD, isVirtualSetting() | menuParam);
+  unknown002(eArmor, *get(isVirtual), ENHANCE_EFFECT_NONE, ENHANCE_EFFECT_ARMOR_ADD, isVirtualSetting() | menuParam);
+  return eArmor;
+}
+
+u32 DataObjBlade::getCriticalRate(bool isVirtual) const {
+  u32 criticalRate = 0;
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  u32 weapon = getEquipWeapon(isVirtual, -1);
+  if (weapon != 0) {
+    criticalRate = bdatItem->getPcWpnCriRate(weapon);
+  }
+
+  unknown002(
+      criticalRate, *get(isVirtual), ENHANCE_EFFECT_CRITICAL_RATE_PERCENT, ENHANCE_EFFECT_CRITICAL_RATE_ADD, isVirtualSetting() | menuParam);
+  return criticalRate;
+}
+
+u32 DataObjBlade::getGuardRate(bool isVirtual) const {
+  u32 guardRate = 0;
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  u32 weapon = getEquipWeapon(isVirtual, -1);
+  if (weapon != 0) {
+    guardRate = bdatItem->getPcWpnGuardRate(weapon);
+  }
+
+  unknown002(guardRate, *get(isVirtual), ENHANCE_EFFECT_GUARD_RATE_PERCENT, ENHANCE_EFFECT_GUARD_RATE_ADD, isVirtualSetting() | menuParam);
+  return guardRate;
 }
 
 u32 DataObjDriver::getAutoHate(bool isVirtual) const {

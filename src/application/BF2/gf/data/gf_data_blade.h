@@ -392,6 +392,7 @@ public:
   static u32 getDexRev(u32 blade);
   static u32 getAgilityRev(u32 blade);
   static u32 getLuckRev(u32 blade);
+  static void getValidEnhance(mm::mtl::FixedVector<u16, 64> &enhances, SDataBlade &dataBlade, bool isVirtual);
   static u32 getBookedItemInfo(u32 blade);
   static bool isUsedFavorite(u32 blade, FAVORITE favorite);
   static u32 getFootStep(u32 blade);
