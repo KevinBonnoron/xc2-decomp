@@ -1,4 +1,5 @@
 #include "gf/game/gf_game_party.h"
+#include "gf/data/gf_bdat_chrdr.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
@@ -36,6 +37,8 @@ constexpr u32 READY_FRAME_MEMBER_OK = 2;
 constexpr u32 READY_FRAME_MAX = 100;
 constexpr int SLOT_HIKARI = 3;
 constexpr u32 BLADE_NEW_GAME = 1012;
+constexpr u32 BLADE_INDEX_LIST_START = 20;
+constexpr u32 BLADE_INDEX_END = 422;
 
 static u32 getValidDriverId(const DataParamAcc &paramAcc) {
   return paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0;
@@ -1303,5 +1306,115 @@ int GfSelectBlade::getBladeSetID(GF_OBJ_HANDLE *handle, int slot) {
 int GfSelectBlade::getDefBladeIndexForDebug(u32 partyId, int index) { return s_pThis->members[partyId].defaultIndices[index]; }
 
 int GfSelectBlade::getChangeBladeIndexForDebug(u32 partyId, int index) { return s_pThis->members[partyId].changeIndices[index]; }
+
+static void getPartyDriverList(mm::mtl::FixedVector<u16, 16> &drivers) {
+  for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
+    u32 driver = GfDataParty::getDriver(partyId);
+    if (driver != 0 && !GfDataDriver::isDummyDriver(driver)) {
+      drivers.push_back(driver);
+    }
+  }
+}
+
+static void getReserverDriverList(mm::mtl::FixedVector<u16, 16> &drivers) {
+  for (u32 partyId = PARTY_MEMBER_NUM; partyId < PARTY_MEMBER_MAX; partyId++) {
+    u32 driver = GfDataParty::getDriver(partyId);
+    if (driver != 0 && !GfDataDriver::isDummyDriver(driver)) {
+      drivers.push_back(driver);
+    }
+  }
+}
+
+bool GfPartySelect::getDriverList(mm::mtl::FixedVector<u16, 16> &drivers, LIST_TYPE listType, u32) {
+  switch (listType) {
+  case LIST_TYPE_PARTY:
+    getPartyDriverList(drivers);
+    break;
+  case LIST_TYPE_RESERVER:
+    getReserverDriverList(drivers);
+    break;
+  case LIST_TYPE_PARTY_AND_RESERVER:
+    getPartyDriverList(drivers);
+    getReserverDriverList(drivers);
+    break;
+  case LIST_TYPE_UNUSE: {
+    GfBdatChrDr *bdatChrDr = GfBdatChrDr::get();
+    u32 start = bdatChrDr->getChrDrStart();
+    u32 end = bdatChrDr->getChrDrEnd();
+    for (u32 driver = start; driver < end; driver++) {
+      if (GfDataDriver::isActivateUnuse(driver) && !GfDataDriver::isDummyDriver(driver)) {
+        drivers.push_back(driver);
+      }
+    }
+    break;
+  }
+  case LIST_TYPE_ACCESSORY:
+    GfGameUtil::getDriverAcceList(drivers);
+    break;
+  default:
+    break;
+  }
+
+  return !drivers.empty();
+}
+
+static void getPartyBladeList(mm::mtl::FixedVector<u16, 422> &blades, u32 driver) {
+  DataParamAcc paramAcc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+  for (int slot = 0; slot < GfDataDriver::getMaxSetBladeNum(driver); slot++) {
+    u32 blade = paramAcc.getBlade(slot, false);
+    if (GfDataBlade::isActivateDriver(blade) && !GfDataBlade::isDummyBlade(blade) && GfDataParty::isExistBlade(blade)) {
+      blades.push_back(blade);
+    }
+  }
+}
+
+static void getReserverBladeList(mm::mtl::FixedVector<u16, 422> &blades, u32 driver) {
+  for (u32 index = 0; index < BLADE_INDEX_END; index++) {
+    u32 blade = GfDataBlade::getBladeID(index);
+    if (blade == 0 || !GfDataBlade::isActivateReserver(blade) || GfDataBlade::isDummyBlade(blade)) {
+      continue;
+    }
+
+    DataParamAcc paramAcc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_NONE);
+    if (GfDataBlade::getCreator(blade) == driver) {
+      blades.push_back(blade);
+    }
+  }
+}
+
+bool GfPartySelect::getBladeList(mm::mtl::FixedVector<u16, 422> &blades, u32 driver, LIST_TYPE listType, u32) {
+  switch (listType) {
+  case LIST_TYPE_PARTY:
+    getPartyBladeList(blades, driver);
+    break;
+  case LIST_TYPE_PARTY_AND_RESERVER:
+    getPartyBladeList(blades, driver);
+    getReserverBladeList(blades, driver);
+    break;
+  case LIST_TYPE_RESERVER:
+    getReserverBladeList(blades, driver);
+    break;
+  case LIST_TYPE_ALL:
+    for (u32 index = BLADE_INDEX_LIST_START; index < BLADE_INDEX_END; index++) {
+      u32 blade = GfDataBlade::getBladeID(index);
+      if (blade != 0 && !GfDataBlade::isActivateMercenaryTeam(blade) && !GfDataBlade::isActivateUnuse(blade) && !GfDataBlade::isDummyBlade(blade)) {
+        blades.push_back(blade);
+      }
+    }
+    break;
+  case LIST_TYPE_MERCENARY:
+    for (u32 index = 0; index < BLADE_INDEX_END; index++) {
+      u32 blade = GfDataBlade::getBladeID(index);
+      if (blade != 0 && GfDataBlade::isActivateMercenaryTeam(blade) && !GfDataBlade::isDummyBlade(blade)) {
+        blades.push_back(blade);
+      }
+    }
+    break;
+  default:
+    break;
+  }
+
+  return !blades.empty();
+}
 
 } // namespace gf
