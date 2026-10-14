@@ -209,9 +209,14 @@ public:
     LIST_TYPE_PARTY,
     LIST_TYPE_RESERVER,
     LIST_TYPE_PARTY_AND_RESERVER,
+    LIST_TYPE_ALL,
+    LIST_TYPE_MERCENARY,
+    LIST_TYPE_UNUSE,
+    LIST_TYPE_ACCESSORY,
   };
 
   static bool getDriverList(mm::mtl::FixedVector<u16, 16> &drivers, LIST_TYPE listType, u32 option);
+  static bool getBladeList(mm::mtl::FixedVector<u16, 422> &blades, u32 driver, LIST_TYPE listType, u32 option);
 };
 
 } // namespace gf
