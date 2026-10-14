@@ -7,7 +7,13 @@ namespace gf {
 
 class GfBdatRsc : public mm::mtl::PtrSingleton<GfBdatRsc>, public GfBdatRefresh {
 public:
+  GfBdatRsc();
+  virtual ~GfBdatRsc();
+  void destroyFP();
+  void createFP();
+  void bdatRefresh() override;
   u32 getRscEnStart() const;
+  u32 getRscEnEnd() const;
   const char *getRscEnDebugName(u32 id) const;
   u32 getRscEnTypeFamily(u32 id) const;
   u32 getRscEnTypeGenus(u32 id) const;
@@ -77,12 +83,16 @@ public:
   u32 getRscEnExtraParts3(u32 id) const;
   u32 getRscEnExtraParts4(u32 id) const;
   u32 getRscEnDeadSeNum(u32 id) const;
+  u32 getRscEnWeaponNum(u32 resource, u32 weapon) const;
+  u32 getRscEnExtraParts(u32 resource, u32 part) const;
   const char *getRscEnRotateBone(u32 id) const;
   u32 getRscEnGenusStart() const;
+  u32 getRscEnGenusEnd() const;
   u32 getRscEnGenusNAME(u32 id) const;
   u32 getRscEnGenusCAPTION(u32 id) const;
   bool isRscEnGenusFlaggimmicktype(u32 id) const;
   u32 getRscEnUndStart() const;
+  u32 getRscEnUndEnd() const;
   bool isRscEnUndFlagUndX(u32 id) const;
   bool isRscEnUndFlagUndZ(u32 id) const;
   s32 getRscEnUndUndMinX(u32 id) const;
@@ -91,6 +101,7 @@ public:
   s32 getRscEnUndUndMaxZ(u32 id) const;
   u32 getRscEnUndUndDeg(u32 id) const;
   u32 getRscNpcListStart() const;
+  u32 getRscNpcListEnd() const;
   const char *getRscNpcListModel(u32 id) const;
   const char *getRscNpcListMotion(u32 id) const;
   const char *getRscNpcListAddMotion(u32 id) const;
@@ -114,7 +125,9 @@ public:
   u32 getRscNpcListExtraParts6(u32 id) const;
   u32 getRscNpcListScale(u32 id) const;
   u32 getRscNpcListEventAsset(u32 id) const;
+  u32 getRscNpcListExtraParts(u32 npc, u32 part) const;
   u32 getRscMobListStart() const;
+  u32 getRscMobListEnd() const;
   const char *getRscMobListModel(u32 id) const;
   const char *getRscMobListMotion(u32 id) const;
   const char *getRscMobListAddMotion(u32 id) const;
@@ -134,6 +147,7 @@ public:
   u32 getRscMobListExtraParts6(u32 id) const;
   u32 getRscMobListExtraParts(u32 id, u32 part) const;
   u32 getRSC_MapObjListStart() const;
+  u32 getRSC_MapObjListEnd() const;
   const char *getRSC_MapObjListModel(u32 id) const;
   const char *getRSC_MapObjListMotion(u32 id) const;
   const char *getRSC_MapObjListComp_Eff(u32 id) const;
@@ -142,13 +156,16 @@ public:
   bool isRSC_MapObjListflagBigObj(u32 id) const;
   u32 getRSC_MapObjListExtraParts1(u32 id) const;
   u32 getRSC_TboxListStart() const;
+  u32 getRSC_TboxListEnd() const;
   const char *getRSC_TboxListModel(u32 id) const;
   const char *getRSC_TboxListMotion(u32 id) const;
   u32 getRSC_PcWpnStart() const;
+  u32 getRSC_PcWpnEnd() const;
   const char *getRSC_PcWpnModel(u32 id) const;
   const char *getRSC_PcWpnMotion(u32 id) const;
   u32 getRSC_PcWpnMenuImageID(u32 id) const;
   u32 getRSC_PcWpnMountStart() const;
+  u32 getRSC_PcWpnMountEnd() const;
   const char *getRSC_PcWpnMountWpn01rIn(u32 id) const;
   const char *getRSC_PcWpnMountWpn01rOut(u32 id) const;
   const char *getRSC_PcWpnMountWpn02rIn(u32 id) const;
@@ -227,7 +244,12 @@ public:
   const char *getRSC_PcWpnMountWpn26rOut(u32 id) const;
   const char *getRSC_PcWpnMountWpn26lIn(u32 id) const;
   const char *getRSC_PcWpnMountWpn26lOut(u32 id) const;
+  const char *getRSC_PcWpnMountWpnInR(u32 mount, u32 weaponType) const;
+  const char *getRSC_PcWpnMountWpnInL(u32 mount, u32 weaponType) const;
+  const char *getRSC_PcWpnMountWpnOutR(u32 mount, u32 weaponType) const;
+  const char *getRSC_PcWpnMountWpnOutL(u32 mount, u32 weaponType) const;
   u32 getRscEnWpnStart() const;
+  u32 getRscEnWpnEnd() const;
   const char *getRscEnWpnModel(u32 id) const;
   u32 getRscEnWpnScale(u32 id) const;
   const char *getRscEnWpnMotion(u32 id) const;
@@ -236,20 +258,25 @@ public:
   const char *getRscEnWpnMtpOutChara(u32 id) const;
   const char *getRscEnWpnMtpOutWpn(u32 id) const;
   u32 getRscNpcWpnStart() const;
+  u32 getRscNpcWpnEnd() const;
   const char *getRscNpcWpnModel(u32 id) const;
   const char *getRscNpcWpnMotion(u32 id) const;
   u32 getDriverParamStart() const;
+  u32 getDriverParamEnd() const;
   u32 getDriverParamExtMountNpc(u32 id) const;
   const char *getDriverParamExtMountBone(u32 id) const;
   u32 getDriverParamExtMountCond(u32 id) const;
   u32 getVoiceTableStart() const;
+  u32 getVoiceTableEnd() const;
   const char *getVoiceTableDriver1(u32 id) const;
   const char *getVoiceTableDriver2(u32 id) const;
   const char *getVoiceTableDriver3(u32 id) const;
   const char *getVoiceTableDriver4(u32 id) const;
   const char *getVoiceTableDriver5(u32 id) const;
   const char *getVoiceTableDriver6(u32 id) const;
+  const char *getVoiceTableDriver(u32 voice, u32 driver) const;
   u32 getVoiceTableBladeStart() const;
+  u32 getVoiceTableBladeEnd() const;
   const char *getVoiceTableBladeBlade1(u32 id) const;
   const char *getVoiceTableBladeBlade2(u32 id) const;
   const char *getVoiceTableBladeBlade3(u32 id) const;
@@ -261,7 +288,9 @@ public:
   const char *getVoiceTableBladeBlade9(u32 id) const;
   const char *getVoiceTableBladeBlade10(u32 id) const;
   const char *getVoiceTableBladeBlade11(u32 id) const;
+  const char *getVoiceTableBladeBlade(u32 voice, u32 blade) const;
   u32 getVoiceTableRareStart() const;
+  u32 getVoiceTableRareEnd() const;
   const char *getVoiceTableRareRareBlade1(u32 id) const;
   const char *getVoiceTableRareRareBlade2(u32 id) const;
   const char *getVoiceTableRareRareBlade3(u32 id) const;
@@ -299,7 +328,9 @@ public:
   const char *getVoiceTableRareRareBlade35(u32 id) const;
   const char *getVoiceTableRareRareBlade36(u32 id) const;
   const char *getVoiceTableRareRareBlade37(u32 id) const;
+  const char *getVoiceTableRareBlade(u32 voice, u32 blade) const;
   u32 getVoiceTableCommonStart() const;
+  u32 getVoiceTableCommonEnd() const;
   const char *getVoiceTableCommonCommonBlade1(u32 id) const;
   const char *getVoiceTableCommonCommonBlade2(u32 id) const;
   const char *getVoiceTableCommonCommonBlade3(u32 id) const;
@@ -332,7 +363,9 @@ public:
   const char *getVoiceTableCommonCommonBlade30(u32 id) const;
   const char *getVoiceTableCommonCommonBlade31(u32 id) const;
   const char *getVoiceTableCommonCommonBlade32(u32 id) const;
+  const char *getVoiceTableCommonCommonBlade(u32 voice, u32 personalityVoice) const;
   u32 getFLD_actorSEStart() const;
+  u32 getFLD_actorSEEnd() const;
   const char *getFLD_actorSELOD(u32 id) const;
   u32 getFLD_actorSEse_type(u32 id) const;
   u32 getFLD_actorSEseName(u32 id) const;
@@ -343,13 +376,6 @@ public:
   f32 getFLD_actorSEoffsetX(u32 id) const;
   f32 getFLD_actorSEoffsetY(u32 id) const;
   f32 getFLD_actorSEoffsetZ(u32 id) const;
-
-  u32 getRscNpcListExtraParts(u32 npc, u32 part) const;
-  u32 getRscEnExtraParts(u32 resource, u32 part) const;
-  const char *getVoiceTableDriver(u32 voice, u32 driver) const;
-  const char *getVoiceTableBladeBlade(u32 voice, u32 blade) const;
-  const char *getVoiceTableRareBlade(u32 voice, u32 blade) const;
-  const char *getVoiceTableCommonCommonBlade(u32 voice, u32 personalityVoice) const;
 
 private:
   CBdatWrapper *mRscEn;

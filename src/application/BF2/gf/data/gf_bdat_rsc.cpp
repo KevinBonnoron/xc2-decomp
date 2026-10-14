@@ -1,5 +1,7 @@
 #include "gf/data/gf_bdat_rsc.h"
 #include "bdat.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/gf_allocator.h"
 
 namespace gf {
 namespace _gfbrs {
@@ -4019,7 +4021,468 @@ f32 getFLD_actorSEoffsetZ(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbrs
 
+enum {
+  BDAT_VOICE_TABLE = 0x72,
+  BDAT_VOICE_TABLE_BLADE = 0x73,
+  BDAT_VOICE_TABLE_RARE = 0x74,
+  BDAT_VOICE_TABLE_COMMON = 0x75,
+  BDAT_FLD_ACTOR_SE = 0x76,
+  BDAT_DRIVER_PARAM = 0x7e,
+  BDAT_RSC_EN = 0x90,
+  BDAT_RSC_EN_GENUS = 0x91,
+  BDAT_RSC_EN_UND = 0x92,
+  BDAT_RSC_NPC_LIST = 0x93,
+  BDAT_RSC_NPC_WPN = 0x94,
+  BDAT_RSC_MOB_LIST = 0x95,
+  BDAT_RSC_MAP_OBJ_LIST = 0x96,
+  BDAT_RSC_TBOX_LIST = 0x97,
+  BDAT_RSC_PC_WPN = 0x98,
+  BDAT_RSC_PC_WPN_MOUNT = 0x99,
+  BDAT_RSC_EN_WPN = 0x9a,
+};
+
+GfBdatRsc::GfBdatRsc()
+    : mRscEn(nullptr), mRscEnGenus(nullptr), mRscEnUnd(nullptr), mRscNpcList(nullptr), mRscNpcWpn(nullptr), mRscMobList(nullptr), mRSC_PcWpn(nullptr),
+      mRSC_PcWpnMount(nullptr), mRscEnWpn(nullptr), mRSC_TboxList(nullptr), mRSC_MapObjList(nullptr), mDriverParam(nullptr), mVoiceTable(nullptr),
+      mVoiceTableBlade(nullptr), mVoiceTableRare(nullptr), mVoiceTableCommon(nullptr), mFLD_actorSE(nullptr) {
+  bdatRefresh();
+}
+
+GfBdatRsc::~GfBdatRsc() { destroyFP(); }
+
+void GfBdatRsc::destroyFP() {
+  if (mRscEn != nullptr) {
+    delete mRscEn;
+    mRscEn = nullptr;
+  }
+
+  if (mRscEnGenus != nullptr) {
+    delete mRscEnGenus;
+    mRscEnGenus = nullptr;
+  }
+
+  if (mRscEnUnd != nullptr) {
+    delete mRscEnUnd;
+    mRscEnUnd = nullptr;
+  }
+
+  if (mRscNpcList != nullptr) {
+    delete mRscNpcList;
+    mRscNpcList = nullptr;
+  }
+
+  if (mRscNpcWpn != nullptr) {
+    delete mRscNpcWpn;
+    mRscNpcWpn = nullptr;
+  }
+
+  if (mRscMobList != nullptr) {
+    delete mRscMobList;
+    mRscMobList = nullptr;
+  }
+
+  if (mRSC_PcWpn != nullptr) {
+    delete mRSC_PcWpn;
+    mRSC_PcWpn = nullptr;
+  }
+
+  if (mRSC_PcWpnMount != nullptr) {
+    delete mRSC_PcWpnMount;
+    mRSC_PcWpnMount = nullptr;
+  }
+
+  if (mRscEnWpn != nullptr) {
+    delete mRscEnWpn;
+    mRscEnWpn = nullptr;
+  }
+
+  if (mRSC_TboxList != nullptr) {
+    delete mRSC_TboxList;
+    mRSC_TboxList = nullptr;
+  }
+
+  if (mRSC_MapObjList != nullptr) {
+    delete mRSC_MapObjList;
+    mRSC_MapObjList = nullptr;
+  }
+
+  if (mDriverParam != nullptr) {
+    delete mDriverParam;
+    mDriverParam = nullptr;
+  }
+
+  if (mVoiceTable != nullptr) {
+    delete mVoiceTable;
+    mVoiceTable = nullptr;
+  }
+
+  if (mVoiceTableBlade != nullptr) {
+    delete mVoiceTableBlade;
+    mVoiceTableBlade = nullptr;
+  }
+
+  if (mVoiceTableRare != nullptr) {
+    delete mVoiceTableRare;
+    mVoiceTableRare = nullptr;
+  }
+
+  if (mVoiceTableCommon != nullptr) {
+    delete mVoiceTableCommon;
+    mVoiceTableCommon = nullptr;
+  }
+
+  if (mFLD_actorSE != nullptr) {
+    delete mFLD_actorSE;
+    mFLD_actorSE = nullptr;
+  }
+}
+
+void GfBdatRsc::createFP() {
+  mRscEn = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN)};
+  mRscEnGenus = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_GENUS)};
+  mRscEnUnd = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_UND)};
+  mRscNpcList = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_NPC_LIST)};
+  mRscNpcWpn = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_NPC_WPN)};
+  mRscMobList = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_MOB_LIST)};
+  mRSC_PcWpn = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_PC_WPN)};
+  mRSC_PcWpnMount = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_PC_WPN_MOUNT)};
+  mRscEnWpn = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_WPN)};
+  mRSC_TboxList = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_TBOX_LIST)};
+  mRSC_MapObjList = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_MAP_OBJ_LIST)};
+  mDriverParam = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_DRIVER_PARAM)};
+  mVoiceTable = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_VOICE_TABLE)};
+  mVoiceTableBlade = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_VOICE_TABLE_BLADE)};
+  mVoiceTableRare = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_VOICE_TABLE_RARE)};
+  mVoiceTableCommon = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_VOICE_TABLE_COMMON)};
+  mFLD_actorSE = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_ACTOR_SE)};
+}
+
+void GfBdatRsc::bdatRefresh() {
+  destroyFP();
+  createFP();
+  _gfbrs::initRscEnDebugName(*mRscEn);
+  _gfbrs::initRscEnTypeFamily(*mRscEn);
+  _gfbrs::initRscEnTypeGenus(*mRscEn);
+  _gfbrs::initRscEnActType(*mRscEn);
+  _gfbrs::initRscEnFlyHeight(*mRscEn);
+  _gfbrs::initRscEnFldMoveType(*mRscEn);
+  _gfbrs::initRscEnMaterial(*mRscEn);
+  _gfbrs::initRscEnProxyID(*mRscEn);
+  _gfbrs::initRscEnEnRadius(*mRscEn);
+  _gfbrs::initRscEnEnRadius2(*mRscEn);
+  _gfbrs::initRscEnChestHeight(*mRscEn);
+  _gfbrs::initRscEnChestHeight2(*mRscEn);
+  _gfbrs::initRscEnBallRadius(*mRscEn);
+  _gfbrs::initRscEnBallHeight(*mRscEn);
+  _gfbrs::initRscEnCharColli(*mRscEn);
+  _gfbrs::initRscEnoffsetID(*mRscEn);
+  _gfbrs::initRscEnEyeRot(*mRscEn);
+  _gfbrs::initRscEnSearchBaseBone(*mRscEn);
+  _gfbrs::initRscEnCenterBone(*mRscEn);
+  _gfbrs::initRscEnCamBone(*mRscEn);
+  _gfbrs::initRscEnFrontAngle(*mRscEn);
+  _gfbrs::initRscEnTurnAngleSmall(*mRscEn);
+  _gfbrs::initRscEnTurnAngleBig(*mRscEn);
+  _gfbrs::initRscEnUnduration(*mRscEn);
+  _gfbrs::initRscEnModel(*mRscEn);
+  _gfbrs::initRscEnChrFile(*mRscEn);
+  _gfbrs::initRscEnMotion(*mRscEn);
+  _gfbrs::initRscEnRefMotion(*mRscEn);
+  _gfbrs::initRscEnEffectPack(*mRscEn);
+  _gfbrs::initRscEnLoopEffect(*mRscEn);
+  _gfbrs::initRscEnSePack(*mRscEn);
+  _gfbrs::initRscEnVoice(*mRscEn);
+  _gfbrs::initRscEnVoiceEx(*mRscEn);
+  _gfbrs::initRscEnClipEvent(*mRscEn);
+  _gfbrs::initRscEnComp_Eff(*mRscEn);
+  _gfbrs::initRscEnComp_Se(*mRscEn);
+  _gfbrs::initRscEnComp_Vo(*mRscEn);
+  _gfbrs::initRscEnFlagNoEcSkip(*mRscEn);
+  _gfbrs::initRscEnFlagMap(*mRscEn);
+  _gfbrs::initRscEnFlagEvt(*mRscEn);
+  _gfbrs::initRscEnFlagNoWinVo(*mRscEn);
+  _gfbrs::initRscEnFlagBait(*mRscEn);
+  _gfbrs::initRscEnFlagUseSearchBone(*mRscEn);
+  _gfbrs::initRscEnFlagNoVanish(*mRscEn);
+  _gfbrs::initRscEnFlagNoCamera(*mRscEn);
+  _gfbrs::initRscEnFlagWeaponDrawDisp(*mRscEn);
+  _gfbrs::initRscEnFlagJoinAll(*mRscEn);
+  _gfbrs::initRscEnFlagDeathMotion(*mRscEn);
+  _gfbrs::initRscEnWeaponNum1(*mRscEn);
+  _gfbrs::initRscEnWeaponNum2(*mRscEn);
+  _gfbrs::initRscEnWeaponNum3(*mRscEn);
+  _gfbrs::initRscEnWeaponNum4(*mRscEn);
+  _gfbrs::initRscEnWeaponNum5(*mRscEn);
+  _gfbrs::initRscEnMemorySlot(*mRscEn);
+  _gfbrs::initRscEnRace(*mRscEn);
+  _gfbrs::initRscEnDrType(*mRscEn);
+  _gfbrs::initRscEnGoldDivideRev(*mRscEn);
+  _gfbrs::initRscEnFootStep(*mRscEn);
+  _gfbrs::initRscEnFootStepEffect(*mRscEn);
+  _gfbrs::initRscEnRotateX(*mRscEn);
+  _gfbrs::initRscEnRotateY(*mRscEn);
+  _gfbrs::initRscEnRotateZ(*mRscEn);
+  _gfbrs::initRscEnRotateDeg(*mRscEn);
+  _gfbrs::initRscEnRotEffScale(*mRscEn);
+  _gfbrs::initRscEnExtraParts1(*mRscEn);
+  _gfbrs::initRscEnExtraParts2(*mRscEn);
+  _gfbrs::initRscEnExtraParts3(*mRscEn);
+  _gfbrs::initRscEnExtraParts4(*mRscEn);
+  _gfbrs::initRscEnDeadSeNum(*mRscEn);
+  _gfbrs::initRscEnRotateBone(*mRscEn);
+  _gfbrs::initRscEnGenusNAME(*mRscEnGenus);
+  _gfbrs::initRscEnGenusCAPTION(*mRscEnGenus);
+  _gfbrs::initRscEnGenusFlaggimmicktype(*mRscEnGenus);
+  _gfbrs::initRscEnUndFlagUndX(*mRscEnUnd);
+  _gfbrs::initRscEnUndFlagUndZ(*mRscEnUnd);
+  _gfbrs::initRscEnUndUndMinX(*mRscEnUnd);
+  _gfbrs::initRscEnUndUndMaxX(*mRscEnUnd);
+  _gfbrs::initRscEnUndUndMinZ(*mRscEnUnd);
+  _gfbrs::initRscEnUndUndMaxZ(*mRscEnUnd);
+  _gfbrs::initRscEnUndUndDeg(*mRscEnUnd);
+  _gfbrs::initRscNpcListModel(*mRscNpcList);
+  _gfbrs::initRscNpcListMotion(*mRscNpcList);
+  _gfbrs::initRscNpcListAddMotion(*mRscNpcList);
+  _gfbrs::initRscNpcListComp_Eff(*mRscNpcList);
+  _gfbrs::initRscNpcListCollisionId(*mRscNpcList);
+  _gfbrs::initRscNpcListSE(*mRscNpcList);
+  _gfbrs::initRscNpcListSeEnv(*mRscNpcList);
+  _gfbrs::initRscNpcListRace(*mRscNpcList);
+  _gfbrs::initRscNpcListFootStep(*mRscNpcList);
+  _gfbrs::initRscNpcListFootStepEffect(*mRscNpcList);
+  _gfbrs::initRscNpcListRoots(*mRscNpcList);
+  _gfbrs::initRscNpcListGender(*mRscNpcList);
+  _gfbrs::initRscNpcListName(*mRscNpcList);
+  _gfbrs::initRscNpcListOffsetID(*mRscNpcList);
+  _gfbrs::initRscNpcListEyeRot(*mRscNpcList);
+  _gfbrs::initRscNpcListExtraParts1(*mRscNpcList);
+  _gfbrs::initRscNpcListExtraParts2(*mRscNpcList);
+  _gfbrs::initRscNpcListExtraParts3(*mRscNpcList);
+  _gfbrs::initRscNpcListExtraParts4(*mRscNpcList);
+  _gfbrs::initRscNpcListExtraParts5(*mRscNpcList);
+  _gfbrs::initRscNpcListExtraParts6(*mRscNpcList);
+  _gfbrs::initRscNpcListScale(*mRscNpcList);
+  _gfbrs::initRscNpcListEventAsset(*mRscNpcList);
+  _gfbrs::initRscMobListModel(*mRscMobList);
+  _gfbrs::initRscMobListMotion(*mRscMobList);
+  _gfbrs::initRscMobListAddMotion(*mRscMobList);
+  _gfbrs::initRscMobListComp_Eff(*mRscMobList);
+  _gfbrs::initRscMobListCollisionId(*mRscMobList);
+  _gfbrs::initRscMobListSE(*mRscMobList);
+  _gfbrs::initRscMobListSeEnv(*mRscMobList);
+  _gfbrs::initRscMobListRace(*mRscMobList);
+  _gfbrs::initRscMobListFootStep(*mRscMobList);
+  _gfbrs::initRscMobListFootStepEffect(*mRscMobList);
+  _gfbrs::initRscMobListOffsetID(*mRscMobList);
+  _gfbrs::initRscMobListExtraParts1(*mRscMobList);
+  _gfbrs::initRscMobListExtraParts2(*mRscMobList);
+  _gfbrs::initRscMobListExtraParts3(*mRscMobList);
+  _gfbrs::initRscMobListExtraParts4(*mRscMobList);
+  _gfbrs::initRscMobListExtraParts5(*mRscMobList);
+  _gfbrs::initRscMobListExtraParts6(*mRscMobList);
+  _gfbrs::initRSC_MapObjListModel(*mRSC_MapObjList);
+  _gfbrs::initRSC_MapObjListMotion(*mRSC_MapObjList);
+  _gfbrs::initRSC_MapObjListComp_Eff(*mRSC_MapObjList);
+  _gfbrs::initRSC_MapObjListSE(*mRSC_MapObjList);
+  _gfbrs::initRSC_MapObjListSeEnv(*mRSC_MapObjList);
+  _gfbrs::initRSC_MapObjListflagBigObj(*mRSC_MapObjList);
+  _gfbrs::initRSC_MapObjListExtraParts1(*mRSC_MapObjList);
+  _gfbrs::initRSC_TboxListModel(*mRSC_TboxList);
+  _gfbrs::initRSC_TboxListMotion(*mRSC_TboxList);
+  _gfbrs::initRSC_PcWpnModel(*mRSC_PcWpn);
+  _gfbrs::initRSC_PcWpnMotion(*mRSC_PcWpn);
+  _gfbrs::initRSC_PcWpnMenuImageID(*mRSC_PcWpn);
+  _gfbrs::initRSC_PcWpnMountWpn01rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn01rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn02rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn02rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn03rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn03rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn03lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn03lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn04rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn04rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn05rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn05rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn05lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn05lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn06rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn06rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn07rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn07rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn07lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn07lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn08rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn08rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn09rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn09rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn09lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn09lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn10rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn10rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn10lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn10lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn11rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn11rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn12rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn12rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn12lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn12lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn13rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn13rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn14rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn14rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn15rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn15rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn16rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn16rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn16lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn16lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn17rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn17rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn18rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn18rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn19rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn19rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn20rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn20rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn20lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn20lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn21rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn21rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn22rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn22rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn22lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn22lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn23rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn23rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn23lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn23lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn24rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn24rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn24lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn24lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn25rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn25rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn25lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn25lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn26rIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn26rOut(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn26lIn(*mRSC_PcWpnMount);
+  _gfbrs::initRSC_PcWpnMountWpn26lOut(*mRSC_PcWpnMount);
+  _gfbrs::initRscEnWpnModel(*mRscEnWpn);
+  _gfbrs::initRscEnWpnScale(*mRscEnWpn);
+  _gfbrs::initRscEnWpnMotion(*mRscEnWpn);
+  _gfbrs::initRscEnWpnMtpInChara(*mRscEnWpn);
+  _gfbrs::initRscEnWpnMtpInWpn(*mRscEnWpn);
+  _gfbrs::initRscEnWpnMtpOutChara(*mRscEnWpn);
+  _gfbrs::initRscEnWpnMtpOutWpn(*mRscEnWpn);
+  _gfbrs::initRscNpcWpnModel(*mRscNpcWpn);
+  _gfbrs::initRscNpcWpnMotion(*mRscNpcWpn);
+  _gfbrs::initDriverParamExtMountNpc(*mDriverParam);
+  _gfbrs::initDriverParamExtMountBone(*mDriverParam);
+  _gfbrs::initDriverParamExtMountCond(*mDriverParam);
+  _gfbrs::initVoiceTableDriver1(*mVoiceTable);
+  _gfbrs::initVoiceTableDriver2(*mVoiceTable);
+  _gfbrs::initVoiceTableDriver3(*mVoiceTable);
+  _gfbrs::initVoiceTableDriver4(*mVoiceTable);
+  _gfbrs::initVoiceTableDriver5(*mVoiceTable);
+  _gfbrs::initVoiceTableDriver6(*mVoiceTable);
+  _gfbrs::initVoiceTableBladeBlade1(*mVoiceTableBlade);
+  _gfbrs::initVoiceTableBladeBlade2(*mVoiceTableBlade);
+  _gfbrs::initVoiceTableBladeBlade3(*mVoiceTableBlade);
+  _gfbrs::initVoiceTableBladeBlade4(*mVoiceTableBlade);
+  _gfbrs::initVoiceTableBladeBlade5(*mVoiceTableBlade);
+  _gfbrs::initVoiceTableBladeBlade6(*mVoiceTableBlade);
+  _gfbrs::initVoiceTableBladeBlade7(*mVoiceTableBlade);
+  _gfbrs::initVoiceTableBladeBlade8(*mVoiceTableBlade);
+  _gfbrs::initVoiceTableBladeBlade9(*mVoiceTableBlade);
+  _gfbrs::initVoiceTableBladeBlade10(*mVoiceTableBlade);
+  _gfbrs::initVoiceTableBladeBlade11(*mVoiceTableBlade);
+  _gfbrs::initVoiceTableRareRareBlade1(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade2(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade3(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade4(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade5(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade6(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade7(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade8(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade9(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade10(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade11(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade12(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade13(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade14(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade15(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade16(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade17(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade18(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade19(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade20(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade21(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade22(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade23(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade24(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade25(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade26(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade27(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade28(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade29(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade30(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade31(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade32(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade33(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade34(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade35(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade36(*mVoiceTableRare);
+  _gfbrs::initVoiceTableRareRareBlade37(*mVoiceTableRare);
+  _gfbrs::initVoiceTableCommonCommonBlade1(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade2(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade3(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade4(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade5(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade6(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade7(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade8(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade9(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade10(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade11(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade12(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade13(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade14(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade15(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade16(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade17(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade18(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade19(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade20(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade21(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade22(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade23(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade24(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade25(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade26(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade27(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade28(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade29(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade30(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade31(*mVoiceTableCommon);
+  _gfbrs::initVoiceTableCommonCommonBlade32(*mVoiceTableCommon);
+  _gfbrs::initFLD_actorSELOD(*mFLD_actorSE);
+  _gfbrs::initFLD_actorSEse_type(*mFLD_actorSE);
+  _gfbrs::initFLD_actorSEseName(*mFLD_actorSE);
+  _gfbrs::initFLD_actorSEmax_volume_Dist(*mFLD_actorSE);
+  _gfbrs::initFLD_actorSEmin_volume_Dist(*mFLD_actorSE);
+  _gfbrs::initFLD_actorSEvolumeMAX(*mFLD_actorSE);
+  _gfbrs::initFLD_actorSEvolumeMIN(*mFLD_actorSE);
+  _gfbrs::initFLD_actorSEoffsetX(*mFLD_actorSE);
+  _gfbrs::initFLD_actorSEoffsetY(*mFLD_actorSE);
+  _gfbrs::initFLD_actorSEoffsetZ(*mFLD_actorSE);
+}
+
 u32 GfBdatRsc::getRscEnStart() const { return Bdat::getIdTop(mRscEn->data); }
+
+u32 GfBdatRsc::getRscEnEnd() const { return Bdat::getIdTop(mRscEn->data) + Bdat::getIdCount(mRscEn->data); }
 
 const char *GfBdatRsc::getRscEnDebugName(u32 id) const { return _gfbrs::getRscEnDebugName(*mRscEn, id); }
 
@@ -4159,9 +4622,23 @@ u32 GfBdatRsc::getRscEnExtraParts4(u32 id) const { return _gfbrs::getRscEnExtraP
 
 u32 GfBdatRsc::getRscEnDeadSeNum(u32 id) const { return _gfbrs::getRscEnDeadSeNum(*mRscEn, id); }
 
+u32 GfBdatRsc::getRscEnWeaponNum(u32 resource, u32 weapon) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbrs::getRscEnWeaponNum1, _gfbrs::getRscEnWeaponNum2, _gfbrs::getRscEnWeaponNum3, _gfbrs::getRscEnWeaponNum4, _gfbrs::getRscEnWeaponNum5};
+  return getters[weapon](*mRscEn, resource);
+}
+
+u32 GfBdatRsc::getRscEnExtraParts(u32 resource, u32 part) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbrs::getRscEnExtraParts1, _gfbrs::getRscEnExtraParts2, _gfbrs::getRscEnExtraParts3, _gfbrs::getRscEnExtraParts4, nullptr, nullptr};
+  return getters[part](*mRscEn, resource);
+}
+
 const char *GfBdatRsc::getRscEnRotateBone(u32 id) const { return _gfbrs::getRscEnRotateBone(*mRscEn, id); }
 
 u32 GfBdatRsc::getRscEnGenusStart() const { return Bdat::getIdTop(mRscEnGenus->data); }
+
+u32 GfBdatRsc::getRscEnGenusEnd() const { return Bdat::getIdTop(mRscEnGenus->data) + Bdat::getIdCount(mRscEnGenus->data); }
 
 u32 GfBdatRsc::getRscEnGenusNAME(u32 id) const { return _gfbrs::getRscEnGenusNAME(*mRscEnGenus, id); }
 
@@ -4170,6 +4647,8 @@ u32 GfBdatRsc::getRscEnGenusCAPTION(u32 id) const { return _gfbrs::getRscEnGenus
 bool GfBdatRsc::isRscEnGenusFlaggimmicktype(u32 id) const { return _gfbrs::isRscEnGenusFlaggimmicktype(*mRscEnGenus, id); }
 
 u32 GfBdatRsc::getRscEnUndStart() const { return Bdat::getIdTop(mRscEnUnd->data); }
+
+u32 GfBdatRsc::getRscEnUndEnd() const { return Bdat::getIdTop(mRscEnUnd->data) + Bdat::getIdCount(mRscEnUnd->data); }
 
 bool GfBdatRsc::isRscEnUndFlagUndX(u32 id) const { return _gfbrs::isRscEnUndFlagUndX(*mRscEnUnd, id); }
 
@@ -4186,6 +4665,8 @@ s32 GfBdatRsc::getRscEnUndUndMaxZ(u32 id) const { return _gfbrs::getRscEnUndUndM
 u32 GfBdatRsc::getRscEnUndUndDeg(u32 id) const { return _gfbrs::getRscEnUndUndDeg(*mRscEnUnd, id); }
 
 u32 GfBdatRsc::getRscNpcListStart() const { return Bdat::getIdTop(mRscNpcList->data); }
+
+u32 GfBdatRsc::getRscNpcListEnd() const { return Bdat::getIdTop(mRscNpcList->data) + Bdat::getIdCount(mRscNpcList->data); }
 
 const char *GfBdatRsc::getRscNpcListModel(u32 id) const { return _gfbrs::getRscNpcListModel(*mRscNpcList, id); }
 
@@ -4233,7 +4714,19 @@ u32 GfBdatRsc::getRscNpcListScale(u32 id) const { return _gfbrs::getRscNpcListSc
 
 u32 GfBdatRsc::getRscNpcListEventAsset(u32 id) const { return _gfbrs::getRscNpcListEventAsset(*mRscNpcList, id); }
 
+u32 GfBdatRsc::getRscNpcListExtraParts(u32 npc, u32 part) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbrs::getRscNpcListExtraParts1,
+                                                              _gfbrs::getRscNpcListExtraParts2,
+                                                              _gfbrs::getRscNpcListExtraParts3,
+                                                              _gfbrs::getRscNpcListExtraParts4,
+                                                              _gfbrs::getRscNpcListExtraParts5,
+                                                              _gfbrs::getRscNpcListExtraParts6};
+  return getters[part](*mRscNpcList, npc);
+}
+
 u32 GfBdatRsc::getRscMobListStart() const { return Bdat::getIdTop(mRscMobList->data); }
+
+u32 GfBdatRsc::getRscMobListEnd() const { return Bdat::getIdTop(mRscMobList->data) + Bdat::getIdCount(mRscMobList->data); }
 
 const char *GfBdatRsc::getRscMobListModel(u32 id) const { return _gfbrs::getRscMobListModel(*mRscMobList, id); }
 
@@ -4269,7 +4762,19 @@ u32 GfBdatRsc::getRscMobListExtraParts5(u32 id) const { return _gfbrs::getRscMob
 
 u32 GfBdatRsc::getRscMobListExtraParts6(u32 id) const { return _gfbrs::getRscMobListExtraParts6(*mRscMobList, id); }
 
+u32 GfBdatRsc::getRscMobListExtraParts(u32 id, u32 part) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbrs::getRscMobListExtraParts1,
+                                                              _gfbrs::getRscMobListExtraParts2,
+                                                              _gfbrs::getRscMobListExtraParts3,
+                                                              _gfbrs::getRscMobListExtraParts4,
+                                                              _gfbrs::getRscMobListExtraParts5,
+                                                              _gfbrs::getRscMobListExtraParts6};
+  return getters[part](*mRscMobList, id);
+}
+
 u32 GfBdatRsc::getRSC_MapObjListStart() const { return Bdat::getIdTop(mRSC_MapObjList->data); }
+
+u32 GfBdatRsc::getRSC_MapObjListEnd() const { return Bdat::getIdTop(mRSC_MapObjList->data) + Bdat::getIdCount(mRSC_MapObjList->data); }
 
 const char *GfBdatRsc::getRSC_MapObjListModel(u32 id) const { return _gfbrs::getRSC_MapObjListModel(*mRSC_MapObjList, id); }
 
@@ -4287,11 +4792,15 @@ u32 GfBdatRsc::getRSC_MapObjListExtraParts1(u32 id) const { return _gfbrs::getRS
 
 u32 GfBdatRsc::getRSC_TboxListStart() const { return Bdat::getIdTop(mRSC_TboxList->data); }
 
+u32 GfBdatRsc::getRSC_TboxListEnd() const { return Bdat::getIdTop(mRSC_TboxList->data) + Bdat::getIdCount(mRSC_TboxList->data); }
+
 const char *GfBdatRsc::getRSC_TboxListModel(u32 id) const { return _gfbrs::getRSC_TboxListModel(*mRSC_TboxList, id); }
 
 const char *GfBdatRsc::getRSC_TboxListMotion(u32 id) const { return _gfbrs::getRSC_TboxListMotion(*mRSC_TboxList, id); }
 
 u32 GfBdatRsc::getRSC_PcWpnStart() const { return Bdat::getIdTop(mRSC_PcWpn->data); }
+
+u32 GfBdatRsc::getRSC_PcWpnEnd() const { return Bdat::getIdTop(mRSC_PcWpn->data) + Bdat::getIdCount(mRSC_PcWpn->data); }
 
 const char *GfBdatRsc::getRSC_PcWpnModel(u32 id) const { return _gfbrs::getRSC_PcWpnModel(*mRSC_PcWpn, id); }
 
@@ -4300,6 +4809,8 @@ const char *GfBdatRsc::getRSC_PcWpnMotion(u32 id) const { return _gfbrs::getRSC_
 u32 GfBdatRsc::getRSC_PcWpnMenuImageID(u32 id) const { return _gfbrs::getRSC_PcWpnMenuImageID(*mRSC_PcWpn, id); }
 
 u32 GfBdatRsc::getRSC_PcWpnMountStart() const { return Bdat::getIdTop(mRSC_PcWpnMount->data); }
+
+u32 GfBdatRsc::getRSC_PcWpnMountEnd() const { return Bdat::getIdTop(mRSC_PcWpnMount->data) + Bdat::getIdCount(mRSC_PcWpnMount->data); }
 
 const char *GfBdatRsc::getRSC_PcWpnMountWpn01rIn(u32 id) const { return _gfbrs::getRSC_PcWpnMountWpn01rIn(*mRSC_PcWpnMount, id); }
 
@@ -4459,6 +4970,8 @@ const char *GfBdatRsc::getRSC_PcWpnMountWpn26lOut(u32 id) const { return _gfbrs:
 
 u32 GfBdatRsc::getRscEnWpnStart() const { return Bdat::getIdTop(mRscEnWpn->data); }
 
+u32 GfBdatRsc::getRscEnWpnEnd() const { return Bdat::getIdTop(mRscEnWpn->data) + Bdat::getIdCount(mRscEnWpn->data); }
+
 const char *GfBdatRsc::getRscEnWpnModel(u32 id) const { return _gfbrs::getRscEnWpnModel(*mRscEnWpn, id); }
 
 u32 GfBdatRsc::getRscEnWpnScale(u32 id) const { return _gfbrs::getRscEnWpnScale(*mRscEnWpn, id); }
@@ -4475,11 +4988,15 @@ const char *GfBdatRsc::getRscEnWpnMtpOutWpn(u32 id) const { return _gfbrs::getRs
 
 u32 GfBdatRsc::getRscNpcWpnStart() const { return Bdat::getIdTop(mRscNpcWpn->data); }
 
+u32 GfBdatRsc::getRscNpcWpnEnd() const { return Bdat::getIdTop(mRscNpcWpn->data) + Bdat::getIdCount(mRscNpcWpn->data); }
+
 const char *GfBdatRsc::getRscNpcWpnModel(u32 id) const { return _gfbrs::getRscNpcWpnModel(*mRscNpcWpn, id); }
 
 const char *GfBdatRsc::getRscNpcWpnMotion(u32 id) const { return _gfbrs::getRscNpcWpnMotion(*mRscNpcWpn, id); }
 
 u32 GfBdatRsc::getDriverParamStart() const { return Bdat::getIdTop(mDriverParam->data); }
+
+u32 GfBdatRsc::getDriverParamEnd() const { return Bdat::getIdTop(mDriverParam->data) + Bdat::getIdCount(mDriverParam->data); }
 
 u32 GfBdatRsc::getDriverParamExtMountNpc(u32 id) const { return _gfbrs::getDriverParamExtMountNpc(*mDriverParam, id); }
 
@@ -4488,6 +5005,8 @@ const char *GfBdatRsc::getDriverParamExtMountBone(u32 id) const { return _gfbrs:
 u32 GfBdatRsc::getDriverParamExtMountCond(u32 id) const { return _gfbrs::getDriverParamExtMountCond(*mDriverParam, id); }
 
 u32 GfBdatRsc::getVoiceTableStart() const { return Bdat::getIdTop(mVoiceTable->data); }
+
+u32 GfBdatRsc::getVoiceTableEnd() const { return Bdat::getIdTop(mVoiceTable->data) + Bdat::getIdCount(mVoiceTable->data); }
 
 const char *GfBdatRsc::getVoiceTableDriver1(u32 id) const { return _gfbrs::getVoiceTableDriver1(*mVoiceTable, id); }
 
@@ -4502,6 +5021,8 @@ const char *GfBdatRsc::getVoiceTableDriver5(u32 id) const { return _gfbrs::getVo
 const char *GfBdatRsc::getVoiceTableDriver6(u32 id) const { return _gfbrs::getVoiceTableDriver6(*mVoiceTable, id); }
 
 u32 GfBdatRsc::getVoiceTableBladeStart() const { return Bdat::getIdTop(mVoiceTableBlade->data); }
+
+u32 GfBdatRsc::getVoiceTableBladeEnd() const { return Bdat::getIdTop(mVoiceTableBlade->data) + Bdat::getIdCount(mVoiceTableBlade->data); }
 
 const char *GfBdatRsc::getVoiceTableBladeBlade1(u32 id) const { return _gfbrs::getVoiceTableBladeBlade1(*mVoiceTableBlade, id); }
 
@@ -4526,6 +5047,8 @@ const char *GfBdatRsc::getVoiceTableBladeBlade10(u32 id) const { return _gfbrs::
 const char *GfBdatRsc::getVoiceTableBladeBlade11(u32 id) const { return _gfbrs::getVoiceTableBladeBlade11(*mVoiceTableBlade, id); }
 
 u32 GfBdatRsc::getVoiceTableRareStart() const { return Bdat::getIdTop(mVoiceTableRare->data); }
+
+u32 GfBdatRsc::getVoiceTableRareEnd() const { return Bdat::getIdTop(mVoiceTableRare->data) + Bdat::getIdCount(mVoiceTableRare->data); }
 
 const char *GfBdatRsc::getVoiceTableRareRareBlade1(u32 id) const { return _gfbrs::getVoiceTableRareRareBlade1(*mVoiceTableRare, id); }
 
@@ -4603,6 +5126,8 @@ const char *GfBdatRsc::getVoiceTableRareRareBlade37(u32 id) const { return _gfbr
 
 u32 GfBdatRsc::getVoiceTableCommonStart() const { return Bdat::getIdTop(mVoiceTableCommon->data); }
 
+u32 GfBdatRsc::getVoiceTableCommonEnd() const { return Bdat::getIdTop(mVoiceTableCommon->data) + Bdat::getIdCount(mVoiceTableCommon->data); }
+
 const char *GfBdatRsc::getVoiceTableCommonCommonBlade1(u32 id) const { return _gfbrs::getVoiceTableCommonCommonBlade1(*mVoiceTableCommon, id); }
 
 const char *GfBdatRsc::getVoiceTableCommonCommonBlade2(u32 id) const { return _gfbrs::getVoiceTableCommonCommonBlade2(*mVoiceTableCommon, id); }
@@ -4668,6 +5193,8 @@ const char *GfBdatRsc::getVoiceTableCommonCommonBlade31(u32 id) const { return _
 const char *GfBdatRsc::getVoiceTableCommonCommonBlade32(u32 id) const { return _gfbrs::getVoiceTableCommonCommonBlade32(*mVoiceTableCommon, id); }
 
 u32 GfBdatRsc::getFLD_actorSEStart() const { return Bdat::getIdTop(mFLD_actorSE->data); }
+
+u32 GfBdatRsc::getFLD_actorSEEnd() const { return Bdat::getIdTop(mFLD_actorSE->data) + Bdat::getIdCount(mFLD_actorSE->data); }
 
 const char *GfBdatRsc::getFLD_actorSELOD(u32 id) const { return _gfbrs::getFLD_actorSELOD(*mFLD_actorSE, id); }
 
