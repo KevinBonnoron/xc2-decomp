@@ -9,6 +9,7 @@ class GfGameManager {
 public:
   static GF_OBJ_HANDLE *getPartyLeaderDriver();
   static bool isBattle();
+  static bool isEvent(bool isIncludeSequentialPlay);
   static bool isChangeNormalHomuraForce(u32 blade);
 };
 

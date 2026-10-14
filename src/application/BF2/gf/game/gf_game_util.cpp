@@ -53,6 +53,9 @@ enum {
   SCENARIO_FLAG_WITHOUT_CRYSTAL_LAST = 1030,
 };
 
+constexpr u32 WEAPON_TYPE_EVENT_BATTLE_IDLE_FIRST = 18;
+constexpr u32 WEAPON_TYPE_EVENT_BATTLE_IDLE_SECOND = 19;
+
 GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
 
 constexpr u32 COIN_MAX = 9'999;
@@ -70,6 +73,19 @@ bool GfGameUtil::isUiGfObjHandleValid(GF_OBJ_HANDLE *handle) {
 
   GfObjAcc objAcc(handle);
   return objAcc.isValid() && !objAcc.isDestroy() && !objAcc.testFlag(OBJ_FLAG_UI_HIDDEN);
+}
+
+static void makeWeaponBattleIdleState(mm::mtl::FixStr<32> &state, u32 weaponType) {
+  mm::mtl::FixStr<16> weaponName;
+  if (weaponType >= 10) {
+    weaponName.format("%d_", weaponType);
+  } else {
+    weaponName.format("0%d_", weaponType);
+  }
+
+  state = "S_";
+  state += weaponName.c_str();
+  state += "btidle";
 }
 
 u32 GfGameUtil::getFsLevelSum(u32 fieldSkill) {
@@ -295,12 +311,84 @@ void GfGameUtil::incGameClearCount() {
   }
 }
 
+void GfGameUtil::makeWeaponStateIdle(mm::mtl::FixStr<32> &state, GF_OBJ_HANDLE *handle, bool isBattle) {
+  const char *motionName = util::getFilePtrFromPath(GfObjUtil::getMotionResourceName(handle));
+  state = "S_";
+  state += motionName;
+  state += "_";
+  state += isBattle ? "btidle" : "idle";
+}
+
 void GfGameUtil::makeWeaponStateIdle(mm::mtl::FixStr<32> &state, u32 driver, bool isBattle) {
   const char *motionName = util::getFilePtrFromPath(GfDataDriver::getMotionResourceName(driver));
   state = "S_";
   state += motionName;
   state += "_";
   state += isBattle ? "btidle" : "idle";
+}
+
+void GfGameUtil::makeWeaponStateStartBattle(mm::mtl::FixStr<32> &state, GF_OBJ_HANDLE *handle) {
+  state = "S_";
+  state += util::getFilePtrFromPath(GfObjUtil::getMotionResourceName(handle));
+  state += "_";
+  state += "btstart";
+}
+
+void GfGameUtil::makeStateIdle(mm::mtl::FixStr<32> &state, GF_OBJ_HANDLE *handle, bool isBattle) {
+  if (!isBattle) {
+    state = "S_idle";
+    return;
+  }
+
+  DataParamAcc dataParamAcc(handle);
+  if (dataParamAcc.getObjType() == OBJECT_TYPE_BLADE || dataParamAcc.getObjType() == OBJECT_TYPE_ENEMY) {
+    state = "S_btidle";
+    return;
+  }
+
+  u32 blade = dataParamAcc.getBlade(-1, false);
+  if (blade == 0) {
+    return;
+  }
+
+  if (GfGameManager::isEvent(false)) {
+    u32 weaponType = GfDataBlade::getBladeWpnType(blade);
+    if (dataParamAcc.getObjType() == OBJECT_TYPE_DRIVER &&
+        (weaponType == WEAPON_TYPE_EVENT_BATTLE_IDLE_FIRST || weaponType == WEAPON_TYPE_EVENT_BATTLE_IDLE_SECOND)) {
+      state = "S_btidle";
+      return;
+    }
+  }
+
+  makeWeaponBattleIdleState(state, GfDataBlade::getBladeWpnType(blade));
+}
+
+void GfGameUtil::makeStateIdleByBlade(mm::mtl::FixStr<32> &state, u32 blade, bool isBattle) {
+  if (!isBattle) {
+    state = "S_idle";
+    return;
+  }
+
+  if (blade == 0) {
+    return;
+  }
+
+  u32 weaponType = GfDataBlade::getBladeWpnType(blade);
+  if (GfGameManager::isEvent(false) && (weaponType == WEAPON_TYPE_EVENT_BATTLE_IDLE_FIRST || weaponType == WEAPON_TYPE_EVENT_BATTLE_IDLE_SECOND)) {
+    state = "S_btidle";
+    return;
+  }
+
+  makeWeaponBattleIdleState(state, weaponType);
+}
+
+void GfGameUtil::makeWeaponCommandBattle(mm::mtl::FixStr<32> &command, GF_OBJ_HANDLE *handle, bool isStart, bool isMotion) {
+  const char *resourceName = isMotion ? GfObjUtil::getMotionResourceName(handle) : GfObjUtil::getResourceName(handle);
+  const char *fileName = util::getFilePtrFromPath(resourceName);
+  command = "C_";
+  command += fileName;
+  command += "_";
+  command += isStart ? "btstart" : "btend";
 }
 
 void GfGameUtil::makeWeaponCommandBattle(mm::mtl::FixStr<32> &command, u32 driver, bool isStart, bool isMotion) {
@@ -323,6 +411,20 @@ void GfGameUtil::makeWeaponRecieveStateForUiModel(mm::mtl::FixStr<32> &state, u3
 void GfGameUtil::makeCommandBattle(mm::mtl::FixStr<32> &command, bool isStart) {
   command = "C_";
   command += isStart ? "btstart" : "btend";
+}
+
+void GfGameUtil::makeStateBattle(mm::mtl::FixStr<32> &state, GF_OBJ_HANDLE *handle, bool isStart) {
+  GfObjAcc objAcc(handle);
+  u32 type = objAcc.getType();
+  u32 bdatId = objAcc.getBdatId();
+  if (type == OBJECT_TYPE_DRIVER && !(bdatId >= DRIVER_SHIN && bdatId <= DRIVER_SHIN_2)) {
+    DataParamAcc dataParamAcc(handle);
+    state.format("S_%02d_", dataParamAcc.getWeaponType(-1, false));
+  } else {
+    state = "S_";
+  }
+
+  state += isStart ? "btstart" : "btend";
 }
 
 void GfGameUtil::makeStateBattleByBlade(mm::mtl::FixStr<32> &state, u32 blade, bool isStart) {
