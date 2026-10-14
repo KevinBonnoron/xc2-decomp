@@ -1,10 +1,11 @@
 #pragma once
+#include "mm_mtl/allocator.h"
 #include "mtl/alloc_handle.h"
 #include <stddef.h>
 
 namespace gf {
 
-class GfAllocator {
+class GfAllocator : public mm::mtl::IAllocator {
 public:
   mtl::ALLOC_HANDLE getMemHandle() const;
 };

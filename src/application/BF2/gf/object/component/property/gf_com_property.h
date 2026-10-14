@@ -94,6 +94,12 @@ struct MsgObjectAlpha : fw::Message {
   f32 alpha;
 };
 
+struct MsgObjectDead : fw::Message {
+  MsgObjectDead(u32 deadType) : fw::Message(0x1000036, 0x20), deadType(deadType) {}
+
+  u32 deadType;
+};
+
 struct MsgObjectStopAutoHeal : fw::Message {
   MsgObjectStopAutoHeal(bool isStop) : fw::Message(0x1000043, 0x20), isStop(isStop) {}
 

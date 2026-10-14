@@ -36,7 +36,7 @@ public:
 
   void push_back(const T &value) {
     MM_ASSERT(size() < capacity());
-    begin()[mSize] = value;
+    *reinterpret_cast<T *>(mBuffer + mSize * sizeof(T)) = value;
     mSize++;
   }
 

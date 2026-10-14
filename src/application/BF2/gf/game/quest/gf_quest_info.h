@@ -15,6 +15,7 @@ class GfQuestInfo {
 public:
   static QSTATE getState(QuestID quest);
   static void setState(QuestID quest, QSTATE state);
+  static bool isDispUI(QuestID quest);
 };
 
 } // namespace gf
