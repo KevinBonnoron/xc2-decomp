@@ -7,6 +7,7 @@
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
+#include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_param_acc.h"
@@ -57,6 +58,7 @@
 #include "gf/menu/object/gf_menu_obj_tutorial.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_manager.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_scom.h"
 #include "gf/sound/gf_sound.h"
@@ -89,6 +91,17 @@ constexpr u32 DEPOP_METER_COUNT = 4;
 
 static u32 getValidDriverId(const DataParamAcc &paramAcc) {
   return paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0;
+}
+
+static bool isEventCharacter(u32 characterType) {
+  switch (characterType) {
+  case CHARACTER_TYPE_EVENT_DRIVER:
+  case CHARACTER_TYPE_EVENT_BLADE:
+  case CHARACTER_TYPE_EVENT_NPC:
+    return true;
+  default:
+    return false;
+  }
 }
 
 GfGameManager::GfGameManager(const GfSetupParam &param) : mInitialized(false), mIsLeaveGame(false) { initialize(param); }
@@ -1042,6 +1055,66 @@ bool GfGameManager::isPartyMover(GF_OBJ_HANDLE *handle) {
   return partyId != -1 && GfGameParty::getHandleMover(partyId) == handle;
 }
 
+bool GfGameManager::isBusyBladeCreateEvent() {
+  if (!GfPause::isPause(PAUSE_BIT_SYSTEM)) {
+    return false;
+  }
+
+  if (isEvent(false)) {
+    return true;
+  }
+
+  for (GF_OBJ_HANDLE *const &handle : *GfGameObj::getList(OBJECT_TYPE_NONE)) {
+    GfObjSetup *setup = GfObjUtil::getObjSetup(handle);
+    if (setup == nullptr) {
+      continue;
+    }
+
+    if (!isEventCharacter(setup->characterType)) {
+      continue;
+    }
+
+    GfObjAcc acc(handle);
+    if (acc.getAlpha() <= 0.0f) {
+      continue;
+    }
+
+    if (acc.isDisp(static_cast<OBJDISP>(0))) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool GfGameManager::isExistBossEnemy() {
+  for (GF_OBJ_HANDLE *const &handle : *GfGameObj::getList(OBJECT_TYPE_ENEMY)) {
+    GfObjAcc acc(handle);
+    if (GfDataEnemy::isBoss(acc.getEnArrangeId())) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool GfGameManager::isExistBossEnemyWithHp() {
+  for (GF_OBJ_HANDLE *const &handle : *GfGameObj::getList(OBJECT_TYPE_ENEMY)) {
+    GfObjAcc acc(handle);
+    if (!acc.isBattle()) {
+      continue;
+    }
+
+    DataParamAcc dataParamAcc(handle);
+    if (GfDataEnemy::isBoss(dataParamAcc.isValid() ? dataParamAcc.getBdatId() : 0) && dataParamAcc.getHp() != 0 &&
+        dataParamAcc.getHp() < dataParamAcc.getHpMax(false)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 bool GfGameManager::isNeedResetBlade() {
   return GfSelectBlade::isNeedFieldBladeChange(0) || GfSelectBlade::isNeedFieldBladeChange(1) || GfSelectBlade::isNeedFieldBladeChange(2);
 }
@@ -1055,6 +1128,20 @@ bool GfGameManager::isForceBossBattleBgm() { return GfGameScene::get() != nullpt
 bool GfGameManager::isForceEventBgm() { return GfGameScene::get() != nullptr && GfGameScene::get()->isForceEventBgm(); }
 
 bool GfGameManager::isNight() { return GfFieldTime::get() != nullptr && GfFieldTime::get()->getTimeRangeDN() == TIME_RANGE_DN_NIGHT; }
+
+void GfGameManager::destroyBattleEnemy() {
+  for (GF_OBJ_HANDLE *const &handle : *GfGameObj::getList(OBJECT_TYPE_ENEMY)) {
+    GfObjAcc acc(handle);
+    if (!acc.isBattle()) {
+      continue;
+    }
+
+    DataParamAcc dataParamAcc(handle);
+    if (dataParamAcc.getHp() != 0) {
+      GfGameUtil::debugHpZero(handle);
+    }
+  }
+}
 
 const char *GfGameManager::getMapSePackName() {
   GfFieldSound *fieldSound = GfFieldSound::get();
