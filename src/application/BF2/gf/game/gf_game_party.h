@@ -11,6 +11,7 @@ public:
   static u32 getPartyId(u32 objectType, u32 id);
   static GF_OBJ_HANDLE *getHandleDriver(u32 partyId);
   static GF_OBJ_HANDLE *getHandleBlade(u32 member, int slot);
+  static bool isPartyMemberInGameObj();
 };
 
 class GfPartySelect {

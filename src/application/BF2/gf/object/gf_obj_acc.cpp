@@ -2,6 +2,7 @@
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
+#include "gf/asset/gf_asset_manager.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/object/component/gf_com_transform.h"
@@ -22,11 +23,6 @@ public:
 namespace gf {
 
 static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
-
-class GfAssetManager {
-public:
-  static bool isReload(GF_ASSET_HANDLE *handle);
-};
 
 GfObjAcc::GfObjAcc(GfObj *obj) : mObj(obj) { mInfo = obj != nullptr ? GfObjManager::getObjInfo(obj->handle) : nullptr; }
 
