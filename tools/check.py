@@ -229,6 +229,7 @@ def ignore_source_locations(lines):
 
 def resolve_pages(lines, image, syms):
     pages = {}
+    labeled = set()
     for i, text in enumerate(lines):
         op, _, args = text.partition("\t")
         regs = [a.strip() for a in args.split(",")]
@@ -244,11 +245,14 @@ def resolve_pages(lines, image, syms):
             for r in regs[:1]:
                 pages.pop(r, None)
             continue
-        adrp_index, page = pages.pop(base)
+        adrp_index, page = pages[base]
         label = target_label(page + imm, op == "ldr" and regs[0].startswith("x"), image, syms)
-        lines[adrp_index] = with_label(lines[adrp_index], label)
+        if adrp_index not in labeled:
+            lines[adrp_index] = with_label(lines[adrp_index], label)
+            labeled.add(adrp_index)
         lines[i] = with_label(text, label)
-        pages.pop(regs[0], None)
+        if op != "str":
+            pages.pop(regs[0], None)
 
 
 def target_symbols():
