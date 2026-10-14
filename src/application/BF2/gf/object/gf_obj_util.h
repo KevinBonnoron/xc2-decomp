@@ -54,6 +54,7 @@ public:
   static f32 getSetupScale(GF_OBJ_HANDLE *handle);
   static GfObjSetup *getObjSetup(GF_OBJ_HANDLE *handle);
   static GF_ASSET_HANDLE *getAssetHandle(GF_OBJ_HANDLE *handle);
+  static void destroy(GF_OBJ_HANDLE *handle);
   static void applyExecUpdate(GfObj *obj);
   static GF_OBJ_HANDLE *getParentHandle(GF_OBJ_HANDLE *handle);
   static GfObj *getParentObj(GfObj *obj);
