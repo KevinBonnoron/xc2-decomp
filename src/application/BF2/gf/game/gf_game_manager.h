@@ -27,6 +27,13 @@ public:
   static GF_OBJ_HANDLE *getPartyLeader();
   static GF_OBJ_HANDLE *getControlMover();
   static bool isGameOver();
+  static bool isTalking();
+  static bool isEnableOpenMainMenuSequence();
+  static bool isEnableBattouWithHoodHomura(bool);
+  static bool isEnableOpenMainMenu();
+  static bool isControlFree();
+  static bool isControlMoverBattle();
+  static bool isStopMainMenuOpenForGimmick();
 };
 
 } // namespace gf
