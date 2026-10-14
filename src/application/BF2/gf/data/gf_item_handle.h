@@ -5,15 +5,14 @@ namespace gf {
 
 class GfItemHandle {
 public:
-  GfItemHandle(const GfItemHandle &other) : mHandle(other.mHandle) {}
+  GfItemHandle(const GfItemHandle &other) : value(other.value) {}
 
   GfItemHandle &operator=(const GfItemHandle &other) {
-    mHandle = other.mHandle;
+    value = other.value;
     return *this;
   }
 
-private:
-  u32 mHandle;
+  u32 value;
 };
 
 static_assert(sizeof(GfItemHandle) == 4, "");

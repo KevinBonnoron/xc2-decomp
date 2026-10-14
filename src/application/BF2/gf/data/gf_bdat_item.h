@@ -142,6 +142,46 @@ public:
   u32 getPcEquipEnhance1(u32 item) const;
   u32 getFavoriteTime(u32 item) const;
   u32 getFavoriteType(u32 item) const;
+
+  u32 getITM_HanaRoleNeedEther(u32 item) const;
+  u32 getITM_HanaRoleNeedPow(u32 item) const;
+  bool isITM_HanaRoleFlagJS(u32 item) const;
+  bool isITM_HanaRoleFlagJK(u32 item) const;
+  bool isITM_HanaRoleFlagJD(u32 item) const;
+  u32 getITM_HanaAtrNeedEther(u32 item) const;
+  u32 getITM_HanaAtrNeedPow(u32 item) const;
+  bool isITM_HanaAtrFlagJS(u32 item) const;
+  bool isITM_HanaAtrFlagJK(u32 item) const;
+  bool isITM_HanaAtrFlagJD(u32 item) const;
+  u32 getITM_HanaArtsEnhNeedEther(u32 item) const;
+  u32 getITM_HanaArtsEnhNeedPow(u32 item) const;
+  bool isITM_HanaArtsEnhFlagJS(u32 item) const;
+  bool isITM_HanaArtsEnhFlagJK(u32 item) const;
+  bool isITM_HanaArtsEnhFlagJD(u32 item) const;
+  u32 getITM_HanaNArtsSetNeedEther(u32 item) const;
+  u32 getITM_HanaNArtsSetNeedPow(u32 item) const;
+  bool isITM_HanaNArtsSetFlagJS(u32 item) const;
+  bool isITM_HanaNArtsSetFlagJK(u32 item) const;
+  bool isITM_HanaNArtsSetFlagJD(u32 item) const;
+  u32 getITM_HanaAssistNeedEther(u32 item) const;
+  u32 getITM_HanaAssistNeedPow(u32 item) const;
+  bool isITM_HanaAssistFlagJS(u32 item) const;
+  bool isITM_HanaAssistFlagJK(u32 item) const;
+  bool isITM_HanaAssistFlagJD(u32 item) const;
+  u32 getITM_HanaRoleRole(u32 item) const;
+  u32 getITM_HanaRoleAutoHate(u32 item) const;
+  u32 getITM_HanaRoleArtsHate(u32 item) const;
+  u32 getITM_HanaRolePArmor(u32 item) const;
+  u32 getITM_HanaRoleEArmor(u32 item) const;
+  u32 getITM_HanaRoleHpMaxRev(u32 item) const;
+  u32 getITM_HanaRoleStrengthRev(u32 item) const;
+  u32 getITM_HanaRolePowEtherRev(u32 item) const;
+  u32 getITM_HanaRoleDexRev(u32 item) const;
+  u32 getITM_HanaRoleAgilityRev(u32 item) const;
+  u32 getITM_HanaRoleLuckRev(u32 item) const;
+  u32 getITM_HanaAtrAtr(u32 item) const;
+  u32 getITM_HanaArtsEnhEnhance(u32 item) const;
+  u32 getITM_HanaNArtsSetNArts(u32 item) const;
 };
 
 } // namespace gf

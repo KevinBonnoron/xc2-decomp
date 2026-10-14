@@ -1,0 +1,120 @@
+#pragma once
+#include "gf/data/gf_item_handle.h"
+#include "mm_mtl/fixed_array.h"
+#include "types.h"
+#include <stddef.h>
+
+namespace gf {
+
+struct SDataBlade;
+
+struct EquipHanaArts {
+  u16 enhance;
+  u8 _02[0x04 - 0x02];
+  u16 parts;
+  u8 _06[0x0a - 0x06];
+  u16 handle;
+};
+
+static_assert(offsetof(EquipHanaArts, parts) == 0x04, "");
+static_assert(offsetof(EquipHanaArts, handle) == 0x0a, "");
+static_assert(sizeof(EquipHanaArts) == 0x0c, "");
+
+struct EquipHana {
+  u16 role;
+  u16 attribute;
+  mm::mtl::FixedArray<EquipHanaArts, 3> arts;
+  mm::mtl::FixedArray<EquipHanaArts, 3> nArts;
+  mm::mtl::FixedArray<u16, 3> condenser;
+  mm::mtl::FixedArray<u16, 3> extendCondenser;
+  GfItemHandle roleHandle;
+  GfItemHandle attributeHandle;
+  GfItemHandle condenserHandles[3];
+  GfItemHandle extendCondenserHandles[3];
+};
+
+static_assert(offsetof(EquipHana, arts) == 0x04, "");
+static_assert(offsetof(EquipHana, nArts) == 0x28, "");
+static_assert(offsetof(EquipHana, condenser) == 0x4c, "");
+static_assert(offsetof(EquipHana, extendCondenser) == 0x52, "");
+static_assert(offsetof(EquipHana, roleHandle) == 0x58, "");
+static_assert(offsetof(EquipHana, attributeHandle) == 0x5c, "");
+static_assert(offsetof(EquipHana, condenserHandles) == 0x60, "");
+static_assert(offsetof(EquipHana, extendCondenserHandles) == 0x6c, "");
+static_assert(sizeof(EquipHana) == 0x78, "");
+
+class GfDataHana {
+public:
+  static bool getRoleName(u8 *&bdat, u32 &textId, u32 parts);
+  static bool getAttributeName(u8 *&bdat, u32 &textId, u32 parts);
+  static bool getArtsName(u8 *&bdat, u32 &textId, u32 parts);
+  static bool getNArtsName(u8 *&bdat, u32 &textId, u32 parts);
+  static bool getAssistName(u8 *&bdat, u32 &textId, u32 parts);
+  static bool isValid(u32 blade);
+  static u32 getRole(u32 blade);
+  static u32 getCondenserNum(u32 blade);
+  static EquipHana *getEquipParts(SDataBlade &dataBlade);
+  static u32 getExtendCondenserNum(u32 blade);
+  static bool isOpenCircuit(SDataBlade &dataBlade, u32 circuit);
+  static u32 getAttribute(u32 blade);
+  static u16 getArtsEnhance(u32 blade, u32 slot);
+  static EquipHana *getEquipParts(u32 blade);
+  static u32 getParmor(u32 blade);
+  static u32 getEarmor(u32 blade);
+  static u32 getHpMaxRev(u32 blade);
+  static u32 getStrengthRev(u32 blade);
+  static u32 getPowerEtherRev(u32 blade);
+  static u32 getDexRev(u32 blade);
+  static u32 getAgilityRev(u32 blade);
+  static u32 getLuckRev(u32 blade);
+  static u32 getEther();
+  static void setEther(u32 ether);
+  static u32 getNartsNum(u32 blade);
+  static u32 getNeedArtsEther(u32 blade, u32 circuit);
+  static u32 getNeedExtendCircuitEther(u32 blade, u32 circuit);
+  static u32 getNeedRolePartsEther(u32 parts);
+  static u32 getNeedAttributePartsEther(u32 parts);
+  static u32 getNeedArtsPartsEther(u32 parts);
+  static u32 getNeedNArtsPartsEther(u32 parts);
+  static u32 getNeedCondenserPartsEther(u32 parts);
+  static u32 getDefaultRoleParts(u32 blade);
+  static u32 getDefaultAttributeParts(u32 blade);
+  static u32 getDefaultNArtsParts(u32 blade, u32 slot);
+  static u32 getDefaultCondenserParts(u32 blade, u32 slot);
+  static bool isOpenCircuit(u32 blade, u32 circuit);
+  static void setOpenCircuit(u32 blade, u32 circuit, bool openCircuit);
+  static u32 getOpenCircuitEther(u32 blade, u32 circuit);
+  static void setEquipRoleParts(u32 blade, u32 parts, GfItemHandle handle);
+  static u32 getAutoHate(u32 blade);
+  static u32 getArtsHate(u32 blade);
+  static void setEquipAttributeParts(u32 blade, u32 parts, GfItemHandle handle);
+  static void setEquipArtsParts(u32 blade, u32 slot, u32 parts, GfItemHandle handle);
+  static void getEquipCondenserParts(mm::mtl::FixedArray<u16, 3> &condenser, u32 blade);
+  static void setEquipCondenserParts(u32 blade, u32 slot, u32 parts, GfItemHandle handle);
+  static bool getEquipExtendCondenserParts(mm::mtl::FixedArray<u16, 3> &extendCondenser, u32 blade);
+  static void setEquipExtendCondenserParts(u32 blade, u32 slot, u32 parts, GfItemHandle handle);
+  static u16 getEquipPowerRank(u32 blade);
+  static u16 getEquipPowerRank(const SDataBlade &dataBlade);
+  static void setEquipPowerRank(u32 blade, u32 equipPowerRank);
+  static u32 getPowerCapacity(u32 blade);
+  static u32 getPowerCapacity(const SDataBlade &dataBlade);
+  static u32 getPartsPower(u32 parts);
+  static u32 getEquipPower(u32 blade);
+  static u32 getEquipPower(const EquipHana &equipParts);
+  static u32 getEquipPower(const SDataBlade &dataBlade);
+  static u16 getPowerRankEther(u32 blade, u32 ether);
+  static bool isEquipRoleParts(u32 blade, u32 parts);
+  static bool isEquipAttributeParts(u32 blade, u32 parts);
+  static bool isEquipArtsParts(u32 blade, u32 parts);
+  static bool isEquipNArtsParts(u32 blade, u32 parts);
+  static bool isEquipCondenserParts(u32 blade, u32 parts);
+  static const char *getRoleName(u32 parts);
+  static const char *getAttributeName(u32 parts);
+  static const char *getNArtsName(u32 parts);
+  static const char *getArtsName(u32 parts);
+  static const char *getAssistName(u32 parts);
+  static u32 getEquipRoleItemNum(u32 blade, u32 parts);
+  static u32 getEquipAttributeItemNum(u32 blade, u32 parts);
+};
+
+} // namespace gf

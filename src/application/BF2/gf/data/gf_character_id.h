@@ -17,6 +17,9 @@ enum {
 
 enum {
   BLADE_BYAKKO = 1004,
+  BLADE_HANA_JS = 1005,
+  BLADE_HANA_JK = 1006,
+  BLADE_HANA_JD = 1007,
 };
 
 } // namespace gf
