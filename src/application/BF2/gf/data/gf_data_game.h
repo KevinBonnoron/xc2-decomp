@@ -1,4 +1,5 @@
 #pragma once
+#include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/game/quest/gf_quest_id.h"
@@ -15,7 +16,8 @@ struct SDataGame {
   u16 eventChapterSave;
   u8 _00002a[0x00002c - 0x00002a];
   SDataDriver drivers[16];
-  u8 _005a2c[0x1097e4 - 0x005a2c];
+  SDataBlade blades[422];
+  u8 _0e9884[0x1097e4 - 0x0e9884];
   QuestID scenario;
   QuestID select;
   u8 _1097ec[0x1097f0 - 0x1097ec];
@@ -32,7 +34,7 @@ struct SDataGame {
   u16 rareBladeAppearType;
   u8 _10ad52[0x10ad54 - 0x10ad52];
   u32 coin;
-  u8 _10ad58[0x10ad68 - 0x10ad58];
+  u32 savedHp[4];
   u64 saveRealTime;
   f32 cameraHeight;
   u8 _10ad74[0x10ae74 - 0x10ad74];
@@ -50,6 +52,7 @@ static_assert(offsetof(SDataGame, money) == 0x0, "");
 static_assert(offsetof(SDataGame, startChapterSave) == 0x000026, "");
 static_assert(offsetof(SDataGame, eventChapterSave) == 0x000028, "");
 static_assert(offsetof(SDataGame, drivers) == 0x00002c, "");
+static_assert(offsetof(SDataGame, blades) == 0x005a2c, "");
 static_assert(offsetof(SDataGame, scenario) == 0x1097e4, "");
 static_assert(offsetof(SDataGame, select) == 0x1097e8, "");
 static_assert(offsetof(SDataGame, map) == 0x1097f0, "");
@@ -62,6 +65,7 @@ static_assert(offsetof(SDataGame, assurePoint) == 0x10ad48, "");
 static_assert(offsetof(SDataGame, assureCount) == 0x10ad4c, "");
 static_assert(offsetof(SDataGame, rareBladeAppearType) == 0x10ad50, "");
 static_assert(offsetof(SDataGame, coin) == 0x10ad54, "");
+static_assert(offsetof(SDataGame, savedHp) == 0x10ad58, "");
 static_assert(offsetof(SDataGame, saveRealTime) == 0x10ad68, "");
 static_assert(offsetof(SDataGame, cameraHeight) == 0x10ad70, "");
 static_assert(offsetof(SDataGame, cameraYaw) == 0x10ae74, "");

@@ -8,6 +8,32 @@ enum {
   FLAG_BLADE_HOMURI_NAME_HIKARI = 0x89fb,
 };
 
+enum {
+  BLADE_FIRST = 1001,
+  BLADE_SECOND_RANGE_FIRST = 1014,
+  BLADE_THIRD_RANGE_FIRST = 1197,
+};
+
+constexpr u32 BLADE_FIRST_RANGE_COUNT = 13;
+constexpr u32 BLADE_SECOND_RANGE_COUNT = 176;
+constexpr u32 BLADE_SECOND_RANGE_INDEX = 20;
+constexpr u32 BLADE_THIRD_RANGE_COUNT = 226;
+
+SDataBlade *GfDataBlade::getSDataBlade(u32 blade) {
+  u32 index = blade - BLADE_FIRST;
+  if (index >= BLADE_FIRST_RANGE_COUNT) {
+    if (blade - BLADE_SECOND_RANGE_FIRST < BLADE_SECOND_RANGE_COUNT) {
+      index = blade - BLADE_SECOND_RANGE_FIRST + BLADE_SECOND_RANGE_INDEX;
+    } else if (blade - BLADE_THIRD_RANGE_FIRST < BLADE_THIRD_RANGE_COUNT) {
+      index = blade - BLADE_FIRST;
+    } else {
+      index = 0;
+    }
+  }
+
+  return &GfDataManager::getDataGame()->blades[index];
+}
+
 bool GfDataBlade::isHikariCurrent() {
   SDataGame *dataGame = GfDataManager::getDataGame();
   return dataGame->hikariCurrent != 0;
