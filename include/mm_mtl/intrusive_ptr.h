@@ -14,6 +14,12 @@ public:
     }
   }
 
+  IntrusivePtr(const IntrusivePtr &other) : mPtr(other.mPtr) {
+    if (mPtr != nullptr) {
+      mPtr->addRef();
+    }
+  }
+
   ~IntrusivePtr() {
     if (mPtr != nullptr) {
       mPtr->release();
@@ -22,6 +28,11 @@ public:
 
   IntrusivePtr &operator=(T *ptr) {
     IntrusivePtr(ptr).swap(*this);
+    return *this;
+  }
+
+  IntrusivePtr &operator=(const IntrusivePtr &other) {
+    IntrusivePtr(other).swap(*this);
     return *this;
   }
 
