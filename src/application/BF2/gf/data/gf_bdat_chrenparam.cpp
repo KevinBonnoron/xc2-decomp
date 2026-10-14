@@ -1,5 +1,7 @@
 #include "gf/data/gf_bdat_chrenparam.h"
 #include "bdat.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/gf_allocator.h"
 
 namespace gf {
 namespace _gfbep {
@@ -978,7 +980,145 @@ u32 getEnemyGroupEnemyID8(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbep
 
+enum {
+  BDAT_CHR_EN_PARAM = 0x7a,
+  BDAT_CHR_EN_PARAM_TABLE = 0x7b,
+  BDAT_CHR_EN_PARAM_REV = 0x7c,
+  BDAT_CHR_EN_RST_DEBUFF_REV = 0x7d,
+  BDAT_FLD_ENEMY_GROUP = 0xc0,
+};
+
+GfBdatChrEnParam::GfBdatChrEnParam()
+    : mChrEnParam(nullptr), mChrEnParamTable(nullptr), mChrEnParamRev(nullptr), mChrEnRstDebuffRev(nullptr), mEnemyGroup(nullptr) {
+  bdatRefresh();
+}
+
+GfBdatChrEnParam::~GfBdatChrEnParam() { destroyFP(); }
+
+void GfBdatChrEnParam::destroyFP() {
+  if (mChrEnParam != nullptr) {
+    delete mChrEnParam;
+    mChrEnParam = nullptr;
+  }
+
+  if (mChrEnParamTable != nullptr) {
+    delete mChrEnParamTable;
+    mChrEnParamTable = nullptr;
+  }
+
+  if (mChrEnParamRev != nullptr) {
+    delete mChrEnParamRev;
+    mChrEnParamRev = nullptr;
+  }
+
+  if (mChrEnRstDebuffRev != nullptr) {
+    delete mChrEnRstDebuffRev;
+    mChrEnRstDebuffRev = nullptr;
+  }
+
+  if (mEnemyGroup != nullptr) {
+    delete mEnemyGroup;
+    mEnemyGroup = nullptr;
+  }
+}
+
+#define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
+
+void GfBdatChrEnParam::createFP() {
+  mChrEnParam = NEW_BDAT_WRAPPER(BDAT_CHR_EN_PARAM);
+  mChrEnParamTable = NEW_BDAT_WRAPPER(BDAT_CHR_EN_PARAM_TABLE);
+  mChrEnParamRev = NEW_BDAT_WRAPPER(BDAT_CHR_EN_PARAM_REV);
+  mChrEnRstDebuffRev = NEW_BDAT_WRAPPER(BDAT_CHR_EN_RST_DEBUFF_REV);
+  mEnemyGroup = NEW_BDAT_WRAPPER(BDAT_FLD_ENEMY_GROUP);
+}
+
+void GfBdatChrEnParam::bdatRefresh() {
+  destroyFP();
+  createFP();
+  _gfbep::initChrEnParamDebug_Name(*mChrEnParam);
+  _gfbep::initChrEnParamResourceID(*mChrEnParam);
+  _gfbep::initChrEnParamAiID(*mChrEnParam);
+  _gfbep::initChrEnParamEnemyRole(*mChrEnParam);
+  _gfbep::initChrEnParamWalkSpeed(*mChrEnParam);
+  _gfbep::initChrEnParamRunSpeed(*mChrEnParam);
+  _gfbep::initChrEnParamBtlSpeed(*mChrEnParam);
+  _gfbep::initChrEnParamHpDefault(*mChrEnParam);
+  _gfbep::initChrEnParamHpLimit(*mChrEnParam);
+  _gfbep::initChrEnParamScoutStartHp(*mChrEnParam);
+  _gfbep::initChrEnParamScoutEndHp(*mChrEnParam);
+  _gfbep::initChrEnParamHpMaxRev(*mChrEnParam);
+  _gfbep::initChrEnParamStrengthRev(*mChrEnParam);
+  _gfbep::initChrEnParamPowEtherRev(*mChrEnParam);
+  _gfbep::initChrEnParamDexRev(*mChrEnParam);
+  _gfbep::initChrEnParamAgilityRev(*mChrEnParam);
+  _gfbep::initChrEnParamLuckRev(*mChrEnParam);
+  _gfbep::initChrEnParamParmor(*mChrEnParam);
+  _gfbep::initChrEnParamEarmor(*mChrEnParam);
+  _gfbep::initChrEnParamRstPower(*mChrEnParam);
+  _gfbep::initChrEnParamRstEther(*mChrEnParam);
+  _gfbep::initChrEnParamAtr(*mChrEnParam);
+  _gfbep::initChrEnParamCriticalRate(*mChrEnParam);
+  _gfbep::initChrEnParamGuardRate(*mChrEnParam);
+  _gfbep::initChrEnParamFlagGrdDirFront(*mChrEnParam);
+  _gfbep::initChrEnParamFlagGrdDirLeft(*mChrEnParam);
+  _gfbep::initChrEnParamFlagGrdDirRight(*mChrEnParam);
+  _gfbep::initChrEnParamFlagGrdDirBack(*mChrEnParam);
+  _gfbep::initChrEnParamFlagFldDmgType(*mChrEnParam);
+  _gfbep::initChrEnParamHealPotDrop(*mChrEnParam);
+  _gfbep::initChrEnParamRstFiCombo(*mChrEnParam);
+  _gfbep::initChrEnParamIvdFiCombo(*mChrEnParam);
+  _gfbep::initChrEnParamAura(*mChrEnParam);
+  _gfbep::initChrEnParamDyingHP(*mChrEnParam);
+  _gfbep::initChrEnParamWTNormal(*mChrEnParam);
+  _gfbep::initChrEnParamWTDying(*mChrEnParam);
+  _gfbep::initChrEnParamHate0Target(*mChrEnParam);
+  _gfbep::initChrEnParamDeathArts(*mChrEnParam);
+  _gfbep::initChrEnParamDeathArtsStop(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum1(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum2(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum3(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum4(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum5(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum6(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum7(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum8(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum9(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum10(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum11(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum12(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum13(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum14(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum15(*mChrEnParam);
+  _gfbep::initChrEnParamArtsNum16(*mChrEnParam);
+  _gfbep::initChrEnParamTableHpMaxBase(*mChrEnParamTable);
+  _gfbep::initChrEnParamTableStrengthBase(*mChrEnParamTable);
+  _gfbep::initChrEnParamTablePowEtherBase(*mChrEnParamTable);
+  _gfbep::initChrEnParamTableDexBase(*mChrEnParamTable);
+  _gfbep::initChrEnParamTableAgilityBase(*mChrEnParamTable);
+  _gfbep::initChrEnParamTableLuckBase(*mChrEnParamTable);
+  _gfbep::initChrEnParamRevHpMaxRev(*mChrEnParamRev);
+  _gfbep::initChrEnParamRevStrengthRev(*mChrEnParamRev);
+  _gfbep::initChrEnParamRevPowEtherRev(*mChrEnParamRev);
+  _gfbep::initChrEnParamRevDexRev(*mChrEnParamRev);
+  _gfbep::initChrEnParamRevAgilityRev(*mChrEnParamRev);
+  _gfbep::initChrEnParamRevLuckRev(*mChrEnParamRev);
+  _gfbep::initChrEnRstDebuffRevRevType(*mChrEnRstDebuffRev);
+  _gfbep::initChrEnRstDebuffRevRstFiCombo(*mChrEnRstDebuffRev);
+  _gfbep::initChrEnRstDebuffRevIvdFiCombo(*mChrEnRstDebuffRev);
+  _gfbep::initEnemyGroupEnemyID1(*mEnemyGroup);
+  _gfbep::initEnemyGroupEnemyID2(*mEnemyGroup);
+  _gfbep::initEnemyGroupEnemyID3(*mEnemyGroup);
+  _gfbep::initEnemyGroupEnemyID4(*mEnemyGroup);
+  _gfbep::initEnemyGroupEnemyID5(*mEnemyGroup);
+  _gfbep::initEnemyGroupEnemyID6(*mEnemyGroup);
+  _gfbep::initEnemyGroupEnemyID7(*mEnemyGroup);
+  _gfbep::initEnemyGroupEnemyID8(*mEnemyGroup);
+}
+
 u32 GfBdatChrEnParam::getChrEnParamStart() const { return Bdat::getIdTop(mChrEnParam->data); }
+
+u32 GfBdatChrEnParam::getChrEnParamEnd() const { return Bdat::getIdTop(mChrEnParam->data) + Bdat::getIdCount(mChrEnParam->data); }
 
 const char *GfBdatChrEnParam::getChrEnParamDebug_Name(u32 id) const { return _gfbep::getChrEnParamDebug_Name(*mChrEnParam, id); }
 
@@ -1090,7 +1230,29 @@ u32 GfBdatChrEnParam::getChrEnParamArtsNum15(u32 id) const { return _gfbep::getC
 
 u32 GfBdatChrEnParam::getChrEnParamArtsNum16(u32 id) const { return _gfbep::getChrEnParamArtsNum16(*mChrEnParam, id); }
 
+u32 GfBdatChrEnParam::getChrEnParamArtsNum(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbep::getChrEnParamArtsNum1,
+                                                              _gfbep::getChrEnParamArtsNum2,
+                                                              _gfbep::getChrEnParamArtsNum3,
+                                                              _gfbep::getChrEnParamArtsNum4,
+                                                              _gfbep::getChrEnParamArtsNum5,
+                                                              _gfbep::getChrEnParamArtsNum6,
+                                                              _gfbep::getChrEnParamArtsNum7,
+                                                              _gfbep::getChrEnParamArtsNum8,
+                                                              _gfbep::getChrEnParamArtsNum9,
+                                                              _gfbep::getChrEnParamArtsNum10,
+                                                              _gfbep::getChrEnParamArtsNum11,
+                                                              _gfbep::getChrEnParamArtsNum12,
+                                                              _gfbep::getChrEnParamArtsNum13,
+                                                              _gfbep::getChrEnParamArtsNum14,
+                                                              _gfbep::getChrEnParamArtsNum15,
+                                                              _gfbep::getChrEnParamArtsNum16};
+  return getters[index](*mChrEnParam, id);
+}
+
 u32 GfBdatChrEnParam::getChrEnParamTableStart() const { return Bdat::getIdTop(mChrEnParamTable->data); }
+
+u32 GfBdatChrEnParam::getChrEnParamTableEnd() const { return Bdat::getIdTop(mChrEnParamTable->data) + Bdat::getIdCount(mChrEnParamTable->data); }
 
 u32 GfBdatChrEnParam::getChrEnParamTableHpMaxBase(u32 id) const { return _gfbep::getChrEnParamTableHpMaxBase(*mChrEnParamTable, id); }
 
@@ -1106,6 +1268,8 @@ u32 GfBdatChrEnParam::getChrEnParamTableLuckBase(u32 id) const { return _gfbep::
 
 u32 GfBdatChrEnParam::getChrEnParamRevStart() const { return Bdat::getIdTop(mChrEnParamRev->data); }
 
+u32 GfBdatChrEnParam::getChrEnParamRevEnd() const { return Bdat::getIdTop(mChrEnParamRev->data) + Bdat::getIdCount(mChrEnParamRev->data); }
+
 u32 GfBdatChrEnParam::getChrEnParamRevHpMaxRev(u32 id) const { return _gfbep::getChrEnParamRevHpMaxRev(*mChrEnParamRev, id); }
 
 u32 GfBdatChrEnParam::getChrEnParamRevStrengthRev(u32 id) const { return _gfbep::getChrEnParamRevStrengthRev(*mChrEnParamRev, id); }
@@ -1120,6 +1284,10 @@ u32 GfBdatChrEnParam::getChrEnParamRevLuckRev(u32 id) const { return _gfbep::get
 
 u32 GfBdatChrEnParam::getChrEnRstDebuffRevStart() const { return Bdat::getIdTop(mChrEnRstDebuffRev->data); }
 
+u32 GfBdatChrEnParam::getChrEnRstDebuffRevEnd() const {
+  return Bdat::getIdTop(mChrEnRstDebuffRev->data) + Bdat::getIdCount(mChrEnRstDebuffRev->data);
+}
+
 u32 GfBdatChrEnParam::getChrEnRstDebuffRevRevType(u32 id) const { return _gfbep::getChrEnRstDebuffRevRevType(*mChrEnRstDebuffRev, id); }
 
 u32 GfBdatChrEnParam::getChrEnRstDebuffRevRstFiCombo(u32 id) const { return _gfbep::getChrEnRstDebuffRevRstFiCombo(*mChrEnRstDebuffRev, id); }
@@ -1127,6 +1295,8 @@ u32 GfBdatChrEnParam::getChrEnRstDebuffRevRstFiCombo(u32 id) const { return _gfb
 u32 GfBdatChrEnParam::getChrEnRstDebuffRevIvdFiCombo(u32 id) const { return _gfbep::getChrEnRstDebuffRevIvdFiCombo(*mChrEnRstDebuffRev, id); }
 
 u32 GfBdatChrEnParam::getEnemyGroupStart() const { return Bdat::getIdTop(mEnemyGroup->data); }
+
+u32 GfBdatChrEnParam::getEnemyGroupEnd() const { return Bdat::getIdTop(mEnemyGroup->data) + Bdat::getIdCount(mEnemyGroup->data); }
 
 u32 GfBdatChrEnParam::getEnemyGroupEnemyID1(u32 id) const { return _gfbep::getEnemyGroupEnemyID1(*mEnemyGroup, id); }
 
@@ -1143,5 +1313,27 @@ u32 GfBdatChrEnParam::getEnemyGroupEnemyID6(u32 id) const { return _gfbep::getEn
 u32 GfBdatChrEnParam::getEnemyGroupEnemyID7(u32 id) const { return _gfbep::getEnemyGroupEnemyID7(*mEnemyGroup, id); }
 
 u32 GfBdatChrEnParam::getEnemyGroupEnemyID8(u32 id) const { return _gfbep::getEnemyGroupEnemyID8(*mEnemyGroup, id); }
+
+u32 GfBdatChrEnParam::getEnemyGroupEnemyID(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbep::getEnemyGroupEnemyID1,
+                                                              _gfbep::getEnemyGroupEnemyID2,
+                                                              _gfbep::getEnemyGroupEnemyID3,
+                                                              _gfbep::getEnemyGroupEnemyID4,
+                                                              _gfbep::getEnemyGroupEnemyID5,
+                                                              _gfbep::getEnemyGroupEnemyID6,
+                                                              _gfbep::getEnemyGroupEnemyID7,
+                                                              _gfbep::getEnemyGroupEnemyID8};
+  return getters[index](*mEnemyGroup, id);
+}
+
+bool GfBdatChrEnParam::searchByRscEn(mm::mtl::FixedVector<u16, 128> &enemies, u32 resourceId) const {
+  for (u32 id = getChrEnParamStart(); id < getChrEnParamEnd(); id++) {
+    if (getChrEnParamResourceID(id) == resourceId) {
+      enemies.push_back(id);
+    }
+  }
+
+  return !enemies.empty();
+}
 
 } // namespace gf
