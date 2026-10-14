@@ -1,5 +1,7 @@
 #include "gf/data/gf_bdat_rsc.h"
 #include "bdat.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/gf_allocator.h"
 
 namespace gf {
 namespace _gfbrs {
@@ -4019,7 +4021,468 @@ f32 getFLD_actorSEoffsetZ(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbrs
 
+enum {
+  BDAT_VOICE_TABLE = 0x72,
+  BDAT_VOICE_TABLE_BLADE = 0x73,
+  BDAT_VOICE_TABLE_RARE = 0x74,
+  BDAT_VOICE_TABLE_COMMON = 0x75,
+  BDAT_FLD_ACTOR_SE = 0x76,
+  BDAT_DRIVER_PARAM = 0x7e,
+  BDAT_RSC_EN = 0x90,
+  BDAT_RSC_EN_GENUS = 0x91,
+  BDAT_RSC_EN_UND = 0x92,
+  BDAT_RSC_NPC_LIST = 0x93,
+  BDAT_RSC_NPC_WPN = 0x94,
+  BDAT_RSC_MOB_LIST = 0x95,
+  BDAT_RSC_MAP_OBJ_LIST = 0x96,
+  BDAT_RSC_TBOX_LIST = 0x97,
+  BDAT_RSC_PC_WPN = 0x98,
+  BDAT_RSC_PC_WPN_MOUNT = 0x99,
+  BDAT_RSC_EN_WPN = 0x9a,
+};
+
+GfBdatRsc::GfBdatRsc()
+    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr),
+      unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr),
+      unknown78(nullptr), unknown80(nullptr), unknown88(nullptr), unknown90(nullptr) {
+  bdatRefresh();
+}
+
+GfBdatRsc::~GfBdatRsc() { destroyFP(); }
+
+void GfBdatRsc::destroyFP() {
+  if (unknown10 != nullptr) {
+    delete unknown10;
+    unknown10 = nullptr;
+  }
+
+  if (unknown18 != nullptr) {
+    delete unknown18;
+    unknown18 = nullptr;
+  }
+
+  if (unknown20 != nullptr) {
+    delete unknown20;
+    unknown20 = nullptr;
+  }
+
+  if (unknown28 != nullptr) {
+    delete unknown28;
+    unknown28 = nullptr;
+  }
+
+  if (unknown30 != nullptr) {
+    delete unknown30;
+    unknown30 = nullptr;
+  }
+
+  if (unknown38 != nullptr) {
+    delete unknown38;
+    unknown38 = nullptr;
+  }
+
+  if (unknown40 != nullptr) {
+    delete unknown40;
+    unknown40 = nullptr;
+  }
+
+  if (unknown48 != nullptr) {
+    delete unknown48;
+    unknown48 = nullptr;
+  }
+
+  if (unknown50 != nullptr) {
+    delete unknown50;
+    unknown50 = nullptr;
+  }
+
+  if (unknown58 != nullptr) {
+    delete unknown58;
+    unknown58 = nullptr;
+  }
+
+  if (unknown60 != nullptr) {
+    delete unknown60;
+    unknown60 = nullptr;
+  }
+
+  if (unknown68 != nullptr) {
+    delete unknown68;
+    unknown68 = nullptr;
+  }
+
+  if (unknown70 != nullptr) {
+    delete unknown70;
+    unknown70 = nullptr;
+  }
+
+  if (unknown78 != nullptr) {
+    delete unknown78;
+    unknown78 = nullptr;
+  }
+
+  if (unknown80 != nullptr) {
+    delete unknown80;
+    unknown80 = nullptr;
+  }
+
+  if (unknown88 != nullptr) {
+    delete unknown88;
+    unknown88 = nullptr;
+  }
+
+  if (unknown90 != nullptr) {
+    delete unknown90;
+    unknown90 = nullptr;
+  }
+}
+
+void GfBdatRsc::createFP() {
+  unknown10 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN)};
+  unknown18 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_GENUS)};
+  unknown20 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_UND)};
+  unknown28 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_NPC_LIST)};
+  unknown30 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_NPC_WPN)};
+  unknown38 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_MOB_LIST)};
+  unknown40 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_PC_WPN)};
+  unknown48 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_PC_WPN_MOUNT)};
+  unknown50 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_WPN)};
+  unknown58 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_TBOX_LIST)};
+  unknown60 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_MAP_OBJ_LIST)};
+  unknown68 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_DRIVER_PARAM)};
+  unknown70 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_VOICE_TABLE)};
+  unknown78 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_VOICE_TABLE_BLADE)};
+  unknown80 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_VOICE_TABLE_RARE)};
+  unknown88 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_VOICE_TABLE_COMMON)};
+  unknown90 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_ACTOR_SE)};
+}
+
+void GfBdatRsc::bdatRefresh() {
+  destroyFP();
+  createFP();
+  _gfbrs::initRscEnDebugName(*unknown10);
+  _gfbrs::initRscEnTypeFamily(*unknown10);
+  _gfbrs::initRscEnTypeGenus(*unknown10);
+  _gfbrs::initRscEnActType(*unknown10);
+  _gfbrs::initRscEnFlyHeight(*unknown10);
+  _gfbrs::initRscEnFldMoveType(*unknown10);
+  _gfbrs::initRscEnMaterial(*unknown10);
+  _gfbrs::initRscEnProxyID(*unknown10);
+  _gfbrs::initRscEnEnRadius(*unknown10);
+  _gfbrs::initRscEnEnRadius2(*unknown10);
+  _gfbrs::initRscEnChestHeight(*unknown10);
+  _gfbrs::initRscEnChestHeight2(*unknown10);
+  _gfbrs::initRscEnBallRadius(*unknown10);
+  _gfbrs::initRscEnBallHeight(*unknown10);
+  _gfbrs::initRscEnCharColli(*unknown10);
+  _gfbrs::initRscEnoffsetID(*unknown10);
+  _gfbrs::initRscEnEyeRot(*unknown10);
+  _gfbrs::initRscEnSearchBaseBone(*unknown10);
+  _gfbrs::initRscEnCenterBone(*unknown10);
+  _gfbrs::initRscEnCamBone(*unknown10);
+  _gfbrs::initRscEnFrontAngle(*unknown10);
+  _gfbrs::initRscEnTurnAngleSmall(*unknown10);
+  _gfbrs::initRscEnTurnAngleBig(*unknown10);
+  _gfbrs::initRscEnUnduration(*unknown10);
+  _gfbrs::initRscEnModel(*unknown10);
+  _gfbrs::initRscEnChrFile(*unknown10);
+  _gfbrs::initRscEnMotion(*unknown10);
+  _gfbrs::initRscEnRefMotion(*unknown10);
+  _gfbrs::initRscEnEffectPack(*unknown10);
+  _gfbrs::initRscEnLoopEffect(*unknown10);
+  _gfbrs::initRscEnSePack(*unknown10);
+  _gfbrs::initRscEnVoice(*unknown10);
+  _gfbrs::initRscEnVoiceEx(*unknown10);
+  _gfbrs::initRscEnClipEvent(*unknown10);
+  _gfbrs::initRscEnComp_Eff(*unknown10);
+  _gfbrs::initRscEnComp_Se(*unknown10);
+  _gfbrs::initRscEnComp_Vo(*unknown10);
+  _gfbrs::initRscEnFlagNoEcSkip(*unknown10);
+  _gfbrs::initRscEnFlagMap(*unknown10);
+  _gfbrs::initRscEnFlagEvt(*unknown10);
+  _gfbrs::initRscEnFlagNoWinVo(*unknown10);
+  _gfbrs::initRscEnFlagBait(*unknown10);
+  _gfbrs::initRscEnFlagUseSearchBone(*unknown10);
+  _gfbrs::initRscEnFlagNoVanish(*unknown10);
+  _gfbrs::initRscEnFlagNoCamera(*unknown10);
+  _gfbrs::initRscEnFlagWeaponDrawDisp(*unknown10);
+  _gfbrs::initRscEnFlagJoinAll(*unknown10);
+  _gfbrs::initRscEnFlagDeathMotion(*unknown10);
+  _gfbrs::initRscEnWeaponNum1(*unknown10);
+  _gfbrs::initRscEnWeaponNum2(*unknown10);
+  _gfbrs::initRscEnWeaponNum3(*unknown10);
+  _gfbrs::initRscEnWeaponNum4(*unknown10);
+  _gfbrs::initRscEnWeaponNum5(*unknown10);
+  _gfbrs::initRscEnMemorySlot(*unknown10);
+  _gfbrs::initRscEnRace(*unknown10);
+  _gfbrs::initRscEnDrType(*unknown10);
+  _gfbrs::initRscEnGoldDivideRev(*unknown10);
+  _gfbrs::initRscEnFootStep(*unknown10);
+  _gfbrs::initRscEnFootStepEffect(*unknown10);
+  _gfbrs::initRscEnRotateX(*unknown10);
+  _gfbrs::initRscEnRotateY(*unknown10);
+  _gfbrs::initRscEnRotateZ(*unknown10);
+  _gfbrs::initRscEnRotateDeg(*unknown10);
+  _gfbrs::initRscEnRotEffScale(*unknown10);
+  _gfbrs::initRscEnExtraParts1(*unknown10);
+  _gfbrs::initRscEnExtraParts2(*unknown10);
+  _gfbrs::initRscEnExtraParts3(*unknown10);
+  _gfbrs::initRscEnExtraParts4(*unknown10);
+  _gfbrs::initRscEnDeadSeNum(*unknown10);
+  _gfbrs::initRscEnRotateBone(*unknown10);
+  _gfbrs::initRscEnGenusNAME(*unknown18);
+  _gfbrs::initRscEnGenusCAPTION(*unknown18);
+  _gfbrs::initRscEnGenusFlaggimmicktype(*unknown18);
+  _gfbrs::initRscEnUndFlagUndX(*unknown20);
+  _gfbrs::initRscEnUndFlagUndZ(*unknown20);
+  _gfbrs::initRscEnUndUndMinX(*unknown20);
+  _gfbrs::initRscEnUndUndMaxX(*unknown20);
+  _gfbrs::initRscEnUndUndMinZ(*unknown20);
+  _gfbrs::initRscEnUndUndMaxZ(*unknown20);
+  _gfbrs::initRscEnUndUndDeg(*unknown20);
+  _gfbrs::initRscNpcListModel(*unknown28);
+  _gfbrs::initRscNpcListMotion(*unknown28);
+  _gfbrs::initRscNpcListAddMotion(*unknown28);
+  _gfbrs::initRscNpcListComp_Eff(*unknown28);
+  _gfbrs::initRscNpcListCollisionId(*unknown28);
+  _gfbrs::initRscNpcListSE(*unknown28);
+  _gfbrs::initRscNpcListSeEnv(*unknown28);
+  _gfbrs::initRscNpcListRace(*unknown28);
+  _gfbrs::initRscNpcListFootStep(*unknown28);
+  _gfbrs::initRscNpcListFootStepEffect(*unknown28);
+  _gfbrs::initRscNpcListRoots(*unknown28);
+  _gfbrs::initRscNpcListGender(*unknown28);
+  _gfbrs::initRscNpcListName(*unknown28);
+  _gfbrs::initRscNpcListOffsetID(*unknown28);
+  _gfbrs::initRscNpcListEyeRot(*unknown28);
+  _gfbrs::initRscNpcListExtraParts1(*unknown28);
+  _gfbrs::initRscNpcListExtraParts2(*unknown28);
+  _gfbrs::initRscNpcListExtraParts3(*unknown28);
+  _gfbrs::initRscNpcListExtraParts4(*unknown28);
+  _gfbrs::initRscNpcListExtraParts5(*unknown28);
+  _gfbrs::initRscNpcListExtraParts6(*unknown28);
+  _gfbrs::initRscNpcListScale(*unknown28);
+  _gfbrs::initRscNpcListEventAsset(*unknown28);
+  _gfbrs::initRscMobListModel(*unknown38);
+  _gfbrs::initRscMobListMotion(*unknown38);
+  _gfbrs::initRscMobListAddMotion(*unknown38);
+  _gfbrs::initRscMobListComp_Eff(*unknown38);
+  _gfbrs::initRscMobListCollisionId(*unknown38);
+  _gfbrs::initRscMobListSE(*unknown38);
+  _gfbrs::initRscMobListSeEnv(*unknown38);
+  _gfbrs::initRscMobListRace(*unknown38);
+  _gfbrs::initRscMobListFootStep(*unknown38);
+  _gfbrs::initRscMobListFootStepEffect(*unknown38);
+  _gfbrs::initRscMobListOffsetID(*unknown38);
+  _gfbrs::initRscMobListExtraParts1(*unknown38);
+  _gfbrs::initRscMobListExtraParts2(*unknown38);
+  _gfbrs::initRscMobListExtraParts3(*unknown38);
+  _gfbrs::initRscMobListExtraParts4(*unknown38);
+  _gfbrs::initRscMobListExtraParts5(*unknown38);
+  _gfbrs::initRscMobListExtraParts6(*unknown38);
+  _gfbrs::initRSC_MapObjListModel(*unknown60);
+  _gfbrs::initRSC_MapObjListMotion(*unknown60);
+  _gfbrs::initRSC_MapObjListComp_Eff(*unknown60);
+  _gfbrs::initRSC_MapObjListSE(*unknown60);
+  _gfbrs::initRSC_MapObjListSeEnv(*unknown60);
+  _gfbrs::initRSC_MapObjListflagBigObj(*unknown60);
+  _gfbrs::initRSC_MapObjListExtraParts1(*unknown60);
+  _gfbrs::initRSC_TboxListModel(*unknown58);
+  _gfbrs::initRSC_TboxListMotion(*unknown58);
+  _gfbrs::initRSC_PcWpnModel(*unknown40);
+  _gfbrs::initRSC_PcWpnMotion(*unknown40);
+  _gfbrs::initRSC_PcWpnMenuImageID(*unknown40);
+  _gfbrs::initRSC_PcWpnMountWpn01rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn01rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn02rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn02rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn03rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn03rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn03lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn03lOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn04rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn04rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn05rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn05rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn05lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn05lOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn06rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn06rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn07rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn07rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn07lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn07lOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn08rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn08rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn09rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn09rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn09lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn09lOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn10rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn10rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn10lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn10lOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn11rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn11rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn12rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn12rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn12lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn12lOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn13rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn13rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn14rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn14rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn15rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn15rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn16rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn16rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn16lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn16lOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn17rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn17rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn18rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn18rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn19rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn19rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn20rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn20rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn20lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn20lOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn21rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn21rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn22rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn22rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn22lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn22lOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn23rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn23rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn23lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn23lOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn24rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn24rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn24lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn24lOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn25rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn25rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn25lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn25lOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn26rIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn26rOut(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn26lIn(*unknown48);
+  _gfbrs::initRSC_PcWpnMountWpn26lOut(*unknown48);
+  _gfbrs::initRscEnWpnModel(*unknown50);
+  _gfbrs::initRscEnWpnScale(*unknown50);
+  _gfbrs::initRscEnWpnMotion(*unknown50);
+  _gfbrs::initRscEnWpnMtpInChara(*unknown50);
+  _gfbrs::initRscEnWpnMtpInWpn(*unknown50);
+  _gfbrs::initRscEnWpnMtpOutChara(*unknown50);
+  _gfbrs::initRscEnWpnMtpOutWpn(*unknown50);
+  _gfbrs::initRscNpcWpnModel(*unknown30);
+  _gfbrs::initRscNpcWpnMotion(*unknown30);
+  _gfbrs::initDriverParamExtMountNpc(*unknown68);
+  _gfbrs::initDriverParamExtMountBone(*unknown68);
+  _gfbrs::initDriverParamExtMountCond(*unknown68);
+  _gfbrs::initVoiceTableDriver1(*unknown70);
+  _gfbrs::initVoiceTableDriver2(*unknown70);
+  _gfbrs::initVoiceTableDriver3(*unknown70);
+  _gfbrs::initVoiceTableDriver4(*unknown70);
+  _gfbrs::initVoiceTableDriver5(*unknown70);
+  _gfbrs::initVoiceTableDriver6(*unknown70);
+  _gfbrs::initVoiceTableBladeBlade1(*unknown78);
+  _gfbrs::initVoiceTableBladeBlade2(*unknown78);
+  _gfbrs::initVoiceTableBladeBlade3(*unknown78);
+  _gfbrs::initVoiceTableBladeBlade4(*unknown78);
+  _gfbrs::initVoiceTableBladeBlade5(*unknown78);
+  _gfbrs::initVoiceTableBladeBlade6(*unknown78);
+  _gfbrs::initVoiceTableBladeBlade7(*unknown78);
+  _gfbrs::initVoiceTableBladeBlade8(*unknown78);
+  _gfbrs::initVoiceTableBladeBlade9(*unknown78);
+  _gfbrs::initVoiceTableBladeBlade10(*unknown78);
+  _gfbrs::initVoiceTableBladeBlade11(*unknown78);
+  _gfbrs::initVoiceTableRareRareBlade1(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade2(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade3(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade4(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade5(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade6(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade7(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade8(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade9(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade10(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade11(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade12(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade13(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade14(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade15(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade16(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade17(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade18(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade19(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade20(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade21(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade22(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade23(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade24(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade25(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade26(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade27(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade28(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade29(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade30(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade31(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade32(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade33(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade34(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade35(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade36(*unknown80);
+  _gfbrs::initVoiceTableRareRareBlade37(*unknown80);
+  _gfbrs::initVoiceTableCommonCommonBlade1(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade2(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade3(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade4(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade5(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade6(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade7(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade8(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade9(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade10(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade11(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade12(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade13(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade14(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade15(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade16(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade17(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade18(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade19(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade20(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade21(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade22(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade23(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade24(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade25(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade26(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade27(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade28(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade29(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade30(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade31(*unknown88);
+  _gfbrs::initVoiceTableCommonCommonBlade32(*unknown88);
+  _gfbrs::initFLD_actorSELOD(*unknown90);
+  _gfbrs::initFLD_actorSEse_type(*unknown90);
+  _gfbrs::initFLD_actorSEseName(*unknown90);
+  _gfbrs::initFLD_actorSEmax_volume_Dist(*unknown90);
+  _gfbrs::initFLD_actorSEmin_volume_Dist(*unknown90);
+  _gfbrs::initFLD_actorSEvolumeMAX(*unknown90);
+  _gfbrs::initFLD_actorSEvolumeMIN(*unknown90);
+  _gfbrs::initFLD_actorSEoffsetX(*unknown90);
+  _gfbrs::initFLD_actorSEoffsetY(*unknown90);
+  _gfbrs::initFLD_actorSEoffsetZ(*unknown90);
+}
+
 u32 GfBdatRsc::getRscEnStart() const { return Bdat::getIdTop(unknown10->data); }
+
+u32 GfBdatRsc::getRscEnEnd() const { return Bdat::getIdTop(unknown10->data) + Bdat::getIdCount(unknown10->data); }
 
 const char *GfBdatRsc::getRscEnDebugName(u32 id) const { return _gfbrs::getRscEnDebugName(*unknown10, id); }
 
@@ -4159,9 +4622,23 @@ u32 GfBdatRsc::getRscEnExtraParts4(u32 id) const { return _gfbrs::getRscEnExtraP
 
 u32 GfBdatRsc::getRscEnDeadSeNum(u32 id) const { return _gfbrs::getRscEnDeadSeNum(*unknown10, id); }
 
+u32 GfBdatRsc::getRscEnWeaponNum(u32 resource, u32 weapon) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbrs::getRscEnWeaponNum1, _gfbrs::getRscEnWeaponNum2, _gfbrs::getRscEnWeaponNum3, _gfbrs::getRscEnWeaponNum4, _gfbrs::getRscEnWeaponNum5};
+  return getters[weapon](*unknown10, resource);
+}
+
+u32 GfBdatRsc::getRscEnExtraParts(u32 resource, u32 part) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbrs::getRscEnExtraParts1, _gfbrs::getRscEnExtraParts2, _gfbrs::getRscEnExtraParts3, _gfbrs::getRscEnExtraParts4, nullptr, nullptr};
+  return getters[part](*unknown10, resource);
+}
+
 const char *GfBdatRsc::getRscEnRotateBone(u32 id) const { return _gfbrs::getRscEnRotateBone(*unknown10, id); }
 
 u32 GfBdatRsc::getRscEnGenusStart() const { return Bdat::getIdTop(unknown18->data); }
+
+u32 GfBdatRsc::getRscEnGenusEnd() const { return Bdat::getIdTop(unknown18->data) + Bdat::getIdCount(unknown18->data); }
 
 u32 GfBdatRsc::getRscEnGenusNAME(u32 id) const { return _gfbrs::getRscEnGenusNAME(*unknown18, id); }
 
@@ -4170,6 +4647,8 @@ u32 GfBdatRsc::getRscEnGenusCAPTION(u32 id) const { return _gfbrs::getRscEnGenus
 bool GfBdatRsc::isRscEnGenusFlaggimmicktype(u32 id) const { return _gfbrs::isRscEnGenusFlaggimmicktype(*unknown18, id); }
 
 u32 GfBdatRsc::getRscEnUndStart() const { return Bdat::getIdTop(unknown20->data); }
+
+u32 GfBdatRsc::getRscEnUndEnd() const { return Bdat::getIdTop(unknown20->data) + Bdat::getIdCount(unknown20->data); }
 
 bool GfBdatRsc::isRscEnUndFlagUndX(u32 id) const { return _gfbrs::isRscEnUndFlagUndX(*unknown20, id); }
 
@@ -4186,6 +4665,8 @@ s32 GfBdatRsc::getRscEnUndUndMaxZ(u32 id) const { return _gfbrs::getRscEnUndUndM
 u32 GfBdatRsc::getRscEnUndUndDeg(u32 id) const { return _gfbrs::getRscEnUndUndDeg(*unknown20, id); }
 
 u32 GfBdatRsc::getRscNpcListStart() const { return Bdat::getIdTop(unknown28->data); }
+
+u32 GfBdatRsc::getRscNpcListEnd() const { return Bdat::getIdTop(unknown28->data) + Bdat::getIdCount(unknown28->data); }
 
 const char *GfBdatRsc::getRscNpcListModel(u32 id) const { return _gfbrs::getRscNpcListModel(*unknown28, id); }
 
@@ -4233,7 +4714,19 @@ u32 GfBdatRsc::getRscNpcListScale(u32 id) const { return _gfbrs::getRscNpcListSc
 
 u32 GfBdatRsc::getRscNpcListEventAsset(u32 id) const { return _gfbrs::getRscNpcListEventAsset(*unknown28, id); }
 
+u32 GfBdatRsc::getRscNpcListExtraParts(u32 npc, u32 part) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbrs::getRscNpcListExtraParts1,
+                                                              _gfbrs::getRscNpcListExtraParts2,
+                                                              _gfbrs::getRscNpcListExtraParts3,
+                                                              _gfbrs::getRscNpcListExtraParts4,
+                                                              _gfbrs::getRscNpcListExtraParts5,
+                                                              _gfbrs::getRscNpcListExtraParts6};
+  return getters[part](*unknown28, npc);
+}
+
 u32 GfBdatRsc::getRscMobListStart() const { return Bdat::getIdTop(unknown38->data); }
+
+u32 GfBdatRsc::getRscMobListEnd() const { return Bdat::getIdTop(unknown38->data) + Bdat::getIdCount(unknown38->data); }
 
 const char *GfBdatRsc::getRscMobListModel(u32 id) const { return _gfbrs::getRscMobListModel(*unknown38, id); }
 
@@ -4269,7 +4762,19 @@ u32 GfBdatRsc::getRscMobListExtraParts5(u32 id) const { return _gfbrs::getRscMob
 
 u32 GfBdatRsc::getRscMobListExtraParts6(u32 id) const { return _gfbrs::getRscMobListExtraParts6(*unknown38, id); }
 
+u32 GfBdatRsc::getRscMobListExtraParts(u32 id, u32 part) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbrs::getRscMobListExtraParts1,
+                                                              _gfbrs::getRscMobListExtraParts2,
+                                                              _gfbrs::getRscMobListExtraParts3,
+                                                              _gfbrs::getRscMobListExtraParts4,
+                                                              _gfbrs::getRscMobListExtraParts5,
+                                                              _gfbrs::getRscMobListExtraParts6};
+  return getters[part](*unknown38, id);
+}
+
 u32 GfBdatRsc::getRSC_MapObjListStart() const { return Bdat::getIdTop(unknown60->data); }
+
+u32 GfBdatRsc::getRSC_MapObjListEnd() const { return Bdat::getIdTop(unknown60->data) + Bdat::getIdCount(unknown60->data); }
 
 const char *GfBdatRsc::getRSC_MapObjListModel(u32 id) const { return _gfbrs::getRSC_MapObjListModel(*unknown60, id); }
 
@@ -4287,11 +4792,15 @@ u32 GfBdatRsc::getRSC_MapObjListExtraParts1(u32 id) const { return _gfbrs::getRS
 
 u32 GfBdatRsc::getRSC_TboxListStart() const { return Bdat::getIdTop(unknown58->data); }
 
+u32 GfBdatRsc::getRSC_TboxListEnd() const { return Bdat::getIdTop(unknown58->data) + Bdat::getIdCount(unknown58->data); }
+
 const char *GfBdatRsc::getRSC_TboxListModel(u32 id) const { return _gfbrs::getRSC_TboxListModel(*unknown58, id); }
 
 const char *GfBdatRsc::getRSC_TboxListMotion(u32 id) const { return _gfbrs::getRSC_TboxListMotion(*unknown58, id); }
 
 u32 GfBdatRsc::getRSC_PcWpnStart() const { return Bdat::getIdTop(unknown40->data); }
+
+u32 GfBdatRsc::getRSC_PcWpnEnd() const { return Bdat::getIdTop(unknown40->data) + Bdat::getIdCount(unknown40->data); }
 
 const char *GfBdatRsc::getRSC_PcWpnModel(u32 id) const { return _gfbrs::getRSC_PcWpnModel(*unknown40, id); }
 
@@ -4300,6 +4809,8 @@ const char *GfBdatRsc::getRSC_PcWpnMotion(u32 id) const { return _gfbrs::getRSC_
 u32 GfBdatRsc::getRSC_PcWpnMenuImageID(u32 id) const { return _gfbrs::getRSC_PcWpnMenuImageID(*unknown40, id); }
 
 u32 GfBdatRsc::getRSC_PcWpnMountStart() const { return Bdat::getIdTop(unknown48->data); }
+
+u32 GfBdatRsc::getRSC_PcWpnMountEnd() const { return Bdat::getIdTop(unknown48->data) + Bdat::getIdCount(unknown48->data); }
 
 const char *GfBdatRsc::getRSC_PcWpnMountWpn01rIn(u32 id) const { return _gfbrs::getRSC_PcWpnMountWpn01rIn(*unknown48, id); }
 
@@ -4459,6 +4970,8 @@ const char *GfBdatRsc::getRSC_PcWpnMountWpn26lOut(u32 id) const { return _gfbrs:
 
 u32 GfBdatRsc::getRscEnWpnStart() const { return Bdat::getIdTop(unknown50->data); }
 
+u32 GfBdatRsc::getRscEnWpnEnd() const { return Bdat::getIdTop(unknown50->data) + Bdat::getIdCount(unknown50->data); }
+
 const char *GfBdatRsc::getRscEnWpnModel(u32 id) const { return _gfbrs::getRscEnWpnModel(*unknown50, id); }
 
 u32 GfBdatRsc::getRscEnWpnScale(u32 id) const { return _gfbrs::getRscEnWpnScale(*unknown50, id); }
@@ -4475,11 +4988,15 @@ const char *GfBdatRsc::getRscEnWpnMtpOutWpn(u32 id) const { return _gfbrs::getRs
 
 u32 GfBdatRsc::getRscNpcWpnStart() const { return Bdat::getIdTop(unknown30->data); }
 
+u32 GfBdatRsc::getRscNpcWpnEnd() const { return Bdat::getIdTop(unknown30->data) + Bdat::getIdCount(unknown30->data); }
+
 const char *GfBdatRsc::getRscNpcWpnModel(u32 id) const { return _gfbrs::getRscNpcWpnModel(*unknown30, id); }
 
 const char *GfBdatRsc::getRscNpcWpnMotion(u32 id) const { return _gfbrs::getRscNpcWpnMotion(*unknown30, id); }
 
 u32 GfBdatRsc::getDriverParamStart() const { return Bdat::getIdTop(unknown68->data); }
+
+u32 GfBdatRsc::getDriverParamEnd() const { return Bdat::getIdTop(unknown68->data) + Bdat::getIdCount(unknown68->data); }
 
 u32 GfBdatRsc::getDriverParamExtMountNpc(u32 id) const { return _gfbrs::getDriverParamExtMountNpc(*unknown68, id); }
 
@@ -4488,6 +5005,8 @@ const char *GfBdatRsc::getDriverParamExtMountBone(u32 id) const { return _gfbrs:
 u32 GfBdatRsc::getDriverParamExtMountCond(u32 id) const { return _gfbrs::getDriverParamExtMountCond(*unknown68, id); }
 
 u32 GfBdatRsc::getVoiceTableStart() const { return Bdat::getIdTop(unknown70->data); }
+
+u32 GfBdatRsc::getVoiceTableEnd() const { return Bdat::getIdTop(unknown70->data) + Bdat::getIdCount(unknown70->data); }
 
 const char *GfBdatRsc::getVoiceTableDriver1(u32 id) const { return _gfbrs::getVoiceTableDriver1(*unknown70, id); }
 
@@ -4502,6 +5021,8 @@ const char *GfBdatRsc::getVoiceTableDriver5(u32 id) const { return _gfbrs::getVo
 const char *GfBdatRsc::getVoiceTableDriver6(u32 id) const { return _gfbrs::getVoiceTableDriver6(*unknown70, id); }
 
 u32 GfBdatRsc::getVoiceTableBladeStart() const { return Bdat::getIdTop(unknown78->data); }
+
+u32 GfBdatRsc::getVoiceTableBladeEnd() const { return Bdat::getIdTop(unknown78->data) + Bdat::getIdCount(unknown78->data); }
 
 const char *GfBdatRsc::getVoiceTableBladeBlade1(u32 id) const { return _gfbrs::getVoiceTableBladeBlade1(*unknown78, id); }
 
@@ -4526,6 +5047,8 @@ const char *GfBdatRsc::getVoiceTableBladeBlade10(u32 id) const { return _gfbrs::
 const char *GfBdatRsc::getVoiceTableBladeBlade11(u32 id) const { return _gfbrs::getVoiceTableBladeBlade11(*unknown78, id); }
 
 u32 GfBdatRsc::getVoiceTableRareStart() const { return Bdat::getIdTop(unknown80->data); }
+
+u32 GfBdatRsc::getVoiceTableRareEnd() const { return Bdat::getIdTop(unknown80->data) + Bdat::getIdCount(unknown80->data); }
 
 const char *GfBdatRsc::getVoiceTableRareRareBlade1(u32 id) const { return _gfbrs::getVoiceTableRareRareBlade1(*unknown80, id); }
 
@@ -4603,6 +5126,8 @@ const char *GfBdatRsc::getVoiceTableRareRareBlade37(u32 id) const { return _gfbr
 
 u32 GfBdatRsc::getVoiceTableCommonStart() const { return Bdat::getIdTop(unknown88->data); }
 
+u32 GfBdatRsc::getVoiceTableCommonEnd() const { return Bdat::getIdTop(unknown88->data) + Bdat::getIdCount(unknown88->data); }
+
 const char *GfBdatRsc::getVoiceTableCommonCommonBlade1(u32 id) const { return _gfbrs::getVoiceTableCommonCommonBlade1(*unknown88, id); }
 
 const char *GfBdatRsc::getVoiceTableCommonCommonBlade2(u32 id) const { return _gfbrs::getVoiceTableCommonCommonBlade2(*unknown88, id); }
@@ -4668,6 +5193,8 @@ const char *GfBdatRsc::getVoiceTableCommonCommonBlade31(u32 id) const { return _
 const char *GfBdatRsc::getVoiceTableCommonCommonBlade32(u32 id) const { return _gfbrs::getVoiceTableCommonCommonBlade32(*unknown88, id); }
 
 u32 GfBdatRsc::getFLD_actorSEStart() const { return Bdat::getIdTop(unknown90->data); }
+
+u32 GfBdatRsc::getFLD_actorSEEnd() const { return Bdat::getIdTop(unknown90->data) + Bdat::getIdCount(unknown90->data); }
 
 const char *GfBdatRsc::getFLD_actorSELOD(u32 id) const { return _gfbrs::getFLD_actorSELOD(*unknown90, id); }
 
