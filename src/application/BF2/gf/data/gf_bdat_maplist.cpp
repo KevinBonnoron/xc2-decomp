@@ -1,6 +1,8 @@
 #include "gf/data/gf_bdat_maplist.h"
 #include "bdat.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/gf_allocator.h"
 
 namespace gf {
 namespace _gfbml {
@@ -779,7 +781,111 @@ u32 getTimeInfomsg(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbml
 
+enum {
+  BDAT_FLD_MAPLIST = 0x4e,
+  BDAT_FLD_TIME_INFO = 0x4f,
+  BDAT_FLD_WEATHER_INFO = 0x50,
+};
+
+GfBdatMaplist::GfBdatMaplist() : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr) { bdatRefresh(); }
+
+GfBdatMaplist::~GfBdatMaplist() { destroyFP(); }
+
+void GfBdatMaplist::destroyFP() {
+  if (unknown10 != nullptr) {
+    delete unknown10;
+    unknown10 = nullptr;
+  }
+
+  if (unknown18 != nullptr) {
+    delete unknown18;
+    unknown18 = nullptr;
+  }
+
+  if (unknown20 != nullptr) {
+    delete unknown20;
+    unknown20 = nullptr;
+  }
+}
+
+void GfBdatMaplist::createFP() {
+  unknown10 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_MAPLIST)};
+  unknown18 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_WEATHER_INFO)};
+  unknown20 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_TIME_INFO)};
+}
+
+void GfBdatMaplist::bdatRefresh() {
+  destroyFP();
+  createFP();
+  _gfbml::initMaplistresource(*unknown10);
+  _gfbml::initMaplistselect(*unknown10);
+  _gfbml::initMaplistrscGmkId(*unknown10);
+  _gfbml::initMaplistene_disp_r(*unknown10);
+  _gfbml::initMaplistene_disp_h(*unknown10);
+  _gfbml::initMaplistene_release_r(*unknown10);
+  _gfbml::initMaplistene_release_h(*unknown10);
+  _gfbml::initMaplistwa_type(*unknown10);
+  _gfbml::initMaplistwa_pop_rate(*unknown10);
+  _gfbml::initMaplistwa_time_BNS(*unknown10);
+  _gfbml::initMaplistwa_end_time(*unknown10);
+  _gfbml::initMaplistwb_type(*unknown10);
+  _gfbml::initMaplistwb_pop_rate(*unknown10);
+  _gfbml::initMaplistwb_time_BNS(*unknown10);
+  _gfbml::initMaplistwb_end_time(*unknown10);
+  _gfbml::initMaplistwc_type(*unknown10);
+  _gfbml::initMaplistwc_pop_rate(*unknown10);
+  _gfbml::initMaplistwc_time_BNS(*unknown10);
+  _gfbml::initMaplistwc_end_time(*unknown10);
+  _gfbml::initMaplistwd_type(*unknown10);
+  _gfbml::initMaplistwd_pop_rate(*unknown10);
+  _gfbml::initMaplistwd_time_BNS(*unknown10);
+  _gfbml::initMaplistwd_end_time(*unknown10);
+  _gfbml::initMaplistwind_mor(*unknown10);
+  _gfbml::initMaplistwind_non(*unknown10);
+  _gfbml::initMaplistwind_eve(*unknown10);
+  _gfbml::initMaplistwind_nit(*unknown10);
+  _gfbml::initMaplistwind_mnit(*unknown10);
+  _gfbml::initMaplistwind_emor(*unknown10);
+  _gfbml::initMaplistwind_WA(*unknown10);
+  _gfbml::initMaplistwind_WB(*unknown10);
+  _gfbml::initMaplistwind_WC(*unknown10);
+  _gfbml::initMaplistwind_WD(*unknown10);
+  _gfbml::initMaplistweatherATR(*unknown10);
+  _gfbml::initMapliste_repoptime(*unknown10);
+  _gfbml::initMaplistm_repoptime(*unknown10);
+  _gfbml::initMaplistmapATR(*unknown10);
+  _gfbml::initMaplistwa_ON_cndID(*unknown10);
+  _gfbml::initMaplistwa_OFF_cndID(*unknown10);
+  _gfbml::initMaplistwb_ON_cndID(*unknown10);
+  _gfbml::initMaplistwb_OFF_cndID(*unknown10);
+  _gfbml::initMaplistwc_ON_cndID(*unknown10);
+  _gfbml::initMaplistwc_OFF_cndID(*unknown10);
+  _gfbml::initMaplistwd_ON_cndID(*unknown10);
+  _gfbml::initMaplistwd_OFF_cndID(*unknown10);
+  _gfbml::initMapliststopTIME_cndID(*unknown10);
+  _gfbml::initMaplistebb_ON_cndID(*unknown10);
+  _gfbml::initMaplistebb_inn_cndID(*unknown10);
+  _gfbml::initMaplistebb_pop_rate(*unknown10);
+  _gfbml::initMaplistst_allOFF_cndID(*unknown10);
+  _gfbml::initMaplistst_OFF_cndID(*unknown10);
+  _gfbml::initMaplistbgm_cndID(*unknown10);
+  _gfbml::initMaplistname_cndID(*unknown10);
+  _gfbml::initMaplistnameID(*unknown10);
+  _gfbml::initMaplistchange_nameID(*unknown10);
+  _gfbml::initMaplistmapON_cndID(*unknown10);
+  _gfbml::initMaplisttextID(*unknown10);
+  _gfbml::initMapliste_balloondisp_r(*unknown10);
+  _gfbml::initMaplistzone(*unknown10);
+  _gfbml::initWeatherInfomsg(*unknown18);
+  _gfbml::initWeatherInfoeff(*unknown18);
+  _gfbml::initWeatherInfosnd(*unknown18);
+  _gfbml::initWeatherInfosndBegin(*unknown18);
+  _gfbml::initTimeInfomsg(*unknown20);
+}
+
 u32 GfBdatMaplist::getMaplistStart() const { return Bdat::getIdTop(unknown10->data); }
+
+u32 GfBdatMaplist::getMaplistEnd() const { return Bdat::getIdTop(unknown10->data) + Bdat::getIdCount(unknown10->data); }
 
 const char *GfBdatMaplist::getMaplistresource(u32 id) const { return _gfbml::getMaplistresource(*unknown10, id); }
 
@@ -899,7 +1005,51 @@ u32 GfBdatMaplist::getMapliste_balloondisp_r(u32 id) const { return _gfbml::getM
 
 u32 GfBdatMaplist::getMaplistzone(u32 id) const { return _gfbml::getMaplistzone(*unknown10, id); }
 
+u32 GfBdatMaplist::getMaplistw_type(u32 map, u32 weather) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbml::getMaplistwa_type, _gfbml::getMaplistwb_type, _gfbml::getMaplistwc_type, _gfbml::getMaplistwd_type};
+  return getters[weather](*unknown10, map);
+}
+
+u32 GfBdatMaplist::getMaplistw_pop_rate(u32 map, u32 weather) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbml::getMaplistwa_pop_rate, _gfbml::getMaplistwb_pop_rate, _gfbml::getMaplistwc_pop_rate, _gfbml::getMaplistwd_pop_rate};
+  return getters[weather](*unknown10, map);
+}
+
+u32 GfBdatMaplist::getMaplistw_time_BNS(u32 map, u32 weather) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbml::getMaplistwa_time_BNS, _gfbml::getMaplistwb_time_BNS, _gfbml::getMaplistwc_time_BNS, _gfbml::getMaplistwd_time_BNS};
+  return getters[weather](*unknown10, map);
+}
+
+u32 GfBdatMaplist::getMaplistw_end_time(u32 map, u32 weather) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbml::getMaplistwa_end_time, _gfbml::getMaplistwb_end_time, _gfbml::getMaplistwc_end_time, _gfbml::getMaplistwd_end_time};
+  return getters[weather](*unknown10, map);
+}
+
+u32 GfBdatMaplist::getMaplistw_ON_cndID(u32 map, u32 weather) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbml::getMaplistwa_ON_cndID, _gfbml::getMaplistwb_ON_cndID, _gfbml::getMaplistwc_ON_cndID, _gfbml::getMaplistwd_ON_cndID};
+  return getters[weather](*unknown10, map);
+}
+
+u32 GfBdatMaplist::getMaplistw_OFF_cndID(u32 map, u32 weather) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbml::getMaplistwa_OFF_cndID, _gfbml::getMaplistwb_OFF_cndID, _gfbml::getMaplistwc_OFF_cndID, _gfbml::getMaplistwd_OFF_cndID};
+  return getters[weather](*unknown10, map);
+}
+
+u32 GfBdatMaplist::getMaplistwind_W(u32 map, u32 weather) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbml::getMaplistwind_WA, _gfbml::getMaplistwind_WB, _gfbml::getMaplistwind_WC, _gfbml::getMaplistwind_WD};
+  return getters[weather](*unknown10, map);
+}
+
 u32 GfBdatMaplist::getWeatherInfoStart() const { return Bdat::getIdTop(unknown18->data); }
+
+u32 GfBdatMaplist::getWeatherInfoEnd() const { return Bdat::getIdTop(unknown18->data) + Bdat::getIdCount(unknown18->data); }
 
 u32 GfBdatMaplist::getWeatherInfomsg(u32 id) const { return _gfbml::getWeatherInfomsg(*unknown18, id); }
 
@@ -910,6 +1060,8 @@ const char *GfBdatMaplist::getWeatherInfosnd(u32 id) const { return _gfbml::getW
 const char *GfBdatMaplist::getWeatherInfosndBegin(u32 id) const { return _gfbml::getWeatherInfosndBegin(*unknown18, id); }
 
 u32 GfBdatMaplist::getTimeInfoStart() const { return Bdat::getIdTop(unknown20->data); }
+
+u32 GfBdatMaplist::getTimeInfoEnd() const { return Bdat::getIdTop(unknown20->data) + Bdat::getIdCount(unknown20->data); }
 
 u32 GfBdatMaplist::getTimeInfomsg(u32 id) const { return _gfbml::getTimeInfomsg(*unknown20, id); }
 

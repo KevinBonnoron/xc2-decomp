@@ -7,7 +7,13 @@ namespace gf {
 
 class GfBdatMaplist : public mm::mtl::PtrSingleton<GfBdatMaplist>, public GfBdatRefresh {
 public:
+  GfBdatMaplist();
+  virtual ~GfBdatMaplist();
+  void destroyFP();
+  void createFP();
+  void bdatRefresh() override;
   u32 getMaplistStart() const;
+  u32 getMaplistEnd() const;
   const char *getMaplistresource(u32 id) const;
   const char *getMaplistselect(u32 id) const;
   u32 getMaplistrscGmkId(u32 id) const;
@@ -67,21 +73,22 @@ public:
   u32 getMaplisttextID(u32 id) const;
   u32 getMapliste_balloondisp_r(u32 id) const;
   u32 getMaplistzone(u32 id) const;
+  u32 getMaplistw_type(u32 map, u32 weather) const;
+  u32 getMaplistw_pop_rate(u32 map, u32 weather) const;
+  u32 getMaplistw_time_BNS(u32 map, u32 weather) const;
+  u32 getMaplistw_end_time(u32 map, u32 weather) const;
+  u32 getMaplistw_ON_cndID(u32 map, u32 weather) const;
+  u32 getMaplistw_OFF_cndID(u32 map, u32 weather) const;
+  u32 getMaplistwind_W(u32 map, u32 weather) const;
   u32 getWeatherInfoStart() const;
+  u32 getWeatherInfoEnd() const;
   u32 getWeatherInfomsg(u32 id) const;
   const char *getWeatherInfoeff(u32 id) const;
   const char *getWeatherInfosnd(u32 id) const;
   const char *getWeatherInfosndBegin(u32 id) const;
   u32 getTimeInfoStart() const;
+  u32 getTimeInfoEnd() const;
   u32 getTimeInfomsg(u32 id) const;
-
-  u32 getMaplistEnd() const;
-  u32 getMaplistw_ON_cndID(u32 map, u32 weather) const;
-  u32 getMaplistw_OFF_cndID(u32 map, u32 weather) const;
-  u32 getMaplistw_time_BNS(u32 map, u32 weather) const;
-  u32 getMaplistw_end_time(u32 map, u32 weather) const;
-  u32 getMaplistw_pop_rate(u32 map, u32 weather) const;
-  u32 getMaplistw_type(u32 map, u32 weather) const;
 
 private:
   CBdatWrapper *unknown10; // Inferred label: mMaplist; original member name unknown.
