@@ -3,6 +3,7 @@
 namespace gf {
 
 enum {
+  OBJECT_TYPE_NONE = 0,
   OBJECT_TYPE_MAP = 1,
   OBJECT_TYPE_DRIVER = 3,
   OBJECT_TYPE_BLADE = 4,
