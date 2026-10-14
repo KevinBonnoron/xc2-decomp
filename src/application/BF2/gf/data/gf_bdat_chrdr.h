@@ -7,7 +7,13 @@ namespace gf {
 
 class GfBdatChrDr : public mm::mtl::PtrSingleton<GfBdatChrDr>, public GfBdatRefresh {
 public:
+  GfBdatChrDr();
+  virtual ~GfBdatChrDr();
+  void destroyFP();
+  void createFP();
+  void bdatRefresh() override;
   u32 getChrDrStart() const;
+  u32 getChrDrEnd() const;
   u32 getChrDrName(u32 id) const;
   const char *getChrDrDebugName(u32 id) const;
   u32 getChrDrRace(u32 id) const;
@@ -64,10 +70,9 @@ public:
   u32 getChrDrCollisionId(u32 id) const;
   const char *getChrDrCenterBone(u32 id) const;
   const char *getChrDrCamBone(u32 id) const;
-
-  u32 getChrDrEnd() const;
-  u32 getChrDrDefBlade(u32 driver, u32 slot) const;
   u32 getChrDrWpnType(u32 driver, u32 slot) const;
+  u32 getChrDrWpRate(u32 id, u32 index) const;
+  u32 getChrDrDefBlade(u32 driver, u32 slot) const;
   u32 getChrDrFavoriteCategory(u32 driver, u32 favorite) const;
   u32 getChrDrFavoriteItem(u32 driver, u32 favorite) const;
 
