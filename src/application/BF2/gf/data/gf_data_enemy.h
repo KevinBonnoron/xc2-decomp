@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 #include <stddef.h>
@@ -93,6 +94,7 @@ public:
   static u32 getBladeID(u32 arrange);
   static u32 getEquipBlade(u32 arrange);
   static u32 getEquipBladeEnArrangeID(u32 arrange);
+  static void getValidEnhance(mm::mtl::FixedVector<u16, 64> &enhances, u32 arrange);
   static u32 getWeaponType(u32 arrange);
   static bool getDriverAddAnim(mm::mtl::FixStr<128> &animName, u32 driver, u32 number);
   static bool getDriverEffect(mm::mtl::FixStr<128> &modelName, mm::mtl::FixStr<128> &effectName, u32 driver, u32 number);
