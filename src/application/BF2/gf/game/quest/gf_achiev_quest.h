@@ -8,19 +8,31 @@ namespace gf {
 struct AchievQuest {
   void setTaskComplete(bool isFirst, bool isComplete);
   void setCountComplete();
-  void setCount(u32 count);
+  bool isCountComplete() const;
+  bool setCount(u32 count);
+  bool incleseCount(u32 count);
+  bool decleseCount(u32 count);
+
+  static const u32 COUNT_MASK = 0x3fffffff;
+
+  u32 getCount() const { return count & COUNT_MASK; }
+  u32 getTargetCount() const { return targetCount & COUNT_MASK; }
 
   QuestID quest;
-  u32 count : 30;
-  u32 : 2;
-  u8 _08[0x0c - 0x08];
+  u32 count;
+  u32 targetCount;
   u16 flags;
   u16 stats;
-  u8 _10[0x1c - 0x10];
+  u16 taskType;
+  u8 _12[0x16 - 0x12];
+  u16 blade;
+  u8 _18[0x1c - 0x18];
 };
 
 static_assert(offsetof(AchievQuest, flags) == 0x0c, "");
 static_assert(offsetof(AchievQuest, stats) == 0x0e, "");
+static_assert(offsetof(AchievQuest, taskType) == 0x10, "");
+static_assert(offsetof(AchievQuest, blade) == 0x16, "");
 static_assert(sizeof(AchievQuest) == 0x1c, "");
 
 } // namespace gf

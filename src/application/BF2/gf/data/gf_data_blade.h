@@ -40,15 +40,17 @@ static_assert(offsetof(SDataBladeSkill, level) == 0x03, "");
 static_assert(offsetof(SDataBladeSkill, levelMax) == 0x04, "");
 static_assert(sizeof(SDataBladeSkill) == 0x06, "");
 
-struct SDataBladeAchievement {
+struct AchievInfo {
   u16 achievement;
   u8 _002[0x004 - 0x002];
   AchievQuest quests[5];
 };
 
-static_assert(offsetof(SDataBladeAchievement, quests) == 0x004, "");
+static_assert(offsetof(AchievInfo, quests) == 0x004, "");
 
-static_assert(sizeof(SDataBladeAchievement) == 0x090, "");
+static_assert(sizeof(AchievInfo) == 0x090, "");
+
+typedef AchievInfo SDataBladeAchievement;
 
 struct SDataBladeFavorite {
   u16 category;
