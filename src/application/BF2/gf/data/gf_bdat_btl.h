@@ -543,6 +543,7 @@ public:
   u32 getBTL_HanaChipsetNCondParts(u32 hana, u32 slot) const;
   u32 getBTL_HanaPowerPowerNum(u32 rank, u32 hana) const;
   u32 getBTL_HanaPowerEtherNum(u32 rank, u32 hana) const;
+  u32 getBTL_Skill_BlEnhance(u32 skill, u32 level) const;
 
 private:
   CBdatWrapper *mArtsDr;
