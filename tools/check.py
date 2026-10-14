@@ -112,6 +112,24 @@ class TargetSymbols:
         self.exact = {}
         for addr, _, name in entries:
             self.exact.setdefault(addr, name)
+        self.stubs = {}
+
+    def find_import_stubs(self, image):
+        """Name the PLT stubs (adrp x16; ldr x17, [x16, #off]; add x16; br x17) after the import they jump to."""
+        slots = {addr: name[len("__imp_"):] for addr, _, name in self.entries if name.startswith("__imp_")}
+        for name, typ, start, offset, length in image.sections:
+            if name != ".text":
+                continue
+            text = image.data[offset:offset + length]
+            for pos in range(0, len(text) - 12, 4):
+                adrp, ldr, add, br = struct.unpack_from("<IIII", text, pos)
+                if adrp & 0x9F00001F != 0x90000010 or ldr & 0xFFC003FF != 0xF9400211 or br != 0xD61F0220:
+                    continue
+                pc = start + pos
+                page = (pc & ~0xFFF) + (((((adrp >> 29) & 3) | (((adrp >> 5) & 0x7FFFF) << 2)) ^ 0x100000) - 0x100000 << 12)
+                slot = page + ((ldr >> 10) & 0xFFF) * 8
+                if slot in slots:
+                    self.stubs[pc] = slots[slot]
 
     def covering(self, addr):
         i = bisect.bisect_right(self.starts, addr) - 1
@@ -176,6 +194,8 @@ def objdump(path, symbols, relocs):
         args.insert(2, "-r")
     image = Image(path)
     syms = None if relocs else TargetSymbols()
+    if syms:
+        syms.find_import_stubs(image)
     funcs = {}
     lines = None
     for line in run(args).splitlines():
@@ -197,7 +217,9 @@ def objdump(path, symbols, relocs):
         if not relocs:
             del lines[sizes.get(name, len(lines) * 4) // 4:]
             resolve_pages(lines, image, syms)
-        funcs[name] = ignore_source_locations([STRUCTOR_VARIANT.sub(r"\1\g<2>1\3", BRANCH_TARGET.sub(lambda m: f"<{m.group(1)}>", l)) for l in lines])
+        stubs = syms.stubs if syms else {}
+        target = lambda m: f"<{stubs.get(int(m.group(0).split()[0], 16), m.group(1))}>"
+        funcs[name] = ignore_source_locations([STRUCTOR_VARIANT.sub(r"\1\g<2>1\3", BRANCH_TARGET.sub(target, l)) for l in lines])
     return funcs
 
 
