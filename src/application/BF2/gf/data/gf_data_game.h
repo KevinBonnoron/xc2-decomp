@@ -9,10 +9,17 @@
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "mm_mtl/fixed_array.h"
+#include "mm_mtl/fixed_vector.h"
 #include "types.h"
 #include <stddef.h>
 
 namespace gf {
+
+struct SDataTaskAchieve {
+  u8 _00[0x0c - 0x00];
+};
+
+static_assert(sizeof(SDataTaskAchieve) == 0x0c, "");
 
 struct SDataGame {
   u32 money;
@@ -33,7 +40,8 @@ struct SDataGame {
   SDataMercenaries mercenaries;
   f32 playerCameraDistance;
   u32 gameClearCount;
-  u8 _109b30[0x10a53c - 0x109b30];
+  mm::mtl::FixedVector<SDataTaskAchieve, 128> taskAchieves;
+  u8 _10a138[0x10a53c - 0x10a138];
   mm::mtl::FixedArray<SDataMapInfo, 64> mapInfos;
   u32 ether;
   f32 achievementWalkMove;
@@ -53,7 +61,7 @@ struct SDataGame {
   u8 hikariCurrent;
   u16 autoEventAfterLoad;
   u8 collectFlagNewVersion;
-  u8 _10ae81[0x10ae82 - 0x10ae81];
+  u8 clearSaveData;
   u8 cameraSide;
   u8 _10ae83[0x10ae84 - 0x10ae83];
   SDataSavedEvent savedEvents[500];
@@ -61,6 +69,7 @@ struct SDataGame {
   u8 _1171d8[0x117690 - 0x1171d8];
 
   SDataGame();
+  SDataGame &operator=(const SDataGame &dataGame);
 };
 
 static_assert(offsetof(SDataGame, money) == 0x0, "");
@@ -77,6 +86,7 @@ static_assert(offsetof(SDataGame, map) == 0x1097f0, "");
 static_assert(offsetof(SDataGame, mercenaries) == 0x1098c8, "");
 static_assert(offsetof(SDataGame, playerCameraDistance) == 0x109b28, "");
 static_assert(offsetof(SDataGame, gameClearCount) == 0x109b2c, "");
+static_assert(offsetof(SDataGame, taskAchieves) == 0x109b30, "");
 static_assert(offsetof(SDataGame, mapInfos) == 0x10a53c, "");
 static_assert(offsetof(SDataGame, ether) == 0x10ad3c, "");
 static_assert(offsetof(SDataGame, achievementWalkMove) == 0x10ad40, "");

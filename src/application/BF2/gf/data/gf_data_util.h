@@ -9,6 +9,8 @@ class GfDataUtil {
 public:
   static void initializeSaveDataDriverAndBlade();
   static void setupEventDriverAndBlade();
+  static void refreshBladeSaveData();
+  static void refreshBdatParam();
 
   static u32 getMoney();
   static void setMoney(u32 money);

@@ -1,6 +1,9 @@
 #include "gf/data/gf_data_store.h"
 #include "gf/data/gf_bdat_maplist.h"
+#include "gf/data/gf_character_id.h"
+#include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_develop.h"
+#include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_util.h"
@@ -10,6 +13,10 @@
 namespace gf {
 
 constexpr u32 NATION_COUNT = 8;
+
+GfDataStore::GfDataStore(const GfSetupParam &param) : mInitialized(false) { initialize(param); }
+
+GfDataStore::~GfDataStore() {}
 
 void GfDataStore::initialize(const GfSetupParam &) {
   initSystemData();
@@ -61,10 +68,57 @@ void GfDataStore::initGameData() {
   }
 }
 
+void GfDataStore::initOptionData() {
+  GfDataStore *dataStore = get();
+  if (dataStore != nullptr) {
+    new (&dataStore->mDataOption) SDataOption();
+  }
+}
+
 SDataSystem &GfDataStore::getDataSystem() { return get()->mDataSystem; }
 
 SDataGame &GfDataStore::getDataGame() { return get()->mDataGame; }
 
 SDataOption &GfDataStore::getDataOption() { return get()->mDataOption; }
+
+void GfDataStore::setGameData(const SDataSystem *dataSystem, const SDataGame *dataGame, const SDataOption *dataOption) {
+  GfDataStore *dataStore = get();
+  if (dataStore == nullptr) {
+    return;
+  }
+
+  if (dataGame != nullptr) {
+    dataStore->mDataGame = *dataGame;
+    GfDataUtil::refreshBladeSaveData();
+    GfDataUtil::refreshBdatParam();
+
+    u32 blade = GfDataDriver::getBlade(DRIVER_REX, -1);
+    if (GfDataBlade::isHikariCurrent()) {
+      if (blade == BLADE_HOMURA && GfDataBlade::isActivateParty(BLADE_HIKARI)) {
+        GfDataBlade::setHikariCurrent(false);
+      }
+    } else if (blade == BLADE_HIKARI && GfDataBlade::isActivateParty(BLADE_HOMURA)) {
+      GfDataBlade::setHikariCurrent(true);
+    }
+
+    GfDataManager::getDataGame()->clearSaveData = 0;
+  }
+
+  if (dataSystem != nullptr) {
+    dataStore->mDataSystem.version = dataSystem->version;
+    dataStore->mDataSystem.flags = dataSystem->flags;
+  }
+
+  if (dataOption != nullptr) {
+    dataStore->mDataOption = *dataOption;
+  }
+}
+
+void GfDataStore::setupOptionData(const SDataOption &dataOption) {
+  GfDataStore *dataStore = get();
+  if (dataStore != nullptr) {
+    dataStore->mDataOption = dataOption;
+  }
+}
 
 } // namespace gf
