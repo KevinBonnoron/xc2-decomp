@@ -1,8 +1,10 @@
 #pragma once
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
+#include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/object/gf_obj_setup.h"
 #include "mm_mtl/fixed_array.h"
 #include "types.h"
 #include <stddef.h>
@@ -10,7 +12,6 @@
 namespace gf {
 
 struct GF_OBJ_HANDLE;
-struct SDataEnemy;
 struct SDataIdea;
 
 class IDataObj {
@@ -389,6 +390,130 @@ public:
 static_assert(offsetof(DataObjPcWpn, handle) == 0x08, "");
 static_assert(offsetof(DataObjPcWpn, id) == 0x10, "");
 static_assert(sizeof(DataObjPcWpn) == 0x18, "");
+
+class DataObjEnemy : public IDataObj {
+public:
+  DataObjEnemy(GF_OBJ_HANDLE *handle);
+  DataObjEnemy(u32 id);
+  virtual ~DataObjEnemy();
+  virtual bool isValid() const;
+  virtual const char *getName() const;
+  virtual bool getName(u8 *&bdat, u32 &textId) const;
+  virtual const char *getModelResourceName() const;
+  virtual const char *getMotionResourceName() const;
+  virtual const char *getEffectResourceName() const;
+  virtual u32 getBdatId() const;
+  virtual u32 getObjType() const { return OBJECT_TYPE_ENEMY; }
+  virtual u32 getLevel(bool isVirtual) const;
+  virtual u32 getHpMax(bool isVirtual) const;
+  virtual u32 getHp() const;
+  virtual u32 getStrength(bool isVirtual) const;
+  virtual u32 getPowerEther(bool isVirtual) const;
+  virtual u32 getDex(bool isVirtual) const;
+  virtual u32 getAgility(bool isVirtual) const;
+  virtual u32 getLuck(bool isVirtual) const;
+  virtual u32 getPArmor(bool isVirtual) const;
+  virtual u32 getEArmor(bool isVirtual) const;
+  virtual u32 getCriticalRate(bool isVirtual) const;
+  virtual u32 getGuardRate(bool isVirtual) const;
+  virtual u32 getFootStep() const;
+  virtual u32 getFootStepEffect() const;
+  virtual u32 getBlade(bool isVirtual, int slot) const;
+  virtual u32 getEquipWeapon(bool isVirtual, int slot) const;
+  virtual u32 getWeaponType(bool isVirtual, int slot) const;
+  virtual u32 getAttribute(bool isVirtual, int slot) const;
+  virtual bool isEnbaleTarget() const;
+  virtual u32 getChestHeight() const;
+  virtual const char *getVoiceStr() const;
+  virtual u32 getMenuOffset() const;
+  virtual u32 getBdatIdEnRsc() const;
+  virtual u32 getBdatIdEnParam() const;
+  virtual u32 getBdatIdEnArrange() const { return getBdatId(); }
+  virtual bool isGuardFront() const;
+  virtual bool isGuardLeft() const;
+  virtual bool isGuardRight() const;
+  virtual bool isGuardBack() const;
+  virtual bool isFieldDamage() const;
+  virtual u32 getResistancePower() const;
+  virtual u32 getResistanceEther() const;
+  virtual u32 getResistanceCombo() const;
+  virtual u32 getInvincibleCombo() const;
+  virtual u32 getLevelGold() const;
+  virtual u32 getLevelExp() const;
+  virtual u32 getLevelWp() const;
+  virtual u32 getLevelSp() const;
+  virtual u32 getGenus() const;
+  virtual bool isLinkGenus() const;
+  virtual f32 getLinkRadius() const;
+  virtual u32 getGoldDivide() const;
+  virtual u32 getGoldDivideRev() const;
+  virtual const SDataEnemy *getSDataEnemy() const;
+  virtual bool isDispInitExtraParts(u32 part) const;
+  virtual bool isNoCameraFade() const;
+  virtual bool isWeaponDrawDisp() const;
+  virtual const char *getCenterBone() const;
+  virtual const char *getCamBone() const;
+  virtual u32 getEyeRotControl() const;
+  virtual const char *getRotateBone() const;
+
+  GF_OBJ_HANDLE *handle;
+  SDataEnemy *data;
+  SDataEnemy enemy;
+};
+
+static_assert(offsetof(DataObjEnemy, handle) == 0x08, "");
+static_assert(offsetof(DataObjEnemy, data) == 0x10, "");
+static_assert(offsetof(DataObjEnemy, enemy) == 0x18, "");
+static_assert(sizeof(DataObjEnemy) == 0xd8, "");
+
+class DataObjEnemyBlade : public DataObjEnemy {
+public:
+  DataObjEnemyBlade(GF_OBJ_HANDLE *handle);
+  DataObjEnemyBlade(u32 id);
+  virtual ~DataObjEnemyBlade();
+  SDataBlade *get(bool isVirtual) const;
+  virtual const char *getName() const;
+  virtual bool getName(u8 *&bdat, u32 &textId) const;
+  virtual const char *getModelResourceName() const;
+  virtual const char *getMotionResourceName() const;
+  virtual const char *getEffectResourceName() const;
+  virtual u32 getWeaponType(bool isVirtual, int slot) const;
+  virtual u32 getPArmor(bool isVirtual) const;
+  virtual u32 getEArmor(bool isVirtual) const;
+  virtual u32 getCriticalRate(bool isVirtual) const;
+  virtual u32 getGuardRate(bool isVirtual) const;
+  virtual u32 getWeaponDamage(bool isVirtual) const;
+  virtual u32 getWeaponStability(bool isVirtual) const;
+  virtual u32 getEquipWeapon(bool isVirtual, int slot) const;
+  virtual u32 getChestHeight() const;
+  virtual u32 getLandingHeight() const;
+  virtual u32 getIconData() const;
+  virtual u32 getRace() const;
+  virtual u32 getQuestRace() const;
+  virtual u32 getGender() const;
+  virtual u32 getAttribute(bool isVirtual, int slot) const;
+  virtual bool isDispInitExtraParts(u32 part) const;
+  virtual u32 getEyeRotControl() const;
+  virtual u32 getBladeArts(bool isVirtual, u32 index) const;
+  virtual u32 getBladeArtsLevel(bool isVirtual, u32 index) const;
+  virtual u32 getBladeArtsH(bool isVirtual, u32 index) const;
+  virtual u32 getBladeArtsN(bool isVirtual, u32 index) const;
+  virtual u32 getBladeArtsNH(bool isVirtual, u32 index) const;
+  virtual u32 getBladeArtsEx(bool isVirtual) const;
+  virtual u32 getBladeArtsExH(bool isVirtual) const;
+  virtual u32 getBladeArtsEx2(bool isVirtual) const;
+  virtual u32 getBladeArtsEx2H(bool isVirtual) const;
+  virtual u32 getPersonality() const;
+  virtual u32 getCoolTime() const;
+  virtual bool isEnbaleTarget() const { return false; }
+
+  GfObjSetupEnemy *setupEnemy;
+  SDataBlade *dataBlade;
+};
+
+static_assert(offsetof(DataObjEnemyBlade, setupEnemy) == 0xd8, "");
+static_assert(offsetof(DataObjEnemyBlade, dataBlade) == 0xe0, "");
+static_assert(sizeof(DataObjEnemyBlade) == 0xe8, "");
 
 class DataObjNpc : public IDataObj {
 public:
