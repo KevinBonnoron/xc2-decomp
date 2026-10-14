@@ -90,6 +90,7 @@ public:
   static void callChangeLeader(GF_OBJ_HANDLE *leader);
   static void callPartyIDMemberOK(bool isOK, u32 partyId);
   static void callPartyDriver(GF_OBJ_HANDLE *handle, u32 partyId, bool isEnter);
+  static void callExecBuy(u32 item, u32 count, u32 shop);
   static void callPartyChange();
   static void callSwapFormation(u32 playerId, u32 otherPlayerId);
 };

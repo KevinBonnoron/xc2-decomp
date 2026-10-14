@@ -495,3 +495,4 @@ void GfItemUtil::setupNewGameParam() {
 } // namespace gf
 
 #include "gf/util/gf_equip_util.cpp"
+#include "gf/util/gf_shop_util.cpp"
