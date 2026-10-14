@@ -1,10 +1,12 @@
 #pragma once
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
+#include "gf/data/gf_data_event.h"
 #include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_party.h"
+#include "gf/data/gf_game_flag.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "mm_mtl/fixed_array.h"
 #include "types.h"
@@ -22,6 +24,8 @@ struct SDataGame {
   SDataBlade blades[422];
   SDataParty party;
   SDataItemBox itemBox;
+  GameFlag gameFlag;
+  u8 _0fdbc4[0x1097e4 - 0x0fdbc4];
   QuestID scenario;
   QuestID select;
   u8 _1097ec[0x1097f0 - 0x1097ec];
@@ -52,6 +56,9 @@ struct SDataGame {
   u8 collectFlagNewVersion;
   u8 _10ae81[0x10ae82 - 0x10ae81];
   u8 cameraSide;
+  u8 _10ae83[0x10ae84 - 0x10ae83];
+  SDataSavedEvent savedEvents[500];
+  u32 savedEventNum;
 };
 
 static_assert(offsetof(SDataGame, money) == 0x0, "");
@@ -61,6 +68,7 @@ static_assert(offsetof(SDataGame, drivers) == 0x00002c, "");
 static_assert(offsetof(SDataGame, blades) == 0x005a2c, "");
 static_assert(offsetof(SDataGame, party) == 0x0e9884, "");
 static_assert(offsetof(SDataGame, itemBox) == 0x0e98d8, "");
+static_assert(offsetof(SDataGame, gameFlag) == 0x0fbbc4, "");
 static_assert(offsetof(SDataGame, scenario) == 0x1097e4, "");
 static_assert(offsetof(SDataGame, select) == 0x1097e8, "");
 static_assert(offsetof(SDataGame, map) == 0x1097f0, "");
@@ -85,5 +93,7 @@ static_assert(offsetof(SDataGame, hikariCurrent) == 0x10ae7d, "");
 static_assert(offsetof(SDataGame, autoEventAfterLoad) == 0x10ae7e, "");
 static_assert(offsetof(SDataGame, collectFlagNewVersion) == 0x10ae80, "");
 static_assert(offsetof(SDataGame, cameraSide) == 0x10ae82, "");
+static_assert(offsetof(SDataGame, savedEvents) == 0x10ae84, "");
+static_assert(offsetof(SDataGame, savedEventNum) == 0x1171d4, "");
 
 } // namespace gf

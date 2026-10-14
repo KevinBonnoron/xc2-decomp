@@ -7,7 +7,9 @@
 namespace gf {
 
 struct SDataBlade {
-  u8 _000[0x006 - 0x000];
+  u8 _000[0x002 - 0x000];
+  u16 driver;
+  u8 _004[0x006 - 0x004];
   u16 id;
   u8 _008[0x0c0 - 0x008];
   u8 extraParts[6];
@@ -39,6 +41,7 @@ struct SDataBlade {
   u8 _84a[0x8a4 - 0x84a];
 };
 
+static_assert(offsetof(SDataBlade, driver) == 0x002, "");
 static_assert(offsetof(SDataBlade, id) == 0x006, "");
 static_assert(offsetof(SDataBlade, extraParts) == 0x0c0, "");
 static_assert(offsetof(SDataBlade, race) == 0x708, "");

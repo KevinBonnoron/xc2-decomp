@@ -1,9 +1,16 @@
 #pragma once
+#include "mm_mtl/bitflag.h"
 #include "types.h"
 
 namespace gf {
 
 struct GfSetupParam;
+
+struct GameFlag {
+  mm::mtl::BitFlag<65536> oneBitFlags;
+};
+
+static_assert(sizeof(GameFlag) == 0x2000, "");
 
 class GfGameFlag {
 public:
