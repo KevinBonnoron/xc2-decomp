@@ -1,6 +1,7 @@
 #pragma once
 #include "gf/data/gf_data_blade.h"
 #include "types.h"
+#include <stddef.h>
 
 namespace gf {
 
@@ -38,8 +39,6 @@ enum EXEC_STATE {};
 
 struct GF_ASSET_HANDLE;
 struct GF_OBJ_HANDLE;
-struct GfAchievementRelease;
-
 struct MapjumpCallbackInfo {
   u8 _00[0x04 - 0x00];
   u32 map;
@@ -48,6 +47,16 @@ struct MapjumpCallbackInfo {
 };
 
 static_assert(sizeof(MapjumpCallbackInfo) == 0x14, "");
+
+struct GfAchievementRelease {
+  u16 blade;
+  u16 level;
+  u32 achievementType;
+};
+
+static_assert(offsetof(GfAchievementRelease, level) == 0x02, "");
+static_assert(offsetof(GfAchievementRelease, achievementType) == 0x04, "");
+static_assert(sizeof(GfAchievementRelease) == 0x08, "");
 
 class IGfEvent {
 public:
@@ -127,6 +136,8 @@ public:
   static void callExecBuy(u32 item, u32 count, u32 shop);
   static void callPartyChange();
   static void callSwapFormation(u32 playerId, u32 otherPlayerId);
+  static void callDriverLevel(u32 driver, u32 level, u32 oldLevel);
+  static void callAchievmentRelease(const GfAchievementRelease &release);
 };
 
 } // namespace gf

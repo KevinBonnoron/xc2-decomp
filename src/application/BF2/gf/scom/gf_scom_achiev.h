@@ -24,6 +24,9 @@ public:
   static void createRecover(GF_OBJ_HANDLE *handle, u32 value);
   static void createBackAttack(GF_OBJ_HANDLE *handle);
   static void createKizuna(GF_OBJ_HANDLE *handle);
+  static void addTotalCount(u32 stats, u32 count);
+  static void create(u32 stats, int count, u32 driver);
+  static void createParty(u32 stats, int count);
 };
 
 } // namespace gf

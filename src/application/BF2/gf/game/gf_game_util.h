@@ -27,8 +27,10 @@ class GfGameUtil {
 public:
   static bool isUiGfObjHandleValid(GF_OBJ_HANDLE *handle);
   static u32 getFsLevelSum(u32 fieldSkill);
+  static void addMoney(int money);
   static void addCoin(int coin);
   static void addEther(int ether);
+  static void execLevelUp(u32 driver, u32 level);
   static void execLevelUpForDebug(u32 driver, u32 level);
   static void execDriverArtsLevelUp(u32 driver, u32 arts, u32 level);
   static DriverSkillLevelUpResult execDriverSkillLevelUp(u32 driver, u32 row, u32 level, bool isHidden);
@@ -37,9 +39,15 @@ public:
   static void addWpForReserve(int weaponPoint);
   static void addWpForObject(u32 driver, u32 weaponType, int weaponPoint);
   static void addSP(u32 driver, int skillPoint);
+  static void addIdeaPoint(u32 driver, u32 idea, int point);
+  static void setIdeaPointForDebug(u32 driver, u32 idea, int point);
+  static void addDevelopPoint(u32 nation, u32 point);
+  static void execDevelopLevelUp();
   static void setDevelopLevelForDebug(u32 nation, u32 level);
   static u32 getTrustRank(u32 blade);
+  static void addTrustRankForKizunaRing(u32 blade);
   static void addTrustPoint(u32 blade, u32 trustPoint);
+  static void setTrustPointForDebug(u32 blade, u32 trustPoint);
   static void setAchievementReleaseLevel(u32 blade, u32 line, u32 level);
   static u16 getAntiBladeAreaBdatId();
   static bool getGmkTargetPointPos(mm::Vec3 &position, u32 gimmick);

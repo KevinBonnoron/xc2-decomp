@@ -177,6 +177,8 @@ public:
   DataIdeaAcc(DataParamAcc &dataParamAcc);
   int getLevel(u32 idea) const;
   void setLevel(u32 idea, u32 level);
+  void addPoint(u32 idea, u32 point);
+  void setPointForDebug(u32 idea, u32 point);
 
   SDataIdea *idea;
   bool isBlade;
