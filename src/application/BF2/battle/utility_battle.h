@@ -50,6 +50,12 @@ public:
     CHARACTER_LIST_EXCLUDE_SELF = 0x10,
   };
 
+  enum ATTACKER_TYPE {
+    ATTACKER_TYPE_ENEMY,
+    ATTACKER_TYPE_PARTY,
+    ATTACKER_TYPE_PLAYER,
+  };
+
   enum ENBOOK_TYPE {
     ENBOOK_TYPE_IN_BATTLE,
     ENBOOK_TYPE_BOSS_TIME,
@@ -69,6 +75,7 @@ public:
   static int GetElementalEffectID();
   static int GetUniteComboID(int attribute, int combo);
   static int GetCharacterList(mm::mtl::FixedVector<u8, 90> &list, gf::GF_OBJ_HANDLE *handle, CHECK_CHR_NUM_MODE mode, u32 flags);
+  static int GetDamageAttackerType(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *attacker, bool isFriendly);
   static int GetPartyID(gf::GF_OBJ_HANDLE *handle);
   static f32 GetDyingHpRate();
   static int GetResistantAttrMaxHP();
@@ -86,6 +93,7 @@ public:
   static bool AI_IsValidID(int aiId);
   static void AI_GetObjectPosition(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position);
   static int AI_GetTargetCharacterID(gf::GF_OBJ_HANDLE *handle);
+  static int AI_GetLinkCharacterID(gf::GF_OBJ_HANDLE *handle);
   static int AI_IsFly(gf::GF_OBJ_HANDLE *handle);
   static f32 AI_GetVertDiff(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *target);
   static int AI_GetEatTargetCharacterID(gf::GF_OBJ_HANDLE *handle, f32 range);
@@ -96,6 +104,7 @@ public:
   static int AI_GetElementalComboID(gf::GF_OBJ_HANDLE *handle);
   static int AI_GetReactionID(gf::GF_OBJ_HANDLE *handle);
   static int AI_GetStamp(gf::GF_OBJ_HANDLE *handle);
+  static int AI_GetStampCharacterID(int stamp);
   static f32 AI_GetHpPercent(gf::GF_OBJ_HANDLE *handle);
   static u32 AI_GetLevel(gf::GF_OBJ_HANDLE *handle);
   static int AI_GetAttribute(gf::GF_OBJ_HANDLE *handle);

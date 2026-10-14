@@ -12,6 +12,7 @@
 #include "bdat.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
@@ -227,6 +228,24 @@ int Utility::GetCharacterList(mm::mtl::FixedVector<u8, 90> &list, gf::GF_OBJ_HAN
   return list.size();
 }
 
+int Utility::GetDamageAttackerType(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *attacker, bool isFriendly) {
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(attacker);
+  if (character == nullptr) {
+    bool isEnemy = gf::GfObjUtil::getObjType(handle) == gf::OBJECT_TYPE_ENEMY;
+    if (isFriendly) {
+      return isEnemy ? ATTACKER_TYPE_ENEMY : ATTACKER_TYPE_PLAYER;
+    }
+
+    return isEnemy ? ATTACKER_TYPE_PLAYER : ATTACKER_TYPE_ENEMY;
+  }
+
+  if (character->IsEnemy()) {
+    return ATTACKER_TYPE_ENEMY;
+  }
+
+  return character->IsControlCharacterGroup() ? ATTACKER_TYPE_PLAYER : ATTACKER_TYPE_PARTY;
+}
+
 int Utility::GetPartyID(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character != nullptr) {
@@ -345,6 +364,20 @@ int Utility::AI_GetTargetCharacterID(gf::GF_OBJ_HANDLE *handle) {
   }
 
   return AI_GetCharacterAIID(character->target);
+}
+
+int Utility::AI_GetLinkCharacterID(gf::GF_OBJ_HANDLE *handle) {
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character == nullptr) {
+    return -1;
+  }
+
+  gf::GF_OBJ_HANDLE *link = BattleGlobal::get()->GetLinkJoinEnemyHandle(character->position);
+  if (link == INVALID_HANDLE) {
+    return -1;
+  }
+
+  return AI_GetCharacterAIID(link);
 }
 
 int Utility::AI_IsFly(gf::GF_OBJ_HANDLE *handle) {
@@ -484,6 +517,21 @@ int Utility::AI_GetStamp(gf::GF_OBJ_HANDLE *handle) {
   }
 
   return character->stamp;
+}
+
+int Utility::AI_GetStampCharacterID(int stamp) {
+  for (int id = 0; id < CHARACTER_COUNT; id++) {
+    BattleCharacter *character = CharacterManager::get()->GetCharacterConst(id);
+    if (character == nullptr || character->IsDead(0)) {
+      continue;
+    }
+
+    if (character->stamp == stamp) {
+      return AI_GetCharacterAIID(character);
+    }
+  }
+
+  return -1;
 }
 
 f32 Utility::AI_GetHpPercent(gf::GF_OBJ_HANDLE *handle) {
