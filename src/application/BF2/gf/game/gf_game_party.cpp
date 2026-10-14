@@ -78,6 +78,7 @@ static bool isInGameObj(GF_OBJ_HANDLE *handle) {
 }
 
 GfSelectBlade *GfSelectBlade::s_pThis;
+static bool s_isHomuraSelected = true;
 
 GfGameParty::GfGameParty(const GfSetupParam &param) : mReadyFrame(0), mIsReadyLost(false), mLeader(INVALID_HANDLE) {
   initialize(param);
@@ -1267,6 +1268,42 @@ int GfSelectBlade::resetCurrentBlade(GF_OBJ_HANDLE *handle) {
   return member.currentIndex;
 }
 
+void GfSelectBlade::resetDefaultBladeForDebug(GF_OBJ_HANDLE *handle) {
+  u32 partyId = GfGameParty::getPartyId(handle);
+  GfSelectBlade *selectBlade = s_pThis;
+  if (partyId == PARTY_ID_NONE) {
+    return;
+  }
+
+  Member &member = selectBlade->members[partyId];
+  int bladeSet = GfGameParty::getBladeSetId(partyId, -1);
+  if (bladeSet < 0) {
+    return;
+  }
+
+  switch (bladeSet) {
+  case 0:
+    member.defaultIndices[0] = 0;
+    member.defaultIndices[1] = 1;
+    member.defaultIndices[2] = 2;
+    break;
+  case 1:
+    member.defaultIndices[0] = 1;
+    member.defaultIndices[1] = 0;
+    member.defaultIndices[2] = 2;
+    break;
+  case 2:
+    member.defaultIndices[0] = 2;
+    member.defaultIndices[1] = 0;
+    member.defaultIndices[2] = 1;
+    break;
+  }
+
+  member.currentIndex = member.defaultIndices[0];
+  member.changeIndices[0] = member.defaultIndices[1];
+  member.changeIndices[1] = member.defaultIndices[2];
+}
+
 int GfSelectBlade::getCurrentBladeIndex(GF_OBJ_HANDLE *handle) {
   u32 partyId = GfGameParty::getPartyId(handle);
   if (partyId == PARTY_ID_NONE) {
@@ -1283,6 +1320,26 @@ int GfSelectBlade::getChangeBladeIndex(GF_OBJ_HANDLE *handle, CHANGE_BLADE chang
   }
 
   return s_pThis->members[partyId].changeIndices[changeBlade];
+}
+
+void GfSelectBlade::setBladeSetID(GF_OBJ_HANDLE *handle, int slot) {
+  DataParamAcc paramAcc(handle);
+  if (paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER && paramAcc.getBdatId() == DRIVER_REX &&
+      paramAcc.getBlade(SLOT_HIKARI, false) == BLADE_HIKARI && paramAcc.getBlade(slot, false) == BLADE_HOMURA) {
+    if (paramAcc.getBlade(-1, false) == BLADE_HIKARI) {
+      paramAcc.setBladeSet(slot);
+      s_isHomuraSelected = true;
+    } else if (paramAcc.getBlade(-1, false) == BLADE_HOMURA) {
+      paramAcc.setBladeSet(SLOT_HIKARI);
+      s_isHomuraSelected = false;
+    } else if (s_isHomuraSelected) {
+      paramAcc.setBladeSet(slot);
+    } else {
+      paramAcc.setBladeSet(SLOT_HIKARI);
+    }
+  } else {
+    paramAcc.setBladeSet(slot);
+  }
 }
 
 int GfSelectBlade::getBladeSetID(GF_OBJ_HANDLE *handle, int slot) {
