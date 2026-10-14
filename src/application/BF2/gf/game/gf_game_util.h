@@ -20,6 +20,7 @@ enum DriverSkillLevelUpResult {
 
 class GfGameUtil {
 public:
+  static bool isUiGfObjHandleValid(GF_OBJ_HANDLE *handle);
   static u32 getFsLevelSum(u32 fieldSkill);
   static void addCoin(int coin);
   static void addEther(int ether);
@@ -28,9 +29,12 @@ public:
   static DriverSkillLevelUpResult execDriverSkillLevelUp(u32 driver, u32 row, u32 level, bool isHidden);
   static DriverSkillLevelUpResult checkDriverSkillLevelUp(u32 driver, u32 row, u32 level, bool isHidden);
   static void addWp(u32 driver, u32 weaponType, int weaponPoint);
+  static void addWpForReserve(int weaponPoint);
   static void addWpForObject(u32 driver, u32 weaponType, int weaponPoint);
+  static void addSP(u32 driver, int skillPoint);
   static u16 getAntiBladeAreaBdatId();
   static bool incEnemySuppress(u32 enemy);
+  static bool isEnableDeleteObject(GF_OBJ_HANDLE *handle);
   static const char *getBladeModel(u32 blade, bool isDefault);
   static bool isCondBladeModel(u32 blade);
   static const char *getBladeMotion(u32 blade, bool isDefault);
@@ -48,6 +52,7 @@ public:
   static u32 getObjAttribute(GF_OBJ_HANDLE *handle);
   static void addInGameLog(GAMELOG_PRIO priority, const char *format, ...);
   static GF_OBJ_HANDLE *getDebugPickObj();
+  static bool isGameObjWait(GF_OBJ_HANDLE *handle);
   static bool isPlayVoice(GF_OBJ_HANDLE *handle);
   static bool isDispWorldMap(u32 map);
   static bool execActivateMercenaryTeamForBlade(u32 blade);
@@ -56,6 +61,9 @@ public:
   static u32 execAddRareBlade(const SDataBlade &dataBlade);
   static void setWatchedEvent(u32 event);
   static u32 execAddCommonBlade(const SDataBlade &dataBlade);
+  static void dispRexCrystal(GF_OBJ_HANDLE *handle, bool isDisp);
+  static void dispHomuraCrystal(GF_OBJ_HANDLE *handle, bool isDisp);
+  static void dispMetsuCrystal(GF_OBJ_HANDLE *handle, bool isDisp);
   static bool isDummyBlade(GF_OBJ_HANDLE *handle);
   static bool isHomuraHoodStyle();
   static bool isTrueRex();

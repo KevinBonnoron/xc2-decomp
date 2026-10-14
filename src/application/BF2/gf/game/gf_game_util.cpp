@@ -19,9 +19,13 @@
 #include "gf/event/gf_event.h"
 #include "gf/field/gf_field_gimmick.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_scene.h"
 #include "gf/game/gf_game_voice.h"
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_util.h"
 #include "gf/util/gf_util.h"
 #include <stdarg.h>
 
@@ -29,6 +33,11 @@ namespace gf {
 
 enum {
   FLAG_GAME_CLEAR = 0xbdcd,
+};
+
+enum {
+  OBJ_FLAG_WAIT = 0x10,
+  OBJ_FLAG_UI_HIDDEN = 0x11,
 };
 
 enum {
@@ -44,6 +53,8 @@ enum {
   SCENARIO_FLAG_WITHOUT_CRYSTAL_LAST = 1030,
 };
 
+GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
+
 constexpr u32 COIN_MAX = 9'999;
 constexpr u32 ETHER_MAX = 999'999'999;
 constexpr u32 DRIVER_ARTS_LEVEL_MAX = 5;
@@ -51,6 +62,15 @@ constexpr u32 DRIVER_SKILL_LEVEL_MAX = 3;
 constexpr u32 GAME_CLEAR_COUNT_MAX = 9'999;
 constexpr u32 ACHIEVEMENT_POPUP_MAX = 300;
 constexpr int PARTY_GAUGE_MAX = 300;
+
+bool GfGameUtil::isUiGfObjHandleValid(GF_OBJ_HANDLE *handle) {
+  if (handle == INVALID_HANDLE) {
+    return false;
+  }
+
+  GfObjAcc objAcc(handle);
+  return objAcc.isValid() && !objAcc.isDestroy() && !objAcc.testFlag(OBJ_FLAG_UI_HIDDEN);
+}
 
 u32 GfGameUtil::getFsLevelSum(u32 fieldSkill) {
   mm::mtl::FixedVector<u16, 422> blades;
@@ -151,11 +171,66 @@ DriverSkillLevelUpResult GfGameUtil::checkDriverSkillLevelUp(u32 driver, u32 row
   return DRIVER_SKILL_LEVEL_UP_OK;
 }
 
+void GfGameUtil::addWp(u32 driver, u32 weaponType, int weaponPoint) {
+  if (driver == 0) {
+    GfObjAcc objAcc(GfGameManager::getPartyLeaderDriver());
+    driver = objAcc.getDriverId();
+    if (driver == 0) {
+      return;
+    }
+  }
+
+  DataParamAcc dataParamAcc(OBJECT_TYPE_DRIVER, driver, static_cast<GimmickType>(0));
+  if (dataParamAcc.isScenarioMask()) {
+    return;
+  }
+
+  if (weaponType == 0) {
+    weaponType = dataParamAcc.getWeaponType(-1, false);
+  }
+
+  dataParamAcc.addWeaponPoint(weaponType, weaponPoint);
+}
+
+void GfGameUtil::addWpForReserve(int weaponPoint) {
+  mm::mtl::FixedVector<u16, 16> drivers;
+  GfPartySelect::getDriverList(drivers, GfPartySelect::LIST_TYPE_RESERVER, 0);
+  if (drivers.size() != 0) {
+    u16 *driver = drivers.begin();
+    do {
+      addWp(*driver, 0, weaponPoint);
+    } while (++driver != drivers.end());
+  }
+}
+
 void GfGameUtil::addWpForObject(u32 driver, u32 weaponType, int weaponPoint) { addWp(driver, weaponType, weaponPoint); }
+
+void GfGameUtil::addSP(u32 driver, int skillPoint) {
+  if (driver == 0) {
+    mm::mtl::FixedVector<u16, 16> drivers;
+    GfPartySelect::getDriverList(drivers, GfPartySelect::LIST_TYPE_PARTY_AND_RESERVER, 0);
+    if (drivers.size() != 0) {
+      u16 *member = drivers.begin();
+      do {
+        addSP(*member, skillPoint);
+      } while (++member != drivers.end());
+    }
+  } else {
+    DataParamAcc dataParamAcc(OBJECT_TYPE_DRIVER, driver, static_cast<GimmickType>(0));
+    if (!dataParamAcc.isScenarioMask()) {
+      GfDataDriver::addSkillPoint(driver, skillPoint);
+    }
+  }
+}
 
 u16 GfGameUtil::getAntiBladeAreaBdatId() { return GfFieldGimmick::getBdatIdOfActiveGmkAntiBladeArea(); }
 
 bool GfGameUtil::incEnemySuppress(u32 enemy) { return GfDataEnemy::incEnemySuppress(enemy); }
+
+bool GfGameUtil::isEnableDeleteObject(GF_OBJ_HANDLE *handle) {
+  GfObjAcc objAcc(handle);
+  return !objAcc.isBattle();
+}
 
 const char *GfGameUtil::getBladeModel(u32 blade, bool isDefault) {
   SDataBlade *dataBlade = GfDataBlade::getSDataBlade(blade);
@@ -164,6 +239,23 @@ const char *GfGameUtil::getBladeModel(u32 blade, bool isDefault) {
   }
 
   return dataBlade->resourceNameModel.c_str();
+}
+
+bool GfGameUtil::isCondBladeModel(u32 blade) {
+  if (GfGameManager::isChangeNormalHomuraForce(blade)) {
+    return false;
+  }
+
+  GfObjAcc objAcc(GfGameParty::getHandleDriver(GfGameParty::getPartyId(OBJECT_TYPE_BLADE, blade)));
+  if (objAcc.isValid() && objAcc.isBattle()) {
+    return false;
+  }
+
+  if (GfGameManager::isBattle()) {
+    return false;
+  }
+
+  return GfGameCond::isGameCond(GfDataBlade::getSDataBlade(blade)->condition);
 }
 
 const char *GfGameUtil::getBladeMotion(u32 blade, bool isDefault) {
@@ -256,7 +348,9 @@ void GfGameUtil::addInGameLog(GAMELOG_PRIO priority, const char *format, ...) {
   va_end(arguments);
 }
 
-GF_OBJ_HANDLE *GfGameUtil::getDebugPickObj() { return reinterpret_cast<GF_OBJ_HANDLE *>(-1); }
+GF_OBJ_HANDLE *GfGameUtil::getDebugPickObj() { return INVALID_HANDLE; }
+
+bool GfGameUtil::isGameObjWait(GF_OBJ_HANDLE *handle) { return GfObjUtil::testFlag(handle, OBJ_FLAG_WAIT); }
 
 bool GfGameUtil::isPlayVoice(GF_OBJ_HANDLE *handle) { return GfGameVoice::getResult(handle) == VOICE_RESULT_PLAY; }
 
@@ -342,6 +436,43 @@ u32 GfGameUtil::execAddCommonBlade(const SDataBlade &dataBlade) {
   }
 
   return blade;
+}
+
+void GfGameUtil::dispRexCrystal(GF_OBJ_HANDLE *handle, bool isDisp) {
+  GfObjAcc objAcc(handle);
+  int mesh = objAcc.getExtMeshIdx("cc_rex");
+  if (mesh >= 0) {
+    objAcc.setExtMeshAlpha(mesh, isDisp ? 1.0f : 0.0f);
+  }
+}
+
+void GfGameUtil::dispHomuraCrystal(GF_OBJ_HANDLE *handle, bool isDisp) {
+  if (handle == INVALID_HANDLE) {
+    return;
+  }
+
+  GfObjAcc objAcc(handle);
+  int mesh = objAcc.getExtMeshIdx("cc_homu");
+  if (mesh >= 0) {
+    objAcc.setExtMeshAlpha(mesh, isDisp ? 1.0f : 0.0f);
+  }
+
+  mesh = objAcc.getExtMeshIdx("cc_zohar");
+  if (mesh >= 0) {
+    objAcc.setExtMeshAlpha(mesh, isDisp ? 0.0f : 1.0f);
+  }
+}
+
+void GfGameUtil::dispMetsuCrystal(GF_OBJ_HANDLE *handle, bool isDisp) {
+  if (handle == INVALID_HANDLE) {
+    return;
+  }
+
+  GfObjAcc objAcc(handle);
+  int mesh = objAcc.getExtMeshIdx("Front_Armor");
+  if (mesh >= 0) {
+    objAcc.setExtMeshAlpha(mesh, isDisp ? 1.0f : 0.0f);
+  }
 }
 
 bool GfGameUtil::isDummyBlade(GF_OBJ_HANDLE *handle) {
