@@ -1,6 +1,10 @@
 #include "gf/data/gf_bdat_item.h"
 #include "bdat.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_weapon.h"
+#include "gf/gf_allocator.h"
+#include "ml/char_code.h"
 
 namespace gf {
 namespace _gfbit {
@@ -3200,7 +3204,460 @@ u32 getITM_HanaAssistsortJP(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbit
 
+enum {
+  BDAT_ITM_HANA_ROLE = 0x42,
+  BDAT_ITM_HANA_ATR = 0x43,
+  BDAT_ITM_HANA_ARTS_ENH = 0x44,
+  BDAT_ITM_HANA_N_ARTS_SET = 0x45,
+  BDAT_ITM_HANA_ASSIST = 0x46,
+  BDAT_FLD_OWNER_BONUS = 0x6f,
+  BDAT_FLD_OWNER_BONUS_PARAM = 0x70,
+  BDAT_ITM_PC_WPN = 0x7f,
+  BDAT_ITM_COLLECTION_LIST = 0x80,
+  BDAT_ITM_TRESURE_LIST = 0x81,
+  BDAT_ITM_PC_WPN_CHIP = 0x82,
+  BDAT_ITM_PC_WPN_TYPE = 0x83,
+  BDAT_ITM_PC_EQUIP = 0x84,
+  BDAT_ITM_ORB = 0x85,
+  BDAT_ITM_ORB_RECIPE = 0x86,
+  BDAT_ITM_ORB_EQUIP = 0x87,
+  BDAT_BTL_HEAL_POT = 0x88,
+  BDAT_ITM_PRECIOUS_LIST = 0x89,
+  BDAT_ITM_INFO_LIST = 0x8a,
+  BDAT_ITM_EVENT_LIST = 0x8b,
+  BDAT_ITM_CRYSTAL_LIST = 0x8c,
+  BDAT_ITM_SALVAGE_LIST = 0x8d,
+  BDAT_ITM_BOOSTER_LIST = 0x8e,
+  BDAT_ITM_FAVORITE_LIST = 0x8f,
+};
+
+GfBdatItem::GfBdatItem()
+    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr),
+      unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr),
+      unknown78(nullptr), unknown80(nullptr), unknown88(nullptr), unknown90(nullptr), unknown98(nullptr), unknowna0(nullptr),
+      unknowna8(nullptr), unknownb0(nullptr), unknownb8(nullptr), unknownc0(nullptr), unknownc8(nullptr) {
+  bdatRefresh();
+}
+
+GfBdatItem::~GfBdatItem() { destroyFP(); }
+
+void GfBdatItem::destroyFP() {
+  if (unknown90 != nullptr) {
+    delete unknown90;
+    unknown90 = nullptr;
+  }
+
+  if (unknown88 != nullptr) {
+    delete unknown88;
+    unknown88 = nullptr;
+  }
+
+  if (unknown80 != nullptr) {
+    delete unknown80;
+    unknown80 = nullptr;
+  }
+
+  if (unknown78 != nullptr) {
+    delete unknown78;
+    unknown78 = nullptr;
+  }
+
+  if (unknown70 != nullptr) {
+    delete unknown70;
+    unknown70 = nullptr;
+  }
+
+  if (unknown58 != nullptr) {
+    delete unknown58;
+    unknown58 = nullptr;
+  }
+
+  if (unknown60 != nullptr) {
+    delete unknown60;
+    unknown60 = nullptr;
+  }
+
+  if (unknown68 != nullptr) {
+    delete unknown68;
+    unknown68 = nullptr;
+  }
+
+  if (unknown48 != nullptr) {
+    delete unknown48;
+    unknown48 = nullptr;
+  }
+
+  if (unknown40 != nullptr) {
+    delete unknown40;
+    unknown40 = nullptr;
+  }
+
+  if (unknown38 != nullptr) {
+    delete unknown38;
+    unknown38 = nullptr;
+  }
+
+  if (unknown30 != nullptr) {
+    delete unknown30;
+    unknown30 = nullptr;
+  }
+
+  if (unknown20 != nullptr) {
+    delete unknown20;
+    unknown20 = nullptr;
+  }
+
+  if (unknown28 != nullptr) {
+    delete unknown28;
+    unknown28 = nullptr;
+  }
+
+  if (unknown50 != nullptr) {
+    delete unknown50;
+    unknown50 = nullptr;
+  }
+
+  if (unknown18 != nullptr) {
+    delete unknown18;
+    unknown18 = nullptr;
+  }
+
+  if (unknown10 != nullptr) {
+    delete unknown10;
+    unknown10 = nullptr;
+  }
+
+  if (unknown98 != nullptr) {
+    delete unknown98;
+    unknown98 = nullptr;
+  }
+
+  if (unknowna0 != nullptr) {
+    delete unknowna0;
+    unknowna0 = nullptr;
+  }
+
+  if (unknowna8 != nullptr) {
+    delete unknowna8;
+    unknowna8 = nullptr;
+  }
+
+  if (unknownb0 != nullptr) {
+    delete unknownb0;
+    unknownb0 = nullptr;
+  }
+
+  if (unknownb8 != nullptr) {
+    delete unknownb8;
+    unknownb8 = nullptr;
+  }
+
+  if (unknownc0 != nullptr) {
+    delete unknownc0;
+    unknownc0 = nullptr;
+  }
+
+  if (unknownc8 != nullptr) {
+    delete unknownc8;
+    unknownc8 = nullptr;
+  }
+}
+
+#define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
+
+void GfBdatItem::createFP() {
+  unknown10 = NEW_BDAT_WRAPPER(BDAT_ITM_CRYSTAL_LIST);
+  unknown18 = NEW_BDAT_WRAPPER(BDAT_ITM_COLLECTION_LIST);
+  unknown28 = NEW_BDAT_WRAPPER(BDAT_ITM_ORB_RECIPE);
+  unknown50 = NEW_BDAT_WRAPPER(BDAT_ITM_ORB_EQUIP);
+  unknown20 = NEW_BDAT_WRAPPER(BDAT_ITM_ORB);
+  unknown30 = NEW_BDAT_WRAPPER(BDAT_ITM_PC_WPN);
+  unknown38 = NEW_BDAT_WRAPPER(BDAT_ITM_PC_WPN_CHIP);
+  unknown40 = NEW_BDAT_WRAPPER(BDAT_ITM_PC_WPN_TYPE);
+  unknown48 = NEW_BDAT_WRAPPER(BDAT_ITM_PC_EQUIP);
+  unknown58 = NEW_BDAT_WRAPPER(BDAT_ITM_PRECIOUS_LIST);
+  unknown60 = NEW_BDAT_WRAPPER(BDAT_ITM_INFO_LIST);
+  unknown68 = NEW_BDAT_WRAPPER(BDAT_ITM_EVENT_LIST);
+  unknown70 = NEW_BDAT_WRAPPER(BDAT_ITM_SALVAGE_LIST);
+  unknown78 = NEW_BDAT_WRAPPER(BDAT_BTL_HEAL_POT);
+  unknown80 = NEW_BDAT_WRAPPER(BDAT_ITM_BOOSTER_LIST);
+  unknown88 = NEW_BDAT_WRAPPER(BDAT_ITM_TRESURE_LIST);
+  unknown90 = NEW_BDAT_WRAPPER(BDAT_ITM_FAVORITE_LIST);
+  unknown98 = NEW_BDAT_WRAPPER(BDAT_FLD_OWNER_BONUS);
+  unknowna0 = NEW_BDAT_WRAPPER(BDAT_FLD_OWNER_BONUS_PARAM);
+  unknowna8 = NEW_BDAT_WRAPPER(BDAT_ITM_HANA_ROLE);
+  unknownb0 = NEW_BDAT_WRAPPER(BDAT_ITM_HANA_ATR);
+  unknownb8 = NEW_BDAT_WRAPPER(BDAT_ITM_HANA_ARTS_ENH);
+  unknownc0 = NEW_BDAT_WRAPPER(BDAT_ITM_HANA_N_ARTS_SET);
+  unknownc8 = NEW_BDAT_WRAPPER(BDAT_ITM_HANA_ASSIST);
+}
+
+void GfBdatItem::bdatRefresh() {
+  destroyFP();
+  createFP();
+  _gfbit::initCrystalListName(*unknown10);
+  _gfbit::initCrystalListRarity(*unknown10);
+  _gfbit::initCrystalListPrice(*unknown10);
+  _gfbit::initCrystalListCondition(*unknown10);
+  _gfbit::initCrystalListNoMultiple(*unknown10);
+  _gfbit::initCrystalListValueMax(*unknown10);
+  _gfbit::initCrystalListRareTableProb(*unknown10);
+  _gfbit::initCrystalListRareBladeRev(*unknown10);
+  _gfbit::initCrystalListCommonPow(*unknown10);
+  _gfbit::initCrystalListAssureP(*unknown10);
+  _gfbit::initCrystalListBladeID(*unknown10);
+  _gfbit::initCrystalListCommonID(*unknown10);
+  _gfbit::initCrystalListCommonWpn(*unknown10);
+  _gfbit::initCrystalListCommonAtr(*unknown10);
+  _gfbit::initCrystalListsortJP(*unknown10);
+  _gfbit::initBoosterName(*unknown80);
+  _gfbit::initBoosterCaption(*unknown80);
+  _gfbit::initBoosterCategory(*unknown80);
+  _gfbit::initBoosterIdea(*unknown80);
+  _gfbit::initBoosterRarity(*unknown80);
+  _gfbit::initBoosterPrice(*unknown80);
+  _gfbit::initBoosterValueMax(*unknown80);
+  _gfbit::initBoostersortJP(*unknown80);
+  _gfbit::initCollectionListName(*unknown18);
+  _gfbit::initCollectionListCaption(*unknown18);
+  _gfbit::initCollectionListCategory(*unknown18);
+  _gfbit::initCollectionListZone(*unknown18);
+  _gfbit::initCollectionListRarity(*unknown18);
+  _gfbit::initCollectionListPrice(*unknown18);
+  _gfbit::initCollectionListsortJP(*unknown18);
+  _gfbit::initEmptyOrbName(*unknown20);
+  _gfbit::initEmptyOrbDebugName(*unknown20);
+  _gfbit::initEmptyOrbPrice(*unknown20);
+  _gfbit::initEmptyOrbRarity(*unknown20);
+  _gfbit::initEmptyOrbFlagNoSell(*unknown20);
+  _gfbit::initEmptyOrbRecipe(*unknown20);
+  _gfbit::initEmptyOrbEquipItemID(*unknown20);
+  _gfbit::initEmptyOrbsortJP(*unknown20);
+  _gfbit::initOrbRecipeRecipeType(*unknown28);
+  _gfbit::initOrbRecipeRarity(*unknown28);
+  _gfbit::initOrbRecipeRscCat(*unknown28);
+  _gfbit::initOrbRecipeAssortNumber(*unknown28);
+  _gfbit::initOrbRecipeItemID1(*unknown28);
+  _gfbit::initOrbRecipeItemNumber1(*unknown28);
+  _gfbit::initOrbRecipeItemID2(*unknown28);
+  _gfbit::initOrbRecipeItemNumber2(*unknown28);
+  _gfbit::initOrbRecipeItemID3(*unknown28);
+  _gfbit::initOrbRecipeItemNumber3(*unknown28);
+  _gfbit::initOrbRecipeItemID4(*unknown28);
+  _gfbit::initOrbRecipeItemNumber4(*unknown28);
+  _gfbit::initOrbRecipeItemID5(*unknown28);
+  _gfbit::initOrbRecipeItemNumber5(*unknown28);
+  _gfbit::initOrbRecipeItemID6(*unknown28);
+  _gfbit::initOrbRecipeItemNumber6(*unknown28);
+  _gfbit::initOrbRecipeItemID7(*unknown28);
+  _gfbit::initOrbRecipeItemNumber7(*unknown28);
+  _gfbit::initOrbRecipeItemID8(*unknown28);
+  _gfbit::initOrbRecipeItemNumber8(*unknown28);
+  _gfbit::initEquipOrbName(*unknown50);
+  _gfbit::initEquipOrbDebugName(*unknown50);
+  _gfbit::initEquipOrbEnhance(*unknown50);
+  _gfbit::initEquipOrbEnhanceCategory(*unknown50);
+  _gfbit::initEquipOrbPrice(*unknown50);
+  _gfbit::initEquipOrbRarity(*unknown50);
+  _gfbit::initEquipOrbFlagNoSell(*unknown50);
+  _gfbit::initEquipOrbsortJP(*unknown50);
+  _gfbit::initPreciousName(*unknown58);
+  _gfbit::initPreciousCaption(*unknown58);
+  _gfbit::initPreciousCategory(*unknown58);
+  _gfbit::initPreciousType(*unknown58);
+  _gfbit::initPreciousPrice(*unknown58);
+  _gfbit::initPreciousValueMax(*unknown58);
+  _gfbit::initPreciousClearNewGame(*unknown58);
+  _gfbit::initPreciousNoMultiple(*unknown58);
+  _gfbit::initPrecioussortJP(*unknown58);
+  _gfbit::initInfoName(*unknown60);
+  _gfbit::initInfoCaption(*unknown60);
+  _gfbit::initInfoPrice(*unknown60);
+  _gfbit::initInfoClearNewGame(*unknown60);
+  _gfbit::initInfosortJP(*unknown60);
+  _gfbit::initEventName(*unknown68);
+  _gfbit::initEventCaption(*unknown68);
+  _gfbit::initEventsortJP(*unknown68);
+  _gfbit::initPcWpnName(*unknown30);
+  _gfbit::initPcWpnDebugName(*unknown30);
+  _gfbit::initPcWpnRank(*unknown30);
+  _gfbit::initPcWpnFlagPrivate(*unknown30);
+  _gfbit::initPcWpnRscR(*unknown30);
+  _gfbit::initPcWpnRscL(*unknown30);
+  _gfbit::initPcWpnTypeRange(*unknown30);
+  _gfbit::initPcWpnWpnType(*unknown30);
+  _gfbit::initPcWpnDamage(*unknown30);
+  _gfbit::initPcWpnStability(*unknown30);
+  _gfbit::initPcWpnPArmor(*unknown30);
+  _gfbit::initPcWpnEArmor(*unknown30);
+  _gfbit::initPcWpnCriRate(*unknown30);
+  _gfbit::initPcWpnGuardRate(*unknown30);
+  _gfbit::initPcWpnEnhance1(*unknown30);
+  _gfbit::initPcWpnEnhance2(*unknown30);
+  _gfbit::initPcWpnTypeName(*unknown40);
+  _gfbit::initPcWpnTypeRole(*unknown40);
+  _gfbit::initPcWpnTypeEffType(*unknown40);
+  _gfbit::initPcWpnTypeJustRange(*unknown40);
+  _gfbit::initPcWpnTypeJustRange2(*unknown40);
+  _gfbit::initPcWpnTypeVoiceType(*unknown40);
+  _gfbit::initPcWpnTypeMotion(*unknown40);
+  _gfbit::initPcWpnChipName(*unknown38);
+  _gfbit::initPcWpnChipDebugName(*unknown38);
+  _gfbit::initPcWpnChipRank(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn1(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn2(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn3(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn4(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn5(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn6(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn7(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn8(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn9(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn10(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn11(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn12(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn13(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn14(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn15(*unknown38);
+  _gfbit::initPcWpnChipCreateWpn16(*unknown38);
+  _gfbit::initPcWpnChipPrice(*unknown38);
+  _gfbit::initPcWpnChipRarity(*unknown38);
+  _gfbit::initPcWpnChipFlagNoSell(*unknown38);
+  _gfbit::initPcWpnChipsortJP(*unknown38);
+  _gfbit::initPcEquipName(*unknown48);
+  _gfbit::initPcEquipDebugName(*unknown48);
+  _gfbit::initPcEquipArmorType(*unknown48);
+  _gfbit::initPcEquipPArmor(*unknown48);
+  _gfbit::initPcEquipEArmor(*unknown48);
+  _gfbit::initPcEquipBns_HpMax(*unknown48);
+  _gfbit::initPcEquipBns_Strength(*unknown48);
+  _gfbit::initPcEquipBns_PowEther(*unknown48);
+  _gfbit::initPcEquipBns_Dex(*unknown48);
+  _gfbit::initPcEquipBns_Agility(*unknown48);
+  _gfbit::initPcEquipBns_Luck(*unknown48);
+  _gfbit::initPcEquipEnhance1(*unknown48);
+  _gfbit::initPcEquipPrice(*unknown48);
+  _gfbit::initPcEquipRarity(*unknown48);
+  _gfbit::initPcEquipFlagNoSell(*unknown48);
+  _gfbit::initPcEquipFlagEqPC01(*unknown48);
+  _gfbit::initPcEquipFlagEqPC02(*unknown48);
+  _gfbit::initPcEquipFlagEqPC03(*unknown48);
+  _gfbit::initPcEquipFlagEqPC04(*unknown48);
+  _gfbit::initPcEquipFlagEqPC05(*unknown48);
+  _gfbit::initPcEquipFlagEqPC06(*unknown48);
+  _gfbit::initPcEquipFlagEqPC07(*unknown48);
+  _gfbit::initPcEquipFlagEqPC08(*unknown48);
+  _gfbit::initPcEquipFlagEqPC09(*unknown48);
+  _gfbit::initPcEquipIcon(*unknown48);
+  _gfbit::initPcEquipsortJP(*unknown48);
+  _gfbit::initSalvageName(*unknown70);
+  _gfbit::initSalvageCaption(*unknown70);
+  _gfbit::initSalvageRarity(*unknown70);
+  _gfbit::initSalvagePrice(*unknown70);
+  _gfbit::initSalvageQuest(*unknown70);
+  _gfbit::initSalvageNoSell(*unknown70);
+  _gfbit::initSalvagesortJP(*unknown70);
+  _gfbit::initHealPotDropRsc(*unknown78);
+  _gfbit::initHealPotHpRatio(*unknown78);
+  _gfbit::initTresureName(*unknown88);
+  _gfbit::initTresureCaption(*unknown88);
+  _gfbit::initTresureCategory(*unknown88);
+  _gfbit::initTresureGraphic(*unknown88);
+  _gfbit::initTresureZone(*unknown88);
+  _gfbit::initTresureRarity(*unknown88);
+  _gfbit::initTresurePrice(*unknown88);
+  _gfbit::initTresureFlag(*unknown88);
+  _gfbit::initTresureNoMultiple(*unknown88);
+  _gfbit::initTresureClearNewGame(*unknown88);
+  _gfbit::initTresuresortJP(*unknown88);
+  _gfbit::initFavoriteName(*unknown90);
+  _gfbit::initFavoriteCaption(*unknown90);
+  _gfbit::initFavoriteCategory(*unknown90);
+  _gfbit::initFavoriteZone(*unknown90);
+  _gfbit::initFavoriteRarity(*unknown90);
+  _gfbit::initFavoritePrice(*unknown90);
+  _gfbit::initFavoriteType(*unknown90);
+  _gfbit::initFavoriteTime(*unknown90);
+  _gfbit::initFavoriteValueMax(*unknown90);
+  _gfbit::initFavoriteTrustPoint(*unknown90);
+  _gfbit::initFavoritesortJP(*unknown90);
+  _gfbit::initOwnerBonusCaption(*unknown98);
+  _gfbit::initOwnerBonusType(*unknown98);
+  _gfbit::initOwnerBonusValue(*unknown98);
+  _gfbit::initOwnerBonusParamMax(*unknowna0);
+  _gfbit::initITM_HanaRoleName(*unknowna8);
+  _gfbit::initITM_HanaRoleRole(*unknowna8);
+  _gfbit::initITM_HanaRolePArmor(*unknowna8);
+  _gfbit::initITM_HanaRoleEArmor(*unknowna8);
+  _gfbit::initITM_HanaRoleHpMaxRev(*unknowna8);
+  _gfbit::initITM_HanaRoleStrengthRev(*unknowna8);
+  _gfbit::initITM_HanaRolePowEtherRev(*unknowna8);
+  _gfbit::initITM_HanaRoleDexRev(*unknowna8);
+  _gfbit::initITM_HanaRoleAgilityRev(*unknowna8);
+  _gfbit::initITM_HanaRoleLuckRev(*unknowna8);
+  _gfbit::initITM_HanaRoleAutoHate(*unknowna8);
+  _gfbit::initITM_HanaRoleArtsHate(*unknowna8);
+  _gfbit::initITM_HanaRoleFlagJS(*unknowna8);
+  _gfbit::initITM_HanaRoleFlagJK(*unknowna8);
+  _gfbit::initITM_HanaRoleFlagJD(*unknowna8);
+  _gfbit::initITM_HanaRoleNeedPow(*unknowna8);
+  _gfbit::initITM_HanaRoleNeedEther(*unknowna8);
+  _gfbit::initITM_HanaRoleDustEther(*unknowna8);
+  _gfbit::initITM_HanaRoleCondition(*unknowna8);
+  _gfbit::initITM_HanaRoleUI(*unknowna8);
+  _gfbit::initITM_HanaRolesortJP(*unknowna8);
+  _gfbit::initITM_HanaAtrName(*unknownb0);
+  _gfbit::initITM_HanaAtrAtr(*unknownb0);
+  _gfbit::initITM_HanaAtrFlagJS(*unknownb0);
+  _gfbit::initITM_HanaAtrFlagJK(*unknownb0);
+  _gfbit::initITM_HanaAtrFlagJD(*unknownb0);
+  _gfbit::initITM_HanaAtrNeedPow(*unknownb0);
+  _gfbit::initITM_HanaAtrNeedEther(*unknownb0);
+  _gfbit::initITM_HanaAtrDustEther(*unknownb0);
+  _gfbit::initITM_HanaAtrCondition(*unknownb0);
+  _gfbit::initITM_HanaAtrUI(*unknownb0);
+  _gfbit::initITM_HanaAtrsortJP(*unknownb0);
+  _gfbit::initITM_HanaArtsEnhName(*unknownb8);
+  _gfbit::initITM_HanaArtsEnhEnhance(*unknownb8);
+  _gfbit::initITM_HanaArtsEnhFlagJS(*unknownb8);
+  _gfbit::initITM_HanaArtsEnhFlagJK(*unknownb8);
+  _gfbit::initITM_HanaArtsEnhFlagJD(*unknownb8);
+  _gfbit::initITM_HanaArtsEnhNeedPow(*unknownb8);
+  _gfbit::initITM_HanaArtsEnhNeedEther(*unknownb8);
+  _gfbit::initITM_HanaArtsEnhDustEther(*unknownb8);
+  _gfbit::initITM_HanaArtsEnhCondition(*unknownb8);
+  _gfbit::initITM_HanaArtsEnhUI(*unknownb8);
+  _gfbit::initITM_HanaArtsEnhsortJP(*unknownb8);
+  _gfbit::initITM_HanaNArtsSetName(*unknownc0);
+  _gfbit::initITM_HanaNArtsSetNArts(*unknownc0);
+  _gfbit::initITM_HanaNArtsSetNArtsRecastRev(*unknownc0);
+  _gfbit::initITM_HanaNArtsSetFlagJS(*unknownc0);
+  _gfbit::initITM_HanaNArtsSetFlagJK(*unknownc0);
+  _gfbit::initITM_HanaNArtsSetFlagJD(*unknownc0);
+  _gfbit::initITM_HanaNArtsSetNeedPow(*unknownc0);
+  _gfbit::initITM_HanaNArtsSetNeedEther(*unknownc0);
+  _gfbit::initITM_HanaNArtsSetDustEther(*unknownc0);
+  _gfbit::initITM_HanaNArtsSetCondition(*unknownc0);
+  _gfbit::initITM_HanaNArtsSetUI(*unknownc0);
+  _gfbit::initITM_HanaNArtsSetsortJP(*unknownc0);
+  _gfbit::initITM_HanaAssistName(*unknownc8);
+  _gfbit::initITM_HanaAssistEnhance(*unknownc8);
+  _gfbit::initITM_HanaAssistEnhanceCategory(*unknownc8);
+  _gfbit::initITM_HanaAssistFlagJS(*unknownc8);
+  _gfbit::initITM_HanaAssistFlagJK(*unknownc8);
+  _gfbit::initITM_HanaAssistFlagJD(*unknownc8);
+  _gfbit::initITM_HanaAssistNeedPow(*unknownc8);
+  _gfbit::initITM_HanaAssistNeedEther(*unknownc8);
+  _gfbit::initITM_HanaAssistDustEther(*unknownc8);
+  _gfbit::initITM_HanaAssistCondition(*unknownc8);
+  _gfbit::initITM_HanaAssistUI(*unknownc8);
+  _gfbit::initITM_HanaAssistsortJP(*unknownc8);
+}
+
 u32 GfBdatItem::getCrystalListStart() const { return Bdat::getIdTop(unknown10->data); }
+
+u32 GfBdatItem::getCrystalListEnd() const { return Bdat::getIdTop(unknown10->data) + Bdat::getIdCount(unknown10->data); }
 
 u32 GfBdatItem::getCrystalListName(u32 id) const { return _gfbit::getCrystalListName(*unknown10, id); }
 
@@ -3234,6 +3691,8 @@ u32 GfBdatItem::getCrystalListsortJP(u32 id) const { return _gfbit::getCrystalLi
 
 u32 GfBdatItem::getBoosterStart() const { return Bdat::getIdTop(unknown80->data); }
 
+u32 GfBdatItem::getBoosterEnd() const { return Bdat::getIdTop(unknown80->data) + Bdat::getIdCount(unknown80->data); }
+
 u32 GfBdatItem::getBoosterName(u32 id) const { return _gfbit::getBoosterName(*unknown80, id); }
 
 u32 GfBdatItem::getBoosterCaption(u32 id) const { return _gfbit::getBoosterCaption(*unknown80, id); }
@@ -3252,6 +3711,8 @@ u32 GfBdatItem::getBoostersortJP(u32 id) const { return _gfbit::getBoostersortJP
 
 u32 GfBdatItem::getCollectionListStart() const { return Bdat::getIdTop(unknown18->data); }
 
+u32 GfBdatItem::getCollectionListEnd() const { return Bdat::getIdTop(unknown18->data) + Bdat::getIdCount(unknown18->data); }
+
 u32 GfBdatItem::getCollectionListName(u32 id) const { return _gfbit::getCollectionListName(*unknown18, id); }
 
 u32 GfBdatItem::getCollectionListCaption(u32 id) const { return _gfbit::getCollectionListCaption(*unknown18, id); }
@@ -3267,6 +3728,8 @@ u32 GfBdatItem::getCollectionListPrice(u32 id) const { return _gfbit::getCollect
 u32 GfBdatItem::getCollectionListsortJP(u32 id) const { return _gfbit::getCollectionListsortJP(*unknown18, id); }
 
 u32 GfBdatItem::getEmptyOrbStart() const { return Bdat::getIdTop(unknown20->data); }
+
+u32 GfBdatItem::getEmptyOrbEnd() const { return Bdat::getIdTop(unknown20->data) + Bdat::getIdCount(unknown20->data); }
 
 u32 GfBdatItem::getEmptyOrbName(u32 id) const { return _gfbit::getEmptyOrbName(*unknown20, id); }
 
@@ -3285,6 +3748,8 @@ u32 GfBdatItem::getEmptyOrbEquipItemID(u32 id) const { return _gfbit::getEmptyOr
 u32 GfBdatItem::getEmptyOrbsortJP(u32 id) const { return _gfbit::getEmptyOrbsortJP(*unknown20, id); }
 
 u32 GfBdatItem::getOrbRecipeStart() const { return Bdat::getIdTop(unknown28->data); }
+
+u32 GfBdatItem::getOrbRecipeEnd() const { return Bdat::getIdTop(unknown28->data) + Bdat::getIdCount(unknown28->data); }
 
 u32 GfBdatItem::getOrbRecipeRecipeType(u32 id) const { return _gfbit::getOrbRecipeRecipeType(*unknown28, id); }
 
@@ -3326,7 +3791,33 @@ u32 GfBdatItem::getOrbRecipeItemID8(u32 id) const { return _gfbit::getOrbRecipeI
 
 u32 GfBdatItem::getOrbRecipeItemNumber8(u32 id) const { return _gfbit::getOrbRecipeItemNumber8(*unknown28, id); }
 
+u32 GfBdatItem::getOrbRecipeItemID(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbit::getOrbRecipeItemID1,
+                                                              _gfbit::getOrbRecipeItemID2,
+                                                              _gfbit::getOrbRecipeItemID3,
+                                                              _gfbit::getOrbRecipeItemID4,
+                                                              _gfbit::getOrbRecipeItemID5,
+                                                              _gfbit::getOrbRecipeItemID6,
+                                                              _gfbit::getOrbRecipeItemID7,
+                                                              _gfbit::getOrbRecipeItemID8};
+  return getters[index](*unknown28, id);
+}
+
+u32 GfBdatItem::getOrbRecipeItemNumber(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbit::getOrbRecipeItemNumber1,
+                                                              _gfbit::getOrbRecipeItemNumber2,
+                                                              _gfbit::getOrbRecipeItemNumber3,
+                                                              _gfbit::getOrbRecipeItemNumber4,
+                                                              _gfbit::getOrbRecipeItemNumber5,
+                                                              _gfbit::getOrbRecipeItemNumber6,
+                                                              _gfbit::getOrbRecipeItemNumber7,
+                                                              _gfbit::getOrbRecipeItemNumber8};
+  return getters[index](*unknown28, id);
+}
+
 u32 GfBdatItem::getEquipOrbStart() const { return Bdat::getIdTop(unknown50->data); }
+
+u32 GfBdatItem::getEquipOrbEnd() const { return Bdat::getIdTop(unknown50->data) + Bdat::getIdCount(unknown50->data); }
 
 u32 GfBdatItem::getEquipOrbName(u32 id) const { return _gfbit::getEquipOrbName(*unknown50, id); }
 
@@ -3345,6 +3836,8 @@ bool GfBdatItem::isEquipOrbFlagNoSell(u32 id) const { return _gfbit::isEquipOrbF
 u32 GfBdatItem::getEquipOrbsortJP(u32 id) const { return _gfbit::getEquipOrbsortJP(*unknown50, id); }
 
 u32 GfBdatItem::getPreciousStart() const { return Bdat::getIdTop(unknown58->data); }
+
+u32 GfBdatItem::getPreciousEnd() const { return Bdat::getIdTop(unknown58->data) + Bdat::getIdCount(unknown58->data); }
 
 u32 GfBdatItem::getPreciousName(u32 id) const { return _gfbit::getPreciousName(*unknown58, id); }
 
@@ -3366,6 +3859,8 @@ u32 GfBdatItem::getPrecioussortJP(u32 id) const { return _gfbit::getPrecioussort
 
 u32 GfBdatItem::getInfoStart() const { return Bdat::getIdTop(unknown60->data); }
 
+u32 GfBdatItem::getInfoEnd() const { return Bdat::getIdTop(unknown60->data) + Bdat::getIdCount(unknown60->data); }
+
 u32 GfBdatItem::getInfoName(u32 id) const { return _gfbit::getInfoName(*unknown60, id); }
 
 u32 GfBdatItem::getInfoCaption(u32 id) const { return _gfbit::getInfoCaption(*unknown60, id); }
@@ -3378,6 +3873,8 @@ u32 GfBdatItem::getInfosortJP(u32 id) const { return _gfbit::getInfosortJP(*unkn
 
 u32 GfBdatItem::getEventStart() const { return Bdat::getIdTop(unknown68->data); }
 
+u32 GfBdatItem::getEventEnd() const { return Bdat::getIdTop(unknown68->data) + Bdat::getIdCount(unknown68->data); }
+
 u32 GfBdatItem::getEventName(u32 id) const { return _gfbit::getEventName(*unknown68, id); }
 
 u32 GfBdatItem::getEventCaption(u32 id) const { return _gfbit::getEventCaption(*unknown68, id); }
@@ -3385,6 +3882,8 @@ u32 GfBdatItem::getEventCaption(u32 id) const { return _gfbit::getEventCaption(*
 u32 GfBdatItem::getEventsortJP(u32 id) const { return _gfbit::getEventsortJP(*unknown68, id); }
 
 u32 GfBdatItem::getPcWpnStart() const { return Bdat::getIdTop(unknown30->data); }
+
+u32 GfBdatItem::getPcWpnEnd() const { return Bdat::getIdTop(unknown30->data) + Bdat::getIdCount(unknown30->data); }
 
 u32 GfBdatItem::getPcWpnName(u32 id) const { return _gfbit::getPcWpnName(*unknown30, id); }
 
@@ -3420,6 +3919,8 @@ u32 GfBdatItem::getPcWpnEnhance2(u32 id) const { return _gfbit::getPcWpnEnhance2
 
 u32 GfBdatItem::getPcWpnTypeStart() const { return Bdat::getIdTop(unknown40->data); }
 
+u32 GfBdatItem::getPcWpnTypeEnd() const { return Bdat::getIdTop(unknown40->data) + Bdat::getIdCount(unknown40->data); }
+
 u32 GfBdatItem::getPcWpnTypeName(u32 id) const { return _gfbit::getPcWpnTypeName(*unknown40, id); }
 
 u32 GfBdatItem::getPcWpnTypeRole(u32 id) const { return _gfbit::getPcWpnTypeRole(*unknown40, id); }
@@ -3435,6 +3936,8 @@ u32 GfBdatItem::getPcWpnTypeVoiceType(u32 id) const { return _gfbit::getPcWpnTyp
 u32 GfBdatItem::getPcWpnTypeMotion(u32 id) const { return _gfbit::getPcWpnTypeMotion(*unknown40, id); }
 
 u32 GfBdatItem::getPcWpnChipStart() const { return Bdat::getIdTop(unknown38->data); }
+
+u32 GfBdatItem::getPcWpnChipEnd() const { return Bdat::getIdTop(unknown38->data) + Bdat::getIdCount(unknown38->data); }
 
 u32 GfBdatItem::getPcWpnChipName(u32 id) const { return _gfbit::getPcWpnChipName(*unknown38, id); }
 
@@ -3482,7 +3985,29 @@ bool GfBdatItem::isPcWpnChipFlagNoSell(u32 id) const { return _gfbit::isPcWpnChi
 
 u32 GfBdatItem::getPcWpnChipsortJP(u32 id) const { return _gfbit::getPcWpnChipsortJP(*unknown38, id); }
 
+u32 GfBdatItem::getPcWpnChipCreateWpn(u32 chip, u32 weaponType) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbit::getPcWpnChipCreateWpn1,
+                                                              _gfbit::getPcWpnChipCreateWpn2,
+                                                              _gfbit::getPcWpnChipCreateWpn3,
+                                                              _gfbit::getPcWpnChipCreateWpn4,
+                                                              _gfbit::getPcWpnChipCreateWpn5,
+                                                              _gfbit::getPcWpnChipCreateWpn6,
+                                                              _gfbit::getPcWpnChipCreateWpn7,
+                                                              _gfbit::getPcWpnChipCreateWpn8,
+                                                              _gfbit::getPcWpnChipCreateWpn9,
+                                                              _gfbit::getPcWpnChipCreateWpn10,
+                                                              _gfbit::getPcWpnChipCreateWpn11,
+                                                              _gfbit::getPcWpnChipCreateWpn12,
+                                                              _gfbit::getPcWpnChipCreateWpn13,
+                                                              _gfbit::getPcWpnChipCreateWpn14,
+                                                              _gfbit::getPcWpnChipCreateWpn15,
+                                                              _gfbit::getPcWpnChipCreateWpn16};
+  return getters[weaponType](*unknown38, chip);
+}
+
 u32 GfBdatItem::getPcEquipStart() const { return Bdat::getIdTop(unknown48->data); }
+
+u32 GfBdatItem::getPcEquipEnd() const { return Bdat::getIdTop(unknown48->data) + Bdat::getIdCount(unknown48->data); }
 
 u32 GfBdatItem::getPcEquipName(u32 id) const { return _gfbit::getPcEquipName(*unknown48, id); }
 
@@ -3538,6 +4063,8 @@ u32 GfBdatItem::getPcEquipsortJP(u32 id) const { return _gfbit::getPcEquipsortJP
 
 u32 GfBdatItem::getSalvageStart() const { return Bdat::getIdTop(unknown70->data); }
 
+u32 GfBdatItem::getSalvageEnd() const { return Bdat::getIdTop(unknown70->data) + Bdat::getIdCount(unknown70->data); }
+
 u32 GfBdatItem::getSalvageName(u32 id) const { return _gfbit::getSalvageName(*unknown70, id); }
 
 u32 GfBdatItem::getSalvageCaption(u32 id) const { return _gfbit::getSalvageCaption(*unknown70, id); }
@@ -3554,11 +4081,15 @@ u32 GfBdatItem::getSalvagesortJP(u32 id) const { return _gfbit::getSalvagesortJP
 
 u32 GfBdatItem::getHealPotStart() const { return Bdat::getIdTop(unknown78->data); }
 
+u32 GfBdatItem::getHealPotEnd() const { return Bdat::getIdTop(unknown78->data) + Bdat::getIdCount(unknown78->data); }
+
 u32 GfBdatItem::getHealPotDropRsc(u32 id) const { return _gfbit::getHealPotDropRsc(*unknown78, id); }
 
 u32 GfBdatItem::getHealPotHpRatio(u32 id) const { return _gfbit::getHealPotHpRatio(*unknown78, id); }
 
 u32 GfBdatItem::getTresureStart() const { return Bdat::getIdTop(unknown88->data); }
+
+u32 GfBdatItem::getTresureEnd() const { return Bdat::getIdTop(unknown88->data) + Bdat::getIdCount(unknown88->data); }
 
 u32 GfBdatItem::getTresureName(u32 id) const { return _gfbit::getTresureName(*unknown88, id); }
 
@@ -3584,6 +4115,8 @@ u32 GfBdatItem::getTresuresortJP(u32 id) const { return _gfbit::getTresuresortJP
 
 u32 GfBdatItem::getFavoriteStart() const { return Bdat::getIdTop(unknown90->data); }
 
+u32 GfBdatItem::getFavoriteEnd() const { return Bdat::getIdTop(unknown90->data) + Bdat::getIdCount(unknown90->data); }
+
 u32 GfBdatItem::getFavoriteName(u32 id) const { return _gfbit::getFavoriteName(*unknown90, id); }
 
 u32 GfBdatItem::getFavoriteCaption(u32 id) const { return _gfbit::getFavoriteCaption(*unknown90, id); }
@@ -3608,6 +4141,8 @@ u32 GfBdatItem::getFavoritesortJP(u32 id) const { return _gfbit::getFavoritesort
 
 u32 GfBdatItem::getOwnerBonusStart() const { return Bdat::getIdTop(unknown98->data); }
 
+u32 GfBdatItem::getOwnerBonusEnd() const { return Bdat::getIdTop(unknown98->data) + Bdat::getIdCount(unknown98->data); }
+
 u32 GfBdatItem::getOwnerBonusCaption(u32 id) const { return _gfbit::getOwnerBonusCaption(*unknown98, id); }
 
 u32 GfBdatItem::getOwnerBonusType(u32 id) const { return _gfbit::getOwnerBonusType(*unknown98, id); }
@@ -3616,9 +4151,13 @@ u32 GfBdatItem::getOwnerBonusValue(u32 id) const { return _gfbit::getOwnerBonusV
 
 u32 GfBdatItem::getOwnerBonusParamStart() const { return Bdat::getIdTop(unknowna0->data); }
 
+u32 GfBdatItem::getOwnerBonusParamEnd() const { return Bdat::getIdTop(unknowna0->data) + Bdat::getIdCount(unknowna0->data); }
+
 u32 GfBdatItem::getOwnerBonusParamMax(u32 id) const { return _gfbit::getOwnerBonusParamMax(*unknowna0, id); }
 
 u32 GfBdatItem::getITM_HanaRoleStart() const { return Bdat::getIdTop(unknowna8->data); }
+
+u32 GfBdatItem::getITM_HanaRoleEnd() const { return Bdat::getIdTop(unknowna8->data) + Bdat::getIdCount(unknowna8->data); }
 
 u32 GfBdatItem::getITM_HanaRoleName(u32 id) const { return _gfbit::getITM_HanaRoleName(*unknowna8, id); }
 
@@ -3664,6 +4203,8 @@ u32 GfBdatItem::getITM_HanaRolesortJP(u32 id) const { return _gfbit::getITM_Hana
 
 u32 GfBdatItem::getITM_HanaAtrStart() const { return Bdat::getIdTop(unknownb0->data); }
 
+u32 GfBdatItem::getITM_HanaAtrEnd() const { return Bdat::getIdTop(unknownb0->data) + Bdat::getIdCount(unknownb0->data); }
+
 u32 GfBdatItem::getITM_HanaAtrName(u32 id) const { return _gfbit::getITM_HanaAtrName(*unknownb0, id); }
 
 u32 GfBdatItem::getITM_HanaAtrAtr(u32 id) const { return _gfbit::getITM_HanaAtrAtr(*unknownb0, id); }
@@ -3688,6 +4229,8 @@ u32 GfBdatItem::getITM_HanaAtrsortJP(u32 id) const { return _gfbit::getITM_HanaA
 
 u32 GfBdatItem::getITM_HanaArtsEnhStart() const { return Bdat::getIdTop(unknownb8->data); }
 
+u32 GfBdatItem::getITM_HanaArtsEnhEnd() const { return Bdat::getIdTop(unknownb8->data) + Bdat::getIdCount(unknownb8->data); }
+
 u32 GfBdatItem::getITM_HanaArtsEnhName(u32 id) const { return _gfbit::getITM_HanaArtsEnhName(*unknownb8, id); }
 
 u32 GfBdatItem::getITM_HanaArtsEnhEnhance(u32 id) const { return _gfbit::getITM_HanaArtsEnhEnhance(*unknownb8, id); }
@@ -3711,6 +4254,8 @@ const char *GfBdatItem::getITM_HanaArtsEnhUI(u32 id) const { return _gfbit::getI
 u32 GfBdatItem::getITM_HanaArtsEnhsortJP(u32 id) const { return _gfbit::getITM_HanaArtsEnhsortJP(*unknownb8, id); }
 
 u32 GfBdatItem::getITM_HanaNArtsSetStart() const { return Bdat::getIdTop(unknownc0->data); }
+
+u32 GfBdatItem::getITM_HanaNArtsSetEnd() const { return Bdat::getIdTop(unknownc0->data) + Bdat::getIdCount(unknownc0->data); }
 
 u32 GfBdatItem::getITM_HanaNArtsSetName(u32 id) const { return _gfbit::getITM_HanaNArtsSetName(*unknownc0, id); }
 
@@ -3738,6 +4283,8 @@ u32 GfBdatItem::getITM_HanaNArtsSetsortJP(u32 id) const { return _gfbit::getITM_
 
 u32 GfBdatItem::getITM_HanaAssistStart() const { return Bdat::getIdTop(unknownc8->data); }
 
+u32 GfBdatItem::getITM_HanaAssistEnd() const { return Bdat::getIdTop(unknownc8->data) + Bdat::getIdCount(unknownc8->data); }
+
 u32 GfBdatItem::getITM_HanaAssistName(u32 id) const { return _gfbit::getITM_HanaAssistName(*unknownc8, id); }
 
 u32 GfBdatItem::getITM_HanaAssistEnhance(u32 id) const { return _gfbit::getITM_HanaAssistEnhance(*unknownc8, id); }
@@ -3761,5 +4308,52 @@ u32 GfBdatItem::getITM_HanaAssistCondition(u32 id) const { return _gfbit::getITM
 const char *GfBdatItem::getITM_HanaAssistUI(u32 id) const { return _gfbit::getITM_HanaAssistUI(*unknownc8, id); }
 
 u32 GfBdatItem::getITM_HanaAssistsortJP(u32 id) const { return _gfbit::getITM_HanaAssistsortJP(*unknownc8, id); }
+
+bool GfBdatItem::getPcWeaponItem(mm::mtl::FixedVector<u16, 512> &weapons, u32 weaponType) const {
+  for (u32 id = getPcWpnStart(), end = getPcWpnEnd(); id < end; id++) {
+    u32 type = GfDataWeapon::getAsmWeaponType(id);
+    if (weaponType != 0 && type != weaponType) {
+      continue;
+    }
+
+    if (weapons.size() >= weapons.capacity()) {
+      break;
+    }
+
+    weapons.push_back(id);
+  }
+
+  return !weapons.empty();
+}
+
+bool GfBdatItem::getPcWeaponNameSJIS(mm::mtl::FixStr<128> &name, u32 id) const {
+  const char *nameUTF8 = _gfbit::getPcWpnDebugName(*unknown30, id);
+  if (nameUTF8 == nullptr) {
+    return false;
+  }
+
+  u16 nameUTF16[512];
+  if (!mlUTF8toUTF16(nameUTF16, 512, nameUTF8)) {
+    return false;
+  }
+
+  char nameSJIS[512];
+  if (!mlUTF16toSJIS(nameSJIS, 512, nameUTF16)) {
+    return false;
+  }
+
+  name = nameSJIS;
+  return true;
+}
+
+bool GfBdatItem::getPcWeaponNameUTF8(mm::mtl::FixStr<128> &name, u32 id) const {
+  const char *nameUTF8 = _gfbit::getPcWpnDebugName(*unknown30, id);
+  if (nameUTF8 == nullptr) {
+    return false;
+  }
+
+  name = nameUTF8;
+  return true;
+}
 
 } // namespace gf

@@ -13,6 +13,9 @@ public:
 
   FixStr &operator=(const char *string) {
     m_nLen = __builtin_strlen(string);
+    // __LINE__ must be 221 as in the original header: it is the line argument of the assert.
+#line 221
+    MM_ASSERT(m_nLen < LEN);
     __builtin_strcpy(mData, string);
     return *this;
   }
