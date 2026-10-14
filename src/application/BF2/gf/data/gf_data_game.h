@@ -22,7 +22,8 @@ struct SDataGame {
   u16 rareBladeAppearType;
   u8 _10ad52[0x10ad54 - 0x10ad52];
   u32 coin;
-  u8 _10ad58[0x10ad70 - 0x10ad58];
+  u8 _10ad58[0x10ad68 - 0x10ad58];
+  u64 saveRealTime;
   f32 cameraHeight;
   u8 _10ad74[0x10ae74 - 0x10ad74];
   f32 cameraYaw;
@@ -47,6 +48,7 @@ static_assert(offsetof(SDataGame, assurePoint) == 0x10ad48, "");
 static_assert(offsetof(SDataGame, assureCount) == 0x10ad4c, "");
 static_assert(offsetof(SDataGame, rareBladeAppearType) == 0x10ad50, "");
 static_assert(offsetof(SDataGame, coin) == 0x10ad54, "");
+static_assert(offsetof(SDataGame, saveRealTime) == 0x10ad68, "");
 static_assert(offsetof(SDataGame, cameraHeight) == 0x10ad70, "");
 static_assert(offsetof(SDataGame, cameraYaw) == 0x10ae74, "");
 static_assert(offsetof(SDataGame, cameraPitch) == 0x10ae78, "");

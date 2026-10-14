@@ -7,6 +7,8 @@ enum AMOVE { AMOVE_WALK, AMOVE_SWIM };
 
 class GfDataUtil {
 public:
+  static void setupEventDriverAndBlade();
+
   static u32 getMoney();
   static void setMoney(u32 money);
 
@@ -39,12 +41,16 @@ public:
   static void setCameraSide(u8 cameraSide);
 
   static u32 getGameClearCount();
+  static const char *getAttributeFileName(u32 attribute);
   static void setScenarioFlag(u16 scenarioFlag);
+  static u32 getObjTypeByCharaId(u32 charaId);
 
   static f32 getMoveDistance(AMOVE amove);
   static void setMoveDistance(AMOVE amove, f32 moveDistance);
 
+  static void setRandomInn();
   static void setSalvagerPoint(u32 salvagerPoint);
+  static u64 *getSaveRealTime();
   static bool isCollectFlagNewVersion();
   static void convertNewCollectFlagPatch();
 
