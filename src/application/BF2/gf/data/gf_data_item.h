@@ -30,6 +30,11 @@ struct ItemType {
   };
 };
 
+enum {
+  FAVORITE_CATEGORY_FOOD_FIRST = 12,
+  FAVORITE_CATEGORY_FOOD_LAST = 17,
+};
+
 struct SDataItemBox {
   u8 _00000[0x122ec - 0x00000];
 };
