@@ -7,10 +7,22 @@ Usage:
   check <scope>                           check every function of a class or namespace, list the missing ones
   check <symbol>                          diff one function, its source file is found automatically
   check <symbol> <source.cpp> [flags...]  diff one function from a given file
+  check <address> <source.cpp> <name> [flags...]
+                                          diff a function the game has no symbol for
 
 <scope> is a class or namespace: gf::GfDataManager.
 <symbol> is either a mangled name or a demangled one, with or without its
 signature: gf::GfDataBlade::setHikariCurrent or 'gf::GfDataBlade::setHikariCurrent(bool)'.
+
+Functions local to their source file (static, anonymous namespace) have no
+symbol in the game. A call to one of them reads <local> on both sides: in the
+game, a branch to an address outside every named function; in your object, a
+branch to a function it defines that is local or unknown to the game. Any local
+function matches any other, so check the local function itself by address: pass
+its game address and its name in your file (mangled, qualified or not), e.g.
+  check 0x710028c7ec src/application/BF2/gf/data/gf_data_obj.cpp applyDriverEnhance
+The game side ends at the next named function or at the next address some bl
+calls, whichever comes first.
 """
 import bisect
 import difflib
@@ -140,6 +152,22 @@ class TargetSymbols:
                 if slot in slots:
                     self.stubs[pc] = slots[slot]
 
+    def unnamed_end(self, addr, image):
+        """End of the unnamed function at addr: the next symbol, or the next address some bl calls."""
+        if self.covering(addr):
+            return None
+        end = self.starts[bisect.bisect_right(self.starts, addr)]
+        for name, _, start, offset, length in image.sections:
+            if name != ".text" or not start <= addr < start + length:
+                continue
+            words = struct.unpack_from(f"<{length // 4}I", image.data, offset)
+            for index, word in enumerate(words):
+                if word & 0xFC000000 == 0x94000000:
+                    callee = start + index * 4 + (((word & 0x3FFFFFF) ^ 0x2000000) - 0x2000000) * 4
+                    if addr < callee < end:
+                        end = callee
+        return end
+
     def covering(self, addr):
         i = bisect.bisect_right(self.starts, addr) - 1
         if i < 0:
@@ -201,19 +229,27 @@ def with_label(text, label):
     return f"{op}\t<{label}>"
 
 
-def objdump(path, symbols, relocs):
-    args = ["llvm-objdump", "-d", "--no-show-raw-insn", *(f"--disassemble-symbols={s}" for s in symbols), path]
-    if relocs:
-        args.insert(2, "-r")
+def objdump(path, symbols, relocs, local_functions=(), address=None):
+    """Disassemble symbols, or with address the unnamed game function there, keyed by hex address."""
     image = Image(path)
     syms = None if relocs else TargetSymbols()
+    if address is None:
+        selection = [f"--disassemble-symbols={s}" for s in symbols]
+    else:
+        end = syms.unnamed_end(address, image)
+        if end is None:
+            sys.exit(f"{address:#x} is inside {syms.covering(address)[0]}, check it by name")
+        selection = [f"--start-address={address:#x}", f"--stop-address={end:#x}"]
+    args = ["llvm-objdump", "-d", "--no-show-raw-insn", *selection, path]
+    if relocs:
+        args.insert(2, "-r")
     if syms:
         syms.find_import_stubs(image)
     funcs = {}
-    lines = None
+    lines = funcs.setdefault(f"{address:#x}", []) if address is not None else None
     for line in run(args).splitlines():
         header = FUNC_HEADER.match(line)
-        if header:
+        if header and address is None:
             lines = funcs.setdefault(header.group(1), [])
             continue
         if lines is None:
@@ -230,10 +266,30 @@ def objdump(path, symbols, relocs):
         if not relocs:
             del lines[sizes.get(name, len(lines) * 4) // 4:]
             resolve_pages(lines, image, syms)
-        stubs = syms.stubs if syms else {}
-        target = lambda m: f"<{stubs.get(int(m.group(0).split()[0], 16), m.group(1))}>"
-        funcs[name] = ignore_source_locations([STRUCTOR_VARIANT.sub(r"\1\g<2>1\3", BRANCH_TARGET.sub(target, l)) for l in lines])
+        funcs[name] = ignore_source_locations([STRUCTOR_VARIANT.sub(r"\1\g<2>1\3", label_branch(l, syms, local_functions))
+                                               for l in lines])
     return funcs
+
+
+def is_branch(op):
+    return op in ("b", "bl", "cbz", "cbnz", "tbz", "tbnz") or op.startswith("b.")
+
+
+def label_branch(text, syms, local_functions):
+    """Name a branch target; a function the game has no symbol for, or local to your file, is <local>."""
+    branch = is_branch(text.partition("\t")[0])
+
+    def target(match):
+        name = match.group(1)
+        if syms:
+            addr = int(match.group(0).split()[0], 16)
+            if addr in syms.stubs:
+                return f"<{syms.stubs[addr]}>"
+            if branch and not syms.covering(addr):
+                return "<local>"
+        return "<local>" if branch and name in local_functions else f"<{name}>"
+
+    return BRANCH_TARGET.sub(target, text)
 
 
 def ignore_source_locations(lines):
@@ -324,6 +380,12 @@ def defined_functions(obj):
     return [parts[2] for parts in (l.split() for l in out.splitlines()) if len(parts) == 3 and parts[1] in "TtWw"]
 
 
+def local_functions(obj, known):
+    out = run(["llvm-nm", "--defined-only", obj])
+    return {parts[2] for parts in (l.split() for l in out.splitlines())
+            if len(parts) == 3 and (parts[1] == "t" or parts[1] in "TWw" and parts[2] not in known)}
+
+
 def included_sources(source):
     found = []
     for name in INCLUDE_CPP.findall(open(source).read()):
@@ -383,7 +445,7 @@ def print_diff(target, mine):
     return False
 
 
-def diff_one(symbol, source, extra):
+def diff_one(symbol, source, extra, known):
     with tempfile.TemporaryDirectory() as tmp:
         if source:
             obj, err = compile_source(source, tmp, extra)
@@ -394,10 +456,27 @@ def diff_one(symbol, source, extra):
             obj = next((o for _, o in objects if symbol in defined_functions(o)), None)
             if obj is None:
                 sys.exit(f"{demangle([symbol])[symbol]} is not defined in any file under src/")
-        mine = objdump(obj, [symbol], relocs=True).get(symbol)
+        mine = objdump(obj, [symbol], relocs=True, local_functions=local_functions(obj, known)).get(symbol)
     if not mine:
         sys.exit(f"{symbol} not found in compiled object (check the mangled name with llvm-nm)")
     target = objdump(TARGET_ELF, [symbol], relocs=False)[symbol]
+    return print_diff(target, mine)
+
+
+def diff_unnamed(address, source, name, extra, known):
+    with tempfile.TemporaryDirectory() as tmp:
+        obj, err = compile_source(source, tmp, extra)
+        if err:
+            sys.exit(err)
+        defined = defined_functions(obj)
+        demangled = demangle(defined)
+        matches = [f for f in defined if name in (f, demangled[f], demangled[f].split("(")[0],
+                                                  demangled[f].split("(")[0].split("::")[-1])]
+        if len(matches) != 1:
+            sys.exit(f"{len(matches)} functions named {name} in {source}" +
+                     "".join(f"\n  {demangled[m]}" for m in matches))
+        mine = objdump(obj, matches, relocs=True, local_functions=local_functions(obj, known))[matches[0]]
+    target = objdump(TARGET_ELF, [], relocs=False, address=address)[f"{address:#x}"]
     return print_diff(target, mine)
 
 
@@ -413,7 +492,7 @@ def check_all(demangled, scope=None):
             sys.exit("no game function defined under src/")
         targets = objdump(TARGET_ELF, all_funcs, relocs=False)
         for source, obj, funcs in per_object:
-            mine = objdump(obj, funcs, relocs=True) if funcs else {}
+            mine = objdump(obj, funcs, relocs=True, local_functions=local_functions(obj, demangled)) if funcs else {}
             for f in funcs:
                 rows.append((f, os.path.relpath(defining_file(demangled[f], source), ROOT), targets.get(f, []), mine.get(f, [])))
 
@@ -489,8 +568,12 @@ def main():
     else:
         name = args[0]
         symbol = resolve_symbol(name, demangled)
-        if symbol:
-            ok = diff_one(symbol, args[1] if len(args) > 1 else None, args[2:])
+        if re.fullmatch(r"0x[0-9a-fA-F]+", name):
+            if len(args) < 3:
+                sys.exit("usage: check <address> <source.cpp> <name> [flags...]")
+            ok = diff_unnamed(int(name, 16), args[1], args[2], args[3:], demangled)
+        elif symbol:
+            ok = diff_one(symbol, args[1] if len(args) > 1 else None, args[2:], demangled)
         elif any(in_scope(d, name) for d in demangled.values()):
             ok, _ = check_all(demangled, name)
         else:
