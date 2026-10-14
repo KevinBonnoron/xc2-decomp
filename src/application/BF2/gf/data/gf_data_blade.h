@@ -135,7 +135,7 @@ struct SDataBlade {
   u8 eyeRotControl;
   u8 _827[0x828 - 0x827];
   u16 coolTime;
-  u8 _82a[0x82c - 0x82a];
+  u16 condition;
   u16 weapon;
   u16 chestHeight;
   u16 landingHeight;
@@ -221,6 +221,7 @@ static_assert(offsetof(SDataBlade, attribute) == 0x823, "");
 static_assert(offsetof(SDataBlade, personality) == 0x824, "");
 static_assert(offsetof(SDataBlade, eyeRotControl) == 0x826, "");
 static_assert(offsetof(SDataBlade, coolTime) == 0x828, "");
+static_assert(offsetof(SDataBlade, condition) == 0x82a, "");
 static_assert(offsetof(SDataBlade, weapon) == 0x82c, "");
 static_assert(offsetof(SDataBlade, chestHeight) == 0x82e, "");
 static_assert(offsetof(SDataBlade, landingHeight) == 0x830, "");
