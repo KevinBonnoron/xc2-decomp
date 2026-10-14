@@ -34,6 +34,8 @@ public:
   GfObjAcc(GfObj *obj);
   GfObjAcc(GF_OBJ_HANDLE *handle);
 
+  bool getObjPosRot(mm::Vec3 &position, f32 &rotation);
+
   bool isValid() const { return mObj != nullptr; }
   bool isValidTransform() const;
   f32 getAlpha(OBJ_ALPHA type) const;
