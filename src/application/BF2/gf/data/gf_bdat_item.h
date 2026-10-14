@@ -1,5 +1,7 @@
 #pragma once
 #include "gf/data/gf_bdat_wrapper.h"
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -7,7 +9,13 @@ namespace gf {
 
 class GfBdatItem : public mm::mtl::PtrSingleton<GfBdatItem>, public GfBdatRefresh {
 public:
+  GfBdatItem();
+  virtual ~GfBdatItem();
+  void destroyFP();
+  void createFP();
+  void bdatRefresh() override;
   u32 getCrystalListStart() const;
+  u32 getCrystalListEnd() const;
   u32 getCrystalListName(u32 id) const;
   u32 getCrystalListRarity(u32 id) const;
   u32 getCrystalListPrice(u32 id) const;
@@ -24,6 +32,7 @@ public:
   u32 getCrystalListCommonAtr(u32 id) const;
   u32 getCrystalListsortJP(u32 id) const;
   u32 getBoosterStart() const;
+  u32 getBoosterEnd() const;
   u32 getBoosterName(u32 id) const;
   u32 getBoosterCaption(u32 id) const;
   u32 getBoosterCategory(u32 id) const;
@@ -33,6 +42,7 @@ public:
   u32 getBoosterValueMax(u32 id) const;
   u32 getBoostersortJP(u32 id) const;
   u32 getCollectionListStart() const;
+  u32 getCollectionListEnd() const;
   u32 getCollectionListName(u32 id) const;
   u32 getCollectionListCaption(u32 id) const;
   u32 getCollectionListCategory(u32 id) const;
@@ -41,6 +51,7 @@ public:
   u32 getCollectionListPrice(u32 id) const;
   u32 getCollectionListsortJP(u32 id) const;
   u32 getEmptyOrbStart() const;
+  u32 getEmptyOrbEnd() const;
   u32 getEmptyOrbName(u32 id) const;
   const char *getEmptyOrbDebugName(u32 id) const;
   u32 getEmptyOrbPrice(u32 id) const;
@@ -50,6 +61,7 @@ public:
   u32 getEmptyOrbEquipItemID(u32 id) const;
   u32 getEmptyOrbsortJP(u32 id) const;
   u32 getOrbRecipeStart() const;
+  u32 getOrbRecipeEnd() const;
   u32 getOrbRecipeRecipeType(u32 id) const;
   u32 getOrbRecipeRarity(u32 id) const;
   u32 getOrbRecipeRscCat(u32 id) const;
@@ -70,7 +82,10 @@ public:
   u32 getOrbRecipeItemNumber7(u32 id) const;
   u32 getOrbRecipeItemID8(u32 id) const;
   u32 getOrbRecipeItemNumber8(u32 id) const;
+  u32 getOrbRecipeItemID(u32 id, u32 index) const;
+  u32 getOrbRecipeItemNumber(u32 id, u32 index) const;
   u32 getEquipOrbStart() const;
+  u32 getEquipOrbEnd() const;
   u32 getEquipOrbName(u32 id) const;
   const char *getEquipOrbDebugName(u32 id) const;
   u32 getEquipOrbEnhance(u32 id) const;
@@ -80,6 +95,7 @@ public:
   bool isEquipOrbFlagNoSell(u32 id) const;
   u32 getEquipOrbsortJP(u32 id) const;
   u32 getPreciousStart() const;
+  u32 getPreciousEnd() const;
   u32 getPreciousName(u32 id) const;
   u32 getPreciousCaption(u32 id) const;
   u32 getPreciousCategory(u32 id) const;
@@ -90,16 +106,19 @@ public:
   u32 getPreciousNoMultiple(u32 id) const;
   u32 getPrecioussortJP(u32 id) const;
   u32 getInfoStart() const;
+  u32 getInfoEnd() const;
   u32 getInfoName(u32 id) const;
   u32 getInfoCaption(u32 id) const;
   u32 getInfoPrice(u32 id) const;
   u32 getInfoClearNewGame(u32 id) const;
   u32 getInfosortJP(u32 id) const;
   u32 getEventStart() const;
+  u32 getEventEnd() const;
   u32 getEventName(u32 id) const;
   u32 getEventCaption(u32 id) const;
   u32 getEventsortJP(u32 id) const;
   u32 getPcWpnStart() const;
+  u32 getPcWpnEnd() const;
   u32 getPcWpnName(u32 id) const;
   const char *getPcWpnDebugName(u32 id) const;
   u32 getPcWpnRank(u32 id) const;
@@ -117,6 +136,7 @@ public:
   u32 getPcWpnEnhance1(u32 id) const;
   u32 getPcWpnEnhance2(u32 id) const;
   u32 getPcWpnTypeStart() const;
+  u32 getPcWpnTypeEnd() const;
   u32 getPcWpnTypeName(u32 id) const;
   u32 getPcWpnTypeRole(u32 id) const;
   u32 getPcWpnTypeEffType(u32 id) const;
@@ -125,6 +145,7 @@ public:
   u32 getPcWpnTypeVoiceType(u32 id) const;
   u32 getPcWpnTypeMotion(u32 id) const;
   u32 getPcWpnChipStart() const;
+  u32 getPcWpnChipEnd() const;
   u32 getPcWpnChipName(u32 id) const;
   const char *getPcWpnChipDebugName(u32 id) const;
   u32 getPcWpnChipRank(u32 id) const;
@@ -148,7 +169,9 @@ public:
   u32 getPcWpnChipRarity(u32 id) const;
   bool isPcWpnChipFlagNoSell(u32 id) const;
   u32 getPcWpnChipsortJP(u32 id) const;
+  u32 getPcWpnChipCreateWpn(u32 chip, u32 weaponType) const;
   u32 getPcEquipStart() const;
+  u32 getPcEquipEnd() const;
   u32 getPcEquipName(u32 id) const;
   const char *getPcEquipDebugName(u32 id) const;
   u32 getPcEquipArmorType(u32 id) const;
@@ -176,6 +199,7 @@ public:
   u32 getPcEquipIcon(u32 id) const;
   u32 getPcEquipsortJP(u32 id) const;
   u32 getSalvageStart() const;
+  u32 getSalvageEnd() const;
   u32 getSalvageName(u32 id) const;
   u32 getSalvageCaption(u32 id) const;
   u32 getSalvageRarity(u32 id) const;
@@ -184,9 +208,11 @@ public:
   u32 getSalvageNoSell(u32 id) const;
   u32 getSalvagesortJP(u32 id) const;
   u32 getHealPotStart() const;
+  u32 getHealPotEnd() const;
   u32 getHealPotDropRsc(u32 id) const;
   u32 getHealPotHpRatio(u32 id) const;
   u32 getTresureStart() const;
+  u32 getTresureEnd() const;
   u32 getTresureName(u32 id) const;
   u32 getTresureCaption(u32 id) const;
   u32 getTresureCategory(u32 id) const;
@@ -199,6 +225,7 @@ public:
   u32 getTresureClearNewGame(u32 id) const;
   u32 getTresuresortJP(u32 id) const;
   u32 getFavoriteStart() const;
+  u32 getFavoriteEnd() const;
   u32 getFavoriteName(u32 id) const;
   u32 getFavoriteCaption(u32 id) const;
   u32 getFavoriteCategory(u32 id) const;
@@ -211,12 +238,15 @@ public:
   u32 getFavoriteTrustPoint(u32 id) const;
   u32 getFavoritesortJP(u32 id) const;
   u32 getOwnerBonusStart() const;
+  u32 getOwnerBonusEnd() const;
   u32 getOwnerBonusCaption(u32 id) const;
   u32 getOwnerBonusType(u32 id) const;
   u32 getOwnerBonusValue(u32 id) const;
   u32 getOwnerBonusParamStart() const;
+  u32 getOwnerBonusParamEnd() const;
   u32 getOwnerBonusParamMax(u32 id) const;
   u32 getITM_HanaRoleStart() const;
+  u32 getITM_HanaRoleEnd() const;
   u32 getITM_HanaRoleName(u32 id) const;
   u32 getITM_HanaRoleRole(u32 id) const;
   u32 getITM_HanaRolePArmor(u32 id) const;
@@ -239,6 +269,7 @@ public:
   const char *getITM_HanaRoleUI(u32 id) const;
   u32 getITM_HanaRolesortJP(u32 id) const;
   u32 getITM_HanaAtrStart() const;
+  u32 getITM_HanaAtrEnd() const;
   u32 getITM_HanaAtrName(u32 id) const;
   u32 getITM_HanaAtrAtr(u32 id) const;
   bool isITM_HanaAtrFlagJS(u32 id) const;
@@ -251,6 +282,7 @@ public:
   const char *getITM_HanaAtrUI(u32 id) const;
   u32 getITM_HanaAtrsortJP(u32 id) const;
   u32 getITM_HanaArtsEnhStart() const;
+  u32 getITM_HanaArtsEnhEnd() const;
   u32 getITM_HanaArtsEnhName(u32 id) const;
   u32 getITM_HanaArtsEnhEnhance(u32 id) const;
   bool isITM_HanaArtsEnhFlagJS(u32 id) const;
@@ -263,6 +295,7 @@ public:
   const char *getITM_HanaArtsEnhUI(u32 id) const;
   u32 getITM_HanaArtsEnhsortJP(u32 id) const;
   u32 getITM_HanaNArtsSetStart() const;
+  u32 getITM_HanaNArtsSetEnd() const;
   u32 getITM_HanaNArtsSetName(u32 id) const;
   u32 getITM_HanaNArtsSetNArts(u32 id) const;
   u32 getITM_HanaNArtsSetNArtsRecastRev(u32 id) const;
@@ -276,6 +309,7 @@ public:
   const char *getITM_HanaNArtsSetUI(u32 id) const;
   u32 getITM_HanaNArtsSetsortJP(u32 id) const;
   u32 getITM_HanaAssistStart() const;
+  u32 getITM_HanaAssistEnd() const;
   u32 getITM_HanaAssistName(u32 id) const;
   u32 getITM_HanaAssistEnhance(u32 id) const;
   u32 getITM_HanaAssistEnhanceCategory(u32 id) const;
@@ -288,28 +322,9 @@ public:
   u32 getITM_HanaAssistCondition(u32 id) const;
   const char *getITM_HanaAssistUI(u32 id) const;
   u32 getITM_HanaAssistsortJP(u32 id) const;
-
-  u32 getPcWpnChipCreateWpn(u32 chip, u32 weaponType) const;
-  u32 getPcWpnChipEnd() const;
-  u32 getPcEquipEnd() const;
-  u32 getEquipOrbEnd() const;
-  u32 getPcWpnEnd() const;
-  u32 getSalvageEnd() const;
-  u32 getPreciousEnd() const;
-  u32 getCollectionListEnd() const;
-  u32 getTresureEnd() const;
-  u32 getEmptyOrbEnd() const;
-  u32 getFavoriteEnd() const;
-  u32 getCrystalListEnd() const;
-  u32 getBoosterEnd() const;
-  u32 getHealPotEnd() const;
-  u32 getInfoEnd() const;
-  u32 getEventEnd() const;
-  u32 getITM_HanaRoleEnd() const;
-  u32 getITM_HanaAtrEnd() const;
-  u32 getITM_HanaArtsEnhEnd() const;
-  u32 getITM_HanaNArtsSetEnd() const;
-  u32 getITM_HanaAssistEnd() const;
+  bool getPcWeaponItem(mm::mtl::FixedVector<u16, 512> &weapons, u32 weaponType) const;
+  bool getPcWeaponNameSJIS(mm::mtl::FixStr<128> &name, u32 id) const;
+  bool getPcWeaponNameUTF8(mm::mtl::FixStr<128> &name, u32 id) const;
 
 private:
   CBdatWrapper *mCrystalList;
