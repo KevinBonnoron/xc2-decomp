@@ -39,6 +39,11 @@ constexpr f32 PERCENT_SCALE = 100.0f;
 constexpr u32 DRIVER_HP_MAX = 9999;
 constexpr u32 DRIVER_STATUS_MAX = 999;
 constexpr u32 RATE_MAX = 100;
+constexpr f32 ENEMY_HP_MAX = 100000000.0f;
+constexpr f32 ENEMY_STATUS_MAX = 9999.0f;
+constexpr f32 ENEMY_AGILITY_MAX = 999.0f;
+constexpr f32 ENEMY_LUCK_MAX = 999.0f;
+constexpr f32 PERMILLE = 0.001f;
 
 enum {
   ENHANCE_EFFECT_NONE,
@@ -1207,12 +1212,228 @@ const char *DataObjEnemy::getEffectResourceName() const { return GfBdatRsc::get(
 
 u32 DataObjEnemy::getBdatId() const { return data->arrange; }
 
+static bool unknown003(f32 &value, u32 arrange, u32 percentEffect, u32 addEffect) { // Inferred role: applyEnemyEnhance; original function name unknown.
+  if (GfDataEnemy::getEquipBlade(arrange) == 0) {
+    return false;
+  }
+
+  mm::mtl::FixedVector<u16, 64> enhances;
+  GfDataEnemy::getValidEnhance(enhances, arrange);
+  GfBdatBtl *bdatBattle = GfBdatBtl::get();
+  f32 base = value;
+  if (enhances.size() != 0) {
+    u16 *enhance = enhances.begin();
+    do {
+      if (bdatBattle->getBTL_EnhanceEnhanceEffect(*enhance) == addEffect) {
+        base += bdatBattle->getBTL_EnhanceParam1(*enhance);
+      }
+    } while (++enhance != enhances.end());
+  }
+
+  f32 percent = 0.0f;
+  if (enhances.size() != 0) {
+    u16 *enhance = enhances.begin();
+    do {
+      if (bdatBattle->getBTL_EnhanceEnhanceEffect(*enhance) == percentEffect) {
+        percent += bdatBattle->getBTL_EnhanceParam1(*enhance) * PERCENT;
+      }
+    } while (++enhance != enhances.end());
+  }
+
+  value = base + base * percent;
+  return true;
+}
+
+u32 DataObjEnemy::getHpMax(bool) const {
+  f32 hpMax = data->hpMax;
+  if (unknown003(hpMax, getBdatIdEnArrange(), ENHANCE_EFFECT_HP_MAX_PERCENT, ENHANCE_EFFECT_HP_MAX_ADD)) {
+    f32 rate = GfDataBlade::getHpMaxRev(GfDataEnemy::getEquipBlade(getBdatIdEnArrange())) * PERCENT;
+    hpMax += hpMax * rate;
+  }
+
+  u32 param = data->param;
+  if (param != 0) {
+    u32 rev = GfBdatChrEnParam::get()->getChrEnParamRevHpMaxRev(param);
+    if (rev != 0) {
+      hpMax = rev * PERMILLE * hpMax;
+    }
+  }
+
+  if (hpMax > ENEMY_HP_MAX) {
+    hpMax = ENEMY_HP_MAX;
+  }
+
+  return hpMax;
+}
+
 u32 DataObjEnemy::getHp() const {
   if (handle != INVALID_HANDLE) {
     return GfObjUtil::getHp(handle);
   }
 
   return getHpMax(false);
+}
+
+u32 DataObjEnemy::getStrength(bool) const {
+  f32 strength = data->strength;
+  if (unknown003(strength, getBdatIdEnArrange(), ENHANCE_EFFECT_STRENGTH_PERCENT, ENHANCE_EFFECT_STRENGTH_ADD)) {
+    f32 rate = GfDataBlade::getStrengthRev(GfDataEnemy::getEquipBlade(getBdatIdEnArrange())) * PERCENT;
+    strength += strength * rate;
+  }
+
+  u32 param = data->param;
+  if (param != 0) {
+    u32 rev = GfBdatChrEnParam::get()->getChrEnParamRevStrengthRev(param);
+    if (rev != 0) {
+      strength = rev * PERMILLE * strength;
+    }
+  }
+
+  if (strength > ENEMY_STATUS_MAX) {
+    strength = ENEMY_STATUS_MAX;
+  }
+
+  return strength;
+}
+
+u32 DataObjEnemy::getPowerEther(bool) const {
+  f32 powerEther = data->powerEther;
+  if (unknown003(powerEther, getBdatIdEnArrange(), ENHANCE_EFFECT_POWER_ETHER_PERCENT, ENHANCE_EFFECT_POWER_ETHER_ADD)) {
+    f32 rate = GfDataBlade::getPowerEtherRev(GfDataEnemy::getEquipBlade(getBdatIdEnArrange())) * PERCENT;
+    powerEther += powerEther * rate;
+  }
+
+  u32 param = data->param;
+  if (param != 0) {
+    u32 rev = GfBdatChrEnParam::get()->getChrEnParamRevPowEtherRev(param);
+    if (rev != 0) {
+      powerEther = rev * PERMILLE * powerEther;
+    }
+  }
+
+  if (powerEther > ENEMY_STATUS_MAX) {
+    powerEther = ENEMY_STATUS_MAX;
+  }
+
+  return powerEther;
+}
+
+u32 DataObjEnemy::getDex(bool) const {
+  f32 dex = data->dex;
+  if (unknown003(dex, getBdatIdEnArrange(), ENHANCE_EFFECT_DEX_PERCENT, ENHANCE_EFFECT_DEX_ADD)) {
+    f32 rate = GfDataBlade::getDexRev(GfDataEnemy::getEquipBlade(getBdatIdEnArrange())) * PERCENT;
+    dex += dex * rate;
+  }
+
+  u32 param = data->param;
+  if (param != 0) {
+    u32 rev = GfBdatChrEnParam::get()->getChrEnParamRevDexRev(param);
+    if (rev != 0) {
+      dex = rev * PERMILLE * dex;
+    }
+  }
+
+  if (dex > ENEMY_STATUS_MAX) {
+    dex = ENEMY_STATUS_MAX;
+  }
+
+  return dex;
+}
+
+u32 DataObjEnemy::getAgility(bool) const {
+  f32 agility = data->agility;
+  if (unknown003(agility, getBdatIdEnArrange(), ENHANCE_EFFECT_AGILITY_PERCENT, ENHANCE_EFFECT_AGILITY_ADD)) {
+    f32 rate = GfDataBlade::getAgilityRev(GfDataEnemy::getEquipBlade(getBdatIdEnArrange())) * PERCENT;
+    agility += agility * rate;
+  }
+
+  u32 param = data->param;
+  if (param != 0) {
+    u32 rev = GfBdatChrEnParam::get()->getChrEnParamRevAgilityRev(param);
+    if (rev != 0) {
+      agility = rev * PERMILLE * agility;
+    }
+  }
+
+  if (agility > ENEMY_AGILITY_MAX) {
+    agility = ENEMY_AGILITY_MAX;
+  }
+
+  return agility;
+}
+
+u32 DataObjEnemy::getLuck(bool) const {
+  f32 luck = data->luck;
+  if (unknown003(luck, getBdatIdEnArrange(), ENHANCE_EFFECT_LUCK_PERCENT, ENHANCE_EFFECT_LUCK_ADD)) {
+    f32 rate = GfDataBlade::getLuckRev(GfDataEnemy::getEquipBlade(getBdatIdEnArrange())) * PERCENT;
+    luck += luck * rate;
+  }
+
+  u32 param = data->param;
+  if (param != 0) {
+    u32 rev = GfBdatChrEnParam::get()->getChrEnParamRevLuckRev(param);
+    if (rev != 0) {
+      luck = rev * PERMILLE * luck;
+    }
+  }
+
+  if (luck > ENEMY_LUCK_MAX) {
+    luck = ENEMY_LUCK_MAX;
+  }
+
+  return luck;
+}
+
+u32 DataObjEnemy::getPArmor(bool) const {
+  f32 pArmor = data->pArmor;
+  if (GfDataEnemy::getEquipBlade(getBdatIdEnArrange()) != 0) {
+    unknown003(pArmor, getBdatIdEnArrange(), ENHANCE_EFFECT_P_ARMOR_PERCENT, ENHANCE_EFFECT_P_ARMOR_ADD);
+  }
+
+  if (pArmor > ARMOR_MAX) {
+    pArmor = ARMOR_MAX;
+  }
+
+  return pArmor;
+}
+
+u32 DataObjEnemy::getEArmor(bool) const {
+  f32 eArmor = data->eArmor;
+  if (GfDataEnemy::getEquipBlade(getBdatIdEnArrange()) != 0) {
+    unknown003(eArmor, getBdatIdEnArrange(), ENHANCE_EFFECT_E_ARMOR_PERCENT, ENHANCE_EFFECT_E_ARMOR_ADD);
+  }
+
+  if (eArmor > ARMOR_MAX) {
+    eArmor = ARMOR_MAX;
+  }
+
+  return eArmor;
+}
+
+u32 DataObjEnemy::getCriticalRate(bool) const {
+  f32 criticalRate = data->criticalRate;
+  if (GfDataEnemy::getEquipBlade(getBdatIdEnArrange()) != 0) {
+    unknown003(criticalRate, getBdatIdEnArrange(), ENHANCE_EFFECT_CRITICAL_RATE_PERCENT, ENHANCE_EFFECT_CRITICAL_RATE_ADD);
+  }
+
+  if (criticalRate > RATE_MAX) {
+    criticalRate = RATE_MAX;
+  }
+
+  return criticalRate;
+}
+
+u32 DataObjEnemy::getGuardRate(bool) const {
+  f32 guardRate = data->guardRate;
+  if (GfDataEnemy::getEquipBlade(getBdatIdEnArrange()) != 0) {
+    unknown003(guardRate, getBdatIdEnArrange(), ENHANCE_EFFECT_GUARD_RATE_PERCENT, ENHANCE_EFFECT_GUARD_RATE_ADD);
+  }
+
+  if (guardRate > RATE_MAX) {
+    guardRate = RATE_MAX;
+  }
+
+  return guardRate;
 }
 
 u32 DataObjEnemy::getFootStep() const { return GfBdatRsc::get()->getRscEnFootStep(getBdatId()); }
