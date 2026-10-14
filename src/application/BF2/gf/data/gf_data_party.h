@@ -16,7 +16,8 @@ struct SDataParty {
   SDataPartyMember members[10];
   u32 leaderObjectType;
   u32 leader;
-  u8 _044[0x04c - 0x044];
+  u32 savedLeaderObjectType;
+  u32 savedLeader;
   u16 partyGauge;
   u8 _04e[0x054 - 0x04e];
 };

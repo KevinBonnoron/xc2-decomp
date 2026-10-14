@@ -19,6 +19,7 @@
 #include "gf/object/gf_append.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_util.h"
+#include "gf/request/gf_req_command.h"
 #include "gf/request/gf_req_scom.h"
 
 namespace gf {
@@ -27,12 +28,14 @@ static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-
 
 constexpr u32 PARTY_ID_NONE = 0xffffffff;
 constexpr u32 PARTY_MEMBER_NUM = 3;
+constexpr u32 PARTY_MEMBER_MAX = 10;
 constexpr u32 PLAYER_ID_NONE = 0xffffffff;
 constexpr u32 WEAPON_HANDLE_NUM = 10;
 constexpr int SET_BLADE_NUM_MAX = 5;
 constexpr u32 READY_FRAME_MEMBER_OK = 2;
 constexpr u32 READY_FRAME_MAX = 100;
 constexpr int SLOT_HIKARI = 3;
+constexpr u32 BLADE_NEW_GAME = 1012;
 
 static u32 getValidDriverId(const DataParamAcc &paramAcc) {
   return paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0;
@@ -832,6 +835,32 @@ u32 GfGameParty::getPartySetBlade(u32 index) {
   return 0;
 }
 
+void GfGameParty::getCurrentPartyInfo(RQ_SETUP_PARTY &info) {
+  for (u32 partyId = 0; partyId < PARTY_MEMBER_MAX; partyId++) {
+    RQ_SETUP_PARTY::Member &member = info.members[partyId];
+    member.driver = GfDataParty::getPartyMember(partyId)->driver;
+    member.bladeSet = GfDataDriver::getBladeSet(GfDataParty::getPartyMember(partyId)->driver);
+    int setBladeNum = GfDataDriver::getMaxSetBladeNum(member.driver);
+    for (int slot = 0; slot < setBladeNum; slot++) {
+      member.blades[slot] = getBladeBdatId(partyId, slot);
+    }
+  }
+
+  SDataParty *dataParty = GfDataParty::getSDataParty();
+  info.leaderObjectType = dataParty->leaderObjectType;
+  info.savedLeaderObjectType = dataParty->savedLeaderObjectType;
+  info.leader = dataParty->leader;
+  info.savedLeader = dataParty->savedLeader;
+}
+
+void GfGameParty::getCurrentPartyInfo(RQ_SETUP_PARTY_DRIVER &info) {
+  for (u32 partyId = 0; partyId < PARTY_MEMBER_MAX; partyId++) {
+    info.drivers[partyId] = GfDataParty::getPartyMember(partyId)->driver;
+  }
+
+  info.leader = GfDataParty::getSDataParty()->leader;
+}
+
 u16 GfGameParty::getPartyGauge() { return GfDataParty::getSDataParty()->partyGauge; }
 
 void GfGameParty::setPartyGauge(u16 partyGauge) { GfDataParty::getSDataParty()->partyGauge = partyGauge; }
@@ -984,6 +1013,14 @@ GfStatusProperty *GfGameParty::getPartyStatusProperty(u32 partyId) {
   }
 
   return party->mMembers[partyId].statusProperty.get();
+}
+
+void GfGameParty::setupNewGameParty() {
+  RQ_SETUP_PARTY info;
+  info.members[0].driver = DRIVER_REX;
+  info.members[0].bladeSet = 0;
+  info.members[0].blades[0] = BLADE_NEW_GAME;
+  setupRequestData(info);
 }
 
 void GfGameParty::setDebugData(u32, bool, bool) {}
