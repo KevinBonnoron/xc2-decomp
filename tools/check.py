@@ -436,6 +436,8 @@ def check_all(demangled, scope=None):
     summary = f"\n{matched}/{len(rows)} functions match"
     if scope:
         summary += f", {len(missing)} left to decompile in {scope}"
+    if failed:
+        summary += f", {len(errors)} {'file' if len(errors) == 1 else 'files'} failed to compile"
     print(paint(summary, "1;32" if matched == len(rows) and not failed else "1;31"))
     return matched == len(rows) and not failed, [f for f, _, target, mine in rows if target == mine]
 
@@ -482,7 +484,7 @@ def main():
         ok, matched = check_all(demangled)
         text = progress_text(matched)
         print(paint(f"Game progress: {text}", "1"))
-        if readme:
+        if readme and ok:
             update_readme(text)
     else:
         name = args[0]
