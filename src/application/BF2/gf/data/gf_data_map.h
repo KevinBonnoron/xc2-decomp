@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_math/mm_vec3.h"
 #include "types.h"
 #include <stddef.h>
 
@@ -21,11 +22,16 @@ enum WEATHERID {
 enum CLOUD_SEA {};
 
 struct SDataMap {
-  u8 _000[0x0c0 - 0x000];
+  mm::Vec3 driverSavePos[3];
+  mm::Vec3 bladeSavePos[3];
+  mm::Vec3 driverSaveRot[3];
+  mm::Vec3 bladeSaveRot[3];
   u32 skipTravelID;
-  u8 _0c4[0x0d0 - 0x0c4];
 };
 
+static_assert(offsetof(SDataMap, bladeSavePos) == 0x030, "");
+static_assert(offsetof(SDataMap, driverSaveRot) == 0x060, "");
+static_assert(offsetof(SDataMap, bladeSaveRot) == 0x090, "");
 static_assert(offsetof(SDataMap, skipTravelID) == 0x0c0, "");
 static_assert(sizeof(SDataMap) == 0x0d0, "");
 
