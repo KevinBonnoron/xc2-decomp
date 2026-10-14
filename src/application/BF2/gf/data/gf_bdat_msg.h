@@ -12,6 +12,21 @@ public:
   static u8 *getFpQuest(QuestID quest);
   static const char *getNameQuest(QuestID quest, u32 line);
   static u8 *getFpEnemy();
+  static u8 *getFpPcWpnChip();
+  static u8 *getFpPcEquip();
+  static u8 *getFpOrb();
+  static u8 *getFpSalvage();
+  static u8 *getFpPrecious();
+  static u8 *getFpCollection();
+  static u8 *getFpTresure();
+  static u8 *getFpFavorite();
+  static u8 *getFpCrystal();
+  static u8 *getFpBooster();
+  static u8 *getFpInfo();
+  static u8 *getFpEvent();
+  static u8 *getFpBtlHanaRole();
+  static u8 *getFpBtlHanaAtr();
+  static u8 *getFpBtlHanaNArts();
 };
 
 } // namespace gf
