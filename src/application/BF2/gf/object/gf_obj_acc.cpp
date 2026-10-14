@@ -8,6 +8,7 @@
 #include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj_util.h"
+#include "ml/scn_obj_model.h"
 
 namespace fw {
 
@@ -143,6 +144,24 @@ f32 GfObjAcc::getAlpha() const {
   return alpha;
 }
 
+ml::ScnObjModel *GfObjAcc::getScnModel() const {
+  if (mObj != nullptr) {
+    GfComModel *model = mObj->getComponent<GfComModel>();
+    if (model != nullptr && model->modelObject != nullptr) {
+      return model->modelObject->getInterface();
+    }
+  }
+
+  return nullptr;
+}
+
+void GfObjAcc::setFrameSpeed(f32 speed) {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    model->setFrameSpd(speed);
+  }
+}
+
 void GfObjAcc::setCameraFade(bool isEnable) { GfObjUtil::setFlag(mInfo, OBJ_FLAG_CAMERA_FADE, isEnable); }
 
 bool GfObjAcc::setFlag(u32 flag, bool value) { return GfObjUtil::setFlag(mInfo, flag, value); }
@@ -190,9 +209,70 @@ bool GfObjAcc::isDispChanged() const {
   return GfObjUtil::testFlag(mInfo, OBJ_FLAG_DISP_CHANGED);
 }
 
+void GfObjAcc::applyDisp() {
+  if (mObj == nullptr) {
+    return;
+  }
+
+  bool isDisp;
+  if (mInfo->dispFlags == 0) {
+    GfObj *parent = GfObjUtil::getParentObj(mObj);
+    if (parent == nullptr) {
+      isDisp = true;
+    } else {
+      isDisp = GfObjManager::getObjInfo(parent->handle)->dispFlags == 0;
+    }
+  } else {
+    isDisp = false;
+  }
+
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    model->setDisp(isDisp);
+  }
+
+  if (GfObjUtil::testFlag(mInfo, OBJ_FLAG_DISP_CHANGED)) {
+    GfObjUtil::setFlag(mInfo, OBJ_FLAG_DISP_CHANGED, false);
+  }
+}
+
 void GfObjAcc::setClip(bool isClip) { GfObjUtil::setFlag(mInfo, OBJ_FLAG_CLIP, isClip); }
 
 void GfObjAcc::setGpuClip(bool isClip) { GfObjUtil::setFlag(mInfo, OBJ_FLAG_GPU_CLIP, isClip); }
+
+void GfObjAcc::setModelScale(f32 scale) {
+  if (mObj == nullptr) {
+    return;
+  }
+
+  mm::Vec3 &modelScale = mInfo->modelScale;
+  modelScale.x = scale;
+  modelScale.y = scale;
+  modelScale.z = scale;
+  GfComModel *model = mObj->getComponent<GfComModel>();
+  if (model != nullptr) {
+    model->setModelScale(scale);
+  }
+}
+
+const mm::Vec3 &GfObjAcc::getModelScaleXYZ() const { return mInfo != nullptr ? mInfo->modelScale : mm::Vec3::unit; }
+
+f32 GfObjAcc::getModelScale() const { return getModelScaleXYZ().x; }
+
+void GfObjAcc::setModelScaleForDebug(f32 scale) {
+  if (mInfo == nullptr) {
+    return;
+  }
+
+  mm::Vec3 &modelScale = mInfo->modelScale;
+  modelScale.x = scale;
+  modelScale.y = scale;
+  modelScale.z = scale;
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    model->setScl(mInfo->modelScale);
+  }
+}
 
 void GfObjAcc::setGravity(bool isGravity) {}
 
@@ -219,6 +299,21 @@ void GfObjAcc::setAttribute(u32 attribute) {
 }
 
 u32 GfObjAcc::getAttribute() const { return mObj != nullptr ? mObj->attribute : 0; }
+
+void GfObjAcc::applyClip() {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    model->setClip(GfObjUtil::testFlag(mInfo, OBJ_FLAG_CLIP));
+  }
+}
+
+void GfObjAcc::applyClipGpu() {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    ml::ScnObjAccResMdlInfo modelInfo(model);
+    modelInfo.setGpuClip(GfObjUtil::testFlag(mInfo, OBJ_FLAG_GPU_CLIP));
+  }
+}
 
 bool GfObjAcc::isValidProperty() const {
   if (mObj == nullptr || mObj->components[GfComProperty::COMPONENT_INDEX] == nullptr) {
@@ -371,6 +466,56 @@ u16 GfObjAcc::getView() const { return mInfo != nullptr ? mInfo->view : 0; }
 u32 GfObjAcc::getLayer() const { return mObj != nullptr ? mObj->layer : 4; }
 
 bool GfObjAcc::isLayerPause() const { return fw::Framework::isLayerPause(getLayer()); }
+
+void GfObjAcc::setExtMeshAlpha(u32 index, f32 alpha) {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    ml::ScnObjAccResSubMesh subMesh(model);
+    if (subMesh.getExtMax() > 0) {
+      subMesh.setExtAlpha(index, alpha);
+    }
+  }
+}
+
+f32 GfObjAcc::getExtMeshAlpha(u32 index) const {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    ml::ScnObjAccResSubMesh subMesh(model);
+    return subMesh.getExtAlpha(index);
+  }
+
+  return 1.0f;
+}
+
+int GfObjAcc::getExtMeshMax() const {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    ml::ScnObjAccResSubMesh subMesh(model);
+    return subMesh.getExtMax();
+  }
+
+  return 0;
+}
+
+int GfObjAcc::getExtMeshIdx(const char *name) const {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    ml::ScnObjAccResSubMesh subMesh(model);
+    return subMesh.getExtIdx(name);
+  }
+
+  return -1;
+}
+
+const char *GfObjAcc::getExtMeshName(int index) const {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    ml::ScnObjAccResSubMesh subMesh(model);
+    return subMesh.getExtName(index);
+  }
+
+  return "";
+}
 
 bool GfObjAcc::isUpdated() const { return GfObjUtil::testFlag(mInfo, OBJ_FLAG_UPDATED); }
 

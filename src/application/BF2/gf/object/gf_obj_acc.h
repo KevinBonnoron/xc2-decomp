@@ -1,6 +1,11 @@
 #pragma once
 #include "gf/object/gf_obj_manager.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
+
+namespace ml {
+class ScnObjModel;
+}
 
 namespace gf {
 
@@ -48,6 +53,8 @@ public:
   void setAlphaNormal(f32 alpha);
   f32 getAlphaNormal() const;
   f32 getAlpha() const;
+  ml::ScnObjModel *getScnModel() const;
+  void setFrameSpeed(f32 speed);
   void setCameraFade(bool isEnable);
   bool setFlag(u32 flag, bool value);
   bool isCameraFadeEnable() const;
@@ -62,8 +69,14 @@ public:
   GF_OBJ_HANDLE *getHandle() const;
   bool isDisp(OBJDISP disp) const;
   bool isDispChanged() const;
+  void applyDisp();
   void setClip(bool isClip);
   void setGpuClip(bool isClip);
+  void setModelScaleForMenu(const mm::Vec3 &scale);
+  void setModelScale(f32 scale);
+  const mm::Vec3 &getModelScaleXYZ() const;
+  f32 getModelScale() const;
+  void setModelScaleForDebug(f32 scale);
   void setGravity(bool isGravity);
   bool isGravity() const;
   bool isReload() const;
@@ -72,6 +85,8 @@ public:
   bool isToolMode() const;
   void setAttribute(u32 attribute);
   u32 getAttribute() const;
+  void applyClip();
+  void applyClipGpu();
   bool isValidProperty() const;
   bool isValidModel() const;
   bool isDestroy() const;
@@ -101,7 +116,10 @@ public:
   u32 getLayer() const;
   bool isLayerPause() const;
   void setExtMeshAlpha(u32 index, f32 alpha);
+  f32 getExtMeshAlpha(u32 index) const;
+  int getExtMeshMax() const;
   int getExtMeshIdx(const char *name) const;
+  const char *getExtMeshName(int index) const;
   bool isUpdated() const;
   const char *getDebugName() const;
   bool isBattle() const;

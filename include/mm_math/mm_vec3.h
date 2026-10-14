@@ -4,6 +4,9 @@
 namespace mm {
 
 struct alignas(16) Vec3 {
+  static const Vec3 zero;
+  static const Vec3 unit;
+
   Vec3() {}
   Vec3(const Vec3 &vector) : x(vector.x), y(vector.y), z(vector.z) {}
 
