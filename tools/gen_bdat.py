@@ -130,7 +130,7 @@ def parse_getter(insns):
     call = next((a for o, a in insns if o == "bl" and ("getValCheck" in a or "getFlagVal" in a)), "")
     if "getFlagVal" in call:
         return {"kind": "flag", "statics": statics[:2]}
-    code = next(imm(a.split(",")[-1]) for o, a in insns if o in ("orr", "mov") and a.startswith("w3,"))
+    code = next(imm(a.split(",")[-1]) for o, a in insns if o in ("orr", "mov") and a.startswith("w3,") and "#" in a)
     after = [o + " " + a for o, a in insns[[i for i, (o, a) in enumerate(insns) if o == "bl" and "getValCheck" in a][0] + 1:]]
     if any(o == "mov" and a == "x0, xzr" for o, a in insns):
         kind = "pointer"
@@ -160,7 +160,13 @@ def main():
     ns = f"_gf{tag}"
     syms = symbols()
     prefix = f"_ZN2gf6{ns}"
-    funcs = sorted((s for s in syms if s[2].startswith(prefix)), key=lambda s: s[0])
+    ordered = sorted(syms, key=lambda s: s[0])
+    cls_mangled = f"{len(cls)}{cls}"
+    first = next(i for i, s in enumerate(ordered) if cls_mangled in s[2] and not s[2].startswith(prefix))
+    start = first
+    while start > 0 and (ordered[start - 1][2].startswith(prefix) or ordered[start - 1][0] == ordered[start][0]):
+        start -= 1
+    funcs = [s for s in ordered[start:first] if s[2].startswith(prefix)]
     class_prefix = f"_ZNK2gf{len(cls)}{cls}"
     methods = sorted((s for s in syms if s[2].startswith(class_prefix)), key=lambda s: s[0])
     code = disassemble([f[2] for f in funcs] + [m[2] for m in methods])
