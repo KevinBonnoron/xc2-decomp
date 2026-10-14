@@ -37,6 +37,7 @@ CXXFLAGS = [
     "-fno-exceptions",
     "-fno-rtti",
     "-fno-strict-aliasing",
+    "-fno-slp-vectorize",
     "-fPIC",
     "-g",
     "-I" + os.path.join(ROOT, "include"),
