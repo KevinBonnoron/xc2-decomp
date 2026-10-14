@@ -310,7 +310,7 @@ WEATHERID GfDataMap::getWeatherIdByWeaType(u32 map, WEATYPE weatherType) {
   return WEATHER_F;
 }
 
-bool GfDataMap::getCloudType(u32 map) { return GfDataManager::getDataGame()->mapInfos[map].cloudType != 0; }
+CLOUD_SEA GfDataMap::getCloudType(u32 map) { return static_cast<CLOUD_SEA>(GfDataManager::getDataGame()->mapInfos[map].cloudType != 0); }
 
 void GfDataMap::setCloudType(u32 map, CLOUD_SEA cloudType) {
   SDataGame *dataGame = GfDataManager::getDataGame();

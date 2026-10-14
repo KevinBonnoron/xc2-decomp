@@ -1,4 +1,5 @@
 #pragma once
+#include "gf/data/gf_data_map.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
@@ -95,6 +96,11 @@ public:
   static bool isBladeInVillage(u32 blade);
   static bool setupSaveAchievementPopup(u32 blade, u32 achievement, u32 level);
   static void execSaveAchievementPopup(u32 blade);
+};
+
+class GfGameUtilCloudSea {
+public:
+  static void setInnCloudSea(CLOUD_SEA cloudSea);
 };
 
 } // namespace gf

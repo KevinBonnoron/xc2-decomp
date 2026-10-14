@@ -1,4 +1,5 @@
 #pragma once
+#include "mm/mm_std_base.h"
 #include <stddef.h>
 
 namespace mm {
@@ -9,9 +10,16 @@ public:
   FixedQueue() : mSize(0), mFront(0) {}
 
   size_t size() const { return mSize; }
+  bool full() const { return mSize == N; }
+
+  void push(const T &value) {
+    MM_ASSERT(!full());
+    mBuffer[(mFront + mSize) % N] = value;
+    mSize++;
+  }
 
 private:
-  alignas(T) unsigned char mBuffer[sizeof(T) * N];
+  T mBuffer[N];
   size_t mSize;
   size_t mFront;
 };
