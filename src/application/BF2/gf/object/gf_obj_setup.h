@@ -21,7 +21,9 @@ public:
   u8 _0c[0x10 - 0x0c];
   u32 id;
   int partyMember;
-  u8 _18[0x54 - 0x18];
+  u8 _18[0x40 - 0x18];
+  f32 scale;
+  u8 _44[0x54 - 0x44];
   bool hasFixedBlade;
   u8 _55[0x58 - 0x55];
   u32 fixedBlade;
@@ -30,6 +32,7 @@ public:
 static_assert(offsetof(GfObjSetup, objType) == 0x08, "");
 static_assert(offsetof(GfObjSetup, id) == 0x10, "");
 static_assert(offsetof(GfObjSetup, partyMember) == 0x14, "");
+static_assert(offsetof(GfObjSetup, scale) == 0x40, "");
 static_assert(offsetof(GfObjSetup, hasFixedBlade) == 0x54, "");
 static_assert(offsetof(GfObjSetup, fixedBlade) == 0x58, "");
 
@@ -64,7 +67,9 @@ public:
 
   virtual u32 getEnArrangeID() const;
 
-  u8 _5c[0xa0 - 0x5c];
+  u8 _5c[0x70 - 0x5c];
+  u32 enArrangeId;
+  u8 _74[0xa0 - 0x74];
   SDataEnemy *dataEnemy;
   u8 _a8[0xb8 - 0xa8];
   u32 blade;
@@ -72,6 +77,7 @@ public:
   SDataBlade *dataBlade;
 };
 
+static_assert(offsetof(GfObjSetupEnemy, enArrangeId) == 0x70, "");
 static_assert(offsetof(GfObjSetupEnemy, dataEnemy) == 0xa0, "");
 static_assert(offsetof(GfObjSetupEnemy, blade) == 0xb8, "");
 static_assert(offsetof(GfObjSetupEnemy, dataBlade) == 0xc0, "");

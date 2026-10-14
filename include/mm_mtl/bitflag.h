@@ -14,7 +14,11 @@ public:
 
   bool test(unsigned int index) const {
     MM_ASSERT(index < Size);
-    return (bit(index) & mBits[wordIndex(index)]) != 0;
+    if (WORD_COUNT > 1) {
+      return (mBits[wordIndex(index)] & bit(index)) != 0;
+    }
+
+    return (bit(index) & mBits[0]) != 0;
   }
 
 private:
