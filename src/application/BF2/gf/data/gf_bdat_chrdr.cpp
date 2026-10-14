@@ -1,5 +1,8 @@
 #include "gf/data/gf_bdat_chrdr.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/gf_allocator.h"
 
 namespace gf {
 namespace _gfbcd {
@@ -593,7 +596,24 @@ u32 getChrDrLuckLv99(const CBdatWrapper &wrapper, u32 id) {
 
 void initChrDrWpnType(const CBdatWrapper &wrapper) { s_members[ChrDrWpnType] = Bdat::getMember(wrapper.data, "WpnType"); }
 
+u32 getChrDrWpnType(const CBdatWrapper &wrapper, u32 id, u32 index) {
+  if (s_members[ChrDrWpnType] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
+      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+    return 0;
+  }
+
+  return wrapper.getArrayValCheck(s_members[ChrDrWpnType], id, index, 1).valueU8;
+}
+
 void initChrDrWpRate(const CBdatWrapper &wrapper) { s_members[ChrDrWpRate] = Bdat::getMember(wrapper.data, "WpRate"); }
+
+u32 getChrDrWpRate(const CBdatWrapper &wrapper, u32 id, u32 index) {
+  if (s_members[ChrDrWpRate] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+    return 0;
+  }
+
+  return wrapper.getArrayValCheck(s_members[ChrDrWpRate], id, index, 1).valueU8;
+}
 
 void initChrDrFavoriteCategory1(const CBdatWrapper &wrapper) {
   s_members[ChrDrFavoriteCategory1] = Bdat::getMember(wrapper.data, "FavoriteCategory1");
@@ -678,7 +698,92 @@ const char *getChrDrCamBone(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbcd
 
+enum {
+  BDAT_CHR_DR = 0x77,
+};
+
+GfBdatChrDr::GfBdatChrDr() : unknown10(nullptr) { bdatRefresh(); }
+
+GfBdatChrDr::~GfBdatChrDr() { destroyFP(); }
+
+void GfBdatChrDr::destroyFP() {
+  if (unknown10 != nullptr) {
+    delete unknown10;
+    unknown10 = nullptr;
+  }
+}
+
+#define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
+
+void GfBdatChrDr::createFP() { unknown10 = NEW_BDAT_WRAPPER(BDAT_CHR_DR); }
+
+void GfBdatChrDr::bdatRefresh() {
+  destroyFP();
+  createFP();
+  _gfbcd::initChrDrName(*unknown10);
+  _gfbcd::initChrDrDebugName(*unknown10);
+  _gfbcd::initChrDrRace(*unknown10);
+  _gfbcd::initChrDrRotateLimitPitch(*unknown10);
+  _gfbcd::initChrDrRotateLimitRoll(*unknown10);
+  _gfbcd::initChrDrGender(*unknown10);
+  _gfbcd::initChrDrModel(*unknown10);
+  _gfbcd::initChrDrCondition(*unknown10);
+  _gfbcd::initChrDrModel2(*unknown10);
+  _gfbcd::initChrDrMotion(*unknown10);
+  _gfbcd::initChrDrStill(*unknown10);
+  _gfbcd::initChrDrOffsetID(*unknown10);
+  _gfbcd::initChrDrEyeRot(*unknown10);
+  _gfbcd::initChrDrVoice(*unknown10);
+  _gfbcd::initChrDrClipEvent(*unknown10);
+  _gfbcd::initChrDrCom_SE(*unknown10);
+  _gfbcd::initChrDrCom_Eff(*unknown10);
+  _gfbcd::initChrDrCom_Vo(*unknown10);
+  _gfbcd::initChrDrAiID(*unknown10);
+  _gfbcd::initChrDrChestHeight(*unknown10);
+  _gfbcd::initChrDrLandingHeight(*unknown10);
+  _gfbcd::initChrDrFootStep(*unknown10);
+  _gfbcd::initChrDrFootStepEffect(*unknown10);
+  _gfbcd::initChrDrDefBlade1(*unknown10);
+  _gfbcd::initChrDrDefBlade2(*unknown10);
+  _gfbcd::initChrDrDefBlade3(*unknown10);
+  _gfbcd::initChrDrDefLvType(*unknown10);
+  _gfbcd::initChrDrDefLv(*unknown10);
+  _gfbcd::initChrDrDefWPType(*unknown10);
+  _gfbcd::initChrDrDefWP(*unknown10);
+  _gfbcd::initChrDrDefSPType(*unknown10);
+  _gfbcd::initChrDrDefSP(*unknown10);
+  _gfbcd::initChrDrDefAcce(*unknown10);
+  _gfbcd::initChrDrDefIdeaBlue(*unknown10);
+  _gfbcd::initChrDrDefIdeaRed(*unknown10);
+  _gfbcd::initChrDrDefIdeaWhite(*unknown10);
+  _gfbcd::initChrDrDefIdeaBlack(*unknown10);
+  _gfbcd::initChrDrHpMaxLv1(*unknown10);
+  _gfbcd::initChrDrStrengthLv1(*unknown10);
+  _gfbcd::initChrDrPowEtherLv1(*unknown10);
+  _gfbcd::initChrDrDexLv1(*unknown10);
+  _gfbcd::initChrDrAgilityLv1(*unknown10);
+  _gfbcd::initChrDrLuckLv1(*unknown10);
+  _gfbcd::initChrDrHpMaxLv99(*unknown10);
+  _gfbcd::initChrDrStrengthLv99(*unknown10);
+  _gfbcd::initChrDrPowEtherLv99(*unknown10);
+  _gfbcd::initChrDrDexLv99(*unknown10);
+  _gfbcd::initChrDrAgilityLv99(*unknown10);
+  _gfbcd::initChrDrLuckLv99(*unknown10);
+  _gfbcd::initChrDrWpnType(*unknown10);
+  _gfbcd::initChrDrWpRate(*unknown10);
+  _gfbcd::initChrDrFavoriteCategory1(*unknown10);
+  _gfbcd::initChrDrFavoriteCategory2(*unknown10);
+  _gfbcd::initChrDrFavoriteItem1(*unknown10);
+  _gfbcd::initChrDrFavoriteItem2(*unknown10);
+  _gfbcd::initChrDrCollisionId(*unknown10);
+  _gfbcd::initChrDrCenterBone(*unknown10);
+  _gfbcd::initChrDrCamBone(*unknown10);
+}
+
 u32 GfBdatChrDr::getChrDrStart() const { return Bdat::getIdTop(unknown10->data); }
+
+u32 GfBdatChrDr::getChrDrEnd() const { return Bdat::getIdTop(unknown10->data) + Bdat::getIdCount(unknown10->data); }
 
 u32 GfBdatChrDr::getChrDrName(u32 id) const { return _gfbcd::getChrDrName(*unknown10, id); }
 
@@ -791,5 +896,24 @@ u32 GfBdatChrDr::getChrDrCollisionId(u32 id) const { return _gfbcd::getChrDrColl
 const char *GfBdatChrDr::getChrDrCenterBone(u32 id) const { return _gfbcd::getChrDrCenterBone(*unknown10, id); }
 
 const char *GfBdatChrDr::getChrDrCamBone(u32 id) const { return _gfbcd::getChrDrCamBone(*unknown10, id); }
+
+u32 GfBdatChrDr::getChrDrWpnType(u32 driver, u32 slot) const { return _gfbcd::getChrDrWpnType(*unknown10, driver, slot); }
+
+u32 GfBdatChrDr::getChrDrWpRate(u32 id, u32 index) const { return _gfbcd::getChrDrWpRate(*unknown10, id, index); }
+
+u32 GfBdatChrDr::getChrDrDefBlade(u32 driver, u32 slot) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbcd::getChrDrDefBlade1, _gfbcd::getChrDrDefBlade2, _gfbcd::getChrDrDefBlade3};
+  return getters[slot](*unknown10, driver);
+}
+
+u32 GfBdatChrDr::getChrDrFavoriteCategory(u32 driver, u32 favorite) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbcd::getChrDrFavoriteCategory1, _gfbcd::getChrDrFavoriteCategory2};
+  return getters[favorite](*unknown10, driver);
+}
+
+u32 GfBdatChrDr::getChrDrFavoriteItem(u32 driver, u32 favorite) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbcd::getChrDrFavoriteItem1, _gfbcd::getChrDrFavoriteItem2};
+  return getters[favorite](*unknown10, driver);
+}
 
 } // namespace gf
