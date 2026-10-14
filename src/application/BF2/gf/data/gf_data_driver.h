@@ -182,8 +182,8 @@ public:
   static bool getEquipAcceEnhance(mm::mtl::FixedVector<u16, 64> &enhances, const SDataDriver &dataDriver);
   static u32 getEquipAcceEnahnce(u32 driver, u32 slot);
   static u32 getEquipAcceEnhance(const SDataDriver &dataDriver, u32 slot);
-  static u16 getEquipAcce(const SDataDriver &dataDriver, u32 slot);
-  static u16 getEquipAcce(u32 driver, u32 slot);
+  static u32 getEquipAcce(const SDataDriver &dataDriver, u32 slot);
+  static u32 getEquipAcce(u32 driver, u32 slot);
   static GfItemHandle getEquipAcceHandle(u32 driver, u32 slot);
   static GfItemHandle getEquipAcceHandle(const SDataDriver &dataDriver, u32 slot);
   static void setEquipAcce(u32 driver, u32 slot, u32 item);

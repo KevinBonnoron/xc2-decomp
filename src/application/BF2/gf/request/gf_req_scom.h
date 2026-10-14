@@ -3,6 +3,11 @@
 
 namespace gf {
 
+class SCOM_ADD_MONEY {
+public:
+  static void create(int money);
+};
+
 class SCOM_ADD_DEVELOP {
 public:
   static void create(u32 nation, u32 point);
