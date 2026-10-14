@@ -47,6 +47,7 @@ public:
   u32 getRequestBladeRequestArtsLevel(u32 requestBlade) const;
   u32 getRequestBladeRequestFSkill(u32 requestBlade) const;
   u32 getRequestBladeRequestFSLevel(u32 requestBlade) const;
+  u32 getFLD_AchievementListTitle(u32 achievement) const;
   u32 getFLD_FieldSkillListName(u32 fieldSkill) const;
   u32 getFLD_MercenariesConfigValue(u32 config) const;
   u32 getFLD_MercenariesMissionStart() const;
