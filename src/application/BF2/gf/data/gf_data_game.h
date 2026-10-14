@@ -1,4 +1,5 @@
 #pragma once
+#include "gf/data/gf_data_driver.h"
 #include "types.h"
 #include <stddef.h>
 
@@ -9,7 +10,9 @@ struct SDataGame {
   u8 _000004[0x000026 - 0x000004];
   u16 startChapterSave;
   u16 eventChapterSave;
-  u8 _00002a[0x1098b0 - 0x00002a];
+  u8 _00002a[0x00002c - 0x00002a];
+  SDataDriver drivers[16];
+  u8 _005a2c[0x1098b0 - 0x005a2c];
   u32 skipTravelID;
   u8 _1098b4[0x109b28 - 0x1098b4];
   f32 playerCameraDistance;
@@ -39,6 +42,7 @@ struct SDataGame {
 static_assert(offsetof(SDataGame, money) == 0x0, "");
 static_assert(offsetof(SDataGame, startChapterSave) == 0x000026, "");
 static_assert(offsetof(SDataGame, eventChapterSave) == 0x000028, "");
+static_assert(offsetof(SDataGame, drivers) == 0x00002c, "");
 static_assert(offsetof(SDataGame, skipTravelID) == 0x1098b0, "");
 static_assert(offsetof(SDataGame, playerCameraDistance) == 0x109b28, "");
 static_assert(offsetof(SDataGame, gameClearCount) == 0x109b2c, "");
