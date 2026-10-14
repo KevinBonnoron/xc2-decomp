@@ -1,5 +1,7 @@
 #include "gf/util/gf_item_util.h"
 #include "gf/data/gf_bdat_item.h"
+#include "gf/data/gf_bdat_shop.h"
+#include "gf/data/gf_data_develop.h"
 #include "gf/data/gf_item_id.h"
 #include "gf/event/gf_event.h"
 #include "gf/game/gf_game_cond.h"
@@ -147,6 +149,30 @@ u32 GfItemUtil::getEnableStock(u32 item) {
     break;
   }
   return stock == 0 ? 1 : stock;
+}
+
+static u32 atLeastOne(u32 value) { return value == 0 ? 1 : value; }
+
+void GfItemUtil::getPrice(ItemPrice &price, u32 item, u32 shop) {
+  u32 value = GfDataItem::getPrice(item);
+  price.price = value;
+  price.buyPrice = value;
+  price.sellPrice = value / 2;
+  price.buyDevelop = 0;
+  price.sellDevelop = 0;
+  if (value == 0) {
+    return;
+  }
+
+  GfBdatShop *bdatShop = GfBdatShop::get();
+  u32 level = GfDataDevelop::getLevel(GfGameManager::getMapZoneID());
+  f32 buyPrice = price.price;
+  if (shop != 0 && level != 0) {
+    buyPrice -= buyPrice * bdatShop->getShopListDiscount(shop, level - 1) * 0.01f;
+  }
+  price.buyPrice = atLeastOne(buyPrice);
+  price.buyDevelop = atLeastOne(price.price * 0.01f);
+  price.sellDevelop = atLeastOne(price.price * 0.005f);
 }
 
 GfItem GfItemUtil::getInfo(u32 item) {
