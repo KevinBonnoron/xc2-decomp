@@ -25,7 +25,6 @@ struct SDataGame {
   SDataParty party;
   SDataItemBox itemBox;
   GameFlag gameFlag;
-  u8 _0fdbc4[0x1097e4 - 0x0fdbc4];
   QuestID scenario;
   QuestID select;
   u8 _1097ec[0x1097f0 - 0x1097ec];

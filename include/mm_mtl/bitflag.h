@@ -9,24 +9,23 @@ template <unsigned int Size> class BitFlag {
 public:
   void set(unsigned int index) {
     MM_ASSERT(index < Size);
-    if (WORD_COUNT == 1) {
-      mBits[0] |= static_cast<unsigned int>(1UL << index);
-    } else {
-      mBits[index / 32] |= static_cast<unsigned int>(1UL << (index % 32));
-    }
+    mBits[wordIndex(index)] |= bit(index);
   }
 
   bool test(unsigned int index) const {
     MM_ASSERT(index < Size);
-    if (WORD_COUNT == 1) {
-      return (static_cast<unsigned int>(1UL << index) & mBits[0]) != 0;
-    }
-
-    return (mBits[index / 32] & static_cast<unsigned int>(1UL << (index % 32))) != 0;
+    return (bit(index) & mBits[wordIndex(index)]) != 0;
   }
 
 private:
   static const unsigned int WORD_COUNT = (Size + 31) / 32;
+
+  static unsigned int wordIndex(unsigned int index) { return WORD_COUNT > 1 ? index >> 5 : 0; }
+
+  static unsigned int bit(unsigned int index) {
+    unsigned long position = index;
+    return static_cast<unsigned int>(1UL << (WORD_COUNT > 1 ? position & 31 : position));
+  }
 
   unsigned int mBits[WORD_COUNT];
 };
