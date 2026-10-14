@@ -13,6 +13,9 @@ public:
   const char *getRscMobListComp_Eff(u32 mob) const;
   u16 getRscMobListFootStep(u32 mob) const;
   u8 getRscMobListFootStepEffect(u32 mob) const;
+
+  const char *getRSC_PcWpnModel(u32 weapon) const;
+  const char *getRSC_PcWpnMotion(u32 weapon) const;
 };
 
 } // namespace gf
