@@ -36,12 +36,11 @@ static_assert(offsetof(SDataMap, skipTravelID) == 0x0c0, "");
 static_assert(sizeof(SDataMap) == 0x0d0, "");
 
 struct SDataMapInfo {
-  u8 _00[0x18 - 0x00];
+  u8 _00[0x1c - 0x00];
   u32 cloudType;
-  u8 _1c[0x20 - 0x1c];
 };
 
-static_assert(offsetof(SDataMapInfo, cloudType) == 0x18, "");
+static_assert(offsetof(SDataMapInfo, cloudType) == 0x1c, "");
 static_assert(sizeof(SDataMapInfo) == 0x20, "");
 
 class GfDataMap {

@@ -25,6 +25,17 @@ public:
   u32 getArtsDrArtsType(u32 arts) const;
   u32 getGrowEnd() const;
   u32 getGrowLevelExp(u32 level) const;
+
+  u32 getBTL_HanaBaseNArtsNum(u32 hana) const;
+  u32 getBTL_HanaBaseNCondNum(u32 hana) const;
+  u32 getBTL_HanaBaseECondNum(u32 hana) const;
+  u32 getBTL_HanaBaseCircuitNum(u32 hana, u32 circuit) const;
+  u32 getBTL_HanaChipsetRoleParts(u32 hana) const;
+  u32 getBTL_HanaChipsetAtrParts(u32 hana) const;
+  u32 getBTL_HanaChipsetNArtsParts(u32 hana, u32 slot) const;
+  u32 getBTL_HanaChipsetNCondParts(u32 hana, u32 slot) const;
+  u32 getBTL_HanaPowerPowerNum(u32 rank, u32 hana) const;
+  u32 getBTL_HanaPowerEtherNum(u32 rank, u32 hana) const;
 };
 
 } // namespace gf
