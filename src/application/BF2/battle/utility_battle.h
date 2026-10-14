@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_mtl/fixed_vector.h"
 #include "types.h"
 
 namespace mm {
@@ -35,6 +36,20 @@ public:
     BTL_ACHIEVE_COND_BACK_ATTACK,
   };
 
+  enum CHECK_CHR_NUM_MODE {
+    CHECK_CHR_NUM_MODE_ENEMY,
+    CHECK_CHR_NUM_MODE_FRIEND,
+    CHECK_CHR_NUM_MODE_ALL,
+  };
+
+  enum {
+    CHARACTER_LIST_BATTLE = 0x01,
+    CHARACTER_LIST_ALIVE = 0x02,
+    CHARACTER_LIST_DEAD = 0x04,
+    CHARACTER_LIST_EXCLUDE_BLADE = 0x08,
+    CHARACTER_LIST_EXCLUDE_SELF = 0x10,
+  };
+
   enum ENBOOK_TYPE {
     ENBOOK_TYPE_IN_BATTLE,
     ENBOOK_TYPE_BOSS_TIME,
@@ -53,6 +68,7 @@ public:
   static int GetAntiAttribute(u32 attribute);
   static int GetElementalEffectID();
   static int GetUniteComboID(int attribute, int combo);
+  static int GetCharacterList(mm::mtl::FixedVector<u8, 90> &list, gf::GF_OBJ_HANDLE *handle, CHECK_CHR_NUM_MODE mode, u32 flags);
   static int GetPartyID(gf::GF_OBJ_HANDLE *handle);
   static f32 GetDyingHpRate();
   static int GetResistantAttrMaxHP();
@@ -72,8 +88,10 @@ public:
   static int AI_GetTargetCharacterID(gf::GF_OBJ_HANDLE *handle);
   static int AI_IsFly(gf::GF_OBJ_HANDLE *handle);
   static f32 AI_GetVertDiff(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *target);
+  static int AI_GetEatTargetCharacterID(gf::GF_OBJ_HANDLE *handle, f32 range);
   static int AI_GetEnemyNum();
   static int AI_GetPlayerNum();
+  static int AI_GetAimCharacterNum(gf::GF_OBJ_HANDLE *handle);
   static int AI_GetFightComboID(gf::GF_OBJ_HANDLE *handle);
   static int AI_GetElementalComboID(gf::GF_OBJ_HANDLE *handle);
   static int AI_GetReactionID(gf::GF_OBJ_HANDLE *handle);
@@ -102,12 +120,16 @@ public:
   static bool AI_StartMoveLeft(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time);
   static bool AI_StartMoveRight(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time);
   static bool AI_StartMoveBack(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time);
+  static bool AI_StartMoveFriendBack(gf::GF_OBJ_HANDLE *handle, f32 distance, f32 time);
   static bool AI_StartMoveSatellite(gf::GF_OBJ_HANDLE *handle, bool isClockwise, f32 frame);
   static bool AI_StartMoveBackward(gf::GF_OBJ_HANDLE *handle, f32 distance, f32 time);
   static bool AI_StartMovePosBackward(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position, f32 time);
   static void AI_MoveStop(gf::GF_OBJ_HANDLE *handle, bool isImmediate);
   static bool AI_IsDestruct(gf::GF_OBJ_HANDLE *handle);
   static int AI_GetTargetDirection(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *target);
+  static int AI_CheckCharacterNum(gf::GF_OBJ_HANDLE *handle, int direction, CHECK_CHR_NUM_MODE mode);
+  static int AI_CheckHpRateCharacterNum(gf::GF_OBJ_HANDLE *handle, int percent, CHECK_CHR_NUM_MODE mode);
+  static int AI_GetDeadCharacterNum(gf::GF_OBJ_HANDLE *handle, CHECK_CHR_NUM_MODE mode);
   static void AI_AddKizuna(gf::GF_OBJ_HANDLE *handle, int kizuna);
   static int AI_GetKizunaStage(gf::GF_OBJ_HANDLE *handle);
   static bool AI_StartSpAttack(gf::GF_OBJ_HANDLE *handle);
