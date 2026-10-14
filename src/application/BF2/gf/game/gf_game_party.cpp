@@ -77,6 +77,12 @@ static bool isInGameObj(GF_OBJ_HANDLE *handle) {
   return followIndex == PLAYER_ID_NONE || formation->players[followIndex].handle != INVALID_HANDLE;
 }
 
+static bool isUpdateDriver(const GfMemberInfo &member) {
+  GfObjAcc objAcc(member.driver);
+  return GfGameObj::isValidGameObj(member.driver, true, nullptr) || GfGameObj::isEnterGameObj(member.driver) || objAcc.isDestroy() ||
+         objAcc.isRebuild();
+}
+
 GfSelectBlade *GfSelectBlade::s_pThis;
 static bool s_isHomuraSelected = true;
 
@@ -776,6 +782,55 @@ void GfGameParty::setPartyStateForDestroyObj(GF_OBJ_HANDLE *handle) {
   u32 partyId = objAcc.getPartyID();
   if (partyId != PARTY_ID_NONE) {
     setPartyObjState(partyId, PARTYOBJ_STATE_NONE);
+  }
+}
+
+void GfGameParty::checkPartyObjReady() {
+  if (mReadyFrame != 0) {
+    if (!isReadyAllObjDisplay(false)) {
+      mIsReadyLost = true;
+    }
+  } else if (isReadyAllObjDisplay(true)) {
+    mReadyFrame = 1;
+  }
+
+  for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
+    if (mMembers[partyId].driver == INVALID_HANDLE) {
+      setPartyObjState(partyId, PARTYOBJ_STATE_NONE);
+      continue;
+    }
+
+    if (!isUpdateDriver(mMembers[partyId])) {
+      setPartyObjState(partyId, PARTYOBJ_STATE_LOADING);
+      continue;
+    }
+
+    DataParamAcc paramAcc(mMembers[partyId].driver);
+    int bladeSet = paramAcc.getBladeSet(false);
+    if (bladeSet < 0) {
+      setPartyObjState(partyId, PARTYOBJ_STATE_READY);
+      continue;
+    }
+
+    GF_OBJ_HANDLE *blade = mMembers[partyId].blades[bladeSet];
+    if (blade == INVALID_HANDLE) {
+      continue;
+    }
+
+    GfObjAcc objAcc(blade);
+    if (GfDataBlade::isDummyBlade(objAcc.getBladeId())) {
+      setPartyObjState(partyId, PARTYOBJ_STATE_READY);
+    } else if (objAcc.testFlag(OBJ_FLAG_LOADED_WAIT) && GfObjUtil::isLoading(blade)) {
+      setPartyObjState(partyId, PARTYOBJ_STATE_LOADING);
+    } else if (GfGameObj::isValidGameObj(blade, true, nullptr) || GfGameObj::isEnterGameObj(blade) || objAcc.isDestroy() || objAcc.isRebuild()) {
+      if (paramAcc.getHp() != 0) {
+        setPartyObjState(partyId, PARTYOBJ_STATE_READY);
+      } else {
+        setPartyObjState(partyId, PARTYOBJ_STATE_LOADING);
+      }
+    } else {
+      setPartyObjState(partyId, PARTYOBJ_STATE_LOADING);
+    }
   }
 }
 
