@@ -196,6 +196,8 @@ public:
   u32 getBLD_ReleaceRewardReleace006(u32 id) const;
   u32 getBLD_ReleaceRewardReleace007(u32 id) const;
 
+  u32 getNameListEnd() const;
+
 private:
   CBdatWrapper *mIdeaTable;
   CBdatWrapper *mBladeTable;

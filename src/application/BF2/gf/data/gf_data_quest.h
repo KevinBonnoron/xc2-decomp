@@ -5,6 +5,9 @@
 
 namespace gf {
 
+constexpr u32 ACHIEVEMENT_PER_BLADE = 50;
+constexpr u32 ACHIEVEMENT_LEVEL_COUNT = 5;
+
 class GfDataQuest {
 public:
   static void registAchievementBlade(u32 achievement, u16 blade);

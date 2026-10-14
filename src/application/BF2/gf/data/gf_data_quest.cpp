@@ -17,9 +17,6 @@ enum {
   QUEST_NEXT_NONE_ALTERNATE = 30001,
 };
 
-constexpr u32 ACHIEVEMENT_PER_BLADE = 50;
-constexpr u32 ACHIEVEMENT_LEVEL_COUNT = 5;
-
 void GfDataQuest::registAchievementBlade(u32 achievement, u16 blade) { m_achieve2blade[achievement] = blade; }
 
 u32 GfDataQuest::getListNextQuestA(QuestID quest) {

@@ -9,6 +9,8 @@ public:
   static u8 *getFpPcWpn();
   static u8 *getFpPcWpnType();
   static u8 *getFpMapInfo();
+  static u8 *getFpCommonBladeName();
+  static u8 *getFpMerceName();
   static u8 *getFpQuest(QuestID quest);
   static const char *getNameQuest(QuestID quest, u32 line);
   static u8 *getFpEnemy();

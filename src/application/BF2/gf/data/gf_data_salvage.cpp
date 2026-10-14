@@ -15,7 +15,7 @@ constexpr u32 SALVAGE_MEMBER_COUNT = 5;
 
 static bool hasSalvageSkill(const SDataBlade &dataBlade) {
   for (u32 index = 0; index < 3; index++) {
-    if (dataBlade.fieldSkills[index].fieldSkill == FIELD_SKILL_SALVAGING && dataBlade.fieldSkills[index].level != 0) {
+    if (dataBlade.fieldSkills[index].id == FIELD_SKILL_SALVAGING && dataBlade.fieldSkills[index].level != 0) {
       return true;
     }
   }
@@ -46,7 +46,7 @@ u8 GfDataSalvage::getSalvageSkillLevel(u32 blade) {
   if (blade != 0) {
     SDataBlade *dataBlade = GfDataBlade::getSDataBlade(blade);
     for (u32 index = 0; index < 3; index++) {
-      if (dataBlade->fieldSkills[index].fieldSkill == FIELD_SKILL_SALVAGING && level < dataBlade->fieldSkills[index].level) {
+      if (dataBlade->fieldSkills[index].id == FIELD_SKILL_SALVAGING && level < dataBlade->fieldSkills[index].level) {
         level = dataBlade->fieldSkills[index].level;
       }
     }

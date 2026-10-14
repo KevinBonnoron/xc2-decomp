@@ -1,4 +1,5 @@
 #pragma once
+#include "gf/data/gf_data_blade.h"
 #include "types.h"
 
 namespace gf {
@@ -16,6 +17,9 @@ public:
 class GfEvent {
 public:
   static void callChangeScenarioFlag(u32 scenarioFlag, u32 oldScenarioFlag);
+  static void callBladeUnselect(u32 blade, bool unselect);
+  static void callDebugChangeIdea(u32 type, u32 id, u32 idea, u32 value);
+  static void callBladeActivate(u32 blade, ActivateType activateType, ActivateType oldActivateType);
 };
 
 } // namespace gf
