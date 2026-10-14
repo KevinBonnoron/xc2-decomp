@@ -46,8 +46,19 @@ static_assert(offsetof(SDataMap, bladeSaveRot) == 0x090, "");
 static_assert(offsetof(SDataMap, skipTravelID) == 0x0c0, "");
 static_assert(sizeof(SDataMap) == 0x0d0, "");
 
+struct WeatherParam {
+  char resource[8];
+  WEATYPE type;
+  WEATHERID weather;
+  f32 pastSec;
+  f32 existSec;
+  u32 map;
+};
+
+static_assert(sizeof(WeatherParam) == 0x1c, "");
+
 struct SDataMapInfo {
-  u8 _00[0x1c - 0x00];
+  WeatherParam weatherParam;
   u32 cloudType;
 };
 
@@ -86,7 +97,7 @@ public:
   static u32 getWeatherPopRate(u32 map, WEATHERID weather);
   static WEATYPE getWeatherType(u32 map, WEATHERID weather);
   static WEATHERID getWeatherIdByWeaType(u32 map, WEATYPE weatherType);
-  static bool getCloudType(u32 map);
+  static CLOUD_SEA getCloudType(u32 map);
   static void setCloudType(u32 map, CLOUD_SEA cloudType);
   static bool isArcadiaDestroy();
 };

@@ -39,7 +39,15 @@ enum EXEC_STATE {};
 struct GF_ASSET_HANDLE;
 struct GF_OBJ_HANDLE;
 struct GfAchievementRelease;
-struct MapjumpCallbackInfo;
+
+struct MapjumpCallbackInfo {
+  u8 _00[0x04 - 0x00];
+  u32 map;
+  u32 prevMap;
+  u8 _0c[0x14 - 0x0c];
+};
+
+static_assert(sizeof(MapjumpCallbackInfo) == 0x14, "");
 
 class IGfEvent {
 public:

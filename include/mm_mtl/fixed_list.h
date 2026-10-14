@@ -73,8 +73,18 @@ public:
   iterator end() { return iterator(head(), this); }
   const_iterator end() const { return const_iterator(head(), const_cast<FixedList *>(this)); }
 
-  size_t size() const { return m_num_nodes; }
+  int size() const { return m_num_nodes; }
   bool empty() const { return m_num_nodes == 0; }
+
+  T &front() {
+    MM_ASSERT(!empty());
+    return node(head()->mNext)->mValue;
+  }
+
+  T &back() {
+    MM_ASSERT(!empty());
+    return node(head()->mPrev)->mValue;
+  }
 
   void clear() {
     for (ListNode *current = node(head()->mNext); current != head(); current = node(current->mNext)) {
@@ -103,6 +113,17 @@ public:
     node(last)->mNext = added->mIndex;
     head()->mPrev = added->mIndex;
     added->mNext = head()->mIndex;
+  }
+
+  void pop_front() {
+    MM_ASSERT(!empty());
+    ListNode *removed = node(head()->mNext);
+    mFreeIndices[++m_free_index_top] = removed->mIndex;
+    node(removed->mPrev)->mNext = removed->mNext;
+    node(removed->mNext)->mPrev = removed->mPrev;
+    removed->mPrev = removed->mIndex;
+    removed->mNext = removed->mIndex;
+    m_num_nodes--;
   }
 
   iterator erase(iterator it) {
