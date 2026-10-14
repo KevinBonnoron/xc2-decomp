@@ -21,7 +21,7 @@ struct SDataGame {
   u16 eventChapterSave;
   u8 _00002a[0x00002c - 0x00002a];
   SDataDriver drivers[16];
-  SDataBlade blades[422];
+  mm::mtl::FixedArray<SDataBlade, 422> blades;
   SDataParty party;
   SDataItemBox itemBox;
   GameFlag gameFlag;

@@ -6,12 +6,23 @@
 
 namespace gf {
 
+struct SDataBladeFieldSkill {
+  u16 fieldSkill;
+  u8 _02;
+  u8 level;
+  u8 _04[0x06 - 0x04];
+};
+
+static_assert(offsetof(SDataBladeFieldSkill, level) == 0x03, "");
+static_assert(sizeof(SDataBladeFieldSkill) == 0x06, "");
+
 struct SDataBlade {
   u8 _000[0x002 - 0x000];
   u16 driver;
   u8 _004[0x006 - 0x004];
   u16 id;
-  u8 _008[0x0c0 - 0x008];
+  u8 _008[0x0ae - 0x008];
+  SDataBladeFieldSkill fieldSkills[3];
   u8 extraParts[6];
   u8 _0c6[0x68c - 0x0c6];
   EquipHana equipHana;
@@ -45,6 +56,7 @@ struct SDataBlade {
 
 static_assert(offsetof(SDataBlade, driver) == 0x002, "");
 static_assert(offsetof(SDataBlade, id) == 0x006, "");
+static_assert(offsetof(SDataBlade, fieldSkills) == 0x0ae, "");
 static_assert(offsetof(SDataBlade, extraParts) == 0x0c0, "");
 static_assert(offsetof(SDataBlade, race) == 0x708, "");
 static_assert(offsetof(SDataBlade, modelName) == 0x70c, "");
