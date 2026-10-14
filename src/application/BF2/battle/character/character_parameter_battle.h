@@ -85,12 +85,18 @@ public:
   gf::GF_OBJ_HANDLE *buddy;
   u8 _18[0x1c - 0x18];
   int partyId;
-  u8 _20[0x5a5 - 0x20];
+  u8 _20[0x2c - 0x20];
+  f32 radius;
+  u8 _30[0x59e - 0x30];
+  u16 resistantAttributeFlags;
+  u8 _5a0[0x5a5 - 0x5a0];
   u8 elementalComboId;
 };
 
 static_assert(offsetof(CharacterParameter, buddy) == 0x10, "");
 static_assert(offsetof(CharacterParameter, partyId) == 0x1c, "");
+static_assert(offsetof(CharacterParameter, radius) == 0x2c, "");
+static_assert(offsetof(CharacterParameter, resistantAttributeFlags) == 0x59e, "");
 static_assert(offsetof(CharacterParameter, elementalComboId) == 0x5a5, "");
 
 } // namespace btl

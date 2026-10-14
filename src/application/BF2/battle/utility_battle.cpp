@@ -20,6 +20,7 @@
 #include "gf/scom/gf_scom_achiev.h"
 #include "gf/scom/gf_scom_enbook.h"
 #include <float.h>
+#include <math.h>
 #include <stdlib.h>
 
 namespace btl {
@@ -176,6 +177,56 @@ int Utility::GetUniteComboID(int attribute, int combo) {
   return stage < 2 ? 0 : stage - 1;
 }
 
+int Utility::GetCharacterList(mm::mtl::FixedVector<u8, 90> &list, gf::GF_OBJ_HANDLE *handle, CHECK_CHR_NUM_MODE mode, u32 flags) {
+  CharacterManager *characterManager = CharacterManager::get();
+  int first = 0;
+  int last = CHARACTER_COUNT - 1;
+  if (mode != CHECK_CHR_NUM_MODE_ALL) {
+    BattleCharacter *character = characterManager->GetCharacterConst(handle);
+    if (character == nullptr) {
+      return 0;
+    }
+
+    bool isPlayer = character->IsPlayer();
+    if ((mode == CHECK_CHR_NUM_MODE_FRIEND && isPlayer) || (mode == CHECK_CHR_NUM_MODE_ENEMY && !isPlayer)) {
+      last = CHARACTER_PLAYER_COUNT - 1;
+    } else if ((mode == CHECK_CHR_NUM_MODE_ENEMY && isPlayer) || (mode == CHECK_CHR_NUM_MODE_FRIEND && !isPlayer)) {
+      first = CHARACTER_PLAYER_COUNT;
+    }
+  }
+
+  for (int id = first; id <= last; id++) {
+    BattleCharacter *character = characterManager->GetCharacterConst(id);
+    if (character == nullptr) {
+      continue;
+    }
+
+    if ((flags & CHARACTER_LIST_BATTLE) && !character->IsBattle()) {
+      continue;
+    }
+
+    if ((flags & CHARACTER_LIST_ALIVE) && character->IsDead(0)) {
+      continue;
+    }
+
+    if ((flags & CHARACTER_LIST_DEAD) && !character->IsDead(0)) {
+      continue;
+    }
+
+    if ((flags & CHARACTER_LIST_EXCLUDE_BLADE) && character->IsBlade()) {
+      continue;
+    }
+
+    if ((flags & CHARACTER_LIST_EXCLUDE_SELF) && character->handle == handle) {
+      continue;
+    }
+
+    list.push_back(id);
+  }
+
+  return list.size();
+}
+
 int Utility::GetPartyID(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character != nullptr) {
@@ -317,6 +368,49 @@ f32 Utility::AI_GetVertDiff(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *target
   return diff;
 }
 
+int Utility::AI_GetEatTargetCharacterID(gf::GF_OBJ_HANDLE *handle, f32 range) {
+  mm::Vec3 position;
+  if (!Misc::GetObjectTransform(handle, position, Misc::TRANS_TYPE_POSITION)) {
+    return -1;
+  }
+
+  mm::mtl::FixedVector<u8, 90> list;
+  if (GetCharacterList(list, handle, CHECK_CHR_NUM_MODE_FRIEND, CHARACTER_LIST_ALIVE | CHARACTER_LIST_EXCLUDE_BLADE | CHARACTER_LIST_EXCLUDE_SELF) <
+      1) {
+    return -1;
+  }
+
+  CharacterManager *characterManager = CharacterManager::get();
+  int nearest = -1;
+  f32 nearestDistance = FLT_MAX;
+  for (u8 id : list) {
+    BattleCharacter *character = characterManager->GetCharacterConst(id);
+    const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
+    if (parameter != nullptr && parameter->IsEatTarget()) {
+      mm::Vec3 targetPosition;
+      Misc::GetObjectTransform(character->handle, targetPosition, Misc::TRANS_TYPE_POSITION);
+      f32 x = targetPosition.x - position.x;
+      f32 y = targetPosition.y - position.y;
+      f32 z = targetPosition.z - position.z;
+      f32 distance = sqrtf(x * x + y * y + z * z) - parameter->radius;
+      if (distance > range) {
+        continue;
+      }
+
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearest = id;
+      }
+    }
+  }
+
+  if (nearest < 0) {
+    return -1;
+  }
+
+  return AI_ConversionID_BtltoAI(nearest);
+}
+
 int Utility::AI_GetEnemyNum() {
   int count = 0;
   for (int id = CHARACTER_PLAYER_COUNT; id < CHARACTER_COUNT; id++) {
@@ -335,6 +429,21 @@ int Utility::AI_GetPlayerNum() {
     BattleCharacter *character = CharacterManager::get()->GetCharacterConst(id);
     if (character != nullptr && !character->IsBlade() && !character->IsDead(0) && character->IsBattle()) {
       count++;
+    }
+  }
+
+  return count;
+}
+
+int Utility::AI_GetAimCharacterNum(gf::GF_OBJ_HANDLE *handle) {
+  mm::mtl::FixedVector<u8, 90> list;
+  int count = 0;
+  if (GetCharacterList(list, handle, CHECK_CHR_NUM_MODE_ENEMY, CHARACTER_LIST_BATTLE | CHARACTER_LIST_ALIVE | CHARACTER_LIST_EXCLUDE_BLADE) > 0) {
+    CharacterManager *characterManager = CharacterManager::get();
+    for (u8 id : list) {
+      if (characterManager->GetCharacterConst(id)->target == handle) {
+        count++;
+      }
     }
   }
 
@@ -685,6 +794,51 @@ bool Utility::AI_StartMoveBack(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance
   return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
 }
 
+bool Utility::AI_StartMoveFriendBack(gf::GF_OBJ_HANDLE *handle, f32 distance, f32 time) {
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character == nullptr) {
+    return false;
+  }
+
+  mm::mtl::FixedVector<u8, 90> list;
+  if (GetCharacterList(list,
+                       handle,
+                       CHECK_CHR_NUM_MODE_FRIEND,
+                       CHARACTER_LIST_BATTLE | CHARACTER_LIST_ALIVE | CHARACTER_LIST_EXCLUDE_BLADE | CHARACTER_LIST_EXCLUDE_SELF) < 1) {
+    return false;
+  }
+
+  mm::Vec3 position = character->position;
+  CharacterManager *characterManager = CharacterManager::get();
+  gf::GF_OBJ_HANDLE *friendHandle = INVALID_HANDLE;
+  f32 nearestLength = FLT_MAX;
+  for (u8 id : list) {
+    BattleCharacter *friendCharacter = characterManager->GetCharacterConst(id);
+    mm::Vec3 friendPosition;
+    Misc::GetObjectTransform(friendCharacter->handle, friendPosition, Misc::TRANS_TYPE_POSITION);
+    f32 length = Misc::CalcSquareLength(friendPosition, position);
+    if (length < nearestLength) {
+      nearestLength = length;
+      friendHandle = friendCharacter->handle;
+    }
+  }
+
+  if (friendHandle == INVALID_HANDLE) {
+    return false;
+  }
+
+  BattleCharacter::AI_MOVE_PARAM param;
+  param.distance = distance;
+  param.time = time;
+  param.type = BattleCharacter::MOVE_TYPE_BACK;
+  param.target = friendHandle;
+  if (!character->IsProcAI(true)) {
+    return false;
+  }
+
+  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
+}
+
 bool Utility::AI_StartMoveSatellite(gf::GF_OBJ_HANDLE *handle, bool isClockwise, f32 frame) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character == nullptr) {
@@ -767,6 +921,52 @@ int Utility::AI_GetTargetDirection(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE 
   }
 
   return position < 4 ? position + 1 : 0;
+}
+
+int Utility::AI_CheckCharacterNum(gf::GF_OBJ_HANDLE *handle, int direction, CHECK_CHR_NUM_MODE mode) {
+  mm::mtl::FixedVector<u8, 90> list;
+  if (GetCharacterList(
+          list, handle, mode, CHARACTER_LIST_BATTLE | CHARACTER_LIST_ALIVE | CHARACTER_LIST_EXCLUDE_BLADE | CHARACTER_LIST_EXCLUDE_SELF) < 1) {
+    return 0;
+  }
+
+  int position = direction >= 1 && direction <= 4 ? direction - 1 : -1;
+  CharacterManager *characterManager = CharacterManager::get();
+  int count = 0;
+  for (u8 id : list) {
+    bool isOut;
+    u8 attackPosition = characterManager->GetCharacterConst(id)->CheckAttackPosition(handle, false, &isOut);
+    if (!isOut && attackPosition == position) {
+      count++;
+    }
+  }
+
+  return count;
+}
+
+int Utility::AI_CheckHpRateCharacterNum(gf::GF_OBJ_HANDLE *handle, int percent, CHECK_CHR_NUM_MODE mode) {
+  mm::mtl::FixedVector<u8, 90> list;
+  if (GetCharacterList(list, handle, mode, CHARACTER_LIST_BATTLE | CHARACTER_LIST_ALIVE | CHARACTER_LIST_EXCLUDE_BLADE) < 1) {
+    return 0;
+  }
+
+  f32 rate = percent * 0.01f;
+  CharacterManager *characterManager = CharacterManager::get();
+  int count = 0;
+  for (u8 id : list) {
+    const CharacterParameter *parameter = characterManager->GetCharacterConst(id)->GetCharacterParameterConst(true);
+    if (parameter != nullptr) {
+      count += parameter->GetHPRate() <= rate;
+    }
+  }
+
+  return count;
+}
+
+int Utility::AI_GetDeadCharacterNum(gf::GF_OBJ_HANDLE *handle, CHECK_CHR_NUM_MODE mode) {
+  mm::mtl::FixedVector<u8, 90> list;
+  return GetCharacterList(
+      list, handle, mode, CHARACTER_LIST_BATTLE | CHARACTER_LIST_DEAD | CHARACTER_LIST_EXCLUDE_BLADE | CHARACTER_LIST_EXCLUDE_SELF);
 }
 
 void Utility::AI_AddKizuna(gf::GF_OBJ_HANDLE *handle, int kizuna) {
