@@ -8,6 +8,7 @@ namespace gf {
 
 struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
+struct GfSetupParam;
 
 enum OPTMNT {};
 
@@ -43,6 +44,8 @@ static_assert(offsetof(GfWeapon, isAlternate) == 0xa8, "");
 
 class GfMountManager {
 public:
+  static void build(const GfSetupParam &param);
+  static void destroy();
   static GfWeapon *getGfWeapon(GF_OBJ_HANDLE *handle, GFATTACH attach);
   static OPTMNT getMountType(GF_OBJ_HANDLE *handle, GFATTACH attach);
   static void setMountType(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type);

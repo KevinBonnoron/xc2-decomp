@@ -1,6 +1,9 @@
 #pragma once
+#include "types.h"
 
 namespace gf {
+
+void GfSleep(u32 frame);
 
 class GfManager {
 public:

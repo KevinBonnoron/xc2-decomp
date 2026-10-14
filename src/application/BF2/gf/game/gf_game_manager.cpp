@@ -7,6 +7,7 @@
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
+#include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_util.h"
@@ -16,26 +17,39 @@
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
 #include "gf/game/achiev/gf_achiev_manager.h"
+#include "gf/game/auto_talk/gf_auto_talk.h"
 #include "gf/game/blade/gf_blade_manager.h"
 #include "gf/game/event/gf_game_event.h"
 #include "gf/game/gf_game_camera.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_depop_meter_manager.h"
 #include "gf/game/gf_game_env.h"
+#include "gf/game/gf_game_inside_battle_lock.h"
 #include "gf/game/gf_game_mount.h"
+#include "gf/game/gf_game_mover_switcher.h"
 #include "gf/game/gf_game_obj.h"
+#include "gf/game/gf_game_pad.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/game/gf_game_player_camera.h"
 #include "gf/game/gf_game_player_formation.h"
+#include "gf/game/gf_game_player_unique_scheduler.h"
 #include "gf/game/gf_game_ride.h"
 #include "gf/game/gf_game_scene.h"
 #include "gf/game/gf_game_speed.h"
+#include "gf/game/gf_game_target.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/gf_game_util_hana.h"
+#include "gf/game/gf_game_visible.h"
 #include "gf/game/gf_game_voice.h"
 #include "gf/game/gf_layer_pause.h"
+#include "gf/game/item/gf_item_manager.h"
 #include "gf/game/kizunaring/gf_kizunaring_manager.h"
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
+#include "gf/game/salvage/gf_game_salvage.h"
 #include "gf/game/sequential_play/gf_play_command.h"
 #include "gf/game/sequential_play/gf_sequential_play.h"
+#include "gf/game/smn_enemy/gf_smn_enemy.h"
+#include "gf/game/talk/gf_game_talk.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
 #include "gf/gf_pause.h"
@@ -71,12 +85,53 @@ constexpr u32 PAUSE_BITS_MAIN_MENU = 0x40;
 constexpr u32 PAUSE_BITS_GIMMICK = 0x59;
 constexpr u32 TIME_RANGE_DN_NIGHT = 7;
 constexpr u32 ASSET_PACK_MAX = 512;
+constexpr u32 DEPOP_METER_COUNT = 4;
 
 static u32 getValidDriverId(const DataParamAcc &paramAcc) {
   return paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0;
 }
 
 GfGameManager::GfGameManager(const GfSetupParam &param) : mInitialized(false), mIsLeaveGame(false) { initialize(param); }
+
+void GfGameManager::initialize(const GfSetupParam &param) {
+  GfEvent::addEventCallback(this);
+  GfGameState::build(param);
+  GfLayerPause::build(param);
+  GfGameSpeed::build(param);
+  GfGameEnv::build(param);
+  GfGamePad::build(param);
+  GfGameCamera::build(param);
+  GfGameCond::build(param);
+  GfGameObj::build(param);
+  GfMountManager::build(param);
+  GfGameParty::build(param);
+  GfItemManager::build(param);
+  GfQuestManager::build(param);
+  GfGameMercenaries::build(param);
+  GfGameTalk::build(param);
+  GfGameEvent::build(param);
+  GfGameTarget::build(param);
+  GfGameSalvage::build(param);
+  GfSequentialPlay::build(param);
+  GfAutoTalkManager::build(param);
+  GfGamePlayerFormation::build(param);
+  GfBladeManager::build(param);
+  GfAchievManager::build(param);
+  GfKizunaringManager::build(param);
+  GfGameVisible::build(param);
+  GfGamePlayerUniqueScheduler::build(param);
+  GfGameScene::build(param);
+  GfGameDepopMeterManager::create(DEPOP_METER_COUNT);
+  GfSmnEnemyManager::create();
+  GfGamePlayerCamera::build(param);
+  GfGameRide::build(param);
+  GfGameMoverSwitcher::build(param);
+  GfGameVoice::build(param);
+  GfGameInsideBattleLock::build(param);
+  GfQuestManager::addEvent(this);
+  GfMenuManager::initOptionData(*GfDataManager::getDataOption());
+  mInitialized = true;
+}
 
 // The empty statement makes the body non-trivial, which keeps the vtable pointer stores of the original.
 GfGameManager::~GfGameManager() { ; }
@@ -91,6 +146,55 @@ void GfGameManager::destroy() {
   GfGameManager *manager = get();
   manager->finalize();
   delete manager;
+}
+
+void GfGameManager::finalize() {
+  GfLayerPause::destroyLayerPause();
+  if (!GfGameObj::isEmpty()) {
+    GfSleep(1);
+  }
+
+  if (GfGameState::getState() != GF_STATE_CONTROL) {
+    GfSleep(1);
+  }
+
+  GfGameState::setState(GF_STATE_DESTROY, false);
+  GfQuestManager::removeEvent(this);
+  GfGameInsideBattleLock::destroy();
+  GfGameVoice::destroy();
+  GfGameMoverSwitcher::destroy();
+  GfGameRide::destroy();
+  GfGamePlayerCamera::destroy();
+  GfSmnEnemyManager::dispose();
+  GfGameDepopMeterManager::dispose();
+  GfGameScene::destroy();
+  GfGamePlayerUniqueScheduler::destroy();
+  GfGameVisible::destroy();
+  GfKizunaringManager::destroy();
+  GfAchievManager::destroy();
+  GfBladeManager::destroy();
+  GfGamePlayerFormation::destroy();
+  GfAutoTalkManager::destroy();
+  GfSequentialPlay::destroy();
+  GfGameSalvage::destroy();
+  GfGameTarget::destroy();
+  GfGameEvent::destroy();
+  GfGameTalk::destroy();
+  GfGameMercenaries::destroy();
+  GfItemManager::destroy();
+  GfQuestManager::destroy();
+  GfGameParty::destroy();
+  GfMountManager::destroy();
+  GfGameObj::destroy();
+  GfGameCond::destroy();
+  GfGameCamera::destroy();
+  GfGamePad::destroy();
+  GfGameEnv::destroy();
+  GfGameSpeed::destroy();
+  GfLayerPause::destroy();
+  GfGameState::destroy();
+  GfEvent::removeEventCallback(this);
+  mInitialized = false;
 }
 
 bool GfGameManager::isGameObjEmpty() { return GfGameObj::isEmpty(); }
@@ -829,6 +933,8 @@ void GfGameManager::leaveGameForDebug() {
 }
 
 bool GfGameManager::isPadCameraForDebug() { return false; }
+
+void GfGameManager::setInterruptPadOnForDebug(DWPAD pad) { GfGamePad::setInterruptPadOnForDebug(pad); }
 
 bool GfGameManager::isScenarioGame() { return GfManager::isExecModeScenarioGame(); }
 

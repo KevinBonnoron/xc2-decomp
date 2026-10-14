@@ -8,9 +8,13 @@ struct UpdateInfo;
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+struct GfSetupParam;
 
 class GfGameObj {
 public:
+  static void build(const GfSetupParam &param);
+  static void destroy();
+  static void update(const fw::UpdateInfo &info);
   static void postUpdate(const fw::UpdateInfo &info);
   static bool isEmpty();
   static void bdatReload();
