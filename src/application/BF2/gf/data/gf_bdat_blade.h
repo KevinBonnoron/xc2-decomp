@@ -7,7 +7,13 @@ namespace gf {
 
 class GfBdatBlade : public mm::mtl::PtrSingleton<GfBdatBlade>, public GfBdatRefresh {
 public:
+  GfBdatBlade();
+  virtual ~GfBdatBlade();
+  void destroyFP();
+  void createFP();
+  void bdatRefresh() override;
   u32 getIdeaTableStart() const;
+  u32 getIdeaTableEnd() const;
   u32 getIdeaTableItem(u32 id) const;
   u32 getIdeaTableIdeaBlue(u32 id) const;
   u32 getIdeaTableIdeaRed(u32 id) const;
@@ -16,6 +22,7 @@ public:
   u32 getIdeaTableCondition(u32 id) const;
   u32 getIdeaTableBladeTable(u32 id) const;
   u32 getBladeTableStart() const;
+  u32 getBladeTableEnd() const;
   u32 getBladeTableCharaID1(u32 id) const;
   u32 getBladeTableCharID1Percent(u32 id) const;
   u32 getBladeTableCharaID2(u32 id) const;
@@ -48,10 +55,14 @@ public:
   u32 getBladeTableCharID15Percent(u32 id) const;
   u32 getBladeTableCharaID16(u32 id) const;
   u32 getBladeTableCharID16Percent(u32 id) const;
+  u32 getBladeTableCharaID(u32 id, u32 index) const;
+  u32 getBladeTableCharaIDPercent(u32 id, u32 index) const;
   u32 getBladeListStart() const;
+  u32 getBladeListEnd() const;
   u32 getBladeListCategory(u32 id) const;
   u32 getBladeListStatusID(u32 id) const;
   u32 getCommonListStart() const;
+  u32 getCommonListEnd() const;
   u32 getCommonListQuestRace(u32 id) const;
   u32 getCommonListGender(u32 id) const;
   u32 getCommonListWeapon(u32 id) const;
@@ -76,11 +87,16 @@ public:
   u32 getCommonListKeyAchievementSet(u32 id) const;
   u32 getCommonListFavoriteCategoryMax(u32 id) const;
   u32 getCommonListFavoriteItemMax(u32 id) const;
+  u32 getCommonListArtsAchievementSet(u32 id, u32 index) const;
+  u32 getCommonListSkillAchievementSet(u32 id, u32 index) const;
+  u32 getCommonListFskillAchivementSet(u32 id, u32 index) const;
   u32 getNameListStart() const;
+  u32 getNameListEnd() const;
   u32 getNameListCategory(u32 id) const;
   u32 getNameListRace(u32 id) const;
   u32 getNameListGender(u32 id) const;
   u32 getBladeModelListStart() const;
+  u32 getBladeModelListEnd() const;
   u32 getBladeModelListQuestRace(u32 id) const;
   u32 getBladeModelListGender(u32 id) const;
   u32 getBladeModelListIdeaMin(u32 id) const;
@@ -93,9 +109,13 @@ public:
   u32 getBladeModelListParts2(u32 id) const;
   u32 getBladeModelListParts3(u32 id) const;
   u32 getBladeModelListParts4(u32 id) const;
+  u32 getBladeModelListModel(u32 id, u32 index) const;
+  u32 getBladeModelListParts(u32 id, u32 index) const;
   u32 getCreateConfigStart() const;
+  u32 getCreateConfigEnd() const;
   u32 getCreateConfigValue(u32 id) const;
   u32 getCmnBl_CapacityStart() const;
+  u32 getCmnBl_CapacityEnd() const;
   u32 getCmnBl_CapacityArtsNum1Prob(u32 id) const;
   u32 getCmnBl_CapacityArtsNum2Prob(u32 id) const;
   u32 getCmnBl_CapacityArtsNum3Prob(u32 id) const;
@@ -127,7 +147,14 @@ public:
   u32 getCmnBl_CapacityNartsRevRand(u32 id) const;
   u32 getCmnBl_CapacityStatusRevCon(u32 id) const;
   u32 getCmnBl_CapacityStatusRevRand(u32 id) const;
+  u32 getCmnBl_CapacityArtsNumProb(u32 id, u32 index) const;
+  u32 getCmnBl_CapacityArtsLvProb(u32 id, u32 index) const;
+  u32 getCmnBl_CapacitySkillNumProb(u32 id, u32 index) const;
+  u32 getCmnBl_CapacitySkillLvProb(u32 id, u32 index) const;
+  u32 getCmnBl_CapacityOrbNumProb(u32 id, u32 index) const;
+  u32 getCmnBl_CapacityNartsNumProb(u32 id, u32 index) const;
   u32 getCmnBl_PowerStart() const;
+  u32 getCmnBl_PowerEnd() const;
   u32 getCmnBl_PowerMinLv(u32 id) const;
   u32 getCmnBl_PowerMaxLv(u32 id) const;
   u32 getCmnBl_PowerPow01(u32 id) const;
@@ -140,7 +167,9 @@ public:
   u32 getCmnBl_PowerPow08(u32 id) const;
   u32 getCmnBl_PowerPow09(u32 id) const;
   u32 getCmnBl_PowerPow10(u32 id) const;
+  u32 getCmnBl_PowerPow(u32 id, u32 index) const;
   u32 getCmnBl_NewBlArtsStart() const;
+  u32 getCmnBl_NewBlArtsEnd() const;
   u32 getCmnBl_NewBlArtsWpnType(u32 id) const;
   u32 getCmnBl_NewBlArtsNBA_01(u32 id) const;
   u32 getCmnBl_NewBlArtsNBA_02(u32 id) const;
@@ -150,7 +179,9 @@ public:
   u32 getCmnBl_NewBlArtsNBA_06(u32 id) const;
   u32 getCmnBl_NewBlArtsNBA_07(u32 id) const;
   u32 getCmnBl_NewBlArtsNBA_08(u32 id) const;
+  u32 getCmnBl_NewBlArtsNBA(u32 id, u32 index) const;
   u32 getCmnBl_StatusTypeStart() const;
+  u32 getCmnBl_StatusTypeEnd() const;
   u32 getCmnBl_StatusTypeWpnType(u32 id) const;
   u32 getCmnBl_StatusTypeStatus01(u32 id) const;
   u32 getCmnBl_StatusTypeStatus02(u32 id) const;
@@ -158,23 +189,28 @@ public:
   u32 getCmnBl_StatusTypeStatus04(u32 id) const;
   u32 getCmnBl_StatusTypeStatus05(u32 id) const;
   u32 getCmnBl_StatusTypeStatus06(u32 id) const;
+  u32 getCmnBl_StatusTypeStatus(u32 id, u32 index) const;
   u32 getCmnBl_ArmorStart() const;
+  u32 getCmnBl_ArmorEnd() const;
   u32 getCmnBl_ArmorWpnType(u32 id) const;
   u32 getCmnBl_ArmorPArmorCon(u32 id) const;
   u32 getCmnBl_ArmorPArmorRand(u32 id) const;
   u32 getCmnBl_ArmorEArmorCon(u32 id) const;
   u32 getCmnBl_ArmorEArmorRand(u32 id) const;
   u32 getFLD_IdeaTableStart() const;
+  u32 getFLD_IdeaTableEnd() const;
   u32 getFLD_IdeaTableTrustPoint(u32 id) const;
   u32 getFLD_IdeaTableWpnRatio(u32 id) const;
   u32 getFLD_IdeaTableNArtsProbRev(u32 id) const;
   s32 getFLD_IdeaTableBladeChangeRev(u32 id) const;
   s32 getFLD_IdeaTableBladeArtsRev(u32 id) const;
   u32 getBLD_IdeaStart() const;
+  u32 getBLD_IdeaEnd() const;
   u32 getBLD_IdeaNeedPoint(u32 id) const;
   u32 getBLD_IdeaProbRev(u32 id) const;
   u32 getBLD_IdeaAtrDamRev(u32 id) const;
   u32 getBLD_RareListStart() const;
+  u32 getBLD_RareListEnd() const;
   u32 getBLD_RareListBlade(u32 id) const;
   u32 getBLD_RareListCondition(u32 id) const;
   f32 getBLD_RareListProb1(u32 id) const;
@@ -187,7 +223,10 @@ public:
   u32 getBLD_RareListAssure4(u32 id) const;
   f32 getBLD_RareListProb5(u32 id) const;
   u32 getBLD_RareListAssure5(u32 id) const;
+  f32 getBLD_RareListProb(u32 id, u32 index) const;
+  u32 getBLD_RareListAssure(u32 id, u32 index) const;
   u32 getBLD_ReleaceRewardStart() const;
+  u32 getBLD_ReleaceRewardEnd() const;
   u32 getBLD_ReleaceRewardReleace001(u32 id) const;
   u32 getBLD_ReleaceRewardReleace002(u32 id) const;
   u32 getBLD_ReleaceRewardReleace003(u32 id) const;
@@ -195,8 +234,7 @@ public:
   u32 getBLD_ReleaceRewardReleace005(u32 id) const;
   u32 getBLD_ReleaceRewardReleace006(u32 id) const;
   u32 getBLD_ReleaceRewardReleace007(u32 id) const;
-
-  u32 getNameListEnd() const;
+  u32 getBLD_ReleaceRewardReleace(u32 id, u32 index) const;
 
 private:
   CBdatWrapper *mIdeaTable;
