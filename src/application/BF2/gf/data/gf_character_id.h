@@ -13,4 +13,8 @@ enum {
   DRIVER_METSU = 8,
 };
 
+enum {
+  BLADE_BYAKKO = 1004,
+};
+
 } // namespace gf

@@ -12,6 +12,7 @@ public:
 
   bool isValid() const;
   const char *getModelResourceName() const;
+  u32 getBlade(int slot, bool isVirtual) const;
 
 private:
   u8 _08[0x18 - 0x08];

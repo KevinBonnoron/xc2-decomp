@@ -5,6 +5,7 @@
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/data/gf_object_type.h"
 #include "ml/rand.h"
 
 namespace gf {
@@ -19,11 +20,6 @@ enum {
 
 enum {
   SCENARIO_FLAG_VANDAMME_DEAD = 0xbe8,
-};
-
-enum {
-  OBJECT_TYPE_DRIVER = 3,
-  OBJECT_TYPE_BLADE = 4,
 };
 
 constexpr u32 MONEY_MAX = 999'999'999;
