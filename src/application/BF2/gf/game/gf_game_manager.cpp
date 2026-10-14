@@ -1,5 +1,9 @@
 #include "gf/game/gf_game_manager.h"
+#include "battle/battle_manager.h"
+#include "battle/utility_battle.h"
 #include "fw/fw_framework.h"
+#include "gf/asset/gf_asset_manager.h"
+#include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
@@ -11,6 +15,7 @@
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
 #include "gf/game/achiev/gf_achiev_manager.h"
+#include "gf/game/blade/gf_blade_manager.h"
 #include "gf/game/event/gf_game_event.h"
 #include "gf/game/gf_game_camera.h"
 #include "gf/game/gf_game_cond.h"
@@ -22,6 +27,7 @@
 #include "gf/game/gf_game_ride.h"
 #include "gf/game/gf_game_scene.h"
 #include "gf/game/gf_game_speed.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/game/gf_game_util_hana.h"
 #include "gf/game/gf_game_voice.h"
 #include "gf/game/gf_layer_pause.h"
@@ -35,8 +41,11 @@
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/object/gf_menu_obj_tutorial.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_scom.h"
+#include "gf/sound/gf_sound.h"
+#include "mm_math/mm_col4.h"
 
 namespace gf {
 
@@ -44,6 +53,7 @@ static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-
 
 constexpr u32 PARTY_ID_LEADER = 0;
 constexpr u32 PARTY_ID_NONE = 0xffffffff;
+constexpr u32 PARTY_MEMBER_NUM = 3;
 constexpr u32 SALVAGE_STATE_COMPLETE = 20;
 constexpr u32 SALVAGE_COUNT_FLAG_SIZE = 16;
 constexpr int SALVAGE_COUNT_FLAG = 1547;
@@ -51,6 +61,15 @@ constexpr u32 SALVAGE_COUNT_MAX = 0xffff;
 constexpr u16 CHILD_QUEST_FORCE_BOSS_BATTLE_BGM = 210;
 constexpr u16 SCENARIO_FLAG_FORCE_BOSS_BATTLE_BGM = 8024;
 constexpr u16 SCENARIO_FLAG_GAME_END = 10033;
+constexpr u16 SCENARIO_FLAG_PER_SCENARIO = 1000;
+constexpr u32 WEAPON_HANDLE_NUM = 10;
+constexpr u32 FADE_ALL = 0xffffffff;
+constexpr u32 FADE_LAYER_COUNT = 3;
+constexpr f32 FADEOUT_ALPHA = 0.9f;
+constexpr u32 PAUSE_BITS_MAIN_MENU = 0x40;
+constexpr u32 PAUSE_BITS_GIMMICK = 0x59;
+constexpr u32 TIME_RANGE_DN_NIGHT = 7;
+constexpr u32 ASSET_PACK_MAX = 512;
 
 static u32 getValidDriverId(const DataParamAcc &paramAcc) {
   return paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0;
@@ -631,5 +650,403 @@ u32 GfGameManager::getMapZoneID() { return GfDataMap::getZoneIdForGameMap(GfGame
 void GfGameManager::setAccessTarget(GF_OBJ_HANDLE *target) { GfEvent::callTargetAccess(target); }
 
 void GfGameManager::setTargetUI(GF_OBJ_HANDLE *target) { GfEvent::callTargetChange(target); }
+
+bool GfGameManager::isEnableFieldBattleTarget() {
+  GfObjAcc driverAcc(getPartyLeaderDriver());
+  if (driverAcc.isBattle()) {
+    return true;
+  }
+
+  if (isInnerState(GF_STATE_MENU)) {
+    return false;
+  }
+
+  if (isInnerState(GF_STATE_SALVAGE)) {
+    return false;
+  }
+
+  if (isInnerState(GF_STATE_GIMMICK_TASK)) {
+    return false;
+  }
+
+  if (isInnerState(GF_STATE_MAP_GIMMICK)) {
+    return false;
+  }
+
+  if (isInnerState(GF_STATE_COLLECT)) {
+    return false;
+  }
+
+  if (isInnerState(GF_STATE_FIELD_TBOX)) {
+    return false;
+  }
+
+  if (isInnerState(GF_STATE_TALK)) {
+    return false;
+  }
+
+  if (isInnerState(GF_STATE_GMK_CAMERA)) {
+    return false;
+  }
+
+  if (isInnerState(GF_STATE_JUMP)) {
+    return false;
+  }
+
+  if (isInnerState(GF_STATE_WARP)) {
+    return false;
+  }
+
+  if (isInnerState(GF_STATE_GMK_TUTORIAL)) {
+    return false;
+  }
+
+  return !isInnerState(GF_STATE_EVENT);
+}
+
+void GfGameManager::setupGame() {
+  if (GfManager::isContinueGame() || GfManager::isNewGame()) {
+  }
+
+  GfQuestManager::setupGame();
+  GfKizunaringManager::setupGame();
+  GfBladeManager::setupGame();
+  GfMenuManager::setupGame();
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->setupGame();
+  }
+
+  if (GfSound::get() != nullptr) {
+    GfSound::get()->setupGame();
+  }
+}
+
+bool GfGameManager::isFading(u32 fade) {
+  if (fade == FADE_ALL) {
+    for (u32 layer = 0; layer < FADE_LAYER_COUNT; layer++) {
+      if (GfMenuManager::isFading(layer)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  return GfMenuManager::isFading(fade) || GfReqSmallCom::isExistCommand(SCOM_TYPE_FADE);
+}
+
+bool GfGameManager::isFadeout() {
+  for (u32 layer = 0; layer < FADE_LAYER_COUNT; layer++) {
+    mm::Col4 color;
+    GfMenuManager::getFadeColor(layer, color);
+    if (color.a >= FADEOUT_ALPHA) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+void GfGameManager::getFadeColor(u32 fade, mm::Col4 &color) { GfMenuManager::getFadeColor(fade, color); }
+
+bool GfGameManager::isFadeClear() {
+  if (isFadeout() || isFading(FADE_ALL)) {
+    return false;
+  }
+
+  for (u32 layer = 0; layer < FADE_LAYER_COUNT; layer++) {
+    mm::Col4 color;
+    GfMenuManager::getFadeColor(layer, color);
+    if (color.a > 0.0f) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+f32 GfGameManager::getFadeoutAlpha() {
+  f32 alpha = 0.0f;
+  for (u32 layer = 0; layer < FADE_LAYER_COUNT; layer++) {
+    mm::Col4 color = mm::Col4::zero;
+    GfMenuManager::getFadeColor(layer, color);
+    alpha = alpha < color.a ? color.a : alpha;
+  }
+
+  return alpha > 1.0f ? 1.0f : alpha;
+}
+bool GfGameManager::isStopBattleSequence() {
+  if (get() == nullptr || btl::BattleManager::get() == nullptr) {
+    return true;
+  }
+
+  if (!btl::BattleManager::isInitialized()) {
+    return true;
+  }
+
+  if (GfReqSmallCom::isExistCommand(SCOM_TYPE_PARTY_ADD)) {
+    return true;
+  }
+
+  if (GfObjManager::get() != nullptr && GfObjManager::get()->hasReloadObjForDebug()) {
+    return true;
+  }
+
+  return false;
+}
+
+bool GfGameManager::isMapjump() { return GfGameEnv::isMapjump(); }
+
+bool GfGameManager::isMapjumpWithSaveData() { return GfGameEnv::isMapjumpWithSaveData(); }
+
+bool GfGameManager::isMapjumpBlackout() { return GfGameEnv::isMapjumpBlackout(); }
+
+bool GfGameManager::isPlayerCameraPause() {
+  if (GfManager::isDestroyNow()) {
+    return false;
+  }
+
+  if (isFadeout()) {
+    return true;
+  }
+
+  return GfGameScene::get() != nullptr && GfGameScene::get()->isPlayerCameraPause();
+}
+
+u32 GfGameManager::getDeadType() { return GfGameScene::get() != nullptr ? GfGameScene::get()->getDeadType() : 0; }
+
+void GfGameManager::leaveGameForDebug() {
+  GfGameManager *manager = get();
+  if (manager != nullptr) {
+    manager->mIsLeaveGame = true;
+    GfGameEvent::finishNewGameWait();
+    GfGameEvent::stop();
+    if (GfGameScene::get() != nullptr) {
+      GfGameScene::get()->setForceStopBattle(true);
+    }
+  }
+}
+
+bool GfGameManager::isPadCameraForDebug() { return false; }
+
+bool GfGameManager::isScenarioGame() { return GfManager::isExecModeScenarioGame(); }
+
+bool GfGameManager::isAdvertize() { return GfManager::isExecModeAdvertize(); }
+
+bool GfGameManager::isPartyCreateForMapjump() { return !GfManager::isExecKillPartyCreate(); }
+
+bool GfGameManager::isActivateHikari(bool isCheckLeader) {
+  bool isActivate = GfDataBlade::isActivateDriver(BLADE_HIKARI);
+  if (isCheckLeader) {
+    GfObjAcc leaderAcc(GfGameParty::getLeaderDriver());
+    return leaderAcc.isValid() && isActivate && leaderAcc.getDriverId() == GfDataDriver::getDriverBySetBlade(BLADE_HIKARI);
+  }
+
+  return isActivate;
+}
+
+bool GfGameManager::isActivateHomuri(bool isCheckLeader) {
+  bool isActivate = GfDataBlade::isActivateDriver(BLADE_HOMURI);
+  if (isCheckLeader) {
+    GfObjAcc leaderAcc(GfGameParty::getLeaderDriver());
+    return leaderAcc.isValid() && isActivate && leaderAcc.getDriverId() == GfDataDriver::getDriverBySetBlade(BLADE_HOMURI);
+  }
+
+  return isActivate;
+}
+
+bool GfGameManager::isInMetJIJI() { return GfGameCond::isGameCond(GfBdatRsc::get()->getDriverParamExtMountCond(DRIVER_REX)); }
+
+OwnerBonus *GfGameManager::getOwnerBonus() { return &GfGameScene::get()->getOwnerBonus(); }
+
+bool GfGameManager::isPlayerFinishBattleState() {
+  if (GfGameParty::isLeaderBlade()) {
+    return true;
+  }
+
+  DataParamAcc leaderAcc(GfGameParty::getLeader());
+  if (leaderAcc.getObjType() == OBJECT_TYPE_DRIVER && getValidDriverId(leaderAcc) == DRIVER_NIA && leaderAcc.getBlade(-1, false) == BLADE_BYAKKO) {
+    return true;
+  }
+
+  return false;
+}
+
+bool GfGameManager::isEnableOpenMainMenuSequence() {
+  if (GfGameScene::get() == nullptr || GfGameScene::get()->isStartGame) {
+    return false;
+  }
+
+  if (GfGameEnv::isMapjump()) {
+    return false;
+  }
+
+  if (isLeaveGameForDebug()) {
+    return false;
+  }
+
+  if (GfSequentialPlay::isInnerPause(PAUSE_BITS_MAIN_MENU)) {
+    return false;
+  }
+
+  if (isBattle()) {
+    return false;
+  }
+
+  {
+    GfObjAcc moverAcc(getControlMover());
+    if (moverAcc.isBattle()) {
+      return false;
+    }
+  }
+
+  {
+    DataParamAcc driverAcc(getPartyLeaderDriver());
+    if (driverAcc.isValid() && driverAcc.getHp() == 0) {
+      return false;
+    }
+  }
+
+  if (GfSequentialPlay::isInnerState(GF_STATE_SALVAGE)) {
+    return false;
+  }
+
+  if (GfGameScene::get() != nullptr && GfGameScene::get()->isNeedResetBladeForBattleEndForMenuOpen()) {
+    return false;
+  }
+
+  return true;
+}
+
+bool GfGameManager::isStartGame() { return GfGameScene::get() == nullptr || GfGameScene::get()->isStartGame; }
+
+bool GfGameManager::isStopMainMenuOpenForGimmick() { return GfGameScene::get() != nullptr && GfGameScene::get()->isStopMainMenuOpenForGimmick; }
+
+bool GfGameManager::isEnableHoodHomuraScenes() { return !isInnerState(GF_STATE_RESET_BLADE) && !isInnerState(GF_STATE_PLAYER_DEAD); }
+
+bool GfGameManager::isEnableGimmickPhantomDamage() { return !GfSequentialPlay::isInnerPause(PAUSE_BITS_GIMMICK); }
+
+bool GfGameManager::isEnableGetFieldPrecious() { return isEnableOpenMainMenuSequence() && isEnableOpenMainMenu(); }
+
+bool GfGameManager::isEnableCreateBattleLock() { return !GfSequentialPlay::isInnerPause(PAUSE_BITS_GIMMICK); }
+
+bool GfGameManager::isPartyMover(GF_OBJ_HANDLE *handle) {
+  int partyId = GfObjUtil::getPartyID(handle);
+  return partyId != -1 && GfGameParty::getHandleMover(partyId) == handle;
+}
+
+bool GfGameManager::isNeedResetBlade() {
+  return GfSelectBlade::isNeedFieldBladeChange(0) || GfSelectBlade::isNeedFieldBladeChange(1) || GfSelectBlade::isNeedFieldBladeChange(2);
+}
+
+bool GfGameManager::isStopEnemySearch() { return GfGameEnv::isStopEnemySearch(); }
+
+bool GfGameManager::isPlayerDeadSequence() { return GfPlayComPlayerDead::isDead(); }
+
+bool GfGameManager::isForceBossBattleBgm() { return GfGameScene::get() != nullptr && GfGameScene::get()->isForceBossBattleBgm(); }
+
+bool GfGameManager::isForceEventBgm() { return GfGameScene::get() != nullptr && GfGameScene::get()->isForceEventBgm(); }
+
+bool GfGameManager::isNight() { return GfFieldTime::get() != nullptr && GfFieldTime::get()->getTimeRangeDN() == TIME_RANGE_DN_NIGHT; }
+
+u32 GfGameManager::getScenarioId() {
+  if (!GfManager::isExecModeScenarioGame()) {
+    return 0;
+  }
+
+  u16 scenarioFlag = GfDataUtil::getScenarioFlag();
+  return scenarioFlag == 0 ? 1 : scenarioFlag / SCENARIO_FLAG_PER_SCENARIO;
+}
+
+bool GfGameManager::isRexAwakening() { return GfGameUtil::isCondDriverModel(DRIVER_REX); }
+
+void GfGameManager::setStartGame() {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->isStartGame = true;
+  }
+}
+
+bool GfGameManager::isEnableRoomForHikariLv4() { return GfGameScene::get() != nullptr && GfGameScene::get()->isEnableRoomForHikariLv4; }
+
+void GfGameManager::setHomuriWeaponExtraMesh(bool isVisible, f32 alpha) {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->setHomuriWeaponExtraMesh(isVisible, alpha);
+  }
+}
+
+bool GfGameManager::isOpenPreciousMenu() { return GfPlayComMenuPrecious::s_activate > 0; }
+
+bool GfGameManager::isStopEnemyAttack() { return GfGameScene::get() != nullptr && GfGameScene::get()->stopEnemyAttackCount > 0; }
+
+bool GfGameManager::isPlayEnemyVoice() { return GfGameVoice::get() != nullptr && GfGameVoice::get()->isPlayEnemyVoice(); }
+
+bool GfGameManager::isPlayVoice(GF_OBJ_HANDLE *handle) { return GfGameVoice::get() != nullptr && GfGameVoice::get()->isPlayVoice(handle); }
+
+bool GfGameManager::isPartyMemberPlayVoice() {
+  GfGameVoice *voice = GfGameVoice::get();
+  if (voice == nullptr) {
+    return false;
+  }
+
+  for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
+    if (voice->isPlayVoice(GfGameParty::getHandleDriver(partyId)) || voice->isPlayVoice(GfGameParty::getHandleBlade(partyId, -1))) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+void GfGameManager::setStopMainMenuOpenForGimmick(bool isStop) {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->isStopMainMenuOpenForGimmick = isStop;
+  }
+}
+
+bool GfGameManager::isDisableJumpForRide() { return GfGameScene::get() != nullptr && GfGameScene::get()->isDisableJumpForRide(); }
+
+bool GfGameManager::isDisableAutoRun() { return GfMenuManager::isEnableQuestOpen(); }
+
+bool GfGameManager::isHoodHomura(GF_OBJ_HANDLE *handle) {
+  GfObjAcc objAcc(handle);
+  if (!objAcc.isValid() || objAcc.getType() != OBJECT_TYPE_BLADE || objAcc.getBladeId() != BLADE_HOMURA) {
+    return false;
+  }
+
+  if (!GfGameCond::isGameCond(GfDataBlade::getSDataBlade(objAcc.getBladeId())->condition)) {
+    return false;
+  }
+
+  GfWeapon *weapon = GfGameParty::getHandleWeapon(PARTY_ID_LEADER, -1);
+  if (weapon != nullptr) {
+    for (u32 index = 0; index < WEAPON_HANDLE_NUM; index++) {
+      if (weapon->getCurrentHandles()[index] != INVALID_HANDLE && (objAcc.isRebuild() || !GfGameObj::isValidGameObj(handle, true, nullptr))) {
+        return true;
+      }
+    }
+  }
+
+  return objAcc.isRebuild() || !GfGameObj::isValidGameObj(handle, true, nullptr);
+}
+
+bool GfGameManager::isChangeNormalHomuraForce(u32 blade) { return blade == BLADE_HOMURA && GfPlayComHoodHomuraBattou::get() != nullptr; }
+
+bool GfGameManager::isAssetNumberInvalid() { return GfAssetManager::getUsedAssetPackInfo() >= ASSET_PACK_MAX; }
+
+void GfGameManager::updateParam(const fw::UpdateInfo &info) {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->updateParam(info);
+  }
+}
+
+void GfGameManager::postUpdate(const fw::UpdateInfo &info) {
+  GfSequentialPlay::postUpdate(info);
+  GfGameObj::postUpdate(info);
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->postUpdate(info);
+  }
+
+  GfGameEvent::postUpdate(info);
+}
 
 } // namespace gf
