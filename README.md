@@ -85,6 +85,40 @@ _JAVA_OPTIONS=-Xmx24g ghidra-analyzeHeadless <project dir> <project name> -proce
 
 Ghidra cannot open a project that is already open in the GUI: run it on a copy.
 
+## Glossary
+
+Abbreviations and names imposed by the game's symbols:
+
+| Term | Meaning |
+|---|---|
+| `Dr`, `Bl` | Driver, Blade |
+| `Chr` | Character (`GfBdatChrDr`: the driver table) |
+| `Btl` | Battle |
+| `Rsc` | Resource: models, motions, effects |
+| `Pc`, `Wpn` | Player character, weapon (`getPcWpnDamage`) |
+| `Cri` | Critical (`getPcWpnCriRate`) |
+| `Wp` | Weapon points, spent to level up driver arts |
+| `MS` | Message: `Bdat::getMSText` reads a text from a message table |
+| `FP` | Pointer to a loaded BDAT table (`GfDataBdat::getFP`) |
+| BDAT | The game's data tables (characters, items, quests, texts...), browsable at [xenoblade.github.io/xb2/bdat](https://xenoblade.github.io/xb2/bdat) |
+| `Homura`, `Hikari` | Pyra, Mythra (Japanese names) |
+| `Homuri` | Pyra and Mythra together |
+| `Byakko` | Dromarch (Japanese name) |
+| `Saika` | Pandoria (Japanese name) |
+| `Hana` | Poppi (Japanese name) |
+| `Hana JS`, `Hana JK`, `Hana JD` | Poppi α, Poppi QT, Poppi QTπ |
+| `Metsu` | Malos (Japanese name) |
+| `Nanakoori` | Ursula (Japanese name) |
+| `Jiku` | Zeke (Japanese name) |
+| `Meleph` | Mòrag (Japanese name) |
+| `Shin` | Jin (Japanese name) |
+| `Shin 2`, `Jiku hood` | Variants of a character, numbered or described as in the `CHR_Dr` BDAT table |
+| `Avaritia`, `Gula`, `Invidia`, `Superbia`, `Luxuria`, `Liberalitas` | Argentum, Gormott, Uraya, Mor Ardain, Tantal, Leftheria (Japanese names) |
+| `Arcadia` | Indol (Japanese name) |
+| `Elpis` | Spirit Crucible Elpys |
+| `Vandamme` | Vandham |
+| `mm`, `mtl`, `ml` | Monolith Soft's in-house libraries (`mtl` is their template library, a replacement for the STL) |
+
 ## Repository layout
 
 | Path | Content |
