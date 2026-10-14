@@ -7,7 +7,13 @@ namespace gf {
 
 class GfBdatShop : public mm::mtl::PtrSingleton<GfBdatShop>, public GfBdatRefresh {
 public:
+  GfBdatShop();
+  virtual ~GfBdatShop();
+  void destroyFP();
+  void createFP();
+  void bdatRefresh() override;
   u32 getShopListStart() const;
+  u32 getShopListEnd() const;
   u32 getShopListName(u32 id) const;
   u32 getShopListShopIcon(u32 id) const;
   u32 getShopListShopType(u32 id) const;
@@ -17,7 +23,9 @@ public:
   u32 getShopListDiscount3(u32 id) const;
   u32 getShopListDiscount4(u32 id) const;
   u32 getShopListDiscount5(u32 id) const;
+  u32 getShopListDiscount(u32 shop, u32 index) const;
   u32 getShopNormalStart() const;
+  u32 getShopNormalEnd() const;
   u32 getShopNormalDefItem1(u32 id) const;
   u32 getShopNormalDefItem2(u32 id) const;
   u32 getShopNormalDefItem3(u32 id) const;
@@ -45,9 +53,15 @@ public:
   u32 getShopNormalPrivilegeCheck5(u32 id) const;
   u32 getShopNormalPrivilegeFlag(u32 id) const;
   u32 getShopNormalPrivilegeItem(u32 id) const;
+  u32 getShopNormalDefItem(u32 table, u32 index) const;
+  u32 getShopNormalAddItem(u32 table, u32 index) const;
+  u32 getShopNormalAddCondition(u32 table, u32 index) const;
+  u32 getShopNormalPrivilegeCheck(u32 table, u32 index) const;
   u32 getShopInnStart() const;
+  u32 getShopInnEnd() const;
   u32 getShopInnPrice(u32 id) const;
   u32 getShopChangeStart() const;
+  u32 getShopChangeEnd() const;
   u32 getShopChangeDefTaskSet1(u32 id) const;
   u32 getShopChangeDefTaskSet2(u32 id) const;
   u32 getShopChangeDefTaskSet3(u32 id) const;
@@ -75,7 +89,11 @@ public:
   u32 getShopChangeLinkQuestTask(u32 id) const;
   u32 getShopChangeLinkQuestTaskID(u32 id) const;
   u32 getShopChangeUnitText(u32 id) const;
+  u32 getShopChangeDefTaskSet(u32 table, u32 index) const;
+  u32 getShopChangeAddTaskSet(u32 table, u32 index) const;
+  u32 getShopChangeAddCondition(u32 table, u32 index) const;
   u32 getShopChangeTaskStart() const;
+  u32 getShopChangeTaskEnd() const;
   u32 getShopChangeTaskSetItem1(u32 id) const;
   u32 getShopChangeTaskSetNumber1(u32 id) const;
   u32 getShopChangeTaskSetItem2(u32 id) const;
@@ -89,7 +107,10 @@ public:
   u32 getShopChangeTaskHideReward(u32 id) const;
   u32 getShopChangeTaskReward(u32 id) const;
   u32 getShopChangeTaskAddFlagValue(u32 id) const;
+  u32 getShopChangeTaskSetItem(u32 task, u32 index) const;
+  u32 getShopChangeTaskSetNumber(u32 task, u32 index) const;
   u32 getMNU_EventTheaterStart() const;
+  u32 getMNU_EventTheaterEnd() const;
   u32 getMNU_EventTheatertitle(u32 id) const;
   u32 getMNU_EventTheaterevent_id(u32 id) const;
   u32 getMNU_EventTheatercondition(u32 id) const;
@@ -100,18 +121,13 @@ public:
   u32 getMNU_EventTheaterblade_id(u32 id) const;
   u32 getMNU_EventTheaterflag_index(u32 id) const;
 
-  u32 getMNU_EventTheaterEnd() const;
-  u32 getShopNormalDefItem(u32 table, u32 index) const;
-  u32 getShopNormalAddItem(u32 table, u32 index) const;
-  u32 getShopNormalPrivilegeCheck(u32 table, u32 index) const;
-
 private:
   CBdatWrapper *unknown10; // Inferred label: mShopList; original member name unknown.
   CBdatWrapper *unknown18; // Inferred label: mShopNormal; original member name unknown.
   CBdatWrapper *unknown20; // Inferred label: mShopInn; original member name unknown.
   CBdatWrapper *unknown28; // Inferred label: mShopChange; original member name unknown.
   CBdatWrapper *unknown30; // Inferred label: mShopChangeTask; original member name unknown.
-  CBdatWrapper *_38[1];
+  CBdatWrapper *unknown38; // Inferred label: mShopCategoryName; original member name unknown.
   CBdatWrapper *unknown40; // Inferred label: mMNU_EventTheater; original member name unknown.
 };
 
