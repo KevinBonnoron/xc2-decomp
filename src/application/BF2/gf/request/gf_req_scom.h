@@ -3,6 +3,8 @@
 
 namespace gf {
 
+struct GF_OBJ_HANDLE;
+
 enum SCOM_TYPE {
   SCOM_TYPE_CREATE_PARTY_OBJ = 0x16,
 };
@@ -25,6 +27,17 @@ public:
 class SCOM_POPUP {
 public:
   static bool createAchievement(u32 blade, u32 achievement, u32 level);
+  static void createArts(u32 driver, u32 arts);
+};
+
+class SCOM_ACCESS_TARGET {
+public:
+  static void create(GF_OBJ_HANDLE *target);
+};
+
+class SCOM_TARGET_UI {
+public:
+  static void create(GF_OBJ_HANDLE *target);
 };
 
 class GfReqSmallCom {

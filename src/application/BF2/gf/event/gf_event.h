@@ -9,7 +9,31 @@ enum RELOAD_BDAT {
 };
 
 enum GEV {};
-enum GF_STATE {};
+enum GF_STATE {
+  GF_STATE_INITIALIZE = 1,
+  GF_STATE_DESTROY = 2,
+  GF_STATE_CONTROL = 3,
+  GF_STATE_TALK = 4,
+  GF_STATE_MENU = 6,
+  GF_STATE_WAIT_EVENT = 7,
+  GF_STATE_MAPJUMP = 8,
+  GF_STATE_MAPJUMP_SKIP_TRAVEL = 9,
+  GF_STATE_PLAYER_DEAD = 10,
+  GF_STATE_SALVAGE = 11,
+  GF_STATE_COLLECT = 12,
+  GF_STATE_FIELD_TBOX = 13,
+  GF_STATE_MAP_GIMMICK = 14,
+  GF_STATE_GRAVE = 15,
+  GF_STATE_JUMP = 16,
+  GF_STATE_WARP = 17,
+  GF_STATE_GMK_TUTORIAL = 18,
+  GF_STATE_GMK_CAMERA = 19,
+  GF_STATE_EVENT = 20,
+  GF_STATE_GIMMICK_TASK = 21,
+  GF_STATE_CHAIN_ATTACK = 22,
+  GF_STATE_ARTS_MOVIE = 23,
+  GF_STATE_RESET_BLADE = 24,
+};
 enum EXEC_STATE {};
 
 struct GF_ASSET_HANDLE;
@@ -80,6 +104,8 @@ public:
   static void addEventCallback(IGfEvent *event);
   static void removeEventCallback(IGfEvent *event);
   static void callChangeScenarioFlag(u32 scenarioFlag, u32 oldScenarioFlag);
+  static void callTargetAccess(GF_OBJ_HANDLE *target);
+  static void callTargetChange(GF_OBJ_HANDLE *target);
   static void callBladeUnselect(u32 blade, bool unselect);
   static void callHikariCurrent(bool hikariCurrent);
   static void callDebugChangeIdea(u32 type, u32 id, u32 idea, u32 value);
