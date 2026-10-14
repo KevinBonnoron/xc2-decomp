@@ -25,6 +25,10 @@ public:
   const char *getRscEnLoopEffect(u32 resource) const;
   u32 getRscEnExtraParts(u32 resource, u32 part) const;
   u32 getRscEnDrType(u32 resource) const;
+
+  u32 getDriverParamExtMountNpc(u32 driver) const;
+  const char *getDriverParamExtMountBone(u32 driver) const;
+  u32 getDriverParamExtMountCond(u32 driver) const;
 };
 
 } // namespace gf

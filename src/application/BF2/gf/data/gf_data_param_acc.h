@@ -13,6 +13,9 @@ public:
   bool isValid() const;
   const char *getModelResourceName() const;
   u32 getBlade(int slot, bool isVirtual) const;
+  int getBladeSet(bool isVirtual) const;
+  u32 getWeaponType(int slot, bool isVirtual) const;
+  u32 getDriverArtsLevel(u32 arts) const;
 
 private:
   u8 _08[0x18 - 0x08];
