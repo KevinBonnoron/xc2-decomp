@@ -236,6 +236,46 @@ void GfGameCond::applyGameEnv(u32 condition) {
   }
 }
 
+static bool isInRange(u32 value, u32 min, u32 max) { return min <= value && max >= value; }
+
+bool GfGameCond::isFlag(u32 condition, bool *isAboveMin, bool *isBelowMax) {
+  u32 flagType = s_bdatCond->getConditionFlagFlagType(condition);
+  u32 flagId = s_bdatCond->getConditionFlagFlagID(condition);
+  u32 flagMin = s_bdatCond->getConditionFlagFlagMin(condition);
+  u32 flagMax = s_bdatCond->getConditionFlagFlagMax(condition);
+  u32 value;
+  switch (flagType) {
+  case 1:
+    value = GfGameFlag::getLocal(1, flagId);
+    break;
+  case 2:
+    value = GfGameFlag::getLocal(2, flagId);
+    break;
+  case 4:
+    value = GfGameFlag::getLocal(4, flagId);
+    break;
+  case 8:
+    value = GfGameFlag::getLocal(8, flagId);
+    break;
+  case 16:
+    value = GfGameFlag::getLocal(16, flagId);
+    break;
+  case 32:
+    value = GfGameFlag::getLocal(32, flagId);
+    break;
+  default:
+    return false;
+  }
+
+  if (isAboveMin != nullptr) {
+    *isAboveMin = flagMin <= value;
+  }
+  if (isBelowMax != nullptr) {
+    *isBelowMax = flagMax >= value;
+  }
+  return isInRange(value, flagMin, flagMax);
+}
+
 void GfGameCond::applyFlag(u32 condition) {
   if (isFlag(condition, nullptr, nullptr)) {
     return;
