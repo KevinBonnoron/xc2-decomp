@@ -81,7 +81,7 @@ u16 GfDataUtil::getEventChapterSave() { return GfDataManager::getDataGame()->eve
 
 u16 GfDataUtil::getAutoEventAfterLoad() { return GfDataManager::getDataGame()->autoEventAfterLoad; }
 
-u32 GfDataUtil::getSkipTravelID() { return GfDataManager::getDataGame()->skipTravelID; }
+u32 GfDataUtil::getSkipTravelID() { return GfDataManager::getDataGame()->map.skipTravelID; }
 
 void GfDataUtil::setPlayerCameraDistance(f32 playerCameraDistance) {
   SDataGame *dataGame = GfDataManager::getDataGame();
