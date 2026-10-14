@@ -225,6 +225,7 @@ public:
   static u32 getBornTime(u32 blade);
   static u8 getEyeRotControl(u32 blade);
   static void setHikariCurrent(bool hikariCurrent);
+  static bool isActivateParty(u32 blade);
   static bool isHomuriNameHikari();
   static void setHomuriNameHikari(bool homuriNameHikari);
   static u16 makeNormalTalkByPersonality(u32 personality);

@@ -22,11 +22,6 @@ enum {
 };
 
 enum {
-  BLADE_HOMURA = 1001,
-  BLADE_HIKARI = 1002,
-};
-
-enum {
   BLADE_REGULAR_FIRST = 1001,
   BLADE_REGULAR_END = 1014,
   BLADE_RARE_FIRST = 1014,
