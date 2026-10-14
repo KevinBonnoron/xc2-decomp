@@ -8,7 +8,7 @@ const char *GfDataMob::getName(u32 mob) { return util::getFilePtrFromPath(GfBdat
 
 bool GfDataMob::getName(u8 *&, u32 &, u32) { return false; }
 
-u8 GfDataMob::getRace(u32 mob) { return GfBdatRsc::get()->getRscMobListRace(mob); }
+u32 GfDataMob::getRace(u32 mob) { return GfBdatRsc::get()->getRscMobListRace(mob); }
 
 const char *GfDataMob::getModelName(u32 mob) { return GfBdatRsc::get()->getRscMobListModel(mob); }
 
@@ -32,8 +32,8 @@ const char *GfDataMob::getEffectName(u32 mob) {
   return effectName;
 }
 
-u16 GfDataMob::getFootStep(u32 mob) { return GfBdatRsc::get()->getRscMobListFootStep(mob); }
+u32 GfDataMob::getFootStep(u32 mob) { return GfBdatRsc::get()->getRscMobListFootStep(mob); }
 
-u8 GfDataMob::getFootStepEffect(u32 mob) { return GfBdatRsc::get()->getRscMobListFootStepEffect(mob); }
+u32 GfDataMob::getFootStepEffect(u32 mob) { return GfBdatRsc::get()->getRscMobListFootStepEffect(mob); }
 
 } // namespace gf
