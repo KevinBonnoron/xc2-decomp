@@ -16,10 +16,11 @@ struct GameTime;
 
 class GfFieldTime : public mm::mtl::PtrSingleton<GfFieldTime> {
 public:
+  u32 getTimeRangeDN() const;
   const GameTime &getGameTime() const;
+  const ElapseTime &getElapseTime() const;
   void setTimeRangeBit(u32 timeRangeBits);
   u32 getTimeRangeBits() const;
-  const ElapseTime &getElapseTime() const;
 };
 
 } // namespace gf

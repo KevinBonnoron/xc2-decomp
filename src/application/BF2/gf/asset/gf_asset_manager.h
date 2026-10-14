@@ -15,6 +15,7 @@ public:
   bool isFullResource(GF_ASSET_HANDLE *handle) const;
   static const char *getModelInfo(GF_ASSET_HANDLE *handle);
   static const char *getMotionInfo(GF_ASSET_HANDLE *handle);
+  static u32 getUsedAssetPackInfo();
 };
 
 } // namespace gf

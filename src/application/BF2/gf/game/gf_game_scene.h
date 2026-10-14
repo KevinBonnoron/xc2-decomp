@@ -72,7 +72,7 @@ public:
   void gevSelectHikari(bool hikariCurrent);
   void qevCompleteQuest(const QuestCompleteParam &param);
   void postUpdate(const fw::UpdateInfo &info);
-  OwnerBonus *getOwnerBonus() const;
+  OwnerBonus &getOwnerBonus() const;
   bool isPlayerCameraPause();
   void enterBattle(bool isForce);
   bool isBattleStop();

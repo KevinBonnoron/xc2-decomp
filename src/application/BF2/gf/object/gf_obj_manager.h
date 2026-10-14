@@ -96,6 +96,7 @@ public:
   void addDestroyObj(GF_OBJ_HANDLE *handle, bool isImmediate);
   void addApplyParam(GF_OBJ_HANDLE *handle);
   bool isSuspendUpdate() const;
+  bool hasReloadObjForDebug();
 };
 
 } // namespace gf

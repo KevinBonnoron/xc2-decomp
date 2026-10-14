@@ -168,6 +168,7 @@ public:
   static u32 getExpUsed(const SDataDriver &dataDriver);
   static bool isDummyDriver(u32 driver);
   static bool isScenarioMask(u32 driver);
+  static u32 getDriverBySetBlade(u32 blade);
   static void setScenarioMask(u32 driver, bool scenarioMask);
   static bool isEnableEquipWeapon(u32 driver, u32 weaponType);
   static bool isEnableEquipWeapon(const SDataDriver &dataDriver, u32 weaponType);

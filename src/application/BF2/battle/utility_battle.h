@@ -81,6 +81,7 @@ public:
   static int GetResistantAttrMaxHP();
   static int GetTrustRank(int blade);
   static bool IsEnableDeadSequence();
+  static bool IsEnableEventStart();
   static bool IsThirdCharacter(gf::GF_OBJ_HANDLE *handle);
   static bool IsBladeArtsBuff(int buff);
   static void RegisterEnemyBook(ENBOOK_TYPE type, gf::GF_OBJ_HANDLE *handle, int value);
