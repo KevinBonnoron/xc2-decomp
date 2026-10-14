@@ -22,7 +22,7 @@ The original source paths (`C:/Monolithsoft/BF2/prog/application/BF2/...`) appea
 ## Progress
 
 <!-- progress -->
-9,416 / 48,739 functions (19.319%), 982,192 / 10,024,304 bytes of code (9.798%)
+9,461 / 48,739 functions (19.412%), 984,436 / 10,024,304 bytes of code (9.820%)
 <!-- /progress -->
 
 Counted over the named functions of `main`, as reported by `check`. Run `check --readme` to update this section.
@@ -139,4 +139,5 @@ Abbreviations and names imposed by the game's symbols:
 
 - Functions appear in the binary in the order they were written in their source file. The neighbors of a function tell you which file it belongs to and what comes next.
 - Ghidra guesses types and return values. When in doubt, the assembly is the reference.
+- A destructor that must store the vtable pointer as the game does gets a body holding only `;`: with an empty body `{}`, the compiler drops the store.
 - Different C++ can produce the same machine code. Prefer the version a programmer would naturally have written.
