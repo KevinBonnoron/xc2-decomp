@@ -1,0 +1,142 @@
+#include "gf/data/gf_data_util.h"
+#include "gf/data/gf_data_game.h"
+#include "gf/data/gf_data_manager.h"
+#include "gf/data/gf_game_flag.h"
+
+namespace gf {
+
+enum {
+  FLAG_SCENARIO_FLAG = 0x1,
+  FLAG_SALVAGER_POINT = 0x854,
+  FLAG_GAME_CLEAR = 0xbdcd,
+  FLAG_GAME_CLEAR_CHECK = 0xd77e,
+};
+
+enum {
+  SCENARIO_FLAG_VANDAMME_DEAD = 0xbe8,
+};
+
+constexpr u32 MONEY_MAX = 999'999'999;
+constexpr u32 COIN_MAX = 9'999;
+
+u32 GfDataUtil::getMoney() { return GfDataManager::getDataGame()->money; }
+
+void GfDataUtil::setMoney(u32 money) {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  if (money >= MONEY_MAX) {
+    money = MONEY_MAX;
+  }
+
+  dataGame->money = money;
+}
+
+u32 GfDataUtil::getCoin() { return GfDataManager::getDataGame()->coin; }
+
+void GfDataUtil::setCoin(u32 coin) {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  if (coin >= COIN_MAX) {
+    coin = COIN_MAX;
+  }
+
+  dataGame->coin = coin;
+}
+
+void GfDataUtil::setChapterSave(u32 eventChapterSave, u16 startChapterSave) {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  dataGame->startChapterSave = startChapterSave;
+  dataGame->eventChapterSave = eventChapterSave;
+}
+
+bool GfDataUtil::isStartChapterSave() {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  if (dataGame->startChapterSave == getScenarioFlag()) {
+    return dataGame->eventChapterSave != 0;
+  }
+
+  return false;
+}
+
+u16 GfDataUtil::getScenarioFlag() { return GfGameFlag::getLocal(16, FLAG_SCENARIO_FLAG); }
+
+u16 GfDataUtil::getEventChapterSave() { return GfDataManager::getDataGame()->eventChapterSave; }
+
+u16 GfDataUtil::getAutoEventAfterLoad() { return GfDataManager::getDataGame()->autoEventAfterLoad; }
+
+u32 GfDataUtil::getSkipTravelID() { return GfDataManager::getDataGame()->skipTravelID; }
+
+void GfDataUtil::setPlayerCameraDistance(f32 playerCameraDistance) {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  dataGame->playerCameraDistance = playerCameraDistance;
+}
+
+f32 GfDataUtil::getPlayerCameraDistance() { return GfDataManager::getDataGame()->playerCameraDistance; }
+
+void GfDataUtil::setCameraHeight(f32 cameraHeight) { GfDataManager::getDataGame()->cameraHeight = cameraHeight; }
+
+f32 GfDataUtil::getCameraHeight() { return GfDataManager::getDataGame()->cameraHeight; }
+
+void GfDataUtil::setCameraYaw(f32 cameraYaw) { GfDataManager::getDataGame()->cameraYaw = cameraYaw; }
+
+f32 GfDataUtil::getCameraYaw() { return GfDataManager::getDataGame()->cameraYaw; }
+
+void GfDataUtil::setCameraPitch(f32 cameraPitch) { GfDataManager::getDataGame()->cameraPitch = cameraPitch; }
+
+f32 GfDataUtil::getCameraPitch() { return GfDataManager::getDataGame()->cameraPitch; }
+
+void GfDataUtil::setCameraFreeMode(bool cameraFreeMode) {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  dataGame->cameraFreeMode = cameraFreeMode;
+}
+
+bool GfDataUtil::isCameraFreeMode() { return GfDataManager::getDataGame()->cameraFreeMode; }
+
+u8 GfDataUtil::getCameraSide() { return GfDataManager::getDataGame()->cameraSide; }
+
+void GfDataUtil::setCameraSide(u8 cameraSide) {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  dataGame->cameraSide = cameraSide;
+}
+
+u32 GfDataUtil::getGameClearCount() { return GfDataManager::getDataGame()->gameClearCount; }
+
+void GfDataUtil::setScenarioFlag(u16 scenarioFlag) { GfGameFlag::setLocal(16, FLAG_SCENARIO_FLAG, scenarioFlag); }
+
+f32 GfDataUtil::getMoveDistance(AMOVE amove) {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+
+  switch (amove) {
+  case AMOVE_WALK:
+    return dataGame->achievementWalkMove;
+  default:
+    return dataGame->achievementSwimMove;
+  }
+}
+
+void GfDataUtil::setMoveDistance(AMOVE amove, f32 moveDistance) {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  switch (amove) {
+  case AMOVE_WALK:
+    dataGame->achievementWalkMove = moveDistance;
+    break;
+
+  case AMOVE_SWIM:
+    dataGame->achievementSwimMove = moveDistance;
+    break;
+  }
+}
+
+void GfDataUtil::setSalvagerPoint(u32 salvagerPoint) { GfGameFlag::setLocal(8, FLAG_SALVAGER_POINT, salvagerPoint); }
+
+bool GfDataUtil::isCollectFlagNewVersion() { return GfDataManager::getDataGame()->collectFlagNewVersion; }
+
+void GfDataUtil::convertNewCollectFlagPatch() {}
+
+bool GfDataUtil::isClearGame() { return GfGameFlag::getLocal(1, FLAG_GAME_CLEAR); }
+
+bool GfDataUtil::isClearGameCheck() { return GfGameFlag::getLocal(1, FLAG_GAME_CLEAR_CHECK); }
+
+void GfDataUtil::setClearGameCheck() { GfGameFlag::setLocal(1, FLAG_GAME_CLEAR_CHECK, 1); }
+
+bool GfDataUtil::isVandammeDead() { return getScenarioFlag() >= SCENARIO_FLAG_VANDAMME_DEAD; }
+
+} // namespace gf
