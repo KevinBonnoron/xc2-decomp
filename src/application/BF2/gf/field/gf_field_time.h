@@ -12,8 +12,11 @@ struct ElapseTime {
 
 static_assert(sizeof(ElapseTime) == 4, "");
 
+struct GameTime;
+
 class GfFieldTime : public mm::mtl::PtrSingleton<GfFieldTime> {
 public:
+  const GameTime &getGameTime() const;
   void setTimeRangeBit(u32 timeRangeBits);
   u32 getTimeRangeBits() const;
 };

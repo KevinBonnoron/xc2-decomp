@@ -38,7 +38,7 @@ struct SDataGame {
   SDataDriver drivers[16];
   mm::mtl::FixedArray<SDataBlade, 422> blades;
   SDataParty party;
-  SDataItemBox itemBox;
+  ItemBox itemBox;
   GameFlag gameFlag;
   QuestID scenario;
   QuestID select;

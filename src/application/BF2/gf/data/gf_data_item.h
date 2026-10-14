@@ -35,11 +35,69 @@ enum {
   FAVORITE_CATEGORY_FOOD_LAST = 17,
 };
 
-struct SDataItemBox {
-  u8 _00000[0x122ec - 0x00000];
+enum ITEM_BOX_INDEX {
+  ITEM_BOX_INDEX_NONE,
+  ITEM_BOX_INDEX_PC_WPN_CHIP,
+  ITEM_BOX_INDEX_PC_EQUIP,
+  ITEM_BOX_INDEX_EQUIP_ORB,
+  ITEM_BOX_INDEX_SALVAGE,
+  ITEM_BOX_INDEX_PRECIOUS,
+  ITEM_BOX_INDEX_INFO,
+  ITEM_BOX_INDEX_EVENT,
+  ITEM_BOX_INDEX_COLLECTION_LIST,
+  ITEM_BOX_INDEX_TRESURE,
+  ITEM_BOX_INDEX_EMPTY_ORB,
+  ITEM_BOX_INDEX_FAVORITE,
+  ITEM_BOX_INDEX_CRYSTAL_LIST,
+  ITEM_BOX_INDEX_BOOSTER,
+  ITEM_BOX_INDEX_HANA_ROLE,
+  ITEM_BOX_INDEX_HANA_ATR,
+  ITEM_BOX_INDEX_HANA_ARTS_ENH,
+  ITEM_BOX_INDEX_HANA_N_ARTS_SET,
+  ITEM_BOX_INDEX_HANA_ASSIST,
+  ITEM_BOX_INDEX_NUM,
 };
 
-static_assert(sizeof(SDataItemBox) == 0x122ec, "");
+struct SDataItemInfo {
+  u32 index : 13;
+  u32 type : 6;
+  u32 count : 10;
+  u32 _00_29 : 1;
+  u32 isEquip : 1;
+  u32 _00_31 : 1;
+  u32 time;
+  u32 serial : 26;
+  u32 _08_26 : 6;
+};
+
+static_assert(sizeof(SDataItemInfo) == 0x0c, "");
+
+struct ItemBox {
+  SDataItemInfo pcWpnChips[200];
+  SDataItemInfo pcEquips[900];
+  SDataItemInfo equipOrbs[500];
+  SDataItemInfo salvages[200];
+  SDataItemInfo preciouses[500];
+  SDataItemInfo infos[200];
+  SDataItemInfo events[100];
+  SDataItemInfo collectionLists[500];
+  SDataItemInfo tresures[200];
+  SDataItemInfo emptyOrbs[500];
+  SDataItemInfo favorites[500];
+  SDataItemInfo crystalLists[200];
+  SDataItemInfo boosters[200];
+  SDataItemInfo hanaRoles[200];
+  SDataItemInfo hanaAtrs[200];
+  SDataItemInfo hanaArtsEnhs[200];
+  SDataItemInfo hanaNArtsSets[200];
+  SDataItemInfo hanaAssists[700];
+  u32 serials[ITEM_BOX_INDEX_NUM];
+};
+
+static_assert(offsetof(ItemBox, pcEquips) == 0x960, "");
+static_assert(offsetof(ItemBox, hanaAssists) == 0x101d0, "");
+static_assert(offsetof(ItemBox, serials) == 0x122a0, "");
+static_assert(sizeof(ItemBox) == 0x122ec, "");
 
 class GfDataItem {
 public:
@@ -48,7 +106,7 @@ public:
   static bool getCaption(u8 *&bdat, u32 &textId, u32 item);
   static f32 getFavoriteItemTime(u32 item);
   static u32 getFavoriteItemType(u32 item);
-  static SDataItemBox *getItemBox();
+  static ItemBox *getItemBox();
   static bool getItemType(ItemType::Type &type, u32 &index, u32 item);
   static bool isEnableSell(u32 item);
   static const char *getName(u32 item);
