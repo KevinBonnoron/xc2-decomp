@@ -1,4 +1,5 @@
 #include "gf/game/gf_game_party.h"
+#include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_manager.h"
@@ -28,6 +29,7 @@ constexpr u32 WEAPON_HANDLE_NUM = 10;
 constexpr int SET_BLADE_NUM_MAX = 5;
 constexpr u32 READY_FRAME_MEMBER_OK = 2;
 constexpr u32 READY_FRAME_MAX = 100;
+constexpr int SLOT_HIKARI = 3;
 
 static u32 getValidDriverId(const DataParamAcc &paramAcc) {
   return paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0;
@@ -960,12 +962,13 @@ GfSelectBlade::GfSelectBlade() {
   s_pThis = this;
   for (int partyId = 0; partyId < 3; partyId++) {
     for (int index = 0; index < 3; index++) {
-      members[partyId].defaultBladeIndices[index] = index;
+      members[partyId].defaultIndices[index] = index;
     }
   }
   for (int partyId = 0; partyId < 3; partyId++) {
-    for (int index = 0; index < 3; index++) {
-      members[partyId].bladeIndices[index] = index;
+    members[partyId].currentIndex = 0;
+    for (int index = 0; index < 2; index++) {
+      members[partyId].changeIndices[index] = index + 1;
     }
   }
   startBattleSetIds[0] = -1;
@@ -974,6 +977,24 @@ GfSelectBlade::GfSelectBlade() {
 }
 
 GfSelectBlade::~GfSelectBlade() { s_pThis = nullptr; }
+
+bool GfSelectBlade::isNeedFieldBladeChange(u32 partyId) {
+  if (partyId == PARTY_ID_NONE) {
+    return false;
+  }
+
+  int startBattleSetId = getStartBattleSetId(partyId);
+  if (startBattleSetId < 0) {
+    return false;
+  }
+
+  u32 driver = GfDataParty::getPartyMember(partyId)->driver;
+  if (driver == 0) {
+    return false;
+  }
+
+  return GfDataDriver::getBladeSet(driver) != startBattleSetId;
+}
 
 int GfSelectBlade::getStartBattleSetId(u32 partyId) {
   if (s_pThis == nullptr) {
@@ -988,7 +1009,7 @@ int GfSelectBlade::getNeedFieldBladeChange(u32 partyId) {
     return 0;
   }
 
-  return s_pThis->members[partyId].defaultBladeIndices[0];
+  return s_pThis->members[partyId].defaultIndices[0];
 }
 
 void GfSelectBlade::resetStartBattleSetId(u32 partyId) {
@@ -997,8 +1018,57 @@ void GfSelectBlade::resetStartBattleSetId(u32 partyId) {
   }
 }
 
-int GfSelectBlade::getDefBladeIndexForDebug(u32 partyId, int index) { return s_pThis->members[partyId].defaultBladeIndices[index]; }
+int GfSelectBlade::resetCurrentBlade(GF_OBJ_HANDLE *handle) {
+  u32 partyId = GfGameParty::getPartyId(handle);
+  if (partyId == PARTY_ID_NONE) {
+    return -1;
+  }
 
-int GfSelectBlade::getChangeBladeIndexForDebug(u32 partyId, int index) { return s_pThis->members[partyId].bladeIndices[index + 1]; }
+  Member &member = s_pThis->members[partyId];
+  member.currentIndex = member.defaultIndices[0];
+  member.changeIndices[0] = member.defaultIndices[1];
+  member.changeIndices[1] = member.defaultIndices[2];
+  return member.currentIndex;
+}
+
+int GfSelectBlade::getCurrentBladeIndex(GF_OBJ_HANDLE *handle) {
+  u32 partyId = GfGameParty::getPartyId(handle);
+  if (partyId == PARTY_ID_NONE) {
+    return -1;
+  }
+
+  return s_pThis->members[partyId].currentIndex;
+}
+
+int GfSelectBlade::getChangeBladeIndex(GF_OBJ_HANDLE *handle, CHANGE_BLADE changeBlade) {
+  u32 partyId = GfGameParty::getPartyId(handle);
+  if (partyId == PARTY_ID_NONE) {
+    return -1;
+  }
+
+  return s_pThis->members[partyId].changeIndices[changeBlade];
+}
+
+int GfSelectBlade::getBladeSetID(GF_OBJ_HANDLE *handle, int slot) {
+  DataParamAcc paramAcc(handle);
+  if (paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER && paramAcc.getBdatId() == DRIVER_REX &&
+      paramAcc.getBlade(SLOT_HIKARI, false) == BLADE_HIKARI && paramAcc.getBlade(slot, false) == BLADE_HOMURA) {
+    if (paramAcc.getBlade(-1, false) == BLADE_HIKARI) {
+      for (int homuraSlot = 0; homuraSlot < SLOT_HIKARI; homuraSlot++) {
+        if (paramAcc.getBlade(homuraSlot, false) == BLADE_HOMURA) {
+          return homuraSlot;
+        }
+      }
+    } else if (paramAcc.getBlade(-1, false) == BLADE_HOMURA) {
+      return SLOT_HIKARI;
+    }
+  }
+
+  return slot;
+}
+
+int GfSelectBlade::getDefBladeIndexForDebug(u32 partyId, int index) { return s_pThis->members[partyId].defaultIndices[index]; }
+
+int GfSelectBlade::getChangeBladeIndexForDebug(u32 partyId, int index) { return s_pThis->members[partyId].changeIndices[index]; }
 
 } // namespace gf
