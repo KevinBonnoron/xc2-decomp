@@ -291,6 +291,7 @@ public:
   static bool getCommonBladeName(u8 *&bdat, u32 &textId, u32 nameList);
   static u32 getFavorite(u32 blade, FAVORITE favorite);
   static u32 getAchievementQuestPrefix(u32 blade, u32 line, u32 level);
+  static void setupAchievQuest(AchievQuest &achievQuest);
   static SDataBladeAchievement *getAchievInfo(u32 blade, u32 line);
   static bool isValid(u32 blade);
   static bool isActivateDriver(u32 blade);

@@ -20,7 +20,7 @@ struct QuestTaskParam {
   u32 taskType;
   u32 taskId;
   TASK_STATE state;
-  u8 _1c[0x20 - 0x1c];
+  bool isDisp;
 };
 
 static_assert(offsetof(QuestTaskParam, quest) == 0x04, "");
@@ -29,6 +29,7 @@ static_assert(offsetof(QuestTaskParam, taskIndex) == 0x0c, "");
 static_assert(offsetof(QuestTaskParam, taskType) == 0x10, "");
 static_assert(offsetof(QuestTaskParam, taskId) == 0x14, "");
 static_assert(offsetof(QuestTaskParam, state) == 0x18, "");
+static_assert(offsetof(QuestTaskParam, isDisp) == 0x1c, "");
 static_assert(sizeof(QuestTaskParam) == 0x20, "");
 
 } // namespace gf

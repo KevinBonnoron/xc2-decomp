@@ -50,12 +50,14 @@ public:
   static void addEvent(IQuestEvent *event);
   static void removeEvent(IQuestEvent *event);
   static void update(const fw::UpdateInfo &info);
+  static void checkQuestComplete(QuestID quest, QSTATE state);
   static QuestID getCurrentQuest(QTYPE type);
   static QuestID getProgressCurrentQuest(QTYPE type);
   static void eventCheckTask(QuestID quest);
   static bool openOrder(QuestID quest, bool isEvent);
   static QuestID getOrderQuestId(u32 purpose);
   static void eventChangeQuestState(QuestID quest, QSTATE oldState, QSTATE state);
+  static void eventChangeTaskState(const QuestTaskParam &param);
   static void gevReloadBdat(RELOAD_BDAT reload, u32 value);
   static void addCompleteQuest(QuestID quest);
   static void gevBattleEnd();

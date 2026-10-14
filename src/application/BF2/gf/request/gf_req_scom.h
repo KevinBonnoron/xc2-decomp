@@ -1,4 +1,5 @@
 #pragma once
+#include "gf/game/quest/gf_quest_id.h"
 #include "types.h"
 
 namespace gf {
@@ -28,6 +29,7 @@ public:
 
 class SCOM_POPUP {
 public:
+  static void createQuest(QuestID quest);
   static bool createAchievement(u32 blade, u32 achievement, u32 level);
   static void createArts(u32 driver, u32 arts);
 };

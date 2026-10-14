@@ -23,6 +23,7 @@ public:
   static void build(const GfSetupParam &param);
   static void destroy();
   void update(const fw::UpdateInfo &info);
+  void incleaseAchievCount(QuestID quest, u32 count, u32 add);
   void gevItemAdd(u32 item, int count);
   void gevBladeActivate(u32 blade, ActivateType activateType, ActivateType oldActivateType);
   void gevMercenariesMissionFlag(u32 mission, u32 flag, u32 value);

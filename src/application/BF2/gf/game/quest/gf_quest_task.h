@@ -1,5 +1,6 @@
 #pragma once
 #include "gf/game/quest/gf_quest_id.h"
+#include "gf/game/quest/gf_quest_info.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
 
@@ -15,9 +16,9 @@ struct QuestTaskParam;
 class GfQuestTask {
 public:
   static void initializeParams();
-  static void setCompleteFlag(const QuestTaskParam &param, bool isComplete);
+  static bool setCompleteFlag(const QuestTaskParam &param, bool isComplete);
   static bool isCompleteFlag(const QuestTaskParam &param);
-  static void updateQuestTask(QuestID quest);
+  static QSTATE updateQuestTask(QuestID quest);
   static void clearTask(QuestID quest);
   static void completeEventTask(u32 event);
   static void completeTalkTask(u32 npc, QuestID quest);
@@ -37,14 +38,14 @@ public:
   static void refreshTaskCounters();
   static bool isEnableTaskConditionWithoutEnv(const QuestTaskParam &param);
   static bool isTaskBattle(QuestID quest);
-  static GF_OBJ_HANDLE *getReduceHpObj(QuestID quest, GF_OBJ_HANDLE *handle);
+  static u32 getReduceHpObj(QuestID quest, GF_OBJ_HANDLE *handle);
   static bool isReduceHpObj(QuestID quest, GF_OBJ_HANDLE *handle);
-  static GF_OBJ_HANDLE *getReduceHpObjPc(QuestID quest, GF_OBJ_HANDLE *handle);
+  static u32 getReduceHpObjPc(QuestID quest, GF_OBJ_HANDLE *handle);
   static bool isReduceHpObjPc(QuestID quest, GF_OBJ_HANDLE *handle);
   static bool isReduceHpQuest(QuestID quest);
   static void resetBattleTaskForPlayerDead(QuestID quest);
-  static void resetBattleTaskForBattleEnd(mm::mtl::FixedVector<u16, 128> &enemies, QuestID quest);
-  static u32 getTaskMap(const QuestTaskParam &param);
+  static bool resetBattleTaskForBattleEnd(mm::mtl::FixedVector<u16, 128> &enemies, QuestID quest);
+  static u16 getTaskMap(const QuestTaskParam &param);
 };
 
 } // namespace gf
