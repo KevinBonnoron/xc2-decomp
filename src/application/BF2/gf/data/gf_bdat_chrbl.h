@@ -7,7 +7,13 @@ namespace gf {
 
 class GfBdatChrBl : public mm::mtl::PtrSingleton<GfBdatChrBl>, public GfBdatRefresh {
 public:
+  GfBdatChrBl();
+  virtual ~GfBdatChrBl();
+  void destroyFP();
+  void createFP();
+  void bdatRefresh() override;
   u32 getChrBlStart() const;
+  u32 getChrBlEnd() const;
   u32 getChrBlName(u32 id) const;
   const char *getChrBlDebugName(u32 id) const;
   u32 getChrBlRace(u32 id) const;
@@ -113,8 +119,19 @@ public:
   const char *getChrBlMnuVoice1(u32 id) const;
   const char *getChrBlMnuVoice2(u32 id) const;
   const char *getChrBlMnuVoice3(u32 id) const;
-
-  u32 getChrBlEnd() const;
+  u32 getChrBlIdea(u32 id, u32 index) const;
+  u32 getChrBlBArts(u32 id, u32 index) const;
+  u32 getChrBlBSkill(u32 id, u32 index) const;
+  u32 getChrBlFSkill(u32 id, u32 index) const;
+  u32 getChrBlNArts(u32 id, u32 index) const;
+  u32 getChrBlNArtsRecastRev(u32 id, u32 index) const;
+  u32 getChrBlArtsAchievement(u32 id, u32 index) const;
+  u32 getChrBlSkillAchievement(u32 id, u32 index) const;
+  u32 getChrBlFskillAchievement(u32 id, u32 index) const;
+  u32 getChrBlFavoriteCategory(u32 id, u32 index) const;
+  u32 getChrBlFavoriteItem(u32 id, u32 index) const;
+  u32 getChrBlExtraParts(u32 id, u32 index) const;
+  const char *getChrBlMnuVoice(u32 id, u32 index) const;
 
 private:
   CBdatWrapper *unknown10; // Inferred label: mChrBl; original member name unknown.
