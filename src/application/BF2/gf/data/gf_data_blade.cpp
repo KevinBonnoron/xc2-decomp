@@ -696,7 +696,7 @@ u32 GfDataBlade::getRole(u32 blade) {
   return getRoleByWpnType(dataBlade->weaponType);
 }
 
-u8 GfDataBlade::getEquipOrbMax(u32 blade) {
+u32 GfDataBlade::getEquipOrbMax(u32 blade) {
   if (blade == 0) {
     return 0;
   }

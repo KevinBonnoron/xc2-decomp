@@ -467,7 +467,7 @@ u32 DataParamAcc::getNorAtkDmgMax(bool isVirtual) const {
   return 0;
 }
 
-u16 DataParamAcc::getEquipAcce(u32 slot, bool isVirtual) const {
+u32 DataParamAcc::getEquipAcce(u32 slot, bool isVirtual) const {
   if (isValid()) {
     return obj->getEquipAcce(slot, isVirtual);
   }

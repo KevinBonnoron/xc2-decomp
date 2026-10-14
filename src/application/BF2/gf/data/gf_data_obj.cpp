@@ -514,7 +514,7 @@ u32 DataObjBlade::getNorAtkDmgMax(bool isVirtual) const {
   return baseDamage * (getWeaponStability(isVirtual) * PERCENT + 1.0f);
 }
 
-u16 DataObjDriver::getEquipAcce(u32 slot, bool isVirtual) const { return GfDataDriver::getEquipAcce(*get(isVirtual), slot); }
+u32 DataObjDriver::getEquipAcce(u32 slot, bool isVirtual) const { return GfDataDriver::getEquipAcce(*get(isVirtual), slot); }
 
 u32 DataObjDriver::getEquipAcceResult(u32 slot, u32 accessory, bool isVirtual) const {
   return GfEquipUtil::getEquipAcceResult(*get(isVirtual), slot, accessory);

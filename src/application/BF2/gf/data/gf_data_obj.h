@@ -75,7 +75,7 @@ public:
   virtual u32 getEyeRotControl() const { return 0; }
   virtual u32 getNorAtkDmgMin(bool isVirtual) const { return 0; }
   virtual u32 getNorAtkDmgMax(bool isVirtual) const { return 0; }
-  virtual u16 getEquipAcce(u32 slot, bool isVirtual) const { return 0; }
+  virtual u32 getEquipAcce(u32 slot, bool isVirtual) const { return 0; }
   virtual u32 getEquipAcceResult(u32 slot, u32 accessory, bool isVirtual) const { return 5; }
   virtual bool getEquipOrb(mm::mtl::FixedArray<u16, 3> &orbs, bool isVirtual) const { return false; }
   virtual int getBladeSet(bool isVirtual) const { return -1; }
@@ -220,7 +220,7 @@ public:
   virtual u32 getWeaponStability(bool isVirtual) const;
   virtual u32 getNorAtkDmgMin(bool isVirtual) const;
   virtual u32 getNorAtkDmgMax(bool isVirtual) const;
-  virtual u16 getEquipAcce(u32 slot, bool isVirtual) const;
+  virtual u32 getEquipAcce(u32 slot, bool isVirtual) const;
   virtual u32 getEquipAcceResult(u32 slot, u32 accessory, bool isVirtual) const;
   virtual int getBladeSet(bool isVirtual) const;
   virtual void setBladeSet(int slot);

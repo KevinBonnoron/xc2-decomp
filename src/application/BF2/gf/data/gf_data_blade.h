@@ -359,10 +359,13 @@ public:
   static u16 getCollisionId(u32 blade);
   static u32 getRoleByWpnType(u32 weaponType);
   static u32 getRole(u32 blade);
-  static u8 getEquipOrbMax(u32 blade);
+  static u32 getEquipOrbMax(u32 blade);
   static u16 getEquipOrb(u32 blade, u32 slot);
+  static GfItemHandle getEquipOrbHandle(u32 blade, u32 slot);
   static bool getEquipOrb(mm::mtl::FixedArray<u16, 3> &equipOrbs, u32 blade);
   static bool getEquipOrbHandle(mm::mtl::FixedArray<u32, 3> &equipOrbHandles, u32 blade);
+  static void setEquipOrb(u32 blade, u16 orb, u32 slot);
+  static void setEquipOrbHandle(u32 blade, GfItemHandle handle, u32 slot);
   static bool isEquipOrbFull(u32 blade);
   static bool getEquipOrbEnance(mm::mtl::FixedVector<u16, 64> &enhances, u32 blade);
   static bool getEquipOrbEnance(mm::mtl::FixedVector<u16, 64> &enhances, SDataBlade &dataBlade);

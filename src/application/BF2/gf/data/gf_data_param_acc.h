@@ -90,7 +90,7 @@ public:
   u32 getCoolTime() const;
   u32 getNorAtkDmgMin(bool isVirtual) const;
   u32 getNorAtkDmgMax(bool isVirtual) const;
-  u16 getEquipAcce(u32 slot, bool isVirtual) const;
+  u32 getEquipAcce(u32 slot, bool isVirtual) const;
   bool getEquipOrb(mm::mtl::FixedArray<u16, 3> &orbs, bool isVirtual) const;
   int getBladeSet(bool isVirtual) const;
   void setBladeSet(int slot);
