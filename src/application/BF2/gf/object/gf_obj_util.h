@@ -13,16 +13,27 @@ class GfComModel;
 class GfObjProperty;
 class GfVolumeFade;
 
-enum GFATTACH {};
-
 enum {
   OBJ_FLAG_DESTROY = 0,
+  OBJ_FLAG_DISP_CHANGED = 1,
+  OBJ_FLAG_CLIP = 2,
+  OBJ_FLAG_GPU_CLIP = 3,
+  OBJ_FLAG_RELOAD = 5,
   OBJ_FLAG_REBUILD = 6,
+  OBJ_FLAG_LOADED_WAIT = 8,
+  OBJ_FLAG_LOADED_WAIT_OK = 9,
+  OBJ_FLAG_CAMERA_FADE = 0xa,
+  OBJ_FLAG_CAMERA_FADE_DISABLE_FOR_EVENT = 0xb,
+  OBJ_FLAG_CAMERA_FADE_DISABLE_FOR_BATTLE = 0xc,
   OBJ_FLAG_CALC_CAMERA_ALPHA = 0xd,
   OBJ_FLAG_WAIT = 0x10,
   OBJ_FLAG_UI_HIDDEN = 0x11,
+  OBJ_FLAG_PARTY_OBJ = 0x12,
+  OBJ_FLAG_UPDATED = 0x13,
   OBJ_FLAG_VOLUME_FADE_FOR_USER = 0x14,
   OBJ_FLAG_TALKING = 0x15,
+  OBJ_FLAG_TOOL_MODE = 0x18,
+  OBJ_FLAG_LOADED_WAIT_BLOCK = 0x1a,
 };
 
 enum {
@@ -86,6 +97,7 @@ public:
   static void setTalking(GF_OBJ_HANDLE *handle, bool isTalking);
   static bool isTalking(GF_OBJ_HANDLE *handle);
   static bool isTrinityBlade(GF_OBJ_HANDLE *handle);
+  static GfObj *getParentObj(GfObj *obj);
 
   template <typename T> static T *getObjSetup(GF_OBJ_HANDLE *handle) {
     GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);

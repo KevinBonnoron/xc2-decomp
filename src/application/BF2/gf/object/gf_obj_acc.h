@@ -1,29 +1,116 @@
 #pragma once
+#include "gf/object/gf_obj_manager.h"
 #include "types.h"
 
 namespace gf {
 
+struct GF_ASSET_HANDLE;
+struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
+struct GFOBJ_INFO;
 class GfObj;
+
+enum OBJ_ALPHA {
+  OBJ_ALPHA_NORMAL,
+  OBJ_ALPHA_FADE,
+  OBJ_ALPHA_CAMERA,
+  OBJ_ALPHA_EVENT,
+  OBJ_ALPHA_LIFE,
+  OBJ_ALPHA_EVT_DISP,
+  OBJ_ALPHA_MAX,
+};
+
+enum OBJDISP {};
+
+enum GfObjUserData {};
 
 class GfObjAcc {
 public:
+  GfObjAcc(GfObj *obj);
   GfObjAcc(GF_OBJ_HANDLE *handle);
 
   bool isValid() const { return mObj != nullptr; }
+  bool isValidTransform() const;
+  f32 getAlpha(OBJ_ALPHA type) const;
+  void setAlpha(OBJ_ALPHA type, f32 alpha);
+  bool isAlphaChanged() const;
+  void addApplyParam();
+  void setAlphaEvent(f32 alpha);
+  f32 getAlphaEvent() const;
+  void setAlphaEvtDisp(f32 alpha);
+  f32 getAlphaEvtDisp() const;
+  void setAlphaFade(f32 alpha);
+  f32 getAlphaFade() const;
+  void setAlphaCamera(f32 alpha);
+  f32 getAlphaCamera() const;
+  void setAlphaLife(f32 alpha);
+  f32 getAlphaLife() const;
+  void setAlphaNormal(f32 alpha);
+  f32 getAlphaNormal() const;
+  f32 getAlpha() const;
+  void setCameraFade(bool isEnable);
+  bool setFlag(u32 flag, bool value);
+  bool isCameraFadeEnable() const;
   bool testFlag(u32 flag) const;
+  bool isCameraFadeDisableForEvent() const;
+  void setCameraFadeDisableForEvent(bool isDisable);
+  bool isCameraFadeDisableForBattle() const;
+  void setCameraFadeDisableForBattle(bool isDisable);
+  bool isCameraFadeAllOK() const;
+  bool hasParent() const;
+  GfObj *getObj() const;
+  GF_OBJ_HANDLE *getHandle() const;
+  bool isDisp(OBJDISP disp) const;
+  bool isDispChanged() const;
+  void setClip(bool isClip);
+  void setGpuClip(bool isClip);
+  void setGravity(bool isGravity);
+  bool isGravity() const;
+  bool isReload() const;
+  bool isRebuild() const;
+  void setToolMode(bool isToolMode);
+  bool isToolMode() const;
+  void setAttribute(u32 attribute);
+  u32 getAttribute() const;
+  bool isValidProperty() const;
+  bool isValidModel() const;
   bool isDestroy() const;
   u32 getType() const;
+  void setCalcCameraAlpha();
+  u16 getMultiBindUniqId() const;
+  bool isMultiBindWaiting() const;
+  GF_ASSET_HANDLE *getAssetHandle() const;
+  GF_OBJ_HANDLE *getTarget() const;
+  GF_OBJ_HANDLE *getMaster() const;
+  void setUserData(GfObjUserData type, u64 data);
+  u64 getUserData(GfObjUserData type) const;
   u32 getBdatId() const;
   u32 getDriverId() const;
   u32 getBladeId() const;
+  bool isEnemyBlade() const;
+  u32 getEnArrangeId() const;
+  u32 getEnRscId() const;
+  u32 getEnParamId() const;
+  u32 getNpcRscId() const;
+  u32 getMobRscId() const;
   u32 getPcWeaponId() const;
+  u32 getUiObjId() const;
+  bool isMasterObjValid() const;
+  bool isLoadedWaitOK() const;
+  u16 getView() const;
+  u32 getLayer() const;
+  bool isLayerPause() const;
   void setExtMeshAlpha(u32 index, f32 alpha);
   int getExtMeshIdx(const char *name) const;
+  bool isUpdated() const;
+  const char *getDebugName() const;
   bool isBattle() const;
+  GF_MOUNT_HANDLE *getMountHandle(GFATTACH attach) const;
+  bool isPartyObj() const;
+  int getPartyID() const;
 
 private:
-  u8 _00[0x08 - 0x00];
+  GFOBJ_INFO *mInfo;
   GfObj *mObj;
 };
 

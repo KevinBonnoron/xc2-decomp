@@ -171,7 +171,7 @@ void GfObjUtil::setLimitHP(GF_OBJ_HANDLE *handle, u32 limitHp) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     MsgObjectLimitHP message(limitHp);
-    obj->recieveMessage(obj, message);
+    obj->sendMessage(obj, message);
   }
 }
 
@@ -191,7 +191,7 @@ void GfObjUtil::setInvincible(GF_OBJ_HANDLE *handle, bool invincible, bool invin
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     MsgObjectInvincible message(invincible, invincibleSub);
-    obj->recieveMessage(obj, message);
+    obj->sendMessage(obj, message);
   }
 }
 
@@ -264,7 +264,7 @@ void GfObjUtil::setDisableAutoHeal(GF_OBJ_HANDLE *handle, bool disableAutoHeal) 
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     MsgObjectStopAutoHeal message(disableAutoHeal);
-    obj->recieveMessage(obj, message);
+    obj->sendMessage(obj, message);
   }
 }
 
