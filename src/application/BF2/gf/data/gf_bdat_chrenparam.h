@@ -1,5 +1,6 @@
 #pragma once
 #include "gf/data/gf_bdat_wrapper.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -7,7 +8,13 @@ namespace gf {
 
 class GfBdatChrEnParam : public mm::mtl::PtrSingleton<GfBdatChrEnParam>, public GfBdatRefresh {
 public:
+  GfBdatChrEnParam();
+  virtual ~GfBdatChrEnParam();
+  void destroyFP();
+  void createFP();
+  void bdatRefresh() override;
   u32 getChrEnParamStart() const;
+  u32 getChrEnParamEnd() const;
   const char *getChrEnParamDebug_Name(u32 id) const;
   u32 getChrEnParamResourceID(u32 id) const;
   u32 getChrEnParamAiID(u32 id) const;
@@ -63,7 +70,9 @@ public:
   u32 getChrEnParamArtsNum14(u32 id) const;
   u32 getChrEnParamArtsNum15(u32 id) const;
   u32 getChrEnParamArtsNum16(u32 id) const;
+  u32 getChrEnParamArtsNum(u32 id, u32 index) const;
   u32 getChrEnParamTableStart() const;
+  u32 getChrEnParamTableEnd() const;
   u32 getChrEnParamTableHpMaxBase(u32 id) const;
   u32 getChrEnParamTableStrengthBase(u32 id) const;
   u32 getChrEnParamTablePowEtherBase(u32 id) const;
@@ -71,6 +80,7 @@ public:
   u32 getChrEnParamTableAgilityBase(u32 id) const;
   u32 getChrEnParamTableLuckBase(u32 id) const;
   u32 getChrEnParamRevStart() const;
+  u32 getChrEnParamRevEnd() const;
   u32 getChrEnParamRevHpMaxRev(u32 id) const;
   u32 getChrEnParamRevStrengthRev(u32 id) const;
   u32 getChrEnParamRevPowEtherRev(u32 id) const;
@@ -78,10 +88,12 @@ public:
   u32 getChrEnParamRevAgilityRev(u32 id) const;
   u32 getChrEnParamRevLuckRev(u32 id) const;
   u32 getChrEnRstDebuffRevStart() const;
+  u32 getChrEnRstDebuffRevEnd() const;
   u32 getChrEnRstDebuffRevRevType(u32 id) const;
   u32 getChrEnRstDebuffRevRstFiCombo(u32 id) const;
   u32 getChrEnRstDebuffRevIvdFiCombo(u32 id) const;
   u32 getEnemyGroupStart() const;
+  u32 getEnemyGroupEnd() const;
   u32 getEnemyGroupEnemyID1(u32 id) const;
   u32 getEnemyGroupEnemyID2(u32 id) const;
   u32 getEnemyGroupEnemyID3(u32 id) const;
@@ -90,6 +102,8 @@ public:
   u32 getEnemyGroupEnemyID6(u32 id) const;
   u32 getEnemyGroupEnemyID7(u32 id) const;
   u32 getEnemyGroupEnemyID8(u32 id) const;
+  u32 getEnemyGroupEnemyID(u32 id, u32 index) const;
+  bool searchByRscEn(mm::mtl::FixedVector<u16, 128> &enemies, u32 resourceId) const;
 
 private:
   CBdatWrapper *unknown10; // Inferred label: mChrEnParam; original member name unknown.
