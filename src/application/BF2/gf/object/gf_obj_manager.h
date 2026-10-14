@@ -15,7 +15,9 @@ class GfObjProperty;
 class GfObjSetup;
 class GfVolumeFade;
 
-enum GFATTACH {};
+enum GFATTACH {
+  GFATTACH_WEAPON = 0,
+};
 
 enum {
   GFOBJ_STATE_LOADING = 1,
