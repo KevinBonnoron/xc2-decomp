@@ -11,6 +11,7 @@ struct GF_ASSET_HANDLE;
 struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
 struct GF_SLOT_HANDLE;
+class GfAppend;
 class GfComModel;
 class GfObjProperty;
 class GfVolumeFade;
@@ -39,6 +40,7 @@ enum {
 };
 
 enum {
+  CHARACTER_TYPE_PARTY = 1,
   CHARACTER_TYPE_ENEMY_BLADE = 5,
   CHARACTER_TYPE_TRINITY_BLADE = 8,
 };
@@ -80,6 +82,7 @@ public:
   static GfObjProperty *getProperty(GF_OBJ_HANDLE *handle);
   static u32 getHp(GF_OBJ_HANDLE *handle);
   static int getPartyID(GF_OBJ_HANDLE *handle);
+  static GfAppend *getAppend(GF_OBJ_HANDLE *handle, GFATTACH attach);
   static bool isValid(GF_OBJ_HANDLE *handle);
   static bool isLoading(GF_OBJ_HANDLE *handle);
   static bool isUpdate(GF_OBJ_HANDLE *handle);

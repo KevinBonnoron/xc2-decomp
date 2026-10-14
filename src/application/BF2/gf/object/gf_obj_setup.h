@@ -20,7 +20,7 @@ public:
   u32 objType;
   u8 _0c[0x10 - 0x0c];
   u32 id;
-  int partyMember;
+  u32 partyMember;
   u8 _18[0x1c - 0x18];
   u32 characterType;
   u8 _20[0x40 - 0x20];
@@ -48,6 +48,34 @@ public:
 };
 
 static_assert(offsetof(GfObjSetupMap, bdatId) == 0x6c, "");
+
+class GfObjSetupDriver : public GfObjSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+};
+
+class GfObjSetupBlade : public GfObjSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  u8 _5c[0x6c - 0x5c];
+  int slot;
+};
+
+static_assert(offsetof(GfObjSetupBlade, slot) == 0x6c, "");
+
+class GfObjSetupWeapon : public GfObjSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  u8 _5c[0x6c - 0x5c];
+  int slot;
+  u8 _70[0x78 - 0x70];
+  bool isAlternate;
+};
+
+static_assert(offsetof(GfObjSetupWeapon, slot) == 0x6c, "");
+static_assert(offsetof(GfObjSetupWeapon, isAlternate) == 0x78, "");
 
 class GfObjSetupMob : public GfObjSetup {
 public:
