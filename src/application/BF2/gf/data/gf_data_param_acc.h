@@ -11,6 +11,8 @@ public:
   virtual ~DataParamAcc();
 
   bool isValid() const;
+  u32 getObjType() const;
+  u32 getBdatId() const;
   const char *getModelResourceName() const;
   u32 getBlade(int slot, bool isVirtual) const;
   int getBladeSet(bool isVirtual) const;

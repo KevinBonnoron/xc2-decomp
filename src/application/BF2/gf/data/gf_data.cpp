@@ -12,6 +12,7 @@
 #include "gf/data/gf_data_npc.cpp"
 #include "gf/data/gf_data_map.cpp"
 #include "gf/data/gf_data_event.cpp"
+#include "gf/data/gf_data_salvage.cpp"
 #include "gf/data/gf_data_mercenaries.cpp"
 #include "gf/data/gf_data_field.cpp"
 #include "gf/data/gf_data_hana.cpp"
