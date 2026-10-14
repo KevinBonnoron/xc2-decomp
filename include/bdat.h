@@ -13,11 +13,12 @@ union Value {
   const char *valueString;
 };
 
+unsigned char *getFP(const char *name);
 int getIdTop(unsigned char *bdat);
 int getIdCount(unsigned char *bdat);
 unsigned char *getMember(unsigned char *bdat, const char *name);
 const char *getMSText(unsigned char *bdat, int id);
-unsigned int getValCheck(unsigned char *bdat, const char *name, int id, int type);
+unsigned long getValCheck(unsigned char *bdat, const char *name, int id, int type);
 Value getValCheck(unsigned char *bdat, unsigned char *member, int id, int type);
 int getFlagVal(unsigned char *bdat, unsigned char *member, int id, unsigned char *flag);
 
