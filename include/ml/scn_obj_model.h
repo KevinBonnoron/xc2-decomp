@@ -37,6 +37,18 @@ public:
   ScnObjAccResMdlInfo(ScnObjModel *model);
   void setGpuClip(bool isClip);
   void setSpAlphaMode(bool isEnable);
+  void setCamCheckMode(bool isEnable);
+  bool isCamCheckResl() const;
+
+private:
+  u8 _00[0x08 - 0x00];
+};
+
+class ScnObjAccEtcParams {
+public:
+  ScnObjAccEtcParams(ScnObjModel *model);
+  int getIndex(const char *name) const;
+  void setInitParams(u32 index, f32 value);
 
 private:
   u8 _00[0x08 - 0x00];
