@@ -1,5 +1,7 @@
 #include "gf/data/gf_bdat_shop.h"
 #include "bdat.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/gf_allocator.h"
 
 namespace gf {
 namespace _gfbsh {
@@ -1060,7 +1062,165 @@ u32 getMNU_EventTheaterflag_index(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbsh
 
+enum {
+  BDAT_MNU_SHOP_LIST = 0xd4,
+  BDAT_MNU_SHOP_NORMAL = 0xd5,
+  BDAT_MNU_SHOP_INN = 0xd6,
+  BDAT_MNU_SHOP_CHANGE = 0xd7,
+  BDAT_MNU_SHOP_CHANGE_TASK = 0xd8,
+  BDAT_MNU_SHOP_CATEGORY_NAME = 0xd9,
+  BDAT_MNU_EVENT_THEATER = 0xe3,
+};
+
+GfBdatShop::GfBdatShop()
+    : mShopList(nullptr), mShopNormal(nullptr), mShopInn(nullptr), mShopChange(nullptr), mShopChangeTask(nullptr), mShopCategoryName(nullptr),
+      mMNU_EventTheater(nullptr) {
+  bdatRefresh();
+}
+
+GfBdatShop::~GfBdatShop() { destroyFP(); }
+
+void GfBdatShop::destroyFP() {
+  if (mShopList != nullptr) {
+    delete mShopList;
+    mShopList = nullptr;
+  }
+
+  if (mShopNormal != nullptr) {
+    delete mShopNormal;
+    mShopNormal = nullptr;
+  }
+
+  if (mShopInn != nullptr) {
+    delete mShopInn;
+    mShopInn = nullptr;
+  }
+
+  if (mShopChange != nullptr) {
+    delete mShopChange;
+    mShopChange = nullptr;
+  }
+
+  if (mShopChangeTask != nullptr) {
+    delete mShopChangeTask;
+    mShopChangeTask = nullptr;
+  }
+
+  if (mShopCategoryName != nullptr) {
+    delete mShopCategoryName;
+    mShopCategoryName = nullptr;
+  }
+
+  if (mMNU_EventTheater != nullptr) {
+    delete mMNU_EventTheater;
+    mMNU_EventTheater = nullptr;
+  }
+}
+
+void GfBdatShop::createFP() {
+  mShopList = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_LIST)};
+  mShopNormal = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_NORMAL)};
+  mShopInn = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_INN)};
+  mShopChange = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_CHANGE)};
+  mShopChangeTask = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_CHANGE_TASK)};
+  mShopCategoryName = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_SHOP_CATEGORY_NAME)};
+  mMNU_EventTheater = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_MNU_EVENT_THEATER)};
+}
+
+void GfBdatShop::bdatRefresh() {
+  destroyFP();
+  createFP();
+  _gfbsh::initShopListName(*mShopList);
+  _gfbsh::initShopListShopIcon(*mShopList);
+  _gfbsh::initShopListShopType(*mShopList);
+  _gfbsh::initShopListTableID(*mShopList);
+  _gfbsh::initShopListDiscount1(*mShopList);
+  _gfbsh::initShopListDiscount2(*mShopList);
+  _gfbsh::initShopListDiscount3(*mShopList);
+  _gfbsh::initShopListDiscount4(*mShopList);
+  _gfbsh::initShopListDiscount5(*mShopList);
+  _gfbsh::initShopNormalDefItem1(*mShopNormal);
+  _gfbsh::initShopNormalDefItem2(*mShopNormal);
+  _gfbsh::initShopNormalDefItem3(*mShopNormal);
+  _gfbsh::initShopNormalDefItem4(*mShopNormal);
+  _gfbsh::initShopNormalDefItem5(*mShopNormal);
+  _gfbsh::initShopNormalDefItem6(*mShopNormal);
+  _gfbsh::initShopNormalDefItem7(*mShopNormal);
+  _gfbsh::initShopNormalDefItem8(*mShopNormal);
+  _gfbsh::initShopNormalDefItem9(*mShopNormal);
+  _gfbsh::initShopNormalDefItem10(*mShopNormal);
+  _gfbsh::initShopNormalAddtem1(*mShopNormal);
+  _gfbsh::initShopNormalAddCondition1(*mShopNormal);
+  _gfbsh::initShopNormalPrivilegeCheck1(*mShopNormal);
+  _gfbsh::initShopNormalAddtem2(*mShopNormal);
+  _gfbsh::initShopNormalAddCondition2(*mShopNormal);
+  _gfbsh::initShopNormalPrivilegeCheck2(*mShopNormal);
+  _gfbsh::initShopNormalAddtem3(*mShopNormal);
+  _gfbsh::initShopNormalAddCondition3(*mShopNormal);
+  _gfbsh::initShopNormalPrivilegeCheck3(*mShopNormal);
+  _gfbsh::initShopNormalAddtem4(*mShopNormal);
+  _gfbsh::initShopNormalAddCondition4(*mShopNormal);
+  _gfbsh::initShopNormalPrivilegeCheck4(*mShopNormal);
+  _gfbsh::initShopNormalAddtem5(*mShopNormal);
+  _gfbsh::initShopNormalAddCondition5(*mShopNormal);
+  _gfbsh::initShopNormalPrivilegeCheck5(*mShopNormal);
+  _gfbsh::initShopNormalPrivilegeFlag(*mShopNormal);
+  _gfbsh::initShopNormalPrivilegeItem(*mShopNormal);
+  _gfbsh::initShopInnPrice(*mShopInn);
+  _gfbsh::initShopChangeDefTaskSet1(*mShopChange);
+  _gfbsh::initShopChangeDefTaskSet2(*mShopChange);
+  _gfbsh::initShopChangeDefTaskSet3(*mShopChange);
+  _gfbsh::initShopChangeDefTaskSet4(*mShopChange);
+  _gfbsh::initShopChangeDefTaskSet5(*mShopChange);
+  _gfbsh::initShopChangeDefTaskSet6(*mShopChange);
+  _gfbsh::initShopChangeDefTaskSet7(*mShopChange);
+  _gfbsh::initShopChangeDefTaskSet8(*mShopChange);
+  _gfbsh::initShopChangeAddTaskSet1(*mShopChange);
+  _gfbsh::initShopChangeAddCondition1(*mShopChange);
+  _gfbsh::initShopChangeAddTaskSet2(*mShopChange);
+  _gfbsh::initShopChangeAddCondition2(*mShopChange);
+  _gfbsh::initShopChangeAddTaskSet3(*mShopChange);
+  _gfbsh::initShopChangeAddCondition3(*mShopChange);
+  _gfbsh::initShopChangeAddTaskSet4(*mShopChange);
+  _gfbsh::initShopChangeAddCondition4(*mShopChange);
+  _gfbsh::initShopChangeAddTaskSet5(*mShopChange);
+  _gfbsh::initShopChangeAddCondition5(*mShopChange);
+  _gfbsh::initShopChangeAddTaskSet6(*mShopChange);
+  _gfbsh::initShopChangeAddCondition6(*mShopChange);
+  _gfbsh::initShopChangeAddTaskSet7(*mShopChange);
+  _gfbsh::initShopChangeAddCondition7(*mShopChange);
+  _gfbsh::initShopChangeAddTaskSet8(*mShopChange);
+  _gfbsh::initShopChangeAddCondition8(*mShopChange);
+  _gfbsh::initShopChangeLinkQuestTask(*mShopChange);
+  _gfbsh::initShopChangeLinkQuestTaskID(*mShopChange);
+  _gfbsh::initShopChangeUnitText(*mShopChange);
+  _gfbsh::initShopChangeTaskSetItem1(*mShopChangeTask);
+  _gfbsh::initShopChangeTaskSetNumber1(*mShopChangeTask);
+  _gfbsh::initShopChangeTaskSetItem2(*mShopChangeTask);
+  _gfbsh::initShopChangeTaskSetNumber2(*mShopChangeTask);
+  _gfbsh::initShopChangeTaskSetItem3(*mShopChangeTask);
+  _gfbsh::initShopChangeTaskSetNumber3(*mShopChangeTask);
+  _gfbsh::initShopChangeTaskSetItem4(*mShopChangeTask);
+  _gfbsh::initShopChangeTaskSetNumber4(*mShopChangeTask);
+  _gfbsh::initShopChangeTaskSetItem5(*mShopChangeTask);
+  _gfbsh::initShopChangeTaskSetNumber5(*mShopChangeTask);
+  _gfbsh::initShopChangeTaskHideReward(*mShopChangeTask);
+  _gfbsh::initShopChangeTaskReward(*mShopChangeTask);
+  _gfbsh::initShopChangeTaskAddFlagValue(*mShopChangeTask);
+  _gfbsh::initMNU_EventTheatertitle(*mMNU_EventTheater);
+  _gfbsh::initMNU_EventTheaterevent_id(*mMNU_EventTheater);
+  _gfbsh::initMNU_EventTheatercondition(*mMNU_EventTheater);
+  _gfbsh::initMNU_EventTheaterthumbnail(*mMNU_EventTheater);
+  _gfbsh::initMNU_EventTheatercategory(*mMNU_EventTheater);
+  _gfbsh::initMNU_EventTheaterchapter(*mMNU_EventTheater);
+  _gfbsh::initMNU_EventTheatermaincast(*mMNU_EventTheater);
+  _gfbsh::initMNU_EventTheaterblade_id(*mMNU_EventTheater);
+  _gfbsh::initMNU_EventTheaterflag_index(*mMNU_EventTheater);
+}
+
 u32 GfBdatShop::getShopListStart() const { return Bdat::getIdTop(mShopList->data); }
+
+u32 GfBdatShop::getShopListEnd() const { return Bdat::getIdTop(mShopList->data) + Bdat::getIdCount(mShopList->data); }
 
 u32 GfBdatShop::getShopListName(u32 id) const { return _gfbsh::getShopListName(*mShopList, id); }
 
@@ -1080,7 +1240,18 @@ u32 GfBdatShop::getShopListDiscount4(u32 id) const { return _gfbsh::getShopListD
 
 u32 GfBdatShop::getShopListDiscount5(u32 id) const { return _gfbsh::getShopListDiscount5(*mShopList, id); }
 
+u32 GfBdatShop::getShopListDiscount(u32 shop, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbsh::getShopListDiscount1,
+                                                              _gfbsh::getShopListDiscount2,
+                                                              _gfbsh::getShopListDiscount3,
+                                                              _gfbsh::getShopListDiscount4,
+                                                              _gfbsh::getShopListDiscount5};
+  return getters[index](*mShopList, shop);
+}
+
 u32 GfBdatShop::getShopNormalStart() const { return Bdat::getIdTop(mShopNormal->data); }
+
+u32 GfBdatShop::getShopNormalEnd() const { return Bdat::getIdTop(mShopNormal->data) + Bdat::getIdCount(mShopNormal->data); }
 
 u32 GfBdatShop::getShopNormalDefItem1(u32 id) const { return _gfbsh::getShopNormalDefItem1(*mShopNormal, id); }
 
@@ -1136,11 +1307,56 @@ u32 GfBdatShop::getShopNormalPrivilegeFlag(u32 id) const { return _gfbsh::getSho
 
 u32 GfBdatShop::getShopNormalPrivilegeItem(u32 id) const { return _gfbsh::getShopNormalPrivilegeItem(*mShopNormal, id); }
 
+u32 GfBdatShop::getShopNormalDefItem(u32 table, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbsh::getShopNormalDefItem1,
+                                                              _gfbsh::getShopNormalDefItem2,
+                                                              _gfbsh::getShopNormalDefItem3,
+                                                              _gfbsh::getShopNormalDefItem4,
+                                                              _gfbsh::getShopNormalDefItem5,
+                                                              _gfbsh::getShopNormalDefItem6,
+                                                              _gfbsh::getShopNormalDefItem7,
+                                                              _gfbsh::getShopNormalDefItem8,
+                                                              _gfbsh::getShopNormalDefItem9,
+                                                              _gfbsh::getShopNormalDefItem10};
+  return getters[index](*mShopNormal, table);
+}
+
+u32 GfBdatShop::getShopNormalAddItem(u32 table, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbsh::getShopNormalAddtem1,
+                                                              _gfbsh::getShopNormalAddtem2,
+                                                              _gfbsh::getShopNormalAddtem3,
+                                                              _gfbsh::getShopNormalAddtem4,
+                                                              _gfbsh::getShopNormalAddtem5};
+  return getters[index](*mShopNormal, table);
+}
+
+u32 GfBdatShop::getShopNormalAddCondition(u32 table, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbsh::getShopNormalAddCondition1,
+                                                              _gfbsh::getShopNormalAddCondition2,
+                                                              _gfbsh::getShopNormalAddCondition3,
+                                                              _gfbsh::getShopNormalAddCondition4,
+                                                              _gfbsh::getShopNormalAddCondition5};
+  return getters[index](*mShopNormal, table);
+}
+
+u32 GfBdatShop::getShopNormalPrivilegeCheck(u32 table, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbsh::getShopNormalPrivilegeCheck1,
+                                                              _gfbsh::getShopNormalPrivilegeCheck2,
+                                                              _gfbsh::getShopNormalPrivilegeCheck3,
+                                                              _gfbsh::getShopNormalPrivilegeCheck4,
+                                                              _gfbsh::getShopNormalPrivilegeCheck5};
+  return getters[index](*mShopNormal, table);
+}
+
 u32 GfBdatShop::getShopInnStart() const { return Bdat::getIdTop(mShopInn->data); }
+
+u32 GfBdatShop::getShopInnEnd() const { return Bdat::getIdTop(mShopInn->data) + Bdat::getIdCount(mShopInn->data); }
 
 u32 GfBdatShop::getShopInnPrice(u32 id) const { return _gfbsh::getShopInnPrice(*mShopInn, id); }
 
 u32 GfBdatShop::getShopChangeStart() const { return Bdat::getIdTop(mShopChange->data); }
+
+u32 GfBdatShop::getShopChangeEnd() const { return Bdat::getIdTop(mShopChange->data) + Bdat::getIdCount(mShopChange->data); }
 
 u32 GfBdatShop::getShopChangeDefTaskSet1(u32 id) const { return _gfbsh::getShopChangeDefTaskSet1(*mShopChange, id); }
 
@@ -1196,7 +1412,45 @@ u32 GfBdatShop::getShopChangeLinkQuestTaskID(u32 id) const { return _gfbsh::getS
 
 u32 GfBdatShop::getShopChangeUnitText(u32 id) const { return _gfbsh::getShopChangeUnitText(*mShopChange, id); }
 
+u32 GfBdatShop::getShopChangeDefTaskSet(u32 table, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbsh::getShopChangeDefTaskSet1,
+                                                              _gfbsh::getShopChangeDefTaskSet2,
+                                                              _gfbsh::getShopChangeDefTaskSet3,
+                                                              _gfbsh::getShopChangeDefTaskSet4,
+                                                              _gfbsh::getShopChangeDefTaskSet5,
+                                                              _gfbsh::getShopChangeDefTaskSet6,
+                                                              _gfbsh::getShopChangeDefTaskSet7,
+                                                              _gfbsh::getShopChangeDefTaskSet8};
+  return getters[index](*mShopChange, table);
+}
+
+u32 GfBdatShop::getShopChangeAddTaskSet(u32 table, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbsh::getShopChangeAddTaskSet1,
+                                                              _gfbsh::getShopChangeAddTaskSet2,
+                                                              _gfbsh::getShopChangeAddTaskSet3,
+                                                              _gfbsh::getShopChangeAddTaskSet4,
+                                                              _gfbsh::getShopChangeAddTaskSet5,
+                                                              _gfbsh::getShopChangeAddTaskSet6,
+                                                              _gfbsh::getShopChangeAddTaskSet7,
+                                                              _gfbsh::getShopChangeAddTaskSet8};
+  return getters[index](*mShopChange, table);
+}
+
+u32 GfBdatShop::getShopChangeAddCondition(u32 table, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbsh::getShopChangeAddCondition1,
+                                                              _gfbsh::getShopChangeAddCondition2,
+                                                              _gfbsh::getShopChangeAddCondition3,
+                                                              _gfbsh::getShopChangeAddCondition4,
+                                                              _gfbsh::getShopChangeAddCondition5,
+                                                              _gfbsh::getShopChangeAddCondition6,
+                                                              _gfbsh::getShopChangeAddCondition7,
+                                                              _gfbsh::getShopChangeAddCondition8};
+  return getters[index](*mShopChange, table);
+}
+
 u32 GfBdatShop::getShopChangeTaskStart() const { return Bdat::getIdTop(mShopChangeTask->data); }
+
+u32 GfBdatShop::getShopChangeTaskEnd() const { return Bdat::getIdTop(mShopChangeTask->data) + Bdat::getIdCount(mShopChangeTask->data); }
 
 u32 GfBdatShop::getShopChangeTaskSetItem1(u32 id) const { return _gfbsh::getShopChangeTaskSetItem1(*mShopChangeTask, id); }
 
@@ -1224,7 +1478,27 @@ u32 GfBdatShop::getShopChangeTaskReward(u32 id) const { return _gfbsh::getShopCh
 
 u32 GfBdatShop::getShopChangeTaskAddFlagValue(u32 id) const { return _gfbsh::getShopChangeTaskAddFlagValue(*mShopChangeTask, id); }
 
+u32 GfBdatShop::getShopChangeTaskSetItem(u32 task, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbsh::getShopChangeTaskSetItem1,
+                                                              _gfbsh::getShopChangeTaskSetItem2,
+                                                              _gfbsh::getShopChangeTaskSetItem3,
+                                                              _gfbsh::getShopChangeTaskSetItem4,
+                                                              _gfbsh::getShopChangeTaskSetItem5};
+  return getters[index](*mShopChangeTask, task);
+}
+
+u32 GfBdatShop::getShopChangeTaskSetNumber(u32 task, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbsh::getShopChangeTaskSetNumber1,
+                                                              _gfbsh::getShopChangeTaskSetNumber2,
+                                                              _gfbsh::getShopChangeTaskSetNumber3,
+                                                              _gfbsh::getShopChangeTaskSetNumber4,
+                                                              _gfbsh::getShopChangeTaskSetNumber5};
+  return getters[index](*mShopChangeTask, task);
+}
+
 u32 GfBdatShop::getMNU_EventTheaterStart() const { return Bdat::getIdTop(mMNU_EventTheater->data); }
+
+u32 GfBdatShop::getMNU_EventTheaterEnd() const { return Bdat::getIdTop(mMNU_EventTheater->data) + Bdat::getIdCount(mMNU_EventTheater->data); }
 
 u32 GfBdatShop::getMNU_EventTheatertitle(u32 id) const { return _gfbsh::getMNU_EventTheatertitle(*mMNU_EventTheater, id); }
 
