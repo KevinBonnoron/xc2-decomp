@@ -1,6 +1,7 @@
 #pragma once
 #include "gf/object/component/gf_component.h"
 #include "gf/object/gf_obj_acc.h"
+#include "mm_mtl/reference_object.h"
 #include "types.h"
 #include <stddef.h>
 
@@ -8,11 +9,10 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 
-class GfStatusProperty {
+class GfStatusProperty : public mm::mtl::ReferenceObject {
 public:
-  virtual ~GfStatusProperty();
+  GfStatusProperty(u32 hp) : maxHp(hp), hp(hp), limitHp(0), invincible(false), _19(), disableAutoHeal(false) {}
 
-  int refCount;
   u32 maxHp;
   u32 hp;
   u32 limitHp;

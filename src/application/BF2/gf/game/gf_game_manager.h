@@ -24,6 +24,8 @@ public:
   static OwnerBonus *getOwnerBonus();
   static bool isChangeNormalHomuraForce(u32 blade);
   static u32 getMapZoneID();
+  static GF_OBJ_HANDLE *getPartyLeader();
+  static GF_OBJ_HANDLE *getControlMover();
 };
 
 } // namespace gf

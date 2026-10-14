@@ -14,13 +14,17 @@ struct SDataPartyMember {
 
 struct SDataParty {
   SDataPartyMember members[10];
-  u8 _03c[0x040 - 0x03c];
+  u32 leaderObjectType;
   u32 leader;
-  u8 _044[0x054 - 0x044];
+  u8 _044[0x04c - 0x044];
+  u16 partyGauge;
+  u8 _04e[0x054 - 0x04e];
 };
 
 static_assert(sizeof(SDataPartyMember) == 0x06, "");
+static_assert(offsetof(SDataParty, leaderObjectType) == 0x03c, "");
 static_assert(offsetof(SDataParty, leader) == 0x040, "");
+static_assert(offsetof(SDataParty, partyGauge) == 0x04c, "");
 static_assert(sizeof(SDataParty) == 0x054, "");
 
 class GfDataParty {

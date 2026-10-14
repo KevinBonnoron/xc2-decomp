@@ -72,9 +72,24 @@ static_assert(offsetof(GFOBJ_INFO, mounts) == 0xb8, "");
 static_assert(offsetof(GFOBJ_INFO, volumeFade) == 0x3d8, "");
 static_assert(offsetof(GFOBJ_INFO, modelBaseName) == 0x404, "");
 
+class IGfObjListener {
+public:
+  enum OBJEVT {
+    OBJEVT_ALL,
+    OBJEVT_ENTRY,
+    OBJEVT_LOADED,
+    OBJEVT_DESTROY,
+    OBJEVT_REMOVE,
+  };
+
+  virtual void listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectType) = 0;
+};
+
 class GfObjManager : public mm::mtl::PtrSingleton<GfObjManager> {
 public:
   static GFOBJ_INFO *getObjInfo(GF_OBJ_HANDLE *handle);
+  static void addListener(IGfObjListener *listener, IGfObjListener::OBJEVT event);
+  static void removeListener(IGfObjListener *listener);
   bool isValidMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId) const;
   void addDestroyObj(GF_OBJ_HANDLE *handle, bool isImmediate);
   void addApplyParam(GF_OBJ_HANDLE *handle);

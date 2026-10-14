@@ -27,6 +27,11 @@ public:
   static void callBladeActivate(u32 blade, ActivateType activateType, ActivateType oldActivateType);
   static void callItemAdd(u32 item, int count);
   static void callBladeChange(GF_OBJ_HANDLE *handle, int oldSlot, int newSlot);
+  static void callPartyMemberOK(bool isOK);
+  static void callChangeLeader(GF_OBJ_HANDLE *leader);
+  static void callPartyIDMemberOK(bool isOK, u32 partyId);
+  static void callPartyDriver(GF_OBJ_HANDLE *handle, u32 partyId, bool isEnter);
+  static void callPartyChange();
 };
 
 } // namespace gf
