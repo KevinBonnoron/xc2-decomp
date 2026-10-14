@@ -8,6 +8,7 @@
 #include "gf/data/gf_data_driver_arts.cpp"
 #include "gf/data/gf_data_party.cpp"
 #include "gf/data/gf_data_quest.cpp"
+#include "gf/data/gf_data_npc.cpp"
 #include "gf/data/gf_data_map.cpp"
 #include "gf/data/gf_data_mercenaries.cpp"
 // clang-format on

@@ -11,7 +11,11 @@ public:
   u32 getChrDrDefBlade(u32 driver, u32 slot) const;
   u32 getChrDrDefBlade1(u32 driver) const;
   const char *getChrDrDebugName(u32 driver) const;
+  u32 getChrDrName(u32 driver) const;
   u32 getChrDrRace(u32 driver) const;
+  u32 getChrDrGender(u32 driver) const;
+  u32 getChrDrCollisionId(u32 driver) const;
+  u32 getChrDrOffsetID(u32 driver) const;
   const char *getChrDrModel(u32 driver) const;
   const char *getChrDrMotion(u32 driver) const;
   u32 getChrDrAiID(u32 driver) const;

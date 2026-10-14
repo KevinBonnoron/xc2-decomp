@@ -14,6 +14,22 @@ public:
   u16 getRscMobListFootStep(u32 mob) const;
   u8 getRscMobListFootStepEffect(u32 mob) const;
 
+  u32 getRscNpcListStart() const;
+  u32 getRscNpcListName(u32 npc) const;
+  u32 getRscNpcListRace(u32 npc) const;
+  u32 getRscNpcListGender(u32 npc) const;
+  const char *getRscNpcListModel(u32 npc) const;
+  const char *getRscNpcListMotion(u32 npc) const;
+  const char *getRscNpcListAddMotion(u32 npc) const;
+  const char *getRscNpcListComp_Eff(u32 npc) const;
+  u32 getRscNpcListScale(u32 npc) const;
+  u32 getRscNpcListCollisionId(u32 npc) const;
+  u32 getRscNpcListOffsetID(u32 npc) const;
+  u32 getRscNpcListExtraParts(u32 npc, u32 part) const;
+  u32 getRscNpcListFootStep(u32 npc) const;
+  u32 getRscNpcListFootStepEffect(u32 npc) const;
+  u32 getRscNpcListEyeRot(u32 npc) const;
+
   const char *getRSC_PcWpnModel(u32 weapon) const;
   const char *getRSC_PcWpnMotion(u32 weapon) const;
 
