@@ -21,6 +21,14 @@ struct SDataTaskAchieve {
 
 static_assert(sizeof(SDataTaskAchieve) == 0x0c, "");
 
+struct SDataAchievementPopup {
+  u16 blade;
+  u8 achievement;
+  u8 level;
+};
+
+static_assert(sizeof(SDataAchievementPopup) == 0x04, "");
+
 struct SDataGame {
   u32 money;
   u8 _000004[0x000026 - 0x000004];
@@ -66,7 +74,9 @@ struct SDataGame {
   u8 _10ae83[0x10ae84 - 0x10ae83];
   SDataSavedEvent savedEvents[500];
   u32 savedEventNum;
-  u8 _1171d8[0x117690 - 0x1171d8];
+  SDataAchievementPopup achievementPopups[300];
+  u32 achievementPopupNum;
+  u8 _11768c[0x117690 - 0x11768c];
 
   SDataGame();
   SDataGame &operator=(const SDataGame &dataGame);
@@ -107,6 +117,8 @@ static_assert(offsetof(SDataGame, collectFlagNewVersion) == 0x10ae80, "");
 static_assert(offsetof(SDataGame, cameraSide) == 0x10ae82, "");
 static_assert(offsetof(SDataGame, savedEvents) == 0x10ae84, "");
 static_assert(offsetof(SDataGame, savedEventNum) == 0x1171d4, "");
+static_assert(offsetof(SDataGame, achievementPopups) == 0x1171d8, "");
+static_assert(offsetof(SDataGame, achievementPopupNum) == 0x117688, "");
 static_assert(sizeof(SDataGame) == 0x117690, "");
 
 } // namespace gf

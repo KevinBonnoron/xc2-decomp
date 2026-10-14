@@ -24,7 +24,7 @@ public:
   static bool isSkillUnlock(u32 driver, u32 row, u32 column, bool isHidden);
   static u16 getSkill(const SDataDriver &dataDriver, u32 row, u32 column, bool isHidden);
   static u32 getNextSkillPoint(u32 driver, u32 row, bool isHidden);
-  static u16 getSkillLevel(u32 driver, u32 row, bool isHidden);
+  static u32 getSkillLevel(u32 driver, u32 row, bool isHidden);
   static u16 getSkillLevel(const SDataDriver &dataDriver, u32 row, bool isHidden);
   static void setSkillLevel(u32 driver, u32 row, u32 level, bool isHidden);
   static bool getSkillEnhance(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver);

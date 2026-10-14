@@ -17,12 +17,13 @@ public:
     return *this;
   }
 
-  FixStr &operator+=(const char *string) {
-    int nBackLen = __builtin_strlen(string);
-    // __LINE__ must be 487 as in the original header: it is the line argument of the assert.
-#line 487
+  FixStr &operator+=(const char *pszBack) {
+    // __LINE__ must be 485 and 487 as in the original header: they are the line arguments of the asserts.
+#line 485
+    MM_ASSERT(pszBack != 0);
+    int nBackLen = __builtin_strlen(pszBack);
     MM_ASSERT(m_nLen + nBackLen < LEN);
-    __builtin_strcat(mData, string);
+    __builtin_strcat(mData, pszBack);
     m_nLen += nBackLen;
     return *this;
   }
@@ -35,6 +36,7 @@ public:
   void format(const char *format, ...);
 
   const char *c_str() const { return mData; }
+  bool empty() const { return m_nLen == 0; }
 
 private:
   char mData[LEN];

@@ -103,7 +103,7 @@ const char *GfDataNpc::getModelName(u32 npc) {
   }
 
   if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->resourceNameModel;
+    return GfDataBlade::getSDataBlade(npc)->resourceNameModel.c_str();
   }
 
   return GfBdatRsc::get()->getRscNpcListModel(npc);
@@ -115,7 +115,7 @@ const char *GfDataNpc::getMotionName(u32 npc) {
   }
 
   if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->resourceNameMotion;
+    return GfDataBlade::getSDataBlade(npc)->resourceNameMotion.c_str();
   }
 
   return GfBdatRsc::get()->getRscNpcListMotion(npc);
