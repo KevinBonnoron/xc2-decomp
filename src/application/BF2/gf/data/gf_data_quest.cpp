@@ -19,17 +19,19 @@ enum {
 
 void GfDataQuest::registAchievementBlade(u32 achievement, u16 blade) { m_achieve2blade[achievement] = blade; }
 
-u32 GfDataQuest::getListNextQuestA(QuestID quest) {
+QuestID GfDataQuest::getListNextQuestA(QuestID quest) {
   QuestID next = {0, 0};
-  if (!quest.empty()) {
-    u16 nextId = QuestListAcc::get()->getListNextQuestA(quest);
-    if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
-      next.id = nextId;
-      next.variant = quest.variant;
-    }
+  if (quest.empty()) {
+    return next;
   }
 
-  return next.id | next.variant << 16;
+  u16 nextId = QuestListAcc::get()->getListNextQuestA(quest);
+  if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
+    next.id = nextId;
+    next.variant = quest.variant;
+  }
+
+  return next;
 }
 
 u32 GfDataQuest::getListPurposeID(QuestID quest) {
@@ -176,23 +178,23 @@ u32 GfDataQuest::getQuestCategory(QuestID quest) {
     return category;
   }
 
-  u32 parent = getListPRTQuestID(quest);
-  QuestID parentQuest = {static_cast<u16>(parent), static_cast<u16>(parent >> 16)};
-  return getListQuestCategory(parentQuest);
+  return getListQuestCategory(getListPRTQuestID(quest));
 }
 
-u32 GfDataQuest::getListPRTQuestID(QuestID quest) {
+QuestID GfDataQuest::getListPRTQuestID(QuestID quest) {
   QuestID parent = {0, 0};
-  if (!quest.empty()) {
-    u32 parentQuest = QuestListAcc::get()->getListPRTQuestID(quest);
-    parent.id = parentQuest;
-    parent.variant = quest.variant;
-    if (parent.variant == 0) {
-      parent.variant = parentQuest >> 16;
-    }
+  if (quest.empty()) {
+    return parent;
   }
 
-  return parent.id | parent.variant << 16;
+  u32 parentQuest = QuestListAcc::get()->getListPRTQuestID(quest);
+  parent.id = parentQuest;
+  parent.variant = quest.variant;
+  if (parent.variant == 0) {
+    parent.variant = parentQuest >> 16;
+  }
+
+  return parent;
 }
 
 u32 GfDataQuest::getListFlagPRT(QuestID quest) {
@@ -211,17 +213,19 @@ u32 GfDataQuest::getListFlagCLD(QuestID quest) {
   return QuestListAcc::get()->getListFlagCLD(quest);
 }
 
-u32 GfDataQuest::getListNextQuestB(QuestID quest) {
+QuestID GfDataQuest::getListNextQuestB(QuestID quest) {
   QuestID next = {0, 0};
-  if (!quest.empty()) {
-    u16 nextId = QuestListAcc::get()->getListNextQuestB(quest);
-    if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
-      next.id = nextId;
-      next.variant = quest.variant;
-    }
+  if (quest.empty()) {
+    return next;
   }
 
-  return next.id | next.variant << 16;
+  u16 nextId = QuestListAcc::get()->getListNextQuestB(quest);
+  if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
+    next.id = nextId;
+    next.variant = quest.variant;
+  }
+
+  return next;
 }
 
 u32 GfDataQuest::getListCallEventA(QuestID quest) {

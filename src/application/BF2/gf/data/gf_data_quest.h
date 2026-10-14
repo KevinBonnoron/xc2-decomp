@@ -5,13 +5,15 @@
 
 namespace gf {
 
+struct AchievQuest;
+
 constexpr u32 ACHIEVEMENT_PER_BLADE = 50;
 constexpr u32 ACHIEVEMENT_LEVEL_COUNT = 5;
 
 class GfDataQuest {
 public:
   static void registAchievementBlade(u32 achievement, u16 blade);
-  static u32 getListNextQuestA(QuestID quest);
+  static QuestID getListNextQuestA(QuestID quest);
   static u32 getListPurposeID(QuestID quest);
   static u32 getAchievementLine(u32 achievement);
   static u32 getAchievementLevel(u32 achievement);
@@ -28,10 +30,10 @@ public:
   static bool getListVisible(QuestID quest);
   static u32 getListQuestCategory(QuestID quest);
   static u32 getQuestCategory(QuestID quest);
-  static u32 getListPRTQuestID(QuestID quest);
+  static QuestID getListPRTQuestID(QuestID quest);
   static u32 getListFlagPRT(QuestID quest);
   static u32 getListFlagCLD(QuestID quest);
-  static u32 getListNextQuestB(QuestID quest);
+  static QuestID getListNextQuestB(QuestID quest);
   static u32 getListCallEventA(QuestID quest);
   static u32 getListCallEventB(QuestID quest);
   static u32 getListHintsID(QuestID quest);
@@ -45,6 +47,7 @@ public:
   static QuestID getScenario();
   static void setSelect(QuestID select);
   static QuestID getSelect();
+  static AchievQuest *getAchievQuest(QuestID quest);
 
   static u16 m_achieve2blade[];
 };

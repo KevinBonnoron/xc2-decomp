@@ -102,11 +102,6 @@ static f32 getBladeFieldSkillLevel(u32 blade, u32 fieldSkill) {
   return level;
 }
 
-static QuestID toQuestID(u32 quest) {
-  QuestID questID = {static_cast<u16>(quest), static_cast<u16>(quest >> 16)};
-  return questID;
-}
-
 u32 GfDataMercenaries::getReserverMax() {
   return getLevel() * RESERVER_PER_LEVEL + RESERVER_PER_LEVEL + (GfDataManager::getDataGame()->gameClearCount != 0 ? RESERVER_GAME_CLEAR_BONUS : 0);
 }
@@ -404,7 +399,7 @@ u32 GfDataMercenaries::getMissionPurposeID(u32 mission) {
     return 0;
   }
 
-  QuestID nextQuest = toQuestID(GfDataQuest::getListNextQuestA(quest));
+  QuestID nextQuest = GfDataQuest::getListNextQuestA(quest);
   if (nextQuest.empty()) {
     return 0;
   }
@@ -888,7 +883,7 @@ void GfDataMercenaries::setFullEnableOrderMissionForDebug() {
 u32 GfDataMercenaries::getBladeWithLeader(u32 mission) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   QuestID quest = toQuestID(questListAcc->getFLD_MercenariesMissionQuestID(mission));
-  u32 purpose = questListAcc->getListPurposeID(toQuestID(GfDataQuest::getListNextQuestA(quest)));
+  u32 purpose = questListAcc->getListPurposeID(GfDataQuest::getListNextQuestA(quest));
   for (u32 task = 0; task < MISSION_TASK_COUNT; task++) {
     u32 condition = questListAcc->getTaskTaskCondition(purpose, task);
     GfBdatCond *bdatCond = GfBdatCond::get();

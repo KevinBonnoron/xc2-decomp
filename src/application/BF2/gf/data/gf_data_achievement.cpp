@@ -127,9 +127,7 @@ bool GfDataAchievement::isAddAchievementBonusCount(const AchievQuest &achievQues
     }
   }
 
-  u32 next = GfDataQuest::getListNextQuestA(achievQuest.quest);
-  QuestID nextQuest = {static_cast<u16>(next), static_cast<u16>(next >> 16)};
-  QuestTaskParam taskParam(nextQuest, 0, static_cast<TASK_STATE>(0));
+  QuestTaskParam taskParam(GfDataQuest::getListNextQuestA(achievQuest.quest), 0, TASK_STATE_NONE);
   switch (taskParam.taskType) {
   case TASK_TYPE_BATTLE:
   case TASK_TYPE_COLLECT:
@@ -181,7 +179,7 @@ void GfDataAchievement::setupTotalCount(AchievQuest &achievQuest) {
     return;
   }
 
-  if (getTotalCount(achievQuest.stats) == 0 || achievQuest.count != 0) {
+  if (getTotalCount(achievQuest.stats) == 0 || achievQuest.getCount() != 0) {
     return;
   }
 

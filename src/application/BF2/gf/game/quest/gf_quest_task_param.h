@@ -5,10 +5,13 @@
 
 namespace gf {
 
-enum TASK_STATE {};
+enum TASK_STATE {
+  TASK_STATE_NONE,
+};
 
 struct QuestTaskParam {
   QuestTaskParam(QuestID quest, u32 taskIndex, TASK_STATE state);
+  QuestTaskParam(QuestID quest, u32 taskIndex, u32 purpose, TASK_STATE state);
 
   u8 _00[0x04 - 0x00];
   QuestID quest;
