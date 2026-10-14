@@ -45,6 +45,11 @@ public:
   u32 getDriverParamExtMountNpc(u32 driver) const;
   const char *getDriverParamExtMountBone(u32 driver) const;
   u32 getDriverParamExtMountCond(u32 driver) const;
+
+  const char *getVoiceTableDriver(u32 voice, u32 driver) const;
+  const char *getVoiceTableBladeBlade(u32 voice, u32 blade) const;
+  const char *getVoiceTableRareBlade(u32 voice, u32 blade) const;
+  const char *getVoiceTableCommonCommonBlade(u32 voice, u32 personalityVoice) const;
 };
 
 } // namespace gf

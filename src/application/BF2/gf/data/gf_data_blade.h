@@ -24,7 +24,9 @@ struct SDataBlade {
   char motionName[0x28];
   u8 _75c[0x821 - 0x75c];
   u8 weaponType;
-  u8 _822[0x826 - 0x822];
+  u8 _822[0x824 - 0x822];
+  u8 personality;
+  u8 _825[0x826 - 0x825];
   u8 eyeRotControl;
   u8 _827[0x82c - 0x827];
   u16 weapon;
@@ -58,6 +60,7 @@ static_assert(offsetof(SDataBlade, equipPowerRank) == 0x704, "");
 static_assert(offsetof(SDataBlade, openCircuit) == 0x706, "");
 static_assert(offsetof(SDataBlade, gender) == 0x709, "");
 static_assert(offsetof(SDataBlade, weaponType) == 0x821, "");
+static_assert(offsetof(SDataBlade, personality) == 0x824, "");
 static_assert(offsetof(SDataBlade, weapon) == 0x82c, "");
 static_assert(offsetof(SDataBlade, questRace) == 0x846, "");
 static_assert(sizeof(SDataBlade) == 0x8a4, "");
