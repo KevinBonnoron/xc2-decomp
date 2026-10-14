@@ -1,12 +1,17 @@
 #pragma once
+#include "mtl/alloc_handle.h"
 #include <stddef.h>
 
 namespace gf {
 
-class GfAllocator;
+class GfAllocator {
+public:
+  mtl::ALLOC_HANDLE getMemHandle() const;
+};
 
 enum ALLOCATOR {
   ALLOCATOR_SYSTEM = 1,
+  ALLOCATOR_BDAT = 4,
 };
 
 GfAllocator *getAllocator(ALLOCATOR allocator);
