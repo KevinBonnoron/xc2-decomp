@@ -11,6 +11,7 @@ class GfObjUtil {
 public:
   static GfObjSetup *getObjSetup(GF_OBJ_HANDLE *handle);
   static u32 getHp(GF_OBJ_HANDLE *handle);
+  static bool testFlag(GF_OBJ_HANDLE *handle, u32 flag);
 
   template <typename T> static T *getObjSetup(GF_OBJ_HANDLE *handle) {
     GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
