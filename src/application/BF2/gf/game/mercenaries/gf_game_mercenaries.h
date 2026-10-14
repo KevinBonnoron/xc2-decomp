@@ -23,6 +23,7 @@ public:
   static void gevMercenariesMissionFlag(u32 mission, u32 flag, u32 value);
   static void qevOrderQuest(const QuestOrderParam &param);
   static void qevCompleteQuest(const QuestCompleteParam &param);
+  static void updateMissionAutoStart();
   static void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
 };
 

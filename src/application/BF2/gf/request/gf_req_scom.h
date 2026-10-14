@@ -54,6 +54,16 @@ public:
   static void create(u32 objectType, u32 leader);
 };
 
+class SCOM_REFRESH_COMPASS {
+public:
+  static void create();
+};
+
+class SCOM_BATTLE_TASK_RESET {
+public:
+  static void create();
+};
+
 class GfReqSmallCom {
 public:
   static bool isExistCommand(SCOM_TYPE type);
