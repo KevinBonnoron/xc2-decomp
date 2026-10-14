@@ -25,6 +25,7 @@ public:
   static void callHikariCurrent(bool hikariCurrent);
   static void callDebugChangeIdea(u32 type, u32 id, u32 idea, u32 value);
   static void callBladeActivate(u32 blade, ActivateType activateType, ActivateType oldActivateType);
+  static void callItemAdd(u32 item, int count);
   static void callBladeChange(GF_OBJ_HANDLE *handle, int oldSlot, int newSlot);
 };
 

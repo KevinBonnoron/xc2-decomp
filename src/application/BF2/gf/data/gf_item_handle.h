@@ -5,6 +5,7 @@ namespace gf {
 
 class GfItemHandle {
 public:
+  GfItemHandle(u32 value) : value(value) {}
   GfItemHandle(const GfItemHandle &other) : value(other.value) {}
 
   GfItemHandle &operator=(const GfItemHandle &other) {

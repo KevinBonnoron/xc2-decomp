@@ -24,11 +24,6 @@ enum {
   ITEM_MAY_LAST = 0x9d77,
 };
 
-enum {
-  FAVORITE_CATEGORY_FOOD_FIRST = 12,
-  FAVORITE_CATEGORY_FOOD_LAST = 17,
-};
-
 constexpr f32 SECONDS_PER_MINUTE = 60.0f;
 
 bool GfDataItem::getName(u8 *&bdat, u32 &textId, u32 item) {
