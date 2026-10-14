@@ -27,13 +27,23 @@ struct SDataPouch {
   u8 _06;
 };
 
+struct SDataDriverSkillRow {
+  u16 skills[3];
+  u8 _06[0x08 - 0x06];
+  u16 level;
+};
+
+static_assert(offsetof(SDataDriverSkillRow, level) == 0x08, "");
+static_assert(sizeof(SDataDriverSkillRow) == 0x0a, "");
+
 struct SDataDriver {
   u8 _000[0x020 - 0x000];
   u16 activate;
   u16 id;
   s16 bladeSet;
   u16 blades[5];
-  u8 _030[0x094 - 0x030];
+  SDataDriverSkillRow skillRows[5];
+  SDataDriverSkillRow hiddenSkillRows[5];
   u16 level;
   u8 _096[0x0b0 - 0x096];
   u32 exp;
@@ -59,6 +69,8 @@ static_assert(offsetof(SDataDriver, activate) == 0x020, "");
 static_assert(offsetof(SDataDriver, id) == 0x022, "");
 static_assert(offsetof(SDataDriver, bladeSet) == 0x024, "");
 static_assert(offsetof(SDataDriver, blades) == 0x026, "");
+static_assert(offsetof(SDataDriver, skillRows) == 0x030, "");
+static_assert(offsetof(SDataDriver, hiddenSkillRows) == 0x062, "");
 static_assert(offsetof(SDataDriver, level) == 0x094, "");
 static_assert(offsetof(SDataDriver, exp) == 0x0b0, "");
 static_assert(offsetof(SDataDriver, battleExp) == 0x0b4, "");

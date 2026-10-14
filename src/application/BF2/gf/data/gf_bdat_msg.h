@@ -38,6 +38,7 @@ public:
   static u8 *getFpLandmark();
   static u8 *getFpBlArtsMs();
   static u8 *getFpBlSpArtsMs();
+  static u8 *getFpBtlSkillDr();
 };
 
 } // namespace gf
