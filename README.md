@@ -65,10 +65,10 @@ check gf::GfDataBlade::setHikariCurrent     # side by side diff of one function
 The game was built with **Clang 3.9.1**. The flags that matter:
 
 ```
---target=aarch64-none-elf -O3 -std=c++14 -fno-exceptions -fno-rtti -fno-strict-aliasing -fPIC -g
+--target=aarch64-none-elf -O3 -std=c++14 -fno-exceptions -fno-rtti -fno-strict-aliasing -fno-slp-vectorize -fPIC -g
 ```
 
-`-g` is not optional: with Clang 3.9, debug info changes instruction scheduling, and nothing matches without it. Clang 4.0.1 is also available in the shell (`clang++-4.0.1`) for comparison.
+`-g` is not optional: with Clang 3.9, debug info changes instruction scheduling, and nothing matches without it. `-fno-slp-vectorize` is needed too: the game was built without SLP vectorization (two vtable pointers stay an `stp`, a run of float to u16 conversions stays scalar). Clang 4.0.1 is also available in the shell (`clang++-4.0.1`) for comparison.
 
 To try another compiler: `XC2_CXX=clang++-4.0.1 check ...`.
 
