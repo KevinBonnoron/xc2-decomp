@@ -2,6 +2,7 @@
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/event/gf_event.h"
 #include "gf/game/quest/gf_quest_id.h"
+#include "gf/game/quest/gf_quest_info.h"
 #include "types.h"
 #include <stddef.h>
 
@@ -49,10 +50,14 @@ public:
   static void addEvent(IQuestEvent *event);
   static void removeEvent(IQuestEvent *event);
   static void update(const fw::UpdateInfo &info);
-  static QuestID getProgressCurrentQuest(QTYPE type);
   static QuestID getCurrentQuest(QTYPE type);
+  static QuestID getProgressCurrentQuest(QTYPE type);
   static void eventCheckTask(QuestID quest);
+  static bool openOrder(QuestID quest, bool isEvent);
+  static QuestID getOrderQuestId(u32 purpose);
+  static void eventChangeQuestState(QuestID quest, QSTATE oldState, QSTATE state);
   static void gevReloadBdat(RELOAD_BDAT reload, u32 value);
+  static void addCompleteQuest(QuestID quest);
   static void gevBattleEnd();
   static void gevPlayEvent(GEV event, u32 eventId);
   static void gevItemAdd(u32 item, int count);

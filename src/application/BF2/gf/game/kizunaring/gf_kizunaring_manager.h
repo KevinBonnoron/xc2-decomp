@@ -4,8 +4,14 @@
 
 namespace gf {
 
+struct AchievQuest;
 struct GfSetupParam;
 struct QuestCompleteParam;
+
+class GfKizunaringBlade {
+public:
+  static bool isCompleteLevel(const AchievQuest &achievQuest);
+};
 
 class GfKizunaringManager : public mm::mtl::PtrSingleton<GfKizunaringManager> {
 public:

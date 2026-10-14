@@ -15,6 +15,7 @@ class GfAchievStats {
 public:
   static void checkBuyItemFromShop(u32 item, u32 count, u32 shop, u32 money);
   static void checkSellItemFromShop(u32 item, u32 count, u32 shop, u32 money);
+  static s32 getAchievementTotalCount(const AchievQuest &achievQuest);
 };
 
 class GfAchievManager : public mm::mtl::PtrSingleton<GfAchievManager> {
