@@ -44,11 +44,6 @@ enum {
 };
 
 enum {
-  OBJ_FLAG_WAIT = 0x10,
-  OBJ_FLAG_UI_HIDDEN = 0x11,
-};
-
-enum {
   GAME_COND_METSU_WITHOUT_CRYSTAL = 2695,
 };
 
