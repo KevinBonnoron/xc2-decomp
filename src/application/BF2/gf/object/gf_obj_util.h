@@ -9,6 +9,7 @@ struct GF_OBJ_HANDLE;
 
 class GfObjUtil {
 public:
+  static u32 getObjType(GF_OBJ_HANDLE *handle);
   static GfObjSetup *getObjSetup(GF_OBJ_HANDLE *handle);
   static const char *getResourceName(GF_OBJ_HANDLE *handle);
   static const char *getMotionResourceName(GF_OBJ_HANDLE *handle);
