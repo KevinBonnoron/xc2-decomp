@@ -45,6 +45,7 @@ public:
   static bool getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle);
   static bool incEnemySuppress(u32 enemy);
   static bool isEnableDeleteObject(GF_OBJ_HANDLE *handle);
+  static u32 getFormationPlayerID(GF_OBJ_HANDLE *handle);
   static const char *getBladeModel(u32 blade, bool isDefault);
   static bool isCondBladeModel(u32 blade);
   static const char *getBladeMotion(u32 blade, bool isDefault);

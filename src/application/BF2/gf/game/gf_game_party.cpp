@@ -10,7 +10,9 @@
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_obj.h"
+#include "gf/game/gf_game_player_formation.h"
 #include "gf/game/gf_game_scene.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_pause.h"
 #include "gf/object/component/gf_com_transform.h"
@@ -25,6 +27,7 @@ static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-
 
 constexpr u32 PARTY_ID_NONE = 0xffffffff;
 constexpr u32 PARTY_MEMBER_NUM = 3;
+constexpr u32 PLAYER_ID_NONE = 0xffffffff;
 constexpr u32 WEAPON_HANDLE_NUM = 10;
 constexpr int SET_BLADE_NUM_MAX = 5;
 constexpr u32 READY_FRAME_MEMBER_OK = 2;
@@ -47,6 +50,25 @@ static bool isReadyBlade(const GfObjAcc &objAcc, GF_OBJ_HANDLE *blade) {
   }
 
   return GfGameObj::isValidGameObj(blade, true, nullptr) || GfGameObj::isEnterGameObj(blade);
+}
+
+static bool isInGameObj(GF_OBJ_HANDLE *handle) {
+  if (!GfGameObj::isValidGameObj(handle, true, nullptr)) {
+    return GfGameObj::isEnterGameObj(handle);
+  }
+
+  if (GfObjUtil::isTrinityBlade(handle)) {
+    return true;
+  }
+
+  GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
+  u32 playerId = GfGameUtil::getFormationPlayerID(handle);
+  if (playerId == PLAYER_ID_NONE) {
+    return false;
+  }
+
+  u32 followIndex = formation->players[playerId].followIndex;
+  return followIndex == PLAYER_ID_NONE || formation->players[followIndex].handle != INVALID_HANDLE;
 }
 
 GfSelectBlade *GfSelectBlade::s_pThis;
@@ -970,6 +992,25 @@ bool GfGameParty::isBtlLeaderDirver() { return GfObjUtil::isBattle(getLeaderDriv
 
 GF_OBJ_HANDLE *GfGameParty::getLeaderDriver() { return getHandleDriver(getPartyId(getHandleByHierarchy(1))); }
 
+bool GfGameParty::isExistMismatchScenarioMask(u32 partyId) {
+  for (u32 memberPartyId = 0; memberPartyId < PARTY_MEMBER_NUM; memberPartyId++) {
+    if (partyId != PARTY_ID_NONE && partyId != memberPartyId) {
+      continue;
+    }
+
+    GF_OBJ_HANDLE *driver = getHandleDriver(memberPartyId);
+    if (driver == INVALID_HANDLE) {
+      continue;
+    }
+
+    if (GfGameObj::isValidGameObj(driver, true, nullptr) == GfDataDriver::isScenarioMask(GfDataParty::getPartyMember(memberPartyId)->driver)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 u32 GfGameParty::getLeaderLevel() {
   SDataParty *dataParty = GfDataParty::getSDataParty();
   u32 driver = 0;
@@ -1059,6 +1100,46 @@ bool GfGameParty::isLeaderDriver(GF_OBJ_HANDLE *handle) {
   }
 
   return getLeaderDriver() == handle;
+}
+
+bool GfGameParty::isPartyMemberInGameObj() {
+  GfGameParty *party = get();
+  if (party == nullptr) {
+    return true;
+  }
+
+  GfMemberInfo *member = &party->mMembers[0];
+  for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++, member++) {
+    if (member->driver == INVALID_HANDLE) {
+      continue;
+    }
+
+    if (!isInGameObj(member->driver)) {
+      return false;
+    }
+
+    DataParamAcc paramAcc(member->driver);
+    int bladeSet = paramAcc.getBladeSet(false);
+    if (bladeSet < 0) {
+      continue;
+    }
+
+    GF_OBJ_HANDLE *blade = member->blades[bladeSet];
+    GfObjAcc objAcc(blade);
+    if (objAcc.isValid() && !isInGameObj(blade) && !objAcc.testFlag(OBJ_FLAG_LOADED_WAIT_BLOCK)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+void GfGameParty::getPartyPosition(GfPartyPosInfo &info) {
+  info = GfPartyPosInfo();
+  for (u32 index = 0; index < 6; index++) {
+    GfObjAcc objAcc(getHandleByHierarchy(index + 1));
+    info.positions[index].isValid = objAcc.getObjPosRot(info.positions[index].position, info.positions[index].rotation);
+  }
 }
 
 GfMemberInfo::GfMemberInfo() { clear(); }

@@ -1,6 +1,7 @@
 #pragma once
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj_manager.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_ptr.h"
@@ -16,7 +17,6 @@ namespace gf {
 
 struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
-struct GfPartyPosInfo;
 struct GfSetupParam;
 struct RQ_SETUP_PARTY;
 struct RQ_SETUP_PARTY_DRIVER;
@@ -25,6 +25,22 @@ class GfObj;
 class GfWeapon;
 
 enum CHANGE_BLADE {};
+
+struct GfPartyPosInfo {
+  struct Position {
+    Position() : position(mm::Vec3::zero), rotation(0.0f), isValid(false) {}
+
+    mm::Vec3 position;
+    f32 rotation;
+    bool isValid;
+  };
+
+  Position positions[6];
+};
+
+static_assert(offsetof(GfPartyPosInfo::Position, rotation) == 0x10, "");
+static_assert(offsetof(GfPartyPosInfo::Position, isValid) == 0x14, "");
+static_assert(sizeof(GfPartyPosInfo) == 0xc0, "");
 
 class GfMemberInfo {
 public:
