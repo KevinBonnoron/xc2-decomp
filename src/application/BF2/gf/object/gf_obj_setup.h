@@ -21,7 +21,9 @@ public:
   u8 _0c[0x10 - 0x0c];
   u32 id;
   int partyMember;
-  u8 _18[0x40 - 0x18];
+  u8 _18[0x1c - 0x18];
+  u32 characterType;
+  u8 _20[0x40 - 0x20];
   f32 scale;
   u8 _44[0x54 - 0x44];
   bool hasFixedBlade;
@@ -32,6 +34,7 @@ public:
 static_assert(offsetof(GfObjSetup, objType) == 0x08, "");
 static_assert(offsetof(GfObjSetup, id) == 0x10, "");
 static_assert(offsetof(GfObjSetup, partyMember) == 0x14, "");
+static_assert(offsetof(GfObjSetup, characterType) == 0x1c, "");
 static_assert(offsetof(GfObjSetup, scale) == 0x40, "");
 static_assert(offsetof(GfObjSetup, hasFixedBlade) == 0x54, "");
 static_assert(offsetof(GfObjSetup, fixedBlade) == 0x58, "");

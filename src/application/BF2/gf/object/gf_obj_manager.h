@@ -12,6 +12,7 @@ struct GF_OBJ_HANDLE;
 class GfObj;
 class GfObjProperty;
 class GfObjSetup;
+class GfVolumeFade;
 
 enum {
   GFOBJ_STATE_LOADING = 1,
@@ -39,7 +40,8 @@ struct GFOBJ_INFO {
   GfObjProperty *property;
   u8 _a0[0xb8 - 0xa0];
   GFOBJ_MOUNT mounts[4];
-  u8 _3d8[0x404 - 0x3d8];
+  GfVolumeFade *volumeFade;
+  u8 _3e0[0x404 - 0x3e0];
   char modelBaseName[0x10];
 };
 
@@ -52,6 +54,7 @@ static_assert(offsetof(GFOBJ_INFO, flags) == 0x38, "");
 static_assert(offsetof(GFOBJ_INFO, owner) == 0x90, "");
 static_assert(offsetof(GFOBJ_INFO, property) == 0x98, "");
 static_assert(offsetof(GFOBJ_INFO, mounts) == 0xb8, "");
+static_assert(offsetof(GFOBJ_INFO, volumeFade) == 0x3d8, "");
 static_assert(offsetof(GFOBJ_INFO, modelBaseName) == 0x404, "");
 
 class GfObjManager : public mm::mtl::PtrSingleton<GfObjManager> {

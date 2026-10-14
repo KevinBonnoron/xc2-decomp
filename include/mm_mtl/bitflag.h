@@ -12,6 +12,15 @@ public:
     mBits[wordIndex(index)] |= bit(index);
   }
 
+  void set(unsigned int index, bool value) {
+    MM_ASSERT(index < Size);
+    if (value) {
+      mBits[wordIndex(index)] |= bit(index);
+    } else {
+      mBits[wordIndex(index)] &= ~bit(index);
+    }
+  }
+
   bool test(unsigned int index) const {
     MM_ASSERT(index < Size);
     if (WORD_COUNT > 1) {
