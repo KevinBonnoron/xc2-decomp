@@ -1,5 +1,8 @@
 #include "gf/game/gf_game_util.h"
+#include "battle/data_manager_battle.h"
 #include "gf/data/gf_bdat_btl.h"
+#include "gf/data/gf_bdat_chrdr.h"
+#include "gf/data/gf_bdat_maplist.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
@@ -8,12 +11,17 @@
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_hana.h"
 #include "gf/data/gf_data_manager.h"
+#include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/event/gf_event.h"
 #include "gf/field/gf_field_gimmick.h"
+#include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_scene.h"
+#include "gf/game/gf_game_voice.h"
+#include "gf/game/mercenaries/gf_game_mercenaries.h"
 #include "gf/util/gf_util.h"
 #include <stdarg.h>
 
@@ -21,6 +29,14 @@ namespace gf {
 
 enum {
   FLAG_GAME_CLEAR = 0xbdcd,
+};
+
+enum {
+  GAME_COND_METSU_WITHOUT_CRYSTAL = 2695,
+};
+
+enum {
+  VOICE_RESULT_PLAY = 2,
 };
 
 enum {
@@ -34,6 +50,7 @@ constexpr u32 DRIVER_ARTS_LEVEL_MAX = 5;
 constexpr u32 DRIVER_SKILL_LEVEL_MAX = 3;
 constexpr u32 GAME_CLEAR_COUNT_MAX = 9'999;
 constexpr u32 ACHIEVEMENT_POPUP_MAX = 300;
+constexpr int PARTY_GAUGE_MAX = 300;
 
 u32 GfGameUtil::getFsLevelSum(u32 fieldSkill) {
   mm::mtl::FixedVector<u16, 422> blades;
@@ -134,6 +151,8 @@ DriverSkillLevelUpResult GfGameUtil::checkDriverSkillLevelUp(u32 driver, u32 row
   return DRIVER_SKILL_LEVEL_UP_OK;
 }
 
+void GfGameUtil::addWpForObject(u32 driver, u32 weaponType, int weaponPoint) { addWp(driver, weaponType, weaponPoint); }
+
 u16 GfGameUtil::getAntiBladeAreaBdatId() { return GfFieldGimmick::getBdatIdOfActiveGmkAntiBladeArea(); }
 
 bool GfGameUtil::incEnemySuppress(u32 enemy) { return GfDataEnemy::incEnemySuppress(enemy); }
@@ -154,6 +173,26 @@ const char *GfGameUtil::getBladeMotion(u32 blade, bool isDefault) {
   }
 
   return dataBlade->resourceNameMotion.c_str();
+}
+
+const char *GfGameUtil::getDriverModel(u32 driver) {
+  GfBdatChrDr *bdatDriver = GfBdatChrDr::get();
+  const char *model2 = bdatDriver->getChrDrModel2(driver);
+  if (model2 != nullptr && *model2 != '\0' && isCondDriverModel(driver)) {
+    return bdatDriver->getChrDrModel2(driver);
+  }
+
+  return bdatDriver->getChrDrModel(driver);
+}
+
+bool GfGameUtil::isCondDriverModel(u32 driver) { return GfGameCond::isGameCond(GfBdatChrDr::get()->getChrDrCondition(driver)); }
+
+const char *GfGameUtil::getSalvageDriverModel(u32 driver) {
+  if (driver == DRIVER_REX) {
+    return isTrueRex() ? "pc/pc000104" : "pc/pc000102";
+  }
+
+  return "";
 }
 
 void GfGameUtil::incGameClearCount() {
@@ -200,6 +239,12 @@ void GfGameUtil::makeStateBattleByBlade(mm::mtl::FixStr<32> &state, u32 blade, b
   state += isStart ? "btstart" : "btend";
 }
 
+void GfGameUtil::requestFieldDamage(GF_OBJ_HANDLE *handle) {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->setDamageCharacter(handle);
+  }
+}
+
 u32 GfGameUtil::getObjAttribute(GF_OBJ_HANDLE *handle) {
   DataParamAcc dataParamAcc(handle);
   return dataParamAcc.getAttribute(-1, false);
@@ -212,6 +257,13 @@ void GfGameUtil::addInGameLog(GAMELOG_PRIO priority, const char *format, ...) {
 }
 
 GF_OBJ_HANDLE *GfGameUtil::getDebugPickObj() { return reinterpret_cast<GF_OBJ_HANDLE *>(-1); }
+
+bool GfGameUtil::isPlayVoice(GF_OBJ_HANDLE *handle) { return GfGameVoice::getResult(handle) == VOICE_RESULT_PLAY; }
+
+bool GfGameUtil::isDispWorldMap(u32 map) {
+  u32 condition = GfBdatMaplist::get()->getMaplistmapON_cndID(map);
+  return condition != 0 && GfGameCond::isGameCond(condition);
+}
 
 bool GfGameUtil::execActivateMercenaryTeamForBlade(u32 blade) {
   if (GfDataBlade::isActivateMercenaryTeam(blade)) {
@@ -240,6 +292,23 @@ bool GfGameUtil::execActivateReserverForBlade(u32 blade) {
 
   GfEvent::callBladeActivate(blade, activateType, ACTIVATE_TYPE_RESERVER);
   return true;
+}
+
+void GfGameUtil::execEquipMercenariesBlade(u32 driver, u32 blade) {
+  if (!GfDataBlade::isActivateMercenaryTeam(blade)) {
+    return;
+  }
+
+  if (GfDataDriver::getBladeSet(driver) >= 0 && !GfDataBlade::isDummyBlade(GfDataDriver::getBlade(driver, -1))) {
+    return;
+  }
+
+  u32 team = GfDataMercenaries::getTeamID(blade);
+  GfGameMercenaries::cancelMission(GfDataMercenaries::getMissionIdByBlade(blade));
+  GfGameMercenaries::clearTeamMember(team);
+  if (GfDataBlade::isActivateReserver(blade)) {
+    GfDataBlade::setActivateDriver(blade, -1, driver, 0);
+  }
 }
 
 u32 GfGameUtil::execAddRareBlade(const SDataBlade &dataBlade) {
@@ -284,9 +353,19 @@ bool GfGameUtil::isDummyBlade(GF_OBJ_HANDLE *handle) {
   return GfDataBlade::isDummyBlade(dataParamAcc.isValid() ? dataParamAcc.getBdatId() : 0);
 }
 
+bool GfGameUtil::isHomuraHoodStyle() { return GfGameCond::isGameCond(GfDataBlade::getSDataBlade(BLADE_HOMURA)->condition); }
+
+bool GfGameUtil::isTrueRex() { return GfGameCond::isGameCond(GfBdatChrDr::get()->getChrDrCondition(DRIVER_REX)); }
+
 void GfGameUtil::changeHikariCurrent(bool hikariCurrent) {
   GfDataBlade::setHikariCurrent(hikariCurrent);
   GfEvent::callHikariCurrent(hikariCurrent);
+}
+
+void GfGameUtil::setMaxPartyGauge() {
+  if (btl::DataManager::get() != nullptr) {
+    btl::DataManager::get()->SetPartyGauge(PARTY_GAUGE_MAX, false);
+  }
 }
 
 bool GfGameUtil::getDriverAcceList(mm::mtl::FixedVector<u16, 16> &drivers) {
@@ -314,6 +393,8 @@ bool GfGameUtil::isDispHomuraCrystal() {
   u16 scenarioFlag = GfDataUtil::getScenarioFlag();
   return scenarioFlag < SCENARIO_FLAG_WITHOUT_CRYSTAL_FIRST || scenarioFlag > SCENARIO_FLAG_WITHOUT_CRYSTAL_LAST;
 }
+
+bool GfGameUtil::isDispMetsuCrystal() { return !GfGameCond::isGameCond(GAME_COND_METSU_WITHOUT_CRYSTAL); }
 
 bool GfGameUtil::isBladeInVillage(u32 blade) {
   if (GfDataBlade::isActivateUnuse(blade) || GfDataBlade::isUnselect(blade)) {
