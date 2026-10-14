@@ -2,6 +2,7 @@
 #include "gf/data/gf_bdat_cond.h"
 #include "gf/data/gf_bdat_item.h"
 #include "gf/data/gf_bdat_quest.h"
+#include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_item.h"
@@ -14,7 +15,10 @@
 #include "gf/game/gf_game_util.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/gf_allocator.h"
+#include "gf/request/gf_req_command.h"
+#include "gf/request/gf_req_scom.h"
 #include "gf/util/gf_item_util.h"
+#include "mm_mtl/fixed_list.h"
 
 namespace gf {
 
@@ -45,6 +49,14 @@ enum {
   ACHIEVEMENT_LINE_FIELD_SKILL_FIRST = 6,
   ACHIEVEMENT_LINE_COUNT = 10,
   ACHIEVEMENT_LEVEL_COUNT = 5,
+};
+
+enum {
+  PARTY_CONDITION_ACTIVATE = 0,
+  PARTY_CONDITION_MEMBER = 1,
+  PARTY_CONDITION_LEADER = 2,
+  PARTY_CONDITION_ACTIVATE_UNUSE = 5,
+  PARTY_CONDITION_CHARACTER_COUNT = 3,
 };
 
 enum {
@@ -336,6 +348,69 @@ bool GfGameCond::isLevel(u32 condition) {
 void GfGameCond::applyLevel(u32 condition) {
   if (!isLevel(condition)) {
     GfDataDriver::setLevel(s_bdatCond->getConditionLevelPCID(condition), s_bdatCond->getConditionLevelLevel(condition));
+  }
+}
+
+void GfGameCond::applyParty(u32 condition) {
+  mm::mtl::FixedList<u32, PARTY_CONDITION_CHARACTER_COUNT> activateDrivers;
+  mm::mtl::FixedList<u32, PARTY_CONDITION_CHARACTER_COUNT> activateBlades;
+  mm::mtl::FixedList<u32, PARTY_CONDITION_CHARACTER_COUNT> removeDrivers;
+  mm::mtl::FixedList<u32, PARTY_CONDITION_CHARACTER_COUNT> removeBlades;
+
+  u32 category = s_bdatCond->getConditionPTCategory(condition);
+  u32 index = 0;
+  u32 leader = 0;
+  for (; index < PARTY_CONDITION_CHARACTER_COUNT; index++) {
+    u32 character = s_bdatCond->getConditionPTPCID(condition, index);
+    if (character == 0) {
+      break;
+    }
+
+    switch (category) {
+    case PARTY_CONDITION_LEADER:
+      leader = character;
+    case PARTY_CONDITION_ACTIVATE:
+      if (character < BLADE_ID_FIRST) {
+        activateDrivers.push_back(character);
+      } else {
+        activateBlades.push_back(character);
+      }
+      break;
+    case PARTY_CONDITION_MEMBER:
+      if (character < BLADE_ID_FIRST) {
+        removeDrivers.push_back(character);
+      } else {
+        removeBlades.push_back(character);
+      }
+      break;
+    case PARTY_CONDITION_ACTIVATE_UNUSE:
+      if (GfDataBlade::isBladeID(character)) {
+        activateBlades.push_back(character);
+      }
+      break;
+    }
+  }
+
+  for (u32 driver : removeDrivers) {
+    SCOM_PARTY_ADD::removeDriver(driver, false);
+  }
+  for (u32 blade : removeBlades) {
+    SCOM_PARTY_ADD::removeDriver(blade, false);
+  }
+  for (const u32 &blade : activateBlades) {
+    if (GfDataBlade::getSetDriver(blade) != 0) {
+      continue;
+    }
+
+    u32 driver = GfDataBlade::getCreator(blade);
+    if (driver == 0 || GfDataDriver::isActivateUnuse(driver)) {
+      driver = DRIVER_REX;
+    }
+    GfReqCommand::reqPartyBlade(blade, driver);
+  }
+
+  if (leader != 0) {
+    SCOM_PARTY_LEADER::create(leader < BLADE_ID_FIRST ? OBJECT_TYPE_DRIVER : OBJECT_TYPE_BLADE, leader);
   }
 }
 
