@@ -16,6 +16,8 @@ public:
 
 class GfEvent {
 public:
+  static void addEventCallback(IGfEvent *event);
+  static void removeEventCallback(IGfEvent *event);
   static void callChangeScenarioFlag(u32 scenarioFlag, u32 oldScenarioFlag);
   static void callBladeUnselect(u32 blade, bool unselect);
   static void callDebugChangeIdea(u32 type, u32 id, u32 idea, u32 value);
