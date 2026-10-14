@@ -1,12 +1,17 @@
 #include "gf/data/gf_data_util.h"
+#include "gf/data/gf_bdat_chrdr.h"
+#include "gf/data/gf_character_id.h"
+#include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_game_flag.h"
+#include "ml/rand.h"
 
 namespace gf {
 
 enum {
   FLAG_SCENARIO_FLAG = 0x1,
+  FLAG_RANDOM_INN = 0x204,
   FLAG_SALVAGER_POINT = 0x854,
   FLAG_GAME_CLEAR = 0xbdcd,
   FLAG_GAME_CLEAR_CHECK = 0xd77e,
@@ -16,8 +21,22 @@ enum {
   SCENARIO_FLAG_VANDAMME_DEAD = 0xbe8,
 };
 
+enum {
+  OBJECT_TYPE_DRIVER = 3,
+  OBJECT_TYPE_BLADE = 4,
+};
+
 constexpr u32 MONEY_MAX = 999'999'999;
 constexpr u32 COIN_MAX = 9'999;
+
+void GfDataUtil::setupEventDriverAndBlade() {
+  GfBdatChrDr *bdatDriver = GfBdatChrDr::get();
+  GfDataBlade::setActivateDriver(bdatDriver->getChrDrDefBlade1(DRIVER_TORA), -1, DRIVER_TORA, 0);
+  GfDataBlade::setActivateDriver(bdatDriver->getChrDrDefBlade1(DRIVER_VANDAMME), -1, DRIVER_VANDAMME, 0);
+  GfDataBlade::setActivateDriver(bdatDriver->getChrDrDefBlade1(DRIVER_MELEPH), -1, DRIVER_MELEPH, 0);
+  GfDataBlade::setActivateDriver(bdatDriver->getChrDrDefBlade1(DRIVER_SHIN), -1, DRIVER_SHIN, 0);
+  GfDataBlade::setActivateDriver(bdatDriver->getChrDrDefBlade1(DRIVER_METSU), -1, DRIVER_METSU, 0);
+}
 
 u32 GfDataUtil::getMoney() { return GfDataManager::getDataGame()->money; }
 
@@ -99,7 +118,35 @@ void GfDataUtil::setCameraSide(u8 cameraSide) {
 
 u32 GfDataUtil::getGameClearCount() { return GfDataManager::getDataGame()->gameClearCount; }
 
+const char *GfDataUtil::getAttributeFileName(u32 attribute) {
+  static const char *const attributeFileNames[] = {
+      "none",
+      "fire",
+      "water",
+      "wind",
+      "earth",
+      "volt",
+      "ice",
+      "light",
+      "dark",
+  };
+
+  return attributeFileNames[attribute];
+}
+
 void GfDataUtil::setScenarioFlag(u16 scenarioFlag) { GfGameFlag::setLocal(16, FLAG_SCENARIO_FLAG, scenarioFlag); }
+
+u32 GfDataUtil::getObjTypeByCharaId(u32 charaId) {
+  if (charaId >= 1 && charaId <= 9) {
+    return OBJECT_TYPE_DRIVER;
+  }
+
+  if (charaId >= 1001 && charaId <= 1050) {
+    return OBJECT_TYPE_BLADE;
+  }
+
+  return 0;
+}
 
 f32 GfDataUtil::getMoveDistance(AMOVE amove) {
   SDataGame *dataGame = GfDataManager::getDataGame();
@@ -125,7 +172,11 @@ void GfDataUtil::setMoveDistance(AMOVE amove, f32 moveDistance) {
   }
 }
 
+void GfDataUtil::setRandomInn() { GfGameFlag::setLocal(4, FLAG_RANDOM_INN, ml::mtRand(16)); }
+
 void GfDataUtil::setSalvagerPoint(u32 salvagerPoint) { GfGameFlag::setLocal(8, FLAG_SALVAGER_POINT, salvagerPoint); }
+
+u64 *GfDataUtil::getSaveRealTime() { return &GfDataManager::getDataGame()->saveRealTime; }
 
 bool GfDataUtil::isCollectFlagNewVersion() { return GfDataManager::getDataGame()->collectFlagNewVersion; }
 
