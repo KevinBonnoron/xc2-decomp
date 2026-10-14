@@ -1,8 +1,10 @@
 #include "gf/object/gf_obj_util.h"
+#include "gf/asset/gf_asset_manager.h"
 #include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_data_npc.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj_acc.h"
@@ -11,12 +13,6 @@
 namespace gf {
 
 static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
-
-class GfAssetManager {
-public:
-  static const char *getModelInfo(GF_ASSET_HANDLE *handle);
-  static const char *getMotionInfo(GF_ASSET_HANDLE *handle);
-};
 
 void GfObjUtil::addDebugName(GF_OBJ_HANDLE *handle) {}
 
@@ -66,6 +62,32 @@ GfObjSetup *GfObjUtil::getObjSetup(GF_OBJ_HANDLE *handle) {
 GF_ASSET_HANDLE *GfObjUtil::getAssetHandle(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
   return info != nullptr ? info->assetHandle : reinterpret_cast<GF_ASSET_HANDLE *>(-1);
+}
+
+void GfObjUtil::applyExecUpdate(GfObj *obj) { obj->isExecUpdate = isUpdateComponent(obj) && !isFollowObjNotReady(obj->handle); }
+
+GF_OBJ_HANDLE *GfObjUtil::getParentHandle(GF_OBJ_HANDLE *handle) {
+  GfObj *obj = getObj(handle);
+  if (obj != nullptr) {
+    fw::UpdatableObject *parent = obj->parent.get();
+    if (parent != nullptr) {
+      GfObj *parentObj = mm::mtl::dynamicCast<GfObj>(parent);
+      if (parentObj != nullptr) {
+        return parentObj->handle;
+      }
+    }
+  }
+
+  return INVALID_HANDLE;
+}
+
+GfObj *GfObjUtil::getParentObj(GfObj *obj) {
+  fw::UpdatableObject *parent = obj->parent.get();
+  if (parent == nullptr) {
+    return nullptr;
+  }
+
+  return mm::mtl::dynamicCast<GfObj>(parent);
 }
 
 u32 GfObjUtil::getLayerSection(u32 layer) {
@@ -361,6 +383,11 @@ const char *GfObjUtil::getAssetModelName(GF_OBJ_HANDLE *handle) { return GfAsset
 
 const char *GfObjUtil::getAssetMotionName(GF_OBJ_HANDLE *handle) { return GfAssetManager::getMotionInfo(getAssetHandle(handle)); }
 
+u32 GfObjUtil::getEyeRotControl(GF_OBJ_HANDLE *handle) {
+  DataParamAcc paramAcc(handle);
+  return paramAcc.getEyeRotControl();
+}
+
 GfComModel *GfObjUtil::getComModel(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   return obj != nullptr ? obj->getComponent<GfComModel>() : nullptr;
@@ -407,9 +434,40 @@ bool GfObjUtil::isTalking(GF_OBJ_HANDLE *handle) {
   return info != nullptr && info->flags.test(OBJ_FLAG_TALKING);
 }
 
+bool GfObjUtil::isSearchEmptyResource(GF_OBJ_HANDLE *handle) {
+  GF_ASSET_HANDLE *assetHandle = getAssetHandle(handle);
+  if (GfAssetManager::get() != nullptr) {
+    return GfAssetManager::get()->isFullResource(assetHandle);
+  }
+
+  return false;
+}
+
+bool GfObjUtil::getMobSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slots, GF_OBJ_HANDLE *handle) {
+  slots.clear();
+  if (getObjType(handle) == OBJECT_TYPE_MOB) {
+    GfAssetManager::getSlotHandle(slots, getAssetHandle(handle));
+  }
+
+  return !slots.empty();
+}
+
 bool GfObjUtil::isTrinityBlade(GF_OBJ_HANDLE *handle) {
   GfObjSetup *setup = getObjSetup(handle);
   return setup != nullptr && setup->characterType == CHARACTER_TYPE_TRINITY_BLADE;
 }
+
+bool GfObjUtil::isUpdateComponent(const GfObj *obj) {
+  const GFOBJ_INFO *info = obj->info;
+  if (!obj->isUpdateEnable || (info != nullptr && info->flags.test(OBJ_FLAG_DESTROY)) ||
+      (GfObjManager::get() != nullptr && GfObjManager::get()->isSuspendUpdate()) ||
+      (info != nullptr && info->flags.test(OBJ_FLAG_PARTY_OBJ) && !GfGameParty::isPartyMemberInGameObj())) {
+    return false;
+  }
+
+  return true;
+}
+
+void GfObjUtil::applyExecUpdate(GF_OBJ_HANDLE *handle) { applyExecUpdate(getObj(handle)); }
 
 } // namespace gf

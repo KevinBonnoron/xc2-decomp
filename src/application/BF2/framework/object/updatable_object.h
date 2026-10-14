@@ -7,6 +7,18 @@ namespace fw {
 
 class UpdatableObject;
 
+class PointerMap {
+public:
+  void *getPtr(u32 id) const;
+};
+
+template <typename T> struct HandlePtr {
+  T *get() const { return id != 0 ? static_cast<T *>(map->getPtr(id)) : nullptr; }
+
+  u32 id;
+  PointerMap *map;
+};
+
 class ComponentObject {
 public:
   virtual const mm::mtl::RTTI *getRTTI() const;
@@ -38,12 +50,14 @@ public:
   u32 layer;
   u8 _30[0x38 - 0x30];
   ComponentObject *components[COMPONENT_MAX];
-  u8 _98[0xe0 - 0x98];
+  u8 _98[0xd0 - 0x98];
+  HandlePtr<UpdatableObject> parent;
 };
 
 static_assert(offsetof(UpdatableObject, type) == 0x28, "");
 static_assert(offsetof(UpdatableObject, layer) == 0x2c, "");
 static_assert(offsetof(UpdatableObject, components) == 0x38, "");
+static_assert(offsetof(UpdatableObject, parent) == 0xd0, "");
 static_assert(sizeof(UpdatableObject) == 0xe0, "");
 
 } // namespace fw

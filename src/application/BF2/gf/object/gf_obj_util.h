@@ -2,6 +2,7 @@
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_setup.h"
+#include "mm_mtl/fixed_vector.h"
 #include "types.h"
 
 namespace gf {
@@ -9,6 +10,7 @@ namespace gf {
 struct GF_ASSET_HANDLE;
 struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
+struct GF_SLOT_HANDLE;
 class GfComModel;
 class GfObjProperty;
 class GfVolumeFade;
@@ -52,6 +54,9 @@ public:
   static f32 getSetupScale(GF_OBJ_HANDLE *handle);
   static GfObjSetup *getObjSetup(GF_OBJ_HANDLE *handle);
   static GF_ASSET_HANDLE *getAssetHandle(GF_OBJ_HANDLE *handle);
+  static void applyExecUpdate(GfObj *obj);
+  static GF_OBJ_HANDLE *getParentHandle(GF_OBJ_HANDLE *handle);
+  static GfObj *getParentObj(GfObj *obj);
   static u32 getLayerSection(u32 layer);
   static void changeLayer(GfObj *obj, u32 layer);
   static void changeLayer(GF_OBJ_HANDLE *handle, u32 layer);
@@ -89,6 +94,7 @@ public:
   static const char *getModelBaseName(GF_OBJ_HANDLE *handle);
   static const char *getAssetModelName(GF_OBJ_HANDLE *handle);
   static const char *getAssetMotionName(GF_OBJ_HANDLE *handle);
+  static u32 getEyeRotControl(GF_OBJ_HANDLE *handle);
   static GfComModel *getComModel(GF_OBJ_HANDLE *handle);
   static GfVolumeFade *getVolumeFade(GF_OBJ_HANDLE *handle);
   static bool isBattle(GF_OBJ_HANDLE *handle);
@@ -96,8 +102,12 @@ public:
   static void setVolumeFadeUserFlag(GF_OBJ_HANDLE *handle, bool isForUser);
   static void setTalking(GF_OBJ_HANDLE *handle, bool isTalking);
   static bool isTalking(GF_OBJ_HANDLE *handle);
+  static bool isSearchEmptyResource(GF_OBJ_HANDLE *handle);
+  static bool getMobSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slots, GF_OBJ_HANDLE *handle);
   static bool isTrinityBlade(GF_OBJ_HANDLE *handle);
-  static GfObj *getParentObj(GfObj *obj);
+  static bool isUpdateComponent(const GfObj *obj);
+  static void applyExecUpdate(GF_OBJ_HANDLE *handle);
+  static bool isFollowObjNotReady(GF_OBJ_HANDLE *handle);
 
   template <typename T> static T *getObjSetup(GF_OBJ_HANDLE *handle) {
     GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
