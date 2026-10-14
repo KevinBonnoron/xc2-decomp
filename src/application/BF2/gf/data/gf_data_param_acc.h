@@ -169,4 +169,19 @@ static_assert(offsetof(DataParamAcc, obj) == 0x08, "");
 static_assert(offsetof(DataParamAcc, handle) == 0x10, "");
 static_assert(sizeof(DataParamAcc) == 0x18, "");
 
+struct SDataIdea;
+
+class DataIdeaAcc {
+public:
+  DataIdeaAcc(DataParamAcc &dataParamAcc);
+  int getLevel(u32 idea) const;
+  void setLevel(u32 idea, u32 level);
+
+  SDataIdea *idea;
+  bool isBlade;
+};
+
+static_assert(offsetof(DataIdeaAcc, isBlade) == 0x08, "");
+static_assert(sizeof(DataIdeaAcc) == 0x10, "");
+
 } // namespace gf
