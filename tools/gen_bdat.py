@@ -62,6 +62,12 @@ class Elf:
                 return self.data[pos:self.data.index(b"\0", pos)].decode()
         raise ValueError(hex(addr))
 
+    def u64(self, addr):
+        for _, typ, _, start, offset, length, *_ in self.sections:
+            if typ != 8 and start and start <= addr < start + length:
+                return struct.unpack_from("<Q", self.data, offset + addr - start)[0]
+        return 0
+
 
 def disassemble(names):
     out = run(["llvm-objdump", "-d", "--no-show-raw-insn", *(f"--disassemble-symbols={n}" for n in names), ELF])
@@ -127,11 +133,13 @@ def parse_getter(insns):
     for op, reg, addr in touched:
         if op == "ldr" and reg.startswith("x") and addr not in statics:
             statics.append(addr)
-    call = next((a for o, a in insns if o == "bl" and ("getValCheck" in a or "getFlagVal" in a)), "")
+    call = next((a for o, a in insns if o == "bl" and ("ValCheck" in a or "getFlagVal" in a)), "")
     if "getFlagVal" in call:
         return {"kind": "flag", "statics": statics[:2]}
-    code = next(imm(a.split(",")[-1]) for o, a in insns if o in ("orr", "mov") and a.startswith("w3,") and "#" in a)
-    after = [o + " " + a for o, a in insns[[i for i, (o, a) in enumerate(insns) if o == "bl" and "getValCheck" in a][0] + 1:]]
+    array = "getArrayValCheck" in call
+    register = "w4," if array else "w3,"
+    code = next(imm(a.split(",")[-1]) for o, a in insns if o in ("orr", "mov") and a.startswith(register) and "#" in a)
+    after = [o + " " + a for o, a in insns[[i for i, (o, a) in enumerate(insns) if o == "bl" and "ValCheck" in a][0] + 1:]]
     if any(o == "mov" and a == "x0, xzr" for o, a in insns):
         kind = "pointer"
     elif any(o == "fmov" and a.startswith("s8, w0") for o, a in insns):
@@ -146,7 +154,22 @@ def parse_getter(insns):
         kind = "sxtb"
     else:
         kind = "none"
-    return {"kind": kind, "statics": statics[:1], "code": code}
+    return {"kind": kind, "statics": statics[:1], "code": code, "array": array}
+
+
+def parse_dispatcher(insns, elf, functions, bounds):
+    """A dispatcher indexes a static table of column getters: read the table back."""
+    regs, _ = addresses(insns)
+    table = next(iter(regs.values()))
+    names = []
+    for i in range(64):
+        if i and table + 8 * i in bounds:
+            break
+        name = functions.get(elf.u64(table + 8 * i))
+        if name is None or names and re.sub(r"\d+", "", name) != re.sub(r"\d+", "", names[0]):
+            break
+        names.append(name)
+    return {"kind": "table", "getters": names}
 
 
 def demangled_name(mangled):
@@ -173,12 +196,17 @@ def main():
     code = disassemble([f[2] for f in funcs] + [m[2] for m in methods])
     elf = Elf()
 
+    functions = {addr: demangled_name(mangled) for addr, size, mangled in funcs}
+    dispatchers = [f for f in funcs if any(o == "br" for o, _ in code[f[2]])]
+    bounds = {next(iter(addresses(code[f[2]])[0].values())) for f in dispatchers}
     statics = {}
     entries = []
     for addr, size, mangled in funcs:
         name = demangled_name(mangled)
         insns = code[mangled]
-        if name.startswith("init"):
+        if (addr, size, mangled) in dispatchers:
+            entries.append(("get", name, parse_dispatcher(insns, elf, functions, bounds), mangled))
+        elif name.startswith("init"):
             column = name[len("init"):]
             stored = parse_init(insns, elf)
             for i, (static, member) in enumerate(stored):
@@ -195,7 +223,7 @@ def main():
     tables = {}
     for addr, size, mangled in methods:
         insns = code.get(mangled, [])
-        load = next((a for o, a in insns if o == "ldr" and re.match(r"x\d+, \[x0, #0x[0-9a-f]+\]", a)), None)
+        load = next((a for o, a in insns if o == "ldr" and re.match(r"x\d+, \[x(0|19), #0x[0-9a-f]+\]", a)), None)
         if load:
             tables[mangled] = imm(load.split("#")[1].rstrip("]"))
 
@@ -203,6 +231,12 @@ def main():
     if namespace_only:
         methods, tables = [], {}
     write(cls, ns, stem, statics, entries, methods, tables, code, direct, namespace_only)
+
+
+def return_type(info, getters=None):
+    if info["kind"] == "table":
+        return return_type(getters[info["getters"][0]])
+    return "bool" if info["kind"] == "flag" else TYPES[info["kind"]][0]
 
 
 def static_name(statics, addr):
@@ -261,14 +295,28 @@ def write(cls, ns, stem, statics, entries, methods, tables, code, direct, namesp
             w("}")
             w("")
             continue
+        if info["kind"] == "table":
+            ret = return_type(info, getters)
+            items = ", ".join(f"{getter}" for getter in info["getters"])
+            w(f"{ret} {name}(const CBdatWrapper &wrapper, u32 id, u32 index) {{")
+            w(f"  static {ret} (*const getters[])(const CBdatWrapper &, u32) = {{{items}}};")
+            w("  return getters[index](wrapper, id);")
+            w("}")
+            w("")
+            continue
         ret, field = TYPES[info["kind"]]
         member = static_name(statics, info["statics"][0])
         zero = "nullptr" if info["kind"] == "pointer" else "0"
-        w(f"{ret} {name}(const CBdatWrapper &wrapper, u32 id) {{")
+        if info["array"]:
+            w(f"{ret} {name}(const CBdatWrapper &wrapper, u32 id, u32 index) {{")
+            value = f"wrapper.getArrayValCheck({member}, id, index, {info['code']}).{field}"
+        else:
+            w(f"{ret} {name}(const CBdatWrapper &wrapper, u32 id) {{")
+            value = f"wrapper.getValCheck({member}, id, {info['code']}).{field}"
         if info["kind"] == "float":
             w("  f32 value = 0.0f;")
             w(f"  if ({member} != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {{")
-            w(f"    value = wrapper.getValCheck({member}, id, {info['code']}).{field};")
+            w(f"    value = {value};")
             w("  }")
             w("")
             w("  return value;")
@@ -277,7 +325,7 @@ def write(cls, ns, stem, statics, entries, methods, tables, code, direct, namesp
             w(f"    return {zero};")
             w("  }")
             w("")
-            w(f"  return wrapper.getValCheck({member}, id, {info['code']}).{field};")
+            w(f"  return {value};")
         w("}")
         w("")
     w(f"}} // namespace {ns}")
@@ -288,6 +336,8 @@ def write(cls, ns, stem, statics, entries, methods, tables, code, direct, namesp
         table_names.setdefault(offset, []).append(re.sub(r"^(get|is)", "", demangled(mangled)))
     member_names = {offset: "m" + common_prefix(names) for offset, names in table_names.items()}
 
+    header_path = os.path.join(ROOT, "src", "application", "BF2", "gf", "data", stem + ".h")
+    existing_header = open(header_path).read() if os.path.exists(header_path) else ""
     declarations = []
     for addr, size, mangled in methods:
         name = demangled(mangled)
@@ -308,6 +358,14 @@ def write(cls, ns, stem, statics, entries, methods, tables, code, direct, namesp
             table = member_names[tables[mangled]]
             declarations.append(f"  {ret} {name}(u32 id) const;")
             w(f"{ret} {cls}::{name}(u32 id) const {{ return {ns}::{name}(*{table}, id); }}")
+            w("")
+        elif args == "Ejj" and name in getters and mangled in tables:
+            ret = return_type(getters[name], getters)
+            table = member_names[tables[mangled]]
+            named = re.search(rf"\b{name}\(u32 (\w+), u32 (\w+)\)", existing_header)
+            first, second = named.groups() if named else ("id", "index")
+            declarations.append(f"  {ret} {name}(u32 {first}, u32 {second}) const;")
+            w(f"{ret} {cls}::{name}(u32 {first}, u32 {second}) const {{ return {ns}::{name}(*{table}, {first}, {second}); }}")
             w("")
     w("} // namespace gf")
     open(os.path.join(ROOT, "src", "application", "BF2", "gf", "data", stem + ".cpp"), "w").write("\n".join(out) + "\n")
