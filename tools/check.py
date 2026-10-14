@@ -100,6 +100,13 @@ class Image:
                 return self.data[pos:offset + min(addr - base + size, length)]
         return b""
 
+    def section_name(self, addr):
+        return next((name for name, _, start, _, length in self.sections if start and start <= addr < start + length), "")
+
+
+def writable(section):
+    return section.startswith((".data", ".bss"))
+
 
 class TargetSymbols:
     def __init__(self):
@@ -166,6 +173,8 @@ def target_label(addr, load64, image, syms):
         pointer = image.read(addr, 8)
         if len(pointer) == 8 and struct.unpack("<Q", pointer)[0] in syms.exact:
             return "got:" + syms.exact[struct.unpack("<Q", pointer)[0]]
+    if writable(image.section_name(addr)):
+        return "data"
     return data_label(image.read(addr, 1024))
 
 
@@ -174,6 +183,8 @@ def object_label(rtype, target, image):
         return "got:" + target
     match = re.fullmatch(r"(.+?)([+-]0x[0-9a-f]+)?", target)
     sym, addend = match.group(1), int(match.group(2) or "0", 16)
+    if writable(sym):
+        return "data"
     if sym.startswith("."):
         return data_label(image.read(addend, 1024, section=sym))
     return sym + (f"+{addend:#x}" if addend else "")
