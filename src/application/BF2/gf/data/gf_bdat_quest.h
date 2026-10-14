@@ -58,6 +58,7 @@ public:
   u32 getFLD_MercenariesMissionCategory(u32 mission) const;
   u32 getFLD_MercenariesMissionRepeatable(u32 mission) const;
   u32 getFLD_MercenariesMissionRequestPerformance(u32 mission) const;
+  u32 getFLD_DevelopmentLevelValue(u32 level) const;
 };
 
 } // namespace gf

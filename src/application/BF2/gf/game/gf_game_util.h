@@ -32,6 +32,7 @@ public:
   static void addWpForReserve(int weaponPoint);
   static void addWpForObject(u32 driver, u32 weaponType, int weaponPoint);
   static void addSP(u32 driver, int skillPoint);
+  static void setDevelopLevelForDebug(u32 nation, u32 level);
   static u16 getAntiBladeAreaBdatId();
   static bool incEnemySuppress(u32 enemy);
   static bool isEnableDeleteObject(GF_OBJ_HANDLE *handle);
@@ -67,6 +68,7 @@ public:
   static u32 execAddRareBlade(const SDataBlade &dataBlade);
   static void setWatchedEvent(u32 event);
   static u32 execAddCommonBlade(const SDataBlade &dataBlade);
+  static void execAddDevelopPointArcadia2Iyasaki();
   static void dispRexCrystal(GF_OBJ_HANDLE *handle, bool isDisp);
   static void dispHomuraCrystal(GF_OBJ_HANDLE *handle, bool isDisp);
   static void dispMetsuCrystal(GF_OBJ_HANDLE *handle, bool isDisp);
@@ -81,6 +83,7 @@ public:
   static bool isDispMetsuCrystal();
   static bool isBladeInVillage(u32 blade);
   static bool setupSaveAchievementPopup(u32 blade, u32 achievement, u32 level);
+  static void execSaveAchievementPopup(u32 blade);
 };
 
 } // namespace gf
