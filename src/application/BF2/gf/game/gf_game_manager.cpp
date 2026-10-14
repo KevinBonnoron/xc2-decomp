@@ -12,6 +12,7 @@
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/field/gf_field_sound.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
 #include "gf/game/achiev/gf_achiev_manager.h"
@@ -948,6 +949,11 @@ bool GfGameManager::isForceBossBattleBgm() { return GfGameScene::get() != nullpt
 bool GfGameManager::isForceEventBgm() { return GfGameScene::get() != nullptr && GfGameScene::get()->isForceEventBgm(); }
 
 bool GfGameManager::isNight() { return GfFieldTime::get() != nullptr && GfFieldTime::get()->getTimeRangeDN() == TIME_RANGE_DN_NIGHT; }
+
+const char *GfGameManager::getMapSePackName() {
+  GfFieldSound *fieldSound = GfFieldSound::get();
+  return fieldSound != nullptr ? fieldSound->mapSePackName.c_str() : nullptr;
+}
 
 u32 GfGameManager::getScenarioId() {
   if (!GfManager::isExecModeScenarioGame()) {
