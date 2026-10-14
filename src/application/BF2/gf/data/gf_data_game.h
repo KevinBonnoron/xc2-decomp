@@ -3,6 +3,7 @@
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_map.h"
+#include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_party.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "mm_mtl/fixed_array.h"
@@ -25,7 +26,8 @@ struct SDataGame {
   QuestID select;
   u8 _1097ec[0x1097f0 - 0x1097ec];
   SDataMap map;
-  u8 _1098c0[0x109b28 - 0x1098c0];
+  u8 _1098c0[0x1098c8 - 0x1098c0];
+  SDataMercenaries mercenaries;
   f32 playerCameraDistance;
   u32 gameClearCount;
   u8 _109b30[0x10a53c - 0x109b30];
@@ -62,6 +64,7 @@ static_assert(offsetof(SDataGame, itemBox) == 0x0e98d8, "");
 static_assert(offsetof(SDataGame, scenario) == 0x1097e4, "");
 static_assert(offsetof(SDataGame, select) == 0x1097e8, "");
 static_assert(offsetof(SDataGame, map) == 0x1097f0, "");
+static_assert(offsetof(SDataGame, mercenaries) == 0x1098c8, "");
 static_assert(offsetof(SDataGame, playerCameraDistance) == 0x109b28, "");
 static_assert(offsetof(SDataGame, gameClearCount) == 0x109b2c, "");
 static_assert(offsetof(SDataGame, mapInfos) == 0x10a53c, "");
