@@ -6,6 +6,7 @@
 namespace gf {
 
 struct AchievQuest;
+struct QuestTaskParam;
 
 constexpr u32 ACHIEVEMENT_PER_BLADE = 50;
 constexpr u32 ACHIEVEMENT_LEVEL_COUNT = 5;
@@ -48,6 +49,7 @@ public:
   static void setSelect(QuestID select);
   static QuestID getSelect();
   static AchievQuest *getAchievQuest(QuestID quest);
+  static bool getHanyouFlg(u32 &flag, u32 &flagMin, u32 &flagMax, const QuestTaskParam &param);
 
   static u16 m_achieve2blade[];
 };
