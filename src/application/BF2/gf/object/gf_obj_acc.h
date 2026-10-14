@@ -13,6 +13,8 @@ public:
   bool isValid() const { return mObj != nullptr; }
   bool testFlag(u32 flag) const;
   bool isDestroy() const;
+  u32 getType() const;
+  u32 getBdatId() const;
   u32 getDriverId() const;
   u32 getBladeId() const;
   u32 getPcWeaponId() const;

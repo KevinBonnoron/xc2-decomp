@@ -42,11 +42,17 @@ public:
   static bool isCondDriverModel(u32 driver);
   static const char *getSalvageDriverModel(u32 driver);
   static void incGameClearCount();
+  static void makeWeaponStateIdle(mm::mtl::FixStr<32> &state, GF_OBJ_HANDLE *handle, bool isBattle);
   static void makeWeaponStateIdle(mm::mtl::FixStr<32> &state, u32 driver, bool isBattle);
+  static void makeWeaponStateStartBattle(mm::mtl::FixStr<32> &state, GF_OBJ_HANDLE *handle);
+  static void makeStateIdle(mm::mtl::FixStr<32> &state, GF_OBJ_HANDLE *handle, bool isBattle);
+  static void makeStateIdleByBlade(mm::mtl::FixStr<32> &state, u32 blade, bool isBattle);
+  static void makeWeaponCommandBattle(mm::mtl::FixStr<32> &command, GF_OBJ_HANDLE *handle, bool isStart, bool isMotion);
   static void makeWeaponCommandBattle(mm::mtl::FixStr<32> &command, u32 driver, bool isStart, bool isMotion);
   static void makeWeaponRecieveStateForUiModel(mm::mtl::FixStr<32> &state, u32 weaponType);
   static u32 getKizunaLink(u32 blade);
   static void makeCommandBattle(mm::mtl::FixStr<32> &command, bool isStart);
+  static void makeStateBattle(mm::mtl::FixStr<32> &state, GF_OBJ_HANDLE *handle, bool isStart);
   static void makeStateBattleByBlade(mm::mtl::FixStr<32> &state, u32 blade, bool isStart);
   static void requestFieldDamage(GF_OBJ_HANDLE *handle);
   static u32 getObjAttribute(GF_OBJ_HANDLE *handle);
