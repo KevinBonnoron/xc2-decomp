@@ -51,6 +51,24 @@ enum {
   FIELD_SKILL_COUNT = 3,
 };
 
+enum {
+  CONDITION_LIST_COUNT = 8,
+};
+
+enum {
+  CONDITION_TYPE_NONE,
+  CONDITION_TYPE_SCENARIO,
+  CONDITION_TYPE_QUEST,
+  CONDITION_TYPE_ENV,
+  CONDITION_TYPE_FLAG,
+  CONDITION_TYPE_ITEM,
+  CONDITION_TYPE_PARTY,
+  CONDITION_TYPE_IDEA,
+  CONDITION_TYPE_LEVEL,
+  CONDITION_TYPE_ACHIEVEMENT,
+  CONDITION_TYPE_FIELD_SKILL_LEVEL,
+};
+
 constexpr u32 BLADE_ID_FIRST = 1001;
 
 static GfBdatCond *s_bdatCond;
@@ -559,6 +577,53 @@ void GfGameCond::applyFieldSkillLevel(u32 condition, u32 blade) {
 
   if (dataParamAcc.getFieldSkillLevel(index, false) < level) {
     GfGameUtil::setAchievementReleaseLevel(blade, ACHIEVEMENT_LINE_FIELD_SKILL_FIRST + index, level);
+  }
+}
+
+void GfGameCond::applyCond(u32 condition, u32 blade) {
+  if (condition == 0) {
+    return;
+  }
+
+  for (u32 index = 0; index < CONDITION_LIST_COUNT; index++) {
+    u32 conditionType = s_bdatCond->getConditionListConditionType(condition, index);
+    u32 conditionParam = s_bdatCond->getConditionListCondition(condition, index);
+    if (conditionParam == 0) {
+      return;
+    }
+
+    switch (conditionType) {
+    case CONDITION_TYPE_SCENARIO:
+      applyScenario(conditionParam);
+      break;
+    case CONDITION_TYPE_QUEST:
+      applyQuest(conditionParam);
+      break;
+    case CONDITION_TYPE_ENV:
+      applyGameEnv(conditionParam);
+      break;
+    case CONDITION_TYPE_FLAG:
+      applyFlag(conditionParam);
+      break;
+    case CONDITION_TYPE_ITEM:
+      applyItem(conditionParam);
+      break;
+    case CONDITION_TYPE_PARTY:
+      applyParty(conditionParam);
+      break;
+    case CONDITION_TYPE_IDEA:
+      applyIdea(conditionParam, blade);
+      break;
+    case CONDITION_TYPE_LEVEL:
+      applyLevel(conditionParam);
+      break;
+    case CONDITION_TYPE_ACHIEVEMENT:
+      applyAchievement(conditionParam, blade);
+      break;
+    case CONDITION_TYPE_FIELD_SKILL_LEVEL:
+      applyFieldSkillLevel(conditionParam, blade);
+      break;
+    }
   }
 }
 
