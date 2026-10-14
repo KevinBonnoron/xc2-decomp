@@ -1,5 +1,6 @@
 #pragma once
 #include "gf/object/gf_obj_manager.h"
+#include "mm_mtl/fixed_array.h"
 #include "types.h"
 #include <stddef.h>
 
@@ -14,7 +15,9 @@ class GfWeapon {
 public:
   virtual ~GfWeapon();
 
-  GF_OBJ_HANDLE **getCurrentHandles() { return isAlternate ? alternateHandles : handles; }
+  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> &getCurrentHandles() { return isAlternate ? alternateHandles : handles; }
+
+  GF_OBJ_HANDLE *getHandle(bool isAlternateSet, u16 index) const { return isAlternateSet ? alternateHandles[index] : handles[index]; }
 
   bool isExistHandle(GF_OBJ_HANDLE *handle) {
     for (u32 index = 0; index < 10; index++) {
@@ -29,8 +32,8 @@ public:
   u16 getRscRight() const;
   u16 getRscLeft() const;
 
-  GF_OBJ_HANDLE *handles[10];
-  GF_OBJ_HANDLE *alternateHandles[10];
+  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> handles;
+  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> alternateHandles;
   bool isAlternate;
 };
 
