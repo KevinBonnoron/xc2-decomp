@@ -1,6 +1,7 @@
 #pragma once
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_map.h"
+#include "gf/game/quest/gf_quest_id.h"
 #include "mm_mtl/fixed_array.h"
 #include "types.h"
 #include <stddef.h>
@@ -14,7 +15,10 @@ struct SDataGame {
   u16 eventChapterSave;
   u8 _00002a[0x00002c - 0x00002a];
   SDataDriver drivers[16];
-  u8 _005a2c[0x1097f0 - 0x005a2c];
+  u8 _005a2c[0x1097e4 - 0x005a2c];
+  QuestID scenario;
+  QuestID select;
+  u8 _1097ec[0x1097f0 - 0x1097ec];
   SDataMap map;
   u8 _1098c0[0x109b28 - 0x1098c0];
   f32 playerCameraDistance;
@@ -46,6 +50,8 @@ static_assert(offsetof(SDataGame, money) == 0x0, "");
 static_assert(offsetof(SDataGame, startChapterSave) == 0x000026, "");
 static_assert(offsetof(SDataGame, eventChapterSave) == 0x000028, "");
 static_assert(offsetof(SDataGame, drivers) == 0x00002c, "");
+static_assert(offsetof(SDataGame, scenario) == 0x1097e4, "");
+static_assert(offsetof(SDataGame, select) == 0x1097e8, "");
 static_assert(offsetof(SDataGame, map) == 0x1097f0, "");
 static_assert(offsetof(SDataGame, playerCameraDistance) == 0x109b28, "");
 static_assert(offsetof(SDataGame, gameClearCount) == 0x109b2c, "");
