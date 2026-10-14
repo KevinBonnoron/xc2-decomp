@@ -23,6 +23,8 @@ public:
   u32 getArtsDrRecast(u32 arts, u32 level) const;
   u32 getArtsDrEnhance(u32 arts, u32 level) const;
   u32 getArtsDrArtsType(u32 arts) const;
+  u32 getGrowEnd() const;
+  u32 getGrowLevelExp(u32 level) const;
 };
 
 } // namespace gf

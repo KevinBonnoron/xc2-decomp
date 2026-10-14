@@ -7,10 +7,13 @@ namespace gf {
 struct SDataBlade {
   u8 _000[0x821 - 0x000];
   u8 weaponType;
-  u8 _822[0x8a4 - 0x822];
+  u8 _822[0x82c - 0x822];
+  u16 weapon;
+  u8 _82e[0x8a4 - 0x82e];
 };
 
 static_assert(offsetof(SDataBlade, weaponType) == 0x821, "");
+static_assert(offsetof(SDataBlade, weapon) == 0x82c, "");
 static_assert(sizeof(SDataBlade) == 0x8a4, "");
 
 class GfDataBlade {

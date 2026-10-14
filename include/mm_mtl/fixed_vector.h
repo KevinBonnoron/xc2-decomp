@@ -7,11 +7,20 @@ namespace mtl {
 
 template <typename T, size_t N> class FixedVector {
 public:
+  FixedVector() : mSize(0) {}
+  ~FixedVector() { clear(); }
+
   T &operator[](size_t index) { return mData[index]; }
   const T &operator[](size_t index) const { return mData[index]; }
   size_t size() const { return mSize; }
   size_t capacity() const { return N; }
   bool empty() const { return mSize == 0; }
+
+  void clear() {
+    if (mSize != 0) {
+      mSize = 0;
+    }
+  }
 
   void push_back(const T &value) {
     MM_ASSERT(size() < capacity());

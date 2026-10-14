@@ -139,6 +139,7 @@ public:
   u32 getPreciousNoMultiple(u32 item) const;
   u32 getCrystalListNoMultiple(u32 item) const;
   u32 getPcEquipArmorType(u32 item) const;
+  u32 getPcEquipEnhance1(u32 item) const;
   u32 getFavoriteTime(u32 item) const;
   u32 getFavoriteType(u32 item) const;
 };

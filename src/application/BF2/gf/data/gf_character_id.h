@@ -11,6 +11,8 @@ enum {
   DRIVER_MELEPH = 6,
   DRIVER_SHIN = 7,
   DRIVER_METSU = 8,
+  DRIVER_SHIN_2 = 9,
+  DRIVER_JIKU_HOOD = 10,
 };
 
 enum {
