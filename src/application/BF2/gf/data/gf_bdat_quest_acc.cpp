@@ -1,8 +1,18 @@
-#include "gf/data/gf_bdat_quest.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_util.h"
+#include "gf/game/quest/gf_quest_task_param.h"
 
 namespace gf {
+
+enum {
+  TASK_TYPE_COLLECT = 3,
+  TASK_TYPE_USE = 4,
+};
+
+constexpr u32 COLLECT_FLAG_USE_OFFSET = 350;
+
 namespace _gfbqa {
 
 enum {
@@ -2488,5 +2498,1647 @@ u32 getTaskTaskCondition4(const CBdatWrapper &wrapper, u32 id) {
 }
 
 } // namespace _gfbqa
+
+u32 QuestListAcc::getListQuestTitle(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListQuestTitle(*fp, quest.id);
+}
+
+CBdatWrapper *QuestListAcc::getFp(QuestID &quest) const {
+  if (quest.empty()) {
+    return nullptr;
+  }
+
+  QIDXINFO info(quest);
+  getQuestInfo(info);
+  if (info.category == QTYPE_NONE) {
+    return mListCategories[QTYPE_BLADE - 1].fp;
+  }
+
+  quest.id = info.quest.id;
+  return mListCategories[info.category - 1].getFp(info.index);
+}
+
+u32 QuestListAcc::getListQuestCategory(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListQuestCategory(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListVisible(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListVisible(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListTalker(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListTalker(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListSummary(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListSummary(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListResultA(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListResultA(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListResultB(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListResultB(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListSortNo(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListSortNo(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListRewardDisp(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListRewardDisp(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListRewardSetA(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListRewardSetA(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListRewardSetB(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListRewardSetB(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListPRTQuestID(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListPRTQuestID(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListFlagPRT(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListFlagPRT(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListFlagCLD(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListFlagCLD(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListPurposeID(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListPurposeID(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListCountCancel(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListCountCancel(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListNextQuestA(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListNextQuestA(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListCallEventA(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListCallEventA(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListNextQuestB(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListNextQuestB(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListCallEventB(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListCallEventB(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListHintsID(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListHintsID(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListClearVoice(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListClearVoice(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListAutoStart(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListAutoStart(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListItemLost(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListItemLost(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListCancelCondition(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListCancelCondition(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListQuestIcon(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListQuestIcon(*fp, quest.id);
+}
+
+u32 QuestListAcc::getListLinkedQuestID(QuestID quest) const {
+  CBdatWrapper *fp = getFp(quest);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getListLinkedQuestID(*fp, quest.id);
+}
+
+u32 QuestListAcc::getTaskPreCondition(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskPreCondition(*fp, purpose);
+}
+
+CBdatWrapper *QuestListAcc::getTaskFp(u32 purpose) const {
+  QIDXINFO info(purpose);
+  getQuestInfo(info);
+  if (info.category == QTYPE_NONE) {
+    return mTaskCategories[QTYPE_BLADE - 1].fp;
+  }
+
+  return mTaskCategories[info.category - 1].getFp(info.index);
+}
+
+u32 QuestListAcc::getTaskTaskType1(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskType1(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskType2(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskType2(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskType3(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskType3(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskType4(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskType4(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskID1(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskID1(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskID2(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskID2(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskID3(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskID3(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskID4(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskID4(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskBranch1(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskBranch1(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskBranch2(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskBranch2(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskBranch3(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskBranch3(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskBranch4(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskBranch4(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskLog1(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskLog1(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskLog2(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskLog2(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskLog3(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskLog3(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskLog4(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskLog4(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskUI1(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskUI1(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskUI2(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskUI2(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskUI3(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskUI3(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskUI4(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskUI4(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskCondition1(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskCondition1(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskCondition2(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskCondition2(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskCondition3(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskCondition3(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskCondition4(u32 purpose) const {
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return _gfbqa::getTaskTaskCondition4(*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskID(u32 purpose, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbqa::getTaskTaskID1, _gfbqa::getTaskTaskID2, _gfbqa::getTaskTaskID3, _gfbqa::getTaskTaskID4};
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return getters[index](*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskUI(u32 purpose, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbqa::getTaskTaskUI1, _gfbqa::getTaskTaskUI2, _gfbqa::getTaskTaskUI3, _gfbqa::getTaskTaskUI4};
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return getters[index](*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskType(u32 purpose, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbqa::getTaskTaskType1, _gfbqa::getTaskTaskType2, _gfbqa::getTaskTaskType3, _gfbqa::getTaskTaskType4};
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return getters[index](*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskBranch(u32 purpose, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbqa::getTaskBranch1, _gfbqa::getTaskBranch2, _gfbqa::getTaskBranch3, _gfbqa::getTaskBranch4};
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return getters[index](*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskLog(u32 purpose, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbqa::getTaskTaskLog1, _gfbqa::getTaskTaskLog2, _gfbqa::getTaskTaskLog3, _gfbqa::getTaskTaskLog4};
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return getters[index](*fp, purpose);
+}
+
+u32 QuestListAcc::getTaskTaskCondition(u32 purpose, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbqa::getTaskTaskCondition1, _gfbqa::getTaskTaskCondition2, _gfbqa::getTaskTaskCondition3, _gfbqa::getTaskTaskCondition4};
+  CBdatWrapper *fp = getTaskFp(purpose);
+  if (fp == nullptr) {
+    return 0;
+  }
+
+  return getters[index](*fp, purpose);
+}
+
+u32 QuestListAcc::getBattleStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestBattle->data); }
+
+u32 QuestListAcc::getBattleEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestBattle->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_QuestBattle->data);
+}
+
+u32 QuestListAcc::getBattleRefer(u32 id) const { return _gfbqa::getBattleRefer(*GfBdatQuest::get()->mFLD_QuestBattle, id); }
+
+u32 QuestListAcc::getBattleEnemyID(u32 id) const { return _gfbqa::getBattleEnemyID(*GfBdatQuest::get()->mFLD_QuestBattle, id); }
+
+u32 QuestListAcc::getBattleEnemyGroupID(u32 id) const { return _gfbqa::getBattleEnemyGroupID(*GfBdatQuest::get()->mFLD_QuestBattle, id); }
+
+u32 QuestListAcc::getBattleEnemySpeciesID(u32 id) const { return _gfbqa::getBattleEnemySpeciesID(*GfBdatQuest::get()->mFLD_QuestBattle, id); }
+
+u32 QuestListAcc::getBattleCount(u32 id) const { return _gfbqa::getBattleCount(*GfBdatQuest::get()->mFLD_QuestBattle, id); }
+
+u32 QuestListAcc::getBattleCountFlag(u32 id) const { return _gfbqa::getBattleCountFlag(*GfBdatQuest::get()->mFLD_QuestBattle, id); }
+
+u32 QuestListAcc::getBattleDeadAll(u32 id) const { return _gfbqa::getBattleDeadAll(*GfBdatQuest::get()->mFLD_QuestBattle, id); }
+
+u32 QuestListAcc::getBattleTimeCount(u32 id) const { return _gfbqa::getBattleTimeCount(*GfBdatQuest::get()->mFLD_QuestBattle, id); }
+
+u32 QuestListAcc::getBattleTimeCountFlag(u32 id) const { return _gfbqa::getBattleTimeCountFlag(*GfBdatQuest::get()->mFLD_QuestBattle, id); }
+
+u32 QuestListAcc::getBattleReduceEnemyHP(u32 id) const { return _gfbqa::getBattleReduceEnemyHP(*GfBdatQuest::get()->mFLD_QuestBattle, id); }
+
+u32 QuestListAcc::getBattleReducePCHP(u32 id) const { return _gfbqa::getBattleReducePCHP(*GfBdatQuest::get()->mFLD_QuestBattle, id); }
+
+u32 QuestListAcc::getRequestItemSetStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_RequestItemSet->data); }
+
+u32 QuestListAcc::getRequestItemSetEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_RequestItemSet->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_RequestItemSet->data);
+}
+
+u32 QuestListAcc::getRequestItemSetItemID1(u32 id) const { return _gfbqa::getRequestItemSetItemID1(*GfBdatQuest::get()->mFLD_RequestItemSet, id); }
+
+u32 QuestListAcc::getRequestItemSetItemID2(u32 id) const { return _gfbqa::getRequestItemSetItemID2(*GfBdatQuest::get()->mFLD_RequestItemSet, id); }
+
+u32 QuestListAcc::getRequestItemSetItemID3(u32 id) const { return _gfbqa::getRequestItemSetItemID3(*GfBdatQuest::get()->mFLD_RequestItemSet, id); }
+
+u32 QuestListAcc::getRequestItemSetItemID4(u32 id) const { return _gfbqa::getRequestItemSetItemID4(*GfBdatQuest::get()->mFLD_RequestItemSet, id); }
+
+u32 QuestListAcc::getRequestItemSetItemID5(u32 id) const { return _gfbqa::getRequestItemSetItemID5(*GfBdatQuest::get()->mFLD_RequestItemSet, id); }
+
+u32 QuestListAcc::getRequestItemSetCount1(u32 id) const { return _gfbqa::getRequestItemSetCount1(*GfBdatQuest::get()->mFLD_RequestItemSet, id); }
+
+u32 QuestListAcc::getRequestItemSetCount2(u32 id) const { return _gfbqa::getRequestItemSetCount2(*GfBdatQuest::get()->mFLD_RequestItemSet, id); }
+
+u32 QuestListAcc::getRequestItemSetCount3(u32 id) const { return _gfbqa::getRequestItemSetCount3(*GfBdatQuest::get()->mFLD_RequestItemSet, id); }
+
+u32 QuestListAcc::getRequestItemSetCount4(u32 id) const { return _gfbqa::getRequestItemSetCount4(*GfBdatQuest::get()->mFLD_RequestItemSet, id); }
+
+u32 QuestListAcc::getRequestItemSetCount5(u32 id) const { return _gfbqa::getRequestItemSetCount5(*GfBdatQuest::get()->mFLD_RequestItemSet, id); }
+
+u32 QuestListAcc::getRequestItemSetMapID(u32 id) const { return _gfbqa::getRequestItemSetMapID(*GfBdatQuest::get()->mFLD_RequestItemSet, id); }
+
+u32 QuestListAcc::getRequestItemSetNpcID(u32 id) const { return _gfbqa::getRequestItemSetNpcID(*GfBdatQuest::get()->mFLD_RequestItemSet, id); }
+
+u32 QuestListAcc::getRequestItemSetItemID(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getRequestItemSetItemID1,
+                                                              _gfbqa::getRequestItemSetItemID2,
+                                                              _gfbqa::getRequestItemSetItemID3,
+                                                              _gfbqa::getRequestItemSetItemID4,
+                                                              _gfbqa::getRequestItemSetItemID5};
+  CBdatWrapper *fp = GfBdatQuest::get()->mFLD_RequestItemSet;
+  return getters[index](*fp, id);
+}
+
+u32 QuestListAcc::getRequestItemSetCount(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getRequestItemSetCount1,
+                                                              _gfbqa::getRequestItemSetCount2,
+                                                              _gfbqa::getRequestItemSetCount3,
+                                                              _gfbqa::getRequestItemSetCount4,
+                                                              _gfbqa::getRequestItemSetCount5};
+  CBdatWrapper *fp = GfBdatQuest::get()->mFLD_RequestItemSet;
+  return getters[index](*fp, id);
+}
+
+u32 QuestListAcc::getCollectStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestCollect->data); }
+
+u32 QuestListAcc::getCollectEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestCollect->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_QuestCollect->data);
+}
+
+u32 QuestListAcc::getCollectItemID(u32 id) const { return _gfbqa::getCollectItemID(*GfBdatQuest::get()->mFLD_QuestCollect, id); }
+
+u32 QuestListAcc::getCollectCategory(u32 id) const { return _gfbqa::getCollectCategory(*GfBdatQuest::get()->mFLD_QuestCollect, id); }
+
+u32 QuestListAcc::getCollectCount(u32 id) const { return _gfbqa::getCollectCount(*GfBdatQuest::get()->mFLD_QuestCollect, id); }
+
+u32 QuestListAcc::getCollectDeduct(u32 id) const { return _gfbqa::getCollectDeduct(*GfBdatQuest::get()->mFLD_QuestCollect, id); }
+
+u32 QuestListAcc::getCollectTresureID(u32 id) const { return _gfbqa::getCollectTresureID(*GfBdatQuest::get()->mFLD_QuestCollect, id); }
+
+u32 QuestListAcc::getCollectEnemyID(u32 id) const { return _gfbqa::getCollectEnemyID(*GfBdatQuest::get()->mFLD_QuestCollect, id); }
+
+u32 QuestListAcc::getCollectMapID(u32 id) const { return _gfbqa::getCollectMapID(*GfBdatQuest::get()->mFLD_QuestCollect, id); }
+
+u32 QuestListAcc::getCollectNpcID(u32 id) const { return _gfbqa::getCollectNpcID(*GfBdatQuest::get()->mFLD_QuestCollect, id); }
+
+u32 QuestListAcc::getUseStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestUse->data); }
+
+u32 QuestListAcc::getUseEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestUse->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_QuestUse->data);
+}
+
+u32 QuestListAcc::getUseItemID(u32 id) const { return _gfbqa::getUseItemID(*GfBdatQuest::get()->mFLD_QuestUse, id); }
+
+u32 QuestListAcc::getUseCategory(u32 id) const { return _gfbqa::getUseCategory(*GfBdatQuest::get()->mFLD_QuestUse, id); }
+
+u32 QuestListAcc::getUseItemNumber(u32 id) const { return _gfbqa::getUseItemNumber(*GfBdatQuest::get()->mFLD_QuestUse, id); }
+
+u32 QuestListAcc::getUsePartyInPC(u32 id) const { return _gfbqa::getUsePartyInPC(*GfBdatQuest::get()->mFLD_QuestUse, id); }
+
+u32 QuestListAcc::getUsebladeID(u32 id) const { return _gfbqa::getUsebladeID(*GfBdatQuest::get()->mFLD_QuestUse, id); }
+
+u32 QuestListAcc::getReachStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestReach->data); }
+
+u32 QuestListAcc::getReachEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestReach->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_QuestReach->data);
+}
+
+u32 QuestListAcc::getReachCategory(u32 id) const { return _gfbqa::getReachCategory(*GfBdatQuest::get()->mFLD_QuestReach, id); }
+
+u32 QuestListAcc::getReachMapID(u32 id) const { return _gfbqa::getReachMapID(*GfBdatQuest::get()->mFLD_QuestReach, id); }
+
+u32 QuestListAcc::getReachPlaceID(u32 id) const { return _gfbqa::getReachPlaceID(*GfBdatQuest::get()->mFLD_QuestReach, id); }
+
+u32 QuestListAcc::getTalkStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestTalk->data); }
+
+u32 QuestListAcc::getTalkEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestTalk->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_QuestTalk->data);
+}
+
+u32 QuestListAcc::getTalkMapID(u32 id) const { return _gfbqa::getTalkMapID(*GfBdatQuest::get()->mFLD_QuestTalk, id); }
+
+u32 QuestListAcc::getTalkNpcID(u32 id) const { return _gfbqa::getTalkNpcID(*GfBdatQuest::get()->mFLD_QuestTalk, id); }
+
+u32 QuestListAcc::getTalkDummyGroup(u32 id) const { return _gfbqa::getTalkDummyGroup(*GfBdatQuest::get()->mFLD_QuestTalk, id); }
+
+u32 QuestListAcc::getDummyGroupStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestTalkDummyGroup->data); }
+
+u32 QuestListAcc::getDummyGroupEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestTalkDummyGroup->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_QuestTalkDummyGroup->data);
+}
+
+u32 QuestListAcc::getDummyGroupNpcID1(u32 id) const { return _gfbqa::getDummyGroupNpcID1(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup, id); }
+
+u32 QuestListAcc::getDummyGroupNpcID2(u32 id) const { return _gfbqa::getDummyGroupNpcID2(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup, id); }
+
+u32 QuestListAcc::getDummyGroupNpcID3(u32 id) const { return _gfbqa::getDummyGroupNpcID3(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup, id); }
+
+u32 QuestListAcc::getDummyGroupNpcID4(u32 id) const { return _gfbqa::getDummyGroupNpcID4(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup, id); }
+
+u32 QuestListAcc::getDummyGroupNpcID5(u32 id) const { return _gfbqa::getDummyGroupNpcID5(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup, id); }
+
+u32 QuestListAcc::getDummyGroupNpcID6(u32 id) const { return _gfbqa::getDummyGroupNpcID6(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup, id); }
+
+u32 QuestListAcc::getDummyGroupNpcID7(u32 id) const { return _gfbqa::getDummyGroupNpcID7(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup, id); }
+
+u32 QuestListAcc::getDummyGroupNpcID8(u32 id) const { return _gfbqa::getDummyGroupNpcID8(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup, id); }
+
+u32 QuestListAcc::getDummyGroupNpcID(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getDummyGroupNpcID1,
+                                                              _gfbqa::getDummyGroupNpcID2,
+                                                              _gfbqa::getDummyGroupNpcID3,
+                                                              _gfbqa::getDummyGroupNpcID4,
+                                                              _gfbqa::getDummyGroupNpcID5,
+                                                              _gfbqa::getDummyGroupNpcID6,
+                                                              _gfbqa::getDummyGroupNpcID7,
+                                                              _gfbqa::getDummyGroupNpcID8};
+  CBdatWrapper *fp = GfBdatQuest::get()->mFLD_QuestTalkDummyGroup;
+  return getters[index](*fp, id);
+}
+
+u32 QuestListAcc::getGimmickStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestGimmick->data); }
+
+u32 QuestListAcc::getGimmickEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestGimmick->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_QuestGimmick->data);
+}
+
+u32 QuestListAcc::getGimmickMapID(u32 id) const { return _gfbqa::getGimmickMapID(*GfBdatQuest::get()->mFLD_QuestGimmick, id); }
+
+u32 QuestListAcc::getGimmickDoorGimmickID(u32 id) const { return _gfbqa::getGimmickDoorGimmickID(*GfBdatQuest::get()->mFLD_QuestGimmick, id); }
+
+u32 QuestListAcc::getGimmickElevatorGimmickID(u32 id) const {
+  return _gfbqa::getGimmickElevatorGimmickID(*GfBdatQuest::get()->mFLD_QuestGimmick, id);
+}
+
+u32 QuestListAcc::getGimmickJumpGimmickID(u32 id) const { return _gfbqa::getGimmickJumpGimmickID(*GfBdatQuest::get()->mFLD_QuestGimmick, id); }
+
+u32 QuestListAcc::getGimmickMapGimmickID(u32 id) const { return _gfbqa::getGimmickMapGimmickID(*GfBdatQuest::get()->mFLD_QuestGimmick, id); }
+
+u32 QuestListAcc::getGimmickMapGmkIconOff(u32 id) const { return _gfbqa::getGimmickMapGmkIconOff(*GfBdatQuest::get()->mFLD_QuestGimmick, id); }
+
+u32 QuestListAcc::getGimmickWarpGimmickID(u32 id) const { return _gfbqa::getGimmickWarpGimmickID(*GfBdatQuest::get()->mFLD_QuestGimmick, id); }
+
+u32 QuestListAcc::getGimmickSalvagePointID(u32 id) const { return _gfbqa::getGimmickSalvagePointID(*GfBdatQuest::get()->mFLD_QuestGimmick, id); }
+
+u32 QuestListAcc::getGimmickTboxPopID(u32 id) const { return _gfbqa::getGimmickTboxPopID(*GfBdatQuest::get()->mFLD_QuestGimmick, id); }
+
+u32 QuestListAcc::getGimmickEndCheck(u32 id) const { return _gfbqa::getGimmickEndCheck(*GfBdatQuest::get()->mFLD_QuestGimmick, id); }
+
+u32 QuestListAcc::getFieldSkillCountStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestFieldSkillCount->data); }
+
+u32 QuestListAcc::getFieldSkillCountEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestFieldSkillCount->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_QuestFieldSkillCount->data);
+}
+
+u32 QuestListAcc::getFieldSkillCountFieldSkillID(u32 id) const {
+  return _gfbqa::getFieldSkillCountFieldSkillID(*GfBdatQuest::get()->mFLD_QuestFieldSkillCount, id);
+}
+
+u32 QuestListAcc::getFieldSkillCountCount(u32 id) const {
+  return _gfbqa::getFieldSkillCountCount(*GfBdatQuest::get()->mFLD_QuestFieldSkillCount, id);
+}
+
+u32 QuestListAcc::getRequestBladeStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_RequestBlade->data); }
+
+u32 QuestListAcc::getRequestBladeEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_RequestBlade->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_RequestBlade->data);
+}
+
+u32 QuestListAcc::getRequestBladeRequestCategory(u32 id) const {
+  return _gfbqa::getRequestBladeRequestCategory(*GfBdatQuest::get()->mFLD_RequestBlade, id);
+}
+
+u32 QuestListAcc::getRequestBladeRequestAtr(u32 id) const { return _gfbqa::getRequestBladeRequestAtr(*GfBdatQuest::get()->mFLD_RequestBlade, id); }
+
+u32 QuestListAcc::getRequestBladeRequestPerformance(u32 id) const {
+  return _gfbqa::getRequestBladeRequestPerformance(*GfBdatQuest::get()->mFLD_RequestBlade, id);
+}
+
+u32 QuestListAcc::getRequestBladeRequestRace(u32 id) const { return _gfbqa::getRequestBladeRequestRace(*GfBdatQuest::get()->mFLD_RequestBlade, id); }
+
+u32 QuestListAcc::getRequestBladeRequestGender(u32 id) const {
+  return _gfbqa::getRequestBladeRequestGender(*GfBdatQuest::get()->mFLD_RequestBlade, id);
+}
+
+u32 QuestListAcc::getRequestBladeRequestArts(u32 id) const { return _gfbqa::getRequestBladeRequestArts(*GfBdatQuest::get()->mFLD_RequestBlade, id); }
+
+u32 QuestListAcc::getRequestBladeRequestArtsLevel(u32 id) const {
+  return _gfbqa::getRequestBladeRequestArtsLevel(*GfBdatQuest::get()->mFLD_RequestBlade, id);
+}
+
+u32 QuestListAcc::getRequestBladeRequestFSkill(u32 id) const {
+  return _gfbqa::getRequestBladeRequestFSkill(*GfBdatQuest::get()->mFLD_RequestBlade, id);
+}
+
+u32 QuestListAcc::getRequestBladeRequestFSLevel(u32 id) const {
+  return _gfbqa::getRequestBladeRequestFSLevel(*GfBdatQuest::get()->mFLD_RequestBlade, id);
+}
+
+u32 QuestListAcc::getRequestBladeRequestNumber(u32 id) const {
+  return _gfbqa::getRequestBladeRequestNumber(*GfBdatQuest::get()->mFLD_RequestBlade, id);
+}
+
+u32 QuestListAcc::getConditionStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestCondition->data); }
+
+u32 QuestListAcc::getConditionEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestCondition->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_QuestCondition->data);
+}
+
+u32 QuestListAcc::getConditionConditionID(u32 id) const { return _gfbqa::getConditionConditionID(*GfBdatQuest::get()->mFLD_QuestCondition, id); }
+
+u32 QuestListAcc::getConditionMapID(u32 id) const { return _gfbqa::getConditionMapID(*GfBdatQuest::get()->mFLD_QuestCondition, id); }
+
+u32 QuestListAcc::getConditionNpcID(u32 id) const { return _gfbqa::getConditionNpcID(*GfBdatQuest::get()->mFLD_QuestCondition, id); }
+
+u32 QuestListAcc::getAchievementStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_Achievement->data); }
+
+u32 QuestListAcc::getAchievementEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_Achievement->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_Achievement->data);
+}
+
+u32 QuestListAcc::getAchievementStatsID(u32 id) const { return _gfbqa::getAchievementStatsID(*GfBdatQuest::get()->mFLD_Achievement, id); }
+
+u32 QuestListAcc::getAchievementCount(u32 id) const { return _gfbqa::getAchievementCount(*GfBdatQuest::get()->mFLD_Achievement, id); }
+
+const char *QuestListAcc::getAchievementDebugName(u32 id) const { return _gfbqa::getAchievementDebugName(*GfBdatQuest::get()->mFLD_Achievement, id); }
+
+u32 QuestListAcc::getHintsStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestHints->data); }
+
+u32 QuestListAcc::getHintsEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestHints->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_QuestHints->data);
+}
+
+u32 QuestListAcc::getHintsMainChar1(u32 id) const { return _gfbqa::getHintsMainChar1(*GfBdatQuest::get()->mFLD_QuestHints, id); }
+
+u32 QuestListAcc::getHintsMainChar2(u32 id) const { return _gfbqa::getHintsMainChar2(*GfBdatQuest::get()->mFLD_QuestHints, id); }
+
+u32 QuestListAcc::getHintsMainChar3(u32 id) const { return _gfbqa::getHintsMainChar3(*GfBdatQuest::get()->mFLD_QuestHints, id); }
+
+u32 QuestListAcc::getHintsMainChar4(u32 id) const { return _gfbqa::getHintsMainChar4(*GfBdatQuest::get()->mFLD_QuestHints, id); }
+
+u32 QuestListAcc::getHintsFSkillID1(u32 id) const { return _gfbqa::getHintsFSkillID1(*GfBdatQuest::get()->mFLD_QuestHints, id); }
+
+u32 QuestListAcc::getHintsFSkillID2(u32 id) const { return _gfbqa::getHintsFSkillID2(*GfBdatQuest::get()->mFLD_QuestHints, id); }
+
+u32 QuestListAcc::getHintsFSkillID3(u32 id) const { return _gfbqa::getHintsFSkillID3(*GfBdatQuest::get()->mFLD_QuestHints, id); }
+
+u32 QuestListAcc::getHintsClientNpc(u32 id) const { return _gfbqa::getHintsClientNpc(*GfBdatQuest::get()->mFLD_QuestHints, id); }
+
+u32 QuestListAcc::getHintsZoneID(u32 id) const { return _gfbqa::getHintsZoneID(*GfBdatQuest::get()->mFLD_QuestHints, id); }
+
+u32 QuestListAcc::getHintsMainChar(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbqa::getHintsMainChar1, _gfbqa::getHintsMainChar2, _gfbqa::getHintsMainChar3, _gfbqa::getHintsMainChar4};
+  CBdatWrapper *fp = GfBdatQuest::get()->mFLD_QuestHints;
+  return getters[index](*fp, id);
+}
+
+u32 QuestListAcc::getHintsFSkillID(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getHintsFSkillID1, _gfbqa::getHintsFSkillID2, _gfbqa::getHintsFSkillID3};
+  CBdatWrapper *fp = GfBdatQuest::get()->mFLD_QuestHints;
+  return getters[index](*fp, id);
+}
+
+u32 QuestListAcc::getEventStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestEvent->data); }
+
+u32 QuestListAcc::getEventEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestEvent->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_QuestEvent->data);
+}
+
+u32 QuestListAcc::getEventEventID(u32 id) const { return _gfbqa::getEventEventID(*GfBdatQuest::get()->mFLD_QuestEvent, id); }
+
+u32 QuestListAcc::getRewardStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestReward->data); }
+
+u32 QuestListAcc::getRewardEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_QuestReward->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_QuestReward->data);
+}
+
+u32 QuestListAcc::getRewardGold(u32 id) const { return _gfbqa::getRewardGold(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardEXP(u32 id) const { return _gfbqa::getRewardEXP(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardSp(u32 id) const { return _gfbqa::getRewardSp(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardCoin(u32 id) const { return _gfbqa::getRewardCoin(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardDevelopZone(u32 id) const { return _gfbqa::getRewardDevelopZone(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardDevelopPoint(u32 id) const { return _gfbqa::getRewardDevelopPoint(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardTrustPoint(u32 id) const { return _gfbqa::getRewardTrustPoint(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardMercenariesPoint(u32 id) const { return _gfbqa::getRewardMercenariesPoint(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardIdeaCategory(u32 id) const { return _gfbqa::getRewardIdeaCategory(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardIdeaValue(u32 id) const { return _gfbqa::getRewardIdeaValue(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardItemID1(u32 id) const { return _gfbqa::getRewardItemID1(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardItemNumber1(u32 id) const { return _gfbqa::getRewardItemNumber1(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardItemID2(u32 id) const { return _gfbqa::getRewardItemID2(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardItemNumber2(u32 id) const { return _gfbqa::getRewardItemNumber2(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardItemID3(u32 id) const { return _gfbqa::getRewardItemID3(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardItemNumber3(u32 id) const { return _gfbqa::getRewardItemNumber3(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardItemID4(u32 id) const { return _gfbqa::getRewardItemID4(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardItemNumber4(u32 id) const { return _gfbqa::getRewardItemNumber4(*GfBdatQuest::get()->mFLD_QuestReward, id); }
+
+u32 QuestListAcc::getRewardItemID(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbqa::getRewardItemID1, _gfbqa::getRewardItemID2, _gfbqa::getRewardItemID3, _gfbqa::getRewardItemID4};
+  CBdatWrapper *fp = GfBdatQuest::get()->mFLD_QuestReward;
+  return getters[index](*fp, id);
+}
+
+u32 QuestListAcc::getRewardItemNumber(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbqa::getRewardItemNumber1, _gfbqa::getRewardItemNumber2, _gfbqa::getRewardItemNumber3, _gfbqa::getRewardItemNumber4};
+  CBdatWrapper *fp = GfBdatQuest::get()->mFLD_QuestReward;
+  return getters[index](*fp, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementSetStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_AchievementSet->data); }
+
+u32 QuestListAcc::getFLD_AchievementSetEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_AchievementSet->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_AchievementSet->data);
+}
+
+u32 QuestListAcc::getFLD_AchievementSetCategory(u32 id) const {
+  return _gfbqa::getFLD_AchievementSetCategory(*GfBdatQuest::get()->mFLD_AchievementSet, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementSetAbilityLevel(u32 id) const {
+  return _gfbqa::getFLD_AchievementSetAbilityLevel(*GfBdatQuest::get()->mFLD_AchievementSet, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementSetAchievementID1(u32 id) const {
+  return _gfbqa::getFLD_AchievementSetAchievementID1(*GfBdatQuest::get()->mFLD_AchievementSet, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementSetAchievementID2(u32 id) const {
+  return _gfbqa::getFLD_AchievementSetAchievementID2(*GfBdatQuest::get()->mFLD_AchievementSet, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementSetAchievementID3(u32 id) const {
+  return _gfbqa::getFLD_AchievementSetAchievementID3(*GfBdatQuest::get()->mFLD_AchievementSet, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementSetAchievementID4(u32 id) const {
+  return _gfbqa::getFLD_AchievementSetAchievementID4(*GfBdatQuest::get()->mFLD_AchievementSet, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementSetAchievementID5(u32 id) const {
+  return _gfbqa::getFLD_AchievementSetAchievementID5(*GfBdatQuest::get()->mFLD_AchievementSet, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementSetAchievementID(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getFLD_AchievementSetAchievementID1,
+                                                              _gfbqa::getFLD_AchievementSetAchievementID2,
+                                                              _gfbqa::getFLD_AchievementSetAchievementID3,
+                                                              _gfbqa::getFLD_AchievementSetAchievementID4,
+                                                              _gfbqa::getFLD_AchievementSetAchievementID5};
+  CBdatWrapper *fp = GfBdatQuest::get()->mFLD_AchievementSet;
+  return getters[index](*fp, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementListStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_AchievementList->data); }
+
+u32 QuestListAcc::getFLD_AchievementListEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_AchievementList->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_AchievementList->data);
+}
+
+u32 QuestListAcc::getFLD_AchievementListTitle(u32 id) const {
+  return _gfbqa::getFLD_AchievementListTitle(*GfBdatQuest::get()->mFLD_AchievementList, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementListCategory(u32 id) const {
+  return _gfbqa::getFLD_AchievementListCategory(*GfBdatQuest::get()->mFLD_AchievementList, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementListIcon(u32 id) const {
+  return _gfbqa::getFLD_AchievementListIcon(*GfBdatQuest::get()->mFLD_AchievementList, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementListTask(u32 id) const {
+  return _gfbqa::getFLD_AchievementListTask(*GfBdatQuest::get()->mFLD_AchievementList, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementListVoiceCategory(u32 id) const {
+  return _gfbqa::getFLD_AchievementListVoiceCategory(*GfBdatQuest::get()->mFLD_AchievementList, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementListAfterVoice(u32 id) const {
+  return _gfbqa::getFLD_AchievementListAfterVoice(*GfBdatQuest::get()->mFLD_AchievementList, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementListDifficulty(u32 id) const {
+  return _gfbqa::getFLD_AchievementListDifficulty(*GfBdatQuest::get()->mFLD_AchievementList, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementListIdeaCategory(u32 id) const {
+  return _gfbqa::getFLD_AchievementListIdeaCategory(*GfBdatQuest::get()->mFLD_AchievementList, id);
+}
+
+u32 QuestListAcc::getFLD_AchievementListIdeaValue(u32 id) const {
+  return _gfbqa::getFLD_AchievementListIdeaValue(*GfBdatQuest::get()->mFLD_AchievementList, id);
+}
+
+u32 QuestListAcc::getFLD_MercenariesConfigStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_MercenariesConfig->data); }
+
+u32 QuestListAcc::getFLD_MercenariesConfigEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_MercenariesConfig->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_MercenariesConfig->data);
+}
+
+u32 QuestListAcc::getFLD_MercenariesConfigValue(u32 id) const {
+  return _gfbqa::getFLD_MercenariesConfigValue(*GfBdatQuest::get()->mFLD_MercenariesConfig, id);
+}
+
+u32 QuestListAcc::getFLD_MercenariesMissionStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_MercenariesMission->data); }
+
+u32 QuestListAcc::getFLD_MercenariesMissionEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_MercenariesMission->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_MercenariesMission->data);
+}
+
+u32 QuestListAcc::getFLD_MercenariesMissionQuestID(u32 id) const {
+  return _gfbqa::getFLD_MercenariesMissionQuestID(*GfBdatQuest::get()->mFLD_MercenariesMission, id);
+}
+
+u32 QuestListAcc::getFLD_MercenariesMissionCategory(u32 id) const {
+  return _gfbqa::getFLD_MercenariesMissionCategory(*GfBdatQuest::get()->mFLD_MercenariesMission, id);
+}
+
+u32 QuestListAcc::getFLD_MercenariesMissionRequestPerformance(u32 id) const {
+  return _gfbqa::getFLD_MercenariesMissionRequestPerformance(*GfBdatQuest::get()->mFLD_MercenariesMission, id);
+}
+
+u32 QuestListAcc::getFLD_MercenariesMissionRepeatable(u32 id) const {
+  return _gfbqa::getFLD_MercenariesMissionRepeatable(*GfBdatQuest::get()->mFLD_MercenariesMission, id);
+}
+
+u32 QuestListAcc::getFLD_MercenariesMissionAutoStart(u32 id) const {
+  return _gfbqa::getFLD_MercenariesMissionAutoStart(*GfBdatQuest::get()->mFLD_MercenariesMission, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillListStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_FieldSkillList->data); }
+
+u32 QuestListAcc::getFLD_FieldSkillListEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_FieldSkillList->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_FieldSkillList->data);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillListName(u32 id) const { return _gfbqa::getFLD_FieldSkillListName(*GfBdatQuest::get()->mFLD_FieldSkillList, id); }
+
+u32 QuestListAcc::getFLD_FieldSkillListCaption(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillListCaption(*GfBdatQuest::get()->mFLD_FieldSkillList, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillListType(u32 id) const { return _gfbqa::getFLD_FieldSkillListType(*GfBdatQuest::get()->mFLD_FieldSkillList, id); }
+
+u32 QuestListAcc::getFLD_FieldSkillListRandomID(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillListRandomID(*GfBdatQuest::get()->mFLD_FieldSkillList, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillListMinLevel(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillListMinLevel(*GfBdatQuest::get()->mFLD_FieldSkillList, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillListMaxLevel(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillListMaxLevel(*GfBdatQuest::get()->mFLD_FieldSkillList, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillListCategory(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillListCategory(*GfBdatQuest::get()->mFLD_FieldSkillList, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillListRarity(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillListRarity(*GfBdatQuest::get()->mFLD_FieldSkillList, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillListIcon(u32 id) const { return _gfbqa::getFLD_FieldSkillListIcon(*GfBdatQuest::get()->mFLD_FieldSkillList, id); }
+
+u32 QuestListAcc::getFLD_FieldSkillListVoiceCategory(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillListVoiceCategory(*GfBdatQuest::get()->mFLD_FieldSkillList, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillListAttirbute(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillListAttirbute(*GfBdatQuest::get()->mFLD_FieldSkillList, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillSettingStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_FieldSkillSetting->data); }
+
+u32 QuestListAcc::getFLD_FieldSkillSettingEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_FieldSkillSetting->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_FieldSkillSetting->data);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillSettingName(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillSettingName(*GfBdatQuest::get()->mFLD_FieldSkillSetting, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillID1(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillSettingFieldSkillID1(*GfBdatQuest::get()->mFLD_FieldSkillSetting, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillLevel1(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillSettingFieldSkillLevel1(*GfBdatQuest::get()->mFLD_FieldSkillSetting, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillID2(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillSettingFieldSkillID2(*GfBdatQuest::get()->mFLD_FieldSkillSetting, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillLevel2(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillSettingFieldSkillLevel2(*GfBdatQuest::get()->mFLD_FieldSkillSetting, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillSettingSuccessVoiceCategory(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillSettingSuccessVoiceCategory(*GfBdatQuest::get()->mFLD_FieldSkillSetting, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillSettingMissVoiceCategory(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillSettingMissVoiceCategory(*GfBdatQuest::get()->mFLD_FieldSkillSetting, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillID(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getFLD_FieldSkillSettingFieldSkillID1,
+                                                              _gfbqa::getFLD_FieldSkillSettingFieldSkillID2};
+  CBdatWrapper *fp = GfBdatQuest::get()->mFLD_FieldSkillSetting;
+  return getters[index](*fp, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillLevel(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getFLD_FieldSkillSettingFieldSkillLevel1,
+                                                              _gfbqa::getFLD_FieldSkillSettingFieldSkillLevel2};
+  CBdatWrapper *fp = GfBdatQuest::get()->mFLD_FieldSkillSetting;
+  return getters[index](*fp, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillRandomStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_FieldSkillRandom->data); }
+
+u32 QuestListAcc::getFLD_FieldSkillRandomEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_FieldSkillRandom->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_FieldSkillRandom->data);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillRandomLevel1Chance(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillRandomLevel1Chance(*GfBdatQuest::get()->mFLD_FieldSkillRandom, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillRandomLevel2Chance(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillRandomLevel2Chance(*GfBdatQuest::get()->mFLD_FieldSkillRandom, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillRandomLevel3Chance(u32 id) const {
+  return _gfbqa::getFLD_FieldSkillRandomLevel3Chance(*GfBdatQuest::get()->mFLD_FieldSkillRandom, id);
+}
+
+u32 QuestListAcc::getFLD_FieldSkillRandomLevelChance(u32 id, u32 index) const {
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbqa::getFLD_FieldSkillRandomLevel1Chance, _gfbqa::getFLD_FieldSkillRandomLevel2Chance, _gfbqa::getFLD_FieldSkillRandomLevel3Chance};
+  CBdatWrapper *fp = GfBdatQuest::get()->mFLD_FieldSkillRandom;
+  return getters[index](*fp, id);
+}
+
+u32 QuestListAcc::getFLD_DevelopmentLevelStart() const { return Bdat::getIdTop(GfBdatQuest::get()->mFLD_DevelopmentLevel->data); }
+
+u32 QuestListAcc::getFLD_DevelopmentLevelEnd() const {
+  return Bdat::getIdTop(GfBdatQuest::get()->mFLD_DevelopmentLevel->data) + Bdat::getIdCount(GfBdatQuest::get()->mFLD_DevelopmentLevel->data);
+}
+
+u32 QuestListAcc::getFLD_DevelopmentLevelValue(u32 level) const {
+  return _gfbqa::getFLD_DevelopmentLevelValue(*GfBdatQuest::get()->mFLD_DevelopmentLevel, level);
+}
+
+QuestListAcc::QuestListAcc() { clear(); }
+
+void QuestListAcc::clear() {
+  __builtin_memset(&mListIndices, 0, sizeof(mListIndices));
+  for (u32 type = 0; type < QTYPE_COUNT; type++) {
+    mListCategories[type].clear();
+  }
+
+  __builtin_memset(&mTaskIndices, 0, sizeof(mTaskIndices));
+  for (u32 type = 0; type < QTYPE_COUNT; type++) {
+    mTaskCategories[type].clear();
+  }
+}
+
+QuestListAcc::~QuestListAcc() {}
+
+QuestListAcc *QuestListAcc::get() { return GfBdatQuest::get()->mQuestListAcc; }
+
+QuestID QuestListAcc::getQuestID(u32 index) const {
+  CBdatWrapper *fp;
+  QuestID quest = {};
+  getQuestListByIndex(fp, quest.id, index);
+  return quest;
+}
+
+bool QuestListAcc::getQuestListByIndex(CBdatWrapper *&fp, u16 &id, u32 index) const {
+  for (const QuestListCategory &category : mListCategories) {
+    if (category.begin <= index && index < category.end) {
+      fp = category.getFp(index);
+      id = category.ids[index - category.begin];
+      return true;
+    }
+  }
+
+  return false;
+}
+
+u16 QuestListAcc::getPurposeID(u32 index) const {
+  CBdatWrapper *fp;
+  u16 purpose;
+  getTaskInfoByIndex(fp, purpose, index);
+  return purpose;
+}
+
+bool QuestListAcc::getTaskInfoByIndex(CBdatWrapper *&fp, u16 &purpose, u32 index) const {
+  for (const QuestTaskCategory &category : mTaskCategories) {
+    if (category.begin <= index && index < category.end) {
+      fp = category.getFp(index);
+      purpose = category.ids[index - category.begin];
+      return true;
+    }
+  }
+
+  return false;
+}
+
+void QuestListAcc::getQuestInfo(QIDXINFO &info) const {
+  if (info.purpose == 0) {
+    if (info.quest.empty()) {
+      info.category = QTYPE_NONE;
+      info.index = 0;
+      info.categoryBegin = 0;
+      return;
+    }
+
+    u32 entry = mListIndices.indices[info.quest.id];
+    info.category = static_cast<QTYPE>(entry >> 24);
+    info.index = entry & 0xffffff;
+    info.categoryBegin = mListCategories[info.category - 1].begin;
+  } else {
+    u32 entry = mTaskIndices.indices[info.purpose];
+    info.category = static_cast<QTYPE>(entry >> 24);
+    info.index = entry & 0xffffff;
+    info.categoryBegin = mTaskCategories[info.category - 1].begin;
+  }
+}
+
+u32 QuestListAcc::getQuestListCount(QTYPE type) const {
+  switch (type) {
+  case QTYPE_NONE:
+    return mListIndices.count;
+  case QTYPE_MAIN:
+  case QTYPE_BLADE:
+  case QTYPE_NORMAL:
+  case QTYPE_UNUSED:
+  case QTYPE_MERCENARIES:
+  case QTYPE_ACHIEVEMENT:
+    return mListCategories[type - 1].ids.size();
+  }
+
+  return 0;
+}
+
+const QuestListCategory *QuestListAcc::getCategory(QTYPE type) const { return type != QTYPE_NONE ? &mListCategories[type - 1] : nullptr; }
+
+const QuestTaskCategory *QuestListAcc::getTaskCategory(QTYPE type) const { return type != QTYPE_NONE ? &mTaskCategories[type - 1] : nullptr; }
+
+qlist_iterator QuestListAcc::begin(QTYPE type) const {
+  qlist_iterator it(type);
+  if (type == QTYPE_NONE || (type >= QTYPE_MAIN && type <= QTYPE_ACHIEVEMENT && mListCategories[type - 1].ids.size() != 0)) {
+    it.index = 0;
+  }
+
+  return it;
+}
+
+qlist_iterator QuestListAcc::end(QTYPE type) const {
+  qlist_iterator it(type);
+  it.index = -1;
+  return it;
+}
+
+tlist_iterator QuestListAcc::beginTask(QTYPE type) const {
+  tlist_iterator it(type);
+  if (type == QTYPE_NONE || (type >= QTYPE_MAIN && type <= QTYPE_ACHIEVEMENT && mTaskCategories[type - 1].ids.size() != 0)) {
+    it.index = 0;
+  }
+
+  return it;
+}
+
+tlist_iterator QuestListAcc::endTask(QTYPE type) const {
+  tlist_iterator it(type);
+  it.index = -1;
+  return it;
+}
+
+qlist_iterator qlist_iterator::operator++() {
+  if (index >= 0) {
+    bool isValid;
+    if (type != QTYPE_NONE) {
+      isValid = static_cast<s32>(category->ids.size()) > index + 1;
+    } else {
+      CBdatWrapper *fp;
+      u16 id;
+      isValid = questListAcc->getQuestListByIndex(fp, id, index + 1);
+    }
+
+    if (isValid) {
+      index++;
+    } else {
+      index = -1;
+    }
+  }
+
+  return *this;
+}
+
+u32 QuestListAcc::getCollectUseFlagIndex(const QuestTaskParam &param) const {
+  if (GfDataUtil::isCollectFlagNewVersion()) {
+    return getCollectUseFlagIndexNewVersion(param);
+  }
+
+  return getCollectUseFlagIndexOldVersion(param);
+}
+
+u32 QuestListAcc::getCollectUseFlagIndexNewVersion(const QuestTaskParam &param) const {
+  switch (param.taskType) {
+  case TASK_TYPE_COLLECT:
+    return param.taskId;
+  case TASK_TYPE_USE:
+    return param.taskId + COLLECT_FLAG_USE_OFFSET;
+  }
+
+  return 0;
+}
+
+u32 QuestListAcc::getCollectUseFlagIndexOldVersion(const QuestTaskParam &param) const {
+  u16 index = mCollectFlagIndices[param.quest.id * QUEST_TASK_COUNT + param.taskIndex];
+  if (index == 0) {
+    return 0;
+  }
+
+  return mCollectFlags[index - 1];
+}
+
+void QuestListAcc::dispCapacityQuestList() {}
+
+void QuestListAcc::dispCapacityQuestTask() {}
+
+void QuestListAcc::rebuild() {
+  clear();
+  _gfbqa::initBattleRefer(*GfBdatQuest::get()->mFLD_QuestBattle);
+  _gfbqa::initBattleEnemyID(*GfBdatQuest::get()->mFLD_QuestBattle);
+  _gfbqa::initBattleEnemyGroupID(*GfBdatQuest::get()->mFLD_QuestBattle);
+  _gfbqa::initBattleEnemySpeciesID(*GfBdatQuest::get()->mFLD_QuestBattle);
+  _gfbqa::initBattleCount(*GfBdatQuest::get()->mFLD_QuestBattle);
+  _gfbqa::initBattleCountFlag(*GfBdatQuest::get()->mFLD_QuestBattle);
+  _gfbqa::initBattleDeadAll(*GfBdatQuest::get()->mFLD_QuestBattle);
+  _gfbqa::initBattleTimeCount(*GfBdatQuest::get()->mFLD_QuestBattle);
+  _gfbqa::initBattleTimeCountFlag(*GfBdatQuest::get()->mFLD_QuestBattle);
+  _gfbqa::initBattleReduceEnemyHP(*GfBdatQuest::get()->mFLD_QuestBattle);
+  _gfbqa::initBattleReducePCHP(*GfBdatQuest::get()->mFLD_QuestBattle);
+  _gfbqa::initRequestItemSetItemID1(*GfBdatQuest::get()->mFLD_RequestItemSet);
+  _gfbqa::initRequestItemSetItemID2(*GfBdatQuest::get()->mFLD_RequestItemSet);
+  _gfbqa::initRequestItemSetItemID3(*GfBdatQuest::get()->mFLD_RequestItemSet);
+  _gfbqa::initRequestItemSetItemID4(*GfBdatQuest::get()->mFLD_RequestItemSet);
+  _gfbqa::initRequestItemSetItemID5(*GfBdatQuest::get()->mFLD_RequestItemSet);
+  _gfbqa::initRequestItemSetCount1(*GfBdatQuest::get()->mFLD_RequestItemSet);
+  _gfbqa::initRequestItemSetCount2(*GfBdatQuest::get()->mFLD_RequestItemSet);
+  _gfbqa::initRequestItemSetCount3(*GfBdatQuest::get()->mFLD_RequestItemSet);
+  _gfbqa::initRequestItemSetCount4(*GfBdatQuest::get()->mFLD_RequestItemSet);
+  _gfbqa::initRequestItemSetCount5(*GfBdatQuest::get()->mFLD_RequestItemSet);
+  _gfbqa::initRequestItemSetMapID(*GfBdatQuest::get()->mFLD_RequestItemSet);
+  _gfbqa::initRequestItemSetNpcID(*GfBdatQuest::get()->mFLD_RequestItemSet);
+  _gfbqa::initCollectItemID(*GfBdatQuest::get()->mFLD_QuestCollect);
+  _gfbqa::initCollectCategory(*GfBdatQuest::get()->mFLD_QuestCollect);
+  _gfbqa::initCollectCount(*GfBdatQuest::get()->mFLD_QuestCollect);
+  _gfbqa::initCollectDeduct(*GfBdatQuest::get()->mFLD_QuestCollect);
+  _gfbqa::initCollectTresureID(*GfBdatQuest::get()->mFLD_QuestCollect);
+  _gfbqa::initCollectEnemyID(*GfBdatQuest::get()->mFLD_QuestCollect);
+  _gfbqa::initCollectMapID(*GfBdatQuest::get()->mFLD_QuestCollect);
+  _gfbqa::initCollectNpcID(*GfBdatQuest::get()->mFLD_QuestCollect);
+  _gfbqa::initUseItemID(*GfBdatQuest::get()->mFLD_QuestUse);
+  _gfbqa::initUseCategory(*GfBdatQuest::get()->mFLD_QuestUse);
+  _gfbqa::initUseItemNumber(*GfBdatQuest::get()->mFLD_QuestUse);
+  _gfbqa::initUsePartyInPC(*GfBdatQuest::get()->mFLD_QuestUse);
+  _gfbqa::initUsebladeID(*GfBdatQuest::get()->mFLD_QuestUse);
+  _gfbqa::initReachCategory(*GfBdatQuest::get()->mFLD_QuestReach);
+  _gfbqa::initReachMapID(*GfBdatQuest::get()->mFLD_QuestReach);
+  _gfbqa::initReachPlaceID(*GfBdatQuest::get()->mFLD_QuestReach);
+  _gfbqa::initTalkMapID(*GfBdatQuest::get()->mFLD_QuestTalk);
+  _gfbqa::initTalkNpcID(*GfBdatQuest::get()->mFLD_QuestTalk);
+  _gfbqa::initTalkDummyGroup(*GfBdatQuest::get()->mFLD_QuestTalk);
+  _gfbqa::initDummyGroupNpcID1(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup);
+  _gfbqa::initDummyGroupNpcID2(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup);
+  _gfbqa::initDummyGroupNpcID3(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup);
+  _gfbqa::initDummyGroupNpcID4(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup);
+  _gfbqa::initDummyGroupNpcID5(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup);
+  _gfbqa::initDummyGroupNpcID6(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup);
+  _gfbqa::initDummyGroupNpcID7(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup);
+  _gfbqa::initDummyGroupNpcID8(*GfBdatQuest::get()->mFLD_QuestTalkDummyGroup);
+  _gfbqa::initGimmickMapID(*GfBdatQuest::get()->mFLD_QuestGimmick);
+  _gfbqa::initGimmickDoorGimmickID(*GfBdatQuest::get()->mFLD_QuestGimmick);
+  _gfbqa::initGimmickElevatorGimmickID(*GfBdatQuest::get()->mFLD_QuestGimmick);
+  _gfbqa::initGimmickJumpGimmickID(*GfBdatQuest::get()->mFLD_QuestGimmick);
+  _gfbqa::initGimmickMapGimmickID(*GfBdatQuest::get()->mFLD_QuestGimmick);
+  _gfbqa::initGimmickMapGmkIconOff(*GfBdatQuest::get()->mFLD_QuestGimmick);
+  _gfbqa::initGimmickWarpGimmickID(*GfBdatQuest::get()->mFLD_QuestGimmick);
+  _gfbqa::initGimmickSalvagePointID(*GfBdatQuest::get()->mFLD_QuestGimmick);
+  _gfbqa::initGimmickTboxPopID(*GfBdatQuest::get()->mFLD_QuestGimmick);
+  _gfbqa::initGimmickEndCheck(*GfBdatQuest::get()->mFLD_QuestGimmick);
+  _gfbqa::initFieldSkillCountFieldSkillID(*GfBdatQuest::get()->mFLD_QuestFieldSkillCount);
+  _gfbqa::initFieldSkillCountCount(*GfBdatQuest::get()->mFLD_QuestFieldSkillCount);
+  _gfbqa::initRequestBladeRequestCategory(*GfBdatQuest::get()->mFLD_RequestBlade);
+  _gfbqa::initRequestBladeRequestAtr(*GfBdatQuest::get()->mFLD_RequestBlade);
+  _gfbqa::initRequestBladeRequestPerformance(*GfBdatQuest::get()->mFLD_RequestBlade);
+  _gfbqa::initRequestBladeRequestRace(*GfBdatQuest::get()->mFLD_RequestBlade);
+  _gfbqa::initRequestBladeRequestGender(*GfBdatQuest::get()->mFLD_RequestBlade);
+  _gfbqa::initRequestBladeRequestArts(*GfBdatQuest::get()->mFLD_RequestBlade);
+  _gfbqa::initRequestBladeRequestArtsLevel(*GfBdatQuest::get()->mFLD_RequestBlade);
+  _gfbqa::initRequestBladeRequestFSkill(*GfBdatQuest::get()->mFLD_RequestBlade);
+  _gfbqa::initRequestBladeRequestFSLevel(*GfBdatQuest::get()->mFLD_RequestBlade);
+  _gfbqa::initRequestBladeRequestNumber(*GfBdatQuest::get()->mFLD_RequestBlade);
+  _gfbqa::initConditionConditionID(*GfBdatQuest::get()->mFLD_QuestCondition);
+  _gfbqa::initConditionMapID(*GfBdatQuest::get()->mFLD_QuestCondition);
+  _gfbqa::initConditionNpcID(*GfBdatQuest::get()->mFLD_QuestCondition);
+  _gfbqa::initAchievementStatsID(*GfBdatQuest::get()->mFLD_Achievement);
+  _gfbqa::initAchievementCount(*GfBdatQuest::get()->mFLD_Achievement);
+  _gfbqa::initAchievementDebugName(*GfBdatQuest::get()->mFLD_Achievement);
+  _gfbqa::initHintsMainChar1(*GfBdatQuest::get()->mFLD_QuestHints);
+  _gfbqa::initHintsMainChar2(*GfBdatQuest::get()->mFLD_QuestHints);
+  _gfbqa::initHintsMainChar3(*GfBdatQuest::get()->mFLD_QuestHints);
+  _gfbqa::initHintsMainChar4(*GfBdatQuest::get()->mFLD_QuestHints);
+  _gfbqa::initHintsFSkillID1(*GfBdatQuest::get()->mFLD_QuestHints);
+  _gfbqa::initHintsFSkillID2(*GfBdatQuest::get()->mFLD_QuestHints);
+  _gfbqa::initHintsFSkillID3(*GfBdatQuest::get()->mFLD_QuestHints);
+  _gfbqa::initHintsClientNpc(*GfBdatQuest::get()->mFLD_QuestHints);
+  _gfbqa::initHintsZoneID(*GfBdatQuest::get()->mFLD_QuestHints);
+  _gfbqa::initEventEventID(*GfBdatQuest::get()->mFLD_QuestEvent);
+  _gfbqa::initRewardGold(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardEXP(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardSp(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardCoin(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardDevelopZone(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardDevelopPoint(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardTrustPoint(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardMercenariesPoint(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardIdeaCategory(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardIdeaValue(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardItemID1(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardItemNumber1(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardItemID2(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardItemNumber2(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardItemID3(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardItemNumber3(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardItemID4(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initRewardItemNumber4(*GfBdatQuest::get()->mFLD_QuestReward);
+  _gfbqa::initFLD_AchievementSetCategory(*GfBdatQuest::get()->mFLD_AchievementSet);
+  _gfbqa::initFLD_AchievementSetAbilityLevel(*GfBdatQuest::get()->mFLD_AchievementSet);
+  _gfbqa::initFLD_AchievementSetAchievementID1(*GfBdatQuest::get()->mFLD_AchievementSet);
+  _gfbqa::initFLD_AchievementSetAchievementID2(*GfBdatQuest::get()->mFLD_AchievementSet);
+  _gfbqa::initFLD_AchievementSetAchievementID3(*GfBdatQuest::get()->mFLD_AchievementSet);
+  _gfbqa::initFLD_AchievementSetAchievementID4(*GfBdatQuest::get()->mFLD_AchievementSet);
+  _gfbqa::initFLD_AchievementSetAchievementID5(*GfBdatQuest::get()->mFLD_AchievementSet);
+  _gfbqa::initFLD_AchievementListTitle(*GfBdatQuest::get()->mFLD_AchievementList);
+  _gfbqa::initFLD_AchievementListCategory(*GfBdatQuest::get()->mFLD_AchievementList);
+  _gfbqa::initFLD_AchievementListIcon(*GfBdatQuest::get()->mFLD_AchievementList);
+  _gfbqa::initFLD_AchievementListTask(*GfBdatQuest::get()->mFLD_AchievementList);
+  _gfbqa::initFLD_AchievementListVoiceCategory(*GfBdatQuest::get()->mFLD_AchievementList);
+  _gfbqa::initFLD_AchievementListAfterVoice(*GfBdatQuest::get()->mFLD_AchievementList);
+  _gfbqa::initFLD_AchievementListDifficulty(*GfBdatQuest::get()->mFLD_AchievementList);
+  _gfbqa::initFLD_AchievementListIdeaCategory(*GfBdatQuest::get()->mFLD_AchievementList);
+  _gfbqa::initFLD_AchievementListIdeaValue(*GfBdatQuest::get()->mFLD_AchievementList);
+  _gfbqa::initFLD_MercenariesConfigValue(*GfBdatQuest::get()->mFLD_MercenariesConfig);
+  _gfbqa::initFLD_MercenariesMissionQuestID(*GfBdatQuest::get()->mFLD_MercenariesMission);
+  _gfbqa::initFLD_MercenariesMissionCategory(*GfBdatQuest::get()->mFLD_MercenariesMission);
+  _gfbqa::initFLD_MercenariesMissionRequestPerformance(*GfBdatQuest::get()->mFLD_MercenariesMission);
+  _gfbqa::initFLD_MercenariesMissionRepeatable(*GfBdatQuest::get()->mFLD_MercenariesMission);
+  _gfbqa::initFLD_MercenariesMissionAutoStart(*GfBdatQuest::get()->mFLD_MercenariesMission);
+  _gfbqa::initFLD_FieldSkillListName(*GfBdatQuest::get()->mFLD_FieldSkillList);
+  _gfbqa::initFLD_FieldSkillListCaption(*GfBdatQuest::get()->mFLD_FieldSkillList);
+  _gfbqa::initFLD_FieldSkillListType(*GfBdatQuest::get()->mFLD_FieldSkillList);
+  _gfbqa::initFLD_FieldSkillListRandomID(*GfBdatQuest::get()->mFLD_FieldSkillList);
+  _gfbqa::initFLD_FieldSkillListMinLevel(*GfBdatQuest::get()->mFLD_FieldSkillList);
+  _gfbqa::initFLD_FieldSkillListMaxLevel(*GfBdatQuest::get()->mFLD_FieldSkillList);
+  _gfbqa::initFLD_FieldSkillListCategory(*GfBdatQuest::get()->mFLD_FieldSkillList);
+  _gfbqa::initFLD_FieldSkillListRarity(*GfBdatQuest::get()->mFLD_FieldSkillList);
+  _gfbqa::initFLD_FieldSkillListIcon(*GfBdatQuest::get()->mFLD_FieldSkillList);
+  _gfbqa::initFLD_FieldSkillListVoiceCategory(*GfBdatQuest::get()->mFLD_FieldSkillList);
+  _gfbqa::initFLD_FieldSkillListAttirbute(*GfBdatQuest::get()->mFLD_FieldSkillList);
+  _gfbqa::initFLD_FieldSkillSettingName(*GfBdatQuest::get()->mFLD_FieldSkillSetting);
+  _gfbqa::initFLD_FieldSkillSettingFieldSkillID1(*GfBdatQuest::get()->mFLD_FieldSkillSetting);
+  _gfbqa::initFLD_FieldSkillSettingFieldSkillLevel1(*GfBdatQuest::get()->mFLD_FieldSkillSetting);
+  _gfbqa::initFLD_FieldSkillSettingFieldSkillID2(*GfBdatQuest::get()->mFLD_FieldSkillSetting);
+  _gfbqa::initFLD_FieldSkillSettingFieldSkillLevel2(*GfBdatQuest::get()->mFLD_FieldSkillSetting);
+  _gfbqa::initFLD_FieldSkillSettingSuccessVoiceCategory(*GfBdatQuest::get()->mFLD_FieldSkillSetting);
+  _gfbqa::initFLD_FieldSkillSettingMissVoiceCategory(*GfBdatQuest::get()->mFLD_FieldSkillSetting);
+  _gfbqa::initFLD_FieldSkillRandomLevel1Chance(*GfBdatQuest::get()->mFLD_FieldSkillRandom);
+  _gfbqa::initFLD_FieldSkillRandomLevel2Chance(*GfBdatQuest::get()->mFLD_FieldSkillRandom);
+  _gfbqa::initFLD_FieldSkillRandomLevel3Chance(*GfBdatQuest::get()->mFLD_FieldSkillRandom);
+  _gfbqa::initFLD_DevelopmentLevelValue(*GfBdatQuest::get()->mFLD_DevelopmentLevel);
+  _gfbqa::initListQuestTitle(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListQuestCategory(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListVisible(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListTalker(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListSummary(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListResultA(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListResultB(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListSortNo(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListRewardDisp(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListRewardSetA(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListRewardSetB(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListPRTQuestID(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListFlagPRT(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListFlagCLD(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListPurposeID(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListCountCancel(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListNextQuestA(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListCallEventA(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListNextQuestB(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListCallEventB(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListHintsID(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListClearVoice(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListAutoStart(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListItemLost(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListCancelCondition(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListQuestIcon(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initListLinkedQuestID(*GfBdatQuest::get()->mFLD_QuestList);
+  _gfbqa::initTaskPreCondition(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskType1(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskType2(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskType3(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskType4(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskID1(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskID2(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskID3(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskID4(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskBranch1(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskBranch2(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskBranch3(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskBranch4(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskLog1(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskLog2(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskLog3(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskLog4(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskUI1(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskUI2(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskUI3(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskUI4(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskCondition1(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskCondition2(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskCondition3(*GfBdatQuest::get()->mFLD_QuestTask);
+  _gfbqa::initTaskTaskCondition4(*GfBdatQuest::get()->mFLD_QuestTask);
+}
+
+u32 QuestListAcc::getQuestIdx(QuestID quest) const {
+  QIDXINFO info(quest);
+  getQuestInfo(info);
+  return info.index;
+}
+
+u32 QuestListAcc::getTaskFlag(u32 purpose, u32 taskIndex) const {
+  QIDXINFO info(purpose);
+  getQuestInfo(info);
+  u32 base;
+  switch (info.category) {
+  case QTYPE_MAIN:
+    base = 0xfa2;
+    break;
+  case QTYPE_BLADE:
+    base = 0x9bc4;
+    break;
+  case QTYPE_NORMAL:
+    base = 0x16ac;
+    break;
+  case QTYPE_MERCENARIES:
+    base = 0x9fad;
+    break;
+  case QTYPE_ACHIEVEMENT:
+    base = 0x11fb;
+    break;
+  default:
+    base = 0;
+    break;
+  }
+
+  u32 offset = (info.index - info.categoryBegin) * QUEST_TASK_COUNT;
+  return base + taskIndex + offset;
+}
+
+qlist_iterator::qlist_iterator(QTYPE type) : type(type), index(-1) {
+  questListAcc = QuestListAcc::get();
+  category = questListAcc->getCategory(type);
+}
+
+tlist_iterator::tlist_iterator(QTYPE type) : type(type), index(-1) {
+  questListAcc = QuestListAcc::get();
+  category = questListAcc->getTaskCategory(type);
+}
+
+tlist_iterator tlist_iterator::operator++() {
+  if (index >= 0) {
+    bool isValid;
+    if (type != QTYPE_NONE) {
+      isValid = static_cast<s32>(category->ids.size()) > index + 1;
+    } else {
+      CBdatWrapper *fp;
+      u16 purpose;
+      isValid = questListAcc->getTaskInfoByIndex(fp, purpose, index + 1);
+    }
+
+    if (isValid) {
+      index++;
+    } else {
+      index = -1;
+    }
+  }
+
+  return *this;
+}
 
 } // namespace gf
