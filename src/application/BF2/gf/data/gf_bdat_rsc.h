@@ -16,6 +16,15 @@ public:
 
   const char *getRSC_PcWpnModel(u32 weapon) const;
   const char *getRSC_PcWpnMotion(u32 weapon) const;
+
+  const char *getRscEnVoice(u32 resource) const;
+  const char *getRscEnRefMotion(u32 resource) const;
+  const char *getRscEnModel(u32 resource) const;
+  const char *getRscEnMotion(u32 resource) const;
+  const char *getRscEnSePack(u32 resource) const;
+  const char *getRscEnLoopEffect(u32 resource) const;
+  u32 getRscEnExtraParts(u32 resource, u32 part) const;
+  u32 getRscEnDrType(u32 resource) const;
 };
 
 } // namespace gf

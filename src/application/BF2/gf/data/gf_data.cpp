@@ -2,6 +2,7 @@
 // clang-format off
 #include "gf/data/gf_data_util.cpp"
 #include "gf/data/gf_data_driver.cpp"
+#include "gf/data/gf_data_enemy.cpp"
 #include "gf/data/gf_data_blade.cpp"
 #include "gf/data/gf_data_driver_arts.cpp"
 #include "gf/data/gf_data_quest.cpp"

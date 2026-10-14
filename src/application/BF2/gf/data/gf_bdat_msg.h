@@ -11,6 +11,7 @@ public:
   static u8 *getFpMapInfo();
   static u8 *getFpQuest(QuestID quest);
   static const char *getNameQuest(QuestID quest, u32 line);
+  static u8 *getFpEnemy();
 };
 
 } // namespace gf
