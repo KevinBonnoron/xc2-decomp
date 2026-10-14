@@ -34,6 +34,7 @@ import subprocess
 import sys
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
+from functools import lru_cache
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TARGET_ELF = os.path.join(ROOT, "work", "main_100.elf")
@@ -90,6 +91,16 @@ def demangle(names):
     return dict(zip(names, run(["llvm-cxxfilt"], input="\n".join(names)).splitlines()))
 
 
+@lru_cache(maxsize=None)
+def defined_symbols(path, sizes=False):
+    return run(["llvm-nm", "--defined-only", *(["-S"] if sizes else []), path])
+
+
+@lru_cache(maxsize=None)
+def read_source(path):
+    return open(path).read()
+
+
 class Image:
     def __init__(self, path):
         self.data = open(path, "rb").read()
@@ -123,7 +134,7 @@ def writable(section):
 class TargetSymbols:
     def __init__(self):
         entries = []
-        for line in run(["llvm-nm", "--defined-only", "-S", TARGET_ELF]).splitlines():
+        for line in defined_symbols(TARGET_ELF, sizes=True).splitlines():
             parts = line.split()
             if len(parts) == 4:
                 entries.append((int(parts[0], 16), int(parts[1], 16), parts[3]))
@@ -384,19 +395,20 @@ def compile_source(source, tmp, extra=()):
 
 
 def defined_functions(obj):
-    out = run(["llvm-nm", "--defined-only", obj])
+    out = defined_symbols(obj)
     return [parts[2] for parts in (l.split() for l in out.splitlines()) if len(parts) == 3 and parts[1] in "TtWw"]
 
 
 def local_functions(obj, known):
-    out = run(["llvm-nm", "--defined-only", obj])
+    out = defined_symbols(obj)
     return {parts[2] for parts in (l.split() for l in out.splitlines())
             if len(parts) == 3 and (parts[1] == "t" or parts[1] in "TWw" and parts[2] not in known)}
 
 
+@lru_cache(maxsize=None)
 def included_sources(source):
     found = []
-    for name in INCLUDE_CPP.findall(open(source).read()):
+    for name in INCLUDE_CPP.findall(read_source(source)):
         for base in (os.path.dirname(source), os.path.join(ROOT, "src", "application", "BF2"), os.path.join(ROOT, "include")):
             path = os.path.normpath(os.path.join(base, name))
             if os.path.exists(path):
@@ -411,17 +423,20 @@ def root_sources():
     return [source for source in sources if source not in included]
 
 
+def qualified_needle(demangled_name):
+    return "::".join(demangled_name.split("(")[0].split("::")[-2:]) + "("
+
+
 def defining_file(demangled_name, root):
-    qualified = demangled_name.split("(")[0].split("::")
-    needle = "::".join(qualified[-2:]) + "("
+    needle = qualified_needle(demangled_name)
     for path in included_sources(root) + [root]:
-        if needle in open(path).read():
+        if needle in read_source(path):
             return path
     return root
 
 
-def compile_all(tmp):
-    sources = root_sources()
+def compile_all(tmp, sources=None):
+    sources = root_sources() if sources is None else sources
     with ThreadPoolExecutor() as pool:
         results = list(pool.map(lambda s: (s, *compile_source(s, tmp)), sources))
     errors = [(os.path.relpath(source, ROOT), err) for source, _, err in results if err]
@@ -460,8 +475,15 @@ def diff_one(symbol, source, extra, known):
             if err:
                 sys.exit(err)
         else:
-            objects, _ = compile_all(tmp)
-            obj = next((o for _, o in objects if symbol in defined_functions(o)), None)
+            needle = qualified_needle(demangle([symbol])[symbol])
+            likely = [root for root in root_sources()
+                      if any(needle in read_source(path) for path in included_sources(root) + [root])]
+            obj = None
+            for sources in (likely, None):
+                objects, _ = compile_all(tmp, sources)
+                obj = next((o for _, o in objects if symbol in defined_functions(o)), None)
+                if obj:
+                    break
             if obj is None:
                 sys.exit(f"{demangle([symbol])[symbol]} is not defined in any file under src/")
         mine = objdump(obj, [symbol], relocs=True, local_functions=local_functions(obj, known)).get(symbol)
@@ -498,9 +520,13 @@ def check_all(demangled, scope=None):
         missing = sorted({demangled[m] for m in demangled if in_scope(demangled[m], scope) and m not in all_funcs}) if scope else []
         if not all_funcs and not scope:
             sys.exit("no game function defined under src/")
-        targets = objdump(TARGET_ELF, all_funcs, relocs=False)
-        for source, obj, funcs in per_object:
-            mine = objdump(obj, funcs, relocs=True, local_functions=local_functions(obj, demangled)) if funcs else {}
+        with ThreadPoolExecutor() as pool:
+            pending_targets = pool.submit(objdump, TARGET_ELF, all_funcs, relocs=False)
+            disassembled = list(pool.map(
+                lambda entry: objdump(entry[1], entry[2], relocs=True, local_functions=local_functions(entry[1], demangled))
+                if entry[2] else {}, per_object))
+            targets = pending_targets.result()
+        for (source, obj, funcs), mine in zip(per_object, disassembled):
             for f in funcs:
                 rows.append((f, os.path.relpath(defining_file(demangled[f], source), ROOT), targets.get(f, []), mine.get(f, [])))
 
@@ -532,7 +558,7 @@ def check_all(demangled, scope=None):
 def game_progress(matched):
     sizes = {}
     names = {}
-    for line in run(["llvm-nm", "--defined-only", "-S", TARGET_ELF]).splitlines():
+    for line in defined_symbols(TARGET_ELF, sizes=True).splitlines():
         parts = line.split()
         if len(parts) == 4 and parts[2] in "TtWw":
             addr = int(parts[0], 16)
