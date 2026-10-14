@@ -196,6 +196,8 @@ public:
   u32 getBLD_ReleaceRewardReleace006(u32 id) const;
   u32 getBLD_ReleaceRewardReleace007(u32 id) const;
 
+  u32 getNameListEnd() const;
+
 private:
   CBdatWrapper *unknown10; // Inferred label: mIdeaTable; original member name unknown.
   CBdatWrapper *unknown18; // Inferred label: mBladeTable; original member name unknown.

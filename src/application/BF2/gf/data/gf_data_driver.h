@@ -61,7 +61,12 @@ struct SDataDriver {
 };
 
 enum DBSLOT {};
-enum FAVORITE {};
+enum FAVORITE {
+  FAVORITE_CATEGORY_0,
+  FAVORITE_CATEGORY_1,
+  FAVORITE_ITEM_0,
+  FAVORITE_ITEM_1,
+};
 
 static_assert(sizeof(SDataDriverWeapon) == 0x14, "");
 static_assert(sizeof(SDataDriverAccessory) == 0x08, "");

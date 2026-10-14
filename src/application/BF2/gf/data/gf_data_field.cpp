@@ -20,7 +20,6 @@ constexpr u32 VOICE_RARE_BLADE_FIRST = 1014;
 constexpr u32 VOICE_RARE_BLADE_COUNT = 37;
 constexpr u32 VOICE_COMMON_BLADE_FIRST = 1197;
 constexpr u32 VOICE_COMMON_BLADE_COUNT = 200;
-constexpr u32 PERSONALITY_VOICE_FIRST = 61;
 constexpr u32 PERSONALITY_VOICE_COUNT = 32;
 
 const char *GfDataField::getFieldSkillVoice(u32 chara, u32 voice) {

@@ -169,7 +169,7 @@ u32 GfDataEvent::getBladeQuestDriver(u32 event) {
         return blade;
       }
 
-      return GfDataBlade::getSDataBlade(blade)->driver;
+      return GfDataBlade::getSDataBlade(blade)->creator;
     }
   }
 

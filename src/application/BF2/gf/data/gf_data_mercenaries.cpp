@@ -41,11 +41,6 @@ enum {
 };
 
 enum {
-  QUEST_RACE_HUMAN = 1,
-  QUEST_RACE_ANIMAL = 2,
-};
-
-enum {
   TASK_TYPE_REQUEST_BLADE = 9,
 };
 

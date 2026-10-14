@@ -1,5 +1,6 @@
 #include "gf/data/gf_bdat_blade.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_wrapper.h"
 
 namespace gf {
 namespace _gfbdb {
