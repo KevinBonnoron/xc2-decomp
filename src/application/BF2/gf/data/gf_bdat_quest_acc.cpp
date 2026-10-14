@@ -6,11 +6,6 @@
 
 namespace gf {
 
-enum {
-  TASK_TYPE_COLLECT = 3,
-  TASK_TYPE_USE = 4,
-};
-
 constexpr u32 COLLECT_FLAG_USE_OFFSET = 350;
 
 namespace _gfbqa {

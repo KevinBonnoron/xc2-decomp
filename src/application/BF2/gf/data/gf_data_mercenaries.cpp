@@ -10,6 +10,7 @@
 #include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/game/quest/gf_quest_task_param.h"
 
 namespace gf {
 
@@ -38,10 +39,6 @@ enum {
 
 enum {
   WILDCARD_MERCENARIES_POINT_LIMIT = 0x3e,
-};
-
-enum {
-  TASK_TYPE_REQUEST_BLADE = 9,
 };
 
 enum {
