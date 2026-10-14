@@ -53,6 +53,7 @@ public:
   static void checkQuestComplete(QuestID quest, QSTATE state);
   static QuestID getCurrentQuest(QTYPE type);
   static QuestID getProgressCurrentQuest(QTYPE type);
+  static QuestID getPrevCompleteQuest();
   static void eventCheckTask(QuestID quest);
   static bool openOrder(QuestID quest, bool isEvent);
   static QuestID getOrderQuestId(u32 purpose);

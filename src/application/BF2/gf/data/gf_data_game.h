@@ -7,6 +7,7 @@
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_party.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/game/quest/gf_quest_data.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
@@ -49,7 +50,8 @@ struct SDataGame {
   f32 playerCameraDistance;
   u32 gameClearCount;
   mm::mtl::FixedVector<SDataTaskAchieve, 128> taskAchieves;
-  u8 _10a138[0x10a53c - 0x10a138];
+  QuestData orderParentQuests[256];
+  u32 orderParentQuestCount;
   mm::mtl::FixedArray<SDataMapInfo, 64> mapInfos;
   u32 ether;
   f32 achievementWalkMove;
@@ -97,6 +99,8 @@ static_assert(offsetof(SDataGame, mercenaries) == 0x1098c8, "");
 static_assert(offsetof(SDataGame, playerCameraDistance) == 0x109b28, "");
 static_assert(offsetof(SDataGame, gameClearCount) == 0x109b2c, "");
 static_assert(offsetof(SDataGame, taskAchieves) == 0x109b30, "");
+static_assert(offsetof(SDataGame, orderParentQuests) == 0x10a138, "");
+static_assert(offsetof(SDataGame, orderParentQuestCount) == 0x10a538, "");
 static_assert(offsetof(SDataGame, mapInfos) == 0x10a53c, "");
 static_assert(offsetof(SDataGame, ether) == 0x10ad3c, "");
 static_assert(offsetof(SDataGame, achievementWalkMove) == 0x10ad40, "");
