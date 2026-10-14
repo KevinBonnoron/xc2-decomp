@@ -42,6 +42,16 @@ public:
   static void create(GF_OBJ_HANDLE *target);
 };
 
+class SCOM_PARTY_ADD {
+public:
+  static void removeDriver(u32 driver, bool isForce);
+};
+
+class SCOM_PARTY_LEADER {
+public:
+  static void create(u32 objectType, u32 leader);
+};
+
 class GfReqSmallCom {
 public:
   static bool isExistCommand(SCOM_TYPE type);

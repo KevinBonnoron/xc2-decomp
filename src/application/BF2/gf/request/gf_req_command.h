@@ -55,6 +55,7 @@ static_assert(offsetof(RQ_SETUP_PARTY_DRIVER, leader) == 0x14, "");
 
 class GfReqCommand {
 public:
+  static void reqPartyBlade(u32 blade, u32 driver);
   static void reqRebuildPartyWeapon(u32 blade);
 };
 
