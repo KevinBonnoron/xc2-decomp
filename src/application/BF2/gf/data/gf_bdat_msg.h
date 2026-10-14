@@ -31,6 +31,7 @@ public:
   static u8 *getFpBtlHanaNArts();
   static u8 *getFpFieldSkill();
   static u8 *getFpBtlEnhanceCap();
+  static u8 *getFpBtlClass();
 };
 
 } // namespace gf
