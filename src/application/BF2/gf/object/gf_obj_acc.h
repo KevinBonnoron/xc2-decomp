@@ -124,8 +124,13 @@ public:
   const char *getDebugName() const;
   bool isBattle() const;
   GF_MOUNT_HANDLE *getMountHandle(GFATTACH attach) const;
+  void setupExtraParts();
+  void setEtcParam(int index, f32 value);
+  int getEtcParamIndex(const char *name) const;
   bool isPartyObj() const;
   int getPartyID() const;
+  bool isCollideModelClip() const;
+  void setEnableCollideModelClip(bool isEnable);
 
 private:
   GFOBJ_INFO *mInfo;

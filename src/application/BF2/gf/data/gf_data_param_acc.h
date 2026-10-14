@@ -11,6 +11,7 @@ struct SDataEnemy;
 class IDataObj;
 
 enum GimmickType {
+  GIMMICK_TYPE_NONE = 0,
   GIMMICK_TYPE_TREASURE_BOX = 1,
 };
 

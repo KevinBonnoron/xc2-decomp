@@ -4,6 +4,7 @@
 #include "battle/character/character_parameter_battle.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/data/gf_data_enemy.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/model/gf_com_model.h"
@@ -23,6 +24,15 @@ public:
 namespace gf {
 
 static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
+
+static const char *EXTRA_PARTS_NAMES[] = {
+    "ExtraPartsA",
+    "ExtraPartsB",
+    "ExtraPartsC",
+    "ExtraPartsD",
+    "ExtraPartsE",
+    "ExtraPartsF",
+};
 
 GfObjAcc::GfObjAcc(GfObj *obj) : mObj(obj) { mInfo = obj != nullptr ? GfObjManager::getObjInfo(obj->handle) : nullptr; }
 
@@ -535,8 +545,62 @@ GF_MOUNT_HANDLE *GfObjAcc::getMountHandle(GFATTACH attach) const {
   return mInfo != nullptr ? mInfo->mounts[attach].handle : reinterpret_cast<GF_MOUNT_HANDLE *>(-1);
 }
 
+void GfObjAcc::setupExtraParts() {
+  ml::ScnObjModel *model = getScnModel();
+  if (model == nullptr) {
+    return;
+  }
+
+  ml::ScnObjAccResSubMesh subMesh(model);
+  subMesh.getExtMax();
+  DataParamAcc paramAcc(getType(), getBdatId(), GIMMICK_TYPE_NONE);
+  int count = paramAcc.getObjType() == OBJECT_TYPE_ENEMY ? 4 : 6;
+  for (int i = 0; i < count; i++) {
+    int index = subMesh.getExtIdx(EXTRA_PARTS_NAMES[i]);
+    if (index >= 0) {
+      subMesh.setExtAlpha(index, paramAcc.isDispInitExtraParts(i) ? 1.0f : 0.0f);
+    }
+  }
+}
+
+void GfObjAcc::setEtcParam(int index, f32 value) {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    ml::ScnObjAccEtcParams etcParams(model);
+    etcParams.setInitParams(index, value);
+  }
+}
+
+int GfObjAcc::getEtcParamIndex(const char *name) const {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    ml::ScnObjAccEtcParams etcParams(model);
+    return etcParams.getIndex(name);
+  }
+
+  return -1;
+}
+
 bool GfObjAcc::isPartyObj() const { return GfObjUtil::testFlag(mInfo, OBJ_FLAG_PARTY_OBJ); }
 
 int GfObjAcc::getPartyID() const { return GfObjUtil::getPartyID(getHandle()); }
+
+bool GfObjAcc::isCollideModelClip() const {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    ml::ScnObjAccResMdlInfo modelInfo(model);
+    return modelInfo.isCamCheckResl();
+  }
+
+  return false;
+}
+
+void GfObjAcc::setEnableCollideModelClip(bool isEnable) {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    ml::ScnObjAccResMdlInfo modelInfo(model);
+    modelInfo.setCamCheckMode(isEnable);
+  }
+}
 
 } // namespace gf
