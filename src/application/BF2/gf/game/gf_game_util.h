@@ -3,6 +3,10 @@
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
+namespace mm {
+struct Vec3;
+}
+
 namespace gf {
 
 struct GF_OBJ_HANDLE;
@@ -34,6 +38,8 @@ public:
   static void addSP(u32 driver, int skillPoint);
   static void setDevelopLevelForDebug(u32 nation, u32 level);
   static u16 getAntiBladeAreaBdatId();
+  static bool getGmkTargetPointPos(mm::Vec3 &position, u32 gimmick);
+  static bool getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle);
   static bool incEnemySuppress(u32 enemy);
   static bool isEnableDeleteObject(GF_OBJ_HANDLE *handle);
   static const char *getBladeModel(u32 blade, bool isDefault);
