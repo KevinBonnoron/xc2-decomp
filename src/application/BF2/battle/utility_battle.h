@@ -11,6 +11,8 @@ struct GF_OBJ_HANDLE;
 
 namespace btl {
 
+class BattleCharacter;
+
 class Utility {
 public:
   enum BTL_ACHIEVE_COND {
@@ -41,6 +43,7 @@ public:
   };
 
   static gf::GF_OBJ_HANDLE *GetLeader();
+  static gf::GF_OBJ_HANDLE *GetControlCharacterHandle();
   static bool IsSatisfyCondition(int condition);
   static bool IsSatisfyConditionFld(int condition);
   static void AchieveCondition(BTL_ACHIEVE_COND condition, gf::GF_OBJ_HANDLE *handle, u32 value);
@@ -48,12 +51,83 @@ public:
   static int GetWeaponSeType(int weaponType);
   static int GetAttrSeType(int attribute);
   static int GetAntiAttribute(u32 attribute);
+  static int GetElementalEffectID();
+  static int GetUniteComboID(int attribute, int combo);
+  static int GetPartyID(gf::GF_OBJ_HANDLE *handle);
+  static f32 GetDyingHpRate();
+  static int GetResistantAttrMaxHP();
   static int GetTrustRank(int blade);
+  static bool IsEnableDeadSequence();
   static bool IsThirdCharacter(gf::GF_OBJ_HANDLE *handle);
   static bool IsBladeArtsBuff(int buff);
   static void RegisterEnemyBook(ENBOOK_TYPE type, gf::GF_OBJ_HANDLE *handle, int value);
+  static int AI_GetCharacterID(gf::GF_OBJ_HANDLE *handle);
+  static int AI_GetCharacterAIID(gf::GF_OBJ_HANDLE *handle);
+  static int AI_GetCharacterAIID(const BattleCharacter *character);
+  static gf::GF_OBJ_HANDLE *AI_GetCharacterHandle(int aiId);
+  static int AI_ConversionID_AItoBtl(int aiId);
+  static int AI_ConversionID_BtltoAI(int id);
+  static bool AI_IsValidID(int aiId);
+  static void AI_GetObjectPosition(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position);
+  static int AI_GetTargetCharacterID(gf::GF_OBJ_HANDLE *handle);
+  static int AI_IsFly(gf::GF_OBJ_HANDLE *handle);
+  static f32 AI_GetVertDiff(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *target);
+  static int AI_GetEnemyNum();
+  static int AI_GetPlayerNum();
+  static int AI_GetFightComboID(gf::GF_OBJ_HANDLE *handle);
+  static int AI_GetElementalComboID(gf::GF_OBJ_HANDLE *handle);
+  static int AI_GetReactionID(gf::GF_OBJ_HANDLE *handle);
+  static int AI_GetStamp(gf::GF_OBJ_HANDLE *handle);
+  static f32 AI_GetHpPercent(gf::GF_OBJ_HANDLE *handle);
+  static u32 AI_GetLevel(gf::GF_OBJ_HANDLE *handle);
+  static int AI_GetAttribute(gf::GF_OBJ_HANDLE *handle);
+  static int AI_GetRescueTargetCharacterID(gf::GF_OBJ_HANDLE *handle);
+  static int AI_GetBackAttackerCharacterID(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_StartActionRescue(gf::GF_OBJ_HANDLE *handle, int aiId);
+  static void AI_StartActionEscape(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_StartActionArts(gf::GF_OBJ_HANDLE *handle, int slot, int aiId);
+  static bool AI_StartActionArtsByID(gf::GF_OBJ_HANDLE *handle, int arts, int aiId);
+  static bool AI_StartActionAttack(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_StartActionBladeChange(gf::GF_OBJ_HANDLE *handle, int blade);
+  static bool AI_IsAngry(gf::GF_OBJ_HANDLE *handle);
+  static void AI_SetAngry(gf::GF_OBJ_HANDLE *handle, f32 time);
+  static void AI_EndAngry(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_TurnTarget(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_TurnDirection(gf::GF_OBJ_HANDLE *handle, const mm::Vec3 &direction);
+  static void AI_SetUseNavi(gf::GF_OBJ_HANDLE *handle, bool isUseNavi);
+  static bool AI_StartMovePosition(gf::GF_OBJ_HANDLE *handle, const mm::Vec3 &position, f32 time);
+  static bool AI_StartMoveTarget(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time);
+  static bool AI_StartMoveFront(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time);
+  static bool AI_StartMoveSide(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time);
+  static bool AI_StartMoveLeft(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time);
+  static bool AI_StartMoveRight(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time);
+  static bool AI_StartMoveBack(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time);
+  static bool AI_StartMoveSatellite(gf::GF_OBJ_HANDLE *handle, bool isClockwise, f32 frame);
+  static bool AI_StartMoveBackward(gf::GF_OBJ_HANDLE *handle, f32 distance, f32 time);
+  static bool AI_StartMovePosBackward(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position, f32 time);
+  static void AI_MoveStop(gf::GF_OBJ_HANDLE *handle, bool isImmediate);
+  static bool AI_IsDestruct(gf::GF_OBJ_HANDLE *handle);
+  static int AI_GetTargetDirection(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *target);
+  static void AI_AddKizuna(gf::GF_OBJ_HANDLE *handle, int kizuna);
+  static int AI_GetKizunaStage(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_StartSpAttack(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_IsBattleOpening(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_IsInAttackRange(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_IsEnableArts(gf::GF_OBJ_HANDLE *handle, int slot, int aiId);
+  static bool AI_IsEnableArtsByID(gf::GF_OBJ_HANDLE *handle, int arts, int aiId);
+  static int AI_SearchVoiceCodeCharacter(int voiceCode);
+  static int AI_GetVoiceCode(gf::GF_OBJ_HANDLE *handle);
+  static void AI_PlayVoice(gf::GF_OBJ_HANDLE *handle, int voice);
+  static int AI_GetPlayVoiceID(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_IsBuff(gf::GF_OBJ_HANDLE *handle, int buff);
+  static bool AI_IsProcSpAttack();
+  static int AI_GetBdatID(gf::GF_OBJ_HANDLE *handle);
   static bool AI_GetCharacterGimmickPoint(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position);
   static bool AI_GetGimmickPoint(mm::Vec3 &position, u32 gimmick);
+  static void AI_SetScout(gf::GF_OBJ_HANDLE *handle, bool isScout);
+  static void AI_SetSuperArmor(gf::GF_OBJ_HANDLE *handle, f32 time);
+  static int AI_EnemyKillNum();
+  static bool AI_IsBenkeiWeather();
 };
 
 } // namespace btl
