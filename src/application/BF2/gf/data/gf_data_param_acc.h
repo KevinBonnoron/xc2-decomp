@@ -3,10 +3,15 @@
 
 namespace gf {
 
-enum GimmickType {};
+struct GF_OBJ_HANDLE;
+
+enum GimmickType {
+  GIMMICK_TYPE_TREASURE_BOX = 1,
+};
 
 class DataParamAcc {
 public:
+  DataParamAcc(GF_OBJ_HANDLE *handle);
   DataParamAcc(u32 objectType, u32 id, GimmickType gimmickType);
   virtual ~DataParamAcc();
 
@@ -23,6 +28,16 @@ public:
   u32 getGender() const;
   u32 getBladeArts(u32 index, bool isVirtual) const;
   u32 getBladeArtsLevel(u32 index, bool isVirtual) const;
+  u32 getBladeArtsEnhance(u32 index, bool isVirtual) const;
+  u32 getBladeArtsH(u32 index, bool isVirtual) const;
+  u32 getBladeArtsN(u32 index, bool isVirtual) const;
+  u32 getBladeArtsNH(u32 index, bool isVirtual) const;
+  u32 getBladeArtsEx(bool isVirtual) const;
+  u32 getBladeArtsExH(bool isVirtual) const;
+  u32 getBladeArtsEx2(bool isVirtual) const;
+  u32 getBladeArtsEx2H(bool isVirtual) const;
+  u32 getBladeSkill(u32 index, bool isVirtual) const;
+  u32 getBladeSkillLevel(u32 index, bool isVirtual) const;
   u32 getFieldSkill(u32 index, bool isVirtual) const;
   u32 getFieldSkillLevel(u32 index, bool isVirtual) const;
 

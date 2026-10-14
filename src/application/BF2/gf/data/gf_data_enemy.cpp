@@ -8,15 +8,12 @@
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/data/gf_object_type.h"
 
 namespace gf {
 
 enum {
   FLAG_ENEMY_SUPPRESS = 0x2e,
-};
-
-enum {
-  OBJECT_TYPE_ENEMY = 5,
 };
 
 constexpr u32 ENEMY_SUPPRESS_COUNT = 0x5db;
