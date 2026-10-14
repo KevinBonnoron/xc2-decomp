@@ -13,6 +13,7 @@ public:
   static const char *getNameQuest(QuestID quest, u32 line);
   static u8 *getFpEnemy();
   static u8 *getFpChrDr();
+  static u8 *getFpAchievement();
   static u8 *getFpPcWpnChip();
   static u8 *getFpPcEquip();
   static u8 *getFpOrb();

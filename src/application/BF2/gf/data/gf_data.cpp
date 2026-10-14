@@ -6,6 +6,7 @@
 #include "gf/data/gf_data_blade.cpp"
 #include "gf/data/gf_data_hana.cpp"
 #include "gf/data/gf_data_driver_arts.cpp"
+#include "gf/data/gf_data_achievement.cpp"
 #include "gf/data/gf_data_party.cpp"
 #include "gf/data/gf_data_quest.cpp"
 #include "gf/data/gf_data_npc.cpp"
