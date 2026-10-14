@@ -24,10 +24,13 @@ public:
 
   static void build(const GfSetupParam &param);
   static void destroy();
+  void finalize();
   static bool isInitialized();
   bool loadBdat(const char *name, u32 bdat);
   bool isBdatLoading(u32 bdat) const;
   void destroyBdat(u32 bdat);
+  static void setupBdatInfo();
+  static void releaseBdatInfo();
   static u8 *getFP(u32 bdat);
   static u32 getReloadCount();
 
