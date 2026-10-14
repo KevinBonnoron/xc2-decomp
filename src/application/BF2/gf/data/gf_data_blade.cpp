@@ -105,7 +105,7 @@ u32 GfDataBlade::getBladeID(u32 index) {
   return index < BLADE_COUNT ? index + BLADE_REGULAR_FIRST : 0;
 }
 
-u8 GfDataBlade::getBladeWpnType(u32 blade) {
+u32 GfDataBlade::getBladeWpnType(u32 blade) {
   if (blade == 0) {
     return 0;
   }

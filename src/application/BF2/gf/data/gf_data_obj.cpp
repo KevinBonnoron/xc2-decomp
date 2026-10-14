@@ -2,6 +2,8 @@
 #include "gf/data/gf_bdat_blade.h"
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_chrdr.h"
+#include "gf/data/gf_bdat_chrenarrange.h"
+#include "gf/data/gf_bdat_chrenparam.h"
 #include "gf/data/gf_bdat_item.h"
 #include "gf/data/gf_bdat_maplist.h"
 #include "gf/data/gf_bdat_rsc.h"
@@ -21,6 +23,7 @@
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/util/gf_equip_util.h"
+#include "mm_math/mm_math.h"
 
 namespace gf {
 
@@ -32,6 +35,7 @@ constexpr int SLOT_ARTS_COUNT = 3;
 constexpr u32 EXTRA_PARTS_COUNT = 4;
 constexpr u32 ARMOR_MAX = 100;
 constexpr f32 PERCENT = 0.01f;
+constexpr f32 PERCENT_SCALE = 100.0f;
 
 DataObjDriver::DataObjDriver(u32 id) : data(nullptr), handle(INVALID_HANDLE), virtualData(nullptr), virtualEquipWeapons(), menuParam(false) {
   setup(id);
@@ -925,6 +929,308 @@ int DataObjPcWpn::getBladeSet(bool isVirtual) const {
 u32 DataObjPcWpn::getWeaponDamage(bool) const { return GfBdatItem::get()->getPcWpnDamage(getBdatId()); }
 
 u32 DataObjPcWpn::getWeaponStability(bool) const { return GfBdatItem::get()->getPcWpnStability(getBdatId()); }
+
+DataObjEnemy::~DataObjEnemy() {}
+
+bool DataObjEnemy::isValid() const { return data != nullptr; }
+
+const char *DataObjEnemy::getName() const { return GfDataEnemy::getName(getBdatId()); }
+
+bool DataObjEnemy::getName(u8 *&bdat, u32 &textId) const { return GfDataEnemy::getName(bdat, textId, getBdatId()); }
+
+const char *DataObjEnemy::getModelResourceName() const { return GfBdatRsc::get()->getRscEnModel(data->resource); }
+
+const char *DataObjEnemy::getMotionResourceName() const { return GfBdatRsc::get()->getRscEnMotion(data->resource); }
+
+const char *DataObjEnemy::getEffectResourceName() const { return GfBdatRsc::get()->getRscEnComp_Eff(data->resource); }
+
+u32 DataObjEnemy::getBdatId() const { return data->arrange; }
+
+u32 DataObjEnemy::getHp() const {
+  if (handle != INVALID_HANDLE) {
+    return GfObjUtil::getHp(handle);
+  }
+
+  return getHpMax(false);
+}
+
+u32 DataObjEnemy::getFootStep() const { return GfBdatRsc::get()->getRscEnFootStep(getBdatId()); }
+
+u32 DataObjEnemy::getFootStepEffect() const { return GfBdatRsc::get()->getRscEnFootStepEffect(getBdatId()); }
+
+u32 DataObjEnemy::getBlade(bool, int) const { return GfDataEnemy::getEquipBlade(getBdatId()); }
+
+u32 DataObjEnemy::getEquipWeapon(bool, int slot) const { return data->equipWeapons[slot]; }
+
+u32 DataObjEnemy::getWeaponType(bool, int) const {
+  u32 blade = GfDataEnemy::getEquipBlade(getBdatIdEnArrange());
+  if (blade == 0) {
+    return 0;
+  }
+
+  return GfDataBlade::getBladeWpnType(blade);
+}
+
+u32 DataObjEnemy::getAttribute(bool, int) const {
+  u32 blade = GfDataEnemy::getEquipBlade(getBdatIdEnArrange());
+  if (blade != 0) {
+    u32 bladeArrange = GfDataEnemy::getEquipBladeEnArrangeID(getBdatIdEnArrange());
+    if (bladeArrange != 0) {
+      GfBdatChrEnArrange *bdatChrEnArrange = GfBdatChrEnArrange::get();
+      if (bdatChrEnArrange->getChrEnArrangeBladeAtr(bladeArrange) != 0) {
+        return bdatChrEnArrange->getChrEnArrangeBladeAtr(bladeArrange);
+      }
+    }
+
+    return GfDataBlade::getAttribute(blade);
+  }
+
+  GfBdatChrEnArrange *bdatChrEnArrange = GfBdatChrEnArrange::get();
+  if (bdatChrEnArrange->getChrEnArrangeBladeAtr(getBdatIdEnArrange()) != 0) {
+    return bdatChrEnArrange->getChrEnArrangeBladeAtr(getBdatIdEnArrange());
+  }
+
+  return data->bladeAttribute;
+}
+
+bool DataObjEnemy::isEnbaleTarget() const {
+  if (GfBdatChrEnArrange::get()->getChrEnArrangeBladeID(getBdatId()) != 0) {
+    return false;
+  }
+
+  return !GfBdatChrEnArrange::get()->isChrEnArrangeFlagNoTarget(getBdatId());
+}
+
+u32 DataObjEnemy::getChestHeight() const { return GfBdatRsc::get()->getRscEnChestHeight(getBdatIdEnRsc()); }
+
+const char *DataObjEnemy::getVoiceStr() const { return GfDataEnemy::getVoiceStr(getBdatIdEnArrange()); }
+
+u32 DataObjEnemy::getMenuOffset() const { return GfBdatRsc::get()->getRscEnoffsetID(getBdatIdEnRsc()); }
+
+u32 DataObjEnemy::getBdatIdEnRsc() const { return GfBdatChrEnParam::get()->getChrEnParamResourceID(getBdatIdEnParam()); }
+
+u32 DataObjEnemy::getBdatIdEnParam() const { return GfBdatChrEnArrange::get()->getChrEnArrangeParamID(getBdatIdEnArrange()); }
+
+bool DataObjEnemy::isGuardFront() const { return data->guardFront; }
+
+bool DataObjEnemy::isGuardLeft() const { return data->guardLeft; }
+
+bool DataObjEnemy::isGuardRight() const { return data->guardRight; }
+
+bool DataObjEnemy::isGuardBack() const { return data->guardBack; }
+
+bool DataObjEnemy::isFieldDamage() const { return data->fieldDamage; }
+
+u32 DataObjEnemy::getResistancePower() const { return data->resistancePower; }
+
+u32 DataObjEnemy::getResistanceEther() const { return data->resistanceEther; }
+
+u32 DataObjEnemy::getResistanceCombo() const { return data->resistanceCombo; }
+
+u32 DataObjEnemy::getInvincibleCombo() const { return data->invincibleCombo; }
+
+u32 DataObjEnemy::getLevelGold() const {
+  GfBdatBtl *bdatBtl = GfBdatBtl::get();
+  u32 level = getLevel(false);
+  mm::clamp(level, bdatBtl->getGrowStart(), bdatBtl->getGrowEnd() - 1);
+  f32 gold = bdatBtl->getGrowEnemyGold(level);
+  return gold * data->goldRev / PERCENT_SCALE;
+}
+
+u32 DataObjEnemy::getLevelExp() const {
+  GfBdatBtl *bdatBtl = GfBdatBtl::get();
+  u32 level = getLevel(false);
+  mm::clamp(level, bdatBtl->getGrowStart(), bdatBtl->getGrowEnd() - 1);
+  f32 exp = bdatBtl->getGrowEnemyExp(level);
+  return exp * GfBdatChrEnArrange::get()->getChrEnArrangeExpRev(getBdatId()) / PERCENT_SCALE;
+}
+
+u32 DataObjEnemy::getLevelWp() const {
+  GfBdatBtl *bdatBtl = GfBdatBtl::get();
+  u32 level = getLevel(false);
+  mm::clamp(level, bdatBtl->getGrowStart(), bdatBtl->getGrowEnd() - 1);
+  f32 wp = bdatBtl->getGrowEnemyWP(level);
+  return wp * GfBdatChrEnArrange::get()->getChrEnArrangeWPRev(getBdatId()) / PERCENT_SCALE;
+}
+
+u32 DataObjEnemy::getLevelSp() const {
+  GfBdatBtl *bdatBtl = GfBdatBtl::get();
+  u32 level = getLevel(false);
+  mm::clamp(level, bdatBtl->getGrowStart(), bdatBtl->getGrowEnd() - 1);
+  f32 sp = bdatBtl->getGrowEnemySP(level);
+  return sp * GfBdatChrEnArrange::get()->getChrEnArrangeSPRev(getBdatId()) / PERCENT_SCALE;
+}
+
+u32 DataObjEnemy::getGenus() const { return data->genus; }
+
+bool DataObjEnemy::isLinkGenus() const { return data->linkGenus; }
+
+f32 DataObjEnemy::getLinkRadius() const { return data->linkRadius; }
+
+u32 DataObjEnemy::getGoldDivide() const { return GfBdatBtl::get()->getGrowGoldDivide(getLevel(false)); }
+
+u32 DataObjEnemy::getGoldDivideRev() const { return GfBdatRsc::get()->getRscEnGoldDivideRev(data->resource); }
+
+const SDataEnemy *DataObjEnemy::getSDataEnemy() const { return data; }
+
+bool DataObjEnemy::isDispInitExtraParts(u32 part) const {
+  if (data == nullptr) {
+    return true;
+  }
+
+  if (data->extraParts != 0 && (data->extraParts & 1 << part) != 0) {
+    return true;
+  }
+
+  return GfDataEnemy::getExtraParts(data->resource, part);
+}
+
+bool DataObjEnemy::isNoCameraFade() const { return data->noCameraFade; }
+
+bool DataObjEnemy::isWeaponDrawDisp() const { return data->weaponDrawDisp; }
+
+const char *DataObjEnemy::getCenterBone() const { return GfBdatRsc::get()->getRscEnCenterBone(getBdatIdEnRsc()); }
+
+const char *DataObjEnemy::getCamBone() const { return GfBdatRsc::get()->getRscEnCamBone(getBdatIdEnRsc()); }
+
+u32 DataObjEnemy::getEyeRotControl() const { return GfBdatRsc::get()->getRscEnEyeRot(getBdatIdEnRsc()); }
+
+const char *DataObjEnemy::getRotateBone() const { return GfBdatRsc::get()->getRscEnRotateBone(getBdatIdEnRsc()); }
+
+DataObjEnemyBlade::~DataObjEnemyBlade() {}
+
+SDataBlade *DataObjEnemyBlade::get(bool) const { return dataBlade; }
+
+const char *DataObjEnemyBlade::getName() const { return GfDataBlade::getName(setupEnemy->blade, 0); }
+
+bool DataObjEnemyBlade::getName(u8 *&bdat, u32 &textId) const { return GfDataBlade::getName(bdat, textId, setupEnemy->blade); }
+
+const char *DataObjEnemyBlade::getModelResourceName() const { return dataBlade->resourceNameModel; }
+
+const char *DataObjEnemyBlade::getMotionResourceName() const { return dataBlade->resourceNameMotion; }
+
+const char *DataObjEnemyBlade::getEffectResourceName() const { return dataBlade->resourceNameEffect; }
+
+u32 DataObjEnemyBlade::getWeaponType(bool, int) const { return dataBlade->weaponType; }
+
+u32 DataObjEnemyBlade::getPArmor(bool isVirtual) const {
+  u32 pArmor = dataBlade->pArmor;
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  u32 weapon = getEquipWeapon(isVirtual, -1);
+  if (weapon != 0) {
+    pArmor += bdatItem->getPcWpnPArmor(weapon);
+  }
+
+  return pArmor;
+}
+
+u32 DataObjEnemyBlade::getEArmor(bool isVirtual) const {
+  u32 eArmor = dataBlade->eArmor;
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  u32 weapon = getEquipWeapon(isVirtual, -1);
+  if (weapon != 0) {
+    eArmor += bdatItem->getPcWpnEArmor(weapon);
+  }
+
+  return eArmor;
+}
+
+u32 DataObjEnemyBlade::getCriticalRate(bool isVirtual) const {
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  u32 weapon = getEquipWeapon(isVirtual, -1);
+  if (weapon == 0) {
+    return 0;
+  }
+
+  return bdatItem->getPcWpnCriRate(weapon);
+}
+
+u32 DataObjEnemyBlade::getGuardRate(bool isVirtual) const {
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  u32 weapon = getEquipWeapon(isVirtual, -1);
+  if (weapon == 0) {
+    return 0;
+  }
+
+  return bdatItem->getPcWpnGuardRate(weapon);
+}
+
+u32 DataObjEnemyBlade::getWeaponDamage(bool isVirtual) const {
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  u32 weapon = getEquipWeapon(isVirtual, -1);
+  if (weapon == 0) {
+    return 0;
+  }
+
+  return bdatItem->getPcWpnDamage(weapon);
+}
+
+u32 DataObjEnemyBlade::getWeaponStability(bool isVirtual) const {
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  u32 weapon = getEquipWeapon(isVirtual, -1);
+  if (weapon == 0) {
+    return 0;
+  }
+
+  return bdatItem->getPcWpnStability(weapon);
+}
+
+u32 DataObjEnemyBlade::getEquipWeapon(bool, int) const { return dataBlade->weapon; }
+
+u32 DataObjEnemyBlade::getChestHeight() const { return dataBlade->chestHeight; }
+
+u32 DataObjEnemyBlade::getLandingHeight() const { return dataBlade->landingHeight; }
+
+u32 DataObjEnemyBlade::getIconData() const { return dataBlade->iconData; }
+
+u32 DataObjEnemyBlade::getRace() const { return dataBlade->race; }
+
+u32 DataObjEnemyBlade::getQuestRace() const { return GfDataBlade::getQuestRace(dataBlade->id); }
+
+u32 DataObjEnemyBlade::getGender() const { return dataBlade->gender; }
+
+u32 DataObjEnemyBlade::getAttribute(bool, int) const {
+  if (setupEnemy->getEnArrangeID() != 0) {
+    GfBdatChrEnArrange *bdatChrEnArrange = GfBdatChrEnArrange::get();
+    if (bdatChrEnArrange->getChrEnArrangeBladeAtr(setupEnemy->getEnArrangeID()) != 0) {
+      return bdatChrEnArrange->getChrEnArrangeBladeAtr(setupEnemy->getEnArrangeID());
+    }
+  }
+
+  return dataBlade->attribute;
+}
+
+bool DataObjEnemyBlade::isDispInitExtraParts(u32 part) const {
+  if (setupEnemy != nullptr && setupEnemy->dataEnemy->extraParts != 0) {
+    return (setupEnemy->dataEnemy->extraParts & 1 << part) != 0;
+  }
+
+  return dataBlade->extraParts[part] != 0;
+}
+
+u32 DataObjEnemyBlade::getEyeRotControl() const { return dataBlade->eyeRotControl; }
+
+u32 DataObjEnemyBlade::getBladeArts(bool, u32 index) const { return dataBlade->arts[index].id; }
+
+u32 DataObjEnemyBlade::getBladeArtsLevel(bool, u32 index) const { return dataBlade->arts[index].level; }
+
+u32 DataObjEnemyBlade::getBladeArtsH(bool, u32 index) const { return dataBlade->arts[index].artsH; }
+
+u32 DataObjEnemyBlade::getBladeArtsN(bool, u32 index) const { return dataBlade->nArts[index].id; }
+
+u32 DataObjEnemyBlade::getBladeArtsNH(bool, u32 index) const { return dataBlade->nArts[index].artsH; }
+
+u32 DataObjEnemyBlade::getBladeArtsEx(bool) const { return dataBlade->artsEx; }
+
+u32 DataObjEnemyBlade::getBladeArtsExH(bool) const { return dataBlade->artsExH; }
+
+u32 DataObjEnemyBlade::getBladeArtsEx2(bool) const { return dataBlade->artsEx2; }
+
+u32 DataObjEnemyBlade::getBladeArtsEx2H(bool) const { return dataBlade->artsEx2H; }
+
+u32 DataObjEnemyBlade::getPersonality() const { return dataBlade->personality; }
+
+u32 DataObjEnemyBlade::getCoolTime() const { return dataBlade->coolTime; }
 
 DataObjNpc::DataObjNpc(GF_OBJ_HANDLE *handle) : handle(handle), id(0) {
   id = mm::mtl::dynamicCast<GfObjSetupNpc>(GfObjManager::getObjInfo(handle)->setup)->id;

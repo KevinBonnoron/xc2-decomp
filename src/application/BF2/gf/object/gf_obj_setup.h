@@ -13,6 +13,9 @@ struct SDataEnemy;
 class GfObjSetup {
 public:
   virtual const mm::mtl::RTTI *getRTTI() const;
+  virtual ~GfObjSetup();
+  virtual u32 getFootStep() const;
+  virtual u32 getFootStepEffect() const;
 
   u32 objType;
   u8 _0c[0x10 - 0x0c];
@@ -59,13 +62,18 @@ public:
   static mm::mtl::RTTI m_rtti;
   static const u32 OBJECT_TYPE = OBJECT_TYPE_ENEMY;
 
+  virtual u32 getEnArrangeID() const;
+
   u8 _5c[0xa0 - 0x5c];
   SDataEnemy *dataEnemy;
-  u8 _a8[0xc0 - 0xa8];
+  u8 _a8[0xb8 - 0xa8];
+  u32 blade;
+  u8 _bc[0xc0 - 0xbc];
   SDataBlade *dataBlade;
 };
 
 static_assert(offsetof(GfObjSetupEnemy, dataEnemy) == 0xa0, "");
+static_assert(offsetof(GfObjSetupEnemy, blade) == 0xb8, "");
 static_assert(offsetof(GfObjSetupEnemy, dataBlade) == 0xc0, "");
 
 class GfObjSetupBelonging : public GfObjSetup {

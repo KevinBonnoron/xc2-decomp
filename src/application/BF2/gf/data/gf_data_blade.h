@@ -252,7 +252,7 @@ public:
   static void setActivateDriver(u32 bladeId, int slot, u32 driverId, u32 option);
   static SDataBlade *getSDataBlade(u32 blade);
   static u32 getBladeID(u32 index);
-  static u8 getBladeWpnType(u32 blade);
+  static u32 getBladeWpnType(u32 blade);
   static bool isDisableHomuraHikari(u32 blade);
   static bool isHikariCurrent();
   static bool isEnableEngageRex(u32 blade);
