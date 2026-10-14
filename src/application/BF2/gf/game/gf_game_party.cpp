@@ -12,6 +12,7 @@
 #include "gf/game/gf_game_scene.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_pause.h"
+#include "gf/object/component/gf_com_transform.h"
 #include "gf/object/gf_append.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_util.h"
@@ -811,6 +812,32 @@ u16 GfGameParty::getPartyGauge() { return GfDataParty::getSDataParty()->partyGau
 
 void GfGameParty::setPartyGauge(u16 partyGauge) { GfDataParty::getSDataParty()->partyGauge = partyGauge; }
 
+void GfGameParty::gevChangeBlade(GF_OBJ_HANDLE *handle, int, int) {
+  u32 partyId = getPartyId(handle);
+  if (partyId == PARTY_ID_NONE) {
+    return;
+  }
+
+  GF_OBJ_HANDLE *driver = getHandleDriver(partyId);
+  if (driver == INVALID_HANDLE) {
+    return;
+  }
+
+  OPTMNT mountType = GfMountManager::getMountType(driver, GFATTACH_WEAPON);
+  GfMountManager::removeMountHandle(driver, GFATTACH_WEAPON);
+  GfMountManager::addMountHandle(GfObjUtil::getMountHandle(getHandleBlade(partyId, -1), GFATTACH_WEAPON), driver);
+  GfMountManager::setMountType(driver, GFATTACH_WEAPON, mountType);
+}
+
+void GfGameParty::createPartyStatusProperty(u32 partyId, u32, u32 hp) {
+  GfGameParty *party = get();
+  if (party == nullptr) {
+    return;
+  }
+
+  party->mMembers[partyId].statusProperty = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfStatusProperty(hp);
+}
+
 GfStatusProperty *GfGameParty::getPartyStatusProperty(u32 partyId) {
   GfGameParty *party = get();
   if (party == nullptr) {
@@ -822,11 +849,100 @@ GfStatusProperty *GfGameParty::getPartyStatusProperty(u32 partyId) {
 
 void GfGameParty::setDebugData(u32, bool, bool) {}
 
+bool GfGameParty::isBtlLeaderDirver() { return GfObjUtil::isBattle(getLeaderDriver()); }
+
 GF_OBJ_HANDLE *GfGameParty::getLeaderDriver() { return getHandleDriver(getPartyId(getHandleByHierarchy(1))); }
+
+u32 GfGameParty::getLeaderLevel() {
+  SDataParty *dataParty = GfDataParty::getSDataParty();
+  u32 driver = 0;
+  if (dataParty->leaderObjectType == OBJECT_TYPE_DRIVER) {
+    driver = dataParty->leader;
+  } else if (dataParty->leaderObjectType == OBJECT_TYPE_BLADE) {
+    driver = getDriverBdatId(getPartyId(OBJECT_TYPE_BLADE, dataParty->leader));
+  }
+
+  DataParamAcc paramAcc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+  return paramAcc.getLevel(false);
+}
 
 u32 GfGameParty::getLeaderBdatID() { return GfDataParty::getSDataParty()->leader; }
 
 GF_OBJ_HANDLE *GfGameParty::getLeader() { return getHandleByHierarchy(1); }
+
+bool GfGameParty::isLeaderBattle() {
+  GfObjAcc objAcc(getLeader());
+  DataParamAcc paramAcc(getLeader());
+  return objAcc.isBattle() && paramAcc.getHp() != 0;
+}
+
+bool GfGameParty::isLeaderBlade() {
+  GfObjAcc objAcc(getLeader());
+  return objAcc.getType() == OBJECT_TYPE_BLADE;
+}
+
+bool GfGameParty::isMemberBattle() {
+  for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
+    if (GfDataDriver::isScenarioMask(GfDataParty::getDriver(partyId))) {
+      continue;
+    }
+
+    GfObjAcc objAcc(getHandleDriver(partyId));
+    if (objAcc.isBattle()) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool GfGameParty::reviveMembere() {
+  if (GfGameManager::isGameOver()) {
+    return false;
+  }
+
+  bool isRevived = false;
+  for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
+    GfObj *obj = GfObjUtil::getObj(getHandleDriver(partyId));
+    if (obj == nullptr) {
+      continue;
+    }
+
+    DataParamAcc paramAcc(obj->handle);
+    if (paramAcc.getHp() == 0) {
+      MsgObjectHealHp message(0, HEAL_TYPE_FULL);
+      message.isRevive = true;
+      obj->sendMessage(obj, message);
+      isRevived = true;
+    }
+  }
+
+  return isRevived;
+}
+
+bool GfGameParty::isLeader(u32 objectType, u32 id) {
+  GfObjAcc objAcc(getLeader());
+  return objAcc.getType() == objectType && objAcc.getBdatId() == id;
+}
+
+GfComTransform *GfGameParty::getLeaderTransform() {
+  GfObj *obj = GfObjUtil::getObj(GfGameManager::getControlMover());
+  if (obj == nullptr) {
+    return nullptr;
+  }
+
+  return obj->getComponent<GfComTransform>();
+}
+
+GfObj *GfGameParty::getLeaderTransformObj() { return GfObjUtil::getObj(GfGameManager::getControlMover()); }
+
+bool GfGameParty::isLeaderDriver(GF_OBJ_HANDLE *handle) {
+  if (handle == INVALID_HANDLE) {
+    return false;
+  }
+
+  return getLeaderDriver() == handle;
+}
 
 GfMemberInfo::GfMemberInfo() { clear(); }
 

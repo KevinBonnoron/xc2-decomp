@@ -26,6 +26,7 @@ public:
   static u32 getMapZoneID();
   static GF_OBJ_HANDLE *getPartyLeader();
   static GF_OBJ_HANDLE *getControlMover();
+  static bool isGameOver();
 };
 
 } // namespace gf

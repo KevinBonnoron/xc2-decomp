@@ -3,7 +3,7 @@
 #include "gf/object/gf_obj_manager.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
-#include "mm_mtl/reference_object.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 #include <stddef.h>
@@ -16,7 +16,12 @@ namespace gf {
 
 struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
+struct GfPartyPosInfo;
 struct GfSetupParam;
+struct RQ_SETUP_PARTY;
+struct RQ_SETUP_PARTY_DRIVER;
+class GfComTransform;
+class GfObj;
 class GfWeapon;
 
 enum CHANGE_BLADE {};
@@ -136,6 +141,8 @@ public:
   static bool isExistBlade(u32 blade);
   static u32 getPartySetBladeNum();
   static u32 getPartySetBlade(u32 index);
+  static void getCurrentPartyInfo(RQ_SETUP_PARTY &info);
+  static void getCurrentPartyInfo(RQ_SETUP_PARTY_DRIVER &info);
   static u16 getPartyGauge();
   static void setPartyGauge(u16 partyGauge);
   static void gevChangeBlade(GF_OBJ_HANDLE *handle, int oldSlot, int newSlot);
@@ -144,14 +151,28 @@ public:
   static bool setPartyLeader(u32 objectType, u32 id);
   static void createPartyStatusProperty(u32 partyId, u32 maxHp, u32 hp);
   static GfStatusProperty *getPartyStatusProperty(u32 partyId);
+  static void setupRequestData(const RQ_SETUP_PARTY &info);
+  static void setupNewGameParty();
   static void setDebugData(u32 partyId, bool isInvincible, bool isDisableFallDead);
   static bool isBtlLeaderDirver();
   static GF_OBJ_HANDLE *getLeaderDriver();
+  static void judgeRandomTalkWarp();
+  static bool isExistMismatchScenarioMask(u32 partyId);
   static u32 getLeaderLevel();
   static u32 getLeaderBdatID();
   static GF_OBJ_HANDLE *getLeader();
   static bool isLeaderBattle();
+  static bool isLeaderBlade();
+  static bool isMemberBattle();
+  static bool reviveMembere();
+  static bool isLeader(u32 objectType, u32 id);
+  static GfComTransform *getLeaderTransform();
+  static GfObj *getLeaderTransformObj();
+  static bool isLeaderDriver(GF_OBJ_HANDLE *handle);
   static bool isPartyMemberInGameObj();
+  static void getPartyPosition(GfPartyPosInfo &info);
+  static void setupPartyPositionByPartyPosition(const GfPartyPosInfo &info);
+  static void refreshPartyMemberPosition();
 
 private:
   mm::mtl::FixedArray<GfMemberInfo, 3> mMembers;
