@@ -11,5 +11,6 @@
 #include "gf/data/gf_data_quest.cpp"
 #include "gf/data/gf_data_npc.cpp"
 #include "gf/data/gf_data_map.cpp"
+#include "gf/data/gf_data_event.cpp"
 #include "gf/data/gf_data_mercenaries.cpp"
 // clang-format on

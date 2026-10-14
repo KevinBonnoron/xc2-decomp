@@ -31,10 +31,10 @@ struct ItemType {
 };
 
 struct SDataItemBox {
-  u8 _00000[0x1ff0c - 0x00000];
+  u8 _00000[0x122ec - 0x00000];
 };
 
-static_assert(sizeof(SDataItemBox) == 0x1ff0c, "");
+static_assert(sizeof(SDataItemBox) == 0x122ec, "");
 
 class GfDataItem {
 public:

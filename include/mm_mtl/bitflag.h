@@ -9,16 +9,26 @@ template <unsigned int Size> class BitFlag {
 public:
   void set(unsigned int index) {
     MM_ASSERT(index < Size);
-    mBits |= static_cast<unsigned int>(1UL << index);
+    if (WORD_COUNT == 1) {
+      mBits[0] |= static_cast<unsigned int>(1UL << index);
+    } else {
+      mBits[index / 32] |= static_cast<unsigned int>(1UL << (index % 32));
+    }
   }
 
   bool test(unsigned int index) const {
     MM_ASSERT(index < Size);
-    return (static_cast<unsigned int>(1UL << index) & mBits) != 0;
+    if (WORD_COUNT == 1) {
+      return (static_cast<unsigned int>(1UL << index) & mBits[0]) != 0;
+    }
+
+    return (mBits[index / 32] & static_cast<unsigned int>(1UL << (index % 32))) != 0;
   }
 
 private:
-  unsigned int mBits;
+  static const unsigned int WORD_COUNT = (Size + 31) / 32;
+
+  unsigned int mBits[WORD_COUNT];
 };
 
 } // namespace mtl
