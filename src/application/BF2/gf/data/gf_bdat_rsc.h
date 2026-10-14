@@ -132,6 +132,7 @@ public:
   u32 getRscMobListExtraParts4(u32 id) const;
   u32 getRscMobListExtraParts5(u32 id) const;
   u32 getRscMobListExtraParts6(u32 id) const;
+  u32 getRscMobListExtraParts(u32 id, u32 part) const;
   u32 getRSC_MapObjListStart() const;
   const char *getRSC_MapObjListModel(u32 id) const;
   const char *getRSC_MapObjListMotion(u32 id) const;
