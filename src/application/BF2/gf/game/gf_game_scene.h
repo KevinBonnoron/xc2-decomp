@@ -13,6 +13,7 @@ struct UpdateInfo;
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+class GfAppendWire;
 struct GfSetupParam;
 struct QuestCompleteParam;
 struct OwnerBonus;
@@ -76,6 +77,7 @@ public:
   void qevCompleteQuest(const QuestCompleteParam &param);
   void postUpdate(const fw::UpdateInfo &info);
   OwnerBonus &getOwnerBonus() const;
+  GfAppendWire *getAppendControl(GF_OBJ_HANDLE *handle);
   bool isPlayerCameraPause();
   void enterBattle(bool isForce);
   bool isBattleStop();

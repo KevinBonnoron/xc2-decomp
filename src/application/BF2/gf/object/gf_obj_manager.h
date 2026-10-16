@@ -1,6 +1,7 @@
 #pragma once
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/bitflag.h"
+#include "mm_mtl/fixed_list.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 #include <stddef.h>
@@ -97,6 +98,7 @@ public:
   void addApplyParam(GF_OBJ_HANDLE *handle);
   bool isSuspendUpdate() const;
   bool hasReloadObjForDebug();
+  bool getFollowObj(mm::mtl::FixedList<GF_OBJ_HANDLE *, 768> &objs, GF_OBJ_HANDLE *handle);
 };
 
 } // namespace gf
