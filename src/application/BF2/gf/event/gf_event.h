@@ -1,5 +1,7 @@
 #pragma once
 #include "gf/data/gf_data_blade.h"
+#include "mm_mtl/fixed_queue.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 #include <stddef.h>
 
@@ -47,6 +49,7 @@ enum GF_STATE {
 enum EXEC_STATE {};
 
 struct GF_ASSET_HANDLE;
+struct GfSetupParam;
 struct GF_OBJ_HANDLE;
 struct MapjumpCallbackInfo {
   u8 _00[0x04 - 0x00];
@@ -125,28 +128,73 @@ public:
   virtual void gevDebugMapModel(GF_OBJ_HANDLE *, bool) {}
 };
 
-class GfEvent {
+class GfEvent : public mm::mtl::PtrSingleton<GfEvent> {
 public:
+  static const u32 CALLBACK_MAX = 32;
+
+  GfEvent(const GfSetupParam &param);
+  void initialize(const GfSetupParam &param);
+  ~GfEvent();
+  static void build(const GfSetupParam &param);
+  static void destroy();
+  void finalize();
+  static bool isInitialized();
   static void addEventCallback(IGfEvent *event);
   static void removeEventCallback(IGfEvent *event);
   static void callChangeScenarioFlag(u32 scenarioFlag, u32 oldScenarioFlag);
+  static void callSalvageStateChange(u32 state);
+  static void callBattleStart();
+  static void callBattleEnd();
+  static void callGameMapModel(GF_OBJ_HANDLE *handle, bool isEnter);
   static void callTargetAccess(GF_OBJ_HANDLE *target);
   static void callTargetChange(GF_OBJ_HANDLE *target);
-  static void callBladeUnselect(u32 blade, bool unselect);
-  static void callHikariCurrent(bool hikariCurrent);
-  static void callDebugChangeIdea(u32 type, u32 id, u32 idea, u32 value);
-  static void callBladeActivate(u32 blade, ActivateType activateType, ActivateType oldActivateType);
-  static void callItemAdd(u32 item, int count);
+  static void callCameraControl(int control);
+  static void callEventPlay(GEV event, u32 eventId);
   static void callBladeChange(GF_OBJ_HANDLE *handle, int oldSlot, int newSlot);
-  static void callPartyMemberOK(bool isOK);
-  static void callChangeLeader(GF_OBJ_HANDLE *leader);
-  static void callPartyIDMemberOK(bool isOK, u32 partyId);
-  static void callPartyDriver(GF_OBJ_HANDLE *handle, u32 partyId, bool isEnter);
-  static void callExecBuy(u32 item, u32 count, u32 shop);
   static void callPartyChange();
-  static void callSwapFormation(u32 playerId, u32 otherPlayerId);
-  static void callDriverLevel(u32 driver, u32 level, u32 oldLevel);
+  static void callGameObjEnter(GF_OBJ_HANDLE *handle);
+  static void callGameObjLeave(GF_OBJ_HANDLE *handle);
   static void callAchievmentRelease(const GfAchievementRelease &release);
+  static void callDriverActivate(u32 driver, ActivateType activateType, ActivateType oldActivateType);
+  static void callBladeActivate(u32 blade, ActivateType activateType, ActivateType oldActivateType);
+  static void callBladeUnselect(u32 blade, bool unselect);
+  static void callBladeEnable(u32 blade);
+  static void callDriverLevel(u32 driver, u32 level, u32 oldLevel);
+  static void callExecState(EXEC_STATE state);
+  static void callMercenariesTeam(u32 team);
+  static void callMercenariesMissionFlag(u32 mission, u32 flag, u32 value);
+  static void callItemAdd(u32 item, int count);
+  static void callPartyMemberOK(bool isOK);
+  static void callPartyIDMemberOK(bool isOK, u32 partyId);
+  static void callChangeLeader(GF_OBJ_HANDLE *leader);
+  static void callPartyDriver(GF_OBJ_HANDLE *handle, u32 partyId, bool isEnter);
+  static void callGameState(GF_STATE state, GF_STATE oldState);
+  static void callControllFree(bool isFree);
+  static void callPartyReturnFieldState(u32 state);
+  static void callLoadGameTime(f32 time);
+  static void callPlayerControl(GEV event);
+  static void callPartyMover(GF_OBJ_HANDLE *handle, bool isMover);
+  static void callExecBuy(u32 item, u32 count, u32 shop);
+  static void callGetArts(u32 driver, u32 arts, bool isNew);
+  static void callHikariCurrent(bool hikariCurrent);
+  static void callSwapFormation(u32 playerId, u32 otherPlayerId);
+  static void callDebugBladeAttribute(u32 blade, u8 attribute);
+  static void callDebugWeaponTypeActivate(u32 weaponType);
+  static void callDebugChangeTime(u32 time, u32 oldTime);
+  static void callChangeTimeRange(u32 timeRange);
+  static void callDebugItem(u32 item, bool isAdd);
+  static void callDebugChangeFlag(u32 type, u32 flag, u32 value, u32 oldValue);
+  static void callChangeWeather(u32 weather, u32 oldWeather);
+  static void callDebugChangeLevel(u32 type, u32 id, u32 level, u32 oldLevel);
+  static void callDebugChangeIdea(u32 type, u32 id, u32 idea, u32 value);
+  static void callDebugDestroyAsset(GF_ASSET_HANDLE *asset);
+  static void callDebugMapModel(GF_OBJ_HANDLE *handle, bool isEnter);
+
+private:
+  mm::mtl::FixedQueue<IGfEvent *, CALLBACK_MAX> callbacks;
+  bool initialized;
 };
+
+static_assert(sizeof(GfEvent) == 0x120, "");
 
 } // namespace gf
