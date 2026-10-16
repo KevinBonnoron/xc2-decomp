@@ -95,7 +95,9 @@ public:
   void PostUpdateProc(const fw::UpdateInfo &updateInfo);
   void ResetBGM();
   void SetElementalComboImmortal(gf::GF_OBJ_HANDLE *handle);
+  bool IsGameOver() const;
   bool IsEnableBattle() const;
+  void NotifyShiftNone();
   const char *GetSeTag(int se) const;
   int GetAttackDamageDataNum() const;
   const ATTACK_DAMAGE_DATA *GetAttackDamageDataConst(u32 attack) const;
@@ -132,6 +134,7 @@ public:
   void SetBGM(u32 bgm);
   void RequestJingle(JINGLE_TYPE jingle);
   bool IsJinglePlaying() const;
+  void PlayErrorSE();
   gf::GF_OBJ_HANDLE *GetLinkJoinEnemyHandle(const mm::Vec3 &position);
   const MAP_DRIVER_REV_DATA *GetMapDriverRevData(const BattleCharacter *character) const;
   const MAP_DRIVER_REV_DATA *GetMapDriverRevDataByBdatID(int driver) const;
@@ -165,7 +168,18 @@ public:
   u8 bgmPriority;
   u8 requestJingle;
   u8 pauseFlags[8];
-  u8 _65de[0x65e8 - 0x65de];
+  u64 isLockArtsPalette : 1;
+  u64 : 11;
+  u64 isLockHate : 1;
+  u64 : 3;
+  u64 isGameOver : 1;
+  u64 : 13;
+  u64 isShiftDecided : 1;
+  u64 isShiftTimeOver : 1;
+  u64 : 2;
+  u64 isPlayErrorSE : 1;
+  u64 : 5;
+  u8 _65e3[0x65e8 - 0x65e3];
 };
 
 static_assert(sizeof(BattleGlobal::SLOW_PROC_DATA) == 0x14, "");

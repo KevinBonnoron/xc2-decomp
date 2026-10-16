@@ -2,11 +2,13 @@
 
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
+#include "battle/shake_camera_manager.h"
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/gf_allocator.h"
+#include "gf/menu/gf_menu_obj_util.h"
 #include "gf/object/gf_obj_handle.h"
 
 namespace btl {
@@ -15,12 +17,28 @@ constexpr int ELEMENTAL_COMBO_NUM = 50;
 constexpr int MAP_DRIVER_REV_NUM = 9;
 constexpr int ATTACK_ATTRIBUTE_NONE = 9;
 constexpr f32 DAMAGE_RATE_SCALE = 65536.0f;
+constexpr u32 SE_COMMON_ERROR = 2;
 
 void BattleGlobal::Create() {
   // __LINE__ must be 265 as in the original file: its value changes the instruction order.
 #line 265
   BattleGlobal *global = new (gf::getAllocator(gf::ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) BattleGlobal();
   global->Initialize();
+}
+
+void BattleGlobal::Destroy() {
+  BattleGlobal *global = get();
+  global->Finalize();
+  if (global != nullptr) {
+    delete global;
+  }
+}
+
+void BattleGlobal::Finalize() {
+  if (shakeCameraManager != nullptr) {
+    delete shakeCameraManager;
+    shakeCameraManager = nullptr;
+  }
 }
 
 int BattleGlobal::GetNormalAttackArtsID(int type, int weapon, int index) const {
@@ -53,7 +71,19 @@ void BattleGlobal::ResetBGM() {
 
 void BattleGlobal::SetElementalComboImmortal(gf::GF_OBJ_HANDLE *handle) { elementalComboImmortal = handle; }
 
+bool BattleGlobal::IsGameOver() const {
+  if (isGameOver) {
+    return true;
+  }
+  return gf::GfGameManager::isPlayerDeadSequence();
+}
+
 bool BattleGlobal::IsEnableBattle() const { return !gf::GfGameManager::isBattleStop(); }
+
+void BattleGlobal::NotifyShiftNone() {
+  isShiftDecided = false;
+  isShiftTimeOver = false;
+}
 
 int BattleGlobal::GetAttackDamageDataNum() const { return attackDamages.size(); }
 
@@ -303,6 +333,13 @@ void BattleGlobal::SetBGM(u32 bgm) {
 void BattleGlobal::RequestJingle(JINGLE_TYPE jingle) { requestJingle = jingle; }
 
 bool BattleGlobal::IsJinglePlaying() const { return jingleHandle != reinterpret_cast<gf::GF_SE_CATEGORY_HANDLE *>(-1); }
+
+void BattleGlobal::PlayErrorSE() {
+  if (!isPlayErrorSE) {
+    gf::GfMenuObjUtil::playSECommon(SE_COMMON_ERROR);
+    isPlayErrorSE = true;
+  }
+}
 
 const BattleGlobal::MAP_DRIVER_REV_DATA *BattleGlobal::GetMapDriverRevData(const BattleCharacter *character) const {
   if (character != nullptr && character->IsPlayer() && character->IsDriver()) {
