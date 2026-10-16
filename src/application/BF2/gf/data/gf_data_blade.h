@@ -325,6 +325,7 @@ public:
   static void setUnselect(u32 blade, bool unselect);
   static bool isReleasedRareBlade(u32 blade);
   static void resetAttachedParty(u32 blade);
+  static bool setActivateUnuse(u32 blade);
   static bool setActivateReserver(u32 blade);
   static bool isActivateReserver(u32 blade);
   static void setActivateMercenaryTeam(u32 blade);

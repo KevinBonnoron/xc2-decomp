@@ -57,6 +57,7 @@ class GfReqCommand {
 public:
   static void reqPartyBlade(u32 blade, u32 driver);
   static void reqRebuildPartyWeapon(u32 blade);
+  static void reqChangeAttribute(u32 objectType, u32 blade, u32 attribute);
 };
 
 } // namespace gf

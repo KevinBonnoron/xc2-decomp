@@ -6,6 +6,7 @@
 #include "gf/data/gf_bdat_blade.h"
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_chrdr.h"
+#include "gf/data/gf_bdat_chrenarrange.h"
 #include "gf/data/gf_bdat_maplist.h"
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_character_id.h"
@@ -23,14 +24,18 @@
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/data/gf_item_handle.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/event/gf_event.h"
 #include "gf/field/gf_field_gimmick.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_mount.h"
+#include "gf/game/gf_game_obj.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_scene.h"
 #include "gf/game/gf_game_voice.h"
+#include "gf/game/kizunaring/gf_kizunaring_manager.h"
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
 #include "gf/game/quest/gf_quest_manager.h"
 #include "gf/object/component/property/gf_com_property.h"
@@ -40,9 +45,13 @@
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_property.h"
 #include "gf/object/gf_obj_util.h"
+#include "gf/request/gf_req_command.h"
 #include "gf/request/gf_req_scom.h"
 #include "gf/scom/gf_scom_achiev.h"
+#include "gf/util/gf_equip_util.h"
+#include "gf/util/gf_item_util.h"
 #include "gf/util/gf_util.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
@@ -68,6 +77,10 @@ enum {
 };
 
 enum {
+  SCENARIO_FLAG_SAIKA_LENS_OFF = 0x1b70,
+};
+
+enum {
   STATS_MONEY = 0x36,
   STATS_PARTY_MONEY = 0x37,
   STATS_PARTY_MONEY_COUNT = 0x38,
@@ -79,6 +92,11 @@ enum {
 
 enum {
   DEAD_TYPE_EMERGENCY_ESCAPE = 4,
+};
+
+enum {
+  BELONGING_FIRST = 1,
+  BELONGING_SECOND = 2,
 };
 
 enum {
@@ -107,6 +125,7 @@ constexpr u32 GAME_CLEAR_COUNT_MAX = 9'999;
 constexpr u32 ACHIEVEMENT_POPUP_MAX = 300;
 constexpr int PARTY_GAUGE_MAX = 300;
 constexpr u32 FOLLOW_OBJ_MAX = 768;
+constexpr u32 SAIKA_HANDLE_MAX = 8;
 
 static const u32 nationLocations[NATION_COUNT] = {3, 6, 9, 10, 14, 12, 13, 15};
 
@@ -803,6 +822,14 @@ void GfGameUtil::requestFieldDamage(GF_OBJ_HANDLE *handle) {
   }
 }
 
+void GfGameUtil::changeObjAttribute(GF_OBJ_HANDLE *handle, u32 attribute) {
+  DataParamAcc dataParamAcc(handle);
+  u32 objectType = dataParamAcc.getObjType();
+  if (objectType == OBJECT_TYPE_DRIVER || objectType == OBJECT_TYPE_BLADE) {
+    GfReqCommand::reqChangeAttribute(dataParamAcc.getObjType(), dataParamAcc.getBlade(-1, false), attribute);
+  }
+}
+
 u32 GfGameUtil::getObjAttribute(GF_OBJ_HANDLE *handle) {
   DataParamAcc dataParamAcc(handle);
   return dataParamAcc.getAttribute(-1, false);
@@ -812,6 +839,19 @@ void GfGameUtil::addInGameLog(GAMELOG_PRIO priority, const char *format, ...) {
   va_list arguments;
   va_start(arguments, format);
   va_end(arguments);
+}
+
+void GfGameUtil::setBladeSelect(GF_OBJ_HANDLE *handle, int slot) {
+  DataParamAcc dataParamAcc(handle);
+  u32 oldAttribute = dataParamAcc.getAttribute(-1, false);
+  dataParamAcc.setBladeSet(slot);
+  GfObj *obj = GfObjUtil::getObj(handle);
+  if (obj != nullptr) {
+    MsgObjectChangeAttribute message;
+    message.attribute = dataParamAcc.getAttribute(-1, false);
+    message.oldAttribute = oldAttribute;
+    obj->sendMessage(obj, message);
+  }
 }
 
 GF_OBJ_HANDLE *GfGameUtil::getDebugPickObj() { return INVALID_HANDLE; }
@@ -877,6 +917,38 @@ bool GfGameUtil::isPlayVoice(GF_OBJ_HANDLE *handle) { return GfGameVoice::getRes
 bool GfGameUtil::isDispWorldMap(u32 map) {
   u32 condition = GfBdatMaplist::get()->getMaplistmapON_cndID(map);
   return condition != 0 && GfGameCond::isGameCond(condition);
+}
+
+u32 GfGameUtil::getBladeOnBookedItem(u32 blade) {
+  u32 item = GfDataBlade::getBookedItemInfo(blade);
+  if (item == 0) {
+    return 0;
+  }
+
+  return GfItemUtil::getItemBoxCount(item) == 0 ? 0 : item;
+}
+
+bool GfGameUtil::execActivateUnuseForBlade(u32 blade, bool isRelease) {
+  if (GfDataBlade::isCommonBlade(blade)) {
+    GfKizunaringBlade::removeAchievement(blade);
+  }
+
+  if (isRelease) {
+    for (u32 slot = 0; slot < GfDataBlade::getEquipOrbMax(blade); slot++) {
+      GfEquipUtil::equipBladeOrb(blade, 0, slot, GfItemHandle(0));
+    }
+  }
+
+  ActivateType activateType = GfDataBlade::getBladeActivateType(*GfDataBlade::getSDataBlade(blade));
+  if (GfDataBlade::setActivateUnuse(blade)) {
+    if (isRelease && GfDataBlade::isRareBlade(blade)) {
+      GfDataBlade::resetAttachedParty(blade);
+    }
+
+    GfEvent::callBladeActivate(blade, activateType, ACTIVATE_TYPE_UNUSE);
+  }
+
+  return false;
 }
 
 bool GfGameUtil::execActivateMercenaryTeamForBlade(u32 blade) {
@@ -958,6 +1030,38 @@ u32 GfGameUtil::execAddCommonBlade(const SDataBlade &dataBlade) {
   return blade;
 }
 
+void GfGameUtil::changeAlphaBelonging(GF_OBJ_HANDLE *handle, u32 belonging, f32 alpha, f32 time) {
+  GfWeapon *weapon = GfMountManager::getGfWeapon(handle, GFATTACH_BELONGING);
+  if (weapon == nullptr) {
+    return;
+  }
+
+  switch (belonging) {
+  case BELONGING_SECOND:
+    SCOM_OBJ_ALPHA::create(weapon->getCurrentHandles()[1], time, alpha);
+    break;
+  case BELONGING_FIRST:
+    SCOM_OBJ_ALPHA::create(weapon->getCurrentHandles()[0], time, alpha);
+    break;
+  }
+}
+
+bool GfGameUtil::hasBelonging(GF_OBJ_HANDLE *handle, u32 belonging) {
+  GfWeapon *weapon = GfMountManager::getGfWeapon(handle, GFATTACH_BELONGING);
+  if (weapon == nullptr) {
+    return false;
+  }
+
+  switch (belonging) {
+  case BELONGING_SECOND:
+    return weapon->getCurrentHandles()[1] != INVALID_HANDLE;
+  case BELONGING_FIRST:
+    return weapon->getCurrentHandles()[0] != INVALID_HANDLE;
+  default:
+    return false;
+  }
+}
+
 void GfGameUtil::execAddDevelopPointArcadia2Iyasaki() {
   u32 point = GfDataDevelop::getPoint(NATION_ARCADIA);
   GfDataDevelop::resetPoint(NATION_ARCADIA);
@@ -998,6 +1102,55 @@ void GfGameUtil::dispMetsuCrystal(GF_OBJ_HANDLE *handle, bool isDisp) {
   int mesh = objAcc.getExtMeshIdx("Front_Armor");
   if (mesh >= 0) {
     objAcc.setExtMeshAlpha(mesh, isDisp ? 1.0f : 0.0f);
+  }
+}
+
+void GfGameUtil::setSaikaLensOff(GF_OBJ_HANDLE *handle) {
+  u16 scenarioFlag = GfDataUtil::getScenarioFlag();
+  GfObjAcc objAcc(handle);
+  switch (objAcc.getType()) {
+  case OBJECT_TYPE_BLADE:
+    if (objAcc.getBladeId() != BLADE_SAIKA) {
+      return;
+    }
+    break;
+  case OBJECT_TYPE_ENEMY:
+    if (GfBdatChrEnArrange::get()->getChrEnArrangeBladeID(objAcc.getEnArrangeId()) != BLADE_SAIKA) {
+      return;
+    }
+    break;
+  }
+
+  int mesh = objAcc.getExtMeshIdx("mt_lens_L");
+  if (mesh >= 0) {
+    objAcc.setExtMeshAlpha(mesh, scenarioFlag > SCENARIO_FLAG_SAIKA_LENS_OFF ? 0.0f : 1.0f);
+  }
+
+  mesh = objAcc.getExtMeshIdx("mt_lens_R");
+  if (mesh >= 0) {
+    objAcc.setExtMeshAlpha(mesh, scenarioFlag > SCENARIO_FLAG_SAIKA_LENS_OFF ? 0.0f : 1.0f);
+  }
+}
+
+void GfGameUtil::setSaikaLensOff() {
+  mm::mtl::FixedVector<GF_OBJ_HANDLE *, SAIKA_HANDLE_MAX> handles;
+  for (GF_OBJ_HANDLE *const &handle : *GfGameObj::getList(OBJECT_TYPE_BLADE)) {
+    DataParamAcc dataParamAcc(handle);
+    if (dataParamAcc.isValid() && dataParamAcc.getBdatId() == BLADE_SAIKA) {
+      handles.push_back(handle);
+    }
+  }
+
+  GfBdatChrEnArrange *bdatEnemyArrange = GfBdatChrEnArrange::get();
+  for (GF_OBJ_HANDLE *const &handle : *GfGameObj::getListEnemyBlade()) {
+    DataParamAcc dataParamAcc(handle);
+    if (bdatEnemyArrange->getChrEnArrangeBladeID(dataParamAcc.isValid() ? dataParamAcc.getBdatId() : 0) == BLADE_SAIKA) {
+      handles.push_back(handle);
+    }
+  }
+
+  for (GF_OBJ_HANDLE *handle : handles) {
+    setSaikaLensOff(handle);
   }
 }
 

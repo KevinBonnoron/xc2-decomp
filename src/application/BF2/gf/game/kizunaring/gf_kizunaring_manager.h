@@ -11,6 +11,7 @@ struct QuestCompleteParam;
 class GfKizunaringBlade {
 public:
   static bool isCompleteLevel(const AchievQuest &achievQuest);
+  static void removeAchievement(u32 blade);
 };
 
 class GfKizunaringManager : public mm::mtl::PtrSingleton<GfKizunaringManager> {
