@@ -1,5 +1,5 @@
 #include "gf/field/gf_field_weather_obj.h"
-#include "fw/fw_effect_manager.h"
+#include "framework/effect/effect_manager.h"
 #include "fw/fw_update_info.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
