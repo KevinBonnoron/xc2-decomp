@@ -43,6 +43,8 @@ public:
   bool isPlayEvent() const;
   bool isMaskMainMenu() const;
   bool isMoverGetFieldDamage() const;
+  void setEventPlayerStop(bool isStop);
+  void setResetBladePlayerStop(bool isStop);
   bool isControlFree() const;
   void setHomuriWeaponExtraMesh(bool isVisible, f32 alpha);
   bool isNeedFieldBladeChange(u32 partyId) const;

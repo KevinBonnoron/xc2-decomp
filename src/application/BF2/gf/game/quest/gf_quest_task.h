@@ -1,11 +1,8 @@
 #pragma once
 #include "gf/game/quest/gf_quest_info.h"
+#include "gmk/gmk_manager.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
-
-namespace gmk {
-enum GmkType : int;
-}
 
 namespace gf {
 

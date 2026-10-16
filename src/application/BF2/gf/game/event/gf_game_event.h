@@ -54,6 +54,7 @@ public:
   void gevPlayEvent(GEV event, u32 eventId);
   static void gevPause(u32 resumeBits, u32 pauseBits);
   static void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
+  static void setAfterEventStartID(int startID);
   static void setDisp(u32 type, const mm::mtl::FixedVector<u32, 1024> &ids, bool isDisp);
   static void setGmkBdatDisp(gmk::GmkType type, u32 bdatId, bool isDisp);
   static void setGmkIdDisp(gmk::GmkType type, u32 index, bool isDisp);

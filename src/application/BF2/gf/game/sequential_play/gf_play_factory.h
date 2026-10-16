@@ -4,7 +4,7 @@
 
 namespace gf {
 
-class GfSequentialPlaySignal;
+struct GfSequentialPlaySignal;
 struct QuestID;
 
 enum MAINMENU {

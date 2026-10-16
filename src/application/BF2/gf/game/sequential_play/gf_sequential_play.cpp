@@ -3,7 +3,6 @@
 #include "gf/game/quest/gf_quest_id.h"
 
 namespace gf {
-class GfSequentialPlaySignal;
 
 void GfSequentialPlay::addWait(f32 time) { addCommand(GfPlayComWait::create(time)); }
 

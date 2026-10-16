@@ -75,6 +75,7 @@ class AGmkBase;
 
 class GmkManager : public mm::mtl::PtrSingleton<GmkManager> {
 public:
+  void updateImmediate();
   const char *getFilenameByType(int gmkSetId, GmkType type) const;
   const char *getSheetnameByType(int gmkSetId, GmkType type) const;
 

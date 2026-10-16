@@ -1,15 +1,12 @@
 #pragma once
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/game/quest/gf_quest_id.h"
+#include "gmk/gmk_manager.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 #include <stddef.h>
-
-namespace gmk {
-enum GmkType : int;
-}
 
 namespace gf {
 

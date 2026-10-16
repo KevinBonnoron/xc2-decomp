@@ -1,9 +1,11 @@
 #pragma once
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace gf {
 
 struct GAME_VOICE_HANDLE;
+struct GF_SCOM_HANDLE;
 struct GF_OBJ_HANDLE;
 struct ParamObj;
 struct QuestID;
@@ -112,8 +114,9 @@ public:
   static void create(GF_OBJ_HANDLE *handle, f32 time, f32 alpha);
 };
 
-class GfReqSmallCom {
+class GfReqSmallCom : public mm::mtl::PtrSingleton<GfReqSmallCom> {
 public:
+  bool isValid(GF_SCOM_HANDLE *handle);
   static bool isExistCommand(SCOM_TYPE type);
 };
 

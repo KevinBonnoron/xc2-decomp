@@ -3,9 +3,11 @@
 
 namespace gf {
 
+struct GF_SCOM_HANDLE;
+
 class SCOM_SCRIPT {
 public:
-  static void create(u32 slot, const char *script, bool isWait);
+  static GF_SCOM_HANDLE *create(u32 slot, const char *script, bool isWait);
 };
 
 } // namespace gf
