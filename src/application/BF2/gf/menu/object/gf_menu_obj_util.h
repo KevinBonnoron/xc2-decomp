@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_mtl/fixed_vector.h"
 #include "types.h"
 
 namespace ui {
@@ -8,6 +9,7 @@ class UIStr;
 namespace gf {
 
 class GfMenuCallContext;
+struct QuestID;
 struct GF_OBJ_HANDLE;
 
 class GfMenuObjUtil {
@@ -58,9 +60,19 @@ public:
   static u32 getBladeAttributeIconID(u32 blade);
   static u32 getBladeCompatibilityIconID(u32 driver, u32 blade);
   static u32 getBladeAttributeID(u32 blade);
+  static u32 getBladeRank(u32 blade);
+  static bool isScenarioBlade(u32 blade);
+  static u32 getBladeRarity(u32 blade);
+  static bool isExtraBlade(u32 blade);
+  static bool isBladeNoBuildWeapon(u32 blade);
+  static bool isBladeCurrent(u32 blade);
+  static u32 canRemoveBladeEx(u32 blade, u32 driver, const mm::mtl::FixedVector<u16, 422> *blades);
+  static bool canRemoveBlade(u32 blade, const mm::mtl::FixedVector<u16, 422> *blades);
+  static bool hasHomura(u32 driver);
   static u16 getMsgIDFromList(u32 bdat, u16 id);
   static bool checkCCStart(GfMenuCallContext *context);
   static bool checkCCNext(GfMenuCallContext *context, u32 menu);
+  static u32 convIdeaPointToLevel(u32 point);
   static u32 playSE(u32 id);
   static u32 playSE(const char *name);
   static u32 playSECommonDecide();
@@ -76,6 +88,13 @@ public:
   static bool isValidSoundHandle(u32 handle);
   static void stopBGM(u32 handle, f32 time);
   static u32 playJingle(u32 id);
+  static u8 getElementComboAtr(u32 combo);
+  static u32 getElementComboEffect(u32 combo);
+  static u8 getElementComboStage(u32 combo);
+  static bool isQuestCompleted(QuestID quest);
+  static bool getMenuCondition(u32 id);
+  static bool getMenuFullOpenFlag();
+  static bool isCustomEnableBlade(u32 blade);
 };
 
 } // namespace gf

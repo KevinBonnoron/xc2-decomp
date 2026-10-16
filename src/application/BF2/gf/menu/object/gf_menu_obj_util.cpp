@@ -3,15 +3,20 @@
 #include "bdat.h"
 #include "framework/sound/sound_manager.h"
 #include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_party.h"
+#include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_util.h"
+#include "gf/game/quest/gf_quest_id.h"
+#include "gf/game/quest/gf_quest_info.h"
 #include "gf/menu/adapter/gf_menu_adapter_manager.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_bdat.h"
@@ -20,6 +25,7 @@
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "mm_math/mm_pnt.h"
+#include "mm_mtl/fixed_vector.h"
 #include "ui/ctrl/ui_ctrl_manager.h"
 #include "ui/event/ui_event_manager.h"
 #include "ui/ui_object_acc.h"
@@ -51,6 +57,11 @@ enum MENU_SE {
 constexpr u32 ICON_NONE = 0xffff;
 constexpr u32 POINTER_SELECT_ICON = 17;
 constexpr u32 PARTY_DRIVER_MAX = 3;
+constexpr u16 SCENARIO_CUSTOM_ENABLE = 2000;
+constexpr u32 BLADE_EXTRA_FIRST = 1043;
+constexpr u32 BLADE_EXTRA_COUNT = 7;
+constexpr u32 BLADE_RANK_MAX = 5;
+constexpr u32 BLADE_RARITY_SCENARIO = 2;
 constexpr int FLAG_BLADE_SLOT_2_OPEN = 0x89ff;
 constexpr int FLAG_BLADE_SLOT_3_OPEN = 0x8a00;
 constexpr u32 ICON_WEAPON_TYPE_BASE = 0x8a;
@@ -87,6 +98,8 @@ static const IconTable s_padSelectIcons[] = {
     {9, 17},
     {8, 17},
 };
+
+static const u32 s_ideaLevelPoints[] = {500, 1500, 3500, 7000, 10000};
 
 static const u16 s_commonSes[] = {MENU_SE_DECIDE, MENU_SE_CANCEL, MENU_SE_INVALID};
 
@@ -382,6 +395,57 @@ u32 GfMenuObjUtil::getBladeAttributeID(u32 blade) {
   return 0;
 }
 
+u32 GfMenuObjUtil::getBladeRank(u32 blade) {
+  if (isScenarioBlade(blade)) {
+    return BLADE_RANK_MAX;
+  }
+  if (GfDataBlade::isRareBlade(blade)) {
+    return BLADE_RANK_MAX;
+  }
+  u32 kizunaringMax = GfDataBlade::getKizunaringMax(blade);
+  if (kizunaringMax > 37) {
+    return 4;
+  }
+  if (kizunaringMax > 28) {
+    return 3;
+  }
+  return kizunaringMax > 18 ? 2 : 1;
+}
+
+bool GfMenuObjUtil::isScenarioBlade(u32 blade) { return GfDataBlade::isRegularBlade(blade) || blade == BLADE_WADATSUMI; }
+
+u32 GfMenuObjUtil::getBladeRarity(u32 blade) {
+  if (isScenarioBlade(blade)) {
+    return BLADE_RARITY_SCENARIO;
+  }
+  return GfDataBlade::isRareBlade(blade);
+}
+
+bool GfMenuObjUtil::isExtraBlade(u32 blade) { return blade - BLADE_EXTRA_FIRST < BLADE_EXTRA_COUNT; }
+
+bool GfMenuObjUtil::isBladeNoBuildWeapon(u32 blade) { return blade - BLADE_EXTRA_FIRST < BLADE_EXTRA_COUNT; }
+
+bool GfMenuObjUtil::isBladeCurrent(u32 blade) {
+  u32 driver = GfDataBlade::getSetDriver(blade);
+  if (driver == 0) {
+    return false;
+  }
+  return GfDataDriver::getBlade(driver, -1) == blade;
+}
+
+bool GfMenuObjUtil::canRemoveBlade(u32 blade, const mm::mtl::FixedVector<u16, 422> *blades) { return canRemoveBladeEx(blade, 0, blades) == 0; }
+
+bool GfMenuObjUtil::hasHomura(u32 driver) {
+  bool hasHomura = false;
+  DataParamAcc acc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+  if (acc.isValid()) {
+    if (GfDataBlade::getCreator(BLADE_HOMURA) == driver) {
+      hasHomura = !GfDataBlade::isActivateUnuse(BLADE_HOMURA);
+    }
+  }
+  return hasHomura;
+}
+
 u16 GfMenuObjUtil::getMsgIDFromList(u32 bdat, u16 id) {
   u8 *list = GfDataBdat::getFP(bdat);
   if (list != nullptr) {
@@ -393,6 +457,15 @@ u16 GfMenuObjUtil::getMsgIDFromList(u32 bdat, u16 id) {
 bool GfMenuObjUtil::checkCCStart(GfMenuCallContext *context) { return context != nullptr && !context->isActive(); }
 
 bool GfMenuObjUtil::checkCCNext(GfMenuCallContext *context, u32 menu) { return context != nullptr && context->menu == menu; }
+
+u32 GfMenuObjUtil::convIdeaPointToLevel(u32 point) {
+  for (u32 level = 0; level < sizeof(s_ideaLevelPoints) / sizeof(s_ideaLevelPoints[0]); level++) {
+    if (point < s_ideaLevelPoints[level]) {
+      return level;
+    }
+  }
+  return sizeof(s_ideaLevelPoints) / sizeof(s_ideaLevelPoints[0]);
+}
 
 u32 GfMenuObjUtil::playSE(u32 id) {
   if (fw::SoundManager::get() != nullptr) {
@@ -454,5 +527,37 @@ void GfMenuObjUtil::stopBGM(u32 handle, f32 time) {
 }
 
 u32 GfMenuObjUtil::playJingle(u32 id) { return GfMenuSoundManager::playJingle(id); }
+
+u8 GfMenuObjUtil::getElementComboAtr(u32 combo) {
+  u8 *bdat = Bdat::getFP("BTL_ElementalCombo");
+  if (GfMenuBdat::isValidBdatID(bdat, combo)) {
+    return Bdat::getVal(bdat, "Atr", combo).valueU8;
+  }
+  return 0;
+}
+
+u32 GfMenuObjUtil::getElementComboEffect(u32 combo) { return 1; }
+
+u8 GfMenuObjUtil::getElementComboStage(u32 combo) {
+  u8 *bdat = Bdat::getFP("BTL_ElementalCombo");
+  if (GfMenuBdat::isValidBdatID(bdat, combo)) {
+    return Bdat::getVal(bdat, "ComboStage", combo).valueU8;
+  }
+  return 0;
+}
+
+bool GfMenuObjUtil::isQuestCompleted(QuestID quest) { return GfQuestInfo::isQuestFin(quest); }
+
+bool GfMenuObjUtil::getMenuCondition(u32 id) {
+  u8 *bdat = GfDataBdat::getFP(BDAT_MNU_CONDITION);
+  if (id < static_cast<u32>(Bdat::getIdTop(bdat)) || id > static_cast<u32>(Bdat::getIdEnd(bdat))) {
+    return false;
+  }
+  return GfGameCond::isGameCond(Bdat::getVal(bdat, "cond", id).valueU16);
+}
+
+bool GfMenuObjUtil::getMenuFullOpenFlag() { return false; }
+
+bool GfMenuObjUtil::isCustomEnableBlade(u32 blade) { return GfDataUtil::getScenarioFlag() > SCENARIO_CUSTOM_ENABLE; }
 
 } // namespace gf
