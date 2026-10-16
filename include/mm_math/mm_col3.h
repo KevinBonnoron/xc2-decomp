@@ -4,6 +4,8 @@
 namespace mm {
 
 struct Col3 {
+  static const Col3 yellow;
+
   Col3() {}
   Col3(f32 r, f32 g, f32 b) : r(r), g(g), b(b) {}
 
