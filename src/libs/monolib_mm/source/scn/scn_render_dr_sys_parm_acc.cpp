@@ -3,6 +3,7 @@
 #include "cloud/cloud_man.h"
 #include "dr/dr_irr_vol_man.h"
 #include "dr/dr_man.h"
+#include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "mm_math/mm_vec3.h"
 #include "scn/scn_render_dr_sys.h"
@@ -416,8 +417,8 @@ void ScnRenderDrSysParmAcc::setSeamMapPriMdl(FILE_PRIO seamMapPriMdl) { drMan->s
 void ScnRenderDrSysParmAcc::setSeamMapPriColi(FILE_PRIO seamMapPriColi) { drMan->seamMapPriColi = seamMapPriColi; }
 
 void *ScnRenderDrSysParmAcc::getBlurVelocityMap() {
-  DrView *views = drMan->views;
-  DrBlurTarget *target = views[viewIndex].blur->target;
+  wkPixlManRes *resources = drMan->pixlMan->m_resources;
+  DrBlurTarget *target = resources[viewIndex].blur->target;
   if (target != nullptr) {
     return target->velocityMap;
   }

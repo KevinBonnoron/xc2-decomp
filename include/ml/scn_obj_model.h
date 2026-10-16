@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "types.h"
 
 namespace mm {
@@ -9,6 +11,7 @@ struct Vec3;
 namespace ml {
 
 class DebDraw;
+class DrMdlObj;
 
 class ScnObjModel {
 public:
@@ -30,42 +33,11 @@ public:
   void setFrameSpd(f32 speed);
   void setDisp(bool isDisp);
   void setClip(bool isClip);
+
+  u8 _008[0x3d8 - 0x008];
+  DrMdlObj *m_drMdl;
 };
 
-class ScnObjAccResMdlInfo {
-public:
-  ScnObjAccResMdlInfo(ScnObjModel *model);
-  void setGpuClip(bool isClip);
-  void setSpAlphaMode(bool isEnable);
-  void setCamCheckMode(bool isEnable);
-  bool isCamCheckResl() const;
-  void releaseAfterImage();
-
-private:
-  u8 _00[0x08 - 0x00];
-};
-
-class ScnObjAccEtcParams {
-public:
-  ScnObjAccEtcParams(ScnObjModel *model);
-  int getIndex(const char *name) const;
-  void setInitParams(u32 index, f32 value);
-
-private:
-  u8 _00[0x08 - 0x00];
-};
-
-class ScnObjAccResSubMesh {
-public:
-  ScnObjAccResSubMesh(ScnObjModel *model);
-  int getExtMax() const;
-  int getExtIdx(const char *name) const;
-  const char *getExtName(int index) const;
-  void setExtAlpha(int index, f32 alpha);
-  f32 getExtAlpha(int index) const;
-
-private:
-  u8 _00[0x10 - 0x00];
-};
+static_assert(offsetof(ScnObjModel, m_drMdl) == 0x3d8, "");
 
 } // namespace ml

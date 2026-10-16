@@ -19,6 +19,7 @@
 #include "ml/scn_obj_model.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/rtti.h"
+#include "scn/scn_obj_acc.h"
 
 namespace fw {
 

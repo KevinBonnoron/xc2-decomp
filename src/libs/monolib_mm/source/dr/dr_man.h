@@ -10,6 +10,7 @@ class CloudMan;
 
 namespace ml {
 class DrIrrVolMan;
+class DrPixlMan;
 class DrPixlPostParm;
 
 enum FILE_PRIO {};
@@ -23,29 +24,6 @@ struct DrMotBlurState {
 };
 
 static_assert(offsetof(DrMotBlurState, motBlurDefault) == 0xb6c, "");
-
-struct DrBlurTarget {
-  u8 _00[0x28 - 0x00];
-  void *velocityMap;
-};
-
-static_assert(offsetof(DrBlurTarget, velocityMap) == 0x28, "");
-
-struct DrViewBlur {
-  u8 _00[0x50 - 0x00];
-  DrBlurTarget *target;
-};
-
-static_assert(offsetof(DrViewBlur, target) == 0x50, "");
-
-struct DrView {
-  u8 _000[0x190 - 0x000];
-  DrViewBlur *blur;
-  u8 _198[0x1f8 - 0x198];
-};
-
-static_assert(offsetof(DrView, blur) == 0x190, "");
-static_assert(sizeof(DrView) == 0x1f8, "");
 
 class DrMan {
 public:
@@ -68,10 +46,11 @@ public:
   bool isAllMiddelTexStmChk() const;
 
   static s32 s_nDblStockIdx;
+  static s32 s_nDblIdx;
 
   u8 _0000[0x0070 - 0x0000];
   DrMotBlurState *motBlurState;
-  DrView *views;
+  DrPixlMan *pixlMan;
   u8 _0080[0x0090 - 0x0080];
   DrIrrVolMan *irrVolMan;
   u8 _0098[0x0120 - 0x0098];
@@ -123,7 +102,7 @@ public:
 };
 
 static_assert(offsetof(DrMan, motBlurState) == 0x0070, "");
-static_assert(offsetof(DrMan, views) == 0x0078, "");
+static_assert(offsetof(DrMan, pixlMan) == 0x0078, "");
 static_assert(offsetof(DrMan, irrVolMan) == 0x0090, "");
 static_assert(offsetof(DrMan, postParms) == 0x0120, "");
 static_assert(offsetof(DrMan, seamMapReadPos) == 0x1c70, "");
