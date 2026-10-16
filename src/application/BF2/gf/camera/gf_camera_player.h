@@ -1,5 +1,8 @@
 #pragma once
+#include <stddef.h>
+
 #include "fw/fw_camera.h"
+#include "fw/fw_pad.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
@@ -36,5 +39,38 @@ public:
   u32 getSaveSide() const;
   bool isSaveFreeMode() const;
 };
+
+class CameraPadData : public fw::PadRelay {
+public:
+  CameraPadData();
+  void reset();
+  void bind();
+  ~CameraPadData();
+  void unbind();
+  void update();
+  void resetAction();
+  void zoomCamera();
+  void heightCamera();
+  void sideLeftCamera();
+  void sideRightCamera();
+  void sideResetCamera();
+  void allResetAction();
+  void setARX(f32 value);
+  void setARY(f32 value);
+
+  f32 arx;
+  f32 ary;
+  bool isReset;
+  bool isAllReset;
+  bool isZoom;
+  bool isHeight;
+  bool isSideLeft;
+  bool isSideRight;
+  bool isSideReset;
+};
+
+static_assert(offsetof(CameraPadData, arx) == 0x38, "");
+static_assert(offsetof(CameraPadData, isReset) == 0x40, "");
+static_assert(offsetof(CameraPadData, isSideReset) == 0x46, "");
 
 } // namespace gf
