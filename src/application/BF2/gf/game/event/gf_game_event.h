@@ -7,8 +7,9 @@
 #include "types.h"
 
 namespace fw {
+enum SoundCategory : int;
 struct UpdateInfo;
-}
+} // namespace fw
 
 namespace gf {
 
@@ -61,6 +62,8 @@ public:
   static bool isPlayBgm();
   static void cancelOverTime();
   static f32 getPlayBgmTotalTime();
+  static void setCategoryVolume(fw::SoundCategory category, f32 volume, f32 time);
+  static f32 getCategoryVolume(fw::SoundCategory category);
 };
 
 } // namespace gf
