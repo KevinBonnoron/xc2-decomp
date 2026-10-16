@@ -104,6 +104,7 @@
 #include "event/rand_calc.cpp"
 #include "event/se_obj.cpp"
 #include "event/se_manager.cpp"
+#include "event/seamless_manager.cpp"
 #include "event/shaker_updater.cpp"
 #include "event/shaker_res.cpp"
 #include "event/shaker.cpp"

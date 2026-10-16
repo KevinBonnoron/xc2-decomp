@@ -15,6 +15,8 @@ public:
 
   FixStr(const char *pszName) { *this = pszName; }
 
+  FixStr(const FixStr &string) { *this = string.c_str(); }
+
   FixStr &operator=(const FixStr &string) { return *this = string.c_str(); }
 
   FixStr &operator=(const char *pszName) {
