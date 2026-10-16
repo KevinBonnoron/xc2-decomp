@@ -51,9 +51,12 @@ public:
 
   u8 _5c[0x6c - 0x5c];
   u32 bdatId;
+  u8 _70[0x75 - 0x70];
+  bool isSeamless;
 };
 
 static_assert(offsetof(GfObjSetupMap, bdatId) == 0x6c, "");
+static_assert(offsetof(GfObjSetupMap, isSeamless) == 0x75, "");
 
 class GfObjSetupDriver : public GfObjSetup {
 public:

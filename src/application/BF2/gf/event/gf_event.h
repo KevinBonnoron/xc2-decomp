@@ -14,6 +14,7 @@ enum RELOAD_BDAT {
 enum GEV {
   GEV_MAPJUMP_START = 1,
   GEV_MAPJUMP_DESTROY_FIELD = 2,
+  GEV_MAPJUMP_CHANGE_MAP = 4,
   GEV_MAPJUMP_CREATE_FIELD = 5,
   GEV_MAPJUMP_FADEIN = 6,
   GEV_EVENT_END = 9,
@@ -61,7 +62,7 @@ enum {
 };
 
 struct MapjumpCallbackInfo {
-  u8 _00[0x04 - 0x00];
+  u32 mapJumpId;
   u32 map;
   u32 prevMap;
   bool isWithSaveData;

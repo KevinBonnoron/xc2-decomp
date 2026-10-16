@@ -59,6 +59,7 @@ class IDColiAccMan {
 public:
   IDColiAccMan();
   void setSubNum(u32 num);
+  bool getGrandAABB(mm::Vec3 &max, mm::Vec3 &min) const;
 
   u8 _00[0x08 - 0x00];
 };
