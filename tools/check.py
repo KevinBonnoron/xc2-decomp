@@ -89,6 +89,8 @@ INCLUDE_CPP = re.compile(r'^#include "([^"]+\.cpp)"', re.M)
 LOCAL_CALL = re.compile(r"<local:([^>]+)>")
 MEM_OPERAND = re.compile(r"\[(\w+)(?:, #(-?0x[0-9a-f]+))?\]")
 SHT_NOBITS = 8
+# The SDK runtime links __cxa_atexit (a no-op) and __dso_handle statically, without a symbol.
+UNNAMED_RUNTIME = {0x710000019C: "__cxa_atexit", 0x7101171000: "__dso_handle"}
 README_START = "<!-- progress -->"
 README_END = "<!-- /progress -->"
 
@@ -212,7 +214,8 @@ class TargetSymbols:
         self.exact = {}
         for addr, _, name in entries:
             self.exact.setdefault(addr, name)
-        self.stubs = {}
+        self.exact.update(UNNAMED_RUNTIME)
+        self.stubs = dict(UNNAMED_RUNTIME)
 
     def find_import_stubs(self, image):
         """Name the PLT stubs (adrp x16; ldr x17, [x16, #off]; add x16; br x17) after the import they jump to."""
