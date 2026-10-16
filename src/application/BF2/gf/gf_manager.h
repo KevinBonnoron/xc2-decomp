@@ -3,6 +3,14 @@
 
 namespace gf {
 
+struct GfSetupParam {
+  u8 _00[0x20 - 0x00];
+  f32 globalSpeed;
+  u8 _24[0x28 - 0x24];
+};
+
+static_assert(sizeof(GfSetupParam) == 0x28, "");
+
 void GfSleep(u32 frame);
 
 class GfManager {
