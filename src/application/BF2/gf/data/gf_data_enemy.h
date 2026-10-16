@@ -12,7 +12,9 @@ constexpr u32 EXTRA_PARTS_COUNT = 4;
 struct SDataEnemy {
   u16 arrange;
   u8 _002[0x004 - 0x002];
-  u8 : 4;
+  u8 named : 1;
+  u8 boss : 1;
+  u8 : 2;
   u8 linkGenus : 1;
   u8 guardFront : 1;
   u8 guardLeft : 1;

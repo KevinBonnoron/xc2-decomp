@@ -17,6 +17,7 @@ class BattleGlobal : public mm::mtl::PtrSingleton<BattleGlobal> {
 public:
   int GetElementalComboStage(int combo) const;
   void ResetBGM();
+  void SetBGM(u32 bgm);
   gf::GF_OBJ_HANDLE *GetLinkJoinEnemyHandle(const mm::Vec3 &position);
 
   u8 _08[0x5b8e - 0x08];

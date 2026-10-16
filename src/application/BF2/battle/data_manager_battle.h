@@ -3,10 +3,15 @@
 #include "types.h"
 #include <stddef.h>
 
+namespace gf {
+struct GF_OBJ_HANDLE;
+}
+
 namespace btl {
 
 class DataManager : public mm::mtl::PtrSingleton<DataManager> {
 public:
+  void ReleaseEnemyGroup(gf::GF_OBJ_HANDLE *handle);
   int GetPartyGauge() const;
   void SetPartyGauge(int partyGauge, bool isNotify);
   bool IsSpecialEffects(int effect) const;
