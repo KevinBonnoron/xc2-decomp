@@ -1,7 +1,7 @@
 #include "event/shaker_res.h"
 
 #include "event/memory_manager.h"
-#include "fw/fw_render_resource.h"
+#include "framework/resource/common_resource.h"
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
