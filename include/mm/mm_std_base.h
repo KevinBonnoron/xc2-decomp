@@ -12,6 +12,7 @@ namespace mm {
 class MMStdBase {
 public:
   static void mmAssert(const char *cond, const char *file, unsigned int line);
+  static void mmPrint(const char *format, ...);
 };
 
 } // namespace mm

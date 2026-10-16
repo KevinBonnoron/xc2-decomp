@@ -2,6 +2,7 @@
 
 #include "framework/object/component_object.h"
 #include "framework/object/updatable_object.h"
+#include "framework/pointer_map.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_data_npc.h"
