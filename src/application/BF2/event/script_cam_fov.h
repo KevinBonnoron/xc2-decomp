@@ -14,7 +14,7 @@ public:
   virtual void redo(const Param &param) { doit(param); }
 
 private:
-  u8 _08[0x10 - 0x08];
+  f32 prevFov;
 };
 
 static_assert(sizeof(ScriptCamFov) == 0x10, "");
