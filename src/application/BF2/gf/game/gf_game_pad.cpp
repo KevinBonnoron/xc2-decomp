@@ -9,7 +9,7 @@
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
-#include "gf/menu/gf_menu_obj_util.h"
+#include "gf/menu/object/gf_menu_obj_util.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_util.h"
