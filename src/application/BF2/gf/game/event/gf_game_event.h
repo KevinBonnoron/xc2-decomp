@@ -64,6 +64,7 @@ public:
   static f32 getPlayBgmTotalTime();
   static void setCategoryVolume(fw::SoundCategory category, f32 volume, f32 time);
   static f32 getCategoryVolume(fw::SoundCategory category);
+  static void setCancelFlag(bool isCancel);
 };
 
 } // namespace gf
