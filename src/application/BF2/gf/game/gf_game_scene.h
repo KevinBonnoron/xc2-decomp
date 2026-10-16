@@ -1,9 +1,10 @@
 #pragma once
+#include <stddef.h>
+
+#include "gf/data/gf_data_blade.h"
 #include "gf/event/gf_event.h"
-#include "gf/game/gf_game_manager.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace fw {
 struct UpdateInfo;
@@ -14,6 +15,7 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 struct QuestCompleteParam;
+struct OwnerBonus;
 
 enum PLSTOP {
   PLSTOP_GMK_TUTORIAL_SEQUENCE = 1,

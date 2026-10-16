@@ -1,9 +1,15 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
-#include "mm_mtl/rtti.h"
 #include "types.h"
-#include <stddef.h>
+
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+} // namespace mm
 
 namespace gf {
 

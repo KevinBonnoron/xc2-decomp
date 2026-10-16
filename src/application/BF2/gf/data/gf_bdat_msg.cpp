@@ -1,8 +1,10 @@
 #include "gf/data/gf_bdat_msg.h"
+
 #include "bdat.h"
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_quest.h"
+#include "gf/game/quest/gf_quest_id.h"
 #include "gf/gf_allocator.h"
 
 namespace gf {

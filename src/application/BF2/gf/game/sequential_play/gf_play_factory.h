@@ -1,10 +1,10 @@
 #pragma once
-#include "gf/game/quest/gf_quest_id.h"
 #include "types.h"
 
 namespace gf {
 
 class GfSequentialPlaySignal;
+struct QuestID;
 
 enum MAINMENU {
   MAINMENU_TOP,

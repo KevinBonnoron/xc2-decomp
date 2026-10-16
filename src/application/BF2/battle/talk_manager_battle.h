@@ -1,6 +1,5 @@
 #pragma once
 #include "mm_mtl/singleton.h"
-#include "types.h"
 
 namespace btl {
 

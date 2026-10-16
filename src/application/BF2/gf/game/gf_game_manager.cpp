@@ -1,6 +1,6 @@
 #include "gf/game/gf_game_manager.h"
+
 #include "battle/battle_manager.h"
-#include "battle/utility_battle.h"
 #include "fw/fw_framework.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/data/gf_bdat_rsc.h"
@@ -37,6 +37,7 @@
 #include "gf/game/gf_game_ride.h"
 #include "gf/game/gf_game_scene.h"
 #include "gf/game/gf_game_speed.h"
+#include "gf/game/gf_game_state.h"
 #include "gf/game/gf_game_target.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/gf_game_util_hana.h"
@@ -46,6 +47,7 @@
 #include "gf/game/item/gf_item_manager.h"
 #include "gf/game/kizunaring/gf_kizunaring_manager.h"
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
+#include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/salvage/gf_game_salvage.h"
 #include "gf/game/sequential_play/gf_play_command.h"
 #include "gf/game/sequential_play/gf_sequential_play.h"
@@ -63,6 +65,9 @@
 #include "gf/request/gf_req_scom.h"
 #include "gf/sound/gf_sound.h"
 #include "mm_math/mm_col4.h"
+#include "mm_mtl/fixed_array.h"
+#include "mm_mtl/fixed_list.h"
+#include "mm_mtl/fixstr.h"
 
 namespace gf {
 

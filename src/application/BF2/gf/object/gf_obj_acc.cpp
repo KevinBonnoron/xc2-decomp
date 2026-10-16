@@ -1,7 +1,10 @@
 #include "gf/object/gf_obj_acc.h"
+
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
+#include "framework/object/updatable_object.h"
+#include "fw/fw_model_object.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
@@ -9,8 +12,12 @@
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/property/gf_com_property.h"
+#include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "ml/scn_obj_model.h"
+#include "mm_math/mm_vec3.h"
+#include "mm_mtl/rtti.h"
 
 namespace fw {
 

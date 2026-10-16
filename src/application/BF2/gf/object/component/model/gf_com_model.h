@@ -1,8 +1,17 @@
 #pragma once
-#include "fw/fw_model_object.h"
+#include <stddef.h>
+
 #include "gf/object/component/gf_component.h"
 #include "types.h"
-#include <stddef.h>
+
+namespace fw {
+class ModelObject;
+} // namespace fw
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+} // namespace mm
 
 namespace gf {
 

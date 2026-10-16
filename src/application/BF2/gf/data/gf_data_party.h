@@ -1,8 +1,12 @@
 #pragma once
-#include "mm_math/mm_vec3.h"
+#include <stddef.h>
+
 #include "mm_mtl/fixed_array.h"
 #include "types.h"
-#include <stddef.h>
+
+namespace mm {
+struct Vec3;
+} // namespace mm
 
 namespace gf {
 

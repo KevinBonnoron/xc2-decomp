@@ -1,4 +1,5 @@
 #include "gf/data/gf_data_driver.h"
+
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_chrdr.h"
 #include "gf/data/gf_bdat_item.h"
@@ -10,6 +11,8 @@
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
 
 namespace gf {
 

@@ -1,6 +1,8 @@
 #include "gf/data/gf_data_param_acc.h"
+
 #include "gf/data/gf_data_obj.h"
 #include "gf/data/gf_data_weapon.h"
+#include "mm_mtl/fixed_array.h"
 
 namespace gf {
 

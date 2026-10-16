@@ -1,7 +1,6 @@
 #pragma once
 #include "gf/event/gf_event.h"
 #include "mm_mtl/singleton.h"
-#include "types.h"
 
 namespace fw {
 struct UpdateInfo;

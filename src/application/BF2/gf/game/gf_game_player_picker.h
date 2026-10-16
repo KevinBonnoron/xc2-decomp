@@ -3,7 +3,6 @@
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace fw {
 struct UpdateInfo;

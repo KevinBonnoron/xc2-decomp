@@ -1,8 +1,8 @@
 #pragma once
-#include "gf/game/quest/gf_achiev_quest.h"
 #include "types.h"
 
 namespace gf {
+struct AchievQuest;
 
 enum ACHIEVEMENT_TYPE {};
 

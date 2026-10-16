@@ -1,10 +1,14 @@
 #include "gf/data/gf_data_party.h"
+
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
+#include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
+#include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixed_array.h"
 
 namespace gf {
 

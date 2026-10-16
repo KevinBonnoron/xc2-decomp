@@ -1,11 +1,12 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/data/gf_item_handle.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace gf {
 

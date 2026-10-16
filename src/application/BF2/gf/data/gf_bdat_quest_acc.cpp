@@ -2,7 +2,10 @@
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_util.h"
+#include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_task_param.h"
+#include "mm_mtl/fixed_vector.h"
+#include "types.h"
 
 namespace gf {
 

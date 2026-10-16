@@ -1,4 +1,5 @@
 #include "gf/field/gf_field_weather.h"
+
 #include "gf/data/gf_bdat_maplist.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
@@ -10,9 +11,11 @@
 #include "gf/gf_pause.h"
 #include "gf/map/gf_map_manager.h"
 #include "ml/rand.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_list.h"
 
 namespace gf {
+struct GF_OBJ_HANDLE;
 
 constexpr u32 WEATHER_LIST_MAX = 16;
 constexpr f32 WEATHER_RAND_SCALE = 100.0f;

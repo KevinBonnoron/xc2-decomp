@@ -1,12 +1,12 @@
 #pragma once
-#include "gf/data/gf_data_game.h"
-#include "gf/data/gf_data_option.h"
-#include "gf/data/gf_data_system.h"
 #include "mm_mtl/singleton.h"
 
 namespace gf {
 
 struct GfSetupParam;
+struct SDataGame;
+struct SDataOption;
+struct SDataSystem;
 
 class GfDataManager : public mm::mtl::PtrSingleton<GfDataManager> {
 public:

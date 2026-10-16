@@ -1,7 +1,10 @@
 #include "gf/data/gf_data_driver_skill.h"
+
 #include "bdat.h"
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_msg.h"
+#include "gf/data/gf_data_driver.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 

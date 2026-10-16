@@ -1,12 +1,17 @@
 #pragma once
+#include <stddef.h>
+
 #include "framework/message/message_object.h"
-#include "fw/fw_camera.h"
 #include "gf/camera/gf_camera_player.h"
 #include "gf/event/gf_event.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
+
+namespace fw {
+class Camera;
+class CameraTarget;
+} // namespace fw
 
 namespace gf {
 

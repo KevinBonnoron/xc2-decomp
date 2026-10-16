@@ -2,6 +2,12 @@
 #include "gf/object/component/gf_component.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+} // namespace mm
+
 namespace gf {
 
 class GfComTransform : public GfComponent {

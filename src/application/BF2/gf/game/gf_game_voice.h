@@ -11,7 +11,6 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 struct GfSetupParam;
-struct MapjumpCallbackInfo;
 
 class GfGameVoice : public mm::mtl::PtrSingleton<GfGameVoice> {
 public:

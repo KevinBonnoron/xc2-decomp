@@ -1,8 +1,14 @@
 #pragma once
-#include "fw/fw_camera.h"
-#include "mm_mtl/rtti.h"
-#include "types.h"
 #include <stddef.h>
+
+#include "fw/fw_camera.h"
+#include "types.h"
+
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+} // namespace mm
 
 namespace gf {
 

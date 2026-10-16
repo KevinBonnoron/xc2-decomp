@@ -10,7 +10,6 @@ struct UpdateInfo;
 namespace gf {
 
 struct GfSetupParam;
-struct MapjumpCallbackInfo;
 
 class GfGameEvent : public mm::mtl::PtrSingleton<GfGameEvent> {
 public:

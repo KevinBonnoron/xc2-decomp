@@ -1,11 +1,19 @@
 #pragma once
-#include "../dr/dr_man.h"
-#include "mm_math/mm_vec3.h"
-#include "scn_render_dr_sys.h"
-#include "types.h"
 #include <stddef.h>
 
+#include "dr/dr_man.h"
+#include "types.h"
+
+namespace mm {
+struct Aabb;
+struct Vec3;
+} // namespace mm
+
 namespace ml {
+class DrPixlPostParm;
+class ScnRenderDrSys;
+class ScnRenderDrViewCtrl;
+struct DR_CAPCUBE_PARAM;
 
 class ScnRenderDrSysParmAcc {
 public:

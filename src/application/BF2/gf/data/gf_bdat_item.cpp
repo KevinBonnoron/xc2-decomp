@@ -1,10 +1,13 @@
 #include "gf/data/gf_bdat_item.h"
+
 #include "bdat.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_weapon.h"
 #include "gf/gf_allocator.h"
 #include "ml/char_code.h"
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
 
 namespace gf {
 namespace _gfbit {

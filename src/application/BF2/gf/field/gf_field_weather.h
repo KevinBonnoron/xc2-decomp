@@ -5,7 +5,6 @@
 #include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace fw {
 struct UpdateInfo;
@@ -14,6 +13,7 @@ struct UpdateInfo;
 namespace gf {
 
 struct GfSetupParam;
+struct GF_OBJ_HANDLE;
 
 class GfFieldWeather : public mm::mtl::PtrSingleton<GfFieldWeather> {
 public:

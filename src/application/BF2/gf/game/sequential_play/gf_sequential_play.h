@@ -1,5 +1,5 @@
 #pragma once
-#include "gf/game/gf_game_state.h"
+#include "gf/event/gf_event.h"
 #include "types.h"
 
 namespace fw {

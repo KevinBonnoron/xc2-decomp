@@ -1,7 +1,9 @@
 #include "gf/field/gf_field_zone_script.h"
+
 #include "gf/gf_allocator.h"
 #include "gf/scom/gf_scom_script.h"
 #include "gf/script/gf_script_manager.h"
+#include "types.h"
 
 namespace gf {
 
@@ -19,7 +21,11 @@ GfFieldZoneScript::~GfFieldZoneScript() {
   ;
 }
 
-void GfFieldZoneScript::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldZoneScript(param); }
+void GfFieldZoneScript::build(const GfSetupParam &param) {
+  // __LINE__ must be 22 as in the original file: its value changes the instruction order.
+#line 22
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfFieldZoneScript(param);
+}
 
 void GfFieldZoneScript::destroy() {
   GfFieldZoneScript *script = get();

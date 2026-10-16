@@ -1,4 +1,9 @@
 #include "battle/utility_battle.h"
+
+#include <float.h>
+#include <math.h>
+#include <stdlib.h>
+
 #include "battle/battle_global.h"
 #include "battle/btl_system_balance_access.h"
 #include "battle/chain_attack_manager.h"
@@ -20,9 +25,8 @@
 #include "gf/object/gf_obj_util.h"
 #include "gf/scom/gf_scom_achiev.h"
 #include "gf/scom/gf_scom_enbook.h"
-#include <float.h>
-#include <math.h>
-#include <stdlib.h>
+#include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace btl {
 

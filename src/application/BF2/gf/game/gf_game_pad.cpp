@@ -1,7 +1,9 @@
 #include "gf/game/gf_game_pad.h"
+
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/quest/gf_quest_manager.h"
 #include "gf/game/sequential_play/gf_play_factory.h"

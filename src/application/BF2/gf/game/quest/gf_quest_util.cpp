@@ -1,4 +1,5 @@
 #include "gf/game/quest/gf_quest_util.h"
+
 #include "gf/data/gf_bdat_cond.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_enemy.h"
@@ -9,11 +10,14 @@
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/quest/gf_achiev_quest.h"
+#include "gf/game/quest/gf_quest_data.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/quest/gf_quest_manager.h"
 #include "gf/game/quest/gf_quest_task.h"
 #include "gf/game/quest/gf_quest_task_param.h"
 #include "gf/util/gf_item_util.h"
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
 
 namespace gf {
 

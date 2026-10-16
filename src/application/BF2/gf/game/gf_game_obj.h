@@ -1,6 +1,7 @@
 #pragma once
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixstr.h"
+#include "types.h"
 
 namespace fw {
 struct UpdateInfo;

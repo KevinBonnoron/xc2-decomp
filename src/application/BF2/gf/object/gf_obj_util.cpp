@@ -1,14 +1,19 @@
 #include "gf/object/gf_obj_util.h"
+
+#include "framework/object/updatable_object.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_data_npc.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/object/component/gf_component.h"
 #include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_property.h"
+#include "mm_mtl/bitflag.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 

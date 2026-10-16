@@ -1,7 +1,6 @@
 #pragma once
 #include "gf/field/gf_field_zone.h"
 #include "mm_mtl/singleton.h"
-#include "types.h"
 
 namespace fw {
 struct UpdateInfo;

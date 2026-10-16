@@ -1,7 +1,9 @@
 #include "gf/data/gf_bdat_chrenarrange.h"
+
 #include "bdat.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 namespace _gfbcb {

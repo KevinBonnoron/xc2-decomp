@@ -1,11 +1,14 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_hana.h"
+#include "gf/data/gf_item_handle.h"
 #include "gf/game/quest/gf_achiev_quest.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace gf {
 
@@ -86,6 +89,8 @@ enum {
   QUEST_RACE_HUMAN = 1,
   QUEST_RACE_ANIMAL = 2,
 };
+
+constexpr u32 PERSONALITY_VOICE_FIRST = 61;
 
 struct SDataBlade {
   u16 activate;

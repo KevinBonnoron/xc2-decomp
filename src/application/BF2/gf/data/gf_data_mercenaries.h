@@ -1,10 +1,11 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/field/gf_field_time.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace gf {
 

@@ -9,7 +9,6 @@ struct UpdateInfo;
 namespace gf {
 
 struct GfSetupParam;
-struct MapjumpCallbackInfo;
 struct QuestCompleteParam;
 struct QuestOrderParam;
 

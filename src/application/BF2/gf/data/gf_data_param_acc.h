@@ -1,8 +1,9 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/data/gf_data_driver.h"
 #include "mm_mtl/fixed_array.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace gf {
 

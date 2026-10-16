@@ -1,6 +1,5 @@
 #pragma once
 #include "mm/mm_std_base.h"
-#include <stddef.h>
 
 namespace mm {
 namespace mtl {

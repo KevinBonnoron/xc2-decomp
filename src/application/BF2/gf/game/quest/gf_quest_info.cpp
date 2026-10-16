@@ -1,4 +1,5 @@
 #include "gf/game/quest/gf_quest_info.h"
+
 #include "bdat.h"
 #include "gf/data/gf_bdat_chrenparam.h"
 #include "gf/data/gf_bdat_cond.h"
@@ -15,6 +16,7 @@
 #include "gf/game/quest/gf_quest_task.h"
 #include "gf/game/quest/gf_quest_task_param.h"
 #include "gf/util/gf_item_util.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 

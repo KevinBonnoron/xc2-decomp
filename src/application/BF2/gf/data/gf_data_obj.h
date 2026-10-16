@@ -1,18 +1,19 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
-#include "gf/object/gf_obj_setup.h"
 #include "mm_mtl/fixed_array.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace gf {
 
 struct GF_OBJ_HANDLE;
 struct SDataIdea;
+class GfObjSetupEnemy;
 
 class IDataObj {
 public:

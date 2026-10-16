@@ -1,6 +1,11 @@
 #pragma once
-#include "mm_mtl/rtti.h"
 #include "types.h"
+
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+} // namespace mm
 
 namespace fw {
 
