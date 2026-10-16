@@ -1,6 +1,8 @@
 #include "event/sche_manager.h"
 
+#include "event/manager.h"
 #include "event/memory_manager.h"
+#include "gf/game/gf_game_party.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 
@@ -13,6 +15,18 @@ namespace event {
 ScheManager::ScheManager() : flags(0) {}
 
 void ScheManager::create() {}
+
+void ScheManager::init() {
+  gf::GF_OBJ_HANDLE *handle = mm::mtl::PtrSingleton<Manager>::get()->getObjHandle();
+  if (handle != gf::INVALID_HANDLE) {
+    push(handle, mm::mtl::PtrSingleton<Manager>::get()->getPlayParam(1));
+  }
+  gf::GF_OBJ_HANDLE *leader = gf::GfGameParty::getLeader();
+  if (leader != gf::INVALID_HANDLE) {
+    push(leader, 0);
+  }
+  flags = 0;
+}
 
 void ScheManager::push(gf::GF_OBJ_HANDLE *handle, u32 type) {
   for (Scheduler **it = mSchedulers.begin(); it != mSchedulers.end(); it++) {
@@ -70,6 +84,33 @@ bool ScheManager::chkUse(Scheduler::USE use, gf::GF_OBJ_HANDLE *handle) {
     }
   }
   return false;
+}
+
+void ScheManager::OnEventProc(MSG_TYPE type) {
+  switch (type) {
+  case MSG_TYPE_INIT_BEGIN:
+    init();
+    play(Scheduler::ORDER_FLD2EVT, gf::INVALID_HANDLE);
+    flags |= FLAG_FLD2EVT;
+    break;
+  case MSG_TYPE_START_SCENE:
+    if ((flags & FLAG_EVT2IDLE) == 0) {
+      play(Scheduler::ORDER_EVT2IDLE, gf::INVALID_HANDLE);
+      flags |= FLAG_EVT2IDLE;
+    }
+    break;
+  case MSG_TYPE_CLEAR:
+    if ((flags & FLAG_EVT2FLD) == 0) {
+      play(Scheduler::ORDER_EVT2FLD, gf::INVALID_HANDLE);
+      flags |= FLAG_EVT2FLD;
+    }
+    break;
+  case MSG_TYPE_UPDATE_POST:
+    update();
+    break;
+  default:
+    break;
+  }
 }
 
 } // namespace event

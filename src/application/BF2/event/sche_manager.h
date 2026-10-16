@@ -16,6 +16,12 @@ class ScheManager : public IManager, public mm::mtl::Singleton<ScheManager> {
 public:
   static constexpr u32 SCHEDULER_COUNT = 16;
 
+  enum {
+    FLAG_FLD2EVT = 1 << 0,
+    FLAG_EVT2IDLE = 1 << 1,
+    FLAG_EVT2FLD = 1 << 2,
+  };
+
   ScheManager();
   virtual ~ScheManager() {}
   void create();
