@@ -77,4 +77,23 @@ static_assert(offsetof(GROUP_BLADE_DATA, id) == 0x24, "");
 static_assert(offsetof(GROUP_BLADE_DATA, bladeArtsEx) == 0x26, "");
 static_assert(sizeof(GROUP_BLADE_DATA) == 0x2c, "");
 
+class GROUP_DATA {
+public:
+  void SetBuddyBladeIndex(int index);
+  const GROUP_BLADE_DATA *GetBladeDataConst(int index) const;
+  void ProgressCoolTime(f32 time);
+  void FinishCoolTime();
+
+  u8 _00[0x08 - 0x00];
+  GROUP_BLADE_DATA blades[5];
+  u8 _e4[0xf0 - 0xe4];
+  f32 buddyTime;
+  u8 _f4[0xff - 0xf4];
+  s8 buddyBladeIndex;
+};
+
+static_assert(offsetof(GROUP_DATA, blades) == 0x08, "");
+static_assert(offsetof(GROUP_DATA, buddyTime) == 0xf0, "");
+static_assert(offsetof(GROUP_DATA, buddyBladeIndex) == 0xff, "");
+
 } // namespace btl

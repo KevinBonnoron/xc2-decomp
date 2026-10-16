@@ -110,4 +110,34 @@ void GROUP_BLADE_DATA::SynchroHomnuraData(const GROUP_BLADE_DATA &blade) {
   coolTimeCounter = blade.coolTimeCounter;
 }
 
+void GROUP_DATA::SetBuddyBladeIndex(int index) {
+  if (buddyBladeIndex != index) {
+    buddyBladeIndex = index;
+    buddyTime = 0.0f;
+  }
+}
+
+const GROUP_BLADE_DATA *GROUP_DATA::GetBladeDataConst(int index) const {
+  if (index < 0) {
+    index = buddyBladeIndex;
+  }
+  return &blades[index];
+}
+
+void GROUP_DATA::ProgressCoolTime(f32 time) {
+  for (int i = 0; i < 5; i++) {
+    if (i != buddyBladeIndex && blades[i].isInitialized) {
+      blades[i].ProgressCoolTime(time);
+    }
+  }
+}
+
+void GROUP_DATA::FinishCoolTime() {
+  for (int i = 0; i < 5; i++) {
+    if (blades[i].isInitialized) {
+      blades[i].coolTimeCounter = blades[i].coolTime;
+    }
+  }
+}
+
 } // namespace btl
