@@ -81,6 +81,7 @@
 #include "event/chara_stop_action.cpp"
 #include "event/chara_play_head.cpp"
 #include "event/chara_stop_head.cpp"
+#include "event/chara_play_facial.cpp"
 #include "event/chara_wink_player.cpp"
 #include "event/chara_manager.cpp"
 #include "event/cs_snd_manager.cpp"
