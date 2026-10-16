@@ -11,6 +11,8 @@ public:
     m_nLen = 0;
   }
 
+  FixStr(const char *pszName) { *this = pszName; }
+
   FixStr &operator=(const FixStr &string) { return *this = string.c_str(); }
 
   FixStr &operator=(const char *pszName) {
