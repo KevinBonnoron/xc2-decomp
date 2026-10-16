@@ -1,14 +1,17 @@
 #include "event/object_list.h"
 
+#include <string.h>
+
 #include "event/bou_manager.h"
 #include "event/memory_manager.h"
 #include "event/object_camera.h"
 #include "event/object_effect.h"
 #include "event/object_light.h"
+#include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_driver.h"
 #include "mm_math/mm_col4.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
-#include <string.h>
 
 namespace event {
 
@@ -200,6 +203,29 @@ bool ObjectList::isLoadingSub(Object *object) const {
     }
   }
   return false;
+}
+
+ObjectChara *ObjectList::createGfObj(const char *name, gf::GF_OBJ_HANDLE *handle) {
+  ObjectChara *chara = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectChara(name);
+  chara->createGfObj(handle);
+  mCharaTree->addChild(chara);
+  mCharaCount++;
+  mm::mtl::Singleton<BouManager>::getPtr()->push(chara);
+  mActive = chara;
+  if (mFirstChara == nullptr) {
+    mFirstChara = chara;
+  }
+  return chara;
+}
+
+u32 ObjectList::getDriverIdByBlade(u32 bladeID) const {
+  u32 driverID = gf::GfDataBlade::getCreator(bladeID);
+  return driverID == 0 ? 3 : driverID;
+}
+
+u32 ObjectList::getBladeIdByDriver(u32 driverID) const {
+  u32 bladeID = gf::GfDataDriver::getBlade(driverID, -1);
+  return bladeID == 0 ? 1001 : bladeID;
 }
 
 ObjectCamera *ObjectList::createCamera(const char *name, u32 id) {
