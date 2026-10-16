@@ -30,7 +30,7 @@ void EnvTransfer::load() {
   }
   gf::GfFieldTime::get()->setTime(mHour, mMinute);
   gf::GfGameEvent::setMapWeather(mWeather);
-  switch (mCloudSea) {
+  switch (static_cast<int>(mCloudSea)) {
   case 0:
     mm::mtl::Singleton<EnvManager>::getPtr()->setCloudSea(EVT_CLOUDTYPE_LOW);
     break;
