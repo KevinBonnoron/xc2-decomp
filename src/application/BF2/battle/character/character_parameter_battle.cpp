@@ -13,6 +13,7 @@
 #include "gf/game/gf_game_util.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 
 namespace btl {
@@ -31,6 +32,16 @@ bool CharacterParameter::InitializeEnhance() const {
 void CharacterParameter::BattleEnd() {
   ResetRecast();
   isBattle = false;
+}
+
+void CharacterParameter::ResetSpecialEnhanceRate(bool isAll) {
+  int last = SPECIAL_ENHANCE_COUNT - 1;
+  if (!isAll) {
+    last = BattleGlobal::get()->isLockArtsPalette ? SPECIAL_ENHANCE_COUNT - 3 : SPECIAL_ENHANCE_COUNT - 1;
+  }
+  for (int i = 0; i <= last; i++) {
+    SetSpecialEnhanceRate(static_cast<SPECIAL_ENHANCE_TYPE>(i), 0.0f);
+  }
 }
 
 int CharacterParameter::GetClass() const {
@@ -205,6 +216,96 @@ const ENHANCE_EFFECT_DATA *CharacterParameter::GetEnhanceEffectDataConst(int enh
   }
 
   return nullptr;
+}
+
+void CharacterParameter::SetSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value) {
+  if (!isBlade && buddy != gf::INVALID_HANDLE) {
+    BattleCharacter *character = CharacterManager::get()->GetCharacterConst(buddy);
+    if (character != nullptr) {
+      CharacterParameter *parameter = character->GetCharacterParameter(true);
+      if (parameter != nullptr) {
+        parameter->SetSpecialEnhanceRate(type, rate);
+      }
+    }
+    return;
+  }
+  if (static_cast<u32>(type) < SPECIAL_ENHANCE_COUNT) {
+    specialEnhanceRates[type] = rate;
+    specialEnhanceValues[value] = value;
+  }
+}
+
+void CharacterParameter::AddSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value) {
+  if (!isBlade && buddy != gf::INVALID_HANDLE) {
+    BattleCharacter *character = CharacterManager::get()->GetCharacterConst(buddy);
+    if (character != nullptr) {
+      CharacterParameter *parameter = character->GetCharacterParameter(true);
+      if (parameter != nullptr) {
+        parameter->AddSpecialEnhanceRate(type, rate, value);
+      }
+    }
+    return;
+  }
+  if (static_cast<u32>(type) < SPECIAL_ENHANCE_COUNT && rate != 0.0f) {
+    specialEnhanceRates[type] += rate;
+    specialEnhanceValues[value] = value;
+  }
+}
+
+void CharacterParameter::MinSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value) {
+  if (!isBlade && buddy != gf::INVALID_HANDLE) {
+    BattleCharacter *character = CharacterManager::get()->GetCharacterConst(buddy);
+    if (character != nullptr) {
+      CharacterParameter *parameter = character->GetCharacterParameter(true);
+      if (parameter != nullptr) {
+        parameter->MinSpecialEnhanceRate(type, rate, value);
+      }
+    }
+    return;
+  }
+  if (static_cast<u32>(type) < SPECIAL_ENHANCE_COUNT && rate != 0.0f) {
+    f32 current = specialEnhanceRates[type];
+    specialEnhanceRates[type] = current == 0.0f ? rate : (current < rate ? current : rate);
+    specialEnhanceValues[value] = value;
+  }
+}
+
+void CharacterParameter::MaxSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value) {
+  if (!isBlade && buddy != gf::INVALID_HANDLE) {
+    BattleCharacter *character = CharacterManager::get()->GetCharacterConst(buddy);
+    if (character != nullptr) {
+      CharacterParameter *parameter = character->GetCharacterParameter(true);
+      if (parameter != nullptr) {
+        parameter->MaxSpecialEnhanceRate(type, rate, value);
+      }
+    }
+    return;
+  }
+  if (static_cast<u32>(type) < SPECIAL_ENHANCE_COUNT && rate != 0.0f) {
+    f32 current = specialEnhanceRates[type];
+    specialEnhanceRates[type] = current == 0.0f ? rate : (current > rate ? current : rate);
+    specialEnhanceValues[value] = value;
+  }
+}
+
+f32 CharacterParameter::GetSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, int *value) const {
+  if (!isBlade && buddy != gf::INVALID_HANDLE) {
+    BattleCharacter *character = CharacterManager::get()->GetCharacterConst(buddy);
+    if (character != nullptr) {
+      CharacterParameter *parameter = character->GetCharacterParameter(true);
+      if (parameter != nullptr) {
+        return parameter->GetSpecialEnhanceRate(type, value);
+      }
+    }
+    return 0.0f;
+  }
+  if (static_cast<u32>(type) < SPECIAL_ENHANCE_COUNT) {
+    if (value != nullptr) {
+      *value = specialEnhanceValues[type];
+    }
+    return specialEnhanceRates[type];
+  }
+  return 0.0f;
 }
 
 int CharacterParameter::GetGender() const {
