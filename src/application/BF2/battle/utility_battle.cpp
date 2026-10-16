@@ -38,8 +38,6 @@ enum {
 };
 
 constexpr int ATTRIBUTE_COUNT = 8;
-constexpr int CHARACTER_PLAYER_COUNT = 20;
-constexpr int CHARACTER_COUNT = 90;
 constexpr int AI_ID_PLAYER_COUNT = 3;
 constexpr int AI_ID_ENEMY_OFFSET = 100;
 constexpr int AI_ID_ENEMY_COUNT = 69;
