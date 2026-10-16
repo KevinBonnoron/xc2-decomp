@@ -2,6 +2,22 @@
 
 namespace event {
 
+bool CharaManager::isSeamlessAction() const { return (flags & FLAG_SEAMLESS_ACTION) != 0; }
+
+bool CharaManager::isStreamMode() const { return (flags & FLAG_STREAM_MODE) != 0; }
+
+int CharaManager::getReuseFlag() const { return mReuseFlag; }
+
+bool CharaManager::isUseHood() const { return (flags & FLAG_USE_HOOD) != 0; }
+
+bool CharaManager::isOffscrMode() const { return (flags & FLAG_OFFSCR_MODE) != 0; }
+
+u32 CharaManager::getOffscrID() const { return mOffscrID; }
+
+bool CharaManager::isSystemTicket960() const { return (flags & FLAG_SYSTEM_TICKET960) != 0; }
+
+bool CharaManager::isAutoTalkMode() const { return (flags & FLAG_AUTO_TALK_MODE) != 0; }
+
 CharaManager::CharaManager() : flags(0), dispFlags(0), mOffscrID(0), mReuseFlag(0) {}
 
 void CharaManager::clear() {

@@ -24,14 +24,14 @@ public:
 
   CharaManager();
   virtual ~CharaManager() {}
-  bool isStreamMode() const { return (flags & FLAG_STREAM_MODE) != 0; }
-  bool isOffscrMode() const { return (flags & FLAG_OFFSCR_MODE) != 0; }
-  u32 getOffscrID() const { return mOffscrID; }
-  bool isAutoTalkMode() const { return (flags & FLAG_AUTO_TALK_MODE) != 0; }
-  bool isSeamlessAction() const { return (flags & FLAG_SEAMLESS_ACTION) != 0; }
-  bool isSystemTicket960() const { return (flags & FLAG_SYSTEM_TICKET960) != 0; }
-  bool isUseHood() const { return (flags & FLAG_USE_HOOD) != 0; }
-  int getReuseFlag() const { return mReuseFlag; }
+  bool isStreamMode() const;
+  bool isOffscrMode() const;
+  u32 getOffscrID() const;
+  bool isAutoTalkMode() const;
+  bool isSeamlessAction() const;
+  bool isSystemTicket960() const;
+  bool isUseHood() const;
+  int getReuseFlag() const;
   void clear();
   void setStreamMode(bool isStreamMode);
   void setOffscrMode(bool isOffscrMode, u32 offscrID);

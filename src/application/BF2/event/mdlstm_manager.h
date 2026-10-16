@@ -30,7 +30,7 @@ public:
   void setReuseFlag(int reuseFlag);
   virtual void OnEventProc(MSG_TYPE type);
 
-  bool isReuseEnable() const { return (mReuseFlags & REUSE_FLAG_ENABLE) != 0; }
+  bool isReuseEnable() const;
 
 private:
   u32 flags;

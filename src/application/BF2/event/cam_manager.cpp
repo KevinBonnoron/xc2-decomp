@@ -16,6 +16,12 @@
 
 namespace event {
 
+bool CamManager::isOffscrMode() const { return (flags & FLAG_OFFSCR_MODE) != 0; }
+
+u32 CamManager::getOffscrID() const { return mOffscrID; }
+
+bool CamManager::isFreeCam() const { return (dispFlags & DISP_FLAG_FREE_CAM) != 0; }
+
 constexpr f32 RAD_TO_DEG = 57.29578f;
 
 CamManager::CamManager() : flags(0), dispFlags(0), mMainCam(nullptr), mFreeCam(false), mOffscrID(0) {}

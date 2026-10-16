@@ -28,9 +28,9 @@ public:
 
   CamManager();
   virtual ~CamManager() {}
-  bool isOffscrMode() const { return (flags & FLAG_OFFSCR_MODE) != 0; }
-  u32 getOffscrID() const { return mOffscrID; }
-  bool isFreeCam() const { return (dispFlags & DISP_FLAG_FREE_CAM) != 0; }
+  bool isOffscrMode() const;
+  u32 getOffscrID() const;
+  bool isFreeCam() const;
   void clear();
   void destroyCam(CamObj *cam);
   void init();

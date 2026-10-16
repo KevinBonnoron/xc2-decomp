@@ -2,6 +2,14 @@
 
 namespace event {
 
+bool EffectManager::isStreamMode() const { return (flags & FLAG_STREAM_MODE) != 0; }
+
+bool EffectManager::isOffscrMode() const { return (flags & FLAG_OFFSCR_MODE) != 0; }
+
+u32 EffectManager::getOffscrID() const { return mOffscrID; }
+
+bool EffectManager::isReplaceMode() const { return (flags & FLAG_REPLACE_MODE) != 0; }
+
 EffectManager::EffectManager() : flags(0), dispFlags(0), mCurrentRes(nullptr), mOffscrID(0), mReplaceID(0) {}
 
 void EffectManager::setStreamMode(bool isStreamMode) { setFlag(FLAG_STREAM_MODE, isStreamMode); }
