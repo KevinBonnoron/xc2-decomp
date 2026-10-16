@@ -84,7 +84,7 @@ SOURCE_LOCATION_CALLS = {
     "_ZnwmPN2gf11GfAllocatorEPKcmi": (3, False),
 }
 # Complete and base constructors and destructors are aliases at the same address: compare them as one.
-STRUCTOR_VARIANT = re.compile(r"(<_ZN\w*?[0-9][A-Za-z_][A-Za-z0-9_]*)(C|D)2(E)")
+STRUCTOR_VARIANT = re.compile(r"(<(?:got:)?_ZN\w*?[0-9][A-Za-z_][A-Za-z0-9_]*)(C|D)2(E)")
 INCLUDE_CPP = re.compile(r'^#include "([^"]+\.cpp)"', re.M)
 LOCAL_CALL = re.compile(r"<local:([^>]+)>")
 MEM_OPERAND = re.compile(r"\[(\w+)(?:, #(-?0x[0-9a-f]+))?\]")
