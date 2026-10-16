@@ -3,6 +3,10 @@
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
+
 namespace event {
 
 enum MODEL_TYPE {
@@ -22,6 +26,7 @@ public:
   bool isReserve(int index);
   bool isSame(const char *path, bool isPriority, u32 id);
   bool isSame();
+  gf::GF_OBJ_HANDLE *getHandle() const { return handle; }
   virtual void OnResEvent(const PARAM &param);
 
 private:
@@ -30,7 +35,9 @@ private:
   u8 _10[0x18 - 0x10];
   mm::mtl::FixStr<64> path;
   u32 mId;
-  u8 _60[0x134 - 0x60];
+  u8 _60[0x120 - 0x60];
+  gf::GF_OBJ_HANDLE *handle;
+  u8 _128[0x134 - 0x128];
   u32 mReserve;
 };
 
