@@ -45,6 +45,7 @@
 #include "event/chara_lens_player.cpp"
 #include "event/chara_weight_item.cpp"
 #include "event/chara_weight_player.cpp"
+#include "event/chara_part_updater.cpp"
 #include "event/chara_dys_updater.cpp"
 #include "event/chara_wink_player.cpp"
 #include "event/chara_manager.cpp"
