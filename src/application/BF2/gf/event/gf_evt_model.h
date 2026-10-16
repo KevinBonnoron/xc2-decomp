@@ -50,10 +50,41 @@ public:
 static_assert(offsetof(GfEvtModel, type) == 0x18, "");
 static_assert(offsetof(GfEvtModel, handle) == 0x20, "");
 
+class GfEvtModelDriver : public GfEvtModel {
+public:
+  void playAnimWeaponRightCS(const char *name);
+  bool isPlayEndAnimWeaponRightCS();
+  void setAnimSpeedWeaponRightCS(f32 speed);
+  void playAnimWeaponLeftCS(const char *name);
+  bool isPlayEndAnimWeaponLeftCS();
+  void setAnimSpeedWeaponLeftCS(f32 speed);
+};
+
+class GfEvtModelWeapon : public GfEvtModel {
+public:
+  static void playAnimCS(GF_OBJ_HANDLE *handle, const char *name);
+  static bool isPlayEndAnimCS(GF_OBJ_HANDLE *handle);
+  static void setAnimSpeedCS(GF_OBJ_HANDLE *handle, f32 speed);
+  void playAnimCS(const char *name);
+  bool isPlayEndAnimCS();
+  void setAnimSpeedCS(f32 speed);
+  void playAnimData(void *data);
+};
+
 class GfEvtModelSalvage : public GfEvtModel {
 public:
   bool isValid() const;
   void setTransform(const mm::Vec3 &position, f32 rotation);
+};
+
+class GfEvtModelBlade : public GfEvtModel {
+public:
+  void playAnimWeaponRightCS(const char *name);
+  bool isPlayEndAnimWeaponRightCS();
+  void setAnimSpeedWeaponRightCS(f32 speed);
+  void playAnimWeaponLeftCS(const char *name);
+  bool isPlayEndAnimWeaponLeftCS();
+  void setAnimSpeedWeaponLeftCS(f32 speed);
 };
 
 } // namespace gf
