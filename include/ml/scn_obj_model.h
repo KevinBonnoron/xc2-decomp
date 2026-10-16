@@ -39,6 +39,7 @@ public:
   void setSpAlphaMode(bool isEnable);
   void setCamCheckMode(bool isEnable);
   bool isCamCheckResl() const;
+  void releaseAfterImage();
 
 private:
   u8 _00[0x08 - 0x00];
