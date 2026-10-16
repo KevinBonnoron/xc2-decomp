@@ -20,6 +20,7 @@ public:
   };
 
   static bool Normalize(mm::Vec3 &vector);
+  static void TurnDirectionAngle(mm::Vec3 &direction, const mm::Vec3 &axis, f32 angle, bool isRadian);
   static f32 CalcAngle(const mm::Vec3 &from, const mm::Vec3 &to, bool isSigned);
   static f32 CalcRotY(const mm::Vec3 &direction);
   static bool NormalizeXZ(mm::Vec3 &vector);
