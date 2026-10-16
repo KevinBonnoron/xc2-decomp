@@ -24,6 +24,7 @@
 #include "event/bou_manager.cpp"
 #include "event/todo_item.cpp"
 #include "event/todo_manager.cpp"
+#include "event/object_util.cpp"
 #include "event/object_party_list.cpp"
 #include "event/object.cpp"
 #include "event/object_tree.cpp"
