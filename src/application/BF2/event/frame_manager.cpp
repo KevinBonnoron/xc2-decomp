@@ -11,6 +11,48 @@
 
 namespace event {
 
+static constexpr u32 PAUSE_BITS_ACC_FRAME = 0x13f4;
+static constexpr u32 PAUSE_BITS_STREAM_STOP = 0x1d80a;
+
+f32 FrameManager::getFrame() const { return frame; }
+
+bool FrameManager::isPause(PAUSE_TYPE type) const { return (mPauseBits & (type == PAUSE_TYPE_ALL ? ~0u : 1u << type)) != 0; }
+
+const FrameInfo &FrameManager::frameInfo() {
+  mFrameInfo.frame = frame;
+  f32 delta = mNextFrame - frame;
+  if (isPause(PAUSE_TYPE_ALL)) {
+    delta = 0.0f;
+  }
+  u32 pauseBits = mPauseBits;
+  mFrameInfo.delta = delta;
+  mFrameInfo.pauseDelta = delta;
+  if ((pauseBits & PAUSE_BITS_ACC_FRAME) != 0 && delta <= 0.0f) {
+    mFrameInfo.pauseDelta = __builtin_fmaxf(mAccFrame, 0.0f) + 1.0f;
+  }
+  mFrameInfo.streamDelta = delta;
+  if ((flags & FLAG_STREAM_MODE) == 0) {
+    mFrameInfo.streamDelta = __builtin_fmaxf(mAccFrame, 0.0f) + 1.0f;
+  }
+  if ((pauseBits & PAUSE_BITS_STREAM_STOP) != 0) {
+    mFrameInfo.streamDelta = 0.0f;
+  }
+  mFrameInfo.accFrame = mAccFrame;
+  return mFrameInfo;
+}
+
+f32 FrameManager::getTotalFrame() const { return mTotalFrame; }
+
+void FrameManager::requestFrame(f32 frame) {
+  flags |= FLAG_REQUEST_FRAME;
+  mRequestFrame = frame;
+}
+
+void FrameManager::setLockFrame(bool isLock, f32 frame) {
+  setFlag(FLAG_LOCK_FRAME, isLock);
+  mLockFrame = frame;
+}
+
 FrameManager::FrameManager()
     : flags(0), mPauseBits(0), frame(0.0f), mTotalFrame(0.0f), mSkipStartFrame(0.0f), mNextFrame(0.0f), mReachedFrame(0.0f),
       mMaxFrame(DEFAULT_MAX_FRAME), mAccType(ACC_TYPE_NORMAL), mFrameInfo() {
