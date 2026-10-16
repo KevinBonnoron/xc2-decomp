@@ -16,6 +16,7 @@ class IAllocator;
 
 namespace ml {
 class Scn;
+class WinProc;
 } // namespace ml
 
 namespace fw {
@@ -107,7 +108,8 @@ public:
 
   Applet *applet;
   FrameworkConfig config;
-  u8 _4c[0x58 - 0x4c];
+  u8 _4c[0x50 - 0x4c];
+  ml::WinProc *winProc;
   ml::Scn *scn;
   u8 _60[0x68 - 0x60];
   mtl::ALLOC_HANDLE memHandle;
