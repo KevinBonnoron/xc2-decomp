@@ -7,7 +7,9 @@ struct Vec3;
 
 namespace fw {
 
-enum CAMERA_TYPE : int;
+enum CAMERA_TYPE : int {
+  CAMERA_TYPE_MAIN = 0,
+};
 
 class RenderParam {
 public:

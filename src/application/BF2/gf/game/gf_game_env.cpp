@@ -1,17 +1,30 @@
 #include "gf/game/gf_game_env.h"
 
 #include "framework/framework.h"
+#include "framework/render/render_param.h"
+#include "fw/fw_camera.h"
 #include "fw/fw_update_info.h"
 #include "gf/event/gf_event.h"
+#include "gf/field/gf_field_weather.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_speed.h"
 #include "gf/game/gf_layer_pause.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
 #include "gf/gf_pause.h"
+#include "gf/map/gf_map_manager.h"
 #include "gf/object/gf_obj.h"
+#include "mm_math/mm_vec3.h"
+#include "mm_mtl/algorithm.h"
+#include "nn/oe.h"
 
 namespace gf {
 struct GF_LP_HANDLE;
+
+constexpr f32 MIN_LAYER_SPEED = 1e-06f;
+constexpr f32 STOP_ENEMY_SEARCH_SEC = 3.0f;
+constexpr u8 SCREEN_SHOT_DISABLE_FRAMES = 180;
+constexpr int ROOM_COUNT_MAX = 99;
 
 static void applyLayerPause(u32 layer, bool isPause) {
   if (fw::Framework::isLayerPause(layer) != isPause) {
@@ -122,8 +135,6 @@ void GfLayerPause::destroyLayerPause() {
 }
 
 bool GfLayerPause::isLayerPause(u32 layer) { return fw::Framework::isLayerPause(layer); }
-
-constexpr f32 MIN_LAYER_SPEED = 1e-06f;
 
 GfGameSpeed::GfGameSpeed(const GfSetupParam &param) : intervalSpeed(1.0f), intervalTime(0.0f) { initialize(param); }
 
@@ -322,6 +333,232 @@ void GfGameSpeed::setSalvageCharacterSpeed(f32 speed) {
   GfGameSpeed *gameSpeed = get();
   gameSpeed->salvageSpeeds[GF_SPEED_LAYER_7].original = speed;
   gameSpeed->speeds[GF_SPEED_LAYER_7].apply = true;
+}
+
+void GfGameEnv::clear() {
+  GfGameEnv *gameEnv = get();
+  gameEnv->mapjump = false;
+  gameEnv->mapjumpBlackout = false;
+  gameEnv->mapjumpWithSaveData = false;
+  gameEnv->mapID = 0;
+  gameEnv->mapJumpID = 0;
+  gameEnv->stopEnemySearchTime = 0.0f;
+  gameEnv->colorFilterSerial = 1;
+  gameEnv->cloudSeaSerial = 1;
+  gameEnv->tempWeatherSerial = 1;
+  gameEnv->roomCount = 0;
+  gameEnv->screenShotDisableTimer = 0;
+}
+
+void GfGameEnv::build(const GfSetupParam &param) {
+  // __LINE__ must be 720 as in the original file: its value changes the instruction order.
+#line 720
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameEnv(param);
+}
+
+void GfGameEnv::destroy() { delete get(); }
+
+GfGameEnv::GfGameEnv(const GfSetupParam &) { clear(); }
+
+GfGameEnv::~GfGameEnv() {}
+
+bool GfGameEnv::isStopEnemySearch() { return get()->stopEnemySearchTime > 0.0f; }
+
+bool GfGameEnv::isMapjumpBlackout() { return get()->mapjumpBlackout; }
+
+bool GfGameEnv::isMapjump() { return get()->mapjump; }
+
+bool GfGameEnv::isMapjumpWithSaveData() { return get() != nullptr && get()->mapjumpWithSaveData; }
+
+u32 GfGameEnv::getMapJumpID() { return get()->mapJumpID; }
+
+u32 GfGameEnv::getMapID() { return get()->mapID; }
+
+void GfGameEnv::setMapID(u32 mapJump, u32 map) {
+  GfGameEnv *gameEnv = get();
+  gameEnv->mapID = map;
+  gameEnv->mapJumpID = mapJump;
+}
+
+void GfGameEnv::destroyColorFilter(CFILTER_HANDLE handle) {
+  GfGameEnv *gameEnv = get();
+  mm::mtl::FixedQueue<ColorFilter, FILTER_MAX>::iterator it = mm::mtl::find_if(
+      gameEnv->colorFilters.begin(), gameEnv->colorFilters.end(), [handle](const ColorFilter &colorFilter) { return colorFilter.handle == handle; });
+  if (it == gameEnv->colorFilters.end()) {
+    return;
+  }
+  if ((*it).handle != gameEnv->colorFilters.front().handle) {
+    gameEnv->colorFilters.erase(it);
+    return;
+  }
+  gameEnv->colorFilters.pop_front();
+  if (!gameEnv->colorFilters.empty()) {
+    const ColorFilter &current = gameEnv->colorFilters.front();
+    fw::RenderParam::setColorFilter(current.filter, current.farFilter, current.time, fw::CAMERA_TYPE_MAIN);
+  } else {
+    fw::RenderParam::resetColorFilter(1.0f, fw::CAMERA_TYPE_MAIN);
+  }
+}
+
+void GfGameEnv::setColorFilter(CFILTER_HANDLE handle, const ColorFilter &filter) {
+  GfGameEnv *gameEnv = get();
+  mm::mtl::FixedQueue<ColorFilter, FILTER_MAX>::iterator it = mm::mtl::find_if(
+      gameEnv->colorFilters.begin(), gameEnv->colorFilters.end(), [handle](const ColorFilter &colorFilter) { return colorFilter.handle == handle; });
+  if (it == gameEnv->colorFilters.end()) {
+    return;
+  }
+  (*it).time = filter.time;
+  (*it).farFilter = filter.farFilter;
+  (*it).filter = filter.filter;
+  fw::RenderParam::setColorFilter(
+      gameEnv->colorFilters.back().filter, gameEnv->colorFilters.back().farFilter, gameEnv->colorFilters.back().time, fw::CAMERA_TYPE_MAIN);
+}
+
+void GfGameEnv::destroyCloudSea(CLOUD_SEA_HANDLE handle) {
+  GfGameEnv *gameEnv = get();
+  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it = mm::mtl::find_if(
+      gameEnv->cloudSeas.begin(), gameEnv->cloudSeas.end(), [handle](const CloudSea &cloudSea) { return cloudSea.handle == handle; });
+  if (it == gameEnv->cloudSeas.end()) {
+    return;
+  }
+  if ((*it).handle != gameEnv->cloudSeas.front().handle) {
+    gameEnv->cloudSeas.erase(it);
+    return;
+  }
+  gameEnv->cloudSeas.pop_front();
+  fw::RenderParam::setCloudSea(gameEnv->cloudSeas.empty() ? 0 : gameEnv->cloudSeas.front().cloudSea);
+}
+
+void GfGameEnv::setCloudSea(CLOUD_SEA_HANDLE handle, CLOUD_SEA cloudSea) {
+  GfGameEnv *gameEnv = get();
+  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it =
+      mm::mtl::find_if(gameEnv->cloudSeas.begin(), gameEnv->cloudSeas.end(), [handle](const CloudSea &other) { return other.handle == handle; });
+  if (it == gameEnv->cloudSeas.end()) {
+    return;
+  }
+  (*it).cloudSea = cloudSea;
+  fw::RenderParam::setCloudSea(gameEnv->cloudSeas.front().cloudSea);
+}
+
+CLOUD_SEA GfGameEnv::getCloudType(CLOUD_SEA_HANDLE handle) {
+  GfGameEnv *gameEnv = get();
+  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it = mm::mtl::find_if(
+      gameEnv->cloudSeas.begin(), gameEnv->cloudSeas.end(), [handle](const CloudSea &cloudSea) { return cloudSea.handle == handle; });
+  if (it != gameEnv->cloudSeas.end()) {
+    return (*it).cloudSea;
+  }
+  return CLOUD_SEA(0);
+}
+
+CLOUD_SEA GfGameEnv::getCurrentCloudSea() {
+  GfGameEnv *gameEnv = get();
+  if (!gameEnv->cloudSeas.empty()) {
+    return gameEnv->cloudSeas.front().cloudSea;
+  }
+  return CLOUD_SEA(0);
+}
+
+void GfGameEnv::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
+  GfGameEnv *gameEnv = get();
+  switch (event) {
+  case GEV_MAPJUMP_START:
+    gameEnv->mapjump = true;
+    gameEnv->mapjumpWithSaveData = info.isWithSaveData;
+    break;
+  case GEV_MAPJUMP_DESTROY_FIELD:
+    gameEnv->mapjumpBlackout = true;
+    break;
+  case GEV_MAPJUMP_CREATE_FIELD:
+    gameEnv->stopEnemySearchTime = info.jumpType == MAPJUMP_TYPE_SAVE_DATA ? 0.0f : STOP_ENEMY_SEARCH_SEC;
+    break;
+  case GEV_MAPJUMP_FADEIN:
+    gameEnv->mapjump = false;
+    gameEnv->mapjumpBlackout = false;
+    gameEnv->mapjumpWithSaveData = false;
+    if (!GfGameManager::isEvent(false)) {
+      nn::oe::DisableScreenShot();
+      gameEnv->screenShotDisableTimer = SCREEN_SHOT_DISABLE_FRAMES;
+    }
+    break;
+  }
+}
+
+void GfGameEnv::gevPlayEvent(GEV, u32) {}
+
+void GfGameEnv::gevGameState(GF_STATE, GF_STATE oldState) {
+  if (oldState == GF_STATE_DESTROY) {
+    fw::RenderParam::setMotionBlur(false, fw::CAMERA_TYPE_MAIN);
+  } else if (oldState == GF_STATE_CONTROL && !GfManager::isExecModeAdvertize()) {
+    fw::RenderParam::setMotionBlur(true, fw::CAMERA_TYPE_MAIN);
+  }
+}
+
+void GfGameEnv::update(const fw::UpdateInfo &info) {
+  GfGameEnv *gameEnv = get();
+  if (!gameEnv->mapjump && gameEnv->stopEnemySearchTime > 0.0f) {
+    gameEnv->stopEnemySearchTime -= info.deltaTime;
+    if (gameEnv->stopEnemySearchTime < 0.0f) {
+      gameEnv->stopEnemySearchTime = 0.0f;
+    }
+  }
+  gameEnv->updateIsInRoom(info);
+  updateGlobalIBLReferencePos(info);
+  if (!gameEnv->colorFilters.empty()) {
+    const ColorFilter &filter = gameEnv->colorFilters.back();
+    fw::RenderParam::setColorFilter(filter.filter, filter.farFilter, filter.time, fw::CAMERA_TYPE_MAIN);
+  }
+  if (gameEnv->screenShotDisableTimer != 0 && --gameEnv->screenShotDisableTimer == 0) {
+    nn::oe::EnableScreenShot();
+  }
+}
+
+void GfGameEnv::updateIsInRoom(const fw::UpdateInfo &) {
+  mm::Vec3 position = fw::CameraManager::get()->layers[0].getCameraPosition();
+  if (isMapjumpBlackout()) {
+    return;
+  }
+  if (fw::RenderParam::isRoom(position, fw::CAMERA_TYPE_MAIN)) {
+    if (roomCount <= 0) {
+      roomCount = 1;
+    } else if (roomCount < ROOM_COUNT_MAX) {
+      roomCount++;
+    }
+  } else {
+    if (roomCount >= 0) {
+      roomCount = -1;
+    } else if (roomCount > -ROOM_COUNT_MAX) {
+      roomCount--;
+    }
+  }
+}
+
+void GfGameEnv::updateGlobalIBLReferencePos(const fw::UpdateInfo &) {
+  if (fw::CameraManager::get() != nullptr) {
+    GfMapManager::setGlobalIBLReferencePos(fw::CameraManager::get()->layers[0].getCameraPosition());
+  }
+}
+
+bool GfGameEnv::isRoom() { return get()->roomCount > -3; }
+
+void GfGameEnv::sendPlayerPositionToRender(const mm::Vec3 &position) { fw::RenderParam::setPlayerPosition(position, fw::CAMERA_TYPE_MAIN); }
+
+void GfGameEnv::setWeather(WEATHERID weather) { GfFieldWeather::setMapWeatherID(weather); }
+
+void GfGameEnv::destroyTempWeather(WEATHER_HANDLE handle) {
+  GfGameEnv *gameEnv = get();
+  mm::mtl::FixedQueue<WeatherSet, FILTER_MAX>::iterator it = mm::mtl::find_if(
+      gameEnv->tempWeathers.begin(), gameEnv->tempWeathers.end(), [handle](const WeatherSet &weatherSet) { return weatherSet.handle == handle; });
+  if (it != gameEnv->tempWeathers.end()) {
+    gameEnv->tempWeathers.erase(it);
+  }
+}
+
+WEATHERID GfGameEnv::getTempWeather() {
+  GfGameEnv *gameEnv = get();
+  if (!gameEnv->tempWeathers.empty()) {
+    return gameEnv->tempWeathers.front().weather;
+  }
+  return WEATHER_NULL;
 }
 
 } // namespace gf

@@ -21,6 +21,15 @@ template <typename InputIterator, typename T> InputIterator find(InputIterator f
   return first;
 }
 
+template <typename InputIterator, typename Predicate> InputIterator find_if(InputIterator first, InputIterator last, Predicate predicate) {
+  for (; first != last; ++first) {
+    if (predicate(*first)) {
+      break;
+    }
+  }
+  return first;
+}
+
 // __LINE__ must be 224 as in the original header: it is the line argument of the assert.
 #line 223
 template <typename T> T *copy_n(const T *first, size_t n, T *result) {

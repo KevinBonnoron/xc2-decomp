@@ -77,6 +77,7 @@ public:
   void push(mm::mtl::IntrusivePtr<Camera> &camera, f32 time);
   void onPushCamera(Camera &camera);
   void pop(mm::mtl::IntrusivePtr<Camera> &camera, f32 time);
+  mm::Vec3 getCameraPosition() const;
 
   mm::mtl::IntrusiveList<Camera> cameras;
   mm::mtl::IntrusiveList<CameraPlugin> plugins;

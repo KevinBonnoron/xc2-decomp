@@ -88,7 +88,12 @@ public:
     return buffer()[mFront];
   }
 
-  T back() { return buffer()[(mFront + mSize - 1) % N]; }
+  // __LINE__ must be 400 as in the original header: it is the line argument of the assert.
+#line 399
+  T &back() {
+    MM_ASSERT(!empty());
+    return buffer()[(mFront + mSize - 1) % N];
+  }
 
   void clear() {
     if (mSize != 0) {
@@ -136,7 +141,8 @@ public:
     MM_ASSERT(size() != 0);
     --mSize;
     for (size_t index = position._index; index < mFront + mSize; index++) {
-      element(index % N) = element((index + 1) % N);
+      T &source = element((index + 1) % N);
+      element(index % N) = source;
     }
     return position;
   }
