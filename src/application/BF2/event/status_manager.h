@@ -1,6 +1,5 @@
 #pragma once
 #include "event/i_manager.h"
-#include "gf/data/gf_game_flag.h"
 #include "ml/work_event.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
@@ -33,9 +32,9 @@ public:
     const char *string0;
   };
 
+  u32 getHomuriFlag() const;
   StatusManager();
   virtual ~StatusManager() {}
-  u32 getHomuriFlag() const { return gf::GfGameFlag::getLocal(1, 0x89fb); }
   void init();
   void clear();
   bool judge(EVT_judge type, int id, int value0, int value1, int value2, bool &result);
