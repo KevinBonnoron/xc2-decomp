@@ -10,6 +10,8 @@ public:
   FixedVector() : mSize(0) {}
   ~FixedVector() { clear(); }
 
+  // The assertion line of the game changes the register allocation of the loops indexing a vector.
+#line 169
   T &operator[](size_t index) {
     MM_ASSERT(index < size());
     return *reinterpret_cast<T *>(mBuffer + index * sizeof(T));
@@ -38,6 +40,17 @@ public:
     MM_ASSERT(size() < capacity());
     *reinterpret_cast<T *>(mBuffer + mSize * sizeof(T)) = value;
     mSize++;
+  }
+
+  bool validate_iterator(const T *it) const { return begin() <= it && it <= end(); }
+
+  T *erase(T *it) {
+    MM_ASSERT(validate_iterator(it));
+    if (it != end()) {
+      __builtin_memcpy(it, it + 1, (end() - (it + 1)) * sizeof(T));
+      mSize--;
+    }
+    return it;
   }
 
 private:

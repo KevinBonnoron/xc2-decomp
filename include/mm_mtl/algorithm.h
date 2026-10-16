@@ -10,5 +10,14 @@ template <typename InputIterator, typename Function> Function for_each(InputIter
   return function;
 }
 
+template <typename InputIterator, typename T> InputIterator find(InputIterator first, InputIterator last, const T &value) {
+  for (; first != last; ++first) {
+    if (*first == value) {
+      break;
+    }
+  }
+  return first;
+}
+
 } // namespace mtl
 } // namespace mm
