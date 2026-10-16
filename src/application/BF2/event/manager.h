@@ -46,6 +46,7 @@ public:
   virtual ~Manager();
   int getStartPageID() const { return mStartPageID; }
   gf::GF_OBJ_HANDLE *getObjHandle() const { return mObjHandle; }
+  ml::Scn *getScn() const { return mScn; }
   const char *getSceneName() const { return mSceneName.c_str(); }
   bool isEndFadeOut() const { return (flags & FLAG_END_FADE_OUT) != 0; }
   u32 getPlayParam(u32 index) const { return mPlayParams[index]; }
