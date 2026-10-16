@@ -11,10 +11,13 @@ class ALLOC_HANDLE;
 namespace ui {
 
 class UIPadRead;
+struct EventData;
 
 class UIManager : public mm::mtl::PtrSingleton<UIManager> {
 public:
   UIManager(const UIPadRead *padRead, mtl::ALLOC_HANDLE handle);
+
+  void requestObjectEvent(u32 handle, const EventData &event, f32 delay);
 
   u8 _08[0x3d8 - 0x08];
   const UIPadRead *padRead;
