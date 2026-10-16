@@ -27,6 +27,10 @@ class BattleGlobal : public mm::mtl::PtrSingleton<BattleGlobal> {
 public:
   enum JINGLE_TYPE {};
 
+  enum PAUSE {
+    PAUSE_BUTTON_CHALLENGE = 4,
+  };
+
   struct SLOW_PROC_DATA {
     void Finalize();
 
@@ -120,6 +124,7 @@ public:
   void SetPause(int pause, bool isPause);
   bool IsPause(int pause) const;
   void RegisterStop(f32 time);
+  void DeleteSlow(u32 slow);
   const SLOW_PROC_DATA *GetSlowProcDataConst(u32 slow) const;
   void SetBGM(u32 bgm);
   void RequestJingle(JINGLE_TYPE jingle);
