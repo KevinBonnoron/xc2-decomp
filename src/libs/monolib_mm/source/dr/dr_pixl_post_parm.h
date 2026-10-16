@@ -195,7 +195,9 @@ public:
   f32 dofFocusRatio;
   f32 dofFocusMin;
   bool dispGlobalIBLTex;
-  u8 _0249[0x0270 - 0x0249];
+  u8 _0249[0x026a - 0x0249];
+  bool colorFilter;
+  u8 _026b[0x0270 - 0x026b];
   f32 colorFilterFrm;
   bool colorFilterTransZ;
   u8 _0275[0x02a0 - 0x0275];
@@ -307,6 +309,7 @@ static_assert(offsetof(DrPixlPostParm, dofFocusNum) == 0x023c, "");
 static_assert(offsetof(DrPixlPostParm, dofFocusRatio) == 0x0240, "");
 static_assert(offsetof(DrPixlPostParm, dofFocusMin) == 0x0244, "");
 static_assert(offsetof(DrPixlPostParm, dispGlobalIBLTex) == 0x0248, "");
+static_assert(offsetof(DrPixlPostParm, colorFilter) == 0x026a, "");
 static_assert(offsetof(DrPixlPostParm, colorFilterFrm) == 0x0270, "");
 static_assert(offsetof(DrPixlPostParm, colorFilterTransZ) == 0x0274, "");
 static_assert(offsetof(DrPixlPostParm, toonDirLightScale) == 0x02a0, "");

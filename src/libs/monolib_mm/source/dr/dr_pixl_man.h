@@ -38,6 +38,10 @@ static_assert(sizeof(wkPixlManRes) == 0x1f8, "");
 
 class DrPixlMan {
 public:
+  void setMainRenderTarget();
+  void updateShadowDisplayList();
+  void callShadowCacheVariance();
+  void fastRender();
   grlib::CGLibTextureBuffer *getDammyTexObj();
 
   u8 _00[0x08 - 0x00];
