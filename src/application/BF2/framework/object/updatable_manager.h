@@ -7,6 +7,12 @@
 #include "mm_mtl/unique_ptr.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace fw {
 
 class UpdatableGroup;
@@ -17,9 +23,23 @@ struct UpdateInfo;
 class UpdatableObjectManager : public ManagerObject, public mm::mtl::PtrSingleton<UpdatableObjectManager> {
 public:
   static const u32 GROUP_MAX = 32;
+  static const u32 POINTER_ID_MAX = 0x7ffffff;
 
   class Impl {
   public:
+    Impl(mm::mtl::IAllocator *allocator, size_t capacity) : allocator(allocator) {
+      for (u32 i = 0; i < GROUP_MAX; i++) {
+        groups[i] = nullptr;
+      }
+      pointerMap.reserve(allocator, capacity);
+      pointerMap.setRange(1, POINTER_ID_MAX, POINTER_ID_MAX);
+    }
+
+    ~Impl() {
+      destroy();
+      pointerMap.destroy();
+    }
+
     HandlePtr<void> registPointer(u32 group, const void *ptr);
     void registGroup(u32 group, UpdatableGroup *updatableGroup);
     void removeGroup(u32 group);
@@ -31,11 +51,12 @@ public:
     UpdatableGroup *getGroup(u32 group);
     void registObject(u32 group, UpdatableObject *object);
 
-    u8 _00[0x08 - 0x00];
+    mm::mtl::IAllocator *allocator;
     UpdatableGroup *groups[GROUP_MAX];
     PointerMap pointerMap;
   };
 
+  UpdatableObjectManager(mm::mtl::IAllocator *allocator, size_t capacity);
   ~UpdatableObjectManager();
   bool initialize() override;
   bool finalize() override;
@@ -49,6 +70,7 @@ public:
   mm::mtl::UniquePtr<Impl> impl;
 };
 
+static_assert(offsetof(UpdatableObjectManager::Impl, allocator) == 0x00, "");
 static_assert(offsetof(UpdatableObjectManager::Impl, groups) == 0x08, "");
 static_assert(offsetof(UpdatableObjectManager::Impl, pointerMap) == 0x108, "");
 static_assert(offsetof(UpdatableObjectManager, impl) == 0x18, "");

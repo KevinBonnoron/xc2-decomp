@@ -7,6 +7,7 @@ namespace mtl {
 template <typename T> class UniquePtr {
 public:
   UniquePtr() : _ptr(nullptr) {}
+  explicit UniquePtr(T *ptr) : _ptr(ptr) {}
   ~UniquePtr() { reset(); }
 
   void reset() {
