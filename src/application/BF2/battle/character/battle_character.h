@@ -212,6 +212,7 @@ public:
   int GetWeaponSeType() const;
   void GetMoveDataPerSec(mm::Vec3 &moveData) const;
   void SetAnimationSpeed(f32 speed);
+  void SetIKData(const ARTS_DATA &data);
   void NotifyStrikeDamage(int);
   void ResetAlphaRate(int alpha);
   void UpdateEffectPositionScale(int effect, const char *node, f32 scale);
@@ -299,7 +300,11 @@ public:
   f32 ikWeight;
   f32 ikHeight;
   u32 ikId : 7;
-  u32 : 25;
+  u32 ikStartNo : 4;
+  u32 ikStartFrame : 8;
+  u32 ikEndNo : 4;
+  u32 ikEndFrame : 8;
+  u32 isIK : 1;
   u8 _dc4[0xdd0 - 0xdc4];
   s16 delayVoiceTime;
   s16 delayVoicePriority;

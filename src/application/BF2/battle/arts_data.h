@@ -54,9 +54,15 @@ struct ARTS_DATA {
   u64 bulletId : 12;
   u64 : 11;
   u64 bulletNum : 5;
-  u64 : 36;
+  u64 : 12;
+  u64 ikStartNo : 4;
+  u64 ikStartFrame : 8;
+  u64 ikEndNo : 4;
+  u64 ikEndFrame : 8;
   u64 : 64;
-  u8 _20[0x30 - 0x20];
+  u8 _20[0x2f - 0x20];
+  u8 isIK : 1;
+  u8 : 7;
   HIT_DATA hits[16];
   LEVEL_DATA levels[ARTS_LEVEL_COUNT];
   u8 _b4[0xe8 - 0xb4];
