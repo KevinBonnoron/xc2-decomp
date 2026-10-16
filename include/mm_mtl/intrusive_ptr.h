@@ -42,6 +42,8 @@ public:
     other.mPtr = ptr;
   }
 
+  // __LINE__ must be 112 as in the original header: it is the line argument of the assert.
+#line 110
   T *operator->() const {
     if (mPtr == 0) {
       mm::MMStdBase::mmAssert("_ptr != 0", __FILE__, __LINE__);
