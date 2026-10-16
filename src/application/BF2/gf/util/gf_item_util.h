@@ -36,7 +36,7 @@ struct ItemProperty {
 
   void clear() {
     static const char *szNull = "";
-    flags = mm::mtl::BitFlag<32>();
+    flags.clear();
     id = 0;
     index = 0;
     type = ItemType::NONE;

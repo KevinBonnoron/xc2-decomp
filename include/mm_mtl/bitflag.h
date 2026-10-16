@@ -1,11 +1,25 @@
 #pragma once
 #include "mm/mm_std_base.h"
+#include "mm_mtl/algorithm.h"
 
 namespace mm {
 namespace mtl {
 
 template <unsigned int Size> class BitFlag {
 public:
+  BitFlag &operator=(const BitFlag &other) {
+    if (&other != this) {
+      copy_n(other.mBits, WORD_COUNT, mBits);
+    }
+    return *this;
+  }
+
+  void clear() {
+    for (unsigned int i = 0; i < WORD_COUNT; i++) {
+      mBits[i] = 0;
+    }
+  }
+
   void set(unsigned int index) {
     MM_ASSERT(index < Size);
     mBits[wordIndex(index)] |= bit(index);
