@@ -1,11 +1,16 @@
 #pragma once
 #include "types.h"
 
+namespace mtl {
+class ALLOC_HANDLE;
+} // namespace mtl
+
 namespace mm {
 struct Vec3;
 } // namespace mm
 
 namespace ml {
+class Scn;
 class WinProc;
 } // namespace ml
 
@@ -34,12 +39,16 @@ public:
 
 class IDColiManager {
 public:
+  IDColiManager(ml::Scn *scn, mtl::ALLOC_HANDLE handle, u32 size);
+  virtual ~IDColiManager();
   void update();
   void tail();
   int isGblId(u32 id);
   void setGblId(u32 id, bool isGlobal);
   void *getGblIdTbl();
   void openDebugWindow(ml::WinProc *window);
+
+  u8 _08[0x108 - 0x08];
 };
 
 class IDColiParmsBase {
