@@ -141,6 +141,13 @@ u32 CharacterParameter::GetLevel() const {
   return acc.getLevel(false);
 }
 
+void EnemyParameter::AddHate(int index, int type, f32 hate) {
+  if (static_cast<u32>(type) < 2) {
+    HATE_DATA &data = hates[index >= 0 && index < HATE_COUNT ? index : 0];
+    data.Set(type, data.hates[type] + hate);
+  }
+}
+
 f32 CharacterParameter::GetBuffEffect(int buff) const {
   for (int i = 0; i < buffNum; i++) {
     if (buffs[i].id == buff) {
@@ -658,6 +665,13 @@ void EnemyParameter::BattleEnd() {
 
 void EnemyParameter::BattleEndInitialize() { CharacterParameter::BattleEndInitialize(); }
 
+void EnemyParameter::MulHate(int index, int type, f32 rate) {
+  if (static_cast<u32>(type) < 2) {
+    HATE_DATA &data = hates[index >= 0 && index < HATE_COUNT ? index : 0];
+    data.Set(type, data.hates[type] * rate);
+  }
+}
+
 int EnemyParameter::GetBGMID() const {
   const gf::SDataEnemy *data = GetEnemyData();
   if (data == nullptr) {
@@ -722,7 +736,14 @@ bool EnemyParameter::UsePerfectAvoid() const {
   return false;
 }
 
-const EnemyParameter::HATE_DATA *EnemyParameter::GetHateDataConst(int index) const { return &hates[index >= 0 && index < 3 ? index : 0]; }
+const EnemyParameter::HATE_DATA *EnemyParameter::GetHateDataConst(int index) const { return &hates[index >= 0 && index < HATE_COUNT ? index : 0]; }
+
+void EnemyParameter::HATE_DATA::Set(int type, f32 hate) {
+  if (!BattleGlobal::get()->isKakusei && static_cast<u32>(type) < 2) {
+    hates[type] = hate > 0.0f ? hate : 0.0f;
+    isEmpty = false;
+  }
+}
 
 int EnemyParameter::GetHateTarget() const {
   if (!isBattle) {

@@ -22,6 +22,7 @@ class GROUP_DATA;
 
 constexpr int SPECIAL_ENHANCE_COUNT = 14;
 constexpr int ADDITIONAL_ENHANCE_COUNT = 6;
+constexpr int HATE_COUNT = 3;
 
 struct FIGHT_COMBO_DATA {
   u8 id;
@@ -301,9 +302,12 @@ public:
     void Set(int type, f32 hate);
 
     f32 hates[2];
-    u8 _08[0x10 - 0x08];
+    f32 rate;
+    bool isEmpty;
+    u8 _0d[0x10 - 0x0d];
   };
 
+  void AddHate(int index, int type, f32 hate);
   EnemyParameter();
   virtual ~EnemyParameter();
   void Initialize(gf::GF_OBJ_HANDLE *handle) override;
@@ -316,6 +320,7 @@ public:
   void BattleEnd() override;
   void BattleEndInitialize() override;
   void Update(const fw::UpdateInfo &updateInfo, bool) override;
+  void MulHate(int index, int type, f32 rate);
   void PostUpdate(const fw::UpdateInfo &updateInfo) override;
   int GetBGMID() const override;
   void SetupBGM() override;
@@ -351,7 +356,7 @@ public:
   }
 
   ARTS_PALETTE_DATA artsPalette;
-  HATE_DATA hates[3];
+  HATE_DATA hates[HATE_COUNT];
   int hateTarget;
   u8 _854[0x864 - 0x854];
   u16 angryAuraId;
