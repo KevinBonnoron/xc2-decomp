@@ -21,9 +21,13 @@ public:
 
   u8 _08[0x10 - 0x08];
   f32 resistantAttrDamageRate;
-  u8 _14[0x40 - 0x14];
+  u8 _14[0x34 - 0x14];
+  u8 elementalValueMax;
+  u8 _35[0x40 - 0x35];
   u8 resistantAttrMaxHP;
-  u8 _41[0xb6 - 0x41];
+  u8 ballScaleMin;
+  u16 ballScaleMax;
+  u8 _44[0xb6 - 0x44];
   u16 oneBoundEnemies[2];
   u16 spSizeEnemies[1];
   u16 spKizunaLineEnemies[2];

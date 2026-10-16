@@ -10,6 +10,7 @@ struct GF_OBJ_HANDLE;
 namespace btl {
 
 constexpr int ELEMENTAL_COMBO_COUNT = 3;
+constexpr int ELEMENTAL_ATTACK_COUNT = 20;
 
 class ElementalComboManager {
 public:
@@ -21,9 +22,16 @@ public:
   struct ELEMENTAL_DATA {
     f32 value;
     f32 ratio;
-    u8 _08[0xc - 0x8];
+    f32 timer;
     int state;
-    u8 _10[0xbc - 0x10];
+    u32 effectHandle;
+    u32 attackIds[ELEMENTAL_ATTACK_COUNT];
+    u32 damages[ELEMENTAL_ATTACK_COUNT];
+    u32 totalDamage;
+    s8 burstCharacter;
+    u8 comboId;
+    u8 stage;
+    u8 attribute;
   };
 
   struct ELEMENTAL_COMBO_DATA {
@@ -50,6 +58,7 @@ public:
   void DeleteBallEffect(int attribute);
   void Initialize(gf::GF_OBJ_HANDLE *handle);
   void CheckCharacterID();
+  void ResetElement(int attribute);
   int GetResistantAttrBreakDamage(int attribute) const;
   int GetResistantAttrBreakTotalDamage(int attribute) const;
   bool IsFullElementalValue(int attribute) const;
@@ -63,7 +72,7 @@ public:
 
   gf::GF_OBJ_HANDLE *handle;
   int characterId;
-  u8 _14[0x18 - 0x14];
+  f32 ballScale;
   f32 startWaitTime;
   ELEMENTAL_DATA elements[ATTRIBUTE_COUNT + 1];
   ELEMENTAL_COMBO_DATA combos[ELEMENTAL_COMBO_COUNT];
