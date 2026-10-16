@@ -3,6 +3,11 @@
 #include <stddef.h>
 
 #include "event/manager.h"
+#include "fw/fw_debug.h"
+#include "ml/dev_graph.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_pnt.h"
+#include "mm_math/mm_rect.h"
 
 namespace event {
 
@@ -18,6 +23,41 @@ FrameManager::FrameManager()
 void FrameManager::login() {
   mTotalFrame = 0.0f;
   mSkipStartFrame = 0.0f;
+}
+
+void FrameManager::render() {
+  if (!(dispFlags & DISP_FLAG_DISP)) {
+    return;
+  }
+  s32 height = ml::DevGraph::getRootHeight();
+  s32 top = height - 60;
+  s32 width = ml::DevGraph::getRootWidth();
+  fw::debug::drawSquare2D(mm::Rect<s32>(25, top, width - 50, 45), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
+  fw::debug::drawLineSquare2D(mm::Rect<s32>(25, top, width - 50, 45), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  fw::debug::drawFont(30, height - 55, "TIME");
+  fw::debug::drawLineSquare2D(mm::Rect<s32>(65, height - 37, width - 130, 15), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  fw::debug::drawSquare2D(mm::Rect<s32>(65, height - 36, (width - 130) * this->frame / __builtin_fmaxf(mMaxFrame, 1.0f), 14),
+                          mm::Col4(1.0f, 0.0f, 0.0f, 0.25f));
+  s32 lineTop = height - 46;
+  s32 barWidth = ml::DevGraph::getRootWidth() - 130;
+  for (size_t i = 0; i < mKeyFrames.size(); i++) {
+    s32 frame = mKeyFrames[i].frame;
+    s32 x = frame * barWidth / static_cast<s32>(__builtin_fmaxf(mMaxFrame, 1.0f)) + 65;
+    if (mKeyFrames[i].isCut) {
+      fw::debug::drawLine2D(mm::Pnt<s32>(x, lineTop), mm::Pnt<s32>(x, height - 16), mm::Col4(1.0f, 0.0f, 0.0f, 1.0f));
+      fw::debug::drawFontColor(mm::Col4(1.0f, 0.0f, 0.0f, 1.0f));
+    } else {
+      fw::debug::drawLine2D(mm::Pnt<s32>(x, lineTop), mm::Pnt<s32>(x, height - 16), mm::Col4(0.7f, 0.0f, 0.0f, 1.0f));
+      fw::debug::drawFontColor(mm::Col4(0.7f, 0.0f, 0.0f, 1.0f));
+    }
+    fw::debug::drawFont(x, height - 56, "%d", frame);
+  }
+  s32 reachedFrame = mReachedFrame;
+  s32 x = reachedFrame * barWidth / static_cast<s32>(__builtin_fmaxf(mMaxFrame, 1.0f)) + 65;
+  fw::debug::drawLine2D(mm::Pnt<s32>(x, lineTop), mm::Pnt<s32>(x, height - 16), mm::Col4(1.0f, 0.0f, 0.0f, 1.0f));
+  fw::debug::drawFontColor(mm::Col4(0.7f, 0.0f, 0.0f, 1.0f));
+  fw::debug::drawFont(x, height - 56, "%d", reachedFrame);
 }
 
 void FrameManager::tailAlways() {
