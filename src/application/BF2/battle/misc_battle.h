@@ -7,7 +7,8 @@ struct Vec3;
 
 namespace gf {
 struct GF_OBJ_HANDLE;
-}
+class GfObj;
+} // namespace gf
 
 namespace btl {
 
@@ -15,13 +16,36 @@ class Misc {
 public:
   enum TRANS_TYPE {
     TRANS_TYPE_POSITION,
+    TRANS_TYPE_DIRECTION,
   };
 
-  static void NormalizeXZ(mm::Vec3 &vector);
+  static bool Normalize(mm::Vec3 &vector);
+  static f32 CalcAngle(const mm::Vec3 &from, const mm::Vec3 &to, bool isSigned);
+  static f32 CalcRotY(const mm::Vec3 &direction);
+  static bool NormalizeXZ(mm::Vec3 &vector);
+  static f32 CalcLength(const mm::Vec3 &from, const mm::Vec3 &to);
   static f32 CalcSquareLength(const mm::Vec3 &from, const mm::Vec3 &to);
+  static f32 CalcLengthXZ(const mm::Vec3 &from, const mm::Vec3 &to);
+  static f32 CalcSquareLengthXZ(const mm::Vec3 &from, const mm::Vec3 &to);
+  static f32 CalcLengthXZ(const mm::Vec3 &vector);
+  static f32 CalcSquareLengthXZ(const mm::Vec3 &vector);
   static bool CalcDirectionXZ(const mm::Vec3 &from, const mm::Vec3 &to, mm::Vec3 &direction);
+  static f32 InnerProductXZ(const mm::Vec3 &left, const mm::Vec3 &right);
+  static f32 CalcOuterProductY(const mm::Vec3 &left, const mm::Vec3 &right);
+  static void RandomVector(mm::Vec3 &vector);
+  static void RandomVectorXZ(mm::Vec3 &vector);
   static bool GetObjectTransform(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &transform, TRANS_TYPE type);
+  static bool GetObjectTransform(const gf::GfObj *obj, mm::Vec3 &transform, TRANS_TYPE type);
+  static bool GetObjectDirection(const gf::GfObj *obj, mm::Vec3 &direction, bool isXZ);
+  static bool GetNodePosition(gf::GF_OBJ_HANDLE *handle, const char *node, mm::Vec3 &position);
+  static bool GetNodePosition(gf::GfObj *obj, const char *node, mm::Vec3 &position);
+  static int GetPartyID(gf::GF_OBJ_HANDLE *handle);
+  static int GetPartyID(const gf::GfObj *obj);
+  static void GetKizunaMinMax(int stage, int &minimum, int &maximum);
+  static int CovertKizunaStageToID(int stage);
+  static bool CheckInRange(const mm::Vec3 &position, const mm::Vec3 &target, f32 range, bool isXZ);
   static bool IsInWater(const mm::Vec3 &position, f32 depth);
+  static const char *GetArtsTypeName(int type);
 };
 
 } // namespace btl

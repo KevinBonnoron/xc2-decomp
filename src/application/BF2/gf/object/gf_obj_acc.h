@@ -6,6 +6,10 @@ namespace mm {
 struct Vec3;
 } // namespace mm
 
+namespace fw {
+struct Transform;
+}
+
 namespace ml {
 class ScnObjModel;
 }
@@ -37,6 +41,9 @@ class GfObjAcc {
 public:
   GfObjAcc(GfObj *obj);
   GfObjAcc(GF_OBJ_HANDLE *handle);
+
+  int getBoneIdx(const char *name);
+  bool getBoneTransform(fw::Transform &transform, int bone);
 
   bool getObjPosRot(mm::Vec3 &position, f32 &rotation);
 
