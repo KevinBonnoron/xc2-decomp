@@ -3,17 +3,27 @@
 #include "mtl/alloc_handle.h"
 #include "types.h"
 
+namespace mm {
+struct Mat44;
+} // namespace mm
+
 namespace effect {
 struct SendParam;
 } // namespace effect
 
 namespace fw {
 
+class EffectCasterBase;
 enum EF_CATEGORY : int;
 
 class EffectManager : public mm::mtl::PtrSingleton<EffectManager> {
 public:
   bool isCommonLoaded();
+  void changeLayerCaster(EffectCasterBase *caster, u32 layer, u32 newLayer);
+  void sendCaster(EffectCasterBase *caster, mm::Mat44 &matrix, const char *name, int index);
+  void sendCaster(EffectCasterBase *caster, f32 scale);
+  void sendCasterFrame(EffectCasterBase *caster, f32 frame);
+  void sendCasterStateName(EffectCasterBase *caster, const char *name);
   bool commonLoaded();
   void getNum(u32 &emitterNum, u32 &particleNum, u32 &drawNum);
   static void efSystemEnd();

@@ -44,6 +44,8 @@ public:
   u8 _0d[0x7824a - 0x0d];
   bool dispParticleTexture;
   bool workTexture;
+  u8 _7824c[0x7824d - 0x7824c];
+  u8 writeBuffer;
 };
 
 } // namespace effect
