@@ -20,6 +20,8 @@ class GfObj : public fw::UpdatableObject, public fw::MessageObject {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  void setUpdateComponent(bool isUpdate);
+
   GF_OBJ_HANDLE *handle;
   GFOBJ_INFO *info;
   u8 _108[0x110 - 0x108];

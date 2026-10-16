@@ -113,8 +113,13 @@ public:
   static void setSaikaLensOff(GF_OBJ_HANDLE *handle);
   static void setSaikaLensOff();
   static bool isDummyBlade(GF_OBJ_HANDLE *handle);
+  static GF_OBJ_HANDLE *getDriverWeaponRight(GF_OBJ_HANDLE *handle);
+  static GF_OBJ_HANDLE *getDriverWeaponLeft(GF_OBJ_HANDLE *handle);
+  static void setKosmosArts3EnableBothWeapon(GF_OBJ_HANDLE *handle, bool isEnable);
   static bool isHomuraHoodStyle();
   static bool isTrueRex();
+  static bool isDriverEquipBlade(u32 driver, u32 blade);
+  static GF_OBJ_HANDLE *getJijiHandle();
   static void changeHikariCurrent(bool hikariCurrent);
   static void setMaxPartyGauge();
   static bool getDriverAcceList(mm::mtl::FixedVector<u16, 16> &drivers);

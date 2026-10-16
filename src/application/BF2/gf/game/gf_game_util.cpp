@@ -126,6 +126,7 @@ constexpr u32 ACHIEVEMENT_POPUP_MAX = 300;
 constexpr int PARTY_GAUGE_MAX = 300;
 constexpr u32 FOLLOW_OBJ_MAX = 768;
 constexpr u32 SAIKA_HANDLE_MAX = 8;
+constexpr u32 APPEND_HANDLE_MAX = 10;
 
 static const u32 nationLocations[NATION_COUNT] = {3, 6, 9, 10, 14, 12, 13, 15};
 
@@ -1163,9 +1164,126 @@ bool GfGameUtil::isDummyBlade(GF_OBJ_HANDLE *handle) {
   return GfDataBlade::isDummyBlade(dataParamAcc.isValid() ? dataParamAcc.getBdatId() : 0);
 }
 
+GF_OBJ_HANDLE *GfGameUtil::getDriverWeaponRight(GF_OBJ_HANDLE *handle) {
+  GfWeapon *weapon = GfMountManager::getGfWeapon(handle, GFATTACH_WEAPON);
+  if (weapon != nullptr) {
+    GF_OBJ_HANDLE *weaponHandle = weapon->getCurrentHandles()[0];
+    if (weaponHandle != INVALID_HANDLE) {
+      return weaponHandle;
+    }
+  }
+
+  weapon = GfMountManager::getGfWeapon(handle, GFATTACH_WEAPON_EXTRA);
+  if (weapon != nullptr) {
+    GF_OBJ_HANDLE *weaponHandle = weapon->getCurrentHandles()[0];
+    if (weaponHandle != INVALID_HANDLE) {
+      return weaponHandle;
+    }
+  }
+
+  return INVALID_HANDLE;
+}
+
+GF_OBJ_HANDLE *GfGameUtil::getDriverWeaponLeft(GF_OBJ_HANDLE *handle) {
+  GfWeapon *weapon = GfMountManager::getGfWeapon(handle, GFATTACH_WEAPON);
+  if (weapon != nullptr) {
+    GF_OBJ_HANDLE *weaponHandle = weapon->getCurrentHandles()[1];
+    if (weaponHandle != INVALID_HANDLE) {
+      return weaponHandle;
+    }
+  }
+
+  weapon = GfMountManager::getGfWeapon(handle, GFATTACH_WEAPON_EXTRA);
+  if (weapon != nullptr) {
+    GF_OBJ_HANDLE *weaponHandle = weapon->getCurrentHandles()[0];
+    if (weaponHandle != INVALID_HANDLE) {
+      return weaponHandle;
+    }
+  }
+
+  return INVALID_HANDLE;
+}
+
+void GfGameUtil::setKosmosArts3EnableBothWeapon(GF_OBJ_HANDLE *handle, bool isEnable) {
+  GfObjAcc objAcc(handle);
+  if (objAcc.getType() != OBJECT_TYPE_BLADE || objAcc.getBladeId() != BLADE_KOSMOS) {
+    return;
+  }
+
+  GfWeapon *weapon = GfMountManager::getGfWeapon(handle, GFATTACH_WEAPON);
+  if (weapon == nullptr) {
+    return;
+  }
+
+  bool isAlternate = weapon->isAlternate;
+  weapon->isAlternate = false;
+  GfObjAcc weaponAcc(weapon->getCurrentHandles()[1]);
+  weaponAcc.setDisp(OBJDISP_KOSMOS_ARTS_3, isEnable);
+  GfObj *obj = weaponAcc.getObj();
+  if (obj != nullptr) {
+    obj->setUpdateComponent(isEnable);
+  }
+
+  weapon->isAlternate = isAlternate;
+}
+
 bool GfGameUtil::isHomuraHoodStyle() { return GfGameCond::isGameCond(GfDataBlade::getSDataBlade(BLADE_HOMURA)->condition); }
 
 bool GfGameUtil::isTrueRex() { return GfGameCond::isGameCond(GfBdatChrDr::get()->getChrDrCondition(DRIVER_REX)); }
+
+bool GfGameUtil::isDriverEquipBlade(u32 driver, u32 blade) {
+  if (driver == 0) {
+    return false;
+  }
+
+  if (!GfDataBlade::isActivateUnuse(blade)) {
+    u32 setDriver = GfDataBlade::getSetDriver(blade);
+    if (setDriver == 0 || !GfDataDriver::isActivateUnuse(setDriver)) {
+      u32 creator = GfDataBlade::getCreator(blade);
+      if (creator == 0) {
+        return driver == DRIVER_REX;
+      }
+
+      if (creator == driver) {
+        return true;
+      }
+
+      if (GfDataHana::isValid(blade)) {
+        return driver == DRIVER_TORA;
+      }
+
+      if ((driver == DRIVER_REX_2 || driver == DRIVER_REX) && isTrueRex()) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+GF_OBJ_HANDLE *GfGameUtil::getJijiHandle() {
+  GfWeapon *append = GfMountManager::getAppendHandles(GfGameParty::getHandleDriverByBdatID(DRIVER_REX), GFATTACH_APPEND);
+  if (append == nullptr) {
+    return INVALID_HANDLE;
+  }
+
+  GF_OBJ_HANDLE *jiji = INVALID_HANDLE;
+  for (u32 index = 0; index < APPEND_HANDLE_MAX; index++) {
+    if (append->getCurrentHandles()[index] != INVALID_HANDLE) {
+      jiji = append->getCurrentHandles()[index];
+      break;
+    }
+  }
+
+  if (jiji != INVALID_HANDLE) {
+    GfObjAcc objAcc(jiji);
+    if (!(objAcc.getAlphaNormal() <= 0.0f)) {
+      return jiji;
+    }
+  }
+
+  return INVALID_HANDLE;
+}
 
 void GfGameUtil::changeHikariCurrent(bool hikariCurrent) {
   GfDataBlade::setHikariCurrent(hikariCurrent);
