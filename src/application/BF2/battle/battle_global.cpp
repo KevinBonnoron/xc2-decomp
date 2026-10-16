@@ -381,4 +381,22 @@ bool BattleGlobal::IsEnableSupport(const BattleCharacter *character) const {
   return data->isEnableSupport;
 }
 
+bool BattleGlobal::IsKakuseiFinished() const { return isKakuseiFinished; }
+
+bool BattleGlobal::IsKakuseiOrder(bool isCheckRestTime) const {
+  if (isKakuseiOrder) {
+    return true;
+  }
+  if (isCheckRestTime && kakuseiRestTime >= 0.0f) {
+    return true;
+  }
+  return false;
+}
+
+void BattleGlobal::ApplyBattleCameraAdjustment(mm::Vec3 &position, mm::Vec3 &target) {
+  if (shakeCameraManager != nullptr) {
+    shakeCameraManager->ApplyShake(position, target);
+  }
+}
+
 } // namespace btl
