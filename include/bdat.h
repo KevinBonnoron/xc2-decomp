@@ -14,6 +14,7 @@ union Value {
 };
 
 unsigned char *getFP(const char *name);
+unsigned char *getFP(int table, int id);
 int getIdTop(unsigned char *bdat);
 int getIdCount(unsigned char *bdat);
 unsigned char *getMember(unsigned char *bdat, const char *name);

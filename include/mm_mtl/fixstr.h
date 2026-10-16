@@ -11,12 +11,13 @@ public:
     m_nLen = 0;
   }
 
-  FixStr &operator=(const char *string) {
-    m_nLen = __builtin_strlen(string);
-    // __LINE__ must be 221 as in the original header: it is the line argument of the assert.
-#line 221
+  FixStr &operator=(const char *pszName) {
+    // __LINE__ must be 219 and 221 as in the original header: they are the line arguments of the asserts.
+#line 219
+    MM_ASSERT(pszName != 0);
+    m_nLen = __builtin_strlen(pszName);
     MM_ASSERT(m_nLen < LEN);
-    __builtin_strcpy(mData, string);
+    __builtin_strcpy(mData, pszName);
     return *this;
   }
 
