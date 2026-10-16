@@ -20,6 +20,10 @@ void ChainAttackManager::Destroy() {
 
 void ChainAttackManager::Finalize() {}
 
+void ChainAttackManager::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->PreUpdateProc(updateInfo); }
+
+void ChainAttackManager::PreUpdateProc(const fw::UpdateInfo &) { isStartFullBurst = false; }
+
 void ChainAttackManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
 
 void ChainAttackManager::AddDamageRate(int rate) {
