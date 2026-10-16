@@ -31,6 +31,7 @@ public:
     DELAY_VOICE_TYPE_NORMAL,
   };
   enum ALPHA_PROC_ID {};
+  enum BLADE_TIMER_MODE {};
   enum ACTION_ID {
     ACTION_ID_IDLE = 1,
     ACTION_ID_PUT_AWAY_WEAPON = 3,
@@ -123,6 +124,7 @@ public:
   void ResetCustomVoiceData();
   void ResetAnimationMoveDistance();
   void ResetAlphaAnimation();
+  void InitializeEnhanceProcData(bool isFinalizeArtsEffect);
   const CharacterParameter *GetCharacterParameterConst(bool) const;
   bool IsPlayer() const;
   bool IsBlade() const;
@@ -144,6 +146,7 @@ public:
   bool IsMove() const;
   int GetGroupIndex() const;
   void AddUseWeapon();
+  void EndBladeTimer(BLADE_TIMER_MODE mode);
   void PlaySE(BTL_SE se, int number, const mm::Vec3 *position, bool isFollow);
   void PlayHitAttrSE(int attribute, const mm::Vec3 *position);
   void PlayHitBulletSE(int attribute, const mm::Vec3 *position);
@@ -163,6 +166,7 @@ public:
   void UpdateTargetLockArrow();
   void ResetChangeActionStopSeData();
   void ReturnBladeChange();
+  void FinalizeArtsEffect(bool);
   ActionCommand *GetFreeCommand();
   bool IsRegisterCommand(ActionCommand::COMMAND_TYPE type) const;
   void ActionCommandRun(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
@@ -287,7 +291,9 @@ public:
   f32 dt;
   f32 systemDt;
   int bdatId;
-  u8 _ccc[0xce0 - 0xccc];
+  u8 _ccc[0xcd0 - 0xccc];
+  f32 bladeTimer;
+  u8 _cd4[0xce0 - 0xcd4];
   ANIMATION_MOVE_DISTANCE_DATA animationMoveDistances[20];
   u8 _d80[0xdb8 - 0xd80];
   f32 ikWeight;
@@ -309,7 +315,12 @@ public:
   u32 customVoiceEndFlags;
   CUSTOM_VOICE_DATA customVoices[3];
   s16 parameterId;
-  u8 _f6c[0xf7d - 0xf6c];
+  u8 _f6c[0xf76 - 0xf6c];
+  u16 : 9;
+  u16 bladeTimerMode : 3;
+  u16 : 4;
+  u16 : 16;
+  u8 _f7a[0xf7d - 0xf7a];
   s8 id;
   s8 aiId;
   s8 weaponType;
@@ -345,7 +356,9 @@ public:
   f32 perfectAvoidTime;
   u8 _10ec[0x10fe - 0x10ec];
   s16 backAttacker;
-  u8 _1100[0x1160 - 0x1100];
+  u8 _1100[0x1108 - 0x1100];
+  f32 enhanceTimers[7];
+  u8 _1124[0x1160 - 0x1124];
   AI_ACTION_DATA aiAction;
   u8 _1168[0x1174 - 0x1168];
   f32 aiScoutTime;
@@ -400,6 +413,7 @@ static_assert(offsetof(BattleCharacter, buttonChallenge) == 0x10c0, "");
 static_assert(offsetof(BattleCharacter, artsTarget) == 0x10c8, "");
 static_assert(offsetof(BattleCharacter, noDamageTime) == 0x10e0, "");
 static_assert(offsetof(BattleCharacter, backAttacker) == 0x10fe, "");
+static_assert(offsetof(BattleCharacter, enhanceTimers) == 0x1108, "");
 static_assert(offsetof(BattleCharacter, aiAction) == 0x1160, "");
 static_assert(offsetof(BattleCharacter, aiScoutTime) == 0x1174, "");
 static_assert(offsetof(BattleCharacter, aiState) == 0x1178, "");
