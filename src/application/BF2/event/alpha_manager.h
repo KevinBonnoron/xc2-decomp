@@ -2,7 +2,7 @@
 #include "event/alpha_obj.h"
 #include "event/i_manager.h"
 #include "mm_mtl/fixed_vector.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace gf {
@@ -11,7 +11,7 @@ struct GF_OBJ_HANDLE;
 
 namespace event {
 
-class AlphaManager : public IManager, public mm::mtl::NoncopyableBase {
+class AlphaManager : public IManager, public mm::mtl::Singleton<AlphaManager> {
 public:
   static constexpr u32 OBJ_COUNT = 256;
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "event/i_manager.h"
 #include "event/stm_manager.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 #include <stddef.h>
 
@@ -11,7 +11,7 @@ class ALLOC_HANDLE;
 
 namespace event {
 
-class MotstmManager : public IManager, public mm::mtl::NoncopyableBase {
+class MotstmManager : public IManager, public mm::mtl::Singleton<MotstmManager> {
 public:
   enum {
     FLAG_CREATE = 1 << 0,
