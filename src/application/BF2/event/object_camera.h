@@ -1,20 +1,25 @@
 #pragma once
+#include <stddef.h>
+
 #include "event/curve.h"
 #include "event/i_bou_callback.h"
 #include "event/i_mani_callback.h"
 #include "event/object.h"
+#include "event/pos_axis.h"
+#include "event/tar_axis.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
 namespace event {
 
 class CamObj;
-class PosAxis;
-class TarAxis;
 
 class ObjectCamera : public Object {
 public:
+  static constexpr size_t KEY_COUNT = 16;
+
   ObjectCamera(const char *name, u32 id);
   virtual ~ObjectCamera();
   virtual void start();
@@ -57,7 +62,12 @@ public:
 private:
   CamObj *mCamObj;
   u32 mId;
-  u8 _74[0x4e8 - 0x74];
+  u8 _74[0x80 - 0x74];
+  PosAxis posAxis;
+  mm::mtl::FixedVector<PosAxis, KEY_COUNT> posAxes;
+  TarAxis tarAxis;
+  mm::mtl::FixedVector<TarAxis, KEY_COUNT> tarAxes;
+  u8 _4E0[0x4e8 - 0x4e0];
   mm::mtl::FixStr<64> mCutName;
   u8 _52c[0x530 - 0x52c];
 };
