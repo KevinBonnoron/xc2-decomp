@@ -48,6 +48,7 @@ public:
     gf::GF_OBJ_HANDLE *target;
   };
 
+  BattleCharacter();
   virtual ~BattleCharacter();
   virtual void BeforeUpdate(const fw::UpdateInfo &updateInfo);
   virtual void Update();
@@ -64,6 +65,7 @@ public:
   bool IsEnemy() const;
   bool IsDriver() const;
   CharacterParameter *GetCharacterParameter(bool);
+  bool IsControlCharacter() const;
   bool IsControlCharacterGroup() const;
   bool IsDead(u32 flags) const;
   u8 CheckAttackPosition(gf::GF_OBJ_HANDLE *handle, bool, bool *) const;
@@ -99,6 +101,9 @@ public:
   void SetScout(bool isScout);
   bool IsScout() const;
   gf::GF_OBJ_HANDLE *GetRescueTarget() const;
+  void BattleEndInitialize();
+  void PreManagerUpdate(const fw::UpdateInfo &updateInfo);
+  void ManagerUpdate(const fw::UpdateInfo &updateInfo);
 
   u8 _08[0x10 - 0x08];
   mm::Vec3 position;
@@ -130,6 +135,7 @@ public:
   u16 : 10;
   u16 isUseNavi : 1;
   u16 isBattleOpening : 1;
+  u8 _11e4[0x11f0 - 0x11e4];
 };
 
 static_assert(offsetof(BattleCharacter, position) == 0x10, "");
@@ -143,5 +149,6 @@ static_assert(offsetof(BattleCharacter, actionId) == 0x107c, "");
 static_assert(offsetof(BattleCharacter, artsTarget) == 0x10c8, "");
 static_assert(offsetof(BattleCharacter, backAttacker) == 0x10fe, "");
 static_assert(offsetof(BattleCharacter, stamp) == 0x11d8, "");
+static_assert(sizeof(BattleCharacter) == 0x11f0, "");
 
 } // namespace btl

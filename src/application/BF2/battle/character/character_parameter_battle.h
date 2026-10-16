@@ -94,6 +94,9 @@ public:
   u8 _5a6[0x5df - 0x5a6];
   u8 : 1;
   u8 isBattle : 1;
+  u8 isBlade : 1;
+  u8 : 5;
+  u8 : 3;
 };
 
 static_assert(offsetof(CharacterParameter, buddy) == 0x10, "");
