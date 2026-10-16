@@ -1,5 +1,10 @@
 #include "event/chara_util.h"
 
+#include "event/chara_manager.h"
+#include "event/skip_manager.h"
+#include "gf/object/gf_obj_acc.h"
+#include "mm_mtl/singleton.h"
+
 #include "fw/fw_coli_check.h"
 #include "gf/event/gf_evt_model.h"
 #include "gf/object/component/animation/gf_com_evt_anim.h"
@@ -113,6 +118,18 @@ bool CharaUtil::checkStatSeries(gf::GfObj *obj, const char *series) {
   return __builtin_strstr(name, series) != nullptr;
 }
 
+bool CharaUtil::isActionBusy(gf::GfObj *obj) {
+  if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
+    return false;
+  }
+
+  if (!mm::mtl::Singleton<CharaManager>::getPtr()->isSeamlessAction()) {
+    return false;
+  }
+
+  return !checkStatSeries(obj, "S_idle");
+}
+
 bool CharaUtil::easeIn(gf::GfObj *obj, const char *name, gf::AnimLayer layer) {
   gf::GfComEvtAnim *anim = obj->getComponent<gf::GfComEvtAnim>();
   if (anim != nullptr) {
@@ -216,6 +233,14 @@ void CharaUtil::combat(gf::GfEvtModel *model, bool isBattle, bool isState) {
     setWeaponMode(model, isBattle, isState);
   } else if (model != nullptr && type == gf::GF_EVT_MODEL_WEAPON) {
     setWeaponMode(model, isBattle, isState);
+  }
+}
+
+void CharaUtil::setGravity(gf::GF_OBJ_HANDLE *handle, bool isEnable) {
+  if (!mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
+    gf::GfObjAcc acc(handle);
+    acc.setGravity(isEnable);
+    acc.setCollisionGround(isEnable);
   }
 }
 

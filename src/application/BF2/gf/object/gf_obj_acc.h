@@ -147,6 +147,7 @@ public:
   int getPartyID() const;
   bool isCollideModelClip() const;
   void setEnableCollideModelClip(bool isEnable);
+  void setCollisionGround(bool isCollisionGround);
 
 private:
   GFOBJ_INFO *mInfo;
