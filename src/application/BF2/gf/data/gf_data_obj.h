@@ -29,7 +29,7 @@ public:
   virtual bool getName(u8 *&bdat, u32 &textId) const { return false; }
   virtual u32 getBdatId() const = 0;
   virtual u32 getObjType() const = 0;
-  virtual const SDataIdea *getIdea() const { return nullptr; }
+  virtual SDataIdea *getIdea() const { return nullptr; }
   virtual u32 getDataType() const { return 0; }
   virtual u32 getHp() const { return 0; }
   virtual u32 getLevel(bool isVirtual) const { return 0; }
@@ -176,7 +176,7 @@ public:
   virtual bool getName(u8 *&bdat, u32 &textId) const;
   virtual u32 getBdatId() const;
   virtual u32 getObjType() const { return OBJECT_TYPE_DRIVER; }
-  virtual const SDataIdea *getIdea() const;
+  virtual SDataIdea *getIdea() const;
   virtual u32 getDataType() const;
   virtual u32 getHp() const;
   virtual u32 getHpMax(bool isVirtual) const;
@@ -297,7 +297,7 @@ public:
   virtual u32 getObjType() const { return OBJECT_TYPE_BLADE; }
   virtual void setMenuParam() { menuParam = true; }
   virtual u32 getDataType() const;
-  virtual const SDataIdea *getIdea() const;
+  virtual SDataIdea *getIdea() const;
   virtual u32 getHpMax(bool isVirtual) const;
   virtual u32 getStrength(bool isVirtual) const;
   virtual u32 getPowerEther(bool isVirtual) const;

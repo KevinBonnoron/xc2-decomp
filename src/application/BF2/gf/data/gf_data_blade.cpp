@@ -12,6 +12,7 @@
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_hana.h"
+#include "gf/data/gf_data_idea.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_party.h"
 #include "gf/data/gf_data_quest.h"
@@ -331,6 +332,11 @@ u32 GfDataBlade::getFavorite(u32 blade, FAVORITE favorite) {
 
 u32 GfDataBlade::getAchievementQuestPrefix(u32 blade, u32 line, u32 level) {
   return getBladeRelativeID(blade) * ACHIEVEMENT_PER_BLADE + line * ACHIEVEMENT_LEVEL_COUNT + level;
+}
+
+void SDataIdea::setLevel(u32 idea, int level) {
+  ideas[idea].level = level;
+  ideas[idea].point = level >= 0 && static_cast<u32>(level) <= IDEA_LEVEL_MAX ? GfBdatBlade::get()->getBLD_IdeaNeedPoint(level) : 0;
 }
 
 bool GfDataBlade::isValid(u32 blade) { return blade - BLADE_REGULAR_FIRST < BLADE_COUNT; }

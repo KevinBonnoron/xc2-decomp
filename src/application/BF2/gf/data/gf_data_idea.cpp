@@ -16,8 +16,6 @@ enum {
   ATTRIBUTE_DARK = 8,
 };
 
-constexpr u32 IDEA_LEVEL_MAX = 10;
-
 void GfDataIdea::getIdeaAttribute(mm::mtl::FixedVector<u32, 2> &attributes, u32 idea) {
   switch (idea) {
   case 0:
@@ -64,6 +62,11 @@ u32 GfDataIdea::getNeedPoint(int level) {
   }
 
   return GfBdatBlade::get()->getBLD_IdeaNeedPoint(level);
+}
+
+void SDataIdea::setPoint(u32 idea, u32 point) {
+  ideas[idea].point = point;
+  ideas[idea].level = GfDataIdea::calcLevel(point);
 }
 
 } // namespace gf
