@@ -61,6 +61,25 @@ int DataManager::GetEnemyGroupIndex(gf::GF_OBJ_HANDLE *handle) {
 
 void DataManager::DeleteElementalEffect() { elementalEffectId = 0; }
 
+void DataManager::PreUpdate(const fw::UpdateInfo &updateInfo) {
+  if (get() != nullptr) {
+    get()->PreUpdateProc(updateInfo);
+  }
+}
+
+void DataManager::PreUpdateProc(const fw::UpdateInfo &updateInfo) {
+  for (int i = 0; i < PLAYER_PARAMETER_COUNT; i++) {
+    if (playerParameters[i].user != gf::INVALID_HANDLE) {
+      playerParameters[i].PreUpdate(updateInfo);
+    }
+  }
+  for (EnemyParameter *parameter : enemyParameters) {
+    if (parameter != nullptr && parameter->user != gf::INVALID_HANDLE) {
+      parameter->PreUpdate(updateInfo);
+    }
+  }
+}
+
 void DataManager::Update(const fw::UpdateInfo &updateInfo) {
   if (get() != nullptr) {
     get()->UpdateProc(updateInfo);
@@ -81,6 +100,21 @@ void DataManager::ResetRequestPermit() {
   permitComboId = 0;
   permitComboStage = 0;
   isPermitCanceled = false;
+}
+
+void DataManager::PostUpdate(const fw::UpdateInfo &updateInfo) { get()->PostUpdateProc(updateInfo); }
+
+void DataManager::PostUpdateProc(const fw::UpdateInfo &updateInfo) {
+  for (int i = 0; i < PLAYER_PARAMETER_COUNT; i++) {
+    if (playerParameters[i].user != gf::INVALID_HANDLE) {
+      playerParameters[i].PostUpdate(updateInfo);
+    }
+  }
+  for (EnemyParameter *parameter : enemyParameters) {
+    if (parameter != nullptr && parameter->user != gf::INVALID_HANDLE) {
+      parameter->PostUpdate(updateInfo);
+    }
+  }
 }
 
 bool DataManager::IsSpecialEffects(int effect) const { return specialEffects[effect]; }

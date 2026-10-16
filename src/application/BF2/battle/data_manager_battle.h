@@ -16,6 +16,8 @@ struct GF_OBJ_HANDLE;
 
 namespace btl {
 
+constexpr int PLAYER_PARAMETER_COUNT = 18;
+
 class DataManager : public mm::mtl::PtrSingleton<DataManager> {
 public:
   struct ENEMY_GROUP_DATA {
@@ -44,16 +46,19 @@ public:
   void ReleaseEnemyGroup(gf::GF_OBJ_HANDLE *handle);
   int GetEnemyGroupIndex(gf::GF_OBJ_HANDLE *handle);
   void DeleteElementalEffect();
+  static void PreUpdate(const fw::UpdateInfo &updateInfo);
+  void PreUpdateProc(const fw::UpdateInfo &updateInfo);
   static void Update(const fw::UpdateInfo &updateInfo);
   void UpdateProc(const fw::UpdateInfo &updateInfo);
   void UpdateElementalEffect(f32 time);
   static void PostUpdate(const fw::UpdateInfo &updateInfo);
+  void PostUpdateProc(const fw::UpdateInfo &updateInfo);
   void SetSpecialEffects(int effect, bool isEnable);
   void ResetRequestPermit();
   bool IsSpecialEffects(int effect) const;
   static bool GetEnhanceData(int id, ENHANCE_EFFECT_DATA &data, bool);
 
-  PlayerParameter playerParameters[18];
+  PlayerParameter playerParameters[PLAYER_PARAMETER_COUNT];
   EnemyParameter *enemyParameters[CHARACTER_COUNT - CHARACTER_PLAYER_COUNT];
   u8 _7588[0x12e88 - 0x7588];
   ENEMY_GROUP_DATA enemyGroups[35];
