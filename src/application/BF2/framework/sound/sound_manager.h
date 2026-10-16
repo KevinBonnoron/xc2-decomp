@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "framework/manager_object.h"
+#include "mm_mtl/list.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -127,6 +128,7 @@ public:
   void stopVoiceAll();
   void stopBgmAll();
   void stopSeAll();
+  void registPack(SoundPack *pack);
   bool isCommonLoaded() const;
   SoundPack *getBattlePack();
   bool isBattleLoaded() const;
@@ -141,7 +143,8 @@ public:
   SoundVolumeFade muteFade;
   int pauseCount;
   bool soundEnable;
-  u8 _99[0xe0 - 0x99];
+  u8 _99[0xa0 - 0x99];
+  mm::mtl::List<SoundPack *> packs;
   ResourceObject *commonResource;
   ResourceObject *battleResources[BATTLE_RESOURCE_MAX];
 };
@@ -151,6 +154,7 @@ static_assert(offsetof(SoundManager, masterFade) == 0x6c, "");
 static_assert(offsetof(SoundManager, muteFade) == 0x80, "");
 static_assert(offsetof(SoundManager, pauseCount) == 0x94, "");
 static_assert(offsetof(SoundManager, soundEnable) == 0x98, "");
+static_assert(offsetof(SoundManager, packs) == 0xa0, "");
 static_assert(offsetof(SoundManager, commonResource) == 0xe0, "");
 
 } // namespace fw

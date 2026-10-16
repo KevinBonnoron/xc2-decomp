@@ -401,6 +401,8 @@ void SoundManager::stopSeAll() {
   }
 }
 
+void SoundManager::registPack(SoundPack *pack) { packs.push_back(pack); }
+
 bool SoundManager::isCommonLoaded() const {
   if (commonResource != nullptr) {
     return commonResource->valid();
