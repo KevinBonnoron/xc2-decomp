@@ -22,11 +22,26 @@ enum TASK_STATE {
   TASK_STATE_NONE,
 };
 
-struct QuestTaskParam {
+enum QUEST_PARAM {
+  QUEST_PARAM_TASK,
+  QUEST_PARAM_COMPLETE,
+  QUEST_PARAM_CHANGE,
+  QUEST_PARAM_ORDER,
+  QUEST_PARAM_COMPLETE_CHILD,
+  QUEST_PARAM_PRE_COMPLETE,
+  QUEST_PARAM_STATE,
+};
+
+struct QuestParam {
+  QuestParam(QUEST_PARAM type) : type(type) {}
+
+  QUEST_PARAM type;
+};
+
+struct QuestTaskParam : QuestParam {
   QuestTaskParam(QuestID quest, u32 taskIndex, TASK_STATE state);
   QuestTaskParam(QuestID quest, u32 taskIndex, u32 purpose, TASK_STATE state);
 
-  u8 _00[0x04 - 0x00];
   QuestID quest;
   u32 purpose;
   u32 taskIndex;

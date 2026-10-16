@@ -6,6 +6,8 @@
 #include "gf/game/quest/gf_quest_data.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
+#include "gf/game/quest/gf_quest_task_param.h"
+#include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
@@ -21,18 +23,52 @@ class GfQuestEvent;
 class GfQuestTarget;
 struct GfQuestReward;
 struct GfSetupParam;
-struct QuestChangeParam;
-struct QuestCompleteParam;
-struct QuestOrderParam;
-struct QuestParam;
-struct QuestPreCompleteParam;
-struct QuestStateParam;
-struct QuestTaskParam;
 
-struct QuestCompleteChildParam {
-  u8 _00[0x04 - 0x00];
+struct QuestOrderParam : QuestParam {
+  QuestOrderParam(QuestID quest) : QuestParam(QUEST_PARAM_ORDER), quest(quest) {}
+
   QuestID quest;
 };
+
+struct QuestCompleteParam : QuestParam {
+  QuestCompleteParam(QuestID quest, QSTATE state) : QuestParam(QUEST_PARAM_COMPLETE), quest(quest), state(state) {}
+
+  QuestID quest;
+  QSTATE state;
+};
+
+struct QuestPreCompleteParam : QuestParam {
+  QuestPreCompleteParam(QuestID quest) : QuestParam(QUEST_PARAM_PRE_COMPLETE), quest(quest) {}
+
+  QuestID quest;
+};
+
+struct QuestStateParam : QuestParam {
+  QuestStateParam(QuestID quest, QSTATE oldState, QSTATE state) : QuestParam(QUEST_PARAM_STATE), quest(quest), oldState(oldState), state(state) {}
+
+  QuestID quest;
+  QSTATE oldState;
+  QSTATE state;
+};
+
+struct QuestChangeParam : QuestParam {
+  QuestChangeParam(QuestID oldQuest, QuestID quest) : QuestParam(QUEST_PARAM_CHANGE), oldQuest(oldQuest), quest(quest) {}
+
+  QuestID oldQuest;
+  QuestID quest;
+};
+
+struct QuestCompleteChildParam : QuestParam {
+  QuestCompleteChildParam(QuestID quest) : QuestParam(QUEST_PARAM_COMPLETE_CHILD), quest(quest) {}
+
+  QuestID quest;
+};
+
+static_assert(sizeof(QuestOrderParam) == 0x08, "");
+static_assert(sizeof(QuestCompleteParam) == 0x0c, "");
+static_assert(sizeof(QuestPreCompleteParam) == 0x08, "");
+static_assert(sizeof(QuestStateParam) == 0x10, "");
+static_assert(sizeof(QuestChangeParam) == 0x0c, "");
 
 static_assert(offsetof(QuestCompleteChildParam, quest) == 0x04, "");
 
@@ -54,12 +90,25 @@ public:
 class GfQuestManager : public mm::mtl::PtrSingleton<GfQuestManager> {
 public:
   struct CompQuest {
+    CompQuest &operator=(const CompQuest &other) {
+      quest.id = other.quest.id;
+      quest.variant = other.quest.variant;
+      state = other.state;
+      return *this;
+    }
+
+    bool operator==(const CompQuest &other) const { return quest == other.quest && state == other.state; }
+
     QuestID quest;
     QSTATE state;
   };
 
   struct compEntryQuest {
+    compEntryQuest(QuestID quest) : quest(quest) {}
+
     bool operator()(const QuestData &data) const;
+
+    QuestID quest;
   };
 
   GfQuestManager(const GfSetupParam &param);
@@ -94,30 +143,30 @@ public:
   static void requestRefreshQuestTaskState();
   static void checkQuestComplete(QuestID quest, QSTATE state);
   static void eventCompleteChildQuest(QuestID quest);
-  static void orderChildQuest(QuestID quest, u32 child);
+  QuestID orderChildQuest(QuestID quest, u32 state);
   static void setCompleteQuest(QuestID quest, QuestID child, QSTATE state);
   static QuestID getCurrentQuest(QTYPE type);
-  static void setCurrentQuestScenario(QuestID quest);
+  void setCurrentQuestScenario(QuestID quest);
   static void setCompleteState(QuestID quest, QuestID child, QSTATE state);
   static void execReward(QuestID quest);
   static bool getRewardItem(GfQuestReward &reward, QuestID quest, bool isRandom);
-  static bool getLinkQuest(mm::mtl::FixedVector<QuestID, 16> &quests, QuestID quest);
+  static void getLinkQuest(mm::mtl::FixedVector<QuestID, 16> &quests, QuestID quest);
   static QuestID getProgressCurrentQuest(QTYPE type);
   static QuestID getPrevCompleteQuest();
   static void updateQuestTask(const QuestData &data);
   static QuestID getCurrentQuestSelect();
-  static void setCurrentQuestSelect(QuestID quest);
+  void setCurrentQuestSelect(QuestID quest);
   static void resetBattleTaskForPlayerDead();
-  static bool acceptOrder(QuestID quest);
-  static void addEntryQuest(QuestID quest);
+  void acceptOrder(QuestID quest);
+  void addEntryQuest(QuestID quest);
   static QuestID getCurrentQuestScenario();
   static void setCurrentQuestForScenario();
   static void eventCheckTask(QuestID quest);
   static bool openOrder(QuestID quest, bool isEvent);
-  static bool setOrder(QuestID quest);
-  static bool orderQuest(QuestID quest);
+  bool setOrder(QuestID quest);
+  void orderQuest(QuestID quest);
   static void eventOrderQuest(QuestID quest);
-  static void reqistLinkQuest(QuestID quest);
+  void reqistLinkQuest(QuestID quest);
   static void entryOrderAchievQuest(QuestID quest);
   void setupParallelTaskCheck();
   static u32 getOrderQuestMaxWithAchievement();
@@ -161,11 +210,18 @@ public:
   bool isInitialize;
   mm::mtl::FixedQueue<QuestData, 8000> orderQuests;
   mm::mtl::FixedQueue<QuestData, 15000> orderAchievementQuests;
-  u8 _16820[0x2e780 - 0x16820];
+  mm::mtl::FixedQueue<QuestData, 8000> bladeQuests;
+  mm::mtl::FixedQueue<QuestData, 8000> normalQuests;
+  mm::mtl::FixedQueue<QuestData, 8000> mercenariesQuests;
+  mm::mtl::FixedQueue<QuestData, 128> prevCompleteQuests;
+  mm::mtl::FixedQueue<QuestData, 128> removeQuests;
+  mm::mtl::FixedQueue<CompQuest, 128> completeQuests;
   QuestID lastOrder;
-  u8 _2e784[0x3f428 - 0x2e784];
+  mm::mtl::FixedList<QuestParam *, 256> eventParams;
+  mm::mtl::FixedQueue<QuestData, 15000> achievementTaskChecks;
+  mm::mtl::FixedQueue<QuestData, 1024> parallelTaskChecks;
   mm::mtl::FixedQueue<QuestData, 1024> reduceHpQuests;
-  u8 _40438[0x408c0 - 0x40438];
+  mm::mtl::FixedVector<mm::mtl::FixedVector<QuestID, 16>, 16> linkQuests;
   bool isRequestRefreshQuestTaskState;
   bool isRequestOrderAchievementQuestForce;
   bool isRequestOrderQuestForce;
@@ -176,8 +232,18 @@ struct GfQuestManagerLayout {
   static_assert(offsetof(GfQuestManager, isInitialize) == 0x98, "");
   static_assert(offsetof(GfQuestManager, orderQuests) == 0xa0, "");
   static_assert(offsetof(GfQuestManager, orderAchievementQuests) == 0x7db0, "");
+  static_assert(offsetof(GfQuestManager, bladeQuests) == 0x16820, "");
+  static_assert(offsetof(GfQuestManager, normalQuests) == 0x1e530, "");
+  static_assert(offsetof(GfQuestManager, mercenariesQuests) == 0x26240, "");
+  static_assert(offsetof(GfQuestManager, prevCompleteQuests) == 0x2df50, "");
+  static_assert(offsetof(GfQuestManager, removeQuests) == 0x2e160, "");
+  static_assert(offsetof(GfQuestManager, completeQuests) == 0x2e370, "");
   static_assert(offsetof(GfQuestManager, lastOrder) == 0x2e780, "");
+  static_assert(offsetof(GfQuestManager, eventParams) == 0x2e788, "");
+  static_assert(offsetof(GfQuestManager, achievementTaskChecks) == 0x2f9a8, "");
+  static_assert(offsetof(GfQuestManager, parallelTaskChecks) == 0x3e418, "");
   static_assert(offsetof(GfQuestManager, reduceHpQuests) == 0x3f428, "");
+  static_assert(offsetof(GfQuestManager, linkQuests) == 0x40438, "");
   static_assert(offsetof(GfQuestManager, isRequestRefreshQuestTaskState) == 0x408c0, "");
   static_assert(sizeof(GfQuestManager) == 0x408c8, "");
 };

@@ -39,6 +39,7 @@ public:
   static bool isPlayerWalkAndRun();
   void clear();
   void setupGame();
+  void refreshGimmickFlag();
   bool isPlayEvent() const;
   bool isMaskMainMenu() const;
   bool isMoverGetFieldDamage() const;

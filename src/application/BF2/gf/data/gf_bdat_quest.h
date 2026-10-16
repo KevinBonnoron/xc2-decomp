@@ -462,6 +462,7 @@ private:
   CBdatWrapper *mFLD_DevelopmentLevel;
   QuestListAcc *mQuestListAcc;
 
+  friend class GfQuestManager;
   friend class QuestListAcc;
   friend struct GfBdatQuestLayout;
 };

@@ -25,7 +25,6 @@ enum {
   ACHIEV_FLAG_TASK_CHILD = 8,
 };
 
-constexpr u32 QUEST_ID_END = 30000;
 constexpr u32 QUEST_MAP_CONDITION = 2020;
 constexpr u32 QUEST_MAP_CONDITION_MAP = 6;
 
@@ -315,7 +314,7 @@ u16 GfQuestTask::getTaskMap(const QuestTaskParam &param) {
 }
 
 QuestTaskParam::QuestTaskParam(QuestID quest, u32 taskIndex, TASK_STATE state)
-    : _00(), quest(quest), taskIndex(taskIndex), taskType(0), taskId(0), state(state), isDisp(false) {
+    : QuestParam(QUEST_PARAM_TASK), quest(quest), taskIndex(taskIndex), taskType(0), taskId(0), state(state), isDisp(false) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   purpose = GfDataQuest::getListPurposeID(quest);
   if (purpose == 0) {
@@ -331,7 +330,7 @@ QuestTaskParam::QuestTaskParam(QuestID quest, u32 taskIndex, TASK_STATE state)
 }
 
 QuestTaskParam::QuestTaskParam(QuestID quest, u32 taskIndex, u32 purpose, TASK_STATE state)
-    : _00(), quest(quest), purpose(purpose), taskIndex(taskIndex), taskType(0), taskId(0), state(state), isDisp(false) {
+    : QuestParam(QUEST_PARAM_TASK), quest(quest), purpose(purpose), taskIndex(taskIndex), taskType(0), taskId(0), state(state), isDisp(false) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   if (!quest.empty() && this->purpose == 0) {
     this->purpose = GfDataQuest::getListPurposeID(quest);
