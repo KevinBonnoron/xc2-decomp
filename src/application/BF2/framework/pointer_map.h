@@ -35,6 +35,7 @@ public:
 
 class PointerMap {
 public:
+  PointerMap() : capacity(0), count(0), currentId(0), rangeMin(1), rangeMax(0xffffffff), idMask(0xffffffff) {}
   virtual ~PointerMap();
 
   void destroy();

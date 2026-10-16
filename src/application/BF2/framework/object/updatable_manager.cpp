@@ -1,6 +1,8 @@
 #include "framework/object/updatable_manager.h"
 
+#include "framework/memory/framework_memory.h"
 #include "framework/object/updatable_group.h"
+#include "framework/object/updatable_object_factory.h"
 
 namespace fw {
 
@@ -70,6 +72,35 @@ void UpdatableObjectManager::Impl::execEvent(const ObjectEvent &event, u32 layer
 UpdatableGroup *UpdatableObjectManager::Impl::getGroup(u32 group) { return groups[group]; }
 
 void UpdatableObjectManager::Impl::registObject(u32 group, UpdatableObject *object) { groups[group]->registObject(object); }
+
+UpdatableObjectManager::UpdatableObjectManager(mm::mtl::IAllocator *allocator, size_t capacity)
+// __LINE__ of the game: it is the line argument of the operator new.
+#line 234
+    : impl(new (allocator, 8, __FILE__, __LINE__) Impl(allocator, capacity)) {
+}
+
+UpdatableObjectManager::~UpdatableObjectManager() {}
+
+bool UpdatableObjectManager::initialize() {
+  mm::mtl::IAllocator *allocator = impl->allocator;
+  for (u32 i = 0; i < GROUP_MAX; i++) {
+    // __LINE__ of the game: it is the line argument of the operator new.
+#line 256
+    UpdatableGroup *group = new (allocator, 8, __FILE__, __LINE__) UpdatableGroup(allocator, i);
+    impl->registGroup(i, group);
+  }
+
+  // __LINE__ of the game: it is the line argument of the operator new.
+#line 262
+  new (allocator, 8, __FILE__, __LINE__) UpdatableObjectFactory(allocator, this);
+  return true;
+}
+
+bool UpdatableObjectManager::finalize() {
+  delete UpdatableObjectFactory::get();
+  impl.reset();
+  return true;
+}
 
 void UpdatableObjectManager::update(const UpdateInfo &info, u32 layerMask) {
   if (isFinalized()) {
