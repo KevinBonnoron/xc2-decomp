@@ -1,8 +1,11 @@
 #pragma once
+#include <stddef.h>
+
 #include "mm/mm_std_base.h"
+#include "mm_mtl/algorithm.h"
 #include "mm_mtl/allocator.h"
 #include "mm_mtl/construct.h"
-#include <stddef.h>
+#include "new"
 
 namespace mm {
 namespace mtl {
@@ -168,6 +171,26 @@ public:
     }
   }
 
+  bool valid_iterator(const T *it) const { return begin() <= it && it <= end(); }
+
+  void push_back(const T &value) {
+    size_t size = m_size;
+    if (size == m_capacity) {
+      expand(size != 0 ? size * 2 : 16, m_alignment);
+    }
+    MM_ASSERT(m_buffer);
+    size = m_size;
+    T *position = begin() + size;
+    if (position != nullptr) {
+      new (position) T(value);
+    }
+    m_size++;
+  }
+
+  T *insert(T *it, const T &value);
+
+  T *erase(T *it);
+
 private:
   T *m_buffer;
   size_t m_size;
@@ -175,6 +198,17 @@ private:
   size_t m_alignment;
   IAllocator *m_allocator;
 };
+
+template <typename T> T *Vector<T>::erase(T *it) {
+  MM_ASSERT(valid_iterator(it));
+  T *last = end();
+  if (it != last) {
+    move_n(it + 1, last - (it + 1), it);
+    m_size--;
+    end()->~T();
+  }
+  return it;
+}
 
 } // namespace mtl
 } // namespace mm

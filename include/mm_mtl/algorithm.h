@@ -29,5 +29,15 @@ template <typename T> T *copy_n(const T *first, size_t n, T *result) {
   return result + n;
 }
 
+template <typename T> void move_n(T *first, size_t n, T *result) {
+  if (__is_pod(T)) {
+    __builtin_memcpy(result, first, n * sizeof(T));
+  } else {
+    for (size_t i = 0; i < n; i++) {
+      result[i] = first[i];
+    }
+  }
+}
+
 } // namespace mtl
 } // namespace mm

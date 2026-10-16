@@ -7,6 +7,9 @@ namespace gf {
 
 class GfAllocator : public mm::mtl::IAllocator {
 public:
+  virtual void *allocate(size_t size, size_t alignment);
+  virtual void deallocate(void *pointer);
+  virtual const char *getName() const;
   mtl::ALLOC_HANDLE getMemHandle() const;
 };
 
