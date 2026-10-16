@@ -49,6 +49,21 @@ static_assert(offsetof(DrMdoCtlSeam, m_etcPosList) == 0x6c8, "");
 class DrMdoCtlSeamAll : public DrMdoCtlSeam {
 public:
   bool isReadSafe() const;
+  void callZPrePassSeamAll();
+  void callThicknessFirstSeamAll();
+  void callThicknessSecondSeamAll();
+  void callRenderSeamAll();
+  void callGBuffRenderSeamAll();
+  void callLightPrePassRenderSeamAll();
+  void callAlphaRenderSeamAll();
+  void callSpAlphaRenderSeamAll();
+  void callRefractionRenderSeamAll();
+  void callRenderSeamEnvMap();
+  void callGBuffRenderSeamEnvMap();
+  void callLightPrePassRenderSeamEnvMap();
+  void callAlphaRenderSeamEnvMap();
+  void callSpAlphaRenderSeamEnvMap();
+  void callRefractionRenderSeamEnvMap();
 };
 
 } // namespace ml

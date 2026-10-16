@@ -16,6 +16,19 @@ class DrResMdoVtxMeshObj;
 
 class DrMdoCtlNom : public DrMdlObj {
 public:
+  void callNomSetupRender();
+  void callZSortNomZpreePassRender();
+  void callZSortThicknessRenderFirst();
+  void callZSortThicknessRenderSecond();
+  void callZSortNomRender();
+  void callZSortLightPrePassRender();
+  void callZSortNomAlphaRender();
+  void callZSortNomSpAlphaRender();
+  void callZSortGBuffRender();
+  void callZSortNomRefractionRender();
+  void callLastAlphaNomRender();
+  void callFastAlphaNomRender();
+  void callCldBackAlphaNomRender();
   void createAfterImage(f32 count, f32 span, f32 fade, const mm::Col3 &headColor, f32 headAlpha, f32 headEmissive, f32 headScale,
                         const mm::Col3 &tailColor, f32 tailAlpha, f32 tailEmissive, f32 tailScale);
   void releaseAfterImage();
