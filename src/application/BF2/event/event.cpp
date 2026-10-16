@@ -102,6 +102,8 @@
 #include "event/outsider_field.cpp"
 #include "event/outsider_manager.cpp"
 #include "event/rand_calc.cpp"
+#include "event/se_obj.cpp"
+#include "event/se_manager.cpp"
 #include "event/schedule_item.cpp"
 #include "event/scheduler.cpp"
 #include "event/sche_manager.cpp"

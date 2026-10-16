@@ -71,6 +71,9 @@ public:
   static bool isPlayBgm();
   static void cancelOverTime();
   static f32 getPlayBgmTotalTime();
+  static void createSe(const char *name);
+  static void destroySe();
+  static bool isLoadedSe();
   static void setCategoryVolume(fw::SoundCategory category, f32 volume, f32 time);
   static f32 getCategoryVolume(fw::SoundCategory category);
   static void setCancelFlag(bool isCancel);
