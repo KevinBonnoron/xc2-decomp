@@ -2,6 +2,7 @@
 // clang-format off
 #include "event/evt_log.cpp"
 #include "event/extend.cpp"
+#include "event/memory_manager.cpp"
 #include "event/curve.cpp"
 #include "event/anm_base.cpp"
 #include "event/anm_f32.cpp"
@@ -15,4 +16,8 @@
 #include "event/param_variable2.cpp"
 #include "event/param2.cpp"
 #include "event/pack_util.cpp"
+#include "event/object_manager.cpp"
+#include "event/frame_manager.cpp"
+#include "event/skip_manager.cpp"
+#include "event/data_manager.cpp"
 // clang-format on

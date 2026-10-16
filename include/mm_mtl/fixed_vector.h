@@ -51,14 +51,20 @@ public:
 
   T *erase(T *it) {
     MM_ASSERT(validate_iterator(it));
-    if (it != end()) {
-      __builtin_memcpy(it, it + 1, (end() - (it + 1)) * sizeof(T));
-      mSize--;
+    if (it == end()) {
+      return it;
     }
+    copy(it + 1, end(), it);
+    --mSize;
     return it;
   }
 
 private:
+  static void copy(const T *first, const T *last, T *dest) {
+    size_t count = last - first;
+    __builtin_memcpy(dest, first, count * sizeof(T));
+  }
+
   alignas(T) unsigned char mBuffer[sizeof(T) * N];
   size_t mSize;
 };
