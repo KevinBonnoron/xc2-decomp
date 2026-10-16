@@ -1,6 +1,7 @@
 #pragma once
 #include "event/cam_base.h"
 #include "event/cam_field.h"
+#include "event/cam_motion.h"
 #include "event/cmd_queue.h"
 #include "event/i_cmd.h"
 #include "types.h"
@@ -53,7 +54,8 @@ private:
   u8 _60[0x64 - 0x60];
   u32 mScreenID;
   CamField mField;
-  u8 _b0[0xc70 - 0xb0];
+  u8 _b0[0xbb0 - 0xb0];
+  CamMotion mMotion;
   CamBase *mActive;
   CmdQueue<CMD_COUNT, 0> mCmdQueue;
 };
