@@ -794,15 +794,15 @@ bool ScnObjAccPartsPos::isRandomStart() const { return m_partsObj->m_info->isRan
 
 u32 ScnObjAccPartsPos::isSwitch() const { return m_partsObj->m_info->isSwitch; }
 
-bool ScnObjAccPartsPos::isColiOff() const { return m_partsObj->m_isColiOff; }
+bool ScnObjAccPartsPos::isColiOff() const { return m_partsObj->m_flags.isColiOff; }
 
-bool ScnObjAccPartsPos::isColiSkipData() const { return m_partsObj->m_isColiSkipData; }
+bool ScnObjAccPartsPos::isColiSkipData() const { return m_partsObj->m_flags.isColiSkipData; }
 
 f32 ScnObjAccPartsPos::getAlpha() const { return m_partsObj->m_alpha; }
 
 void ScnObjAccPartsPos::setAlpha(f32 alpha) { m_partsObj->m_alpha = alpha; }
 
-bool ScnObjAccPartsPos::isLoop() const { return m_partsObj->m_isLoop; }
+bool ScnObjAccPartsPos::isLoop() const { return m_partsObj->m_flags.isLoop; }
 
 void ScnObjAccPartsPos::setPosFrame(f32 frame) { m_partsObj->setPosFrame(frame); }
 

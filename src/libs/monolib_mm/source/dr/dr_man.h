@@ -100,6 +100,7 @@ public:
   static DrMan *s_pTop;
   static s32 s_nDblStockIdx;
   static s32 s_nDblIdx;
+  static s32 s_nDblMemIdx;
   static s32 s_nDblNowIdx;
   static bool s_bSRGBMode;
   static bool s_bFogSRGB;
