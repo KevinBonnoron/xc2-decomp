@@ -1,7 +1,10 @@
 #pragma once
+#include <stddef.h>
+
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace gmk {
@@ -30,5 +33,13 @@ static_assert(sizeof(GmkLandmark::BdatInfo) == 0x10, "");
 static_assert(sizeof(GmkLandmark) == 0x100, "");
 
 typedef TGmkList<GmkLandmark, GmkLandmark::BdatInfo, 0x4b4d444c, 2, GmkLandmarkGob> GmkLandmarkList;
+
+class GmkLandmarkManager : public mm::mtl::PtrSingleton<GmkLandmarkManager> {
+public:
+  u8 _08[0x20 - 0x08];
+  GmkLandmark *frontLandmark;
+};
+
+static_assert(offsetof(GmkLandmarkManager, frontLandmark) == 0x20, "");
 
 } // namespace gmk

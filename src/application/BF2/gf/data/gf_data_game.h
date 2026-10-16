@@ -12,6 +12,7 @@
 #include "gf/field/gf_field_time.h"
 #include "gf/game/quest/gf_quest_data.h"
 #include "gf/game/quest/gf_quest_id.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
@@ -34,7 +35,10 @@ static_assert(sizeof(SDataAchievementPopup) == 0x04, "");
 
 struct SDataGame {
   u32 money;
-  u8 _000004[0x000024 - 0x000004];
+  u32 landmarkPoint;
+  u8 _000008[0x000010 - 0x000008];
+  mm::Vec3 landmarkPos;
+  f32 landmarkRotY;
   u16 timeStop;
   u16 startChapterSave;
   u16 eventChapterSave;
@@ -89,6 +93,9 @@ struct SDataGame {
 };
 
 static_assert(offsetof(SDataGame, money) == 0x0, "");
+static_assert(offsetof(SDataGame, landmarkPoint) == 0x000004, "");
+static_assert(offsetof(SDataGame, landmarkPos) == 0x000010, "");
+static_assert(offsetof(SDataGame, landmarkRotY) == 0x000020, "");
 static_assert(offsetof(SDataGame, timeStop) == 0x000024, "");
 static_assert(offsetof(SDataGame, startChapterSave) == 0x000026, "");
 static_assert(offsetof(SDataGame, eventChapterSave) == 0x000028, "");
