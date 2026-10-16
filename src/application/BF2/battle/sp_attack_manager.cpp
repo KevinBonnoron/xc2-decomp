@@ -115,4 +115,14 @@ bool SpAttackManager::IsDispThirdChr() const {
   return isFound & isDispThirdChr;
 }
 
+bool SpAttackManager::IsMovie() const {
+  for (int i = 0; i < procCount; i++) {
+    if (procs[i].movieStep == MOVIE_STEP_LOAD || procs[i].movieStep == MOVIE_STEP_PLAY) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 } // namespace btl
