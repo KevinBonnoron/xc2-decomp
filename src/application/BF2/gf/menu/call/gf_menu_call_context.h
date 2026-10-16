@@ -16,8 +16,8 @@ public:
   };
 
   struct GfMenuResult {
+    int value;
     u32 type;
-    u32 value;
   };
 
   GfMenuCallContext();

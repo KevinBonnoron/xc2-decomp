@@ -26,5 +26,12 @@ private:
   int m_RefCount;
 };
 
+template <typename T> void safeRelease(T *&object) {
+  if (object != nullptr) {
+    object->release();
+    object = nullptr;
+  }
+}
+
 } // namespace mtl
 } // namespace mm
