@@ -18,7 +18,9 @@ class GfVolumeFade;
 
 enum GFATTACH {
   GFATTACH_WEAPON = 0,
+  GFATTACH_APPEND = 1,
   GFATTACH_BELONGING = 2,
+  GFATTACH_WEAPON_EXTRA = 3,
 };
 
 enum {

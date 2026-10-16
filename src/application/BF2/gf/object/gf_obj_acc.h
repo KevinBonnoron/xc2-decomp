@@ -27,7 +27,9 @@ enum OBJ_ALPHA {
   OBJ_ALPHA_MAX,
 };
 
-enum OBJDISP {};
+enum OBJDISP {
+  OBJDISP_KOSMOS_ARTS_3 = 0x20,
+};
 
 enum GfObjUserData {};
 
@@ -72,6 +74,7 @@ public:
   GfObj *getObj() const;
   GF_OBJ_HANDLE *getHandle() const;
   bool isDisp(OBJDISP disp) const;
+  void setDisp(OBJDISP disp, bool isDisp);
   bool isDispChanged() const;
   void applyDisp();
   void setClip(bool isClip);
