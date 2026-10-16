@@ -64,6 +64,7 @@ static_assert(sizeof(ActionCommand) == 0x14, "");
 class BattleCharacter {
 public:
   enum ANIM_ID {};
+  enum SLOW_PROC_ID {};
   enum ACTION_ID {
     ACTION_ID_IDLE = 1,
     ACTION_ID_MOVE = 4,
@@ -89,6 +90,35 @@ public:
     MOVE_TYPE_POSITION = 10,
   };
 
+  struct CUSTOM_VOICE_DATA {
+    u8 voice;
+    u8 type;
+  };
+
+  enum EFFECT_ID {
+    EFFECT_ID_KIZUNA_AURA = 2,
+    EFFECT_ID_NUM = 13,
+  };
+
+  struct ANIMATION_MOVE_DISTANCE_DATA {
+    f32 distance;
+    u16 animation;
+  };
+
+  struct ALPHA_PROC_DATA {
+    f32 targetRate;
+    f32 startRate;
+    f32 rate;
+    f32 time;
+    f32 duration;
+  };
+
+  struct SLOW_PROC_DATA {
+    f32 rate;
+    f32 time;
+    f32 counter;
+  };
+
   struct AI_MOVE_PARAM {
     AI_MOVE_PARAM() : distance(0.0f), time(0.0f), type(MOVE_TYPE_TARGET), position(nullptr), target(reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1)) {}
 
@@ -110,6 +140,9 @@ public:
   virtual void BoundCallback();
   virtual void SetActionCallback(ACTION_ID actionId);
 
+  void ResetCustomVoiceData();
+  void ResetAnimationMoveDistance();
+  void ResetAlphaAnimation();
   const CharacterParameter *GetCharacterParameterConst(bool) const;
   bool IsPlayer() const;
   bool IsBlade() const;
@@ -121,7 +154,14 @@ public:
   bool IsDead(u32 flags) const;
   u8 CheckAttackPosition(gf::GF_OBJ_HANDLE *handle, bool, bool *) const;
   bool IsBattle() const;
+  void DeleteKizunaAuraEffect();
+  void CancelButtonChallenge();
+  bool IsDispWeaponAlpha(int alpha) const;
+  bool IsBoss() const;
+  bool IsNamed() const;
+  bool IsBossOrNamed() const;
   bool IsMove() const;
+  int GetGroupIndex() const;
   const GROUP_DATA *GetGroupDataConst() const;
   bool IsEnableSpeakVoice() const;
   bool IsEnableTurnAI() const;
@@ -163,6 +203,7 @@ public:
   bool IsEnableBackHome() const;
   bool IsDisp() const;
   int GetWeaponType(bool isAsm) const;
+  const CUSTOM_VOICE_DATA *GetCustomVoiceData(int voice, int *index) const;
   bool IsCustomVoice(int voice) const;
   void SetCustomVoiceEndFlag(int voice, bool isEnd);
   void ClearCustomVoiceEndFlag(u32 flags);
@@ -171,6 +212,11 @@ public:
   void SetAnimationSpeed(f32 speed);
   void NotifyStrikeDamage(int);
   void ResetAlphaRate(int alpha);
+  f32 GetSyncCount(bool isSlow) const;
+  f32 GetDt(bool isSlow, bool isStopCheck) const;
+  void RegisterSlow(SLOW_PROC_ID slow, f32 rate, f32 time);
+  void DeleteSlow(SLOW_PROC_ID slow);
+  bool IsPause() const;
   f32 GetSystemDt() const;
   f32 GetSystemSyncCount() const;
   bool IsEnableBladeChangeAction(ACTION_ID actionId) const;
@@ -223,21 +269,33 @@ public:
   u8 _c0[0x118 - 0xc0];
   gf::GF_OBJ_HANDLE *handle;
   gf::GF_OBJ_HANDLE *target;
-  u8 _128[0xc58 - 0x128];
+  u8 _128[0x130 - 0x128];
+  u32 effects[EFFECT_ID_NUM];
+  u8 _164[0x168 - 0x164];
+  mutable const CharacterParameter *parameter;
+  u8 _170[0xc58 - 0x170];
   char voiceCode[0x10];
   u8 _c68[0xcb8 - 0xc68];
   f32 animationSpeed;
-  u8 _cbc[0xcc4 - 0xcbc];
+  u8 _cbc[0xcc0 - 0xcbc];
+  f32 dt;
   f32 systemDt;
   int bdatId;
-  u8 _ccc[0xdd0 - 0xccc];
+  u8 _ccc[0xce0 - 0xccc];
+  ANIMATION_MOVE_DISTANCE_DATA animationMoveDistances[20];
+  u8 _d80[0xdd0 - 0xd80];
   s16 delayVoiceTime;
-  u8 _dd2[0xf2c - 0xdd2];
+  u8 _dd2[0xdd8 - 0xdd2];
+  ALPHA_PROC_DATA alphaProcs[17];
   f32 alphaRates[7];
-  u8 _f48[0xf5c - 0xf48];
+  u8 _f48[0xf4c - 0xf48];
+  SLOW_PROC_DATA slows[1];
+  f32 slowRate;
   u32 customVoiceFlags;
   u32 customVoiceEndFlags;
-  u8 _f64[0xf7d - 0xf64];
+  CUSTOM_VOICE_DATA customVoices[3];
+  s16 parameterId;
+  u8 _f6c[0xf7d - 0xf6c];
   s8 id;
   s8 aiId;
   s8 weaponType;
@@ -249,9 +307,14 @@ public:
   u8 _f8e[0xf8f - 0xf8e];
   u8 : 7;
   u8 isFly : 1;
-  u8 _f90[0x107c - 0xf90];
+  u8 _f90[0xf93 - 0xf90];
+  u8 : 6;
+  u8 isStop : 1;
+  u8 _f94[0x107c - 0xf94];
   u8 actionId;
-  u8 _107d[0x10c6 - 0x107d];
+  u8 _107d[0x10c0 - 0x107d];
+  u32 buttonChallenge;
+  u8 _10c4[0x10c6 - 0x10c4];
   u8 reactionId : 5;
   u8 : 3;
   u8 _10c7[0x10c8 - 0x10c7];
@@ -278,17 +341,27 @@ static_assert(offsetof(BattleCharacter, position) == 0x10, "");
 static_assert(offsetof(BattleCharacter, moveData) == 0xb0, "");
 static_assert(offsetof(BattleCharacter, handle) == 0x118, "");
 static_assert(offsetof(BattleCharacter, target) == 0x120, "");
+static_assert(offsetof(BattleCharacter, effects) == 0x130, "");
+static_assert(offsetof(BattleCharacter, parameter) == 0x168, "");
 static_assert(offsetof(BattleCharacter, voiceCode) == 0xc58, "");
 static_assert(offsetof(BattleCharacter, animationSpeed) == 0xcb8, "");
 static_assert(offsetof(BattleCharacter, systemDt) == 0xcc4, "");
 static_assert(offsetof(BattleCharacter, bdatId) == 0xcc8, "");
+static_assert(offsetof(BattleCharacter, animationMoveDistances) == 0xce0, "");
 static_assert(offsetof(BattleCharacter, delayVoiceTime) == 0xdd0, "");
+static_assert(offsetof(BattleCharacter, alphaProcs) == 0xdd8, "");
 static_assert(offsetof(BattleCharacter, alphaRates) == 0xf2c, "");
+static_assert(offsetof(BattleCharacter, dt) == 0xcc0, "");
+static_assert(offsetof(BattleCharacter, slows) == 0xf4c, "");
+static_assert(offsetof(BattleCharacter, slowRate) == 0xf58, "");
 static_assert(offsetof(BattleCharacter, customVoiceFlags) == 0xf5c, "");
+static_assert(offsetof(BattleCharacter, customVoices) == 0xf64, "");
+static_assert(offsetof(BattleCharacter, parameterId) == 0xf6a, "");
 static_assert(offsetof(BattleCharacter, id) == 0xf7d, "");
 static_assert(offsetof(BattleCharacter, aiId) == 0xf7e, "");
 static_assert(offsetof(BattleCharacter, weaponType) == 0xf7f, "");
 static_assert(offsetof(BattleCharacter, actionId) == 0x107c, "");
+static_assert(offsetof(BattleCharacter, buttonChallenge) == 0x10c0, "");
 static_assert(offsetof(BattleCharacter, artsTarget) == 0x10c8, "");
 static_assert(offsetof(BattleCharacter, noDamageTime) == 0x10e0, "");
 static_assert(offsetof(BattleCharacter, backAttacker) == 0x10fe, "");

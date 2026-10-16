@@ -1,11 +1,16 @@
 #include "battle/character/battle_character.h"
 
 #include "battle/battle_global.h"
+#include "battle/button_challenge.h"
+#include "battle/character/character_parameter_battle.h"
+#include "battle/data_manager_battle.h"
 #include "battle/hate_ring_manager.h"
 #include "battle/misc_battle.h"
 #include "battle/talk_manager_battle.h"
 #include "battle/utility_battle.h"
+#include "framework/effect/effect_manager.h"
 #include "gf/data/gf_data_weapon.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_scom.h"
@@ -14,6 +19,10 @@
 namespace btl {
 
 constexpr int ALPHA_RATE_NUM = 7;
+constexpr f32 PAUSE_DT = 0.000001f;
+constexpr u16 ANIMATION_INVALID = 39;
+constexpr int ALPHA_WEAPON_FIRST = 12;
+constexpr int ALPHA_WEAPON_LAST = 16;
 constexpr u32 BLADE_CHANGE_ACTIONS = 0xd2;
 constexpr int BLADE_SUPPORT_CONDITION_HATE_ELSE = 8;
 
@@ -117,17 +126,112 @@ void BattleCharacter::ResetHateRingData() {
 
 void BattleCharacter::ResetDelayVoice() { delayVoiceTime = -1; }
 
+void BattleCharacter::ResetCustomVoiceData() {
+  customVoiceFlags = 0;
+  customVoiceEndFlags = 0;
+  for (int i = 0; i < 3; i++) {
+    customVoices[i].voice = 0;
+    customVoices[i].type = 0;
+  }
+}
+
+const CharacterParameter *BattleCharacter::GetCharacterParameterConst(bool) const {
+  if (parameter == nullptr) {
+    if (parameterId < 0) {
+      return nullptr;
+    }
+    parameter = DataManager::get()->GetCharacterParameterConst(parameterId);
+  }
+  return parameter;
+}
+
 bool BattleCharacter::IsPlayer() const { return isPlayer; }
+
+bool BattleCharacter::IsBlade() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  return parameter != nullptr && parameter->isBlade;
+}
 
 gf::GfObj *BattleCharacter::GetObject() const { return gf::GfObjUtil::getObj(handle); }
 
 bool BattleCharacter::IsEnemy() const { return !isPlayer; }
+
+bool BattleCharacter::IsDriver() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  return parameter != nullptr && !parameter->isBlade && parameter->buddy != gf::INVALID_HANDLE;
+}
+
+CharacterParameter *BattleCharacter::GetCharacterParameter(bool isBattle) {
+  return const_cast<CharacterParameter *>(GetCharacterParameterConst(isBattle));
+}
 
 gf::GF_OBJ_HANDLE *BattleCharacter::GetControlCharacterHandle() const { return Utility::GetControlCharacterHandle(); }
 
 gf::GfObj *BattleCharacter::GetObject(gf::GF_OBJ_HANDLE *handle) const { return gf::GfObjUtil::getObj(handle); }
 
 bool BattleCharacter::IsBattle() const { return isBattle; }
+
+void BattleCharacter::ResetAnimationMoveDistance() {
+  for (int i = 0; i < 20; i++) {
+    animationMoveDistances[i].animation = ANIMATION_INVALID;
+  }
+}
+
+void BattleCharacter::ResetAlphaAnimation() {
+  for (int i = 0; i < 17; i++) {
+    alphaProcs[i].duration = 0.0f;
+    alphaProcs[i].time = 0.0f;
+    alphaProcs[i].startRate = -1.0f;
+    alphaProcs[i].rate = -1.0f;
+    alphaProcs[i].targetRate = -1.0f;
+  }
+}
+
+void BattleCharacter::DeleteKizunaAuraEffect() {
+  if (effects[EFFECT_ID_KIZUNA_AURA] != 0) {
+    if (gf::GfGameManager::isPlayEvent()) {
+      fw::EffectManager::get()->remove(effects[EFFECT_ID_KIZUNA_AURA]);
+    } else {
+      fw::EffectManager::get()->dead(effects[EFFECT_ID_KIZUNA_AURA]);
+    }
+    effects[EFFECT_ID_KIZUNA_AURA] = 0;
+  }
+}
+
+void BattleCharacter::CancelButtonChallenge() {
+  if (buttonChallenge != 0) {
+    BattleGlobal::get()->buttonChallenge.Cancel(buttonChallenge);
+    buttonChallenge = 0;
+  }
+}
+
+bool BattleCharacter::IsDispWeaponAlpha(int alpha) const {
+  if (alpha >= ALPHA_WEAPON_FIRST && alpha <= ALPHA_WEAPON_LAST) {
+    f32 rate = alphaProcs[alpha].rate;
+    return rate < 0.0f || rate > 0.0f;
+  }
+  return false;
+}
+
+bool BattleCharacter::IsBoss() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  return parameter != nullptr && parameter->IsBoss();
+}
+
+bool BattleCharacter::IsNamed() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  return parameter != nullptr && parameter->IsNamed();
+}
+
+bool BattleCharacter::IsBossOrNamed() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  return parameter != nullptr && parameter->IsBossOrNamed();
+}
+
+int BattleCharacter::GetGroupIndex() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  return parameter != nullptr ? parameter->partyId : -1;
+}
 
 bool BattleCharacter::IsEnableBackHome() const { return actionId == ACTION_ID_IDLE; }
 
@@ -139,6 +243,18 @@ int BattleCharacter::GetWeaponType(bool isAsm) const {
   }
 
   return weaponType;
+}
+
+const BattleCharacter::CUSTOM_VOICE_DATA *BattleCharacter::GetCustomVoiceData(int voice, int *index) const {
+  for (int i = 0; i < 3; i++) {
+    if (customVoices[i].voice == voice) {
+      if (index != nullptr) {
+        *index = i;
+      }
+      return &customVoices[i];
+    }
+  }
+  return nullptr;
 }
 
 bool BattleCharacter::IsCustomVoice(int voice) const {
@@ -190,6 +306,29 @@ void BattleCharacter::ResetAlphaRate(int alpha) {
     alphaRates[i] = -1.0f;
   }
 }
+
+f32 BattleCharacter::GetSyncCount(bool isSlow) const { return GetDt(isSlow, true) * FRAME_RATE; }
+
+f32 BattleCharacter::GetDt(bool isSlow, bool isStopCheck) const {
+  if (isStopCheck && isStop) {
+    return 0.0f;
+  }
+  return isSlow ? dt * slowRate : dt;
+}
+
+void BattleCharacter::RegisterSlow(SLOW_PROC_ID slow, f32 rate, f32 time) {
+  slows[slow].rate = rate;
+  slows[slow].time = time;
+  slows[slow].counter = 0.0f;
+}
+
+void BattleCharacter::DeleteSlow(SLOW_PROC_ID slow) {
+  slows[slow].rate = 1.0f;
+  slows[slow].time = 0.0f;
+  slows[slow].counter = 0.0f;
+}
+
+bool BattleCharacter::IsPause() const { return GetDt(true, true) <= PAUSE_DT; }
 
 f32 BattleCharacter::GetSystemDt() const { return systemDt; }
 

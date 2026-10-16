@@ -1,4 +1,5 @@
 #pragma once
+#include "battle/button_challenge.h"
 #include "gf/data/gf_data_weapon.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
@@ -142,7 +143,8 @@ public:
   u8 _08[0x18 - 0x08];
   mutable const char *seTags[185];
   ShakeCameraManager *shakeCameraManager;
-  u8 _5e8[0x6b8 - 0x5e8];
+  ButtonChallenge buttonChallenge;
+  u8 _620[0x6b8 - 0x620];
   f32 stopTime;
   u8 _6bc[0x6c0 - 0x6bc];
   mm::mtl::FixedVector<SLOW_PROC_DATA, 20> slowProcs;
