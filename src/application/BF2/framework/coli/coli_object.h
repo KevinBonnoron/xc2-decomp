@@ -80,7 +80,10 @@ static_assert(offsetof(ColiShape, size) == 0x10, "");
 
 class ColiObjUserData {
 public:
-  virtual ~ColiObjUserData();
+  static mm::mtl::RTTI m_rtti;
+
+  ColiObjUserData() : handle(0) {}
+  virtual const mm::mtl::RTTI *getRTTI() const { return &m_rtti; }
 
   u32 handle;
 };
@@ -94,6 +97,7 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
+  ColiObject();
   ~ColiObject();
   virtual const mm::mtl::RTTI *getRTTI() const { return &m_rtti; }
   virtual void update();
@@ -145,9 +149,10 @@ public:
   HandlePtr<UpdatableObject> owner;
   mm::mtl::BitFlag<32> eventFlags;
   IColiEventListener *listener;
-  u8 _58[0xa0 - 0x58];
+  u8 _58[0x60 - 0x58];
+  mm::Mat44 offsetMatrix;
   mm::Mat44 matrix;
-  u8 _e0[0xe8 - 0xe0];
+  f32 scale;
   ColiShape *shape;
   ColiObjUserData userData;
 };
@@ -156,7 +161,9 @@ static_assert(offsetof(ColiObject, coliObject) == 0x20, "");
 static_assert(offsetof(ColiObject, type) == 0x30, "");
 static_assert(offsetof(ColiObject, owner) == 0x38, "");
 static_assert(offsetof(ColiObject, listener) == 0x50, "");
+static_assert(offsetof(ColiObject, offsetMatrix) == 0x60, "");
 static_assert(offsetof(ColiObject, matrix) == 0xa0, "");
+static_assert(offsetof(ColiObject, scale) == 0xe0, "");
 static_assert(offsetof(ColiObject, shape) == 0xe8, "");
 static_assert(offsetof(ColiObject, userData) == 0xf0, "");
 static_assert(sizeof(ColiObject) == 0x100, "");

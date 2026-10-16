@@ -31,7 +31,10 @@ public:
   static const u8 FLAG_OUT_RANGE = 1 << 1;
   static const u8 FLAG_CONTACT_WALL = 1 << 2;
 
-  u8 _00[0x20 - 0x00];
+  virtual ~IDColiObj();
+  virtual void release();
+
+  u8 _08[0x20 - 0x08];
   u8 flags;
   u8 _21[0x24 - 0x21];
   ObjType type;

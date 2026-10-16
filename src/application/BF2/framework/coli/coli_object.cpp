@@ -1,7 +1,9 @@
 #include "framework/coli/coli_object.h"
 
+#include "framework/coli/coli_manager.h"
 #include "framework/object/updatable_object.h"
 #include "idcoli/idcoli.h"
+#include "ml/work_cpu.h"
 
 namespace idcoli {
 enum ColiAtrr : int;
@@ -189,6 +191,26 @@ void ColiObject::resetCharacter(f32 radius, f32 height) {
   }
   default:
     break;
+  }
+}
+
+ColiObject::ColiObject() : coliObject(nullptr), flags(0), listener(nullptr), _58(), scale(1.0f), shape(nullptr) {
+  offsetMatrix = mm::Mat44::identity;
+  matrix = mm::Mat44::identity;
+}
+
+ColiObject::~ColiObject() {
+  if (coliObject != nullptr) {
+    ColiManager::get()->getInterface();
+    ml::WorkCpu::getFrameCount();
+    coliObject->release();
+    coliObject = nullptr;
+  }
+
+  ColiManager::get()->removeObject(this);
+  if (shape != nullptr) {
+    delete shape;
+    shape = nullptr;
   }
 }
 
