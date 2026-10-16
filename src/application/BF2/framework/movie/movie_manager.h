@@ -8,11 +8,19 @@
 
 class ICMovie;
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+}
+} // namespace mm
+
 namespace fw {
 
 class MovieManager : public ManagerObject, public mm::mtl::PtrSingleton<MovieManager>, public ml::IWorkBackground {
 public:
   ~MovieManager();
+  void open(mm::mtl::IAllocator *allocator, u32 layer);
+  void close();
   void stop();
   bool set_file(const char *path);
   f32 get_length();
