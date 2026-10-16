@@ -1,5 +1,4 @@
 #pragma once
-#include "fw/fw_lang_util.h"
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
@@ -13,6 +12,7 @@ namespace fw {
 struct PadData;
 class MemHandlebaseAllocator;
 class PointerMap;
+enum LangType : u32;
 } // namespace fw
 
 namespace mm {
