@@ -1,14 +1,19 @@
 #include "battle/character/elemental_combo_manager.h"
 
 #include "battle/battle_global.h"
+#include "battle/btl_system_balance_access.h"
 #include "battle/chain_attack_manager.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
 #include "battle/data_manager_battle.h"
 #include "framework/effect/effect_manager.h"
+#include "gf/object/gf_obj_handle.h"
+#include "mm_math/mm_math.h"
 
 namespace btl {
+
+constexpr int ELEMENTAL_STAGE_NONE = 3;
 
 ElementalComboManager::~ElementalComboManager() {
   if (BattleGlobal::get()->elementalComboImmortal == handle) {
@@ -45,6 +50,56 @@ void ElementalComboManager::Initialize(gf::GF_OBJ_HANDLE *handle) {
   this->handle = handle;
   isPlayer = false;
   CheckCharacterID();
+}
+
+void ElementalComboManager::CheckCharacterID() {
+  if (characterId >= 0 || handle == gf::INVALID_HANDLE) {
+    return;
+  }
+
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character == nullptr) {
+    return;
+  }
+
+  characterId = character->id;
+  isPlayer = character->IsPlayer();
+  const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
+  f32 scale = parameter->ballHeight * 0.1f;
+  f32 radiusScale = parameter->ballRadius * (1.0f / 6.0f);
+  scale = scale > radiusScale ? scale : radiusScale;
+  BtlSystemBalanceAccess *balance = BtlSystemBalanceAccess::get();
+  ballScale = mm::clamp(scale, balance->ballScaleMin * 0.01f, balance->ballScaleMax * 0.01f);
+  if (isPlayer) {
+    elementalValueMax = BtlSystemBalanceAccess::get()->elementalValueMax;
+  } else {
+    elementalValueMax = 0;
+  }
+}
+
+void ElementalComboManager::ResetElement(int attribute) {
+  int first = 0;
+  int last = ATTRIBUTE_COUNT;
+  if (attribute >= 0) {
+    first = attribute;
+    last = attribute;
+  }
+  for (int i = first; i <= last; i++) {
+    ELEMENTAL_DATA &element = elements[i];
+    element.totalDamage = 0;
+    element.value = 0.0f;
+    element.ratio = 0.0f;
+    element.timer = 0.0f;
+    element.state = 0;
+    element.burstCharacter = -1;
+    element.comboId = 0;
+    element.stage = ELEMENTAL_STAGE_NONE;
+    __builtin_memset(element.attackIds, 0, sizeof(element.attackIds));
+    __builtin_memset(element.damages, 0, sizeof(element.damages));
+    element.attribute = i;
+  }
+  startWaitTime = 0.0f;
+  burstComboId = 0;
 }
 
 int ElementalComboManager::GetResistantAttrBreakDamage(int attribute) const {

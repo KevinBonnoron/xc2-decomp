@@ -192,7 +192,10 @@ public:
   int partyId;
   u8 _20[0x2c - 0x20];
   f32 radius;
-  u8 _30[0x5c - 0x30];
+  f32 ballHeight;
+  u8 _34[0x3c - 0x34];
+  f32 ballRadius;
+  u8 _40[0x5c - 0x40];
   f32 specialEnhanceRates[SPECIAL_ENHANCE_COUNT];
   u16 specialEnhanceValues[SPECIAL_ENHANCE_COUNT];
   u8 _b0[0xbc - 0xb0];
