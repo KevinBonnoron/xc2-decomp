@@ -555,6 +555,18 @@ def compile_headers(tmp):
     return [(os.path.relpath(header, ROOT), err) for header, err in results if err]
 
 
+ABSOLUTE_INCLUDE = re.compile(r'^\s*#\s*include\s*[<"](/[^>"]*)[>"]', re.M)
+
+
+def absolute_includes():
+    """An include by absolute path builds only in one checkout, and may pull a second copy of a header elsewhere."""
+    found = []
+    for path in sorted(glob.glob(os.path.join(SRC_DIR, "**", "*.cpp"), recursive=True)) + header_sources():
+        for target in ABSOLUTE_INCLUDE.findall(read_source(path)):
+            found.append((os.path.relpath(path, ROOT), f"includes {target} by absolute path, use a path relative to an include directory\n"))
+    return found
+
+
 def qualified_needle(demangled_name):
     return "::".join(demangled_name.split("(")[0].split("::")[-2:]) + "("
 
@@ -713,7 +725,7 @@ def check_all(demangled, scope=None, verbose=True):
         with ThreadPoolExecutor(max_workers=2) as pool:
             pending_headers = pool.submit(compile_headers, tmp)
             objects, errors = compile_all(tmp)
-            errors += pending_headers.result()
+            errors += pending_headers.result() + absolute_includes()
         per_object = [(source, obj, [f for f in defined_functions(obj) if f in demangled and in_scope(demangled[f], scope)])
                       for source, obj in objects]
         all_funcs = [f for _, _, funcs in per_object for f in funcs]
