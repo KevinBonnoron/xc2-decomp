@@ -21,6 +21,8 @@ public:
   void requestGameEvent(u32 handle, const EventData &event);
   void registObjectTimer(u32 handle, u16 id, u64 time, bool repeat);
   void releaseObjectTimer(u32 handle);
+  u32 createLayer(u32 layer);
+  void releaseLayer(u32 layer);
 
   u8 _08[0x3d8 - 0x08];
   const UIPadRead *padRead;
