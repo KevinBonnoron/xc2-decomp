@@ -40,6 +40,7 @@ public:
   virtual void onDeactivate();
   virtual void update(const UpdateInfo &info);
   virtual void updateViewMatrix();
+  void setLookAt(const mm::Vec3 &position, const mm::Vec3 &target, f32 roll);
 
   CameraLayer *layer;
   CAMERA_PRIO prio;
@@ -93,13 +94,14 @@ static_assert(sizeof(CameraLayer) == 0xd0, "");
 
 class CameraManager : public mm::mtl::PtrSingleton<CameraManager> {
 public:
+  static constexpr u32 LAYER_COUNT = 4;
+
   u8 _08[0x20 - 0x08];
-  CameraLayer layer;
-  u8 _f0[0x360 - 0xf0];
+  CameraLayer layers[LAYER_COUNT];
   mm::mtl::IntrusivePtr<CameraTarget> target;
 };
 
-static_assert(offsetof(CameraManager, layer) == 0x20, "");
+static_assert(offsetof(CameraManager, layers) == 0x20, "");
 static_assert(offsetof(CameraManager, target) == 0x360, "");
 
 } // namespace fw

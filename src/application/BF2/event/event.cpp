@@ -51,6 +51,7 @@
 #include "event/block_wtr.cpp"
 #include "event/block_time.cpp"
 #include "event/block_manager.cpp"
+#include "event/cam_interface.cpp"
 #include "event/cam_util.cpp"
 #include "event/cam_eva_player.cpp"
 #include "event/cam_eva_player_eff.cpp"

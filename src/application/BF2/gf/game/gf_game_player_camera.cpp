@@ -51,7 +51,7 @@ void GfGamePlayerCamera::cleanup() {
   if (camera.get() != nullptr) {
     fw::CameraManager *manager = fw::CameraManager::get();
     if (manager != nullptr) {
-      manager->layer.pop(camera, 0.0f);
+      manager->layers[0].pop(camera, 0.0f);
     }
 
     camera = nullptr;
@@ -70,12 +70,12 @@ void GfGamePlayerCamera::resetCameraForSceneJump() {
   }
 
   if (playerCamera->camera.get() != nullptr) {
-    manager->layer.pop(playerCamera->camera, 0.0f);
+    manager->layers[0].pop(playerCamera->camera, 0.0f);
     playerCamera->camera = nullptr;
   }
 
   playerCamera->camera = PlayerCamera::create();
-  manager->layer.push(playerCamera->camera, 0.0f);
+  manager->layers[0].push(playerCamera->camera, 0.0f);
 }
 
 void GfGamePlayerCamera::resetCamera() {
@@ -208,7 +208,7 @@ void GfGamePlayerCamera::gevPartyMemberOK(bool isOK) {
     camera = PlayerCamera::create();
     fw::CameraManager *manager = fw::CameraManager::get();
     if (manager != nullptr) {
-      manager->layer.push(camera, 0.0f);
+      manager->layers[0].push(camera, 0.0f);
     }
   }
 }
