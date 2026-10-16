@@ -16,12 +16,33 @@ enum ACC_TYPE {
   ACC_TYPE_NORMAL,
 };
 
+struct FrameInfo {
+  f32 frame;
+  f32 delta;
+  f32 pauseDelta;
+  f32 streamDelta;
+  f32 accFrame;
+};
+
 class FrameManager : public IManager, public mm::mtl::NoncopyableBase {
 public:
   static constexpr u32 KEY_FRAME_COUNT = 512;
   static constexpr f32 DEFAULT_MAX_FRAME = 1000.0f;
 
   enum PAUSE_TYPE {
+    PAUSE_TYPE_WAIT = 0,
+    PAUSE_TYPE_SKIP = 1,
+    PAUSE_TYPE_SELECT = 2,
+    PAUSE_TYPE_QUEST = 3,
+    PAUSE_TYPE_COMMON_UI = 4,
+    PAUSE_TYPE_FIELD_SKILL = 5,
+    PAUSE_TYPE_SHOP_UI = 6,
+    PAUSE_TYPE_PAYOFF_UI = 7,
+    PAUSE_TYPE_REWARD_UI = 8,
+    PAUSE_TYPE_RAND = 9,
+    PAUSE_TYPE_HOMURA_HIKARI_UI = 11,
+    PAUSE_TYPE_MINIGAME = 12,
+    PAUSE_TYPE_NEW_GAME_WAIT = 13,
     PAUSE_TYPE_COUNT = 17,
     PAUSE_TYPE_ALL = PAUSE_TYPE_COUNT,
   };
@@ -32,9 +53,13 @@ public:
     FLAG_CPU_ACC_ENABLE = 1 << 2,
     FLAG_LOCK_FRAME = 1 << 3,
     FLAG_MAKE_CAPTURE_FRAME = 1 << 4,
+    FLAG_CAPTURE_FRAME_SET = 1 << 5,
     FLAG_CAPTURE_FRAME = 1 << 6,
     FLAG_REQUEST_FRAME = 1 << 7,
+    FLAG_PAGE_START = 1 << 8,
     FLAG_WAITING = 1 << 9,
+    FLAG_BACKUP_FRAME = 1 << 10,
+    FLAG_RESTORE_FRAME = 1 << 11,
   };
 
   enum {
@@ -45,6 +70,8 @@ public:
     DISP_FLAG_USE_STOP3D = 1 << 4,
     DISP_FLAG_USE_ACC_PRINT = 1 << 5,
   };
+
+  static constexpr u32 PAUSE_PRESERVED_BITS = 1 << 14;
 
   struct KeyFrame {
     f32 frame;
@@ -64,6 +91,7 @@ public:
     setFlag(FLAG_LOCK_FRAME, isLock);
     mLockFrame = frame;
   }
+  void pause(PAUSE_TYPE type, bool isPause);
   void login();
   void init();
   void end();
@@ -120,6 +148,19 @@ private:
     }
   }
 
+  void clearPage() {
+    mMaxFrame = DEFAULT_MAX_FRAME;
+    mKomaCount = -1;
+    mPageName = "";
+    mPageID = 0;
+    frame = 0.0f;
+    mNextFrame = 0.0f;
+    mReachedFrame = 0.0f;
+    mSkipAbleFrame = 0.0f;
+    mKeyFrames.clear();
+    mAccFrame = 0.0f;
+  }
+
   u32 flags;
   u32 dispFlags;
   u32 mPauseBits;
@@ -129,22 +170,22 @@ private:
   f32 frame;
   f32 mTotalFrame;
   f32 mSkipStartFrame;
-  f32 mPrevFrame;
-  u8 _140[0x144 - 0x140];
-  u32 mWaitCount;
+  f32 mNextFrame;
+  f32 mBackupFrame;
+  f32 mReachedFrame;
   f32 mMaxFrame;
   f32 mLockFrame;
-  u8 _150[0x154 - 0x150];
+  f32 mCaptureFrame;
   f32 mRequestFrame;
   f32 mSkipAbleFrame;
   ACC_TYPE mAccType;
-  u32 mKomaCount;
+  f32 mAccFrame;
+  u8 _164[0x168 - 0x164];
   mm::mtl::FixedVector<KeyFrame, KEY_FRAME_COUNT> mKeyFrames;
-  u64 mCaptureTime;
-  u64 mCaptureStartTime;
-  u32 mCaptureCount;
-  u8 _1184[0x1188 - 0x1184];
-  int mNextPageID;
+  FrameInfo mFrameInfo;
+  int mPageDispCount;
+  int mKomaCount;
+  PAUSE_TYPE mKomaType;
 };
 
 static_assert(sizeof(FrameManager) == 0x1190, "");
