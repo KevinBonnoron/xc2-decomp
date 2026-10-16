@@ -20,6 +20,7 @@ public:
   CV_TYPE getCv(size_t index) const;
   f32 getValue(size_t index) const;
   void setValue(size_t index, f32 value);
+  f32 getValue() const { return value; }
 
 private:
   mm::mtl::FixedVector<f32, KEY_COUNT> values;
