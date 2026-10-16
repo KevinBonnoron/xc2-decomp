@@ -52,6 +52,7 @@
 #include "event/select_window.cpp"
 #include "event/select_manager.cpp"
 #include "event/status_manager.cpp"
+#include "event/voice_maker.cpp"
 #include "event/volume_player.cpp"
 #include "event/volume_skip.cpp"
 #include "event/volume_seamless.cpp"
