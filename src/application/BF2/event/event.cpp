@@ -34,6 +34,7 @@
 #include "event/cam_base.cpp"
 #include "event/cam_free.cpp"
 #include "event/cam_field.cpp"
+#include "event/cam_hands.cpp"
 #include "event/cam_motion.cpp"
 #include "event/cam_obj.cpp"
 #include "event/cam_manager.cpp"
