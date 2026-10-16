@@ -67,7 +67,7 @@ public:
   void push_back(const T &value) {
 #line 227
     MM_ASSERT(size() < capacity());
-    new (static_cast<void *>(at(mSize))) T(value);
+    construct(at(mSize), value);
     mSize++;
   }
 
@@ -96,6 +96,12 @@ private:
       for (; first != last; ++first, ++dest) {
         *dest = *first;
       }
+    }
+  }
+
+  static void construct(T *it, const T &value) {
+    if (it != nullptr) {
+      new (static_cast<void *>(it)) T(value);
     }
   }
 
