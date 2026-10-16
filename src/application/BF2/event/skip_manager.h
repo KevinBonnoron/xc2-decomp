@@ -16,9 +16,6 @@ public:
     FLAG_SKIP_FAST_ENABLE = 1 << 2,
   };
 
-  SkipManager();
-  virtual ~SkipManager();
-  bool isSkip() const { return (flags & FLAG_SKIP) != 0; }
   bool isSkipFast() const {
     if (flags & FLAG_SKIP_FAST_ENABLE) {
       if (mm::mtl::Singleton<DebugManager>::getPtr()->isFastSkipDisable() && !mm::mtl::Singleton<DebugManager>::getPtr()->isFastSkipEnableOneTime()) {
@@ -30,25 +27,24 @@ public:
     }
     return false;
   }
-  f32 getEndFrame() const {
-    if (!isSkip()) {
-      return 0.0f;
-    }
-    return mSkipFrame < 0.0f ? DEFAULT_END_FRAME : mSkipFrame;
-  }
+  bool isSkip() const;
+  void skip(bool isSkip, f32 frame);
+  void setSkipVolume(bool isSkipVolume);
+  f32 getEndFrame() const;
+  SkipManager();
+  virtual ~SkipManager();
   void clear();
   void update();
   void render();
   void tail();
-  void setSkipVolume(bool isSkipVolume);
   bool isSkipVolume() const;
   void setSkipFastEnable(bool isEnable);
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
   u32 flags;
-  u32 mSkipState;
-  f32 mSkipFrame;
+  u32 skipState;
+  f32 skipFrame;
 };
 
 static_assert(sizeof(SkipManager) == 0x20, "");
