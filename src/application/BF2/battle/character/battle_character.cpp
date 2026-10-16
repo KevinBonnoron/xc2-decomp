@@ -267,6 +267,14 @@ void BattleCharacter::GetMoveDataPerSec(mm::Vec3 &moveData) const {
 
 void BattleCharacter::SetAnimationSpeed(f32 speed) { animationSpeed = speed; }
 
+void BattleCharacter::SetIKData(const ARTS_DATA &data) {
+  ikStartNo = data.ikStartNo;
+  ikStartFrame = data.ikStartFrame;
+  ikEndNo = data.ikEndNo;
+  ikEndFrame = data.ikEndFrame;
+  isIK = data.isIK;
+}
+
 void BattleCharacter::NotifyStrikeDamage(int) { TalkManager::get()->NotifyTrigger(id, TalkManager::TRIGGER_STRIKE_DAMAGE, 0, 0); }
 
 void BattleCharacter::LandingCallback() {}
