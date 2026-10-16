@@ -5,27 +5,49 @@
 namespace mm {
 namespace mtl {
 
+template <size_t ALIGN> struct FixedVectorUnit;
+template <> struct FixedVectorUnit<1> {
+  typedef unsigned char type;
+};
+template <> struct FixedVectorUnit<2> {
+  typedef unsigned short type;
+};
+template <> struct FixedVectorUnit<4> {
+  typedef unsigned int type;
+};
+template <> struct FixedVectorUnit<8> {
+  typedef unsigned long type;
+};
+template <> struct FixedVectorUnit<16> {
+  struct alignas(16) type {
+    unsigned char bytes[16];
+  };
+};
+
 template <typename T, size_t N> class FixedVector {
+  typedef typename FixedVectorUnit<alignof(T)>::type Unit;
+
 public:
   FixedVector() : mSize(0) {}
   ~FixedVector() { clear(); }
 
-  // The assertion line of the game changes the register allocation of the loops indexing a vector.
-#line 169
+  // __LINE__ must be 170, 181 and 227 as in the original header: they are the line arguments of the asserts.
   T &operator[](size_t index) {
+#line 170
     MM_ASSERT(index < size());
-    return *reinterpret_cast<T *>(mBuffer + index * sizeof(T));
+    return *at(index);
   }
 
   const T &operator[](size_t index) const {
+#line 181
     MM_ASSERT(index < size());
-    return *reinterpret_cast<const T *>(mBuffer + index * sizeof(T));
+    return *at(index);
   }
 
-  T &front() { return *reinterpret_cast<T *>(mBuffer); }
-  const T &front() const { return *reinterpret_cast<const T *>(mBuffer); }
-  T &back() { return *reinterpret_cast<T *>(mBuffer + (mSize - 1) * sizeof(T)); }
-  const T &back() const { return *reinterpret_cast<const T *>(mBuffer + (mSize - 1) * sizeof(T)); }
+  T &front() { return *at(0); }
+  const T &front() const { return *at(0); }
+  T &back() { return *at(mSize - 1); }
+  const T &back() const { return *at(mSize - 1); }
 
   size_t size() const { return mSize; }
   size_t capacity() const { return N; }
@@ -37,13 +59,14 @@ public:
 
   void clear() {
     while (mSize != 0) {
-      reinterpret_cast<T *>(mBuffer + --mSize * sizeof(T))->~T();
+      at(--mSize)->~T();
     }
   }
 
   void push_back(const T &value) {
+#line 227
     MM_ASSERT(size() < capacity());
-    *reinterpret_cast<T *>(mBuffer + mSize * sizeof(T)) = value;
+    *at(mSize) = value;
     mSize++;
   }
 
@@ -60,12 +83,15 @@ public:
   }
 
 private:
+  T *at(size_t index) { return reinterpret_cast<T *>(&mBuffer[index * sizeof(T) / sizeof(Unit)]); }
+  const T *at(size_t index) const { return reinterpret_cast<const T *>(&mBuffer[index * sizeof(T) / sizeof(Unit)]); }
+
   static void copy(const T *first, const T *last, T *dest) {
     size_t count = last - first;
     __builtin_memcpy(dest, first, count * sizeof(T));
   }
 
-  alignas(T) unsigned char mBuffer[sizeof(T) * N];
+  Unit mBuffer[sizeof(T) * N / sizeof(Unit)];
   size_t mSize;
 };
 
