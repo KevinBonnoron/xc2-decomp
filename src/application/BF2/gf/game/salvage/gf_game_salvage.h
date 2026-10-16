@@ -19,6 +19,7 @@ struct Vec3;
 namespace gf {
 
 struct GAME_VOICE_HANDLE;
+class GfMenuCallContext;
 struct GF_OBJ_HANDLE;
 class GfEvtModelSalvage;
 class GfGameSalvage;
@@ -45,7 +46,7 @@ class StateSalvageErrorMessage : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x20 - 0x18];
+  GfMenuCallContext *context;
 };
 
 class StateSalvageItemSelect : public ai::State {
@@ -55,7 +56,7 @@ class StateSalvageItemSelect : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x20 - 0x18];
+  GfMenuCallContext *context;
 };
 
 class StateSalvageSetupFadeOut : public ai::State {
@@ -65,7 +66,7 @@ class StateSalvageSetupFadeOut : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x20 - 0x18];
+  long startClock;
 };
 
 class StateSalvageLoad : public ai::State {
@@ -82,7 +83,7 @@ class StateSalvageSetupFadeIn : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x20 - 0x18];
+  long startClock;
 };
 
 class StateSalvageSkillCheck : public ai::State {
@@ -102,7 +103,7 @@ class StateSalvageStartVoice : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x20 - 0x18];
+  long startClock;
 };
 
 class StateSalvageDiveStart : public ai::State {
@@ -136,7 +137,7 @@ class StateSalvageDiveFadeOut : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x20 - 0x18];
+  long startClock;
 };
 
 class StateSalvageDiveFadeWait : public ai::State {
@@ -146,7 +147,7 @@ class StateSalvageDiveFadeWait : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x20 - 0x18];
+  long startClock;
 };
 
 class StateSalvageDiveFadeIn : public ai::State {
@@ -156,7 +157,7 @@ class StateSalvageDiveFadeIn : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x20 - 0x18];
+  long startClock;
 };
 
 class StateSalvageClimbStart : public ai::State {
@@ -176,7 +177,8 @@ class StateSalvageResult : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x28 - 0x18];
+  long startClock;
+  bool isVibrated;
 };
 
 class StateSalvageResultUi : public ai::State {
@@ -186,7 +188,7 @@ class StateSalvageResultUi : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x20 - 0x18];
+  GfMenuCallContext *context;
 };
 
 class StateSalvagePartyFormDelay : public ai::State {
@@ -196,7 +198,7 @@ class StateSalvagePartyFormDelay : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x20 - 0x18];
+  long startClock;
 };
 
 class StateSalvageCamWait : public ai::State {
@@ -206,7 +208,7 @@ class StateSalvageCamWait : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x20 - 0x18];
+  long startClock;
 };
 
 class StateSalvageFinish : public ai::State {
@@ -216,7 +218,7 @@ class StateSalvageFinish : public ai::State {
   void update(GfGameSalvage *salvage, const fw::UpdateInfo &info);
 
 private:
-  u8 _18[0x20 - 0x18];
+  long startClock;
 };
 
 class GfGameSalvage : public mm::mtl::PtrSingleton<GfGameSalvage> {
@@ -244,6 +246,11 @@ public:
     STATE_CAM_WAIT,
     STATE_FINISH,
     STATE_MAX,
+  };
+
+  enum VoiceType {
+    VOICE_START,
+    VOICE_START_SKILL,
   };
 
   enum AnimationType {
@@ -288,10 +295,17 @@ public:
   bool isCameraClimbEnd();
   bool isCameraCut01End();
   bool isCameraDive();
+  bool isTboxExist() const;
+  void execPop();
   void createModel();
+  void destroyModel();
   bool isValidModel();
+  bool isAnimationEnd() const;
   void setModelTransform(const mm::Vec3 &position, f32 rotation);
+  void setPartyDisp(bool isDisp);
+  void playVoice(VoiceType voice);
   bool isVoiceEnd();
+  void playClimbReady();
   AnimationType getClimbAnimationType() const;
   void playWireStart(f32 time, f32 speed, f32 length);
   void addSalvagerPoint(u32 point);
@@ -304,7 +318,6 @@ public:
   static void setLogButtonChallengeResult(int result);
   static void setLogLapsedTime(int time);
 
-private:
   ai::Fsm fsm;
   mm::mtl::IntrusivePtr<fw::Camera> cameraDiveStart;
   mm::mtl::IntrusivePtr<fw::Camera> cameraDive;
