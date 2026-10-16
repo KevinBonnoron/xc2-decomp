@@ -102,6 +102,17 @@ u32 CharacterParameter::GetMaxHP() const {
   return maxHp;
 }
 
+int CharacterParameter::ApplyStatusEnhance(int value, int rateType, int addType) const {
+  ENHANCE_DATA data;
+  if (rateType != 0 && GetAdditionalEnhanceEffect(data, rateType, nullptr)) {
+    value += static_cast<int>(value * data.value);
+  }
+  if (addType != 0 && GetAdditionalEnhanceEffect(data, addType, nullptr)) {
+    value += static_cast<int>(data.value);
+  }
+  return value;
+}
+
 bool CharacterParameter::IsBuff(int buff) const {
   if (isBlade) {
     if (isIgnoreBuddy) {
@@ -566,6 +577,12 @@ void PlayerParameter::ResetUseWeapon() {
   }
 
   useWeaponTotal = 0;
+}
+
+void PlayerParameter::CheckChangeArtsPalette() {
+  if (isInitialized && !isBattle && !BattleGlobal::get()->isLockArtsPalette) {
+    InitializeArtsPalette(0);
+  }
 }
 
 void PlayerParameter::SetupPouchDamageArmor() {

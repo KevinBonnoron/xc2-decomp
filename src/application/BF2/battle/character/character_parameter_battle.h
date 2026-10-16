@@ -141,6 +141,7 @@ public:
   void SetHP(u32 hp);
   u32 GetHP() const;
   u32 GetMaxHP() const;
+  int ApplyStatusEnhance(int value, int rateType, int addType) const;
   bool IsBuff(int buff) const;
   const FIGHT_COMBO_DATA *GetFightComboDataConst() const;
   u32 GetLevel() const;
@@ -222,7 +223,7 @@ public:
   u8 characterId;
   s8 classId;
   u8 _5b0[0x5df - 0x5b0];
-  u8 : 1;
+  u8 isInitialized : 1;
   u8 isBattle : 1;
   u8 isBlade : 1;
   u8 isEnableCoolTime : 1;
