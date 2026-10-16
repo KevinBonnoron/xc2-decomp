@@ -37,6 +37,7 @@ public:
   static void RandomVectorXZ(mm::Vec3 &vector);
   static bool GetObjectTransform(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &transform, TRANS_TYPE type);
   static bool GetObjectTransform(const gf::GfObj *obj, mm::Vec3 &transform, TRANS_TYPE type);
+  static bool GetObjectDirection(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &direction, bool isXZ);
   static bool GetObjectDirection(const gf::GfObj *obj, mm::Vec3 &direction, bool isXZ);
   static bool GetNodePosition(gf::GF_OBJ_HANDLE *handle, const char *node, mm::Vec3 &position);
   static bool GetNodePosition(gf::GfObj *obj, const char *node, mm::Vec3 &position);

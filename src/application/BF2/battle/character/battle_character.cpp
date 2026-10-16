@@ -1,5 +1,7 @@
 #include "battle/character/battle_character.h"
 
+#include <float.h>
+
 #include "battle/battle_global.h"
 #include "battle/button_challenge.h"
 #include "battle/character/character_parameter_battle.h"
@@ -23,6 +25,10 @@ constexpr f32 PAUSE_DT = 0.000001f;
 constexpr u16 ANIMATION_INVALID = 39;
 constexpr int ALPHA_WEAPON_FIRST = 12;
 constexpr int ALPHA_WEAPON_LAST = 16;
+constexpr int ALPHA_PROC_WEAPON = 6;
+constexpr int ALPHA_PROC_LAST = 11;
+constexpr int SE_HIT_ATTRIBUTE = 9;
+constexpr int SE_HIT_BULLET = 17;
 constexpr u32 BLADE_CHANGE_ACTIONS = 0xd2;
 constexpr int BLADE_SUPPORT_CONDITION_HATE_ELSE = 8;
 
@@ -228,6 +234,44 @@ bool BattleCharacter::IsBossOrNamed() const {
   return parameter != nullptr && parameter->IsBossOrNamed();
 }
 
+void BattleCharacter::AddUseWeapon() {
+  CharacterParameter *parameter = GetCharacterParameter(true);
+  if (parameter != nullptr) {
+    int weapon = weaponType;
+    parameter->AddUseWeapon(weapon);
+  }
+}
+
+void BattleCharacter::PlayHitAttrSE(int attribute, const mm::Vec3 *position) {
+  if (attribute >= 1 && attribute <= ATTRIBUTE_COUNT) {
+    PlaySE(BTL_SE_HIT, attribute + SE_HIT_ATTRIBUTE, position, true);
+  }
+}
+
+void BattleCharacter::PlayHitBulletSE(int attribute, const mm::Vec3 *position) {
+  if (attribute >= 1 && attribute <= ATTRIBUTE_COUNT) {
+    PlaySE(BTL_SE_HIT, attribute + SE_HIT_BULLET, position, true);
+  }
+}
+
+int BattleCharacter::GetIKData(f32 &weight, f32 &height) const {
+  int id = ikId;
+  if (id == 0) {
+    weight = 0.0f;
+    height = 0.0f;
+    return id;
+  }
+  weight = ikWeight;
+  height = ikHeight;
+  return id;
+}
+
+void BattleCharacter::SetupPosDir() {
+  landHeight = FLT_MAX;
+  Misc::GetObjectTransform(handle, position, Misc::TRANS_TYPE_POSITION);
+  Misc::GetObjectDirection(handle, direction, true);
+}
+
 int BattleCharacter::GetGroupIndex() const {
   const CharacterParameter *parameter = GetCharacterParameterConst(true);
   return parameter != nullptr ? parameter->partyId : -1;
@@ -326,6 +370,20 @@ void BattleCharacter::DeleteSlow(SLOW_PROC_ID slow) {
   slows[slow].rate = 1.0f;
   slows[slow].time = 0.0f;
   slows[slow].counter = 0.0f;
+}
+
+int BattleCharacter::GetAlphaSetID(ALPHA_PROC_ID alpha) {
+  int id = alpha;
+  if (id > ALPHA_PROC_LAST) {
+    return ALPHA_PROC_WEAPON;
+  }
+  if (id >= 0 && id < ALPHA_PROC_WEAPON) {
+    return id;
+  }
+  if (id >= ALPHA_PROC_WEAPON && id <= ALPHA_PROC_LAST) {
+    return id - ALPHA_PROC_WEAPON;
+  }
+  return -1;
 }
 
 bool BattleCharacter::IsPause() const { return GetDt(true, true) <= PAUSE_DT; }
