@@ -9,7 +9,7 @@ namespace ml {
 
 class DrMdoCtlPos : public DrMdlObj {
 public:
-  u8 _164[0x1e8 - 0x164];
+  u8 _190[0x1e8 - 0x190];
   DrResMdoInstAnmObj m_instAnmObj;
 };
 
