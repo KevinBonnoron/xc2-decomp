@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "framework/object/component_object.h"
+#include "framework/pointer_map.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/rtti.h"
 #include "types.h"
@@ -10,27 +11,6 @@ namespace fw {
 
 struct ObjectEvent;
 struct UpdateInfo;
-
-class PointerMap {
-public:
-  void *getPtr(u32 id) const;
-};
-
-template <typename T> struct HandlePtr {
-  HandlePtr() : id(0), map(nullptr) {}
-  HandlePtr(const HandlePtr &other) : id(other.id), map(other.map) {}
-
-  HandlePtr &operator=(const HandlePtr &other) {
-    id = other.id;
-    map = other.map;
-    return *this;
-  }
-
-  T *get() const { return id != 0 ? static_cast<T *>(map->getPtr(id)) : nullptr; }
-
-  u32 id;
-  PointerMap *map;
-};
 
 class UpdatableObject : public mm::mtl::IntrusiveListNode<UpdatableObject> {
 public:
