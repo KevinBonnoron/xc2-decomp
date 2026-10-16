@@ -42,6 +42,7 @@ public:
   void PreUpdateProc(const fw::UpdateInfo &updateInfo);
   static void Update(const fw::UpdateInfo &updateInfo);
   void UpdateProc(const fw::UpdateInfo &updateInfo);
+  void UpdateRing(int target, mm::Vec3 position, mm::Vec3 direction);
   void SetData(int id, gf::GF_OBJ_HANDLE *handle, int);
   int GetTarget(gf::GF_OBJ_HANDLE *handle) const;
   int GetTarget(int id) const;
@@ -52,7 +53,7 @@ public:
 
   u8 _08[0x10 - 0x08];
   RING_DATA rings[CHARACTER_COUNT];
-  u8 _10f0[0x1120 - 0x10f0];
+  mm::Vec3 targetRingPositions[HATE_TARGET_COUNT];
   u32 targetRingEffects[HATE_TARGET_COUNT];
   bool isTargetRingUsed[HATE_TARGET_COUNT];
 };

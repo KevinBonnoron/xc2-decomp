@@ -1,5 +1,6 @@
 #include "battle/hate_ring_manager.h"
 
+#include "battle/misc_battle.h"
 #include "framework/effect/effect_manager.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/gf_allocator.h"
@@ -63,6 +64,22 @@ void HateRingManager::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->PreUp
 void HateRingManager::PreUpdateProc(const fw::UpdateInfo &) {}
 
 void HateRingManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
+
+void HateRingManager::UpdateRing(int target, mm::Vec3 position, mm::Vec3 direction) {
+  targetRingPositions[target] = position;
+  fw::EffectManager *effectManager = fw::EffectManager::get();
+  u32 effect = targetRingEffects[target];
+  if (isTargetRingUsed[target]) {
+    if (effect != 0 || (effect = effectManager->createHateRing()) != 0) {
+      f32 rotation = Misc::CalcRotY(direction);
+      effectManager->updateHateRing(targetRingEffects[target], position, rotation, isTargetRingUsed[target], 1.0f);
+    }
+  } else if (effect != 0) {
+    effectManager->destroyHateRing(effect);
+    effect = 0;
+  }
+  targetRingEffects[target] = effect;
+}
 
 int HateRingManager::GetTarget(gf::GF_OBJ_HANDLE *handle) const {
   const RING_DATA *ring = rings;
