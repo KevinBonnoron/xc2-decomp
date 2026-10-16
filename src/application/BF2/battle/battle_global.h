@@ -141,6 +141,8 @@ public:
   int GetKizunaMax(const BattleCharacter *character) const;
   int GetSpLevelMax(const BattleCharacter *character) const;
   bool IsEnableSupport(const BattleCharacter *character) const;
+  bool IsKakuseiFinished() const;
+  bool IsKakuseiOrder(bool isCheckRestTime) const;
   void ApplyBattleCameraAdjustment(mm::Vec3 &position, mm::Vec3 &target);
 
   u8 _08[0x18 - 0x08];
@@ -160,7 +162,9 @@ public:
   MAP_DRIVER_REV_DATA mapDriverRevs[9];
   u8 _5ae4[0x5af8 - 0x5ae4];
   gf::GF_OBJ_HANDLE *elementalComboImmortal;
-  u8 _5b00[0x5b8e - 0x5b00];
+  u8 _5b00[0x5b68 - 0x5b00];
+  f32 kakuseiRestTime;
+  u8 _5b6c[0x5b8e - 0x5b6c];
   u16 enemyKillNum;
   u16 normalAttackArtsIds[16][gf::WEAPON_TYPE_COUNT + 1][3];
   u8 _65b0[0x65d2 - 0x65b0];
@@ -169,9 +173,11 @@ public:
   u8 requestJingle;
   u8 pauseFlags[8];
   u64 isLockArtsPalette : 1;
-  u64 : 11;
-  u64 isLockHate : 1;
-  u64 : 3;
+  u64 : 10;
+  u64 isKakuseiOrder : 1;
+  u64 isKakusei : 1;
+  u64 isKakuseiFinished : 1;
+  u64 : 2;
   u64 isGameOver : 1;
   u64 : 7;
   u64 isKillChild : 1;
@@ -196,6 +202,7 @@ static_assert(offsetof(BattleGlobal, elementalComboFlows) == 0x56a0, "");
 static_assert(offsetof(BattleGlobal, jingleHandle) == 0x5aa0, "");
 static_assert(offsetof(BattleGlobal, mapDriverRevs) == 0x5ac0, "");
 static_assert(offsetof(BattleGlobal, elementalComboImmortal) == 0x5af8, "");
+static_assert(offsetof(BattleGlobal, kakuseiRestTime) == 0x5b68, "");
 static_assert(offsetof(BattleGlobal, enemyKillNum) == 0x5b8e, "");
 static_assert(offsetof(BattleGlobal, normalAttackArtsIds) == 0x5b90, "");
 static_assert(offsetof(BattleGlobal, bgm) == 0x65d2, "");

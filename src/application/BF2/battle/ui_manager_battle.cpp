@@ -20,6 +20,12 @@ void UIManager::PreUpdateProc(const fw::UpdateInfo &) {}
 
 void UIManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
 
+void UIManager::SetKakuseiData(bool isEnableKakusei, bool isKakusei, f32 kakuseiRestTimeRatio) {
+  this->isEnableKakusei = isEnableKakusei;
+  this->kakuseiRestTimeRatio = kakuseiRestTimeRatio;
+  this->isKakusei = isKakusei;
+}
+
 void UIManager::RegisterRescueUI(gf::GF_OBJ_HANDLE *handle) { rescueTarget = handle; }
 
 } // namespace btl

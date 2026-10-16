@@ -23,12 +23,19 @@ public:
   void PreUpdateProc(const fw::UpdateInfo &updateInfo);
   static void Update(const fw::UpdateInfo &updateInfo);
   void UpdateProc(const fw::UpdateInfo &updateInfo);
+  void SetKakuseiData(bool isEnableKakusei, bool isKakusei, f32 kakuseiRestTimeRatio);
   void RegisterRescueUI(gf::GF_OBJ_HANDLE *handle);
 
-  u8 _08[0x20 - 0x08];
+  u8 _08[0x18 - 0x08];
+  f32 kakuseiRestTimeRatio;
+  bool isEnableKakusei;
+  bool isKakusei;
+  u8 _1e[0x20 - 0x1e];
   gf::GF_OBJ_HANDLE *rescueTarget;
 };
 
+static_assert(offsetof(UIManager, kakuseiRestTimeRatio) == 0x18, "");
+static_assert(offsetof(UIManager, isEnableKakusei) == 0x1c, "");
 static_assert(offsetof(UIManager, rescueTarget) == 0x20, "");
 
 } // namespace btl
