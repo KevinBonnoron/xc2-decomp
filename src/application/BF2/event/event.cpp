@@ -2,6 +2,11 @@
 // clang-format off
 #include "event/evt_log.cpp"
 #include "event/extend.cpp"
+#include "event/curve.cpp"
+#include "event/anm_base.cpp"
+#include "event/anm_f32.cpp"
+#include "event/anm_vec.cpp"
+#include "event/anm_col.cpp"
 #include "event/cmd_variable.cpp"
 #include "event/cmd_param.cpp"
 #include "event/param_variable.cpp"
