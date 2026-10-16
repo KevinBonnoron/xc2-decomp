@@ -83,6 +83,7 @@ public:
   static int GetResistantAttrMaxHP();
   static int GetTrustRank(int blade);
   static f32 GetBladeCoolTime(int blade);
+  static bool IsEnableFieldBladeChange();
   static bool IsEnableDeadSequence();
   static bool IsEnableEventStart();
   static bool IsThirdCharacter(gf::GF_OBJ_HANDLE *handle);
@@ -161,7 +162,9 @@ public:
   static bool AI_GetGimmickPoint(mm::Vec3 &position, u32 gimmick);
   static void AI_SetScout(gf::GF_OBJ_HANDLE *handle, bool isScout);
   static void AI_SetSuperArmor(gf::GF_OBJ_HANDLE *handle, f32 time);
+  static int AI_GetButtonChallengeResult();
   static int AI_EnemyKillNum();
+  static bool AI_IsKillChild();
   static bool AI_IsBenkeiWeather();
 };
 

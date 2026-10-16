@@ -32,6 +32,7 @@ public:
   enum ALPHA_PROC_ID {};
   enum ACTION_ID {
     ACTION_ID_IDLE = 1,
+    ACTION_ID_PUT_AWAY_WEAPON = 3,
     ACTION_ID_MOVE = 4,
     ACTION_ID_ATTACK = 6,
     ACTION_ID_ARTS = 7,
