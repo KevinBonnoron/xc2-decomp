@@ -22,6 +22,7 @@ public:
   CV_TYPE getCv(size_t index) const;
   const mm::Vec3 &getValue(size_t index) const;
   void setValue(size_t index, const mm::Vec3 &value);
+  const mm::Vec3 &getValue() const { return value; }
 
 private:
   mm::mtl::FixedVector<mm::Vec3, KEY_COUNT> values;

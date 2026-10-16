@@ -27,6 +27,7 @@ public:
   void setCv(CV_TYPE cv);
   bool isEnd() const { return endFrame <= frame; }
   bool isPlay() const { return (state & STATE_PLAY) != 0; }
+  f32 getKeyFrame(size_t index) const { return frames[index]; }
 
 protected:
   u32 state;

@@ -13,6 +13,13 @@ void AnmVec::clear() {
   value.z = 0.0f;
 }
 
+void AnmVec::update(f32 delta) {
+  AnmBase::update(delta);
+  if (state & STATE_PLAY) {
+    value = calcEvalute(index, alpha);
+  }
+}
+
 void AnmVec::replay() { AnmBase::replay(); }
 
 void AnmVec::append(f32 frame, const mm::Vec3 &value, CV_TYPE cv) {
