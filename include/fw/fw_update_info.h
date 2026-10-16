@@ -4,8 +4,11 @@
 namespace fw {
 
 struct UpdateInfo {
-  u8 _00[0x04 - 0x00];
+  f32 frameTime;
   f32 deltaTime;
+  f32 speed;
 };
+
+static_assert(sizeof(UpdateInfo) == 0x0c, "");
 
 } // namespace fw

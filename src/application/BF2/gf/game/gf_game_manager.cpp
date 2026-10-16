@@ -1,7 +1,7 @@
 #include "gf/game/gf_game_manager.h"
 
 #include "battle/battle_manager.h"
-#include "fw/fw_framework.h"
+#include "framework/framework.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_character_id.h"

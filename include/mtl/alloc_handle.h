@@ -7,6 +7,8 @@ public:
   ALLOC_HANDLE() : mHandle(0) {}
   ALLOC_HANDLE(const ALLOC_HANDLE &other) : mHandle(other.mHandle) {}
 
+  bool isValid() const { return mHandle != 0; }
+
   ALLOC_HANDLE &operator=(const ALLOC_HANDLE &other) {
     mHandle = other.mHandle;
     return *this;
