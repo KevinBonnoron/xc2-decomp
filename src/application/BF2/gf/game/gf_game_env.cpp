@@ -2,11 +2,126 @@
 
 #include "framework/framework.h"
 #include "fw/fw_update_info.h"
+#include "gf/event/gf_event.h"
 #include "gf/game/gf_game_speed.h"
+#include "gf/game/gf_layer_pause.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
+#include "gf/gf_pause.h"
+#include "gf/object/gf_obj.h"
 
 namespace gf {
+struct GF_LP_HANDLE;
+
+static void applyLayerPause(u32 layer, bool isPause) {
+  if (fw::Framework::isLayerPause(layer) != isPause) {
+    fw::Framework::setLayerPause(layer, isPause);
+    GfObjLayerSpeed::reqApplyModelLayerSpeed(layer, isPause ? 0.0f : 1.0f);
+    GfEvent::callLayerPause(layer, isPause);
+  }
+}
+
+GfLayerPause::GfLayerPause(const GfSetupParam &param)
+    : section4PauseBits(0), section1PauseBits(0), section7PauseBits(0), section10PauseBits(0), section0PauseBits(0),
+      section4Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)), section0Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)),
+      section1Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)), section7Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)),
+      section10Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)) {
+  initialize(param);
+}
+
+void GfLayerPause::initialize(const GfSetupParam &) { initialized = true; }
+
+GfLayerPause::~GfLayerPause() {}
+
+void GfLayerPause::build(const GfSetupParam &param) {
+  // __LINE__ must be 108 as in the original file: its value changes the instruction order.
+#line 108
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfLayerPause(param);
+}
+
+void GfLayerPause::destroy() {
+  GfLayerPause *layerPause = get();
+  layerPause->finalize();
+  delete layerPause;
+}
+
+void GfLayerPause::finalize() { initialized = false; }
+
+bool GfLayerPause::isInitialized() { return get() != nullptr && get()->initialized; }
+
+void GfLayerPause::update(const fw::UpdateInfo &) {}
+
+void GfLayerPause::gevPause(u32 resumeBits, u32 pauseBits) {
+  GfLayerPause *layerPause = get();
+  if ((resumeBits & PAUSE_BIT_SYSTEM) != 0) {
+    destroyLayerPause(layerPause->section4Handle);
+    destroyLayerPause(layerPause->section0Handle);
+    destroyLayerPause(layerPause->section1Handle);
+    destroyLayerPause(layerPause->section7Handle);
+  } else if ((pauseBits & PAUSE_BIT_SYSTEM) != 0) {
+    layerPause->section4Handle = setLayerPause(4);
+    layerPause->section0Handle = setLayerPause(0);
+    layerPause->section1Handle = setLayerPause(1);
+    layerPause->section7Handle = setLayerPause(7);
+  }
+  if ((resumeBits & PAUSE_BIT_EVENT_SKIP) != 0) {
+    destroyLayerPause(layerPause->section10Handle);
+  } else if ((pauseBits & PAUSE_BIT_EVENT_SKIP) != 0) {
+    layerPause->section10Handle = setLayerPause(10);
+  }
+}
+
+void GfLayerPause::destroyLayerPause(GF_LP_HANDLE *&handle) {
+  if (handle == reinterpret_cast<GF_LP_HANDLE *>(-1)) {
+    return;
+  }
+  u32 value = reinterpret_cast<u64>(handle);
+  u32 index = value >> 8;
+  u32 layer = value & 0xff;
+  u32 *pauseBits = get()->getPauseBits(layer);
+  *pauseBits &= ~(1 << index);
+  if (*pauseBits == 0) {
+    applyLayerPause(layer, false);
+    if (layer != 0) {
+      applyLayerPause(layer + 1, false);
+      applyLayerPause(layer + 2, false);
+    }
+  }
+  handle = reinterpret_cast<GF_LP_HANDLE *>(-1);
+}
+
+GF_LP_HANDLE *GfLayerPause::setLayerPause(u32 layer) {
+  u32 *pauseBits = get()->getPauseBits(layer);
+  u32 index;
+  u32 bit = 1;
+  for (index = 0; index < 32; index++) {
+    if ((*pauseBits & bit) == 0) {
+      break;
+    }
+    bit <<= 1;
+  }
+  if (index >= 32) {
+    return reinterpret_cast<GF_LP_HANDLE *>(-1);
+  }
+  *pauseBits |= bit;
+  if (layer != 0) {
+    applyLayerPause(layer + 1, true);
+    applyLayerPause(layer + 2, true);
+  }
+  applyLayerPause(layer, true);
+  return reinterpret_cast<GF_LP_HANDLE *>(static_cast<u64>(layer | index << 8));
+}
+
+void GfLayerPause::destroyLayerPause() {
+  GfLayerPause *layerPause = get();
+  destroyLayerPause(layerPause->section4Handle);
+  destroyLayerPause(layerPause->section0Handle);
+  destroyLayerPause(layerPause->section1Handle);
+  destroyLayerPause(layerPause->section7Handle);
+  destroyLayerPause(layerPause->section10Handle);
+}
+
+bool GfLayerPause::isLayerPause(u32 layer) { return fw::Framework::isLayerPause(layer); }
 
 constexpr f32 MIN_LAYER_SPEED = 1e-06f;
 

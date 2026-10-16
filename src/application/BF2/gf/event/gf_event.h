@@ -190,6 +190,13 @@ public:
   static void callDebugDestroyAsset(GF_ASSET_HANDLE *asset);
   static void callDebugMapModel(GF_OBJ_HANDLE *handle, bool isEnter);
 
+  static void callLayerPause(u32 layer, bool isPause) {
+    GfEvent *gfEvent = get();
+    for (size_t i = 0; i < gfEvent->callbacks.size(); i++) {
+      gfEvent->callbacks[i]->gevLayerPause(layer, isPause);
+    }
+  }
+
 private:
   mm::mtl::FixedQueue<IGfEvent *, CALLBACK_MAX> callbacks;
   bool initialized;
