@@ -1,5 +1,7 @@
 #include "framework/object/updatable_manager.h"
 
+#include "framework/object/updatable_group.h"
+
 namespace fw {
 
 HandlePtr<void> UpdatableObjectManager::Impl::registPointer(u32 group, const void *ptr) {

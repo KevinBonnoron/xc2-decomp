@@ -9,19 +9,10 @@
 
 namespace fw {
 
+class UpdatableGroup;
 class UpdatableObject;
 struct ObjectEvent;
 struct UpdateInfo;
-
-class UpdatableGroup {
-public:
-  virtual ~UpdatableGroup();
-  virtual void update(const UpdateInfo &info, u32 layerMask);
-  virtual void tail(const UpdateInfo &info);
-  void execEvent(const ObjectEvent &event, u32 layerMask);
-  void registObject(UpdatableObject *object);
-  void destroyAllObject();
-};
 
 class UpdatableObjectManager : public ManagerObject, public mm::mtl::PtrSingleton<UpdatableObjectManager> {
 public:
