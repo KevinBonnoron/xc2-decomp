@@ -3,11 +3,8 @@
 #include "gf/gf_allocator.h"
 #include "gf/scom/gf_scom_script.h"
 #include "gf/script/gf_script_manager.h"
-#include "types.h"
 
 namespace gf {
-
-constexpr u32 SCRIPT_SLOT_FIELD = 1;
 
 GfFieldZoneScript::GfFieldZoneScript(const GfSetupParam &param) { initialize(param); }
 

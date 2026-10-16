@@ -32,6 +32,7 @@ public:
   void finalize();
   static bool isInitialized();
   static void postUpdate(const fw::UpdateInfo &info);
+  static void setFade(u32 type, u32 frame, const mm::Col4 &color);
   static void getFadeColor(u32 type, mm::Col4 &color);
   static void setLoading(u32 type, bool disp);
   static bool isFading(u32 type);

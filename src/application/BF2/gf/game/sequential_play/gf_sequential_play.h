@@ -16,7 +16,6 @@ struct GfMapjumpInfo;
 struct GfSetupParam;
 struct GfSetupPfTalk;
 struct ParamReturnTitle;
-class GfSequentialPlaySignal;
 struct QuestID;
 
 class GfSequentialPlay {
@@ -26,6 +25,10 @@ public:
   static bool isPlay();
   static void postUpdate(const fw::UpdateInfo &info);
   static void addCommand(GfPlayCom *command);
+  static void pauseOn(u32 pauseBits);
+  static void pauseOff();
+  static void execPushState(GF_STATE state);
+  static void execPopState();
   static void addWait(f32 time);
   static void addWaitEvent(f32 time, GF_OBJ_HANDLE *handle);
   static void addMapjump(const GfMapjumpInfo &info);
@@ -69,6 +72,7 @@ public:
   static void addMoverSwitch();
   static void addHoodHomuraBattou();
   static bool isInnerState(GF_STATE state);
+  static bool isSequenceSpecialAction();
   static bool isInnerPause(u32 pauseBits);
   static void startSignal(GfSequentialPlaySignal *signal);
   static void endSignal(GfSequentialPlaySignal *signal);
