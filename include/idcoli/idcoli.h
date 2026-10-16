@@ -52,6 +52,14 @@ public:
   u8 _08[0x108 - 0x08];
 };
 
+class IDColiAccMan {
+public:
+  IDColiAccMan();
+  void setSubNum(u32 num);
+
+  u8 _00[0x08 - 0x00];
+};
+
 class IDColiParmsBase {
 public:
   void setPriority(int priority);
