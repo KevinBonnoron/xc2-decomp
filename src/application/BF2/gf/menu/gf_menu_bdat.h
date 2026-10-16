@@ -7,6 +7,7 @@ class GfMenuBdat {
 public:
   static bool isValidBdatID(u8 *bdat, int id);
   static u32 getIconImageIndex(int icon);
+  static u32 getTopBladeIconID();
 };
 
 } // namespace gf

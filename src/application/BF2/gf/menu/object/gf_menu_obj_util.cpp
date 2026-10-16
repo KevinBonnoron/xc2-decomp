@@ -4,7 +4,14 @@
 #include "framework/sound/sound_manager.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_driver.h"
+#include "gf/data/gf_data_param_acc.h"
+#include "gf/data/gf_data_party.h"
+#include "gf/data/gf_game_flag.h"
+#include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/menu/adapter/gf_menu_adapter_manager.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_bdat.h"
@@ -44,6 +51,12 @@ enum MENU_SE {
 constexpr u32 ICON_NONE = 0xffff;
 constexpr u32 POINTER_SELECT_ICON = 17;
 constexpr u32 PARTY_DRIVER_MAX = 3;
+constexpr int FLAG_BLADE_SLOT_2_OPEN = 0x89ff;
+constexpr int FLAG_BLADE_SLOT_3_OPEN = 0x8a00;
+constexpr u32 ICON_WEAPON_TYPE_BASE = 0x8a;
+constexpr u32 ICON_WEAPON_TYPE_NONE = 0x8b;
+constexpr u32 ICON_ATTRIBUTE_BASE = 0x9e;
+constexpr u32 ICON_TRUST_RANK_BASE = 0x83;
 
 static const IconTable s_buttonIcons[] = {
     {0x1000, 26},
@@ -234,6 +247,139 @@ bool GfMenuObjUtil::isExitDriver(u32 partyId) {
     partyId %= PARTY_DRIVER_MAX;
   }
   return GfGameParty::getHandleDriver(partyId) != INVALID_HANDLE;
+}
+
+bool GfMenuObjUtil::isLeaderBladeEnable() {
+  u32 blade = GfDataDriver::getBlade(GfDataParty::getDriver(0), -1);
+  return blade != 0 && !GfDataBlade::isDummyBlade(blade);
+}
+
+bool GfMenuObjUtil::isBladeEnable(u32 partyId, int slot) {
+  u32 blade = GfDataDriver::getBlade(GfDataParty::getDriver(partyId), -1);
+  return blade != 0 && !GfDataBlade::isDummyBlade(blade);
+}
+
+bool GfMenuObjUtil::isValidBlade(u32 blade) { return blade != 0 && !GfDataBlade::isDummyBlade(blade); }
+
+bool GfMenuObjUtil::isBladeEnableOffset(u32 partyId, int offset) {
+  int slot = getSetBladeID(partyId, offset, false);
+  if (slot == -1) {
+    return false;
+  }
+  u32 driver = GfDataParty::getDriver(partyId);
+  if (driver == 0) {
+    return false;
+  }
+  u32 blade = GfDataDriver::getBlade(driver, slot);
+  return blade != 0 && !GfDataBlade::isDummyBlade(blade);
+}
+
+bool GfMenuObjUtil::isBladeContorolable(u32 blade) {
+  if (blade != 0) {
+    return GfDataBlade::isOperable(blade);
+  }
+  return false;
+}
+
+bool GfMenuObjUtil::isBladeContorolable(u32 partyId, int slot) {
+  if (!isBladeEnable(partyId, slot)) {
+    return false;
+  }
+  u32 driver = GfDataParty::getDriver(partyId);
+  if (driver == 0) {
+    return false;
+  }
+  return isBladeContorolable(GfDataDriver::getBlade(driver, slot));
+}
+
+GF_OBJ_HANDLE *GfMenuObjUtil::getLeaderBladeHandle(bool isVirtual) {
+  int bladeSet = 0;
+  {
+    DataParamAcc acc(OBJECT_TYPE_DRIVER, GfDataParty::getDriver(0), GIMMICK_TYPE_NONE);
+    if (acc.isValid()) {
+      bladeSet = acc.getBladeSet(false);
+    }
+  }
+  if (bladeSet == -1) {
+    return INVALID_HANDLE;
+  }
+  return GfGameParty::getHandleBlade(0, bladeSet);
+}
+
+GF_OBJ_HANDLE *GfMenuObjUtil::getBladeHandle(u32 partyId, u32 slot) { return GfGameParty::getHandleBlade(partyId, slot); }
+
+GF_OBJ_HANDLE *GfMenuObjUtil::getBladeHandleFromPartySlot(u32 partyId, int offset, bool isVirtual) {
+  int slot = getSetBladeID(partyId, offset, isVirtual);
+  if (slot == -1) {
+    return INVALID_HANDLE;
+  }
+  return GfGameParty::getHandleBlade(partyId, slot);
+}
+
+GF_OBJ_HANDLE *GfMenuObjUtil::getBladeHandleFromPartyBackSlot(u32 partyId, int offset, bool isVirtual) {
+  return GfGameParty::getHandleBladeByBdatID(getBladeIDFromPartyBackSlot(partyId, offset, isVirtual));
+}
+
+GF_OBJ_HANDLE *GfMenuObjUtil::getBladeHandleOffset(u32 partyId, int offset) {
+  int slot = getSetBladeID(partyId, offset, false);
+  if (slot == -1) {
+    return INVALID_HANDLE;
+  }
+  return GfGameParty::getHandleBlade(partyId, slot);
+}
+
+u32 GfMenuObjUtil::getBladeSlotMax() {
+  u32 slotMax = 1;
+  if (GfGameFlag::getLocal(1, FLAG_BLADE_SLOT_2_OPEN) == 1) {
+    slotMax++;
+  }
+  if (GfGameFlag::getLocal(1, FLAG_BLADE_SLOT_3_OPEN) == 1) {
+    slotMax = 3;
+  }
+  return slotMax;
+}
+
+u16 GfMenuObjUtil::getBladeFaceIconID(GF_OBJ_HANDLE *handle) {
+  u32 blade = GfObjAcc(handle).getBdatId();
+  if (GfDataBlade::isValid(blade)) {
+    return GfDataBlade::getSDataBlade(blade)->iconData;
+  }
+  return GfMenuBdat::getTopBladeIconID();
+}
+
+u16 GfMenuObjUtil::getBladeFaceIconID(u32 blade) {
+  if (GfDataBlade::isValid(blade)) {
+    return GfDataBlade::getSDataBlade(blade)->iconData;
+  }
+  return GfMenuBdat::getTopBladeIconID();
+}
+
+u32 GfMenuObjUtil::getBladeWeaponTypeIconID(u32 blade) {
+  if (GfDataBlade::isValid(blade)) {
+    return GfDataBlade::getSDataBlade(blade)->weaponType + ICON_WEAPON_TYPE_BASE;
+  }
+  return ICON_WEAPON_TYPE_NONE;
+}
+
+u32 GfMenuObjUtil::getBladeAttributeIconID(u32 blade) {
+  if (GfDataBlade::isValid(blade)) {
+    return GfDataBlade::getAttribute(blade) + ICON_ATTRIBUTE_BASE;
+  }
+  return ICON_ATTRIBUTE_BASE;
+}
+
+u32 GfMenuObjUtil::getBladeCompatibilityIconID(u32 driver, u32 blade) {
+  if (GfDataBlade::isValid(blade)) {
+    return GfGameUtil::getTrustRank(blade) + ICON_TRUST_RANK_BASE;
+  }
+  return ICON_TRUST_RANK_BASE;
+}
+
+u32 GfMenuObjUtil::getBladeAttributeID(u32 blade) {
+  if (GfDataBlade::isValid(blade)) {
+    return GfDataBlade::getSDataBlade(blade)->attribute;
+  }
+  return 0;
 }
 
 u16 GfMenuObjUtil::getMsgIDFromList(u32 bdat, u16 id) {
