@@ -5,6 +5,10 @@ namespace mm {
 struct Vec3;
 } // namespace mm
 
+namespace ml {
+class WinProc;
+} // namespace ml
+
 namespace idcoli {
 
 enum ColiState : int;
@@ -26,6 +30,16 @@ public:
   u8 flags;
   u8 _21[0x24 - 0x21];
   ObjType type;
+};
+
+class IDColiManager {
+public:
+  void update();
+  void tail();
+  int isGblId(u32 id);
+  void setGblId(u32 id, bool isGlobal);
+  void *getGblIdTbl();
+  void openDebugWindow(ml::WinProc *window);
 };
 
 class IDColiParmsBase {
