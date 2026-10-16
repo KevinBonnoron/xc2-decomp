@@ -2,15 +2,39 @@
 
 namespace event {
 
-SelectManager::SelectManager() : flags(0), mTalkerType(0), mSelected(0), mResult(0) {}
+SelectManager::SelectManager() : flags(0), talkerType(0), selected(0), result(0) {}
+
+void SelectManager::clear() {
+  window.clear();
+  selected = 0;
+  result = 0;
+  flags = 0;
+  talkerType = 0;
+}
 
 void SelectManager::update() {
   if (isActive()) {
-    mWindow.update();
+    window.update();
   }
 }
 
-int SelectManager::getResult() const { return mResult; }
+void SelectManager::OnEventProc(MSG_TYPE type) {
+  switch (type) {
+  case MSG_TYPE_INIT:
+    clear();
+    break;
+  case MSG_TYPE_CLEAR:
+    clear();
+    break;
+  case MSG_TYPE_UPDATE:
+    update();
+    break;
+  default:
+    break;
+  }
+}
+
+int SelectManager::getResult() const { return result; }
 
 bool SelectManager::isActive() const { return (flags & FLAG_ACTIVE) != 0; }
 
