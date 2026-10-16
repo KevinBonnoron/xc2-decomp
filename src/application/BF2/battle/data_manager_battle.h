@@ -28,6 +28,7 @@ public:
   };
 
   enum POUCH_BUFF_TYPE {
+    POUCH_BUFF_TYPE_DAMAGE_ARMOR,
     POUCH_BUFF_TYPE_KIZUNA = 6,
   };
 

@@ -6,6 +6,7 @@
 #include "battle/character/character_manager_battle.h"
 #include "battle/data_manager_battle.h"
 #include "battle/group_data.h"
+#include "battle/misc_battle.h"
 #include "battle/utility_battle.h"
 #include "gf/data/gf_bdat_chrenarrange.h"
 #include "gf/data/gf_data_enemy.h"
@@ -567,6 +568,25 @@ void PlayerParameter::ResetUseWeapon() {
   useWeaponTotal = 0;
 }
 
+void PlayerParameter::SetupPouchDamageArmor() {
+  if (pouchDamageArmor >= 0) {
+    return;
+  }
+
+  f32 rate = DataManager::get()->GetPouchBuffParam(DataManager::POUCH_BUFF_TYPE_DAMAGE_ARMOR, partyId);
+  int armor = 0;
+  if (!(rate <= 0.0f)) {
+    u32 maxHp = gf::GfGameUtil::getMaxHp(user, objectType, gameObjectId);
+    ENHANCE_DATA data;
+    if (GetAdditionalEnhanceEffect(data, ADD_ENHANCE_TYPE_HP, nullptr)) {
+      maxHp += static_cast<int>(data.value);
+    }
+    f32 hp = maxHp;
+    armor = NextFloat(rate * 0.01f * hp);
+  }
+  pouchDamageArmor = armor;
+}
+
 void PlayerParameter::BattleEnd() {
   CharacterParameter::BattleEnd();
   ResetUseWeapon();
@@ -612,6 +632,21 @@ const ARTS_PALETTE_DATA *PlayerParameter::GetArtsPaletteDataConst(int index) con
   }
 
   return &artsPalettes[index];
+}
+
+u32 PlayerParameter::CalcDamageArmorEx(u32 damage) {
+  SetupPouchDamageArmor();
+  u32 armor = pouchDamageArmor;
+  if (armor != 0) {
+    if (armor >= damage) {
+      pouchDamageArmor = armor - damage;
+      damage = 0;
+    } else {
+      damage -= armor;
+      pouchDamageArmor = 0;
+    }
+  }
+  return damage;
 }
 
 void PlayerParameter::ResetRecast() {

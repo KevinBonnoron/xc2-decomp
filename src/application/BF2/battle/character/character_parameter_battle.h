@@ -264,6 +264,7 @@ public:
   void InitializeAttackParam() override;
   bool InitializeEnhance() const override;
   void BattleStart(int) override;
+  void SetupPouchDamageArmor();
   void BattleEnd() override;
   void BattleEndInitialize() override;
   void Update(const fw::UpdateInfo &updateInfo, bool) override;
