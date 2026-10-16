@@ -8,6 +8,8 @@ class IntrusiveListNodeBase {
 public:
   IntrusiveListNodeBase() : m_next(this), m_prev(this) {}
 
+  bool intoNode() const { return m_next != this; }
+
   IntrusiveListNodeBase *m_next;
   IntrusiveListNodeBase *m_prev;
 };
