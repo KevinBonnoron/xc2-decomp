@@ -20,6 +20,9 @@ public:
   static mm::mtl::RTTI m_rtti;
 
   static mm::mtl::IntrusivePtr<fw::Camera> create();
+  static f32 getNearClip();
+  static f32 getFarClip();
+  static f32 getFov();
   void reset();
   void resetClimb(ResetCameraWallTiming timing);
   void resetLoad();
