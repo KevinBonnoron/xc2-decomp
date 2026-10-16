@@ -49,6 +49,8 @@
 #include "event/text_manager.cpp"
 #include "event/quest_manager.cpp"
 #include "event/mercenaries_manager.cpp"
+#include "event/select_window.cpp"
+#include "event/select_manager.cpp"
 #include "event/status_manager.cpp"
 #include "event/volume_player.cpp"
 #include "event/volume_skip.cpp"
