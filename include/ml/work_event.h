@@ -7,7 +7,7 @@ class EventView;
 
 class IWorkEvent {
 public:
-  virtual ~IWorkEvent();
+  virtual ~IWorkEvent() {}
   virtual void OnSystemPause(unsigned int reason);
   virtual void OnShutdownForce();
   virtual bool IsShutdownForce();
