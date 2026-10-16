@@ -17,6 +17,7 @@ unsigned char *getFP(const char *name);
 unsigned char *getFP(int table, int id);
 int getIdTop(unsigned char *bdat);
 int getIdCount(unsigned char *bdat);
+Value getVal(unsigned char *bdat, const char *name, int id);
 unsigned char *getMember(unsigned char *bdat, const char *name);
 const char *getMSText(unsigned char *bdat, int id);
 unsigned long getValCheck(unsigned char *bdat, const char *name, int id, int type);

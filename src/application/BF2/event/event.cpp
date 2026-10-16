@@ -23,6 +23,7 @@
 #include "event/object_manager.cpp"
 #include "event/frame_manager.cpp"
 #include "event/skip_manager.cpp"
+#include "event/seq_info.cpp"
 #include "event/data_manager.cpp"
 #include "event/manager.cpp"
 // clang-format on

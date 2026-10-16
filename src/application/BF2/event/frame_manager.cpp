@@ -2,6 +2,8 @@
 
 #include <stddef.h>
 
+#include "event/manager.h"
+
 namespace event {
 
 FrameManager::FrameManager()
@@ -41,6 +43,17 @@ void FrameManager::setStreamMode(bool isStreamMode) { setFlag(FLAG_STREAM_MODE, 
 void FrameManager::setCsSndAccEnable(bool isEnable) { setFlag(FLAG_CS_SND_ACC_ENABLE, isEnable); }
 
 void FrameManager::setCpuAccEnable(bool isEnable) { setFlag(FLAG_CPU_ACC_ENABLE, isEnable); }
+
+void FrameManager::setInfomation(const char *pageName, int pageID, f32 maxFrame) {
+  bool isMakeCapture = (flags & FLAG_MAKE_CAPTURE_FRAME) != 0;
+  mPageName = pageName;
+  mPageID = pageID;
+  mMaxFrame = __builtin_fmaxf(maxFrame, 0.0f);
+  if (isMakeCapture && Manager::get()->getStartPageID() <= pageID) {
+    flags |= FLAG_CAPTURE_FRAME_SET;
+    mCaptureFrame = mMaxFrame - 1.0f;
+  }
+}
 
 const char *FrameManager::getPageName() const { return mPageName.c_str(); }
 
