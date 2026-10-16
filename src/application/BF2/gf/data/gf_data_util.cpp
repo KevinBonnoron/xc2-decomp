@@ -15,7 +15,6 @@ namespace gf {
 enum {
   FLAG_SCENARIO_FLAG = 0x1,
   FLAG_RANDOM_INN = 0x204,
-  FLAG_SALVAGER_POINT = 0x854,
   FLAG_GAME_CLEAR_CHECK = 0xd77e,
 };
 

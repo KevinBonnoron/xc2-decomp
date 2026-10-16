@@ -7,6 +7,7 @@ namespace fw {
 struct UpdateInfo;
 } // namespace fw
 namespace mm {
+struct Vec3;
 namespace mtl {
 class RTTI;
 } // namespace mtl
@@ -43,8 +44,16 @@ public:
 
   u8 _08[0x18 - 0x08];
   GF_EVT_MODEL type;
+  GF_OBJ_HANDLE *handle;
 };
 
 static_assert(offsetof(GfEvtModel, type) == 0x18, "");
+static_assert(offsetof(GfEvtModel, handle) == 0x20, "");
+
+class GfEvtModelSalvage : public GfEvtModel {
+public:
+  bool isValid() const;
+  void setTransform(const mm::Vec3 &position, f32 rotation);
+};
 
 } // namespace gf
