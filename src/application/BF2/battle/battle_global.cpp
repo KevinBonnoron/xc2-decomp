@@ -8,7 +8,7 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/gf_allocator.h"
-#include "gf/menu/gf_menu_obj_util.h"
+#include "gf/menu/object/gf_menu_obj_util.h"
 #include "gf/object/gf_obj_handle.h"
 
 namespace btl {
