@@ -148,6 +148,8 @@ public:
   const MAP_DRIVER_REV_DATA *GetMapDriverRevData(const BattleCharacter *character) const;
   const MAP_DRIVER_REV_DATA *GetMapDriverRevDataByBdatID(int driver) const;
   int GetKizunaMax(const BattleCharacter *character) const;
+  f32 GetAttackRate(const BattleCharacter *character) const;
+  f32 GetDefenceRate(const BattleCharacter *character) const;
   int GetSpLevelMax(const BattleCharacter *character) const;
   bool IsEnableSupport(const BattleCharacter *character) const;
   bool IsKakuseiFinished() const;

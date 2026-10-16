@@ -44,6 +44,7 @@ public:
   void ModifyPosition();
   void ModifyPositionDriver(gf::GF_OBJ_HANDLE *driver);
   void ModifyPositionBlade(gf::GF_OBJ_HANDLE *driver, gf::GF_OBJ_HANDLE *blade);
+  f32 GetDamageRate() const;
   int GetSpAttackLevel(int group) const;
   f32 GetSpAttackRecast(int group, int blade) const;
   int GetOrderAttr(int order) const;

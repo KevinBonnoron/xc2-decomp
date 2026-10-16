@@ -2,6 +2,7 @@
 
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
+#include "battle/misc_battle.h"
 #include "gf/game/gf_game_party.h"
 #include "mm_math/mm_math.h"
 
@@ -40,6 +41,13 @@ void ChainAttackManager::ModifyPosition() {
     ModifyPositionDriver(driver);
     ModifyPositionBlade(driver, gf::GfGameParty::getHandleBlade(group, -1));
   }
+}
+
+f32 ChainAttackManager::GetDamageRate() const {
+  if (state == STATE_NONE) {
+    return 1.0f;
+  }
+  return NextFloat((damageRate - DAMAGE_RATE_MIN + 100) * 0.01f);
 }
 
 int ChainAttackManager::GetSpAttackLevel(int group) const { return spAttacks[group].level; }
