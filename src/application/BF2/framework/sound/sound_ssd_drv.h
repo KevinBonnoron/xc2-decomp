@@ -1,7 +1,11 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/sound/sound_driver.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_ptr.h"
+#include "mm_mtl/list.h"
+#include "mm_mtl/singleton.h"
 #include "ssd/ssd_sound.h"
 #include "types.h"
 
@@ -22,9 +26,8 @@ namespace fw {
 
 class SoundSsdBank;
 enum SoundCategory : int;
-enum SoundVolumeType : int;
 
-class SoundSsdDriver {
+class SoundSsdDriver : public ISoundDriver, public mm::mtl::PtrSingleton<SoundSsdDriver> {
 public:
   class SoundAllocator : public ssd::Allocator {
   public:
@@ -37,28 +40,69 @@ public:
 
     mm::mtl::IAllocator *allocator;
   };
+
+  SoundSsdBank *findBank(u32 id);
+
+  u8 _10[0x838 - 0x10];
+  mm::mtl::List<SoundSsdBank *> banks;
 };
 
 static_assert(offsetof(SoundSsdDriver::SoundAllocator, allocator) == 0x08, "");
+static_assert(offsetof(SoundSsdDriver, banks) == 0x838, "");
 
 class SoundReferenceObject {
 public:
   virtual ~SoundReferenceObject();
 
-  void addRef() { refCount++; }
+  void addRef() { m_RefCount++; }
   int release();
 
-  int refCount;
+  int m_RefCount;
 };
+
+class SoundSsdSource;
+
+class SoundSsdBank : public SoundReferenceObject {
+public:
+  void addEntry(ssd::SoundEntry *entry);
+  void addSource(SoundSsdSource *source);
+  void removeEntry(ssd::SoundEntry *entry);
+  void removeSource(SoundSsdSource *source);
+  void setMaxSound(int maxSound);
+  bool canRelease() const;
+  void stopAll();
+
+  ssd::SoundBank soundBank;
+  ssd::SoundGroup soundGroup;
+  SoundCategory category;
+  mm::mtl::FixStr<256> name;
+  u32 nameHash;
+  u32 id;
+  int maxSound;
+  mm::mtl::IAllocator *allocator;
+  mm::mtl::List<SoundSsdSource *> sources;
+};
+
+static_assert(offsetof(SoundSsdBank, soundBank) == 0x10, "");
+static_assert(offsetof(SoundSsdBank, soundGroup) == 0x130, "");
+static_assert(offsetof(SoundSsdBank, name) == 0x154, "");
+static_assert(offsetof(SoundSsdBank, id) == 0x25c, "");
+static_assert(offsetof(SoundSsdBank, sources) == 0x270, "");
+static_assert(sizeof(SoundSsdBank) == 0x2b0, "");
 
 struct SoundSsdSourceData {
   u8 _00[0x50 - 0x00];
   bool isLoop;
+  u8 _51[0x6c - 0x51];
+  int refCount;
 };
 
 class SoundSsdSource : public SoundReferenceObject {
 public:
   static const u8 FLAG_3D = 1 << 1;
+
+  bool isLoop() const;
+  int getSourceRefCount() const;
 
   u8 _0c[0x10 - 0x0c];
   SoundSsdSourceData *data;
