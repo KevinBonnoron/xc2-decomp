@@ -3,6 +3,7 @@
 
 namespace gf {
 
+struct GAME_VOICE_HANDLE;
 struct GF_OBJ_HANDLE;
 struct ParamObj;
 struct QuestID;
@@ -79,6 +80,16 @@ public:
 class SCOM_BATTLE_TASK_RESET {
 public:
   static void create();
+};
+
+enum CV_SALVAGE {};
+enum CV_SALVAGE_RESULT {};
+
+class SCOM_SALVAGE_VOICE {
+public:
+  static GAME_VOICE_HANDLE *create(GF_OBJ_HANDLE *handle, CV_SALVAGE voice);
+  static GAME_VOICE_HANDLE *createResult(GF_OBJ_HANDLE *handle, CV_SALVAGE_RESULT voice);
+  static bool isPlayEnd(GAME_VOICE_HANDLE *voice);
 };
 
 class SCOM_FIELD_VOICE {
