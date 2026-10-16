@@ -1,7 +1,10 @@
 #include "battle/hate_ring_manager.h"
 
+#include "battle/battle_global.h"
+#include "battle/character/battle_character.h"
 #include "battle/misc_battle.h"
 #include "framework/effect/effect_manager.h"
+#include "fw/fw_update_info.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_handle.h"
@@ -64,6 +67,38 @@ void HateRingManager::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->PreUp
 void HateRingManager::PreUpdateProc(const fw::UpdateInfo &) {}
 
 void HateRingManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
+
+void HateRingManager::UpdateProc(const fw::UpdateInfo &updateInfo) {
+  for (bool &isUsed : isTargetRingUsed) {
+    isUsed = false;
+  }
+
+  if (BattleGlobal::get()->IsEnableBattle()) {
+    RING_DATA *ring = rings;
+    for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
+      if (ring->handle == gf::INVALID_HANDLE) {
+        continue;
+      }
+      BattleCharacter *character = CharacterManager::get()->GetCharacterConst(i);
+      if (character == nullptr || character->IsDead(0)) {
+        ring->Reset(true);
+      } else {
+        isTargetRingUsed[ring->target] = true;
+      }
+    }
+    for (int i = 0; i < HATE_TARGET_COUNT; i++) {
+      if (!isTargetRingUsed[i] && targetRingEffects[i] != 0) {
+        fw::EffectManager::get()->destroyHateRing(targetRingEffects[i]);
+        targetRingEffects[i] = 0;
+      }
+    }
+  }
+
+  RING_DATA *ring = rings;
+  for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
+    UpdateArrow(i, *ring, updateInfo.deltaTime);
+  }
+}
 
 void HateRingManager::UpdateRing(int target, mm::Vec3 position, mm::Vec3 direction) {
   targetRingPositions[target] = position;
