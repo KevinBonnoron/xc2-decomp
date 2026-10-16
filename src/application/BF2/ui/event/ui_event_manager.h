@@ -12,6 +12,7 @@ public:
   void registObjectListener(u32 handle, UIObjectListener *listener);
   void removeObjectListener(u32 handle);
   void addCondition(u32 handle, UIEventCondition *condition);
+  bool isObjectListenerFull();
 };
 
 } // namespace ui
