@@ -113,6 +113,7 @@ public:
   static u32 execAddCommonBlade(const SDataBlade &dataBlade);
   static void changeAlphaBelonging(GF_OBJ_HANDLE *handle, u32 belonging, f32 alpha, f32 time);
   static bool hasBelonging(GF_OBJ_HANDLE *handle, u32 belonging);
+  static bool isTurnEnd(GF_OBJ_HANDLE *handle);
   static void execAddDevelopPointArcadia2Iyasaki();
   static void dispRexCrystal(GF_OBJ_HANDLE *handle, bool isDisp);
   static void dispHomuraCrystal(GF_OBJ_HANDLE *handle, bool isDisp);
