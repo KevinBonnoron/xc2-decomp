@@ -51,6 +51,7 @@
 #include "gf/util/gf_equip_util.h"
 #include "gf/util/gf_item_util.h"
 #include "gf/util/gf_util.h"
+#include "gmk/gmk_base.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_vector.h"
@@ -129,6 +130,7 @@ constexpr u32 SAIKA_HANDLE_MAX = 8;
 constexpr u32 APPEND_HANDLE_MAX = 10;
 constexpr u32 BLADE_COUNT = 422;
 constexpr u32 DRIVER_ACCESSORY_SLOT_COUNT = 2;
+constexpr u32 PARTY_DRIVER_COUNT = 3;
 
 static const u32 nationLocations[NATION_COUNT] = {3, 6, 9, 10, 14, 12, 13, 15};
 
@@ -547,7 +549,28 @@ void GfGameUtil::setAchievementReleaseLevel(u32 blade, u32 line, u32 level) {
   GfEvent::callAchievmentRelease(release);
 }
 
+void GfGameUtil::setDispByGmkType(gmk::GmkType type, bool isDisp) { gmk::setDispByGmkType(type, isDisp); }
+
+void GfGameUtil::setDispByGmkTypeAndBdatId(gmk::GmkType type, int bdatId, bool isDisp) { gmk::setDispByGmkTypeAndBdatId(type, bdatId, isDisp); }
+
+void GfGameUtil::setDispByGmkTypeAndGmkIdx(gmk::GmkType type, u32 index, bool isDisp) {
+  int gmkSet = GfFieldGimmick::getBdatIdFrom_FLD_maplist_To_RSC_GmkSetList(gmk::getCurrentMapBdatId());
+  gmk::setDispByGmkTypeAndGmkIdx(gmkSet, type, index, isDisp);
+}
+
 u16 GfGameUtil::getAntiBladeAreaBdatId() { return GfFieldGimmick::getBdatIdOfActiveGmkAntiBladeArea(); }
+
+bool GfGameUtil::getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle) {
+  gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(handle);
+  if (gmkInst != nullptr) {
+    u32 type = gmkInst->getGmkType();
+    if (type <= gmk::GMK_TYPE_ROUTED_ENEMY) {
+      return getGmkTargetPointPos(position, gmkInst->info->id);
+    }
+  }
+
+  return false;
+}
 
 bool GfGameUtil::incEnemySuppress(u32 enemy) { return GfDataEnemy::incEnemySuppress(enemy); }
 
@@ -575,6 +598,25 @@ void GfGameUtil::debugFallDead(GF_OBJ_HANDLE *handle) {
 
   MsgObjectDead message(DEAD_TYPE_EMERGENCY_ESCAPE);
   obj->sendMessage(obj, message);
+}
+
+bool GfGameUtil::isSceneRide() {
+  if (GfGameManager::isBattle()) {
+    return false;
+  }
+
+  for (u32 partyId = 0; partyId < PARTY_DRIVER_COUNT; partyId++) {
+    GfObjAcc objAcc(GfGameParty::getHandleDriver(partyId));
+    if (!objAcc.isValid()) {
+      continue;
+    }
+
+    if (objAcc.isBattle()) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 const char *GfGameUtil::getBladeModel(u32 blade, bool isDefault) {
