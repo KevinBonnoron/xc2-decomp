@@ -73,6 +73,7 @@ public:
   virtual void debugUpdateMmf();
 
   void disposeBase();
+  u8 *getBindedBdatFp() const;
   void createBase(const CreateBaseInfo &info);
 
   CreateBaseInfo baseInfo;
