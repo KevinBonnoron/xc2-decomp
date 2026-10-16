@@ -14,6 +14,7 @@ public:
   f32 getScreenWidth() const;
   f32 getScreenHeight() const;
   LayerCoordinate getCoordinate() const;
+  void setCoordinate(LayerCoordinate coordinate);
 };
 
 } // namespace layer
