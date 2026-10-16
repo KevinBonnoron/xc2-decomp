@@ -20,6 +20,8 @@ namespace btl {
 
 class GROUP_DATA;
 
+constexpr int SPECIAL_ENHANCE_COUNT = 14;
+
 struct FIGHT_COMBO_DATA {
   u8 id;
   u8 _01[0x18 - 0x01];
@@ -63,6 +65,8 @@ public:
     ADD_ENHANCE_TYPE_GUARD,
   };
 
+  enum SPECIAL_ENHANCE_TYPE {};
+
   struct ENHANCE_DATA {
     f32 value;
     u8 _04[0x8 - 0x4];
@@ -77,6 +81,7 @@ public:
   virtual void BattleEnd();
   virtual void BattleEndInitialize();
   virtual void PreUpdate(const fw::UpdateInfo &updateInfo);
+  void ResetSpecialEnhanceRate(bool isAll);
   virtual void Update(const fw::UpdateInfo &updateInfo, bool);
   virtual void PostUpdate(const fw::UpdateInfo &updateInfo);
   virtual int GetAttribute() const;
@@ -141,6 +146,11 @@ public:
   bool IsProgressCoolTime() const;
   const ENHANCE_EFFECT_DATA *GetEnhanceEffectDataConst(int enhance) const;
   bool GetAdditionalEnhanceEffect(ENHANCE_DATA &data, int type, int *) const;
+  void SetSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value = 0);
+  void AddSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value = 0);
+  void MinSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value = 0);
+  void MaxSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value = 0);
+  f32 GetSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, int *value) const;
   int GetGender() const;
   int GetBaseSTR() const;
   int GetBaseDEX() const;
@@ -172,7 +182,10 @@ public:
   int partyId;
   u8 _20[0x2c - 0x20];
   f32 radius;
-  u8 _30[0xbc - 0x30];
+  u8 _30[0x5c - 0x30];
+  f32 specialEnhanceRates[SPECIAL_ENHANCE_COUNT];
+  u16 specialEnhanceValues[SPECIAL_ENHANCE_COUNT];
+  u8 _b0[0xbc - 0xb0];
   u8 attackWeaponType : 7;
   u8 : 1;
   u8 _bd[0xc0 - 0xbd];
