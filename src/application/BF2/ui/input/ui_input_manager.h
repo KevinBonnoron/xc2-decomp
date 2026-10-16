@@ -11,6 +11,8 @@ class IUIInputSelectionChecker;
 
 class UIInputManager : public mm::mtl::PtrSingleton<UIInputManager> {
 public:
+  void enable();
+  void disable();
   void setupInputSelection(u32 input, int index, u32 size);
   void resetInputSelection(u32 input);
   void setSelectionChecker(u32 input, IUIInputSelectionChecker *checker);

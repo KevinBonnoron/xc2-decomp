@@ -27,6 +27,7 @@ enum DriverSkillLevelUpResult {
 class GfGameUtil {
 public:
   static bool isUiGfObjHandleValid(GF_OBJ_HANDLE *handle);
+  static bool evalSumFs(int condition, u32 option);
   static u32 getFsLevelSum(u32 fieldSkill);
   static void addMoney(int money);
   static void addCoin(int coin);

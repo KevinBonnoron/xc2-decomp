@@ -26,6 +26,7 @@ public:
   void append(f32 frame);
   void setCv(CV_TYPE cv);
   bool isEnd() const { return endFrame <= frame; }
+  bool isPlay() const { return (state & STATE_PLAY) != 0; }
 
 protected:
   u32 state;

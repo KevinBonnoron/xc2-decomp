@@ -8,8 +8,8 @@ AnmBase::AnmBase() { clear(); }
 
 void AnmBase::clear() {
   frames.clear();
-  state = STATE_FIRST;
   cv = CV_TYPE_LINEAR;
+  state = STATE_FIRST;
   frame = 0.0f;
   index = 0;
   alpha = 0.0f;
