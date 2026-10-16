@@ -3,12 +3,16 @@
 
 Usage: gen_bdat.py <namespace tag> <class> <file stem> [--namespace-only]
        gen_bdat.py bbt GfBdatBtl gf_bdat_btl
+       gen_bdat.py --ids
 
 The game's BDAT accessors are generated code: for each column, a `_gfbXX::initColumn`
 stores a member pointer in a static variable, and `_gfbXX::getColumn` reads the
 column through it. The `GfBdatXxx` class repeats every getter on its own tables.
 This script reads those functions back from work/main_100.elf and writes the
 equivalent C++.
+
+With --ids, it writes gf/data/gf_bdat_id.h instead: one BDAT_* index per table of
+`_gfbdat::s_aszGfBdatName`, the indices GfDataBdat::getFP takes.
 """
 
 import os
@@ -178,7 +182,31 @@ def demangled_name(mangled):
     return mangled[m.end():m.end() + n]
 
 
+def bdat_id_name(table):
+    return "BDAT_" + re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", table).upper()
+
+
+def write_ids():
+    names = next(line.split() for line in run(["llvm-nm", "--defined-only", "-S", ELF]).splitlines() if line.endswith(" _ZN2gf7_gfbdat15s_aszGfBdatNameE"))
+    table, size = int(names[0], 16), int(names[1], 16)
+    elf = Elf()
+    tables = [elf.string(elf.u64(table + offset)) for offset in range(0, size, 8)]
+    uppercase = {bdat_id_name(t) for t in tables if t != t.lower()}
+    out = ["#pragma once", "", "namespace gf {", "", "enum {"]
+    for index, t in enumerate(tables):
+        name = bdat_id_name(t)
+        # Message tables have lowercase names: itm_orb holds the texts of ITM_Orb.
+        if t == t.lower() and name in uppercase:
+            name += "_MS"
+        out.append(f"  {name} = {index:#x},")
+    out += ["};", "", "} // namespace gf", ""]
+    open(os.path.join(ROOT, "src", "application", "BF2", "gf", "data", "gf_bdat_id.h"), "w").write("\n".join(out))
+
+
 def main():
+    if sys.argv[1:] == ["--ids"]:
+        write_ids()
+        return
     tag, cls, stem = sys.argv[1:4]
     namespace_only = "--namespace-only" in sys.argv[4:]
     ns = f"_gf{tag}"
