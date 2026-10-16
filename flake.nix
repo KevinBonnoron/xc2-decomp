@@ -60,6 +60,11 @@
         git add $files
       '';
 
+      includes = pkgs.writeShellScriptBin "includes" ''
+        export PATH=${pkgs.include-what-you-use}/bin:$PATH
+        exec ${pkgs.python3}/bin/python3 "$(git rev-parse --show-toplevel)/tools/includes.py" "$@"
+      '';
+
       setup = pkgs.writeShellScriptBin "setup" ''
         exec ${pkgs.bash}/bin/bash "$(git rev-parse --show-toplevel)/tools/setup.sh" "$@"
       '';
@@ -71,6 +76,7 @@
           clang401
           check
           format
+          includes
           setup
           ghidra
           hactool

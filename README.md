@@ -64,6 +64,15 @@ A function you define that the game has no symbol for is listed as `NOT IN GAME`
 
 Functions local to their source file (`static`, anonymous namespace) have no symbol in the game. A call to one of them shows as `<local>` on both sides: in the game, a branch to an address outside every named function; in your object, a branch to a function it defines that is local or unknown to the game. Any local function matches any other there, so check each local function on its own, by its game address and its name in your file. The game side of that diff ends at the next named function or at the next address called by a `bl`.
 
+## Includes
+
+```sh
+includes                                    # list the includes to add, remove or replace by a forward declaration
+includes --fix                              # apply them
+```
+
+Each file includes the header of every name it uses, and a header forward-declares what it only needs by pointer or reference instead of including it. `includes` runs include-what-you-use over `src/` and `include/` to enforce it; class templates are always included, never forward-declared. Run `check` afterwards: adding a line above an `operator new` or an assertion shifts its `__LINE__`, which can change the instructions (pin it with `#line` when it does).
+
 ## Compiler
 
 The game was built with **Clang 3.9.1**. The flags that matter:
@@ -130,6 +139,7 @@ Abbreviations and names imposed by the game's symbols:
 | `src/application/BF2/` | Decompiled game code, following the original source tree |
 | `include/` | Shared headers (basic types) |
 | `tools/check.py` | Compile and compare functions |
+| `tools/includes.py`, `tools/iwyu.imp` | Include-what-you-use pass and its mappings |
 | `tools/setup.sh` | Extract the executable from the XCI |
 | `tools/nso2elf.py`, `tools/nso_syms.py` | NSO to ELF conversion, symbol dump |
 | `tools/ghidra/` | Ghidra scripts |
