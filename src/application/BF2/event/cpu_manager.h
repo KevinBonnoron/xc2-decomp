@@ -1,12 +1,12 @@
 #pragma once
 #include "event/i_manager.h"
 #include "ml/time_count.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class CpuManager : public IManager, public mm::mtl::NoncopyableBase {
+class CpuManager : public IManager, public mm::mtl::Singleton<CpuManager> {
 public:
   enum {
     FLAG_START = 1 << 0,

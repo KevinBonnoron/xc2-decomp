@@ -1,13 +1,12 @@
 #pragma once
 #include "event/debug_manager.h"
 #include "event/i_manager.h"
-#include "mm_mtl/noncopyable.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class SkipManager : public IManager, public mm::mtl::NoncopyableBase {
+class SkipManager : public IManager, public mm::mtl::Singleton<SkipManager> {
 public:
   static constexpr f32 DEFAULT_END_FRAME = 99999.0f;
 

@@ -2,7 +2,7 @@
 #include "event/cam_free.h"
 #include "event/i_manager.h"
 #include "mm_mtl/fixed_vector.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
@@ -10,7 +10,7 @@ namespace event {
 class CamInterface;
 class CamObj;
 
-class CamManager : public IManager, public mm::mtl::NoncopyableBase {
+class CamManager : public IManager, public mm::mtl::Singleton<CamManager> {
 public:
   static constexpr u32 CAM_COUNT = 8;
   static constexpr u32 INTERFACE_COUNT = 4;

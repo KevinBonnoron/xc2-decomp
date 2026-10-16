@@ -4,12 +4,12 @@
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class DataManager : public IManager, public mm::mtl::NoncopyableBase {
+class DataManager : public IManager, public mm::mtl::Singleton<DataManager> {
 public:
   static constexpr u32 SCENE_COUNT = 16;
 

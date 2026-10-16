@@ -1,5 +1,6 @@
 #pragma once
 #include "mm/mm_std_base.h"
+#include "mm_mtl/noncopyable.h"
 
 namespace mm {
 namespace mtl {
@@ -21,7 +22,7 @@ public:
   }
 };
 
-template <typename T> class Singleton {
+template <typename T> class Singleton : public NoncopyableBase {
 public:
   static T *getPtr() {
     static T s_instance;

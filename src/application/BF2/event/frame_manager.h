@@ -2,7 +2,7 @@
 #include "event/i_manager.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace gf {
@@ -24,7 +24,7 @@ struct FrameInfo {
   f32 accFrame;
 };
 
-class FrameManager : public IManager, public mm::mtl::NoncopyableBase {
+class FrameManager : public IManager, public mm::mtl::Singleton<FrameManager> {
 public:
   static constexpr u32 KEY_FRAME_COUNT = 512;
   static constexpr f32 DEFAULT_MAX_FRAME = 1000.0f;

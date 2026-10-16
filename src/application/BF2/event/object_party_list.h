@@ -1,7 +1,7 @@
 #pragma once
 #include "gf/object/gf_obj_handle.h"
 #include "mm_mtl/fixed_vector.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace gf {
@@ -10,7 +10,7 @@ struct GF_OBJ_HANDLE;
 
 namespace event {
 
-class ObjectPartyList : public mm::mtl::NoncopyableBase {
+class ObjectPartyList : public mm::mtl::Singleton<ObjectPartyList> {
 public:
   static constexpr u32 MEMBER_COUNT = 3;
 

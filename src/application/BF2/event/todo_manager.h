@@ -5,14 +5,14 @@
 #include "event/todo_item.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
 class Param;
 
-class TodoManager : public IManager, public mm::mtl::NoncopyableBase {
+class TodoManager : public IManager, public mm::mtl::Singleton<TodoManager> {
 public:
   static constexpr u32 ITEM_COUNT = 128;
 

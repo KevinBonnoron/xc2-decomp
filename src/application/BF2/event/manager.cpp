@@ -1,5 +1,7 @@
 #include "event/manager.h"
 
+#include "event/debug_manager.h"
+
 #include "framework/lang_util.h"
 #include "gf/game/event/gf_game_event.h"
 #include "ml/proc_desktop.h"
@@ -58,6 +60,8 @@ bool Manager::checkLanguageMode() const {
     return true;
   }
 }
+
+void Manager::setDebugPlayOnetime(bool isPlayOnetime) { mm::mtl::Singleton<DebugManager>::getPtr()->setPlayOnetime(isPlayOnetime); }
 
 Manager *Manager::create(ml::Scn *scn) {
   destroy();

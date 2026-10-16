@@ -1,13 +1,13 @@
 #pragma once
 #include "event/i_manager.h"
 #include "mm_mtl/fixed_vector.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 #include "types.h"
 
 namespace event {
 
-class MemoryManager : public IManager, public mm::mtl::NoncopyableBase {
+class MemoryManager : public IManager, public mm::mtl::Singleton<MemoryManager> {
 public:
   static constexpr u32 TXTBUF_COUNT = 512;
 

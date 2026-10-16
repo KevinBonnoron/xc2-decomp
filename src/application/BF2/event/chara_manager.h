@@ -1,11 +1,11 @@
 #pragma once
 #include "event/i_manager.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class CharaManager : public IManager, public mm::mtl::NoncopyableBase {
+class CharaManager : public IManager, public mm::mtl::Singleton<CharaManager> {
 public:
   enum {
     FLAG_STREAM_MODE = 1 << 0,
