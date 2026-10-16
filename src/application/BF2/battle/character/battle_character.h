@@ -234,6 +234,7 @@ public:
   void SetPerfectAvoidTime(f32 time);
   f32 GetFriendEnhanceRate(int enhance, bool) const;
   f32 GetArtsDamageRate(const ARTS_DATA::LEVEL_DATA &level) const;
+  f32 ApplyResistantAttr(f32 damage, int attribute) const;
   f32 GetArtsDamageRate(const ARTS_DATA &data, int level) const;
   void EnhanceTimerProc();
   void StopAI(f32 time);

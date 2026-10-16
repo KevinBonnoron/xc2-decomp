@@ -19,7 +19,9 @@ public:
   bool IsSpForceLandEnemy(u32 enemy) const;
   bool IsSpBenkeiWeapondEnemy(u32 enemy) const;
 
-  u8 _08[0x40 - 0x08];
+  u8 _08[0x10 - 0x08];
+  f32 resistantAttrDamageRate;
+  u8 _14[0x40 - 0x14];
   u8 resistantAttrMaxHP;
   u8 _41[0xb6 - 0x41];
   u16 oneBoundEnemies[2];
