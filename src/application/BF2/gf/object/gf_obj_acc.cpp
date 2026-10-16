@@ -13,6 +13,7 @@
 #include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "ml/scn_obj_model.h"
@@ -29,8 +30,6 @@ public:
 } // namespace fw
 
 namespace gf {
-
-static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
 
 static const char *EXTRA_PARTS_NAMES[] = {
     "ExtraPartsA",

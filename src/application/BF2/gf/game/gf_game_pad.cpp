@@ -19,7 +19,6 @@ namespace gf {
 constexpr u32 EMERGENCY_ESCAPE_BUTTONS = 0x40f8;
 constexpr u32 EMERGENCY_ESCAPE_FRAME = 150;
 constexpr u32 COND_DISABLE_EMERGENCY_ESCAPE = 2654;
-constexpr u32 DEAD_TYPE_EMERGENCY_ESCAPE = 4;
 constexpr u32 SE_OPEN_MENU = 3;
 constexpr u32 SE_DISABLE = 7;
 constexpr u32 OPEN_MENU_TYPE = 1;

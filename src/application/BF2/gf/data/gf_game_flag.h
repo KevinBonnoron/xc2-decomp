@@ -8,6 +8,10 @@ namespace gf {
 
 struct GfSetupParam;
 
+enum {
+  FLAG_GAME_CLEAR = 0xbdcd,
+};
+
 struct GameFlag {
   mm::mtl::BitFlag<0x10000> oneBitFlags;
   u32 twoBitFlags[0x1000];

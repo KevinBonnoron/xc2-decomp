@@ -14,7 +14,6 @@ namespace gf {
 
 constexpr u32 PARTY_MEMBER_COUNT = 10;
 constexpr u32 PARTY_BATTLE_MEMBER_COUNT = 3;
-constexpr u32 SET_BLADE_NUM_MAX = 5;
 constexpr u32 WEAPON_NUM_PER_BLADE = 8;
 constexpr u32 MEMBER_NONE = 0xffffffff;
 

@@ -8,6 +8,22 @@ namespace gf {
 
 struct GfSetupParam;
 
+enum {
+  CONDITION_TYPE_NONE,
+  CONDITION_TYPE_SCENARIO,
+  CONDITION_TYPE_QUEST,
+  CONDITION_TYPE_ENVIRONMENT,
+  CONDITION_TYPE_FLAG,
+  CONDITION_TYPE_ITEM,
+  CONDITION_TYPE_PARTY,
+  CONDITION_TYPE_IDEA,
+  CONDITION_TYPE_LEVEL,
+  CONDITION_TYPE_ACHIEVEMENT,
+  CONDITION_TYPE_FIELD_SKILL_LEVEL,
+};
+
+constexpr u32 CONDITION_LIST_COUNT = 8;
+
 class GfGameCond : public mm::mtl::PtrSingleton<GfGameCond> {
 public:
   GfGameCond(const GfSetupParam &param);

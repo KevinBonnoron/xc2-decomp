@@ -1,59 +1,18 @@
 #include "gf/data/gf_bdat_quest.h"
-#include "bdat.h"
+
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
 
 namespace gf {
 
-enum {
-  BDAT_FLD_FIELD_SKILL_LIST = 0x5e,
-  BDAT_FLD_FIELD_SKILL_RANDOM = 0x5f,
-  BDAT_FLD_FIELD_SKILL_SETTING = 0x60,
-  BDAT_FLD_MERCENARIES_CONFIG = 0x6b,
-  BDAT_FLD_MERCENARIES_MISSION = 0x6d,
-  BDAT_FLD_DEVELOPMENT_LEVEL = 0x6e,
-  BDAT_FLD_QUEST_LIST = 0xa5,
-  BDAT_FLD_QUEST_LIST_NORMAL = 0xa6,
-  BDAT_FLD_QUEST_LIST_MINI = 0xa7,
-  BDAT_FLD_QUEST_LIST_MERCENARIES = 0xa8,
-  BDAT_FLD_QUEST_LIST_ACHIEVEMENT = 0xa9,
-  BDAT_FLD_QUEST_LIST_BLADE = 0xaa,
-  BDAT_FLD_QUEST_TASK = 0xab,
-  BDAT_FLD_QUEST_TASK_NORMAL = 0xac,
-  BDAT_FLD_QUEST_TASK_MINI = 0xad,
-  BDAT_FLD_QUEST_TASK_MERCENARIES = 0xae,
-  BDAT_FLD_QUEST_TASK_ACHIEVEMENT = 0xaf,
-  BDAT_FLD_QUEST_TASK_BLADE = 0xb0,
-  BDAT_FLD_QUEST_BATTLE = 0xb1,
-  BDAT_FLD_REQUEST_ITEM_SET = 0xb2,
-  BDAT_FLD_QUEST_COLLECT = 0xb3,
-  BDAT_FLD_QUEST_USE = 0xb4,
-  BDAT_FLD_QUEST_REACH = 0xb5,
-  BDAT_FLD_QUEST_TALK = 0xb6,
-  BDAT_FLD_QUEST_TALK_DUMMY_GROUP = 0xb7,
-  BDAT_FLD_QUEST_GIMMICK = 0xb8,
-  BDAT_FLD_QUEST_FIELD_SKILL_COUNT = 0xb9,
-  BDAT_FLD_REQUEST_BLADE = 0xba,
-  BDAT_FLD_QUEST_CONDITION = 0xbb,
-  BDAT_FLD_QUEST_HINTS = 0xbc,
-  BDAT_FLD_QUEST_REWARD = 0xbd,
-  BDAT_FLD_QUEST_REWARD_RANDOM = 0xbe,
-  BDAT_FLD_QUEST_EVENT = 0xbf,
-  BDAT_FLD_ACHIEVEMENT = 0xc1,
-  BDAT_FLD_ACHIEVEMENT_SET = 0xc2,
-  BDAT_FLD_ACHIEVEMENT_LIST = 0xc3,
-};
-
 GfBdatQuest::GfBdatQuest()
-    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr),
-      unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr),
-      unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr),
-      unknown70(nullptr), unknown78(nullptr), unknown80(nullptr), unknown88(nullptr), unknown90(nullptr),
-      unknown98(nullptr), unknowna0(nullptr), unknowna8(nullptr), unknownb0(nullptr),
-      unknownb8(nullptr), unknownc0(nullptr), unknownc8(nullptr), unknownd0(nullptr), unknownd8(nullptr),
-      unknowne0(nullptr), unknowne8(nullptr), unknownf0(nullptr), unknownf8(nullptr),
-      unknown100(nullptr), unknown108(nullptr), unknown110(nullptr), unknown118(nullptr),
-      unknown120(nullptr), unknown128(nullptr) {
+    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr),
+      unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), unknown78(nullptr),
+      unknown80(nullptr), unknown88(nullptr), unknown90(nullptr), unknown98(nullptr), unknowna0(nullptr), unknowna8(nullptr), unknownb0(nullptr),
+      unknownb8(nullptr), unknownc0(nullptr), unknownc8(nullptr), unknownd0(nullptr), unknownd8(nullptr), unknowne0(nullptr), unknowne8(nullptr),
+      unknownf0(nullptr), unknownf8(nullptr), unknown100(nullptr), unknown108(nullptr), unknown110(nullptr), unknown118(nullptr), unknown120(nullptr),
+      unknown128(nullptr) {
   mQuestListAcc = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) QuestListAcc();
   bdatRefresh();
 }

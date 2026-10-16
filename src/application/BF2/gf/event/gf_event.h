@@ -9,7 +9,16 @@ enum RELOAD_BDAT {
   RELOAD_BDAT_ALL = 1,
 };
 
-enum GEV {};
+enum GEV {
+  GEV_MAPJUMP_DESTROY_FIELD = 2,
+  GEV_MAPJUMP_FADEIN = 6,
+  GEV_EVENT_END = 9,
+};
+
+enum {
+  DEBUG_CHANGE_IDEA_TRUST = 4,
+};
+
 enum GF_STATE {
   GF_STATE_INITIALIZE = 1,
   GF_STATE_DESTROY = 2,

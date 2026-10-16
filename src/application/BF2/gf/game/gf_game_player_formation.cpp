@@ -1,15 +1,15 @@
 #include "gf/game/gf_game_player_formation.h"
+
 #include "fw/fw_param_manager.h"
 #include "gf/event/gf_event.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_quat.h"
+#include "mm_mtl/intrusive_ptr.h"
 
 namespace gf {
 
-static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
-
-constexpr u32 PLAYER_ID_NONE = 0xffffffff;
 constexpr u32 FORMATION_NUM = 4;
 constexpr u32 PARAM_WARP_FOR_RANDOM_TALK = 2;
 

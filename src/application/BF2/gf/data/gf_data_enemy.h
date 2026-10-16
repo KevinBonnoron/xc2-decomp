@@ -7,6 +7,8 @@
 
 namespace gf {
 
+constexpr u32 EXTRA_PARTS_COUNT = 4;
+
 struct SDataEnemy {
   u16 arrange;
   u8 _002[0x004 - 0x002];

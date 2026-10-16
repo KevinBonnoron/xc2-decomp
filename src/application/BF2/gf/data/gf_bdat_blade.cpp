@@ -1,5 +1,6 @@
 #include "gf/data/gf_bdat_blade.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
@@ -2321,29 +2322,10 @@ u32 getBLD_ReleaceRewardReleace(const CBdatWrapper &wrapper, u32 id, u32 index) 
 
 } // namespace _gfbdb
 
-enum {
-  BDAT_BTL_CMN_BL_CAPACITY = 0x19,
-  BDAT_BTL_CMN_BL_POWER = 0x1a,
-  BDAT_BTL_CMN_BL_NEW_BL_ARTS = 0x1b,
-  BDAT_BTL_CMN_BL_STATUS_TYPE = 0x1c,
-  BDAT_BTL_CMN_BL_ARMOR = 0x1d,
-  BDAT_FLD_IDEA_TABLE = 0x71,
-  BDAT_BLD_IDEA = 0xc5,
-  BDAT_BLD_IDEA_TABLE = 0xc6,
-  BDAT_BLD_BLADE_TABLE = 0xc7,
-  BDAT_BLD_BLADE_LIST = 0xc8,
-  BDAT_BLD_COMMON_LIST = 0xc9,
-  BDAT_BLD_NAME_LIST = 0xca,
-  BDAT_BLD_BLADE_MODEL_LIST = 0xcb,
-  BDAT_BLD_CREATE_CONFIG = 0xcc,
-  BDAT_BLD_RARE_LIST = 0xcd,
-  BDAT_BLD_RELEACE_REWARD = 0xce,
-};
-
 GfBdatBlade::GfBdatBlade()
-    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr),
-      unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr),
-      unknown68(nullptr), unknown70(nullptr), unknown78(nullptr), unknown80(nullptr), unknown88(nullptr) {
+    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr),
+      unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), unknown78(nullptr),
+      unknown80(nullptr), unknown88(nullptr) {
   bdatRefresh();
 }
 
@@ -2818,13 +2800,9 @@ u32 GfBdatBlade::getCommonListFavoriteItemMax(u32 id) const { return _gfbdb::get
 
 u32 GfBdatBlade::getCommonListArtsAchievementSet(u32 id, u32 index) const { return _gfbdb::getCommonListArtsAchievementSet(*unknown28, id, index); }
 
-u32 GfBdatBlade::getCommonListSkillAchievementSet(u32 id, u32 index) const {
-  return _gfbdb::getCommonListSkillAchievementSet(*unknown28, id, index);
-}
+u32 GfBdatBlade::getCommonListSkillAchievementSet(u32 id, u32 index) const { return _gfbdb::getCommonListSkillAchievementSet(*unknown28, id, index); }
 
-u32 GfBdatBlade::getCommonListFskillAchivementSet(u32 id, u32 index) const {
-  return _gfbdb::getCommonListFskillAchivementSet(*unknown28, id, index);
-}
+u32 GfBdatBlade::getCommonListFskillAchivementSet(u32 id, u32 index) const { return _gfbdb::getCommonListFskillAchivementSet(*unknown28, id, index); }
 
 u32 GfBdatBlade::getNameListStart() const { return Bdat::getIdTop(unknown30->data); }
 

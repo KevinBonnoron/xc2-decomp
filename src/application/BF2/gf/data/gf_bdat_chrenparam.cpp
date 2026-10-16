@@ -1,6 +1,7 @@
 #include "gf/data/gf_bdat_chrenparam.h"
 
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
 #include "mm_mtl/fixed_vector.h"
@@ -982,16 +983,7 @@ u32 getEnemyGroupEnemyID8(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbep
 
-enum {
-  BDAT_CHR_EN_PARAM = 0x7a,
-  BDAT_CHR_EN_PARAM_TABLE = 0x7b,
-  BDAT_CHR_EN_PARAM_REV = 0x7c,
-  BDAT_CHR_EN_RST_DEBUFF_REV = 0x7d,
-  BDAT_FLD_ENEMY_GROUP = 0xc0,
-};
-
-GfBdatChrEnParam::GfBdatChrEnParam()
-    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr) {
+GfBdatChrEnParam::GfBdatChrEnParam() : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr) {
   bdatRefresh();
 }
 
@@ -1027,6 +1019,8 @@ void GfBdatChrEnParam::destroyFP() {
 #define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
+// __LINE__ of the allocations changes the instruction order.
+#line 1030
 void GfBdatChrEnParam::createFP() {
   unknown10 = NEW_BDAT_WRAPPER(BDAT_CHR_EN_PARAM);
   unknown18 = NEW_BDAT_WRAPPER(BDAT_CHR_EN_PARAM_TABLE);
@@ -1286,9 +1280,7 @@ u32 GfBdatChrEnParam::getChrEnParamRevLuckRev(u32 id) const { return _gfbep::get
 
 u32 GfBdatChrEnParam::getChrEnRstDebuffRevStart() const { return Bdat::getIdTop(unknown28->data); }
 
-u32 GfBdatChrEnParam::getChrEnRstDebuffRevEnd() const {
-  return Bdat::getIdTop(unknown28->data) + Bdat::getIdCount(unknown28->data);
-}
+u32 GfBdatChrEnParam::getChrEnRstDebuffRevEnd() const { return Bdat::getIdTop(unknown28->data) + Bdat::getIdCount(unknown28->data); }
 
 u32 GfBdatChrEnParam::getChrEnRstDebuffRevRevType(u32 id) const { return _gfbep::getChrEnRstDebuffRevRevType(*unknown28, id); }
 

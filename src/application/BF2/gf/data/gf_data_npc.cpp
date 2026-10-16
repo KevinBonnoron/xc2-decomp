@@ -1,23 +1,17 @@
 #include "gf/data/gf_data_npc.h"
+
 #include "bdat.h"
 #include "gf/data/gf_bdat_chrbl.h"
 #include "gf/data/gf_bdat_chrdr.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
+#include "mm_mtl/fixed_array.h"
+#include "mm_mtl/fixstr.h"
 
 namespace gf {
-
-enum {
-  BDAT_CHR_DR = 0x77,
-  BDAT_CHR_BL = 0x78,
-  BDAT_RSC_NPC_LIST = 0x93,
-  BDAT_BLD_BLADENAME = 0x14e,
-  BDAT_CHR_BL_MS = 0x168,
-  BDAT_CHR_DR_MS = 0x169,
-  BDAT_FLD_NPCNAME = 0x176,
-};
 
 constexpr u32 NPC_DRIVER_END = 10;
 constexpr u32 NPC_BLADE_FIRST = 1001;

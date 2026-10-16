@@ -11,13 +11,12 @@
 #include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_property.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_vector.h"
 
 namespace gf {
-
-static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
 
 void GfObjUtil::addDebugName(GF_OBJ_HANDLE *handle) {}
 

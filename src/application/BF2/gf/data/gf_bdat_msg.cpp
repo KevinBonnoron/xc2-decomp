@@ -1,6 +1,7 @@
 #include "gf/data/gf_bdat_msg.h"
 
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_quest.h"
@@ -13,54 +14,6 @@ namespace _gfbms {
 const char *szEmpty = "";
 
 } // namespace _gfbms
-
-enum {
-  BDAT_BLD_BLADENAME = 0x14e,
-  BDAT_BLD_MERCENAME = 0x14f,
-  BDAT_BTL_ARTS_BL_MS = 0x150,
-  BDAT_BTL_ARTS_BLSP_MS = 0x151,
-  BDAT_BTL_ARTS_DR_MS = 0x152,
-  BDAT_BTL_BUFF_CAP = 0x157,
-  BDAT_BTL_BUFF_MS = 0x158,
-  BDAT_BTL_CLASS_MS = 0x159,
-  BDAT_BTL_ENGENUS_MS = 0x15c,
-  BDAT_BTL_ENHANCE_CAP = 0x15d,
-  BDAT_BTL_SKILL_DR_NAME = 0x15f,
-  BDAT_BTL_SKILL_BL_NAME = 0x160,
-  BDAT_ITM_HANA_ROLE_MS = 0x163,
-  BDAT_ITM_HANA_NARTS_SET_MS = 0x164,
-  BDAT_ITM_HANA_ATR_MS = 0x165,
-  BDAT_ITM_HANA_ASSIST_MS = 0x166,
-  BDAT_ITM_HANA_ARTS_ENH_MS = 0x167,
-  BDAT_CHR_BL_MS = 0x168,
-  BDAT_CHR_DR_MS = 0x169,
-  BDAT_FLD_ACHIEVEMENTTXT = 0x16b,
-  BDAT_FLD_ENEMYNAME = 0x16e,
-  BDAT_FLD_FIELDSKILLTXT = 0x170,
-  BDAT_FLD_LANDMARK = 0x174,
-  BDAT_FLD_MAPINFO = 0x175,
-  BDAT_FLD_NPCNAME = 0x176,
-  BDAT_FLD_QUEST = 0x177,
-  BDAT_FLD_QUEST_NORMAL = 0x178,
-  BDAT_FLD_QUEST_MINI = 0x179,
-  BDAT_FLD_QUEST_BLADE = 0x17a,
-  BDAT_FLD_QUEST_ACHIEVEMENT = 0x17b,
-  BDAT_FLD_QUEST_MERCENARIES = 0x17c,
-  BDAT_ITM_BOOSTER = 0x182,
-  BDAT_ITM_COLLECTION = 0x183,
-  BDAT_ITM_CRYSTAL = 0x184,
-  BDAT_ITM_EVT = 0x185,
-  BDAT_ITM_FAVORITE = 0x186,
-  BDAT_ITM_INFO = 0x187,
-  BDAT_ITM_ORB = 0x188,
-  BDAT_ITM_PCEQUIP = 0x189,
-  BDAT_ITM_PCWPN_MS = 0x18a,
-  BDAT_ITM_PCWPNCHIP_MS = 0x18b,
-  BDAT_ITM_PCWPNTYPE_MS = 0x18c,
-  BDAT_ITM_PRECIOUS = 0x18d,
-  BDAT_ITM_SALVAGE = 0x18e,
-  BDAT_ITM_TRESURE = 0x18f,
-};
 
 CBdatWrapper *GfBdatMsg::m_fpBldBladeName;
 CBdatWrapper *GfBdatMsg::m_fpBldMerceName;
@@ -413,7 +366,7 @@ void GfBdatMsg::createFP() {
   m_fpItmTresure = NEW_BDAT_WRAPPER(BDAT_ITM_TRESURE);
   m_fpItmFavorite = NEW_BDAT_WRAPPER(BDAT_ITM_FAVORITE);
   m_fpItmBooster = NEW_BDAT_WRAPPER(BDAT_ITM_BOOSTER);
-  m_fpItmOrb = NEW_BDAT_WRAPPER(BDAT_ITM_ORB);
+  m_fpItmOrb = NEW_BDAT_WRAPPER(BDAT_ITM_ORB_MS);
   m_fpItmPcEquip = NEW_BDAT_WRAPPER(BDAT_ITM_PCEQUIP);
   m_fpChrDr = NEW_BDAT_WRAPPER(BDAT_CHR_DR_MS);
   m_fpChrBl = NEW_BDAT_WRAPPER(BDAT_CHR_BL_MS);

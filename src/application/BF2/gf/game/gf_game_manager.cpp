@@ -59,6 +59,7 @@
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/object/gf_menu_obj_tutorial.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
@@ -71,11 +72,7 @@
 
 namespace gf {
 
-static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
-
 constexpr u32 PARTY_ID_LEADER = 0;
-constexpr u32 PARTY_ID_NONE = 0xffffffff;
-constexpr u32 PARTY_MEMBER_NUM = 3;
 constexpr u32 SALVAGE_STATE_COMPLETE = 20;
 constexpr u32 SALVAGE_COUNT_FLAG_SIZE = 16;
 constexpr int SALVAGE_COUNT_FLAG = 1547;
@@ -84,7 +81,6 @@ constexpr u16 CHILD_QUEST_FORCE_BOSS_BATTLE_BGM = 210;
 constexpr u16 SCENARIO_FLAG_FORCE_BOSS_BATTLE_BGM = 8024;
 constexpr u16 SCENARIO_FLAG_GAME_END = 10033;
 constexpr u16 SCENARIO_FLAG_PER_SCENARIO = 1000;
-constexpr u32 WEAPON_HANDLE_NUM = 10;
 constexpr u32 FADE_ALL = 0xffffffff;
 constexpr u32 FADE_LAYER_COUNT = 3;
 constexpr f32 FADEOUT_ALPHA = 0.9f;

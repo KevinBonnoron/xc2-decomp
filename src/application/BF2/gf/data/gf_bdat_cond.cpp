@@ -1,5 +1,6 @@
 #include "gf/data/gf_bdat_cond.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
 
@@ -796,24 +797,9 @@ u32 getConditionFieldSkiiLevelLevel(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbdb
 
-enum {
-  BDAT_FLD_CONDITION_SCENARIO = 0x51,
-  BDAT_FLD_CONDITION_FLAG = 0x52,
-  BDAT_FLD_CONDITION_LIST = 0x53,
-  BDAT_FLD_CONDITION_QUEST = 0x54,
-  BDAT_FLD_CONDITION_ENV = 0x55,
-  BDAT_FLD_CONDITION_LEVEL = 0x56,
-  BDAT_FLD_CONDITION_PT = 0x57,
-  BDAT_FLD_CONDITION_ITEM = 0x58,
-  BDAT_FLD_CONDITION_IDEA = 0x59,
-  BDAT_FLD_CONDITION_ACHIEVEMENT = 0x5a,
-  BDAT_FLD_CONDITION_FIELD_SKII_LEVEL = 0x5b,
-};
-
 GfBdatCond::GfBdatCond()
-    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr),
-      unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr),
-      unknown60(nullptr) {
+    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr),
+      unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr) {
   bdatRefresh();
 }
 
@@ -1175,25 +1161,17 @@ u32 GfBdatCond::getConditionLevelLevel(u32 id) const { return _gfbdb::getConditi
 
 u32 GfBdatCond::getConditionAchievementStart() const { return Bdat::getIdTop(unknown58->data); }
 
-u32 GfBdatCond::getConditionAchievementEnd() const {
-  return Bdat::getIdTop(unknown58->data) + Bdat::getIdCount(unknown58->data);
-}
+u32 GfBdatCond::getConditionAchievementEnd() const { return Bdat::getIdTop(unknown58->data) + Bdat::getIdCount(unknown58->data); }
 
-u32 GfBdatCond::getConditionAchievementAchievementSetID(u32 id) const {
-  return _gfbdb::getConditionAchievementAchievementSetID(*unknown58, id);
-}
+u32 GfBdatCond::getConditionAchievementAchievementSetID(u32 id) const { return _gfbdb::getConditionAchievementAchievementSetID(*unknown58, id); }
 
 u32 GfBdatCond::getConditionAchievementValue(u32 id) const { return _gfbdb::getConditionAchievementValue(*unknown58, id); }
 
 u32 GfBdatCond::getConditionFieldSkiiLevelStart() const { return Bdat::getIdTop(unknown60->data); }
 
-u32 GfBdatCond::getConditionFieldSkiiLevelEnd() const {
-  return Bdat::getIdTop(unknown60->data) + Bdat::getIdCount(unknown60->data);
-}
+u32 GfBdatCond::getConditionFieldSkiiLevelEnd() const { return Bdat::getIdTop(unknown60->data) + Bdat::getIdCount(unknown60->data); }
 
-u32 GfBdatCond::getConditionFieldSkiiLevelFieldSkillID(u32 id) const {
-  return _gfbdb::getConditionFieldSkiiLevelFieldSkillID(*unknown60, id);
-}
+u32 GfBdatCond::getConditionFieldSkiiLevelFieldSkillID(u32 id) const { return _gfbdb::getConditionFieldSkiiLevelFieldSkillID(*unknown60, id); }
 
 u32 GfBdatCond::getConditionFieldSkiiLevelLevel(u32 id) const { return _gfbdb::getConditionFieldSkiiLevelLevel(*unknown60, id); }
 

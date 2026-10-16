@@ -12,6 +12,7 @@
 #include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/game/gf_game_cond.h"
 #include "gf/game/quest/gf_quest_task_param.h"
 #include "mm_mtl/fixstr.h"
 
@@ -59,17 +60,10 @@ enum {
 };
 
 enum {
-  CONDITION_TYPE_PARTY = 6,
-};
-
-enum {
   CONDITION_PARTY_CATEGORY_BLADE = 4,
 };
 
-constexpr u32 CONDITION_LIST_COUNT = 8;
 constexpr u32 CONDITION_PARTY_MEMBER_COUNT = 3;
-constexpr u32 BLADE_ID_FIRST = 1001;
-constexpr u32 BLADE_ID_COUNT = 422;
 
 constexpr u32 BLADE_ARTS_COUNT = 3;
 constexpr u32 BLADE_FIELD_SKILL_COUNT = 3;
@@ -899,7 +893,7 @@ u32 GfDataMercenaries::getBladeWithLeader(u32 mission) {
 
       for (u32 member = 0; member < CONDITION_PARTY_MEMBER_COUNT; member++) {
         u32 blade = bdatCond->getConditionPTPCID(partyCondition, member);
-        if (blade - BLADE_ID_FIRST < BLADE_ID_COUNT) {
+        if (blade - BLADE_ID_FIRST < BLADE_COUNT) {
           return blade;
         }
       }

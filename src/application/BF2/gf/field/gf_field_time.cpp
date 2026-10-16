@@ -15,7 +15,6 @@ constexpr u32 TIME_RANGE_BIT_COUNT = 32;
 constexpr u32 START_HOUR = 7;
 constexpr u32 HOURS_PER_DAY = 24;
 constexpr u32 MINUTES_PER_HOUR = 60;
-constexpr u32 SECONDS_PER_MINUTE = 60;
 constexpr u32 SECONDS_PER_HOUR = 3600;
 constexpr u32 SECONDS_PER_DAY = 86400;
 constexpr u32 SECONDS_PER_YEAR = 5184000;

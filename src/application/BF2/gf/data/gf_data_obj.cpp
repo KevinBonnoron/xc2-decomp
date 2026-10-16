@@ -20,6 +20,7 @@
 #include "gf/game/gf_game_util.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
@@ -32,12 +33,7 @@
 
 namespace gf {
 
-static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
-
-constexpr u32 DRIVER_LEVEL_MAX = 99;
-constexpr u32 DRIVER_ARTS_LEVEL_MAX = 5;
 constexpr int SLOT_ARTS_COUNT = 3;
-constexpr u32 EXTRA_PARTS_COUNT = 4;
 constexpr u32 ARMOR_MAX = 100;
 constexpr f32 PERCENT = 0.01f;
 constexpr f32 PERCENT_SCALE = 100.0f;
@@ -191,7 +187,8 @@ u32 DataObjDriver::getDataType() const { return data->activate; }
 
 u32 DataObjDriver::getHp() const { return GfObjUtil::getHp(handle); }
 
-static void unknown001(u32 &value, const SDataDriver &dataDriver, u32 percentEffect, u32 addEffect) { // Inferred role: applyDriverEnhance; original function name unknown.
+static void unknown001(u32 &value, const SDataDriver &dataDriver, u32 percentEffect,
+                       u32 addEffect) { // Inferred role: applyDriverEnhance; original function name unknown.
   mm::mtl::FixedVector<u16, 64> enhances;
   GfDataDriver::getValidEnhance(enhances, dataDriver);
   GfBdatBtl *bdatBattle = GfBdatBtl::get();
@@ -499,7 +496,8 @@ void DataObjBlade::setVirtualEquipWpn(u32 weapon, int) {
   }
 }
 
-static void unknown002(u32 &value, SDataBlade &dataBlade, u32 percentEffect, u32 addEffect, bool isVirtual) { // Inferred role: applyBladeEnhance; original function name unknown.
+static void unknown002(u32 &value, SDataBlade &dataBlade, u32 percentEffect, u32 addEffect,
+                       bool isVirtual) { // Inferred role: applyBladeEnhance; original function name unknown.
   mm::mtl::FixedVector<u16, 64> enhances;
   GfDataBlade::getValidEnhance(enhances, dataBlade, isVirtual);
   GfBdatBtl *bdatBattle = GfBdatBtl::get();
@@ -605,8 +603,7 @@ u32 DataObjBlade::getCriticalRate(bool isVirtual) const {
     criticalRate = bdatItem->getPcWpnCriRate(weapon);
   }
 
-  unknown002(
-      criticalRate, *get(isVirtual), ENHANCE_EFFECT_CRITICAL_RATE_PERCENT, ENHANCE_EFFECT_CRITICAL_RATE_ADD, isVirtualSetting() | menuParam);
+  unknown002(criticalRate, *get(isVirtual), ENHANCE_EFFECT_CRITICAL_RATE_PERCENT, ENHANCE_EFFECT_CRITICAL_RATE_ADD, isVirtualSetting() | menuParam);
   return criticalRate;
 }
 
@@ -1217,7 +1214,8 @@ const char *DataObjEnemy::getEffectResourceName() const { return GfBdatRsc::get(
 
 u32 DataObjEnemy::getBdatId() const { return data->arrange; }
 
-static bool unknown003(f32 &value, u32 arrange, u32 percentEffect, u32 addEffect) { // Inferred role: applyEnemyEnhance; original function name unknown.
+static bool unknown003(f32 &value, u32 arrange, u32 percentEffect,
+                       u32 addEffect) { // Inferred role: applyEnemyEnhance; original function name unknown.
   if (GfDataEnemy::getEquipBlade(arrange) == 0) {
     return false;
   }

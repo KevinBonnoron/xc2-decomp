@@ -1,5 +1,6 @@
 #include "gf/game/gf_game_util.h"
 
+#include "gf/object/gf_obj_handle.h"
 #include <stdarg.h>
 
 #include "battle/data_manager_battle.h"
@@ -63,17 +64,9 @@
 namespace gf {
 
 enum {
-  FLAG_GAME_CLEAR = 0xbdcd,
-};
-
-enum {
   NATION_FIRST = 1,
   NATION_IYASAKI = 5,
   NATION_ARCADIA = 6,
-};
-
-enum {
-  DEBUG_CHANGE_IDEA_TRUST = 4,
 };
 
 enum {
@@ -95,10 +88,6 @@ enum {
 };
 
 enum {
-  DEAD_TYPE_EMERGENCY_ESCAPE = 4,
-};
-
-enum {
   BELONGING_FIRST = 1,
   BELONGING_SECOND = 2,
 };
@@ -111,19 +100,10 @@ enum {
 constexpr u32 WEAPON_TYPE_EVENT_BATTLE_IDLE_FIRST = 18;
 constexpr u32 WEAPON_TYPE_EVENT_BATTLE_IDLE_SECOND = 19;
 
-GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
-
-constexpr u32 MONEY_MAX = 999'999'999;
-constexpr u32 COIN_MAX = 9'999;
 constexpr u32 ETHER_MAX = 999'999'999;
-constexpr u32 NATION_COUNT = 8;
-constexpr u32 DEVELOP_LEVEL_MAX = 5;
-constexpr int TRUST_RANK_MAX = 6;
 constexpr int TRUST_RANK_LIMIT = 16;
 constexpr u32 TRUST_POINT_MAX = 0xffff;
 constexpr u32 ACHIEVEMENT_LEVEL_MAX = 5;
-constexpr u32 DRIVER_LEVEL_MAX = 99;
-constexpr u32 DRIVER_ARTS_LEVEL_MAX = 5;
 constexpr u32 DRIVER_SKILL_LEVEL_MAX = 3;
 constexpr u32 GAME_CLEAR_COUNT_MAX = 9'999;
 constexpr u32 ACHIEVEMENT_POPUP_MAX = 300;
@@ -131,7 +111,6 @@ constexpr int PARTY_GAUGE_MAX = 300;
 constexpr u32 FOLLOW_OBJ_MAX = 768;
 constexpr u32 SAIKA_HANDLE_MAX = 8;
 constexpr u32 APPEND_HANDLE_MAX = 10;
-constexpr u32 BLADE_COUNT = 422;
 constexpr u32 DRIVER_ACCESSORY_SLOT_COUNT = 2;
 constexpr u32 PARTY_DRIVER_COUNT = 3;
 

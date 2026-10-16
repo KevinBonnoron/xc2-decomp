@@ -10,6 +10,7 @@ struct QuestTaskParam;
 
 constexpr u32 ACHIEVEMENT_PER_BLADE = 50;
 constexpr u32 ACHIEVEMENT_LEVEL_COUNT = 5;
+constexpr u32 ACHIEVEMENT_LINE_COUNT = 10;
 
 class GfDataQuest {
 public:

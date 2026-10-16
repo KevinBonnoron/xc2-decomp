@@ -1,5 +1,6 @@
 #include "gf/data/gf_bdat_rsc.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
 
@@ -4021,30 +4022,10 @@ f32 getFLD_actorSEoffsetZ(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbrs
 
-enum {
-  BDAT_VOICE_TABLE = 0x72,
-  BDAT_VOICE_TABLE_BLADE = 0x73,
-  BDAT_VOICE_TABLE_RARE = 0x74,
-  BDAT_VOICE_TABLE_COMMON = 0x75,
-  BDAT_FLD_ACTOR_SE = 0x76,
-  BDAT_DRIVER_PARAM = 0x7e,
-  BDAT_RSC_EN = 0x90,
-  BDAT_RSC_EN_GENUS = 0x91,
-  BDAT_RSC_EN_UND = 0x92,
-  BDAT_RSC_NPC_LIST = 0x93,
-  BDAT_RSC_NPC_WPN = 0x94,
-  BDAT_RSC_MOB_LIST = 0x95,
-  BDAT_RSC_MAP_OBJ_LIST = 0x96,
-  BDAT_RSC_TBOX_LIST = 0x97,
-  BDAT_RSC_PC_WPN = 0x98,
-  BDAT_RSC_PC_WPN_MOUNT = 0x99,
-  BDAT_RSC_EN_WPN = 0x9a,
-};
-
 GfBdatRsc::GfBdatRsc()
     : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr),
-      unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr),
-      unknown78(nullptr), unknown80(nullptr), unknown88(nullptr), unknown90(nullptr) {
+      unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), unknown78(nullptr),
+      unknown80(nullptr), unknown88(nullptr), unknown90(nullptr) {
   bdatRefresh();
 }
 
@@ -4149,11 +4130,11 @@ void GfBdatRsc::createFP() {
   unknown50 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_EN_WPN)};
   unknown58 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_TBOX_LIST)};
   unknown60 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_RSC_MAP_OBJ_LIST)};
-  unknown68 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_DRIVER_PARAM)};
-  unknown70 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_VOICE_TABLE)};
-  unknown78 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_VOICE_TABLE_BLADE)};
-  unknown80 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_VOICE_TABLE_RARE)};
-  unknown88 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_VOICE_TABLE_COMMON)};
+  unknown68 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_CHR_DRIVER_PARAM)};
+  unknown70 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_VOICE_TABLE)};
+  unknown78 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_VOICE_TABLE_BLADE)};
+  unknown80 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_VOICE_TABLE_RARE)};
+  unknown88 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_VOICE_TABLE_COMMON)};
   unknown90 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_ACTOR_SE)};
 }
 

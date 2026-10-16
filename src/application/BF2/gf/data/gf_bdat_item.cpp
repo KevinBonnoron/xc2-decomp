@@ -1,6 +1,7 @@
 #include "gf/data/gf_bdat_item.h"
 
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_weapon.h"
@@ -3207,38 +3208,11 @@ u32 getITM_HanaAssistsortJP(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbit
 
-enum {
-  BDAT_ITM_HANA_ROLE = 0x42,
-  BDAT_ITM_HANA_ATR = 0x43,
-  BDAT_ITM_HANA_ARTS_ENH = 0x44,
-  BDAT_ITM_HANA_N_ARTS_SET = 0x45,
-  BDAT_ITM_HANA_ASSIST = 0x46,
-  BDAT_FLD_OWNER_BONUS = 0x6f,
-  BDAT_FLD_OWNER_BONUS_PARAM = 0x70,
-  BDAT_ITM_PC_WPN = 0x7f,
-  BDAT_ITM_COLLECTION_LIST = 0x80,
-  BDAT_ITM_TRESURE_LIST = 0x81,
-  BDAT_ITM_PC_WPN_CHIP = 0x82,
-  BDAT_ITM_PC_WPN_TYPE = 0x83,
-  BDAT_ITM_PC_EQUIP = 0x84,
-  BDAT_ITM_ORB = 0x85,
-  BDAT_ITM_ORB_RECIPE = 0x86,
-  BDAT_ITM_ORB_EQUIP = 0x87,
-  BDAT_BTL_HEAL_POT = 0x88,
-  BDAT_ITM_PRECIOUS_LIST = 0x89,
-  BDAT_ITM_INFO_LIST = 0x8a,
-  BDAT_ITM_EVENT_LIST = 0x8b,
-  BDAT_ITM_CRYSTAL_LIST = 0x8c,
-  BDAT_ITM_SALVAGE_LIST = 0x8d,
-  BDAT_ITM_BOOSTER_LIST = 0x8e,
-  BDAT_ITM_FAVORITE_LIST = 0x8f,
-};
-
 GfBdatItem::GfBdatItem()
-    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr),
-      unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr),
-      unknown78(nullptr), unknown80(nullptr), unknown88(nullptr), unknown90(nullptr), unknown98(nullptr), unknowna0(nullptr),
-      unknowna8(nullptr), unknownb0(nullptr), unknownb8(nullptr), unknownc0(nullptr), unknownc8(nullptr) {
+    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr),
+      unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), unknown78(nullptr),
+      unknown80(nullptr), unknown88(nullptr), unknown90(nullptr), unknown98(nullptr), unknowna0(nullptr), unknowna8(nullptr), unknownb0(nullptr),
+      unknownb8(nullptr), unknownc0(nullptr), unknownc8(nullptr) {
   bdatRefresh();
 }
 
@@ -3392,7 +3366,7 @@ void GfBdatItem::createFP() {
   unknowna8 = NEW_BDAT_WRAPPER(BDAT_ITM_HANA_ROLE);
   unknownb0 = NEW_BDAT_WRAPPER(BDAT_ITM_HANA_ATR);
   unknownb8 = NEW_BDAT_WRAPPER(BDAT_ITM_HANA_ARTS_ENH);
-  unknownc0 = NEW_BDAT_WRAPPER(BDAT_ITM_HANA_N_ARTS_SET);
+  unknownc0 = NEW_BDAT_WRAPPER(BDAT_ITM_HANA_NARTS_SET);
   unknownc8 = NEW_BDAT_WRAPPER(BDAT_ITM_HANA_ASSIST);
 }
 

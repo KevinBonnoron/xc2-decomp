@@ -1,5 +1,6 @@
 #include "gf/data/gf_bdat_maplist.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
@@ -780,12 +781,6 @@ u32 getTimeInfomsg(const CBdatWrapper &wrapper, u32 id) {
 }
 
 } // namespace _gfbml
-
-enum {
-  BDAT_FLD_MAPLIST = 0x4e,
-  BDAT_FLD_TIME_INFO = 0x4f,
-  BDAT_FLD_WEATHER_INFO = 0x50,
-};
 
 GfBdatMaplist::GfBdatMaplist() : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr) { bdatRefresh(); }
 

@@ -3,6 +3,9 @@
 
 namespace gf {
 
+constexpr u32 MONEY_MAX = 999'999'999;
+constexpr u32 COIN_MAX = 9'999;
+
 enum AMOVE { AMOVE_WALK, AMOVE_SWIM };
 
 class GfDataUtil {

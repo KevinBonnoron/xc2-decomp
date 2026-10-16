@@ -16,6 +16,8 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 
+constexpr u32 PLAYER_ID_NONE = 0xffffffff;
+
 struct MsgPcFieldNotifyChangePlayerID : fw::Message {
   MsgPcFieldNotifyChangePlayerID(u32 playerId) : fw::Message(0x100001c, 0x20), playerId(playerId) {}
 

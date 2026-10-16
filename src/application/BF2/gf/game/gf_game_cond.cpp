@@ -8,6 +8,7 @@
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_param_acc.h"
+#include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
@@ -47,13 +48,7 @@ enum {
 };
 
 enum {
-  TRUST_RANK_MAX = 6,
-};
-
-enum {
   ACHIEVEMENT_LINE_FIELD_SKILL_FIRST = 6,
-  ACHIEVEMENT_LINE_COUNT = 10,
-  ACHIEVEMENT_LEVEL_COUNT = 5,
 };
 
 enum {
@@ -67,26 +62,6 @@ enum {
 enum {
   FIELD_SKILL_COUNT = 3,
 };
-
-enum {
-  CONDITION_LIST_COUNT = 8,
-};
-
-enum {
-  CONDITION_TYPE_NONE,
-  CONDITION_TYPE_SCENARIO,
-  CONDITION_TYPE_QUEST,
-  CONDITION_TYPE_ENV,
-  CONDITION_TYPE_FLAG,
-  CONDITION_TYPE_ITEM,
-  CONDITION_TYPE_PARTY,
-  CONDITION_TYPE_IDEA,
-  CONDITION_TYPE_LEVEL,
-  CONDITION_TYPE_ACHIEVEMENT,
-  CONDITION_TYPE_FIELD_SKILL_LEVEL,
-};
-
-constexpr u32 BLADE_ID_FIRST = 1001;
 
 static GfBdatCond *s_bdatCond;
 
@@ -719,7 +694,7 @@ void GfGameCond::applyCond(u32 condition, u32 blade) {
     case CONDITION_TYPE_QUEST:
       applyQuest(conditionParam);
       break;
-    case CONDITION_TYPE_ENV:
+    case CONDITION_TYPE_ENVIRONMENT:
       applyGameEnv(conditionParam);
       break;
     case CONDITION_TYPE_FLAG:

@@ -1,10 +1,12 @@
 #include "gf/data/gf_data_item.h"
+
 #include "bdat.h"
 #include "gf/data/gf_bdat_item.h"
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/field/gf_field_time.h"
 
 namespace gf {
 
@@ -24,8 +26,6 @@ enum {
   ITEM_MAY_FIRST = 0x9d73,
   ITEM_MAY_LAST = 0x9d77,
 };
-
-constexpr f32 SECONDS_PER_MINUTE = 60.0f;
 
 bool GfDataItem::getName(u8 *&bdat, u32 &textId, u32 item) {
   GfBdatItem *bdatItem = GfBdatItem::get();
@@ -273,7 +273,7 @@ bool GfDataItem::getCaption(u8 *&bdat, u32 &textId, u32 item) {
   return textId != 0 && bdat != nullptr;
 }
 
-f32 GfDataItem::getFavoriteItemTime(u32 item) { return GfBdatItem::get()->getFavoriteTime(item) * SECONDS_PER_MINUTE; }
+f32 GfDataItem::getFavoriteItemTime(u32 item) { return GfBdatItem::get()->getFavoriteTime(item) * static_cast<f32>(SECONDS_PER_MINUTE); }
 
 u32 GfDataItem::getFavoriteItemType(u32 item) { return GfBdatItem::get()->getFavoriteType(item); }
 

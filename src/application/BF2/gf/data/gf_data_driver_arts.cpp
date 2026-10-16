@@ -2,16 +2,12 @@
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_btl.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_driver.h"
 #include "mm_mtl/fixed_array.h"
 
 namespace gf {
-
-enum {
-  BDAT_DRIVER_ARTS_NAME = 0x152,
-  BDAT_DRIVER_ARTS_CAPTION = 0x153,
-};
 
 constexpr u32 ARTS_LEVEL_MAX = 5;
 
@@ -74,9 +70,9 @@ void GfDataDriverArts::initializeWp(u32 driver, u32 weaponType) {
   weapon.totalWp = 0;
 }
 
-u8 *GfDataDriverArts::getNameFP() { return GfDataBdat::getFP(BDAT_DRIVER_ARTS_NAME); }
+u8 *GfDataDriverArts::getNameFP() { return GfDataBdat::getFP(BDAT_BTL_ARTS_DR_MS); }
 
-u8 *GfDataDriverArts::getCaptionFP() { return GfDataBdat::getFP(BDAT_DRIVER_ARTS_CAPTION); }
+u8 *GfDataDriverArts::getCaptionFP() { return GfDataBdat::getFP(BDAT_BTL_ARTS_DR_CAP); }
 
 u32 GfDataDriverArts::getNameID(u32 arts) { return GfBdatBtl::get()->getArtsDrName(arts); }
 
@@ -88,7 +84,7 @@ const char *GfDataDriverArts::getName(u32 arts) {
     return GfBdatBtl::get()->getArtsDrDebugName(arts);
   }
 
-  const char *text = Bdat::getMSText(GfDataBdat::getFP(BDAT_DRIVER_ARTS_NAME), name);
+  const char *text = Bdat::getMSText(GfDataBdat::getFP(BDAT_BTL_ARTS_DR_MS), name);
   if (text == nullptr) {
     text = "";
   }
