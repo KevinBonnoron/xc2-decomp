@@ -1,16 +1,22 @@
 #pragma once
-#include "mm_mtl/bitflag.h"
-#include "types.h"
 #include <stddef.h>
 
+#include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/object/gf_menu_obj_balloon.h"
+#include "mm_mtl/bitflag.h"
+#include "mm_mtl/reference_object.h"
+#include "types.h"
+
 namespace gf {
-class GfMenuCallContext;
 struct GF_OBJ_HANDLE;
 } // namespace gf
 
 namespace event {
 
-enum SELECT_TYPE {};
+enum SELECT_TYPE {
+  SELECT_TYPE_BALLOON = 0,
+  SELECT_TYPE_BOX = 1,
+};
 
 class SelectWindow {
 public:
@@ -23,15 +29,22 @@ public:
   void clear();
   void update();
   void close();
-  void open(SELECT_TYPE type, int defaultIndex, const int *items, size_t count, u8 *message, gf::GF_OBJ_HANDLE *handle);
+  void open(SELECT_TYPE type, int textId, const int *selectIds, size_t count, u8 *bdat, gf::GF_OBJ_HANDLE *handle);
   int getResult();
   bool isOpen() const { return flags.test(FLAG_OPEN); }
-  int getSelected() const { return mResult; }
+  int getSelected() const { return result; }
 
 private:
+  void closeContext() {
+    if (context != nullptr) {
+      gf::GfMenuObjBalloon::close(context, true);
+      mm::mtl::safeRelease(context);
+    }
+  }
+
   mm::mtl::BitFlag<32> flags;
-  int mResult;
-  gf::GfMenuCallContext *mContext;
+  int result;
+  gf::GfMenuCallContext *context;
 };
 
 static_assert(sizeof(SelectWindow) == 0x18, "");

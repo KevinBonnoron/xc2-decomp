@@ -29,8 +29,11 @@ public:
   };
 
   struct OpenSelectParam : OpenParam {
+    OpenSelectParam() : selectBdat(nullptr) {}
+
     u8 *selectBdat;
     mm::mtl::FixedVector<u32, 2> selectIds;
+    u8 _68[0x70 - 0x68];
   };
 
   struct OpenSelectBoxParam : NextParam {
@@ -50,7 +53,7 @@ static_assert(offsetof(GfMenuObjBalloon::OpenParam, handle) == 0x20, "");
 static_assert(offsetof(GfMenuObjBalloon::OpenParam, offset) == 0x30, "");
 static_assert(sizeof(GfMenuObjBalloon::OpenParam) == 0x50, "");
 static_assert(offsetof(GfMenuObjBalloon::OpenSelectParam, selectIds) == 0x58, "");
-static_assert(sizeof(GfMenuObjBalloon::OpenSelectParam) == 0x68, "");
+static_assert(sizeof(GfMenuObjBalloon::OpenSelectParam) == 0x70, "");
 static_assert(offsetof(GfMenuObjBalloon::OpenSelectBoxParam, selectIds) == 0x18, "");
 static_assert(sizeof(GfMenuObjBalloon::OpenSelectBoxParam) == 0x30, "");
 

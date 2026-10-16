@@ -28,12 +28,12 @@ public:
 
 private:
   u32 flags;
-  u32 mTalkerType;
-  SelectWindow mWindow;
+  u32 talkerType;
+  SelectWindow window;
   u8 _30[0x38 - 0x30];
-  int mSelected;
-  int mResult;
-  s32 mWait;
+  int selected;
+  int result;
+  s32 wait;
 };
 
 static_assert(sizeof(SelectManager) == 0x48, "");
