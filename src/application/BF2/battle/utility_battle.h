@@ -12,6 +12,8 @@ struct GF_OBJ_HANDLE;
 
 namespace btl {
 
+constexpr int ATTRIBUTE_COUNT = 8;
+
 class BattleCharacter;
 
 class Utility {

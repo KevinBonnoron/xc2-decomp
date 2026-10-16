@@ -12,13 +12,14 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 class GfObj;
 class GfStatusProperty;
+struct SDataEnemy;
 } // namespace gf
 
 namespace btl {
 
 class GROUP_DATA;
 
-struct ARTS_PALETTE_DATA {
+struct alignas(8) ARTS_PALETTE_DATA {
   void ResetAllRecast();
 
   u8 _00[0x238];
@@ -263,5 +264,92 @@ static_assert(offsetof(PlayerParameter, useWeaponCounts) == 0x5f0, "");
 static_assert(offsetof(PlayerParameter, useWeaponTotal) == 0x65c, "");
 static_assert(offsetof(PlayerParameter, artsPaletteNum) == 0x664, "");
 static_assert(sizeof(PlayerParameter) == 0x668, "");
+
+class EnemyParameter : public CharacterParameter {
+public:
+  struct HATE_DATA {
+    void Set(int type, f32 hate);
+
+    f32 hates[2];
+    u8 _08[0x10 - 0x08];
+  };
+
+  EnemyParameter();
+  virtual ~EnemyParameter();
+  void Initialize(gf::GF_OBJ_HANDLE *handle) override;
+  const gf::SDataEnemy *GetEnemyData() const;
+  void SetBuddy(gf::GF_OBJ_HANDLE *handle, bool isIgnoreBuddy) override;
+  void InitializeArtsPalette(int) override;
+  void InitializeAttackParam() override;
+  bool InitializeEnhance() const override;
+  void BattleStart(int) override;
+  void BattleEnd() override;
+  void BattleEndInitialize() override;
+  void Update(const fw::UpdateInfo &updateInfo, bool) override;
+  void PostUpdate(const fw::UpdateInfo &updateInfo) override;
+  int GetBGMID() const override;
+  void SetupBGM() override;
+  int GetAttribute() const override;
+  bool SetAngry(bool isAngry, f32 time) override;
+  int GetWeaponID(int slot) const override;
+  bool IsBoss() const override;
+  bool IsNamed() const override;
+  bool IsBossOrNamed() const override;
+  bool IsEatTarget() const override;
+  bool IsChild() const override;
+  bool IsInvalidHikariSp() const override;
+  bool IsAlwaysKakusei() const override;
+  bool UsePerfectAvoid() const override;
+  const HATE_DATA *GetHateDataConst(int index) const;
+  int GetHateTarget() const;
+  const ARTS_PALETTE_DATA *GetArtsPaletteDataConst(int) const override { return &artsPalette; }
+  bool IsEnemyParameter() const override { return true; }
+  bool IsInvalidTarget() const override { return isInvalidTarget; }
+  bool IsInvalidWarp() const override { return isInvalidWarp; }
+  bool IsLevelDiffDamageCorrect() const override { return isLevelDiffDamageCorrect; }
+  bool IsFallDeadDrop() const override { return isFallDeadDrop; }
+  int GetAngryAuraID() const override { return angryAuraId; }
+  int GetAngryAttr() const override { return angryAttr; }
+  bool IsAngry() const override { return isAngry; }
+  int GetDeadSEID() const override { return deadSeId; }
+  void SetOverwriteAttr(int attribute) override { overwriteAttr = attribute; }
+  int GetEatNum() const override { return eatNum; }
+  void IncEatNum() override {
+    if (eatNum != 0xff) {
+      eatNum++;
+    }
+  }
+
+  ARTS_PALETTE_DATA artsPalette;
+  HATE_DATA hates[3];
+  int hateTarget;
+  u8 _854[0x864 - 0x854];
+  u16 angryAuraId;
+  u8 angryAttr;
+  u8 deadSeId;
+  u8 overwriteAttr;
+  u8 _869[0x86a - 0x869];
+  u8 eatNum;
+  mutable u8 perfectAvoidNum;
+  u8 isAngry : 1;
+  u8 : 2;
+  u8 isEatTarget : 1;
+  u8 isChild : 1;
+  u8 isInvalidHikariSp : 1;
+  u8 isAlwaysKakusei : 1;
+  u8 isInvalidTarget : 1;
+  u8 isInvalidWarp : 1;
+  u8 isLevelDiffDamageCorrect : 1;
+  u8 isFallDeadDrop : 1;
+};
+
+static_assert(offsetof(EnemyParameter, artsPalette) == 0x5e8, "");
+static_assert(offsetof(EnemyParameter, hates) == 0x820, "");
+static_assert(offsetof(EnemyParameter, hateTarget) == 0x850, "");
+static_assert(offsetof(EnemyParameter, angryAuraId) == 0x864, "");
+static_assert(offsetof(EnemyParameter, overwriteAttr) == 0x868, "");
+static_assert(offsetof(EnemyParameter, eatNum) == 0x86a, "");
+static_assert(offsetof(EnemyParameter, perfectAvoidNum) == 0x86b, "");
+static_assert(sizeof(EnemyParameter) == 0x870, "");
 
 } // namespace btl

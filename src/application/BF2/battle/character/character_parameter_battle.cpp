@@ -1,8 +1,12 @@
 #include "battle/character/character_parameter_battle.h"
 
+#include "battle/battle_global.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
+#include "battle/data_manager_battle.h"
 #include "battle/utility_battle.h"
+#include "gf/data/gf_bdat_chrenarrange.h"
+#include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/object/component/property/gf_com_property.h"
@@ -466,9 +470,97 @@ int PlayerParameter::GetIdeaLevel(int idea) const {
   return ideaAcc.getLevel(idea);
 }
 
+EnemyParameter::~EnemyParameter() { DataManager::get()->ReleaseEnemyGroup(user); }
+
+const gf::SDataEnemy *EnemyParameter::GetEnemyData() const {
+  gf::DataParamAcc acc(user);
+  return acc.getSDataEnemy();
+}
+
 void CharacterParameter::SetBuddy(gf::GF_OBJ_HANDLE *handle, bool isIgnoreBuddy) {
   buddy = handle;
   this->isIgnoreBuddy = isIgnoreBuddy;
+}
+
+void EnemyParameter::BattleEnd() {
+  CharacterParameter::BattleEnd();
+  DataManager::get()->ReleaseEnemyGroup(user);
+}
+
+void EnemyParameter::BattleEndInitialize() { CharacterParameter::BattleEndInitialize(); }
+
+int EnemyParameter::GetBGMID() const {
+  const gf::SDataEnemy *data = GetEnemyData();
+  if (data == nullptr) {
+    return 0;
+  }
+
+  return gf::GfBdatChrEnArrange::get()->getChrEnArrangeBGMID(data->arrange);
+}
+
+void EnemyParameter::SetupBGM() {
+  int bgm = GetBGMID();
+  BattleGlobal::get()->SetBGM(bgm);
+}
+
+int EnemyParameter::GetAttribute() const {
+  if (overwriteAttr <= ATTRIBUTE_COUNT) {
+    return overwriteAttr;
+  }
+
+  if (IsAngry() && angryAttr <= ATTRIBUTE_COUNT) {
+    return angryAttr;
+  }
+
+  gf::DataParamAcc acc(user);
+  return acc.getAttribute(-1, false);
+}
+
+int EnemyParameter::GetWeaponID(int) const {
+  gf::DataParamAcc acc(isBlade ? buddy : user);
+  return acc.getEquipWeapon(0, false);
+}
+
+bool EnemyParameter::IsBoss() const {
+  const gf::SDataEnemy *data = GetEnemyData();
+  return data != nullptr && data->boss;
+}
+
+bool EnemyParameter::IsNamed() const {
+  const gf::SDataEnemy *data = GetEnemyData();
+  return data != nullptr && data->named;
+}
+
+bool EnemyParameter::IsBossOrNamed() const {
+  const gf::SDataEnemy *data = GetEnemyData();
+  return data != nullptr && (data->named | data->boss);
+}
+
+bool EnemyParameter::IsEatTarget() const { return isEatTarget; }
+
+bool EnemyParameter::IsChild() const { return isChild; }
+
+bool EnemyParameter::IsInvalidHikariSp() const { return isInvalidHikariSp; }
+
+bool EnemyParameter::IsAlwaysKakusei() const { return isAlwaysKakusei; }
+
+bool EnemyParameter::UsePerfectAvoid() const {
+  if (perfectAvoidNum > 0) {
+    perfectAvoidNum = perfectAvoidNum - 1;
+    return true;
+  }
+
+  return false;
+}
+
+const EnemyParameter::HATE_DATA *EnemyParameter::GetHateDataConst(int index) const { return &hates[index >= 0 && index < 3 ? index : 0]; }
+
+int EnemyParameter::GetHateTarget() const {
+  if (!isBattle) {
+    return -1;
+  }
+
+  return hateTarget;
 }
 
 } // namespace btl
