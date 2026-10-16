@@ -1,6 +1,7 @@
 #pragma once
 #include "event/cam_base.h"
 #include "event/cam_field.h"
+#include "event/cam_hands.h"
 #include "event/cam_motion.h"
 #include "event/cmd_queue.h"
 #include "event/i_cmd.h"
@@ -40,6 +41,15 @@ public:
   virtual ~CamObj();
   u32 getScreenID() const { return mScreenID; }
   void changeActive(CamBase *cam);
+  CamHands *getHands() { return &mHands; }
+  CamHands *activateHands() {
+    changeActive(&mHands);
+    return &mHands;
+  }
+  CamMotion *activateMotion() {
+    changeActive(&mMotion);
+    return &mMotion;
+  }
   void start();
   void end();
   virtual void update(const FrameInfo &info);
@@ -53,8 +63,9 @@ private:
   SetNearfar mSetNearfar;
   u8 _60[0x64 - 0x60];
   u32 mScreenID;
+  u8 _68[0x70 - 0x68];
   CamField mField;
-  u8 _b0[0xbb0 - 0xb0];
+  CamHands mHands;
   CamMotion mMotion;
   CamBase *mActive;
   CmdQueue<CMD_COUNT, 0> mCmdQueue;
