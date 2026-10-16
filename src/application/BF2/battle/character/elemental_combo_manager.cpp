@@ -129,6 +129,29 @@ int ElementalComboManager::GetResistantAttrBreakTotalDamage(int attribute) const
   return 0;
 }
 
+bool ElementalComboManager::IsEnableElementalCombo(int attribute, int stage, bool isIncludeBurst, bool isAnyAttribute) const {
+  if (!IsFullElementalValue(attribute)) {
+    return false;
+  }
+  if (comboIndex == ELEMENTAL_COMBO_COUNT) {
+    return false;
+  }
+  if (startWaitTime > 0.0f) {
+    return false;
+  }
+  int combo = GetNextElementalComboID(attribute, isIncludeBurst, isAnyAttribute);
+  if (combo == 0) {
+    return false;
+  }
+  if (stage >= 0) {
+    int comboStage = isIncludeBurst ? BattleGlobal::get()->GetElementalComboStage(combo) : comboIndex + 1;
+    if (stage < comboStage) {
+      return false;
+    }
+  }
+  return true;
+}
+
 bool ElementalComboManager::IsFullElementalValue(int attribute) const {
   int first = 0;
   int last = ATTRIBUTE_COUNT;
