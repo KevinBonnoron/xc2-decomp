@@ -1231,7 +1231,8 @@ bool GfGameParty::isPartyMemberInGameObj() {
 }
 
 void GfGameParty::getPartyPosition(GfPartyPosInfo &info) {
-  info = GfPartyPosInfo();
+  GfPartyPosInfo defaultInfo;
+  info = defaultInfo;
   for (u32 index = 0; index < 6; index++) {
     GfObjAcc objAcc(getHandleByHierarchy(index + 1));
     info.positions[index].isValid = objAcc.getObjPosRot(info.positions[index].position, info.positions[index].rotation);

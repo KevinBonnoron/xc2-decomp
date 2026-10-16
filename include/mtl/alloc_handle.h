@@ -1,4 +1,5 @@
 #pragma once
+#include <stddef.h>
 
 namespace mtl {
 
@@ -19,3 +20,5 @@ private:
 };
 
 } // namespace mtl
+
+void *operator new(size_t size, mtl::ALLOC_HANDLE handle, const char *file, size_t line, int alignment, bool);
