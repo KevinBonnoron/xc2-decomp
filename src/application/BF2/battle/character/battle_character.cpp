@@ -110,6 +110,15 @@ void BattleCharacter::ResetAlphaAnimation() {
   }
 }
 
+void BattleCharacter::InitializeEnhanceProcData(bool isFinalizeArtsEffect) {
+  for (f32 &timer : enhanceTimers) {
+    timer = 0.0f;
+  }
+  if (isFinalizeArtsEffect) {
+    FinalizeArtsEffect(true);
+  }
+}
+
 void BattleCharacter::DeleteKizunaAuraEffect() {
   if (effects[EFFECT_ID_KIZUNA_AURA] != 0) {
     if (gf::GfGameManager::isPlayEvent()) {
@@ -151,11 +160,20 @@ bool BattleCharacter::IsBossOrNamed() const {
   return parameter != nullptr && parameter->IsBossOrNamed();
 }
 
+bool BattleCharacter::IsMove() const { return actionId == ACTION_ID_MOVE || aiState == AI_STATE_ACTIVE; }
+
 void BattleCharacter::AddUseWeapon() {
   CharacterParameter *parameter = GetCharacterParameter(true);
   if (parameter != nullptr) {
     int weapon = weaponType;
     parameter->AddUseWeapon(weapon);
+  }
+}
+
+void BattleCharacter::EndBladeTimer(BLADE_TIMER_MODE mode) {
+  if (bladeTimerMode == mode) {
+    bladeTimer = 0.0f;
+    bladeTimerMode = 0;
   }
 }
 
