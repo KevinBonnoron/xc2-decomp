@@ -48,6 +48,7 @@ public:
   static constexpr size_t SUB_QUEUE_COUNT = 5;
 
   enum {
+    FLAG_FADE_OUT = 1 << 5,
     FLAG_DISP_JIJI = 1 << 7,
   };
 
@@ -63,9 +64,12 @@ public:
   void end();
   void update(const FrameInfo &info);
   void initModel();
+  const mm::Vec3 &getPos() const;
+  bool isCharaObjPause(const FrameInfo &info) const;
   void exitModelStream();
   void renderBone();
   void renderAction();
+  f32 getEyeOffset() const;
   void renderMotion();
   void renderHead();
   void renderFacial();
@@ -78,27 +82,41 @@ public:
   void setPos(const mm::Vec3 &pos);
   void walkPos(const mm::Vec3 &pos, EVT_poscvtype cv, bool isRun);
   void linerPos(const mm::Vec3 &pos, bool isWalk, f32 frame, CV_TYPE cv);
+  mm::Vec3 getPosTo() const;
   void setRot(const mm::Vec3 &rot);
   void turnRot(const mm::Vec3 &rot, EVT_rotcvtype cv, f32 frame);
   void linerRot(const mm::Vec3 &rot, f32 frame, CV_TYPE cv);
+  const mm::Vec3 &getRot() const;
+  mm::Vec3 getRotTo() const;
+  bool isTurnable() const;
   void setTar(const TarAxis &axis, f32 frame, EVT_tarcvtype cv, EVT_aimtype aim, f32 weight, f32 speed);
   void resetTar();
+  const mm::Vec3 &getTar() const;
+  bool isTar() const;
   void setLensTarget(const mm::Vec2 &target);
+  const mm::Vec2 &getLensTarget() const;
   void setIdle(int type);
+  int getIdle() const;
   void playAutoAction(f32 frame);
   void playAction(int type, f32 frame, bool isLoop, bool isBlend);
   void stopAction();
+  int getAction() const;
+  f32 getActionLastFrame() const;
   void playMotion(const char *name, f32 frame, f32 blend, f32 speed);
   void initModelStream();
   void playMotionABC(const char *nameA, const char *nameB, const char *nameC, f32 frameA, f32 frameB, f32 frameC, f32 blendA, f32 blendB, f32 blendC);
-  void playHead(int type, f32 frame, bool isBlend, bool isBlendOut);
+  void playHead(int type, f32 life, bool isBlendIn, bool isBlendOut);
   void stopHead();
-  void playFacial(int typeA, f32 weightA, int typeB, f32 weightB, int typeC, f32 weightC, int typeD, f32 weightD, f32 frame, f32 blend);
+  int getHead() const;
+  void playFacial(int type, f32 life, int browType, f32 browWeight, int eyeType, f32 eyeWeight, int lipType, f32 lipWeight, f32 blendIn,
+                  f32 blendOut);
+  int getFacial() const;
   void playAutoTalk(f32 frame);
   void playTalk(bool isTalk, f32 frame, bool isBlend, bool isAuto, f32 openMin, f32 openMax, f32 closeMin, f32 closeMax);
   void mount(CharaObj *target, const char *bone, const mm::Vec3 &pos, const mm::Vec3 &rot);
   void resetDynamics(int frame);
   void playFade(bool isIn, f32 frame);
+  bool isFadeOut() const;
   void playVolumeFade(CharaEffectPlayer::VF_TYPE type, int id, const mm::Vec3 &position, const mm::Vec3 &scale, f32 frame, f32 rate, int mode,
                       f32 speed);
   void playVolumeFadeAnim(CharaEffectPlayer::VF_TYPE type, f32 rate, f32 frame);
@@ -127,7 +145,8 @@ private:
   CHARA_TYPE type;
   u32 id;
   mm::mtl::FixStr<64> modelName;
-  u8 _D38[0xd40 - 0xd38];
+  u8 _D38[0xd3c - 0xd38];
+  u32 offscrId;
   gf::GF_OBJ_HANDLE *handle;
   gf::GfEvtModel *model;
   u8 _D50[0xd60 - 0xd50];
@@ -140,7 +159,7 @@ private:
   CharaWinkPlayer winkPlayer;
   CharaEffectPlayer effectPlayer;
   CharaPartUpdater partUpdater;
-  f32 _1730;
+  f32 eyeOffset;
   CmdQueue<QUEUE_COUNT, 0> queue;
   CmdQueue<QUEUE_COUNT, 0> subQueue;
   CmdQueue<SUB_QUEUE_COUNT, 0> fadeQueue;
@@ -149,10 +168,10 @@ private:
   mm::Vec3 rot;
   u8 _2FE0[0x3030 - 0x2fe0];
   FrameInfo frameInfo;
+  u8 _3044[0x3048 - 0x3044];
   f32 weaponScale;
   u32 hideWeaponFlags[2];
-  int offscrId;
-  u8 _3058[0x3060 - 0x3058];
+  int reuseFlag;
 };
 
 static_assert(sizeof(CharaObj) == 0x3060, "");
