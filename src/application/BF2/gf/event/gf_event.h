@@ -12,7 +12,9 @@ enum RELOAD_BDAT {
 };
 
 enum GEV {
+  GEV_MAPJUMP_START = 1,
   GEV_MAPJUMP_DESTROY_FIELD = 2,
+  GEV_MAPJUMP_CREATE_FIELD = 5,
   GEV_MAPJUMP_FADEIN = 6,
   GEV_EVENT_END = 9,
 };
@@ -51,11 +53,16 @@ enum EXEC_STATE {};
 struct GF_ASSET_HANDLE;
 struct GfSetupParam;
 struct GF_OBJ_HANDLE;
+enum {
+  MAPJUMP_TYPE_SAVE_DATA = 1,
+};
+
 struct MapjumpCallbackInfo {
   u8 _00[0x04 - 0x00];
   u32 map;
   u32 prevMap;
-  u8 _0c[0x14 - 0x0c];
+  bool isWithSaveData;
+  u32 jumpType;
 };
 
 static_assert(sizeof(MapjumpCallbackInfo) == 0x14, "");
