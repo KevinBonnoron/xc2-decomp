@@ -33,11 +33,17 @@
 #include "gf/game/gf_game_voice.h"
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
 #include "gf/game/quest/gf_quest_manager.h"
+#include "gf/object/component/property/gf_com_property.h"
+#include "gf/object/gf_append.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_manager.h"
+#include "gf/object/gf_obj_property.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_scom.h"
 #include "gf/scom/gf_scom_achiev.h"
 #include "gf/util/gf_util.h"
+#include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 
@@ -72,6 +78,10 @@ enum {
 };
 
 enum {
+  DEAD_TYPE_EMERGENCY_ESCAPE = 4,
+};
+
+enum {
   SCENARIO_FLAG_WITHOUT_CRYSTAL_FIRST = 1001,
   SCENARIO_FLAG_WITHOUT_CRYSTAL_LAST = 1030,
 };
@@ -96,6 +106,7 @@ constexpr u32 DRIVER_SKILL_LEVEL_MAX = 3;
 constexpr u32 GAME_CLEAR_COUNT_MAX = 9'999;
 constexpr u32 ACHIEVEMENT_POPUP_MAX = 300;
 constexpr int PARTY_GAUGE_MAX = 300;
+constexpr u32 FOLLOW_OBJ_MAX = 768;
 
 static const u32 nationLocations[NATION_COUNT] = {3, 6, 9, 10, 14, 12, 13, 15};
 
@@ -523,6 +534,27 @@ bool GfGameUtil::isEnableDeleteObject(GF_OBJ_HANDLE *handle) {
   return !objAcc.isBattle();
 }
 
+void GfGameUtil::setHp(GF_OBJ_HANDLE *handle, u32 hp) {
+  GfObj *obj = GfObjUtil::getObj(handle);
+  if (obj == nullptr) {
+    return;
+  }
+
+  MsgObjectHealHp message(hp, HEAL_TYPE_SET);
+  message.isRevive = true;
+  obj->sendMessage(obj, message);
+}
+
+void GfGameUtil::debugFallDead(GF_OBJ_HANDLE *handle) {
+  GfObj *obj = GfObjUtil::getObj(handle);
+  if (obj == nullptr) {
+    return;
+  }
+
+  MsgObjectDead message(DEAD_TYPE_EMERGENCY_ESCAPE);
+  obj->sendMessage(obj, message);
+}
+
 const char *GfGameUtil::getBladeModel(u32 blade, bool isDefault) {
   SDataBlade *dataBlade = GfDataBlade::getSDataBlade(blade);
   if (!dataBlade->resourceNameModel2.empty() && !isDefault && isCondBladeModel(blade)) {
@@ -578,12 +610,69 @@ const char *GfGameUtil::getSalvageDriverModel(u32 driver) {
   return "";
 }
 
+u32 GfGameUtil::getNowHp(GF_OBJ_HANDLE *handle, u32 objectType, u32 id) {
+  GfObj *obj = GfObjUtil::getObj(handle);
+  if (obj != nullptr) {
+    GfComProperty *property = obj->getComponent<GfComProperty>();
+    if (property != nullptr && property->status != nullptr) {
+      return property->status->hp;
+    }
+  }
+
+  DataParamAcc dataParamAcc(objectType, id, GIMMICK_TYPE_NONE);
+  return dataParamAcc.getHpMax(true);
+}
+
+u32 GfGameUtil::getMaxHp(GF_OBJ_HANDLE *handle, u32 objectType, u32 id) {
+  GfObj *obj = GfObjUtil::getObj(handle);
+  if (obj != nullptr) {
+    GfComProperty *property = obj->getComponent<GfComProperty>();
+    if (property != nullptr && property->status != nullptr) {
+      return property->status->maxHp;
+    }
+  }
+
+  DataParamAcc dataParamAcc(objectType, id, GIMMICK_TYPE_NONE);
+  return dataParamAcc.getHpMax(true);
+}
+
+bool GfGameUtil::getNowHpForUi(GF_OBJ_HANDLE *handle, u32 *hp) {
+  GfObjProperty *property = GfObjUtil::getProperty(handle);
+  if (property == nullptr || property->character == nullptr) {
+    return false;
+  }
+
+  *hp = property->character->hp;
+  return true;
+}
+
+bool GfGameUtil::getMaxHpForUi(GF_OBJ_HANDLE *handle, u32 *maxHp) {
+  GfObjProperty *property = GfObjUtil::getProperty(handle);
+  if (property == nullptr || property->character == nullptr) {
+    return false;
+  }
+
+  *maxHp = property->character->maxHp;
+  return true;
+}
+
 void GfGameUtil::incGameClearCount() {
   GfGameFlag::setLocal(1, FLAG_GAME_CLEAR, 1);
   SDataGame *dataGame = GfDataManager::getDataGame();
   if (dataGame->gameClearCount < GAME_CLEAR_COUNT_MAX) {
     dataGame->gameClearCount++;
   }
+}
+
+void GfGameUtil::refreshEnhanceState(u32 driver) {
+  GfObj *obj = GfObjUtil::getObj(GfGameParty::getHandleDriverByBdatID(driver));
+  if (obj == nullptr) {
+    return;
+  }
+
+  DataParamAcc dataParamAcc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+  MsgObjectChangeHpMax message(dataParamAcc.getHpMax(false));
+  obj->sendMessage(obj, message);
 }
 
 void GfGameUtil::makeWeaponStateIdle(mm::mtl::FixStr<32> &state, GF_OBJ_HANDLE *handle, bool isBattle) {
@@ -726,6 +815,60 @@ void GfGameUtil::addInGameLog(GAMELOG_PRIO priority, const char *format, ...) {
 }
 
 GF_OBJ_HANDLE *GfGameUtil::getDebugPickObj() { return INVALID_HANDLE; }
+
+void GfGameUtil::startWire(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *target, f32 time) {
+  if (GfGameScene::get() == nullptr) {
+    return;
+  }
+
+  GfAppendWire *wire = GfGameScene::get()->getAppendControl(handle);
+  if (wire != nullptr) {
+    wire->startWire(target, time);
+  }
+}
+
+void GfGameUtil::startWireWithClose(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *target, f32 time, f32 closeTime, f32 closeDistance) {
+  if (GfGameScene::get() == nullptr) {
+    return;
+  }
+
+  GfAppendWire *wire = GfGameScene::get()->getAppendControl(handle);
+  if (wire != nullptr) {
+    wire->startWireWithClose(target, time, closeTime, closeDistance);
+  }
+}
+
+void GfGameUtil::startWireWithBone(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *target, const char *bone, f32 time) {
+  if (GfGameScene::get() == nullptr) {
+    return;
+  }
+
+  GfAppendWire *wire = GfGameScene::get()->getAppendControl(handle);
+  if (wire != nullptr) {
+    wire->startWireWithBone(target, bone, time);
+  }
+}
+
+void GfGameUtil::endWire(GF_OBJ_HANDLE *handle, f32 time) {
+  if (GfGameScene::get() == nullptr) {
+    return;
+  }
+
+  GfAppendWire *wire = GfGameScene::get()->getAppendControl(handle);
+  if (wire != nullptr) {
+    wire->endWire(time);
+  }
+}
+
+void GfGameUtil::setGameObjWait(GF_OBJ_HANDLE *handle, bool isWait) {
+  GfObjUtil::setFlag(handle, OBJ_FLAG_WAIT, isWait);
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, FOLLOW_OBJ_MAX> followObjs;
+  if (GfObjManager::get() != nullptr && GfObjManager::get()->getFollowObj(followObjs, handle)) {
+    for (GF_OBJ_HANDLE *followObj : followObjs) {
+      setGameObjWait(followObj, isWait);
+    }
+  }
+}
 
 bool GfGameUtil::isGameObjWait(GF_OBJ_HANDLE *handle) { return GfObjUtil::testFlag(handle, OBJ_FLAG_WAIT); }
 

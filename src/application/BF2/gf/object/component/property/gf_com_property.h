@@ -74,6 +74,7 @@ static_assert(offsetof(GfComProperty, debugFlags) == 0x30, "");
 
 enum {
   HEAL_TYPE_FULL = 1,
+  HEAL_TYPE_SET = 2,
 };
 
 struct MsgObjectHealHp : fw::Message {
@@ -101,6 +102,12 @@ struct MsgObjectAlpha : fw::Message {
 
   OBJ_ALPHA type;
   f32 alpha;
+};
+
+struct MsgObjectChangeHpMax : fw::Message {
+  MsgObjectChangeHpMax(u32 maxHp) : fw::Message(0x1000034, 0x20), maxHp(maxHp) {}
+
+  u32 maxHp;
 };
 
 struct MsgObjectDead : fw::Message {
