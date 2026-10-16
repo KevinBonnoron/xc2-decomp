@@ -12,6 +12,9 @@ namespace gf {
 
 enum AnimLayer {
   ANIM_LAYER_BASE = 0,
+  ANIM_LAYER_HEAD = 2,
+  ANIM_LAYER_EYE = 3,
+  ANIM_LAYER_LIP = 4,
 };
 
 class GfComAsm : public GfComponent {

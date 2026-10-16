@@ -46,6 +46,7 @@
 #include "event/chara_weight_item.cpp"
 #include "event/chara_weight_player.cpp"
 #include "event/chara_dys_updater.cpp"
+#include "event/chara_wink_player.cpp"
 #include "event/chara_manager.cpp"
 #include "event/effect_manager.cpp"
 #include "event/schedule_item.cpp"
