@@ -25,10 +25,10 @@ public:
 
   EffectManager();
   virtual ~EffectManager() {}
-  bool isStreamMode() const { return (flags & FLAG_STREAM_MODE) != 0; }
-  bool isOffscrMode() const { return (flags & FLAG_OFFSCR_MODE) != 0; }
-  u32 getOffscrID() const { return mOffscrID; }
-  bool isReplaceMode() const { return (flags & FLAG_REPLACE_MODE) != 0; }
+  bool isStreamMode() const;
+  bool isOffscrMode() const;
+  u32 getOffscrID() const;
+  bool isReplaceMode() const;
   void setStreamMode(bool isStreamMode);
   void setOffscrMode(bool isOffscrMode, u32 offscrID);
   void setReplaceMode(bool isReplaceMode, u32 replaceID);

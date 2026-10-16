@@ -2,6 +2,8 @@
 
 namespace event {
 
+bool LipsyncManager::isActive() const { return (flags & FLAG_ACTIVE) != 0; }
+
 LipsyncManager::LipsyncManager() : flags(0), mCurrentRes(nullptr), mCsv(nullptr) {}
 
 f32 LipsyncManager::getFrameMax() const {

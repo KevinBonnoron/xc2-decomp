@@ -5,6 +5,8 @@
 
 namespace event {
 
+bool LightManager::isStreamMode() const { return (flags & FLAG_STREAM_MODE) != 0; }
+
 LightManager::LightManager() : dispFlags(0), flags(0), mEvtLight(nullptr) {
   for (u32 i = 0; i < OFFSCR_LIGHT_COUNT; i++) {
     mOffScrLights[i] = nullptr;

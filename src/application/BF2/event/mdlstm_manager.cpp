@@ -2,6 +2,8 @@
 
 namespace event {
 
+bool MdlstmManager::isReuseEnable() const { return (mReuseFlags & REUSE_FLAG_ENABLE) != 0; }
+
 MdlstmManager::MdlstmManager() : flags(0), mReuseFlags(0), mObjCount(0) {}
 
 void MdlstmManager::render() {}

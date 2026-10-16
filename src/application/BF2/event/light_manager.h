@@ -21,7 +21,7 @@ public:
 
   LightManager();
   virtual ~LightManager() {}
-  bool isStreamMode() const { return (flags & FLAG_STREAM_MODE) != 0; }
+  bool isStreamMode() const;
   void loadOffScrLight(u32 screenID);
   void clear();
   void update();

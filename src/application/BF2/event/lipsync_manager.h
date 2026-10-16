@@ -21,7 +21,7 @@ public:
 
   LipsyncManager();
   virtual ~LipsyncManager() {}
-  bool isActive() const { return (flags & FLAG_ACTIVE) != 0; }
+  bool isActive() const;
   f32 getVolume(f32 frame) const {
     if (!(flags & FLAG_ACTIVE)) {
       return 0.0f;
