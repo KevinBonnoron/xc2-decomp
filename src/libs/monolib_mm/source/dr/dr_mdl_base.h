@@ -18,7 +18,7 @@ enum DrMdlType {
 
 class DrMdlBase {
 public:
-  virtual ~DrMdlBase();
+  virtual ~DrMdlBase() {}
   virtual void update() = 0;
   virtual void dispOffUpdate();
   virtual void noOffScreenUpdate();

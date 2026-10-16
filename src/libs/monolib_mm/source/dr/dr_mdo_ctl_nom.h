@@ -20,7 +20,7 @@ public:
                         const mm::Col3 &tailColor, f32 tailAlpha, f32 tailEmissive, f32 tailScale);
   void releaseAfterImage();
 
-  u8 _164[0x1d0 - 0x164];
+  u8 _190[0x1d0 - 0x190];
   DrResMdoShdObj *m_shdObj;
   DrResMdoVtxMeshObj *m_vtxMeshObj;
   u8 _1e0[0x1e8 - 0x1e0];

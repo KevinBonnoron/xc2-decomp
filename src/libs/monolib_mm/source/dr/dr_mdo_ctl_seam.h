@@ -37,7 +37,7 @@ struct DrSeamEtcPosList {
 
 class DrMdoCtlSeam : public DrMdlObj {
 public:
-  u8 _164[0x698 - 0x164];
+  u8 _190[0x698 - 0x190];
   DrResMdoInstAnmObj m_instAnmObj;
   u8 _6a8[0x6c8 - 0x6a8];
   DrSeamEtcPosList m_etcPosList;
