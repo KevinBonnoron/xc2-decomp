@@ -12,7 +12,8 @@ struct UpdateInfo;
 
 class AnimControlUpdaterInterface : public mm::mtl::IntrusiveListNode<AnimControlUpdaterInterface> {
 public:
-  virtual ~AnimControlUpdaterInterface();
+  virtual ~AnimControlUpdaterInterface() {}
+  virtual void update(const UpdateInfo &info) = 0;
 };
 
 class AnimPoseSamplerInterface : public mm::mtl::IntrusiveListNode<AnimPoseSamplerInterface> {
