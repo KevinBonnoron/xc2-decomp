@@ -36,6 +36,8 @@ public:
   static void Destroy();
   void Finalize();
   void Reset(int);
+  static void PreUpdate(const fw::UpdateInfo &updateInfo);
+  void PreUpdateProc(const fw::UpdateInfo &updateInfo);
   static void Update(const fw::UpdateInfo &updateInfo);
   void UpdateProc(const fw::UpdateInfo &updateInfo);
   void AddDamageRate(int rate);
@@ -67,6 +69,10 @@ public:
   u8 groups[3];
   u8 groupNum;
   u8 orderAttrs[9];
+  u8 _19df[0x19e4 - 0x19df];
+  u16 : 4;
+  u16 isStartFullBurst : 1;
+  u16 : 11;
 };
 
 static_assert(sizeof(ChainAttackManager::SP_ATTACK_DATA) == 0x1c, "");
