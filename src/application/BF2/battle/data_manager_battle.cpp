@@ -1,5 +1,6 @@
 #include "battle/data_manager_battle.h"
 
+#include "battle/battle_global.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/object/gf_obj_handle.h"
 
@@ -63,6 +64,12 @@ void DataManager::DeleteElementalEffect() { elementalEffectId = 0; }
 void DataManager::Update(const fw::UpdateInfo &updateInfo) {
   if (get() != nullptr) {
     get()->UpdateProc(updateInfo);
+  }
+}
+
+void DataManager::UpdateElementalEffect(f32) {
+  if (!BattleGlobal::get()->isLockArtsPalette) {
+    elementalEffectId = 0;
   }
 }
 

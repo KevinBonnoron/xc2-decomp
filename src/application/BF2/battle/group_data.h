@@ -81,6 +81,7 @@ class GROUP_DATA {
 public:
   void SetBuddyBladeIndex(int index);
   const GROUP_BLADE_DATA *GetBladeDataConst(int index) const;
+  void SetNeedPermit(bool isNeedPermit);
   void ProgressCoolTime(f32 time);
   void FinishCoolTime();
 
@@ -90,6 +91,11 @@ public:
   f32 buddyTime;
   u8 _f4[0xff - 0xf4];
   s8 buddyBladeIndex;
+  u8 _100[0x104 - 0x100];
+  u16 : 1;
+  u16 isNeedPermit : 1;
+  u16 permitState : 2;
+  u16 : 12;
 };
 
 static_assert(offsetof(GROUP_DATA, blades) == 0x08, "");
