@@ -13,6 +13,7 @@
 #include "framework/effect/effect_manager.h"
 #include "gf/data/gf_data_weapon.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_scom.h"
@@ -29,100 +30,16 @@ constexpr int ALPHA_PROC_WEAPON = 6;
 constexpr int ALPHA_PROC_LAST = 11;
 constexpr int SE_HIT_ATTRIBUTE = 9;
 constexpr int SE_HIT_BULLET = 17;
+constexpr int SLOT_ALL = -17;
+constexpr f32 DELAY_VOICE_TIME_SCALE = 4096.0f;
+constexpr int BUFF_EFFECT_TARGET_LOCK = 8;
+constexpr int COMMAND_NUM = 10;
+constexpr u16 ACTION_PHASE_BLADE_ARTS_MOVE = 8;
+constexpr u16 ACTION_PHASE_BLADE_CHANGE_RETURN = 6;
+constexpr int AI_STATE_ACTIVE = 1;
+constexpr f32 AI_SCOUT_TIME = 10.0f;
 constexpr u32 BLADE_CHANGE_ACTIONS = 0xd2;
 constexpr int BLADE_SUPPORT_CONDITION_HATE_ELSE = 8;
-
-ActionCommand::ActionCommand() { Reset(); }
-
-void ActionCommand::Reset() { __builtin_memset(this, 0, sizeof(ActionCommand)); }
-
-void ActionCommand::SetActionID(int action) { actionFlags |= 1 << action; }
-
-bool ActionCommand::IsProcAction(int action) const { return (actionFlags & (1 << action)) != 0; }
-
-namespace act_cmd {
-
-void MOVE_DIR_RATE::Initialize(mm::Vec3 &direction, f32 rate, bool isFieldRun) {
-  id = ID_MOVE_DIR_RATE;
-  SetActionID(BattleCharacter::ACTION_ID_IDLE);
-  SetActionID(BattleCharacter::ACTION_ID_MOVE);
-  SetActionID(BattleCharacter::ACTION_ID_ATTACK);
-  SetActionID(BattleCharacter::ACTION_ID_ARTS);
-  SetActionID(BattleCharacter::ACTION_ID_BLADE_ARTS);
-  mm::Vec3 directionXZ = direction;
-  Misc::NormalizeXZ(directionXZ);
-  f32 length = Misc::CalcLengthXZ(direction);
-  moveDirRate.directionX = directionXZ.x;
-  moveDirRate.directionZ = directionXZ.z;
-  moveDirRate.rate = length * rate;
-  moveDirRate.isFieldRun = isFieldRun;
-}
-
-void MOVE_DIR_RATE::GetMoveData(mm::Vec3 &move) const {
-  GetDirection(move);
-  f32 rate = GetRate();
-  move.x = rate * move.x;
-  move.z = rate * move.z;
-}
-
-void MOVE_DIR_RATE::GetDirection(mm::Vec3 &direction) const {
-  direction.x = moveDirRate.directionX;
-  direction.y = 0.0f;
-  direction.z = moveDirRate.directionZ;
-}
-
-f32 MOVE_DIR_RATE::GetRate() const { return moveDirRate.rate; }
-
-bool MOVE_DIR_RATE::IsFieldRun() const { return moveDirRate.isFieldRun != 0; }
-
-void MOVE_LOCK::Initialize(f32 inputX, f32 inputY, bool isFieldRun, bool isTurnTarget, bool isSatellite) {
-  id = ID_MOVE_LOCK;
-  SetActionID(BattleCharacter::ACTION_ID_IDLE);
-  SetActionID(BattleCharacter::ACTION_ID_MOVE);
-  SetActionID(BattleCharacter::ACTION_ID_ATTACK);
-  SetActionID(BattleCharacter::ACTION_ID_ARTS);
-  SetActionID(BattleCharacter::ACTION_ID_BLADE_ARTS);
-  moveLock.inputX = inputX;
-  moveLock.inputY = inputY;
-  u32 flags = isFieldRun;
-  if (isTurnTarget) {
-    flags |= MOVE_LOCK_TURN_TARGET;
-  }
-  if (isSatellite) {
-    flags |= MOVE_LOCK_SATELLITE;
-  }
-  moveLock.flags = flags;
-}
-
-void MOVE_LOCK::GetInput(f32 &inputX, f32 &inputY) const {
-  inputX = moveLock.inputX;
-  inputY = moveLock.inputY;
-}
-
-bool MOVE_LOCK::IsFieldRun() const { return (moveLock.flags & MOVE_LOCK_FIELD_RUN) != 0; }
-
-bool MOVE_LOCK::IsTurnTarget() const { return (moveLock.flags & MOVE_LOCK_TURN_TARGET) != 0; }
-
-bool MOVE_LOCK::IsSatellite() const { return (moveLock.flags & MOVE_LOCK_SATELLITE) != 0; }
-
-void SUFFER_DAMAGE::Initialize() {
-  id = ID_SUFFER_DAMAGE;
-  SetActionID(BattleCharacter::ACTION_ID_IDLE);
-}
-
-void ATTACK_REPELLED::Initialize() {
-  id = ID_ATTACK_REPELLED;
-  SetActionID(BattleCharacter::ACTION_ID_ATTACK);
-  SetActionID(BattleCharacter::ACTION_ID_ARTS);
-}
-
-void BLADE_GUARD::Initialize() {
-  id = ID_BLADE_GUARD;
-  SetActionID(BattleCharacter::ACTION_ID_IDLE);
-  SetActionID(BattleCharacter::ACTION_ID_MOVE);
-}
-
-} // namespace act_cmd
 
 void BattleCharacter::ResetHateRingData() {
   if (!isPlayer && handle != gf::INVALID_HANDLE && id >= 0) {
@@ -384,6 +301,114 @@ int BattleCharacter::GetAlphaSetID(ALPHA_PROC_ID alpha) {
     return id - ALPHA_PROC_WEAPON;
   }
   return -1;
+}
+
+void BattleCharacter::AddRecast(f32 recast, bool isRate, int slot) { AddSlotRecast(slot < 0 ? SLOT_ALL : -1 - slot, recast, isRate); }
+
+void BattleCharacter::RegisterDelayVoice(DELAY_VOICE_TYPE type, f32 time, int voice, int group, int priority) {
+  if (type == DELAY_VOICE_TYPE_NORMAL) {
+    delayVoiceTime = time * (1.0f / FRAME_RATE) * DELAY_VOICE_TIME_SCALE;
+    delayVoicePriority = priority;
+    delayVoiceGroup = group;
+    delayVoice = voice;
+  }
+}
+
+bool BattleCharacter::IsAngry() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  return parameter != nullptr && parameter->IsAngry();
+}
+
+void BattleCharacter::UpdateBuffEffect(int buff) {
+  if (buff == BUFF_EFFECT_TARGET_LOCK) {
+    UpdateTargetLockArrow();
+  } else {
+    UpdateEffectPositionScale(buff, nullptr, -1.0f);
+  }
+}
+
+void BattleCharacter::ResetChangeActionStopSeData() { changeActionStopSe = 0; }
+
+void BattleCharacter::ReturnBladeChange() {
+  SetAction(ACTION_ID_BLADE_CHANGE, false, false, 0, 0.0f);
+  actionPhase = ACTION_PHASE_BLADE_CHANGE_RETURN;
+}
+
+ActionCommand *BattleCharacter::GetFreeCommand() {
+  if (commandNum >= COMMAND_NUM) {
+    return nullptr;
+  }
+  ActionCommand *command = &commands[commandNum];
+  commandNum++;
+  command->Reset();
+  return command;
+}
+
+bool BattleCharacter::IsRegisterCommand(ActionCommand::COMMAND_TYPE type) const {
+  for (int i = 0; i < commandNum; i++) {
+    if (commands[i].type == type) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void BattleCharacter::ActionCommandBladeArts(const ActionCommand *command, ActionCommand::COMMAND_TYPE type) {
+  if ((type == ActionCommand::COMMAND_TYPE_MOVE_DIR_RATE || type == ActionCommand::COMMAND_TYPE_MOVE_LOCK) &&
+      actionPhase == ACTION_PHASE_BLADE_ARTS_MOVE) {
+    ActionCommandRun(command, type);
+  }
+}
+
+bool BattleCharacter::IsRescue() const {
+  if (actionId == ACTION_ID_RESCUE) {
+    return true;
+  }
+  if (actionId == ACTION_ID_MOVE && aiState == AI_STATE_ACTIVE && aiAction.action == ACTION_ID_RESCUE) {
+    return true;
+  }
+  return false;
+}
+
+bool BattleCharacter::MoveStop(bool isForce) {
+  if (aiState != AI_STATE_ACTIVE || aiAction.action != ACTION_ID_IDLE || (aiFlags & AI_FLAG_SCOUT) != 0) {
+    return false;
+  }
+  aiFlags |= isForce ? AI_FLAG_STOP_FORCE : AI_FLAG_STOP;
+  return true;
+}
+
+void BattleCharacter::SetScout(bool isScout) {
+  if (aiState == AI_STATE_ACTIVE) {
+    if (isScout) {
+      aiFlags |= AI_FLAG_SCOUT;
+      aiScoutTime += AI_SCOUT_TIME;
+    } else {
+      aiFlags &= ~AI_FLAG_SCOUT;
+    }
+  }
+}
+
+bool BattleCharacter::IsScout() const { return aiState == AI_STATE_ACTIVE && (aiFlags & AI_FLAG_SCOUT) != 0; }
+
+gf::GF_OBJ_HANDLE *BattleCharacter::GetRescueTarget() const {
+  int target;
+  if (actionId == ACTION_ID_RESCUE) {
+    target = rescueTarget;
+  } else if (actionId == ACTION_ID_MOVE && aiState == AI_STATE_ACTIVE) {
+    AI_ACTION_DATA action = GetAIActionData();
+    if (action.action != ACTION_ID_RESCUE) {
+      return gf::INVALID_HANDLE;
+    }
+    target = action.target;
+  } else {
+    return gf::INVALID_HANDLE;
+  }
+
+  if (target < 0) {
+    return gf::INVALID_HANDLE;
+  }
+  return gf::GfGameParty::getHandleDriver(target);
 }
 
 bool BattleCharacter::IsPause() const { return GetDt(true, true) <= PAUSE_DT; }
