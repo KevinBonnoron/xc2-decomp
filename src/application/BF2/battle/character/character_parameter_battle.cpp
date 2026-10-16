@@ -19,6 +19,7 @@
 namespace btl {
 
 constexpr f32 DEGREE_TO_RADIAN = 3.14159265f / 180.0f;
+constexpr int ENHANCE_LINK_DISTANCE_BONUS = 258;
 
 gf::GfObj *CharacterParameter::GetUserObject() const { return gf::GfObjUtil::getObj(user); }
 
@@ -206,6 +207,15 @@ bool CharacterParameter::IsProgressCoolTime() const {
     return false;
   }
   return isEnableCoolTime;
+}
+
+void CharacterParameter::SetupLinkDistanceBonus() const {
+  f32 bonus = 0.0f;
+  ENHANCE_DATA data;
+  if (GetEnhanceEffect(data, ENHANCE_LINK_DISTANCE_BONUS)) {
+    bonus += data.value;
+  }
+  linkDistanceBonus = bonus;
 }
 
 const ENHANCE_EFFECT_DATA *CharacterParameter::GetEnhanceEffectDataConst(int enhance) const {

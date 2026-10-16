@@ -21,6 +21,7 @@ namespace btl {
 class GROUP_DATA;
 
 constexpr int SPECIAL_ENHANCE_COUNT = 14;
+constexpr int ADDITIONAL_ENHANCE_COUNT = 6;
 
 struct FIGHT_COMBO_DATA {
   u8 id;
@@ -66,6 +67,11 @@ public:
   };
 
   enum SPECIAL_ENHANCE_TYPE {};
+
+  struct ADDITIONAL_ENHANCE_DATA {
+    ENHANCE_EFFECT_DATA effect;
+    int enhance;
+  };
 
   struct ENHANCE_DATA {
     f32 value;
@@ -144,6 +150,8 @@ public:
   f32 GetBlowRotSpeed() const;
   bool IsBlowRot() const;
   bool IsProgressCoolTime() const;
+  void SetupLinkDistanceBonus() const;
+  bool GetEnhanceEffect(ENHANCE_DATA &data, int enhance) const;
   const ENHANCE_EFFECT_DATA *GetEnhanceEffectDataConst(int enhance) const;
   bool GetAdditionalEnhanceEffect(ENHANCE_DATA &data, int type, int *) const;
   void SetSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value = 0);
@@ -192,12 +200,14 @@ public:
   FIGHT_COMBO_DATA fightCombo;
   FIGHT_COMBO_DATA overwriteFightCombo;
   mm::mtl::FixedVector<ENHANCE_EFFECT_DATA, 64> enhanceEffects;
-  u8 _3f8[0x458 - 0x3f8];
+  ADDITIONAL_ENHANCE_DATA additionalEnhances[ADDITIONAL_ENHANCE_COUNT];
   BUFF_DATA buffs[20];
   u8 buffNum;
   u8 buffFlags[5];
   u16 resistantAttributeFlags;
-  u8 _5a0[0x5a5 - 0x5a0];
+  u8 _5a0[0x5a2 - 0x5a0];
+  mutable s16 linkDistanceBonus;
+  u8 _5a4[0x5a5 - 0x5a4];
   u8 elementalComboId;
   u8 _5a6[0x5a7 - 0x5a6];
   u8 objectType : 6;
