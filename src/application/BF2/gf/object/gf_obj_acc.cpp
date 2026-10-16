@@ -3,7 +3,7 @@
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
-#include "framework/object/updatable_object.h"
+#include "framework/object/component_object.h"
 #include "fw/fw_model_object.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/data/gf_data_enemy.h"
