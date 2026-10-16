@@ -49,6 +49,7 @@ public:
   void UpdateElementalEffect(f32 time);
   static void PostUpdate(const fw::UpdateInfo &updateInfo);
   void SetSpecialEffects(int effect, bool isEnable);
+  void ResetRequestPermit();
   bool IsSpecialEffects(int effect) const;
   static bool GetEnhanceData(int id, ENHANCE_EFFECT_DATA &data, bool);
 
@@ -65,6 +66,7 @@ public:
   u8 elementalEffectId;
   u8 _132a4[0x132a5 - 0x132a4];
   bool specialEffects[3];
+  bool isPermitCanceled;
 };
 
 static_assert(offsetof(DataManager, playerParameters) == 0x8, "");

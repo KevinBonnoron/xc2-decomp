@@ -6,6 +6,7 @@
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "mm_math/mm_math.h"
 
 namespace btl {
 
@@ -100,6 +101,17 @@ void GROUP_BLADE_DATA::ProgressCoolTime(f32 time) {
     f32 counter = coolTimeCounter + time;
     coolTimeCounter = counter < coolTime ? counter : coolTime;
   }
+}
+
+f32 GROUP_BLADE_DATA::GetCoolTimeRatio() const {
+  if (coolTime <= 0.0f) {
+    return 1.0f;
+  }
+  f32 ratio = coolTimeCounter / coolTime;
+  if (ratio < 0.0f) {
+    return 0.0f;
+  }
+  return mm::min(1.0f, ratio);
 }
 
 bool GROUP_BLADE_DATA::IsCoolTimeEnd() const { return coolTimeCounter >= coolTime; }

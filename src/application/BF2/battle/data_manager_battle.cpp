@@ -75,6 +75,14 @@ void DataManager::UpdateElementalEffect(f32) {
 
 void DataManager::SetSpecialEffects(int effect, bool isEnable) { specialEffects[effect] = isEnable; }
 
+void DataManager::ResetRequestPermit() {
+  permitTarget = reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1);
+  permitParty = -1;
+  permitComboId = 0;
+  permitComboStage = 0;
+  isPermitCanceled = false;
+}
+
 bool DataManager::IsSpecialEffects(int effect) const { return specialEffects[effect]; }
 
 } // namespace btl
