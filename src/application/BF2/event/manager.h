@@ -1,5 +1,6 @@
 #pragma once
 #include "event/i_manager.h"
+#include "ml/work_background.h"
 #include "ml/work_event.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"

@@ -1,9 +1,9 @@
 #include "scn/scn_render_dr_sys.h"
 
 #include "dr/dr_man.h"
+#include "ml/scn.h"
 #include "ml/work_cpu.h"
 #include "mtl/alloc_handle.h"
-#include "scn/scn.h"
 #include "scn/scn_obj_dr_sys.h"
 
 namespace ml {
