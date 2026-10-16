@@ -19,6 +19,7 @@ public:
   static int getRootHeight();
   static f32 fontGetWidth(const char *text, FONT_STYLE style, f32 scale);
   static f32 fontGetHeight(FONT_STYLE style, f32 scale);
+  static f32 getFrameSyncSec();
 };
 
 } // namespace ml
