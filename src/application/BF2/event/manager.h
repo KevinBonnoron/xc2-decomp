@@ -47,6 +47,7 @@ public:
   int getStartPageID() const { return mStartPageID; }
   const char *getSceneName() const { return mSceneName.c_str(); }
   bool isEndFadeOut() const { return (flags & FLAG_END_FADE_OUT) != 0; }
+  u32 getPlayParam(u32 index) const { return mPlayParams[index]; }
   void failureSkip();
   void nextEvent(int next);
   bool isPlayCancel() const;
