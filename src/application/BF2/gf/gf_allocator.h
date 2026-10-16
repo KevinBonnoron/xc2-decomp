@@ -17,6 +17,7 @@ enum ALLOCATOR {
   ALLOCATOR_DEFAULT = 0,
   ALLOCATOR_SYSTEM = 1,
   ALLOCATOR_BDAT = 4,
+  ALLOCATOR_DEBUG = 10,
 };
 
 GfAllocator *getAllocator(ALLOCATOR allocator);
