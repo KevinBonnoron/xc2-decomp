@@ -21,6 +21,10 @@ public:
   enum ANIM_ID {};
   enum ACTION_ID {};
 
+  enum {
+    DEAD_CHECK_IGNORE_CHAIN_ATTACK = 0x02,
+  };
+
   enum MOVE_TYPE {
     MOVE_TYPE_TARGET = 0,
     MOVE_TYPE_FRONT = 2,
