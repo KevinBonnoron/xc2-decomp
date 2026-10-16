@@ -1,16 +1,18 @@
 #pragma once
+#include <stddef.h>
+
 #include "framework/message/message_object.h"
-#include "fw/fw_param_manager.h"
 #include "gf/data/gf_bdat_unique_motion.h"
 #include "gf/event/gf_event.h"
+#include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace fw {
 struct UpdateInfo;
-}
+class ParamList;
+} // namespace fw
 
 namespace gf {
 

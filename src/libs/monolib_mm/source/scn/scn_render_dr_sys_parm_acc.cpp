@@ -1,6 +1,18 @@
-#include "scn_render_dr_sys_parm_acc.h"
+#include "scn/scn_render_dr_sys_parm_acc.h"
+
+#include "cloud/cloud_man.h"
+#include "dr/dr_irr_vol_man.h"
+#include "dr/dr_man.h"
+#include "dr/dr_pixl_post_parm.h"
+#include "mm_math/mm_vec3.h"
+#include "scn/scn_render_dr_sys.h"
+
+namespace mm {
+struct Aabb;
+} // namespace mm
 
 namespace ml {
+struct DR_CAPCUBE_PARAM;
 
 ScnRenderDrSysParmAcc::ScnRenderDrSysParmAcc() : drMan(nullptr), postParm(nullptr), viewIndex(0) {
   drMan = DrMan::get();

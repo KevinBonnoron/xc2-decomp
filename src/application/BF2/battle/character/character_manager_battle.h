@@ -1,6 +1,5 @@
 #pragma once
 #include "mm_mtl/singleton.h"
-#include "types.h"
 
 namespace gf {
 struct GF_OBJ_HANDLE;

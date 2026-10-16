@@ -1,9 +1,14 @@
 #include "gf/data/gf_data_achievement.h"
+
+#include <stddef.h>
+
 #include "bdat.h"
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/game/quest/gf_achiev_quest.h"
+#include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_task_param.h"
 
 namespace gf {

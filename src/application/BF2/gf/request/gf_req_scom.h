@@ -1,10 +1,10 @@
 #pragma once
-#include "gf/game/quest/gf_quest_id.h"
 #include "types.h"
 
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+struct QuestID;
 
 enum SCOM_TYPE {
   SCOM_TYPE_CREATE_PARTY_OBJ = 0x16,

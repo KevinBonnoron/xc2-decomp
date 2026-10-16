@@ -3,6 +3,7 @@
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_setup.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/rtti.h"
 #include "types.h"
 
 namespace gf {

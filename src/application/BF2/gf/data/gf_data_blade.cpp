@@ -1,4 +1,5 @@
 #include "gf/data/gf_data_blade.h"
+
 #include "bdat.h"
 #include "gf/data/gf_bdat_blade.h"
 #include "gf/data/gf_bdat_btl.h"
@@ -8,12 +9,14 @@
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_driver.h"
+#include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_hana.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_party.h"
 #include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/event/gf_event.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 
@@ -60,7 +63,6 @@ constexpr u32 BLADE_CHANGE_WEAPON_RANGE_COUNT = 8;
 constexpr f32 SCALE_PERCENT = 0.01f;
 constexpr u32 CROWN_POINT_MAX = 5;
 constexpr u32 CROWN_POINT_MIN = 1;
-constexpr u32 PERSONALITY_VOICE_FIRST = 61;
 constexpr u32 NORMAL_TALK_COUNT = 32;
 constexpr u32 CHIP_CREATE_WEAPON_TYPE_COUNT = 16;
 constexpr u32 BDAT_COMMON_BLADE_NAME = 0x14e;

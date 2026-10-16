@@ -1,12 +1,17 @@
 #include "gf/data/gf_data_manager.h"
+
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_store.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/event/gf_event.h"
 #include "gf/gf_allocator.h"
+#include "types.h"
 
 namespace gf {
+struct SDataGame;
+struct SDataOption;
+struct SDataSystem;
 
 GfDataManager::GfDataManager(const GfSetupParam &param) : mInitialized(false) { initialize(param); }
 

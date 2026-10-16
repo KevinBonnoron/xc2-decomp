@@ -1,6 +1,9 @@
 #include "gf/game/gf_game_player_camera.h"
+
+#include "fw/fw_camera.h"
 #include "gf/camera/gf_camera_player_target.h"
 #include "gf/gf_allocator.h"
+#include "mm_mtl/rtti.h"
 
 namespace gf {
 

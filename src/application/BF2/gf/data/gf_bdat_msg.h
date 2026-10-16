@@ -1,10 +1,10 @@
 #pragma once
 #include "gf/data/gf_bdat_wrapper.h"
-#include "gf/game/quest/gf_quest_id.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace gf {
+struct QuestID;
 
 class GfBdatMsg : public mm::mtl::PtrSingleton<GfBdatMsg>, public GfBdatRefresh {
 public:

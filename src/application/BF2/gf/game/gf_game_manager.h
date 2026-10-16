@@ -1,12 +1,13 @@
 #pragma once
+#include <stddef.h>
+
+#include "gf/data/gf_data_blade.h"
 #include "gf/event/gf_event.h"
 #include "gf/game/gf_game_pad.h"
-#include "gf/game/gf_game_state.h"
 #include "gf/game/quest/gf_quest_manager.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace fw {
 struct UpdateInfo;

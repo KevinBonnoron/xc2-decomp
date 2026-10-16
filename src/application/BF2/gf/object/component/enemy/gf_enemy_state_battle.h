@@ -1,7 +1,7 @@
 #pragma once
-#include "ai/ai_state.h"
-#include "types.h"
 #include <stddef.h>
+
+#include "ai/ai_state.h"
 
 namespace btl {
 class BattleCharacter;

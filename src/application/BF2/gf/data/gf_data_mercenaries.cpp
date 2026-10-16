@@ -1,9 +1,11 @@
 #include "gf/data/gf_data_mercenaries.h"
+
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_cond.h"
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_param_acc.h"
@@ -11,6 +13,7 @@
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/quest/gf_quest_task_param.h"
+#include "mm_mtl/fixstr.h"
 
 namespace gf {
 

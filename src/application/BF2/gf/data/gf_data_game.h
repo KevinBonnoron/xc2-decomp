@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_event.h"
@@ -7,12 +9,12 @@
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_party.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/field/gf_field_time.h"
 #include "gf/game/quest/gf_quest_data.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace gf {
 

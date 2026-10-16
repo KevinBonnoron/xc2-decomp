@@ -1,10 +1,16 @@
 #pragma once
+#include <stddef.h>
+
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/reference_object.h"
-#include "mm_mtl/rtti.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
+
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+} // namespace mm
 
 namespace fw {
 

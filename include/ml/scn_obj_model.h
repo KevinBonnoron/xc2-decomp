@@ -1,10 +1,10 @@
 #pragma once
-#include "mm_math/mm_vec3.h"
 #include "types.h"
 
 namespace mm {
 struct Quat;
-}
+struct Vec3;
+} // namespace mm
 
 namespace ml {
 

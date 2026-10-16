@@ -1,4 +1,6 @@
 #include "gf/game/gf_game_player_unique_scheduler.h"
+
+#include "fw/fw_param_manager.h"
 #include "fw/fw_update_info.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/gf_allocator.h"

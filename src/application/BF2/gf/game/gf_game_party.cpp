@@ -1,4 +1,5 @@
 #include "gf/game/gf_game_party.h"
+
 #include "gf/data/gf_bdat_chrdr.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
@@ -17,11 +18,16 @@
 #include "gf/gf_allocator.h"
 #include "gf/gf_pause.h"
 #include "gf/object/component/gf_com_transform.h"
+#include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_append.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_command.h"
 #include "gf/request/gf_req_scom.h"
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/rtti.h"
 
 namespace gf {
 

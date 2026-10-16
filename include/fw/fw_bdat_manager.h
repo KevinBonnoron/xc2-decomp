@@ -1,5 +1,8 @@
 #pragma once
-#include "mtl/alloc_handle.h"
+
+namespace mtl {
+class ALLOC_HANDLE;
+} // namespace mtl
 
 namespace fw {
 

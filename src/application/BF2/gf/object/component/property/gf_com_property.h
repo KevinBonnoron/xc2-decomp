@@ -1,9 +1,18 @@
 #pragma once
+#include <stddef.h>
+
+#include "framework/message/message_object.h"
 #include "gf/object/component/gf_component.h"
 #include "gf/object/gf_obj_acc.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
-#include <stddef.h>
+
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+struct Vec3;
+} // namespace mm
 
 namespace gf {
 

@@ -1,8 +1,11 @@
 #include "gf/object/component/enemy/gf_enemy_state_battle.h"
+
 #include "anm/anm_res_asm.h"
 #include "gf/object/component/enemy/gf_enemy_asm_callback.h"
 
 namespace gf {
+struct GF_OBJ_HANDLE;
+
 namespace enemy {
 
 void StateBattle::onEnter(void *owner, ai::State *previous) {

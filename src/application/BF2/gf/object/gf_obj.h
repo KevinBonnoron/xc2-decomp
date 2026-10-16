@@ -1,8 +1,15 @@
 #pragma once
+#include <stddef.h>
+
 #include "framework/message/message_object.h"
 #include "framework/object/updatable_object.h"
 #include "types.h"
-#include <stddef.h>
+
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+} // namespace mm
 
 namespace gf {
 

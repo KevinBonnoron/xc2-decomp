@@ -1,7 +1,10 @@
 #pragma once
 #include "gf/object/gf_obj_manager.h"
-#include "mm_math/mm_vec3.h"
 #include "types.h"
+
+namespace mm {
+struct Vec3;
+} // namespace mm
 
 namespace ml {
 class ScnObjModel;
@@ -12,7 +15,6 @@ namespace gf {
 struct GF_ASSET_HANDLE;
 struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
-struct GFOBJ_INFO;
 class GfObj;
 
 enum OBJ_ALPHA {

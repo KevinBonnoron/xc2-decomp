@@ -1,5 +1,4 @@
 #pragma once
-#include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
@@ -12,6 +11,7 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 struct QuestTaskParam;
+struct QuestID;
 
 class GfQuestTask {
 public:

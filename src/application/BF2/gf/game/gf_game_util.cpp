@@ -1,4 +1,7 @@
 #include "gf/game/gf_game_util.h"
+
+#include <stdarg.h>
+
 #include "battle/data_manager_battle.h"
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_chrdr.h"
@@ -30,7 +33,8 @@
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_scom.h"
 #include "gf/util/gf_util.h"
-#include <stdarg.h>
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
 
 namespace gf {
 

@@ -1,5 +1,8 @@
 #include "gf/data/gf_data_sound.h"
 
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
+
 namespace gf {
 
 void GfDataSound::getFullPath(mm::mtl::FixStr<128> &path, const char *name) { path.format("sound/se/%s%s", name, ".xsp"); }

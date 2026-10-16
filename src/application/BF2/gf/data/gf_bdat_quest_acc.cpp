@@ -2,7 +2,10 @@
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_util.h"
+#include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_task_param.h"
+#include "mm_mtl/fixed_vector.h"
+#include "types.h"
 
 namespace gf {
 
@@ -3238,9 +3241,7 @@ u32 QuestListAcc::getGimmickMapID(u32 id) const { return _gfbqa::getGimmickMapID
 
 u32 QuestListAcc::getGimmickDoorGimmickID(u32 id) const { return _gfbqa::getGimmickDoorGimmickID(*GfBdatQuest::get()->unknowna8, id); }
 
-u32 QuestListAcc::getGimmickElevatorGimmickID(u32 id) const {
-  return _gfbqa::getGimmickElevatorGimmickID(*GfBdatQuest::get()->unknowna8, id);
-}
+u32 QuestListAcc::getGimmickElevatorGimmickID(u32 id) const { return _gfbqa::getGimmickElevatorGimmickID(*GfBdatQuest::get()->unknowna8, id); }
 
 u32 QuestListAcc::getGimmickJumpGimmickID(u32 id) const { return _gfbqa::getGimmickJumpGimmickID(*GfBdatQuest::get()->unknowna8, id); }
 
@@ -3262,13 +3263,9 @@ u32 QuestListAcc::getFieldSkillCountEnd() const {
   return Bdat::getIdTop(GfBdatQuest::get()->unknownb0->data) + Bdat::getIdCount(GfBdatQuest::get()->unknownb0->data);
 }
 
-u32 QuestListAcc::getFieldSkillCountFieldSkillID(u32 id) const {
-  return _gfbqa::getFieldSkillCountFieldSkillID(*GfBdatQuest::get()->unknownb0, id);
-}
+u32 QuestListAcc::getFieldSkillCountFieldSkillID(u32 id) const { return _gfbqa::getFieldSkillCountFieldSkillID(*GfBdatQuest::get()->unknownb0, id); }
 
-u32 QuestListAcc::getFieldSkillCountCount(u32 id) const {
-  return _gfbqa::getFieldSkillCountCount(*GfBdatQuest::get()->unknownb0, id);
-}
+u32 QuestListAcc::getFieldSkillCountCount(u32 id) const { return _gfbqa::getFieldSkillCountCount(*GfBdatQuest::get()->unknownb0, id); }
 
 u32 QuestListAcc::getRequestBladeStart() const { return Bdat::getIdTop(GfBdatQuest::get()->unknownb8->data); }
 
@@ -3276,9 +3273,7 @@ u32 QuestListAcc::getRequestBladeEnd() const {
   return Bdat::getIdTop(GfBdatQuest::get()->unknownb8->data) + Bdat::getIdCount(GfBdatQuest::get()->unknownb8->data);
 }
 
-u32 QuestListAcc::getRequestBladeRequestCategory(u32 id) const {
-  return _gfbqa::getRequestBladeRequestCategory(*GfBdatQuest::get()->unknownb8, id);
-}
+u32 QuestListAcc::getRequestBladeRequestCategory(u32 id) const { return _gfbqa::getRequestBladeRequestCategory(*GfBdatQuest::get()->unknownb8, id); }
 
 u32 QuestListAcc::getRequestBladeRequestAtr(u32 id) const { return _gfbqa::getRequestBladeRequestAtr(*GfBdatQuest::get()->unknownb8, id); }
 
@@ -3288,9 +3283,7 @@ u32 QuestListAcc::getRequestBladeRequestPerformance(u32 id) const {
 
 u32 QuestListAcc::getRequestBladeRequestRace(u32 id) const { return _gfbqa::getRequestBladeRequestRace(*GfBdatQuest::get()->unknownb8, id); }
 
-u32 QuestListAcc::getRequestBladeRequestGender(u32 id) const {
-  return _gfbqa::getRequestBladeRequestGender(*GfBdatQuest::get()->unknownb8, id);
-}
+u32 QuestListAcc::getRequestBladeRequestGender(u32 id) const { return _gfbqa::getRequestBladeRequestGender(*GfBdatQuest::get()->unknownb8, id); }
 
 u32 QuestListAcc::getRequestBladeRequestArts(u32 id) const { return _gfbqa::getRequestBladeRequestArts(*GfBdatQuest::get()->unknownb8, id); }
 
@@ -3298,17 +3291,11 @@ u32 QuestListAcc::getRequestBladeRequestArtsLevel(u32 id) const {
   return _gfbqa::getRequestBladeRequestArtsLevel(*GfBdatQuest::get()->unknownb8, id);
 }
 
-u32 QuestListAcc::getRequestBladeRequestFSkill(u32 id) const {
-  return _gfbqa::getRequestBladeRequestFSkill(*GfBdatQuest::get()->unknownb8, id);
-}
+u32 QuestListAcc::getRequestBladeRequestFSkill(u32 id) const { return _gfbqa::getRequestBladeRequestFSkill(*GfBdatQuest::get()->unknownb8, id); }
 
-u32 QuestListAcc::getRequestBladeRequestFSLevel(u32 id) const {
-  return _gfbqa::getRequestBladeRequestFSLevel(*GfBdatQuest::get()->unknownb8, id);
-}
+u32 QuestListAcc::getRequestBladeRequestFSLevel(u32 id) const { return _gfbqa::getRequestBladeRequestFSLevel(*GfBdatQuest::get()->unknownb8, id); }
 
-u32 QuestListAcc::getRequestBladeRequestNumber(u32 id) const {
-  return _gfbqa::getRequestBladeRequestNumber(*GfBdatQuest::get()->unknownb8, id);
-}
+u32 QuestListAcc::getRequestBladeRequestNumber(u32 id) const { return _gfbqa::getRequestBladeRequestNumber(*GfBdatQuest::get()->unknownb8, id); }
 
 u32 QuestListAcc::getConditionStart() const { return Bdat::getIdTop(GfBdatQuest::get()->unknownc0->data); }
 
@@ -3441,9 +3428,7 @@ u32 QuestListAcc::getFLD_AchievementSetEnd() const {
   return Bdat::getIdTop(GfBdatQuest::get()->unknownf0->data) + Bdat::getIdCount(GfBdatQuest::get()->unknownf0->data);
 }
 
-u32 QuestListAcc::getFLD_AchievementSetCategory(u32 id) const {
-  return _gfbqa::getFLD_AchievementSetCategory(*GfBdatQuest::get()->unknownf0, id);
-}
+u32 QuestListAcc::getFLD_AchievementSetCategory(u32 id) const { return _gfbqa::getFLD_AchievementSetCategory(*GfBdatQuest::get()->unknownf0, id); }
 
 u32 QuestListAcc::getFLD_AchievementSetAbilityLevel(u32 id) const {
   return _gfbqa::getFLD_AchievementSetAbilityLevel(*GfBdatQuest::get()->unknownf0, id);
@@ -3485,21 +3470,13 @@ u32 QuestListAcc::getFLD_AchievementListEnd() const {
   return Bdat::getIdTop(GfBdatQuest::get()->unknownf8->data) + Bdat::getIdCount(GfBdatQuest::get()->unknownf8->data);
 }
 
-u32 QuestListAcc::getFLD_AchievementListTitle(u32 id) const {
-  return _gfbqa::getFLD_AchievementListTitle(*GfBdatQuest::get()->unknownf8, id);
-}
+u32 QuestListAcc::getFLD_AchievementListTitle(u32 id) const { return _gfbqa::getFLD_AchievementListTitle(*GfBdatQuest::get()->unknownf8, id); }
 
-u32 QuestListAcc::getFLD_AchievementListCategory(u32 id) const {
-  return _gfbqa::getFLD_AchievementListCategory(*GfBdatQuest::get()->unknownf8, id);
-}
+u32 QuestListAcc::getFLD_AchievementListCategory(u32 id) const { return _gfbqa::getFLD_AchievementListCategory(*GfBdatQuest::get()->unknownf8, id); }
 
-u32 QuestListAcc::getFLD_AchievementListIcon(u32 id) const {
-  return _gfbqa::getFLD_AchievementListIcon(*GfBdatQuest::get()->unknownf8, id);
-}
+u32 QuestListAcc::getFLD_AchievementListIcon(u32 id) const { return _gfbqa::getFLD_AchievementListIcon(*GfBdatQuest::get()->unknownf8, id); }
 
-u32 QuestListAcc::getFLD_AchievementListTask(u32 id) const {
-  return _gfbqa::getFLD_AchievementListTask(*GfBdatQuest::get()->unknownf8, id);
-}
+u32 QuestListAcc::getFLD_AchievementListTask(u32 id) const { return _gfbqa::getFLD_AchievementListTask(*GfBdatQuest::get()->unknownf8, id); }
 
 u32 QuestListAcc::getFLD_AchievementListVoiceCategory(u32 id) const {
   return _gfbqa::getFLD_AchievementListVoiceCategory(*GfBdatQuest::get()->unknownf8, id);
@@ -3527,9 +3504,7 @@ u32 QuestListAcc::getFLD_MercenariesConfigEnd() const {
   return Bdat::getIdTop(GfBdatQuest::get()->unknown100->data) + Bdat::getIdCount(GfBdatQuest::get()->unknown100->data);
 }
 
-u32 QuestListAcc::getFLD_MercenariesConfigValue(u32 id) const {
-  return _gfbqa::getFLD_MercenariesConfigValue(*GfBdatQuest::get()->unknown100, id);
-}
+u32 QuestListAcc::getFLD_MercenariesConfigValue(u32 id) const { return _gfbqa::getFLD_MercenariesConfigValue(*GfBdatQuest::get()->unknown100, id); }
 
 u32 QuestListAcc::getFLD_MercenariesMissionStart() const { return Bdat::getIdTop(GfBdatQuest::get()->unknown108->data); }
 
@@ -3565,31 +3540,19 @@ u32 QuestListAcc::getFLD_FieldSkillListEnd() const {
 
 u32 QuestListAcc::getFLD_FieldSkillListName(u32 id) const { return _gfbqa::getFLD_FieldSkillListName(*GfBdatQuest::get()->unknown110, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListCaption(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListCaption(*GfBdatQuest::get()->unknown110, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListCaption(u32 id) const { return _gfbqa::getFLD_FieldSkillListCaption(*GfBdatQuest::get()->unknown110, id); }
 
 u32 QuestListAcc::getFLD_FieldSkillListType(u32 id) const { return _gfbqa::getFLD_FieldSkillListType(*GfBdatQuest::get()->unknown110, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListRandomID(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListRandomID(*GfBdatQuest::get()->unknown110, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListRandomID(u32 id) const { return _gfbqa::getFLD_FieldSkillListRandomID(*GfBdatQuest::get()->unknown110, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListMinLevel(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListMinLevel(*GfBdatQuest::get()->unknown110, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListMinLevel(u32 id) const { return _gfbqa::getFLD_FieldSkillListMinLevel(*GfBdatQuest::get()->unknown110, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListMaxLevel(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListMaxLevel(*GfBdatQuest::get()->unknown110, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListMaxLevel(u32 id) const { return _gfbqa::getFLD_FieldSkillListMaxLevel(*GfBdatQuest::get()->unknown110, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListCategory(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListCategory(*GfBdatQuest::get()->unknown110, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListCategory(u32 id) const { return _gfbqa::getFLD_FieldSkillListCategory(*GfBdatQuest::get()->unknown110, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListRarity(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListRarity(*GfBdatQuest::get()->unknown110, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListRarity(u32 id) const { return _gfbqa::getFLD_FieldSkillListRarity(*GfBdatQuest::get()->unknown110, id); }
 
 u32 QuestListAcc::getFLD_FieldSkillListIcon(u32 id) const { return _gfbqa::getFLD_FieldSkillListIcon(*GfBdatQuest::get()->unknown110, id); }
 
@@ -3597,9 +3560,7 @@ u32 QuestListAcc::getFLD_FieldSkillListVoiceCategory(u32 id) const {
   return _gfbqa::getFLD_FieldSkillListVoiceCategory(*GfBdatQuest::get()->unknown110, id);
 }
 
-u32 QuestListAcc::getFLD_FieldSkillListAttirbute(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListAttirbute(*GfBdatQuest::get()->unknown110, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListAttirbute(u32 id) const { return _gfbqa::getFLD_FieldSkillListAttirbute(*GfBdatQuest::get()->unknown110, id); }
 
 u32 QuestListAcc::getFLD_FieldSkillSettingStart() const { return Bdat::getIdTop(GfBdatQuest::get()->unknown118->data); }
 
@@ -3607,9 +3568,7 @@ u32 QuestListAcc::getFLD_FieldSkillSettingEnd() const {
   return Bdat::getIdTop(GfBdatQuest::get()->unknown118->data) + Bdat::getIdCount(GfBdatQuest::get()->unknown118->data);
 }
 
-u32 QuestListAcc::getFLD_FieldSkillSettingName(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillSettingName(*GfBdatQuest::get()->unknown118, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillSettingName(u32 id) const { return _gfbqa::getFLD_FieldSkillSettingName(*GfBdatQuest::get()->unknown118, id); }
 
 u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillID1(u32 id) const {
   return _gfbqa::getFLD_FieldSkillSettingFieldSkillID1(*GfBdatQuest::get()->unknown118, id);

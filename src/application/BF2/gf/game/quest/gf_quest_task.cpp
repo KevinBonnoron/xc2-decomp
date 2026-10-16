@@ -1,4 +1,5 @@
 #include "gf/game/quest/gf_quest_task.h"
+
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_game_flag.h"
@@ -7,12 +8,13 @@
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/kizunaring/gf_kizunaring_manager.h"
 #include "gf/game/quest/gf_achiev_quest.h"
+#include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/quest/gf_quest_manager.h"
 #include "gf/game/quest/gf_quest_task_param.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/request/gf_req_scom.h"
-#include "gf/util/gf_item_util.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 

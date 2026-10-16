@@ -1,9 +1,10 @@
 #pragma once
-#include "../dr/dr_man.h"
-#include "types.h"
 #include <stddef.h>
 
+#include "types.h"
+
 namespace ml {
+class DrMan;
 
 class ScnRenderDrSys {
 public:

@@ -1,5 +1,6 @@
 #pragma once
-#include "gf/object/component/property/gf_com_property.h"
+#include <stddef.h>
+
 #include "gf/object/gf_obj_manager.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
@@ -7,7 +8,6 @@
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace fw {
 struct UpdateInfo;
@@ -23,6 +23,7 @@ struct RQ_SETUP_PARTY_DRIVER;
 class GfComTransform;
 class GfObj;
 class GfWeapon;
+class GfStatusProperty;
 
 enum CHANGE_BLADE {};
 

@@ -1,4 +1,5 @@
 #include "gf/data/gf_data_obj.h"
+
 #include "gf/data/gf_bdat_blade.h"
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_chrdr.h"
@@ -24,6 +25,10 @@
 #include "gf/object/gf_obj_util.h"
 #include "gf/util/gf_equip_util.h"
 #include "mm_math/mm_math.h"
+#include "mm_mtl/fixed_array.h"
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
+#include "mm_mtl/rtti.h"
 
 namespace gf {
 

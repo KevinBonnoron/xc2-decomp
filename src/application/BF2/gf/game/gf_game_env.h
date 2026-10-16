@@ -1,7 +1,6 @@
 #pragma once
 #include "gf/data/gf_data_map.h"
 #include "gf/event/gf_event.h"
-#include "gf/game/gf_game_state.h"
 #include "types.h"
 
 namespace fw {
@@ -11,7 +10,6 @@ struct UpdateInfo;
 namespace gf {
 
 struct GfSetupParam;
-struct MapjumpCallbackInfo;
 
 enum CLOUD_SEA_PRIO {};
 enum CLOUD_SEA_HANDLE {};

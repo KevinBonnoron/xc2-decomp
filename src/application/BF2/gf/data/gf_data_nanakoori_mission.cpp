@@ -1,5 +1,6 @@
 #include "gf/data/gf_data_nanakoori.h"
 #include "gf/data/gf_game_flag.h"
+#include "types.h"
 
 // Must not live in gf_data_nanakoori.cpp: when the body of getNanakooriMissionClearFlg1Offset is in the same
 // translation unit, Clang sees it is pure, folds its second call in setMissionComplete and the function no longer matches.

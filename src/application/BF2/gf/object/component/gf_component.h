@@ -1,7 +1,16 @@
 #pragma once
-#include "framework/message/message_object.h"
 #include "framework/object/updatable_object.h"
 #include "types.h"
+
+namespace fw {
+class MessageObject;
+struct Message;
+} // namespace fw
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+} // namespace mm
 
 namespace gf {
 

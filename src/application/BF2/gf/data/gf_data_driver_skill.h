@@ -1,9 +1,9 @@
 #pragma once
-#include "gf/data/gf_data_driver.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
 
 namespace gf {
+struct SDataDriver;
 
 class GfDataDriverSkill {
 public:

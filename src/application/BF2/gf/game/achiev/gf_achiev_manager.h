@@ -10,6 +10,8 @@ struct UpdateInfo;
 namespace gf {
 
 struct GfSetupParam;
+struct AchievQuest;
+struct QuestID;
 
 class GfAchievStats {
 public:

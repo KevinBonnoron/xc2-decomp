@@ -1,8 +1,9 @@
 #pragma once
+#include <stddef.h>
+
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace gf {
 

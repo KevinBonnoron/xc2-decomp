@@ -1,12 +1,16 @@
 #pragma once
-#include "../cloud/cloud_man.h"
-#include "dr_irr_vol_man.h"
-#include "dr_pixl_post_parm.h"
-#include "mm_math/mm_vec3.h"
-#include "types.h"
 #include <stddef.h>
 
+#include "mm_math/mm_vec3.h"
+#include "types.h"
+
+namespace cloud {
+class CloudMan;
+} // namespace cloud
+
 namespace ml {
+class DrIrrVolMan;
+class DrPixlPostParm;
 
 enum FILE_PRIO {};
 enum RenderSpecMode {};

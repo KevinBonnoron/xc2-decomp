@@ -1,5 +1,7 @@
 #include "gf/data/gf_data_idea.h"
+
 #include "gf/data/gf_bdat_blade.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 

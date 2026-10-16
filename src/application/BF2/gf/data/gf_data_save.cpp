@@ -1,5 +1,7 @@
 #include "gf/data/gf_data_save.h"
 
+#include "mm_mtl/fixstr.h"
+
 namespace gf {
 
 constexpr int CHAPTER_NUMBER_OFFSET = 8;

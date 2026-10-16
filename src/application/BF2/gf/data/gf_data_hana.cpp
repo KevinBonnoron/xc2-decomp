@@ -5,6 +5,7 @@
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_manager.h"
 

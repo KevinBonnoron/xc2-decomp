@@ -2,6 +2,7 @@
 #include "bdat.h"
 #include "gf/data/gf_bdat_item.h"
 #include "gf/data/gf_bdat_msg.h"
+#include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_game_flag.h"
 
