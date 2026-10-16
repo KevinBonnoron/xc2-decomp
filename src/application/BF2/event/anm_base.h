@@ -25,6 +25,7 @@ public:
   size_t count() const;
   void append(f32 frame);
   void setCv(CV_TYPE cv);
+  bool isEnd() const { return endFrame <= frame; }
 
 protected:
   u32 state;

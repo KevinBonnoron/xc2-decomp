@@ -41,6 +41,8 @@
 #include "event/chara_util.cpp"
 #include "event/chara_tar_util.cpp"
 #include "event/chara_facial_util.cpp"
+#include "event/chara_weight_item.cpp"
+#include "event/chara_weight_player.cpp"
 #include "event/chara_manager.cpp"
 #include "event/effect_manager.cpp"
 #include "event/schedule_item.cpp"
