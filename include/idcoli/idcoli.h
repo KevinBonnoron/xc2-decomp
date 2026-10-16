@@ -43,6 +43,7 @@ public:
   virtual ~IDColiManager();
   void update();
   void tail();
+  void consistentUpdate();
   int isGblId(u32 id);
   void setGblId(u32 id, bool isGlobal);
   void *getGblIdTbl();

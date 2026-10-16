@@ -54,6 +54,7 @@ public:
 
     bool operator==(const iterator &other) const { return m_node == other.m_node; }
     bool operator!=(const iterator &other) const { return m_node != other.m_node; }
+    T *get() const { return m_node; }
 
   private:
     T *m_node;

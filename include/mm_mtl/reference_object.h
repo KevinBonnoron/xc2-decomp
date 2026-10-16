@@ -18,6 +18,8 @@ public:
     }
   }
 
+  int getRefCount() const { return m_RefCount; }
+
 private:
   int m_RefCount;
 };
