@@ -12,6 +12,7 @@ class CmdParam;
 template <size_t N, int Type> class CmdQueue {
 public:
   virtual ~CmdQueue() {}
+  void clear() { mItems.clear(); }
   void update();
   void erase(const ICmd *cmd);
   void push_back(ICmd *cmd, const CmdParam &param);
@@ -77,7 +78,7 @@ template <size_t N, int Type> void CmdQueue<N, Type>::erase(const ICmd *cmd) {
 }
 
 template <size_t N, int Type> void CmdQueue<N, Type>::push_back(ICmd *cmd, const CmdParam &param) {
-  while (mItems.size() >= N) {
+  while (mItems.size() >= mItems.capacity()) {
     mItems.erase(mItems.begin());
   }
   cmd->init();
