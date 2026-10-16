@@ -16,6 +16,8 @@ public:
   mm::Vec3 calcPos() const;
   mm::Mat44 calcOrigMat() const;
   const char *getOrigName() const;
+  u32 getAxis() const { return mAxis; }
+  const mm::Vec3 &getPos() const { return mPos; }
 
 private:
   u32 mAxis;
