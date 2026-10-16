@@ -22,6 +22,7 @@
 #include "event/effect_manager.cpp"
 #include "event/bou_rect.cpp"
 #include "event/bou_manager.cpp"
+#include "event/mani_manager.cpp"
 #include "event/todo_item.cpp"
 #include "event/todo_manager.cpp"
 #include "event/object_util.cpp"

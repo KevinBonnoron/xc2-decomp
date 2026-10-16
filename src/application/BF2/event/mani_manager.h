@@ -1,0 +1,79 @@
+#pragma once
+#include "event/i_manager.h"
+#include "ml/work_event.h"
+#include "mm_mtl/bitflag.h"
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/noncopyable.h"
+#include "types.h"
+
+namespace mm {
+struct Vec3;
+}
+
+namespace ml {
+class EventView;
+}
+
+namespace event {
+
+class IManiCallback;
+
+enum MANI_TYPE {
+  MANI_TYPE_POS = 1,
+  MANI_TYPE_ROT = 2,
+  MANI_TYPE_TAR = 3,
+};
+
+class ManiManager : public IManager, public mm::mtl::NoncopyableBase, public ml::IWorkEvent {
+public:
+  static constexpr u32 ITEM_COUNT = 512;
+
+  enum {
+    FLAG_ENABLE = 0,
+    FLAG_ATTACHED = 1,
+    FLAG_ACTIVE = 2,
+    FLAG_ADJEST_POS = 3,
+  };
+
+  enum {
+    DEBUG_FLAG_ENABLE = 0,
+  };
+
+  struct Item {
+    IManiCallback *callback;
+    u8 _08[0x110 - 0x08];
+  };
+
+  ManiManager();
+  virtual ~ManiManager() {}
+  void create();
+  void clear();
+  void clearManipulate();
+  void update();
+  void updateManipulate();
+  void render();
+  void adjestPosY(mm::Vec3 &position);
+  void addManipulate(IManiCallback *callback, MANI_TYPE type);
+  static bool exist(mm::mtl::FixedVector<Item, ITEM_COUNT> &items, IManiCallback *callback);
+  void removeManipulate(IManiCallback *callback);
+  void changeManipulate(MANI_TYPE type);
+  void setAdjestPosEnable(bool isEnable);
+  bool isAdjestPosEnable() const;
+  void setEnable(bool isEnable);
+  void setDebugEnable(bool isEnable);
+  virtual bool OnMouseButtonDown(ml::EventView *view);
+  virtual bool OnKeyDown(ml::EventView *view);
+  virtual void OnEventProc(MSG_TYPE type);
+
+private:
+  mm::mtl::BitFlag<32> flags;
+  mm::mtl::BitFlag<32> mDebugFlags;
+  mm::mtl::FixedVector<Item, ITEM_COUNT> mItems;
+  u8 _22028[0x22030 - 0x22028];
+  MANI_TYPE mType;
+  u8 _22034[0x22180 - 0x22034];
+};
+
+static_assert(sizeof(ManiManager) == 0x22180, "");
+
+} // namespace event
