@@ -56,6 +56,7 @@
 #include "event/volume_skip.cpp"
 #include "event/volume_seamless.cpp"
 #include "event/volume_manager.cpp"
+#include "event/capture_manager.cpp"
 #include "event/evtxt_manager.cpp"
 #include "event/bou_rect.cpp"
 #include "event/bou_manager.cpp"
