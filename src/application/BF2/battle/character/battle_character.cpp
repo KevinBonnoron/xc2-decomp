@@ -1,5 +1,6 @@
 #include "battle/character/battle_character.h"
 
+#include "battle/battle_global.h"
 #include "battle/hate_ring_manager.h"
 #include "battle/misc_battle.h"
 #include "battle/talk_manager_battle.h"
@@ -12,7 +13,6 @@
 
 namespace btl {
 
-constexpr f32 FRAME_RATE = 30.0f;
 constexpr int ALPHA_RATE_NUM = 7;
 constexpr u32 BLADE_CHANGE_ACTIONS = 0xd2;
 constexpr int BLADE_SUPPORT_CONDITION_HATE_ELSE = 8;
