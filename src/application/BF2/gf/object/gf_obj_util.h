@@ -92,6 +92,7 @@ public:
   static bool isUpdate(GF_OBJ_HANDLE *handle);
   static void setOwner(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *owner);
   static GF_OBJ_HANDLE *getOwner(GF_OBJ_HANDLE *handle);
+  static u32 getSetupObjNumberByEnArrangeId(u32 arrange);
   static void reload(GF_OBJ_HANDLE *handle);
   static bool isEnemyBlade(GF_OBJ_HANDLE *handle);
   static bool setFlag(GF_OBJ_HANDLE *handle, u32 flag, bool value);

@@ -127,6 +127,8 @@ constexpr int PARTY_GAUGE_MAX = 300;
 constexpr u32 FOLLOW_OBJ_MAX = 768;
 constexpr u32 SAIKA_HANDLE_MAX = 8;
 constexpr u32 APPEND_HANDLE_MAX = 10;
+constexpr u32 BLADE_COUNT = 422;
+constexpr u32 DRIVER_ACCESSORY_SLOT_COUNT = 2;
 
 static const u32 nationLocations[NATION_COUNT] = {3, 6, 9, 10, 14, 12, 13, 15};
 
@@ -1290,11 +1292,18 @@ void GfGameUtil::changeHikariCurrent(bool hikariCurrent) {
   GfEvent::callHikariCurrent(hikariCurrent);
 }
 
+u32 GfGameUtil::getObjNumberByEnArrangeId(u32 arrange) {
+  u32 number = GfGameObj::get() != nullptr ? GfGameObj::get()->getObjNumberByEnArrangeId(arrange) : 0;
+  return GfObjUtil::getSetupObjNumberByEnArrangeId(arrange) + number;
+}
+
 void GfGameUtil::setMaxPartyGauge() {
   if (btl::DataManager::get() != nullptr) {
     btl::DataManager::get()->SetPartyGauge(PARTY_GAUGE_MAX, false);
   }
 }
+
+GF_OBJ_HANDLE *GfGameUtil::getBlade(GF_OBJ_HANDLE *handle) { return GfMountManager::getHandle(handle, GFATTACH_WEAPON, OPTMNT_BLADE); }
 
 bool GfGameUtil::getDriverAcceList(mm::mtl::FixedVector<u16, 16> &drivers) {
   for (u32 driver = DRIVER_REX; driver <= DRIVER_METSU; driver++) {
@@ -1323,6 +1332,60 @@ bool GfGameUtil::isDispHomuraCrystal() {
 }
 
 bool GfGameUtil::isDispMetsuCrystal() { return !GfGameCond::isGameCond(GAME_COND_METSU_WITHOUT_CRYSTAL); }
+
+void GfGameUtil::execEquipDriverDefaultAcce(u32 driver) {
+  if (driver == 0 || GfDataDriver::isEquipDefaultAcce(driver)) {
+    return;
+  }
+
+  GfDataDriver::getSDataDriver(driver)->equipDefaultAcce = true;
+  u32 accessory = GfBdatChrDr::get()->getChrDrDefAcce(driver);
+  if (accessory == 0) {
+    return;
+  }
+
+  if (GfItemUtil::isEnableAddItemBox(accessory, 1)) {
+    GfItemUtil::addItemBoxWithSilent(accessory, 1);
+  }
+
+  GfEquipUtil::equipDriverAcce(driver, 0, accessory, GfItemHandle(0));
+}
+
+void GfGameUtil::execDriverDead(u32 driver) {
+  for (u32 slot = 0; slot < DRIVER_ACCESSORY_SLOT_COUNT; slot++) {
+    GfEquipUtil::equipDriverAcce(driver, slot, 0, GfItemHandle(0));
+  }
+
+  for (int slot = GfDataDriver::getMaxSetBladeNum(driver) - 1; slot >= 0; slot--) {
+    u32 blade = GfDataDriver::getBlade(driver, slot);
+    if (blade != 0) {
+      GfDataDriver::unsetBlade(blade);
+    }
+  }
+}
+
+void GfGameUtil::setPartyChange10020() {
+  for (u32 index = 0; index < BLADE_COUNT; index++) {
+    u32 blade = GfDataBlade::getBladeID(index);
+    if (blade == 0 || !GfDataBlade::isUnselect(blade)) {
+      continue;
+    }
+
+    if (GfDataBlade::isRegularBlade(blade) && GfDataBlade::isUnselect(blade) && GfDataBlade::isActivateUnuse(blade)) {
+      GfDataBlade::setActivateReserver(blade);
+    }
+
+    GfDataBlade::setUnselect(blade, false);
+  }
+
+  SCOM_PARTY_ADD::addBlade(BLADE_HIKARI, DRIVER_REX, -1);
+  SCOM_PARTY_ADD::addBlade(BLADE_HOMURA, DRIVER_REX, -1);
+  SCOM_PARTY_ADD::addBlade(BLADE_HOMURI, DRIVER_REX, -1);
+  SCOM_PARTY_ADD::addDriver(DRIVER_NIA, -1);
+  SCOM_PARTY_ADD::addDriver(DRIVER_TORA, -1);
+  SCOM_PARTY_ADD::addDriver(DRIVER_MELEPH, -1);
+  SCOM_PARTY_ADD::addDriver(DRIVER_JIKU, -1);
+}
 
 bool GfGameUtil::isBladeInVillage(u32 blade) {
   if (GfDataBlade::isActivateUnuse(blade) || GfDataBlade::isUnselect(blade)) {

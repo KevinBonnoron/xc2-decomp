@@ -50,7 +50,10 @@ public:
 
 class SCOM_PARTY_ADD {
 public:
+  static void addDriver(u32 driver, u32 partyId);
   static void removeDriver(u32 driver, bool isForce);
+  static void addBlade(u32 blade, u32 driver, int slot);
+  static void removeBlade(u32 blade, bool isForce);
 };
 
 class SCOM_PARTY_LEADER {
