@@ -8,6 +8,7 @@ class UIStr;
 namespace gf {
 
 class GfMenuCallContext;
+struct GF_OBJ_HANDLE;
 
 class GfMenuObjUtil {
 public:
@@ -37,6 +38,26 @@ public:
   static u32 getLeaderPartyID();
   static int getLeaderPartyType();
   static bool isExitDriver(u32 partyId);
+  static bool isLeaderBladeEnable();
+  static bool isBladeEnable(u32 partyId, int slot);
+  static bool isValidBlade(u32 blade);
+  static bool isBladeEnableOffset(u32 partyId, int offset);
+  static int getSetBladeID(u32 partyId, int offset, bool isVirtual);
+  static bool isBladeContorolable(u32 blade);
+  static bool isBladeContorolable(u32 partyId, int slot);
+  static GF_OBJ_HANDLE *getLeaderBladeHandle(bool isVirtual);
+  static GF_OBJ_HANDLE *getBladeHandle(u32 partyId, u32 slot);
+  static GF_OBJ_HANDLE *getBladeHandleFromPartySlot(u32 partyId, int offset, bool isVirtual);
+  static GF_OBJ_HANDLE *getBladeHandleFromPartyBackSlot(u32 partyId, int offset, bool isVirtual);
+  static u32 getBladeIDFromPartyBackSlot(u32 partyId, int offset, bool isVirtual);
+  static GF_OBJ_HANDLE *getBladeHandleOffset(u32 partyId, int offset);
+  static u32 getBladeSlotMax();
+  static u16 getBladeFaceIconID(GF_OBJ_HANDLE *handle);
+  static u16 getBladeFaceIconID(u32 blade);
+  static u32 getBladeWeaponTypeIconID(u32 blade);
+  static u32 getBladeAttributeIconID(u32 blade);
+  static u32 getBladeCompatibilityIconID(u32 driver, u32 blade);
+  static u32 getBladeAttributeID(u32 blade);
   static u16 getMsgIDFromList(u32 bdat, u16 id);
   static bool checkCCStart(GfMenuCallContext *context);
   static bool checkCCNext(GfMenuCallContext *context, u32 menu);
