@@ -5,6 +5,7 @@
 
 namespace mm {
 struct Mat44;
+struct Vec3;
 } // namespace mm
 
 namespace effect {
@@ -76,6 +77,8 @@ public:
   bool isDebugShader();
   void setDebugShader(bool isDebugShader);
   bool isPerfMonitoring();
+  u32 createHateRing();
+  void updateHateRing(u32 handle, const mm::Vec3 &position, const f32 &rotation, bool isEnable, const f32 &scale);
   void destroyHateRing(u32 handle);
   void destroyHateRingVec(u32 handle);
   void destroyHateArrow(u32 handle);
