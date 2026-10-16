@@ -7,6 +7,9 @@ namespace layer {
 class LayerBase;
 
 enum LayerFontDisplayArea {};
+enum LayerFontSetting {
+  LAYER_FONT_SETTING_VERTICAL = 2,
+};
 
 class LayerAccFontObj : public LayerAccObjBase {
 public:
@@ -14,6 +17,7 @@ public:
   LayerFontDisplayArea getDisplayArea() const;
   u16 getFontPixelWidth() const;
   u16 getFontPixelHeight() const;
+  void setDispSetting(LayerFontSetting setting);
 };
 
 } // namespace layer
