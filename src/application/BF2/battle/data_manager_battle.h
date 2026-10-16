@@ -12,7 +12,8 @@ struct UpdateInfo;
 
 namespace gf {
 struct GF_OBJ_HANDLE;
-}
+class GfMenuCallContext;
+} // namespace gf
 
 namespace btl {
 
@@ -36,6 +37,9 @@ public:
     bool isTiming;
   };
 
+  static void Destroy();
+  void Finalize();
+  void InitializeComboRequestUI();
   const CharacterParameter *GetCharacterParameterConst(int id) const;
   void GetArtsData(ARTS_DATA::DATA_TYPE type, int id, ARTS_DATA &data) const;
   f32 GetPouchBuffParam(int type, int pouch) const;
@@ -63,7 +67,8 @@ public:
   u8 _7588[0x12e88 - 0x7588];
   ENEMY_GROUP_DATA enemyGroups[35];
   POUCH_BUFF_DATA pouchBuffs[3];
-  u8 _13284[0x13298 - 0x13284];
+  u8 _13284[0x13290 - 0x13284];
+  gf::GfMenuCallContext *comboRequestContext;
   gf::GF_OBJ_HANDLE *permitTarget;
   s8 permitParty;
   u8 permitComboId;

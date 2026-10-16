@@ -2,12 +2,38 @@
 
 #include "battle/battle_global.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/object/gf_menu_obj_party_status.h"
 #include "gf/object/gf_obj_handle.h"
 
 namespace btl {
 
 constexpr int ENEMY_GROUP_NUM = 35;
 constexpr int ENEMY_GROUP_INDEX_OFFSET = 3;
+
+void DataManager::Destroy() {
+  DataManager *manager = get();
+  manager->Finalize();
+  if (manager != nullptr) {
+    delete manager;
+  }
+}
+
+void DataManager::Finalize() {
+  if (comboRequestContext != nullptr) {
+    comboRequestContext->release();
+    comboRequestContext = nullptr;
+  }
+}
+
+void DataManager::InitializeComboRequestUI() {
+  if (comboRequestContext == nullptr) {
+    comboRequestContext = gf::GfMenuCallContext::create();
+    if (comboRequestContext != nullptr) {
+      gf::GfMenuObjPartyStatus::attachComboRequest(comboRequestContext);
+    }
+  }
+}
 
 f32 DataManager::GetPouchBuffParam(int type, int pouch) const {
   if (pouch > 2) {
