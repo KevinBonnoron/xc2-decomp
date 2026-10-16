@@ -37,6 +37,7 @@ public:
   };
 
   DebugManager();
+  virtual ~DebugManager() {}
   void update();
   void render();
   void tail();
