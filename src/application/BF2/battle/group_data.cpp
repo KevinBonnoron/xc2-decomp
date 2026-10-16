@@ -124,6 +124,15 @@ const GROUP_BLADE_DATA *GROUP_DATA::GetBladeDataConst(int index) const {
   return &blades[index];
 }
 
+void GROUP_DATA::SetNeedPermit(bool isNeedPermit) {
+  if (!isNeedPermit) {
+    permitState = 0;
+  } else if (!this->isNeedPermit) {
+    permitState = 0;
+  }
+  this->isNeedPermit = isNeedPermit;
+}
+
 void GROUP_DATA::ProgressCoolTime(f32 time) {
   for (int i = 0; i < 5; i++) {
     if (i != buddyBladeIndex && blades[i].isInitialized) {
