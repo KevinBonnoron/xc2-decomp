@@ -127,6 +127,16 @@ void Utility::AchieveCondition(BTL_ACHIEVE_COND condition, gf::GF_OBJ_HANDLE *ha
   }
 }
 
+void Utility::GetArtsData(ARTS_DATA::DATA_TYPE type, int id, ARTS_DATA &data) { DataManager::get()->GetArtsData(type, id, data); }
+
+int Utility::GetArtsEnhance(const ARTS_SLOT_DATA &slot) {
+  ARTS_DATA data;
+  slot.GetArtsData(data);
+  return GetArtsEnhance(data, slot.level);
+}
+
+int Utility::GetArtsEnhance(const ARTS_DATA &data, int level) { return data.levels[level - 1].enhance; }
+
 int Utility::GetSeType(const char *packName) {
   if (packName != nullptr && packName[0] != '\0') {
     u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_BTL_SE);

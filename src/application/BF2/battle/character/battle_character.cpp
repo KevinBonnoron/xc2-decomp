@@ -491,6 +491,10 @@ void BattleCharacter::SetSuperArmorTime(f32 time) { superArmorTime = superArmorT
 
 void BattleCharacter::SetPerfectAvoidTime(f32 time) { perfectAvoidTime = perfectAvoidTime > time ? perfectAvoidTime : time; }
 
+f32 BattleCharacter::GetArtsDamageRate(const ARTS_DATA::LEVEL_DATA &level) const { return level.damageMargin * 0.01f; }
+
+f32 BattleCharacter::GetArtsDamageRate(const ARTS_DATA &data, int level) const { return GetArtsDamageRate(data.levels[level - 1]); }
+
 void BattleCharacter::StopAI(f32 time) { stopAiTime = stopAiTime > time ? stopAiTime : time; }
 
 bool BattleCharacter::CheckRandFriendEnhanceRate(int enhance) const {
