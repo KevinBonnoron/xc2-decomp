@@ -337,7 +337,11 @@ def objdump(path, symbols, relocs, local_functions=(), address=None):
     for line in run(args).splitlines():
         header = FUNC_HEADER.match(line)
         if header and address is None:
-            lines = funcs.setdefault(header.group(1), [])
+            # Labels at the same address (constructor and destructor variants) share their instructions.
+            if lines is not None and not lines:
+                funcs[header.group(1)] = lines
+            else:
+                lines = funcs.setdefault(header.group(1), [])
             continue
         if lines is None:
             continue
@@ -350,6 +354,7 @@ def objdump(path, symbols, relocs, local_functions=(), address=None):
             lines.append(insn.group(1).split("//")[0].rstrip())
     sizes = {} if relocs else {name: size for _, size, name in syms.entries}
     for name, lines in funcs.items():
+        lines = list(lines)
         if not relocs:
             del lines[sizes.get(name, len(lines) * 4) // 4:]
             resolve_pages(lines, image, syms)
