@@ -6,6 +6,8 @@ namespace mm {
 struct alignas(16) Mat44 {
   static const Mat44 identity;
 
+  Mat44() {}
+
   f32 rows[4][4];
 };
 
