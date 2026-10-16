@@ -1,5 +1,10 @@
 #pragma once
 #include "layer/layer_acc_obj_base.h"
+#include "types.h"
+
+namespace mm {
+struct Col4;
+} // namespace mm
 
 namespace grlib {
 class CGLibTextureBuffer;
@@ -9,9 +14,23 @@ namespace layer {
 
 class LayerBase;
 
+enum LAYER_ANCHOR {};
+
 class LayerAccLayoutObj : public LayerAccObjBase {
 public:
   LayerAccLayoutObj(LayerBase *layer);
+  void setViewPortMode(bool viewPortMode);
+  void setViewPort(f32 x, f32 y, f32 width, f32 height);
+  void createRenderTarget(f32 x, f32 y, f32 width, f32 height, mm::Col4 clearColor);
+  void releaseRenderTarget();
+  void createPriorityTbl(u32 num);
+  void releasePriorityTbl();
+  u16 getPriorityTbl() const;
+  void setAutoAnchorMode(LAYER_ANCHOR mode);
+  LAYER_ANCHOR getAutoAnchorMode() const;
+  grlib::CGLibTextureBuffer *getTexture();
+  void setRender(bool render);
+  bool isRender() const;
   LayerBase *createObj(const void *data);
   LayerBase *createMaskObj(const void *data);
   LayerBase *createTexObj(const grlib::CGLibTextureBuffer &texture);
