@@ -1,5 +1,7 @@
 #include "event/cs_snd_manager.h"
 
+#include "framework/sound/sound_manager.h"
+
 namespace event {
 
 CsSndManager::CsSndManager() : flags(0), dispFlags(0), mPreloadHandle(0), mPlayHandle(0), mUnused(0), mSyncFrameOffset(0.0f) {}
@@ -29,6 +31,14 @@ void CsSndManager::setDisp(bool isDisp) {
 }
 
 bool CsSndManager::isDisp() const { return (dispFlags & DISP_FLAG_DISP) != 0; }
+
+void CsSndManager::setSyncFrame(f32 frame) {
+  if (!isPlay()) {
+    return;
+  }
+  f32 time = (frame + mSyncFrameOffset) / 30.0f;
+  fw::SoundManager::get()->setPlayTime(mPlayHandle, time);
+}
 
 f32 CsSndManager::getStartedTotalFrame() const { return mStartedTotalFrame; }
 
