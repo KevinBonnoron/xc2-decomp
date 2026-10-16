@@ -38,6 +38,7 @@
 #include "event/cam_motion.cpp"
 #include "event/cam_obj.cpp"
 #include "event/cam_manager.cpp"
+#include "event/chara_util.cpp"
 #include "event/chara_manager.cpp"
 #include "event/effect_manager.cpp"
 #include "event/schedule_item.cpp"
