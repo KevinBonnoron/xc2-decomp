@@ -23,6 +23,8 @@ public:
   const mm::Vec3 &getTarget() const { return mTarget; }
   f32 getFov() const { return mFov; }
   f32 getRoll() const { return mRoll; }
+  f32 getNear() const { return mNear; }
+  f32 getFar() const { return mFar; }
   void setNearFar(f32 nearClip, f32 farClip) {
     mNear = nearClip;
     mFar = farClip;

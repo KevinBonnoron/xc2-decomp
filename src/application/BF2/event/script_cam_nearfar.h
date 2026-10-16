@@ -14,7 +14,8 @@ public:
   virtual void redo(const Param &param) { doit(param); }
 
 private:
-  u8 _08[0x10 - 0x08];
+  f32 prevNear;
+  f32 prevFar;
 };
 
 static_assert(sizeof(ScriptCamNearfar) == 0x10, "");

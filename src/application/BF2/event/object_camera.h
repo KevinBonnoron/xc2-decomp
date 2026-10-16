@@ -58,6 +58,8 @@ public:
   const char *getCutName() const { return mCutName.c_str(); }
 
   CamObj *getCamObj() const { return mCamObj; }
+  const PosAxis &getPosAxis() const { return posAxis; }
+  const TarAxis &getTarAxis() const { return tarAxis; }
 
 private:
   CamObj *mCamObj;

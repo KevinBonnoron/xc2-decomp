@@ -9,7 +9,9 @@
 #include "event/script_cam_move_rot_z.h"
 #include "event/script_cam_move_tar.h"
 #include "event/script_cam_nearfar.h"
+#include "event/script_cam_pos.h"
 #include "event/script_cam_rot_z.h"
+#include "event/script_cam_tar.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 
@@ -18,7 +20,11 @@ class ITodo;
 
 ITodo *ScriptCamMotion::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCamMotion; }
 
+ITodo *ScriptCamPos::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCamPos; }
+
 ITodo *ScriptCamMovePos::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCamMovePos; }
+
+ITodo *ScriptCamTar::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCamTar; }
 
 ITodo *ScriptCamMoveTar::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCamMoveTar; }
 
