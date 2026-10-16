@@ -1,5 +1,5 @@
 #pragma once
-#include "framework/object/updatable_object.h"
+#include "framework/object/component_object.h"
 #include "types.h"
 
 namespace fw {
