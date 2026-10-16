@@ -23,6 +23,12 @@ namespace btl {
 
 constexpr f32 FRAME_RATE = 30.0f;
 
+enum BTL_TUTORIAL_COND {
+  BTL_TUTORIAL_COND_DRIVER_ARTS_RECAST_END = 2,
+  BTL_TUTORIAL_COND_BLADE_ARTS_RECAST_END = 3,
+  BTL_TUTORIAL_COND_SP_ATTACK_LEVEL3_RECAST_END = 4,
+};
+
 class BattleCharacter;
 class ShakeCameraManager;
 
@@ -93,6 +99,7 @@ public:
   bool IsSlowProc(u32 slow) const;
   static void PostUpdate(const fw::UpdateInfo &updateInfo);
   void PostUpdateProc(const fw::UpdateInfo &updateInfo);
+  void Tutorial(BTL_TUTORIAL_COND cond, int combo, void *character);
   void ResetBGM();
   void SetElementalComboImmortal(gf::GF_OBJ_HANDLE *handle);
   bool IsGameOver() const;
