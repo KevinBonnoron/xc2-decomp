@@ -89,7 +89,7 @@ private:
   const T *at(size_t index) const { return reinterpret_cast<const T *>(&mBuffer[index * sizeof(T) / sizeof(Unit)]); }
 
   static void copy(const T *first, const T *last, T *dest) {
-    if (__is_trivially_copyable(T)) {
+    if (__is_pod(T)) {
       size_t count = last - first;
       __builtin_memcpy(dest, first, count * sizeof(T));
     } else {
