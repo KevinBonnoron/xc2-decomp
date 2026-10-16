@@ -7,6 +7,26 @@
 
 namespace event {
 
+u32 ObjectManager::getCharaCount() const {
+  if (mCurrent == nullptr) {
+    return 0;
+  }
+  return mCurrent->getCharaCount();
+}
+
+ObjectChara *ObjectManager::getChara(u32 index) { return getCurrent()->getChara(index); }
+
+u32 ObjectManager::getCameraCount() const {
+  if (mCurrent == nullptr) {
+    return 0;
+  }
+  return mCurrent->getCameraCount();
+}
+
+ObjectCamera *ObjectManager::getCamera(u32 index) { return getCurrent()->getCamera(index); }
+
+bool ObjectManager::isDisp() const { return (flags & FLAG_DISP) != 0; }
+
 ObjectManager::ObjectManager() : mMode(0), flags(0), mSceneName("default") {}
 
 void ObjectManager::init() {
