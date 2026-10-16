@@ -3,6 +3,7 @@
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
+#include "framework/framework.h"
 #include "framework/object/component_object.h"
 #include "fw/fw_model_object.h"
 #include "gf/asset/gf_asset_manager.h"
@@ -20,15 +21,6 @@
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/rtti.h"
 #include "scn/scn_obj_acc.h"
-
-namespace fw {
-
-class Framework {
-public:
-  static bool isLayerPause(u32 layer);
-};
-
-} // namespace fw
 
 namespace gf {
 
