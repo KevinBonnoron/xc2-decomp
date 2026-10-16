@@ -18,6 +18,14 @@ namespace btl {
 constexpr f32 NORMALIZE_LENGTH_MIN = 0.000001f;
 constexpr int KIZUNA_STAGE_TO_ID = 7;
 
+void Misc::GetCrossDirection(const mm::Vec3 &direction, mm::Vec3 &cross, CROSS_MODE mode) {
+  f32 z = direction.z;
+  f32 x = direction.x;
+  cross.x = mode == CROSS_MODE_LEFT ? -z : z;
+  cross.z = mode == CROSS_MODE_LEFT ? x : -x;
+  cross.y = 0.0f;
+}
+
 f32 Misc::CalcRotY(const mm::Vec3 &direction) { return CalcAngle(mm::Vec3::unitZ, direction, true); }
 
 bool Misc::NormalizeXZ(mm::Vec3 &vector) {

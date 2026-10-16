@@ -14,6 +14,11 @@ namespace btl {
 
 class Misc {
 public:
+  enum CROSS_MODE {
+    CROSS_MODE_LEFT,
+    CROSS_MODE_RIGHT,
+  };
+
   enum TRANS_TYPE {
     TRANS_TYPE_POSITION,
     TRANS_TYPE_DIRECTION,
@@ -21,6 +26,7 @@ public:
 
   static bool Normalize(mm::Vec3 &vector);
   static void TurnDirectionAngle(mm::Vec3 &direction, const mm::Vec3 &axis, f32 angle, bool isRadian);
+  static void GetCrossDirection(const mm::Vec3 &direction, mm::Vec3 &cross, CROSS_MODE mode);
   static f32 CalcAngle(const mm::Vec3 &from, const mm::Vec3 &to, bool isSigned);
   static f32 CalcRotY(const mm::Vec3 &direction);
   static bool NormalizeXZ(mm::Vec3 &vector);
