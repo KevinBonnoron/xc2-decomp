@@ -3,6 +3,7 @@
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_trigger.h"
 #include "types.h"
 
 namespace gmk {
@@ -34,7 +35,20 @@ static_assert(sizeof(GmkEnemy) == 0x1d0, "");
 
 class GmkEnemyList : public TGmkList<GmkEnemy, GmkEnemy::BdatInfo, 0x4d454e45, 5, GmkEnemyGob> {
 public:
-  explicit GmkEnemyList(u32 updateGmkNumPerFrame);
+  struct BdatInfo {
+    BdatInfo() : mapId(-1), enemyDisplayRadius(100), enemyDisplayHeight(50), enemyReleaseRadius(10), enemyReleaseHeight(5), enemyRepopTime(3) {}
+
+    bool create();
+
+    int mapId;
+    u8 enemyDisplayRadius;
+    u8 enemyDisplayHeight;
+    u8 enemyReleaseRadius;
+    u8 enemyReleaseHeight;
+    u8 enemyRepopTime;
+  };
+
+  explicit GmkEnemyList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), triggerList(0xffffffff) {}
   ~GmkEnemyList() override;
 
   const AGmkBase *getInst(u32 index) const override;
@@ -50,9 +64,11 @@ protected:
   void createGmk(void *data) override;
 
 private:
-  u8 _228[0x470 - 0x228];
+  GmkEnemyList::BdatInfo bdatInfo;
+  GmkTriggerList triggerList;
 };
 
+static_assert(sizeof(GmkEnemyList::BdatInfo) == 0xc, "");
 static_assert(sizeof(GmkEnemyList) == 0x470, "");
 
 } // namespace gmk
