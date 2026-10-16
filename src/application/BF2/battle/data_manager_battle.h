@@ -40,6 +40,7 @@ public:
   void DeleteElementalEffect();
   static void Update(const fw::UpdateInfo &updateInfo);
   void UpdateProc(const fw::UpdateInfo &updateInfo);
+  static void PostUpdate(const fw::UpdateInfo &updateInfo);
   void SetSpecialEffects(int effect, bool isEnable);
   bool IsSpecialEffects(int effect) const;
 
