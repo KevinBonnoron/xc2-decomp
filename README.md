@@ -60,6 +60,8 @@ check 0x710028c7ec src/application/BF2/gf/data/gf_data_obj.cpp applyDriverEnhanc
 
 `check` keeps its work in `work/check_cache`: each object is reused until its source or one of the headers it includes changes, and the game's disassembly and symbols are read once. A change to `tools/check.py`, the compiler or its flags discards the whole cache; delete the directory to start over.
 
+A function you define that the game has no symbol for is listed as `NOT IN GAME`, with the game functions of the same name: it usually means a wrong namespace or parameter type in its signature.
+
 Functions local to their source file (`static`, anonymous namespace) have no symbol in the game. A call to one of them shows as `<local>` on both sides: in the game, a branch to an address outside every named function; in your object, a branch to a function it defines that is local or unknown to the game. Any local function matches any other there, so check each local function on its own, by its game address and its name in your file. The game side of that diff ends at the next named function or at the next address called by a `bl`.
 
 ## Compiler
