@@ -12,6 +12,10 @@ struct GF_OBJ_HANDLE;
 class GfObj;
 } // namespace gf
 
+enum BTL_SE {
+  BTL_SE_HIT = 1,
+};
+
 namespace btl {
 
 class CharacterParameter;
@@ -65,6 +69,7 @@ class BattleCharacter {
 public:
   enum ANIM_ID {};
   enum SLOW_PROC_ID {};
+  enum ALPHA_PROC_ID {};
   enum ACTION_ID {
     ACTION_ID_IDLE = 1,
     ACTION_ID_MOVE = 4,
@@ -162,6 +167,12 @@ public:
   bool IsBossOrNamed() const;
   bool IsMove() const;
   int GetGroupIndex() const;
+  void AddUseWeapon();
+  void PlaySE(BTL_SE se, int number, const mm::Vec3 *position, bool isFollow);
+  void PlayHitAttrSE(int attribute, const mm::Vec3 *position);
+  void PlayHitBulletSE(int attribute, const mm::Vec3 *position);
+  int GetIKData(f32 &weight, f32 &height) const;
+  void SetupPosDir();
   const GROUP_DATA *GetGroupDataConst() const;
   bool IsEnableSpeakVoice() const;
   bool IsEnableTurnAI() const;
@@ -216,6 +227,7 @@ public:
   f32 GetDt(bool isSlow, bool isStopCheck) const;
   void RegisterSlow(SLOW_PROC_ID slow, f32 rate, f32 time);
   void DeleteSlow(SLOW_PROC_ID slow);
+  int GetAlphaSetID(ALPHA_PROC_ID alpha);
   bool IsPause() const;
   f32 GetSystemDt() const;
   f32 GetSystemSyncCount() const;
@@ -264,9 +276,13 @@ public:
 
   u8 _08[0x10 - 0x08];
   mm::Vec3 position;
-  u8 _20[0xb0 - 0x20];
+  u8 _20[0x50 - 0x20];
+  mm::Vec3 direction;
+  u8 _60[0xb0 - 0x60];
   mm::Vec3 moveData;
-  u8 _c0[0x118 - 0xc0];
+  u8 _c0[0xf4 - 0xc0];
+  f32 landHeight;
+  u8 _f8[0x118 - 0xf8];
   gf::GF_OBJ_HANDLE *handle;
   gf::GF_OBJ_HANDLE *target;
   u8 _128[0x130 - 0x128];
@@ -283,7 +299,12 @@ public:
   int bdatId;
   u8 _ccc[0xce0 - 0xccc];
   ANIMATION_MOVE_DISTANCE_DATA animationMoveDistances[20];
-  u8 _d80[0xdd0 - 0xd80];
+  u8 _d80[0xdb8 - 0xd80];
+  f32 ikWeight;
+  f32 ikHeight;
+  u32 ikId : 7;
+  u32 : 25;
+  u8 _dc4[0xdd0 - 0xdc4];
   s16 delayVoiceTime;
   u8 _dd2[0xdd8 - 0xdd2];
   ALPHA_PROC_DATA alphaProcs[17];
@@ -338,7 +359,9 @@ public:
 };
 
 static_assert(offsetof(BattleCharacter, position) == 0x10, "");
+static_assert(offsetof(BattleCharacter, direction) == 0x50, "");
 static_assert(offsetof(BattleCharacter, moveData) == 0xb0, "");
+static_assert(offsetof(BattleCharacter, landHeight) == 0xf4, "");
 static_assert(offsetof(BattleCharacter, handle) == 0x118, "");
 static_assert(offsetof(BattleCharacter, target) == 0x120, "");
 static_assert(offsetof(BattleCharacter, effects) == 0x130, "");
@@ -348,6 +371,7 @@ static_assert(offsetof(BattleCharacter, animationSpeed) == 0xcb8, "");
 static_assert(offsetof(BattleCharacter, systemDt) == 0xcc4, "");
 static_assert(offsetof(BattleCharacter, bdatId) == 0xcc8, "");
 static_assert(offsetof(BattleCharacter, animationMoveDistances) == 0xce0, "");
+static_assert(offsetof(BattleCharacter, ikWeight) == 0xdb8, "");
 static_assert(offsetof(BattleCharacter, delayVoiceTime) == 0xdd0, "");
 static_assert(offsetof(BattleCharacter, alphaProcs) == 0xdd8, "");
 static_assert(offsetof(BattleCharacter, alphaRates) == 0xf2c, "");
