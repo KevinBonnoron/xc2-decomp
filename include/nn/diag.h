@@ -1,0 +1,58 @@
+#pragma once
+#include <stddef.h>
+
+#define NN_LOG(...)                                                                                                                                  \
+  do {                                                                                                                                               \
+    ::nn::diag::LogMetaData logMetaData;                                                                                                             \
+    logMetaData.sourceInfo.lineNumber = __LINE__;                                                                                                    \
+    logMetaData.sourceInfo.fileName = __FILE__;                                                                                                      \
+    logMetaData.sourceInfo.functionName = __FUNCTION__;                                                                                              \
+    logMetaData.moduleName = "";                                                                                                                     \
+    logMetaData.severity = ::nn::diag::LogSeverity_Info;                                                                                             \
+    logMetaData.verbosity = 0;                                                                                                                       \
+    logMetaData.useDefaultLocaleCharset = false;                                                                                                     \
+    logMetaData.pAdditionalData = nullptr;                                                                                                           \
+    logMetaData.additionalDataBytes = 0;                                                                                                             \
+    ::nn::diag::detail::LogImpl(logMetaData, __VA_ARGS__);                                                                                           \
+  } while (0)
+
+namespace nn {
+namespace diag {
+
+enum LogSeverity {
+  LogSeverity_Trace,
+  LogSeverity_Info,
+  LogSeverity_Warn,
+  LogSeverity_Error,
+  LogSeverity_Fatal,
+};
+
+struct SourceInfo {
+  int lineNumber;
+  const char *fileName;
+  const char *functionName;
+};
+
+struct LogMetaData {
+  SourceInfo sourceInfo;
+  const char *moduleName;
+  LogSeverity severity;
+  int verbosity;
+  bool useDefaultLocaleCharset;
+  void *pAdditionalData;
+  size_t additionalDataBytes;
+};
+
+static_assert(offsetof(LogMetaData, moduleName) == 0x18, "");
+static_assert(offsetof(LogMetaData, severity) == 0x20, "");
+static_assert(offsetof(LogMetaData, useDefaultLocaleCharset) == 0x28, "");
+static_assert(offsetof(LogMetaData, pAdditionalData) == 0x30, "");
+static_assert(sizeof(LogMetaData) == 0x40, "");
+
+namespace detail {
+
+void LogImpl(const LogMetaData &metaData, const char *format, ...);
+
+} // namespace detail
+} // namespace diag
+} // namespace nn
