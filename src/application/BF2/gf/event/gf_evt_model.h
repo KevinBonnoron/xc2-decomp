@@ -52,23 +52,13 @@ static_assert(offsetof(GfEvtModel, handle) == 0x20, "");
 
 class GfEvtModelDriver : public GfEvtModel {
 public:
+  void setDispJiji(bool isDisp);
   void playAnimWeaponRightCS(const char *name);
   bool isPlayEndAnimWeaponRightCS();
   void setAnimSpeedWeaponRightCS(f32 speed);
   void playAnimWeaponLeftCS(const char *name);
   bool isPlayEndAnimWeaponLeftCS();
   void setAnimSpeedWeaponLeftCS(f32 speed);
-};
-
-class GfEvtModelWeapon : public GfEvtModel {
-public:
-  static void playAnimCS(GF_OBJ_HANDLE *handle, const char *name);
-  static bool isPlayEndAnimCS(GF_OBJ_HANDLE *handle);
-  static void setAnimSpeedCS(GF_OBJ_HANDLE *handle, f32 speed);
-  void playAnimCS(const char *name);
-  bool isPlayEndAnimCS();
-  void setAnimSpeedCS(f32 speed);
-  void playAnimData(void *data);
 };
 
 class GfEvtModelSalvage : public GfEvtModel {
@@ -85,6 +75,18 @@ public:
   void playAnimWeaponLeftCS(const char *name);
   bool isPlayEndAnimWeaponLeftCS();
   void setAnimSpeedWeaponLeftCS(f32 speed);
+};
+
+class GfEvtModelWeapon : public GfEvtModel {
+public:
+  static void playAnimCS(GF_OBJ_HANDLE *handle, const char *name);
+  static bool isPlayEndAnimCS(GF_OBJ_HANDLE *handle);
+  static void setAnimSpeedCS(GF_OBJ_HANDLE *handle, f32 speed);
+  void playAnimData(void *data);
+  void setScale(f32 scale);
+  void playAnimCS(const char *name);
+  bool isPlayEndAnimCS();
+  void setAnimSpeedCS(f32 speed);
 };
 
 } // namespace gf
