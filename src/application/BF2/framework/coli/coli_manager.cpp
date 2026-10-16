@@ -2,9 +2,23 @@
 
 #include "framework/coli/coli_object.h"
 #include "framework/framework.h"
+#include "framework/memory/framework_memory.h"
 #include "idcoli/idcoli.h"
+#include "mtl/alloc_handle.h"
 
 namespace fw {
+
+bool ColiManager::initialize() {
+  Impl *colliders = &*impl;
+  if (colliders->manager == nullptr) {
+    // __LINE__ of the game: it is the line argument of the operator new.
+#line 247
+    colliders->manager =
+        new (Framework::getAllocator(), 16, __FILE__, __LINE__) idcoli::IDColiManager(Framework::get()->scn, FrameworkMemory::getMem(5), 0x80000);
+  }
+
+  return true;
+}
 
 void ColiManager::postUpdate() {
   if (isFinalized()) {
