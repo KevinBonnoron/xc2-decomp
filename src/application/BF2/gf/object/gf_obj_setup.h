@@ -58,7 +58,16 @@ static_assert(offsetof(GfObjSetupMap, bdatId) == 0x6c, "");
 class GfObjSetupDriver : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
+  static const u32 OBJECT_TYPE = OBJECT_TYPE_DRIVER;
+
+  u8 _5c[0x6c - 0x5c];
+  bool isRide;
+  u8 _6d[0x70 - 0x6d];
+  int formationPlayerId;
 };
+
+static_assert(offsetof(GfObjSetupDriver, isRide) == 0x6c, "");
+static_assert(offsetof(GfObjSetupDriver, formationPlayerId) == 0x70, "");
 
 class GfObjSetupBlade : public GfObjSetup {
 public:
@@ -66,9 +75,12 @@ public:
 
   u8 _5c[0x6c - 0x5c];
   int slot;
+  u8 _70[0x74 - 0x70];
+  int formationPlayerId;
 };
 
 static_assert(offsetof(GfObjSetupBlade, slot) == 0x6c, "");
+static_assert(offsetof(GfObjSetupBlade, formationPlayerId) == 0x74, "");
 
 class GfObjSetupWeapon : public GfObjSetup {
 public:
