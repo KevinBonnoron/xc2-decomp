@@ -14,5 +14,3 @@ public:
 
 } // namespace mtl
 } // namespace mm
-
-void *operator new(size_t size, mm::mtl::IAllocator *allocator, int alignment, const char *file, size_t line);

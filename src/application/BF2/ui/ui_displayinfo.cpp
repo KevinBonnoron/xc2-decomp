@@ -1,6 +1,6 @@
 #include "ui/ui_displayinfo.h"
 
-#include "mm_mtl/allocator.h"
+#include "framework/memory/framework_memory.h"
 #include "ui/ui_util.h"
 
 namespace ui {
