@@ -8,14 +8,19 @@
 
 namespace fw {
 
+struct UpdateInfo;
+
 class DynamicsUpdaterInterface : public mm::mtl::IntrusiveListNode<DynamicsUpdaterInterface> {
 public:
-  virtual ~DynamicsUpdaterInterface();
+  virtual ~DynamicsUpdaterInterface() {}
+  virtual void update(const UpdateInfo &info) = 0;
+  virtual void drawDebug() = 0;
 };
 
 class DynamicsColObjUpdaterInterface : public mm::mtl::IntrusiveListNode<DynamicsColObjUpdaterInterface> {
 public:
-  virtual ~DynamicsColObjUpdaterInterface();
+  virtual ~DynamicsColObjUpdaterInterface() {}
+  virtual void update() = 0;
 };
 
 class DyanmicsManager : public ManagerObject, public mm::mtl::PtrSingleton<DyanmicsManager> {
