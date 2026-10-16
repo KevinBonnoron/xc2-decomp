@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/framework.h"
 #include "framework/message/message_object.h"
 #include "framework/object/updatable_object.h"
 #include "types.h"
@@ -36,5 +37,27 @@ static_assert(offsetof(GfObj, handle) == 0xf8, "");
 static_assert(offsetof(GfObj, info) == 0x100, "");
 static_assert(offsetof(GfObj, attribute) == 0x110, "");
 static_assert(offsetof(GfObj, isExecUpdate) == 0x118, "");
+
+class GfObjLayerSpeed {
+public:
+  struct Info {
+    Info() : request(false), speed(1.0f) {}
+
+    bool request;
+    f32 speed;
+  };
+
+  static void initialize();
+  static void finalize();
+  static void reqApplyModelLayerSpeed(u32 layer, f32 speed);
+  static bool isRequest(u32 layer);
+  static f32 getSpeed(u32 layer);
+  static void cleanup();
+
+private:
+  static Info s_info[fw::Framework::LAYER_MAX];
+};
+
+static_assert(sizeof(GfObjLayerSpeed::Info) == 0x8, "");
 
 } // namespace gf
