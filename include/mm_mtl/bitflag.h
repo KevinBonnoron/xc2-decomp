@@ -7,6 +7,8 @@ namespace mtl {
 
 template <unsigned int Size> class BitFlag {
 public:
+  BitFlag() { clear(); }
+
   BitFlag &operator=(const BitFlag &other) {
     if (&other != this) {
       copy_n(other.mBits, WORD_COUNT, mBits);
