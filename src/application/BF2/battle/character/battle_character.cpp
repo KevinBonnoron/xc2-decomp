@@ -3,6 +3,7 @@
 #include <float.h>
 
 #include "battle/battle_global.h"
+#include "battle/btl_system_balance_access.h"
 #include "battle/button_challenge.h"
 #include "battle/character/character_parameter_battle.h"
 #include "battle/data_manager_battle.h"
@@ -518,6 +519,13 @@ void BattleCharacter::SetSuperArmorTime(f32 time) { superArmorTime = superArmorT
 void BattleCharacter::SetPerfectAvoidTime(f32 time) { perfectAvoidTime = perfectAvoidTime > time ? perfectAvoidTime : time; }
 
 f32 BattleCharacter::GetArtsDamageRate(const ARTS_DATA::LEVEL_DATA &level) const { return level.damageMargin * 0.01f; }
+
+f32 BattleCharacter::ApplyResistantAttr(f32 damage, int attribute) const {
+  if (GetCharacterParameterConst(false)->resistantAttributeFlags & (1 << attribute)) {
+    damage = BtlSystemBalanceAccess::get()->resistantAttrDamageRate * damage;
+  }
+  return damage;
+}
 
 f32 BattleCharacter::GetArtsDamageRate(const ARTS_DATA &data, int level) const { return GetArtsDamageRate(data.levels[level - 1]); }
 
