@@ -7,6 +7,9 @@ struct Col4 {
   static const Col4 white;
   static const Col4 zero;
 
+  Col4() {}
+  Col4(f32 r, f32 g, f32 b, f32 a) : r(r), g(g), b(b), a(a) {}
+
   f32 r;
   f32 g;
   f32 b;

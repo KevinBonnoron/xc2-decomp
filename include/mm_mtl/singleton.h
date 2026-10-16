@@ -21,5 +21,15 @@ public:
   }
 };
 
+template <typename T> class Singleton {
+public:
+  static T *getPtr() {
+    static T s_instance;
+    return &s_instance;
+  }
+
+  static T &get() { return *getPtr(); }
+};
+
 } // namespace mtl
 } // namespace mm

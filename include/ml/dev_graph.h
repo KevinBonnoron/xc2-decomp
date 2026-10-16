@@ -10,6 +10,8 @@ class DevGraph {
 public:
   static void setMemPoolMemHandle(mtl::ALLOC_HANDLE handle);
   static void releaseMemPoolMemHandle(mtl::ALLOC_HANDLE handle);
+  static int getRootWidth();
+  static int getRootHeight();
 };
 
 } // namespace ml
