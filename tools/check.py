@@ -29,18 +29,22 @@ calls, whichever comes first.
 import bisect
 import difflib
 import glob
+import hashlib
 import os
+import pickle
 import re
 import struct
 import subprocess
 import sys
 import tempfile
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from functools import lru_cache
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TARGET_ELF = os.path.join(ROOT, "work", "main_100.elf")
 SRC_DIR = os.path.join(ROOT, "src")
+CACHE_DIR = os.path.join(ROOT, "work", "check_cache")
 
 CXX = "clang++-3.9.1"
 
@@ -94,8 +98,60 @@ def demangle(names):
 
 
 @lru_cache(maxsize=None)
+def tool_key():
+    """Anything that changes how sources compile or how disassembly is read invalidates every cache entry."""
+    digest = hashlib.sha1(open(os.path.abspath(__file__), "rb").read())
+    digest.update("\0".join([os.environ.get("XC2_CXX", CXX), *CXXFLAGS]).encode())
+    return digest.hexdigest()
+
+
+@lru_cache(maxsize=None)
+def file_digest(path, stamp=None):
+    return hashlib.sha1(open(path, "rb").read()).hexdigest()
+
+
+def current_digest(path):
+    info = os.stat(path)
+    return file_digest(path, (info.st_mtime_ns, info.st_size))
+
+
+@lru_cache(maxsize=None)
+def target_key():
+    info = os.stat(TARGET_ELF)
+    return f"{tool_key()}:{info.st_size}:{info.st_mtime_ns}"
+
+
+def load_cached(path, key):
+    try:
+        with open(path, "rb") as f:
+            stored, value = pickle.load(f)
+    except (OSError, EOFError, ValueError, pickle.UnpicklingError):
+        return None
+    return value if stored == key else None
+
+
+def save_cached(path, key, value):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    partial = f"{path}.{os.getpid()}.{threading.get_ident()}"
+    with open(partial, "wb") as f:
+        pickle.dump((key, value), f, protocol=pickle.HIGHEST_PROTOCOL)
+    os.replace(partial, path)
+
+
+def cached(path, key, compute):
+    value = load_cached(path, key)
+    if value is None:
+        value = compute()
+        save_cached(path, key, value)
+    return value
+
+
+@lru_cache(maxsize=None)
 def defined_symbols(path, sizes=False):
-    return run(["llvm-nm", "--defined-only", *(["-S"] if sizes else []), path])
+    args = ["llvm-nm", "--defined-only", *(["-S"] if sizes else []), path]
+    if path == TARGET_ELF:
+        return cached(os.path.join(CACHE_DIR, f"target{'.sizes' if sizes else ''}.nm"), target_key(), lambda: run(args))
+    return cached(path + ".nm", (tool_key(), current_digest(path)), lambda: run(args))
 
 
 @lru_cache(maxsize=None)
@@ -387,13 +443,57 @@ def in_scope(demangled_name, scope):
     return scope is None or demangled_name.startswith(scope + "::")
 
 
+def dependency_key(deps_file, extra):
+    """Digest of every file the last compilation read, from the depfile clang wrote; None if one is gone."""
+    try:
+        text = open(deps_file).read()
+    except OSError:
+        return None
+    digest = hashlib.sha1("\0".join([tool_key(), *extra]).encode())
+    for path in text.partition(":")[2].replace("\\\n", " ").split():
+        if not os.path.exists(path):
+            return None
+        digest.update(path.encode() + current_digest(path).encode())
+    return digest.hexdigest()
+
+
 def compile_source(source, tmp, extra=()):
-    obj = os.path.join(tmp, os.path.relpath(source, ROOT).replace(os.sep, "_") + ".o")
-    proc = subprocess.run([os.environ.get("XC2_CXX", CXX), *CXXFLAGS, *extra, "-c", source, "-o", obj],
-                          capture_output=True, text=True)
+    """Compile into the cache, or reuse the object when neither the source nor anything it includes changed."""
+    name = hashlib.sha1("\0".join([os.path.relpath(source, ROOT), *extra]).encode()).hexdigest()
+    base = os.path.join(CACHE_DIR, "obj", name)
+    obj, deps_file, key_file = base + ".o", base + ".d", base + ".key"
+    key = dependency_key(deps_file, extra)
+    try:
+        if key and os.path.exists(obj) and open(key_file).read() == key:
+            return obj, None
+    except OSError:
+        pass
+    os.makedirs(os.path.dirname(base), exist_ok=True)
+    if os.path.exists(key_file):
+        os.remove(key_file)
+    proc = subprocess.run([os.environ.get("XC2_CXX", CXX), *CXXFLAGS, *extra, "-MD", "-MF", deps_file, "-c", source,
+                           "-o", obj], capture_output=True, text=True)
     if proc.returncode:
         return None, proc.stderr
+    open(key_file, "w").write(dependency_key(deps_file, extra) or "")
     return obj, None
+
+
+def target_disassembly(symbols):
+    path = os.path.join(CACHE_DIR, "target.dis")
+    known = load_cached(path, target_key()) or {}
+    missing = [s for s in symbols if s not in known]
+    if missing:
+        found = objdump(TARGET_ELF, missing, relocs=False)
+        known.update({s: found.get(s, []) for s in missing})
+        save_cached(path, target_key(), known)
+    return {s: known[s] for s in symbols}
+
+
+def object_disassembly(obj, symbols, known):
+    key = (target_key(), current_digest(obj), tuple(symbols))
+    return cached(obj + ".dis", key,
+                  lambda: objdump(obj, symbols, relocs=True, local_functions=local_functions(obj, known)))
 
 
 def defined_functions(obj):
@@ -488,10 +588,10 @@ def diff_one(symbol, source, extra, known):
                     break
             if obj is None:
                 sys.exit(f"{demangle([symbol])[symbol]} is not defined in any file under src/")
-        mine = objdump(obj, [symbol], relocs=True, local_functions=local_functions(obj, known)).get(symbol)
+        mine = object_disassembly(obj, [symbol], known).get(symbol)
     if not mine:
         sys.exit(f"{symbol} not found in compiled object (check the mangled name with llvm-nm)")
-    target = objdump(TARGET_ELF, [symbol], relocs=False)[symbol]
+    target = target_disassembly([symbol])[symbol]
     return print_diff(target, mine)
 
 
@@ -523,10 +623,9 @@ def check_all(demangled, scope=None, verbose=True):
         if not all_funcs and not scope:
             sys.exit("no game function defined under src/")
         with ThreadPoolExecutor() as pool:
-            pending_targets = pool.submit(objdump, TARGET_ELF, all_funcs, relocs=False)
+            pending_targets = pool.submit(target_disassembly, all_funcs)
             disassembled = list(pool.map(
-                lambda entry: objdump(entry[1], entry[2], relocs=True, local_functions=local_functions(entry[1], demangled))
-                if entry[2] else {}, per_object))
+                lambda entry: object_disassembly(entry[1], entry[2], demangled) if entry[2] else {}, per_object))
             targets = pending_targets.result()
         for (source, obj, funcs), mine in zip(per_object, disassembled):
             for f in funcs:
@@ -594,8 +693,8 @@ def main():
     readme = "--readme" in args
     verbose = any(a in ("-v", "--verbose") for a in args)
     args = [a for a in args if a not in ("--readme", "-v", "--verbose")]
-    known = sorted(target_symbols())
-    demangled = demangle(known)
+    demangled = cached(os.path.join(CACHE_DIR, "target.demangled"), target_key(),
+                       lambda: demangle(sorted(target_symbols())))
     if not args:
         ok, matched = check_all(demangled, verbose=verbose)
         text = progress_text(matched)
