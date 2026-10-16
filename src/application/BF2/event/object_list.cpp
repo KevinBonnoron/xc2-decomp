@@ -130,6 +130,20 @@ void ObjectList::startSceneSub(Object *object) {
   }
 }
 
+void ObjectList::startPage() {
+  for (Object *object = mEffectTree->getChild(); object != nullptr; object = object->getNext()) {
+    mm::mtl::Singleton<BouManager>::getPtr()->pop(static_cast<ObjectEffect *>(object));
+  }
+  ObjectTree *tree = mEffectTree;
+  for (Object *object = tree->getChild(); object != nullptr; object = object->getNext()) {
+  }
+  if (tree != nullptr) {
+    clrChilds(tree);
+  }
+  mEffectCount = 0;
+  mActive = nullptr;
+}
+
 void ObjectList::endScene() {
   if (mRoot != nullptr) {
     endSceneSub(mRoot);
