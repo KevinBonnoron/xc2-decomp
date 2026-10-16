@@ -1,5 +1,7 @@
 #pragma once
 #include "mm/mm_std_base.h"
+#include <stdarg.h>
+#include <stdio.h>
 
 namespace mm {
 namespace mtl {
@@ -41,7 +43,29 @@ public:
     m_nLen = 0;
   }
 
-  void format(const char *format, ...);
+  FixStr &format(const char *format, ...) {
+    char buffer[256];
+    va_list args;
+    va_start(args, format);
+    vsnprintf(buffer, sizeof(buffer), format, args);
+    va_end(args);
+    *this = buffer;
+    return *this;
+  }
+
+  void assign(const char *string, int len) {
+    MM_ASSERT(len < LEN);
+    __builtin_memcpy(mData, string, len);
+    mData[len] = 0;
+  }
+
+  void erase(int pos, int count) {
+    if (pos < m_nLen) {
+      int end = pos + count < m_nLen ? pos + count : m_nLen;
+      __builtin_strcpy(mData + pos, mData + end);
+      m_nLen = __builtin_strlen(mData);
+    }
+  }
 
   const char *c_str() const { return mData; }
   bool empty() const { return m_nLen == 0; }
