@@ -22,6 +22,11 @@ public:
     return *reinterpret_cast<const T *>(mBuffer + index * sizeof(T));
   }
 
+  T &front() { return *reinterpret_cast<T *>(mBuffer); }
+  const T &front() const { return *reinterpret_cast<const T *>(mBuffer); }
+  T &back() { return *reinterpret_cast<T *>(mBuffer + (mSize - 1) * sizeof(T)); }
+  const T &back() const { return *reinterpret_cast<const T *>(mBuffer + (mSize - 1) * sizeof(T)); }
+
   size_t size() const { return mSize; }
   size_t capacity() const { return N; }
   bool empty() const { return mSize == 0; }
