@@ -3,6 +3,7 @@
 
 #include "framework/manager_object.h"
 #include "ml/work_event.h"
+#include "mm_mtl/array.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -17,10 +18,7 @@ struct ScriptEventParam {
   enum State : int;
 };
 
-class ScriptManager : public ManagerObject, public mm::mtl::PtrSingleton<ScriptManager> {
-public:
-  void notifyEvent(int type, ScriptEventParam::State state);
-};
+class ScriptManager;
 
 class ScriptInfo : public ml::IWorkEvent {
 public:
@@ -72,5 +70,21 @@ static_assert(offsetof(ScriptInfo, name) == 0x118, "");
 static_assert(offsetof(ScriptInfo, type) == 0x21c, "");
 static_assert(offsetof(ScriptInfo, state) == 0x228, "");
 static_assert(offsetof(ScriptInfo, manager) == 0x238, "");
+
+class ScriptManager : public ManagerObject, public mm::mtl::PtrSingleton<ScriptManager> {
+public:
+  ~ScriptManager();
+  bool initialize() override;
+  bool isScriptCreated(int type) const;
+  bool isScriptLoaded(int type) const;
+  bool isScriptFree(int type) const;
+  void notifyEvent(int type, ScriptEventParam::State state);
+  u32 getTypeMax() const;
+
+  u8 _18[0x20 - 0x18];
+  mm::mtl::Array<ScriptInfo> scripts;
+};
+
+static_assert(offsetof(ScriptManager, scripts) == 0x20, "");
 
 } // namespace fw
