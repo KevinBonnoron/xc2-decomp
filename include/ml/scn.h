@@ -9,7 +9,7 @@ namespace ml {
 
 class ScnRenderDrSys;
 
-class ScnCam {
+class ScnObjCam {
 public:
   struct RENDER_INFO {
     u8 _00[0x10];
@@ -22,7 +22,7 @@ public:
 
 class Scn : public mm::mtl::PtrSingleton<Scn> {
 public:
-  ScnCam *getCam(int index);
+  ScnObjCam *getCam(int index);
 
   u8 _08[0x38 - 0x08];
   ScnRenderDrSys *renderDrSys;

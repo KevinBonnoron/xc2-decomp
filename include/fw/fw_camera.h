@@ -17,7 +17,7 @@ class RTTI;
 
 namespace ml {
 class Scn;
-class ScnCam;
+class ScnObjCam;
 } // namespace ml
 
 namespace fw {
@@ -79,7 +79,7 @@ public:
 
   mm::mtl::IntrusiveList<Camera> cameras;
   mm::mtl::IntrusiveList<CameraPlugin> plugins;
-  ml::ScnCam *scnCamera;
+  ml::ScnObjCam *scnCamera;
   mm::Mat44 matrix;
   mm::Mat44 previousMatrix;
   f32 blendTime;
