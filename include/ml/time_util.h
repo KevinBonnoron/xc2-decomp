@@ -25,3 +25,8 @@ public:
 };
 
 } // namespace ml
+
+extern "C" {
+
+void mlGetDateName(char *name, int size);
+}
