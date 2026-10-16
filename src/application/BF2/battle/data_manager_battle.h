@@ -56,7 +56,11 @@ public:
   u8 _7588[0x12e88 - 0x7588];
   ENEMY_GROUP_DATA enemyGroups[35];
   POUCH_BUFF_DATA pouchBuffs[3];
-  u8 _13284[0x132a3 - 0x13284];
+  u8 _13284[0x13298 - 0x13284];
+  gf::GF_OBJ_HANDLE *permitTarget;
+  s8 permitParty;
+  u8 permitComboId;
+  u8 permitComboStage;
   u8 elementalEffectId;
   u8 _132a4[0x132a5 - 0x132a4];
   bool specialEffects[3];
@@ -66,6 +70,7 @@ static_assert(offsetof(DataManager, playerParameters) == 0x8, "");
 static_assert(offsetof(DataManager, enemyParameters) == 0x7358, "");
 static_assert(offsetof(DataManager, enemyGroups) == 0x12e88, "");
 static_assert(offsetof(DataManager, pouchBuffs) == 0x131d0, "");
+static_assert(offsetof(DataManager, permitTarget) == 0x13298, "");
 static_assert(offsetof(DataManager, elementalEffectId) == 0x132a3, "");
 static_assert(offsetof(DataManager, specialEffects) == 0x132a5, "");
 
