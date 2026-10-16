@@ -62,7 +62,7 @@ check 0x710028c7ec src/application/BF2/gf/data/gf_data_obj.cpp applyDriverEnhanc
 
 A function you define that the game has no symbol for is listed as `NOT IN GAME`, with the game functions of the same name: it usually means a wrong namespace or parameter type in its signature.
 
-Functions local to their source file (`static`, anonymous namespace) have no symbol in the game. A call to one of them shows as `<local>` on both sides: in the game, a branch to an address outside every named function; in your object, a branch to a function it defines that is local or unknown to the game. Any local function matches any other there, so check each local function on its own, by its game address and its name in your file. The game side of that diff ends at the next named function or at the next address called by a `bl`.
+Functions local to their source file (`static`, anonymous namespace) have no symbol in the game. A call to one of them shows as `<local>` on both sides: in the game, a branch to an address outside every named function; in your object, a branch to a function it defines that is local or unknown to the game. Any local call compares equal to any other there. A full `check` then finds the game address of each local function through the callers that match (the n-th local call on both sides reaches the same function) and checks it too, listed as `(local, address)`; a local function only ever inlined has no call to follow. To diff one by hand, pass its game address and its name in your file. The game side of that diff ends at the next named function or at the next address called by a `bl`.
 
 ## Includes
 

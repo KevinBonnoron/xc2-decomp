@@ -24,8 +24,11 @@ Functions local to their source file (static, anonymous namespace) have no
 symbol in the game. A call to one of them reads <local> on both sides: in the
 game, a branch to an address outside every named function; in your object, a
 branch to a function it defines that is local or unknown to the game. Any local
-function matches any other, so check the local function itself by address: pass
-its game address and its name in your file (mangled, qualified or not), e.g.
+call compares equal to any other, and a full check then pairs each local
+function with its game address through the callers that match (the n-th local
+call on both sides reaches the same function) and checks it too. To diff one by
+hand, pass its game address and its name in your file (mangled, qualified or
+not), e.g.
   check 0x710028c7ec src/application/BF2/gf/data/gf_data_obj.cpp applyDriverEnhance
 The game side ends at the next named function or at the next address some bl
 calls, whichever comes first.
@@ -83,6 +86,7 @@ SOURCE_LOCATION_CALLS = {
 # Complete and base constructors and destructors are aliases at the same address: compare them as one.
 STRUCTOR_VARIANT = re.compile(r"(<_ZN\w*?[0-9][A-Za-z_][A-Za-z0-9_]*)(C|D)2(E)")
 INCLUDE_CPP = re.compile(r'^#include "([^"]+\.cpp)"', re.M)
+LOCAL_CALL = re.compile(r"<local:([^>]+)>")
 MEM_OPERAND = re.compile(r"\[(\w+)(?:, #(-?0x[0-9a-f]+))?\]")
 SHT_NOBITS = 8
 README_START = "<!-- progress -->"
@@ -369,8 +373,8 @@ def label_branch(text, syms, local_functions):
             if addr in syms.stubs:
                 return f"<{syms.stubs[addr]}>"
             if branch and not syms.covering(addr):
-                return "<local>"
-        return "<local>" if branch and name in local_functions else f"<{name}>"
+                return f"<local:{addr:#x}>"
+        return f"<local:{name}>" if branch and name in local_functions else f"<{name}>"
 
     return BRANCH_TARGET.sub(target, text)
 
@@ -485,15 +489,20 @@ def compile_source(source, tmp, extra=()):
     return obj, None
 
 
-def target_disassembly(symbols):
+def target_disassembly(symbols=(), addresses=()):
+    """Game functions by symbol, and unnamed ones by hex address, read once and kept in the cache."""
     path = os.path.join(CACHE_DIR, "target.dis")
     known = load_cached(path, target_key()) or {}
     missing = [s for s in symbols if s not in known]
     if missing:
         found = objdump(TARGET_ELF, missing, relocs=False)
         known.update({s: found.get(s, []) for s in missing})
+    unnamed = [a for a in addresses if a not in known]
+    for address in unnamed:
+        known.update(objdump(TARGET_ELF, [], relocs=False, address=int(address, 16)))
+    if missing or unnamed:
         save_cached(path, target_key(), known)
-    return {s: known[s] for s in symbols}
+    return {s: known[s] for s in [*symbols, *addresses]}
 
 
 def object_disassembly(obj, symbols, known):
@@ -597,7 +606,17 @@ def print_compile_errors(errors):
         print(err, file=sys.stderr)
 
 
+def comparable(lines):
+    """Any local function call compares equal to any other: each local function is checked on its own."""
+    return [LOCAL_CALL.sub("<local>", line) for line in lines]
+
+
+def local_callees(lines):
+    return [match.group(1) for line in lines for match in LOCAL_CALL.finditer(line)]
+
+
 def print_diff(target, mine):
+    target, mine = comparable(target), comparable(mine)
     if mine == target:
         print(paint(f"MATCH ({len(target)} instructions)", "1;32"))
         return True
@@ -656,9 +675,36 @@ def diff_unnamed(address, source, name, extra, known):
         if len(matches) != 1:
             sys.exit(f"{len(matches)} functions named {name} in {source}" +
                      "".join(f"\n  {demangled[m]}" for m in matches))
-        mine = objdump(obj, matches, relocs=True, local_functions=local_functions(obj, known))[matches[0]]
-    target = objdump(TARGET_ELF, [], relocs=False, address=address)[f"{address:#x}"]
+        mine = object_disassembly(obj, matches, known)[matches[0]]
+    target = target_disassembly(addresses=[f"{address:#x}"])[f"{address:#x}"]
     return print_diff(target, mine)
+
+
+def add_local_pairs(pairs, obj, source, target, mine):
+    """In a function that matches, the n-th local call of the game and of your object reach the same function."""
+    if comparable(target) != comparable(mine):
+        return
+    for address, name in zip(local_callees(target), local_callees(mine)):
+        pairs.setdefault((obj, name), (source, address))
+
+
+def check_local_functions(pairs, demangled, names):
+    """Compare each local function found through a matching caller, then the local functions it calls."""
+    rows = []
+    done = set()
+    while len(done) < len(pairs):
+        todo = [key for key in pairs if key not in done]
+        done.update(todo)
+        targets = target_disassembly(addresses=sorted({pairs[key][1] for key in todo}))
+        readable = demangle(sorted({name for _, name in todo}))
+        for obj, name in todo:
+            source, address = pairs[(obj, name)]
+            mine = object_disassembly(obj, [name], demangled).get(name, [])
+            key = f"local:{address}:{name}"
+            names[key] = f"{readable[name]} (local, {address})"
+            rows.append((key, os.path.relpath(source, ROOT), targets[address], mine))
+            add_local_pairs(pairs, obj, source, targets[address], mine)
+    return rows
 
 
 def check_all(demangled, scope=None, verbose=True):
@@ -680,10 +726,16 @@ def check_all(demangled, scope=None, verbose=True):
             disassembled = list(pool.map(
                 lambda entry: object_disassembly(entry[1], entry[2], demangled) if entry[2] else {}, per_object))
             targets = pending_targets.result()
+        pairs = {}
         for (source, obj, funcs), mine in zip(per_object, disassembled):
             for f in funcs:
                 rows.append((f, os.path.relpath(defining_file(demangled[f], source), ROOT), targets.get(f, []), mine.get(f, [])))
+                add_local_pairs(pairs, obj, source, targets.get(f, []), mine.get(f, []))
+        names = dict(demangled)
+        rows += check_local_functions(pairs, demangled, names)
 
+    demangled = names
+    rows = [(f, source, comparable(target), comparable(mine)) for f, source, target, mine in rows]
     rows.sort(key=lambda r: (r[2] != r[3], r[1], demangled[r[0]]))
     mismatches = [r for r in rows if r[2] != r[3]]
     width = max((len(n) for n in [demangled[f] for f, *_ in rows] + missing), default=0)
@@ -701,7 +753,10 @@ def check_all(demangled, scope=None, verbose=True):
     print_compile_errors(errors)
     failed = bool(errors)
     matched = len(rows) - len(mismatches)
+    local_count = sum(1 for f, *_ in rows if f.startswith("local:"))
     summary = f"\n{matched}/{len(rows)} functions match"
+    if local_count:
+        summary += f" ({local_count} of them local)"
     if scope:
         summary += f", {len(missing)} left to decompile in {scope}"
     if failed:
@@ -709,7 +764,7 @@ def check_all(demangled, scope=None, verbose=True):
     if unknown:
         summary += f", {len(unknown)} not in the game"
     print(paint(summary, "1;32" if matched == len(rows) and not failed else "1;31"))
-    return matched == len(rows) and not failed, [f for f, _, target, mine in rows if target == mine]
+    return matched == len(rows) and not failed, [f for f, _, target, mine in rows if target == mine and not f.startswith("local:")]
 
 
 def game_progress(matched):
