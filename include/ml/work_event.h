@@ -16,11 +16,4 @@ public:
   virtual bool OnFileEvent(EventFileTh *event);
 };
 
-class IWorkBackground {
-public:
-  virtual ~IWorkBackground();
-  virtual void bkgHomeMenu(bool isOpen);
-  virtual void bkgHomeMenuDenied();
-};
-
 } // namespace ml
