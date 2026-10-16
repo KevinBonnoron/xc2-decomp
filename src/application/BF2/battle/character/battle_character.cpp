@@ -16,6 +16,10 @@ constexpr int ALPHA_RATE_NUM = 7;
 constexpr u32 BLADE_CHANGE_ACTIONS = 0xd2;
 constexpr int BLADE_SUPPORT_CONDITION_HATE_ELSE = 8;
 
+void ActionCommand::SetActionID(int action) { actionFlags |= 1 << action; }
+
+bool ActionCommand::IsProcAction(int action) const { return (actionFlags & (1 << action)) != 0; }
+
 void BattleCharacter::ResetHateRingData() {
   if (!isPlayer && handle != gf::INVALID_HANDLE && id >= 0) {
     HateRingManager::get()->SetData(id, handle, -1);
@@ -109,6 +113,64 @@ void BattleCharacter::EnhanceProc() { EnhanceTimerProc(); }
 bool BattleCharacter::IsEnableBattleFace() const { return isPlayer; }
 
 void BattleCharacter::NotifyHateElse() { SetBladeSupportCondition(BLADE_SUPPORT_CONDITION_HATE_ELSE); }
+
+void BattleCharacter::ActionCommandEndIdle() {}
+
+void BattleCharacter::ActionCommandPutOutWeapon(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndPutOutWeapon() {}
+
+void BattleCharacter::ActionCommandPutAwayWeapon(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndPutAwayWeapon() {}
+
+void BattleCharacter::ActionCommandKizunaMax(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndKizunaMax() {}
+
+void BattleCharacter::ActionCommandEndAttack() {}
+
+void BattleCharacter::ActionCommandEndArts() {}
+
+void BattleCharacter::ActionCommandBladeChange(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndBladeChange() {}
+
+void BattleCharacter::ActionCommandSpAttack(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndSpAttack() {}
+
+void BattleCharacter::ActionCommandSupport(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndSupport() {}
+
+void BattleCharacter::ActionCommandBladeGuard(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndBladeGuard() {}
+
+void BattleCharacter::ActionCommandRepelled(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndRepelled() {}
+
+void BattleCharacter::ActionCommandDown(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndDown() {}
+
+void BattleCharacter::ActionCommandKnockBack(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndKnockBack() {}
+
+void BattleCharacter::ActionCommandBreak(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndBreak() {}
+
+void BattleCharacter::ActionCommandDead(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndDead() {}
+
+void BattleCharacter::ActionCommandRescue(const ActionCommand *, ActionCommand::COMMAND_TYPE) {}
+
+void BattleCharacter::ActionCommandEndRescue() {}
 
 void BattleCharacter::AddIdea(u32 idea, u32 point) { gf::SCOM_ADD_IDEA::create(handle, idea, point); }
 
