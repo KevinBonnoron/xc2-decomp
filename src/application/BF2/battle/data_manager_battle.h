@@ -23,6 +23,10 @@ public:
     u8 _10[0x18 - 0x10];
   };
 
+  enum POUCH_BUFF_TYPE {
+    POUCH_BUFF_TYPE_KIZUNA = 6,
+  };
+
   struct POUCH_BUFF_DATA {
     f32 params[14];
     u8 _38[0x3b - 0x38];

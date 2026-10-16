@@ -82,6 +82,7 @@ public:
   static f32 GetDyingHpRate();
   static int GetResistantAttrMaxHP();
   static int GetTrustRank(int blade);
+  static f32 GetBladeCoolTime(int blade);
   static bool IsEnableDeadSequence();
   static bool IsEnableEventStart();
   static bool IsThirdCharacter(gf::GF_OBJ_HANDLE *handle);
