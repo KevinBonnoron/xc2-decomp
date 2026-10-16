@@ -18,6 +18,16 @@ public:
   static void create(int money);
 };
 
+class SCOM_ADD_TRUST {
+public:
+  static void create(u32 blade, u32 point);
+};
+
+class SCOM_MISSION_COMPLETE {
+public:
+  static void create(u32 mission);
+};
+
 class SCOM_ADD_DEVELOP {
 public:
   static void create(u32 nation, u32 point);

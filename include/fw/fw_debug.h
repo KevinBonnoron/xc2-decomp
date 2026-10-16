@@ -15,6 +15,8 @@ int drawFontGetHeight();
 void drawSquare2D(const mm::Rect<int> &rect, const mm::Col4 &color);
 void drawLineSquare2D(const mm::Rect<int> &rect, const mm::Col4 &color);
 void drawLine2D(const mm::Pnt<int> &start, const mm::Pnt<int> &end, const mm::Col4 &color);
+void drawCompareZ(bool isCompare);
+void drawFont(int x, int y, const mm::Col4 &color, const char *format, ...);
 
 } // namespace debug
 } // namespace fw
