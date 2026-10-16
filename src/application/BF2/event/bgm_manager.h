@@ -1,12 +1,12 @@
 #pragma once
 #include "event/i_manager.h"
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class BgmManager : public IManager, public mm::mtl::NoncopyableBase {
+class BgmManager : public IManager, public mm::mtl::Singleton<BgmManager> {
 public:
   static constexpr f32 TO_FR = 30.0f;
   static constexpr f32 TO_SEC = 1.0f / 30.0f;

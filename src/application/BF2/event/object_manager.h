@@ -4,7 +4,7 @@
 #include "event/object_list.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
@@ -14,7 +14,7 @@ class ObjectCamera;
 class ObjectEffect;
 class ObjectLight;
 
-class ObjectManager : public IManager, public mm::mtl::NoncopyableBase {
+class ObjectManager : public IManager, public mm::mtl::Singleton<ObjectManager> {
 public:
   static constexpr u32 SCENE_COUNT = 16;
 

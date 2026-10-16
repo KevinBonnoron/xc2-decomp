@@ -1,11 +1,11 @@
 #pragma once
 #include "event/i_manager.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class AreaeffManager : public IManager, public mm::mtl::NoncopyableBase {
+class AreaeffManager : public IManager, public mm::mtl::Singleton<AreaeffManager> {
 public:
   enum {
     FLAG_HIDE_LIGHT = 1 << 0,

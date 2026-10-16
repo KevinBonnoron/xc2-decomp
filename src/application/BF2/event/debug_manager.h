@@ -1,12 +1,12 @@
 #pragma once
 #include "event/i_manager.h"
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class DebugManager : public IManager, public mm::mtl::NoncopyableBase {
+class DebugManager : public IManager, public mm::mtl::Singleton<DebugManager> {
 public:
   static constexpr u32 EQUIP_SLOT_COUNT = 16;
 

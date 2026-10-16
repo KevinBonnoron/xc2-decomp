@@ -4,7 +4,7 @@
 #include "event/i_manager.h"
 #include "ml/work_event.h"
 #include "mm_mtl/fixed_array.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace mtl {
@@ -13,7 +13,7 @@ class ALLOC_HANDLE;
 
 namespace event {
 
-class BlockManager : public IManager, public ml::IWorkEvent, public mm::mtl::NoncopyableBase {
+class BlockManager : public IManager, public ml::IWorkEvent, public mm::mtl::Singleton<BlockManager> {
 public:
   static constexpr u32 BLOCK_COUNT = 32;
 

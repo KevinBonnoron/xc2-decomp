@@ -4,7 +4,7 @@
 #include "event/i_manager.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/game/event/gf_game_event.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 enum EVT_cloudtype {
@@ -15,7 +15,7 @@ enum EVT_cloudtype {
 
 namespace event {
 
-class EnvManager : public IManager, public mm::mtl::NoncopyableBase {
+class EnvManager : public IManager, public mm::mtl::Singleton<EnvManager> {
 public:
   enum COLORFILTER_TYPE {
     COLORFILTER_TYPE_STOP,

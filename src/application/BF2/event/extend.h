@@ -1,10 +1,10 @@
 #pragma once
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 
 namespace event {
 
-class Extend : public mm::mtl::NoncopyableBase {
+class Extend : public mm::mtl::Singleton<Extend> {
 public:
   const char *mdo(const char *name);
   const char *arc(const char *name);

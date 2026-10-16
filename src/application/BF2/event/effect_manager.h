@@ -1,14 +1,14 @@
 #pragma once
 #include "event/i_manager.h"
 #include "mm_mtl/fixed_vector.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
 class EffectRes;
 
-class EffectManager : public IManager, public mm::mtl::NoncopyableBase {
+class EffectManager : public IManager, public mm::mtl::Singleton<EffectManager> {
 public:
   static constexpr u32 RES_COUNT = 16;
 

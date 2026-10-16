@@ -1,11 +1,12 @@
 #pragma once
+#include <stddef.h>
+
 #include "event/i_manager.h"
 #include "event/i_res_pack_event.h"
 #include "event/res_pack_manager.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/noncopyable.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace event {
 

@@ -2,12 +2,12 @@
 #include "event/i_manager.h"
 #include "event/seq_info.h"
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class SeqManager : public IManager, public mm::mtl::NoncopyableBase {
+class SeqManager : public IManager, public mm::mtl::Singleton<SeqManager> {
 public:
   enum {
     DISP_FLAG_DISP = 1 << 0,

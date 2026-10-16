@@ -1,12 +1,12 @@
 #pragma once
 #include "event/i_manager.h"
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class CopydataManager : public IManager, public mm::mtl::NoncopyableBase {
+class CopydataManager : public IManager, public mm::mtl::Singleton<CopydataManager> {
 public:
   CopydataManager();
   virtual ~CopydataManager() {}
