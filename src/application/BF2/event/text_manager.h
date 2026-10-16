@@ -23,8 +23,10 @@ public:
     FLAG_BLADE_NAME_MODE = 1 << 3,
     FLAG_REPLACE_MODE = 1 << 4,
     FLAG_CUT_CHANGE_FRAME = 1 << 5,
+    FLAG_LOCK_FRAME = 1 << 6,
     FLAG_PLAY = 1 << 7,
-    FLAG_REPLY = 1 << 8,
+    FLAG_WRITE = 1 << 8,
+    FLAG_ERASE = 1 << 9,
   };
 
   enum {
@@ -34,22 +36,14 @@ public:
 
   TextManager();
   virtual ~TextManager() {}
-  bool isCutChangeFrame() const { return (flags & FLAG_CUT_CHANGE_FRAME) != 0; }
-  bool isReplying() const {
-    if ((flags & FLAG_PLAY) == 0) {
-      return false;
-    }
-    if ((flags & FLAG_REPLY) == 0) {
-      return true;
-    }
-    return mWindow.isWriting();
-  }
-  void reply(const char *label, int id, CharaObj *chara);
+  void reply(const char *label, int textId, CharaObj *chara);
+  bool isReplying() const;
   void replyEnd(CharaObj *chara);
+  bool isCutChangeFrame() const;
   void clear();
   void init();
   void update();
-  void write(const char *text, u8 *message, u32 length, const char *name, gf::GF_OBJ_HANDLE *handle);
+  void write(const char *text, u8 *bdat, u32 textId, const char *name, gf::GF_OBJ_HANDLE *handle);
   void stop();
   void render();
   void setup(bool isCaption);
@@ -84,23 +78,23 @@ private:
 
   u32 flags;
   u32 dispFlags;
-  TextCaption mCaption;
-  TextWindow mWindow;
-  f32 mLife;
-  f32 mDelay;
-  f32 mDelayBack;
-  f32 mLifeCount;
-  f32 mDelayCount;
-  f32 mDelayBackCount;
-  int mCaptionType;
-  f32 mStartFrame;
-  u8 *mBdat;
-  int mTextId;
-  mm::mtl::FixStr<64> mLabel;
-  mm::mtl::FixStr<512> mText;
-  CharaObj *mTalker;
-  CharaObj *mDefaultTalker;
-  mm::mtl::FixStr<32> mReplaceName;
+  TextCaption caption;
+  TextWindow window;
+  f32 life;
+  f32 delay;
+  f32 delayBack;
+  f32 lifeCount;
+  f32 delayCount;
+  f32 delayBackCount;
+  int captionType;
+  f32 startFrame;
+  u8 *bdat;
+  int textId;
+  mm::mtl::FixStr<64> label;
+  mm::mtl::FixStr<512> text;
+  CharaObj *talker;
+  CharaObj *defaultTalker;
+  mm::mtl::FixStr<32> replaceName;
 };
 
 static_assert(sizeof(TextManager) == 0x608, "");
