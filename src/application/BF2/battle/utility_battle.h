@@ -150,6 +150,7 @@ public:
   static int AI_GetDeadCharacterNum(gf::GF_OBJ_HANDLE *handle, CHECK_CHR_NUM_MODE mode);
   static void AI_AddKizuna(gf::GF_OBJ_HANDLE *handle, int kizuna);
   static int AI_GetKizunaStage(gf::GF_OBJ_HANDLE *handle);
+  static int AI_GetSpAttackLevel(gf::GF_OBJ_HANDLE *handle);
   static bool AI_StartSpAttack(gf::GF_OBJ_HANDLE *handle);
   static bool AI_IsBattleOpening(gf::GF_OBJ_HANDLE *handle);
   static bool AI_IsInAttackRange(gf::GF_OBJ_HANDLE *handle);
@@ -159,6 +160,8 @@ public:
   static int AI_GetVoiceCode(gf::GF_OBJ_HANDLE *handle);
   static void AI_PlayVoice(gf::GF_OBJ_HANDLE *handle, int voice);
   static int AI_GetPlayVoiceID(gf::GF_OBJ_HANDLE *handle);
+  static void AI_AddBladeArtsRecast(gf::GF_OBJ_HANDLE *handle, f32 recast, bool isRate);
+  static void AI_SetBladeArtsRecastByLevel(gf::GF_OBJ_HANDLE *handle, int level, bool isDecrease);
   static bool AI_IsBuff(gf::GF_OBJ_HANDLE *handle, int buff);
   static bool AI_IsProcSpAttack();
   static int AI_GetBdatID(gf::GF_OBJ_HANDLE *handle);

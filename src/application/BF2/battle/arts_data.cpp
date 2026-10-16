@@ -170,7 +170,7 @@ void ARTS_PALETTE_DATA::ResetSupportRecast() {
 }
 
 const ARTS_SLOT_DATA *ARTS_PALETTE_DATA::GetSlotDataConst(int slot, bool isTalent) const {
-  if (slot == 15) {
+  if (slot == SP_ATTACK_LEVEL_4_SLOT) {
     return &spAttackLevel4;
   }
   return &arts[isTalent ? slot + 16 : slot];

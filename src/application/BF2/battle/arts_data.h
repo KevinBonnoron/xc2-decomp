@@ -9,6 +9,7 @@ struct GF_OBJ_HANDLE;
 namespace btl {
 
 constexpr int ARTS_LEVEL_COUNT = 6;
+constexpr int SP_ATTACK_LEVEL_4_SLOT = 15;
 
 struct ARTS_DATA {
   enum DATA_TYPE {
