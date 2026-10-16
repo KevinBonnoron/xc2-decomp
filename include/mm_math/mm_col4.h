@@ -4,6 +4,7 @@
 namespace mm {
 
 struct Col4 {
+  static const Col4 white;
   static const Col4 zero;
 
   f32 r;
