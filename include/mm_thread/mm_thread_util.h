@@ -1,0 +1,61 @@
+#pragma once
+#include <stddef.h>
+
+#include "mm_thread/mm_thread_csection.h"
+#include "nn/os.h"
+#include "types.h"
+
+namespace mm {
+namespace threading {
+
+struct MMTHREAD : nn::os::ThreadType {};
+
+enum CPUID {
+  CPUID_ANY,
+  CPUID_CORE_0,
+  CPUID_CORE_1,
+  CPUID_CORE_2,
+};
+
+class ThreadUtil {
+public:
+  static s32 getCpuNum();
+  static u32 getCpuMask();
+  static void setCpuThread(MMTHREAD *thread, CPUID cpuId);
+  static s32 convertCoreID(CPUID cpuId);
+  static u64 getID(MMTHREAD *thread);
+  static const char *getThreadName(u64 id);
+  static s32 suspendThread(MMTHREAD *thread);
+  static void resumeThread(MMTHREAD *thread);
+  static CPUID getCurrentCPUID();
+  static u64 getCurrentID();
+  static MMTHREAD *getCurrentHandle();
+};
+
+class EventWait {
+public:
+  EventWait(bool manualClear, bool initiallySignaled);
+  virtual ~EventWait();
+  void finalize();
+  void setSignal(bool signal);
+  bool waitSignal(u32 milliSeconds);
+  bool isSignal() const;
+
+  nn::os::EventType event;
+  CriticalSection sect;
+  bool initialized;
+};
+
+static_assert(offsetof(EventWait, event) == 0x08, "");
+static_assert(offsetof(EventWait, sect) == 0x30, "");
+static_assert(offsetof(EventWait, initialized) == 0x58, "");
+
+class SpinLock {
+public:
+  SpinLock();
+
+  s32 locked;
+};
+
+} // namespace threading
+} // namespace mm
