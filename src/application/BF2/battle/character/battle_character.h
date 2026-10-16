@@ -17,6 +17,20 @@ namespace btl {
 class CharacterParameter;
 class GROUP_DATA;
 
+class ActionCommand {
+public:
+  enum COMMAND_TYPE {};
+
+  void SetActionID(int action);
+  bool IsProcAction(int action) const;
+
+  u8 _00[0x10 - 0x00];
+  u32 : 6;
+  u32 actionFlags : 25;
+};
+
+static_assert(sizeof(ActionCommand) == 0x14, "");
+
 class BattleCharacter {
 public:
   enum ANIM_ID {};
@@ -139,6 +153,35 @@ public:
   void StopAI(f32 time);
   bool CheckRandFriendEnhanceRate(int enhance) const;
   void ResetBladeSupportConditionFlag();
+  void ActionCommandEndIdle();
+  void ActionCommandPutOutWeapon(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndPutOutWeapon();
+  void ActionCommandPutAwayWeapon(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndPutAwayWeapon();
+  void ActionCommandKizunaMax(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndKizunaMax();
+  void ActionCommandEndAttack();
+  void ActionCommandEndArts();
+  void ActionCommandBladeChange(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndBladeChange();
+  void ActionCommandSpAttack(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndSpAttack();
+  void ActionCommandSupport(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndSupport();
+  void ActionCommandBladeGuard(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndBladeGuard();
+  void ActionCommandRepelled(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndRepelled();
+  void ActionCommandDown(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndDown();
+  void ActionCommandKnockBack(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndKnockBack();
+  void ActionCommandBreak(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndBreak();
+  void ActionCommandDead(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndDead();
+  void ActionCommandRescue(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandEndRescue();
 
   u8 _08[0x10 - 0x08];
   mm::Vec3 position;
