@@ -78,20 +78,15 @@ public:
     bool isCut;
   };
 
+  f32 getFrame() const;
+  bool isPause(PAUSE_TYPE type) const;
+  const FrameInfo &frameInfo();
+  f32 getTotalFrame() const;
+  void pause(PAUSE_TYPE type, bool isPause);
+  void requestFrame(f32 frame);
+  void setLockFrame(bool isLock, f32 frame);
   FrameManager();
   virtual ~FrameManager() {}
-  f32 getFrame() const { return frame; }
-  bool isPause(PAUSE_TYPE type) const { return (mPauseBits & (type == PAUSE_TYPE_ALL ? ~0u : 1u << type)) != 0; }
-  f32 getTotalFrame() const { return mTotalFrame; }
-  void requestFrame(f32 frame) {
-    flags |= FLAG_REQUEST_FRAME;
-    mRequestFrame = frame;
-  }
-  void setLockFrame(bool isLock, f32 frame) {
-    setFlag(FLAG_LOCK_FRAME, isLock);
-    mLockFrame = frame;
-  }
-  void pause(PAUSE_TYPE type, bool isPause);
   void login();
   void init();
   void end();
