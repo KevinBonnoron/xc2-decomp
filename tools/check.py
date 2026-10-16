@@ -16,6 +16,10 @@ Usage:
 <symbol> is either a mangled name or a demangled one, with or without its
 signature: gf::GfDataBlade::setHikariCurrent or 'gf::GfDataBlade::setHikariCurrent(bool)'.
 
+A global function you define that the game has no symbol for is listed as NOT IN
+GAME, with the game functions of the same name: usually a wrong namespace or
+parameter type in its signature.
+
 Functions local to their source file (static, anonymous namespace) have no
 symbol in the game. A call to one of them reads <local> on both sides: in the
 game, a branch to an address outside every named function; in your object, a
@@ -545,6 +549,31 @@ def compile_all(tmp, sources=None):
     return [(source, obj) for source, obj, _ in results if obj], errors
 
 
+def unknown_functions(objects, demangled, scope):
+    """Global functions your objects define that the game has no symbol for, with game functions of the same name."""
+    defined = sorted({parts[2] for _, obj in objects for parts in (l.split() for l in defined_symbols(obj).splitlines())
+                      if len(parts) == 3 and parts[1] == "T" and parts[2] not in demangled})
+    names = demangle(defined) if defined else {}
+    by_name = {}
+    for game_name in demangled.values():
+        by_name.setdefault(game_name.split("(")[0].split("::")[-1], []).append(game_name)
+    found = []
+    for symbol in defined:
+        name = names[symbol]
+        if in_scope(name, scope):
+            short = name.split("(")[0].split("::")[-1]
+            found.append((name, [g for g in by_name.get(short, []) if g.split("(")[0] == name.split("(")[0]] or
+                          by_name.get(short, [])[:3]))
+    return found
+
+
+def print_unknown_functions(unknown):
+    for name, candidates in unknown:
+        print(f"{paint('NOT IN GAME', '33')}  {name}")
+        for candidate in candidates:
+            print(f"             the game has {candidate}")
+
+
 def print_compile_errors(errors):
     for source, err in errors:
         print(paint(f"compile error: {source}", "1;31"), file=sys.stderr)
@@ -619,6 +648,7 @@ def check_all(demangled, scope=None, verbose=True):
         per_object = [(source, obj, [f for f in defined_functions(obj) if f in demangled and in_scope(demangled[f], scope)])
                       for source, obj in objects]
         all_funcs = [f for _, _, funcs in per_object for f in funcs]
+        unknown = unknown_functions(objects, demangled, scope)
         missing = sorted({demangled[m] for m in demangled if in_scope(demangled[m], scope) and m not in all_funcs}) if scope else []
         if not all_funcs and not scope:
             sys.exit("no game function defined under src/")
@@ -640,6 +670,7 @@ def check_all(demangled, scope=None, verbose=True):
     for m in missing:
         print(f"{paint('TODO    ', '2')}  {m}")
 
+    print_unknown_functions(unknown)
     for f, source, target, mine in mismatches:
         print(paint(f"\n=== {demangled[f]}  ({source})", "1"))
         print_diff(target, mine)
@@ -652,6 +683,8 @@ def check_all(demangled, scope=None, verbose=True):
         summary += f", {len(missing)} left to decompile in {scope}"
     if failed:
         summary += f", {len(errors)} {'file' if len(errors) == 1 else 'files'} failed to compile"
+    if unknown:
+        summary += f", {len(unknown)} not in the game"
     print(paint(summary, "1;32" if matched == len(rows) and not failed else "1;31"))
     return matched == len(rows) and not failed, [f for f, _, target, mine in rows if target == mine]
 
