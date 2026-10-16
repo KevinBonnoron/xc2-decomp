@@ -24,6 +24,7 @@
 #include "event/bou_manager.cpp"
 #include "event/object.cpp"
 #include "event/object_tree.cpp"
+#include "event/object_party_list.cpp"
 #include "event/object_list.cpp"
 #include "event/object_manager.cpp"
 #include "event/frame_manager.cpp"
