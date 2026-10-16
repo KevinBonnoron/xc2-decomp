@@ -41,7 +41,7 @@ public:
   void eventInGameOpenSystemMenu();
   void eventInGameOpenSkipTravelMenu();
   void gevExecState(EXEC_STATE state) override;
-  void gevGameState(GF_STATE state, GF_STATE oldState) override;
+  void gevGameState(GF_STATE previousState, GF_STATE state) override;
   void eventInGameOpenQuestListMenu();
 
 private:

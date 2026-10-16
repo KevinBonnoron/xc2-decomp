@@ -215,10 +215,10 @@ void GfEvent::callPartyDriver(GF_OBJ_HANDLE *handle, u32 partyId, bool isEnter) 
   }
 }
 
-void GfEvent::callGameState(GF_STATE state, GF_STATE oldState) {
+void GfEvent::callGameState(GF_STATE previousState, GF_STATE state) {
   GfEvent *gfEvent = get();
   for (size_t i = 0; i < gfEvent->callbacks.size(); i++) {
-    gfEvent->callbacks[i]->gevGameState(state, oldState);
+    gfEvent->callbacks[i]->gevGameState(previousState, state);
   }
 }
 

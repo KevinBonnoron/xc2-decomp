@@ -75,7 +75,7 @@ public:
   static CLOUD_SEA getCurrentCloudSea();
   static void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
   static void gevPlayEvent(GEV event, u32 eventId);
-  static void gevGameState(GF_STATE state, GF_STATE oldState);
+  static void gevGameState(GF_STATE previousState, GF_STATE state);
   static void update(const fw::UpdateInfo &info);
   void updateIsInRoom(const fw::UpdateInfo &info);
   static void updateGlobalIBLReferencePos(const fw::UpdateInfo &info);
