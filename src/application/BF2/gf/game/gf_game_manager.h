@@ -76,7 +76,7 @@ public:
   void gevChangeScenarioFlag(u32 scenarioFlag, u32 oldScenarioFlag) override;
   void gevChangeWeather(u32 weather, u32 oldWeather) override;
   void gevChangeTimeRange(u32 timeRange) override;
-  void gevGameState(GF_STATE state, GF_STATE oldState) override;
+  void gevGameState(GF_STATE previousState, GF_STATE state) override;
   void gevControllFree(bool isFree) override;
   void gevMercenariesMissionFlag(u32 mission, u32 flag, u32 value) override;
   void qevCompleteQuest(const QuestCompleteParam &param) override;

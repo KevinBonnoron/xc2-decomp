@@ -432,7 +432,7 @@ void GfGameManager::gevChangeTimeRange(u32 timeRange) {
   GfQuestManager::gevChangeTimeRange(timeRange);
 }
 
-void GfGameManager::gevGameState(GF_STATE state, GF_STATE oldState) { GfGameEnv::gevGameState(state, oldState); }
+void GfGameManager::gevGameState(GF_STATE previousState, GF_STATE state) { GfGameEnv::gevGameState(previousState, state); }
 
 void GfGameManager::gevControllFree(bool isFree) {
   if (GfGameScene::get() != nullptr) {

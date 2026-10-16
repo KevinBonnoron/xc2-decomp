@@ -47,6 +47,7 @@ enum GF_STATE {
   GF_STATE_CHAIN_ATTACK = 22,
   GF_STATE_ARTS_MOVIE = 23,
   GF_STATE_RESET_BLADE = 24,
+  GF_STATE_MAX = 25,
 };
 enum EXEC_STATE {};
 
@@ -175,7 +176,7 @@ public:
   static void callPartyIDMemberOK(bool isOK, u32 partyId);
   static void callChangeLeader(GF_OBJ_HANDLE *leader);
   static void callPartyDriver(GF_OBJ_HANDLE *handle, u32 partyId, bool isEnter);
-  static void callGameState(GF_STATE state, GF_STATE oldState);
+  static void callGameState(GF_STATE previousState, GF_STATE state);
   static void callControllFree(bool isFree);
   static void callPartyReturnFieldState(u32 state);
   static void callLoadGameTime(f32 time);

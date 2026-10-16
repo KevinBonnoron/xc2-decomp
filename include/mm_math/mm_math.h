@@ -18,6 +18,8 @@ template <typename T> T clamp(T value, T mi, T ma) {
 
 template <typename T> const T &min(const T &a, const T &b) { return a < b ? a : b; }
 
+template <typename T> const T &max(const T &a, const T &b) { return a < b ? b : a; }
+
 template <typename T> void clampRef(T &value, const T &mi, const T &ma) {
   MM_ASSERT(mi <= ma);
   if (value < mi) {

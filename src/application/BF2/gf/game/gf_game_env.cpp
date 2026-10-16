@@ -485,10 +485,10 @@ void GfGameEnv::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
 
 void GfGameEnv::gevPlayEvent(GEV, u32) {}
 
-void GfGameEnv::gevGameState(GF_STATE, GF_STATE oldState) {
-  if (oldState == GF_STATE_DESTROY) {
+void GfGameEnv::gevGameState(GF_STATE, GF_STATE state) {
+  if (state == GF_STATE_DESTROY) {
     fw::RenderParam::setMotionBlur(false, fw::CAMERA_TYPE_MAIN);
-  } else if (oldState == GF_STATE_CONTROL && !GfManager::isExecModeAdvertize()) {
+  } else if (state == GF_STATE_CONTROL && !GfManager::isExecModeAdvertize()) {
     fw::RenderParam::setMotionBlur(true, fw::CAMERA_TYPE_MAIN);
   }
 }
