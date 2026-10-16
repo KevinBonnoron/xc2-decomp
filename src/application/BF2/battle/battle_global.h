@@ -20,6 +20,8 @@ struct GF_SE_CATEGORY_HANDLE;
 
 namespace btl {
 
+constexpr f32 FRAME_RATE = 30.0f;
+
 class BattleCharacter;
 class ShakeCameraManager;
 
