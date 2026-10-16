@@ -86,13 +86,14 @@ public:
 
   u8 _00[0x08 - 0x00];
   GROUP_BLADE_DATA blades[5];
-  u8 _e4[0xf0 - 0xe4];
+  f32 recasts[3];
   f32 buddyTime;
   u8 _f4[0xff - 0xf4];
   s8 buddyBladeIndex;
 };
 
 static_assert(offsetof(GROUP_DATA, blades) == 0x08, "");
+static_assert(offsetof(GROUP_DATA, recasts) == 0xe4, "");
 static_assert(offsetof(GROUP_DATA, buddyTime) == 0xf0, "");
 static_assert(offsetof(GROUP_DATA, buddyBladeIndex) == 0xff, "");
 

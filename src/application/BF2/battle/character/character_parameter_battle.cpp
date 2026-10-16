@@ -1,9 +1,11 @@
 #include "battle/character/character_parameter_battle.h"
 
 #include "battle/battle_global.h"
+#include "battle/chain_attack_manager.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/data_manager_battle.h"
+#include "battle/group_data.h"
 #include "battle/utility_battle.h"
 #include "gf/data/gf_bdat_chrenarrange.h"
 #include "gf/data/gf_data_enemy.h"
@@ -115,6 +117,13 @@ u32 CharacterParameter::GetWeakAttributeFlag() const {
   return attribute >= 0 ? 1 << attribute : 0;
 }
 
+const FIGHT_COMBO_DATA *CharacterParameter::GetFightComboDataConst() const {
+  if (isOverwriteFightCombo && overwriteFightCombo.id != 0) {
+    return &overwriteFightCombo;
+  }
+  return &fightCombo;
+}
+
 u32 CharacterParameter::GetLevel() const {
   gf::DataParamAcc acc(isBlade ? buddy : user);
   return acc.getLevel(false);
@@ -128,6 +137,16 @@ f32 CharacterParameter::GetBuffEffect(int buff) const {
   }
 
   return 0.0f;
+}
+
+bool CharacterParameter::IsBuffInfinite(int buff) const {
+  for (int i = 0; i < buffNum; i++) {
+    if (buffs[i].id == buff) {
+      return buffs[i].restFrame < 0.0f;
+    }
+  }
+
+  return false;
 }
 
 const BUFF_DATA *CharacterParameter::GetBuffDataConst(int buff, int *index) const {
@@ -166,6 +185,16 @@ bool CharacterParameter::IsBlowRot() const {
   }
 
   return true;
+}
+
+bool CharacterParameter::IsProgressCoolTime() const {
+  if (!isBattle) {
+    return false;
+  }
+  if (ChainAttackManager::get()->IsProc(true)) {
+    return false;
+  }
+  return isEnableCoolTime;
 }
 
 const ENHANCE_EFFECT_DATA *CharacterParameter::GetEnhanceEffectDataConst(int enhance) const {
@@ -425,9 +454,38 @@ void PlayerParameter::BattleEnd() {
   ResetUseWeapon();
 }
 
+void PlayerParameter::BattleEndInitialize() {
+  CharacterParameter::BattleEndInitialize();
+  pouchDamageArmor = -1;
+}
+
+void PlayerParameter::WritebackRecast(GROUP_DATA *groupData) {
+  if (isBattle && isBlade) {
+    const ARTS_PALETTE_DATA *palette = GetArtsPaletteDataConst(-1);
+    for (int i = 0; i < 3; i++) {
+      const ARTS_SLOT_DATA *slot = palette->GetSlotDataConst(i, false);
+      bool isValid = slot->id != 0;
+      f32 recast = slot->recast;
+      groupData->recasts[i] = isValid ? recast : 0.0f;
+    }
+  }
+}
+
 void PlayerParameter::AddUseWeapon(int weapon) {
   useWeaponCounts[weapon]++;
   useWeaponTotal++;
+}
+
+f32 PlayerParameter::GetUseWeaponRate(int weapon) const {
+  if (useWeaponTotal == 0) {
+    return weapon == attackWeaponType ? 1.0f : 0.0f;
+  }
+
+  u32 count = useWeaponCounts[weapon];
+  if (count >= useWeaponTotal) {
+    return 1.0f;
+  }
+  return static_cast<f32>(count) / useWeaponTotal;
 }
 
 const ARTS_PALETTE_DATA *PlayerParameter::GetArtsPaletteDataConst(int index) const {
