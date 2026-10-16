@@ -9,6 +9,7 @@
 #include "event/anm_col.cpp"
 #include "event/cmd_variable.cpp"
 #include "event/cmd_param.cpp"
+#include "event/debug_manager.cpp"
 #include "event/param_variable.cpp"
 #include "event/param.cpp"
 #include "event/param_variable2.cpp"

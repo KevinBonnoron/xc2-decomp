@@ -1,0 +1,33 @@
+#pragma once
+
+namespace event {
+
+enum MSG_TYPE {
+  MSG_TYPE_INIT_BEGIN = 1,
+  MSG_TYPE_UPDATE_SEQUENCE = 2,
+  MSG_TYPE_INIT_LOAD = 3,
+  MSG_TYPE_INIT = 4,
+  MSG_TYPE_SETUP_SCENE = 5,
+  MSG_TYPE_SETUP_SCENE_END = 6,
+  MSG_TYPE_START_SCENE = 7,
+  MSG_TYPE_START_PAGE = 8,
+  MSG_TYPE_END_SCENE_BEGIN = 9,
+  MSG_TYPE_END_SCENE = 10,
+  MSG_TYPE_STOP = 11,
+  MSG_TYPE_CLEAR = 12,
+  MSG_TYPE_CLEAR_POST = 13,
+  MSG_TYPE_UPDATE = 14,
+  MSG_TYPE_UPDATE_POST = 15,
+  MSG_TYPE_RENDER = 16,
+  MSG_TYPE_RENDER_POST = 17,
+  MSG_TYPE_TAIL = 18,
+  MSG_TYPE_TAIL_POST = 19,
+};
+
+class IManager {
+public:
+  virtual ~IManager() {}
+  virtual void OnEventProc(MSG_TYPE type) {}
+};
+
+} // namespace event
