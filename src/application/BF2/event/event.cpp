@@ -30,6 +30,7 @@
 #include "event/object.cpp"
 #include "event/object_tree.cpp"
 #include "event/object_camera.cpp"
+#include "event/object_effect.cpp"
 #include "event/object_list.cpp"
 #include "event/object_manager.cpp"
 #include "event/copydata_manager.cpp"
