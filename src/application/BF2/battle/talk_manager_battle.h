@@ -18,6 +18,7 @@ namespace btl {
 class TalkManager : public mm::mtl::PtrSingleton<TalkManager> {
 public:
   enum TRIGGER {
+    TRIGGER_STRIKE_DAMAGE = 20,
     TRIGGER_ENEMY_WIN = 26,
   };
 
