@@ -66,7 +66,9 @@ CXXFLAGS = [
     "-g",
     "-I" + os.path.join(ROOT, "include"),
     "-I" + os.path.join(ROOT, "src", "application", "BF2"),
+    "-I" + os.path.join(ROOT, "src", "libs", "monolib_mm", "source"),
 ]
+INCLUDE_DIRS = [flag[2:] for flag in CXXFLAGS if flag.startswith("-I")]
 
 FUNC_HEADER = re.compile(r"^[0-9a-f]+ <(\S+)>:$")
 INSN = re.compile(r"^\s*[0-9a-f]+:\s+(.*)$")
