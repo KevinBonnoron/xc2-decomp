@@ -24,4 +24,5 @@
 #include "event/frame_manager.cpp"
 #include "event/skip_manager.cpp"
 #include "event/data_manager.cpp"
+#include "event/manager.cpp"
 // clang-format on
