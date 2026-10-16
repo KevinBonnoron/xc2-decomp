@@ -1,11 +1,32 @@
 #include "gf/data/gf_data_param_acc.h"
 
+#include "gf/data/gf_bdat_blade.h"
+#include "gf/data/gf_data_idea.h"
 #include "gf/data/gf_data_obj.h"
 #include "gf/data/gf_data_weapon.h"
+#include "gf/data/gf_object_type.h"
 #include "gf/object/gf_obj_handle.h"
+#include "mm_math/mm_math.h"
 #include "mm_mtl/fixed_array.h"
 
 namespace gf {
+
+enum {
+  CREATE_CONFIG_SUB_RATIO_MINUS_3 = 1,
+  CREATE_CONFIG_SUB_RATIO_MINUS_2 = 2,
+  CREATE_CONFIG_SUB_RATIO_MINUS_1 = 3,
+  CREATE_CONFIG_SUB_RATIO_0 = 4,
+  CREATE_CONFIG_SUB_RATIO_1 = 5,
+  CREATE_CONFIG_SUB_RATIO_2 = 6,
+  CREATE_CONFIG_SUB_RATIO_3 = 7,
+  CREATE_CONFIG_SUB_RATIO_4 = 8,
+  CREATE_CONFIG_SUB_RATIO_5 = 9,
+  CREATE_CONFIG_RATIO_0 = 10,
+  CREATE_CONFIG_RATIO_1 = 11,
+  CREATE_CONFIG_RATIO_2 = 12,
+  CREATE_CONFIG_RATIO_3 = 13,
+  CREATE_CONFIG_RATIO_4 = 14,
+};
 
 DataParamAcc::DataParamAcc(const ParamObj &paramObj) {
   if (paramObj.handle != INVALID_HANDLE) {
@@ -1011,6 +1032,95 @@ const char *DataParamAcc::getCamBone() const {
   }
 
   return nullptr;
+}
+
+DataIdeaAcc::DataIdeaAcc(DataParamAcc &dataParamAcc) : idea(dataParamAcc.obj->getIdea()), isBlade(false) {
+  if (idea != nullptr) {
+    isBlade = dataParamAcc.getObjType() == OBJECT_TYPE_BLADE;
+  }
+}
+
+DataIdeaAcc::DataIdeaAcc(SDataIdea &idea, bool isBlade) : idea(&idea), isBlade(isBlade) {}
+
+bool DataIdeaAcc::isValid() const { return idea != nullptr; }
+
+int DataIdeaAcc::getLevel(u32 idea) const {
+  if (this->idea != nullptr) {
+    return this->idea->ideas[idea].level;
+  }
+
+  return 0;
+}
+
+SDataIdea *DataIdeaAcc::get() const { return idea; }
+
+void DataIdeaAcc::setLevel(u32 idea, u32 level) {
+  if (this->idea != nullptr) {
+    this->idea->setLevel(idea, level);
+  }
+}
+
+bool DataIdeaAcc::addPoint(u32 idea, u32 point) {
+  if (this->idea != nullptr) {
+    this->idea->setPoint(idea, this->idea->ideas[idea].point + point);
+  }
+
+  return false;
+}
+
+void DataIdeaAcc::setPointForDebug(u32 idea, u32 point) {
+  if (this->idea != nullptr) {
+    this->idea->setPoint(idea, point);
+  }
+}
+
+IdeaRatio DataIdeaAcc::getRatio(u32 level0, u32 level1, u32 level2, u32 level3, int offset0, int offset1, int offset2, int offset3) const {
+  GfBdatBlade *bdatBlade = GfBdatBlade::get();
+  f32 total = getSubRatio(level0, offset0, 0) + getSubRatio(level1, offset1, 1) + getSubRatio(level2, offset2, 2) + getSubRatio(level3, offset3, 3);
+  IdeaRatio result;
+  result.ratio = static_cast<int>(total + (total > 0.0f ? 0.5f : -0.5f));
+  if (result.ratio > 3) {
+    result.rate = bdatBlade->getCreateConfigValue(CREATE_CONFIG_RATIO_4);
+  } else if (result.ratio > 2) {
+    result.rate = bdatBlade->getCreateConfigValue(CREATE_CONFIG_RATIO_3);
+  } else if (result.ratio > 1) {
+    result.rate = bdatBlade->getCreateConfigValue(CREATE_CONFIG_RATIO_2);
+  } else if (result.ratio > 0) {
+    result.rate = bdatBlade->getCreateConfigValue(CREATE_CONFIG_RATIO_1);
+  } else {
+    result.rate = bdatBlade->getCreateConfigValue(CREATE_CONFIG_RATIO_0);
+  }
+  return result;
+}
+
+f32 DataIdeaAcc::getSubRatio(u32 level, int offset, u32 idea) const {
+  GfBdatBlade *bdatBlade = GfBdatBlade::get();
+  int diff = level - mm::clamp(getLevel(idea) + offset, 0, static_cast<int>(IDEA_LEVEL_MAX));
+  if (diff >= 5) {
+    return bdatBlade->getCreateConfigValue(CREATE_CONFIG_SUB_RATIO_5) * 0.1f;
+  }
+  if (diff >= 4) {
+    return bdatBlade->getCreateConfigValue(CREATE_CONFIG_SUB_RATIO_4) * 0.1f;
+  }
+  if (diff >= 3) {
+    return bdatBlade->getCreateConfigValue(CREATE_CONFIG_SUB_RATIO_3) * 0.1f;
+  }
+  if (diff >= 2) {
+    return bdatBlade->getCreateConfigValue(CREATE_CONFIG_SUB_RATIO_2) * 0.1f;
+  }
+  if (diff >= 1) {
+    return bdatBlade->getCreateConfigValue(CREATE_CONFIG_SUB_RATIO_1) * 0.1f;
+  }
+  if (diff >= 0) {
+    return bdatBlade->getCreateConfigValue(CREATE_CONFIG_SUB_RATIO_0) * 0.1f;
+  }
+  if (diff >= -1) {
+    return bdatBlade->getCreateConfigValue(CREATE_CONFIG_SUB_RATIO_MINUS_1) * 0.1f;
+  }
+  if (diff >= -2) {
+    return bdatBlade->getCreateConfigValue(CREATE_CONFIG_SUB_RATIO_MINUS_2) * 0.1f;
+  }
+  return bdatBlade->getCreateConfigValue(CREATE_CONFIG_SUB_RATIO_MINUS_3) * 0.1f;
 }
 
 } // namespace gf
