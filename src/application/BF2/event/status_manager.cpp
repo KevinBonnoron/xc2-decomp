@@ -13,6 +13,8 @@
 
 namespace event {
 
+u32 StatusManager::getHomuriFlag() const { return gf::GfGameFlag::getLocal(1, gf::FLAG_BLADE_HOMURI_NAME_HIKARI); }
+
 StatusManager::StatusManager() : flags(0) {}
 
 void StatusManager::init() {

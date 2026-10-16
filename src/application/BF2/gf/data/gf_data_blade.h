@@ -15,6 +15,7 @@ namespace gf {
 constexpr u32 BLADE_ID_FIRST = 1001;
 constexpr u32 BLADE_COUNT = 422;
 constexpr int TRUST_RANK_MAX = 6;
+constexpr int FLAG_BLADE_HOMURI_NAME_HIKARI = 0x89fb;
 
 enum GfIdea {};
 
