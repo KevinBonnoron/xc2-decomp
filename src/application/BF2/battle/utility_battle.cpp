@@ -6,6 +6,7 @@
 
 #include "battle/battle_global.h"
 #include "battle/btl_system_balance_access.h"
+#include "battle/button_challenge.h"
 #include "battle/chain_attack_manager.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
@@ -38,6 +39,9 @@ enum {
 };
 
 constexpr int AI_ID_PLAYER_COUNT = 3;
+constexpr int BUTTON_CHALLENGE_RESULT_PROC = 0;
+constexpr int BUTTON_CHALLENGE_RESULT_SUCCESS = 1;
+constexpr int BUTTON_CHALLENGE_RESULT_FAILURE = 2;
 constexpr int AI_ID_ENEMY_OFFSET = 100;
 constexpr int AI_ID_ENEMY_COUNT = 69;
 constexpr f32 FRAME_TO_SECOND = 1.0f / 30.0f;
@@ -259,6 +263,14 @@ f32 Utility::GetDyingHpRate() { return BtlSystemBalanceAccess::get()->dyingHpRat
 int Utility::GetResistantAttrMaxHP() { return BtlSystemBalanceAccess::get()->resistantAttrMaxHP; }
 
 int Utility::GetTrustRank(int blade) { return gf::GfDataBlade::getTrustRank(blade); }
+
+bool Utility::IsEnableFieldBladeChange() {
+  BattleCharacter *leader = CharacterManager::get()->GetCharacterConst(gf::GfGameManager::getPartyLeaderDriver());
+  if (leader == nullptr || !leader->IsBattle() || leader->actionId != BattleCharacter::ACTION_ID_PUT_AWAY_WEAPON) {
+    return false;
+  }
+  return TalkManager::get()->IsEnableFieldBladeChange();
+}
 
 bool Utility::IsEnableDeadSequence() { return !TalkManager::get()->IsPlayingEnemyWinVoice(); }
 
@@ -1157,7 +1169,17 @@ void Utility::AI_SetSuperArmor(gf::GF_OBJ_HANDLE *handle, f32 time) {
   }
 }
 
+int Utility::AI_GetButtonChallengeResult() {
+  ButtonChallenge &challenge = BattleGlobal::get()->buttonChallenge;
+  if (challenge.IsProc() && challenge.param.type == ButtonChallenge::TYPE_ENEMY) {
+    return BUTTON_CHALLENGE_RESULT_PROC;
+  }
+  return challenge.IsEnemyChallengeSuccess() ? BUTTON_CHALLENGE_RESULT_SUCCESS : BUTTON_CHALLENGE_RESULT_FAILURE;
+}
+
 int Utility::AI_EnemyKillNum() { return BattleGlobal::get()->enemyKillNum; }
+
+bool Utility::AI_IsKillChild() { return BattleGlobal::get()->isKillChild; }
 
 bool Utility::AI_IsBenkeiWeather() { return DataManager::get()->IsSpecialEffects(SPECIAL_EFFECT_BENKEI_WEATHER); }
 

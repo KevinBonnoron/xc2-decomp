@@ -173,7 +173,9 @@ public:
   u64 isLockHate : 1;
   u64 : 3;
   u64 isGameOver : 1;
-  u64 : 13;
+  u64 : 7;
+  u64 isKillChild : 1;
+  u64 : 5;
   u64 isShiftDecided : 1;
   u64 isShiftTimeOver : 1;
   u64 : 2;
