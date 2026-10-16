@@ -149,6 +149,7 @@ public:
   void unbind();
   void update();
   template <typename T, typename F> void bindAction(const char *name, T *object, F function);
+  template <typename T, typename F> void bindAxis(const char *name, T *object, F function);
 
   u8 _00[0x38 - 0x00];
 };
