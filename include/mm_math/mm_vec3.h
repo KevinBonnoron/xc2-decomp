@@ -39,6 +39,13 @@ struct alignas(16) Vec3 {
     return *this;
   }
 
+  Vec3 &operator-=(const Vec3 &vector) {
+    x = x - vector.x;
+    y = y - vector.y;
+    z = z - vector.z;
+    return *this;
+  }
+
   Vec3 &operator*=(f32 scale) {
     x = x * scale;
     y = y * scale;
