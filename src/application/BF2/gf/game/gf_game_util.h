@@ -1,5 +1,6 @@
 #pragma once
 #include "gf/data/gf_data_map.h"
+#include "gmk/gmk_manager.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
@@ -49,6 +50,9 @@ public:
   static void addTrustPoint(u32 blade, u32 trustPoint);
   static void setTrustPointForDebug(u32 blade, u32 trustPoint);
   static void setAchievementReleaseLevel(u32 blade, u32 line, u32 level);
+  static void setDispByGmkType(gmk::GmkType type, bool isDisp);
+  static void setDispByGmkTypeAndBdatId(gmk::GmkType type, int bdatId, bool isDisp);
+  static void setDispByGmkTypeAndGmkIdx(gmk::GmkType type, u32 index, bool isDisp);
   static u16 getAntiBladeAreaBdatId();
   static bool getGmkTargetPointPos(mm::Vec3 &position, u32 gimmick);
   static bool getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle);
@@ -58,6 +62,7 @@ public:
   static void setHp(GF_OBJ_HANDLE *handle, u32 hp);
   static void debugHpZero(GF_OBJ_HANDLE *handle);
   static void debugFallDead(GF_OBJ_HANDLE *handle);
+  static bool isSceneRide();
   static const char *getBladeModel(u32 blade, bool isDefault);
   static bool isCondBladeModel(u32 blade);
   static const char *getBladeMotion(u32 blade, bool isDefault);
