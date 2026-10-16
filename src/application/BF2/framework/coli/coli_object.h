@@ -23,6 +23,7 @@ class IDColiObj;
 
 namespace fw {
 
+class ColiObject;
 class UpdatableObject;
 
 enum ColiType : int {
@@ -43,6 +44,21 @@ public:
   virtual void enter(const EnterInfo &info) = 0;
   virtual void leave(const LeaveInfo &info) = 0;
   virtual void contact(const EnterInfo &info) = 0;
+};
+
+struct IColiEventListener::EnterInfo {
+  ColiObject *object;
+  ColiObject *other;
+  mm::Vec3 position;
+  mm::Vec3 normal;
+};
+
+static_assert(offsetof(IColiEventListener::EnterInfo, position) == 0x10, "");
+static_assert(sizeof(IColiEventListener::EnterInfo) == 0x30, "");
+
+struct IColiEventListener::LeaveInfo {
+  ColiObject *object;
+  ColiObject *other;
 };
 
 struct ColiShape {

@@ -36,7 +36,7 @@ public:
       MM_ASSERT(m_node != 0);
       return m_node->mValue;
     }
-
+    V *operator->() const { return &m_node->mValue; }
     node_iterator &operator++() {
       m_node = mList->node(m_node->mNext);
       return *this;

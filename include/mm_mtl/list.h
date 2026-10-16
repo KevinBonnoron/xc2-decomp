@@ -34,7 +34,7 @@ public:
     _ReslistBase *m_list;
   };
 
-  _ReslistBase() : m_capacity(0), m_size(0), m_alignment(8), m_allocator(nullptr) {
+  explicit _ReslistBase(IAllocator *allocator = nullptr) : m_capacity(0), m_size(0), m_alignment(alignof(Node)), m_allocator(allocator) {
     m_head = &m_terminator;
     m_head->m_next = m_head;
     m_head->m_prev = m_head;
@@ -72,7 +72,7 @@ public:
   void reserve(int capacity) {
     MM_ASSERT(m_allocator && "yet setAllocator");
     if (m_capacity < capacity) {
-      m_alignment = 8;
+      m_alignment = alignof(Node);
       m_capacity = capacity;
     }
   }
@@ -126,7 +126,10 @@ private:
   IAllocator *m_allocator;
 };
 
-template <typename T> class List : public _ReslistBase<T> {};
+template <typename T> class List : public _ReslistBase<T> {
+public:
+  explicit List(IAllocator *allocator = nullptr) : _ReslistBase<T>(allocator) {}
+};
 
 static_assert(sizeof(List<void *>) == 0x40, "");
 
