@@ -25,6 +25,8 @@
 #include "event/alpha_obj.cpp"
 #include "event/alpha_manager.cpp"
 #include "event/offscr_manager.cpp"
+#include "event/model_obj.cpp"
+#include "event/model_manager.cpp"
 #include "event/pack_endian.cpp"
 #include "event/pack_header.cpp"
 #include "event/stm_pack_header.cpp"
