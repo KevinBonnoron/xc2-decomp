@@ -9,6 +9,8 @@ namespace fw {
 
 class CommonResource : public mm::mtl::ReferenceObject {
 public:
+  static CommonResource *request(mtl::ALLOC_HANDLE handle, const char *path, int priority, bool);
+
   virtual void update();
   virtual bool valid() const;
   virtual const char *getAssetName() const;

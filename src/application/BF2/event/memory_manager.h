@@ -35,6 +35,7 @@ public:
   bool isDisp() const;
   virtual void OnEventProc(MSG_TYPE type);
 
+  const mtl::ALLOC_HANDLE &getStaticHandle() const { return mStaticHandle; }
   const mtl::ALLOC_HANDLE &getSysHandle() const { return mSysHandle; }
   const mtl::ALLOC_HANDLE &getResHandle() const { return mResHandle; }
 
