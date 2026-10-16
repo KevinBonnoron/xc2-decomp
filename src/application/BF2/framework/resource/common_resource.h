@@ -16,6 +16,7 @@ public:
   virtual const char *getAssetName() const;
 
   void *getAssetData();
+  int getAssetSize() const;
 };
 
 } // namespace fw

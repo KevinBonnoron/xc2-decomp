@@ -65,14 +65,4 @@ public:
   static CacheDraw *getCacheDraw();
 };
 
-enum FONT_STYLE : int {
-  FONT_STYLE_NORMAL = 0,
-};
-
-class DevGraph {
-public:
-  static f32 fontGetWidth(const char *text, FONT_STYLE style, f32 scale);
-  static f32 fontGetHeight(FONT_STYLE style, f32 scale);
-};
-
 } // namespace ml
