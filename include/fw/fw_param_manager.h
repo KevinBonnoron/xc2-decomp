@@ -23,13 +23,17 @@ static_assert(offsetof(ParamList, entries) == 0x10, "");
 
 class ParamManager : public mm::mtl::PtrSingleton<ParamManager> {
 public:
-  u8 _08[0x438 - 0x08];
+  u8 _08[0x430 - 0x08];
+  mm::mtl::IntrusivePtr<ParamList> pcParamList;
   mm::mtl::IntrusivePtr<ParamList> formationParamList;
-  u8 _440[0x468 - 0x440];
+  mm::mtl::IntrusivePtr<ParamList> lureParamList;
+  u8 _448[0x468 - 0x448];
   mm::mtl::IntrusivePtr<ParamList> uniqueMotionParamList;
 };
 
+static_assert(offsetof(ParamManager, pcParamList) == 0x430, "");
 static_assert(offsetof(ParamManager, formationParamList) == 0x438, "");
+static_assert(offsetof(ParamManager, lureParamList) == 0x440, "");
 static_assert(offsetof(ParamManager, uniqueMotionParamList) == 0x468, "");
 
 } // namespace fw
