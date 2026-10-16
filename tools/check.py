@@ -529,6 +529,21 @@ def root_sources():
     return [source for source in sources if source not in included]
 
 
+def header_sources():
+    return sorted(glob.glob(os.path.join(SRC_DIR, "**", "*.h"), recursive=True) +
+                  glob.glob(os.path.join(ROOT, "include", "**", "*.h"), recursive=True))
+
+
+HEADER_FLAGS = ("-x", "c++", "-Wno-pragma-once-outside-header")
+
+
+def compile_headers(tmp):
+    """Compile every header on its own: it must build without relying on what its includer included before."""
+    with ThreadPoolExecutor() as pool:
+        results = list(pool.map(lambda h: (h, compile_source(h, tmp, HEADER_FLAGS)[1]), header_sources()))
+    return [(os.path.relpath(header, ROOT), err) for header, err in results if err]
+
+
 def qualified_needle(demangled_name):
     return "::".join(demangled_name.split("(")[0].split("::")[-2:]) + "("
 
@@ -611,12 +626,15 @@ def diff_one(symbol, source, extra, known):
                       if any(needle in read_source(path) for path in included_sources(root) + [root])]
             obj = None
             for sources in (likely, None):
-                objects, _ = compile_all(tmp, sources)
+                objects, errors = compile_all(tmp, sources)
                 obj = next((o for _, o in objects if symbol in defined_functions(o)), None)
                 if obj:
                     break
+            if errors:
+                print_compile_errors(errors)
             if obj is None:
-                sys.exit(f"{demangle([symbol])[symbol]} is not defined in any file under src/")
+                sys.exit(f"{demangle([symbol])[symbol]} is not defined in any file under src/" +
+                         (" that compiles" if errors else ""))
         mine = object_disassembly(obj, [symbol], known).get(symbol)
     if not mine:
         sys.exit(f"{symbol} not found in compiled object (check the mangled name with llvm-nm)")
@@ -644,7 +662,10 @@ def diff_unnamed(address, source, name, extra, known):
 def check_all(demangled, scope=None, verbose=True):
     rows = []
     with tempfile.TemporaryDirectory() as tmp:
-        objects, errors = compile_all(tmp)
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            pending_headers = pool.submit(compile_headers, tmp)
+            objects, errors = compile_all(tmp)
+            errors += pending_headers.result()
         per_object = [(source, obj, [f for f in defined_functions(obj) if f in demangled and in_scope(demangled[f], scope)])
                       for source, obj in objects]
         all_funcs = [f for _, _, funcs in per_object for f in funcs]
