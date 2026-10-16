@@ -5,6 +5,9 @@
 namespace fw {
 
 struct Transform {
+  static void mul(const Transform &transform, const Transform &other, Transform *result);
+  static void invert(const Transform &transform, Transform *result);
+
   mm::Vec3 position;
   mm::Quat rotation;
 };
