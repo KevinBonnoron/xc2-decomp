@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/coli/coli_object.h"
 #include "framework/manager_object.h"
 #include "framework/pointer_map.h"
 #include "mm_mtl/intrusive_list.h"
@@ -14,19 +15,32 @@ class IDColiManager;
 
 namespace fw {
 
-class ColiObject;
-
 class ColiManager : public ManagerObject, public mm::mtl::PtrSingleton<ColiManager> {
 public:
   class Impl {
   public:
     ~Impl();
+    bool initialize();
+    bool finalize();
+    void finalizeContact();
+    void updateRelease();
+    void update();
     void updateContact();
     void sendContactEvent();
     void postUpdate();
+    void tail();
+    u32 getFrameCount() const;
+    void destroyContactTable();
+    ColiObject *getObject(u32 handle, bool isCheck) const;
     void sendRemoveEvent(u32 handle);
+    bool isValidObject(u32 handle);
     void registObject(ColiObject *object);
     void removeObject(ColiObject *object);
+    void cleanupObject(ColiObject *object);
+    void openDebugWindow();
+    bool isGblId(u32 id);
+    void setGblId(u32 id, bool isGlobal);
+    void *getGblIdTbl();
 
     mm::mtl::IntrusiveList<ColiObject> objects;
     ColiObject *groundObject;
