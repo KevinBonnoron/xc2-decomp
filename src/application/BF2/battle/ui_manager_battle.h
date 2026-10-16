@@ -32,6 +32,10 @@ public:
   bool isKakusei;
   u8 _1e[0x20 - 0x1e];
   gf::GF_OBJ_HANDLE *rescueTarget;
+  u8 _28[0x44 - 0x28];
+  u16 : 7;
+  u16 isDispBattleUI : 1;
+  u16 : 8;
 };
 
 static_assert(offsetof(UIManager, kakuseiRestTimeRatio) == 0x18, "");

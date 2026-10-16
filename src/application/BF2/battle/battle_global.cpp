@@ -3,6 +3,7 @@
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/shake_camera_manager.h"
+#include "battle/ui_manager_battle.h"
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
@@ -56,6 +57,21 @@ const BattleGlobal::ELEMENTAL_COMBO_FLOW_DATA *BattleGlobal::GetElementalComboFl
 
 int BattleGlobal::GetElementalComboStage(int combo) const { return GetElementalComboFlowData(combo)->stage; }
 
+int BattleGlobal::GetFirstStageElementalComboData(int combo) const {
+  int first;
+  bool isFirstStage;
+  do {
+    first = combo;
+    if (first == 0) {
+      break;
+    }
+    const ELEMENTAL_COMBO_FLOW_DATA *flow = GetElementalComboFlowData(first);
+    isFirstStage = flow->stage == 1;
+    combo = flow->parent;
+  } while (!isFirstStage);
+  return first;
+}
+
 void BattleGlobal::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->PreUpdateProc(updateInfo); }
 
 void BattleGlobal::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
@@ -83,6 +99,12 @@ bool BattleGlobal::IsEnableBattle() const { return !gf::GfGameManager::isBattleS
 void BattleGlobal::NotifyShiftNone() {
   isShiftDecided = false;
   isShiftTimeOver = false;
+}
+
+void BattleGlobal::NotifyShiftTimeOver() {
+  if (UIManager::get()->isDispBattleUI) {
+    isShiftTimeOver = true;
+  }
 }
 
 int BattleGlobal::GetAttackDamageDataNum() const { return attackDamages.size(); }
