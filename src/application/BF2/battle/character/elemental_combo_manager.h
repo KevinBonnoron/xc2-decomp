@@ -61,6 +61,8 @@ public:
   void ResetElement(int attribute);
   int GetResistantAttrBreakDamage(int attribute) const;
   int GetResistantAttrBreakTotalDamage(int attribute) const;
+  bool IsEnableElementalCombo(int attribute, int stage, bool isIncludeBurst, bool isAnyAttribute) const;
+  int GetNextElementalComboID(int attribute, bool isIncludeBurst, bool isAnyAttribute) const;
   bool IsFullElementalValue(int attribute) const;
   bool IsDirecting(int attribute) const;
   bool IsEnableStartElementalCombo() const;
