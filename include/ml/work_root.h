@@ -11,6 +11,8 @@ class ALLOC_HANDLE;
 
 namespace ml {
 
+class WorkObj;
+
 struct WorkRootParam {
   WorkRootParam &operator=(const WorkRootParam &other);
 
@@ -76,6 +78,8 @@ public:
   static void initialize();
   static void finalize();
   static void setThreadRender(bool isThreadRender);
+  static void addFrameEnd(WorkObj *work);
+  static void removeFrameEnd(WorkObj *work);
   static bool runSingle();
 };
 
