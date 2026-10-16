@@ -1,6 +1,7 @@
 #pragma once
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace fw {
@@ -16,7 +17,7 @@ enum {
   GAME_OBJ_LIST_CAPACITY = 1024,
 };
 
-class GfGameObj {
+class GfGameObj : public mm::mtl::PtrSingleton<GfGameObj> {
 public:
   static void build(const GfSetupParam &param);
   static void destroy();
@@ -28,6 +29,7 @@ public:
   static void bdatReload();
   static bool isValidGameObj(GF_OBJ_HANDLE *handle, bool isCheckState, mm::mtl::FixStr<128> *reason);
   static bool isEnterGameObj(GF_OBJ_HANDLE *handle);
+  u32 getObjNumberByEnArrangeId(u32 arrange);
 };
 
 } // namespace gf

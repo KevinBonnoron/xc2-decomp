@@ -10,7 +10,9 @@ struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 
-enum OPTMNT {};
+enum OPTMNT {
+  OPTMNT_BLADE = 3,
+};
 
 class GfWeapon {
 public:
@@ -48,6 +50,7 @@ public:
   static void destroy();
   static GfWeapon *getGfWeapon(GF_OBJ_HANDLE *handle, GFATTACH attach);
   static GfWeapon *getAppendHandles(GF_OBJ_HANDLE *handle, GFATTACH attach);
+  static GF_OBJ_HANDLE *getHandle(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type);
   static OPTMNT getMountType(GF_OBJ_HANDLE *handle, GFATTACH attach);
   static void setMountType(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type);
   static void addMountHandle(GF_MOUNT_HANDLE *mountHandle, GF_OBJ_HANDLE *handle);

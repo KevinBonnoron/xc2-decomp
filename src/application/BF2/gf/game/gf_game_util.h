@@ -121,11 +121,16 @@ public:
   static bool isDriverEquipBlade(u32 driver, u32 blade);
   static GF_OBJ_HANDLE *getJijiHandle();
   static void changeHikariCurrent(bool hikariCurrent);
+  static u32 getObjNumberByEnArrangeId(u32 arrange);
   static void setMaxPartyGauge();
+  static GF_OBJ_HANDLE *getBlade(GF_OBJ_HANDLE *handle);
   static bool getDriverAcceList(mm::mtl::FixedVector<u16, 16> &drivers);
   static bool isDispRexCrystal();
   static bool isDispHomuraCrystal();
   static bool isDispMetsuCrystal();
+  static void execEquipDriverDefaultAcce(u32 driver);
+  static void execDriverDead(u32 driver);
+  static void setPartyChange10020();
   static bool isBladeInVillage(u32 blade);
   static bool setupSaveAchievementPopup(u32 blade, u32 achievement, u32 level);
   static void execSaveAchievementPopup(u32 blade);
