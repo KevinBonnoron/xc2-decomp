@@ -19,6 +19,15 @@ namespace btl {
 
 class SpAttackManager : public mm::mtl::PtrSingleton<SpAttackManager> {
 public:
+  enum MOVIE_STEP {
+    MOVIE_STEP_NONE,
+    MOVIE_STEP_WAIT_ANIMATION,
+    MOVIE_STEP_CREATE,
+    MOVIE_STEP_LOAD,
+    MOVIE_STEP_PLAY,
+    MOVIE_STEP_END,
+  };
+
   struct PROC_DATA {
     bool IsRegister(gf::GF_OBJ_HANDLE *handle) const;
 
@@ -27,7 +36,9 @@ public:
     gf::GF_OBJ_HANDLE *driver;
     gf::GF_OBJ_HANDLE *blade;
     gf::GF_OBJ_HANDLE *target;
-    u8 _28[0x5a - 0x28];
+    u8 _28[0x53 - 0x28];
+    u8 movieStep;
+    u8 _54[0x5a - 0x54];
     u8 slot;
     u8 _5b[0x5c - 0x5b];
     u8 : 2;
@@ -51,6 +62,7 @@ public:
   bool IsLastAttackDriver(gf::GF_OBJ_HANDLE *handle) const;
   bool IsTrinityAttack(gf::GF_OBJ_HANDLE *handle) const;
   bool IsDispThirdChr() const;
+  bool IsMovie() const;
 
   const PROC_DATA *GetProcDataConst(gf::GF_OBJ_HANDLE *handle) const {
     int num = procCount;
@@ -70,6 +82,7 @@ public:
 };
 
 static_assert(sizeof(SpAttackManager::PROC_DATA) == 0x60, "");
+static_assert(offsetof(SpAttackManager::PROC_DATA, movieStep) == 0x53, "");
 static_assert(offsetof(SpAttackManager::PROC_DATA, slot) == 0x5a, "");
 static_assert(offsetof(SpAttackManager, camera) == 0x8, "");
 static_assert(offsetof(SpAttackManager, procs) == 0x28, "");
