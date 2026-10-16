@@ -39,6 +39,7 @@
 #include "event/cam_obj.cpp"
 #include "event/cam_manager.cpp"
 #include "event/chara_util.cpp"
+#include "event/chara_tar_util.cpp"
 #include "event/chara_facial_util.cpp"
 #include "event/chara_manager.cpp"
 #include "event/effect_manager.cpp"
