@@ -9,6 +9,16 @@ namespace ml {
 
 class DrMdoCtlPos : public DrMdlObj {
 public:
+  void callZpreePassRenderPosAll();
+  void callRenderPosAll();
+  void callRefractionRenderPosAll();
+  void callThicknessRenderFirstPosAll();
+  void callThicknessRenderSecondPosAll();
+  void callGBuffRenderPosAll();
+  void callLightPrePassRenderPosAll();
+  void callAlphaRenderPosAll();
+  void callSpAlphaRenderPosAll();
+
   u8 _190[0x1e8 - 0x190];
   DrResMdoInstAnmObj m_instAnmObj;
 };

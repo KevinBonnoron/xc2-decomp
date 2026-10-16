@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "dr/dr_draw_work_info.h"
 #include "ml/work_event.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
@@ -125,7 +126,9 @@ public:
   u8 _05d0[0x05d8 - 0x05d0];
   IDrDrawCallback *callbacks[16];
   s32 callbackNum;
-  u8 _065c[0x1c70 - 0x065c];
+  u8 _065c[0x0660 - 0x065c];
+  IDrDrawWorkInfo drawWorkInfos[4];
+  u8 _1c60[0x1c70 - 0x1c60];
   mm::Vec3 seamMapReadPos;
   bool seamMapAddPosMode;
   u8 captureModes[2];
@@ -133,7 +136,8 @@ public:
   f32 mdlSpd;
   u8 _1c8c[0x1c90 - 0x1c8c];
   f32 gamma;
-  u8 _1c94[0x1c9c - 0x1c94];
+  u8 _1c94[0x1c98 - 0x1c94];
+  s32 viewIndex;
   u32 viewRenderSkip;
   u8 _1ca0[0x1ca4 - 0x1ca0];
   f32 timeVals[2];
@@ -191,12 +195,14 @@ static_assert(offsetof(DrMan, apCache) == 0x05c0, "");
 static_assert(offsetof(DrMan, gpuCost) == 0x05c8, "");
 static_assert(offsetof(DrMan, callbacks) == 0x05d8, "");
 static_assert(offsetof(DrMan, callbackNum) == 0x0658, "");
+static_assert(offsetof(DrMan, drawWorkInfos) == 0x0660, "");
 static_assert(offsetof(DrMan, seamMapReadPos) == 0x1c70, "");
 static_assert(offsetof(DrMan, seamMapAddPosMode) == 0x1c80, "");
 static_assert(offsetof(DrMan, captureModes) == 0x1c81, "");
 static_assert(offsetof(DrMan, glbSpd) == 0x1c84, "");
 static_assert(offsetof(DrMan, mdlSpd) == 0x1c88, "");
 static_assert(offsetof(DrMan, gamma) == 0x1c90, "");
+static_assert(offsetof(DrMan, viewIndex) == 0x1c98, "");
 static_assert(offsetof(DrMan, viewRenderSkip) == 0x1c9c, "");
 static_assert(offsetof(DrMan, timeVals) == 0x1ca4, "");
 static_assert(offsetof(DrMan, timerVal) == 0x1cac, "");
