@@ -11,6 +11,8 @@ public:
     m_nLen = 0;
   }
 
+  FixStr &operator=(const FixStr &string) { return *this = string.c_str(); }
+
   FixStr &operator=(const char *pszName) {
     // __LINE__ must be 219 and 221 as in the original header: they are the line arguments of the asserts.
 #line 219

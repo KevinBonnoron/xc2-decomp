@@ -35,7 +35,9 @@ enum OBJDISP {
   OBJDISP_KOSMOS_ARTS_3 = 0x20,
 };
 
-enum GfObjUserData {};
+enum GfObjUserData {
+  OBJ_USER_DATA_GMK = 0,
+};
 
 class GfObjAcc {
 public:

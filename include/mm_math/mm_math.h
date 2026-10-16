@@ -12,4 +12,6 @@ template <typename T> T clamp(T value, T mi, T ma) {
   return value > ma ? ma : value;
 }
 
+template <typename T> const T &min(const T &a, const T &b) { return a < b ? a : b; }
+
 } // namespace mm
