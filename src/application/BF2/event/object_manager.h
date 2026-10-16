@@ -26,6 +26,11 @@ public:
     FLAG_DISP = 1 << 0,
   };
 
+  u32 getCharaCount() const;
+  ObjectChara *getChara(u32 index);
+  u32 getCameraCount() const;
+  ObjectCamera *getCamera(u32 index);
+  bool isDisp() const;
   ObjectManager();
   virtual ~ObjectManager() {}
   void stopEffect();
@@ -66,24 +71,6 @@ public:
   ObjectList *searchScene(const char *name) const;
   ObjectList *createScene(const char *name);
   virtual void OnEventProc(MSG_TYPE type);
-
-  u32 getCharaCount() const {
-    if (mCurrent == nullptr) {
-      return 0;
-    }
-    return mCurrent->getCharaCount();
-  }
-
-  u32 getCameraCount() const {
-    if (mCurrent == nullptr) {
-      return 0;
-    }
-    return mCurrent->getCameraCount();
-  }
-
-  ObjectChara *getChara(u32 index) { return getCurrent()->getChara(index); }
-  ObjectCamera *getCamera(u32 index) { return getCurrent()->getCamera(index); }
-  bool isDisp() const { return (flags & FLAG_DISP) != 0; }
 
   Object *getActive() const {
     if (mCurrent == nullptr) {
