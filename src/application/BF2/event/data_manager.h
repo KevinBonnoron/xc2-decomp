@@ -37,6 +37,9 @@ public:
   u32 getCharaNum() const;
   bool checkRadianTar(u32 axis);
   mm::Vec3 axis2pos(u32 axis, f32 x, f32 y, f32 z);
+  mm::Mat44 getPosAxis(u32 axis);
+  f32 getRotOfsY(u32 axis, const mm::Vec3 &rot);
+  mm::Mat44 getTarAxis(u32 axis);
   mm::Vec3 axis2rot(u32 axis, f32 x, f32 y, f32 z, const mm::Vec3 &rot);
   mm::Vec3 axis2tar(u32 axis, f32 x, f32 y, f32 z, const mm::Vec3 &pos);
   const char *getPosName(u32 axis);
