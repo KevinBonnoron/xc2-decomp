@@ -21,4 +21,5 @@ private:
 
 } // namespace mtl
 
-void *operator new(size_t size, mtl::ALLOC_HANDLE handle, const char *file, size_t line, int alignment, bool);
+void *operator new(size_t size, mtl::ALLOC_HANDLE handle, const char *file = nullptr, size_t line = 0, int alignment = 4, bool = false);
+void *operator new[](size_t size, mtl::ALLOC_HANDLE handle, const char *file = nullptr, size_t line = 0, int alignment = 4, bool = false);
