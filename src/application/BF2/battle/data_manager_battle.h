@@ -1,4 +1,5 @@
 #pragma once
+#include "battle/arts_data.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
 #include "mm_mtl/singleton.h"
@@ -34,6 +35,7 @@ public:
   };
 
   const CharacterParameter *GetCharacterParameterConst(int id) const;
+  void GetArtsData(ARTS_DATA::DATA_TYPE type, int id, ARTS_DATA &data) const;
   f32 GetPouchBuffParam(int type, int pouch) const;
   int GetPartyGauge() const;
   void SetPartyGauge(int partyGauge, bool isNotify);
@@ -47,6 +49,7 @@ public:
   static void PostUpdate(const fw::UpdateInfo &updateInfo);
   void SetSpecialEffects(int effect, bool isEnable);
   bool IsSpecialEffects(int effect) const;
+  static bool GetEnhanceData(int id, ENHANCE_EFFECT_DATA &data, bool);
 
   PlayerParameter playerParameters[18];
   EnemyParameter *enemyParameters[CHARACTER_COUNT - CHARACTER_PLAYER_COUNT];

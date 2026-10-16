@@ -1,4 +1,5 @@
 #pragma once
+#include "battle/arts_data.h"
 #include "gf/data/gf_data_weapon.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
@@ -18,20 +19,6 @@ struct SDataEnemy;
 namespace btl {
 
 class GROUP_DATA;
-
-struct ARTS_SLOT_DATA {
-  u32 id : 11;
-  u32 : 21;
-  f32 recast;
-  u8 _08[0x18 - 0x08];
-};
-
-struct alignas(8) ARTS_PALETTE_DATA {
-  void ResetAllRecast();
-  const ARTS_SLOT_DATA *GetSlotDataConst(int slot, bool isTalent) const;
-
-  u8 _00[0x238];
-};
 
 struct FIGHT_COMBO_DATA {
   u8 id;
@@ -230,7 +217,6 @@ static_assert(offsetof(CharacterParameter, gameObjectId) == 0x18, "");
 static_assert(offsetof(CharacterParameter, partyId) == 0x1c, "");
 static_assert(offsetof(CharacterParameter, radius) == 0x2c, "");
 static_assert(offsetof(CharacterParameter, fightCombo) == 0xc0, "");
-static_assert(sizeof(ARTS_SLOT_DATA) == 0x18, "");
 static_assert(offsetof(CharacterParameter, enhanceEffects) == 0xf0, "");
 static_assert(offsetof(CharacterParameter, buffs) == 0x458, "");
 static_assert(offsetof(CharacterParameter, buffNum) == 0x598, "");
