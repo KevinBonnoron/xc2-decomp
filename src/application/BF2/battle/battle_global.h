@@ -106,6 +106,7 @@ public:
   bool IsGameOver() const;
   bool IsEnableBattle() const;
   void NotifyShiftNone();
+  void NotifyShiftTimeOver();
   const char *GetSeTag(int se) const;
   int GetAttackDamageDataNum() const;
   const ATTACK_DAMAGE_DATA *GetAttackDamageDataConst(u32 attack) const;
