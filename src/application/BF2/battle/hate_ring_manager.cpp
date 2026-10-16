@@ -1,16 +1,62 @@
 #include "battle/hate_ring_manager.h"
 
+#include "framework/effect/effect_manager.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_handle.h"
 
 namespace btl {
 
-constexpr int HATE_TARGET_NUM = 3;
 constexpr int HATE_ENEMY_NUM_SHIFT = 10;
+
+void HateRingManager::RING_DATA::Reset(bool isDestroyEffect) {
+  handle = gf::INVALID_HANDLE;
+  target = -1;
+  arrowFrame = 0.0f;
+  if (isDestroyEffect) {
+    if (ringEffect != 0) {
+      fw::EffectManager::get()->destroyHateRingVec(ringEffect);
+    }
+    if (arrowEffect != 0) {
+      fw::EffectManager::get()->destroyHateArrow(arrowEffect);
+    }
+  }
+  ringEffect = 0;
+  arrowEffect = 0;
+  position = mm::Vec3::zero;
+}
+
+HateRingManager::HateRingManager() {
+  for (u32 &effect : targetRingEffects) {
+    effect = 0;
+  }
+}
 
 HateRingManager::~HateRingManager() {}
 
+void HateRingManager::Create() {
+  // __LINE__ must be 91 as in the original file: it is an argument of operator new.
+#line 91
+  HateRingManager *manager = new (gf::getAllocator(gf::ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) HateRingManager();
+  manager->Initialize();
+}
+
 void HateRingManager::Initialize() {}
+
+void HateRingManager::Destroy() {
+  HateRingManager *manager = get();
+  manager->Finalize();
+  if (manager != nullptr) {
+    delete manager;
+  }
+}
+
+void HateRingManager::Finalize() {
+  RING_DATA *ring = rings;
+  for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
+    ring->Reset(true);
+  }
+}
 
 void HateRingManager::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->PreUpdateProc(updateInfo); }
 
@@ -48,7 +94,7 @@ int HateRingManager::GetHateEnemyNum(int target) const {
 }
 
 u32 HateRingManager::GetHateEnemyNumAll() const {
-  u32 nums[HATE_TARGET_NUM] = {};
+  u32 nums[HATE_TARGET_COUNT] = {};
   const RING_DATA *ring = rings;
   for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
     if (ring->handle == gf::INVALID_HANDLE) {
@@ -56,7 +102,7 @@ u32 HateRingManager::GetHateEnemyNumAll() const {
     }
 
     int target = ring->target;
-    if (target >= 0 && target < HATE_TARGET_NUM) {
+    if (target >= 0 && target < HATE_TARGET_COUNT) {
       nums[target]++;
     }
   }
