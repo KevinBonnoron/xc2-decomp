@@ -10,6 +10,7 @@ namespace gf {
 
 struct GfSetupParam;
 struct QuestCompleteParam;
+struct QuestID;
 struct QuestOrderParam;
 
 class GfGameMercenaries {
@@ -23,6 +24,7 @@ public:
   static void qevOrderQuest(const QuestOrderParam &param);
   static void qevCompleteQuest(const QuestCompleteParam &param);
   static void updateMissionAutoStart();
+  static bool isQuestMission(QuestID quest);
   static void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
 };
 

@@ -3,11 +3,14 @@
 
 namespace gf {
 
+constexpr u32 QUEST_ID_END = 30000;
+
 struct QuestID {
+  bool empty() const;
+  bool operator==(const QuestID &other) const { return id == other.id && variant == other.variant; }
+
   u16 id;
   u16 variant;
-
-  bool empty() const;
 };
 
 static_assert(sizeof(QuestID) == 4, "");

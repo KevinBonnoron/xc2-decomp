@@ -5,6 +5,7 @@
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
+#include <stddef.h>
 
 namespace gmk {
 enum GmkType : int;
@@ -14,10 +15,28 @@ namespace gf {
 
 struct AchievQuest;
 struct GF_OBJ_HANDLE;
-struct GfQuestReward;
 struct GfQuestScinario;
 struct GfQuestTaskLogResult;
 struct QuestTaskParam;
+
+struct GfQuestReward {
+  struct Param {
+    Param() : _44() {}
+
+    u32 getDevelopZone() const;
+
+    mm::mtl::FixStr<64> name;
+    u8 _44[0x48 - 0x44];
+  };
+
+  Param params[12];
+  u16 blade;
+  u8 _362[0x368 - 0x362];
+};
+
+static_assert(sizeof(GfQuestReward::Param) == 0x48, "");
+static_assert(offsetof(GfQuestReward, blade) == 0x360, "");
+static_assert(sizeof(GfQuestReward) == 0x368, "");
 
 class GfQuestUtil {
 public:
@@ -37,7 +56,7 @@ public:
   static u32 getMsgQuestSummary(QuestID quest);
   static u32 getMsgQuestNeedFieldSkill(u32 index, QuestID quest);
   static u32 getMsgQuestResult(QuestID quest);
-  static void getReward(GfQuestReward &reward, u32 rewardSet, bool isRandom);
+  static bool getReward(GfQuestReward &reward, u32 rewardSet, bool isRandom);
   static bool isCurrentTaskBattle();
   static bool isReduceHpObj(GF_OBJ_HANDLE *handle);
   static void execReward(const GfQuestReward &reward);

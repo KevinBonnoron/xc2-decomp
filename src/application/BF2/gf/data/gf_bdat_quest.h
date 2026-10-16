@@ -424,36 +424,36 @@ public:
   void bdatRefresh() override;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mFLD_QuestList; original member name unknown.
-  CBdatWrapper *unknown18; // Inferred label: mFLD_QuestListNormal; original member name unknown.
-  CBdatWrapper *unknown20; // Inferred label: mFLD_QuestListMini; original member name unknown.
-  CBdatWrapper *unknown28; // Inferred label: mFLD_QuestListMercenaries; original member name unknown.
-  CBdatWrapper *unknown30; // Inferred label: mFLD_QuestListAchievement; original member name unknown.
-  CBdatWrapper *unknown38; // Inferred label: mFLD_QuestListBlade; original member name unknown.
-  CBdatWrapper *unknown40; // Inferred label: mFLD_QuestCollect; original member name unknown.
-  CBdatWrapper *unknown48; // Inferred label: mFLD_QuestTask; original member name unknown.
-  CBdatWrapper *unknown50; // Inferred label: mFLD_QuestTaskNormal; original member name unknown.
-  CBdatWrapper *unknown58; // Inferred label: mFLD_QuestTaskMini; original member name unknown.
-  CBdatWrapper *unknown60; // Inferred label: mFLD_QuestTaskMercenaries; original member name unknown.
-  CBdatWrapper *unknown68; // Inferred label: mFLD_QuestTaskAchievement; original member name unknown.
-  CBdatWrapper *unknown70; // Inferred label: mFLD_QuestTaskBlade; original member name unknown.
-  CBdatWrapper *unknown78; // Inferred label: mFLD_QuestBattle; original member name unknown.
-  CBdatWrapper *unknown80; // Inferred label: mFLD_RequestItemSet; original member name unknown.
-  CBdatWrapper *unknown88; // Inferred label: mFLD_QuestUse; original member name unknown.
-  CBdatWrapper *unknown90; // Inferred label: mFLD_QuestReach; original member name unknown.
-  CBdatWrapper *unknown98; // Inferred label: mFLD_QuestTalk; original member name unknown.
-  CBdatWrapper *unknowna0; // Inferred label: mFLD_QuestTalkDummyGroup; original member name unknown.
-  CBdatWrapper *unknowna8; // Inferred label: mFLD_QuestGimmick; original member name unknown.
-  CBdatWrapper *unknownb0; // Inferred label: mFLD_QuestFieldSkillCount; original member name unknown.
-  CBdatWrapper *unknownb8; // Inferred label: mFLD_RequestBlade; original member name unknown.
-  CBdatWrapper *unknownc0; // Inferred label: mFLD_QuestCondition; original member name unknown.
-  CBdatWrapper *unknownc8; // Inferred label: mFLD_QuestHints; original member name unknown.
-  CBdatWrapper *unknownd0; // Inferred label: mFLD_QuestEvent; original member name unknown.
-  CBdatWrapper *unknownd8; // Inferred label: mFLD_QuestReward; original member name unknown.
-  CBdatWrapper *unknowne0; // Inferred label: mFLD_QuestRewardRandom; original member name unknown.
-  CBdatWrapper *unknowne8; // Inferred label: mFLD_Achievement; original member name unknown.
-  CBdatWrapper *unknownf0; // Inferred label: mFLD_AchievementSet; original member name unknown.
-  CBdatWrapper *unknownf8; // Inferred label: mFLD_AchievementList; original member name unknown.
+  CBdatWrapper *unknown10;  // Inferred label: mFLD_QuestList; original member name unknown.
+  CBdatWrapper *unknown18;  // Inferred label: mFLD_QuestListNormal; original member name unknown.
+  CBdatWrapper *unknown20;  // Inferred label: mFLD_QuestListMini; original member name unknown.
+  CBdatWrapper *unknown28;  // Inferred label: mFLD_QuestListMercenaries; original member name unknown.
+  CBdatWrapper *unknown30;  // Inferred label: mFLD_QuestListAchievement; original member name unknown.
+  CBdatWrapper *unknown38;  // Inferred label: mFLD_QuestListBlade; original member name unknown.
+  CBdatWrapper *unknown40;  // Inferred label: mFLD_QuestCollect; original member name unknown.
+  CBdatWrapper *unknown48;  // Inferred label: mFLD_QuestTask; original member name unknown.
+  CBdatWrapper *unknown50;  // Inferred label: mFLD_QuestTaskNormal; original member name unknown.
+  CBdatWrapper *unknown58;  // Inferred label: mFLD_QuestTaskMini; original member name unknown.
+  CBdatWrapper *unknown60;  // Inferred label: mFLD_QuestTaskMercenaries; original member name unknown.
+  CBdatWrapper *unknown68;  // Inferred label: mFLD_QuestTaskAchievement; original member name unknown.
+  CBdatWrapper *unknown70;  // Inferred label: mFLD_QuestTaskBlade; original member name unknown.
+  CBdatWrapper *unknown78;  // Inferred label: mFLD_QuestBattle; original member name unknown.
+  CBdatWrapper *unknown80;  // Inferred label: mFLD_RequestItemSet; original member name unknown.
+  CBdatWrapper *unknown88;  // Inferred label: mFLD_QuestUse; original member name unknown.
+  CBdatWrapper *unknown90;  // Inferred label: mFLD_QuestReach; original member name unknown.
+  CBdatWrapper *unknown98;  // Inferred label: mFLD_QuestTalk; original member name unknown.
+  CBdatWrapper *unknowna0;  // Inferred label: mFLD_QuestTalkDummyGroup; original member name unknown.
+  CBdatWrapper *unknowna8;  // Inferred label: mFLD_QuestGimmick; original member name unknown.
+  CBdatWrapper *unknownb0;  // Inferred label: mFLD_QuestFieldSkillCount; original member name unknown.
+  CBdatWrapper *unknownb8;  // Inferred label: mFLD_RequestBlade; original member name unknown.
+  CBdatWrapper *unknownc0;  // Inferred label: mFLD_QuestCondition; original member name unknown.
+  CBdatWrapper *unknownc8;  // Inferred label: mFLD_QuestHints; original member name unknown.
+  CBdatWrapper *unknownd0;  // Inferred label: mFLD_QuestEvent; original member name unknown.
+  CBdatWrapper *unknownd8;  // Inferred label: mFLD_QuestReward; original member name unknown.
+  CBdatWrapper *unknowne0;  // Inferred label: mFLD_QuestRewardRandom; original member name unknown.
+  CBdatWrapper *unknowne8;  // Inferred label: mFLD_Achievement; original member name unknown.
+  CBdatWrapper *unknownf0;  // Inferred label: mFLD_AchievementSet; original member name unknown.
+  CBdatWrapper *unknownf8;  // Inferred label: mFLD_AchievementList; original member name unknown.
   CBdatWrapper *unknown100; // Inferred label: mFLD_MercenariesConfig; original member name unknown.
   CBdatWrapper *unknown108; // Inferred label: mFLD_MercenariesMission; original member name unknown.
   CBdatWrapper *unknown110; // Inferred label: mFLD_FieldSkillList; original member name unknown.
@@ -462,6 +462,7 @@ private:
   CBdatWrapper *unknown128; // Inferred label: mFLD_DevelopmentLevel; original member name unknown.
   QuestListAcc *mQuestListAcc;
 
+  friend class GfQuestManager;
   friend class QuestListAcc;
   friend struct GfBdatQuestLayout;
 };
