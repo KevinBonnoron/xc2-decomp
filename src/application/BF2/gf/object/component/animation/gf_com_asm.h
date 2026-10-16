@@ -23,6 +23,11 @@ public:
   static const u32 COMPONENT_INDEX = 2;
 
   const char *getStateName(AnimLayer layer) const;
+  void easeIn(const char *state, f32 time, AnimLayer layer);
+  void easeOut(const char *state, f32 time, AnimLayer layer);
+  bool isActiveAdditiveState(const char *state, AnimLayer layer);
+  void setWeightAdditiveState(const char *state, f32 weight, AnimLayer layer);
+  void setSpeedAdditiveState(const char *state, f32 speed, AnimLayer layer);
 };
 
 } // namespace gf
