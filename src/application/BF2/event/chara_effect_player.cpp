@@ -5,7 +5,7 @@
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
-#include "ml/scn_obj_model.h"
+#include "scn/scn_obj_acc.h"
 
 namespace event {
 
