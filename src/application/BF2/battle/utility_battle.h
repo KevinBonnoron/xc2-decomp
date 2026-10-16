@@ -1,4 +1,5 @@
 #pragma once
+#include "battle/arts_data.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
 
@@ -70,6 +71,9 @@ public:
   static bool IsSatisfyCondition(int condition);
   static bool IsSatisfyConditionFld(int condition);
   static void AchieveCondition(BTL_ACHIEVE_COND condition, gf::GF_OBJ_HANDLE *handle, u32 value);
+  static void GetArtsData(ARTS_DATA::DATA_TYPE type, int id, ARTS_DATA &data);
+  static int GetArtsEnhance(const ARTS_SLOT_DATA &slot);
+  static int GetArtsEnhance(const ARTS_DATA &data, int level);
   static int GetSeType(const char *packName);
   static int GetWeaponSeType(int weaponType);
   static int GetAttrSeType(int attribute);

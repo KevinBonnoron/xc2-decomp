@@ -1,4 +1,5 @@
 #pragma once
+#include "battle/arts_data.h"
 #include "battle/character/action_command.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
@@ -227,6 +228,8 @@ public:
   void SetNoDamageTime(f32 time);
   void SetPerfectAvoidTime(f32 time);
   f32 GetFriendEnhanceRate(int enhance, bool) const;
+  f32 GetArtsDamageRate(const ARTS_DATA::LEVEL_DATA &level) const;
+  f32 GetArtsDamageRate(const ARTS_DATA &data, int level) const;
   void EnhanceTimerProc();
   void StopAI(f32 time);
   bool CheckRandFriendEnhanceRate(int enhance) const;
