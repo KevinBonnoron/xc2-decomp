@@ -1,12 +1,12 @@
 #pragma once
 #include "event/i_manager.h"
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class AgelogManager : public IManager, public mm::mtl::NoncopyableBase {
+class AgelogManager : public IManager, public mm::mtl::Singleton<AgelogManager> {
 public:
   enum {
     FLAG_RESERVE = 1 << 0,

@@ -1,6 +1,6 @@
 #pragma once
 #include "event/i_manager.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace ml {
@@ -9,7 +9,7 @@ class ScnRenderDrViewCtrl;
 
 namespace event {
 
-class OffscrManager : public IManager, public mm::mtl::NoncopyableBase {
+class OffscrManager : public IManager, public mm::mtl::Singleton<OffscrManager> {
 public:
   static constexpr u32 SCREEN_COUNT = 4;
 
