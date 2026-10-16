@@ -2,6 +2,7 @@
 
 #include "framework/sound/sound_driver.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/allocator.h"
 
 namespace ssd {
 class SoundListener;
@@ -9,6 +10,30 @@ class SoundListener;
 
 namespace fw {
 enum SoundCategory : int;
+
+void *SoundSsdDriver::SoundAllocator::AllocInstance(size_t size) { return allocator->allocate(size, 16); }
+
+void SoundSsdDriver::SoundAllocator::FreeInstance(void *pointer) {
+  if (pointer != nullptr) {
+    allocator->deallocate(pointer);
+  }
+}
+
+void *SoundSsdDriver::SoundAllocator::AllocBuffer(size_t size, size_t alignment) { return allocator->allocate(size, alignment); }
+
+void SoundSsdDriver::SoundAllocator::FreeBuffer(void *pointer) {
+  if (pointer != nullptr) {
+    allocator->deallocate(pointer);
+  }
+}
+
+void *SoundSsdDriver::SoundAllocator::AllocStream(size_t size, size_t alignment) { return allocator->allocate(size, alignment); }
+
+void SoundSsdDriver::SoundAllocator::FreeStream(void *pointer) {
+  if (pointer != nullptr) {
+    allocator->deallocate(pointer);
+  }
+}
 
 bool SoundSsdPlayer::getTotalTime(f32 &time) const {
   time = 0.0f;

@@ -12,6 +12,10 @@ class SoundListener;
 
 namespace mm {
 struct Vec3;
+
+namespace mtl {
+class IAllocator;
+} // namespace mtl
 } // namespace mm
 
 namespace fw {
@@ -19,6 +23,23 @@ namespace fw {
 class SoundSsdBank;
 enum SoundCategory : int;
 enum SoundVolumeType : int;
+
+class SoundSsdDriver {
+public:
+  class SoundAllocator : public ssd::Allocator {
+  public:
+    void *AllocInstance(size_t size) override;
+    void FreeInstance(void *pointer) override;
+    void *AllocBuffer(size_t size, size_t alignment) override;
+    void FreeBuffer(void *pointer) override;
+    void *AllocStream(size_t size, size_t alignment) override;
+    void FreeStream(void *pointer) override;
+
+    mm::mtl::IAllocator *allocator;
+  };
+};
+
+static_assert(offsetof(SoundSsdDriver::SoundAllocator, allocator) == 0x08, "");
 
 class SoundReferenceObject {
 public:

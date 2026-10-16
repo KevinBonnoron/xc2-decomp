@@ -17,6 +17,17 @@ class SoundEntry;
 class SoundHandle;
 class SoundListener;
 
+class Allocator {
+public:
+  virtual ~Allocator() {}
+  virtual void *AllocInstance(size_t size) = 0;
+  virtual void FreeInstance(void *pointer) = 0;
+  virtual void *AllocBuffer(size_t size, size_t alignment) = 0;
+  virtual void FreeBuffer(void *pointer) = 0;
+  virtual void *AllocStream(size_t size, size_t alignment) = 0;
+  virtual void FreeStream(void *pointer) = 0;
+};
+
 class SoundActor {
 public:
   virtual ~SoundActor();
