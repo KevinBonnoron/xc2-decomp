@@ -1,8 +1,10 @@
 #include "framework/sound/sound_ssd_drv.h"
 
 #include "framework/sound/sound_driver.h"
+#include "mm/mm_std_base.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/allocator.h"
+#include "mtl/mem_manager.h"
 
 namespace ssd {
 class SoundListener;
@@ -33,6 +35,62 @@ void SoundSsdDriver::SoundAllocator::FreeStream(void *pointer) {
   if (pointer != nullptr) {
     allocator->deallocate(pointer);
   }
+}
+
+int SoundReferenceObject::release() {
+  // __LINE__ of the game: it is the line argument of the assert.
+#line 274
+  MM_ASSERT(m_RefCount > 0);
+  int count = --m_RefCount;
+  if (count == 0) {
+    this->~SoundReferenceObject();
+    mtl::MemManager::deallocate(this, 0, false);
+  }
+
+  return count;
+}
+
+void SoundSsdBank::addEntry(ssd::SoundEntry *entry) {
+  if (entry != nullptr) {
+    soundBank.AddSoundEntry(entry);
+  }
+}
+
+void SoundSsdBank::addSource(SoundSsdSource *source) {
+  source->addRef();
+  sources.push_back(source);
+}
+
+SoundSsdBank *SoundSsdDriver::findBank(u32 id) {
+  for (mm::mtl::List<SoundSsdBank *>::iterator it = banks.begin(); it != banks.end(); ++it) {
+    if ((*it)->id == id) {
+      return *it;
+    }
+  }
+
+  return nullptr;
+}
+
+void SoundSsdBank::removeEntry(ssd::SoundEntry *entry) {
+  if (entry != nullptr) {
+    soundBank.RemoveSoundEntry(entry);
+  }
+}
+
+bool SoundSsdSource::isLoop() const {
+  if (data != nullptr) {
+    return data->isLoop;
+  }
+
+  return false;
+}
+
+int SoundSsdSource::getSourceRefCount() const {
+  if (data != nullptr) {
+    return data->refCount;
+  }
+
+  return 0;
 }
 
 bool SoundSsdPlayer::getTotalTime(f32 &time) const {
@@ -282,5 +340,21 @@ void SoundSsdPlayer::stop(f32 time) {
     Stop(time);
   }
 }
+
+void SoundSsdBank::setMaxSound(int maxSound) {
+  soundGroup.id = id;
+  soundGroup.maxSound = maxSound;
+  this->maxSound = maxSound;
+}
+
+bool SoundSsdBank::canRelease() const {
+  if (soundBank.GetReferenceCounter() != 0) {
+    return false;
+  }
+
+  return soundBank.NumSoundEntry() == 0;
+}
+
+void SoundSsdBank::stopAll() { soundBank.Stop(0.0f); }
 
 } // namespace fw

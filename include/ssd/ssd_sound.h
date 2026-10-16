@@ -60,6 +60,36 @@ public:
 static_assert(offsetof(SoundActor3D, position) == 0x44, "");
 static_assert(sizeof(SoundActor3D) == 0x78, "");
 
+class Object {
+public:
+  virtual ~Object();
+
+  u32 type;
+  u8 _0c[0x18 - 0x0c];
+};
+
+class SoundGroup : public Object {
+public:
+  int id;
+  int maxSound;
+};
+
+static_assert(sizeof(SoundGroup) == 0x20, "");
+
+class SoundBank {
+public:
+  virtual ~SoundBank();
+  void AddSoundEntry(SoundEntry *entry);
+  void RemoveSoundEntry(SoundEntry *entry);
+  int GetReferenceCounter() const;
+  int NumSoundEntry() const;
+  void Stop(f32 fadeTime);
+
+  u8 _08[0x120 - 0x08];
+};
+
+static_assert(sizeof(SoundBank) == 0x120, "");
+
 class SoundHandle {
 public:
   bool IsValidHandle() const;
