@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "mtl/alloc_handle.h"
 #include "types.h"
 
@@ -17,3 +19,5 @@ public:
 };
 
 } // namespace fw
+
+void *operator new(size_t size, mm::mtl::IAllocator *allocator, int alignment, const char *file, size_t line);
