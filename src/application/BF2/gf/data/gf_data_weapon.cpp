@@ -6,7 +6,6 @@
 
 namespace gf {
 
-constexpr u32 WEAPON_TYPE_COUNT = 16;
 constexpr u32 WEAPON_TYPE_SPECIAL = 0x11;
 
 const char *GfDataWeapon::getName(u32 weapon) {
@@ -35,7 +34,7 @@ const char *GfDataWeapon::getMotionName(u32 weapon) { return GfBdatRsc::get()->g
 u32 GfDataWeapon::getNewWeapon(u32 weapon, u32 chip) {
   GfBdatItem *bdatItem = GfBdatItem::get();
   u32 weaponTypeIndex = bdatItem->getPcWpnWpnType(weapon) - 1;
-  if (weaponTypeIndex < WEAPON_TYPE_COUNT) {
+  if (weaponTypeIndex < CHIP_CREATE_WEAPON_TYPE_COUNT) {
     return bdatItem->getPcWpnChipCreateWpn(chip, weaponTypeIndex);
   }
 

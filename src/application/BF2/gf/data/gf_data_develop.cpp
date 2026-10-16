@@ -10,8 +10,6 @@ enum {
 
 constexpr u32 DEVELOP_POINT_MAX = 0xffff;
 constexpr u32 DEVELOP_LEVEL_MIN = 1;
-constexpr u32 DEVELOP_LEVEL_MAX = 5;
-constexpr u32 NATION_COUNT = 8;
 
 u32 GfDataDevelop::getPoint(u32 nation) { return GfGameFlag::getLocal(16, FLAG_DEVELOP_POINT + nation); }
 

@@ -1,5 +1,6 @@
 #include "gf/data/gf_bdat_shop.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
 
@@ -1061,16 +1062,6 @@ u32 getMNU_EventTheaterflag_index(const CBdatWrapper &wrapper, u32 id) {
 }
 
 } // namespace _gfbsh
-
-enum {
-  BDAT_MNU_SHOP_LIST = 0xd4,
-  BDAT_MNU_SHOP_NORMAL = 0xd5,
-  BDAT_MNU_SHOP_INN = 0xd6,
-  BDAT_MNU_SHOP_CHANGE = 0xd7,
-  BDAT_MNU_SHOP_CHANGE_TASK = 0xd8,
-  BDAT_MNU_SHOP_CATEGORY_NAME = 0xd9,
-  BDAT_MNU_EVENT_THEATER = 0xe3,
-};
 
 GfBdatShop::GfBdatShop()
     : mShopList(nullptr), mShopNormal(nullptr), mShopInn(nullptr), mShopChange(nullptr), mShopChangeTask(nullptr), mShopCategoryName(nullptr),

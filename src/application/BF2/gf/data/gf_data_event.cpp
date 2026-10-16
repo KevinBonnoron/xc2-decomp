@@ -1,5 +1,6 @@
 #include "gf/data/gf_data_event.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_shop.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
@@ -8,14 +9,6 @@
 #include "gf/data/gf_game_flag.h"
 
 namespace gf {
-
-enum {
-  BDAT_EVT_LIST_BF = 0xcf,
-  BDAT_EVT_LIST_QST01 = 0xd0,
-  BDAT_EVT_LIST_FEV01 = 0xd1,
-  BDAT_EVT_LIST_TLK01 = 0xd2,
-  BDAT_EVT_LIST_BL = 0xd3,
-};
 
 enum {
   FLAG_EVENT_PLAY = 0x8a5f,

@@ -15,13 +15,16 @@
 #include "battle/sp_attack_manager.h"
 #include "battle/talk_manager_battle.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_weapon.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_util.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/scom/gf_scom_achiev.h"
 #include "gf/scom/gf_scom_enbook.h"
@@ -31,15 +34,9 @@
 namespace btl {
 
 enum {
-  BDAT_BTL_CONDITION = 0x1e,
-  BDAT_BTL_SE = 0x35,
-};
-
-enum {
   SPECIAL_EFFECT_BENKEI_WEATHER = 2,
 };
 
-constexpr int WEAPON_TYPE_COUNT = 26;
 constexpr int ATTRIBUTE_COUNT = 8;
 constexpr int CHARACTER_PLAYER_COUNT = 20;
 constexpr int CHARACTER_COUNT = 90;
@@ -49,9 +46,7 @@ constexpr int AI_ID_ENEMY_COUNT = 69;
 constexpr f32 FRAME_TO_SECOND = 1.0f / 30.0f;
 constexpr f32 POS_BACKWARD_DISTANCE = 0.7f;
 
-static gf::GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1);
-
-static const u16 s_weaponSeTypes[WEAPON_TYPE_COUNT] = {12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
+static const u16 s_weaponSeTypes[gf::WEAPON_TYPE_COUNT] = {12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
 static const u16 s_attributeSeTypes[ATTRIBUTE_COUNT] = {4, 5, 6, 7, 8, 9, 10, 11};
 static const s8 s_antiAttributes[ATTRIBUTE_COUNT + 1] = {-1, 2, 1, 6, 5, 4, 3, 8, 7};
 
@@ -69,7 +64,7 @@ gf::GF_OBJ_HANDLE *Utility::GetControlCharacterHandle() {
 }
 
 bool Utility::IsSatisfyCondition(int condition) {
-  u16 gameCondition = Bdat::getValCheck(gf::GfDataBdat::getFP(BDAT_BTL_CONDITION), "FLD_CondID", condition, 2);
+  u16 gameCondition = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_BTL_CONDITION), "FLD_CondID", condition, 2);
   return gf::GfGameCond::isGameCond(gameCondition);
 }
 
@@ -133,7 +128,7 @@ void Utility::AchieveCondition(BTL_ACHIEVE_COND condition, gf::GF_OBJ_HANDLE *ha
 
 int Utility::GetSeType(const char *packName) {
   if (packName != nullptr && packName[0] != '\0') {
-    u8 *bdat = gf::GfDataBdat::getFP(BDAT_BTL_SE);
+    u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_BTL_SE);
     int top = Bdat::getIdTop(bdat);
     int count = Bdat::getIdCount(bdat);
     for (int id = top; id < top + count; id++) {
@@ -148,7 +143,7 @@ int Utility::GetSeType(const char *packName) {
 }
 
 int Utility::GetWeaponSeType(int weaponType) {
-  if (weaponType >= 1 && weaponType <= WEAPON_TYPE_COUNT) {
+  if (weaponType >= 1 && weaponType <= gf::WEAPON_TYPE_COUNT) {
     return s_weaponSeTypes[weaponType - 1];
   }
 
@@ -329,7 +324,7 @@ gf::GF_OBJ_HANDLE *Utility::AI_GetCharacterHandle(int aiId) {
     }
   }
 
-  return INVALID_HANDLE;
+  return gf::INVALID_HANDLE;
 }
 
 int Utility::AI_ConversionID_AItoBtl(int aiId) {
@@ -355,7 +350,7 @@ int Utility::AI_ConversionID_BtltoAI(int id) {
   return AI_GetCharacterAIID(character);
 }
 
-bool Utility::AI_IsValidID(int aiId) { return AI_GetCharacterHandle(aiId) != INVALID_HANDLE; }
+bool Utility::AI_IsValidID(int aiId) { return AI_GetCharacterHandle(aiId) != gf::INVALID_HANDLE; }
 
 void Utility::AI_GetObjectPosition(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position) {
   Misc::GetObjectTransform(handle, position, Misc::TRANS_TYPE_POSITION);
@@ -363,7 +358,7 @@ void Utility::AI_GetObjectPosition(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position
 
 int Utility::AI_GetTargetCharacterID(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
-  if (character == nullptr || character->target == INVALID_HANDLE) {
+  if (character == nullptr || character->target == gf::INVALID_HANDLE) {
     return -1;
   }
 
@@ -377,7 +372,7 @@ int Utility::AI_GetLinkCharacterID(gf::GF_OBJ_HANDLE *handle) {
   }
 
   gf::GF_OBJ_HANDLE *link = BattleGlobal::get()->GetLinkJoinEnemyHandle(character->position);
-  if (link == INVALID_HANDLE) {
+  if (link == gf::INVALID_HANDLE) {
     return -1;
   }
 
@@ -583,7 +578,7 @@ int Utility::AI_GetRescueTargetCharacterID(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character != nullptr) {
     gf::GF_OBJ_HANDLE *target = character->GetRescueTarget();
-    if (target != INVALID_HANDLE) {
+    if (target != gf::INVALID_HANDLE) {
       return AI_GetCharacterAIID(target);
     }
   }
@@ -862,7 +857,7 @@ bool Utility::AI_StartMoveFriendBack(gf::GF_OBJ_HANDLE *handle, f32 distance, f3
 
   mm::Vec3 position = character->position;
   CharacterManager *characterManager = CharacterManager::get();
-  gf::GF_OBJ_HANDLE *friendHandle = INVALID_HANDLE;
+  gf::GF_OBJ_HANDLE *friendHandle = gf::INVALID_HANDLE;
   f32 nearestLength = FLT_MAX;
   for (u8 id : list) {
     BattleCharacter *friendCharacter = characterManager->GetCharacterConst(id);
@@ -875,7 +870,7 @@ bool Utility::AI_StartMoveFriendBack(gf::GF_OBJ_HANDLE *handle, f32 distance, f3
     }
   }
 
-  if (friendHandle == INVALID_HANDLE) {
+  if (friendHandle == gf::INVALID_HANDLE) {
     return false;
   }
 

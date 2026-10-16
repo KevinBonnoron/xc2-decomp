@@ -118,6 +118,10 @@ struct MsgObjectChangeAttribute : fw::Message {
   u32 oldAttribute;
 };
 
+enum {
+  DEAD_TYPE_EMERGENCY_ESCAPE = 4,
+};
+
 struct MsgObjectDead : fw::Message {
   MsgObjectDead(u32 deadType) : fw::Message(0x1000036, 0x20), deadType(deadType) {}
 

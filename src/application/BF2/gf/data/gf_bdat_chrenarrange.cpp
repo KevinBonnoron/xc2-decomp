@@ -1,6 +1,7 @@
 #include "gf/data/gf_bdat_chrenarrange.h"
 
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
 #include "mm_mtl/fixed_vector.h"
@@ -909,11 +910,6 @@ u32 getBTL_EnBookBOOK_popWeather(const CBdatWrapper &wrapper, u32 id) {
 }
 
 } // namespace _gfbcb
-
-enum {
-  BDAT_BTL_EN_BOOK = 0x26,
-  BDAT_CHR_EN_ARRANGE = 0x79,
-};
 
 GfBdatChrEnArrange::GfBdatChrEnArrange() : mChrEnArrange(nullptr), mBTL_EnBook(nullptr) { bdatRefresh(); }
 

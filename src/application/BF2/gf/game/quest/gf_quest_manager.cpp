@@ -10,15 +10,6 @@
 
 namespace gf {
 
-namespace {
-
-enum {
-  GEV_MAPJUMP_END = 6,
-  GEV_EVENT_END = 9,
-};
-
-} // namespace
-
 GfBdatQuest *GfQuestManager::s_bdat;
 GfQuestEvent *GfQuestManager::s_event;
 GfQuestTarget *GfQuestManager::s_target;
@@ -197,7 +188,7 @@ void GfQuestManager::gevChangeTimeRange(u32) { eventCheckTaskAll(); }
 void GfQuestManager::gevMercenariesMissionFlag(u32, u32, u32) { eventCheckTaskAll(); }
 
 void GfQuestManager::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
-  if (event == GEV_MAPJUMP_END && s_pThis != nullptr) {
+  if (event == GEV_MAPJUMP_FADEIN && s_pThis != nullptr) {
     refreshQuestTaskState();
   }
 

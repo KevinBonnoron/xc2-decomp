@@ -21,7 +21,6 @@ enum {
 
 constexpr u32 ENEMY_SUPPRESS_COUNT = 0x5db;
 constexpr u32 ENEMY_SUPPRESS_MAX = 0xffff;
-constexpr u32 EXTRA_PARTS_COUNT = 4;
 
 const char *GfDataEnemy::getName(u32 arrange) {
   u32 textId = GfBdatChrEnArrange::get()->getChrEnArrangeName(arrange);

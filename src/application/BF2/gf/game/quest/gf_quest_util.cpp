@@ -8,6 +8,7 @@
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/quest/gf_achiev_quest.h"
 #include "gf/game/quest/gf_quest_data.h"
@@ -24,10 +25,6 @@ namespace gf {
 namespace {
 
 enum {
-  CONDITION_TYPE_PARTY = 6,
-};
-
-enum {
   GIMMICK_TYPE_TBOX = 9,
   GIMMICK_TYPE_SALVAGE_POINT = 31,
   GIMMICK_TYPE_MAP = 33,
@@ -38,10 +35,8 @@ enum {
 };
 
 constexpr u32 ORDER_PARENT_QUEST_MAX = 256;
-constexpr u32 CONDITION_LIST_COUNT = 8;
 constexpr u32 PARTY_CHARACTER_COUNT = 3;
 constexpr u32 DUMMY_GROUP_NPC_COUNT = 8;
-constexpr u32 ACHIEVEMENT_LINE_COUNT = 10;
 
 } // namespace
 

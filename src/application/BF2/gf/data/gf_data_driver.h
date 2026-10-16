@@ -10,6 +10,10 @@
 
 namespace gf {
 
+constexpr u32 DRIVER_LEVEL_MAX = 99;
+constexpr u32 DRIVER_ARTS_LEVEL_MAX = 5;
+constexpr u32 SET_BLADE_NUM_MAX = 5;
+
 struct SDataDriverWeapon {
   mm::mtl::FixedArray<u32, 3> slotArts;
   u32 wp;

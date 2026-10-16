@@ -1,5 +1,6 @@
 #include "gf/data/gf_bdat_cond.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
 
@@ -795,20 +796,6 @@ u32 getConditionFieldSkiiLevelLevel(const CBdatWrapper &wrapper, u32 id) {
 }
 
 } // namespace _gfbdb
-
-enum {
-  BDAT_FLD_CONDITION_SCENARIO = 0x51,
-  BDAT_FLD_CONDITION_FLAG = 0x52,
-  BDAT_FLD_CONDITION_LIST = 0x53,
-  BDAT_FLD_CONDITION_QUEST = 0x54,
-  BDAT_FLD_CONDITION_ENV = 0x55,
-  BDAT_FLD_CONDITION_LEVEL = 0x56,
-  BDAT_FLD_CONDITION_PT = 0x57,
-  BDAT_FLD_CONDITION_ITEM = 0x58,
-  BDAT_FLD_CONDITION_IDEA = 0x59,
-  BDAT_FLD_CONDITION_ACHIEVEMENT = 0x5a,
-  BDAT_FLD_CONDITION_FIELD_SKII_LEVEL = 0x5b,
-};
 
 GfBdatCond::GfBdatCond()
     : mConditionList(nullptr), mConditionScenario(nullptr), mConditionQuest(nullptr), mConditionEnv(nullptr), mConditionFlag(nullptr),

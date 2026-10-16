@@ -1,5 +1,6 @@
 #include "gf/data/gf_bdat_blade.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
@@ -2320,25 +2321,6 @@ u32 getBLD_ReleaceRewardReleace(const CBdatWrapper &wrapper, u32 id, u32 index) 
 }
 
 } // namespace _gfbdb
-
-enum {
-  BDAT_BTL_CMN_BL_CAPACITY = 0x19,
-  BDAT_BTL_CMN_BL_POWER = 0x1a,
-  BDAT_BTL_CMN_BL_NEW_BL_ARTS = 0x1b,
-  BDAT_BTL_CMN_BL_STATUS_TYPE = 0x1c,
-  BDAT_BTL_CMN_BL_ARMOR = 0x1d,
-  BDAT_FLD_IDEA_TABLE = 0x71,
-  BDAT_BLD_IDEA = 0xc5,
-  BDAT_BLD_IDEA_TABLE = 0xc6,
-  BDAT_BLD_BLADE_TABLE = 0xc7,
-  BDAT_BLD_BLADE_LIST = 0xc8,
-  BDAT_BLD_COMMON_LIST = 0xc9,
-  BDAT_BLD_NAME_LIST = 0xca,
-  BDAT_BLD_BLADE_MODEL_LIST = 0xcb,
-  BDAT_BLD_CREATE_CONFIG = 0xcc,
-  BDAT_BLD_RARE_LIST = 0xcd,
-  BDAT_BLD_RELEACE_REWARD = 0xce,
-};
 
 GfBdatBlade::GfBdatBlade()
     : mIdeaTable(nullptr), mBladeTable(nullptr), mBladeList(nullptr), mCommonList(nullptr), mNameList(nullptr), mBladeModelList(nullptr),

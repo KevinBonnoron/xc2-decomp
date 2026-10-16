@@ -1,5 +1,6 @@
 #include "gf/data/gf_bdat_chrbl.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
@@ -1273,10 +1274,6 @@ const char *getChrBlMnuVoice3(const CBdatWrapper &wrapper, u32 id) {
 }
 
 } // namespace _gfbcb
-
-enum {
-  BDAT_CHR_BL = 0x78,
-};
 
 GfBdatChrBl::GfBdatChrBl() : mChrBl(nullptr) { bdatRefresh(); }
 

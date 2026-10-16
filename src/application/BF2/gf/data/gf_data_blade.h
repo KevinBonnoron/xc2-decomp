@@ -12,6 +12,10 @@
 
 namespace gf {
 
+constexpr u32 BLADE_ID_FIRST = 1001;
+constexpr u32 BLADE_COUNT = 422;
+constexpr int TRUST_RANK_MAX = 6;
+
 enum GfIdea {};
 
 struct SDataBladeArts {

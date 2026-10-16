@@ -1,18 +1,21 @@
 #include "gf/data/gf_data_store.h"
+
+#include <new>
+
 #include "gf/data/gf_bdat_maplist.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_develop.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_manager.h"
+#include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/gf_allocator.h"
-#include <new>
+#include "mm_mtl/fixed_array.h"
+#include "types.h"
 
 namespace gf {
-
-constexpr u32 NATION_COUNT = 8;
 
 GfDataStore::GfDataStore(const GfSetupParam &param) : mInitialized(false) { initialize(param); }
 

@@ -20,6 +20,7 @@
 #include "gf/game/gf_game_util.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
@@ -32,12 +33,7 @@
 
 namespace gf {
 
-static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
-
-constexpr u32 DRIVER_LEVEL_MAX = 99;
-constexpr u32 DRIVER_ARTS_LEVEL_MAX = 5;
 constexpr int SLOT_ARTS_COUNT = 3;
-constexpr u32 EXTRA_PARTS_COUNT = 4;
 constexpr u32 ARMOR_MAX = 100;
 constexpr f32 PERCENT = 0.01f;
 constexpr f32 PERCENT_SCALE = 100.0f;

@@ -1,5 +1,6 @@
 #include "gf/data/gf_bdat_bgm.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
@@ -134,11 +135,6 @@ u32 getBgmConditionPriority(const CBdatWrapper &wrapper, u32 id) {
 }
 
 } // namespace _gfbbg
-
-enum {
-  BDAT_RSC_BGM_LIST = 0x9b,
-  BDAT_RSC_BGM_CONDITION = 0x9c,
-};
 
 GfBdatBgm::GfBdatBgm() : mBgmList(nullptr), mBgmCondition(nullptr) { bdatRefresh(); }
 

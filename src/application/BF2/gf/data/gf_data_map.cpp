@@ -1,5 +1,7 @@
 #include "gf/data/gf_data_map.h"
+
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_maplist.h"
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_data_bdat.h"
@@ -7,6 +9,7 @@
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
+#include "mm_mtl/fixed_array.h"
 
 namespace gf {
 
@@ -16,17 +19,12 @@ enum {
 };
 
 enum {
-  BDAT_MAP_JUMP = 0xa1,
-  BDAT_MAP_JUMP_EXTRA = 0xa2,
-};
-
-enum {
   SCENARIO_FLAG_ARCADIA_DESTROY = 0x1f65,
 };
 
 constexpr u32 ZONE_COUNT = 8;
 constexpr u32 ZONE_ELPIS = 8;
-constexpr u32 TIME_RANGE_COUNT = 9;
+constexpr u32 TIME_INFO_COUNT = 9;
 constexpr u32 WEATHER_COUNT = 4;
 
 bool GfDataMap::getName(u8 *&bdat, u32 &textId, u32 map) {
@@ -152,8 +150,8 @@ u32 GfDataMap::getMapID(u32 mapJump) {
     return 0;
   }
 
-  u8 *bdat = GfDataBdat::getFP(BDAT_MAP_JUMP);
-  u8 *bdatExtra = GfDataBdat::getFP(BDAT_MAP_JUMP_EXTRA);
+  u8 *bdat = GfDataBdat::getFP(BDAT_SYS_MAP_JUMP_LIST);
+  u8 *bdatExtra = GfDataBdat::getFP(BDAT_SYS_MAP_JUMP_EV_LIST);
   int id = mapJump;
   u8 map = 0;
   if (id >= Bdat::getIdTop(bdat) && id < Bdat::getIdTop(bdat) + Bdat::getIdCount(bdat)) {
@@ -174,7 +172,7 @@ const char *GfDataMap::getMapResourceNameByMapID(u32 map) {
 }
 
 u32 GfDataMap::getMapJumpID(u32 map) {
-  u8 *bdat = GfDataBdat::getFP(BDAT_MAP_JUMP);
+  u8 *bdat = GfDataBdat::getFP(BDAT_SYS_MAP_JUMP_LIST);
   u32 mapJump = Bdat::getIdTop(bdat);
   u32 end = mapJump + Bdat::getIdCount(bdat);
   for (; mapJump < end; mapJump++) {
@@ -187,7 +185,7 @@ u32 GfDataMap::getMapJumpID(u32 map) {
 }
 
 bool GfDataMap::getTimeRangeName(u8 *&bdat, u32 &textId, u32 time) {
-  if (time < TIME_RANGE_COUNT) {
+  if (time < TIME_INFO_COUNT) {
     GfBdatMaplist *bdatMaplist = GfBdatMaplist::get();
     bdat = GfBdatMsg::getFpMapInfo();
     textId = bdatMaplist->getTimeInfomsg(time);

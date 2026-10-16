@@ -1,17 +1,13 @@
 #include "gf/data/gf_data_field.h"
 #include "bdat.h"
 #include "gf/data/gf_bdat_btl.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
 
 namespace gf {
-
-enum {
-  BDAT_TIME_RANGE = 0x4f,
-  BDAT_WEATHER = 0x50,
-};
 
 constexpr u32 VOICE_DRIVER_COUNT = 6;
 constexpr u32 VOICE_BLADE_FIRST = 1001;
@@ -63,7 +59,7 @@ bool GfDataField::getLandmarkName(u8 *&bdat, u32 &textId, u32 landmark) {
 }
 
 bool GfDataField::getTimeRangeName(u8 *&bdat, u32 &textId, u32 time) {
-  u16 msg = Bdat::getValCheck(GfDataBdat::getFP(BDAT_TIME_RANGE), "msg", time, 2);
+  u16 msg = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_TIME_INFO), "msg", time, 2);
   textId = msg;
   if (msg == 0) {
     return false;
@@ -74,7 +70,7 @@ bool GfDataField::getTimeRangeName(u8 *&bdat, u32 &textId, u32 time) {
 }
 
 bool GfDataField::getWeatherName(u8 *&bdat, u32 &textId, u32 weather) {
-  u16 msg = Bdat::getValCheck(GfDataBdat::getFP(BDAT_WEATHER), "msg", weather, 2);
+  u16 msg = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WEATHER_INFO), "msg", weather, 2);
   textId = msg;
   if (msg == 0) {
     return false;

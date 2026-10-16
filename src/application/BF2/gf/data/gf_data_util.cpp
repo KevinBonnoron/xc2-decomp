@@ -1,9 +1,11 @@
 #include "gf/data/gf_data_util.h"
+
 #include "gf/data/gf_bdat_chrdr.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
+#include "gf/data/gf_data_map.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
 #include "ml/rand.h"
@@ -14,16 +16,12 @@ enum {
   FLAG_SCENARIO_FLAG = 0x1,
   FLAG_RANDOM_INN = 0x204,
   FLAG_SALVAGER_POINT = 0x854,
-  FLAG_GAME_CLEAR = 0xbdcd,
   FLAG_GAME_CLEAR_CHECK = 0xd77e,
 };
 
 enum {
   SCENARIO_FLAG_VANDAMME_DEAD = 0xbe8,
 };
-
-constexpr u32 MONEY_MAX = 999'999'999;
-constexpr u32 COIN_MAX = 9'999;
 
 void GfDataUtil::setupEventDriverAndBlade() {
   GfBdatChrDr *bdatDriver = GfBdatChrDr::get();

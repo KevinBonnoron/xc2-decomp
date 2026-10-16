@@ -22,6 +22,7 @@
 #include "gf/object/gf_append.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_command.h"
@@ -31,14 +32,7 @@
 
 namespace gf {
 
-static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
-
-constexpr u32 PARTY_ID_NONE = 0xffffffff;
-constexpr u32 PARTY_MEMBER_NUM = 3;
 constexpr u32 PARTY_MEMBER_MAX = 10;
-constexpr u32 PLAYER_ID_NONE = 0xffffffff;
-constexpr u32 WEAPON_HANDLE_NUM = 10;
-constexpr int SET_BLADE_NUM_MAX = 5;
 constexpr u32 READY_FRAME_MEMBER_OK = 2;
 constexpr u32 READY_FRAME_MAX = 100;
 constexpr int SLOT_HIKARI = 3;

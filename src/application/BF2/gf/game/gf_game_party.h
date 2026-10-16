@@ -27,6 +27,10 @@ class GfStatusProperty;
 
 enum CHANGE_BLADE {};
 
+constexpr u32 PARTY_ID_NONE = 0xffffffff;
+constexpr u32 PARTY_MEMBER_NUM = 3;
+constexpr u32 WEAPON_HANDLE_NUM = 10;
+
 struct GfPartyPosInfo {
   struct Position {
     Position() : position(mm::Vec3::zero), rotation(0.0f), isValid(false) {}

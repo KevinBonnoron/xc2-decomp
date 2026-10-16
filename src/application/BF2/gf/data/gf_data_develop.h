@@ -3,6 +3,9 @@
 
 namespace gf {
 
+constexpr u32 NATION_COUNT = 8;
+constexpr u32 DEVELOP_LEVEL_MAX = 5;
+
 class GfDataDevelop {
 public:
   static u32 getPoint(u32 nation);

@@ -10,6 +10,7 @@
 #include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/achiev/gf_achiev_manager.h"
+#include "gf/game/gf_game_cond.h"
 #include "gf/game/kizunaring/gf_kizunaring_manager.h"
 #include "gf/game/quest/gf_achiev_quest.h"
 #include "gf/game/quest/gf_quest_manager.h"
@@ -22,14 +23,9 @@ namespace gf {
 
 namespace {
 
-enum {
-  CONDITION_TYPE_ENVIRONMENT = 3,
-};
-
 constexpr u32 COLLECT_USE_FLAG_OFFSET = 0x5ef;
 constexpr u32 DUMMY_TALK_GROUP_FLAG_OFFSET = 0xe8b;
 constexpr u32 COUNT_FLAG_MAX = 0xff;
-constexpr u32 CONDITION_LIST_COUNT = 8;
 constexpr u32 ENEMY_GROUP_COUNT = 8;
 constexpr u32 WEATHER_NONE = 4;
 

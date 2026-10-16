@@ -3,6 +3,9 @@
 
 namespace gf {
 
+constexpr int WEAPON_TYPE_COUNT = 26;
+constexpr u32 CHIP_CREATE_WEAPON_TYPE_COUNT = 16;
+
 class GfDataWeapon {
 public:
   static const char *getName(u32 weapon);

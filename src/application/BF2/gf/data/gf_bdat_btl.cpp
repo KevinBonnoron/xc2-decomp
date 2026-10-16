@@ -1,5 +1,6 @@
 #include "gf/data/gf_bdat_btl.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
@@ -6060,30 +6061,6 @@ const char *getVo_Field_FilterChangeFile(const CBdatWrapper &wrapper, u32 id) {
 }
 
 } // namespace _gfbbt
-
-enum {
-  BDAT_BTL_ARTS_DR = 0x1,
-  BDAT_BTL_ARTS_BL = 0x2,
-  BDAT_BTL_ARTS_BL_SP = 0x4,
-  BDAT_BTL_BL_KIZUNA_LINK_SET = 0xc,
-  BDAT_BTL_BL_KIZUNA_LINK = 0xd,
-  BDAT_BTL_BL_PERSONALITY = 0xe,
-  BDAT_BTL_BUFF = 0x11,
-  BDAT_BTL_CLASS = 0x18,
-  BDAT_BTL_ENHANCE = 0x27,
-  BDAT_BTL_ENHANCE_EFF = 0x28,
-  BDAT_BTL_GROW = 0x2a,
-  BDAT_BTL_LV_REV = 0x2f,
-  BDAT_BTL_SKILL_DR = 0x36,
-  BDAT_BTL_SKILL_BL = 0x37,
-  BDAT_BTL_WPN_EN = 0x3d,
-  BDAT_BTL_TEST_SETTING = 0x3e,
-  BDAT_BTL_HANA_BASE = 0x3f,
-  BDAT_BTL_HANA_POWER = 0x40,
-  BDAT_BTL_HANA_CHIPSET = 0x41,
-  BDAT_VO_FIELD_FILTER = 0x4d,
-  BDAT_FLD_WILDCARD_DATA = 0x6a,
-};
 
 GfBdatBtl::GfBdatBtl()
     : mArtsDr(nullptr), mArtsBl(nullptr), mArtsBlSp(nullptr), mGrow(nullptr), mLv_Rev(nullptr), mWpn_En(nullptr), mBTL_Class(nullptr),

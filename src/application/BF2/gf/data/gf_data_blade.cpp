@@ -4,6 +4,7 @@
 #include "gf/data/gf_bdat_blade.h"
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_chrbl.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_item.h"
 #include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_character_id.h"
@@ -14,6 +15,7 @@
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_party.h"
 #include "gf/data/gf_data_quest.h"
+#include "gf/data/gf_data_weapon.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/event/gf_event.h"
 #include "mm_mtl/fixed_vector.h"
@@ -43,10 +45,6 @@ enum {
 };
 
 enum {
-  DEBUG_CHANGE_IDEA_TRUST = 4,
-};
-
-enum {
   BLADE_DUMMY_REGULAR_FIRST = 1012,
   BLADE_DUMMY_REGULAR_SECOND = 1013,
   BLADE_DUMMY_RARE = 1073,
@@ -56,7 +54,6 @@ constexpr u32 BLADE_REGULAR_COUNT = BLADE_REGULAR_END - BLADE_REGULAR_FIRST;
 constexpr u32 BLADE_RARE_COUNT = 176;
 constexpr u32 BLADE_RARE_INDEX = 20;
 constexpr u32 BLADE_COMMON_COUNT = BLADE_ACT_COMMON_END - BLADE_COMMON_FIRST;
-constexpr u32 BLADE_COUNT = 422;
 constexpr u32 BLADE_ACT_COUNT = BLADE_ACT_COMMON_END - BLADE_ACT_COMMON_FIRST;
 constexpr u32 BLADE_HANA_COUNT = BLADE_HANA_JD - BLADE_HANA_JS + 1;
 constexpr u32 BLADE_CHANGE_WEAPON_RANGE_COUNT = 8;
@@ -64,9 +61,6 @@ constexpr f32 SCALE_PERCENT = 0.01f;
 constexpr u32 CROWN_POINT_MAX = 5;
 constexpr u32 CROWN_POINT_MIN = 1;
 constexpr u32 NORMAL_TALK_COUNT = 32;
-constexpr u32 CHIP_CREATE_WEAPON_TYPE_COUNT = 16;
-constexpr u32 BDAT_COMMON_BLADE_NAME = 0x14e;
-constexpr u32 BDAT_BLADE_NAME = 0x168;
 
 void GfDataBlade::setCreator(u32 blade, u32 creator) {
   if (blade != 0) {
@@ -286,17 +280,17 @@ bool GfDataBlade::getNameWithMsgID(u8 *&bdat, u32 &textId, const SDataBlade &dat
     }
     textId = nameId;
     if (dataBlade.name != 0) {
-      bdat = GfDataBdat::getFP(BDAT_BLADE_NAME);
+      bdat = GfDataBdat::getFP(BDAT_CHR_BL_MS);
     } else {
-      bdat = GfDataBdat::getFP(BDAT_COMMON_BLADE_NAME);
+      bdat = GfDataBdat::getFP(BDAT_BLD_BLADENAME);
     }
     return textId != 0;
   }
 
   if (dataBlade.id < GfBdatChrBl::get()->getChrBlEnd()) {
-    bdat = GfDataBdat::getFP(BDAT_BLADE_NAME);
+    bdat = GfDataBdat::getFP(BDAT_CHR_BL_MS);
   } else {
-    bdat = GfDataBdat::getFP(BDAT_COMMON_BLADE_NAME);
+    bdat = GfDataBdat::getFP(BDAT_BLD_BLADENAME);
   }
   return true;
 }

@@ -2,11 +2,10 @@
 
 #include "gf/data/gf_data_obj.h"
 #include "gf/data/gf_data_weapon.h"
+#include "gf/object/gf_obj_handle.h"
 #include "mm_mtl/fixed_array.h"
 
 namespace gf {
-
-static GF_OBJ_HANDLE *const INVALID_HANDLE = reinterpret_cast<GF_OBJ_HANDLE *>(-1);
 
 DataParamAcc::DataParamAcc(const ParamObj &paramObj) {
   if (paramObj.handle != INVALID_HANDLE) {

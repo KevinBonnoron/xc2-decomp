@@ -5,8 +5,6 @@
 
 namespace gf {
 
-constexpr u32 GEV_MAPJUMP_END = 2;
-
 GfFieldZone::GfFieldZone(const GfSetupParam &param) : mInitialized(false) { initialize(param); }
 
 void GfFieldZone::initialize(const GfSetupParam &param) {
@@ -42,7 +40,7 @@ bool GfFieldZone::isInitialized() {
 void GfFieldZone::update(const fw::UpdateInfo &) {}
 
 void GfFieldZone::gevMapjump(GEV gev, const MapjumpCallbackInfo &) {
-  if (gev == GEV_MAPJUMP_END) {
+  if (gev == GEV_MAPJUMP_DESTROY_FIELD) {
     GfFieldZoneScript::destroyScript();
   }
 }

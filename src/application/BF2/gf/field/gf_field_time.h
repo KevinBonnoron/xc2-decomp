@@ -12,6 +12,8 @@ namespace gf {
 
 struct GfSetupParam;
 
+constexpr u32 SECONDS_PER_MINUTE = 60;
+
 enum TIME_RANGE {
   TIME_RANGE_MORNING,
   TIME_RANGE_NOONTIME,

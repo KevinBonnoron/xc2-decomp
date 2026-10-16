@@ -9,6 +9,7 @@
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_param_acc.h"
+#include "gf/data/gf_data_weapon.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
 #include "mm_mtl/fixed_vector.h"
@@ -23,8 +24,6 @@ enum {
 constexpr u32 DRIVER_COUNT = 16;
 constexpr u32 SET_BLADE_NUM_NORMAL = 3;
 constexpr u32 SET_BLADE_NUM_REX = 5;
-constexpr u32 DRIVER_LEVEL_MAX = 99;
-constexpr u32 WEAPON_TYPE_COUNT = 26;
 constexpr u32 POUCH_COUNT = 3;
 constexpr int DEATH_BLOW_PER_SLOT = 5;
 constexpr int FILE_INDEX_WEAPON_ANM = 0x30;
