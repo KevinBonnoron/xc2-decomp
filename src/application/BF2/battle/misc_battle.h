@@ -44,6 +44,7 @@ public:
   static int GetPartyID(const gf::GfObj *obj);
   static void GetKizunaMinMax(int stage, int &minimum, int &maximum);
   static int CovertKizunaStageToID(int stage);
+  static int GetKizunaStage(int kizuna, f32 *rate);
   static bool CheckInRange(const mm::Vec3 &position, const mm::Vec3 &target, f32 range, bool isXZ);
   static bool IsInWater(const mm::Vec3 &position, f32 depth);
   static const char *GetArtsTypeName(int type);
