@@ -12,6 +12,7 @@ struct Vec3;
 namespace ml {
 class DrPixlPostParm;
 class ScnRenderDrSys;
+class ScnRenderDrCapture;
 class ScnRenderDrViewCtrl;
 struct DR_CAPCUBE_PARAM;
 
@@ -240,6 +241,7 @@ public:
   void setAutoResetScene(bool autoResetScene);
   f32 getGamma() const;
   void setGamma(f32 gamma);
+  void startCapture(ScnRenderDrCapture *capture);
   void setCaptureMode(bool captureMode);
 
   DrMan *drMan;

@@ -19,6 +19,7 @@ class UILayoutObject : public UIObject {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  u32 addChild(u32 parent, UIObject *child);
   u32 countChild(const char *name, u32 length) const;
   u32 countActiveChild() const;
   u32 searchChild(const char *name) const;

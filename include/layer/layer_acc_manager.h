@@ -1,7 +1,13 @@
 #pragma once
 #include "types.h"
 
+namespace grlib {
+class CGLibTextureBuffer;
+}
+
 namespace layer {
+
+class LayerBase;
 
 enum LayerCoordinate {
   LAYER_COORDINATE_PIXEL = 0,
@@ -15,6 +21,9 @@ public:
   f32 getScreenHeight() const;
   LayerCoordinate getCoordinate() const;
   void setCoordinate(LayerCoordinate coordinate);
+  LayerBase *createObj(const void *data);
+  LayerBase *createMaskObj(const void *data);
+  LayerBase *createTexObj(const grlib::CGLibTextureBuffer &texture);
 };
 
 } // namespace layer
