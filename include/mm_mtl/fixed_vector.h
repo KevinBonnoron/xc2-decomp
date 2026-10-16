@@ -1,5 +1,6 @@
 #pragma once
 #include "mm/mm_std_base.h"
+#include <new>
 #include <stddef.h>
 
 namespace mm {
@@ -66,7 +67,7 @@ public:
   void push_back(const T &value) {
 #line 227
     MM_ASSERT(size() < capacity());
-    *at(mSize) = value;
+    new (static_cast<void *>(at(mSize))) T(value);
     mSize++;
   }
 
@@ -79,6 +80,7 @@ public:
     }
     copy(it + 1, end(), it);
     --mSize;
+    destroy(end());
     return it;
   }
 
@@ -87,8 +89,20 @@ private:
   const T *at(size_t index) const { return reinterpret_cast<const T *>(&mBuffer[index * sizeof(T) / sizeof(Unit)]); }
 
   static void copy(const T *first, const T *last, T *dest) {
-    size_t count = last - first;
-    __builtin_memcpy(dest, first, count * sizeof(T));
+    if (__is_trivially_copyable(T)) {
+      size_t count = last - first;
+      __builtin_memcpy(dest, first, count * sizeof(T));
+    } else {
+      for (; first != last; ++first, ++dest) {
+        *dest = *first;
+      }
+    }
+  }
+
+  static void destroy(T *it) {
+    if (it != nullptr) {
+      it->~T();
+    }
   }
 
   Unit mBuffer[sizeof(T) * N / sizeof(Unit)];
