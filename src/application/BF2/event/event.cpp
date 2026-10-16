@@ -43,6 +43,7 @@
 #include "event/schedule_item.cpp"
 #include "event/scheduler.cpp"
 #include "event/sche_manager.cpp"
+#include "event/ui_manager.cpp"
 #include "event/text_window.cpp"
 #include "event/text_caption.cpp"
 #include "event/text_manager.cpp"
