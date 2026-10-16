@@ -1,12 +1,19 @@
 #pragma once
 #include <stddef.h>
 
+#include "dr/dr_man.h"
 #include "framework/manager_object.h"
 #include "ml/work_event.h"
 #include "mm_mtl/array.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
+
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
 
 namespace ml {
 class FileHandleTh;
@@ -75,9 +82,12 @@ class ScriptManager : public ManagerObject, public mm::mtl::PtrSingleton<ScriptM
 public:
   ~ScriptManager();
   bool initialize() override;
+  void createScript(int type, mm::mtl::IAllocator *allocator, size_t size);
+  void destroyScript(int type, bool isForce);
   bool isScriptCreated(int type) const;
   bool isScriptLoaded(int type) const;
   bool isScriptFree(int type) const;
+  void loadScript(int type, const char *name, ml::FILE_PRIO priority);
   void notifyEvent(int type, ScriptEventParam::State state);
   u32 getTypeMax() const;
 
