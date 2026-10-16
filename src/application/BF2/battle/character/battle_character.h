@@ -9,7 +9,8 @@ struct UpdateInfo;
 
 namespace gf {
 struct GF_OBJ_HANDLE;
-}
+class GfObj;
+} // namespace gf
 
 namespace btl {
 
@@ -19,7 +20,10 @@ class GROUP_DATA;
 class BattleCharacter {
 public:
   enum ANIM_ID {};
-  enum ACTION_ID {};
+  enum ACTION_ID {
+    ACTION_ID_IDLE = 1,
+    ACTION_ID_MOVE = 4,
+  };
 
   enum {
     DEAD_CHECK_IGNORE_CHAIN_ATTACK = 0x02,
@@ -104,20 +108,69 @@ public:
   void BattleEndInitialize();
   void PreManagerUpdate(const fw::UpdateInfo &updateInfo);
   void ManagerUpdate(const fw::UpdateInfo &updateInfo);
+  void ResetHateRingData();
+  void ResetDelayVoice();
+  gf::GfObj *GetObject() const;
+  gf::GF_OBJ_HANDLE *GetControlCharacterHandle() const;
+  gf::GfObj *GetObject(gf::GF_OBJ_HANDLE *handle) const;
+  bool IsEnableBackHome() const;
+  bool IsDisp() const;
+  int GetWeaponType(bool isAsm) const;
+  bool IsCustomVoice(int voice) const;
+  void SetCustomVoiceEndFlag(int voice, bool isEnd);
+  void ClearCustomVoiceEndFlag(u32 flags);
+  int GetWeaponSeType() const;
+  void GetMoveDataPerSec(mm::Vec3 &moveData) const;
+  void SetAnimationSpeed(f32 speed);
+  void NotifyStrikeDamage(int);
+  void ResetAlphaRate(int alpha);
+  f32 GetSystemDt() const;
+  f32 GetSystemSyncCount() const;
+  bool IsEnableBladeChangeAction(ACTION_ID actionId) const;
+  void EnhanceProc();
+  bool IsEnableBattleFace() const;
+  void NotifyHateElse();
+  void SetBladeSupportCondition(int condition);
+  void AddIdea(u32 idea, u32 point);
+  void SetNoDamageTime(f32 time);
+  void SetPerfectAvoidTime(f32 time);
+  f32 GetFriendEnhanceRate(int enhance, bool) const;
+  void EnhanceTimerProc();
+  void StopAI(f32 time);
+  bool CheckRandFriendEnhanceRate(int enhance) const;
+  void ResetBladeSupportConditionFlag();
 
   u8 _08[0x10 - 0x08];
   mm::Vec3 position;
-  u8 _20[0x118 - 0x20];
+  u8 _20[0xb0 - 0x20];
+  mm::Vec3 moveData;
+  u8 _c0[0x118 - 0xc0];
   gf::GF_OBJ_HANDLE *handle;
   gf::GF_OBJ_HANDLE *target;
   u8 _128[0xc58 - 0x128];
   char voiceCode[0x10];
-  u8 _c68[0xcc8 - 0xc68];
+  u8 _c68[0xcb8 - 0xc68];
+  f32 animationSpeed;
+  u8 _cbc[0xcc4 - 0xcbc];
+  f32 systemDt;
   int bdatId;
-  u8 _ccc[0xf7d - 0xccc];
+  u8 _ccc[0xdd0 - 0xccc];
+  s16 delayVoiceTime;
+  u8 _dd2[0xf2c - 0xdd2];
+  f32 alphaRates[7];
+  u8 _f48[0xf5c - 0xf48];
+  u32 customVoiceFlags;
+  u32 customVoiceEndFlags;
+  u8 _f64[0xf7d - 0xf64];
   s8 id;
   s8 aiId;
-  u8 _f7f[0xf8f - 0xf7f];
+  s8 weaponType;
+  u8 _f80[0xf8c - 0xf80];
+  u8 : 7;
+  u8 isPlayer : 1;
+  u8 isBattle : 1;
+  u8 : 7;
+  u8 _f8e[0xf8f - 0xf8e];
   u8 : 7;
   u8 isFly : 1;
   u8 _f90[0x107c - 0xf90];
@@ -127,11 +180,18 @@ public:
   u8 : 3;
   u8 _10c7[0x10c8 - 0x10c7];
   s8 artsTarget;
-  u8 _10c9[0x10fe - 0x10c9];
+  u8 _10c9[0x10e0 - 0x10c9];
+  f32 noDamageTime;
+  f32 superArmorTime;
+  f32 perfectAvoidTime;
+  u8 _10ec[0x10fe - 0x10ec];
   s16 backAttacker;
-  u8 _1100[0x11d8 - 0x1100];
+  u8 _1100[0x11cc - 0x1100];
+  f32 stopAiTime;
+  u8 _11d0[0x11d8 - 0x11d0];
   int stamp;
-  u8 _11dc[0x11e2 - 0x11dc];
+  u8 _11dc[0x11e0 - 0x11dc];
+  u16 bladeSupportConditionFlags;
   u16 : 10;
   u16 isUseNavi : 1;
   u16 isBattleOpening : 1;
@@ -139,16 +199,26 @@ public:
 };
 
 static_assert(offsetof(BattleCharacter, position) == 0x10, "");
+static_assert(offsetof(BattleCharacter, moveData) == 0xb0, "");
 static_assert(offsetof(BattleCharacter, handle) == 0x118, "");
 static_assert(offsetof(BattleCharacter, target) == 0x120, "");
 static_assert(offsetof(BattleCharacter, voiceCode) == 0xc58, "");
+static_assert(offsetof(BattleCharacter, animationSpeed) == 0xcb8, "");
+static_assert(offsetof(BattleCharacter, systemDt) == 0xcc4, "");
 static_assert(offsetof(BattleCharacter, bdatId) == 0xcc8, "");
+static_assert(offsetof(BattleCharacter, delayVoiceTime) == 0xdd0, "");
+static_assert(offsetof(BattleCharacter, alphaRates) == 0xf2c, "");
+static_assert(offsetof(BattleCharacter, customVoiceFlags) == 0xf5c, "");
 static_assert(offsetof(BattleCharacter, id) == 0xf7d, "");
 static_assert(offsetof(BattleCharacter, aiId) == 0xf7e, "");
+static_assert(offsetof(BattleCharacter, weaponType) == 0xf7f, "");
 static_assert(offsetof(BattleCharacter, actionId) == 0x107c, "");
 static_assert(offsetof(BattleCharacter, artsTarget) == 0x10c8, "");
+static_assert(offsetof(BattleCharacter, noDamageTime) == 0x10e0, "");
 static_assert(offsetof(BattleCharacter, backAttacker) == 0x10fe, "");
+static_assert(offsetof(BattleCharacter, stopAiTime) == 0x11cc, "");
 static_assert(offsetof(BattleCharacter, stamp) == 0x11d8, "");
+static_assert(offsetof(BattleCharacter, bladeSupportConditionFlags) == 0x11e0, "");
 static_assert(sizeof(BattleCharacter) == 0x11f0, "");
 
 } // namespace btl
