@@ -1,11 +1,11 @@
 #pragma once
 #include "event/i_manager.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class QuestManager : public IManager, public mm::mtl::NoncopyableBase {
+class QuestManager : public IManager, public mm::mtl::Singleton<QuestManager> {
 public:
   enum {
     FLAG_ACTIVE = 1 << 0,

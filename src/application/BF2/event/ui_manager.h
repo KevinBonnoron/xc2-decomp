@@ -2,7 +2,7 @@
 #include "event/anm_f32.h"
 #include "event/i_manager.h"
 #include "mm_mtl/fixed_vector.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace fw {
@@ -15,7 +15,7 @@ class GfMenuCallContext;
 
 namespace event {
 
-class UIManager : public IManager, public mm::mtl::NoncopyableBase {
+class UIManager : public IManager, public mm::mtl::Singleton<UIManager> {
 public:
   enum OPTELOP_TYPE {
     OPTELOP_TYPE_CENTER,

@@ -3,7 +3,7 @@
 #include "event/scheduler.h"
 #include "gf/object/gf_obj_handle.h"
 #include "mm_mtl/fixed_vector.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace gf {
@@ -12,7 +12,7 @@ struct GF_OBJ_HANDLE;
 
 namespace event {
 
-class ScheManager : public IManager, public mm::mtl::NoncopyableBase {
+class ScheManager : public IManager, public mm::mtl::Singleton<ScheManager> {
 public:
   static constexpr u32 SCHEDULER_COUNT = 16;
 

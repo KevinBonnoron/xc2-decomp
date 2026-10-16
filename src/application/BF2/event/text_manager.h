@@ -3,7 +3,7 @@
 #include "event/text_caption.h"
 #include "event/text_window.h"
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace gf {
@@ -14,7 +14,7 @@ namespace event {
 
 class CharaObj;
 
-class TextManager : public IManager, public mm::mtl::NoncopyableBase {
+class TextManager : public IManager, public mm::mtl::Singleton<TextManager> {
 public:
   enum {
     FLAG_CAPTION = 1 << 0,
