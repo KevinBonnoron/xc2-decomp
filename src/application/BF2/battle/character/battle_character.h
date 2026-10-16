@@ -1,4 +1,5 @@
 #pragma once
+#include "battle/character/action_command.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 #include <stddef.h>
@@ -21,54 +22,13 @@ namespace btl {
 class CharacterParameter;
 class GROUP_DATA;
 
-class ActionCommand {
-public:
-  enum COMMAND_TYPE {};
-
-  enum ID {
-    ID_NONE,
-    ID_MOVE_DIR_RATE,
-    ID_MOVE_LOCK,
-    ID_SUFFER_DAMAGE,
-    ID_ATTACK_REPELLED,
-    ID_BLADE_GUARD,
-  };
-
-  enum {
-    MOVE_LOCK_FIELD_RUN = 0x1,
-    MOVE_LOCK_TURN_TARGET = 0x2,
-    MOVE_LOCK_SATELLITE = 0x4,
-  };
-
-  ActionCommand();
-  void Reset();
-  void SetActionID(int action);
-  bool IsProcAction(int action) const;
-
-  union {
-    struct {
-      f32 directionX;
-      f32 directionZ;
-      f32 rate;
-      u32 isFieldRun;
-    } moveDirRate;
-    struct {
-      f32 inputX;
-      f32 inputY;
-      u32 flags;
-    } moveLock;
-    u8 data[0x10];
-  };
-  u32 id : 6;
-  u32 actionFlags : 25;
-};
-
-static_assert(sizeof(ActionCommand) == 0x14, "");
-
 class BattleCharacter {
 public:
   enum ANIM_ID {};
   enum SLOW_PROC_ID {};
+  enum DELAY_VOICE_TYPE {
+    DELAY_VOICE_TYPE_NORMAL,
+  };
   enum ALPHA_PROC_ID {};
   enum ACTION_ID {
     ACTION_ID_IDLE = 1,
@@ -76,10 +36,18 @@ public:
     ACTION_ID_ATTACK = 6,
     ACTION_ID_ARTS = 7,
     ACTION_ID_BLADE_ARTS = 8,
+    ACTION_ID_BLADE_CHANGE = 9,
+    ACTION_ID_RESCUE = 18,
   };
 
   enum {
     DEAD_CHECK_IGNORE_CHAIN_ATTACK = 0x02,
+  };
+
+  enum {
+    AI_FLAG_STOP = 0x02,
+    AI_FLAG_STOP_FORCE = 0x04,
+    AI_FLAG_SCOUT = 0x10,
   };
 
   enum MOVE_TYPE {
@@ -124,6 +92,11 @@ public:
     f32 counter;
   };
 
+  struct AI_ACTION_DATA {
+    u8 action;
+    int target;
+  };
+
   struct AI_MOVE_PARAM {
     AI_MOVE_PARAM() : distance(0.0f), time(0.0f), type(MOVE_TYPE_TARGET), position(nullptr), target(reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1)) {}
 
@@ -157,6 +130,7 @@ public:
   bool IsControlCharacter() const;
   bool IsControlCharacterGroup() const;
   bool IsDead(u32 flags) const;
+  void SetAction(ACTION_ID actionId, bool, bool, int, f32);
   u8 CheckAttackPosition(gf::GF_OBJ_HANDLE *handle, bool, bool *) const;
   bool IsBattle() const;
   void DeleteKizunaAuraEffect();
@@ -179,9 +153,18 @@ public:
   void TurnDirection(const mm::Vec3 &direction, bool, bool);
   void TurnTarget(bool, bool, bool);
   int GetKizunaStage(f32 *rate) const;
-  void AddRecast(f32 recast, bool, int);
+  void AddRecast(f32 recast, bool isRate, int slot);
   void SetAngry(bool isAngry, f32 time);
+  void RegisterDelayVoice(DELAY_VOICE_TYPE type, f32 time, int voice, int group, int priority);
   bool IsAngry() const;
+  void UpdateBuffEffect(int buff);
+  void UpdateTargetLockArrow();
+  void ResetChangeActionStopSeData();
+  void ReturnBladeChange();
+  ActionCommand *GetFreeCommand();
+  bool IsRegisterCommand(ActionCommand::COMMAND_TYPE type) const;
+  void ActionCommandRun(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandBladeArts(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
   void HealHpRate(f32 rate, int, BattleCharacter *healer);
   void FluctuatePartyGauge(int);
   void StartBackHome();
@@ -192,6 +175,7 @@ public:
   void AddKizuna(f32 kizuna);
   void SetSpAttackRecastByLevel(int level, bool);
   void SetSuperArmorTime(f32 time);
+  void AddSlotRecast(int slot, f32 recast, bool isRate);
   bool AI_Rescue(ACTION_ID actionId, int target);
   bool AI_BladeChange(ACTION_ID actionId, int blade);
   bool AI_SpAttack(ACTION_ID actionId, bool, bool);
@@ -199,7 +183,8 @@ public:
   bool AI_Attack(ACTION_ID actionId, bool);
   bool IsProcAI(bool) const;
   bool AI_Move(ACTION_ID actionId, bool, const AI_MOVE_PARAM *param);
-  void MoveStop(bool);
+  bool MoveStop(bool isForce);
+  AI_ACTION_DATA GetAIActionData() const { return aiAction; }
   void SetScout(bool isScout);
   bool IsScout() const;
   gf::GF_OBJ_HANDLE *GetRescueTarget() const;
@@ -223,6 +208,7 @@ public:
   void SetAnimationSpeed(f32 speed);
   void NotifyStrikeDamage(int);
   void ResetAlphaRate(int alpha);
+  void UpdateEffectPositionScale(int effect, const char *node, f32 scale);
   f32 GetSyncCount(bool isSlow) const;
   f32 GetDt(bool isSlow, bool isStopCheck) const;
   void RegisterSlow(SLOW_PROC_ID slow, f32 rate, f32 time);
@@ -306,7 +292,10 @@ public:
   u32 : 25;
   u8 _dc4[0xdd0 - 0xdc4];
   s16 delayVoiceTime;
-  u8 _dd2[0xdd8 - 0xdd2];
+  s16 delayVoicePriority;
+  s16 delayVoiceGroup;
+  u8 delayVoice;
+  u8 _dd7[0xdd8 - 0xdd7];
   ALPHA_PROC_DATA alphaProcs[17];
   f32 alphaRates[7];
   u8 _f48[0xf4c - 0xf48];
@@ -331,13 +320,19 @@ public:
   u8 _f90[0xf93 - 0xf90];
   u8 : 6;
   u8 isStop : 1;
-  u8 _f94[0x107c - 0xf94];
+  u8 _f94[0xfb0 - 0xf94];
+  ActionCommand commands[10];
+  int commandNum;
   u8 actionId;
-  u8 _107d[0x10c0 - 0x107d];
+  u8 _107d[0x107e - 0x107d];
+  u16 actionPhase;
+  u8 _1080[0x108c - 0x1080];
+  int rescueTarget;
+  u8 _1090[0x10c0 - 0x1090];
   u32 buttonChallenge;
-  u8 _10c4[0x10c6 - 0x10c4];
-  u8 reactionId : 5;
-  u8 : 3;
+  u32 changeActionStopSe : 16;
+  u32 reactionId : 5;
+  u32 : 3;
   u8 _10c7[0x10c8 - 0x10c7];
   s8 artsTarget;
   u8 _10c9[0x10e0 - 0x10c9];
@@ -346,7 +341,14 @@ public:
   f32 perfectAvoidTime;
   u8 _10ec[0x10fe - 0x10ec];
   s16 backAttacker;
-  u8 _1100[0x11cc - 0x1100];
+  u8 _1100[0x1160 - 0x1100];
+  AI_ACTION_DATA aiAction;
+  u8 _1168[0x1174 - 0x1168];
+  f32 aiScoutTime;
+  int aiState;
+  u8 _117c[0x1180 - 0x117c];
+  u32 aiFlags;
+  u8 _1184[0x11cc - 0x1184];
   f32 stopAiTime;
   u8 _11d0[0x11d8 - 0x11d0];
   int stamp;
@@ -373,6 +375,7 @@ static_assert(offsetof(BattleCharacter, bdatId) == 0xcc8, "");
 static_assert(offsetof(BattleCharacter, animationMoveDistances) == 0xce0, "");
 static_assert(offsetof(BattleCharacter, ikWeight) == 0xdb8, "");
 static_assert(offsetof(BattleCharacter, delayVoiceTime) == 0xdd0, "");
+static_assert(offsetof(BattleCharacter, delayVoice) == 0xdd6, "");
 static_assert(offsetof(BattleCharacter, alphaProcs) == 0xdd8, "");
 static_assert(offsetof(BattleCharacter, alphaRates) == 0xf2c, "");
 static_assert(offsetof(BattleCharacter, dt) == 0xcc0, "");
@@ -384,51 +387,22 @@ static_assert(offsetof(BattleCharacter, parameterId) == 0xf6a, "");
 static_assert(offsetof(BattleCharacter, id) == 0xf7d, "");
 static_assert(offsetof(BattleCharacter, aiId) == 0xf7e, "");
 static_assert(offsetof(BattleCharacter, weaponType) == 0xf7f, "");
+static_assert(offsetof(BattleCharacter, commands) == 0xfb0, "");
+static_assert(offsetof(BattleCharacter, commandNum) == 0x1078, "");
 static_assert(offsetof(BattleCharacter, actionId) == 0x107c, "");
+static_assert(offsetof(BattleCharacter, actionPhase) == 0x107e, "");
+static_assert(offsetof(BattleCharacter, rescueTarget) == 0x108c, "");
 static_assert(offsetof(BattleCharacter, buttonChallenge) == 0x10c0, "");
 static_assert(offsetof(BattleCharacter, artsTarget) == 0x10c8, "");
 static_assert(offsetof(BattleCharacter, noDamageTime) == 0x10e0, "");
 static_assert(offsetof(BattleCharacter, backAttacker) == 0x10fe, "");
+static_assert(offsetof(BattleCharacter, aiAction) == 0x1160, "");
+static_assert(offsetof(BattleCharacter, aiScoutTime) == 0x1174, "");
+static_assert(offsetof(BattleCharacter, aiState) == 0x1178, "");
+static_assert(offsetof(BattleCharacter, aiFlags) == 0x1180, "");
 static_assert(offsetof(BattleCharacter, stopAiTime) == 0x11cc, "");
 static_assert(offsetof(BattleCharacter, stamp) == 0x11d8, "");
 static_assert(offsetof(BattleCharacter, bladeSupportConditionFlags) == 0x11e0, "");
 static_assert(sizeof(BattleCharacter) == 0x11f0, "");
-
-namespace act_cmd {
-
-class MOVE_DIR_RATE : public ActionCommand {
-public:
-  void Initialize(mm::Vec3 &direction, f32 rate, bool isFieldRun);
-  void GetMoveData(mm::Vec3 &move) const;
-  void GetDirection(mm::Vec3 &direction) const;
-  f32 GetRate() const;
-  bool IsFieldRun() const;
-};
-
-class MOVE_LOCK : public ActionCommand {
-public:
-  void Initialize(f32 inputX, f32 inputY, bool isFieldRun, bool isTurnTarget, bool isSatellite);
-  void GetInput(f32 &inputX, f32 &inputY) const;
-  bool IsFieldRun() const;
-  bool IsTurnTarget() const;
-  bool IsSatellite() const;
-};
-
-class SUFFER_DAMAGE : public ActionCommand {
-public:
-  void Initialize();
-};
-
-class ATTACK_REPELLED : public ActionCommand {
-public:
-  void Initialize();
-};
-
-class BLADE_GUARD : public ActionCommand {
-public:
-  void Initialize();
-};
-
-} // namespace act_cmd
 
 } // namespace btl
