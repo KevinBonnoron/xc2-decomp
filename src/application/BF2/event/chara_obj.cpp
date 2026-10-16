@@ -11,6 +11,10 @@ const mm::Vec3 &CharaObj::getPos() const { return pos; }
 
 f32 CharaObj::getEyeOffset() const { return eyeOffset; }
 
+void CharaObj::renderHead() { cmdPlayHead.render(pos, eyeOffset); }
+
+void CharaObj::renderFacial() { cmdPlayFacial.render(pos, eyeOffset); }
+
 void CharaObj::renderLens() { lensPlayer.render(pos, eyeOffset); }
 
 void CharaObj::renderWeight() { weightPlayer.render(pos, eyeOffset); }

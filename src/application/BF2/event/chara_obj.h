@@ -6,8 +6,11 @@
 #include "event/chara_ik_updater.h"
 #include "event/chara_lens_player.h"
 #include "event/chara_part_updater.h"
+#include "event/chara_play_facial.h"
+#include "event/chara_play_head.h"
 #include "event/chara_set_pos.h"
 #include "event/chara_set_rot.h"
+#include "event/chara_stop_head.h"
 #include "event/chara_tar_player.h"
 #include "event/chara_weight_player.h"
 #include "event/chara_wink_player.h"
@@ -138,7 +141,11 @@ public:
 private:
   CharaSetPos cmdSetPos;
   CharaSetRot cmdSetRot;
-  u8 _28[0xca0 - 0x28];
+  u8 _28[0x950 - 0x28];
+  CharaPlayHead cmdPlayHead;
+  CharaStopHead cmdStopHead;
+  CharaPlayFacial cmdPlayFacial;
+  u8 _A10[0xca0 - 0xa10];
   u32 flags;
   u32 state;
   mm::mtl::FixStr<64> name;
