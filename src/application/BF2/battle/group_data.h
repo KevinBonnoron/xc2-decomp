@@ -91,11 +91,15 @@ public:
   f32 buddyTime;
   u8 _f4[0xff - 0xf4];
   s8 buddyBladeIndex;
-  u8 _100[0x104 - 0x100];
+  u8 _100[0x101 - 0x100];
+  s8 spAttackSlot;
+  u8 _102[0x104 - 0x102];
   u16 : 1;
   u16 isNeedPermit : 1;
   u16 permitState : 2;
-  u16 : 12;
+  u16 : 9;
+  u16 isEntry : 1;
+  u16 : 2;
 };
 
 static_assert(offsetof(GROUP_DATA, blades) == 0x08, "");

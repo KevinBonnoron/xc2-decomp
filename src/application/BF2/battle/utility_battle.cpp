@@ -12,6 +12,7 @@
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
 #include "battle/data_manager_battle.h"
+#include "battle/group_data.h"
 #include "battle/misc_battle.h"
 #include "battle/sp_attack_manager.h"
 #include "battle/talk_manager_battle.h"
@@ -1051,6 +1052,28 @@ int Utility::AI_GetKizunaStage(gf::GF_OBJ_HANDLE *handle) {
   return character->GetKizunaStage(nullptr);
 }
 
+int Utility::AI_GetSpAttackLevel(gf::GF_OBJ_HANDLE *handle) {
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character == nullptr) {
+    return 0;
+  }
+  const GROUP_DATA *group = character->GetGroupDataConst();
+  if (group == nullptr) {
+    return 0;
+  }
+  if (!group->isEntry) {
+    return 0;
+  }
+  int slot = group->spAttackSlot;
+  if (slot < 0) {
+    return 0;
+  }
+  if (slot == SP_ATTACK_LEVEL_4_SLOT) {
+    return 4;
+  }
+  return slot + 1;
+}
+
 bool Utility::AI_StartSpAttack(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character != nullptr && character->IsProcAI(false)) {
@@ -1134,6 +1157,36 @@ int Utility::AI_GetPlayVoiceID(gf::GF_OBJ_HANDLE *handle) {
   }
 
   return TalkManager::get()->GetPlayVoiceID(character->id);
+}
+
+void Utility::AI_AddBladeArtsRecast(gf::GF_OBJ_HANDLE *handle, f32 recast, bool isRate) {
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character == nullptr) {
+    return;
+  }
+  if (character->IsDriver()) {
+    const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
+    character = CharacterManager::get()->GetCharacterConst(parameter->buddy);
+    if (character == nullptr) {
+      return;
+    }
+  }
+  character->AddRecast(recast, isRate, -1);
+}
+
+void Utility::AI_SetBladeArtsRecastByLevel(gf::GF_OBJ_HANDLE *handle, int level, bool isDecrease) {
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character == nullptr) {
+    return;
+  }
+  if (character->IsDriver()) {
+    const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
+    character = CharacterManager::get()->GetCharacterConst(parameter->buddy);
+    if (character == nullptr) {
+      return;
+    }
+  }
+  character->SetSpAttackRecastByLevel(level, isDecrease);
 }
 
 bool Utility::AI_IsBuff(gf::GF_OBJ_HANDLE *handle, int buff) {
