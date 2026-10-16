@@ -48,6 +48,7 @@
 #include "event/chara_part_updater.cpp"
 #include "event/chara_dys_updater.cpp"
 #include "event/chara_set_pos.cpp"
+#include "event/chara_walk_calculator.cpp"
 #include "event/chara_set_idle.cpp"
 #include "event/chara_stop_action.cpp"
 #include "event/chara_stop_head.cpp"
