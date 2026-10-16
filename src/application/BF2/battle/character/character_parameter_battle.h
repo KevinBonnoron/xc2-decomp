@@ -19,14 +19,23 @@ namespace btl {
 
 class GROUP_DATA;
 
+struct ARTS_SLOT_DATA {
+  u32 id : 11;
+  u32 : 21;
+  f32 recast;
+  u8 _08[0x18 - 0x08];
+};
+
 struct alignas(8) ARTS_PALETTE_DATA {
   void ResetAllRecast();
+  const ARTS_SLOT_DATA *GetSlotDataConst(int slot, bool isTalent) const;
 
   u8 _00[0x238];
 };
 
 struct FIGHT_COMBO_DATA {
   u8 id;
+  u8 _01[0x18 - 0x01];
 };
 
 struct ENHANCE_EFFECT_DATA {
@@ -137,10 +146,12 @@ public:
   const FIGHT_COMBO_DATA *GetFightComboDataConst() const;
   u32 GetLevel() const;
   f32 GetBuffEffect(int buff) const;
+  bool IsBuffInfinite(int buff) const;
   const BUFF_DATA *GetBuffDataConst(int buff, int *index) const;
   f32 GetBuffRestFrame(int buff) const;
   f32 GetBlowRotSpeed() const;
   bool IsBlowRot() const;
+  bool IsProgressCoolTime() const;
   const ENHANCE_EFFECT_DATA *GetEnhanceEffectDataConst(int enhance) const;
   bool GetAdditionalEnhanceEffect(ENHANCE_DATA &data, int type, int *) const;
   int GetGender() const;
@@ -174,7 +185,12 @@ public:
   int partyId;
   u8 _20[0x2c - 0x20];
   f32 radius;
-  u8 _30[0xf0 - 0x30];
+  u8 _30[0xbc - 0x30];
+  u8 attackWeaponType : 7;
+  u8 : 1;
+  u8 _bd[0xc0 - 0xbd];
+  FIGHT_COMBO_DATA fightCombo;
+  FIGHT_COMBO_DATA overwriteFightCombo;
   mm::mtl::FixedVector<ENHANCE_EFFECT_DATA, 64> enhanceEffects;
   u8 _3f8[0x458 - 0x3f8];
   BUFF_DATA buffs[20];
@@ -198,10 +214,12 @@ public:
   u8 : 1;
   u8 isBattle : 1;
   u8 isBlade : 1;
-  u8 : 3;
+  u8 isEnableCoolTime : 1;
+  u8 : 2;
   u8 isIgnoreBuddy : 1;
   u8 : 1;
-  u8 : 2;
+  u8 : 1;
+  u8 isOverwriteFightCombo : 1;
   mutable u8 isInitializedEnhance : 1;
 };
 
@@ -211,6 +229,8 @@ static_assert(offsetof(CharacterParameter, buddy) == 0x10, "");
 static_assert(offsetof(CharacterParameter, gameObjectId) == 0x18, "");
 static_assert(offsetof(CharacterParameter, partyId) == 0x1c, "");
 static_assert(offsetof(CharacterParameter, radius) == 0x2c, "");
+static_assert(offsetof(CharacterParameter, fightCombo) == 0xc0, "");
+static_assert(sizeof(ARTS_SLOT_DATA) == 0x18, "");
 static_assert(offsetof(CharacterParameter, enhanceEffects) == 0xf0, "");
 static_assert(offsetof(CharacterParameter, buffs) == 0x458, "");
 static_assert(offsetof(CharacterParameter, buffNum) == 0x598, "");
@@ -254,7 +274,7 @@ public:
   ARTS_PALETTE_DATA *artsPalettes;
   u32 useWeaponCounts[gf::WEAPON_TYPE_COUNT + 1];
   u32 useWeaponTotal;
-  u8 _660[0x664 - 0x660];
+  int pouchDamageArmor;
   u8 artsPaletteNum;
   u8 bladeChangeType;
 };
@@ -262,6 +282,7 @@ public:
 static_assert(offsetof(PlayerParameter, artsPalettes) == 0x5e8, "");
 static_assert(offsetof(PlayerParameter, useWeaponCounts) == 0x5f0, "");
 static_assert(offsetof(PlayerParameter, useWeaponTotal) == 0x65c, "");
+static_assert(offsetof(PlayerParameter, pouchDamageArmor) == 0x660, "");
 static_assert(offsetof(PlayerParameter, artsPaletteNum) == 0x664, "");
 static_assert(sizeof(PlayerParameter) == 0x668, "");
 
