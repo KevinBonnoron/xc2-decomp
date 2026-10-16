@@ -22,4 +22,17 @@ public:
   LAYER_GAUGE getGauge() const;
 };
 
+class LayerAccDefAnmObj : public LayerAccObjBase {
+public:
+  LayerAccDefAnmObj(LayerBase *layer);
+  f32 getMaxSecond() const;
+  f32 getSecond() const;
+  void setSecond(f32 second);
+  void setLoop(bool loop);
+  bool isLoop() const;
+  void setPause(bool pause);
+  bool isPause() const;
+  u32 getDataType() const;
+};
+
 } // namespace layer
