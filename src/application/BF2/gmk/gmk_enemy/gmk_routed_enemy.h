@@ -4,6 +4,7 @@
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_route.h"
+#include "gmk/gmk_trigger.h"
 #include "types.h"
 
 namespace gmk {
@@ -31,7 +32,7 @@ static_assert(sizeof(GmkRoutedEnemy) == 0x200, "");
 
 class GmkRoutedEnemyList : public TGmkList<GmkRoutedEnemy, GmkEnemy::BdatInfo, 0x4d4e4552, 8, GmkRoutedEnemyGobCustom> {
 public:
-  explicit GmkRoutedEnemyList(u32 updateGmkNumPerFrame);
+  explicit GmkRoutedEnemyList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), triggerList(0xffffffff) {}
   ~GmkRoutedEnemyList() override;
 
   void setUpdateGmkNumPerFrame(u32 num) override;
@@ -46,7 +47,8 @@ protected:
   void createGmk(void *data) override;
 
 private:
-  u8 _228[0x470 - 0x228];
+  GmkEnemyList::BdatInfo bdatInfo;
+  GmkTriggerList triggerList;
 };
 
 static_assert(sizeof(GmkRoutedEnemyList) == 0x470, "");

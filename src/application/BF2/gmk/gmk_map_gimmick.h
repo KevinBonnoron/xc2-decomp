@@ -3,6 +3,7 @@
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_trigger.h"
 #include "types.h"
 
 namespace gmk {
@@ -34,7 +35,7 @@ static_assert(sizeof(GmkMapGimmick) == 0xb0, "");
 
 class GmkMapGimmickList : public TGmkList<GmkMapGimmick, GmkMapGimmick::BdatInfo, 0x4750414d, 2, GmkMapGimmickGob> {
 public:
-  explicit GmkMapGimmickList(u32 updateGmkNumPerFrame);
+  explicit GmkMapGimmickList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), triggerList(0xffffffff) {}
   ~GmkMapGimmickList() override;
 
   const AGmkBase *getInst(u32 index) const override;
@@ -49,7 +50,7 @@ protected:
   void createGmk(void *data) override;
 
 private:
-  u8 _228[0x460 - 0x228];
+  GmkTriggerList triggerList;
 };
 
 static_assert(sizeof(GmkMapGimmickList) == 0x460, "");
