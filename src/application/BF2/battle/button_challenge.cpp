@@ -1,7 +1,7 @@
 #include "battle/button_challenge.h"
 
 #include "battle/battle_global.h"
-#include "gf/menu/gf_menu_call_context.h"
+#include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/object/gf_menu_obj_button_challenge2.h"
 
 namespace btl {
