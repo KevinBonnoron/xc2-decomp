@@ -61,7 +61,7 @@ check 0x710028c7ec src/application/BF2/gf/data/gf_data_obj.cpp unknown001
                                             # diff a function the game has no symbol for
 ```
 
-`check` compiles `src/`, disassembles both your function and the original, and prints `MATCH` or a colored diff. A full `check` lists only the functions that do not match; `-v` lists them all. It exits with an error when something does not match.
+`check` compiles `src/`, disassembles both your function and the original, and prints `MATCH` or a colored diff. A full `check` lists only the functions that do not match; `-v` lists them all. It also compiles every header on its own, so a header must include or forward-declare everything it uses. It exits with an error when something does not match or fails to compile.
 
 `check` keeps its work in `work/check_cache`: each object is reused until its source or one of the headers it includes changes, and the game's disassembly and symbols are read once. A change to `tools/check.py`, the compiler or its flags discards the whole cache; delete the directory to start over.
 
