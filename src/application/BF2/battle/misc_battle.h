@@ -12,6 +12,11 @@ class GfObj;
 
 namespace btl {
 
+inline f32 NextFloat(f32 value) {
+  u32 bits = *reinterpret_cast<u32 *>(&value) + 1;
+  return *reinterpret_cast<f32 *>(&bits);
+}
+
 class Misc {
 public:
   enum CROSS_MODE {

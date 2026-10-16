@@ -2,6 +2,7 @@
 
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
+#include "battle/misc_battle.h"
 #include "battle/shake_camera_manager.h"
 #include "battle/ui_manager_battle.h"
 #include "bdat.h"
@@ -383,6 +384,22 @@ int BattleGlobal::GetKizunaMax(const BattleCharacter *character) const {
   }
 
   return data->kizunaMax;
+}
+
+f32 BattleGlobal::GetAttackRate(const BattleCharacter *character) const {
+  const MAP_DRIVER_REV_DATA *data = GetMapDriverRevData(character);
+  if (data == nullptr) {
+    return 1.0f;
+  }
+  return NextFloat(data->attackRate * 0.01f);
+}
+
+f32 BattleGlobal::GetDefenceRate(const BattleCharacter *character) const {
+  const MAP_DRIVER_REV_DATA *data = GetMapDriverRevData(character);
+  if (data == nullptr) {
+    return 1.0f;
+  }
+  return NextFloat(data->defenceRate * 0.01f);
 }
 
 int BattleGlobal::GetSpLevelMax(const BattleCharacter *character) const {
