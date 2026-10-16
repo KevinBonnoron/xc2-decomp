@@ -23,6 +23,7 @@ public:
   static void update(const fw::UpdateInfo &info);
   static void postUpdate(const fw::UpdateInfo &info);
   static const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> *getList(u32 objectType);
+  static const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> *getListEnemyBlade();
   static bool isEmpty();
   static void bdatReload();
   static bool isValidGameObj(GF_OBJ_HANDLE *handle, bool isCheckState, mm::mtl::FixStr<128> *reason);

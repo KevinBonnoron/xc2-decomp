@@ -83,6 +83,11 @@ public:
   static void create(GF_OBJ_HANDLE *handle, u32 idea, int point);
 };
 
+class SCOM_OBJ_ALPHA {
+public:
+  static void create(GF_OBJ_HANDLE *handle, f32 time, f32 alpha);
+};
+
 class GfReqSmallCom {
 public:
   static bool isExistCommand(SCOM_TYPE type);
