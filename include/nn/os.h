@@ -81,5 +81,7 @@ const char *GetThreadNamePointer(const ThreadType *thread);
 void SetThreadCoreMask(ThreadType *thread, int idealCore, u64 affinityMask);
 u64 GetThreadAvailableCoreMask();
 
+void FlushDataCache(const void *address, size_t size);
+
 } // namespace os
 } // namespace nn
