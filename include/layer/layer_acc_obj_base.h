@@ -24,7 +24,10 @@ enum LayerTexFilterType {
   LAYER_TEX_FILTER_TYPE_NEAREST = 0,
   LAYER_TEX_FILTER_TYPE_LINEAR = 1,
 };
-enum LayerFlipType {};
+enum LayerFlipType {
+  LAYER_FLIP_TYPE_HORIZONTAL = 0,
+  LAYER_FLIP_TYPE_VERTICAL = 1,
+};
 
 class LayerAccObjBase {
 public:
@@ -53,6 +56,7 @@ public:
   LayerCenterType getCenterType() const;
   void setMaskObj(const LayerBase *mask);
   void resetMaskObj();
+  const void *getResData() const;
 
   LayerBase *layer;
 };

@@ -1,21 +1,44 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_mtl/fixstr.h"
 #include "types.h"
 #include "ui/ui_object.h"
 
+namespace layer {
+class LayerBase;
+}
+
+namespace ml {
+class ScnRenderDrCapture;
+}
+
 namespace mm {
 namespace mtl {
+class IAllocator;
 class RTTI;
 } // namespace mtl
 } // namespace mm
 
 namespace ui {
 
+class UILayoutObject;
+
 class UIImageObject : public UIObject {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  UIImageObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name);
+  UIImageObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name, u32 type);
+  virtual ~UIImageObject();
+  virtual const mm::mtl::RTTI *getRTTI() const;
+  virtual u32 duplicateImpl(u32 parent);
+  virtual void changeBin(const void *data);
+
+  static UIImageObject *create(UILayoutObject *parent, const void *data, u32 streamId, const mm::mtl::FixStr<32> &name,
+                               mm::mtl::IAllocator *allocator, bool mask);
+  static UIImageObject *create(UILayoutObject *parent, ml::ScnRenderDrCapture *capture, const mm::mtl::FixStr<32> &name,
+                               mm::mtl::IAllocator *allocator);
   void setMaskObject(UIImageObject *mask);
   void setImageIndex(u16 index);
   u16 getImageMax();
@@ -39,10 +62,16 @@ public:
   void setAnimationPlaybackTime(f32 time);
   void applyCapture();
 
-  u8 _108[0x118 - 0x108];
+  u32 streamId;
+  u16 imageIndex;
+  ml::ScnRenderDrCapture *capture;
   bool playbackControl;
 };
 
+static_assert(offsetof(UIImageObject, streamId) == 0x108, "");
+static_assert(offsetof(UIImageObject, imageIndex) == 0x10c, "");
+static_assert(offsetof(UIImageObject, capture) == 0x110, "");
 static_assert(offsetof(UIImageObject, playbackControl) == 0x118, "");
+static_assert(sizeof(UIImageObject) == 0x120, "");
 
 } // namespace ui

@@ -3,6 +3,10 @@
 
 #include "types.h"
 
+namespace grlib {
+class CGLibTextureBuffer;
+}
+
 namespace ml {
 class DrMan;
 
@@ -21,5 +25,10 @@ public:
 };
 
 static_assert(offsetof(ScnRenderDrViewCtrl, viewId) == 0x08, "");
+
+class ScnRenderDrCapture {
+public:
+  grlib::CGLibTextureBuffer *texture;
+};
 
 } // namespace ml
