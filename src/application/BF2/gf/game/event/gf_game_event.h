@@ -1,6 +1,8 @@
 #pragma once
 #include "gf/data/gf_data_map.h"
 #include "gf/event/gf_event.h"
+#include "gmk/gmk_manager.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
@@ -51,6 +53,13 @@ public:
   void gevPlayEvent(GEV event, u32 eventId);
   static void gevPause(u32 resumeBits, u32 pauseBits);
   static void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
+  static void setDisp(u32 type, const mm::mtl::FixedVector<u32, 1024> &ids, bool isDisp);
+  static void setGmkBdatDisp(gmk::GmkType type, u32 bdatId, bool isDisp);
+  static void setGmkIdDisp(gmk::GmkType type, u32 index, bool isDisp);
+  static void setMapLodDisp(u32 id, bool isDisp);
+  static bool isMapLodDisp(u32 id);
+  static void setMapLodAnim(u32 id, bool isReverse, bool isSkip);
+  static bool isMapLodAnimReverse(u32 id);
   static void setMapWeather(WEATHERID weather);
   static void setCloudSea(bool isEnable, bool isHigh);
   static void setColorFilter(bool isEnable, int filter, int subFilter, f32 fadeSec);
