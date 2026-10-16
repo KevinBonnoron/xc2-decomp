@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "ml/work_event.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 
@@ -9,9 +10,13 @@ class CloudMan;
 } // namespace cloud
 
 namespace ml {
+class DrEnvironmentMan;
 class DrIrrVolMan;
+class IDrDrawCallback;
 class DrPixlMan;
 class DrPixlPostParm;
+class Scn;
+class WinProc;
 
 enum FILE_PRIO {};
 enum RenderSpecMode {};
@@ -25,35 +30,58 @@ struct DrMotBlurState {
 
 static_assert(offsetof(DrMotBlurState, motBlurDefault) == 0xb6c, "");
 
-class DrMan {
+class DrMan : public IWorkBackground {
 public:
-  static DrMan *get();
   static DrMan *getIns();
-
-  void setTimeVal(f32 timeVal);
-  void setGlobalWind(const mm::Vec3 &globalWind);
-  void setGroupsDisp(s32 group, bool disp);
-  void setAutoReduction(bool autoReduction);
-  void setAvatarCapMode(s32 avatarCapMode);
-  void setCacherClearMode(bool cacherClearMode);
-  void releaseFastLight(s32 index);
-  void setGblIdx(s32 id);
-  void offGblIdx(s32 id);
-  void callCubeMapRender(const DR_CAPCUBE_PARAM &param);
+  static DrMan *get();
+  DrMan(Scn *scn);
+  ~DrMan() override;
   void resetModelTexture(u32 index);
   void deleteAddRenderSystem(u32 id);
-  bool isSeamMapStmOk() const;
+  void begin();
+  void end();
+  int loopCnt();
+  void apply(int loop);
+  void render(int loop);
+  void tail();
+  void setCallBack(IDrDrawCallback *callback);
+  void releaseCallBack(IDrDrawCallback *callback);
+  void setCacherClearMode(bool cacherClearMode);
+  void openPixelDebugWindow(WinProc *window);
+  void openHistgramDebugWindow(WinProc *window);
+  void setGblIdx(s32 id);
+  void offGblIdx(s32 id);
+  void setTimeVal(f32 timeVal);
+  void setGroupsDisp(s32 group, bool disp);
+  void setReduction(bool isReduction, f32 scaleX, f32 scaleY);
+  void setAutoReduction(bool autoReduction);
+  void setAA(bool isAA);
+  void setColorFilter(bool isColorFilter);
+  void setSSAO(bool isSSAO);
+  void setBloom(bool isBloom, bool isLensFlare);
+  void setToneMap(bool isToneMap);
+  void setMotionBlur(bool isMotionBlur);
+  void setMotionBlur(f32 strength, f32 sub);
+  void setDepthOfField(bool isDepthOfField);
+  void setDepthOfFieldParm(f32 distance, f32 range, f32 strength, f32 blend);
+  void setGlobalWind(const mm::Vec3 &globalWind);
+  void callCubeMapRender(const DR_CAPCUBE_PARAM &param);
+  void releaseFastLight(s32 index);
   bool isAllMiddelTexStmChk() const;
+  bool isSeamMapStmOk() const;
+  void setAvatarCapMode(s32 avatarCapMode);
+  void bkgHomeMenu(bool isOpen) override;
 
   static s32 s_nDblStockIdx;
   static s32 s_nDblIdx;
 
-  u8 _0000[0x0070 - 0x0000];
+  u8 _0008[0x0070 - 0x0008];
   DrMotBlurState *motBlurState;
   DrPixlMan *pixlMan;
   u8 _0080[0x0090 - 0x0080];
   DrIrrVolMan *irrVolMan;
-  u8 _0098[0x0120 - 0x0098];
+  u8 _0098[0x0100 - 0x0098];
+  DrEnvironmentMan *environmentMans[4];
   DrPixlPostParm *postParms[4];
   u8 _0140[0x1c70 - 0x0140];
   mm::Vec3 seamMapReadPos;
@@ -99,11 +127,13 @@ public:
   bool toonDirLightScale;
   u8 _1e09[0x1e0c - 0x1e09];
   s32 toonAmbient;
+  u8 _1e10[0x1e20 - 0x1e10];
 };
 
 static_assert(offsetof(DrMan, motBlurState) == 0x0070, "");
 static_assert(offsetof(DrMan, pixlMan) == 0x0078, "");
 static_assert(offsetof(DrMan, irrVolMan) == 0x0090, "");
+static_assert(offsetof(DrMan, environmentMans) == 0x0100, "");
 static_assert(offsetof(DrMan, postParms) == 0x0120, "");
 static_assert(offsetof(DrMan, seamMapReadPos) == 0x1c70, "");
 static_assert(offsetof(DrMan, seamMapAddPosMode) == 0x1c80, "");
@@ -133,5 +163,6 @@ static_assert(offsetof(DrMan, cameraLight) == 0x1da0, "");
 static_assert(offsetof(DrMan, cloudMan) == 0x1e00, "");
 static_assert(offsetof(DrMan, toonDirLightScale) == 0x1e08, "");
 static_assert(offsetof(DrMan, toonAmbient) == 0x1e0c, "");
+static_assert(sizeof(DrMan) == 0x1e20, "");
 
 } // namespace ml
