@@ -4,6 +4,7 @@
 #include "event/i_mani_callback.h"
 #include "event/object.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixstr.h"
 #include "types.h"
 
 namespace event {
@@ -49,14 +50,16 @@ public:
   virtual bool OnManiStartTar(IManiCallback::StartParam &param);
   virtual void OnManiSetTar(IManiCallback::SetParam &param);
   virtual void OnManiRender(IManiCallback::RenderParam &param);
-  const char *getCutName() const;
+  const char *getCutName() const { return mCutName.c_str(); }
 
   CamObj *getCamObj() const { return mCamObj; }
 
 private:
   CamObj *mCamObj;
   u32 mId;
-  u8 _74[0x530 - 0x74];
+  u8 _74[0x4e8 - 0x74];
+  mm::mtl::FixStr<64> mCutName;
+  u8 _52c[0x530 - 0x52c];
 };
 
 static_assert(sizeof(ObjectCamera) == 0x530, "");
