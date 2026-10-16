@@ -4,5 +4,6 @@ namespace ml {
 
 int mtRand(int max);
 float mtRandf1();
+float mtRandf2();
 
 } // namespace ml
