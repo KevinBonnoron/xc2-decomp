@@ -29,8 +29,8 @@ public:
   const T *end() const { return begin() + size(); }
 
   void clear() {
-    if (mSize != 0) {
-      mSize = 0;
+    while (mSize != 0) {
+      reinterpret_cast<T *>(mBuffer + --mSize * sizeof(T))->~T();
     }
   }
 

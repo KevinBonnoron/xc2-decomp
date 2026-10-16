@@ -115,17 +115,6 @@ public:
     added->mNext = head()->mIndex;
   }
 
-  void pop_front() {
-    MM_ASSERT(!empty());
-    ListNode *removed = node(head()->mNext);
-    mFreeIndices[++m_free_index_top] = removed->mIndex;
-    node(removed->mPrev)->mNext = removed->mNext;
-    node(removed->mNext)->mPrev = removed->mPrev;
-    removed->mPrev = removed->mIndex;
-    removed->mNext = removed->mIndex;
-    m_num_nodes--;
-  }
-
   iterator erase(iterator it) {
     MM_ASSERT(!empty());
     MM_ASSERT(it.node()->in_list());
@@ -141,13 +130,36 @@ public:
     return next;
   }
 
+  // __LINE__ must be 230 as in the original header: it is the line argument of the assert.
+#line 229
+  void pop_front() {
+    MM_ASSERT(!empty());
+    ListNode *removed = node(head()->mNext);
+    mFreeIndices[++m_free_index_top] = removed->mIndex;
+    node(removed->mPrev)->mNext = removed->mNext;
+    node(removed->mNext)->mPrev = removed->mPrev;
+    removed->mPrev = removed->mIndex;
+    removed->mNext = removed->mIndex;
+    m_num_nodes--;
+  }
+
 private:
   ListNode *node(int index) { return reinterpret_cast<ListNode *>(mBuffer) + index; }
   const ListNode *node(int index) const { return reinterpret_cast<const ListNode *>(mBuffer) + index; }
   ListNode *head() { return node(0); }
   const ListNode *head() const { return node(0); }
 
-  alignas(ListNode) unsigned char mBuffer[sizeof(ListNode) * (N + 1)];
+  template <size_t Align, bool IsWord = (Align == 8)> struct Storage {
+    typedef u8 Unit;
+  };
+
+  template <size_t Align> struct Storage<Align, true> {
+    typedef u64 Unit;
+  };
+
+  typedef typename Storage<alignof(ListNode)>::Unit Unit;
+
+  alignas(ListNode) Unit mBuffer[sizeof(ListNode) * (N + 1) / sizeof(Unit)];
   Index mFreeIndices[N + 1];
   int m_free_index_top;
   int m_num_nodes;
