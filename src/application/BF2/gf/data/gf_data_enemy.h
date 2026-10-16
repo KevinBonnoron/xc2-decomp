@@ -82,6 +82,7 @@ static_assert(sizeof(SDataEnemy) == 0x0bc, "");
 
 class GfDataEnemy {
 public:
+  static void setupGameParamForLevel(SDataEnemy &dataEnemy, u32 level);
   static const char *getName(u32 arrange);
   static bool getName(u8 *&bdat, u32 &textId, u32 arrange);
   static u32 getRscIdByArrangeId(u32 arrange);

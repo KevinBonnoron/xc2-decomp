@@ -73,6 +73,7 @@ static_assert(offsetof(GfComProperty, alpha) == 0x20, "");
 static_assert(offsetof(GfComProperty, debugFlags) == 0x30, "");
 
 enum {
+  HEAL_TYPE_NORMAL = 0,
   HEAL_TYPE_FULL = 1,
   HEAL_TYPE_SET = 2,
 };

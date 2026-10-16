@@ -62,6 +62,7 @@ public:
   static void setHp(GF_OBJ_HANDLE *handle, u32 hp);
   static void debugHpZero(GF_OBJ_HANDLE *handle);
   static void debugFallDead(GF_OBJ_HANDLE *handle);
+  static bool isDriverRide(GF_OBJ_HANDLE *handle);
   static bool isSceneRide();
   static const char *getBladeModel(u32 blade, bool isDefault);
   static bool isCondBladeModel(u32 blade);
@@ -100,6 +101,7 @@ public:
   static void setGameObjWait(GF_OBJ_HANDLE *handle, bool isWait);
   static bool isGameObjWait(GF_OBJ_HANDLE *handle);
   static bool isPlayVoice(GF_OBJ_HANDLE *handle);
+  static void levelupForEnemy(GF_OBJ_HANDLE *handle, u32 addLevel);
   static bool isDispWorldMap(u32 map);
   static u32 getBladeOnBookedItem(u32 blade);
   static bool execActivateUnuseForBlade(u32 blade, bool isRelease);

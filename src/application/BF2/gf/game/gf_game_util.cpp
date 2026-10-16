@@ -7,6 +7,7 @@
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_chrdr.h"
 #include "gf/data/gf_bdat_chrenarrange.h"
+#include "gf/data/gf_bdat_chrenparam.h"
 #include "gf/data/gf_bdat_maplist.h"
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_character_id.h"
@@ -44,6 +45,7 @@
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_property.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_command.h"
 #include "gf/request/gf_req_scom.h"
@@ -56,6 +58,7 @@
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/rtti.h"
 
 namespace gf {
 
@@ -579,6 +582,36 @@ bool GfGameUtil::isEnableDeleteObject(GF_OBJ_HANDLE *handle) {
   return !objAcc.isBattle();
 }
 
+u32 GfGameUtil::getFormationPlayerID(GF_OBJ_HANDLE *handle) {
+  if (GfObjUtil::isTrinityBlade(handle)) {
+    return -1;
+  }
+
+  GfGameParty::getPartyId(handle);
+  u32 hierarchy = GfGameParty::getHierarchyByHandle(handle);
+  if (hierarchy == 0) {
+    return -1;
+  }
+
+  GfObjAcc objAcc(handle);
+  if (objAcc.isRebuild()) {
+    int *formationPlayerId;
+    if (objAcc.getType() == OBJECT_TYPE_DRIVER) {
+      formationPlayerId = &mm::mtl::dynamicCast<GfObjSetupDriver>(GfObjManager::getObjInfo(handle)->setup)->formationPlayerId;
+    } else if (objAcc.getType() == OBJECT_TYPE_BLADE) {
+      formationPlayerId = &mm::mtl::dynamicCast<GfObjSetupBlade>(GfObjManager::getObjInfo(handle)->setup)->formationPlayerId;
+    } else {
+      return hierarchy - 1;
+    }
+
+    if (*formationPlayerId >= 0) {
+      return *formationPlayerId;
+    }
+  }
+
+  return hierarchy - 1;
+}
+
 void GfGameUtil::setHp(GF_OBJ_HANDLE *handle, u32 hp) {
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj == nullptr) {
@@ -598,6 +631,11 @@ void GfGameUtil::debugFallDead(GF_OBJ_HANDLE *handle) {
 
   MsgObjectDead message(DEAD_TYPE_EMERGENCY_ESCAPE);
   obj->sendMessage(obj, message);
+}
+
+bool GfGameUtil::isDriverRide(GF_OBJ_HANDLE *handle) {
+  GfObjSetupDriver *setup = GfObjUtil::getObjSetup<GfObjSetupDriver>(handle);
+  return setup != nullptr && setup->isRide;
 }
 
 bool GfGameUtil::isSceneRide() {
@@ -958,6 +996,28 @@ void GfGameUtil::setGameObjWait(GF_OBJ_HANDLE *handle, bool isWait) {
 bool GfGameUtil::isGameObjWait(GF_OBJ_HANDLE *handle) { return GfObjUtil::testFlag(handle, OBJ_FLAG_WAIT); }
 
 bool GfGameUtil::isPlayVoice(GF_OBJ_HANDLE *handle) { return GfGameVoice::getResult(handle) == VOICE_RESULT_PLAY; }
+
+void GfGameUtil::levelupForEnemy(GF_OBJ_HANDLE *handle, u32 addLevel) {
+  DataParamAcc dataParamAcc(handle);
+  GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(handle);
+  if (setup == nullptr) {
+    return;
+  }
+
+  u32 levelMax = GfBdatChrEnParam::get()->getChrEnParamTableEnd() - 1;
+  u32 level = dataParamAcc.getLevel(false) + addLevel;
+  GfDataEnemy::setupGameParamForLevel(*setup->dataEnemy, level > levelMax ? levelMax : level);
+  GfObj *obj = GfObjUtil::getObj(handle);
+  MsgObjectChangeHpMax changeHpMax(dataParamAcc.getHpMax(false));
+  obj->sendMessage(obj, changeHpMax);
+  u32 maxHp = dataParamAcc.getHpMax(false);
+  u32 hp = dataParamAcc.getHp();
+  if (hp < maxHp) {
+    MsgObjectHealHp healHp(maxHp - hp, HEAL_TYPE_NORMAL);
+    obj = GfObjUtil::getObj(handle);
+    obj->sendMessage(obj, healHp);
+  }
+}
 
 bool GfGameUtil::isDispWorldMap(u32 map) {
   u32 condition = GfBdatMaplist::get()->getMaplistmapON_cndID(map);
