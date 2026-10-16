@@ -2,14 +2,14 @@
 #include "event/i_manager.h"
 #include "event/select_window.h"
 #include "mm_mtl/fixed_vector.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
 class CharaObj;
 
-class SelectManager : public IManager, public mm::mtl::NoncopyableBase {
+class SelectManager : public IManager, public mm::mtl::Singleton<SelectManager> {
 public:
   enum {
     FLAG_ACTIVE = 1 << 0,

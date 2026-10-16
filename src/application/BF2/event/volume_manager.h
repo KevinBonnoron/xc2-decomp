@@ -3,12 +3,12 @@
 #include "event/volume_seamless.h"
 #include "event/volume_skip.h"
 #include "mm_mtl/fixed_array.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class VolumeManager : public IManager, public mm::mtl::NoncopyableBase {
+class VolumeManager : public IManager, public mm::mtl::Singleton<VolumeManager> {
 public:
   enum CATE {
     CATE_BGM,

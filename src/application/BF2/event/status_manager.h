@@ -3,7 +3,7 @@
 #include "gf/data/gf_game_flag.h"
 #include "ml/work_event.h"
 #include "mm_mtl/fixed_vector.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 enum EVT_judge {};
@@ -11,7 +11,7 @@ enum EVT_change {};
 
 namespace event {
 
-class StatusManager : public IManager, public ml::IWorkEvent, public mm::mtl::NoncopyableBase {
+class StatusManager : public IManager, public ml::IWorkEvent, public mm::mtl::Singleton<StatusManager> {
 public:
   static constexpr u32 CHANGE_COUNT = 32;
 

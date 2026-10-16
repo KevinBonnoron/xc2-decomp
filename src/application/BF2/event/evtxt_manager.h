@@ -1,11 +1,11 @@
 #pragma once
 #include "event/i_manager.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class EvtxtManager : public IManager, public mm::mtl::NoncopyableBase {
+class EvtxtManager : public IManager, public mm::mtl::Singleton<EvtxtManager> {
 public:
   static const char *EVTXT_PATH;
 

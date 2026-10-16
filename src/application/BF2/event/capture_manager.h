@@ -2,12 +2,12 @@
 #include "event/i_manager.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/noncopyable.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace event {
 
-class CaptureManager : public IManager, public mm::mtl::NoncopyableBase {
+class CaptureManager : public IManager, public mm::mtl::Singleton<CaptureManager> {
 public:
   static const char *MOV_PATH;
   static const char *MOV_PATH_OFS;
