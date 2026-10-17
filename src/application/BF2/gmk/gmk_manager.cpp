@@ -121,6 +121,10 @@ void GmkBdat::dispose() {
   createInfo = CreateInfo();
 }
 
+bool GmkSet::isValid() const {
+  return createInfo.memory.isValid() && createInfo.gmkSetId > 0 && (!mapBdat.createInfo.isValid() || mapBdat.isValid());
+}
+
 void GmkBdat::update(f32 deltaTime) {
   if (seq) {
     (this->*seq)(deltaTime);
@@ -147,6 +151,71 @@ const char *GmkManager::getSheetnameByType(int gmkSetId, GmkType type) const {
     return nullptr;
   }
   return reinterpret_cast<const char *>(Bdat::getValCheck(bdat, column.c_str(), gmkSetId, BDAT_TYPE_STRING));
+}
+
+int GmkManager::getMapBdatId(int gmkSetId) const {
+  u8 *bdat = gmkSetListBdat;
+  int count = Bdat::getIdCount(bdat);
+  int top = Bdat::getIdTop(bdat);
+  if (gmkSetId < top || gmkSetId >= top + count) {
+    return -1;
+  }
+  return static_cast<u16>(Bdat::getValCheck(bdat, "mapId", gmkSetId, BDAT_TYPE_U16));
+}
+
+const AGmkBase *GmkManager::findFirstGmkInstByBdatId(GmkType type, int bdatId) const {
+  for (GmkSet *const *it = sets.begin(); it != sets.end(); ++it) {
+    const GmkSet *set = *it;
+    if (set == nullptr || !set->isValid()) {
+      continue;
+    }
+    const AGmkBase *gmk = set->findFirstGmkInstByBdatId(type, bdatId);
+    if (gmk != nullptr) {
+      return gmk;
+    }
+  }
+  return nullptr;
+}
+
+const AGmkBase *GmkSet::findFirstGmkInstByBdatId(GmkType type, int bdatId) const {
+  IGmkList *list = lists[type];
+  if (list == nullptr) {
+    return nullptr;
+  }
+  u32 num = list->getInstNum();
+  for (u32 i = 0; i < num; i++) {
+    const AGmkBase *gmk = list->getInst(i);
+    if (gmk->isValid() && gmk->createInfo.bdatIndex == bdatId) {
+      return gmk;
+    }
+  }
+  return nullptr;
+}
+
+const AGmkBase *GmkManager::findGmkInstByGmkInstIndex(int gmkSetId, GmkType type, u32 index) const {
+  const GmkSet *set = findGmkSet(gmkSetId);
+  if (set == nullptr) {
+    return nullptr;
+  }
+  return set->findGmkInstByGmkInstIndex(type, index);
+}
+
+GmkSet *GmkManager::findGmkSet(int gmkSetId) const {
+  for (GmkSet *const *it = sets.begin(); it != sets.end(); ++it) {
+    GmkSet *set = *it;
+    if (set != nullptr && set->createInfo.gmkSetId == gmkSetId) {
+      return set;
+    }
+  }
+  return nullptr;
+}
+
+const AGmkBase *GmkSet::findGmkInstByGmkInstIndex(GmkType type, u32 index) const {
+  IGmkList *list = lists[type];
+  if (list != nullptr && index < list->getInstNum()) {
+    return list->getInst(index);
+  }
+  return nullptr;
 }
 
 int getCurrentMapBdatId() { return gf::GfGameManager::getMapID(); }
@@ -247,6 +316,7 @@ bool isInEvent() { return gf::GfGameManager::isEvent(false); }
 // clang-format off
 #include "gmk/gmk_base.cpp"
 #include "gmk/gmk_gob_event_listener_impl.h" // IWYU pragma: keep
+#include "gmk/gmk_acc.cpp"
 // clang-format on
 
 namespace gmk {

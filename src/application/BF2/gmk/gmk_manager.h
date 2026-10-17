@@ -1,5 +1,6 @@
 #pragma once
 #include "mm_mtl/singleton.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 #include <stddef.h>
 
@@ -92,20 +93,30 @@ enum InterestType {
 };
 
 class AGmkBase;
+class GmkSet;
 
 class GmkManager : public mm::mtl::PtrSingleton<GmkManager> {
 public:
+  ~GmkManager() override;
+
   void updateImmediate();
   const char *getFilenameByType(int gmkSetId, GmkType type) const;
   const char *getSheetnameByType(int gmkSetId, GmkType type) const;
+  int getMapBdatId(int gmkSetId) const;
+  const AGmkBase *findFirstGmkInstByBdatId(GmkType type, int bdatId) const;
+  const AGmkBase *findGmkInstByGmkInstIndex(int gmkSetId, GmkType type, u32 index) const;
+  GmkSet *findGmkSet(int gmkSetId) const;
 
   u8 _08[0x190 - 0x08];
   u8 *gmkSetListBdat;
   InterestType interestType;
+  u8 _19c[0xf358 - 0x19c];
+  mm::mtl::Vector<GmkSet *> sets;
 };
 
 static_assert(offsetof(GmkManager, gmkSetListBdat) == 0x190, "");
 static_assert(offsetof(GmkManager, interestType) == 0x198, "");
+static_assert(offsetof(GmkManager, sets) == 0xf358, "");
 
 int getCurrentMapBdatId();
 bool isInEvent();

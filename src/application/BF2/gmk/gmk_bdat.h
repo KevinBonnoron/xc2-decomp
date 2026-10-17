@@ -31,6 +31,8 @@ public:
   struct CreateInfo {
     CreateInfo() : bdatId(-1) {}
 
+    bool isValid() const { return memory.isValid() && path.length() > 0 && bdatId >= 0; }
+
     mtl::ALLOC_HANDLE memory;
     mm::mtl::FixStr<256> path;
     int bdatId;
