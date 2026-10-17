@@ -6,6 +6,7 @@
 
 namespace fw {
 
+class AssetCsvb;
 class AssetData;
 
 class AssetManager : public ManagerObject, public mm::mtl::PtrSingleton<AssetManager> {
@@ -16,6 +17,9 @@ public:
   void addAsset(AssetData *asset);
   void removeAsset(AssetData *asset);
   AssetData *searchAsset(const char *name, AssetData *previous);
+  void addCsvb(AssetCsvb *csvb);
+  void removeCsvb(AssetCsvb *csvb);
+  AssetCsvb *searchCsvb(const char *name, AssetCsvb *previous);
 };
 
 } // namespace fw
