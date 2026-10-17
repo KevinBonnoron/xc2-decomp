@@ -106,6 +106,7 @@ public:
   virtual RESULT update(const Param &param);
   virtual void term();
 
+  void keep() { flags |= FLAG_KEEP; }
   int getType() const { return type; }
   f32 getLastFrame() const { return (flags & FLAG_STANBY) != 0 ? life : 9999.0f; }
 
