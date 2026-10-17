@@ -13,6 +13,7 @@ struct Col3;
 namespace ml {
 
 class IThreadValue;
+class IWorkInfomation;
 class WorkCpuThread;
 
 enum CPUID {
@@ -84,6 +85,8 @@ public:
   static void gotoForeground();
   static void backgroundProcess();
   static void backgroundProcess(CPUID cpu);
+  static void addSystemInfoListener(IWorkInfomation *listener);
+  static void removeSystemInfoListener(IWorkInfomation *listener);
   static u32 thForeground(void *argument, void *userData);
   static u32 thBackground(void *argument, void *userData);
   static void setAfterUpdateRender(bool isAfterUpdateRender);
