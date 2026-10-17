@@ -22,6 +22,7 @@ public:
   void *getOldBuff();
   void *getMapping();
   void setUniformBlock(u32 index);
+  void setStorageBuffer(u32 index);
 
   void *m_mappings[2];
   u32 m_size;
