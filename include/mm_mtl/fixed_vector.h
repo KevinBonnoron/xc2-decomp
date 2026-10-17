@@ -1,5 +1,6 @@
 #pragma once
 #include "mm/mm_std_base.h"
+#include "mm_mtl/type_traits.h"
 #include <new>
 #include <stddef.h>
 
@@ -99,7 +100,7 @@ public:
 
 private:
   static void copy(const T *first, const T *last, T *dest) {
-    if (__is_pod(T)) {
+    if (is_pod<T>::value) {
       size_t count = last - first;
       __builtin_memcpy(dest, first, count * sizeof(T));
     } else {
