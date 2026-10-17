@@ -9,6 +9,7 @@ public:
   ALLOC_HANDLE(const ALLOC_HANDLE &other) : mHandle(other.mHandle) {}
 
   bool isValid() const { return mHandle != 0; }
+  bool operator==(const ALLOC_HANDLE &other) const { return mHandle == other.mHandle; }
 
   ALLOC_HANDLE &operator=(const ALLOC_HANDLE &other) {
     mHandle = other.mHandle;
