@@ -15,6 +15,7 @@ public:
   void end();
 
   static int s_nDblNowIdx;
+  static int s_nTriNowIdx;
 
   NVNdevice m_device;
   u8 _3008[0x5030 - 0x3008];
