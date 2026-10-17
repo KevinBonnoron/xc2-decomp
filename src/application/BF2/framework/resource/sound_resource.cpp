@@ -82,7 +82,7 @@ void SoundResource::update() {
         break;
       }
 
-      if (loader->handle != nullptr) {
+      if (loader->fileHandle != nullptr) {
         return;
       }
 

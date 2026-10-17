@@ -4,10 +4,17 @@
 #include "mtl/alloc_handle.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace fw {
 
 class AssetCsvb;
 class AssetData;
+class AssetLoader;
 
 class AssetManager : public ManagerObject, public mm::mtl::PtrSingleton<AssetManager> {
 public:
@@ -20,6 +27,10 @@ public:
   void addCsvb(AssetCsvb *csvb);
   void removeCsvb(AssetCsvb *csvb);
   AssetCsvb *searchCsvb(const char *name, AssetCsvb *previous);
+  void addLoader(AssetLoader *loader);
+  void removeLoader(AssetLoader *loader);
+  AssetLoader *searchLoader(mtl::ALLOC_HANDLE handle, const char *path);
+  AssetLoader *searchLoader(mm::mtl::IAllocator *allocator, const char *path);
 };
 
 } // namespace fw
