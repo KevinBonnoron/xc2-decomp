@@ -268,6 +268,19 @@ f32 DevGraph::getCost() {
 
 DevGraphQue *DevGraph::getGraphQue() { return get()->m_graphQue; }
 
+bool DevGraph::isInitialized() {
+  DevGraph *graph = get();
+  if (graph == nullptr) {
+    return true;
+  }
+
+  if (graph->wkIsWaitException()) {
+    return false;
+  }
+
+  return graph->wkIsActive();
+}
+
 void DevGraph::setVSync(int vsync) {
   dg::s_nVSyncOld = dg::s_nVSync;
   dg::s_nVSync = vsync;
