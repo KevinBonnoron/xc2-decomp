@@ -62,6 +62,7 @@ public:
 
   bool existInputXY() const;
   void setLocomotion(const anm::QsTransform &locomotion);
+  void setEnvSensorCheckFlags(u32 flags, bool isEnable);
 
   u8 _38[0x60 - 0x38];
   Input input;
@@ -73,7 +74,11 @@ public:
   u8 _98[0x110 - 0x98];
   u32 isFieldControl : 1;
   u32 isBattleControl : 1;
-  u32 : 30;
+  u32 : 1;
+  u32 isEnableGravity : 1;
+  u32 : 6;
+  u32 isPadControl : 1;
+  u32 : 21;
   u8 _114[0x160 - 0x114];
   mm::Vec3 position;
   u8 _170[0x318 - 0x170];

@@ -11,6 +11,9 @@ class GfComBehaviorPc : public GfComBehavior {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  void setEnableAgentField(bool isEnable);
+  void setEnableAgentBattle(bool isEnable);
+
   GfComPropertyPc *getProperty() const { return mm::mtl::dynamicCast<GfComPropertyPc>(owner->components[GfComPropertyPc::COMPONENT_INDEX]); }
 };
 

@@ -25,6 +25,7 @@ public:
   };
 
   static bool execAsmCmd(GfComAsm &comAsm, ASM_CMD_ID_FIELD id);
+  static bool testVechile(GfComBehaviorPc &behavior);
   static void setEnableFallIntoColi(GfComBehaviorPc &behavior, bool isEnable);
   static void setAccessFlag(GfComBehaviorPc &behavior, bool isEnable);
   static void setLookAtFlag(GfComBehaviorPc &behavior, bool isEnable);

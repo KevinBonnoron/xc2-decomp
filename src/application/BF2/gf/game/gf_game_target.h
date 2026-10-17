@@ -14,6 +14,7 @@ public:
   static void build(const GfSetupParam &param);
   static void destroy();
   static void update(const fw::UpdateInfo &info);
+  static void lockTarget(bool isLock);
 };
 
 } // namespace gf

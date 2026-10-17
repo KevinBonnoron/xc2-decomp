@@ -16,7 +16,11 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 
-enum ResetCameraWallTiming {};
+enum ResetCameraWallTiming {
+  RESET_CAMERA_WALL_TIMING_UNDER_GROUND,
+  RESET_CAMERA_WALL_TIMING_GROUND,
+  RESET_CAMERA_WALL_TIMING_AIR,
+};
 
 class PlayerCamera : public fw::Camera {
 public:
