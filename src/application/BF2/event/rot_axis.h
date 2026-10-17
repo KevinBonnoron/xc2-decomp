@@ -15,6 +15,8 @@ public:
   mm::Vec3 calcRot(const mm::Vec3 &pos) const;
   f32 calcOrigRot(const mm::Vec3 &pos) const;
   const char *getOrigName() const;
+  u32 getAxis() const { return mAxis; }
+  const mm::Vec3 &getRot() const { return mRot; }
 
 private:
   u32 mAxis;

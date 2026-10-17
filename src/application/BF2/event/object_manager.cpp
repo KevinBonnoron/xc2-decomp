@@ -6,6 +6,7 @@
 #include "mtl/alloc_handle.h"
 
 namespace event {
+class ObjectChara;
 
 u32 ObjectManager::getCharaCount() const {
   if (mCurrent == nullptr) {

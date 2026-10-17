@@ -38,7 +38,6 @@
 #include "event/cmd_queue.h"
 #include "event/curve.h"
 #include "event/frame_manager.h"
-#include "event/object_chara.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
@@ -60,6 +59,13 @@ namespace event {
 
 class TarAxis;
 
+enum CHARA_TYPE {
+  CHARA_TYPE_DRIVER = 1,
+  CHARA_TYPE_BLADE = 2,
+  CHARA_TYPE_NPC = 3,
+  CHARA_TYPE_ENEMY = 5,
+};
+
 enum WPNHIDEID {
   WPNHIDEID_SEQ = 0,
   WPNHIDEID_EVA = 1,
@@ -72,6 +78,7 @@ public:
   static constexpr size_t SUB_QUEUE_COUNT = 5;
 
   enum {
+    FLAG_READY = 1 << 3,
     FLAG_MOUNT = 1 << 4,
     FLAG_FADE_OUT = 1 << 5,
     FLAG_MODEL_STREAM = 1 << 6,
@@ -160,6 +167,7 @@ public:
   void updateDispJiji();
 
   const char *getName() const { return name.c_str(); }
+  bool isReady() const { return (flags & FLAG_READY) != 0; }
   gf::GF_OBJ_HANDLE *getHandle() const { return handle; }
   const FrameInfo &getFrameInfo() const { return frameInfo; }
 

@@ -149,6 +149,7 @@
 #include "event/object_party_list.cpp"
 #include "event/object.cpp"
 #include "event/object_tree.cpp"
+#include "event/object_chara.cpp"
 #include "event/object_camera.cpp"
 #include "event/object_effect.cpp"
 #include "event/object_list.cpp"
