@@ -3,19 +3,32 @@
 
 #include "event/chara_dys_updater.h"
 #include "event/chara_effect_player.h"
+#include "event/chara_eva_player.h"
+#include "event/chara_eva_player_eff.h"
+#include "event/chara_fade.h"
+#include "event/chara_hide_wpn.h"
 #include "event/chara_ik_updater.h"
 #include "event/chara_lens_player.h"
 #include "event/chara_liner_pos.h"
 #include "event/chara_liner_rot.h"
+#include "event/chara_mount.h"
 #include "event/chara_part_updater.h"
 #include "event/chara_play_action.h"
 #include "event/chara_play_action_auto.h"
+#include "event/chara_play_eva.h"
+#include "event/chara_play_eva_eff.h"
 #include "event/chara_play_facial.h"
 #include "event/chara_play_head.h"
+#include "event/chara_play_motion.h"
+#include "event/chara_play_motion_abc.h"
+#include "event/chara_play_talk.h"
+#include "event/chara_play_talk_auto.h"
+#include "event/chara_play_wink.h"
 #include "event/chara_set_idle.h"
 #include "event/chara_set_pos.h"
 #include "event/chara_set_rot.h"
 #include "event/chara_set_tar.h"
+#include "event/chara_stop_action.h"
 #include "event/chara_stop_head.h"
 #include "event/chara_tar_player.h"
 #include "event/chara_turn_rot.h"
@@ -59,7 +72,9 @@ public:
   static constexpr size_t SUB_QUEUE_COUNT = 5;
 
   enum {
+    FLAG_MOUNT = 1 << 4,
     FLAG_FADE_OUT = 1 << 5,
+    FLAG_MODEL_STREAM = 1 << 6,
     FLAG_DISP_JIJI = 1 << 7,
   };
 
@@ -123,10 +138,10 @@ public:
                   f32 blendOut);
   int getFacial() const;
   void playAutoTalk(f32 frame);
-  void playTalk(bool isTalk, f32 frame, bool isBlend, bool isAuto, f32 openMin, f32 openMax, f32 closeMin, f32 closeMax);
+  void playTalk(bool isManual, f32 frame, bool isBlend, bool isAuto, f32 openMin, f32 openMax, f32 closeMin, f32 closeMax);
   void mount(CharaObj *target, const char *bone, const mm::Vec3 &pos, const mm::Vec3 &rot);
   void resetDynamics(int frame);
-  void playFade(bool isIn, f32 frame);
+  void playFade(bool isOut, f32 frame);
   bool isFadeOut() const;
   void playVolumeFade(CharaEffectPlayer::VF_TYPE type, int id, const mm::Vec3 &position, const mm::Vec3 &scale, f32 frame, f32 rate, int mode,
                       f32 speed);
@@ -144,6 +159,8 @@ public:
   void setDispJiji(bool isDisp);
   void updateDispJiji();
 
+  const char *getName() const { return name.c_str(); }
+  gf::GF_OBJ_HANDLE *getHandle() const { return handle; }
   const FrameInfo &getFrameInfo() const { return frameInfo; }
 
 private:
@@ -158,11 +175,22 @@ private:
   CharaSetIdle cmdSetIdle;
   CharaPlayActionAuto cmdPlayActionAuto;
   CharaPlayAction cmdPlayAction;
-  u8 _670[0x950 - 0x670];
+  CharaStopAction cmdStopAction;
+  CharaPlayMotion cmdPlayMotion;
+  CharaPlayMotionABC cmdPlayMotionABC;
+  CharaPlayEva cmdPlayEva;
+  CharaEvaPlayer evaPlayer;
+  CharaPlayEvaEff cmdPlayEvaEff;
+  CharaEvaPlayerEff evaPlayerEff;
+  CharaHideWpn cmdHideWpn;
   CharaPlayHead cmdPlayHead;
   CharaStopHead cmdStopHead;
   CharaPlayFacial cmdPlayFacial;
-  u8 _A10[0xca0 - 0xa10];
+  CharaPlayTalkAuto cmdPlayTalkAuto;
+  CharaPlayTalk cmdPlayTalk;
+  CharaPlayWink cmdPlayWink;
+  CharaMount cmdMount;
+  CharaFade cmdFade;
   u32 flags;
   u32 state;
   mm::mtl::FixStr<64> name;
@@ -193,7 +221,7 @@ private:
   mm::Vec3 rotTo;
   u8 _2FF0[0x3030 - 0x2ff0];
   FrameInfo frameInfo;
-  u8 _3044[0x3048 - 0x3044];
+  f32 streamFrame;
   f32 weaponScale;
   u32 hideWeaponFlags[2];
   int reuseFlag;
