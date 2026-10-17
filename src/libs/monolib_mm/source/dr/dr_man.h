@@ -54,6 +54,7 @@ public:
   void applyViewBegin();
   void render(int loop);
   void renderBegin(int loop);
+  void setAlphaRenderTarget();
   void tail();
   void setMainRenderTarget();
   bool isIBLHalfRes() const;

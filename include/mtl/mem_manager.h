@@ -12,6 +12,7 @@ enum AllocatorType {
 
 class MemManager {
 public:
+  static ALLOC_HANDLE create(ALLOC_HANDLE parent, size_t size, const char *name, bool, const char *file = "no name", int line = 0);
   static ALLOC_HANDLE create(ALLOC_HANDLE parent, size_t size, const char *name, bool, AllocatorType type, size_t alignment,
                              const char *file = "no name", int line = 0);
   static void erase(ALLOC_HANDLE handle);
