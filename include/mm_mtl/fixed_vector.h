@@ -1,5 +1,6 @@
 #pragma once
 #include "mm/mm_std_base.h"
+#include "mm_mtl/construct.h"
 #include "mm_mtl/type_traits.h"
 #include <new>
 #include <stddef.h>
@@ -93,7 +94,17 @@ public:
     return *this;
   }
 
-  void assign(const T *first, const T *last);
+  void assign(const T *first, const T *last) {
+    MM_ASSERT(first <= last);
+    clear();
+    if (first == last) {
+      return;
+    }
+    size_t newSize = last - first;
+    MM_ASSERT(newSize <= N);
+    copy_construct_n(first, newSize, begin());
+    mSize = newSize;
+  }
 
   T *at(size_t index) { return reinterpret_cast<T *>(&mBuffer[index * sizeof(T) / sizeof(Unit)]); }
   const T *at(size_t index) const { return reinterpret_cast<const T *>(&mBuffer[index * sizeof(T) / sizeof(Unit)]); }
