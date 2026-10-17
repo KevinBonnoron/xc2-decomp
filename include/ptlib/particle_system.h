@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_math/mm_mat44.h"
 #include "mtl/alloc_handle.h"
 #include "types.h"
 
@@ -46,6 +47,10 @@ struct FxParam {
 static_assert(offsetof(FxParam, m_isPause) == 0x0d, "");
 static_assert(offsetof(FxParam, m_isStop) == 0x10, "");
 static_assert(sizeof(FxParam) == 0x18, "");
+
+struct CamParam {
+  mm::Mat44 m_viewMatrix;
+};
 
 class ParticleManager {
 public:
@@ -131,6 +136,7 @@ public:
   static void debugRenderer(void *renderer);
   static void *getGrp(int index);
   int get_prio_idx(int priority);
+  CamParam &getCamParam();
   renderer::RenderManager &getRenderManager();
   bool emitter_set_check(FxHeader *header);
   void emitter_set_free_all(bool isForce);
