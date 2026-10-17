@@ -1,16 +1,17 @@
 #pragma once
 #include "event/anm_vec.h"
 #include "event/i_cmd.h"
-#include "types.h"
 
 namespace event {
+
+class CharaDysUpdater;
 
 class CharaLinerRot : public ICmd {
 public:
   virtual RESULT update(const Param &param);
 
 private:
-  u8 _08[0x10 - 0x08];
+  CharaDysUpdater *dysUpdater;
   AnmVec anm;
 };
 

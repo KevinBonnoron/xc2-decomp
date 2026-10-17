@@ -5,12 +5,17 @@
 
 namespace event {
 
+class CharaDysUpdater;
+class CharaIKUpdater;
+
 class CharaLinerPos : public ICmd {
 public:
   virtual RESULT update(const Param &param);
 
 private:
-  u8 _08[0x20 - 0x08];
+  CharaIKUpdater *ikUpdater;
+  CharaDysUpdater *dysUpdater;
+  u32 offscrId;
   AnmVec anm;
 };
 
