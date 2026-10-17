@@ -5,6 +5,7 @@
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_manager.h"
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
@@ -34,5 +35,20 @@ bool GmkCollection::BdatInfo::isPopCondMatchedExceptDist() const {
 }
 
 void GmkCollection::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
+
+bool GmkCollectionList::BdatInfo::create() {
+  u8 *mapList = gf::GfDataBdat::getFP(gf::BDAT_FLD_MAPLIST);
+  if (mapList == nullptr) {
+    mapId = -1;
+    return false;
+  }
+  mapId = gf::GfGameManager::getMapID();
+  if (mapId < Bdat::getIdTop(mapList) || Bdat::getIdTop(mapList) + Bdat::getIdCount(mapList) <= mapId) {
+    mapId = -1;
+    return false;
+  }
+  repopTime = Bdat::getValCheck(mapList, "m_repoptime", mapId, BDAT_TYPE_U8);
+  return true;
+}
 
 } // namespace gmk

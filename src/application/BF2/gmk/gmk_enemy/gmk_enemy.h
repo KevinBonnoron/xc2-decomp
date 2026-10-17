@@ -6,6 +6,8 @@
 #include "gmk/gmk_trigger.h"
 #include "types.h"
 
+struct CBdatWrapper;
+
 namespace gmk {
 
 class GmkEnemyGob;
@@ -13,7 +15,12 @@ class GmkEnemyGob;
 class GmkEnemy : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x8];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+
+    u16 targetPointName;
+    bool isPopSummon;
+    u16 displayRadius;
+    u16 displayHeight;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_ENEMY;
