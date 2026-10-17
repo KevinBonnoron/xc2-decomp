@@ -31,6 +31,7 @@ enum ColiType : int {
 };
 
 enum ColiState : int {
+  COLI_STATE_ENABLE = 1,
   COLI_STATE_INACTIVE = 2,
 };
 

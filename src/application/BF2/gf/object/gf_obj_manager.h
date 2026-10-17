@@ -59,7 +59,8 @@ struct GFOBJ_INFO {
   GF_OBJ_HANDLE *owner;
   GfObjProperty *property;
   mm::Vec3 modelScale;
-  u8 _b0[0xb8 - 0xb0];
+  int coliPriority;
+  u8 _b4[0xb8 - 0xb4];
   GFOBJ_MOUNT mounts[4];
   GfVolumeFade *volumeFade;
   u8 _3e0[0x404 - 0x3e0];
@@ -71,6 +72,7 @@ static_assert(offsetof(GFOBJ_INFO, state) == 0x06, "");
 static_assert(offsetof(GFOBJ_INFO, handle) == 0x08, "");
 static_assert(offsetof(GFOBJ_INFO, assetHandle) == 0x10, "");
 static_assert(offsetof(GFOBJ_INFO, obj) == 0x18, "");
+static_assert(offsetof(GFOBJ_INFO, coliPriority) == 0xb0, "");
 static_assert(offsetof(GFOBJ_INFO, setup) == 0x30, "");
 static_assert(offsetof(GFOBJ_INFO, flags) == 0x38, "");
 static_assert(offsetof(GFOBJ_INFO, dispFlags) == 0x48, "");

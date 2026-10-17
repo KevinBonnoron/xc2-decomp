@@ -3,6 +3,12 @@
 
 namespace gf {
 
+enum {
+  NATION_FIRST = 1,
+  NATION_IYASAKI = 5,
+  NATION_ARCADIA = 6,
+};
+
 constexpr u32 NATION_COUNT = 8;
 constexpr u32 DEVELOP_LEVEL_MAX = 5;
 

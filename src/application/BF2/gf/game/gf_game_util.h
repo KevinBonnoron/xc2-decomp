@@ -11,6 +11,10 @@ struct Vec3;
 
 namespace gf {
 
+enum {
+  SCENARIO_FLAG_SAIKA_LENS_OFF = 0x1b70,
+};
+
 struct GF_OBJ_HANDLE;
 struct OwnerBonus;
 struct SDataBlade;

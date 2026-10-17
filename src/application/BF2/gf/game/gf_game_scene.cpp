@@ -1,12 +1,15 @@
 #include "gf/game/gf_game_scene.h"
 
 #include <math.h>
+#include <string.h>
 
 #include "battle/utility_battle.h"
+#include "framework/coli/coli_object.h"
 #include "framework/effect/effect_manager.h"
 #include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
 #include "gf/data/gf_bdat_chrbl.h"
+#include "gf/data/gf_bdat_chrenarrange.h"
 #include "gf/data/gf_bdat_item.h"
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_character_id.h"
@@ -24,6 +27,7 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/field/gf_field_bgm.h"
 #include "gf/field/gf_field_sound.h"
+#include "gf/field/gf_field_time.h"
 #include "gf/game/event/gf_game_event.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_mount.h"
@@ -36,11 +40,14 @@
 #include "gf/game/gf_game_util.h"
 #include "gf/game/gf_layer_pause.h"
 #include "gf/game/quest/gf_quest_manager.h"
+#include "gf/game/quest/gf_quest_target.h"
 #include "gf/game/sequential_play/gf_play_command.h"
 #include "gf/game/sequential_play/gf_sequential_play.h"
 #include "gf/gf_allocator.h"
 #include "gf/gf_manager.h"
 #include "gf/gf_pause.h"
+#include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/gf_com_collider.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_append.h"
 #include "gf/object/gf_obj.h"
@@ -50,13 +57,16 @@
 #include "gf/object/gf_obj_property.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
+#include "gf/request/gf_req_command.h"
 #include "gf/request/gf_req_manager.h"
 #include "gf/request/gf_req_scom.h"
 #include "gf/scom/gf_scom_achiev.h"
 #include "gf/sound/gf_sound.h"
 #include "gf/util/gf_equip_util.h"
 #include "gf/util/gf_item_util.h"
+#include "gf/util/gf_util.h"
 #include "mm_mtl/algorithm.h"
+#include "mm_mtl/vector.h"
 
 namespace gf {
 
@@ -69,11 +79,12 @@ constexpr f32 FIELD_BLADE_CHANGE_WAIT_TIME = 0.5f;
 constexpr f32 MONEY_LOG_TIME = 0.5f;
 constexpr int STOP_ENEMY_ATTACK_FRAME = 30;
 constexpr int AFTER_EVENT_COUNT_MAX = 1000;
-constexpr u32 TIME_RANGE_MORNING = 0;
-constexpr u32 TIME_RANGE_NIGHT = 3;
 constexpr f32 INVALID_SAVE_POS = -999999.0f;
 constexpr f32 INVALID_SAVE_POS_LIMIT = -999998.0f;
 constexpr u32 OBJ_LAYER_PLAYER = 4;
+constexpr int HOMURI_BLADE_SET = 4;
+constexpr int DEAD_COLI_PRIORITY = 900;
+constexpr f32 HIKARI_ROOM_HEIGHT = 100.0f;
 constexpr u32 SAVED_HP_TYPE_FIRST = 1;
 constexpr u32 SAVED_HP_TYPE_LAST = 3;
 constexpr u32 SHOP_PRIVILEGE = 39;
@@ -102,6 +113,60 @@ constexpr f32 MOVE_DISTANCE_MIN = 0.01f;
 constexpr f32 MOVE_DISTANCE_MAX = 5.0f;
 constexpr u32 CRYSTAL_LIST_FIRST = 45005;
 constexpr u32 CRYSTAL_ITEM_FIRST = 38;
+
+bool isEnableBattleMomuri(u32 partyId) {
+  DataParamAcc paramAcc(GfGameParty::getHandleBlade(partyId, -1));
+  if (paramAcc.isValid() && paramAcc.getBdatId() == BLADE_HOMURI) {
+    return false;
+  }
+  return GfDataBlade::getSetDriver(BLADE_HOMURI) == DRIVER_REX;
+}
+
+void updateColiPriority(const DataParamAcc &paramAcc, bool isDead, bool isSwim) {
+  if (!paramAcc.isValid()) {
+    return;
+  }
+  GfObj *obj = GfObjUtil::getObj(paramAcc.handle);
+  if (obj == nullptr) {
+    return;
+  }
+  int priority = obj->info->coliPriority;
+  if (priority < 0) {
+    return;
+  }
+  GfComAsm *comAsm = obj->getComponent<GfComAsm>();
+  if (comAsm == nullptr) {
+    return;
+  }
+  GfComCollider *collider = obj->getComponent<GfComCollider>();
+  if (collider == nullptr) {
+    return;
+  }
+  fw::ColiObject *coli = collider->colis[0];
+  if (coli == nullptr) {
+    return;
+  }
+  int currentPriority = coli->getPriority();
+  if (priority == currentPriority && isDead) {
+    bool isDeadState = isSwim;
+    if (!isDeadState) {
+      const char *state = comAsm->getStateName(ANIM_LAYER_BASE);
+      isDeadState = state != nullptr && (strcmp(state, "S_waterdead_00") == 0 || strcmp(state, "S_waterdead_01") == 0);
+    }
+    if (!isDeadState && comAsm->isEnd(ANIM_LAYER_BASE)) {
+      const char *state = comAsm->getStateName(ANIM_LAYER_BASE);
+      isDeadState = state != nullptr && strcmp(state, "S_dead") == 0;
+    }
+    if (isDeadState) {
+      coli->setPriority(DEAD_COLI_PRIORITY);
+      coli->clearState(fw::COLI_STATE_ENABLE);
+    }
+  }
+  if (priority != currentPriority && !isDead) {
+    coli->setPriority(priority);
+    coli->setState(fw::COLI_STATE_ENABLE);
+  }
+}
 
 void addAchievementCount(u32 stats, int count) {
   for (int i = 0; i < count; i++) {
@@ -408,6 +473,38 @@ bool GfGameScene::isControlFreeState() const {
     return GfGameState::getStateReserve() == GF_STATE_CONTROL;
   }
   return false;
+}
+
+void GfGameScene::setEraseQuestEnemyForEventStart(QuestID quest) {
+  const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> *enemies = GfGameObj::getList(OBJECT_TYPE_ENEMY);
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY>::const_iterator it = enemies->begin(); it != enemies->end(); ++it) {
+    DataParamAcc paramAcc(*it);
+    if (paramAcc.getHp() == 0) {
+      if (eventObjs.size() != eventObjs.capacity()) {
+        eventObjs.push_back(*it);
+      }
+    } else if (!quest.empty() && GfQuestTarget::getIconType(*it, quest) != 0) {
+      if (eventObjs.size() != eventObjs.capacity()) {
+        eventObjs.push_back(*it);
+      }
+    }
+  }
+  isForceBossBattleBgmEnable = true;
+}
+
+void GfGameScene::setEnemyDead(GF_OBJ_HANDLE *handle) {
+  GfObj *obj = GfObjUtil::getObj(GfMountManager::getHandle(handle, GFATTACH_WEAPON, OPTMNT_BLADE));
+  if (obj == nullptr) {
+    return;
+  }
+  GfComCollider *collider = obj->getComponent<GfComCollider>();
+  if (collider == nullptr) {
+    return;
+  }
+  fw::ColiObject *coli = collider->colis[0];
+  if (coli != nullptr) {
+    coli->clearState(fw::COLI_STATE_ENABLE);
+  }
 }
 
 void GfGameScene::setHomuriWeaponExtraMesh(bool isVisible, f32 alpha) {
@@ -865,7 +962,7 @@ void GfGameScene::gevChangeTimeRange(u32 timeRange) {
   CV_FIELD voice;
   if (timeRange == TIME_RANGE_MORNING) {
     voice = CV_FIELD_TIME_MORNING;
-  } else if (timeRange == TIME_RANGE_NIGHT) {
+  } else if (timeRange == TIME_RANGE_EVENING) {
     voice = CV_FIELD_TIME_NIGHT;
   } else {
     return;
@@ -1083,6 +1180,26 @@ void GfGameScene::gevPlayEvent(GEV event, u32 eventId) {
   }
 }
 
+void GfGameScene::gevSelectHikari(bool) {
+  if (GfDataBlade::getSetDriver(BLADE_HOMURA) != DRIVER_REX || GfDataBlade::getSetDriver(BLADE_HIKARI) != DRIVER_REX) {
+    return;
+  }
+  if ((GfDataBlade::isHikariCurrent() && GfDataDriver::getBlade(DRIVER_REX, -1) == BLADE_HOMURA) ||
+      (!GfDataBlade::isHikariCurrent() && GfDataDriver::getBlade(DRIVER_REX, -1) == BLADE_HIKARI)) {
+    int bladeSet = GfDataDriver::getSetIdByBlade(DRIVER_REX, GfDataBlade::isHikariCurrent() ? BLADE_HIKARI : BLADE_HOMURA);
+    GF_OBJ_HANDLE *driver = GfGameParty::getHandleDriverByBdatID(DRIVER_REX);
+    if (!GfObjUtil::isValid(driver)) {
+      DataParamAcc paramAcc(OBJECT_TYPE_DRIVER, DRIVER_REX, GimmickType());
+      paramAcc.setBladeSet(bladeSet);
+    } else {
+      GfGameUtil::setBladeSelect(driver, bladeSet);
+      RQ_SETUP_PARTY info;
+      GfGameParty::getCurrentPartyInfo(info);
+      GfReqCommand::reqChangeParty(info);
+    }
+  }
+}
+
 void GfGameScene::qevCompleteQuest(const QuestCompleteParam &) { isRequestAutoFlag = true; }
 
 void GfGameScene::updateAppendModel(const fw::UpdateInfo &info) {
@@ -1267,6 +1384,57 @@ void GfGameScene::updatePartyObjFlag(const fw::UpdateInfo &) {
   }
 }
 
+void GfGameScene::updateBattleMomuri(const fw::UpdateInfo &) {
+  if (battleMomuriRequest != -1 && !GfReqManager::isValid(battleMomuriRequest)) {
+    battleMomuriRequest = -1;
+  }
+  if (isBattleMomuri || GfGameManager::isMapjump()) {
+    return;
+  }
+  u32 partyId = GfGameParty::getPartyId(OBJECT_TYPE_DRIVER, DRIVER_REX);
+  if (partyId == -1) {
+    return;
+  }
+  if (!isEnableBattleMomuri(partyId)) {
+    return;
+  }
+  GfBdatChrEnArrange *enArrange = GfBdatChrEnArrange::get();
+  for (GF_OBJ_HANDLE *handle : *GfGameObj::getList(OBJECT_TYPE_ENEMY)) {
+    GfObjAcc obj(handle);
+    if (obj.isBattle() && enArrange->isChrEnArrangeFlagHomuri(obj.getEnArrangeId())) {
+      if (GfGameManager::isControlFree()) {
+        isBattleMomuri = true;
+        battleMomuriRequest = GfReqCommand::reqChangeBladeWithSetId(GfGameParty::getPartyId(OBJECT_TYPE_DRIVER, DRIVER_REX), HOMURI_BLADE_SET, false);
+      }
+      return;
+    }
+  }
+}
+
+void GfGameScene::updateHikariLv4Room(const fw::UpdateInfo &) {
+  isEnableRoomForHikariLv4 = false;
+  if (GfGameManager::isMapjump()) {
+    return;
+  }
+  u32 partyId = GfGameParty::getPartyId(OBJECT_TYPE_DRIVER, DRIVER_REX);
+  if (partyId == -1) {
+    return;
+  }
+  u32 blade;
+  {
+    DataParamAcc paramAcc(GfGameParty::getHandleBlade(partyId, -1));
+    blade = paramAcc.getValidBdatId();
+  }
+  if (blade == BLADE_HIKARI && !GfGameManager::isRoom()) {
+    GfObjAcc obj(GfGameParty::getHandleDriver(0));
+    mm::Vec3 hit;
+    mm::Vec3 position = obj.getWorldTransform().position + mm::Vec3(0.0f, 1.0f, 0.0f);
+    if (!util::getUpperHitCollision(hit, position, HIKARI_ROOM_HEIGHT)) {
+      isEnableRoomForHikariLv4 = true;
+    }
+  }
+}
+
 void GfGameScene::updateStartGame(const fw::UpdateInfo &) {
   if (isStartGame && GfGameManager::isControlFree() && !GfGameManager::isFadeout() && playerControl == GEV_PLAYER_CONTROL_FREE) {
     isStartGame = false;
@@ -1381,6 +1549,15 @@ void GfGameScene::updateBladeChangeInField(const fw::UpdateInfo &info) {
     return;
   }
   fieldBladeChangeTime = time + info.deltaTime;
+}
+
+void GfGameScene::updateColiPrio(const fw::UpdateInfo &) {
+  for (u32 partyId = 0; partyId < 3; partyId++) {
+    DataParamAcc driverAcc(GfGameParty::getHandleDriver(partyId));
+    updateColiPriority(driverAcc, driverAcc.getHp() == 0, partyStates[partyId].moverState == MOVER_STATE_SWIM);
+    DataParamAcc bladeAcc(GfGameParty::getHandleBlade(partyId, -1));
+    updateColiPriority(bladeAcc, driverAcc.getHp() == 0, partyStates[partyId].moverState == MOVER_STATE_SWIM);
+  }
 }
 
 void GfGameScene::updateAutoHeal(const fw::UpdateInfo &info) {
@@ -1582,6 +1759,21 @@ void GfGameScene::updateRideRequest(const fw::UpdateInfo &) {
     }
   }
   isRequestRideOn = false;
+}
+
+void GfGameScene::updateEnemySaveHp(const fw::UpdateInfo &) {
+  const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> *enemies = GfGameObj::getList(OBJECT_TYPE_ENEMY);
+  for (mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY>::const_iterator it = enemies->begin(); it != enemies->end(); ++it) {
+    GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(*it);
+    if (setup != nullptr && setup->savedHp != 0) {
+      GfObjAcc obj(*it);
+      if (obj.isBattle()) {
+        MsgObjectChangeHp message(setup->savedHp);
+        obj.getObj()->sendMessage(obj.getObj(), message);
+        setup->savedHp = 0;
+      }
+    }
+  }
 }
 
 void GfGameScene::setRideOn(u32 partyId) {

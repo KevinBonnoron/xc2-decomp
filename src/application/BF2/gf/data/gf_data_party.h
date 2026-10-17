@@ -23,13 +23,15 @@ struct SDataParty {
   u32 savedLeaderObjectType;
   u32 savedLeader;
   u16 partyGauge;
-  u8 _04e[0x054 - 0x04e];
+  u16 clearRexBlades[2];
+  u8 _052[0x054 - 0x052];
 };
 
 static_assert(sizeof(SDataPartyMember) == 0x06, "");
 static_assert(offsetof(SDataParty, leaderObjectType) == 0x03c, "");
 static_assert(offsetof(SDataParty, leader) == 0x040, "");
 static_assert(offsetof(SDataParty, partyGauge) == 0x04c, "");
+static_assert(offsetof(SDataParty, clearRexBlades) == 0x04e, "");
 static_assert(sizeof(SDataParty) == 0x054, "");
 
 class GfDataParty {

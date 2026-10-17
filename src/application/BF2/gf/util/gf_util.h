@@ -2,9 +2,14 @@
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
+namespace mm {
+struct Vec3;
+}
+
 namespace gf {
 namespace util {
 
+bool getUpperHitCollision(mm::Vec3 &hit, const mm::Vec3 &position, f32 distance);
 f32 getGameCameraFov();
 f32 getGameCameraNearClip();
 f32 getGameCameraFarClip();
