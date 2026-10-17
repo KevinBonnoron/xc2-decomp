@@ -22,6 +22,7 @@ public:
   void registObjectTimer(u32 handle, u16 id, u64 time, bool repeat);
   void releaseObjectTimer(u32 handle);
   u32 createLayer(u32 layer);
+  void terminateLayer(u32 layer, bool isImmediate);
   void releaseLayer(u32 layer);
 
   u8 _08[0x3d8 - 0x08];
