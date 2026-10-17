@@ -19,6 +19,7 @@ public:
     OPTMNT mount;
   };
 
+  GfAppend();
   const char *getBone(OPTMNT mount) const;
   void addMount(MOUNT_INFO &info);
   const char *getModelName() const;

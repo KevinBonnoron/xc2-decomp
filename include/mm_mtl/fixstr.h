@@ -1,5 +1,6 @@
 #pragma once
 #include "mm/mm_std_base.h"
+#include "mm_mtl/algorithm.h"
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -69,8 +70,27 @@ public:
     }
   }
 
+  // __LINE__ must be 715, 725 and 726 as in the original header: they are the line arguments of the asserts.
+#line 714
+  FixStr &insert(int index, const char *pszStr, int len) {
+    MM_ASSERT(pszStr);
+    int nowSize = m_nLen;
+    int newSize = nowSize + len;
+#line 725
+    MM_ASSERT(newSize < capacity());
+    MM_ASSERT(index <= nowSize);
+    char *position = mData + index;
+    move(position, nowSize - index, position + len);
+    copy(pszStr, len, position);
+    m_nLen = newSize;
+    mData[newSize] = 0;
+    return *this;
+  }
+
   const char *c_str() const { return mData; }
   bool empty() const { return m_nLen == 0; }
+  int capacity() const { return LEN - 1; }
+  int length() const { return m_nLen; }
 
 private:
   char mData[LEN];

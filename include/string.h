@@ -9,4 +9,6 @@ size_t strlen(const char *string);
 void *memcpy(void *destination, const void *source, size_t size);
 int strcmp(const char *left, const char *right);
 char *strcpy(char *destination, const char *source);
+char *strstr(const char *string, const char *substring);
+int strncmp(const char *left, const char *right, size_t count);
 }
