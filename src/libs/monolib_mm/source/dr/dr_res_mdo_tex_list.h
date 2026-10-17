@@ -1,12 +1,9 @@
 #pragma once
 #include <stddef.h>
 
+#include "grlib/cglib_texture_buffer.h"
 #include "grlib/cglib_vtl_mem_pool.h"
 #include "types.h"
-
-namespace grlib {
-class CGLibTextureBuffer;
-} // namespace grlib
 
 namespace ml {
 
@@ -71,5 +68,24 @@ static_assert(offsetof(DrResMdoTexList, m_stmList) == 0x58, "");
 static_assert(offsetof(DrResMdoTexList, m_texMax) == 0x68, "");
 static_assert(offsetof(DrResMdoTexList, m_stmTexIdx) == 0x78, "");
 static_assert(sizeof(DrResMdoTexList) == 0xa0, "");
+
+class DrResMdoTexSimple {
+public:
+  DrResMdoTexSimple(const void *texData, int size, bool isMiddle);
+  ~DrResMdoTexSimple();
+  void releaseTex();
+  void release();
+  void createTex();
+
+  DrResMdoTexSimple *m_prev;
+  DrResMdoTexSimple *m_next;
+  grlib::CGLibTextureBuffer m_texture;
+  const void *m_texData;
+  int m_size;
+  u32 m_flags;
+};
+
+static_assert(offsetof(DrResMdoTexSimple, m_texData) == 0x80, "");
+static_assert(sizeof(DrResMdoTexSimple) == 0x90, "");
 
 } // namespace ml

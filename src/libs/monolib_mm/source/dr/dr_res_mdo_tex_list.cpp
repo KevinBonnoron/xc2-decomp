@@ -1,6 +1,8 @@
 #include "dr/dr_res_mdo_tex_list.h"
 
 #include "dr/dr_calc_stm_list_obj.h"
+#include "dr/dr_man.h"
+#include "grlib/cglib_texture.h"
 #include "grlib/cglib_texture_buffer.h"
 #include "mtl/mem_manager.h"
 
@@ -90,5 +92,22 @@ bool DrResMdoTexList::isTexMiddelStmCheck() const {
 }
 
 int DrResMdoTexList::calcTextureMax(const u8 *texHeader) { return reinterpret_cast<const MdsTexHeader *>(texHeader)->texNum; }
+
+DrResMdoTexSimple::DrResMdoTexSimple(const void *texData, int size, bool isMiddle)
+    : m_prev(nullptr), m_next(nullptr), m_texData(texData), m_size(size), m_flags(isMiddle ? 2 : 0) {}
+
+DrResMdoTexSimple::~DrResMdoTexSimple() { releaseTex(); }
+
+void DrResMdoTexSimple::releaseTex() {
+  m_texture.release();
+  m_flags &= ~0xd;
+}
+
+void DrResMdoTexSimple::release() { m_flags |= 4 << DrMan::s_nDblStockIdx; }
+
+void DrResMdoTexSimple::createTex() {
+  grlib::CGLibTexture::createTextureImagePtrs(m_texture, m_texData, m_size, false, nullptr, false);
+  m_flags |= 1;
+}
 
 } // namespace ml
