@@ -407,6 +407,20 @@ void EffectObj::stopAnim() {
   }
 }
 
+void EffectObj::setCaster(IAttachActor *caster) {
+  if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
+    return;
+  }
+  ctrl.setCaster(caster);
+}
+
+void EffectObj::setMount(IAttachActor *mount, const char *bone, const mm::Vec3 &offset, bool isRotate, ATTACH_TYPE type) {
+  if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
+    return;
+  }
+  ctrl.setMount(mount, bone, offset, isRotate, type);
+}
+
 size_t EffectObj::getEffCount() const { return ctrl.getEffCount(); }
 
 } // namespace event

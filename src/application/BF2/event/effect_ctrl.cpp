@@ -10,7 +10,6 @@ enum EF_CATEGORY : int;
 } // namespace fw
 
 namespace event {
-enum ATTACH_TYPE : int;
 
 EffectCtrl::EffectCtrl() {
   mAttribute = 0;
