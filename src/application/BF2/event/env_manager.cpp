@@ -2,19 +2,44 @@
 
 #include <stddef.h>
 
+#include "event/manager.h"
 #include "framework/effect/effect_manager.h"
 #include "fw/fw_debug.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
 #include "ml/dev_graph.h"
+#include "ml/scn.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_rect.h"
+#include "scn/scn_render_dr_sys_parm_acc.h"
 
 namespace event {
 
 EnvManager::EnvManager()
     : flags(0), dispFlags(0), mClockHour(-1), mClockMinute(-1), mCloudType(EVT_CLOUDTYPE_DEFAULT), mColorFilterState(COLORFILTER_TYPE_STOP),
       mColorFilter(-1), mColorSubFilter(-1), mColorFilterFrame(0.0f), mColorFilterCount(0), mVignetteHandle(0) {}
+
+void EnvManager::setMotBlur(bool isEnable) {
+  if (isEnable == ((flags & FLAG_MOT_BLUR) != 0)) {
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+    parmAcc.setMotBlurOverride(true);
+    parmAcc.setMotBlur(isEnable);
+    flags = isEnable ? flags & ~FLAG_MOT_BLUR : flags | FLAG_MOT_BLUR;
+  }
+}
+
+void EnvManager::setToneMap(bool isEnable, f32 toneMap) {
+  if (isEnable != ((flags & FLAG_TONE_MAP) != 0)) {
+    if (isEnable) {
+      ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+      parmAcc.setOverrideToneMap(toneMap);
+      flags |= FLAG_TONE_MAP;
+    } else {
+      flags &= ~FLAG_TONE_MAP;
+    }
+    mToneMap = toneMap;
+  }
+}
 
 void EnvManager::login() {
   mTransferField.clear();
@@ -32,6 +57,21 @@ void EnvManager::updateColorFilter() {
     mColorFilterState = COLORFILTER_TYPE_STOP;
     mColorFilterFrame = 0.0f;
     stopVignette();
+  }
+}
+
+void EnvManager::updateMotBlur() {
+  if ((flags & FLAG_MOT_BLUR) != 0) {
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+    parmAcc.setMotBlurOverride(true);
+    parmAcc.setMotBlur(false);
+  }
+}
+
+void EnvManager::updateToneMap() {
+  if ((flags & FLAG_TONE_MAP) != 0) {
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+    parmAcc.setOverrideToneMap(mToneMap);
   }
 }
 
@@ -117,6 +157,13 @@ void EnvManager::setClock(f32 clock) {
   }
 }
 
+void EnvManager::setMapWeatherID(gf::WEATHERID weather, f32 frame) {
+  gf::GfFieldWeather::getCurrentMapWeatherID(false);
+  gf::GfGameEvent::setMapWeather(weather);
+  ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+  parmAcc.setWeatherFrame(frame);
+}
+
 void EnvManager::setWeatherType(gf::WEATYPE type) {
   gf::GfGameEvent::setWeaType(type);
   flags |= FLAG_WEATHER_TYPE;
@@ -169,6 +216,21 @@ bool EnvManager::hasTransferEnvironment(u32 eventID) const { return mTransferEve
 void EnvManager::loadTransferEnvironment(u32 eventID) { mTransferEvent.load(eventID); }
 
 void EnvManager::loadFieldEnvironment() { mTransferField.load(); }
+
+void EnvManager::setAutoResetSceneEnable(bool isEnable) {
+  ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+  parmAcc.setAutoResetScene(isEnable);
+  if (isEnable) {
+    flags |= FLAG_AUTO_RESET_SCENE;
+  } else {
+    flags &= ~FLAG_AUTO_RESET_SCENE;
+  }
+}
+
+void EnvManager::resetScene() {
+  ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+  parmAcc.resetScene();
+}
 
 void EnvManager::setDisp(bool isDisp) {
   if (isDisp) {
