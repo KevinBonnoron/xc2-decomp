@@ -659,6 +659,8 @@ void BootedGmkCond::dispose() { gimmickType = 0; }
 } // namespace gmk
 
 // clang-format off
+#include "gmk/gmk_map_obj.cpp"
+#include "gmk/gmk_tbox.cpp"
 #include "gmk/gmk_event.cpp"
 #include "gmk/gmk_field_lock.cpp"
 #include "gmk/gmk_effect.cpp"
@@ -667,6 +669,8 @@ void BootedGmkCond::dispose() { gimmickType = 0; }
 #include "gmk/gmk_collection.cpp"
 #include "gmk/gmk_area_bgm.cpp"
 #include "gmk/gmk_salvage.cpp"
+#include "gmk/gmk_precious.cpp"
+#include "gmk/gmk_grave.cpp"
 #include "gmk/gmk_kizuna_talk.cpp"
 #include "gmk/gmk_jump.cpp"
 #include "gmk/gmk_map_jump.cpp"

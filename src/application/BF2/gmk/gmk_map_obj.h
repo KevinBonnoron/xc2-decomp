@@ -1,10 +1,16 @@
 #pragma once
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_route.h"
 #include "types.h"
+
+namespace mm {
+struct Vec3;
+} // namespace mm
+struct CBdatWrapper;
 
 namespace gmk {
 
@@ -14,7 +20,14 @@ class GmkRouteGob;
 class GmkMapObj : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x14];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    bool isPopCondMatched(const mm::Vec3 &position) const;
+    bool isDepopCondMatched(const mm::Vec3 &position) const;
+
+    u16 condition;
+    u8 priority;
+    DistHvCond popDist;
+    DistHvCond depopDist;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_MAP_OBJ;
