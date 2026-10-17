@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "types.h"
 
 namespace ptlib {
@@ -12,6 +14,7 @@ struct EmitterParam;
 class EmitterManager {
 public:
   static EmitterManager *get();
+  static EmitterManager *&getPtr();
   void emitter_update(u32 category, f32 speed, bool isSkipDraw);
   void emitter_set_param_pos_only(u32 handle, EmitterParam *param);
   void emitter_set_param_pos_only2(u32 handle, EmitterParam *param);
@@ -34,7 +37,12 @@ public:
   bool emitter_set_check(FxHeader *header);
   void move();
   FxHeader *emitter_set_search(int type, const char *name, void *owner, u32 category);
+
+  u8 _0000[0x1700 - 0x0000];
+  f32 m_categorySpeed[(0x1778 - 0x1700) / sizeof(f32)];
 };
+
+static_assert(offsetof(EmitterManager, m_categorySpeed) == 0x1700, "");
 
 } // namespace emitter
 } // namespace ptlib

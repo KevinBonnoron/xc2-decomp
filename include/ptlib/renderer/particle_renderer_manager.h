@@ -20,7 +20,7 @@ public:
   void setDrInfo(const DrDrawWorkInfoEF *info);
   void setEmitterDraw(emitter::EmitterObj *emitter, emitter::EmitterArg *arg);
   void fxcore_setup_target();
-  void draw(emitter::EmitterManager &emitterManager, FxParam &fxParam, int priority, int isTranslucent);
+  void draw(emitter::EmitterManager &emitterManager, FxParam &fxParam, int viewIndex, int isBlur);
 };
 
 } // namespace renderer

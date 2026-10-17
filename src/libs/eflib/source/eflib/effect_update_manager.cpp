@@ -1,0 +1,184 @@
+#include <new>
+
+#include "eflib/effect_system_manager.h"
+#include "mm/mm_std_base.h"
+#include "mtl/alloc_handle.h"
+#include "ptlib/emitter/particle_emitter_manager.h"
+#include "ptlib/forcefield/particle_force_field.h"
+#include "ptlib/particle_system.h"
+#include "ptlib/renderer/screen_render_manager.h"
+#include "types.h"
+
+namespace effect {
+
+namespace {
+SystemManager *s_instance;
+} // namespace
+
+SystemManager *SystemManager::get() {
+  MM_ASSERT(getPtr());
+  return getPtr();
+}
+
+SystemManager *&SystemManager::getPtr() { return s_instance; }
+
+bool SystemManager::isValid() {
+  if (getPtr() != nullptr) {
+    if (getPtr()->m_clearCount == 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+SystemManager::SystemManager()
+    : m_isUpdate(true), m_isDraw(true), dispEmitter(false), isDispEmitterSet(true), m_isClearForce(false), _78249(0), dispParticleTexture(false),
+      workTexture(false), m_commandBuffer(0), writeBuffer(0), m_clearCount(0) {}
+
+SystemManager::~SystemManager() {
+  m_commands[0].clear();
+  m_commands[1].clear();
+}
+
+SystemManager *SystemManager::create(const ptlib::DrDrawWorkInfoEF *info) {
+// The allocation records its line number.
+#line 551
+  getPtr() = static_cast<SystemManager *>(ptlib::ParticleManager::sysAlloc(sizeof(SystemManager), 16, __FILE__, __LINE__));
+  new (getPtr()) SystemManager();
+  if (getPtr() != nullptr) {
+    ptlib::ParticleManager::init(info);
+    return getPtr();
+  }
+  ptlib::efAstMsg("0", "task create error!!");
+  return nullptr;
+}
+
+void SystemManager::Init(const ptlib::DrDrawWorkInfoEF *info) { ptlib::ParticleManager::init(info); }
+
+void SystemManager::destroy() {
+  if (getPtr() != nullptr) {
+    getPtr()->Term();
+    getPtr()->~SystemManager();
+    if (getPtr() != nullptr) {
+      ptlib::ParticleManager::sysFree(getPtr());
+      getPtr() = nullptr;
+    }
+  }
+  ptlib::screen::ScreenRenderManager::term();
+}
+
+void SystemManager::Term() {
+  ptlib::ParticleManager::get()->term();
+  _78249 = 0;
+}
+
+void SystemManager::setUserFuncClear() {
+  ptlib::ParticleManager::setUserAllocFunc(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+  ptlib::ParticleManager::setUserFileFunc(nullptr, nullptr);
+  ptlib::ParticleManager::setUserOutputString(nullptr, nullptr);
+  ptlib::ParticleManager::setUserDrFunc(
+      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+}
+
+void SystemManager::setUserAllocFunc(void *(*allocSys)(void *, u32, u32, const char *, u32), void (*freeSys)(void *, void *),
+                                     void *(*allocRes)(void *, u32, u32, const char *, u32), void (*freeRes)(void *, void *),
+                                     mtl::ALLOC_HANDLE (*getSysHandle)(), mtl::ALLOC_HANDLE (*getResHandle)()) {
+  ptlib::ParticleManager::setUserAllocFunc(allocSys, freeSys, allocRes, freeRes, getSysHandle, getResHandle);
+}
+
+void SystemManager::setUserFileFunc(void *(*read)(const char *, int &), void (*readEnd)(void *)) {
+  ptlib::ParticleManager::setUserFileFunc(read, readEnd);
+}
+
+void SystemManager::setUserOutputString(void (*outputDebug)(const char *), void (*outputWarn)(const char *)) {
+  ptlib::ParticleManager::setUserOutputString(outputDebug, outputWarn);
+}
+
+void SystemManager::setUserDrFunc(void *(*createMdl)(const void *, const char *, int, const void *, int), void (*deleteMdl)(void *),
+                                  void *(*createLgt)(u32, int), void (*deleteLgt)(u32, void *), void (*setMdlPos)(void *, void *),
+                                  void (*setMdlMatrix)(void *, void *), void (*setMdlColor)(void *, void *), void (*setMdlAlpha)(void *, f32),
+                                  void (*setMdlSpd)(void *, void *), void (*setLgtPos)(u32, void *, void *),
+                                  void (*setLgtMatrix)(u32, void *, void *), void (*setLgtParam)(u32, void *, void *), void (*debugRenderer)(void *),
+                                  void *(*createGrp)(int, int), void (*destroyGrp)(void *)) {
+  ptlib::ParticleManager::setUserDrFunc(createMdl,
+                                        deleteMdl,
+                                        createLgt,
+                                        deleteLgt,
+                                        setMdlPos,
+                                        setMdlMatrix,
+                                        setMdlColor,
+                                        setMdlAlpha,
+                                        setMdlSpd,
+                                        setLgtPos,
+                                        setLgtMatrix,
+                                        setLgtParam,
+                                        debugRenderer,
+                                        createGrp,
+                                        destroyGrp);
+}
+
+void SystemManager::syncRenderBegin() {}
+
+void SystemManager::syncRenderEnd() {}
+
+void SystemManager::syncUpdateBegin() {}
+
+void SystemManager::syncUpdateEnd() {}
+
+void SystemManager::setIBLSaturation(f32 saturation) { ptlib::ParticleManager::get()->m_iblSaturation = saturation; }
+
+void SystemManager::setDirScale(f32 scale) { ptlib::ParticleManager::get()->m_dirScale = scale; }
+
+void SystemManager::setSpecScale(f32 scale) { ptlib::ParticleManager::get()->m_specScale = scale; }
+
+void SystemManager::setResponsiveAA(f32 responsiveAA) { ptlib::ParticleManager::get()->m_responsiveAA = responsiveAA; }
+
+void SystemManager::setAllDisp(bool isDisp) { ptlib::ParticleManager::get()->m_isAllDisp = isDisp; }
+
+void SystemManager::setDisableCollision(bool isDisable) { ptlib::ParticleManager::get()->m_isAllDisp = isDisable; }
+
+void SystemManager::MainDraw(const ptlib::DrDrawWorkInfoEF *info, int viewIndex, bool isBlur) {
+  ptlib::ParticleManager::get()->draw(info, viewIndex, isBlur);
+}
+
+void SystemManager::es_pack_free_(u64 pack) { ptlib::ParticleManager::get()->emitter_pack_free(pack); }
+
+void SystemManager::es_free(void *data) {
+  if (data != nullptr) {
+    ptlib::ParticleManager::get()->emitter_set_free(static_cast<ptlib::FxHeader *>(data), 0);
+  }
+}
+
+SystemManager::CommandList *SystemManager::getCommand(u32 index) { return index == 0 ? &m_commands[0] : &m_commands[1]; }
+
+f32 SystemManager::getGlobalSpeed() { return m_globalSpeed[m_commandBuffer]; }
+
+bool SystemManager::es_is_loop(void *data) const { return static_cast<ptlib::FxHeader *>(data)->m_isLoop != 0; }
+
+bool SystemManager::es_contais_cam_axis(void *data) { return static_cast<ptlib::FxHeader *>(data)->m_isCamAxis != 0; }
+
+const char *SystemManager::es_get_name(void *data) { return static_cast<ptlib::FxHeader *>(data)->m_name; }
+
+void SystemManager::log() { ptlib::efMsg("%04x log()", m_frame); }
+
+SystemManager::CommandList *SystemManager::getCommandPtr(u32 index) { return index == 0 ? &m_commands[0] : &m_commands[1]; }
+
+void SystemManager::setGlobalSpeed(f32 speed) { m_globalSpeed[m_commandBuffer == 0] = speed; }
+
+void SystemManager::setCategorySpd(u32 category, f32 speed) { ptlib::emitter::EmitterManager::getPtr()->m_categorySpeed[category] = speed; }
+
+void SystemManager::end() {}
+
+void SystemManager::apply(const ptlib::DrDrawWorkInfoEF *info) {
+  if (m_isUpdate) {
+    MainLoop(info);
+  }
+}
+
+void SystemManager::opacityRender(const ptlib::DrDrawWorkInfoEF *info) {}
+
+void SystemManager::lastRender(const ptlib::DrDrawWorkInfoEF *info) {}
+
+void SystemManager::finalRender(const ptlib::DrDrawWorkInfoEF *info) { testRender(info); }
+
+} // namespace effect

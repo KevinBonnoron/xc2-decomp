@@ -6,9 +6,6 @@
 
 namespace ptlib {
 
-struct DrDrawWorkInfoEF;
-struct FxHeader;
-
 namespace emitter {
 struct EmitterArg;
 class EmitterObj;
@@ -18,6 +15,24 @@ struct EmitterParam;
 namespace renderer {
 class RenderManager;
 } // namespace renderer
+
+struct DrDrawWorkInfoEF {
+  u8 _000[0x560 - 0x000];
+  u32 m_viewIndex;
+};
+
+static_assert(offsetof(DrDrawWorkInfoEF, m_viewIndex) == 0x560, "");
+
+struct FxHeader {
+  u8 _00[0x09 - 0x00];
+  u8 m_isLoop;
+  u8 m_isCamAxis;
+  u8 _0b[0x14 - 0x0b];
+  char m_name[0x20];
+};
+
+static_assert(offsetof(FxHeader, m_isLoop) == 0x09, "");
+static_assert(offsetof(FxHeader, m_name) == 0x14, "");
 
 struct FxParam {
   u8 _00[0x0d - 0x00];
@@ -85,11 +100,13 @@ public:
                             void (*setMdlSpd)(void *, void *), void (*setLgtPos)(u32, void *, void *), void (*setLgtMatrix)(u32, void *, void *),
                             void (*setLgtParam)(u32, void *, void *), void (*debugRenderer)(void *), void *(*createGrp)(int, int),
                             void (*destroyGrp)(void *));
+  static void init(const DrDrawWorkInfoEF *info);
   static void *sysAlloc(u32 size, u32 alignment, const char *file, u32 line);
   void clear();
   FxParam *getFxParam();
   void fxcore_setup_target();
   static void *createGrp(int index, int count);
+  void term();
   static void destroyGrp(void *group);
   static void sysFree(void *ptr);
   static void *resAlloc(u32 size, u32 alignment, const char *file, u32 line);
@@ -138,27 +155,32 @@ public:
   void emitter_set_free(FxHeader *header, int frame);
   void emitter_alloc01_set_draw(emitter::EmitterObj *emitter, emitter::EmitterArg *arg);
   void move();
-  void draw(const DrDrawWorkInfoEF *info, int priority, bool isTranslucent);
+  void draw(const DrDrawWorkInfoEF *info, int viewIndex, bool isBlur);
   void setDrInfo(const DrDrawWorkInfoEF *info);
 
   u8 _000[0x130 - 0x000];
   FxParam m_fxParam;
-  f32 _148;
-  f32 _14c;
-  f32 _150;
+  f32 m_responsiveAA;
+  f32 m_specScale;
+  f32 m_dirScale;
   f32 _154;
-  f32 _158;
+  f32 m_iblSaturation;
   f32 m_frameCount;
   const u8 *m_modelTable;
-  u8 _168[0x170 - 0x168];
+  bool m_isAllDisp;
+  u8 _169[0x170 - 0x169];
   void *m_groups[4];
 };
 
 static_assert(offsetof(ParticleManager, m_fxParam) == 0x130, "");
-static_assert(offsetof(ParticleManager, _148) == 0x148, "");
+static_assert(offsetof(ParticleManager, m_responsiveAA) == 0x148, "");
+static_assert(offsetof(ParticleManager, m_isAllDisp) == 0x168, "");
 static_assert(offsetof(ParticleManager, m_frameCount) == 0x15c, "");
 static_assert(offsetof(ParticleManager, m_modelTable) == 0x160, "");
 static_assert(offsetof(ParticleManager, m_groups) == 0x170, "");
 static_assert(sizeof(ParticleManager::DrFunc) == 0x80, "");
+
+void efAstMsg(const char *cond, const char *format, ...);
+void efMsg(const char *format, ...);
 
 } // namespace ptlib

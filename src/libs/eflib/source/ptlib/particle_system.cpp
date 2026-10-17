@@ -83,11 +83,11 @@ void *ParticleManager::sysAlloc(u32 size, u32 alignment, const char *file, u32 l
 void ParticleManager::clear() {
   m_modelTable = nullptr;
   m_frameCount = 0.0f;
-  _148 = 0.25f;
-  _14c = 0.0f;
-  _150 = 1.0f;
+  m_responsiveAA = 0.25f;
+  m_specScale = 0.0f;
+  m_dirScale = 1.0f;
   _154 = 1.0f;
-  _158 = 1.0f;
+  m_iblSaturation = 1.0f;
   for (int i = 0; i < 4; i++) {
     m_groups[i] = nullptr;
   }
@@ -261,14 +261,14 @@ void ParticleManager::move() {
   emitter::EmitterManager::get()->move();
 }
 
-void ParticleManager::draw(const DrDrawWorkInfoEF *info, int priority, bool isTranslucent) {
+void ParticleManager::draw(const DrDrawWorkInfoEF *info, int viewIndex, bool isBlur) {
   renderer::RenderManager &renderManager = get()->getRenderManager();
   renderManager.setDrInfo(info);
   emitter::EmitterManager *emitterManager = emitter::EmitterManager::get();
-  if (isTranslucent) {
-    renderManager.draw(*emitterManager, m_fxParam, priority, 1);
+  if (isBlur) {
+    renderManager.draw(*emitterManager, m_fxParam, viewIndex, 1);
   } else {
-    renderManager.draw(*emitterManager, m_fxParam, priority, 0);
+    renderManager.draw(*emitterManager, m_fxParam, viewIndex, 0);
   }
 }
 
