@@ -1,7 +1,10 @@
 #pragma once
+#include <stddef.h>
+
 #include "ml/scn_obj_model.h"
 
 namespace ml {
+class DrMdlObj;
 class Scn;
 class ScnObj;
 
@@ -25,7 +28,12 @@ public:
   static ScnObj *create(Scn *scn, const void *data, int screen);
 };
 
-class ScnObjModelDrSys : public ScnObjModel {};
+class ScnObjModelDrSys : public ScnObjModel {
+public:
+  DrMdlObj *m_drMdl;
+};
+
+static_assert(offsetof(ScnObjModelDrSys, m_drMdl) == 0x3d8, "");
 
 class ScnObjModelDrSysStandard : public ScnObjModelDrSys {
 public:

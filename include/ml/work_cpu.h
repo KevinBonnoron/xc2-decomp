@@ -12,6 +12,7 @@ struct Col3;
 
 namespace ml {
 
+class IThreadValue;
 class WorkCpuThread;
 
 enum CPUID {
@@ -65,6 +66,8 @@ public:
   static void runThread(CPUID cpu, unsigned int (*function)(void *, void *), void *argument, void *userData, const mm::Col3 *color, bool isDebug,
                         WKCPU_SYNC sync);
   static bool isShutdown();
+  static void entrySwap(IThreadValue *value);
+  static void removeSwap(IThreadValue *value);
   static u32 getFrameCountU32();
   static const unsigned long &getFrameCount();
   static bool getOdd();
