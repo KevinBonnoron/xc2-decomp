@@ -4,6 +4,8 @@
 #include "gmk/gmk_manager.h"
 #include "types.h"
 
+struct CBdatWrapper;
+
 namespace gmk {
 
 class GmkAntiBladeAreaGob;
@@ -11,7 +13,10 @@ class GmkAntiBladeAreaGob;
 class GmkAntiBladeArea : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x2];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    void dispose() { mapRevId = 0; }
+
+    u16 mapRevId;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_ANTI_BLADE_AREA;

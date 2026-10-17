@@ -5,6 +5,8 @@
 #include "gmk/gmk_manager.h"
 #include "types.h"
 
+struct CBdatWrapper;
+
 namespace gmk {
 
 class GmkJumpGobCustom;
@@ -12,7 +14,13 @@ class GmkJumpGobCustom;
 class GmkJump : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x6];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    bool isPopCondMatched() const;
+    void debugDraw(const AGmkBase &gmk) const;
+
+    u16 condition;
+    u8 jumpType;
+    u16 nameRadius;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_JUMP;

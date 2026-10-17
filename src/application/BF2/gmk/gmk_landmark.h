@@ -7,6 +7,8 @@
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
+struct CBdatWrapper;
+
 namespace gmk {
 
 class GmkLandmarkGob;
@@ -14,7 +16,14 @@ class GmkLandmarkGob;
 class GmkLandmark : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x10];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    bool isCondMatched() const;
+
+    u16 msgId;
+    u8 category;
+    u16 condition;
+    bool isNoTelop;
+    const char *name;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_LANDMARK;
