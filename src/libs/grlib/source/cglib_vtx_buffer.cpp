@@ -1,17 +1,130 @@
 #include <string.h>
 
+#include "grlib/cglib_ctl_vertex.h"
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_mem_handle.h"
+#include "grlib/cglib_one_uniform_block.h"
+#include "grlib/cglib_pipeline.h"
 #include "grlib/cglib_system_context.h"
 #include "grlib/cglib_vtl_mem_pool.h"
+#include "grlib/cglib_vtx_index.h"
 #include "grlib/cglib_vtx_instans.h"
 #include "grlib/cglib_vtx_one_instans.h"
 #include "grlib/cglib_vtx_stm_out.h"
 #include "grlib/cglib_vtx_vertex.h"
 #include "nn/os.h"
+#include "nvn/nvn.h"
 #include "types.h"
 
 namespace grlib {
+
+CGLibVtxIndex::CGLibVtxIndex() { m_count = 0; }
+
+CGLibVtxIndex::~CGLibVtxIndex() { release(); }
+
+void CGLibVtxIndex::release() { CGLibMemHandle::free(m_memType); }
+
+void CGLibVtxIndex::createIndexBuff(u32 count, GrlPrimitiveType type, GrlIndexFormat format) {
+  release();
+  m_type = type;
+  m_format = format;
+  m_count = count;
+  int size = getSize();
+  CGLibMemHandle::allocVertex(m_memType, size + (4 - size % 4) % 4);
+  context::CGLibSystemContext::get()->getVertexGpuAddress(m_gpuAddress, m_memType);
+}
+
+void CGLibVtxIndex::createMemIndexBuff(CGLibVtlMemPool *memPool, u32 offset, u32 count, GrlPrimitiveType type, GrlIndexFormat format) {
+  release();
+  m_type = type;
+  m_format = format;
+  m_count = count;
+  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memPool->m_buffer) + offset);
+  m_gpuAddress = memPool->m_address + offset;
+}
+
+void CGLibVtxIndex::createCopyIndexBuff(const void *data, u32 count, GrlPrimitiveType type, GrlIndexFormat format) {
+  release();
+  m_type = type;
+  m_format = format;
+  m_count = count;
+  int size = getSize();
+  CGLibMemHandle::allocVertex(m_memType, size + (4 - size % 4) % 4);
+  memcpy(m_memType.m_buffer, data, size);
+  nn::os::FlushDataCache(m_memType.m_buffer, size);
+  context::CGLibSystemContext::get()->getVertexGpuAddress(m_gpuAddress, m_memType);
+}
+
+void CGLibVtxIndex::resetIndexBuff(CGLibVtlMemPool *memPool, u32 offset) {
+  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memPool->m_buffer) + offset);
+  m_gpuAddress = memPool->m_address + offset;
+}
+
+void CGLibVtxIndex::drawIndex() {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->m_pipeline.updateVertex();
+  nvnCommandBufferDrawElements(
+      context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), m_count, m_gpuAddress);
+}
+
+void CGLibVtxIndex::drawIndex(u32 count, u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->m_pipeline.updateVertex();
+  nvnCommandBufferDrawElements(
+      context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), count, m_gpuAddress + offset);
+}
+
+void CGLibVtxIndex::drawInsIndex(int instanceCount) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->m_pipeline.updateVertex();
+  nvnCommandBufferDrawElementsInstanced(context->m_pipeline.m_cmdBuf,
+                                        static_cast<NVNdrawPrimitive>(m_type),
+                                        static_cast<NVNindexType>(m_format),
+                                        m_count,
+                                        m_gpuAddress,
+                                        0,
+                                        0,
+                                        instanceCount);
+}
+
+void CGLibVtxIndex::drawInsIndex(int instanceCount, u32 count, u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->m_pipeline.updateVertex();
+  nvnCommandBufferDrawElementsInstanced(context->m_pipeline.m_cmdBuf,
+                                        static_cast<NVNdrawPrimitive>(m_type),
+                                        static_cast<NVNindexType>(m_format),
+                                        count,
+                                        m_gpuAddress + offset,
+                                        0,
+                                        0,
+                                        instanceCount);
+}
+
+void CGLibVtxIndex::drawIndirect(const CGLibOneUniformBlock &block, u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->m_pipeline.updateVertex();
+  nvnCommandBufferDrawElementsIndirect(context->m_pipeline.m_cmdBuf,
+                                       static_cast<NVNdrawPrimitive>(m_type),
+                                       static_cast<NVNindexType>(m_format),
+                                       m_gpuAddress,
+                                       block.m_gpuAddress + offset);
+}
+
+void CGLibVtxIndex::lock(void **buffer, u32 *size) {
+  *buffer = m_memType.m_buffer;
+  *size = getSize();
+}
+
+void CGLibVtxIndex::unlock() {
+  int size = getSize();
+  nn::os::FlushDataCache(m_memType.m_buffer, size);
+}
+
+void CGLibVtxIndex::copyIndexBuff(const void *data) {
+  int size = getSize();
+  memcpy(m_memType.m_buffer, data, size);
+  nn::os::FlushDataCache(m_memType.m_buffer, size);
+}
 
 CGLibVtxInstans::CGLibVtxInstans() { m_bankOffset = 0; }
 
