@@ -664,6 +664,7 @@ void BootedGmkCond::dispose() { gimmickType = 0; }
 #include "gmk/gmk_effect.cpp"
 #include "gmk/gmk_landmark.cpp"
 #include "gmk/gmk_route.cpp"
+#include "gmk/gmk_collection.cpp"
 #include "gmk/gmk_area_bgm.cpp"
 #include "gmk/gmk_salvage.cpp"
 #include "gmk/gmk_kizuna_talk.cpp"
@@ -672,4 +673,5 @@ void BootedGmkCond::dispose() { gimmickType = 0; }
 #include "gmk/gmk_field_volume.cpp"
 #include "gmk/gmk_foot_print.cpp"
 #include "gmk/gmk_anti_blade_area.cpp"
+#include "gmk/gmk_tutorial.cpp"
 // clang-format on

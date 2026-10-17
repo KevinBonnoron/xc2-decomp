@@ -59,6 +59,7 @@ public:
 class TimeCond {
 public:
   virtual ~TimeCond() {}
+  bool isEnable() const { return timeRangeBits != 0; }
   bool isMatch() const;
 
   u32 timeRangeBits;
@@ -69,6 +70,7 @@ static_assert(offsetof(TimeCond, timeRangeBits) == 0x8, "");
 class WeatherCond {
 public:
   virtual ~WeatherCond() {}
+  bool isEnable() const { return weatherBits != 0; }
   bool isMatch() const;
 
   u8 weatherBits;

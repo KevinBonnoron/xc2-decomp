@@ -1,8 +1,11 @@
 #pragma once
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
+
+struct CBdatWrapper;
 
 namespace gmk {
 
@@ -11,7 +14,12 @@ class GmkTutorialGob;
 class GmkTutorial : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0xa];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    bool isCondMatched() const;
+
+    u8 sysMultiFlag;
+    ScenarioFlagCond scenarioFlag;
+    QuestFlagCond questFlag;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_TUTORIAL;

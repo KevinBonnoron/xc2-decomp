@@ -24,6 +24,7 @@ const char *getMSText(unsigned char *bdat, int id);
 Value getVal(unsigned char *bdat, const char *name, int id);
 unsigned long getValCheck(unsigned char *bdat, const char *name, int id, int type);
 Value getValCheck(unsigned char *bdat, unsigned char *member, int id, int type);
+Value getValCheck(unsigned char *bdat, int column, int id, int type);
 Value getArrayValCheck(unsigned char *bdat, unsigned char *member, int id, int index, int type);
 int getFlagVal(unsigned char *bdat, unsigned char *member, int id, unsigned char *flag);
 int getFlagVal(unsigned char *bdat, const char *name, int id, const char *flag);

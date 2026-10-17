@@ -1,8 +1,11 @@
 #pragma once
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
+
+struct CBdatWrapper;
 
 namespace gmk {
 
@@ -11,7 +14,16 @@ class GmkCollectionGob;
 class GmkCollection : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x30];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    bool isPopCondMatchedExceptDist() const;
+    bool isPopCondMatched(const AGmkBase &gmk) const;
+    void debugDraw(const AGmkBase &gmk) const;
+
+    u16 nameRadius;
+    u16 condition;
+    TimeCond timeCond;
+    WeatherCond weatherCond;
+    DistCond distCond;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_COLLECTION;
