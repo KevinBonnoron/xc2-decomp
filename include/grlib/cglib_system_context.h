@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "grlib/cglib_buff_mem_pool_tbl.h"
+#include "grlib/cglib_buff_sampler_tbl.h"
 #include "grlib/cglib_buff_texture.h"
 #include "grlib/cglib_dec_shader.h"
 #include "grlib/cglib_depth_target.h"
@@ -33,7 +34,9 @@ public:
 
   u8 _0008[0x0538 - 0x0008];
   CGLibTexDescriptor m_texDescriptor;
-  u8 _05a0[0x0e60 - 0x05a0];
+  u8 _05a0[0x0608 - 0x05a0];
+  CGLibBuffSamplerTbl m_buffSamplerTbl;
+  u8 _0e38[0x0e60 - 0x0e38];
   CGLibBuffTexture m_buffTexture;
   CGLibBuffMemPoolTbl m_buffMemPoolTbl;
   u8 _0eb8[0x1070 - 0x0eb8];
@@ -66,6 +69,7 @@ public:
 };
 
 static_assert(offsetof(CGLibSystemContext, m_texDescriptor) == 0x0538, "");
+static_assert(offsetof(CGLibSystemContext, m_buffSamplerTbl) == 0x0608, "");
 static_assert(offsetof(CGLibSystemContext, m_buffTexture) == 0x0e60, "");
 static_assert(offsetof(CGLibSystemContext, m_buffMemPoolTbl) == 0x0e90, "");
 static_assert(offsetof(CGLibSystemContext, m_cmdBuf) == 0x1070, "");
