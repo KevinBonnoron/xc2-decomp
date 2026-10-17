@@ -21,6 +21,15 @@ public:
 static_assert(offsetof(ParamList, count) == 0x0c, "");
 static_assert(offsetof(ParamList, entries) == 0x10, "");
 
+class ParamAdapter {
+public:
+  template <typename T> const T *get() const { return entry != nullptr ? static_cast<const T *>(entry->param) : nullptr; }
+
+  const ParamList::Entry *entry;
+};
+
+static_assert(sizeof(ParamAdapter) == 0x08, "");
+
 class ParamManager : public mm::mtl::PtrSingleton<ParamManager> {
 public:
   u8 _08[0x430 - 0x08];
