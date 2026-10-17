@@ -35,6 +35,7 @@ public:
   static u64 getTopAdr(const ALLOC_HANDLE &handle);
   static size_t getTotalSize(ALLOC_HANDLE handle);
   static void log(ALLOC_HANDLE handle, bool isDetail, MemoryInfo *info);
+  static const char *getName(ALLOC_HANDLE handle);
 };
 
 } // namespace mtl
