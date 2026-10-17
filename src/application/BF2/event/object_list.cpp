@@ -10,6 +10,7 @@
 #include "event/object_light.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
+#include "gf/object/gf_obj_acc.h"
 #include "mm_math/mm_col4.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
@@ -326,6 +327,31 @@ Object *ObjectList::searchByNameSub(Object *object, const char *name) {
     Object *found = searchByNameSub(child, name);
     if (found != nullptr) {
       return found;
+    }
+  }
+  return nullptr;
+}
+
+ObjectChara *ObjectList::searchByHandle(gf::GF_OBJ_HANDLE *handle) const {
+  if (mCharaTree == nullptr) {
+    return nullptr;
+  }
+  Object *object = mCharaTree->getChild();
+  while (object != nullptr && (object->getType() != OBJTYPE_CHARA || static_cast<ObjectChara *>(object)->getCharaObj()->getHandle() != handle)) {
+    object = object->getNext();
+  }
+  return static_cast<ObjectChara *>(object);
+}
+
+ObjectChara *ObjectList::searchByID(u32 type, u32 id) const {
+  if (mCharaTree != nullptr) {
+    for (Object *object = mCharaTree->getChild(); object != nullptr; object = object->getNext()) {
+      if (object->getType() == OBJTYPE_CHARA) {
+        gf::GfObjAcc acc(static_cast<ObjectChara *>(object)->getCharaObj()->getHandle());
+        if (acc.getType() == type && acc.getBdatId() == id) {
+          return static_cast<ObjectChara *>(object);
+        }
+      }
     }
   }
   return nullptr;
