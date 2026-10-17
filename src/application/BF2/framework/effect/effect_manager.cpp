@@ -9,6 +9,7 @@
 #include "dr/dr_mdo_grp_obj.h"
 #include "eflib/effect_system_manager.h"
 #include "framework/effect/effect_caster.h"
+#include "framework/effect/effect_data.h"
 #include "framework/effect/effect_pack.h"
 #include "framework/framework.h"
 #include "mm_math/mm_mat44.h"
@@ -36,6 +37,34 @@ void EffectManager::efSystemEnd() {
     effect::SystemManager::destroy();
     effect::SystemManager::setUserFuncClear();
   }
+}
+
+void EffectManager::addPack(EffectPack *pack) { (*packMap)[std::string(pack->name.c_str())] = pack; }
+
+void EffectManager::removePack(EffectPack *pack) {
+  PackMap::iterator it = packMap->find(std::string(pack->name.c_str()));
+  if (it != packMap->end()) {
+    packMap->erase(it);
+  }
+}
+
+EffectPack *EffectManager::findPack(const char *name) {
+  PackMap::iterator it = packMap->find(name);
+  return it != packMap->end() ? it->second : nullptr;
+}
+
+void EffectManager::addData(EffectData *data) { (*dataMap)[std::string(data->getName())] = data; }
+
+void EffectManager::removeData(EffectData *data) {
+  DataMap::iterator it = dataMap->find(std::string(data->getName()));
+  if (it != dataMap->end()) {
+    dataMap->erase(it);
+  }
+}
+
+EffectData *EffectManager::findData(const char *name) {
+  DataMap::iterator it = dataMap->find(name);
+  return it != dataMap->end() ? it->second : nullptr;
 }
 
 void EffectManager::setMasterPause(bool isPause) {
