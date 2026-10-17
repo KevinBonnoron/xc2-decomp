@@ -692,6 +692,7 @@ void BootedGmkCond::dispose() { gimmickType = 0; }
 #include "gmk/gmk_kizuna_talk.cpp"
 #include "gmk/gmk_jump.cpp"
 #include "gmk/gmk_warp.cpp"
+#include "gmk/gmk_door.cpp"
 #include "gmk/gmk_map_jump.cpp"
 #include "gmk/gmk_field_volume.cpp"
 #include "gmk/gmk_climbing.cpp"
