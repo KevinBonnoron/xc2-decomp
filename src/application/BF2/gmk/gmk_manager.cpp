@@ -4,7 +4,9 @@
 #include "dr/dr_man.h"
 #include "framework/memory/framework_memory.h"
 #include "framework/navi/navi_util.h"
+#include "framework/resource/common_resource.h"
 #include "framework/script/script_manager.h"
+#include "fw/fw_bdat_manager.h"
 #include "fw/fw_transform.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_enemy.h"
@@ -29,6 +31,7 @@
 #include "gmk/gmk_area_weather.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_battle_lock.h"
+#include "gmk/gmk_bdat.h"
 #include "gmk/gmk_blade.h"
 #include "gmk/gmk_climbing.h"
 #include "gmk/gmk_collection.h"
@@ -75,6 +78,7 @@
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/array.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/reference_object.h"
 #include "mtl/alloc_handle.h"
 
 namespace gmk {
@@ -93,6 +97,36 @@ static const char *const s_gmkFileNames[] = {
     "fieldVolume", "climbing",   "blade",         "dmgGimmick",  "dmgGimmick", "dmgGimmick", "dmgGimmick", nullptr,    "enemy",
     "footPrint",   "footPrint",  "antiBladeArea", "tutorial",
 };
+
+bool GmkBdat::isValid() const { return data != nullptr && fw::BdatManager::isEnableBdat(createInfo.bdatId); }
+
+bool GmkBdat::create(const CreateInfo &info) {
+  dispose();
+  createInfo = info;
+  resource = fw::CommonResource::request(info.memory, createInfo.path.c_str(), 9, false);
+  if (resource->getRefCount() != 1) {
+    return false;
+  }
+  seq = &GmkBdat::seqWaitResourceLoaded;
+  return true;
+}
+
+void GmkBdat::dispose() {
+  seq = nullptr;
+  if (createInfo.bdatId >= 0) {
+    fw::BdatManager::unregistBdat(createInfo.bdatId);
+    createInfo.bdatId = -1;
+  }
+  mm::mtl::safeRelease(resource);
+  data = nullptr;
+  createInfo = CreateInfo();
+}
+
+void GmkBdat::update(f32 deltaTime) {
+  if (seq) {
+    (this->*seq)(deltaTime);
+  }
+}
 
 const char *GmkManager::getFilenameByType(int gmkSetId, GmkType type) const {
   const char *column = s_gmkFileNames[type];
@@ -217,6 +251,25 @@ bool isInEvent() { return gf::GfGameManager::isEvent(false); }
 // clang-format on
 
 namespace gmk {
+
+GmkBdat::GmkBdat(const CreateInfo *info) : resource(nullptr), data(nullptr), seq(nullptr) {
+  if (info != nullptr) {
+    create(*info);
+  }
+}
+
+void GmkBdat::seqWaitResourceLoaded(f32) {
+  if (!resource->valid()) {
+    return;
+  }
+  data = resource->getAssetData();
+  if (data == nullptr || fw::BdatManager::isExistBdat(createInfo.bdatId)) {
+    dispose();
+    return;
+  }
+  fw::BdatManager::loadBdatFromMemory(createInfo.bdatId, data);
+  seq = nullptr;
+}
 
 static InterestType getInterestType() {
   GmkManager *manager = GmkManager::get();

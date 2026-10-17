@@ -1,0 +1,44 @@
+#pragma once
+#include "mm_mtl/fixstr.h"
+#include "mtl/alloc_handle.h"
+#include "types.h"
+#include <stddef.h>
+
+namespace fw {
+class CommonResource;
+}
+
+namespace gmk {
+
+class GmkBdat {
+public:
+  struct CreateInfo {
+    CreateInfo() : bdatId(-1) {}
+
+    mtl::ALLOC_HANDLE memory;
+    mm::mtl::FixStr<256> path;
+    int bdatId;
+  };
+
+  virtual ~GmkBdat() { dispose(); }
+
+  bool isValid() const;
+  bool create(const CreateInfo &info);
+  void dispose();
+  void update(f32 deltaTime);
+  GmkBdat(const CreateInfo *info);
+  void seqWaitResourceLoaded(f32 deltaTime);
+
+  CreateInfo createInfo;
+  fw::CommonResource *resource;
+  void *data;
+  void (GmkBdat::*seq)(f32);
+};
+
+static_assert(sizeof(GmkBdat::CreateInfo) == 0x10c, "");
+static_assert(offsetof(GmkBdat, createInfo) == 0x8, "");
+static_assert(offsetof(GmkBdat, resource) == 0x118, "");
+static_assert(offsetof(GmkBdat, seq) == 0x128, "");
+static_assert(sizeof(GmkBdat) == 0x138, "");
+
+} // namespace gmk
