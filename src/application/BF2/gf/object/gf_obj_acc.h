@@ -33,6 +33,7 @@ enum OBJ_ALPHA {
 
 enum OBJDISP {
   OBJDISP_EVENT = 0x2,
+  OBJDISP_GMK_EVENT = 0x8,
   OBJDISP_KOSMOS_ARTS_3 = 0x20,
 };
 
@@ -48,6 +49,7 @@ public:
   int getBoneIdx(const char *name);
   bool getBoneTransform(fw::Transform &transform, int bone);
 
+  const fw::Transform &getWorldTransformNoSync() const;
   bool getObjPosRot(mm::Vec3 &position, f32 &rotation);
 
   bool isValid() const { return mObj != nullptr; }

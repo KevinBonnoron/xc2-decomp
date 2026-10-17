@@ -107,6 +107,8 @@ public:
   static GFOBJ_INFO *getObjInfo(GF_OBJ_HANDLE *handle);
   static void addListener(IGfObjListener *listener, IGfObjListener::OBJEVT event);
   static void removeListener(IGfObjListener *listener);
+  static int getGfObjCapacity(u32 objectType);
+  static int getObjectNum(u32 objectType);
   bool isValidMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId) const;
   void addDestroyObj(GF_OBJ_HANDLE *handle, bool isImmediate);
   void addApplyParam(GF_OBJ_HANDLE *handle);

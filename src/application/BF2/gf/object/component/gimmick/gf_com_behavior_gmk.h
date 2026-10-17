@@ -13,6 +13,7 @@ class GfComBehaviorGmk : public GfComBehavior {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  void createMenuObj();
   void disposeMenuObj();
 };
 

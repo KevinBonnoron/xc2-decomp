@@ -7,6 +7,12 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 }
 
+namespace mm {
+struct Quat;
+struct Vec2;
+struct Vec3;
+} // namespace mm
+
 namespace gmk {
 
 enum GmkType {
@@ -69,6 +75,14 @@ enum GmkType {
   GMK_TYPE_ANTI_BLADE_AREA = 56,
   GMK_TYPE_TUTORIAL = 57,
   GMK_TYPE_NUM = 58,
+  GMK_TYPE_INVALID = 59,
+};
+
+enum ShapeType {};
+
+enum InterestType {
+  INTEREST_TYPE_PLAYER = 0,
+  INTEREST_TYPE_CAMERA = 1,
 };
 
 class AGmkBase;
@@ -81,14 +95,47 @@ public:
 
   u8 _08[0x190 - 0x08];
   u8 *gmkSetListBdat;
+  InterestType interestType;
 };
 
 static_assert(offsetof(GmkManager, gmkSetListBdat) == 0x190, "");
+static_assert(offsetof(GmkManager, interestType) == 0x198, "");
 
 int getCurrentMapBdatId();
-AGmkBase *getBindedGmkInst(gf::GF_OBJ_HANDLE *handle);
+bool isInEvent();
 void setDispByGmkType(GmkType type, bool isDisp);
 void setDispByGmkTypeAndBdatId(GmkType type, int bdatId, bool isDisp);
 void setDispByGmkTypeAndGmkIdx(int gmkSet, GmkType type, u32 index, bool isDisp);
+bool isInterestPosExist();
+bool isPlayerExist();
+bool isCameraExist();
+const mm::Vec3 &getInterestPos();
+const mm::Vec3 &getPlayerPos();
+const mm::Vec3 &getCameraPos();
+bool isPlayerInDoor();
+gf::GF_OBJ_HANDLE *getPlayer();
+bool toScreenPos(mm::Vec2 &screenPos, const mm::Vec3 &position);
+AGmkBase *getBindedGmkInst(gf::GF_OBJ_HANDLE *handle);
+GmkType getBindedGmkInstType(gf::GF_OBJ_HANDLE *handle);
+void setEventDisp(gf::GF_OBJ_HANDLE *handle, bool isDisp);
+bool getGobPosRot(mm::Vec3 &position, mm::Quat &rotation, gf::GF_OBJ_HANDLE *handle);
+bool isModelRendered(gf::GF_OBJ_HANDLE *handle);
+bool isNaviMeshExist(const mm::Vec3 &position);
+bool isGfObjNumFull(u32 objectType);
+bool isInBattle();
+bool isInMapJumpWithLoadingSaveData();
+void setOpenMainMenuEnable(bool isEnable);
+void createMenuObj(gf::GF_OBJ_HANDLE *handle);
+u32 getDefeatedNum(int enemy);
+void disposeGobInst(gf::GF_OBJ_HANDLE *handle, f32 fadeTime);
+void disposeGobInstWithAttr(gf::GF_OBJ_HANDLE *handle, u32 attribute, f32 fadeTime);
+bool canObtainPreciousItem();
+bool canCreateBattleLock();
+bool canDisposeBattleLock();
+const char *debugGetGmkTypeName(GmkType type);
+const char *debugGetShapeTypeName(ShapeType type);
+const char *debugGetGmkFileName(const AGmkBase &gmk);
+const char *debugGetGmkBdatRowName(const AGmkBase &gmk);
+const char *debugGetGmkBdatSheetName(const AGmkBase &gmk);
 
 } // namespace gmk
