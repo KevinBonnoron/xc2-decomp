@@ -1,5 +1,6 @@
 #pragma once
 #include "mm/mm_std_base.h"
+#include "mm_mtl/type_traits.h"
 #include <stddef.h>
 
 namespace mm {
@@ -39,7 +40,7 @@ template <typename T> T *copy_n(const T *first, size_t n, T *result) {
 }
 
 template <typename T> void move_n(T *first, size_t n, T *result) {
-  if (__is_pod(T)) {
+  if (is_pod<T>::value) {
     __builtin_memcpy(result, first, n * sizeof(T));
   } else {
     for (size_t i = 0; i < n; i++) {
