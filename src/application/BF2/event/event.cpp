@@ -76,6 +76,7 @@
 #include "event/chara_obj.cpp"
 #include "event/chara_wpn_asm.cpp"
 #include "event/chara_eva_player.cpp"
+#include "event/chara_eva_player_eff.cpp"
 #include "event/chara_set_pos.cpp"
 #include "event/chara_set_rot.cpp"
 #include "event/chara_walk_calculator.cpp"

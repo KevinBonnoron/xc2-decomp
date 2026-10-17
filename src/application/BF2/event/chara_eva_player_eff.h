@@ -1,6 +1,7 @@
 #pragma once
 #include "types.h"
 
+class RchaChrEff;
 namespace gf {
 class GfEvtModel;
 } // namespace gf
@@ -18,7 +19,10 @@ public:
   void play(gf::GfEvtModel *model, CharaEffectPlayer *effectPlayer, void *data);
 
 private:
-  u8 _08[0x28 - 0x08];
+  gf::GfEvtModel *model;
+  CharaEffectPlayer *effectPlayer;
+  RchaChrEff *rcha;
+  f32 frame;
 };
 
 static_assert(sizeof(CharaEvaPlayerEff) == 0x28, "");
