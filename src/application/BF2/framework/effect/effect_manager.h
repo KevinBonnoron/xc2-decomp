@@ -1,9 +1,15 @@
 #pragma once
 #include <stddef.h>
 
+#include <functional>
+#include <string>
+#include <unordered_map>
+#include <utility>
+
 #include "dr/dr_draw_callback.h"
 #include "framework/effect/effect_caster.h"
 #include "framework/manager_object.h"
+#include "ml/stl_custom_allocator.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_list.h"
@@ -50,14 +56,25 @@ public:
     EffectPack *pack;
   };
 
+  typedef std::unordered_map<std::string, EffectPack *, std::hash<std::string>, std::equal_to<std::string>,
+                             ml::StlCustomAllocator<std::pair<const std::string, EffectPack *>>>
+      PackMap;
+  typedef std::unordered_map<std::string, EffectData *, std::hash<std::string>, std::equal_to<std::string>,
+                             ml::StlCustomAllocator<std::pair<const std::string, EffectData *>>>
+      DataMap;
+
   ~EffectManager() override;
   bool initialize() override;
   bool isCommonLoaded();
   bool commonLoaded();
   void getNum(u32 &emitterNum, u32 &particleNum, u32 &drawNum);
   static void efSystemEnd();
+  void addPack(EffectPack *pack);
+  void removePack(EffectPack *pack);
+  EffectPack *findPack(const char *name);
   void addData(EffectData *data);
   void removeData(EffectData *data);
+  EffectData *findData(const char *name);
   void setMasterPause(bool isPause);
   bool isMasterPause() const;
   EffectCasterSend *getCaster(EffectCasterBase *caster);
@@ -157,7 +174,9 @@ public:
   mm::mtl::IAllocator *allocator;
   ml::Scn *scn;
   mm::mtl::FixedArray<CasterGroup, LAYER_MAX> casterGroups;
-  u8 _348[0x1fb8 - 0x348];
+  PackMap *packMap;
+  DataMap *dataMap;
+  u8 _358[0x1fb8 - 0x358];
   mm::mtl::FixedVector<CommonEffect, COMMON_EFFECT_MAX> commonEffects;
   u8 _27c0[0x2fd5 - 0x27c0];
   bool masterPause;
@@ -168,6 +187,8 @@ static_assert(sizeof(EffectManager::CasterGroup) == 0x18, "");
 static_assert(offsetof(EffectManager, sysHandle) == 0x2c, "");
 static_assert(offsetof(EffectManager, allocator) == 0x38, "");
 static_assert(offsetof(EffectManager, casterGroups) == 0x48, "");
+static_assert(offsetof(EffectManager, packMap) == 0x348, "");
+static_assert(offsetof(EffectManager, dataMap) == 0x350, "");
 static_assert(offsetof(EffectManager, commonEffects) == 0x1fb8, "");
 static_assert(offsetof(EffectManager, masterPause) == 0x2fd5, "");
 static_assert(offsetof(EffectManager, finalizing) == 0x2fd6, "");
