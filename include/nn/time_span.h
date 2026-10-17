@@ -15,6 +15,8 @@ public:
 
   static TimeSpan FromMilliSeconds(s64 milliSeconds) { return FromMicroSeconds(milliSeconds * 1000); }
 
+  static TimeSpan FromSeconds(s64 seconds) { return FromMilliSeconds(seconds * 1000); }
+
   s64 GetNanoSeconds() const { return nanoSeconds; }
 
 private:

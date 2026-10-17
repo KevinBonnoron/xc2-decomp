@@ -1,14 +1,14 @@
 #pragma once
 #include "ml/work_obj.h"
-#include "types.h"
 
 namespace ml {
 
 class DevBase : public WorkObj {
 public:
+  DevBase(const char *name, WorkObj *parent) : WorkObj(name, parent, 0), _1a8(0) {}
   ~DevBase() override {}
 
-  u8 _1a8[0x1ac - 0x1a8];
+  int _1a8;
 };
 
 } // namespace ml

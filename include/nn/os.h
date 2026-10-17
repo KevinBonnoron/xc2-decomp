@@ -37,6 +37,8 @@ enum EventClearMode {
 
 class Tick {
 public:
+  Tick() {}
+  explicit Tick(s64 value) : value(value) {}
   s64 GetInt64Value() const { return value; }
 
 private:
@@ -68,6 +70,7 @@ void ClearEvent(EventType *event);
 
 Tick GetSystemTick();
 TimeSpan ConvertToTimeSpan(Tick tick);
+Tick ConvertToTick(TimeSpan span);
 
 Result CreateThread(ThreadType *thread, ThreadFunction function, void *argument, void *stack, size_t stackSize, int priority, int idealCore);
 Result CreateThread(ThreadType *thread, ThreadFunction function, void *argument, void *stack, size_t stackSize, int priority);
