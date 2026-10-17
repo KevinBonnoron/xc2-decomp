@@ -7,6 +7,10 @@
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
+
 namespace event {
 
 class Object;
@@ -72,6 +76,20 @@ public:
   ObjectList *searchScene(const char *name) const;
   ObjectList *createScene(const char *name);
   virtual void OnEventProc(MSG_TYPE type);
+
+  ObjectChara *searchByHandle(gf::GF_OBJ_HANDLE *handle) {
+    if (mCurrent == nullptr) {
+      return nullptr;
+    }
+    return mCurrent->searchByHandle(handle);
+  }
+
+  ObjectChara *searchByID(u32 type, u32 id) const {
+    if (mCurrent == nullptr) {
+      return nullptr;
+    }
+    return mCurrent->searchByID(type, id);
+  }
 
   Object *getActive() const {
     if (mCurrent == nullptr) {
