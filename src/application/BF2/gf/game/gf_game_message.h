@@ -12,4 +12,10 @@ struct MsgGameTalkAction : fw::Message {
   bool isSuccess;
 };
 
+struct MsgGameLipAction : fw::Message {
+  MsgGameLipAction(u32 action) : fw::Message(0x100002e, 0x40), action(action) {}
+
+  u32 action;
+};
+
 } // namespace gf
