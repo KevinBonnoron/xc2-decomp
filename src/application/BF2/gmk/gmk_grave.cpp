@@ -4,6 +4,8 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_set.h"
 
@@ -12,6 +14,8 @@ struct Vec3;
 } // namespace mm
 
 namespace gmk {
+class GmkEnemy;
+class GmkRoutedEnemy;
 
 void GmkGrave::BdatInfo::create(u8 *bdat, int id, const AGmkBase &gmk) {
   dispose();
@@ -49,5 +53,69 @@ bool GmkGrave::BdatInfo::isPopCondMatched(const mm::Vec3 &position) const { retu
 bool GmkGrave::BdatInfo::isDepopCondMatched(const mm::Vec3 &position) const { return !depopDist.isMatch(position); }
 
 void GmkGrave::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
+
+void GmkGrave::disposeGobInst(bool isFadeOut) {
+  if (handle == gf::INVALID_HANDLE) {
+    return;
+  }
+  if (isFadeOut) {
+    gmk::disposeGobInst(handle, 1.0f);
+  } else {
+    unbindToGameObj(handle);
+    gf::GfObjUtil::destroy(handle);
+    handle = gf::INVALID_HANDLE;
+  }
+}
+
+void GmkGrave::update(f32 deltaTime) {
+  AGmkBase::update(deltaTime);
+  if (!isValid()) {
+    return;
+  }
+  if (!getBdatInfo()->isValid()) {
+    return;
+  }
+  isEnemyDefeated = getDefeatedNum(getBdatInfo()->enemyId) != 0;
+  validateTargetable();
+  if (!isInterestPosExist()) {
+    return;
+  }
+  if (canPopGobInst()) {
+    createGobInst();
+  } else if (canDepopGobInst()) {
+    disposeGobInst(true);
+  }
+}
+
+bool GmkGrave::canPopGobInst() const {
+  if (handle != gf::INVALID_HANDLE || !isEnemyDefeated) {
+    return false;
+  }
+  return getBdatInfo()->isPopCondMatched(baseInfo.xform->position);
+}
+
+bool GmkGrave::canDepopGobInst() const {
+  if (handle == gf::INVALID_HANDLE) {
+    return false;
+  }
+  if (!isEnemyDefeated) {
+    return true;
+  }
+  return getBdatInfo()->isDepopCondMatched(baseInfo.xform->position);
+}
+
+void GmkGrave::debugDraw() const {
+  AGmkBase::debugDraw();
+  isValid();
+}
+
+bool GmkGrave::reqPopEnemy() const { return reqPopEnemy<GmkEnemy>() || reqPopEnemy<GmkRoutedEnemy>(); }
+
+void GmkGrave::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
+  AGmkBase::onGobEvent(event, handle);
+  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
+    disposeGobInst(false);
+  }
+}
 
 } // namespace gmk
