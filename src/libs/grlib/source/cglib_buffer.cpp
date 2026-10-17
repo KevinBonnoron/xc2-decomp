@@ -1,8 +1,11 @@
 #include <string.h>
 
 #include "grlib/cglib_buff_fix_alloc.h"
+#include "grlib/cglib_system_context.h"
+#include "grlib/cglib_vtl_mem_pool.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
+#include "nvn/nvn.h"
 #include "types.h"
 
 namespace grlib {
@@ -57,6 +60,36 @@ void CGLibBuffFixAlloc::setupFixTbl(mtl::ALLOC_HANDLE tableHandle, mtl::ALLOC_HA
 void CGLibBuffFixAlloc::freeID(u32 id) {
   m_usedBits[id >> 6] &= ~(1ul << (static_cast<u64>(id) & 0x3f));
   m_usedNum--;
+}
+
+CGLibVtlMemPool::CGLibVtlMemPool() {
+  m_size = 0;
+  m_buffer = nullptr;
+  m_isOwnPool = false;
+  m_offset = 0;
+}
+
+CGLibVtlMemPool::~CGLibVtlMemPool() { release(); }
+
+void CGLibVtlMemPool::release() {
+  if (m_isOwnPool) {
+    nvnMemoryPoolFinalize(m_memoryPool);
+    context::CGLibSystemContext::get()->m_memoryPoolAlloc.freeBuffer(m_memoryPool);
+  }
+  m_size = 0;
+  m_buffer = nullptr;
+  m_isOwnPool = false;
+  m_offset = 0;
+}
+
+void CGLibVtlMemPool::delayRelease() {
+  if (m_isOwnPool) {
+    context::CGLibSystemContext::get()->releaseDelayMempool(m_memoryPool, nullptr);
+  }
+  m_size = 0;
+  m_buffer = nullptr;
+  m_isOwnPool = false;
+  m_offset = 0;
 }
 
 } // namespace grlib
