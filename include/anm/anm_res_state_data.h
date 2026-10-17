@@ -15,8 +15,15 @@ struct ResLoopCount {
   u32 range;
 };
 
+enum StateType {
+  STATE_TYPE_SIMPLE,
+  STATE_TYPE_FROZEN,
+  STATE_TYPE_COMPLEX,
+};
+
 struct ResState {
-  u8 _00[0x30];
+  StateType type;
+  u8 _04[0x30 - 0x4];
   const ResLoopCount *loopCount;
 };
 
