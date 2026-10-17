@@ -11,4 +11,9 @@ public:
   virtual void reciveEvent(const EventData &event, u32 handle);
 };
 
+class UIGameListener {
+public:
+  virtual void reciveEvent(const EventData &event, u32 handle) = 0;
+};
+
 } // namespace ui
