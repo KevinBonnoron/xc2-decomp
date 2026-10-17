@@ -4,9 +4,11 @@
 #include "types.h"
 
 namespace ml {
+class WorkObj;
 
 class DevClock : public DevBase, public mm::mtl::PtrSingleton<DevClock> {
 public:
+  DevClock(const char *name, WorkObj *parent) : DevBase(name, parent) {}
   static bool getClockNow(long &clock);
   static void getSec2Clock(long &clock, f32 sec);
   static bool getTimeNow(long &time, const long &clock);
@@ -17,7 +19,7 @@ public:
   static bool isInitialized();
   bool wkStandbyLogin() override;
   bool wkStandbyLogout() override;
-  virtual long getPowerOnTimeSys() const = 0;
+  virtual f32 getPowerOnTimeSys() const = 0;
   virtual void getClockNowSys(long &clock) const = 0;
   virtual void getSec2ClockSys(long &clock, f32 sec) const = 0;
   virtual f32 getSecNowSys(const long &clock) const = 0;
