@@ -3,6 +3,7 @@
 
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/object/gf_init_param.h"
 #include "types.h"
 
 namespace mm {
@@ -22,6 +23,17 @@ public:
   virtual ~GfObjSetup();
   virtual u32 getFootStep() const;
   virtual u32 getFootStepEffect() const;
+
+  bool isEvent() const {
+    switch (characterType) {
+    case CHARACTER_TYPE_EVENT:
+    case CHARACTER_TYPE_EVENT_CS:
+    case CHARACTER_TYPE_ACT_VIEWER_EVENT:
+      return true;
+    default:
+      return false;
+    }
+  }
 
   u32 objType;
   u8 _0c[0x10 - 0x0c];

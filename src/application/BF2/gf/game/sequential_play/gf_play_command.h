@@ -3,6 +3,7 @@
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gmk/gmk_manager.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -515,6 +516,8 @@ static_assert(sizeof(GfPlayComWaitPlayerToStartGmkTuto) == 0x18, "");
 class GfPlayComGmkTutorialSeq : public GfPlayCom {
 public:
   static GfPlayComGmkTutorialSeq *create(const char *name, u32 tutorial);
+
+  static int s_activate;
 };
 
 class GfPlayComPlayerDead : public GfPlayCom {
@@ -596,6 +599,8 @@ class GfPlayComResetBlade : public GfPlayCom {
 public:
   static GfPlayComResetBlade *create(u32 partyId, int blade);
   static bool isPlaying(u32 partyId);
+
+  static mm::mtl::FixedVector<u8, 8> s_execFlag;
 };
 
 class GfPlayComMoverSwitch : public GfPlayCom {

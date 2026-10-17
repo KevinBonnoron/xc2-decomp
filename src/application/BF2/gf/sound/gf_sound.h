@@ -22,6 +22,26 @@ struct GF_OBJ_HANDLE;
 struct GF_SE_CATEGORY_HANDLE;
 struct GfSetupParam;
 
+GF_SE_CATEGORY_HANDLE *const INVALID_CATEGORY_HANDLE = reinterpret_cast<GF_SE_CATEGORY_HANDLE *>(-1);
+
+constexpr fw::SoundCategory CATEGORY_GAME_BGM = static_cast<fw::SoundCategory>(1);
+constexpr fw::SoundCategory CATEGORY_PLAYER_VOICE = static_cast<fw::SoundCategory>(2);
+constexpr fw::SoundCategory CATEGORY_SYSTEM = static_cast<fw::SoundCategory>(3);
+constexpr fw::SoundCategory CATEGORY_BATTLE_SE = static_cast<fw::SoundCategory>(4);
+constexpr fw::SoundCategory CATEGORY_FIELD_SE = static_cast<fw::SoundCategory>(5);
+constexpr fw::SoundCategory CATEGORY_GIMMICK_SE = static_cast<fw::SoundCategory>(6);
+constexpr fw::SoundCategory CATEGORY_GAME_ENV = static_cast<fw::SoundCategory>(7);
+constexpr fw::SoundCategory CATEGORY_GAME_WEATHER = static_cast<fw::SoundCategory>(8);
+constexpr fw::SoundCategory CATEGORY_EVENT_CS = static_cast<fw::SoundCategory>(9);
+constexpr fw::SoundCategory CATEGORY_EVENT_BGM = static_cast<fw::SoundCategory>(10);
+constexpr fw::SoundCategory CATEGORY_EVENT_VOICE = static_cast<fw::SoundCategory>(11);
+constexpr fw::SoundCategory CATEGORY_EVENT_SE = static_cast<fw::SoundCategory>(12);
+constexpr fw::SoundCategory CATEGORY_CHARACTER_SE = static_cast<fw::SoundCategory>(13);
+constexpr fw::SoundCategory CATEGORY_NO_SLOW_SE = static_cast<fw::SoundCategory>(14);
+constexpr fw::SoundCategory CATEGORY_ENEMY_VOICE = static_cast<fw::SoundCategory>(15);
+constexpr fw::SoundCategory CATEGORY_NARE_VOICE = static_cast<fw::SoundCategory>(16);
+constexpr fw::SoundCategory CATEGORY_MENU_BGM = static_cast<fw::SoundCategory>(17);
+
 enum SEINFO {
   SEINFO_SEARCH,
   SEINFO_COMMON_PACK,

@@ -58,6 +58,7 @@
 #include "gf/gf_pause.h"
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/object/gf_menu_obj_tutorial.h"
+#include "gf/object/gf_init_param.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
@@ -88,10 +89,6 @@ constexpr u32 PAUSE_BITS_GIMMICK = 0x59;
 constexpr u32 TIME_RANGE_DN_NIGHT = 7;
 constexpr u32 ASSET_PACK_MAX = 512;
 constexpr u32 DEPOP_METER_COUNT = 4;
-
-static u32 getValidDriverId(const DataParamAcc &paramAcc) {
-  return paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0;
-}
 
 static bool isEventCharacter(u32 characterType) {
   switch (characterType) {
@@ -728,12 +725,12 @@ bool GfGameManager::isEnableFieldAccess() {
   GfGameScene *scene = GfGameScene::get();
   if (scene != nullptr) {
     DataParamAcc driverAcc(GfGameParty::getHandleDriver(PARTY_ID_LEADER));
-    if (driverAcc.isValid() && getValidDriverId(driverAcc) == DRIVER_NIA) {
+    if (driverAcc.isValid() && driverAcc.getValidDriverId() == DRIVER_NIA) {
       if (scene->isNeedFieldBladeChange(PARTY_ID_LEADER)) {
         return false;
       }
 
-      if (GfDataDriver::getBlade(getValidDriverId(driverAcc), -1) == BLADE_BYAKKO &&
+      if (GfDataDriver::getBlade(driverAcc.getValidDriverId(), -1) == BLADE_BYAKKO &&
           GfObjUtil::getParentHandle(driverAcc.handle) != GfGameParty::getHandleBlade(PARTY_ID_LEADER, -1)) {
         return false;
       }
@@ -985,7 +982,7 @@ bool GfGameManager::isPlayerFinishBattleState() {
   }
 
   DataParamAcc leaderAcc(GfGameParty::getLeader());
-  if (leaderAcc.getObjType() == OBJECT_TYPE_DRIVER && getValidDriverId(leaderAcc) == DRIVER_NIA && leaderAcc.getBlade(-1, false) == BLADE_BYAKKO) {
+  if (leaderAcc.getObjType() == OBJECT_TYPE_DRIVER && leaderAcc.getValidDriverId() == DRIVER_NIA && leaderAcc.getBlade(-1, false) == BLADE_BYAKKO) {
     return true;
   }
 

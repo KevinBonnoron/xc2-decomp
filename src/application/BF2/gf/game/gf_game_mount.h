@@ -11,6 +11,7 @@ struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 
 enum OPTMNT {
+  OPTMNT_WIRE = 2,
   OPTMNT_BLADE = 3,
 };
 

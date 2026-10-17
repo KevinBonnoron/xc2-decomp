@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "gf/data/gf_data_driver.h"
+#include "gf/data/gf_object_type.h"
 #include "mm_mtl/fixed_array.h"
 #include "types.h"
 
@@ -161,6 +162,9 @@ public:
   bool isWeaponDrawDisp() const;
   const char *getCenterBone() const;
   const char *getCamBone() const;
+
+  u32 getValidBdatId() const { return isValid() ? getBdatId() : 0; }
+  u32 getValidDriverId() const { return isValid() && getObjType() == OBJECT_TYPE_DRIVER ? getBdatId() : 0; }
 
   IDataObj *obj;
   GF_OBJ_HANDLE *handle;

@@ -12,4 +12,5 @@ float atan2f(float y, float x);
 float tanf(float value);
 float asinf(float value);
 float powf(float base, float exponent);
+float floorf(float value);
 }

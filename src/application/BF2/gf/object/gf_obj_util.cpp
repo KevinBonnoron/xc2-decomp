@@ -12,6 +12,7 @@
 #include "gf/object/component/gf_component.h"
 #include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/property/gf_com_property.h"
+#include "gf/object/gf_init_param.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_property.h"

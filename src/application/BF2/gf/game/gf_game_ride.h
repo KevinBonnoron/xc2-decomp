@@ -8,6 +8,7 @@ class GfGameRide {
 public:
   static void build(const GfSetupParam &param);
   static void destroy();
+  static void setRideOn(bool isRide);
   static bool testRideOn();
 };
 
