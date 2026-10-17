@@ -4,6 +4,11 @@
 namespace gf {
 namespace GfMenuTypes {
 
+enum UIEvent {
+  UI_EVENT_OPEN = 0x21,
+  UI_EVENT_CLOSE = 0x22,
+};
+
 struct Param {
   Param() : data() {}
 
