@@ -3,7 +3,9 @@
 #include "types.h"
 
 namespace grlib {
+class CGLibColorBuffer;
 class CGLibDepthBuffer;
+class CGLibDepthTarget;
 class CGLibRenderTarget;
 
 struct LibMainStateViewPort {
@@ -21,12 +23,18 @@ struct LibMainStateViewPort {
 class CGLibState {
 public:
   static void setMainFrameBuffer();
+  static void setupInitialize();
   static void setViewport(const LibMainStateViewPort &viewPort);
+  static void setOnlyViewport(const LibMainStateViewPort &viewPort);
+  static void setOnlyScissor(const LibMainStateViewPort &viewPort);
   static void beginRegisterRenderTarget();
+  static void setRegisterRenderTarget(CGLibColorBuffer &colorBuffer, GrlMrtType mrt);
   static void setRegisterRenderTarget(CGLibRenderTarget &renderTarget, GrlMrtType mrt);
   static void setRegisterDepthTarget(CGLibDepthBuffer &depthBuffer);
   static void endRegisterRenderTarget();
   static CGLibRenderTarget *getMainRenderTarget();
+  static CGLibDepthTarget *getMainDepthTarget();
+  static LibMainStateViewPort *getDefViewPort();
 };
 
 } // namespace grlib

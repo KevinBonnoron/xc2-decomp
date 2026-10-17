@@ -97,6 +97,7 @@ public:
   u16 getMipmap() const;
   u16 getDepth() const;
   u32 get1PixelImageSize() const;
+  void invalidate();
 
   GrlSurfaceFormat m_format;
   u16 m_width;
