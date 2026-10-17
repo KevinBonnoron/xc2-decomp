@@ -9,11 +9,15 @@
 #include "gf/game/event/gf_game_event.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_scene.h"
+#include "gf/game/gf_game_speed.h"
 #include "gf/game/gf_game_state.h"
 #include "gf/game/quest/gf_quest_task.h"
+#include "gf/game/salvage/gf_game_salvage.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/game/sequential_play/gf_sequential_play.h"
 #include "gf/gf_allocator.h"
+#include "gf/gf_pause.h"
+#include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_fade.h"
 #include "gf/menu/gf_menu_kizunaring.h"
 #include "gf/menu/gf_menu_manager.h"
@@ -22,6 +26,7 @@
 #include "gf/script/gf_script_manager.h"
 #include "gmk/gmk_manager.h"
 #include "mm_math/mm_col4.h"
+#include "mm_mtl/reference_object.h"
 
 namespace gf {
 
@@ -468,6 +473,60 @@ GfPlayComMenuPrecious *GfPlayComMenuPrecious::create(u32 item) {
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuPrecious(item);
 }
 
+GfPlayComSalvage::GfPlayComSalvage(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_SALVAGE, false), handle(handle), waitFrame(3), state(STATE_WAIT) {
+  if (GfGameScene::get() != nullptr) {
+    pause = GfGameScene::get()->createPlayerPause();
+  }
+}
+
+void GfPlayComSalvage::start() {}
+
+void GfPlayComSalvage::end() {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->destroyPlayerPause(pause);
+  }
+}
+
+bool GfPlayComSalvage::updateForWait(const fw::UpdateInfo &info) {
+  if (--waitFrame <= 0) {
+    if (GfSequentialPlay::isSequenceSpecialAction()) {
+      return true;
+    }
+    if (GfPause::isPause(PAUSE_BIT_MAIN_MENU)) {
+      return true;
+    }
+    state = STATE_SALVAGE;
+    GfGameSalvage::startSalvage(handle);
+  }
+  return false;
+}
+
+bool GfPlayComSalvage::updateForSalvage(const fw::UpdateInfo &info, bool isCancel) {
+  if (isCancel) {
+    GfGameSalvage::cancelSalvage();
+  } else if (!GfGameSalvage::isStateWait()) {
+    return false;
+  }
+  GfGameSpeed::setSalvageSpeed(1.0f);
+  return true;
+}
+
+bool GfPlayComSalvage::update(const fw::UpdateInfo &info, bool isCancel) {
+  switch (state) {
+  case STATE_WAIT:
+    return updateForWait(info);
+  case STATE_SALVAGE:
+    return updateForSalvage(info, isCancel);
+  }
+  return false;
+}
+
+GfPlayComSalvage *GfPlayComSalvage::create(GF_OBJ_HANDLE *handle) {
+  // __LINE__ must be 1715 as in the original file: its value changes the instruction order.
+#line 1715
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComSalvage(handle);
+}
+
 bool GfPlayComWaitPlayerToStartGmkTuto::update(const fw::UpdateInfo &info, bool isCancel) {
   if (isCancel) {
     return true;
@@ -523,6 +582,41 @@ GfPlayComExecuteSignal *GfPlayComExecuteSignal::create(bool isStart, GfSequentia
   // __LINE__ must be 2722 as in the original file: its value changes the instruction order.
 #line 2722
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComExecuteSignal(isStart, signal);
+}
+
+void GfPlayComMenuObjCommonText::start() {
+  context = GfMenuCallContext::create();
+  GfMenuObjCommonText::openKizunaDialog(context, param);
+}
+
+void GfPlayComMenuObjCommonText::end() {
+  if (context != nullptr) {
+    GfMenuObjCommonText::close();
+    mm::mtl::safeRelease(context);
+  }
+}
+
+bool GfPlayComMenuObjCommonText::update(const fw::UpdateInfo &, bool isCancel) {
+  if (isCancel) {
+    return true;
+  }
+  return context->isTerm();
+}
+
+int GfPlayComMenuObjCommonText::s_activate;
+
+GfPlayComMenuObjCommonText::GfPlayComMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param)
+    : GfPlayCom(PCOMTYPE_MENU_COMMON, false), context(nullptr) {
+  this->param = param;
+  s_activate++;
+}
+
+GfPlayComMenuObjCommonText::~GfPlayComMenuObjCommonText() { s_activate--; }
+
+GfPlayComMenuObjCommonText *GfPlayComMenuObjCommonText::create(GfMenuObjCommonText::OpenKizunaParam &param) {
+  // __LINE__ must be 3127 as in the original file: its value changes the instruction order.
+#line 3127
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuObjCommonText(param);
 }
 
 } // namespace gf
