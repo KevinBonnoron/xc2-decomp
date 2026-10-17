@@ -130,6 +130,7 @@ public:
   bool IsBlade() const;
   bool IsEnemy() const;
   bool IsDriver() const;
+  void SetWeaponType(int weaponType);
   CharacterParameter *GetCharacterParameter(bool);
   bool IsControlCharacter() const;
   bool IsControlCharacterGroup() const;

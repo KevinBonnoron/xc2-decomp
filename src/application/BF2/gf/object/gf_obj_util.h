@@ -101,6 +101,7 @@ public:
   static const char *getAssetModelName(GF_OBJ_HANDLE *handle);
   static const char *getAssetMotionName(GF_OBJ_HANDLE *handle);
   static u32 getEyeRotControl(GF_OBJ_HANDLE *handle);
+  static void setEnableEyeBlink(GF_OBJ_HANDLE *handle, bool isEnable);
   static GfComModel *getComModel(GF_OBJ_HANDLE *handle);
   static GfVolumeFade *getVolumeFade(GF_OBJ_HANDLE *handle);
   static bool isBattle(GF_OBJ_HANDLE *handle);
