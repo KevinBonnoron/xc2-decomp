@@ -3,6 +3,7 @@
 #include "grlib/cglib_color_buffer.h"
 #include "grlib/cglib_depth_buffer.h"
 #include "grlib/cglib_depth_target.h"
+#include "grlib/cglib_pipeline.h"
 #include "grlib/cglib_render_target.h"
 #include "grlib/cglib_system_context.h"
 #include "nvn/nvn.h"
@@ -17,11 +18,11 @@ void CGLibState::setMainFrameBuffer() {
 void CGLibState::setupInitialize() {}
 
 void CGLibState::setOnlyViewport(const LibMainStateViewPort &viewPort) {
-  nvnCommandBufferSetViewport(context::CGLibSystemContext::get()->m_cmdBuf, viewPort.x, viewPort.y, viewPort.width, viewPort.height);
+  nvnCommandBufferSetViewport(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, viewPort.x, viewPort.y, viewPort.width, viewPort.height);
 }
 
 void CGLibState::setOnlyScissor(const LibMainStateViewPort &viewPort) {
-  nvnCommandBufferSetScissor(context::CGLibSystemContext::get()->m_cmdBuf, viewPort.x, viewPort.y, viewPort.width, viewPort.height);
+  nvnCommandBufferSetScissor(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, viewPort.x, viewPort.y, viewPort.width, viewPort.height);
 }
 
 void CGLibState::beginRegisterRenderTarget() {
@@ -52,7 +53,7 @@ void CGLibState::setRegisterDepthTarget(CGLibDepthBuffer &depthBuffer) {
 void CGLibState::endRegisterRenderTarget() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
   nvnCommandBufferSetRenderTargets(
-      context->m_cmdBuf, context->m_registerNum, context->m_registerTextures, context->m_registerViews, context->m_registerDepth, nullptr);
+      context->m_pipeline.m_cmdBuf, context->m_registerNum, context->m_registerTextures, context->m_registerViews, context->m_registerDepth, nullptr);
 }
 
 CGLibRenderTarget *CGLibState::getMainRenderTarget() {

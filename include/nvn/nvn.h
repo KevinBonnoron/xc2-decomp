@@ -94,6 +94,18 @@ enum NVNtextureFlags {
   NVN_TEXTURE_FLAGS_COMPRESSIBLE = 0x8,
 };
 
+enum NVNdrawPrimitive {};
+
+enum NVNindexType {};
+
+typedef u64 NVNbufferAddress;
+
+typedef void (*PFNNVNCOMMANDBUFFERDRAWELEMENTSPROC)(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count,
+                                                    NVNbufferAddress indexBuffer);
+typedef void (*PFNNVNCOMMANDBUFFERDRAWELEMENTSINSTANCEDPROC)(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count,
+                                                             NVNbufferAddress indexBuffer, int baseVertex, int baseInstance, int instanceCount);
+typedef void (*PFNNVNCOMMANDBUFFERDRAWELEMENTSINDIRECTPROC)(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type,
+                                                            NVNbufferAddress indexBuffer, NVNbufferAddress indirectBuffer);
 typedef void (*PFNNVNCOMMANDBUFFERSETBLENDCOLORPROC)(NVNcommandBuffer *cmdBuf, const float *blendColor);
 typedef void (*PFNNVNCOMMANDBUFFERBINDCHANNELMASKSTATEPROC)(NVNcommandBuffer *cmdBuf, const NVNchannelMaskState *channelMask);
 typedef void (*PFNNVNCOMMANDBUFFERBINDPOLYGONSTATEPROC)(NVNcommandBuffer *cmdBuf, const NVNpolygonState *polygon);
@@ -149,6 +161,9 @@ extern PFNNVNCOMMANDBUFFERSETBLENDCOLORPROC pfnc_nvnCommandBufferSetBlendColor;
 extern PFNNVNCOMMANDBUFFERBINDCHANNELMASKSTATEPROC pfnc_nvnCommandBufferBindChannelMaskState;
 extern PFNNVNCOMMANDBUFFERBINDPOLYGONSTATEPROC pfnc_nvnCommandBufferBindPolygonState;
 extern PFNNVNCOMMANDBUFFERSETRENDERTARGETSPROC pfnc_nvnCommandBufferSetRenderTargets;
+extern PFNNVNCOMMANDBUFFERDRAWELEMENTSPROC pfnc_nvnCommandBufferDrawElements;
+extern PFNNVNCOMMANDBUFFERDRAWELEMENTSINSTANCEDPROC pfnc_nvnCommandBufferDrawElementsInstanced;
+extern PFNNVNCOMMANDBUFFERDRAWELEMENTSINDIRECTPROC pfnc_nvnCommandBufferDrawElementsIndirect;
 extern PFNNVNCOMMANDBUFFERSETVIEWPORTPROC pfnc_nvnCommandBufferSetViewport;
 extern PFNNVNCOMMANDBUFFERSETSCISSORPROC pfnc_nvnCommandBufferSetScissor;
 extern PFNNVNCOMMANDBUFFERSETLINEWIDTHPROC pfnc_nvnCommandBufferSetLineWidth;
@@ -209,6 +224,21 @@ inline void nvnCommandBufferSetRenderTargets(NVNcommandBuffer *cmdBuf, int numCo
                                              const NVNtextureView *const *colorViews, const NVNtexture *depthStencil,
                                              const NVNtextureView *depthStencilView) {
   pfnc_nvnCommandBufferSetRenderTargets(cmdBuf, numColors, colors, colorViews, depthStencil, depthStencilView);
+}
+
+inline void nvnCommandBufferDrawElements(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count,
+                                         NVNbufferAddress indexBuffer) {
+  pfnc_nvnCommandBufferDrawElements(cmdBuf, mode, type, count, indexBuffer);
+}
+
+inline void nvnCommandBufferDrawElementsInstanced(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count,
+                                                  NVNbufferAddress indexBuffer, int baseVertex, int baseInstance, int instanceCount) {
+  pfnc_nvnCommandBufferDrawElementsInstanced(cmdBuf, mode, type, count, indexBuffer, baseVertex, baseInstance, instanceCount);
+}
+
+inline void nvnCommandBufferDrawElementsIndirect(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, NVNbufferAddress indexBuffer,
+                                                 NVNbufferAddress indirectBuffer) {
+  pfnc_nvnCommandBufferDrawElementsIndirect(cmdBuf, mode, type, indexBuffer, indirectBuffer);
 }
 
 inline void nvnCommandBufferSetViewport(NVNcommandBuffer *cmdBuf, int x, int y, int w, int h) {

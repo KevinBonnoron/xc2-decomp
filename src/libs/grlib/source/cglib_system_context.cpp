@@ -6,6 +6,7 @@
 #include "ml/critical_section.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
+#include "nvn/nvn.h"
 
 namespace grlib {
 namespace context {
@@ -35,7 +36,7 @@ void CGLibSystemContext::setRegisterRenderTarget(CGLibColorBuffer &colorBuffer, 
 void CGLibSystemContext::setRegisterDepthTarget(CGLibDepthBuffer &depthBuffer) { m_registerDepth = depthBuffer.m_nvnTexture; }
 
 void CGLibSystemContext::endRegisterRenderTarget() {
-  nvnCommandBufferSetRenderTargets(m_cmdBuf, m_registerNum, m_registerTextures, m_registerViews, m_registerDepth, nullptr);
+  nvnCommandBufferSetRenderTargets(m_pipeline.m_cmdBuf, m_registerNum, m_registerTextures, m_registerViews, m_registerDepth, nullptr);
 }
 
 void CGLibSystemContext::setMainFrameBuffer() { m_mainRenderTargets[m_mainRenderTargetIndex].setRenderTarget(*m_mainDepthTarget.m_depthBuffer); }
