@@ -3,6 +3,7 @@
 #include "gf/game/quest/gf_quest_id.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_npc/gmk_npc_manager.h"
+#include "types.h"
 
 namespace gmk {
 
@@ -26,6 +27,11 @@ void GmkNpcIdInfo::BdatInfo::dispose() {
   mountObject = 0;
   mountPoint2 = 0;
   mountObject2 = 0;
+}
+
+GmkNpcManager::GmkNpcManager(u32 updateNpcNumPerFrame)
+    : _30(), updateNpcNumPerFrame(updateNpcNumPerFrame), updateNpcIndex(0), isCreateGameEntity(true) {
+  create();
 }
 
 } // namespace gmk

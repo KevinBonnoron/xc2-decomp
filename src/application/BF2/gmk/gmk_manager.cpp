@@ -234,6 +234,78 @@ const AGmkBase *GmkSet::findGmkInstByGmkInstIndex(GmkType type, u32 index) const
 
 int getCurrentMapBdatId() { return gf::GfGameManager::getMapID(); }
 
+void GmkSet::update(f32 deltaTime) {
+  const GmkManager *manager = GmkManager::get();
+  if (!manager->resDefBdat.isValid() || manager->gmkSetListBdat == nullptr) {
+    return;
+  }
+  mapBdat.update(deltaTime);
+  npcManager.update(deltaTime);
+  if (seq) {
+    (this->*seq)(deltaTime);
+  }
+}
+
+void GmkSet::create(const CreateInfo &info) {
+  dispose();
+  createInfo = info;
+  npcManager.isCreateGameEntity = !info.isGameEntityDisabled;
+  seq = &GmkSet::seqWaitToValidate_GfGameManager_m_mapID;
+}
+
+void GmkSet::dispose() {
+  seq = nullptr;
+  disposeGmkLists();
+  disposeMapBdat();
+  createInfo = CreateInfo();
+}
+
+GmkSet::~GmkSet() { dispose(); }
+
+const IGmkList *GmkSet::getGmkList(GmkType type) const { return lists[type]; }
+
+IGmkList *GmkSet::getGmkList(GmkType type) { return lists[type]; }
+
+void GmkSet::seqWaitToValidate_GfGameManager_m_mapID(f32 deltaTime) {
+  if (gf::GfGameManager::getMapID() != 0) {
+    seq = &GmkSet::seqCreateMapBdat;
+  }
+}
+
+void GmkSet::disposeGmkLists() {
+  for (u32 type = 0; type < GMK_TYPE_NUM; type++) {
+    if (lists[type] != nullptr) {
+      delete lists[type];
+      lists[type] = nullptr;
+    }
+  }
+}
+
+void GmkSet::disposeMapBdat() { mapBdat.dispose(); }
+
+void GmkSet::seqUpdate(f32 deltaTime) {
+  for (u32 type = 0; type < GMK_TYPE_NUM; type++) {
+    if (lists[type] != nullptr) {
+      lists[type]->update(deltaTime);
+    }
+  }
+}
+
+bool GmkSet::createMapBdat(int map) {
+  mapBdat.dispose();
+  GmkBdat::CreateInfo info;
+  const char *name = reinterpret_cast<const char *>(Bdat::getValCheck(GmkManager::get()->gmkSetListBdat, "bdat", map, BDAT_TYPE_STRING));
+  if (name == nullptr || name[0] == '\0') {
+    return false;
+  }
+  info.memory = createInfo.memory;
+  info.path = "gmk/";
+  info.path += name;
+  info.path += ".bdat";
+  info.bdatId = 4;
+  return mapBdat.create(info);
+}
+
 void GmkSet::createGmkLists(int gmkSetId) {
   npcManager.setUpdateNpcNumPerFrame(32);
   for (int i = 0; i < GMK_TYPE_NUM; i++) {
@@ -320,6 +392,18 @@ void GmkSet::createGmkLists(int gmkSetId) {
     info.position = createInfo.position;
     info.rotation = createInfo.rotation;
     list->create(info);
+  }
+}
+
+void GmkSet::seqCreateMapBdat(f32 deltaTime) {
+  createGmkLists(createInfo.gmkSetId);
+  seq = &GmkSet::seqUpdate;
+}
+
+void GmkSet::seqCreateMapGmk(f32 deltaTime) {
+  if (mapBdat.isValid() || !mapBdat.createInfo.isValid()) {
+    createGmkLists(createInfo.gmkSetId);
+    seq = &GmkSet::seqUpdate;
   }
 }
 

@@ -32,6 +32,10 @@ public:
     u16 mountObject2;
   };
 
+  ~GmkNpcIdInfo() { dispose(); }
+
+  void dispose();
+
   u16 npcId;
   u8 *bdat;
   mm::mtl::IntrusiveList<AGmkNpc> *npcs;
@@ -51,17 +55,18 @@ static_assert(sizeof(GmkNpcIdInfo) == 0x38, "");
 class GmkNpcManager {
 public:
   explicit GmkNpcManager(u32 updateNpcNumPerFrame);
-  virtual ~GmkNpcManager();
+  virtual ~GmkNpcManager() { dispose(); }
 
   void create();
+  void dispose();
+  void update(f32 deltaTime);
   void setUpdateNpcNumPerFrame(u32 num) { updateNpcNumPerFrame = num; }
 
-private:
   mm::mtl::Vector<GmkNpcIdInfo> npcIdInfos;
   u8 _30[0x34 - 0x30];
   u32 updateNpcNumPerFrame;
   u32 updateNpcIndex;
-  u8 _3c[0x40 - 0x3c];
+  bool isCreateGameEntity;
 };
 
 static_assert(sizeof(GmkNpcManager) == 0x40, "");

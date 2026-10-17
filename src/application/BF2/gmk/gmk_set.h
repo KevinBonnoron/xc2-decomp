@@ -29,14 +29,29 @@ public:
   virtual void createGmkLists(int gmkSetId);
 
   bool isValid() const;
+  bool isGmkListsCreated() const;
+  bool updateImmediate();
   const AGmkBase *findFirstGmkInstByBdatId(GmkType type, int bdatId) const;
   const AGmkBase *findGmkInstByGmkInstIndex(GmkType type, u32 index) const;
+  void update(f32 deltaTime);
+  explicit GmkSet(const CreateInfo *info);
+  void create(const CreateInfo &info);
+  void dispose();
+  const IGmkList *getGmkList(GmkType type) const;
+  IGmkList *getGmkList(GmkType type);
+  void seqWaitToValidate_GfGameManager_m_mapID(f32 deltaTime);
+  void disposeGmkLists();
+  void disposeMapBdat();
+  void seqUpdate(f32 deltaTime);
+  bool createMapBdat(int map);
+  void seqCreateMapBdat(f32 deltaTime);
+  void seqCreateMapGmk(f32 deltaTime);
 
   CreateInfo createInfo;
   GmkBdat mapBdat;
   GmkNpcManager npcManager;
   IGmkList *lists[GMK_TYPE_NUM];
-  u8 _388[0x398 - 0x388];
+  void (GmkSet::*seq)(f32);
 };
 
 static_assert(sizeof(GmkSet::CreateInfo) == 0x30, "");
@@ -44,5 +59,6 @@ static_assert(offsetof(GmkSet, createInfo) == 0x10, "");
 static_assert(offsetof(GmkSet, mapBdat) == 0x40, "");
 static_assert(offsetof(GmkSet, npcManager) == 0x178, "");
 static_assert(offsetof(GmkSet, lists) == 0x1b8, "");
+static_assert(offsetof(GmkSet, seq) == 0x388, "");
 
 } // namespace gmk
