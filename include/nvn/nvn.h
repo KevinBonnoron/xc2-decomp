@@ -9,12 +9,36 @@ struct NVNcommandBuffer;
 struct NVNmemoryPool;
 struct NVNtexture;
 
-struct NVNdevice {
+struct alignas(8) NVNdevice {
   u8 reserved[0x3000];
 };
 
-struct NVNtextureBuilder {
+struct alignas(8) NVNtextureBuilder {
   u8 reserved[0x80];
+};
+
+struct alignas(8) NVNbuffer {
+  u8 reserved[0x30];
+};
+
+struct alignas(8) NVNbufferBuilder {
+  u8 reserved[0x40];
+};
+
+struct alignas(8) NVNblendState {
+  u8 reserved[0x8];
+};
+
+struct NVNcolorState {
+  u8 reserved[0x4];
+};
+
+struct alignas(8) NVNdepthStencilState {
+  u8 reserved[0x8];
+};
+
+struct alignas(8) NVNvertexStreamState {
+  u8 reserved[0x8];
 };
 
 struct NVNtextureView {
@@ -47,6 +71,24 @@ enum NVNtextureTarget {
 
 enum NVNformat {};
 
+enum NVNfrontFace {
+  NVN_FRONT_FACE_CW,
+  NVN_FRONT_FACE_CCW,
+};
+
+enum NVNface {
+  NVN_FACE_NONE,
+  NVN_FACE_FRONT,
+  NVN_FACE_BACK,
+  NVN_FACE_FRONT_AND_BACK,
+};
+
+enum NVNpolygonMode {
+  NVN_POLYGON_MODE_POINT,
+  NVN_POLYGON_MODE_LINE,
+  NVN_POLYGON_MODE_FILL,
+};
+
 enum NVNtextureFlags {
   NVN_TEXTURE_FLAGS_IMAGE = 0x4,
   NVN_TEXTURE_FLAGS_COMPRESSIBLE = 0x8,
@@ -70,6 +112,24 @@ typedef void (*PFNNVNCOMMANDBUFFERBARRIERPROC)(NVNcommandBuffer *cmdBuf, int bar
 typedef void (*PFNNVNCOMMANDBUFFERSETTILEDCACHETILESIZEPROC)(NVNcommandBuffer *cmdBuf, int tileWidth, int tileHeight);
 typedef void (*PFNNVNCOMMANDBUFFERSETTILEDCACHEACTIONPROC)(NVNcommandBuffer *cmdBuf, NVNtiledCacheAction action);
 typedef void (*PFNNVNMEMORYPOOLFINALIZEPROC)(NVNmemoryPool *pool);
+typedef void (*PFNNVNCOMMANDBUFFERBINDVERTEXSTREAMSTATEPROC)(NVNcommandBuffer *cmdBuf, int numStreams, const NVNvertexStreamState *streams);
+typedef void (*PFNNVNBLENDSTATESETDEFAULTSPROC)(NVNblendState *blend);
+typedef void (*PFNNVNCHANNELMASKSTATESETDEFAULTSPROC)(NVNchannelMaskState *channelMask);
+typedef void (*PFNNVNCHANNELMASKSTATESETCHANNELMASKPROC)(NVNchannelMaskState *channelMask, int index, NVNboolean r, NVNboolean g, NVNboolean b,
+                                                         NVNboolean a);
+typedef void (*PFNNVNCOLORSTATESETDEFAULTSPROC)(NVNcolorState *color);
+typedef void (*PFNNVNCOLORSTATESETBLENDENABLEPROC)(NVNcolorState *color, int index, NVNboolean enable);
+typedef void (*PFNNVNDEPTHSTENCILSTATESETDEFAULTSPROC)(NVNdepthStencilState *depthStencil);
+typedef void (*PFNNVNPOLYGONSTATESETDEFAULTSPROC)(NVNpolygonState *polygon);
+typedef void (*PFNNVNPOLYGONSTATESETCULLFACEPROC)(NVNpolygonState *polygon, NVNface face);
+typedef void (*PFNNVNPOLYGONSTATESETFRONTFACEPROC)(NVNpolygonState *polygon, NVNfrontFace face);
+typedef void (*PFNNVNPOLYGONSTATESETPOLYGONMODEPROC)(NVNpolygonState *polygon, NVNpolygonMode polygonMode);
+typedef void (*PFNNVNVERTEXSTREAMSTATESETDEFAULTSPROC)(NVNvertexStreamState *stream);
+typedef void (*PFNNVNBUFFERBUILDERSETDEVICEPROC)(NVNbufferBuilder *builder, NVNdevice *device);
+typedef void (*PFNNVNBUFFERBUILDERSETDEFAULTSPROC)(NVNbufferBuilder *builder);
+typedef void (*PFNNVNBUFFERBUILDERSETSTORAGEPROC)(NVNbufferBuilder *builder, NVNmemoryPool *pool, ptrdiff_t offset, size_t size);
+typedef NVNboolean (*PFNNVNBUFFERINITIALIZEPROC)(NVNbuffer *buffer, const NVNbufferBuilder *builder);
+typedef void (*PFNNVNBUFFERFINALIZEPROC)(NVNbuffer *buffer);
 typedef void (*PFNNVNTEXTUREBUILDERSETDEVICEPROC)(NVNtextureBuilder *builder, NVNdevice *device);
 typedef void (*PFNNVNTEXTUREBUILDERSETDEFAULTSPROC)(NVNtextureBuilder *builder);
 typedef void (*PFNNVNTEXTUREBUILDERSETFLAGSPROC)(NVNtextureBuilder *builder, int flags);
@@ -101,6 +161,23 @@ extern PFNNVNCOMMANDBUFFERBARRIERPROC pfnc_nvnCommandBufferBarrier;
 extern PFNNVNCOMMANDBUFFERSETTILEDCACHETILESIZEPROC pfnc_nvnCommandBufferSetTiledCacheTileSize;
 extern PFNNVNCOMMANDBUFFERSETTILEDCACHEACTIONPROC pfnc_nvnCommandBufferSetTiledCacheAction;
 extern PFNNVNMEMORYPOOLFINALIZEPROC pfnc_nvnMemoryPoolFinalize;
+extern PFNNVNCOMMANDBUFFERBINDVERTEXSTREAMSTATEPROC pfnc_nvnCommandBufferBindVertexStreamState;
+extern PFNNVNBLENDSTATESETDEFAULTSPROC pfnc_nvnBlendStateSetDefaults;
+extern PFNNVNCHANNELMASKSTATESETDEFAULTSPROC pfnc_nvnChannelMaskStateSetDefaults;
+extern PFNNVNCHANNELMASKSTATESETCHANNELMASKPROC pfnc_nvnChannelMaskStateSetChannelMask;
+extern PFNNVNCOLORSTATESETDEFAULTSPROC pfnc_nvnColorStateSetDefaults;
+extern PFNNVNCOLORSTATESETBLENDENABLEPROC pfnc_nvnColorStateSetBlendEnable;
+extern PFNNVNDEPTHSTENCILSTATESETDEFAULTSPROC pfnc_nvnDepthStencilStateSetDefaults;
+extern PFNNVNPOLYGONSTATESETDEFAULTSPROC pfnc_nvnPolygonStateSetDefaults;
+extern PFNNVNPOLYGONSTATESETCULLFACEPROC pfnc_nvnPolygonStateSetCullFace;
+extern PFNNVNPOLYGONSTATESETFRONTFACEPROC pfnc_nvnPolygonStateSetFrontFace;
+extern PFNNVNPOLYGONSTATESETPOLYGONMODEPROC pfnc_nvnPolygonStateSetPolygonMode;
+extern PFNNVNVERTEXSTREAMSTATESETDEFAULTSPROC pfnc_nvnVertexStreamStateSetDefaults;
+extern PFNNVNBUFFERBUILDERSETDEVICEPROC pfnc_nvnBufferBuilderSetDevice;
+extern PFNNVNBUFFERBUILDERSETDEFAULTSPROC pfnc_nvnBufferBuilderSetDefaults;
+extern PFNNVNBUFFERBUILDERSETSTORAGEPROC pfnc_nvnBufferBuilderSetStorage;
+extern PFNNVNBUFFERINITIALIZEPROC pfnc_nvnBufferInitialize;
+extern PFNNVNBUFFERFINALIZEPROC pfnc_nvnBufferFinalize;
 extern PFNNVNTEXTUREBUILDERSETDEVICEPROC pfnc_nvnTextureBuilderSetDevice;
 extern PFNNVNTEXTUREBUILDERSETDEFAULTSPROC pfnc_nvnTextureBuilderSetDefaults;
 extern PFNNVNTEXTUREBUILDERSETFLAGSPROC pfnc_nvnTextureBuilderSetFlags;
@@ -173,6 +250,50 @@ inline void nvnCommandBufferSetTiledCacheAction(NVNcommandBuffer *cmdBuf, NVNtil
 }
 
 inline void nvnMemoryPoolFinalize(NVNmemoryPool *pool) { pfnc_nvnMemoryPoolFinalize(pool); }
+
+inline void nvnCommandBufferBindVertexStreamState(NVNcommandBuffer *cmdBuf, int numStreams, const NVNvertexStreamState *streams) {
+  pfnc_nvnCommandBufferBindVertexStreamState(cmdBuf, numStreams, streams);
+}
+
+inline void nvnBlendStateSetDefaults(NVNblendState *blend) { pfnc_nvnBlendStateSetDefaults(blend); }
+
+inline void nvnChannelMaskStateSetDefaults(NVNchannelMaskState *channelMask) { pfnc_nvnChannelMaskStateSetDefaults(channelMask); }
+
+inline void nvnChannelMaskStateSetChannelMask(NVNchannelMaskState *channelMask, int index, NVNboolean r, NVNboolean g, NVNboolean b, NVNboolean a) {
+  pfnc_nvnChannelMaskStateSetChannelMask(channelMask, index, r, g, b, a);
+}
+
+inline void nvnColorStateSetDefaults(NVNcolorState *color) { pfnc_nvnColorStateSetDefaults(color); }
+
+inline void nvnColorStateSetBlendEnable(NVNcolorState *color, int index, NVNboolean enable) {
+  pfnc_nvnColorStateSetBlendEnable(color, index, enable);
+}
+
+inline void nvnDepthStencilStateSetDefaults(NVNdepthStencilState *depthStencil) { pfnc_nvnDepthStencilStateSetDefaults(depthStencil); }
+
+inline void nvnPolygonStateSetDefaults(NVNpolygonState *polygon) { pfnc_nvnPolygonStateSetDefaults(polygon); }
+
+inline void nvnPolygonStateSetCullFace(NVNpolygonState *polygon, NVNface face) { pfnc_nvnPolygonStateSetCullFace(polygon, face); }
+
+inline void nvnPolygonStateSetFrontFace(NVNpolygonState *polygon, NVNfrontFace face) { pfnc_nvnPolygonStateSetFrontFace(polygon, face); }
+
+inline void nvnPolygonStateSetPolygonMode(NVNpolygonState *polygon, NVNpolygonMode polygonMode) {
+  pfnc_nvnPolygonStateSetPolygonMode(polygon, polygonMode);
+}
+
+inline void nvnVertexStreamStateSetDefaults(NVNvertexStreamState *stream) { pfnc_nvnVertexStreamStateSetDefaults(stream); }
+
+inline void nvnBufferBuilderSetDevice(NVNbufferBuilder *builder, NVNdevice *device) { pfnc_nvnBufferBuilderSetDevice(builder, device); }
+
+inline void nvnBufferBuilderSetDefaults(NVNbufferBuilder *builder) { pfnc_nvnBufferBuilderSetDefaults(builder); }
+
+inline void nvnBufferBuilderSetStorage(NVNbufferBuilder *builder, NVNmemoryPool *pool, ptrdiff_t offset, size_t size) {
+  pfnc_nvnBufferBuilderSetStorage(builder, pool, offset, size);
+}
+
+inline NVNboolean nvnBufferInitialize(NVNbuffer *buffer, const NVNbufferBuilder *builder) { return pfnc_nvnBufferInitialize(buffer, builder); }
+
+inline void nvnBufferFinalize(NVNbuffer *buffer) { pfnc_nvnBufferFinalize(buffer); }
 
 inline void nvnTextureBuilderSetDevice(NVNtextureBuilder *builder, NVNdevice *device) { pfnc_nvnTextureBuilderSetDevice(builder, device); }
 
