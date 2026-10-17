@@ -1,0 +1,76 @@
+#include <string.h>
+
+#include "ssd/ssd_io_stream.h"
+#include "types.h"
+
+namespace ssd {
+
+bool MemoryStream::IsOpen() const { return data != nullptr; }
+
+long MemoryStream::Open(void *data, u64 size, OpenMode mode) {
+  if (mode != OPEN_MODE_READ) {
+    return -1;
+  }
+  this->data = static_cast<u8 *>(data);
+  this->size = size;
+  position = 0;
+  return 0;
+}
+
+long MemoryStream::Close() {
+  data = nullptr;
+  return 0;
+}
+
+long MemoryStream::Read(u64 size, void *buffer, u64 *readSize) {
+  u64 accessSize = CheckAccessSize(size);
+  if (accessSize != 0) {
+    memcpy(buffer, &data[position], accessSize);
+    position += accessSize;
+  }
+  if (readSize != nullptr) {
+    *readSize = position;
+  }
+  return 0;
+}
+
+long MemoryStream::Write(u64 size, const void *buffer, u64 *writeSize) { return -1; }
+
+long MemoryStream::Seek(SeekMode mode, u64 offset, u64 *position) {
+  if (mode == SEEK_MODE_CURRENT) {
+    this->position += CheckAccessSize(offset);
+  } else if (mode == SEEK_MODE_BEGIN) {
+    this->position = CheckAccessSize(offset);
+  } else if (mode == SEEK_MODE_END) {
+    u64 accessSize = CheckAccessSize(offset);
+    this->position = size - accessSize;
+  }
+  if (position != nullptr) {
+    *position = this->position;
+  }
+  return 0;
+}
+
+long MemoryStream::Tell(u64 *position) {
+  *position = this->position;
+  return 0;
+}
+
+long MemoryStream::GetPosition(u64 *position) const {
+  *position = this->position;
+  return 0;
+}
+
+u64 MemoryStream::CheckAccessSize(u64 size) {
+  if (!IsOpen()) {
+    return 0;
+  }
+  if (this->size != 0) {
+    if (position + size >= this->size) {
+      return this->size - position;
+    }
+  }
+  return size;
+}
+
+} // namespace ssd
