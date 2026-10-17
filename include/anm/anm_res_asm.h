@@ -5,10 +5,12 @@
 
 namespace anm {
 
+class ResStateData;
 class Skeleton;
 
 class ResASM {
 public:
+  const ResStateData *findResStateData(const char *name) const;
   void sortAnnotation(u32 type);
 
   u8 _00[0x18];
