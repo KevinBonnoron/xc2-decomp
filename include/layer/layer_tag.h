@@ -6,7 +6,10 @@
 
 namespace layer {
 
-struct LayerTagTbl;
+struct LayerTagTbl {
+  const char *name;
+  const char *value;
+};
 
 class LayerStrInfo {
 public:
@@ -39,7 +42,7 @@ public:
 class LayerTagStr : public LayerTag {
 public:
   LayerTagStr();
-  ~LayerTagStr() override {}
+  ~LayerTagStr() override;
   void setStockTbl(char *table, int size);
   void stockString(const char *string);
   void stockString(const wchar_t *string);
