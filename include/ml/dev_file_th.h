@@ -44,6 +44,7 @@ static_assert(sizeof(DevFileParamTh) == 0x70, "");
 class DevFileTh {
 public:
   static bool isInitialized();
+  static bool writeFileBlock(const char *path, const void *data, u32 size, int priority);
   static FileHandleTh *rfOpen(const DevFileParamTh &param);
   static bool rfRead(FileHandleTh *handle, const DevFileParamTh &param);
   static bool rfIsBusy(FileHandleTh *handle);
