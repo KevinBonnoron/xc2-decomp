@@ -21,21 +21,42 @@ struct LyrActionData {
 
 static_assert(sizeof(LyrActionData) == 0x2c, "");
 
+struct LyrActionHeader {
+  u8 _00[0xc];
+  s32 actionNum;
+};
+
 struct LayerActWork {
   const u8 *data;
   const LyrActionData *actions;
   s32 actionNum;
   f32 sec;
-  u8 _18[0x20 - 0x18];
+  f32 deltaSec;
+  f32 invDeltaSec;
   u32 actionIdx;
+  u32 flags;
+  u32 *actionWorks;
 };
 
 static_assert(offsetof(LayerActWork, actionIdx) == 0x20, "");
+static_assert(sizeof(LayerActWork) == 0x30, "");
 
 class LayerActBase : public LayerObj {
 public:
+  void startSetupAction();
+  void checkActionEnd(const LyrActionData *action, bool isCmdEnd);
+  u32 calcActionWorkSize(const u8 *data);
   void actionIdx(u32 index);
   void actionEnd();
+  bool actcmd_no(const u8 *&cmd);
+  bool actcmd_priority(const u8 *&cmd);
+  bool actcmd_wait(const u8 *&cmd);
+  bool actcmd_ctrlspd(const u8 *&cmd);
+  bool actend_no(const LyrActionData *action, bool isCmdEnd);
+  bool actend_cmdend(const LyrActionData *action, bool isCmdEnd);
+  bool actend_on(const LyrActionData *action, bool isCmdEnd);
+
+  static bool (LayerActBase::*s_pCallActEnd[])(const LyrActionData *action, bool isCmdEnd);
 
   LayerActWork *m_actWork;
 };

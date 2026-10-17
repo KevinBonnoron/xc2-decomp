@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include "layer/layer_act_base.h"
+
 #include "layer/layer_anime_obj.h"
 #include "layer/layer_manager.h"
 #include "layer/layer_res_sec_texture.h"
@@ -261,5 +263,87 @@ f32 LayerObj::getSecondTexBlend() const {
 
   return 0.0f;
 }
+
+void LayerActBase::startSetupAction() {
+  m_actWork->flags |= 1;
+  m_actWork->sec = 0.0f;
+  const LyrActionData &action = *(m_actWork->actions + m_actWork->actionIdx);
+  if ((action.flags & 0x7e) == 0) {
+    return;
+  }
+  if (action.flags & 0x2) {
+    m_flags |= 0x80;
+  } else if (action.flags & 0x4) {
+    m_flags &= ~0x80;
+  }
+  if (action.flags & 0x8) {
+    m_flags |= 0x20000;
+  } else if (action.flags & 0x10) {
+    m_flags &= ~0x20000;
+  }
+  if (action.flags & 0x20) {
+    m_flags |= 0x200;
+  } else if (action.flags & 0x40) {
+    m_flags &= ~0x200;
+  }
+}
+
+void LayerActBase::checkActionEnd(const LyrActionData *action, bool isCmdEnd) {
+  if (m_actWork->deltaSec == 0.0f) {
+    return;
+  }
+  const LyrActionData *actions = m_actWork->actions;
+  u32 index = m_actWork->actionIdx;
+  const LyrActionData &current = actions[index];
+  if (!(this->*s_pCallActEnd[current.endType])(&current, isCmdEnd)) {
+    return;
+  }
+  if (!(current.flags & 1)) {
+    m_flags &= ~0x40;
+    return;
+  }
+  m_actWork->sec = 0.0f;
+  m_actWork->actionIdx = actions[index].nextIdx;
+}
+
+u32 LayerActBase::calcActionWorkSize(const u8 *data) {
+  return sizeof(LayerActWork) + reinterpret_cast<const LyrActionHeader *>(data)->actionNum * sizeof(u32);
+}
+
+void LayerActBase::actionIdx(u32 index) {
+  onStateFlags(0x10000);
+  m_actionIdx[LayerManager::s_nStkIdx] = index;
+}
+
+void LayerActBase::actionEnd() { onStateFlags(0x20000); }
+
+bool LayerActBase::actcmd_no(const u8 *&cmd) {
+  cmd += 4;
+  return false;
+}
+
+bool LayerActBase::actcmd_priority(const u8 *&cmd) {
+  m_priority = *reinterpret_cast<const u16 *>(cmd + 2);
+  cmd += 4;
+  return false;
+}
+
+bool LayerActBase::actcmd_wait(const u8 *&cmd) {
+  const u8 *data = cmd;
+  cmd += 8;
+  return !(*reinterpret_cast<const f32 *>(data + 4) <= m_actWork->sec);
+}
+
+bool LayerActBase::actcmd_ctrlspd(const u8 *&cmd) {
+  m_ctrlSpd = *reinterpret_cast<const f32 *>(cmd + 4);
+  cmd += 8;
+  return false;
+}
+
+bool LayerActBase::actend_no(const LyrActionData *action, bool isCmdEnd) { return false; }
+
+bool LayerActBase::actend_cmdend(const LyrActionData *action, bool isCmdEnd) { return !isCmdEnd; }
+
+bool LayerActBase::actend_on(const LyrActionData *action, bool isCmdEnd) { return true; }
 
 } // namespace layer
