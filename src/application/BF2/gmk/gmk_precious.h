@@ -1,9 +1,12 @@
 #pragma once
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
+
+struct CBdatWrapper;
 
 namespace gmk {
 
@@ -12,7 +15,17 @@ class GmkPreciousGob;
 class GmkPrecious : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x30];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    void dispose();
+    bool isPopCondMatched() const;
+
+    u16 itemId;
+    u16 condition;
+    u16 questId;
+    ScenarioFlagCond scenarioFlag;
+    QuestFlagCond questFlag;
+    TimeCond timeCond;
+    WeatherCond weatherCond;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_PRECIOUS;

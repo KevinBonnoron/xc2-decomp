@@ -1,9 +1,14 @@
 #pragma once
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
+
+namespace mm {
+struct Vec3;
+} // namespace mm
 
 namespace gmk {
 
@@ -12,7 +17,20 @@ class GmkGraveGob;
 class GmkGrave : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x14];
+    void create(u8 *bdat, int id, const AGmkBase &gmk);
+    bool isPopCondMatched(const mm::Vec3 &position) const;
+    bool isDepopCondMatched(const mm::Vec3 &position) const;
+    void debugDraw(const AGmkBase &gmk) const;
+
+    void dispose() {
+      enemyPopId = 0;
+      enemyId = 0;
+    }
+
+    u16 enemyPopId;
+    u16 enemyId;
+    DistHvCond popDist;
+    DistHvCond depopDist;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_GRAVE;

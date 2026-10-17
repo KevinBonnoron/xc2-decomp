@@ -41,6 +41,13 @@ static_assert(offsetof(QuestFlagCond, maxState) == 0x3, "");
 
 class DistHvCond {
 public:
+  static u16 clampDepopDist(u16 depopDist, u16 popDist) { return depopDist <= popDist ? popDist + 1 : depopDist; }
+
+  void set(f32 horizontalDist, f32 verticalDist) {
+    horizontalDistSq = horizontalDist * horizontalDist;
+    verticalDistSq = verticalDist * verticalDist;
+  }
+
   bool isMatch(const mm::Vec3 &position) const;
 
   f32 horizontalDistSq;
