@@ -1,8 +1,11 @@
 #pragma once
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
+
+struct CBdatWrapper;
 
 namespace gmk {
 
@@ -14,7 +17,21 @@ class GmkDmgSeGob;
 class GmkDmgGimmick : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x28];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    bool isCondMatched() const;
+
+    u16 condition;
+    u16 depopCondition;
+    f32 damageInterval;
+    u8 pcDamage;
+    u8 enemyDamage;
+    const char *effectName;
+    u8 seName;
+    u8 volumeMax;
+    u8 volumeMin;
+    BootedGmkCond depopBootedGmk;
+    DistCond effectDispDist;
+    DistCond effectReleaseDist;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_GIMMICK;

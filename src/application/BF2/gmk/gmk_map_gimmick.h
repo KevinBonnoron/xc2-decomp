@@ -1,10 +1,13 @@
 #pragma once
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_trigger.h"
 #include "types.h"
+
+struct CBdatWrapper;
 
 namespace gmk {
 
@@ -13,7 +16,17 @@ class GmkMapGimmickGob;
 class GmkMapGimmick : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x30];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    bool isPopCondMatched() const;
+    void debugDraw(const AGmkBase &gmk) const;
+
+    u16 condition;
+    u16 nameRadius;
+    u16 mapObjId;
+    bool isMsgRay;
+    TimeCond timeCond;
+    WeatherCond weatherCond;
+    BootedGmkCond bootedGmk;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_MAP_GIMMICK;

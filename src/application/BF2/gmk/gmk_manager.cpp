@@ -643,15 +643,28 @@ PopPosSafeCond::PopPosSafeCond(const CreateInfo *info) : isCreated(false) {
   }
 }
 
-BootedGmkCond::BootedGmkCond(u8 gimmickType, u16 gimmickId) : gimmickType(0), gimmickId(0) {
-  if (gimmickType != 0 && gimmickId != 0) {
-    create(gimmickType, gimmickId);
-  }
-}
+BootedGmkCond::BootedGmkCond(u8 gimmickType, u16 gimmickId) : gimmickType(0), gimmickId(0) { createIfEnable(gimmickType, gimmickId); }
 
 void BootedGmkCond::create(u8 gimmickType, u16 gimmickId) {
   this->gimmickType = gimmickType;
   this->gimmickId = gimmickId;
+}
+
+BootedGmkCond::BootedGmkCond(const CBdatWrapper &bdat, int id, const char *prefix) : gimmickType(0), gimmickId(0) {
+  mm::mtl::FixStr<32> name;
+  if (prefix == nullptr) {
+    name = "gimmickType";
+  } else {
+    name.format("%sgimmickType", prefix);
+  }
+  u8 type = bdat.getValCheck(name.c_str(), id, BDAT_TYPE_U8);
+  if (prefix == nullptr) {
+    name = "gimmickID";
+  } else {
+    name.format("%sgimmickID", prefix);
+  }
+  u16 gmkId = bdat.getValCheck(name.c_str(), id, BDAT_TYPE_U16);
+  createIfEnable(type, gmkId);
 }
 
 void BootedGmkCond::dispose() { gimmickType = 0; }
@@ -669,12 +682,15 @@ void BootedGmkCond::dispose() { gimmickType = 0; }
 #include "gmk/gmk_collection.cpp"
 #include "gmk/gmk_area_bgm.cpp"
 #include "gmk/gmk_salvage.cpp"
+#include "gmk/gmk_map_gimmick.cpp"
 #include "gmk/gmk_precious.cpp"
 #include "gmk/gmk_grave.cpp"
 #include "gmk/gmk_kizuna_talk.cpp"
 #include "gmk/gmk_jump.cpp"
+#include "gmk/gmk_warp.cpp"
 #include "gmk/gmk_map_jump.cpp"
 #include "gmk/gmk_field_volume.cpp"
+#include "gmk/gmk_dmg_gimmick.cpp"
 #include "gmk/gmk_foot_print.cpp"
 #include "gmk/gmk_anti_blade_area.cpp"
 #include "gmk/gmk_tutorial.cpp"
