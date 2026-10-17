@@ -90,6 +90,14 @@ public:
   u32 getEffectCount() const { return mEffectCount; }
   u32 getLightCount() const { return mLightCount; }
 
+  Object *getCharaObject(u32 index) const {
+    Object *object = mCharaTree->getChild();
+    for (u32 i = 0; i < index; i++) {
+      object = object->getNext();
+    }
+    return object;
+  }
+
   Object *getEffect(u32 index) const {
     Object *object = mEffectTree->getChild();
     for (u32 i = 0; i < index; i++) {

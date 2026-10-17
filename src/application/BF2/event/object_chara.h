@@ -52,7 +52,7 @@ public:
   void turnRotAxis(const RotAxis &axis, EVT_rotcvtype cv, f32 frame);
   void linerRotAxis(const RotAxis &axis, f32 frame, CV_TYPE cv);
   mm::Vec3 getTar() const;
-  mm::Vec3 getEyeOffset() const;
+  f32 getEyeOffset() const;
   mm::Mat44 getMat();
   mm::Mat44 getEyeMat();
   virtual bool OnBouRectSelect(const IBouCallback::SelectParam &param);

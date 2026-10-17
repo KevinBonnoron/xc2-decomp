@@ -7,6 +7,14 @@ namespace event {
 
 class PosAxis {
 public:
+  enum {
+    AXIS_NONE = 0,
+    AXIS_POS = 1,
+    AXIS_POS_GLOBAL = 2,
+    AXIS_SAY = 3,
+    AXIS_CHARA = 4,
+  };
+
   PosAxis();
   PosAxis(u32 axis, f32 x, f32 y, f32 z);
   PosAxis(u32 axis, const mm::Vec3 &pos);

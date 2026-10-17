@@ -4,6 +4,7 @@
 
 #include "event/manager.h"
 #include "event/memory_manager.h"
+#include "event/object_manager.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 
@@ -76,6 +77,24 @@ DataManager::OfsInfo *DataManager::createScene(const char *name) {
   OfsInfo *info = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) OfsInfo(name);
   mScenes.push_back(info);
   return info;
+}
+
+size_t DataManager::getCharaNum() const { return mm::mtl::Singleton<ObjectManager>::getPtr()->getCharaCount(); }
+
+bool DataManager::checkRadianTar(u32 axis) {
+  if (axis < 6) {
+    switch (axis) {
+    case 4:
+    case 5:
+      return true;
+    default:
+      return false;
+    }
+  }
+  if (axis < getCharaNum() + 6) {
+    return false;
+  }
+  return false;
 }
 
 void DataManager::OnEventProc(MSG_TYPE type) {
