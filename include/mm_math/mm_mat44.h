@@ -35,6 +35,27 @@ struct alignas(16) Mat44 {
     rows[3][3] = 1.0f;
   }
 
+  void setRotY(f32 rotY) {
+    f32 sinY = sinf(rotY);
+    f32 cosY = cosf(rotY);
+    rows[0][0] = cosY;
+    rows[0][1] = 0.0f;
+    rows[0][2] = -sinY;
+    rows[0][3] = 0.0f;
+    rows[1][0] = 0.0f;
+    rows[1][1] = 1.0f;
+    rows[1][2] = 0.0f;
+    rows[1][3] = 0.0f;
+    rows[2][0] = sinY;
+    rows[2][1] = 0.0f;
+    rows[2][2] = cosY;
+    rows[2][3] = 0.0f;
+    rows[3][0] = 0.0f;
+    rows[3][1] = 0.0f;
+    rows[3][2] = 0.0f;
+    rows[3][3] = 1.0f;
+  }
+
   void setTrans(const Vec3 &pos) {
     rows[3][0] = pos.x;
     rows[3][1] = pos.y;
