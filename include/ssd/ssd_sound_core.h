@@ -1,6 +1,8 @@
 #pragma once
 #include <stddef.h>
 
+#include "ssd/ssd_behavior.h"
+#include "ssd/ssd_mutex.h"
 #include "ssd/ssd_result.h"
 #include "types.h"
 
@@ -10,14 +12,18 @@ class SoundCategory;
 class SoundEffecter;
 class SoundListener;
 
+struct OutputMode {
+  enum Type {};
+};
+
 class SoundCore {
 public:
-  virtual int GetOutputMode() const = 0;
-  virtual Result SetOutputMode(int mode) = 0;
+  virtual OutputMode::Type GetOutputMode() const = 0;
+  virtual void SetOutputMode(OutputMode::Type mode) = 0;
   virtual f32 GetMasterVolume() const = 0;
-  virtual Result SetMasterVolume(f32 volume, f32 fadeTime) = 0;
+  virtual void SetMasterVolume(f32 volume, f32 fadeTime) = 0;
   virtual f32 GetMasterPitch() const = 0;
-  virtual Result SetMasterPitch(f32 pitch, f32 fadeTime) = 0;
+  virtual void SetMasterPitch(f32 pitch, f32 fadeTime) = 0;
   virtual Result AddSoundListener(SoundListener *listener) = 0;
   virtual Result RemoveSoundListener(SoundListener *listener) = 0;
   virtual Result GetSoundEffectList(int bus, SoundEffecter **effecters, int *num) = 0;
@@ -26,8 +32,8 @@ public:
   virtual bool IsActiveEffect(u8 bus) = 0;
   virtual int GetNumPlaySound() const = 0;
   virtual f32 GetSpeedOfSound() const = 0;
-  virtual Result SetSpeedOfSound(f32 speed) = 0;
-  virtual f32 GetAudioCpuLoad() const = 0;
+  virtual void SetSpeedOfSound(f32 speed) = 0;
+  virtual f64 GetAudioCpuLoad() const = 0;
   virtual void LockAudio() const = 0;
   virtual void UnlockAudio() const = 0;
   virtual void *GetPlatformDataImpl(const char *name) = 0;
@@ -70,6 +76,32 @@ static_assert(offsetof(SoundCore, isInit) == 0x10, "");
 
 class SystemCore : public SoundCore {
 public:
+  struct DebugInfo;
+
+  struct CpuLoad {
+    f64 processTime;
+    f64 frameTime;
+  };
+
+  ~SystemCore() override;
+  static void StreamThreadEntry(SystemCore *core, void *argument);
+  void SetMasterVolume(f32 volume, f32 fadeTime) override;
+  void MasterVolumeBehavior(f32 volume);
+  void SetMasterPitch(f32 pitch, f32 fadeTime) override;
+  void MasterPitchBehavior(f32 pitch);
+  void AddBehavior(BehaviorControl *behavior);
+  OutputMode::Type GetOutputMode() const override;
+  void SetOutputMode(OutputMode::Type mode) override;
+  void StreamThreadImpl();
+  f32 GetMasterVolume() const override;
+  f32 GetMasterPitch() const override;
+  int GetNumPlaySound() const override;
+  f32 GetSpeedOfSound() const override;
+  void SetSpeedOfSound(f32 speed) override;
+  f64 GetAudioCpuLoad() const override;
+  void LockAudio() const override;
+  void UnlockAudio() const override;
+  const void *GetDebugInfo() const override;
   Result Quit();
   Result StopSound(f32 fadeTime);
   Result PauseSound(bool isPause, f32 fadeTime);
@@ -84,7 +116,12 @@ public:
   u64 gameFrameCounter;
   u64 audioFrameCounter;
   f64 audioTimerCounter;
-  u8 _288[0x3c0 - 0x288];
+  u8 _288[0x300 - 0x288];
+  OutputMode::Type outputMode;
+  u8 _304[0x308 - 0x304];
+  BehaviorInstance<SystemCore> masterVolume;
+  BehaviorInstance<SystemCore> masterPitch;
+  u8 _398[0x3c0 - 0x398];
   int voiceHandleCount;
   u8 _3c4[0x410 - 0x3c4];
   int hwAllocVoiceCount;
@@ -92,6 +129,18 @@ public:
   int numSoundBank;
   u8 _43c[0x460 - 0x43c];
   int numSoundActor;
+  u8 _464[0x4e0 - 0x464];
+  f32 speedOfSound;
+  u8 _4e4[0x708 - 0x4e4];
+  mutable Mutex audioMutex;
+  u8 _730[0x978 - 0x730];
+  List<BehaviorControl> behaviors;
+  u8 _9a0[0x9f8 - 0x9a0];
+  CpuLoad cpuLoads[2];
+  f64 lastCpuLoadTime;
+  s32 cpuLoadIndex;
+
+  static DebugInfo debugInfo_;
 };
 
 static_assert(offsetof(SystemCore, gameFrameCounter) == 0x270, "");
@@ -99,5 +148,12 @@ static_assert(offsetof(SystemCore, voiceHandleCount) == 0x3c0, "");
 static_assert(offsetof(SystemCore, hwAllocVoiceCount) == 0x410, "");
 static_assert(offsetof(SystemCore, numSoundBank) == 0x438, "");
 static_assert(offsetof(SystemCore, numSoundActor) == 0x460, "");
+static_assert(offsetof(SystemCore, masterVolume) == 0x308, "");
+static_assert(offsetof(SystemCore, masterPitch) == 0x350, "");
+static_assert(offsetof(SystemCore, speedOfSound) == 0x4e0, "");
+static_assert(offsetof(SystemCore, audioMutex) == 0x708, "");
+static_assert(offsetof(SystemCore, behaviors) == 0x978, "");
+static_assert(offsetof(SystemCore, cpuLoads) == 0x9f8, "");
+static_assert(offsetof(SystemCore, cpuLoadIndex) == 0xa20, "");
 
 } // namespace ssd
