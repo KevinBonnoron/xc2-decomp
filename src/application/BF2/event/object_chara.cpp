@@ -1,5 +1,7 @@
 #include "event/object_chara.h"
 
+#include "mm_math/mm_math.h"
+
 #include "event/frame_manager.h"
 #include "event/memory_manager.h"
 #include "mm_math/mm_mat44.h"
@@ -115,6 +117,15 @@ mm::Mat44 ObjectChara::getEyeMat() {
   mat.setRotXYZ(getRot());
   mat.setTrans(getEyePos());
   return mat;
+}
+
+void ObjectChara::OnManiSetRot(IManiCallback::SetParam &param) {
+  mm::Vec3 euler = mm::matrixToEuler(param.matrix);
+  RotAxis axis = rotAxis;
+  mm::Vec3 pos = mCharaObj->getPos();
+  f32 ofs = mm::mtl::Singleton<DataManager>::getPtr()->getRotOfsY(axis.getAxis(), pos);
+  axis.set(axis.getAxis(), 0.0f, euler.y - ofs, 0.0f);
+  setRotAxis(axis);
 }
 
 } // namespace event
