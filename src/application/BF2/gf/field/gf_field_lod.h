@@ -13,6 +13,11 @@ struct GfSetupParam;
 
 class GfFieldLod : public mm::mtl::PtrSingleton<GfFieldLod> {
 public:
+  int findBdatIdByLodId(u16 lodId) const;
+  bool isAnimReverse(int bdatId) const;
+  void setFade(int bdatId, bool isFadeIn, bool isImmediate);
+  void setAnimReverse(int bdatId, bool isReverse, bool isSkip);
+  bool isFadeOut(int bdatId) const;
   void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
   void gevPlayEvent(GEV event, u32 value);
   static void validateByInitData();
