@@ -5,6 +5,9 @@ namespace grlib {
 
 class CGLibOcclusionQuery {
 public:
+  CGLibOcclusionQuery();
+  ~CGLibOcclusionQuery() { release(); }
+  void release();
   void beginQuery();
   void endQuery();
   u32 getQueryPixel();

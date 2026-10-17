@@ -8,11 +8,18 @@ namespace ml {
 class DrResUseQueryObj;
 
 struct DrResQueryObj {
+  u32 getOccZPassCount();
+  DrResQueryObj();
+  ~DrResQueryObj();
+  bool update();
+  void begin();
+  void end();
+
   DrResQueryObj *next;
   DrResQueryObj *prev;
   grlib::CGLibOcclusionQuery query;
   DrResUseQueryObj *user;
-  u8 _30[0x38 - 0x30];
+  DrResQueryObj *subNext;
   u32 flags;
 };
 
