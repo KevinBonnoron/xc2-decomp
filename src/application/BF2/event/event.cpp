@@ -98,6 +98,8 @@
 #include "event/blur_manager.cpp"
 #include "event/effect_ctrl.cpp"
 #include "event/effect_util.cpp"
+#include "event/effect_obj.cpp"
+#include "event/effect_res.cpp"
 #include "event/effect_manager.cpp"
 #include "event/fade_updater.cpp"
 #include "event/fade_ctrl.cpp"
