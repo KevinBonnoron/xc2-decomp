@@ -1,6 +1,9 @@
 #include <string.h>
 
 #include "grlib/cglib_buff_fix_alloc.h"
+#include "grlib/cglib_buffer.h"
+#include "grlib/cglib_manager.h"
+#include "grlib/cglib_mem_pool.h"
 #include "grlib/cglib_system_context.h"
 #include "grlib/cglib_vtl_mem_pool.h"
 #include "mtl/alloc_handle.h"
@@ -61,6 +64,29 @@ void CGLibBuffFixAlloc::freeID(u32 id) {
   m_usedBits[id >> 6] &= ~(1ul << (static_cast<u64>(id) & 0x3f));
   m_usedNum--;
 }
+
+CGLibBuffer::CGLibBuffer() {}
+
+CGLibBuffer::~CGLibBuffer() { nvnBufferFinalize(&m_buffer); }
+
+void CGLibBuffer::release() { nvnBufferFinalize(&m_buffer); }
+
+void CGLibBuffer::setup(u32 offset, u32 size, CGLibMemPool &memPool) {
+  nvnBufferFinalize(&m_buffer);
+  NVNbufferBuilder builder;
+  nvnBufferBuilderSetDefaults(&builder);
+  nvnBufferBuilderSetDevice(&builder, &CGLibManager::get()->m_device);
+  nvnBufferBuilderSetStorage(&builder, memPool.m_memoryPool, offset, size);
+  nvnBufferInitialize(&m_buffer, &builder);
+}
+
+void CGLibBuffer::updateData() {}
+
+void CGLibBuffer::setUniformBlock(u32 index) {}
+
+void CGLibBuffer::setStorageBuffer(u32 index) {}
+
+void CGLibBuffer::updateMaping() {}
 
 CGLibVtlMemPool::CGLibVtlMemPool() {
   m_size = 0;
