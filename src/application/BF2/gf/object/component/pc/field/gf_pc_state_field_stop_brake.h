@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/gf_state.h"
 #include "gf/object/component/enemy/gf_enemy_state_battle.h"
 #include "types.h"
@@ -23,9 +25,11 @@ class StateFieldStopBrake : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
-  u8 _18[0x20 - 0x18];
+  bool isStopped;
+  u8 _19[0x20 - 0x19];
 };
 
+static_assert(offsetof(StateFieldStopBrake, isStopped) == 0x18, "");
 static_assert(sizeof(StateFieldStopBrake) == 0x20, "");
 
 } // namespace pc
