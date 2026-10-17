@@ -60,11 +60,16 @@ struct RQ_SETUP_PARTY_DRIVER {
 static_assert(offsetof(RQ_SETUP_PARTY_DRIVER, leader) == 0x14, "");
 
 struct GfMapjumpInfo {
-  GfMapjumpInfo()
-      : mapjumpId(0), map(0), landmarkId(-1), partyCreateRate(1.0f), isWithSaveData(false), isNoFadeIn(false), isNoFadeOut(false), _103(),
+  explicit GfMapjumpInfo(u32 mapjumpId = 0)
+      : mapjumpId(mapjumpId), map(0), landmarkId(-1), partyCreateRate(1.0f), isWithSaveData(false), isNoFadeIn(false), isNoFadeOut(false), _103(),
         isSkipTravel(false), jumpType(0) {}
 
   void setupForSaveData(u32 mapjumpId, const mm::Vec3 &position, const mm::Vec3 &rotation, bool isStartChapterSave);
+
+  void setMapjump(u32 mapjumpId) {
+    this->mapjumpId = mapjumpId;
+    map = 0;
+  }
 
   u32 mapjumpId;
   u32 map;
@@ -92,6 +97,7 @@ public:
   static void reqPartyBlade(u32 blade, u32 driver);
   static void reqRebuildPartyWeapon(u32 blade);
   static void reqChangeAttribute(u32 objectType, u32 blade, u32 attribute);
+  static void reqChangeBladeWithSetId(u32 partyId, int bladeSet, bool isForce);
   static void reqDestroyGf();
 };
 
