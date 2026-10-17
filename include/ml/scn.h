@@ -9,6 +9,7 @@
 namespace ml {
 
 class ScnObj;
+class ScnPoolObj;
 class ScnRenderDrSys;
 
 class ScnObjCam {
@@ -28,12 +29,15 @@ public:
   ScnObj *createLgt(const void *data, int screenID);
   ScnObjCam *getCam(int index);
 
-  u8 _08[0x38 - 0x08];
+  u8 _08[0x20 - 0x08];
+  ScnPoolObj *poolObj;
+  u8 _28[0x38 - 0x28];
   ScnRenderDrSys *renderDrSys;
   u8 _40[0x64 - 0x40];
   mtl::ALLOC_HANDLE allocHandle;
 };
 
+static_assert(offsetof(Scn, poolObj) == 0x20, "");
 static_assert(offsetof(Scn, renderDrSys) == 0x38, "");
 static_assert(offsetof(Scn, allocHandle) == 0x64, "");
 

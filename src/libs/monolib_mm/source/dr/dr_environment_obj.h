@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
 
 namespace ml {
@@ -12,6 +13,10 @@ class DrMan;
 class DrEnvironmentObj {
 public:
   enum Flag {
+    FLAG_DISP_OFF = 1 << 0,
+    FLAG_GROUP = 1 << 2,
+    FLAG_OFS_MATRIX = 1 << 3,
+    FLAG_DEBUG_DISP_2D = 1 << 20,
     FLAG_RELEASE = 1 << 30,
   };
 
@@ -30,25 +35,25 @@ public:
   virtual void setFrame(f32 frame) = 0;
   virtual void changeMemCall(const void *data) = 0;
 
+  void setMatrix(const mm::Mat44 &matrix) { m_matrix = matrix; }
+
   DrEnvironmentObj *m_prev;
   DrEnvironmentObj *m_next;
   DrMan *m_drMan;
   DrLightMan *m_lightMan;
   DrFogMan *m_fogMan;
   mm::Mat44 m_matrix;
-  const void *_70;
-  int _78;
-  u8 _7c[0x80 - 0x7c];
+  mm::Vec3 m_offsetPos;
   f32 m_frame;
   f32 m_frameSpd;
   f32 m_maxFrame;
   u32 m_flags;
-  u32 _90;
+  int m_group;
 };
 
 static_assert(offsetof(DrEnvironmentObj, m_drMan) == 0x18, "");
 static_assert(offsetof(DrEnvironmentObj, m_matrix) == 0x30, "");
-static_assert(offsetof(DrEnvironmentObj, _70) == 0x70, "");
+static_assert(offsetof(DrEnvironmentObj, m_offsetPos) == 0x70, "");
 static_assert(offsetof(DrEnvironmentObj, m_frame) == 0x80, "");
 static_assert(offsetof(DrEnvironmentObj, m_flags) == 0x8c, "");
 
