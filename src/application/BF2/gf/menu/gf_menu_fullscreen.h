@@ -15,6 +15,7 @@ public:
   static void enableSwitching();
   static void disableSwitching();
   static void overrideFadeOutFrame(u32 frame);
+  static u32 getScreenLayerID(u32 screen);
   static bool setInputObject(u32 layer, u32 object);
   static u32 getInputObject(u32 layer);
   static void enableInput(u32 layer);
