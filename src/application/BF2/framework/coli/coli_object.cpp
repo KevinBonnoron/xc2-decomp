@@ -194,7 +194,7 @@ void ColiObject::resetCharacter(f32 radius, f32 height) {
   }
 }
 
-ColiObject::ColiObject() : coliObject(nullptr), flags(0), listener(nullptr), _58(), scale(1.0f), shape(nullptr) {
+ColiObject::ColiObject() : coliObject(nullptr), flags(0), listener(nullptr), coliUserData(nullptr), scale(1.0f), shape(nullptr) {
   offsetMatrix = mm::Mat44::identity;
   matrix = mm::Mat44::identity;
 }
