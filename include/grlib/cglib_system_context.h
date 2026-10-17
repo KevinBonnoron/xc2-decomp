@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "grlib/cglib_buff_fix_alloc.h"
 #include "grlib/cglib_dec_shader.h"
 #include "grlib/cglib_depth_target.h"
 #include "grlib/cglib_render_target.h"
@@ -11,6 +12,7 @@
 #include "types.h"
 
 struct NVNcommandBuffer;
+struct NVNmemoryPool;
 struct NVNtexture;
 
 namespace grlib {
@@ -18,7 +20,15 @@ namespace context {
 
 class CGLibSystemContext : public mm::mtl::PtrSingleton<CGLibSystemContext> {
 public:
-  u8 _0008[0x1070 - 0x0008];
+  void releaseDelayMempool(NVNmemoryPool *pool, void *buffer);
+  void releaseDelayTexture(NVNtexture *texture, void *buffer, int textureId, int samplerId);
+
+  u8 _0008[0x0538 - 0x0008];
+  CGLibBuffFixAlloc m_descriptorAlloc;
+  u8 _0568[0x0e60 - 0x0568];
+  CGLibBuffFixAlloc m_textureAlloc;
+  CGLibBuffFixAlloc m_memoryPoolAlloc;
+  u8 _0ec0[0x1070 - 0x0ec0];
   NVNcommandBuffer *m_cmdBuf;
   u8 _1078[0x1084 - 0x1078];
   NVNchannelMaskState m_colorBufferOn;
@@ -47,6 +57,9 @@ public:
   const NVNtexture *m_registerDepth;
 };
 
+static_assert(offsetof(CGLibSystemContext, m_descriptorAlloc) == 0x0538, "");
+static_assert(offsetof(CGLibSystemContext, m_textureAlloc) == 0x0e60, "");
+static_assert(offsetof(CGLibSystemContext, m_memoryPoolAlloc) == 0x0e90, "");
 static_assert(offsetof(CGLibSystemContext, m_cmdBuf) == 0x1070, "");
 static_assert(offsetof(CGLibSystemContext, m_colorBufferOn) == 0x1084, "");
 static_assert(offsetof(CGLibSystemContext, m_cullingOff) == 0x10a0, "");

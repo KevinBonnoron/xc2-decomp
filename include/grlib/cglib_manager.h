@@ -1,5 +1,8 @@
 #pragma once
+#include <stddef.h>
+
 #include "mm_mtl/singleton.h"
+#include "nvn/nvn.h"
 #include "types.h"
 
 namespace grlib {
@@ -13,7 +16,10 @@ public:
 
   static int s_nDblNowIdx;
 
-  u8 _0008[0x5030 - 0x0008];
+  NVNdevice m_device;
+  u8 _3008[0x5030 - 0x3008];
 };
+
+static_assert(offsetof(CGLibManager, m_device) == 0x8, "");
 
 } // namespace grlib

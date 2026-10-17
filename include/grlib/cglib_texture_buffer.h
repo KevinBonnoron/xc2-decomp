@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "grlib/cglib_vtl_mem_pool.h"
 #include "types.h"
 
 enum GrlSurfaceFormat {
@@ -87,17 +88,36 @@ enum GrlSurfaceFormat {
   GRL_SURFACE_FORMAT_BPTC_UNSIGNED_FLOAT,
 };
 
+struct NVNtexture;
+
 namespace grlib {
 
 class CGLibTextureBuffer {
 public:
+  enum Flag {
+    FLAG_INITIALIZED = 1 << 0,
+    FLAG_OWN_BUFFER = 1 << 1,
+  };
+
+  void delayRelease();
   u16 getWidth() const;
   u16 getHeight() const;
   GrlSurfaceFormat getFormat() const;
   u16 getMipmap() const;
   u16 getDepth() const;
   u32 get1PixelImageSize() const;
+  CGLibTextureBuffer();
+  ~CGLibTextureBuffer();
+  void release();
+  u16 getSlice() const;
+  bool isTexture1D() const;
+  bool isTexture2D() const;
+  bool isTexture3D() const;
+  void setTexturePass(CGLibTextureBuffer &texture);
   void invalidate();
+  bool isInitialized() const;
+  f32 get1PixelTextureInfo();
+  void writeDDS(const char *path, bool isMipmap);
 
   GrlSurfaceFormat m_format;
   u16 m_width;
@@ -107,13 +127,21 @@ public:
   u16 m_mipmap;
   u16 m_dimension;
   u32 m_flags;
-  u8 _14[0x28 - 0x14];
+  u8 _14[0x18 - 0x14];
+  NVNtexture *m_nvnTexture;
+  u64 m_gpuAddress;
   void *m_buffer;
   u32 m_bufferSize;
+  int m_textureId;
+  int m_samplerId;
+  CGLibVtlMemPool m_memPool;
 };
 
 static_assert(offsetof(CGLibTextureBuffer, m_flags) == 0x10, "");
+static_assert(offsetof(CGLibTextureBuffer, m_nvnTexture) == 0x18, "");
 static_assert(offsetof(CGLibTextureBuffer, m_buffer) == 0x28, "");
 static_assert(offsetof(CGLibTextureBuffer, m_bufferSize) == 0x30, "");
+static_assert(offsetof(CGLibTextureBuffer, m_textureId) == 0x34, "");
+static_assert(offsetof(CGLibTextureBuffer, m_memPool) == 0x40, "");
 
 } // namespace grlib
