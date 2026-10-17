@@ -4,7 +4,12 @@
 namespace gf {
 struct AchievQuest;
 
-enum ACHIEVEMENT_TYPE {};
+enum ACHIEVEMENT_TYPE {
+  ACHIEVEMENT_TYPE_ARTS,
+  ACHIEVEMENT_TYPE_SKILL,
+  ACHIEVEMENT_TYPE_FIELD_SKILL,
+  ACHIEVEMENT_TYPE_KEY,
+};
 
 class GfDataAchievement {
 public:
