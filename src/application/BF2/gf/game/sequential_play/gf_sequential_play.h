@@ -4,6 +4,7 @@
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gmk/gmk_manager.h"
 #include "mm_mtl/fixed_list.h"
+#include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 #include <stddef.h>
@@ -15,6 +16,7 @@ struct UpdateInfo;
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+struct GF_PAUSE_HANDLE;
 struct GfMapjumpInfo;
 struct GfSetupParam;
 struct GfSetupPfTalk;
@@ -38,11 +40,12 @@ public:
   static void postUpdate(const fw::UpdateInfo &info);
   static bool play();
   static void beginCommand(TYPE type);
+  static bool isCancel();
   static void addCommand(GfPlayCom *command);
   static void pauseOn(u32 pauseBits);
   static void pauseOff();
-  static void execPushState(GF_STATE state);
-  static void execPopState();
+  static GF_STATE execPushState(GF_STATE state);
+  static GF_STATE execPopState();
   static void addWait(f32 time);
   static void addWaitEvent(f32 time, GF_OBJ_HANDLE *handle);
   static void addMapjump(const GfMapjumpInfo &info);
@@ -101,15 +104,20 @@ public:
   static void startSignal(GfSequentialPlaySignal *signal);
   static void endSignal(GfSequentialPlaySignal *signal);
   bool isExistEvent(u32 event) const;
+  static const char *getFuncName();
 
   mm::mtl::FixedList<GfPlayCom *, 256> commands;
-  u8 _1228[0x1850 - 0x1228];
+  bool isCanceled;
+  mm::mtl::FixedQueue<GF_PAUSE_HANDLE *, 128> pauseHandles;
+  mm::mtl::FixedQueue<GF_STATE, 128> states;
   mm::mtl::FixedList<GfPlayCom *, 128> playingCommands;
   TYPE commandType;
   bool initialized;
 };
 
 static_assert(offsetof(GfSequentialPlay, commands) == 0x08, "");
+static_assert(offsetof(GfSequentialPlay, isCanceled) == 0x1228, "");
+static_assert(offsetof(GfSequentialPlay, states) == 0x1640, "");
 static_assert(offsetof(GfSequentialPlay, playingCommands) == 0x1850, "");
 static_assert(offsetof(GfSequentialPlay, commandType) == 0x20f0, "");
 static_assert(sizeof(GfSequentialPlay) == 0x20f8, "");
