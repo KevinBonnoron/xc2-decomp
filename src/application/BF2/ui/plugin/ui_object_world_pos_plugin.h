@@ -17,11 +17,16 @@ class UIObjectWorldPosPlugin : public UIObjectPosPlugin {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  UIObjectWorldPosPlugin();
+  virtual ~UIObjectWorldPosPlugin();
   static UIObjectWorldPosPlugin *create(u32 handle);
+  virtual void execute(UIObjectAcc &acc);
+  virtual const mm::mtl::RTTI *getRTTI() const;
 
   mm::Vec3 worldPos;
 };
 
 static_assert(offsetof(UIObjectWorldPosPlugin, worldPos) == 0xa0, "");
+static_assert(sizeof(UIObjectWorldPosPlugin) == 0xb0, "");
 
 } // namespace ui
