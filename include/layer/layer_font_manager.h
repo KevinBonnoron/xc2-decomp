@@ -15,6 +15,7 @@ public:
   LayerBase *createStyleObj(const void *data);
   LayerBase *createFontIconObj(const void *data);
   LayerBase *createFontColMapObj(const void *data);
+  void update();
 
   u8 _00[0x68 - 0x00];
   LayerFontIconObj *m_defaultIconObj;

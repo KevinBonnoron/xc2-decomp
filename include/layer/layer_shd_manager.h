@@ -4,21 +4,35 @@
 #include "mm_math/mm_mat44.h"
 #include "types.h"
 
+namespace ml {
+class IDrDrawWorkInfo;
+} // namespace ml
+
 namespace layer {
 
 class LayerShdManager {
 public:
   virtual ~LayerShdManager();
+  void readShader();
+  bool setupUpdate();
+  void beginShader(const ml::IDrDrawWorkInfo *info);
+  void endShader(const ml::IDrDrawWorkInfo *info);
 
   u8 _008[0x4a0 - 0x008];
   mm::Mat44 m_viewProjectionMatrix;
   u8 _4e0[0x530 - 0x4e0];
   f32 m_screenWidth;
   f32 m_screenHeight;
-  u8 _538[0x550 - 0x538];
+  f32 m_screenDivWidth;
+  f32 m_screenDivHeight;
+  f32 m_screenCalcPosWidth;
+  f32 m_screenCalcPosHeight;
+  f32 m_screenCalcSclWidth;
+  f32 m_screenCalcSclHeight;
   f32 m_screenOrgWidth;
   f32 m_screenOrgHeight;
-  u8 _558[0x578 - 0x558];
+  u8 _558[0x574 - 0x558];
+  f32 m_screenRatioHeight;
   f32 m_gamma;
 };
 
