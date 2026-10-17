@@ -13,6 +13,7 @@ namespace gmk {
 constexpr int BDAT_TYPE_U8 = 1;
 constexpr int BDAT_TYPE_U16 = 2;
 constexpr int BDAT_TYPE_U32 = 3;
+constexpr int BDAT_TYPE_S16 = 5;
 constexpr int BDAT_TYPE_STRING = 7;
 constexpr int BDAT_TYPE_F32 = 8;
 

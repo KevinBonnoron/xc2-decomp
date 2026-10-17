@@ -5,6 +5,8 @@
 #include "gmk/gmk_manager.h"
 #include "types.h"
 
+struct CBdatWrapper;
+
 namespace gmk {
 
 class GmkElevatorGobCustom;
@@ -13,7 +15,29 @@ class GmkElevatorLocatorGob;
 class GmkElevator : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x30];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+
+    u16 condition;
+    u16 callNameRadius;
+    u16 liftNameRadius;
+    u16 liftLod;
+    u16 shutterALod;
+    u16 shutterBLod;
+    u16 switchALod;
+    u16 switchBLod;
+    u16 switchSe;
+    u16 shutterSe;
+    u16 liftStartSe;
+    u16 liftLoopSe;
+    u16 liftStopSe;
+    u8 liftMinVolumeDist;
+    u8 liftMaxVolumeDist;
+    bool isLiftReverse;
+    f32 callLiftSpeed;
+    u16 missMsgId;
+    f32 nextWait;
+    u16 liftAMapJumpId;
+    u16 liftBMapJumpId;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_ELEVATOR;
