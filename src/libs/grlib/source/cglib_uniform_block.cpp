@@ -10,6 +10,8 @@
 
 namespace grlib {
 
+CGLibDblUniformBlock::CGLibDblUniformBlock() : m_mappings(), m_gpuAddresses() {}
+
 CGLibDblUniformBlock::~CGLibDblUniformBlock() { release(); }
 
 void CGLibDblUniformBlock::release() {
@@ -110,6 +112,8 @@ void CGLibOneUniformBlock::updateData() { nn::os::FlushDataCache(m_mapping, m_si
 void CGLibOneUniformBlock::updateData(u32 offset, u32 size) { nn::os::FlushDataCache(static_cast<u8 *>(m_mapping) + offset, size); }
 
 void *CGLibOneUniformBlock::getMapping() { return m_mapping; }
+
+CGLibTriUniformBlock::CGLibTriUniformBlock() : m_mappings(), m_gpuAddresses() {}
 
 CGLibTriUniformBlock::~CGLibTriUniformBlock() { release(); }
 
