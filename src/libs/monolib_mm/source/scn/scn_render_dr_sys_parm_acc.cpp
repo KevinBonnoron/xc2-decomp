@@ -4,6 +4,8 @@
 #include "dr/dr_irr_vol_man.h"
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_man.h"
+#include "dr/dr_pixl_post_man.h"
+#include "dr/dr_pixl_post_obj_motion_blur.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "mm_math/mm_vec3.h"
 #include "scn/scn_render_dr_sys.h"
@@ -418,9 +420,9 @@ void ScnRenderDrSysParmAcc::setSeamMapPriColi(FILE_PRIO seamMapPriColi) { drMan-
 
 void *ScnRenderDrSysParmAcc::getBlurVelocityMap() {
   wkPixlManRes *resources = drMan->pixlMan->m_resources;
-  DrBlurTarget *target = resources[viewIndex].blur->target;
-  if (target != nullptr) {
-    return target->velocityMap;
+  DrPixlPostObjMotionBlur *motionBlur = resources[viewIndex].postMan->m_motionBlur;
+  if (motionBlur != nullptr) {
+    return motionBlur->m_velocityMap;
   }
   return nullptr;
 }

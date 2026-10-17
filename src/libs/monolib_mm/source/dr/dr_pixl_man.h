@@ -4,56 +4,156 @@
 #include "types.h"
 
 namespace grlib {
+class CGLibDepthTarget;
+class CGLibRenderTarget;
 class CGLibTextureBuffer;
 } // namespace grlib
 
 namespace ml {
 class DrMan;
+class DrPixlDeferred;
+class DrPixlOccQuery;
+class DrPixlPostMan;
+class DrPixlRenderTarget;
+class DrPixlShadowCacheMan;
 class DrPixlShadowMan;
 
-struct DrBlurTarget {
-  u8 _00[0x28 - 0x00];
-  void *velocityMap;
-};
-
-static_assert(offsetof(DrBlurTarget, velocityMap) == 0x28, "");
-
-struct DrViewBlur {
-  u8 _00[0x50 - 0x00];
-  DrBlurTarget *target;
-};
-
-static_assert(offsetof(DrViewBlur, target) == 0x50, "");
-
 struct wkPixlManRes {
-  u8 _000[0x178 - 0x000];
+  DrPixlRenderTarget *pixlObjs[19][2];
+  DrPixlRenderTarget *colorBuff;
+  DrPixlRenderTarget *activeColorBuff;
+  DrPixlRenderTarget *hdrBuff;
+  DrPixlRenderTarget *backFaceDepthTexture;
+  u8 _150[0x170 - 0x150];
+  DrPixlDeferred *deferred;
   DrPixlShadowMan *shadowMan;
-  DrViewBlur *blur;
-  u8 _188[0x1f8 - 0x188];
+  DrPixlPostMan *postMan;
+  u8 _188[0x194 - 0x188];
+  f32 toneAveMin;
+  f32 toneAveMax;
+  u8 _19c[0x1a0 - 0x19c];
+  grlib::CGLibDepthTarget *depthObjs[2];
+  grlib::CGLibDepthTarget *separateTransDepthObj;
+  u8 _1b8[0x1d0 - 0x1b8];
+  grlib::CGLibRenderTarget *mainRenderTarget;
+  u32 flags;
+  u8 _1dc[0x1f8 - 0x1dc];
 };
 
+static_assert(offsetof(wkPixlManRes, colorBuff) == 0x130, "");
+static_assert(offsetof(wkPixlManRes, backFaceDepthTexture) == 0x148, "");
+static_assert(offsetof(wkPixlManRes, deferred) == 0x170, "");
 static_assert(offsetof(wkPixlManRes, shadowMan) == 0x178, "");
-static_assert(offsetof(wkPixlManRes, blur) == 0x180, "");
+static_assert(offsetof(wkPixlManRes, postMan) == 0x180, "");
+static_assert(offsetof(wkPixlManRes, toneAveMin) == 0x194, "");
+static_assert(offsetof(wkPixlManRes, depthObjs) == 0x1a0, "");
+static_assert(offsetof(wkPixlManRes, separateTransDepthObj) == 0x1b0, "");
+static_assert(offsetof(wkPixlManRes, mainRenderTarget) == 0x1d0, "");
+static_assert(offsetof(wkPixlManRes, flags) == 0x1d8, "");
 static_assert(sizeof(wkPixlManRes) == 0x1f8, "");
 
 class DrPixlMan {
 public:
-  void setMainRenderTarget();
-  void updateShadowDisplayList();
-  void callShadowCacheVariance();
-  void fastRender();
-  grlib::CGLibTextureBuffer *getDammyTexObj();
+  enum ResFlag {
+    RES_FLAG_SHADOW_DISPLAY_LIST = 0x20,
+  };
 
-  u8 _00[0x08 - 0x00];
+  void endDeferredRenderTarget();
+  void setMainViewPort();
+  void resetRenderTarget();
+  void endGBuffTexture();
+  void setMainRenderTarget();
+  void selectOpcaityBlmRenderTarget();
+  void selectOpcaityRenderTarget();
+  DrPixlRenderTarget *getPixlObj(int type);
+  grlib::CGLibDepthTarget *getDepthObj();
+  grlib::CGLibTextureBuffer *getDammyWhiteTexObj();
+  static DrPixlMan *get();
+  ~DrPixlMan();
+  void releaseColorBuffer();
+  void resetLightBuffOnly();
+  void createShadowParmDisplayList(wkPixlManRes *res);
+  void setupCate(int cate);
+  void updateShadowDisplayList();
+  DrPixlRenderTarget *getResponsiveAAMask();
+  grlib::CGLibDepthTarget *getSeparateTransDepthObj();
+  void displayUpdate();
+  void renderEnd(int loop);
+  void selectZprepassRenderTarget();
+  void selectGBuffRenderTarget();
+  bool selectGBuffRenderTarget(u32 mask);
+  void refractionGBuffInvalidate();
+  void endGBuffRenderTarget();
+  void selectDeferredRenderTarget();
+  void selectRefractRenderTarget();
+  void selectPrePassWrkClearRenderTarget();
+  void selectGlobalIBLIndexRenderTarget();
+  void endGlobalIBLIndexRenderTarget();
+  void alphaRenderTarget();
+  void skyVisibilityRenderTarget();
+  void skyGodRayRenderTarget();
+  void renderRefractionMap(bool isRefractionMap, bool isHalfMap);
+  bool renderRefractionBegin();
+  void renderRefractionEnd();
+  void renderSkyDome();
+  void renderSkyGodRay();
+  void renderRainDrop();
+  void renderTMAA();
+  bool isRefractionMap();
+  void thicknessFirstBegin();
+  DrPixlRenderTarget *getBackFaceDepthTexture();
+  void thicknessFirstEnd();
+  void lastDeferredRender();
+  void occRenderEnd();
+  void depCheckEnd();
+  void shadowCallDirBegin();
+  void shadowCallDirEnd();
+  void shadowDirBegin();
+  void shadowDirEnd();
+  void callShadowCacheUpdate(bool isAll);
+  void callShadowCacheVariance();
+  void callFgShadowCacheUpdate();
+  void fastRender();
+  void lastCapRender();
+  void setFinalViewPort();
+  void setMainSRGBRenderTarget();
+  void setMainSRGBAfterRenderTarget();
+  void changeColorBuff();
+  void changeHDRBuff(DrPixlRenderTarget *hdrBuff);
+  void setTempColorBuff();
+  DrPixlRenderTarget *getTempColorBuff();
+  void pixelEndMode();
+  void setToneAveRange(f32 min, f32 max);
+  grlib::CGLibTextureBuffer *getDammyTexObj();
+  void offScreenAlphaEnd();
+  void debugDeferredRenderAlbedoAndFogRatio(int x, int y, int width, int height);
+  DrPixlRenderTarget *getDeactivePixlObj(int type);
+  grlib::CGLibDepthTarget *getDeactiveDepthObj();
+  void swapPixlObj(int type);
+  DrPixlRenderTarget *getBackFaceDepthTexture() const;
+
+  u8 _000[0x008 - 0x000];
   DrMan *m_drMan;
   wkPixlManRes m_resources[4];
   wkPixlManRes *m_res;
-  u8 _7f8[0x800 - 0x7f8];
-  u32 *m_lightFlags;
+  DrPixlOccQuery *m_occQuery;
+  DrPixlShadowCacheMan *m_shadowCacheMan;
+  u8 _808[0x830 - 0x808];
+  DrPixlRenderTarget *m_dammyTex;
+  DrPixlRenderTarget *m_dammyWhiteTex;
+  u8 _840[0x858 - 0x840];
+  u32 m_renderTarget;
+  u32 m_gbuffMask;
+  s32 m_cate;
 };
 
-static_assert(offsetof(DrPixlMan, m_resources) == 0x10, "");
+static_assert(offsetof(DrPixlMan, m_drMan) == 0x008, "");
+static_assert(offsetof(DrPixlMan, m_resources) == 0x010, "");
 static_assert(offsetof(DrPixlMan, m_res) == 0x7f0, "");
-static_assert(offsetof(DrPixlMan, m_lightFlags) == 0x800, "");
+static_assert(offsetof(DrPixlMan, m_occQuery) == 0x7f8, "");
+static_assert(offsetof(DrPixlMan, m_shadowCacheMan) == 0x800, "");
+static_assert(offsetof(DrPixlMan, m_dammyTex) == 0x830, "");
+static_assert(offsetof(DrPixlMan, m_renderTarget) == 0x858, "");
+static_assert(offsetof(DrPixlMan, m_cate) == 0x860, "");
 
 } // namespace ml
