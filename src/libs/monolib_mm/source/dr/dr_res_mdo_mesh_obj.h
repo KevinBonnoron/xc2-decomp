@@ -47,12 +47,19 @@ static_assert(sizeof(DrResMdoMeshParts) == 0x40, "");
 
 class DrResMdoMeshObj {
 public:
+  DrResMdoMeshObj();
+  ~DrResMdoMeshObj();
+  int setup(const u8 *resource, u8 *work);
   int getIdx(const char *name) const;
+  static int calcWorkSize(const u8 *resource);
+  static int create(u8 *work, const u8 *resource);
+  static void release(DrResMdoMeshObj *&meshObj);
+  DrResMdoMeshObj &operator=(const DrResMdoMeshObj &other);
 
   DrResMdoMeshParts *getParts(u32 index) const { return &m_parts[index]; }
 
   DrResMdoMeshParts *m_parts;
-  int m_partsMax;
+  u32 m_partsMax;
 };
 
 static_assert(offsetof(DrResMdoMeshObj, m_partsMax) == 0x08, "");

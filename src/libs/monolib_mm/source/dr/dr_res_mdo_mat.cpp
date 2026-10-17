@@ -86,4 +86,36 @@ void DrResMdoMeshParts::updateAlpha() {
   }
 }
 
+DrResMdoMeshObj::DrResMdoMeshObj() : m_parts(nullptr), m_partsMax(0) {}
+
+DrResMdoMeshObj::~DrResMdoMeshObj() {}
+
+int DrResMdoMeshObj::getIdx(const char *name) const {
+  int index = -1;
+  u32 num = m_partsMax;
+  if (num != 0) {
+    const DrResMdoMeshParts *parts = m_parts;
+    for (u32 i = 0; i < num; i++, parts++) {
+      if (strcmp(parts->m_name, name) == 0) {
+        index = i;
+        break;
+      }
+    }
+  }
+  return index;
+}
+
+void DrResMdoMeshObj::release(DrResMdoMeshObj *&meshObj) {
+  if (meshObj != nullptr) {
+    meshObj = nullptr;
+  }
+}
+
+DrResMdoMeshObj &DrResMdoMeshObj::operator=(const DrResMdoMeshObj &other) {
+  for (u32 i = 0; i < m_partsMax; i++) {
+    m_parts[i] = other.m_parts[i];
+  }
+  return *this;
+}
+
 } // namespace ml
