@@ -43,6 +43,7 @@ public:
   static bool isTargetChanged();
   static bool isAccessChanged();
   static u32 getCurCameraType();
+  static bool isBattleState(u32 state);
   static void openCommonWindow(u16 window);
   static void openCommonWindow(const MenuCommonWindowParam &param);
   static void closeCommonWindow();

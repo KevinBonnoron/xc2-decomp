@@ -51,7 +51,8 @@ struct ARTS_DATA {
   u64 startRecast : 7;
   u64 : 28;
   u64 loopNum : 4;
-  u64 : 32;
+  u64 fightCombo : 3;
+  u64 : 29;
   u64 bulletId : 12;
   u64 : 11;
   u64 bulletNum : 5;

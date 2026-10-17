@@ -23,6 +23,7 @@ public:
   static void getMenuOffset(int id, MenuOffset &offset);
   static u32 getIconImageIndex(int icon);
   static u32 getTopBladeIconID();
+  static u16 getIconIDFromArtsID(u16 arts);
   static int getIconIDFromWeatherType(u32 weatherType);
 };
 
