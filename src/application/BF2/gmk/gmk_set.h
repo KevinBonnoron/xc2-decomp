@@ -9,6 +9,7 @@
 
 namespace gmk {
 
+class AGmkBase;
 class IGmkList;
 
 class GmkSet {
@@ -26,6 +27,10 @@ public:
   virtual ~GmkSet();
 
   virtual void createGmkLists(int gmkSetId);
+
+  bool isValid() const;
+  const AGmkBase *findFirstGmkInstByBdatId(GmkType type, int bdatId) const;
+  const AGmkBase *findGmkInstByGmkInstIndex(GmkType type, u32 index) const;
 
   CreateInfo createInfo;
   GmkBdat mapBdat;
