@@ -14,7 +14,7 @@ template <typename T> class Vector {
 public:
   Vector() : m_buffer(nullptr), m_size(0), m_capacity(0), m_alignment(16), m_allocator(nullptr) {}
   explicit Vector(IAllocator *allocator) : m_buffer(nullptr), m_size(0), m_capacity(0), m_alignment(16), m_allocator(allocator) {}
-  ~Vector() { release(); }
+  ~Vector() { destroy(); }
 
   // __LINE__ must be 60 as in the original header: it is the line argument of the assert.
 #line 59
@@ -98,7 +98,7 @@ public:
 
   void setAllocator(IAllocator *allocator) {
     if (m_allocator != allocator) {
-      release();
+      destroy();
       m_allocator = allocator;
     }
   }
@@ -144,7 +144,7 @@ public:
 
   // __LINE__ must be 455 as in the original header: it is the line argument of the assert.
 #line 452
-  void release() {
+  void destroy() {
     clear();
     if (m_buffer != nullptr) {
       MM_ASSERT(m_allocator);

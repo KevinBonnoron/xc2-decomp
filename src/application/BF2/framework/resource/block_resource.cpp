@@ -44,7 +44,7 @@ BlockResource::~BlockResource() {
     }
   }
 
-  resources.release();
+  resources.destroy();
 }
 
 void BlockResource::update() {

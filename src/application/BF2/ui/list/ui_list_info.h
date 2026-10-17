@@ -72,7 +72,7 @@ public:
 
   virtual ~UIListInfo() {
     if (!contents.empty()) {
-      contents.release();
+      contents.destroy();
     }
   }
 
@@ -85,7 +85,7 @@ public:
     UIListInfoBase::setup(param);
     if (isValid()) {
       if (!contents.empty()) {
-        contents.release();
+        contents.destroy();
       }
       u32 count = getPageColumnSize() * getPageRowSize();
       if (count < 8) {

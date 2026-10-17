@@ -14,7 +14,7 @@ UIColorLibrary::~UIColorLibrary() { reset(); }
 void UIColorLibrary::reset() {
   colors.clear();
   if (colors.capacity() != 0) {
-    colors.release();
+    colors.destroy();
   }
 }
 

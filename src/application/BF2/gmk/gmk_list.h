@@ -188,8 +188,8 @@ protected:
   virtual void createGmk(void *data);
 
   virtual void disposeGmk() {
-    gmkInsts.release();
-    bdatInfos.release();
+    gmkInsts.destroy();
+    bdatInfos.destroy();
     data = nullptr;
     xformChunk = nullptr;
     xforms = nullptr;
