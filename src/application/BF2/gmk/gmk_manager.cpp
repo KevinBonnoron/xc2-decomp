@@ -4,6 +4,7 @@
 
 #include "bdat.h"
 #include "dr/dr_man.h"
+#include "framework/coli/coli_object.h"
 #include "framework/debug/debug_draw.h"
 #include "framework/memory/framework_memory.h"
 #include "framework/navi/navi_util.h"
@@ -67,6 +68,7 @@
 #include "gmk/gmk_npc/gmk_npc.h"
 #include "gmk/gmk_npc/gmk_npc_manager.h"
 #include "gmk/gmk_npc/gmk_routed_npc.h"
+#include "gmk/gmk_phantom.h"
 #include "gmk/gmk_precious.h"
 #include "gmk/gmk_route.h"
 #include "gmk/gmk_salvage.h"
@@ -86,6 +88,7 @@
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/array.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/reference_object.h"
 #include "mtl/alloc_handle.h"
 
@@ -616,6 +619,42 @@ void GmkScript::update(f32 deltaTime) {
     (this->*seq)(deltaTime);
   }
 }
+
+GmkPhantom::GmkPhantom(const CreateInfo *info) : name(nullptr), phantom(nullptr), isHit(false), isEntered(false), isLeft(false), isInside(false) {
+  if (info != nullptr) {
+    create(*info);
+  }
+  GmkPhantomManager::get()->addGmkPhantom(this);
+}
+
+GmkPhantom::~GmkPhantom() {
+  if (GmkPhantomManager::get() != nullptr) {
+    GmkPhantomManager::get()->removeGmkPhantom(this);
+  }
+  dispose();
+}
+
+void GmkPhantom::dispose() {
+  if (phantom != nullptr) {
+    phantom->setColiUserData(nullptr);
+    phantom->setListener(nullptr);
+  }
+  isInside = false;
+  mm::mtl::safeRelease(phantom);
+  name = nullptr;
+}
+
+void GmkPhantomManager::addGmkPhantom(GmkPhantom *phantom) { phantoms.push_back(phantom); }
+
+void GmkPhantomManager::removeGmkPhantom(GmkPhantom *phantom) {
+  if (phantom != nullptr) {
+    phantoms.erase(phantom);
+  }
+}
+
+GmkPhantomManager::GmkPhantomManager() {}
+
+GmkPhantomManager::~GmkPhantomManager() {}
 
 ScenarioFlagCond::ScenarioFlagCond(const CBdatWrapper &bdat, int id, const AGmkBase &gmk) {
   u16 scenarioFlagMin = bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16);

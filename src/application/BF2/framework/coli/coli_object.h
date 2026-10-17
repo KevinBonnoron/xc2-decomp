@@ -85,7 +85,8 @@ class ColiUserData {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  virtual const mm::mtl::RTTI *getRTTI() const = 0;
+  virtual const mm::mtl::RTTI *getRTTI() const { return &m_rtti; }
+  virtual ~ColiUserData() {}
 };
 
 class ColiObjUserData {
@@ -153,6 +154,13 @@ public:
   void enter(const IColiEventListener::EnterInfo &info);
   void leave(const IColiEventListener::LeaveInfo &info);
   void contact(const IColiEventListener::EnterInfo &info);
+
+  void setColiUserData(ColiUserData *data) { coliUserData = data; }
+
+  void setListener(IColiEventListener *listener) {
+    eventFlags.clear();
+    this->listener = listener;
+  }
 
   idcoli::IDColiObj *coliObject;
   mm::mtl::IntrusivePtr<ReferenceFrame> referenceFrame;

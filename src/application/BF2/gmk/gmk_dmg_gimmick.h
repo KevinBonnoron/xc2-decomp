@@ -123,7 +123,6 @@ public:
 
   u8 _48[0x50 - 0x48];
   mutable GmkPhantom phantom;
-  u8 _d8[0xe0 - 0xd8];
   bool isMute;
   mutable u32 seHandle;
   mutable f32 seVolume;
