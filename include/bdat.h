@@ -18,6 +18,7 @@ unsigned char *getFP(int table, int id);
 int getIdTop(unsigned char *bdat);
 int getIdEnd(unsigned char *bdat);
 int getIdCount(unsigned char *bdat);
+unsigned short getMemberSize(unsigned char *bdat);
 const char *getMSLabel(unsigned char *bdat, int id);
 unsigned char *getMember(unsigned char *bdat, const char *name);
 int getVarType(unsigned char *bdat, const char *name);
