@@ -6,7 +6,8 @@
 namespace anm {
 
 struct AsmAnnotetion {
-  u8 _00[0x18];
+  const char *name;
+  u8 _08[0x18 - 0x08];
 };
 
 struct AsmKeyframeAnnotation {

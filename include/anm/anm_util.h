@@ -6,7 +6,13 @@ namespace anm {
 class Binding;
 class Control;
 class ResASM;
+struct QsTransform;
 struct ResState;
+
+struct Appendix {
+  const char *name;
+  const void *data;
+};
 
 enum PlayMode {
   PLAY_MODE_LOOP,
@@ -38,12 +44,17 @@ public:
   static f32 getInvFps(const Binding &binding);
   static f32 calcLocalTime(f32 time, f32 start, f32 end, PlayMode playMode);
   static void setKeyFrame(Control &control, f32 frame);
+  static bool getAsmPlaybackTime(const ResASM &resAsm, const char *state, u32 index, f32 *time);
+  static const Binding *getAsmBinding(const ResASM &resAsm, const char *state, u32 index);
+  static bool getAsmLocomotionReference(const ResASM &resAsm, const char *state, f32 time, u32 index, QsTransform *transform);
+  static bool getAsmLocomotionDeltaReference(const ResASM &resAsm, const char *state, f32 startTime, f32 endTime, u32 index, QsTransform *transform);
   static const char *getLayerName(Layer layer);
   static Layer getLayer(const char *name);
   static const ResState *getStateResource(const ResASM &resAsm, const char *name);
   static const ResState *getSimpleStateResource(const ResASM &resAsm, const char *name);
   static const ResState *getComplexStateResource(const ResASM &resAsm, const char *name);
   static const ResState *getFrozenStateResource(const ResASM &resAsm, const char *name);
+  static const Appendix *findAppendix(const ResASM &resAsm, const char *name);
 };
 
 } // namespace anm

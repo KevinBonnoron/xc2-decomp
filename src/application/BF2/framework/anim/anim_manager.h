@@ -19,6 +19,7 @@ public:
 class AnimPoseSamplerInterface : public mm::mtl::IntrusiveListNode<AnimPoseSamplerInterface> {
 public:
   virtual ~AnimPoseSamplerInterface();
+  virtual void samplePose() = 0;
 };
 
 class AnimPoseModifierInterface : public mm::mtl::IntrusiveListNode<AnimPoseModifierInterface> {

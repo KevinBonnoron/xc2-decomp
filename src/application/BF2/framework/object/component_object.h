@@ -15,7 +15,7 @@ class UpdatableObject;
 class ComponentObject {
 public:
   virtual const mm::mtl::RTTI *getRTTI() const;
-  virtual ~ComponentObject();
+  virtual ~ComponentObject() {}
 
   u32 getLayer() const;
 
