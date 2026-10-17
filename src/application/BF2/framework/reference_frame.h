@@ -17,9 +17,12 @@ public:
   static const u32 FLAG_LOCAL_SYNCED = 1 << 0;
   static const u32 FLAG_WORLD_SYNCED = 1 << 1;
   static const u32 FLAG_MATRIX_SYNCED = 1 << 2;
+  static const u32 FLAG_ALL_SYNCED = FLAG_LOCAL_SYNCED | FLAG_WORLD_SYNCED | FLAG_MATRIX_SYNCED;
 
   ReferenceFrame();
   ~ReferenceFrame() override;
+  void invalidateLocal() { flags = (flags & ~FLAG_ALL_SYNCED) | FLAG_WORLD_SYNCED; }
+  void invalidateWorld() { flags = (flags & ~FLAG_ALL_SYNCED) | FLAG_LOCAL_SYNCED; }
   void addChild(ReferenceFrame &child);
   void removeChild(ReferenceFrame &child);
   void syncLocalTransform();
@@ -66,6 +69,8 @@ public:
   static const u32 LAYER_MAX = 32;
 
   void update(u32 layerMask);
+  void addUpdater(u32 layer, TransformUpdater &updater) { groups[layer].push_back(&updater); }
+  void removeUpdater(u32 layer, TransformUpdater &updater) { groups[layer].erase(&updater); }
 
   mm::mtl::IntrusiveList<TransformUpdater> groups[LAYER_MAX];
 };

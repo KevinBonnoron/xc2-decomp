@@ -1,6 +1,5 @@
 #pragma once
 #include "mm/mm_std_base.h"
-#include "mm_mtl/type_traits.h"
 #include <stddef.h>
 
 namespace mm {
@@ -37,16 +36,6 @@ template <typename T> T *copy_n(const T *first, size_t n, T *result) {
   MM_ASSERT((first + n <= result) || result < first);
   __builtin_memcpy(result, first, n * sizeof(T));
   return result + n;
-}
-
-template <typename T> void move_n(T *first, size_t n, T *result) {
-  if (is_pod<T>::value) {
-    __builtin_memcpy(result, first, n * sizeof(T));
-  } else {
-    for (size_t i = 0; i < n; i++) {
-      result[i] = first[i];
-    }
-  }
 }
 
 // __LINE__ must be 264 as in the original header: it is the line argument of the assert.

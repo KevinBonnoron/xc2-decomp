@@ -54,6 +54,8 @@ public:
 
   T *get() const { return mPtr; }
 
+  bool operator==(const IntrusivePtr &other) const { return mPtr == other.mPtr; }
+
 private:
   T *mPtr;
 };

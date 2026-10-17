@@ -3,9 +3,9 @@
 #include <stddef.h>
 
 #include "mm/mm_std_base.h"
-#include "mm_mtl/algorithm.h"
 #include "mm_mtl/allocator.h"
 #include "mm_mtl/construct.h"
+#include "mm_mtl/type_traits.h"
 
 namespace mm {
 namespace mtl {
@@ -196,6 +196,8 @@ public:
   T *erase(T *it);
 
 private:
+  static void copy(const T *first, const T *last, T *result);
+
   T *m_buffer;
   size_t m_size;
   size_t m_capacity;
@@ -203,13 +205,23 @@ private:
   IAllocator *m_allocator;
 };
 
+template <typename T> void Vector<T>::copy(const T *first, const T *last, T *result) {
+  if (is_pod<T>::value) {
+    __builtin_memcpy(result, first, (last - first) * sizeof(T));
+  } else {
+    while (first != last) {
+      *result++ = *first++;
+    }
+  }
+}
+
 template <typename T> T *Vector<T>::erase(T *it) {
   MM_ASSERT(valid_iterator(it));
   T *last = end();
   if (it != last) {
-    move_n(it + 1, last - (it + 1), it);
+    copy(it + 1, last, it);
     m_size--;
-    end()->~T();
+    destruct(end());
   }
   return it;
 }
