@@ -302,6 +302,7 @@ public:
   static u32 getFavorite(u32 blade, FAVORITE favorite);
   static u32 getAchievementQuestPrefix(u32 blade, u32 line, u32 level);
   static void setupAchievQuest(AchievQuest &achievQuest);
+  static u32 getKizunaringCompleteNum(u32 blade);
   static SDataBladeAchievement *getAchievInfo(u32 blade, u32 line);
   static bool isValid(u32 blade);
   static bool isActivateDriver(u32 blade);
@@ -359,7 +360,11 @@ public:
   static bool isFemale(u32 blade);
   static bool getNameWithFieldSkillForDebug(mm::mtl::FixStr<128> &name, u32 blade);
   static u16 getKeyReleaseLevel(u32 blade);
+  static u32 getSkillLineId(u32 blade, u32 line);
   static bool setAchievReleaseLevel(u32 blade, u32 line, u32 level);
+  static bool getTaskSkillMessage(u8 *&bdat, u32 &textId, u32 blade, u32 line);
+  static bool getTaskTitleMessage(u8 *&bdat, u32 &textId, u32 blade, u32 line, u32 level);
+  static bool getTaskResultMessage(u8 *&bdat, u32 &textId, u32 blade, u32 line, u32 level);
   static bool isCompleteAchievement(u32 blade);
   static u32 getAchievementID(u32 blade, u32 line, u32 level);
   static const char *getBaseEabWeaponName(u32 blade);

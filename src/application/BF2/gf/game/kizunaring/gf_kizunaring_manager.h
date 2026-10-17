@@ -12,6 +12,18 @@ class GfKizunaringBlade {
 public:
   static void orderAchievement(u32 blade);
   static void removeAchievement(u32 blade);
+  static u32 getReleaseAchievement(u32 blade, u32 line, u32 level);
+  static u32 getAchievementCategory(u32 blade, u32 line, u32 level);
+  static bool getAchievementResultMsg(u8 *&bdat, u32 &textId, u32 blade, u32 line, u32 level);
+  static u16 getAchievementResultEnhance(u32 blade, u32 line, u32 level);
+  static u32 getAchievementIcon(u32 blade, u32 line, u32 level);
+  static u32 getAchievementVoiceCategory(u32 blade, u32 line, u32 level);
+  static u32 getAchievementAfterVoice(u32 blade, u32 line, u32 level);
+  static u32 getAchievementDifficulty(u32 blade, u32 line, u32 level);
+  static u32 getAchievementQuest(u32 blade, u32 line, u32 level);
+  static u32 getAchievementSetCategory(u32 blade, u32 line);
+  static u32 getAchievementSetAbilityLevel(u32 blade, u32 line);
+  static bool isNetabareOK(u32 blade, u32 line, u32 level);
   static bool isCompleteLevel(const AchievQuest &achievQuest);
   static void completeAllAchievementForDebug(u32 blade);
   static void qevCompleteQuest(const QuestCompleteParam &param);
