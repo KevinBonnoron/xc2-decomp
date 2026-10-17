@@ -109,6 +109,7 @@ public:
   static bool isBattle(GF_OBJ_HANDLE *handle);
   static bool isVolumeFadeForUser(GF_OBJ_HANDLE *handle);
   static void setVolumeFadeUserFlag(GF_OBJ_HANDLE *handle, bool isForUser);
+  static bool isStanbyTalkingPlayer(GF_OBJ_HANDLE *handle);
   static void setTalking(GF_OBJ_HANDLE *handle, bool isTalking);
   static bool isTalking(GF_OBJ_HANDLE *handle);
   static bool isSearchEmptyResource(GF_OBJ_HANDLE *handle);
