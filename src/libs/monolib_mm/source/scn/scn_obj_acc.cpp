@@ -330,7 +330,7 @@ const char *ScnObjAccResDecShader::getDecName(u32 index) const {
   if (m_shdObj == nullptr) {
     return nullptr;
   }
-  return m_shdObj->m_names + *m_shdObj->m_decShds[index].nameOffset;
+  return reinterpret_cast<const char *>(m_shdObj->m_header) + m_shdObj->m_decShds[index].info->nameOfs;
 }
 
 u32 ScnObjAccResDecShader::getID(u32 index) const {
