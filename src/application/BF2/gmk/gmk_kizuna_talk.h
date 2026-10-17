@@ -1,10 +1,16 @@
 #pragma once
+#include <stddef.h>
+
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
 
 struct CBdatWrapper;
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
 
 namespace gmk {
 
@@ -23,16 +29,28 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_KIZUNA_TALK;
 
-  ~GmkKizunaTalk() override;
-  GmkType getGmkType() const override;
+  ~GmkKizunaTalk() override { dispose(); }
+  GmkType getGmkType() const override { return GMK_TYPE; }
+  int getGameFlagId() const;
   void create(const CreateInfo &info) override;
   void dispose() override;
+  void disposeGfObjHandle();
   void update(f32 deltaTime) override;
+  void createGfObjHandle();
   void debugDraw() const override;
+  void validateDisp() const;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
 
-  u8 _48[0x58 - 0x48];
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(createInfo.info); }
+
+  gf::GF_OBJ_HANDLE *handle;
+  DistCond distCond;
+  bool isDisp;
 };
+
+static_assert(offsetof(GmkKizunaTalk, handle) == 0x48, "");
+static_assert(offsetof(GmkKizunaTalk, distCond) == 0x50, "");
+static_assert(offsetof(GmkKizunaTalk, isDisp) == 0x54, "");
 
 static_assert(sizeof(GmkKizunaTalk::BdatInfo) == 0x6, "");
 static_assert(sizeof(GmkKizunaTalk) == 0x58, "");
