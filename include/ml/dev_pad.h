@@ -47,6 +47,7 @@ public:
   void updateLocal();
   void wkUpdate() override;
   bool wkStandbyLogin() override;
+  bool wkStandbyLogout() override;
   virtual bool isLocalConnect(int padNo) const = 0;
   virtual u32 getLocalStyle(int padNo) const = 0;
   virtual int getLocalUserSelectPadID() const = 0;

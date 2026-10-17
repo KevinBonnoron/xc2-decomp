@@ -1,5 +1,10 @@
 #include "ml/dev_mouse.h"
 
+#include "ml/dev_pad.h"
+#include "ml/lib_main.h"
+#include "ml/reslist.h"
+#include "ml/work_system.h"
+
 namespace ml {
 
 namespace {
@@ -7,6 +12,15 @@ namespace {
 mm::Pnt<int> s_clipMove;
 
 } // namespace
+
+bool DevMouse::isInitialized() {
+  DevMouse *mouse = get();
+  if (mouse->wkIsWaitException()) {
+    return false;
+  }
+
+  return mouse->wkIsActive();
+}
 
 void DevMouse::setClipMove(int x, int y) {
   s_clipMove.x += x;
@@ -81,6 +95,21 @@ void DevMouse::imMButtonDbl() { m_buttonDblAccum |= 0x2; }
 
 void DevMouse::imRButtonDbl() { m_buttonDblAccum |= 0x4; }
 
+void DevMouse::updateDevice() {
+  if (m_isPadMouse && !m_isMouseInput) {
+    if (!(DevPad::getBtn(9) & 0xf000)) {
+      m_padMouseSpeed = 0.7f;
+    } else {
+      m_padMouseSpeed += 0.3f;
+      if (m_padMouseSpeed < 0.0f) {
+        m_padMouseSpeed = 0.0f;
+      } else if (m_padMouseSpeed > 8.0f) {
+        m_padMouseSpeed = 8.0f;
+      }
+    }
+  }
+}
+
 void DevMouse::wkUpdate() {
   updateDevice();
   m_move = m_moveAccum;
@@ -93,6 +122,23 @@ void DevMouse::wkUpdate() {
   m_buttonOffAccum = 0;
   m_buttonDbl = m_buttonDblAccum;
   m_buttonDblAccum = 0;
+}
+
+bool DevMouse::wkStandbyLogin() {
+  if (!createDevice()) {
+    return false;
+  }
+
+  return WorkObj::wkStandbyLogin();
+}
+
+bool DevMouse::wkStandbyLogout() {
+  if (m_children.size() == 0 && WorkSystem::get() == nullptr && LibMain::get() == nullptr) {
+    releaseDevice();
+    return WorkObj::wkStandbyLogout();
+  }
+
+  return false;
 }
 
 void DevMouse::setPadMouse(bool isPadMouse) { get()->m_isPadMouse = isPadMouse; }
