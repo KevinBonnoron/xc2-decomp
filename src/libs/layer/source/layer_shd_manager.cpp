@@ -5,7 +5,10 @@
 #include "grlib/cglib_ctl_vertex.h"
 #include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_state.h"
+#include "layer/layer_handle_allocator.h"
 #include "layer/layer_vertex_obj.h"
+#include "mtl/alloc_handle.h"
+#include "mtl/mem_manager.h"
 
 namespace layer {
 
@@ -150,5 +153,23 @@ void LayerShdManager::setupBlendMul() {
 void LayerShdManager::initFlowMap(u32 index) {}
 
 void LayerShdManager::initGamma(u32 index) {}
+
+LayerHandleAllocator::LayerHandleAllocator() {}
+
+LayerHandleAllocator::LayerHandleAllocator(mtl::ALLOC_HANDLE handle) : m_handle(handle) {}
+
+void LayerHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { m_handle = handle; }
+
+mtl::ALLOC_HANDLE LayerHandleAllocator::getMemHandle() const { return m_handle; }
+
+void *LayerHandleAllocator::allocate(size_t size, size_t alignment) {
+  return mtl::MemManager::allocate(m_handle, size, alignment, false, "no name", 0);
+}
+
+void LayerHandleAllocator::deallocate(void *pointer) {
+  if (pointer != nullptr) {
+    mtl::MemManager::deallocate(pointer, 0, false);
+  }
+}
 
 } // namespace layer
