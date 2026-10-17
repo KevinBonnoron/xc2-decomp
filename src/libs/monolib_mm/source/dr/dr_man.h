@@ -121,7 +121,8 @@ public:
   static bool s_bFogSRGB;
   static bool s_bSeamDebug;
 
-  u8 _0008[0x0010 - 0x0008];
+  u8 _0008[0x000c - 0x0008];
+  mtl::ALLOC_HANDLE memSys;
   mtl::ALLOC_HANDLE memClass;
   u8 _0014[0x0070 - 0x0014];
   DrMotBlurState *motBlurState;
@@ -195,7 +196,9 @@ public:
   bool allMiddelTexStmChks[2];
   bool seamMapStmOks[2];
   bool cameraLight;
-  u8 _1da1[0x1e00 - 0x1da1];
+  u8 _1da1[0x1da4 - 0x1da1];
+  s32 dynamicLightType;
+  u8 _1da8[0x1e00 - 0x1da8];
   cloud::CloudMan *cloudMan;
   bool toonDirLightScale;
   u8 _1e09[0x1e0c - 0x1e09];
@@ -203,6 +206,7 @@ public:
   u8 _1e10[0x1e20 - 0x1e10];
 };
 
+static_assert(offsetof(DrMan, memSys) == 0x000c, "");
 static_assert(offsetof(DrMan, memClass) == 0x0010, "");
 static_assert(offsetof(DrMan, motBlurState) == 0x0070, "");
 static_assert(offsetof(DrMan, pixlMan) == 0x0078, "");
@@ -254,6 +258,7 @@ static_assert(offsetof(DrMan, seamMapPriColi) == 0x1d98, "");
 static_assert(offsetof(DrMan, allMiddelTexStmChks) == 0x1d9c, "");
 static_assert(offsetof(DrMan, seamMapStmOks) == 0x1d9e, "");
 static_assert(offsetof(DrMan, cameraLight) == 0x1da0, "");
+static_assert(offsetof(DrMan, dynamicLightType) == 0x1da4, "");
 static_assert(offsetof(DrMan, cloudMan) == 0x1e00, "");
 static_assert(offsetof(DrMan, toonDirLightScale) == 0x1e08, "");
 static_assert(offsetof(DrMan, toonAmbient) == 0x1e0c, "");

@@ -1,19 +1,28 @@
 #pragma once
 #include <stddef.h>
 
-#include "types.h"
+#include "dr/dr_shd_lgt_dynamic.h"
 
 namespace ml {
-class DrMan;
 class DrShdLgtClustered;
 class DrShdLgtTileBasedDr;
+class DrMan;
 
-class DrShdLgtHybrid {
+class DrShdLgtHybrid : public DrShdLgtDynamic {
 public:
-  virtual ~DrShdLgtHybrid();
+  DrShdLgtHybrid(DrMan *drMan);
+  ~DrShdLgtHybrid() override;
+  void stockBegin() override;
+  void stockEnd() override;
+  void update() override;
+  void setupCate(int cate) override;
+  void addViewInfo(int cate) override;
+  void delViewInfo(int cate) override;
+  void stockPntList(DrLightObjPnt *light) override;
+  void stockSptList(DrLightObjSpt *light) override;
+  void render(DrShdLgtMan *shdLgtMan, DrLightMan *lightMan) override;
+  void debugRender() override;
 
-  u8 _08[0x10 - 0x08];
-  DrMan *m_drMan;
   DrShdLgtClustered *m_clustered;
   DrShdLgtTileBasedDr *m_tileBasedDr;
 };

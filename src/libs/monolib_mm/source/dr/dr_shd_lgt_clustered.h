@@ -10,6 +10,7 @@ class CGLibTexture;
 } // namespace grlib
 
 namespace ml {
+class DrMan;
 
 class DrShdLgtClustered : public DrShdLgtDynamic {
 public:
@@ -31,10 +32,16 @@ public:
     u8 *lightListData;
   };
 
+  DrShdLgtClustered(DrMan *drMan, bool isLowResolution);
   ~DrShdLgtClustered() override;
   const ClusterSetting *getClusterSetting(u32 cate) const;
+  void stockBegin() override;
+  void stockEnd() override;
   void update() override;
+  void addViewInfo(int cate) override;
   void delViewInfo(int cate) override;
+  void stockPntList(DrLightObjPnt *light) override;
+  void stockSptList(DrLightObjSpt *light) override;
   void setPntLightUniformBlock(u32 cate, u32 index);
   void setSptLightUniformBlock(u32 cate, u32 index);
   void setPointerListUniformBlock(u32 cate, u32 index);
@@ -50,16 +57,19 @@ public:
   void setLightListData(u32 index, int data);
   u8 getLightListData(u32 index);
   void endLightList();
+  void render(DrShdLgtMan *shdLgtMan, DrLightMan *lightMan) override;
   void debugRender() override;
 
   static const ClusterSetting c_ClusterSettings[4];
 
   bool m_isLowResolution;
   ViewInfo m_viewInfos[3];
+  u8 _4d0[0x6b0 - 0x4d0];
 };
 
 static_assert(sizeof(DrShdLgtClustered::ViewInfo) == 0x190, "");
 static_assert(offsetof(DrShdLgtClustered, m_isLowResolution) == 0x18, "");
 static_assert(offsetof(DrShdLgtClustered, m_viewInfos) == 0x20, "");
+static_assert(sizeof(DrShdLgtClustered) == 0x6b0, "");
 
 } // namespace ml
