@@ -13,6 +13,7 @@ namespace mtl {
 template <typename T> class Vector {
 public:
   Vector() : m_buffer(nullptr), m_size(0), m_capacity(0), m_alignment(16), m_allocator(nullptr) {}
+  explicit Vector(IAllocator *allocator) : m_buffer(nullptr), m_size(0), m_capacity(0), m_alignment(16), m_allocator(allocator) {}
   ~Vector() { release(); }
 
   // __LINE__ must be 60 as in the original header: it is the line argument of the assert.
