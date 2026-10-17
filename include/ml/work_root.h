@@ -71,20 +71,33 @@ public:
   static void finalize();
   static mtl::ALLOC_HANDLE getMemFG();
   static mtl::ALLOC_HANDLE getMemTMP();
+  static mtl::ALLOC_HANDLE getMemState();
+  static mtl::ALLOC_HANDLE getMemStateDebug();
 };
 
 class WorkRootState {
 public:
   static void initialize();
+  static void entryWork();
+  static void standbyWork();
   static void finalize();
   static WorkObj *getWork(u32 wid);
+  static bool isDebug(WorkObj *work);
   static u32 allocWID(WorkObj *work);
   static void freeWID(u32 wid);
   static mtl::ALLOC_HANDLE getWorkMem();
   static void setThreadRender(bool isThreadRender);
+  static bool isThreadRender();
+  static void shutdownAll();
+  static bool isShutdownAll();
   static void entryWork(WorkObj *work, WorkObj *parent, bool isFront);
   static void addFrameEnd(WorkObj *work);
   static void removeFrameEnd(WorkObj *work);
+  static void standbyWork(WorkObj *work);
+  static void updateWork(WorkObj *work);
+  static void tailWork(WorkObj *work);
+  static void updateWork();
+  static void tailWork();
   static bool runSingle();
 };
 
