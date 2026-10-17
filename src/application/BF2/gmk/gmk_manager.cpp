@@ -659,9 +659,11 @@ void BootedGmkCond::dispose() { gimmickType = 0; }
 } // namespace gmk
 
 // clang-format off
-#include "gmk/gmk_field_volume.cpp"
-// clang-format on
-
-// clang-format off
+#include "gmk/gmk_event.cpp"
+#include "gmk/gmk_field_lock.cpp"
+#include "gmk/gmk_effect.cpp"
 #include "gmk/gmk_route.cpp"
+#include "gmk/gmk_map_jump.cpp"
+#include "gmk/gmk_field_volume.cpp"
+#include "gmk/gmk_foot_print.cpp"
 // clang-format on
