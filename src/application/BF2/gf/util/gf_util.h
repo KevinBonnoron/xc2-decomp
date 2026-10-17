@@ -9,6 +9,7 @@ struct Vec3;
 namespace gf {
 namespace util {
 
+bool getScreenPos(mm::Vec3 &screenPos, const mm::Vec3 &position);
 bool getUpperHitCollision(mm::Vec3 &hit, const mm::Vec3 &position, f32 distance);
 f32 getGameCameraFov();
 f32 getGameCameraNearClip();
