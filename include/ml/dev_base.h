@@ -6,7 +6,7 @@ namespace ml {
 
 class DevBase : public WorkObj {
 public:
-  ~DevBase() override;
+  ~DevBase() override {}
 
   u8 _1a8[0x1ac - 0x1a8];
 };
