@@ -17,10 +17,10 @@
 #include "dr/dr_res_mdo_shd_obj.h"
 #include "dr/dr_res_mdo_vtx_mesh_obj.h"
 #include "dr/dr_stm_read_obj.h"
-#include "ml/scn_obj_model.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
+#include "scn/scn_obj_dr_sys.h"
 #include "string.h"
 
 namespace ml {
@@ -29,7 +29,7 @@ ScnObjAccResMdlInfo::ScnObjAccResMdlInfo() : m_drMdl(nullptr) {}
 
 ScnObjAccResMdlInfo::ScnObjAccResMdlInfo(ScnObjModel *model) : m_drMdl(nullptr) { setDrMdl(model); }
 
-void ScnObjAccResMdlInfo::setDrMdl(ScnObjModel *model) { m_drMdl = model->m_drMdl; }
+void ScnObjAccResMdlInfo::setDrMdl(ScnObjModel *model) { m_drMdl = static_cast<ScnObjModelDrSys *>(model)->m_drMdl; }
 
 int ScnObjAccResMdlInfo::getViewNum() const { return m_drMdl->m_viewNum; }
 
@@ -111,7 +111,7 @@ void ScnObjAccResMdlInfo::getTextureStreamInfo(u32 &size, u32 &count, const void
   DrMdlMan::getTextureStreamInfo(size, count, data, isMiddle);
 }
 
-void ScnObjAccResMdlInfo::setClone(const ScnObjModel *model) { m_drMdl->cloneMdlObj(model->m_drMdl); }
+void ScnObjAccResMdlInfo::setClone(const ScnObjModel *model) { m_drMdl->cloneMdlObj(static_cast<const ScnObjModelDrSys *>(model)->m_drMdl); }
 
 void ScnObjAccResMdlInfo::createAfterImage(const DrMdlAfterImageParams &params) {
   if (m_drMdl->m_type == DR_MDL_TYPE_NORMAL) {
@@ -137,9 +137,9 @@ void ScnObjAccResMdlInfo::releaseAfterImage() {
 
 ScnObjAccResNode::ScnObjAccResNode() : m_drMdl(nullptr) {}
 
-ScnObjAccResNode::ScnObjAccResNode(ScnObjModel *model) : m_drMdl(model->m_drMdl) {}
+ScnObjAccResNode::ScnObjAccResNode(ScnObjModel *model) : m_drMdl(static_cast<ScnObjModelDrSys *>(model)->m_drMdl) {}
 
-void ScnObjAccResNode::setDrMdl(ScnObjModel *model) { m_drMdl = model->m_drMdl; }
+void ScnObjAccResNode::setDrMdl(ScnObjModel *model) { m_drMdl = static_cast<ScnObjModelDrSys *>(model)->m_drMdl; }
 
 void ScnObjAccResNode::setDrMdl(DrMdlObj *drMdl) { m_drMdl = drMdl; }
 
@@ -165,7 +165,7 @@ ScnObjAccEtcParams::ScnObjAccEtcParams() : m_etcPamObj(nullptr) {}
 ScnObjAccEtcParams::ScnObjAccEtcParams(ScnObjModel *model) { setDrMdl(model); }
 
 void ScnObjAccEtcParams::setDrMdl(ScnObjModel *model) {
-  DrMdlObj *drMdl = model->m_drMdl;
+  DrMdlObj *drMdl = static_cast<ScnObjModelDrSys *>(model)->m_drMdl;
   if (drMdl->m_type != DR_MDL_TYPE_NORMAL) {
     m_etcPamObj = nullptr;
   } else {
@@ -240,7 +240,7 @@ ScnObjAccResMaterial::ScnObjAccResMaterial() : m_matCount(0) {}
 ScnObjAccResMaterial::ScnObjAccResMaterial(ScnObjModel *model) : m_matCount(0) { setDrMdl(model); }
 
 void ScnObjAccResMaterial::setDrMdl(ScnObjModel *model) {
-  MdoWrkMatRes *matRes = model->m_drMdl->m_matRes;
+  MdoWrkMatRes *matRes = static_cast<ScnObjModelDrSys *>(model)->m_drMdl->m_matRes;
   if (matRes != nullptr) {
     m_matCount = matRes->matCount;
     m_matEntries = matRes->matEntries;
@@ -257,7 +257,7 @@ ScnObjAccResSubMesh::ScnObjAccResSubMesh() : m_meshObj(nullptr) {}
 ScnObjAccResSubMesh::ScnObjAccResSubMesh(ScnObjModel *model) : m_meshObj(nullptr) { setDrMdl(model); }
 
 void ScnObjAccResSubMesh::setDrMdl(ScnObjModel *model) {
-  DrMdlObj *drMdl = model->m_drMdl;
+  DrMdlObj *drMdl = static_cast<ScnObjModelDrSys *>(model)->m_drMdl;
   if (drMdl->m_type != DR_MDL_TYPE_NORMAL) {
     return;
   }
@@ -311,7 +311,7 @@ ScnObjAccResDecShader::ScnObjAccResDecShader() : m_shdObj(nullptr) {}
 ScnObjAccResDecShader::ScnObjAccResDecShader(ScnObjModel *model) : m_shdObj(nullptr) { setDrMdl(model); }
 
 void ScnObjAccResDecShader::setDrMdl(ScnObjModel *model) {
-  DrMdlObj *drMdl = model->m_drMdl;
+  DrMdlObj *drMdl = static_cast<ScnObjModelDrSys *>(model)->m_drMdl;
   if (drMdl->m_type == DR_MDL_TYPE_NORMAL) {
     m_shdObj = static_cast<DrMdoCtlNom *>(drMdl)->m_shdObj;
   }
@@ -377,7 +377,7 @@ ScnObjAccResAvatar::ScnObjAccResAvatar() : m_avatar(nullptr) {}
 ScnObjAccResAvatar::ScnObjAccResAvatar(ScnObjModel *model) : m_avatar(nullptr) { setDrMdl(model); }
 
 void ScnObjAccResAvatar::setDrMdl(ScnObjModel *model) {
-  m_drMdl = model->m_drMdl;
+  m_drMdl = static_cast<ScnObjModelDrSys *>(model)->m_drMdl;
   if (m_drMdl->m_matRes != nullptr) {
     m_avatar = m_drMdl->m_matRes->avatar;
   }
@@ -477,7 +477,7 @@ ScnObjAccResShaderParm::ScnObjAccResShaderParm() : m_shaderParm(nullptr) {}
 ScnObjAccResShaderParm::ScnObjAccResShaderParm(ScnObjModel *model) : m_shaderParm(nullptr) { setDrMdl(model); }
 
 void ScnObjAccResShaderParm::setDrMdl(ScnObjModel *model) {
-  MdoWrkMatRes *matRes = model->m_drMdl->m_matRes;
+  MdoWrkMatRes *matRes = static_cast<ScnObjModelDrSys *>(model)->m_drMdl->m_matRes;
   if (matRes != nullptr) {
     m_shaderParm = matRes->shaderParm;
   }
@@ -511,9 +511,9 @@ f32 ScnObjAccResShaderParm::getVal(int index) const {
 
 ScnObjAccVolumeFade::ScnObjAccVolumeFade() : m_drMdl(nullptr) {}
 
-ScnObjAccVolumeFade::ScnObjAccVolumeFade(ScnObjModel *model) : m_drMdl(model->m_drMdl) {}
+ScnObjAccVolumeFade::ScnObjAccVolumeFade(ScnObjModel *model) : m_drMdl(static_cast<ScnObjModelDrSys *>(model)->m_drMdl) {}
 
-void ScnObjAccVolumeFade::setDrMdl(ScnObjModel *model) { m_drMdl = model->m_drMdl; }
+void ScnObjAccVolumeFade::setDrMdl(ScnObjModel *model) { m_drMdl = static_cast<ScnObjModelDrSys *>(model)->m_drMdl; }
 
 ScnObjAccVolumeFade::~ScnObjAccVolumeFade() {}
 
@@ -545,9 +545,9 @@ void ScnObjAccVolumeFade::setRatio(f32 ratio, int index) {
 
 ScnObjAccRimBloom::ScnObjAccRimBloom() : m_drMdl(nullptr) {}
 
-ScnObjAccRimBloom::ScnObjAccRimBloom(ScnObjModel *model) : m_drMdl(model->m_drMdl) {}
+ScnObjAccRimBloom::ScnObjAccRimBloom(ScnObjModel *model) : m_drMdl(static_cast<ScnObjModelDrSys *>(model)->m_drMdl) {}
 
-void ScnObjAccRimBloom::setDrMdl(ScnObjModel *model) { m_drMdl = model->m_drMdl; }
+void ScnObjAccRimBloom::setDrMdl(ScnObjModel *model) { m_drMdl = static_cast<ScnObjModelDrSys *>(model)->m_drMdl; }
 
 ScnObjAccRimBloom::~ScnObjAccRimBloom() {}
 
@@ -646,7 +646,7 @@ f32 ScnObjAccRimBloom::getBlackRatio() const {
 ScnObjAccMdlParticle::ScnObjAccMdlParticle() : m_vtxMeshObj(nullptr) {}
 
 ScnObjAccMdlParticle::ScnObjAccMdlParticle(ScnObjModel *model) {
-  DrMdlObj *drMdl = model->m_drMdl;
+  DrMdlObj *drMdl = static_cast<ScnObjModelDrSys *>(model)->m_drMdl;
   if (drMdl->m_type != DR_MDL_TYPE_NORMAL) {
     m_vtxMeshObj = nullptr;
   } else {
@@ -716,7 +716,7 @@ ScnObjAccSeamResMdlInfo::ScnObjAccSeamResMdlInfo() {}
 ScnObjAccSeamResMdlInfo::ScnObjAccSeamResMdlInfo(ScnObjModel *model) { setDrMdl(model); }
 
 void ScnObjAccSeamResMdlInfo::setDrMdl(ScnObjModel *model) {
-  DrMdlObj *drMdl = model->m_drMdl;
+  DrMdlObj *drMdl = static_cast<ScnObjModelDrSys *>(model)->m_drMdl;
   if (drMdl->m_type == DR_MDL_TYPE_SEAM) {
     m_seam = static_cast<DrMdoCtlSeamAll *>(drMdl);
   } else {
@@ -736,7 +736,7 @@ ScnObjAccSeamPos::ScnObjAccSeamPos() : m_instAnmObj(nullptr) {}
 ScnObjAccSeamPos::ScnObjAccSeamPos(ScnObjModel *model) : m_instAnmObj(nullptr) { setDrMdl(model); }
 
 void ScnObjAccSeamPos::setDrMdl(ScnObjModel *model) {
-  DrMdlObj *drMdl = model->m_drMdl;
+  DrMdlObj *drMdl = static_cast<ScnObjModelDrSys *>(model)->m_drMdl;
   if (drMdl->m_type == DR_MDL_TYPE_SEAM) {
     m_instAnmObj = &static_cast<DrMdoCtlSeam *>(drMdl)->m_instAnmObj;
   } else if (drMdl->m_type == DR_MDL_TYPE_POSITION) {
@@ -835,7 +835,7 @@ ScnObjAccSeamEtcPos::ScnObjAccSeamEtcPos() : m_etcPosList(nullptr) {}
 ScnObjAccSeamEtcPos::ScnObjAccSeamEtcPos(ScnObjModel *model) : m_etcPosList(nullptr) { setDrMdl(model); }
 
 void ScnObjAccSeamEtcPos::setDrMdl(ScnObjModel *model) {
-  DrMdlObj *drMdl = model->m_drMdl;
+  DrMdlObj *drMdl = static_cast<ScnObjModelDrSys *>(model)->m_drMdl;
   if (drMdl->m_type == DR_MDL_TYPE_SEAM) {
     m_etcPosList = &static_cast<DrMdoCtlSeam *>(drMdl)->m_etcPosList;
   } else {
