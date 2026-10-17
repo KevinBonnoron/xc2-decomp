@@ -78,6 +78,22 @@ enum {
   HEAL_TYPE_SET = 2,
 };
 
+struct MsgObjectDamage : fw::Message {
+  u32 damage;
+  u8 _0c[0x28 - 0x0c];
+  u8 : 1;
+  u8 isCritical : 1;
+};
+
+static_assert(offsetof(MsgObjectDamage, damage) == 0x08, "");
+
+struct MsgObjectNotifyDamage : fw::Message {
+  const MsgObjectDamage *damage;
+  GF_OBJ_HANDLE *attacker;
+};
+
+static_assert(offsetof(MsgObjectNotifyDamage, attacker) == 0x10, "");
+
 struct MsgObjectHealHp : fw::Message {
   MsgObjectHealHp(u32 hp, u32 healType)
       : fw::Message(0x1000033, 0x20), hp(hp), healType(healType), position(nullptr), healer(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), _20(),

@@ -31,6 +31,27 @@ static_assert(offsetof(GfObjPropertyCharacter, hp) == 0x04, "");
 static_assert(offsetof(GfObjPropertyCharacter, level) == 0x08, "");
 static_assert(offsetof(GfObjPropertyCharacter, isBattle) == 0x30, "");
 
+enum {
+  PROPERTY_MOVE_WALK = 0,
+  PROPERTY_MOVE_SWIM = 1,
+  PROPERTY_MOVE_SWIM_ON_CLOUD = 2,
+  PROPERTY_MOVE_CLIMB = 3,
+  PROPERTY_MOVE_ACTION = 4,
+};
+
+struct GfObjPropertyMove {
+  u32 type;
+  u8 _04[0x80 - 0x04];
+  bool isJump;
+  u8 _81[0xc0 - 0x81];
+  GF_OBJ_HANDLE *groundObj;
+  f32 floatTime;
+};
+
+static_assert(offsetof(GfObjPropertyMove, isJump) == 0x80, "");
+static_assert(offsetof(GfObjPropertyMove, groundObj) == 0xc0, "");
+static_assert(offsetof(GfObjPropertyMove, floatTime) == 0xc8, "");
+
 class GfObjProperty {
 public:
   GfObjPropertyMap *getMap();
@@ -50,9 +71,11 @@ public:
 
   GF_OBJ_HANDLE *handle;
   GfObjPropertyCharacter *character;
+  GfObjPropertyMove *move;
 };
 
 static_assert(offsetof(GfObjProperty, character) == 0x10, "");
+static_assert(offsetof(GfObjProperty, move) == 0x18, "");
 
 class GfObjPropertyMap : public GfObjProperty {};
 

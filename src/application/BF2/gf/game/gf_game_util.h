@@ -120,6 +120,7 @@ public:
   static bool hasBelonging(GF_OBJ_HANDLE *handle, u32 belonging);
   static bool isTurnEnd(GF_OBJ_HANDLE *handle);
   static void execAddDevelopPointArcadia2Iyasaki();
+  static void addTrusuPointByLastKizunaTalk();
   static void dispRexCrystal(GF_OBJ_HANDLE *handle, bool isDisp);
   static void dispHomuraCrystal(GF_OBJ_HANDLE *handle, bool isDisp);
   static void dispMetsuCrystal(GF_OBJ_HANDLE *handle, bool isDisp);

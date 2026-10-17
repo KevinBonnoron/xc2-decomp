@@ -50,6 +50,7 @@ public:
   static bool createAchievement(u32 blade, u32 achievement, u32 level);
   static void createIdea(u32 driver, u32 idea, u32 level);
   static void createArts(u32 driver, u32 arts);
+  static void createCrystalOK(u32 item);
 };
 
 class SCOM_ACCESS_TARGET {
@@ -103,7 +104,18 @@ public:
 class SCOM_FIELD_VOICE {
 public:
   static void createLevelup(const ParamObj &paramObj);
+  static void createBadWeather();
   static void createTime(CV_FIELD voice);
+};
+
+class SCOM_ZONE {
+public:
+  static void create(u32 map);
+};
+
+class SCOM_HOMURI_PARTS {
+public:
+  static void create(u32 partyId, bool isVisible, f32 alpha);
 };
 
 class SCOM_MAXIMUM_HEAL {

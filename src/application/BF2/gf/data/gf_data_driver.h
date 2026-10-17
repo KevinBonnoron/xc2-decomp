@@ -126,6 +126,8 @@ public:
   static void calcDriverBaseParamByLevel(SDataDriver &dataDriver);
   static u32 getLevel(u32 driver);
   static bool isActivateParty(u32 driver);
+  static void setBlade(u32 driver, u32 blade, int slot);
+  static int getSetIdByBlade(u32 driver, u32 blade);
   static int getMaxSetBladeNum(u32 driver);
   static u32 getBlade(u32 driver, int slot);
   static void unsetBlade(u32 blade);

@@ -122,6 +122,7 @@ public:
   static void setNoMultiple(u32 item, bool noMultiple);
   static bool isFavoriteCategoryFood(u32 category);
   static bool isHomuraCookItem(u32 item);
+  static bool isYuohCookItem(u32 item);
   static bool isMusubiCookItem(u32 item);
   static bool isMayItem(u32 item);
   static bool isTukiItem(u32 item);

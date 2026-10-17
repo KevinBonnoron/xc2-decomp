@@ -51,6 +51,7 @@ public:
 
   bool isValid() const { return mObj != nullptr; }
   bool isValidTransform() const;
+  const fw::Transform &getWorldTransform() const;
   f32 getAlpha(OBJ_ALPHA type) const;
   void setAlpha(OBJ_ALPHA type, f32 alpha);
   bool isAlphaChanged() const;

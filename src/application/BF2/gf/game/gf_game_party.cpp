@@ -20,6 +20,7 @@
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_append.h"
+#include "gf/object/gf_init_param.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
@@ -39,12 +40,6 @@ constexpr int SLOT_HIKARI = 3;
 constexpr u32 BLADE_NEW_GAME = 1012;
 constexpr u32 BLADE_INDEX_LIST_START = 20;
 constexpr u32 BLADE_INDEX_END = 422;
-
-static u32 getValidDriverId(const DataParamAcc &paramAcc) {
-  return paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0;
-}
-
-static u32 getValidBdatId(const DataParamAcc &paramAcc) { return paramAcc.isValid() ? paramAcc.getBdatId() : 0; }
 
 static bool isReadyBlade(const GfObjAcc &objAcc, GF_OBJ_HANDLE *blade) {
   if (GfDataBlade::isDummyBlade(objAcc.getBladeId())) {
@@ -192,7 +187,7 @@ u32 GfGameParty::getPartyId(u32 objectType, u32 id) {
     int setBladeNum = GfDataDriver::getMaxSetBladeNum(GfDataParty::getPartyMember(partyId)->driver);
     if (objectType == OBJECT_TYPE_DRIVER) {
       DataParamAcc paramAcc(member->driver);
-      if (paramAcc.isValid() && getValidDriverId(paramAcc) == id) {
+      if (paramAcc.isValid() && paramAcc.getValidDriverId() == id) {
         return partyId;
       }
     }
@@ -200,7 +195,7 @@ u32 GfGameParty::getPartyId(u32 objectType, u32 id) {
     for (int slot = 0; slot < setBladeNum; slot++) {
       if (objectType == OBJECT_TYPE_BLADE) {
         DataParamAcc paramAcc(member->blades[slot]);
-        if (paramAcc.isValid() && getValidBdatId(paramAcc) == id) {
+        if (paramAcc.isValid() && paramAcc.getValidBdatId() == id) {
           return partyId;
         }
       }
@@ -209,7 +204,7 @@ u32 GfGameParty::getPartyId(u32 objectType, u32 id) {
         GfWeapon *weapon = GfMountManager::getGfWeapon(member->blades[slot], GFATTACH_WEAPON);
         for (u32 index = 0; index < WEAPON_HANDLE_NUM; index++) {
           DataParamAcc paramAcc(weapon->getCurrentHandles()[index]);
-          if (paramAcc.isValid() && getValidBdatId(paramAcc) == id) {
+          if (paramAcc.isValid() && paramAcc.getValidBdatId() == id) {
             return partyId;
           }
         }
@@ -858,7 +853,7 @@ u32 GfGameParty::getPartySetBladeNum() {
     }
 
     DataParamAcc paramAcc(driver);
-    int setBladeNum = GfDataDriver::getMaxSetBladeNum(getValidDriverId(paramAcc));
+    int setBladeNum = GfDataDriver::getMaxSetBladeNum(paramAcc.getValidDriverId());
     for (int slot = 0; slot < setBladeNum; slot++) {
       u32 blade = paramAcc.getBlade(slot, false);
       if (blade != 0) {
@@ -879,7 +874,7 @@ u32 GfGameParty::getPartySetBlade(u32 index) {
     }
 
     DataParamAcc paramAcc(driver);
-    int setBladeNum = GfDataDriver::getMaxSetBladeNum(getValidDriverId(paramAcc));
+    int setBladeNum = GfDataDriver::getMaxSetBladeNum(paramAcc.getValidDriverId());
     for (int slot = 0; slot < setBladeNum; slot++) {
       u32 blade = paramAcc.getBlade(slot, false);
       if (blade != 0) {
@@ -948,7 +943,7 @@ void GfGameParty::setPartyLeader(GF_OBJ_HANDLE *handle) {
     GF_OBJ_HANDLE *blade = getHandleBlade(partyId, -1);
     if (driver == handle || blade == handle) {
       DataParamAcc paramAcc(handle);
-      dataParty->leader = paramAcc.getObjType() == OBJECT_TYPE_DRIVER ? getValidDriverId(paramAcc) : getValidBdatId(paramAcc);
+      dataParty->leader = paramAcc.getObjType() == OBJECT_TYPE_DRIVER ? paramAcc.getValidDriverId() : paramAcc.getValidBdatId();
       dataParty->leaderObjectType = paramAcc.getObjType();
       recalcHierarchy();
       GfEvent::callPartyChange();

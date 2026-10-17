@@ -6,6 +6,10 @@
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
+namespace fw {
+struct UpdateInfo;
+}
+
 namespace gf {
 
 struct GF_OBJ_HANDLE;
@@ -49,10 +53,20 @@ static_assert(sizeof(GfAppend) == 0x88, "");
 
 class GfAppendWire {
 public:
+  GfAppendWire(GF_OBJ_HANDLE *wire, GF_OBJ_HANDLE *owner);
+  void endWire(f32 time);
+  ~GfAppendWire();
   void startWire(GF_OBJ_HANDLE *target, f32 time);
   void startWireWithClose(GF_OBJ_HANDLE *target, f32 time, f32 closeTime, f32 closeDistance);
   void startWireWithBone(GF_OBJ_HANDLE *target, const char *bone, f32 time);
-  void endWire(f32 time);
+  void update(const fw::UpdateInfo &info);
+
+  GF_OBJ_HANDLE *wire;
+  GF_OBJ_HANDLE *owner;
+  u8 _10[0x50 - 0x10];
 };
+
+static_assert(offsetof(GfAppendWire, owner) == 0x08, "");
+static_assert(sizeof(GfAppendWire) == 0x50, "");
 
 } // namespace gf
