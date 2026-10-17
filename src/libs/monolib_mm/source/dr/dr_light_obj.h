@@ -36,8 +36,22 @@ public:
     FLAG_BASE_MAP_SHADOW = 1 << 19,
     FLAG_INST_MAP_SHADOW = 1 << 20,
     FLAG_INST_SEL_MAP_SHADOW = 1 << 21,
+    FLAG_SUBTRACT = 1 << 22,
+    FLAG_CULL_ON = 1 << 30,
   };
 
+  void setSoftShadow(bool isEnable);
+  void setAmbModeOn(bool isEnable);
+  void setSubtractOn(bool isEnable);
+  void setCharShadow(bool isEnable);
+  void setBaseMapShadow(bool isEnable);
+  void setInstMapShadow(bool isEnable);
+  void setInstSelMapShadow(bool isEnable);
+  bool isShadowLight() const;
+  void setCacheShadow(bool isEnable);
+  bool isSubtract() const;
+  void setCullON(bool isEnable);
+  bool isCullON() const;
   DrLightObj();
   DrLightObj(DrPixlMan *pixlMan);
   virtual ~DrLightObj() {}
