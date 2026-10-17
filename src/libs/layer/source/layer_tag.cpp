@@ -51,6 +51,8 @@ u32 LayerTag::calcStringLength(const wchar_t *string) {
 
 LayerTagStr::LayerTagStr() : m_stockTbl(nullptr), m_stockSize(0), m_stockNum(0) {}
 
+LayerTagStr::~LayerTagStr() {}
+
 void LayerTagStr::setStockTbl(char *table, int size) {
   m_stockTbl = table;
   m_stockSize = size;
