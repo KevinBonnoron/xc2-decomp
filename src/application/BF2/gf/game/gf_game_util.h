@@ -12,6 +12,7 @@ struct Vec3;
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+struct OwnerBonus;
 struct SDataBlade;
 struct SDataGame;
 
@@ -91,6 +92,7 @@ public:
   static void makeCommandBattle(mm::mtl::FixStr<32> &command, bool isStart);
   static void makeStateBattle(mm::mtl::FixStr<32> &state, GF_OBJ_HANDLE *handle, bool isStart);
   static void makeStateBattleByBlade(mm::mtl::FixStr<32> &state, u32 blade, bool isStart);
+  static void getOwnerBonus(OwnerBonus &ownerBonus);
   static void requestFieldDamage(GF_OBJ_HANDLE *handle);
   static void changeObjAttribute(GF_OBJ_HANDLE *handle, u32 attribute);
   static u32 getObjAttribute(GF_OBJ_HANDLE *handle);
@@ -151,6 +153,12 @@ public:
 class GfGameUtilCloudSea {
 public:
   static void setInnCloudSea(CLOUD_SEA cloudSea);
+};
+
+class GfGameUtilNanakoori {
+public:
+  static bool checkCompleteMission(u32 mission, u32 flag);
+  static bool calcLevelAndFan();
 };
 
 } // namespace gf

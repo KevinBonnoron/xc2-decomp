@@ -29,6 +29,7 @@ public:
   void gevPause(u32 resumeBits, u32 pauseBits);
   fw::SoundPack *getCommonPack();
   fw::SoundPack *getMapPack();
+  void setCategorySeFadeoutForEvent(f32 volume);
 
   u8 _08[0xc4 - 0x08];
   mm::mtl::FixStr<64> mapSePackName;

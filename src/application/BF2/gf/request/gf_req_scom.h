@@ -88,6 +88,11 @@ public:
 enum CV_SALVAGE {};
 enum CV_SALVAGE_RESULT {};
 
+enum CV_FIELD {
+  CV_FIELD_TIME_MORNING = 31,
+  CV_FIELD_TIME_NIGHT = 32,
+};
+
 class SCOM_SALVAGE_VOICE {
 public:
   static GAME_VOICE_HANDLE *create(GF_OBJ_HANDLE *handle, CV_SALVAGE voice);
@@ -98,6 +103,7 @@ public:
 class SCOM_FIELD_VOICE {
 public:
   static void createLevelup(const ParamObj &paramObj);
+  static void createTime(CV_FIELD voice);
 };
 
 class SCOM_MAXIMUM_HEAL {
