@@ -6,6 +6,32 @@
 
 namespace ml {
 
+void DrLightObj::setSoftShadow(bool isEnable) { m_flags = !isEnable ? m_flags & ~FLAG_SOFT_SHADOW : m_flags | FLAG_SOFT_SHADOW; }
+
+void DrLightObj::setAmbModeOn(bool isEnable) { m_flags = !isEnable ? m_flags & ~FLAG_AMB_MODE_ON : m_flags | FLAG_AMB_MODE_ON; }
+
+void DrLightObj::setSubtractOn(bool isEnable) { m_flags = !isEnable ? m_flags & ~FLAG_SUBTRACT : m_flags | FLAG_SUBTRACT; }
+
+void DrLightObj::setCharShadow(bool isEnable) { m_flags = !isEnable ? m_flags & ~FLAG_CHAR_SHADOW : m_flags | FLAG_CHAR_SHADOW; }
+
+void DrLightObj::setBaseMapShadow(bool isEnable) { m_flags = !isEnable ? m_flags & ~FLAG_BASE_MAP_SHADOW : m_flags | FLAG_BASE_MAP_SHADOW; }
+
+void DrLightObj::setInstMapShadow(bool isEnable) { m_flags = !isEnable ? m_flags & ~FLAG_INST_MAP_SHADOW : m_flags | FLAG_INST_MAP_SHADOW; }
+
+void DrLightObj::setInstSelMapShadow(bool isEnable) {
+  m_flags = !isEnable ? m_flags & ~FLAG_INST_SEL_MAP_SHADOW : m_flags | FLAG_INST_SEL_MAP_SHADOW;
+}
+
+bool DrLightObj::isShadowLight() const { return m_flags & FLAG_SHADOW; }
+
+void DrLightObj::setCacheShadow(bool isEnable) { m_flags = !isEnable ? m_flags & ~FLAG_CACHE_SHADOW : m_flags | FLAG_CACHE_SHADOW; }
+
+bool DrLightObj::isSubtract() const { return (m_flags & FLAG_SUBTRACT) != 0; }
+
+void DrLightObj::setCullON(bool isEnable) { m_flags = !isEnable ? m_flags & ~FLAG_CULL_ON : m_flags | FLAG_CULL_ON; }
+
+bool DrLightObj::isCullON() const { return (m_flags & FLAG_CULL_ON) != 0; }
+
 DrLightObj::DrLightObj() : m_prev(nullptr), m_next(nullptr), m_flags(0), m_pixlMan(nullptr), m_shadow(nullptr) {}
 
 DrLightObj::DrLightObj(DrPixlMan *pixlMan) : m_next(nullptr), m_flags(0), m_pixlMan(pixlMan), m_shadow(nullptr) { m_prev = nullptr; }
