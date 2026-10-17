@@ -8,10 +8,14 @@
 #include "event/object_chara.h"
 #include "event/object_effect.h"
 #include "event/object_light.h"
+#include "event/object_party_list.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "mm_math/mm_col4.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 
@@ -234,9 +238,45 @@ ObjectChara *ObjectList::createGfObj(const char *name, gf::GF_OBJ_HANDLE *handle
   return chara;
 }
 
+ObjectChara *ObjectList::createGfObjPcByBladeID(const char *name, u32 bladeID, u32 param2) {
+  if ((flags & FLAG_CLONE_MODE) == 0) {
+    return createGfObj(name, getDriverByBlade(bladeID));
+  }
+  return createGfObj(name, CHARA_TYPE_DRIVER, getDriverIdByBlade(bladeID), param2, 0);
+}
+
+gf::GF_OBJ_HANDLE *ObjectList::getDriverByBlade(u32 bladeID) {
+  for (u32 i = 1; i <= ObjectPartyList::MEMBER_COUNT; i++) {
+    gf::GF_OBJ_HANDLE *driver = mm::mtl::Singleton<ObjectPartyList>::getPtr()->getDriver(i);
+    gf::GF_OBJ_HANDLE *blade = mm::mtl::Singleton<ObjectPartyList>::getPtr()->getBlade(i);
+    if (gf::GfObjAcc(blade).getBdatId() == bladeID) {
+      return driver;
+    }
+  }
+  return gf::GfGameManager::getPartyLeaderDriver();
+}
+
 u32 ObjectList::getDriverIdByBlade(u32 bladeID) const {
   u32 driverID = gf::GfDataBlade::getCreator(bladeID);
   return driverID == 0 ? 3 : driverID;
+}
+
+ObjectChara *ObjectList::createGfObjBladeByPcID(const char *name, u32 pcID, u32 param2) {
+  if ((flags & FLAG_CLONE_MODE) == 0) {
+    return createGfObj(name, getBladeByDriver(pcID));
+  }
+  return createGfObj(name, CHARA_TYPE_BLADE, getBladeIdByDriver(pcID), param2, 0);
+}
+
+gf::GF_OBJ_HANDLE *ObjectList::getBladeByDriver(u32 driverID) {
+  for (u32 i = 1; i <= ObjectPartyList::MEMBER_COUNT; i++) {
+    gf::GF_OBJ_HANDLE *driver = mm::mtl::Singleton<ObjectPartyList>::getPtr()->getDriver(i);
+    gf::GF_OBJ_HANDLE *blade = mm::mtl::Singleton<ObjectPartyList>::getPtr()->getBlade(i);
+    if (gf::GfObjAcc(driver).getBdatId() == driverID) {
+      return blade;
+    }
+  }
+  return gf::INVALID_HANDLE;
 }
 
 u32 ObjectList::getBladeIdByDriver(u32 driverID) const {
@@ -304,6 +344,21 @@ ObjectLight *ObjectList::getLight(u32 index) {
     return nullptr;
   }
   return static_cast<ObjectLight *>(getChild(mLightTree, index));
+}
+
+bool ObjectList::isUsingEffect() {
+  for (u32 i = 0; i < mEffectCount; i++) {
+    if (static_cast<ObjectEffect *>(getEffect(i))->getEffCount() != 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void ObjectList::stopEffect() {
+  for (u32 i = 0; i < mEffectCount; i++) {
+    static_cast<ObjectEffect *>(getEffect(i))->stop();
+  }
 }
 
 Object *ObjectList::searchByPathSub(Object *object, const char *path) {
@@ -387,6 +442,39 @@ bool ObjectList::getPathByObjSub(mm::mtl::FixStr<256> &path, const char *parentP
     }
   }
   return false;
+}
+
+void ObjectList::listupObject(mm::mtl::FixedVector<u32, 256> &list, u32 type, bool isAppend) {
+  if (!isAppend) {
+    list.clear();
+  }
+  if (mCharaTree == nullptr) {
+    return;
+  }
+  for (Object *object = mCharaTree->getChild(); object != nullptr && list.size() < list.capacity(); object = object->getNext()) {
+    if (object->getType() != OBJTYPE_CHARA) {
+      continue;
+    }
+    gf::GF_OBJ_HANDLE *handle = static_cast<ObjectChara *>(object)->getCharaObj()->getHandle();
+    if (handle == gf::INVALID_HANDLE) {
+      continue;
+    }
+    gf::GfObjAcc acc(handle);
+    if (acc.getType() == type) {
+      list.push_back(acc.getBdatId());
+    }
+  }
+}
+
+void ObjectList::dump() {
+  if (mCharaTree == nullptr) {
+    return;
+  }
+  for (Object *object = mCharaTree->getChild(); object != nullptr; object = object->getNext()) {
+    if (object->getType() == OBJTYPE_CHARA) {
+      gf::GfObjAcc acc(static_cast<ObjectChara *>(object)->getCharaObj()->getHandle());
+    }
+  }
 }
 
 } // namespace event
