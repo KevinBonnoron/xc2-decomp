@@ -29,6 +29,8 @@ public:
   typedef void (CGLibAccUtilTexture::*WriteF32Channel)(const f32 *values);
   typedef void (CGLibAccUtilTexture::*WriteIntChannel)(const int *values);
 
+  CGLibAccUtilTexture() : _90() {}
+
   void setup1DTexutreInfo(CGLibTextureBuffer &texture);
   void textureFlush(CGLibTextureBuffer &texture);
   void getF32(f32 *values, u32 x, u32 y);
@@ -127,6 +129,7 @@ public:
   u8 *m_buffer;
   u8 *m_pixel;
   bool m_isLinear;
+  u64 _90;
 };
 
 static_assert(offsetof(CGLibAccUtilTexture, m_chanel) == 0x40, "");
@@ -135,5 +138,102 @@ static_assert(offsetof(CGLibAccUtilTexture, m_sectorWidth) == 0x5c, "");
 static_assert(offsetof(CGLibAccUtilTexture, m_bufferSize) == 0x74, "");
 static_assert(offsetof(CGLibAccUtilTexture, m_buffer) == 0x78, "");
 static_assert(offsetof(CGLibAccUtilTexture, m_isLinear) == 0x88, "");
+
+class CGLibAcc1DTexture : public CGLibAccUtilTexture {
+public:
+  CGLibAcc1DTexture();
+  ~CGLibAcc1DTexture();
+  bool lock(CGLibTextureBuffer &texture);
+  void unlock();
+  void getFloat(f32 &r, u32 x);
+  void getFloat(f32 &r, f32 &g, u32 x);
+  void getFloat(f32 &r, f32 &g, f32 &b, u32 x);
+  void getFloat(f32 &r, f32 &g, f32 &b, f32 &a, u32 x);
+  void getInt(int &r, u32 x);
+  void getInt(int &r, int &g, u32 x);
+  void getInt(int &r, int &g, int &b, u32 x);
+  void getInt(int &r, int &g, int &b, int &a, u32 x);
+  void setFloat(f32 r, u32 x);
+  void setFloat(f32 r, f32 g, u32 x);
+  void setFloat(f32 r, f32 g, f32 b, u32 x);
+  void setFloat(f32 r, f32 g, f32 b, f32 a, u32 x);
+  void setInt(int r, u32 x);
+  void setInt(int r, int g, u32 x);
+  void setInt(int r, int g, int b, u32 x);
+  void setInt(int r, int g, int b, int a, u32 x);
+
+  bool m_isLock;
+  bool m_isDirty;
+  CGLibTextureBuffer *m_pTexture;
+};
+
+class CGLibAcc2DTexture : public CGLibAccUtilTexture {
+public:
+  CGLibAcc2DTexture();
+  ~CGLibAcc2DTexture();
+  bool lock(CGLibTextureBuffer &texture);
+  bool lockMipmap(CGLibTextureBuffer &texture, u32 mipmap);
+  bool lockCubemap(CGLibTextureBuffer &texture, u32 face);
+  bool lockCubemapMipmap(CGLibTextureBuffer &texture, u32 face, u32 mipmap);
+  void unlock();
+  void getFloat(f32 &r, u32 x, u32 y);
+  void getFloat(f32 &r, f32 &g, u32 x, u32 y);
+  void getFloat(f32 &r, f32 &g, f32 &b, u32 x, u32 y);
+  void getFloat(f32 &r, f32 &g, f32 &b, f32 &a, u32 x, u32 y);
+  void getInt(int &r, u32 x, u32 y);
+  void getInt(int &r, int &g, u32 x, u32 y);
+  void getInt(int &r, int &g, int &b, u32 x, u32 y);
+  void getInt(int &r, int &g, int &b, int &a, u32 x, u32 y);
+  void setFloat(f32 r, u32 x, u32 y);
+  void setFloat(f32 r, f32 g, u32 x, u32 y);
+  void setFloat(f32 r, f32 g, f32 b, u32 x, u32 y);
+  void setFloat(f32 r, f32 g, f32 b, f32 a, u32 x, u32 y);
+  void setInt(int r, u32 x, u32 y);
+  void setInt(int r, int g, u32 x, u32 y);
+  void setInt(int r, int g, int b, u32 x, u32 y);
+  void setInt(int r, int g, int b, int a, u32 x, u32 y);
+
+  u32 m_mipmap;
+  u32 m_face;
+  bool m_isLock;
+  bool m_isDirty;
+  bool m_isCubemap;
+  CGLibTextureBuffer *m_pTexture;
+};
+
+class CGLibAcc3DTexture : public CGLibAccUtilTexture {
+public:
+  CGLibAcc3DTexture();
+  ~CGLibAcc3DTexture();
+  bool lock(CGLibTextureBuffer &texture);
+  void unlock();
+  void getFloat(f32 &r, u32 x, u32 y, u32 z);
+  void getFloat(f32 &r, f32 &g, u32 x, u32 y, u32 z);
+  void getFloat(f32 &r, f32 &g, f32 &b, u32 x, u32 y, u32 z);
+  void getFloat(f32 &r, f32 &g, f32 &b, f32 &a, u32 x, u32 y, u32 z);
+  void getInt(int &r, u32 x, u32 y, u32 z);
+  void getInt(int &r, int &g, u32 x, u32 y, u32 z);
+  void getInt(int &r, int &g, int &b, u32 x, u32 y, u32 z);
+  void getInt(int &r, int &g, int &b, int &a, u32 x, u32 y, u32 z);
+  void setFloat(f32 r, u32 x, u32 y, u32 z);
+  void setFloat(f32 r, f32 g, u32 x, u32 y, u32 z);
+  void setFloat(f32 r, f32 g, f32 b, u32 x, u32 y, u32 z);
+  void setFloat(f32 r, f32 g, f32 b, f32 a, u32 x, u32 y, u32 z);
+  void setInt(int r, u32 x, u32 y, u32 z);
+  void setInt(int r, int g, u32 x, u32 y, u32 z);
+  void setInt(int r, int g, int b, u32 x, u32 y, u32 z);
+  void setInt(int r, int g, int b, int a, u32 x, u32 y, u32 z);
+
+  bool m_isDirty;
+  CGLibTextureBuffer *m_pTexture;
+};
+
+static_assert(offsetof(CGLibAcc1DTexture, m_isLock) == 0x98, "");
+static_assert(offsetof(CGLibAcc1DTexture, m_pTexture) == 0xa0, "");
+static_assert(offsetof(CGLibAcc2DTexture, m_mipmap) == 0x98, "");
+static_assert(offsetof(CGLibAcc2DTexture, m_isLock) == 0xa0, "");
+static_assert(offsetof(CGLibAcc2DTexture, m_pTexture) == 0xa8, "");
+static_assert(offsetof(CGLibAcc3DTexture, m_isDirty) == 0x98, "");
+static_assert(sizeof(CGLibAcc3DTexture) == 0xa8, "");
 
 } // namespace grlib
