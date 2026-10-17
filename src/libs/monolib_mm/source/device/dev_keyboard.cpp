@@ -1,5 +1,6 @@
 #include "ml/dev_keyboard.h"
 
+#include "ml/reslist.h"
 #include "ml/work_root.h"
 
 namespace ml {
@@ -199,7 +200,7 @@ bool DevKeyboard::wkStandbyLogin() {
 }
 
 bool DevKeyboard::wkStandbyLogout() {
-  if (m_childCount != 0) {
+  if (m_children.size() != 0) {
     return false;
   }
 

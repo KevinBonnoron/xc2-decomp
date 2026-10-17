@@ -273,9 +273,9 @@ void DevGraph::setVSync(int vsync) {
   dg::s_nVSync = vsync;
 }
 
-bool DevGraph::wkStandby() {
+void DevGraph::wkStandby() {
   WorkObj::wkStandby();
-  return ErrViewer::standby();
+  ErrViewer::standby();
 }
 
 void DevGraph::wkUpdate() { ErrViewer::update(); }

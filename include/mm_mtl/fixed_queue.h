@@ -83,6 +83,13 @@ public:
     return buffer()[(mFront + index) % N];
   }
 
+  // __LINE__ must be 376 as in the original header: it is the line argument of the assert.
+#line 375
+  const T &operator[](size_t index) const {
+    MM_ASSERT(index < N);
+    return reinterpret_cast<const T *>(mBuffer)[(mFront + index) % N];
+  }
+
   T &front() {
     MM_ASSERT(!empty());
     return buffer()[mFront];
