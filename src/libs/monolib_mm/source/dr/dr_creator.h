@@ -2,6 +2,7 @@
 #include "types.h"
 
 namespace ml {
+class DrCalcClipObj;
 class DrEnvColiObj;
 class DrEnvironmentObj;
 class DrGpuCheckBase;
@@ -19,6 +20,7 @@ public:
   DrMdoGrpObj *createInstantGrp(int num, u32 flags);
   DrEnvironmentObj *createLgt(const void *data, int screen);
   DrEnvColiObj *createEnvColi(const void *data, int screen);
+  DrCalcClipObj *createClipObj(const void *data, int screen);
   DrGpuCheckBase *createGpuCheckObj(int type);
   DrGpuCheckBase *createEffGpuCheckObj(int type);
   DrStmReadObj *createStmLoadObj(const char *path);

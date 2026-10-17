@@ -11,8 +11,8 @@ class DrLightMan;
 void DrEnvironmentObj::release() { m_flags |= FLAG_RELEASE << DrMan::s_nDblStockIdx; }
 
 DrEnvironmentObj::DrEnvironmentObj(DrMan *drMan, DrLightMan *lightMan, DrFogMan *fogMan)
-    : m_prev(nullptr), m_next(nullptr), m_drMan(drMan), m_lightMan(lightMan), m_fogMan(fogMan), _70(nullptr), _78(0), m_frame(0.0f), m_frameSpd(1.0f),
-      m_maxFrame(0.0f), m_flags(0), _90(0) {
+    : m_prev(nullptr), m_next(nullptr), m_drMan(drMan), m_lightMan(lightMan), m_fogMan(fogMan), m_offsetPos(0.0f, 0.0f, 0.0f), m_frame(0.0f),
+      m_frameSpd(1.0f), m_maxFrame(0.0f), m_flags(0), m_group(0) {
   m_matrix = mm::Mat44::identity;
 }
 

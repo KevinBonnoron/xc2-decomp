@@ -29,6 +29,7 @@ public:
     FLAG_DISP = 1 << 0,
     FLAG_CLIP = 1 << 1,
     FLAG_WARP = 1 << 4,
+    FLAG_SEAM = 1 << 5,
     FLAG_FRAME_SPD = 1 << 6,
     FLAG_DISP_NEXT = 1 << 16,
   };
