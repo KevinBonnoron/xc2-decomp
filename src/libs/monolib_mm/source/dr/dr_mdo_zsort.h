@@ -31,4 +31,9 @@ static_assert(offsetof(DrMdoZSortObj, m_next) == 0x08, "");
 static_assert(offsetof(DrMdoZSortObj, m_parent) == 0x10, "");
 static_assert(offsetof(DrMdoZSortObj, m_owner) == 0x18, "");
 
+class DrMdoZSortMan {
+public:
+  void setViewCloud(DrMdoZSortObj *object);
+};
+
 } // namespace ml
