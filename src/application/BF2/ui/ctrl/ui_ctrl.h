@@ -25,7 +25,8 @@ public:
   void stop();
   void start(UIObject *object, f32 duration, const MethodList &methods, bool loop);
 
-  bool isBusy() const { return object != nullptr; }
+  bool isFinished() const { return duration <= time; }
+  bool isBusy() const { return loop || !isFinished(); }
 
   UIObject *object;
   f32 time;
