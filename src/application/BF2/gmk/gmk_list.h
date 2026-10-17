@@ -59,7 +59,7 @@ public:
   virtual bool updateImmediate() = 0;
   virtual void debugUpdateMmf() = 0;
   virtual void debugDraw() const = 0;
-  virtual u32 debugGetDocId() const;
+  virtual u32 debugGetDocId() const { return 0; }
 };
 
 template <typename T, typename BDAT_INFO, u32 MAGIC, u32 VERSION, typename GOB> class TGmkList : public IGmkList {
