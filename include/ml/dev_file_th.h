@@ -1,5 +1,6 @@
 #pragma once
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
 #include "types.h"
 
 namespace ml {
@@ -11,6 +12,7 @@ class EventFileTh {
 public:
   enum {
     TYPE_COMPLETE = 2,
+    TYPE_VALID = 9,
   };
 
   int type;
@@ -43,6 +45,8 @@ static_assert(sizeof(DevFileParamTh) == 0x70, "");
 
 class DevFileTh {
 public:
+  static void normalizeDvdFileName(mm::mtl::FixStr<256> &fileName, const char *path);
+  static void checkValidFile(const char *path, IWorkEvent *event);
   static bool isInitialized();
   static bool writeFileBlock(const char *path, const void *data, u32 size, int priority);
   static FileHandleTh *rfOpen(const DevFileParamTh &param);

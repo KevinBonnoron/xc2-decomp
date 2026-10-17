@@ -3,6 +3,7 @@
 #include "framework/asset/asset_data.h"
 #include "framework/asset/asset_loader.h"
 #include "framework/resource/resource_manager.h"
+#include "ml/dev_file_th.h"
 #include "mm_mtl/allocator.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
@@ -10,6 +11,7 @@
 #include "mtl/mem_manager.h"
 
 namespace fw {
+enum eResourceType : int;
 
 CommonResource *CommonResource::search(mtl::ALLOC_HANDLE handle, const char *path) {
   return static_cast<CommonResource *>(ResourceManager::get()->searchResource(0, handle, path));
@@ -115,6 +117,68 @@ CommonResource::~CommonResource() {
     }
 
     mm::mtl::safeRelease(asset);
+  }
+}
+
+void CommonResource::update() {
+  while (state != STATE_LOADED) {
+    switch (state) {
+    case STATE_NONE:
+      if (handle.isValid()) {
+        asset = AssetData::CreateFromCache(handle, path.c_str());
+      } else if (allocator != nullptr) {
+        asset = AssetData::CreateFromCache(allocator, path.c_str());
+      }
+
+      if (asset != nullptr) {
+        if (isSafe) {
+          ResourceManager::get()->addSafeObject(asset, static_cast<eResourceType>(0));
+        }
+
+        state = STATE_LOADED;
+      } else {
+        mm::mtl::FixStr<256> fileName;
+        ml::DevFileTh::normalizeDvdFileName(fileName, path.c_str());
+        if (handle.isValid()) {
+          loader = AssetLoader::Create(handle, fileName.c_str(), priority, option);
+        } else if (allocator != nullptr) {
+          loader = AssetLoader::Create(allocator, fileName.c_str(), priority, option);
+        }
+
+        state = static_cast<State>(state + 1);
+      }
+      break;
+    case STATE_LOADING:
+      if (loader == nullptr) {
+        state = STATE_LOADED;
+        break;
+      }
+
+      if (loader->handle != nullptr) {
+        return;
+      }
+
+      if (loader->size != -2 && loader->isExist()) {
+        loader->isBufferOwner = false;
+        if (handle.isValid()) {
+          asset = AssetData::AssignFromMemory(handle, loader->buffer, loader->size, loader->name.c_str(), loader->timeStamp);
+        } else if (allocator != nullptr) {
+          asset = AssetData::AssignFromMemory(allocator, loader->buffer, loader->size, loader->name.c_str(), loader->timeStamp);
+        }
+
+        if (isSafe) {
+          ResourceManager::get()->addSafeObject(asset, static_cast<eResourceType>(0));
+        }
+      }
+
+      if (loader != nullptr) {
+        loader->Release();
+        loader = nullptr;
+      }
+      break;
+    default:
+      break;
+    }
   }
 }
 
