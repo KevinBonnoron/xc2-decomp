@@ -78,6 +78,8 @@
 #include "event/chara_set_pos.cpp"
 #include "event/chara_set_rot.cpp"
 #include "event/chara_walk_calculator.cpp"
+#include "event/chara_liner_pos.cpp"
+#include "event/chara_liner_rot.cpp"
 #include "event/chara_set_idle.cpp"
 #include "event/chara_play_action_auto.cpp"
 #include "event/chara_play_action.cpp"
