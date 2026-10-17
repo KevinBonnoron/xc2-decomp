@@ -6,6 +6,10 @@
 #include "mm_mtl/rtti.h"
 #include "types.h"
 
+namespace fw {
+class SoundPack;
+}
+
 namespace gf {
 
 struct GF_ASSET_HANDLE;
@@ -113,6 +117,7 @@ public:
   static void setTalking(GF_OBJ_HANDLE *handle, bool isTalking);
   static bool isTalking(GF_OBJ_HANDLE *handle);
   static bool isSearchEmptyResource(GF_OBJ_HANDLE *handle);
+  static bool getSePackAll(mm::mtl::FixedVector<fw::SoundPack *, 4> &packs, GF_OBJ_HANDLE *handle);
   static bool getMobSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slots, GF_OBJ_HANDLE *handle);
   static bool isTrinityBlade(GF_OBJ_HANDLE *handle);
   static bool isUpdateComponent(const GfObj *obj);

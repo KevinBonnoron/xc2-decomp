@@ -6,6 +6,7 @@
 #include <stddef.h>
 
 namespace fw {
+class SoundPack;
 struct UpdateInfo;
 } // namespace fw
 
@@ -26,6 +27,8 @@ public:
   void gevBattleEnd();
   void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
   void gevPause(u32 resumeBits, u32 pauseBits);
+  fw::SoundPack *getCommonPack();
+  fw::SoundPack *getMapPack();
 
   u8 _08[0xc4 - 0x08];
   mm::mtl::FixStr<64> mapSePackName;
