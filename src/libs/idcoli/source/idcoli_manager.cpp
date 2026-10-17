@@ -1,4 +1,9 @@
+#include <stddef.h>
+
 #include "idcoli/idcoli.h"
+#include "idcoli/idcoli_mem_handle_allocator.h"
+#include "mtl/alloc_handle.h"
+#include "mtl/mem_manager.h"
 #include "types.h"
 
 namespace ml {
@@ -6,6 +11,24 @@ class WinProc;
 } // namespace ml
 
 namespace idcoli {
+
+IDColiMemHandleAllocator::IDColiMemHandleAllocator() {}
+
+IDColiMemHandleAllocator::IDColiMemHandleAllocator(mtl::ALLOC_HANDLE handle) : m_handle(handle) {}
+
+void IDColiMemHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { m_handle = handle; }
+
+mtl::ALLOC_HANDLE IDColiMemHandleAllocator::getMemHandle() const { return m_handle; }
+
+void *IDColiMemHandleAllocator::allocate(size_t size, size_t alignment) {
+  return mtl::MemManager::allocate(m_handle, size, alignment, false, "no name", 0);
+}
+
+void IDColiMemHandleAllocator::deallocate(void *pointer) {
+  if (pointer != nullptr) {
+    mtl::MemManager::deallocate(pointer, 0, false);
+  }
+}
 
 void IDColiManager::update() {
   addDelUpdate();

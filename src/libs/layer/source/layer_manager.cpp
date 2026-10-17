@@ -1,4 +1,6 @@
 #include "layer/layer_manager.h"
+#include "layer/layer_mem_handle_allocator.h"
+#include "mtl/mem_manager.h"
 
 #include "dr/dr_draw_work_info.h"
 #include "layer/layer_font_manager.h"
@@ -7,6 +9,24 @@
 #include "layer/layer_shd_manager.h"
 
 namespace layer {
+
+LayerMemHandleAllocator::LayerMemHandleAllocator() {}
+
+LayerMemHandleAllocator::LayerMemHandleAllocator(mtl::ALLOC_HANDLE handle) : m_handle(handle) {}
+
+void LayerMemHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { m_handle = handle; }
+
+mtl::ALLOC_HANDLE LayerMemHandleAllocator::getMemHandle() const { return m_handle; }
+
+void *LayerMemHandleAllocator::allocate(size_t size, size_t alignment) {
+  return mtl::MemManager::allocate(m_handle, size, alignment, false, "no name", 0);
+}
+
+void LayerMemHandleAllocator::deallocate(void *pointer) {
+  if (pointer != nullptr) {
+    mtl::MemManager::deallocate(pointer, 0, false);
+  }
+}
 
 void LayerManager::beginFastSetup() {
   m_flags |= 1;
