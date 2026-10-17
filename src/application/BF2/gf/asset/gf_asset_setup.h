@@ -3,6 +3,7 @@
 
 #include "gf/asset/gf_asset_def.h"
 #include "gf/asset/gf_asset_path.h"
+#include "gf/map/gf_map_manager.h"
 #include "gf/object/gf_append.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
@@ -27,12 +28,16 @@ class GfInitParamBlade;
 class GfInitParamDriver;
 class GfInitParamEnWeapon;
 class GfInitParamEnemy;
+class GfInitParamEventObj;
 class GfInitParamExtra;
 class GfInitParamFobj;
 class GfInitParamGimmick;
+class GfInitParamMap;
 class GfInitParamMapObj;
+class GfInitParamMapSeamless;
 class GfInitParamMob;
 class GfInitParamNpc;
+class GfInitParamUiObj;
 class GfInitParamWeapon;
 
 class GfAssetSetup {
@@ -590,5 +595,106 @@ public:
 };
 
 static_assert(offsetof(GfAssetSetupExtra, append) == 0x200, "");
+
+class GfAssetSetupMapSeamless : public GfAssetSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  GfAssetSetupMapSeamless();
+  void setup(GF_ASSET_HANDLE *handle, const GfInitParamMapSeamless &param);
+  const char *getMdlFile(GfAssetType type) override;
+  virtual const char *getColFile(GfAssetType type);
+  virtual const char *getNaviFile(GfAssetType type);
+  const char *getEfbFile(GfAssetType type) override;
+  virtual const char *getGIblFile(GfAssetType type);
+  virtual const char *getLIblFile(GfAssetType type);
+  void requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handle) override;
+  const char *getPath() const override;
+  const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
+  GfFileIdx getMdlSlot() const override { return static_cast<GfFileIdx>(0); }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_MAP; }
+  virtual GfFileIdx getColSlot() const { return MAP_FILE_IDX_COLLISION; }
+  virtual GfFileIdx getNaviSlot() const { return static_cast<GfFileIdx>(2); }
+  virtual GfFileIdx getEpkSlot() const { return static_cast<GfFileIdx>(6); }
+  virtual GfFileIdx getGIblSlot() const { return static_cast<GfFileIdx>(7); }
+  virtual GfFileIdx getLIblSlot() const { return static_cast<GfFileIdx>(8); }
+
+  bool useMapId;
+  mm::mtl::FixStr<128> modelName;
+  mm::mtl::FixStr<128> effectPackName;
+};
+
+static_assert(offsetof(GfAssetSetupMapSeamless, useMapId) == 0x1fc, "");
+static_assert(offsetof(GfAssetSetupMapSeamless, modelName) == 0x200, "");
+static_assert(offsetof(GfAssetSetupMapSeamless, effectPackName) == 0x284, "");
+
+class GfAssetSetupMapMdl : public GfAssetSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  GfAssetSetupMapMdl();
+  void setup(GF_ASSET_HANDLE *handle, const GfInitParamMap &param);
+  const char *getMdlFile(GfAssetType type) override;
+  virtual const char *getColFile(GfAssetType type);
+  virtual const char *getLodFile(GfAssetType type);
+  virtual const char *getMpfFile(GfAssetType type);
+  virtual const char *getLgtFile(GfAssetType type);
+  virtual const char *getGIblFile(GfAssetType type);
+  virtual const char *getAcoFile(GfAssetType type);
+  virtual const char *getClpFile(GfAssetType type);
+  void requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handle) override;
+  const char *getPath() const override;
+  const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
+  GfFileIdx getMdlSlot() const override { return static_cast<GfFileIdx>(0); }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_MAP; }
+  virtual GfFileIdx getColSlot() const { return MAP_FILE_IDX_COLLISION; }
+  virtual GfFileIdx getLodSlot() const { return static_cast<GfFileIdx>(4); }
+  virtual GfFileIdx getMpfSlot() const { return static_cast<GfFileIdx>(5); }
+  virtual GfFileIdx getLgtSlot() const { return static_cast<GfFileIdx>(3); }
+  virtual GfFileIdx getGIblSlot() const { return static_cast<GfFileIdx>(7); }
+  virtual GfFileIdx getAcoSlot() const { return static_cast<GfFileIdx>(9); }
+  virtual GfFileIdx getClpSlot() const { return static_cast<GfFileIdx>(10); }
+
+  mm::mtl::FixStr<256> path;
+};
+
+static_assert(offsetof(GfAssetSetupMapMdl, path) == 0x1fc, "");
+
+class GfAssetSetupEventObj : public GfAssetSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  GfAssetSetupEventObj();
+  void setup(GF_ASSET_HANDLE *handle, const GfInitParamEventObj &param);
+  const char *getMdlFile(GfAssetType type) override;
+  const char *getArcFile(GfAssetType type) override;
+  const char *getEfpFile(GfAssetType type) override;
+  const char *getEabFile(GfAssetType type) override;
+  const char *getEfbFile(GfAssetType type) override;
+  const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
+  const char *getAssetCategoryName() const override { return "Evt"; }
+  GfFileIdx getMdlSlot() const override { return static_cast<GfFileIdx>(0); }
+  GfFileIdx getArcSlot() const override { return static_cast<GfFileIdx>(1); }
+  GfFileIdx getEfpSlot() const override { return static_cast<GfFileIdx>(2); }
+  GfFileIdx getEabSlot() const override { return static_cast<GfFileIdx>(3); }
+  GfFileIdx getEfbSlot() const override { return static_cast<GfFileIdx>(4); }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_TEMPORARY; }
+};
+
+class GfAssetSetupUiObj : public GfAssetSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  GfAssetSetupUiObj();
+  void setup(GF_ASSET_HANDLE *handle, const GfInitParamUiObj &param);
+  const char *getMdlFile(GfAssetType type) override;
+  const char *getArcFile(GfAssetType type) override;
+  const char *getPath() const override;
+  const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
+  const char *getAssetCategoryName() const override { return "Sal"; }
+  GfFileIdx getMdlSlot() const override { return static_cast<GfFileIdx>(0); }
+  GfFileIdx getArcSlot() const override { return static_cast<GfFileIdx>(1); }
+  GfAssetType getAssetType() const override { return ASSET_TYPE_TEMPORARY; }
+};
 
 } // namespace gf

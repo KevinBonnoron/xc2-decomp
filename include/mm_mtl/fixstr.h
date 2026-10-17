@@ -92,6 +92,11 @@ public:
   int capacity() const { return LEN - 1; }
   int length() const { return m_nLen; }
 
+  void resize(int len) {
+    mData[len] = 0;
+    m_nLen = len;
+  }
+
 private:
   char mData[LEN];
   int m_nLen;
