@@ -1,5 +1,10 @@
 #pragma once
+#include "grlib/cglib_render_target.h"
 #include "types.h"
+
+namespace mm {
+struct Col4;
+} // namespace mm
 
 enum GrlCompare {
   GRL_COMPARE_NEVER,
@@ -25,11 +30,15 @@ enum GrlStencil {
 
 namespace grlib {
 
+class CGLibColorBuffer;
+
 class CGLibDepthCtl {
 public:
   static void setDepthControl(u8 isTest, u8 isWrite, GrlCompare compare);
   static void setDepthStencilControl(u8 isTest, u8 isWrite, GrlCompare compare, u8 isStencil, GrlCompare stencilCompare, u32 ref, u32 mask,
                                      u32 writeMask, GrlStencil fail, GrlStencil depthFail, GrlStencil pass);
+  static void clearColorBuffer(CGLibColorBuffer &colorBuffer, const mm::Col4 &color, GrlClaerMask mask);
+  static void clearIntColorBuffer(CGLibColorBuffer &colorBuffer, const int *color, GrlClaerMask mask);
 };
 
 } // namespace grlib
