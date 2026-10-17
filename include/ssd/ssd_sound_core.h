@@ -10,6 +10,8 @@ namespace ssd {
 class SoundBank;
 class SoundCategory;
 class SoundEffecter;
+class SoundActor;
+class SoundHandle;
 class SoundListener;
 class VoiceHandle;
 
@@ -112,6 +114,13 @@ public:
   Result SetCategory(const SoundCategory &category);
   Result ResetCategory(int id);
   Result GetCategory(int id, SoundCategory *category) const;
+  bool IsPlayActor(const SoundActor *actor) const;
+  void StopActor(SoundActor *actor, f32 fadeTime);
+  void PauseActor(SoundActor *actor, bool isPause, f32 fadeTime);
+  int CountPlaySoundHandleActor(const SoundActor *actor) const;
+  SoundHandle *GetPlaySoundHandle(const SoundActor *actor, int index) const;
+  void ConnectActor(SoundActor *actor);
+  void DisconnectActor(SoundActor *actor);
   void UpdateGameFrame(f32 deltaTime);
 
   u8 _011[0x270 - 0x011];

@@ -1,6 +1,8 @@
 #pragma once
 #include <stddef.h>
 
+#include "ssd/ssd_behavior.h"
+#include "ssd/ssd_result.h"
 #include "types.h"
 
 namespace ssd {
@@ -36,45 +38,90 @@ public:
   virtual void FreeStream(void *pointer) = 0;
 };
 
-class SoundActor {
-public:
-  virtual ~SoundActor();
-  virtual void Init();
-  virtual void Quit();
-  virtual long Play(SoundHandle *handle, const SoundEntry *entry, f32 volume, f32 fadeTime);
-  virtual void Stop(f32 fadeTime);
-  virtual void Pause(bool isPause, f32 fadeTime);
-  virtual void UpdateGameFrame(f32 deltaTime);
-
-  void SetVolume(f32 volume, f32 fadeTime);
-  void SetCategoryId(int category);
-
-  u8 _08[0x44 - 0x08];
-  Vec3 position;
-  u8 _50[0x78 - 0x50];
+namespace ObjectType {
+enum Id {
+  WAVE_SOURCE = 1,
+  SOUND_ENTRY = 2,
+  SOUND_BANK = 3,
+  SOUND_LISTENER = 6,
+  SOUND_HANDLE = 7,
+  SOUND_ACTOR = 8,
+  SOUND_ACTOR_3D = 9,
+  VOICE_HANDLE = 10,
+  FILE_STREAM = 12,
 };
-
-class SoundActor3D : public SoundActor {
-public:
-  void Init() override;
-  void Quit() override;
-  long Play(SoundHandle *handle, const SoundEntry *entry, f32 volume, f32 fadeTime) override;
-  void UpdateGameFrame(f32 deltaTime) override;
-  void SetListener(const SoundListener *listener);
-  void SetPosition(const Vec3 &position);
-  void SetVelocity(const Vec3 &velocity);
-};
-
-static_assert(offsetof(SoundActor3D, position) == 0x44, "");
-static_assert(sizeof(SoundActor3D) == 0x78, "");
+} // namespace ObjectType
 
 class Object {
 public:
+  Object(ObjectType::Id type);
   virtual ~Object() {}
 
   u32 type;
   u8 _0c[0x18 - 0x0c];
 };
+
+class SoundActor : public Object, public List<SoundActor>::Node {
+public:
+  SoundActor();
+  SoundActor(ObjectType::Id type);
+  virtual ~SoundActor();
+  virtual Result Init();
+  virtual Result Quit();
+  virtual long Play(SoundHandle *handle, const SoundEntry *entry, f32 volume, f32 fadeTime);
+  virtual Result Stop(f32 fadeTime);
+  virtual Result Pause(bool isPause, f32 fadeTime);
+  virtual void UpdateGameFrame(f32 deltaTime);
+
+  bool IsPlay() const;
+  void SetPitch(f32 pitch, f32 fadeTime);
+  void SetVolume(f32 volume, f32 fadeTime);
+  void SetPan(f32 pan, f32 fadeTime);
+  void SetCategoryId(int category);
+  int CountPlaySoundHandle() const;
+  SoundHandle *GetPlaySoundHandle(int index) const;
+
+  bool isInit;
+  bool isConnect;
+  bool is3D;
+  u8 _33[0x38 - 0x33];
+  f32 pitch;
+  f32 volume;
+  u8 _40[0x44 - 0x40];
+};
+
+static_assert(offsetof(SoundActor, isInit) == 0x30, "");
+static_assert(offsetof(SoundActor, pitch) == 0x38, "");
+static_assert(sizeof(SoundActor) == 0x48, "");
+
+class SoundActor3D : public SoundActor {
+public:
+  SoundActor3D();
+  ~SoundActor3D() override;
+  Result Init() override;
+  long Play(SoundHandle *handle, const SoundEntry *entry, f32 volume, f32 fadeTime) override;
+  void SetListener(const SoundListener *listener);
+  void SetPosition(const Vec3 &position);
+  void SetPosition(f32 x, f32 y, f32 z);
+  void SetVelocity(const Vec3 &velocity);
+  void SetVelocity(f32 x, f32 y, f32 z);
+  void UpdateGameFrame(f32 deltaTime) override;
+  Result Quit() override;
+
+  Vec3 position;
+  Vec3 velocity;
+  Vec3 prevPosition;
+  u8 _68[0x69 - 0x68];
+  bool isPositionUpdate;
+  u8 _6a[0x6b - 0x6a];
+  bool isVelocityUpdate;
+  const SoundListener *listener;
+};
+
+static_assert(offsetof(SoundActor3D, position) == 0x44, "");
+static_assert(offsetof(SoundActor3D, prevPosition) == 0x5c, "");
+static_assert(offsetof(SoundActor3D, listener) == 0x70, "");
+static_assert(sizeof(SoundActor3D) == 0x78, "");
 
 class SoundGroup : public Object {
 public:
@@ -139,6 +186,7 @@ public:
   int GetState() const;
   bool HasEnded() const;
   bool IsPlay() const;
+  long Play(const SoundEntry *entry, SoundActor *actor, f32 volume, f32 fadeTime);
   long Prepare(const SoundEntry *entry);
   long Start(SoundActor *actor, f32 volume, f32 fadeTime);
   long Pause(bool isPause, f32 fadeTime);
