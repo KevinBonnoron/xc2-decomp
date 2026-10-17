@@ -11,8 +11,10 @@ class AGmkBase;
 
 class ScenarioFlagCond {
 public:
+  ScenarioFlagCond(u16 min, u16 max) : min(min), max(max) {}
   ScenarioFlagCond(const CBdatWrapper &bdat, int id, const AGmkBase &gmk);
   ScenarioFlagCond(const CBdatWrapper &bdat, int id, const char *prefix);
+  bool isEnable() const { return max != 0; }
   bool isMatch() const;
 
   u16 min;
@@ -23,8 +25,10 @@ static_assert(sizeof(ScenarioFlagCond) == 0x4, "");
 
 class QuestFlagCond {
 public:
+  QuestFlagCond(u16 quest, u8 minState, u8 maxState) : quest(quest), minState(minState), maxState(maxState) {}
   QuestFlagCond(const CBdatWrapper &bdat, int id, const AGmkBase &gmk);
   QuestFlagCond(const CBdatWrapper &bdat, int id, const char *prefix);
+  bool isEnable() const { return quest != 0 && minState <= maxState; }
   bool isMatch() const;
 
   u16 quest;
