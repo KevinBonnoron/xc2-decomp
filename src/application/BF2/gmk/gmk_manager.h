@@ -155,4 +155,6 @@ const char *debugGetGmkFileName(const AGmkBase &gmk);
 const char *debugGetGmkBdatRowName(const AGmkBase &gmk);
 const char *debugGetGmkBdatSheetName(const AGmkBase &gmk);
 
+inline bool debugIsDispGmkType(GmkType type) { return true; }
+
 } // namespace gmk

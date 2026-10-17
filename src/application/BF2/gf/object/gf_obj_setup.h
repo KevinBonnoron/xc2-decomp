@@ -4,6 +4,7 @@
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/object/gf_init_param.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
 
 namespace mm {
@@ -24,6 +25,8 @@ public:
   virtual u32 getFootStep() const;
   virtual u32 getFootStepEffect() const;
 
+  void setInitialScale(f32 scale);
+
   bool isEvent() const {
     switch (characterType) {
     case CHARACTER_TYPE_EVENT:
@@ -41,7 +44,8 @@ public:
   u32 partyMember;
   u8 _18[0x1c - 0x18];
   u32 characterType;
-  u8 _20[0x40 - 0x20];
+  mm::Vec3 position;
+  mm::Vec3 rotation;
   f32 scale;
   u8 _44[0x54 - 0x44];
   bool hasFixedBlade;
@@ -53,6 +57,8 @@ static_assert(offsetof(GfObjSetup, objType) == 0x08, "");
 static_assert(offsetof(GfObjSetup, id) == 0x10, "");
 static_assert(offsetof(GfObjSetup, partyMember) == 0x14, "");
 static_assert(offsetof(GfObjSetup, characterType) == 0x1c, "");
+static_assert(offsetof(GfObjSetup, position) == 0x20, "");
+static_assert(offsetof(GfObjSetup, rotation) == 0x30, "");
 static_assert(offsetof(GfObjSetup, scale) == 0x40, "");
 static_assert(offsetof(GfObjSetup, hasFixedBlade) == 0x54, "");
 static_assert(offsetof(GfObjSetup, fixedBlade) == 0x58, "");
@@ -123,6 +129,7 @@ public:
 class GfObjSetupGimmick : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
+  static const u32 OBJECT_TYPE = OBJECT_TYPE_GIMMICK;
 
   GimmickType gimmickType;
 };

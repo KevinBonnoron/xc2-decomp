@@ -40,7 +40,7 @@ public:
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTE;
 
   GmkRoute() : _48() {}
-  ~GmkRoute() override { dispose(); }
+  ~GmkRoute() override { GmkRoute::dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
   bool isValid() const override;
   void create(const CreateInfo &info) override { AGmkBase::create(info); }
