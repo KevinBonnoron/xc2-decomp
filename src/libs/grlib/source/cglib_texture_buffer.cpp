@@ -2,13 +2,22 @@
 
 #include "grlib/cglib_buff_texture.h"
 #include "grlib/cglib_color_buffer.h"
+#include "grlib/cglib_color_ctl.h"
 #include "grlib/cglib_depth_buffer.h"
+#include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_manager.h"
+#include "grlib/cglib_render_array.h"
+#include "grlib/cglib_render_target.h"
+#include "grlib/cglib_state.h"
 #include "grlib/cglib_system_context.h"
 #include "grlib/cglib_tex_descriptor.h"
 #include "grlib/cglib_texture.h"
 #include "mtl/mem_manager.h"
 #include "nvn/nvn.h"
+
+namespace mm {
+struct Col4;
+} // namespace mm
 
 namespace grlib {
 
@@ -29,9 +38,229 @@ void CGLibTextureBuffer::delayRelease() {
   m_memPool.delayRelease();
 }
 
+CGLibRenderArray::CGLibRenderArray()
+    : m_texture(this), m_colorBuffers(nullptr), m_isResArea(false), m_arrayWidth(0), m_arrayHeight(0), m_sliceNum(0), m_mipmapNum(0) {}
+
+CGLibRenderArray::~CGLibRenderArray() { releaseWork(); }
+
+void CGLibRenderArray::releaseWork() {
+  u32 count = m_sliceNum + m_mipmapNum * m_sliceNum;
+  for (u32 i = 0; i < count; i++) {
+    m_colorBuffers[i].release();
+  }
+  if (m_colorBuffers != nullptr) {
+    mtl::MemManager::deallocate(m_colorBuffers, 0, false);
+    m_colorBuffers = nullptr;
+  }
+  delayRelease();
+  m_isResArea = false;
+  m_sliceNum = 0;
+  m_mipmapNum = 0;
+  m_arrayWidth = 0;
+  m_arrayHeight = 0;
+}
+
+void CGLibRenderArray::release() { releaseWork(); }
+
 u16 CGLibColorBuffer::getWidth() const { return m_width; }
 
 u16 CGLibColorBuffer::getHeight() const { return m_height; }
+
+void CGLibRenderArray::releaseTexture() {
+  releaseWork();
+  m_arrayWidth = 0;
+  m_arrayHeight = 0;
+}
+
+void CGLibRenderArray::clearTexture(u32 slice, const mm::Col4 &color, GrlClaerMask mask) {
+  CGLibDepthCtl::clearColorBuffer(m_colorBuffers[slice], color, mask);
+}
+
+CGLibColorBuffer *CGLibRenderArray::getColorBuffer(u32 slice) { return &m_colorBuffers[slice]; }
+
+void CGLibRenderArray::clearMipmapTexture(u32 slice, u32 mipmap, const mm::Col4 &color, GrlClaerMask mask) {
+  CGLibDepthCtl::clearColorBuffer(m_colorBuffers[slice + m_sliceNum * mipmap], color, mask);
+}
+
+CGLibColorBuffer *CGLibRenderArray::getMipmapColorBuffer(u32 slice, u32 mipmap) { return &m_colorBuffers[slice + m_sliceNum * mipmap]; }
+
+void CGLibRenderArray::clearIntTexture(u32 slice, const int *color, GrlClaerMask mask) {
+  CGLibDepthCtl::clearIntColorBuffer(m_colorBuffers[slice], color, mask);
+}
+
+void CGLibRenderArray::clearIntMipmapTexture(u32 slice, u32 mipmap, const int *color, GrlClaerMask mask) {
+  CGLibDepthCtl::clearIntColorBuffer(m_colorBuffers[slice + m_sliceNum * mipmap], color, mask);
+}
+
+void CGLibRenderArray::setRenderTarget(u32 slice) {
+  CGLibColorBuffer &colorBuffer = m_colorBuffers[slice];
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, m_arrayWidth, m_arrayHeight, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(colorBuffer, GRL_MRT_TYPE_0);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderArray::setRenderTarget(u32 slice, CGLibColorBuffer &colorBuffer) {
+  CGLibColorBuffer &target = m_colorBuffers[slice];
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, m_arrayWidth, m_arrayHeight, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(target, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterRenderTarget(colorBuffer, GRL_MRT_TYPE_1);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderArray::setRenderTarget(u32 slice, CGLibDepthBuffer &depthBuffer) {
+  CGLibColorBuffer &target = m_colorBuffers[slice];
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, m_arrayWidth, m_arrayHeight, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(target, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterDepthTarget(depthBuffer);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderArray::setMipmapRenderTarget(u32 slice, u32 mipmap) {
+  CGLibColorBuffer &target = m_colorBuffers[slice + m_sliceNum * mipmap];
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, target.getWidth(), target.getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(target, GRL_MRT_TYPE_0);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderArray::setMipmapRenderTarget(u32 slice, u32 mipmap, CGLibColorBuffer &colorBuffer) {
+  CGLibColorBuffer &target = m_colorBuffers[slice + m_sliceNum * mipmap];
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, target.getWidth(), target.getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(target, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterRenderTarget(colorBuffer, GRL_MRT_TYPE_1);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderArray::setMipmapRenderTarget(u32 slice, u32 mipmap, CGLibDepthBuffer &depthBuffer) {
+  CGLibColorBuffer &target = m_colorBuffers[slice + m_sliceNum * mipmap];
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, target.getWidth(), target.getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(target, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterDepthTarget(depthBuffer);
+  CGLibState::endRegisterRenderTarget();
+}
+
+const CGLibColorBuffer *CGLibRenderArray::getColorBuffer(u32 slice) const { return &m_colorBuffers[slice]; }
+
+const CGLibColorBuffer *CGLibRenderArray::getMipmapColorBuffer(u32 slice, u32 mipmap) const { return &m_colorBuffers[slice + m_sliceNum * mipmap]; }
+
+CGLibRenderArrayCubeMap::CGLibRenderArrayCubeMap()
+    : m_texture(this), m_colorBuffers(nullptr), m_isResArea(false), m_arrayWidth(0), m_arrayHeight(0), m_sliceNum(0), m_mipmapNum(0) {}
+
+CGLibRenderArrayCubeMap::~CGLibRenderArrayCubeMap() { releaseWork(); }
+
+void CGLibRenderArrayCubeMap::releaseWork() {
+  u32 count = getFaceBufferNum() * GRL_CUBE_MAP_FACE_NUM;
+  for (u32 i = 0; i < count; i++) {
+    m_colorBuffers[i].release();
+  }
+  if (m_colorBuffers != nullptr) {
+    mtl::MemManager::deallocate(m_colorBuffers, 0, false);
+    m_colorBuffers = nullptr;
+  }
+  delayRelease();
+  m_isResArea = false;
+  m_sliceNum = 0;
+  m_mipmapNum = 0;
+  m_arrayWidth = 0;
+  m_arrayHeight = 0;
+}
+
+void CGLibRenderArrayCubeMap::release() { releaseWork(); }
+
+void CGLibRenderArrayCubeMap::releaseTexture() {
+  releaseWork();
+  m_arrayWidth = 0;
+  m_arrayHeight = 0;
+}
+
+void CGLibRenderArrayCubeMap::clearTexture(GrlCubeMapFace face, u32 slice, const mm::Col4 &color, GrlClaerMask mask) {
+  CGLibDepthCtl::clearColorBuffer(m_colorBuffers[getFaceBufferNum() * face + slice], color, mask);
+}
+
+CGLibColorBuffer *CGLibRenderArrayCubeMap::getColorBuffer(GrlCubeMapFace face, u32 slice) {
+  return &m_colorBuffers[getFaceBufferNum() * face + slice];
+}
+
+void CGLibRenderArrayCubeMap::clearMipmapTexture(GrlCubeMapFace face, u32 slice, u32 mipmap, const mm::Col4 &color, GrlClaerMask mask) {
+  CGLibDepthCtl::clearColorBuffer(m_colorBuffers[getFaceBufferNum() * face + slice + m_sliceNum * mipmap], color, mask);
+}
+
+CGLibColorBuffer *CGLibRenderArrayCubeMap::getMipmapColorBuffer(GrlCubeMapFace face, u32 slice, u32 mipmap) {
+  return &m_colorBuffers[getFaceBufferNum() * face + slice + m_sliceNum * mipmap];
+}
+
+void CGLibRenderArrayCubeMap::clearIntTexture(GrlCubeMapFace face, u32 slice, const int *color, GrlClaerMask mask) {
+  CGLibDepthCtl::clearIntColorBuffer(m_colorBuffers[getFaceBufferNum() * face + slice], color, mask);
+}
+
+void CGLibRenderArrayCubeMap::clearIntMipmapTexture(GrlCubeMapFace face, u32 slice, u32 mipmap, const int *color, GrlClaerMask mask) {
+  CGLibDepthCtl::clearIntColorBuffer(m_colorBuffers[getFaceBufferNum() * face + slice + m_sliceNum * mipmap], color, mask);
+}
+
+void CGLibRenderArrayCubeMap::setRenderTarget(GrlCubeMapFace face, u32 slice) {
+  CGLibColorBuffer &target = m_colorBuffers[getFaceBufferNum() * face + slice];
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, target.getWidth(), target.getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(target, GRL_MRT_TYPE_0);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderArrayCubeMap::setRenderTarget(GrlCubeMapFace face, u32 slice, CGLibColorBuffer &colorBuffer) {
+  CGLibColorBuffer &target = m_colorBuffers[getFaceBufferNum() * face + slice];
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, target.getWidth(), target.getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(target, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterRenderTarget(colorBuffer, GRL_MRT_TYPE_1);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderArrayCubeMap::setRenderTarget(GrlCubeMapFace face, u32 slice, CGLibDepthBuffer &depthBuffer) {
+  CGLibColorBuffer &target = m_colorBuffers[getFaceBufferNum() * face + slice];
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, target.getWidth(), target.getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(target, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterDepthTarget(depthBuffer);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderArrayCubeMap::setMipmapRenderTarget(GrlCubeMapFace face, u32 slice, u32 mipmap) {
+  CGLibColorBuffer &target = m_colorBuffers[getFaceBufferNum() * face + slice + m_sliceNum * mipmap];
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, target.getWidth(), target.getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(target, GRL_MRT_TYPE_0);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderArrayCubeMap::setMipmapRenderTarget(GrlCubeMapFace face, u32 slice, u32 mipmap, CGLibColorBuffer &colorBuffer) {
+  CGLibColorBuffer &target = m_colorBuffers[getFaceBufferNum() * face + slice + m_sliceNum * mipmap];
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, target.getWidth(), target.getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(target, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterRenderTarget(colorBuffer, GRL_MRT_TYPE_1);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderArrayCubeMap::setMipmapRenderTarget(GrlCubeMapFace face, u32 slice, u32 mipmap, CGLibDepthBuffer &depthBuffer) {
+  CGLibColorBuffer &target = m_colorBuffers[getFaceBufferNum() * face + slice + m_sliceNum * mipmap];
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, target.getWidth(), target.getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(target, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterDepthTarget(depthBuffer);
+  CGLibState::endRegisterRenderTarget();
+}
+
+const CGLibColorBuffer *CGLibRenderArrayCubeMap::getColorBuffer(GrlCubeMapFace face, u32 slice) const {
+  return &m_colorBuffers[getFaceBufferNum() * face + slice];
+}
+
+const CGLibColorBuffer *CGLibRenderArrayCubeMap::getMipmapColorBuffer(GrlCubeMapFace face, u32 slice, u32 mipmap) const {
+  return &m_colorBuffers[getFaceBufferNum() * face + slice + m_sliceNum * mipmap];
+}
 
 void CGLibDepthBuffer::delayRelease() {
   if ((m_flags & (FLAG_INITIALIZED | FLAG_OWN_BUFFER)) == 0) {
@@ -43,6 +272,16 @@ void CGLibDepthBuffer::delayRelease() {
   NVNtexture *texture = (m_flags & FLAG_INITIALIZED) ? m_nvnTexture : nullptr;
   m_flags &= ~(FLAG_INITIALIZED | FLAG_OWN_BUFFER);
   context::CGLibSystemContext::get()->releaseDelayTexture(texture, buffer, -1, -1);
+}
+
+CGLibTextureBuffer::CGLibTextureBuffer() {
+  m_flags = 0;
+  m_buffer = nullptr;
+  m_bufferSize = 0;
+  m_textureId = -1;
+  m_samplerId = -1;
+  m_nvnTexture = nullptr;
+  m_gpuAddress = 0;
 }
 
 CGLibTextureBuffer::~CGLibTextureBuffer() { release(); }
