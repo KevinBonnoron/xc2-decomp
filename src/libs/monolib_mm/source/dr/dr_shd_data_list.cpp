@@ -2,10 +2,20 @@
 
 #include "dr/dr_res_shd.h"
 #include "dr/dr_shd_data_obj.h"
+#include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_ctl_vertex.h"
 #include "grlib/cglib_one_uniform_block.h"
 
 namespace ml {
+
+void DrShdDataObj::createShader(DrShdDataList *list, int type, int index) {
+  if (type == 2) {
+    return;
+  }
+  m_fetches[0] = &list->m_fetches[index];
+  u8 next = DrShdDataList::s_etcNextVertex[index];
+  m_fetches[1] = next == 0xff ? nullptr : &list->m_fetches[next];
+}
 
 void DrShdDataList::reloadShader(int type) { createShader(); }
 
@@ -99,5 +109,20 @@ grlib::CGLibOneUniformBlock *DrShdDataList::getAlphaTestUniform(f32 alphaRef) {
   }
   return &m_alphaTestUniforms.m_items[index];
 }
+
+DrShdDataObj::DrShdDataObj() {
+  m_fetches[0] = nullptr;
+  m_fetches[1] = nullptr;
+}
+
+DrShdDataObj::~DrShdDataObj() {}
+
+void DrShdDataObj::release() {}
+
+void DrShdDataObj::setupShader(u32 index) { grlib::CGLibCtlShader::setShader(*this, *m_fetches[index]); }
+
+void DrShdDataObj::setupShader(DrResFetch *fetch) { grlib::CGLibCtlShader::setShader(*this, *fetch); }
+
+void DrShdDataObj::setupComputeShader() { grlib::CGLibCtlShader::setComputeShader(*this); }
 
 } // namespace ml

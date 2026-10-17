@@ -66,7 +66,7 @@ public:
   DrResFetch *getSubFetchShader(int index);
   grlib::CGLibOneUniformBlock *getAlphaTestUniform(f32 alphaRef);
 
-  static const u8 s_etcNextVertex[];
+  static u8 s_etcNextVertex[];
 
   u8 _000[0x008 - 0x000];
   DrMan *m_drMan;
