@@ -70,7 +70,7 @@ bool GfDataUtil::isStartChapterSave() {
 
 u16 GfDataUtil::getScenarioFlag() { return GfGameFlag::getLocal(16, FLAG_SCENARIO_FLAG); }
 
-u16 GfDataUtil::getEventChapterSave() { return GfDataManager::getDataGame()->eventChapterSave; }
+u32 GfDataUtil::getEventChapterSave() { return GfDataManager::getDataGame()->eventChapterSave; }
 
 u16 GfDataUtil::getAutoEventAfterLoad() { return GfDataManager::getDataGame()->autoEventAfterLoad; }
 

@@ -22,6 +22,7 @@ public:
   static void destroy();
   void finalize();
   static bool isInitialized();
+  static void apply();
   static u64 getFrameCount64();
   static u32 getFrameCount32();
   static bool isDebugDisp();

@@ -1,7 +1,13 @@
 #pragma once
-#include "gf/game/gf_game_party.h"
-#include "types.h"
 #include <stddef.h>
+
+#include "gf/game/gf_game_party.h"
+#include "mm_mtl/fixstr.h"
+#include "types.h"
+
+namespace mm {
+struct Vec3;
+} // namespace mm
 
 namespace gf {
 
@@ -53,11 +59,40 @@ struct RQ_SETUP_PARTY_DRIVER {
 
 static_assert(offsetof(RQ_SETUP_PARTY_DRIVER, leader) == 0x14, "");
 
+struct GfMapjumpInfo {
+  GfMapjumpInfo()
+      : mapjumpId(0), map(0), landmarkId(-1), partyCreateRate(1.0f), isWithSaveData(false), isNoFadeIn(false), isNoFadeOut(false), _103(),
+        isSkipTravel(false), jumpType(0) {}
+
+  void setupForSaveData(u32 mapjumpId, const mm::Vec3 &position, const mm::Vec3 &rotation, bool isStartChapterSave);
+
+  u32 mapjumpId;
+  u32 map;
+  int landmarkId;
+  f32 partyCreateRate;
+  mm::mtl::FixStr<32> mapScript;
+  GfPartyPosInfo partyPos;
+  bool isWithSaveData;
+  bool isNoFadeIn;
+  bool isNoFadeOut;
+  u8 _103[0x104 - 0x103];
+  bool isSkipTravel;
+  u32 jumpType;
+};
+
+static_assert(offsetof(GfMapjumpInfo, mapScript) == 0x10, "");
+static_assert(offsetof(GfMapjumpInfo, partyPos) == 0x40, "");
+static_assert(offsetof(GfMapjumpInfo, isWithSaveData) == 0x100, "");
+static_assert(offsetof(GfMapjumpInfo, isSkipTravel) == 0x104, "");
+static_assert(offsetof(GfMapjumpInfo, jumpType) == 0x108, "");
+static_assert(sizeof(GfMapjumpInfo) == 0x110, "");
+
 class GfReqCommand {
 public:
   static void reqPartyBlade(u32 blade, u32 driver);
   static void reqRebuildPartyWeapon(u32 blade);
   static void reqChangeAttribute(u32 objectType, u32 blade, u32 attribute);
+  static void reqDestroyGf();
 };
 
 } // namespace gf

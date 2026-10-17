@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace gf {
@@ -10,8 +11,13 @@ enum {
   PAUSE_BIT_EVENT_SKIP = 1 << 9,
 };
 
-class GfPause {
+struct GfSetupParam;
+
+class GfPause : public mm::mtl::PtrSingleton<GfPause> {
 public:
+  static void build(const GfSetupParam &param);
+  static void destroy();
+  static void update();
   static bool isPause(u32 pauseBits);
 };
 

@@ -4,9 +4,12 @@
 
 namespace fw {
 enum SoundCategory : int;
-}
+struct UpdateInfo;
+} // namespace fw
 
 namespace gf {
+
+struct GfSetupParam;
 
 class SoundHandle {
 public:
@@ -24,6 +27,9 @@ static_assert(alignof(SoundHandle) == 0x04, "");
 
 class GfSound : public mm::mtl::PtrSingleton<GfSound> {
 public:
+  static void build(const GfSetupParam &param);
+  static void destroy();
+  void update(const fw::UpdateInfo &info);
   void setupGame();
   SoundHandle playSe(const char *name, fw::SoundCategory category);
   void stopSe(SoundHandle handle, f32 fadeSec);
@@ -35,5 +41,8 @@ public:
   f32 getVolume(SoundHandle handle);
   bool isPlaying(SoundHandle handle) const;
 };
+
+void bindGFSoundSource();
+void unrbindGFSoundSource();
 
 } // namespace gf

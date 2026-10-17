@@ -5,7 +5,9 @@ namespace ml {
 
 class TimeCount {
 public:
+  void reset();
   void start();
+  void getClockLap(s64 &clock) const;
   f32 getSecLap() const;
 
 private:

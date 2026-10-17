@@ -22,10 +22,14 @@ struct GF_OBJ_HANDLE;
 struct GF_SCOM_HANDLE;
 struct GfMapjumpInfo;
 struct GfSetupPfTalk;
-struct ParamReturnTitle;
 struct QuestID;
 
 enum GfPlayerDead {};
+
+struct ParamReturnTitle {
+  bool isWaitVoice;
+  bool isGameClear;
+};
 
 struct GfSequentialPlaySignal {
   bool isActive;

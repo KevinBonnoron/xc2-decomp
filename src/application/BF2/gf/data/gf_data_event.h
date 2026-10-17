@@ -14,9 +14,11 @@ static_assert(sizeof(SDataSavedEvent) == 0x64, "");
 
 class GfDataEvent {
 public:
+  static int getEventType(u32 event);
   static int getEventAfterScriptStartID(u32 event);
   static const char *getEventAfterScriptName(u32 event);
   static int getEventPlayFlag(u32 event);
+  static u32 getMapjumpID(u32 event);
   static bool isBladeCreateEvent(u32 event);
   static bool isBladeQuestEvent(u32 event);
   static bool isScenarioEvent(u32 event);

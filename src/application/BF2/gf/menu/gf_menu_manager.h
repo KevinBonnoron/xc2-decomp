@@ -1,5 +1,10 @@
 #pragma once
+#include "mm_mtl/singleton.h"
 #include "types.h"
+
+namespace fw {
+struct UpdateInfo;
+}
 
 namespace mm {
 struct Col4;
@@ -7,10 +12,15 @@ struct Col4;
 
 namespace gf {
 
+struct GfSetupParam;
 struct SDataOption;
 
-class GfMenuManager {
+class GfMenuManager : public mm::mtl::PtrSingleton<GfMenuManager> {
 public:
+  static void build(const GfSetupParam &param);
+  static void destroy();
+  static bool isInitialized();
+  static void update(const fw::UpdateInfo &info);
   static void initOptionData(SDataOption &option);
   static void setupGame();
   static bool isFading(u32 fade);
@@ -28,6 +38,7 @@ public:
   static void openDummyTutorial(u8 tutorial);
   static bool isOpenDummyTutorial();
   static bool isEnableQuestOpen();
+  void postUpdate(const fw::UpdateInfo &info);
   static bool isOpenFullScreen();
   static void openFullScreen(u32 screen, bool isFadeOut, bool isFadeIn);
   static void openMenu(u32 menu);
