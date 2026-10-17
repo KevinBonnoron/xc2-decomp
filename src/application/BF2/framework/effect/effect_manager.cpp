@@ -1,9 +1,24 @@
 #include "framework/effect/effect_manager.h"
 
+#include "dr/dr_creator.h"
+#include "dr/dr_light_man.h"
+#include "dr/dr_light_obj.h"
+#include "dr/dr_man.h"
+#include "dr/dr_mdl_base.h"
+#include "dr/dr_mdl_obj.h"
+#include "dr/dr_mdo_grp_obj.h"
 #include "eflib/effect_system_manager.h"
+#include "framework/framework.h"
+#include "mm_math/mm_mat44.h"
 #include "mtl/mem_manager.h"
 
+namespace ptlib {
+struct DrDrawWorkInfoEF;
+} // namespace ptlib
+
 namespace fw {
+
+bool EffectManager::initialize() { return true; }
 
 bool EffectManager::isCommonLoaded() { return commonLoaded(); }
 
@@ -173,6 +188,122 @@ void EffectManager::debugOutputString(const char *string) {}
 
 void EffectManager::warnOutputString(const char *string) {}
 
+void *EffectManager::createMdl(const void *data, const char *name, int index, const void *group, int groupIndex) {
+  ml::DrMdlObj *model = nullptr;
+  if (group != nullptr && Framework::get() != nullptr) {
+    model = static_cast<ml::DrMdoGrpObj *>(const_cast<void *>(group))->createInstantMdl(data, name, groupIndex);
+    model->setMatrix(mm::Mat44::identity);
+    model->setDisp(true);
+    model->setOcclusionQuery(false);
+  }
+
+  return model;
+}
+
+void EffectManager::deleteMdl(void *model) {
+  if (model != nullptr && Framework::get() != nullptr) {
+    ml::DrMdlObj *object = static_cast<ml::DrMdlObj *>(model);
+    object->setDisp(false);
+    object->setDeleteCall(ml::DrMan::s_nDblStockIdx);
+  }
+}
+
+void EffectManager::deleteLgt(u32 type, void *light) {
+  if (light == nullptr || Framework::get() == nullptr) {
+    return;
+  }
+
+  ml::DrMan *drMan = ml::DrMan::getIns();
+  if (drMan == nullptr) {
+    return;
+  }
+
+  ml::DrLightMan *lightMan = drMan->lightMan;
+  if (lightMan == nullptr) {
+    return;
+  }
+
+  switch (type) {
+  case 1:
+    lightMan->releaseInstantPntLight(static_cast<ml::DrLightObjPnt *>(light));
+    break;
+  case 2:
+    lightMan->releaseInstantSptLight(static_cast<ml::DrLightObjSpt *>(light));
+    break;
+  }
+}
+
+void EffectManager::setMdlPos(void *model, void *position) {
+  if (model != nullptr && position != nullptr) {
+    static_cast<ml::DrMdlObj *>(model)->setOffsetPos(*static_cast<mm::Vec3 *>(position));
+  }
+}
+
+void EffectManager::setMdlMatrix(void *model, void *matrix) {
+  if (model != nullptr && matrix != nullptr) {
+    static_cast<ml::DrMdlObj *>(model)->setMatrix(*static_cast<mm::Mat44 *>(matrix));
+  }
+}
+
+void EffectManager::setMdlAlpha(void *model, f32 alpha) {
+  if (model != nullptr) {
+    static_cast<ml::DrMdlObj *>(model)->setAlpha(alpha);
+  }
+}
+
+void EffectManager::setMdlSpeed(void *model, void *speed) {
+  if (model != nullptr && speed != nullptr) {
+    static_cast<ml::DrMdlObj *>(model)->setFrameSpd(*static_cast<f32 *>(speed));
+  }
+}
+
+void EffectManager::setLgtPos(u32 type, void *light, void *position) {
+  if (Framework::get() != nullptr && light != nullptr && position != nullptr) {
+    ml::DrMan *drMan = ml::DrMan::getIns();
+    if (drMan != nullptr && drMan->lightMan != nullptr) {
+      switch (type) {
+      case 1:
+        static_cast<ml::DrLightObjPnt *>(light)->setPos(*static_cast<mm::Vec3 *>(position));
+        break;
+      case 2:
+        static_cast<ml::DrLightObjSpt *>(light)->setPos(*static_cast<mm::Vec3 *>(position));
+        break;
+      }
+    }
+  }
+}
+
+void EffectManager::setLgtMatrix(u32 type, void *light, void *matrix) {
+  if (Framework::get() != nullptr && light != nullptr && matrix != nullptr) {
+    ml::DrMan *drMan = ml::DrMan::getIns();
+    if (drMan != nullptr && drMan->lightMan != nullptr) {
+      switch (type) {
+      case 1:
+        static_cast<ml::DrLightObjPnt *>(light)->setMat(*static_cast<mm::Mat44 *>(matrix));
+        break;
+      case 2:
+        static_cast<ml::DrLightObjSpt *>(light)->setMat(*static_cast<mm::Mat44 *>(matrix));
+        break;
+      }
+    }
+  }
+}
+
+void *EffectManager::createGroup(int num, int flags) {
+  if (Framework::get() == nullptr) {
+    return nullptr;
+  }
+
+  ml::DrCreator creator;
+  return creator.createInstantGrp(num, flags);
+}
+
+void EffectManager::destroyGroup(void *group) {
+  if (group != nullptr && Framework::get() != nullptr) {
+    static_cast<ml::DrMdlBase *>(group)->setDeleteCall(ml::DrMan::s_nDblStockIdx);
+  }
+}
+
 bool EffectManager::isEfSystemValid() { return effect::SystemManager::isValid(); }
 
 u32 EffectManager::getEmitterForm(u32 handle) {
@@ -242,5 +373,75 @@ void EffectManager::destroyHateArrow(u32 handle) { remove(handle); }
 void EffectManager::destroyComboBall(u32 handle) { kill(handle); }
 
 void EffectManager::setPerfLoggingCsv(bool isLogging) {}
+
+void EffectManager::begin() {
+  if (isFinalized()) {
+    return;
+  }
+
+  if (effect::SystemManager::getPtr() != nullptr) {
+    effect::SystemManager::getPtr()->begin();
+  }
+}
+
+void EffectManager::end() {
+  if (isFinalized()) {
+    return;
+  }
+
+  if (effect::SystemManager::getPtr() != nullptr) {
+    effect::SystemManager::getPtr()->end();
+  }
+}
+
+void EffectManager::opacityRender(const ml::IDrDrawWorkInfo *info) {
+  if (isFinalized() || finalizing) {
+    return;
+  }
+
+  if (effect::SystemManager::getPtr() != nullptr) {
+    effect::SystemManager::getPtr()->opacityRender(reinterpret_cast<const ptlib::DrDrawWorkInfoEF *>(info));
+  }
+}
+
+void EffectManager::alphaRender(const ml::IDrDrawWorkInfo *info) {
+  if (isFinalized() || finalizing) {
+    return;
+  }
+
+  if (effect::SystemManager::getPtr() != nullptr) {
+    effect::SystemManager::getPtr()->alphaRender(reinterpret_cast<const ptlib::DrDrawWorkInfoEF *>(info));
+  }
+}
+
+void EffectManager::lastRender(const ml::IDrDrawWorkInfo *info) {
+  if (isFinalized() || finalizing) {
+    return;
+  }
+
+  if (effect::SystemManager::getPtr() != nullptr) {
+    effect::SystemManager::getPtr()->lastRender(reinterpret_cast<const ptlib::DrDrawWorkInfoEF *>(info));
+  }
+}
+
+void EffectManager::blurRender(const ml::IDrDrawWorkInfo *info) {
+  if (isFinalized() || finalizing) {
+    return;
+  }
+
+  if (effect::SystemManager::getPtr() != nullptr) {
+    effect::SystemManager::getPtr()->blurRender(reinterpret_cast<const ptlib::DrDrawWorkInfoEF *>(info));
+  }
+}
+
+void EffectManager::finalRender(const ml::IDrDrawWorkInfo *info) {
+  if (isFinalized() || finalizing) {
+    return;
+  }
+
+  if (effect::SystemManager::getPtr() != nullptr) {
+    effect::SystemManager::getPtr()->finalRender(reinterpret_cast<const ptlib::DrDrawWorkInfoEF *>(info));
+  }
+}
 
 } // namespace fw

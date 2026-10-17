@@ -4,6 +4,7 @@
 #include "types.h"
 
 namespace mm {
+struct Mat44;
 struct Vec3;
 } // namespace mm
 
@@ -119,6 +120,8 @@ static_assert(offsetof(DrLightObjDir, m_intensity) == 0x90, "");
 
 class DrLightObjPnt : public DrLightObj {
 public:
+  void setMat(const mm::Mat44 &matrix);
+  void setPos(const mm::Vec3 &position);
   DrLightObjPnt();
   void initPnt();
   DrLightObjPnt(DrPixlMan *pixlMan);
@@ -136,6 +139,8 @@ static_assert(offsetof(DrLightObjPnt, m_speIntensity) == 0xb0, "");
 
 class DrLightObjSpt : public DrLightObj {
 public:
+  void setMat(const mm::Mat44 &matrix);
+  void setPos(const mm::Vec3 &position);
   DrLightObjSpt();
   void initSpt();
   DrLightObjSpt(DrPixlMan *pixlMan);

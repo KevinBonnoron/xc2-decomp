@@ -136,7 +136,8 @@ public:
   DrPixlTileParm *tileParm;
   u8 _0188[0x0580 - 0x0188];
   DrCalcMan *calcMan;
-  u8 _0588[0x05b0 - 0x0588];
+  DrLightMan *lightMan;
+  u8 _0590[0x05b0 - 0x0590];
   DrCalcTexStreamMan *texStreamMan;
   DrScreenInfo *screenInfo;
   DrAPCache *apCache;
@@ -210,6 +211,7 @@ static_assert(offsetof(DrMan, postParms) == 0x0120, "");
 static_assert(offsetof(DrMan, globalIBLMans) == 0x0160, "");
 static_assert(offsetof(DrMan, tileParm) == 0x0180, "");
 static_assert(offsetof(DrMan, calcMan) == 0x0580, "");
+static_assert(offsetof(DrMan, lightMan) == 0x0588, "");
 static_assert(offsetof(DrMan, texStreamMan) == 0x05b0, "");
 static_assert(offsetof(DrMan, screenInfo) == 0x05b8, "");
 static_assert(offsetof(DrMan, apCache) == 0x05c0, "");

@@ -1,6 +1,11 @@
 #pragma once
+#include <stddef.h>
+
+#include "dr/dr_draw_callback.h"
+#include "framework/manager_object.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
+#include "scn/scn_render_callback.h"
 #include "types.h"
 
 namespace mm {
@@ -18,8 +23,10 @@ class EffectCasterBase;
 class EffectPack;
 enum EF_CATEGORY : int;
 
-class EffectManager : public mm::mtl::PtrSingleton<EffectManager> {
+class EffectManager : public mm::mtl::PtrSingleton<EffectManager>, public ManagerObject, public ml::IDrDrawCallback, public ml::IScnRender {
 public:
+  ~EffectManager() override;
+  bool initialize() override;
   bool isCommonLoaded();
   void changeLayerCaster(EffectCasterBase *caster, u32 layer, u32 newLayer);
   void sendCaster(EffectCasterBase *caster, mm::Mat44 &matrix, const char *name, int index);
@@ -68,6 +75,17 @@ public:
   static void debugReadFileEnd(void *data);
   static void debugOutputString(const char *string);
   static void warnOutputString(const char *string);
+  static void *createMdl(const void *data, const char *name, int index, const void *group, int groupIndex);
+  static void deleteMdl(void *model);
+  static void deleteLgt(u32 type, void *light);
+  static void setMdlPos(void *model, void *position);
+  static void setMdlMatrix(void *model, void *matrix);
+  static void setMdlAlpha(void *model, f32 alpha);
+  static void setMdlSpeed(void *model, void *speed);
+  static void setLgtPos(u32 type, void *light, void *position);
+  static void setLgtMatrix(u32 type, void *light, void *matrix);
+  static void *createGroup(int num, int flags);
+  static void destroyGroup(void *group);
   static bool isEfSystemValid();
   u32 getEmitterForm(u32 handle);
   void getNumDetail(u32 &emitterNum, u32 &particleNum, u32 &drawNum, u32 &workNum);
@@ -87,12 +105,24 @@ public:
   void destroyHateArrow(u32 handle);
   void destroyComboBall(u32 handle);
   void setPerfLoggingCsv(bool isLogging);
+  void begin() override;
+  void end() override;
+  void opacityRender(const ml::IDrDrawWorkInfo *info) override;
+  void alphaRender(const ml::IDrDrawWorkInfo *info) override;
+  void lastRender(const ml::IDrDrawWorkInfo *info) override;
+  void blurRender(const ml::IDrDrawWorkInfo *info) override;
+  void finalRender(const ml::IDrDrawWorkInfo *info) override;
 
-  u8 _08[0x2c - 0x08];
+  u8 _28[0x2c - 0x28];
   mtl::ALLOC_HANDLE sysHandle;
   mtl::ALLOC_HANDLE resHandle;
   u8 _34[0x2fd5 - 0x34];
   bool masterPause;
+  bool finalizing;
 };
+
+static_assert(offsetof(EffectManager, sysHandle) == 0x2c, "");
+static_assert(offsetof(EffectManager, masterPause) == 0x2fd5, "");
+static_assert(offsetof(EffectManager, finalizing) == 0x2fd6, "");
 
 } // namespace fw
