@@ -7,9 +7,12 @@
 
 namespace anm {
 
+struct SerialiseArg;
+
 class ReferenceObject {
 public:
   explicit ReferenceObject(mm::mtl::IAllocator *pAllocator) : m_refCount(0), m_isShared(0xffff), m_pAllocator(pAllocator) { MM_ASSERT(pAllocator); }
+  explicit ReferenceObject(const SerialiseArg &arg) {}
   virtual ~ReferenceObject() {}
 
   void addRef() {
