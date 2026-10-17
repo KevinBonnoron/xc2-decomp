@@ -78,6 +78,7 @@ public:
   static bool getTeamByZoneMissionWorking(mm::mtl::FixedVector<u16, 3> &teams, u32 zone);
   static u32 getMissionFlag(u32 mission);
   static u32 getMissionMapID(u32 mission);
+  static bool getTeamByZoneMissionComplete(mm::mtl::FixedVector<u16, 3> &teams, u32 zone);
   static bool isTeamStateReward(u32 teamID);
   static void setMissionFlag(u32 mission, u32 missionFlag);
   static bool isMissionCompleteFlag(u32 mission);
