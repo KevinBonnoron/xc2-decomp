@@ -1,5 +1,7 @@
 #include "gf/asset/gf_slot_mapping.h"
 
+#include <algorithm>
+
 #include "framework/sound/sound_manager.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/asset/gf_asset_pack.h"
@@ -16,6 +18,7 @@ namespace gf {
 constexpr size_t ALL_SLOT_SIZE = 0x24eb0000;
 constexpr size_t EXTEND_MEMORY_MARGIN = 0x8000;
 constexpr u16 RETRY_COUNT_MAX = 999;
+constexpr f32 RETRY_INTERVAL = 0.5f;
 
 size_t GfSlotMapping::getAllSize() { return ALL_SLOT_SIZE; }
 
@@ -138,6 +141,22 @@ bool GfSlotMapping::setupFreeSlot(REQ *request) {
 
   GfAssetManager::loadStart(request->pack, slot);
   return true;
+}
+
+void GfSlotMapping::requestSlotLoad(GF_ASSET_HANDLE *handle, GfAssetPack *pack) {
+  for (REQ *request = requests.begin(); request != requests.end(); ++request) {
+    if (request->pack == pack) {
+      return;
+    }
+  }
+  pack->addRef();
+  REQ request = {};
+  request.handle = handle;
+  request.pack = pack;
+  request.retryCount = 0;
+  request.timer = RETRY_INTERVAL;
+  requests.push_back(request);
+  std::sort(requests.begin(), requests.end(), BiggerPrio());
 }
 
 bool GfSlotMapping::isRequest(const GfAssetPack *pack) const {
