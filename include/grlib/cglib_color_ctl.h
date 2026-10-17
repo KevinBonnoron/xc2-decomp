@@ -17,6 +17,7 @@ enum GrlBlendFunc {
 
 enum GrlBlendCombine {
   GRL_BLEND_COMBINE_ADD = 1,
+  GRL_BLEND_COMBINE_SUBTRACT = 2,
   GRL_BLEND_COMBINE_MIN = 4,
   GRL_BLEND_COMBINE_MAX = 5,
 };
