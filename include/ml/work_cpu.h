@@ -12,6 +12,8 @@ struct Col3;
 
 namespace ml {
 
+class WorkCpuThread;
+
 enum CPUID {
   CPUID_ANY,
   CPUID_CORE_0,
@@ -95,7 +97,8 @@ public:
   u8 _1c0[0x1738 - 0x1c0];
   DO_THREAD m_thread;
   DO_THREAD m_nextThread;
-  u8 _1740[0x1764 - 0x1740];
+  WorkCpuThread *m_cpuThreads[4];
+  u8 _1760[0x1764 - 0x1760];
   u32 m_even;
   u8 _1768[0x195c - 0x1768];
   u32 m_counter;
@@ -116,6 +119,7 @@ public:
 static_assert(offsetof(WorkCpu, m_flags) == 0x1b0, "");
 static_assert(offsetof(WorkCpu, m_cpuNum) == 0x1bc, "");
 static_assert(offsetof(WorkCpu, m_thread) == 0x1738, "");
+static_assert(offsetof(WorkCpu, m_cpuThreads) == 0x1740, "");
 static_assert(offsetof(WorkCpu, m_even) == 0x1764, "");
 static_assert(offsetof(WorkCpu, m_counter) == 0x195c, "");
 static_assert(offsetof(WorkCpu, m_mainThreadId) == 0x2020, "");
