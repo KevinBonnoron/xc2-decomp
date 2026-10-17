@@ -18,19 +18,24 @@ enum DrMdlType {
 
 class DrMdlBase {
 public:
+  enum UpdateFlag {
+    UPDATE_FLAG_DISP = 1 << 0,
+    UPDATE_FLAG_DELETE_CALL = 1 << 3,
+  };
+
   virtual ~DrMdlBase() {}
   virtual void update() = 0;
   virtual void dispOffUpdate();
   virtual void noOffScreenUpdate();
   virtual void resourceInit() = 0;
   virtual void shadowRender();
-  virtual void shadowCacheRender(DrPixlShadowCacheObj &cache);
+  virtual bool shadowCacheRender(DrPixlShadowCacheObj &cache);
   virtual void shadowCacheAddRender(int index);
   virtual void shadowCacheOnlyRender();
   virtual void shadowPartsRender(int index);
   virtual void callShadowCacheUpdate(u64 flags);
   virtual void occRender();
-  virtual void cloneMdlObj(DrMdlObj *source);
+  virtual bool cloneMdlObj(DrMdlObj *source);
   virtual void chageShadowObject(DrMdoSmlShadowMan *shadowMan);
   virtual void setDisp(bool isDisp);
   virtual void setDeleteCall(int deleteCall);

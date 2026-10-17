@@ -8,6 +8,7 @@ struct Vec3;
 } // namespace mm
 
 namespace ml {
+class DrEnvColiObj;
 
 struct DrEnvColiResult {
   s32 bgmId;
@@ -25,6 +26,7 @@ static_assert(offsetof(DrEnvColiResult, windId) == 0x18, "");
 
 class DrEnvColiMan {
 public:
+  DrEnvColiObj *createObj(const void *data);
   bool testEnvColi(DrEnvColiResult *result, const mm::Vec3 &position, f32 radius);
 
   u8 _00[0x48 - 0x00];
