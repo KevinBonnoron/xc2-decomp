@@ -9,6 +9,11 @@ namespace event {
 
 const mm::Vec3 &CharaObj::getPos() const { return pos; }
 
+void CharaObj::renderAction() {
+  cmdPlayAction.render(pos, eyeOffset);
+  cmdPlayActionAuto.render(pos, eyeOffset);
+}
+
 f32 CharaObj::getEyeOffset() const { return eyeOffset; }
 
 void CharaObj::renderHead() { cmdPlayHead.render(pos, eyeOffset); }
