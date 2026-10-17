@@ -38,27 +38,6 @@ static_assert(sizeof(MdoWrkRimBloom) == 0x20, "");
 
 class DrMdlObj : public DrMdoCtl {
 public:
-  enum DrawFlag {
-    DRAW_FLAG_ALWAYS_TEX_STM = 1 << 2,
-    DRAW_FLAG_WRITE_STENCIL = 1 << 4,
-    DRAW_FLAG_SIMPLE_SHADOW = 1 << 10,
-    DRAW_FLAG_SP_ALPHA_MODE = 1 << 14,
-    DRAW_FLAG_SP_BLUR_OFF = 1 << 15,
-    DRAW_FLAG_GPU_CLIP_OFF = 1 << 16,
-    DRAW_FLAG_ALWAYS_MIDDLE_TEX_STM = 1 << 17,
-    DRAW_FLAG_OCCLUSION_QUERY_OFF = 1 << 18,
-    DRAW_FLAG_EXPRESS_DRAW_MODE = 1 << 20,
-    DRAW_FLAG_CAM_CHECK_MODE = 1 << 28,
-    DRAW_FLAG_CAM_CHECK_RESL = 1 << 29,
-    DRAW_FLAG_DEBUG_DELETE = 1 << 30,
-    DRAW_FLAG_DEBUG_WINDOW = 1u << 31,
-  };
-
-  enum AlphaFlag {
-    ALPHA_FLAG_UPDATED = 1 << 16,
-    ALPHA_FLAG_SINGLE_BUFFER = 1 << 18,
-  };
-
   void setDblBuffAlpha(bool isEnable);
   DrMdlObj(int viewNum);
   void chageShadowObject(DrMdoSmlShadowMan *shadowMan) override;
