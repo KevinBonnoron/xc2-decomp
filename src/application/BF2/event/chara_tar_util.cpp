@@ -1,8 +1,11 @@
 #include "event/chara_tar_util.h"
 
 #include "bdat.h"
+#include "gf/object/component/gf_com_transform.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_math.h"
 
 namespace event {
 
@@ -17,6 +20,10 @@ mm::Vec3 CharaTarUtil::getCharaDefaultEyeVec(gf::GF_OBJ_HANDLE *handle) {
     }
   }
   return mm::Vec3(0.0f, 1.0f, 0.0f);
+}
+
+f32 CharaTarUtil::getCharaEyeRotY(gf::GF_OBJ_HANDLE *handle) {
+  return mm::quatToEuler(gf::GfObjUtil::getObj(handle)->getComponent<gf::GfComTransform>()->getRotation()).y;
 }
 
 const char *CharaTarUtil::aimmotType2stat(int type) {

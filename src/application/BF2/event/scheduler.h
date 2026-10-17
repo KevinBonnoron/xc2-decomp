@@ -2,6 +2,8 @@
 #include "event/schedule_item.h"
 #include "types.h"
 
+enum EVT_aimtype : int;
+
 namespace gf {
 class GfObj;
 struct GF_OBJ_HANDLE;
@@ -46,8 +48,10 @@ public:
   void func_motionEnd(gf::GfObj *obj);
   void func_motionEnd_loop(gf::GfObj *obj);
   void func_turn(gf::GfObj *obj);
+  static f32 getRotY(gf::GfObj *obj, gf::GfObj *target);
   void func_turn_loop(gf::GfObj *obj);
   void func_look(gf::GfObj *obj);
+  static void lookTo(bool isLook, gf::GfObj *obj, gf::GfObj *target, EVT_aimtype aim, bool isApply);
   void func_return(gf::GfObj *obj);
   void func_return_loop(gf::GfObj *obj);
   void func_motion(gf::GfObj *obj);
@@ -55,6 +59,7 @@ public:
   void func_item(gf::GfObj *obj);
   void func_item_loop(gf::GfObj *obj);
   void setUse(USE use, bool isUse);
+  static f32 getRotY(gf::GfObj *obj);
   bool chkUse(USE use) const { return (mUse & use) != 0; }
   bool isPlay(ORDER order) const { return mFuncs[order]; }
   gf::GF_OBJ_HANDLE *getHandle() const { return handle; }
