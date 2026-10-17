@@ -124,7 +124,8 @@ public:
   u8 _0008[0x000c - 0x0008];
   mtl::ALLOC_HANDLE memSys;
   mtl::ALLOC_HANDLE memClass;
-  u8 _0014[0x0070 - 0x0014];
+  mtl::ALLOC_HANDLE memWork;
+  u8 _0018[0x0070 - 0x0018];
   DrMotBlurState *motBlurState;
   DrPixlMan *pixlMan;
   DrShdMan *shdMan;
@@ -208,6 +209,7 @@ public:
 
 static_assert(offsetof(DrMan, memSys) == 0x000c, "");
 static_assert(offsetof(DrMan, memClass) == 0x0010, "");
+static_assert(offsetof(DrMan, memWork) == 0x0014, "");
 static_assert(offsetof(DrMan, motBlurState) == 0x0070, "");
 static_assert(offsetof(DrMan, pixlMan) == 0x0078, "");
 static_assert(offsetof(DrMan, shdMan) == 0x0080, "");
