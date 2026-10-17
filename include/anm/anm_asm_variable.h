@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 namespace anm {
@@ -33,5 +34,8 @@ public:
 };
 
 static_assert(sizeof(Variable) == 0x10, "");
+
+Variable *findVariable(mm::mtl::Vector<Variable> &variables, const char *name);
+const Variable *findVariable(const mm::mtl::Vector<Variable> &variables, const char *name);
 
 } // namespace anm

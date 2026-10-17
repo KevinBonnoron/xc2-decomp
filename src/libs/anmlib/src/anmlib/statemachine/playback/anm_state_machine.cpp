@@ -1,5 +1,6 @@
 #include "anm/anm_state_machine.h"
 
+#include "anm/anm_asm_state.h"
 #include "anm/anm_res_state_data.h"
 
 namespace anm {

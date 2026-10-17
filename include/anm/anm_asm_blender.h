@@ -42,6 +42,7 @@ public:
   AsmBlender();
   ~AsmBlender();
   void setup(const ResASM &resAsm, mm::mtl::IAllocator &allocator);
+  void cleanup();
   bool addClip(AsmClip &clip);
   void removeClip(AsmClip &clip);
 
