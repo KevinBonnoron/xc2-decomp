@@ -37,6 +37,7 @@ public:
   void setResponsiveAA(f32 responsiveAA);
   void setAllDisp(bool isDisp);
   void setDisableCollision(bool isDisable);
+  void *search(const char *name, EffectPack *pack);
   u32 create(const char *name, EffectPack *pack, bool isLoop);
   u32 create(void *data, bool isLoop);
   u32 create(void *data, const effect::SendParam *param, bool isLoop);
