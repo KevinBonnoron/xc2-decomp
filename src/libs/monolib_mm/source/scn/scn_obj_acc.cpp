@@ -301,7 +301,7 @@ void ScnObjAccResSubMesh::setExtRegisterMatrix(int index, bool isRegister) { m_m
 
 void ScnObjAccResSubMesh::setExtMatrix(int index, const mm::Mat44 &matrix) {
   DrResMdoMeshParts *parts = m_meshObj->getParts(index);
-  if (parts->m_flags & 8) {
+  if (parts->m_flags & DrResMdoMeshParts::FLAG_MAT_ADD) {
     parts->setMatrix(matrix);
   }
 }
