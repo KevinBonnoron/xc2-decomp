@@ -2,12 +2,17 @@
 #include "gf/object/component/pc/gf_pc_asm_cmd_id_field.h"
 #include "types.h"
 
+namespace mm {
+struct Vec3;
+} // namespace mm
+
 namespace gf {
 
 class GfComAsm;
 class GfComBehaviorPc;
 class GfComPropertyPc;
 class GfComponent;
+struct GF_OBJ_HANDLE;
 
 namespace pc {
 
@@ -24,11 +29,14 @@ public:
   static void setAccessFlag(GfComBehaviorPc &behavior, bool isEnable);
   static void setLookAtFlag(GfComBehaviorPc &behavior, bool isEnable);
   static void setEnableLure(GfComBehaviorPc &behavior, bool isEnable);
+  static GF_OBJ_HANDLE *getLureTargetHandle(GfComBehaviorPc &behavior);
   static bool isStop(GfComPropertyPc &property, u32 noInputFrameCount);
   static void flipAutoRun(GfComPropertyPc &property);
   static void setAutoRun(GfComPropertyPc &property, bool isAutoRun);
   static bool testAutoRun(GfComPropertyPc &property);
   static void setAutoRunInput(GfComPropertyPc &property);
+  static void setAsmSpeedMove(GfComPropertyPc &property);
+  static bool isTurnEndRangeCacheInput(GfComPropertyPc &property, const mm::Vec3 &direction);
   static bool isInputInverseDirAutoRun(GfComPropertyPc &property);
   static void setIdleStatus(GfComPropertyPc &property, bool isIdle);
   static void setAirStatus(GfComBehaviorPc &behavior, bool isAir);

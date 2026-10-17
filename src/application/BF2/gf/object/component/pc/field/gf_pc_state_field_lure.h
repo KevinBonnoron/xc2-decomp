@@ -1,7 +1,8 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/gf_state.h"
 #include "gf/object/component/enemy/gf_enemy_state_battle.h"
-#include "types.h"
 
 namespace ai {
 class State;
@@ -14,6 +15,7 @@ struct UpdateInfo;
 namespace gf {
 
 class GfComBehaviorPc;
+struct GF_OBJ_HANDLE;
 
 namespace pc {
 
@@ -23,9 +25,10 @@ class StateFieldLure : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
-  u8 _18[0x20 - 0x18];
+  GF_OBJ_HANDLE *target;
 };
 
+static_assert(offsetof(StateFieldLure, target) == 0x18, "");
 static_assert(sizeof(StateFieldLure) == 0x20, "");
 
 } // namespace pc

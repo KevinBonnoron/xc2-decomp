@@ -1,6 +1,9 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/gf_state.h"
 #include "gf/object/component/enemy/gf_enemy_state_battle.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
 
 namespace ai {
@@ -23,9 +26,13 @@ class StateFieldTurn : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
-  u8 _18[0x30 - 0x18];
+  bool isWalkTurn;
+  u8 _19[0x20 - 0x19];
+  mm::Vec3 inputDirection;
 };
 
+static_assert(offsetof(StateFieldTurn, isWalkTurn) == 0x18, "");
+static_assert(offsetof(StateFieldTurn, inputDirection) == 0x20, "");
 static_assert(sizeof(StateFieldTurn) == 0x30, "");
 
 } // namespace pc

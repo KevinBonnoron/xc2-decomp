@@ -1,4 +1,6 @@
 #pragma once
+#include "types.h"
+
 #include "gf/object/component/pc/plugin/gf_pc_timer_plugin.h"
 
 namespace mm {
@@ -18,6 +20,7 @@ public:
   static void setFallDamageDisable(GfComBehaviorPc &behavior, bool isDisable);
   static void setEnableDownIK(GfComBehaviorPc &behavior, bool isEnable);
   static void setEnableLookIK(GfComBehaviorPc &behavior, bool isEnable);
+  static void changePlacementDownDist(GfComBehaviorPc &behavior, f32 distance);
   static void resetPlacementDownDist(GfComBehaviorPc &behavior);
   static void changeGroundAnglesForMotion(GfComBehaviorPc &behavior, const mm::Vec3 &angles);
   static void setActivateTimer(GfComBehaviorPc &behavior, TimerPlugin::TYPE type, bool isActive);
