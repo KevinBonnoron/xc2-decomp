@@ -6,6 +6,10 @@
 
 struct CBdatWrapper;
 
+namespace mm {
+struct Col4;
+} // namespace mm
+
 namespace gmk {
 
 class AGmkBase;
@@ -50,6 +54,7 @@ public:
   }
 
   bool isMatch(const mm::Vec3 &position) const;
+  void debugDraw(const mm::Vec3 &position, const mm::Col4 &color) const;
 
   f32 horizontalDistSq;
   f32 verticalDistSq;
@@ -59,6 +64,7 @@ static_assert(sizeof(DistHvCond) == 0x8, "");
 
 class DistCond {
 public:
+  void debugDraw(const mm::Vec3 &position, const mm::Col4 &color) const;
   static bool isMatch(f32 distSq, const mm::Vec3 &position);
 
   f32 distSq;

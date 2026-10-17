@@ -1,7 +1,10 @@
 #include "gmk/gmk_manager.h"
 
+#include <math.h>
+
 #include "bdat.h"
 #include "dr/dr_man.h"
+#include "framework/debug/debug_draw.h"
 #include "framework/memory/framework_memory.h"
 #include "framework/navi/navi_util.h"
 #include "framework/resource/common_resource.h"
@@ -74,6 +77,7 @@
 #include "gmk/gmk_warp.h"
 #include "ml/scn.h"
 #include "ml/scn_cam_util.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
@@ -81,6 +85,10 @@
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "mtl/alloc_handle.h"
+
+namespace mm {
+struct Col4;
+} // namespace mm
 
 namespace gmk {
 
@@ -659,6 +667,71 @@ QuestFlagCond::QuestFlagCond(const CBdatWrapper &bdat, int id, const char *prefi
 bool QuestFlagCond::isMatch() const {
   u8 state = gf::GfQuestInfo::getState(gf::toQuestID(quest));
   return (minState <= state) & (state <= maxState);
+}
+
+bool DistHvCond::isMatch(const mm::Vec3 &position) const {
+  if (!isInterestPosExist()) {
+    return false;
+  }
+  const mm::Vec3 &interestPos = getInterestPos();
+  f32 y = interestPos.y - position.y;
+  f32 verticalSq = y * y;
+  if (verticalDistSq < verticalSq) {
+    return false;
+  }
+  f32 x = interestPos.x - position.x;
+  f32 z = interestPos.z - position.z;
+  f32 horizontalSq = x * x + z * z;
+  if (horizontalDistSq < horizontalSq) {
+    return false;
+  }
+  return true;
+}
+
+void DistHvCond::debugDraw(const mm::Vec3 &position, const mm::Col4 &color) const {
+  f32 horizontalDist = sqrtf(horizontalDistSq);
+  f32 verticalDist = sqrtf(verticalDistSq);
+  mm::Vec3 center = position;
+  mm::Mat44 matrix;
+  matrix.rows[0][0] = 1.0f;
+  matrix.rows[0][1] = 0.0f;
+  matrix.rows[0][2] = 0.0f;
+  matrix.rows[0][3] = 0.0f;
+  matrix.rows[1][0] = 0.0f;
+  matrix.rows[1][1] = 1.0f;
+  matrix.rows[1][2] = 0.0f;
+  matrix.rows[1][3] = 0.0f;
+  matrix.rows[2][0] = 0.0f;
+  matrix.rows[2][1] = 0.0f;
+  matrix.rows[2][2] = 1.0f;
+  matrix.rows[2][3] = 0.0f;
+  matrix.rows[3][0] = center.x;
+  matrix.rows[3][1] = center.y;
+  matrix.rows[3][2] = center.z;
+  matrix.rows[3][3] = 1.0f;
+  fw::debug::drawCylinder(matrix, verticalDist + verticalDist, horizontalDist, color, 8);
+}
+
+void DistCond::debugDraw(const mm::Vec3 &position, const mm::Col4 &color) const {
+  mm::Vec3 center = position;
+  mm::Mat44 matrix;
+  matrix.rows[0][0] = 1.0f;
+  matrix.rows[0][1] = 0.0f;
+  matrix.rows[0][2] = 0.0f;
+  matrix.rows[0][3] = 0.0f;
+  matrix.rows[1][0] = 0.0f;
+  matrix.rows[1][1] = 1.0f;
+  matrix.rows[1][2] = 0.0f;
+  matrix.rows[1][3] = 0.0f;
+  matrix.rows[2][0] = 0.0f;
+  matrix.rows[2][1] = 0.0f;
+  matrix.rows[2][2] = 1.0f;
+  matrix.rows[2][3] = 0.0f;
+  matrix.rows[3][0] = center.x;
+  matrix.rows[3][1] = center.y;
+  matrix.rows[3][2] = center.z;
+  matrix.rows[3][3] = 1.0f;
+  fw::debug::drawSphere(matrix, sqrtf(distSq), color, 12);
 }
 
 bool DistCond::isMatch(f32 distSq, const mm::Vec3 &position) {
