@@ -24,8 +24,9 @@ class IDColiObj;
 namespace fw {
 
 class ColiObject;
-class ColiUserData;
 class UpdatableObject;
+struct ColiCharacterInfo;
+struct ColiPhantomInfo;
 
 enum ColiType : int {
   COLI_TYPE_STATIC = 0,
@@ -80,6 +81,13 @@ struct ColiShape {
 
 static_assert(offsetof(ColiShape, size) == 0x10, "");
 
+class ColiUserData {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  virtual const mm::mtl::RTTI *getRTTI() const = 0;
+};
+
 class ColiObjUserData {
 public:
   static mm::mtl::RTTI m_rtti;
@@ -99,6 +107,8 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
+  static ColiObject *createColiCharacter(const ColiCharacterInfo &info, const mm::mtl::IntrusivePtr<ReferenceFrame> &frame);
+  static ColiObject *createColiPhantom(const ColiPhantomInfo &info, const mm::mtl::IntrusivePtr<ReferenceFrame> &frame);
   ColiObject();
   ~ColiObject();
   virtual const mm::mtl::RTTI *getRTTI() const { return &m_rtti; }
@@ -170,5 +180,11 @@ static_assert(offsetof(ColiObject, scale) == 0xe0, "");
 static_assert(offsetof(ColiObject, shape) == 0xe8, "");
 static_assert(offsetof(ColiObject, userData) == 0xf0, "");
 static_assert(sizeof(ColiObject) == 0x100, "");
+
+class ColiMoveObject : public ColiObject {
+public:
+  static ColiObject *createColiCharacter(const ColiCharacterInfo &info, const mm::mtl::IntrusivePtr<ReferenceFrame> &frame);
+  static ColiObject *createColiPhantom(const ColiPhantomInfo &info, const mm::mtl::IntrusivePtr<ReferenceFrame> &frame);
+};
 
 } // namespace fw

@@ -30,6 +30,7 @@ public:
 class AnimAfterModifierInterface : public mm::mtl::IntrusiveListNode<AnimAfterModifierInterface> {
 public:
   virtual ~AnimAfterModifierInterface();
+  virtual void apply() = 0;
 };
 
 class IkResolver : public mm::mtl::IntrusiveListNode<IkResolver> {
