@@ -97,7 +97,8 @@ public:
   static void reqPartyBlade(u32 blade, u32 driver);
   static void reqRebuildPartyWeapon(u32 blade);
   static void reqChangeAttribute(u32 objectType, u32 blade, u32 attribute);
-  static void reqChangeBladeWithSetId(u32 partyId, int bladeSet, bool isForce);
+  static void reqChangeParty(const RQ_SETUP_PARTY &info);
+  static u32 reqChangeBladeWithSetId(u32 partyId, int bladeSet, bool isForce);
   static void reqDestroyGf();
 };
 

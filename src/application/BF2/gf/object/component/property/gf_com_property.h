@@ -127,6 +127,12 @@ struct MsgObjectChangeHpMax : fw::Message {
   u32 maxHp;
 };
 
+struct MsgObjectChangeHp : fw::Message {
+  MsgObjectChangeHp(u32 hp) : fw::Message(0x1000035, 0x20), hp(hp) {}
+
+  u32 hp;
+};
+
 struct MsgObjectChangeAttribute : fw::Message {
   MsgObjectChangeAttribute() : fw::Message(0x1000042, 0x20) {}
 

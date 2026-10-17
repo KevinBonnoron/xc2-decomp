@@ -141,7 +141,8 @@ public:
   u32 enArrangeId;
   u8 _74[0xa0 - 0x74];
   SDataEnemy *dataEnemy;
-  u8 _a8[0xb8 - 0xa8];
+  u8 _a8[0xb4 - 0xa8];
+  u32 savedHp;
   u32 blade;
   u8 _bc[0xc0 - 0xbc];
   SDataBlade *dataBlade;

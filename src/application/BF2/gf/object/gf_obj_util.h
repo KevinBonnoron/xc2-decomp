@@ -20,6 +20,7 @@ class GfAppend;
 class GfComModel;
 class GfObjProperty;
 class GfVolumeFade;
+class GfWeapon;
 
 enum {
   OBJ_FLAG_DESTROY = 0,
@@ -79,6 +80,7 @@ public:
   static void setDisableAutoHeal(GF_OBJ_HANDLE *handle, bool disableAutoHeal);
   static bool testDisableAutoHeal(GF_OBJ_HANDLE *handle);
   static GfObjProperty *getProperty(GF_OBJ_HANDLE *handle);
+  static GfWeapon *getExtraMountObject(GF_OBJ_HANDLE *handle);
   static u32 getHp(GF_OBJ_HANDLE *handle);
   static int getPartyID(GF_OBJ_HANDLE *handle);
   static GfAppend *getAppend(GF_OBJ_HANDLE *handle, GFATTACH attach);

@@ -8,6 +8,8 @@ struct UpdateInfo;
 }
 
 namespace gf {
+struct GF_OBJ_HANDLE;
+struct QuestID;
 
 class GfQuestTarget : public mm::mtl::PtrSingleton<GfQuestTarget> {
 public:
@@ -15,6 +17,7 @@ public:
   ~GfQuestTarget();
   void update(const fw::UpdateInfo &info);
   void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
+  static int getIconType(GF_OBJ_HANDLE *handle, QuestID quest);
 
   u8 _08[0x4440 - 0x08];
 };

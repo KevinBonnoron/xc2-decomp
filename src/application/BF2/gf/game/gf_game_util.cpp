@@ -64,17 +64,7 @@
 namespace gf {
 
 enum {
-  NATION_FIRST = 1,
-  NATION_IYASAKI = 5,
-  NATION_ARCADIA = 6,
-};
-
-enum {
   GAME_COND_METSU_WITHOUT_CRYSTAL = 2695,
-};
-
-enum {
-  SCENARIO_FLAG_SAIKA_LENS_OFF = 0x1b70,
 };
 
 enum {
