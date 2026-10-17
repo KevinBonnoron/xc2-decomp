@@ -5,8 +5,13 @@
 
 namespace ml {
 
+class DrCalcStmListObj;
+
 class DrCalcTexStreamMan {
 public:
+  DrCalcStmListObj *createTexStmListObj(const char *path);
+  DrCalcStmListObj *createBufferListObj(u32 size);
+
   enum Flag {
     FLAG_CACHER_CLEAR_MODE = 1 << 4,
   };

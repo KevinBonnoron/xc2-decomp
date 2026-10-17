@@ -21,9 +21,18 @@ static_assert(sizeof(DrCalcStmRes) == 0x18, "");
 
 class DrCalcStmListObj {
 public:
+  enum DrTexUseMode {
+    DR_TEX_USE_MODE_NONE,
+    DR_TEX_USE_MODE_LOW,
+    DR_TEX_USE_MODE_MIDDLE,
+  };
+
+  void release();
   bool isResSafe() const;
   DrCalcStmRes *getResVertexObj();
+  void setUseMode(DrTexUseMode mode);
   grlib::CGLibTextureBuffer *getTexObj(u32 index);
+  u32 getAdder();
 };
 
 } // namespace ml
