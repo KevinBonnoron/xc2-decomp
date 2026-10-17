@@ -6,9 +6,15 @@
 #include "framework/navi/navi_util.h"
 #include "framework/script/script_manager.h"
 #include "fw/fw_transform.h"
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_util.h"
+#include "gf/data/gf_game_flag.h"
+#include "gf/field/gf_field_time.h"
+#include "gf/field/gf_field_weather.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/quest/gf_quest_id.h"
+#include "gf/game/quest/gf_quest_info.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/gimmick/gf_com_behavior_gmk.h"
 #include "gf/object/component/model/gf_com_model.h"
@@ -26,6 +32,7 @@
 #include "gmk/gmk_blade.h"
 #include "gmk/gmk_climbing.h"
 #include "gmk/gmk_collection.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_dmg_gimmick.h"
 #include "gmk/gmk_door.h"
 #include "gmk/gmk_effect.h"
@@ -72,6 +79,8 @@
 
 namespace gmk {
 
+constexpr int BDAT_TYPE_U8 = 1;
+constexpr int BDAT_TYPE_U16 = 2;
 constexpr u16 SCENARIO_FLAG_KEEP_BATTLE_LOCK_IN_BATTLE = 7039;
 const ml::FILE_PRIO GMK_SCRIPT_FILE_PRIO = static_cast<ml::FILE_PRIO>(7);
 
@@ -440,5 +449,160 @@ void GmkScript::update(f32 deltaTime) {
     (this->*seq)(deltaTime);
   }
 }
+
+ScenarioFlagCond::ScenarioFlagCond(const CBdatWrapper &bdat, int id, const AGmkBase &gmk) {
+  u16 scenarioFlagMin = bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16);
+  u16 scenarioFlagMax = bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16);
+  if (scenarioFlagMax >= scenarioFlagMin) {
+    min = scenarioFlagMin;
+    max = scenarioFlagMax;
+  }
+}
+
+ScenarioFlagCond::ScenarioFlagCond(const CBdatWrapper &bdat, int id, const char *prefix) {
+  u16 scenarioFlagMin;
+  u16 scenarioFlagMax;
+  if (prefix == nullptr) {
+    scenarioFlagMin = bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16);
+    scenarioFlagMax = bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16);
+  } else {
+    mm::mtl::FixStr<32> name;
+    name.format("%s%s", prefix, "ScenarioFlagMin");
+    scenarioFlagMin = bdat.getValCheck(name.c_str(), id, BDAT_TYPE_U16);
+    name.format("%s%s", prefix, "ScenarioFlagMax");
+    scenarioFlagMax = bdat.getValCheck(name.c_str(), id, BDAT_TYPE_U16);
+  }
+  if (scenarioFlagMax >= scenarioFlagMin) {
+    min = scenarioFlagMin;
+    max = scenarioFlagMax;
+  }
+}
+
+bool ScenarioFlagCond::isMatch() const {
+  u16 scenarioFlag = gf::GfDataUtil::getScenarioFlag();
+  return min <= scenarioFlag && scenarioFlag <= max;
+}
+
+QuestFlagCond::QuestFlagCond(const CBdatWrapper &bdat, int id, const AGmkBase &gmk) {
+  u16 questFlag = bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16);
+  u8 questFlagMin = bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8);
+  u8 questFlagMax = bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8);
+  if (questFlagMax >= questFlagMin) {
+    quest = questFlag;
+    minState = questFlagMin;
+    maxState = questFlagMax;
+  }
+}
+
+QuestFlagCond::QuestFlagCond(const CBdatWrapper &bdat, int id, const char *prefix) {
+  u16 questFlag;
+  u8 questFlagMin;
+  u8 questFlagMax;
+  if (prefix == nullptr) {
+    questFlag = bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16);
+    questFlagMin = bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8);
+    questFlagMax = bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8);
+  } else {
+    mm::mtl::FixStr<32> name;
+    name.format("%s%s", prefix, "QuestFlag");
+    questFlag = bdat.getValCheck(name.c_str(), id, BDAT_TYPE_U16);
+    name.format("%s%s", prefix, "QuestFlagMin");
+    questFlagMin = bdat.getValCheck(name.c_str(), id, BDAT_TYPE_U8);
+    name.format("%s%s", prefix, "QuestFlagMax");
+    questFlagMax = bdat.getValCheck(name.c_str(), id, BDAT_TYPE_U8);
+  }
+  if (questFlagMax >= questFlagMin) {
+    quest = questFlag;
+    minState = questFlagMin;
+    maxState = questFlagMax;
+  }
+}
+
+bool QuestFlagCond::isMatch() const {
+  u8 state = gf::GfQuestInfo::getState(gf::toQuestID(quest));
+  return (minState <= state) & (state <= maxState);
+}
+
+bool DistCond::isMatch(f32 distSq, const mm::Vec3 &position) {
+  if (!isInterestPosExist()) {
+    return false;
+  }
+  const mm::Vec3 &interestPos = getInterestPos();
+  f32 x = interestPos.x - position.x;
+  f32 y = interestPos.y - position.y;
+  f32 z = interestPos.z - position.z;
+  if (x * x + y * y + z * z > distSq) {
+    return false;
+  }
+  return true;
+}
+
+bool TimeCond::isMatch() const {
+  bool isMatched = false;
+  if (gf::GfFieldTime::get() != nullptr) {
+    isMatched = (gf::GfFieldTime::get()->getTimeRangeBits() & timeRangeBits) != 0;
+  }
+  return isMatched;
+}
+
+bool WeatherCond::isMatch() const { return (gf::GfFieldWeather::getCurrentMapWeatherBit(false) & weatherBits) != 0; }
+
+bool CloudCond::isMatch() const {
+  int cloudSea = gf::GfFieldWeather::getCurrentCloudSea();
+  if (type == TYPE_NO_CLOUD_SEA) {
+    return cloudSea == 0;
+  }
+  if (type == TYPE_CLOUD_SEA) {
+    return cloudSea == 1;
+  }
+  return false;
+}
+
+bool InOutDoorCond::isMatch() const {
+  if (isIndoor && isOutdoor) {
+    return true;
+  }
+  if (gf::GfGameManager::isRoom()) {
+    return isIndoor;
+  }
+  return isOutdoor;
+}
+
+bool GameFlagCond::isMatch(u32 value) const {
+  switch (size) {
+  case 1:
+    return gf::GfGameFlag::getLocal(1, index) == value;
+  case 2:
+    return gf::GfGameFlag::getLocal(2, index) == value;
+  case 3:
+    return gf::GfGameFlag::getLocal(4, index) == value;
+  case 4:
+    return gf::GfGameFlag::getLocal(8, index) == value;
+  case 5:
+    return gf::GfGameFlag::getLocal(16, index) == value;
+  case 6:
+    return gf::GfGameFlag::getLocal(32, index) == value;
+  }
+  return false;
+}
+
+PopPosSafeCond::PopPosSafeCond(const CreateInfo *info) : isCreated(false) {
+  if (info != nullptr) {
+    create(*info);
+  }
+}
+
+BootedGmkCond::BootedGmkCond(u8 gimmickType, u16 gimmickId) : gimmickType(0), gimmickId(0) {
+  if (gimmickType != 0 && gimmickId != 0) {
+    create(gimmickType, gimmickId);
+  }
+}
+
+void BootedGmkCond::create(u8 gimmickType, u16 gimmickId) {
+  this->gimmickType = gimmickType;
+  this->gimmickId = gimmickId;
+}
+
+void BootedGmkCond::dispose() { gimmickType = 0; }
 
 } // namespace gmk
