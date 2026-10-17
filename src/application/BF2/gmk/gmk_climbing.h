@@ -1,8 +1,11 @@
 #pragma once
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
+
+struct CBdatWrapper;
 
 namespace gmk {
 
@@ -11,7 +14,14 @@ class GmkClimbingGob;
 class GmkClimbing : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x10];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    bool isPopCondMatched() const;
+
+    u16 condition;
+    u16 climbIconRadius;
+    ScenarioFlagCond scenarioFlag;
+    QuestFlagCond questFlag;
+    BootedGmkCond bootedGmk;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_CLIMBING;

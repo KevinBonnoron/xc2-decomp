@@ -1,9 +1,15 @@
 #pragma once
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
+
+namespace mm {
+struct Vec3;
+} // namespace mm
+struct CBdatWrapper;
 
 namespace gmk {
 
@@ -12,7 +18,18 @@ class GmkBladeGob;
 class GmkBlade : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x30];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    bool isPopCondMatched(const mm::Vec3 &position) const;
+    bool isPopCommonCondMatched() const;
+    bool isDepopCondMatched(const mm::Vec3 &position) const;
+
+    u8 bladeSizeCheck;
+    u16 condition;
+    u16 battleReaction;
+    ScenarioFlagCond scenarioFlag;
+    TimeCond timeCond;
+    DistHvCond popDist;
+    DistHvCond depopDist;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_BLADE;
