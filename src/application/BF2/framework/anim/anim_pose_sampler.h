@@ -7,11 +7,32 @@
 namespace anm {
 class ASMControl;
 class Blender;
+class Control;
 class ExtraTruckBuffer;
 class Pose;
 } // namespace anm
 
 namespace fw {
+
+class AnimSinglePoseSamper : public AnimPoseSamplerInterface {
+public:
+  AnimSinglePoseSamper();
+  void unbind();
+  ~AnimSinglePoseSamper() override;
+  void bind(anm::Control *control, anm::Pose *pose, anm::ExtraTruckBuffer *extraTruckBuffer);
+  void samplePose() override;
+
+  anm::Control *control;
+  anm::Pose *pose;
+  anm::ExtraTruckBuffer *extraTruckBuffer;
+  u16 extraTruckSlot;
+  bool isLocalSpace;
+};
+
+static_assert(offsetof(AnimSinglePoseSamper, control) == 0x18, "");
+static_assert(offsetof(AnimSinglePoseSamper, extraTruckSlot) == 0x30, "");
+static_assert(offsetof(AnimSinglePoseSamper, isLocalSpace) == 0x32, "");
+static_assert(sizeof(AnimSinglePoseSamper) == 0x38, "");
 
 class AnimPoseSamper : public AnimPoseSamplerInterface {
 public:
