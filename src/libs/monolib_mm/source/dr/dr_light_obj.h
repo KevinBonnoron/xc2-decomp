@@ -110,7 +110,15 @@ public:
   DrLightObjPnt(DrPixlMan *pixlMan);
   ~DrLightObjPnt() override;
   void releasePnt();
+
+  u8 _30[0x9c - 0x30];
+  f32 m_size;
+  u8 _a0[0xb0 - 0xa0];
+  f32 m_speIntensity;
 };
+
+static_assert(offsetof(DrLightObjPnt, m_size) == 0x9c, "");
+static_assert(offsetof(DrLightObjPnt, m_speIntensity) == 0xb0, "");
 
 class DrLightObjSpt : public DrLightObj {
 public:
@@ -120,6 +128,16 @@ public:
   ~DrLightObjSpt() override;
   void releaseSpt();
   void setDir(const mm::Vec3 &direction);
+
+  u8 _30[0xbc - 0x30];
+  f32 m_angle;
+  f32 m_size;
+  u8 _c4[0xd4 - 0xc4];
+  f32 m_speIntensity;
 };
+
+static_assert(offsetof(DrLightObjSpt, m_angle) == 0xbc, "");
+static_assert(offsetof(DrLightObjSpt, m_size) == 0xc0, "");
+static_assert(offsetof(DrLightObjSpt, m_speIntensity) == 0xd4, "");
 
 } // namespace ml
