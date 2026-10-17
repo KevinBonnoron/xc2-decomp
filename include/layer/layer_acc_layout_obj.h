@@ -37,6 +37,7 @@ public:
   LayerBase *createMaskObj(const void *data);
   LayerBase *createTexObj(const grlib::CGLibTextureBuffer &texture);
   LayerBase *createMemObj(u32 width, u32 height, LayerMemType type);
+  LayerBase *createPolyObj(u32 width, u32 height, u16 vertexNum, u16 indexNum, LayerPrimitiveType type);
 
   u8 _08[0x10 - 0x08];
 };
