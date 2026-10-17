@@ -27,7 +27,8 @@ struct UpdateInfo;
 enum CAMERA_PRIO : int;
 
 class CameraLayer;
-class CameraPlugin;
+
+class CameraPlugin : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<CameraPlugin> {};
 
 class Camera : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<Camera> {
 public:
@@ -77,6 +78,8 @@ public:
   void push(mm::mtl::IntrusivePtr<Camera> &camera, f32 time);
   void onPushCamera(Camera &camera);
   void pop(mm::mtl::IntrusivePtr<Camera> &camera, f32 time);
+  void pushPlugin(mm::mtl::IntrusivePtr<CameraPlugin> &plugin);
+  void popPlugin(mm::mtl::IntrusivePtr<CameraPlugin> &plugin);
   mm::Vec3 getCameraPosition() const;
 
   mm::mtl::IntrusiveList<Camera> cameras;

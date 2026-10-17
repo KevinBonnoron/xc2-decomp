@@ -89,6 +89,14 @@ public:
     m_size++;
   }
 
+  // __LINE__ must be 243 as in the original header: it is the line argument of the assert.
+#line 242
+  void push_front(T *ptr) {
+    MM_ASSERT(ptr);
+    linkNode(ptr, m_head.m_next);
+    m_size++;
+  }
+
   // __LINE__ must be 268 and 269 as in the original header: they are the line arguments of the asserts.
 #line 267
   iterator erase(iterator it) {
