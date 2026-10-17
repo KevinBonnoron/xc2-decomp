@@ -13,9 +13,9 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_FIELD_VOLUME;
 
-  ~GmkFieldVolume() override;
-  GmkType getGmkType() const override;
-  bool isValid() const override;
+  ~GmkFieldVolume() override { dispose(); }
+  GmkType getGmkType() const override { return GMK_TYPE; }
+  bool isValid() const override { return baseInfo.list != nullptr && createInfo.data != nullptr; }
   void create(const CreateInfo &info) override;
 };
 
