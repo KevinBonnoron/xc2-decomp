@@ -16,17 +16,23 @@ struct ResClipInfo {
   f32 weight;
 };
 
+bool lessAsmKeyframeAnnotation(const AsmKeyframeAnnotation &annotation, const AsmKeyframeAnnotation &other);
+
 class ResClipData {
 public:
+  void sortAnnotation(u32 type);
+
   const ResClipInfo *m_pInfo;
   const Binding *m_pBinding;
   f32 m_startFrame;
   f32 m_endFrame;
   mm::mtl::FixedArray<mm::mtl::Vector<AsmKeyframeAnnotation>, 5> m_frameAnnotations;
-  u8 _e0[0xe8 - 0xe0];
+  bool m_isAnnotationDirty;
+  u8 _e1[0xe8 - 0xe1];
 };
 
 static_assert(offsetof(ResClipData, m_frameAnnotations) == 0x18, "");
+static_assert(offsetof(ResClipData, m_isAnnotationDirty) == 0xe0, "");
 static_assert(sizeof(ResClipData) == 0xe8, "");
 
 } // namespace anm
