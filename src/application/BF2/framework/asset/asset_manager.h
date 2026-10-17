@@ -6,11 +6,16 @@
 
 namespace fw {
 
+class AssetData;
+
 class AssetManager : public ManagerObject, public mm::mtl::PtrSingleton<AssetManager> {
 public:
   static mtl::ALLOC_HANDLE getMemSYS();
   static mtl::ALLOC_HANDLE getMemTMP();
   static u32 getHash(const char *name);
+  void addAsset(AssetData *asset);
+  void removeAsset(AssetData *asset);
+  AssetData *searchAsset(const char *name, AssetData *previous);
 };
 
 } // namespace fw
