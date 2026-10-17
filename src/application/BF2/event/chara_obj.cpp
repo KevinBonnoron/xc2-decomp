@@ -21,11 +21,68 @@ void CharaObj::renderWeight() { weightPlayer.render(pos, eyeOffset); }
 
 void CharaObj::renderIK() { ikUpdater.render(pos, eyeOffset); }
 
+const mm::Vec3 &CharaObj::getPosTo() const {
+  if (queue.isExist(&cmdWalkPos) || subQueue.isExist(&cmdWalkPos) || subQueue.isExist(&cmdLinerPos)) {
+    return posTo;
+  }
+  return pos;
+}
+
 const mm::Vec3 &CharaObj::getRot() const { return rot; }
+
+const mm::Vec3 &CharaObj::getRotTo() const {
+  if (queue.isExist(&cmdTurnRot) || subQueue.isExist(&cmdTurnRot) || subQueue.isExist(&cmdLinerRot)) {
+    return rotTo;
+  }
+  return rot;
+}
+
+bool CharaObj::isTurnable() const { return !fadeQueue.isExist(&cmdSetRot); }
+
+const mm::Vec3 &CharaObj::getTar() const { return cmdSetTar.getTar(); }
+
+bool CharaObj::isTar() const { return fadeQueue.isExist(&cmdSetTar); }
 
 void CharaObj::setLensTarget(const mm::Vec2 &target) { lensPlayer.setManualTarget(true, target, true); }
 
 const mm::Vec2 &CharaObj::getLensTarget() const { return lensPlayer.getTarget(); }
+
+int CharaObj::getIdle() const {
+  if (queue.isExist(&cmdSetIdle)) {
+    return cmdSetIdle.getType();
+  }
+  return 0;
+}
+
+int CharaObj::getAction() const {
+  if (queue.isExist(&cmdPlayAction)) {
+    return cmdPlayAction.getType();
+  }
+  return 0;
+}
+
+f32 CharaObj::getActionLastFrame() const {
+  if (queue.isExist(&cmdPlayAction)) {
+    return cmdPlayAction.getLastFrame();
+  }
+  return 0.0f;
+}
+
+int CharaObj::getHead() const {
+  if (subQueue.isExist(&cmdPlayHead)) {
+    return cmdPlayHead.getType();
+  }
+  return 0;
+}
+
+int CharaObj::getFacial() const {
+  if (subQueue.isExist(&cmdPlayFacial)) {
+    return cmdPlayFacial.getType();
+  }
+  return 0;
+}
+
+void CharaObj::resetDynamics(int frame) { dysUpdater.resetDynamics(frame); }
 
 bool CharaObj::isFadeOut() const { return (flags & FLAG_FADE_OUT) != 0; }
 

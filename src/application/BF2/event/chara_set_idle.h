@@ -17,6 +17,8 @@ public:
   virtual void init();
   virtual RESULT update(const Param &param);
 
+  int getType() const { return mType; }
+
 private:
   u32 mStep;
   gf::GF_OBJ_HANDLE *handle;

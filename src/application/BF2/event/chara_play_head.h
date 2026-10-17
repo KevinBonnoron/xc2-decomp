@@ -64,6 +64,8 @@ public:
   virtual RESULT update(const Param &param);
   virtual void term();
 
+  int getType() const { return type; }
+
 private:
   static const char *type2stat(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_headtype"), "stat", type, 7)); }
   static f32 type2blend(int type) { return static_cast<s16>(Bdat::getValCheck(Bdat::getFP("EVT_headtype"), "blend", type, 5)); }

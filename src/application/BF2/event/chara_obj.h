@@ -5,13 +5,20 @@
 #include "event/chara_effect_player.h"
 #include "event/chara_ik_updater.h"
 #include "event/chara_lens_player.h"
+#include "event/chara_liner_pos.h"
+#include "event/chara_liner_rot.h"
 #include "event/chara_part_updater.h"
+#include "event/chara_play_action.h"
 #include "event/chara_play_facial.h"
 #include "event/chara_play_head.h"
+#include "event/chara_set_idle.h"
 #include "event/chara_set_pos.h"
 #include "event/chara_set_rot.h"
+#include "event/chara_set_tar.h"
 #include "event/chara_stop_head.h"
 #include "event/chara_tar_player.h"
+#include "event/chara_turn_rot.h"
+#include "event/chara_walk_pos.h"
 #include "event/chara_weight_player.h"
 #include "event/chara_wink_player.h"
 #include "event/cmd_queue.h"
@@ -85,12 +92,12 @@ public:
   void setPos(const mm::Vec3 &pos);
   void walkPos(const mm::Vec3 &pos, EVT_poscvtype cv, bool isRun);
   void linerPos(const mm::Vec3 &pos, bool isWalk, f32 frame, CV_TYPE cv);
-  mm::Vec3 getPosTo() const;
+  const mm::Vec3 &getPosTo() const;
   void setRot(const mm::Vec3 &rot);
   void turnRot(const mm::Vec3 &rot, EVT_rotcvtype cv, f32 frame);
   void linerRot(const mm::Vec3 &rot, f32 frame, CV_TYPE cv);
   const mm::Vec3 &getRot() const;
-  mm::Vec3 getRotTo() const;
+  const mm::Vec3 &getRotTo() const;
   bool isTurnable() const;
   void setTar(const TarAxis &axis, f32 frame, EVT_tarcvtype cv, EVT_aimtype aim, f32 weight, f32 speed);
   void resetTar();
@@ -141,7 +148,16 @@ public:
 private:
   CharaSetPos cmdSetPos;
   CharaSetRot cmdSetRot;
-  u8 _28[0x950 - 0x28];
+  u8 _28[0x30 - 0x28];
+  CharaWalkPos cmdWalkPos;
+  CharaLinerPos cmdLinerPos;
+  CharaTurnRot cmdTurnRot;
+  CharaLinerRot cmdLinerRot;
+  CharaSetTar cmdSetTar;
+  CharaSetIdle cmdSetIdle;
+  u8 _608[0x630 - 0x608];
+  CharaPlayAction cmdPlayAction;
+  u8 _670[0x950 - 0x670];
   CharaPlayHead cmdPlayHead;
   CharaStopHead cmdStopHead;
   CharaPlayFacial cmdPlayFacial;
@@ -171,9 +187,10 @@ private:
   CmdQueue<QUEUE_COUNT, 0> subQueue;
   CmdQueue<SUB_QUEUE_COUNT, 0> fadeQueue;
   mm::Vec3 pos;
-  u8 _2FC0[0x2fd0 - 0x2fc0];
+  mm::Vec3 posTo;
   mm::Vec3 rot;
-  u8 _2FE0[0x3030 - 0x2fe0];
+  mm::Vec3 rotTo;
+  u8 _2FF0[0x3030 - 0x2ff0];
   FrameInfo frameInfo;
   u8 _3044[0x3048 - 0x3044];
   f32 weaponScale;

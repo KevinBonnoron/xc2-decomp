@@ -16,6 +16,14 @@ public:
   void update();
   void erase(const ICmd *cmd);
   void push_back(ICmd *cmd, const CmdParam &param);
+  bool isExist(const ICmd *cmd) const {
+    for (u32 i = 0; i < mItems.size(); i++) {
+      if (mItems.at(i)->mCmd == cmd) {
+        return true;
+      }
+    }
+    return false;
+  }
 
 private:
   mm::mtl::FixedVector<CmdItem, N> mItems;
