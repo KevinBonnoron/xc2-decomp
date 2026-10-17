@@ -20,6 +20,9 @@ class GfMenuZoneMapList : public ui::UIListInfo<MenuZoneMapInfo> {
 public:
   GfMenuZoneMapList();
   ~GfMenuZoneMapList() override;
+  static GfMenuZoneMapList *create();
+  void sortFromPriority();
+  static bool sortPriority(const MenuZoneMapInfo &info, const MenuZoneMapInfo &other);
 
   bool isGroupMode;
 };

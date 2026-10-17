@@ -99,6 +99,13 @@ public:
     contentsChanged = true;
   }
 
+  T &getContents(u32 index) {
+    if (index < contents.size()) {
+      return contents[index];
+    }
+    return invalid;
+  }
+
   const T &getContents(u32 index) const {
     if (index < contents.size()) {
       return contents[index];

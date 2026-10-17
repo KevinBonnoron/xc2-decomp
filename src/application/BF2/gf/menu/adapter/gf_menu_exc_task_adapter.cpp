@@ -5,7 +5,7 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_bdat.h"
-#include "gf/menu/gf_menu_id_list.h"
+#include "gf/menu/list/gf_menu_id_list.h"
 #include "ui/ui_object_acc.h"
 #include "ui/ui_object_plugin.h"
 #include "ui/ui_str.h"
