@@ -1,10 +1,11 @@
 #include "grlib/cglib_texture_buffer.h"
 
-#include "grlib/cglib_buff_fix_alloc.h"
+#include "grlib/cglib_buff_texture.h"
 #include "grlib/cglib_color_buffer.h"
 #include "grlib/cglib_depth_buffer.h"
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_system_context.h"
+#include "grlib/cglib_tex_descriptor.h"
 #include "grlib/cglib_texture.h"
 #include "mtl/mem_manager.h"
 #include "nvn/nvn.h"
@@ -59,15 +60,15 @@ void CGLibTextureBuffer::release() {
   m_gpuAddress = 0;
   if (m_flags & FLAG_INITIALIZED) {
     nvnTextureFinalize(m_nvnTexture);
-    context::CGLibSystemContext::get()->m_textureAlloc.freeBuffer(m_nvnTexture);
+    context::CGLibSystemContext::get()->m_buffTexture.freeBuffer(m_nvnTexture);
   }
   m_memPool.release();
   if (m_textureId != -1) {
-    context::CGLibSystemContext::get()->m_descriptorAlloc.freeID(m_textureId);
+    context::CGLibSystemContext::get()->m_texDescriptor.freeID(m_textureId);
     m_textureId = -1;
   }
   if (m_samplerId != -1) {
-    context::CGLibSystemContext::get()->m_descriptorAlloc.freeID(m_samplerId);
+    context::CGLibSystemContext::get()->m_texDescriptor.freeID(m_samplerId);
     m_samplerId = -1;
   }
   m_flags &= ~(FLAG_INITIALIZED | FLAG_OWN_BUFFER);
@@ -217,7 +218,7 @@ void CGLibDepthBuffer::release() {
   m_bufferSize = 0;
   if (m_flags & FLAG_INITIALIZED) {
     nvnTextureFinalize(m_nvnTexture);
-    context::CGLibSystemContext::get()->m_textureAlloc.freeBuffer(m_nvnTexture);
+    context::CGLibSystemContext::get()->m_buffTexture.freeBuffer(m_nvnTexture);
   }
   m_flags &= ~(FLAG_INITIALIZED | FLAG_OWN_BUFFER);
 }

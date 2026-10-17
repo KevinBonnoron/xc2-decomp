@@ -1,11 +1,13 @@
 #pragma once
 #include <stddef.h>
 
-#include "grlib/cglib_buff_fix_alloc.h"
+#include "grlib/cglib_buff_mem_pool_tbl.h"
+#include "grlib/cglib_buff_texture.h"
 #include "grlib/cglib_dec_shader.h"
 #include "grlib/cglib_depth_target.h"
 #include "grlib/cglib_render_target.h"
 #include "grlib/cglib_state.h"
+#include "grlib/cglib_tex_descriptor.h"
 #include "grlib/cglib_vtx_fetch.h"
 #include "mm_mtl/singleton.h"
 #include "nvn/nvn.h"
@@ -30,11 +32,11 @@ public:
   void releaseDelayVertex(CGLibMemType &memType);
 
   u8 _0008[0x0538 - 0x0008];
-  CGLibBuffFixAlloc m_descriptorAlloc;
-  u8 _0568[0x0e60 - 0x0568];
-  CGLibBuffFixAlloc m_textureAlloc;
-  CGLibBuffFixAlloc m_memoryPoolAlloc;
-  u8 _0ec0[0x1070 - 0x0ec0];
+  CGLibTexDescriptor m_texDescriptor;
+  u8 _05a0[0x0e60 - 0x05a0];
+  CGLibBuffTexture m_buffTexture;
+  CGLibBuffMemPoolTbl m_buffMemPoolTbl;
+  u8 _0eb8[0x1070 - 0x0eb8];
   NVNcommandBuffer *m_cmdBuf;
   u8 _1078[0x1084 - 0x1078];
   NVNchannelMaskState m_colorBufferOn;
@@ -63,9 +65,9 @@ public:
   const NVNtexture *m_registerDepth;
 };
 
-static_assert(offsetof(CGLibSystemContext, m_descriptorAlloc) == 0x0538, "");
-static_assert(offsetof(CGLibSystemContext, m_textureAlloc) == 0x0e60, "");
-static_assert(offsetof(CGLibSystemContext, m_memoryPoolAlloc) == 0x0e90, "");
+static_assert(offsetof(CGLibSystemContext, m_texDescriptor) == 0x0538, "");
+static_assert(offsetof(CGLibSystemContext, m_buffTexture) == 0x0e60, "");
+static_assert(offsetof(CGLibSystemContext, m_buffMemPoolTbl) == 0x0e90, "");
 static_assert(offsetof(CGLibSystemContext, m_cmdBuf) == 0x1070, "");
 static_assert(offsetof(CGLibSystemContext, m_colorBufferOn) == 0x1084, "");
 static_assert(offsetof(CGLibSystemContext, m_cullingOff) == 0x10a0, "");
