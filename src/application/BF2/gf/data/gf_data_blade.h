@@ -352,6 +352,7 @@ public:
   static u8 getRace(u32 blade);
   static u8 getGender(u32 blade);
   static u32 getQuestRace(u32 blade);
+  static bool getCommonBladeName(const char *model);
   static bool isOperable(u32 blade);
   static bool isAnimal(u32 blade);
   static bool isMale(u32 blade);
@@ -361,6 +362,9 @@ public:
   static bool setAchievReleaseLevel(u32 blade, u32 line, u32 level);
   static bool isCompleteAchievement(u32 blade);
   static u32 getAchievementID(u32 blade, u32 line, u32 level);
+  static const char *getBaseEabWeaponName(u32 blade);
+  static const char *getBaseEfbWeaponName(u32 blade);
+  static const char *getBaseEfbAttributeName(u32 blade, u32 attribute);
   static u8 getAttribute(u32 blade);
   static const char *getDeathBlowWeaponName(u32 blade);
   static u32 getRealBladeId(u32 blade);

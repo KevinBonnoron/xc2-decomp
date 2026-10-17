@@ -48,5 +48,24 @@ template <typename T> void move_n(T *first, size_t n, T *result) {
   }
 }
 
+// __LINE__ must be 264 as in the original header: it is the line argument of the assert.
+#line 262
+template <typename T> T *copy(const T *first, size_t n, T *result) {
+  MM_ASSERT(result >= first + n || result < first);
+  __builtin_memcpy(result, first, n * sizeof(T));
+  return result + n;
+}
+
+// __LINE__ must be 393 as in the original header: it is the line argument of the assert.
+#line 392
+template <typename T> void move(const T *from, size_t n, T *result) {
+  MM_ASSERT(from != result || n == 0);
+  if (from < result && result < from + n) {
+    __builtin_memmove(result, from, n * sizeof(T));
+  } else {
+    copy(from, n, result);
+  }
+}
+
 } // namespace mtl
 } // namespace mm
