@@ -1,12 +1,18 @@
 #pragma once
+#include "mm_math/mm_mat44.h"
+#include "types.h"
 
 namespace event {
 
 class IManiCallback {
 public:
   struct StartParam;
-  struct SetParam;
   struct RenderParam;
+
+  struct SetParam {
+    u8 _00[0x80 - 0x00];
+    mm::Mat44 matrix;
+  };
 
   virtual ~IManiCallback() {}
   virtual bool OnManiStartPos(StartParam &param) { return false; }

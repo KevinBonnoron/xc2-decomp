@@ -2,6 +2,7 @@
 
 #include "event/data_manager.h"
 #include "event/effect_obj.h"
+#include "mm_math/mm_math.h"
 #include "mm_mtl/singleton.h"
 
 namespace event {
@@ -30,6 +31,15 @@ void ObjectEffect::tail() { mEffectObj->tail(); }
 void ObjectEffect::setPosAxis(const PosAxis &axis) {
   posAxis = axis;
   mEffectObj->setPos(mm::mtl::Singleton<DataManager>::getPtr()->axis2pos(axis.getAxis(), axis.getPos().x, axis.getPos().y, axis.getPos().z));
+}
+
+void ObjectEffect::OnManiSetRot(IManiCallback::SetParam &param) {
+  mm::Vec3 euler = mm::matrixToEuler(param.matrix);
+  RotAxis axis = rotAxis;
+  mm::Vec3 pos = getPos();
+  f32 ofs = mm::mtl::Singleton<DataManager>::getPtr()->getRotOfsY(axis.getAxis(), pos);
+  axis.set(axis.getAxis(), euler.x, euler.y - ofs, euler.z);
+  setRotAxis(axis);
 }
 
 void ObjectEffect::setRotAxis(const RotAxis &axis) {
