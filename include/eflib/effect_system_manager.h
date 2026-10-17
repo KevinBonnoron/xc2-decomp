@@ -77,6 +77,7 @@ public:
   f32 getGlobalSpeed();
   void es_set_disp(u32 handle, int isDisp);
   void es_fade_core(void *data, u32 handle, int frame);
+  void es_remove_cas(void *callback);
   int es_isalive(u32 handle);
   bool es_getDeadFlag(u32 handle);
   bool es_is_loop(void *data) const;
@@ -87,6 +88,7 @@ public:
   CommandList *getCommandPtr(u32 index);
   void setGlobalSpeed(f32 speed);
   void setCategorySpd(u32 category, f32 speed);
+  void memoryDump();
   void begin();
   void end();
   void apply(const ptlib::DrDrawWorkInfoEF *info);

@@ -12,6 +12,8 @@ class IAllocator;
 
 namespace mtl {
 
+struct MemoryInfo;
+
 enum AllocatorType {
   ALLOCATOR_TYPE_PROGRAM = 1,
   ALLOCATOR_TYPE_RESOURCE = 2,
@@ -32,6 +34,7 @@ public:
   static bool isArea(ALLOC_HANDLE handle, const void *pointer);
   static u64 getTopAdr(const ALLOC_HANDLE &handle);
   static size_t getTotalSize(ALLOC_HANDLE handle);
+  static void log(ALLOC_HANDLE handle, bool isDetail, MemoryInfo *info);
 };
 
 } // namespace mtl

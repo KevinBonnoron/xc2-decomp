@@ -71,6 +71,7 @@ public:
 
   EffectCasterBase *getCaster();
   bool checkCaster(EffectCasterBase *caster);
+  void sendData(mm::Mat44 &matrix, const char *name, int index);
   void sendData(f32 scale);
   void sendDataFrame(f32 frame);
   void sendDataStateName(const char *name);

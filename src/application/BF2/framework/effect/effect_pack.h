@@ -7,6 +7,7 @@ namespace fw {
 class EffectPack : public mm::mtl::ReferenceObject {
 public:
   static EffectPack *createFromMemory(void *data, u32 size, const char *name, bool isCopy);
+  void *searchEfb(const char *name) const;
 };
 
 } // namespace fw
