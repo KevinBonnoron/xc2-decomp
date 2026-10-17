@@ -14,6 +14,12 @@
 
 namespace event {
 
+void CharaObj::clear() {
+  queue.eraseAll();
+  subQueue.eraseAll();
+  fadeQueue.eraseAll();
+}
+
 void CharaObj::playWink(int type, f32 frame, bool isLoop, f32 lensX, f32 lensY, int lensType, bool isDirect, bool isAuto) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
     return;

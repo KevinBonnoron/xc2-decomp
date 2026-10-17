@@ -1,6 +1,6 @@
 #pragma once
+#include "event/chara_obj.h"
 #include "event/i_manager.h"
-#include "event/object_chara.h"
 #include "event/object_list.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
@@ -13,6 +13,7 @@ class Object;
 class ObjectCamera;
 class ObjectEffect;
 class ObjectLight;
+class ObjectChara;
 
 class ObjectManager : public IManager, public mm::mtl::Singleton<ObjectManager> {
 public:

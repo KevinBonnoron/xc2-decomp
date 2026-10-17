@@ -5,6 +5,7 @@
 #include "event/bou_manager.h"
 #include "event/memory_manager.h"
 #include "event/object_camera.h"
+#include "event/object_chara.h"
 #include "event/object_effect.h"
 #include "event/object_light.h"
 #include "gf/data/gf_data_blade.h"

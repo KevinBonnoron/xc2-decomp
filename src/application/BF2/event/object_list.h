@@ -1,6 +1,6 @@
 #pragma once
+#include "event/chara_obj.h"
 #include "event/object.h"
-#include "event/object_chara.h"
 #include "event/object_tree.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
@@ -15,6 +15,7 @@ namespace event {
 class ObjectCamera;
 class ObjectEffect;
 class ObjectLight;
+class ObjectChara;
 
 class ObjectList {
 public:
