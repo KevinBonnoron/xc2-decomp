@@ -73,6 +73,9 @@ public:
   void resetTar();
 
   CharaObj *getCharaObj() const { return mCharaObj; }
+  const PosAxis &getPosAxis() const { return posAxis; }
+  const RotAxis &getRotAxis() const { return rotAxis; }
+  const TarAxis &getTarAxis() const { return tarAxis; }
 
 private:
   u32 flags;

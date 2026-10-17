@@ -3,17 +3,40 @@
 #include "event/script_chara_facial.h"
 #include "event/script_chara_fade.h"
 #include "event/script_chara_head.h"
+#include "event/script_chara_liner_pos.h"
+#include "event/script_chara_liner_rot.h"
 #include "event/script_chara_motion.h"
 #include "event/script_chara_motion_abc.h"
 #include "event/script_chara_mount.h"
 #include "event/script_chara_set_idle.h"
 #include "event/script_chara_talk.h"
+#include "event/script_chara_tgt.h"
+#include "event/script_chara_turn_rot.h"
+#include "event/script_chara_walk_pos.h"
 #include "event/script_chara_wink.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 
 namespace event {
 class ITodo;
+
+ITodo *ScriptCharaWalkPos::exec() {
+  return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaWalkPos;
+}
+
+ITodo *ScriptCharaLinerPos::exec() {
+  return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaLinerPos;
+}
+
+ITodo *ScriptCharaTurnRot::exec() {
+  return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaTurnRot;
+}
+
+ITodo *ScriptCharaLinerRot::exec() {
+  return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaLinerRot;
+}
+
+ITodo *ScriptCharaTgt::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaTgt; }
 
 ITodo *ScriptCharaSetIdle::exec() {
   return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaSetIdle;

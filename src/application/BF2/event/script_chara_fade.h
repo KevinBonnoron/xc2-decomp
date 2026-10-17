@@ -1,6 +1,5 @@
 #pragma once
 #include "event/i_todo.h"
-#include "types.h"
 
 namespace event {
 
@@ -14,7 +13,7 @@ public:
   virtual void redo(const Param &param);
 
 private:
-  u8 _08[0x10 - 0x08];
+  bool isPrevFadeOut;
 };
 
 static_assert(sizeof(ScriptCharaFade) == 0x10, "");
