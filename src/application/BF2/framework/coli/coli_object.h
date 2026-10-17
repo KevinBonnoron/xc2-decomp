@@ -24,6 +24,7 @@ class IDColiObj;
 namespace fw {
 
 class ColiObject;
+class ColiUserData;
 class UpdatableObject;
 
 enum ColiType : int {
@@ -150,7 +151,7 @@ public:
   HandlePtr<UpdatableObject> owner;
   mm::mtl::BitFlag<32> eventFlags;
   IColiEventListener *listener;
-  u8 _58[0x60 - 0x58];
+  ColiUserData *coliUserData;
   mm::Mat44 offsetMatrix;
   mm::Mat44 matrix;
   f32 scale;
@@ -162,6 +163,7 @@ static_assert(offsetof(ColiObject, coliObject) == 0x20, "");
 static_assert(offsetof(ColiObject, type) == 0x30, "");
 static_assert(offsetof(ColiObject, owner) == 0x38, "");
 static_assert(offsetof(ColiObject, listener) == 0x50, "");
+static_assert(offsetof(ColiObject, coliUserData) == 0x58, "");
 static_assert(offsetof(ColiObject, offsetMatrix) == 0x60, "");
 static_assert(offsetof(ColiObject, matrix) == 0xa0, "");
 static_assert(offsetof(ColiObject, scale) == 0xe0, "");
