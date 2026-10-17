@@ -25,6 +25,7 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_util.h"
+#include "gf/scom/gf_scom_obj.h"
 #include "gf/script/gf_script_manager.h"
 #include "gmk/gmk_anti_blade_area.h"
 #include "gmk/gmk_area_bgm.h"
@@ -401,6 +402,22 @@ void createMenuObj(gf::GF_OBJ_HANDLE *handle) {
 }
 
 u32 getDefeatedNum(int enemy) { return gf::GfDataEnemy::getEnemySuppress(enemy); }
+
+void disposeGobInst(gf::GF_OBJ_HANDLE *handle, f32 fadeTime) {
+  gf::GfObjAcc acc(handle);
+  if (acc.getObj() == nullptr || acc.isDestroy() || acc.testFlag(gf::OBJ_FLAG_UI_HIDDEN)) {
+    return;
+  }
+  gf::SCOM_DESTROY_GAME_OBJ::create(handle, fadeTime, 0);
+}
+
+void disposeGobInstWithAttr(gf::GF_OBJ_HANDLE *handle, u32 attribute, f32 fadeTime) {
+  gf::GfObjAcc acc(handle);
+  if (acc.getObj() == nullptr || acc.isDestroy() || acc.testFlag(gf::OBJ_FLAG_UI_HIDDEN)) {
+    return;
+  }
+  gf::SCOM_DESTROY_GAME_OBJ::create(handle, fadeTime, attribute);
+}
 
 bool canObtainPreciousItem() { return gf::GfGameManager::isEnableGetFieldPrecious(); }
 
