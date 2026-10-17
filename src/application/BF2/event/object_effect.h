@@ -53,6 +53,8 @@ public:
   size_t getEffCount() const;
 
   EffectObj *getEffectObj() const { return mEffectObj; }
+  const PosAxis &getPosAxis() const { return posAxis; }
+  const RotAxis &getRotAxis() const { return rotAxis; }
 
 private:
   void resetAttach() {

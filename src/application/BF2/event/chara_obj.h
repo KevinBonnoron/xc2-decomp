@@ -55,6 +55,8 @@ struct Vec2;
 
 namespace event {
 
+class IAttachActor;
+class ModelObj;
 class TarAxis;
 
 enum CHARA_TYPE {
@@ -167,6 +169,7 @@ public:
   const char *getName() const { return name.c_str(); }
   bool isReady() const { return (flags & FLAG_READY) != 0; }
   gf::GF_OBJ_HANDLE *getHandle() const { return handle; }
+  IAttachActor *getAttachActor() const { return attachActor; }
   const FrameInfo &getFrameInfo() const { return frameInfo; }
 
 private:
@@ -205,7 +208,8 @@ private:
   u32 offscrId;
   gf::GF_OBJ_HANDLE *handle;
   gf::GfEvtModel *model;
-  u8 _D50[0xd60 - 0xd50];
+  ModelObj *modelObj;
+  IAttachActor *attachActor;
   CharaIKUpdater ikUpdater;
   CharaDysUpdater dysUpdater;
   CharaTarPlayer tarPlayer;

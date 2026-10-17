@@ -1,6 +1,6 @@
 #pragma once
 #include "event/i_todo.h"
-#include "types.h"
+#include "mm_math/mm_vec3.h"
 
 namespace event {
 
@@ -14,7 +14,7 @@ public:
   virtual void redo(const Param &param);
 
 private:
-  u8 _08[0x20 - 0x08];
+  mm::Vec3 prevScale;
 };
 
 static_assert(sizeof(ScriptEffectScale) == 0x20, "");
