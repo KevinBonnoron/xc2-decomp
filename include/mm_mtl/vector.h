@@ -173,6 +173,8 @@ public:
 
   bool valid_iterator(const T *it) const { return begin() <= it && it <= end(); }
 
+  // __LINE__ must be 385 as in the original header: it is the line argument of the assert.
+#line 380
   void push_back(const T &value) {
     size_t size = m_size;
     if (size == m_capacity) {
@@ -186,6 +188,7 @@ public:
     }
     m_size++;
   }
+#line 512
 
   T *insert(T *it, const T &value);
 
