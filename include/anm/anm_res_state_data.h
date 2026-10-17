@@ -23,7 +23,10 @@ enum StateType {
 
 struct ResState {
   StateType type;
-  u8 _04[0x30 - 0x4];
+  u8 _04[0x8 - 0x4];
+  const char *name;
+  u64 attribute;
+  u8 _18[0x30 - 0x18];
   const ResLoopCount *loopCount;
 };
 
@@ -31,7 +34,7 @@ class ResStateData {
 public:
   const ResState *m_pResState;
   mm::mtl::Vector<ResClipData> m_clips;
-  u8 _30[0x50 - 0x30];
+  u64 m_attributes[4];
   mm::mtl::FixedArray<mm::mtl::Vector<AsmAnnotetion>, 5> m_enterAnnotations;
   mm::mtl::FixedArray<mm::mtl::Vector<AsmAnnotetion>, 5> m_leaveAnnotations;
 };
