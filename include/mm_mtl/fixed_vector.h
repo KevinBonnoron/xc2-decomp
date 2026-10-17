@@ -84,6 +84,16 @@ public:
     return it;
   }
 
+  FixedVector &operator=(const FixedVector &other) {
+    if (this != &other) {
+      clear();
+      assign(other.begin(), other.end());
+    }
+    return *this;
+  }
+
+  void assign(const T *first, const T *last);
+
   T *at(size_t index) { return reinterpret_cast<T *>(&mBuffer[index * sizeof(T) / sizeof(Unit)]); }
   const T *at(size_t index) const { return reinterpret_cast<const T *>(&mBuffer[index * sizeof(T) / sizeof(Unit)]); }
 
