@@ -24,8 +24,10 @@ namespace context {
 class CGLibSystemContext : public mm::mtl::PtrSingleton<CGLibSystemContext> {
 public:
   void getUniformoGpuAddress(u64 &address, const CGLibMemType &memType);
+  void getVertexGpuAddress(u64 &address, const CGLibMemType &memType);
   void releaseDelayMempool(NVNmemoryPool *pool, void *buffer);
   void releaseDelayTexture(NVNtexture *texture, void *buffer, int textureId, int samplerId);
+  void releaseDelayVertex(CGLibMemType &memType);
 
   u8 _0008[0x0538 - 0x0008];
   CGLibBuffFixAlloc m_descriptorAlloc;
