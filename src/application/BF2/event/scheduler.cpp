@@ -1,10 +1,18 @@
 #include "event/scheduler.h"
 
+#include "event/chara_util.h"
+#include "event/manager.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_util.h"
+#include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/gf_com_transform.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_util.h"
+#include "math.h"
+#include "mm_math/mm_math.h"
+#include "mm_math/mm_vec3.h"
 
 namespace event {
 
@@ -93,13 +101,52 @@ void Scheduler::func_evt2idle(gf::GfObj *obj) {
   mFuncs[ORDER_EVT2IDLE] = &Scheduler::func_look;
 }
 
+void Scheduler::func_evt2fld(gf::GfObj *obj) {
+  if ((mUse & USE_LOOK_RESET) != 0) {
+    lookTo(false, obj, nullptr, static_cast<EVT_aimtype>(0), true);
+  }
+  mFuncs[ORDER_EVT2FLD] = &Scheduler::func_return;
+}
+
 void Scheduler::func_motionEnd(gf::GfObj *obj) { mFuncs[ORDER_FLD2EVT] = &Scheduler::func_motionEnd_loop; }
 
 void Scheduler::func_motionEnd_loop(gf::GfObj *obj) { mFuncs[ORDER_FLD2EVT] = &Scheduler::func_turn; }
 
+f32 Scheduler::getRotY(gf::GfObj *obj, gf::GfObj *target) {
+  gf::GfComTransform *targetTransform = target->getComponent<gf::GfComTransform>();
+  gf::GfComTransform *transform = obj->getComponent<gf::GfComTransform>();
+  const mm::Vec3 &pos = transform->getPosition();
+  const mm::Vec3 &targetPos = targetTransform->getPosition();
+  return -atan2f(pos.x - targetPos.x, -(pos.z - targetPos.z));
+}
+
 void Scheduler::func_turn_loop(gf::GfObj *obj) {
   if ((mUse & USE_TURN) == 0 || gf::GfGameUtil::isTurnEnd(handle)) {
     mFuncs[ORDER_FLD2EVT] = nullptr;
+  }
+}
+
+void Scheduler::func_look(gf::GfObj *obj) {
+  if ((mUse & USE_LOOK) == 0) {
+    mFuncs[ORDER_EVT2IDLE] = nullptr;
+    return;
+  }
+  gf::GfObj *target = nullptr;
+  if (obj->type == gf::OBJECT_TYPE_DRIVER) {
+    target = gf::GfObjUtil::getObj(Manager::get()->getObjHandle());
+  } else if (obj->type == gf::OBJECT_TYPE_NPC) {
+    target = gf::GfGameParty::getLeaderTransformObj();
+  }
+  if (target == nullptr) {
+    return;
+  }
+  if ((flags & FLAG_LOOK_START) == 0) {
+    lookTo(true, obj, target, static_cast<EVT_aimtype>(mAimType), false);
+    return;
+  }
+  if (CharaUtil::isCanTarget(obj->handle, target->handle)) {
+    lookTo(true, obj, target, static_cast<EVT_aimtype>(mAimType), true);
+    flags &= ~FLAG_LOOK_START;
   }
 }
 
@@ -113,6 +160,20 @@ void Scheduler::func_return(gf::GfObj *obj) {
 void Scheduler::func_return_loop(gf::GfObj *obj) { mFuncs[ORDER_EVT2FLD] = &Scheduler::func_motion; }
 
 void Scheduler::func_motion(gf::GfObj *obj) { mFuncs[ORDER_EVT2FLD] = &Scheduler::func_motion_loop; }
+
+void Scheduler::func_motion_loop(gf::GfObj *obj) {
+  if ((mUse & USE_ITEM) != 0) {
+    gf::GfComAsm *anim = obj->getComponent<gf::GfComAsm>();
+    if (mWait-- > 0 && anim != nullptr) {
+      bool isLoop = anim->isLoop(gf::ANIM_LAYER_BASE);
+      const char *state = anim->getStateName(gf::ANIM_LAYER_BASE);
+      if (!isLoop || __builtin_strcmp(state, "S_idle") == 0) {
+        return;
+      }
+    }
+  }
+  mFuncs[ORDER_EVT2FLD] = &Scheduler::func_item;
+}
 
 void Scheduler::func_item(gf::GfObj *obj) {
   if ((mUse & USE_ITEM) != 0) {
@@ -138,5 +199,7 @@ void Scheduler::setUse(USE use, bool isUse) {
     }
   }
 }
+
+f32 Scheduler::getRotY(gf::GfObj *obj) { return mm::quatToEuler(obj->getComponent<gf::GfComTransform>()->getRotation()).y; }
 
 } // namespace event
