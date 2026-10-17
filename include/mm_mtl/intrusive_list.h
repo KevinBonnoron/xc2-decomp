@@ -42,6 +42,8 @@ public:
       return *m_node;
     }
 
+    // The assertion lines of the game change the register allocation of the loops over a list.
+#line 70
     T *operator->() const {
       MM_ASSERT(m_node);
       return m_node;
