@@ -77,6 +77,17 @@ u16 CGLibTextureBuffer::getHeight() const { return m_height; }
 
 GrlSurfaceFormat CGLibTextureBuffer::getFormat() const { return m_format; }
 
+CGLibAcc1DTexture::CGLibAcc1DTexture() : m_isLock(false), m_isDirty(false) {}
+
+CGLibAcc1DTexture::~CGLibAcc1DTexture() {}
+
+bool CGLibAcc1DTexture::lock(CGLibTextureBuffer &texture) {
+  setup1DTexutreInfo(texture);
+  m_isLock = true;
+  m_pTexture = &texture;
+  return true;
+}
+
 void CGLibAccUtilTexture::setup1DTexutreInfo(CGLibTextureBuffer &texture) {
   m_width = texture.getWidth();
   m_isLinear = false;
@@ -96,7 +107,24 @@ void CGLibAccUtilTexture::setup1DTexutreInfo(CGLibTextureBuffer &texture) {
   setupFormatParam();
 }
 
+void CGLibAcc1DTexture::unlock() {
+  if (m_isDirty) {
+    textureFlush(*m_pTexture);
+  }
+}
+
 void CGLibAccUtilTexture::textureFlush(CGLibTextureBuffer &texture) { nn::os::FlushDataCache(texture.m_buffer, texture.m_bufferSize); }
+
+CGLibAcc2DTexture::CGLibAcc2DTexture() : m_mipmap(0), m_face(0), m_isLock(false), m_isDirty(false), m_isCubemap(false) {}
+
+CGLibAcc2DTexture::~CGLibAcc2DTexture() {}
+
+bool CGLibAcc2DTexture::lock(CGLibTextureBuffer &texture) {
+  m_pTexture = &texture;
+  m_isLock = true;
+  setup2DTexutreInfo(texture, 0);
+  return true;
+}
 
 void CGLibAccUtilTexture::setup2DTexutreInfo(CGLibTextureBuffer &texture, u32 mipmap) {
   u32 width = texture.getWidth();
@@ -130,7 +158,30 @@ void CGLibAccUtilTexture::setup2DTexutreInfo(CGLibTextureBuffer &texture, u32 mi
   m_isLinear = (texture.m_flags >> 5) & 1;
 }
 
+bool CGLibAcc2DTexture::lockMipmap(CGLibTextureBuffer &texture, u32 mipmap) {
+  if (mipmap < texture.getMipmap()) {
+    m_mipmap = mipmap;
+    m_pTexture = &texture;
+    m_isLock = true;
+    setup2DTexutreInfo(texture, mipmap);
+    return true;
+  }
+  return false;
+}
+
 u16 CGLibTextureBuffer::getMipmap() const { return m_mipmap; }
+
+bool CGLibAcc2DTexture::lockCubemap(CGLibTextureBuffer &texture, u32 face) {
+  if (face < texture.getDepth()) {
+    m_face = face;
+    m_pTexture = &texture;
+    m_isLock = true;
+    m_isCubemap = true;
+    setupCubeTexutreInfo(texture, face, 0);
+    return true;
+  }
+  return false;
+}
 
 u16 CGLibTextureBuffer::getDepth() const { return m_depth; }
 
@@ -166,6 +217,143 @@ void CGLibAccUtilTexture::setupCubeTexutreInfo(CGLibTextureBuffer &texture, u32 
   setupFormatParam();
 }
 
+bool CGLibAcc2DTexture::lockCubemapMipmap(CGLibTextureBuffer &texture, u32 face, u32 mipmap) {
+  if (face < texture.getDepth() && mipmap < texture.getMipmap()) {
+    m_mipmap = mipmap;
+    m_face = face;
+    m_pTexture = &texture;
+    m_isLock = true;
+    m_isCubemap = true;
+    setupCubeTexutreInfo(texture, face, mipmap);
+    return true;
+  }
+  return false;
+}
+
+void CGLibAcc2DTexture::unlock() {
+  if (m_isDirty) {
+    textureFlush(*m_pTexture);
+  }
+}
+
+void CGLibAcc2DTexture::getFloat(f32 &r, u32 x, u32 y) {
+  f32 values[4];
+  getF32(values, x, y);
+  r = values[0];
+}
+
+void CGLibAcc2DTexture::getFloat(f32 &r, f32 &g, u32 x, u32 y) {
+  f32 values[4];
+  getF32(values, x, y);
+  r = values[0];
+  g = values[1];
+}
+
+void CGLibAcc2DTexture::getFloat(f32 &r, f32 &g, f32 &b, u32 x, u32 y) {
+  f32 values[4];
+  getF32(values, x, y);
+  r = values[0];
+  g = values[1];
+  b = values[2];
+}
+
+void CGLibAcc2DTexture::getFloat(f32 &r, f32 &g, f32 &b, f32 &a, u32 x, u32 y) {
+  f32 values[4];
+  getF32(values, x, y);
+  r = values[0];
+  g = values[1];
+  b = values[2];
+  a = values[3];
+}
+
+void CGLibAcc2DTexture::getInt(int &r, u32 x, u32 y) {
+  int values[4];
+  CGLibAccUtilTexture::getInt(values, x, y);
+  r = values[0];
+}
+
+void CGLibAcc2DTexture::getInt(int &r, int &g, u32 x, u32 y) {
+  int values[4];
+  CGLibAccUtilTexture::getInt(values, x, y);
+  r = values[0];
+  g = values[1];
+}
+
+void CGLibAcc2DTexture::getInt(int &r, int &g, int &b, u32 x, u32 y) {
+  int values[4];
+  CGLibAccUtilTexture::getInt(values, x, y);
+  r = values[0];
+  g = values[1];
+  b = values[2];
+}
+
+void CGLibAcc2DTexture::getInt(int &r, int &g, int &b, int &a, u32 x, u32 y) {
+  int values[4];
+  CGLibAccUtilTexture::getInt(values, x, y);
+  r = values[0];
+  g = values[1];
+  b = values[2];
+  a = values[3];
+}
+
+void CGLibAcc2DTexture::setFloat(f32 r, u32 x, u32 y) {
+  f32 values[4] = {r, 0.0f, 0.0f, 1.0f};
+  setF32(values, x, y);
+  m_isDirty = true;
+}
+
+void CGLibAcc2DTexture::setFloat(f32 r, f32 g, u32 x, u32 y) {
+  f32 values[4] = {r, g, 0.0f, 1.0f};
+  setF32(values, x, y);
+  m_isDirty = true;
+}
+
+void CGLibAcc2DTexture::setFloat(f32 r, f32 g, f32 b, u32 x, u32 y) {
+  f32 values[4] = {r, g, b, 1.0f};
+  setF32(values, x, y);
+  m_isDirty = true;
+}
+
+void CGLibAcc2DTexture::setFloat(f32 r, f32 g, f32 b, f32 a, u32 x, u32 y) {
+  f32 values[4] = {r, g, b, a};
+  setF32(values, x, y);
+  m_isDirty = true;
+}
+
+void CGLibAcc2DTexture::setInt(int r, u32 x, u32 y) {
+  int values[4] = {r, 0, 0, 0};
+  CGLibAccUtilTexture::setInt(values, x, y);
+  m_isDirty = true;
+}
+
+void CGLibAcc2DTexture::setInt(int r, int g, u32 x, u32 y) {
+  int values[4] = {r, g, 0, 0};
+  CGLibAccUtilTexture::setInt(values, x, y);
+  m_isDirty = true;
+}
+
+void CGLibAcc2DTexture::setInt(int r, int g, int b, u32 x, u32 y) {
+  int values[4] = {r, g, b, 0};
+  CGLibAccUtilTexture::setInt(values, x, y);
+  m_isDirty = true;
+}
+
+void CGLibAcc2DTexture::setInt(int r, int g, int b, int a, u32 x, u32 y) {
+  int values[4] = {r, g, b, a};
+  CGLibAccUtilTexture::setInt(values, x, y);
+  m_isDirty = true;
+}
+
+CGLibAcc3DTexture::CGLibAcc3DTexture() : m_isDirty(false) {}
+
+CGLibAcc3DTexture::~CGLibAcc3DTexture() {}
+
+bool CGLibAcc3DTexture::lock(CGLibTextureBuffer &texture) {
+  m_pTexture = &texture;
+  setup3DTexutreInfo(texture);
+  return true;
+}
+
 void CGLibAccUtilTexture::setup3DTexutreInfo(CGLibTextureBuffer &texture) {
   m_width = texture.getWidth();
   m_height = texture.getHeight();
@@ -183,6 +371,12 @@ void CGLibAccUtilTexture::setup3DTexutreInfo(CGLibTextureBuffer &texture) {
   m_bufferSize = texture.m_bufferSize;
   m_isLinear = false;
   setupFormatParam();
+}
+
+void CGLibAcc3DTexture::unlock() {
+  if (m_isDirty) {
+    textureFlush(*m_pTexture);
+  }
 }
 
 AccCalcType CGLibAccUtilTexture::getCalcType(GrlSurfaceFormat format) const {
