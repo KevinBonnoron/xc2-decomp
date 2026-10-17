@@ -8,6 +8,10 @@
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
+namespace anm {
+struct QsTransform;
+} // namespace anm
+
 namespace mm {
 namespace mtl {
 class RTTI;
@@ -57,6 +61,7 @@ public:
   static mm::mtl::RTTI m_rtti;
 
   bool existInputXY() const;
+  void setLocomotion(const anm::QsTransform &locomotion);
 
   u8 _38[0x60 - 0x38];
   Input input;

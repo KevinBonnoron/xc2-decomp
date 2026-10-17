@@ -21,6 +21,7 @@ public:
   static void updateMoveWalkTurn(const fw::UpdateInfo &info, GfComPropertyPc &property, const mm::Vec3 &direction);
   static void enterMoveSwim(GfComPropertyPc &property);
   static void updateMoveSwim(const fw::UpdateInfo &info, GfComPropertyPc &property);
+  static void updateMoveWaterTurn(const fw::UpdateInfo &info, GfComPropertyPc &property, const mm::Vec3 &direction);
   static void updateMoveWaterRise(const fw::UpdateInfo &info, GfComPropertyPc &property);
   static void updateMoveWaterHoleRise(const fw::UpdateInfo &info, GfComPropertyPc &property);
 };

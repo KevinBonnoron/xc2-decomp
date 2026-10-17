@@ -37,6 +37,7 @@ public:
   static void setAutoRunInput(GfComPropertyPc &property);
   static void setAsmSpeedMove(GfComPropertyPc &property);
   static bool isTurnEndRangeCacheInput(GfComPropertyPc &property, const mm::Vec3 &direction);
+  static bool isInputInverseDir(GfComPropertyPc &property);
   static bool isInputInverseDirAutoRun(GfComPropertyPc &property);
   static void setIdleStatus(GfComPropertyPc &property, bool isIdle);
   static void setAirStatus(GfComBehaviorPc &behavior, bool isAir);
