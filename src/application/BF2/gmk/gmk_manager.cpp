@@ -2,9 +2,23 @@
 
 #include "bdat.h"
 #include "framework/memory/framework_memory.h"
+#include "framework/navi/navi_util.h"
+#include "fw/fw_transform.h"
+#include "gf/data/gf_data_enemy.h"
+#include "gf/data/gf_data_util.h"
+#include "gf/game/gf_game_manager.h"
+#include "gf/object/component/gf_com_transform.h"
+#include "gf/object/component/gimmick/gf_com_behavior_gmk.h"
+#include "gf/object/component/model/gf_com_model.h"
+#include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_manager.h"
+#include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_anti_blade_area.h"
 #include "gmk/gmk_area_bgm.h"
 #include "gmk/gmk_area_weather.h"
+#include "gmk/gmk_base.h"
 #include "gmk/gmk_battle_lock.h"
 #include "gmk/gmk_blade.h"
 #include "gmk/gmk_climbing.h"
@@ -43,11 +57,17 @@
 #include "gmk/gmk_tbox.h"
 #include "gmk/gmk_tutorial.h"
 #include "gmk/gmk_warp.h"
+#include "ml/scn.h"
+#include "ml/scn_cam_util.h"
+#include "mm_math/mm_quat.h"
+#include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
 #include "mtl/alloc_handle.h"
 
 namespace gmk {
+
+constexpr u16 SCENARIO_FLAG_KEEP_BATTLE_LOCK_IN_BATTLE = 7039;
 
 static const char *const s_gmkFileNames[] = {
     "enemy",       "enemy",      "enemy",         "npc",         "npc",        "npc",        "mapObj",     "mapObj",   "mapObj",
@@ -80,6 +100,8 @@ const char *GmkManager::getSheetnameByType(int gmkSetId, GmkType type) const {
   }
   return reinterpret_cast<const char *>(Bdat::getValCheck(bdat, column.c_str(), gmkSetId, 7));
 }
+
+int getCurrentMapBdatId() { return gf::GfGameManager::getMapID(); }
 
 void GmkSet::createGmkLists(int gmkSetId) {
   npcManager.setUpdateNpcNumPerFrame(32);
@@ -170,9 +192,169 @@ void GmkSet::createGmkLists(int gmkSetId) {
   }
 }
 
+bool isInEvent() { return gf::GfGameManager::isEvent(false); }
+
 } // namespace gmk
 
 // clang-format off
 #include "gmk/gmk_base.cpp"
 #include "gmk/gmk_gob_event_listener_impl.h" // IWYU pragma: keep
 // clang-format on
+
+namespace gmk {
+
+static InterestType getInterestType() {
+  GmkManager *manager = GmkManager::get();
+  if (manager == nullptr) {
+    return INTEREST_TYPE_CAMERA;
+  }
+  return manager->interestType;
+}
+
+bool isInterestPosExist() {
+  switch (getInterestType()) {
+  case INTEREST_TYPE_PLAYER:
+    return isPlayerExist();
+  case INTEREST_TYPE_CAMERA:
+    return isCameraExist();
+  }
+  return false;
+}
+
+bool isPlayerExist() { return gf::GfGameManager::getControlMover() != gf::INVALID_HANDLE; }
+
+bool isCameraExist() { return ml::Scn::sys() != nullptr && ml::Scn::sys()->getCam(-1) != nullptr; }
+
+const mm::Vec3 &getInterestPos() {
+  switch (getInterestType()) {
+  case INTEREST_TYPE_PLAYER:
+    return getPlayerPos();
+  case INTEREST_TYPE_CAMERA:
+    return getCameraPos();
+  }
+  return mm::Vec3::zero;
+}
+
+const mm::Vec3 &getPlayerPos() {
+  return gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
+}
+
+const mm::Vec3 &getCameraPos() { return ml::Scn::sys()->getCam(-1)->renderInfo->position; }
+
+bool isPlayerInDoor() { return gf::GfGameManager::isRoom(); }
+
+gf::GF_OBJ_HANDLE *getPlayer() { return gf::GfGameManager::getControlMover(); }
+
+bool toScreenPos(mm::Vec2 &screenPos, const mm::Vec3 &position) {
+  mm::Vec3 screen;
+  bool isOnScreen = ml::ScnCamUtil::getScreenPos(screen, ml::Scn::sys()->getCam(-1), position);
+  screenPos.x = screen.x;
+  screenPos.y = screen.y;
+  return isOnScreen;
+}
+
+AGmkBase *getBindedGmkInst(gf::GF_OBJ_HANDLE *handle) {
+  if (handle == gf::INVALID_HANDLE) {
+    return nullptr;
+  }
+  gf::GfObjAcc acc(handle);
+  if (!acc.isValid() || acc.isDestroy() || acc.testFlag(gf::OBJ_FLAG_UI_HIDDEN) || acc.getObj() == nullptr) {
+    return nullptr;
+  }
+  return reinterpret_cast<AGmkBase *>(acc.getUserData(gf::OBJ_USER_DATA_GMK));
+}
+
+GmkType getBindedGmkInstType(gf::GF_OBJ_HANDLE *handle) {
+  AGmkBase *gmk = getBindedGmkInst(handle);
+  if (gmk == nullptr) {
+    return GMK_TYPE_INVALID;
+  }
+  return gmk->getGmkType();
+}
+
+void setEventDisp(gf::GF_OBJ_HANDLE *handle, bool isDisp) {
+  gf::GfObjAcc acc(handle);
+  if (acc.isValid()) {
+    acc.setDisp(gf::OBJDISP_GMK_EVENT, isDisp);
+  }
+}
+
+bool getGobPosRot(mm::Vec3 &position, mm::Quat &rotation, gf::GF_OBJ_HANDLE *handle) {
+  gf::GfObjAcc acc(handle);
+  if (!acc.isValidTransform()) {
+    return false;
+  }
+  fw::Transform transform = acc.getWorldTransformNoSync();
+  position = transform.position;
+  rotation = transform.rotation;
+  return true;
+}
+
+bool isModelRendered(gf::GF_OBJ_HANDLE *handle) {
+  gf::GfObjAcc acc(handle);
+  gf::GfObj *obj = acc.getObj();
+  if (obj == nullptr) {
+    return false;
+  }
+  gf::GfComModel *model = obj->getComponent<gf::GfComModel>();
+  if (model == nullptr) {
+    return false;
+  }
+  return model->isRender();
+}
+
+bool isNaviMeshExist(const mm::Vec3 &position) {
+  mm::Vec3 result;
+  return fw::NaviUtil::testNaviColi(result, position, 2.0f, 2.0f);
+}
+
+bool isGfObjNumFull(u32 objectType) {
+  int capacity = gf::GfObjManager::getGfObjCapacity(objectType);
+  if (capacity <= 0) {
+    return false;
+  }
+  return capacity <= gf::GfObjManager::getObjectNum(objectType);
+}
+
+bool isInBattle() { return gf::GfGameManager::isBattle(); }
+
+bool isInMapJumpWithLoadingSaveData() { return gf::GfGameManager::isMapjumpWithSaveData(); }
+
+void setOpenMainMenuEnable(bool isEnable) { gf::GfGameManager::setStopMainMenuOpenForGimmick(!isEnable); }
+
+void createMenuObj(gf::GF_OBJ_HANDLE *handle) {
+  gf::GfObjAcc acc(handle);
+  gf::GfObj *obj = acc.getObj();
+  if (obj == nullptr) {
+    return;
+  }
+  gf::GfComBehaviorGmk *behavior = obj->getComponent<gf::GfComBehaviorGmk>();
+  if (behavior != nullptr) {
+    behavior->createMenuObj();
+  }
+}
+
+u32 getDefeatedNum(int enemy) { return gf::GfDataEnemy::getEnemySuppress(enemy); }
+
+bool canObtainPreciousItem() { return gf::GfGameManager::isEnableGetFieldPrecious(); }
+
+bool canCreateBattleLock() { return gf::GfGameManager::isEnableCreateBattleLock(); }
+
+bool canDisposeBattleLock() {
+  if (gf::GfDataUtil::getScenarioFlag() == SCENARIO_FLAG_KEEP_BATTLE_LOCK_IN_BATTLE) {
+    return !gf::GfGameManager::isBattle();
+  }
+  return true;
+}
+
+const char *debugGetGmkTypeName(GmkType type) { return "(null)"; }
+
+const char *debugGetShapeTypeName(ShapeType type) { return "(null)"; }
+
+const char *debugGetGmkFileName(const AGmkBase &gmk) { return "(null)"; }
+
+const char *debugGetGmkBdatRowName(const AGmkBase &gmk) { return "(null)"; }
+
+const char *debugGetGmkBdatSheetName(const AGmkBase &gmk) { return "(null)"; }
+
+} // namespace gmk

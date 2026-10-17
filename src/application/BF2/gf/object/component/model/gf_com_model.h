@@ -20,6 +20,7 @@ public:
   static mm::mtl::RTTI m_rtti;
   static const u32 COMPONENT_INDEX = 1;
 
+  bool isRender() const;
   void setModelScale(f32 scale);
 
   u8 _10[0x18 - 0x10];
