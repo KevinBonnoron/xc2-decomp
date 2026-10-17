@@ -381,7 +381,7 @@ u32 GfMenuObjUtil::getBladeAttributeIconID(u32 blade) {
   return ICON_ATTRIBUTE_BASE;
 }
 
-u32 GfMenuObjUtil::getBladeCompatibilityIconID(u32 driver, u32 blade) {
+u16 GfMenuObjUtil::getBladeCompatibilityIconID(u32 driver, u32 blade) {
   if (GfDataBlade::isValid(blade)) {
     return GfGameUtil::getTrustRank(blade) + ICON_TRUST_RANK_BASE;
   }

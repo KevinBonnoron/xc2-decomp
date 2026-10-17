@@ -68,7 +68,7 @@ public:
   static u16 getBladeFaceIconID(u32 blade);
   static u32 getBladeWeaponTypeIconID(u32 blade);
   static u32 getBladeAttributeIconID(u32 blade);
-  static u32 getBladeCompatibilityIconID(u32 driver, u32 blade);
+  static u16 getBladeCompatibilityIconID(u32 driver, u32 blade);
   static u32 getBladeAttributeID(u32 blade);
   static u32 getBladeRank(u32 blade);
   static bool isScenarioBlade(u32 blade);
