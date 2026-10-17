@@ -8,6 +8,7 @@ namespace mm {
 
 struct Plane {
   Plane() {}
+  Plane(const Vec3 &normal, f32 distance) : normal(normal), distance(distance) {}
 
   void set(const Vec3 &direction, const Vec3 &position) {
     normal = direction;
