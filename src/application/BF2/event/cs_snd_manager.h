@@ -1,5 +1,6 @@
 #pragma once
 #include "event/i_manager.h"
+#include "framework/sound/sound_manager.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -12,6 +13,7 @@ public:
     FLAG_PRELOAD = 1 << 0,
     FLAG_PLAY = 1 << 1,
     FLAG_PAUSE = 1 << 2,
+    FLAG_STALL = 1 << 3,
   };
 
   enum {
@@ -44,6 +46,20 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
+  void stopPreload() {
+    fw::SoundManager::get()->stopBgm(mPreloadHandle, 1.0f);
+    mPreloadHandle = 0;
+    mPreloadPath = "";
+    flags &= ~FLAG_PRELOAD;
+  }
+
+  void stopPlay() {
+    fw::SoundManager::get()->stopBgm(mPlayHandle, 1.0f);
+    mPlayHandle = 0;
+    mPlayPath = "";
+    flags &= ~(FLAG_PLAY | FLAG_PAUSE | FLAG_STALL);
+  }
+
   u32 flags;
   u32 dispFlags;
   u32 mPreloadHandle;
