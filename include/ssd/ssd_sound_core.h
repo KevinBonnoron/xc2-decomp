@@ -11,6 +11,7 @@ class SoundBank;
 class SoundCategory;
 class SoundEffecter;
 class SoundListener;
+class VoiceHandle;
 
 struct OutputMode {
   enum Type {};
@@ -92,6 +93,7 @@ public:
   void AddBehavior(BehaviorControl *behavior);
   OutputMode::Type GetOutputMode() const override;
   void SetOutputMode(OutputMode::Type mode) override;
+  VoiceHandle *GetVoiceHandle(u32 id) const;
   void StreamThreadImpl();
   f32 GetMasterVolume() const override;
   f32 GetMasterPitch() const override;
