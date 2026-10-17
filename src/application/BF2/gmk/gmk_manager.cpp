@@ -15,11 +15,14 @@
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/data/gf_object_type.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
+#include "gf/game/quest/gf_quest_util.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/gimmick/gf_com_behavior_gmk.h"
 #include "gf/object/component/model/gf_com_model.h"
@@ -453,6 +456,11 @@ bool isNaviMeshExist(const mm::Vec3 &position) {
   return fw::NaviUtil::testNaviColi(result, position, 2.0f, 2.0f);
 }
 
+int getCapaOfGmkDmgPhantomTargetInfo() {
+  int capacity = gf::GfObjManager::getGfObjCapacity(gf::OBJECT_TYPE_ENEMY);
+  return capacity > 0 ? capacity + 3 : 3;
+}
+
 bool isGfObjNumFull(u32 objectType) {
   int capacity = gf::GfObjManager::getGfObjCapacity(objectType);
   if (capacity <= 0) {
@@ -477,6 +485,19 @@ void createMenuObj(gf::GF_OBJ_HANDLE *handle) {
   if (behavior != nullptr) {
     behavior->createMenuObj();
   }
+}
+
+u32 GmkTbox::getProgress() const { return gf::GfGameFlag::getLocal(2, createInfo.bdatIndex + GAME_FLAG_PROGRESS); }
+
+bool isEnemyPopCondOfQuestMatched(u16 enemy) {
+  int remain = gf::GfQuestUtil::getEnemyPopRemainNumber(enemy);
+  if (remain < 0) {
+    return true;
+  }
+  if (remain == 0) {
+    return false;
+  }
+  return remain > static_cast<int>(gf::GfGameUtil::getObjNumberByEnArrangeId(enemy));
 }
 
 u32 getDefeatedNum(int enemy) { return gf::GfDataEnemy::getEnemySuppress(enemy); }

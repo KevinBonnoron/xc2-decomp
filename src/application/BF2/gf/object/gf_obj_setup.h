@@ -5,6 +5,7 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/object/gf_init_param.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixstr.h"
 #include "types.h"
 
 namespace mm {
@@ -47,7 +48,8 @@ public:
   mm::Vec3 position;
   mm::Vec3 rotation;
   f32 scale;
-  u8 _44[0x54 - 0x44];
+  u8 _44[0x50 - 0x44];
+  f32 opacity;
   bool hasFixedBlade;
   u8 _55[0x58 - 0x55];
   u32 fixedBlade;
@@ -60,6 +62,7 @@ static_assert(offsetof(GfObjSetup, characterType) == 0x1c, "");
 static_assert(offsetof(GfObjSetup, position) == 0x20, "");
 static_assert(offsetof(GfObjSetup, rotation) == 0x30, "");
 static_assert(offsetof(GfObjSetup, scale) == 0x40, "");
+static_assert(offsetof(GfObjSetup, opacity) == 0x50, "");
 static_assert(offsetof(GfObjSetup, hasFixedBlade) == 0x54, "");
 static_assert(offsetof(GfObjSetup, fixedBlade) == 0x58, "");
 
@@ -132,9 +135,17 @@ public:
   static const u32 OBJECT_TYPE = OBJECT_TYPE_GIMMICK;
 
   GimmickType gimmickType;
+  u8 _60[0x6c - 0x60];
+  u32 attribute;
+  mm::mtl::FixStr<32> motion;
+  u8 _94[0xa1 - 0x94];
+  bool isAccessible;
 };
 
 static_assert(offsetof(GfObjSetupGimmick, gimmickType) == 0x5c, "");
+static_assert(offsetof(GfObjSetupGimmick, attribute) == 0x6c, "");
+static_assert(offsetof(GfObjSetupGimmick, motion) == 0x70, "");
+static_assert(offsetof(GfObjSetupGimmick, isAccessible) == 0xa1, "");
 
 class GfObjSetupEnemy : public GfObjSetup {
 public:
