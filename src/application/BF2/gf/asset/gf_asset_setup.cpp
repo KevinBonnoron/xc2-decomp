@@ -1330,6 +1330,27 @@ const char *GfAssetSetupFobj::getPath() const { return "/model/oj/"; }
 
 GfAssetSetupWeapon::GfAssetSetupWeapon() {}
 
+void GfAssetSetupWeapon::setup(GF_ASSET_HANDLE *handle, const GfInitParamWeapon &param) {
+  setupParam(handle, param);
+  append = param.append;
+  if (!checkValidResource()) {
+    return;
+  }
+
+  mm::mtl::FixStr<128> name;
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.assetType = getAssetType();
+  info.name = name.c_str();
+  info.priority = param.priority;
+  makeAssetNamePrefix(name, info.assetType, getMdlFile(info.assetType), "");
+  if (param.isDeathBlowWeapon) {
+    name += "DBW";
+  }
+  GfAssetPack *corePack = GfAssetManager::createAssetFiles(info);
+  requestCoreResource(corePack, handle);
+}
+
 const char *GfAssetSetupWeapon::getMdlFile(GfAssetType type) {
   static mm::mtl::FixStr<128> s_model;
   RefResource *resource = getRefResource(getMdlSlot());
@@ -1384,6 +1405,32 @@ const char *GfAssetSetupWeapon::getPath() const { return GfAssetPath::getMdoMode
 
 GfAssetSetupWeaponEventCS::GfAssetSetupWeaponEventCS() {}
 
+void GfAssetSetupWeaponEventCS::setup(GF_ASSET_HANDLE *handle, const GfInitParamWeapon &param) {
+  GfAssetSetupWeapon::setup(handle, param);
+  if (!checkValidResource()) {
+    return;
+  }
+
+  mm::mtl::FixStr<128> name;
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.name = name.c_str();
+  info.priority = param.priority;
+  info.assetType = ASSET_TYPE_TEMPORARY;
+  const char *eventMotion = getEvtMotFile(info.assetType);
+  if (eventMotion == nullptr) {
+    return;
+  }
+  makeAssetNamePrefix(name, ASSET_TYPE_TEMPORARY, eventMotion, "Evt");
+  GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+  if (setupReference(pack, eventMotion, getEvtMotSlot())) {
+    return;
+  }
+  mm::mtl::FixStr<128> path;
+  path.format("%s%s%s", getEvtPath(), eventMotion, ".mot");
+  pack->files.addResource(getEvtMotSlot(), path.c_str());
+}
+
 const char *GfAssetSetupWeaponEventCS::getEvtMotFile(GfAssetType type) {
   if (type == ASSET_TYPE_TEMPORARY) {
     return getMotFile(ASSET_TYPE_TEMPORARY);
@@ -1394,6 +1441,24 @@ const char *GfAssetSetupWeaponEventCS::getEvtMotFile(GfAssetType type) {
 const char *GfAssetSetupWeaponEventCS::getEvtPath() const { return "/event/mot/"; }
 
 GfAssetSetupEnWeapon::GfAssetSetupEnWeapon() {}
+
+void GfAssetSetupEnWeapon::setup(GF_ASSET_HANDLE *handle, const GfInitParamEnWeapon &param) {
+  setupParam(handle, param);
+  append = param.append;
+  if (!checkValidResource()) {
+    return;
+  }
+
+  mm::mtl::FixStr<128> name;
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.assetType = getAssetType();
+  info.name = name.c_str();
+  info.priority = param.priority;
+  makeAssetNamePrefix(name, info.assetType, getMdlFile(info.assetType), getMotFile(info.assetType));
+  GfAssetPack *corePack = GfAssetManager::createAssetFiles(info);
+  requestCoreResource(corePack, handle);
+}
 
 const char *GfAssetSetupEnWeapon::getMdlFile(GfAssetType type) {
   RefResource *resource = getRefResource(getMdlSlot());
@@ -1429,6 +1494,24 @@ const char *GfAssetSetupEnWeapon::getPath() const { return GfAssetPath::getMdoMo
 
 GfAssetSetupBelonging::GfAssetSetupBelonging() {}
 
+void GfAssetSetupBelonging::setup(GF_ASSET_HANDLE *handle, const GfInitParamBelonging &param) {
+  setupParam(handle, param);
+  append = param.append;
+  if (!checkValidResource()) {
+    return;
+  }
+
+  mm::mtl::FixStr<128> name;
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.assetType = getAssetType();
+  info.name = name.c_str();
+  info.priority = param.priority;
+  makeAssetNamePrefix(name, info.assetType, getMdlFile(info.assetType), getMotFile(info.assetType));
+  GfAssetPack *corePack = GfAssetManager::createAssetFiles(info);
+  requestCoreResource(corePack, handle);
+}
+
 const char *GfAssetSetupBelonging::getMdlFile(GfAssetType type) {
   RefResource *resource = getRefResource(getMdlSlot());
   if (resource != nullptr && !resource->name.empty()) {
@@ -1461,6 +1544,24 @@ const char *GfAssetSetupBelonging::getMotFile(GfAssetType type) {
 const char *GfAssetSetupBelonging::getPath() const { return GfAssetPath::getMdoModel(); }
 
 GfAssetSetupExtra::GfAssetSetupExtra() {}
+
+void GfAssetSetupExtra::setup(GF_ASSET_HANDLE *handle, const GfInitParamExtra &param) {
+  setupParam(handle, param);
+  append = param.append;
+  if (!checkValidResource()) {
+    return;
+  }
+
+  mm::mtl::FixStr<128> name;
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.assetType = getAssetType();
+  info.name = name.c_str();
+  info.priority = param.priority;
+  makeAssetNamePrefix(name, info.assetType, getMdlFile(info.assetType), getMotFile(info.assetType));
+  GfAssetPack *corePack = GfAssetManager::createAssetFiles(info);
+  requestCoreResource(corePack, handle);
+}
 
 const char *GfAssetSetupExtra::getMdlFile(GfAssetType type) {
   RefResource *resource = getRefResource(getMdlSlot());

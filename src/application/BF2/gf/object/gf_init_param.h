@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/object/gf_append.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
@@ -74,13 +75,35 @@ class GfInitParamMapObj : public GfInitParam {};
 
 class GfInitParamFobj : public GfInitParam {};
 
-class GfInitParamWeapon : public GfInitParam {};
+class GfInitParamWeapon : public GfInitParam {
+public:
+  u8 _90[0x98 - 0x90];
+  GfAppend append;
+};
 
-class GfInitParamEnWeapon : public GfInitParam {};
+static_assert(offsetof(GfInitParamWeapon, append) == 0x98, "");
 
-class GfInitParamBelonging : public GfInitParam {};
+class GfInitParamEnWeapon : public GfInitParam {
+public:
+  u8 _90[0x98 - 0x90];
+  GfAppend append;
+};
 
-class GfInitParamExtra : public GfInitParam {};
+static_assert(offsetof(GfInitParamEnWeapon, append) == 0x98, "");
+
+class GfInitParamBelonging : public GfInitParam {
+public:
+  GfAppend append;
+};
+
+static_assert(offsetof(GfInitParamBelonging, append) == 0x90, "");
+
+class GfInitParamExtra : public GfInitParam {
+public:
+  GfAppend append;
+};
+
+static_assert(offsetof(GfInitParamExtra, append) == 0x90, "");
 
 class GfInitParamMapSeamless : public GfInitParam {
 public:

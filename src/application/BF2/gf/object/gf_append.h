@@ -35,7 +35,7 @@ public:
   u16 mountIndex;
   u16 rscId;
   f32 scale;
-  u8 _80[0x88 - 0x80];
+  bool isMultiMount;
 };
 
 static_assert(sizeof(GfAppend::MOUNT_INFO) == 0x18, "");
@@ -44,6 +44,7 @@ static_assert(offsetof(GfAppend, motionName) == 0x70, "");
 static_assert(offsetof(GfAppend, mountIndex) == 0x78, "");
 static_assert(offsetof(GfAppend, rscId) == 0x7a, "");
 static_assert(offsetof(GfAppend, scale) == 0x7c, "");
+static_assert(offsetof(GfAppend, isMultiMount) == 0x80, "");
 static_assert(sizeof(GfAppend) == 0x88, "");
 
 class GfAppendWire {
