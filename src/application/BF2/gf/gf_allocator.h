@@ -27,3 +27,4 @@ GfAllocator *getAllocator(ALLOCATOR allocator);
 } // namespace gf
 
 void *operator new(size_t size, gf::GfAllocator *allocator, const char *file, size_t line, int alignment);
+void *operator new[](size_t size, gf::GfAllocator *allocator, const char *file, size_t line, int alignment);

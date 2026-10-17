@@ -14,11 +14,6 @@ public:
   GfItemHandle(u32 value) : value(value) {}
   GfItemHandle(const GfItemHandle &other) : value(other.value) {}
 
-  GfItemHandle &operator=(const GfItemHandle &other) {
-    value = other.value;
-    return *this;
-  }
-
   union {
     u32 value;
     Bits bits;

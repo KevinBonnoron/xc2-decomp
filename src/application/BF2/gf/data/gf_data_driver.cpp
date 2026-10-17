@@ -392,7 +392,9 @@ void GfDataDriver::setEquipAcceHandle(u32 driver, u32 slot, GfItemHandle handle)
   setEquipAcceHandle(*getSDataDriver(driver), slot, handle);
 }
 
-void GfDataDriver::setEquipAcceHandle(SDataDriver &dataDriver, u32 slot, GfItemHandle handle) { dataDriver.accessories[slot].handle = handle; }
+void GfDataDriver::setEquipAcceHandle(SDataDriver &dataDriver, u32 slot, GfItemHandle handle) {
+  dataDriver.accessories[slot].handle.value = handle.value;
+}
 
 void GfDataDriver::getEquipWpnType(mm::mtl::FixedVector<u32, 27> &weaponTypes, u32 driver) { getEquipWpnType(weaponTypes, *getSDataDriver(driver)); }
 
