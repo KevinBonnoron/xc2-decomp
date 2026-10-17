@@ -20,6 +20,7 @@ public:
   void setMatrix(const mm::Mat44 &matrix);
   void setOffsetPos(const mm::Vec3 &position);
   const mm::Mat44 &getMatrix() const;
+  void setFrameSpd(f32 speed) { m_frameSpd = speed; }
 
   u8 _38[0x40 - 0x38];
   mm::Col3 *m_avatarMapColors;

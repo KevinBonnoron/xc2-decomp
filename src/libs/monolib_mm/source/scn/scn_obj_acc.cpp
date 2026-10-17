@@ -20,7 +20,7 @@
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
-#include "scn/scn_obj_dr_sys.h"
+#include "scn/scn_obj_model_dr_sys.h"
 #include "string.h"
 
 namespace ml {
