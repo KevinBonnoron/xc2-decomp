@@ -62,6 +62,7 @@ static_assert(offsetof(CacheDraw, isZWrite) == 0x6070, "");
 
 class DebDraw {
 public:
+  static DebDraw *get(u32 screen);
   static CacheDraw *getCacheDraw();
 };
 

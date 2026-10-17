@@ -13,6 +13,7 @@ public:
   enum Flag {
     FLAG_MATRIX = 1 << 0,
     FLAG_QUAT = 1 << 1,
+    FLAG_ROTATION_ZXY = 1 << 3,
   };
 
   AttrTransform() : m_flags(0) {}
@@ -20,15 +21,15 @@ public:
   void clear();
 
   mm::Vec3 m_pos;
-  u8 _10[0x20 - 0x10];
+  mm::Vec3 _10;
   mm::Vec3 m_scl;
   mm::Mat44 m_matrix;
   mm::Mat44 m_worldMatrix;
-  u8 _b0[0xf0 - 0xb0];
+  mm::Mat44 _b0;
   mm::Vec3 m_rot;
-  u8 _100[0x110 - 0x100];
+  mm::Vec3 _100;
   mm::Quat m_quat;
-  u8 _120[0x130 - 0x120];
+  mm::Quat _120;
   u32 m_flags;
 };
 
