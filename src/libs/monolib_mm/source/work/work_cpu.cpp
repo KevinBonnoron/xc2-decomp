@@ -2,6 +2,7 @@
 
 #include "ml/dev_clock.h"
 #include "ml/thread_util.h"
+#include "ml/work_cpu_thread.h"
 
 namespace ml {
 
@@ -17,6 +18,22 @@ bool s_bBackGround;
 } // namespace _mlwcpu
 
 bool WorkCpu::s_bRenderSubCpu;
+
+bool WorkCpu::isInitialized() {
+  WorkCpu *cpu = get();
+  if (cpu == nullptr) {
+    return false;
+  }
+
+  for (u32 i = 0; i < cpu->m_cpuNum; i++) {
+    WorkCpuThread *thread = cpu->m_cpuThreads[i];
+    if (thread == nullptr || thread->wkIsWaitException() || !thread->wkIsActive()) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 void WorkCpu::stallRender() { _mlwcpu::s_bStallRender = true; }
 
