@@ -32,6 +32,8 @@ struct alignas(16) Vec3 {
 
   Vec3 operator+(const Vec3 &vector) const { return Vec3(x + vector.x, y + vector.y, z + vector.z); }
 
+  Vec3 operator-(const Vec3 &vector) const { return Vec3(x - vector.x, y - vector.y, z - vector.z); }
+
   Vec3 operator*(f32 scale) const { return Vec3(x * scale, y * scale, z * scale); }
 
   Vec3 &operator+=(const Vec3 &vector) {

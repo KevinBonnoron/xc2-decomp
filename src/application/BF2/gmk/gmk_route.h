@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
@@ -26,11 +28,14 @@ public:
   struct Data {
     u32 firstPointIndex;
     u32 endPointIndex;
-    u8 _08[0xc - 0x8];
+    f32 curveRadius;
     u32 flags;
+    s8 widthSide;
   };
 
   static const u32 FLAG_CLOSED = 1 << 0;
+  static const u32 FLAG_FORWARD = 1 << 1;
+  static const u32 FLAG_REVERSE = 1 << 2;
 
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTE;
 
@@ -57,7 +62,7 @@ public:
   u8 _48[0x50 - 0x48];
 };
 
-static_assert(sizeof(GmkRoute::Data) == 0x10, "");
+static_assert(offsetof(GmkRoute::Data, widthSide) == 0x10, "");
 static_assert(sizeof(GmkRoute) == 0x50, "");
 
 typedef TGmkList<GmkRoute, GmkRoute::BdatInfo, 0x56525543, 5, GmkRouteGob> GmkRouteList;
@@ -68,8 +73,13 @@ public:
 
   struct Data {
     mm::Vec3 position;
-    mm::Vec3 extent;
+    f32 sideX;
+    f32 sideY;
+    f32 sideZ;
+    u32 flags;
   };
+
+  static const u32 FLAG_LINE = 1 << 0;
 
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTE_POINT;
 
@@ -86,6 +96,7 @@ public:
   u8 _48[0x50 - 0x48];
 };
 
+static_assert(offsetof(GmkRoutePoint::Data, flags) == 0x1c, "");
 static_assert(sizeof(GmkRoutePoint::Data) == 0x20, "");
 static_assert(sizeof(GmkRoutePoint) == 0x50, "");
 
