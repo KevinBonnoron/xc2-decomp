@@ -33,12 +33,11 @@ public:
   int m_num;
   u32 m_bitWordNum;
   u32 m_searchWord;
-  u8 _28[0x30 - 0x28];
 };
 
 static_assert(offsetof(CGLibBuffFixAlloc, m_unitSize) == 0x10, "");
 static_assert(offsetof(CGLibBuffFixAlloc, m_nextIndex) == 0x18, "");
 static_assert(offsetof(CGLibBuffFixAlloc, m_searchWord) == 0x24, "");
-static_assert(sizeof(CGLibBuffFixAlloc) == 0x30, "");
+static_assert(sizeof(CGLibBuffFixAlloc) == 0x28, "");
 
 } // namespace grlib

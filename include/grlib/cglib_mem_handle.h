@@ -3,6 +3,10 @@
 
 #include "types.h"
 
+namespace mtl {
+class ALLOC_HANDLE;
+} // namespace mtl
+
 namespace grlib {
 
 struct CGLibMemType {
@@ -21,6 +25,8 @@ static_assert(offsetof(CGLibMemType, m_type) == 0x8, "");
 
 class CGLibMemHandle {
 public:
+  static mtl::ALLOC_HANDLE s_hDefHandle;
+
   static void setMemBuff(CGLibMemType &memType, void *buffer);
   static void allocVertex(CGLibMemType &memType, u32 size);
   static void allocUniform(CGLibMemType &memType, u32 size);

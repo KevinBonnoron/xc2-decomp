@@ -1,8 +1,11 @@
 #include <string.h>
 
 #include "grlib/cglib_buff_fix_alloc.h"
+#include "grlib/cglib_buff_mem_pool_tbl.h"
+#include "grlib/cglib_buff_texture.h"
 #include "grlib/cglib_buffer.h"
 #include "grlib/cglib_manager.h"
+#include "grlib/cglib_mem_handle.h"
 #include "grlib/cglib_mem_pool.h"
 #include "grlib/cglib_system_context.h"
 #include "grlib/cglib_vtl_mem_pool.h"
@@ -65,6 +68,32 @@ void CGLibBuffFixAlloc::freeID(u32 id) {
   m_usedNum--;
 }
 
+CGLibBuffTexture::CGLibBuffTexture() : m_textures(nullptr) {}
+
+CGLibBuffTexture::~CGLibBuffTexture() { release(); }
+
+void CGLibBuffTexture::release() {
+  m_textures = nullptr;
+  releaseTbl();
+}
+
+void CGLibBuffTexture::createTexture(u32 num) {
+  release();
+  setupTbl(CGLibMemHandle::s_hDefHandle, CGLibMemHandle::s_hDefHandle, num, 0xc0, 0x10);
+  m_textures = m_buffer;
+}
+
+CGLibBuffMemPoolTbl::CGLibBuffMemPoolTbl() {}
+
+CGLibBuffMemPoolTbl::~CGLibBuffMemPoolTbl() { release(); }
+
+void CGLibBuffMemPoolTbl::release() { releaseTbl(); }
+
+void CGLibBuffMemPoolTbl::createMemPoolTbl(u32 num) {
+  release();
+  setupTbl(CGLibMemHandle::s_hDefHandle, CGLibMemHandle::s_hDefHandle, num, 0x100, 0x100);
+}
+
 CGLibBuffer::CGLibBuffer() {}
 
 CGLibBuffer::~CGLibBuffer() { nvnBufferFinalize(&m_buffer); }
@@ -100,7 +129,7 @@ CGLibVtlMemPool::~CGLibVtlMemPool() { release(); }
 void CGLibVtlMemPool::release() {
   if (m_isOwnPool) {
     nvnMemoryPoolFinalize(m_memoryPool);
-    context::CGLibSystemContext::get()->m_memoryPoolAlloc.freeBuffer(m_memoryPool);
+    context::CGLibSystemContext::get()->m_buffMemPoolTbl.freeBuffer(m_memoryPool);
   }
   m_size = 0;
   m_buffer = nullptr;
