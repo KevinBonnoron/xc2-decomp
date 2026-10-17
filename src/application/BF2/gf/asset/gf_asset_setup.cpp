@@ -27,6 +27,7 @@
 #include "gf/object/gf_init_param.h"
 #include "gf/util/gf_util.h"
 #include "mm_mtl/fixed_queue.h"
+#include "nn/diag.h"
 #include "string.h"
 
 namespace gf {
@@ -39,6 +40,11 @@ const u32 HANA_JS_ATTRIBUTE = 5;
 const u32 HANA_JK_ATTRIBUTE = 1;
 const u32 HANA_JD_ATTRIBUTE = 5;
 const int BDAT_TYPE_STRING = 7;
+const char *const MOB_EVENT_MOTION = "np423000";
+const char *const NPC_EVENT_MODEL = "np/np002001";
+const GfFileIdx FOOT_STEP_SE_FILE_INDEX = static_cast<GfFileIdx>(1);
+const GfFileIdx FOOT_STEP_SE_SUB_FILE_INDEX = static_cast<GfFileIdx>(2);
+const GfFileIdx ADD_MOTION_FILE_INDEX = static_cast<GfFileIdx>(15);
 
 const char *getValidName(const char *name) {
   if (name == nullptr || *name == '\0') {
@@ -75,6 +81,19 @@ void makeWeaponFileName(mm::mtl::FixStr<128> &fileName, const mm::mtl::FixStr<12
       fileName.insert(0, "db/", 3);
     }
   }
+}
+
+GfAssetType makeMotionAssetName(mm::mtl::FixStr<128> &name, GfAssetType type, const char *motion) {
+  NN_ABORT_UNLESS(*motion != '\0');
+  if (strstr(motion, MOB_EVENT_MOTION) != nullptr) {
+    type = ASSET_TYPE_TEMPORARY;
+  }
+  if (type == ASSET_TYPE_TEMPORARY || type == ASSET_TYPE_MAP_OBJECT) {
+    GfAssetSetup::makeAssetNamePrefix(name, type, motion, "Mot");
+  } else {
+    GfAssetSetup::makeAssetNamePrefix(name, type, motion, "");
+  }
+  return type;
 }
 
 } // namespace
@@ -884,6 +903,106 @@ const char *GfAssetSetupEnemyBlade::getRetargetMotFile(GfAssetType type) {
 
 const char *GfAssetSetupEnemyBlade::getPath() const { return GfAssetPath::getMdoModel(); }
 
+void GfAssetSetupEventEnemy::setup(GF_ASSET_HANDLE *handle, const GfInitParamEnemy &param) {
+  initParamEnemy = &param;
+  setupParam(handle, param);
+  if (!checkValidResource()) {
+    return;
+  }
+
+  mm::mtl::FixStr<128> name;
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.assetType = getAssetType();
+  info.name = name.c_str();
+  info.priority = param.priority;
+  info.assetType = getAssetType();
+  info.backupAssetTypes.clear();
+  info.backupAssetTypes.push(ASSET_TYPE_TEMPORARY);
+  makeAssetNamePrefix(name, info.assetType, getMdlFile(info.assetType), "Mdl");
+  GfAssetPack *corePack = GfAssetManager::createAssetFiles(info);
+  requestCoreResource(corePack, handle);
+
+  info.assetType = getAssetTypeArc();
+  info.backupAssetTypes.clear();
+  info.backupAssetTypes.push(ASSET_TYPE_TEMPORARY);
+  if (const char *arc = getArcFile(info.assetType)) {
+    makeAssetNamePrefix(name, info.assetType, arc, "EV");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getArcSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), arc, ".arc");
+      pack->files.addResource(getArcSlot(), path.c_str());
+    }
+  }
+
+  info.assetType = getAssetTypeMot();
+  info.backupAssetTypes.clear();
+  info.backupAssetTypes.push(ASSET_TYPE_TEMPORARY);
+  if (const char *motion = getRetargetMotFile(info.assetType)) {
+    makeAssetNamePrefix(name, info.assetType, motion, "Mot");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getRetargetMotSlot())) {
+      GfAssetManager::setMotionInfo(handle, motion);
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), motion, ".mot");
+      pack->files.addResource(getRetargetMotSlot(), path.c_str());
+    }
+  }
+
+  const char *retargetMotion = getRetargetMotFile(info.assetType);
+  const char *addMotion = GfDataEnemy::getAddMotionName(id);
+  info.backupAssetTypes.clear();
+  info.backupAssetTypes.push(ASSET_TYPE_TEMPORARY);
+  if (retargetMotion != nullptr && addMotion != nullptr && strcmp(retargetMotion, addMotion) != 0) {
+    makeAssetNamePrefix(name, info.assetType, addMotion, "Mot");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    mm::mtl::FixStr<128> path;
+    path.format("%s%s%s", getPath(), addMotion, ".mot");
+    pack->files.addResource(getMotSlot(), path.c_str());
+  }
+
+  info.assetType = ASSET_TYPE_TEMPORARY;
+  info.backupAssetTypes.clear();
+  info.backupAssetTypes.push(ASSET_TYPE_ENEMY_MOTION);
+  if (const char *eventMotion = getEvtMotFile(ASSET_TYPE_BASE)) {
+    makeAssetNamePrefix(name, info.assetType, eventMotion, "Evt");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getEvtMotSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getEvtPath(), eventMotion, ".mot");
+      pack->files.addResource(getEvtMotSlot(), path.c_str());
+      if (const char *eventAddMotion = GfDataEnemy::getAddMotionName(id)) {
+        makeAssetNamePrefix(name, info.assetType, eventAddMotion, "Evt");
+        GfAssetPack *addPack = GfAssetManager::createAssetFiles(info);
+        path.format("%s%s%s", getEvtPath(), eventAddMotion, ".mot");
+        addPack->files.addResource(getAddMotSlot(), path.c_str());
+      }
+    }
+  }
+
+  info.assetType = ASSET_TYPE_EFFECT;
+  info.backupAssetTypes.clear();
+  if (const char *eab = getEabFile(info.assetType)) {
+    makeAssetNamePrefix(name, info.assetType, eab, "Eff");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getEabSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getEffPath(), eab, ".wieab");
+      pack->files.addResource(getEabSlot(), path.c_str());
+    }
+    if (const char *efb = getEfbFile(info.assetType)) {
+      if (!setupReference(pack, name.c_str(), getEfbSlot())) {
+        mm::mtl::FixStr<128> path;
+        path.format("%s%s%s", getEffPath(), efb, ".wiefb");
+        pack->files.addResource(getEfbSlot(), path.c_str());
+      }
+    }
+  }
+
+  requestFootStepSePackFile(info, getFootStepId(), FOOT_STEP_SE_FILE_INDEX, FOOT_STEP_SE_SUB_FILE_INDEX);
+}
+
 const char *GfAssetSetupEventEnemy::getEvtMotFile(GfAssetType type) {
   if (type == ASSET_TYPE_BASE) {
     RefResource *resource = getRefResource(getEvtMotSlot());
@@ -905,6 +1024,108 @@ const char *GfAssetSetupEventEnemy::getEvtStpFile(GfAssetType type) {
 const char *GfAssetSetupEventEnemy::getEvtPath() const { return GfAssetPath::getEvt(); }
 
 GfAssetSetupNpc::GfAssetSetupNpc() {}
+
+void GfAssetSetupNpc::setup(GF_ASSET_HANDLE *handle, const GfInitParamNpc &param) {
+  setupParam(handle, param);
+  if (!checkValidResource()) {
+    return;
+  }
+
+  mm::mtl::FixStr<128> name;
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.assetType = getAssetType();
+  info.name = name.c_str();
+  info.priority = param.priority;
+  info.assetType = getAssetType();
+  info.backupAssetTypes.clear();
+  info.backupAssetTypes.push(ASSET_TYPE_TEMPORARY);
+  makeAssetNamePrefix(name, info.assetType, getMdlFile(info.assetType), "");
+  GfAssetPack *corePack = GfAssetManager::createAssetFiles(info);
+  requestCoreResource(corePack, handle);
+
+  info.assetType = getAssetTypeArc();
+  info.backupAssetTypes.clear();
+  info.backupAssetTypes.push(ASSET_TYPE_TEMPORARY);
+  if (const char *arc = getArcFile(info.assetType)) {
+    makeAssetNamePrefix(name, info.assetType, arc, "NP");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getArcSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), arc, ".arc");
+      pack->files.addResource(getArcSlot(), path.c_str());
+    }
+  }
+
+  info.assetType = getAssetTypeMot();
+  if (const char *motion = getRetargetMotFile(info.assetType)) {
+    GfAssetType motionType = makeMotionAssetName(name, info.assetType, motion);
+    info.assetType = motionType;
+    info.backupAssetTypes.clear();
+    info.backupAssetTypes.push(ASSET_TYPE_TEMPORARY);
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getRetargetMotSlot())) {
+      GfAssetManager::setMotionInfo(handle, motion);
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), motion, ".mot");
+      pack->files.addResource(getRetargetMotSlot(), path.c_str());
+    }
+  }
+
+  info.assetType = getAssetTypeMot();
+  const char *retargetMotion = getRetargetMotFile(info.assetType);
+  const char *addMotion = GfDataNpc::getAddMotionName(id);
+  if (retargetMotion != nullptr && addMotion != nullptr && strcmp(retargetMotion, addMotion) != 0) {
+    info.assetType = makeMotionAssetName(name, info.assetType, addMotion);
+    GfAssetType motionType = makeMotionAssetName(name, info.assetType, addMotion);
+    info.assetType = motionType;
+    info.backupAssetTypes.clear();
+    info.backupAssetTypes.push(ASSET_TYPE_TEMPORARY);
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    mm::mtl::FixStr<128> path;
+    path.format("%s%s%s", getPath(), addMotion, ".mot");
+    pack->files.addResource(getMotSlot(), path.c_str());
+  }
+
+  if (strstr(getMdlFile(info.assetType), NPC_EVENT_MODEL) != nullptr) {
+    info.assetType = ASSET_TYPE_TEMPORARY;
+    info.backupAssetTypes.clear();
+    if (const char *eventMotion = getEvtMotFile(ASSET_TYPE_BASE)) {
+      makeAssetNamePrefix(name, info.assetType, eventMotion, "Evt");
+      GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+      if (!setupReference(pack, name.c_str(), getEvtMotSlot())) {
+        mm::mtl::FixStr<128> path;
+        path.format("%s%s%s", getEvtPath(), eventMotion, ".mot");
+        pack->files.addResource(getEvtMotSlot(), path.c_str());
+        if (const char *eventAddMotion = GfDataNpc::getAddMotionName(id)) {
+          path.format("%s%s%s", getEvtPath(), eventAddMotion, ".mot");
+          pack->files.addResource(ADD_MOTION_FILE_INDEX, path.c_str());
+        }
+      }
+    }
+  }
+
+  info.assetType = ASSET_TYPE_EFFECT;
+  info.backupAssetTypes.clear();
+  if (const char *eab = getEabFile(info.assetType)) {
+    makeAssetNamePrefix(name, info.assetType, eab, "");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getEabSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getEffPath(), eab, ".wieab");
+      pack->files.addResource(getEabSlot(), path.c_str());
+    }
+    if (const char *efb = getEfbFile(info.assetType)) {
+      if (!setupReference(pack, name.c_str(), getEfbSlot())) {
+        mm::mtl::FixStr<128> path;
+        path.format("%s%s%s", getEffPath(), efb, ".wiefb");
+        pack->files.addResource(getEfbSlot(), path.c_str());
+      }
+    }
+  }
+
+  requestFootStepSePackFile(info, getFootStepId(), FOOT_STEP_SE_FILE_INDEX, FOOT_STEP_SE_SUB_FILE_INDEX);
+}
 
 u32 GfAssetSetupNpc::getFootStepId() const {
   DataParamAcc dataParamAcc(OBJECT_TYPE_NPC, id, GIMMICK_TYPE_NONE);
@@ -997,6 +1218,104 @@ const char *GfAssetSetupNpc::getEfbFile(GfAssetType type) { return getEabFile(ty
 
 const char *GfAssetSetupNpc::getEvtPath() const { return GfAssetPath::getEvt(); }
 
+void GfAssetSetupEventNpc::setup(GF_ASSET_HANDLE *handle, const GfInitParamNpc &param) {
+  setupParam(handle, param);
+  if (!checkValidResource()) {
+    return;
+  }
+
+  mm::mtl::FixStr<128> name;
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.name = name.c_str();
+  info.priority = param.priority;
+  info.assetType = getAssetType();
+  info.backupAssetTypes.clear();
+  info.backupAssetTypes.push(ASSET_TYPE_TEMPORARY);
+  info.backupAssetTypes.push(ASSET_TYPE_ENEMY_MOTION);
+  makeAssetNamePrefix(name, info.assetType, getMdlFile(info.assetType), "Mdl");
+  GfAssetPack *corePack = GfAssetManager::createAssetFiles(info);
+  requestCoreResource(corePack, handle);
+
+  info.assetType = getAssetTypeArc();
+  info.backupAssetTypes.clear();
+  info.backupAssetTypes.push(ASSET_TYPE_TEMPORARY);
+  info.backupAssetTypes.push(ASSET_TYPE_ENEMY_MOTION);
+  if (const char *arc = getArcFile(info.assetType)) {
+    makeAssetNamePrefix(name, info.assetType, arc, "EV");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getArcSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), arc, ".arc");
+      pack->files.addResource(getArcSlot(), path.c_str());
+    }
+  }
+
+  info.assetType = getAssetTypeMot();
+  info.backupAssetTypes.clear();
+  info.backupAssetTypes.push(ASSET_TYPE_ENEMY_MOTION);
+  if (const char *motion = getRetargetMotFile(info.assetType)) {
+    makeAssetNamePrefix(name, info.assetType, motion, "Mot");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getRetargetMotSlot())) {
+      GfAssetManager::setMotionInfo(handle, motion);
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), motion, ".mot");
+      pack->files.addResource(getRetargetMotSlot(), path.c_str());
+    }
+  }
+
+  const char *retargetMotion = getRetargetMotFile(info.assetType);
+  const char *addMotion = GfDataNpc::getAddMotionName(id);
+  if (retargetMotion != nullptr && addMotion != nullptr && strcmp(retargetMotion, addMotion) != 0) {
+    makeAssetNamePrefix(name, info.assetType, addMotion, "Mot");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    mm::mtl::FixStr<128> path;
+    path.format("%s%s%s", getPath(), addMotion, ".mot");
+    pack->files.addResource(getMotSlot(), path.c_str());
+  }
+
+  info.assetType = ASSET_TYPE_TEMPORARY;
+  info.backupAssetTypes.clear();
+  info.backupAssetTypes.push(ASSET_TYPE_ENEMY_MOTION);
+  if (const char *eventMotion = getEvtMotFile(ASSET_TYPE_BASE)) {
+    makeAssetNamePrefix(name, info.assetType, eventMotion, "Evt");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getEvtMotSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getEvtPath(), eventMotion, ".mot");
+      pack->files.addResource(getEvtMotSlot(), path.c_str());
+      if (const char *eventAddMotion = GfDataNpc::getAddMotionName(id)) {
+        makeAssetNamePrefix(name, info.assetType, eventAddMotion, "Evt");
+        GfAssetPack *addPack = GfAssetManager::createAssetFiles(info);
+        path.format("%s%s%s", getEvtPath(), eventAddMotion, ".mot");
+        addPack->files.addResource(ADD_MOTION_FILE_INDEX, path.c_str());
+      }
+    }
+  }
+
+  info.assetType = ASSET_TYPE_EFFECT;
+  info.backupAssetTypes.clear();
+  if (const char *eab = getEabFile(info.assetType)) {
+    makeAssetNamePrefix(name, info.assetType, eab, "Eff");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getEabSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getEffPath(), eab, ".wieab");
+      pack->files.addResource(getEabSlot(), path.c_str());
+    }
+    if (const char *efb = getEfbFile(info.assetType)) {
+      if (!setupReference(pack, name.c_str(), getEfbSlot())) {
+        mm::mtl::FixStr<128> path;
+        path.format("%s%s%s", getEffPath(), efb, ".wiefb");
+        pack->files.addResource(getEfbSlot(), path.c_str());
+      }
+    }
+  }
+
+  requestFootStepSePackFile(info, getFootStepId(), FOOT_STEP_SE_FILE_INDEX, FOOT_STEP_SE_SUB_FILE_INDEX);
+}
+
 const char *GfAssetSetupEventNpc::getMotFile(GfAssetType type) {
   if (type == ASSET_TYPE_BASE) {
     RefResource *resource = getRefResource(getMotSlot());
@@ -1035,6 +1354,49 @@ const char *GfAssetSetupEventNpc::getEvtStpFile(GfAssetType type) {
 }
 
 GfAssetSetupMob::GfAssetSetupMob() {}
+
+void GfAssetSetupMob::setup(GF_ASSET_HANDLE *handle, const GfInitParamMob &param) {
+  setupParam(handle, param);
+  if (!checkValidResource()) {
+    return;
+  }
+
+  mm::mtl::FixStr<128> name;
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.assetType = getAssetType();
+  info.name = name.c_str();
+  info.priority = param.priority;
+  makeAssetNamePrefix(name, info.assetType, getMdlFile(info.assetType), "Mdl");
+  GfAssetPack *corePack = GfAssetManager::createAssetFiles(info);
+  requestCoreResource(corePack, handle);
+
+  info.assetType = ASSET_TYPE_BASE;
+  if (const char *motion = getRetargetMotFile(ASSET_TYPE_BASE)) {
+    GfAssetType motionType = makeMotionAssetName(name, ASSET_TYPE_MAP_OBJECT, motion);
+    info.assetType = motionType;
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getRetargetMotSlot())) {
+      GfAssetManager::setMotionInfo(handle, motion);
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), motion, ".mot");
+      pack->files.addResource(getRetargetMotSlot(), path.c_str());
+    }
+  }
+
+  const char *retargetMotion = getRetargetMotFile(ASSET_TYPE_BASE);
+  const char *addMotion = GfDataMob::getAddMotionName(id);
+  if (retargetMotion != nullptr && addMotion != nullptr && strcmp(retargetMotion, addMotion) != 0) {
+    GfAssetType motionType = makeMotionAssetName(name, ASSET_TYPE_MAP_OBJECT, addMotion);
+    info.assetType = motionType;
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    mm::mtl::FixStr<128> path;
+    path.format("%s%s%s", getPath(), addMotion, ".mot");
+    pack->files.addResource(getMotSlot(), path.c_str());
+  }
+
+  requestFootStepSePackFile(info, getFootStepId(), FOOT_STEP_SE_FILE_INDEX, FOOT_STEP_SE_SUB_FILE_INDEX);
+}
 
 u32 GfAssetSetupMob::getFootStepId() const {
   DataParamAcc dataParamAcc(OBJECT_TYPE_MOB, id, GIMMICK_TYPE_NONE);
@@ -1091,6 +1453,60 @@ const char *GfAssetSetupMob::getEabFile(GfAssetType type) {
 }
 
 const char *GfAssetSetupMob::getEfbFile(GfAssetType type) { return getEabFile(type); }
+
+void GfAssetSetupEventMob::setup(GF_ASSET_HANDLE *handle, const GfInitParamMob &param) {
+  setupParam(handle, param);
+  if (!checkValidResource()) {
+    return;
+  }
+
+  mm::mtl::FixStr<128> name;
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.assetType = getAssetType();
+  info.name = name.c_str();
+  info.priority = param.priority;
+  makeAssetNamePrefix(name, info.assetType, getMdlFile(info.assetType), "Mdl");
+  GfAssetPack *corePack = GfAssetManager::createAssetFiles(info);
+  requestCoreResource(corePack, handle);
+
+  if (const char *motion = getMdlFile(ASSET_TYPE_BASE)) {
+    info.assetType = ASSET_TYPE_TEMPORARY;
+    makeAssetNamePrefix(name, info.assetType, motion, "Mot");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getRetargetMotSlot())) {
+      GfAssetManager::setMotionInfo(handle, motion);
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getEvtPath(), motion, ".mot");
+      pack->files.addResource(getRetargetMotSlot(), path.c_str());
+    }
+  }
+
+  if (const char *motion = getMdlFile(ASSET_TYPE_BASE)) {
+    info.assetType = ASSET_TYPE_TEMPORARY;
+    makeAssetNamePrefix(name, info.assetType, motion, "Mot");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), getMotSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), motion, ".mot");
+      pack->files.addResource(getMotSlot(), path.c_str());
+    }
+  }
+
+  if (strcmp(getMdlFile(ASSET_TYPE_BASE), getMotFile(ASSET_TYPE_BASE)) != 0) {
+    const char *motion = getMotFile(ASSET_TYPE_BASE);
+    info.assetType = ASSET_TYPE_TEMPORARY;
+    makeAssetNamePrefix(name, info.assetType, motion, "Mot");
+    GfAssetPack *pack = GfAssetManager::createAssetFiles(info);
+    if (!setupReference(pack, name.c_str(), ADD_MOTION_FILE_INDEX)) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), motion, ".mot");
+      pack->files.addResource(ADD_MOTION_FILE_INDEX, path.c_str());
+    }
+  }
+
+  requestFootStepSePackFile(info, getFootStepId(), FOOT_STEP_SE_FILE_INDEX, FOOT_STEP_SE_SUB_FILE_INDEX);
+}
 
 const char *GfAssetSetupEventMob::getEvtStpFile(GfAssetType type) {
   if (getAssetType() == type) {
