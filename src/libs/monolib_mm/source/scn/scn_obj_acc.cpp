@@ -701,7 +701,7 @@ void ScnObjAccStmReadObj::readType(ReadType type) {
   }
 }
 
-u32 ScnObjAccStmReadObj::getAdder() { return m_readObj->getAdder(); }
+u64 ScnObjAccStmReadObj::getAdder() { return m_readObj->getAdder(); }
 
 DrStmReadObj *ScnObjAccStmReadObj::create(const char *path) {
   DrCreator creator;

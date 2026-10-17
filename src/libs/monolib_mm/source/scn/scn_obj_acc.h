@@ -309,7 +309,7 @@ public:
 
   ScnObjAccStmReadObj(DrStmReadObj *readObj);
   void readType(ReadType type);
-  u32 getAdder();
+  u64 getAdder();
   static DrStmReadObj *create(const char *path);
   static DrStmReadObj *createSizeObj(u32 size);
 
