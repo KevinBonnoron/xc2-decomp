@@ -7,6 +7,8 @@
 namespace gf {
 
 struct MenuZoneMapInfo {
+  MenuZoneMapInfo() : mapId(0), param(0), _08(), priority(0) {}
+
   u32 mapId;
   u32 param;
   u8 _08[0x14 - 0x8];
