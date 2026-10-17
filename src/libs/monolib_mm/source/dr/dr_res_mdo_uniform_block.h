@@ -5,6 +5,14 @@ namespace ml {
 
 class DrResMdoUniformBlock {
 public:
+  enum VarType {
+    VAR_TYPE_TEX_MATRIX = 17,
+    VAR_TYPE_WORK_FLOAT4 = 18,
+    VAR_TYPE_WORK_COLOR = 19,
+    VAR_TYPE_PROJECTION_MAT = 20,
+    VAR_TYPE_NOM_PROJECTION_MAT = 50,
+  };
+
   static u32 getStaticUniformBlockSize();
   static u32 getMdlUniformBlockSize();
   static u32 getAVACharUniformBlockSize();
