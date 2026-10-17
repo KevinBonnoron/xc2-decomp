@@ -657,3 +657,11 @@ void BootedGmkCond::create(u8 gimmickType, u16 gimmickId) {
 void BootedGmkCond::dispose() { gimmickType = 0; }
 
 } // namespace gmk
+
+// clang-format off
+#include "gmk/gmk_field_volume.cpp"
+// clang-format on
+
+// clang-format off
+#include "gmk/gmk_route.cpp"
+// clang-format on
