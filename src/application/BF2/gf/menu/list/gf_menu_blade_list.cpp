@@ -1,7 +1,10 @@
 #include "gf/menu/list/gf_menu_blade_list.h"
 
+#include <functional>
+
 #include "gf/data/gf_data_blade.h"
 #include "gf/gf_allocator.h"
+#include "gf/menu/list/gf_menu_sort_type.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 
 namespace gf {
@@ -19,6 +22,39 @@ GfMenuBladeList *GfMenuBladeList::create() {
   GfMenuBladeList *list = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuBladeList();
   list->addRef();
   return list;
+}
+
+void GfMenuBladeList::sort(u32 type, bool ascending) {
+  if (getSize() == 0) {
+    return;
+  }
+  std::function<bool(const MenuBladeInfo &, const MenuBladeInfo &)> compare;
+  switch (type) {
+  case SORT_TIME:
+    compare = ascending ? sortTimeAscending : sortTimeDescending;
+    break;
+  case SORT_NAME:
+    compare = ascending ? sortNameDescending : sortNameAscending;
+    break;
+  case SORT_RARITY:
+    compare = ascending ? sortRarityAscending : sortRarityDescending;
+    break;
+  case SORT_WEAPON:
+    compare = ascending ? sortWeaponAscending : sortWeaponDescending;
+    break;
+  case SORT_ATTR:
+    compare = ascending ? sortAttrAscending : sortAttrDescending;
+    break;
+  case SORT_CREATOR:
+    compare = ascending ? sortCreatorAscending : sortCreatorDescending;
+    break;
+  case SORT_GENDER:
+    compare = ascending ? sortGenderDescending : sortGenderAscending;
+    break;
+  default:
+    return;
+  }
+  UIListInfo<MenuBladeInfo>::sort(compare);
 }
 
 bool GfMenuBladeList::sortTimeAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) {

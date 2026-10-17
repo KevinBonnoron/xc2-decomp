@@ -16,6 +16,7 @@ public:
   GfMenuBladeList();
   ~GfMenuBladeList() override;
   static GfMenuBladeList *create();
+  void sort(u32 type, bool ascending);
   static bool sortTimeAscending(const MenuBladeInfo &info, const MenuBladeInfo &other);
   static bool sortTimeDescending(const MenuBladeInfo &info, const MenuBladeInfo &other);
   static bool sortNameDescending(const MenuBladeInfo &info, const MenuBladeInfo &other);
