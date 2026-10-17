@@ -12,10 +12,6 @@
 #include "ml/scn.h"
 #include "scn/scn_render_dr_sys_parm_acc.h"
 
-namespace ml {
-enum SleepExtendType : int;
-} // namespace ml
-
 namespace event {
 
 constexpr u32 CATEGORY_CAPTURE = 5;

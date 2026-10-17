@@ -1,4 +1,5 @@
 #pragma once
+#include "nn/settings.h"
 
 namespace nn {
 namespace oe {
@@ -30,6 +31,11 @@ void SetResumeNotificationEnabled(bool isEnabled);
 FocusState GetCurrentFocusState();
 void SetPerformanceConfiguration(PerformanceMode mode, int configuration);
 void EnterExitRequestHandlingSection();
+settings::LanguageCode GetDesiredLanguage();
+void SetUserInactivityDetectionTimeExtended(bool isExtended);
+int GetUserInactivityDetectionTimeExtensionMode();
+void SetUserInactivityDetectionTimeExtendedUnsafe(bool isExtended);
+bool IsUserInactivityDetectionTimeExtended();
 
 } // namespace oe
 } // namespace nn
