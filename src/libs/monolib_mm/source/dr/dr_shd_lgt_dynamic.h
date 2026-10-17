@@ -11,6 +11,11 @@ class DrLightObjSpt;
 class DrMan;
 class DrShdLgtMan;
 
+enum DrShdLgtDynamicType {
+  DR_SHD_LGT_DYNAMIC_TILE_BASED,
+  DR_SHD_LGT_DYNAMIC_CLUSTERED,
+};
+
 class DrShdLgtDynamic {
 public:
   virtual ~DrShdLgtDynamic() {}
