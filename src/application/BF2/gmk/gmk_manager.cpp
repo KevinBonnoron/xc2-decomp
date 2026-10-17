@@ -672,6 +672,7 @@ void BootedGmkCond::dispose() { gimmickType = 0; }
 } // namespace gmk
 
 // clang-format off
+#include "gmk/gmk_enemy/gmk_enemy.cpp"
 #include "gmk/gmk_npc/gmk_npc_manager_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_npc/gmk_npc.cpp"
 #include "gmk/gmk_map_obj.cpp"
