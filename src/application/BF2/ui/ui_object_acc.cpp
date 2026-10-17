@@ -848,7 +848,7 @@ u32 UIObjectAcc::getShapeType() {
   if (polygon == nullptr) {
     return 0;
   }
-  return polygon->shapeType;
+  return polygon->info.shapeType;
 }
 
 bool UIObjectAcc::isShapeSimpleFace() {
@@ -856,7 +856,7 @@ bool UIObjectAcc::isShapeSimpleFace() {
   if (polygon == nullptr) {
     return false;
   }
-  return polygon->shapeType == UIPolygonObject::SHAPE_TYPE_SIMPLE_FACE;
+  return polygon->info.shapeType == UIPolygonObject::SHAPE_TYPE_SIMPLE_FACE;
 }
 
 bool UIObjectAcc::isShapeRing() {
@@ -864,7 +864,7 @@ bool UIObjectAcc::isShapeRing() {
   if (polygon == nullptr) {
     return false;
   }
-  return polygon->shapeType == UIPolygonObject::SHAPE_TYPE_RING;
+  return polygon->info.shapeType == UIPolygonObject::SHAPE_TYPE_RING;
 }
 
 bool UIObjectAcc::isShapeParticle() {
@@ -872,7 +872,7 @@ bool UIObjectAcc::isShapeParticle() {
   if (polygon == nullptr) {
     return false;
   }
-  return polygon->shapeType == UIPolygonObject::SHAPE_TYPE_PARTICLE;
+  return polygon->info.shapeType == UIPolygonObject::SHAPE_TYPE_PARTICLE;
 }
 
 UIShape *UIObjectAcc::getShape() {
