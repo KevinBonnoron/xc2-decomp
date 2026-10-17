@@ -58,6 +58,12 @@ private:
                     mat.rows[0][2] * x + mat.rows[1][2] * y + mat.rows[2][2] * z + mat.rows[3][2]);
   }
 
+  static mm::Vec3 angle2tar(f32 rotX, f32 rotY, const mm::Vec3 &pos) {
+    mm::Mat44 mat;
+    mat.setRotXYZ(mm::Vec3(rotX, rotY, 0.0f));
+    return transformPos(mat, 0.0f, 0.0f, -1.0f) + pos;
+  }
+
   mm::mtl::FixedVector<OfsInfo *, SCENE_COUNT> mScenes;
   mm::mtl::FixStr<64> mSceneName;
   mm::mtl::FixStr<64> mCurrentSceneName;
