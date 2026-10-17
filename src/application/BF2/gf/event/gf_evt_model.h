@@ -41,6 +41,9 @@ public:
   virtual void setWeaponFieldState();
   virtual void setWeaponBattleMount();
   virtual void setWeaponFieldMount();
+  void resetMount(GfEvtModel *parent);
+  void setMount(GfEvtModel *parent, const char *bone);
+  void setMount(GfEvtModel *parent, const char *bone, const mm::Vec3 &pos, const mm::Vec3 &rot);
 
   u8 _08[0x18 - 0x08];
   GF_EVT_MODEL type;

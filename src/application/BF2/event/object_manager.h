@@ -84,7 +84,7 @@ public:
     return mCurrent->searchByHandle(handle);
   }
 
-  ObjectChara *searchByID(u32 type, u32 id) const {
+  ObjectChara *searchByID(u32 type, u32 id) {
     if (mCurrent == nullptr) {
       return nullptr;
     }
