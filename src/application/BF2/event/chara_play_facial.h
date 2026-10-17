@@ -74,6 +74,8 @@ public:
   virtual RESULT update(const Param &param);
   virtual void term();
 
+  int getType() const { return type; }
+
 private:
   u32 flags;
   gf::GF_OBJ_HANDLE *handle;

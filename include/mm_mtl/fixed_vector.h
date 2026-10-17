@@ -84,10 +84,10 @@ public:
     return it;
   }
 
-private:
   T *at(size_t index) { return reinterpret_cast<T *>(&mBuffer[index * sizeof(T) / sizeof(Unit)]); }
   const T *at(size_t index) const { return reinterpret_cast<const T *>(&mBuffer[index * sizeof(T) / sizeof(Unit)]); }
 
+private:
   static void copy(const T *first, const T *last, T *dest) {
     if (__is_pod(T)) {
       size_t count = last - first;
