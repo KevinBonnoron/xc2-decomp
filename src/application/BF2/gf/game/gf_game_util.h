@@ -158,6 +158,7 @@ public:
 class GfGameUtilCloudSea {
 public:
   static void setInnCloudSea(CLOUD_SEA cloudSea);
+  static CLOUD_SEA getCloudSea();
 };
 
 class GfGameUtilNanakoori {
