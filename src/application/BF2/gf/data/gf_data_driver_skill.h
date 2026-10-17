@@ -5,6 +5,9 @@
 namespace gf {
 struct SDataDriver;
 
+constexpr u32 SKILL_ROW_COUNT = 5;
+constexpr u32 SKILL_COLUMN_COUNT = 3;
+
 class GfDataDriverSkill {
 public:
   static bool getName(u8 *&bdat, u32 &textId, u32 skill);
@@ -18,7 +21,7 @@ public:
   static u32 getRowFromBdat(u32 driver, u32 row, u32 column, bool isHidden);
   static u32 getEnhanceFromBdat(u32 driver, u32 row, u32 column, bool isHidden);
   static u32 getValidSkillNum(u32 driver, bool isHidden);
-  static u16 getSkill(u32 driver, u32 row, u32 column, bool isHidden);
+  static u32 getSkill(u32 driver, u32 row, u32 column, bool isHidden);
   static bool isSkillLevelUnlock(u32 driver, u32 column, bool isHidden);
   static u32 getSkillLevelUnlockNum(u32 driver, u32 column, bool isHidden);
   static bool isSkillUnlock(u32 driver, u32 row, u32 column, bool isHidden);
