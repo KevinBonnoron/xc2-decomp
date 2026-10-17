@@ -64,6 +64,7 @@ public:
 class DevKeyboard : public WorkObj, public IDevInputKeyboard, public mm::mtl::PtrSingleton<DevKeyboard> {
 public:
   ~DevKeyboard() override;
+  static bool isInitialized();
   static u32 getVkDown();
   static u32 getVkUp();
   static u32 getVkHold();

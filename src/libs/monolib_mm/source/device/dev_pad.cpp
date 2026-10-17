@@ -1,6 +1,9 @@
 #include "ml/dev_pad.h"
 
 #include "ml/dev_graph.h"
+#include "ml/lib_main.h"
+#include "ml/reslist.h"
+#include "ml/work_system.h"
 
 namespace ml {
 
@@ -18,6 +21,15 @@ void DevPad::setRepeatTime(float time) {
       pad->m_repeats[i].time = time;
     }
   }
+}
+
+bool DevPad::isInitialized() {
+  DevPad *pad = get();
+  if (pad == nullptr || pad->wkIsWaitException()) {
+    return false;
+  }
+
+  return pad->wkIsActive();
 }
 
 bool DevPad::isConnectPad(int padNo) {
@@ -222,6 +234,15 @@ bool DevPad::wkStandbyLogin() {
   }
 
   return WorkObj::wkStandbyLogin();
+}
+
+bool DevPad::wkStandbyLogout() {
+  if (m_children.size() == 0 && WorkSystem::get() == nullptr && LibMain::get() == nullptr) {
+    releaseDevice();
+    return WorkObj::wkStandbyLogout();
+  }
+
+  return false;
 }
 
 void DevPad::viBeginFrame() { updateLocal(); }

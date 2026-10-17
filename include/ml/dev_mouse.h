@@ -28,6 +28,7 @@ public:
 class DevMouse : public WorkObj, public IDevInputMouse, public mm::mtl::PtrSingleton<DevMouse> {
 public:
   ~DevMouse() override;
+  static bool isInitialized();
   static void setClipMove(int x, int y);
   static void getClipMove(mm::Pnt<int> &move);
   static const mm::Pnt<int> &getPos();
@@ -53,6 +54,8 @@ public:
   virtual bool createDevice() = 0;
   virtual void releaseDevice() = 0;
   void wkUpdate() override;
+  bool wkStandbyLogin() override;
+  bool wkStandbyLogout() override;
   static void setPadMouse(bool isPadMouse);
   static bool isPadMouse();
   static void resetMouse();
@@ -70,7 +73,9 @@ public:
   u32 m_buttonDbl;
   u32 m_buttonDblAccum;
   bool m_isPadMouse;
-  u8 _1f5[0x200 - 0x1f5];
+  f32 m_padMouseSpeed;
+  bool m_isMouseInput;
+  u8 _1fd[0x200 - 0x1fd];
 };
 
 static_assert(offsetof(DevMouse, m_pos) == 0x1b8, "");
@@ -78,5 +83,6 @@ static_assert(offsetof(DevMouse, m_wheelAccum) == 0x1d0, "");
 static_assert(offsetof(DevMouse, m_buttonOnAccum) == 0x1d8, "");
 static_assert(offsetof(DevMouse, m_buttonDblAccum) == 0x1f0, "");
 static_assert(offsetof(DevMouse, m_isPadMouse) == 0x1f4, "");
+static_assert(offsetof(DevMouse, m_padMouseSpeed) == 0x1f8, "");
 
 } // namespace ml

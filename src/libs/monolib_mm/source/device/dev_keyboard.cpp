@@ -5,6 +5,15 @@
 
 namespace ml {
 
+bool DevKeyboard::isInitialized() {
+  DevKeyboard *keyboard = get();
+  if (keyboard == nullptr || keyboard->wkIsWaitException()) {
+    return false;
+  }
+
+  return keyboard->wkIsActive();
+}
+
 u32 DevKeyboard::getVkDown() {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
