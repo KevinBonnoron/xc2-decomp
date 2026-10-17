@@ -331,4 +331,34 @@ void DevGraph::createGraphDeveice() {
   }
 }
 
+void DevGraph::cmdAddDisplayListFast(void *list, u32 size, u32 flags) {}
+
+void DevGraph::cmdExecDisplayListSys() {}
+
+void DevGraph::cmdAddDisplayListSys(void *list, u32 size, u32 flags) {}
+
+void DevGraph::cmdSetupDisplayListSys() {}
+
+void DevGraph::cmdTermDisplayListSys() {}
+
+void *DevGraph::cmdOpenDisplayListSys(u32 size, bool isSuspend, bool isFlush) { return nullptr; }
+
+bool DevGraph::cmdCloseDisplayListSys(bool isFlush) { return false; }
+
+void DevGraph::cmdAddCreatedListSys(void *list, u32 size) {}
+
+void DevGraph::cmdSuspendDisplayListSys(bool isSuspend, bool isFlush) {}
+
+void *DevGraph::cmdGetCurrentAdrSys() { return nullptr; }
+
+u32 DevGraph::cmdGetRemainSizeSys() const { return 0; }
+
+void *DevGraph::cmdAllocSys(u32 size, u32 alignment) { return nullptr; }
+
+void *DevGraph::cmdAlignSys(u32 alignment) { return nullptr; }
+
+void *DevGraph::cmdAddOfsSys(u32 offset) { return nullptr; }
+
+bool DevGraph::cmdIsOpenDisplayListSys() const { return false; }
+
 } // namespace ml

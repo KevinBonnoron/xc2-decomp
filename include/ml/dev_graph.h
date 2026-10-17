@@ -120,15 +120,15 @@ public:
   virtual void cmdAddDisplayListSys(void *list, u32 size, u32 flags);
   virtual void cmdSetupDisplayListSys();
   virtual void cmdTermDisplayListSys();
-  virtual void cmdOpenDisplayListSys(u32 size, bool isSuspend, bool isFlush);
-  virtual void cmdCloseDisplayListSys(bool isFlush);
+  virtual void *cmdOpenDisplayListSys(u32 size, bool isSuspend, bool isFlush);
+  virtual bool cmdCloseDisplayListSys(bool isFlush);
   virtual void cmdAddCreatedListSys(void *list, u32 size);
   virtual void cmdSuspendDisplayListSys(bool isSuspend, bool isFlush);
   virtual void *cmdGetCurrentAdrSys();
   virtual u32 cmdGetRemainSizeSys() const;
   virtual void *cmdAllocSys(u32 size, u32 alignment);
-  virtual void cmdAlignSys(u32 alignment);
-  virtual void cmdAddOfsSys(u32 offset);
+  virtual void *cmdAlignSys(u32 alignment);
+  virtual void *cmdAddOfsSys(u32 offset);
   virtual bool cmdIsOpenDisplayListSys() const;
 
   u8 _1b8[0x208 - 0x1b8];
