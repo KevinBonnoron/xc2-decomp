@@ -9,6 +9,7 @@
 #include "event/chara_liner_rot.h"
 #include "event/chara_part_updater.h"
 #include "event/chara_play_action.h"
+#include "event/chara_play_action_auto.h"
 #include "event/chara_play_facial.h"
 #include "event/chara_play_head.h"
 #include "event/chara_set_idle.h"
@@ -155,7 +156,7 @@ private:
   CharaLinerRot cmdLinerRot;
   CharaSetTar cmdSetTar;
   CharaSetIdle cmdSetIdle;
-  u8 _608[0x630 - 0x608];
+  CharaPlayActionAuto cmdPlayActionAuto;
   CharaPlayAction cmdPlayAction;
   u8 _670[0x950 - 0x670];
   CharaPlayHead cmdPlayHead;
