@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "gf/object/gf_append.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
@@ -55,6 +56,26 @@ static_assert(offsetof(GfInitParam, priority) == 0x44, "");
 static_assert(offsetof(GfInitParam, gimmickType) == 0x48, "");
 static_assert(offsetof(GfInitParam, isDeathBlowWeapon) == 0x83, "");
 static_assert(sizeof(GfInitParam) == 0x90, "");
+
+class GfInitParamDriver : public GfInitParam {
+public:
+  struct Weapon {
+    s8 slot;
+    u8 weaponType;
+    u8 attribute;
+    u8 _03[0x04 - 0x03];
+    u16 blade;
+    u8 _06[0x08 - 0x06];
+  };
+
+  static const u32 WEAPON_MAX = 32;
+
+  u8 _90[0x98 - 0x90];
+  mm::mtl::FixedVector<Weapon, WEAPON_MAX> weapons;
+};
+
+static_assert(sizeof(GfInitParamDriver::Weapon) == 0x08, "");
+static_assert(offsetof(GfInitParamDriver, weapons) == 0x98, "");
 
 class GfInitParamEnemy : public GfInitParam {
 public:
