@@ -1,16 +1,30 @@
 #include "dr/dr_mdo_setup.h"
 
 #include "dr/dr_ap_cache.h"
+#include "dr/dr_calc_man.h"
+#include "dr/dr_calc_view_work.h"
 #include "dr/dr_man.h"
 #include "dr/dr_mdo_mat.h"
 #include "dr/dr_pixl_deferred.h"
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_post_man.h"
+#include "dr/dr_pixl_post_obj_cube_map_ibl.h"
 #include "dr/dr_pixl_render_target.h"
 #include "dr/dr_res_mdo_uniform_block.h"
+#include "dr/dr_shd_data_list.h"
+#include "dr/dr_shd_lgt_clustered.h"
+#include "dr/dr_shd_lgt_hybrid.h"
+#include "dr/dr_shd_lgt_man.h"
+#include "dr/dr_shd_man.h"
+#include "dr/dr_shd_mdo_dec_ext_tbl.h"
 #include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_ctl_texture.h"
+#include "grlib/cglib_dbl_uniform_block.h"
+#include "grlib/cglib_one_uniform_block.h"
 #include "grlib/cglib_render_target.h"
+#include "grlib/cglib_tri_uniform_block.h"
+#include "grlib/cglib_uniform_array.h"
+#include "grlib/cglib_vtx_stm_out.h"
 #include "grlib/shd_util.h"
 
 namespace grlib {
@@ -18,6 +32,119 @@ class CGLibTextureBuffer;
 } // namespace grlib
 
 namespace ml {
+
+void DrMdoSetup::uniformBlock_Static(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
+  m_drMan->calcMan->m_viewWork->m_staticUniform.setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
+}
+
+void DrMdoSetup::uniformBlock_Material(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
+  (*m_matRes->materialUniforms)[matIndex].setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
+}
+
+void DrMdoSetup::uniformBlock_Light(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
+  m_drMan->calcMan->m_viewWork->m_lightUniform.setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
+}
+
+void DrMdoSetup::uniformBlock_Mdl(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
+  (*m_matRes->mdlUniforms)[mdlIndex].setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
+}
+
+void DrMdoSetup::uniformBlock_Bone(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
+  m_drMan->shdMan->m_dataList->m_stmOuts[0].setStorageBuffer(m_decExtTbl->getValGlobalParam(paramIndex));
+}
+
+void DrMdoSetup::uniformBlock_no(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {}
+
+void DrMdoSetup::uniformBlock_AvatarChar(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
+                                         u32 bufferIndex) {
+  m_matRes->avatar->charColors->setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
+}
+
+void DrMdoSetup::uniformBlock_AvatarDoll(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
+                                         u32 bufferIndex) {
+  m_matRes->avatar->dollColors->setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
+}
+
+void DrMdoSetup::uniformBlock_Fog(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
+  m_drMan->calcMan->m_viewWork->m_fogUniform.setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
+}
+
+void DrMdoSetup::uniformBlock_Toon(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
+  m_drMan->calcMan->m_viewWork->m_toonUniform.setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
+}
+
+void DrMdoSetup::uniformBlock_VolTexCalc(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
+                                         u32 bufferIndex) {
+  (*m_matRes->volTexUniforms)[bufferIndex].setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
+}
+
+void DrMdoSetup::uniformBlock_GlobalIBL(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
+  m_drMan->pixlMan->m_res->postMan->m_cubeMapIBL->setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
+}
+
+void DrMdoSetup::uniformBlock_ClusterParam(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
+                                           u32 bufferIndex) {
+  DrShdLgtClustered *clustered = m_drMan->shdMan->m_lgtMan->getHybridLight()->m_clustered;
+  u32 index = m_decExtTbl->getValGlobalParam(paramIndex);
+  if (cate->flags & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
+    clustered->setParamStorageBuffer(m_drMan->viewIndex, index);
+  } else {
+    clustered->setParamUniformBlock(m_drMan->viewIndex, index);
+  }
+}
+
+void DrMdoSetup::uniformBlock_ClusterPntList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
+                                             u32 bufferIndex) {
+  DrShdLgtClustered *clustered = m_drMan->shdMan->m_lgtMan->getHybridLight()->m_clustered;
+  u32 index = m_decExtTbl->getValGlobalParam(paramIndex);
+  if (cate->flags & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
+    clustered->setPntLightStorageBuffer(m_drMan->viewIndex, index);
+  } else {
+    clustered->setPntLightUniformBlock(m_drMan->viewIndex, index);
+  }
+}
+
+void DrMdoSetup::uniformBlock_ClusterSptList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
+                                             u32 bufferIndex) {
+  DrShdLgtClustered *clustered = m_drMan->shdMan->m_lgtMan->getHybridLight()->m_clustered;
+  u32 index = m_decExtTbl->getValGlobalParam(paramIndex);
+  if (cate->flags & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
+    clustered->setSptLightStorageBuffer(m_drMan->viewIndex, index);
+  } else {
+    clustered->setSptLightUniformBlock(m_drMan->viewIndex, index);
+  }
+}
+
+void DrMdoSetup::uniformBlock_ClusterIdxList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
+                                             u32 bufferIndex) {
+  DrShdLgtClustered *clustered = m_drMan->shdMan->m_lgtMan->getHybridLight()->m_clustered;
+  u32 index = m_decExtTbl->getValGlobalParam(paramIndex);
+  if (cate->flags & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
+    clustered->setLightListStorageBuffer(m_drMan->viewIndex, index);
+  } else {
+    clustered->setLightListUniformBlock(m_drMan->viewIndex, index);
+  }
+}
+
+void DrMdoSetup::uniformBlock_ClusterAddressList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
+                                                 u32 bufferIndex) {
+  DrShdLgtClustered *clustered = m_drMan->shdMan->m_lgtMan->getHybridLight()->m_clustered;
+  u32 index = m_decExtTbl->getValGlobalParam(paramIndex);
+  if (cate->flags & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
+    clustered->setPointerListStorageBuffer(m_drMan->viewIndex, index);
+  } else {
+    clustered->setPointerListUniformBlock(m_drMan->viewIndex, index);
+  }
+}
+
+void DrMdoSetup::uniformBlock_RimBloomCalc(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
+                                           u32 bufferIndex) {
+  (*m_matRes->rimBloomUniforms)[mdlIndex].setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
+}
+
+void DrMdoSetup::uniformBlock_Toon2(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
+  m_drMan->calcMan->m_viewWork->m_toon2Uniform.setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
+}
 
 int DrMdoSetup::unimate_texMatrix(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {
   MdoWrkMatRes *matRes = m_matRes;

@@ -2,13 +2,17 @@
 #include <stddef.h>
 
 #include "dr/dr_mdl_base.h"
+#include "grlib/cglib_uniform_array.h"
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 
 namespace grlib {
+class CGLibDblUniformBlock;
+class CGLibOneUniformBlock;
 class CGLibTextureBuffer;
+class CGLibTriUniformBlock;
 } // namespace grlib
 
 namespace ml {
@@ -17,6 +21,7 @@ class DrMdoSmlShadowObj;
 struct MdsMatCharMkTexTbl;
 class DrResMdoTexList;
 class DrResMdoVertex;
+class DrShdMdoDecExtTbl;
 
 struct MdsMatInfoHeader {
   u8 _00[0x20 - 0x00];
@@ -67,10 +72,6 @@ struct MdoWrkMatEntry {
 
 static_assert(sizeof(MdoWrkMatEntry) == 0x20, "");
 
-struct MdoWrkAvatarColors {
-  f32 *values;
-};
-
 struct MdoWrkAvatar {
   u32 flags;
   u8 _04[0x08 - 0x04];
@@ -80,8 +81,8 @@ struct MdoWrkAvatar {
   void *eyeTexture;
   bool dollMat;
   u8 _39[0x40 - 0x39];
-  MdoWrkAvatarColors *charColors;
-  MdoWrkAvatarColors *dollColors;
+  grlib::CGLibOneUniformBlock *charColors;
+  grlib::CGLibOneUniformBlock *dollColors;
 };
 
 static_assert(offsetof(MdoWrkAvatar, baseTextures) == 0x08, "");
@@ -127,7 +128,13 @@ struct MdoWrkMatRes {
   s32 matCount;
   u8 _034[0x038 - 0x034];
   f32 *baseValues;
-  u8 _040[0x0c0 - 0x040];
+  u8 _040[0x090 - 0x040];
+  grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *materialUniforms;
+  u8 _098[0x0a0 - 0x098];
+  grlib::CGLibUniformArray<grlib::CGLibTriUniformBlock> *mdlUniforms;
+  u8 _0a8[0x0b0 - 0x0a8];
+  grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *volTexUniforms;
+  grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *rimBloomUniforms;
   MdoWrkMatEntry *matEntries;
   DrResMdoVertex *vertex;
   DrResMdoTexList *textureList;
@@ -153,6 +160,10 @@ static_assert(offsetof(MdoWrkMatRes, meshHeader) == 0x020, "");
 static_assert(offsetof(MdoWrkMatRes, matData) == 0x028, "");
 static_assert(offsetof(MdoWrkMatRes, matCount) == 0x030, "");
 static_assert(offsetof(MdoWrkMatRes, baseValues) == 0x038, "");
+static_assert(offsetof(MdoWrkMatRes, materialUniforms) == 0x090, "");
+static_assert(offsetof(MdoWrkMatRes, mdlUniforms) == 0x0a0, "");
+static_assert(offsetof(MdoWrkMatRes, volTexUniforms) == 0x0b0, "");
+static_assert(offsetof(MdoWrkMatRes, rimBloomUniforms) == 0x0b8, "");
 static_assert(offsetof(MdoWrkMatRes, matEntries) == 0x0c0, "");
 static_assert(offsetof(MdoWrkMatRes, vertex) == 0x0c8, "");
 static_assert(offsetof(MdoWrkMatRes, textureList) == 0x0d0, "");
@@ -246,7 +257,7 @@ public:
   u8 _24[0x28 - 0x24];
   DrMan *m_drMan;
   MdoWrkMatRes *m_matRes;
-  u8 _38[0x40 - 0x38];
+  DrShdMdoDecExtTbl *m_decExtTbl;
   mm::Col3 *m_avatarMapColors;
   const MdsMatCharMkTexTbl *m_charMkTextures;
   u8 _50[0x58 - 0x50];
@@ -279,6 +290,7 @@ public:
 
 static_assert(offsetof(DrMdoMat, m_drMan) == 0x28, "");
 static_assert(offsetof(DrMdoMat, m_matRes) == 0x30, "");
+static_assert(offsetof(DrMdoMat, m_decExtTbl) == 0x38, "");
 static_assert(offsetof(DrMdoMat, m_avatarMapColors) == 0x40, "");
 static_assert(offsetof(DrMdoMat, m_charMkTextures) == 0x48, "");
 static_assert(offsetof(DrMdoMat, m_smlShadow) == 0x58, "");

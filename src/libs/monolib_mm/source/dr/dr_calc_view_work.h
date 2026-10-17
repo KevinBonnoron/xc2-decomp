@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "grlib/cglib_dbl_uniform_block.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
@@ -63,7 +64,14 @@ public:
   DrMan *m_drMan;
   u8 _708[0x770 - 0x708];
   mm::Vec3 m_prevViewPos;
-  u8 _780[0xae0 - 0x780];
+  u8 _780[0x7b0 - 0x780];
+  grlib::CGLibDblUniformBlock m_staticUniform;
+  u8 _7e8[0x820 - 0x7e8];
+  grlib::CGLibDblUniformBlock m_fogUniform;
+  grlib::CGLibDblUniformBlock m_toonUniform;
+  grlib::CGLibDblUniformBlock m_toon2Uniform;
+  grlib::CGLibDblUniformBlock m_lightUniform;
+  u8 _900[0xae0 - 0x900];
   f32 m_jitter[2];
   u8 _ae8[0xaf0 - 0xae8];
   f32 m_prevJitter[2];
@@ -84,6 +92,11 @@ static_assert(offsetof(DrCalcViewWork, m_fades) == 0x490, "");
 static_assert(offsetof(DrCalcViewWork, m_pixlScale) == 0x4d0, "");
 static_assert(offsetof(DrCalcViewWork, m_drMan) == 0x700, "");
 static_assert(offsetof(DrCalcViewWork, m_prevViewPos) == 0x770, "");
+static_assert(offsetof(DrCalcViewWork, m_staticUniform) == 0x7b0, "");
+static_assert(offsetof(DrCalcViewWork, m_fogUniform) == 0x820, "");
+static_assert(offsetof(DrCalcViewWork, m_toonUniform) == 0x858, "");
+static_assert(offsetof(DrCalcViewWork, m_toon2Uniform) == 0x890, "");
+static_assert(offsetof(DrCalcViewWork, m_lightUniform) == 0x8c8, "");
 static_assert(offsetof(DrCalcViewWork, m_jitter) == 0xae0, "");
 static_assert(offsetof(DrCalcViewWork, m_prevJitter) == 0xaf0, "");
 static_assert(offsetof(DrCalcViewWork, m_ditherTmaaValues) == 0xb00, "");

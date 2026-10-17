@@ -17,6 +17,7 @@
 #include "dr/dr_res_mdo_shd_obj.h"
 #include "dr/dr_res_mdo_vtx_mesh_obj.h"
 #include "dr/dr_stm_read_obj.h"
+#include "grlib/cglib_one_uniform_block.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
@@ -407,11 +408,11 @@ bool ScnObjAccResAvatar::isAvatarEyeTex() const {
 bool ScnObjAccResAvatar::isAvatarMapMode() const { return m_drMdl->m_avatarMapColors != nullptr; }
 
 void ScnObjAccResAvatar::setAvatarCharColor(int index, const mm::Col4 &color) {
-  *reinterpret_cast<mm::Col4 *>(m_avatar->charColors->values + index * 4) = color;
+  *reinterpret_cast<mm::Col4 *>(static_cast<f32 *>(m_avatar->charColors->m_mapping) + index * 4) = color;
 }
 
 void ScnObjAccResAvatar::setAvatarDollColor(int index, const mm::Col4 &color) {
-  *reinterpret_cast<mm::Col4 *>(m_avatar->dollColors->values + index * 4) = color;
+  *reinterpret_cast<mm::Col4 *>(static_cast<f32 *>(m_avatar->dollColors->m_mapping) + index * 4) = color;
 }
 
 void ScnObjAccResAvatar::setAvatarDollMat(bool isEnable) { m_avatar->dollMat = isEnable; }
@@ -423,9 +424,9 @@ void ScnObjAccResAvatar::setAvatarMapColor(int index, const mm::Col3 &color) {
   }
 }
 
-f32 *ScnObjAccResAvatar::getAvatarCharColor(int index) { return m_avatar->charColors->values + index * 4; }
+f32 *ScnObjAccResAvatar::getAvatarCharColor(int index) { return static_cast<f32 *>(m_avatar->charColors->m_mapping) + index * 4; }
 
-f32 *ScnObjAccResAvatar::getAvatarDollColor(int index) { return m_avatar->dollColors->values + index * 4; }
+f32 *ScnObjAccResAvatar::getAvatarDollColor(int index) { return static_cast<f32 *>(m_avatar->dollColors->m_mapping) + index * 4; }
 
 mm::Col3 *ScnObjAccResAvatar::getAvatarMapColor(int index) const { return &m_drMdl->m_avatarMapColors[index]; }
 

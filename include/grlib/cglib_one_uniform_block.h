@@ -20,6 +20,7 @@ public:
   void updateData();
   void updateData(u32 offset, u32 size);
   void *getMapping();
+  void setUniformBlock(u32 index);
 
   void *m_mapping;
   u32 m_size;
