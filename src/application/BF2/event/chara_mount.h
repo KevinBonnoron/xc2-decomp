@@ -1,8 +1,15 @@
 #pragma once
 #include "event/i_cmd.h"
-#include "types.h"
+#include "mm_math/mm_quat.h"
+#include "mm_math/mm_vec3.h"
+
+namespace gf {
+class GfEvtModel;
+} // namespace gf
 
 namespace event {
+
+class CharaDysUpdater;
 
 class CharaMount : public ICmd {
 public:
@@ -11,7 +18,11 @@ public:
   virtual void term();
 
 private:
-  u8 _08[0x40 - 0x08];
+  gf::GfEvtModel *model;
+  gf::GfEvtModel *parent;
+  CharaDysUpdater *dysUpdater;
+  mm::Vec3 position;
+  mm::Quat rotation;
 };
 
 static_assert(sizeof(CharaMount) == 0x40, "");

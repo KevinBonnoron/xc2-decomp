@@ -1,7 +1,10 @@
 #pragma once
 #include "event/anm_f32.h"
 #include "event/i_cmd.h"
-#include "types.h"
+
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
 
 namespace event {
 
@@ -10,7 +13,7 @@ public:
   virtual RESULT update(const Param &param);
 
 private:
-  u8 _08[0x10 - 0x08];
+  gf::GF_OBJ_HANDLE *handle;
   AnmF32 anm;
 };
 
