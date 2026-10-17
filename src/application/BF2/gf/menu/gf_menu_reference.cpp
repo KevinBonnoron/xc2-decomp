@@ -87,7 +87,7 @@ void GfMenuReference::setChainNum(u32 chainNum) {
   }
 }
 
-u16 GfMenuReference::getChainNum() {
+u32 GfMenuReference::getChainNum() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
     return reference->chainNum;

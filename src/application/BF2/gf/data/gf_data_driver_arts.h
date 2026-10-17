@@ -18,6 +18,7 @@ public:
   static u8 *getNameFP();
   static u8 *getCaptionFP();
   static u32 getNameID(u32 arts);
+  static u32 getCaptionID(u32 arts);
   static u32 getIconID(u32 arts);
   static const char *getName(u32 arts);
   static const char *getDebugName(u32 arts);

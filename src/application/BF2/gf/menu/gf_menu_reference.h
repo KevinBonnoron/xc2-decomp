@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
@@ -16,6 +17,9 @@ struct MenuItemInfo;
 
 class GfMenuReference : public mm::mtl::PtrSingleton<GfMenuReference> {
 public:
+  static const u32 ARTS_PALETTE_COUNT = 3;
+  static const u32 ALL_ARTS_PALETTE_COUNT = 9;
+
   enum HOMURA_MODE {};
 
   struct FieldSkillInfo {
@@ -40,16 +44,38 @@ public:
     int value;
   };
 
+  struct ArtsPaletteInfo {
+    ArtsPaletteInfo() : artsId(0), recast(0.0f) {}
+
+    u16 artsId;
+    f32 recast;
+  };
+
+  struct ArtsPalette {
+    ArtsPaletteInfo info;
+    GfMenuObjUtil::ArtsIconInfo iconInfo;
+    u32 elementType;
+    bool isEnable;
+    u32 disableFlags;
+  };
+
   static bool isInitialized();
   static void initReferenceNumber(u32 index);
   static void resetDriverVirtual();
   static void postReset();
   static u32 getFieldSkillMax();
   static void getFieldSkillInfo(u8 index, FieldSkillInfo &info);
+  static void setArtsPaletteInfo(u8 index, const ArtsPaletteInfo &info);
+  static void setArtsPaletteEnable(u8 index, bool isEnable, u32 disableFlags);
+  static const ArtsPaletteInfo &getArtsPaletteInfo(u8 index);
+  static const GfMenuObjUtil::ArtsIconInfo &getArtsPaletteIconInfo(u8 index);
+  static u32 getArtsPaletteElementType(u8 index);
+  static bool isArtsPaletteEnable(u8 index);
+  static u32 getArtsPaletteDisable(u8 index);
   static u32 getTargetEnemyBuff(u32 index);
   static u32 getTargetEnemyWeakAttr();
   static void setChainNum(u32 chainNum);
-  static u16 getChainNum();
+  static u32 getChainNum();
   static void setWeaponJustRange(bool isJustRange);
   static bool isWeaponJustRange();
   static void setAwakeningRestTimeRatio(f32 ratio);
@@ -128,7 +154,8 @@ public:
   mm::threading::CriticalSection criticalSection;
   bool initialized;
   mm::mtl::FixedVector<FieldSkillInfo, 28> fieldSkills;
-  u8 _4cac0[0x4cb3c - 0x4cac0];
+  ArtsPalette artsPalettes[ARTS_PALETTE_COUNT];
+  u8 _4cb38[0x4cb3c - 0x4cb38];
   bool isJustRange;
   f32 awakeningRestTimeRatio;
   f32 chainAttackActionRecast;
@@ -173,7 +200,7 @@ public:
   u32 bladeVirtualEquipOrbSlot;
   u8 _4ccdc[0x4cce0 - 0x4ccdc];
   ui::UIStr referenceStrings[8];
-  u8 _4cda0[0x4cf08 - 0x4cda0];
+  ArtsPalette allArtsPalettes[ALL_ARTS_PALETTE_COUNT];
   mm::mtl::BitFlag<32> partyStatusLock;
   u8 _4cf0c[0x4cf10 - 0x4cf0c];
 };
@@ -181,6 +208,7 @@ public:
 static_assert(offsetof(GfMenuReference, criticalSection) == 0x4ca18, "");
 static_assert(offsetof(GfMenuReference, initialized) == 0x4ca40, "");
 static_assert(offsetof(GfMenuReference, fieldSkills) == 0x4ca48, "");
+static_assert(offsetof(GfMenuReference, artsPalettes) == 0x4cac0, "");
 static_assert(offsetof(GfMenuReference, isJustRange) == 0x4cb3c, "");
 static_assert(offsetof(GfMenuReference, awakeningRestTimeRatio) == 0x4cb40, "");
 static_assert(offsetof(GfMenuReference, chainAttackActionRecast) == 0x4cb44, "");
