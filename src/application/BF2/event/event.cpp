@@ -117,6 +117,7 @@
 #include "event/light_obj.cpp"
 #include "event/light_manager.cpp"
 #include "event/lod_manager.cpp"
+#include "event/lipsync_res.cpp"
 #include "event/lipsync_manager.cpp"
 #include "event/movie_manager.cpp"
 #include "event/outsider_field.cpp"
