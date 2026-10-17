@@ -1,8 +1,10 @@
 #include "gmk/gmk_manager.h"
 
 #include "bdat.h"
+#include "dr/dr_man.h"
 #include "framework/memory/framework_memory.h"
 #include "framework/navi/navi_util.h"
+#include "framework/script/script_manager.h"
 #include "fw/fw_transform.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_util.h"
@@ -15,6 +17,7 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_util.h"
+#include "gf/script/gf_script_manager.h"
 #include "gmk/gmk_anti_blade_area.h"
 #include "gmk/gmk_area_bgm.h"
 #include "gmk/gmk_area_weather.h"
@@ -50,6 +53,7 @@
 #include "gmk/gmk_precious.h"
 #include "gmk/gmk_route.h"
 #include "gmk/gmk_salvage.h"
+#include "gmk/gmk_script.h"
 #include "gmk/gmk_se.h"
 #include "gmk/gmk_set.h"
 #include "gmk/gmk_squad.h"
@@ -62,12 +66,14 @@
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/array.h"
 #include "mm_mtl/fixstr.h"
 #include "mtl/alloc_handle.h"
 
 namespace gmk {
 
 constexpr u16 SCENARIO_FLAG_KEEP_BATTLE_LOCK_IN_BATTLE = 7039;
+const ml::FILE_PRIO GMK_SCRIPT_FILE_PRIO = static_cast<ml::FILE_PRIO>(7);
 
 static const char *const s_gmkFileNames[] = {
     "enemy",       "enemy",      "enemy",         "npc",         "npc",        "npc",        "mapObj",     "mapObj",   "mapObj",
@@ -356,5 +362,83 @@ const char *debugGetGmkFileName(const AGmkBase &gmk) { return "(null)"; }
 const char *debugGetGmkBdatRowName(const AGmkBase &gmk) { return "(null)"; }
 
 const char *debugGetGmkBdatSheetName(const AGmkBase &gmk) { return "(null)"; }
+
+static bool s_isScriptStart = false;
+static bool s_isScriptEnd = false;
+static int s_scriptStartId = -1;
+
+GmkScript::GmkScript(const CreateInfo *info) : seq(nullptr) {
+  if (info != nullptr) {
+    createInfo = *info;
+  }
+}
+
+void GmkScript::create(const CreateInfo &info) {
+  endScript();
+  createInfo = info;
+}
+
+void GmkScript::vmSetStartId(int id) { s_scriptStartId = id; }
+
+int GmkScript::vmGetStartId() { return s_scriptStartId; }
+
+bool GmkScript::isScriptStart() { return s_isScriptStart; }
+
+bool GmkScript::isScriptEnd() { return s_isScriptEnd; }
+
+bool GmkScript::isScriptExecuting() {
+  const fw::ScriptManager *manager = fw::ScriptManager::get();
+  return manager->scripts[gf::SCRIPT_SLOT_FIELD].isActive();
+}
+
+const char *GmkScript::getExecutingScriptName() {
+  const fw::ScriptManager *manager = fw::ScriptManager::get();
+  return manager->scripts[gf::SCRIPT_SLOT_FIELD].name.c_str();
+}
+
+void GmkScript::vmBeginScript() {
+  s_isScriptStart = true;
+  s_isScriptEnd = false;
+}
+
+void GmkScript::vmEndScript() {
+  s_isScriptStart = false;
+  s_isScriptEnd = true;
+}
+
+void GmkScript::dispose() { endScript(); }
+
+void GmkScript::endScript() {
+  if (seq) {
+    seq = nullptr;
+    vmEndScript();
+    vmSetStartId(-1);
+  }
+}
+
+void GmkScript::beginScript() {
+  if (isScriptExecuting()) {
+    return;
+  }
+  endScript();
+  fw::ScriptManager::get()->loadScript(gf::SCRIPT_SLOT_FIELD, createInfo.name.c_str(), GMK_SCRIPT_FILE_PRIO);
+  vmSetStartId(createInfo.startId);
+  fw::ScriptManager::get()->scripts[gf::SCRIPT_SLOT_FIELD].start();
+  vmBeginScript();
+  seq = &GmkScript::seqWaitEndScript;
+}
+
+void GmkScript::seqWaitEndScript(f32) {
+  const fw::ScriptManager *manager = fw::ScriptManager::get();
+  if (!manager->scripts[gf::SCRIPT_SLOT_FIELD].isFinish()) {
+    endScript();
+  }
+}
+
+void GmkScript::update(f32 deltaTime) {
+  if (seq) {
+    (this->*seq)(deltaTime);
+  }
+}
 
 } // namespace gmk
