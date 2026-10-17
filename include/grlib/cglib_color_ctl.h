@@ -19,10 +19,18 @@ enum GrlLogicType {
 
 namespace grlib {
 
+enum GrlMrtType {
+  GRL_MRT_TYPE_0,
+  GRL_MRT_TYPE_1,
+  GRL_MRT_TYPE_2,
+};
+
 class CGLibColorCtl {
 public:
   static void setBlendControl(GrlBlendFunc source, GrlBlendFunc destination, GrlBlendCombine combine, GrlLogicType logic);
   static void setBlendOffControl(GrlLogicType logic);
+  static void setColorBufferOn();
+  static void setColorBufferOff();
   static void clearMainFrameBuffer(const mm::Col4 &color);
 };
 

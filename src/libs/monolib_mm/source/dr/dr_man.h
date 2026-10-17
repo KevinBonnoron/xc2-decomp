@@ -31,6 +31,17 @@ enum RenderSpecMode {};
 
 struct DR_CAPCUBE_PARAM;
 
+struct DrScreenInfo {
+  u8 _00[0x18 - 0x00];
+  s32 width;
+  s32 height;
+  s32 renderWidth;
+  s32 renderHeight;
+};
+
+static_assert(offsetof(DrScreenInfo, width) == 0x18, "");
+static_assert(offsetof(DrScreenInfo, renderWidth) == 0x20, "");
+
 struct DrMotBlurState {
   u8 _000[0xb6c - 0x000];
   bool motBlurDefault;
@@ -122,7 +133,7 @@ public:
   DrPixlTileParm *tileParm;
   u8 _0188[0x05b0 - 0x0188];
   DrCalcTexStreamMan *texStreamMan;
-  u8 _05b8[0x05c0 - 0x05b8];
+  DrScreenInfo *screenInfo;
   DrAPCache *apCache;
   DrCalcGpuCost *gpuCost;
   u8 _05d0[0x05d8 - 0x05d0];
@@ -193,6 +204,7 @@ static_assert(offsetof(DrMan, environmentMans) == 0x0100, "");
 static_assert(offsetof(DrMan, postParms) == 0x0120, "");
 static_assert(offsetof(DrMan, tileParm) == 0x0180, "");
 static_assert(offsetof(DrMan, texStreamMan) == 0x05b0, "");
+static_assert(offsetof(DrMan, screenInfo) == 0x05b8, "");
 static_assert(offsetof(DrMan, apCache) == 0x05c0, "");
 static_assert(offsetof(DrMan, gpuCost) == 0x05c8, "");
 static_assert(offsetof(DrMan, callbacks) == 0x05d8, "");

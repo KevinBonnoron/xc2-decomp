@@ -1,6 +1,7 @@
 #include "dr/dr_light_obj.h"
 
 #include "dr/dr_pixl_man.h"
+#include "dr/dr_pixl_shadow_cache_man.h"
 #include "dr/dr_pixl_shadow_man.h"
 
 namespace ml {
@@ -82,9 +83,9 @@ void DrLightObjDir::deleteDirShadow() {
 void DrLightObjDir::update(DrLightMan *lightMan) {
   if (m_flags & FLAG_SHADOW) {
     if (m_intensity > 0.0f) {
-      *m_pixlMan->m_lightFlags |= 4;
+      m_pixlMan->m_shadowCacheMan->m_flags |= 4;
     } else {
-      *m_pixlMan->m_lightFlags |= 0x20;
+      m_pixlMan->m_shadowCacheMan->m_flags |= 0x20;
     }
   }
 }
