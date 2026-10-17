@@ -1,6 +1,9 @@
 #pragma once
 #include <stddef.h>
 
+#include <algorithm>
+#include <functional>
+
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
@@ -111,6 +114,13 @@ public:
       return contents[index];
     }
     return invalid;
+  }
+
+  void sort(std::function<bool(const T &, const T &)> compare) {
+    if (!contents.empty()) {
+      std::sort(contents.begin(), contents.end(), compare);
+      contentsChanged = true;
+    }
   }
 
   mm::mtl::Vector<T> contents;
