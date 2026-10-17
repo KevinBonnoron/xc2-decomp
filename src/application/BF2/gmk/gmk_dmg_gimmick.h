@@ -1,11 +1,18 @@
 #pragma once
+#include <stddef.h>
+
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_phantom.h"
 #include "types.h"
 
 struct CBdatWrapper;
+
+namespace fw {
+class SoundPack;
+} // namespace fw
 
 namespace gmk {
 
@@ -104,14 +111,28 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_SE;
 
-  ~GmkDmgSe() override;
-  GmkType getGmkType() const override;
-  bool isValid() const override;
+  ~GmkDmgSe() override { dispose(); }
+  GmkType getGmkType() const override { return GMK_TYPE; }
+  bool isValid() const override { return baseInfo.list != nullptr && createInfo.data != nullptr; }
+  void createGmkPhantom() const;
+  void createSeInst(fw::SoundPack *pack, u32 id) const;
+  void disposeSeInst(bool isFadeOut) const;
+  void setSeVolume(f32 volume, f32 time) const;
   void dispose() override;
+  void validateMute() const;
 
-  u8 _48[0xf0 - 0x48];
+  u8 _48[0x50 - 0x48];
+  mutable GmkPhantom phantom;
+  u8 _d8[0xe0 - 0xd8];
+  bool isMute;
+  mutable u32 seHandle;
+  mutable f32 seVolume;
 };
 
+static_assert(offsetof(GmkDmgSe, phantom) == 0x50, "");
+static_assert(offsetof(GmkDmgSe, isMute) == 0xe0, "");
+static_assert(offsetof(GmkDmgSe, seHandle) == 0xe4, "");
+static_assert(offsetof(GmkDmgSe, seVolume) == 0xe8, "");
 static_assert(sizeof(GmkDmgSe) == 0xf0, "");
 
 class GmkDmgSeList : public TGmkList<GmkDmgSe, GmkDmgSe::BdatInfo, 0x45534d44, 2, GmkDmgSeGob> {
