@@ -13,6 +13,7 @@ struct LogFlag {
 
 } // namespace Debug
 
+void log_message(const char *format, ...);
 Result log_error(Result result, Debug::LogFlag::Type flag, const char *format, ...);
 Result log_error(Result result, Debug::LogFlag::Type flag, const char16_t *format, ...);
 

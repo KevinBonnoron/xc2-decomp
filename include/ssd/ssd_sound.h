@@ -23,6 +23,7 @@ struct Vec3 {
 class SoundEntry;
 class SoundHandle;
 class SoundListener;
+class WaveSource;
 
 class Allocator {
 public:
@@ -99,30 +100,97 @@ static_assert(sizeof(SoundBank) == 0x120, "");
 
 class SoundHandle {
 public:
+  struct Fade {
+    void Set(f32 target, f32 time) {
+      f32 current = value;
+      this->time = time;
+      f32 begin = time != 0.0f ? current : target;
+      this->target = target;
+      start = begin;
+      value = begin;
+      delta = target - begin;
+      elapsed = 0.0f;
+    }
+
+    void Reset(f32 value) {
+      target = value;
+      start = value;
+      this->value = value;
+      delta = 0.0f;
+      elapsed = 0.0f;
+      time = 0.0f;
+    }
+
+    f32 value;
+    f32 elapsed;
+    f32 time;
+    f32 delta;
+    f32 start;
+    f32 target;
+  };
+
+  struct Effect {
+    bool isEnable;
+    Fade volume;
+  };
+
   bool IsValidHandle() const;
+  long Stop(f32 fadeTime);
   int GetState() const;
+  bool HasEnded() const;
   bool IsPlay() const;
   long Prepare(const SoundEntry *entry);
   long Start(SoundActor *actor, f32 volume, f32 fadeTime);
-  long Stop(f32 fadeTime);
   long Pause(bool isPause, f32 fadeTime);
-  long SetPitch(f32 pitch, f32 fadeTime);
-  long SetVolume(f32 volume, f32 fadeTime);
-  long SetPan(f32 pan, f32 fadeTime);
+  void SetPitch(f32 pitch, f32 fadeTime);
+  void SetVolume(f32 volume, f32 fadeTime);
+  void SetPan(f32 pan, f32 fadeTime);
+  long SetEnableEffect(int index, bool isEnable);
+  long SetEffectVolume(int index, f32 volume, f32 fadeTime);
+  long SetPregapTime(f32 time);
+  long GetPlayPosition(u64 *position) const;
+  long GetPlaySample(unsigned long long *sample) const;
+  long GetFilePosition(u64 *position) const;
   long GetPlayTime(f32 *time) const;
   long GetDataTime(f32 *time) const;
+  long SetPlayPosition(u64 position);
+  long SetPlaySample(unsigned long long sample);
   long SetPlayTime(f32 time);
-  long SetCategoryId(int category);
+  long GetLoopTime(bool *isLoop, f32 *begin, f32 *end);
+  void SetCategoryId(int category);
   f32 GetDistanceVolume() const;
   long GetRemainLoopCount(int *count) const;
   long SetRemainLoopCount(int count);
+  long GetVoiceQueueCount(int *count) const;
+  long IsEmptyVoiceQueue(bool *isEmpty);
+  long IsEmptyStreamBuffer(bool *isEmpty);
+  long GetWaveSource(WaveSource **waveSource);
+  long KeepStreamOpen(bool isKeep);
+  void DisplayDebugVerbose();
 
-  u8 _00[0x84 - 0x00];
+  u8 _00[0x58 - 0x00];
+  bool isValid;
+  u8 _59[0x68 - 0x59];
+  f32 pregapTime;
+  Fade pitch;
   f32 volume;
-  u8 _88[0xb8 - 0x88];
+  f32 volumeElapsed;
+  f32 volumeTime;
+  f32 volumeDelta;
+  f32 volumeStart;
+  f32 volumeTarget;
+  Fade pan;
+  u8 _b4[0xb8 - 0xb4];
   f32 categoryVolume;
+  u8 _bc[0xc0 - 0xbc];
+  Effect effects[2];
+  u32 voiceHandleId;
 };
 
+static_assert(offsetof(SoundHandle, pregapTime) == 0x68, "");
+static_assert(offsetof(SoundHandle, pan) == 0x9c, "");
+static_assert(offsetof(SoundHandle, effects) == 0xc0, "");
+static_assert(offsetof(SoundHandle, voiceHandleId) == 0xf8, "");
 static_assert(offsetof(SoundHandle, volume) == 0x84, "");
 static_assert(offsetof(SoundHandle, categoryVolume) == 0xb8, "");
 
