@@ -61,7 +61,8 @@ public:
   u8 _38[0x60 - 0x38];
   Input input;
   Input previousInput;
-  u8 _78[0x90 - 0x78];
+  u8 _78[0x80 - 0x78];
+  mm::Vec3 velocity;
   f32 verticalSpeed;
   f32 horizontalSpeed;
   u8 _98[0x110 - 0x98];
@@ -76,6 +77,7 @@ public:
 
 static_assert(offsetof(GfComPropertyPc, input) == 0x60, "");
 static_assert(offsetof(GfComPropertyPc, previousInput) == 0x6c, "");
+static_assert(offsetof(GfComPropertyPc, velocity) == 0x80, "");
 static_assert(offsetof(GfComPropertyPc, verticalSpeed) == 0x90, "");
 static_assert(offsetof(GfComPropertyPc, horizontalSpeed) == 0x94, "");
 static_assert(offsetof(GfComPropertyPc, position) == 0x160, "");
