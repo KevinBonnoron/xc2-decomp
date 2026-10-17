@@ -1,0 +1,43 @@
+#pragma once
+#include <stddef.h>
+
+#include "ai/ai_state.h"
+#include "mm/mm_std_base.h"
+#include "mm_math/mm_math.h"
+#include "mm_mtl/vector.h"
+#include "types.h"
+
+namespace ai {
+
+class Hfsm {
+public:
+  typedef State *(*CreateFunc)(void *buffer);
+
+  struct StateInfo {
+    CreateFunc create;
+    int parent;
+  };
+
+  // __LINE__ must be 50 as in the original header: it is the line argument of the assert.
+#line 49
+  template <typename T> void registerState(u32 stateID, int parent) {
+    MM_ASSERT(m_setup);
+    m_stateInfos[stateID].create = &T::create;
+    m_stateInfos[stateID].parent = parent;
+    m_stateSize = (mm::max(sizeof(T), m_stateSize) + 15) & ~static_cast<size_t>(15);
+  }
+
+  void *m_pOwner;
+  State *m_pState;
+  mm::mtl::Vector<StateInfo> m_stateInfos;
+  u8 _38[0x78 - 0x38];
+  size_t m_stateSize;
+  bool m_setup;
+};
+
+static_assert(sizeof(Hfsm::StateInfo) == 0x10, "");
+static_assert(offsetof(Hfsm, m_stateInfos) == 0x10, "");
+static_assert(offsetof(Hfsm, m_stateSize) == 0x78, "");
+static_assert(offsetof(Hfsm, m_setup) == 0x80, "");
+
+} // namespace ai

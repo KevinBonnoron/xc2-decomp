@@ -20,7 +20,7 @@ class GfComBehaviorEnemy;
 class GfStateBase : public ai::State {
 public:
   void onEvent(void *owner, void *event) override;
-  virtual void recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) = 0;
+  virtual void recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message);
 };
 
 namespace enemy {

@@ -1,0 +1,138 @@
+#include "gf/object/component/pc/field/gf_pc_field_states.h"
+
+#include "ai/ai_state.h"
+#include "ai/ai_state_hfsm.h"
+#include "gf/object/component/pc/field/gf_pc_state_field.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_access.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_air.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_air_dead.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_alive.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_big_jump.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_dead.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_extra_control.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_fall.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_idle.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_idle_turn.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_jump.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_land.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_land_big.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_lure.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_move.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_move_common.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_on_ground.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_on_wall.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_prepare_big_jump.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_ride_on.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_slide.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_slide_land_brake.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_slide_move.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_start.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_stop_brake.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_talk.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_turn.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_adsorption_air.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_adsorption_ground.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_adsorption_under_ground.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_climb_end.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_idle.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_jump.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_jump_end.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_jump_move.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_jump_start.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_land.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_move.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_performance.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_wall_prepare_jump.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_brake.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_dead.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_dead_dive.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_dead_idle.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_dead_rise.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_dead_sink.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_dive.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_idle.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_idle_turn.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_normal.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_prepare_warp.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_rise.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_sink.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_swim.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_swim_rise.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_swim_sink.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_warp_dive.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_warp_rise.h"
+#include "gf/object/component/pc/field/gf_pc_state_field_water_warp_rise_buddy.h"
+#include "gf/object/component/pc/gf_pc_state_id.h"
+
+namespace gf {
+namespace pc {
+
+void registerFieldStates(ai::Hfsm &hfsm) {
+  hfsm.registerState<StateField>(STATE_ID_FIELD, static_cast<int>(ai::INVALID_STATE_ID));
+  hfsm.registerState<StateFieldRideOn>(STATE_ID_FIELD_RIDE_ON, static_cast<int>(ai::INVALID_STATE_ID));
+  hfsm.registerState<StateFieldDead>(STATE_ID_FIELD_DEAD, static_cast<int>(ai::INVALID_STATE_ID));
+  hfsm.registerState<StateFieldAlive>(STATE_ID_FIELD_ALIVE, static_cast<int>(ai::INVALID_STATE_ID));
+  hfsm.registerState<StateFieldStart>(STATE_ID_FIELD_START, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldAccess>(STATE_ID_FIELD_ACCESS, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldTalk>(STATE_ID_FIELD_TALK, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldPrepareBigJump>(STATE_ID_FIELD_PREPARE_BIG_JUMP, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldBigJump>(STATE_ID_FIELD_BIG_JUMP, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldLure>(STATE_ID_FIELD_LURE, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldExtraControl>(STATE_ID_FIELD_EXTRA_CONTROL, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldOnGround>(STATE_ID_FIELD_ON_GROUND, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldIdle>(STATE_ID_FIELD_IDLE, STATE_ID_FIELD_ON_GROUND);
+  hfsm.registerState<StateFieldIdleTurn>(STATE_ID_FIELD_IDLE_TURN, STATE_ID_FIELD_ON_GROUND);
+  hfsm.registerState<StateFieldStopBrake>(STATE_ID_FIELD_STOP_BRAKE, STATE_ID_FIELD_ON_GROUND);
+  hfsm.registerState<StateFieldMoveCommon>(STATE_ID_FIELD_MOVE_COMMON, STATE_ID_FIELD_ON_GROUND);
+  hfsm.registerState<StateFieldMove>(STATE_ID_FIELD_MOVE, STATE_ID_FIELD_MOVE_COMMON);
+  hfsm.registerState<StateFieldTurn>(STATE_ID_FIELD_TURN, STATE_ID_FIELD_MOVE_COMMON);
+  hfsm.registerState<StateFieldSlide>(STATE_ID_FIELD_SLIDE, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldSlideMove>(STATE_ID_FIELD_SLIDE_MOVE, STATE_ID_FIELD_SLIDE);
+  hfsm.registerState<StateFieldSlideLandBrake>(STATE_ID_FIELD_SLIDE_LAND_BRAKE, STATE_ID_FIELD_SLIDE);
+  hfsm.registerState<StateFieldAir>(STATE_ID_FIELD_AIR, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldJump>(STATE_ID_FIELD_JUMP, STATE_ID_FIELD_AIR);
+  hfsm.registerState<StateFieldFall>(STATE_ID_FIELD_FALL, STATE_ID_FIELD_AIR);
+  hfsm.registerState<StateFieldAirDead>(STATE_ID_FIELD_AIR_DEAD, STATE_ID_FIELD_AIR);
+  hfsm.registerState<StateFieldLand>(STATE_ID_FIELD_LAND, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldLandBig>(STATE_ID_FIELD_LAND_BIG, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldWater>(STATE_ID_FIELD_WATER, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldWaterNormal>(STATE_ID_FIELD_WATER_NORMAL, STATE_ID_FIELD_WATER);
+  hfsm.registerState<StateFieldWaterIdle>(STATE_ID_FIELD_WATER_IDLE, STATE_ID_FIELD_WATER_NORMAL);
+  hfsm.registerState<StateFieldWaterIdleTurn>(STATE_ID_FIELD_WATER_IDLE_TURN, STATE_ID_FIELD_WATER_NORMAL);
+  hfsm.registerState<StateFieldWaterSwim>(STATE_ID_FIELD_WATER_SWIM, STATE_ID_FIELD_WATER_NORMAL);
+  hfsm.registerState<StateFieldWaterBrake>(STATE_ID_FIELD_WATER_BRAKE, STATE_ID_FIELD_WATER_NORMAL);
+  hfsm.registerState<StateFieldWaterDive>(STATE_ID_FIELD_WATER_DIVE, STATE_ID_FIELD_WATER);
+  hfsm.registerState<StateFieldWaterSink>(STATE_ID_FIELD_WATER_SINK, STATE_ID_FIELD_WATER_DIVE);
+  hfsm.registerState<StateFieldWaterRise>(STATE_ID_FIELD_WATER_RISE, STATE_ID_FIELD_WATER_DIVE);
+  hfsm.registerState<StateFieldWaterSwimSink>(STATE_ID_FIELD_WATER_SWIM_SINK, STATE_ID_FIELD_WATER_DIVE);
+  hfsm.registerState<StateFieldWaterSwimRise>(STATE_ID_FIELD_WATER_SWIM_RISE, STATE_ID_FIELD_WATER_DIVE);
+  hfsm.registerState<StateFieldWaterPrepareWarp>(STATE_ID_FIELD_WATER_PREPARE_WARP, STATE_ID_FIELD_WATER);
+  hfsm.registerState<StateFieldWaterWarpDive>(STATE_ID_FIELD_WATER_WARP_DIVE, STATE_ID_FIELD_WATER_DIVE);
+  hfsm.registerState<StateFieldWaterWarpRise>(STATE_ID_FIELD_WATER_WARP_RISE, STATE_ID_FIELD_WATER_DIVE);
+  hfsm.registerState<StateFieldWaterWarpRiseBuddy>(STATE_ID_FIELD_WATER_WARP_RISE_BUDDY, STATE_ID_FIELD_WATER_DIVE);
+  hfsm.registerState<StateFieldWaterDead>(STATE_ID_FIELD_WATER_DEAD, STATE_ID_FIELD_WATER);
+  hfsm.registerState<StateFieldWaterDeadDive>(STATE_ID_FIELD_WATER_DEAD_DIVE, STATE_ID_FIELD_WATER_DEAD);
+  hfsm.registerState<StateFieldWaterDeadSink>(STATE_ID_FIELD_WATER_DEAD_SINK, STATE_ID_FIELD_WATER_DEAD_DIVE);
+  hfsm.registerState<StateFieldWaterDeadRise>(STATE_ID_FIELD_WATER_DEAD_RISE, STATE_ID_FIELD_WATER_DEAD_DIVE);
+  hfsm.registerState<StateFieldWaterDeadIdle>(STATE_ID_FIELD_WATER_DEAD_IDLE, STATE_ID_FIELD_WATER_DEAD);
+  hfsm.registerState<StateFieldWall>(STATE_ID_FIELD_WALL, STATE_ID_FIELD);
+  hfsm.registerState<StateFieldWallPerformance>(STATE_ID_FIELD_WALL_PERFORMANCE, STATE_ID_FIELD_WALL);
+  hfsm.registerState<StateFieldWallAdsorptionGround>(STATE_ID_FIELD_WALL_ADSORPTION_GROUND, STATE_ID_FIELD_WALL_PERFORMANCE);
+  hfsm.registerState<StateFieldWallAdsorptionAir>(STATE_ID_FIELD_WALL_ADSORPTION_AIR, STATE_ID_FIELD_WALL_PERFORMANCE);
+  hfsm.registerState<StateFieldWallAdsorptionUnderGround>(STATE_ID_FIELD_WALL_ADSORPTION_UNDER_GROUND, STATE_ID_FIELD_WALL_PERFORMANCE);
+  hfsm.registerState<StateFieldWallLand>(STATE_ID_FIELD_WALL_LAND, STATE_ID_FIELD_WALL_PERFORMANCE);
+  hfsm.registerState<StateFieldWallClimbEnd>(STATE_ID_FIELD_WALL_CLIMB_END, STATE_ID_FIELD_WALL_PERFORMANCE);
+  hfsm.registerState<StateFieldOnWall>(STATE_ID_FIELD_ON_WALL, STATE_ID_FIELD_WALL);
+  hfsm.registerState<StateFieldWallIdle>(STATE_ID_FIELD_WALL_IDLE, STATE_ID_FIELD_ON_WALL);
+  hfsm.registerState<StateFieldWallMove>(STATE_ID_FIELD_WALL_MOVE, STATE_ID_FIELD_ON_WALL);
+  hfsm.registerState<StateFieldWallPrepareJump>(STATE_ID_FIELD_WALL_PREPARE_JUMP, STATE_ID_FIELD_WALL);
+  hfsm.registerState<StateFieldWallJump>(STATE_ID_FIELD_WALL_JUMP, STATE_ID_FIELD_WALL);
+  hfsm.registerState<StateFieldWallJumpStart>(STATE_ID_FIELD_WALL_JUMP_START, STATE_ID_FIELD_WALL_JUMP);
+  hfsm.registerState<StateFieldWallJumpMove>(STATE_ID_FIELD_WALL_JUMP_MOVE, STATE_ID_FIELD_WALL_JUMP);
+  hfsm.registerState<StateFieldWallJumpEnd>(STATE_ID_FIELD_WALL_JUMP_END, STATE_ID_FIELD_WALL_JUMP);
+}
+
+} // namespace pc
+} // namespace gf
