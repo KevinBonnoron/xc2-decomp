@@ -43,7 +43,6 @@ struct Col3;
 namespace layer {
 class LayerFontIconObj;
 class LayerFontResObj;
-struct LayerPolyVertex;
 
 LayerAccManager::LayerAccManager() {}
 

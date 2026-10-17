@@ -10,7 +10,18 @@ namespace layer {
 
 class LayerBase;
 class LayerObjTopPolyObj;
-struct LayerPolyVertex;
+struct LayerPolyVertex {
+  f32 x;
+  f32 y;
+  u8 r;
+  u8 g;
+  u8 b;
+  u8 a;
+  f32 u;
+  f32 v;
+};
+
+static_assert(sizeof(LayerPolyVertex) == 0x14, "");
 
 class LayerAccPolyObj : public LayerAccObjBase {
 public:

@@ -23,6 +23,8 @@ public:
     return m_element + m_size;
   }
 
+  // The assertion lines of the game change the register allocation of the loops writing an array.
+#line 89
   T &operator[](size_t index) {
     MM_ASSERT(m_element);
     return m_element[index];
@@ -68,17 +70,20 @@ private:
   IAllocator *m_allocator;
 };
 
+// __LINE__ must be 161 to 163 and 167 as in the original header: they are the line arguments of the asserts.
+#line 160
 template <typename T> void Array<T>::reserve(size_t size) {
   MM_ASSERT(size != 0);
   MM_ASSERT(m_element == 0);
   MM_ASSERT(m_allocator != 0);
   m_element = static_cast<T *>(m_allocator->allocate(size * sizeof(T), 8));
+#line 167
   MM_ASSERT(m_element != 0);
   m_size = size;
   for (size_t i = 0; i < m_size; i++) {
     T *element = &m_element[i];
     if (element != nullptr) {
-      new (element) T();
+      new (element) T;
     }
   }
 }
