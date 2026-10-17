@@ -12,6 +12,7 @@ class CGLibCtlShader {
 public:
   static void setShader(CGLibDecShader &shader, CGLibVtxFetch &fetch);
   static void setShader(CGLibDecShdExtTbl &shader, CGLibVtxFetch &fetch);
+  static void setComputeShader(CGLibDecShader &shader);
   static void setDispatchCompute(u32 groupsX, u32 groupsY, u32 groupsZ);
   static void setMemoryBarrier();
   static void setMemoryBarrierBit(u32 bits);
