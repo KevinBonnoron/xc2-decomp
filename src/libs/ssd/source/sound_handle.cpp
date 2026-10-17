@@ -41,7 +41,7 @@ int SoundHandle::GetState() const {
   if (voice == nullptr) {
     return 0;
   }
-  return voice->state;
+  return voice->state_;
 }
 
 bool SoundHandle::HasEnded() const {
