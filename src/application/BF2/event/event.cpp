@@ -86,6 +86,8 @@
 #include "event/chara_play_action_auto.cpp"
 #include "event/chara_play_action.cpp"
 #include "event/chara_stop_action.cpp"
+#include "event/chara_play_eva.cpp"
+#include "event/chara_play_eva_eff.cpp"
 #include "event/chara_hide_wpn.cpp"
 #include "event/chara_play_head.cpp"
 #include "event/chara_stop_head.cpp"

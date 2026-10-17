@@ -93,7 +93,7 @@ void CharaObj::linerPos(const mm::Vec3 &pos, bool isWalk, f32 frame, CV_TYPE cv)
   param.val(4).setF32(frame);
   param.val(5).setS32(cv);
   subQueue.push_back(&cmdLinerPos, param);
-  evaPlayer.setPos(pos);
+  cmdPlayEva.setPos(pos);
 }
 
 const mm::Vec3 &CharaObj::getPosTo() const {

@@ -3,8 +3,6 @@
 
 #include "event/chara_dys_updater.h"
 #include "event/chara_effect_player.h"
-#include "event/chara_eva_player.h"
-#include "event/chara_eva_player_eff.h"
 #include "event/chara_fade.h"
 #include "event/chara_hide_wpn.h"
 #include "event/chara_ik_updater.h"
@@ -187,9 +185,7 @@ private:
   CharaPlayMotion cmdPlayMotion;
   CharaPlayMotionABC cmdPlayMotionABC;
   CharaPlayEva cmdPlayEva;
-  CharaEvaPlayer evaPlayer;
   CharaPlayEvaEff cmdPlayEvaEff;
-  CharaEvaPlayerEff evaPlayerEff;
   CharaHideWpn cmdHideWpn;
   CharaPlayHead cmdPlayHead;
   CharaStopHead cmdStopHead;
