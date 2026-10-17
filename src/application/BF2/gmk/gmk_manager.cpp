@@ -83,8 +83,6 @@
 
 namespace gmk {
 
-constexpr int BDAT_TYPE_U8 = 1;
-constexpr int BDAT_TYPE_U16 = 2;
 constexpr u16 SCENARIO_FLAG_KEEP_BATTLE_LOCK_IN_BATTLE = 7039;
 const ml::FILE_PRIO GMK_SCRIPT_FILE_PRIO = static_cast<ml::FILE_PRIO>(7);
 
@@ -137,7 +135,7 @@ const char *GmkManager::getFilenameByType(int gmkSetId, GmkType type) const {
   if (Bdat::getMember(bdat, column) == nullptr) {
     return nullptr;
   }
-  return reinterpret_cast<const char *>(Bdat::getValCheck(bdat, column, gmkSetId, 7));
+  return reinterpret_cast<const char *>(Bdat::getValCheck(bdat, column, gmkSetId, BDAT_TYPE_STRING));
 }
 
 const char *GmkManager::getSheetnameByType(int gmkSetId, GmkType type) const {
@@ -147,7 +145,7 @@ const char *GmkManager::getSheetnameByType(int gmkSetId, GmkType type) const {
   if (Bdat::getMember(bdat, column.c_str()) == nullptr) {
     return nullptr;
   }
-  return reinterpret_cast<const char *>(Bdat::getValCheck(bdat, column.c_str(), gmkSetId, 7));
+  return reinterpret_cast<const char *>(Bdat::getValCheck(bdat, column.c_str(), gmkSetId, BDAT_TYPE_STRING));
 }
 
 int getCurrentMapBdatId() { return gf::GfGameManager::getMapID(); }
@@ -227,7 +225,7 @@ void GmkSet::createGmkLists(int gmkSetId) {
     }
     const char *bdatName = GmkManager::get()->getSheetnameByType(gmkSetId, static_cast<GmkType>(type));
     IGmkList::CreateInfo info;
-    info.memory = memory;
+    info.memory = createInfo.memory;
     info.set = this;
     info.path = "gmk/";
     info.path += fileName;
@@ -235,8 +233,8 @@ void GmkSet::createGmkLists(int gmkSetId) {
     if (bdatName != nullptr) {
       info.bdatName = bdatName;
     }
-    info.position = position;
-    info.rotation = rotation;
+    info.position = createInfo.position;
+    info.rotation = createInfo.rotation;
     list->create(info);
   }
 }
