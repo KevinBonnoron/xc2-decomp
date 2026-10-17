@@ -41,7 +41,7 @@ void GfDataDriverArts::setSlotArts(u32 driver, u32 weaponType, const mm::mtl::Fi
   GfDataDriver::getSDataDriver(driver)->weapons[weaponType].slotArts = slotArts;
 }
 
-u8 GfDataDriverArts::getArtsLevel(u32 driver, u32 arts) { return GfDataDriver::getSDataDriver(driver)->artsLevel[arts]; }
+u32 GfDataDriverArts::getArtsLevel(u32 driver, u32 arts) { return GfDataDriver::getSDataDriver(driver)->artsLevel[arts]; }
 
 u32 GfDataDriverArts::getNeedLevelupWp(u32 driver, u32 arts) {
   u32 level = GfDataDriver::getSDataDriver(driver)->artsLevel[arts];
