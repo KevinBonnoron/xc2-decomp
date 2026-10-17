@@ -3,6 +3,10 @@
 
 #include "types.h"
 
+namespace grlib {
+class CGLibTextureBuffer;
+} // namespace grlib
+
 namespace ml {
 
 struct DrCalcStmRes {
@@ -17,7 +21,9 @@ static_assert(sizeof(DrCalcStmRes) == 0x18, "");
 
 class DrCalcStmListObj {
 public:
+  bool isResSafe() const;
   DrCalcStmRes *getResVertexObj();
+  grlib::CGLibTextureBuffer *getTexObj(u32 index);
 };
 
 } // namespace ml
