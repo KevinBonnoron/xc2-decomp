@@ -44,7 +44,8 @@ public:
   u32 id;
   u8 _14[0x18 - 0x14];
   const CBdatWrapper *bdat;
-  u8 _20[0x44 - 0x20];
+  u8 _20[0x40 - 0x20];
+  u32 layer;
   u16 priority;
   u8 _46[0x48 - 0x46];
   u32 gimmickType;
@@ -56,6 +57,7 @@ public:
 static_assert(offsetof(GfInitParam, characterType) == 0x08, "");
 static_assert(offsetof(GfInitParam, id) == 0x10, "");
 static_assert(offsetof(GfInitParam, bdat) == 0x18, "");
+static_assert(offsetof(GfInitParam, layer) == 0x40, "");
 static_assert(offsetof(GfInitParam, priority) == 0x44, "");
 static_assert(offsetof(GfInitParam, gimmickType) == 0x48, "");
 static_assert(offsetof(GfInitParam, isDeathBlowWeapon) == 0x83, "");

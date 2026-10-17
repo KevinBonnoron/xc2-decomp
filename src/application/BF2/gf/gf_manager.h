@@ -8,6 +8,10 @@
 #include "types.h"
 #include <stddef.h>
 
+namespace ml {
+class Scn;
+}
+
 namespace fw {
 struct UpdateInfo;
 }
@@ -19,9 +23,9 @@ struct SDataOption;
 struct SDataSystem;
 
 struct GfSetupParam {
-  GfSetupParam() : _00(), _08(), _10(), memHandle(ml::MlMem::getProductMem()), _1c(), globalSpeed(1.0f), exec(EXEC_STATE_DEBUG) {}
+  GfSetupParam() : scn(), _08(), _10(), memHandle(ml::MlMem::getProductMem()), _1c(), globalSpeed(1.0f), exec(EXEC_STATE_DEBUG) {}
 
-  u8 _00[0x08 - 0x00];
+  ml::Scn *scn;
   u8 _08[0x10 - 0x08];
   u8 _10[0x18 - 0x10];
   mtl::ALLOC_HANDLE memHandle;

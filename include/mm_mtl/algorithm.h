@@ -15,10 +15,10 @@ template <typename InputIterator, typename Function> Function for_each(InputIter
 template <typename InputIterator, typename T> InputIterator find(InputIterator first, InputIterator last, const T &value) {
   for (; first != last; ++first) {
     if (*first == value) {
-      break;
+      return first;
     }
   }
-  return first;
+  return last;
 }
 
 template <typename InputIterator, typename Predicate> InputIterator find_if(InputIterator first, InputIterator last, Predicate predicate) {

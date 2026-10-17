@@ -15,6 +15,8 @@ class RTTI;
 
 namespace gf {
 
+class GfInitParamEventObj;
+class GfInitParamWeapon;
 struct GF_OBJ_HANDLE;
 
 enum GF_EVT_MODEL {
@@ -44,6 +46,8 @@ public:
   void resetMount(GfEvtModel *parent);
   void setMount(GfEvtModel *parent, const char *bone);
   void setMount(GfEvtModel *parent, const char *bone, const mm::Vec3 &pos, const mm::Vec3 &rot);
+
+  static u32 changeLayerUI(u32 layer);
 
   u8 _08[0x18 - 0x08];
   GF_EVT_MODEL type;
@@ -85,11 +89,17 @@ public:
   static void playAnimCS(GF_OBJ_HANDLE *handle, const char *name);
   static bool isPlayEndAnimCS(GF_OBJ_HANDLE *handle);
   static void setAnimSpeedCS(GF_OBJ_HANDLE *handle, f32 speed);
+  static GfEvtModelWeapon *create(GfInitParamWeapon &param);
   void playAnimData(void *data);
   void setScale(f32 scale);
   void playAnimCS(const char *name);
   bool isPlayEndAnimCS();
   void setAnimSpeedCS(f32 speed);
+};
+
+class GfEvtModelEvent : public GfEvtModel {
+public:
+  static GfEvtModelEvent *create(GfInitParamEventObj &param);
 };
 
 } // namespace gf

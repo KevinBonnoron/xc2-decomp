@@ -32,6 +32,7 @@ enum OBJ_ALPHA {
 };
 
 enum OBJDISP {
+  OBJDISP_EVENT = 0x2,
   OBJDISP_KOSMOS_ARTS_3 = 0x20,
 };
 
