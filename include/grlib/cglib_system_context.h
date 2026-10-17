@@ -16,10 +16,14 @@ struct NVNmemoryPool;
 struct NVNtexture;
 
 namespace grlib {
+
+struct CGLibMemType;
+
 namespace context {
 
 class CGLibSystemContext : public mm::mtl::PtrSingleton<CGLibSystemContext> {
 public:
+  void getUniformoGpuAddress(u64 &address, const CGLibMemType &memType);
   void releaseDelayMempool(NVNmemoryPool *pool, void *buffer);
   void releaseDelayTexture(NVNtexture *texture, void *buffer, int textureId, int samplerId);
 
