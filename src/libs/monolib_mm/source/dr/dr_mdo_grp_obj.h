@@ -1,9 +1,13 @@
 #pragma once
+#include "types.h"
 
 namespace ml {
 
+class DrMdlObj;
+
 class DrMdoGrpObj {
 public:
+  DrMdlObj *createInstantMdl(const void *data, const char *name, u32 index);
   void callNomSetupRender();
   void callZSortNomZpreePassRender();
   void callZSortThicknessRenderFirst();

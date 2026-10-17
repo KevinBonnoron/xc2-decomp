@@ -87,6 +87,7 @@ public:
   CommandList *getCommandPtr(u32 index);
   void setGlobalSpeed(f32 speed);
   void setCategorySpd(u32 category, f32 speed);
+  void begin();
   void end();
   void apply(const ptlib::DrDrawWorkInfoEF *info);
   void opacityRender(const ptlib::DrDrawWorkInfoEF *info);
