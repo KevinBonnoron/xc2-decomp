@@ -55,6 +55,7 @@ public:
   bool isPlayerTalkForce();
   bool isPlayerPause() const;
   bool isPlayerPauseForBattle() const;
+  bool isRideParty(u32 partyId) const;
   void setDeadType(GfPlayerDead dead);
   u32 getDeadType();
   bool isNeedResetBladeForBattleEndForMenuOpen() const;
