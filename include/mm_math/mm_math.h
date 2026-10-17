@@ -1,5 +1,6 @@
 #pragma once
-#include "math.h"
+#include <math.h>
+
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_quat.h"

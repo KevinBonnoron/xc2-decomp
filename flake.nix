@@ -38,6 +38,52 @@
         hash = "sha256-ykik3vTLyd1q8/Rs4dwr2QPSbHrVE4f1eIStHqpY5C8=";
       };
 
+      libcxxSite = pkgs.writeText "__config_site" ''
+        #ifndef _LIBCPP_CONFIG_SITE
+        #define _LIBCPP_CONFIG_SITE
+
+        #define _LIBCPP_HAS_MUSL_LIBC
+        #define _LIBCPP_HAS_THREAD_API_PTHREAD
+
+        #endif // _LIBCPP_CONFIG_SITE
+      '';
+
+      libcxxHeaders = pkgs.stdenvNoCC.mkDerivation {
+        pname = "libcxx-headers";
+        version = "3.9.1";
+        src = pkgs.fetchurl {
+          url = "https://releases.llvm.org/3.9.1/libcxx-3.9.1.src.tar.xz";
+          sha256 = "0qbl3afl2p2h87p977lsqr5kykl6cgjpkzczs0g6a3pn53j1bri5";
+        };
+        dontConfigure = true;
+        dontBuild = true;
+        installPhase = ''
+          mkdir -p $out/include/c++
+          cp -r include $out/include/c++/v1
+          rm $out/include/c++/v1/CMakeLists.txt $out/include/c++/v1/__config_site.in
+          cat ${libcxxSite} include/__config > $out/include/c++/v1/__config
+        '';
+      };
+
+      muslHeaders = pkgs.stdenvNoCC.mkDerivation {
+        pname = "musl-headers";
+        version = "1.1.16";
+        src = pkgs.fetchurl {
+          url = "https://musl.libc.org/releases/musl-1.1.16.tar.gz";
+          sha256 = "048h0w4yjyza4h05bkc6dpwg3hq6l03na46g0q1ha8fpwnjqawck";
+        };
+        dontConfigure = true;
+        dontBuild = true;
+        installPhase = ''
+          make ARCH=aarch64 prefix= DESTDIR=$out install-headers
+        '';
+      };
+
+      sysroot = pkgs.symlinkJoin {
+        name = "nx-sysroot";
+        paths = [ libcxxHeaders muslHeaders ];
+      };
+
       check = pkgs.writeShellScriptBin "check" ''
         exec ${pkgs.python3}/bin/python3 "$(git rev-parse --show-toplevel)/tools/check.py" "$@"
       '';
@@ -60,8 +106,15 @@
         git add $files
       '';
 
+      # The nixpkgs wrapper adds the host glibc headers, which would shadow musl.
+      iwyu = pkgs.runCommand "iwyu-unwrapped" { } ''
+        mkdir -p $out/bin
+        ln -s ${pkgs.include-what-you-use}/bin/.include-what-you-use-unwrapped $out/bin/include-what-you-use
+        ln -s ${pkgs.include-what-you-use}/bin/fix_includes.py $out/bin/fix_includes.py
+      '';
+
       includes = pkgs.writeShellScriptBin "includes" ''
-        export PATH=${pkgs.include-what-you-use}/bin:$PATH
+        export PATH=${iwyu}/bin:$PATH
         exec ${pkgs.python3}/bin/python3 "$(git rev-parse --show-toplevel)/tools/includes.py" "$@"
       '';
 
@@ -86,6 +139,9 @@
 
         shellHook = ''
           git config core.hooksPath .githooks
+          export XC2_SYSROOT=${sysroot}
+          mkdir -p "$(git rev-parse --show-toplevel)/work"
+          ln -sfn ${sysroot} "$(git rev-parse --show-toplevel)/work/sysroot"
         '';
       };
     };

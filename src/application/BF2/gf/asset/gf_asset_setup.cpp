@@ -1,5 +1,7 @@
 #include "gf/asset/gf_asset_setup.h"
 
+#include <string.h>
+
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/asset/gf_asset_name.h"
 #include "gf/asset/gf_asset_pack.h"
@@ -28,7 +30,6 @@
 #include "gf/util/gf_util.h"
 #include "mm_mtl/fixed_queue.h"
 #include "nn/diag.h"
-#include "string.h"
 
 namespace gf {
 
@@ -59,7 +60,8 @@ const char *getRscValue(const GfAssetSetup *setup, u32 table, const char *member
   return reinterpret_cast<const char *>(bdat->getValCheck(member, setup->id, BDAT_TYPE_STRING));
 }
 
-void unknown001(mm::mtl::FixStr<128> &fileName, const mm::mtl::FixStr<128> &refName, const char *name, bool isDeathBlowWeapon) { // Inferred role: makeWeaponFileName; original function name unknown.
+void unknown001(mm::mtl::FixStr<128> &fileName, const mm::mtl::FixStr<128> &refName, const char *name,
+                bool isDeathBlowWeapon) { // Inferred role: makeWeaponFileName; original function name unknown.
   fileName.clear();
   if (!refName.empty()) {
     fileName = refName.c_str();

@@ -1,10 +1,11 @@
 #include "gf/field/gf_field_time.h"
 
+#include <math.h>
+
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/gf_allocator.h"
-#include "math.h"
 #include "ml/time_util.h"
 #include "mm_mtl/fixstr.h"
 

@@ -1,5 +1,7 @@
 #include "dr/dr_man.h"
 
+#include <string.h>
+
 #include "dr/dr_ap_cache.h"
 #include "dr/dr_calc_gpu_cost.h"
 #include "dr/dr_calc_tex_stream_man.h"
@@ -11,7 +13,6 @@
 #include "dr/dr_pixl_tile_parm.h"
 #include "grlib/cglib_debug.h"
 #include "grlib/cglib_manager.h"
-#include "string.h"
 
 namespace ml {
 

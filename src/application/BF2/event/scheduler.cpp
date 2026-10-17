@@ -1,5 +1,7 @@
 #include "event/scheduler.h"
 
+#include <math.h>
+
 #include "event/chara_util.h"
 #include "event/manager.h"
 #include "gf/data/gf_object_type.h"
@@ -10,7 +12,6 @@
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_util.h"
-#include "math.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 

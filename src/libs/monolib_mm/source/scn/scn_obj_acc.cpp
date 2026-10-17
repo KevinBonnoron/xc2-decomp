@@ -1,5 +1,7 @@
 #include "scn/scn_obj_acc.h"
 
+#include <string.h>
+
 #include "dr/dr_creator.h"
 #include "dr/dr_gpu_check_base.h"
 #include "dr/dr_man.h"
@@ -22,7 +24,6 @@
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "scn/scn_obj_model_dr_sys.h"
-#include "string.h"
 
 namespace ml {
 

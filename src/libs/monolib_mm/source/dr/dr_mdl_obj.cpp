@@ -1,5 +1,7 @@
 #include "dr/dr_mdl_obj.h"
 
+#include <string.h>
+
 #include "dr/dr_man.h"
 #include "dr/dr_mdo_mat.h"
 #include "dr/dr_mdo_node.h"
@@ -7,7 +9,6 @@
 #include "dr/dr_res_mdo_tex_list.h"
 #include "dr/dr_res_mdo_vertex.h"
 #include "mm_math/mm_vec3.h"
-#include "string.h"
 
 namespace ml {
 

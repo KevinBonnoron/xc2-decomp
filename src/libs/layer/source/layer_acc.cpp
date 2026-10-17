@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "layer/layer_acc_action.h"
 #include "layer/layer_acc_def_obj.h"
 #include "layer/layer_acc_def_texture.h"
@@ -24,7 +26,6 @@
 #include "layer/layer_obj_top_poly_obj.h"
 #include "layer/layer_obj_work.h"
 #include "layer/layer_shd_manager.h"
-#include "math.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"

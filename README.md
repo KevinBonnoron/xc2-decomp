@@ -90,6 +90,12 @@ The game was built with **Clang 3.9.1**. The flags that matter:
 
 To try another compiler: `XC2_CXX=clang++-4.0.1 check ...`.
 
+## Standard library
+
+The game uses the Nintendo SDK's libc++ (`std::__1`) on top of its musl based C library (`__nnmusl_init_dso`). The dev shell provides the same era of headers: the libc++ headers of LLVM 3.9.1, configured for musl and the pthread API, and the musl 1.1.16 headers for AArch64. The shell points `XC2_SYSROOT` at them (and links `work/sysroot` for editors). Include them as system headers: `<string.h>`, `<new>`, `<functional>`, `<unordered_map>`...
+
+With exceptions disabled, libc++ 3.9 reports an allocation overflow with `fprintf(stderr, ...)` and `abort()` instead of throwing, as the game does. `std::sort`, `std::function`, `std::unordered_map<std::string, ...>` and the other `std::__1` templates the game instantiates compile to the same code as the game's.
+
 ## Ghidra
 
 The dev shell includes Ghidra. Import `work/main_100.elf` (AArch64, little endian, base `0x7100000000`) and run the auto analysis.
@@ -142,7 +148,7 @@ Abbreviations and names imposed by the game's symbols:
 | Path | Content |
 |---|---|
 | `src/application/BF2/` | Decompiled game code, following the original source tree |
-| `include/` | Shared headers (basic types) |
+| `include/` | Shared headers (basic types, libraries); the C and C++ standard headers come from the dev shell |
 | `tools/check.py` | Compile and compare functions |
 | `tools/includes.py`, `tools/iwyu.imp` | Include-what-you-use pass and its mappings |
 | `tools/setup.sh` | Extract the executable from the XCI |

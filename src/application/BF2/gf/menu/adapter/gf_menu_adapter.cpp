@@ -1,12 +1,13 @@
 #include "gf/menu/adapter/gf_menu_adapter.h"
 
+#include <string.h>
+
 #include "gf/field/gf_field_time.h"
 #include "gf/menu/adapter/gf_menu_adapter_manager.h"
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/rtti.h"
-#include "string.h"
 #include "ui/plugin/ui_object_color_plugin.h"
 #include "ui/plugin/ui_object_disp_plugin.h"
 #include "ui/plugin/ui_object_number_plugin.h"
