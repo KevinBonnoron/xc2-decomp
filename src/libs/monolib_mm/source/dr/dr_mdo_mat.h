@@ -10,6 +10,7 @@ class CGLibTextureBuffer;
 } // namespace grlib
 
 namespace ml {
+class DrMan;
 class DrResMdoTexList;
 class DrResMdoVertex;
 
@@ -54,9 +55,9 @@ struct MdoWrkAvatarColors {
 struct MdoWrkAvatar {
   u32 flags;
   u8 _04[0x08 - 0x04];
-  void *baseTextures[2];
+  grlib::CGLibTextureBuffer *baseTextures[2];
   void *textures[2];
-  void *eyeBaseTexture;
+  grlib::CGLibTextureBuffer *eyeBaseTexture;
   void *eyeTexture;
   bool dollMat;
   u8 _39[0x40 - 0x39];
@@ -155,10 +156,12 @@ public:
   void setExtraShaderSetup(const void *shader);
   void releaseExtraShader();
 
-  u8 _24[0x30 - 0x24];
+  u8 _24[0x28 - 0x24];
+  DrMan *m_drMan;
   MdoWrkMatRes *m_matRes;
 };
 
+static_assert(offsetof(DrMdoMat, m_drMan) == 0x28, "");
 static_assert(offsetof(DrMdoMat, m_matRes) == 0x30, "");
 
 } // namespace ml

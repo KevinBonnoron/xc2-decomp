@@ -128,6 +128,8 @@ public:
   void offScreenAlphaEnd();
   void debugDeferredRenderAlbedoAndFogRatio(int x, int y, int width, int height);
   DrPixlRenderTarget *getDeactivePixlObj(int type);
+  DrPixlRenderTarget *getSpecIBLObj();
+  DrPixlRenderTarget *getDiffIBLObj();
   grlib::CGLibDepthTarget *getDeactiveDepthObj();
   void swapPixlObj(int type);
   DrPixlRenderTarget *getBackFaceDepthTexture() const;
