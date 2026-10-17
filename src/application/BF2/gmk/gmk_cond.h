@@ -1,7 +1,8 @@
 #pragma once
+#include <stddef.h>
+
 #include "mm_math/mm_vec3.h"
 #include "types.h"
-#include <stddef.h>
 
 struct CBdatWrapper;
 
@@ -156,8 +157,18 @@ class BootedGmkCond {
 public:
   BootedGmkCond(u8 gimmickType, u16 gimmickId);
   void create(u8 gimmickType, u16 gimmickId);
+
   BootedGmkCond(const CBdatWrapper &bdat, int id, const char *prefix);
   void dispose();
+  void createIfEnable(u8 gimmickType, u16 gimmickId) {
+    if (gimmickType == 0 || gimmickId == 0) {
+      return;
+    }
+    create(gimmickType, gimmickId);
+  }
+
+  bool isEnable() const { return gimmickType != 0 && gimmickId != 0; }
+  bool isMatch() const;
 
   u8 gimmickType;
   u16 gimmickId;

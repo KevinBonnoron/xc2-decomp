@@ -16,6 +16,15 @@ constexpr int BDAT_TYPE_U32 = 3;
 constexpr int BDAT_TYPE_STRING = 7;
 constexpr int BDAT_TYPE_F32 = 8;
 
+inline f32 toBdatF32(unsigned long value) {
+  union {
+    unsigned long value;
+    f32 valueF32;
+  } bits;
+  bits.value = value;
+  return bits.valueF32;
+}
+
 class GmkBdat {
 public:
   struct CreateInfo {
