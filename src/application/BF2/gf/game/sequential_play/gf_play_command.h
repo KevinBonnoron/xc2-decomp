@@ -24,8 +24,6 @@ struct GfMapjumpInfo;
 struct GfSetupPfTalk;
 struct QuestID;
 
-enum GfPlayerDead {};
-
 struct ParamReturnTitle {
   bool isWaitVoice;
   bool isGameClear;
@@ -171,6 +169,8 @@ public:
 class GfPlayComWaitBattleEnd : public GfPlayCom {
 public:
   static GfPlayComWaitBattleEnd *create(u32 battle);
+
+  static int s_activate;
 };
 
 class GfPlayComEventPlayerStop : public GfPlayCom {
@@ -334,6 +334,12 @@ public:
 
 static_assert(sizeof(GfPlayComMenuChapterSave) == 0x18, "");
 
+class GfPlayComMenuCommon : public GfPlayCom {
+public:
+  static bool isDisp(u32 window);
+  static u32 getResult(u32 window);
+};
+
 class GfPlayComMenuChapter : public GfPlayCom {
   GF_PLAY_COM("PlayComMenuChapter")
 
@@ -491,6 +497,7 @@ public:
 class GfPlayComPlayerDead : public GfPlayCom {
 public:
   static bool isDead();
+  static bool replaceDeadType(GfPlayerDead dead);
   static GfPlayComPlayerDead *create(GfPlayerDead dead);
 };
 
@@ -528,7 +535,7 @@ public:
 
 static_assert(sizeof(GfPlayComGimmickTaskComplete) == 0x20, "");
 
-class GfPlayComReturnTitle : public GfPlayCom {
+class GfPlayComReturnTitle : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComReturnTitle> {
 public:
   static GfPlayComReturnTitle *create(const ParamReturnTitle &param);
 };

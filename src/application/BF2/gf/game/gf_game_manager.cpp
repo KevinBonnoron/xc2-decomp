@@ -84,7 +84,6 @@ constexpr u16 SCENARIO_FLAG_PER_SCENARIO = 1000;
 constexpr u32 FADE_ALL = 0xffffffff;
 constexpr u32 FADE_LAYER_COUNT = 3;
 constexpr f32 FADEOUT_ALPHA = 0.9f;
-constexpr u32 PAUSE_BITS_MAIN_MENU = 0x40;
 constexpr u32 PAUSE_BITS_GIMMICK = 0x59;
 constexpr u32 TIME_RANGE_DN_NIGHT = 7;
 constexpr u32 ASSET_PACK_MAX = 512;
@@ -1006,7 +1005,7 @@ bool GfGameManager::isEnableOpenMainMenuSequence() {
     return false;
   }
 
-  if (GfSequentialPlay::isInnerPause(PAUSE_BITS_MAIN_MENU)) {
+  if (GfSequentialPlay::isInnerPause(PAUSE_BIT_MAIN_MENU)) {
     return false;
   }
 

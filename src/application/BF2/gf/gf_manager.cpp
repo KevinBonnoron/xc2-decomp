@@ -351,8 +351,7 @@ void GfManager::startEventTheater(const mm::mtl::FixedVector<u16, 8> &events) {
   setExec(EXEC_STATE_THEATER);
   u32 mapjumpId = GfDataEvent::getMapjumpID(events[0]);
   GfMapjumpInfo info;
-  info.mapjumpId = mapjumpId;
-  info.map = 0;
+  info.setMapjump(mapjumpId);
   u32 eventType = GfDataEvent::getEventType(events[0]);
   if (eventType == 3 || eventType == 4) {
     info.isNoFadeIn = true;
@@ -371,8 +370,7 @@ void GfManager::execToAdvertize() {
   setExec(EXEC_STATE_ADVERTIZE);
   GfGameManager::leaveGameForDebug();
   GfMapjumpInfo info;
-  info.mapjumpId = -1;
-  info.map = 0;
+  info.setMapjump(-1);
   GfPlayFactory::createMapjump(info);
 }
 

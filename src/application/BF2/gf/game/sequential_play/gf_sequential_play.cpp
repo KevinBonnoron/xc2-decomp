@@ -1,6 +1,7 @@
 #include "gf/game/sequential_play/gf_sequential_play.h"
 
 #include "gf/game/quest/gf_quest_id.h"
+#include "gf/game/sequential_play/gf_play_command.h"
 
 namespace gf {
 

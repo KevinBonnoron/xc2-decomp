@@ -3,6 +3,7 @@
 
 #include "gf/data/gf_data_blade.h"
 #include "gf/event/gf_event.h"
+#include "gf/game/sequential_play/gf_play_factory.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -54,6 +55,7 @@ public:
   bool isPlayerTalkForce();
   bool isPlayerPause() const;
   bool isPlayerPauseForBattle() const;
+  void setDeadType(GfPlayerDead dead);
   u32 getDeadType();
   bool isNeedResetBladeForBattleEndForMenuOpen() const;
   bool isDisableJumpForRide() const;
