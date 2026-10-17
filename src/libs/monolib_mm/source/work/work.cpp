@@ -4,4 +4,6 @@
 #include "work_cpu.cpp"
 #include "work_root.cpp"
 #include "work_system.cpp"
+#include "work_util.cpp"
+#include "work_profiler.cpp"
 // clang-format on
