@@ -80,6 +80,7 @@ public:
   static bool canRemoveBlade(u32 blade, const mm::mtl::FixedVector<u16, 422> *blades);
   static bool hasHomura(u32 driver);
   static u16 getMsgIDFromList(u32 bdat, u16 id);
+  static bool getArtsIconInfo(u32 arts, u32 level, ArtsIconInfo &info);
   static bool checkCCStart(GfMenuCallContext *context);
   static bool checkCCNext(GfMenuCallContext *context, u32 menu);
   static u32 convIdeaPointToLevel(u32 point);
