@@ -672,11 +672,14 @@ void BootedGmkCond::dispose() { gimmickType = 0; }
 } // namespace gmk
 
 // clang-format off
+#include "gmk/gmk_npc/gmk_npc_manager_impl.h" // IWYU pragma: keep
+#include "gmk/gmk_npc/gmk_npc.cpp"
 #include "gmk/gmk_map_obj.cpp"
 #include "gmk/gmk_tbox.cpp"
 #include "gmk/gmk_event.cpp"
 #include "gmk/gmk_field_lock.cpp"
 #include "gmk/gmk_effect.cpp"
+#include "gmk/gmk_se.cpp"
 #include "gmk/gmk_landmark.cpp"
 #include "gmk/gmk_route.cpp"
 #include "gmk/gmk_collection.cpp"

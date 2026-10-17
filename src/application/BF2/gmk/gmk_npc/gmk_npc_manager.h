@@ -1,10 +1,52 @@
 #pragma once
+#include <stddef.h>
+
+#include "gf/game/quest/gf_quest_id.h"
+#include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
 
+struct CBdatWrapper;
+
+namespace gf {
+struct GF_OBJ_HANDLE;
+}
+
 namespace gmk {
 
-class GmkNpcIdInfo;
+class AGmkNpc;
+
+class GmkNpcIdInfo {
+public:
+  struct BdatInfo {
+    BdatInfo();
+
+    void create(CBdatWrapper bdat, int id);
+    void dispose();
+
+    gf::QuestID quest;
+    u16 shopId;
+    u16 mountPoint;
+    u16 mountObject;
+    u16 mountPoint2;
+    u16 mountObject2;
+  };
+
+  u16 npcId;
+  u8 *bdat;
+  mm::mtl::IntrusiveList<AGmkNpc> *npcs;
+  AGmkNpc *activeNpc;
+  BdatInfo bdatInfo;
+  gf::GF_OBJ_HANDLE *handle;
+};
+
+static_assert(sizeof(GmkNpcIdInfo::BdatInfo) == 0xe, "");
+static_assert(offsetof(GmkNpcIdInfo, bdat) == 0x08, "");
+static_assert(offsetof(GmkNpcIdInfo, npcs) == 0x10, "");
+static_assert(offsetof(GmkNpcIdInfo, activeNpc) == 0x18, "");
+static_assert(offsetof(GmkNpcIdInfo, bdatInfo) == 0x20, "");
+static_assert(offsetof(GmkNpcIdInfo, handle) == 0x30, "");
+static_assert(sizeof(GmkNpcIdInfo) == 0x38, "");
 
 class GmkNpcManager {
 public:

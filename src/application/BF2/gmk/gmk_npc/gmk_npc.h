@@ -1,9 +1,12 @@
 #pragma once
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
+
+struct CBdatWrapper;
 
 namespace gmk {
 
@@ -12,7 +15,18 @@ class GmkNpcGob;
 class GmkNpc : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x30];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    bool isPopCommonCondMatched(const AGmkBase &gmk) const;
+    void debugDraw(const AGmkBase &gmk) const;
+
+    u16 condition;
+    u16 group;
+    u16 battleReaction;
+    ScenarioFlagCond scenarioFlag;
+    QuestFlagCond questFlag;
+    TimeCond timeCond;
+    DistHvCond popDist;
+    DistHvCond depopDist;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_NPC;

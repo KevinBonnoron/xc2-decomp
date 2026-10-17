@@ -1,8 +1,15 @@
 #pragma once
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
+
+struct CBdatWrapper;
+
+namespace fw {
+class SoundPack;
+}
 
 namespace gmk {
 
@@ -13,7 +20,23 @@ class GmkSeLinePointGobCustom;
 class GmkSe : public AGmkBase {
 public:
   struct BdatInfo {
-    u8 _00[0x40];
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    bool isPopCondMatched() const;
+    fw::SoundPack *getSoundPack() const;
+
+    bool isMapPack;
+    bool isPlayOnce;
+    u16 seName;
+    u8 volumeMax;
+    u8 volumeMin;
+    u16 condition;
+    u8 inRoomVolume;
+    ScenarioFlagCond scenarioFlag;
+    QuestFlagCond questFlag;
+    TimeCond timeCond;
+    WeatherCond weatherCond;
+    BootedGmkCond bootedGmk;
+    BootedGmkCond opBootedGmk;
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_SE;
