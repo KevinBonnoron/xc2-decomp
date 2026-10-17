@@ -1,5 +1,6 @@
 #pragma once
 #include "layer/layer_acc_obj_base.h"
+#include "layer/layer_obj_manager.h"
 #include "types.h"
 
 namespace mm {
@@ -35,6 +36,7 @@ public:
   LayerBase *createFontObj();
   LayerBase *createMaskObj(const void *data);
   LayerBase *createTexObj(const grlib::CGLibTextureBuffer &texture);
+  LayerBase *createMemObj(u32 width, u32 height, LayerMemType type);
 
   u8 _08[0x10 - 0x08];
 };

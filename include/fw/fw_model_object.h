@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/reference_object.h"
 #include "types.h"
 
 namespace ml {
@@ -10,14 +11,16 @@ class ScnObjModel;
 
 namespace fw {
 
-class ModelObject {
+class ModelObject : public mm::mtl::ReferenceObject {
 public:
+  virtual ~ModelObject();
+  virtual void update();
   ml::ScnObjModel *getInterface();
   void setActive(bool isActive);
   bool isActive() const;
   void setAddOffsetPos(const mm::Vec3 &offset);
 
-  u8 _00[0x30 - 0x00];
+  u8 _10[0x30 - 0x10];
   ml::ScnObjModel *model;
   u8 _38[0x3c - 0x38];
   bool active;
