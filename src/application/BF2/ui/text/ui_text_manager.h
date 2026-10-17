@@ -8,6 +8,7 @@ class UITextManager : public mm::mtl::PtrSingleton<UITextManager> {
 public:
   u32 registTextFile(u8 *data);
   void unregistTextFile(u32 handle);
+  void reloadAll();
   const char *getText(u32 handle, u32 id) const;
   u16 getStyle(u32 handle, u32 id) const;
   u8 *getTextFile(u32 handle) const;
