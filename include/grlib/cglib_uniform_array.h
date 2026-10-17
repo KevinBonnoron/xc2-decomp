@@ -3,6 +3,8 @@
 
 namespace grlib {
 
+class CGLibOneUniformBlock;
+
 template <typename T> class CGLibUniformArray {
 public:
   void setupArray(u32 count);
@@ -10,5 +12,7 @@ public:
 
   T *m_items;
 };
+
+class CGLibOneUniformArray : public CGLibUniformArray<CGLibOneUniformBlock> {};
 
 } // namespace grlib

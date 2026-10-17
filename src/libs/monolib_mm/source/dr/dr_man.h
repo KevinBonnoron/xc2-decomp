@@ -4,6 +4,7 @@
 #include "dr/dr_draw_work_info.h"
 #include "ml/work_background.h"
 #include "mm_math/mm_vec3.h"
+#include "mtl/alloc_handle.h"
 #include "types.h"
 
 namespace cloud {
@@ -120,7 +121,9 @@ public:
   static bool s_bFogSRGB;
   static bool s_bSeamDebug;
 
-  u8 _0008[0x0070 - 0x0008];
+  u8 _0008[0x0010 - 0x0008];
+  mtl::ALLOC_HANDLE memClass;
+  u8 _0014[0x0070 - 0x0014];
   DrMotBlurState *motBlurState;
   DrPixlMan *pixlMan;
   DrShdMan *shdMan;
@@ -200,6 +203,7 @@ public:
   u8 _1e10[0x1e20 - 0x1e10];
 };
 
+static_assert(offsetof(DrMan, memClass) == 0x0010, "");
 static_assert(offsetof(DrMan, motBlurState) == 0x0070, "");
 static_assert(offsetof(DrMan, pixlMan) == 0x0078, "");
 static_assert(offsetof(DrMan, shdMan) == 0x0080, "");
