@@ -8,6 +8,13 @@
 
 namespace ml {
 
+enum DevKeyboardKey {
+  KEY_LEFT = 0x25,
+  KEY_UP = 0x26,
+  KEY_RIGHT = 0x27,
+  KEY_DOWN = 0x28,
+};
+
 enum DevKeyboardVk {
   VK_ALT = 0x1,
   VK_CTRL = 0x2,
@@ -20,6 +27,10 @@ enum DevKeyboardVk {
   VK_PAGE_DOWN = 0x100000,
   VK_HOME = 0x200000,
   VK_END = 0x400000,
+  VK_UP = 0x800000,
+  VK_RIGHT = 0x1000000,
+  VK_DOWN = 0x2000000,
+  VK_LEFT = 0x4000000,
   VK_PAUSE = 0x8000000,
   VK_SCROLL = 0x10000000,
 };
@@ -71,8 +82,12 @@ public:
   static bool isVkDown(u32 key);
   static bool isVkUp(u32 key);
   static int getCharDownNum();
+  static u8 getCharDown(u32 index);
+  static bool isCharDown(u8 code);
   static u8 getCodeDown(u32 index);
   static int getCharUpNum();
+  static u8 getCharUp(u32 index);
+  static bool isCharUp(u8 code);
   static u8 getCodeUp(u32 index);
   void ikReturnDown() override;
   void updateKey();
