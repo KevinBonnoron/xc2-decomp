@@ -16,6 +16,13 @@
     ::nn::diag::detail::LogImpl(logMetaData, __VA_ARGS__);                                                                                           \
   } while (0)
 
+#define NN_ABORT_UNLESS(condition)                                                                                                                   \
+  do {                                                                                                                                               \
+    if (!(condition)) {                                                                                                                              \
+      ::nn::diag::detail::AbortImpl("", "", "", 0);                                                                                                  \
+    }                                                                                                                                                \
+  } while (0)
+
 namespace nn {
 namespace diag {
 
@@ -52,6 +59,7 @@ static_assert(sizeof(LogMetaData) == 0x40, "");
 namespace detail {
 
 void LogImpl(const LogMetaData &metaData, const char *format, ...);
+[[noreturn]] void AbortImpl(const char *condition, const char *functionName, const char *fileName, int lineNumber);
 
 } // namespace detail
 } // namespace diag

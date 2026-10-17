@@ -69,6 +69,10 @@ public:
 static_assert(offsetof(GfInitParamEnemy, enArrangeId) == 0x9c, "");
 static_assert(offsetof(GfInitParamEnemy, bladeId) == 0xa0, "");
 
+class GfInitParamNpc : public GfInitParam {};
+
+class GfInitParamMob : public GfInitParam {};
+
 class GfInitParamGimmick : public GfInitParam {};
 
 class GfInitParamMapObj : public GfInitParam {};
