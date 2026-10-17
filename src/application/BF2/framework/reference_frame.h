@@ -4,8 +4,10 @@
 #include "fw/fw_transform.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_mtl/intrusive_list.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/singleton.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 namespace fw {
@@ -50,7 +52,14 @@ static_assert(sizeof(ReferenceFrame) == 0xe0, "");
 class TransformUpdater : public mm::mtl::IntrusiveListNode<TransformUpdater> {
 public:
   void resolveWorldTrasform();
+
+  mm::mtl::Vector<mm::mtl::IntrusivePtr<ReferenceFrame>> frames;
+  mm::mtl::Vector<mm::mtl::IntrusivePtr<ReferenceFrame>> afterFrames;
 };
+
+static_assert(offsetof(TransformUpdater, frames) == 0x10, "");
+static_assert(offsetof(TransformUpdater, afterFrames) == 0x38, "");
+static_assert(sizeof(TransformUpdater) == 0x60, "");
 
 class TransformManager : public mm::mtl::PtrSingleton<TransformManager> {
 public:

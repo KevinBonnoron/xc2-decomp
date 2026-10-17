@@ -18,6 +18,9 @@ static_assert(sizeof(ResWind) == 0x30, "");
 
 namespace fw {
 
+class ReferenceFrame;
+class WindProbe;
+
 class DynamicWindResource : public mm::mtl::ReferenceObject {
 public:
   DynamicWindResource();
@@ -30,6 +33,7 @@ static_assert(sizeof(DynamicWindResource) == 0x40, "");
 
 class WindFactory {
 public:
+  static WindProbe *createProbe(u32 group, f32 radius, mm::mtl::IntrusivePtr<ReferenceFrame> frame, bool isFollowFrame);
   static mm::mtl::IntrusivePtr<DynamicWindResource> createWindResource(const mm::Vec3 &min, const mm::Vec3 &max);
 };
 

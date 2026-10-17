@@ -14,6 +14,7 @@ public:
   ~Delegate() {}
 
   bool isValid() const { return m_invoker != nullptr; }
+  void clear() { m_invoker = nullptr; }
 
   R operator()(Args... args) const { return m_invoker(this, args...); }
 

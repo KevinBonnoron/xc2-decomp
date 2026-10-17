@@ -1,5 +1,6 @@
 #include "event/chara_dys_updater.h"
 
+#include "framework/dynamics/dynamics_updater.h"
 #include "gf/object/component/gf_com_dynamics.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
@@ -45,7 +46,7 @@ void CharaDysUpdater::resetDynamics(gf::GF_OBJ_HANDLE *handle) {
 
   gf::GfComDynamics *dynamics = obj->getComponent<gf::GfComDynamics>();
   if (dynamics != nullptr) {
-    dynamics->isReset = true;
+    dynamics->updater.isResetRequested = true;
     dynamics->resetMovement();
   }
 }
