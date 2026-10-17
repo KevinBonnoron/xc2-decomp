@@ -120,6 +120,15 @@ public:
     return at(index);
   }
 
+  // __LINE__ must be 485 as in the original header: it is the line argument of the assert.
+#line 484
+  T pop_back() {
+    MM_ASSERT(!empty());
+    size_t index = (mFront + mSize - 1) % N;
+    --mSize;
+    return element(index);
+  }
+
   // __LINE__ must be 633 as in the original header: it is the line argument of the assert.
 #line 632
   void push(const T &value) {

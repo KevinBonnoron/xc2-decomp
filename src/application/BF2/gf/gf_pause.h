@@ -15,12 +15,15 @@ enum {
   PAUSE_BIT_EVENT_SKIP = 1 << 9,
 };
 
+struct GF_PAUSE_HANDLE;
 struct GfSetupParam;
 
 class GfPause : public mm::mtl::PtrSingleton<GfPause> {
 public:
   static void build(const GfSetupParam &param);
   static void destroy();
+  static GF_PAUSE_HANDLE *reqPause(u32 pauseBits);
+  static void destroyHandle(GF_PAUSE_HANDLE *handle);
   static void update();
   static bool isPause(u32 pauseBits);
 };

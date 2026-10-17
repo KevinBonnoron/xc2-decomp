@@ -1,9 +1,12 @@
 #include "gf/game/sequential_play/gf_sequential_play.h"
 
 #include "gf/field/gf_field_map_gimmick.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_scene.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/sequential_play/gf_play_command.h"
+#include "gf/gf_pause.h"
+#include "mm_mtl/rtti.h"
 
 namespace gf {
 
@@ -28,7 +31,31 @@ bool GfSequentialPlay::play() {
   return true;
 }
 
+bool GfSequentialPlay::isCancel() { return get()->isCanceled; }
+
 void GfSequentialPlay::beginCommand(TYPE type) { get()->commandType = type; }
+
+void GfSequentialPlay::pauseOn(u32 pauseBits) {
+  GfSequentialPlay *sequentialPlay = get();
+  sequentialPlay->pauseHandles.push(GfPause::reqPause(pauseBits));
+}
+
+void GfSequentialPlay::pauseOff() { GfPause::destroyHandle(get()->pauseHandles.pop_back()); }
+
+GF_STATE GfSequentialPlay::execPushState(GF_STATE state) {
+  GfSequentialPlay *sequentialPlay = get();
+  GF_STATE previousState = GfGameManager::getState();
+  sequentialPlay->states.push(state);
+  GfGameManager::setState(state, false);
+  return previousState;
+}
+
+GF_STATE GfSequentialPlay::execPopState() {
+  GfSequentialPlay *sequentialPlay = get();
+  GF_STATE state = sequentialPlay->states.pop_back();
+  GfGameManager::setState(sequentialPlay->states.empty() ? GF_STATE_CONTROL : sequentialPlay->states.back(), true);
+  return state;
+}
 
 void GfSequentialPlay::addWait(f32 time) { addCommand(GfPlayComWait::create(time)); }
 
@@ -162,5 +189,32 @@ void GfSequentialPlay::addHoodHomuraBattou() { addCommand(GfPlayComHoodHomuraBat
 void GfSequentialPlay::startSignal(GfSequentialPlaySignal *signal) { addCommand(GfPlayComExecuteSignal::create(true, signal)); }
 
 void GfSequentialPlay::endSignal(GfSequentialPlaySignal *signal) { addCommand(GfPlayComExecuteSignal::create(false, signal)); }
+
+bool GfSequentialPlay::isInnerPause(u32 pauseBits) {
+  GfSequentialPlay *sequentialPlay = get();
+  for (GfPlayCom *command : sequentialPlay->commands) {
+    if (command->type == PCOMTYPE_PAUSE) {
+      if (command->getRTTI()->isKindOf(&GfPlayComPause::m_rtti) && (static_cast<GfPlayComPause *>(command)->pauseBits & pauseBits) == pauseBits) {
+        return true;
+      }
+    }
+  }
+  for (GfPlayCom *command : sequentialPlay->playingCommands) {
+    if (command->type == PCOMTYPE_PAUSE) {
+      if (command->getRTTI()->isKindOf(&GfPlayComPause::m_rtti) && (static_cast<GfPlayComPause *>(command)->pauseBits & pauseBits) == pauseBits) {
+        return true;
+      }
+    }
+  }
+  return GfPause::isPause(pauseBits);
+}
+
+const char *GfSequentialPlay::getFuncName() {
+  GfSequentialPlay *sequentialPlay = get();
+  if (sequentialPlay != nullptr && !sequentialPlay->commands.empty()) {
+    return sequentialPlay->commands.front()->getFuncName();
+  }
+  return "";
+}
 
 } // namespace gf
