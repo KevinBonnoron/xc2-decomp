@@ -15,6 +15,7 @@ struct SendParam;
 namespace fw {
 
 class EffectCasterBase;
+class EffectPack;
 enum EF_CATEGORY : int;
 
 class EffectManager : public mm::mtl::PtrSingleton<EffectManager> {
@@ -36,6 +37,7 @@ public:
   void setResponsiveAA(f32 responsiveAA);
   void setAllDisp(bool isDisp);
   void setDisableCollision(bool isDisable);
+  u32 create(const char *name, EffectPack *pack, bool isLoop);
   u32 create(void *data, bool isLoop);
   u32 create(void *data, const effect::SendParam *param, bool isLoop);
   void kill(u32 handle);

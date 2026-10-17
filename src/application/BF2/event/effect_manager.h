@@ -1,12 +1,17 @@
 #pragma once
+#include "event/effect_res.h"
+#include "event/effect_util.h"
 #include "event/i_manager.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
-namespace event {
+namespace fw {
+class EffectPack;
+} // namespace fw
 
-class EffectRes;
+namespace event {
 
 class EffectManager : public IManager, public mm::mtl::Singleton<EffectManager> {
 public:
@@ -23,12 +28,19 @@ public:
     DISP_FLAG_DISABLE = 1 << 1,
   };
 
+  fw::EffectPack *getResPack() const {
+    if (mCurrentRes != nullptr) {
+      return mCurrentRes->getResPack();
+    }
+    return nullptr;
+  }
   EffectManager();
   virtual ~EffectManager() {}
   bool isStreamMode() const;
   bool isOffscrMode() const;
   u32 getOffscrID() const;
   bool isReplaceMode() const;
+  void replaceFile(mm::mtl::FixStr<128> &file) const;
   void setStreamMode(bool isStreamMode);
   void setOffscrMode(bool isOffscrMode, u32 offscrID);
   void setReplaceMode(bool isReplaceMode, u32 replaceID);
@@ -64,5 +76,19 @@ private:
 };
 
 static_assert(sizeof(EffectManager) == 0xb0, "");
+
+inline void EffectManager::replaceFile(mm::mtl::FixStr<128> &file) const {
+  if (!isReplaceMode() || mReplaceID == 0) {
+    return;
+  }
+  char buffer[256];
+  __builtin_memset(buffer, 0, sizeof(buffer));
+  __builtin_strcpy(buffer, file.c_str());
+  char *found = __builtin_strstr(buffer, "dark");
+  if (found != nullptr) {
+    __builtin_strcpy(found, EffectUtil::getAttrName(mReplaceID));
+    file = buffer;
+  }
+}
 
 } // namespace event

@@ -18,6 +18,7 @@ public:
   void replay();
   void append(f32 frame, const mm::Col4 &value, CV_TYPE cv);
   size_t count() const;
+  const mm::Col4 &getValue() const { return value; }
 
 private:
   mm::mtl::FixedVector<mm::Col4, KEY_COUNT> values;
