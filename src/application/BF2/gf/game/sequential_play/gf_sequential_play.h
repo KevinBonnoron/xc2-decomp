@@ -3,8 +3,10 @@
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gmk/gmk_manager.h"
+#include "mm_mtl/fixed_list.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
+#include <stddef.h>
 
 namespace fw {
 struct UpdateInfo;
@@ -32,6 +34,7 @@ public:
   static void build(const GfSetupParam &param);
   static void destroy();
   static bool isPlay();
+  static bool isInitialized();
   static void postUpdate(const fw::UpdateInfo &info);
   static bool play();
   static void beginCommand(TYPE type);
@@ -98,6 +101,17 @@ public:
   static void startSignal(GfSequentialPlaySignal *signal);
   static void endSignal(GfSequentialPlaySignal *signal);
   bool isExistEvent(u32 event) const;
+
+  mm::mtl::FixedList<GfPlayCom *, 256> commands;
+  u8 _1228[0x1850 - 0x1228];
+  mm::mtl::FixedList<GfPlayCom *, 128> playingCommands;
+  TYPE commandType;
+  bool initialized;
 };
+
+static_assert(offsetof(GfSequentialPlay, commands) == 0x08, "");
+static_assert(offsetof(GfSequentialPlay, playingCommands) == 0x1850, "");
+static_assert(offsetof(GfSequentialPlay, commandType) == 0x20f0, "");
+static_assert(sizeof(GfSequentialPlay) == 0x20f8, "");
 
 } // namespace gf

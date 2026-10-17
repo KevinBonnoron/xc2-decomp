@@ -22,7 +22,9 @@ struct GF_OBJ_HANDLE;
 struct GF_SCOM_HANDLE;
 struct GfMapjumpInfo;
 struct GfSetupPfTalk;
+struct MenuCommonWindowParam;
 struct QuestID;
+class IFieldSeq;
 
 struct ParamReturnTitle {
   bool isWaitVoice;
@@ -338,7 +340,23 @@ class GfPlayComMenuCommon : public GfPlayCom {
 public:
   static bool isDisp(u32 window);
   static u32 getResult(u32 window);
+  static GfPlayComMenuCommon *create(u32 window);
+
+  u32 window;
+  int id;
 };
+
+static_assert(sizeof(GfPlayComMenuCommon) == 0x18, "");
+
+class GfPlayComMenuCommonFromParam : public GfPlayCom {
+public:
+  static GfPlayComMenuCommonFromParam *create(const MenuCommonWindowParam &param);
+
+  u8 _10[0x60 - 0x10];
+  int id;
+};
+
+static_assert(sizeof(GfPlayComMenuCommonFromParam) == 0x68, "");
 
 class GfPlayComMenuChapter : public GfPlayCom {
   GF_PLAY_COM("PlayComMenuChapter")
@@ -474,6 +492,11 @@ public:
   static GfPlayComFieldTbox *create(GF_OBJ_HANDLE *handle);
 };
 
+class GfPlayComFieldSeq : public GfPlayCom {
+public:
+  static GfPlayComFieldSeq *create(IFieldSeq *sequence, GF_OBJ_HANDLE *handle);
+};
+
 class GfPlayComWaitPlayerToStartGmkTuto : public GfPlayCom {
   GF_PLAY_COM("PlayComWaitPlayerToStartGmkTuto")
 
@@ -540,7 +563,7 @@ public:
   static GfPlayComReturnTitle *create(const ParamReturnTitle &param);
 };
 
-class GfPlayComBattleStart : public GfPlayCom {
+class GfPlayComBattleStart : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComBattleStart> {
 public:
   static GfPlayComBattleStart *create(bool isStart);
 };

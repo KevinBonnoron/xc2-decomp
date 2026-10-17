@@ -1,9 +1,34 @@
 #include "gf/game/sequential_play/gf_sequential_play.h"
 
+#include "gf/field/gf_field_map_gimmick.h"
+#include "gf/game/gf_game_scene.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/sequential_play/gf_play_command.h"
 
 namespace gf {
+
+namespace {
+
+constexpr f32 BATTLE_START_END_WAIT_TIME = 0.3f;
+constexpr f32 BATTLE_START_END_RIDE_WAIT_TIME = 0.6f;
+
+} // namespace
+
+bool GfSequentialPlay::isPlay() { return !get()->commands.empty() || !get()->playingCommands.empty(); }
+
+bool GfSequentialPlay::isInitialized() {
+  if (get() != nullptr) {
+    return get()->initialized;
+  }
+  return false;
+}
+
+bool GfSequentialPlay::play() {
+  get()->commandType = TYPE_NORMAL;
+  return true;
+}
+
+void GfSequentialPlay::beginCommand(TYPE type) { get()->commandType = type; }
 
 void GfSequentialPlay::addWait(f32 time) { addCommand(GfPlayComWait::create(time)); }
 
@@ -23,6 +48,8 @@ void GfSequentialPlay::pushPause(u32 pauseBits) { addCommand(GfPlayComPause::cre
 
 void GfSequentialPlay::popPause() { addCommand(GfPlayComPause::create(0)); }
 
+void GfSequentialPlay::pushState(GF_STATE state) { addCommand(GfPlayComState::create(state, get()->commandType != TYPE_NORMAL)); }
+
 void GfSequentialPlay::popState() { addCommand(GfPlayComState::create(GF_STATE(0), false)); }
 
 void GfSequentialPlay::addEventFade() { addCommand(GfPlayComEventFade::create()); }
@@ -40,6 +67,18 @@ void GfSequentialPlay::addCallbackEventSequence(int sequence, bool isStart) { ad
 void GfSequentialPlay::addMenuKizunaring(u32 blade) { addCommand(GfPlayComMenuKizunaring::create(blade)); }
 
 void GfSequentialPlay::addMenuPrecious(u32 item) { addCommand(GfPlayComMenuPrecious::create(item)); }
+
+int GfSequentialPlay::addMenuCommon(u32 window) {
+  GfPlayComMenuCommon *command = GfPlayComMenuCommon::create(window);
+  addCommand(command);
+  return command->id;
+}
+
+int GfSequentialPlay::addMenuCommon(const MenuCommonWindowParam &param) {
+  GfPlayComMenuCommonFromParam *command = GfPlayComMenuCommonFromParam::create(param);
+  addCommand(command);
+  return command->id;
+}
 
 void GfSequentialPlay::addMenuChapterSave(u32 chapter) { addCommand(GfPlayComMenuChapterSave::create(chapter)); }
 
@@ -63,6 +102,19 @@ void GfSequentialPlay::addReturnTitle(const ParamReturnTitle &param) { addComman
 
 void GfSequentialPlay::addBattleStart(bool isStart) { addCommand(GfPlayComBattleStart::create(isStart)); }
 
+void GfSequentialPlay::addBattleStartEnd() {
+  if (GfPlayComBattleStart::get() == nullptr) {
+    return;
+  }
+  f32 time;
+  if (GfGameScene::get() == nullptr) {
+    time = BATTLE_START_END_WAIT_TIME;
+  } else {
+    time = GfGameScene::get()->isRideParty(0) ? BATTLE_START_END_RIDE_WAIT_TIME : BATTLE_START_END_WAIT_TIME;
+  }
+  addCommand(GfPlayComWait::create(time));
+}
+
 void GfSequentialPlay::addMenuQuestList() { addCommand(GfPlayComMenuQuestList::create()); }
 
 void GfSequentialPlay::addSalvage(GF_OBJ_HANDLE *handle) { addCommand(GfPlayComSalvage::create(handle)); }
@@ -70,6 +122,14 @@ void GfSequentialPlay::addSalvage(GF_OBJ_HANDLE *handle) { addCommand(GfPlayComS
 void GfSequentialPlay::addCollect(GF_OBJ_HANDLE *handle) { addCommand(GfPlayComCollect::create(handle)); }
 
 void GfSequentialPlay::addFieldTbox(GF_OBJ_HANDLE *handle) { addCommand(GfPlayComFieldTbox::create(handle)); }
+
+void GfSequentialPlay::addMapGimmick(GF_OBJ_HANDLE *handle) { addCommand(GfPlayComFieldSeq::create(GfFieldMapGimmick::get(), handle)); }
+
+void GfSequentialPlay::addGrave(GF_OBJ_HANDLE *handle) { addCommand(GfPlayComFieldSeq::create(GfFieldGrave::get(), handle)); }
+
+void GfSequentialPlay::addJump(GF_OBJ_HANDLE *handle) { addCommand(GfPlayComFieldSeq::create(GfFieldJump::get(), handle)); }
+
+void GfSequentialPlay::addWarp(GF_OBJ_HANDLE *handle) { addCommand(GfPlayComFieldSeq::create(GfFieldWarp::get(), handle)); }
 
 void GfSequentialPlay::addWaitPlayerToStartGmkTuto() { addCommand(GfPlayComWaitPlayerToStartGmkTuto::create()); }
 
@@ -83,6 +143,10 @@ void GfSequentialPlay::addQuestUIOrder(QuestID quest, bool isForce) { addCommand
 
 void GfSequentialPlay::addQuestUIComplete(QuestID quest, QuestID child, QSTATE state) {
   addCommand(GfPlayComQuestCompleteUI::create(quest, child, state));
+}
+
+void GfSequentialPlay::addGimmickTaskComplete(gmk::GmkType type, u32 task, f32 time) {
+  addCommand(GfPlayComGimmickTaskComplete::create(type, task, time));
 }
 
 void GfSequentialPlay::addChainAttack() { addCommand(GfPlayComChainAttack::create()); }
