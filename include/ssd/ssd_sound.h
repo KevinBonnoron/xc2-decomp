@@ -8,6 +8,13 @@ namespace ssd {
 struct Vec3 {
   Vec3(f32 x, f32 y, f32 z) : x(x), y(y), z(z) {}
 
+  Vec3 &operator=(const Vec3 &vector) {
+    x = vector.x;
+    y = vector.y;
+    z = vector.z;
+    return *this;
+  }
+
   f32 x;
   f32 y;
   f32 z;
@@ -62,7 +69,7 @@ static_assert(sizeof(SoundActor3D) == 0x78, "");
 
 class Object {
 public:
-  virtual ~Object();
+  virtual ~Object() {}
 
   u32 type;
   u8 _0c[0x18 - 0x0c];
