@@ -1,11 +1,48 @@
 #include "event/text_manager.h"
 
+#include "bdat.h"
+#include "event/chara_obj.h"
+#include "event/debug_manager.h"
+#include "event/frame_manager.h"
+#include "event/skip_manager.h"
+#include "fw/fw_bdat_manager.h"
 #include "fw/fw_debug.h"
 #include "ml/dev_graph.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_rect.h"
+#include "mm_mtl/singleton.h"
 
 namespace event {
+
+void TextManager::reply(const char *label, int textId, CharaObj *chara) {
+  if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
+    return;
+  }
+  if (mm::mtl::Singleton<DebugManager>::getPtr()->isFailureSkip() || (flags & FLAG_CAPTION) != 0) {
+    return;
+  }
+  flags = (flags & ~(FLAG_PLAY | FLAG_WRITE | FLAG_ERASE)) | FLAG_PLAY;
+  bdat = fw::BdatManager::getFp(label);
+  this->textId = textId;
+  this->label = "";
+  text = Bdat::getMSText(bdat, textId);
+  delay = 0.0f;
+  delayBack = 0.0f;
+  life = 1.0f;
+  lifeCount = 1.0f;
+  delayCount = 0.0f;
+  captionType = 0;
+  startFrame = mm::mtl::Singleton<FrameManager>::getPtr()->getFrame() + 1.0f;
+  talker = chara;
+  if (chara == nullptr) {
+    return;
+  }
+  if ((flags & FLAG_AUTO_TALK_MODE) != 0 && chara->getActionLastFrame() <= 0.0f) {
+    chara->playAutoAction(-1.0f);
+  }
+  talker->playAutoTalk(-1.0f);
+  talker->playTalk(false, -1.0f, true, true, -1.0f, -1.0f, -1.0f, -1.0f);
+}
 
 bool TextManager::isReplying() const {
   if ((flags & FLAG_PLAY) != 0) {
@@ -17,6 +54,14 @@ bool TextManager::isReplying() const {
     }
   }
   return false;
+}
+
+void TextManager::replyEnd(CharaObj *chara) {
+  if ((flags & FLAG_AUTO_TALK_MODE) != 0) {
+    chara->playAutoAction(1.0f);
+  }
+  chara->playAutoTalk(1.0f);
+  chara->playTalk(false, 1.0f, true, true, -1.0f, -1.0f, -1.0f, -1.0f);
 }
 
 bool TextManager::isCutChangeFrame() const { return (flags & FLAG_CUT_CHANGE_FRAME) != 0; }
