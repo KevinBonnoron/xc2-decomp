@@ -110,6 +110,8 @@
 #include "event/outsider_field.cpp"
 #include "event/outsider_manager.cpp"
 #include "event/rand_calc.cpp"
+#include "event/rand_player.cpp"
+#include "event/rand_manager.cpp"
 #include "event/se_obj.cpp"
 #include "event/se_manager.cpp"
 #include "event/seamless_manager.cpp"

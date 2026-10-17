@@ -13,6 +13,7 @@ template <size_t N, int Type> class CmdQueue {
 public:
   virtual ~CmdQueue() {}
   void clear() { mItems.clear(); }
+  bool isEmpty() const { return mItems.size() == 0; }
   void update();
   void erase(const ICmd *cmd);
   void push_back(ICmd *cmd, const CmdParam &param);
