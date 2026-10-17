@@ -13,6 +13,7 @@ struct MenuFieldSkill {
 
   u16 fieldSkill;
   u8 level;
+  u8 _03[0x4 - 0x3];
 };
 
 static_assert(offsetof(MenuFieldSkill, level) == 0x2, "");

@@ -1,9 +1,11 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/menu/list/gf_menu_field_skill_list.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/reference_object.h"
 #include "mm_mtl/singleton.h"
 #include "mm_thread/mm_thread_csection.h"
 #include "types.h"
@@ -242,5 +244,14 @@ static_assert(offsetof(GfMenuReference, bladeVirtualEquipOrbSlot) == 0x4ccd8, ""
 static_assert(offsetof(GfMenuReference, referenceStrings) == 0x4cce0, "");
 static_assert(offsetof(GfMenuReference, partyStatusLock) == 0x4cf08, "");
 static_assert(sizeof(GfMenuReference) == 0x4cf10, "");
+
+class GfMenuReferenceFs : public mm::mtl::ReferenceObject {
+public:
+  virtual void getFs(MenuFieldSkill &fs) const { fs = fieldSkill; }
+
+  MenuFieldSkill fieldSkill;
+};
+
+static_assert(offsetof(GfMenuReferenceFs, fieldSkill) == 0x0c, "");
 
 } // namespace gf
