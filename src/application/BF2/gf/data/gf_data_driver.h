@@ -27,7 +27,7 @@ struct SDataDriverAccessory {
 };
 
 struct SDataPouch {
-  GfItemHandle handle;
+  f32 time;
   u16 item;
   u8 _06;
 };
