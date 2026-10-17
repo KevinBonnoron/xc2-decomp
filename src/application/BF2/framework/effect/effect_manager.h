@@ -31,6 +31,7 @@ struct SendParam;
 
 namespace fw {
 
+class EffectData;
 class EffectPack;
 class RenderResource;
 enum EF_CATEGORY : int;
@@ -55,6 +56,8 @@ public:
   bool commonLoaded();
   void getNum(u32 &emitterNum, u32 &particleNum, u32 &drawNum);
   static void efSystemEnd();
+  void addData(EffectData *data);
+  void removeData(EffectData *data);
   void setMasterPause(bool isPause);
   bool isMasterPause() const;
   EffectCasterSend *getCaster(EffectCasterBase *caster);
