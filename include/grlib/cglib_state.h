@@ -26,6 +26,7 @@ public:
   static void setRegisterRenderTarget(CGLibRenderTarget &renderTarget, GrlMrtType mrt);
   static void setRegisterDepthTarget(CGLibDepthBuffer &depthBuffer);
   static void endRegisterRenderTarget();
+  static CGLibRenderTarget *getMainRenderTarget();
 };
 
 } // namespace grlib
