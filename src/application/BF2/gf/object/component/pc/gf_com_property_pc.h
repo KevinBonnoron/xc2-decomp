@@ -1,11 +1,10 @@
 #pragma once
 #include <stddef.h>
 
-#include "fw/fw_param_manager.h"
+#include "gf/object/component/pc/gf_pc_property_field.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/bitflag.h"
-#include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
 namespace anm {
@@ -81,8 +80,8 @@ public:
   u32 : 21;
   u8 _114[0x160 - 0x114];
   mm::Vec3 position;
-  u8 _170[0x318 - 0x170];
-  mm::mtl::IntrusivePtr<fw::ParamList> paramList;
+  u8 _170[0x310 - 0x170];
+  pc::GfPropertyField field;
 };
 
 static_assert(offsetof(GfComPropertyPc, input) == 0x60, "");
@@ -91,6 +90,6 @@ static_assert(offsetof(GfComPropertyPc, velocity) == 0x80, "");
 static_assert(offsetof(GfComPropertyPc, verticalSpeed) == 0x90, "");
 static_assert(offsetof(GfComPropertyPc, horizontalSpeed) == 0x94, "");
 static_assert(offsetof(GfComPropertyPc, position) == 0x160, "");
-static_assert(offsetof(GfComPropertyPc, paramList) == 0x318, "");
+static_assert(offsetof(GfComPropertyPc, field) == 0x310, "");
 
 } // namespace gf

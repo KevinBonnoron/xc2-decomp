@@ -1,5 +1,6 @@
 #pragma once
 #include "gf/object/component/pc/gf_pc_asm_cmd_id_field.h"
+#include "gf/object/component/pc/gf_pc_property_field.h"
 #include "types.h"
 
 namespace mm {
@@ -27,6 +28,7 @@ public:
   static bool execAsmCmd(GfComAsm &comAsm, ASM_CMD_ID_FIELD id);
   static bool testVechile(GfComBehaviorPc &behavior);
   static void setEnableFallIntoColi(GfComBehaviorPc &behavior, bool isEnable);
+  static bool isWalkMode(GfComPropertyPc &property);
   static void setAccessFlag(GfComBehaviorPc &behavior, bool isEnable);
   static void setLookAtFlag(GfComBehaviorPc &behavior, bool isEnable);
   static void setEnableLure(GfComBehaviorPc &behavior, bool isEnable);
@@ -48,6 +50,8 @@ public:
   static void setWaterMode(GfComBehaviorPc &behavior, bool isWater);
   static void setWaterDiveMove(GfComPropertyPc &property, bool isDive);
   static f32 getChildFrameHeight(GfComponent &component);
+  static bool isWallUpMove(GfPropertyField::WALL_MOVE_MODE mode);
+  static ASM_CMD_ID_FIELD getAsmID(GfPropertyField::WALL_MOVE_MODE mode);
   static void resetCameraForWall(GfComBehaviorPc &behavior, Timing timing);
   static void setAsmSpeedSlideBrake(GfComPropertyPc &property);
 };

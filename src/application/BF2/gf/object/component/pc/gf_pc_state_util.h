@@ -10,6 +10,7 @@ struct Vec3;
 namespace gf {
 
 class GfComBehaviorPc;
+struct GF_OBJ_HANDLE;
 struct MsgObjectNotifyDead;
 
 namespace pc {
@@ -18,6 +19,7 @@ class StateUtil {
 public:
   static void resetCamera();
   static bool isManualCamera();
+  static void setTarget(GfComBehaviorPc &behavior, GF_OBJ_HANDLE *target);
   static void setTargetLock(bool isLock);
   static bool isBattle(GfComBehaviorPc &behavior);
   static void setEnableAgentField(GfComBehaviorPc &behavior, bool isEnable);

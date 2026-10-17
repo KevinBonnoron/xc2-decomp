@@ -15,6 +15,42 @@ bool StateUtilField::execAsmCmd(GfComAsm &comAsm, ASM_CMD_ID_FIELD id) { return 
 
 bool StateUtilField::testVechile(GfComBehaviorPc &behavior) { return GfGameRide::isVehicle(static_cast<GfObj *>(behavior.owner)->handle); }
 
+bool StateUtilField::isWalkMode(GfComPropertyPc &property) { return property.field.isWalkMode; }
+
+bool StateUtilField::testAutoRun(GfComPropertyPc &property) { return property.field.isAutoRun; }
+
+void StateUtilField::setIdleStatus(GfComPropertyPc &property, bool isIdle) {
+  if (isIdle) {
+    property.field.isIdle = true;
+  } else {
+    property.field.isIdle = false;
+  }
+}
+
+bool StateUtilField::isWallUpMove(GfPropertyField::WALL_MOVE_MODE mode) {
+  return (mode == GfPropertyField::WALL_MOVE_MODE_UP || mode == GfPropertyField::WALL_MOVE_MODE_UP_RIGHT) |
+         (mode == GfPropertyField::WALL_MOVE_MODE_UP_LEFT);
+}
+
+ASM_CMD_ID_FIELD StateUtilField::getAsmID(GfPropertyField::WALL_MOVE_MODE mode) {
+  switch (mode) {
+  case GfPropertyField::WALL_MOVE_MODE_UP:
+  case GfPropertyField::WALL_MOVE_MODE_UP_RIGHT:
+  case GfPropertyField::WALL_MOVE_MODE_UP_LEFT:
+    return ASM_CMD_ID_FIELD_CLIMBUP;
+  case GfPropertyField::WALL_MOVE_MODE_RIGHT:
+    return ASM_CMD_ID_FIELD_CLIMBRIGHT;
+  case GfPropertyField::WALL_MOVE_MODE_DOWN_RIGHT:
+  case GfPropertyField::WALL_MOVE_MODE_DOWN:
+  case GfPropertyField::WALL_MOVE_MODE_DOWN_LEFT:
+    return ASM_CMD_ID_FIELD_CLIMBDOWN;
+  case GfPropertyField::WALL_MOVE_MODE_LEFT:
+    return ASM_CMD_ID_FIELD_CLIMBLEFT;
+  default:
+    return ASM_CMD_ID_FIELD_CLIMBIDLE;
+  }
+}
+
 void StateUtilField::resetCameraForWall(GfComBehaviorPc &behavior, Timing timing) {
   if (!behavior.getProperty()->isPadControl) {
     return;

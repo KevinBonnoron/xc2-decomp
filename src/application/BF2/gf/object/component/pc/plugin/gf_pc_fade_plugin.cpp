@@ -4,6 +4,7 @@
 #include "framework/object/updatable_object.h"
 #include "fw/fw_update_info.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
+#include "gf/object/component/pc/gf_pc_property_field.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/scom/gf_scom_fade.h"
 #include "mm_math/mm_col4.h"
@@ -23,7 +24,7 @@ FadePlugin::~FadePlugin() {}
 
 bool FadePlugin::setup(GfComBehaviorPc &behavior) {
   GfComPropertyPc *property = mm::mtl::dynamicCast<GfComPropertyPc>(behavior.owner->components[GfComProperty::COMPONENT_INDEX]);
-  const fw::ParamList *paramList = property->paramList.operator->();
+  const fw::ParamList *paramList = property->field.paramList.operator->();
   paramEntry = paramList->count > PC_PARAM_FADE ? &paramList->entries[PC_PARAM_FADE] : nullptr;
   return true;
 }
