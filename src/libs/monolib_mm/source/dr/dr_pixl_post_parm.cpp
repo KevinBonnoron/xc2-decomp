@@ -4,6 +4,35 @@
 
 namespace ml {
 
+bool DrPixlPostParm::isShwRaytrace() const { return shwRaytrace; }
+
+void DrPixlPostParm::calcReductionTransBuffer(int &width, int &height) const {
+  width = width * reductionTransScX;
+  height = height * reductionTransScY;
+}
+
+void DrPixlPostParm::setDOF(bool dof) { dblParms[DrMan::s_nDblIdx].dof = dof; }
+
+bool DrPixlPostParm::getTMAAOn() const { return tmaa; }
+
+bool DrPixlPostParm::isMotBlur2() const { return motBlur2; }
+
+bool DrPixlPostParm::getBloomOn() const { return bloom; }
+
+bool DrPixlPostParm::getToneMapOn() const { return toneMap; }
+
+void DrPixlPostParm::update() {
+  if (attriMenuClosed) {
+    attriMenuClosed = false;
+  }
+}
+
+bool DrPixlPostParm::getAAOn() const { return aa; }
+
+bool DrPixlPostParm::getColTblOn() const { return colorFilter; }
+
+f32 DrPixlPostParm::getBorderBlmMul() const { return borderBlmMul; }
+
 DrPixlPostParm *DrPixlPostParm::get() { return s_pIns; }
 
 void DrPixlPostParm::setInst() { s_pIns = this; }
