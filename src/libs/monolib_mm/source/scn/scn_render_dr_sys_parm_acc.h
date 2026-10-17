@@ -9,12 +9,22 @@ struct Aabb;
 struct Vec3;
 } // namespace mm
 
+namespace grlib {
+class CGLibTextureBuffer;
+}
+
 namespace ml {
 class DrPixlPostParm;
 class ScnRenderDrSys;
 class ScnRenderDrCapture;
 class ScnRenderDrViewCtrl;
 struct DR_CAPCUBE_PARAM;
+
+struct ScnRenderDrMdlTexture {
+  grlib::CGLibTextureBuffer *texture;
+  u32 index;
+  bool enable;
+};
 
 class ScnRenderDrSysParmAcc {
 public:
@@ -227,6 +237,7 @@ public:
   void setGBuffDebugDefault();
   void setGBuffDebugParam(GBuffDebugType type, f32 min, f32 max);
   void deleteAddRenderView(ScnRenderDrViewCtrl *viewCtrl);
+  void setModelTexture(const ScnRenderDrMdlTexture &texture);
   void resetModelTexture(u32 index);
   void setDefferedColor(bool defferedColor);
   bool isDefferedColor() const;

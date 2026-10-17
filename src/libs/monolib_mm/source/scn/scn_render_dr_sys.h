@@ -62,9 +62,12 @@ class ScnRenderDrViewCtrl {
 public:
   u8 _00[0x08 - 0x00];
   s32 viewId;
+  u8 _0c[0x20 - 0x0c];
+  grlib::CGLibTextureBuffer *texture;
 };
 
 static_assert(offsetof(ScnRenderDrViewCtrl, viewId) == 0x08, "");
+static_assert(offsetof(ScnRenderDrViewCtrl, texture) == 0x20, "");
 
 class ScnRenderDrCapture {
 public:
