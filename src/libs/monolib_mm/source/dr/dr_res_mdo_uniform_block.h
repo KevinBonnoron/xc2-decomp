@@ -6,11 +6,23 @@ namespace ml {
 class DrResMdoUniformBlock {
 public:
   enum VarType {
+    VAR_TYPE_VIEW = 2,
+    VAR_TYPE_PROJ = 3,
+    VAR_TYPE_VIEW_PROJ = 4,
+    VAR_TYPE_INV_VIEW = 6,
+    VAR_TYPE_VIEW_Y_VEC = 8,
     VAR_TYPE_TEX_MATRIX = 17,
     VAR_TYPE_WORK_FLOAT4 = 18,
     VAR_TYPE_WORK_COLOR = 19,
     VAR_TYPE_PROJECTION_MAT = 20,
+    VAR_TYPE_BILLBOARD_DEF = 45,
+    VAR_TYPE_BILLBOARD_Y_VEC = 46,
     VAR_TYPE_NOM_PROJECTION_MAT = 50,
+    VAR_TYPE_JITTER = 73,
+    VAR_TYPE_LIGHT_NOT_USE = 77,
+    VAR_TYPE_DITHER_TMAA_VAL = 93,
+    VAR_TYPE_PROJ_NON_JITTER = 115,
+    VAR_TYPE_DIFF_PRE_ORIJ_MAT = 120,
   };
 
   static u32 getStaticUniformBlockSize();
