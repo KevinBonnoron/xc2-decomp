@@ -91,7 +91,7 @@ public:
   static f32 getCost();
   static DevGraphQue *getGraphQue();
   static void setVSync(int vsync);
-  bool wkStandby() override;
+  void wkStandby() override;
   void wkUpdate() override;
   static void setFrameSpd(f32 speed);
   static void addOuterRender(void (*render)());

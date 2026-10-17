@@ -77,7 +77,12 @@ class WorkRootState {
 public:
   static void initialize();
   static void finalize();
+  static WorkObj *getWork(u32 wid);
+  static u32 allocWID(WorkObj *work);
+  static void freeWID(u32 wid);
+  static mtl::ALLOC_HANDLE getWorkMem();
   static void setThreadRender(bool isThreadRender);
+  static void entryWork(WorkObj *work, WorkObj *parent, bool isFront);
   static void addFrameEnd(WorkObj *work);
   static void removeFrameEnd(WorkObj *work);
   static bool runSingle();

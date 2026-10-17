@@ -39,6 +39,7 @@ extern bool s_bBackGround;
 
 class WorkCpu : public WorkObj, public mm::mtl::PtrSingleton<WorkCpu> {
 public:
+  static bool isInitialized();
   static void stallRender();
   static bool isGotoEShop();
   static void gotoEShop();
