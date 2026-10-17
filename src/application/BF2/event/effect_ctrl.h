@@ -9,6 +9,7 @@
 namespace event {
 
 class IAttachActor;
+enum ATTACH_TYPE : int;
 
 class EffectCtrl {
 public:
@@ -34,6 +35,7 @@ public:
   void setColor(const mm::Col4 &color);
   const mm::Col4 &getColor() const;
   void setCaster(IAttachActor *caster);
+  void setMount(IAttachActor *mount, const char *bone, const mm::Vec3 &offset, bool isRotate, ATTACH_TYPE type);
   size_t getEffCount() const;
 
 private:
