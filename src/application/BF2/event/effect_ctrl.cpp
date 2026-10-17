@@ -54,16 +54,7 @@ void EffectCtrl::dead() {
 }
 
 void EffectCtrl::kill() {
-  if (mCaster != nullptr) {
-    for (size_t i = 0; i < mHandles.size(); i++) {
-      mCaster->setEffectCaster(false, mHandles[i]);
-    }
-  }
-  if (mMount != nullptr) {
-    for (size_t i = 0; i < mHandles.size(); i++) {
-      mMount->setEffectMount(false, mHandles[i], "", mm::Vec3::zero, false, static_cast<ATTACH_TYPE>(0));
-    }
-  }
+  detach();
   if (handle != 0) {
     fw::EffectManager::get()->remove(handle);
   }
@@ -93,6 +84,32 @@ const mm::Vec3 &EffectCtrl::getScale() const { return mScale; }
 void EffectCtrl::setColor(const mm::Col4 &color) { mColor = color; }
 
 const mm::Col4 &EffectCtrl::getColor() const { return mColor; }
+
+void EffectCtrl::setCaster(IAttachActor *caster) {
+  detach();
+  mCaster = caster;
+  mMount = nullptr;
+  if (mCaster != nullptr) {
+    for (size_t i = 0; i < mHandles.size(); i++) {
+      mCaster->setEffectCaster(true, mHandles[i]);
+    }
+  }
+}
+
+void EffectCtrl::setMount(IAttachActor *mount, const char *bone, const mm::Vec3 &offset, bool isRotate, ATTACH_TYPE type) {
+  detach();
+  mCaster = nullptr;
+  mMount = mount;
+  mMountName = bone;
+  mMountOffset = offset;
+  mIsMountRotate = isRotate;
+  mAttachType = type;
+  if (mMount != nullptr) {
+    for (size_t i = 0; i < mHandles.size(); i++) {
+      mMount->setEffectMount(true, mHandles[i], mMountName.c_str(), mMountOffset, mIsMountRotate, static_cast<ATTACH_TYPE>(mAttachType));
+    }
+  }
+}
 
 size_t EffectCtrl::getEffCount() const { return mHandles.size(); }
 

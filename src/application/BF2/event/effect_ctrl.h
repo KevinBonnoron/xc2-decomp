@@ -1,14 +1,15 @@
 #pragma once
+#include <stddef.h>
+
+#include "event/i_attach_actor.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace event {
 
-class IAttachActor;
 enum ATTACH_TYPE : int;
 
 class EffectCtrl {
@@ -39,6 +40,19 @@ public:
   size_t getEffCount() const;
 
 private:
+  void detach() {
+    if (mCaster != nullptr) {
+      for (size_t i = 0; i < mHandles.size(); i++) {
+        mCaster->setEffectCaster(false, mHandles[i]);
+      }
+    }
+    if (mMount != nullptr) {
+      for (size_t i = 0; i < mHandles.size(); i++) {
+        mMount->setEffectMount(false, mHandles[i], "", mm::Vec3::zero, false, static_cast<ATTACH_TYPE>(0));
+      }
+    }
+  }
+
   void reset() {
     handle = 0;
     mPos = mm::Vec3(0.0f, 0.0f, 0.0f);

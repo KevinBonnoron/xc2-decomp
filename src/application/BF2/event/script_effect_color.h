@@ -1,6 +1,6 @@
 #pragma once
 #include "event/i_todo.h"
-#include "types.h"
+#include "mm_math/mm_col4.h"
 
 namespace event {
 
@@ -14,7 +14,7 @@ public:
   virtual void redo(const Param &param);
 
 private:
-  u8 _08[0x18 - 0x08];
+  mm::Col4 prevColor;
 };
 
 static_assert(sizeof(ScriptEffectColor) == 0x18, "");

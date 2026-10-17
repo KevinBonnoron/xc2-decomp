@@ -4,8 +4,10 @@
 #include "event/script_effect_color.h"
 #include "event/script_effect_kill.h"
 #include "event/script_effect_mount.h"
+#include "event/script_effect_move.h"
 #include "event/script_effect_play.h"
 #include "event/script_effect_scale.h"
+#include "event/script_effect_turn.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 
@@ -21,6 +23,10 @@ ITodo *ScriptEffectMount::exec() { return new (mm::mtl::Singleton<MemoryManager>
 ITodo *ScriptEffectKill::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptEffectKill; }
 
 ITodo *ScriptEffectAnim::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptEffectAnim; }
+
+ITodo *ScriptEffectMove::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptEffectMove; }
+
+ITodo *ScriptEffectTurn::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptEffectTurn; }
 
 ITodo *ScriptEffectScale::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptEffectScale; }
 
