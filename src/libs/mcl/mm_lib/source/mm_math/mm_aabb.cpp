@@ -1,6 +1,8 @@
 #include "mm_math/mm_aabb.h"
 
+#include "mm_math/mm_quat.h"
 #include "mm_mtl/fixed_array.h"
+#include "types.h"
 
 namespace mm {
 
@@ -48,6 +50,24 @@ void Aabb::getVertices(mtl::FixedArray<Vec3, 8> &vertices) const {
   vertices[5] = Vec3(max.x, min.y, max.z);
   vertices[6] = Vec3(min.x, max.y, max.z);
   vertices[7] = Vec3(max.x, max.y, max.z);
+}
+
+void Aabb::transform(const Quat &rotation) {
+  mtl::FixedArray<Vec3, 8> vertices;
+  getVertices(vertices);
+  min = Vec3(1e12f, 1e12f, 1e12f);
+  max = Vec3(-1e12f, -1e12f, -1e12f);
+  for (u32 i = 0; i < 8; i++) {
+    Vec3 &vertex = vertices[i];
+    f32 tx = rotation.y * vertex.z - rotation.z * vertex.y + rotation.w * vertex.x;
+    f32 ty = rotation.z * vertex.x - vertex.z * rotation.x + vertex.y * rotation.w;
+    f32 tz = vertex.y * rotation.x - rotation.y * vertex.x + vertex.z * rotation.w;
+    f32 tw = -vertex.x * rotation.x - rotation.y * vertex.y - vertex.z * rotation.z;
+    vertex.x = -(rotation.z * ty) + rotation.y * tz - rotation.x * tw + rotation.w * tx;
+    vertex.y = -(rotation.x * tz) + rotation.z * tx - rotation.y * tw + rotation.w * ty;
+    vertex.z = -(rotation.y * tx) + rotation.x * ty - rotation.z * tw + rotation.w * tz;
+    apply(vertex);
+  }
 }
 
 Aabb &Aabb::operator+=(const Vec3 &offset) {
