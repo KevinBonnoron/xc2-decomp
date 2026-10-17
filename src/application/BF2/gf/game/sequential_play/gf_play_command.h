@@ -2,6 +2,7 @@
 #include "gf/event/gf_event.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gmk/gmk_manager.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
@@ -25,6 +26,7 @@ struct GfMapjumpInfo;
 struct GfSetupPfTalk;
 struct MenuCommonWindowParam;
 struct QuestID;
+class GfMenuCallContext;
 class IFieldSeq;
 
 struct ParamReturnTitle {
@@ -479,9 +481,29 @@ public:
 static_assert(sizeof(GfPlayComMenuPrecious) == 0x18, "");
 
 class GfPlayComSalvage : public GfPlayCom {
+  GF_PLAY_COM("PlayComSalvage")
+
 public:
+  enum STATE {
+    STATE_WAIT,
+    STATE_SALVAGE,
+  };
+
+  GfPlayComSalvage(GF_OBJ_HANDLE *handle);
+  void start() override;
+  void end() override;
+  bool updateForWait(const fw::UpdateInfo &info);
+  bool updateForSalvage(const fw::UpdateInfo &info, bool isCancel);
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComSalvage *create(GF_OBJ_HANDLE *handle);
+
+  u32 pause;
+  GF_OBJ_HANDLE *handle;
+  int waitFrame;
+  STATE state;
 };
+
+static_assert(sizeof(GfPlayComSalvage) == 0x28, "");
 
 class GfPlayComCollect : public GfPlayCom {
 public:
@@ -612,5 +634,24 @@ class GfPlayComHoodHomuraBattou : public GfPlayCom, public mm::mtl::PtrSingleton
 public:
   static GfPlayComHoodHomuraBattou *create();
 };
+
+class GfPlayComMenuObjCommonText : public GfPlayCom {
+  GF_PLAY_COM("PlayComMenuObjCommonText")
+
+public:
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
+  GfPlayComMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param);
+  ~GfPlayComMenuObjCommonText() override;
+  static GfPlayComMenuObjCommonText *create(GfMenuObjCommonText::OpenKizunaParam &param);
+
+  GfMenuObjCommonText::OpenKizunaParam param;
+  GfMenuCallContext *context;
+
+  static int s_activate;
+};
+
+static_assert(sizeof(GfPlayComMenuObjCommonText) == 0x28, "");
 
 } // namespace gf
