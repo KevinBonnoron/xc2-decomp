@@ -1,9 +1,11 @@
 #include "grlib/cglib_dbl_uniform_block.h"
+#include "grlib/cglib_etc_uniform_block.h"
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_mem_handle.h"
 #include "grlib/cglib_one_uniform_block.h"
 #include "grlib/cglib_system_context.h"
 #include "grlib/cglib_tri_uniform_block.h"
+#include "grlib/cglib_uni_base_utility.h"
 #include "grlib/cglib_vtl_mem_pool.h"
 #include "nn/os.h"
 #include "types.h"
@@ -196,5 +198,27 @@ void *CGLibTriUniformBlock::getOldTriBuff() {
 }
 
 void *CGLibTriUniformBlock::getMapping() { return m_mappings[CGLibManager::s_nTriNowIdx]; }
+
+CGLibEtcUniformBlock::~CGLibEtcUniformBlock() {}
+
+void CGLibEtcUniformBlock::updateData(u32 size) {
+  m_size = size;
+  if (size != 0) {
+    context::CGLibSystemContext::get()->nextGlbUniformOfs(size);
+  }
+}
+
+void CGLibEtcUniformBlock::Rebuilding() { context::CGLibSystemContext::get()->getGlbUniformParam(m_buffer, m_gpuAddress); }
+
+void CGLibEtcUniformBlock::setMoveMem(u32 size) {
+  if (size != 0) {
+    m_size = size;
+    context::CGLibSystemContext::get()->nextGlbUniformOfs(size);
+  }
+}
+
+void CGLibUniformEtcUtility::setMoveMem() { m_block.setMoveMem(m_size); }
+
+void CGLibUniBaseUtility::setMoveMem() {}
 
 } // namespace grlib
