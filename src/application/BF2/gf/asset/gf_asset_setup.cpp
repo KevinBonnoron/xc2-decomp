@@ -14,6 +14,7 @@
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_hana.h"
+#include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_mob.h"
 #include "gf/data/gf_data_npc.h"
 #include "gf/data/gf_data_param_acc.h"
@@ -1490,5 +1491,237 @@ const char *GfAssetSetupExtra::getMotFile(GfAssetType type) {
 const char *GfAssetSetupExtra::getStpFile(GfAssetType type) { return getValidName(append.getModelName()); }
 
 const char *GfAssetSetupExtra::getPath() const { return GfAssetPath::getMdoModel(); }
+
+GfAssetSetupMapSeamless::GfAssetSetupMapSeamless() : useMapId(false) {}
+
+const char *GfAssetSetupMapSeamless::getMdlFile(GfAssetType type) {
+  RefResource *resource = getRefResource(getMdlSlot());
+  if (resource != nullptr && !resource->name.empty()) {
+    return resource->name.c_str();
+  }
+  const char *model = useMapId ? GfDataMap::getMapResourceNameByMapID(id) : GfDataMap::getMapResourceName(id);
+  model = getValidName(model);
+  if (!modelName.empty()) {
+    model = modelName.c_str();
+  }
+  return model;
+}
+
+const char *GfAssetSetupMapSeamless::getColFile(GfAssetType type) { return getMdlFile(type); }
+
+const char *GfAssetSetupMapSeamless::getNaviFile(GfAssetType type) { return getMdlFile(type); }
+
+const char *GfAssetSetupMapSeamless::getEfbFile(GfAssetType type) {
+  effectPackName = util::getFilePtrFromPath(getMdlFile(type));
+  if (!effectPackName.empty()) {
+    int last = effectPackName.length() - 1;
+    if (effectPackName.c_str()[last] == 'a') {
+      effectPackName.resize(last);
+    }
+    effectPackName += "_pack";
+  }
+  return effectPackName.c_str();
+}
+
+const char *GfAssetSetupMapSeamless::getGIblFile(GfAssetType type) { return getMdlFile(type); }
+
+const char *GfAssetSetupMapSeamless::getLIblFile(GfAssetType type) { return getMdlFile(type); }
+
+void GfAssetSetupMapSeamless::requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handle) {
+  if (pack == nullptr) {
+    return;
+  }
+
+  GfAssetFiles &files = pack->files;
+
+  if (const char *file = getMdlFile(getAssetType())) {
+    if (!setupReference(pack, file, getMdlSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), file, ".wismhd");
+      files.addResource(getMdlSlot(), path.c_str());
+    }
+  }
+
+  if (const char *file = getColFile(getAssetType())) {
+    if (!setupReference(pack, file, getColSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), file, ".wiidcm");
+      files.addResource(getColSlot(), path.c_str());
+    }
+  }
+
+  if (const char *file = getNaviFile(getAssetType())) {
+    if (!setupReference(pack, file, getNaviSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), file, ".winvhe");
+      files.addResource(getNaviSlot(), path.c_str());
+    }
+  }
+
+  if (const char *file = getEfbFile(getAssetType())) {
+    if (!setupReference(pack, file, getEpkSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("/effect/ma/%s%s", file, ".wiefb");
+      files.addResource(getEpkSlot(), path.c_str());
+    }
+  }
+
+  if (const char *file = getGIblFile(getAssetType())) {
+    if (!setupReference(pack, file, getGIblSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s%s", getPath(), file, ".wiibl");
+      files.addResource(getGIblSlot(), path.c_str());
+    }
+  }
+
+  if (const char *file = getLIblFile(getAssetType())) {
+    if (!setupReference(pack, file, getLIblSlot())) {
+      mm::mtl::FixStr<128> path;
+      path.format("%s%s_libl%s", getPath(), file, ".wilgt");
+      files.addResource(getLIblSlot(), path.c_str());
+    }
+  }
+}
+
+const char *GfAssetSetupMapSeamless::getPath() const { return modelName.empty() ? GfAssetPath::getMdoMap() : ""; }
+
+GfAssetSetupMapMdl::GfAssetSetupMapMdl() {}
+
+void GfAssetSetupMapMdl::setup(GF_ASSET_HANDLE *handle, const GfInitParamMap &param) {
+  setupParam(handle, param);
+  path = param.path.c_str();
+  if (!checkValidResource()) {
+    return;
+  }
+
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.priority = param.priority;
+  info.assetType = getAssetType();
+  info.name = util::getFilePtrFromPath(getPath());
+  GfAssetPack *corePack = GfAssetManager::createAssetFiles(info);
+  requestCoreResource(corePack, handle);
+}
+
+const char *GfAssetSetupMapMdl::getMdlFile(GfAssetType type) { return "exist"; }
+
+const char *GfAssetSetupMapMdl::getColFile(GfAssetType type) { return getMdlFile(type); }
+
+const char *GfAssetSetupMapMdl::getLodFile(GfAssetType type) { return getMdlFile(type); }
+
+const char *GfAssetSetupMapMdl::getMpfFile(GfAssetType type) { return getMdlFile(type); }
+
+const char *GfAssetSetupMapMdl::getLgtFile(GfAssetType type) { return getMdlFile(type); }
+
+const char *GfAssetSetupMapMdl::getGIblFile(GfAssetType type) { return getMdlFile(type); }
+
+const char *GfAssetSetupMapMdl::getAcoFile(GfAssetType type) { return getMdlFile(type); }
+
+const char *GfAssetSetupMapMdl::getClpFile(GfAssetType type) { return getMdlFile(type); }
+
+const char *GfAssetSetupMapMdl::getPath() const { return path.c_str(); }
+
+GfAssetSetupEventObj::GfAssetSetupEventObj() {}
+
+void GfAssetSetupEventObj::setup(GF_ASSET_HANDLE *handle, const GfInitParamEventObj &param) {
+  setupParam(handle, param);
+  if (param.bdat != nullptr) {
+    // __LINE__ must be 5106 as in the original source: it is the line argument of operator new.
+#line 5106
+    bdat = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) CBdatWrapper(*param.bdat);
+  }
+  if (!checkValidResource()) {
+    return;
+  }
+
+  mm::mtl::FixStr<128> name;
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.assetType = getAssetType();
+  info.name = name.c_str();
+  info.priority = param.priority;
+  makeAssetNamePrefix(name, info.assetType, getMdlFile(info.assetType), getMotFile(info.assetType));
+  name += "Evt";
+  if (hasRefResource) {
+    name += "Out";
+  }
+  GfAssetPack *corePack = GfAssetManager::createAssetFiles(info);
+  requestCoreResource(corePack, handle);
+}
+
+const char *GfAssetSetupEventObj::getMdlFile(GfAssetType type) {
+  RefResource *resource = getRefResource(getMdlSlot());
+  if (resource != nullptr && !resource->name.empty()) {
+    return resource->name.c_str();
+  }
+  return nullptr;
+}
+
+const char *GfAssetSetupEventObj::getArcFile(GfAssetType type) {
+  RefResource *resource = getRefResource(getArcSlot());
+  if (resource != nullptr && !resource->name.empty()) {
+    return resource->name.c_str();
+  }
+  return nullptr;
+}
+
+const char *GfAssetSetupEventObj::getEfpFile(GfAssetType type) {
+  RefResource *resource = getRefResource(getEfpSlot());
+  if (resource != nullptr && !resource->name.empty()) {
+    return resource->name.c_str();
+  }
+  return nullptr;
+}
+
+const char *GfAssetSetupEventObj::getEabFile(GfAssetType type) {
+  RefResource *resource = getRefResource(getEabSlot());
+  if (resource != nullptr && !resource->name.empty()) {
+    return resource->name.c_str();
+  }
+  return nullptr;
+}
+
+const char *GfAssetSetupEventObj::getEfbFile(GfAssetType type) {
+  RefResource *resource = getRefResource(getEfbSlot());
+  if (resource != nullptr && !resource->name.empty()) {
+    return resource->name.c_str();
+  }
+  return nullptr;
+}
+
+GfAssetSetupUiObj::GfAssetSetupUiObj() {}
+
+void GfAssetSetupUiObj::setup(GF_ASSET_HANDLE *handle, const GfInitParamUiObj &param) {
+  setupParam(handle, param);
+  if (!checkValidResource()) {
+    return;
+  }
+
+  mm::mtl::FixStr<128> name;
+  GfAssetFilesInfo info;
+  info.handle = handle;
+  info.name = name.c_str();
+  info.priority = param.priority;
+  info.assetType = getAssetType();
+  makeAssetNamePrefix(name, info.assetType, getMdlFile(info.assetType), "");
+  GfAssetPack *corePack = GfAssetManager::createAssetFiles(info);
+  requestCoreResource(corePack, handle);
+}
+
+const char *GfAssetSetupUiObj::getMdlFile(GfAssetType type) {
+  RefResource *resource = getRefResource(getMdlSlot());
+  if (resource != nullptr && !resource->name.empty()) {
+    return resource->name.c_str();
+  }
+  const char *model = GfBdatRsc::get()->getRSC_MapObjListModel(id);
+  if (model == nullptr || *model == '\0') {
+    return nullptr;
+  }
+  return model;
+}
+
+const char *GfAssetSetupUiObj::getArcFile(GfAssetType type) { return getMdlFile(type); }
+
+const char *GfAssetSetupUiObj::getPath() const { return "/model/"; }
 
 } // namespace gf

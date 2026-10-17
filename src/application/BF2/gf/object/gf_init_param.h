@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_mtl/fixstr.h"
 #include "types.h"
 
 struct CBdatWrapper;
@@ -80,5 +81,25 @@ class GfInitParamEnWeapon : public GfInitParam {};
 class GfInitParamBelonging : public GfInitParam {};
 
 class GfInitParamExtra : public GfInitParam {};
+
+class GfInitParamMapSeamless : public GfInitParam {
+public:
+  bool useMapId;
+  const char *modelPath;
+};
+
+static_assert(offsetof(GfInitParamMapSeamless, useMapId) == 0x90, "");
+static_assert(offsetof(GfInitParamMapSeamless, modelPath) == 0x98, "");
+
+class GfInitParamMap : public GfInitParam {
+public:
+  mm::mtl::FixStr<256> path;
+};
+
+static_assert(offsetof(GfInitParamMap, path) == 0x90, "");
+
+class GfInitParamEventObj : public GfInitParam {};
+
+class GfInitParamUiObj : public GfInitParam {};
 
 } // namespace gf
