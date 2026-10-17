@@ -1,14 +1,14 @@
 #pragma once
 #include <stddef.h>
 
+#include "grlib/cglib_one_uniform_block.h"
+#include "grlib/cglib_vtl_mem_pool.h"
+#include "grlib/cglib_vtx_index.h"
+#include "grlib/cglib_vtx_vertex.h"
 #include "types.h"
 
 namespace grlib {
 class CGLibOneUniformArray;
-class CGLibOneUniformBlock;
-class CGLibVtlMemPool;
-class CGLibVtxIndex;
-class CGLibVtxVertex;
 } // namespace grlib
 
 namespace mm {
@@ -173,5 +173,49 @@ static_assert(offsetof(DrResMdoVertex, m_bindVertex) == 0x4e, "");
 static_assert(offsetof(DrResMdoVertex, m_vertices) == 0x50, "");
 static_assert(offsetof(DrResMdoVertex, m_stmList) == 0x78, "");
 static_assert(sizeof(DrResMdoVertex) == 0x80, "");
+
+inline void DrResMdoVertex::changeMemVertex(const u8 *resource) {
+  const MdsVertexHeader *header = reinterpret_cast<const MdsVertexHeader *>(resource);
+  m_header = header;
+  m_memPool->delayRelease();
+  m_memPool->setupBuffer(const_cast<u8 *>(reinterpret_cast<const u8 *>(m_header)) + header->bufferOffset, header->bufferSize);
+  const MdsVertexBuffInfo *vertexInfos = reinterpret_cast<const MdsVertexBuffInfo *>(reinterpret_cast<const u8 *>(m_header) + header->vertexOffset);
+  for (int i = 0; i < m_vertexNum; i++) {
+    m_vertices[i].resetVertexBuff(m_memPool, vertexInfos[i].offset);
+  }
+  const MdsEtcVertexBuffInfo *etcVertexInfos =
+      reinterpret_cast<const MdsEtcVertexBuffInfo *>(reinterpret_cast<const u8 *>(m_header) + header->etcVertexOffset);
+  for (int i = 0; i < m_etcVertexNum; i++) {
+    m_etcVertices[i].resetVertexBuff(m_memPool, etcVertexInfos[i].offset);
+  }
+  const MdsIndexBuffInfo *indexInfos = reinterpret_cast<const MdsIndexBuffInfo *>(reinterpret_cast<const u8 *>(m_header) + header->indexOffset);
+  for (int i = 0; i < m_indexNum; i++) {
+    m_indices[i].resetIndexBuff(m_memPool, indexInfos[i].offset);
+  }
+  if (header->uniformVertexOffset != 0) {
+    const MdsUniformVertexInfo *uniformInfo =
+        reinterpret_cast<const MdsUniformVertexInfo *>(reinterpret_cast<const u8 *>(m_header) + header->uniformVertexOffset);
+    m_uniformVertex->vertex->resetVertexBuff(m_memPool, uniformInfo->vertexOffset);
+    m_uniformVertex->uniformBlock->setup(m_memPool, uniformInfo->uniformSize, uniformInfo->uniformOffset);
+    m_uniformVertex->uniformBlock->updateData();
+  }
+  if (header->etcInfoOffset != 0) {
+    m_etcInfos = reinterpret_cast<const MdsEtcVertexInfo *>(reinterpret_cast<const u8 *>(m_header) + header->etcInfoOffset);
+  } else {
+    m_etcInfos = nullptr;
+  }
+  if (header->mofBlendOffset != 0) {
+    const u8 *base = reinterpret_cast<const u8 *>(m_header);
+    m_mofBlendInfos =
+        reinterpret_cast<const MdsMofBlendInfo *>(base + reinterpret_cast<const MdsMofBlendHeader *>(base + header->mofBlendOffset)->infoOffset);
+  } else {
+    m_mofBlendInfos = nullptr;
+  }
+  if (header->weightOffset != 0) {
+    m_weightInfo = reinterpret_cast<const MdsWeightInfo *>(reinterpret_cast<const u8 *>(m_header) + header->weightOffset);
+  } else {
+    m_weightInfo = nullptr;
+  }
+}
 
 } // namespace ml
