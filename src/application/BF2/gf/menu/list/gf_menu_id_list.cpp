@@ -1,5 +1,7 @@
 #include "gf/menu/list/gf_menu_id_list.h"
 
+#include <functional>
+
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
 #include "gf/gf_allocator.h"
@@ -62,6 +64,21 @@ void GfMenuIDList::setupMercenaryZoneList(const SetupParam &param, bool isCondit
         addContents(id);
       }
     }
+  }
+}
+
+void GfMenuIDList::setupMissionListFromZone(const SetupParam &param, u32 zone) {
+  mm::mtl::FixedVector<u16, 500> missions;
+  GfGameMercenaries::getZoneMission(missions, zone);
+  SetupParam setupParam = param;
+  UIListInfo<MenuID>::setup(getAllocator(ALLOCATOR_DEFAULT), setupParam);
+  if (isValid()) {
+    MenuID id = {};
+    for (u32 i = 0; i < missions.size(); i++) {
+      id.id = *missions.at(i);
+      addContents(id);
+    }
+    sort(sortMissionComplete);
   }
 }
 
