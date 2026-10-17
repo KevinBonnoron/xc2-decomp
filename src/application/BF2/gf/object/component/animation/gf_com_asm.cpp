@@ -20,14 +20,6 @@ class Binding;
 namespace gf {
 struct MsgDebugActivateComponentWindow;
 
-static anm::StateMachine *getStateMachine(anm::ASMControl *asmControl, AnimLayer layer) {
-  if (layer < anm::ASMControl::LAYER_MAX && asmControl != nullptr) {
-    return &asmControl->m_stateMachines[layer];
-  }
-
-  return nullptr;
-}
-
 void GfComAsm::procMsgObjectSetAsmPlaybackSpeed(fw::MessageObject *sender, MsgObjectSetAsmPlaybackSpeed &message) {
   setSpeed(message.speed, message.layer);
 }

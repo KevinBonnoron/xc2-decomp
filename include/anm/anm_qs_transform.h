@@ -2,19 +2,22 @@
 #include <stddef.h>
 
 #include "mm_math/mm_quat.h"
-#include "mm_math/mm_vec3.h"
-#include "types.h"
+#include "mm_math/mm_vec4.h"
+
+namespace mm {
+struct Vec3;
+} // namespace mm
 
 namespace anm {
 
 struct alignas(16) QsTransform {
   QsTransform() {}
   QsTransform(const mm::Vec3 &translation, const mm::Quat &rotation, const mm::Vec3 &scale)
-      : translation{translation.x, translation.y, translation.z, 1.0f}, rotation(rotation), scale{scale.x, scale.y, scale.z, 1.0f} {}
+      : translation(translation, 1.0f), rotation(rotation), scale(scale, 1.0f) {}
 
-  f32 translation[4];
+  mm::Vec4 translation;
   mm::Quat rotation;
-  f32 scale[4];
+  mm::Vec4 scale;
 };
 
 static_assert(offsetof(QsTransform, rotation) == 0x10, "");

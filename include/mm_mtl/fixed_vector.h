@@ -115,8 +115,8 @@ private:
       size_t count = last - first;
       __builtin_memcpy(dest, first, count * sizeof(T));
     } else {
-      for (; first != last; ++first, ++dest) {
-        *dest = *first;
+      while (first != last) {
+        *dest++ = *first++;
       }
     }
   }

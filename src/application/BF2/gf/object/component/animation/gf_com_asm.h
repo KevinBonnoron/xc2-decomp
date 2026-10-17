@@ -1,7 +1,9 @@
 #pragma once
 #include <stddef.h>
 
+#include "anm/anm_asm_control.h"
 #include "anm/anm_asm_listener.h"
+#include "anm/anm_state_machine.h"
 #include "framework/anim/anim_control_updater.h"
 #include "framework/anim/anim_pose_sampler.h"
 #include "framework/message/message_object.h"
@@ -11,7 +13,6 @@
 #include "types.h"
 
 namespace anm {
-class ASMControl;
 class ResASM;
 struct QsTransform;
 } // namespace anm
@@ -45,6 +46,14 @@ struct MsgObjectSetAsmPlaybackSpeed : fw::Message {
 
 static_assert(offsetof(MsgObjectSetAsmPlaybackSpeed, speed) == 0x08, "");
 static_assert(offsetof(MsgObjectSetAsmPlaybackSpeed, layer) == 0x0c, "");
+
+inline anm::StateMachine *getStateMachine(anm::ASMControl *asmControl, AnimLayer layer) {
+  if (layer < anm::ASMControl::LAYER_MAX && asmControl != nullptr) {
+    return &asmControl->m_stateMachines[layer];
+  }
+
+  return nullptr;
+}
 
 struct CallBackCache {
   CallBackCache(anm::AsmListener::CallBackType type, const anm::AsmAnnotetion *annotation) : type(type), annotation(annotation) {}

@@ -4,6 +4,11 @@
 #include "gf/object/component/gf_component.h"
 #include "types.h"
 
+namespace anm {
+class ExtraTruckBuffer;
+class Pose;
+class Skeleton;
+} // namespace anm
 namespace fw {
 class ModelObject;
 } // namespace fw
@@ -25,8 +30,15 @@ public:
 
   u8 _10[0x18 - 0x10];
   fw::ModelObject *modelObject;
+  u8 _20[0x28 - 0x20];
+  const anm::Skeleton *skeleton;
+  anm::Pose *pose;
+  anm::ExtraTruckBuffer *extraTruckBuffer;
 };
 
 static_assert(offsetof(GfComModel, modelObject) == 0x18, "");
+static_assert(offsetof(GfComModel, skeleton) == 0x28, "");
+static_assert(offsetof(GfComModel, pose) == 0x30, "");
+static_assert(offsetof(GfComModel, extraTruckBuffer) == 0x38, "");
 
 } // namespace gf
