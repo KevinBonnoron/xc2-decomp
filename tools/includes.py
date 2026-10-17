@@ -19,7 +19,7 @@ from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from check import CXXFLAGS, HEADER_FLAGS, INCLUDE_DIRS, ROOT, header_sources, included_sources, root_sources  # noqa: E402
 
-IWYU_FLAGS = [flag for flag in CXXFLAGS if flag.startswith(("--target", "-std", "-fno-exceptions", "-fno-rtti", "-I"))]
+IWYU_FLAGS = [flag for flag in CXXFLAGS if flag.startswith(("--target", "-std", "-fno-exceptions", "-fno-rtti", "-D", "-I", "-isystem", "-idirafter"))]
 IWYU_OPTIONS = ["-Xiwyu", "--max_line_length=200", "-Xiwyu", "--mapping_file=" + os.path.join(ROOT, "tools", "iwyu.imp")]
 
 

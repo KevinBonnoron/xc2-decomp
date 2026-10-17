@@ -1,8 +1,9 @@
 #include "dr/dr_res_mdo_inst_anm_obj.h"
 
+#include <string.h>
+
 #include "dr/dr_man.h"
 #include "mm_math/mm_vec3.h"
-#include "string.h"
 
 namespace ml {
 

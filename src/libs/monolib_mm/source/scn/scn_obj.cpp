@@ -1,4 +1,7 @@
 #include "ml/scn_obj.h"
+
+#include <string.h>
+
 #include "ml/attr_transform.h"
 #include "ml/scn_obj_clip.h"
 #include "ml/scn_obj_env_coli.h"
@@ -6,7 +9,6 @@
 #include "ml/scn_obj_light.h"
 #include "ml/scn_obj_model.h"
 #include "ml/threadval.h"
-#include "string.h"
 #include "types.h"
 
 namespace ml {

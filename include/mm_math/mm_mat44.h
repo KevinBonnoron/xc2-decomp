@@ -1,5 +1,6 @@
 #pragma once
-#include "math.h"
+#include <math.h>
+
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 

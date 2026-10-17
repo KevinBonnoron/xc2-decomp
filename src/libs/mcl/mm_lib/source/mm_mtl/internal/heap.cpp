@@ -1,7 +1,7 @@
 #include "mm_mtl/internal/heap.h"
 
 #include "mm/mm_std_base.h"
-#include "string.h"
+#include <string.h>
 
 #define HEAP_INSIST(x)                                                                                                                               \
   {                                                                                                                                                  \

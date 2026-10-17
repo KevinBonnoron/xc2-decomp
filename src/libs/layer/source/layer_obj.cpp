@@ -1,10 +1,11 @@
 #include "layer/layer_obj.h"
 
+#include <string.h>
+
 #include "layer/layer_anime_obj.h"
 #include "layer/layer_manager.h"
 #include "layer/layer_res_sec_texture.h"
 #include "mtl/alloc_handle.h"
-#include "string.h"
 
 namespace layer {
 

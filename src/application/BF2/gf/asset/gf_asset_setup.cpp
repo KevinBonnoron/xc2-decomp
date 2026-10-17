@@ -1,5 +1,7 @@
 #include "gf/asset/gf_asset_setup.h"
 
+#include <string.h>
+
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/asset/gf_asset_name.h"
 #include "gf/asset/gf_asset_pack.h"
@@ -28,7 +30,6 @@
 #include "gf/util/gf_util.h"
 #include "mm_mtl/fixed_queue.h"
 #include "nn/diag.h"
-#include "string.h"
 
 namespace gf {
 

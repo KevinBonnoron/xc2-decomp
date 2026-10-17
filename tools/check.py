@@ -54,6 +54,7 @@ SRC_DIR = os.path.join(ROOT, "src")
 CACHE_DIR = os.path.join(ROOT, "work", "check_cache")
 
 CXX = "clang++-3.9.1"
+SYSROOT = os.environ.get("XC2_SYSROOT") or sys.exit("check: XC2_SYSROOT is not set, run it from the nix develop shell")
 
 CXXFLAGS = [
     "--target=aarch64-none-elf",
@@ -67,9 +68,12 @@ CXXFLAGS = [
     "-mno-implicit-float",
     "-fPIC",
     "-g",
+    "-D_GNU_SOURCE",
     "-I" + os.path.join(ROOT, "include"),
     "-I" + os.path.join(ROOT, "src", "application", "BF2"),
     "-I" + os.path.join(ROOT, "src", "libs", "monolib_mm", "source"),
+    "-isystem" + os.path.join(SYSROOT, "include", "c++", "v1"),
+    "-idirafter" + os.path.join(SYSROOT, "include"),
 ]
 INCLUDE_DIRS = [flag[2:] for flag in CXXFLAGS if flag.startswith("-I")]
 
