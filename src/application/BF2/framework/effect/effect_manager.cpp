@@ -8,8 +8,11 @@
 #include "dr/dr_mdl_obj.h"
 #include "dr/dr_mdo_grp_obj.h"
 #include "eflib/effect_system_manager.h"
+#include "framework/effect/effect_caster.h"
+#include "framework/effect/effect_pack.h"
 #include "framework/framework.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_mtl/fixstr.h"
 #include "mtl/mem_manager.h"
 
 namespace ptlib {
@@ -50,6 +53,89 @@ void EffectManager::setMasterPause(bool isPause) {
 
 bool EffectManager::isMasterPause() const { return masterPause; }
 
+EffectCasterSend *EffectManager::getCaster(EffectCasterBase *caster) {
+  for (u32 i = 0; i < LAYER_MAX; i++) {
+    mm::mtl::IntrusiveList<EffectCasterSend> &casters = casterGroups[i].casters;
+    for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
+      if (it.get()->caster == caster) {
+        return it.get();
+      }
+    }
+  }
+
+  return nullptr;
+}
+
+void EffectManager::remove(EffectCasterBase *caster) { effect::SystemManager::getPtr()->es_remove_cas(getCaster(caster)); }
+
+void EffectManager::changeLayerCaster(EffectCasterBase *caster, u32 layer, u32 newLayer) {
+  mm::mtl::IntrusiveList<EffectCasterSend> &casters = casterGroups[layer].casters;
+  for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
+    if (it.get()->caster == caster) {
+      EffectCasterSend *send = it.get();
+      casters.erase(it);
+      casterGroups[newLayer].casters.push_back(send);
+      return;
+    }
+  }
+}
+
+void EffectManager::sendCaster(EffectCasterBase *caster, mm::Mat44 &matrix, const char *name, int index) {
+  for (u32 i = 0; i < LAYER_MAX; i++) {
+    mm::mtl::IntrusiveList<EffectCasterSend> &casters = casterGroups[i].casters;
+    for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
+      if (it.get()->caster == caster) {
+        it.get()->sendData(matrix, name, index);
+        return;
+      }
+    }
+  }
+}
+
+void EffectManager::sendCaster(EffectCasterBase *caster, f32 scale) {
+  for (u32 i = 0; i < LAYER_MAX; i++) {
+    mm::mtl::IntrusiveList<EffectCasterSend> &casters = casterGroups[i].casters;
+    for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
+      if (it.get()->caster == caster) {
+        EffectCasterSend *send = it.get();
+        if (send->caster != nullptr && effect::SystemManager::getPtr() != nullptr) {
+          send->scales[effect::SystemManager::getPtr()->writeBuffer != 0] = scale;
+        }
+        return;
+      }
+    }
+  }
+}
+
+void EffectManager::sendCasterFrame(EffectCasterBase *caster, f32 frame) {
+  for (u32 i = 0; i < LAYER_MAX; i++) {
+    mm::mtl::IntrusiveList<EffectCasterSend> &casters = casterGroups[i].casters;
+    for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
+      if (it.get()->caster == caster) {
+        EffectCasterSend *send = it.get();
+        if (send->caster != nullptr && effect::SystemManager::getPtr() != nullptr) {
+          send->frames[effect::SystemManager::getPtr()->writeBuffer != 0] = frame;
+        }
+        return;
+      }
+    }
+  }
+}
+
+void EffectManager::sendCasterStateName(EffectCasterBase *caster, const char *name) {
+  for (u32 i = 0; i < LAYER_MAX; i++) {
+    mm::mtl::IntrusiveList<EffectCasterSend> &casters = casterGroups[i].casters;
+    for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
+      if (it.get()->caster == caster) {
+        it.get()->sendDataStateName(name);
+        return;
+      }
+    }
+  }
+}
+
+EffectCasterSend *EffectManager::getCasterCB(EffectCasterBase *caster) { return getCaster(caster); }
+
 void EffectManager::setIBLSaturation(f32 saturation) { effect::SystemManager::getPtr()->setIBLSaturation(saturation); }
 
 void EffectManager::setDirScale(f32 scale) { effect::SystemManager::getPtr()->setDirScale(scale); }
@@ -61,6 +147,26 @@ void EffectManager::setResponsiveAA(f32 responsiveAA) { effect::SystemManager::g
 void EffectManager::setAllDisp(bool isDisp) { effect::SystemManager::getPtr()->setAllDisp(isDisp); }
 
 void EffectManager::setDisableCollision(bool isDisable) { effect::SystemManager::getPtr()->setDisableCollision(isDisable); }
+
+u32 EffectManager::create(const char *name, EffectPack *pack, bool isLoop) {
+  void *data = search(name, pack);
+  if (data == nullptr) {
+    return 0;
+  }
+
+  return create(data, isLoop);
+}
+
+void *EffectManager::search(const char *name, EffectPack *pack) {
+  if (pack != nullptr) {
+    void *data = pack->searchEfb(name);
+    if (data != nullptr) {
+      return data;
+    }
+  }
+
+  return seachAssetEffectHandle(name);
+}
 
 u32 EffectManager::create(void *data, bool isLoop) {
   if (effect::SystemManager::getPtr() == nullptr) {
@@ -160,7 +266,25 @@ bool EffectManager::getDeadFlag(u32 handle) { return effect::SystemManager::getP
 
 bool EffectManager::isLoop(void *data) const { return effect::SystemManager::getPtr()->es_is_loop(data); }
 
+bool EffectManager::isLoop(const char *name, EffectPack *pack) const { return isLoop(get()->search(name, pack)); }
+
 bool EffectManager::containsCamAxis(void *data) const { return effect::SystemManager::getPtr()->es_contais_cam_axis(data); }
+
+bool EffectManager::containsCamAxis(const char *name, EffectPack *pack) const { return containsCamAxis(get()->search(name, pack)); }
+
+void *EffectManager::seachAssetEffectHandle(const char *name) {
+  CommonEffect *end = commonEffects.end();
+  for (CommonEffect *it = commonEffects.begin(); it != end; ++it) {
+    if (it->pack != nullptr) {
+      void *data = it->pack->searchEfb(name);
+      if (data != nullptr) {
+        return data;
+      }
+    }
+  }
+
+  return nullptr;
+}
 
 void *EffectManager::effectAllocSys(void *user, u32 size, u32 alignment, const char *name, u32 line) {
   return mtl::MemManager::allocate(get()->sysHandle, size, alignment, false, "no name", 0);
@@ -364,11 +488,35 @@ void EffectManager::setDebugShader(bool isDebugShader) {}
 
 bool EffectManager::isPerfMonitoring() { return false; }
 
+void EffectManager::memoryDump() {
+  mtl::MemManager::log(get()->sysHandle, true, nullptr);
+  mtl::MemManager::log(get()->resHandle, true, nullptr);
+  if (effect::SystemManager::getPtr() != nullptr) {
+    effect::SystemManager::getPtr()->memoryDump();
+  }
+}
+
+u32 EffectManager::createHateRing() { return create("cmn_000_000", nullptr, true); }
+
 void EffectManager::destroyHateRing(u32 handle) { remove(handle); }
+
+u32 EffectManager::createHateRingVec() { return create("cmn_000_001", nullptr, true); }
 
 void EffectManager::destroyHateRingVec(u32 handle) { remove(handle); }
 
+u32 EffectManager::createHateArrow() { return create("cmn_000_002", nullptr, true); }
+
 void EffectManager::destroyHateArrow(u32 handle) { remove(handle); }
+
+u32 EffectManager::createComboBall(u32 level) {
+  if (level == 0) {
+    return 0;
+  }
+
+  mm::mtl::FixStr<32> name;
+  name.format("cmn_010_%03d", level - 1);
+  return create(name.c_str(), nullptr, true);
+}
 
 void EffectManager::destroyComboBall(u32 handle) { kill(handle); }
 

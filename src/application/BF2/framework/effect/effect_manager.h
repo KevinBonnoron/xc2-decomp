@@ -2,7 +2,11 @@
 #include <stddef.h>
 
 #include "dr/dr_draw_callback.h"
+#include "framework/effect/effect_caster.h"
 #include "framework/manager_object.h"
+#include "mm_mtl/fixed_array.h"
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 #include "scn/scn_render_callback.h"
@@ -11,7 +15,15 @@
 namespace mm {
 struct Mat44;
 struct Vec3;
+
+namespace mtl {
+class IAllocator;
+} // namespace mtl
 } // namespace mm
+
+namespace ml {
+class Scn;
+} // namespace ml
 
 namespace effect {
 struct SendParam;
@@ -19,33 +31,48 @@ struct SendParam;
 
 namespace fw {
 
-class EffectCasterBase;
 class EffectPack;
+class RenderResource;
 enum EF_CATEGORY : int;
 
 class EffectManager : public mm::mtl::PtrSingleton<EffectManager>, public ManagerObject, public ml::IDrDrawCallback, public ml::IScnRender {
 public:
+  static const u32 LAYER_MAX = 32;
+  static const u32 COMMON_EFFECT_MAX = 128;
+
+  struct CasterGroup {
+    mm::mtl::IntrusiveList<EffectCasterSend> casters;
+  };
+
+  struct CommonEffect {
+    RenderResource *resource;
+    EffectPack *pack;
+  };
+
   ~EffectManager() override;
   bool initialize() override;
   bool isCommonLoaded();
-  void changeLayerCaster(EffectCasterBase *caster, u32 layer, u32 newLayer);
-  void sendCaster(EffectCasterBase *caster, mm::Mat44 &matrix, const char *name, int index);
-  void sendCaster(EffectCasterBase *caster, f32 scale);
-  void sendCasterFrame(EffectCasterBase *caster, f32 frame);
-  void sendCasterStateName(EffectCasterBase *caster, const char *name);
   bool commonLoaded();
   void getNum(u32 &emitterNum, u32 &particleNum, u32 &drawNum);
   static void efSystemEnd();
   void setMasterPause(bool isPause);
   bool isMasterPause() const;
+  EffectCasterSend *getCaster(EffectCasterBase *caster);
+  void remove(EffectCasterBase *caster);
+  void changeLayerCaster(EffectCasterBase *caster, u32 layer, u32 newLayer);
+  void sendCaster(EffectCasterBase *caster, mm::Mat44 &matrix, const char *name, int index);
+  void sendCaster(EffectCasterBase *caster, f32 scale);
+  void sendCasterFrame(EffectCasterBase *caster, f32 frame);
+  void sendCasterStateName(EffectCasterBase *caster, const char *name);
+  EffectCasterSend *getCasterCB(EffectCasterBase *caster);
   void setIBLSaturation(f32 saturation);
   void setDirScale(f32 scale);
   void setSpecScale(f32 scale);
   void setResponsiveAA(f32 responsiveAA);
   void setAllDisp(bool isDisp);
   void setDisableCollision(bool isDisable);
-  void *search(const char *name, EffectPack *pack);
   u32 create(const char *name, EffectPack *pack, bool isLoop);
+  void *search(const char *name, EffectPack *pack);
   u32 create(void *data, bool isLoop);
   u32 create(void *data, const effect::SendParam *param, bool isLoop);
   void kill(u32 handle);
@@ -65,7 +92,10 @@ public:
   bool isExist(u32 handle);
   bool getDeadFlag(u32 handle);
   bool isLoop(void *data) const;
+  bool isLoop(const char *name, EffectPack *pack) const;
   bool containsCamAxis(void *data) const;
+  bool containsCamAxis(const char *name, EffectPack *pack) const;
+  void *seachAssetEffectHandle(const char *name);
   static void *effectAllocSys(void *user, u32 size, u32 alignment, const char *name, u32 line);
   static void effectFreeSys(void *user, void *pointer);
   static void *effectAllocRes(void *user, u32 size, u32 alignment, const char *name, u32 line);
@@ -98,11 +128,15 @@ public:
   bool isDebugShader();
   void setDebugShader(bool isDebugShader);
   bool isPerfMonitoring();
+  static void memoryDump();
   u32 createHateRing();
   void updateHateRing(u32 handle, const mm::Vec3 &position, const f32 &rotation, bool isEnable, const f32 &scale);
   void destroyHateRing(u32 handle);
+  u32 createHateRingVec();
   void destroyHateRingVec(u32 handle);
+  u32 createHateArrow();
   void destroyHateArrow(u32 handle);
+  u32 createComboBall(u32 level);
   void destroyComboBall(u32 handle);
   void setPerfLoggingCsv(bool isLogging);
   void begin() override;
@@ -116,12 +150,22 @@ public:
   u8 _28[0x2c - 0x28];
   mtl::ALLOC_HANDLE sysHandle;
   mtl::ALLOC_HANDLE resHandle;
-  u8 _34[0x2fd5 - 0x34];
+  u8 _34[0x38 - 0x34];
+  mm::mtl::IAllocator *allocator;
+  ml::Scn *scn;
+  mm::mtl::FixedArray<CasterGroup, LAYER_MAX> casterGroups;
+  u8 _348[0x1fb8 - 0x348];
+  mm::mtl::FixedVector<CommonEffect, COMMON_EFFECT_MAX> commonEffects;
+  u8 _27c0[0x2fd5 - 0x27c0];
   bool masterPause;
   bool finalizing;
 };
 
+static_assert(sizeof(EffectManager::CasterGroup) == 0x18, "");
 static_assert(offsetof(EffectManager, sysHandle) == 0x2c, "");
+static_assert(offsetof(EffectManager, allocator) == 0x38, "");
+static_assert(offsetof(EffectManager, casterGroups) == 0x48, "");
+static_assert(offsetof(EffectManager, commonEffects) == 0x1fb8, "");
 static_assert(offsetof(EffectManager, masterPause) == 0x2fd5, "");
 static_assert(offsetof(EffectManager, finalizing) == 0x2fd6, "");
 
