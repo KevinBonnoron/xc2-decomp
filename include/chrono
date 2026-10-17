@@ -1,0 +1,22 @@
+#pragma once
+
+namespace std {
+inline namespace __1 {
+
+template <long Num, long Den = 1> class ratio {};
+
+namespace chrono {
+
+template <typename Rep, typename Period = ratio<1>> class duration {
+public:
+  explicit duration(const Rep &count) : __rep_(count) {}
+
+private:
+  Rep __rep_;
+};
+
+typedef duration<long long, ratio<1, 1000000000>> nanoseconds;
+
+} // namespace chrono
+} // namespace __1
+} // namespace std
