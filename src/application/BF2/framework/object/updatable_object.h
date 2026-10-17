@@ -9,8 +9,15 @@
 
 namespace fw {
 
-struct ObjectEvent;
 struct UpdateInfo;
+
+enum OBJECT_EVENT {
+  OBJECT_EVENT_UPDATE_END = 0,
+};
+
+struct ObjectEvent {
+  u32 type;
+};
 
 class UpdatableObject : public mm::mtl::IntrusiveListNode<UpdatableObject> {
 public:

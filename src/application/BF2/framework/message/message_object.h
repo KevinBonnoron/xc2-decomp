@@ -13,10 +13,10 @@ class RTTI;
 namespace fw {
 
 struct Message {
-  Message(u32 id, u32 size) : id(id), size(size) {}
+  Message(u32 id, u32 componentMask) : id(id), componentMask(componentMask) {}
 
   u32 id;
-  u32 size;
+  u32 componentMask;
 };
 
 class MessageObject {
