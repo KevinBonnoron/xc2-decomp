@@ -60,6 +60,8 @@ public:
   static mm::mtl::RTTI m_rtti;
   static const u32 COMPONENT_INDEX = 5;
 
+  void flush();
+
   GfStatusProperty *status;
   GfPropertyTarget *target;
   GfPropertyAlpha *alpha;

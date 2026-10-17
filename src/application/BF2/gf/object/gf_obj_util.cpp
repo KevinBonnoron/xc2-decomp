@@ -466,7 +466,7 @@ bool GfObjUtil::isTrinityBlade(GF_OBJ_HANDLE *handle) {
 
 bool GfObjUtil::isUpdateComponent(const GfObj *obj) {
   const GFOBJ_INFO *info = obj->info;
-  if (!obj->isUpdateEnable || (info != nullptr && info->flags.test(OBJ_FLAG_DESTROY)) ||
+  if (!obj->flags.test(OBJ_STATE_UPDATE_ENABLE) || (info != nullptr && info->flags.test(OBJ_FLAG_DESTROY)) ||
       (GfObjManager::get() != nullptr && GfObjManager::get()->isSuspendUpdate()) ||
       (info != nullptr && info->flags.test(OBJ_FLAG_PARTY_OBJ) && !GfGameParty::isPartyMemberInGameObj())) {
     return false;
