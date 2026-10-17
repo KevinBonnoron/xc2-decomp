@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "types.h"
 
 namespace grlib {
@@ -12,6 +14,7 @@ class IDrDrawWorkInfo;
 namespace layer {
 
 class LayerBase;
+class LayerSortMan;
 
 enum LayerMemType {};
 enum LayerPrimitiveType {};
@@ -30,6 +33,12 @@ public:
   void apply(const ml::IDrDrawWorkInfo *info);
   void finalRender(const ml::IDrDrawWorkInfo *info);
   void end();
+
+  const ml::IDrDrawWorkInfo *m_workInfo;
+  u8 _08[0x10 - 0x08];
+  LayerSortMan *m_sortMan;
 };
+
+static_assert(offsetof(LayerObjManager, m_sortMan) == 0x10, "");
 
 } // namespace layer
