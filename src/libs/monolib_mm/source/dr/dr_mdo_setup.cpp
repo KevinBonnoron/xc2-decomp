@@ -7,15 +7,53 @@
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_render_target.h"
+#include "dr/dr_res_mdo_uniform_block.h"
 #include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_ctl_texture.h"
 #include "grlib/cglib_render_target.h"
+#include "grlib/shd_util.h"
 
 namespace grlib {
 class CGLibTextureBuffer;
 } // namespace grlib
 
 namespace ml {
+
+int DrMdoSetup::unimate_texMatrix(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {
+  MdoWrkMatRes *matRes = m_matRes;
+  grlib::ShdF32SetF32Array(work, &matRes->values[header->valueOffset + variable->valueIndex], variable->count * 8);
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_TEX_MATRIX] * variable->count;
+}
+
+int DrMdoSetup::unimate_workFloat4(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {
+  MdoWrkMatRes *matRes = m_matRes;
+  grlib::ShdF32SetF32Array(work, &matRes->values[header->valueOffset + variable->valueIndex], variable->count * 4);
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_WORK_FLOAT4] * variable->count;
+}
+
+int DrMdoSetup::unimate_workColor(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {
+  MdoWrkMatRes *matRes = m_matRes;
+  grlib::ShdF32SetF32Array(work, &matRes->values[header->valueOffset + variable->valueIndex], variable->count * 4);
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_WORK_COLOR] * variable->count;
+}
+
+int DrMdoSetup::unimate_ProjectionMat(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {
+  MdoWrkMatRes *matRes = m_matRes;
+  const f32 *values = &matRes->values[header->valueOffset + variable->valueIndex];
+  for (int i = 0; i < variable->count; i++, work += 12) {
+    grlib::ShdF32TransposeMat34(work, &values[i * 16]);
+  }
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_PROJECTION_MAT] * variable->count;
+}
+
+int DrMdoSetup::unimate_NomProjectionMat(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable) {
+  MdoWrkMatRes *matRes = m_matRes;
+  const f32 *values = &matRes->values[header->valueOffset + variable->valueIndex];
+  for (int i = 0; i < variable->count; i++, work += 12) {
+    grlib::ShdF32TransposeMat34(work, &values[i * 16]);
+  }
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_NOM_PROJECTION_MAT] * variable->count;
+}
 
 void DrMdoSetup::varStTex_ColorTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->apCache;

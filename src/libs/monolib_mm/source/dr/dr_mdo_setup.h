@@ -1,12 +1,30 @@
 #pragma once
+#include <stddef.h>
+
 #include "dr/dr_mdo_node.h"
 #include "types.h"
 
 namespace ml {
+class DrResMdoMat;
 struct MdsMatInfoHeader;
+
+struct MdsMatVariableTbl {
+  u8 _00[0x02 - 0x00];
+  u16 valueIndex;
+  u8 _04[0x06 - 0x04];
+  u16 count;
+};
+
+static_assert(offsetof(MdsMatVariableTbl, valueIndex) == 0x02, "");
+static_assert(offsetof(MdsMatVariableTbl, count) == 0x06, "");
 
 class DrMdoSetup : public DrMdoNode {
 public:
+  int unimate_texMatrix(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable);
+  int unimate_workFloat4(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable);
+  int unimate_workColor(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable);
+  int unimate_ProjectionMat(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable);
+  int unimate_NomProjectionMat(f32 *work, DrResMdoMat *mat, const MdsMatInfoHeader *header, const MdsMatVariableTbl *variable);
   void varStTex_ColorTex(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStTex_NormalTex(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStTex_LightTex(const MdsMatInfoHeader *header, u32 location, u32 index);
