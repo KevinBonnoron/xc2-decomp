@@ -6,6 +6,10 @@
 #include "types.h"
 #include <stddef.h>
 
+namespace fw {
+struct UpdateInfo;
+}
+
 namespace gf {
 
 struct GF_ASSET_HANDLE;
@@ -14,6 +18,7 @@ struct GF_OBJ_HANDLE;
 class GfObj;
 class GfObjProperty;
 class GfObjSetup;
+struct GfSetupParam;
 class GfVolumeFade;
 
 enum GFATTACH {
@@ -93,6 +98,10 @@ public:
 
 class GfObjManager : public mm::mtl::PtrSingleton<GfObjManager> {
 public:
+  static void build(const GfSetupParam &param);
+  static void destroy();
+  void update(const fw::UpdateInfo &info);
+  void postUpdate(const fw::UpdateInfo &info);
   static GFOBJ_INFO *getObjInfo(GF_OBJ_HANDLE *handle);
   static void addListener(IGfObjListener *listener, IGfObjListener::OBJEVT event);
   static void removeListener(IGfObjListener *listener);

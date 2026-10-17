@@ -18,9 +18,11 @@ class BattleManager : public mm::mtl::PtrSingleton<BattleManager>, public gf::IG
 public:
   ~BattleManager();
   void Initialize(const gf::GfSetupParam &param);
+  static void build(const gf::GfSetupParam &param);
   static void destroy();
   void Finalize();
   static bool isInitialized();
+  static void update(const fw::UpdateInfo &updateInfo);
   void postUpdate(const fw::UpdateInfo &updateInfo);
   void gevMapjump(gf::GEV gev, const gf::MapjumpCallbackInfo &info) override;
   void gevBattleStart() override;

@@ -13,6 +13,7 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 struct SDataBlade;
+struct SDataGame;
 
 enum GAMELOG_PRIO {};
 
@@ -134,6 +135,7 @@ public:
   static u32 getObjNumberByEnArrangeId(u32 arrange);
   static void setMaxPartyGauge();
   static GF_OBJ_HANDLE *getBlade(GF_OBJ_HANDLE *handle);
+  static void setupNewGameParam(const SDataGame &dataGame);
   static bool getDriverAcceList(mm::mtl::FixedVector<u16, 16> &drivers);
   static bool isDispRexCrystal();
   static bool isDispHomuraCrystal();

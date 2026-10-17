@@ -15,7 +15,6 @@ struct GF_OBJ_HANDLE;
 struct GfMapjumpInfo;
 struct GfSetupParam;
 struct GfSetupPfTalk;
-struct ParamReturnTitle;
 struct QuestID;
 
 class GfSequentialPlay {

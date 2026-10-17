@@ -24,7 +24,7 @@ public:
   static void setChapterSave(u32 eventChapterSave, u16 startChapterSave);
   static bool isStartChapterSave();
   static u16 getScenarioFlag();
-  static u16 getEventChapterSave();
+  static u32 getEventChapterSave();
   static u16 getAutoEventAfterLoad();
   static u32 getSkipTravelID();
 
