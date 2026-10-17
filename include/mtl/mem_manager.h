@@ -19,6 +19,7 @@ public:
   static void *allocate(ALLOC_HANDLE handle, size_t size, size_t alignment, bool isBack, const char *name, int line);
   static void deallocate(void *pointer, size_t size, bool isBack);
   static size_t maxAllocSize(ALLOC_HANDLE handle);
+  static bool isArea(ALLOC_HANDLE handle, const void *pointer);
 };
 
 } // namespace mtl
