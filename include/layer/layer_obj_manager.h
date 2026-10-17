@@ -5,6 +5,10 @@ namespace grlib {
 class CGLibTextureBuffer;
 } // namespace grlib
 
+namespace ml {
+class IDrDrawWorkInfo;
+} // namespace ml
+
 namespace layer {
 
 class LayerBase;
@@ -22,6 +26,10 @@ public:
   LayerBase *createMemObj(u32 width, u32 height, LayerMemType type);
   LayerBase *createPolyObj(u32 vertexNum, u32 indexNum, u16 width, u16 height, LayerPrimitiveType type);
   LayerBase *createFilterObj();
+  void begin();
+  void apply(const ml::IDrDrawWorkInfo *info);
+  void finalRender(const ml::IDrDrawWorkInfo *info);
+  void end();
 };
 
 } // namespace layer
