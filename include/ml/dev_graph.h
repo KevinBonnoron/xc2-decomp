@@ -90,6 +90,7 @@ public:
   static void resetSize(s16 width, s16 height);
   static f32 getCost();
   static DevGraphQue *getGraphQue();
+  static bool isInitialized();
   static void setVSync(int vsync);
   void wkStandby() override;
   void wkUpdate() override;
