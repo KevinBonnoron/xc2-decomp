@@ -30,17 +30,7 @@ void SimplexState::onEnter(AsmListener *listener) {
 
 void SimplexState::onLeave(AsmListener *listener) { notifyLeave(listener); }
 
-void SimplexState::update(f32 deltaTime, AsmListener *listener) {
-  bool isEnd = m_clip.update(deltaTime, listener);
-  if (m_loopNum <= 0) {
-    if (m_loopNum != 0 || m_loopCount != 0 || !isEnd) {
-      return;
-    }
-  } else if (!isEnd) {
-    return;
-  }
-  m_loopCount++;
-}
+void SimplexState::update(f32 deltaTime, AsmListener *listener) { updateLoopCount(m_clip.update(deltaTime, listener)); }
 
 void SimplexState::onSetSpeed() { m_clip.setSpeed(m_speed); }
 

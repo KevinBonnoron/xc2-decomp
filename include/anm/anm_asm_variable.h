@@ -3,13 +3,13 @@
 
 namespace anm {
 
-struct ResVariable {
-  enum Type {
-    TYPE_INT,
-    TYPE_FLOAT,
-  };
+enum VarType {
+  VAR_INT,
+  VAR_FLOAT,
+};
 
-  s32 type;
+struct ResVariable {
+  VarType type;
   const char *name;
 };
 
@@ -22,6 +22,8 @@ public:
   bool getValue(s32 *value) const;
   bool getValue(f32 *value) const;
   const char *getName() const;
+
+  VarType getVarType() const { return m_pResVariable->type; }
 
   const ResVariable *m_pResVariable;
   union {

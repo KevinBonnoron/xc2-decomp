@@ -46,6 +46,17 @@ public:
     onSetSpeed();
   }
 
+  void updateLoopCount(bool isEnd) {
+    if (m_loopNum <= 0) {
+      if (m_loopNum != 0 || m_loopCount != 0 || !isEnd) {
+        return;
+      }
+    } else if (!isEnd) {
+      return;
+    }
+    m_loopCount++;
+  }
+
   void initLoopCount() {
     const ResState *resState = m_pResStateData->m_pResState;
     const Binding *binding = m_pResStateData->m_clips[0].m_pBinding;

@@ -13,6 +13,7 @@ enum PlayMode {
 class Util {
 public:
   static PlayMode getPlayMode(const Binding &binding);
+  static f32 getPlayBackTime(const Binding &binding);
   static f32 calcLocalTime(f32 time, f32 start, f32 end, PlayMode playMode);
 };
 
