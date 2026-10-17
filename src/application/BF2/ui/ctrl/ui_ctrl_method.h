@@ -63,14 +63,13 @@ public:
   void setup(const UIObject *object, const mm::Vec2 &to);
   virtual void execute(UIObject *object, f32 rate, const TimeInfo &timeInfo);
 
-  u8 _08[0x10 - 0x08];
-  mm::Vec2 from;
-  u8 _18[0x20 - 0x18];
-  mm::Vec2 to;
+  alignas(16) mm::Vec2 from;
+  alignas(16) mm::Vec2 to;
 };
 
 static_assert(offsetof(UICtrlMethodScale, from) == 0x10, "");
 static_assert(offsetof(UICtrlMethodScale, to) == 0x20, "");
+static_assert(sizeof(UICtrlMethodScale) == 0x30, "");
 
 class UICtrlMethodRot : public UICtrlMethod {
 public:
@@ -116,10 +115,8 @@ public:
   const UIMotionData *motionData;
   u32 motion;
   u32 frame;
-  u8 _18[0x20 - 0x18];
-  mm::Vec2 pos;
-  u8 _28[0x30 - 0x28];
-  mm::Vec2 scale;
+  alignas(16) mm::Vec2 pos;
+  alignas(16) mm::Vec2 scale;
 };
 
 static_assert(offsetof(UICtrlMethodMotion, motionData) == 0x08, "");
@@ -127,5 +124,6 @@ static_assert(offsetof(UICtrlMethodMotion, motion) == 0x10, "");
 static_assert(offsetof(UICtrlMethodMotion, frame) == 0x14, "");
 static_assert(offsetof(UICtrlMethodMotion, pos) == 0x20, "");
 static_assert(offsetof(UICtrlMethodMotion, scale) == 0x30, "");
+static_assert(sizeof(UICtrlMethodMotion) == 0x40, "");
 
 } // namespace ui
