@@ -1,4 +1,5 @@
 #pragma once
+#include <new> // IWYU pragma: keep
 
 #define GF_STATE_CLASS(name, Owner)                                                                                                                  \
 public:                                                                                                                                              \
