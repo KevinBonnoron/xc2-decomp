@@ -20,6 +20,7 @@ class DrMdlBase {
 public:
   enum UpdateFlag {
     UPDATE_FLAG_DISP = 1 << 0,
+    UPDATE_FLAG_CLIP = 1 << 1,
     UPDATE_FLAG_DELETE_CALL = 1 << 3,
   };
 
@@ -39,6 +40,14 @@ public:
   virtual void chageShadowObject(DrMdoSmlShadowMan *shadowMan);
   virtual void setDisp(bool isDisp);
   virtual void setDeleteCall(int deleteCall);
+
+  void setClip(bool isClip) {
+    if (isClip) {
+      m_updateFlags |= UPDATE_FLAG_CLIP;
+    } else {
+      m_updateFlags &= ~UPDATE_FLAG_CLIP;
+    }
+  }
 
   u8 _08[0x18 - 0x08];
   s16 m_groups;
