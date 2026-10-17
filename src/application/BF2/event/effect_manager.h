@@ -36,12 +36,18 @@ public:
   }
   EffectManager();
   virtual ~EffectManager() {}
+  void clear();
+  void load(const char *name);
+  EffectRes *searchRes(const char *name);
+  bool isLoading() const;
+  void setEvent(const char *name);
   bool isStreamMode() const;
   bool isOffscrMode() const;
   u32 getOffscrID() const;
   bool isReplaceMode() const;
   void replaceFile(mm::mtl::FixStr<128> &file) const;
   void setStreamMode(bool isStreamMode);
+  void loadResource(const char *name);
   void setOffscrMode(bool isOffscrMode, u32 offscrID);
   void setReplaceMode(bool isReplaceMode, u32 replaceID);
   void setEffectDisp(bool isDisp);
