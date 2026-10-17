@@ -10,6 +10,7 @@ struct FxHeader;
 namespace emitter {
 
 struct EmitterParam;
+class EmitterObj;
 
 class EmitterManager {
 public:
@@ -39,10 +40,12 @@ public:
   FxHeader *emitter_set_search(int type, const char *name, void *owner, u32 category);
 
   u8 _0000[0x1700 - 0x0000];
-  f32 m_categorySpeed[(0x1778 - 0x1700) / sizeof(f32)];
+  f32 m_categorySpeed[(0x1750 - 0x1700) / sizeof(f32)];
+  EmitterObj *m_pEmitterTop;
 };
 
 static_assert(offsetof(EmitterManager, m_categorySpeed) == 0x1700, "");
+static_assert(offsetof(EmitterManager, m_pEmitterTop) == 0x1750, "");
 
 } // namespace emitter
 } // namespace ptlib
