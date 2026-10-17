@@ -10,6 +10,10 @@ class CommonResource;
 
 namespace gmk {
 
+constexpr int BDAT_TYPE_U8 = 1;
+constexpr int BDAT_TYPE_U16 = 2;
+constexpr int BDAT_TYPE_STRING = 7;
+
 class GmkBdat {
 public:
   struct CreateInfo {

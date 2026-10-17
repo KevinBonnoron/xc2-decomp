@@ -29,6 +29,7 @@ static_assert(sizeof(Xform) == 0x40, "");
 struct GobInfo {
   const char *name;
   u32 xformIndex;
+  ShapeType shapeType;
 };
 
 static_assert(sizeof(GobInfo) == 0x10, "");
@@ -69,12 +70,17 @@ public:
   virtual void update(f32 deltaTime);
   virtual void debugDraw() const;
   virtual void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle);
-  virtual void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle);
-  virtual void debugUpdateMmf();
+  virtual void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {}
+  virtual void debugUpdateMmf() {}
 
   void disposeBase();
   u8 *getBindedBdatFp() const;
+  bool canCreateGameEntity() const;
+  f32 getYSnapRayLength() const;
   void createBase(const CreateBaseInfo &info);
+  void bindToGameObj(gf::GF_OBJ_HANDLE *handle) const;
+  void unbindToGameObj(gf::GF_OBJ_HANDLE *handle) const;
+  int findBdatRowIndex() const;
 
   CreateBaseInfo baseInfo;
   CreateInfo createInfo;

@@ -78,7 +78,13 @@ enum GmkType {
   GMK_TYPE_INVALID = 59,
 };
 
-enum ShapeType {};
+enum ShapeType {
+  SHAPE_TYPE_NONE = 0,
+  SHAPE_TYPE_POINT = 1,
+  SHAPE_TYPE_SPHERE = 2,
+  SHAPE_TYPE_BOX = 3,
+  SHAPE_TYPE_CAPSULE = 4,
+};
 
 enum InterestType {
   INTEREST_TYPE_PLAYER = 0,
