@@ -2,6 +2,7 @@
 
 #include "event/frame_manager.h"
 #include "event/memory_manager.h"
+#include "mm_math/mm_mat44.h"
 #include "mtl/alloc_handle.h"
 
 namespace event {
@@ -76,5 +77,21 @@ void ObjectChara::tail() {
 bool ObjectChara::isLoading() const { return !mCharaObj->isReady(); }
 
 mm::Vec3 ObjectChara::getTar() const { return mCharaObj->getTar(); }
+
+f32 ObjectChara::getEyeOffset() const { return mCharaObj->getEyeOffset(); }
+
+mm::Mat44 ObjectChara::getMat() {
+  mm::Mat44 mat;
+  mat.setRotXYZ(getRot());
+  mat.setTrans(getPos());
+  return mat;
+}
+
+mm::Mat44 ObjectChara::getEyeMat() {
+  mm::Mat44 mat;
+  mat.setRotXYZ(getRot());
+  mat.setTrans(getEyePos());
+  return mat;
+}
 
 } // namespace event

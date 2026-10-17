@@ -336,11 +336,12 @@ ObjectChara *ObjectList::searchByHandle(gf::GF_OBJ_HANDLE *handle) const {
   if (mCharaTree == nullptr) {
     return nullptr;
   }
-  Object *object = mCharaTree->getChild();
-  while (object != nullptr && (object->getType() != OBJTYPE_CHARA || static_cast<ObjectChara *>(object)->getCharaObj()->getHandle() != handle)) {
-    object = object->getNext();
+  for (Object *object = mCharaTree->getChild(); object != nullptr; object = object->getNext()) {
+    if (object->getType() == OBJTYPE_CHARA && static_cast<ObjectChara *>(object)->getCharaObj()->getHandle() == handle) {
+      return static_cast<ObjectChara *>(object);
+    }
   }
-  return static_cast<ObjectChara *>(object);
+  return nullptr;
 }
 
 ObjectChara *ObjectList::searchByID(u32 type, u32 id) const {

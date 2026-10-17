@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "event/i_manager.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
@@ -34,7 +36,7 @@ public:
   OfsInfo *getCurrent();
   OfsInfo *searchScene(const char *name) const;
   OfsInfo *createScene(const char *name);
-  u32 getCharaNum() const;
+  size_t getCharaNum() const;
   bool checkRadianTar(u32 axis);
   mm::Vec3 axis2pos(u32 axis, f32 x, f32 y, f32 z);
   mm::Mat44 getPosAxis(u32 axis);
@@ -50,6 +52,12 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
+  static mm::Vec3 transformPos(mm::Mat44 mat, f32 x, f32 y, f32 z) {
+    return mm::Vec3(mat.rows[0][0] * x + mat.rows[1][0] * y + mat.rows[2][0] * z + mat.rows[3][0],
+                    mat.rows[0][1] * x + mat.rows[1][1] * y + mat.rows[2][1] * z + mat.rows[3][1],
+                    mat.rows[0][2] * x + mat.rows[1][2] * y + mat.rows[2][2] * z + mat.rows[3][2]);
+  }
+
   mm::mtl::FixedVector<OfsInfo *, SCENE_COUNT> mScenes;
   mm::mtl::FixStr<64> mSceneName;
   mm::mtl::FixStr<64> mCurrentSceneName;

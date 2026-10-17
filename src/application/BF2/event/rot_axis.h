@@ -6,6 +6,14 @@ namespace event {
 
 class RotAxis {
 public:
+  enum {
+    AXIS_NONE = 0,
+    AXIS_ANGLE = 1,
+    AXIS_ANGLE_GLOBAL = 2,
+    AXIS_SAY = 3,
+    AXIS_CHARA = 4,
+  };
+
   RotAxis();
   RotAxis(u32 axis, f32 x, f32 y, f32 z);
   RotAxis(u32 axis, const mm::Vec3 &rot);

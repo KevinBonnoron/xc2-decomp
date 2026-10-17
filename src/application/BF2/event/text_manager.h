@@ -59,6 +59,8 @@ public:
   void setUseSkip(bool isUse);
   virtual void OnEventProc(MSG_TYPE type);
 
+  CharaObj *getTalker() const { return talker; }
+
 private:
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
