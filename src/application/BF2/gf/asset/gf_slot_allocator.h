@@ -8,6 +8,8 @@
 
 namespace gf {
 
+constexpr size_t SLOT_ALIGNMENT = 0x2000;
+
 class GfSlotAllocator : public mm::mtl::IAllocator {
 public:
   GfSlotAllocator();

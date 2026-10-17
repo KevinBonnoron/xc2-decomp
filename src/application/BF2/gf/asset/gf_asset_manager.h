@@ -8,6 +8,12 @@ namespace fw {
 struct UpdateInfo;
 }
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace gf {
 
 struct GF_ASSET_HANDLE;
@@ -22,6 +28,7 @@ public:
   static void build(const GfSetupParam &param);
   static void destroy();
   static void destroy(GF_ASSET_HANDLE *handle);
+  static void loadStart(GfAssetPack *pack, mm::mtl::IAllocator *allocator);
   static GfAssetPack *createAssetFiles(const GfAssetFilesInfo &info);
   static bool isReload(GF_ASSET_HANDLE *handle);
   static void getSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slots, GF_ASSET_HANDLE *handle);
@@ -33,6 +40,8 @@ public:
   static u32 getUsedAssetPackInfo();
   static GfAssetPack *getAssetPack(GF_ASSET_HANDLE *handle, GfFileIdx index);
   static GfAssetResource *getResource(GF_ASSET_HANDLE *handle, GfFileIdx index, GfAssetType type);
+  static void destroySlotCache(GfAssetType type);
+  static bool isExistSameAsset(GfAssetPack *pack);
   static void clear();
   void releaseRefResource(void *data);
   static void lockEnterRersource(GF_ASSET_HANDLE *handle);

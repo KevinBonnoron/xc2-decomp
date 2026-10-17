@@ -23,13 +23,13 @@ struct SDataOption;
 struct SDataSystem;
 
 struct GfSetupParam {
-  GfSetupParam() : scn(), _08(), _10(), memHandle(ml::MlMem::getProductMem()), _1c(), globalSpeed(1.0f), exec(EXEC_STATE_DEBUG) {}
+  GfSetupParam() : scn(), _08(), _10(), memHandle(ml::MlMem::getProductMem()), slotMappingType(0), globalSpeed(1.0f), exec(EXEC_STATE_DEBUG) {}
 
   ml::Scn *scn;
   u8 _08[0x10 - 0x08];
   u8 _10[0x18 - 0x10];
   mtl::ALLOC_HANDLE memHandle;
-  u8 _1c[0x20 - 0x1c];
+  u32 slotMappingType;
   f32 globalSpeed;
   EXEC_STATE exec;
 };
