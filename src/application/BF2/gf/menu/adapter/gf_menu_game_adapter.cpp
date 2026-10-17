@@ -1,0 +1,212 @@
+#include "gf/menu/adapter/gf_menu_game_adapter.h"
+
+#include "gf/data/gf_data_map.h"
+#include "gf/data/gf_data_mercenaries.h"
+#include "gf/data/gf_data_util.h"
+#include "gf/field/gf_field_manager.h"
+#include "gf/field/gf_field_time.h"
+#include "gf/field/gf_field_weather.h"
+#include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_util.h"
+#include "gf/gf_allocator.h"
+#include "gf/menu/gf_menu_bdat.h"
+#include "gf/menu/gf_menu_reference.h"
+#include "ui/plugin/ui_object_time_plugin.h"
+#include "ui/ui_object_acc.h"
+#include "ui/ui_object_plugin.h"
+#include "ui/ui_str.h"
+
+namespace gf {
+
+constexpr u32 ELAPSE_HOUR_MAX = 999;
+constexpr u32 ELAPSE_MINUTE_MAX = 59;
+constexpr u32 ELAPSE_SECOND_MAX = 59;
+constexpr int CHAPTER_MAX = 10;
+
+static GfMenuGameAdapter::TypeInfo TYPE_INFOS[] = {
+    {&GfMenuGameAdapter::update_GamePlayTime, {GfMenuAdapter::PLUGIN_TYPE_TIME, 7, 0}},
+    {&GfMenuGameAdapter::update_Money, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 999999999}},
+    {&GfMenuGameAdapter::update_FieldTime, {GfMenuAdapter::PLUGIN_TYPE_TIME, 6, 0}},
+    {&GfMenuGameAdapter::update_WeatherIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
+    {&GfMenuGameAdapter::update_CloudIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
+    {&GfMenuGameAdapter::update_MapName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
+    {&GfMenuGameAdapter::update_LocationName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
+    {&GfMenuGameAdapter::update_TimeZoneName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
+    {&GfMenuGameAdapter::update_TimeZoneIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
+    {&GfMenuGameAdapter::update_ReferenceNum, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99999}},
+    {&GfMenuGameAdapter::update_MercenariesName, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
+    {&GfMenuGameAdapter::update_MercenariesLv, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 5}},
+    {&GfMenuGameAdapter::update_MercenariesPoint, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99999}},
+    {&GfMenuGameAdapter::update_MercenariesPointMax, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99999}},
+    {&GfMenuGameAdapter::update_RealYear, {GfMenuAdapter::PLUGIN_TYPE_TIME, 1, 0}},
+    {&GfMenuGameAdapter::update_RealTime, {GfMenuAdapter::PLUGIN_TYPE_TIME, 6, 0}},
+    {&GfMenuGameAdapter::update_Chapter, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 1, 99}},
+    {&GfMenuGameAdapter::update_DispAccess, {GfMenuAdapter::PLUGIN_TYPE_DISP, 0, 0}},
+};
+
+GfMenuGameAdapter::GfMenuGameAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways) {}
+
+GfMenuGameAdapter::~GfMenuGameAdapter() {}
+
+GfMenuAdapter *GfMenuGameAdapter::create(u32 handle, u32 type, bool isUpdateAlways) {
+  ui::UIObjectAcc acc(handle);
+  if (acc.isValid()) {
+    TypeInfo &info = TYPE_INFOS[type];
+    ui::UIObjectPlugin *plugin = createPlugin(handle, info.setup);
+    if (plugin != nullptr) {
+      // __LINE__ must be 79 as in the original source: it is the line argument of operator new.
+#line 79
+      GfMenuGameAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuGameAdapter(plugin, isUpdateAlways);
+      adapter->updater.bind(adapter, info.update);
+      plugin->release();
+      return adapter;
+    }
+  }
+  return nullptr;
+}
+
+bool GfMenuGameAdapter::update_GamePlayTime() {
+  if (GfFieldTime::get() != nullptr) {
+    ElapseTime time = GfFieldTime::get()->getElapseTime();
+    if (time.hour > ELAPSE_HOUR_MAX) {
+      time.hour = ELAPSE_HOUR_MAX;
+      time.minute = ELAPSE_MINUTE_MAX;
+      time.second = ELAPSE_SECOND_MAX;
+    }
+    setElapseTime(time);
+  }
+  return true;
+}
+
+bool GfMenuGameAdapter::update_Money() {
+  setNumber(GfDataUtil::getMoney());
+  return true;
+}
+
+bool GfMenuGameAdapter::update_FieldTime() {
+  ui::uiDateTime time = {};
+  GfFieldTime *fieldTime = GfFieldTime::get();
+  if (fieldTime != nullptr) {
+    time.hour = fieldTime->getHour();
+    time.minute = fieldTime->getMin();
+  }
+  setTime(time);
+  return true;
+}
+
+bool GfMenuGameAdapter::update_WeatherIcon() {
+  setNumber(GfMenuBdat::getIconImageIndex(GfMenuBdat::getIconIDFromWeatherType(GfFieldWeather::getCurrentWtrType(false))));
+  return true;
+}
+
+bool GfMenuGameAdapter::update_CloudIcon() {
+  setNumber(GfGameUtilCloudSea::getCloudSea() == 0);
+  return GfGameManager::getMapID() == MAP_GULA || GfGameManager::getMapID() == MAP_SUPERBIA;
+}
+
+bool GfMenuGameAdapter::update_MapName() {
+  const char *name = GfFieldManager::getMapName();
+  if (name == nullptr) {
+    return false;
+  }
+  setText(ui::UIStr(name, false));
+  return true;
+}
+
+bool GfMenuGameAdapter::update_LocationName() {
+  u8 *bdat;
+  int textId;
+  if (!GfFieldManager::getLandmarkNameId(bdat, textId)) {
+    return false;
+  }
+  setText(ui::UIStr(bdat, textId));
+  return true;
+}
+
+bool GfMenuGameAdapter::update_TimeZoneName() {
+  u8 *bdat;
+  u32 textId;
+  if (GfFieldTime::get() != nullptr && !GfFieldTime::get()->getTimeRangeName(bdat, textId)) {
+    return false;
+  }
+  setText(ui::UIStr(bdat, textId));
+  return true;
+}
+
+bool GfMenuGameAdapter::update_TimeZoneIcon() {
+  if (GfFieldTime::get() == nullptr) {
+    return false;
+  }
+  setNumber(GfFieldTime::get()->getTimeRange());
+  return true;
+}
+
+bool GfMenuGameAdapter::update_ReferenceNum() {
+  int number = GfMenuReference::getReferenceNumber(referenceIndex);
+  setNumber(number);
+  return number >= GfMenuReference::getReferenceNumberMin(referenceIndex) && number <= GfMenuReference::getReferenceNumberMax(referenceIndex);
+}
+
+bool GfMenuGameAdapter::update_MercenariesName() {
+  setText(ui::UIStr("Mercenaries", false));
+  return true;
+}
+
+bool GfMenuGameAdapter::update_MercenariesLv() {
+  setNumber(GfDataMercenaries::getLevel());
+  return true;
+}
+
+bool GfMenuGameAdapter::update_MercenariesPoint() {
+  if (GfDataMercenaries::getLevel() == MERCENARIES_LEVEL_MAX) {
+    setNumber(0);
+  } else {
+    setNumberMax(GfDataMercenaries::getPointMax());
+    setNumber(GfDataMercenaries::getPoint());
+  }
+  return true;
+}
+
+bool GfMenuGameAdapter::update_MercenariesPointMax() {
+  setNumberMax(GfDataMercenaries::getPointMax());
+  setNumber(GfDataMercenaries::getPointMax());
+  return true;
+}
+
+bool GfMenuGameAdapter::update_RealYear() {
+  RealTime realTime = {};
+  GfFieldTime::get()->getRealTime(realTime);
+  ui::uiDateTime time = {};
+  time.year = realTime.year;
+  time.month = realTime.month;
+  time.day = realTime.day;
+  setTime(time);
+  return true;
+}
+
+bool GfMenuGameAdapter::update_RealTime() {
+  RealTime realTime = {};
+  GfFieldTime::get()->getRealTime(realTime);
+  ui::uiDateTime time = {};
+  time.hour = realTime.hour;
+  time.minute = realTime.minute;
+  setTime(time);
+  return true;
+}
+
+bool GfMenuGameAdapter::update_Chapter() {
+  setNumber(GfGameManager::getScenarioId());
+  setNumberMax(CHAPTER_MAX);
+  return true;
+}
+
+bool GfMenuGameAdapter::update_DispAccess() { return GfGameManager::isPlaySequenceClear(); }
+
+void GfMenuGameAdapter::update(const fw::UpdateInfo &info) {
+  if (updater.isValid() && (flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+    setDisp(updater());
+    flags &= ~FLAG_CHANGED;
+  }
+}
+
+} // namespace gf

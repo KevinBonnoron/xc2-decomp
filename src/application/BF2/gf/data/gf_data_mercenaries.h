@@ -18,6 +18,8 @@ struct GfRequestBladeData {
 
 static_assert(sizeof(GfRequestBladeData) == 0x10, "");
 
+constexpr u32 MERCENARIES_LEVEL_MAX = 5;
+
 struct SDataMercenariesTeam {
   u16 members[6];
   u8 _0c[0x10 - 0x0c];
