@@ -14,8 +14,6 @@ enum {
 };
 
 constexpr u32 SKILL_DRIVER_END = 7;
-constexpr u32 SKILL_ROW_COUNT = 5;
-constexpr u32 SKILL_COLUMN_COUNT = 3;
 constexpr u32 HIDDEN_SKILL_FIRST = 15;
 
 static const char *const skillTables[] = {
@@ -157,7 +155,7 @@ u32 GfDataDriverSkill::getValidSkillNum(u32 driver, bool isHidden) {
   return count;
 }
 
-u16 GfDataDriverSkill::getSkill(u32 driver, u32 row, u32 column, bool isHidden) {
+u32 GfDataDriverSkill::getSkill(u32 driver, u32 row, u32 column, bool isHidden) {
   if (column == 0) {
     return 0;
   }
