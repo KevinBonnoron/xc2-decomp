@@ -32,8 +32,13 @@ public:
   void setRender(bool render);
   bool isRender() const;
   LayerBase *createObj(const void *data);
+  LayerBase *createFontObj();
   LayerBase *createMaskObj(const void *data);
   LayerBase *createTexObj(const grlib::CGLibTextureBuffer &texture);
+
+  u8 _08[0x10 - 0x08];
 };
+
+static_assert(sizeof(LayerAccLayoutObj) == 0x10, "");
 
 } // namespace layer
