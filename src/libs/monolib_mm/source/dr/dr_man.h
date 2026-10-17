@@ -12,6 +12,7 @@ class CloudMan;
 
 namespace ml {
 class DrAPCache;
+class DrCalcMan;
 class DrCalcGpuCost;
 class DrCalcTexStreamMan;
 class DrEnvironmentMan;
@@ -133,7 +134,9 @@ public:
   u8 _0140[0x0160 - 0x0140];
   DrGlobalIBLMan *globalIBLMans[4];
   DrPixlTileParm *tileParm;
-  u8 _0188[0x05b0 - 0x0188];
+  u8 _0188[0x0580 - 0x0188];
+  DrCalcMan *calcMan;
+  u8 _0588[0x05b0 - 0x0588];
   DrCalcTexStreamMan *texStreamMan;
   DrScreenInfo *screenInfo;
   DrAPCache *apCache;
@@ -206,6 +209,7 @@ static_assert(offsetof(DrMan, environmentMans) == 0x0100, "");
 static_assert(offsetof(DrMan, postParms) == 0x0120, "");
 static_assert(offsetof(DrMan, globalIBLMans) == 0x0160, "");
 static_assert(offsetof(DrMan, tileParm) == 0x0180, "");
+static_assert(offsetof(DrMan, calcMan) == 0x0580, "");
 static_assert(offsetof(DrMan, texStreamMan) == 0x05b0, "");
 static_assert(offsetof(DrMan, screenInfo) == 0x05b8, "");
 static_assert(offsetof(DrMan, apCache) == 0x05c0, "");

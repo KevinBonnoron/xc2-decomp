@@ -16,6 +16,7 @@ public:
   int getSize();
   void *getBuff();
   void *getMapping();
+  void setStorageBuffer(u32 index);
 
   int m_writtenSize;
   int m_bufferSize;

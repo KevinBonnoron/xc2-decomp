@@ -24,6 +24,7 @@ public:
   void *getOldBuff();
   void *getOldTriBuff();
   void *getMapping();
+  void setUniformBlock(u32 index);
 
   void *m_mappings[3];
   u32 m_size;
