@@ -88,6 +88,7 @@
 #include "event/chara_play_head.cpp"
 #include "event/chara_stop_head.cpp"
 #include "event/chara_play_facial.cpp"
+#include "event/chara_play_talk_auto.cpp"
 #include "event/chara_wink_player.cpp"
 #include "event/chara_mount.cpp"
 #include "event/chara_fade.cpp"
