@@ -35,6 +35,8 @@ public:
   ~GmkNpcIdInfo() { dispose(); }
 
   void dispose();
+  void disposeGobInst(bool isFadeOut);
+  void setActiveGmkNpc(AGmkNpc *npc);
 
   u16 npcId;
   u8 *bdat;

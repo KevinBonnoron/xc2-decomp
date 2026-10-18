@@ -1,18 +1,51 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "mm_mtl/intrusive_list.h"
 #include "types.h"
 
 struct CBdatWrapper;
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
+namespace mm {
+struct Vec3;
+} // namespace mm
 
 namespace gmk {
 
 class GmkNpcGob;
+class GmkNpcIdInfo;
 
-class GmkNpc : public AGmkBase {
+class AGmkNpc : public mm::mtl::IntrusiveListNode<AGmkNpc> {
+public:
+  virtual ~AGmkNpc() {}
+  virtual bool isPopCondMatched() const = 0;
+  virtual bool isDepopCondMatched() const = 0;
+  virtual bool isPopDistCondMatched() const = 0;
+  virtual bool isDepopDistCondMatched() const = 0;
+  virtual u8 *getBindedBdatFp() const = 0;
+  virtual int getBindedBdatId() const = 0;
+  virtual bool findPopPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const = 0;
+  virtual void bindToGameObj(gf::GF_OBJ_HANDLE *handle) const = 0;
+  virtual void unbindToGameObj(gf::GF_OBJ_HANDLE *handle) const = 0;
+  virtual void validateDisp() const = 0;
+  virtual void debugUpdate(f32 deltaTime) {}
+
+  GmkNpcIdInfo *unknown18; // Inferred role: shared NPC instance information; original member name unknown.
+  bool unknown20;          // Inferred role: display enabled; original member name unknown.
+};
+
+static_assert(offsetof(AGmkNpc, unknown18) == 0x18, "");
+static_assert(offsetof(AGmkNpc, unknown20) == 0x20, "");
+static_assert(sizeof(AGmkNpc) == 0x28, "");
+
+class GmkNpc : public AGmkBase, public AGmkNpc {
 public:
   struct BdatInfo {
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
@@ -31,12 +64,25 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_NPC;
 
-  ~GmkNpc() override;
-  GmkType getGmkType() const override;
+  ~GmkNpc() override { dispose(); }
+  GmkType getGmkType() const override { return GMK_TYPE; }
+  gf::GF_OBJ_HANDLE *getGobInst() const;
+  bool isPopCondMatchedExceptDist() const;
+  bool isPopCondMatched() const override;
+  bool isDepopCondMatched() const override;
+  bool isPopDistCondMatched() const override;
+  bool isDepopDistCondMatched() const override;
+  u8 *getBindedBdatFp() const override { return AGmkBase::getBindedBdatFp(); }
+  int getBindedBdatId() const override { return createInfo.bdatIndex; }
+  bool findPopPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const override;
+  void bindToGameObj(gf::GF_OBJ_HANDLE *handle) const override;
+  void unbindToGameObj(gf::GF_OBJ_HANDLE *handle) const override { AGmkBase::unbindToGameObj(handle); }
+  void validateDisp() const override;
   void debugDraw() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
+  void debugUpdate(f32 deltaTime) override {}
 
-  u8 _48[0x70 - 0x48];
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(createInfo.info); }
 };
 
 static_assert(sizeof(GmkNpc::BdatInfo) == 0x30, "");
