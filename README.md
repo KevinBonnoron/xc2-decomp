@@ -4,7 +4,7 @@ A work-in-progress matching decompilation of *Xenoblade Chronicles 2* (Nintendo 
 
 The goal is to write C++ source code that, compiled with the same compiler and flags as the original, produces exactly the same machine code as the game, function by function.
 
-**This repository contains no game code or assets.** You need your own legally obtained copy of the game to work on it.
+**This repository contains reconstructed C++ code, but must not include original game executables, extracted assets, console keys or proprietary SDK files.** You need your own legally obtained copy of the game to work on it.
 
 ## Target
 

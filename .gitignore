@@ -2,3 +2,21 @@
 /result*
 __pycache__/
 .direnv
+.claude
+
+# Local game dumps, extracted resources, keys and build products.
+*.xci
+*.nsp
+*.nca
+*.nso
+*.elf
+/*.bin
+*.bdat
+*.keys
+*.tik
+*.cert
+*.o
+*.a
+/sdk/
+/NintendoSDK/
+/decomp/

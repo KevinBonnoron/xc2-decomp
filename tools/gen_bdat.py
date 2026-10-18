@@ -362,7 +362,8 @@ def write(cls, ns, stem, statics, entries, methods, tables, code, direct, namesp
     table_names = {}
     for mangled, offset in tables.items():
         table_names.setdefault(offset, []).append(re.sub(r"^(get|is)", "", demangled(mangled)))
-    member_names = {offset: "m" + common_prefix(names) for offset, names in table_names.items()}
+    # Getter names do not establish the original member names.
+    member_names = {offset: f"unknown{offset:02x}" for offset in table_names}
 
     header_path = os.path.join(ROOT, "src", "application", "BF2", "gf", "data", stem + ".h")
     existing_header = open(header_path).read() if os.path.exists(header_path) else ""

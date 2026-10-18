@@ -775,7 +775,7 @@ def check_all(demangled, scope=None, verbose=True):
         print_diff(target, mine)
     sys.stdout.flush()
     print_compile_errors(errors)
-    failed = bool(errors)
+    failed = bool(errors or unknown)
     matched = len(rows) - len(mismatches)
     local_count = sum(1 for f, *_ in rows if f.startswith("local:"))
     summary = f"\n{matched}/{len(rows)} functions match"
@@ -783,7 +783,7 @@ def check_all(demangled, scope=None, verbose=True):
         summary += f" ({local_count} of them local)"
     if scope:
         summary += f", {len(missing)} left to decompile in {scope}"
-    if failed:
+    if errors:
         summary += f", {len(errors)} {'file' if len(errors) == 1 else 'files'} failed to compile"
     if unknown:
         summary += f", {len(unknown)} not in the game"
