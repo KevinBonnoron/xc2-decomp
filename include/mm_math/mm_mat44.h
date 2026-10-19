@@ -63,6 +63,47 @@ struct alignas(16) Mat44 {
     rows[3][2] = pos.z;
   }
 
+  // Inferred from AttachActorBase::get{Mtp,Efp,Bone}MatGlobal
+  // (1.0.0: 0x710009e7b8, 0x710009ed2c, 0x710009f2a0).
+  // Product order: local * attachment transform; original helper names unknown.
+  // Inferred helper: matrix product with a destination distinct from both inputs.
+  // Keep the scalar operand order: it affects Clang's generated instructions.
+  __attribute__((always_inline)) void unknown001(const Mat44 &__restrict a, const Mat44 &b) {
+    rows[0][0] = a.rows[0][0] * b.rows[0][0] + a.rows[0][1] * b.rows[1][0] + a.rows[0][2] * b.rows[2][0] + a.rows[0][3] * b.rows[3][0];
+    rows[0][1] = a.rows[0][0] * b.rows[0][1] + a.rows[0][1] * b.rows[1][1] + a.rows[0][2] * b.rows[2][1] + a.rows[0][3] * b.rows[3][1];
+    rows[0][2] = a.rows[0][0] * b.rows[0][2] + a.rows[0][1] * b.rows[1][2] + a.rows[0][2] * b.rows[2][2] + a.rows[0][3] * b.rows[3][2];
+    rows[0][3] = a.rows[0][0] * b.rows[0][3] + a.rows[0][1] * b.rows[1][3] + a.rows[0][2] * b.rows[2][3] + a.rows[0][3] * b.rows[3][3];
+    rows[1][0] = b.rows[0][0] * a.rows[1][0] + b.rows[1][0] * a.rows[1][1] + b.rows[2][0] * a.rows[1][2] + b.rows[3][0] * a.rows[1][3];
+    rows[1][1] = b.rows[0][1] * a.rows[1][0] + b.rows[1][1] * a.rows[1][1] + b.rows[2][1] * a.rows[1][2] + b.rows[3][1] * a.rows[1][3];
+    rows[1][2] = b.rows[0][2] * a.rows[1][0] + b.rows[1][2] * a.rows[1][1] + b.rows[2][2] * a.rows[1][2] + b.rows[3][2] * a.rows[1][3];
+    rows[1][3] = b.rows[0][3] * a.rows[1][0] + b.rows[1][3] * a.rows[1][1] + b.rows[2][3] * a.rows[1][2] + b.rows[3][3] * a.rows[1][3];
+    rows[2][0] = b.rows[0][0] * a.rows[2][0] + a.rows[2][1] * b.rows[1][0] + a.rows[2][2] * b.rows[2][0] + a.rows[2][3] * b.rows[3][0];
+    rows[2][1] = b.rows[0][1] * a.rows[2][0] + b.rows[1][1] * a.rows[2][1] + b.rows[2][1] * a.rows[2][2] + b.rows[3][1] * a.rows[2][3];
+    rows[2][2] = b.rows[0][2] * a.rows[2][0] + b.rows[1][2] * a.rows[2][1] + b.rows[2][2] * a.rows[2][2] + b.rows[3][2] * a.rows[2][3];
+    rows[2][3] = b.rows[0][3] * a.rows[2][0] + b.rows[1][3] * a.rows[2][1] + b.rows[2][3] * a.rows[2][2] + b.rows[3][3] * a.rows[2][3];
+    rows[3][0] = a.rows[3][0] * b.rows[0][0] + b.rows[1][0] * a.rows[3][1] + b.rows[2][0] * a.rows[3][2] + b.rows[3][0] * a.rows[3][3];
+    rows[3][1] = b.rows[0][1] * a.rows[3][0] + b.rows[1][1] * a.rows[3][1] + b.rows[2][1] * a.rows[3][2] + b.rows[3][1] * a.rows[3][3];
+    rows[3][2] = b.rows[0][2] * a.rows[3][0] + b.rows[1][2] * a.rows[3][1] + b.rows[2][2] * a.rows[3][2] + b.rows[3][2] * a.rows[3][3];
+    rows[3][3] = b.rows[0][3] * a.rows[3][0] + b.rows[1][3] * a.rows[3][1] + b.rows[2][3] * a.rows[3][2] + b.rows[3][3] * a.rows[3][3];
+  }
+
+  // Inferred helper: matrix product allowing an aliased destination; original name unknown.
+  __attribute__((always_inline)) Mat44 &unknown002(const Mat44 &a, const Mat44 &b) {
+    if (this == &a || this == &b) {
+      Mat44 result;
+      result.unknown001(a, b);
+      *this = result;
+    } else {
+      unknown001(a, b);
+    }
+    return *this;
+  }
+
+  __attribute__((always_inline)) Mat44 operator*(const Mat44 &matrix) const {
+    Mat44 result;
+    return result.unknown002(*this, matrix);
+  }
+
   f32 rows[4][4];
 };
 

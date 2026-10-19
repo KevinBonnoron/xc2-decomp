@@ -17,14 +17,44 @@ bool AttachActorBase::getMat(mm::Mat44 &mat) const {
   return true;
 }
 
+bool AttachActorBase::getMtpMatGlobal(mm::Mat44 &mat, const char *name) const {
+  mm::Mat44 local;
+  if (!getMtpMat(local, name)) {
+    mat = unknown60;
+    return false;
+  }
+  mat = local * unknown60;
+  return true;
+}
+
 bool AttachActorBase::hasMtp(const char *name) const {
   mm::Mat44 mat;
   return getMtpMat(mat, name);
 }
 
+bool AttachActorBase::getEfpMatGlobal(mm::Mat44 &mat, const char *name) const {
+  mm::Mat44 local;
+  if (!getEfpMat(local, name)) {
+    mat = unknown60;
+    return false;
+  }
+  mat = local * unknown60;
+  return true;
+}
+
 bool AttachActorBase::hasEfp(const char *name) const {
   mm::Mat44 mat;
   return getEfpMat(mat, name);
+}
+
+bool AttachActorBase::getBoneMatGlobal(mm::Mat44 &mat, const char *name) const {
+  mm::Mat44 local;
+  if (!getBoneMat(local, name)) {
+    mat = unknown60;
+    return false;
+  }
+  mat = local * unknown60;
+  return true;
 }
 
 bool AttachActorBase::hasBone(const char *name) const {
