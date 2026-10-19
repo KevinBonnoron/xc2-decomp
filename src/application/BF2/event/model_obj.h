@@ -6,6 +6,9 @@
 namespace gf {
 struct GF_OBJ_HANDLE;
 } // namespace gf
+namespace mm {
+struct Mat44;
+} // namespace mm
 
 namespace event {
 
@@ -22,6 +25,8 @@ public:
   };
 
   virtual ~ModelObj();
+  bool getEfpMat(mm::Mat44 &mat, const char *name) const;
+  bool getBoneMat(mm::Mat44 &mat, const char *name) const;
   void setReserve(u32 index, bool isReserve);
   bool isReserve(int index);
   bool isSame(const char *path, bool isPriority, u32 id);

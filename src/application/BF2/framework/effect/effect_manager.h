@@ -108,6 +108,7 @@ public:
   void setParamPosOnly(u32 handle, const effect::SendParam *param);
   void setParamPosOnly2(u32 handle, const effect::SendParam *param);
   void setParam(u32 handle, const effect::SendParam *param);
+  void setParam(u32 handle, EffectCasterBase *caster, f32 scale);
   void setSignal(u32 handle);
   bool isExist(u32 handle);
   bool getDeadFlag(u32 handle);
