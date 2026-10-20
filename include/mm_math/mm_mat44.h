@@ -1,5 +1,7 @@
 #pragma once
+#include "mm/mm_std_base.h"
 #include <math.h>
+#include <string.h>
 
 #include "mm_math/mm_vec3.h"
 #include "types.h"
@@ -102,6 +104,58 @@ struct alignas(16) Mat44 {
   __attribute__((always_inline)) Mat44 operator*(const Mat44 &matrix) const {
     Mat44 result;
     return result.unknown002(*this, matrix);
+  }
+
+  // Inferred adjugate/determinant inverse; original helper name unknown.
+  // Matches AttachActorCS/Gf::getEfpMat (646 instructions) and getBoneMat
+  // (688 instructions) in 1.0.0. Build the signed first column before the
+  // determinant check, then normalize only after computing all cofactors.
+  __attribute__((always_inline)) Mat44 unknown003() const {
+    const auto &m = rows;
+    Mat44 result;
+    result.rows[0][0] = unknown005(m[1][1], m[2][1], m[3][1], m[1][2], m[2][2], m[3][2], m[1][3], m[2][3], m[3][3]);
+    result.rows[1][0] = -unknown005(m[1][0], m[2][0], m[3][0], m[1][2], m[2][2], m[3][2], m[1][3], m[2][3], m[3][3]);
+    result.rows[2][0] = unknown005(m[1][0], m[2][0], m[3][0], m[1][1], m[2][1], m[3][1], m[1][3], m[2][3], m[3][3]);
+    result.rows[3][0] = -unknown005(m[1][0], m[2][0], m[3][0], m[1][1], m[2][1], m[3][1], m[1][2], m[2][2], m[3][2]);
+    f32 det = m[0][0] * result.rows[0][0] + m[0][1] * result.rows[1][0] + m[0][2] * result.rows[2][0] + m[0][3] * result.rows[3][0];
+    if (!(fabsf(det) > 1.0e-6f)) {
+      MMStdBase::mmAssert("mm::abs(det) > MM_FLOAT_EPSILON", __FILE__, 2993);
+    }
+    result.rows[0][1] = -unknown005(m[0][1], m[2][1], m[3][1], m[0][2], m[2][2], m[3][2], m[0][3], m[2][3], m[3][3]);
+    result.rows[0][2] = unknown005(m[0][1], m[1][1], m[3][1], m[0][2], m[1][2], m[3][2], m[0][3], m[1][3], m[3][3]);
+    result.rows[0][3] = -unknown005(m[0][1], m[1][1], m[2][1], m[0][2], m[1][2], m[2][2], m[0][3], m[1][3], m[2][3]);
+    result.rows[1][1] = unknown005(m[0][0], m[2][0], m[3][0], m[0][2], m[2][2], m[3][2], m[0][3], m[2][3], m[3][3]);
+    result.rows[1][2] = -unknown005(m[0][0], m[1][0], m[3][0], m[0][2], m[1][2], m[3][2], m[0][3], m[1][3], m[3][3]);
+    result.rows[1][3] = unknown005(m[0][0], m[1][0], m[2][0], m[0][2], m[1][2], m[2][2], m[0][3], m[1][3], m[2][3]);
+    result.rows[2][1] = -unknown005(m[0][0], m[2][0], m[3][0], m[0][1], m[2][1], m[3][1], m[0][3], m[2][3], m[3][3]);
+    result.rows[2][2] = unknown005(m[0][0], m[1][0], m[3][0], m[0][1], m[1][1], m[3][1], m[0][3], m[1][3], m[3][3]);
+    result.rows[2][3] = -unknown005(m[0][0], m[1][0], m[2][0], m[0][1], m[1][1], m[2][1], m[0][3], m[1][3], m[2][3]);
+    result.rows[3][1] = unknown005(m[0][0], m[2][0], m[3][0], m[0][1], m[2][1], m[3][1], m[0][2], m[2][2], m[3][2]);
+    result.rows[3][2] = -unknown005(m[0][0], m[1][0], m[3][0], m[0][1], m[1][1], m[3][1], m[0][2], m[1][2], m[3][2]);
+    result.rows[3][3] = unknown005(m[0][0], m[1][0], m[2][0], m[0][1], m[1][1], m[2][1], m[0][2], m[1][2], m[2][2]);
+    f32 invDet = 1.0f / det;
+    for (u32 r = 0; r < 4; ++r) {
+      for (u32 c = 0; c < 4; ++c) {
+        result.rows[r][c] *= invDet;
+      }
+    }
+    return result;
+  }
+
+  // Inferred 3x3 determinant expansion; original helper name unknown.
+  // Arguments are passed by column. Preserve this order: it affects Clang
+  // 3.9.1's operand order in the four matching attachment getters above.
+  static f32 unknown005(f32 a00, f32 a10, f32 a20, f32 a01, f32 a11, f32 a21, f32 a02, f32 a12, f32 a22) {
+    return a00 * (a11 * a22 - a12 * a21) - a01 * (a10 * a22 - a12 * a20) + a02 * (a10 * a21 - a20 * a11);
+  }
+
+  // Inferred translation extraction in AttachActorBase::render (1.0.0:
+  // 0x710009e4bc, 179 matching instructions); original helper name unknown.
+  // Copy only the three components, then use Vec3's component-wise copy.
+  __attribute__((always_inline)) Vec3 unknown004() const {
+    Vec3 position;
+    memcpy(&position, rows[3], sizeof(f32) * 3);
+    return Vec3(position);
   }
 
   f32 rows[4][4];
