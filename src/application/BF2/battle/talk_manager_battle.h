@@ -32,12 +32,12 @@ public:
   };
 
   struct CHR_VOICE_DATA {
-    gf::GF_OBJ_HANDLE *handle;
+    gf::GF_OBJ_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
     u8 _08[0x10 - 0x08];
-    u32 type : 3;
-    u32 voiceId : 10;
-    u32 id : 7;
-    u32 priority : 8;
+    u32 unknown10_0 : 3;  // Inferred role: type; original member name unknown.
+    u32 unknown10_3 : 10; // Inferred role: voice id; original member name unknown.
+    u32 unknown11_5 : 7;  // Inferred role: id; original member name unknown.
+    u32 unknown12_4 : 8;  // Inferred role: priority; original member name unknown.
   };
 
   void ResetVoiceGroupID();
@@ -64,13 +64,13 @@ public:
   bool NotifyTrigger(int id, TRIGGER trigger, int, int);
   void PlayVoice(int id, int voice);
 
-  mm::mtl::FixedVector<CHR_VOICE_DATA, CHARACTER_COUNT> registeredVoices;
+  mm::mtl::FixedVector<CHR_VOICE_DATA, CHARACTER_COUNT> unknown08; // Inferred role: registered voices; original member name unknown.
   u8 _880[0x14dc - 0x880];
-  u16 groupTops[77];
+  u16 unknown14dc[77]; // Inferred role: group tops; original member name unknown.
 };
 
 static_assert(sizeof(TalkManager::CHR_VOICE_DATA) == 0x18, "");
-static_assert(offsetof(TalkManager, registeredVoices) == 0x8, "");
-static_assert(offsetof(TalkManager, groupTops) == 0x14dc, "");
+static_assert(offsetof(TalkManager, unknown08) == 0x8, "");
+static_assert(offsetof(TalkManager, unknown14dc) == 0x14dc, "");
 
 } // namespace btl

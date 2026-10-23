@@ -7,7 +7,7 @@ namespace btl {
 static const int s_bdatDefs[TalkManager::VOICE_TYPE_COUNT] = {
     -1, gf::BDAT_VO_BATTLE_DRIVER, gf::BDAT_VO_BATTLE_BLADE, gf::BDAT_VO_BATTLE_ENEMY, gf::BDAT_VO_WIN_SP};
 
-void TalkManager::ResetVoiceGroupID() { __builtin_memset(groupTops, 0, sizeof(groupTops)); }
+void TalkManager::ResetVoiceGroupID() { __builtin_memset(unknown14dc, 0, sizeof(unknown14dc)); }
 
 void TalkManager::Initialize() { InitializeGroupTopData(); }
 
@@ -44,8 +44,8 @@ bool TalkManager::CheckPriority(int id, int priority, bool isExcludeSame) const 
 }
 
 const TalkManager::CHR_VOICE_DATA *TalkManager::GetRegisterDataConst(int id) const {
-  for (const CHR_VOICE_DATA &data : registeredVoices) {
-    if (data.id == id) {
+  for (const CHR_VOICE_DATA &data : unknown08) {
+    if (data.unknown11_5 == id) {
       return &data;
     }
   }
@@ -54,8 +54,8 @@ const TalkManager::CHR_VOICE_DATA *TalkManager::GetRegisterDataConst(int id) con
 }
 
 const TalkManager::CHR_VOICE_DATA *TalkManager::GetRegisterDataConst(gf::GF_OBJ_HANDLE *handle) const {
-  for (const CHR_VOICE_DATA &data : registeredVoices) {
-    if (data.handle == handle) {
+  for (const CHR_VOICE_DATA &data : unknown08) {
+    if (data.unknown00 == handle) {
       return &data;
     }
   }
@@ -69,7 +69,7 @@ int TalkManager::GetPlayVoiceID(int id) const {
     return 0;
   }
 
-  return data->voiceId;
+  return data->unknown10_3;
 }
 
 bool TalkManager::CheckPriority(const CHR_VOICE_DATA *data, int priority, bool isExcludeSame) const {
@@ -77,11 +77,11 @@ bool TalkManager::CheckPriority(const CHR_VOICE_DATA *data, int priority, bool i
     return true;
   }
 
-  if (data->priority < priority) {
+  if (data->unknown12_4 < priority) {
     return false;
   }
 
-  if (data->priority == priority && isExcludeSame) {
+  if (data->unknown12_4 == priority && isExcludeSame) {
     return false;
   }
 
@@ -90,7 +90,7 @@ bool TalkManager::CheckPriority(const CHR_VOICE_DATA *data, int priority, bool i
 
 int TalkManager::GetGroupTop(int group) const {
   if (group >= 0 && group <= 76) {
-    u16 top = groupTops[group];
+    u16 top = unknown14dc[group];
     return top == 0 ? -1 : top;
   }
 
