@@ -33,23 +33,23 @@ public:
   };
 
   struct ONE_SHOT_HIT_DATA {
-    f32 time;
-    bool isEnableHit;
-    bool isHitOnEnd;
-    bool isEndHit;
-    bool isLastAttack;
+    f32 unknown00;  // Inferred role: time; original member name unknown.
+    bool unknown04; // Inferred role: hit enabled; original member name unknown.
+    bool unknown05; // Inferred role: hit on end; original member name unknown.
+    bool unknown06; // Inferred role: end hit; original member name unknown.
+    bool unknown07; // Inferred role: last attack; original member name unknown.
   };
 
   struct INTERVAL_HIT_DATA {
-    f32 damage;
-    u16 radius;
-    s16 lifespan;
-    u8 interval;
-    u8 isDamageRate : 1;
-    u8 isSpecialTarget : 1;
-    u8 isTargetFriend : 1;
-    u8 isTargetEnemy : 1;
-    u16 hitTimers[EFFECT_HIT_CHARACTER_COUNT];
+    f32 unknown00;                            // Inferred role: damage; original member name unknown.
+    u16 unknown04;                            // Inferred role: radius; original member name unknown.
+    s16 unknown06;                            // Inferred role: lifespan; original member name unknown.
+    u8 unknown08;                             // Inferred role: interval; original member name unknown.
+    u8 unknown09_0 : 1;                       // Inferred role: damage rate; original member name unknown.
+    u8 unknown09_1 : 1;                       // Inferred role: special target; original member name unknown.
+    u8 unknown09_2 : 1;                       // Inferred role: target friend; original member name unknown.
+    u8 unknown09_3 : 1;                       // Inferred role: target enemy; original member name unknown.
+    u16 unknowna[EFFECT_HIT_CHARACTER_COUNT]; // Inferred role: hit timers; original member name unknown.
   };
 
   EffectObject();
@@ -63,52 +63,52 @@ public:
   void SetEndEffect(const char *name);
   bool IsEnd() const;
 
-  mm::mtl::FixedVector<fw::EffectPack *, 8> effectPacks;
-  gf::GF_OBJ_HANDLE *attacker;
-  gf::GF_OBJ_HANDLE *target;
-  mm::mtl::FixStr<32> endEffect;
-  mm::Vec3 position;
-  mm::Vec3 direction;
-  mm::Vec3 rotation;
-  mm::Vec3 scale;
+  mm::mtl::FixedVector<fw::EffectPack *, 8> unknown00; // Inferred role: effect packs; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown48;                        // Inferred role: attacker; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown50;                        // Inferred role: target; original member name unknown.
+  mm::mtl::FixStr<32> unknown58;                       // Inferred role: end effect name; original member name unknown.
+  mm::Vec3 unknown80;                                  // Inferred role: position; original member name unknown.
+  mm::Vec3 unknown90;                                  // Inferred role: direction; original member name unknown.
+  mm::Vec3 unknowna0;                                  // Inferred role: rotation; original member name unknown.
+  mm::Vec3 unknownb0;                                  // Inferred role: scale; original member name unknown.
   union {
-    gf::GF_OBJ_HANDLE *objectHandle;
-    u32 effectHandle;
+    gf::GF_OBJ_HANDLE *unknownc0_0; // Inferred role: object handle; original member name unknown.
+    u32 unknownc0_1;                // Inferred role: effect handle; original member name unknown.
   };
   union {
-    ONE_SHOT_HIT_DATA oneShotHit;
-    INTERVAL_HIT_DATA intervalHit;
+    ONE_SHOT_HIT_DATA unknownc8_0; // Inferred role: one shot hit data; original member name unknown.
+    INTERVAL_HIT_DATA unknownc8_1; // Inferred role: interval hit data; original member name unknown.
   };
-  EffectMoveComponent move;
-  u32 id;
-  u32 attackId;
-  f32 frame;
-  f32 lifeTime;
-  u16 bulletId;
-  u16 bulletEffectId;
-  u8 artsSlot;
-  u8 hit;
-  u8 fadeFrame;
-  u8 objectType;
-  u8 hitType;
-  u8 additionalAttackNum;
-  u8 isEnd : 1;
-  u8 isRotation : 1;
-  u8 isArts : 1;
-  u8 isHitEnable : 1;
+  EffectMoveComponent unknown190; // Inferred role: move component; original member name unknown.
+  u32 unknown240;                 // Inferred role: id; original member name unknown.
+  u32 unknown244;                 // Inferred role: attack id; original member name unknown.
+  f32 unknown248;                 // Inferred role: frame; original member name unknown.
+  f32 unknown24c;                 // Inferred role: life time; original member name unknown.
+  u16 unknown250;                 // Inferred role: bullet id; original member name unknown.
+  u16 unknown252;                 // Inferred role: bullet effect id; original member name unknown.
+  u8 unknown254;                  // Inferred role: arts slot; original member name unknown.
+  u8 unknown255;                  // Inferred role: hit; original member name unknown.
+  u8 unknown256;                  // Inferred role: fade frame; original member name unknown.
+  u8 unknown257;                  // Inferred role: object type; original member name unknown.
+  u8 unknown258;                  // Inferred role: hit type; original member name unknown.
+  u8 unknown259;                  // Inferred role: additional attack count; original member name unknown.
+  u8 unknown25a_0 : 1;            // Inferred role: end; original member name unknown.
+  u8 unknown25a_1 : 1;            // Inferred role: rotation; original member name unknown.
+  u8 unknown25a_2 : 1;            // Inferred role: arts; original member name unknown.
+  u8 unknown25a_3 : 1;            // Inferred role: hit enabled; original member name unknown.
 };
 
-static_assert(offsetof(EffectObject, attacker) == 0x48, "");
-static_assert(offsetof(EffectObject, endEffect) == 0x58, "");
-static_assert(offsetof(EffectObject, position) == 0x80, "");
-static_assert(offsetof(EffectObject, scale) == 0xb0, "");
-static_assert(offsetof(EffectObject, objectHandle) == 0xc0, "");
-static_assert(offsetof(EffectObject, oneShotHit) == 0xc8, "");
-static_assert(offsetof(EffectObject::INTERVAL_HIT_DATA, hitTimers) == 0xa, "");
-static_assert(offsetof(EffectObject, move) == 0x190, "");
-static_assert(offsetof(EffectObject, id) == 0x240, "");
-static_assert(offsetof(EffectObject, bulletId) == 0x250, "");
-static_assert(offsetof(EffectObject, objectType) == 0x257, "");
+static_assert(offsetof(EffectObject, unknown48) == 0x48, "");
+static_assert(offsetof(EffectObject, unknown58) == 0x58, "");
+static_assert(offsetof(EffectObject, unknown80) == 0x80, "");
+static_assert(offsetof(EffectObject, unknownb0) == 0xb0, "");
+static_assert(offsetof(EffectObject, unknownc0_0) == 0xc0, "");
+static_assert(offsetof(EffectObject, unknownc8_0) == 0xc8, "");
+static_assert(offsetof(EffectObject::INTERVAL_HIT_DATA, unknowna) == 0xa, "");
+static_assert(offsetof(EffectObject, unknown190) == 0x190, "");
+static_assert(offsetof(EffectObject, unknown240) == 0x240, "");
+static_assert(offsetof(EffectObject, unknown250) == 0x250, "");
+static_assert(offsetof(EffectObject, unknown257) == 0x257, "");
 static_assert(sizeof(EffectObject) == 0x260, "");
 
 } // namespace btl
