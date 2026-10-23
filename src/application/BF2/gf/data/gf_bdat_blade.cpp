@@ -2323,93 +2323,93 @@ u32 getBLD_ReleaceRewardReleace(const CBdatWrapper &wrapper, u32 id, u32 index) 
 } // namespace _gfbdb
 
 GfBdatBlade::GfBdatBlade()
-    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr),
-      unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), unknown78(nullptr),
-      unknown80(nullptr), unknown88(nullptr) {
+    : m_ideaTable(nullptr), m_bladeTable(nullptr), m_bladeList(nullptr), m_commonList(nullptr), m_nameList(nullptr), m_bladeModelList(nullptr),
+      m_createConfig(nullptr), m_cmnBl_Capacity(nullptr), m_cmnBl_Power(nullptr), m_cmnBl_NewBlArts(nullptr), m_cmnBl_StatusType(nullptr),
+      m_cmnBl_Armor(nullptr), m_FLD_IdeaTable(nullptr), m_BLD_Idea(nullptr), m_BLD_RareList(nullptr), m_BLD_ReleaceReward(nullptr) {
   bdatRefresh();
 }
 
 GfBdatBlade::~GfBdatBlade() { destroyFP(); }
 
 void GfBdatBlade::destroyFP() {
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_ideaTable != nullptr) {
+    delete m_ideaTable;
+    m_ideaTable = nullptr;
   }
 
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  if (m_bladeTable != nullptr) {
+    delete m_bladeTable;
+    m_bladeTable = nullptr;
   }
 
-  if (unknown20 != nullptr) {
-    delete unknown20;
-    unknown20 = nullptr;
+  if (m_bladeList != nullptr) {
+    delete m_bladeList;
+    m_bladeList = nullptr;
   }
 
-  if (unknown28 != nullptr) {
-    delete unknown28;
-    unknown28 = nullptr;
+  if (m_commonList != nullptr) {
+    delete m_commonList;
+    m_commonList = nullptr;
   }
 
-  if (unknown30 != nullptr) {
-    delete unknown30;
-    unknown30 = nullptr;
+  if (m_nameList != nullptr) {
+    delete m_nameList;
+    m_nameList = nullptr;
   }
 
-  if (unknown38 != nullptr) {
-    delete unknown38;
-    unknown38 = nullptr;
+  if (m_bladeModelList != nullptr) {
+    delete m_bladeModelList;
+    m_bladeModelList = nullptr;
   }
 
-  if (unknown40 != nullptr) {
-    delete unknown40;
-    unknown40 = nullptr;
+  if (m_createConfig != nullptr) {
+    delete m_createConfig;
+    m_createConfig = nullptr;
   }
 
-  if (unknown48 != nullptr) {
-    delete unknown48;
-    unknown48 = nullptr;
+  if (m_cmnBl_Capacity != nullptr) {
+    delete m_cmnBl_Capacity;
+    m_cmnBl_Capacity = nullptr;
   }
 
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_cmnBl_Power != nullptr) {
+    delete m_cmnBl_Power;
+    m_cmnBl_Power = nullptr;
   }
 
-  if (unknown58 != nullptr) {
-    delete unknown58;
-    unknown58 = nullptr;
+  if (m_cmnBl_NewBlArts != nullptr) {
+    delete m_cmnBl_NewBlArts;
+    m_cmnBl_NewBlArts = nullptr;
   }
 
-  if (unknown60 != nullptr) {
-    delete unknown60;
-    unknown60 = nullptr;
+  if (m_cmnBl_StatusType != nullptr) {
+    delete m_cmnBl_StatusType;
+    m_cmnBl_StatusType = nullptr;
   }
 
-  if (unknown68 != nullptr) {
-    delete unknown68;
-    unknown68 = nullptr;
+  if (m_cmnBl_Armor != nullptr) {
+    delete m_cmnBl_Armor;
+    m_cmnBl_Armor = nullptr;
   }
 
-  if (unknown70 != nullptr) {
-    delete unknown70;
-    unknown70 = nullptr;
+  if (m_FLD_IdeaTable != nullptr) {
+    delete m_FLD_IdeaTable;
+    m_FLD_IdeaTable = nullptr;
   }
 
-  if (unknown78 != nullptr) {
-    delete unknown78;
-    unknown78 = nullptr;
+  if (m_BLD_Idea != nullptr) {
+    delete m_BLD_Idea;
+    m_BLD_Idea = nullptr;
   }
 
-  if (unknown80 != nullptr) {
-    delete unknown80;
-    unknown80 = nullptr;
+  if (m_BLD_RareList != nullptr) {
+    delete m_BLD_RareList;
+    m_BLD_RareList = nullptr;
   }
 
-  if (unknown88 != nullptr) {
-    delete unknown88;
-    unknown88 = nullptr;
+  if (m_BLD_ReleaceReward != nullptr) {
+    delete m_BLD_ReleaceReward;
+    m_BLD_ReleaceReward = nullptr;
   }
 }
 
@@ -2417,286 +2417,286 @@ void GfBdatBlade::destroyFP() {
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 void GfBdatBlade::createFP() {
-  unknown10 = NEW_BDAT_WRAPPER(BDAT_BLD_IDEA_TABLE);
-  unknown18 = NEW_BDAT_WRAPPER(BDAT_BLD_BLADE_TABLE);
-  unknown20 = NEW_BDAT_WRAPPER(BDAT_BLD_BLADE_LIST);
-  unknown28 = NEW_BDAT_WRAPPER(BDAT_BLD_COMMON_LIST);
-  unknown30 = NEW_BDAT_WRAPPER(BDAT_BLD_NAME_LIST);
-  unknown38 = NEW_BDAT_WRAPPER(BDAT_BLD_BLADE_MODEL_LIST);
-  unknown40 = NEW_BDAT_WRAPPER(BDAT_BLD_CREATE_CONFIG);
-  unknown48 = NEW_BDAT_WRAPPER(BDAT_BTL_CMN_BL_CAPACITY);
-  unknown50 = NEW_BDAT_WRAPPER(BDAT_BTL_CMN_BL_POWER);
-  unknown58 = NEW_BDAT_WRAPPER(BDAT_BTL_CMN_BL_NEW_BL_ARTS);
-  unknown60 = NEW_BDAT_WRAPPER(BDAT_BTL_CMN_BL_STATUS_TYPE);
-  unknown68 = NEW_BDAT_WRAPPER(BDAT_BTL_CMN_BL_ARMOR);
-  unknown70 = NEW_BDAT_WRAPPER(BDAT_FLD_IDEA_TABLE);
-  unknown78 = NEW_BDAT_WRAPPER(BDAT_BLD_IDEA);
-  unknown80 = NEW_BDAT_WRAPPER(BDAT_BLD_RARE_LIST);
-  unknown88 = NEW_BDAT_WRAPPER(BDAT_BLD_RELEACE_REWARD);
+  m_ideaTable = NEW_BDAT_WRAPPER(BDAT_BLD_IDEA_TABLE);
+  m_bladeTable = NEW_BDAT_WRAPPER(BDAT_BLD_BLADE_TABLE);
+  m_bladeList = NEW_BDAT_WRAPPER(BDAT_BLD_BLADE_LIST);
+  m_commonList = NEW_BDAT_WRAPPER(BDAT_BLD_COMMON_LIST);
+  m_nameList = NEW_BDAT_WRAPPER(BDAT_BLD_NAME_LIST);
+  m_bladeModelList = NEW_BDAT_WRAPPER(BDAT_BLD_BLADE_MODEL_LIST);
+  m_createConfig = NEW_BDAT_WRAPPER(BDAT_BLD_CREATE_CONFIG);
+  m_cmnBl_Capacity = NEW_BDAT_WRAPPER(BDAT_BTL_CMN_BL_CAPACITY);
+  m_cmnBl_Power = NEW_BDAT_WRAPPER(BDAT_BTL_CMN_BL_POWER);
+  m_cmnBl_NewBlArts = NEW_BDAT_WRAPPER(BDAT_BTL_CMN_BL_NEW_BL_ARTS);
+  m_cmnBl_StatusType = NEW_BDAT_WRAPPER(BDAT_BTL_CMN_BL_STATUS_TYPE);
+  m_cmnBl_Armor = NEW_BDAT_WRAPPER(BDAT_BTL_CMN_BL_ARMOR);
+  m_FLD_IdeaTable = NEW_BDAT_WRAPPER(BDAT_FLD_IDEA_TABLE);
+  m_BLD_Idea = NEW_BDAT_WRAPPER(BDAT_BLD_IDEA);
+  m_BLD_RareList = NEW_BDAT_WRAPPER(BDAT_BLD_RARE_LIST);
+  m_BLD_ReleaceReward = NEW_BDAT_WRAPPER(BDAT_BLD_RELEACE_REWARD);
 }
 
 void GfBdatBlade::bdatRefresh() {
   destroyFP();
   createFP();
-  _gfbdb::initIdeaTableItem(*unknown10);
-  _gfbdb::initIdeaTableIdeaBlue(*unknown10);
-  _gfbdb::initIdeaTableIdeaRed(*unknown10);
-  _gfbdb::initIdeaTableIdeaWhite(*unknown10);
-  _gfbdb::initIdeaTableIdeaBlack(*unknown10);
-  _gfbdb::initIdeaTableCondition(*unknown10);
-  _gfbdb::initIdeaTableBladeTable(*unknown10);
-  _gfbdb::initBladeTableCharaID1(*unknown18);
-  _gfbdb::initBladeTableCharID1Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID2(*unknown18);
-  _gfbdb::initBladeTableCharID2Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID3(*unknown18);
-  _gfbdb::initBladeTableCharID3Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID4(*unknown18);
-  _gfbdb::initBladeTableCharID4Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID5(*unknown18);
-  _gfbdb::initBladeTableCharID5Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID6(*unknown18);
-  _gfbdb::initBladeTableCharID6Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID7(*unknown18);
-  _gfbdb::initBladeTableCharID7Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID8(*unknown18);
-  _gfbdb::initBladeTableCharID8Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID9(*unknown18);
-  _gfbdb::initBladeTableCharID9Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID10(*unknown18);
-  _gfbdb::initBladeTableCharID10Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID11(*unknown18);
-  _gfbdb::initBladeTableCharID11Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID12(*unknown18);
-  _gfbdb::initBladeTableCharID12Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID13(*unknown18);
-  _gfbdb::initBladeTableCharID13Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID14(*unknown18);
-  _gfbdb::initBladeTableCharID14Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID15(*unknown18);
-  _gfbdb::initBladeTableCharID15Percent(*unknown18);
-  _gfbdb::initBladeTableCharaID16(*unknown18);
-  _gfbdb::initBladeTableCharID16Percent(*unknown18);
-  _gfbdb::initBladeListCategory(*unknown20);
-  _gfbdb::initBladeListStatusID(*unknown20);
-  _gfbdb::initCommonListQuestRace(*unknown28);
-  _gfbdb::initCommonListGender(*unknown28);
-  _gfbdb::initCommonListWeapon(*unknown28);
-  _gfbdb::initCommonListAtr(*unknown28);
-  _gfbdb::initCommonListModelTable(*unknown28);
-  _gfbdb::initCommonListIdeaType(*unknown28);
-  _gfbdb::initCommonListIdeaMin(*unknown28);
-  _gfbdb::initCommonListIdeaMax(*unknown28);
-  _gfbdb::initCommonListRatio(*unknown28);
-  _gfbdb::initCommonListRarityMin(*unknown28);
-  _gfbdb::initCommonListRarityMax(*unknown28);
-  _gfbdb::initCommonListFskill(*unknown28);
-  _gfbdb::initCommonListArtsAchievementSet1(*unknown28);
-  _gfbdb::initCommonListArtsAchievementSet2(*unknown28);
-  _gfbdb::initCommonListArtsAchievementSet3(*unknown28);
-  _gfbdb::initCommonListSkillAchievementSet1(*unknown28);
-  _gfbdb::initCommonListSkillAchievementSet2(*unknown28);
-  _gfbdb::initCommonListSkillAchievementSet3(*unknown28);
-  _gfbdb::initCommonListFskillAchivementSet1(*unknown28);
-  _gfbdb::initCommonListFskillAchivementSet2(*unknown28);
-  _gfbdb::initCommonListFskillAchivementSet3(*unknown28);
-  _gfbdb::initCommonListKeyAchievementSet(*unknown28);
-  _gfbdb::initCommonListFavoriteCategoryMax(*unknown28);
-  _gfbdb::initCommonListFavoriteItemMax(*unknown28);
-  _gfbdb::initNameListCategory(*unknown30);
-  _gfbdb::initNameListRace(*unknown30);
-  _gfbdb::initNameListGender(*unknown30);
-  _gfbdb::initBladeModelListQuestRace(*unknown38);
-  _gfbdb::initBladeModelListGender(*unknown38);
-  _gfbdb::initBladeModelListIdeaMin(*unknown38);
-  _gfbdb::initBladeModelListIdeaMax(*unknown38);
-  _gfbdb::initBladeModelListModel1(*unknown38);
-  _gfbdb::initBladeModelListModel2(*unknown38);
-  _gfbdb::initBladeModelListPartsNumMin(*unknown38);
-  _gfbdb::initBladeModelListPartsNumMax(*unknown38);
-  _gfbdb::initBladeModelListParts1(*unknown38);
-  _gfbdb::initBladeModelListParts2(*unknown38);
-  _gfbdb::initBladeModelListParts3(*unknown38);
-  _gfbdb::initBladeModelListParts4(*unknown38);
-  _gfbdb::initCreateConfigValue(*unknown40);
-  _gfbdb::initCmnBl_CapacityArtsNum1Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityArtsNum2Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityArtsNum3Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityArtsLv1Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityArtsLv2Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityArtsLv3Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityArtsLv4Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityArtsLv5Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityArtsRevCon(*unknown48);
-  _gfbdb::initCmnBl_CapacityArtsRevRand(*unknown48);
-  _gfbdb::initCmnBl_CapacitySpArtsRevCon(*unknown48);
-  _gfbdb::initCmnBl_CapacitySpArtsRevRand(*unknown48);
-  _gfbdb::initCmnBl_CapacitySkillNum1Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacitySkillNum2Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacitySkillNum3Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacitySkillLv1Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacitySkillLv2Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacitySkillLv3Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacitySkillLv4Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacitySkillLv5Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityOrbNum0Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityOrbNum1Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityOrbNum2Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityOrbNum3Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityNartsNum1Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityNartsNum2Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityNartsNum3Prob(*unknown48);
-  _gfbdb::initCmnBl_CapacityNartsRevCon(*unknown48);
-  _gfbdb::initCmnBl_CapacityNartsRevRand(*unknown48);
-  _gfbdb::initCmnBl_CapacityStatusRevCon(*unknown48);
-  _gfbdb::initCmnBl_CapacityStatusRevRand(*unknown48);
-  _gfbdb::initCmnBl_PowerMinLv(*unknown50);
-  _gfbdb::initCmnBl_PowerMaxLv(*unknown50);
-  _gfbdb::initCmnBl_PowerPow01(*unknown50);
-  _gfbdb::initCmnBl_PowerPow02(*unknown50);
-  _gfbdb::initCmnBl_PowerPow03(*unknown50);
-  _gfbdb::initCmnBl_PowerPow04(*unknown50);
-  _gfbdb::initCmnBl_PowerPow05(*unknown50);
-  _gfbdb::initCmnBl_PowerPow06(*unknown50);
-  _gfbdb::initCmnBl_PowerPow07(*unknown50);
-  _gfbdb::initCmnBl_PowerPow08(*unknown50);
-  _gfbdb::initCmnBl_PowerPow09(*unknown50);
-  _gfbdb::initCmnBl_PowerPow10(*unknown50);
-  _gfbdb::initCmnBl_NewBlArtsWpnType(*unknown58);
-  _gfbdb::initCmnBl_NewBlArtsNBA_01(*unknown58);
-  _gfbdb::initCmnBl_NewBlArtsNBA_02(*unknown58);
-  _gfbdb::initCmnBl_NewBlArtsNBA_03(*unknown58);
-  _gfbdb::initCmnBl_NewBlArtsNBA_04(*unknown58);
-  _gfbdb::initCmnBl_NewBlArtsNBA_05(*unknown58);
-  _gfbdb::initCmnBl_NewBlArtsNBA_06(*unknown58);
-  _gfbdb::initCmnBl_NewBlArtsNBA_07(*unknown58);
-  _gfbdb::initCmnBl_NewBlArtsNBA_08(*unknown58);
-  _gfbdb::initCmnBl_StatusTypeWpnType(*unknown60);
-  _gfbdb::initCmnBl_StatusTypeStatus01(*unknown60);
-  _gfbdb::initCmnBl_StatusTypeStatus02(*unknown60);
-  _gfbdb::initCmnBl_StatusTypeStatus03(*unknown60);
-  _gfbdb::initCmnBl_StatusTypeStatus04(*unknown60);
-  _gfbdb::initCmnBl_StatusTypeStatus05(*unknown60);
-  _gfbdb::initCmnBl_StatusTypeStatus06(*unknown60);
-  _gfbdb::initCmnBl_ArmorWpnType(*unknown68);
-  _gfbdb::initCmnBl_ArmorPArmorCon(*unknown68);
-  _gfbdb::initCmnBl_ArmorPArmorRand(*unknown68);
-  _gfbdb::initCmnBl_ArmorEArmorCon(*unknown68);
-  _gfbdb::initCmnBl_ArmorEArmorRand(*unknown68);
-  _gfbdb::initFLD_IdeaTableTrustPoint(*unknown70);
-  _gfbdb::initFLD_IdeaTableWpnRatio(*unknown70);
-  _gfbdb::initFLD_IdeaTableNArtsProbRev(*unknown70);
-  _gfbdb::initFLD_IdeaTableBladeChangeRev(*unknown70);
-  _gfbdb::initFLD_IdeaTableBladeArtsRev(*unknown70);
-  _gfbdb::initBLD_IdeaNeedPoint(*unknown78);
-  _gfbdb::initBLD_IdeaProbRev(*unknown78);
-  _gfbdb::initBLD_IdeaAtrDamRev(*unknown78);
-  _gfbdb::initBLD_RareListBlade(*unknown80);
-  _gfbdb::initBLD_RareListCondition(*unknown80);
-  _gfbdb::initBLD_RareListProb1(*unknown80);
-  _gfbdb::initBLD_RareListAssure1(*unknown80);
-  _gfbdb::initBLD_RareListProb2(*unknown80);
-  _gfbdb::initBLD_RareListAssure2(*unknown80);
-  _gfbdb::initBLD_RareListProb3(*unknown80);
-  _gfbdb::initBLD_RareListAssure3(*unknown80);
-  _gfbdb::initBLD_RareListProb4(*unknown80);
-  _gfbdb::initBLD_RareListAssure4(*unknown80);
-  _gfbdb::initBLD_RareListProb5(*unknown80);
-  _gfbdb::initBLD_RareListAssure5(*unknown80);
-  _gfbdb::initBLD_ReleaceRewardReleace001(*unknown88);
-  _gfbdb::initBLD_ReleaceRewardReleace002(*unknown88);
-  _gfbdb::initBLD_ReleaceRewardReleace003(*unknown88);
-  _gfbdb::initBLD_ReleaceRewardReleace004(*unknown88);
-  _gfbdb::initBLD_ReleaceRewardReleace005(*unknown88);
-  _gfbdb::initBLD_ReleaceRewardReleace006(*unknown88);
-  _gfbdb::initBLD_ReleaceRewardReleace007(*unknown88);
+  _gfbdb::initIdeaTableItem(*m_ideaTable);
+  _gfbdb::initIdeaTableIdeaBlue(*m_ideaTable);
+  _gfbdb::initIdeaTableIdeaRed(*m_ideaTable);
+  _gfbdb::initIdeaTableIdeaWhite(*m_ideaTable);
+  _gfbdb::initIdeaTableIdeaBlack(*m_ideaTable);
+  _gfbdb::initIdeaTableCondition(*m_ideaTable);
+  _gfbdb::initIdeaTableBladeTable(*m_ideaTable);
+  _gfbdb::initBladeTableCharaID1(*m_bladeTable);
+  _gfbdb::initBladeTableCharID1Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID2(*m_bladeTable);
+  _gfbdb::initBladeTableCharID2Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID3(*m_bladeTable);
+  _gfbdb::initBladeTableCharID3Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID4(*m_bladeTable);
+  _gfbdb::initBladeTableCharID4Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID5(*m_bladeTable);
+  _gfbdb::initBladeTableCharID5Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID6(*m_bladeTable);
+  _gfbdb::initBladeTableCharID6Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID7(*m_bladeTable);
+  _gfbdb::initBladeTableCharID7Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID8(*m_bladeTable);
+  _gfbdb::initBladeTableCharID8Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID9(*m_bladeTable);
+  _gfbdb::initBladeTableCharID9Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID10(*m_bladeTable);
+  _gfbdb::initBladeTableCharID10Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID11(*m_bladeTable);
+  _gfbdb::initBladeTableCharID11Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID12(*m_bladeTable);
+  _gfbdb::initBladeTableCharID12Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID13(*m_bladeTable);
+  _gfbdb::initBladeTableCharID13Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID14(*m_bladeTable);
+  _gfbdb::initBladeTableCharID14Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID15(*m_bladeTable);
+  _gfbdb::initBladeTableCharID15Percent(*m_bladeTable);
+  _gfbdb::initBladeTableCharaID16(*m_bladeTable);
+  _gfbdb::initBladeTableCharID16Percent(*m_bladeTable);
+  _gfbdb::initBladeListCategory(*m_bladeList);
+  _gfbdb::initBladeListStatusID(*m_bladeList);
+  _gfbdb::initCommonListQuestRace(*m_commonList);
+  _gfbdb::initCommonListGender(*m_commonList);
+  _gfbdb::initCommonListWeapon(*m_commonList);
+  _gfbdb::initCommonListAtr(*m_commonList);
+  _gfbdb::initCommonListModelTable(*m_commonList);
+  _gfbdb::initCommonListIdeaType(*m_commonList);
+  _gfbdb::initCommonListIdeaMin(*m_commonList);
+  _gfbdb::initCommonListIdeaMax(*m_commonList);
+  _gfbdb::initCommonListRatio(*m_commonList);
+  _gfbdb::initCommonListRarityMin(*m_commonList);
+  _gfbdb::initCommonListRarityMax(*m_commonList);
+  _gfbdb::initCommonListFskill(*m_commonList);
+  _gfbdb::initCommonListArtsAchievementSet1(*m_commonList);
+  _gfbdb::initCommonListArtsAchievementSet2(*m_commonList);
+  _gfbdb::initCommonListArtsAchievementSet3(*m_commonList);
+  _gfbdb::initCommonListSkillAchievementSet1(*m_commonList);
+  _gfbdb::initCommonListSkillAchievementSet2(*m_commonList);
+  _gfbdb::initCommonListSkillAchievementSet3(*m_commonList);
+  _gfbdb::initCommonListFskillAchivementSet1(*m_commonList);
+  _gfbdb::initCommonListFskillAchivementSet2(*m_commonList);
+  _gfbdb::initCommonListFskillAchivementSet3(*m_commonList);
+  _gfbdb::initCommonListKeyAchievementSet(*m_commonList);
+  _gfbdb::initCommonListFavoriteCategoryMax(*m_commonList);
+  _gfbdb::initCommonListFavoriteItemMax(*m_commonList);
+  _gfbdb::initNameListCategory(*m_nameList);
+  _gfbdb::initNameListRace(*m_nameList);
+  _gfbdb::initNameListGender(*m_nameList);
+  _gfbdb::initBladeModelListQuestRace(*m_bladeModelList);
+  _gfbdb::initBladeModelListGender(*m_bladeModelList);
+  _gfbdb::initBladeModelListIdeaMin(*m_bladeModelList);
+  _gfbdb::initBladeModelListIdeaMax(*m_bladeModelList);
+  _gfbdb::initBladeModelListModel1(*m_bladeModelList);
+  _gfbdb::initBladeModelListModel2(*m_bladeModelList);
+  _gfbdb::initBladeModelListPartsNumMin(*m_bladeModelList);
+  _gfbdb::initBladeModelListPartsNumMax(*m_bladeModelList);
+  _gfbdb::initBladeModelListParts1(*m_bladeModelList);
+  _gfbdb::initBladeModelListParts2(*m_bladeModelList);
+  _gfbdb::initBladeModelListParts3(*m_bladeModelList);
+  _gfbdb::initBladeModelListParts4(*m_bladeModelList);
+  _gfbdb::initCreateConfigValue(*m_createConfig);
+  _gfbdb::initCmnBl_CapacityArtsNum1Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityArtsNum2Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityArtsNum3Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityArtsLv1Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityArtsLv2Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityArtsLv3Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityArtsLv4Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityArtsLv5Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityArtsRevCon(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityArtsRevRand(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacitySpArtsRevCon(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacitySpArtsRevRand(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacitySkillNum1Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacitySkillNum2Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacitySkillNum3Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacitySkillLv1Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacitySkillLv2Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacitySkillLv3Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacitySkillLv4Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacitySkillLv5Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityOrbNum0Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityOrbNum1Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityOrbNum2Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityOrbNum3Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityNartsNum1Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityNartsNum2Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityNartsNum3Prob(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityNartsRevCon(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityNartsRevRand(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityStatusRevCon(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_CapacityStatusRevRand(*m_cmnBl_Capacity);
+  _gfbdb::initCmnBl_PowerMinLv(*m_cmnBl_Power);
+  _gfbdb::initCmnBl_PowerMaxLv(*m_cmnBl_Power);
+  _gfbdb::initCmnBl_PowerPow01(*m_cmnBl_Power);
+  _gfbdb::initCmnBl_PowerPow02(*m_cmnBl_Power);
+  _gfbdb::initCmnBl_PowerPow03(*m_cmnBl_Power);
+  _gfbdb::initCmnBl_PowerPow04(*m_cmnBl_Power);
+  _gfbdb::initCmnBl_PowerPow05(*m_cmnBl_Power);
+  _gfbdb::initCmnBl_PowerPow06(*m_cmnBl_Power);
+  _gfbdb::initCmnBl_PowerPow07(*m_cmnBl_Power);
+  _gfbdb::initCmnBl_PowerPow08(*m_cmnBl_Power);
+  _gfbdb::initCmnBl_PowerPow09(*m_cmnBl_Power);
+  _gfbdb::initCmnBl_PowerPow10(*m_cmnBl_Power);
+  _gfbdb::initCmnBl_NewBlArtsWpnType(*m_cmnBl_NewBlArts);
+  _gfbdb::initCmnBl_NewBlArtsNBA_01(*m_cmnBl_NewBlArts);
+  _gfbdb::initCmnBl_NewBlArtsNBA_02(*m_cmnBl_NewBlArts);
+  _gfbdb::initCmnBl_NewBlArtsNBA_03(*m_cmnBl_NewBlArts);
+  _gfbdb::initCmnBl_NewBlArtsNBA_04(*m_cmnBl_NewBlArts);
+  _gfbdb::initCmnBl_NewBlArtsNBA_05(*m_cmnBl_NewBlArts);
+  _gfbdb::initCmnBl_NewBlArtsNBA_06(*m_cmnBl_NewBlArts);
+  _gfbdb::initCmnBl_NewBlArtsNBA_07(*m_cmnBl_NewBlArts);
+  _gfbdb::initCmnBl_NewBlArtsNBA_08(*m_cmnBl_NewBlArts);
+  _gfbdb::initCmnBl_StatusTypeWpnType(*m_cmnBl_StatusType);
+  _gfbdb::initCmnBl_StatusTypeStatus01(*m_cmnBl_StatusType);
+  _gfbdb::initCmnBl_StatusTypeStatus02(*m_cmnBl_StatusType);
+  _gfbdb::initCmnBl_StatusTypeStatus03(*m_cmnBl_StatusType);
+  _gfbdb::initCmnBl_StatusTypeStatus04(*m_cmnBl_StatusType);
+  _gfbdb::initCmnBl_StatusTypeStatus05(*m_cmnBl_StatusType);
+  _gfbdb::initCmnBl_StatusTypeStatus06(*m_cmnBl_StatusType);
+  _gfbdb::initCmnBl_ArmorWpnType(*m_cmnBl_Armor);
+  _gfbdb::initCmnBl_ArmorPArmorCon(*m_cmnBl_Armor);
+  _gfbdb::initCmnBl_ArmorPArmorRand(*m_cmnBl_Armor);
+  _gfbdb::initCmnBl_ArmorEArmorCon(*m_cmnBl_Armor);
+  _gfbdb::initCmnBl_ArmorEArmorRand(*m_cmnBl_Armor);
+  _gfbdb::initFLD_IdeaTableTrustPoint(*m_FLD_IdeaTable);
+  _gfbdb::initFLD_IdeaTableWpnRatio(*m_FLD_IdeaTable);
+  _gfbdb::initFLD_IdeaTableNArtsProbRev(*m_FLD_IdeaTable);
+  _gfbdb::initFLD_IdeaTableBladeChangeRev(*m_FLD_IdeaTable);
+  _gfbdb::initFLD_IdeaTableBladeArtsRev(*m_FLD_IdeaTable);
+  _gfbdb::initBLD_IdeaNeedPoint(*m_BLD_Idea);
+  _gfbdb::initBLD_IdeaProbRev(*m_BLD_Idea);
+  _gfbdb::initBLD_IdeaAtrDamRev(*m_BLD_Idea);
+  _gfbdb::initBLD_RareListBlade(*m_BLD_RareList);
+  _gfbdb::initBLD_RareListCondition(*m_BLD_RareList);
+  _gfbdb::initBLD_RareListProb1(*m_BLD_RareList);
+  _gfbdb::initBLD_RareListAssure1(*m_BLD_RareList);
+  _gfbdb::initBLD_RareListProb2(*m_BLD_RareList);
+  _gfbdb::initBLD_RareListAssure2(*m_BLD_RareList);
+  _gfbdb::initBLD_RareListProb3(*m_BLD_RareList);
+  _gfbdb::initBLD_RareListAssure3(*m_BLD_RareList);
+  _gfbdb::initBLD_RareListProb4(*m_BLD_RareList);
+  _gfbdb::initBLD_RareListAssure4(*m_BLD_RareList);
+  _gfbdb::initBLD_RareListProb5(*m_BLD_RareList);
+  _gfbdb::initBLD_RareListAssure5(*m_BLD_RareList);
+  _gfbdb::initBLD_ReleaceRewardReleace001(*m_BLD_ReleaceReward);
+  _gfbdb::initBLD_ReleaceRewardReleace002(*m_BLD_ReleaceReward);
+  _gfbdb::initBLD_ReleaceRewardReleace003(*m_BLD_ReleaceReward);
+  _gfbdb::initBLD_ReleaceRewardReleace004(*m_BLD_ReleaceReward);
+  _gfbdb::initBLD_ReleaceRewardReleace005(*m_BLD_ReleaceReward);
+  _gfbdb::initBLD_ReleaceRewardReleace006(*m_BLD_ReleaceReward);
+  _gfbdb::initBLD_ReleaceRewardReleace007(*m_BLD_ReleaceReward);
 }
 
-u32 GfBdatBlade::getIdeaTableStart() const { return Bdat::getIdTop(unknown10->data); }
+u32 GfBdatBlade::getIdeaTableStart() const { return Bdat::getIdTop(m_ideaTable->data); }
 
-u32 GfBdatBlade::getIdeaTableEnd() const { return Bdat::getIdTop(unknown10->data) + Bdat::getIdCount(unknown10->data); }
+u32 GfBdatBlade::getIdeaTableEnd() const { return Bdat::getIdTop(m_ideaTable->data) + Bdat::getIdCount(m_ideaTable->data); }
 
-u32 GfBdatBlade::getIdeaTableItem(u32 id) const { return _gfbdb::getIdeaTableItem(*unknown10, id); }
+u32 GfBdatBlade::getIdeaTableItem(u32 id) const { return _gfbdb::getIdeaTableItem(*m_ideaTable, id); }
 
-u32 GfBdatBlade::getIdeaTableIdeaBlue(u32 id) const { return _gfbdb::getIdeaTableIdeaBlue(*unknown10, id); }
+u32 GfBdatBlade::getIdeaTableIdeaBlue(u32 id) const { return _gfbdb::getIdeaTableIdeaBlue(*m_ideaTable, id); }
 
-u32 GfBdatBlade::getIdeaTableIdeaRed(u32 id) const { return _gfbdb::getIdeaTableIdeaRed(*unknown10, id); }
+u32 GfBdatBlade::getIdeaTableIdeaRed(u32 id) const { return _gfbdb::getIdeaTableIdeaRed(*m_ideaTable, id); }
 
-u32 GfBdatBlade::getIdeaTableIdeaWhite(u32 id) const { return _gfbdb::getIdeaTableIdeaWhite(*unknown10, id); }
+u32 GfBdatBlade::getIdeaTableIdeaWhite(u32 id) const { return _gfbdb::getIdeaTableIdeaWhite(*m_ideaTable, id); }
 
-u32 GfBdatBlade::getIdeaTableIdeaBlack(u32 id) const { return _gfbdb::getIdeaTableIdeaBlack(*unknown10, id); }
+u32 GfBdatBlade::getIdeaTableIdeaBlack(u32 id) const { return _gfbdb::getIdeaTableIdeaBlack(*m_ideaTable, id); }
 
-u32 GfBdatBlade::getIdeaTableCondition(u32 id) const { return _gfbdb::getIdeaTableCondition(*unknown10, id); }
+u32 GfBdatBlade::getIdeaTableCondition(u32 id) const { return _gfbdb::getIdeaTableCondition(*m_ideaTable, id); }
 
-u32 GfBdatBlade::getIdeaTableBladeTable(u32 id) const { return _gfbdb::getIdeaTableBladeTable(*unknown10, id); }
+u32 GfBdatBlade::getIdeaTableBladeTable(u32 id) const { return _gfbdb::getIdeaTableBladeTable(*m_ideaTable, id); }
 
-u32 GfBdatBlade::getBladeTableStart() const { return Bdat::getIdTop(unknown18->data); }
+u32 GfBdatBlade::getBladeTableStart() const { return Bdat::getIdTop(m_bladeTable->data); }
 
-u32 GfBdatBlade::getBladeTableEnd() const { return Bdat::getIdTop(unknown18->data) + Bdat::getIdCount(unknown18->data); }
+u32 GfBdatBlade::getBladeTableEnd() const { return Bdat::getIdTop(m_bladeTable->data) + Bdat::getIdCount(m_bladeTable->data); }
 
-u32 GfBdatBlade::getBladeTableCharaID1(u32 id) const { return _gfbdb::getBladeTableCharaID1(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID1(u32 id) const { return _gfbdb::getBladeTableCharaID1(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID1Percent(u32 id) const { return _gfbdb::getBladeTableCharID1Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID1Percent(u32 id) const { return _gfbdb::getBladeTableCharID1Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID2(u32 id) const { return _gfbdb::getBladeTableCharaID2(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID2(u32 id) const { return _gfbdb::getBladeTableCharaID2(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID2Percent(u32 id) const { return _gfbdb::getBladeTableCharID2Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID2Percent(u32 id) const { return _gfbdb::getBladeTableCharID2Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID3(u32 id) const { return _gfbdb::getBladeTableCharaID3(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID3(u32 id) const { return _gfbdb::getBladeTableCharaID3(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID3Percent(u32 id) const { return _gfbdb::getBladeTableCharID3Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID3Percent(u32 id) const { return _gfbdb::getBladeTableCharID3Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID4(u32 id) const { return _gfbdb::getBladeTableCharaID4(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID4(u32 id) const { return _gfbdb::getBladeTableCharaID4(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID4Percent(u32 id) const { return _gfbdb::getBladeTableCharID4Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID4Percent(u32 id) const { return _gfbdb::getBladeTableCharID4Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID5(u32 id) const { return _gfbdb::getBladeTableCharaID5(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID5(u32 id) const { return _gfbdb::getBladeTableCharaID5(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID5Percent(u32 id) const { return _gfbdb::getBladeTableCharID5Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID5Percent(u32 id) const { return _gfbdb::getBladeTableCharID5Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID6(u32 id) const { return _gfbdb::getBladeTableCharaID6(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID6(u32 id) const { return _gfbdb::getBladeTableCharaID6(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID6Percent(u32 id) const { return _gfbdb::getBladeTableCharID6Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID6Percent(u32 id) const { return _gfbdb::getBladeTableCharID6Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID7(u32 id) const { return _gfbdb::getBladeTableCharaID7(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID7(u32 id) const { return _gfbdb::getBladeTableCharaID7(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID7Percent(u32 id) const { return _gfbdb::getBladeTableCharID7Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID7Percent(u32 id) const { return _gfbdb::getBladeTableCharID7Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID8(u32 id) const { return _gfbdb::getBladeTableCharaID8(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID8(u32 id) const { return _gfbdb::getBladeTableCharaID8(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID8Percent(u32 id) const { return _gfbdb::getBladeTableCharID8Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID8Percent(u32 id) const { return _gfbdb::getBladeTableCharID8Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID9(u32 id) const { return _gfbdb::getBladeTableCharaID9(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID9(u32 id) const { return _gfbdb::getBladeTableCharaID9(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID9Percent(u32 id) const { return _gfbdb::getBladeTableCharID9Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID9Percent(u32 id) const { return _gfbdb::getBladeTableCharID9Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID10(u32 id) const { return _gfbdb::getBladeTableCharaID10(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID10(u32 id) const { return _gfbdb::getBladeTableCharaID10(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID10Percent(u32 id) const { return _gfbdb::getBladeTableCharID10Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID10Percent(u32 id) const { return _gfbdb::getBladeTableCharID10Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID11(u32 id) const { return _gfbdb::getBladeTableCharaID11(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID11(u32 id) const { return _gfbdb::getBladeTableCharaID11(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID11Percent(u32 id) const { return _gfbdb::getBladeTableCharID11Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID11Percent(u32 id) const { return _gfbdb::getBladeTableCharID11Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID12(u32 id) const { return _gfbdb::getBladeTableCharaID12(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID12(u32 id) const { return _gfbdb::getBladeTableCharaID12(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID12Percent(u32 id) const { return _gfbdb::getBladeTableCharID12Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID12Percent(u32 id) const { return _gfbdb::getBladeTableCharID12Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID13(u32 id) const { return _gfbdb::getBladeTableCharaID13(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID13(u32 id) const { return _gfbdb::getBladeTableCharaID13(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID13Percent(u32 id) const { return _gfbdb::getBladeTableCharID13Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID13Percent(u32 id) const { return _gfbdb::getBladeTableCharID13Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID14(u32 id) const { return _gfbdb::getBladeTableCharaID14(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID14(u32 id) const { return _gfbdb::getBladeTableCharaID14(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID14Percent(u32 id) const { return _gfbdb::getBladeTableCharID14Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID14Percent(u32 id) const { return _gfbdb::getBladeTableCharID14Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID15(u32 id) const { return _gfbdb::getBladeTableCharaID15(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID15(u32 id) const { return _gfbdb::getBladeTableCharaID15(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID15Percent(u32 id) const { return _gfbdb::getBladeTableCharID15Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID15Percent(u32 id) const { return _gfbdb::getBladeTableCharID15Percent(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharaID16(u32 id) const { return _gfbdb::getBladeTableCharaID16(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharaID16(u32 id) const { return _gfbdb::getBladeTableCharaID16(*m_bladeTable, id); }
 
-u32 GfBdatBlade::getBladeTableCharID16Percent(u32 id) const { return _gfbdb::getBladeTableCharID16Percent(*unknown18, id); }
+u32 GfBdatBlade::getBladeTableCharID16Percent(u32 id) const { return _gfbdb::getBladeTableCharID16Percent(*m_bladeTable, id); }
 
 u32 GfBdatBlade::getBladeTableCharaID(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getBladeTableCharaID1,
@@ -2715,7 +2715,7 @@ u32 GfBdatBlade::getBladeTableCharaID(u32 id, u32 index) const {
                                                               _gfbdb::getBladeTableCharaID14,
                                                               _gfbdb::getBladeTableCharaID15,
                                                               _gfbdb::getBladeTableCharaID16};
-  return getters[index](*unknown18, id);
+  return getters[index](*m_bladeTable, id);
 }
 
 u32 GfBdatBlade::getBladeTableCharaIDPercent(u32 id, u32 index) const {
@@ -2735,200 +2735,206 @@ u32 GfBdatBlade::getBladeTableCharaIDPercent(u32 id, u32 index) const {
                                                               _gfbdb::getBladeTableCharID15Percent,
                                                               _gfbdb::getBladeTableCharID15Percent,
                                                               _gfbdb::getBladeTableCharID16Percent};
-  return getters[index](*unknown18, id);
+  return getters[index](*m_bladeTable, id);
 }
 
-u32 GfBdatBlade::getBladeListStart() const { return Bdat::getIdTop(unknown20->data); }
+u32 GfBdatBlade::getBladeListStart() const { return Bdat::getIdTop(m_bladeList->data); }
 
-u32 GfBdatBlade::getBladeListEnd() const { return Bdat::getIdTop(unknown20->data) + Bdat::getIdCount(unknown20->data); }
+u32 GfBdatBlade::getBladeListEnd() const { return Bdat::getIdTop(m_bladeList->data) + Bdat::getIdCount(m_bladeList->data); }
 
-u32 GfBdatBlade::getBladeListCategory(u32 id) const { return _gfbdb::getBladeListCategory(*unknown20, id); }
+u32 GfBdatBlade::getBladeListCategory(u32 id) const { return _gfbdb::getBladeListCategory(*m_bladeList, id); }
 
-u32 GfBdatBlade::getBladeListStatusID(u32 id) const { return _gfbdb::getBladeListStatusID(*unknown20, id); }
+u32 GfBdatBlade::getBladeListStatusID(u32 id) const { return _gfbdb::getBladeListStatusID(*m_bladeList, id); }
 
-u32 GfBdatBlade::getCommonListStart() const { return Bdat::getIdTop(unknown28->data); }
+u32 GfBdatBlade::getCommonListStart() const { return Bdat::getIdTop(m_commonList->data); }
 
-u32 GfBdatBlade::getCommonListEnd() const { return Bdat::getIdTop(unknown28->data) + Bdat::getIdCount(unknown28->data); }
+u32 GfBdatBlade::getCommonListEnd() const { return Bdat::getIdTop(m_commonList->data) + Bdat::getIdCount(m_commonList->data); }
 
-u32 GfBdatBlade::getCommonListQuestRace(u32 id) const { return _gfbdb::getCommonListQuestRace(*unknown28, id); }
+u32 GfBdatBlade::getCommonListQuestRace(u32 id) const { return _gfbdb::getCommonListQuestRace(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListGender(u32 id) const { return _gfbdb::getCommonListGender(*unknown28, id); }
+u32 GfBdatBlade::getCommonListGender(u32 id) const { return _gfbdb::getCommonListGender(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListWeapon(u32 id) const { return _gfbdb::getCommonListWeapon(*unknown28, id); }
+u32 GfBdatBlade::getCommonListWeapon(u32 id) const { return _gfbdb::getCommonListWeapon(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListAtr(u32 id) const { return _gfbdb::getCommonListAtr(*unknown28, id); }
+u32 GfBdatBlade::getCommonListAtr(u32 id) const { return _gfbdb::getCommonListAtr(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListModelTable(u32 id) const { return _gfbdb::getCommonListModelTable(*unknown28, id); }
+u32 GfBdatBlade::getCommonListModelTable(u32 id) const { return _gfbdb::getCommonListModelTable(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListIdeaType(u32 id) const { return _gfbdb::getCommonListIdeaType(*unknown28, id); }
+u32 GfBdatBlade::getCommonListIdeaType(u32 id) const { return _gfbdb::getCommonListIdeaType(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListIdeaMin(u32 id) const { return _gfbdb::getCommonListIdeaMin(*unknown28, id); }
+u32 GfBdatBlade::getCommonListIdeaMin(u32 id) const { return _gfbdb::getCommonListIdeaMin(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListIdeaMax(u32 id) const { return _gfbdb::getCommonListIdeaMax(*unknown28, id); }
+u32 GfBdatBlade::getCommonListIdeaMax(u32 id) const { return _gfbdb::getCommonListIdeaMax(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListRatio(u32 id) const { return _gfbdb::getCommonListRatio(*unknown28, id); }
+u32 GfBdatBlade::getCommonListRatio(u32 id) const { return _gfbdb::getCommonListRatio(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListRarityMin(u32 id) const { return _gfbdb::getCommonListRarityMin(*unknown28, id); }
+u32 GfBdatBlade::getCommonListRarityMin(u32 id) const { return _gfbdb::getCommonListRarityMin(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListRarityMax(u32 id) const { return _gfbdb::getCommonListRarityMax(*unknown28, id); }
+u32 GfBdatBlade::getCommonListRarityMax(u32 id) const { return _gfbdb::getCommonListRarityMax(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListFskill(u32 id) const { return _gfbdb::getCommonListFskill(*unknown28, id); }
+u32 GfBdatBlade::getCommonListFskill(u32 id) const { return _gfbdb::getCommonListFskill(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListArtsAchievementSet1(u32 id) const { return _gfbdb::getCommonListArtsAchievementSet1(*unknown28, id); }
+u32 GfBdatBlade::getCommonListArtsAchievementSet1(u32 id) const { return _gfbdb::getCommonListArtsAchievementSet1(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListArtsAchievementSet2(u32 id) const { return _gfbdb::getCommonListArtsAchievementSet2(*unknown28, id); }
+u32 GfBdatBlade::getCommonListArtsAchievementSet2(u32 id) const { return _gfbdb::getCommonListArtsAchievementSet2(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListArtsAchievementSet3(u32 id) const { return _gfbdb::getCommonListArtsAchievementSet3(*unknown28, id); }
+u32 GfBdatBlade::getCommonListArtsAchievementSet3(u32 id) const { return _gfbdb::getCommonListArtsAchievementSet3(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListSkillAchievementSet1(u32 id) const { return _gfbdb::getCommonListSkillAchievementSet1(*unknown28, id); }
+u32 GfBdatBlade::getCommonListSkillAchievementSet1(u32 id) const { return _gfbdb::getCommonListSkillAchievementSet1(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListSkillAchievementSet2(u32 id) const { return _gfbdb::getCommonListSkillAchievementSet2(*unknown28, id); }
+u32 GfBdatBlade::getCommonListSkillAchievementSet2(u32 id) const { return _gfbdb::getCommonListSkillAchievementSet2(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListSkillAchievementSet3(u32 id) const { return _gfbdb::getCommonListSkillAchievementSet3(*unknown28, id); }
+u32 GfBdatBlade::getCommonListSkillAchievementSet3(u32 id) const { return _gfbdb::getCommonListSkillAchievementSet3(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListFskillAchivementSet1(u32 id) const { return _gfbdb::getCommonListFskillAchivementSet1(*unknown28, id); }
+u32 GfBdatBlade::getCommonListFskillAchivementSet1(u32 id) const { return _gfbdb::getCommonListFskillAchivementSet1(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListFskillAchivementSet2(u32 id) const { return _gfbdb::getCommonListFskillAchivementSet2(*unknown28, id); }
+u32 GfBdatBlade::getCommonListFskillAchivementSet2(u32 id) const { return _gfbdb::getCommonListFskillAchivementSet2(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListFskillAchivementSet3(u32 id) const { return _gfbdb::getCommonListFskillAchivementSet3(*unknown28, id); }
+u32 GfBdatBlade::getCommonListFskillAchivementSet3(u32 id) const { return _gfbdb::getCommonListFskillAchivementSet3(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListKeyAchievementSet(u32 id) const { return _gfbdb::getCommonListKeyAchievementSet(*unknown28, id); }
+u32 GfBdatBlade::getCommonListKeyAchievementSet(u32 id) const { return _gfbdb::getCommonListKeyAchievementSet(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListFavoriteCategoryMax(u32 id) const { return _gfbdb::getCommonListFavoriteCategoryMax(*unknown28, id); }
+u32 GfBdatBlade::getCommonListFavoriteCategoryMax(u32 id) const { return _gfbdb::getCommonListFavoriteCategoryMax(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListFavoriteItemMax(u32 id) const { return _gfbdb::getCommonListFavoriteItemMax(*unknown28, id); }
+u32 GfBdatBlade::getCommonListFavoriteItemMax(u32 id) const { return _gfbdb::getCommonListFavoriteItemMax(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListArtsAchievementSet(u32 id, u32 index) const { return _gfbdb::getCommonListArtsAchievementSet(*unknown28, id, index); }
+u32 GfBdatBlade::getCommonListArtsAchievementSet(u32 id, u32 index) const {
+  return _gfbdb::getCommonListArtsAchievementSet(*m_commonList, id, index);
+}
 
-u32 GfBdatBlade::getCommonListSkillAchievementSet(u32 id, u32 index) const { return _gfbdb::getCommonListSkillAchievementSet(*unknown28, id, index); }
+u32 GfBdatBlade::getCommonListSkillAchievementSet(u32 id, u32 index) const {
+  return _gfbdb::getCommonListSkillAchievementSet(*m_commonList, id, index);
+}
 
-u32 GfBdatBlade::getCommonListFskillAchivementSet(u32 id, u32 index) const { return _gfbdb::getCommonListFskillAchivementSet(*unknown28, id, index); }
+u32 GfBdatBlade::getCommonListFskillAchivementSet(u32 id, u32 index) const {
+  return _gfbdb::getCommonListFskillAchivementSet(*m_commonList, id, index);
+}
 
-u32 GfBdatBlade::getNameListStart() const { return Bdat::getIdTop(unknown30->data); }
+u32 GfBdatBlade::getNameListStart() const { return Bdat::getIdTop(m_nameList->data); }
 
-u32 GfBdatBlade::getNameListEnd() const { return Bdat::getIdTop(unknown30->data) + Bdat::getIdCount(unknown30->data); }
+u32 GfBdatBlade::getNameListEnd() const { return Bdat::getIdTop(m_nameList->data) + Bdat::getIdCount(m_nameList->data); }
 
-u32 GfBdatBlade::getNameListCategory(u32 id) const { return _gfbdb::getNameListCategory(*unknown30, id); }
+u32 GfBdatBlade::getNameListCategory(u32 id) const { return _gfbdb::getNameListCategory(*m_nameList, id); }
 
-u32 GfBdatBlade::getNameListRace(u32 id) const { return _gfbdb::getNameListRace(*unknown30, id); }
+u32 GfBdatBlade::getNameListRace(u32 id) const { return _gfbdb::getNameListRace(*m_nameList, id); }
 
-u32 GfBdatBlade::getNameListGender(u32 id) const { return _gfbdb::getNameListGender(*unknown30, id); }
+u32 GfBdatBlade::getNameListGender(u32 id) const { return _gfbdb::getNameListGender(*m_nameList, id); }
 
-u32 GfBdatBlade::getBladeModelListStart() const { return Bdat::getIdTop(unknown38->data); }
+u32 GfBdatBlade::getBladeModelListStart() const { return Bdat::getIdTop(m_bladeModelList->data); }
 
-u32 GfBdatBlade::getBladeModelListEnd() const { return Bdat::getIdTop(unknown38->data) + Bdat::getIdCount(unknown38->data); }
+u32 GfBdatBlade::getBladeModelListEnd() const { return Bdat::getIdTop(m_bladeModelList->data) + Bdat::getIdCount(m_bladeModelList->data); }
 
-u32 GfBdatBlade::getBladeModelListQuestRace(u32 id) const { return _gfbdb::getBladeModelListQuestRace(*unknown38, id); }
+u32 GfBdatBlade::getBladeModelListQuestRace(u32 id) const { return _gfbdb::getBladeModelListQuestRace(*m_bladeModelList, id); }
 
-u32 GfBdatBlade::getBladeModelListGender(u32 id) const { return _gfbdb::getBladeModelListGender(*unknown38, id); }
+u32 GfBdatBlade::getBladeModelListGender(u32 id) const { return _gfbdb::getBladeModelListGender(*m_bladeModelList, id); }
 
-u32 GfBdatBlade::getBladeModelListIdeaMin(u32 id) const { return _gfbdb::getBladeModelListIdeaMin(*unknown38, id); }
+u32 GfBdatBlade::getBladeModelListIdeaMin(u32 id) const { return _gfbdb::getBladeModelListIdeaMin(*m_bladeModelList, id); }
 
-u32 GfBdatBlade::getBladeModelListIdeaMax(u32 id) const { return _gfbdb::getBladeModelListIdeaMax(*unknown38, id); }
+u32 GfBdatBlade::getBladeModelListIdeaMax(u32 id) const { return _gfbdb::getBladeModelListIdeaMax(*m_bladeModelList, id); }
 
-u32 GfBdatBlade::getBladeModelListModel1(u32 id) const { return _gfbdb::getBladeModelListModel1(*unknown38, id); }
+u32 GfBdatBlade::getBladeModelListModel1(u32 id) const { return _gfbdb::getBladeModelListModel1(*m_bladeModelList, id); }
 
-u32 GfBdatBlade::getBladeModelListModel2(u32 id) const { return _gfbdb::getBladeModelListModel2(*unknown38, id); }
+u32 GfBdatBlade::getBladeModelListModel2(u32 id) const { return _gfbdb::getBladeModelListModel2(*m_bladeModelList, id); }
 
-u32 GfBdatBlade::getBladeModelListPartsNumMin(u32 id) const { return _gfbdb::getBladeModelListPartsNumMin(*unknown38, id); }
+u32 GfBdatBlade::getBladeModelListPartsNumMin(u32 id) const { return _gfbdb::getBladeModelListPartsNumMin(*m_bladeModelList, id); }
 
-u32 GfBdatBlade::getBladeModelListPartsNumMax(u32 id) const { return _gfbdb::getBladeModelListPartsNumMax(*unknown38, id); }
+u32 GfBdatBlade::getBladeModelListPartsNumMax(u32 id) const { return _gfbdb::getBladeModelListPartsNumMax(*m_bladeModelList, id); }
 
-u32 GfBdatBlade::getBladeModelListParts1(u32 id) const { return _gfbdb::getBladeModelListParts1(*unknown38, id); }
+u32 GfBdatBlade::getBladeModelListParts1(u32 id) const { return _gfbdb::getBladeModelListParts1(*m_bladeModelList, id); }
 
-u32 GfBdatBlade::getBladeModelListParts2(u32 id) const { return _gfbdb::getBladeModelListParts2(*unknown38, id); }
+u32 GfBdatBlade::getBladeModelListParts2(u32 id) const { return _gfbdb::getBladeModelListParts2(*m_bladeModelList, id); }
 
-u32 GfBdatBlade::getBladeModelListParts3(u32 id) const { return _gfbdb::getBladeModelListParts3(*unknown38, id); }
+u32 GfBdatBlade::getBladeModelListParts3(u32 id) const { return _gfbdb::getBladeModelListParts3(*m_bladeModelList, id); }
 
-u32 GfBdatBlade::getBladeModelListParts4(u32 id) const { return _gfbdb::getBladeModelListParts4(*unknown38, id); }
+u32 GfBdatBlade::getBladeModelListParts4(u32 id) const { return _gfbdb::getBladeModelListParts4(*m_bladeModelList, id); }
 
 u32 GfBdatBlade::getBladeModelListModel(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getBladeModelListModel1, _gfbdb::getBladeModelListModel2};
-  return getters[index](*unknown38, id);
+  return getters[index](*m_bladeModelList, id);
 }
 
 u32 GfBdatBlade::getBladeModelListParts(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {
       _gfbdb::getBladeModelListParts1, _gfbdb::getBladeModelListParts2, _gfbdb::getBladeModelListParts3, _gfbdb::getBladeModelListParts4};
-  return getters[index](*unknown38, id);
+  return getters[index](*m_bladeModelList, id);
 }
 
-u32 GfBdatBlade::getCreateConfigStart() const { return Bdat::getIdTop(unknown40->data); }
+u32 GfBdatBlade::getCreateConfigStart() const { return Bdat::getIdTop(m_createConfig->data); }
 
-u32 GfBdatBlade::getCreateConfigEnd() const { return Bdat::getIdTop(unknown40->data) + Bdat::getIdCount(unknown40->data); }
+u32 GfBdatBlade::getCreateConfigEnd() const { return Bdat::getIdTop(m_createConfig->data) + Bdat::getIdCount(m_createConfig->data); }
 
-u32 GfBdatBlade::getCreateConfigValue(u32 id) const { return _gfbdb::getCreateConfigValue(*unknown40, id); }
+u32 GfBdatBlade::getCreateConfigValue(u32 id) const { return _gfbdb::getCreateConfigValue(*m_createConfig, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityStart() const { return Bdat::getIdTop(unknown48->data); }
+u32 GfBdatBlade::getCmnBl_CapacityStart() const { return Bdat::getIdTop(m_cmnBl_Capacity->data); }
 
-u32 GfBdatBlade::getCmnBl_CapacityEnd() const { return Bdat::getIdTop(unknown48->data) + Bdat::getIdCount(unknown48->data); }
+u32 GfBdatBlade::getCmnBl_CapacityEnd() const { return Bdat::getIdTop(m_cmnBl_Capacity->data) + Bdat::getIdCount(m_cmnBl_Capacity->data); }
 
-u32 GfBdatBlade::getCmnBl_CapacityArtsNum1Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsNum1Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityArtsNum1Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsNum1Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityArtsNum2Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsNum2Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityArtsNum2Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsNum2Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityArtsNum3Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsNum3Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityArtsNum3Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsNum3Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityArtsLv1Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsLv1Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityArtsLv1Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsLv1Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityArtsLv2Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsLv2Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityArtsLv2Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsLv2Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityArtsLv3Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsLv3Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityArtsLv3Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsLv3Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityArtsLv4Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsLv4Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityArtsLv4Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsLv4Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityArtsLv5Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsLv5Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityArtsLv5Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsLv5Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityArtsRevCon(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsRevCon(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityArtsRevCon(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsRevCon(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityArtsRevRand(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsRevRand(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityArtsRevRand(u32 id) const { return _gfbdb::getCmnBl_CapacityArtsRevRand(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacitySpArtsRevCon(u32 id) const { return _gfbdb::getCmnBl_CapacitySpArtsRevCon(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacitySpArtsRevCon(u32 id) const { return _gfbdb::getCmnBl_CapacitySpArtsRevCon(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacitySpArtsRevRand(u32 id) const { return _gfbdb::getCmnBl_CapacitySpArtsRevRand(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacitySpArtsRevRand(u32 id) const { return _gfbdb::getCmnBl_CapacitySpArtsRevRand(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacitySkillNum1Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillNum1Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacitySkillNum1Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillNum1Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacitySkillNum2Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillNum2Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacitySkillNum2Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillNum2Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacitySkillNum3Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillNum3Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacitySkillNum3Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillNum3Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacitySkillLv1Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillLv1Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacitySkillLv1Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillLv1Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacitySkillLv2Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillLv2Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacitySkillLv2Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillLv2Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacitySkillLv3Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillLv3Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacitySkillLv3Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillLv3Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacitySkillLv4Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillLv4Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacitySkillLv4Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillLv4Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacitySkillLv5Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillLv5Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacitySkillLv5Prob(u32 id) const { return _gfbdb::getCmnBl_CapacitySkillLv5Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityOrbNum0Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityOrbNum0Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityOrbNum0Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityOrbNum0Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityOrbNum1Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityOrbNum1Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityOrbNum1Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityOrbNum1Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityOrbNum2Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityOrbNum2Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityOrbNum2Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityOrbNum2Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityOrbNum3Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityOrbNum3Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityOrbNum3Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityOrbNum3Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityNartsNum1Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityNartsNum1Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityNartsNum1Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityNartsNum1Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityNartsNum2Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityNartsNum2Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityNartsNum2Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityNartsNum2Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityNartsNum3Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityNartsNum3Prob(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityNartsNum3Prob(u32 id) const { return _gfbdb::getCmnBl_CapacityNartsNum3Prob(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityNartsRevCon(u32 id) const { return _gfbdb::getCmnBl_CapacityNartsRevCon(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityNartsRevCon(u32 id) const { return _gfbdb::getCmnBl_CapacityNartsRevCon(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityNartsRevRand(u32 id) const { return _gfbdb::getCmnBl_CapacityNartsRevRand(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityNartsRevRand(u32 id) const { return _gfbdb::getCmnBl_CapacityNartsRevRand(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityStatusRevCon(u32 id) const { return _gfbdb::getCmnBl_CapacityStatusRevCon(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityStatusRevCon(u32 id) const { return _gfbdb::getCmnBl_CapacityStatusRevCon(*m_cmnBl_Capacity, id); }
 
-u32 GfBdatBlade::getCmnBl_CapacityStatusRevRand(u32 id) const { return _gfbdb::getCmnBl_CapacityStatusRevRand(*unknown48, id); }
+u32 GfBdatBlade::getCmnBl_CapacityStatusRevRand(u32 id) const { return _gfbdb::getCmnBl_CapacityStatusRevRand(*m_cmnBl_Capacity, id); }
 
 u32 GfBdatBlade::getCmnBl_CapacityArtsNumProb(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {
       _gfbdb::getCmnBl_CapacityArtsNum1Prob, _gfbdb::getCmnBl_CapacityArtsNum2Prob, _gfbdb::getCmnBl_CapacityArtsNum3Prob};
-  return getters[index](*unknown48, id);
+  return getters[index](*m_cmnBl_Capacity, id);
 }
 
 u32 GfBdatBlade::getCmnBl_CapacityArtsLvProb(u32 id, u32 index) const {
@@ -2937,183 +2943,185 @@ u32 GfBdatBlade::getCmnBl_CapacityArtsLvProb(u32 id, u32 index) const {
                                                               _gfbdb::getCmnBl_CapacityArtsLv3Prob,
                                                               _gfbdb::getCmnBl_CapacityArtsLv4Prob,
                                                               _gfbdb::getCmnBl_CapacityArtsLv5Prob};
-  return getters[index](*unknown48, id);
+  return getters[index](*m_cmnBl_Capacity, id);
 }
 
-u32 GfBdatBlade::getCmnBl_CapacitySkillNumProb(u32 id, u32 index) const { return _gfbdb::getCmnBl_CapacitySkillNumProb(*unknown48, id, index); }
+u32 GfBdatBlade::getCmnBl_CapacitySkillNumProb(u32 id, u32 index) const {
+  return _gfbdb::getCmnBl_CapacitySkillNumProb(*m_cmnBl_Capacity, id, index);
+}
 
-u32 GfBdatBlade::getCmnBl_CapacitySkillLvProb(u32 id, u32 index) const { return _gfbdb::getCmnBl_CapacitySkillLvProb(*unknown48, id, index); }
+u32 GfBdatBlade::getCmnBl_CapacitySkillLvProb(u32 id, u32 index) const { return _gfbdb::getCmnBl_CapacitySkillLvProb(*m_cmnBl_Capacity, id, index); }
 
-u32 GfBdatBlade::getCmnBl_CapacityOrbNumProb(u32 id, u32 index) const { return _gfbdb::getCmnBl_CapacityOrbNumProb(*unknown48, id, index); }
+u32 GfBdatBlade::getCmnBl_CapacityOrbNumProb(u32 id, u32 index) const { return _gfbdb::getCmnBl_CapacityOrbNumProb(*m_cmnBl_Capacity, id, index); }
 
 u32 GfBdatBlade::getCmnBl_CapacityNartsNumProb(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {
       _gfbdb::getCmnBl_CapacityNartsNum1Prob, _gfbdb::getCmnBl_CapacityNartsNum2Prob, _gfbdb::getCmnBl_CapacityNartsNum3Prob};
-  return getters[index](*unknown48, id);
+  return getters[index](*m_cmnBl_Capacity, id);
 }
 
-u32 GfBdatBlade::getCmnBl_PowerStart() const { return Bdat::getIdTop(unknown50->data); }
+u32 GfBdatBlade::getCmnBl_PowerStart() const { return Bdat::getIdTop(m_cmnBl_Power->data); }
 
-u32 GfBdatBlade::getCmnBl_PowerEnd() const { return Bdat::getIdTop(unknown50->data) + Bdat::getIdCount(unknown50->data); }
+u32 GfBdatBlade::getCmnBl_PowerEnd() const { return Bdat::getIdTop(m_cmnBl_Power->data) + Bdat::getIdCount(m_cmnBl_Power->data); }
 
-u32 GfBdatBlade::getCmnBl_PowerMinLv(u32 id) const { return _gfbdb::getCmnBl_PowerMinLv(*unknown50, id); }
+u32 GfBdatBlade::getCmnBl_PowerMinLv(u32 id) const { return _gfbdb::getCmnBl_PowerMinLv(*m_cmnBl_Power, id); }
 
-u32 GfBdatBlade::getCmnBl_PowerMaxLv(u32 id) const { return _gfbdb::getCmnBl_PowerMaxLv(*unknown50, id); }
+u32 GfBdatBlade::getCmnBl_PowerMaxLv(u32 id) const { return _gfbdb::getCmnBl_PowerMaxLv(*m_cmnBl_Power, id); }
 
-u32 GfBdatBlade::getCmnBl_PowerPow01(u32 id) const { return _gfbdb::getCmnBl_PowerPow01(*unknown50, id); }
+u32 GfBdatBlade::getCmnBl_PowerPow01(u32 id) const { return _gfbdb::getCmnBl_PowerPow01(*m_cmnBl_Power, id); }
 
-u32 GfBdatBlade::getCmnBl_PowerPow02(u32 id) const { return _gfbdb::getCmnBl_PowerPow02(*unknown50, id); }
+u32 GfBdatBlade::getCmnBl_PowerPow02(u32 id) const { return _gfbdb::getCmnBl_PowerPow02(*m_cmnBl_Power, id); }
 
-u32 GfBdatBlade::getCmnBl_PowerPow03(u32 id) const { return _gfbdb::getCmnBl_PowerPow03(*unknown50, id); }
+u32 GfBdatBlade::getCmnBl_PowerPow03(u32 id) const { return _gfbdb::getCmnBl_PowerPow03(*m_cmnBl_Power, id); }
 
-u32 GfBdatBlade::getCmnBl_PowerPow04(u32 id) const { return _gfbdb::getCmnBl_PowerPow04(*unknown50, id); }
+u32 GfBdatBlade::getCmnBl_PowerPow04(u32 id) const { return _gfbdb::getCmnBl_PowerPow04(*m_cmnBl_Power, id); }
 
-u32 GfBdatBlade::getCmnBl_PowerPow05(u32 id) const { return _gfbdb::getCmnBl_PowerPow05(*unknown50, id); }
+u32 GfBdatBlade::getCmnBl_PowerPow05(u32 id) const { return _gfbdb::getCmnBl_PowerPow05(*m_cmnBl_Power, id); }
 
-u32 GfBdatBlade::getCmnBl_PowerPow06(u32 id) const { return _gfbdb::getCmnBl_PowerPow06(*unknown50, id); }
+u32 GfBdatBlade::getCmnBl_PowerPow06(u32 id) const { return _gfbdb::getCmnBl_PowerPow06(*m_cmnBl_Power, id); }
 
-u32 GfBdatBlade::getCmnBl_PowerPow07(u32 id) const { return _gfbdb::getCmnBl_PowerPow07(*unknown50, id); }
+u32 GfBdatBlade::getCmnBl_PowerPow07(u32 id) const { return _gfbdb::getCmnBl_PowerPow07(*m_cmnBl_Power, id); }
 
-u32 GfBdatBlade::getCmnBl_PowerPow08(u32 id) const { return _gfbdb::getCmnBl_PowerPow08(*unknown50, id); }
+u32 GfBdatBlade::getCmnBl_PowerPow08(u32 id) const { return _gfbdb::getCmnBl_PowerPow08(*m_cmnBl_Power, id); }
 
-u32 GfBdatBlade::getCmnBl_PowerPow09(u32 id) const { return _gfbdb::getCmnBl_PowerPow09(*unknown50, id); }
+u32 GfBdatBlade::getCmnBl_PowerPow09(u32 id) const { return _gfbdb::getCmnBl_PowerPow09(*m_cmnBl_Power, id); }
 
-u32 GfBdatBlade::getCmnBl_PowerPow10(u32 id) const { return _gfbdb::getCmnBl_PowerPow10(*unknown50, id); }
+u32 GfBdatBlade::getCmnBl_PowerPow10(u32 id) const { return _gfbdb::getCmnBl_PowerPow10(*m_cmnBl_Power, id); }
 
-u32 GfBdatBlade::getCmnBl_PowerPow(u32 id, u32 index) const { return _gfbdb::getCmnBl_PowerPow(*unknown50, id, index); }
+u32 GfBdatBlade::getCmnBl_PowerPow(u32 id, u32 index) const { return _gfbdb::getCmnBl_PowerPow(*m_cmnBl_Power, id, index); }
 
-u32 GfBdatBlade::getCmnBl_NewBlArtsStart() const { return Bdat::getIdTop(unknown58->data); }
+u32 GfBdatBlade::getCmnBl_NewBlArtsStart() const { return Bdat::getIdTop(m_cmnBl_NewBlArts->data); }
 
-u32 GfBdatBlade::getCmnBl_NewBlArtsEnd() const { return Bdat::getIdTop(unknown58->data) + Bdat::getIdCount(unknown58->data); }
+u32 GfBdatBlade::getCmnBl_NewBlArtsEnd() const { return Bdat::getIdTop(m_cmnBl_NewBlArts->data) + Bdat::getIdCount(m_cmnBl_NewBlArts->data); }
 
-u32 GfBdatBlade::getCmnBl_NewBlArtsWpnType(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsWpnType(*unknown58, id); }
+u32 GfBdatBlade::getCmnBl_NewBlArtsWpnType(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsWpnType(*m_cmnBl_NewBlArts, id); }
 
-u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_01(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_01(*unknown58, id); }
+u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_01(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_01(*m_cmnBl_NewBlArts, id); }
 
-u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_02(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_02(*unknown58, id); }
+u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_02(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_02(*m_cmnBl_NewBlArts, id); }
 
-u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_03(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_03(*unknown58, id); }
+u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_03(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_03(*m_cmnBl_NewBlArts, id); }
 
-u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_04(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_04(*unknown58, id); }
+u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_04(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_04(*m_cmnBl_NewBlArts, id); }
 
-u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_05(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_05(*unknown58, id); }
+u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_05(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_05(*m_cmnBl_NewBlArts, id); }
 
-u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_06(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_06(*unknown58, id); }
+u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_06(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_06(*m_cmnBl_NewBlArts, id); }
 
-u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_07(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_07(*unknown58, id); }
+u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_07(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_07(*m_cmnBl_NewBlArts, id); }
 
-u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_08(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_08(*unknown58, id); }
+u32 GfBdatBlade::getCmnBl_NewBlArtsNBA_08(u32 id) const { return _gfbdb::getCmnBl_NewBlArtsNBA_08(*m_cmnBl_NewBlArts, id); }
 
-u32 GfBdatBlade::getCmnBl_NewBlArtsNBA(u32 id, u32 index) const { return _gfbdb::getCmnBl_NewBlArtsNBA(*unknown58, id, index); }
+u32 GfBdatBlade::getCmnBl_NewBlArtsNBA(u32 id, u32 index) const { return _gfbdb::getCmnBl_NewBlArtsNBA(*m_cmnBl_NewBlArts, id, index); }
 
-u32 GfBdatBlade::getCmnBl_StatusTypeStart() const { return Bdat::getIdTop(unknown60->data); }
+u32 GfBdatBlade::getCmnBl_StatusTypeStart() const { return Bdat::getIdTop(m_cmnBl_StatusType->data); }
 
-u32 GfBdatBlade::getCmnBl_StatusTypeEnd() const { return Bdat::getIdTop(unknown60->data) + Bdat::getIdCount(unknown60->data); }
+u32 GfBdatBlade::getCmnBl_StatusTypeEnd() const { return Bdat::getIdTop(m_cmnBl_StatusType->data) + Bdat::getIdCount(m_cmnBl_StatusType->data); }
 
-u32 GfBdatBlade::getCmnBl_StatusTypeWpnType(u32 id) const { return _gfbdb::getCmnBl_StatusTypeWpnType(*unknown60, id); }
+u32 GfBdatBlade::getCmnBl_StatusTypeWpnType(u32 id) const { return _gfbdb::getCmnBl_StatusTypeWpnType(*m_cmnBl_StatusType, id); }
 
-u32 GfBdatBlade::getCmnBl_StatusTypeStatus01(u32 id) const { return _gfbdb::getCmnBl_StatusTypeStatus01(*unknown60, id); }
+u32 GfBdatBlade::getCmnBl_StatusTypeStatus01(u32 id) const { return _gfbdb::getCmnBl_StatusTypeStatus01(*m_cmnBl_StatusType, id); }
 
-u32 GfBdatBlade::getCmnBl_StatusTypeStatus02(u32 id) const { return _gfbdb::getCmnBl_StatusTypeStatus02(*unknown60, id); }
+u32 GfBdatBlade::getCmnBl_StatusTypeStatus02(u32 id) const { return _gfbdb::getCmnBl_StatusTypeStatus02(*m_cmnBl_StatusType, id); }
 
-u32 GfBdatBlade::getCmnBl_StatusTypeStatus03(u32 id) const { return _gfbdb::getCmnBl_StatusTypeStatus03(*unknown60, id); }
+u32 GfBdatBlade::getCmnBl_StatusTypeStatus03(u32 id) const { return _gfbdb::getCmnBl_StatusTypeStatus03(*m_cmnBl_StatusType, id); }
 
-u32 GfBdatBlade::getCmnBl_StatusTypeStatus04(u32 id) const { return _gfbdb::getCmnBl_StatusTypeStatus04(*unknown60, id); }
+u32 GfBdatBlade::getCmnBl_StatusTypeStatus04(u32 id) const { return _gfbdb::getCmnBl_StatusTypeStatus04(*m_cmnBl_StatusType, id); }
 
-u32 GfBdatBlade::getCmnBl_StatusTypeStatus05(u32 id) const { return _gfbdb::getCmnBl_StatusTypeStatus05(*unknown60, id); }
+u32 GfBdatBlade::getCmnBl_StatusTypeStatus05(u32 id) const { return _gfbdb::getCmnBl_StatusTypeStatus05(*m_cmnBl_StatusType, id); }
 
-u32 GfBdatBlade::getCmnBl_StatusTypeStatus06(u32 id) const { return _gfbdb::getCmnBl_StatusTypeStatus06(*unknown60, id); }
+u32 GfBdatBlade::getCmnBl_StatusTypeStatus06(u32 id) const { return _gfbdb::getCmnBl_StatusTypeStatus06(*m_cmnBl_StatusType, id); }
 
-u32 GfBdatBlade::getCmnBl_StatusTypeStatus(u32 id, u32 index) const { return _gfbdb::getCmnBl_StatusTypeStatus(*unknown60, id, index); }
+u32 GfBdatBlade::getCmnBl_StatusTypeStatus(u32 id, u32 index) const { return _gfbdb::getCmnBl_StatusTypeStatus(*m_cmnBl_StatusType, id, index); }
 
-u32 GfBdatBlade::getCmnBl_ArmorStart() const { return Bdat::getIdTop(unknown68->data); }
+u32 GfBdatBlade::getCmnBl_ArmorStart() const { return Bdat::getIdTop(m_cmnBl_Armor->data); }
 
-u32 GfBdatBlade::getCmnBl_ArmorEnd() const { return Bdat::getIdTop(unknown68->data) + Bdat::getIdCount(unknown68->data); }
+u32 GfBdatBlade::getCmnBl_ArmorEnd() const { return Bdat::getIdTop(m_cmnBl_Armor->data) + Bdat::getIdCount(m_cmnBl_Armor->data); }
 
-u32 GfBdatBlade::getCmnBl_ArmorWpnType(u32 id) const { return _gfbdb::getCmnBl_ArmorWpnType(*unknown68, id); }
+u32 GfBdatBlade::getCmnBl_ArmorWpnType(u32 id) const { return _gfbdb::getCmnBl_ArmorWpnType(*m_cmnBl_Armor, id); }
 
-u32 GfBdatBlade::getCmnBl_ArmorPArmorCon(u32 id) const { return _gfbdb::getCmnBl_ArmorPArmorCon(*unknown68, id); }
+u32 GfBdatBlade::getCmnBl_ArmorPArmorCon(u32 id) const { return _gfbdb::getCmnBl_ArmorPArmorCon(*m_cmnBl_Armor, id); }
 
-u32 GfBdatBlade::getCmnBl_ArmorPArmorRand(u32 id) const { return _gfbdb::getCmnBl_ArmorPArmorRand(*unknown68, id); }
+u32 GfBdatBlade::getCmnBl_ArmorPArmorRand(u32 id) const { return _gfbdb::getCmnBl_ArmorPArmorRand(*m_cmnBl_Armor, id); }
 
-u32 GfBdatBlade::getCmnBl_ArmorEArmorCon(u32 id) const { return _gfbdb::getCmnBl_ArmorEArmorCon(*unknown68, id); }
+u32 GfBdatBlade::getCmnBl_ArmorEArmorCon(u32 id) const { return _gfbdb::getCmnBl_ArmorEArmorCon(*m_cmnBl_Armor, id); }
 
-u32 GfBdatBlade::getCmnBl_ArmorEArmorRand(u32 id) const { return _gfbdb::getCmnBl_ArmorEArmorRand(*unknown68, id); }
+u32 GfBdatBlade::getCmnBl_ArmorEArmorRand(u32 id) const { return _gfbdb::getCmnBl_ArmorEArmorRand(*m_cmnBl_Armor, id); }
 
-u32 GfBdatBlade::getFLD_IdeaTableStart() const { return Bdat::getIdTop(unknown70->data); }
+u32 GfBdatBlade::getFLD_IdeaTableStart() const { return Bdat::getIdTop(m_FLD_IdeaTable->data); }
 
-u32 GfBdatBlade::getFLD_IdeaTableEnd() const { return Bdat::getIdTop(unknown70->data) + Bdat::getIdCount(unknown70->data); }
+u32 GfBdatBlade::getFLD_IdeaTableEnd() const { return Bdat::getIdTop(m_FLD_IdeaTable->data) + Bdat::getIdCount(m_FLD_IdeaTable->data); }
 
-u32 GfBdatBlade::getFLD_IdeaTableTrustPoint(u32 id) const { return _gfbdb::getFLD_IdeaTableTrustPoint(*unknown70, id); }
+u32 GfBdatBlade::getFLD_IdeaTableTrustPoint(u32 id) const { return _gfbdb::getFLD_IdeaTableTrustPoint(*m_FLD_IdeaTable, id); }
 
-u32 GfBdatBlade::getFLD_IdeaTableWpnRatio(u32 id) const { return _gfbdb::getFLD_IdeaTableWpnRatio(*unknown70, id); }
+u32 GfBdatBlade::getFLD_IdeaTableWpnRatio(u32 id) const { return _gfbdb::getFLD_IdeaTableWpnRatio(*m_FLD_IdeaTable, id); }
 
-u32 GfBdatBlade::getFLD_IdeaTableNArtsProbRev(u32 id) const { return _gfbdb::getFLD_IdeaTableNArtsProbRev(*unknown70, id); }
+u32 GfBdatBlade::getFLD_IdeaTableNArtsProbRev(u32 id) const { return _gfbdb::getFLD_IdeaTableNArtsProbRev(*m_FLD_IdeaTable, id); }
 
-s32 GfBdatBlade::getFLD_IdeaTableBladeChangeRev(u32 id) const { return _gfbdb::getFLD_IdeaTableBladeChangeRev(*unknown70, id); }
+s32 GfBdatBlade::getFLD_IdeaTableBladeChangeRev(u32 id) const { return _gfbdb::getFLD_IdeaTableBladeChangeRev(*m_FLD_IdeaTable, id); }
 
-s32 GfBdatBlade::getFLD_IdeaTableBladeArtsRev(u32 id) const { return _gfbdb::getFLD_IdeaTableBladeArtsRev(*unknown70, id); }
+s32 GfBdatBlade::getFLD_IdeaTableBladeArtsRev(u32 id) const { return _gfbdb::getFLD_IdeaTableBladeArtsRev(*m_FLD_IdeaTable, id); }
 
-u32 GfBdatBlade::getBLD_IdeaStart() const { return Bdat::getIdTop(unknown78->data); }
+u32 GfBdatBlade::getBLD_IdeaStart() const { return Bdat::getIdTop(m_BLD_Idea->data); }
 
-u32 GfBdatBlade::getBLD_IdeaEnd() const { return Bdat::getIdTop(unknown78->data) + Bdat::getIdCount(unknown78->data); }
+u32 GfBdatBlade::getBLD_IdeaEnd() const { return Bdat::getIdTop(m_BLD_Idea->data) + Bdat::getIdCount(m_BLD_Idea->data); }
 
-u32 GfBdatBlade::getBLD_IdeaNeedPoint(u32 id) const { return _gfbdb::getBLD_IdeaNeedPoint(*unknown78, id); }
+u32 GfBdatBlade::getBLD_IdeaNeedPoint(u32 id) const { return _gfbdb::getBLD_IdeaNeedPoint(*m_BLD_Idea, id); }
 
-u32 GfBdatBlade::getBLD_IdeaProbRev(u32 id) const { return _gfbdb::getBLD_IdeaProbRev(*unknown78, id); }
+u32 GfBdatBlade::getBLD_IdeaProbRev(u32 id) const { return _gfbdb::getBLD_IdeaProbRev(*m_BLD_Idea, id); }
 
-u32 GfBdatBlade::getBLD_IdeaAtrDamRev(u32 id) const { return _gfbdb::getBLD_IdeaAtrDamRev(*unknown78, id); }
+u32 GfBdatBlade::getBLD_IdeaAtrDamRev(u32 id) const { return _gfbdb::getBLD_IdeaAtrDamRev(*m_BLD_Idea, id); }
 
-u32 GfBdatBlade::getBLD_RareListStart() const { return Bdat::getIdTop(unknown80->data); }
+u32 GfBdatBlade::getBLD_RareListStart() const { return Bdat::getIdTop(m_BLD_RareList->data); }
 
-u32 GfBdatBlade::getBLD_RareListEnd() const { return Bdat::getIdTop(unknown80->data) + Bdat::getIdCount(unknown80->data); }
+u32 GfBdatBlade::getBLD_RareListEnd() const { return Bdat::getIdTop(m_BLD_RareList->data) + Bdat::getIdCount(m_BLD_RareList->data); }
 
-u32 GfBdatBlade::getBLD_RareListBlade(u32 id) const { return _gfbdb::getBLD_RareListBlade(*unknown80, id); }
+u32 GfBdatBlade::getBLD_RareListBlade(u32 id) const { return _gfbdb::getBLD_RareListBlade(*m_BLD_RareList, id); }
 
-u32 GfBdatBlade::getBLD_RareListCondition(u32 id) const { return _gfbdb::getBLD_RareListCondition(*unknown80, id); }
+u32 GfBdatBlade::getBLD_RareListCondition(u32 id) const { return _gfbdb::getBLD_RareListCondition(*m_BLD_RareList, id); }
 
-f32 GfBdatBlade::getBLD_RareListProb1(u32 id) const { return _gfbdb::getBLD_RareListProb1(*unknown80, id); }
+f32 GfBdatBlade::getBLD_RareListProb1(u32 id) const { return _gfbdb::getBLD_RareListProb1(*m_BLD_RareList, id); }
 
-u32 GfBdatBlade::getBLD_RareListAssure1(u32 id) const { return _gfbdb::getBLD_RareListAssure1(*unknown80, id); }
+u32 GfBdatBlade::getBLD_RareListAssure1(u32 id) const { return _gfbdb::getBLD_RareListAssure1(*m_BLD_RareList, id); }
 
-f32 GfBdatBlade::getBLD_RareListProb2(u32 id) const { return _gfbdb::getBLD_RareListProb2(*unknown80, id); }
+f32 GfBdatBlade::getBLD_RareListProb2(u32 id) const { return _gfbdb::getBLD_RareListProb2(*m_BLD_RareList, id); }
 
-u32 GfBdatBlade::getBLD_RareListAssure2(u32 id) const { return _gfbdb::getBLD_RareListAssure2(*unknown80, id); }
+u32 GfBdatBlade::getBLD_RareListAssure2(u32 id) const { return _gfbdb::getBLD_RareListAssure2(*m_BLD_RareList, id); }
 
-f32 GfBdatBlade::getBLD_RareListProb3(u32 id) const { return _gfbdb::getBLD_RareListProb3(*unknown80, id); }
+f32 GfBdatBlade::getBLD_RareListProb3(u32 id) const { return _gfbdb::getBLD_RareListProb3(*m_BLD_RareList, id); }
 
-u32 GfBdatBlade::getBLD_RareListAssure3(u32 id) const { return _gfbdb::getBLD_RareListAssure3(*unknown80, id); }
+u32 GfBdatBlade::getBLD_RareListAssure3(u32 id) const { return _gfbdb::getBLD_RareListAssure3(*m_BLD_RareList, id); }
 
-f32 GfBdatBlade::getBLD_RareListProb4(u32 id) const { return _gfbdb::getBLD_RareListProb4(*unknown80, id); }
+f32 GfBdatBlade::getBLD_RareListProb4(u32 id) const { return _gfbdb::getBLD_RareListProb4(*m_BLD_RareList, id); }
 
-u32 GfBdatBlade::getBLD_RareListAssure4(u32 id) const { return _gfbdb::getBLD_RareListAssure4(*unknown80, id); }
+u32 GfBdatBlade::getBLD_RareListAssure4(u32 id) const { return _gfbdb::getBLD_RareListAssure4(*m_BLD_RareList, id); }
 
-f32 GfBdatBlade::getBLD_RareListProb5(u32 id) const { return _gfbdb::getBLD_RareListProb5(*unknown80, id); }
+f32 GfBdatBlade::getBLD_RareListProb5(u32 id) const { return _gfbdb::getBLD_RareListProb5(*m_BLD_RareList, id); }
 
-u32 GfBdatBlade::getBLD_RareListAssure5(u32 id) const { return _gfbdb::getBLD_RareListAssure5(*unknown80, id); }
+u32 GfBdatBlade::getBLD_RareListAssure5(u32 id) const { return _gfbdb::getBLD_RareListAssure5(*m_BLD_RareList, id); }
 
-f32 GfBdatBlade::getBLD_RareListProb(u32 id, u32 index) const { return _gfbdb::getBLD_RareListProb(*unknown80, id, index); }
+f32 GfBdatBlade::getBLD_RareListProb(u32 id, u32 index) const { return _gfbdb::getBLD_RareListProb(*m_BLD_RareList, id, index); }
 
-u32 GfBdatBlade::getBLD_RareListAssure(u32 id, u32 index) const { return _gfbdb::getBLD_RareListAssure(*unknown80, id, index); }
+u32 GfBdatBlade::getBLD_RareListAssure(u32 id, u32 index) const { return _gfbdb::getBLD_RareListAssure(*m_BLD_RareList, id, index); }
 
-u32 GfBdatBlade::getBLD_ReleaceRewardStart() const { return Bdat::getIdTop(unknown88->data); }
+u32 GfBdatBlade::getBLD_ReleaceRewardStart() const { return Bdat::getIdTop(m_BLD_ReleaceReward->data); }
 
-u32 GfBdatBlade::getBLD_ReleaceRewardEnd() const { return Bdat::getIdTop(unknown88->data) + Bdat::getIdCount(unknown88->data); }
+u32 GfBdatBlade::getBLD_ReleaceRewardEnd() const { return Bdat::getIdTop(m_BLD_ReleaceReward->data) + Bdat::getIdCount(m_BLD_ReleaceReward->data); }
 
-u32 GfBdatBlade::getBLD_ReleaceRewardReleace001(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace001(*unknown88, id); }
+u32 GfBdatBlade::getBLD_ReleaceRewardReleace001(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace001(*m_BLD_ReleaceReward, id); }
 
-u32 GfBdatBlade::getBLD_ReleaceRewardReleace002(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace002(*unknown88, id); }
+u32 GfBdatBlade::getBLD_ReleaceRewardReleace002(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace002(*m_BLD_ReleaceReward, id); }
 
-u32 GfBdatBlade::getBLD_ReleaceRewardReleace003(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace003(*unknown88, id); }
+u32 GfBdatBlade::getBLD_ReleaceRewardReleace003(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace003(*m_BLD_ReleaceReward, id); }
 
-u32 GfBdatBlade::getBLD_ReleaceRewardReleace004(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace004(*unknown88, id); }
+u32 GfBdatBlade::getBLD_ReleaceRewardReleace004(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace004(*m_BLD_ReleaceReward, id); }
 
-u32 GfBdatBlade::getBLD_ReleaceRewardReleace005(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace005(*unknown88, id); }
+u32 GfBdatBlade::getBLD_ReleaceRewardReleace005(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace005(*m_BLD_ReleaceReward, id); }
 
-u32 GfBdatBlade::getBLD_ReleaceRewardReleace006(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace006(*unknown88, id); }
+u32 GfBdatBlade::getBLD_ReleaceRewardReleace006(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace006(*m_BLD_ReleaceReward, id); }
 
-u32 GfBdatBlade::getBLD_ReleaceRewardReleace007(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace007(*unknown88, id); }
+u32 GfBdatBlade::getBLD_ReleaceRewardReleace007(u32 id) const { return _gfbdb::getBLD_ReleaceRewardReleace007(*m_BLD_ReleaceReward, id); }
 
-u32 GfBdatBlade::getBLD_ReleaceRewardReleace(u32 id, u32 index) const { return _gfbdb::getBLD_ReleaceRewardReleace(*unknown88, id, index); }
+u32 GfBdatBlade::getBLD_ReleaceRewardReleace(u32 id, u32 index) const { return _gfbdb::getBLD_ReleaceRewardReleace(*m_BLD_ReleaceReward, id, index); }
 
 } // namespace gf

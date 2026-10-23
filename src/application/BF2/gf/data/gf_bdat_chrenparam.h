@@ -106,11 +106,11 @@ public:
   bool searchByRscEn(mm::mtl::FixedVector<u16, 128> &enemies, u32 resourceId) const;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mChrEnParam; original member name unknown.
-  CBdatWrapper *unknown18; // Inferred label: mChrEnParamTable; original member name unknown.
-  CBdatWrapper *unknown20; // Inferred label: mChrEnParamRev; original member name unknown.
-  CBdatWrapper *unknown28; // Inferred label: mChrEnRstDebuffRev; original member name unknown.
-  CBdatWrapper *unknown30; // Inferred label: mEnemyGroup; original member name unknown.
+  CBdatWrapper *m_chrEnParam;
+  CBdatWrapper *m_chrEnParamTable;
+  CBdatWrapper *m_chrEnParamRev;
+  CBdatWrapper *m_chrEnRstDebuffRev;
+  CBdatWrapper *m_enemyGroup;
 };
 
 } // namespace gf

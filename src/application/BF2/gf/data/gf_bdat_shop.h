@@ -122,13 +122,13 @@ public:
   u32 getMNU_EventTheaterflag_index(u32 id) const;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mShopList; original member name unknown.
-  CBdatWrapper *unknown18; // Inferred label: mShopNormal; original member name unknown.
-  CBdatWrapper *unknown20; // Inferred label: mShopInn; original member name unknown.
-  CBdatWrapper *unknown28; // Inferred label: mShopChange; original member name unknown.
-  CBdatWrapper *unknown30; // Inferred label: mShopChangeTask; original member name unknown.
-  CBdatWrapper *unknown38; // Inferred label: mShopCategoryName; original member name unknown.
-  CBdatWrapper *unknown40; // Inferred label: mMNU_EventTheater; original member name unknown.
+  CBdatWrapper *m_shopList;
+  CBdatWrapper *m_shopNormal;
+  CBdatWrapper *m_shopInn;
+  CBdatWrapper *m_shopChange;
+  CBdatWrapper *m_shopChangeTask;
+  CBdatWrapper *m_shopCategoryName;
+  CBdatWrapper *m_MNU_EventTheater;
 };
 
 } // namespace gf

@@ -77,7 +77,7 @@ public:
   u32 getChrDrFavoriteItem(u32 driver, u32 favorite) const;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mChrDr; original member name unknown.
+  CBdatWrapper *m_chrDr;
 };
 
 } // namespace gf

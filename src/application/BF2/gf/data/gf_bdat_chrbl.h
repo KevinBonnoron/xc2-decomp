@@ -134,7 +134,7 @@ public:
   const char *getChrBlMnuVoice(u32 id, u32 index) const;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mChrBl; original member name unknown.
+  CBdatWrapper *m_chrBl;
 };
 
 } // namespace gf

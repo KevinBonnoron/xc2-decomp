@@ -591,27 +591,27 @@ public:
   const char *getVo_Field_FilterChangeFile(u32 id) const;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mArtsDr; original member name unknown.
-  CBdatWrapper *unknown18; // Inferred label: mArtsBl; original member name unknown.
-  CBdatWrapper *unknown20; // Inferred label: mArtsBlSp; original member name unknown.
-  CBdatWrapper *unknown28; // Inferred label: mGrow; original member name unknown.
-  CBdatWrapper *unknown30; // Inferred label: mLv_Rev; original member name unknown.
-  CBdatWrapper *unknown38; // Inferred label: mWpn_En; original member name unknown.
-  CBdatWrapper *unknown40; // Inferred label: mBTL_Class; original member name unknown.
-  CBdatWrapper *unknown48; // Inferred label: mBTL_Enhance; original member name unknown.
-  CBdatWrapper *unknown50; // Inferred label: mBTL_EnhanceEff; original member name unknown.
-  CBdatWrapper *unknown58; // Inferred label: mBTL_Skill_Bl; original member name unknown.
-  CBdatWrapper *unknown60; // Inferred label: mBTL_Skill_Dr; original member name unknown.
-  CBdatWrapper *unknown68; // Inferred label: mBTL_Buff; original member name unknown.
-  CBdatWrapper *unknown70; // Inferred label: mBTL_Bl_Personality; original member name unknown.
-  CBdatWrapper *unknown78; // Inferred label: mBTL_Bl_KizunaLink; original member name unknown.
-  CBdatWrapper *unknown80; // Inferred label: mBTL_Bl_KizunaLinkSet; original member name unknown.
-  CBdatWrapper *unknown88; // Inferred label: mBTL_TestSetting; original member name unknown.
-  CBdatWrapper *unknown90; // Inferred label: mBTL_HanaBase; original member name unknown.
-  CBdatWrapper *unknown98; // Inferred label: mBTL_HanaPower; original member name unknown.
-  CBdatWrapper *unknowna0; // Inferred label: mBTL_HanaChipset; original member name unknown.
-  CBdatWrapper *unknowna8; // Inferred label: mWildcardData; original member name unknown.
-  CBdatWrapper *unknownb0; // Inferred label: mVo_Field_Filter; original member name unknown.
+  CBdatWrapper *m_artsDr;
+  CBdatWrapper *m_artsBl;
+  CBdatWrapper *m_artsBlSp;
+  CBdatWrapper *m_grow;
+  CBdatWrapper *m_lv_Rev;
+  CBdatWrapper *m_wpn_En;
+  CBdatWrapper *m_BTL_Class;
+  CBdatWrapper *m_BTL_Enhance;
+  CBdatWrapper *m_BTL_EnhanceEff;
+  CBdatWrapper *m_BTL_Skill_Bl;
+  CBdatWrapper *m_BTL_Skill_Dr;
+  CBdatWrapper *m_BTL_Buff;
+  CBdatWrapper *m_BTL_Bl_Personality;
+  CBdatWrapper *m_BTL_Bl_KizunaLink;
+  CBdatWrapper *m_BTL_Bl_KizunaLinkSet;
+  CBdatWrapper *m_BTL_TestSetting;
+  CBdatWrapper *m_BTL_HanaBase;
+  CBdatWrapper *m_BTL_HanaPower;
+  CBdatWrapper *m_BTL_HanaChipset;
+  CBdatWrapper *m_wildcardData;
+  CBdatWrapper *m_vo_Field_Filter;
 };
 
 } // namespace gf

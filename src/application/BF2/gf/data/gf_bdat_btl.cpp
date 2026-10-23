@@ -6063,118 +6063,119 @@ const char *getVo_Field_FilterChangeFile(const CBdatWrapper &wrapper, u32 id) {
 } // namespace _gfbbt
 
 GfBdatBtl::GfBdatBtl()
-    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr),
-      unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), unknown78(nullptr),
-      unknown80(nullptr), unknown88(nullptr), unknown90(nullptr), unknown98(nullptr), unknowna0(nullptr), unknowna8(nullptr), unknownb0(nullptr) {
+    : m_artsDr(nullptr), m_artsBl(nullptr), m_artsBlSp(nullptr), m_grow(nullptr), m_lv_Rev(nullptr), m_wpn_En(nullptr), m_BTL_Class(nullptr),
+      m_BTL_Enhance(nullptr), m_BTL_EnhanceEff(nullptr), m_BTL_Skill_Bl(nullptr), m_BTL_Skill_Dr(nullptr), m_BTL_Buff(nullptr),
+      m_BTL_Bl_Personality(nullptr), m_BTL_Bl_KizunaLink(nullptr), m_BTL_Bl_KizunaLinkSet(nullptr), m_BTL_TestSetting(nullptr),
+      m_BTL_HanaBase(nullptr), m_BTL_HanaPower(nullptr), m_BTL_HanaChipset(nullptr), m_wildcardData(nullptr), m_vo_Field_Filter(nullptr) {
   bdatRefresh();
 }
 
 GfBdatBtl::~GfBdatBtl() { destroyFP(); }
 
 void GfBdatBtl::destroyFP() {
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_artsDr != nullptr) {
+    delete m_artsDr;
+    m_artsDr = nullptr;
   }
 
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  if (m_artsBl != nullptr) {
+    delete m_artsBl;
+    m_artsBl = nullptr;
   }
 
-  if (unknown20 != nullptr) {
-    delete unknown20;
-    unknown20 = nullptr;
+  if (m_artsBlSp != nullptr) {
+    delete m_artsBlSp;
+    m_artsBlSp = nullptr;
   }
 
-  if (unknown28 != nullptr) {
-    delete unknown28;
-    unknown28 = nullptr;
+  if (m_grow != nullptr) {
+    delete m_grow;
+    m_grow = nullptr;
   }
 
-  if (unknown30 != nullptr) {
-    delete unknown30;
-    unknown30 = nullptr;
+  if (m_lv_Rev != nullptr) {
+    delete m_lv_Rev;
+    m_lv_Rev = nullptr;
   }
 
-  if (unknown38 != nullptr) {
-    delete unknown38;
-    unknown38 = nullptr;
+  if (m_wpn_En != nullptr) {
+    delete m_wpn_En;
+    m_wpn_En = nullptr;
   }
 
-  if (unknown40 != nullptr) {
-    delete unknown40;
-    unknown40 = nullptr;
+  if (m_BTL_Class != nullptr) {
+    delete m_BTL_Class;
+    m_BTL_Class = nullptr;
   }
 
-  if (unknown48 != nullptr) {
-    delete unknown48;
-    unknown48 = nullptr;
+  if (m_BTL_Enhance != nullptr) {
+    delete m_BTL_Enhance;
+    m_BTL_Enhance = nullptr;
   }
 
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_BTL_EnhanceEff != nullptr) {
+    delete m_BTL_EnhanceEff;
+    m_BTL_EnhanceEff = nullptr;
   }
 
-  if (unknown58 != nullptr) {
-    delete unknown58;
-    unknown58 = nullptr;
+  if (m_BTL_Skill_Bl != nullptr) {
+    delete m_BTL_Skill_Bl;
+    m_BTL_Skill_Bl = nullptr;
   }
 
-  if (unknown60 != nullptr) {
-    delete unknown60;
-    unknown60 = nullptr;
+  if (m_BTL_Skill_Dr != nullptr) {
+    delete m_BTL_Skill_Dr;
+    m_BTL_Skill_Dr = nullptr;
   }
 
-  if (unknown68 != nullptr) {
-    delete unknown68;
-    unknown68 = nullptr;
+  if (m_BTL_Buff != nullptr) {
+    delete m_BTL_Buff;
+    m_BTL_Buff = nullptr;
   }
 
-  if (unknown70 != nullptr) {
-    delete unknown70;
-    unknown70 = nullptr;
+  if (m_BTL_Bl_Personality != nullptr) {
+    delete m_BTL_Bl_Personality;
+    m_BTL_Bl_Personality = nullptr;
   }
 
-  if (unknown78 != nullptr) {
-    delete unknown78;
-    unknown78 = nullptr;
+  if (m_BTL_Bl_KizunaLink != nullptr) {
+    delete m_BTL_Bl_KizunaLink;
+    m_BTL_Bl_KizunaLink = nullptr;
   }
 
-  if (unknown80 != nullptr) {
-    delete unknown80;
-    unknown80 = nullptr;
+  if (m_BTL_Bl_KizunaLinkSet != nullptr) {
+    delete m_BTL_Bl_KizunaLinkSet;
+    m_BTL_Bl_KizunaLinkSet = nullptr;
   }
 
-  if (unknown88 != nullptr) {
-    delete unknown88;
-    unknown88 = nullptr;
+  if (m_BTL_TestSetting != nullptr) {
+    delete m_BTL_TestSetting;
+    m_BTL_TestSetting = nullptr;
   }
 
-  if (unknown90 != nullptr) {
-    delete unknown90;
-    unknown90 = nullptr;
+  if (m_BTL_HanaBase != nullptr) {
+    delete m_BTL_HanaBase;
+    m_BTL_HanaBase = nullptr;
   }
 
-  if (unknown98 != nullptr) {
-    delete unknown98;
-    unknown98 = nullptr;
+  if (m_BTL_HanaPower != nullptr) {
+    delete m_BTL_HanaPower;
+    m_BTL_HanaPower = nullptr;
   }
 
-  if (unknowna0 != nullptr) {
-    delete unknowna0;
-    unknowna0 = nullptr;
+  if (m_BTL_HanaChipset != nullptr) {
+    delete m_BTL_HanaChipset;
+    m_BTL_HanaChipset = nullptr;
   }
 
-  if (unknowna8 != nullptr) {
-    delete unknowna8;
-    unknowna8 = nullptr;
+  if (m_wildcardData != nullptr) {
+    delete m_wildcardData;
+    m_wildcardData = nullptr;
   }
 
-  if (unknownb0 != nullptr) {
-    delete unknownb0;
-    unknownb0 = nullptr;
+  if (m_vo_Field_Filter != nullptr) {
+    delete m_vo_Field_Filter;
+    m_vo_Field_Filter = nullptr;
   }
 }
 
@@ -6182,806 +6183,806 @@ void GfBdatBtl::destroyFP() {
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 void GfBdatBtl::createFP() {
-  unknown10 = NEW_BDAT_WRAPPER(BDAT_BTL_ARTS_DR);
-  unknown18 = NEW_BDAT_WRAPPER(BDAT_BTL_ARTS_BL);
-  unknown20 = NEW_BDAT_WRAPPER(BDAT_BTL_ARTS_BL_SP);
-  unknown28 = NEW_BDAT_WRAPPER(BDAT_BTL_GROW);
-  unknown30 = NEW_BDAT_WRAPPER(BDAT_BTL_LV_REV);
-  unknown38 = NEW_BDAT_WRAPPER(BDAT_BTL_WPN_EN);
-  unknown40 = NEW_BDAT_WRAPPER(BDAT_BTL_CLASS);
-  unknown48 = NEW_BDAT_WRAPPER(BDAT_BTL_ENHANCE);
-  unknown50 = NEW_BDAT_WRAPPER(BDAT_BTL_ENHANCE_EFF);
-  unknown58 = NEW_BDAT_WRAPPER(BDAT_BTL_SKILL_BL);
-  unknown60 = NEW_BDAT_WRAPPER(BDAT_BTL_SKILL_DR);
-  unknown68 = NEW_BDAT_WRAPPER(BDAT_BTL_BUFF);
-  unknown70 = NEW_BDAT_WRAPPER(BDAT_BTL_BL_PERSONALITY);
-  unknown78 = NEW_BDAT_WRAPPER(BDAT_BTL_BL_KIZUNA_LINK);
-  unknown80 = NEW_BDAT_WRAPPER(BDAT_BTL_BL_KIZUNA_LINK_SET);
-  unknown88 = NEW_BDAT_WRAPPER(BDAT_BTL_TEST_SETTING);
-  unknown90 = NEW_BDAT_WRAPPER(BDAT_BTL_HANA_BASE);
-  unknown98 = NEW_BDAT_WRAPPER(BDAT_BTL_HANA_POWER);
-  unknowna0 = NEW_BDAT_WRAPPER(BDAT_BTL_HANA_CHIPSET);
-  unknowna8 = NEW_BDAT_WRAPPER(BDAT_FLD_WILDCARD_DATA);
-  unknownb0 = NEW_BDAT_WRAPPER(BDAT_VO_FIELD_FILTER);
+  m_artsDr = NEW_BDAT_WRAPPER(BDAT_BTL_ARTS_DR);
+  m_artsBl = NEW_BDAT_WRAPPER(BDAT_BTL_ARTS_BL);
+  m_artsBlSp = NEW_BDAT_WRAPPER(BDAT_BTL_ARTS_BL_SP);
+  m_grow = NEW_BDAT_WRAPPER(BDAT_BTL_GROW);
+  m_lv_Rev = NEW_BDAT_WRAPPER(BDAT_BTL_LV_REV);
+  m_wpn_En = NEW_BDAT_WRAPPER(BDAT_BTL_WPN_EN);
+  m_BTL_Class = NEW_BDAT_WRAPPER(BDAT_BTL_CLASS);
+  m_BTL_Enhance = NEW_BDAT_WRAPPER(BDAT_BTL_ENHANCE);
+  m_BTL_EnhanceEff = NEW_BDAT_WRAPPER(BDAT_BTL_ENHANCE_EFF);
+  m_BTL_Skill_Bl = NEW_BDAT_WRAPPER(BDAT_BTL_SKILL_BL);
+  m_BTL_Skill_Dr = NEW_BDAT_WRAPPER(BDAT_BTL_SKILL_DR);
+  m_BTL_Buff = NEW_BDAT_WRAPPER(BDAT_BTL_BUFF);
+  m_BTL_Bl_Personality = NEW_BDAT_WRAPPER(BDAT_BTL_BL_PERSONALITY);
+  m_BTL_Bl_KizunaLink = NEW_BDAT_WRAPPER(BDAT_BTL_BL_KIZUNA_LINK);
+  m_BTL_Bl_KizunaLinkSet = NEW_BDAT_WRAPPER(BDAT_BTL_BL_KIZUNA_LINK_SET);
+  m_BTL_TestSetting = NEW_BDAT_WRAPPER(BDAT_BTL_TEST_SETTING);
+  m_BTL_HanaBase = NEW_BDAT_WRAPPER(BDAT_BTL_HANA_BASE);
+  m_BTL_HanaPower = NEW_BDAT_WRAPPER(BDAT_BTL_HANA_POWER);
+  m_BTL_HanaChipset = NEW_BDAT_WRAPPER(BDAT_BTL_HANA_CHIPSET);
+  m_wildcardData = NEW_BDAT_WRAPPER(BDAT_FLD_WILDCARD_DATA);
+  m_vo_Field_Filter = NEW_BDAT_WRAPPER(BDAT_VO_FIELD_FILTER);
 }
 
 void GfBdatBtl::bdatRefresh() {
   destroyFP();
   createFP();
-  _gfbbt::initArtsDrName(*unknown10);
-  _gfbbt::initArtsDrDebugName(*unknown10);
-  _gfbbt::initArtsDrCaption(*unknown10);
-  _gfbbt::initArtsDrDriver(*unknown10);
-  _gfbbt::initArtsDrWpnType(*unknown10);
-  _gfbbt::initArtsDrActNo(*unknown10);
-  _gfbbt::initArtsDrArtsType(*unknown10);
-  _gfbbt::initArtsDrArtsBuff(*unknown10);
-  _gfbbt::initArtsDrAtrType(*unknown10);
-  _gfbbt::initArtsDrFlagNormal(*unknown10);
-  _gfbbt::initArtsDrFlagPierce(*unknown10);
-  _gfbbt::initArtsDrFlagNoRepelled(*unknown10);
-  _gfbbt::initArtsDrNextArts(*unknown10);
-  _gfbbt::initArtsDrTarget(*unknown10);
-  _gfbbt::initArtsDrDistance(*unknown10);
-  _gfbbt::initArtsDrRangeType(*unknown10);
-  _gfbbt::initArtsDrRadius(*unknown10);
-  _gfbbt::initArtsDrLength(*unknown10);
-  _gfbbt::initArtsDrHate(*unknown10);
-  _gfbbt::initArtsDrHitRevise(*unknown10);
-  _gfbbt::initArtsDrCriRevise(*unknown10);
-  _gfbbt::initArtsDrBulletID(*unknown10);
-  _gfbbt::initArtsDrBulletNum(*unknown10);
-  _gfbbt::initArtsDrHitFrm1(*unknown10);
-  _gfbbt::initArtsDrHitFrm2(*unknown10);
-  _gfbbt::initArtsDrHitFrm3(*unknown10);
-  _gfbbt::initArtsDrHitFrm4(*unknown10);
-  _gfbbt::initArtsDrHitFrm5(*unknown10);
-  _gfbbt::initArtsDrHitFrm6(*unknown10);
-  _gfbbt::initArtsDrHitFrm7(*unknown10);
-  _gfbbt::initArtsDrHitFrm8(*unknown10);
-  _gfbbt::initArtsDrHitFrm9(*unknown10);
-  _gfbbt::initArtsDrHitFrm10(*unknown10);
-  _gfbbt::initArtsDrHitFrm11(*unknown10);
-  _gfbbt::initArtsDrHitFrm12(*unknown10);
-  _gfbbt::initArtsDrHitFrm13(*unknown10);
-  _gfbbt::initArtsDrHitFrm14(*unknown10);
-  _gfbbt::initArtsDrHitFrm15(*unknown10);
-  _gfbbt::initArtsDrHitFrm16(*unknown10);
-  _gfbbt::initArtsDrEfp1(*unknown10);
-  _gfbbt::initArtsDrEfp2(*unknown10);
-  _gfbbt::initArtsDrEfp3(*unknown10);
-  _gfbbt::initArtsDrEfp4(*unknown10);
-  _gfbbt::initArtsDrEfp5(*unknown10);
-  _gfbbt::initArtsDrEfp6(*unknown10);
-  _gfbbt::initArtsDrEfp7(*unknown10);
-  _gfbbt::initArtsDrEfp8(*unknown10);
-  _gfbbt::initArtsDrEfp9(*unknown10);
-  _gfbbt::initArtsDrEfp10(*unknown10);
-  _gfbbt::initArtsDrEfp11(*unknown10);
-  _gfbbt::initArtsDrEfp12(*unknown10);
-  _gfbbt::initArtsDrEfp13(*unknown10);
-  _gfbbt::initArtsDrEfp14(*unknown10);
-  _gfbbt::initArtsDrEfp15(*unknown10);
-  _gfbbt::initArtsDrEfp16(*unknown10);
-  _gfbbt::initArtsDrHitDirID1(*unknown10);
-  _gfbbt::initArtsDrHitDirID2(*unknown10);
-  _gfbbt::initArtsDrHitDirID3(*unknown10);
-  _gfbbt::initArtsDrHitDirID4(*unknown10);
-  _gfbbt::initArtsDrHitDirID5(*unknown10);
-  _gfbbt::initArtsDrHitDirID6(*unknown10);
-  _gfbbt::initArtsDrHitDirID7(*unknown10);
-  _gfbbt::initArtsDrHitDirID8(*unknown10);
-  _gfbbt::initArtsDrHitDirID9(*unknown10);
-  _gfbbt::initArtsDrHitDirID10(*unknown10);
-  _gfbbt::initArtsDrHitDirID11(*unknown10);
-  _gfbbt::initArtsDrHitDirID12(*unknown10);
-  _gfbbt::initArtsDrHitDirID13(*unknown10);
-  _gfbbt::initArtsDrHitDirID14(*unknown10);
-  _gfbbt::initArtsDrHitDirID15(*unknown10);
-  _gfbbt::initArtsDrHitDirID16(*unknown10);
-  _gfbbt::initArtsDrDmgRt1(*unknown10);
-  _gfbbt::initArtsDrDmgRt2(*unknown10);
-  _gfbbt::initArtsDrDmgRt3(*unknown10);
-  _gfbbt::initArtsDrDmgRt4(*unknown10);
-  _gfbbt::initArtsDrDmgRt5(*unknown10);
-  _gfbbt::initArtsDrDmgRt6(*unknown10);
-  _gfbbt::initArtsDrDmgRt7(*unknown10);
-  _gfbbt::initArtsDrDmgRt8(*unknown10);
-  _gfbbt::initArtsDrDmgRt9(*unknown10);
-  _gfbbt::initArtsDrDmgRt10(*unknown10);
-  _gfbbt::initArtsDrDmgRt11(*unknown10);
-  _gfbbt::initArtsDrDmgRt12(*unknown10);
-  _gfbbt::initArtsDrDmgRt13(*unknown10);
-  _gfbbt::initArtsDrDmgRt14(*unknown10);
-  _gfbbt::initArtsDrDmgRt15(*unknown10);
-  _gfbbt::initArtsDrDmgRt16(*unknown10);
-  _gfbbt::initArtsDrReAct1(*unknown10);
-  _gfbbt::initArtsDrReAct2(*unknown10);
-  _gfbbt::initArtsDrReAct3(*unknown10);
-  _gfbbt::initArtsDrReAct4(*unknown10);
-  _gfbbt::initArtsDrReAct5(*unknown10);
-  _gfbbt::initArtsDrReAct6(*unknown10);
-  _gfbbt::initArtsDrReAct7(*unknown10);
-  _gfbbt::initArtsDrReAct8(*unknown10);
-  _gfbbt::initArtsDrReAct9(*unknown10);
-  _gfbbt::initArtsDrReAct10(*unknown10);
-  _gfbbt::initArtsDrReAct11(*unknown10);
-  _gfbbt::initArtsDrReAct12(*unknown10);
-  _gfbbt::initArtsDrReAct13(*unknown10);
-  _gfbbt::initArtsDrReAct14(*unknown10);
-  _gfbbt::initArtsDrReAct15(*unknown10);
-  _gfbbt::initArtsDrReAct16(*unknown10);
-  _gfbbt::initArtsDrMoveCancelFrm(*unknown10);
-  _gfbbt::initArtsDrDmgMgn1(*unknown10);
-  _gfbbt::initArtsDrDmgMgn2(*unknown10);
-  _gfbbt::initArtsDrDmgMgn3(*unknown10);
-  _gfbbt::initArtsDrDmgMgn4(*unknown10);
-  _gfbbt::initArtsDrDmgMgn5(*unknown10);
-  _gfbbt::initArtsDrDmgMgn6(*unknown10);
-  _gfbbt::initArtsDrRecast1(*unknown10);
-  _gfbbt::initArtsDrRecast2(*unknown10);
-  _gfbbt::initArtsDrRecast3(*unknown10);
-  _gfbbt::initArtsDrRecast4(*unknown10);
-  _gfbbt::initArtsDrRecast5(*unknown10);
-  _gfbbt::initArtsDrRecast6(*unknown10);
-  _gfbbt::initArtsDrAtrNum(*unknown10);
-  _gfbbt::initArtsDrEnhance1(*unknown10);
-  _gfbbt::initArtsDrEnhance2(*unknown10);
-  _gfbbt::initArtsDrEnhance3(*unknown10);
-  _gfbbt::initArtsDrEnhance4(*unknown10);
-  _gfbbt::initArtsDrEnhance5(*unknown10);
-  _gfbbt::initArtsDrEnhance6(*unknown10);
-  _gfbbt::initArtsDrReleaseLv1(*unknown10);
-  _gfbbt::initArtsDrReleaseLv2(*unknown10);
-  _gfbbt::initArtsDrReleaseLv3(*unknown10);
-  _gfbbt::initArtsDrReleaseLv4(*unknown10);
-  _gfbbt::initArtsDrReleaseLv5(*unknown10);
-  _gfbbt::initArtsDrNeedWP2(*unknown10);
-  _gfbbt::initArtsDrNeedWP3(*unknown10);
-  _gfbbt::initArtsDrNeedWP4(*unknown10);
-  _gfbbt::initArtsDrNeedWP5(*unknown10);
-  _gfbbt::initArtsDrUI(*unknown10);
-  _gfbbt::initArtsDrPriority(*unknown10);
-  _gfbbt::initArtsBlName(*unknown18);
-  _gfbbt::initArtsBlDebugName(*unknown18);
-  _gfbbt::initArtsBlCaption(*unknown18);
-  _gfbbt::initArtsBlWpnType(*unknown18);
-  _gfbbt::initArtsBlCmnBlType(*unknown18);
-  _gfbbt::initArtsBlSpLv(*unknown18);
-  _gfbbt::initArtsBlActNo(*unknown18);
-  _gfbbt::initArtsBlArtsType(*unknown18);
-  _gfbbt::initArtsBlArtsBuff(*unknown18);
-  _gfbbt::initArtsBlFlagcommon(*unknown18);
-  _gfbbt::initArtsBlFlagPierce(*unknown18);
-  _gfbbt::initArtsBlTarget(*unknown18);
-  _gfbbt::initArtsBlDistance(*unknown18);
-  _gfbbt::initArtsBlRangeType(*unknown18);
-  _gfbbt::initArtsBlRadius(*unknown18);
-  _gfbbt::initArtsBlLength(*unknown18);
-  _gfbbt::initArtsBlAtr(*unknown18);
-  _gfbbt::initArtsBlHate(*unknown18);
-  _gfbbt::initArtsBlHitRevise(*unknown18);
-  _gfbbt::initArtsBlCriRevise(*unknown18);
-  _gfbbt::initArtsBlBulletID(*unknown18);
-  _gfbbt::initArtsBlBulletNum(*unknown18);
-  _gfbbt::initArtsBlHitFrm1(*unknown18);
-  _gfbbt::initArtsBlHitFrm2(*unknown18);
-  _gfbbt::initArtsBlHitFrm3(*unknown18);
-  _gfbbt::initArtsBlHitFrm4(*unknown18);
-  _gfbbt::initArtsBlHitFrm5(*unknown18);
-  _gfbbt::initArtsBlHitFrm6(*unknown18);
-  _gfbbt::initArtsBlHitFrm7(*unknown18);
-  _gfbbt::initArtsBlHitFrm8(*unknown18);
-  _gfbbt::initArtsBlHitFrm9(*unknown18);
-  _gfbbt::initArtsBlHitFrm10(*unknown18);
-  _gfbbt::initArtsBlHitFrm11(*unknown18);
-  _gfbbt::initArtsBlHitFrm12(*unknown18);
-  _gfbbt::initArtsBlHitFrm13(*unknown18);
-  _gfbbt::initArtsBlHitFrm14(*unknown18);
-  _gfbbt::initArtsBlHitFrm15(*unknown18);
-  _gfbbt::initArtsBlHitFrm16(*unknown18);
-  _gfbbt::initArtsBlEfp1(*unknown18);
-  _gfbbt::initArtsBlEfp2(*unknown18);
-  _gfbbt::initArtsBlEfp3(*unknown18);
-  _gfbbt::initArtsBlEfp4(*unknown18);
-  _gfbbt::initArtsBlEfp5(*unknown18);
-  _gfbbt::initArtsBlEfp6(*unknown18);
-  _gfbbt::initArtsBlEfp7(*unknown18);
-  _gfbbt::initArtsBlEfp8(*unknown18);
-  _gfbbt::initArtsBlEfp9(*unknown18);
-  _gfbbt::initArtsBlEfp10(*unknown18);
-  _gfbbt::initArtsBlEfp11(*unknown18);
-  _gfbbt::initArtsBlEfp12(*unknown18);
-  _gfbbt::initArtsBlEfp13(*unknown18);
-  _gfbbt::initArtsBlEfp14(*unknown18);
-  _gfbbt::initArtsBlEfp15(*unknown18);
-  _gfbbt::initArtsBlEfp16(*unknown18);
-  _gfbbt::initArtsBlHitDirID1(*unknown18);
-  _gfbbt::initArtsBlHitDirID2(*unknown18);
-  _gfbbt::initArtsBlHitDirID3(*unknown18);
-  _gfbbt::initArtsBlHitDirID4(*unknown18);
-  _gfbbt::initArtsBlHitDirID5(*unknown18);
-  _gfbbt::initArtsBlHitDirID6(*unknown18);
-  _gfbbt::initArtsBlHitDirID7(*unknown18);
-  _gfbbt::initArtsBlHitDirID8(*unknown18);
-  _gfbbt::initArtsBlHitDirID9(*unknown18);
-  _gfbbt::initArtsBlHitDirID10(*unknown18);
-  _gfbbt::initArtsBlHitDirID11(*unknown18);
-  _gfbbt::initArtsBlHitDirID12(*unknown18);
-  _gfbbt::initArtsBlHitDirID13(*unknown18);
-  _gfbbt::initArtsBlHitDirID14(*unknown18);
-  _gfbbt::initArtsBlHitDirID15(*unknown18);
-  _gfbbt::initArtsBlHitDirID16(*unknown18);
-  _gfbbt::initArtsBlDmgRt1(*unknown18);
-  _gfbbt::initArtsBlDmgRt2(*unknown18);
-  _gfbbt::initArtsBlDmgRt3(*unknown18);
-  _gfbbt::initArtsBlDmgRt4(*unknown18);
-  _gfbbt::initArtsBlDmgRt5(*unknown18);
-  _gfbbt::initArtsBlDmgRt6(*unknown18);
-  _gfbbt::initArtsBlDmgRt7(*unknown18);
-  _gfbbt::initArtsBlDmgRt8(*unknown18);
-  _gfbbt::initArtsBlDmgRt9(*unknown18);
-  _gfbbt::initArtsBlDmgRt10(*unknown18);
-  _gfbbt::initArtsBlDmgRt11(*unknown18);
-  _gfbbt::initArtsBlDmgRt12(*unknown18);
-  _gfbbt::initArtsBlDmgRt13(*unknown18);
-  _gfbbt::initArtsBlDmgRt14(*unknown18);
-  _gfbbt::initArtsBlDmgRt15(*unknown18);
-  _gfbbt::initArtsBlDmgRt16(*unknown18);
-  _gfbbt::initArtsBlReAct1(*unknown18);
-  _gfbbt::initArtsBlReAct2(*unknown18);
-  _gfbbt::initArtsBlReAct3(*unknown18);
-  _gfbbt::initArtsBlReAct4(*unknown18);
-  _gfbbt::initArtsBlReAct5(*unknown18);
-  _gfbbt::initArtsBlReAct6(*unknown18);
-  _gfbbt::initArtsBlReAct7(*unknown18);
-  _gfbbt::initArtsBlReAct8(*unknown18);
-  _gfbbt::initArtsBlReAct9(*unknown18);
-  _gfbbt::initArtsBlReAct10(*unknown18);
-  _gfbbt::initArtsBlReAct11(*unknown18);
-  _gfbbt::initArtsBlReAct12(*unknown18);
-  _gfbbt::initArtsBlReAct13(*unknown18);
-  _gfbbt::initArtsBlReAct14(*unknown18);
-  _gfbbt::initArtsBlReAct15(*unknown18);
-  _gfbbt::initArtsBlReAct16(*unknown18);
-  _gfbbt::initArtsBlDmgMgn1(*unknown18);
-  _gfbbt::initArtsBlDmgMgn2(*unknown18);
-  _gfbbt::initArtsBlDmgMgn3(*unknown18);
-  _gfbbt::initArtsBlDmgMgn4(*unknown18);
-  _gfbbt::initArtsBlDmgMgn5(*unknown18);
-  _gfbbt::initArtsBlDmgMgn6(*unknown18);
-  _gfbbt::initArtsBlAtrNum(*unknown18);
-  _gfbbt::initArtsBlEnhance1(*unknown18);
-  _gfbbt::initArtsBlEnhance2(*unknown18);
-  _gfbbt::initArtsBlEnhance3(*unknown18);
-  _gfbbt::initArtsBlEnhance4(*unknown18);
-  _gfbbt::initArtsBlEnhance5(*unknown18);
-  _gfbbt::initArtsBlEnhance6(*unknown18);
-  _gfbbt::initArtsBlBtnType(*unknown18);
-  _gfbbt::initArtsBlBtnChal1(*unknown18);
-  _gfbbt::initArtsBlUI(*unknown18);
-  _gfbbt::initArtsBlSpName(*unknown20);
-  _gfbbt::initArtsBlSpDebugName(*unknown20);
-  _gfbbt::initArtsBlSpCaption(*unknown20);
-  _gfbbt::initArtsBlSpWpnType(*unknown20);
-  _gfbbt::initArtsBlSpCmnBlType(*unknown20);
-  _gfbbt::initArtsBlSpActNoDr(*unknown20);
-  _gfbbt::initArtsBlSpActNoBl(*unknown20);
-  _gfbbt::initArtsBlSpActNoBl2(*unknown20);
-  _gfbbt::initArtsBlSpBuddyDr(*unknown20);
-  _gfbbt::initArtsBlSpAddBl(*unknown20);
-  _gfbbt::initArtsBlSpActType(*unknown20);
-  _gfbbt::initArtsBlSpPC01(*unknown20);
-  _gfbbt::initArtsBlSpPC02(*unknown20);
-  _gfbbt::initArtsBlSpPC03(*unknown20);
-  _gfbbt::initArtsBlSpPC06(*unknown20);
-  _gfbbt::initArtsBlSpArtsType(*unknown20);
-  _gfbbt::initArtsBlSpArtsBuff(*unknown20);
-  _gfbbt::initArtsBlSpFlagPierce(*unknown20);
-  _gfbbt::initArtsBlSpFlagNoMove(*unknown20);
-  _gfbbt::initArtsBlSpTarget(*unknown20);
-  _gfbbt::initArtsBlSpDistance(*unknown20);
-  _gfbbt::initArtsBlSpRangeType(*unknown20);
-  _gfbbt::initArtsBlSpRadius(*unknown20);
-  _gfbbt::initArtsBlSpLength(*unknown20);
-  _gfbbt::initArtsBlSpAtr(*unknown20);
-  _gfbbt::initArtsBlSpHate(*unknown20);
-  _gfbbt::initArtsBlSpHitRevise(*unknown20);
-  _gfbbt::initArtsBlSpCriRevise(*unknown20);
-  _gfbbt::initArtsBlSpBulletID(*unknown20);
-  _gfbbt::initArtsBlSpBulletEffID(*unknown20);
-  _gfbbt::initArtsBlSpBulletNum(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm1(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm2(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm3(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm4(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm5(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm6(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm7(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm8(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm9(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm10(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm11(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm12(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm13(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm14(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm15(*unknown20);
-  _gfbbt::initArtsBlSpHitFrm16(*unknown20);
-  _gfbbt::initArtsBlSpEfp1(*unknown20);
-  _gfbbt::initArtsBlSpEfp2(*unknown20);
-  _gfbbt::initArtsBlSpEfp3(*unknown20);
-  _gfbbt::initArtsBlSpEfp4(*unknown20);
-  _gfbbt::initArtsBlSpEfp5(*unknown20);
-  _gfbbt::initArtsBlSpEfp6(*unknown20);
-  _gfbbt::initArtsBlSpEfp7(*unknown20);
-  _gfbbt::initArtsBlSpEfp8(*unknown20);
-  _gfbbt::initArtsBlSpEfp9(*unknown20);
-  _gfbbt::initArtsBlSpEfp10(*unknown20);
-  _gfbbt::initArtsBlSpEfp11(*unknown20);
-  _gfbbt::initArtsBlSpEfp12(*unknown20);
-  _gfbbt::initArtsBlSpEfp13(*unknown20);
-  _gfbbt::initArtsBlSpEfp14(*unknown20);
-  _gfbbt::initArtsBlSpEfp15(*unknown20);
-  _gfbbt::initArtsBlSpEfp16(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID1(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID2(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID3(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID4(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID5(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID6(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID7(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID8(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID9(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID10(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID11(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID12(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID13(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID14(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID15(*unknown20);
-  _gfbbt::initArtsBlSpHitDirID16(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt1(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt2(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt3(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt4(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt5(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt6(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt7(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt8(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt9(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt10(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt11(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt12(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt13(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt14(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt15(*unknown20);
-  _gfbbt::initArtsBlSpDmgRt16(*unknown20);
-  _gfbbt::initArtsBlSpReAct1(*unknown20);
-  _gfbbt::initArtsBlSpReAct2(*unknown20);
-  _gfbbt::initArtsBlSpReAct3(*unknown20);
-  _gfbbt::initArtsBlSpReAct4(*unknown20);
-  _gfbbt::initArtsBlSpReAct5(*unknown20);
-  _gfbbt::initArtsBlSpReAct6(*unknown20);
-  _gfbbt::initArtsBlSpReAct7(*unknown20);
-  _gfbbt::initArtsBlSpReAct8(*unknown20);
-  _gfbbt::initArtsBlSpReAct9(*unknown20);
-  _gfbbt::initArtsBlSpReAct10(*unknown20);
-  _gfbbt::initArtsBlSpReAct11(*unknown20);
-  _gfbbt::initArtsBlSpReAct12(*unknown20);
-  _gfbbt::initArtsBlSpReAct13(*unknown20);
-  _gfbbt::initArtsBlSpReAct14(*unknown20);
-  _gfbbt::initArtsBlSpReAct15(*unknown20);
-  _gfbbt::initArtsBlSpReAct16(*unknown20);
-  _gfbbt::initArtsBlSpDmgMgn(*unknown20);
-  _gfbbt::initArtsBlSpRecast(*unknown20);
-  _gfbbt::initArtsBlSpAtrNum(*unknown20);
-  _gfbbt::initArtsBlSpEnhance(*unknown20);
-  _gfbbt::initArtsBlSpBtnType(*unknown20);
-  _gfbbt::initArtsBlSpBtnChal1(*unknown20);
-  _gfbbt::initArtsBlSpCamera1(*unknown20);
-  _gfbbt::initArtsBlSpCamera2(*unknown20);
-  _gfbbt::initArtsBlSpCamera3(*unknown20);
-  _gfbbt::initArtsBlSpCameraCT1(*unknown20);
-  _gfbbt::initArtsBlSpCameraCT2(*unknown20);
-  _gfbbt::initArtsBlSpCameraEndf(*unknown20);
-  _gfbbt::initArtsBlSpHitEff(*unknown20);
-  _gfbbt::initGrowLevelExp(*unknown28);
-  _gfbbt::initGrowEnemyExp(*unknown28);
-  _gfbbt::initGrowEnemyWP(*unknown28);
-  _gfbbt::initGrowEnemySP(*unknown28);
-  _gfbbt::initGrowEnemyGold(*unknown28);
-  _gfbbt::initGrowGoldDivide(*unknown28);
-  _gfbbt::initLv_RevExpRevHigh(*unknown30);
-  _gfbbt::initLv_RevExpRevLow(*unknown30);
-  _gfbbt::initLv_RevDamageRevHigh(*unknown30);
-  _gfbbt::initLv_RevDamageRevLow(*unknown30);
-  _gfbbt::initWpn_EnRscR(*unknown38);
-  _gfbbt::initWpn_EnRscL(*unknown38);
-  _gfbbt::initWpn_EnTypeRange(*unknown38);
-  _gfbbt::initWpn_EnDamage(*unknown38);
-  _gfbbt::initWpn_EnStability(*unknown38);
-  _gfbbt::initBTL_ClassName(*unknown40);
-  _gfbbt::initBTL_ClassRole1(*unknown40);
-  _gfbbt::initBTL_ClassRole2(*unknown40);
-  _gfbbt::initBTL_ClassRole3(*unknown40);
-  _gfbbt::initBTL_ClassDamageDown(*unknown40);
-  _gfbbt::initBTL_ClassDamageUP(*unknown40);
-  _gfbbt::initBTL_ClassHealUP(*unknown40);
-  _gfbbt::initBTL_ClassAutoHate(*unknown40);
-  _gfbbt::initBTL_ClassArtsHate(*unknown40);
-  _gfbbt::initBTL_EnhanceEnhanceEffect(*unknown48);
-  _gfbbt::initBTL_EnhanceParam1(*unknown48);
-  _gfbbt::initBTL_EnhanceParam2(*unknown48);
-  _gfbbt::initBTL_EnhanceCaption(*unknown48);
-  _gfbbt::initBTL_EnhanceEffCategory(*unknown50);
-  _gfbbt::initBTL_EnhanceEffIcon(*unknown50);
-  _gfbbt::initBTL_EnhanceEffFlagCondition(*unknown50);
-  _gfbbt::initBTL_EnhanceEffFlagUI(*unknown50);
-  _gfbbt::initBTL_EnhanceEffParam(*unknown50);
-  _gfbbt::initBTL_EnhanceEffName(*unknown50);
-  _gfbbt::initBTL_EnhanceEffDirect(*unknown50);
-  _gfbbt::initBTL_Skill_BlName(*unknown58);
-  _gfbbt::initBTL_Skill_BlDebugName(*unknown58);
-  _gfbbt::initBTL_Skill_BlEnhance1(*unknown58);
-  _gfbbt::initBTL_Skill_BlEnhance2(*unknown58);
-  _gfbbt::initBTL_Skill_BlEnhance3(*unknown58);
-  _gfbbt::initBTL_Skill_BlEnhance4(*unknown58);
-  _gfbbt::initBTL_Skill_BlEnhance5(*unknown58);
-  _gfbbt::initBTL_Skill_BlFlagcommon(*unknown58);
-  _gfbbt::initBTL_Skill_BlTank(*unknown58);
-  _gfbbt::initBTL_Skill_BlAttacker(*unknown58);
-  _gfbbt::initBTL_Skill_BlHealer(*unknown58);
-  _gfbbt::initBTL_Skill_BlUI(*unknown58);
-  _gfbbt::initBTL_Skill_DrName(*unknown60);
-  _gfbbt::initBTL_Skill_DrDebugName(*unknown60);
-  _gfbbt::initBTL_Skill_DrEnhance(*unknown60);
-  _gfbbt::initBTL_Skill_DrUI(*unknown60);
-  _gfbbt::initBTL_BuffName(*unknown68);
-  _gfbbt::initBTL_BuffDebugName(*unknown68);
-  _gfbbt::initBTL_BuffCaption(*unknown68);
-  _gfbbt::initBTL_BuffBaseNum(*unknown68);
-  _gfbbt::initBTL_BuffBaseTime(*unknown68);
-  _gfbbt::initBTL_BuffBaseRecast(*unknown68);
-  _gfbbt::initBTL_BuffBaseProb(*unknown68);
-  _gfbbt::initBTL_BuffInterval(*unknown68);
-  _gfbbt::initBTL_BuffEffect(*unknown68);
-  _gfbbt::initBTL_BuffIcon(*unknown68);
-  _gfbbt::initBTL_Bl_PersonalityFlagcommon(*unknown70);
-  _gfbbt::initBTL_Bl_PersonalityKizunaBase(*unknown70);
-  _gfbbt::initBTL_Bl_PersonalityVoiceID(*unknown70);
-  _gfbbt::initBTL_Bl_KizunaLinkLinkNum(*unknown78);
-  _gfbbt::initBTL_Bl_KizunaLinkDeadNum(*unknown78);
-  _gfbbt::initBTL_Bl_KizunaLinkAppStNum(*unknown78);
-  _gfbbt::initBTL_Bl_KizunaLinkAppEndNum(*unknown78);
-  _gfbbt::initBTL_Bl_KizunaLinkAppCond(*unknown78);
-  _gfbbt::initBTL_Bl_KizunaLinkAppCondNum(*unknown78);
-  _gfbbt::initBTL_Bl_KizunaLinkReJudgef(*unknown78);
-  _gfbbt::initBTL_Bl_KizunaLinkSpActType(*unknown78);
-  _gfbbt::initBTL_Bl_KizunaLinkSpActNum(*unknown78);
-  _gfbbt::initBTL_Bl_KizunaLinkSpActf(*unknown78);
-  _gfbbt::initBTL_Bl_KizunaLinkStandDir(*unknown78);
-  _gfbbt::initBTL_Bl_KizunaLinkSetKizunaLink1(*unknown80);
-  _gfbbt::initBTL_Bl_KizunaLinkSetKizunaLink2(*unknown80);
-  _gfbbt::initBTL_Bl_KizunaLinkSetLinkChType(*unknown80);
-  _gfbbt::initBTL_Bl_KizunaLinkSetLinkChNum(*unknown80);
-  _gfbbt::initBTL_Bl_KizunaLinkSetVoiceID(*unknown80);
-  _gfbbt::initBTL_TestSettingDr1(*unknown88);
-  _gfbbt::initBTL_TestSettingDr1Lv(*unknown88);
-  _gfbbt::initBTL_TestSettingDr1Bl1(*unknown88);
-  _gfbbt::initBTL_TestSettingDr1Bl2(*unknown88);
-  _gfbbt::initBTL_TestSettingDr1Bl3(*unknown88);
-  _gfbbt::initBTL_TestSettingDr2(*unknown88);
-  _gfbbt::initBTL_TestSettingDr2Lv(*unknown88);
-  _gfbbt::initBTL_TestSettingDr2Bl1(*unknown88);
-  _gfbbt::initBTL_TestSettingDr2Bl2(*unknown88);
-  _gfbbt::initBTL_TestSettingDr2Bl3(*unknown88);
-  _gfbbt::initBTL_TestSettingDr3(*unknown88);
-  _gfbbt::initBTL_TestSettingDr3Lv(*unknown88);
-  _gfbbt::initBTL_TestSettingDr3Bl1(*unknown88);
-  _gfbbt::initBTL_TestSettingDr3Bl2(*unknown88);
-  _gfbbt::initBTL_TestSettingDr3Bl3(*unknown88);
-  _gfbbt::initBTL_HanaBaseNCondNum(*unknown90);
-  _gfbbt::initBTL_HanaBaseECondNum(*unknown90);
-  _gfbbt::initBTL_HanaBaseNArtsNum(*unknown90);
-  _gfbbt::initBTL_HanaBaseCircuit1Num(*unknown90);
-  _gfbbt::initBTL_HanaBaseCircuit2Num(*unknown90);
-  _gfbbt::initBTL_HanaBaseCircuit3Num(*unknown90);
-  _gfbbt::initBTL_HanaBaseCircuit4Num(*unknown90);
-  _gfbbt::initBTL_HanaBaseCircuit5Num(*unknown90);
-  _gfbbt::initBTL_HanaBaseCircuit6Num(*unknown90);
-  _gfbbt::initBTL_HanaBaseUI(*unknown90);
-  _gfbbt::initBTL_HanaPowerPowerNum1(*unknown98);
-  _gfbbt::initBTL_HanaPowerPowerNum2(*unknown98);
-  _gfbbt::initBTL_HanaPowerPowerNum3(*unknown98);
-  _gfbbt::initBTL_HanaPowerEtherNum1(*unknown98);
-  _gfbbt::initBTL_HanaPowerEtherNum2(*unknown98);
-  _gfbbt::initBTL_HanaPowerEtherNum3(*unknown98);
-  _gfbbt::initBTL_HanaChipsetRoleParts(*unknowna0);
-  _gfbbt::initBTL_HanaChipsetAtrParts(*unknowna0);
-  _gfbbt::initBTL_HanaChipsetNArtsParts1(*unknowna0);
-  _gfbbt::initBTL_HanaChipsetNArtsParts2(*unknowna0);
-  _gfbbt::initBTL_HanaChipsetNArtsParts3(*unknowna0);
-  _gfbbt::initBTL_HanaChipsetNCondParts1(*unknowna0);
-  _gfbbt::initBTL_HanaChipsetNCondParts2(*unknowna0);
-  _gfbbt::initBTL_HanaChipsetNCondParts3(*unknowna0);
-  _gfbbt::initBTL_HanaChipsetUI(*unknowna0);
-  _gfbbt::initWildcardDatavalueF4(*unknowna8);
-  _gfbbt::initWildcardDatavalueU2(*unknowna8);
-  _gfbbt::initVo_Field_FilterTargetFile(*unknownb0);
-  _gfbbt::initVo_Field_FilterCondition(*unknownb0);
-  _gfbbt::initVo_Field_FilterChangeFile(*unknownb0);
+  _gfbbt::initArtsDrName(*m_artsDr);
+  _gfbbt::initArtsDrDebugName(*m_artsDr);
+  _gfbbt::initArtsDrCaption(*m_artsDr);
+  _gfbbt::initArtsDrDriver(*m_artsDr);
+  _gfbbt::initArtsDrWpnType(*m_artsDr);
+  _gfbbt::initArtsDrActNo(*m_artsDr);
+  _gfbbt::initArtsDrArtsType(*m_artsDr);
+  _gfbbt::initArtsDrArtsBuff(*m_artsDr);
+  _gfbbt::initArtsDrAtrType(*m_artsDr);
+  _gfbbt::initArtsDrFlagNormal(*m_artsDr);
+  _gfbbt::initArtsDrFlagPierce(*m_artsDr);
+  _gfbbt::initArtsDrFlagNoRepelled(*m_artsDr);
+  _gfbbt::initArtsDrNextArts(*m_artsDr);
+  _gfbbt::initArtsDrTarget(*m_artsDr);
+  _gfbbt::initArtsDrDistance(*m_artsDr);
+  _gfbbt::initArtsDrRangeType(*m_artsDr);
+  _gfbbt::initArtsDrRadius(*m_artsDr);
+  _gfbbt::initArtsDrLength(*m_artsDr);
+  _gfbbt::initArtsDrHate(*m_artsDr);
+  _gfbbt::initArtsDrHitRevise(*m_artsDr);
+  _gfbbt::initArtsDrCriRevise(*m_artsDr);
+  _gfbbt::initArtsDrBulletID(*m_artsDr);
+  _gfbbt::initArtsDrBulletNum(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm1(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm2(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm3(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm4(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm5(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm6(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm7(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm8(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm9(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm10(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm11(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm12(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm13(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm14(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm15(*m_artsDr);
+  _gfbbt::initArtsDrHitFrm16(*m_artsDr);
+  _gfbbt::initArtsDrEfp1(*m_artsDr);
+  _gfbbt::initArtsDrEfp2(*m_artsDr);
+  _gfbbt::initArtsDrEfp3(*m_artsDr);
+  _gfbbt::initArtsDrEfp4(*m_artsDr);
+  _gfbbt::initArtsDrEfp5(*m_artsDr);
+  _gfbbt::initArtsDrEfp6(*m_artsDr);
+  _gfbbt::initArtsDrEfp7(*m_artsDr);
+  _gfbbt::initArtsDrEfp8(*m_artsDr);
+  _gfbbt::initArtsDrEfp9(*m_artsDr);
+  _gfbbt::initArtsDrEfp10(*m_artsDr);
+  _gfbbt::initArtsDrEfp11(*m_artsDr);
+  _gfbbt::initArtsDrEfp12(*m_artsDr);
+  _gfbbt::initArtsDrEfp13(*m_artsDr);
+  _gfbbt::initArtsDrEfp14(*m_artsDr);
+  _gfbbt::initArtsDrEfp15(*m_artsDr);
+  _gfbbt::initArtsDrEfp16(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID1(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID2(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID3(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID4(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID5(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID6(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID7(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID8(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID9(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID10(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID11(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID12(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID13(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID14(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID15(*m_artsDr);
+  _gfbbt::initArtsDrHitDirID16(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt1(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt2(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt3(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt4(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt5(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt6(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt7(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt8(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt9(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt10(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt11(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt12(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt13(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt14(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt15(*m_artsDr);
+  _gfbbt::initArtsDrDmgRt16(*m_artsDr);
+  _gfbbt::initArtsDrReAct1(*m_artsDr);
+  _gfbbt::initArtsDrReAct2(*m_artsDr);
+  _gfbbt::initArtsDrReAct3(*m_artsDr);
+  _gfbbt::initArtsDrReAct4(*m_artsDr);
+  _gfbbt::initArtsDrReAct5(*m_artsDr);
+  _gfbbt::initArtsDrReAct6(*m_artsDr);
+  _gfbbt::initArtsDrReAct7(*m_artsDr);
+  _gfbbt::initArtsDrReAct8(*m_artsDr);
+  _gfbbt::initArtsDrReAct9(*m_artsDr);
+  _gfbbt::initArtsDrReAct10(*m_artsDr);
+  _gfbbt::initArtsDrReAct11(*m_artsDr);
+  _gfbbt::initArtsDrReAct12(*m_artsDr);
+  _gfbbt::initArtsDrReAct13(*m_artsDr);
+  _gfbbt::initArtsDrReAct14(*m_artsDr);
+  _gfbbt::initArtsDrReAct15(*m_artsDr);
+  _gfbbt::initArtsDrReAct16(*m_artsDr);
+  _gfbbt::initArtsDrMoveCancelFrm(*m_artsDr);
+  _gfbbt::initArtsDrDmgMgn1(*m_artsDr);
+  _gfbbt::initArtsDrDmgMgn2(*m_artsDr);
+  _gfbbt::initArtsDrDmgMgn3(*m_artsDr);
+  _gfbbt::initArtsDrDmgMgn4(*m_artsDr);
+  _gfbbt::initArtsDrDmgMgn5(*m_artsDr);
+  _gfbbt::initArtsDrDmgMgn6(*m_artsDr);
+  _gfbbt::initArtsDrRecast1(*m_artsDr);
+  _gfbbt::initArtsDrRecast2(*m_artsDr);
+  _gfbbt::initArtsDrRecast3(*m_artsDr);
+  _gfbbt::initArtsDrRecast4(*m_artsDr);
+  _gfbbt::initArtsDrRecast5(*m_artsDr);
+  _gfbbt::initArtsDrRecast6(*m_artsDr);
+  _gfbbt::initArtsDrAtrNum(*m_artsDr);
+  _gfbbt::initArtsDrEnhance1(*m_artsDr);
+  _gfbbt::initArtsDrEnhance2(*m_artsDr);
+  _gfbbt::initArtsDrEnhance3(*m_artsDr);
+  _gfbbt::initArtsDrEnhance4(*m_artsDr);
+  _gfbbt::initArtsDrEnhance5(*m_artsDr);
+  _gfbbt::initArtsDrEnhance6(*m_artsDr);
+  _gfbbt::initArtsDrReleaseLv1(*m_artsDr);
+  _gfbbt::initArtsDrReleaseLv2(*m_artsDr);
+  _gfbbt::initArtsDrReleaseLv3(*m_artsDr);
+  _gfbbt::initArtsDrReleaseLv4(*m_artsDr);
+  _gfbbt::initArtsDrReleaseLv5(*m_artsDr);
+  _gfbbt::initArtsDrNeedWP2(*m_artsDr);
+  _gfbbt::initArtsDrNeedWP3(*m_artsDr);
+  _gfbbt::initArtsDrNeedWP4(*m_artsDr);
+  _gfbbt::initArtsDrNeedWP5(*m_artsDr);
+  _gfbbt::initArtsDrUI(*m_artsDr);
+  _gfbbt::initArtsDrPriority(*m_artsDr);
+  _gfbbt::initArtsBlName(*m_artsBl);
+  _gfbbt::initArtsBlDebugName(*m_artsBl);
+  _gfbbt::initArtsBlCaption(*m_artsBl);
+  _gfbbt::initArtsBlWpnType(*m_artsBl);
+  _gfbbt::initArtsBlCmnBlType(*m_artsBl);
+  _gfbbt::initArtsBlSpLv(*m_artsBl);
+  _gfbbt::initArtsBlActNo(*m_artsBl);
+  _gfbbt::initArtsBlArtsType(*m_artsBl);
+  _gfbbt::initArtsBlArtsBuff(*m_artsBl);
+  _gfbbt::initArtsBlFlagcommon(*m_artsBl);
+  _gfbbt::initArtsBlFlagPierce(*m_artsBl);
+  _gfbbt::initArtsBlTarget(*m_artsBl);
+  _gfbbt::initArtsBlDistance(*m_artsBl);
+  _gfbbt::initArtsBlRangeType(*m_artsBl);
+  _gfbbt::initArtsBlRadius(*m_artsBl);
+  _gfbbt::initArtsBlLength(*m_artsBl);
+  _gfbbt::initArtsBlAtr(*m_artsBl);
+  _gfbbt::initArtsBlHate(*m_artsBl);
+  _gfbbt::initArtsBlHitRevise(*m_artsBl);
+  _gfbbt::initArtsBlCriRevise(*m_artsBl);
+  _gfbbt::initArtsBlBulletID(*m_artsBl);
+  _gfbbt::initArtsBlBulletNum(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm1(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm2(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm3(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm4(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm5(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm6(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm7(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm8(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm9(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm10(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm11(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm12(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm13(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm14(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm15(*m_artsBl);
+  _gfbbt::initArtsBlHitFrm16(*m_artsBl);
+  _gfbbt::initArtsBlEfp1(*m_artsBl);
+  _gfbbt::initArtsBlEfp2(*m_artsBl);
+  _gfbbt::initArtsBlEfp3(*m_artsBl);
+  _gfbbt::initArtsBlEfp4(*m_artsBl);
+  _gfbbt::initArtsBlEfp5(*m_artsBl);
+  _gfbbt::initArtsBlEfp6(*m_artsBl);
+  _gfbbt::initArtsBlEfp7(*m_artsBl);
+  _gfbbt::initArtsBlEfp8(*m_artsBl);
+  _gfbbt::initArtsBlEfp9(*m_artsBl);
+  _gfbbt::initArtsBlEfp10(*m_artsBl);
+  _gfbbt::initArtsBlEfp11(*m_artsBl);
+  _gfbbt::initArtsBlEfp12(*m_artsBl);
+  _gfbbt::initArtsBlEfp13(*m_artsBl);
+  _gfbbt::initArtsBlEfp14(*m_artsBl);
+  _gfbbt::initArtsBlEfp15(*m_artsBl);
+  _gfbbt::initArtsBlEfp16(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID1(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID2(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID3(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID4(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID5(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID6(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID7(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID8(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID9(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID10(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID11(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID12(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID13(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID14(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID15(*m_artsBl);
+  _gfbbt::initArtsBlHitDirID16(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt1(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt2(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt3(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt4(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt5(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt6(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt7(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt8(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt9(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt10(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt11(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt12(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt13(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt14(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt15(*m_artsBl);
+  _gfbbt::initArtsBlDmgRt16(*m_artsBl);
+  _gfbbt::initArtsBlReAct1(*m_artsBl);
+  _gfbbt::initArtsBlReAct2(*m_artsBl);
+  _gfbbt::initArtsBlReAct3(*m_artsBl);
+  _gfbbt::initArtsBlReAct4(*m_artsBl);
+  _gfbbt::initArtsBlReAct5(*m_artsBl);
+  _gfbbt::initArtsBlReAct6(*m_artsBl);
+  _gfbbt::initArtsBlReAct7(*m_artsBl);
+  _gfbbt::initArtsBlReAct8(*m_artsBl);
+  _gfbbt::initArtsBlReAct9(*m_artsBl);
+  _gfbbt::initArtsBlReAct10(*m_artsBl);
+  _gfbbt::initArtsBlReAct11(*m_artsBl);
+  _gfbbt::initArtsBlReAct12(*m_artsBl);
+  _gfbbt::initArtsBlReAct13(*m_artsBl);
+  _gfbbt::initArtsBlReAct14(*m_artsBl);
+  _gfbbt::initArtsBlReAct15(*m_artsBl);
+  _gfbbt::initArtsBlReAct16(*m_artsBl);
+  _gfbbt::initArtsBlDmgMgn1(*m_artsBl);
+  _gfbbt::initArtsBlDmgMgn2(*m_artsBl);
+  _gfbbt::initArtsBlDmgMgn3(*m_artsBl);
+  _gfbbt::initArtsBlDmgMgn4(*m_artsBl);
+  _gfbbt::initArtsBlDmgMgn5(*m_artsBl);
+  _gfbbt::initArtsBlDmgMgn6(*m_artsBl);
+  _gfbbt::initArtsBlAtrNum(*m_artsBl);
+  _gfbbt::initArtsBlEnhance1(*m_artsBl);
+  _gfbbt::initArtsBlEnhance2(*m_artsBl);
+  _gfbbt::initArtsBlEnhance3(*m_artsBl);
+  _gfbbt::initArtsBlEnhance4(*m_artsBl);
+  _gfbbt::initArtsBlEnhance5(*m_artsBl);
+  _gfbbt::initArtsBlEnhance6(*m_artsBl);
+  _gfbbt::initArtsBlBtnType(*m_artsBl);
+  _gfbbt::initArtsBlBtnChal1(*m_artsBl);
+  _gfbbt::initArtsBlUI(*m_artsBl);
+  _gfbbt::initArtsBlSpName(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDebugName(*m_artsBlSp);
+  _gfbbt::initArtsBlSpCaption(*m_artsBlSp);
+  _gfbbt::initArtsBlSpWpnType(*m_artsBlSp);
+  _gfbbt::initArtsBlSpCmnBlType(*m_artsBlSp);
+  _gfbbt::initArtsBlSpActNoDr(*m_artsBlSp);
+  _gfbbt::initArtsBlSpActNoBl(*m_artsBlSp);
+  _gfbbt::initArtsBlSpActNoBl2(*m_artsBlSp);
+  _gfbbt::initArtsBlSpBuddyDr(*m_artsBlSp);
+  _gfbbt::initArtsBlSpAddBl(*m_artsBlSp);
+  _gfbbt::initArtsBlSpActType(*m_artsBlSp);
+  _gfbbt::initArtsBlSpPC01(*m_artsBlSp);
+  _gfbbt::initArtsBlSpPC02(*m_artsBlSp);
+  _gfbbt::initArtsBlSpPC03(*m_artsBlSp);
+  _gfbbt::initArtsBlSpPC06(*m_artsBlSp);
+  _gfbbt::initArtsBlSpArtsType(*m_artsBlSp);
+  _gfbbt::initArtsBlSpArtsBuff(*m_artsBlSp);
+  _gfbbt::initArtsBlSpFlagPierce(*m_artsBlSp);
+  _gfbbt::initArtsBlSpFlagNoMove(*m_artsBlSp);
+  _gfbbt::initArtsBlSpTarget(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDistance(*m_artsBlSp);
+  _gfbbt::initArtsBlSpRangeType(*m_artsBlSp);
+  _gfbbt::initArtsBlSpRadius(*m_artsBlSp);
+  _gfbbt::initArtsBlSpLength(*m_artsBlSp);
+  _gfbbt::initArtsBlSpAtr(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHate(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitRevise(*m_artsBlSp);
+  _gfbbt::initArtsBlSpCriRevise(*m_artsBlSp);
+  _gfbbt::initArtsBlSpBulletID(*m_artsBlSp);
+  _gfbbt::initArtsBlSpBulletEffID(*m_artsBlSp);
+  _gfbbt::initArtsBlSpBulletNum(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm1(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm2(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm3(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm4(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm5(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm6(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm7(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm8(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm9(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm10(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm11(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm12(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm13(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm14(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm15(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitFrm16(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp1(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp2(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp3(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp4(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp5(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp6(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp7(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp8(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp9(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp10(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp11(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp12(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp13(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp14(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp15(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEfp16(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID1(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID2(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID3(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID4(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID5(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID6(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID7(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID8(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID9(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID10(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID11(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID12(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID13(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID14(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID15(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitDirID16(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt1(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt2(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt3(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt4(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt5(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt6(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt7(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt8(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt9(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt10(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt11(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt12(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt13(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt14(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt15(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgRt16(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct1(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct2(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct3(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct4(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct5(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct6(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct7(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct8(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct9(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct10(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct11(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct12(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct13(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct14(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct15(*m_artsBlSp);
+  _gfbbt::initArtsBlSpReAct16(*m_artsBlSp);
+  _gfbbt::initArtsBlSpDmgMgn(*m_artsBlSp);
+  _gfbbt::initArtsBlSpRecast(*m_artsBlSp);
+  _gfbbt::initArtsBlSpAtrNum(*m_artsBlSp);
+  _gfbbt::initArtsBlSpEnhance(*m_artsBlSp);
+  _gfbbt::initArtsBlSpBtnType(*m_artsBlSp);
+  _gfbbt::initArtsBlSpBtnChal1(*m_artsBlSp);
+  _gfbbt::initArtsBlSpCamera1(*m_artsBlSp);
+  _gfbbt::initArtsBlSpCamera2(*m_artsBlSp);
+  _gfbbt::initArtsBlSpCamera3(*m_artsBlSp);
+  _gfbbt::initArtsBlSpCameraCT1(*m_artsBlSp);
+  _gfbbt::initArtsBlSpCameraCT2(*m_artsBlSp);
+  _gfbbt::initArtsBlSpCameraEndf(*m_artsBlSp);
+  _gfbbt::initArtsBlSpHitEff(*m_artsBlSp);
+  _gfbbt::initGrowLevelExp(*m_grow);
+  _gfbbt::initGrowEnemyExp(*m_grow);
+  _gfbbt::initGrowEnemyWP(*m_grow);
+  _gfbbt::initGrowEnemySP(*m_grow);
+  _gfbbt::initGrowEnemyGold(*m_grow);
+  _gfbbt::initGrowGoldDivide(*m_grow);
+  _gfbbt::initLv_RevExpRevHigh(*m_lv_Rev);
+  _gfbbt::initLv_RevExpRevLow(*m_lv_Rev);
+  _gfbbt::initLv_RevDamageRevHigh(*m_lv_Rev);
+  _gfbbt::initLv_RevDamageRevLow(*m_lv_Rev);
+  _gfbbt::initWpn_EnRscR(*m_wpn_En);
+  _gfbbt::initWpn_EnRscL(*m_wpn_En);
+  _gfbbt::initWpn_EnTypeRange(*m_wpn_En);
+  _gfbbt::initWpn_EnDamage(*m_wpn_En);
+  _gfbbt::initWpn_EnStability(*m_wpn_En);
+  _gfbbt::initBTL_ClassName(*m_BTL_Class);
+  _gfbbt::initBTL_ClassRole1(*m_BTL_Class);
+  _gfbbt::initBTL_ClassRole2(*m_BTL_Class);
+  _gfbbt::initBTL_ClassRole3(*m_BTL_Class);
+  _gfbbt::initBTL_ClassDamageDown(*m_BTL_Class);
+  _gfbbt::initBTL_ClassDamageUP(*m_BTL_Class);
+  _gfbbt::initBTL_ClassHealUP(*m_BTL_Class);
+  _gfbbt::initBTL_ClassAutoHate(*m_BTL_Class);
+  _gfbbt::initBTL_ClassArtsHate(*m_BTL_Class);
+  _gfbbt::initBTL_EnhanceEnhanceEffect(*m_BTL_Enhance);
+  _gfbbt::initBTL_EnhanceParam1(*m_BTL_Enhance);
+  _gfbbt::initBTL_EnhanceParam2(*m_BTL_Enhance);
+  _gfbbt::initBTL_EnhanceCaption(*m_BTL_Enhance);
+  _gfbbt::initBTL_EnhanceEffCategory(*m_BTL_EnhanceEff);
+  _gfbbt::initBTL_EnhanceEffIcon(*m_BTL_EnhanceEff);
+  _gfbbt::initBTL_EnhanceEffFlagCondition(*m_BTL_EnhanceEff);
+  _gfbbt::initBTL_EnhanceEffFlagUI(*m_BTL_EnhanceEff);
+  _gfbbt::initBTL_EnhanceEffParam(*m_BTL_EnhanceEff);
+  _gfbbt::initBTL_EnhanceEffName(*m_BTL_EnhanceEff);
+  _gfbbt::initBTL_EnhanceEffDirect(*m_BTL_EnhanceEff);
+  _gfbbt::initBTL_Skill_BlName(*m_BTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlDebugName(*m_BTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlEnhance1(*m_BTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlEnhance2(*m_BTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlEnhance3(*m_BTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlEnhance4(*m_BTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlEnhance5(*m_BTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlFlagcommon(*m_BTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlTank(*m_BTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlAttacker(*m_BTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlHealer(*m_BTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_BlUI(*m_BTL_Skill_Bl);
+  _gfbbt::initBTL_Skill_DrName(*m_BTL_Skill_Dr);
+  _gfbbt::initBTL_Skill_DrDebugName(*m_BTL_Skill_Dr);
+  _gfbbt::initBTL_Skill_DrEnhance(*m_BTL_Skill_Dr);
+  _gfbbt::initBTL_Skill_DrUI(*m_BTL_Skill_Dr);
+  _gfbbt::initBTL_BuffName(*m_BTL_Buff);
+  _gfbbt::initBTL_BuffDebugName(*m_BTL_Buff);
+  _gfbbt::initBTL_BuffCaption(*m_BTL_Buff);
+  _gfbbt::initBTL_BuffBaseNum(*m_BTL_Buff);
+  _gfbbt::initBTL_BuffBaseTime(*m_BTL_Buff);
+  _gfbbt::initBTL_BuffBaseRecast(*m_BTL_Buff);
+  _gfbbt::initBTL_BuffBaseProb(*m_BTL_Buff);
+  _gfbbt::initBTL_BuffInterval(*m_BTL_Buff);
+  _gfbbt::initBTL_BuffEffect(*m_BTL_Buff);
+  _gfbbt::initBTL_BuffIcon(*m_BTL_Buff);
+  _gfbbt::initBTL_Bl_PersonalityFlagcommon(*m_BTL_Bl_Personality);
+  _gfbbt::initBTL_Bl_PersonalityKizunaBase(*m_BTL_Bl_Personality);
+  _gfbbt::initBTL_Bl_PersonalityVoiceID(*m_BTL_Bl_Personality);
+  _gfbbt::initBTL_Bl_KizunaLinkLinkNum(*m_BTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkDeadNum(*m_BTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkAppStNum(*m_BTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkAppEndNum(*m_BTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkAppCond(*m_BTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkAppCondNum(*m_BTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkReJudgef(*m_BTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkSpActType(*m_BTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkSpActNum(*m_BTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkSpActf(*m_BTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkStandDir(*m_BTL_Bl_KizunaLink);
+  _gfbbt::initBTL_Bl_KizunaLinkSetKizunaLink1(*m_BTL_Bl_KizunaLinkSet);
+  _gfbbt::initBTL_Bl_KizunaLinkSetKizunaLink2(*m_BTL_Bl_KizunaLinkSet);
+  _gfbbt::initBTL_Bl_KizunaLinkSetLinkChType(*m_BTL_Bl_KizunaLinkSet);
+  _gfbbt::initBTL_Bl_KizunaLinkSetLinkChNum(*m_BTL_Bl_KizunaLinkSet);
+  _gfbbt::initBTL_Bl_KizunaLinkSetVoiceID(*m_BTL_Bl_KizunaLinkSet);
+  _gfbbt::initBTL_TestSettingDr1(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr1Lv(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr1Bl1(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr1Bl2(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr1Bl3(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr2(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr2Lv(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr2Bl1(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr2Bl2(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr2Bl3(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr3(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr3Lv(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr3Bl1(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr3Bl2(*m_BTL_TestSetting);
+  _gfbbt::initBTL_TestSettingDr3Bl3(*m_BTL_TestSetting);
+  _gfbbt::initBTL_HanaBaseNCondNum(*m_BTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseECondNum(*m_BTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseNArtsNum(*m_BTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseCircuit1Num(*m_BTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseCircuit2Num(*m_BTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseCircuit3Num(*m_BTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseCircuit4Num(*m_BTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseCircuit5Num(*m_BTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseCircuit6Num(*m_BTL_HanaBase);
+  _gfbbt::initBTL_HanaBaseUI(*m_BTL_HanaBase);
+  _gfbbt::initBTL_HanaPowerPowerNum1(*m_BTL_HanaPower);
+  _gfbbt::initBTL_HanaPowerPowerNum2(*m_BTL_HanaPower);
+  _gfbbt::initBTL_HanaPowerPowerNum3(*m_BTL_HanaPower);
+  _gfbbt::initBTL_HanaPowerEtherNum1(*m_BTL_HanaPower);
+  _gfbbt::initBTL_HanaPowerEtherNum2(*m_BTL_HanaPower);
+  _gfbbt::initBTL_HanaPowerEtherNum3(*m_BTL_HanaPower);
+  _gfbbt::initBTL_HanaChipsetRoleParts(*m_BTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetAtrParts(*m_BTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetNArtsParts1(*m_BTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetNArtsParts2(*m_BTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetNArtsParts3(*m_BTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetNCondParts1(*m_BTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetNCondParts2(*m_BTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetNCondParts3(*m_BTL_HanaChipset);
+  _gfbbt::initBTL_HanaChipsetUI(*m_BTL_HanaChipset);
+  _gfbbt::initWildcardDatavalueF4(*m_wildcardData);
+  _gfbbt::initWildcardDatavalueU2(*m_wildcardData);
+  _gfbbt::initVo_Field_FilterTargetFile(*m_vo_Field_Filter);
+  _gfbbt::initVo_Field_FilterCondition(*m_vo_Field_Filter);
+  _gfbbt::initVo_Field_FilterChangeFile(*m_vo_Field_Filter);
 }
 
-u32 GfBdatBtl::getArtsDrStart() const { return Bdat::getIdTop(unknown10->data); }
+u32 GfBdatBtl::getArtsDrStart() const { return Bdat::getIdTop(m_artsDr->data); }
 
-u32 GfBdatBtl::getArtsDrEnd() const { return Bdat::getIdTop(unknown10->data) + Bdat::getIdCount(unknown10->data); }
+u32 GfBdatBtl::getArtsDrEnd() const { return Bdat::getIdTop(m_artsDr->data) + Bdat::getIdCount(m_artsDr->data); }
 
-u32 GfBdatBtl::getArtsDrName(u32 id) const { return _gfbbt::getArtsDrName(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrName(u32 id) const { return _gfbbt::getArtsDrName(*m_artsDr, id); }
 
-const char *GfBdatBtl::getArtsDrDebugName(u32 id) const { return _gfbbt::getArtsDrDebugName(*unknown10, id); }
+const char *GfBdatBtl::getArtsDrDebugName(u32 id) const { return _gfbbt::getArtsDrDebugName(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrCaption(u32 id) const { return _gfbbt::getArtsDrCaption(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrCaption(u32 id) const { return _gfbbt::getArtsDrCaption(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDriver(u32 id) const { return _gfbbt::getArtsDrDriver(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDriver(u32 id) const { return _gfbbt::getArtsDrDriver(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrWpnType(u32 id) const { return _gfbbt::getArtsDrWpnType(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrWpnType(u32 id) const { return _gfbbt::getArtsDrWpnType(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrActNo(u32 id) const { return _gfbbt::getArtsDrActNo(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrActNo(u32 id) const { return _gfbbt::getArtsDrActNo(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrArtsType(u32 id) const { return _gfbbt::getArtsDrArtsType(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrArtsType(u32 id) const { return _gfbbt::getArtsDrArtsType(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrArtsBuff(u32 id) const { return _gfbbt::getArtsDrArtsBuff(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrArtsBuff(u32 id) const { return _gfbbt::getArtsDrArtsBuff(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrAtrType(u32 id) const { return _gfbbt::getArtsDrAtrType(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrAtrType(u32 id) const { return _gfbbt::getArtsDrAtrType(*m_artsDr, id); }
 
-bool GfBdatBtl::isArtsDrFlagNormal(u32 id) const { return _gfbbt::isArtsDrFlagNormal(*unknown10, id); }
+bool GfBdatBtl::isArtsDrFlagNormal(u32 id) const { return _gfbbt::isArtsDrFlagNormal(*m_artsDr, id); }
 
-bool GfBdatBtl::isArtsDrFlagPierce(u32 id) const { return _gfbbt::isArtsDrFlagPierce(*unknown10, id); }
+bool GfBdatBtl::isArtsDrFlagPierce(u32 id) const { return _gfbbt::isArtsDrFlagPierce(*m_artsDr, id); }
 
-bool GfBdatBtl::isArtsDrFlagNoRepelled(u32 id) const { return _gfbbt::isArtsDrFlagNoRepelled(*unknown10, id); }
+bool GfBdatBtl::isArtsDrFlagNoRepelled(u32 id) const { return _gfbbt::isArtsDrFlagNoRepelled(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrNextArts(u32 id) const { return _gfbbt::getArtsDrNextArts(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrNextArts(u32 id) const { return _gfbbt::getArtsDrNextArts(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrTarget(u32 id) const { return _gfbbt::getArtsDrTarget(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrTarget(u32 id) const { return _gfbbt::getArtsDrTarget(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDistance(u32 id) const { return _gfbbt::getArtsDrDistance(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDistance(u32 id) const { return _gfbbt::getArtsDrDistance(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrRangeType(u32 id) const { return _gfbbt::getArtsDrRangeType(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrRangeType(u32 id) const { return _gfbbt::getArtsDrRangeType(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrRadius(u32 id) const { return _gfbbt::getArtsDrRadius(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrRadius(u32 id) const { return _gfbbt::getArtsDrRadius(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrLength(u32 id) const { return _gfbbt::getArtsDrLength(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrLength(u32 id) const { return _gfbbt::getArtsDrLength(*m_artsDr, id); }
 
-s32 GfBdatBtl::getArtsDrHate(u32 id) const { return _gfbbt::getArtsDrHate(*unknown10, id); }
+s32 GfBdatBtl::getArtsDrHate(u32 id) const { return _gfbbt::getArtsDrHate(*m_artsDr, id); }
 
-s32 GfBdatBtl::getArtsDrHitRevise(u32 id) const { return _gfbbt::getArtsDrHitRevise(*unknown10, id); }
+s32 GfBdatBtl::getArtsDrHitRevise(u32 id) const { return _gfbbt::getArtsDrHitRevise(*m_artsDr, id); }
 
-s32 GfBdatBtl::getArtsDrCriRevise(u32 id) const { return _gfbbt::getArtsDrCriRevise(*unknown10, id); }
+s32 GfBdatBtl::getArtsDrCriRevise(u32 id) const { return _gfbbt::getArtsDrCriRevise(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrBulletID(u32 id) const { return _gfbbt::getArtsDrBulletID(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrBulletID(u32 id) const { return _gfbbt::getArtsDrBulletID(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrBulletNum(u32 id) const { return _gfbbt::getArtsDrBulletNum(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrBulletNum(u32 id) const { return _gfbbt::getArtsDrBulletNum(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm1(u32 id) const { return _gfbbt::getArtsDrHitFrm1(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm1(u32 id) const { return _gfbbt::getArtsDrHitFrm1(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm2(u32 id) const { return _gfbbt::getArtsDrHitFrm2(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm2(u32 id) const { return _gfbbt::getArtsDrHitFrm2(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm3(u32 id) const { return _gfbbt::getArtsDrHitFrm3(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm3(u32 id) const { return _gfbbt::getArtsDrHitFrm3(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm4(u32 id) const { return _gfbbt::getArtsDrHitFrm4(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm4(u32 id) const { return _gfbbt::getArtsDrHitFrm4(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm5(u32 id) const { return _gfbbt::getArtsDrHitFrm5(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm5(u32 id) const { return _gfbbt::getArtsDrHitFrm5(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm6(u32 id) const { return _gfbbt::getArtsDrHitFrm6(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm6(u32 id) const { return _gfbbt::getArtsDrHitFrm6(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm7(u32 id) const { return _gfbbt::getArtsDrHitFrm7(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm7(u32 id) const { return _gfbbt::getArtsDrHitFrm7(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm8(u32 id) const { return _gfbbt::getArtsDrHitFrm8(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm8(u32 id) const { return _gfbbt::getArtsDrHitFrm8(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm9(u32 id) const { return _gfbbt::getArtsDrHitFrm9(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm9(u32 id) const { return _gfbbt::getArtsDrHitFrm9(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm10(u32 id) const { return _gfbbt::getArtsDrHitFrm10(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm10(u32 id) const { return _gfbbt::getArtsDrHitFrm10(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm11(u32 id) const { return _gfbbt::getArtsDrHitFrm11(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm11(u32 id) const { return _gfbbt::getArtsDrHitFrm11(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm12(u32 id) const { return _gfbbt::getArtsDrHitFrm12(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm12(u32 id) const { return _gfbbt::getArtsDrHitFrm12(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm13(u32 id) const { return _gfbbt::getArtsDrHitFrm13(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm13(u32 id) const { return _gfbbt::getArtsDrHitFrm13(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm14(u32 id) const { return _gfbbt::getArtsDrHitFrm14(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm14(u32 id) const { return _gfbbt::getArtsDrHitFrm14(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm15(u32 id) const { return _gfbbt::getArtsDrHitFrm15(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm15(u32 id) const { return _gfbbt::getArtsDrHitFrm15(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitFrm16(u32 id) const { return _gfbbt::getArtsDrHitFrm16(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitFrm16(u32 id) const { return _gfbbt::getArtsDrHitFrm16(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp1(u32 id) const { return _gfbbt::getArtsDrEfp1(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp1(u32 id) const { return _gfbbt::getArtsDrEfp1(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp2(u32 id) const { return _gfbbt::getArtsDrEfp2(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp2(u32 id) const { return _gfbbt::getArtsDrEfp2(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp3(u32 id) const { return _gfbbt::getArtsDrEfp3(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp3(u32 id) const { return _gfbbt::getArtsDrEfp3(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp4(u32 id) const { return _gfbbt::getArtsDrEfp4(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp4(u32 id) const { return _gfbbt::getArtsDrEfp4(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp5(u32 id) const { return _gfbbt::getArtsDrEfp5(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp5(u32 id) const { return _gfbbt::getArtsDrEfp5(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp6(u32 id) const { return _gfbbt::getArtsDrEfp6(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp6(u32 id) const { return _gfbbt::getArtsDrEfp6(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp7(u32 id) const { return _gfbbt::getArtsDrEfp7(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp7(u32 id) const { return _gfbbt::getArtsDrEfp7(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp8(u32 id) const { return _gfbbt::getArtsDrEfp8(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp8(u32 id) const { return _gfbbt::getArtsDrEfp8(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp9(u32 id) const { return _gfbbt::getArtsDrEfp9(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp9(u32 id) const { return _gfbbt::getArtsDrEfp9(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp10(u32 id) const { return _gfbbt::getArtsDrEfp10(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp10(u32 id) const { return _gfbbt::getArtsDrEfp10(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp11(u32 id) const { return _gfbbt::getArtsDrEfp11(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp11(u32 id) const { return _gfbbt::getArtsDrEfp11(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp12(u32 id) const { return _gfbbt::getArtsDrEfp12(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp12(u32 id) const { return _gfbbt::getArtsDrEfp12(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp13(u32 id) const { return _gfbbt::getArtsDrEfp13(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp13(u32 id) const { return _gfbbt::getArtsDrEfp13(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp14(u32 id) const { return _gfbbt::getArtsDrEfp14(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp14(u32 id) const { return _gfbbt::getArtsDrEfp14(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp15(u32 id) const { return _gfbbt::getArtsDrEfp15(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp15(u32 id) const { return _gfbbt::getArtsDrEfp15(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEfp16(u32 id) const { return _gfbbt::getArtsDrEfp16(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEfp16(u32 id) const { return _gfbbt::getArtsDrEfp16(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID1(u32 id) const { return _gfbbt::getArtsDrHitDirID1(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID1(u32 id) const { return _gfbbt::getArtsDrHitDirID1(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID2(u32 id) const { return _gfbbt::getArtsDrHitDirID2(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID2(u32 id) const { return _gfbbt::getArtsDrHitDirID2(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID3(u32 id) const { return _gfbbt::getArtsDrHitDirID3(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID3(u32 id) const { return _gfbbt::getArtsDrHitDirID3(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID4(u32 id) const { return _gfbbt::getArtsDrHitDirID4(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID4(u32 id) const { return _gfbbt::getArtsDrHitDirID4(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID5(u32 id) const { return _gfbbt::getArtsDrHitDirID5(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID5(u32 id) const { return _gfbbt::getArtsDrHitDirID5(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID6(u32 id) const { return _gfbbt::getArtsDrHitDirID6(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID6(u32 id) const { return _gfbbt::getArtsDrHitDirID6(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID7(u32 id) const { return _gfbbt::getArtsDrHitDirID7(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID7(u32 id) const { return _gfbbt::getArtsDrHitDirID7(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID8(u32 id) const { return _gfbbt::getArtsDrHitDirID8(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID8(u32 id) const { return _gfbbt::getArtsDrHitDirID8(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID9(u32 id) const { return _gfbbt::getArtsDrHitDirID9(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID9(u32 id) const { return _gfbbt::getArtsDrHitDirID9(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID10(u32 id) const { return _gfbbt::getArtsDrHitDirID10(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID10(u32 id) const { return _gfbbt::getArtsDrHitDirID10(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID11(u32 id) const { return _gfbbt::getArtsDrHitDirID11(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID11(u32 id) const { return _gfbbt::getArtsDrHitDirID11(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID12(u32 id) const { return _gfbbt::getArtsDrHitDirID12(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID12(u32 id) const { return _gfbbt::getArtsDrHitDirID12(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID13(u32 id) const { return _gfbbt::getArtsDrHitDirID13(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID13(u32 id) const { return _gfbbt::getArtsDrHitDirID13(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID14(u32 id) const { return _gfbbt::getArtsDrHitDirID14(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID14(u32 id) const { return _gfbbt::getArtsDrHitDirID14(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID15(u32 id) const { return _gfbbt::getArtsDrHitDirID15(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID15(u32 id) const { return _gfbbt::getArtsDrHitDirID15(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrHitDirID16(u32 id) const { return _gfbbt::getArtsDrHitDirID16(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrHitDirID16(u32 id) const { return _gfbbt::getArtsDrHitDirID16(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt1(u32 id) const { return _gfbbt::getArtsDrDmgRt1(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt1(u32 id) const { return _gfbbt::getArtsDrDmgRt1(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt2(u32 id) const { return _gfbbt::getArtsDrDmgRt2(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt2(u32 id) const { return _gfbbt::getArtsDrDmgRt2(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt3(u32 id) const { return _gfbbt::getArtsDrDmgRt3(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt3(u32 id) const { return _gfbbt::getArtsDrDmgRt3(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt4(u32 id) const { return _gfbbt::getArtsDrDmgRt4(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt4(u32 id) const { return _gfbbt::getArtsDrDmgRt4(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt5(u32 id) const { return _gfbbt::getArtsDrDmgRt5(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt5(u32 id) const { return _gfbbt::getArtsDrDmgRt5(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt6(u32 id) const { return _gfbbt::getArtsDrDmgRt6(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt6(u32 id) const { return _gfbbt::getArtsDrDmgRt6(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt7(u32 id) const { return _gfbbt::getArtsDrDmgRt7(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt7(u32 id) const { return _gfbbt::getArtsDrDmgRt7(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt8(u32 id) const { return _gfbbt::getArtsDrDmgRt8(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt8(u32 id) const { return _gfbbt::getArtsDrDmgRt8(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt9(u32 id) const { return _gfbbt::getArtsDrDmgRt9(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt9(u32 id) const { return _gfbbt::getArtsDrDmgRt9(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt10(u32 id) const { return _gfbbt::getArtsDrDmgRt10(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt10(u32 id) const { return _gfbbt::getArtsDrDmgRt10(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt11(u32 id) const { return _gfbbt::getArtsDrDmgRt11(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt11(u32 id) const { return _gfbbt::getArtsDrDmgRt11(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt12(u32 id) const { return _gfbbt::getArtsDrDmgRt12(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt12(u32 id) const { return _gfbbt::getArtsDrDmgRt12(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt13(u32 id) const { return _gfbbt::getArtsDrDmgRt13(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt13(u32 id) const { return _gfbbt::getArtsDrDmgRt13(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt14(u32 id) const { return _gfbbt::getArtsDrDmgRt14(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt14(u32 id) const { return _gfbbt::getArtsDrDmgRt14(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt15(u32 id) const { return _gfbbt::getArtsDrDmgRt15(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt15(u32 id) const { return _gfbbt::getArtsDrDmgRt15(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgRt16(u32 id) const { return _gfbbt::getArtsDrDmgRt16(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgRt16(u32 id) const { return _gfbbt::getArtsDrDmgRt16(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct1(u32 id) const { return _gfbbt::getArtsDrReAct1(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct1(u32 id) const { return _gfbbt::getArtsDrReAct1(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct2(u32 id) const { return _gfbbt::getArtsDrReAct2(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct2(u32 id) const { return _gfbbt::getArtsDrReAct2(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct3(u32 id) const { return _gfbbt::getArtsDrReAct3(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct3(u32 id) const { return _gfbbt::getArtsDrReAct3(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct4(u32 id) const { return _gfbbt::getArtsDrReAct4(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct4(u32 id) const { return _gfbbt::getArtsDrReAct4(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct5(u32 id) const { return _gfbbt::getArtsDrReAct5(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct5(u32 id) const { return _gfbbt::getArtsDrReAct5(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct6(u32 id) const { return _gfbbt::getArtsDrReAct6(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct6(u32 id) const { return _gfbbt::getArtsDrReAct6(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct7(u32 id) const { return _gfbbt::getArtsDrReAct7(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct7(u32 id) const { return _gfbbt::getArtsDrReAct7(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct8(u32 id) const { return _gfbbt::getArtsDrReAct8(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct8(u32 id) const { return _gfbbt::getArtsDrReAct8(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct9(u32 id) const { return _gfbbt::getArtsDrReAct9(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct9(u32 id) const { return _gfbbt::getArtsDrReAct9(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct10(u32 id) const { return _gfbbt::getArtsDrReAct10(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct10(u32 id) const { return _gfbbt::getArtsDrReAct10(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct11(u32 id) const { return _gfbbt::getArtsDrReAct11(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct11(u32 id) const { return _gfbbt::getArtsDrReAct11(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct12(u32 id) const { return _gfbbt::getArtsDrReAct12(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct12(u32 id) const { return _gfbbt::getArtsDrReAct12(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct13(u32 id) const { return _gfbbt::getArtsDrReAct13(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct13(u32 id) const { return _gfbbt::getArtsDrReAct13(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct14(u32 id) const { return _gfbbt::getArtsDrReAct14(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct14(u32 id) const { return _gfbbt::getArtsDrReAct14(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct15(u32 id) const { return _gfbbt::getArtsDrReAct15(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct15(u32 id) const { return _gfbbt::getArtsDrReAct15(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReAct16(u32 id) const { return _gfbbt::getArtsDrReAct16(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReAct16(u32 id) const { return _gfbbt::getArtsDrReAct16(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrMoveCancelFrm(u32 id) const { return _gfbbt::getArtsDrMoveCancelFrm(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrMoveCancelFrm(u32 id) const { return _gfbbt::getArtsDrMoveCancelFrm(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgMgn1(u32 id) const { return _gfbbt::getArtsDrDmgMgn1(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgMgn1(u32 id) const { return _gfbbt::getArtsDrDmgMgn1(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgMgn2(u32 id) const { return _gfbbt::getArtsDrDmgMgn2(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgMgn2(u32 id) const { return _gfbbt::getArtsDrDmgMgn2(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgMgn3(u32 id) const { return _gfbbt::getArtsDrDmgMgn3(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgMgn3(u32 id) const { return _gfbbt::getArtsDrDmgMgn3(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgMgn4(u32 id) const { return _gfbbt::getArtsDrDmgMgn4(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgMgn4(u32 id) const { return _gfbbt::getArtsDrDmgMgn4(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgMgn5(u32 id) const { return _gfbbt::getArtsDrDmgMgn5(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgMgn5(u32 id) const { return _gfbbt::getArtsDrDmgMgn5(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrDmgMgn6(u32 id) const { return _gfbbt::getArtsDrDmgMgn6(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrDmgMgn6(u32 id) const { return _gfbbt::getArtsDrDmgMgn6(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrRecast1(u32 id) const { return _gfbbt::getArtsDrRecast1(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrRecast1(u32 id) const { return _gfbbt::getArtsDrRecast1(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrRecast2(u32 id) const { return _gfbbt::getArtsDrRecast2(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrRecast2(u32 id) const { return _gfbbt::getArtsDrRecast2(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrRecast3(u32 id) const { return _gfbbt::getArtsDrRecast3(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrRecast3(u32 id) const { return _gfbbt::getArtsDrRecast3(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrRecast4(u32 id) const { return _gfbbt::getArtsDrRecast4(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrRecast4(u32 id) const { return _gfbbt::getArtsDrRecast4(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrRecast5(u32 id) const { return _gfbbt::getArtsDrRecast5(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrRecast5(u32 id) const { return _gfbbt::getArtsDrRecast5(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrRecast6(u32 id) const { return _gfbbt::getArtsDrRecast6(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrRecast6(u32 id) const { return _gfbbt::getArtsDrRecast6(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrAtrNum(u32 id) const { return _gfbbt::getArtsDrAtrNum(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrAtrNum(u32 id) const { return _gfbbt::getArtsDrAtrNum(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEnhance1(u32 id) const { return _gfbbt::getArtsDrEnhance1(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEnhance1(u32 id) const { return _gfbbt::getArtsDrEnhance1(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEnhance2(u32 id) const { return _gfbbt::getArtsDrEnhance2(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEnhance2(u32 id) const { return _gfbbt::getArtsDrEnhance2(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEnhance3(u32 id) const { return _gfbbt::getArtsDrEnhance3(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEnhance3(u32 id) const { return _gfbbt::getArtsDrEnhance3(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEnhance4(u32 id) const { return _gfbbt::getArtsDrEnhance4(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEnhance4(u32 id) const { return _gfbbt::getArtsDrEnhance4(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEnhance5(u32 id) const { return _gfbbt::getArtsDrEnhance5(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEnhance5(u32 id) const { return _gfbbt::getArtsDrEnhance5(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrEnhance6(u32 id) const { return _gfbbt::getArtsDrEnhance6(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrEnhance6(u32 id) const { return _gfbbt::getArtsDrEnhance6(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReleaseLv1(u32 id) const { return _gfbbt::getArtsDrReleaseLv1(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReleaseLv1(u32 id) const { return _gfbbt::getArtsDrReleaseLv1(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReleaseLv2(u32 id) const { return _gfbbt::getArtsDrReleaseLv2(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReleaseLv2(u32 id) const { return _gfbbt::getArtsDrReleaseLv2(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReleaseLv3(u32 id) const { return _gfbbt::getArtsDrReleaseLv3(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReleaseLv3(u32 id) const { return _gfbbt::getArtsDrReleaseLv3(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReleaseLv4(u32 id) const { return _gfbbt::getArtsDrReleaseLv4(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReleaseLv4(u32 id) const { return _gfbbt::getArtsDrReleaseLv4(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrReleaseLv5(u32 id) const { return _gfbbt::getArtsDrReleaseLv5(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrReleaseLv5(u32 id) const { return _gfbbt::getArtsDrReleaseLv5(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrNeedWP2(u32 id) const { return _gfbbt::getArtsDrNeedWP2(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrNeedWP2(u32 id) const { return _gfbbt::getArtsDrNeedWP2(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrNeedWP3(u32 id) const { return _gfbbt::getArtsDrNeedWP3(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrNeedWP3(u32 id) const { return _gfbbt::getArtsDrNeedWP3(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrNeedWP4(u32 id) const { return _gfbbt::getArtsDrNeedWP4(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrNeedWP4(u32 id) const { return _gfbbt::getArtsDrNeedWP4(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrNeedWP5(u32 id) const { return _gfbbt::getArtsDrNeedWP5(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrNeedWP5(u32 id) const { return _gfbbt::getArtsDrNeedWP5(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrUI(u32 id) const { return _gfbbt::getArtsDrUI(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrUI(u32 id) const { return _gfbbt::getArtsDrUI(*m_artsDr, id); }
 
-u32 GfBdatBtl::getArtsDrPriority(u32 id) const { return _gfbbt::getArtsDrPriority(*unknown10, id); }
+u32 GfBdatBtl::getArtsDrPriority(u32 id) const { return _gfbbt::getArtsDrPriority(*m_artsDr, id); }
 
 u32 GfBdatBtl::getArtsDrHitFrm(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsDrHitFrm1,
@@ -7000,7 +7001,7 @@ u32 GfBdatBtl::getArtsDrHitFrm(u32 id, u32 index) const {
                                                               _gfbbt::getArtsDrHitFrm14,
                                                               _gfbbt::getArtsDrHitFrm15,
                                                               _gfbbt::getArtsDrHitFrm16};
-  return getters[index](*unknown10, id);
+  return getters[index](*m_artsDr, id);
 }
 
 u32 GfBdatBtl::getArtsDrEfp(u32 id, u32 index) const {
@@ -7020,7 +7021,7 @@ u32 GfBdatBtl::getArtsDrEfp(u32 id, u32 index) const {
                                                               _gfbbt::getArtsDrEfp14,
                                                               _gfbbt::getArtsDrEfp15,
                                                               _gfbbt::getArtsDrEfp16};
-  return getters[index](*unknown10, id);
+  return getters[index](*m_artsDr, id);
 }
 
 u32 GfBdatBtl::getArtsDrHitDirID(u32 id, u32 index) const {
@@ -7040,7 +7041,7 @@ u32 GfBdatBtl::getArtsDrHitDirID(u32 id, u32 index) const {
                                                               _gfbbt::getArtsDrHitDirID14,
                                                               _gfbbt::getArtsDrHitDirID15,
                                                               _gfbbt::getArtsDrHitDirID16};
-  return getters[index](*unknown10, id);
+  return getters[index](*m_artsDr, id);
 }
 
 u32 GfBdatBtl::getArtsDrDmgRt(u32 id, u32 index) const {
@@ -7060,7 +7061,7 @@ u32 GfBdatBtl::getArtsDrDmgRt(u32 id, u32 index) const {
                                                               _gfbbt::getArtsDrDmgRt14,
                                                               _gfbbt::getArtsDrDmgRt15,
                                                               _gfbbt::getArtsDrDmgRt16};
-  return getters[index](*unknown10, id);
+  return getters[index](*m_artsDr, id);
 }
 
 u32 GfBdatBtl::getArtsDrReAct(u32 arts, u32 level) const {
@@ -7080,7 +7081,7 @@ u32 GfBdatBtl::getArtsDrReAct(u32 arts, u32 level) const {
                                                               _gfbbt::getArtsDrReAct14,
                                                               _gfbbt::getArtsDrReAct15,
                                                               _gfbbt::getArtsDrReAct16};
-  return getters[level](*unknown10, arts);
+  return getters[level](*m_artsDr, arts);
 }
 
 u32 GfBdatBtl::getArtsDrDmgMgn(u32 arts, u32 level) const {
@@ -7090,7 +7091,7 @@ u32 GfBdatBtl::getArtsDrDmgMgn(u32 arts, u32 level) const {
                                                               _gfbbt::getArtsDrDmgMgn4,
                                                               _gfbbt::getArtsDrDmgMgn5,
                                                               _gfbbt::getArtsDrDmgMgn6};
-  return getters[level](*unknown10, arts);
+  return getters[level](*m_artsDr, arts);
 }
 
 u32 GfBdatBtl::getArtsDrRecast(u32 arts, u32 level) const {
@@ -7100,7 +7101,7 @@ u32 GfBdatBtl::getArtsDrRecast(u32 arts, u32 level) const {
                                                               _gfbbt::getArtsDrRecast4,
                                                               _gfbbt::getArtsDrRecast5,
                                                               _gfbbt::getArtsDrRecast6};
-  return getters[level](*unknown10, arts);
+  return getters[level](*m_artsDr, arts);
 }
 
 u32 GfBdatBtl::getArtsDrEnhance(u32 arts, u32 level) const {
@@ -7110,7 +7111,7 @@ u32 GfBdatBtl::getArtsDrEnhance(u32 arts, u32 level) const {
                                                               _gfbbt::getArtsDrEnhance4,
                                                               _gfbbt::getArtsDrEnhance5,
                                                               _gfbbt::getArtsDrEnhance6};
-  return getters[level](*unknown10, arts);
+  return getters[level](*m_artsDr, arts);
 }
 
 u32 GfBdatBtl::getArtsDrReleaseLv(u32 arts, u32 level) const {
@@ -7120,7 +7121,7 @@ u32 GfBdatBtl::getArtsDrReleaseLv(u32 arts, u32 level) const {
                                                               _gfbbt::getArtsDrReleaseLv3,
                                                               _gfbbt::getArtsDrReleaseLv4,
                                                               _gfbbt::getArtsDrReleaseLv5};
-  return getters[level](*unknown10, arts);
+  return getters[level](*m_artsDr, arts);
 }
 
 u32 GfBdatBtl::getArtsDrNeedWP(u32 arts, u32 level) const {
@@ -7130,248 +7131,248 @@ u32 GfBdatBtl::getArtsDrNeedWP(u32 arts, u32 level) const {
                                                               _gfbbt::getArtsDrNeedWP3,
                                                               _gfbbt::getArtsDrNeedWP4,
                                                               _gfbbt::getArtsDrNeedWP5};
-  return getters[level](*unknown10, arts);
+  return getters[level](*m_artsDr, arts);
 }
 
-u32 GfBdatBtl::getArtsBlStart() const { return Bdat::getIdTop(unknown18->data); }
+u32 GfBdatBtl::getArtsBlStart() const { return Bdat::getIdTop(m_artsBl->data); }
 
-u32 GfBdatBtl::getArtsBlEnd() const { return Bdat::getIdTop(unknown18->data) + Bdat::getIdCount(unknown18->data); }
+u32 GfBdatBtl::getArtsBlEnd() const { return Bdat::getIdTop(m_artsBl->data) + Bdat::getIdCount(m_artsBl->data); }
 
-u32 GfBdatBtl::getArtsBlName(u32 id) const { return _gfbbt::getArtsBlName(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlName(u32 id) const { return _gfbbt::getArtsBlName(*m_artsBl, id); }
 
-const char *GfBdatBtl::getArtsBlDebugName(u32 id) const { return _gfbbt::getArtsBlDebugName(*unknown18, id); }
+const char *GfBdatBtl::getArtsBlDebugName(u32 id) const { return _gfbbt::getArtsBlDebugName(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlCaption(u32 id) const { return _gfbbt::getArtsBlCaption(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlCaption(u32 id) const { return _gfbbt::getArtsBlCaption(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlWpnType(u32 id) const { return _gfbbt::getArtsBlWpnType(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlWpnType(u32 id) const { return _gfbbt::getArtsBlWpnType(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlCmnBlType(u32 id) const { return _gfbbt::getArtsBlCmnBlType(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlCmnBlType(u32 id) const { return _gfbbt::getArtsBlCmnBlType(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlSpLv(u32 id) const { return _gfbbt::getArtsBlSpLv(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlSpLv(u32 id) const { return _gfbbt::getArtsBlSpLv(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlActNo(u32 id) const { return _gfbbt::getArtsBlActNo(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlActNo(u32 id) const { return _gfbbt::getArtsBlActNo(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlArtsType(u32 id) const { return _gfbbt::getArtsBlArtsType(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlArtsType(u32 id) const { return _gfbbt::getArtsBlArtsType(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlArtsBuff(u32 id) const { return _gfbbt::getArtsBlArtsBuff(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlArtsBuff(u32 id) const { return _gfbbt::getArtsBlArtsBuff(*m_artsBl, id); }
 
-bool GfBdatBtl::isArtsBlFlagcommon(u32 id) const { return _gfbbt::isArtsBlFlagcommon(*unknown18, id); }
+bool GfBdatBtl::isArtsBlFlagcommon(u32 id) const { return _gfbbt::isArtsBlFlagcommon(*m_artsBl, id); }
 
-bool GfBdatBtl::isArtsBlFlagPierce(u32 id) const { return _gfbbt::isArtsBlFlagPierce(*unknown18, id); }
+bool GfBdatBtl::isArtsBlFlagPierce(u32 id) const { return _gfbbt::isArtsBlFlagPierce(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlTarget(u32 id) const { return _gfbbt::getArtsBlTarget(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlTarget(u32 id) const { return _gfbbt::getArtsBlTarget(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDistance(u32 id) const { return _gfbbt::getArtsBlDistance(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDistance(u32 id) const { return _gfbbt::getArtsBlDistance(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlRangeType(u32 id) const { return _gfbbt::getArtsBlRangeType(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlRangeType(u32 id) const { return _gfbbt::getArtsBlRangeType(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlRadius(u32 id) const { return _gfbbt::getArtsBlRadius(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlRadius(u32 id) const { return _gfbbt::getArtsBlRadius(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlLength(u32 id) const { return _gfbbt::getArtsBlLength(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlLength(u32 id) const { return _gfbbt::getArtsBlLength(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlAtr(u32 id) const { return _gfbbt::getArtsBlAtr(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlAtr(u32 id) const { return _gfbbt::getArtsBlAtr(*m_artsBl, id); }
 
-s32 GfBdatBtl::getArtsBlHate(u32 id) const { return _gfbbt::getArtsBlHate(*unknown18, id); }
+s32 GfBdatBtl::getArtsBlHate(u32 id) const { return _gfbbt::getArtsBlHate(*m_artsBl, id); }
 
-s32 GfBdatBtl::getArtsBlHitRevise(u32 id) const { return _gfbbt::getArtsBlHitRevise(*unknown18, id); }
+s32 GfBdatBtl::getArtsBlHitRevise(u32 id) const { return _gfbbt::getArtsBlHitRevise(*m_artsBl, id); }
 
-s32 GfBdatBtl::getArtsBlCriRevise(u32 id) const { return _gfbbt::getArtsBlCriRevise(*unknown18, id); }
+s32 GfBdatBtl::getArtsBlCriRevise(u32 id) const { return _gfbbt::getArtsBlCriRevise(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlBulletID(u32 id) const { return _gfbbt::getArtsBlBulletID(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlBulletID(u32 id) const { return _gfbbt::getArtsBlBulletID(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlBulletNum(u32 id) const { return _gfbbt::getArtsBlBulletNum(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlBulletNum(u32 id) const { return _gfbbt::getArtsBlBulletNum(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm1(u32 id) const { return _gfbbt::getArtsBlHitFrm1(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm1(u32 id) const { return _gfbbt::getArtsBlHitFrm1(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm2(u32 id) const { return _gfbbt::getArtsBlHitFrm2(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm2(u32 id) const { return _gfbbt::getArtsBlHitFrm2(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm3(u32 id) const { return _gfbbt::getArtsBlHitFrm3(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm3(u32 id) const { return _gfbbt::getArtsBlHitFrm3(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm4(u32 id) const { return _gfbbt::getArtsBlHitFrm4(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm4(u32 id) const { return _gfbbt::getArtsBlHitFrm4(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm5(u32 id) const { return _gfbbt::getArtsBlHitFrm5(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm5(u32 id) const { return _gfbbt::getArtsBlHitFrm5(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm6(u32 id) const { return _gfbbt::getArtsBlHitFrm6(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm6(u32 id) const { return _gfbbt::getArtsBlHitFrm6(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm7(u32 id) const { return _gfbbt::getArtsBlHitFrm7(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm7(u32 id) const { return _gfbbt::getArtsBlHitFrm7(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm8(u32 id) const { return _gfbbt::getArtsBlHitFrm8(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm8(u32 id) const { return _gfbbt::getArtsBlHitFrm8(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm9(u32 id) const { return _gfbbt::getArtsBlHitFrm9(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm9(u32 id) const { return _gfbbt::getArtsBlHitFrm9(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm10(u32 id) const { return _gfbbt::getArtsBlHitFrm10(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm10(u32 id) const { return _gfbbt::getArtsBlHitFrm10(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm11(u32 id) const { return _gfbbt::getArtsBlHitFrm11(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm11(u32 id) const { return _gfbbt::getArtsBlHitFrm11(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm12(u32 id) const { return _gfbbt::getArtsBlHitFrm12(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm12(u32 id) const { return _gfbbt::getArtsBlHitFrm12(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm13(u32 id) const { return _gfbbt::getArtsBlHitFrm13(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm13(u32 id) const { return _gfbbt::getArtsBlHitFrm13(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm14(u32 id) const { return _gfbbt::getArtsBlHitFrm14(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm14(u32 id) const { return _gfbbt::getArtsBlHitFrm14(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm15(u32 id) const { return _gfbbt::getArtsBlHitFrm15(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm15(u32 id) const { return _gfbbt::getArtsBlHitFrm15(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitFrm16(u32 id) const { return _gfbbt::getArtsBlHitFrm16(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitFrm16(u32 id) const { return _gfbbt::getArtsBlHitFrm16(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp1(u32 id) const { return _gfbbt::getArtsBlEfp1(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp1(u32 id) const { return _gfbbt::getArtsBlEfp1(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp2(u32 id) const { return _gfbbt::getArtsBlEfp2(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp2(u32 id) const { return _gfbbt::getArtsBlEfp2(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp3(u32 id) const { return _gfbbt::getArtsBlEfp3(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp3(u32 id) const { return _gfbbt::getArtsBlEfp3(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp4(u32 id) const { return _gfbbt::getArtsBlEfp4(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp4(u32 id) const { return _gfbbt::getArtsBlEfp4(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp5(u32 id) const { return _gfbbt::getArtsBlEfp5(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp5(u32 id) const { return _gfbbt::getArtsBlEfp5(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp6(u32 id) const { return _gfbbt::getArtsBlEfp6(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp6(u32 id) const { return _gfbbt::getArtsBlEfp6(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp7(u32 id) const { return _gfbbt::getArtsBlEfp7(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp7(u32 id) const { return _gfbbt::getArtsBlEfp7(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp8(u32 id) const { return _gfbbt::getArtsBlEfp8(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp8(u32 id) const { return _gfbbt::getArtsBlEfp8(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp9(u32 id) const { return _gfbbt::getArtsBlEfp9(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp9(u32 id) const { return _gfbbt::getArtsBlEfp9(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp10(u32 id) const { return _gfbbt::getArtsBlEfp10(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp10(u32 id) const { return _gfbbt::getArtsBlEfp10(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp11(u32 id) const { return _gfbbt::getArtsBlEfp11(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp11(u32 id) const { return _gfbbt::getArtsBlEfp11(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp12(u32 id) const { return _gfbbt::getArtsBlEfp12(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp12(u32 id) const { return _gfbbt::getArtsBlEfp12(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp13(u32 id) const { return _gfbbt::getArtsBlEfp13(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp13(u32 id) const { return _gfbbt::getArtsBlEfp13(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp14(u32 id) const { return _gfbbt::getArtsBlEfp14(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp14(u32 id) const { return _gfbbt::getArtsBlEfp14(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp15(u32 id) const { return _gfbbt::getArtsBlEfp15(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp15(u32 id) const { return _gfbbt::getArtsBlEfp15(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEfp16(u32 id) const { return _gfbbt::getArtsBlEfp16(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEfp16(u32 id) const { return _gfbbt::getArtsBlEfp16(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID1(u32 id) const { return _gfbbt::getArtsBlHitDirID1(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID1(u32 id) const { return _gfbbt::getArtsBlHitDirID1(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID2(u32 id) const { return _gfbbt::getArtsBlHitDirID2(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID2(u32 id) const { return _gfbbt::getArtsBlHitDirID2(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID3(u32 id) const { return _gfbbt::getArtsBlHitDirID3(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID3(u32 id) const { return _gfbbt::getArtsBlHitDirID3(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID4(u32 id) const { return _gfbbt::getArtsBlHitDirID4(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID4(u32 id) const { return _gfbbt::getArtsBlHitDirID4(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID5(u32 id) const { return _gfbbt::getArtsBlHitDirID5(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID5(u32 id) const { return _gfbbt::getArtsBlHitDirID5(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID6(u32 id) const { return _gfbbt::getArtsBlHitDirID6(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID6(u32 id) const { return _gfbbt::getArtsBlHitDirID6(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID7(u32 id) const { return _gfbbt::getArtsBlHitDirID7(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID7(u32 id) const { return _gfbbt::getArtsBlHitDirID7(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID8(u32 id) const { return _gfbbt::getArtsBlHitDirID8(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID8(u32 id) const { return _gfbbt::getArtsBlHitDirID8(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID9(u32 id) const { return _gfbbt::getArtsBlHitDirID9(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID9(u32 id) const { return _gfbbt::getArtsBlHitDirID9(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID10(u32 id) const { return _gfbbt::getArtsBlHitDirID10(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID10(u32 id) const { return _gfbbt::getArtsBlHitDirID10(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID11(u32 id) const { return _gfbbt::getArtsBlHitDirID11(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID11(u32 id) const { return _gfbbt::getArtsBlHitDirID11(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID12(u32 id) const { return _gfbbt::getArtsBlHitDirID12(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID12(u32 id) const { return _gfbbt::getArtsBlHitDirID12(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID13(u32 id) const { return _gfbbt::getArtsBlHitDirID13(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID13(u32 id) const { return _gfbbt::getArtsBlHitDirID13(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID14(u32 id) const { return _gfbbt::getArtsBlHitDirID14(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID14(u32 id) const { return _gfbbt::getArtsBlHitDirID14(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID15(u32 id) const { return _gfbbt::getArtsBlHitDirID15(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID15(u32 id) const { return _gfbbt::getArtsBlHitDirID15(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlHitDirID16(u32 id) const { return _gfbbt::getArtsBlHitDirID16(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlHitDirID16(u32 id) const { return _gfbbt::getArtsBlHitDirID16(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt1(u32 id) const { return _gfbbt::getArtsBlDmgRt1(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt1(u32 id) const { return _gfbbt::getArtsBlDmgRt1(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt2(u32 id) const { return _gfbbt::getArtsBlDmgRt2(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt2(u32 id) const { return _gfbbt::getArtsBlDmgRt2(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt3(u32 id) const { return _gfbbt::getArtsBlDmgRt3(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt3(u32 id) const { return _gfbbt::getArtsBlDmgRt3(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt4(u32 id) const { return _gfbbt::getArtsBlDmgRt4(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt4(u32 id) const { return _gfbbt::getArtsBlDmgRt4(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt5(u32 id) const { return _gfbbt::getArtsBlDmgRt5(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt5(u32 id) const { return _gfbbt::getArtsBlDmgRt5(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt6(u32 id) const { return _gfbbt::getArtsBlDmgRt6(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt6(u32 id) const { return _gfbbt::getArtsBlDmgRt6(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt7(u32 id) const { return _gfbbt::getArtsBlDmgRt7(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt7(u32 id) const { return _gfbbt::getArtsBlDmgRt7(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt8(u32 id) const { return _gfbbt::getArtsBlDmgRt8(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt8(u32 id) const { return _gfbbt::getArtsBlDmgRt8(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt9(u32 id) const { return _gfbbt::getArtsBlDmgRt9(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt9(u32 id) const { return _gfbbt::getArtsBlDmgRt9(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt10(u32 id) const { return _gfbbt::getArtsBlDmgRt10(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt10(u32 id) const { return _gfbbt::getArtsBlDmgRt10(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt11(u32 id) const { return _gfbbt::getArtsBlDmgRt11(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt11(u32 id) const { return _gfbbt::getArtsBlDmgRt11(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt12(u32 id) const { return _gfbbt::getArtsBlDmgRt12(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt12(u32 id) const { return _gfbbt::getArtsBlDmgRt12(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt13(u32 id) const { return _gfbbt::getArtsBlDmgRt13(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt13(u32 id) const { return _gfbbt::getArtsBlDmgRt13(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt14(u32 id) const { return _gfbbt::getArtsBlDmgRt14(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt14(u32 id) const { return _gfbbt::getArtsBlDmgRt14(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt15(u32 id) const { return _gfbbt::getArtsBlDmgRt15(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt15(u32 id) const { return _gfbbt::getArtsBlDmgRt15(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgRt16(u32 id) const { return _gfbbt::getArtsBlDmgRt16(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgRt16(u32 id) const { return _gfbbt::getArtsBlDmgRt16(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct1(u32 id) const { return _gfbbt::getArtsBlReAct1(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct1(u32 id) const { return _gfbbt::getArtsBlReAct1(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct2(u32 id) const { return _gfbbt::getArtsBlReAct2(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct2(u32 id) const { return _gfbbt::getArtsBlReAct2(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct3(u32 id) const { return _gfbbt::getArtsBlReAct3(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct3(u32 id) const { return _gfbbt::getArtsBlReAct3(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct4(u32 id) const { return _gfbbt::getArtsBlReAct4(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct4(u32 id) const { return _gfbbt::getArtsBlReAct4(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct5(u32 id) const { return _gfbbt::getArtsBlReAct5(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct5(u32 id) const { return _gfbbt::getArtsBlReAct5(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct6(u32 id) const { return _gfbbt::getArtsBlReAct6(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct6(u32 id) const { return _gfbbt::getArtsBlReAct6(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct7(u32 id) const { return _gfbbt::getArtsBlReAct7(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct7(u32 id) const { return _gfbbt::getArtsBlReAct7(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct8(u32 id) const { return _gfbbt::getArtsBlReAct8(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct8(u32 id) const { return _gfbbt::getArtsBlReAct8(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct9(u32 id) const { return _gfbbt::getArtsBlReAct9(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct9(u32 id) const { return _gfbbt::getArtsBlReAct9(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct10(u32 id) const { return _gfbbt::getArtsBlReAct10(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct10(u32 id) const { return _gfbbt::getArtsBlReAct10(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct11(u32 id) const { return _gfbbt::getArtsBlReAct11(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct11(u32 id) const { return _gfbbt::getArtsBlReAct11(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct12(u32 id) const { return _gfbbt::getArtsBlReAct12(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct12(u32 id) const { return _gfbbt::getArtsBlReAct12(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct13(u32 id) const { return _gfbbt::getArtsBlReAct13(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct13(u32 id) const { return _gfbbt::getArtsBlReAct13(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct14(u32 id) const { return _gfbbt::getArtsBlReAct14(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct14(u32 id) const { return _gfbbt::getArtsBlReAct14(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct15(u32 id) const { return _gfbbt::getArtsBlReAct15(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct15(u32 id) const { return _gfbbt::getArtsBlReAct15(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlReAct16(u32 id) const { return _gfbbt::getArtsBlReAct16(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlReAct16(u32 id) const { return _gfbbt::getArtsBlReAct16(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgMgn1(u32 id) const { return _gfbbt::getArtsBlDmgMgn1(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgMgn1(u32 id) const { return _gfbbt::getArtsBlDmgMgn1(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgMgn2(u32 id) const { return _gfbbt::getArtsBlDmgMgn2(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgMgn2(u32 id) const { return _gfbbt::getArtsBlDmgMgn2(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgMgn3(u32 id) const { return _gfbbt::getArtsBlDmgMgn3(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgMgn3(u32 id) const { return _gfbbt::getArtsBlDmgMgn3(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgMgn4(u32 id) const { return _gfbbt::getArtsBlDmgMgn4(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgMgn4(u32 id) const { return _gfbbt::getArtsBlDmgMgn4(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgMgn5(u32 id) const { return _gfbbt::getArtsBlDmgMgn5(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgMgn5(u32 id) const { return _gfbbt::getArtsBlDmgMgn5(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlDmgMgn6(u32 id) const { return _gfbbt::getArtsBlDmgMgn6(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlDmgMgn6(u32 id) const { return _gfbbt::getArtsBlDmgMgn6(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlAtrNum(u32 id) const { return _gfbbt::getArtsBlAtrNum(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlAtrNum(u32 id) const { return _gfbbt::getArtsBlAtrNum(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEnhance1(u32 id) const { return _gfbbt::getArtsBlEnhance1(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEnhance1(u32 id) const { return _gfbbt::getArtsBlEnhance1(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEnhance2(u32 id) const { return _gfbbt::getArtsBlEnhance2(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEnhance2(u32 id) const { return _gfbbt::getArtsBlEnhance2(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEnhance3(u32 id) const { return _gfbbt::getArtsBlEnhance3(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEnhance3(u32 id) const { return _gfbbt::getArtsBlEnhance3(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEnhance4(u32 id) const { return _gfbbt::getArtsBlEnhance4(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEnhance4(u32 id) const { return _gfbbt::getArtsBlEnhance4(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEnhance5(u32 id) const { return _gfbbt::getArtsBlEnhance5(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEnhance5(u32 id) const { return _gfbbt::getArtsBlEnhance5(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlEnhance6(u32 id) const { return _gfbbt::getArtsBlEnhance6(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlEnhance6(u32 id) const { return _gfbbt::getArtsBlEnhance6(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlBtnType(u32 id) const { return _gfbbt::getArtsBlBtnType(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlBtnType(u32 id) const { return _gfbbt::getArtsBlBtnType(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlBtnChal1(u32 id) const { return _gfbbt::getArtsBlBtnChal1(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlBtnChal1(u32 id) const { return _gfbbt::getArtsBlBtnChal1(*m_artsBl, id); }
 
-u32 GfBdatBtl::getArtsBlUI(u32 id) const { return _gfbbt::getArtsBlUI(*unknown18, id); }
+u32 GfBdatBtl::getArtsBlUI(u32 id) const { return _gfbbt::getArtsBlUI(*m_artsBl, id); }
 
 u32 GfBdatBtl::getArtsBlHitFrm(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlHitFrm1,
@@ -7390,7 +7391,7 @@ u32 GfBdatBtl::getArtsBlHitFrm(u32 id, u32 index) const {
                                                               _gfbbt::getArtsBlHitFrm14,
                                                               _gfbbt::getArtsBlHitFrm15,
                                                               _gfbbt::getArtsBlHitFrm16};
-  return getters[index](*unknown18, id);
+  return getters[index](*m_artsBl, id);
 }
 
 u32 GfBdatBtl::getArtsBlEfp(u32 id, u32 index) const {
@@ -7410,7 +7411,7 @@ u32 GfBdatBtl::getArtsBlEfp(u32 id, u32 index) const {
                                                               _gfbbt::getArtsBlEfp14,
                                                               _gfbbt::getArtsBlEfp15,
                                                               _gfbbt::getArtsBlEfp16};
-  return getters[index](*unknown18, id);
+  return getters[index](*m_artsBl, id);
 }
 
 u32 GfBdatBtl::getArtsBlHitDirID(u32 id, u32 index) const {
@@ -7430,7 +7431,7 @@ u32 GfBdatBtl::getArtsBlHitDirID(u32 id, u32 index) const {
                                                               _gfbbt::getArtsBlHitDirID14,
                                                               _gfbbt::getArtsBlHitDirID15,
                                                               _gfbbt::getArtsBlHitDirID16};
-  return getters[index](*unknown18, id);
+  return getters[index](*m_artsBl, id);
 }
 
 u32 GfBdatBtl::getArtsBlDmgRt(u32 id, u32 index) const {
@@ -7450,7 +7451,7 @@ u32 GfBdatBtl::getArtsBlDmgRt(u32 id, u32 index) const {
                                                               _gfbbt::getArtsBlDmgRt14,
                                                               _gfbbt::getArtsBlDmgRt15,
                                                               _gfbbt::getArtsBlDmgRt16};
-  return getters[index](*unknown18, id);
+  return getters[index](*m_artsBl, id);
 }
 
 u32 GfBdatBtl::getArtsBlReAct(u32 id, u32 index) const {
@@ -7470,7 +7471,7 @@ u32 GfBdatBtl::getArtsBlReAct(u32 id, u32 index) const {
                                                               _gfbbt::getArtsBlReAct14,
                                                               _gfbbt::getArtsBlReAct15,
                                                               _gfbbt::getArtsBlReAct16};
-  return getters[index](*unknown18, id);
+  return getters[index](*m_artsBl, id);
 }
 
 u32 GfBdatBtl::getArtsBlDmgMgn(u32 id, u32 index) const {
@@ -7480,7 +7481,7 @@ u32 GfBdatBtl::getArtsBlDmgMgn(u32 id, u32 index) const {
                                                               _gfbbt::getArtsBlDmgMgn4,
                                                               _gfbbt::getArtsBlDmgMgn5,
                                                               _gfbbt::getArtsBlDmgMgn6};
-  return getters[index](*unknown18, id);
+  return getters[index](*m_artsBl, id);
 }
 
 u32 GfBdatBtl::getArtsBlEnhance(u32 arts, u32 level) const {
@@ -7490,260 +7491,260 @@ u32 GfBdatBtl::getArtsBlEnhance(u32 arts, u32 level) const {
                                                               _gfbbt::getArtsBlEnhance4,
                                                               _gfbbt::getArtsBlEnhance5,
                                                               _gfbbt::getArtsBlEnhance6};
-  return getters[level](*unknown18, arts);
+  return getters[level](*m_artsBl, arts);
 }
 
-u32 GfBdatBtl::getArtsBlSpStart() const { return Bdat::getIdTop(unknown20->data); }
+u32 GfBdatBtl::getArtsBlSpStart() const { return Bdat::getIdTop(m_artsBlSp->data); }
 
-u32 GfBdatBtl::getArtsBlSpEnd() const { return Bdat::getIdTop(unknown20->data) + Bdat::getIdCount(unknown20->data); }
+u32 GfBdatBtl::getArtsBlSpEnd() const { return Bdat::getIdTop(m_artsBlSp->data) + Bdat::getIdCount(m_artsBlSp->data); }
 
-u32 GfBdatBtl::getArtsBlSpName(u32 id) const { return _gfbbt::getArtsBlSpName(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpName(u32 id) const { return _gfbbt::getArtsBlSpName(*m_artsBlSp, id); }
 
-const char *GfBdatBtl::getArtsBlSpDebugName(u32 id) const { return _gfbbt::getArtsBlSpDebugName(*unknown20, id); }
+const char *GfBdatBtl::getArtsBlSpDebugName(u32 id) const { return _gfbbt::getArtsBlSpDebugName(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpCaption(u32 id) const { return _gfbbt::getArtsBlSpCaption(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpCaption(u32 id) const { return _gfbbt::getArtsBlSpCaption(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpWpnType(u32 id) const { return _gfbbt::getArtsBlSpWpnType(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpWpnType(u32 id) const { return _gfbbt::getArtsBlSpWpnType(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpCmnBlType(u32 id) const { return _gfbbt::getArtsBlSpCmnBlType(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpCmnBlType(u32 id) const { return _gfbbt::getArtsBlSpCmnBlType(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpActNoDr(u32 id) const { return _gfbbt::getArtsBlSpActNoDr(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpActNoDr(u32 id) const { return _gfbbt::getArtsBlSpActNoDr(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpActNoBl(u32 id) const { return _gfbbt::getArtsBlSpActNoBl(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpActNoBl(u32 id) const { return _gfbbt::getArtsBlSpActNoBl(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpActNoBl2(u32 id) const { return _gfbbt::getArtsBlSpActNoBl2(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpActNoBl2(u32 id) const { return _gfbbt::getArtsBlSpActNoBl2(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpBuddyDr(u32 id) const { return _gfbbt::getArtsBlSpBuddyDr(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpBuddyDr(u32 id) const { return _gfbbt::getArtsBlSpBuddyDr(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpAddBl(u32 id) const { return _gfbbt::getArtsBlSpAddBl(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpAddBl(u32 id) const { return _gfbbt::getArtsBlSpAddBl(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpActType(u32 id) const { return _gfbbt::getArtsBlSpActType(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpActType(u32 id) const { return _gfbbt::getArtsBlSpActType(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpPC01(u32 id) const { return _gfbbt::getArtsBlSpPC01(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpPC01(u32 id) const { return _gfbbt::getArtsBlSpPC01(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpPC02(u32 id) const { return _gfbbt::getArtsBlSpPC02(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpPC02(u32 id) const { return _gfbbt::getArtsBlSpPC02(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpPC03(u32 id) const { return _gfbbt::getArtsBlSpPC03(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpPC03(u32 id) const { return _gfbbt::getArtsBlSpPC03(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpPC06(u32 id) const { return _gfbbt::getArtsBlSpPC06(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpPC06(u32 id) const { return _gfbbt::getArtsBlSpPC06(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpArtsType(u32 id) const { return _gfbbt::getArtsBlSpArtsType(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpArtsType(u32 id) const { return _gfbbt::getArtsBlSpArtsType(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpArtsBuff(u32 id) const { return _gfbbt::getArtsBlSpArtsBuff(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpArtsBuff(u32 id) const { return _gfbbt::getArtsBlSpArtsBuff(*m_artsBlSp, id); }
 
-bool GfBdatBtl::isArtsBlSpFlagPierce(u32 id) const { return _gfbbt::isArtsBlSpFlagPierce(*unknown20, id); }
+bool GfBdatBtl::isArtsBlSpFlagPierce(u32 id) const { return _gfbbt::isArtsBlSpFlagPierce(*m_artsBlSp, id); }
 
-bool GfBdatBtl::isArtsBlSpFlagNoMove(u32 id) const { return _gfbbt::isArtsBlSpFlagNoMove(*unknown20, id); }
+bool GfBdatBtl::isArtsBlSpFlagNoMove(u32 id) const { return _gfbbt::isArtsBlSpFlagNoMove(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpTarget(u32 id) const { return _gfbbt::getArtsBlSpTarget(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpTarget(u32 id) const { return _gfbbt::getArtsBlSpTarget(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDistance(u32 id) const { return _gfbbt::getArtsBlSpDistance(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDistance(u32 id) const { return _gfbbt::getArtsBlSpDistance(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpRangeType(u32 id) const { return _gfbbt::getArtsBlSpRangeType(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpRangeType(u32 id) const { return _gfbbt::getArtsBlSpRangeType(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpRadius(u32 id) const { return _gfbbt::getArtsBlSpRadius(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpRadius(u32 id) const { return _gfbbt::getArtsBlSpRadius(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpLength(u32 id) const { return _gfbbt::getArtsBlSpLength(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpLength(u32 id) const { return _gfbbt::getArtsBlSpLength(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpAtr(u32 id) const { return _gfbbt::getArtsBlSpAtr(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpAtr(u32 id) const { return _gfbbt::getArtsBlSpAtr(*m_artsBlSp, id); }
 
-s32 GfBdatBtl::getArtsBlSpHate(u32 id) const { return _gfbbt::getArtsBlSpHate(*unknown20, id); }
+s32 GfBdatBtl::getArtsBlSpHate(u32 id) const { return _gfbbt::getArtsBlSpHate(*m_artsBlSp, id); }
 
-s32 GfBdatBtl::getArtsBlSpHitRevise(u32 id) const { return _gfbbt::getArtsBlSpHitRevise(*unknown20, id); }
+s32 GfBdatBtl::getArtsBlSpHitRevise(u32 id) const { return _gfbbt::getArtsBlSpHitRevise(*m_artsBlSp, id); }
 
-s32 GfBdatBtl::getArtsBlSpCriRevise(u32 id) const { return _gfbbt::getArtsBlSpCriRevise(*unknown20, id); }
+s32 GfBdatBtl::getArtsBlSpCriRevise(u32 id) const { return _gfbbt::getArtsBlSpCriRevise(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpBulletID(u32 id) const { return _gfbbt::getArtsBlSpBulletID(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpBulletID(u32 id) const { return _gfbbt::getArtsBlSpBulletID(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpBulletEffID(u32 id) const { return _gfbbt::getArtsBlSpBulletEffID(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpBulletEffID(u32 id) const { return _gfbbt::getArtsBlSpBulletEffID(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpBulletNum(u32 id) const { return _gfbbt::getArtsBlSpBulletNum(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpBulletNum(u32 id) const { return _gfbbt::getArtsBlSpBulletNum(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm1(u32 id) const { return _gfbbt::getArtsBlSpHitFrm1(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm1(u32 id) const { return _gfbbt::getArtsBlSpHitFrm1(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm2(u32 id) const { return _gfbbt::getArtsBlSpHitFrm2(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm2(u32 id) const { return _gfbbt::getArtsBlSpHitFrm2(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm3(u32 id) const { return _gfbbt::getArtsBlSpHitFrm3(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm3(u32 id) const { return _gfbbt::getArtsBlSpHitFrm3(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm4(u32 id) const { return _gfbbt::getArtsBlSpHitFrm4(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm4(u32 id) const { return _gfbbt::getArtsBlSpHitFrm4(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm5(u32 id) const { return _gfbbt::getArtsBlSpHitFrm5(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm5(u32 id) const { return _gfbbt::getArtsBlSpHitFrm5(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm6(u32 id) const { return _gfbbt::getArtsBlSpHitFrm6(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm6(u32 id) const { return _gfbbt::getArtsBlSpHitFrm6(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm7(u32 id) const { return _gfbbt::getArtsBlSpHitFrm7(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm7(u32 id) const { return _gfbbt::getArtsBlSpHitFrm7(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm8(u32 id) const { return _gfbbt::getArtsBlSpHitFrm8(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm8(u32 id) const { return _gfbbt::getArtsBlSpHitFrm8(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm9(u32 id) const { return _gfbbt::getArtsBlSpHitFrm9(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm9(u32 id) const { return _gfbbt::getArtsBlSpHitFrm9(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm10(u32 id) const { return _gfbbt::getArtsBlSpHitFrm10(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm10(u32 id) const { return _gfbbt::getArtsBlSpHitFrm10(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm11(u32 id) const { return _gfbbt::getArtsBlSpHitFrm11(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm11(u32 id) const { return _gfbbt::getArtsBlSpHitFrm11(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm12(u32 id) const { return _gfbbt::getArtsBlSpHitFrm12(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm12(u32 id) const { return _gfbbt::getArtsBlSpHitFrm12(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm13(u32 id) const { return _gfbbt::getArtsBlSpHitFrm13(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm13(u32 id) const { return _gfbbt::getArtsBlSpHitFrm13(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm14(u32 id) const { return _gfbbt::getArtsBlSpHitFrm14(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm14(u32 id) const { return _gfbbt::getArtsBlSpHitFrm14(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm15(u32 id) const { return _gfbbt::getArtsBlSpHitFrm15(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm15(u32 id) const { return _gfbbt::getArtsBlSpHitFrm15(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitFrm16(u32 id) const { return _gfbbt::getArtsBlSpHitFrm16(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitFrm16(u32 id) const { return _gfbbt::getArtsBlSpHitFrm16(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp1(u32 id) const { return _gfbbt::getArtsBlSpEfp1(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp1(u32 id) const { return _gfbbt::getArtsBlSpEfp1(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp2(u32 id) const { return _gfbbt::getArtsBlSpEfp2(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp2(u32 id) const { return _gfbbt::getArtsBlSpEfp2(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp3(u32 id) const { return _gfbbt::getArtsBlSpEfp3(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp3(u32 id) const { return _gfbbt::getArtsBlSpEfp3(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp4(u32 id) const { return _gfbbt::getArtsBlSpEfp4(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp4(u32 id) const { return _gfbbt::getArtsBlSpEfp4(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp5(u32 id) const { return _gfbbt::getArtsBlSpEfp5(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp5(u32 id) const { return _gfbbt::getArtsBlSpEfp5(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp6(u32 id) const { return _gfbbt::getArtsBlSpEfp6(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp6(u32 id) const { return _gfbbt::getArtsBlSpEfp6(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp7(u32 id) const { return _gfbbt::getArtsBlSpEfp7(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp7(u32 id) const { return _gfbbt::getArtsBlSpEfp7(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp8(u32 id) const { return _gfbbt::getArtsBlSpEfp8(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp8(u32 id) const { return _gfbbt::getArtsBlSpEfp8(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp9(u32 id) const { return _gfbbt::getArtsBlSpEfp9(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp9(u32 id) const { return _gfbbt::getArtsBlSpEfp9(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp10(u32 id) const { return _gfbbt::getArtsBlSpEfp10(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp10(u32 id) const { return _gfbbt::getArtsBlSpEfp10(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp11(u32 id) const { return _gfbbt::getArtsBlSpEfp11(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp11(u32 id) const { return _gfbbt::getArtsBlSpEfp11(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp12(u32 id) const { return _gfbbt::getArtsBlSpEfp12(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp12(u32 id) const { return _gfbbt::getArtsBlSpEfp12(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp13(u32 id) const { return _gfbbt::getArtsBlSpEfp13(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp13(u32 id) const { return _gfbbt::getArtsBlSpEfp13(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp14(u32 id) const { return _gfbbt::getArtsBlSpEfp14(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp14(u32 id) const { return _gfbbt::getArtsBlSpEfp14(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp15(u32 id) const { return _gfbbt::getArtsBlSpEfp15(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp15(u32 id) const { return _gfbbt::getArtsBlSpEfp15(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEfp16(u32 id) const { return _gfbbt::getArtsBlSpEfp16(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEfp16(u32 id) const { return _gfbbt::getArtsBlSpEfp16(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID1(u32 id) const { return _gfbbt::getArtsBlSpHitDirID1(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID1(u32 id) const { return _gfbbt::getArtsBlSpHitDirID1(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID2(u32 id) const { return _gfbbt::getArtsBlSpHitDirID2(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID2(u32 id) const { return _gfbbt::getArtsBlSpHitDirID2(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID3(u32 id) const { return _gfbbt::getArtsBlSpHitDirID3(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID3(u32 id) const { return _gfbbt::getArtsBlSpHitDirID3(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID4(u32 id) const { return _gfbbt::getArtsBlSpHitDirID4(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID4(u32 id) const { return _gfbbt::getArtsBlSpHitDirID4(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID5(u32 id) const { return _gfbbt::getArtsBlSpHitDirID5(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID5(u32 id) const { return _gfbbt::getArtsBlSpHitDirID5(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID6(u32 id) const { return _gfbbt::getArtsBlSpHitDirID6(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID6(u32 id) const { return _gfbbt::getArtsBlSpHitDirID6(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID7(u32 id) const { return _gfbbt::getArtsBlSpHitDirID7(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID7(u32 id) const { return _gfbbt::getArtsBlSpHitDirID7(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID8(u32 id) const { return _gfbbt::getArtsBlSpHitDirID8(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID8(u32 id) const { return _gfbbt::getArtsBlSpHitDirID8(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID9(u32 id) const { return _gfbbt::getArtsBlSpHitDirID9(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID9(u32 id) const { return _gfbbt::getArtsBlSpHitDirID9(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID10(u32 id) const { return _gfbbt::getArtsBlSpHitDirID10(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID10(u32 id) const { return _gfbbt::getArtsBlSpHitDirID10(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID11(u32 id) const { return _gfbbt::getArtsBlSpHitDirID11(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID11(u32 id) const { return _gfbbt::getArtsBlSpHitDirID11(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID12(u32 id) const { return _gfbbt::getArtsBlSpHitDirID12(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID12(u32 id) const { return _gfbbt::getArtsBlSpHitDirID12(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID13(u32 id) const { return _gfbbt::getArtsBlSpHitDirID13(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID13(u32 id) const { return _gfbbt::getArtsBlSpHitDirID13(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID14(u32 id) const { return _gfbbt::getArtsBlSpHitDirID14(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID14(u32 id) const { return _gfbbt::getArtsBlSpHitDirID14(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID15(u32 id) const { return _gfbbt::getArtsBlSpHitDirID15(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID15(u32 id) const { return _gfbbt::getArtsBlSpHitDirID15(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitDirID16(u32 id) const { return _gfbbt::getArtsBlSpHitDirID16(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitDirID16(u32 id) const { return _gfbbt::getArtsBlSpHitDirID16(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt1(u32 id) const { return _gfbbt::getArtsBlSpDmgRt1(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt1(u32 id) const { return _gfbbt::getArtsBlSpDmgRt1(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt2(u32 id) const { return _gfbbt::getArtsBlSpDmgRt2(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt2(u32 id) const { return _gfbbt::getArtsBlSpDmgRt2(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt3(u32 id) const { return _gfbbt::getArtsBlSpDmgRt3(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt3(u32 id) const { return _gfbbt::getArtsBlSpDmgRt3(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt4(u32 id) const { return _gfbbt::getArtsBlSpDmgRt4(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt4(u32 id) const { return _gfbbt::getArtsBlSpDmgRt4(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt5(u32 id) const { return _gfbbt::getArtsBlSpDmgRt5(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt5(u32 id) const { return _gfbbt::getArtsBlSpDmgRt5(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt6(u32 id) const { return _gfbbt::getArtsBlSpDmgRt6(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt6(u32 id) const { return _gfbbt::getArtsBlSpDmgRt6(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt7(u32 id) const { return _gfbbt::getArtsBlSpDmgRt7(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt7(u32 id) const { return _gfbbt::getArtsBlSpDmgRt7(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt8(u32 id) const { return _gfbbt::getArtsBlSpDmgRt8(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt8(u32 id) const { return _gfbbt::getArtsBlSpDmgRt8(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt9(u32 id) const { return _gfbbt::getArtsBlSpDmgRt9(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt9(u32 id) const { return _gfbbt::getArtsBlSpDmgRt9(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt10(u32 id) const { return _gfbbt::getArtsBlSpDmgRt10(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt10(u32 id) const { return _gfbbt::getArtsBlSpDmgRt10(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt11(u32 id) const { return _gfbbt::getArtsBlSpDmgRt11(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt11(u32 id) const { return _gfbbt::getArtsBlSpDmgRt11(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt12(u32 id) const { return _gfbbt::getArtsBlSpDmgRt12(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt12(u32 id) const { return _gfbbt::getArtsBlSpDmgRt12(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt13(u32 id) const { return _gfbbt::getArtsBlSpDmgRt13(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt13(u32 id) const { return _gfbbt::getArtsBlSpDmgRt13(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt14(u32 id) const { return _gfbbt::getArtsBlSpDmgRt14(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt14(u32 id) const { return _gfbbt::getArtsBlSpDmgRt14(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt15(u32 id) const { return _gfbbt::getArtsBlSpDmgRt15(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt15(u32 id) const { return _gfbbt::getArtsBlSpDmgRt15(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgRt16(u32 id) const { return _gfbbt::getArtsBlSpDmgRt16(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgRt16(u32 id) const { return _gfbbt::getArtsBlSpDmgRt16(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct1(u32 id) const { return _gfbbt::getArtsBlSpReAct1(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct1(u32 id) const { return _gfbbt::getArtsBlSpReAct1(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct2(u32 id) const { return _gfbbt::getArtsBlSpReAct2(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct2(u32 id) const { return _gfbbt::getArtsBlSpReAct2(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct3(u32 id) const { return _gfbbt::getArtsBlSpReAct3(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct3(u32 id) const { return _gfbbt::getArtsBlSpReAct3(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct4(u32 id) const { return _gfbbt::getArtsBlSpReAct4(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct4(u32 id) const { return _gfbbt::getArtsBlSpReAct4(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct5(u32 id) const { return _gfbbt::getArtsBlSpReAct5(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct5(u32 id) const { return _gfbbt::getArtsBlSpReAct5(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct6(u32 id) const { return _gfbbt::getArtsBlSpReAct6(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct6(u32 id) const { return _gfbbt::getArtsBlSpReAct6(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct7(u32 id) const { return _gfbbt::getArtsBlSpReAct7(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct7(u32 id) const { return _gfbbt::getArtsBlSpReAct7(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct8(u32 id) const { return _gfbbt::getArtsBlSpReAct8(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct8(u32 id) const { return _gfbbt::getArtsBlSpReAct8(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct9(u32 id) const { return _gfbbt::getArtsBlSpReAct9(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct9(u32 id) const { return _gfbbt::getArtsBlSpReAct9(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct10(u32 id) const { return _gfbbt::getArtsBlSpReAct10(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct10(u32 id) const { return _gfbbt::getArtsBlSpReAct10(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct11(u32 id) const { return _gfbbt::getArtsBlSpReAct11(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct11(u32 id) const { return _gfbbt::getArtsBlSpReAct11(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct12(u32 id) const { return _gfbbt::getArtsBlSpReAct12(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct12(u32 id) const { return _gfbbt::getArtsBlSpReAct12(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct13(u32 id) const { return _gfbbt::getArtsBlSpReAct13(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct13(u32 id) const { return _gfbbt::getArtsBlSpReAct13(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct14(u32 id) const { return _gfbbt::getArtsBlSpReAct14(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct14(u32 id) const { return _gfbbt::getArtsBlSpReAct14(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct15(u32 id) const { return _gfbbt::getArtsBlSpReAct15(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct15(u32 id) const { return _gfbbt::getArtsBlSpReAct15(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpReAct16(u32 id) const { return _gfbbt::getArtsBlSpReAct16(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpReAct16(u32 id) const { return _gfbbt::getArtsBlSpReAct16(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpDmgMgn(u32 id) const { return _gfbbt::getArtsBlSpDmgMgn(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpDmgMgn(u32 id) const { return _gfbbt::getArtsBlSpDmgMgn(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpRecast(u32 id) const { return _gfbbt::getArtsBlSpRecast(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpRecast(u32 id) const { return _gfbbt::getArtsBlSpRecast(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpAtrNum(u32 id) const { return _gfbbt::getArtsBlSpAtrNum(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpAtrNum(u32 id) const { return _gfbbt::getArtsBlSpAtrNum(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpEnhance(u32 id) const { return _gfbbt::getArtsBlSpEnhance(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpEnhance(u32 id) const { return _gfbbt::getArtsBlSpEnhance(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpBtnType(u32 id) const { return _gfbbt::getArtsBlSpBtnType(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpBtnType(u32 id) const { return _gfbbt::getArtsBlSpBtnType(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpBtnChal1(u32 id) const { return _gfbbt::getArtsBlSpBtnChal1(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpBtnChal1(u32 id) const { return _gfbbt::getArtsBlSpBtnChal1(*m_artsBlSp, id); }
 
-const char *GfBdatBtl::getArtsBlSpCamera1(u32 id) const { return _gfbbt::getArtsBlSpCamera1(*unknown20, id); }
+const char *GfBdatBtl::getArtsBlSpCamera1(u32 id) const { return _gfbbt::getArtsBlSpCamera1(*m_artsBlSp, id); }
 
-const char *GfBdatBtl::getArtsBlSpCamera2(u32 id) const { return _gfbbt::getArtsBlSpCamera2(*unknown20, id); }
+const char *GfBdatBtl::getArtsBlSpCamera2(u32 id) const { return _gfbbt::getArtsBlSpCamera2(*m_artsBlSp, id); }
 
-const char *GfBdatBtl::getArtsBlSpCamera3(u32 id) const { return _gfbbt::getArtsBlSpCamera3(*unknown20, id); }
+const char *GfBdatBtl::getArtsBlSpCamera3(u32 id) const { return _gfbbt::getArtsBlSpCamera3(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpCameraCT1(u32 id) const { return _gfbbt::getArtsBlSpCameraCT1(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpCameraCT1(u32 id) const { return _gfbbt::getArtsBlSpCameraCT1(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpCameraCT2(u32 id) const { return _gfbbt::getArtsBlSpCameraCT2(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpCameraCT2(u32 id) const { return _gfbbt::getArtsBlSpCameraCT2(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpCameraEndf(u32 id) const { return _gfbbt::getArtsBlSpCameraEndf(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpCameraEndf(u32 id) const { return _gfbbt::getArtsBlSpCameraEndf(*m_artsBlSp, id); }
 
-u32 GfBdatBtl::getArtsBlSpHitEff(u32 id) const { return _gfbbt::getArtsBlSpHitEff(*unknown20, id); }
+u32 GfBdatBtl::getArtsBlSpHitEff(u32 id) const { return _gfbbt::getArtsBlSpHitEff(*m_artsBlSp, id); }
 
 u32 GfBdatBtl::getArtsBlSpHitFrm(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getArtsBlSpHitFrm1,
@@ -7762,7 +7763,7 @@ u32 GfBdatBtl::getArtsBlSpHitFrm(u32 id, u32 index) const {
                                                               _gfbbt::getArtsBlSpHitFrm14,
                                                               _gfbbt::getArtsBlSpHitFrm15,
                                                               _gfbbt::getArtsBlSpHitFrm16};
-  return getters[index](*unknown20, id);
+  return getters[index](*m_artsBlSp, id);
 }
 
 u32 GfBdatBtl::getArtsBlSpEfp(u32 id, u32 index) const {
@@ -7782,7 +7783,7 @@ u32 GfBdatBtl::getArtsBlSpEfp(u32 id, u32 index) const {
                                                               _gfbbt::getArtsBlSpEfp14,
                                                               _gfbbt::getArtsBlSpEfp15,
                                                               _gfbbt::getArtsBlSpEfp16};
-  return getters[index](*unknown20, id);
+  return getters[index](*m_artsBlSp, id);
 }
 
 u32 GfBdatBtl::getArtsBlSpHitDirID(u32 id, u32 index) const {
@@ -7802,7 +7803,7 @@ u32 GfBdatBtl::getArtsBlSpHitDirID(u32 id, u32 index) const {
                                                               _gfbbt::getArtsBlSpHitDirID14,
                                                               _gfbbt::getArtsBlSpHitDirID15,
                                                               _gfbbt::getArtsBlSpHitDirID16};
-  return getters[index](*unknown20, id);
+  return getters[index](*m_artsBlSp, id);
 }
 
 u32 GfBdatBtl::getArtsBlSpDmgRt(u32 id, u32 index) const {
@@ -7822,7 +7823,7 @@ u32 GfBdatBtl::getArtsBlSpDmgRt(u32 id, u32 index) const {
                                                               _gfbbt::getArtsBlSpDmgRt14,
                                                               _gfbbt::getArtsBlSpDmgRt15,
                                                               _gfbbt::getArtsBlSpDmgRt16};
-  return getters[index](*unknown20, id);
+  return getters[index](*m_artsBlSp, id);
 }
 
 u32 GfBdatBtl::getArtsBlSpReAct(u32 id, u32 index) const {
@@ -7842,135 +7843,135 @@ u32 GfBdatBtl::getArtsBlSpReAct(u32 id, u32 index) const {
                                                               _gfbbt::getArtsBlSpReAct14,
                                                               _gfbbt::getArtsBlSpReAct15,
                                                               _gfbbt::getArtsBlSpReAct16};
-  return getters[index](*unknown20, id);
+  return getters[index](*m_artsBlSp, id);
 }
 
-u32 GfBdatBtl::getGrowStart() const { return Bdat::getIdTop(unknown28->data); }
+u32 GfBdatBtl::getGrowStart() const { return Bdat::getIdTop(m_grow->data); }
 
-u32 GfBdatBtl::getGrowEnd() const { return Bdat::getIdTop(unknown28->data) + Bdat::getIdCount(unknown28->data); }
+u32 GfBdatBtl::getGrowEnd() const { return Bdat::getIdTop(m_grow->data) + Bdat::getIdCount(m_grow->data); }
 
-u32 GfBdatBtl::getGrowLevelExp(u32 id) const { return _gfbbt::getGrowLevelExp(*unknown28, id); }
+u32 GfBdatBtl::getGrowLevelExp(u32 id) const { return _gfbbt::getGrowLevelExp(*m_grow, id); }
 
-u32 GfBdatBtl::getGrowEnemyExp(u32 id) const { return _gfbbt::getGrowEnemyExp(*unknown28, id); }
+u32 GfBdatBtl::getGrowEnemyExp(u32 id) const { return _gfbbt::getGrowEnemyExp(*m_grow, id); }
 
-u32 GfBdatBtl::getGrowEnemyWP(u32 id) const { return _gfbbt::getGrowEnemyWP(*unknown28, id); }
+u32 GfBdatBtl::getGrowEnemyWP(u32 id) const { return _gfbbt::getGrowEnemyWP(*m_grow, id); }
 
-u32 GfBdatBtl::getGrowEnemySP(u32 id) const { return _gfbbt::getGrowEnemySP(*unknown28, id); }
+u32 GfBdatBtl::getGrowEnemySP(u32 id) const { return _gfbbt::getGrowEnemySP(*m_grow, id); }
 
-u32 GfBdatBtl::getGrowEnemyGold(u32 id) const { return _gfbbt::getGrowEnemyGold(*unknown28, id); }
+u32 GfBdatBtl::getGrowEnemyGold(u32 id) const { return _gfbbt::getGrowEnemyGold(*m_grow, id); }
 
-u32 GfBdatBtl::getGrowGoldDivide(u32 id) const { return _gfbbt::getGrowGoldDivide(*unknown28, id); }
+u32 GfBdatBtl::getGrowGoldDivide(u32 id) const { return _gfbbt::getGrowGoldDivide(*m_grow, id); }
 
-u32 GfBdatBtl::getLv_RevStart() const { return Bdat::getIdTop(unknown30->data); }
+u32 GfBdatBtl::getLv_RevStart() const { return Bdat::getIdTop(m_lv_Rev->data); }
 
-u32 GfBdatBtl::getLv_RevEnd() const { return Bdat::getIdTop(unknown30->data) + Bdat::getIdCount(unknown30->data); }
+u32 GfBdatBtl::getLv_RevEnd() const { return Bdat::getIdTop(m_lv_Rev->data) + Bdat::getIdCount(m_lv_Rev->data); }
 
-u32 GfBdatBtl::getLv_RevExpRevHigh(u32 id) const { return _gfbbt::getLv_RevExpRevHigh(*unknown30, id); }
+u32 GfBdatBtl::getLv_RevExpRevHigh(u32 id) const { return _gfbbt::getLv_RevExpRevHigh(*m_lv_Rev, id); }
 
-u32 GfBdatBtl::getLv_RevExpRevLow(u32 id) const { return _gfbbt::getLv_RevExpRevLow(*unknown30, id); }
+u32 GfBdatBtl::getLv_RevExpRevLow(u32 id) const { return _gfbbt::getLv_RevExpRevLow(*m_lv_Rev, id); }
 
-u32 GfBdatBtl::getLv_RevDamageRevHigh(u32 id) const { return _gfbbt::getLv_RevDamageRevHigh(*unknown30, id); }
+u32 GfBdatBtl::getLv_RevDamageRevHigh(u32 id) const { return _gfbbt::getLv_RevDamageRevHigh(*m_lv_Rev, id); }
 
-u32 GfBdatBtl::getLv_RevDamageRevLow(u32 id) const { return _gfbbt::getLv_RevDamageRevLow(*unknown30, id); }
+u32 GfBdatBtl::getLv_RevDamageRevLow(u32 id) const { return _gfbbt::getLv_RevDamageRevLow(*m_lv_Rev, id); }
 
-u32 GfBdatBtl::getWpn_EnStart() const { return Bdat::getIdTop(unknown38->data); }
+u32 GfBdatBtl::getWpn_EnStart() const { return Bdat::getIdTop(m_wpn_En->data); }
 
-u32 GfBdatBtl::getWpn_EnEnd() const { return Bdat::getIdTop(unknown38->data) + Bdat::getIdCount(unknown38->data); }
+u32 GfBdatBtl::getWpn_EnEnd() const { return Bdat::getIdTop(m_wpn_En->data) + Bdat::getIdCount(m_wpn_En->data); }
 
-u32 GfBdatBtl::getWpn_EnRscR(u32 id) const { return _gfbbt::getWpn_EnRscR(*unknown38, id); }
+u32 GfBdatBtl::getWpn_EnRscR(u32 id) const { return _gfbbt::getWpn_EnRscR(*m_wpn_En, id); }
 
-u32 GfBdatBtl::getWpn_EnRscL(u32 id) const { return _gfbbt::getWpn_EnRscL(*unknown38, id); }
+u32 GfBdatBtl::getWpn_EnRscL(u32 id) const { return _gfbbt::getWpn_EnRscL(*m_wpn_En, id); }
 
-u32 GfBdatBtl::getWpn_EnTypeRange(u32 id) const { return _gfbbt::getWpn_EnTypeRange(*unknown38, id); }
+u32 GfBdatBtl::getWpn_EnTypeRange(u32 id) const { return _gfbbt::getWpn_EnTypeRange(*m_wpn_En, id); }
 
-u32 GfBdatBtl::getWpn_EnDamage(u32 id) const { return _gfbbt::getWpn_EnDamage(*unknown38, id); }
+u32 GfBdatBtl::getWpn_EnDamage(u32 id) const { return _gfbbt::getWpn_EnDamage(*m_wpn_En, id); }
 
-u32 GfBdatBtl::getWpn_EnStability(u32 id) const { return _gfbbt::getWpn_EnStability(*unknown38, id); }
+u32 GfBdatBtl::getWpn_EnStability(u32 id) const { return _gfbbt::getWpn_EnStability(*m_wpn_En, id); }
 
-u32 GfBdatBtl::getBTL_ClassStart() const { return Bdat::getIdTop(unknown40->data); }
+u32 GfBdatBtl::getBTL_ClassStart() const { return Bdat::getIdTop(m_BTL_Class->data); }
 
-u32 GfBdatBtl::getBTL_ClassEnd() const { return Bdat::getIdTop(unknown40->data) + Bdat::getIdCount(unknown40->data); }
+u32 GfBdatBtl::getBTL_ClassEnd() const { return Bdat::getIdTop(m_BTL_Class->data) + Bdat::getIdCount(m_BTL_Class->data); }
 
-u32 GfBdatBtl::getBTL_ClassName(u32 id) const { return _gfbbt::getBTL_ClassName(*unknown40, id); }
+u32 GfBdatBtl::getBTL_ClassName(u32 id) const { return _gfbbt::getBTL_ClassName(*m_BTL_Class, id); }
 
-u32 GfBdatBtl::getBTL_ClassRole1(u32 id) const { return _gfbbt::getBTL_ClassRole1(*unknown40, id); }
+u32 GfBdatBtl::getBTL_ClassRole1(u32 id) const { return _gfbbt::getBTL_ClassRole1(*m_BTL_Class, id); }
 
-u32 GfBdatBtl::getBTL_ClassRole2(u32 id) const { return _gfbbt::getBTL_ClassRole2(*unknown40, id); }
+u32 GfBdatBtl::getBTL_ClassRole2(u32 id) const { return _gfbbt::getBTL_ClassRole2(*m_BTL_Class, id); }
 
-u32 GfBdatBtl::getBTL_ClassRole3(u32 id) const { return _gfbbt::getBTL_ClassRole3(*unknown40, id); }
+u32 GfBdatBtl::getBTL_ClassRole3(u32 id) const { return _gfbbt::getBTL_ClassRole3(*m_BTL_Class, id); }
 
-u32 GfBdatBtl::getBTL_ClassDamageDown(u32 id) const { return _gfbbt::getBTL_ClassDamageDown(*unknown40, id); }
+u32 GfBdatBtl::getBTL_ClassDamageDown(u32 id) const { return _gfbbt::getBTL_ClassDamageDown(*m_BTL_Class, id); }
 
-u32 GfBdatBtl::getBTL_ClassDamageUP(u32 id) const { return _gfbbt::getBTL_ClassDamageUP(*unknown40, id); }
+u32 GfBdatBtl::getBTL_ClassDamageUP(u32 id) const { return _gfbbt::getBTL_ClassDamageUP(*m_BTL_Class, id); }
 
-u32 GfBdatBtl::getBTL_ClassHealUP(u32 id) const { return _gfbbt::getBTL_ClassHealUP(*unknown40, id); }
+u32 GfBdatBtl::getBTL_ClassHealUP(u32 id) const { return _gfbbt::getBTL_ClassHealUP(*m_BTL_Class, id); }
 
-s32 GfBdatBtl::getBTL_ClassAutoHate(u32 id) const { return _gfbbt::getBTL_ClassAutoHate(*unknown40, id); }
+s32 GfBdatBtl::getBTL_ClassAutoHate(u32 id) const { return _gfbbt::getBTL_ClassAutoHate(*m_BTL_Class, id); }
 
-s32 GfBdatBtl::getBTL_ClassArtsHate(u32 id) const { return _gfbbt::getBTL_ClassArtsHate(*unknown40, id); }
+s32 GfBdatBtl::getBTL_ClassArtsHate(u32 id) const { return _gfbbt::getBTL_ClassArtsHate(*m_BTL_Class, id); }
 
 u32 GfBdatBtl::getBTL_ClassRole(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getBTL_ClassRole1, _gfbbt::getBTL_ClassRole2, _gfbbt::getBTL_ClassRole3};
-  return getters[index](*unknown40, id);
+  return getters[index](*m_BTL_Class, id);
 }
 
-u32 GfBdatBtl::getBTL_EnhanceStart() const { return Bdat::getIdTop(unknown48->data); }
+u32 GfBdatBtl::getBTL_EnhanceStart() const { return Bdat::getIdTop(m_BTL_Enhance->data); }
 
-u32 GfBdatBtl::getBTL_EnhanceEnd() const { return Bdat::getIdTop(unknown48->data) + Bdat::getIdCount(unknown48->data); }
+u32 GfBdatBtl::getBTL_EnhanceEnd() const { return Bdat::getIdTop(m_BTL_Enhance->data) + Bdat::getIdCount(m_BTL_Enhance->data); }
 
-u32 GfBdatBtl::getBTL_EnhanceEnhanceEffect(u32 id) const { return _gfbbt::getBTL_EnhanceEnhanceEffect(*unknown48, id); }
+u32 GfBdatBtl::getBTL_EnhanceEnhanceEffect(u32 id) const { return _gfbbt::getBTL_EnhanceEnhanceEffect(*m_BTL_Enhance, id); }
 
-f32 GfBdatBtl::getBTL_EnhanceParam1(u32 id) const { return _gfbbt::getBTL_EnhanceParam1(*unknown48, id); }
+f32 GfBdatBtl::getBTL_EnhanceParam1(u32 id) const { return _gfbbt::getBTL_EnhanceParam1(*m_BTL_Enhance, id); }
 
-f32 GfBdatBtl::getBTL_EnhanceParam2(u32 id) const { return _gfbbt::getBTL_EnhanceParam2(*unknown48, id); }
+f32 GfBdatBtl::getBTL_EnhanceParam2(u32 id) const { return _gfbbt::getBTL_EnhanceParam2(*m_BTL_Enhance, id); }
 
-u32 GfBdatBtl::getBTL_EnhanceCaption(u32 id) const { return _gfbbt::getBTL_EnhanceCaption(*unknown48, id); }
+u32 GfBdatBtl::getBTL_EnhanceCaption(u32 id) const { return _gfbbt::getBTL_EnhanceCaption(*m_BTL_Enhance, id); }
 
-u32 GfBdatBtl::getBTL_EnhanceEffStart() const { return Bdat::getIdTop(unknown50->data); }
+u32 GfBdatBtl::getBTL_EnhanceEffStart() const { return Bdat::getIdTop(m_BTL_EnhanceEff->data); }
 
-u32 GfBdatBtl::getBTL_EnhanceEffEnd() const { return Bdat::getIdTop(unknown50->data) + Bdat::getIdCount(unknown50->data); }
+u32 GfBdatBtl::getBTL_EnhanceEffEnd() const { return Bdat::getIdTop(m_BTL_EnhanceEff->data) + Bdat::getIdCount(m_BTL_EnhanceEff->data); }
 
-u32 GfBdatBtl::getBTL_EnhanceEffCategory(u32 id) const { return _gfbbt::getBTL_EnhanceEffCategory(*unknown50, id); }
+u32 GfBdatBtl::getBTL_EnhanceEffCategory(u32 id) const { return _gfbbt::getBTL_EnhanceEffCategory(*m_BTL_EnhanceEff, id); }
 
-u32 GfBdatBtl::getBTL_EnhanceEffIcon(u32 id) const { return _gfbbt::getBTL_EnhanceEffIcon(*unknown50, id); }
+u32 GfBdatBtl::getBTL_EnhanceEffIcon(u32 id) const { return _gfbbt::getBTL_EnhanceEffIcon(*m_BTL_EnhanceEff, id); }
 
-bool GfBdatBtl::isBTL_EnhanceEffFlagCondition(u32 id) const { return _gfbbt::isBTL_EnhanceEffFlagCondition(*unknown50, id); }
+bool GfBdatBtl::isBTL_EnhanceEffFlagCondition(u32 id) const { return _gfbbt::isBTL_EnhanceEffFlagCondition(*m_BTL_EnhanceEff, id); }
 
-bool GfBdatBtl::isBTL_EnhanceEffFlagUI(u32 id) const { return _gfbbt::isBTL_EnhanceEffFlagUI(*unknown50, id); }
+bool GfBdatBtl::isBTL_EnhanceEffFlagUI(u32 id) const { return _gfbbt::isBTL_EnhanceEffFlagUI(*m_BTL_EnhanceEff, id); }
 
-u32 GfBdatBtl::getBTL_EnhanceEffParam(u32 id) const { return _gfbbt::getBTL_EnhanceEffParam(*unknown50, id); }
+u32 GfBdatBtl::getBTL_EnhanceEffParam(u32 id) const { return _gfbbt::getBTL_EnhanceEffParam(*m_BTL_EnhanceEff, id); }
 
-u32 GfBdatBtl::getBTL_EnhanceEffName(u32 id) const { return _gfbbt::getBTL_EnhanceEffName(*unknown50, id); }
+u32 GfBdatBtl::getBTL_EnhanceEffName(u32 id) const { return _gfbbt::getBTL_EnhanceEffName(*m_BTL_EnhanceEff, id); }
 
-u32 GfBdatBtl::getBTL_EnhanceEffDirect(u32 id) const { return _gfbbt::getBTL_EnhanceEffDirect(*unknown50, id); }
+u32 GfBdatBtl::getBTL_EnhanceEffDirect(u32 id) const { return _gfbbt::getBTL_EnhanceEffDirect(*m_BTL_EnhanceEff, id); }
 
-u32 GfBdatBtl::getBTL_Skill_BlStart() const { return Bdat::getIdTop(unknown58->data); }
+u32 GfBdatBtl::getBTL_Skill_BlStart() const { return Bdat::getIdTop(m_BTL_Skill_Bl->data); }
 
-u32 GfBdatBtl::getBTL_Skill_BlEnd() const { return Bdat::getIdTop(unknown58->data) + Bdat::getIdCount(unknown58->data); }
+u32 GfBdatBtl::getBTL_Skill_BlEnd() const { return Bdat::getIdTop(m_BTL_Skill_Bl->data) + Bdat::getIdCount(m_BTL_Skill_Bl->data); }
 
-u32 GfBdatBtl::getBTL_Skill_BlName(u32 id) const { return _gfbbt::getBTL_Skill_BlName(*unknown58, id); }
+u32 GfBdatBtl::getBTL_Skill_BlName(u32 id) const { return _gfbbt::getBTL_Skill_BlName(*m_BTL_Skill_Bl, id); }
 
-const char *GfBdatBtl::getBTL_Skill_BlDebugName(u32 id) const { return _gfbbt::getBTL_Skill_BlDebugName(*unknown58, id); }
+const char *GfBdatBtl::getBTL_Skill_BlDebugName(u32 id) const { return _gfbbt::getBTL_Skill_BlDebugName(*m_BTL_Skill_Bl, id); }
 
-u32 GfBdatBtl::getBTL_Skill_BlEnhance1(u32 id) const { return _gfbbt::getBTL_Skill_BlEnhance1(*unknown58, id); }
+u32 GfBdatBtl::getBTL_Skill_BlEnhance1(u32 id) const { return _gfbbt::getBTL_Skill_BlEnhance1(*m_BTL_Skill_Bl, id); }
 
-u32 GfBdatBtl::getBTL_Skill_BlEnhance2(u32 id) const { return _gfbbt::getBTL_Skill_BlEnhance2(*unknown58, id); }
+u32 GfBdatBtl::getBTL_Skill_BlEnhance2(u32 id) const { return _gfbbt::getBTL_Skill_BlEnhance2(*m_BTL_Skill_Bl, id); }
 
-u32 GfBdatBtl::getBTL_Skill_BlEnhance3(u32 id) const { return _gfbbt::getBTL_Skill_BlEnhance3(*unknown58, id); }
+u32 GfBdatBtl::getBTL_Skill_BlEnhance3(u32 id) const { return _gfbbt::getBTL_Skill_BlEnhance3(*m_BTL_Skill_Bl, id); }
 
-u32 GfBdatBtl::getBTL_Skill_BlEnhance4(u32 id) const { return _gfbbt::getBTL_Skill_BlEnhance4(*unknown58, id); }
+u32 GfBdatBtl::getBTL_Skill_BlEnhance4(u32 id) const { return _gfbbt::getBTL_Skill_BlEnhance4(*m_BTL_Skill_Bl, id); }
 
-u32 GfBdatBtl::getBTL_Skill_BlEnhance5(u32 id) const { return _gfbbt::getBTL_Skill_BlEnhance5(*unknown58, id); }
+u32 GfBdatBtl::getBTL_Skill_BlEnhance5(u32 id) const { return _gfbbt::getBTL_Skill_BlEnhance5(*m_BTL_Skill_Bl, id); }
 
-bool GfBdatBtl::isBTL_Skill_BlFlagcommon(u32 id) const { return _gfbbt::isBTL_Skill_BlFlagcommon(*unknown58, id); }
+bool GfBdatBtl::isBTL_Skill_BlFlagcommon(u32 id) const { return _gfbbt::isBTL_Skill_BlFlagcommon(*m_BTL_Skill_Bl, id); }
 
-u32 GfBdatBtl::getBTL_Skill_BlTank(u32 id) const { return _gfbbt::getBTL_Skill_BlTank(*unknown58, id); }
+u32 GfBdatBtl::getBTL_Skill_BlTank(u32 id) const { return _gfbbt::getBTL_Skill_BlTank(*m_BTL_Skill_Bl, id); }
 
-u32 GfBdatBtl::getBTL_Skill_BlAttacker(u32 id) const { return _gfbbt::getBTL_Skill_BlAttacker(*unknown58, id); }
+u32 GfBdatBtl::getBTL_Skill_BlAttacker(u32 id) const { return _gfbbt::getBTL_Skill_BlAttacker(*m_BTL_Skill_Bl, id); }
 
-u32 GfBdatBtl::getBTL_Skill_BlHealer(u32 id) const { return _gfbbt::getBTL_Skill_BlHealer(*unknown58, id); }
+u32 GfBdatBtl::getBTL_Skill_BlHealer(u32 id) const { return _gfbbt::getBTL_Skill_BlHealer(*m_BTL_Skill_Bl, id); }
 
-u32 GfBdatBtl::getBTL_Skill_BlUI(u32 id) const { return _gfbbt::getBTL_Skill_BlUI(*unknown58, id); }
+u32 GfBdatBtl::getBTL_Skill_BlUI(u32 id) const { return _gfbbt::getBTL_Skill_BlUI(*m_BTL_Skill_Bl, id); }
 
 u32 GfBdatBtl::getBTL_Skill_BlEnhance(u32 skill, u32 level) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getBTL_Skill_BlEnhance1,
@@ -7978,182 +7979,184 @@ u32 GfBdatBtl::getBTL_Skill_BlEnhance(u32 skill, u32 level) const {
                                                               _gfbbt::getBTL_Skill_BlEnhance3,
                                                               _gfbbt::getBTL_Skill_BlEnhance4,
                                                               _gfbbt::getBTL_Skill_BlEnhance5};
-  return getters[level](*unknown58, skill);
+  return getters[level](*m_BTL_Skill_Bl, skill);
 }
 
-u32 GfBdatBtl::getBTL_Skill_DrStart() const { return Bdat::getIdTop(unknown60->data); }
+u32 GfBdatBtl::getBTL_Skill_DrStart() const { return Bdat::getIdTop(m_BTL_Skill_Dr->data); }
 
-u32 GfBdatBtl::getBTL_Skill_DrEnd() const { return Bdat::getIdTop(unknown60->data) + Bdat::getIdCount(unknown60->data); }
+u32 GfBdatBtl::getBTL_Skill_DrEnd() const { return Bdat::getIdTop(m_BTL_Skill_Dr->data) + Bdat::getIdCount(m_BTL_Skill_Dr->data); }
 
-u32 GfBdatBtl::getBTL_Skill_DrName(u32 id) const { return _gfbbt::getBTL_Skill_DrName(*unknown60, id); }
+u32 GfBdatBtl::getBTL_Skill_DrName(u32 id) const { return _gfbbt::getBTL_Skill_DrName(*m_BTL_Skill_Dr, id); }
 
-const char *GfBdatBtl::getBTL_Skill_DrDebugName(u32 id) const { return _gfbbt::getBTL_Skill_DrDebugName(*unknown60, id); }
+const char *GfBdatBtl::getBTL_Skill_DrDebugName(u32 id) const { return _gfbbt::getBTL_Skill_DrDebugName(*m_BTL_Skill_Dr, id); }
 
-u32 GfBdatBtl::getBTL_Skill_DrEnhance(u32 id) const { return _gfbbt::getBTL_Skill_DrEnhance(*unknown60, id); }
+u32 GfBdatBtl::getBTL_Skill_DrEnhance(u32 id) const { return _gfbbt::getBTL_Skill_DrEnhance(*m_BTL_Skill_Dr, id); }
 
-u32 GfBdatBtl::getBTL_Skill_DrUI(u32 id) const { return _gfbbt::getBTL_Skill_DrUI(*unknown60, id); }
+u32 GfBdatBtl::getBTL_Skill_DrUI(u32 id) const { return _gfbbt::getBTL_Skill_DrUI(*m_BTL_Skill_Dr, id); }
 
-u32 GfBdatBtl::getBTL_BuffStart() const { return Bdat::getIdTop(unknown68->data); }
+u32 GfBdatBtl::getBTL_BuffStart() const { return Bdat::getIdTop(m_BTL_Buff->data); }
 
-u32 GfBdatBtl::getBTL_BuffEnd() const { return Bdat::getIdTop(unknown68->data) + Bdat::getIdCount(unknown68->data); }
+u32 GfBdatBtl::getBTL_BuffEnd() const { return Bdat::getIdTop(m_BTL_Buff->data) + Bdat::getIdCount(m_BTL_Buff->data); }
 
-u32 GfBdatBtl::getBTL_BuffName(u32 id) const { return _gfbbt::getBTL_BuffName(*unknown68, id); }
+u32 GfBdatBtl::getBTL_BuffName(u32 id) const { return _gfbbt::getBTL_BuffName(*m_BTL_Buff, id); }
 
-const char *GfBdatBtl::getBTL_BuffDebugName(u32 id) const { return _gfbbt::getBTL_BuffDebugName(*unknown68, id); }
+const char *GfBdatBtl::getBTL_BuffDebugName(u32 id) const { return _gfbbt::getBTL_BuffDebugName(*m_BTL_Buff, id); }
 
-u32 GfBdatBtl::getBTL_BuffCaption(u32 id) const { return _gfbbt::getBTL_BuffCaption(*unknown68, id); }
+u32 GfBdatBtl::getBTL_BuffCaption(u32 id) const { return _gfbbt::getBTL_BuffCaption(*m_BTL_Buff, id); }
 
-u32 GfBdatBtl::getBTL_BuffBaseNum(u32 id) const { return _gfbbt::getBTL_BuffBaseNum(*unknown68, id); }
+u32 GfBdatBtl::getBTL_BuffBaseNum(u32 id) const { return _gfbbt::getBTL_BuffBaseNum(*m_BTL_Buff, id); }
 
-u32 GfBdatBtl::getBTL_BuffBaseTime(u32 id) const { return _gfbbt::getBTL_BuffBaseTime(*unknown68, id); }
+u32 GfBdatBtl::getBTL_BuffBaseTime(u32 id) const { return _gfbbt::getBTL_BuffBaseTime(*m_BTL_Buff, id); }
 
-u32 GfBdatBtl::getBTL_BuffBaseRecast(u32 id) const { return _gfbbt::getBTL_BuffBaseRecast(*unknown68, id); }
+u32 GfBdatBtl::getBTL_BuffBaseRecast(u32 id) const { return _gfbbt::getBTL_BuffBaseRecast(*m_BTL_Buff, id); }
 
-u32 GfBdatBtl::getBTL_BuffBaseProb(u32 id) const { return _gfbbt::getBTL_BuffBaseProb(*unknown68, id); }
+u32 GfBdatBtl::getBTL_BuffBaseProb(u32 id) const { return _gfbbt::getBTL_BuffBaseProb(*m_BTL_Buff, id); }
 
-u32 GfBdatBtl::getBTL_BuffInterval(u32 id) const { return _gfbbt::getBTL_BuffInterval(*unknown68, id); }
+u32 GfBdatBtl::getBTL_BuffInterval(u32 id) const { return _gfbbt::getBTL_BuffInterval(*m_BTL_Buff, id); }
 
-const char *GfBdatBtl::getBTL_BuffEffect(u32 id) const { return _gfbbt::getBTL_BuffEffect(*unknown68, id); }
+const char *GfBdatBtl::getBTL_BuffEffect(u32 id) const { return _gfbbt::getBTL_BuffEffect(*m_BTL_Buff, id); }
 
-u32 GfBdatBtl::getBTL_BuffIcon(u32 id) const { return _gfbbt::getBTL_BuffIcon(*unknown68, id); }
+u32 GfBdatBtl::getBTL_BuffIcon(u32 id) const { return _gfbbt::getBTL_BuffIcon(*m_BTL_Buff, id); }
 
-u32 GfBdatBtl::getBTL_Bl_PersonalityStart() const { return Bdat::getIdTop(unknown70->data); }
+u32 GfBdatBtl::getBTL_Bl_PersonalityStart() const { return Bdat::getIdTop(m_BTL_Bl_Personality->data); }
 
-u32 GfBdatBtl::getBTL_Bl_PersonalityEnd() const { return Bdat::getIdTop(unknown70->data) + Bdat::getIdCount(unknown70->data); }
+u32 GfBdatBtl::getBTL_Bl_PersonalityEnd() const { return Bdat::getIdTop(m_BTL_Bl_Personality->data) + Bdat::getIdCount(m_BTL_Bl_Personality->data); }
 
-bool GfBdatBtl::isBTL_Bl_PersonalityFlagcommon(u32 id) const { return _gfbbt::isBTL_Bl_PersonalityFlagcommon(*unknown70, id); }
+bool GfBdatBtl::isBTL_Bl_PersonalityFlagcommon(u32 id) const { return _gfbbt::isBTL_Bl_PersonalityFlagcommon(*m_BTL_Bl_Personality, id); }
 
-u32 GfBdatBtl::getBTL_Bl_PersonalityKizunaBase(u32 id) const { return _gfbbt::getBTL_Bl_PersonalityKizunaBase(*unknown70, id); }
+u32 GfBdatBtl::getBTL_Bl_PersonalityKizunaBase(u32 id) const { return _gfbbt::getBTL_Bl_PersonalityKizunaBase(*m_BTL_Bl_Personality, id); }
 
-u32 GfBdatBtl::getBTL_Bl_PersonalityVoiceID(u32 id) const { return _gfbbt::getBTL_Bl_PersonalityVoiceID(*unknown70, id); }
+u32 GfBdatBtl::getBTL_Bl_PersonalityVoiceID(u32 id) const { return _gfbbt::getBTL_Bl_PersonalityVoiceID(*m_BTL_Bl_Personality, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkStart() const { return Bdat::getIdTop(unknown78->data); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkStart() const { return Bdat::getIdTop(m_BTL_Bl_KizunaLink->data); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkEnd() const { return Bdat::getIdTop(unknown78->data) + Bdat::getIdCount(unknown78->data); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkEnd() const { return Bdat::getIdTop(m_BTL_Bl_KizunaLink->data) + Bdat::getIdCount(m_BTL_Bl_KizunaLink->data); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkLinkNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkLinkNum(*unknown78, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkLinkNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkLinkNum(*m_BTL_Bl_KizunaLink, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkDeadNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkDeadNum(*unknown78, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkDeadNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkDeadNum(*m_BTL_Bl_KizunaLink, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkAppStNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkAppStNum(*unknown78, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkAppStNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkAppStNum(*m_BTL_Bl_KizunaLink, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkAppEndNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkAppEndNum(*unknown78, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkAppEndNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkAppEndNum(*m_BTL_Bl_KizunaLink, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkAppCond(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkAppCond(*unknown78, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkAppCond(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkAppCond(*m_BTL_Bl_KizunaLink, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkAppCondNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkAppCondNum(*unknown78, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkAppCondNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkAppCondNum(*m_BTL_Bl_KizunaLink, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkReJudgef(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkReJudgef(*unknown78, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkReJudgef(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkReJudgef(*m_BTL_Bl_KizunaLink, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkSpActType(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSpActType(*unknown78, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkSpActType(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSpActType(*m_BTL_Bl_KizunaLink, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkSpActNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSpActNum(*unknown78, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkSpActNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSpActNum(*m_BTL_Bl_KizunaLink, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkSpActf(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSpActf(*unknown78, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkSpActf(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSpActf(*m_BTL_Bl_KizunaLink, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkStandDir(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkStandDir(*unknown78, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkStandDir(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkStandDir(*m_BTL_Bl_KizunaLink, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetStart() const { return Bdat::getIdTop(unknown80->data); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetStart() const { return Bdat::getIdTop(m_BTL_Bl_KizunaLinkSet->data); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetEnd() const { return Bdat::getIdTop(unknown80->data) + Bdat::getIdCount(unknown80->data); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetEnd() const {
+  return Bdat::getIdTop(m_BTL_Bl_KizunaLinkSet->data) + Bdat::getIdCount(m_BTL_Bl_KizunaLinkSet->data);
+}
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetKizunaLink1(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetKizunaLink1(*unknown80, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetKizunaLink1(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetKizunaLink1(*m_BTL_Bl_KizunaLinkSet, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetKizunaLink2(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetKizunaLink2(*unknown80, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetKizunaLink2(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetKizunaLink2(*m_BTL_Bl_KizunaLinkSet, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetLinkChType(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetLinkChType(*unknown80, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetLinkChType(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetLinkChType(*m_BTL_Bl_KizunaLinkSet, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetLinkChNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetLinkChNum(*unknown80, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetLinkChNum(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetLinkChNum(*m_BTL_Bl_KizunaLinkSet, id); }
 
-u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetVoiceID(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetVoiceID(*unknown80, id); }
+u32 GfBdatBtl::getBTL_Bl_KizunaLinkSetVoiceID(u32 id) const { return _gfbbt::getBTL_Bl_KizunaLinkSetVoiceID(*m_BTL_Bl_KizunaLinkSet, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingStart() const { return Bdat::getIdTop(unknown88->data); }
+u32 GfBdatBtl::getBTL_TestSettingStart() const { return Bdat::getIdTop(m_BTL_TestSetting->data); }
 
-u32 GfBdatBtl::getBTL_TestSettingEnd() const { return Bdat::getIdTop(unknown88->data) + Bdat::getIdCount(unknown88->data); }
+u32 GfBdatBtl::getBTL_TestSettingEnd() const { return Bdat::getIdTop(m_BTL_TestSetting->data) + Bdat::getIdCount(m_BTL_TestSetting->data); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr1(u32 id) const { return _gfbbt::getBTL_TestSettingDr1(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr1(u32 id) const { return _gfbbt::getBTL_TestSettingDr1(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr1Lv(u32 id) const { return _gfbbt::getBTL_TestSettingDr1Lv(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr1Lv(u32 id) const { return _gfbbt::getBTL_TestSettingDr1Lv(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr1Bl1(u32 id) const { return _gfbbt::getBTL_TestSettingDr1Bl1(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr1Bl1(u32 id) const { return _gfbbt::getBTL_TestSettingDr1Bl1(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr1Bl2(u32 id) const { return _gfbbt::getBTL_TestSettingDr1Bl2(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr1Bl2(u32 id) const { return _gfbbt::getBTL_TestSettingDr1Bl2(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr1Bl3(u32 id) const { return _gfbbt::getBTL_TestSettingDr1Bl3(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr1Bl3(u32 id) const { return _gfbbt::getBTL_TestSettingDr1Bl3(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr2(u32 id) const { return _gfbbt::getBTL_TestSettingDr2(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr2(u32 id) const { return _gfbbt::getBTL_TestSettingDr2(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr2Lv(u32 id) const { return _gfbbt::getBTL_TestSettingDr2Lv(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr2Lv(u32 id) const { return _gfbbt::getBTL_TestSettingDr2Lv(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr2Bl1(u32 id) const { return _gfbbt::getBTL_TestSettingDr2Bl1(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr2Bl1(u32 id) const { return _gfbbt::getBTL_TestSettingDr2Bl1(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr2Bl2(u32 id) const { return _gfbbt::getBTL_TestSettingDr2Bl2(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr2Bl2(u32 id) const { return _gfbbt::getBTL_TestSettingDr2Bl2(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr2Bl3(u32 id) const { return _gfbbt::getBTL_TestSettingDr2Bl3(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr2Bl3(u32 id) const { return _gfbbt::getBTL_TestSettingDr2Bl3(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr3(u32 id) const { return _gfbbt::getBTL_TestSettingDr3(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr3(u32 id) const { return _gfbbt::getBTL_TestSettingDr3(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr3Lv(u32 id) const { return _gfbbt::getBTL_TestSettingDr3Lv(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr3Lv(u32 id) const { return _gfbbt::getBTL_TestSettingDr3Lv(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr3Bl1(u32 id) const { return _gfbbt::getBTL_TestSettingDr3Bl1(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr3Bl1(u32 id) const { return _gfbbt::getBTL_TestSettingDr3Bl1(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr3Bl2(u32 id) const { return _gfbbt::getBTL_TestSettingDr3Bl2(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr3Bl2(u32 id) const { return _gfbbt::getBTL_TestSettingDr3Bl2(*m_BTL_TestSetting, id); }
 
-u32 GfBdatBtl::getBTL_TestSettingDr3Bl3(u32 id) const { return _gfbbt::getBTL_TestSettingDr3Bl3(*unknown88, id); }
+u32 GfBdatBtl::getBTL_TestSettingDr3Bl3(u32 id) const { return _gfbbt::getBTL_TestSettingDr3Bl3(*m_BTL_TestSetting, id); }
 
 u32 GfBdatBtl::getBTL_TestSettingDr(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &,
                                 u32) = {_gfbbt::getBTL_TestSettingDr1, _gfbbt::getBTL_TestSettingDr2, _gfbbt::getBTL_TestSettingDr3};
-  return getters[index](*unknown88, id);
+  return getters[index](*m_BTL_TestSetting, id);
 }
 
 u32 GfBdatBtl::getBTL_TestSettingDrLv(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &,
                                 u32) = {_gfbbt::getBTL_TestSettingDr1Lv, _gfbbt::getBTL_TestSettingDr2Lv, _gfbbt::getBTL_TestSettingDr3Lv};
-  return getters[index](*unknown88, id);
+  return getters[index](*m_BTL_TestSetting, id);
 }
 
 u32 GfBdatBtl::getBTL_TestSettingDrBl1(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &,
                                 u32) = {_gfbbt::getBTL_TestSettingDr1Bl1, _gfbbt::getBTL_TestSettingDr2Bl1, _gfbbt::getBTL_TestSettingDr3Bl1};
-  return getters[index](*unknown88, id);
+  return getters[index](*m_BTL_TestSetting, id);
 }
 
 u32 GfBdatBtl::getBTL_TestSettingDrBl2(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &,
                                 u32) = {_gfbbt::getBTL_TestSettingDr1Bl2, _gfbbt::getBTL_TestSettingDr2Bl2, _gfbbt::getBTL_TestSettingDr3Bl2};
-  return getters[index](*unknown88, id);
+  return getters[index](*m_BTL_TestSetting, id);
 }
 
 u32 GfBdatBtl::getBTL_TestSettingDrBl3(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &,
                                 u32) = {_gfbbt::getBTL_TestSettingDr1Bl3, _gfbbt::getBTL_TestSettingDr2Bl3, _gfbbt::getBTL_TestSettingDr3Bl3};
-  return getters[index](*unknown88, id);
+  return getters[index](*m_BTL_TestSetting, id);
 }
 
-u32 GfBdatBtl::getBTL_HanaBaseStart() const { return Bdat::getIdTop(unknown90->data); }
+u32 GfBdatBtl::getBTL_HanaBaseStart() const { return Bdat::getIdTop(m_BTL_HanaBase->data); }
 
-u32 GfBdatBtl::getBTL_HanaBaseEnd() const { return Bdat::getIdTop(unknown90->data) + Bdat::getIdCount(unknown90->data); }
+u32 GfBdatBtl::getBTL_HanaBaseEnd() const { return Bdat::getIdTop(m_BTL_HanaBase->data) + Bdat::getIdCount(m_BTL_HanaBase->data); }
 
-u32 GfBdatBtl::getBTL_HanaBaseNCondNum(u32 id) const { return _gfbbt::getBTL_HanaBaseNCondNum(*unknown90, id); }
+u32 GfBdatBtl::getBTL_HanaBaseNCondNum(u32 id) const { return _gfbbt::getBTL_HanaBaseNCondNum(*m_BTL_HanaBase, id); }
 
-u32 GfBdatBtl::getBTL_HanaBaseECondNum(u32 id) const { return _gfbbt::getBTL_HanaBaseECondNum(*unknown90, id); }
+u32 GfBdatBtl::getBTL_HanaBaseECondNum(u32 id) const { return _gfbbt::getBTL_HanaBaseECondNum(*m_BTL_HanaBase, id); }
 
-u32 GfBdatBtl::getBTL_HanaBaseNArtsNum(u32 id) const { return _gfbbt::getBTL_HanaBaseNArtsNum(*unknown90, id); }
+u32 GfBdatBtl::getBTL_HanaBaseNArtsNum(u32 id) const { return _gfbbt::getBTL_HanaBaseNArtsNum(*m_BTL_HanaBase, id); }
 
-u32 GfBdatBtl::getBTL_HanaBaseCircuit1Num(u32 id) const { return _gfbbt::getBTL_HanaBaseCircuit1Num(*unknown90, id); }
+u32 GfBdatBtl::getBTL_HanaBaseCircuit1Num(u32 id) const { return _gfbbt::getBTL_HanaBaseCircuit1Num(*m_BTL_HanaBase, id); }
 
-u32 GfBdatBtl::getBTL_HanaBaseCircuit2Num(u32 id) const { return _gfbbt::getBTL_HanaBaseCircuit2Num(*unknown90, id); }
+u32 GfBdatBtl::getBTL_HanaBaseCircuit2Num(u32 id) const { return _gfbbt::getBTL_HanaBaseCircuit2Num(*m_BTL_HanaBase, id); }
 
-u32 GfBdatBtl::getBTL_HanaBaseCircuit3Num(u32 id) const { return _gfbbt::getBTL_HanaBaseCircuit3Num(*unknown90, id); }
+u32 GfBdatBtl::getBTL_HanaBaseCircuit3Num(u32 id) const { return _gfbbt::getBTL_HanaBaseCircuit3Num(*m_BTL_HanaBase, id); }
 
-u32 GfBdatBtl::getBTL_HanaBaseCircuit4Num(u32 id) const { return _gfbbt::getBTL_HanaBaseCircuit4Num(*unknown90, id); }
+u32 GfBdatBtl::getBTL_HanaBaseCircuit4Num(u32 id) const { return _gfbbt::getBTL_HanaBaseCircuit4Num(*m_BTL_HanaBase, id); }
 
-u32 GfBdatBtl::getBTL_HanaBaseCircuit5Num(u32 id) const { return _gfbbt::getBTL_HanaBaseCircuit5Num(*unknown90, id); }
+u32 GfBdatBtl::getBTL_HanaBaseCircuit5Num(u32 id) const { return _gfbbt::getBTL_HanaBaseCircuit5Num(*m_BTL_HanaBase, id); }
 
-u32 GfBdatBtl::getBTL_HanaBaseCircuit6Num(u32 id) const { return _gfbbt::getBTL_HanaBaseCircuit6Num(*unknown90, id); }
+u32 GfBdatBtl::getBTL_HanaBaseCircuit6Num(u32 id) const { return _gfbbt::getBTL_HanaBaseCircuit6Num(*m_BTL_HanaBase, id); }
 
-const char *GfBdatBtl::getBTL_HanaBaseUI(u32 id) const { return _gfbbt::getBTL_HanaBaseUI(*unknown90, id); }
+const char *GfBdatBtl::getBTL_HanaBaseUI(u32 id) const { return _gfbbt::getBTL_HanaBaseUI(*m_BTL_HanaBase, id); }
 
 u32 GfBdatBtl::getBTL_HanaBaseCircuitNum(u32 hana, u32 circuit) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbt::getBTL_HanaBaseCircuit1Num,
@@ -8162,87 +8165,87 @@ u32 GfBdatBtl::getBTL_HanaBaseCircuitNum(u32 hana, u32 circuit) const {
                                                               _gfbbt::getBTL_HanaBaseCircuit4Num,
                                                               _gfbbt::getBTL_HanaBaseCircuit5Num,
                                                               _gfbbt::getBTL_HanaBaseCircuit6Num};
-  return getters[circuit](*unknown90, hana);
+  return getters[circuit](*m_BTL_HanaBase, hana);
 }
 
-u32 GfBdatBtl::getBTL_HanaPowerStart() const { return Bdat::getIdTop(unknown98->data); }
+u32 GfBdatBtl::getBTL_HanaPowerStart() const { return Bdat::getIdTop(m_BTL_HanaPower->data); }
 
-u32 GfBdatBtl::getBTL_HanaPowerEnd() const { return Bdat::getIdTop(unknown98->data) + Bdat::getIdCount(unknown98->data); }
+u32 GfBdatBtl::getBTL_HanaPowerEnd() const { return Bdat::getIdTop(m_BTL_HanaPower->data) + Bdat::getIdCount(m_BTL_HanaPower->data); }
 
-u32 GfBdatBtl::getBTL_HanaPowerPowerNum1(u32 id) const { return _gfbbt::getBTL_HanaPowerPowerNum1(*unknown98, id); }
+u32 GfBdatBtl::getBTL_HanaPowerPowerNum1(u32 id) const { return _gfbbt::getBTL_HanaPowerPowerNum1(*m_BTL_HanaPower, id); }
 
-u32 GfBdatBtl::getBTL_HanaPowerPowerNum2(u32 id) const { return _gfbbt::getBTL_HanaPowerPowerNum2(*unknown98, id); }
+u32 GfBdatBtl::getBTL_HanaPowerPowerNum2(u32 id) const { return _gfbbt::getBTL_HanaPowerPowerNum2(*m_BTL_HanaPower, id); }
 
-u32 GfBdatBtl::getBTL_HanaPowerPowerNum3(u32 id) const { return _gfbbt::getBTL_HanaPowerPowerNum3(*unknown98, id); }
+u32 GfBdatBtl::getBTL_HanaPowerPowerNum3(u32 id) const { return _gfbbt::getBTL_HanaPowerPowerNum3(*m_BTL_HanaPower, id); }
 
-u32 GfBdatBtl::getBTL_HanaPowerEtherNum1(u32 id) const { return _gfbbt::getBTL_HanaPowerEtherNum1(*unknown98, id); }
+u32 GfBdatBtl::getBTL_HanaPowerEtherNum1(u32 id) const { return _gfbbt::getBTL_HanaPowerEtherNum1(*m_BTL_HanaPower, id); }
 
-u32 GfBdatBtl::getBTL_HanaPowerEtherNum2(u32 id) const { return _gfbbt::getBTL_HanaPowerEtherNum2(*unknown98, id); }
+u32 GfBdatBtl::getBTL_HanaPowerEtherNum2(u32 id) const { return _gfbbt::getBTL_HanaPowerEtherNum2(*m_BTL_HanaPower, id); }
 
-u32 GfBdatBtl::getBTL_HanaPowerEtherNum3(u32 id) const { return _gfbbt::getBTL_HanaPowerEtherNum3(*unknown98, id); }
+u32 GfBdatBtl::getBTL_HanaPowerEtherNum3(u32 id) const { return _gfbbt::getBTL_HanaPowerEtherNum3(*m_BTL_HanaPower, id); }
 
 u32 GfBdatBtl::getBTL_HanaPowerPowerNum(u32 rank, u32 hana) const {
   static u32 (*const getters[])(const CBdatWrapper &,
                                 u32) = {_gfbbt::getBTL_HanaPowerPowerNum1, _gfbbt::getBTL_HanaPowerPowerNum2, _gfbbt::getBTL_HanaPowerPowerNum3};
-  return getters[hana](*unknown98, rank);
+  return getters[hana](*m_BTL_HanaPower, rank);
 }
 
 u32 GfBdatBtl::getBTL_HanaPowerEtherNum(u32 rank, u32 hana) const {
   static u32 (*const getters[])(const CBdatWrapper &,
                                 u32) = {_gfbbt::getBTL_HanaPowerEtherNum1, _gfbbt::getBTL_HanaPowerEtherNum2, _gfbbt::getBTL_HanaPowerEtherNum3};
-  return getters[hana](*unknown98, rank);
+  return getters[hana](*m_BTL_HanaPower, rank);
 }
 
-u32 GfBdatBtl::getBTL_HanaChipsetStart() const { return Bdat::getIdTop(unknowna0->data); }
+u32 GfBdatBtl::getBTL_HanaChipsetStart() const { return Bdat::getIdTop(m_BTL_HanaChipset->data); }
 
-u32 GfBdatBtl::getBTL_HanaChipsetEnd() const { return Bdat::getIdTop(unknowna0->data) + Bdat::getIdCount(unknowna0->data); }
+u32 GfBdatBtl::getBTL_HanaChipsetEnd() const { return Bdat::getIdTop(m_BTL_HanaChipset->data) + Bdat::getIdCount(m_BTL_HanaChipset->data); }
 
-u32 GfBdatBtl::getBTL_HanaChipsetRoleParts(u32 id) const { return _gfbbt::getBTL_HanaChipsetRoleParts(*unknowna0, id); }
+u32 GfBdatBtl::getBTL_HanaChipsetRoleParts(u32 id) const { return _gfbbt::getBTL_HanaChipsetRoleParts(*m_BTL_HanaChipset, id); }
 
-u32 GfBdatBtl::getBTL_HanaChipsetAtrParts(u32 id) const { return _gfbbt::getBTL_HanaChipsetAtrParts(*unknowna0, id); }
+u32 GfBdatBtl::getBTL_HanaChipsetAtrParts(u32 id) const { return _gfbbt::getBTL_HanaChipsetAtrParts(*m_BTL_HanaChipset, id); }
 
-u32 GfBdatBtl::getBTL_HanaChipsetNArtsParts1(u32 id) const { return _gfbbt::getBTL_HanaChipsetNArtsParts1(*unknowna0, id); }
+u32 GfBdatBtl::getBTL_HanaChipsetNArtsParts1(u32 id) const { return _gfbbt::getBTL_HanaChipsetNArtsParts1(*m_BTL_HanaChipset, id); }
 
-u32 GfBdatBtl::getBTL_HanaChipsetNArtsParts2(u32 id) const { return _gfbbt::getBTL_HanaChipsetNArtsParts2(*unknowna0, id); }
+u32 GfBdatBtl::getBTL_HanaChipsetNArtsParts2(u32 id) const { return _gfbbt::getBTL_HanaChipsetNArtsParts2(*m_BTL_HanaChipset, id); }
 
-u32 GfBdatBtl::getBTL_HanaChipsetNArtsParts3(u32 id) const { return _gfbbt::getBTL_HanaChipsetNArtsParts3(*unknowna0, id); }
+u32 GfBdatBtl::getBTL_HanaChipsetNArtsParts3(u32 id) const { return _gfbbt::getBTL_HanaChipsetNArtsParts3(*m_BTL_HanaChipset, id); }
 
-u32 GfBdatBtl::getBTL_HanaChipsetNCondParts1(u32 id) const { return _gfbbt::getBTL_HanaChipsetNCondParts1(*unknowna0, id); }
+u32 GfBdatBtl::getBTL_HanaChipsetNCondParts1(u32 id) const { return _gfbbt::getBTL_HanaChipsetNCondParts1(*m_BTL_HanaChipset, id); }
 
-u32 GfBdatBtl::getBTL_HanaChipsetNCondParts2(u32 id) const { return _gfbbt::getBTL_HanaChipsetNCondParts2(*unknowna0, id); }
+u32 GfBdatBtl::getBTL_HanaChipsetNCondParts2(u32 id) const { return _gfbbt::getBTL_HanaChipsetNCondParts2(*m_BTL_HanaChipset, id); }
 
-u32 GfBdatBtl::getBTL_HanaChipsetNCondParts3(u32 id) const { return _gfbbt::getBTL_HanaChipsetNCondParts3(*unknowna0, id); }
+u32 GfBdatBtl::getBTL_HanaChipsetNCondParts3(u32 id) const { return _gfbbt::getBTL_HanaChipsetNCondParts3(*m_BTL_HanaChipset, id); }
 
-const char *GfBdatBtl::getBTL_HanaChipsetUI(u32 id) const { return _gfbbt::getBTL_HanaChipsetUI(*unknowna0, id); }
+const char *GfBdatBtl::getBTL_HanaChipsetUI(u32 id) const { return _gfbbt::getBTL_HanaChipsetUI(*m_BTL_HanaChipset, id); }
 
 u32 GfBdatBtl::getBTL_HanaChipsetNArtsParts(u32 hana, u32 slot) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {
       _gfbbt::getBTL_HanaChipsetNArtsParts1, _gfbbt::getBTL_HanaChipsetNArtsParts2, _gfbbt::getBTL_HanaChipsetNArtsParts3};
-  return getters[slot](*unknowna0, hana);
+  return getters[slot](*m_BTL_HanaChipset, hana);
 }
 
 u32 GfBdatBtl::getBTL_HanaChipsetNCondParts(u32 hana, u32 slot) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {
       _gfbbt::getBTL_HanaChipsetNCondParts1, _gfbbt::getBTL_HanaChipsetNCondParts2, _gfbbt::getBTL_HanaChipsetNCondParts3};
-  return getters[slot](*unknowna0, hana);
+  return getters[slot](*m_BTL_HanaChipset, hana);
 }
 
-u32 GfBdatBtl::getWildcardDataStart() const { return Bdat::getIdTop(unknowna8->data); }
+u32 GfBdatBtl::getWildcardDataStart() const { return Bdat::getIdTop(m_wildcardData->data); }
 
-u32 GfBdatBtl::getWildcardDataEnd() const { return Bdat::getIdTop(unknowna8->data) + Bdat::getIdCount(unknowna8->data); }
+u32 GfBdatBtl::getWildcardDataEnd() const { return Bdat::getIdTop(m_wildcardData->data) + Bdat::getIdCount(m_wildcardData->data); }
 
-f32 GfBdatBtl::getWildcardDatavalueF4(u32 id) const { return _gfbbt::getWildcardDatavalueF4(*unknowna8, id); }
+f32 GfBdatBtl::getWildcardDatavalueF4(u32 id) const { return _gfbbt::getWildcardDatavalueF4(*m_wildcardData, id); }
 
-u32 GfBdatBtl::getWildcardDatavalueU2(u32 id) const { return _gfbbt::getWildcardDatavalueU2(*unknowna8, id); }
+u32 GfBdatBtl::getWildcardDatavalueU2(u32 id) const { return _gfbbt::getWildcardDatavalueU2(*m_wildcardData, id); }
 
-u32 GfBdatBtl::getVo_Field_FilterStart() const { return Bdat::getIdTop(unknownb0->data); }
+u32 GfBdatBtl::getVo_Field_FilterStart() const { return Bdat::getIdTop(m_vo_Field_Filter->data); }
 
-u32 GfBdatBtl::getVo_Field_FilterEnd() const { return Bdat::getIdTop(unknownb0->data) + Bdat::getIdCount(unknownb0->data); }
+u32 GfBdatBtl::getVo_Field_FilterEnd() const { return Bdat::getIdTop(m_vo_Field_Filter->data) + Bdat::getIdCount(m_vo_Field_Filter->data); }
 
-const char *GfBdatBtl::getVo_Field_FilterTargetFile(u32 id) const { return _gfbbt::getVo_Field_FilterTargetFile(*unknownb0, id); }
+const char *GfBdatBtl::getVo_Field_FilterTargetFile(u32 id) const { return _gfbbt::getVo_Field_FilterTargetFile(*m_vo_Field_Filter, id); }
 
-u32 GfBdatBtl::getVo_Field_FilterCondition(u32 id) const { return _gfbbt::getVo_Field_FilterCondition(*unknownb0, id); }
+u32 GfBdatBtl::getVo_Field_FilterCondition(u32 id) const { return _gfbbt::getVo_Field_FilterCondition(*m_vo_Field_Filter, id); }
 
-const char *GfBdatBtl::getVo_Field_FilterChangeFile(u32 id) const { return _gfbbt::getVo_Field_FilterChangeFile(*unknownb0, id); }
+const char *GfBdatBtl::getVo_Field_FilterChangeFile(u32 id) const { return _gfbbt::getVo_Field_FilterChangeFile(*m_vo_Field_Filter, id); }
 
 } // namespace gf

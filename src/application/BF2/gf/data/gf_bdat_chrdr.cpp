@@ -699,218 +699,218 @@ const char *getChrDrCamBone(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbcd
 
-GfBdatChrDr::GfBdatChrDr() : unknown10(nullptr) { bdatRefresh(); }
+GfBdatChrDr::GfBdatChrDr() : m_chrDr(nullptr) { bdatRefresh(); }
 
 GfBdatChrDr::~GfBdatChrDr() { destroyFP(); }
 
 void GfBdatChrDr::destroyFP() {
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_chrDr != nullptr) {
+    delete m_chrDr;
+    m_chrDr = nullptr;
   }
 }
 
 #define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
-void GfBdatChrDr::createFP() { unknown10 = NEW_BDAT_WRAPPER(BDAT_CHR_DR); }
+void GfBdatChrDr::createFP() { m_chrDr = NEW_BDAT_WRAPPER(BDAT_CHR_DR); }
 
 void GfBdatChrDr::bdatRefresh() {
   destroyFP();
   createFP();
-  _gfbcd::initChrDrName(*unknown10);
-  _gfbcd::initChrDrDebugName(*unknown10);
-  _gfbcd::initChrDrRace(*unknown10);
-  _gfbcd::initChrDrRotateLimitPitch(*unknown10);
-  _gfbcd::initChrDrRotateLimitRoll(*unknown10);
-  _gfbcd::initChrDrGender(*unknown10);
-  _gfbcd::initChrDrModel(*unknown10);
-  _gfbcd::initChrDrCondition(*unknown10);
-  _gfbcd::initChrDrModel2(*unknown10);
-  _gfbcd::initChrDrMotion(*unknown10);
-  _gfbcd::initChrDrStill(*unknown10);
-  _gfbcd::initChrDrOffsetID(*unknown10);
-  _gfbcd::initChrDrEyeRot(*unknown10);
-  _gfbcd::initChrDrVoice(*unknown10);
-  _gfbcd::initChrDrClipEvent(*unknown10);
-  _gfbcd::initChrDrCom_SE(*unknown10);
-  _gfbcd::initChrDrCom_Eff(*unknown10);
-  _gfbcd::initChrDrCom_Vo(*unknown10);
-  _gfbcd::initChrDrAiID(*unknown10);
-  _gfbcd::initChrDrChestHeight(*unknown10);
-  _gfbcd::initChrDrLandingHeight(*unknown10);
-  _gfbcd::initChrDrFootStep(*unknown10);
-  _gfbcd::initChrDrFootStepEffect(*unknown10);
-  _gfbcd::initChrDrDefBlade1(*unknown10);
-  _gfbcd::initChrDrDefBlade2(*unknown10);
-  _gfbcd::initChrDrDefBlade3(*unknown10);
-  _gfbcd::initChrDrDefLvType(*unknown10);
-  _gfbcd::initChrDrDefLv(*unknown10);
-  _gfbcd::initChrDrDefWPType(*unknown10);
-  _gfbcd::initChrDrDefWP(*unknown10);
-  _gfbcd::initChrDrDefSPType(*unknown10);
-  _gfbcd::initChrDrDefSP(*unknown10);
-  _gfbcd::initChrDrDefAcce(*unknown10);
-  _gfbcd::initChrDrDefIdeaBlue(*unknown10);
-  _gfbcd::initChrDrDefIdeaRed(*unknown10);
-  _gfbcd::initChrDrDefIdeaWhite(*unknown10);
-  _gfbcd::initChrDrDefIdeaBlack(*unknown10);
-  _gfbcd::initChrDrHpMaxLv1(*unknown10);
-  _gfbcd::initChrDrStrengthLv1(*unknown10);
-  _gfbcd::initChrDrPowEtherLv1(*unknown10);
-  _gfbcd::initChrDrDexLv1(*unknown10);
-  _gfbcd::initChrDrAgilityLv1(*unknown10);
-  _gfbcd::initChrDrLuckLv1(*unknown10);
-  _gfbcd::initChrDrHpMaxLv99(*unknown10);
-  _gfbcd::initChrDrStrengthLv99(*unknown10);
-  _gfbcd::initChrDrPowEtherLv99(*unknown10);
-  _gfbcd::initChrDrDexLv99(*unknown10);
-  _gfbcd::initChrDrAgilityLv99(*unknown10);
-  _gfbcd::initChrDrLuckLv99(*unknown10);
-  _gfbcd::initChrDrWpnType(*unknown10);
-  _gfbcd::initChrDrWpRate(*unknown10);
-  _gfbcd::initChrDrFavoriteCategory1(*unknown10);
-  _gfbcd::initChrDrFavoriteCategory2(*unknown10);
-  _gfbcd::initChrDrFavoriteItem1(*unknown10);
-  _gfbcd::initChrDrFavoriteItem2(*unknown10);
-  _gfbcd::initChrDrCollisionId(*unknown10);
-  _gfbcd::initChrDrCenterBone(*unknown10);
-  _gfbcd::initChrDrCamBone(*unknown10);
+  _gfbcd::initChrDrName(*m_chrDr);
+  _gfbcd::initChrDrDebugName(*m_chrDr);
+  _gfbcd::initChrDrRace(*m_chrDr);
+  _gfbcd::initChrDrRotateLimitPitch(*m_chrDr);
+  _gfbcd::initChrDrRotateLimitRoll(*m_chrDr);
+  _gfbcd::initChrDrGender(*m_chrDr);
+  _gfbcd::initChrDrModel(*m_chrDr);
+  _gfbcd::initChrDrCondition(*m_chrDr);
+  _gfbcd::initChrDrModel2(*m_chrDr);
+  _gfbcd::initChrDrMotion(*m_chrDr);
+  _gfbcd::initChrDrStill(*m_chrDr);
+  _gfbcd::initChrDrOffsetID(*m_chrDr);
+  _gfbcd::initChrDrEyeRot(*m_chrDr);
+  _gfbcd::initChrDrVoice(*m_chrDr);
+  _gfbcd::initChrDrClipEvent(*m_chrDr);
+  _gfbcd::initChrDrCom_SE(*m_chrDr);
+  _gfbcd::initChrDrCom_Eff(*m_chrDr);
+  _gfbcd::initChrDrCom_Vo(*m_chrDr);
+  _gfbcd::initChrDrAiID(*m_chrDr);
+  _gfbcd::initChrDrChestHeight(*m_chrDr);
+  _gfbcd::initChrDrLandingHeight(*m_chrDr);
+  _gfbcd::initChrDrFootStep(*m_chrDr);
+  _gfbcd::initChrDrFootStepEffect(*m_chrDr);
+  _gfbcd::initChrDrDefBlade1(*m_chrDr);
+  _gfbcd::initChrDrDefBlade2(*m_chrDr);
+  _gfbcd::initChrDrDefBlade3(*m_chrDr);
+  _gfbcd::initChrDrDefLvType(*m_chrDr);
+  _gfbcd::initChrDrDefLv(*m_chrDr);
+  _gfbcd::initChrDrDefWPType(*m_chrDr);
+  _gfbcd::initChrDrDefWP(*m_chrDr);
+  _gfbcd::initChrDrDefSPType(*m_chrDr);
+  _gfbcd::initChrDrDefSP(*m_chrDr);
+  _gfbcd::initChrDrDefAcce(*m_chrDr);
+  _gfbcd::initChrDrDefIdeaBlue(*m_chrDr);
+  _gfbcd::initChrDrDefIdeaRed(*m_chrDr);
+  _gfbcd::initChrDrDefIdeaWhite(*m_chrDr);
+  _gfbcd::initChrDrDefIdeaBlack(*m_chrDr);
+  _gfbcd::initChrDrHpMaxLv1(*m_chrDr);
+  _gfbcd::initChrDrStrengthLv1(*m_chrDr);
+  _gfbcd::initChrDrPowEtherLv1(*m_chrDr);
+  _gfbcd::initChrDrDexLv1(*m_chrDr);
+  _gfbcd::initChrDrAgilityLv1(*m_chrDr);
+  _gfbcd::initChrDrLuckLv1(*m_chrDr);
+  _gfbcd::initChrDrHpMaxLv99(*m_chrDr);
+  _gfbcd::initChrDrStrengthLv99(*m_chrDr);
+  _gfbcd::initChrDrPowEtherLv99(*m_chrDr);
+  _gfbcd::initChrDrDexLv99(*m_chrDr);
+  _gfbcd::initChrDrAgilityLv99(*m_chrDr);
+  _gfbcd::initChrDrLuckLv99(*m_chrDr);
+  _gfbcd::initChrDrWpnType(*m_chrDr);
+  _gfbcd::initChrDrWpRate(*m_chrDr);
+  _gfbcd::initChrDrFavoriteCategory1(*m_chrDr);
+  _gfbcd::initChrDrFavoriteCategory2(*m_chrDr);
+  _gfbcd::initChrDrFavoriteItem1(*m_chrDr);
+  _gfbcd::initChrDrFavoriteItem2(*m_chrDr);
+  _gfbcd::initChrDrCollisionId(*m_chrDr);
+  _gfbcd::initChrDrCenterBone(*m_chrDr);
+  _gfbcd::initChrDrCamBone(*m_chrDr);
 }
 
-u32 GfBdatChrDr::getChrDrStart() const { return Bdat::getIdTop(unknown10->data); }
+u32 GfBdatChrDr::getChrDrStart() const { return Bdat::getIdTop(m_chrDr->data); }
 
-u32 GfBdatChrDr::getChrDrEnd() const { return Bdat::getIdTop(unknown10->data) + Bdat::getIdCount(unknown10->data); }
+u32 GfBdatChrDr::getChrDrEnd() const { return Bdat::getIdTop(m_chrDr->data) + Bdat::getIdCount(m_chrDr->data); }
 
-u32 GfBdatChrDr::getChrDrName(u32 id) const { return _gfbcd::getChrDrName(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrName(u32 id) const { return _gfbcd::getChrDrName(*m_chrDr, id); }
 
-const char *GfBdatChrDr::getChrDrDebugName(u32 id) const { return _gfbcd::getChrDrDebugName(*unknown10, id); }
+const char *GfBdatChrDr::getChrDrDebugName(u32 id) const { return _gfbcd::getChrDrDebugName(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrRace(u32 id) const { return _gfbcd::getChrDrRace(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrRace(u32 id) const { return _gfbcd::getChrDrRace(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrRotateLimitPitch(u32 id) const { return _gfbcd::getChrDrRotateLimitPitch(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrRotateLimitPitch(u32 id) const { return _gfbcd::getChrDrRotateLimitPitch(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrRotateLimitRoll(u32 id) const { return _gfbcd::getChrDrRotateLimitRoll(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrRotateLimitRoll(u32 id) const { return _gfbcd::getChrDrRotateLimitRoll(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrGender(u32 id) const { return _gfbcd::getChrDrGender(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrGender(u32 id) const { return _gfbcd::getChrDrGender(*m_chrDr, id); }
 
-const char *GfBdatChrDr::getChrDrModel(u32 id) const { return _gfbcd::getChrDrModel(*unknown10, id); }
+const char *GfBdatChrDr::getChrDrModel(u32 id) const { return _gfbcd::getChrDrModel(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrCondition(u32 id) const { return _gfbcd::getChrDrCondition(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrCondition(u32 id) const { return _gfbcd::getChrDrCondition(*m_chrDr, id); }
 
-const char *GfBdatChrDr::getChrDrModel2(u32 id) const { return _gfbcd::getChrDrModel2(*unknown10, id); }
+const char *GfBdatChrDr::getChrDrModel2(u32 id) const { return _gfbcd::getChrDrModel2(*m_chrDr, id); }
 
-const char *GfBdatChrDr::getChrDrMotion(u32 id) const { return _gfbcd::getChrDrMotion(*unknown10, id); }
+const char *GfBdatChrDr::getChrDrMotion(u32 id) const { return _gfbcd::getChrDrMotion(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrStill(u32 id) const { return _gfbcd::getChrDrStill(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrStill(u32 id) const { return _gfbcd::getChrDrStill(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrOffsetID(u32 id) const { return _gfbcd::getChrDrOffsetID(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrOffsetID(u32 id) const { return _gfbcd::getChrDrOffsetID(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrEyeRot(u32 id) const { return _gfbcd::getChrDrEyeRot(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrEyeRot(u32 id) const { return _gfbcd::getChrDrEyeRot(*m_chrDr, id); }
 
-const char *GfBdatChrDr::getChrDrVoice(u32 id) const { return _gfbcd::getChrDrVoice(*unknown10, id); }
+const char *GfBdatChrDr::getChrDrVoice(u32 id) const { return _gfbcd::getChrDrVoice(*m_chrDr, id); }
 
-const char *GfBdatChrDr::getChrDrClipEvent(u32 id) const { return _gfbcd::getChrDrClipEvent(*unknown10, id); }
+const char *GfBdatChrDr::getChrDrClipEvent(u32 id) const { return _gfbcd::getChrDrClipEvent(*m_chrDr, id); }
 
-const char *GfBdatChrDr::getChrDrCom_SE(u32 id) const { return _gfbcd::getChrDrCom_SE(*unknown10, id); }
+const char *GfBdatChrDr::getChrDrCom_SE(u32 id) const { return _gfbcd::getChrDrCom_SE(*m_chrDr, id); }
 
-const char *GfBdatChrDr::getChrDrCom_Eff(u32 id) const { return _gfbcd::getChrDrCom_Eff(*unknown10, id); }
+const char *GfBdatChrDr::getChrDrCom_Eff(u32 id) const { return _gfbcd::getChrDrCom_Eff(*m_chrDr, id); }
 
-const char *GfBdatChrDr::getChrDrCom_Vo(u32 id) const { return _gfbcd::getChrDrCom_Vo(*unknown10, id); }
+const char *GfBdatChrDr::getChrDrCom_Vo(u32 id) const { return _gfbcd::getChrDrCom_Vo(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrAiID(u32 id) const { return _gfbcd::getChrDrAiID(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrAiID(u32 id) const { return _gfbcd::getChrDrAiID(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrChestHeight(u32 id) const { return _gfbcd::getChrDrChestHeight(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrChestHeight(u32 id) const { return _gfbcd::getChrDrChestHeight(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrLandingHeight(u32 id) const { return _gfbcd::getChrDrLandingHeight(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrLandingHeight(u32 id) const { return _gfbcd::getChrDrLandingHeight(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrFootStep(u32 id) const { return _gfbcd::getChrDrFootStep(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrFootStep(u32 id) const { return _gfbcd::getChrDrFootStep(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrFootStepEffect(u32 id) const { return _gfbcd::getChrDrFootStepEffect(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrFootStepEffect(u32 id) const { return _gfbcd::getChrDrFootStepEffect(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefBlade1(u32 id) const { return _gfbcd::getChrDrDefBlade1(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefBlade1(u32 id) const { return _gfbcd::getChrDrDefBlade1(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefBlade2(u32 id) const { return _gfbcd::getChrDrDefBlade2(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefBlade2(u32 id) const { return _gfbcd::getChrDrDefBlade2(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefBlade3(u32 id) const { return _gfbcd::getChrDrDefBlade3(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefBlade3(u32 id) const { return _gfbcd::getChrDrDefBlade3(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefLvType(u32 id) const { return _gfbcd::getChrDrDefLvType(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefLvType(u32 id) const { return _gfbcd::getChrDrDefLvType(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefLv(u32 id) const { return _gfbcd::getChrDrDefLv(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefLv(u32 id) const { return _gfbcd::getChrDrDefLv(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefWPType(u32 id) const { return _gfbcd::getChrDrDefWPType(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefWPType(u32 id) const { return _gfbcd::getChrDrDefWPType(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefWP(u32 id) const { return _gfbcd::getChrDrDefWP(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefWP(u32 id) const { return _gfbcd::getChrDrDefWP(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefSPType(u32 id) const { return _gfbcd::getChrDrDefSPType(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefSPType(u32 id) const { return _gfbcd::getChrDrDefSPType(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefSP(u32 id) const { return _gfbcd::getChrDrDefSP(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefSP(u32 id) const { return _gfbcd::getChrDrDefSP(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefAcce(u32 id) const { return _gfbcd::getChrDrDefAcce(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefAcce(u32 id) const { return _gfbcd::getChrDrDefAcce(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefIdeaBlue(u32 id) const { return _gfbcd::getChrDrDefIdeaBlue(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefIdeaBlue(u32 id) const { return _gfbcd::getChrDrDefIdeaBlue(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefIdeaRed(u32 id) const { return _gfbcd::getChrDrDefIdeaRed(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefIdeaRed(u32 id) const { return _gfbcd::getChrDrDefIdeaRed(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefIdeaWhite(u32 id) const { return _gfbcd::getChrDrDefIdeaWhite(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefIdeaWhite(u32 id) const { return _gfbcd::getChrDrDefIdeaWhite(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDefIdeaBlack(u32 id) const { return _gfbcd::getChrDrDefIdeaBlack(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDefIdeaBlack(u32 id) const { return _gfbcd::getChrDrDefIdeaBlack(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrHpMaxLv1(u32 id) const { return _gfbcd::getChrDrHpMaxLv1(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrHpMaxLv1(u32 id) const { return _gfbcd::getChrDrHpMaxLv1(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrStrengthLv1(u32 id) const { return _gfbcd::getChrDrStrengthLv1(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrStrengthLv1(u32 id) const { return _gfbcd::getChrDrStrengthLv1(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrPowEtherLv1(u32 id) const { return _gfbcd::getChrDrPowEtherLv1(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrPowEtherLv1(u32 id) const { return _gfbcd::getChrDrPowEtherLv1(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDexLv1(u32 id) const { return _gfbcd::getChrDrDexLv1(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDexLv1(u32 id) const { return _gfbcd::getChrDrDexLv1(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrAgilityLv1(u32 id) const { return _gfbcd::getChrDrAgilityLv1(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrAgilityLv1(u32 id) const { return _gfbcd::getChrDrAgilityLv1(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrLuckLv1(u32 id) const { return _gfbcd::getChrDrLuckLv1(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrLuckLv1(u32 id) const { return _gfbcd::getChrDrLuckLv1(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrHpMaxLv99(u32 id) const { return _gfbcd::getChrDrHpMaxLv99(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrHpMaxLv99(u32 id) const { return _gfbcd::getChrDrHpMaxLv99(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrStrengthLv99(u32 id) const { return _gfbcd::getChrDrStrengthLv99(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrStrengthLv99(u32 id) const { return _gfbcd::getChrDrStrengthLv99(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrPowEtherLv99(u32 id) const { return _gfbcd::getChrDrPowEtherLv99(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrPowEtherLv99(u32 id) const { return _gfbcd::getChrDrPowEtherLv99(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrDexLv99(u32 id) const { return _gfbcd::getChrDrDexLv99(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrDexLv99(u32 id) const { return _gfbcd::getChrDrDexLv99(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrAgilityLv99(u32 id) const { return _gfbcd::getChrDrAgilityLv99(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrAgilityLv99(u32 id) const { return _gfbcd::getChrDrAgilityLv99(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrLuckLv99(u32 id) const { return _gfbcd::getChrDrLuckLv99(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrLuckLv99(u32 id) const { return _gfbcd::getChrDrLuckLv99(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrFavoriteCategory1(u32 id) const { return _gfbcd::getChrDrFavoriteCategory1(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrFavoriteCategory1(u32 id) const { return _gfbcd::getChrDrFavoriteCategory1(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrFavoriteCategory2(u32 id) const { return _gfbcd::getChrDrFavoriteCategory2(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrFavoriteCategory2(u32 id) const { return _gfbcd::getChrDrFavoriteCategory2(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrFavoriteItem1(u32 id) const { return _gfbcd::getChrDrFavoriteItem1(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrFavoriteItem1(u32 id) const { return _gfbcd::getChrDrFavoriteItem1(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrFavoriteItem2(u32 id) const { return _gfbcd::getChrDrFavoriteItem2(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrFavoriteItem2(u32 id) const { return _gfbcd::getChrDrFavoriteItem2(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrCollisionId(u32 id) const { return _gfbcd::getChrDrCollisionId(*unknown10, id); }
+u32 GfBdatChrDr::getChrDrCollisionId(u32 id) const { return _gfbcd::getChrDrCollisionId(*m_chrDr, id); }
 
-const char *GfBdatChrDr::getChrDrCenterBone(u32 id) const { return _gfbcd::getChrDrCenterBone(*unknown10, id); }
+const char *GfBdatChrDr::getChrDrCenterBone(u32 id) const { return _gfbcd::getChrDrCenterBone(*m_chrDr, id); }
 
-const char *GfBdatChrDr::getChrDrCamBone(u32 id) const { return _gfbcd::getChrDrCamBone(*unknown10, id); }
+const char *GfBdatChrDr::getChrDrCamBone(u32 id) const { return _gfbcd::getChrDrCamBone(*m_chrDr, id); }
 
-u32 GfBdatChrDr::getChrDrWpnType(u32 driver, u32 slot) const { return _gfbcd::getChrDrWpnType(*unknown10, driver, slot); }
+u32 GfBdatChrDr::getChrDrWpnType(u32 driver, u32 slot) const { return _gfbcd::getChrDrWpnType(*m_chrDr, driver, slot); }
 
-u32 GfBdatChrDr::getChrDrWpRate(u32 id, u32 index) const { return _gfbcd::getChrDrWpRate(*unknown10, id, index); }
+u32 GfBdatChrDr::getChrDrWpRate(u32 id, u32 index) const { return _gfbcd::getChrDrWpRate(*m_chrDr, id, index); }
 
 u32 GfBdatChrDr::getChrDrDefBlade(u32 driver, u32 slot) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbcd::getChrDrDefBlade1, _gfbcd::getChrDrDefBlade2, _gfbcd::getChrDrDefBlade3};
-  return getters[slot](*unknown10, driver);
+  return getters[slot](*m_chrDr, driver);
 }
 
 u32 GfBdatChrDr::getChrDrFavoriteCategory(u32 driver, u32 favorite) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbcd::getChrDrFavoriteCategory1, _gfbcd::getChrDrFavoriteCategory2};
-  return getters[favorite](*unknown10, driver);
+  return getters[favorite](*m_chrDr, driver);
 }
 
 u32 GfBdatChrDr::getChrDrFavoriteItem(u32 driver, u32 favorite) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbcd::getChrDrFavoriteItem1, _gfbcd::getChrDrFavoriteItem2};
-  return getters[favorite](*unknown10, driver);
+  return getters[favorite](*m_chrDr, driver);
 }
 
 } // namespace gf

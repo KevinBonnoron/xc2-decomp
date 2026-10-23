@@ -362,8 +362,7 @@ def write(cls, ns, stem, statics, entries, methods, tables, code, direct, namesp
     table_names = {}
     for mangled, offset in tables.items():
         table_names.setdefault(offset, []).append(re.sub(r"^(get|is)", "", demangled(mangled)))
-    # Getter names do not establish the original member names.
-    member_names = {offset: f"unknown{offset:02x}" for offset in table_names}
+    member_names = {offset: member_name(common_prefix(names)) for offset, names in table_names.items()}
 
     header_path = os.path.join(ROOT, "src", "application", "BF2", "gf", "data", stem + ".h")
     existing_header = open(header_path).read() if os.path.exists(header_path) else ""
@@ -419,7 +418,7 @@ def write(cls, ns, stem, statics, entries, methods, tables, code, direct, namesp
     for offset in sorted(member_names):
         if offset > end:
             header.append(f"  CBdatWrapper *_{end:02x}[{(offset - end) // 8}];")
-        header.append(f"  CBdatWrapper *{member_names[offset]}; // Inferred label: m{common_prefix(table_names[offset])}; original member name unknown.")
+        header.append(f"  CBdatWrapper *{member_names[offset]};")
         end = offset + 8
     header += ["};", "", "} // namespace gf", ""]
     path = os.path.join(ROOT, "src", "application", "BF2", "gf", "data", stem + ".h")
@@ -449,6 +448,13 @@ def demangled(mangled):
 def common_prefix(names):
     prefix = os.path.commonprefix(names)
     return prefix if prefix else names[0]
+
+
+def member_name(table):
+    """The getters name the table: getBgmListName reads m_bgmList, getBLD_IdeaName reads m_BLD_Idea."""
+    if len(table) > 1 and table[0].isupper() and table[1].islower():
+        table = table[0].lower() + table[1:]
+    return "m_" + table
 
 
 if __name__ == "__main__":

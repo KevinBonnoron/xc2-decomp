@@ -106,17 +106,17 @@ public:
   u32 getConditionFieldSkiiLevelLevel(u32 id) const;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mConditionList; original member name unknown.
-  CBdatWrapper *unknown18; // Inferred label: mConditionScenario; original member name unknown.
-  CBdatWrapper *unknown20; // Inferred label: mConditionQuest; original member name unknown.
-  CBdatWrapper *unknown28; // Inferred label: mConditionEnv; original member name unknown.
-  CBdatWrapper *unknown30; // Inferred label: mConditionFlag; original member name unknown.
-  CBdatWrapper *unknown38; // Inferred label: mConditionItem; original member name unknown.
-  CBdatWrapper *unknown40; // Inferred label: mConditionPT; original member name unknown.
-  CBdatWrapper *unknown48; // Inferred label: mConditionIdea; original member name unknown.
-  CBdatWrapper *unknown50; // Inferred label: mConditionLevel; original member name unknown.
-  CBdatWrapper *unknown58; // Inferred label: mConditionAchievement; original member name unknown.
-  CBdatWrapper *unknown60; // Inferred label: mConditionFieldSkiiLevel; original member name unknown.
+  CBdatWrapper *m_conditionList;
+  CBdatWrapper *m_conditionScenario;
+  CBdatWrapper *m_conditionQuest;
+  CBdatWrapper *m_conditionEnv;
+  CBdatWrapper *m_conditionFlag;
+  CBdatWrapper *m_conditionItem;
+  CBdatWrapper *m_conditionPT;
+  CBdatWrapper *m_conditionIdea;
+  CBdatWrapper *m_conditionLevel;
+  CBdatWrapper *m_conditionAchievement;
+  CBdatWrapper *m_conditionFieldSkiiLevel;
 };
 
 } // namespace gf

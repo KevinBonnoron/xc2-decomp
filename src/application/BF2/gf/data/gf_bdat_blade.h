@@ -237,22 +237,22 @@ public:
   u32 getBLD_ReleaceRewardReleace(u32 id, u32 index) const;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mIdeaTable; original member name unknown.
-  CBdatWrapper *unknown18; // Inferred label: mBladeTable; original member name unknown.
-  CBdatWrapper *unknown20; // Inferred label: mBladeList; original member name unknown.
-  CBdatWrapper *unknown28; // Inferred label: mCommonList; original member name unknown.
-  CBdatWrapper *unknown30; // Inferred label: mNameList; original member name unknown.
-  CBdatWrapper *unknown38; // Inferred label: mBladeModelList; original member name unknown.
-  CBdatWrapper *unknown40; // Inferred label: mCreateConfig; original member name unknown.
-  CBdatWrapper *unknown48; // Inferred label: mCmnBl_Capacity; original member name unknown.
-  CBdatWrapper *unknown50; // Inferred label: mCmnBl_Power; original member name unknown.
-  CBdatWrapper *unknown58; // Inferred label: mCmnBl_NewBlArts; original member name unknown.
-  CBdatWrapper *unknown60; // Inferred label: mCmnBl_StatusType; original member name unknown.
-  CBdatWrapper *unknown68; // Inferred label: mCmnBl_Armor; original member name unknown.
-  CBdatWrapper *unknown70; // Inferred label: mFLD_IdeaTable; original member name unknown.
-  CBdatWrapper *unknown78; // Inferred label: mBLD_Idea; original member name unknown.
-  CBdatWrapper *unknown80; // Inferred label: mBLD_RareList; original member name unknown.
-  CBdatWrapper *unknown88; // Inferred label: mBLD_ReleaceReward; original member name unknown.
+  CBdatWrapper *m_ideaTable;
+  CBdatWrapper *m_bladeTable;
+  CBdatWrapper *m_bladeList;
+  CBdatWrapper *m_commonList;
+  CBdatWrapper *m_nameList;
+  CBdatWrapper *m_bladeModelList;
+  CBdatWrapper *m_createConfig;
+  CBdatWrapper *m_cmnBl_Capacity;
+  CBdatWrapper *m_cmnBl_Power;
+  CBdatWrapper *m_cmnBl_NewBlArts;
+  CBdatWrapper *m_cmnBl_StatusType;
+  CBdatWrapper *m_cmnBl_Armor;
+  CBdatWrapper *m_FLD_IdeaTable;
+  CBdatWrapper *m_BLD_Idea;
+  CBdatWrapper *m_BLD_RareList;
+  CBdatWrapper *m_BLD_ReleaceReward;
 };
 
 } // namespace gf

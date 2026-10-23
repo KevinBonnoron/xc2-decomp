@@ -30,8 +30,8 @@ public:
   u32 getBgmConditionBgmID(u32 id, u32 index) const;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mBgmList; original member name unknown.
-  CBdatWrapper *unknown18; // Inferred label: mBgmCondition; original member name unknown.
+  CBdatWrapper *m_bgmList;
+  CBdatWrapper *m_bgmCondition;
 };
 
 } // namespace gf

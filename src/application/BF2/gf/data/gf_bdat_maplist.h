@@ -91,9 +91,9 @@ public:
   u32 getTimeInfomsg(u32 id) const;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mMaplist; original member name unknown.
-  CBdatWrapper *unknown18; // Inferred label: mWeatherInfo; original member name unknown.
-  CBdatWrapper *unknown20; // Inferred label: mTimeInfo; original member name unknown.
+  CBdatWrapper *m_maplist;
+  CBdatWrapper *m_weatherInfo;
+  CBdatWrapper *m_timeInfo;
 };
 
 } // namespace gf

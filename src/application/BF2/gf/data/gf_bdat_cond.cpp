@@ -798,67 +798,68 @@ u32 getConditionFieldSkiiLevelLevel(const CBdatWrapper &wrapper, u32 id) {
 } // namespace _gfbdb
 
 GfBdatCond::GfBdatCond()
-    : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr),
-      unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr) {
+    : m_conditionList(nullptr), m_conditionScenario(nullptr), m_conditionQuest(nullptr), m_conditionEnv(nullptr), m_conditionFlag(nullptr),
+      m_conditionItem(nullptr), m_conditionPT(nullptr), m_conditionIdea(nullptr), m_conditionLevel(nullptr), m_conditionAchievement(nullptr),
+      m_conditionFieldSkiiLevel(nullptr) {
   bdatRefresh();
 }
 
 GfBdatCond::~GfBdatCond() { destroyFP(); }
 
 void GfBdatCond::destroyFP() {
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_conditionList != nullptr) {
+    delete m_conditionList;
+    m_conditionList = nullptr;
   }
 
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  if (m_conditionScenario != nullptr) {
+    delete m_conditionScenario;
+    m_conditionScenario = nullptr;
   }
 
-  if (unknown20 != nullptr) {
-    delete unknown20;
-    unknown20 = nullptr;
+  if (m_conditionQuest != nullptr) {
+    delete m_conditionQuest;
+    m_conditionQuest = nullptr;
   }
 
-  if (unknown28 != nullptr) {
-    delete unknown28;
-    unknown28 = nullptr;
+  if (m_conditionEnv != nullptr) {
+    delete m_conditionEnv;
+    m_conditionEnv = nullptr;
   }
 
-  if (unknown30 != nullptr) {
-    delete unknown30;
-    unknown30 = nullptr;
+  if (m_conditionFlag != nullptr) {
+    delete m_conditionFlag;
+    m_conditionFlag = nullptr;
   }
 
-  if (unknown38 != nullptr) {
-    delete unknown38;
-    unknown38 = nullptr;
+  if (m_conditionItem != nullptr) {
+    delete m_conditionItem;
+    m_conditionItem = nullptr;
   }
 
-  if (unknown40 != nullptr) {
-    delete unknown40;
-    unknown40 = nullptr;
+  if (m_conditionPT != nullptr) {
+    delete m_conditionPT;
+    m_conditionPT = nullptr;
   }
 
-  if (unknown48 != nullptr) {
-    delete unknown48;
-    unknown48 = nullptr;
+  if (m_conditionIdea != nullptr) {
+    delete m_conditionIdea;
+    m_conditionIdea = nullptr;
   }
 
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_conditionLevel != nullptr) {
+    delete m_conditionLevel;
+    m_conditionLevel = nullptr;
   }
 
-  if (unknown58 != nullptr) {
-    delete unknown58;
-    unknown58 = nullptr;
+  if (m_conditionAchievement != nullptr) {
+    delete m_conditionAchievement;
+    m_conditionAchievement = nullptr;
   }
 
-  if (unknown60 != nullptr) {
-    delete unknown60;
-    unknown60 = nullptr;
+  if (m_conditionFieldSkiiLevel != nullptr) {
+    delete m_conditionFieldSkiiLevel;
+    m_conditionFieldSkiiLevel = nullptr;
   }
 }
 
@@ -866,121 +867,121 @@ void GfBdatCond::destroyFP() {
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 void GfBdatCond::createFP() {
-  unknown10 = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_LIST);
-  unknown18 = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_SCENARIO);
-  unknown20 = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_QUEST);
-  unknown28 = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_ENV);
-  unknown30 = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_FLAG);
-  unknown38 = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_ITEM);
-  unknown40 = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_PT);
-  unknown48 = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_IDEA);
-  unknown50 = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_LEVEL);
-  unknown58 = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_ACHIEVEMENT);
-  unknown60 = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_FIELD_SKII_LEVEL);
+  m_conditionList = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_LIST);
+  m_conditionScenario = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_SCENARIO);
+  m_conditionQuest = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_QUEST);
+  m_conditionEnv = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_ENV);
+  m_conditionFlag = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_FLAG);
+  m_conditionItem = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_ITEM);
+  m_conditionPT = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_PT);
+  m_conditionIdea = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_IDEA);
+  m_conditionLevel = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_LEVEL);
+  m_conditionAchievement = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_ACHIEVEMENT);
+  m_conditionFieldSkiiLevel = NEW_BDAT_WRAPPER(BDAT_FLD_CONDITION_FIELD_SKII_LEVEL);
 }
 
 void GfBdatCond::bdatRefresh() {
   destroyFP();
   createFP();
-  _gfbdb::initConditionListPremise(*unknown10);
-  _gfbdb::initConditionListConditionType1(*unknown10);
-  _gfbdb::initConditionListCondition1(*unknown10);
-  _gfbdb::initConditionListConditionType2(*unknown10);
-  _gfbdb::initConditionListCondition2(*unknown10);
-  _gfbdb::initConditionListConditionType3(*unknown10);
-  _gfbdb::initConditionListCondition3(*unknown10);
-  _gfbdb::initConditionListConditionType4(*unknown10);
-  _gfbdb::initConditionListCondition4(*unknown10);
-  _gfbdb::initConditionListConditionType5(*unknown10);
-  _gfbdb::initConditionListCondition5(*unknown10);
-  _gfbdb::initConditionListConditionType6(*unknown10);
-  _gfbdb::initConditionListCondition6(*unknown10);
-  _gfbdb::initConditionListConditionType7(*unknown10);
-  _gfbdb::initConditionListCondition7(*unknown10);
-  _gfbdb::initConditionListConditionType8(*unknown10);
-  _gfbdb::initConditionListCondition8(*unknown10);
-  _gfbdb::initConditionScenarioScenarioMin(*unknown18);
-  _gfbdb::initConditionScenarioScenarioMax(*unknown18);
-  _gfbdb::initConditionScenarioNotScenarioMin(*unknown18);
-  _gfbdb::initConditionScenarioNotScenarioMax(*unknown18);
-  _gfbdb::initConditionQuestQuestFlag1(*unknown20);
-  _gfbdb::initConditionQuestQuestFlagMin1(*unknown20);
-  _gfbdb::initConditionQuestQuestFlagMax1(*unknown20);
-  _gfbdb::initConditionQuestQuestFlag2(*unknown20);
-  _gfbdb::initConditionQuestQuestFlagMin2(*unknown20);
-  _gfbdb::initConditionQuestQuestFlagMax2(*unknown20);
-  _gfbdb::initConditionQuestNotQuestFlag1(*unknown20);
-  _gfbdb::initConditionQuestNotQuestFlagMin1(*unknown20);
-  _gfbdb::initConditionQuestNotQuestFlagMax1(*unknown20);
-  _gfbdb::initConditionQuestNotQuestFlag2(*unknown20);
-  _gfbdb::initConditionQuestNotQuestFlagMin2(*unknown20);
-  _gfbdb::initConditionQuestNotQuestFlagMax2(*unknown20);
-  _gfbdb::initConditionEnvTimeRange(*unknown28);
-  _gfbdb::initConditionEnvWeather(*unknown28);
-  _gfbdb::initConditionEnvCloudHeight(*unknown28);
-  _gfbdb::initConditionFlagFlagType(*unknown30);
-  _gfbdb::initConditionFlagFlagID(*unknown30);
-  _gfbdb::initConditionFlagFlagMin(*unknown30);
-  _gfbdb::initConditionFlagFlagMax(*unknown30);
-  _gfbdb::initConditionItemItemCategory(*unknown38);
-  _gfbdb::initConditionItemItemID(*unknown38);
-  _gfbdb::initConditionItemNumber(*unknown38);
-  _gfbdb::initConditionPTCategory(*unknown40);
-  _gfbdb::initConditionPTPCID1(*unknown40);
-  _gfbdb::initConditionPTPCID2(*unknown40);
-  _gfbdb::initConditionPTPCID3(*unknown40);
-  _gfbdb::initConditionIdeaPCID(*unknown48);
-  _gfbdb::initConditionIdeaIdeaLevelBlue(*unknown48);
-  _gfbdb::initConditionIdeaIdeaLevelRed(*unknown48);
-  _gfbdb::initConditionIdeaIdeaLevelWhite(*unknown48);
-  _gfbdb::initConditionIdeaIdeaLevelBlack(*unknown48);
-  _gfbdb::initConditionIdeaCompatibility(*unknown48);
-  _gfbdb::initConditionIdeaTrustPoint(*unknown48);
-  _gfbdb::initConditionLevelPCID(*unknown50);
-  _gfbdb::initConditionLevelLevel(*unknown50);
-  _gfbdb::initConditionAchievementAchievementSetID(*unknown58);
-  _gfbdb::initConditionAchievementValue(*unknown58);
-  _gfbdb::initConditionFieldSkiiLevelFieldSkillID(*unknown60);
-  _gfbdb::initConditionFieldSkiiLevelLevel(*unknown60);
+  _gfbdb::initConditionListPremise(*m_conditionList);
+  _gfbdb::initConditionListConditionType1(*m_conditionList);
+  _gfbdb::initConditionListCondition1(*m_conditionList);
+  _gfbdb::initConditionListConditionType2(*m_conditionList);
+  _gfbdb::initConditionListCondition2(*m_conditionList);
+  _gfbdb::initConditionListConditionType3(*m_conditionList);
+  _gfbdb::initConditionListCondition3(*m_conditionList);
+  _gfbdb::initConditionListConditionType4(*m_conditionList);
+  _gfbdb::initConditionListCondition4(*m_conditionList);
+  _gfbdb::initConditionListConditionType5(*m_conditionList);
+  _gfbdb::initConditionListCondition5(*m_conditionList);
+  _gfbdb::initConditionListConditionType6(*m_conditionList);
+  _gfbdb::initConditionListCondition6(*m_conditionList);
+  _gfbdb::initConditionListConditionType7(*m_conditionList);
+  _gfbdb::initConditionListCondition7(*m_conditionList);
+  _gfbdb::initConditionListConditionType8(*m_conditionList);
+  _gfbdb::initConditionListCondition8(*m_conditionList);
+  _gfbdb::initConditionScenarioScenarioMin(*m_conditionScenario);
+  _gfbdb::initConditionScenarioScenarioMax(*m_conditionScenario);
+  _gfbdb::initConditionScenarioNotScenarioMin(*m_conditionScenario);
+  _gfbdb::initConditionScenarioNotScenarioMax(*m_conditionScenario);
+  _gfbdb::initConditionQuestQuestFlag1(*m_conditionQuest);
+  _gfbdb::initConditionQuestQuestFlagMin1(*m_conditionQuest);
+  _gfbdb::initConditionQuestQuestFlagMax1(*m_conditionQuest);
+  _gfbdb::initConditionQuestQuestFlag2(*m_conditionQuest);
+  _gfbdb::initConditionQuestQuestFlagMin2(*m_conditionQuest);
+  _gfbdb::initConditionQuestQuestFlagMax2(*m_conditionQuest);
+  _gfbdb::initConditionQuestNotQuestFlag1(*m_conditionQuest);
+  _gfbdb::initConditionQuestNotQuestFlagMin1(*m_conditionQuest);
+  _gfbdb::initConditionQuestNotQuestFlagMax1(*m_conditionQuest);
+  _gfbdb::initConditionQuestNotQuestFlag2(*m_conditionQuest);
+  _gfbdb::initConditionQuestNotQuestFlagMin2(*m_conditionQuest);
+  _gfbdb::initConditionQuestNotQuestFlagMax2(*m_conditionQuest);
+  _gfbdb::initConditionEnvTimeRange(*m_conditionEnv);
+  _gfbdb::initConditionEnvWeather(*m_conditionEnv);
+  _gfbdb::initConditionEnvCloudHeight(*m_conditionEnv);
+  _gfbdb::initConditionFlagFlagType(*m_conditionFlag);
+  _gfbdb::initConditionFlagFlagID(*m_conditionFlag);
+  _gfbdb::initConditionFlagFlagMin(*m_conditionFlag);
+  _gfbdb::initConditionFlagFlagMax(*m_conditionFlag);
+  _gfbdb::initConditionItemItemCategory(*m_conditionItem);
+  _gfbdb::initConditionItemItemID(*m_conditionItem);
+  _gfbdb::initConditionItemNumber(*m_conditionItem);
+  _gfbdb::initConditionPTCategory(*m_conditionPT);
+  _gfbdb::initConditionPTPCID1(*m_conditionPT);
+  _gfbdb::initConditionPTPCID2(*m_conditionPT);
+  _gfbdb::initConditionPTPCID3(*m_conditionPT);
+  _gfbdb::initConditionIdeaPCID(*m_conditionIdea);
+  _gfbdb::initConditionIdeaIdeaLevelBlue(*m_conditionIdea);
+  _gfbdb::initConditionIdeaIdeaLevelRed(*m_conditionIdea);
+  _gfbdb::initConditionIdeaIdeaLevelWhite(*m_conditionIdea);
+  _gfbdb::initConditionIdeaIdeaLevelBlack(*m_conditionIdea);
+  _gfbdb::initConditionIdeaCompatibility(*m_conditionIdea);
+  _gfbdb::initConditionIdeaTrustPoint(*m_conditionIdea);
+  _gfbdb::initConditionLevelPCID(*m_conditionLevel);
+  _gfbdb::initConditionLevelLevel(*m_conditionLevel);
+  _gfbdb::initConditionAchievementAchievementSetID(*m_conditionAchievement);
+  _gfbdb::initConditionAchievementValue(*m_conditionAchievement);
+  _gfbdb::initConditionFieldSkiiLevelFieldSkillID(*m_conditionFieldSkiiLevel);
+  _gfbdb::initConditionFieldSkiiLevelLevel(*m_conditionFieldSkiiLevel);
 }
 
-u32 GfBdatCond::getConditionListStart() const { return Bdat::getIdTop(unknown10->data); }
+u32 GfBdatCond::getConditionListStart() const { return Bdat::getIdTop(m_conditionList->data); }
 
-u32 GfBdatCond::getConditionListEnd() const { return Bdat::getIdTop(unknown10->data) + Bdat::getIdCount(unknown10->data); }
+u32 GfBdatCond::getConditionListEnd() const { return Bdat::getIdTop(m_conditionList->data) + Bdat::getIdCount(m_conditionList->data); }
 
-u32 GfBdatCond::getConditionListPremise(u32 id) const { return _gfbdb::getConditionListPremise(*unknown10, id); }
+u32 GfBdatCond::getConditionListPremise(u32 id) const { return _gfbdb::getConditionListPremise(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListConditionType1(u32 id) const { return _gfbdb::getConditionListConditionType1(*unknown10, id); }
+u32 GfBdatCond::getConditionListConditionType1(u32 id) const { return _gfbdb::getConditionListConditionType1(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListCondition1(u32 id) const { return _gfbdb::getConditionListCondition1(*unknown10, id); }
+u32 GfBdatCond::getConditionListCondition1(u32 id) const { return _gfbdb::getConditionListCondition1(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListConditionType2(u32 id) const { return _gfbdb::getConditionListConditionType2(*unknown10, id); }
+u32 GfBdatCond::getConditionListConditionType2(u32 id) const { return _gfbdb::getConditionListConditionType2(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListCondition2(u32 id) const { return _gfbdb::getConditionListCondition2(*unknown10, id); }
+u32 GfBdatCond::getConditionListCondition2(u32 id) const { return _gfbdb::getConditionListCondition2(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListConditionType3(u32 id) const { return _gfbdb::getConditionListConditionType3(*unknown10, id); }
+u32 GfBdatCond::getConditionListConditionType3(u32 id) const { return _gfbdb::getConditionListConditionType3(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListCondition3(u32 id) const { return _gfbdb::getConditionListCondition3(*unknown10, id); }
+u32 GfBdatCond::getConditionListCondition3(u32 id) const { return _gfbdb::getConditionListCondition3(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListConditionType4(u32 id) const { return _gfbdb::getConditionListConditionType4(*unknown10, id); }
+u32 GfBdatCond::getConditionListConditionType4(u32 id) const { return _gfbdb::getConditionListConditionType4(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListCondition4(u32 id) const { return _gfbdb::getConditionListCondition4(*unknown10, id); }
+u32 GfBdatCond::getConditionListCondition4(u32 id) const { return _gfbdb::getConditionListCondition4(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListConditionType5(u32 id) const { return _gfbdb::getConditionListConditionType5(*unknown10, id); }
+u32 GfBdatCond::getConditionListConditionType5(u32 id) const { return _gfbdb::getConditionListConditionType5(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListCondition5(u32 id) const { return _gfbdb::getConditionListCondition5(*unknown10, id); }
+u32 GfBdatCond::getConditionListCondition5(u32 id) const { return _gfbdb::getConditionListCondition5(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListConditionType6(u32 id) const { return _gfbdb::getConditionListConditionType6(*unknown10, id); }
+u32 GfBdatCond::getConditionListConditionType6(u32 id) const { return _gfbdb::getConditionListConditionType6(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListCondition6(u32 id) const { return _gfbdb::getConditionListCondition6(*unknown10, id); }
+u32 GfBdatCond::getConditionListCondition6(u32 id) const { return _gfbdb::getConditionListCondition6(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListConditionType7(u32 id) const { return _gfbdb::getConditionListConditionType7(*unknown10, id); }
+u32 GfBdatCond::getConditionListConditionType7(u32 id) const { return _gfbdb::getConditionListConditionType7(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListCondition7(u32 id) const { return _gfbdb::getConditionListCondition7(*unknown10, id); }
+u32 GfBdatCond::getConditionListCondition7(u32 id) const { return _gfbdb::getConditionListCondition7(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListConditionType8(u32 id) const { return _gfbdb::getConditionListConditionType8(*unknown10, id); }
+u32 GfBdatCond::getConditionListConditionType8(u32 id) const { return _gfbdb::getConditionListConditionType8(*m_conditionList, id); }
 
-u32 GfBdatCond::getConditionListCondition8(u32 id) const { return _gfbdb::getConditionListCondition8(*unknown10, id); }
+u32 GfBdatCond::getConditionListCondition8(u32 id) const { return _gfbdb::getConditionListCondition8(*m_conditionList, id); }
 
 u32 GfBdatCond::getConditionListConditionType(u32 condition, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getConditionListConditionType1,
@@ -991,7 +992,7 @@ u32 GfBdatCond::getConditionListConditionType(u32 condition, u32 index) const {
                                                               _gfbdb::getConditionListConditionType6,
                                                               _gfbdb::getConditionListConditionType7,
                                                               _gfbdb::getConditionListConditionType8};
-  return getters[index](*unknown10, condition);
+  return getters[index](*m_conditionList, condition);
 }
 
 u32 GfBdatCond::getConditionListCondition(u32 condition, u32 index) const {
@@ -1003,176 +1004,184 @@ u32 GfBdatCond::getConditionListCondition(u32 condition, u32 index) const {
                                                               _gfbdb::getConditionListCondition6,
                                                               _gfbdb::getConditionListCondition7,
                                                               _gfbdb::getConditionListCondition8};
-  return getters[index](*unknown10, condition);
+  return getters[index](*m_conditionList, condition);
 }
 
-u32 GfBdatCond::getConditionScenarioStart() const { return Bdat::getIdTop(unknown18->data); }
+u32 GfBdatCond::getConditionScenarioStart() const { return Bdat::getIdTop(m_conditionScenario->data); }
 
-u32 GfBdatCond::getConditionScenarioEnd() const { return Bdat::getIdTop(unknown18->data) + Bdat::getIdCount(unknown18->data); }
+u32 GfBdatCond::getConditionScenarioEnd() const { return Bdat::getIdTop(m_conditionScenario->data) + Bdat::getIdCount(m_conditionScenario->data); }
 
-u32 GfBdatCond::getConditionScenarioScenarioMin(u32 id) const { return _gfbdb::getConditionScenarioScenarioMin(*unknown18, id); }
+u32 GfBdatCond::getConditionScenarioScenarioMin(u32 id) const { return _gfbdb::getConditionScenarioScenarioMin(*m_conditionScenario, id); }
 
-u32 GfBdatCond::getConditionScenarioScenarioMax(u32 id) const { return _gfbdb::getConditionScenarioScenarioMax(*unknown18, id); }
+u32 GfBdatCond::getConditionScenarioScenarioMax(u32 id) const { return _gfbdb::getConditionScenarioScenarioMax(*m_conditionScenario, id); }
 
-u32 GfBdatCond::getConditionScenarioNotScenarioMin(u32 id) const { return _gfbdb::getConditionScenarioNotScenarioMin(*unknown18, id); }
+u32 GfBdatCond::getConditionScenarioNotScenarioMin(u32 id) const { return _gfbdb::getConditionScenarioNotScenarioMin(*m_conditionScenario, id); }
 
-u32 GfBdatCond::getConditionScenarioNotScenarioMax(u32 id) const { return _gfbdb::getConditionScenarioNotScenarioMax(*unknown18, id); }
+u32 GfBdatCond::getConditionScenarioNotScenarioMax(u32 id) const { return _gfbdb::getConditionScenarioNotScenarioMax(*m_conditionScenario, id); }
 
-u32 GfBdatCond::getConditionQuestStart() const { return Bdat::getIdTop(unknown20->data); }
+u32 GfBdatCond::getConditionQuestStart() const { return Bdat::getIdTop(m_conditionQuest->data); }
 
-u32 GfBdatCond::getConditionQuestEnd() const { return Bdat::getIdTop(unknown20->data) + Bdat::getIdCount(unknown20->data); }
+u32 GfBdatCond::getConditionQuestEnd() const { return Bdat::getIdTop(m_conditionQuest->data) + Bdat::getIdCount(m_conditionQuest->data); }
 
-u32 GfBdatCond::getConditionQuestQuestFlag1(u32 id) const { return _gfbdb::getConditionQuestQuestFlag1(*unknown20, id); }
+u32 GfBdatCond::getConditionQuestQuestFlag1(u32 id) const { return _gfbdb::getConditionQuestQuestFlag1(*m_conditionQuest, id); }
 
-u32 GfBdatCond::getConditionQuestQuestFlagMin1(u32 id) const { return _gfbdb::getConditionQuestQuestFlagMin1(*unknown20, id); }
+u32 GfBdatCond::getConditionQuestQuestFlagMin1(u32 id) const { return _gfbdb::getConditionQuestQuestFlagMin1(*m_conditionQuest, id); }
 
-u32 GfBdatCond::getConditionQuestQuestFlagMax1(u32 id) const { return _gfbdb::getConditionQuestQuestFlagMax1(*unknown20, id); }
+u32 GfBdatCond::getConditionQuestQuestFlagMax1(u32 id) const { return _gfbdb::getConditionQuestQuestFlagMax1(*m_conditionQuest, id); }
 
-u32 GfBdatCond::getConditionQuestQuestFlag2(u32 id) const { return _gfbdb::getConditionQuestQuestFlag2(*unknown20, id); }
+u32 GfBdatCond::getConditionQuestQuestFlag2(u32 id) const { return _gfbdb::getConditionQuestQuestFlag2(*m_conditionQuest, id); }
 
-u32 GfBdatCond::getConditionQuestQuestFlagMin2(u32 id) const { return _gfbdb::getConditionQuestQuestFlagMin2(*unknown20, id); }
+u32 GfBdatCond::getConditionQuestQuestFlagMin2(u32 id) const { return _gfbdb::getConditionQuestQuestFlagMin2(*m_conditionQuest, id); }
 
-u32 GfBdatCond::getConditionQuestQuestFlagMax2(u32 id) const { return _gfbdb::getConditionQuestQuestFlagMax2(*unknown20, id); }
+u32 GfBdatCond::getConditionQuestQuestFlagMax2(u32 id) const { return _gfbdb::getConditionQuestQuestFlagMax2(*m_conditionQuest, id); }
 
-u32 GfBdatCond::getConditionQuestNotQuestFlag1(u32 id) const { return _gfbdb::getConditionQuestNotQuestFlag1(*unknown20, id); }
+u32 GfBdatCond::getConditionQuestNotQuestFlag1(u32 id) const { return _gfbdb::getConditionQuestNotQuestFlag1(*m_conditionQuest, id); }
 
-u32 GfBdatCond::getConditionQuestNotQuestFlagMin1(u32 id) const { return _gfbdb::getConditionQuestNotQuestFlagMin1(*unknown20, id); }
+u32 GfBdatCond::getConditionQuestNotQuestFlagMin1(u32 id) const { return _gfbdb::getConditionQuestNotQuestFlagMin1(*m_conditionQuest, id); }
 
-u32 GfBdatCond::getConditionQuestNotQuestFlagMax1(u32 id) const { return _gfbdb::getConditionQuestNotQuestFlagMax1(*unknown20, id); }
+u32 GfBdatCond::getConditionQuestNotQuestFlagMax1(u32 id) const { return _gfbdb::getConditionQuestNotQuestFlagMax1(*m_conditionQuest, id); }
 
-u32 GfBdatCond::getConditionQuestNotQuestFlag2(u32 id) const { return _gfbdb::getConditionQuestNotQuestFlag2(*unknown20, id); }
+u32 GfBdatCond::getConditionQuestNotQuestFlag2(u32 id) const { return _gfbdb::getConditionQuestNotQuestFlag2(*m_conditionQuest, id); }
 
-u32 GfBdatCond::getConditionQuestNotQuestFlagMin2(u32 id) const { return _gfbdb::getConditionQuestNotQuestFlagMin2(*unknown20, id); }
+u32 GfBdatCond::getConditionQuestNotQuestFlagMin2(u32 id) const { return _gfbdb::getConditionQuestNotQuestFlagMin2(*m_conditionQuest, id); }
 
-u32 GfBdatCond::getConditionQuestNotQuestFlagMax2(u32 id) const { return _gfbdb::getConditionQuestNotQuestFlagMax2(*unknown20, id); }
+u32 GfBdatCond::getConditionQuestNotQuestFlagMax2(u32 id) const { return _gfbdb::getConditionQuestNotQuestFlagMax2(*m_conditionQuest, id); }
 
 u32 GfBdatCond::getConditionQuestQuestFlag(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getConditionQuestQuestFlag1, _gfbdb::getConditionQuestQuestFlag2};
-  return getters[index](*unknown20, id);
+  return getters[index](*m_conditionQuest, id);
 }
 
 u32 GfBdatCond::getConditionQuestQuestFlagMin(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getConditionQuestQuestFlagMin1, _gfbdb::getConditionQuestQuestFlagMin2};
-  return getters[index](*unknown20, id);
+  return getters[index](*m_conditionQuest, id);
 }
 
 u32 GfBdatCond::getConditionQuestQuestFlagMax(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getConditionQuestQuestFlagMax1, _gfbdb::getConditionQuestQuestFlagMax2};
-  return getters[index](*unknown20, id);
+  return getters[index](*m_conditionQuest, id);
 }
 
 u32 GfBdatCond::getConditionQuestNotQuestFlag(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getConditionQuestNotQuestFlag1, _gfbdb::getConditionQuestNotQuestFlag2};
-  return getters[index](*unknown20, id);
+  return getters[index](*m_conditionQuest, id);
 }
 
 u32 GfBdatCond::getConditionQuestNotQuestFlagMin(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getConditionQuestNotQuestFlagMin1, _gfbdb::getConditionQuestNotQuestFlagMin2};
-  return getters[index](*unknown20, id);
+  return getters[index](*m_conditionQuest, id);
 }
 
 u32 GfBdatCond::getConditionQuestNotQuestFlagMax(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getConditionQuestNotQuestFlagMax1, _gfbdb::getConditionQuestNotQuestFlagMax2};
-  return getters[index](*unknown20, id);
+  return getters[index](*m_conditionQuest, id);
 }
 
-u32 GfBdatCond::getConditionEnvStart() const { return Bdat::getIdTop(unknown28->data); }
+u32 GfBdatCond::getConditionEnvStart() const { return Bdat::getIdTop(m_conditionEnv->data); }
 
-u32 GfBdatCond::getConditionEnvEnd() const { return Bdat::getIdTop(unknown28->data) + Bdat::getIdCount(unknown28->data); }
+u32 GfBdatCond::getConditionEnvEnd() const { return Bdat::getIdTop(m_conditionEnv->data) + Bdat::getIdCount(m_conditionEnv->data); }
 
-u32 GfBdatCond::getConditionEnvTimeRange(u32 id) const { return _gfbdb::getConditionEnvTimeRange(*unknown28, id); }
+u32 GfBdatCond::getConditionEnvTimeRange(u32 id) const { return _gfbdb::getConditionEnvTimeRange(*m_conditionEnv, id); }
 
-u32 GfBdatCond::getConditionEnvWeather(u32 id) const { return _gfbdb::getConditionEnvWeather(*unknown28, id); }
+u32 GfBdatCond::getConditionEnvWeather(u32 id) const { return _gfbdb::getConditionEnvWeather(*m_conditionEnv, id); }
 
-u32 GfBdatCond::getConditionEnvCloudHeight(u32 id) const { return _gfbdb::getConditionEnvCloudHeight(*unknown28, id); }
+u32 GfBdatCond::getConditionEnvCloudHeight(u32 id) const { return _gfbdb::getConditionEnvCloudHeight(*m_conditionEnv, id); }
 
-u32 GfBdatCond::getConditionFlagStart() const { return Bdat::getIdTop(unknown30->data); }
+u32 GfBdatCond::getConditionFlagStart() const { return Bdat::getIdTop(m_conditionFlag->data); }
 
-u32 GfBdatCond::getConditionFlagEnd() const { return Bdat::getIdTop(unknown30->data) + Bdat::getIdCount(unknown30->data); }
+u32 GfBdatCond::getConditionFlagEnd() const { return Bdat::getIdTop(m_conditionFlag->data) + Bdat::getIdCount(m_conditionFlag->data); }
 
-u32 GfBdatCond::getConditionFlagFlagType(u32 id) const { return _gfbdb::getConditionFlagFlagType(*unknown30, id); }
+u32 GfBdatCond::getConditionFlagFlagType(u32 id) const { return _gfbdb::getConditionFlagFlagType(*m_conditionFlag, id); }
 
-u32 GfBdatCond::getConditionFlagFlagID(u32 id) const { return _gfbdb::getConditionFlagFlagID(*unknown30, id); }
+u32 GfBdatCond::getConditionFlagFlagID(u32 id) const { return _gfbdb::getConditionFlagFlagID(*m_conditionFlag, id); }
 
-u32 GfBdatCond::getConditionFlagFlagMin(u32 id) const { return _gfbdb::getConditionFlagFlagMin(*unknown30, id); }
+u32 GfBdatCond::getConditionFlagFlagMin(u32 id) const { return _gfbdb::getConditionFlagFlagMin(*m_conditionFlag, id); }
 
-u32 GfBdatCond::getConditionFlagFlagMax(u32 id) const { return _gfbdb::getConditionFlagFlagMax(*unknown30, id); }
+u32 GfBdatCond::getConditionFlagFlagMax(u32 id) const { return _gfbdb::getConditionFlagFlagMax(*m_conditionFlag, id); }
 
-u32 GfBdatCond::getConditionItemStart() const { return Bdat::getIdTop(unknown38->data); }
+u32 GfBdatCond::getConditionItemStart() const { return Bdat::getIdTop(m_conditionItem->data); }
 
-u32 GfBdatCond::getConditionItemEnd() const { return Bdat::getIdTop(unknown38->data) + Bdat::getIdCount(unknown38->data); }
+u32 GfBdatCond::getConditionItemEnd() const { return Bdat::getIdTop(m_conditionItem->data) + Bdat::getIdCount(m_conditionItem->data); }
 
-u32 GfBdatCond::getConditionItemItemCategory(u32 id) const { return _gfbdb::getConditionItemItemCategory(*unknown38, id); }
+u32 GfBdatCond::getConditionItemItemCategory(u32 id) const { return _gfbdb::getConditionItemItemCategory(*m_conditionItem, id); }
 
-u32 GfBdatCond::getConditionItemItemID(u32 id) const { return _gfbdb::getConditionItemItemID(*unknown38, id); }
+u32 GfBdatCond::getConditionItemItemID(u32 id) const { return _gfbdb::getConditionItemItemID(*m_conditionItem, id); }
 
-u32 GfBdatCond::getConditionItemNumber(u32 id) const { return _gfbdb::getConditionItemNumber(*unknown38, id); }
+u32 GfBdatCond::getConditionItemNumber(u32 id) const { return _gfbdb::getConditionItemNumber(*m_conditionItem, id); }
 
-u32 GfBdatCond::getConditionPTStart() const { return Bdat::getIdTop(unknown40->data); }
+u32 GfBdatCond::getConditionPTStart() const { return Bdat::getIdTop(m_conditionPT->data); }
 
-u32 GfBdatCond::getConditionPTEnd() const { return Bdat::getIdTop(unknown40->data) + Bdat::getIdCount(unknown40->data); }
+u32 GfBdatCond::getConditionPTEnd() const { return Bdat::getIdTop(m_conditionPT->data) + Bdat::getIdCount(m_conditionPT->data); }
 
-u32 GfBdatCond::getConditionPTCategory(u32 id) const { return _gfbdb::getConditionPTCategory(*unknown40, id); }
+u32 GfBdatCond::getConditionPTCategory(u32 id) const { return _gfbdb::getConditionPTCategory(*m_conditionPT, id); }
 
-u32 GfBdatCond::getConditionPTPCID1(u32 id) const { return _gfbdb::getConditionPTPCID1(*unknown40, id); }
+u32 GfBdatCond::getConditionPTPCID1(u32 id) const { return _gfbdb::getConditionPTPCID1(*m_conditionPT, id); }
 
-u32 GfBdatCond::getConditionPTPCID2(u32 id) const { return _gfbdb::getConditionPTPCID2(*unknown40, id); }
+u32 GfBdatCond::getConditionPTPCID2(u32 id) const { return _gfbdb::getConditionPTPCID2(*m_conditionPT, id); }
 
-u32 GfBdatCond::getConditionPTPCID3(u32 id) const { return _gfbdb::getConditionPTPCID3(*unknown40, id); }
+u32 GfBdatCond::getConditionPTPCID3(u32 id) const { return _gfbdb::getConditionPTPCID3(*m_conditionPT, id); }
 
 u32 GfBdatCond::getConditionPTPCID(u32 condition, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getConditionPTPCID1, _gfbdb::getConditionPTPCID2, _gfbdb::getConditionPTPCID3};
-  return getters[index](*unknown40, condition);
+  return getters[index](*m_conditionPT, condition);
 }
 
-u32 GfBdatCond::getConditionIdeaStart() const { return Bdat::getIdTop(unknown48->data); }
+u32 GfBdatCond::getConditionIdeaStart() const { return Bdat::getIdTop(m_conditionIdea->data); }
 
-u32 GfBdatCond::getConditionIdeaEnd() const { return Bdat::getIdTop(unknown48->data) + Bdat::getIdCount(unknown48->data); }
+u32 GfBdatCond::getConditionIdeaEnd() const { return Bdat::getIdTop(m_conditionIdea->data) + Bdat::getIdCount(m_conditionIdea->data); }
 
-u32 GfBdatCond::getConditionIdeaPCID(u32 id) const { return _gfbdb::getConditionIdeaPCID(*unknown48, id); }
+u32 GfBdatCond::getConditionIdeaPCID(u32 id) const { return _gfbdb::getConditionIdeaPCID(*m_conditionIdea, id); }
 
-u32 GfBdatCond::getConditionIdeaIdeaLevelBlue(u32 id) const { return _gfbdb::getConditionIdeaIdeaLevelBlue(*unknown48, id); }
+u32 GfBdatCond::getConditionIdeaIdeaLevelBlue(u32 id) const { return _gfbdb::getConditionIdeaIdeaLevelBlue(*m_conditionIdea, id); }
 
-u32 GfBdatCond::getConditionIdeaIdeaLevelRed(u32 id) const { return _gfbdb::getConditionIdeaIdeaLevelRed(*unknown48, id); }
+u32 GfBdatCond::getConditionIdeaIdeaLevelRed(u32 id) const { return _gfbdb::getConditionIdeaIdeaLevelRed(*m_conditionIdea, id); }
 
-u32 GfBdatCond::getConditionIdeaIdeaLevelWhite(u32 id) const { return _gfbdb::getConditionIdeaIdeaLevelWhite(*unknown48, id); }
+u32 GfBdatCond::getConditionIdeaIdeaLevelWhite(u32 id) const { return _gfbdb::getConditionIdeaIdeaLevelWhite(*m_conditionIdea, id); }
 
-u32 GfBdatCond::getConditionIdeaIdeaLevelBlack(u32 id) const { return _gfbdb::getConditionIdeaIdeaLevelBlack(*unknown48, id); }
+u32 GfBdatCond::getConditionIdeaIdeaLevelBlack(u32 id) const { return _gfbdb::getConditionIdeaIdeaLevelBlack(*m_conditionIdea, id); }
 
-u32 GfBdatCond::getConditionIdeaCompatibility(u32 id) const { return _gfbdb::getConditionIdeaCompatibility(*unknown48, id); }
+u32 GfBdatCond::getConditionIdeaCompatibility(u32 id) const { return _gfbdb::getConditionIdeaCompatibility(*m_conditionIdea, id); }
 
-u32 GfBdatCond::getConditionIdeaTrustPoint(u32 id) const { return _gfbdb::getConditionIdeaTrustPoint(*unknown48, id); }
+u32 GfBdatCond::getConditionIdeaTrustPoint(u32 id) const { return _gfbdb::getConditionIdeaTrustPoint(*m_conditionIdea, id); }
 
 u32 GfBdatCond::getConditionIdeaIdeaLevel(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getConditionIdeaIdeaLevelBlue,
                                                               _gfbdb::getConditionIdeaIdeaLevelRed,
                                                               _gfbdb::getConditionIdeaIdeaLevelWhite,
                                                               _gfbdb::getConditionIdeaIdeaLevelBlack};
-  return getters[index](*unknown48, id);
+  return getters[index](*m_conditionIdea, id);
 }
 
-u32 GfBdatCond::getConditionLevelStart() const { return Bdat::getIdTop(unknown50->data); }
+u32 GfBdatCond::getConditionLevelStart() const { return Bdat::getIdTop(m_conditionLevel->data); }
 
-u32 GfBdatCond::getConditionLevelEnd() const { return Bdat::getIdTop(unknown50->data) + Bdat::getIdCount(unknown50->data); }
+u32 GfBdatCond::getConditionLevelEnd() const { return Bdat::getIdTop(m_conditionLevel->data) + Bdat::getIdCount(m_conditionLevel->data); }
 
-u32 GfBdatCond::getConditionLevelPCID(u32 id) const { return _gfbdb::getConditionLevelPCID(*unknown50, id); }
+u32 GfBdatCond::getConditionLevelPCID(u32 id) const { return _gfbdb::getConditionLevelPCID(*m_conditionLevel, id); }
 
-u32 GfBdatCond::getConditionLevelLevel(u32 id) const { return _gfbdb::getConditionLevelLevel(*unknown50, id); }
+u32 GfBdatCond::getConditionLevelLevel(u32 id) const { return _gfbdb::getConditionLevelLevel(*m_conditionLevel, id); }
 
-u32 GfBdatCond::getConditionAchievementStart() const { return Bdat::getIdTop(unknown58->data); }
+u32 GfBdatCond::getConditionAchievementStart() const { return Bdat::getIdTop(m_conditionAchievement->data); }
 
-u32 GfBdatCond::getConditionAchievementEnd() const { return Bdat::getIdTop(unknown58->data) + Bdat::getIdCount(unknown58->data); }
+u32 GfBdatCond::getConditionAchievementEnd() const {
+  return Bdat::getIdTop(m_conditionAchievement->data) + Bdat::getIdCount(m_conditionAchievement->data);
+}
 
-u32 GfBdatCond::getConditionAchievementAchievementSetID(u32 id) const { return _gfbdb::getConditionAchievementAchievementSetID(*unknown58, id); }
+u32 GfBdatCond::getConditionAchievementAchievementSetID(u32 id) const {
+  return _gfbdb::getConditionAchievementAchievementSetID(*m_conditionAchievement, id);
+}
 
-u32 GfBdatCond::getConditionAchievementValue(u32 id) const { return _gfbdb::getConditionAchievementValue(*unknown58, id); }
+u32 GfBdatCond::getConditionAchievementValue(u32 id) const { return _gfbdb::getConditionAchievementValue(*m_conditionAchievement, id); }
 
-u32 GfBdatCond::getConditionFieldSkiiLevelStart() const { return Bdat::getIdTop(unknown60->data); }
+u32 GfBdatCond::getConditionFieldSkiiLevelStart() const { return Bdat::getIdTop(m_conditionFieldSkiiLevel->data); }
 
-u32 GfBdatCond::getConditionFieldSkiiLevelEnd() const { return Bdat::getIdTop(unknown60->data) + Bdat::getIdCount(unknown60->data); }
+u32 GfBdatCond::getConditionFieldSkiiLevelEnd() const {
+  return Bdat::getIdTop(m_conditionFieldSkiiLevel->data) + Bdat::getIdCount(m_conditionFieldSkiiLevel->data);
+}
 
-u32 GfBdatCond::getConditionFieldSkiiLevelFieldSkillID(u32 id) const { return _gfbdb::getConditionFieldSkiiLevelFieldSkillID(*unknown60, id); }
+u32 GfBdatCond::getConditionFieldSkiiLevelFieldSkillID(u32 id) const {
+  return _gfbdb::getConditionFieldSkiiLevelFieldSkillID(*m_conditionFieldSkiiLevel, id);
+}
 
-u32 GfBdatCond::getConditionFieldSkiiLevelLevel(u32 id) const { return _gfbdb::getConditionFieldSkiiLevelLevel(*unknown60, id); }
+u32 GfBdatCond::getConditionFieldSkiiLevelLevel(u32 id) const { return _gfbdb::getConditionFieldSkiiLevelLevel(*m_conditionFieldSkiiLevel, id); }
 
 } // namespace gf

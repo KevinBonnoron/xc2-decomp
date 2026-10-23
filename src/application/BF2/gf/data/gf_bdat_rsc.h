@@ -378,23 +378,23 @@ public:
   f32 getFLD_actorSEoffsetZ(u32 id) const;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mRscEn; original member name unknown.
-  CBdatWrapper *unknown18; // Inferred label: mRscEnGenus; original member name unknown.
-  CBdatWrapper *unknown20; // Inferred label: mRscEnUnd; original member name unknown.
-  CBdatWrapper *unknown28; // Inferred label: mRscNpcList; original member name unknown.
-  CBdatWrapper *unknown30; // Inferred label: mRscNpcWpn; original member name unknown.
-  CBdatWrapper *unknown38; // Inferred label: mRscMobList; original member name unknown.
-  CBdatWrapper *unknown40; // Inferred label: mRSC_PcWpn; original member name unknown.
-  CBdatWrapper *unknown48; // Inferred label: mRSC_PcWpnMount; original member name unknown.
-  CBdatWrapper *unknown50; // Inferred label: mRscEnWpn; original member name unknown.
-  CBdatWrapper *unknown58; // Inferred label: mRSC_TboxList; original member name unknown.
-  CBdatWrapper *unknown60; // Inferred label: mRSC_MapObjList; original member name unknown.
-  CBdatWrapper *unknown68; // Inferred label: mDriverParam; original member name unknown.
-  CBdatWrapper *unknown70; // Inferred label: mVoiceTable; original member name unknown.
-  CBdatWrapper *unknown78; // Inferred label: mVoiceTableBlade; original member name unknown.
-  CBdatWrapper *unknown80; // Inferred label: mVoiceTableRare; original member name unknown.
-  CBdatWrapper *unknown88; // Inferred label: mVoiceTableCommon; original member name unknown.
-  CBdatWrapper *unknown90; // Inferred label: mFLD_actorSE; original member name unknown.
+  CBdatWrapper *m_rscEn;
+  CBdatWrapper *m_rscEnGenus;
+  CBdatWrapper *m_rscEnUnd;
+  CBdatWrapper *m_rscNpcList;
+  CBdatWrapper *m_rscNpcWpn;
+  CBdatWrapper *m_rscMobList;
+  CBdatWrapper *m_RSC_PcWpn;
+  CBdatWrapper *m_RSC_PcWpnMount;
+  CBdatWrapper *m_rscEnWpn;
+  CBdatWrapper *m_RSC_TboxList;
+  CBdatWrapper *m_RSC_MapObjList;
+  CBdatWrapper *m_driverParam;
+  CBdatWrapper *m_voiceTable;
+  CBdatWrapper *m_voiceTableBlade;
+  CBdatWrapper *m_voiceTableRare;
+  CBdatWrapper *m_voiceTableCommon;
+  CBdatWrapper *m_FLD_actorSE;
 };
 
 } // namespace gf

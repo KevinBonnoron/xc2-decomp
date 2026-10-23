@@ -782,282 +782,282 @@ u32 getTimeInfomsg(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbml
 
-GfBdatMaplist::GfBdatMaplist() : unknown10(nullptr), unknown18(nullptr), unknown20(nullptr) { bdatRefresh(); }
+GfBdatMaplist::GfBdatMaplist() : m_maplist(nullptr), m_weatherInfo(nullptr), m_timeInfo(nullptr) { bdatRefresh(); }
 
 GfBdatMaplist::~GfBdatMaplist() { destroyFP(); }
 
 void GfBdatMaplist::destroyFP() {
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_maplist != nullptr) {
+    delete m_maplist;
+    m_maplist = nullptr;
   }
 
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  if (m_weatherInfo != nullptr) {
+    delete m_weatherInfo;
+    m_weatherInfo = nullptr;
   }
 
-  if (unknown20 != nullptr) {
-    delete unknown20;
-    unknown20 = nullptr;
+  if (m_timeInfo != nullptr) {
+    delete m_timeInfo;
+    m_timeInfo = nullptr;
   }
 }
 
 void GfBdatMaplist::createFP() {
-  unknown10 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_MAPLIST)};
-  unknown18 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_WEATHER_INFO)};
-  unknown20 = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_TIME_INFO)};
+  m_maplist = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_MAPLIST)};
+  m_weatherInfo = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_WEATHER_INFO)};
+  m_timeInfo = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper{GfDataBdat::getFP(BDAT_FLD_TIME_INFO)};
 }
 
 void GfBdatMaplist::bdatRefresh() {
   destroyFP();
   createFP();
-  _gfbml::initMaplistresource(*unknown10);
-  _gfbml::initMaplistselect(*unknown10);
-  _gfbml::initMaplistrscGmkId(*unknown10);
-  _gfbml::initMaplistene_disp_r(*unknown10);
-  _gfbml::initMaplistene_disp_h(*unknown10);
-  _gfbml::initMaplistene_release_r(*unknown10);
-  _gfbml::initMaplistene_release_h(*unknown10);
-  _gfbml::initMaplistwa_type(*unknown10);
-  _gfbml::initMaplistwa_pop_rate(*unknown10);
-  _gfbml::initMaplistwa_time_BNS(*unknown10);
-  _gfbml::initMaplistwa_end_time(*unknown10);
-  _gfbml::initMaplistwb_type(*unknown10);
-  _gfbml::initMaplistwb_pop_rate(*unknown10);
-  _gfbml::initMaplistwb_time_BNS(*unknown10);
-  _gfbml::initMaplistwb_end_time(*unknown10);
-  _gfbml::initMaplistwc_type(*unknown10);
-  _gfbml::initMaplistwc_pop_rate(*unknown10);
-  _gfbml::initMaplistwc_time_BNS(*unknown10);
-  _gfbml::initMaplistwc_end_time(*unknown10);
-  _gfbml::initMaplistwd_type(*unknown10);
-  _gfbml::initMaplistwd_pop_rate(*unknown10);
-  _gfbml::initMaplistwd_time_BNS(*unknown10);
-  _gfbml::initMaplistwd_end_time(*unknown10);
-  _gfbml::initMaplistwind_mor(*unknown10);
-  _gfbml::initMaplistwind_non(*unknown10);
-  _gfbml::initMaplistwind_eve(*unknown10);
-  _gfbml::initMaplistwind_nit(*unknown10);
-  _gfbml::initMaplistwind_mnit(*unknown10);
-  _gfbml::initMaplistwind_emor(*unknown10);
-  _gfbml::initMaplistwind_WA(*unknown10);
-  _gfbml::initMaplistwind_WB(*unknown10);
-  _gfbml::initMaplistwind_WC(*unknown10);
-  _gfbml::initMaplistwind_WD(*unknown10);
-  _gfbml::initMaplistweatherATR(*unknown10);
-  _gfbml::initMapliste_repoptime(*unknown10);
-  _gfbml::initMaplistm_repoptime(*unknown10);
-  _gfbml::initMaplistmapATR(*unknown10);
-  _gfbml::initMaplistwa_ON_cndID(*unknown10);
-  _gfbml::initMaplistwa_OFF_cndID(*unknown10);
-  _gfbml::initMaplistwb_ON_cndID(*unknown10);
-  _gfbml::initMaplistwb_OFF_cndID(*unknown10);
-  _gfbml::initMaplistwc_ON_cndID(*unknown10);
-  _gfbml::initMaplistwc_OFF_cndID(*unknown10);
-  _gfbml::initMaplistwd_ON_cndID(*unknown10);
-  _gfbml::initMaplistwd_OFF_cndID(*unknown10);
-  _gfbml::initMapliststopTIME_cndID(*unknown10);
-  _gfbml::initMaplistebb_ON_cndID(*unknown10);
-  _gfbml::initMaplistebb_inn_cndID(*unknown10);
-  _gfbml::initMaplistebb_pop_rate(*unknown10);
-  _gfbml::initMaplistst_allOFF_cndID(*unknown10);
-  _gfbml::initMaplistst_OFF_cndID(*unknown10);
-  _gfbml::initMaplistbgm_cndID(*unknown10);
-  _gfbml::initMaplistname_cndID(*unknown10);
-  _gfbml::initMaplistnameID(*unknown10);
-  _gfbml::initMaplistchange_nameID(*unknown10);
-  _gfbml::initMaplistmapON_cndID(*unknown10);
-  _gfbml::initMaplisttextID(*unknown10);
-  _gfbml::initMapliste_balloondisp_r(*unknown10);
-  _gfbml::initMaplistzone(*unknown10);
-  _gfbml::initWeatherInfomsg(*unknown18);
-  _gfbml::initWeatherInfoeff(*unknown18);
-  _gfbml::initWeatherInfosnd(*unknown18);
-  _gfbml::initWeatherInfosndBegin(*unknown18);
-  _gfbml::initTimeInfomsg(*unknown20);
+  _gfbml::initMaplistresource(*m_maplist);
+  _gfbml::initMaplistselect(*m_maplist);
+  _gfbml::initMaplistrscGmkId(*m_maplist);
+  _gfbml::initMaplistene_disp_r(*m_maplist);
+  _gfbml::initMaplistene_disp_h(*m_maplist);
+  _gfbml::initMaplistene_release_r(*m_maplist);
+  _gfbml::initMaplistene_release_h(*m_maplist);
+  _gfbml::initMaplistwa_type(*m_maplist);
+  _gfbml::initMaplistwa_pop_rate(*m_maplist);
+  _gfbml::initMaplistwa_time_BNS(*m_maplist);
+  _gfbml::initMaplistwa_end_time(*m_maplist);
+  _gfbml::initMaplistwb_type(*m_maplist);
+  _gfbml::initMaplistwb_pop_rate(*m_maplist);
+  _gfbml::initMaplistwb_time_BNS(*m_maplist);
+  _gfbml::initMaplistwb_end_time(*m_maplist);
+  _gfbml::initMaplistwc_type(*m_maplist);
+  _gfbml::initMaplistwc_pop_rate(*m_maplist);
+  _gfbml::initMaplistwc_time_BNS(*m_maplist);
+  _gfbml::initMaplistwc_end_time(*m_maplist);
+  _gfbml::initMaplistwd_type(*m_maplist);
+  _gfbml::initMaplistwd_pop_rate(*m_maplist);
+  _gfbml::initMaplistwd_time_BNS(*m_maplist);
+  _gfbml::initMaplistwd_end_time(*m_maplist);
+  _gfbml::initMaplistwind_mor(*m_maplist);
+  _gfbml::initMaplistwind_non(*m_maplist);
+  _gfbml::initMaplistwind_eve(*m_maplist);
+  _gfbml::initMaplistwind_nit(*m_maplist);
+  _gfbml::initMaplistwind_mnit(*m_maplist);
+  _gfbml::initMaplistwind_emor(*m_maplist);
+  _gfbml::initMaplistwind_WA(*m_maplist);
+  _gfbml::initMaplistwind_WB(*m_maplist);
+  _gfbml::initMaplistwind_WC(*m_maplist);
+  _gfbml::initMaplistwind_WD(*m_maplist);
+  _gfbml::initMaplistweatherATR(*m_maplist);
+  _gfbml::initMapliste_repoptime(*m_maplist);
+  _gfbml::initMaplistm_repoptime(*m_maplist);
+  _gfbml::initMaplistmapATR(*m_maplist);
+  _gfbml::initMaplistwa_ON_cndID(*m_maplist);
+  _gfbml::initMaplistwa_OFF_cndID(*m_maplist);
+  _gfbml::initMaplistwb_ON_cndID(*m_maplist);
+  _gfbml::initMaplistwb_OFF_cndID(*m_maplist);
+  _gfbml::initMaplistwc_ON_cndID(*m_maplist);
+  _gfbml::initMaplistwc_OFF_cndID(*m_maplist);
+  _gfbml::initMaplistwd_ON_cndID(*m_maplist);
+  _gfbml::initMaplistwd_OFF_cndID(*m_maplist);
+  _gfbml::initMapliststopTIME_cndID(*m_maplist);
+  _gfbml::initMaplistebb_ON_cndID(*m_maplist);
+  _gfbml::initMaplistebb_inn_cndID(*m_maplist);
+  _gfbml::initMaplistebb_pop_rate(*m_maplist);
+  _gfbml::initMaplistst_allOFF_cndID(*m_maplist);
+  _gfbml::initMaplistst_OFF_cndID(*m_maplist);
+  _gfbml::initMaplistbgm_cndID(*m_maplist);
+  _gfbml::initMaplistname_cndID(*m_maplist);
+  _gfbml::initMaplistnameID(*m_maplist);
+  _gfbml::initMaplistchange_nameID(*m_maplist);
+  _gfbml::initMaplistmapON_cndID(*m_maplist);
+  _gfbml::initMaplisttextID(*m_maplist);
+  _gfbml::initMapliste_balloondisp_r(*m_maplist);
+  _gfbml::initMaplistzone(*m_maplist);
+  _gfbml::initWeatherInfomsg(*m_weatherInfo);
+  _gfbml::initWeatherInfoeff(*m_weatherInfo);
+  _gfbml::initWeatherInfosnd(*m_weatherInfo);
+  _gfbml::initWeatherInfosndBegin(*m_weatherInfo);
+  _gfbml::initTimeInfomsg(*m_timeInfo);
 }
 
-u32 GfBdatMaplist::getMaplistStart() const { return Bdat::getIdTop(unknown10->data); }
+u32 GfBdatMaplist::getMaplistStart() const { return Bdat::getIdTop(m_maplist->data); }
 
-u32 GfBdatMaplist::getMaplistEnd() const { return Bdat::getIdTop(unknown10->data) + Bdat::getIdCount(unknown10->data); }
+u32 GfBdatMaplist::getMaplistEnd() const { return Bdat::getIdTop(m_maplist->data) + Bdat::getIdCount(m_maplist->data); }
 
-const char *GfBdatMaplist::getMaplistresource(u32 id) const { return _gfbml::getMaplistresource(*unknown10, id); }
+const char *GfBdatMaplist::getMaplistresource(u32 id) const { return _gfbml::getMaplistresource(*m_maplist, id); }
 
-const char *GfBdatMaplist::getMaplistselect(u32 id) const { return _gfbml::getMaplistselect(*unknown10, id); }
+const char *GfBdatMaplist::getMaplistselect(u32 id) const { return _gfbml::getMaplistselect(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistrscGmkId(u32 id) const { return _gfbml::getMaplistrscGmkId(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistrscGmkId(u32 id) const { return _gfbml::getMaplistrscGmkId(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistene_disp_r(u32 id) const { return _gfbml::getMaplistene_disp_r(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistene_disp_r(u32 id) const { return _gfbml::getMaplistene_disp_r(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistene_disp_h(u32 id) const { return _gfbml::getMaplistene_disp_h(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistene_disp_h(u32 id) const { return _gfbml::getMaplistene_disp_h(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistene_release_r(u32 id) const { return _gfbml::getMaplistene_release_r(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistene_release_r(u32 id) const { return _gfbml::getMaplistene_release_r(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistene_release_h(u32 id) const { return _gfbml::getMaplistene_release_h(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistene_release_h(u32 id) const { return _gfbml::getMaplistene_release_h(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwa_type(u32 id) const { return _gfbml::getMaplistwa_type(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwa_type(u32 id) const { return _gfbml::getMaplistwa_type(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwa_pop_rate(u32 id) const { return _gfbml::getMaplistwa_pop_rate(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwa_pop_rate(u32 id) const { return _gfbml::getMaplistwa_pop_rate(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwa_time_BNS(u32 id) const { return _gfbml::getMaplistwa_time_BNS(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwa_time_BNS(u32 id) const { return _gfbml::getMaplistwa_time_BNS(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwa_end_time(u32 id) const { return _gfbml::getMaplistwa_end_time(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwa_end_time(u32 id) const { return _gfbml::getMaplistwa_end_time(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwb_type(u32 id) const { return _gfbml::getMaplistwb_type(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwb_type(u32 id) const { return _gfbml::getMaplistwb_type(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwb_pop_rate(u32 id) const { return _gfbml::getMaplistwb_pop_rate(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwb_pop_rate(u32 id) const { return _gfbml::getMaplistwb_pop_rate(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwb_time_BNS(u32 id) const { return _gfbml::getMaplistwb_time_BNS(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwb_time_BNS(u32 id) const { return _gfbml::getMaplistwb_time_BNS(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwb_end_time(u32 id) const { return _gfbml::getMaplistwb_end_time(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwb_end_time(u32 id) const { return _gfbml::getMaplistwb_end_time(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwc_type(u32 id) const { return _gfbml::getMaplistwc_type(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwc_type(u32 id) const { return _gfbml::getMaplistwc_type(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwc_pop_rate(u32 id) const { return _gfbml::getMaplistwc_pop_rate(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwc_pop_rate(u32 id) const { return _gfbml::getMaplistwc_pop_rate(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwc_time_BNS(u32 id) const { return _gfbml::getMaplistwc_time_BNS(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwc_time_BNS(u32 id) const { return _gfbml::getMaplistwc_time_BNS(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwc_end_time(u32 id) const { return _gfbml::getMaplistwc_end_time(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwc_end_time(u32 id) const { return _gfbml::getMaplistwc_end_time(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwd_type(u32 id) const { return _gfbml::getMaplistwd_type(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwd_type(u32 id) const { return _gfbml::getMaplistwd_type(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwd_pop_rate(u32 id) const { return _gfbml::getMaplistwd_pop_rate(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwd_pop_rate(u32 id) const { return _gfbml::getMaplistwd_pop_rate(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwd_time_BNS(u32 id) const { return _gfbml::getMaplistwd_time_BNS(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwd_time_BNS(u32 id) const { return _gfbml::getMaplistwd_time_BNS(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwd_end_time(u32 id) const { return _gfbml::getMaplistwd_end_time(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwd_end_time(u32 id) const { return _gfbml::getMaplistwd_end_time(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwind_mor(u32 id) const { return _gfbml::getMaplistwind_mor(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwind_mor(u32 id) const { return _gfbml::getMaplistwind_mor(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwind_non(u32 id) const { return _gfbml::getMaplistwind_non(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwind_non(u32 id) const { return _gfbml::getMaplistwind_non(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwind_eve(u32 id) const { return _gfbml::getMaplistwind_eve(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwind_eve(u32 id) const { return _gfbml::getMaplistwind_eve(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwind_nit(u32 id) const { return _gfbml::getMaplistwind_nit(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwind_nit(u32 id) const { return _gfbml::getMaplistwind_nit(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwind_mnit(u32 id) const { return _gfbml::getMaplistwind_mnit(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwind_mnit(u32 id) const { return _gfbml::getMaplistwind_mnit(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwind_emor(u32 id) const { return _gfbml::getMaplistwind_emor(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwind_emor(u32 id) const { return _gfbml::getMaplistwind_emor(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwind_WA(u32 id) const { return _gfbml::getMaplistwind_WA(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwind_WA(u32 id) const { return _gfbml::getMaplistwind_WA(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwind_WB(u32 id) const { return _gfbml::getMaplistwind_WB(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwind_WB(u32 id) const { return _gfbml::getMaplistwind_WB(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwind_WC(u32 id) const { return _gfbml::getMaplistwind_WC(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwind_WC(u32 id) const { return _gfbml::getMaplistwind_WC(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwind_WD(u32 id) const { return _gfbml::getMaplistwind_WD(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwind_WD(u32 id) const { return _gfbml::getMaplistwind_WD(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistweatherATR(u32 id) const { return _gfbml::getMaplistweatherATR(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistweatherATR(u32 id) const { return _gfbml::getMaplistweatherATR(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMapliste_repoptime(u32 id) const { return _gfbml::getMapliste_repoptime(*unknown10, id); }
+u32 GfBdatMaplist::getMapliste_repoptime(u32 id) const { return _gfbml::getMapliste_repoptime(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistm_repoptime(u32 id) const { return _gfbml::getMaplistm_repoptime(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistm_repoptime(u32 id) const { return _gfbml::getMaplistm_repoptime(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistmapATR(u32 id) const { return _gfbml::getMaplistmapATR(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistmapATR(u32 id) const { return _gfbml::getMaplistmapATR(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwa_ON_cndID(u32 id) const { return _gfbml::getMaplistwa_ON_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwa_ON_cndID(u32 id) const { return _gfbml::getMaplistwa_ON_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwa_OFF_cndID(u32 id) const { return _gfbml::getMaplistwa_OFF_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwa_OFF_cndID(u32 id) const { return _gfbml::getMaplistwa_OFF_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwb_ON_cndID(u32 id) const { return _gfbml::getMaplistwb_ON_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwb_ON_cndID(u32 id) const { return _gfbml::getMaplistwb_ON_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwb_OFF_cndID(u32 id) const { return _gfbml::getMaplistwb_OFF_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwb_OFF_cndID(u32 id) const { return _gfbml::getMaplistwb_OFF_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwc_ON_cndID(u32 id) const { return _gfbml::getMaplistwc_ON_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwc_ON_cndID(u32 id) const { return _gfbml::getMaplistwc_ON_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwc_OFF_cndID(u32 id) const { return _gfbml::getMaplistwc_OFF_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwc_OFF_cndID(u32 id) const { return _gfbml::getMaplistwc_OFF_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwd_ON_cndID(u32 id) const { return _gfbml::getMaplistwd_ON_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwd_ON_cndID(u32 id) const { return _gfbml::getMaplistwd_ON_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistwd_OFF_cndID(u32 id) const { return _gfbml::getMaplistwd_OFF_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistwd_OFF_cndID(u32 id) const { return _gfbml::getMaplistwd_OFF_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMapliststopTIME_cndID(u32 id) const { return _gfbml::getMapliststopTIME_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMapliststopTIME_cndID(u32 id) const { return _gfbml::getMapliststopTIME_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistebb_ON_cndID(u32 id) const { return _gfbml::getMaplistebb_ON_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistebb_ON_cndID(u32 id) const { return _gfbml::getMaplistebb_ON_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistebb_inn_cndID(u32 id) const { return _gfbml::getMaplistebb_inn_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistebb_inn_cndID(u32 id) const { return _gfbml::getMaplistebb_inn_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistebb_pop_rate(u32 id) const { return _gfbml::getMaplistebb_pop_rate(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistebb_pop_rate(u32 id) const { return _gfbml::getMaplistebb_pop_rate(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistst_allOFF_cndID(u32 id) const { return _gfbml::getMaplistst_allOFF_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistst_allOFF_cndID(u32 id) const { return _gfbml::getMaplistst_allOFF_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistst_OFF_cndID(u32 id) const { return _gfbml::getMaplistst_OFF_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistst_OFF_cndID(u32 id) const { return _gfbml::getMaplistst_OFF_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistbgm_cndID(u32 id) const { return _gfbml::getMaplistbgm_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistbgm_cndID(u32 id) const { return _gfbml::getMaplistbgm_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistname_cndID(u32 id) const { return _gfbml::getMaplistname_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistname_cndID(u32 id) const { return _gfbml::getMaplistname_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistnameID(u32 id) const { return _gfbml::getMaplistnameID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistnameID(u32 id) const { return _gfbml::getMaplistnameID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistchange_nameID(u32 id) const { return _gfbml::getMaplistchange_nameID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistchange_nameID(u32 id) const { return _gfbml::getMaplistchange_nameID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistmapON_cndID(u32 id) const { return _gfbml::getMaplistmapON_cndID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistmapON_cndID(u32 id) const { return _gfbml::getMaplistmapON_cndID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplisttextID(u32 id) const { return _gfbml::getMaplisttextID(*unknown10, id); }
+u32 GfBdatMaplist::getMaplisttextID(u32 id) const { return _gfbml::getMaplisttextID(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMapliste_balloondisp_r(u32 id) const { return _gfbml::getMapliste_balloondisp_r(*unknown10, id); }
+u32 GfBdatMaplist::getMapliste_balloondisp_r(u32 id) const { return _gfbml::getMapliste_balloondisp_r(*m_maplist, id); }
 
-u32 GfBdatMaplist::getMaplistzone(u32 id) const { return _gfbml::getMaplistzone(*unknown10, id); }
+u32 GfBdatMaplist::getMaplistzone(u32 id) const { return _gfbml::getMaplistzone(*m_maplist, id); }
 
 u32 GfBdatMaplist::getMaplistw_type(u32 map, u32 weather) const {
   static u32 (*const getters[])(const CBdatWrapper &,
                                 u32) = {_gfbml::getMaplistwa_type, _gfbml::getMaplistwb_type, _gfbml::getMaplistwc_type, _gfbml::getMaplistwd_type};
-  return getters[weather](*unknown10, map);
+  return getters[weather](*m_maplist, map);
 }
 
 u32 GfBdatMaplist::getMaplistw_pop_rate(u32 map, u32 weather) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {
       _gfbml::getMaplistwa_pop_rate, _gfbml::getMaplistwb_pop_rate, _gfbml::getMaplistwc_pop_rate, _gfbml::getMaplistwd_pop_rate};
-  return getters[weather](*unknown10, map);
+  return getters[weather](*m_maplist, map);
 }
 
 u32 GfBdatMaplist::getMaplistw_time_BNS(u32 map, u32 weather) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {
       _gfbml::getMaplistwa_time_BNS, _gfbml::getMaplistwb_time_BNS, _gfbml::getMaplistwc_time_BNS, _gfbml::getMaplistwd_time_BNS};
-  return getters[weather](*unknown10, map);
+  return getters[weather](*m_maplist, map);
 }
 
 u32 GfBdatMaplist::getMaplistw_end_time(u32 map, u32 weather) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {
       _gfbml::getMaplistwa_end_time, _gfbml::getMaplistwb_end_time, _gfbml::getMaplistwc_end_time, _gfbml::getMaplistwd_end_time};
-  return getters[weather](*unknown10, map);
+  return getters[weather](*m_maplist, map);
 }
 
 u32 GfBdatMaplist::getMaplistw_ON_cndID(u32 map, u32 weather) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {
       _gfbml::getMaplistwa_ON_cndID, _gfbml::getMaplistwb_ON_cndID, _gfbml::getMaplistwc_ON_cndID, _gfbml::getMaplistwd_ON_cndID};
-  return getters[weather](*unknown10, map);
+  return getters[weather](*m_maplist, map);
 }
 
 u32 GfBdatMaplist::getMaplistw_OFF_cndID(u32 map, u32 weather) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {
       _gfbml::getMaplistwa_OFF_cndID, _gfbml::getMaplistwb_OFF_cndID, _gfbml::getMaplistwc_OFF_cndID, _gfbml::getMaplistwd_OFF_cndID};
-  return getters[weather](*unknown10, map);
+  return getters[weather](*m_maplist, map);
 }
 
 u32 GfBdatMaplist::getMaplistwind_W(u32 map, u32 weather) const {
   static u32 (*const getters[])(const CBdatWrapper &,
                                 u32) = {_gfbml::getMaplistwind_WA, _gfbml::getMaplistwind_WB, _gfbml::getMaplistwind_WC, _gfbml::getMaplistwind_WD};
-  return getters[weather](*unknown10, map);
+  return getters[weather](*m_maplist, map);
 }
 
-u32 GfBdatMaplist::getWeatherInfoStart() const { return Bdat::getIdTop(unknown18->data); }
+u32 GfBdatMaplist::getWeatherInfoStart() const { return Bdat::getIdTop(m_weatherInfo->data); }
 
-u32 GfBdatMaplist::getWeatherInfoEnd() const { return Bdat::getIdTop(unknown18->data) + Bdat::getIdCount(unknown18->data); }
+u32 GfBdatMaplist::getWeatherInfoEnd() const { return Bdat::getIdTop(m_weatherInfo->data) + Bdat::getIdCount(m_weatherInfo->data); }
 
-u32 GfBdatMaplist::getWeatherInfomsg(u32 id) const { return _gfbml::getWeatherInfomsg(*unknown18, id); }
+u32 GfBdatMaplist::getWeatherInfomsg(u32 id) const { return _gfbml::getWeatherInfomsg(*m_weatherInfo, id); }
 
-const char *GfBdatMaplist::getWeatherInfoeff(u32 id) const { return _gfbml::getWeatherInfoeff(*unknown18, id); }
+const char *GfBdatMaplist::getWeatherInfoeff(u32 id) const { return _gfbml::getWeatherInfoeff(*m_weatherInfo, id); }
 
-const char *GfBdatMaplist::getWeatherInfosnd(u32 id) const { return _gfbml::getWeatherInfosnd(*unknown18, id); }
+const char *GfBdatMaplist::getWeatherInfosnd(u32 id) const { return _gfbml::getWeatherInfosnd(*m_weatherInfo, id); }
 
-const char *GfBdatMaplist::getWeatherInfosndBegin(u32 id) const { return _gfbml::getWeatherInfosndBegin(*unknown18, id); }
+const char *GfBdatMaplist::getWeatherInfosndBegin(u32 id) const { return _gfbml::getWeatherInfosndBegin(*m_weatherInfo, id); }
 
-u32 GfBdatMaplist::getTimeInfoStart() const { return Bdat::getIdTop(unknown20->data); }
+u32 GfBdatMaplist::getTimeInfoStart() const { return Bdat::getIdTop(m_timeInfo->data); }
 
-u32 GfBdatMaplist::getTimeInfoEnd() const { return Bdat::getIdTop(unknown20->data) + Bdat::getIdCount(unknown20->data); }
+u32 GfBdatMaplist::getTimeInfoEnd() const { return Bdat::getIdTop(m_timeInfo->data) + Bdat::getIdCount(m_timeInfo->data); }
 
-u32 GfBdatMaplist::getTimeInfomsg(u32 id) const { return _gfbml::getTimeInfomsg(*unknown20, id); }
+u32 GfBdatMaplist::getTimeInfomsg(u32 id) const { return _gfbml::getTimeInfomsg(*m_timeInfo, id); }
 
 } // namespace gf

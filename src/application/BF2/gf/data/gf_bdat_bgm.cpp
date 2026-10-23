@@ -136,19 +136,19 @@ u32 getBgmConditionPriority(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbbg
 
-GfBdatBgm::GfBdatBgm() : unknown10(nullptr), unknown18(nullptr) { bdatRefresh(); }
+GfBdatBgm::GfBdatBgm() : m_bgmList(nullptr), m_bgmCondition(nullptr) { bdatRefresh(); }
 
 GfBdatBgm::~GfBdatBgm() { destroyFP(); }
 
 void GfBdatBgm::destroyFP() {
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_bgmList != nullptr) {
+    delete m_bgmList;
+    m_bgmList = nullptr;
   }
 
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  if (m_bgmCondition != nullptr) {
+    delete m_bgmCondition;
+    m_bgmCondition = nullptr;
   }
 }
 
@@ -156,63 +156,63 @@ void GfBdatBgm::destroyFP() {
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 void GfBdatBgm::createFP() {
-  unknown10 = NEW_BDAT_WRAPPER(BDAT_RSC_BGM_LIST);
-  unknown18 = NEW_BDAT_WRAPPER(BDAT_RSC_BGM_CONDITION);
+  m_bgmList = NEW_BDAT_WRAPPER(BDAT_RSC_BGM_LIST);
+  m_bgmCondition = NEW_BDAT_WRAPPER(BDAT_RSC_BGM_CONDITION);
 }
 
 void GfBdatBgm::bdatRefresh() {
   destroyFP();
   createFP();
-  _gfbbg::initBgmListfilename(*unknown10);
-  _gfbbg::initBgmConditionConditionA(*unknown18);
-  _gfbbg::initBgmConditionBgmIDA(*unknown18);
-  _gfbbg::initBgmConditionConditionB(*unknown18);
-  _gfbbg::initBgmConditionBgmIDB(*unknown18);
-  _gfbbg::initBgmConditionConditionC(*unknown18);
-  _gfbbg::initBgmConditionBgmIDC(*unknown18);
-  _gfbbg::initBgmConditionConditionD(*unknown18);
-  _gfbbg::initBgmConditionBgmIDD(*unknown18);
-  _gfbbg::initBgmConditionPriority(*unknown18);
+  _gfbbg::initBgmListfilename(*m_bgmList);
+  _gfbbg::initBgmConditionConditionA(*m_bgmCondition);
+  _gfbbg::initBgmConditionBgmIDA(*m_bgmCondition);
+  _gfbbg::initBgmConditionConditionB(*m_bgmCondition);
+  _gfbbg::initBgmConditionBgmIDB(*m_bgmCondition);
+  _gfbbg::initBgmConditionConditionC(*m_bgmCondition);
+  _gfbbg::initBgmConditionBgmIDC(*m_bgmCondition);
+  _gfbbg::initBgmConditionConditionD(*m_bgmCondition);
+  _gfbbg::initBgmConditionBgmIDD(*m_bgmCondition);
+  _gfbbg::initBgmConditionPriority(*m_bgmCondition);
 }
 
-u32 GfBdatBgm::getBgmListStart() const { return Bdat::getIdTop(unknown10->data); }
+u32 GfBdatBgm::getBgmListStart() const { return Bdat::getIdTop(m_bgmList->data); }
 
-u32 GfBdatBgm::getBgmListEnd() const { return Bdat::getIdTop(unknown10->data) + Bdat::getIdCount(unknown10->data); }
+u32 GfBdatBgm::getBgmListEnd() const { return Bdat::getIdTop(m_bgmList->data) + Bdat::getIdCount(m_bgmList->data); }
 
-const char *GfBdatBgm::getBgmListfilename(u32 id) const { return _gfbbg::getBgmListfilename(*unknown10, id); }
+const char *GfBdatBgm::getBgmListfilename(u32 id) const { return _gfbbg::getBgmListfilename(*m_bgmList, id); }
 
-u32 GfBdatBgm::getBgmConditionStart() const { return Bdat::getIdTop(unknown18->data); }
+u32 GfBdatBgm::getBgmConditionStart() const { return Bdat::getIdTop(m_bgmCondition->data); }
 
-u32 GfBdatBgm::getBgmConditionEnd() const { return Bdat::getIdTop(unknown18->data) + Bdat::getIdCount(unknown18->data); }
+u32 GfBdatBgm::getBgmConditionEnd() const { return Bdat::getIdTop(m_bgmCondition->data) + Bdat::getIdCount(m_bgmCondition->data); }
 
-u32 GfBdatBgm::getBgmConditionConditionA(u32 id) const { return _gfbbg::getBgmConditionConditionA(*unknown18, id); }
+u32 GfBdatBgm::getBgmConditionConditionA(u32 id) const { return _gfbbg::getBgmConditionConditionA(*m_bgmCondition, id); }
 
-u32 GfBdatBgm::getBgmConditionBgmIDA(u32 id) const { return _gfbbg::getBgmConditionBgmIDA(*unknown18, id); }
+u32 GfBdatBgm::getBgmConditionBgmIDA(u32 id) const { return _gfbbg::getBgmConditionBgmIDA(*m_bgmCondition, id); }
 
-u32 GfBdatBgm::getBgmConditionConditionB(u32 id) const { return _gfbbg::getBgmConditionConditionB(*unknown18, id); }
+u32 GfBdatBgm::getBgmConditionConditionB(u32 id) const { return _gfbbg::getBgmConditionConditionB(*m_bgmCondition, id); }
 
-u32 GfBdatBgm::getBgmConditionBgmIDB(u32 id) const { return _gfbbg::getBgmConditionBgmIDB(*unknown18, id); }
+u32 GfBdatBgm::getBgmConditionBgmIDB(u32 id) const { return _gfbbg::getBgmConditionBgmIDB(*m_bgmCondition, id); }
 
-u32 GfBdatBgm::getBgmConditionConditionC(u32 id) const { return _gfbbg::getBgmConditionConditionC(*unknown18, id); }
+u32 GfBdatBgm::getBgmConditionConditionC(u32 id) const { return _gfbbg::getBgmConditionConditionC(*m_bgmCondition, id); }
 
-u32 GfBdatBgm::getBgmConditionBgmIDC(u32 id) const { return _gfbbg::getBgmConditionBgmIDC(*unknown18, id); }
+u32 GfBdatBgm::getBgmConditionBgmIDC(u32 id) const { return _gfbbg::getBgmConditionBgmIDC(*m_bgmCondition, id); }
 
-u32 GfBdatBgm::getBgmConditionConditionD(u32 id) const { return _gfbbg::getBgmConditionConditionD(*unknown18, id); }
+u32 GfBdatBgm::getBgmConditionConditionD(u32 id) const { return _gfbbg::getBgmConditionConditionD(*m_bgmCondition, id); }
 
-u32 GfBdatBgm::getBgmConditionBgmIDD(u32 id) const { return _gfbbg::getBgmConditionBgmIDD(*unknown18, id); }
+u32 GfBdatBgm::getBgmConditionBgmIDD(u32 id) const { return _gfbbg::getBgmConditionBgmIDD(*m_bgmCondition, id); }
 
-u32 GfBdatBgm::getBgmConditionPriority(u32 id) const { return _gfbbg::getBgmConditionPriority(*unknown18, id); }
+u32 GfBdatBgm::getBgmConditionPriority(u32 id) const { return _gfbbg::getBgmConditionPriority(*m_bgmCondition, id); }
 
 u32 GfBdatBgm::getBgmConditionCondition(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {
       _gfbbg::getBgmConditionConditionA, _gfbbg::getBgmConditionConditionB, _gfbbg::getBgmConditionConditionC, _gfbbg::getBgmConditionConditionD};
-  return getters[index](*unknown18, id);
+  return getters[index](*m_bgmCondition, id);
 }
 
 u32 GfBdatBgm::getBgmConditionBgmID(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {
       _gfbbg::getBgmConditionBgmIDA, _gfbbg::getBgmConditionBgmIDB, _gfbbg::getBgmConditionBgmIDC, _gfbbg::getBgmConditionBgmIDD};
-  return getters[index](*unknown18, id);
+  return getters[index](*m_bgmCondition, id);
 }
 
 } // namespace gf

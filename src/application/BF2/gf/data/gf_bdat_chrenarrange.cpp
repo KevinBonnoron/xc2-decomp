@@ -911,19 +911,19 @@ u32 getBTL_EnBookBOOK_popWeather(const CBdatWrapper &wrapper, u32 id) {
 
 } // namespace _gfbcb
 
-GfBdatChrEnArrange::GfBdatChrEnArrange() : unknown10(nullptr), unknown18(nullptr) { bdatRefresh(); }
+GfBdatChrEnArrange::GfBdatChrEnArrange() : m_chrEnArrange(nullptr), m_BTL_EnBook(nullptr) { bdatRefresh(); }
 
 GfBdatChrEnArrange::~GfBdatChrEnArrange() { destroyFP(); }
 
 void GfBdatChrEnArrange::destroyFP() {
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_chrEnArrange != nullptr) {
+    delete m_chrEnArrange;
+    m_chrEnArrange = nullptr;
   }
 
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  if (m_BTL_EnBook != nullptr) {
+    delete m_BTL_EnBook;
+    m_BTL_EnBook = nullptr;
   }
 }
 
@@ -933,223 +933,223 @@ void GfBdatChrEnArrange::destroyFP() {
 void GfBdatChrEnArrange::createFP() {
 // The line numbers passed to the allocator decide between mov and orr.
 #line 60
-  unknown10 = NEW_BDAT_WRAPPER(BDAT_CHR_EN_ARRANGE);
-  unknown18 = NEW_BDAT_WRAPPER(BDAT_BTL_EN_BOOK);
+  m_chrEnArrange = NEW_BDAT_WRAPPER(BDAT_CHR_EN_ARRANGE);
+  m_BTL_EnBook = NEW_BDAT_WRAPPER(BDAT_BTL_EN_BOOK);
 }
 
 void GfBdatChrEnArrange::bdatRefresh() {
   destroyFP();
   createFP();
-  _gfbcb::initChrEnArrangeParamID(*unknown10);
-  _gfbcb::initChrEnArrangeEnemyBladeID(*unknown10);
-  _gfbcb::initChrEnArrangeBladeID(*unknown10);
-  _gfbcb::initChrEnArrangeBladeAtr(*unknown10);
-  _gfbcb::initChrEnArrangeExtraParts(*unknown10);
-  _gfbcb::initChrEnArrangeName(*unknown10);
-  _gfbcb::initChrEnArrangeDebug_Name(*unknown10);
-  _gfbcb::initChrEnArrangeLv(*unknown10);
-  _gfbcb::initChrEnArrangeLvRand(*unknown10);
-  _gfbcb::initChrEnArrangeHpOver(*unknown10);
-  _gfbcb::initChrEnArrangeExpRev(*unknown10);
-  _gfbcb::initChrEnArrangeGoldRev(*unknown10);
-  _gfbcb::initChrEnArrangeWPRev(*unknown10);
-  _gfbcb::initChrEnArrangeSPRev(*unknown10);
-  _gfbcb::initChrEnArrangeDropTableID(*unknown10);
-  _gfbcb::initChrEnArrangeDropTableID2(*unknown10);
-  _gfbcb::initChrEnArrangeDropTableID3(*unknown10);
-  _gfbcb::initChrEnArrangePreciousID(*unknown10);
-  _gfbcb::initChrEnArrangeScale(*unknown10);
-  _gfbcb::initChrEnArrangeChrSize(*unknown10);
-  _gfbcb::initChrEnArrangeTurnSize(*unknown10);
-  _gfbcb::initChrEnArrangeFlagNamed(*unknown10);
-  _gfbcb::initChrEnArrangeFlagmBoss(*unknown10);
-  _gfbcb::initChrEnArrangeFlagChild(*unknown10);
-  _gfbcb::initChrEnArrangeFlagFAOff(*unknown10);
-  _gfbcb::initChrEnArrangeFlagNoEcSkip(*unknown10);
-  _gfbcb::initChrEnArrangeFlagLinkType(*unknown10);
-  _gfbcb::initChrEnArrangeFlagChrColiOff(*unknown10);
-  _gfbcb::initChrEnArrangeFlagNoTarget(*unknown10);
-  _gfbcb::initChrEnArrangeFlagHikariSP4(*unknown10);
-  _gfbcb::initChrEnArrangeFlagHomuri(*unknown10);
-  _gfbcb::initChrEnArrangeFlagHikari(*unknown10);
-  _gfbcb::initChrEnArrangeFlagNoNaviMesh(*unknown10);
-  _gfbcb::initChrEnArrangeFlagFixed(*unknown10);
-  _gfbcb::initChrEnArrangeFlagDropFront(*unknown10);
-  _gfbcb::initChrEnArrangeFlagNoWarp(*unknown10);
-  _gfbcb::initChrEnArrangeFlagIgnoreLevPow(*unknown10);
-  _gfbcb::initChrEnArrangeFlagAlwaysAttack(*unknown10);
-  _gfbcb::initChrEnArrangeFlagPGMax(*unknown10);
-  _gfbcb::initChrEnArrangeFlagSalvage(*unknown10);
-  _gfbcb::initChrEnArrangeLinkRadius(*unknown10);
-  _gfbcb::initChrEnArrangeDetects(*unknown10);
-  _gfbcb::initChrEnArrangeSearchRange(*unknown10);
-  _gfbcb::initChrEnArrangeSearchAngle(*unknown10);
-  _gfbcb::initChrEnArrangeSearchRadius(*unknown10);
-  _gfbcb::initChrEnArrangeBatInterval(*unknown10);
-  _gfbcb::initChrEnArrangeBatArea(*unknown10);
-  _gfbcb::initChrEnArrangeBatAreaType(*unknown10);
-  _gfbcb::initChrEnArrangeAiGroup(*unknown10);
-  _gfbcb::initChrEnArrangeAiGroupNum(*unknown10);
-  _gfbcb::initChrEnArrangeBookID(*unknown10);
-  _gfbcb::initChrEnArrangeEnhanceID1(*unknown10);
-  _gfbcb::initChrEnArrangeEnhanceID2(*unknown10);
-  _gfbcb::initChrEnArrangeEnhanceID3(*unknown10);
-  _gfbcb::initChrEnArrangeParamRev(*unknown10);
-  _gfbcb::initChrEnArrangeRstDebuffRev(*unknown10);
-  _gfbcb::initChrEnArrangeHealPotTypeRev(*unknown10);
-  _gfbcb::initChrEnArrangeSummonID(*unknown10);
-  _gfbcb::initChrEnArrangeBGMID(*unknown10);
-  _gfbcb::initChrEnArrangeSeEnvID(*unknown10);
-  _gfbcb::initChrEnArrangeZoneID(*unknown10);
-  _gfbcb::initChrEnArrangeTimeSet(*unknown10);
-  _gfbcb::initChrEnArrangeWeatherSet(*unknown10);
-  _gfbcb::initChrEnArrangeDriverLev(*unknown10);
-  _gfbcb::initBTL_EnBookBaseEnemyID(*unknown18);
-  _gfbcb::initBTL_EnBookBOOK_POP_TIME(*unknown18);
-  _gfbcb::initBTL_EnBookBOOK_popWeather(*unknown18);
+  _gfbcb::initChrEnArrangeParamID(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeEnemyBladeID(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeBladeID(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeBladeAtr(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeExtraParts(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeName(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeDebug_Name(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeLv(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeLvRand(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeHpOver(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeExpRev(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeGoldRev(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeWPRev(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeSPRev(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeDropTableID(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeDropTableID2(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeDropTableID3(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangePreciousID(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeScale(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeChrSize(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeTurnSize(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagNamed(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagmBoss(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagChild(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagFAOff(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagNoEcSkip(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagLinkType(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagChrColiOff(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagNoTarget(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagHikariSP4(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagHomuri(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagHikari(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagNoNaviMesh(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagFixed(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagDropFront(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagNoWarp(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagIgnoreLevPow(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagAlwaysAttack(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagPGMax(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeFlagSalvage(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeLinkRadius(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeDetects(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeSearchRange(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeSearchAngle(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeSearchRadius(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeBatInterval(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeBatArea(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeBatAreaType(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeAiGroup(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeAiGroupNum(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeBookID(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeEnhanceID1(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeEnhanceID2(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeEnhanceID3(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeParamRev(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeRstDebuffRev(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeHealPotTypeRev(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeSummonID(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeBGMID(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeSeEnvID(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeZoneID(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeTimeSet(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeWeatherSet(*m_chrEnArrange);
+  _gfbcb::initChrEnArrangeDriverLev(*m_chrEnArrange);
+  _gfbcb::initBTL_EnBookBaseEnemyID(*m_BTL_EnBook);
+  _gfbcb::initBTL_EnBookBOOK_POP_TIME(*m_BTL_EnBook);
+  _gfbcb::initBTL_EnBookBOOK_popWeather(*m_BTL_EnBook);
 }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeStart() const { return Bdat::getIdTop(unknown10->data); }
+u32 GfBdatChrEnArrange::getChrEnArrangeStart() const { return Bdat::getIdTop(m_chrEnArrange->data); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeEnd() const { return Bdat::getIdTop(unknown10->data) + Bdat::getIdCount(unknown10->data); }
+u32 GfBdatChrEnArrange::getChrEnArrangeEnd() const { return Bdat::getIdTop(m_chrEnArrange->data) + Bdat::getIdCount(m_chrEnArrange->data); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeParamID(u32 id) const { return _gfbcb::getChrEnArrangeParamID(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeParamID(u32 id) const { return _gfbcb::getChrEnArrangeParamID(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeEnemyBladeID(u32 id) const { return _gfbcb::getChrEnArrangeEnemyBladeID(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeEnemyBladeID(u32 id) const { return _gfbcb::getChrEnArrangeEnemyBladeID(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeBladeID(u32 id) const { return _gfbcb::getChrEnArrangeBladeID(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeBladeID(u32 id) const { return _gfbcb::getChrEnArrangeBladeID(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeBladeAtr(u32 id) const { return _gfbcb::getChrEnArrangeBladeAtr(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeBladeAtr(u32 id) const { return _gfbcb::getChrEnArrangeBladeAtr(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeExtraParts(u32 id) const { return _gfbcb::getChrEnArrangeExtraParts(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeExtraParts(u32 id) const { return _gfbcb::getChrEnArrangeExtraParts(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeName(u32 id) const { return _gfbcb::getChrEnArrangeName(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeName(u32 id) const { return _gfbcb::getChrEnArrangeName(*m_chrEnArrange, id); }
 
-const char *GfBdatChrEnArrange::getChrEnArrangeDebug_Name(u32 id) const { return _gfbcb::getChrEnArrangeDebug_Name(*unknown10, id); }
+const char *GfBdatChrEnArrange::getChrEnArrangeDebug_Name(u32 id) const { return _gfbcb::getChrEnArrangeDebug_Name(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeLv(u32 id) const { return _gfbcb::getChrEnArrangeLv(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeLv(u32 id) const { return _gfbcb::getChrEnArrangeLv(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeLvRand(u32 id) const { return _gfbcb::getChrEnArrangeLvRand(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeLvRand(u32 id) const { return _gfbcb::getChrEnArrangeLvRand(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeHpOver(u32 id) const { return _gfbcb::getChrEnArrangeHpOver(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeHpOver(u32 id) const { return _gfbcb::getChrEnArrangeHpOver(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeExpRev(u32 id) const { return _gfbcb::getChrEnArrangeExpRev(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeExpRev(u32 id) const { return _gfbcb::getChrEnArrangeExpRev(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeGoldRev(u32 id) const { return _gfbcb::getChrEnArrangeGoldRev(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeGoldRev(u32 id) const { return _gfbcb::getChrEnArrangeGoldRev(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeWPRev(u32 id) const { return _gfbcb::getChrEnArrangeWPRev(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeWPRev(u32 id) const { return _gfbcb::getChrEnArrangeWPRev(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeSPRev(u32 id) const { return _gfbcb::getChrEnArrangeSPRev(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeSPRev(u32 id) const { return _gfbcb::getChrEnArrangeSPRev(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeDropTableID(u32 id) const { return _gfbcb::getChrEnArrangeDropTableID(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeDropTableID(u32 id) const { return _gfbcb::getChrEnArrangeDropTableID(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeDropTableID2(u32 id) const { return _gfbcb::getChrEnArrangeDropTableID2(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeDropTableID2(u32 id) const { return _gfbcb::getChrEnArrangeDropTableID2(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeDropTableID3(u32 id) const { return _gfbcb::getChrEnArrangeDropTableID3(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeDropTableID3(u32 id) const { return _gfbcb::getChrEnArrangeDropTableID3(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangePreciousID(u32 id) const { return _gfbcb::getChrEnArrangePreciousID(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangePreciousID(u32 id) const { return _gfbcb::getChrEnArrangePreciousID(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeScale(u32 id) const { return _gfbcb::getChrEnArrangeScale(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeScale(u32 id) const { return _gfbcb::getChrEnArrangeScale(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeChrSize(u32 id) const { return _gfbcb::getChrEnArrangeChrSize(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeChrSize(u32 id) const { return _gfbcb::getChrEnArrangeChrSize(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeTurnSize(u32 id) const { return _gfbcb::getChrEnArrangeTurnSize(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeTurnSize(u32 id) const { return _gfbcb::getChrEnArrangeTurnSize(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagNamed(u32 id) const { return _gfbcb::isChrEnArrangeFlagNamed(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagNamed(u32 id) const { return _gfbcb::isChrEnArrangeFlagNamed(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagmBoss(u32 id) const { return _gfbcb::isChrEnArrangeFlagmBoss(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagmBoss(u32 id) const { return _gfbcb::isChrEnArrangeFlagmBoss(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagChild(u32 id) const { return _gfbcb::isChrEnArrangeFlagChild(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagChild(u32 id) const { return _gfbcb::isChrEnArrangeFlagChild(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagFAOff(u32 id) const { return _gfbcb::isChrEnArrangeFlagFAOff(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagFAOff(u32 id) const { return _gfbcb::isChrEnArrangeFlagFAOff(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagNoEcSkip(u32 id) const { return _gfbcb::isChrEnArrangeFlagNoEcSkip(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagNoEcSkip(u32 id) const { return _gfbcb::isChrEnArrangeFlagNoEcSkip(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagLinkType(u32 id) const { return _gfbcb::isChrEnArrangeFlagLinkType(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagLinkType(u32 id) const { return _gfbcb::isChrEnArrangeFlagLinkType(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagChrColiOff(u32 id) const { return _gfbcb::isChrEnArrangeFlagChrColiOff(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagChrColiOff(u32 id) const { return _gfbcb::isChrEnArrangeFlagChrColiOff(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagNoTarget(u32 id) const { return _gfbcb::isChrEnArrangeFlagNoTarget(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagNoTarget(u32 id) const { return _gfbcb::isChrEnArrangeFlagNoTarget(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagHikariSP4(u32 id) const { return _gfbcb::isChrEnArrangeFlagHikariSP4(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagHikariSP4(u32 id) const { return _gfbcb::isChrEnArrangeFlagHikariSP4(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagHomuri(u32 id) const { return _gfbcb::isChrEnArrangeFlagHomuri(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagHomuri(u32 id) const { return _gfbcb::isChrEnArrangeFlagHomuri(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagHikari(u32 id) const { return _gfbcb::isChrEnArrangeFlagHikari(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagHikari(u32 id) const { return _gfbcb::isChrEnArrangeFlagHikari(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagNoNaviMesh(u32 id) const { return _gfbcb::isChrEnArrangeFlagNoNaviMesh(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagNoNaviMesh(u32 id) const { return _gfbcb::isChrEnArrangeFlagNoNaviMesh(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagFixed(u32 id) const { return _gfbcb::isChrEnArrangeFlagFixed(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagFixed(u32 id) const { return _gfbcb::isChrEnArrangeFlagFixed(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagDropFront(u32 id) const { return _gfbcb::isChrEnArrangeFlagDropFront(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagDropFront(u32 id) const { return _gfbcb::isChrEnArrangeFlagDropFront(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagNoWarp(u32 id) const { return _gfbcb::isChrEnArrangeFlagNoWarp(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagNoWarp(u32 id) const { return _gfbcb::isChrEnArrangeFlagNoWarp(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagIgnoreLevPow(u32 id) const { return _gfbcb::isChrEnArrangeFlagIgnoreLevPow(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagIgnoreLevPow(u32 id) const { return _gfbcb::isChrEnArrangeFlagIgnoreLevPow(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagAlwaysAttack(u32 id) const { return _gfbcb::isChrEnArrangeFlagAlwaysAttack(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagAlwaysAttack(u32 id) const { return _gfbcb::isChrEnArrangeFlagAlwaysAttack(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagPGMax(u32 id) const { return _gfbcb::isChrEnArrangeFlagPGMax(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagPGMax(u32 id) const { return _gfbcb::isChrEnArrangeFlagPGMax(*m_chrEnArrange, id); }
 
-bool GfBdatChrEnArrange::isChrEnArrangeFlagSalvage(u32 id) const { return _gfbcb::isChrEnArrangeFlagSalvage(*unknown10, id); }
+bool GfBdatChrEnArrange::isChrEnArrangeFlagSalvage(u32 id) const { return _gfbcb::isChrEnArrangeFlagSalvage(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeLinkRadius(u32 id) const { return _gfbcb::getChrEnArrangeLinkRadius(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeLinkRadius(u32 id) const { return _gfbcb::getChrEnArrangeLinkRadius(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeDetects(u32 id) const { return _gfbcb::getChrEnArrangeDetects(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeDetects(u32 id) const { return _gfbcb::getChrEnArrangeDetects(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeSearchRange(u32 id) const { return _gfbcb::getChrEnArrangeSearchRange(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeSearchRange(u32 id) const { return _gfbcb::getChrEnArrangeSearchRange(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeSearchAngle(u32 id) const { return _gfbcb::getChrEnArrangeSearchAngle(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeSearchAngle(u32 id) const { return _gfbcb::getChrEnArrangeSearchAngle(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeSearchRadius(u32 id) const { return _gfbcb::getChrEnArrangeSearchRadius(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeSearchRadius(u32 id) const { return _gfbcb::getChrEnArrangeSearchRadius(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeBatInterval(u32 id) const { return _gfbcb::getChrEnArrangeBatInterval(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeBatInterval(u32 id) const { return _gfbcb::getChrEnArrangeBatInterval(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeBatArea(u32 id) const { return _gfbcb::getChrEnArrangeBatArea(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeBatArea(u32 id) const { return _gfbcb::getChrEnArrangeBatArea(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeBatAreaType(u32 id) const { return _gfbcb::getChrEnArrangeBatAreaType(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeBatAreaType(u32 id) const { return _gfbcb::getChrEnArrangeBatAreaType(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeAiGroup(u32 id) const { return _gfbcb::getChrEnArrangeAiGroup(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeAiGroup(u32 id) const { return _gfbcb::getChrEnArrangeAiGroup(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeAiGroupNum(u32 id) const { return _gfbcb::getChrEnArrangeAiGroupNum(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeAiGroupNum(u32 id) const { return _gfbcb::getChrEnArrangeAiGroupNum(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeBookID(u32 id) const { return _gfbcb::getChrEnArrangeBookID(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeBookID(u32 id) const { return _gfbcb::getChrEnArrangeBookID(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeEnhanceID1(u32 id) const { return _gfbcb::getChrEnArrangeEnhanceID1(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeEnhanceID1(u32 id) const { return _gfbcb::getChrEnArrangeEnhanceID1(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeEnhanceID2(u32 id) const { return _gfbcb::getChrEnArrangeEnhanceID2(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeEnhanceID2(u32 id) const { return _gfbcb::getChrEnArrangeEnhanceID2(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeEnhanceID3(u32 id) const { return _gfbcb::getChrEnArrangeEnhanceID3(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeEnhanceID3(u32 id) const { return _gfbcb::getChrEnArrangeEnhanceID3(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeParamRev(u32 id) const { return _gfbcb::getChrEnArrangeParamRev(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeParamRev(u32 id) const { return _gfbcb::getChrEnArrangeParamRev(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeRstDebuffRev(u32 id) const { return _gfbcb::getChrEnArrangeRstDebuffRev(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeRstDebuffRev(u32 id) const { return _gfbcb::getChrEnArrangeRstDebuffRev(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeHealPotTypeRev(u32 id) const { return _gfbcb::getChrEnArrangeHealPotTypeRev(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeHealPotTypeRev(u32 id) const { return _gfbcb::getChrEnArrangeHealPotTypeRev(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeSummonID(u32 id) const { return _gfbcb::getChrEnArrangeSummonID(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeSummonID(u32 id) const { return _gfbcb::getChrEnArrangeSummonID(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeBGMID(u32 id) const { return _gfbcb::getChrEnArrangeBGMID(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeBGMID(u32 id) const { return _gfbcb::getChrEnArrangeBGMID(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeSeEnvID(u32 id) const { return _gfbcb::getChrEnArrangeSeEnvID(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeSeEnvID(u32 id) const { return _gfbcb::getChrEnArrangeSeEnvID(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeZoneID(u32 id) const { return _gfbcb::getChrEnArrangeZoneID(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeZoneID(u32 id) const { return _gfbcb::getChrEnArrangeZoneID(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeTimeSet(u32 id) const { return _gfbcb::getChrEnArrangeTimeSet(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeTimeSet(u32 id) const { return _gfbcb::getChrEnArrangeTimeSet(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeWeatherSet(u32 id) const { return _gfbcb::getChrEnArrangeWeatherSet(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeWeatherSet(u32 id) const { return _gfbcb::getChrEnArrangeWeatherSet(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getChrEnArrangeDriverLev(u32 id) const { return _gfbcb::getChrEnArrangeDriverLev(*unknown10, id); }
+u32 GfBdatChrEnArrange::getChrEnArrangeDriverLev(u32 id) const { return _gfbcb::getChrEnArrangeDriverLev(*m_chrEnArrange, id); }
 
-u32 GfBdatChrEnArrange::getBTL_EnBookStart() const { return Bdat::getIdTop(unknown18->data); }
+u32 GfBdatChrEnArrange::getBTL_EnBookStart() const { return Bdat::getIdTop(m_BTL_EnBook->data); }
 
-u32 GfBdatChrEnArrange::getBTL_EnBookEnd() const { return Bdat::getIdTop(unknown18->data) + Bdat::getIdCount(unknown18->data); }
+u32 GfBdatChrEnArrange::getBTL_EnBookEnd() const { return Bdat::getIdTop(m_BTL_EnBook->data) + Bdat::getIdCount(m_BTL_EnBook->data); }
 
-u32 GfBdatChrEnArrange::getBTL_EnBookBaseEnemyID(u32 id) const { return _gfbcb::getBTL_EnBookBaseEnemyID(*unknown18, id); }
+u32 GfBdatChrEnArrange::getBTL_EnBookBaseEnemyID(u32 id) const { return _gfbcb::getBTL_EnBookBaseEnemyID(*m_BTL_EnBook, id); }
 
-u32 GfBdatChrEnArrange::getBTL_EnBookBOOK_POP_TIME(u32 id) const { return _gfbcb::getBTL_EnBookBOOK_POP_TIME(*unknown18, id); }
+u32 GfBdatChrEnArrange::getBTL_EnBookBOOK_POP_TIME(u32 id) const { return _gfbcb::getBTL_EnBookBOOK_POP_TIME(*m_BTL_EnBook, id); }
 
-u32 GfBdatChrEnArrange::getBTL_EnBookBOOK_popWeather(u32 id) const { return _gfbcb::getBTL_EnBookBOOK_popWeather(*unknown18, id); }
+u32 GfBdatChrEnArrange::getBTL_EnBookBOOK_popWeather(u32 id) const { return _gfbcb::getBTL_EnBookBOOK_popWeather(*m_BTL_EnBook, id); }
 
 bool GfBdatChrEnArrange::searchByEnParamId(mm::mtl::FixedVector<u16, 128> &arranges, u32 paramId) const {
   for (u32 id = getChrEnArrangeStart(), end = getChrEnArrangeEnd(); id < end; id++) {

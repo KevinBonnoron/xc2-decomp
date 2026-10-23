@@ -327,30 +327,30 @@ public:
   bool getPcWeaponNameUTF8(mm::mtl::FixStr<128> &name, u32 id) const;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mCrystalList; original member name unknown.
-  CBdatWrapper *unknown18; // Inferred label: mCollectionList; original member name unknown.
-  CBdatWrapper *unknown20; // Inferred label: mEmptyOrb; original member name unknown.
-  CBdatWrapper *unknown28; // Inferred label: mOrbRecipe; original member name unknown.
-  CBdatWrapper *unknown30; // Inferred label: mPcW; original member name unknown.
-  CBdatWrapper *unknown38; // Inferred label: mPcWpnChip; original member name unknown.
-  CBdatWrapper *unknown40; // Inferred label: mPcWpnType; original member name unknown.
-  CBdatWrapper *unknown48; // Inferred label: mPcEquip; original member name unknown.
-  CBdatWrapper *unknown50; // Inferred label: mEquipOrb; original member name unknown.
-  CBdatWrapper *unknown58; // Inferred label: mPrecious; original member name unknown.
-  CBdatWrapper *unknown60; // Inferred label: mInfo; original member name unknown.
-  CBdatWrapper *unknown68; // Inferred label: mEvent; original member name unknown.
-  CBdatWrapper *unknown70; // Inferred label: mSalvage; original member name unknown.
-  CBdatWrapper *unknown78; // Inferred label: mHealPot; original member name unknown.
-  CBdatWrapper *unknown80; // Inferred label: mBooster; original member name unknown.
-  CBdatWrapper *unknown88; // Inferred label: mTresure; original member name unknown.
-  CBdatWrapper *unknown90; // Inferred label: mFavorite; original member name unknown.
-  CBdatWrapper *unknown98; // Inferred label: mOwnerBonus; original member name unknown.
-  CBdatWrapper *unknowna0; // Inferred label: mOwnerBonusParam; original member name unknown.
-  CBdatWrapper *unknowna8; // Inferred label: mITM_HanaRole; original member name unknown.
-  CBdatWrapper *unknownb0; // Inferred label: mITM_HanaAtr; original member name unknown.
-  CBdatWrapper *unknownb8; // Inferred label: mITM_HanaArtsEnh; original member name unknown.
-  CBdatWrapper *unknownc0; // Inferred label: mITM_HanaNArtsSet; original member name unknown.
-  CBdatWrapper *unknownc8; // Inferred label: mITM_HanaAssist; original member name unknown.
+  CBdatWrapper *m_crystalList;
+  CBdatWrapper *m_collectionList;
+  CBdatWrapper *m_emptyOrb;
+  CBdatWrapper *m_orbRecipe;
+  CBdatWrapper *m_pcW;
+  CBdatWrapper *m_pcWpnChip;
+  CBdatWrapper *m_pcWpnType;
+  CBdatWrapper *m_pcEquip;
+  CBdatWrapper *m_equipOrb;
+  CBdatWrapper *m_precious;
+  CBdatWrapper *m_info;
+  CBdatWrapper *m_event;
+  CBdatWrapper *m_salvage;
+  CBdatWrapper *m_healPot;
+  CBdatWrapper *m_booster;
+  CBdatWrapper *m_tresure;
+  CBdatWrapper *m_favorite;
+  CBdatWrapper *m_ownerBonus;
+  CBdatWrapper *m_ownerBonusParam;
+  CBdatWrapper *m_ITM_HanaRole;
+  CBdatWrapper *m_ITM_HanaAtr;
+  CBdatWrapper *m_ITM_HanaArtsEnh;
+  CBdatWrapper *m_ITM_HanaNArtsSet;
+  CBdatWrapper *m_ITM_HanaAssist;
 };
 
 } // namespace gf

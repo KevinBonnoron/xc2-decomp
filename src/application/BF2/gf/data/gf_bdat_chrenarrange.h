@@ -87,8 +87,8 @@ public:
   bool searchByEnParamId(mm::mtl::FixedVector<u16, 128> &arranges, u32 paramId) const;
 
 private:
-  CBdatWrapper *unknown10; // Inferred label: mChrEnArrange; original member name unknown.
-  CBdatWrapper *unknown18; // Inferred label: mBTL_EnBook; original member name unknown.
+  CBdatWrapper *m_chrEnArrange;
+  CBdatWrapper *m_BTL_EnBook;
 };
 
 } // namespace gf
