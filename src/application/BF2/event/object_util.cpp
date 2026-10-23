@@ -3,6 +3,10 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include "event/manager.h"
+#include "ml/scn.h"
+#include "ml/scn_cam_util.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
 
 namespace event {
@@ -10,6 +14,11 @@ namespace event {
 f32 ObjectUtil::toFov(f32 focal) { return 2.0f * atanf(25.39f / (2.0f * focal)) * 180.0f / 3.1415f; }
 
 f32 ObjectUtil::toFocal(f32 fov) { return 25.39f / (2.0f * tanf(fov * 0.017452778f * 0.5f)); }
+
+bool ObjectUtil::isBackSide(const mm::Vec3 &position) {
+  mm::Vec3 screen;
+  return !ml::ScnCamUtil::getScreenPos(screen, Manager::sys()->getScn()->getCam(-1), position);
+}
 
 const char *ObjectUtil::num2str(u32 number) {
   static const char *const NUMBERS[] = {"", "2", "3", "4", "5", "6", "7", "8", "9", "10"};

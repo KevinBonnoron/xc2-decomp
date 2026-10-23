@@ -1,10 +1,13 @@
 #pragma once
-#include "csvb/csvb_data.h"
 #include "event/i_manager.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
+
+namespace csvb {
+class CCsvbData;
+} // namespace csvb
 
 namespace event {
 
@@ -22,16 +25,7 @@ public:
   LipsyncManager();
   virtual ~LipsyncManager() {}
   bool isActive() const;
-  f32 getVolume(f32 frame) const {
-    if (!(flags & FLAG_ACTIVE)) {
-      return 0.0f;
-    }
-    int row = frame;
-    if (mCsv->GetRowCount() <= row) {
-      row = mCsv->GetRowCount() - 1;
-    }
-    return mCsv->GetFloat(row, 1);
-  }
+  f32 getVolume(f32 frame) const;
   void clear();
   void load(const char *name);
   LipsyncRes *searchRes(const char *name);

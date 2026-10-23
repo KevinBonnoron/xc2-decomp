@@ -4,6 +4,7 @@
 #include "event/manager.h"
 #include "fw/fw_debug.h"
 #include "ml/scn.h"
+#include "ml/scn_obj_light.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/singleton.h"
@@ -23,6 +24,18 @@ void LightEvt::clear() {
   mScreenID = 0;
 }
 
+void LightEvt::play(void *data, const char *name, u32 screenID) {
+  if (mLight != nullptr) {
+    Manager::get()->getScn()->releaseItem(mLight);
+    mLight = nullptr;
+  }
+  path = "";
+  mScreenID = 0;
+  path = name;
+  mLight = static_cast<ml::ScnObjLight *>(Manager::get()->getScn()->createLgt(data, screenID));
+  mScreenID = screenID;
+}
+
 void LightEvt::render(int x, int y) {
   fw::debug::drawSquare2D(mm::Rect<int>(x, y, 230, 45), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
   fw::debug::drawLineSquare2D(mm::Rect<int>(x, y, 230, 45), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -33,5 +46,11 @@ void LightEvt::render(int x, int y) {
 }
 
 bool LightEvt::isPlaying() const { return mLight != nullptr; }
+
+void LightEvt::setPos(const mm::Vec3 &pos) {
+  // The call at 0x71000e2cf8 dispatches through vtable offset 0x80.
+  if (mLight != nullptr)
+    mLight->setOffsetPos(pos);
+}
 
 } // namespace event

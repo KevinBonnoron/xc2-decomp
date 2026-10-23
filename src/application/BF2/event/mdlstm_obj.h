@@ -38,6 +38,7 @@ public:
   bool isDisposeable(ModelObj *model) const;
   bool isActive() const;
   bool isLoading(f32 frame) const;
+  bool isBuildable(const char *path, u32 value) const;
   bool checkByHandle(gf::GF_OBJ_HANDLE *handle) const;
   virtual void OnResEvent(const PARAM &param);
 

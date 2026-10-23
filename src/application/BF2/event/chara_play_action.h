@@ -1,5 +1,4 @@
 #pragma once
-#include "bdat.h"
 #include "event/i_cmd.h"
 #include "event/manager.h"
 #include "fw/fw_debug.h"
@@ -66,39 +65,11 @@ public:
     }
     fw::debug::drawFont(x - 70, y - 40, name);
   }
-  static const char *type2stat(int type, u32 index) {
-    const char *column;
-    switch (index) {
-    case 0:
-      column = "stat0";
-      break;
-    case 1:
-      column = "stat1";
-      break;
-    default:
-      column = "stat2";
-      break;
-    }
-    return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_acttype"), column, type, 7));
-  }
-  static const char *type2cmd(int type, u32 index) {
-    const char *column;
-    switch (index) {
-    case 0:
-      column = "cmd0";
-      break;
-    case 1:
-      column = "cmd1";
-      break;
-    default:
-      column = "cmd2";
-      break;
-    }
-    return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_acttype"), column, type, 7));
-  }
-  static const char *type2idle(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_acttype"), "statI", type, 7)); }
+  static const char *type2stat(int type, u32 index);
+  static const char *type2cmd(int type, u32 index);
+  static const char *type2idle(int type);
   void stanby(int type, f32 life, bool isBlendIn, bool isBlendOut);
-  static const char *type2name(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_acttype"), "name", type, 7)); }
+  static const char *type2name(int type);
   void play(gf::GfObj *obj);
   void idle();
   void clr();

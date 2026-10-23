@@ -7,7 +7,7 @@ struct Vec3;
 } // namespace mm
 
 namespace ml {
-class ScnObj;
+class ScnObjLight;
 } // namespace ml
 
 namespace event {
@@ -23,7 +23,7 @@ public:
   void setPos(const mm::Vec3 &pos);
 
 private:
-  ml::ScnObj *mLight;
+  ml::ScnObjLight *mLight;
   mm::mtl::FixStr<128> path;
   u32 mScreenID;
 };

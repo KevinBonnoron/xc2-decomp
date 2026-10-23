@@ -1,7 +1,9 @@
 #include "event/light_obj.h"
 
 #include "event/extend.h"
+#include "event/frame_manager.h"
 #include "fw/fw_debug.h"
+#include "ml/scn_obj_light.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/singleton.h"
@@ -13,6 +15,16 @@ constexpr f32 RADIAN_TO_DEGREE = 57.29578f;
 LightObj::LightObj(int screenID) : flags(0), mLight(nullptr), mScreenID(screenID), mData(nullptr), mPos(mm::Vec3::zero), mRot(mm::Vec3::zero) {}
 
 LightObj::~LightObj() { clear(); }
+
+void LightObj::update(const FrameInfo &info) {
+  if (mLight == nullptr)
+    return;
+  mLight->setPos(mPos);
+  mLight->setRot(mRot);
+  mLife -= info.delta;
+  if (mLife < 0.0f)
+    clear();
+}
 
 void LightObj::render(int x, int y) {
   if (mLight == nullptr) {

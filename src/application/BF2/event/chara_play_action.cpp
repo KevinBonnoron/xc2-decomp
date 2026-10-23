@@ -1,5 +1,6 @@
 #include "event/chara_play_action.h"
 
+#include "bdat.h"
 #include "event/chara_dys_updater.h"
 #include "event/chara_obj.h"
 #include "event/chara_util.h"
@@ -12,6 +13,38 @@
 #include "mm_mtl/singleton.h"
 
 namespace event {
+
+const char *CharaPlayAction::type2stat(int type, u32 index) {
+  unsigned char *fp = Bdat::getFP("EVT_acttype");
+  switch (index) {
+  case 0:
+    return reinterpret_cast<const char *>(Bdat::getValCheck(fp, "stat0", type, 7));
+  case 1:
+    return reinterpret_cast<const char *>(Bdat::getValCheck(fp, "stat1", type, 7));
+  default:
+    return reinterpret_cast<const char *>(Bdat::getValCheck(fp, "stat2", type, 7));
+  }
+}
+
+const char *CharaPlayAction::type2cmd(int type, u32 index) {
+  unsigned char *fp = Bdat::getFP("EVT_acttype");
+  switch (index) {
+  case 0:
+    return reinterpret_cast<const char *>(Bdat::getValCheck(fp, "cmd0", type, 7));
+  case 1:
+    return reinterpret_cast<const char *>(Bdat::getValCheck(fp, "cmd1", type, 7));
+  default:
+    return reinterpret_cast<const char *>(Bdat::getValCheck(fp, "cmd2", type, 7));
+  }
+}
+
+const char *CharaPlayAction::type2idle(int type) {
+  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_acttype"), "statI", type, 7));
+}
+
+const char *CharaPlayAction::type2name(int type) {
+  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_acttype"), "name", type, 7));
+}
 
 void CharaPlayAction::stanby(int type, f32 life, bool isBlendIn, bool isBlendOut) {
   bool isBlend = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() ? false : isBlendIn;

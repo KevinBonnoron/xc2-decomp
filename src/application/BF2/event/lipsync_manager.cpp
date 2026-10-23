@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 
+#include "csvb/csvb_data.h"
 #include "event/lipsync_res.h"
 #include "event/memory_manager.h"
 #include "mm_mtl/singleton.h"
@@ -10,6 +11,15 @@
 namespace event {
 
 bool LipsyncManager::isActive() const { return (flags & FLAG_ACTIVE) != 0; }
+
+f32 LipsyncManager::getVolume(f32 frame) const {
+  if (!(flags & FLAG_ACTIVE))
+    return 0.0f;
+  int row = frame;
+  if (mCsv->GetRowCount() <= row)
+    row = mCsv->GetRowCount() - 1;
+  return mCsv->GetFloat(row, 1);
+}
 
 LipsyncManager::LipsyncManager() : flags(0), mCurrentRes(nullptr), mCsv(nullptr) {}
 

@@ -151,4 +151,15 @@ void StmPackMemory::free(void *adr, int frame) {
 
 bool StmPackMemory::isFailure() const { return getLoadStream()->mHeader.isFailure() || getLoadStream()->mData.isFailure(); }
 
+// The symbol at 0x71000a4ec8 reads +0x58e8, +0x58f0 and +0x5840;
+// check confirms the code match, while the original member names remain unknown.
+bool StmPackMemory::isLoadingPrio(f32 prio) const {
+  if (mLoadStream <= mCurrentStream) {
+    if (static_cast<f32>(mNextPrio) <= prio) {
+      return true;
+    }
+  }
+  return false;
+}
+
 } // namespace event

@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 
+#include "event/effect_res.h"
 #include "event/extend.h"
 #include "event/memory_manager.h"
 #include "event/res_manager.h"
@@ -9,6 +10,13 @@
 #include "mtl/alloc_handle.h"
 
 namespace event {
+
+fw::EffectPack *EffectManager::getResPack() const {
+  if (mCurrentRes != nullptr) {
+    return mCurrentRes->getResPack();
+  }
+  return nullptr;
+}
 
 bool EffectManager::isStreamMode() const { return (flags & FLAG_STREAM_MODE) != 0; }
 

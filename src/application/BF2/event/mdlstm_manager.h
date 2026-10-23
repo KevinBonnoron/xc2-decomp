@@ -5,6 +5,10 @@
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
+namespace gf {
+struct GF_OBJ_HANDLE;
+}
+
 namespace event {
 
 class MdlstmManager : public IManager, public mm::mtl::Singleton<MdlstmManager> {
@@ -31,6 +35,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
   bool isReuseEnable() const;
+  bool isLoadingPrio(f32 priority) const;
+  bool searchByHandle(gf::GF_OBJ_HANDLE *handle) const;
 
 private:
   u32 flags;

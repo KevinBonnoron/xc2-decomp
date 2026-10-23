@@ -2,12 +2,24 @@
 
 #include "event/i_bou_callback.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_pnt.h"
 
 namespace event {
 
 BouManager::BouManager() : flags(), mDebugFlags() {}
 
 void BouManager::endActive() { flags.set(FLAG_ACTIVE, false); }
+
+void BouManager::startActive(const mm::Pnt<int> &point) {
+  mRect.x = point.x;
+  mRect.y = point.y;
+  // The target reloads +0x28 before subtracting. This read preserves that
+  // instruction; it does not establish a volatile original member type.
+  mRect.width = point.x - *reinterpret_cast<volatile int *>(&mRect.x);
+  mRect.height = point.y - mRect.y;
+  mSelected.clear();
+  flags.set(FLAG_ACTIVE);
+}
 
 void BouManager::render() {
   if (!isEnable() || !isDebugEnable()) {

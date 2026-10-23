@@ -3,7 +3,6 @@
 #include "event/env_transfer_field.h"
 #include "event/i_manager.h"
 #include "gf/data/gf_data_map.h"
-#include "gf/game/event/gf_game_event.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -38,22 +37,7 @@ public:
 
   EnvManager();
   virtual ~EnvManager() {}
-  void setCloudSea(EVT_cloudtype cloudType) {
-    if (mCloudType != cloudType) {
-      switch (cloudType) {
-      case EVT_CLOUDTYPE_DEFAULT:
-        gf::GfGameEvent::setCloudSea(false, false);
-        break;
-      case EVT_CLOUDTYPE_HIGH:
-        gf::GfGameEvent::setCloudSea(true, true);
-        break;
-      case EVT_CLOUDTYPE_LOW:
-        gf::GfGameEvent::setCloudSea(true, false);
-        break;
-      }
-    }
-    mCloudType = cloudType;
-  }
+  void setCloudSea(EVT_cloudtype cloudType);
   void clear();
   void setMotBlur(bool isEnable);
   void setToneMap(bool isEnable, f32 toneMap);

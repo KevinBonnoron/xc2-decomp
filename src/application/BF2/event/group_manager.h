@@ -17,8 +17,8 @@ public:
 
   GroupManager();
   virtual ~GroupManager() {}
-  void push(const CharaObj *chara) { mGroup.push(chara); }
-  void pop(const CharaObj *chara) { mGroup.pop(chara); }
+  void push(const CharaObj *chara);
+  void pop(const CharaObj *chara);
   void clear();
   void update();
   void render();

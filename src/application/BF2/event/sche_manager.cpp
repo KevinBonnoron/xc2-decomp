@@ -1,8 +1,11 @@
 #include "event/sche_manager.h"
 
+#include <stddef.h>
+
 #include "event/manager.h"
 #include "event/memory_manager.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/object/gf_obj_handle.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 
@@ -15,6 +18,34 @@ namespace event {
 ScheManager::ScheManager() : flags(0) {}
 
 void ScheManager::create() {}
+
+void ScheManager::destroy() {
+  for (size_t i = 0; i < mSchedulers.size(); i++) {
+    if (mSchedulers[i] != nullptr) {
+      delete mSchedulers[i];
+      mSchedulers[i] = nullptr;
+    }
+  }
+  mSchedulers.clear();
+}
+
+bool ScheManager::isPlay(Scheduler::ORDER order, gf::GF_OBJ_HANDLE *handle) {
+  if (handle == gf::INVALID_HANDLE) {
+    for (Scheduler **it = mSchedulers.begin(); it != mSchedulers.end(); it++) {
+      if ((*it)->isPlay(order)) {
+        return true;
+      }
+    }
+    return false;
+  } else {
+    for (Scheduler **it = mSchedulers.begin(); it != mSchedulers.end(); it++) {
+      if ((*it)->getHandle() == handle && (*it)->isPlay(order)) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
 
 void ScheManager::init() {
   gf::GF_OBJ_HANDLE *handle = mm::mtl::PtrSingleton<Manager>::get()->getObjHandle();

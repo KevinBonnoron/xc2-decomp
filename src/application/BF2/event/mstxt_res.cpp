@@ -2,9 +2,11 @@
 
 #include "bdat.h"
 #include "event/extend.h"
+#include "event/manager.h"
 #include "event/res_manager.h"
 #include "framework/lang_util.h"
 #include "fw/fw_bdat_manager.h"
+#include "gf/menu/object/gf_menu_obj_event_subtitle.h"
 #include "mm_mtl/singleton.h"
 
 namespace event {
@@ -16,6 +18,25 @@ MstxtRes::MstxtRes(const char *path) : flags(0), path(path) {
   bdatPath.format("bdat/%s/%s.bdat", fw::LangUtil::getLangFolder().c_str(), mName.c_str());
   mm::mtl::Singleton<ResManager>::getPtr()->load(bdatPath.c_str(), this, false);
   flags |= FLAG_LOADING;
+}
+
+MstxtRes::~MstxtRes() { unregisterBdat(); }
+
+void MstxtRes::unregisterBdat() {
+  if (flags & FLAG_REGISTERED) {
+    gf::GfMenuObjEventSubtitle::endText();
+    fw::BdatManager::unregistBdat(2);
+    flags &= ~FLAG_REGISTERED;
+  }
+}
+
+void MstxtRes::OnResEvent(const PARAM &param) {
+  if (param.result == RES_RESULT_TYPE_SUCCESS) {
+    flags |= FLAG_LOADED;
+  } else if (param.result == RES_RESULT_TYPE_FAILURE) {
+    mm::mtl::PtrSingleton<Manager>::get()->failureSkip();
+  }
+  flags &= ~FLAG_LOADING;
 }
 
 void MstxtRes::registerBdat() {

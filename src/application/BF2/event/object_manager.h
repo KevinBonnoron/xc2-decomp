@@ -77,19 +77,9 @@ public:
   ObjectList *createScene(const char *name);
   virtual void OnEventProc(MSG_TYPE type);
 
-  ObjectChara *searchByHandle(gf::GF_OBJ_HANDLE *handle) {
-    if (mCurrent == nullptr) {
-      return nullptr;
-    }
-    return mCurrent->searchByHandle(handle);
-  }
+  ObjectChara *searchByHandle(gf::GF_OBJ_HANDLE *handle);
 
-  ObjectChara *searchByID(u32 type, u32 id) {
-    if (mCurrent == nullptr) {
-      return nullptr;
-    }
-    return mCurrent->searchByID(type, id);
-  }
+  ObjectChara *searchByID(u32 type, u32 id);
 
   Object *getActive() const {
     if (mCurrent == nullptr) {

@@ -31,6 +31,19 @@ bool MdlstmObj::isDisposeable(ModelObj *model) const { return state == STATE_ACT
 
 bool MdlstmObj::isActive() const { return state != STATE_NONE; }
 
+bool MdlstmObj::isLoading(f32 threshold) const {
+  if (frame <= threshold && static_cast<u32>(state - STATE_INIT) < 6) {
+    return true;
+  }
+  return false;
+}
+
+bool MdlstmObj::isBuildable(const char *name, u32 value) const {
+  if (state != STATE_BUSY || !(flags & 1) || _a8 != value)
+    return false;
+  return __builtin_strcmp(path.c_str(), name) == 0;
+}
+
 bool MdlstmObj::checkByHandle(gf::GF_OBJ_HANDLE *handle) const {
   if (mReuseModel != nullptr && mReuseModel->getHandle() == handle) {
     return true;

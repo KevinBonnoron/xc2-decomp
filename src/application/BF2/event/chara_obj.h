@@ -166,7 +166,7 @@ public:
   void setDispJiji(bool isDisp);
   void updateDispJiji();
 
-  const char *getName() const { return name.c_str(); }
+  const char *getName() const;
   bool isReady() const { return (flags & FLAG_READY) != 0; }
   gf::GF_OBJ_HANDLE *getHandle() const { return handle; }
   IAttachActor *getAttachActor() const { return attachActor; }

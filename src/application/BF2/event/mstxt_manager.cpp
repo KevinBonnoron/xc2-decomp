@@ -11,6 +11,29 @@ namespace event {
 
 MstxtManager::MstxtManager() : mCurrentRes(nullptr) {}
 
+void MstxtManager::clear() {
+  if (mCurrentRes != nullptr) {
+    mCurrentRes->unregisterBdat();
+    mCurrentRes = nullptr;
+  }
+  for (size_t i = 0; i < mResList.size(); i++) {
+    if (mResList[i] != nullptr) {
+      delete mResList[i];
+      mResList[i] = nullptr;
+    }
+  }
+  mResList.clear();
+}
+
+void MstxtManager::registerBdat(const char *path) {
+  if (mCurrentRes != nullptr) {
+    mCurrentRes->unregisterBdat();
+    mCurrentRes = nullptr;
+  }
+  mCurrentRes = search(path);
+  mCurrentRes->registerBdat();
+}
+
 void MstxtManager::load(const char *path) {
   if (search(path) != nullptr) {
     return;

@@ -5,6 +5,7 @@
 #include "event/manager.h"
 #include "event/memory_manager.h"
 #include "event/object_party_list.h"
+#include "event/object_tree.h"
 #include "event/skip_manager.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
@@ -29,6 +30,32 @@ u32 ObjectManager::getCameraCount() const {
 }
 
 ObjectCamera *ObjectManager::getCamera(u32 index) { return getCurrent()->getCamera(index); }
+
+ObjectChara *ObjectManager::searchByHandle(gf::GF_OBJ_HANDLE *handle) {
+  if (mCurrent == nullptr)
+    return nullptr;
+  return mCurrent->searchByHandle(handle);
+}
+
+ObjectChara *ObjectManager::searchByID(u32 type, u32 id) {
+  if (mCurrent == nullptr)
+    return nullptr;
+  return mCurrent->searchByID(type, id);
+}
+
+Object *ObjectManager::searchByName(const char *name) {
+  ObjectList *current = mCurrent;
+  if (current == nullptr)
+    return nullptr;
+  Object *root = current->mRoot;
+  if (root == nullptr)
+    return nullptr;
+  Object *found = ObjectList::searchByNameSub(root, name);
+  if (found == nullptr || found == root || found == current->mCharaTree || found == current->mCameraTree || found == current->mEffectTree ||
+      found == current->mLightTree)
+    return nullptr;
+  return found;
+}
 
 bool ObjectManager::isDisp() const { return (flags & FLAG_DISP) != 0; }
 

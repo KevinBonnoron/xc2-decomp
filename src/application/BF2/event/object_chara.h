@@ -105,15 +105,11 @@ inline void ObjectChara::setRotAxis(const RotAxis &axis) {
   mCharaObj->mount(nullptr, "", mm::Vec3::zero, mm::Vec3::zero);
 }
 
-inline mm::Vec3 ObjectChara::getPos() const { return mCharaObj->getPos(); }
-
 inline mm::Vec3 ObjectChara::getRot() const { return mCharaObj->getRotTo(); }
 
 inline void ObjectChara::setTar(const TarAxis &axis, f32 frame, EVT_tarcvtype cv, EVT_aimtype aim, f32 weight, f32 speed) {
   tarAxis = axis;
   mCharaObj->setTar(axis, frame, cv, aim, weight, speed);
 }
-
-inline void ObjectChara::resetTar() { mCharaObj->resetTar(); }
 
 } // namespace event

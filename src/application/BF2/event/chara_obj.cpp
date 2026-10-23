@@ -1,5 +1,6 @@
 #include "event/chara_obj.h"
 
+#include "event/attach_actor_base.h"
 #include "event/chara_facial_util.h"
 #include "event/chara_manager.h"
 #include "event/chara_util.h"
@@ -10,9 +11,13 @@
 #include "event/tar_axis.h"
 #include "gf/event/gf_evt_model.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_setup.h"
+#include "gf/object/gf_obj_util.h"
 #include "mm_mtl/singleton.h"
 
 namespace event {
+
+const char *CharaObj::getName() const { return name.c_str(); }
 
 void CharaObj::clear() {
   queue.eraseAll();
@@ -40,6 +45,22 @@ void CharaObj::playWink(int type, f32 frame, bool isLoop, f32 lensX, f32 lensY, 
 
 const mm::Vec3 &CharaObj::getPos() const { return pos; }
 
+// The routine at 0x71000c19cc reads +0xc of GfObjSetup. The original
+// meaning of that opaque field is unknown; values 10 through 12 skip pause.
+bool CharaObj::isCharaObjPause(const FrameInfo &info) const {
+  gf::GfObjSetup *setup = gf::GfObjUtil::getObjSetup(handle);
+  if (setup != nullptr) {
+    u32 unknown0c = *reinterpret_cast<const u32 *>(setup->_0c);
+    if (unknown0c - 10 < 3)
+      return false;
+  }
+  if (info.streamDelta <= 0.0f) {
+    if (info.delta <= 0.0f)
+      return true;
+  }
+  return false;
+}
+
 void CharaObj::renderAction() {
   cmdPlayAction.render(pos, eyeOffset);
   cmdPlayActionAuto.render(pos, eyeOffset);
@@ -49,13 +70,35 @@ f32 CharaObj::getEyeOffset() const { return eyeOffset; }
 
 void CharaObj::renderHead() { cmdPlayHead.render(pos, eyeOffset); }
 
+void CharaObj::renderMotion() {
+  cmdPlayMotion.render(pos, eyeOffset);
+  cmdPlayMotionABC.render(pos, eyeOffset);
+}
+
 void CharaObj::renderFacial() { cmdPlayFacial.render(pos, eyeOffset); }
+
+void CharaObj::renderTalk() { cmdPlayTalk.render(pos, eyeOffset); }
+
+void CharaObj::renderWink() { cmdPlayWink.render(pos, eyeOffset); }
 
 void CharaObj::renderLens() { lensPlayer.render(pos, eyeOffset); }
 
 void CharaObj::renderWeight() { weightPlayer.render(pos, eyeOffset); }
 
 void CharaObj::renderIK() { ikUpdater.render(pos, eyeOffset); }
+
+// The original flag names are unknown. The routine at 0x71000c1da8 tests
+// bits 0 and 1 at +0xca0, then calls AttachActorBase::render for each set bit.
+void CharaObj::renderBone() {
+  if (attachActor != nullptr) {
+    if ((flags & 1) != 0) {
+      static_cast<AttachActorBase *>(attachActor)->render();
+    }
+    if ((flags & 2) != 0) {
+      static_cast<AttachActorBase *>(attachActor)->render();
+    }
+  }
+}
 
 void CharaObj::setPos(const mm::Vec3 &pos) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {

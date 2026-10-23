@@ -55,7 +55,7 @@ public:
   virtual bool OnManiStartTar(IManiCallback::StartParam &param);
   virtual void OnManiSetTar(IManiCallback::SetParam &param);
   virtual void OnManiRender(IManiCallback::RenderParam &param);
-  const char *getCutName() const { return mCutName.c_str(); }
+  const char *getCutName() const;
 
   CamObj *getCamObj() const { return mCamObj; }
   const PosAxis &getPosAxis() const { return posAxis; }

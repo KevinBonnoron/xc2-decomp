@@ -7,10 +7,10 @@ class ScriptEffectMount : public ITodo {
 public:
   static ITodo *exec();
   virtual ~ScriptEffectMount() {}
-  virtual const char *cmdName() const { return "effmount"; }
+  virtual const char *cmdName() const;
   virtual void doit(const Param &param);
   virtual void undo(const Param &param);
-  virtual void redo(const Param &param) { doit(param); }
+  virtual void redo(const Param &param);
 };
 
 static_assert(sizeof(ScriptEffectMount) == 0x8, "");

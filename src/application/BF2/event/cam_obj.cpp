@@ -4,6 +4,11 @@ namespace event {
 
 void CamObj::start() {}
 
+void CamObj::end() {
+  mCmdQueue.eraseAll();
+  mMotion.stop();
+}
+
 void CamObj::render(const mm::Col4 &color) {
   if (mActive != nullptr) {
     mActive->render(color);

@@ -7,6 +7,7 @@
 #include "fw/fw_debug.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
+#include "gf/game/event/gf_game_event.h"
 #include "ml/dev_graph.h"
 #include "ml/scn.h"
 #include "mm_math/mm_col4.h"
@@ -18,6 +19,23 @@ namespace event {
 EnvManager::EnvManager()
     : flags(0), dispFlags(0), mClockHour(-1), mClockMinute(-1), mCloudType(EVT_CLOUDTYPE_DEFAULT), mColorFilterState(COLORFILTER_TYPE_STOP),
       mColorFilter(-1), mColorSubFilter(-1), mColorFilterFrame(0.0f), mColorFilterCount(0), mVignetteHandle(0) {}
+
+void EnvManager::setCloudSea(EVT_cloudtype cloudType) {
+  if (mCloudType != cloudType) {
+    switch (cloudType) {
+    case EVT_CLOUDTYPE_DEFAULT:
+      gf::GfGameEvent::setCloudSea(false, false);
+      break;
+    case EVT_CLOUDTYPE_HIGH:
+      gf::GfGameEvent::setCloudSea(true, true);
+      break;
+    case EVT_CLOUDTYPE_LOW:
+      gf::GfGameEvent::setCloudSea(true, false);
+      break;
+    }
+  }
+  mCloudType = cloudType;
+}
 
 void EnvManager::setMotBlur(bool isEnable) {
   if (isEnable == ((flags & FLAG_MOT_BLUR) != 0)) {

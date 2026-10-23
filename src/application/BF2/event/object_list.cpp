@@ -387,6 +387,16 @@ Object *ObjectList::searchByNameSub(Object *object, const char *name) {
   return nullptr;
 }
 
+Object *ObjectList::searchByName(const char *name) const {
+  Object *root = mRoot;
+  if (root == nullptr)
+    return nullptr;
+  Object *found = searchByNameSub(root, name);
+  if (found == nullptr || found == root || found == mCharaTree || found == mCameraTree || found == mEffectTree || found == mLightTree)
+    return nullptr;
+  return found;
+}
+
 ObjectChara *ObjectList::searchByHandle(gf::GF_OBJ_HANDLE *handle) const {
   if (mCharaTree == nullptr) {
     return nullptr;

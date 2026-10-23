@@ -1,7 +1,6 @@
 #pragma once
 #include "event/i_manager.h"
 #include "event/scheduler.h"
-#include "gf/object/gf_obj_handle.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -33,22 +32,7 @@ public:
   void play(Scheduler::ORDER order, gf::GF_OBJ_HANDLE *handle);
   void setUse(Scheduler::USE use, bool isUse, gf::GF_OBJ_HANDLE *handle);
   bool chkUse(Scheduler::USE use, gf::GF_OBJ_HANDLE *handle);
-  bool isPlay(Scheduler::ORDER order, gf::GF_OBJ_HANDLE *handle) {
-    if (handle == gf::INVALID_HANDLE) {
-      for (Scheduler **it = mSchedulers.begin(); it != mSchedulers.end(); it++) {
-        if ((*it)->isPlay(order)) {
-          return true;
-        }
-      }
-    } else {
-      for (Scheduler **it = mSchedulers.begin(); it != mSchedulers.end(); it++) {
-        if ((*it)->getHandle() == handle && (*it)->isPlay(order)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
+  bool isPlay(Scheduler::ORDER order, gf::GF_OBJ_HANDLE *handle);
   virtual void OnEventProc(MSG_TYPE type);
 
 private:

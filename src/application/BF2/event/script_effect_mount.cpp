@@ -10,6 +10,10 @@
 namespace event {
 enum ATTACH_TYPE : int;
 
+const char *ScriptEffectMount::cmdName() const { return "effmount"; }
+
+void ScriptEffectMount::redo(const Param &param) { doit(param); }
+
 void ScriptEffectMount::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
   if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {

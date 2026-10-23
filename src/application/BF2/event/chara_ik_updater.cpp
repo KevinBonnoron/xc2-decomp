@@ -3,9 +3,27 @@
 #include "event/chara_facial_util.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 
 namespace event {
+
+// The constructor at 0x71000b9044 writes flags at +0x8, the handle at
+// +0x10, Vec3::zero at +0x20, and Vec2::zero at +0x30 through +0x70.
+CharaIKUpdater::CharaIKUpdater() : flags(), mRequests(), handle(gf::INVALID_HANDLE), mTargetFrame(0.0f), mTargetPos(mm::Vec3::zero) {
+  f32 x = mm::Vec2::zero.x;
+  f32 y = mm::Vec2::zero.y;
+  mLensMove.x = x;
+  mLensMove.y = y;
+  mLensTranslateMin.x = x;
+  mLensTranslateMin.y = y;
+  mLensTranslateMax.x = x;
+  mLensTranslateMax.y = y;
+  mLensRotateMin.x = x;
+  mLensRotateMin.y = y;
+  mLensRotateMax.x = x;
+  mLensRotateMax.y = y;
+}
 
 void CharaIKUpdater::create(gf::GF_OBJ_HANDLE *handle) {
   this->handle = handle;

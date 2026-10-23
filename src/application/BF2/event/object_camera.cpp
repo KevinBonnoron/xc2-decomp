@@ -6,7 +6,14 @@
 
 namespace event {
 
+const char *ObjectCamera::getCutName() const { return mCutName.c_str(); }
+
 void ObjectCamera::start() {}
+
+void ObjectCamera::end() {
+  if (mCamObj != nullptr)
+    mCamObj->end();
+}
 
 void ObjectCamera::tail() { mCamObj->tail(); }
 

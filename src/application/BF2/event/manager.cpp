@@ -1,6 +1,7 @@
 #include "event/manager.h"
 
 #include "event/debug_manager.h"
+#include "event/ui_manager.h"
 
 #include "framework/lang_util.h"
 #include "gf/game/event/gf_game_event.h"
@@ -18,6 +19,8 @@ void Manager::failureSkip() {
   mm::mtl::Singleton<DebugManager>::getPtr()->setDisp(true);
   mm::mtl::Singleton<DebugManager>::getPtr()->playMessage("failure skip!! [%s.sb]", mEventName.c_str());
 }
+
+void Manager::finishNewGameWait() { mm::mtl::Singleton<UIManager>::getPtr()->finishNewGameWait(); }
 
 bool Manager::isPlayCancel() const { return mm::mtl::Singleton<DebugManager>::getPtr()->isPlayCancel(); }
 

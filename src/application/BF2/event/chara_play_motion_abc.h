@@ -5,6 +5,9 @@
 namespace gf {
 struct GF_OBJ_HANDLE;
 } // namespace gf
+namespace mm {
+struct Vec3;
+}
 
 namespace event {
 
@@ -13,6 +16,7 @@ public:
   CharaPlayMotionABC();
   virtual RESULT update(const Param &param);
   virtual void term();
+  void render(const mm::Vec3 &position, f32 eyeOffset);
 
 private:
   u32 flags;

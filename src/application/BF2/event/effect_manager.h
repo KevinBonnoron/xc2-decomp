@@ -1,5 +1,4 @@
 #pragma once
-#include "event/effect_res.h"
 #include "event/effect_util.h"
 #include "event/i_manager.h"
 #include "mm_mtl/fixed_vector.h"
@@ -12,6 +11,7 @@ class EffectPack;
 } // namespace fw
 
 namespace event {
+class EffectRes;
 
 class EffectManager : public IManager, public mm::mtl::Singleton<EffectManager> {
 public:
@@ -28,12 +28,7 @@ public:
     DISP_FLAG_DISABLE = 1 << 1,
   };
 
-  fw::EffectPack *getResPack() const {
-    if (mCurrentRes != nullptr) {
-      return mCurrentRes->getResPack();
-    }
-    return nullptr;
-  }
+  fw::EffectPack *getResPack() const;
   EffectManager();
   virtual ~EffectManager() {}
   void clear();

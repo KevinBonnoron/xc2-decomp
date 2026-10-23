@@ -18,16 +18,8 @@ public:
   CharaWinkPlayer();
   virtual ~CharaWinkPlayer() {}
 
-  void create(CharaWeightPlayer *weight) {
-    state = nullptr;
-    mWeight = weight;
-  }
-
-  void destroy() {
-    state = nullptr;
-    mWeight = nullptr;
-  }
-
+  void create(CharaWeightPlayer *weight);
+  void destroy();
   void update(f32 delta) {
     if (mWeight == nullptr) {
       return;

@@ -5,6 +5,9 @@
 namespace gf {
 struct GF_OBJ_HANDLE;
 } // namespace gf
+namespace mm {
+struct Vec3;
+}
 
 namespace event {
 
@@ -19,6 +22,7 @@ public:
   virtual void init();
   virtual RESULT update(const Param &param);
   virtual void term();
+  void render(const mm::Vec3 &position, f32 eyeOffset);
 
   bool isManual() const { return (flags & FLAG_MANUAL) != 0; }
 

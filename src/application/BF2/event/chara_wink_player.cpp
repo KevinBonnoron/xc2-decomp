@@ -10,6 +10,16 @@ namespace event {
 
 CharaWinkPlayer::CharaWinkPlayer() : flags(), mWeight(nullptr), state(nullptr), mStatus("") {}
 
+void CharaWinkPlayer::create(CharaWeightPlayer *weight) {
+  state = nullptr;
+  mWeight = weight;
+}
+
+void CharaWinkPlayer::destroy() {
+  state = nullptr;
+  mWeight = nullptr;
+}
+
 void CharaWinkPlayer::open(bool isDirect) {
   mWeight->easeOut(gf::ANIM_LAYER_EYE, "S_eye_close", isDirect ? 0.0f : 4.0f, CV_TYPE_LINEAR, WEIGHT_LAYER_WINK);
   mStatus = "open";
@@ -44,6 +54,14 @@ void CharaWinkPlayer::idle_waiting() {
   mStatus = "close";
   state = &CharaWinkPlayer::idle_wink;
   mCounter = 7;
+}
+
+void CharaWinkPlayer::idle_wink() {
+  if (mCounter-- > 0)
+    return;
+  mWeight->easeOut(gf::ANIM_LAYER_EYE, "S_eye_close", 4.0f, CV_TYPE_LINEAR, WEIGHT_LAYER_WINK);
+  mStatus = "open";
+  state = &CharaWinkPlayer::idle_start;
 }
 
 } // namespace event

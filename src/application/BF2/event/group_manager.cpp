@@ -4,6 +4,10 @@ namespace event {
 
 GroupManager::GroupManager() : dispFlags(0), mMatrix(mm::Mat44::identity), mRadius(0.0f) {}
 
+void GroupManager::push(const CharaObj *chara) { mGroup.push(chara); }
+
+void GroupManager::pop(const CharaObj *chara) { mGroup.pop(chara); }
+
 void GroupManager::clear() {
   mMatrix = mm::Mat44::identity;
   mRadius = 0.0f;

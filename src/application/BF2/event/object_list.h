@@ -107,6 +107,10 @@ public:
   }
 
 private:
+  // Reconstruction access for ObjectManager::searchByName; original access
+  // relationship is unknown. The wrapper reads the same tree offsets.
+  friend class ObjectManager;
+
   bool isTree(const Object *object) const {
     return object == mRoot || object == mCharaTree || object == mCameraTree || object == mEffectTree || object == mLightTree;
   }

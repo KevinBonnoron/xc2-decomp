@@ -9,6 +9,10 @@
 
 namespace event {
 
+mm::Vec3 ObjectChara::getPos() const { return mCharaObj->getPos(); }
+
+void ObjectChara::resetTar() { mCharaObj->resetTar(); }
+
 ObjectChara::ObjectChara(const char *name) : Object(OBJTYPE_CHARA, name), flags(0), mCharaObj(nullptr) {}
 
 ObjectChara::~ObjectChara() {
