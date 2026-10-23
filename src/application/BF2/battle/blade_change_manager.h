@@ -38,29 +38,29 @@ public:
 
   struct PROC_DATA {
     PROC_DATA()
-        : driver(gf::INVALID_HANDLE), blade(gf::INVALID_HANDLE), changeBlade(gf::INVALID_HANDLE), effect(0), coolTimeRate(0.0f), changeBladeIndex(-1),
-          baseBladeBdatId(0), progress(0), step(0), timer(0.0f), changeType(CHANGE_TYPE_NORMAL), receiveType(RECEIVE_TYPE_BLADE_CHANGE),
-          isFirst(true), isReceive(false), isDriverEnd(false), isChangeBladeEnd(false), isFinish(false), cancelState(CANCEL_STATE_ENABLE) {}
+        : unknown00(gf::INVALID_HANDLE), unknown08(gf::INVALID_HANDLE), unknown10(gf::INVALID_HANDLE), unknown40(0), unknown44(0.0f), unknown48(-1),
+          unknown4c(0), unknown50(0), unknown54(0), unknown58(0.0f), unknown5c(CHANGE_TYPE_NORMAL), unknown5d(RECEIVE_TYPE_BLADE_CHANGE),
+          unknown5e(true), unknown5f(false), unknown60(false), unknown61(false), unknown62(false), unknown63(CANCEL_STATE_ENABLE) {}
 
-    gf::GF_OBJ_HANDLE *driver;
-    gf::GF_OBJ_HANDLE *blade;
-    gf::GF_OBJ_HANDLE *changeBlade;
+    gf::GF_OBJ_HANDLE *unknown00; // Inferred role: driver handle; original member name unknown.
+    gf::GF_OBJ_HANDLE *unknown08; // Inferred role: blade handle; original member name unknown.
+    gf::GF_OBJ_HANDLE *unknown10; // Inferred role: blade being changed to; original member name unknown.
     u8 _18[0x40 - 0x18];
-    u32 effect;
-    f32 coolTimeRate;
-    int changeBladeIndex;
-    int baseBladeBdatId;
-    int progress;
-    int step;
-    f32 timer;
-    u8 changeType;
-    s8 receiveType;
-    bool isFirst;
-    bool isReceive;
-    bool isDriverEnd;
-    bool isChangeBladeEnd;
-    bool isFinish;
-    u8 cancelState;
+    u32 unknown40;  // Inferred role: effect id; original member name unknown.
+    f32 unknown44;  // Inferred role: cool time rate; original member name unknown.
+    int unknown48;  // Inferred role: change blade index; original member name unknown.
+    int unknown4c;  // Inferred role: base blade bdat id; original member name unknown.
+    int unknown50;  // Inferred role: progress; original member name unknown.
+    int unknown54;  // Inferred role: step; original member name unknown.
+    f32 unknown58;  // Inferred role: timer; original member name unknown.
+    u8 unknown5c;   // Inferred role: change type; original member name unknown.
+    s8 unknown5d;   // Inferred role: receive type; original member name unknown.
+    bool unknown5e; // Inferred role: first flag; original member name unknown.
+    bool unknown5f; // Inferred role: receive flag; original member name unknown.
+    bool unknown60; // Inferred role: driver end flag; original member name unknown.
+    bool unknown61; // Inferred role: change blade end flag; original member name unknown.
+    bool unknown62; // Inferred role: finish flag; original member name unknown.
+    u8 unknown63;   // Inferred role: cancel state; original member name unknown.
     u8 _64[0x70 - 0x64];
   };
 
@@ -86,18 +86,18 @@ public:
   bool IsProcHomuriEnd() const;
 
   u8 _08[0x10 - 0x08];
-  PROC_DATA procs[10];
-  int procNum;
-  int isEnable;
+  PROC_DATA unknown10[10]; // Inferred role: procs; original member name unknown.
+  int unknown470;          // Inferred role: proc count; original member name unknown.
+  int unknown474;          // Inferred role: enable flag; original member name unknown.
   u8 _478[0x480 - 0x478];
 };
 
 static_assert(sizeof(BladeChangeManager::PROC_DATA) == 0x70, "");
-static_assert(offsetof(BladeChangeManager::PROC_DATA, effect) == 0x40, "");
-static_assert(offsetof(BladeChangeManager::PROC_DATA, changeType) == 0x5c, "");
-static_assert(offsetof(BladeChangeManager::PROC_DATA, cancelState) == 0x63, "");
-static_assert(offsetof(BladeChangeManager, procs) == 0x10, "");
-static_assert(offsetof(BladeChangeManager, procNum) == 0x470, "");
+static_assert(offsetof(BladeChangeManager::PROC_DATA, unknown40) == 0x40, "");
+static_assert(offsetof(BladeChangeManager::PROC_DATA, unknown5c) == 0x5c, "");
+static_assert(offsetof(BladeChangeManager::PROC_DATA, unknown63) == 0x63, "");
+static_assert(offsetof(BladeChangeManager, unknown10) == 0x10, "");
+static_assert(offsetof(BladeChangeManager, unknown470) == 0x470, "");
 static_assert(sizeof(BladeChangeManager) == 0x480, "");
 
 } // namespace btl
