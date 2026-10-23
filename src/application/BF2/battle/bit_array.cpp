@@ -4,33 +4,33 @@
 
 namespace btl {
 
-BitArray::BitArray() : data(nullptr) {}
+BitArray::BitArray() : unknown08(nullptr) {}
 
-BitArray::BitArray(int bitCount, int count, bool isSigned) : data(nullptr) { Initialize(bitCount, count, isSigned); }
+BitArray::BitArray(int bitCount, int count, bool isSigned) : unknown08(nullptr) { Initialize(bitCount, count, isSigned); }
 
 void BitArray::Initialize(int bitCount, int count, bool isSigned) {
-  if (data != nullptr) {
-    gf::getAllocator(gf::ALLOCATOR_DEFAULT)->deallocate(data);
+  if (unknown08 != nullptr) {
+    gf::getAllocator(gf::ALLOCATOR_DEFAULT)->deallocate(unknown08);
   }
 
   int size = (bitCount * count + 7) / 8;
-  data = static_cast<u8 *>(gf::getAllocator(gf::ALLOCATOR_DEFAULT)->allocate(size, 4));
-  __builtin_memset(data, 0, size);
-  this->count = count;
-  this->bitCount = bitCount;
-  this->isSigned = isSigned;
+  unknown08 = static_cast<u8 *>(gf::getAllocator(gf::ALLOCATOR_DEFAULT)->allocate(size, 4));
+  __builtin_memset(unknown08, 0, size);
+  this->unknown10 = count;
+  this->unknown12 = bitCount;
+  this->unknown13 = isSigned;
 }
 
 BitArray::~BitArray() {
-  if (data != nullptr) {
-    gf::getAllocator(gf::ALLOCATOR_DEFAULT)->deallocate(data);
+  if (unknown08 != nullptr) {
+    gf::getAllocator(gf::ALLOCATOR_DEFAULT)->deallocate(unknown08);
   }
 }
 
 void BitArray::SetData(int index, int value) {
-  int size = bitCount;
+  int size = unknown12;
   int bits;
-  if (!isSigned) {
+  if (!unknown13) {
     bits = (value < 0 ? 0 : value) & ((1 << size) - 1);
   } else {
     int sign = 1 << (size - 1);
@@ -43,7 +43,7 @@ void BitArray::SetData(int index, int value) {
   int i = 0;
   while (true) {
     u8 mask = 1 << bit;
-    data[byte] = (data[byte] & ~mask) | ((bits & (1 << (size - 1 - i))) == 0 ? 0 : mask);
+    unknown08[byte] = (unknown08[byte] & ~mask) | ((bits & (1 << (size - 1 - i))) == 0 ? 0 : mask);
     if (++i >= size) {
       break;
     }

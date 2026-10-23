@@ -13,16 +13,16 @@ public:
   void SetData(int index, int value);
   int GetData(int index) const;
 
-  u8 *data;
-  u16 count;
-  u8 bitCount;
-  bool isSigned;
+  u8 *unknown08;  // Inferred role: bit data buffer; original member name unknown.
+  u16 unknown10;  // Inferred role: count; original member name unknown.
+  u8 unknown12;   // Inferred role: bit count; original member name unknown.
+  bool unknown13; // Inferred role: signed flag; original member name unknown.
 };
 
-static_assert(offsetof(BitArray, data) == 0x08, "");
-static_assert(offsetof(BitArray, count) == 0x10, "");
-static_assert(offsetof(BitArray, bitCount) == 0x12, "");
-static_assert(offsetof(BitArray, isSigned) == 0x13, "");
+static_assert(offsetof(BitArray, unknown08) == 0x08, "");
+static_assert(offsetof(BitArray, unknown10) == 0x10, "");
+static_assert(offsetof(BitArray, unknown12) == 0x12, "");
+static_assert(offsetof(BitArray, unknown13) == 0x13, "");
 static_assert(sizeof(BitArray) == 0x18, "");
 
 } // namespace btl
