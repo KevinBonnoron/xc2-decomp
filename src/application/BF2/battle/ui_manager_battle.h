@@ -40,30 +40,30 @@ public:
   void DispChainUI(gf::GF_OBJ_HANDLE *handle);
   void NotifyInput(INPUT_TYPE type, int value);
 
-  gf::GfMenuCallContext *elementEffectContext;
-  u32 elementEffectId;
-  u8 elementEffectAttribute;
-  bool isElementEffectCanceled;
+  gf::GfMenuCallContext *unknown08; // Inferred role: element effect context; original member name unknown.
+  u32 unknown10;                    // Inferred role: element effect id; original member name unknown.
+  u8 unknown14;                     // Inferred role: element effect attribute; original member name unknown.
+  bool unknown15;                   // Inferred role: element effect canceled; original member name unknown.
   u8 _16[0x18 - 0x16];
-  f32 kakuseiRestTimeRatio;
-  bool isEnableKakusei;
-  bool isKakusei;
+  f32 unknown18;  // Inferred role: kakusei rest time ratio; original member name unknown.
+  bool unknown1c; // Inferred role: enable kakusei; original member name unknown.
+  bool unknown1d; // Inferred role: kakusei; original member name unknown.
   u8 _1e[0x20 - 0x1e];
-  gf::GF_OBJ_HANDLE *rescueTarget;
+  gf::GF_OBJ_HANDLE *unknown20; // Inferred role: rescue target; original member name unknown.
   u8 _28[0x44 - 0x28];
   u16 : 3;
-  u16 isPushReversePalette0 : 1;
-  u16 isPushReversePalette1 : 1;
-  u16 isPushReversePalette2 : 1;
-  u16 isPushReversePalette3 : 1;
-  u16 isDispBattleUI : 1;
+  u16 unknown44_3 : 1; // Inferred role: push reverse palette 0; original member name unknown.
+  u16 unknown44_4 : 1; // Inferred role: push reverse palette 1; original member name unknown.
+  u16 unknown44_5 : 1; // Inferred role: push reverse palette 2; original member name unknown.
+  u16 unknown44_6 : 1; // Inferred role: push reverse palette 3; original member name unknown.
+  u16 unknown44_7 : 1; // Inferred role: display battle UI; original member name unknown.
   u16 : 8;
 };
 
-static_assert(offsetof(UIManager, elementEffectContext) == 0x08, "");
-static_assert(offsetof(UIManager, isElementEffectCanceled) == 0x15, "");
-static_assert(offsetof(UIManager, kakuseiRestTimeRatio) == 0x18, "");
-static_assert(offsetof(UIManager, isEnableKakusei) == 0x1c, "");
-static_assert(offsetof(UIManager, rescueTarget) == 0x20, "");
+static_assert(offsetof(UIManager, unknown08) == 0x08, "");
+static_assert(offsetof(UIManager, unknown15) == 0x15, "");
+static_assert(offsetof(UIManager, unknown18) == 0x18, "");
+static_assert(offsetof(UIManager, unknown1c) == 0x1c, "");
+static_assert(offsetof(UIManager, unknown20) == 0x20, "");
 
 } // namespace btl

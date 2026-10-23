@@ -27,19 +27,19 @@ void UIManager::PreUpdateProc(const fw::UpdateInfo &) {}
 void UIManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
 
 void UIManager::ExitElementalComboDirectionUI(u32 id) {
-  if (id != 0 && !isElementEffectCanceled && elementEffectId == id) {
-    gf::GfMenuObjElementEff::cancel(elementEffectContext);
-    isElementEffectCanceled = true;
+  if (id != 0 && !unknown15 && unknown10 == id) {
+    gf::GfMenuObjElementEff::cancel(unknown08);
+    unknown15 = true;
   }
 }
 
 void UIManager::SetKakuseiData(bool isEnableKakusei, bool isKakusei, f32 kakuseiRestTimeRatio) {
-  this->isEnableKakusei = isEnableKakusei;
-  this->kakuseiRestTimeRatio = kakuseiRestTimeRatio;
-  this->isKakusei = isKakusei;
+  this->unknown1c = isEnableKakusei;
+  this->unknown18 = kakuseiRestTimeRatio;
+  this->unknown1d = isKakusei;
 }
 
-void UIManager::RegisterRescueUI(gf::GF_OBJ_HANDLE *handle) { rescueTarget = handle; }
+void UIManager::RegisterRescueUI(gf::GF_OBJ_HANDLE *handle) { unknown20 = handle; }
 
 void UIManager::DispChainUI(gf::GF_OBJ_HANDLE *handle) {
   gf::GfMenuObjChainIcon::OpenParam param;
@@ -59,16 +59,16 @@ void UIManager::NotifyInput(INPUT_TYPE type, int value) {
     gf::GfMenuObjSpecialGauge::push();
     break;
   case INPUT_TYPE_REVERSE_PALETTE_0:
-    isPushReversePalette0 = true;
+    unknown44_3 = true;
     break;
   case INPUT_TYPE_REVERSE_PALETTE_1:
-    isPushReversePalette1 = true;
+    unknown44_4 = true;
     break;
   case INPUT_TYPE_REVERSE_PALETTE_2:
-    isPushReversePalette2 = true;
+    unknown44_5 = true;
     break;
   case INPUT_TYPE_REVERSE_PALETTE_3:
-    isPushReversePalette3 = true;
+    unknown44_6 = true;
     break;
   }
 }

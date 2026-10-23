@@ -103,7 +103,7 @@ void BattleGlobal::NotifyShiftNone() {
 }
 
 void BattleGlobal::NotifyShiftTimeOver() {
-  if (UIManager::get()->isDispBattleUI) {
+  if (UIManager::get()->unknown44_7) {
     unknown65e1_7 = true;
   }
 }
