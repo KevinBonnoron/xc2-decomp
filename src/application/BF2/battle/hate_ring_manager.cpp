@@ -14,24 +14,24 @@ namespace btl {
 constexpr int HATE_ENEMY_NUM_SHIFT = 10;
 
 void HateRingManager::RING_DATA::Reset(bool isDestroyEffect) {
-  handle = gf::INVALID_HANDLE;
-  target = -1;
-  arrowFrame = 0.0f;
+  unknown10 = gf::INVALID_HANDLE;
+  unknown18 = -1;
+  unknown1c = 0.0f;
   if (isDestroyEffect) {
-    if (ringEffect != 0) {
-      fw::EffectManager::get()->destroyHateRingVec(ringEffect);
+    if (unknown20 != 0) {
+      fw::EffectManager::get()->destroyHateRingVec(unknown20);
     }
-    if (arrowEffect != 0) {
-      fw::EffectManager::get()->destroyHateArrow(arrowEffect);
+    if (unknown24 != 0) {
+      fw::EffectManager::get()->destroyHateArrow(unknown24);
     }
   }
-  ringEffect = 0;
-  arrowEffect = 0;
-  position = mm::Vec3::zero;
+  unknown20 = 0;
+  unknown24 = 0;
+  unknown00 = mm::Vec3::zero;
 }
 
 HateRingManager::HateRingManager() {
-  for (u32 &effect : targetRingEffects) {
+  for (u32 &effect : unknown1120) {
     effect = 0;
   }
 }
@@ -56,7 +56,7 @@ void HateRingManager::Destroy() {
 }
 
 void HateRingManager::Finalize() {
-  RING_DATA *ring = rings;
+  RING_DATA *ring = unknown10;
   for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
     ring->Reset(true);
   }
@@ -69,65 +69,65 @@ void HateRingManager::PreUpdateProc(const fw::UpdateInfo &) {}
 void HateRingManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
 
 void HateRingManager::UpdateProc(const fw::UpdateInfo &updateInfo) {
-  for (bool &isUsed : isTargetRingUsed) {
+  for (bool &isUsed : unknown112c) {
     isUsed = false;
   }
 
   if (BattleGlobal::get()->IsEnableBattle()) {
-    RING_DATA *ring = rings;
+    RING_DATA *ring = unknown10;
     for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
-      if (ring->handle == gf::INVALID_HANDLE) {
+      if (ring->unknown10 == gf::INVALID_HANDLE) {
         continue;
       }
       BattleCharacter *character = CharacterManager::get()->GetCharacterConst(i);
       if (character == nullptr || character->IsDead(0)) {
         ring->Reset(true);
       } else {
-        isTargetRingUsed[ring->target] = true;
+        unknown112c[ring->unknown18] = true;
       }
     }
     for (int i = 0; i < HATE_TARGET_COUNT; i++) {
-      if (!isTargetRingUsed[i] && targetRingEffects[i] != 0) {
-        fw::EffectManager::get()->destroyHateRing(targetRingEffects[i]);
-        targetRingEffects[i] = 0;
+      if (!unknown112c[i] && unknown1120[i] != 0) {
+        fw::EffectManager::get()->destroyHateRing(unknown1120[i]);
+        unknown1120[i] = 0;
       }
     }
   }
 
-  RING_DATA *ring = rings;
+  RING_DATA *ring = unknown10;
   for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
     UpdateArrow(i, *ring, updateInfo.deltaTime);
   }
 }
 
 void HateRingManager::UpdateRing(int target, mm::Vec3 position, mm::Vec3 direction) {
-  targetRingPositions[target] = position;
+  unknown10f0[target] = position;
   fw::EffectManager *effectManager = fw::EffectManager::get();
-  u32 effect = targetRingEffects[target];
-  if (isTargetRingUsed[target]) {
+  u32 effect = unknown1120[target];
+  if (unknown112c[target]) {
     if (effect != 0 || (effect = effectManager->createHateRing()) != 0) {
       f32 rotation = Misc::CalcRotY(direction);
-      effectManager->updateHateRing(targetRingEffects[target], position, rotation, isTargetRingUsed[target], 1.0f);
+      effectManager->updateHateRing(unknown1120[target], position, rotation, unknown112c[target], 1.0f);
     }
   } else if (effect != 0) {
     effectManager->destroyHateRing(effect);
     effect = 0;
   }
-  targetRingEffects[target] = effect;
+  unknown1120[target] = effect;
 }
 
 int HateRingManager::GetTarget(gf::GF_OBJ_HANDLE *handle) const {
-  const RING_DATA *ring = rings;
+  const RING_DATA *ring = unknown10;
   for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
-    if (ring->handle == handle) {
-      return ring->target;
+    if (ring->unknown10 == handle) {
+      return ring->unknown18;
     }
   }
 
   return -1;
 }
 
-int HateRingManager::GetTarget(int id) const { return rings[id].target; }
+int HateRingManager::GetTarget(int id) const { return unknown10[id].unknown18; }
 
 gf::GF_OBJ_HANDLE *HateRingManager::GetTargetHandle(gf::GF_OBJ_HANDLE *handle) const { return gf::GfGameParty::getHandleDriver(GetTarget(handle)); }
 
@@ -135,9 +135,9 @@ gf::GF_OBJ_HANDLE *HateRingManager::GetTargetHandle(int id) const { return gf::G
 
 int HateRingManager::GetHateEnemyNum(int target) const {
   int num = 0;
-  const RING_DATA *ring = rings;
+  const RING_DATA *ring = unknown10;
   for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
-    if (ring->handle != gf::INVALID_HANDLE && ring->target == target) {
+    if (ring->unknown10 != gf::INVALID_HANDLE && ring->unknown18 == target) {
       num++;
     }
   }
@@ -147,13 +147,13 @@ int HateRingManager::GetHateEnemyNum(int target) const {
 
 u32 HateRingManager::GetHateEnemyNumAll() const {
   u32 nums[HATE_TARGET_COUNT] = {};
-  const RING_DATA *ring = rings;
+  const RING_DATA *ring = unknown10;
   for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
-    if (ring->handle == gf::INVALID_HANDLE) {
+    if (ring->unknown10 == gf::INVALID_HANDLE) {
       continue;
     }
 
-    int target = ring->target;
+    int target = ring->unknown18;
     if (target >= 0 && target < HATE_TARGET_COUNT) {
       nums[target]++;
     }
