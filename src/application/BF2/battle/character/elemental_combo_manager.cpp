@@ -69,9 +69,9 @@ void ElementalComboManager::CheckCharacterID() {
   f32 radiusScale = parameter->ballRadius * (1.0f / 6.0f);
   scale = scale > radiusScale ? scale : radiusScale;
   BtlSystemBalanceAccess *balance = BtlSystemBalanceAccess::get();
-  ballScale = mm::clamp(scale, balance->ballScaleMin * 0.01f, balance->ballScaleMax * 0.01f);
+  ballScale = mm::clamp(scale, balance->unknown41 * 0.01f, balance->unknown42 * 0.01f);
   if (isPlayer) {
-    elementalValueMax = BtlSystemBalanceAccess::get()->elementalValueMax;
+    elementalValueMax = BtlSystemBalanceAccess::get()->unknown34;
   } else {
     elementalValueMax = 0;
   }

@@ -522,7 +522,7 @@ f32 BattleCharacter::GetArtsDamageRate(const ARTS_DATA::LEVEL_DATA &level) const
 
 f32 BattleCharacter::ApplyResistantAttr(f32 damage, int attribute) const {
   if (GetCharacterParameterConst(false)->resistantAttributeFlags & (1 << attribute)) {
-    damage = BtlSystemBalanceAccess::get()->resistantAttrDamageRate * damage;
+    damage = BtlSystemBalanceAccess::get()->unknown10 * damage;
   }
   return damage;
 }

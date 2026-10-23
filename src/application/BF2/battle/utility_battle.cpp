@@ -269,9 +269,9 @@ int Utility::GetPartyID(gf::GF_OBJ_HANDLE *handle) {
   return -1;
 }
 
-f32 Utility::GetDyingHpRate() { return BtlSystemBalanceAccess::get()->dyingHpRate; }
+f32 Utility::GetDyingHpRate() { return BtlSystemBalanceAccess::get()->unknowndc; }
 
-int Utility::GetResistantAttrMaxHP() { return BtlSystemBalanceAccess::get()->resistantAttrMaxHP; }
+int Utility::GetResistantAttrMaxHP() { return BtlSystemBalanceAccess::get()->unknown40; }
 
 int Utility::GetTrustRank(int blade) { return gf::GfDataBlade::getTrustRank(blade); }
 

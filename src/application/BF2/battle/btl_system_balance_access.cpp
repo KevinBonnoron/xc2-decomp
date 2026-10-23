@@ -25,7 +25,7 @@ void BtlSystemBalanceAccess::Finalize() {}
 
 bool BtlSystemBalanceAccess::IsOneBoundEnemy(u32 enemy) const {
   for (int i = 0; i < 2; i++) {
-    if (oneBoundEnemies[i] == enemy) {
+    if (unknownb6[i] == enemy) {
       return true;
     }
   }
@@ -35,7 +35,7 @@ bool BtlSystemBalanceAccess::IsOneBoundEnemy(u32 enemy) const {
 
 int BtlSystemBalanceAccess::IsSpSizeEnemy(u32 enemy) const {
   for (int i = 0; i < 1; i++) {
-    if (spSizeEnemies[i] == enemy) {
+    if (unknownba[i] == enemy) {
       return i;
     }
   }
@@ -45,7 +45,7 @@ int BtlSystemBalanceAccess::IsSpSizeEnemy(u32 enemy) const {
 
 bool BtlSystemBalanceAccess::IsSpKizunaLineEnemy(u32 enemy) const {
   for (int i = 0; i < 2; i++) {
-    if (spKizunaLineEnemies[i] == enemy) {
+    if (unknownbc[i] == enemy) {
       return true;
     }
   }
@@ -55,7 +55,7 @@ bool BtlSystemBalanceAccess::IsSpKizunaLineEnemy(u32 enemy) const {
 
 bool BtlSystemBalanceAccess::IsSpForceLandEnemy(u32 enemy) const {
   for (int i = 0; i < 2; i++) {
-    if (spForceLandEnemies[i] == enemy) {
+    if (unknownc0[i] == enemy) {
       return true;
     }
   }
@@ -65,7 +65,7 @@ bool BtlSystemBalanceAccess::IsSpForceLandEnemy(u32 enemy) const {
 
 bool BtlSystemBalanceAccess::IsSpBenkeiWeapondEnemy(u32 enemy) const {
   for (int i = 0; i < 1; i++) {
-    if (spBenkeiWeaponEnemies[i] == enemy) {
+    if (unknownc4[i] == enemy) {
       return true;
     }
   }
