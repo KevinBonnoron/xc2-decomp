@@ -1234,7 +1234,7 @@ void Utility::AI_SetSuperArmor(gf::GF_OBJ_HANDLE *handle, f32 time) {
 
 int Utility::AI_GetButtonChallengeResult() {
   ButtonChallenge &challenge = BattleGlobal::get()->unknown5e8;
-  if (challenge.IsProc() && challenge.param.type == ButtonChallenge::TYPE_ENEMY) {
+  if (challenge.IsProc() && challenge.unknown18.unknown03_4 == ButtonChallenge::TYPE_ENEMY) {
     return BUTTON_CHALLENGE_RESULT_PROC;
   }
   return challenge.IsEnemyChallengeSuccess() ? BUTTON_CHALLENGE_RESULT_SUCCESS : BUTTON_CHALLENGE_RESULT_FAILURE;

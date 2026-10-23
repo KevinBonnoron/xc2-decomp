@@ -24,17 +24,18 @@ public:
 
   struct BUTTON_CHALLENGE_PARAM {
     BUTTON_CHALLENGE_PARAM()
-        : id(0), challenge(0), type(TYPE_NONE), isWeaponAttack(0), attackType(0), target(0), characterId(CHARACTER_COUNT), priority(0) {}
+        : unknown00_0(0), unknown01_6(0), unknown03_4(TYPE_NONE), unknown04_0(0), unknown06_0(0), unknown08(0), unknown0c(CHARACTER_COUNT),
+          unknown0d(0) {}
 
-    u32 id : 14;
-    u32 challenge : 14;
-    u32 type : 4;
+    u32 unknown00_0 : 14; // Inferred role: id; original member name unknown.
+    u32 unknown01_6 : 14; // Inferred role: challenge; original member name unknown.
+    u32 unknown03_4 : 4;  // Inferred role: type; original member name unknown.
     u32 : 0;
-    u32 isWeaponAttack : 16;
-    u32 attackType : 16;
-    int target;
-    u8 characterId;
-    u8 priority;
+    u32 unknown04_0 : 16; // Inferred role: weapon attack flag; original member name unknown.
+    u32 unknown06_0 : 16; // Inferred role: attack type; original member name unknown.
+    int unknown08;        // Inferred role: target; original member name unknown.
+    u8 unknown0c;         // Inferred role: character id; original member name unknown.
+    u8 unknown0d;         // Inferred role: priority; original member name unknown.
   };
 
   ButtonChallenge();
@@ -51,28 +52,28 @@ public:
   void DeleteSlow();
   bool IsEnemyChallengeSuccess();
 
-  gf::GfMenuCallContext *context;
-  gf::GfMenuCallContext *closingContext;
-  BUTTON_CHALLENGE_PARAM param;
-  int nextId;
-  u32 currentId;
-  u32 slow;
-  u8 successCount;
-  bool isOpen;
-  bool isEnd;
-  bool isEnemySuccess;
+  gf::GfMenuCallContext *unknown08; // Inferred role: menu call context; original member name unknown.
+  gf::GfMenuCallContext *unknown10; // Inferred role: closing menu call context; original member name unknown.
+  BUTTON_CHALLENGE_PARAM unknown18; // Inferred role: param; original member name unknown.
+  int unknown28;                    // Inferred role: next id; original member name unknown.
+  u32 unknown2c;                    // Inferred role: current id; original member name unknown.
+  u32 unknown30;                    // Inferred role: slow id; original member name unknown.
+  u8 unknown34;                     // Inferred role: success count; original member name unknown.
+  bool unknown35;                   // Inferred role: open flag; original member name unknown.
+  bool unknown36;                   // Inferred role: end flag; original member name unknown.
+  bool unknown37;                   // Inferred role: enemy success flag; original member name unknown.
 };
 
-static_assert(offsetof(ButtonChallenge, context) == 0x08, "");
-static_assert(offsetof(ButtonChallenge, closingContext) == 0x10, "");
-static_assert(offsetof(ButtonChallenge, param) == 0x18, "");
-static_assert(offsetof(ButtonChallenge, nextId) == 0x28, "");
-static_assert(offsetof(ButtonChallenge, currentId) == 0x2c, "");
-static_assert(offsetof(ButtonChallenge, slow) == 0x30, "");
-static_assert(offsetof(ButtonChallenge, successCount) == 0x34, "");
-static_assert(offsetof(ButtonChallenge, isOpen) == 0x35, "");
-static_assert(offsetof(ButtonChallenge, isEnd) == 0x36, "");
-static_assert(offsetof(ButtonChallenge, isEnemySuccess) == 0x37, "");
+static_assert(offsetof(ButtonChallenge, unknown08) == 0x08, "");
+static_assert(offsetof(ButtonChallenge, unknown10) == 0x10, "");
+static_assert(offsetof(ButtonChallenge, unknown18) == 0x18, "");
+static_assert(offsetof(ButtonChallenge, unknown28) == 0x28, "");
+static_assert(offsetof(ButtonChallenge, unknown2c) == 0x2c, "");
+static_assert(offsetof(ButtonChallenge, unknown30) == 0x30, "");
+static_assert(offsetof(ButtonChallenge, unknown34) == 0x34, "");
+static_assert(offsetof(ButtonChallenge, unknown35) == 0x35, "");
+static_assert(offsetof(ButtonChallenge, unknown36) == 0x36, "");
+static_assert(offsetof(ButtonChallenge, unknown37) == 0x37, "");
 static_assert(sizeof(ButtonChallenge) == 0x38, "");
 
 } // namespace btl

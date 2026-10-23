@@ -8,7 +8,7 @@ namespace btl {
 
 constexpr int CHALLENGE_SEQUENCE = 223;
 
-static void ReleaseContext(gf::GfMenuCallContext *&context) {
+static void unknown001(gf::GfMenuCallContext *&context) { // Inferred role: releaseContext; original function name unknown.
   if (context != nullptr) {
     context->release();
     context = nullptr;
@@ -16,67 +16,67 @@ static void ReleaseContext(gf::GfMenuCallContext *&context) {
 }
 
 ButtonChallenge::ButtonChallenge()
-    : context(nullptr), closingContext(nullptr), nextId(1), currentId(0), slow(0), successCount(0), isOpen(false), isEnd(true),
-      isEnemySuccess(false) {}
+    : unknown08(nullptr), unknown10(nullptr), unknown28(1), unknown2c(0), unknown30(0), unknown34(0), unknown35(false), unknown36(true),
+      unknown37(false) {}
 
 ButtonChallenge::~ButtonChallenge() {
-  ReleaseContext(context);
-  ReleaseContext(closingContext);
+  unknown001(unknown08);
+  unknown001(unknown10);
 }
 
 void ButtonChallenge::OpenButtonChallenge(int id, int challenge) {
-  if (context == nullptr) {
-    context = gf::GfMenuCallContext::create();
+  if (unknown08 == nullptr) {
+    unknown08 = gf::GfMenuCallContext::create();
   } else {
-    context->reset();
+    unknown08->reset();
   }
 
   if (id == CHALLENGE_SEQUENCE) {
-    gf::GfMenuObjButtonChallenge2::openSequence(context, challenge, false, true);
+    gf::GfMenuObjButtonChallenge2::openSequence(unknown08, challenge, false, true);
   } else {
-    gf::GfMenuObjButtonChallenge2::open(context, challenge, false, true);
+    gf::GfMenuObjButtonChallenge2::open(unknown08, challenge, false, true);
   }
-  isOpen = true;
-  isEnd = false;
+  unknown35 = true;
+  unknown36 = false;
 }
 
 int ButtonChallenge::Start(const BUTTON_CHALLENGE_PARAM &param) {
-  if (isOpen) {
-    if (param.priority < this->param.priority) {
+  if (unknown35) {
+    if (param.unknown0d < this->unknown18.unknown0d) {
       return 0;
     }
-    if (!isEnd && this->param.type == TYPE_DRIVER) {
+    if (!unknown36 && this->unknown18.unknown03_4 == TYPE_DRIVER) {
       ResultProc(3);
     }
     CancelProc();
   }
 
-  this->param = param;
-  OpenButtonChallenge(param.id, param.challenge);
+  this->unknown18 = param;
+  OpenButtonChallenge(param.unknown00_0, param.unknown01_6);
   FinalizeExProc();
-  if (param.type == TYPE_ENEMY) {
+  if (param.unknown03_4 == TYPE_ENEMY) {
     BattleGlobal::get()->SetPause(BattleGlobal::PAUSE_BUTTON_CHALLENGE, true);
   }
-  this->param = param;
-  int id = nextId;
-  nextId = id == -1 ? 1 : id + 1;
-  currentId = id;
+  this->unknown18 = param;
+  int id = unknown28;
+  unknown28 = id == -1 ? 1 : id + 1;
+  unknown2c = id;
   return id;
 }
 
 void ButtonChallenge::CancelProc() {
-  gf::GfMenuCallContext *closing = context;
+  gf::GfMenuCallContext *closing = unknown08;
   if (closing != nullptr) {
-    ReleaseContext(closingContext);
-    context = nullptr;
-    closingContext = closing;
+    unknown001(unknown10);
+    unknown08 = nullptr;
+    unknown10 = closing;
     gf::GfMenuObjButtonChallenge2::close(closing);
   }
-  param = BUTTON_CHALLENGE_PARAM();
-  currentId = 0;
-  isOpen = false;
-  isEnd = true;
-  isEnemySuccess = false;
+  unknown18 = BUTTON_CHALLENGE_PARAM();
+  unknown2c = 0;
+  unknown35 = false;
+  unknown36 = true;
+  unknown37 = false;
 }
 
 void ButtonChallenge::FinalizeExProc() {
@@ -85,29 +85,29 @@ void ButtonChallenge::FinalizeExProc() {
 }
 
 void ButtonChallenge::Cancel(u32 id) {
-  if (currentId == id && !isEnd) {
+  if (unknown2c == id && !unknown36) {
     CancelProc();
   }
 }
 
 void ButtonChallenge::ProgressSeparately() {
-  if (context != nullptr) {
-    gf::GfMenuObjButtonChallenge2::resume(context);
+  if (unknown08 != nullptr) {
+    gf::GfMenuObjButtonChallenge2::resume(unknown08);
   }
 }
 
-bool ButtonChallenge::IsProc() const { return isOpen || param.type != TYPE_NONE; }
+bool ButtonChallenge::IsProc() const { return unknown35 || unknown18.unknown03_4 != TYPE_NONE; }
 
 void ButtonChallenge::DeleteSlow() {
-  if (slow != 0) {
-    BattleGlobal::get()->DeleteSlow(slow);
-    slow = 0;
+  if (unknown30 != 0) {
+    BattleGlobal::get()->DeleteSlow(unknown30);
+    unknown30 = 0;
   }
 }
 
 bool ButtonChallenge::IsEnemyChallengeSuccess() {
-  bool isSuccess = isEnemySuccess;
-  isEnemySuccess = false;
+  bool isSuccess = unknown37;
+  unknown37 = false;
   return isSuccess;
 }
 
