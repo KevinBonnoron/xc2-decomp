@@ -133,10 +133,10 @@ void Utility::GetArtsData(ARTS_DATA::DATA_TYPE type, int id, ARTS_DATA &data) { 
 int Utility::GetArtsEnhance(const ARTS_SLOT_DATA &slot) {
   ARTS_DATA data;
   slot.GetArtsData(data);
-  return GetArtsEnhance(data, slot.level);
+  return GetArtsEnhance(data, slot.unknown02_5);
 }
 
-int Utility::GetArtsEnhance(const ARTS_DATA &data, int level) { return data.levels[level - 1].enhance; }
+int Utility::GetArtsEnhance(const ARTS_DATA &data, int level) { return data.unknown90[level - 1].unknown04; }
 
 int Utility::GetSeType(const char *packName) {
   if (packName != nullptr && packName[0] != '\0') {

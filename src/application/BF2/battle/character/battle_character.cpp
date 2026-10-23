@@ -269,11 +269,11 @@ void BattleCharacter::GetMoveDataPerSec(mm::Vec3 &moveData) const {
 void BattleCharacter::SetAnimationSpeed(f32 speed) { animationSpeed = speed; }
 
 void BattleCharacter::SetIKData(const ARTS_DATA &data) {
-  ikStartNo = data.ikStartNo;
-  ikStartFrame = data.ikStartFrame;
-  ikEndNo = data.ikEndNo;
-  ikEndFrame = data.ikEndFrame;
-  isIK = data.isIK;
+  ikStartNo = data.unknown15_0;
+  ikStartFrame = data.unknown15_4;
+  ikEndNo = data.unknown16_4;
+  ikEndFrame = data.unknown17_0;
+  isIK = data.unknown2f_0;
 }
 
 void BattleCharacter::NotifyStrikeDamage(int) { TalkManager::get()->NotifyTrigger(id, TalkManager::TRIGGER_STRIKE_DAMAGE, 0, 0); }
@@ -518,7 +518,7 @@ void BattleCharacter::SetSuperArmorTime(f32 time) { superArmorTime = superArmorT
 
 void BattleCharacter::SetPerfectAvoidTime(f32 time) { perfectAvoidTime = perfectAvoidTime > time ? perfectAvoidTime : time; }
 
-f32 BattleCharacter::GetArtsDamageRate(const ARTS_DATA::LEVEL_DATA &level) const { return level.damageMargin * 0.01f; }
+f32 BattleCharacter::GetArtsDamageRate(const ARTS_DATA::LEVEL_DATA &level) const { return level.unknown00 * 0.01f; }
 
 f32 BattleCharacter::ApplyResistantAttr(f32 damage, int attribute) const {
   if (GetCharacterParameterConst(false)->resistantAttributeFlags & (1 << attribute)) {
@@ -527,7 +527,7 @@ f32 BattleCharacter::ApplyResistantAttr(f32 damage, int attribute) const {
   return damage;
 }
 
-f32 BattleCharacter::GetArtsDamageRate(const ARTS_DATA &data, int level) const { return GetArtsDamageRate(data.levels[level - 1]); }
+f32 BattleCharacter::GetArtsDamageRate(const ARTS_DATA &data, int level) const { return GetArtsDamageRate(data.unknown90[level - 1]); }
 
 void BattleCharacter::StopAI(f32 time) { stopAiTime = stopAiTime > time ? stopAiTime : time; }
 

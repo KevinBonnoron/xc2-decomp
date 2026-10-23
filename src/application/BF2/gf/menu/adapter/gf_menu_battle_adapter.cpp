@@ -153,10 +153,10 @@ bool GfMenuBattleAdapter::update_ArtsFightComboIcon() {
     return false;
   }
   btl::Utility::GetArtsData(btl::ARTS_DATA::DATA_TYPE_DRIVER, info.artsId, data);
-  if (data.fightCombo == 0) {
+  if (data.unknown0c_0 == 0) {
     return false;
   }
-  setNumber(data.fightCombo - 1);
+  setNumber(data.unknown0c_0 - 1);
   return true;
 }
 

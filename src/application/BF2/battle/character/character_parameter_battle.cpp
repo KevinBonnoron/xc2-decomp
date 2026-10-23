@@ -619,8 +619,8 @@ void PlayerParameter::WritebackRecast(GROUP_DATA *groupData) {
     const ARTS_PALETTE_DATA *palette = GetArtsPaletteDataConst(-1);
     for (int i = 0; i < 3; i++) {
       const ARTS_SLOT_DATA *slot = palette->GetSlotDataConst(i, false);
-      bool isValid = slot->id != 0;
-      f32 recast = slot->recast;
+      bool isValid = slot->unknown00_0 != 0;
+      f32 recast = slot->unknown04;
       groupData->recasts[i] = isValid ? recast : 0.0f;
     }
   }
