@@ -8,7 +8,7 @@ struct GF_OBJ_HANDLE;
 
 namespace btl {
 
-BladeArtsManager::BladeArtsManager() : procNum(0) {}
+BladeArtsManager::BladeArtsManager() : unknown198(0) {}
 
 BladeArtsManager::~BladeArtsManager() {}
 
@@ -19,9 +19,9 @@ void BladeArtsManager::Create() {
 
 void BladeArtsManager::Initialize() {
   for (int i = 0; i < 10; i++) {
-    procs[i] = PROC_DATA();
+    unknown08[i] = PROC_DATA();
   }
-  procNum = 0;
+  unknown198 = 0;
 }
 
 void BladeArtsManager::Destroy() {
@@ -34,9 +34,9 @@ void BladeArtsManager::Finalize() {}
 
 void BladeArtsManager::NotifyMapChange() {
   for (int i = 0; i < 10; i++) {
-    procs[i] = PROC_DATA();
+    unknown08[i] = PROC_DATA();
   }
-  procNum = 0;
+  unknown198 = 0;
 }
 
 void BladeArtsManager::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->PreUpdateProc(updateInfo); }
@@ -44,26 +44,26 @@ void BladeArtsManager::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->PreU
 void BladeArtsManager::PreUpdateProc(const fw::UpdateInfo &) {}
 
 void BladeArtsManager::FinishBladeArts(gf::GF_OBJ_HANDLE *handle) {
-  int num = procNum;
+  int num = unknown198;
   for (int i = 0; i < num; i++) {
-    if (procs[i].driver == handle || procs[i].blade == handle) {
-      procs[i].state = STATE_FINISH;
+    if (unknown08[i].unknown00 == handle || unknown08[i].unknown08 == handle) {
+      unknown08[i].unknown1c = STATE_FINISH;
     }
   }
 }
 
 gf::GF_OBJ_HANDLE *BladeArtsManager::GetTargetHandle(gf::GF_OBJ_HANDLE *handle) const {
-  for (int i = 0; i < procNum; i++) {
-    if (procs[i].driver == handle || procs[i].blade == handle) {
-      return procs[i].target;
+  for (int i = 0; i < unknown198; i++) {
+    if (unknown08[i].unknown00 == handle || unknown08[i].unknown08 == handle) {
+      return unknown08[i].unknown10;
     }
   }
   return gf::INVALID_HANDLE;
 }
 
 bool BladeArtsManager::IsRegister(gf::GF_OBJ_HANDLE *handle) const {
-  for (int i = 0; i < procNum; i++) {
-    if (procs[i].driver == handle || procs[i].blade == handle) {
+  for (int i = 0; i < unknown198; i++) {
+    if (unknown08[i].unknown00 == handle || unknown08[i].unknown08 == handle) {
       return true;
     }
   }
@@ -73,10 +73,10 @@ bool BladeArtsManager::IsRegister(gf::GF_OBJ_HANDLE *handle) const {
 bool BladeArtsManager::IsBladeStart(gf::GF_OBJ_HANDLE *handle) const {
   bool isFound = false;
   bool isStart;
-  for (int i = 0; i < procNum; i++) {
-    if (procs[i].driver == handle || procs[i].blade == handle) {
+  for (int i = 0; i < unknown198; i++) {
+    if (unknown08[i].unknown00 == handle || unknown08[i].unknown08 == handle) {
       isFound = true;
-      isStart = procs[i].state >= STATE_ATTACK;
+      isStart = unknown08[i].unknown1c >= STATE_ATTACK;
       break;
     }
   }
@@ -86,10 +86,10 @@ bool BladeArtsManager::IsBladeStart(gf::GF_OBJ_HANDLE *handle) const {
 bool BladeArtsManager::IsBladeAttack(gf::GF_OBJ_HANDLE *handle) const {
   bool isFound = false;
   bool isAttack;
-  for (int i = 0; i < procNum; i++) {
-    if (procs[i].driver == handle || procs[i].blade == handle) {
+  for (int i = 0; i < unknown198; i++) {
+    if (unknown08[i].unknown00 == handle || unknown08[i].unknown08 == handle) {
       isFound = true;
-      isAttack = procs[i].state == STATE_ATTACK;
+      isAttack = unknown08[i].unknown1c == STATE_ATTACK;
       break;
     }
   }
