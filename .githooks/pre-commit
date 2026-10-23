@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 set -e
-if command -v format >/dev/null; then
-  exec format --staged
+run() {
+  if command -v check >/dev/null; then
+    "$@"
+  else
+    nix develop -c "$@"
+  fi
+}
+run format --staged
+mapfile -t files < <(git diff --cached --name-only --diff-filter=ACMR -- 'src/*.h' 'src/*.cpp' 'include/*.h' 'include/*.cpp')
+if [ ${#files[@]} -gt 0 ]; then
+  run includes "${files[@]}" || {
+    echo "pre-commit: run \`includes --fix\` on the staged files, then \`check\`" >&2
+    exit 1
+  }
 fi
-exec nix develop -c format --staged
+run check || {
+  echo "pre-commit: \`check\` must match every function, with no compile error and nothing NOT IN GAME" >&2
+  exit 1
+}
