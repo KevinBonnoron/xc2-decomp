@@ -22,10 +22,10 @@ constexpr int CHARACTER_COUNT = 90;
 class CharacterManager : public mm::mtl::PtrSingleton<CharacterManager>, public fw::MessageObject {
 public:
   struct CHARACTER_DATA {
-    CHARACTER_DATA() : isUse(false) {}
+    CHARACTER_DATA() : unknown11f0(false) {}
 
-    BattleCharacter character;
-    bool isUse;
+    BattleCharacter unknown00; // Inferred role: character; original member name unknown.
+    bool unknown11f0;          // Inferred role: in use; original member name unknown.
   };
 
   CharacterManager();
@@ -60,19 +60,19 @@ public:
   void PlayEnemyWinVoice();
   void SetupBGM();
 
-  CHARACTER_DATA characters[CHARACTER_COUNT];
-  mm::mtl::FixedVector<u8, CHARACTER_COUNT> registeredIds;
-  u8 controlCharacterId;
-  u8 playerAiChrTable[CHARACTER_PLAYER_COUNT];
-  u8 enemyAiChrTable[CHARACTER_COUNT - CHARACTER_PLAYER_COUNT];
+  CHARACTER_DATA unknown20[CHARACTER_COUNT];                 // Inferred role: characters; original member name unknown.
+  mm::mtl::FixedVector<u8, CHARACTER_COUNT> unknown65420;    // Inferred role: registered ids; original member name unknown.
+  u8 unknown65488;                                           // Inferred role: control character id; original member name unknown.
+  u8 unknown65489[CHARACTER_PLAYER_COUNT];                   // Inferred role: player AI character table; original member name unknown.
+  u8 unknown6549d[CHARACTER_COUNT - CHARACTER_PLAYER_COUNT]; // Inferred role: enemy AI character table; original member name unknown.
 };
 
 static_assert(sizeof(CharacterManager::CHARACTER_DATA) == 0x1200, "");
-static_assert(offsetof(CharacterManager, characters) == 0x20, "");
-static_assert(offsetof(CharacterManager, registeredIds) == 0x65420, "");
-static_assert(offsetof(CharacterManager, controlCharacterId) == 0x65488, "");
-static_assert(offsetof(CharacterManager, playerAiChrTable) == 0x65489, "");
-static_assert(offsetof(CharacterManager, enemyAiChrTable) == 0x6549d, "");
+static_assert(offsetof(CharacterManager, unknown20) == 0x20, "");
+static_assert(offsetof(CharacterManager, unknown65420) == 0x65420, "");
+static_assert(offsetof(CharacterManager, unknown65488) == 0x65488, "");
+static_assert(offsetof(CharacterManager, unknown65489) == 0x65489, "");
+static_assert(offsetof(CharacterManager, unknown6549d) == 0x6549d, "");
 static_assert(sizeof(CharacterManager) == 0x654f0, "");
 
 } // namespace btl

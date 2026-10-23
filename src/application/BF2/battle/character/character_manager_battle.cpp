@@ -8,13 +8,13 @@
 
 namespace btl {
 
-CharacterManager::CharacterManager() : controlCharacterId(CHARACTER_COUNT) {
+CharacterManager::CharacterManager() : unknown65488(CHARACTER_COUNT) {
   for (int i = 0; i < CHARACTER_PLAYER_COUNT; i++) {
-    playerAiChrTable[i] = 0xff;
+    unknown65489[i] = 0xff;
   }
 
   for (int i = 0; i < CHARACTER_COUNT - CHARACTER_PLAYER_COUNT; i++) {
-    enemyAiChrTable[i] = 0xff;
+    unknown6549d[i] = 0xff;
   }
 }
 
@@ -43,11 +43,11 @@ int CharacterManager::SearchCharacter(gf::GF_OBJ_HANDLE *handle) const {
   }
 
   int low = 0;
-  int high = static_cast<int>(registeredIds.size()) - 1;
+  int high = static_cast<int>(unknown65420.size()) - 1;
   while (low <= high) {
     int middle = (low + high) >> 1;
-    u8 id = registeredIds[middle];
-    gf::GF_OBJ_HANDLE *middleHandle = characters[id].character.unknown118;
+    u8 id = unknown65420[middle];
+    gf::GF_OBJ_HANDLE *middleHandle = unknown20[id].unknown00.unknown118;
     if (middleHandle == handle) {
       return id;
     }
@@ -72,9 +72,9 @@ void CharacterManager::Release(gf::GF_OBJ_HANDLE *handle) {
 void CharacterManager::SetAiChrTable(int id, int aiId, bool isPlayer) {
   u8 value = id < 0 ? -1 : id;
   if (isPlayer) {
-    playerAiChrTable[aiId] = value;
+    unknown65489[aiId] = value;
   } else {
-    enemyAiChrTable[aiId] = value;
+    unknown6549d[aiId] = value;
   }
 }
 
@@ -84,12 +84,12 @@ BattleCharacter *CharacterManager::GetCharacterConst(gf::GF_OBJ_HANDLE *handle) 
     return nullptr;
   }
 
-  return const_cast<BattleCharacter *>(&characters[id].character);
+  return const_cast<BattleCharacter *>(&unknown20[id].unknown00);
 }
 
 BattleCharacter *CharacterManager::GetCharacterConst(int id) const {
   if (id >= 0 && id < CHARACTER_COUNT) {
-    return characters[id].isUse ? const_cast<BattleCharacter *>(&characters[id].character) : nullptr;
+    return unknown20[id].unknown11f0 ? const_cast<BattleCharacter *>(&unknown20[id].unknown00) : nullptr;
   }
 
   return nullptr;
@@ -105,30 +105,30 @@ gf::GF_OBJ_HANDLE *CharacterManager::GetCharacterHandle(int id) const {
 }
 
 BattleCharacter *CharacterManager::GetControlCharacter() {
-  if (controlCharacterId >= CHARACTER_COUNT) {
+  if (unknown65488 >= CHARACTER_COUNT) {
     return nullptr;
   }
 
-  return characters[controlCharacterId].isUse ? &characters[controlCharacterId].character : nullptr;
+  return unknown20[unknown65488].unknown11f0 ? &unknown20[unknown65488].unknown00 : nullptr;
 }
 
 bool CharacterManager::IsControlCharacter(gf::GF_OBJ_HANDLE *handle) {
-  if (controlCharacterId >= CHARACTER_COUNT) {
+  if (unknown65488 >= CHARACTER_COUNT) {
     return false;
   }
 
-  const BattleCharacter *character = characters[controlCharacterId].isUse ? &characters[controlCharacterId].character : nullptr;
+  const BattleCharacter *character = unknown20[unknown65488].unknown11f0 ? &unknown20[unknown65488].unknown00 : nullptr;
   return character != nullptr && character->unknown118 == handle;
 }
 
 int CharacterManager::GetAliveBossNum() const {
   int num = 0;
   for (int id = CHARACTER_PLAYER_COUNT; id < CHARACTER_COUNT; id++) {
-    if (!characters[id].isUse) {
+    if (!unknown20[id].unknown11f0) {
       continue;
     }
 
-    const BattleCharacter &character = characters[id].character;
+    const BattleCharacter &character = unknown20[id].unknown00;
     const CharacterParameter *parameter = character.GetCharacterParameterConst(true);
     if (parameter == nullptr || !parameter->isBattle || parameter->isBlade || character.IsDead(0)) {
       continue;
@@ -141,18 +141,18 @@ int CharacterManager::GetAliveBossNum() const {
 }
 
 bool CharacterManager::IsCharacterDead(int id) const {
-  if (id < 0 || id >= CHARACTER_COUNT || !characters[id].isUse) {
+  if (id < 0 || id >= CHARACTER_COUNT || !unknown20[id].unknown11f0) {
     return true;
   }
 
-  return characters[id].character.IsDead(0);
+  return unknown20[id].unknown00.IsDead(0);
 }
 
 void CharacterManager::PostUpdate(const fw::UpdateInfo &updateInfo) { get()->PostUpdateProc(updateInfo); }
 
 bool CharacterManager::IsExistAlivePlayer() const {
   for (int id = 0; id < CHARACTER_PLAYER_COUNT; id++) {
-    if (characters[id].isUse && !characters[id].character.IsBlade() && !characters[id].character.IsDead(0)) {
+    if (unknown20[id].unknown11f0 && !unknown20[id].unknown00.IsBlade() && !unknown20[id].unknown00.IsDead(0)) {
       return true;
     }
   }
@@ -162,7 +162,7 @@ bool CharacterManager::IsExistAlivePlayer() const {
 
 bool CharacterManager::IsExistEnArrange(u32 enemy) const {
   for (int id = CHARACTER_PLAYER_COUNT; id < CHARACTER_COUNT; id++) {
-    if (characters[id].isUse && static_cast<u32>(characters[id].character.unknowncc8) == enemy && characters[id].character.IsBattle()) {
+    if (unknown20[id].unknown11f0 && static_cast<u32>(unknown20[id].unknown00.unknowncc8) == enemy && unknown20[id].unknown00.IsBattle()) {
       return true;
     }
   }
@@ -172,12 +172,12 @@ bool CharacterManager::IsExistEnArrange(u32 enemy) const {
 
 bool CharacterManager::IsExistHikariSp() const {
   for (int id = CHARACTER_PLAYER_COUNT; id < CHARACTER_COUNT; id++) {
-    if (!characters[id].isUse) {
+    if (!unknown20[id].unknown11f0) {
       continue;
     }
 
-    const CharacterParameter *parameter = characters[id].character.GetCharacterParameterConst(false);
-    if (parameter != nullptr && parameter->IsInvalidHikariSp() && parameter->isBattle && !characters[id].character.IsDead(0)) {
+    const CharacterParameter *parameter = unknown20[id].unknown00.GetCharacterParameterConst(false);
+    if (parameter != nullptr && parameter->IsInvalidHikariSp() && parameter->isBattle && !unknown20[id].unknown00.IsDead(0)) {
       return true;
     }
   }
@@ -187,12 +187,12 @@ bool CharacterManager::IsExistHikariSp() const {
 
 bool CharacterManager::IsExistAlwaysKakusei() const {
   for (int id = CHARACTER_PLAYER_COUNT; id < CHARACTER_COUNT; id++) {
-    if (!characters[id].isUse) {
+    if (!unknown20[id].unknown11f0) {
       continue;
     }
 
-    const CharacterParameter *parameter = characters[id].character.GetCharacterParameterConst(false);
-    if (parameter != nullptr && parameter->IsAlwaysKakusei() && parameter->isBattle && !characters[id].character.IsDead(0)) {
+    const CharacterParameter *parameter = unknown20[id].unknown00.GetCharacterParameterConst(false);
+    if (parameter != nullptr && parameter->IsAlwaysKakusei() && parameter->isBattle && !unknown20[id].unknown00.IsDead(0)) {
       return true;
     }
   }
@@ -202,11 +202,11 @@ bool CharacterManager::IsExistAlwaysKakusei() const {
 
 void CharacterManager::PlayEnemyWinVoice() {
   for (int id = CHARACTER_PLAYER_COUNT; id < CHARACTER_COUNT; id++) {
-    if (!characters[id].isUse) {
+    if (!unknown20[id].unknown11f0) {
       continue;
     }
 
-    BattleCharacter &character = characters[id].character;
+    BattleCharacter &character = unknown20[id].unknown00;
     if (!character.IsBattle() || character.IsBlade() || character.IsDead(0)) {
       continue;
     }
@@ -220,11 +220,11 @@ void CharacterManager::PlayEnemyWinVoice() {
 void CharacterManager::SetupBGM() {
   bool isReset = false;
   for (int id = CHARACTER_PLAYER_COUNT; id < CHARACTER_COUNT; id++) {
-    if (!characters[id].isUse) {
+    if (!unknown20[id].unknown11f0) {
       continue;
     }
 
-    BattleCharacter &character = characters[id].character;
+    BattleCharacter &character = unknown20[id].unknown00;
     if (!character.IsBattle() || character.IsDead(0)) {
       continue;
     }
