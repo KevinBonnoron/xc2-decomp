@@ -8,65 +8,65 @@ namespace btl {
 
 constexpr f32 PI = 3.14159265f;
 
-ShakeCameraManager::ShakeCameraManager() : isStopEternalShake(false) {}
+ShakeCameraManager::ShakeCameraManager() : unknownb0(false) {}
 
 ShakeCameraManager::~ShakeCameraManager() { DeleteAllData(); }
 
 void ShakeCameraManager::DeleteAllData() {
-  for (ShakeCameraElement *element : elements) {
+  for (ShakeCameraElement *element : unknown08) {
     delete element;
   }
-  elements.clear();
+  unknown08.clear();
 }
 
 void ShakeCameraManager::RegisterData(ShakeCameraElement *element) {
-  if (elements.size() == elements.capacity()) {
-    ShakeCameraElement *oldest = *elements.begin();
-    elements.erase(elements.begin());
+  if (unknown08.size() == unknown08.capacity()) {
+    ShakeCameraElement *oldest = *unknown08.begin();
+    unknown08.erase(unknown08.begin());
     delete oldest;
   }
-  elements.push_back(element);
+  unknown08.push_back(element);
 }
 
-ShakeCameraElement::ShakeCameraElement() : type(0), interval(0.0f), counter(0.0f), isFrameTime(true) {}
+ShakeCameraElement::ShakeCameraElement() : unknown08(0), unknown10(0.0f), unknown14(0.0f), unknown18(true) {}
 
 bool ShakeCameraElement::ProgressShakeCounter(f32 time) {
-  f32 total = counter + time;
-  if (total >= interval) {
-    counter = total - interval;
+  f32 total = unknown14 + time;
+  if (total >= unknown10) {
+    unknown14 = total - unknown10;
     return true;
   }
 
-  counter = total;
+  unknown14 = total;
   return false;
 }
 
-ShakeCameraElementRandom::ShakeCameraElementRandom() : phase(PHASE_FADE_IN), phaseTime(0.0f), isVertical(false), isStarted(false) {
-  previousShift = mm::Vec3::zero;
-  nextShift = mm::Vec3::zero;
+ShakeCameraElementRandom::ShakeCameraElementRandom() : unknown4c(PHASE_FADE_IN), unknown50(0.0f), unknown54(false), unknown55(false) {
+  unknown20 = mm::Vec3::zero;
+  unknown30 = mm::Vec3::zero;
 }
 
 void ShakeCameraElementRandom::StopEternalShake() {
-  if (keepTime < 0.0f) {
-    keepTime = 0.0f;
+  if (unknown44 < 0.0f) {
+    unknown44 = 0.0f;
   }
 }
 
-ShakeCameraElementAxis::ShakeCameraElementAxis() : axis(), loopCount(0), loop(0), phase(0), isBothSides(false) {}
+ShakeCameraElementAxis::ShakeCameraElementAxis() : unknown20(), unknown30(0), unknown38(0), unknown3c(0), unknown40(false) {}
 
 bool ShakeCameraElementAxis::Update(f32 time) {
   if (!ProgressShakeCounter(time)) {
     return false;
   }
 
-  loop++;
-  if (loop < loopCount) {
+  unknown38++;
+  if (unknown38 < unknown30) {
     return false;
   }
 
-  if (phase == 0 && fadeOutLoopCount > 0) {
-    loop = 0;
-    phase = 1;
+  if (unknown3c == 0 && unknown34 > 0) {
+    unknown38 = 0;
+    unknown3c = 1;
     return false;
   }
 
@@ -74,25 +74,25 @@ bool ShakeCameraElementAxis::Update(f32 time) {
 }
 
 void ShakeCameraElementAxis::CalcShift(const mm::Vec3 &position, const mm::Vec3 &target, mm::Vec3 &positionShift, mm::Vec3 &targetShift) {
-  f32 shift = power;
-  f32 period = interval;
-  f32 time = counter;
+  f32 shift = unknown0c;
+  f32 period = unknown10;
+  f32 time = unknown14;
   f32 angle = time / period * (PI * 2.0f);
-  if (!isBothSides) {
+  if (!unknown40) {
     angle += PI * 1.5f;
   }
   f32 wave = sinf(angle);
-  if (!isBothSides) {
+  if (!unknown40) {
     wave = (wave + 1.0f) * 0.5f;
   }
   shift *= wave;
-  if (phase == 1) {
-    shift *= 1.0f - powf((time + period * loop) / (period * fadeOutLoopCount), 0.75f);
+  if (unknown3c == 1) {
+    shift *= 1.0f - powf((time + period * unknown38) / (period * unknown34), 0.75f);
   }
 
-  switch (type) {
+  switch (unknown08) {
   case 0: {
-    mm::Vec3 vector(shift * axis.x, shift * axis.y, shift * axis.z);
+    mm::Vec3 vector(shift * unknown20.x, shift * unknown20.y, shift * unknown20.z);
     positionShift = vector;
     targetShift = vector;
     break;
@@ -105,7 +105,7 @@ void ShakeCameraElementAxis::CalcShift(const mm::Vec3 &position, const mm::Vec3 
     forward.z = target.z - position.z;
     Misc::Normalize(forward);
     mm::Vec3 direction = forward;
-    Misc::TurnDirectionAngle(direction, axis, shift, true);
+    Misc::TurnDirectionAngle(direction, unknown20, shift, true);
     f32 x = position.x - target.x;
     f32 y = position.y - target.y;
     f32 z = position.z - target.z;
@@ -127,19 +127,19 @@ void ShakeCameraElementAxis::CalcShift(const mm::Vec3 &position, const mm::Vec3 
 }
 
 void ShakeCameraElementCameraAxis::SetData(SHAKE_AXIS shakeAxis, int loopCount, int fadeOutLoopCount, bool isBothSides) {
-  axis = mm::Vec3::zero;
-  this->loopCount = loopCount;
-  this->fadeOutLoopCount = fadeOutLoopCount;
-  this->isBothSides = isBothSides;
-  this->shakeAxis = shakeAxis;
+  unknown20 = mm::Vec3::zero;
+  this->unknown30 = loopCount;
+  this->unknown34 = fadeOutLoopCount;
+  this->unknown40 = isBothSides;
+  this->unknown44 = shakeAxis;
   switch (shakeAxis) {
   case SHAKE_AXIS_LEFT:
   case SHAKE_AXIS_DOWN:
   case SHAKE_AXIS_BACK:
-    isReverse = true;
+    unknown48 = true;
     break;
   default:
-    isReverse = false;
+    unknown48 = false;
     break;
   }
 }
