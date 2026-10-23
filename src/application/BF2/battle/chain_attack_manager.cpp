@@ -23,20 +23,20 @@ void ChainAttackManager::Finalize() {}
 
 void ChainAttackManager::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->PreUpdateProc(updateInfo); }
 
-void ChainAttackManager::PreUpdateProc(const fw::UpdateInfo &) { isStartFullBurst = false; }
+void ChainAttackManager::PreUpdateProc(const fw::UpdateInfo &) { unknown19e4_4 = false; }
 
 void ChainAttackManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
 
 void ChainAttackManager::AddDamageRate(int rate) {
-  if (rate != 0 && state >= STATE_START_WAIT && state < STATE_RESULT) {
-    damageRate = mm::clamp<int>(damageRate + rate, DAMAGE_RATE_MIN, DAMAGE_RATE_MAX);
+  if (rate != 0 && unknown19ce >= STATE_START_WAIT && unknown19ce < STATE_RESULT) {
+    unknown19cc = mm::clamp<int>(unknown19cc + rate, DAMAGE_RATE_MIN, DAMAGE_RATE_MAX);
   }
 }
 
 void ChainAttackManager::ModifyPosition() {
-  int num = groupNum;
+  int num = unknown19d5;
   for (int i = 0; i < num; i++) {
-    u8 group = groups[i];
+    u8 group = unknown19d2[i];
     gf::GF_OBJ_HANDLE *driver = gf::GfGameParty::getHandleDriver(group);
     ModifyPositionDriver(driver);
     ModifyPositionBlade(driver, gf::GfGameParty::getHandleBlade(group, -1));
@@ -44,19 +44,19 @@ void ChainAttackManager::ModifyPosition() {
 }
 
 f32 ChainAttackManager::GetDamageRate() const {
-  if (state == STATE_NONE) {
+  if (unknown19ce == STATE_NONE) {
     return 1.0f;
   }
-  return NextFloat((damageRate - DAMAGE_RATE_MIN + 100) * 0.01f);
+  return NextFloat((unknown19cc - DAMAGE_RATE_MIN + 100) * 0.01f);
 }
 
-int ChainAttackManager::GetSpAttackLevel(int group) const { return spAttacks[group].level; }
+int ChainAttackManager::GetSpAttackLevel(int group) const { return unknown1974[group].unknown18; }
 
 f32 ChainAttackManager::GetSpAttackRecast(int group, int blade) const {
   for (int i = 0; i < 3; i++) {
-    int slotBlade = spAttacks[group].blades[i].blade;
+    int slotBlade = unknown1974[group].unknown00[i].unknown04;
     if (slotBlade >= 0 && slotBlade == blade) {
-      return spAttacks[group].blades[i].recast;
+      return unknown1974[group].unknown00[i].unknown00;
     }
   }
 
@@ -65,14 +65,14 @@ f32 ChainAttackManager::GetSpAttackRecast(int group, int blade) const {
 
 int ChainAttackManager::GetOrderAttr(int order) const {
   if (order >= 0 && order <= 8) {
-    return orderAttrs[order];
+    return unknown19d6[order];
   }
 
   return 0;
 }
 
 bool ChainAttackManager::IsProc(bool isExcludeStartWait) const {
-  if (state == STATE_NONE) {
+  if (unknown19ce == STATE_NONE) {
     return false;
   }
 
@@ -83,35 +83,35 @@ bool ChainAttackManager::IsProc(bool isExcludeStartWait) const {
   return true;
 }
 
-bool ChainAttackManager::IsResult() const { return state >= STATE_RESULT; }
+bool ChainAttackManager::IsResult() const { return unknown19ce >= STATE_RESULT; }
 
 void ChainAttackManager::AddTotalDamage(u32 damage) {
-  if (state >= STATE_START_WAIT && state < STATE_RESULT) {
-    totalDamage += damage;
+  if (unknown19ce >= STATE_START_WAIT && unknown19ce < STATE_RESULT) {
+    unknown1930 += damage;
   }
 }
 
 int ChainAttackManager::GetGroupIndex() const {
-  if (groupIndex > 2) {
+  if (unknown19d1 > 2) {
     return -1;
   }
 
-  u8 group = groups[groupIndex];
+  u8 group = unknown19d2[unknown19d1];
   return group > 2 ? -1 : group;
 }
 
-bool ChainAttackManager::IsStartWait() const { return state >= STATE_START_WAIT && state < STATE_START_WAIT + 3; }
+bool ChainAttackManager::IsStartWait() const { return unknown19ce >= STATE_START_WAIT && unknown19ce < STATE_START_WAIT + 3; }
 
-bool ChainAttackManager::IsSelectAction() const { return state == STATE_SELECT_ACTION; }
+bool ChainAttackManager::IsSelectAction() const { return unknown19ce == STATE_SELECT_ACTION; }
 
-bool ChainAttackManager::IsStopTime() const { return state == STATE_SELECT_ACTION; }
+bool ChainAttackManager::IsStopTime() const { return unknown19ce == STATE_SELECT_ACTION; }
 
 bool ChainAttackManager::IsTargetDead() const {
-  if (state == STATE_NONE) {
+  if (unknown19ce == STATE_NONE) {
     return true;
   }
 
-  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(target);
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown08);
   if (character == nullptr) {
     return true;
   }
