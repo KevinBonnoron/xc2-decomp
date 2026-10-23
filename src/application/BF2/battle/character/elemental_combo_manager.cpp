@@ -194,8 +194,8 @@ bool ElementalComboManager::IsEnableStartElementalCombo() const {
 
 int ElementalComboManager::GetElementalComboID(bool isIncludeBurst) const {
   if (isIncludeBurst) {
-    if (DataManager::get()->permitTarget == unknown08) {
-      return DataManager::get()->permitComboId;
+    if (DataManager::get()->unknown13298 == unknown08) {
+      return DataManager::get()->unknown132a1;
     }
     if (unknownaa6 != 0) {
       return unknownaa6;

@@ -22,8 +22,8 @@ constexpr int PLAYER_PARAMETER_COUNT = 18;
 class DataManager : public mm::mtl::PtrSingleton<DataManager> {
 public:
   struct ENEMY_GROUP_DATA {
-    gf::GF_OBJ_HANDLE *leader;
-    gf::GF_OBJ_HANDLE *member;
+    gf::GF_OBJ_HANDLE *unknown00; // Inferred role: leader handle; original member name unknown.
+    gf::GF_OBJ_HANDLE *unknown08; // Inferred role: member handle; original member name unknown.
     u8 _10[0x18 - 0x10];
   };
 
@@ -33,9 +33,9 @@ public:
   };
 
   struct POUCH_BUFF_DATA {
-    f32 params[14];
+    f32 unknown00[14]; // Inferred role: pouch buff params; original member name unknown.
     u8 _38[0x3b - 0x38];
-    bool isTiming;
+    bool unknown3b; // Inferred role: timing flag; original member name unknown.
   };
 
   static void Destroy();
@@ -63,29 +63,29 @@ public:
   bool IsSpecialEffects(int effect) const;
   static bool GetEnhanceData(int id, ENHANCE_EFFECT_DATA &data, bool);
 
-  PlayerParameter playerParameters[PLAYER_PARAMETER_COUNT];
-  EnemyParameter *enemyParameters[CHARACTER_COUNT - CHARACTER_PLAYER_COUNT];
+  PlayerParameter unknown08[PLAYER_PARAMETER_COUNT];                     // Inferred role: player parameters; original member name unknown.
+  EnemyParameter *unknown7358[CHARACTER_COUNT - CHARACTER_PLAYER_COUNT]; // Inferred role: enemy parameters; original member name unknown.
   u8 _7588[0x12e88 - 0x7588];
-  ENEMY_GROUP_DATA enemyGroups[35];
-  POUCH_BUFF_DATA pouchBuffs[3];
+  ENEMY_GROUP_DATA unknown12e88[35]; // Inferred role: enemy groups; original member name unknown.
+  POUCH_BUFF_DATA unknown131d0[3];   // Inferred role: pouch buffs; original member name unknown.
   u8 _13284[0x13290 - 0x13284];
-  gf::GfMenuCallContext *comboRequestContext;
-  gf::GF_OBJ_HANDLE *permitTarget;
-  s8 permitParty;
-  u8 permitComboId;
-  u8 permitComboStage;
-  u8 elementalEffectId;
+  gf::GfMenuCallContext *unknown13290; // Inferred role: combo request context; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown13298;     // Inferred role: permit target; original member name unknown.
+  s8 unknown132a0;                     // Inferred role: permit party; original member name unknown.
+  u8 unknown132a1;                     // Inferred role: permit combo id; original member name unknown.
+  u8 unknown132a2;                     // Inferred role: permit combo stage; original member name unknown.
+  u8 unknown132a3;                     // Inferred role: elemental effect id; original member name unknown.
   u8 _132a4[0x132a5 - 0x132a4];
-  bool specialEffects[3];
-  bool isPermitCanceled;
+  bool unknown132a5[3]; // Inferred role: special effects; original member name unknown.
+  bool unknown132a8;    // Inferred role: permit canceled; original member name unknown.
 };
 
-static_assert(offsetof(DataManager, playerParameters) == 0x8, "");
-static_assert(offsetof(DataManager, enemyParameters) == 0x7358, "");
-static_assert(offsetof(DataManager, enemyGroups) == 0x12e88, "");
-static_assert(offsetof(DataManager, pouchBuffs) == 0x131d0, "");
-static_assert(offsetof(DataManager, permitTarget) == 0x13298, "");
-static_assert(offsetof(DataManager, elementalEffectId) == 0x132a3, "");
-static_assert(offsetof(DataManager, specialEffects) == 0x132a5, "");
+static_assert(offsetof(DataManager, unknown08) == 0x8, "");
+static_assert(offsetof(DataManager, unknown7358) == 0x7358, "");
+static_assert(offsetof(DataManager, unknown12e88) == 0x12e88, "");
+static_assert(offsetof(DataManager, unknown131d0) == 0x131d0, "");
+static_assert(offsetof(DataManager, unknown13298) == 0x13298, "");
+static_assert(offsetof(DataManager, unknown132a3) == 0x132a3, "");
+static_assert(offsetof(DataManager, unknown132a5) == 0x132a5, "");
 
 } // namespace btl

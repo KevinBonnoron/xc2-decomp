@@ -20,17 +20,17 @@ void DataManager::Destroy() {
 }
 
 void DataManager::Finalize() {
-  if (comboRequestContext != nullptr) {
-    comboRequestContext->release();
-    comboRequestContext = nullptr;
+  if (unknown13290 != nullptr) {
+    unknown13290->release();
+    unknown13290 = nullptr;
   }
 }
 
 void DataManager::InitializeComboRequestUI() {
-  if (comboRequestContext == nullptr) {
-    comboRequestContext = gf::GfMenuCallContext::create();
-    if (comboRequestContext != nullptr) {
-      gf::GfMenuObjPartyStatus::attachComboRequest(comboRequestContext);
+  if (unknown13290 == nullptr) {
+    unknown13290 = gf::GfMenuCallContext::create();
+    if (unknown13290 != nullptr) {
+      gf::GfMenuObjPartyStatus::attachComboRequest(unknown13290);
     }
   }
 }
@@ -40,7 +40,7 @@ f32 DataManager::GetPouchBuffParam(int type, int pouch) const {
     return 0.0f;
   }
 
-  return pouchBuffs[pouch].params[type];
+  return unknown131d0[pouch].unknown00[type];
 }
 
 int DataManager::GetPartyGauge() const { return gf::GfGameParty::getPartyGauge(); }
@@ -50,7 +50,7 @@ bool DataManager::IsPouchBuffTiming(int pouch) const {
     return false;
   }
 
-  return pouchBuffs[pouch].isTiming;
+  return unknown131d0[pouch].unknown3b;
 }
 
 int DataManager::RegisterEnemyGroup(gf::GF_OBJ_HANDLE *leader, gf::GF_OBJ_HANDLE *member) {
@@ -59,9 +59,9 @@ int DataManager::RegisterEnemyGroup(gf::GF_OBJ_HANDLE *leader, gf::GF_OBJ_HANDLE
   }
 
   for (int i = 0; i < ENEMY_GROUP_NUM; i++) {
-    if (enemyGroups[i].leader == gf::INVALID_HANDLE) {
-      enemyGroups[i].leader = leader;
-      enemyGroups[i].member = member;
+    if (unknown12e88[i].unknown00 == gf::INVALID_HANDLE) {
+      unknown12e88[i].unknown00 = leader;
+      unknown12e88[i].unknown08 = member;
       return i + ENEMY_GROUP_INDEX_OFFSET;
     }
   }
@@ -76,7 +76,7 @@ int DataManager::GetEnemyGroupIndex(gf::GF_OBJ_HANDLE *handle) {
 
   int index = -1;
   for (int i = 0; i < ENEMY_GROUP_NUM; i++) {
-    if (enemyGroups[i].leader == handle || enemyGroups[i].member == handle) {
+    if (unknown12e88[i].unknown00 == handle || unknown12e88[i].unknown08 == handle) {
       index = i + ENEMY_GROUP_INDEX_OFFSET;
       break;
     }
@@ -85,7 +85,7 @@ int DataManager::GetEnemyGroupIndex(gf::GF_OBJ_HANDLE *handle) {
   return index;
 }
 
-void DataManager::DeleteElementalEffect() { elementalEffectId = 0; }
+void DataManager::DeleteElementalEffect() { unknown132a3 = 0; }
 
 void DataManager::PreUpdate(const fw::UpdateInfo &updateInfo) {
   if (get() != nullptr) {
@@ -95,11 +95,11 @@ void DataManager::PreUpdate(const fw::UpdateInfo &updateInfo) {
 
 void DataManager::PreUpdateProc(const fw::UpdateInfo &updateInfo) {
   for (int i = 0; i < PLAYER_PARAMETER_COUNT; i++) {
-    if (playerParameters[i].unknown08 != gf::INVALID_HANDLE) {
-      playerParameters[i].PreUpdate(updateInfo);
+    if (unknown08[i].unknown08 != gf::INVALID_HANDLE) {
+      unknown08[i].PreUpdate(updateInfo);
     }
   }
-  for (EnemyParameter *parameter : enemyParameters) {
+  for (EnemyParameter *parameter : unknown7358) {
     if (parameter != nullptr && parameter->unknown08 != gf::INVALID_HANDLE) {
       parameter->PreUpdate(updateInfo);
     }
@@ -114,35 +114,35 @@ void DataManager::Update(const fw::UpdateInfo &updateInfo) {
 
 void DataManager::UpdateElementalEffect(f32) {
   if (!BattleGlobal::get()->unknown65de_0) {
-    elementalEffectId = 0;
+    unknown132a3 = 0;
   }
 }
 
-void DataManager::SetSpecialEffects(int effect, bool isEnable) { specialEffects[effect] = isEnable; }
+void DataManager::SetSpecialEffects(int effect, bool isEnable) { unknown132a5[effect] = isEnable; }
 
 void DataManager::ResetRequestPermit() {
-  permitTarget = reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1);
-  permitParty = -1;
-  permitComboId = 0;
-  permitComboStage = 0;
-  isPermitCanceled = false;
+  unknown13298 = reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1);
+  unknown132a0 = -1;
+  unknown132a1 = 0;
+  unknown132a2 = 0;
+  unknown132a8 = false;
 }
 
 void DataManager::PostUpdate(const fw::UpdateInfo &updateInfo) { get()->PostUpdateProc(updateInfo); }
 
 void DataManager::PostUpdateProc(const fw::UpdateInfo &updateInfo) {
   for (int i = 0; i < PLAYER_PARAMETER_COUNT; i++) {
-    if (playerParameters[i].unknown08 != gf::INVALID_HANDLE) {
-      playerParameters[i].PostUpdate(updateInfo);
+    if (unknown08[i].unknown08 != gf::INVALID_HANDLE) {
+      unknown08[i].PostUpdate(updateInfo);
     }
   }
-  for (EnemyParameter *parameter : enemyParameters) {
+  for (EnemyParameter *parameter : unknown7358) {
     if (parameter != nullptr && parameter->unknown08 != gf::INVALID_HANDLE) {
       parameter->PostUpdate(updateInfo);
     }
   }
 }
 
-bool DataManager::IsSpecialEffects(int effect) const { return specialEffects[effect]; }
+bool DataManager::IsSpecialEffects(int effect) const { return unknown132a5[effect]; }
 
 } // namespace btl

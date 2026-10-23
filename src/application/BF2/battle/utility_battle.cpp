@@ -178,7 +178,7 @@ int Utility::GetAntiAttribute(u32 attribute) {
   return s_antiAttributes[attribute];
 }
 
-int Utility::GetElementalEffectID() { return DataManager::get()->elementalEffectId; }
+int Utility::GetElementalEffectID() { return DataManager::get()->unknown132a3; }
 
 int Utility::GetUniteComboID(int attribute, int combo) {
   if (attribute == 0 || combo == 0) {
