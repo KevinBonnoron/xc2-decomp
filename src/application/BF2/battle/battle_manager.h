@@ -31,9 +31,9 @@ public:
   void QuestTaskProc(u32 task);
 
   u8 _10[0x14 - 0x10];
-  bool initialized;
+  bool unknown14; // Inferred role: initialized; original member name unknown.
 };
 
-static_assert(offsetof(BattleManager, initialized) == 0x14, "");
+static_assert(offsetof(BattleManager, unknown14) == 0x14, "");
 
 } // namespace btl

@@ -19,11 +19,11 @@ bool BattleManager::isInitialized() {
     return false;
   }
 
-  return get()->initialized;
+  return get()->unknown14;
 }
 
 void BattleManager::postUpdate(const fw::UpdateInfo &updateInfo) {
-  if (!initialized) {
+  if (!unknown14) {
     return;
   }
 
