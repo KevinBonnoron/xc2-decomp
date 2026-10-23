@@ -373,7 +373,7 @@ ActionCommand *BattleCharacter::GetFreeCommand() {
 
 bool BattleCharacter::IsRegisterCommand(ActionCommand::COMMAND_TYPE type) const {
   for (int i = 0; i < commandNum; i++) {
-    if (commands[i].type == type) {
+    if (commands[i].unknown10_0 == type) {
       return true;
     }
   }

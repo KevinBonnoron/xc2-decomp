@@ -31,20 +31,20 @@ public:
 
   union {
     struct {
-      f32 directionX;
-      f32 directionZ;
-      f32 rate;
-      u32 isFieldRun;
-    } moveDirRate;
+      f32 unknown00; // Inferred role: direction X; original member name unknown.
+      f32 unknown04; // Inferred role: direction Z; original member name unknown.
+      f32 unknown08; // Inferred role: rate; original member name unknown.
+      u32 unknown0c; // Inferred role: field run flag; original member name unknown.
+    } unknown00_0;   // Inferred role: move direction rate data; original member name unknown.
     struct {
-      f32 inputX;
-      f32 inputY;
-      u32 flags;
-    } moveLock;
-    u8 data[0x10];
+      f32 unknown00;      // Inferred role: input X; original member name unknown.
+      f32 unknown04;      // Inferred role: input Y; original member name unknown.
+      u32 unknown08;      // Inferred role: move lock flags; original member name unknown.
+    } unknown00_1;        // Inferred role: move lock data; original member name unknown.
+    u8 unknown00_2[0x10]; // Inferred role: raw command data; original member name unknown.
   };
-  u32 type : 6;
-  u32 actionFlags : 25;
+  u32 unknown10_0 : 6;  // Inferred role: command type; original member name unknown.
+  u32 unknown10_6 : 25; // Inferred role: action flags; original member name unknown.
 };
 
 static_assert(sizeof(ActionCommand) == 0x14, "");
