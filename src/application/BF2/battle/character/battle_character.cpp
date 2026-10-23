@@ -43,42 +43,42 @@ constexpr u32 BLADE_CHANGE_ACTIONS = 0xd2;
 constexpr int BLADE_SUPPORT_CONDITION_HATE_ELSE = 8;
 
 void BattleCharacter::ResetHateRingData() {
-  if (!isPlayer && handle != gf::INVALID_HANDLE && id >= 0) {
-    HateRingManager::get()->SetData(id, handle, -1);
+  if (!unknownf8c_7 && unknown118 != gf::INVALID_HANDLE && unknownf7d >= 0) {
+    HateRingManager::get()->SetData(unknownf7d, unknown118, -1);
   }
 }
 
-void BattleCharacter::ResetDelayVoice() { delayVoiceTime = -1; }
+void BattleCharacter::ResetDelayVoice() { unknowndd0 = -1; }
 
 void BattleCharacter::ResetCustomVoiceData() {
-  customVoiceFlags = 0;
-  customVoiceEndFlags = 0;
+  unknownf5c = 0;
+  unknownf60 = 0;
   for (int i = 0; i < 3; i++) {
-    customVoices[i].voice = 0;
-    customVoices[i].type = 0;
+    unknownf64[i].unknown00 = 0;
+    unknownf64[i].unknown01 = 0;
   }
 }
 
 const CharacterParameter *BattleCharacter::GetCharacterParameterConst(bool) const {
-  if (parameter == nullptr) {
-    if (parameterId < 0) {
+  if (unknown168 == nullptr) {
+    if (unknownf6a < 0) {
       return nullptr;
     }
-    parameter = DataManager::get()->GetCharacterParameterConst(parameterId);
+    unknown168 = DataManager::get()->GetCharacterParameterConst(unknownf6a);
   }
-  return parameter;
+  return unknown168;
 }
 
-bool BattleCharacter::IsPlayer() const { return isPlayer; }
+bool BattleCharacter::IsPlayer() const { return unknownf8c_7; }
 
 bool BattleCharacter::IsBlade() const {
   const CharacterParameter *parameter = GetCharacterParameterConst(true);
   return parameter != nullptr && parameter->isBlade;
 }
 
-gf::GfObj *BattleCharacter::GetObject() const { return gf::GfObjUtil::getObj(handle); }
+gf::GfObj *BattleCharacter::GetObject() const { return gf::GfObjUtil::getObj(unknown118); }
 
-bool BattleCharacter::IsEnemy() const { return !isPlayer; }
+bool BattleCharacter::IsEnemy() const { return !unknownf8c_7; }
 
 bool BattleCharacter::IsDriver() const {
   const CharacterParameter *parameter = GetCharacterParameterConst(true);
@@ -93,26 +93,26 @@ gf::GF_OBJ_HANDLE *BattleCharacter::GetControlCharacterHandle() const { return U
 
 gf::GfObj *BattleCharacter::GetObject(gf::GF_OBJ_HANDLE *handle) const { return gf::GfObjUtil::getObj(handle); }
 
-bool BattleCharacter::IsBattle() const { return isBattle; }
+bool BattleCharacter::IsBattle() const { return unknownf8d_0; }
 
 void BattleCharacter::ResetAnimationMoveDistance() {
   for (int i = 0; i < 20; i++) {
-    animationMoveDistances[i].animation = ANIMATION_INVALID;
+    unknownce0[i].unknown04 = ANIMATION_INVALID;
   }
 }
 
 void BattleCharacter::ResetAlphaAnimation() {
   for (int i = 0; i < 17; i++) {
-    alphaProcs[i].duration = 0.0f;
-    alphaProcs[i].time = 0.0f;
-    alphaProcs[i].startRate = -1.0f;
-    alphaProcs[i].rate = -1.0f;
-    alphaProcs[i].targetRate = -1.0f;
+    unknowndd8[i].unknown10 = 0.0f;
+    unknowndd8[i].unknown0c = 0.0f;
+    unknowndd8[i].unknown04 = -1.0f;
+    unknowndd8[i].unknown08 = -1.0f;
+    unknowndd8[i].unknown00 = -1.0f;
   }
 }
 
 void BattleCharacter::InitializeEnhanceProcData(bool isFinalizeArtsEffect) {
-  for (f32 &timer : enhanceTimers) {
+  for (f32 &timer : unknown1108) {
     timer = 0.0f;
   }
   if (isFinalizeArtsEffect) {
@@ -121,26 +121,26 @@ void BattleCharacter::InitializeEnhanceProcData(bool isFinalizeArtsEffect) {
 }
 
 void BattleCharacter::DeleteKizunaAuraEffect() {
-  if (effects[EFFECT_ID_KIZUNA_AURA] != 0) {
+  if (unknown130[EFFECT_ID_KIZUNA_AURA] != 0) {
     if (gf::GfGameManager::isPlayEvent()) {
-      fw::EffectManager::get()->remove(effects[EFFECT_ID_KIZUNA_AURA]);
+      fw::EffectManager::get()->remove(unknown130[EFFECT_ID_KIZUNA_AURA]);
     } else {
-      fw::EffectManager::get()->dead(effects[EFFECT_ID_KIZUNA_AURA]);
+      fw::EffectManager::get()->dead(unknown130[EFFECT_ID_KIZUNA_AURA]);
     }
-    effects[EFFECT_ID_KIZUNA_AURA] = 0;
+    unknown130[EFFECT_ID_KIZUNA_AURA] = 0;
   }
 }
 
 void BattleCharacter::CancelButtonChallenge() {
-  if (buttonChallenge != 0) {
-    BattleGlobal::get()->unknown5e8.Cancel(buttonChallenge);
-    buttonChallenge = 0;
+  if (unknown10c0 != 0) {
+    BattleGlobal::get()->unknown5e8.Cancel(unknown10c0);
+    unknown10c0 = 0;
   }
 }
 
 bool BattleCharacter::IsDispWeaponAlpha(int alpha) const {
   if (alpha >= ALPHA_WEAPON_FIRST && alpha <= ALPHA_WEAPON_LAST) {
-    f32 rate = alphaProcs[alpha].rate;
+    f32 rate = unknowndd8[alpha].unknown08;
     return rate < 0.0f || rate > 0.0f;
   }
   return false;
@@ -161,20 +161,20 @@ bool BattleCharacter::IsBossOrNamed() const {
   return parameter != nullptr && parameter->IsBossOrNamed();
 }
 
-bool BattleCharacter::IsMove() const { return actionId == ACTION_ID_MOVE || aiState == AI_STATE_ACTIVE; }
+bool BattleCharacter::IsMove() const { return unknown107c == ACTION_ID_MOVE || unknown1178 == AI_STATE_ACTIVE; }
 
 void BattleCharacter::AddUseWeapon() {
   CharacterParameter *parameter = GetCharacterParameter(true);
   if (parameter != nullptr) {
-    int weapon = weaponType;
+    int weapon = unknownf7f;
     parameter->AddUseWeapon(weapon);
   }
 }
 
 void BattleCharacter::EndBladeTimer(BLADE_TIMER_MODE mode) {
-  if (bladeTimerMode == mode) {
-    bladeTimer = 0.0f;
-    bladeTimerMode = 0;
+  if (unknownf77_1 == mode) {
+    unknowncd0 = 0.0f;
+    unknownf77_1 = 0;
   }
 }
 
@@ -191,21 +191,21 @@ void BattleCharacter::PlayHitBulletSE(int attribute, const mm::Vec3 *position) {
 }
 
 int BattleCharacter::GetIKData(f32 &weight, f32 &height) const {
-  int id = ikId;
+  int id = unknowndc0_0;
   if (id == 0) {
     weight = 0.0f;
     height = 0.0f;
     return id;
   }
-  weight = ikWeight;
-  height = ikHeight;
+  weight = unknowndb8;
+  height = unknowndbc;
   return id;
 }
 
 void BattleCharacter::SetupPosDir() {
-  landHeight = FLT_MAX;
-  Misc::GetObjectTransform(handle, position, Misc::TRANS_TYPE_POSITION);
-  Misc::GetObjectDirection(handle, direction, true);
+  unknownf4 = FLT_MAX;
+  Misc::GetObjectTransform(unknown118, unknown10, Misc::TRANS_TYPE_POSITION);
+  Misc::GetObjectDirection(unknown118, unknown50, true);
 }
 
 int BattleCharacter::GetGroupIndex() const {
@@ -213,25 +213,25 @@ int BattleCharacter::GetGroupIndex() const {
   return parameter != nullptr ? parameter->partyId : -1;
 }
 
-bool BattleCharacter::IsEnableBackHome() const { return actionId == ACTION_ID_IDLE; }
+bool BattleCharacter::IsEnableBackHome() const { return unknown107c == ACTION_ID_IDLE; }
 
-bool BattleCharacter::IsDisp() const { return alphaRates[0] > 0.0f; }
+bool BattleCharacter::IsDisp() const { return unknownf2c[0] > 0.0f; }
 
 int BattleCharacter::GetWeaponType(bool isAsm) const {
   if (isAsm) {
-    return gf::GfDataWeapon::getAsmWeaponType(weaponType);
+    return gf::GfDataWeapon::getAsmWeaponType(unknownf7f);
   }
 
-  return weaponType;
+  return unknownf7f;
 }
 
 const BattleCharacter::CUSTOM_VOICE_DATA *BattleCharacter::GetCustomVoiceData(int voice, int *index) const {
   for (int i = 0; i < 3; i++) {
-    if (customVoices[i].voice == voice) {
+    if (unknownf64[i].unknown00 == voice) {
       if (index != nullptr) {
         *index = i;
       }
-      return &customVoices[i];
+      return &unknownf64[i];
     }
   }
   return nullptr;
@@ -239,44 +239,44 @@ const BattleCharacter::CUSTOM_VOICE_DATA *BattleCharacter::GetCustomVoiceData(in
 
 bool BattleCharacter::IsCustomVoice(int voice) const {
   u32 flag = 1 << voice;
-  if ((customVoiceFlags & flag) == 0) {
+  if ((unknownf5c & flag) == 0) {
     return false;
   }
 
-  return (customVoiceEndFlags & flag) == 0;
+  return (unknownf60 & flag) == 0;
 }
 
 void BattleCharacter::SetCustomVoiceEndFlag(int voice, bool isEnd) {
   if (isEnd) {
-    customVoiceEndFlags |= 1 << voice;
+    unknownf60 |= 1 << voice;
   } else {
-    customVoiceEndFlags &= ~(1 << voice);
+    unknownf60 &= ~(1 << voice);
   }
 }
 
-void BattleCharacter::ClearCustomVoiceEndFlag(u32 flags) { customVoiceEndFlags &= ~flags; }
+void BattleCharacter::ClearCustomVoiceEndFlag(u32 flags) { unknownf60 &= ~flags; }
 
-int BattleCharacter::GetWeaponSeType() const { return Utility::GetWeaponSeType(weaponType); }
+int BattleCharacter::GetWeaponSeType() const { return Utility::GetWeaponSeType(unknownf7f); }
 
-bool BattleCharacter::IsEnableTurnAI() const { return ((1 << actionId) & ((1 << ACTION_ID_IDLE) | (1 << ACTION_ID_MOVE))) != 0; }
+bool BattleCharacter::IsEnableTurnAI() const { return ((1 << unknown107c) & ((1 << ACTION_ID_IDLE) | (1 << ACTION_ID_MOVE))) != 0; }
 
 void BattleCharacter::GetMoveDataPerSec(mm::Vec3 &moveData) const {
-  moveData.x = this->moveData.x * FRAME_RATE;
-  moveData.y = this->moveData.y * FRAME_RATE;
-  moveData.z = this->moveData.z * FRAME_RATE;
+  moveData.x = this->unknownb0.x * FRAME_RATE;
+  moveData.y = this->unknownb0.y * FRAME_RATE;
+  moveData.z = this->unknownb0.z * FRAME_RATE;
 }
 
-void BattleCharacter::SetAnimationSpeed(f32 speed) { animationSpeed = speed; }
+void BattleCharacter::SetAnimationSpeed(f32 speed) { unknowncb8 = speed; }
 
 void BattleCharacter::SetIKData(const ARTS_DATA &data) {
-  ikStartNo = data.unknown15_0;
-  ikStartFrame = data.unknown15_4;
-  ikEndNo = data.unknown16_4;
-  ikEndFrame = data.unknown17_0;
-  isIK = data.unknown2f_0;
+  unknowndc0_7 = data.unknown15_0;
+  unknowndc1_3 = data.unknown15_4;
+  unknowndc2_3 = data.unknown16_4;
+  unknowndc2_7 = data.unknown17_0;
+  unknowndc3_7 = data.unknown2f_0;
 }
 
-void BattleCharacter::NotifyStrikeDamage(int) { TalkManager::get()->NotifyTrigger(id, TalkManager::TRIGGER_STRIKE_DAMAGE, 0, 0); }
+void BattleCharacter::NotifyStrikeDamage(int) { TalkManager::get()->NotifyTrigger(unknownf7d, TalkManager::TRIGGER_STRIKE_DAMAGE, 0, 0); }
 
 void BattleCharacter::LandingCallback() {}
 
@@ -291,29 +291,29 @@ void BattleCharacter::ResetAlphaRate(int alpha) {
   }
 
   for (int i = first; i <= last; i++) {
-    alphaRates[i] = -1.0f;
+    unknownf2c[i] = -1.0f;
   }
 }
 
 f32 BattleCharacter::GetSyncCount(bool isSlow) const { return GetDt(isSlow, true) * FRAME_RATE; }
 
 f32 BattleCharacter::GetDt(bool isSlow, bool isStopCheck) const {
-  if (isStopCheck && isStop) {
+  if (isStopCheck && unknownf93_6) {
     return 0.0f;
   }
-  return isSlow ? dt * slowRate : dt;
+  return isSlow ? unknowncc0 * unknownf58 : unknowncc0;
 }
 
 void BattleCharacter::RegisterSlow(SLOW_PROC_ID slow, f32 rate, f32 time) {
-  slows[slow].rate = rate;
-  slows[slow].time = time;
-  slows[slow].counter = 0.0f;
+  unknownf4c[slow].unknown00 = rate;
+  unknownf4c[slow].unknown04 = time;
+  unknownf4c[slow].unknown08 = 0.0f;
 }
 
 void BattleCharacter::DeleteSlow(SLOW_PROC_ID slow) {
-  slows[slow].rate = 1.0f;
-  slows[slow].time = 0.0f;
-  slows[slow].counter = 0.0f;
+  unknownf4c[slow].unknown00 = 1.0f;
+  unknownf4c[slow].unknown04 = 0.0f;
+  unknownf4c[slow].unknown08 = 0.0f;
 }
 
 int BattleCharacter::GetAlphaSetID(ALPHA_PROC_ID alpha) {
@@ -334,10 +334,10 @@ void BattleCharacter::AddRecast(f32 recast, bool isRate, int slot) { AddSlotReca
 
 void BattleCharacter::RegisterDelayVoice(DELAY_VOICE_TYPE type, f32 time, int voice, int group, int priority) {
   if (type == DELAY_VOICE_TYPE_NORMAL) {
-    delayVoiceTime = time * (1.0f / FRAME_RATE) * DELAY_VOICE_TIME_SCALE;
-    delayVoicePriority = priority;
-    delayVoiceGroup = group;
-    delayVoice = voice;
+    unknowndd0 = time * (1.0f / FRAME_RATE) * DELAY_VOICE_TIME_SCALE;
+    unknowndd2 = priority;
+    unknowndd4 = group;
+    unknowndd6 = voice;
   }
 }
 
@@ -354,26 +354,26 @@ void BattleCharacter::UpdateBuffEffect(int buff) {
   }
 }
 
-void BattleCharacter::ResetChangeActionStopSeData() { changeActionStopSe = 0; }
+void BattleCharacter::ResetChangeActionStopSeData() { unknown10c4_0 = 0; }
 
 void BattleCharacter::ReturnBladeChange() {
   SetAction(ACTION_ID_BLADE_CHANGE, false, false, 0, 0.0f);
-  actionPhase = ACTION_PHASE_BLADE_CHANGE_RETURN;
+  unknown107e = ACTION_PHASE_BLADE_CHANGE_RETURN;
 }
 
 ActionCommand *BattleCharacter::GetFreeCommand() {
-  if (commandNum >= COMMAND_NUM) {
+  if (unknown1078 >= COMMAND_NUM) {
     return nullptr;
   }
-  ActionCommand *command = &commands[commandNum];
-  commandNum++;
+  ActionCommand *command = &unknownfb0[unknown1078];
+  unknown1078++;
   command->Reset();
   return command;
 }
 
 bool BattleCharacter::IsRegisterCommand(ActionCommand::COMMAND_TYPE type) const {
-  for (int i = 0; i < commandNum; i++) {
-    if (commands[i].unknown10_0 == type) {
+  for (int i = 0; i < unknown1078; i++) {
+    if (unknownfb0[i].unknown10_0 == type) {
       return true;
     }
   }
@@ -382,52 +382,52 @@ bool BattleCharacter::IsRegisterCommand(ActionCommand::COMMAND_TYPE type) const 
 
 void BattleCharacter::ActionCommandBladeArts(const ActionCommand *command, ActionCommand::COMMAND_TYPE type) {
   if ((type == ActionCommand::COMMAND_TYPE_MOVE_DIR_RATE || type == ActionCommand::COMMAND_TYPE_MOVE_LOCK) &&
-      actionPhase == ACTION_PHASE_BLADE_ARTS_MOVE) {
+      unknown107e == ACTION_PHASE_BLADE_ARTS_MOVE) {
     ActionCommandRun(command, type);
   }
 }
 
 bool BattleCharacter::IsRescue() const {
-  if (actionId == ACTION_ID_RESCUE) {
+  if (unknown107c == ACTION_ID_RESCUE) {
     return true;
   }
-  if (actionId == ACTION_ID_MOVE && aiState == AI_STATE_ACTIVE && aiAction.action == ACTION_ID_RESCUE) {
+  if (unknown107c == ACTION_ID_MOVE && unknown1178 == AI_STATE_ACTIVE && unknown1160.unknown00 == ACTION_ID_RESCUE) {
     return true;
   }
   return false;
 }
 
 bool BattleCharacter::MoveStop(bool isForce) {
-  if (aiState != AI_STATE_ACTIVE || aiAction.action != ACTION_ID_IDLE || (aiFlags & AI_FLAG_SCOUT) != 0) {
+  if (unknown1178 != AI_STATE_ACTIVE || unknown1160.unknown00 != ACTION_ID_IDLE || (unknown1180 & AI_FLAG_SCOUT) != 0) {
     return false;
   }
-  aiFlags |= isForce ? AI_FLAG_STOP_FORCE : AI_FLAG_STOP;
+  unknown1180 |= isForce ? AI_FLAG_STOP_FORCE : AI_FLAG_STOP;
   return true;
 }
 
 void BattleCharacter::SetScout(bool isScout) {
-  if (aiState == AI_STATE_ACTIVE) {
+  if (unknown1178 == AI_STATE_ACTIVE) {
     if (isScout) {
-      aiFlags |= AI_FLAG_SCOUT;
-      aiScoutTime += AI_SCOUT_TIME;
+      unknown1180 |= AI_FLAG_SCOUT;
+      unknown1174 += AI_SCOUT_TIME;
     } else {
-      aiFlags &= ~AI_FLAG_SCOUT;
+      unknown1180 &= ~AI_FLAG_SCOUT;
     }
   }
 }
 
-bool BattleCharacter::IsScout() const { return aiState == AI_STATE_ACTIVE && (aiFlags & AI_FLAG_SCOUT) != 0; }
+bool BattleCharacter::IsScout() const { return unknown1178 == AI_STATE_ACTIVE && (unknown1180 & AI_FLAG_SCOUT) != 0; }
 
 gf::GF_OBJ_HANDLE *BattleCharacter::GetRescueTarget() const {
   int target;
-  if (actionId == ACTION_ID_RESCUE) {
-    target = rescueTarget;
-  } else if (actionId == ACTION_ID_MOVE && aiState == AI_STATE_ACTIVE) {
+  if (unknown107c == ACTION_ID_RESCUE) {
+    target = unknown108c;
+  } else if (unknown107c == ACTION_ID_MOVE && unknown1178 == AI_STATE_ACTIVE) {
     AI_ACTION_DATA action = GetAIActionData();
-    if (action.action != ACTION_ID_RESCUE) {
+    if (action.unknown00 != ACTION_ID_RESCUE) {
       return gf::INVALID_HANDLE;
     }
-    target = action.target;
+    target = action.unknown04;
   } else {
     return gf::INVALID_HANDLE;
   }
@@ -440,15 +440,15 @@ gf::GF_OBJ_HANDLE *BattleCharacter::GetRescueTarget() const {
 
 bool BattleCharacter::IsPause() const { return GetDt(true, true) <= PAUSE_DT; }
 
-f32 BattleCharacter::GetSystemDt() const { return systemDt; }
+f32 BattleCharacter::GetSystemDt() const { return unknowncc4; }
 
-f32 BattleCharacter::GetSystemSyncCount() const { return systemDt * FRAME_RATE; }
+f32 BattleCharacter::GetSystemSyncCount() const { return unknowncc4 * FRAME_RATE; }
 
 bool BattleCharacter::IsEnableBladeChangeAction(ACTION_ID actionId) const { return ((1 << static_cast<u8>(actionId)) & BLADE_CHANGE_ACTIONS) != 0; }
 
 void BattleCharacter::EnhanceProc() { EnhanceTimerProc(); }
 
-bool BattleCharacter::IsEnableBattleFace() const { return isPlayer; }
+bool BattleCharacter::IsEnableBattleFace() const { return unknownf8c_7; }
 
 void BattleCharacter::NotifyHateElse() { SetBladeSupportCondition(BLADE_SUPPORT_CONDITION_HATE_ELSE); }
 
@@ -510,13 +510,13 @@ void BattleCharacter::ActionCommandRescue(const ActionCommand *, ActionCommand::
 
 void BattleCharacter::ActionCommandEndRescue() {}
 
-void BattleCharacter::AddIdea(u32 idea, u32 point) { gf::SCOM_ADD_IDEA::create(handle, idea, point); }
+void BattleCharacter::AddIdea(u32 idea, u32 point) { gf::SCOM_ADD_IDEA::create(unknown118, idea, point); }
 
-void BattleCharacter::SetNoDamageTime(f32 time) { noDamageTime = noDamageTime > time ? noDamageTime : time; }
+void BattleCharacter::SetNoDamageTime(f32 time) { unknown10e0 = unknown10e0 > time ? unknown10e0 : time; }
 
-void BattleCharacter::SetSuperArmorTime(f32 time) { superArmorTime = superArmorTime > time ? superArmorTime : time; }
+void BattleCharacter::SetSuperArmorTime(f32 time) { unknown10e4 = unknown10e4 > time ? unknown10e4 : time; }
 
-void BattleCharacter::SetPerfectAvoidTime(f32 time) { perfectAvoidTime = perfectAvoidTime > time ? perfectAvoidTime : time; }
+void BattleCharacter::SetPerfectAvoidTime(f32 time) { unknown10e8 = unknown10e8 > time ? unknown10e8 : time; }
 
 f32 BattleCharacter::GetArtsDamageRate(const ARTS_DATA::LEVEL_DATA &level) const { return level.unknown00 * 0.01f; }
 
@@ -529,7 +529,7 @@ f32 BattleCharacter::ApplyResistantAttr(f32 damage, int attribute) const {
 
 f32 BattleCharacter::GetArtsDamageRate(const ARTS_DATA &data, int level) const { return GetArtsDamageRate(data.unknown90[level - 1]); }
 
-void BattleCharacter::StopAI(f32 time) { stopAiTime = stopAiTime > time ? stopAiTime : time; }
+void BattleCharacter::StopAI(f32 time) { unknown11cc = unknown11cc > time ? unknown11cc : time; }
 
 bool BattleCharacter::CheckRandFriendEnhanceRate(int enhance) const {
   f32 rate = GetFriendEnhanceRate(enhance, false);
@@ -540,7 +540,7 @@ bool BattleCharacter::CheckRandFriendEnhanceRate(int enhance) const {
   return ml::mtRandf1() <= rate;
 }
 
-void BattleCharacter::ResetBladeSupportConditionFlag() { bladeSupportConditionFlags = 0; }
+void BattleCharacter::ResetBladeSupportConditionFlag() { unknown11e0 = 0; }
 
 void BattleCharacter::SetActionCallback(ACTION_ID) {}
 

@@ -229,7 +229,7 @@ int Utility::GetCharacterList(mm::mtl::FixedVector<u8, 90> &list, gf::GF_OBJ_HAN
       continue;
     }
 
-    if ((flags & CHARACTER_LIST_EXCLUDE_SELF) && character->handle == handle) {
+    if ((flags & CHARACTER_LIST_EXCLUDE_SELF) && character->unknown118 == handle) {
       continue;
     }
 
@@ -277,7 +277,7 @@ int Utility::GetTrustRank(int blade) { return gf::GfDataBlade::getTrustRank(blad
 
 bool Utility::IsEnableFieldBladeChange() {
   BattleCharacter *leader = CharacterManager::get()->GetCharacterConst(gf::GfGameManager::getPartyLeaderDriver());
-  if (leader == nullptr || !leader->IsBattle() || leader->actionId != BattleCharacter::ACTION_ID_PUT_AWAY_WEAPON) {
+  if (leader == nullptr || !leader->IsBattle() || leader->unknown107c != BattleCharacter::ACTION_ID_PUT_AWAY_WEAPON) {
     return false;
   }
   return TalkManager::get()->IsEnableFieldBladeChange();
@@ -309,7 +309,7 @@ void Utility::RegisterEnemyBook(ENBOOK_TYPE type, gf::GF_OBJ_HANDLE *handle, int
 int Utility::AI_GetCharacterID(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character != nullptr) {
-    return character->id;
+    return character->unknownf7d;
   }
 
   return -1;
@@ -325,7 +325,7 @@ int Utility::AI_GetCharacterAIID(gf::GF_OBJ_HANDLE *handle) {
 }
 
 int Utility::AI_GetCharacterAIID(const BattleCharacter *character) {
-  int aiId = character->aiId;
+  int aiId = character->unknownf7e;
   if (!character->IsPlayer()) {
     aiId += AI_ID_ENEMY_OFFSET;
   }
@@ -339,7 +339,7 @@ gf::GF_OBJ_HANDLE *Utility::AI_GetCharacterHandle(int aiId) {
     if (id >= 0) {
       BattleCharacter *character = CharacterManager::get()->GetCharacterConst(id);
       if (character != nullptr) {
-        return character->handle;
+        return character->unknown118;
       }
     }
   }
@@ -378,11 +378,11 @@ void Utility::AI_GetObjectPosition(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position
 
 int Utility::AI_GetTargetCharacterID(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
-  if (character == nullptr || character->target == gf::INVALID_HANDLE) {
+  if (character == nullptr || character->unknown120 == gf::INVALID_HANDLE) {
     return -1;
   }
 
-  return AI_GetCharacterAIID(character->target);
+  return AI_GetCharacterAIID(character->unknown120);
 }
 
 int Utility::AI_GetLinkCharacterID(gf::GF_OBJ_HANDLE *handle) {
@@ -391,7 +391,7 @@ int Utility::AI_GetLinkCharacterID(gf::GF_OBJ_HANDLE *handle) {
     return -1;
   }
 
-  gf::GF_OBJ_HANDLE *link = BattleGlobal::get()->GetLinkJoinEnemyHandle(character->position);
+  gf::GF_OBJ_HANDLE *link = BattleGlobal::get()->GetLinkJoinEnemyHandle(character->unknown10);
   if (link == gf::INVALID_HANDLE) {
     return -1;
   }
@@ -405,7 +405,7 @@ int Utility::AI_IsFly(gf::GF_OBJ_HANDLE *handle) {
     return 0;
   }
 
-  return character->isFly;
+  return character->unknownf8f_7;
 }
 
 f32 Utility::AI_GetVertDiff(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *target) {
@@ -440,7 +440,7 @@ int Utility::AI_GetEatTargetCharacterID(gf::GF_OBJ_HANDLE *handle, f32 range) {
     const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
     if (parameter != nullptr && parameter->IsEatTarget()) {
       mm::Vec3 targetPosition;
-      Misc::GetObjectTransform(character->handle, targetPosition, Misc::TRANS_TYPE_POSITION);
+      Misc::GetObjectTransform(character->unknown118, targetPosition, Misc::TRANS_TYPE_POSITION);
       f32 x = targetPosition.x - position.x;
       f32 y = targetPosition.y - position.y;
       f32 z = targetPosition.z - position.z;
@@ -493,7 +493,7 @@ int Utility::AI_GetAimCharacterNum(gf::GF_OBJ_HANDLE *handle) {
   if (GetCharacterList(list, handle, CHECK_CHR_NUM_MODE_ENEMY, CHARACTER_LIST_BATTLE | CHARACTER_LIST_ALIVE | CHARACTER_LIST_EXCLUDE_BLADE) > 0) {
     CharacterManager *characterManager = CharacterManager::get();
     for (u8 id : list) {
-      if (characterManager->GetCharacterConst(id)->target == handle) {
+      if (characterManager->GetCharacterConst(id)->unknown120 == handle) {
         count++;
       }
     }
@@ -526,7 +526,7 @@ int Utility::AI_GetReactionID(gf::GF_OBJ_HANDLE *handle) {
     return 0;
   }
 
-  return character->reactionId;
+  return character->unknown10c6_0;
 }
 
 int Utility::AI_GetStamp(gf::GF_OBJ_HANDLE *handle) {
@@ -535,7 +535,7 @@ int Utility::AI_GetStamp(gf::GF_OBJ_HANDLE *handle) {
     return 0;
   }
 
-  return character->stamp;
+  return character->unknown11d8;
 }
 
 int Utility::AI_GetStampCharacterID(int stamp) {
@@ -545,7 +545,7 @@ int Utility::AI_GetStampCharacterID(int stamp) {
       continue;
     }
 
-    if (character->stamp == stamp) {
+    if (character->unknown11d8 == stamp) {
       return AI_GetCharacterAIID(character);
     }
   }
@@ -612,7 +612,7 @@ int Utility::AI_GetBackAttackerCharacterID(gf::GF_OBJ_HANDLE *handle) {
     return -1;
   }
 
-  return AI_ConversionID_BtltoAI(character->backAttacker);
+  return AI_ConversionID_BtltoAI(character->unknown10fe);
 }
 
 bool Utility::AI_StartActionRescue(gf::GF_OBJ_HANDLE *handle, int aiId) {
@@ -620,7 +620,7 @@ bool Utility::AI_StartActionRescue(gf::GF_OBJ_HANDLE *handle, int aiId) {
   if (character != nullptr) {
     int target = AI_ConversionID_AItoBtl(aiId);
     if (target >= 0 && character->IsProcAI(false)) {
-      return character->AI_Rescue(static_cast<BattleCharacter::ACTION_ID>(character->actionId), target);
+      return character->AI_Rescue(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), target);
     }
   }
 
@@ -648,11 +648,11 @@ bool Utility::AI_StartActionArts(gf::GF_OBJ_HANDLE *handle, int slot, int aiId) 
     }
   }
 
-  if (!character->IsProcAI(false) || !character->AI_Arts(static_cast<BattleCharacter::ACTION_ID>(character->actionId), slot)) {
+  if (!character->IsProcAI(false) || !character->AI_Arts(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), slot)) {
     return false;
   }
 
-  character->artsTarget = target;
+  character->unknown10c8 = target;
   return true;
 }
 
@@ -673,7 +673,7 @@ bool Utility::AI_StartActionArtsByID(gf::GF_OBJ_HANDLE *handle, int arts, int ai
 bool Utility::AI_StartActionAttack(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character != nullptr && character->IsProcAI(false)) {
-    return character->AI_Attack(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false);
+    return character->AI_Attack(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false);
   }
 
   return false;
@@ -682,7 +682,7 @@ bool Utility::AI_StartActionAttack(gf::GF_OBJ_HANDLE *handle) {
 bool Utility::AI_StartActionBladeChange(gf::GF_OBJ_HANDLE *handle, int blade) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character != nullptr && character->IsProcAI(false)) {
-    return character->AI_BladeChange(static_cast<BattleCharacter::ACTION_ID>(character->actionId), blade);
+    return character->AI_BladeChange(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), blade);
   }
 
   return false;
@@ -732,7 +732,7 @@ bool Utility::AI_TurnDirection(gf::GF_OBJ_HANDLE *handle, const mm::Vec3 &direct
 void Utility::AI_SetUseNavi(gf::GF_OBJ_HANDLE *handle, bool isUseNavi) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character != nullptr) {
-    character->isUseNavi = isUseNavi;
+    character->unknown11e3_2 = isUseNavi;
   }
 }
 
@@ -743,15 +743,15 @@ bool Utility::AI_StartMovePosition(gf::GF_OBJ_HANDLE *handle, const mm::Vec3 &po
   }
 
   BattleCharacter::AI_MOVE_PARAM param;
-  param.distance = 0.0f;
-  param.time = time;
-  param.type = BattleCharacter::MOVE_TYPE_POSITION;
-  param.position = &position;
+  param.unknown00 = 0.0f;
+  param.unknown04 = time;
+  param.unknown08 = BattleCharacter::MOVE_TYPE_POSITION;
+  param.unknown10 = &position;
   if (!character->IsProcAI(true)) {
     return false;
   }
 
-  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
+  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false, &param);
 }
 
 bool Utility::AI_StartMoveTarget(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time) {
@@ -761,14 +761,14 @@ bool Utility::AI_StartMoveTarget(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distan
   }
 
   BattleCharacter::AI_MOVE_PARAM param;
-  param.distance = distance;
-  param.time = time;
-  param.target = AI_GetCharacterHandle(aiId);
+  param.unknown00 = distance;
+  param.unknown04 = time;
+  param.unknown18 = AI_GetCharacterHandle(aiId);
   if (!character->IsProcAI(true)) {
     return false;
   }
 
-  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
+  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false, &param);
 }
 
 bool Utility::AI_StartMoveFront(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time) {
@@ -778,15 +778,15 @@ bool Utility::AI_StartMoveFront(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distanc
   }
 
   BattleCharacter::AI_MOVE_PARAM param;
-  param.distance = distance;
-  param.time = time;
-  param.type = BattleCharacter::MOVE_TYPE_FRONT;
-  param.target = AI_GetCharacterHandle(aiId);
+  param.unknown00 = distance;
+  param.unknown04 = time;
+  param.unknown08 = BattleCharacter::MOVE_TYPE_FRONT;
+  param.unknown18 = AI_GetCharacterHandle(aiId);
   if (!character->IsProcAI(true)) {
     return false;
   }
 
-  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
+  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false, &param);
 }
 
 bool Utility::AI_StartMoveSide(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time) {
@@ -796,15 +796,15 @@ bool Utility::AI_StartMoveSide(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance
   }
 
   BattleCharacter::AI_MOVE_PARAM param;
-  param.distance = distance;
-  param.time = time;
-  param.type = BattleCharacter::MOVE_TYPE_SIDE;
-  param.target = AI_GetCharacterHandle(aiId);
+  param.unknown00 = distance;
+  param.unknown04 = time;
+  param.unknown08 = BattleCharacter::MOVE_TYPE_SIDE;
+  param.unknown18 = AI_GetCharacterHandle(aiId);
   if (!character->IsProcAI(true)) {
     return false;
   }
 
-  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
+  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false, &param);
 }
 
 bool Utility::AI_StartMoveLeft(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time) {
@@ -814,15 +814,15 @@ bool Utility::AI_StartMoveLeft(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance
   }
 
   BattleCharacter::AI_MOVE_PARAM param;
-  param.distance = distance;
-  param.time = time;
-  param.type = BattleCharacter::MOVE_TYPE_LEFT;
-  param.target = AI_GetCharacterHandle(aiId);
+  param.unknown00 = distance;
+  param.unknown04 = time;
+  param.unknown08 = BattleCharacter::MOVE_TYPE_LEFT;
+  param.unknown18 = AI_GetCharacterHandle(aiId);
   if (!character->IsProcAI(true)) {
     return false;
   }
 
-  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
+  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false, &param);
 }
 
 bool Utility::AI_StartMoveRight(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time) {
@@ -832,15 +832,15 @@ bool Utility::AI_StartMoveRight(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distanc
   }
 
   BattleCharacter::AI_MOVE_PARAM param;
-  param.distance = distance;
-  param.time = time;
-  param.type = BattleCharacter::MOVE_TYPE_RIGHT;
-  param.target = AI_GetCharacterHandle(aiId);
+  param.unknown00 = distance;
+  param.unknown04 = time;
+  param.unknown08 = BattleCharacter::MOVE_TYPE_RIGHT;
+  param.unknown18 = AI_GetCharacterHandle(aiId);
   if (!character->IsProcAI(true)) {
     return false;
   }
 
-  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
+  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false, &param);
 }
 
 bool Utility::AI_StartMoveBack(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance, f32 time) {
@@ -850,15 +850,15 @@ bool Utility::AI_StartMoveBack(gf::GF_OBJ_HANDLE *handle, int aiId, f32 distance
   }
 
   BattleCharacter::AI_MOVE_PARAM param;
-  param.distance = distance;
-  param.time = time;
-  param.type = BattleCharacter::MOVE_TYPE_BACK;
-  param.target = AI_GetCharacterHandle(aiId);
+  param.unknown00 = distance;
+  param.unknown04 = time;
+  param.unknown08 = BattleCharacter::MOVE_TYPE_BACK;
+  param.unknown18 = AI_GetCharacterHandle(aiId);
   if (!character->IsProcAI(true)) {
     return false;
   }
 
-  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
+  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false, &param);
 }
 
 bool Utility::AI_StartMoveFriendBack(gf::GF_OBJ_HANDLE *handle, f32 distance, f32 time) {
@@ -875,18 +875,18 @@ bool Utility::AI_StartMoveFriendBack(gf::GF_OBJ_HANDLE *handle, f32 distance, f3
     return false;
   }
 
-  mm::Vec3 position = character->position;
+  mm::Vec3 position = character->unknown10;
   CharacterManager *characterManager = CharacterManager::get();
   gf::GF_OBJ_HANDLE *friendHandle = gf::INVALID_HANDLE;
   f32 nearestLength = FLT_MAX;
   for (u8 id : list) {
     BattleCharacter *friendCharacter = characterManager->GetCharacterConst(id);
     mm::Vec3 friendPosition;
-    Misc::GetObjectTransform(friendCharacter->handle, friendPosition, Misc::TRANS_TYPE_POSITION);
+    Misc::GetObjectTransform(friendCharacter->unknown118, friendPosition, Misc::TRANS_TYPE_POSITION);
     f32 length = Misc::CalcSquareLength(friendPosition, position);
     if (length < nearestLength) {
       nearestLength = length;
-      friendHandle = friendCharacter->handle;
+      friendHandle = friendCharacter->unknown118;
     }
   }
 
@@ -895,15 +895,15 @@ bool Utility::AI_StartMoveFriendBack(gf::GF_OBJ_HANDLE *handle, f32 distance, f3
   }
 
   BattleCharacter::AI_MOVE_PARAM param;
-  param.distance = distance;
-  param.time = time;
-  param.type = BattleCharacter::MOVE_TYPE_BACK;
-  param.target = friendHandle;
+  param.unknown00 = distance;
+  param.unknown04 = time;
+  param.unknown08 = BattleCharacter::MOVE_TYPE_BACK;
+  param.unknown18 = friendHandle;
   if (!character->IsProcAI(true)) {
     return false;
   }
 
-  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
+  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false, &param);
 }
 
 bool Utility::AI_StartMoveSatellite(gf::GF_OBJ_HANDLE *handle, bool isClockwise, f32 frame) {
@@ -913,14 +913,14 @@ bool Utility::AI_StartMoveSatellite(gf::GF_OBJ_HANDLE *handle, bool isClockwise,
   }
 
   BattleCharacter::AI_MOVE_PARAM param;
-  param.distance = 0.0f;
-  param.time = frame * FRAME_TO_SECOND;
-  param.type = isClockwise ? BattleCharacter::MOVE_TYPE_SATELLITE_CLOCKWISE : BattleCharacter::MOVE_TYPE_SATELLITE_COUNTERCLOCKWISE;
+  param.unknown00 = 0.0f;
+  param.unknown04 = frame * FRAME_TO_SECOND;
+  param.unknown08 = isClockwise ? BattleCharacter::MOVE_TYPE_SATELLITE_CLOCKWISE : BattleCharacter::MOVE_TYPE_SATELLITE_COUNTERCLOCKWISE;
   if (!character->IsProcAI(true)) {
     return false;
   }
 
-  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
+  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false, &param);
 }
 
 bool Utility::AI_StartMoveBackward(gf::GF_OBJ_HANDLE *handle, f32 distance, f32 time) {
@@ -930,14 +930,14 @@ bool Utility::AI_StartMoveBackward(gf::GF_OBJ_HANDLE *handle, f32 distance, f32 
   }
 
   BattleCharacter::AI_MOVE_PARAM param;
-  param.distance = distance;
-  param.time = time;
-  param.type = BattleCharacter::MOVE_TYPE_BACKWARD;
+  param.unknown00 = distance;
+  param.unknown04 = time;
+  param.unknown08 = BattleCharacter::MOVE_TYPE_BACKWARD;
   if (!character->IsProcAI(true)) {
     return false;
   }
 
-  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
+  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false, &param);
 }
 
 bool Utility::AI_StartMovePosBackward(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position, f32 time) {
@@ -947,7 +947,7 @@ bool Utility::AI_StartMovePosBackward(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &posit
   }
 
   mm::Vec3 destination;
-  if (Misc::CalcDirectionXZ(character->position, position, destination)) {
+  if (Misc::CalcDirectionXZ(character->unknown10, position, destination)) {
     destination *= POS_BACKWARD_DISTANCE;
     destination += position;
   } else {
@@ -955,15 +955,15 @@ bool Utility::AI_StartMovePosBackward(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &posit
   }
 
   BattleCharacter::AI_MOVE_PARAM param;
-  param.distance = 0.0f;
-  param.time = time;
-  param.type = BattleCharacter::MOVE_TYPE_BACKWARD;
-  param.position = &destination;
+  param.unknown00 = 0.0f;
+  param.unknown04 = time;
+  param.unknown08 = BattleCharacter::MOVE_TYPE_BACKWARD;
+  param.unknown10 = &destination;
   if (!character->IsProcAI(true)) {
     return false;
   }
 
-  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, &param);
+  return character->AI_Move(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false, &param);
 }
 
 void Utility::AI_MoveStop(gf::GF_OBJ_HANDLE *handle, bool isImmediate) {
@@ -1077,7 +1077,7 @@ int Utility::AI_GetSpAttackLevel(gf::GF_OBJ_HANDLE *handle) {
 bool Utility::AI_StartSpAttack(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character != nullptr && character->IsProcAI(false)) {
-    return character->AI_SpAttack(static_cast<BattleCharacter::ACTION_ID>(character->actionId), false, false);
+    return character->AI_SpAttack(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), false, false);
   }
 
   return false;
@@ -1087,8 +1087,8 @@ bool Utility::AI_IsBattleOpening(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   bool isBattleOpening = false;
   if (character != nullptr) {
-    isBattleOpening = character->isBattleOpening;
-    character->isBattleOpening = false;
+    isBattleOpening = character->unknown11e3_3;
+    character->unknown11e3_3 = false;
   }
 
   return isBattleOpening;
@@ -1126,7 +1126,7 @@ int Utility::AI_SearchVoiceCodeCharacter(int voiceCode) {
   CharacterManager *characterManager = CharacterManager::get();
   for (int id = 0; id < CHARACTER_COUNT; id++) {
     BattleCharacter *character = characterManager->GetCharacterConst(id);
-    if (character != nullptr && atoi(character->voiceCode) == voiceCode) {
+    if (character != nullptr && atoi(character->unknownc58) == voiceCode) {
       return AI_GetCharacterAIID(character);
     }
   }
@@ -1140,13 +1140,13 @@ int Utility::AI_GetVoiceCode(gf::GF_OBJ_HANDLE *handle) {
     return 0;
   }
 
-  return atoi(character->voiceCode);
+  return atoi(character->unknownc58);
 }
 
 void Utility::AI_PlayVoice(gf::GF_OBJ_HANDLE *handle, int voice) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character != nullptr) {
-    TalkManager::get()->PlayVoice(character->id, voice);
+    TalkManager::get()->PlayVoice(character->unknownf7d, voice);
   }
 }
 
@@ -1156,7 +1156,7 @@ int Utility::AI_GetPlayVoiceID(gf::GF_OBJ_HANDLE *handle) {
     return 0;
   }
 
-  return TalkManager::get()->GetPlayVoiceID(character->id);
+  return TalkManager::get()->GetPlayVoiceID(character->unknownf7d);
 }
 
 void Utility::AI_AddBladeArtsRecast(gf::GF_OBJ_HANDLE *handle, f32 recast, bool isRate) {
@@ -1209,7 +1209,7 @@ int Utility::AI_GetBdatID(gf::GF_OBJ_HANDLE *handle) {
     return 0;
   }
 
-  return character->bdatId;
+  return character->unknowncc8;
 }
 
 bool Utility::AI_GetCharacterGimmickPoint(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position) {

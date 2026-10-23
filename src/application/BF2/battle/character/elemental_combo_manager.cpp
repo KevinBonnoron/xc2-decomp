@@ -62,7 +62,7 @@ void ElementalComboManager::CheckCharacterID() {
     return;
   }
 
-  characterId = character->id;
+  characterId = character->unknownf7d;
   isPlayer = character->IsPlayer();
   const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
   f32 scale = parameter->ballHeight * 0.1f;

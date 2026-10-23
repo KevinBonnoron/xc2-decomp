@@ -366,7 +366,7 @@ void BattleGlobal::PlayErrorSE() {
 
 const BattleGlobal::MAP_DRIVER_REV_DATA *BattleGlobal::GetMapDriverRevData(const BattleCharacter *character) const {
   if (character != nullptr && character->IsPlayer() && character->IsDriver()) {
-    return GetMapDriverRevDataByBdatID(character->bdatId);
+    return GetMapDriverRevDataByBdatID(character->unknowncc8);
   }
 
   return nullptr;

@@ -47,7 +47,7 @@ int CharacterManager::SearchCharacter(gf::GF_OBJ_HANDLE *handle) const {
   while (low <= high) {
     int middle = (low + high) >> 1;
     u8 id = registeredIds[middle];
-    gf::GF_OBJ_HANDLE *middleHandle = characters[id].character.handle;
+    gf::GF_OBJ_HANDLE *middleHandle = characters[id].character.unknown118;
     if (middleHandle == handle) {
       return id;
     }
@@ -101,7 +101,7 @@ gf::GF_OBJ_HANDLE *CharacterManager::GetCharacterHandle(int id) const {
     return gf::INVALID_HANDLE;
   }
 
-  return character->handle;
+  return character->unknown118;
 }
 
 BattleCharacter *CharacterManager::GetControlCharacter() {
@@ -118,7 +118,7 @@ bool CharacterManager::IsControlCharacter(gf::GF_OBJ_HANDLE *handle) {
   }
 
   const BattleCharacter *character = characters[controlCharacterId].isUse ? &characters[controlCharacterId].character : nullptr;
-  return character != nullptr && character->handle == handle;
+  return character != nullptr && character->unknown118 == handle;
 }
 
 int CharacterManager::GetAliveBossNum() const {
@@ -162,7 +162,7 @@ bool CharacterManager::IsExistAlivePlayer() const {
 
 bool CharacterManager::IsExistEnArrange(u32 enemy) const {
   for (int id = CHARACTER_PLAYER_COUNT; id < CHARACTER_COUNT; id++) {
-    if (characters[id].isUse && static_cast<u32>(characters[id].character.bdatId) == enemy && characters[id].character.IsBattle()) {
+    if (characters[id].isUse && static_cast<u32>(characters[id].character.unknowncc8) == enemy && characters[id].character.IsBattle()) {
       return true;
     }
   }
