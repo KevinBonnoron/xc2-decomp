@@ -14,7 +14,7 @@ constexpr int KIZUNA_STAGE_INVALID = 7;
 constexpr int POUCH_COUNT = 3;
 
 void KIZUNA_GAUGE_DATA::ResetGauge(int driver) {
-  f32 value = static_cast<u16>(Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_BTL_BL_KIZUNA_BASE), "KizunaDef", personality, 2));
+  f32 value = static_cast<u16>(Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_BTL_BL_KIZUNA_BASE), "KizunaDef", unknown18, 2));
   if (driver < POUCH_COUNT) {
     value += DataManager::get()->GetPouchBuffParam(DataManager::POUCH_BUFF_TYPE_KIZUNA, driver);
   }
@@ -22,141 +22,141 @@ void KIZUNA_GAUGE_DATA::ResetGauge(int driver) {
 }
 
 void KIZUNA_GAUGE_DATA::SetGauge(f32 value, bool) {
-  if (isLock && gauge < value) {
+  if (unknown19_3 && unknown00 < value) {
     return;
   }
 
-  f32 maximum = kizunaMax;
+  f32 maximum = unknown14;
   value = value < maximum ? value : maximum;
   if (value <= 0.0f) {
-    if (gauge > 0.0f) {
-      isReachZero = true;
+    if (unknown00 > 0.0f) {
+      unknown19_2 = true;
     }
-    gauge = 0.0f;
-    subGauge = 0.0f;
-    gaugeRate = 0.0f;
+    unknown00 = 0.0f;
+    unknown04 = 0.0f;
+    unknown08 = 0.0f;
   } else if (value >= KIZUNA_GAUGE_MAX) {
-    if (!isPermitMax) {
-      gauge = KIZUNA_GAUGE_MAX - 1.0f;
-      subGauge = -1.0f;
-      gaugeRate = 0.999f;
+    if (!unknown19_0) {
+      unknown00 = KIZUNA_GAUGE_MAX - 1.0f;
+      unknown04 = -1.0f;
+      unknown08 = 0.999f;
     } else {
-      if (gauge < KIZUNA_GAUGE_MAX) {
-        isReachMax = true;
+      if (unknown00 < KIZUNA_GAUGE_MAX) {
+        unknown19_1 = true;
       }
-      gauge = KIZUNA_GAUGE_MAX;
-      subGauge = KIZUNA_GAUGE_MAX;
-      gaugeRate = 1.0f;
+      unknown00 = KIZUNA_GAUGE_MAX;
+      unknown04 = KIZUNA_GAUGE_MAX;
+      unknown08 = 1.0f;
     }
-    stage = KIZUNA_STAGE_INVALID;
+    unknown16 = KIZUNA_STAGE_INVALID;
     return;
   } else {
-    gauge = value;
-    subGauge = -1.0f;
-    gaugeRate = value * 0.001f;
+    unknown00 = value;
+    unknown04 = -1.0f;
+    unknown08 = value * 0.001f;
   }
-  isPermitMax = false;
-  stage = KIZUNA_STAGE_INVALID;
+  unknown19_0 = false;
+  unknown16 = KIZUNA_STAGE_INVALID;
 }
 
 void KIZUNA_GAUGE_DATA::SetKizunaMax(int kizunaMax) {
   int clamped = kizunaMax < 0 ? 0 : (kizunaMax > KIZUNA_GAUGE_MAX ? static_cast<int>(KIZUNA_GAUGE_MAX) : kizunaMax);
-  this->kizunaMax = clamped;
-  if (gauge > clamped) {
-    SetGauge(gauge, false);
+  this->unknown14 = clamped;
+  if (unknown00 > clamped) {
+    SetGauge(unknown00, false);
   }
 }
 
 int KIZUNA_GAUGE_DATA::GetKizunaStage(f32 *rate) const {
-  if (stage >= KIZUNA_STAGE_INVALID) {
-    stage = Misc::GetKizunaStage(gauge, &stageRate);
+  if (unknown16 >= KIZUNA_STAGE_INVALID) {
+    unknown16 = Misc::GetKizunaStage(unknown00, &unknown10);
   }
   if (rate != nullptr) {
-    *rate = stageRate;
+    *rate = unknown10;
   }
-  return stage;
+  return unknown16;
 }
 
 void KIZUNA_GAUGE_DATA::ResetTimingFlag() {
-  isReachMax = false;
-  isReachZero = false;
+  unknown19_1 = false;
+  unknown19_2 = false;
 }
 
 void GROUP_BLADE_DATA::InitializeCoolTime(f32 rate) {
-  if (isDriverBlade) {
-    coolTime = Utility::GetBladeCoolTime(id);
-    coolTimeCounter = coolTime * rate;
+  if (unknown28_0) {
+    unknown1c = Utility::GetBladeCoolTime(unknown24);
+    unknown20 = unknown1c * rate;
   } else {
-    coolTime = 0.0f;
-    coolTimeCounter = 0.0f;
+    unknown1c = 0.0f;
+    unknown20 = 0.0f;
   }
 }
 
-int GROUP_BLADE_DATA::GetTrustRank() const { return Utility::GetTrustRank(id); }
+int GROUP_BLADE_DATA::GetTrustRank() const { return Utility::GetTrustRank(unknown24); }
 
-f32 GROUP_BLADE_DATA::GetCoolTime() const { return coolTime; }
+f32 GROUP_BLADE_DATA::GetCoolTime() const { return unknown1c; }
 
 void GROUP_BLADE_DATA::ProgressCoolTime(f32 time) {
-  if (coolTimeCounter < coolTime) {
-    f32 counter = coolTimeCounter + time;
-    coolTimeCounter = counter < coolTime ? counter : coolTime;
+  if (unknown20 < unknown1c) {
+    f32 counter = unknown20 + time;
+    unknown20 = counter < unknown1c ? counter : unknown1c;
   }
 }
 
 f32 GROUP_BLADE_DATA::GetCoolTimeRatio() const {
-  if (coolTime <= 0.0f) {
+  if (unknown1c <= 0.0f) {
     return 1.0f;
   }
-  f32 ratio = coolTimeCounter / coolTime;
+  f32 ratio = unknown20 / unknown1c;
   if (ratio < 0.0f) {
     return 0.0f;
   }
   return mm::min(1.0f, ratio);
 }
 
-bool GROUP_BLADE_DATA::IsCoolTimeEnd() const { return coolTimeCounter >= coolTime; }
+bool GROUP_BLADE_DATA::IsCoolTimeEnd() const { return unknown20 >= unknown1c; }
 
 void GROUP_BLADE_DATA::SynchroHomnuraData(const GROUP_BLADE_DATA &blade) {
   static_cast<KIZUNA_GAUGE_DATA &>(*this) = blade;
-  coolTime = blade.coolTime;
-  coolTimeCounter = blade.coolTimeCounter;
+  unknown1c = blade.unknown1c;
+  unknown20 = blade.unknown20;
 }
 
 void GROUP_DATA::SetBuddyBladeIndex(int index) {
-  if (buddyBladeIndex != index) {
-    buddyBladeIndex = index;
-    buddyTime = 0.0f;
+  if (unknownff != index) {
+    unknownff = index;
+    unknownf0 = 0.0f;
   }
 }
 
 const GROUP_BLADE_DATA *GROUP_DATA::GetBladeDataConst(int index) const {
   if (index < 0) {
-    index = buddyBladeIndex;
+    index = unknownff;
   }
-  return &blades[index];
+  return &unknown08[index];
 }
 
 void GROUP_DATA::SetNeedPermit(bool isNeedPermit) {
   if (!isNeedPermit) {
-    permitState = 0;
-  } else if (!this->isNeedPermit) {
-    permitState = 0;
+    unknown104_2 = 0;
+  } else if (!this->unknown104_1) {
+    unknown104_2 = 0;
   }
-  this->isNeedPermit = isNeedPermit;
+  this->unknown104_1 = isNeedPermit;
 }
 
 void GROUP_DATA::ProgressCoolTime(f32 time) {
   for (int i = 0; i < 5; i++) {
-    if (i != buddyBladeIndex && blades[i].isInitialized) {
-      blades[i].ProgressCoolTime(time);
+    if (i != unknownff && unknown08[i].unknown28_3) {
+      unknown08[i].ProgressCoolTime(time);
     }
   }
 }
 
 void GROUP_DATA::FinishCoolTime() {
   for (int i = 0; i < 5; i++) {
-    if (blades[i].isInitialized) {
-      blades[i].coolTimeCounter = blades[i].coolTime;
+    if (unknown08[i].unknown28_3) {
+      unknown08[i].unknown20 = unknown08[i].unknown1c;
     }
   }
 }

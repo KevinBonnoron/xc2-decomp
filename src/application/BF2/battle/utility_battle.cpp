@@ -1061,10 +1061,10 @@ int Utility::AI_GetSpAttackLevel(gf::GF_OBJ_HANDLE *handle) {
   if (group == nullptr) {
     return 0;
   }
-  if (!group->isEntry) {
+  if (!group->unknown105_5) {
     return 0;
   }
-  int slot = group->spAttackSlot;
+  int slot = group->unknown101;
   if (slot < 0) {
     return 0;
   }
