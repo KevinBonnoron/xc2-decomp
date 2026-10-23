@@ -133,7 +133,7 @@ void BattleCharacter::DeleteKizunaAuraEffect() {
 
 void BattleCharacter::CancelButtonChallenge() {
   if (buttonChallenge != 0) {
-    BattleGlobal::get()->buttonChallenge.Cancel(buttonChallenge);
+    BattleGlobal::get()->unknown5e8.Cancel(buttonChallenge);
     buttonChallenge = 0;
   }
 }

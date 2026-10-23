@@ -113,7 +113,7 @@ void DataManager::Update(const fw::UpdateInfo &updateInfo) {
 }
 
 void DataManager::UpdateElementalEffect(f32) {
-  if (!BattleGlobal::get()->isLockArtsPalette) {
+  if (!BattleGlobal::get()->unknown65de_0) {
     elementalEffectId = 0;
   }
 }

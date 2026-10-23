@@ -39,7 +39,7 @@ void CharacterParameter::BattleEnd() {
 void CharacterParameter::ResetSpecialEnhanceRate(bool isAll) {
   int last = SPECIAL_ENHANCE_COUNT - 1;
   if (!isAll) {
-    last = BattleGlobal::get()->isLockArtsPalette ? SPECIAL_ENHANCE_COUNT - 3 : SPECIAL_ENHANCE_COUNT - 1;
+    last = BattleGlobal::get()->unknown65de_0 ? SPECIAL_ENHANCE_COUNT - 3 : SPECIAL_ENHANCE_COUNT - 1;
   }
   for (int i = 0; i <= last; i++) {
     SetSpecialEnhanceRate(static_cast<SPECIAL_ENHANCE_TYPE>(i), 0.0f);
@@ -580,7 +580,7 @@ void PlayerParameter::ResetUseWeapon() {
 }
 
 void PlayerParameter::CheckChangeArtsPalette() {
-  if (isInitialized && !isBattle && !BattleGlobal::get()->isLockArtsPalette) {
+  if (isInitialized && !isBattle && !BattleGlobal::get()->unknown65de_0) {
     InitializeArtsPalette(0);
   }
 }
@@ -791,7 +791,7 @@ bool EnemyParameter::UsePerfectAvoid() const {
 const EnemyParameter::HATE_DATA *EnemyParameter::GetHateDataConst(int index) const { return &hates[index >= 0 && index < HATE_COUNT ? index : 0]; }
 
 void EnemyParameter::HATE_DATA::Set(int type, f32 hate) {
-  if (!BattleGlobal::get()->isKakusei && static_cast<u32>(type) < 2) {
+  if (!BattleGlobal::get()->unknown65df_4 && static_cast<u32>(type) < 2) {
     hates[type] = hate > 0.0f ? hate : 0.0f;
     isEmpty = false;
   }

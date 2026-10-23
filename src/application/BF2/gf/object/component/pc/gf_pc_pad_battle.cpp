@@ -106,19 +106,19 @@ void PadBattle::setInput(InputID id) const {
   switch (id) {
   case INPUT_ID_BATTLE_END:
   case INPUT_ID_ART_03:
-    id = btl::BattleGlobal::get()->isShiftDecided ? INPUT_ID_BATTLE_END : INPUT_ID_ART_03;
+    id = btl::BattleGlobal::get()->unknown65e1_6 ? INPUT_ID_BATTLE_END : INPUT_ID_ART_03;
     break;
   case INPUT_ID_ART_01:
   case INPUT_ID_KAKUSEI:
-    id = btl::BattleGlobal::get()->isShiftDecided ? INPUT_ID_KAKUSEI : INPUT_ID_ART_01;
+    id = btl::BattleGlobal::get()->unknown65e1_6 ? INPUT_ID_KAKUSEI : INPUT_ID_ART_01;
     break;
   case INPUT_ID_ART_02:
   case INPUT_ID_CHANGE_TARGET_L:
-    id = btl::BattleGlobal::get()->isShiftDecided ? INPUT_ID_CHANGE_TARGET_L : INPUT_ID_ART_02;
+    id = btl::BattleGlobal::get()->unknown65e1_6 ? INPUT_ID_CHANGE_TARGET_L : INPUT_ID_ART_02;
     break;
   case INPUT_ID_SP_ATTACK:
   case INPUT_ID_CHANGE_TARGET_R:
-    id = btl::BattleGlobal::get()->isShiftDecided ? INPUT_ID_CHANGE_TARGET_R : INPUT_ID_SP_ATTACK;
+    id = btl::BattleGlobal::get()->unknown65e1_6 ? INPUT_ID_CHANGE_TARGET_R : INPUT_ID_SP_ATTACK;
     break;
   default:
     break;

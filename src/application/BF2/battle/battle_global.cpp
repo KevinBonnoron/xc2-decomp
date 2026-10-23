@@ -37,26 +37,26 @@ void BattleGlobal::Destroy() {
 }
 
 void BattleGlobal::Finalize() {
-  if (shakeCameraManager != nullptr) {
-    delete shakeCameraManager;
-    shakeCameraManager = nullptr;
+  if (unknown5e0 != nullptr) {
+    delete unknown5e0;
+    unknown5e0 = nullptr;
   }
 }
 
 int BattleGlobal::GetNormalAttackArtsID(int type, int weapon, int index) const {
-  u16 arts = normalAttackArtsIds[type][weapon][index];
+  u16 arts = unknown5b90[type][weapon][index];
   if (arts == 0) {
-    arts = normalAttackArtsIds[0][weapon][index];
+    arts = unknown5b90[0][weapon][index];
   }
 
   return arts;
 }
 
 const BattleGlobal::ELEMENTAL_COMBO_FLOW_DATA *BattleGlobal::GetElementalComboFlowData(int combo) const {
-  return &elementalComboFlows[combo >= 0 && combo < ELEMENTAL_COMBO_NUM ? combo : 0];
+  return &unknown56a0[combo >= 0 && combo < ELEMENTAL_COMBO_NUM ? combo : 0];
 }
 
-int BattleGlobal::GetElementalComboStage(int combo) const { return GetElementalComboFlowData(combo)->stage; }
+int BattleGlobal::GetElementalComboStage(int combo) const { return GetElementalComboFlowData(combo)->unknown01_0; }
 
 int BattleGlobal::GetFirstStageElementalComboData(int combo) const {
   int first;
@@ -67,8 +67,8 @@ int BattleGlobal::GetFirstStageElementalComboData(int combo) const {
       break;
     }
     const ELEMENTAL_COMBO_FLOW_DATA *flow = GetElementalComboFlowData(first);
-    isFirstStage = flow->stage == 1;
-    combo = flow->parent;
+    isFirstStage = flow->unknown01_0 == 1;
+    combo = flow->unknown00;
   } while (!isFirstStage);
   return first;
 }
@@ -82,14 +82,14 @@ bool BattleGlobal::IsSlowProc(u32 slow) const { return GetSlowProcDataConst(slow
 void BattleGlobal::PostUpdate(const fw::UpdateInfo &updateInfo) { get()->PostUpdateProc(updateInfo); }
 
 void BattleGlobal::ResetBGM() {
-  bgm = 0;
-  bgmPriority = 0xff;
+  unknown65d2 = 0;
+  unknown65d4 = 0xff;
 }
 
-void BattleGlobal::SetElementalComboImmortal(gf::GF_OBJ_HANDLE *handle) { elementalComboImmortal = handle; }
+void BattleGlobal::SetElementalComboImmortal(gf::GF_OBJ_HANDLE *handle) { unknown5af8 = handle; }
 
 bool BattleGlobal::IsGameOver() const {
-  if (isGameOver) {
+  if (unknown65e0_0) {
     return true;
   }
   return gf::GfGameManager::isPlayerDeadSequence();
@@ -98,26 +98,26 @@ bool BattleGlobal::IsGameOver() const {
 bool BattleGlobal::IsEnableBattle() const { return !gf::GfGameManager::isBattleStop(); }
 
 void BattleGlobal::NotifyShiftNone() {
-  isShiftDecided = false;
-  isShiftTimeOver = false;
+  unknown65e1_6 = false;
+  unknown65e1_7 = false;
 }
 
 void BattleGlobal::NotifyShiftTimeOver() {
   if (UIManager::get()->isDispBattleUI) {
-    isShiftTimeOver = true;
+    unknown65e1_7 = true;
   }
 }
 
-int BattleGlobal::GetAttackDamageDataNum() const { return attackDamages.size(); }
+int BattleGlobal::GetAttackDamageDataNum() const { return unknown878.size(); }
 
 const BattleGlobal::ATTACK_DAMAGE_DATA *BattleGlobal::GetAttackDamageDataConst(u32 attack) const {
   if (attack == 0) {
     return nullptr;
   }
 
-  for (const ATTACK_DAMAGE_DATA &data : attackDamages) {
-    if (data.id == attack) {
-      data.isUpdated = true;
+  for (const ATTACK_DAMAGE_DATA &data : unknown878) {
+    if (data.unknown00 == attack) {
+      data.unknown10_7 = true;
       return &data;
     }
   }
@@ -133,7 +133,7 @@ int BattleGlobal::GetAttackDamage(u32 attack) const {
     return -1;
   }
 
-  return data->damage;
+  return data->unknown04;
 }
 
 gf::GF_OBJ_HANDLE *BattleGlobal::GetAttackMainTargetHandle(u32 attack) const {
@@ -142,20 +142,20 @@ gf::GF_OBJ_HANDLE *BattleGlobal::GetAttackMainTargetHandle(u32 attack) const {
     return gf::INVALID_HANDLE;
   }
 
-  return CharacterManager::get()->GetCharacterHandle(data->mainTarget);
+  return CharacterManager::get()->GetCharacterHandle(data->unknown13);
 }
 
 void BattleGlobal::SetAttackAttr(u32 attack, int attribute) {
   ATTACK_DAMAGE_DATA *data = const_cast<ATTACK_DAMAGE_DATA *>(GetAttackDamageDataConst(attack));
   if (data != nullptr) {
-    data->attribute = attribute;
+    data->unknown0b_3 = attribute;
   }
 }
 
 int BattleGlobal::GetAttackAttr(u32 attack) const {
   const ATTACK_DAMAGE_DATA *data = GetAttackDamageDataConst(attack);
   if (data != nullptr) {
-    int attribute = data->attribute;
+    int attribute = data->unknown0b_3;
     if (attribute != ATTACK_ATTRIBUTE_NONE) {
       return attribute;
     }
@@ -167,97 +167,97 @@ int BattleGlobal::GetAttackAttr(u32 attack) const {
 void BattleGlobal::SetEndDropHealPot2(u32 attack) {
   ATTACK_DAMAGE_DATA *data = const_cast<ATTACK_DAMAGE_DATA *>(GetAttackDamageDataConst(attack));
   if (data != nullptr) {
-    data->isEndDropHealPot2 = true;
+    data->unknown10_5 = true;
   }
 }
 
 bool BattleGlobal::IsEndDropHealPot2(u32 attack) const {
   const ATTACK_DAMAGE_DATA *data = GetAttackDamageDataConst(attack);
-  return data != nullptr ? data->isEndDropHealPot2 : false;
+  return data != nullptr ? data->unknown10_5 : false;
 }
 
 void BattleGlobal::SetCriticalRecastEnhanceEnd(u32 attack) {
   ATTACK_DAMAGE_DATA *data = const_cast<ATTACK_DAMAGE_DATA *>(GetAttackDamageDataConst(attack));
   if (data != nullptr) {
-    data->isEndCriticalRecastEnhance = true;
+    data->unknown10_6 = true;
   }
 }
 
 bool BattleGlobal::IsEndCriticalRecastEnhance(u32 attack) const {
   const ATTACK_DAMAGE_DATA *data = GetAttackDamageDataConst(attack);
-  return data != nullptr ? data->isEndCriticalRecastEnhance : false;
+  return data != nullptr ? data->unknown10_6 : false;
 }
 
 void BattleGlobal::SetJustDistanceAttack(u32 attack) {
   ATTACK_DAMAGE_DATA *data = const_cast<ATTACK_DAMAGE_DATA *>(GetAttackDamageDataConst(attack));
   if (data != nullptr) {
-    data->isJustDistanceAttack = true;
+    data->unknown10_0 = true;
   }
 }
 
 bool BattleGlobal::IsJustDistanceAttack(u32 attack) const {
   const ATTACK_DAMAGE_DATA *data = GetAttackDamageDataConst(attack);
-  return data != nullptr ? data->isJustDistanceAttack : false;
+  return data != nullptr ? data->unknown10_0 : false;
 }
 
 void BattleGlobal::SetEnableAddElementalBall(u32 attack, bool isEnable) {
   ATTACK_DAMAGE_DATA *data = const_cast<ATTACK_DAMAGE_DATA *>(GetAttackDamageDataConst(attack));
   if (data != nullptr) {
-    data->isEnableAddElementalBall = isEnable;
+    data->unknown12_0 = isEnable;
   }
 }
 
 bool BattleGlobal::IsEnableAddElementalBall(u32 attack) const {
   const ATTACK_DAMAGE_DATA *data = GetAttackDamageDataConst(attack);
-  return data != nullptr ? data->isEnableAddElementalBall : true;
+  return data != nullptr ? data->unknown12_0 : true;
 }
 
 void BattleGlobal::SetResistantBreakDamageEnd(u32 attack) {
   ATTACK_DAMAGE_DATA *data = const_cast<ATTACK_DAMAGE_DATA *>(GetAttackDamageDataConst(attack));
   if (data != nullptr) {
-    data->isResistantBreakDamageEnd = true;
+    data->unknown10_1 = true;
   }
 }
 
 bool BattleGlobal::IsEnableResistantBreakDamage(u32 attack) const {
   const ATTACK_DAMAGE_DATA *data = GetAttackDamageDataConst(attack);
-  return data != nullptr ? !data->isResistantBreakDamageEnd : false;
+  return data != nullptr ? !data->unknown10_1 : false;
 }
 
 void BattleGlobal::SetPermitArts(u32 attack) {
   ATTACK_DAMAGE_DATA *data = const_cast<ATTACK_DAMAGE_DATA *>(GetAttackDamageDataConst(attack));
   if (data != nullptr) {
-    data->isPermitArts = true;
+    data->unknown10_2 = true;
   }
 }
 
 bool BattleGlobal::IsPermitArts(u32 attack) const {
   const ATTACK_DAMAGE_DATA *data = GetAttackDamageDataConst(attack);
-  return data != nullptr ? data->isPermitArts : false;
+  return data != nullptr ? data->unknown10_2 : false;
 }
 
 void BattleGlobal::SetShootBullet(u32 attack, bool isShoot) {
   ATTACK_DAMAGE_DATA *data = const_cast<ATTACK_DAMAGE_DATA *>(GetAttackDamageDataConst(attack));
   if (data != nullptr) {
-    data->isNotShootBullet = !isShoot;
+    data->unknown10_3 = !isShoot;
   }
 }
 
 bool BattleGlobal::IsShootBullet(u32 attack) const {
   const ATTACK_DAMAGE_DATA *data = GetAttackDamageDataConst(attack);
-  return data != nullptr ? !data->isNotShootBullet : true;
+  return data != nullptr ? !data->unknown10_3 : true;
 }
 
 void BattleGlobal::SetValidAttackRange(u32 attack, bool isValid) {
   ATTACK_DAMAGE_DATA *data = const_cast<ATTACK_DAMAGE_DATA *>(GetAttackDamageDataConst(attack));
   if (data != nullptr) {
-    data->isValidAttackRange = isValid;
+    data->unknown12_1 = isValid;
   }
 }
 
 bool BattleGlobal::IsValidAttackRange(u32 attack) const {
   const ATTACK_DAMAGE_DATA *data = GetAttackDamageDataConst(attack);
-  return data != nullptr ? data->isValidAttackRange : true;
+  return data != nullptr ? data->unknown12_1 : true;
 }
 
 void BattleGlobal::SetDamageRate(u32 attack, f32 rate, bool isOverwrite) {
@@ -266,9 +266,9 @@ void BattleGlobal::SetDamageRate(u32 attack, f32 rate, bool isOverwrite) {
     return;
   }
 
-  data->damageRate = static_cast<u32>(rate * DAMAGE_RATE_SCALE);
+  data->unknown08_0 = static_cast<u32>(rate * DAMAGE_RATE_SCALE);
   if (isOverwrite) {
-    data->isOverwriteDamageRate = true;
+    data->unknown10_4 = true;
   }
 }
 
@@ -278,9 +278,9 @@ void BattleGlobal::AddDamageRate(u32 attack, f32 rate, bool isOverwrite) {
     return;
   }
 
-  data->damageRate = static_cast<u32>((static_cast<u32>(data->damageRate) * (1.0f / DAMAGE_RATE_SCALE) + rate) * DAMAGE_RATE_SCALE);
+  data->unknown08_0 = static_cast<u32>((static_cast<u32>(data->unknown08_0) * (1.0f / DAMAGE_RATE_SCALE) + rate) * DAMAGE_RATE_SCALE);
   if (isOverwrite) {
-    data->isOverwriteDamageRate = true;
+    data->unknown10_4 = true;
   }
 }
 
@@ -290,9 +290,9 @@ void BattleGlobal::MulDamageRate(u32 attack, f32 rate, bool isOverwrite) {
     return;
   }
 
-  data->damageRate = static_cast<u32>(static_cast<u32>(data->damageRate) * (1.0f / DAMAGE_RATE_SCALE) * rate * DAMAGE_RATE_SCALE);
+  data->unknown08_0 = static_cast<u32>(static_cast<u32>(data->unknown08_0) * (1.0f / DAMAGE_RATE_SCALE) * rate * DAMAGE_RATE_SCALE);
   if (isOverwrite) {
-    data->isOverwriteDamageRate = true;
+    data->unknown10_4 = true;
   }
 }
 
@@ -300,10 +300,10 @@ f32 BattleGlobal::GetDamageRate(u32 attack, bool *isOverwrite) const {
   const ATTACK_DAMAGE_DATA *data = GetAttackDamageDataConst(attack);
   if (data != nullptr) {
     if (isOverwrite != nullptr) {
-      *isOverwrite = data->isOverwriteDamageRate;
+      *isOverwrite = data->unknown10_4;
     }
 
-    return static_cast<u32>(data->damageRate) * (1.0f / DAMAGE_RATE_SCALE);
+    return static_cast<u32>(data->unknown08_0) * (1.0f / DAMAGE_RATE_SCALE);
   }
 
   if (isOverwrite != nullptr) {
@@ -314,26 +314,26 @@ f32 BattleGlobal::GetDamageRate(u32 attack, bool *isOverwrite) const {
 }
 
 void BattleGlobal::SetPause(int pause, bool isPause) {
-  pauseFlags[pause >> 3] = isPause ? pauseFlags[pause >> 3] | (1 << (pause & 7)) : pauseFlags[pause >> 3] & ~(1 << (pause & 7));
+  unknown65d6[pause >> 3] = isPause ? unknown65d6[pause >> 3] | (1 << (pause & 7)) : unknown65d6[pause >> 3] & ~(1 << (pause & 7));
 }
 
 bool BattleGlobal::IsPause(int pause) const {
   if (pause >= 0) {
-    return (pauseFlags[pause >> 3] & (1 << (pause & 7))) != 0;
+    return (unknown65d6[pause >> 3] & (1 << (pause & 7))) != 0;
   }
 
-  return pauseFlags[0] != 0;
+  return unknown65d6[0] != 0;
 }
 
-void BattleGlobal::RegisterStop(f32 time) { stopTime = stopTime > time ? stopTime : time; }
+void BattleGlobal::RegisterStop(f32 time) { unknown6b8 = unknown6b8 > time ? unknown6b8 : time; }
 
 const BattleGlobal::SLOW_PROC_DATA *BattleGlobal::GetSlowProcDataConst(u32 slow) const {
   if (slow == 0) {
     return nullptr;
   }
 
-  for (const SLOW_PROC_DATA &data : slowProcs) {
-    if (data.id == slow) {
+  for (const SLOW_PROC_DATA &data : unknown6c0) {
+    if (data.unknown0c == slow) {
       return &data;
     }
   }
@@ -347,20 +347,20 @@ void BattleGlobal::SetBGM(u32 bgm) {
   }
 
   u8 priority = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_RSC_BGM_CONDITION), "Priority", bgm, 1);
-  if (bgmPriority == 0xff || priority > bgmPriority) {
-    this->bgm = bgm;
-    bgmPriority = priority;
+  if (unknown65d4 == 0xff || priority > unknown65d4) {
+    this->unknown65d2 = bgm;
+    unknown65d4 = priority;
   }
 }
 
-void BattleGlobal::RequestJingle(JINGLE_TYPE jingle) { requestJingle = jingle; }
+void BattleGlobal::RequestJingle(JINGLE_TYPE jingle) { unknown65d5 = jingle; }
 
-bool BattleGlobal::IsJinglePlaying() const { return jingleHandle != reinterpret_cast<gf::GF_SE_CATEGORY_HANDLE *>(-1); }
+bool BattleGlobal::IsJinglePlaying() const { return unknown5aa0 != reinterpret_cast<gf::GF_SE_CATEGORY_HANDLE *>(-1); }
 
 void BattleGlobal::PlayErrorSE() {
-  if (!isPlayErrorSE) {
+  if (!unknown65e2_2) {
     gf::GfMenuObjUtil::playSECommon(SE_COMMON_ERROR);
-    isPlayErrorSE = true;
+    unknown65e2_2 = true;
   }
 }
 
@@ -374,7 +374,7 @@ const BattleGlobal::MAP_DRIVER_REV_DATA *BattleGlobal::GetMapDriverRevData(const
 
 const BattleGlobal::MAP_DRIVER_REV_DATA *BattleGlobal::GetMapDriverRevDataByBdatID(int driver) const {
   int index = driver - 1;
-  return index >= 0 && index < MAP_DRIVER_REV_NUM ? &mapDriverRevs[index] : nullptr;
+  return index >= 0 && index < MAP_DRIVER_REV_NUM ? &unknown5ac0[index] : nullptr;
 }
 
 int BattleGlobal::GetKizunaMax(const BattleCharacter *character) const {
@@ -383,7 +383,7 @@ int BattleGlobal::GetKizunaMax(const BattleCharacter *character) const {
     return 1000;
   }
 
-  return data->kizunaMax;
+  return data->unknown00_0;
 }
 
 f32 BattleGlobal::GetAttackRate(const BattleCharacter *character) const {
@@ -391,7 +391,7 @@ f32 BattleGlobal::GetAttackRate(const BattleCharacter *character) const {
   if (data == nullptr) {
     return 1.0f;
   }
-  return NextFloat(data->attackRate * 0.01f);
+  return NextFloat(data->unknown02 * 0.01f);
 }
 
 f32 BattleGlobal::GetDefenceRate(const BattleCharacter *character) const {
@@ -399,7 +399,7 @@ f32 BattleGlobal::GetDefenceRate(const BattleCharacter *character) const {
   if (data == nullptr) {
     return 1.0f;
   }
-  return NextFloat(data->defenceRate * 0.01f);
+  return NextFloat(data->unknown03 * 0.01f);
 }
 
 int BattleGlobal::GetSpLevelMax(const BattleCharacter *character) const {
@@ -408,7 +408,7 @@ int BattleGlobal::GetSpLevelMax(const BattleCharacter *character) const {
     return 4;
   }
 
-  return data->spLevelMax;
+  return data->unknown01_3;
 }
 
 bool BattleGlobal::IsEnableSupport(const BattleCharacter *character) const {
@@ -417,24 +417,24 @@ bool BattleGlobal::IsEnableSupport(const BattleCharacter *character) const {
     return true;
   }
 
-  return data->isEnableSupport;
+  return data->unknown01_7;
 }
 
-bool BattleGlobal::IsKakuseiFinished() const { return isKakuseiFinished; }
+bool BattleGlobal::IsKakuseiFinished() const { return unknown65df_5; }
 
 bool BattleGlobal::IsKakuseiOrder(bool isCheckRestTime) const {
-  if (isKakuseiOrder) {
+  if (unknown65df_3) {
     return true;
   }
-  if (isCheckRestTime && kakuseiRestTime >= 0.0f) {
+  if (isCheckRestTime && unknown5b68 >= 0.0f) {
     return true;
   }
   return false;
 }
 
 void BattleGlobal::ApplyBattleCameraAdjustment(mm::Vec3 &position, mm::Vec3 &target) {
-  if (shakeCameraManager != nullptr) {
-    shakeCameraManager->ApplyShake(position, target);
+  if (unknown5e0 != nullptr) {
+    unknown5e0->ApplyShake(position, target);
   }
 }
 

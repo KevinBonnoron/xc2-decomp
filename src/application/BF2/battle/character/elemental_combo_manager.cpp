@@ -16,10 +16,10 @@ namespace btl {
 constexpr int ELEMENTAL_STAGE_NONE = 3;
 
 ElementalComboManager::~ElementalComboManager() {
-  if (BattleGlobal::get()->elementalComboImmortal == handle) {
+  if (BattleGlobal::get()->unknown5af8 == handle) {
     BattleGlobal::get()->SetElementalComboImmortal(reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1));
   }
-  if (BattleGlobal::get()->uniteComboTarget == handle && !BattleGlobal::get()->isUniteComboDirection) {
+  if (BattleGlobal::get()->unknown5b28 == handle && !BattleGlobal::get()->unknown5b5f) {
     BattleGlobal::get()->DeleteUniteComboDirection();
   }
   DeleteBallEffect(-1);

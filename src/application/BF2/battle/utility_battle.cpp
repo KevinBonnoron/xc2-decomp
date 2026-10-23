@@ -1233,16 +1233,16 @@ void Utility::AI_SetSuperArmor(gf::GF_OBJ_HANDLE *handle, f32 time) {
 }
 
 int Utility::AI_GetButtonChallengeResult() {
-  ButtonChallenge &challenge = BattleGlobal::get()->buttonChallenge;
+  ButtonChallenge &challenge = BattleGlobal::get()->unknown5e8;
   if (challenge.IsProc() && challenge.param.type == ButtonChallenge::TYPE_ENEMY) {
     return BUTTON_CHALLENGE_RESULT_PROC;
   }
   return challenge.IsEnemyChallengeSuccess() ? BUTTON_CHALLENGE_RESULT_SUCCESS : BUTTON_CHALLENGE_RESULT_FAILURE;
 }
 
-int Utility::AI_EnemyKillNum() { return BattleGlobal::get()->enemyKillNum; }
+int Utility::AI_EnemyKillNum() { return BattleGlobal::get()->unknown5b8e; }
 
-bool Utility::AI_IsKillChild() { return BattleGlobal::get()->isKillChild; }
+bool Utility::AI_IsKillChild() { return BattleGlobal::get()->unknown65e1_0; }
 
 bool Utility::AI_IsBenkeiWeather() { return DataManager::get()->IsSpecialEffects(SPECIAL_EFFECT_BENKEI_WEATHER); }
 

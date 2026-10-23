@@ -44,43 +44,43 @@ public:
     void Finalize();
 
     u8 _00[0xc - 0x0];
-    u32 id;
-    u8 characterId;
+    u32 unknown0c; // Inferred role: slow id; original member name unknown.
+    u8 unknown10;  // Inferred role: character id; original member name unknown.
   };
 
   struct ATTACK_DAMAGE_DATA {
-    u32 id;
-    u32 damage;
-    u32 damageRate : 27;
-    u32 attribute : 5;
+    u32 unknown00;        // Inferred role: attack id; original member name unknown.
+    u32 unknown04;        // Inferred role: damage; original member name unknown.
+    u32 unknown08_0 : 27; // Inferred role: damage rate; original member name unknown.
+    u32 unknown0b_3 : 5;  // Inferred role: attribute; original member name unknown.
     u32 : 32;
     u32 : 0;
-    u8 isJustDistanceAttack : 1;
-    u8 isResistantBreakDamageEnd : 1;
-    u8 isPermitArts : 1;
-    u8 isNotShootBullet : 1;
-    u8 isOverwriteDamageRate : 1;
-    u8 isEndDropHealPot2 : 1;
-    u8 isEndCriticalRecastEnhance : 1;
-    mutable u8 isUpdated : 1;
+    u8 unknown10_0 : 1;         // Inferred role: just distance attack; original member name unknown.
+    u8 unknown10_1 : 1;         // Inferred role: resistant break damage end; original member name unknown.
+    u8 unknown10_2 : 1;         // Inferred role: permit arts; original member name unknown.
+    u8 unknown10_3 : 1;         // Inferred role: do not shoot bullet; original member name unknown.
+    u8 unknown10_4 : 1;         // Inferred role: overwrite damage rate; original member name unknown.
+    u8 unknown10_5 : 1;         // Inferred role: end drop heal pot 2; original member name unknown.
+    u8 unknown10_6 : 1;         // Inferred role: end critical recast enhance; original member name unknown.
+    mutable u8 unknown10_7 : 1; // Inferred role: updated; original member name unknown.
     u8 _11[0x12 - 0x11];
-    u8 isEnableAddElementalBall : 1;
-    u8 isValidAttackRange : 1;
-    u8 mainTarget;
+    u8 unknown12_0 : 1; // Inferred role: enable add elemental ball; original member name unknown.
+    u8 unknown12_1 : 1; // Inferred role: valid attack range; original member name unknown.
+    u8 unknown13;       // Inferred role: main target; original member name unknown.
   };
 
   struct ELEMENTAL_COMBO_FLOW_DATA {
-    u8 parent;
-    u8 stage : 3;
+    u8 unknown00;       // Inferred role: parent combo; original member name unknown.
+    u8 unknown01_0 : 3; // Inferred role: stage; original member name unknown.
     u8 _02[0x14 - 0x02];
   };
 
   struct MAP_DRIVER_REV_DATA {
-    u16 kizunaMax : 11;
-    u16 spLevelMax : 4;
-    u16 isEnableSupport : 1;
-    u8 attackRate;
-    u8 defenceRate;
+    u16 unknown00_0 : 11; // Inferred role: kizuna max; original member name unknown.
+    u16 unknown01_3 : 4;  // Inferred role: SP level max; original member name unknown.
+    u16 unknown01_7 : 1;  // Inferred role: support enabled; original member name unknown.
+    u8 unknown02;         // Inferred role: attack rate; original member name unknown.
+    u8 unknown03;         // Inferred role: defence rate; original member name unknown.
   };
 
   BattleGlobal();
@@ -157,50 +157,50 @@ public:
   void ApplyBattleCameraAdjustment(mm::Vec3 &position, mm::Vec3 &target);
 
   u8 _08[0x18 - 0x08];
-  mutable const char *seTags[185];
-  ShakeCameraManager *shakeCameraManager;
-  ButtonChallenge buttonChallenge;
+  mutable const char *unknown18[185]; // Inferred role: SE tag names; original member name unknown.
+  ShakeCameraManager *unknown5e0;     // Inferred role: shake camera manager; original member name unknown.
+  ButtonChallenge unknown5e8;         // Inferred role: button challenge; original member name unknown.
   u8 _620[0x6b8 - 0x620];
-  f32 stopTime;
+  f32 unknown6b8; // Inferred role: stop time; original member name unknown.
   u8 _6bc[0x6c0 - 0x6bc];
-  mm::mtl::FixedVector<SLOW_PROC_DATA, 20> slowProcs;
+  mm::mtl::FixedVector<SLOW_PROC_DATA, 20> unknown6c0; // Inferred role: slow procs; original member name unknown.
   u8 _858[0x878 - 0x858];
-  mm::mtl::FixedVector<ATTACK_DAMAGE_DATA, 1000> attackDamages;
-  ELEMENTAL_COMBO_FLOW_DATA elementalComboFlows[50];
+  mm::mtl::FixedVector<ATTACK_DAMAGE_DATA, 1000> unknown878; // Inferred role: attack damages; original member name unknown.
+  ELEMENTAL_COMBO_FLOW_DATA unknown56a0[50];                 // Inferred role: elemental combo flows; original member name unknown.
   u8 _5a88[0x5aa0 - 0x5a88];
-  gf::GF_SE_CATEGORY_HANDLE *jingleHandle;
+  gf::GF_SE_CATEGORY_HANDLE *unknown5aa0; // Inferred role: jingle handle; original member name unknown.
   u8 _5aa8[0x5ac0 - 0x5aa8];
-  MAP_DRIVER_REV_DATA mapDriverRevs[9];
+  MAP_DRIVER_REV_DATA unknown5ac0[9]; // Inferred role: map driver revisions; original member name unknown.
   u8 _5ae4[0x5af8 - 0x5ae4];
-  gf::GF_OBJ_HANDLE *elementalComboImmortal;
+  gf::GF_OBJ_HANDLE *unknown5af8; // Inferred role: elemental combo immortal target; original member name unknown.
   u8 _5b00[0x5b28 - 0x5b00];
-  gf::GF_OBJ_HANDLE *uniteComboTarget;
+  gf::GF_OBJ_HANDLE *unknown5b28; // Inferred role: unite combo target; original member name unknown.
   u8 _5b30[0x5b5f - 0x5b30];
-  bool isUniteComboDirection;
+  bool unknown5b5f; // Inferred role: unite combo direction; original member name unknown.
   u8 _5b60[0x5b68 - 0x5b60];
-  f32 kakuseiRestTime;
+  f32 unknown5b68; // Inferred role: kakusei rest time; original member name unknown.
   u8 _5b6c[0x5b8e - 0x5b6c];
-  u16 enemyKillNum;
-  u16 normalAttackArtsIds[16][gf::WEAPON_TYPE_COUNT + 1][3];
+  u16 unknown5b8e;                                   // Inferred role: enemy kill count; original member name unknown.
+  u16 unknown5b90[16][gf::WEAPON_TYPE_COUNT + 1][3]; // Inferred role: normal attack arts ids; original member name unknown.
   u8 _65b0[0x65d2 - 0x65b0];
-  u16 bgm;
-  u8 bgmPriority;
-  u8 requestJingle;
-  u8 pauseFlags[8];
-  u64 isLockArtsPalette : 1;
+  u16 unknown65d2;       // Inferred role: BGM id; original member name unknown.
+  u8 unknown65d4;        // Inferred role: BGM priority; original member name unknown.
+  u8 unknown65d5;        // Inferred role: requested jingle; original member name unknown.
+  u8 unknown65d6[8];     // Inferred role: pause flags; original member name unknown.
+  u64 unknown65de_0 : 1; // Inferred role: lock arts palette; original member name unknown.
   u64 : 10;
-  u64 isKakuseiOrder : 1;
-  u64 isKakusei : 1;
-  u64 isKakuseiFinished : 1;
+  u64 unknown65df_3 : 1; // Inferred role: kakusei order; original member name unknown.
+  u64 unknown65df_4 : 1; // Inferred role: kakusei; original member name unknown.
+  u64 unknown65df_5 : 1; // Inferred role: kakusei finished; original member name unknown.
   u64 : 2;
-  u64 isGameOver : 1;
+  u64 unknown65e0_0 : 1; // Inferred role: game over; original member name unknown.
   u64 : 7;
-  u64 isKillChild : 1;
+  u64 unknown65e1_0 : 1; // Inferred role: kill child; original member name unknown.
   u64 : 5;
-  u64 isShiftDecided : 1;
-  u64 isShiftTimeOver : 1;
+  u64 unknown65e1_6 : 1; // Inferred role: shift decided; original member name unknown.
+  u64 unknown65e1_7 : 1; // Inferred role: shift time over; original member name unknown.
   u64 : 2;
-  u64 isPlayErrorSE : 1;
+  u64 unknown65e2_2 : 1; // Inferred role: play error SE; original member name unknown.
   u64 : 5;
   u8 _65e3[0x65e8 - 0x65e3];
 };
@@ -208,22 +208,22 @@ public:
 static_assert(sizeof(BattleGlobal::SLOW_PROC_DATA) == 0x14, "");
 static_assert(sizeof(BattleGlobal::ATTACK_DAMAGE_DATA) == 0x14, "");
 static_assert(sizeof(BattleGlobal::MAP_DRIVER_REV_DATA) == 0x4, "");
-static_assert(offsetof(BattleGlobal, seTags) == 0x18, "");
-static_assert(offsetof(BattleGlobal, shakeCameraManager) == 0x5e0, "");
-static_assert(offsetof(BattleGlobal, stopTime) == 0x6b8, "");
-static_assert(offsetof(BattleGlobal, slowProcs) == 0x6c0, "");
-static_assert(offsetof(BattleGlobal, attackDamages) == 0x878, "");
-static_assert(offsetof(BattleGlobal, elementalComboFlows) == 0x56a0, "");
-static_assert(offsetof(BattleGlobal, jingleHandle) == 0x5aa0, "");
-static_assert(offsetof(BattleGlobal, mapDriverRevs) == 0x5ac0, "");
-static_assert(offsetof(BattleGlobal, elementalComboImmortal) == 0x5af8, "");
-static_assert(offsetof(BattleGlobal, uniteComboTarget) == 0x5b28, "");
-static_assert(offsetof(BattleGlobal, isUniteComboDirection) == 0x5b5f, "");
-static_assert(offsetof(BattleGlobal, kakuseiRestTime) == 0x5b68, "");
-static_assert(offsetof(BattleGlobal, enemyKillNum) == 0x5b8e, "");
-static_assert(offsetof(BattleGlobal, normalAttackArtsIds) == 0x5b90, "");
-static_assert(offsetof(BattleGlobal, bgm) == 0x65d2, "");
-static_assert(offsetof(BattleGlobal, pauseFlags) == 0x65d6, "");
+static_assert(offsetof(BattleGlobal, unknown18) == 0x18, "");
+static_assert(offsetof(BattleGlobal, unknown5e0) == 0x5e0, "");
+static_assert(offsetof(BattleGlobal, unknown6b8) == 0x6b8, "");
+static_assert(offsetof(BattleGlobal, unknown6c0) == 0x6c0, "");
+static_assert(offsetof(BattleGlobal, unknown878) == 0x878, "");
+static_assert(offsetof(BattleGlobal, unknown56a0) == 0x56a0, "");
+static_assert(offsetof(BattleGlobal, unknown5aa0) == 0x5aa0, "");
+static_assert(offsetof(BattleGlobal, unknown5ac0) == 0x5ac0, "");
+static_assert(offsetof(BattleGlobal, unknown5af8) == 0x5af8, "");
+static_assert(offsetof(BattleGlobal, unknown5b28) == 0x5b28, "");
+static_assert(offsetof(BattleGlobal, unknown5b5f) == 0x5b5f, "");
+static_assert(offsetof(BattleGlobal, unknown5b68) == 0x5b68, "");
+static_assert(offsetof(BattleGlobal, unknown5b8e) == 0x5b8e, "");
+static_assert(offsetof(BattleGlobal, unknown5b90) == 0x5b90, "");
+static_assert(offsetof(BattleGlobal, unknown65d2) == 0x65d2, "");
+static_assert(offsetof(BattleGlobal, unknown65d6) == 0x65d6, "");
 static_assert(sizeof(BattleGlobal) == 0x65e8, "");
 
 } // namespace btl
