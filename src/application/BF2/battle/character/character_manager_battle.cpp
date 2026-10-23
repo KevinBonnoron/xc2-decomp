@@ -130,7 +130,7 @@ int CharacterManager::GetAliveBossNum() const {
 
     const BattleCharacter &character = unknown20[id].unknown00;
     const CharacterParameter *parameter = character.GetCharacterParameterConst(true);
-    if (parameter == nullptr || !parameter->unknown5df_1 || parameter->unknown5df_2 || character.IsDead(0)) {
+    if (parameter == nullptr || !parameter->unknown5df_1 || parameter->m_invalidTarget || character.IsDead(0)) {
       continue;
     }
 

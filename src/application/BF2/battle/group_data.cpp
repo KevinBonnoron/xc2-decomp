@@ -84,41 +84,41 @@ void KIZUNA_GAUGE_DATA::ResetTimingFlag() {
 
 void GROUP_BLADE_DATA::InitializeCoolTime(f32 rate) {
   if (unknown28_0) {
-    unknown1c = Utility::GetBladeCoolTime(unknown24);
-    unknown20 = unknown1c * rate;
+    m_coolTime = Utility::GetBladeCoolTime(unknown24);
+    unknown20 = m_coolTime * rate;
   } else {
-    unknown1c = 0.0f;
+    m_coolTime = 0.0f;
     unknown20 = 0.0f;
   }
 }
 
 int GROUP_BLADE_DATA::GetTrustRank() const { return Utility::GetTrustRank(unknown24); }
 
-f32 GROUP_BLADE_DATA::GetCoolTime() const { return unknown1c; }
+f32 GROUP_BLADE_DATA::GetCoolTime() const { return m_coolTime; }
 
 void GROUP_BLADE_DATA::ProgressCoolTime(f32 time) {
-  if (unknown20 < unknown1c) {
+  if (unknown20 < m_coolTime) {
     f32 counter = unknown20 + time;
-    unknown20 = counter < unknown1c ? counter : unknown1c;
+    unknown20 = counter < m_coolTime ? counter : m_coolTime;
   }
 }
 
 f32 GROUP_BLADE_DATA::GetCoolTimeRatio() const {
-  if (unknown1c <= 0.0f) {
+  if (m_coolTime <= 0.0f) {
     return 1.0f;
   }
-  f32 ratio = unknown20 / unknown1c;
+  f32 ratio = unknown20 / m_coolTime;
   if (ratio < 0.0f) {
     return 0.0f;
   }
   return mm::min(1.0f, ratio);
 }
 
-bool GROUP_BLADE_DATA::IsCoolTimeEnd() const { return unknown20 >= unknown1c; }
+bool GROUP_BLADE_DATA::IsCoolTimeEnd() const { return unknown20 >= m_coolTime; }
 
 void GROUP_BLADE_DATA::SynchroHomnuraData(const GROUP_BLADE_DATA &blade) {
   static_cast<KIZUNA_GAUGE_DATA &>(*this) = blade;
-  unknown1c = blade.unknown1c;
+  m_coolTime = blade.m_coolTime;
   unknown20 = blade.unknown20;
 }
 
@@ -156,7 +156,7 @@ void GROUP_DATA::ProgressCoolTime(f32 time) {
 void GROUP_DATA::FinishCoolTime() {
   for (int i = 0; i < 5; i++) {
     if (unknown08[i].unknown28_3) {
-      unknown08[i].unknown20 = unknown08[i].unknown1c;
+      unknown08[i].unknown20 = unknown08[i].m_coolTime;
     }
   }
 }

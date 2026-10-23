@@ -104,7 +104,7 @@ public:
   virtual bool InitializeEnhance() const;
   virtual bool IsPlayerParameter() const { return false; }
   virtual bool IsEnemyParameter() const { return false; }
-  virtual bool IsInvalidTarget() const { return unknown5df_2; }
+  virtual bool IsInvalidTarget() const { return m_invalidTarget; }
   virtual bool IsInvalidWarp() const { return false; }
   virtual bool IsLevelDiffDamageCorrect() const { return false; }
   virtual bool IsFallDeadDrop() const { return true; }
@@ -228,7 +228,7 @@ public:
   u8 _5b0[0x5df - 0x5b0];
   u8 unknown5df_0 : 1; // Inferred role: initialized; original member name unknown.
   u8 unknown5df_1 : 1; // Inferred role: battle; original member name unknown.
-  u8 unknown5df_2 : 1; // Inferred role: blade; original member name unknown.
+  u8 m_invalidTarget : 1;
   u8 unknown5df_3 : 1; // Inferred role: cool time enabled; original member name unknown.
   u8 : 2;
   u8 unknown5df_6 : 1; // Inferred role: ignore buddy; original member name unknown.
@@ -282,23 +282,23 @@ public:
   int GetWeaponID(int slot) const override;
   int GetEquipAccessory() const override;
   int GetIdeaLevel(int idea) const override;
-  int GetArtsPaletteNum() const override { return unknown664; }
+  int GetArtsPaletteNum() const override { return m_artsPaletteNum; }
   bool IsPlayerParameter() const override { return true; }
-  int GetBladeChangeType() const override { return unknown665; }
+  int GetBladeChangeType() const override { return m_bladeChangeType; }
 
   ARTS_PALETTE_DATA *unknown5e8;             // Inferred role: arts palettes; original member name unknown.
   u32 unknown5f0[gf::WEAPON_TYPE_COUNT + 1]; // Inferred role: use weapon counts; original member name unknown.
   u32 unknown65c;                            // Inferred role: total weapon use; original member name unknown.
   int unknown660;                            // Inferred role: pouch damage armor; original member name unknown.
-  u8 unknown664;                             // Inferred role: arts palette count; original member name unknown.
-  u8 unknown665;                             // Inferred role: blade change type; original member name unknown.
+  u8 m_artsPaletteNum;
+  u8 m_bladeChangeType;
 };
 
 static_assert(offsetof(PlayerParameter, unknown5e8) == 0x5e8, "");
 static_assert(offsetof(PlayerParameter, unknown5f0) == 0x5f0, "");
 static_assert(offsetof(PlayerParameter, unknown65c) == 0x65c, "");
 static_assert(offsetof(PlayerParameter, unknown660) == 0x660, "");
-static_assert(offsetof(PlayerParameter, unknown664) == 0x664, "");
+static_assert(offsetof(PlayerParameter, m_artsPaletteNum) == 0x664, "");
 static_assert(sizeof(PlayerParameter) == 0x668, "");
 
 class EnemyParameter : public CharacterParameter {
@@ -342,53 +342,53 @@ public:
   bool UsePerfectAvoid() const override;
   const HATE_DATA *GetHateDataConst(int index) const;
   int GetHateTarget() const;
-  const ARTS_PALETTE_DATA *GetArtsPaletteDataConst(int) const override { return &unknown5e8; }
+  const ARTS_PALETTE_DATA *GetArtsPaletteDataConst(int) const override { return &m_artsPaletteData; }
   bool IsEnemyParameter() const override { return true; }
-  bool IsInvalidTarget() const override { return unknown86c_7; }
-  bool IsInvalidWarp() const override { return unknown86d_0; }
-  bool IsLevelDiffDamageCorrect() const override { return unknown86d_1; }
-  bool IsFallDeadDrop() const override { return unknown86d_2; }
-  int GetAngryAuraID() const override { return unknown864; }
-  int GetAngryAttr() const override { return unknown866; }
-  bool IsAngry() const override { return unknown86c_0; }
-  int GetDeadSEID() const override { return unknown867; }
-  void SetOverwriteAttr(int attribute) override { unknown868 = attribute; }
-  int GetEatNum() const override { return unknown86a; }
+  bool IsInvalidTarget() const override { return m_invalidTarget; }
+  bool IsInvalidWarp() const override { return m_invalidWarp; }
+  bool IsLevelDiffDamageCorrect() const override { return m_levelDiffDamageCorrect; }
+  bool IsFallDeadDrop() const override { return m_fallDeadDrop; }
+  int GetAngryAuraID() const override { return m_angryAuraID; }
+  int GetAngryAttr() const override { return m_angryAttr; }
+  bool IsAngry() const override { return m_angry; }
+  int GetDeadSEID() const override { return m_deadSEID; }
+  void SetOverwriteAttr(int attribute) override { m_overwriteAttr = attribute; }
+  int GetEatNum() const override { return m_eatNum; }
   void IncEatNum() override {
-    if (unknown86a != 0xff) {
-      unknown86a++;
+    if (m_eatNum != 0xff) {
+      m_eatNum++;
     }
   }
 
-  ARTS_PALETTE_DATA unknown5e8;     // Inferred role: arts palette; original member name unknown.
+  ARTS_PALETTE_DATA m_artsPaletteData;
   HATE_DATA unknown820[HATE_COUNT]; // Inferred role: hates; original member name unknown.
   int unknown850;                   // Inferred role: hate target; original member name unknown.
   u8 _854[0x864 - 0x854];
-  u16 unknown864; // Inferred role: angry aura id; original member name unknown.
-  u8 unknown866;  // Inferred role: angry attribute; original member name unknown.
-  u8 unknown867;  // Inferred role: dead SE id; original member name unknown.
-  u8 unknown868;  // Inferred role: overwrite attribute; original member name unknown.
+  u16 m_angryAuraID;
+  u8 m_angryAttr;
+  u8 m_deadSEID;
+  u8 m_overwriteAttr;
   u8 _869[0x86a - 0x869];
-  u8 unknown86a;         // Inferred role: eat count; original member name unknown.
+  u8 m_eatNum;
   mutable u8 unknown86b; // Inferred role: perfect avoid count; original member name unknown.
-  u8 unknown86c_0 : 1;   // Inferred role: angry; original member name unknown.
+  u8 m_angry : 1;
   u8 : 2;
-  u8 unknown86c_3 : 1; // Inferred role: eat target; original member name unknown.
-  u8 unknown86c_4 : 1; // Inferred role: child; original member name unknown.
-  u8 unknown86c_5 : 1; // Inferred role: invalid hikari SP; original member name unknown.
-  u8 unknown86c_6 : 1; // Inferred role: always kakusei; original member name unknown.
-  u8 unknown86c_7 : 1; // Inferred role: invalid target; original member name unknown.
-  u8 unknown86d_0 : 1; // Inferred role: invalid warp; original member name unknown.
-  u8 unknown86d_1 : 1; // Inferred role: level difference damage correction; original member name unknown.
-  u8 unknown86d_2 : 1; // Inferred role: fall dead drop; original member name unknown.
+  u8 m_eatTarget : 1;
+  u8 m_child : 1;
+  u8 m_invalidHikariSp : 1;
+  u8 m_alwaysKakusei : 1;
+  u8 m_invalidTarget : 1;
+  u8 m_invalidWarp : 1;
+  u8 m_levelDiffDamageCorrect : 1;
+  u8 m_fallDeadDrop : 1;
 };
 
-static_assert(offsetof(EnemyParameter, unknown5e8) == 0x5e8, "");
+static_assert(offsetof(EnemyParameter, m_artsPaletteData) == 0x5e8, "");
 static_assert(offsetof(EnemyParameter, unknown820) == 0x820, "");
 static_assert(offsetof(EnemyParameter, unknown850) == 0x850, "");
-static_assert(offsetof(EnemyParameter, unknown864) == 0x864, "");
-static_assert(offsetof(EnemyParameter, unknown868) == 0x868, "");
-static_assert(offsetof(EnemyParameter, unknown86a) == 0x86a, "");
+static_assert(offsetof(EnemyParameter, m_angryAuraID) == 0x864, "");
+static_assert(offsetof(EnemyParameter, m_overwriteAttr) == 0x868, "");
+static_assert(offsetof(EnemyParameter, m_eatNum) == 0x86a, "");
 static_assert(offsetof(EnemyParameter, unknown86b) == 0x86b, "");
 static_assert(sizeof(EnemyParameter) == 0x870, "");
 

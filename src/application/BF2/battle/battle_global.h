@@ -172,7 +172,7 @@ public:
   u8 _5aa8[0x5ac0 - 0x5aa8];
   MAP_DRIVER_REV_DATA unknown5ac0[9]; // Inferred role: map driver revisions; original member name unknown.
   u8 _5ae4[0x5af8 - 0x5ae4];
-  gf::GF_OBJ_HANDLE *unknown5af8; // Inferred role: elemental combo immortal target; original member name unknown.
+  gf::GF_OBJ_HANDLE *m_elementalComboImmortal;
   u8 _5b00[0x5b28 - 0x5b00];
   gf::GF_OBJ_HANDLE *unknown5b28; // Inferred role: unite combo target; original member name unknown.
   u8 _5b30[0x5b5f - 0x5b30];
@@ -216,7 +216,7 @@ static_assert(offsetof(BattleGlobal, unknown878) == 0x878, "");
 static_assert(offsetof(BattleGlobal, unknown56a0) == 0x56a0, "");
 static_assert(offsetof(BattleGlobal, unknown5aa0) == 0x5aa0, "");
 static_assert(offsetof(BattleGlobal, unknown5ac0) == 0x5ac0, "");
-static_assert(offsetof(BattleGlobal, unknown5af8) == 0x5af8, "");
+static_assert(offsetof(BattleGlobal, m_elementalComboImmortal) == 0x5af8, "");
 static_assert(offsetof(BattleGlobal, unknown5b28) == 0x5b28, "");
 static_assert(offsetof(BattleGlobal, unknown5b5f) == 0x5b5f, "");
 static_assert(offsetof(BattleGlobal, unknown5b68) == 0x5b68, "");

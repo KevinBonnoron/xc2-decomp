@@ -86,7 +86,7 @@ void BattleGlobal::ResetBGM() {
   unknown65d4 = 0xff;
 }
 
-void BattleGlobal::SetElementalComboImmortal(gf::GF_OBJ_HANDLE *handle) { unknown5af8 = handle; }
+void BattleGlobal::SetElementalComboImmortal(gf::GF_OBJ_HANDLE *handle) { m_elementalComboImmortal = handle; }
 
 bool BattleGlobal::IsGameOver() const {
   if (unknown65e0_0) {

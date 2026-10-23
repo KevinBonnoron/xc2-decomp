@@ -43,7 +43,7 @@ constexpr u32 BLADE_CHANGE_ACTIONS = 0xd2;
 constexpr int BLADE_SUPPORT_CONDITION_HATE_ELSE = 8;
 
 void BattleCharacter::ResetHateRingData() {
-  if (!unknownf8c_7 && unknown118 != gf::INVALID_HANDLE && unknownf7d >= 0) {
+  if (!m_player && unknown118 != gf::INVALID_HANDLE && unknownf7d >= 0) {
     HateRingManager::get()->SetData(unknownf7d, unknown118, -1);
   }
 }
@@ -69,20 +69,20 @@ const CharacterParameter *BattleCharacter::GetCharacterParameterConst(bool) cons
   return unknown168;
 }
 
-bool BattleCharacter::IsPlayer() const { return unknownf8c_7; }
+bool BattleCharacter::IsPlayer() const { return m_player; }
 
 bool BattleCharacter::IsBlade() const {
   const CharacterParameter *parameter = GetCharacterParameterConst(true);
-  return parameter != nullptr && parameter->unknown5df_2;
+  return parameter != nullptr && parameter->m_invalidTarget;
 }
 
 gf::GfObj *BattleCharacter::GetObject() const { return gf::GfObjUtil::getObj(unknown118); }
 
-bool BattleCharacter::IsEnemy() const { return !unknownf8c_7; }
+bool BattleCharacter::IsEnemy() const { return !m_player; }
 
 bool BattleCharacter::IsDriver() const {
   const CharacterParameter *parameter = GetCharacterParameterConst(true);
-  return parameter != nullptr && !parameter->unknown5df_2 && parameter->unknown10 != gf::INVALID_HANDLE;
+  return parameter != nullptr && !parameter->m_invalidTarget && parameter->unknown10 != gf::INVALID_HANDLE;
 }
 
 CharacterParameter *BattleCharacter::GetCharacterParameter(bool isBattle) {
@@ -93,7 +93,7 @@ gf::GF_OBJ_HANDLE *BattleCharacter::GetControlCharacterHandle() const { return U
 
 gf::GfObj *BattleCharacter::GetObject(gf::GF_OBJ_HANDLE *handle) const { return gf::GfObjUtil::getObj(handle); }
 
-bool BattleCharacter::IsBattle() const { return unknownf8d_0; }
+bool BattleCharacter::IsBattle() const { return m_battle; }
 
 void BattleCharacter::ResetAnimationMoveDistance() {
   for (int i = 0; i < 20; i++) {
@@ -266,7 +266,7 @@ void BattleCharacter::GetMoveDataPerSec(mm::Vec3 &moveData) const {
   moveData.z = this->unknownb0.z * FRAME_RATE;
 }
 
-void BattleCharacter::SetAnimationSpeed(f32 speed) { unknowncb8 = speed; }
+void BattleCharacter::SetAnimationSpeed(f32 speed) { m_animationSpeed = speed; }
 
 void BattleCharacter::SetIKData(const ARTS_DATA &data) {
   unknowndc0_7 = data.unknown15_0;
@@ -440,15 +440,15 @@ gf::GF_OBJ_HANDLE *BattleCharacter::GetRescueTarget() const {
 
 bool BattleCharacter::IsPause() const { return GetDt(true, true) <= PAUSE_DT; }
 
-f32 BattleCharacter::GetSystemDt() const { return unknowncc4; }
+f32 BattleCharacter::GetSystemDt() const { return m_systemDt; }
 
-f32 BattleCharacter::GetSystemSyncCount() const { return unknowncc4 * FRAME_RATE; }
+f32 BattleCharacter::GetSystemSyncCount() const { return m_systemDt * FRAME_RATE; }
 
 bool BattleCharacter::IsEnableBladeChangeAction(ACTION_ID actionId) const { return ((1 << static_cast<u8>(actionId)) & BLADE_CHANGE_ACTIONS) != 0; }
 
 void BattleCharacter::EnhanceProc() { EnhanceTimerProc(); }
 
-bool BattleCharacter::IsEnableBattleFace() const { return unknownf8c_7; }
+bool BattleCharacter::IsEnableBattleFace() const { return m_player; }
 
 void BattleCharacter::NotifyHateElse() { SetBladeSupportCondition(BLADE_SUPPORT_CONDITION_HATE_ELSE); }
 

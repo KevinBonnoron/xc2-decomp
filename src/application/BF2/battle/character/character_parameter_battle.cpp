@@ -48,7 +48,7 @@ void CharacterParameter::ResetSpecialEnhanceRate(bool isAll) {
 
 int CharacterParameter::GetClass() const {
   if (unknown5af < 0) {
-    gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+    gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
     return acc.getClass(false);
   }
 
@@ -114,7 +114,7 @@ int CharacterParameter::ApplyStatusEnhance(int value, int rateType, int addType)
 }
 
 bool CharacterParameter::IsBuff(int buff) const {
-  if (unknown5df_2) {
+  if (m_invalidTarget) {
     if (unknown5df_6) {
       return false;
     }
@@ -149,7 +149,7 @@ const FIGHT_COMBO_DATA *CharacterParameter::GetFightComboDataConst() const {
 }
 
 u32 CharacterParameter::GetLevel() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getLevel(false);
 }
 
@@ -248,7 +248,7 @@ const ENHANCE_EFFECT_DATA *CharacterParameter::GetEnhanceEffectDataConst(int enh
 }
 
 void CharacterParameter::SetSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value) {
-  if (!unknown5df_2 && unknown10 != gf::INVALID_HANDLE) {
+  if (!m_invalidTarget && unknown10 != gf::INVALID_HANDLE) {
     BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown10);
     if (character != nullptr) {
       CharacterParameter *parameter = character->GetCharacterParameter(true);
@@ -265,7 +265,7 @@ void CharacterParameter::SetSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 ra
 }
 
 void CharacterParameter::AddSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value) {
-  if (!unknown5df_2 && unknown10 != gf::INVALID_HANDLE) {
+  if (!m_invalidTarget && unknown10 != gf::INVALID_HANDLE) {
     BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown10);
     if (character != nullptr) {
       CharacterParameter *parameter = character->GetCharacterParameter(true);
@@ -282,7 +282,7 @@ void CharacterParameter::AddSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 ra
 }
 
 void CharacterParameter::MinSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value) {
-  if (!unknown5df_2 && unknown10 != gf::INVALID_HANDLE) {
+  if (!m_invalidTarget && unknown10 != gf::INVALID_HANDLE) {
     BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown10);
     if (character != nullptr) {
       CharacterParameter *parameter = character->GetCharacterParameter(true);
@@ -300,7 +300,7 @@ void CharacterParameter::MinSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 ra
 }
 
 void CharacterParameter::MaxSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value) {
-  if (!unknown5df_2 && unknown10 != gf::INVALID_HANDLE) {
+  if (!m_invalidTarget && unknown10 != gf::INVALID_HANDLE) {
     BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown10);
     if (character != nullptr) {
       CharacterParameter *parameter = character->GetCharacterParameter(true);
@@ -318,7 +318,7 @@ void CharacterParameter::MaxSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 ra
 }
 
 f32 CharacterParameter::GetSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, int *value) const {
-  if (!unknown5df_2 && unknown10 != gf::INVALID_HANDLE) {
+  if (!m_invalidTarget && unknown10 != gf::INVALID_HANDLE) {
     BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown10);
     if (character != nullptr) {
       CharacterParameter *parameter = character->GetCharacterParameter(true);
@@ -348,62 +348,62 @@ int CharacterParameter::GetAttribute() const {
 }
 
 int CharacterParameter::GetBaseSTR() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getStrength(false);
 }
 
 int CharacterParameter::GetBaseDEX() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getDex(false);
 }
 
 int CharacterParameter::GetBaseAGI() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getAgility(false);
 }
 
 int CharacterParameter::GetBaseLUK() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getLuck(false);
 }
 
 int CharacterParameter::GetBaseEtherPower() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getPowerEther(false);
 }
 
 int CharacterParameter::GetBasePArmor() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getPArmor(false);
 }
 
 int CharacterParameter::GetBaseEArmor() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getEArmor(false);
 }
 
 int CharacterParameter::GetBaseCriticalPercent() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getCriticalRate(false);
 }
 
 int CharacterParameter::GetBaseGuardPercent() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getGuardRate(false);
 }
 
 int CharacterParameter::GetBaseResistPowerAttack() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return static_cast<s8>(acc.getResistancePower());
 }
 
 int CharacterParameter::GetBaseResistEtherAttack() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return static_cast<s8>(acc.getResistanceEther());
 }
 
 void CharacterParameter::GetBaseDamage(u32 &minimum, u32 &maximum) const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   minimum = acc.getNorAtkDmgMin(false);
   maximum = acc.getNorAtkDmgMax(false);
 }
@@ -562,7 +562,7 @@ int CharacterParameter::GetResistEtherAttack() const {
   return value;
 }
 
-PlayerParameter::PlayerParameter() : unknown5e8(nullptr), unknown664(0), unknown665(0) {}
+PlayerParameter::PlayerParameter() : unknown5e8(nullptr), m_artsPaletteNum(0), m_bladeChangeType(0) {}
 
 PlayerParameter::~PlayerParameter() {
   if (unknown5e8 != nullptr) {
@@ -615,7 +615,7 @@ void PlayerParameter::BattleEndInitialize() {
 }
 
 void PlayerParameter::WritebackRecast(GROUP_DATA *groupData) {
-  if (unknown5df_1 && unknown5df_2) {
+  if (unknown5df_1 && m_invalidTarget) {
     const ARTS_PALETTE_DATA *palette = GetArtsPaletteDataConst(-1);
     for (int i = 0; i < 3; i++) {
       const ARTS_SLOT_DATA *slot = palette->GetSlotDataConst(i, false);
@@ -645,7 +645,7 @@ f32 PlayerParameter::GetUseWeaponRate(int weapon) const {
 
 const ARTS_PALETTE_DATA *PlayerParameter::GetArtsPaletteDataConst(int index) const {
   if (index < 0) {
-    index = unknown5df_2 ? 0 : GetBladeIndex();
+    index = m_invalidTarget ? 0 : GetBladeIndex();
   }
 
   return &unknown5e8[index];
@@ -671,29 +671,29 @@ void PlayerParameter::ResetRecast() {
     return;
   }
 
-  u8 num = unknown664;
+  u8 num = m_artsPaletteNum;
   for (int i = 0; i < num; i++) {
     const_cast<ARTS_PALETTE_DATA *>(GetArtsPaletteDataConst(i))->ResetAllRecast();
   }
 }
 
 int PlayerParameter::GetBladeIndex() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getBladeSet(false);
 }
 
 int PlayerParameter::GetWeaponID(int slot) const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getEquipWeapon(slot, false);
 }
 
 int PlayerParameter::GetEquipAccessory() const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   return acc.getEquipAcce(0, false);
 }
 
 int PlayerParameter::GetIdeaLevel(int idea) const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(m_invalidTarget ? unknown10 : unknown08);
   gf::DataIdeaAcc ideaAcc(acc);
   return ideaAcc.getLevel(idea);
 }
@@ -739,12 +739,12 @@ void EnemyParameter::SetupBGM() {
 }
 
 int EnemyParameter::GetAttribute() const {
-  if (unknown868 <= ATTRIBUTE_COUNT) {
-    return unknown868;
+  if (m_overwriteAttr <= ATTRIBUTE_COUNT) {
+    return m_overwriteAttr;
   }
 
-  if (IsAngry() && unknown866 <= ATTRIBUTE_COUNT) {
-    return unknown866;
+  if (IsAngry() && m_angryAttr <= ATTRIBUTE_COUNT) {
+    return m_angryAttr;
   }
 
   gf::DataParamAcc acc(unknown08);
@@ -752,7 +752,7 @@ int EnemyParameter::GetAttribute() const {
 }
 
 int EnemyParameter::GetWeaponID(int) const {
-  gf::DataParamAcc acc(unknown5df_2 ? unknown10 : unknown08);
+  gf::DataParamAcc acc(CharacterParameter::m_invalidTarget ? unknown10 : unknown08);
   return acc.getEquipWeapon(0, false);
 }
 
@@ -771,13 +771,13 @@ bool EnemyParameter::IsBossOrNamed() const {
   return data != nullptr && (data->named | data->boss);
 }
 
-bool EnemyParameter::IsEatTarget() const { return unknown86c_3; }
+bool EnemyParameter::IsEatTarget() const { return m_eatTarget; }
 
-bool EnemyParameter::IsChild() const { return unknown86c_4; }
+bool EnemyParameter::IsChild() const { return m_child; }
 
-bool EnemyParameter::IsInvalidHikariSp() const { return unknown86c_5; }
+bool EnemyParameter::IsInvalidHikariSp() const { return m_invalidHikariSp; }
 
-bool EnemyParameter::IsAlwaysKakusei() const { return unknown86c_6; }
+bool EnemyParameter::IsAlwaysKakusei() const { return m_alwaysKakusei; }
 
 bool EnemyParameter::UsePerfectAvoid() const {
   if (unknown86b > 0) {

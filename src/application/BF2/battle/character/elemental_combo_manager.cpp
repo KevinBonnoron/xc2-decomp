@@ -16,7 +16,7 @@ namespace btl {
 constexpr int ELEMENTAL_STAGE_NONE = 3;
 
 ElementalComboManager::~ElementalComboManager() {
-  if (BattleGlobal::get()->unknown5af8 == unknown08) {
+  if (BattleGlobal::get()->m_elementalComboImmortal == unknown08) {
     BattleGlobal::get()->SetElementalComboImmortal(reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1));
   }
   if (BattleGlobal::get()->unknown5b28 == unknown08 && !BattleGlobal::get()->unknown5b5f) {

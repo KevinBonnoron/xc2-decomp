@@ -62,7 +62,7 @@ public:
   bool IsCoolTimeEnd() const;
   void SynchroHomnuraData(const GROUP_BLADE_DATA &blade);
 
-  f32 unknown1c;      // Inferred role: cool time; original member name unknown.
+  f32 m_coolTime;
   f32 unknown20;      // Inferred role: cool time counter; original member name unknown.
   u16 unknown24;      // Inferred role: id; original member name unknown.
   u16 unknown26;      // Inferred role: blade arts ex; original member name unknown.
@@ -71,7 +71,7 @@ public:
   u8 unknown28_3 : 1; // Inferred role: initialized; original member name unknown.
 };
 
-static_assert(offsetof(GROUP_BLADE_DATA, unknown1c) == 0x1c, "");
+static_assert(offsetof(GROUP_BLADE_DATA, m_coolTime) == 0x1c, "");
 static_assert(offsetof(GROUP_BLADE_DATA, unknown20) == 0x20, "");
 static_assert(offsetof(GROUP_BLADE_DATA, unknown24) == 0x24, "");
 static_assert(offsetof(GROUP_BLADE_DATA, unknown26) == 0x26, "");

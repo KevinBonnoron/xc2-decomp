@@ -290,10 +290,10 @@ public:
   u8 _170[0xc58 - 0x170];
   char unknownc58[0x10]; // Inferred role: voice code; original member name unknown.
   u8 _c68[0xcb8 - 0xc68];
-  f32 unknowncb8; // Inferred role: animation speed; original member name unknown.
+  f32 m_animationSpeed;
   u8 _cbc[0xcc0 - 0xcbc];
   f32 unknowncc0; // Inferred role: delta time; original member name unknown.
-  f32 unknowncc4; // Inferred role: system delta time; original member name unknown.
+  f32 m_systemDt;
   int unknowncc8; // Inferred role: bdat id; original member name unknown.
   u8 _ccc[0xcd0 - 0xccc];
   f32 unknowncd0; // Inferred role: blade timer; original member name unknown.
@@ -334,8 +334,8 @@ public:
   s8 unknownf7f; // Inferred role: weapon type; original member name unknown.
   u8 _f80[0xf8c - 0xf80];
   u8 : 7;
-  u8 unknownf8c_7 : 1; // Inferred role: player flag; original member name unknown.
-  u8 unknownf8d_0 : 1; // Inferred role: battle flag; original member name unknown.
+  u8 m_player : 1;
+  u8 m_battle : 1;
   u8 : 7;
   u8 _f8e[0xf8f - 0xf8e];
   u8 : 7;
@@ -394,8 +394,8 @@ static_assert(offsetof(BattleCharacter, unknown120) == 0x120, "");
 static_assert(offsetof(BattleCharacter, unknown130) == 0x130, "");
 static_assert(offsetof(BattleCharacter, unknown168) == 0x168, "");
 static_assert(offsetof(BattleCharacter, unknownc58) == 0xc58, "");
-static_assert(offsetof(BattleCharacter, unknowncb8) == 0xcb8, "");
-static_assert(offsetof(BattleCharacter, unknowncc4) == 0xcc4, "");
+static_assert(offsetof(BattleCharacter, m_animationSpeed) == 0xcb8, "");
+static_assert(offsetof(BattleCharacter, m_systemDt) == 0xcc4, "");
 static_assert(offsetof(BattleCharacter, unknowncc8) == 0xcc8, "");
 static_assert(offsetof(BattleCharacter, unknownce0) == 0xce0, "");
 static_assert(offsetof(BattleCharacter, unknowndb8) == 0xdb8, "");
