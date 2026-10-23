@@ -193,7 +193,7 @@ bool ARTS_PALETTE_DATA::IsEnableHealArts(bool isRecastEnd) const {
     }
     ENHANCE_EFFECT_DATA enhance;
     if (data.unknown90[slot.unknown02_5 - 1].unknown04 != 0 &&
-        DataManager::GetEnhanceData(data.unknown90[slot.unknown02_5 - 1].unknown04, enhance, false) && enhance.id == ENHANCE_HEAL) {
+        DataManager::GetEnhanceData(data.unknown90[slot.unknown02_5 - 1].unknown04, enhance, false) && enhance.unknown00 == ENHANCE_HEAL) {
       return true;
     }
   }

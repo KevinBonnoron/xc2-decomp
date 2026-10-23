@@ -262,7 +262,7 @@ int Utility::GetPartyID(gf::GF_OBJ_HANDLE *handle) {
   if (character != nullptr) {
     const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
     if (parameter != nullptr) {
-      return parameter->partyId;
+      return parameter->unknown1c;
     }
   }
 
@@ -444,7 +444,7 @@ int Utility::AI_GetEatTargetCharacterID(gf::GF_OBJ_HANDLE *handle, f32 range) {
       f32 x = targetPosition.x - position.x;
       f32 y = targetPosition.y - position.y;
       f32 z = targetPosition.z - position.z;
-      f32 distance = sqrtf(x * x + y * y + z * z) - parameter->radius;
+      f32 distance = sqrtf(x * x + y * y + z * z) - parameter->unknown2c;
       if (distance > range) {
         continue;
       }
@@ -508,7 +508,7 @@ int Utility::AI_GetFightComboID(gf::GF_OBJ_HANDLE *handle) {
     return 0;
   }
 
-  return character->GetCharacterParameterConst(true)->GetFightComboDataConst()->id;
+  return character->GetCharacterParameterConst(true)->GetFightComboDataConst()->unknown00;
 }
 
 int Utility::AI_GetElementalComboID(gf::GF_OBJ_HANDLE *handle) {
@@ -517,7 +517,7 @@ int Utility::AI_GetElementalComboID(gf::GF_OBJ_HANDLE *handle) {
     return 0;
   }
 
-  return character->GetCharacterParameterConst(true)->elementalComboId;
+  return character->GetCharacterParameterConst(true)->unknown5a5;
 }
 
 int Utility::AI_GetReactionID(gf::GF_OBJ_HANDLE *handle) {
@@ -1166,7 +1166,7 @@ void Utility::AI_AddBladeArtsRecast(gf::GF_OBJ_HANDLE *handle, f32 recast, bool 
   }
   if (character->IsDriver()) {
     const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
-    character = CharacterManager::get()->GetCharacterConst(parameter->buddy);
+    character = CharacterManager::get()->GetCharacterConst(parameter->unknown10);
     if (character == nullptr) {
       return;
     }
@@ -1181,7 +1181,7 @@ void Utility::AI_SetBladeArtsRecastByLevel(gf::GF_OBJ_HANDLE *handle, int level,
   }
   if (character->IsDriver()) {
     const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
-    character = CharacterManager::get()->GetCharacterConst(parameter->buddy);
+    character = CharacterManager::get()->GetCharacterConst(parameter->unknown10);
     if (character == nullptr) {
       return;
     }

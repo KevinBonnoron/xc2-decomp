@@ -73,7 +73,7 @@ bool BattleCharacter::IsPlayer() const { return unknownf8c_7; }
 
 bool BattleCharacter::IsBlade() const {
   const CharacterParameter *parameter = GetCharacterParameterConst(true);
-  return parameter != nullptr && parameter->isBlade;
+  return parameter != nullptr && parameter->unknown5df_2;
 }
 
 gf::GfObj *BattleCharacter::GetObject() const { return gf::GfObjUtil::getObj(unknown118); }
@@ -82,7 +82,7 @@ bool BattleCharacter::IsEnemy() const { return !unknownf8c_7; }
 
 bool BattleCharacter::IsDriver() const {
   const CharacterParameter *parameter = GetCharacterParameterConst(true);
-  return parameter != nullptr && !parameter->isBlade && parameter->buddy != gf::INVALID_HANDLE;
+  return parameter != nullptr && !parameter->unknown5df_2 && parameter->unknown10 != gf::INVALID_HANDLE;
 }
 
 CharacterParameter *BattleCharacter::GetCharacterParameter(bool isBattle) {
@@ -210,7 +210,7 @@ void BattleCharacter::SetupPosDir() {
 
 int BattleCharacter::GetGroupIndex() const {
   const CharacterParameter *parameter = GetCharacterParameterConst(true);
-  return parameter != nullptr ? parameter->partyId : -1;
+  return parameter != nullptr ? parameter->unknown1c : -1;
 }
 
 bool BattleCharacter::IsEnableBackHome() const { return unknown107c == ACTION_ID_IDLE; }
@@ -521,7 +521,7 @@ void BattleCharacter::SetPerfectAvoidTime(f32 time) { unknown10e8 = unknown10e8 
 f32 BattleCharacter::GetArtsDamageRate(const ARTS_DATA::LEVEL_DATA &level) const { return level.unknown00 * 0.01f; }
 
 f32 BattleCharacter::ApplyResistantAttr(f32 damage, int attribute) const {
-  if (GetCharacterParameterConst(false)->resistantAttributeFlags & (1 << attribute)) {
+  if (GetCharacterParameterConst(false)->unknown59e & (1 << attribute)) {
     damage = BtlSystemBalanceAccess::get()->unknown10 * damage;
   }
   return damage;

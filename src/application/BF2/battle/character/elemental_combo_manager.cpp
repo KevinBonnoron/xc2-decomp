@@ -65,8 +65,8 @@ void ElementalComboManager::CheckCharacterID() {
   characterId = character->unknownf7d;
   isPlayer = character->IsPlayer();
   const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
-  f32 scale = parameter->ballHeight * 0.1f;
-  f32 radiusScale = parameter->ballRadius * (1.0f / 6.0f);
+  f32 scale = parameter->unknown30 * 0.1f;
+  f32 radiusScale = parameter->unknown3c * (1.0f / 6.0f);
   scale = scale > radiusScale ? scale : radiusScale;
   BtlSystemBalanceAccess *balance = BtlSystemBalanceAccess::get();
   ballScale = mm::clamp(scale, balance->unknown41 * 0.01f, balance->unknown42 * 0.01f);
@@ -119,7 +119,7 @@ int ElementalComboManager::GetResistantAttrBreakDamage(int attribute) const {
   if (anti < 0) {
     return 1;
   }
-  return parameter->resistantAttributeFlags & (1 << anti) ? 2 : 1;
+  return parameter->unknown59e & (1 << anti) ? 2 : 1;
 }
 
 int ElementalComboManager::GetResistantAttrBreakTotalDamage(int attribute) const {

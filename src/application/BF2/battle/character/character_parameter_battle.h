@@ -25,20 +25,20 @@ constexpr int ADDITIONAL_ENHANCE_COUNT = 6;
 constexpr int HATE_COUNT = 3;
 
 struct FIGHT_COMBO_DATA {
-  u8 id;
+  u8 unknown00; // Inferred role: combo id; original member name unknown.
   u8 _01[0x18 - 0x01];
 };
 
 struct ENHANCE_EFFECT_DATA {
-  u16 id;
+  u16 unknown00; // Inferred role: enhance id; original member name unknown.
   u8 _02[0xc - 0x2];
 };
 
 struct BUFF_DATA {
-  u16 id;
+  u16 unknown00; // Inferred role: buff id; original member name unknown.
   u8 _02[0x4 - 0x2];
-  f32 restFrame;
-  f32 effect;
+  f32 unknown04; // Inferred role: rest frame; original member name unknown.
+  f32 unknown08; // Inferred role: effect; original member name unknown.
   u8 _0c[0x10 - 0xc];
 };
 
@@ -70,12 +70,12 @@ public:
   enum SPECIAL_ENHANCE_TYPE {};
 
   struct ADDITIONAL_ENHANCE_DATA {
-    ENHANCE_EFFECT_DATA effect;
-    int enhance;
+    ENHANCE_EFFECT_DATA unknown00; // Inferred role: effect; original member name unknown.
+    int unknown0c;                 // Inferred role: enhance; original member name unknown.
   };
 
   struct ENHANCE_DATA {
-    f32 value;
+    f32 unknown00; // Inferred role: value; original member name unknown.
     u8 _04[0x8 - 0x4];
   };
 
@@ -104,7 +104,7 @@ public:
   virtual bool InitializeEnhance() const;
   virtual bool IsPlayerParameter() const { return false; }
   virtual bool IsEnemyParameter() const { return false; }
-  virtual bool IsInvalidTarget() const { return isBlade; }
+  virtual bool IsInvalidTarget() const { return unknown5df_2; }
   virtual bool IsInvalidWarp() const { return false; }
   virtual bool IsLevelDiffDamageCorrect() const { return false; }
   virtual bool IsFallDeadDrop() const { return true; }
@@ -186,75 +186,75 @@ public:
   int GetResistPowerAttack() const;
   int GetResistEtherAttack() const;
 
-  gf::GF_OBJ_HANDLE *user;
-  gf::GF_OBJ_HANDLE *buddy;
-  u32 gameObjectId;
-  int partyId;
+  gf::GF_OBJ_HANDLE *unknown08; // Inferred role: user handle; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: buddy handle; original member name unknown.
+  u32 unknown18;                // Inferred role: game object id; original member name unknown.
+  int unknown1c;                // Inferred role: party id; original member name unknown.
   u8 _20[0x2c - 0x20];
-  f32 radius;
-  f32 ballHeight;
+  f32 unknown2c; // Inferred role: radius; original member name unknown.
+  f32 unknown30; // Inferred role: ball height; original member name unknown.
   u8 _34[0x3c - 0x34];
-  f32 ballRadius;
+  f32 unknown3c; // Inferred role: ball radius; original member name unknown.
   u8 _40[0x5c - 0x40];
-  f32 specialEnhanceRates[SPECIAL_ENHANCE_COUNT];
-  u16 specialEnhanceValues[SPECIAL_ENHANCE_COUNT];
+  f32 unknown5c[SPECIAL_ENHANCE_COUNT]; // Inferred role: special enhance rates; original member name unknown.
+  u16 unknown94[SPECIAL_ENHANCE_COUNT]; // Inferred role: special enhance values; original member name unknown.
   u8 _b0[0xbc - 0xb0];
-  u8 attackWeaponType : 7;
+  u8 unknownbc_0 : 7; // Inferred role: attack weapon type; original member name unknown.
   u8 : 1;
   u8 _bd[0xc0 - 0xbd];
-  FIGHT_COMBO_DATA fightCombo;
-  FIGHT_COMBO_DATA overwriteFightCombo;
-  mm::mtl::FixedVector<ENHANCE_EFFECT_DATA, 64> enhanceEffects;
-  ADDITIONAL_ENHANCE_DATA additionalEnhances[ADDITIONAL_ENHANCE_COUNT];
-  BUFF_DATA buffs[20];
-  u8 buffNum;
-  u8 buffFlags[5];
-  u16 resistantAttributeFlags;
+  FIGHT_COMBO_DATA unknownc0;                                   // Inferred role: fight combo; original member name unknown.
+  FIGHT_COMBO_DATA unknownd8;                                   // Inferred role: overwrite fight combo; original member name unknown.
+  mm::mtl::FixedVector<ENHANCE_EFFECT_DATA, 64> unknownf0;      // Inferred role: enhance effects; original member name unknown.
+  ADDITIONAL_ENHANCE_DATA unknown3f8[ADDITIONAL_ENHANCE_COUNT]; // Inferred role: additional enhances; original member name unknown.
+  BUFF_DATA unknown458[20];                                     // Inferred role: buffs; original member name unknown.
+  u8 unknown598;                                                // Inferred role: buff count; original member name unknown.
+  u8 unknown599[5];                                             // Inferred role: buff flags; original member name unknown.
+  u16 unknown59e;                                               // Inferred role: resistant attribute flags; original member name unknown.
   u8 _5a0[0x5a2 - 0x5a0];
-  mutable s16 linkDistanceBonus;
+  mutable s16 unknown5a2; // Inferred role: link distance bonus; original member name unknown.
   u8 _5a4[0x5a5 - 0x5a4];
-  u8 elementalComboId;
+  u8 unknown5a5; // Inferred role: elemental combo id; original member name unknown.
   u8 _5a6[0x5a7 - 0x5a6];
-  u8 objectType : 6;
+  u8 unknown5a7_0 : 6; // Inferred role: object type; original member name unknown.
   u8 : 2;
   u8 : 8;
   u8 : 8;
-  s8 rotateX;
-  s8 rotateY;
-  s8 rotateZ;
-  s8 rotateDeg;
-  u8 characterId;
-  s8 classId;
+  s8 unknown5aa; // Inferred role: rotate X; original member name unknown.
+  s8 unknown5ab; // Inferred role: rotate Y; original member name unknown.
+  s8 unknown5ac; // Inferred role: rotate Z; original member name unknown.
+  s8 unknown5ad; // Inferred role: rotate degrees; original member name unknown.
+  u8 unknown5ae; // Inferred role: character id; original member name unknown.
+  s8 unknown5af; // Inferred role: class id; original member name unknown.
   u8 _5b0[0x5df - 0x5b0];
-  u8 isInitialized : 1;
-  u8 isBattle : 1;
-  u8 isBlade : 1;
-  u8 isEnableCoolTime : 1;
+  u8 unknown5df_0 : 1; // Inferred role: initialized; original member name unknown.
+  u8 unknown5df_1 : 1; // Inferred role: battle; original member name unknown.
+  u8 unknown5df_2 : 1; // Inferred role: blade; original member name unknown.
+  u8 unknown5df_3 : 1; // Inferred role: cool time enabled; original member name unknown.
   u8 : 2;
-  u8 isIgnoreBuddy : 1;
+  u8 unknown5df_6 : 1; // Inferred role: ignore buddy; original member name unknown.
   u8 : 1;
   u8 : 1;
-  u8 isOverwriteFightCombo : 1;
-  mutable u8 isInitializedEnhance : 1;
+  u8 unknown5e0_1 : 1;         // Inferred role: overwrite fight combo; original member name unknown.
+  mutable u8 unknown5e0_2 : 1; // Inferred role: initialized enhance; original member name unknown.
 };
 
 static_assert(sizeof(BUFF_DATA) == 0x10, "");
-static_assert(offsetof(CharacterParameter, user) == 0x8, "");
-static_assert(offsetof(CharacterParameter, buddy) == 0x10, "");
-static_assert(offsetof(CharacterParameter, gameObjectId) == 0x18, "");
-static_assert(offsetof(CharacterParameter, partyId) == 0x1c, "");
-static_assert(offsetof(CharacterParameter, radius) == 0x2c, "");
-static_assert(offsetof(CharacterParameter, fightCombo) == 0xc0, "");
-static_assert(offsetof(CharacterParameter, enhanceEffects) == 0xf0, "");
-static_assert(offsetof(CharacterParameter, buffs) == 0x458, "");
-static_assert(offsetof(CharacterParameter, buffNum) == 0x598, "");
-static_assert(offsetof(CharacterParameter, buffFlags) == 0x599, "");
-static_assert(offsetof(CharacterParameter, resistantAttributeFlags) == 0x59e, "");
-static_assert(offsetof(CharacterParameter, elementalComboId) == 0x5a5, "");
-static_assert(offsetof(CharacterParameter, rotateX) == 0x5aa, "");
-static_assert(offsetof(CharacterParameter, rotateDeg) == 0x5ad, "");
-static_assert(offsetof(CharacterParameter, characterId) == 0x5ae, "");
-static_assert(offsetof(CharacterParameter, classId) == 0x5af, "");
+static_assert(offsetof(CharacterParameter, unknown08) == 0x8, "");
+static_assert(offsetof(CharacterParameter, unknown10) == 0x10, "");
+static_assert(offsetof(CharacterParameter, unknown18) == 0x18, "");
+static_assert(offsetof(CharacterParameter, unknown1c) == 0x1c, "");
+static_assert(offsetof(CharacterParameter, unknown2c) == 0x2c, "");
+static_assert(offsetof(CharacterParameter, unknownc0) == 0xc0, "");
+static_assert(offsetof(CharacterParameter, unknownf0) == 0xf0, "");
+static_assert(offsetof(CharacterParameter, unknown458) == 0x458, "");
+static_assert(offsetof(CharacterParameter, unknown598) == 0x598, "");
+static_assert(offsetof(CharacterParameter, unknown599) == 0x599, "");
+static_assert(offsetof(CharacterParameter, unknown59e) == 0x59e, "");
+static_assert(offsetof(CharacterParameter, unknown5a5) == 0x5a5, "");
+static_assert(offsetof(CharacterParameter, unknown5aa) == 0x5aa, "");
+static_assert(offsetof(CharacterParameter, unknown5ad) == 0x5ad, "");
+static_assert(offsetof(CharacterParameter, unknown5ae) == 0x5ae, "");
+static_assert(offsetof(CharacterParameter, unknown5af) == 0x5af, "");
 static_assert(sizeof(CharacterParameter) == 0x5e8, "");
 
 class PlayerParameter : public CharacterParameter {
@@ -282,23 +282,23 @@ public:
   int GetWeaponID(int slot) const override;
   int GetEquipAccessory() const override;
   int GetIdeaLevel(int idea) const override;
-  int GetArtsPaletteNum() const override { return artsPaletteNum; }
+  int GetArtsPaletteNum() const override { return unknown664; }
   bool IsPlayerParameter() const override { return true; }
-  int GetBladeChangeType() const override { return bladeChangeType; }
+  int GetBladeChangeType() const override { return unknown665; }
 
-  ARTS_PALETTE_DATA *artsPalettes;
-  u32 useWeaponCounts[gf::WEAPON_TYPE_COUNT + 1];
-  u32 useWeaponTotal;
-  int pouchDamageArmor;
-  u8 artsPaletteNum;
-  u8 bladeChangeType;
+  ARTS_PALETTE_DATA *unknown5e8;             // Inferred role: arts palettes; original member name unknown.
+  u32 unknown5f0[gf::WEAPON_TYPE_COUNT + 1]; // Inferred role: use weapon counts; original member name unknown.
+  u32 unknown65c;                            // Inferred role: total weapon use; original member name unknown.
+  int unknown660;                            // Inferred role: pouch damage armor; original member name unknown.
+  u8 unknown664;                             // Inferred role: arts palette count; original member name unknown.
+  u8 unknown665;                             // Inferred role: blade change type; original member name unknown.
 };
 
-static_assert(offsetof(PlayerParameter, artsPalettes) == 0x5e8, "");
-static_assert(offsetof(PlayerParameter, useWeaponCounts) == 0x5f0, "");
-static_assert(offsetof(PlayerParameter, useWeaponTotal) == 0x65c, "");
-static_assert(offsetof(PlayerParameter, pouchDamageArmor) == 0x660, "");
-static_assert(offsetof(PlayerParameter, artsPaletteNum) == 0x664, "");
+static_assert(offsetof(PlayerParameter, unknown5e8) == 0x5e8, "");
+static_assert(offsetof(PlayerParameter, unknown5f0) == 0x5f0, "");
+static_assert(offsetof(PlayerParameter, unknown65c) == 0x65c, "");
+static_assert(offsetof(PlayerParameter, unknown660) == 0x660, "");
+static_assert(offsetof(PlayerParameter, unknown664) == 0x664, "");
 static_assert(sizeof(PlayerParameter) == 0x668, "");
 
 class EnemyParameter : public CharacterParameter {
@@ -306,9 +306,9 @@ public:
   struct HATE_DATA {
     void Set(int type, f32 hate);
 
-    f32 hates[2];
-    f32 rate;
-    bool isEmpty;
+    f32 unknown00[2]; // Inferred role: hates; original member name unknown.
+    f32 unknown08;    // Inferred role: rate; original member name unknown.
+    bool unknown0c;   // Inferred role: empty flag; original member name unknown.
     u8 _0d[0x10 - 0x0d];
   };
 
@@ -342,54 +342,54 @@ public:
   bool UsePerfectAvoid() const override;
   const HATE_DATA *GetHateDataConst(int index) const;
   int GetHateTarget() const;
-  const ARTS_PALETTE_DATA *GetArtsPaletteDataConst(int) const override { return &artsPalette; }
+  const ARTS_PALETTE_DATA *GetArtsPaletteDataConst(int) const override { return &unknown5e8; }
   bool IsEnemyParameter() const override { return true; }
-  bool IsInvalidTarget() const override { return isInvalidTarget; }
-  bool IsInvalidWarp() const override { return isInvalidWarp; }
-  bool IsLevelDiffDamageCorrect() const override { return isLevelDiffDamageCorrect; }
-  bool IsFallDeadDrop() const override { return isFallDeadDrop; }
-  int GetAngryAuraID() const override { return angryAuraId; }
-  int GetAngryAttr() const override { return angryAttr; }
-  bool IsAngry() const override { return isAngry; }
-  int GetDeadSEID() const override { return deadSeId; }
-  void SetOverwriteAttr(int attribute) override { overwriteAttr = attribute; }
-  int GetEatNum() const override { return eatNum; }
+  bool IsInvalidTarget() const override { return unknown86c_7; }
+  bool IsInvalidWarp() const override { return unknown86d_0; }
+  bool IsLevelDiffDamageCorrect() const override { return unknown86d_1; }
+  bool IsFallDeadDrop() const override { return unknown86d_2; }
+  int GetAngryAuraID() const override { return unknown864; }
+  int GetAngryAttr() const override { return unknown866; }
+  bool IsAngry() const override { return unknown86c_0; }
+  int GetDeadSEID() const override { return unknown867; }
+  void SetOverwriteAttr(int attribute) override { unknown868 = attribute; }
+  int GetEatNum() const override { return unknown86a; }
   void IncEatNum() override {
-    if (eatNum != 0xff) {
-      eatNum++;
+    if (unknown86a != 0xff) {
+      unknown86a++;
     }
   }
 
-  ARTS_PALETTE_DATA artsPalette;
-  HATE_DATA hates[HATE_COUNT];
-  int hateTarget;
+  ARTS_PALETTE_DATA unknown5e8;     // Inferred role: arts palette; original member name unknown.
+  HATE_DATA unknown820[HATE_COUNT]; // Inferred role: hates; original member name unknown.
+  int unknown850;                   // Inferred role: hate target; original member name unknown.
   u8 _854[0x864 - 0x854];
-  u16 angryAuraId;
-  u8 angryAttr;
-  u8 deadSeId;
-  u8 overwriteAttr;
+  u16 unknown864; // Inferred role: angry aura id; original member name unknown.
+  u8 unknown866;  // Inferred role: angry attribute; original member name unknown.
+  u8 unknown867;  // Inferred role: dead SE id; original member name unknown.
+  u8 unknown868;  // Inferred role: overwrite attribute; original member name unknown.
   u8 _869[0x86a - 0x869];
-  u8 eatNum;
-  mutable u8 perfectAvoidNum;
-  u8 isAngry : 1;
+  u8 unknown86a;         // Inferred role: eat count; original member name unknown.
+  mutable u8 unknown86b; // Inferred role: perfect avoid count; original member name unknown.
+  u8 unknown86c_0 : 1;   // Inferred role: angry; original member name unknown.
   u8 : 2;
-  u8 isEatTarget : 1;
-  u8 isChild : 1;
-  u8 isInvalidHikariSp : 1;
-  u8 isAlwaysKakusei : 1;
-  u8 isInvalidTarget : 1;
-  u8 isInvalidWarp : 1;
-  u8 isLevelDiffDamageCorrect : 1;
-  u8 isFallDeadDrop : 1;
+  u8 unknown86c_3 : 1; // Inferred role: eat target; original member name unknown.
+  u8 unknown86c_4 : 1; // Inferred role: child; original member name unknown.
+  u8 unknown86c_5 : 1; // Inferred role: invalid hikari SP; original member name unknown.
+  u8 unknown86c_6 : 1; // Inferred role: always kakusei; original member name unknown.
+  u8 unknown86c_7 : 1; // Inferred role: invalid target; original member name unknown.
+  u8 unknown86d_0 : 1; // Inferred role: invalid warp; original member name unknown.
+  u8 unknown86d_1 : 1; // Inferred role: level difference damage correction; original member name unknown.
+  u8 unknown86d_2 : 1; // Inferred role: fall dead drop; original member name unknown.
 };
 
-static_assert(offsetof(EnemyParameter, artsPalette) == 0x5e8, "");
-static_assert(offsetof(EnemyParameter, hates) == 0x820, "");
-static_assert(offsetof(EnemyParameter, hateTarget) == 0x850, "");
-static_assert(offsetof(EnemyParameter, angryAuraId) == 0x864, "");
-static_assert(offsetof(EnemyParameter, overwriteAttr) == 0x868, "");
-static_assert(offsetof(EnemyParameter, eatNum) == 0x86a, "");
-static_assert(offsetof(EnemyParameter, perfectAvoidNum) == 0x86b, "");
+static_assert(offsetof(EnemyParameter, unknown5e8) == 0x5e8, "");
+static_assert(offsetof(EnemyParameter, unknown820) == 0x820, "");
+static_assert(offsetof(EnemyParameter, unknown850) == 0x850, "");
+static_assert(offsetof(EnemyParameter, unknown864) == 0x864, "");
+static_assert(offsetof(EnemyParameter, unknown868) == 0x868, "");
+static_assert(offsetof(EnemyParameter, unknown86a) == 0x86a, "");
+static_assert(offsetof(EnemyParameter, unknown86b) == 0x86b, "");
 static_assert(sizeof(EnemyParameter) == 0x870, "");
 
 } // namespace btl

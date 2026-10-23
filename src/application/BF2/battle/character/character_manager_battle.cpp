@@ -130,7 +130,7 @@ int CharacterManager::GetAliveBossNum() const {
 
     const BattleCharacter &character = unknown20[id].unknown00;
     const CharacterParameter *parameter = character.GetCharacterParameterConst(true);
-    if (parameter == nullptr || !parameter->isBattle || parameter->isBlade || character.IsDead(0)) {
+    if (parameter == nullptr || !parameter->unknown5df_1 || parameter->unknown5df_2 || character.IsDead(0)) {
       continue;
     }
 
@@ -177,7 +177,7 @@ bool CharacterManager::IsExistHikariSp() const {
     }
 
     const CharacterParameter *parameter = unknown20[id].unknown00.GetCharacterParameterConst(false);
-    if (parameter != nullptr && parameter->IsInvalidHikariSp() && parameter->isBattle && !unknown20[id].unknown00.IsDead(0)) {
+    if (parameter != nullptr && parameter->IsInvalidHikariSp() && parameter->unknown5df_1 && !unknown20[id].unknown00.IsDead(0)) {
       return true;
     }
   }
@@ -192,7 +192,7 @@ bool CharacterManager::IsExistAlwaysKakusei() const {
     }
 
     const CharacterParameter *parameter = unknown20[id].unknown00.GetCharacterParameterConst(false);
-    if (parameter != nullptr && parameter->IsAlwaysKakusei() && parameter->isBattle && !unknown20[id].unknown00.IsDead(0)) {
+    if (parameter != nullptr && parameter->IsAlwaysKakusei() && parameter->unknown5df_1 && !unknown20[id].unknown00.IsDead(0)) {
       return true;
     }
   }

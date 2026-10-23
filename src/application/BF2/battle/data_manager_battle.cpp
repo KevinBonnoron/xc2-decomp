@@ -95,12 +95,12 @@ void DataManager::PreUpdate(const fw::UpdateInfo &updateInfo) {
 
 void DataManager::PreUpdateProc(const fw::UpdateInfo &updateInfo) {
   for (int i = 0; i < PLAYER_PARAMETER_COUNT; i++) {
-    if (playerParameters[i].user != gf::INVALID_HANDLE) {
+    if (playerParameters[i].unknown08 != gf::INVALID_HANDLE) {
       playerParameters[i].PreUpdate(updateInfo);
     }
   }
   for (EnemyParameter *parameter : enemyParameters) {
-    if (parameter != nullptr && parameter->user != gf::INVALID_HANDLE) {
+    if (parameter != nullptr && parameter->unknown08 != gf::INVALID_HANDLE) {
       parameter->PreUpdate(updateInfo);
     }
   }
@@ -132,12 +132,12 @@ void DataManager::PostUpdate(const fw::UpdateInfo &updateInfo) { get()->PostUpda
 
 void DataManager::PostUpdateProc(const fw::UpdateInfo &updateInfo) {
   for (int i = 0; i < PLAYER_PARAMETER_COUNT; i++) {
-    if (playerParameters[i].user != gf::INVALID_HANDLE) {
+    if (playerParameters[i].unknown08 != gf::INVALID_HANDLE) {
       playerParameters[i].PostUpdate(updateInfo);
     }
   }
   for (EnemyParameter *parameter : enemyParameters) {
-    if (parameter != nullptr && parameter->user != gf::INVALID_HANDLE) {
+    if (parameter != nullptr && parameter->unknown08 != gf::INVALID_HANDLE) {
       parameter->PostUpdate(updateInfo);
     }
   }

@@ -533,7 +533,7 @@ bool GfObjAcc::isBattle() const {
     if (character != nullptr) {
       btl::CharacterParameter *parameter = character->GetCharacterParameter(false);
       if (parameter != nullptr) {
-        return parameter->isBattle;
+        return parameter->unknown5df_1;
       }
     }
   }
