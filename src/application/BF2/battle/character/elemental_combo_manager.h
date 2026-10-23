@@ -20,37 +20,37 @@ public:
   };
 
   struct ELEMENTAL_DATA {
-    f32 value;
-    f32 ratio;
-    f32 timer;
-    int state;
-    u32 effectHandle;
-    u32 attackIds[ELEMENTAL_ATTACK_COUNT];
-    u32 damages[ELEMENTAL_ATTACK_COUNT];
-    u32 totalDamage;
-    s8 burstCharacter;
-    u8 comboId;
-    u8 stage;
-    u8 attribute;
+    f32 unknown00;                         // Inferred role: value; original member name unknown.
+    f32 unknown04;                         // Inferred role: ratio; original member name unknown.
+    f32 unknown08;                         // Inferred role: timer; original member name unknown.
+    int unknown0c;                         // Inferred role: state; original member name unknown.
+    u32 unknown10;                         // Inferred role: effect handle; original member name unknown.
+    u32 unknown14[ELEMENTAL_ATTACK_COUNT]; // Inferred role: attack ids; original member name unknown.
+    u32 unknown64[ELEMENTAL_ATTACK_COUNT]; // Inferred role: damages; original member name unknown.
+    u32 unknownb4;                         // Inferred role: total damage; original member name unknown.
+    s8 unknownb8;                          // Inferred role: burst character; original member name unknown.
+    u8 unknownb9;                          // Inferred role: combo id; original member name unknown.
+    u8 unknownba;                          // Inferred role: stage; original member name unknown.
+    u8 unknownbb;                          // Inferred role: attribute; original member name unknown.
   };
 
   struct ELEMENTAL_COMBO_DATA {
     u8 _00[0xc - 0x0];
-    f32 restTimeMax;
-    f32 restTime;
-    f32 suspendRatio;
+    f32 unknown0c; // Inferred role: rest time max; original member name unknown.
+    f32 unknown10; // Inferred role: rest time; original member name unknown.
+    f32 unknown14; // Inferred role: suspend ratio; original member name unknown.
     u8 _18[0x74 - 0x18];
-    u16 restTimeSpeed;
-    u8 comboId;
+    u16 unknown74; // Inferred role: rest time speed; original member name unknown.
+    u8 unknown76;  // Inferred role: combo id; original member name unknown.
     u8 _77[0x88 - 0x77];
-    u8 isSuspend : 1;
+    u8 unknown88_0 : 1; // Inferred role: suspend; original member name unknown.
     u8 : 7;
     u8 _89[0x8c - 0x89];
   };
 
   struct BALL_DATA {
     u8 _00[0x34 - 0x00];
-    u32 effectHandle;
+    u32 unknown34; // Inferred role: effect handle; original member name unknown.
     u8 _38[0x40 - 0x38];
   };
 
@@ -72,33 +72,33 @@ public:
   f32 GetElementalValue(int attribute) const;
   f32 GetRestTimeRatio(bool &isSuspend) const;
 
-  gf::GF_OBJ_HANDLE *handle;
-  int characterId;
-  f32 ballScale;
-  f32 startWaitTime;
-  ELEMENTAL_DATA elements[ATTRIBUTE_COUNT + 1];
-  ELEMENTAL_COMBO_DATA combos[ELEMENTAL_COMBO_COUNT];
+  gf::GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
+  int unknown10;                                          // Inferred role: character id; original member name unknown.
+  f32 unknown14;                                          // Inferred role: ball scale; original member name unknown.
+  f32 unknown18;                                          // Inferred role: start wait time; original member name unknown.
+  ELEMENTAL_DATA unknown1c[ATTRIBUTE_COUNT + 1];          // Inferred role: elements; original member name unknown.
+  ELEMENTAL_COMBO_DATA unknown6b8[ELEMENTAL_COMBO_COUNT]; // Inferred role: combos; original member name unknown.
   u8 _85c[0x860 - 0x85c];
-  BALL_DATA balls[ATTRIBUTE_COUNT + 1];
+  BALL_DATA unknown860[ATTRIBUTE_COUNT + 1]; // Inferred role: balls; original member name unknown.
   u8 _aa0[0xaa4 - 0xaa0];
-  u8 comboIndex : 4;
+  u8 unknownaa4_0 : 4; // Inferred role: combo index; original member name unknown.
   u8 : 4;
-  u8 elementalValueMax;
-  u8 burstComboId;
-  u8 resistantAttrBreakTotalDamages[ATTRIBUTE_COUNT];
-  u8 isPlayer : 1;
+  u8 unknownaa5;                  // Inferred role: elemental value max; original member name unknown.
+  u8 unknownaa6;                  // Inferred role: burst combo id; original member name unknown.
+  u8 unknownaa7[ATTRIBUTE_COUNT]; // Inferred role: resistant attribute break total damages; original member name unknown.
+  u8 unknownaaf_0 : 1;            // Inferred role: player flag; original member name unknown.
   u8 : 7;
 };
 
 static_assert(sizeof(ElementalComboManager::ELEMENTAL_DATA) == 0xbc, "");
 static_assert(sizeof(ElementalComboManager::ELEMENTAL_COMBO_DATA) == 0x8c, "");
 static_assert(sizeof(ElementalComboManager::BALL_DATA) == 0x40, "");
-static_assert(offsetof(ElementalComboManager, handle) == 0x8, "");
-static_assert(offsetof(ElementalComboManager, elements) == 0x1c, "");
-static_assert(offsetof(ElementalComboManager, combos) == 0x6b8, "");
-static_assert(offsetof(ElementalComboManager, balls) == 0x860, "");
-static_assert(offsetof(ElementalComboManager, elementalValueMax) == 0xaa5, "");
-static_assert(offsetof(ElementalComboManager, resistantAttrBreakTotalDamages) == 0xaa7, "");
+static_assert(offsetof(ElementalComboManager, unknown08) == 0x8, "");
+static_assert(offsetof(ElementalComboManager, unknown1c) == 0x1c, "");
+static_assert(offsetof(ElementalComboManager, unknown6b8) == 0x6b8, "");
+static_assert(offsetof(ElementalComboManager, unknown860) == 0x860, "");
+static_assert(offsetof(ElementalComboManager, unknownaa5) == 0xaa5, "");
+static_assert(offsetof(ElementalComboManager, unknownaa7) == 0xaa7, "");
 static_assert(sizeof(ElementalComboManager) == 0xab0, "");
 
 } // namespace btl
