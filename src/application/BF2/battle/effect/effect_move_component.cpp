@@ -18,36 +18,36 @@ void (EffectMoveComponent::*const EffectMoveComponent::m_apUpdateFuncList[])(f32
 EffectMoveComponent::EffectMoveComponent() { Initialize(); }
 
 void EffectMoveComponent::Initialize() {
-  move = mm::Vec3::zero;
-  direction = mm::Vec3::zero;
-  time = 0.0f;
-  moveType = MOVE_TYPE_NONE;
+  unknown40 = mm::Vec3::zero;
+  unknown50 = mm::Vec3::zero;
+  unknown60 = 0.0f;
+  unknowna5 = MOVE_TYPE_NONE;
 }
 
-void EffectMoveComponent::SetGravity(f32 gravity) { this->gravity = gravity * 0.5f; }
+void EffectMoveComponent::SetGravity(f32 gravity) { this->unknown84 = gravity * 0.5f; }
 
 void EffectMoveComponent::UpdateNormal(f32 time, f32 frame, const mm::Vec3 &) {
-  f32 moveSpeed = speed * speedRate * frame;
+  f32 moveSpeed = unknown6c * unknown74 * frame;
   mm::Vec3 velocity;
-  velocity.x = direction.x * moveSpeed;
-  velocity.y = moveSpeed * direction.y;
-  velocity.z = moveSpeed * direction.z;
-  distance += moveSpeed;
-  distanceXZ += Misc::CalcLengthXZ(velocity);
-  if (gravity != 0.0f) {
-    f32 previous = gravityTime;
-    gravityTime += time;
-    velocity.y -= gravity * (gravityTime * gravityTime - previous * previous);
+  velocity.x = unknown50.x * moveSpeed;
+  velocity.y = moveSpeed * unknown50.y;
+  velocity.z = moveSpeed * unknown50.z;
+  unknown64 += moveSpeed;
+  unknown68 += Misc::CalcLengthXZ(velocity);
+  if (unknown84 != 0.0f) {
+    f32 previous = unknown88;
+    unknown88 += time;
+    velocity.y -= unknown84 * (unknown88 * unknown88 - previous * previous);
   }
-  move = velocity;
+  unknown40 = velocity;
 
-  if (accel != 0.0f) {
-    if (accelTime < accelDelay) {
-      accelTime += frame;
+  if (unknown78 != 0.0f) {
+    if (unknown80 < unknown7c) {
+      unknown80 += frame;
     } else {
-      f32 nextSpeed = accel * frame + speed;
-      bool isAccel = accel > 0.0f ? nextSpeed < speedMax : nextSpeed > speedMax;
-      speed = isAccel ? nextSpeed : speedMax;
+      f32 nextSpeed = unknown78 * frame + unknown6c;
+      bool isAccel = unknown78 > 0.0f ? nextSpeed < unknown70 : nextSpeed > unknown70;
+      unknown6c = isAccel ? nextSpeed : unknown70;
     }
   }
 }
@@ -56,24 +56,24 @@ void EffectMoveComponent::UpdateBounce(f32, f32, const mm::Vec3 &) {}
 
 void EffectMoveComponent::UpdateUp(f32, f32 frame, const mm::Vec3 &) {
   f32 rate;
-  if (up.time <= frame) {
-    rate = up.time / frame;
-    up.time = 0.0f;
+  if (unknown00_2.unknown00 <= frame) {
+    rate = unknown00_2.unknown00 / frame;
+    unknown00_2.unknown00 = 0.0f;
   } else {
     rate = frame;
-    up.time -= frame;
+    unknown00_2.unknown00 -= frame;
   }
-  move.x = 0.0f;
-  move.z = 0.0f;
-  move.y += rate * speed;
+  unknown40.x = 0.0f;
+  unknown40.z = 0.0f;
+  unknown40.y += rate * unknown6c;
 }
 
 void EffectMoveComponent::Update(const fw::UpdateInfo &updateInfo, const mm::Vec3 &position) {
-  if (moveType != MOVE_TYPE_NONE) {
+  if (unknowna5 != MOVE_TYPE_NONE) {
     f32 deltaTime = updateInfo.deltaTime;
     f32 frame = deltaTime * FRAME_RATE;
-    time += deltaTime;
-    (this->*m_apUpdateFuncList[moveType - 1])(deltaTime, frame, position);
+    unknown60 += deltaTime;
+    (this->*m_apUpdateFuncList[unknowna5 - 1])(deltaTime, frame, position);
   }
 }
 
