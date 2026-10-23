@@ -9,15 +9,15 @@ namespace btl {
 constexpr int SP_ATTACK_SLOT_NONE = 15;
 
 bool SpAttackManager::PROC_DATA::IsRegister(gf::GF_OBJ_HANDLE *handle) const {
-  if (driver == handle) {
+  if (unknown10 == handle) {
     return true;
   }
 
-  if (blade == handle) {
+  if (unknown18 == handle) {
     return true;
   }
 
-  if (trinityAttack != nullptr && Utility::IsThirdCharacter(handle)) {
+  if (unknown08 != nullptr && Utility::IsThirdCharacter(handle)) {
     return true;
   }
 
@@ -41,9 +41,9 @@ void SpAttackManager::PreUpdateProc(const fw::UpdateInfo &) {}
 void SpAttackManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
 
 bool SpAttackManager::IsRegister(gf::GF_OBJ_HANDLE *handle) const {
-  int num = procCount;
+  int num = unknown208;
   for (int i = 0; i < num; i++) {
-    if (procs[i].IsRegister(handle)) {
+    if (unknown28[i].IsRegister(handle)) {
       return true;
     }
   }
@@ -54,7 +54,7 @@ bool SpAttackManager::IsRegister(gf::GF_OBJ_HANDLE *handle) const {
 void SpAttackManager::FinishUpdateAttackData(gf::GF_OBJ_HANDLE *handle) {
   PROC_DATA *proc = const_cast<PROC_DATA *>(GetProcDataConst(handle));
   if (proc != nullptr) {
-    proc->isUpdateAttackData = false;
+    proc->unknown5c_2 = false;
   }
 }
 
@@ -64,7 +64,7 @@ int SpAttackManager::GetSpAttackSlot(gf::GF_OBJ_HANDLE *handle) const {
     return SP_ATTACK_SLOT_NONE;
   }
 
-  return proc->slot;
+  return proc->unknown5a;
 }
 
 gf::GF_OBJ_HANDLE *SpAttackManager::GetTargetHandle(gf::GF_OBJ_HANDLE *handle) const {
@@ -73,7 +73,7 @@ gf::GF_OBJ_HANDLE *SpAttackManager::GetTargetHandle(gf::GF_OBJ_HANDLE *handle) c
     return gf::INVALID_HANDLE;
   }
 
-  return proc->target;
+  return proc->unknown20;
 }
 
 bool SpAttackManager::IsLastAttackDriver(gf::GF_OBJ_HANDLE *handle) const {
@@ -81,7 +81,7 @@ bool SpAttackManager::IsLastAttackDriver(gf::GF_OBJ_HANDLE *handle) const {
   bool isLastAttackDriver;
   const PROC_DATA *proc = GetProcDataConst(handle);
   if (proc != nullptr) {
-    isLastAttackDriver = proc->isLastAttackDriver;
+    isLastAttackDriver = proc->unknown5c_3;
     isFound = true;
   }
 
@@ -93,7 +93,7 @@ bool SpAttackManager::IsTrinityAttack(gf::GF_OBJ_HANDLE *handle) const {
   bool isTrinityAttack;
   const PROC_DATA *proc = GetProcDataConst(handle);
   if (proc != nullptr) {
-    isTrinityAttack = proc->trinityAttack != nullptr;
+    isTrinityAttack = proc->unknown08 != nullptr;
     isFound = true;
   }
 
@@ -103,10 +103,10 @@ bool SpAttackManager::IsTrinityAttack(gf::GF_OBJ_HANDLE *handle) const {
 bool SpAttackManager::IsDispThirdChr() const {
   bool isFound = false;
   bool isDispThirdChr;
-  int num = procCount;
+  int num = unknown208;
   for (int i = 0; i < num; i++) {
-    if (procs[i].trinityAttack != nullptr) {
-      isDispThirdChr = procs[i].isDispThirdChr;
+    if (unknown28[i].unknown08 != nullptr) {
+      isDispThirdChr = unknown28[i].unknown5c_6;
       isFound = true;
       break;
     }
@@ -116,8 +116,8 @@ bool SpAttackManager::IsDispThirdChr() const {
 }
 
 bool SpAttackManager::IsMovie() const {
-  for (int i = 0; i < procCount; i++) {
-    if (procs[i].movieStep == MOVIE_STEP_LOAD || procs[i].movieStep == MOVIE_STEP_PLAY) {
+  for (int i = 0; i < unknown208; i++) {
+    if (unknown28[i].unknown53 == MOVIE_STEP_LOAD || unknown28[i].unknown53 == MOVIE_STEP_PLAY) {
       return true;
     }
   }

@@ -1201,7 +1201,7 @@ bool Utility::AI_IsBuff(gf::GF_OBJ_HANDLE *handle, int buff) {
   return false;
 }
 
-bool Utility::AI_IsProcSpAttack() { return SpAttackManager::get()->procCount > 0; }
+bool Utility::AI_IsProcSpAttack() { return SpAttackManager::get()->unknown208 > 0; }
 
 int Utility::AI_GetBdatID(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
