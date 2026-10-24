@@ -29,39 +29,39 @@ public:
 
   const UIDisplayInfo *getColorSource() const {
     const UIDisplayInfo *info = this;
-    while (info->colorLink != nullptr) {
-      info = info->colorLink;
+    while (info->unknown40 != nullptr) {
+      info = info->unknown40;
     }
     return info;
   }
 
-  const mm::Col4 &getMulColor() const { return getColorSource()->mulColor; }
-  const mm::Col3 &getAddColor() const { return getColorSource()->addColor; }
+  const mm::Col4 &getMulColor() const { return getColorSource()->unknown10; }
+  const mm::Col3 &getAddColor() const { return getColorSource()->unknown20; }
 
-  bool disp;
-  u8 displayMode;
-  u8 blendType;
-  u16 priority;
-  mm::Col4 mulColor;
-  mm::Col3 addColor;
-  u16 pixelWidth;
-  u16 pixelHeight;
-  bool dirty;
-  DefColor *defColor;
-  const UIDisplayInfo *colorLink;
+  bool unknown08;                 // Inferred role: disp; original member name unknown.
+  u8 unknown09;                   // Inferred role: display mode; original member name unknown.
+  u8 unknown0a;                   // Inferred role: blend type; original member name unknown.
+  u16 unknown0c;                  // Inferred role: priority; original member name unknown.
+  mm::Col4 unknown10;             // Inferred role: mul color; original member name unknown.
+  mm::Col3 unknown20;             // Inferred role: add color; original member name unknown.
+  u16 unknown2c;                  // Inferred role: pixel width; original member name unknown.
+  u16 unknown2e;                  // Inferred role: pixel height; original member name unknown.
+  bool unknown30;                 // Inferred role: dirty; original member name unknown.
+  DefColor *unknown38;            // Inferred role: def color; original member name unknown.
+  const UIDisplayInfo *unknown40; // Inferred role: color link; original member name unknown.
 };
 
-static_assert(offsetof(UIDisplayInfo, disp) == 0x08, "");
-static_assert(offsetof(UIDisplayInfo, displayMode) == 0x09, "");
-static_assert(offsetof(UIDisplayInfo, blendType) == 0x0a, "");
-static_assert(offsetof(UIDisplayInfo, priority) == 0x0c, "");
-static_assert(offsetof(UIDisplayInfo, mulColor) == 0x10, "");
-static_assert(offsetof(UIDisplayInfo, addColor) == 0x20, "");
-static_assert(offsetof(UIDisplayInfo, pixelWidth) == 0x2c, "");
-static_assert(offsetof(UIDisplayInfo, pixelHeight) == 0x2e, "");
-static_assert(offsetof(UIDisplayInfo, dirty) == 0x30, "");
-static_assert(offsetof(UIDisplayInfo, defColor) == 0x38, "");
-static_assert(offsetof(UIDisplayInfo, colorLink) == 0x40, "");
+static_assert(offsetof(UIDisplayInfo, unknown08) == 0x08, "");
+static_assert(offsetof(UIDisplayInfo, unknown09) == 0x09, "");
+static_assert(offsetof(UIDisplayInfo, unknown0a) == 0x0a, "");
+static_assert(offsetof(UIDisplayInfo, unknown0c) == 0x0c, "");
+static_assert(offsetof(UIDisplayInfo, unknown10) == 0x10, "");
+static_assert(offsetof(UIDisplayInfo, unknown20) == 0x20, "");
+static_assert(offsetof(UIDisplayInfo, unknown2c) == 0x2c, "");
+static_assert(offsetof(UIDisplayInfo, unknown2e) == 0x2e, "");
+static_assert(offsetof(UIDisplayInfo, unknown30) == 0x30, "");
+static_assert(offsetof(UIDisplayInfo, unknown38) == 0x38, "");
+static_assert(offsetof(UIDisplayInfo, unknown40) == 0x40, "");
 static_assert(sizeof(UIDisplayInfo) == 0x48, "");
 
 } // namespace ui

@@ -46,16 +46,16 @@ public:
   u32 getLoadedResourceSize();
   bool hasObject() const;
 
-  UIObjectList *objectList;
-  mm::mtl::Vector<RootObjInfo> rootObjects;
-  mm::mtl::Vector<InputInfo> inputs;
-  u32 flags;
+  UIObjectList *unknown08;                // Inferred role: object list; original member name unknown.
+  mm::mtl::Vector<RootObjInfo> unknown10; // Inferred role: root objects; original member name unknown.
+  mm::mtl::Vector<InputInfo> unknown38;   // Inferred role: inputs; original member name unknown.
+  u32 unknown60;                          // Inferred role: flags; original member name unknown.
 };
 
-static_assert(offsetof(UIGroup, objectList) == 0x08, "");
-static_assert(offsetof(UIGroup, rootObjects) == 0x10, "");
-static_assert(offsetof(UIGroup, inputs) == 0x38, "");
-static_assert(offsetof(UIGroup, flags) == 0x60, "");
+static_assert(offsetof(UIGroup, unknown08) == 0x08, "");
+static_assert(offsetof(UIGroup, unknown10) == 0x10, "");
+static_assert(offsetof(UIGroup, unknown38) == 0x38, "");
+static_assert(offsetof(UIGroup, unknown60) == 0x60, "");
 static_assert(sizeof(UIGroup) == 0x68, "");
 
 } // namespace ui

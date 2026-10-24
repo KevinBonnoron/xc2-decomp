@@ -25,20 +25,20 @@ public:
   void setScale(f32 scale);
   void setWeightScale(f32 weightScale);
 
-  u32 divisionNum;
-  f32 weight;
-  f32 weightScale;
-  f32 scale;
-  f32 prevScale;
-  f32 prevWeightScale;
+  u32 unknown40; // Inferred role: division num; original member name unknown.
+  f32 unknown44; // Inferred role: weight; original member name unknown.
+  f32 m_weightScale;
+  f32 m_scale;
+  f32 unknown50; // Inferred role: prev scale; original member name unknown.
+  f32 unknown54; // Inferred role: prev weight scale; original member name unknown.
 };
 
-static_assert(offsetof(UIShapeRing, divisionNum) == 0x40, "");
-static_assert(offsetof(UIShapeRing, weight) == 0x44, "");
-static_assert(offsetof(UIShapeRing, weightScale) == 0x48, "");
-static_assert(offsetof(UIShapeRing, scale) == 0x4c, "");
-static_assert(offsetof(UIShapeRing, prevScale) == 0x50, "");
-static_assert(offsetof(UIShapeRing, prevWeightScale) == 0x54, "");
+static_assert(offsetof(UIShapeRing, unknown40) == 0x40, "");
+static_assert(offsetof(UIShapeRing, unknown44) == 0x44, "");
+static_assert(offsetof(UIShapeRing, m_weightScale) == 0x48, "");
+static_assert(offsetof(UIShapeRing, m_scale) == 0x4c, "");
+static_assert(offsetof(UIShapeRing, unknown50) == 0x50, "");
+static_assert(offsetof(UIShapeRing, unknown54) == 0x54, "");
 static_assert(sizeof(UIShapeRing) == 0x58, "");
 
 } // namespace ui

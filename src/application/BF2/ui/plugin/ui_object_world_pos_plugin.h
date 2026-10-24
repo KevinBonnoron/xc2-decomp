@@ -23,10 +23,10 @@ public:
   virtual void execute(UIObjectAcc &acc);
   virtual const mm::mtl::RTTI *getRTTI() const;
 
-  mm::Vec3 worldPos;
+  mm::Vec3 unknowna0; // Inferred role: world pos; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectWorldPosPlugin, worldPos) == 0xa0, "");
+static_assert(offsetof(UIObjectWorldPosPlugin, unknowna0) == 0xa0, "");
 static_assert(sizeof(UIObjectWorldPosPlugin) == 0xb0, "");
 
 } // namespace ui

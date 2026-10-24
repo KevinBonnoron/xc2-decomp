@@ -8,48 +8,48 @@
 
 namespace ui {
 
-UIObjectDispPlugin::UIObjectDispPlugin() : dispControl(true), disp(true), modeFlags(), followObjHandle(0), alphaParam(nullptr), fadeTime(0.0f) {}
+UIObjectDispPlugin::UIObjectDispPlugin() : unknown1c(true), unknown1d(true), unknown20(), m_followObjHandle(0), unknown28(nullptr), unknown78(0.0f) {}
 
 UIObjectDispPlugin::~UIObjectDispPlugin() {
-  if (fadeUpdater.ctrl != nullptr) {
-    UICtrlManager::get()->delUpdater(fadeUpdater);
+  if (unknown58.ctrl != nullptr) {
+    UICtrlManager::get()->delUpdater(unknown58);
   }
-  fadeUpdater.ctrl = nullptr;
-  if (alphaParam != nullptr) {
-    delete alphaParam;
-    alphaParam = nullptr;
+  unknown58.ctrl = nullptr;
+  if (unknown28 != nullptr) {
+    delete unknown28;
+    unknown28 = nullptr;
   }
 }
 
 void UIObjectDispPlugin::setAlphaMode(bool alphaMode) {
-  if (modeFlags.test(MODE_ALPHA) != alphaMode) {
-    modeFlags.set(MODE_ALPHA, alphaMode);
-    needUpdate |= true;
+  if (unknown20.test(MODE_ALPHA) != alphaMode) {
+    unknown20.set(MODE_ALPHA, alphaMode);
+    unknown18 |= true;
   }
 }
 
 void UIObjectDispPlugin::setReverseMode(bool reverseMode) {
-  if (modeFlags.test(MODE_REVERSE) != reverseMode) {
-    modeFlags.set(MODE_REVERSE, reverseMode);
-    needUpdate |= true;
+  if (unknown20.test(MODE_REVERSE) != reverseMode) {
+    unknown20.set(MODE_REVERSE, reverseMode);
+    unknown18 |= true;
   }
 }
 
 void UIObjectDispPlugin::setSuspendMode(bool suspendMode) {
-  if (modeFlags.test(MODE_SUSPEND) != suspendMode) {
-    modeFlags.set(MODE_SUSPEND, suspendMode);
-    needUpdate |= true;
+  if (unknown20.test(MODE_SUSPEND) != suspendMode) {
+    unknown20.set(MODE_SUSPEND, suspendMode);
+    unknown18 |= true;
   }
 }
 
-void UIObjectDispPlugin::setDispControl(bool dispControl) { this->dispControl = dispControl; }
+void UIObjectDispPlugin::setDispControl(bool dispControl) { this->unknown1c = dispControl; }
 
-void UIObjectDispPlugin::setFollowObjHandle(u32 handle) { followObjHandle = handle; }
+void UIObjectDispPlugin::setFollowObjHandle(u32 handle) { m_followObjHandle = handle; }
 
 void UIObjectDispPlugin::setFadeMode(f32 fadeTime) {
-  this->fadeTime = fadeTime;
-  modeFlags.set(MODE_ALPHA);
-  modeFlags.set(MODE_FADE);
+  this->unknown78 = fadeTime;
+  unknown20.set(MODE_ALPHA);
+  unknown20.set(MODE_FADE);
 }
 
 UIObjectDispPlugin *UIObjectDispPlugin::create(u32 handle) {
@@ -66,46 +66,46 @@ UIObjectDispPlugin *UIObjectDispPlugin::create(u32 handle) {
   return plugin;
 }
 
-void UIObjectDispPlugin::init(u32 handle) { disp = UIObjectAcc(handle).isDisp(); }
+void UIObjectDispPlugin::init(u32 handle) { unknown1d = UIObjectAcc(handle).isDisp(); }
 
 void UIObjectDispPlugin::execute(UIObjectAcc &acc) {
-  if (dispControl) {
-    bool visible = disp;
-    if (followObjHandle != 0) {
-      visible = UIObjectAcc(followObjHandle).isDisp();
+  if (unknown1c) {
+    bool visible = unknown1d;
+    if (m_followObjHandle != 0) {
+      visible = UIObjectAcc(m_followObjHandle).isDisp();
     }
-    visible ^= modeFlags.test(MODE_REVERSE);
-    if (!modeFlags.test(MODE_ALPHA)) {
-      if (modeFlags.test(MODE_SUSPEND)) {
+    visible ^= unknown20.test(MODE_REVERSE);
+    if (!unknown20.test(MODE_ALPHA)) {
+      if (unknown20.test(MODE_SUSPEND)) {
         acc.setSuspend(!visible);
       }
       acc.setDisp(visible);
     } else {
       acc.setDisp(true);
-      if (!modeFlags.test(MODE_FADE)) {
+      if (!unknown20.test(MODE_FADE)) {
         acc.setAlpha(visible ? 1.0f : 0.0f);
-        if (modeFlags.test(MODE_SUSPEND)) {
+        if (unknown20.test(MODE_SUSPEND)) {
           acc.setSuspend(!visible);
         }
-      } else if (alphaParam == nullptr) {
+      } else if (unknown28 == nullptr) {
 // __LINE__ is the line argument of the operator new call.
 #line 221
-        alphaParam = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UIObjectAlphaParam(acc.handle);
-        alphaParam->alpha = visible ? 1.0f : 0.0f;
-      } else if (fadeUpdater.ctrl != nullptr) {
-        f32 alpha = fade.values[0];
-        alphaParam->alpha = alpha;
-        if (!fade.isBusy()) {
-          if (fadeUpdater.ctrl != nullptr) {
-            UICtrlManager::get()->delUpdater(fadeUpdater);
+        unknown28 = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UIObjectAlphaParam(acc.unknown10);
+        unknown28->unknown1c = visible ? 1.0f : 0.0f;
+      } else if (unknown58.ctrl != nullptr) {
+        f32 alpha = unknown30.values[0];
+        unknown28->unknown1c = alpha;
+        if (!unknown30.isBusy()) {
+          if (unknown58.ctrl != nullptr) {
+            UICtrlManager::get()->delUpdater(unknown58);
           }
-          fadeUpdater.ctrl = nullptr;
+          unknown58.ctrl = nullptr;
         }
-        if (modeFlags.test(MODE_SUSPEND)) {
+        if (unknown20.test(MODE_SUSPEND)) {
           acc.setSuspend(alpha == 0.0f);
         }
-      } else if (modeFlags.test(MODE_SUSPEND)) {
-        acc.setSuspend(alphaParam->alpha == 0.0f);
+      } else if (unknown20.test(MODE_SUSPEND)) {
+        acc.setSuspend(unknown28->unknown1c == 0.0f);
       }
     }
   }
@@ -114,8 +114,8 @@ void UIObjectDispPlugin::execute(UIObjectAcc &acc) {
 
 const mm::mtl::RTTI *UIObjectDispPlugin::getRTTI() const { return &m_rtti; }
 
-bool UIObjectDispPlugin::isNeedUpdate(UIObjectAcc &acc) { return (needUpdate & 1) || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0; }
+bool UIObjectDispPlugin::isNeedUpdate(UIObjectAcc &acc) { return (unknown18 & 1) || acc.isDisp() != unknown1d || unknown58.ctrl != nullptr || m_followObjHandle != 0; }
 
-void UIObjectAlphaParam::apply(AdditionalParam &param) const { param.alpha *= alpha; }
+void UIObjectAlphaParam::apply(AdditionalParam &param) const { param.alpha *= unknown1c; }
 
 } // namespace ui

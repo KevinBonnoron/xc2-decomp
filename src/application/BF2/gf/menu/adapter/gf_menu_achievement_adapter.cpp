@@ -121,7 +121,7 @@ bool GfMenuAchievementAdapter::update_AchievementResult() {
   if (GfKizunaringBlade::getAchievementResultMsg(bdat, textId, unknown5c, unknown60, unknown64)) {
     u16 enhance = GfKizunaringBlade::getAchievementResultEnhance(unknown5c, unknown60, unknown64);
     ui::UIStr text(bdat, textId);
-    text.option = enhance;
+    text.unknown12 = enhance;
     setText(text);
   } else if (unknown60 == ACHIEVEMENT_LINE_KEY && unknown64 >= 2 && unknown64 <= 5) {
     u32 index = unknown64;
@@ -350,7 +350,7 @@ bool GfMenuAchievementAdapter::update_QuestCaptionText() {
     if (text.size() != 0 && GfDataBlade::getTaskSkillMessage(bdat, textId, unknown5c, unknown60)) {
       ui::UIStr skillName(bdat, textId);
       GfMenuReference::setReferenceString(skillName, 0);
-      text.option = 0;
+      text.unknown12 = 0;
       setText(text);
       return true;
     }
@@ -366,7 +366,7 @@ bool GfMenuAchievementAdapter::update_QuestResultText() {
     if (text.size() != 0 && GfDataBlade::getTaskSkillMessage(bdat, textId, unknown5c, unknown60)) {
       ui::UIStr skillName(bdat, textId);
       GfMenuReference::setReferenceString(skillName, 1);
-      text.option = 1;
+      text.unknown12 = 1;
       setText(text);
       return true;
     }

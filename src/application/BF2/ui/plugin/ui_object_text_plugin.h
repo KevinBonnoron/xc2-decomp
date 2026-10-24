@@ -25,10 +25,10 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual bool isNeedUpdate(UIObjectAcc &acc);
 
-  UIStr text;
+  UIStr unknown80; // Inferred role: text; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectTextPlugin, text) == 0x80, "");
+static_assert(offsetof(UIObjectTextPlugin, unknown80) == 0x80, "");
 static_assert(sizeof(UIObjectTextPlugin) == 0x98, "");
 
 } // namespace ui

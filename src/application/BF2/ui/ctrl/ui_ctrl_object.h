@@ -31,13 +31,13 @@ public:
   static void getEventParam(const EventData &event, u32 index, uiEventParam &param);
   void sendEvent(u16 type, const uiEventParam *param0, const uiEventParam *param1, const uiEventParam *param2);
 
-  u32 object;
-  u32 eventHandler;
-  u16 id;
+  u32 unknown20; // Inferred role: object; original member name unknown.
+  u32 unknown24; // Inferred role: event handler; original member name unknown.
+  u16 unknown28; // Inferred role: id; original member name unknown.
 };
 
-static_assert(offsetof(UICtrlObject, object) == 0x20, "");
-static_assert(offsetof(UICtrlObject, eventHandler) == 0x24, "");
-static_assert(offsetof(UICtrlObject, id) == 0x28, "");
+static_assert(offsetof(UICtrlObject, unknown20) == 0x20, "");
+static_assert(offsetof(UICtrlObject, unknown24) == 0x24, "");
+static_assert(offsetof(UICtrlObject, unknown28) == 0x28, "");
 
 } // namespace ui

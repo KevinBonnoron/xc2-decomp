@@ -17,12 +17,12 @@ class UITimer;
 class UITimerManager : public mm::mtl::PtrSingleton<UITimerManager> {
 public:
   struct TimerInfo : public mm::mtl::IntrusiveListNode<TimerInfo> {
-    u32 timer;
-    u32 object;
-    u16 id;
-    u16 count;
-    bool suspended;
-    bool repeat;
+    u32 unknown10;  // Inferred role: timer; original member name unknown.
+    u32 unknown14;  // Inferred role: object; original member name unknown.
+    u16 unknown18;  // Inferred role: id; original member name unknown.
+    u16 unknown1a;  // Inferred role: count; original member name unknown.
+    bool unknown1c; // Inferred role: suspended; original member name unknown.
+    bool unknown1d; // Inferred role: repeat; original member name unknown.
   };
 
   UITimerManager();
@@ -41,17 +41,17 @@ public:
   void resumeTimer(u32 timer);
   bool isValidTimer(u32 timer);
 
-  fw::PointerMap timerMap;
-  mm::mtl::IntrusiveList<TimerInfo> timers;
-  bool suspended;
+  fw::PointerMap unknown08;                    // Inferred role: timer map; original member name unknown.
+  mm::mtl::IntrusiveList<TimerInfo> unknown40; // Inferred role: timers; original member name unknown.
+  bool unknown58;                              // Inferred role: suspended; original member name unknown.
 };
 
-static_assert(offsetof(UITimerManager::TimerInfo, timer) == 0x10, "");
-static_assert(offsetof(UITimerManager::TimerInfo, repeat) == 0x1d, "");
+static_assert(offsetof(UITimerManager::TimerInfo, unknown10) == 0x10, "");
+static_assert(offsetof(UITimerManager::TimerInfo, unknown1d) == 0x1d, "");
 static_assert(sizeof(UITimerManager::TimerInfo) == 0x20, "");
-static_assert(offsetof(UITimerManager, timerMap) == 0x08, "");
-static_assert(offsetof(UITimerManager, timers) == 0x40, "");
-static_assert(offsetof(UITimerManager, suspended) == 0x58, "");
+static_assert(offsetof(UITimerManager, unknown08) == 0x08, "");
+static_assert(offsetof(UITimerManager, unknown40) == 0x40, "");
+static_assert(offsetof(UITimerManager, unknown58) == 0x58, "");
 static_assert(sizeof(UITimerManager) == 0x60, "");
 
 } // namespace ui

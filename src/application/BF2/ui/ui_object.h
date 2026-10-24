@@ -82,28 +82,28 @@ public:
   static void importDisplaySize(UIDisplayInfo &displayInfo, layer::LayerBase *layer);
   static void importDisplayInfo(UIDisplayInfo &displayInfo, layer::LayerBase *layer);
 
-  bool isImageType() const { return objectType == UI_OBJECT_TYPE_IMAGE || objectType == UI_OBJECT_TYPE_SCREEN || objectType == UI_OBJECT_TYPE_POLYGON; }
+  bool isImageType() const { return unknownd8 == UI_OBJECT_TYPE_IMAGE || unknownd8 == UI_OBJECT_TYPE_SCREEN || unknownd8 == UI_OBJECT_TYPE_POLYGON; }
 
-  layer::LayerBase *layer;
-  layer::LayerAccObjBase layerAcc;
-  u16 objectType;
-  u16 duplicateCount;
-  u32 parent;
-  UIObjectPlugin *plugins;
-  u32 handle;
-  u32 nameHash;
-  mm::mtl::IntrusiveList<UIObjectParam> params;
+  layer::LayerBase *unknownc8;                     // Inferred role: layer; original member name unknown.
+  layer::LayerAccObjBase unknownd0;                // Inferred role: layer acc; original member name unknown.
+  u16 unknownd8;                                   // Inferred role: object type; original member name unknown.
+  u16 unknownda;                                   // Inferred role: duplicate count; original member name unknown.
+  u32 unknowndc;                                   // Inferred role: parent; original member name unknown.
+  UIObjectPlugin *unknowne0;                       // Inferred role: plugins; original member name unknown.
+  u32 unknowne8;                                   // Inferred role: handle; original member name unknown.
+  u32 unknownec;                                   // Inferred role: name hash; original member name unknown.
+  mm::mtl::IntrusiveList<UIObjectParam> unknownf0; // Inferred role: params; original member name unknown.
 };
 
-static_assert(offsetof(UIObject, layer) == 0xc8, "");
-static_assert(offsetof(UIObject, layerAcc) == 0xd0, "");
-static_assert(offsetof(UIObject, objectType) == 0xd8, "");
-static_assert(offsetof(UIObject, duplicateCount) == 0xda, "");
-static_assert(offsetof(UIObject, parent) == 0xdc, "");
-static_assert(offsetof(UIObject, plugins) == 0xe0, "");
-static_assert(offsetof(UIObject, handle) == 0xe8, "");
-static_assert(offsetof(UIObject, nameHash) == 0xec, "");
-static_assert(offsetof(UIObject, params) == 0xf0, "");
+static_assert(offsetof(UIObject, unknownc8) == 0xc8, "");
+static_assert(offsetof(UIObject, unknownd0) == 0xd0, "");
+static_assert(offsetof(UIObject, unknownd8) == 0xd8, "");
+static_assert(offsetof(UIObject, unknownda) == 0xda, "");
+static_assert(offsetof(UIObject, unknowndc) == 0xdc, "");
+static_assert(offsetof(UIObject, unknowne0) == 0xe0, "");
+static_assert(offsetof(UIObject, unknowne8) == 0xe8, "");
+static_assert(offsetof(UIObject, unknownec) == 0xec, "");
+static_assert(offsetof(UIObject, unknownf0) == 0xf0, "");
 static_assert(sizeof(UIObject) == 0x108, "");
 
 } // namespace ui

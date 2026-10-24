@@ -17,12 +17,12 @@
 
 namespace ui {
 
-UITextObject::UITextObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name) : UIObject(layer, name, UI_OBJECT_TYPE_TEXT), style(0xffff), facePatternIndex(0xffffffff) {}
+UITextObject::UITextObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name) : UIObject(layer, name, UI_OBJECT_TYPE_TEXT), unknown138(0xffff), unknown13c(0xffffffff) {}
 
 UITextObject::~UITextObject() { ; }
 
 UITextObject *UITextObject::create(UILayoutObject *parent, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
-  layer::LayerAccLayoutObj layoutAcc(parent->layer);
+  layer::LayerAccLayoutObj layoutAcc(parent->unknownc8);
   layer::LayerBase *layer = layoutAcc.createFontObj();
   if (layer == nullptr) {
     return nullptr;
@@ -38,25 +38,25 @@ UITextObject *UITextObject::create(UILayoutObject *parent, const mm::mtl::FixStr
 }
 
 void UITextObject::applyText(const char *text) {
-  u16 style = this->style;
-  layer::LayerAccFontObj acc(layer);
-  u16 width = displayInfo.pixelWidth;
-  u16 height = displayInfo.pixelHeight;
+  u16 style = this->unknown138;
+  layer::LayerAccFontObj acc(unknownc8);
+  u16 width = unknown50.unknown2c;
+  u16 height = unknown50.unknown2e;
   if (style != 0xffff) {
     UIFontManager::FontRes *font = UIFontManager::get()->getFontResFromStyle(style);
     if (font == nullptr) {
       return;
     }
-    acc.setMsg(text, font->res, style);
+    acc.setMsg(text, font->unknown08, style);
   } else {
     acc.setMsg(text);
   }
 
-  importDisplaySize(displayInfo, layer);
-  if (displayInfo.displayMode == UI_DISPLAY_MODE_CENTER) {
-    s16 x = transform.getPos().x - width / 2;
-    s16 y = transform.getPos().y - height / 2;
-    transform.setPos(x + displayInfo.pixelWidth / 2, y + displayInfo.pixelHeight / 2);
+  importDisplaySize(unknown50, unknownc8);
+  if (unknown50.unknown09 == UI_DISPLAY_MODE_CENTER) {
+    s16 x = unknown20.getPos().x - width / 2;
+    s16 y = unknown20.getPos().y - height / 2;
+    unknown20.setPos(x + unknown50.unknown2c / 2, y + unknown50.unknown2e / 2);
   }
 }
 
@@ -65,38 +65,38 @@ void UITextObject::setText(const UIStr &text) {
     return;
   }
 
-  baseText.copy(text);
-  if (style == 0xffff) {
-    style = text.getStyle();
+  unknown108.copy(text);
+  if (unknown138 == 0xffff) {
+    unknown138 = text.getStyle();
   }
-  if (baseText.isValid() && baseText.c_str() != nullptr) {
+  if (unknown108.isValid() && unknown108.c_str() != nullptr) {
     UITagParser *parser = UITagParser::get();
-    parser->option = text.option;
+    parser->unknownb8 = text.unknown12;
     parser->parse(getBaseText());
-    this->text.deepcopy(UIStr(UITagParser::get()->getResult(), false));
-    if (this->text.isValid() && this->text.c_str() != nullptr) {
-      applyText(this->text.c_str());
+    this->unknown120.deepcopy(UIStr(UITagParser::get()->getResult(), false));
+    if (this->unknown120.isValid() && this->unknown120.c_str() != nullptr) {
+      applyText(this->unknown120.c_str());
     }
   }
 }
 
-const char *UITextObject::getBaseText() { return baseText.isValid() ? baseText.c_str() : nullptr; }
+const char *UITextObject::getBaseText() { return unknown108.isValid() ? unknown108.c_str() : nullptr; }
 
 void UITextObject::getStyleSize(u16 &width, u16 &height) {
   width = 0;
   height = 0;
-  if (layer != nullptr) {
-    layer::LayerAccFontObj acc(layer);
+  if (unknownc8 != nullptr) {
+    layer::LayerAccFontObj acc(unknownc8);
     width = acc.getPixelWidth();
     height = acc.getPixelHeight();
   }
 }
 
 void UITextObject::setTextAlignH(u8 align) {
-  if (layer == nullptr) {
+  if (unknownc8 == nullptr) {
     return;
   }
-  layer::LayerAccFontObj acc(layer);
+  layer::LayerAccFontObj acc(unknownc8);
   switch (align) {
   case 0:
     acc.setDisplayArea(static_cast<layer::LayerFontDisplayArea>(0));
@@ -118,10 +118,10 @@ void UITextObject::setTextAlignH(u8 align) {
 }
 
 void UITextObject::setTextAlignV(u8 align) {
-  if (layer == nullptr) {
+  if (unknownc8 == nullptr) {
     return;
   }
-  layer::LayerAccFontObj acc(layer);
+  layer::LayerAccFontObj acc(unknownc8);
   switch (align) {
   case 0:
     acc.setVertical(static_cast<layer::LayerFontVertical>(0));
@@ -139,46 +139,46 @@ void UITextObject::setTextAlignV(u8 align) {
 }
 
 u8 UITextObject::getTextAlignH() {
-  if (layer == nullptr) {
+  if (unknownc8 == nullptr) {
     return 0;
   }
-  u32 horizontal = layer::LayerAccFontObj(layer).getHorizontal();
+  u32 horizontal = layer::LayerAccFontObj(unknownc8).getHorizontal();
   return horizontal < 3 ? horizontal : 0;
 }
 
 u8 UITextObject::getTextAlignV() {
-  if (layer == nullptr) {
+  if (unknownc8 == nullptr) {
     return 0;
   }
-  u32 vertical = layer::LayerAccFontObj(layer).getVertical();
+  u32 vertical = layer::LayerAccFontObj(unknownc8).getVertical();
   return vertical < 3 ? vertical : 0;
 }
 
-void UITextObject::setBorderWeight(f32 weight) { layer::LayerAccFontObj(layer).setBorderWeight(weight + 0.5f); }
+void UITextObject::setBorderWeight(f32 weight) { layer::LayerAccFontObj(unknownc8).setBorderWeight(weight + 0.5f); }
 
-f32 UITextObject::getBorderWeight() { return layer::LayerAccFontObj(layer).getBorderWeight() - 0.5f; }
+f32 UITextObject::getBorderWeight() { return layer::LayerAccFontObj(unknownc8).getBorderWeight() - 0.5f; }
 
-void UITextObject::setSlopeRot(f32 rot) { layer::LayerAccFontObj(layer).setSlopeRot(rot + 0.20943952f); }
+void UITextObject::setSlopeRot(f32 rot) { layer::LayerAccFontObj(unknownc8).setSlopeRot(rot + 0.20943952f); }
 
-f32 UITextObject::getSlopeRot() { return layer::LayerAccFontObj(layer).getSlopeRot() + -0.20943952f; }
+f32 UITextObject::getSlopeRot() { return layer::LayerAccFontObj(unknownc8).getSlopeRot() + -0.20943952f; }
 
 void UITextObject::setTextFacePattern(u32 index) {
-  layer::LayerAccFontObj(layer).setColorMap(UIFontManager::get()->colorMap, index);
-  facePatternIndex = index;
+  layer::LayerAccFontObj(unknownc8).setColorMap(UIFontManager::get()->unknown98, index);
+  unknown13c = index;
 }
 
 void UITextObject::reloadText() {
-  if (baseText.type != UIStr::TYPE_MSTXT) {
+  if (unknown108.unknown10 != UIStr::TYPE_MSTXT) {
     return;
   }
 
-  UITagParser::get()->option = baseText.option;
+  UITagParser::get()->unknownb8 = unknown108.unknown12;
   UITagParser::get()->parse(getBaseText());
-  text.deepcopy(UIStr(UITagParser::get()->getResult(), false));
-  applyText(text.c_str());
-  UIObjectPlugin *plugin = plugins;
+  unknown120.deepcopy(UIStr(UITagParser::get()->getResult(), false));
+  applyText(unknown120.c_str());
+  UIObjectPlugin *plugin = unknowne0;
   if (plugin != nullptr && plugin->getRTTI()->isKindOf(&UIObjectPlugin::m_rtti)) {
-    UIObjectAcc acc(handle);
+    UIObjectAcc acc(unknowne8);
     plugin->reload(acc);
   }
 }
@@ -189,14 +189,14 @@ void UITextObject::getTransformPosOffs(mm::Vec2 &offset) {
   offset.x = 0.0f;
   offset.y = 0.0f;
   UIFontManager::StyleInfo info;
-  if (UIFontManager::get()->getFontStyleInfo(style, info)) {
-    offset.y -= static_cast<s32>(info.offsetY * 4.0f);
+  if (UIFontManager::get()->getFontStyleInfo(unknown138, info)) {
+    offset.y -= static_cast<s32>(info.unknown04 * 4.0f);
   }
 }
 
 void UITextObject::getDisplayOffset(u16 mode, mm::Pnt<s16> &offset) const {
   UIObject::getDisplayOffset(mode, offset);
-  layer::LayerAccFontObj acc(layer);
+  layer::LayerAccFontObj acc(unknownc8);
   offset.x += acc.getFontPixelX();
   offset.y += acc.getFontPixelY();
 }
@@ -207,7 +207,7 @@ u32 UITextObject::duplicateImpl(u32 parent) {
     return 0;
   }
 
-  UITextObject *textObject = create(layout, name.c_str(), UIUtil::getProgAllocator());
+  UITextObject *textObject = create(layout, unknowna0.c_str(), UIUtil::getProgAllocator());
   if (textObject == nullptr) {
     return 0;
   }
@@ -217,11 +217,11 @@ u32 UITextObject::duplicateImpl(u32 parent) {
   textObject->setTextAlignV(getTextAlignV());
   textObject->setBorderWeight(getBorderWeight());
   textObject->setSlopeRot(getSlopeRot());
-  textObject->style = style;
-  if (facePatternIndex != 0xffffffff) {
-    textObject->setTextFacePattern(facePatternIndex);
+  textObject->unknown138 = unknown138;
+  if (unknown13c != 0xffffffff) {
+    textObject->setTextFacePattern(unknown13c);
   }
-  textObject->setText(baseText);
+  textObject->setText(unknown108);
   u32 handle = layout->addChild(parent, textObject);
   textObject->release();
   return handle;

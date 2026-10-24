@@ -17,7 +17,7 @@ UISelectObjList *UISelectObjList::create(const CreateParam &param) {
 #line 38
   UISelectObjList *list = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UISelectObjList();
   SetupParam setup;
-  setup.pageRowSize = 32;
+  setup.unknown08 = 32;
   list->setup(param.allocator, setup);
   list->addRef();
   return list;

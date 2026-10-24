@@ -6,13 +6,13 @@
 
 namespace ui {
 
-UITimerManager::UITimerManager() : suspended(false) { timerMap.reserve(UIUtil::getProgAllocator(), 64); }
+UITimerManager::UITimerManager() : unknown58(false) { unknown08.reserve(UIUtil::getProgAllocator(), 64); }
 
-UITimer *UITimerManager::getTimer(u32 timer) const { return static_cast<UITimer *>(timerMap.getPtr(timer)); }
+UITimer *UITimerManager::getTimer(u32 timer) const { return static_cast<UITimer *>(unknown08.getPtr(timer)); }
 
-void UITimerManager::suspend() { suspended = true; }
+void UITimerManager::suspend() { unknown58 = true; }
 
-void UITimerManager::resume() { suspended = false; }
+void UITimerManager::resume() { unknown58 = false; }
 
 u32 UITimerManager::registTimer(u32 object, u16 id, u64 time, bool repeat) {
 // __LINE__ is the line argument of the operator new calls.
@@ -29,20 +29,20 @@ u32 UITimerManager::registTimer(u32 object, u16 id, u64 time, bool repeat) {
     timer = nullptr;
   }
 
-  u32 handle = timerMap.regist(timer);
+  u32 handle = unknown08.regist(timer);
   if (handle == 0) {
     delete timer;
     return 0;
   }
 
   timer->start(time);
-  info->timer = handle;
-  info->object = object;
-  info->id = id;
-  info->count = 0;
-  info->repeat = repeat;
-  info->suspended = false;
-  timers.push_back(info);
+  info->unknown10 = handle;
+  info->unknown14 = object;
+  info->unknown18 = id;
+  info->unknown1a = 0;
+  info->unknown1d = repeat;
+  info->unknown1c = false;
+  unknown40.push_back(info);
   return handle;
 }
 
@@ -51,13 +51,13 @@ void UITimerManager::releaseTimer(u32 timer) {
     return;
   }
 
-  for (mm::mtl::IntrusiveList<TimerInfo>::iterator it = timers.begin(); it != timers.end(); ++it) {
+  for (mm::mtl::IntrusiveList<TimerInfo>::iterator it = unknown40.begin(); it != unknown40.end(); ++it) {
     TimerInfo *info = it.get();
-    if (info->timer == timer) {
+    if (info->unknown10 == timer) {
       UITimer *ptr = getTimer(timer);
-      timerMap.remove(info->timer);
+      unknown08.remove(info->unknown10);
       delete ptr;
-      timers.erase(it);
+      unknown40.erase(it);
       delete info;
       return;
     }
@@ -69,9 +69,9 @@ void UITimerManager::setTimerSpeedFactor(u32 timer, f32 speedFactor) {
     return;
   }
 
-  for (mm::mtl::IntrusiveList<TimerInfo>::iterator it = timers.begin(); it != timers.end(); ++it) {
-    if (it.get()->timer == timer) {
-      getTimer(timer)->speedFactor = speedFactor;
+  for (mm::mtl::IntrusiveList<TimerInfo>::iterator it = unknown40.begin(); it != unknown40.end(); ++it) {
+    if (it.get()->unknown10 == timer) {
+      getTimer(timer)->unknown18 = speedFactor;
     }
   }
 }
@@ -81,9 +81,9 @@ u32 UITimerManager::getTimerHandle(u32 object) {
     return 0;
   }
 
-  for (mm::mtl::IntrusiveList<TimerInfo>::iterator it = timers.begin(); it != timers.end(); ++it) {
-    if (it->object == object) {
-      return it->timer;
+  for (mm::mtl::IntrusiveList<TimerInfo>::iterator it = unknown40.begin(); it != unknown40.end(); ++it) {
+    if (it->unknown14 == object) {
+      return it->unknown10;
     }
   }
   return 0;
@@ -92,7 +92,7 @@ u32 UITimerManager::getTimerHandle(u32 object) {
 void UITimerManager::setRepeatTimer(u32 timer, bool repeat) {
   TimerInfo *info = getTimerInfo(timer);
   if (info != nullptr) {
-    info->repeat = repeat;
+    info->unknown1d = repeat;
   }
 }
 
@@ -101,8 +101,8 @@ UITimerManager::TimerInfo *UITimerManager::getTimerInfo(u32 timer) {
     return nullptr;
   }
 
-  for (mm::mtl::IntrusiveList<TimerInfo>::iterator it = timers.begin(); it != timers.end(); ++it) {
-    if (it->timer == timer) {
+  for (mm::mtl::IntrusiveList<TimerInfo>::iterator it = unknown40.begin(); it != unknown40.end(); ++it) {
+    if (it->unknown10 == timer) {
       return it.get();
     }
   }
@@ -112,14 +112,14 @@ UITimerManager::TimerInfo *UITimerManager::getTimerInfo(u32 timer) {
 void UITimerManager::suspendTimer(u32 timer) {
   TimerInfo *info = getTimerInfo(timer);
   if (info != nullptr) {
-    info->suspended = true;
+    info->unknown1c = true;
   }
 }
 
 void UITimerManager::resumeTimer(u32 timer) {
   TimerInfo *info = getTimerInfo(timer);
   if (info != nullptr) {
-    info->suspended = false;
+    info->unknown1c = false;
   }
 }
 

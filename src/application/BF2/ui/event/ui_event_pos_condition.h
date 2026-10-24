@@ -15,12 +15,12 @@ public:
   static UIEventPosCondition *create(u32 event, u32 value, const UIObjectPosPlugin *plugin);
   virtual int update();
 
-  const UIObjectPosPlugin *plugin;
-  bool adjusting;
+  const UIObjectPosPlugin *unknown20; // Inferred role: plugin; original member name unknown.
+  bool unknown28;                     // Inferred role: adjusting; original member name unknown.
 };
 
-static_assert(offsetof(UIEventPosCondition, plugin) == 0x20, "");
-static_assert(offsetof(UIEventPosCondition, adjusting) == 0x28, "");
+static_assert(offsetof(UIEventPosCondition, unknown20) == 0x20, "");
+static_assert(offsetof(UIEventPosCondition, unknown28) == 0x28, "");
 static_assert(sizeof(UIEventPosCondition) == 0x30, "");
 
 } // namespace ui

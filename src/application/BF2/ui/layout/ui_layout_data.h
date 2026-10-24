@@ -23,12 +23,12 @@ public:
   bool attachLayout(const char *name, UIObject *object) const;
   bool getLayoutRect(const char *name, mm::Rect<s16> &rect) const;
 
-  void *data;
-  const UILayoutData *parent;
+  void *unknown10;               // Inferred role: data; original member name unknown.
+  const UILayoutData *unknown18; // Inferred role: parent; original member name unknown.
 };
 
-static_assert(offsetof(UILayoutData, data) == 0x10, "");
-static_assert(offsetof(UILayoutData, parent) == 0x18, "");
+static_assert(offsetof(UILayoutData, unknown10) == 0x10, "");
+static_assert(offsetof(UILayoutData, unknown18) == 0x18, "");
 static_assert(sizeof(UILayoutData) == 0x20, "");
 
 } // namespace ui

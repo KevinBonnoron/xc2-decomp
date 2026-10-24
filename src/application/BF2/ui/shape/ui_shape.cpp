@@ -5,37 +5,37 @@
 
 namespace ui {
 
-UIShape::UIShape() : dirty(false) {}
+UIShape::UIShape() : unknown3c(false) {}
 
 UIShape::~UIShape() {
-  if (vertices.size() != 0) {
-    vertices.destroy();
+  if (unknown08.size() != 0) {
+    unknown08.destroy();
   }
-  if (indices.size() != 0) {
-    indices.destroy();
+  if (unknown20.size() != 0) {
+    unknown20.destroy();
   }
 }
 
 void UIShape::setupBuffer(u32 vertexNum, u32 indexNum) {
-  vertices.setAllocator(UIUtil::getProgAllocator());
-  indices.setAllocator(UIUtil::getProgAllocator());
-  vertices.reserve(vertexNum);
-  indices.reserve(indexNum);
+  unknown08.setAllocator(UIUtil::getProgAllocator());
+  unknown20.setAllocator(UIUtil::getProgAllocator());
+  unknown08.reserve(vertexNum);
+  unknown20.reserve(indexNum);
   for (u32 i = 0; i < vertexNum; i++) {
-    vertices[i].y = 0.0f;
-    vertices[i].x = 0.0f;
-    vertices[i].a = 0xff;
-    vertices[i].b = 0xff;
-    vertices[i].g = 0xff;
-    vertices[i].r = 0xff;
-    vertices[i].v = 0.0f;
-    vertices[i].u = 0.0f;
+    unknown08[i].y = 0.0f;
+    unknown08[i].x = 0.0f;
+    unknown08[i].a = 0xff;
+    unknown08[i].b = 0xff;
+    unknown08[i].g = 0xff;
+    unknown08[i].r = 0xff;
+    unknown08[i].v = 0.0f;
+    unknown08[i].u = 0.0f;
   }
   for (u32 i = 0; i < indexNum; i++) {
-    indices[i] = 0;
+    unknown20[i] = 0;
   }
-  indexRange = indexNum;
-  dirty = true;
+  unknown38 = indexNum;
+  unknown3c = true;
 }
 
 void UIShape::writeVertex(const layer::LayerPolyVertex *vertex, u32 num, u32 offset) {
@@ -43,13 +43,13 @@ void UIShape::writeVertex(const layer::LayerPolyVertex *vertex, u32 num, u32 off
     return;
   }
 
-  dirty = true;
+  unknown3c = true;
   for (u32 i = 0; i < num; i++) {
     u32 index = offset + i;
-    if (index >= vertices.size()) {
+    if (index >= unknown08.size()) {
       break;
     }
-    vertices[index] = vertex[i];
+    unknown08[index] = vertex[i];
   }
 }
 
@@ -58,17 +58,17 @@ void UIShape::writeIndex(const u32 *index, u32 num, u32 offset) {
     return;
   }
 
-  dirty = true;
+  unknown3c = true;
   for (u32 i = 0; i < num; i++) {
     u32 position = offset + i;
-    if (position >= indices.size()) {
+    if (position >= unknown20.size()) {
       break;
     }
-    indices[position] = index[i];
+    unknown20[position] = index[i];
   }
 }
 
-void UIShape::setIndexRange(u32 range) { indexRange = range > indices.size() ? static_cast<u32>(indices.size()) : range; }
+void UIShape::setIndexRange(u32 range) { unknown38 = range > unknown20.size() ? static_cast<u32>(unknown20.size()) : range; }
 
 const mm::mtl::RTTI *UIShape::getRTTI() const { return &m_rtti; }
 

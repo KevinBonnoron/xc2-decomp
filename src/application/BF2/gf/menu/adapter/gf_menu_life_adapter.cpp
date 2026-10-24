@@ -24,7 +24,7 @@ GfMenuLifeAdapter *GfMenuLifeAdapter::create_Time_EffTime(u32 handle, const char
   if (!acc.isValid()) {
     return nullptr;
   }
-  return create(ui::UIObjectTimePlugin::create(acc.handle, 4), index, &GfMenuLifeAdapter::update_Time_EffTime);
+  return create(ui::UIObjectTimePlugin::create(acc.unknown10, 4), index, &GfMenuLifeAdapter::update_Time_EffTime);
 }
 
 GfMenuLifeAdapter *GfMenuLifeAdapter::create(ui::UIObjectPlugin *plugin, u8 index, void (GfMenuLifeAdapter::*update)(u8)) {
@@ -55,7 +55,7 @@ GfMenuLifeAdapter *GfMenuLifeAdapter::create_Text_BonusName(u32 handle, const ch
   if (!acc.isValid()) {
     return nullptr;
   }
-  return create(ui::UIObjectTextPlugin::create(acc.handle), index, &GfMenuLifeAdapter::update_Text_BonusName);
+  return create(ui::UIObjectTextPlugin::create(acc.unknown10), index, &GfMenuLifeAdapter::update_Text_BonusName);
 }
 
 void GfMenuLifeAdapter::update_Text_BonusName(u8 index) {
@@ -69,7 +69,7 @@ GfMenuLifeAdapter *GfMenuLifeAdapter::create_Number_Bonus(u32 handle, const char
   if (!acc.isValid()) {
     return nullptr;
   }
-  ui::UIObjectNumberPlugin *numberPlugin = ui::UIObjectNumberPlugin::create(acc.handle);
+  ui::UIObjectNumberPlugin *numberPlugin = ui::UIObjectNumberPlugin::create(acc.unknown10);
   numberPlugin->setMin(0);
   numberPlugin->setMax(BONUS_MAX);
   return create(numberPlugin, index, &GfMenuLifeAdapter::update_Number_Bonus);
@@ -78,7 +78,7 @@ GfMenuLifeAdapter *GfMenuLifeAdapter::create_Number_Bonus(u32 handle, const char
 void GfMenuLifeAdapter::update_Number_Bonus(u8 index) {
   ui::UIObjectNumberPlugin *numberPlugin = static_cast<ui::UIObjectNumberPlugin *>(unknown18);
   if (numberPlugin != nullptr && numberPlugin->getRTTI()->isKindOf(&ui::UIObjectNumberPlugin::m_rtti)) {
-    numberPlugin->setNumber(ml::mtRand(numberPlugin->min, numberPlugin->max));
+    numberPlugin->setNumber(ml::mtRand(numberPlugin->unknown80, numberPlugin->unknown84));
   }
 }
 

@@ -87,8 +87,8 @@ bool GfMenuGameAdapter::update_FieldTime() {
   ui::uiDateTime time = {};
   GfFieldTime *fieldTime = GfFieldTime::get();
   if (fieldTime != nullptr) {
-    time.hour = fieldTime->getHour();
-    time.minute = fieldTime->getMin();
+    time.unknown03_7 = fieldTime->getHour();
+    time.unknown04_6 = fieldTime->getMin();
   }
   setTime(time);
   return true;
@@ -177,9 +177,9 @@ bool GfMenuGameAdapter::update_RealYear() {
   RealTime realTime = {};
   GfFieldTime::get()->getRealTime(realTime);
   ui::uiDateTime time = {};
-  time.year = realTime.unknown06_3;
-  time.month = realTime.unknown05_7;
-  time.day = realTime.unknown04_1;
+  time.unknown00_0 = realTime.unknown06_3;
+  time.unknown01_5 = realTime.unknown05_7;
+  time.unknown03_2 = realTime.unknown04_1;
   setTime(time);
   return true;
 }
@@ -188,8 +188,8 @@ bool GfMenuGameAdapter::update_RealTime() {
   RealTime realTime = {};
   GfFieldTime::get()->getRealTime(realTime);
   ui::uiDateTime time = {};
-  time.hour = realTime.unknown03_4;
-  time.minute = realTime.unknown02_6;
+  time.unknown03_7 = realTime.unknown03_4;
+  time.unknown04_6 = realTime.unknown02_6;
   setTime(time);
   return true;
 }

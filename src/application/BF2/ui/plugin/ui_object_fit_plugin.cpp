@@ -7,7 +7,7 @@
 
 namespace ui {
 
-UIObjectFitPlugin::UIObjectFitPlugin() : margin(0, 0), expand(0, 0), minSize(0, 0), flags(0) {}
+UIObjectFitPlugin::UIObjectFitPlugin() : unknown1c(0, 0), unknown20(0, 0), unknown24(0, 0), unknown28(0) {}
 
 UIObjectFitPlugin::~UIObjectFitPlugin() { ; }
 
@@ -17,9 +17,9 @@ UIObjectFitPlugin *UIObjectFitPlugin::create(u32 handle, u32 target, u16 marginX
   UIObjectFitPlugin *plugin = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UIObjectFitPlugin();
   plugin->addRef();
   if (UIUtil::isValid(handle) && UIObjectPluginUtil::attachPlugin(handle, plugin)) {
-    plugin->margin.x = marginX;
-    plugin->margin.y = marginY;
-    plugin->target = target;
+    plugin->unknown1c.x = marginX;
+    plugin->unknown1c.y = marginY;
+    plugin->unknown2c = target;
   } else if (plugin != nullptr) {
     plugin->release();
     plugin = nullptr;

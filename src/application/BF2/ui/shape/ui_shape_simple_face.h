@@ -28,12 +28,12 @@ public:
 
   void writeFaceVertex(const layer::LayerPolyVertex *vertex, u32 num, u32 offset);
 
-  mm::mtl::Array<layer::LayerPolyVertex> faceVertices;
-  bool faceDirty;
+  mm::mtl::Array<layer::LayerPolyVertex> unknown40; // Inferred role: face vertices; original member name unknown.
+  bool unknown58;                                   // Inferred role: face dirty; original member name unknown.
 };
 
-static_assert(offsetof(UIShapeSimpleFace, faceVertices) == 0x40, "");
-static_assert(offsetof(UIShapeSimpleFace, faceDirty) == 0x58, "");
+static_assert(offsetof(UIShapeSimpleFace, unknown40) == 0x40, "");
+static_assert(offsetof(UIShapeSimpleFace, unknown58) == 0x58, "");
 static_assert(sizeof(UIShapeSimpleFace) == 0x60, "");
 
 } // namespace ui

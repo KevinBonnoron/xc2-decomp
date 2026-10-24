@@ -6,55 +6,55 @@
 namespace ui {
 
 UIDisplayInfo::UIDisplayInfo() {
-  disp = true;
-  displayMode = 0;
-  blendType = 0;
-  priority = 0;
-  mulColor.r = 1.0f;
-  mulColor.g = 1.0f;
-  mulColor.b = 1.0f;
-  mulColor.a = 1.0f;
-  addColor.r = 0.0f;
-  addColor.g = 0.0f;
-  addColor.b = 0.0f;
-  pixelWidth = 0;
-  pixelHeight = 0;
-  dirty = false;
-  defColor = nullptr;
-  colorLink = nullptr;
+  unknown08 = true;
+  unknown09 = 0;
+  unknown0a = 0;
+  unknown0c = 0;
+  unknown10.r = 1.0f;
+  unknown10.g = 1.0f;
+  unknown10.b = 1.0f;
+  unknown10.a = 1.0f;
+  unknown20.r = 0.0f;
+  unknown20.g = 0.0f;
+  unknown20.b = 0.0f;
+  unknown2c = 0;
+  unknown2e = 0;
+  unknown30 = false;
+  unknown38 = nullptr;
+  unknown40 = nullptr;
 }
 
 UIDisplayInfo::UIDisplayInfo(const UIDisplayInfo &other) {
-  disp = other.disp;
-  displayMode = other.displayMode;
-  blendType = other.blendType;
-  priority = other.priority;
-  mulColor = other.mulColor;
-  addColor = other.addColor;
-  pixelWidth = other.pixelWidth;
-  pixelHeight = other.pixelHeight;
-  dirty = false;
-  defColor = nullptr;
-  colorLink = nullptr;
-  if (other.defColor != nullptr) {
+  unknown08 = other.unknown08;
+  unknown09 = other.unknown09;
+  unknown0a = other.unknown0a;
+  unknown0c = other.unknown0c;
+  unknown10 = other.unknown10;
+  unknown20 = other.unknown20;
+  unknown2c = other.unknown2c;
+  unknown2e = other.unknown2e;
+  unknown30 = false;
+  unknown38 = nullptr;
+  unknown40 = nullptr;
+  if (other.unknown38 != nullptr) {
     saveDefColor();
   }
 }
 
 void UIDisplayInfo::saveDefColor() {
-  if (defColor == nullptr) {
+  if (unknown38 == nullptr) {
 // __LINE__ is the line argument of the operator new call.
 #line 130
-    defColor = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) DefColor();
+    unknown38 = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) DefColor();
   }
-  defColor->addColor = getAddColor();
-  defColor->mulColor = mm::Col3(getMulColor().r, getMulColor().g, getMulColor().b);
+  unknown38->addColor = getAddColor();
+  unknown38->mulColor = mm::Col3(getMulColor().r, getMulColor().g, getMulColor().b);
 }
 
 UIDisplayInfo::~UIDisplayInfo() {
-  if (defColor != nullptr) {
-    delete defColor;
-    defColor = nullptr;
+  if (unknown38 != nullptr) {
+    delete unknown38;
+    unknown38 = nullptr;
   }
 }
 
@@ -63,46 +63,46 @@ void UIDisplayInfo::syncParent() {}
 void UIDisplayInfo::setParent(const UIDisplayInfo *) {}
 
 void UIDisplayInfo::setDisp(bool disp) {
-  if (this->disp != disp) {
-    dirty = true;
+  if (this->unknown08 != disp) {
+    unknown30 = true;
   }
-  this->disp = disp;
+  this->unknown08 = disp;
 }
 
 void UIDisplayInfo::loadDefColor() {
-  if (defColor != nullptr) {
-    addColor = defColor->addColor;
-    mm::Col4 color = {defColor->mulColor.r, defColor->mulColor.g, defColor->mulColor.b, getMulColor().a};
-    mulColor = color;
+  if (unknown38 != nullptr) {
+    unknown20 = unknown38->addColor;
+    mm::Col4 color = {unknown38->mulColor.r, unknown38->mulColor.g, unknown38->mulColor.b, getMulColor().a};
+    unknown10 = color;
   }
 }
 
-void UIDisplayInfo::linkColor(const UIDisplayInfo *link) { colorLink = link; }
+void UIDisplayInfo::linkColor(const UIDisplayInfo *link) { unknown40 = link; }
 
 void UIDisplayInfo::setPixelWidth(u16 width) {
-  if (pixelWidth != width) {
-    dirty = true;
+  if (unknown2c != width) {
+    unknown30 = true;
   }
-  pixelWidth = width;
+  unknown2c = width;
 }
 
 void UIDisplayInfo::setPixelHeight(u16 height) {
-  if (pixelHeight != height) {
-    dirty = true;
+  if (unknown2e != height) {
+    unknown30 = true;
   }
-  pixelHeight = height;
+  unknown2e = height;
 }
 
 void UIDisplayInfo::operator=(const UIDisplayInfo &other) {
-  disp = other.disp;
-  displayMode = other.displayMode;
-  priority = other.priority;
-  mulColor = other.mulColor;
-  addColor = other.addColor;
-  pixelWidth = other.pixelWidth;
-  pixelHeight = other.pixelHeight;
-  dirty = true;
-  if (other.defColor != nullptr) {
+  unknown08 = other.unknown08;
+  unknown09 = other.unknown09;
+  unknown0c = other.unknown0c;
+  unknown10 = other.unknown10;
+  unknown20 = other.unknown20;
+  unknown2c = other.unknown2c;
+  unknown2e = other.unknown2e;
+  unknown30 = true;
+  if (other.unknown38 != nullptr) {
     saveDefColor();
   }
 }

@@ -36,8 +36,8 @@ public:
   };
 
   struct OnMemoryInfo {
-    u8 textureSlot;
-    u8 memType;
+    u8 unknown00; // Inferred role: texture slot; original member name unknown.
+    u8 unknown01; // Inferred role: mem type; original member name unknown.
   };
 
   static mm::mtl::RTTI m_rtti;
@@ -53,20 +53,20 @@ public:
   void *getOnMemoryBuffer() const;
   void swapOnMemoryBuffer();
 
-  u32 mode;
+  u32 unknown108; // Inferred role: mode; original member name unknown.
   u8 _10c[0x110 - 0x10c];
   union {
     u32 renderIndex;
     OnMemoryInfo onMemoryInfo;
   };
   u8 _114[0x118 - 0x114];
-  fw::ModelObject *model;
+  fw::ModelObject *unknown118; // Inferred role: model; original member name unknown.
 };
 
-static_assert(offsetof(UIScreenObject, mode) == 0x108, "");
+static_assert(offsetof(UIScreenObject, unknown108) == 0x108, "");
 static_assert(offsetof(UIScreenObject, renderIndex) == 0x110, "");
 static_assert(offsetof(UIScreenObject, onMemoryInfo) == 0x110, "");
-static_assert(offsetof(UIScreenObject, model) == 0x118, "");
+static_assert(offsetof(UIScreenObject, unknown118) == 0x118, "");
 static_assert(sizeof(UIScreenObject) == 0x120, "");
 
 } // namespace ui

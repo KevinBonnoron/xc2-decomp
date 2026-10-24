@@ -11,40 +11,40 @@
 
 namespace ui {
 
-UIEventManager::UIEventManager() : gameListener(nullptr) {}
+UIEventManager::UIEventManager() : m_gameListener(nullptr) {}
 
 void UIEventManager::update(const fw::UpdateInfo &info) {
-  if (listeners.size() != 0) {
-    for (mm::mtl::IntrusiveList<ListenerInfo>::iterator it = listeners.begin(); it != listeners.end(); ++it) {
-      for (UIEventCondition *condition = it->conditions; condition != nullptr; condition = condition->next) {
+  if (unknown08.size() != 0) {
+    for (mm::mtl::IntrusiveList<ListenerInfo>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+      for (UIEventCondition *condition = it->unknown20; condition != nullptr; condition = condition->unknown18) {
         int result = condition->update();
         if (result != 0) {
           EventInfo event;
-          event.handle = it->handle;
-          event.data.type = 13;
-          event.data.param0 = result;
-          event.data.param1 = condition->event;
-          event.data.param2 = condition->value;
-          event.data.param3 = condition->getArg();
-          objectEvents.push_back(event);
+          event.unknown00 = it->unknown10;
+          event.unknown08.unknown00 = 13;
+          event.unknown08.unknown08 = result;
+          event.unknown08.unknown0c = condition->unknown0c;
+          event.unknown08.unknown10 = condition->unknown10;
+          event.unknown08.unknown14 = condition->getArg();
+          unknown20.push_back(event);
         }
       }
     }
 
-    if (!objectEvents.empty()) {
-      for (EventInfo *event = objectEvents.begin(); event != objectEvents.end();) {
+    if (!unknown20.empty()) {
+      for (EventInfo *event = unknown20.begin(); event != unknown20.end();) {
         if (stepEventInfo(*event, info.unknown04)) {
-          for (mm::mtl::IntrusiveList<ListenerInfo>::iterator it = listeners.begin(); it != listeners.end(); ++it) {
-            u32 handle = event->handle;
-            if (handle != it->handle) {
+          for (mm::mtl::IntrusiveList<ListenerInfo>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+            u32 handle = event->unknown00;
+            if (handle != it->unknown10) {
               continue;
             }
             if (!UIUtil::isTerm(handle)) {
-              it->listener->reciveEvent(event->data, event->handle);
+              it->unknown18->reciveEvent(event->unknown08, event->unknown00);
             }
             break;
           }
-          event = objectEvents.erase(event);
+          event = unknown20.erase(event);
         } else {
           ++event;
         }
@@ -52,11 +52,11 @@ void UIEventManager::update(const fw::UpdateInfo &info) {
     }
   }
 
-  if (gameListener != nullptr && !gameEvents.empty()) {
-    for (EventInfo *event = gameEvents.begin(); event != gameEvents.end();) {
+  if (m_gameListener != nullptr && !unknown2030.empty()) {
+    for (EventInfo *event = unknown2030.begin(); event != unknown2030.end();) {
       if (stepEventInfo(*event, info.unknown04)) {
-        gameListener->reciveEvent(event->data, event->handle);
-        event = gameEvents.erase(event);
+        m_gameListener->reciveEvent(event->unknown08, event->unknown00);
+        event = unknown2030.erase(event);
       } else {
         ++event;
       }
@@ -64,15 +64,15 @@ void UIEventManager::update(const fw::UpdateInfo &info) {
   }
 }
 
-void UIEventManager::pushObjectEvent(const EventInfo &event) { objectEvents.push_back(event); }
+void UIEventManager::pushObjectEvent(const EventInfo &event) { unknown20.push_back(event); }
 
 bool UIEventManager::stepEventInfo(EventInfo &event, f32 time) {
-  if (event.delay == 0.0f) {
+  if (event.unknown04 == 0.0f) {
     return true;
   }
 
-  f32 delay = event.delay - time;
-  event.delay = delay < 0.0f ? 0.0f : delay;
+  f32 delay = event.unknown04 - time;
+  event.unknown04 = delay < 0.0f ? 0.0f : delay;
   return false;
 }
 
@@ -81,8 +81,8 @@ void UIEventManager::registObjectListener(u32 handle, UIObjectListener *listener
     return;
   }
 
-  for (mm::mtl::IntrusiveList<ListenerInfo>::iterator it = listeners.begin(); it != listeners.end(); ++it) {
-    if (it->handle == handle) {
+  for (mm::mtl::IntrusiveList<ListenerInfo>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+    if (it->unknown10 == handle) {
       return;
     }
   }
@@ -91,19 +91,19 @@ void UIEventManager::registObjectListener(u32 handle, UIObjectListener *listener
 // __LINE__ is the line argument of the operator new call.
 #line 198
   ListenerInfo *info = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) ListenerInfo;
-  info->handle = handle;
-  info->listener = listener;
-  info->conditions = nullptr;
-  listeners.push_back(info);
-  UIUtil::getObject(handle)->flags.set(UI_OBJECT_FLAG_LISTENER);
+  info->unknown10 = handle;
+  info->unknown18 = listener;
+  info->unknown20 = nullptr;
+  unknown08.push_back(info);
+  UIUtil::getObject(handle)->unknown98.set(UI_OBJECT_FLAG_LISTENER);
 
   EventInfo event;
-  event.handle = handle;
-  event.data.type = 1;
-  event.data.param0 = 0;
-  event.data.param1 = 0;
-  event.data.param2 = 0;
-  event.data.param3 = 0;
+  event.unknown00 = handle;
+  event.unknown08.unknown00 = 1;
+  event.unknown08.unknown08 = 0;
+  event.unknown08.unknown0c = 0;
+  event.unknown08.unknown10 = 0;
+  event.unknown08.unknown14 = 0;
   UIEventManager::get()->pushObjectEvent(event);
 }
 
@@ -112,22 +112,22 @@ void UIEventManager::addCondition(u32 handle, UIEventCondition *condition) {
     return;
   }
 
-  for (mm::mtl::IntrusiveList<ListenerInfo>::iterator it = listeners.begin(); it != listeners.end(); ++it) {
-    if (it->handle == handle) {
+  for (mm::mtl::IntrusiveList<ListenerInfo>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+    if (it->unknown10 == handle) {
       condition->addRef();
-      condition->next = it->conditions;
-      it->conditions = condition;
+      condition->unknown18 = it->unknown20;
+      it->unknown20 = condition;
     }
   }
 }
 
 void UIEventManager::pushGameEvent(const EventInfo &event) {
-  if (gameListener != nullptr) {
-    gameEvents.push_back(event);
+  if (m_gameListener != nullptr) {
+    unknown2030.push_back(event);
   }
 }
 
-void UIEventManager::setGameListener(UIGameListener *listener) { gameListener = listener; }
+void UIEventManager::setGameListener(UIGameListener *listener) { m_gameListener = listener; }
 
 bool UIEventManager::isObjectListenerFull() { return false; }
 

@@ -8,7 +8,7 @@
 
 namespace ui {
 
-UIObjectWorldPosPlugin::UIObjectWorldPosPlugin() : worldPos(0.0f, 0.0f, 0.0f) {}
+UIObjectWorldPosPlugin::UIObjectWorldPosPlugin() : unknowna0(0.0f, 0.0f, 0.0f) {}
 
 UIObjectWorldPosPlugin::~UIObjectWorldPosPlugin() { ; }
 
@@ -18,7 +18,7 @@ UIObjectWorldPosPlugin *UIObjectWorldPosPlugin::create(u32 handle) {
   UIObjectWorldPosPlugin *plugin = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UIObjectWorldPosPlugin();
   plugin->addRef();
   if (UIObjectPluginUtil::attachPlugin(handle, plugin)) {
-    layer::LayerAccObjBase(UIUtil::getObject(handle)->layer).setSpace(static_cast<layer::LAYER_SPACE_TYPE>(1));
+    layer::LayerAccObjBase(UIUtil::getObject(handle)->unknownc8).setSpace(static_cast<layer::LAYER_SPACE_TYPE>(1));
   } else if (plugin != nullptr) {
     plugin->release();
     plugin = nullptr;

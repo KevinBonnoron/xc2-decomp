@@ -11,9 +11,9 @@ namespace ui {
 class UITextManager : public mm::mtl::PtrSingleton<UITextManager> {
 public:
   struct FileInfo {
-    u32 hash;
-    u32 handle;
-    u32 refCount;
+    u32 unknown00; // Inferred role: hash; original member name unknown.
+    u32 unknown04; // Inferred role: handle; original member name unknown.
+    u32 unknown08; // Inferred role: ref count; original member name unknown.
   };
 
   UITextManager();
@@ -26,13 +26,13 @@ public:
   u16 getStyle(u32 handle, u32 id) const;
   u8 *getTextFile(u32 handle) const;
 
-  mm::mtl::FixedVector<FileInfo, 256> files;
-  fw::PointerMap fileMap;
+  mm::mtl::FixedVector<FileInfo, 256> unknown08; // Inferred role: files; original member name unknown.
+  fw::PointerMap unknownc10;                     // Inferred role: file map; original member name unknown.
 };
 
 static_assert(sizeof(UITextManager::FileInfo) == 0x0c, "");
-static_assert(offsetof(UITextManager, files) == 0x08, "");
-static_assert(offsetof(UITextManager, fileMap) == 0xc10, "");
+static_assert(offsetof(UITextManager, unknown08) == 0x08, "");
+static_assert(offsetof(UITextManager, unknownc10) == 0xc10, "");
 static_assert(sizeof(UITextManager) == 0xc48, "");
 
 } // namespace ui

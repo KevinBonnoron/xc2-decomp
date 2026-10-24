@@ -27,10 +27,10 @@ public:
   UIObjectAcc(u32 handle);
   UIObjectAcc(u32 handle, const char *name);
   UIObjectAcc(const UIObjectAcc &other);
-  UIObjectAcc(UIObject *object) : object(object), handle(object->handle) {}
+  UIObjectAcc(UIObject *object) : unknown08(object), unknown10(object->unknowne8) {}
   virtual ~UIObjectAcc();
 
-  bool isValid() const { return object != nullptr; }
+  bool isValid() const { return unknown08 != nullptr; }
 
   bool isLayout() const;
   bool isText() const;
@@ -156,12 +156,12 @@ public:
   void setParicleActivate(bool activate);
   bool isParicleActivate();
 
-  UIObject *object;
-  u32 handle;
+  UIObject *unknown08; // Inferred role: object; original member name unknown.
+  u32 unknown10;       // Inferred role: handle; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectAcc, object) == 0x08, "");
-static_assert(offsetof(UIObjectAcc, handle) == 0x10, "");
+static_assert(offsetof(UIObjectAcc, unknown08) == 0x08, "");
+static_assert(offsetof(UIObjectAcc, unknown10) == 0x10, "");
 static_assert(sizeof(UIObjectAcc) == 0x18, "");
 
 } // namespace ui

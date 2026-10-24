@@ -9,7 +9,7 @@
 
 namespace ui {
 
-UIObjectPatternPlugin::UIObjectPatternPlugin() : facePattern(0) {}
+UIObjectPatternPlugin::UIObjectPatternPlugin() : unknown7c(0) {}
 
 UIObjectPatternPlugin::~UIObjectPatternPlugin() { ; }
 
@@ -20,7 +20,7 @@ UIObjectPatternPlugin *UIObjectPatternPlugin::create(u32 handle) {
   plugin->addRef();
   UIObjectAcc acc(handle);
   if (acc.isValid() && UIObjectPluginUtil::attachPlugin(handle, plugin)) {
-    plugin->facePattern = acc.getTextFacePatternIndex();
+    plugin->unknown7c = acc.getTextFacePatternIndex();
     plugin->init(handle);
   } else if (plugin != nullptr) {
     plugin->release();
@@ -31,19 +31,19 @@ UIObjectPatternPlugin *UIObjectPatternPlugin::create(u32 handle) {
 
 void UIObjectPatternPlugin::setFacePattern(const char *name) {
   u32 index;
-  if (name != nullptr && UIFontManager::get()->findFacePattern(name, index) && facePattern != index) {
-    facePattern = index;
-    needUpdate |= true;
+  if (name != nullptr && UIFontManager::get()->findFacePattern(name, index) && unknown7c != index) {
+    unknown7c = index;
+    unknown18 |= true;
   }
 }
 
 void UIObjectPatternPlugin::execute(UIObjectAcc &acc) {
-  acc.setTextFacePattern(facePattern);
+  acc.setTextFacePattern(unknown7c);
   UIObjectDispPlugin::execute(acc);
 }
 
 const mm::mtl::RTTI *UIObjectPatternPlugin::getRTTI() const { return &m_rtti; }
 
-bool UIObjectPatternPlugin::isNeedUpdate(UIObjectAcc &acc) { return (needUpdate & 1) || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0; }
+bool UIObjectPatternPlugin::isNeedUpdate(UIObjectAcc &acc) { return (unknown18 & 1) || acc.isDisp() != unknown1d || unknown58.ctrl != nullptr || m_followObjHandle != 0; }
 
 } // namespace ui

@@ -2,94 +2,94 @@
 
 namespace ui {
 
-UIListInfoBase::UIListInfoBase() : size(0), index(0), rowOffset(0), columnOffset(0), changed(false) {}
+UIListInfoBase::UIListInfoBase() : m_size(0), unknown24(0), unknown28(0), unknown2c(0), unknown30(false) {}
 
 UIListInfoBase::~UIListInfoBase() { ; }
 
 void UIListInfoBase::setup(const SetupParam &param) {
-  this->param = param;
-  if (this->param.columnSize == 0) {
-    this->param.columnSize = this->param.pageColumnSize;
+  this->unknown0c = param;
+  if (this->unknown0c.unknown04 == 0) {
+    this->unknown0c.unknown04 = this->unknown0c.unknown0c;
   }
   clear();
-  setIndex(param.index);
+  setIndex(param.unknown00);
 }
 
 void UIListInfoBase::clear() {
-  changed = false;
-  size = 0;
-  index = 0;
-  rowOffset = 0;
-  columnOffset = 0;
+  unknown30 = false;
+  m_size = 0;
+  unknown24 = 0;
+  unknown28 = 0;
+  unknown2c = 0;
 }
 
-bool UIListInfoBase::isValid() const { return param.pageColumnSize != 0 && param.pageRowSize != 0; }
+bool UIListInfoBase::isValid() const { return unknown0c.unknown0c != 0 && unknown0c.unknown08 != 0; }
 
-bool UIListInfoBase::isEmpty() const { return size == 0; }
+bool UIListInfoBase::isEmpty() const { return m_size == 0; }
 
-u32 UIListInfoBase::getSize() const { return size; }
+u32 UIListInfoBase::getSize() const { return m_size; }
 
 u32 UIListInfoBase::getColumnSize() const {
-  if (size == 0) {
+  if (m_size == 0) {
     return 0;
   }
-  return param.columnSize;
+  return unknown0c.unknown04;
 }
 
 u32 UIListInfoBase::getPageRowSize() const {
-  if (param.pageColumnSize == 0) {
+  if (unknown0c.unknown0c == 0) {
     return 0;
   }
-  return param.pageRowSize;
+  return unknown0c.unknown08;
 }
 
 u32 UIListInfoBase::getPageColumnSize() const {
   if (!isValid()) {
     return 0;
   }
-  return param.pageColumnSize;
+  return unknown0c.unknown0c;
 }
 
-void UIListInfoBase::update() { changed = false; }
+void UIListInfoBase::update() { unknown30 = false; }
 
-void UIListInfoBase::addSize(u32 count) { size += count; }
+void UIListInfoBase::addSize(u32 count) { m_size += count; }
 
 void UIListInfoBase::subSize(u32 count) {
-  if (count == 0 || size == 0) {
+  if (count == 0 || m_size == 0) {
     return;
   }
 
-  u32 current = index;
-  int remain = size - count;
-  size = remain < 0 ? 0 : remain;
-  if (size != 0 && static_cast<int>(size) > static_cast<int>(getPageSize())) {
-    if (rowOffset != 0 && getRowSize() > getPageRowSize()) {
+  u32 current = unknown24;
+  int remain = m_size - count;
+  m_size = remain < 0 ? 0 : remain;
+  if (m_size != 0 && static_cast<int>(m_size) > static_cast<int>(getPageSize())) {
+    if (unknown28 != 0 && getRowSize() > getPageRowSize()) {
       u32 lastRow;
-      if (param.pageColumnSize != 0) {
-        lastRow = (size - 1) / param.pageColumnSize;
+      if (unknown0c.unknown0c != 0) {
+        lastRow = (m_size - 1) / unknown0c.unknown0c;
       }
       u32 maxRowOffset = lastRow - (getPageRowSize() - 1);
-      if (rowOffset > maxRowOffset) {
-        rowOffset = maxRowOffset;
+      if (unknown28 > maxRowOffset) {
+        unknown28 = maxRowOffset;
       }
     }
-    if (columnOffset != 0 && param.columnSize > getPageColumnSize()) {
+    if (unknown2c != 0 && unknown0c.unknown04 > getPageColumnSize()) {
       u32 lastColumn;
-      if (param.pageColumnSize != 0) {
-        lastColumn = (size - 1) / param.pageRowSize;
+      if (unknown0c.unknown0c != 0) {
+        lastColumn = (m_size - 1) / unknown0c.unknown08;
       }
       u32 maxColumnOffset = lastColumn - (getPageColumnSize() - 1);
-      if (columnOffset > maxColumnOffset) {
-        columnOffset = maxColumnOffset;
+      if (unknown2c > maxColumnOffset) {
+        unknown2c = maxColumnOffset;
       }
     }
   } else {
-    rowOffset = 0;
-    columnOffset = 0;
+    unknown28 = 0;
+    unknown2c = 0;
   }
 
-  if (current >= size) {
-    setIndex(size - 1);
+  if (current >= m_size) {
+    setIndex(m_size - 1);
   }
 }
 
@@ -98,15 +98,15 @@ u32 UIListInfoBase::getPageSize() const {
   if (rows == 0) {
     return 0;
   }
-  return param.pageColumnSize * rows;
+  return unknown0c.unknown0c * rows;
 }
 
 u32 UIListInfoBase::getRowSize() const {
-  if (size == 0) {
+  if (m_size == 0) {
     return 0;
   }
-  u32 rows = size / param.columnSize;
-  if (size % param.columnSize != 0) {
+  u32 rows = m_size / unknown0c.unknown04;
+  if (m_size % unknown0c.unknown04 != 0) {
     rows++;
   }
   return rows;
@@ -114,36 +114,36 @@ u32 UIListInfoBase::getRowSize() const {
 
 u32 UIListInfoBase::getIndex(bool inPage) const {
   u32 result = 0;
-  if (size != 0) {
-    result = index;
+  if (m_size != 0) {
+    result = unknown24;
     if (inPage) {
-      result = index - (columnOffset + rowOffset * param.pageColumnSize);
+      result = unknown24 - (unknown2c + unknown28 * unknown0c.unknown0c);
     }
   }
   return result;
 }
 
 u32 UIListInfoBase::getPageIndex(u32 index) const {
-  if (!isValid() || size == 0) {
+  if (!isValid() || m_size == 0) {
     return 0;
   }
-  u32 row = index / param.pageColumnSize + rowOffset;
-  u32 column = index % param.pageColumnSize + columnOffset;
-  return row * param.pageColumnSize + column;
+  u32 row = index / unknown0c.unknown0c + unknown28;
+  u32 column = index % unknown0c.unknown0c + unknown2c;
+  return row * unknown0c.unknown0c + column;
 }
 
 u32 UIListInfoBase::getRowOffset() const {
-  if (!isValid() || size == 0) {
+  if (!isValid() || m_size == 0) {
     return 0;
   }
-  return rowOffset;
+  return unknown28;
 }
 
 u32 UIListInfoBase::getColumnOffset() const {
-  if (!isValid() || size == 0) {
+  if (!isValid() || m_size == 0) {
     return 0;
   }
-  return columnOffset;
+  return unknown2c;
 }
 
 } // namespace ui

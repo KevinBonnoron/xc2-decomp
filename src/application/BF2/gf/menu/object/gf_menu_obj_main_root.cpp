@@ -30,17 +30,17 @@ void GfMenuObjMainRoot::initialize() {
 #line 54
   MainListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) MainListener(this);
   listener->addRef();
-  ui::UIEventManager::get()->registObjectListener(main.handle, listener);
+  ui::UIEventManager::get()->registObjectListener(main.unknown10, listener);
   if (listener != nullptr) {
     listener->release();
   }
   GfMenuTypes::Param param;
   u32 menu = getFSLayerParam(unknown20, param) ? param.get<OpenParam>().unknown00 : 1;
   u16 menuLayer = getMenuLayerID(menu);
-  changeFSSubLayer(main.handle, 1, menuLayer, true);
+  changeFSSubLayer(main.unknown10, 1, menuLayer, true);
   main.setDispChild(true, "IMG_bg_black");
   setFSShadowLayer(unknown20, true);
-  disableInput(main.handle);
+  disableInput(main.unknown10);
   GfMenuObject::initialize();
 }
 
@@ -50,16 +50,16 @@ void GfMenuObjMainRoot::update() { GfMenuObject::update(); }
 
 void GfMenuObjMainRoot::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
-  switch (event.type) {
+  switch (event.unknown00) {
   case 1:
     break;
   case 8:
-    if (event.param1 == 3) {
-      closeFSLayer(acc.handle, true, true);
+    if (event.unknown0c == 3) {
+      closeFSLayer(acc.unknown10, true, true);
     }
     break;
   case 0x43:
-    closeFSLayer(acc.handle, true, true);
+    closeFSLayer(acc.unknown10, true, true);
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
   }

@@ -6,7 +6,7 @@
 
 namespace ui {
 
-UILayoutData::UILayoutData(void *data) : data(data), parent(nullptr) {}
+UILayoutData::UILayoutData(void *data) : unknown10(data), unknown18(nullptr) {}
 
 UILayoutData::~UILayoutData() { ; }
 
@@ -15,19 +15,19 @@ UILayoutData *UILayoutData::create(void *data, mm::mtl::IAllocator *allocator, c
 #line 47
   UILayoutData *layoutData = new (allocator, 16, __FILE__, __LINE__) UILayoutData(data);
   layoutData->addRef();
-  layoutData->parent = parent;
+  layoutData->unknown18 = parent;
   return layoutData;
 }
 
 bool UILayoutData::getLayoutRect(const char *name, mm::Rect<s16> &rect) const {
-  if (data == nullptr) {
+  if (unknown10 == nullptr) {
     return false;
   }
 
-  layer::LayerAccLayoutBinary binary(data);
+  layer::LayerAccLayoutBinary binary(unknown10);
   u32 index = binary.getPosIdx(name);
-  if (index == 0xffffffff && parent != nullptr) {
-    return parent->getLayoutRect(name, rect);
+  if (index == 0xffffffff && unknown18 != nullptr) {
+    return unknown18->getLayoutRect(name, rect);
   }
 
   f32 pos[2];

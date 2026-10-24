@@ -6,12 +6,12 @@
 
 namespace ui {
 
-UIShapeRing::UIShapeRing(u32 num, f32 weight) : divisionNum(num * 4), weight(weight) {
-  weightScale = prevWeightScale = 1.0f;
-  scale = prevScale = 1.0f;
-  setupBuffer(divisionNum * 2, divisionNum * 6);
-  u32 vertexNum = divisionNum * 2;
-  for (u32 i = 0; i < divisionNum; i++) {
+UIShapeRing::UIShapeRing(u32 num, f32 weight) : unknown40(num * 4), unknown44(weight) {
+  m_weightScale = unknown54 = 1.0f;
+  m_scale = unknown50 = 1.0f;
+  setupBuffer(unknown40 * 2, unknown40 * 6);
+  u32 vertexNum = unknown40 * 2;
+  for (u32 i = 0; i < unknown40; i++) {
     u32 vertex = i * 2;
     u32 index[6];
     index[0] = vertex % vertexNum;
@@ -26,7 +26,7 @@ UIShapeRing::UIShapeRing(u32 num, f32 weight) : divisionNum(num * 4), weight(wei
 }
 
 void UIShapeRing::buildVertex() {
-  u32 num = divisionNum;
+  u32 num = unknown40;
   layer::LayerPolyVertex vertex;
   vertex.u = 0.0f;
   vertex.r = 0xff;
@@ -40,18 +40,18 @@ void UIShapeRing::buildVertex() {
 
   f32 step = 360.0f / num * 0.017453292f;
   f32 angle = 1.5707964f;
-  for (u32 i = 0; i < divisionNum; i++) {
+  for (u32 i = 0; i < unknown40; i++) {
     f32 dx = cosf(angle);
     f32 dy = -sinf(angle);
-    f32 width = weight * 0.5f * weightScale;
-    vertex.x = dx * scale + dx * width;
-    vertex.y = dy * scale + dy * width;
+    f32 width = unknown44 * 0.5f * m_weightScale;
+    vertex.x = dx * m_scale + dx * width;
+    vertex.y = dy * m_scale + dy * width;
     vertex.u = 0.0f;
     vertex.v = 0.0f;
     writeVertex(&vertex, 1, i * 2);
-    width = weight * 0.5f * weightScale;
-    vertex.x = dx * scale - dx * width;
-    vertex.y = dy * scale - dy * width;
+    width = unknown44 * 0.5f * m_weightScale;
+    vertex.x = dx * m_scale - dx * width;
+    vertex.y = dy * m_scale - dy * width;
     vertex.u = 0.0f;
     vertex.v = 1.0f;
     writeVertex(&vertex, 1, i * 2 + 1);
@@ -61,15 +61,15 @@ void UIShapeRing::buildVertex() {
 
 UIShapeRing::~UIShapeRing() { ; }
 
-void UIShapeRing::setScale(f32 scale) { this->scale = scale; }
+void UIShapeRing::setScale(f32 scale) { this->m_scale = scale; }
 
-void UIShapeRing::setWeightScale(f32 weightScale) { this->weightScale = weightScale; }
+void UIShapeRing::setWeightScale(f32 weightScale) { this->m_weightScale = weightScale; }
 
 void UIShapeRing::update(u32 frame) {
-  if (scale != prevScale || weightScale != prevWeightScale) {
+  if (m_scale != unknown50 || m_weightScale != unknown54) {
     buildVertex();
-    prevScale = scale;
-    prevWeightScale = weightScale;
+    unknown50 = m_scale;
+    unknown54 = m_weightScale;
   }
 }
 

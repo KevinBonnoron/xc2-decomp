@@ -20,12 +20,13 @@
 
 namespace ui {
 
-UIPolygonObject::UIPolygonObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name) : UIObject(layer, name, UI_OBJECT_TYPE_POLYGON), shape(nullptr), streamId(0), _134(), capture(nullptr) {}
+UIPolygonObject::UIPolygonObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name)
+    : UIObject(layer, name, UI_OBJECT_TYPE_POLYGON), unknown108(nullptr), unknown130(0), _134(), unknown138(nullptr) {}
 
 UIPolygonObject::~UIPolygonObject() {
-  if (shape != nullptr) {
-    delete shape;
-    shape = nullptr;
+  if (unknown108 != nullptr) {
+    delete unknown108;
+    unknown108 = nullptr;
   }
 }
 
@@ -42,13 +43,13 @@ UIPolygonObject *UIPolygonObject::create(UILayoutObject *parent, const PolygonIn
     return nullptr;
   }
 
-  if (polygon->info.shapeType == SHAPE_TYPE_PARTICLE) {
-    polygon->flags.set(UI_OBJECT_FLAG_IGNORE_ROT);
+  if (polygon->unknown110.unknown08 == SHAPE_TYPE_PARTICLE) {
+    polygon->unknown98.set(UI_OBJECT_FLAG_IGNORE_ROT);
   }
-  polygon->streamId = streamId;
-  polygon->capture = nullptr;
+  polygon->unknown130 = streamId;
+  polygon->unknown138 = nullptr;
   if (data != nullptr) {
-    layer::LayerAccPolyObj acc(polygon->layer);
+    layer::LayerAccPolyObj acc(polygon->unknownc8);
     acc.setTexutre(data);
   }
   return polygon;
@@ -62,11 +63,11 @@ UIPolygonObject *UIPolygonObject::createObject(UILayoutObject *parent, const Pol
 
   layer::LayerBase *layer;
   if (parent != nullptr) {
-    layer::LayerAccLayoutObj layoutAcc(parent->layer);
-    layer = layoutAcc.createPolyObj(info.width, info.height, shape->vertices.size(), shape->indices.size(), static_cast<layer::LayerPrimitiveType>(0));
+    layer::LayerAccLayoutObj layoutAcc(parent->unknownc8);
+    layer = layoutAcc.createPolyObj(info.unknown00, info.unknown04, shape->unknown08.size(), shape->unknown20.size(), static_cast<layer::LayerPrimitiveType>(0));
   } else {
     layer::LayerAccManager manager;
-    layer = manager.createPolyObj(info.width, info.height, shape->vertices.size(), shape->indices.size(), static_cast<layer::LayerPrimitiveType>(0));
+    layer = manager.createPolyObj(info.unknown00, info.unknown04, shape->unknown08.size(), shape->unknown20.size(), static_cast<layer::LayerPrimitiveType>(0));
   }
   if (layer == nullptr) {
     return nullptr;
@@ -78,8 +79,8 @@ UIPolygonObject *UIPolygonObject::createObject(UILayoutObject *parent, const Pol
   if (polygon == nullptr) {
     return nullptr;
   }
-  polygon->info = info;
-  polygon->shape = shape;
+  polygon->unknown110 = info;
+  polygon->unknown108 = shape;
   return polygon;
 }
 
@@ -88,40 +89,40 @@ UIPolygonObject *UIPolygonObject::create(UILayoutObject *parent, const PolygonIn
   if (polygon == nullptr) {
     return nullptr;
   }
-  polygon->streamId = 0;
-  polygon->capture = capture;
-  layer::LayerAccPolyObj acc(polygon->layer);
+  polygon->unknown130 = 0;
+  polygon->unknown138 = capture;
+  layer::LayerAccPolyObj acc(polygon->unknownc8);
   acc.setTexutre(*capture->texture);
   return polygon;
 }
 
 void UIPolygonObject::apply() {
   UIObject::apply();
-  if (shape == nullptr) {
+  if (unknown108 == nullptr) {
     return;
   }
 
-  shape->update(handle);
-  if (!shape->dirty || shape->indexRange == 0) {
+  unknown108->update(unknowne8);
+  if (!unknown108->unknown3c || unknown108->unknown38 == 0) {
     return;
   }
 
-  layer::LayerAccPolyObj acc(layer);
+  layer::LayerAccPolyObj acc(unknownc8);
   acc.LockVertex();
-  for (u32 i = 0; i < static_cast<u32>(shape->vertices.size()); i++) {
-    layer::LayerPolyVertex vertex = shape->vertices[i];
+  for (u32 i = 0; i < static_cast<u32>(unknown108->unknown08.size()); i++) {
+    layer::LayerPolyVertex vertex = unknown108->unknown08[i];
     vertex.x = vertex.x * 0.5f + 0.5f;
     vertex.y = vertex.y * 0.5f + 0.5f;
     acc.setVertex(i, vertex);
   }
   acc.UnlockVertex();
   acc.LockIndex();
-  for (u32 i = 0; i < static_cast<u32>(shape->indices.size()); i++) {
-    acc.setIndex(i, shape->indices[i]);
+  for (u32 i = 0; i < static_cast<u32>(unknown108->unknown20.size()); i++) {
+    acc.setIndex(i, unknown108->unknown20[i]);
   }
   acc.UnlockIndex();
-  acc.setIndexInfo(0, shape->indexRange);
-  shape->dirty = false;
+  acc.setIndexInfo(0, unknown108->unknown38);
+  unknown108->unknown3c = false;
 }
 
 u32 UIPolygonObject::duplicateImpl(u32 parent) {
@@ -130,12 +131,12 @@ u32 UIPolygonObject::duplicateImpl(u32 parent) {
     return 0;
   }
 
-  layer::LayerAccObjBase acc(layer);
+  layer::LayerAccObjBase acc(unknownc8);
   UIPolygonObject *polygon;
-  if (capture != nullptr) {
-    polygon = create(layout, info, capture, name.c_str(), UIUtil::getProgAllocator());
+  if (unknown138 != nullptr) {
+    polygon = create(layout, unknown110, unknown138, unknowna0.c_str(), UIUtil::getProgAllocator());
   } else {
-    polygon = create(layout, info, acc.getResData(), streamId, name.c_str(), UIUtil::getProgAllocator());
+    polygon = create(layout, unknown110, acc.getResData(), unknown130, unknowna0.c_str(), UIUtil::getProgAllocator());
   }
   if (polygon == nullptr) {
     return 0;
@@ -149,17 +150,17 @@ u32 UIPolygonObject::duplicateImpl(u32 parent) {
 
 UIShape *UIPolygonObject::createShape(const PolygonInfo &info, mm::mtl::IAllocator *allocator) {
   UIShape *shape = nullptr;
-  switch (info.shapeType) {
+  switch (info.unknown08) {
   case SHAPE_TYPE_SIMPLE_FACE:
 // __LINE__ is the line argument of the operator new call.
 #line 239
     shape = new (allocator, 16, __FILE__, __LINE__) UIShapeSimpleFace(info.vertexNum);
     break;
   case SHAPE_TYPE_RING:
-    shape = new (allocator, 16, __FILE__, __LINE__) UIShapeRing(info.ring.num, info.ring.weight);
+    shape = new (allocator, 16, __FILE__, __LINE__) UIShapeRing(info.ring.unknown00, info.ring.unknown04);
     break;
   case SHAPE_TYPE_PARTICLE:
-    shape = new (allocator, 16, __FILE__, __LINE__) UIShapeParticle(info.particle.data, info.particle.size, info.width, info.height);
+    shape = new (allocator, 16, __FILE__, __LINE__) UIShapeParticle(info.particle.unknown00, info.particle.unknown08, info.unknown00, info.unknown04);
     break;
   }
   return shape;

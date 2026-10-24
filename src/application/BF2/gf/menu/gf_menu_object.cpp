@@ -104,15 +104,15 @@ void GfMenuObject::nextCallContext(GfMenuCallContext *context, u32 menu) {
 
 void GfMenuObject::addResultCallContext(u32 handle, u32 type, int value) {
   ui::EventData event;
-  event.type = 8;
-  event.param0 = type;
-  event.param1 = value;
+  event.unknown00 = 8;
+  event.unknown08 = type;
+  event.unknown0c = value;
   ui::UIManager::get()->requestGameEvent(handle, event);
 }
 
 void GfMenuObject::termCallContext(u32 handle) {
   ui::EventData event;
-  event.type = 9;
+  event.unknown00 = 9;
   ui::UIManager::get()->requestGameEvent(handle, event);
 }
 
@@ -268,9 +268,9 @@ void GfMenuObject::sendEvent(u32 handle, const ui::EventData &event, f32 delay) 
 void GfMenuObject::sendOpenEvent(u32 handle, int type, f32 delay) {
   if (handle != 0) {
     ui::EventData event;
-    event.param0 = type;
-    event.param1 = 0;
-    event.type = 0x21;
+    event.unknown08 = type;
+    event.unknown0c = 0;
+    event.unknown00 = 0x21;
     ui::UIManager::get()->requestObjectEvent(handle, event, delay);
   }
 }
@@ -278,17 +278,17 @@ void GfMenuObject::sendOpenEvent(u32 handle, int type, f32 delay) {
 void GfMenuObject::sendCloseEvent(u32 handle, int type, f32 delay) {
   if (handle != 0) {
     ui::EventData event;
-    event.param0 = type;
-    event.param1 = 0;
-    event.type = 0x22;
+    event.unknown08 = type;
+    event.unknown0c = 0;
+    event.unknown00 = 0x22;
     ui::UIManager::get()->requestObjectEvent(handle, event, delay);
   }
 }
 
 void GfMenuObject::sendEventToChild(u32 handle, const ui::EventData &event, const char *name, f32 delay) {
   ui::UIObjectAcc acc(handle, name);
-  if (acc.isValid() && acc.handle != 0) {
-    ui::UIManager::get()->requestObjectEvent(acc.handle, event, delay);
+  if (acc.isValid() && acc.unknown10 != 0) {
+    ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, delay);
   }
 }
 
@@ -312,14 +312,14 @@ void GfMenuObject::sendEventToParent(u32 handle, const ui::EventData &event, f32
   }
 }
 
-static bool hasListener(u32 handle) { return handle != 0 && ui::UIUtil::getObject(handle)->flags.test(ui::UI_OBJECT_FLAG_LISTENER); }
+static bool hasListener(u32 handle) { return handle != 0 && ui::UIUtil::getObject(handle)->unknown98.test(ui::UI_OBJECT_FLAG_LISTENER); }
 
 template <typename T> static T *getPlugin(u32 handle) {
   ui::UIObject *object = ui::UIUtil::getObject(handle);
-  if (object == nullptr || object->plugins == nullptr) {
+  if (object == nullptr || object->unknowne0 == nullptr) {
     return nullptr;
   }
-  return mm::mtl::dynamicCast<T>(object->plugins);
+  return mm::mtl::dynamicCast<T>(object->unknowne0);
 }
 
 static void addCondition(u32 handle, ui::UIEventCondition *condition) {
@@ -391,25 +391,25 @@ void GfMenuObject::hookAnimationEvent(u32 handle, u32 object) { ui::UIAnimationM
 
 void GfMenuObject::changeFSLayer(u32 handle, u16 layer, bool keep) {
   ui::EventData event;
-  event.type = 1;
-  event.param0 = layer;
-  event.param1 = 0;
-  event.param2 = keep;
-  event.param3 = 0;
+  event.unknown00 = 1;
+  event.unknown08 = layer;
+  event.unknown0c = 0;
+  event.unknown10 = keep;
+  event.unknown14 = 0;
   ui::UIManager::get()->requestGameEvent(handle, event);
 }
 
 void GfMenuObject::returnFSLayer(u32 handle) {
   ui::EventData event;
-  event.type = 3;
+  event.unknown00 = 3;
   ui::UIManager::get()->requestGameEvent(handle, event);
 }
 
 void GfMenuObject::closeFSLayer(u32 handle, bool fade, bool keep) {
   ui::EventData event;
-  event.type = 7;
-  event.param0 = fade;
-  event.param1 = keep;
+  event.unknown00 = 7;
+  event.unknown08 = fade;
+  event.unknown0c = keep;
   ui::UIManager::get()->requestGameEvent(handle, event);
 }
 
@@ -467,9 +467,9 @@ void GfMenuObject::overrideFadeOutTime(u32 frame) { GfMenuFullScreen::overrideFa
 
 void GfMenuObject::clearLayerStatck(u32 handle, u16 group) {
   ui::EventData event;
-  event.type = 0xc;
-  event.param0 = group;
-  event.param1 = 0;
+  event.unknown00 = 0xc;
+  event.unknown08 = group;
+  event.unknown0c = 0;
   ui::UIManager::get()->requestGameEvent(handle, event);
 }
 

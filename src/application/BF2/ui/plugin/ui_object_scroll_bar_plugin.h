@@ -28,23 +28,23 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual bool isNeedUpdate(UIObjectAcc &acc);
 
-  const UIListInfoBase *list;
-  u32 bar;
-  u32 direction;
-  mm::Pnt<s16> basePos;
+  const UIListInfoBase *unknown20; // Inferred role: list; original member name unknown.
+  u32 unknown28;                   // Inferred role: bar; original member name unknown.
+  u32 unknown2c;                   // Inferred role: direction; original member name unknown.
+  mm::Pnt<s16> unknown30;          // Inferred role: base pos; original member name unknown.
   u8 _34[0x40 - 0x34];
-  mm::Vec2 baseScale;
+  mm::Vec2 unknown40; // Inferred role: base scale; original member name unknown.
   u8 _48[0x50 - 0x48];
-  bool scaleEnable;
+  bool unknown50; // Inferred role: scale enable; original member name unknown.
   u8 _51[0x60 - 0x51];
 };
 
-static_assert(offsetof(UIObjectScrollBarPlugin, list) == 0x20, "");
-static_assert(offsetof(UIObjectScrollBarPlugin, bar) == 0x28, "");
-static_assert(offsetof(UIObjectScrollBarPlugin, direction) == 0x2c, "");
-static_assert(offsetof(UIObjectScrollBarPlugin, basePos) == 0x30, "");
-static_assert(offsetof(UIObjectScrollBarPlugin, baseScale) == 0x40, "");
-static_assert(offsetof(UIObjectScrollBarPlugin, scaleEnable) == 0x50, "");
+static_assert(offsetof(UIObjectScrollBarPlugin, unknown20) == 0x20, "");
+static_assert(offsetof(UIObjectScrollBarPlugin, unknown28) == 0x28, "");
+static_assert(offsetof(UIObjectScrollBarPlugin, unknown2c) == 0x2c, "");
+static_assert(offsetof(UIObjectScrollBarPlugin, unknown30) == 0x30, "");
+static_assert(offsetof(UIObjectScrollBarPlugin, unknown40) == 0x40, "");
+static_assert(offsetof(UIObjectScrollBarPlugin, unknown50) == 0x50, "");
 static_assert(sizeof(UIObjectScrollBarPlugin) == 0x60, "");
 
 } // namespace ui

@@ -20,15 +20,15 @@ public:
 class UIInputLayer : public mm::mtl::ReferenceObject {
 public:
   struct InputAction {
-    u16 pad;
-    u16 actId;
-    u16 text[4];
-    bool repeat;
-    bool enable;
+    u16 unknown00;    // Inferred role: pad; original member name unknown.
+    u16 unknown02;    // Inferred role: act id; original member name unknown.
+    u16 unknown04[4]; // Inferred role: text; original member name unknown.
+    bool unknown0c;   // Inferred role: repeat; original member name unknown.
+    bool unknown0d;   // Inferred role: enable; original member name unknown.
   };
 
   struct InputSetup {
-    mm::mtl::FixedVector<InputAction, 27> actions;
+    mm::mtl::FixedVector<InputAction, 27> unknown00; // Inferred role: actions; original member name unknown.
   };
 
   UIInputLayer(u32 handle, u32 priority, const InputSetup &setup);
@@ -49,28 +49,28 @@ public:
   virtual UIInputPointer *castUIInputPointer();
   virtual bool updateImpl() = 0;
 
-  u32 priority;
-  EventData event;
-  EventData actionEvent;
-  u32 handle;
-  u32 selectSize;
-  int selectIndex;
-  bool selectEnable;
-  InputSetup setup;
-  IUIInputSelectionChecker *selectionChecker;
+  u32 unknown0c;                        // Inferred role: priority; original member name unknown.
+  EventData unknown10;                  // Inferred role: event; original member name unknown.
+  EventData unknown28;                  // Inferred role: action event; original member name unknown.
+  u32 unknown40;                        // Inferred role: handle; original member name unknown.
+  u32 unknown44;                        // Inferred role: select size; original member name unknown.
+  int unknown48;                        // Inferred role: select index; original member name unknown.
+  bool unknown4c;                       // Inferred role: select enable; original member name unknown.
+  InputSetup unknown50;                 // Inferred role: setup; original member name unknown.
+  IUIInputSelectionChecker *unknown1d8; // Inferred role: selection checker; original member name unknown.
 };
 
 static_assert(sizeof(UIInputLayer::InputAction) == 0x0e, "");
 static_assert(sizeof(UIInputLayer::InputSetup) == 0x188, "");
-static_assert(offsetof(UIInputLayer, priority) == 0x0c, "");
-static_assert(offsetof(UIInputLayer, event) == 0x10, "");
-static_assert(offsetof(UIInputLayer, actionEvent) == 0x28, "");
-static_assert(offsetof(UIInputLayer, handle) == 0x40, "");
-static_assert(offsetof(UIInputLayer, selectSize) == 0x44, "");
-static_assert(offsetof(UIInputLayer, selectIndex) == 0x48, "");
-static_assert(offsetof(UIInputLayer, selectEnable) == 0x4c, "");
-static_assert(offsetof(UIInputLayer, setup) == 0x50, "");
-static_assert(offsetof(UIInputLayer, selectionChecker) == 0x1d8, "");
+static_assert(offsetof(UIInputLayer, unknown0c) == 0x0c, "");
+static_assert(offsetof(UIInputLayer, unknown10) == 0x10, "");
+static_assert(offsetof(UIInputLayer, unknown28) == 0x28, "");
+static_assert(offsetof(UIInputLayer, unknown40) == 0x40, "");
+static_assert(offsetof(UIInputLayer, unknown44) == 0x44, "");
+static_assert(offsetof(UIInputLayer, unknown48) == 0x48, "");
+static_assert(offsetof(UIInputLayer, unknown4c) == 0x4c, "");
+static_assert(offsetof(UIInputLayer, unknown50) == 0x50, "");
+static_assert(offsetof(UIInputLayer, unknown1d8) == 0x1d8, "");
 static_assert(sizeof(UIInputLayer) == 0x1e0, "");
 
 } // namespace ui

@@ -5,16 +5,16 @@
 namespace ui {
 
 UIColorLibrary::UIColorLibrary() {
-  colors.setAllocator(UIUtil::getProgAllocator());
-  colors.reserve(8);
+  unknown08.setAllocator(UIUtil::getProgAllocator());
+  unknown08.reserve(8);
 }
 
 UIColorLibrary::~UIColorLibrary() { reset(); }
 
 void UIColorLibrary::reset() {
-  colors.clear();
-  if (colors.capacity() != 0) {
-    colors.destroy();
+  unknown08.clear();
+  if (unknown08.capacity() != 0) {
+    unknown08.destroy();
   }
 }
 

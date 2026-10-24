@@ -10,15 +10,15 @@ class RTTI;
 
 namespace ui {
 
-UIObjectPlugin::UIObjectPlugin() : next(nullptr), needUpdate(true) {}
+UIObjectPlugin::UIObjectPlugin() : unknown10(nullptr), unknown18(true) {}
 
-void UIObjectPlugin::execute(UIObjectAcc &) { needUpdate = false; }
+void UIObjectPlugin::execute(UIObjectAcc &) { unknown18 = false; }
 
 bool UIObjectPlugin::isNeedUpdate(UIObjectAcc &acc) {
   if (!acc.isDisp()) {
     return false;
   }
-  return needUpdate & 1;
+  return unknown18 & 1;
 }
 
 const mm::mtl::RTTI *UIObjectPlugin::getRTTI() const { return &m_rtti; }

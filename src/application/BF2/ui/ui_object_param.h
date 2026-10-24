@@ -16,9 +16,9 @@ public:
   virtual ~UIObjectParam();
   virtual void apply(AdditionalParam &param) const = 0;
 
-  u32 handle;
+  u32 unknown18; // Inferred role: handle; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectParam, handle) == 0x18, "");
+static_assert(offsetof(UIObjectParam, unknown18) == 0x18, "");
 
 } // namespace ui

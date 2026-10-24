@@ -13,14 +13,14 @@ class RTTI;
 namespace ui {
 
 struct uiDateTime {
-  u64 year : 13;
-  u64 month : 4;
+  u64 unknown00_0 : 13; // Inferred role: year; original member name unknown.
+  u64 unknown01_5 : 4;  // Inferred role: month; original member name unknown.
   u64 : 9;
-  u64 day : 5;
-  u64 hour : 7;
-  u64 minute : 7;
-  u64 second : 6;
-  u64 millisecond : 10;
+  u64 unknown03_2 : 5;  // Inferred role: day; original member name unknown.
+  u64 unknown03_7 : 7;  // Inferred role: hour; original member name unknown.
+  u64 unknown04_6 : 7;  // Inferred role: minute; original member name unknown.
+  u64 unknown05_5 : 6;  // Inferred role: second; original member name unknown.
+  u64 unknown06_3 : 10; // Inferred role: millisecond; original member name unknown.
 };
 
 static_assert(sizeof(uiDateTime) == 8, "");
@@ -56,16 +56,16 @@ public:
   virtual void execute(UIObjectAcc &acc);
   virtual const mm::mtl::RTTI *getRTTI() const;
 
-  uiDateTime time;
-  const char *format;
-  u8 type;
-  u16 elapseHour;
+  uiDateTime unknown80;  // Inferred role: time; original member name unknown.
+  const char *unknown88; // Inferred role: format; original member name unknown.
+  u8 unknown90;          // Inferred role: type; original member name unknown.
+  u16 unknown92;         // Inferred role: elapse hour; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectTimePlugin, time) == 0x80, "");
-static_assert(offsetof(UIObjectTimePlugin, format) == 0x88, "");
-static_assert(offsetof(UIObjectTimePlugin, type) == 0x90, "");
-static_assert(offsetof(UIObjectTimePlugin, elapseHour) == 0x92, "");
+static_assert(offsetof(UIObjectTimePlugin, unknown80) == 0x80, "");
+static_assert(offsetof(UIObjectTimePlugin, unknown88) == 0x88, "");
+static_assert(offsetof(UIObjectTimePlugin, unknown90) == 0x90, "");
+static_assert(offsetof(UIObjectTimePlugin, unknown92) == 0x92, "");
 static_assert(sizeof(UIObjectTimePlugin) == 0x98, "");
 
 } // namespace ui

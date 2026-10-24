@@ -15,8 +15,8 @@ public:
   };
 
   struct Mstxt {
-    u32 fileId;
-    u32 msgId;
+    u32 unknown00; // Inferred role: file id; original member name unknown.
+    u32 unknown04; // Inferred role: msg id; original member name unknown.
   };
 
   UIStr();
@@ -45,15 +45,15 @@ public:
     const char *reference;
     char *allocated;
   };
-  u32 allocatedSize;
+  u32 unknown08; // Inferred role: allocated size; original member name unknown.
   u8 _0c[0x10 - 0x0c];
-  u16 type;
-  u16 option;
+  u16 unknown10; // Inferred role: type; original member name unknown.
+  u16 unknown12; // Inferred role: option; original member name unknown.
 };
 
-static_assert(offsetof(UIStr, allocatedSize) == 0x08, "");
-static_assert(offsetof(UIStr, type) == 0x10, "");
-static_assert(offsetof(UIStr, option) == 0x12, "");
+static_assert(offsetof(UIStr, unknown08) == 0x08, "");
+static_assert(offsetof(UIStr, unknown10) == 0x10, "");
+static_assert(offsetof(UIStr, unknown12) == 0x12, "");
 static_assert(sizeof(UIStr) == 0x18, "");
 
 } // namespace ui

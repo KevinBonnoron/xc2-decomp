@@ -17,7 +17,7 @@ bool isSameColor(const mm::Col3 &a, const mm::Col3 &b) { return mm::fabs(a.r - b
 
 } // namespace
 
-UIObjectColorPlugin::UIObjectColorPlugin() : color(1.0f, 1.0f, 1.0f), colorMode(COLOR_MODE_MUL) {}
+UIObjectColorPlugin::UIObjectColorPlugin() : unknown7c(1.0f, 1.0f, 1.0f), unknown88(COLOR_MODE_MUL) {}
 
 UIObjectColorPlugin::~UIObjectColorPlugin() { ; }
 
@@ -28,7 +28,7 @@ UIObjectColorPlugin *UIObjectColorPlugin::create(u32 handle) {
   plugin->addRef();
   UIObjectAcc acc(handle);
   if (acc.isValid() && UIObjectPluginUtil::attachPlugin(handle, plugin)) {
-    acc.getMulColor(plugin->color);
+    acc.getMulColor(plugin->unknown7c);
     plugin->init(handle);
   } else if (plugin != nullptr) {
     plugin->release();
@@ -38,10 +38,10 @@ UIObjectColorPlugin *UIObjectColorPlugin::create(u32 handle) {
 }
 
 void UIObjectColorPlugin::setMulColor(const mm::Col3 &color) {
-  colorMode = COLOR_MODE_MUL;
-  if (!isSameColor(color, this->color)) {
-    this->color = color;
-    needUpdate |= true;
+  unknown88 = COLOR_MODE_MUL;
+  if (!isSameColor(color, this->unknown7c)) {
+    this->unknown7c = color;
+    unknown18 |= true;
   }
 }
 
@@ -53,10 +53,10 @@ void UIObjectColorPlugin::setMulColor(const char *name) {
 }
 
 void UIObjectColorPlugin::setAddColor(const mm::Col3 &color) {
-  colorMode = COLOR_MODE_ADD;
-  if (!isSameColor(color, this->color)) {
-    this->color = color;
-    needUpdate |= true;
+  unknown88 = COLOR_MODE_ADD;
+  if (!isSameColor(color, this->unknown7c)) {
+    this->unknown7c = color;
+    unknown18 |= true;
   }
 }
 
@@ -69,12 +69,12 @@ void UIObjectColorPlugin::setAddColor(const char *name) {
 
 void UIObjectColorPlugin::setColorMode(u32 mode) {
   if (mode <= COLOR_MODE_ADD) {
-    colorMode = mode;
+    unknown88 = mode;
   }
 }
 
 void UIObjectColorPlugin::setColor(const mm::Col3 &color) {
-  switch (colorMode) {
+  switch (unknown88) {
   case COLOR_MODE_MUL:
     setMulColor(color);
     break;
@@ -85,7 +85,7 @@ void UIObjectColorPlugin::setColor(const mm::Col3 &color) {
 }
 
 void UIObjectColorPlugin::setColor(const char *name) {
-  switch (colorMode) {
+  switch (unknown88) {
   case COLOR_MODE_MUL:
     setMulColor(name);
     break;
@@ -96,12 +96,12 @@ void UIObjectColorPlugin::setColor(const char *name) {
 }
 
 void UIObjectColorPlugin::execute(UIObjectAcc &acc) {
-  switch (colorMode) {
+  switch (unknown88) {
   case COLOR_MODE_MUL:
-    acc.setMulColor(color);
+    acc.setMulColor(unknown7c);
     break;
   case COLOR_MODE_ADD:
-    acc.setAddColor(color);
+    acc.setAddColor(unknown7c);
     break;
   }
   UIObjectDispPlugin::execute(acc);
@@ -109,6 +109,6 @@ void UIObjectColorPlugin::execute(UIObjectAcc &acc) {
 
 const mm::mtl::RTTI *UIObjectColorPlugin::getRTTI() const { return &m_rtti; }
 
-bool UIObjectColorPlugin::isNeedUpdate(UIObjectAcc &acc) { return (needUpdate & 1) || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0; }
+bool UIObjectColorPlugin::isNeedUpdate(UIObjectAcc &acc) { return (unknown18 & 1) || acc.isDisp() != unknown1d || unknown58.ctrl != nullptr || m_followObjHandle != 0; }
 
 } // namespace ui

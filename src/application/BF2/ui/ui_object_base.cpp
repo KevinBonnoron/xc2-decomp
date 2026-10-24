@@ -2,27 +2,27 @@
 
 namespace ui {
 
-UIObjectBase::UIObjectBase(const mm::mtl::FixStr<32> &name) : flags(), duplicateIndex(0), name(name.c_str()) { flags.clear(); }
+UIObjectBase::UIObjectBase(const mm::mtl::FixStr<32> &name) : unknown98(), unknown9c(0), unknowna0(name.c_str()) { unknown98.clear(); }
 
 UIObjectBase::~UIObjectBase() {}
 
 void UIObjectBase::update() {
-  transform.syncParent();
-  displayInfo.syncParent();
+  unknown20.syncParent();
+  unknown50.syncParent();
 }
 
-void UIObjectBase::setInitialize() { flags.set(UI_OBJECT_FLAG_TERM, false); }
+void UIObjectBase::setInitialize() { unknown98.set(UI_OBJECT_FLAG_TERM, false); }
 
 void UIObjectBase::setTerm() {
-  flags.set(UI_OBJECT_FLAG_TERM, true);
-  flags.set(UI_OBJECT_FLAG_SUSPEND, false);
+  unknown98.set(UI_OBJECT_FLAG_TERM, true);
+  unknown98.set(UI_OBJECT_FLAG_SUSPEND, false);
 }
 
 void UIObjectBase::setSuspend(bool suspend) {
   if (isTerm()) {
-    flags.set(UI_OBJECT_FLAG_SUSPEND, false);
+    unknown98.set(UI_OBJECT_FLAG_SUSPEND, false);
   } else {
-    flags.set(UI_OBJECT_FLAG_SUSPEND, suspend);
+    unknown98.set(UI_OBJECT_FLAG_SUSPEND, suspend);
   }
 }
 

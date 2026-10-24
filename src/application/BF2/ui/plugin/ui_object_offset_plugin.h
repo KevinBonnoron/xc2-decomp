@@ -24,12 +24,12 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual bool isNeedUpdate(UIObjectAcc &acc);
 
-  mm::Pnt<s16> targetPos;
-  mm::Pnt<u16> maxOffset;
+  mm::Pnt<s16> unknown7c; // Inferred role: target pos; original member name unknown.
+  mm::Pnt<u16> unknown80; // Inferred role: max offset; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectOffsetPlugin, targetPos) == 0x7c, "");
-static_assert(offsetof(UIObjectOffsetPlugin, maxOffset) == 0x80, "");
+static_assert(offsetof(UIObjectOffsetPlugin, unknown7c) == 0x7c, "");
+static_assert(offsetof(UIObjectOffsetPlugin, unknown80) == 0x80, "");
 static_assert(sizeof(UIObjectOffsetPlugin) == 0x88, "");
 
 } // namespace ui

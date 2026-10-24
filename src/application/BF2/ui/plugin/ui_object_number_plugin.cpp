@@ -15,13 +15,13 @@
 
 namespace ui {
 
-UIObjectNumberPlugin::UIObjectNumberPlugin() : number(0), min(0), max(9999), type(TYPE_NONE), isReverse(false), interpolate(false), format(nullptr), interpolateTime(0.0f) {}
+UIObjectNumberPlugin::UIObjectNumberPlugin() : unknown7c(0), unknown80(0), unknown84(9999), unknown88(TYPE_NONE), unknown89(false), unknown8a(false), unknown90(nullptr), unknowne0(0.0f) {}
 
 UIObjectNumberPlugin::~UIObjectNumberPlugin() {
-  if (interpolationUpdater.ctrl != nullptr) {
-    UICtrlManager::get()->delUpdater(interpolationUpdater);
+  if (unknownc0.ctrl != nullptr) {
+    UICtrlManager::get()->delUpdater(unknownc0);
   }
-  interpolationUpdater.ctrl = nullptr;
+  unknownc0.ctrl = nullptr;
 }
 
 UIObjectNumberPlugin *UIObjectNumberPlugin::create(u32 handle) {
@@ -34,15 +34,15 @@ UIObjectNumberPlugin *UIObjectNumberPlugin::create(u32 handle) {
     int max;
     if (acc.isText()) {
       const char *text = acc.getTextPtr();
-      plugin->format = text;
+      plugin->unknown90 = text;
       if (text == nullptr || !UIUtil::checkNumberTextFormat(text, 1)) {
-        plugin->format = "e%d";
+        plugin->unknown90 = "e%d";
       }
-      plugin->type = strstr(text, "%s") != nullptr ? TYPE_TEXT_STRING : TYPE_TEXT;
+      plugin->unknown88 = strstr(text, "%s") != nullptr ? TYPE_TEXT_STRING : TYPE_TEXT;
       max = 9999;
     } else if (acc.isImage()) {
       max = acc.getImageMax();
-      plugin->type = TYPE_IMAGE;
+      plugin->unknown88 = TYPE_IMAGE;
     } else if (acc.isLayout()) {
       plugin->setDispControl(false);
       max = 9999;
@@ -52,9 +52,9 @@ UIObjectNumberPlugin *UIObjectNumberPlugin::create(u32 handle) {
     }
 
     if (UIObjectPluginUtil::attachPlugin(handle, plugin)) {
-      plugin->max = max;
-      plugin->number = 0;
-      plugin->min = 0;
+      plugin->unknown84 = max;
+      plugin->unknown7c = 0;
+      plugin->unknown80 = 0;
       plugin->init(handle);
       return plugin;
     }
@@ -68,7 +68,7 @@ UIObjectNumberPlugin *UIObjectNumberPlugin::getPlugin(u32 handle) {
   if (object == nullptr) {
     return nullptr;
   }
-  UIObjectPlugin *plugin = object->plugins;
+  UIObjectPlugin *plugin = object->unknowne0;
   if (plugin == nullptr) {
     return nullptr;
   }
@@ -76,50 +76,48 @@ UIObjectNumberPlugin *UIObjectNumberPlugin::getPlugin(u32 handle) {
 }
 
 void UIObjectNumberPlugin::setMin(int min) {
-  if (max <= min) {
-    max = min + 1;
+  if (unknown84 <= min) {
+    unknown84 = min + 1;
   }
-  if (this->min != min) {
-    this->min = min;
-    needUpdate |= true;
+  if (this->unknown80 != min) {
+    this->unknown80 = min;
+    unknown18 |= true;
   }
 }
 
 void UIObjectNumberPlugin::setMax(int max) {
-  if (max <= min) {
-    max = min + 1;
+  if (max <= unknown80) {
+    max = unknown80 + 1;
   }
-  if (max != this->max) {
-    this->max = max;
-    needUpdate |= true;
+  if (max != this->unknown84) {
+    this->unknown84 = max;
+    unknown18 |= true;
   }
 }
 
 void UIObjectNumberPlugin::setInterpolate(f32 time) {
-  interpolate = true;
-  interpolateTime = time;
+  unknown8a = true;
+  unknowne0 = time;
 }
 
 void UIObjectNumberPlugin::reload(UIObjectAcc &acc) {
-  if (type != TYPE_TEXT && type != TYPE_TEXT_STRING) {
+  if (unknown88 != TYPE_TEXT && unknown88 != TYPE_TEXT_STRING) {
     return;
   }
 
   const char *text = acc.getTextPtr();
-  format = text;
+  unknown90 = text;
   if (text == nullptr || !UIUtil::checkNumberTextFormat(text, 1)) {
-    format = "e%d";
+    unknown90 = "e%d";
   }
-  type = strstr(text, "%s") != nullptr ? TYPE_TEXT_STRING : TYPE_TEXT;
-  needUpdate |= true;
+  unknown88 = strstr(text, "%s") != nullptr ? TYPE_TEXT_STRING : TYPE_TEXT;
+  unknown18 |= true;
 }
 
 void UIObjectNumberPlugin::refreshMoneySeparetor() { s_MoneySeparetor = UIUtil::getMoneySeparetor(fw::LangUtil::getLangType()); }
 
 const mm::mtl::RTTI *UIObjectNumberPlugin::getRTTI() const { return &m_rtti; }
 
-bool UIObjectNumberPlugin::isNeedUpdate(UIObjectAcc &acc) {
-  return (needUpdate & 1) || interpolationUpdater.ctrl != nullptr || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0;
-}
+bool UIObjectNumberPlugin::isNeedUpdate(UIObjectAcc &acc) { return (unknown18 & 1) || unknownc0.ctrl != nullptr || acc.isDisp() != unknown1d || unknown58.ctrl != nullptr || m_followObjHandle != 0; }
 
 } // namespace ui

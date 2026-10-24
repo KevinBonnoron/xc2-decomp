@@ -24,10 +24,10 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual bool isNeedUpdate(UIObjectAcc &acc);
 
-  u32 facePattern;
+  u32 unknown7c; // Inferred role: face pattern; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectPatternPlugin, facePattern) == 0x7c, "");
+static_assert(offsetof(UIObjectPatternPlugin, unknown7c) == 0x7c, "");
 static_assert(sizeof(UIObjectPatternPlugin) == 0x80, "");
 
 } // namespace ui

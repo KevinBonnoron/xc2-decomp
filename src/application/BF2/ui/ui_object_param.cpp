@@ -6,13 +6,13 @@
 namespace ui {
 
 UIObjectParam::UIObjectParam(u32 handle) {
-  this->handle = handle;
+  this->unknown18 = handle;
   UIUtil::getObject(handle)->registAdditionalParam(this);
 }
 
 UIObjectParam::~UIObjectParam() {
-  if (handle != 0) {
-    UIObject *object = UIUtil::getObject(handle);
+  if (unknown18 != 0) {
+    UIObject *object = UIUtil::getObject(unknown18);
     if (object != nullptr) {
       object->registAdditionalParam(this);
     }

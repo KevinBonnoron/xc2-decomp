@@ -7,49 +7,49 @@
 
 namespace ui {
 
-UITextManager::UITextManager() { fileMap.reserve(UIUtil::getProgAllocator(), 256); }
+UITextManager::UITextManager() { unknownc10.reserve(UIUtil::getProgAllocator(), 256); }
 
 UITextManager::~UITextManager() {
-  for (FileInfo *it = files.begin(); it != files.end(); ++it) {
-    delete static_cast<UITextFile *>(fileMap.getPtr(it->handle));
+  for (FileInfo *it = unknown08.begin(); it != unknown08.end(); ++it) {
+    delete static_cast<UITextFile *>(unknownc10.getPtr(it->unknown04));
   }
-  files.clear();
+  unknown08.clear();
 }
 
 u32 UITextManager::registTextFile(u8 *data) {
   u32 hash = mm::mtl::hashStrCrc(Bdat::getSheetName(data));
-  for (FileInfo *it = files.begin(); it != files.end(); ++it) {
-    if (it->hash == hash) {
-      it->refCount++;
-      return it->handle;
+  for (FileInfo *it = unknown08.begin(); it != unknown08.end(); ++it) {
+    if (it->unknown00 == hash) {
+      it->unknown08++;
+      return it->unknown04;
     }
   }
 
-  u32 handle = fileMap.regist(UITextFile::create(data));
+  u32 handle = unknownc10.regist(UITextFile::create(data));
   if (handle != 0) {
     FileInfo info;
-    info.hash = hash;
-    info.handle = handle;
-    info.refCount = 1;
-    files.push_back(info);
+    info.unknown00 = hash;
+    info.unknown04 = handle;
+    info.unknown08 = 1;
+    unknown08.push_back(info);
   }
   return handle;
 }
 
 void UITextManager::unregistTextFile(u32 handle) {
-  for (FileInfo *it = files.begin(); it != files.end(); ++it) {
-    if (it->handle == handle && (it->refCount == 0 || --it->refCount == 0)) {
-      delete static_cast<UITextFile *>(fileMap.getPtr(handle));
-      fileMap.remove(it->handle);
-      files.erase(it);
+  for (FileInfo *it = unknown08.begin(); it != unknown08.end(); ++it) {
+    if (it->unknown04 == handle && (it->unknown08 == 0 || --it->unknown08 == 0)) {
+      delete static_cast<UITextFile *>(unknownc10.getPtr(handle));
+      unknownc10.remove(it->unknown04);
+      unknown08.erase(it);
       return;
     }
   }
 }
 
 void UITextManager::reloadAll() {
-  for (FileInfo *it = files.begin(); it != files.end(); ++it) {
-    UITextFile *file = static_cast<UITextFile *>(fileMap.getPtr(it->handle));
+  for (FileInfo *it = unknown08.begin(); it != unknown08.end(); ++it) {
+    UITextFile *file = static_cast<UITextFile *>(unknownc10.getPtr(it->unknown04));
     if (file != nullptr) {
       file->reload();
     }
@@ -57,14 +57,14 @@ void UITextManager::reloadAll() {
 }
 
 void UITextManager::reload(u32 handle) {
-  UITextFile *file = static_cast<UITextFile *>(fileMap.getPtr(handle));
+  UITextFile *file = static_cast<UITextFile *>(unknownc10.getPtr(handle));
   if (file != nullptr) {
     file->reload();
   }
 }
 
 const char *UITextManager::getText(u32 handle, u32 id) const {
-  UITextFile *file = static_cast<UITextFile *>(fileMap.getPtr(handle));
+  UITextFile *file = static_cast<UITextFile *>(unknownc10.getPtr(handle));
   if (file != nullptr) {
     return file->getText(id);
   }
@@ -72,7 +72,7 @@ const char *UITextManager::getText(u32 handle, u32 id) const {
 }
 
 u16 UITextManager::getStyle(u32 handle, u32 id) const {
-  UITextFile *file = static_cast<UITextFile *>(fileMap.getPtr(handle));
+  UITextFile *file = static_cast<UITextFile *>(unknownc10.getPtr(handle));
   if (file != nullptr) {
     return file->getStyle(id);
   }
@@ -80,8 +80,8 @@ u16 UITextManager::getStyle(u32 handle, u32 id) const {
 }
 
 u8 *UITextManager::getTextFile(u32 handle) const {
-  UITextFile *file = static_cast<UITextFile *>(fileMap.getPtr(handle));
-  return file != nullptr ? file->data : nullptr;
+  UITextFile *file = static_cast<UITextFile *>(unknownc10.getPtr(handle));
+  return file != nullptr ? file->unknown08 : nullptr;
 }
 
 } // namespace ui

@@ -7,7 +7,7 @@
 
 namespace ui {
 
-UIObjectScrollBarPlugin::UIObjectScrollBarPlugin() : list(nullptr), bar(0), direction(0), basePos(0, 0), scaleEnable(true) {}
+UIObjectScrollBarPlugin::UIObjectScrollBarPlugin() : unknown20(nullptr), unknown28(0), unknown2c(0), unknown30(0, 0), unknown50(true) {}
 
 UIObjectScrollBarPlugin::~UIObjectScrollBarPlugin() { ; }
 
@@ -20,11 +20,11 @@ UIObjectScrollBarPlugin *UIObjectScrollBarPlugin::create(u32 handle, u32 directi
     plugin->addRef();
     UIObjectAcc acc(handle);
     if (acc.isValid() && UIObjectPluginUtil::attachPlugin(handle, plugin)) {
-      plugin->list = list;
-      plugin->bar = acc.searchSibiling(barName);
-      plugin->direction = direction;
-      acc.getPos(plugin->basePos);
-      acc.getScale(plugin->baseScale);
+      plugin->unknown20 = list;
+      plugin->unknown28 = acc.searchSibiling(barName);
+      plugin->unknown2c = direction;
+      acc.getPos(plugin->unknown30);
+      acc.getScale(plugin->unknown40);
     } else if (plugin != nullptr) {
       plugin->release();
       plugin = nullptr;
@@ -33,7 +33,7 @@ UIObjectScrollBarPlugin *UIObjectScrollBarPlugin::create(u32 handle, u32 directi
   return plugin;
 }
 
-void UIObjectScrollBarPlugin::setScaleEnable(bool enable) { scaleEnable = enable; }
+void UIObjectScrollBarPlugin::setScaleEnable(bool enable) { unknown50 = enable; }
 
 const mm::mtl::RTTI *UIObjectScrollBarPlugin::getRTTI() const { return &m_rtti; }
 

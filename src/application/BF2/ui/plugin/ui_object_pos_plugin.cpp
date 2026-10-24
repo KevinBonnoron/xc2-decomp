@@ -6,11 +6,11 @@
 
 namespace ui {
 
-UIObjectPosPlugin::UIObjectPosPlugin() : pos(0, 0), isAdjustScreen(false), offsetMode(0), adjusting(false) {
-  adjustWidth = 0;
-  adjustHeight = 0;
-  adjustOffsetX = 0;
-  adjustOffsetY = 0;
+UIObjectPosPlugin::UIObjectPosPlugin() : unknown7c(0, 0), unknown80(false), unknown8c(0), unknown90(false) {
+  unknown82 = 0;
+  unknown84 = 0;
+  unknown86 = 0;
+  unknown88 = 0;
 }
 
 UIObjectPosPlugin::~UIObjectPosPlugin() { ; }
@@ -21,8 +21,8 @@ UIObjectPosPlugin *UIObjectPosPlugin::create(u32 handle, s16 x, s16 y) {
   UIObjectPosPlugin *plugin = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UIObjectPosPlugin();
   plugin->addRef();
   if (UIObjectPluginUtil::attachPlugin(handle, plugin)) {
-    plugin->pos.x = x;
-    plugin->pos.y = y;
+    plugin->unknown7c.x = x;
+    plugin->unknown7c.y = y;
   } else if (plugin != nullptr) {
     plugin->release();
     plugin = nullptr;

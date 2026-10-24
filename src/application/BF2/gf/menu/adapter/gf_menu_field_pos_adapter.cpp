@@ -70,8 +70,8 @@ void GfMenuFieldPosAdapter::update(const fw::UpdateInfo &info) {
       }
     }
   }
-  posPlugin->pos.x = point.x;
-  posPlugin->pos.y = point.y;
+  posPlugin->unknown7c.x = point.x;
+  posPlugin->unknown7c.y = point.y;
 }
 
 } // namespace gf

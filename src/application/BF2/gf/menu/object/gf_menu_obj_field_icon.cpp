@@ -23,12 +23,12 @@ void GfMenuObjFieldIcon::open(GfMenuCallContext *context, const OpenParam &param
     ui::UIObjectAcc icon(root.duplicateChild("LAY_icon"));
     if (icon.isValid()) {
       u32 imageIndex = GfMenuBdat::getIconImageIndex(param.unknown00);
-      ui::UIObjectAcc(icon.handle, "IMG_icon").setImageIndex(imageIndex);
+      ui::UIObjectAcc(icon.unknown10, "IMG_icon").setImageIndex(imageIndex);
       icon.setDisp(true);
       mm::Vec3 position = param.unknown10;
       position += param.unknown20;
-      GfMenuPosAdapter::createFixedPoint(icon.handle, position, false);
-      startCallContext(context, CALL_FIELD_ICON, icon.handle);
+      GfMenuPosAdapter::createFixedPoint(icon.unknown10, position, false);
+      startCallContext(context, CALL_FIELD_ICON, icon.unknown10);
     }
   }
 }
@@ -56,7 +56,7 @@ void GfMenuObjFieldIcon::dispAll(bool isDisp) { ui::UIObjectAcc(getAttachedObjec
 void GfMenuObjFieldIcon::initialize() {
   ui::UIObjectAcc main(unknown18, "LAY_main");
   if (main.isValid()) {
-    attachExternalCall(CALL_FIELD_ICON, main.handle);
+    attachExternalCall(CALL_FIELD_ICON, main.unknown10);
     GfMenuObject::initialize();
   }
 }

@@ -15,12 +15,12 @@ public:
   static UIEventDispCondition *create(u32 event, u32 value, const UIObjectDispPlugin *plugin);
   virtual int update();
 
-  const UIObjectDispPlugin *plugin;
-  bool disp;
+  const UIObjectDispPlugin *unknown20; // Inferred role: plugin; original member name unknown.
+  bool unknown28;                      // Inferred role: disp; original member name unknown.
 };
 
-static_assert(offsetof(UIEventDispCondition, plugin) == 0x20, "");
-static_assert(offsetof(UIEventDispCondition, disp) == 0x28, "");
+static_assert(offsetof(UIEventDispCondition, unknown20) == 0x20, "");
+static_assert(offsetof(UIEventDispCondition, unknown28) == 0x28, "");
 static_assert(sizeof(UIEventDispCondition) == 0x30, "");
 
 } // namespace ui

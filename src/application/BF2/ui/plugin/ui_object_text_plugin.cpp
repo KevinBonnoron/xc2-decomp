@@ -28,21 +28,21 @@ UIObjectTextPlugin *UIObjectTextPlugin::create(u32 handle) {
 }
 
 void UIObjectTextPlugin::setText(const UIStr &text) {
-  if (text.isValid() && !this->text.compare(text)) {
-    this->text.copy(text);
-    needUpdate |= true;
+  if (text.isValid() && !this->unknown80.compare(text)) {
+    this->unknown80.copy(text);
+    unknown18 |= true;
   }
 }
 
 void UIObjectTextPlugin::execute(UIObjectAcc &acc) {
-  if (text.isValid()) {
-    acc.setText(text);
+  if (unknown80.isValid()) {
+    acc.setText(unknown80);
   }
   UIObjectDispPlugin::execute(acc);
 }
 
 const mm::mtl::RTTI *UIObjectTextPlugin::getRTTI() const { return &m_rtti; }
 
-bool UIObjectTextPlugin::isNeedUpdate(UIObjectAcc &acc) { return (needUpdate & 1) || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0; }
+bool UIObjectTextPlugin::isNeedUpdate(UIObjectAcc &acc) { return (unknown18 & 1) || acc.isDisp() != unknown1d || unknown58.ctrl != nullptr || m_followObjHandle != 0; }
 
 } // namespace ui

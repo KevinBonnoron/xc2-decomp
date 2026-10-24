@@ -14,13 +14,13 @@ namespace ui {
 
 void UIManager::terminate() {
   for (int i = 0; i < GROUP_MAX; i++) {
-    groups[i].terminateObjectAll(true);
+    unknown08[i].terminateObjectAll(true);
   }
 }
 
 bool UIManager::isLayerCreated(u32 layer) {
-  for (LayerInfo *it = layers.begin(); it != layers.end(); ++it) {
-    if (it->layer == layer) {
+  for (LayerInfo *it = unknown348.begin(); it != unknown348.end(); ++it) {
+    if (it->unknown02 == layer) {
       return true;
     }
   }
@@ -29,7 +29,7 @@ bool UIManager::isLayerCreated(u32 layer) {
 
 u32 UIManager::searchObject(const char *name, u16 group) {
   if (name != nullptr && group < GROUP_MAX && *name != '\0') {
-    return groups[group].searchObject(name);
+    return unknown08[group].searchObject(name);
   }
   return 0;
 }
@@ -60,16 +60,16 @@ bool UIManager::preloadLayer(u32 layer) {
 
 void UIManager::terminateObject(const char *name, u8 group, bool isImmediate) {
   if (name != nullptr && group < GROUP_MAX && *name != '\0') {
-    groups[group].terminateObject(name, isImmediate);
+    unknown08[group].terminateObject(name, isImmediate);
   }
 }
 
 void UIManager::requestObjectEvent(u32 handle, const EventData &event, f32 delay) {
   if (UIUtil::isValid(handle)) {
     UIEventManager::EventInfo info;
-    info.handle = handle;
-    info.data = event;
-    info.delay = delay;
+    info.unknown00 = handle;
+    info.unknown08 = event;
+    info.unknown04 = delay;
     UIEventManager::get()->pushObjectEvent(info);
   }
 }
@@ -77,15 +77,15 @@ void UIManager::requestObjectEvent(u32 handle, const EventData &event, f32 delay
 void UIManager::requestGameEvent(u32 handle, const EventData &event) {
   if (UIUtil::isValid(handle)) {
     UIEventManager::EventInfo info;
-    info.handle = handle;
-    info.data = event;
+    info.unknown00 = handle;
+    info.unknown08 = event;
     UIEventManager::get()->pushGameEvent(info);
   }
 }
 
 void UIManager::setGameEventLisenter(UIGameListener *listener) { UIEventManager::get()->setGameListener(listener); }
 
-void UIManager::setUpdateCallback(UIUpdateCallback *callback) { updateCallback = callback; }
+void UIManager::setUpdateCallback(UIUpdateCallback *callback) { m_updateCallback = callback; }
 
 void UIManager::registObjectTimer(u32 handle, u16 id, u64 time, bool repeat) { UITimerManager::get()->registTimer(handle, id, time, repeat); }
 
@@ -98,7 +98,7 @@ void UIManager::releaseObjectTimer(u32 handle) {
 
 void UIManager::setDisp(u16 group, bool disp) {
   if (group < GROUP_MAX) {
-    groups[group].disp(disp);
+    unknown08[group].disp(disp);
   }
 }
 
@@ -108,21 +108,21 @@ void UIManager::reloadText() {
   UIObjectNumberPlugin::refreshMoneySeparetor();
   UITextManager::get()->reloadAll();
   for (int i = 0; i < GROUP_MAX; i++) {
-    groups[i].reloadText();
+    unknown08[i].reloadText();
   }
 }
 
 u32 UIManager::getLoadedResourceSize() {
   u32 size = 0;
   for (int i = 0; i < GROUP_MAX; i++) {
-    size += groups[i].getLoadedResourceSize();
+    size += unknown08[i].getLoadedResourceSize();
   }
   return size;
 }
 
 bool UIManager::isTerminated() const {
   for (int i = 0; i < GROUP_MAX; i++) {
-    if (groups[i].hasObject()) {
+    if (unknown08[i].hasObject()) {
       return false;
     }
   }

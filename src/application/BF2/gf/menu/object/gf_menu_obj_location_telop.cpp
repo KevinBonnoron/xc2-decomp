@@ -30,12 +30,12 @@ void GfMenuObjLocationTelop::initialize() {
 #line 62
   MainListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) MainListener(this);
   listener->addRef();
-  ui::UIEventManager::get()->registObjectListener(main.handle, listener);
+  ui::UIEventManager::get()->registObjectListener(main.unknown10, listener);
   if (listener != nullptr) {
     listener->release();
   }
-  attachExternalCall(CALL_LOCATION_TELOP, main.handle);
-  attachExternalCall(CALL_LOCATION_TELOP_SUB, main.handle);
+  attachExternalCall(CALL_LOCATION_TELOP, main.unknown10);
+  attachExternalCall(CALL_LOCATION_TELOP_SUB, main.unknown10);
   GfMenuObject::initialize();
 }
 
@@ -48,12 +48,12 @@ void GfMenuObjLocationTelop::open(const OpenParam &param) {
   if (acc.isValid() && !acc.isTerm() && param.unknown10) {
     u16 text = registString(ui::UIStr(param.unknown00, param.unknown08));
     ui::EventData event;
-    event.type = EVENT_OPEN_TELOP;
-    event.param0 = text;
-    event.param1 = TELOP_FRAME;
-    event.param2 = param.unknown0c;
-    event.param3 = param.unknown10;
-    GfMenuOrderMgr::setOrder(ORDER_LOCATION_TELOP, acc.handle, event);
+    event.unknown00 = EVENT_OPEN_TELOP;
+    event.unknown08 = text;
+    event.unknown0c = TELOP_FRAME;
+    event.unknown10 = param.unknown0c;
+    event.unknown14 = param.unknown10;
+    GfMenuOrderMgr::setOrder(ORDER_LOCATION_TELOP, acc.unknown10, event);
   }
 }
 
@@ -61,8 +61,8 @@ void GfMenuObjLocationTelop::close() {
   ui::UIObjectAcc acc(getAttachedObject(CALL_LOCATION_TELOP));
   if (acc.isValid() && !acc.isTerm()) {
     ui::EventData event;
-    event.type = EVENT_CLOSE_TELOP;
-    ui::UIManager::get()->requestObjectEvent(acc.handle, event, 0.0f);
+    event.unknown00 = EVENT_CLOSE_TELOP;
+    ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
   }
 }
 

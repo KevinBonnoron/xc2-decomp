@@ -6,7 +6,7 @@
 
 namespace ui {
 
-UIEventDispCondition::UIEventDispCondition(u32 event, u32 value) : UIEventCondition(event, value), plugin(nullptr), disp(false) {}
+UIEventDispCondition::UIEventDispCondition(u32 event, u32 value) : UIEventCondition(event, value), unknown20(nullptr), unknown28(false) {}
 
 UIEventDispCondition::~UIEventDispCondition() { ; }
 
@@ -19,15 +19,15 @@ UIEventDispCondition *UIEventDispCondition::create(u32 event, u32 value, const U
 #line 43
   UIEventDispCondition *condition = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UIEventDispCondition(event, value);
   condition->addRef();
-  condition->plugin = plugin;
-  condition->disp = !plugin->disp;
+  condition->unknown20 = plugin;
+  condition->unknown28 = !plugin->unknown1d;
   return condition;
 }
 
 int UIEventDispCondition::update() {
-  bool disp = plugin->disp;
-  int result = disp == this->disp ? 0 : (disp ? 5 : 6);
-  this->disp = disp;
+  bool disp = unknown20->unknown1d;
+  int result = disp == this->unknown28 ? 0 : (disp ? 5 : 6);
+  this->unknown28 = disp;
   return result;
 }
 

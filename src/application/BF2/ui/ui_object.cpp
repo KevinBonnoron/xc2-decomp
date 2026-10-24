@@ -31,55 +31,55 @@ const layer::LayerBlendType BLEND_TYPES[] = {layer::LAYER_BLEND_TYPE_NORMAL, lay
 } // namespace
 
 UIObject::UIObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name, u32 type)
-    : UIObjectBase(name), layer(layer), layerAcc(layer), objectType(type), duplicateCount(0), parent(0), plugins(nullptr) {
-  handle = UIUtil::registObject(this);
-  nameHash = mm::mtl::hashStrCrc(this->name.c_str());
+    : UIObjectBase(name), unknownc8(layer), unknownd0(layer), unknownd8(type), unknownda(0), unknowndc(0), unknowne0(nullptr) {
+  unknowne8 = UIUtil::registObject(this);
+  unknownec = mm::mtl::hashStrCrc(this->unknowna0.c_str());
 }
 
 UIObject::~UIObject() {
-  if (layer != nullptr) {
-    layer->release();
-    layer = nullptr;
+  if (unknownc8 != nullptr) {
+    unknownc8->release();
+    unknownc8 = nullptr;
   }
 
-  for (mm::mtl::IntrusiveList<UIObjectParam>::iterator it = params.begin(); it != params.end(); ++it) {
-    it->handle = 0;
+  for (mm::mtl::IntrusiveList<UIObjectParam>::iterator it = unknownf0.begin(); it != unknownf0.end(); ++it) {
+    it->unknown18 = 0;
   }
 
-  if (plugins != nullptr) {
-    UIObjectPlugin *plugin = plugins;
+  if (unknowne0 != nullptr) {
+    UIObjectPlugin *plugin = unknowne0;
     do {
-      UIObjectPlugin *next = plugin->next;
+      UIObjectPlugin *next = plugin->unknown10;
       plugin->release();
       plugin = next;
     } while (plugin != nullptr);
   }
-  plugins = nullptr;
+  unknowne0 = nullptr;
 }
 
 void UIObject::update() {
-  if (flags.test(UI_OBJECT_FLAG_DUPLICATE) && !flags.test(UI_OBJECT_FLAG_TERM)) {
-    if (UIUtil::getObject(parent)->isTerm()) {
+  if (unknown98.test(UI_OBJECT_FLAG_DUPLICATE) && !unknown98.test(UI_OBJECT_FLAG_TERM)) {
+    if (UIUtil::getObject(unknowndc)->isTerm()) {
       setTerm();
       return;
     }
   }
 
-  if (!flags.test(UI_OBJECT_FLAG_SUSPEND) && displayInfo.disp) {
+  if (!unknown98.test(UI_OBJECT_FLAG_SUSPEND) && unknown50.unknown08) {
     UIObjectBase::update();
   }
 }
 
 UIObject *UIObject::getParentPtr() const {
-  if (parent != 0) {
-    return UIUtil::getObject(parent);
+  if (unknowndc != 0) {
+    return UIUtil::getObject(unknowndc);
   }
   return nullptr;
 }
 
 void UIObject::updatePlugin() {
   UIObjectAcc acc(this);
-  for (UIObjectPlugin *plugin = plugins; plugin != nullptr; plugin = plugin->next) {
+  for (UIObjectPlugin *plugin = unknowne0; plugin != nullptr; plugin = plugin->unknown10) {
     if (plugin->isNeedUpdate(acc)) {
       plugin->execute(acc);
     }
@@ -87,22 +87,22 @@ void UIObject::updatePlugin() {
 }
 
 void UIObject::applyDisplayInfo(const UIObjectParam::AdditionalParam &param) {
-  layerAcc.setCenterType(CENTER_TYPES[displayInfo.displayMode]);
-  layerAcc.setPriority(displayInfo.priority);
-  layerAcc.setAddCol(displayInfo.getAddColor());
-  mm::Col4 color = displayInfo.getMulColor();
+  unknownd0.setCenterType(CENTER_TYPES[unknown50.unknown09]);
+  unknownd0.setPriority(unknown50.unknown0c);
+  unknownd0.setAddCol(unknown50.getAddColor());
+  mm::Col4 color = unknown50.getMulColor();
   color.a = param.alpha * color.a;
-  layerAcc.setMulCol(color);
+  unknownd0.setMulCol(color);
 }
 
 void UIObject::setParent(u32 parent) {
-  if (this->parent != parent) {
-    this->parent = parent;
+  if (this->unknowndc != parent) {
+    this->unknowndc = parent;
   }
 }
 
 void UIObject::getPos(mm::Pnt<s16> &pos) const {
-  pos = transform.pos;
+  pos = unknown20.unknown08;
   mm::Pnt<s16> offset;
   getDisplayOffset(UI_DISPLAY_MODE_TOP_LEFT, offset);
   pos.x += offset.x;
@@ -110,7 +110,7 @@ void UIObject::getPos(mm::Pnt<s16> &pos) const {
 }
 
 void UIObject::getPosCenter(mm::Pnt<s16> &pos) const {
-  pos = transform.pos;
+  pos = unknown20.unknown08;
   mm::Pnt<s16> offset;
   getDisplayOffset(UI_DISPLAY_MODE_CENTER, offset);
   pos.x += offset.x;
@@ -122,7 +122,7 @@ void UIObject::setPos(const mm::Pnt<s16> &pos) {
   s16 y = pos.y;
   mm::Pnt<s16> offset;
   getDisplayOffset(UI_DISPLAY_MODE_TOP_LEFT, offset);
-  transform.setPos(x - offset.x, y - offset.y);
+  unknown20.setPos(x - offset.x, y - offset.y);
 }
 
 void UIObject::setPosCenter(const mm::Pnt<s16> &pos) {
@@ -130,17 +130,17 @@ void UIObject::setPosCenter(const mm::Pnt<s16> &pos) {
   s16 y = pos.y;
   mm::Pnt<s16> offset;
   getDisplayOffset(UI_DISPLAY_MODE_CENTER, offset);
-  transform.setPos(x - offset.x, y - offset.y);
+  unknown20.setPos(x - offset.x, y - offset.y);
 }
 
 void UIObject::resetDirty() {
-  transform.dirty = false;
-  displayInfo.dirty = false;
+  unknown20.unknown24 = false;
+  unknown50.unknown30 = false;
 }
 
 void UIObject::attachPlugin(UIObjectPlugin *plugin) {
-  plugin->next = plugins;
-  plugins = plugin;
+  plugin->unknown10 = unknowne0;
+  unknowne0 = plugin;
   plugin->addRef();
 }
 
@@ -149,7 +149,7 @@ bool UIObject::isPluginOwner(UIObjectPlugin *plugin) const {
     return false;
   }
 
-  for (UIObjectPlugin *owned = plugins; owned != nullptr; owned = owned->next) {
+  for (UIObjectPlugin *owned = unknowne0; owned != nullptr; owned = owned->unknown10) {
     if (owned == plugin) {
       return true;
     }
@@ -159,27 +159,27 @@ bool UIObject::isPluginOwner(UIObjectPlugin *plugin) const {
 
 void UIObject::registAdditionalParam(UIObjectParam *param) {
   if (param != nullptr) {
-    params.push_back(param);
+    unknownf0.push_back(param);
   }
 }
 
 void UIObject::unregistAdditionalParam(UIObjectParam *param) {
   if (param != nullptr) {
-    params.erase(param);
+    unknownf0.erase(param);
   }
 }
 
 void UIObject::getDisplayOffset(u16 mode, mm::Pnt<s16> &offset) const {
   offset.x = 0;
   offset.y = 0;
-  u32 width = static_cast<s32>(displayInfo.pixelWidth * transform.scale.x);
-  u32 height = static_cast<s32>(displayInfo.pixelHeight * transform.scale.y);
-  if (displayInfo.displayMode == UI_DISPLAY_MODE_TOP_LEFT) {
+  u32 width = static_cast<s32>(unknown50.unknown2c * unknown20.unknown10.x);
+  u32 height = static_cast<s32>(unknown50.unknown2e * unknown20.unknown10.y);
+  if (unknown50.unknown09 == UI_DISPLAY_MODE_TOP_LEFT) {
     if (mode == UI_DISPLAY_MODE_CENTER) {
       offset.x = width >> 1;
       offset.y = height >> 1;
     }
-  } else if (displayInfo.displayMode == UI_DISPLAY_MODE_CENTER) {
+  } else if (unknown50.unknown09 == UI_DISPLAY_MODE_CENTER) {
     if (mode == UI_DISPLAY_MODE_TOP_LEFT) {
       offset.x = -(width >> 1);
       offset.y = -(height >> 1);
@@ -189,30 +189,30 @@ void UIObject::getDisplayOffset(u16 mode, mm::Pnt<s16> &offset) const {
 
 void UIObject::switchDisplayMode(u16 mode) {
   layer::LayerAccManager manager;
-  if (displayInfo.displayMode == mode) {
+  if (unknown50.unknown09 == mode) {
     return;
   }
 
-  f32 width = displayInfo.pixelWidth * transform.scale.x;
-  f32 height = displayInfo.pixelHeight * transform.scale.y;
+  f32 width = unknown50.unknown2c * unknown20.unknown10.x;
+  f32 height = unknown50.unknown2e * unknown20.unknown10.y;
   if (mode == UI_DISPLAY_MODE_CENTER) {
-    if (isImageType() || objectType == UI_OBJECT_TYPE_TEXT) {
-      transform.setPos(transform.getPos().x + static_cast<s16>(width * 0.5f), transform.getPos().y + static_cast<s16>(height * 0.5f));
+    if (isImageType() || unknownd8 == UI_OBJECT_TYPE_TEXT) {
+      unknown20.setPos(unknown20.getPos().x + static_cast<s16>(width * 0.5f), unknown20.getPos().y + static_cast<s16>(height * 0.5f));
     }
-  } else if (isImageType() || objectType == UI_OBJECT_TYPE_TEXT) {
-    transform.setPos(transform.getPos().x - static_cast<s16>(width * 0.5f), transform.getPos().y - static_cast<s16>(height * 0.5f));
+  } else if (isImageType() || unknownd8 == UI_OBJECT_TYPE_TEXT) {
+    unknown20.setPos(unknown20.getPos().x - static_cast<s16>(width * 0.5f), unknown20.getPos().y - static_cast<s16>(height * 0.5f));
   }
-  displayInfo.displayMode = mode;
+  unknown50.unknown09 = mode;
 }
 
 void UIObject::setBlendType(u16 type) {
-  displayInfo.blendType = type;
-  layerAcc.setBlendType(BLEND_TYPES[type]);
+  unknown50.unknown0a = type;
+  unknownd0.setBlendType(BLEND_TYPES[type]);
 }
 
-void UIObject::setPriority(u16 priority) { displayInfo.priority = priority; }
+void UIObject::setPriority(u16 priority) { unknown50.unknown0c = priority; }
 
-void UIObject::setAddColor(const mm::Col3 &color) { displayInfo.addColor = color; }
+void UIObject::setAddColor(const mm::Col3 &color) { unknown50.unknown20 = color; }
 
 void UIObject::setDebugDraw(bool) {}
 
@@ -225,7 +225,7 @@ void UIObject::importDisplaySize(UIDisplayInfo &displayInfo, layer::LayerBase *l
     layer::LayerAccFontObj font(layer);
     displayInfo.setPixelWidth(font.getFontPixelWidth());
     displayInfo.setPixelHeight(font.getFontPixelHeight());
-    displayInfo.dirty = true;
+    displayInfo.unknown30 = true;
     break;
   }
   case layer::LAYER_OBJ_TYPE_MEM: {
@@ -245,12 +245,12 @@ void UIObject::importDisplayInfo(UIDisplayInfo &displayInfo, layer::LayerBase *l
   layer::LayerAccObjBase acc(layer);
   importDisplaySize(displayInfo, layer);
   if (acc.getCenterType() == layer::LAYER_CENTER_TYPE_TOP_LEFT) {
-    displayInfo.displayMode = UI_DISPLAY_MODE_TOP_LEFT;
+    displayInfo.unknown09 = UI_DISPLAY_MODE_TOP_LEFT;
   } else if (acc.getCenterType() == layer::LAYER_CENTER_TYPE_CENTER) {
-    displayInfo.displayMode = UI_DISPLAY_MODE_CENTER;
+    displayInfo.unknown09 = UI_DISPLAY_MODE_CENTER;
   }
   mm::Col4 color = acc.getMulCol();
-  displayInfo.mulColor = color;
+  displayInfo.unknown10 = color;
 }
 
 const mm::mtl::RTTI *UIObject::getRTTI() const { return &m_rtti; }

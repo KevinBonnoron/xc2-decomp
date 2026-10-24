@@ -35,12 +35,12 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual bool isNeedUpdate(UIObjectAcc &acc);
 
-  u32 targetObject;
-  u32 targetFlag;
+  u32 m_targetObject;
+  u32 m_targetFlag;
 };
 
-static_assert(offsetof(UIObjectSyncPlugin, targetObject) == 0x1c, "");
-static_assert(offsetof(UIObjectSyncPlugin, targetFlag) == 0x20, "");
+static_assert(offsetof(UIObjectSyncPlugin, m_targetObject) == 0x1c, "");
+static_assert(offsetof(UIObjectSyncPlugin, m_targetFlag) == 0x20, "");
 static_assert(sizeof(UIObjectSyncPlugin) == 0x28, "");
 
 } // namespace ui

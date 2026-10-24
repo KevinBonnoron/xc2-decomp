@@ -6,7 +6,7 @@
 
 namespace ui {
 
-UICtrlObject::UICtrlObject(u32 object) : object(object), eventHandler(0) {
+UICtrlObject::UICtrlObject(u32 object) : unknown20(object), unknown24(0) {
   addRef();
   UICtrlManager::get()->addCtrlObject(this);
 }
@@ -17,16 +17,16 @@ bool UICtrlObject::isTerm() {
   if (getRefCount() == 1) {
     return true;
   }
-  return !UIUtil::isValid(object);
+  return !UIUtil::isValid(unknown20);
 }
 
 void UICtrlObject::setupEventHanding(u32 handler, u16 id) {
-  eventHandler = handler;
-  this->id = id;
+  unknown24 = handler;
+  this->unknown28 = id;
 }
 
-u16 UICtrlObject::getEventType(const EventData &event) { return event.param0 >> 16; }
+u16 UICtrlObject::getEventType(const EventData &event) { return event.unknown08 >> 16; }
 
-void UICtrlObject::getEventParam(const EventData &event, u32 index, uiEventParam &param) { param.valueU32 = (&event.param0)[index]; }
+void UICtrlObject::getEventParam(const EventData &event, u32 index, uiEventParam &param) { param.valueU32 = (&event.unknown08)[index]; }
 
 } // namespace ui

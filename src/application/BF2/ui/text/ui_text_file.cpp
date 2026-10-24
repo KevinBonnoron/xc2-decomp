@@ -6,7 +6,7 @@
 
 namespace ui {
 
-UITextFile::UITextFile(u8 *data) : data(data) { name = Bdat::getSheetName(data); }
+UITextFile::UITextFile(u8 *data) : unknown08(data) { unknown10 = Bdat::getSheetName(data); }
 
 UITextFile::~UITextFile() { ; }
 
@@ -16,18 +16,18 @@ UITextFile *UITextFile::create(u8 *data) {
   return new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UITextFile(data);
 }
 
-void UITextFile::reload() { data = Bdat::getFP(name.c_str()); }
+void UITextFile::reload() { unknown08 = Bdat::getFP(unknown10.c_str()); }
 
 const char *UITextFile::getText(u32 id) const {
-  if (data != nullptr) {
-    return Bdat::getMSText(data, id);
+  if (unknown08 != nullptr) {
+    return Bdat::getMSText(unknown08, id);
   }
   return nullptr;
 }
 
 u16 UITextFile::getStyle(u32 id) const {
-  if (data != nullptr) {
-    return Bdat::getMSStyle(data, id);
+  if (unknown08 != nullptr) {
+    return Bdat::getMSStyle(unknown08, id);
   }
   return 0xffff;
 }

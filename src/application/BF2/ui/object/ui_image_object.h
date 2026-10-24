@@ -60,16 +60,16 @@ public:
   void setAnimationPlaybackTime(f32 time);
   void applyCapture();
 
-  u32 streamId;
-  u16 imageIndex;
-  ml::ScnRenderDrCapture *capture;
-  bool playbackControl;
+  u32 unknown108;                     // Inferred role: stream id; original member name unknown.
+  u16 unknown10c;                     // Inferred role: image index; original member name unknown.
+  ml::ScnRenderDrCapture *unknown110; // Inferred role: capture; original member name unknown.
+  bool unknown118;                    // Inferred role: playback control; original member name unknown.
 };
 
-static_assert(offsetof(UIImageObject, streamId) == 0x108, "");
-static_assert(offsetof(UIImageObject, imageIndex) == 0x10c, "");
-static_assert(offsetof(UIImageObject, capture) == 0x110, "");
-static_assert(offsetof(UIImageObject, playbackControl) == 0x118, "");
+static_assert(offsetof(UIImageObject, unknown108) == 0x108, "");
+static_assert(offsetof(UIImageObject, unknown10c) == 0x10c, "");
+static_assert(offsetof(UIImageObject, unknown110) == 0x110, "");
+static_assert(offsetof(UIImageObject, unknown118) == 0x118, "");
 static_assert(sizeof(UIImageObject) == 0x120, "");
 
 } // namespace ui

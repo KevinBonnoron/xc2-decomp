@@ -4,28 +4,28 @@ namespace ui {
 
 UIInputLayer::~UIInputLayer() {}
 
-void UIInputLayer::resetSelection() { selectIndex = -1; }
+void UIInputLayer::resetSelection() { unknown48 = -1; }
 
 bool UIInputLayer::isEnableSelect(int index) {
-  if (selectionChecker != nullptr) {
-    return selectionChecker->isEnableSelect(handle, index);
+  if (unknown1d8 != nullptr) {
+    return unknown1d8->isEnableSelect(unknown40, index);
   }
   return true;
 }
 
 void UIInputLayer::setActionEnable(u16 actId, bool enable) {
-  for (InputAction *it = setup.actions.begin(); it != setup.actions.end(); ++it) {
-    if (it->actId == actId) {
-      it->enable = enable;
+  for (InputAction *it = unknown50.unknown00.begin(); it != unknown50.unknown00.end(); ++it) {
+    if (it->unknown02 == actId) {
+      it->unknown0d = enable;
       return;
     }
   }
 }
 
 bool UIInputLayer::getActionEnable(u16 actId) {
-  for (InputAction *it = setup.actions.begin(); it != setup.actions.end(); ++it) {
-    if (it->actId == actId) {
-      return it->enable;
+  for (InputAction *it = unknown50.unknown00.begin(); it != unknown50.unknown00.end(); ++it) {
+    if (it->unknown02 == actId) {
+      return it->unknown0d;
     }
   }
   return false;
@@ -34,16 +34,16 @@ bool UIInputLayer::getActionEnable(u16 actId) {
 bool UIInputLayer::hasEventExt() const { return false; }
 
 void UIInputLayer::clear() {
-  event.type = 0;
-  actionEvent.type = 0;
-  event.param0 = 0;
-  event.param1 = 0;
-  event.param2 = 0;
-  event.param3 = 0;
-  actionEvent.param0 = 0;
-  actionEvent.param1 = 0;
-  actionEvent.param2 = 0;
-  actionEvent.param3 = 0;
+  unknown10.unknown00 = 0;
+  unknown28.unknown00 = 0;
+  unknown10.unknown08 = 0;
+  unknown10.unknown0c = 0;
+  unknown10.unknown10 = 0;
+  unknown10.unknown14 = 0;
+  unknown28.unknown08 = 0;
+  unknown28.unknown0c = 0;
+  unknown28.unknown10 = 0;
+  unknown28.unknown14 = 0;
   clearExt();
 }
 

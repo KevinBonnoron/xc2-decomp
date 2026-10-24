@@ -9,9 +9,9 @@ namespace ui {
 UIStr::UIStr() { init(); }
 
 void UIStr::init() {
-  type = TYPE_NONE;
-  option = 0;
-  allocatedSize = 0;
+  unknown10 = TYPE_NONE;
+  unknown12 = 0;
+  unknown08 = 0;
   reference = nullptr;
 }
 
@@ -21,23 +21,23 @@ UIStr::UIStr(const UIStr &other) {
 }
 
 UIStr::UIStr(u8 *data, u32 id) {
-  allocatedSize = 0;
+  unknown08 = 0;
   reference = nullptr;
-  type = TYPE_NONE;
-  option = 0;
+  unknown10 = TYPE_NONE;
+  unknown12 = 0;
   if (data != nullptr && id != 0) {
-    mstxt.fileId = UITextManager::get()->registTextFile(data);
-    mstxt.msgId = id;
-    type = TYPE_MSTXT;
+    mstxt.unknown00 = UITextManager::get()->registTextFile(data);
+    mstxt.unknown04 = id;
+    unknown10 = TYPE_MSTXT;
   }
 }
 
 void UIStr::setupMstxt(u8 *data, u32 id) {
   release();
   if (data != nullptr && id != 0) {
-    mstxt.fileId = UITextManager::get()->registTextFile(data);
-    mstxt.msgId = id;
-    type = TYPE_MSTXT;
+    mstxt.unknown00 = UITextManager::get()->registTextFile(data);
+    mstxt.unknown04 = id;
+    unknown10 = TYPE_MSTXT;
   }
 }
 
@@ -57,31 +57,31 @@ void UIStr::setupAllocated(const char *string) { allocate(string); }
 void UIStr::setupReference(const char *string) {
   release();
   reference = string;
-  type = TYPE_REFERENCE;
+  unknown10 = TYPE_REFERENCE;
 }
 
 UIStr::~UIStr() { release(); }
 
 void UIStr::release() {
-  if (type == TYPE_ALLOCATED && allocated != nullptr && allocatedSize != 0) {
+  if (unknown10 == TYPE_ALLOCATED && allocated != nullptr && unknown08 != 0) {
     UIUtil::getProgAllocator()->deallocate(allocated);
   }
-  if (type == TYPE_MSTXT && mstxt.fileId != 0) {
-    UITextManager::get()->unregistTextFile(mstxt.fileId);
+  if (unknown10 == TYPE_MSTXT && mstxt.unknown00 != 0) {
+    UITextManager::get()->unregistTextFile(mstxt.unknown00);
   }
   init();
 }
 
 u8 *UIStr::getMsgFP() const {
-  if (type == TYPE_MSTXT) {
-    return UITextManager::get()->getTextFile(mstxt.fileId);
+  if (unknown10 == TYPE_MSTXT) {
+    return UITextManager::get()->getTextFile(mstxt.unknown00);
   }
   return nullptr;
 }
 
 u32 UIStr::getMsgID() const {
-  if (type == TYPE_MSTXT) {
-    return mstxt.msgId;
+  if (unknown10 == TYPE_MSTXT) {
+    return mstxt.unknown04;
   }
   return 0;
 }

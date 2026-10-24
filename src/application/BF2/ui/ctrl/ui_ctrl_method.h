@@ -27,48 +27,48 @@ public:
   void setup(const UIObject *object, f32 to);
   virtual void execute(UIObject *object, f32 rate, const TimeInfo &timeInfo);
 
-  f32 from;
-  f32 to;
+  f32 unknown08; // Inferred role: from; original member name unknown.
+  f32 unknown0c; // Inferred role: to; original member name unknown.
 };
 
-static_assert(offsetof(UICtrlMethodAlpha, from) == 0x08, "");
-static_assert(offsetof(UICtrlMethodAlpha, to) == 0x0c, "");
+static_assert(offsetof(UICtrlMethodAlpha, unknown08) == 0x08, "");
+static_assert(offsetof(UICtrlMethodAlpha, unknown0c) == 0x0c, "");
 
 class UICtrlMethodBright : public UICtrlMethod {
 public:
   void setup(const UIObject *object, f32 to);
   virtual void execute(UIObject *object, f32 rate, const TimeInfo &timeInfo);
 
-  f32 from;
-  f32 to;
+  f32 unknown08; // Inferred role: from; original member name unknown.
+  f32 unknown0c; // Inferred role: to; original member name unknown.
 };
 
-static_assert(offsetof(UICtrlMethodBright, from) == 0x08, "");
-static_assert(offsetof(UICtrlMethodBright, to) == 0x0c, "");
+static_assert(offsetof(UICtrlMethodBright, unknown08) == 0x08, "");
+static_assert(offsetof(UICtrlMethodBright, unknown0c) == 0x0c, "");
 
 class UICtrlMethodPos : public UICtrlMethod {
 public:
   void setup(const UIObject *object, const mm::Pnt<s16> &to);
   virtual void execute(UIObject *object, f32 rate, const TimeInfo &timeInfo);
 
-  mm::Pnt<s16> from;
-  mm::Pnt<s16> to;
+  mm::Pnt<s16> unknown08; // Inferred role: from; original member name unknown.
+  mm::Pnt<s16> unknown0c; // Inferred role: to; original member name unknown.
 };
 
-static_assert(offsetof(UICtrlMethodPos, from) == 0x08, "");
-static_assert(offsetof(UICtrlMethodPos, to) == 0x0c, "");
+static_assert(offsetof(UICtrlMethodPos, unknown08) == 0x08, "");
+static_assert(offsetof(UICtrlMethodPos, unknown0c) == 0x0c, "");
 
 class UICtrlMethodScale : public UICtrlMethod {
 public:
   void setup(const UIObject *object, const mm::Vec2 &to);
   virtual void execute(UIObject *object, f32 rate, const TimeInfo &timeInfo);
 
-  alignas(16) mm::Vec2 from;
-  alignas(16) mm::Vec2 to;
+  alignas(16) mm::Vec2 unknown10; // Inferred role: from; original member name unknown.
+  alignas(16) mm::Vec2 unknown20; // Inferred role: to; original member name unknown.
 };
 
-static_assert(offsetof(UICtrlMethodScale, from) == 0x10, "");
-static_assert(offsetof(UICtrlMethodScale, to) == 0x20, "");
+static_assert(offsetof(UICtrlMethodScale, unknown10) == 0x10, "");
+static_assert(offsetof(UICtrlMethodScale, unknown20) == 0x20, "");
 static_assert(sizeof(UICtrlMethodScale) == 0x30, "");
 
 class UICtrlMethodRot : public UICtrlMethod {
@@ -76,54 +76,54 @@ public:
   void setup(const UIObject *object, f32 to);
   virtual void execute(UIObject *object, f32 rate, const TimeInfo &timeInfo);
 
-  f32 from;
-  f32 to;
+  f32 unknown08; // Inferred role: from; original member name unknown.
+  f32 unknown0c; // Inferred role: to; original member name unknown.
 };
 
-static_assert(offsetof(UICtrlMethodRot, from) == 0x08, "");
-static_assert(offsetof(UICtrlMethodRot, to) == 0x0c, "");
+static_assert(offsetof(UICtrlMethodRot, unknown08) == 0x08, "");
+static_assert(offsetof(UICtrlMethodRot, unknown0c) == 0x0c, "");
 
 class UICtrlMethodMulColor : public UICtrlMethod {
 public:
   void setup(const UIObject *object, const mm::Col3 &to);
   virtual void execute(UIObject *object, f32 rate, const TimeInfo &timeInfo);
 
-  mm::Col3 from;
-  mm::Col3 to;
+  mm::Col3 unknown08; // Inferred role: from; original member name unknown.
+  mm::Col3 unknown14; // Inferred role: to; original member name unknown.
 };
 
-static_assert(offsetof(UICtrlMethodMulColor, from) == 0x08, "");
-static_assert(offsetof(UICtrlMethodMulColor, to) == 0x14, "");
+static_assert(offsetof(UICtrlMethodMulColor, unknown08) == 0x08, "");
+static_assert(offsetof(UICtrlMethodMulColor, unknown14) == 0x14, "");
 
 class UICtrlMethodAddColor : public UICtrlMethod {
 public:
   void setup(const UIObject *object, const mm::Col3 &to);
   virtual void execute(UIObject *object, f32 rate, const TimeInfo &timeInfo);
 
-  mm::Col3 from;
-  mm::Col3 to;
+  mm::Col3 unknown08; // Inferred role: from; original member name unknown.
+  mm::Col3 unknown14; // Inferred role: to; original member name unknown.
 };
 
-static_assert(offsetof(UICtrlMethodAddColor, from) == 0x08, "");
-static_assert(offsetof(UICtrlMethodAddColor, to) == 0x14, "");
+static_assert(offsetof(UICtrlMethodAddColor, unknown08) == 0x08, "");
+static_assert(offsetof(UICtrlMethodAddColor, unknown14) == 0x14, "");
 
 class UICtrlMethodMotion : public UICtrlMethod {
 public:
   void setup(const UIObject *object, const UIMotionData *motionData, const char *name);
   virtual void execute(UIObject *object, f32 rate, const TimeInfo &timeInfo);
 
-  const UIMotionData *motionData;
-  u32 motion;
-  u32 frame;
-  alignas(16) mm::Vec2 pos;
-  alignas(16) mm::Vec2 scale;
+  const UIMotionData *unknown08;  // Inferred role: motion data; original member name unknown.
+  u32 unknown10;                  // Inferred role: motion; original member name unknown.
+  u32 unknown14;                  // Inferred role: frame; original member name unknown.
+  alignas(16) mm::Vec2 unknown20; // Inferred role: pos; original member name unknown.
+  alignas(16) mm::Vec2 unknown30; // Inferred role: scale; original member name unknown.
 };
 
-static_assert(offsetof(UICtrlMethodMotion, motionData) == 0x08, "");
-static_assert(offsetof(UICtrlMethodMotion, motion) == 0x10, "");
-static_assert(offsetof(UICtrlMethodMotion, frame) == 0x14, "");
-static_assert(offsetof(UICtrlMethodMotion, pos) == 0x20, "");
-static_assert(offsetof(UICtrlMethodMotion, scale) == 0x30, "");
+static_assert(offsetof(UICtrlMethodMotion, unknown08) == 0x08, "");
+static_assert(offsetof(UICtrlMethodMotion, unknown10) == 0x10, "");
+static_assert(offsetof(UICtrlMethodMotion, unknown14) == 0x14, "");
+static_assert(offsetof(UICtrlMethodMotion, unknown20) == 0x20, "");
+static_assert(offsetof(UICtrlMethodMotion, unknown30) == 0x30, "");
 static_assert(sizeof(UICtrlMethodMotion) == 0x40, "");
 
 } // namespace ui

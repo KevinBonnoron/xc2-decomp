@@ -41,25 +41,25 @@ public:
   };
 
   struct CtrlSlot {
-    UICtrlMethodPos pos;
-    UICtrlMethodScale scale;
-    UICtrlMethodAlpha alpha;
-    UICtrlMethodBright bright;
-    UICtrlMethodRot rot;
-    UICtrlMethodMulColor mulColor;
-    UICtrlMethodAddColor addColor;
-    UICtrlMethodMotion motion;
-    UICtrl ctrl;
-    UICtrl::MethodList methods;
-    f32 delay;
-    u32 object;
-    UIObject *objectPtr;
-    bool loop;
-    mm::mtl::BitFlag<32> flags;
-    u32 handler;
-    u32 id;
-    UITransform defaultTransform;
-    UIDisplayInfo defaultDisplayInfo;
+    UICtrlMethodPos unknown00;       // Inferred role: pos; original member name unknown.
+    UICtrlMethodScale unknown10;     // Inferred role: scale; original member name unknown.
+    UICtrlMethodAlpha unknown40;     // Inferred role: alpha; original member name unknown.
+    UICtrlMethodBright unknown50;    // Inferred role: bright; original member name unknown.
+    UICtrlMethodRot unknown60;       // Inferred role: rot; original member name unknown.
+    UICtrlMethodMulColor unknown70;  // Inferred role: mul color; original member name unknown.
+    UICtrlMethodAddColor unknown90;  // Inferred role: add color; original member name unknown.
+    UICtrlMethodMotion unknownb0;    // Inferred role: motion; original member name unknown.
+    UICtrl unknownf0;                // Inferred role: ctrl; original member name unknown.
+    UICtrl::MethodList unknown178;   // Inferred role: methods; original member name unknown.
+    f32 unknown1d0;                  // Inferred role: delay; original member name unknown.
+    u32 unknown1d4;                  // Inferred role: object; original member name unknown.
+    UIObject *unknown1d8;            // Inferred role: object ptr; original member name unknown.
+    bool unknown1e0;                 // Inferred role: loop; original member name unknown.
+    mm::mtl::BitFlag<32> unknown1e4; // Inferred role: flags; original member name unknown.
+    u32 unknown1e8;                  // Inferred role: handler; original member name unknown.
+    u32 unknown1ec;                  // Inferred role: id; original member name unknown.
+    UITransform unknown1f0;          // Inferred role: default transform; original member name unknown.
+    UIDisplayInfo unknown220;        // Inferred role: default display info; original member name unknown.
   };
 
   UICtrlManager();
@@ -93,33 +93,33 @@ public:
 
   static bool isValidSlot(int slot) { return slot >= 0 && slot <= CTRL_SLOT_MAX; }
 
-  CtrlSlot slots[CTRL_SLOT_MAX];
-  mm::mtl::IntrusiveList<UICtrlObject> ctrlObjects;
-  mm::mtl::IntrusiveList<IUICtrlUpdater> updaters;
+  CtrlSlot unknown10[CTRL_SLOT_MAX];                   // Inferred role: slots; original member name unknown.
+  mm::mtl::IntrusiveList<UICtrlObject> unknown13810;   // Inferred role: ctrl objects; original member name unknown.
+  mm::mtl::IntrusiveList<IUICtrlUpdater> unknown13828; // Inferred role: updaters; original member name unknown.
 };
 
-static_assert(offsetof(UICtrlManager::CtrlSlot, scale) == 0x10, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, alpha) == 0x40, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, bright) == 0x50, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, rot) == 0x60, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, mulColor) == 0x70, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, addColor) == 0x90, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, motion) == 0xb0, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, ctrl) == 0xf0, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, methods) == 0x178, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, delay) == 0x1d0, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, object) == 0x1d4, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, objectPtr) == 0x1d8, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, loop) == 0x1e0, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, flags) == 0x1e4, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, handler) == 0x1e8, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, id) == 0x1ec, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, defaultTransform) == 0x1f0, "");
-static_assert(offsetof(UICtrlManager::CtrlSlot, defaultDisplayInfo) == 0x220, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown10) == 0x10, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown40) == 0x40, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown50) == 0x50, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown60) == 0x60, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown70) == 0x70, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown90) == 0x90, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknownb0) == 0xb0, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknownf0) == 0xf0, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown178) == 0x178, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown1d0) == 0x1d0, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown1d4) == 0x1d4, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown1d8) == 0x1d8, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown1e0) == 0x1e0, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown1e4) == 0x1e4, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown1e8) == 0x1e8, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown1ec) == 0x1ec, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown1f0) == 0x1f0, "");
+static_assert(offsetof(UICtrlManager::CtrlSlot, unknown220) == 0x220, "");
 static_assert(sizeof(UICtrlManager::CtrlSlot) == 0x270, "");
-static_assert(offsetof(UICtrlManager, slots) == 0x10, "");
-static_assert(offsetof(UICtrlManager, ctrlObjects) == 0x13810, "");
-static_assert(offsetof(UICtrlManager, updaters) == 0x13828, "");
+static_assert(offsetof(UICtrlManager, unknown10) == 0x10, "");
+static_assert(offsetof(UICtrlManager, unknown13810) == 0x13810, "");
+static_assert(offsetof(UICtrlManager, unknown13828) == 0x13828, "");
 static_assert(sizeof(UICtrlManager) == 0x13840, "");
 
 } // namespace ui

@@ -58,7 +58,7 @@ void GfMenuCallContext::terminate() {
 void GfMenuCallContext::abort() {
   if (unknown14 != 0) {
     ui::EventData event;
-    event.type = 2;
+    event.unknown00 = 2;
     ui::UIManager::get()->requestObjectEvent(unknown14, event, 0.0f);
     return;
   }

@@ -24,22 +24,22 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual bool isNeedUpdate(UIObjectAcc &acc);
 
-  mm::Pnt<s16> pos;
-  bool isAdjustScreen;
-  u16 adjustWidth;
-  u16 adjustHeight;
-  s16 adjustOffsetX;
-  s16 adjustOffsetY;
-  u32 offsetMode;
-  bool adjusting;
+  mm::Pnt<s16> unknown7c; // Inferred role: pos; original member name unknown.
+  bool unknown80;         // Inferred role: adjust screen; original member name unknown.
+  u16 unknown82;          // Inferred role: adjust width; original member name unknown.
+  u16 unknown84;          // Inferred role: adjust height; original member name unknown.
+  s16 unknown86;          // Inferred role: adjust offset x; original member name unknown.
+  s16 unknown88;          // Inferred role: adjust offset y; original member name unknown.
+  u32 unknown8c;          // Inferred role: offset mode; original member name unknown.
+  bool unknown90;         // Inferred role: adjusting; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectPosPlugin, pos) == 0x7c, "");
-static_assert(offsetof(UIObjectPosPlugin, isAdjustScreen) == 0x80, "");
-static_assert(offsetof(UIObjectPosPlugin, adjustWidth) == 0x82, "");
-static_assert(offsetof(UIObjectPosPlugin, adjustOffsetX) == 0x86, "");
-static_assert(offsetof(UIObjectPosPlugin, offsetMode) == 0x8c, "");
-static_assert(offsetof(UIObjectPosPlugin, adjusting) == 0x90, "");
+static_assert(offsetof(UIObjectPosPlugin, unknown7c) == 0x7c, "");
+static_assert(offsetof(UIObjectPosPlugin, unknown80) == 0x80, "");
+static_assert(offsetof(UIObjectPosPlugin, unknown82) == 0x82, "");
+static_assert(offsetof(UIObjectPosPlugin, unknown86) == 0x86, "");
+static_assert(offsetof(UIObjectPosPlugin, unknown8c) == 0x8c, "");
+static_assert(offsetof(UIObjectPosPlugin, unknown90) == 0x90, "");
 static_assert(sizeof(UIObjectPosPlugin) == 0x98, "");
 
 } // namespace ui

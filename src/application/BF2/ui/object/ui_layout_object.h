@@ -28,9 +28,9 @@ public:
   void updateSize();
 
   u8 _108[0x110 - 0x108];
-  UILayoutData *layoutData;
+  UILayoutData *unknown110; // Inferred role: layout data; original member name unknown.
 };
 
-static_assert(offsetof(UILayoutObject, layoutData) == 0x110, "");
+static_assert(offsetof(UILayoutObject, unknown110) == 0x110, "");
 
 } // namespace ui

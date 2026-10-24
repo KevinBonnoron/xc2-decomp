@@ -4,31 +4,31 @@
 
 namespace ui {
 
-UITimer::UITimer() : elapsed(0), duration(0), speedFactor(1.0f) {}
+UITimer::UITimer() : unknown08(0), unknown10(0), unknown18(1.0f) {}
 
 UITimer::~UITimer() { ; }
 
-void UITimer::update(f32 sec) { elapsed += UIUtil::timeSecToUITime(speedFactor * sec); }
+void UITimer::update(f32 sec) { unknown08 += UIUtil::timeSecToUITime(unknown18 * sec); }
 
 void UITimer::start(u64 duration) {
-  elapsed = 0;
-  this->duration = duration;
-  speedFactor = 1.0f;
+  unknown08 = 0;
+  this->unknown10 = duration;
+  unknown18 = 1.0f;
 }
 
 void UITimer::restart() {
-  if (duration != 0) {
-    elapsed = 0;
+  if (unknown10 != 0) {
+    unknown08 = 0;
   }
 }
 
-void UITimer::stop() { duration = 0; }
+void UITimer::stop() { unknown10 = 0; }
 
-bool UITimer::isActive() const { return duration != 0; }
+bool UITimer::isActive() const { return unknown10 != 0; }
 
 bool UITimer::isOver() const {
-  if (duration != 0) {
-    return elapsed >= duration;
+  if (unknown10 != 0) {
+    return unknown08 >= unknown10;
   }
   return false;
 }

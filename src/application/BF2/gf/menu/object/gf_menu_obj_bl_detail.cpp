@@ -13,7 +13,7 @@ GfMenuObjBlDetail::~GfMenuObjBlDetail() { ; }
 void GfMenuObjBlDetail::initialize() {
   ui::UIObjectAcc main(unknown18, "LAY_main");
   if (main.isValid()) {
-    attachExternalCall(CALL_BL_DETAIL, main.handle);
+    attachExternalCall(CALL_BL_DETAIL, main.unknown10);
     GfMenuObject::initialize();
   }
 }

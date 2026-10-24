@@ -42,7 +42,7 @@ GfMenuAdapter::~GfMenuAdapter() {
 void GfMenuAdapter::setChange() {
   unknown20 |= FLAG_CHANGED;
   if (unknown18 != nullptr) {
-    unknown18->needUpdate |= 2;
+    unknown18->unknown18 |= 2;
   }
 }
 
@@ -108,13 +108,13 @@ GfMenuAdapter::CompareResult GfMenuAdapter::compare(GfMenuAdapter *adapter, GfMe
   if (other->unknown18 != nullptr) {
     ui::UIObjectNumberPlugin *otherNumber = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(other->unknown18);
     if (number != nullptr && otherNumber != nullptr) {
-      if (number->number == otherNumber->number) {
+      if (number->unknown7c == otherNumber->unknown7c) {
         return COMPARE_RESULT_SAME;
       }
-      if (number->number < otherNumber->number) {
+      if (number->unknown7c < otherNumber->unknown7c) {
         return COMPARE_RESULT_LESS;
       }
-      if (number->number > otherNumber->number) {
+      if (number->unknown7c > otherNumber->unknown7c) {
         return COMPARE_RESULT_GREATER;
       }
     }
@@ -129,7 +129,7 @@ GfMenuAdapter::CompareResult GfMenuAdapter::compare(GfMenuAdapter *adapter, GfMe
     return COMPARE_RESULT_SAME;
   }
 
-  int result = strcmp(text->text.c_str(), otherText->text.c_str());
+  int result = strcmp(text->unknown80.c_str(), otherText->unknown80.c_str());
   if (result == 0) {
     return COMPARE_RESULT_SAME;
   }
@@ -187,7 +187,7 @@ void GfMenuAdapter::setNumberReverseMode(bool isReverseMode) {
   if (unknown18 != nullptr) {
     ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
-      numberPlugin->isReverse = isReverseMode;
+      numberPlugin->unknown89 = isReverseMode;
     }
   }
 }
@@ -205,7 +205,7 @@ void GfMenuAdapter::setPosAdjustScreen(bool isAdjustScreen) {
   if (unknown18 != nullptr) {
     ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(unknown18);
     if (posPlugin != nullptr) {
-      posPlugin->isAdjustScreen = isAdjustScreen;
+      posPlugin->unknown80 = isAdjustScreen;
     }
   }
 }
@@ -214,8 +214,8 @@ void GfMenuAdapter::setPosAdjustSize(u32 width, u32 height) {
   if (unknown18 != nullptr) {
     ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(unknown18);
     if (posPlugin != nullptr) {
-      posPlugin->adjustWidth = width;
-      posPlugin->adjustHeight = height;
+      posPlugin->unknown82 = width;
+      posPlugin->unknown84 = height;
     }
   }
 }
@@ -224,8 +224,8 @@ void GfMenuAdapter::setPosAdjustSizeOffs(s16 x, s16 y) {
   if (unknown18 != nullptr) {
     ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(unknown18);
     if (posPlugin != nullptr) {
-      posPlugin->adjustOffsetX = x;
-      posPlugin->adjustOffsetY = y;
+      posPlugin->unknown86 = x;
+      posPlugin->unknown88 = y;
     }
   }
 }
@@ -234,7 +234,7 @@ void GfMenuAdapter::setPosOffsMode(u32 mode) {
   if (unknown18 != nullptr) {
     ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(unknown18);
     if (posPlugin != nullptr) {
-      posPlugin->offsetMode = mode;
+      posPlugin->unknown8c = mode;
     }
   }
 }
@@ -243,8 +243,8 @@ void GfMenuAdapter::setOffsetLimit(u16 x, u16 y) {
   if (unknown18 != nullptr) {
     ui::UIObjectOffsetPlugin *offsetPlugin = mm::mtl::dynamicCast<ui::UIObjectOffsetPlugin>(unknown18);
     if (offsetPlugin != nullptr) {
-      offsetPlugin->maxOffset.x = x;
-      offsetPlugin->maxOffset.y = y;
+      offsetPlugin->unknown80.x = x;
+      offsetPlugin->unknown80.y = y;
     }
   }
 }
@@ -260,7 +260,7 @@ int GfMenuAdapter::getNumber() const {
   if (unknown18 != nullptr) {
     ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
-      return numberPlugin->number;
+      return numberPlugin->unknown7c;
     }
   }
   return 0;
@@ -270,7 +270,7 @@ int GfMenuAdapter::getNumberMin() const {
   if (unknown18 != nullptr) {
     ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
-      return numberPlugin->min;
+      return numberPlugin->unknown80;
     }
   }
   return 0;
@@ -280,7 +280,7 @@ int GfMenuAdapter::getNumberMax() const {
   if (unknown18 != nullptr) {
     ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
-      return numberPlugin->max;
+      return numberPlugin->unknown84;
     }
   }
   return 0;
@@ -346,7 +346,7 @@ void GfMenuAdapter::setPos(const mm::Pnt<s16> &pos) {
   if (unknown18 != nullptr) {
     ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(unknown18);
     if (posPlugin != nullptr) {
-      posPlugin->pos = pos;
+      posPlugin->unknown7c = pos;
     }
   }
 }
@@ -355,7 +355,7 @@ void GfMenuAdapter::setPosWorld(const mm::Vec3 &pos) {
   if (unknown18 != nullptr) {
     ui::UIObjectWorldPosPlugin *worldPosPlugin = mm::mtl::dynamicCast<ui::UIObjectWorldPosPlugin>(unknown18);
     if (worldPosPlugin != nullptr) {
-      worldPosPlugin->worldPos = pos;
+      worldPosPlugin->unknowna0 = pos;
     }
   }
 }
@@ -364,7 +364,7 @@ void GfMenuAdapter::setOffsetTargetPos(const mm::Pnt<s16> &pos) {
   if (unknown18 != nullptr) {
     ui::UIObjectOffsetPlugin *offsetPlugin = mm::mtl::dynamicCast<ui::UIObjectOffsetPlugin>(unknown18);
     if (offsetPlugin != nullptr) {
-      offsetPlugin->targetPos = pos;
+      offsetPlugin->unknown7c = pos;
     }
   }
 }
@@ -373,7 +373,7 @@ bool GfMenuAdapter::isPosScreenAdjust() const {
   if (unknown18 != nullptr) {
     ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(unknown18);
     if (posPlugin != nullptr) {
-      return posPlugin->isAdjustScreen;
+      return posPlugin->unknown80;
     }
   }
   return false;
@@ -383,13 +383,13 @@ void GfMenuAdapter::setTime(const ui::uiDateTime &time) {
   if (unknown18 != nullptr) {
     ui::UIObjectTimePlugin *timePlugin = mm::mtl::dynamicCast<ui::UIObjectTimePlugin>(unknown18);
     if (timePlugin != nullptr) {
-      timePlugin->setYear(time.year);
-      timePlugin->setMonth(time.month);
-      timePlugin->setDay(time.day);
-      timePlugin->setHour(time.hour);
-      timePlugin->setMin(time.minute);
-      timePlugin->setSec(time.second);
-      timePlugin->setMSec(time.millisecond);
+      timePlugin->setYear(time.unknown00_0);
+      timePlugin->setMonth(time.unknown01_5);
+      timePlugin->setDay(time.unknown03_2);
+      timePlugin->setHour(time.unknown03_7);
+      timePlugin->setMin(time.unknown04_6);
+      timePlugin->setSec(time.unknown05_5);
+      timePlugin->setMSec(time.unknown06_3);
     }
   }
 }

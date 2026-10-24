@@ -49,16 +49,16 @@ public:
   void setTextFacePattern(u32 index);
   void reloadText();
 
-  UIStr baseText;
-  UIStr text;
-  u16 style;
-  u32 facePatternIndex;
+  UIStr unknown108; // Inferred role: base text; original member name unknown.
+  UIStr unknown120; // Inferred role: text; original member name unknown.
+  u16 unknown138;   // Inferred role: style; original member name unknown.
+  u32 unknown13c;   // Inferred role: face pattern index; original member name unknown.
 };
 
-static_assert(offsetof(UITextObject, baseText) == 0x108, "");
-static_assert(offsetof(UITextObject, text) == 0x120, "");
-static_assert(offsetof(UITextObject, style) == 0x138, "");
-static_assert(offsetof(UITextObject, facePatternIndex) == 0x13c, "");
+static_assert(offsetof(UITextObject, unknown108) == 0x108, "");
+static_assert(offsetof(UITextObject, unknown120) == 0x120, "");
+static_assert(offsetof(UITextObject, unknown138) == 0x138, "");
+static_assert(offsetof(UITextObject, unknown13c) == 0x13c, "");
 static_assert(sizeof(UITextObject) == 0x140, "");
 
 } // namespace ui

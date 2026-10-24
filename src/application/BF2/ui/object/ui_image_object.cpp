@@ -18,16 +18,16 @@
 
 namespace ui {
 
-UIImageObject::UIImageObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name) : UIObject(layer, name, UI_OBJECT_TYPE_IMAGE), streamId(0), imageIndex(0), capture(nullptr) {}
+UIImageObject::UIImageObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name) : UIObject(layer, name, UI_OBJECT_TYPE_IMAGE), unknown108(0), unknown10c(0), unknown110(nullptr) {}
 
-UIImageObject::UIImageObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name, u32 type) : UIObject(layer, name, type), streamId(0), imageIndex(0), capture(nullptr) {}
+UIImageObject::UIImageObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name, u32 type) : UIObject(layer, name, type), unknown108(0), unknown10c(0), unknown110(nullptr) {}
 
 UIImageObject::~UIImageObject() { ; }
 
 UIImageObject *UIImageObject::create(UILayoutObject *parent, const void *data, u32 streamId, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator, bool mask) {
   layer::LayerBase *layer;
   if (parent != nullptr) {
-    layer::LayerAccLayoutObj layoutAcc(parent->layer);
+    layer::LayerAccLayoutObj layoutAcc(parent->unknownc8);
     layer = mask ? layoutAcc.createMaskObj(data) : layoutAcc.createObj(data);
   } else {
     layer::LayerAccManager manager;
@@ -41,17 +41,17 @@ UIImageObject *UIImageObject::create(UILayoutObject *parent, const void *data, u
 #line 106
     image = new (allocator, 16, __FILE__, __LINE__) UIImageObject(layer, name.c_str());
     if (image != nullptr && mask) {
-      image->flags.set(UI_OBJECT_FLAG_MASK);
+      image->unknown98.set(UI_OBJECT_FLAG_MASK);
     }
   }
-  image->streamId = streamId;
+  image->unknown108 = streamId;
   return image;
 }
 
 UIImageObject *UIImageObject::create(UILayoutObject *parent, ml::ScnRenderDrCapture *capture, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
   layer::LayerBase *layer;
   if (parent != nullptr) {
-    layer::LayerAccLayoutObj layoutAcc(parent->layer);
+    layer::LayerAccLayoutObj layoutAcc(parent->unknownc8);
     layer = layoutAcc.createTexObj(*capture->texture);
   } else {
     layer::LayerAccManager manager;
@@ -64,84 +64,84 @@ UIImageObject *UIImageObject::create(UILayoutObject *parent, ml::ScnRenderDrCapt
 #line 155
     image = new (allocator, 16, __FILE__, __LINE__) UIImageObject(layer, name.c_str());
   }
-  image->capture = capture;
+  image->unknown110 = capture;
   return image;
 }
 
 void UIImageObject::changeBin(const void *data) {
-  if (data != nullptr && layer != nullptr) {
-    layer::LayerAccDefTexture(layer).setTexutre(data);
+  if (data != nullptr && unknownc8 != nullptr) {
+    layer::LayerAccDefTexture(unknownc8).setTexutre(data);
   }
 }
 
 void UIImageObject::setMaskObject(UIImageObject *mask) {
-  if (mask != nullptr && layer != nullptr && mask->layer != nullptr && mask->flags.test(UI_OBJECT_FLAG_MASK)) {
-    layer::LayerAccDefObj(layer).setMaskObj(mask->layer);
+  if (mask != nullptr && unknownc8 != nullptr && mask->unknownc8 != nullptr && mask->unknown98.test(UI_OBJECT_FLAG_MASK)) {
+    layer::LayerAccDefObj(unknownc8).setMaskObj(mask->unknownc8);
   }
 }
 
 void UIImageObject::setImageIndex(u16 index) {
-  if (capture != nullptr || layer == nullptr) {
+  if (unknown110 != nullptr || unknownc8 == nullptr) {
     return;
   }
   if (index < getImageMax()) {
-    if (streamId != 0) {
-      UIStreamManager::get()->start(streamId, handle, index);
-      imageIndex = index;
+    if (unknown108 != 0) {
+      UIStreamManager::get()->start(unknown108, unknowne8, index);
+      unknown10c = index;
     } else {
-      layer::LayerAccDefObj obj(layer);
+      layer::LayerAccDefObj obj(unknownc8);
       obj.setIconNum(index);
     }
   }
 }
 
 u16 UIImageObject::getImageMax() {
-  if (capture != nullptr) {
+  if (unknown110 != nullptr) {
     return 1;
   }
-  if (layer == nullptr) {
+  if (unknownc8 == nullptr) {
     return 1;
   }
   u16 max;
-  if (streamId != 0) {
-    max = UIStreamManager::get()->getContentsNum(streamId);
+  if (unknown108 != 0) {
+    max = UIStreamManager::get()->getContentsNum(unknown108);
   } else {
-    layer::LayerAccDefObj obj(layer);
+    layer::LayerAccDefObj obj(unknownc8);
     max = obj.getIconMax() + 1;
   }
   return max;
 }
 
 u16 UIImageObject::getImageIndex() {
-  if (capture != nullptr) {
+  if (unknown110 != nullptr) {
     return 0;
   }
-  if (layer == nullptr) {
+  if (unknownc8 == nullptr) {
     return 0;
   }
-  if (streamId != 0) {
-    return imageIndex;
+  if (unknown108 != 0) {
+    return unknown10c;
   }
-  return layer::LayerAccDefObj(layer).getIconNum();
+  return layer::LayerAccDefObj(unknownc8).getIconNum();
 }
 
 void UIImageObject::setHFlip(bool flip) {
-  if (layer != nullptr) {
-    layer::LayerAccDefObj(layer).setFlip(layer::LAYER_FLIP_TYPE_HORIZONTAL, flip);
+  if (unknownc8 != nullptr) {
+    layer::LayerAccDefObj(unknownc8).setFlip(layer::LAYER_FLIP_TYPE_HORIZONTAL, flip);
   }
 }
 
 void UIImageObject::setVFlip(bool flip) {
-  if (layer != nullptr) {
-    layer::LayerAccDefObj(layer).setFlip(layer::LAYER_FLIP_TYPE_VERTICAL, flip);
+  if (unknownc8 != nullptr) {
+    layer::LayerAccDefObj(unknownc8).setFlip(layer::LAYER_FLIP_TYPE_VERTICAL, flip);
   }
 }
 
 void UIImageObject::setExtType(u32 type) {
-  if (capture != nullptr || layer == nullptr) {
+  if (unknown110 != nullptr || unknownc8 == nullptr) {
     return;
   }
-  layer::LayerAccDefObj obj(layer);
+  layer::LayerAccDefObj obj(unknownc8);
   switch (type) {
   case 1:
     obj.setGauge(static_cast<layer::LAYER_GAUGE>(3));
@@ -159,13 +159,13 @@ void UIImageObject::setExtType(u32 type) {
 }
 
 u32 UIImageObject::getExtType() {
-  if (capture != nullptr) {
+  if (unknown110 != nullptr) {
     return 0;
   }
-  if (layer == nullptr) {
+  if (unknownc8 == nullptr) {
     return 0;
   }
-  layer::LayerAccDefObj obj(layer);
+  layer::LayerAccDefObj obj(unknownc8);
   if (obj.getGauge() != layer::LAYER_GAUGE_NONE) {
     if (obj.getGauge() == 3) {
       return 1;
@@ -184,20 +184,20 @@ u32 UIImageObject::getExtType() {
 }
 
 void UIImageObject::setExtParam(f32 param) {
-  if (capture != nullptr || layer == nullptr) {
+  if (unknown110 != nullptr || unknownc8 == nullptr) {
     return;
   }
-  layer::LayerAccDefObj obj(layer);
+  layer::LayerAccDefObj obj(unknownc8);
   if (obj.getGauge() != layer::LAYER_GAUGE_NONE) {
     obj.setParm(param);
   }
 }
 
 f32 UIImageObject::getExtParam() {
-  if (capture != nullptr || layer == nullptr) {
+  if (unknown110 != nullptr || unknownc8 == nullptr) {
     return 0.0f;
   }
-  layer::LayerAccDefObj obj(layer);
+  layer::LayerAccDefObj obj(unknownc8);
   if (obj.getGauge() == layer::LAYER_GAUGE_NONE) {
     return 0.0f;
   }
@@ -205,47 +205,47 @@ f32 UIImageObject::getExtParam() {
 }
 
 bool UIImageObject::hasAnimation() {
-  if (capture != nullptr) {
+  if (unknown110 != nullptr) {
     return false;
   }
-  if (layer == nullptr) {
+  if (unknownc8 == nullptr) {
     return false;
   }
-  if (flags.test(UI_OBJECT_FLAG_MASK)) {
+  if (unknown98.test(UI_OBJECT_FLAG_MASK)) {
     return false;
   }
-  return layer::LayerAccAction(layer).isActionData();
+  return layer::LayerAccAction(unknownc8).isActionData();
 }
 
 void UIImageObject::startAnimation(const char *name, bool loop) {
   if (hasAnimation()) {
-    layer::LayerAccAction action(layer);
+    layer::LayerAccAction action(unknownc8);
     action.actionName(name);
-    playbackControl = loop;
+    unknown118 = loop;
   }
 }
 
 void UIImageObject::startAnimationFromID(u32 id, bool loop) {
   if (hasAnimation()) {
-    layer::LayerAccAction action(layer);
+    layer::LayerAccAction action(unknownc8);
     action.actionID(id);
-    playbackControl = loop;
+    unknown118 = loop;
   }
 }
 
 void UIImageObject::startAnimationFromIndex(u32 index, bool loop) {
   if (hasAnimation()) {
-    layer::LayerAccAction action(layer);
+    layer::LayerAccAction action(unknownc8);
     if (index < action.getActionMax()) {
       action.actionIdx(index);
-      playbackControl = loop;
+      unknown118 = loop;
     }
   }
 }
 
 void UIImageObject::stopAnimation() {
   if (hasAnimation()) {
-    layer::LayerAccAction action(layer);
+    layer::LayerAccAction action(unknownc8);
     if (action.isRunning()) {
       action.actionEnd();
     }
@@ -254,7 +254,7 @@ void UIImageObject::stopAnimation() {
 
 bool UIImageObject::isPlayingAnimation() {
   if (hasAnimation()) {
-    layer::LayerAccAction action(layer);
+    layer::LayerAccAction action(unknownc8);
     return action.isRunning();
   }
   return false;
@@ -262,7 +262,7 @@ bool UIImageObject::isPlayingAnimation() {
 
 u32 UIImageObject::getAnimationMax() {
   if (hasAnimation()) {
-    layer::LayerAccAction action(layer);
+    layer::LayerAccAction action(unknownc8);
     return action.getActionMax();
   }
   return 0;
@@ -270,36 +270,36 @@ u32 UIImageObject::getAnimationMax() {
 
 const char *UIImageObject::getAnimationName(u32 index) {
   if (index < getAnimationMax()) {
-    layer::LayerAccAction action(layer);
+    layer::LayerAccAction action(unknownc8);
     return action.getActionName(index);
   }
   return nullptr;
 }
 
 f32 UIImageObject::getAnimationPlaybackLength() {
-  if (capture != nullptr || layer == nullptr) {
+  if (unknown110 != nullptr || unknownc8 == nullptr) {
     return 0.0f;
   }
-  layer::LayerAccAction action(layer);
+  layer::LayerAccAction action(unknownc8);
   return action.getActionSec(action.getRunningActIdx());
 }
 
 f32 UIImageObject::getAnimationPlaybackTime() {
-  if (capture != nullptr || layer == nullptr) {
+  if (unknown110 != nullptr || unknownc8 == nullptr) {
     return 0.0f;
   }
-  return layer::LayerAccAction(layer).getRunningActSec();
+  return layer::LayerAccAction(unknownc8).getRunningActSec();
 }
 
 void UIImageObject::setAnimationPlaybackTime(f32 time) {
-  if (capture == nullptr && layer != nullptr) {
-    layer::LayerAccAction(layer).setRunningActSec(time);
+  if (unknown110 == nullptr && unknownc8 != nullptr) {
+    layer::LayerAccAction(unknownc8).setRunningActSec(time);
   }
 }
 
 void UIImageObject::applyCapture() {
-  if (capture != nullptr) {
-    ml::ScnRenderDrSysParmAcc(ml::Scn::get()->renderDrSys, 0).startCapture(capture);
+  if (unknown110 != nullptr) {
+    ml::ScnRenderDrSysParmAcc(ml::Scn::get()->renderDrSys, 0).startCapture(unknown110);
   }
 }
 
@@ -309,12 +309,12 @@ u32 UIImageObject::duplicateImpl(u32 parent) {
     return 0;
   }
 
-  layer::LayerAccObjBase acc(layer);
+  layer::LayerAccObjBase acc(unknownc8);
   UIImageObject *image;
-  if (capture == nullptr) {
-    image = create(layout, acc.getResData(), streamId, name.c_str(), UIUtil::getProgAllocator(), flags.test(UI_OBJECT_FLAG_MASK));
+  if (unknown110 == nullptr) {
+    image = create(layout, acc.getResData(), unknown108, unknowna0.c_str(), UIUtil::getProgAllocator(), unknown98.test(UI_OBJECT_FLAG_MASK));
   } else {
-    image = create(layout, capture, name.c_str(), UIUtil::getProgAllocator());
+    image = create(layout, unknown110, unknowna0.c_str(), UIUtil::getProgAllocator());
   }
   if (image == nullptr) {
     return 0;

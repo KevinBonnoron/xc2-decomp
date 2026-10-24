@@ -36,24 +36,24 @@ public:
   virtual bool callTagStart(const char *tag, const layer::LayerTagTbl *table, u32 count);
   virtual bool callTagEnd(const char *tag);
 
-  mm::mtl::IAllocator *allocator;
-  char *stockBuffer;
-  mm::mtl::FixedVector<UITagConv *, 16> converters;
-  u16 option;
-  u16 mode;
-  const char *tag;
-  const char *param;
-  mm::mtl::FixStr<128> result;
+  mm::mtl::IAllocator *unknown20;                  // Inferred role: allocator; original member name unknown.
+  char *unknown28;                                 // Inferred role: stock buffer; original member name unknown.
+  mm::mtl::FixedVector<UITagConv *, 16> unknown30; // Inferred role: converters; original member name unknown.
+  u16 unknownb8;                                   // Inferred role: option; original member name unknown.
+  u16 unknownba;                                   // Inferred role: mode; original member name unknown.
+  const char *unknownc0;                           // Inferred role: tag; original member name unknown.
+  const char *unknownc8;                           // Inferred role: param; original member name unknown.
+  mm::mtl::FixStr<128> unknownd0;                  // Inferred role: result; original member name unknown.
 };
 
-static_assert(offsetof(UITagParser, allocator) == 0x20, "");
-static_assert(offsetof(UITagParser, stockBuffer) == 0x28, "");
-static_assert(offsetof(UITagParser, converters) == 0x30, "");
-static_assert(offsetof(UITagParser, option) == 0xb8, "");
-static_assert(offsetof(UITagParser, mode) == 0xba, "");
-static_assert(offsetof(UITagParser, tag) == 0xc0, "");
-static_assert(offsetof(UITagParser, param) == 0xc8, "");
-static_assert(offsetof(UITagParser, result) == 0xd0, "");
+static_assert(offsetof(UITagParser, unknown20) == 0x20, "");
+static_assert(offsetof(UITagParser, unknown28) == 0x28, "");
+static_assert(offsetof(UITagParser, unknown30) == 0x30, "");
+static_assert(offsetof(UITagParser, unknownb8) == 0xb8, "");
+static_assert(offsetof(UITagParser, unknownba) == 0xba, "");
+static_assert(offsetof(UITagParser, unknownc0) == 0xc0, "");
+static_assert(offsetof(UITagParser, unknownc8) == 0xc8, "");
+static_assert(offsetof(UITagParser, unknownd0) == 0xd0, "");
 static_assert(sizeof(UITagParser) == 0x158, "");
 
 } // namespace ui

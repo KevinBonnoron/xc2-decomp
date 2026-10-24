@@ -30,18 +30,18 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual bool isNeedUpdate(UIObjectAcc &acc);
 
-  mm::Pnt<u16> margin;
-  mm::Pnt<s16> expand;
-  mm::Pnt<u16> minSize;
-  u32 flags;
-  u32 target;
+  mm::Pnt<u16> unknown1c; // Inferred role: margin; original member name unknown.
+  mm::Pnt<s16> unknown20; // Inferred role: expand; original member name unknown.
+  mm::Pnt<u16> unknown24; // Inferred role: min size; original member name unknown.
+  u32 unknown28;          // Inferred role: flags; original member name unknown.
+  u32 unknown2c;          // Inferred role: target; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectFitPlugin, margin) == 0x1c, "");
-static_assert(offsetof(UIObjectFitPlugin, expand) == 0x20, "");
-static_assert(offsetof(UIObjectFitPlugin, minSize) == 0x24, "");
-static_assert(offsetof(UIObjectFitPlugin, flags) == 0x28, "");
-static_assert(offsetof(UIObjectFitPlugin, target) == 0x2c, "");
+static_assert(offsetof(UIObjectFitPlugin, unknown1c) == 0x1c, "");
+static_assert(offsetof(UIObjectFitPlugin, unknown20) == 0x20, "");
+static_assert(offsetof(UIObjectFitPlugin, unknown24) == 0x24, "");
+static_assert(offsetof(UIObjectFitPlugin, unknown28) == 0x28, "");
+static_assert(offsetof(UIObjectFitPlugin, unknown2c) == 0x2c, "");
 static_assert(sizeof(UIObjectFitPlugin) == 0x30, "");
 
 } // namespace ui

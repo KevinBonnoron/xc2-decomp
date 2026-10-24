@@ -5,32 +5,32 @@
 
 namespace ui {
 
-UICtrl::UICtrl() : object(nullptr), time(0.0f), prevTime(0.0f), duration(0.0f), loop(false), loopCount(0), speedFactor(1.0f) {}
+UICtrl::UICtrl() : unknown08(nullptr), unknown10(0.0f), unknown14(0.0f), unknown18(0.0f), unknown1c(false), unknown20(0), unknown80(1.0f) {}
 
-UICtrl::~UICtrl() { mm::mtl::safeRelease(object); }
+UICtrl::~UICtrl() { mm::mtl::safeRelease(unknown08); }
 
 void UICtrl::stop() {
-  mm::mtl::safeRelease(object);
-  time = 0.0f;
-  duration = 0.0f;
-  loop = false;
-  loopCount = 0;
-  methods.clear();
-  speedFactor = 1.0f;
-  prevTime = 0.0f;
+  mm::mtl::safeRelease(unknown08);
+  unknown10 = 0.0f;
+  unknown18 = 0.0f;
+  unknown1c = false;
+  unknown20 = 0;
+  unknown28.clear();
+  unknown80 = 1.0f;
+  unknown14 = 0.0f;
 }
 
 void UICtrl::start(UIObject *object, f32 duration, const MethodList &methods, bool loop) {
-  mm::mtl::safeRelease(this->object);
-  this->object = object;
+  mm::mtl::safeRelease(this->unknown08);
+  this->unknown08 = object;
   object->addRef();
-  time = 0.0f;
-  this->duration = duration;
-  this->loop = loop;
-  loopCount = 0;
-  this->methods = methods;
-  speedFactor = 1.0f;
-  prevTime = 0.0f;
+  unknown10 = 0.0f;
+  this->unknown18 = duration;
+  this->unknown1c = loop;
+  unknown20 = 0;
+  this->unknown28 = methods;
+  unknown80 = 1.0f;
+  unknown14 = 0.0f;
 }
 
 } // namespace ui

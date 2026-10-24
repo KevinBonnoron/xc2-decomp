@@ -15,12 +15,12 @@ public:
   const char *getText(u32 id) const;
   u16 getStyle(u32 id) const;
 
-  u8 *data;
-  mm::mtl::FixStr<64> name;
+  u8 *unknown08;                 // Inferred role: data; original member name unknown.
+  mm::mtl::FixStr<64> unknown10; // Inferred role: name; original member name unknown.
 };
 
-static_assert(offsetof(UITextFile, data) == 0x08, "");
-static_assert(offsetof(UITextFile, name) == 0x10, "");
+static_assert(offsetof(UITextFile, unknown08) == 0x08, "");
+static_assert(offsetof(UITextFile, unknown10) == 0x10, "");
 static_assert(sizeof(UITextFile) == 0x58, "");
 
 } // namespace ui

@@ -74,7 +74,7 @@ void UIUtil::releaseObject(u32 handle) {
   UIObjectAcc acc(handle);
   if (acc.isValid()) {
     if (UIInputManager::get() != nullptr && acc.isDuplicate()) {
-      u32 input = UIInputManager::get()->searchInputHandle(acc.handle);
+      u32 input = UIInputManager::get()->searchInputHandle(acc.unknown10);
       if (input != 0) {
         UIInputManager::get()->migrateInput(input, 0);
       }
@@ -125,7 +125,7 @@ u32 UIUtil::searchChild(u32 handle, const char *name) {
 void UIUtil::setDisp(u32 handle, bool disp) {
   UIObject *object = getObject(handle);
   if (object != nullptr) {
-    object->displayInfo.setDisp(disp);
+    object->unknown50.setDisp(disp);
   }
 }
 
@@ -317,8 +317,8 @@ const UICtrlCurve *UIUtil::getCurve(CURVE_TYPE type) {
 
 const fw::PadData &UIUtil::getPadData() {
   UIManager *manager = UIManager::get();
-  if (manager != nullptr && manager->padRead != nullptr) {
-    return *manager->padRead->getPadData();
+  if (manager != nullptr && manager->unknown3d8 != nullptr) {
+    return *manager->unknown3d8->getPadData();
   }
   return *fw::PadManager::getControlPadData(0);
 }

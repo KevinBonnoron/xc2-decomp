@@ -17,17 +17,17 @@ public:
   };
 
   struct MotionParam {
-    MotionParam() : flags(0), posX(0.0f), posY(0.0f), scaleX(0.0f), scaleY(0.0f), rot(0.0f), alpha(0.0f) {}
+    MotionParam() : unknown00(0), unknown04(0.0f), unknown08(0.0f), unknown0c(0.0f), unknown10(0.0f), unknown14(0.0f), unknown18(0.0f) {}
 
-    bool has(ParamType type) const { return (flags & (1 << type)) != 0; }
+    bool has(ParamType type) const { return (unknown00 & (1 << type)) != 0; }
 
-    u32 flags;
-    f32 posX;
-    f32 posY;
-    f32 scaleX;
-    f32 scaleY;
-    f32 rot;
-    f32 alpha;
+    u32 unknown00; // Inferred role: flags; original member name unknown.
+    f32 unknown04; // Inferred role: pos x; original member name unknown.
+    f32 unknown08; // Inferred role: pos y; original member name unknown.
+    f32 unknown0c; // Inferred role: scale x; original member name unknown.
+    f32 unknown10; // Inferred role: scale y; original member name unknown.
+    f32 unknown14; // Inferred role: rot; original member name unknown.
+    f32 unknown18; // Inferred role: alpha; original member name unknown.
   };
 
   u32 searchMotion(const char *name) const;
@@ -36,7 +36,7 @@ public:
   void getMotionParamDelta(u32 motion, f32 begin, f32 end, MotionParam &param) const;
 };
 
-static_assert(offsetof(UIMotionData::MotionParam, alpha) == 0x18, "");
+static_assert(offsetof(UIMotionData::MotionParam, unknown18) == 0x18, "");
 static_assert(sizeof(UIMotionData::MotionParam) == 0x1c, "");
 
 } // namespace ui

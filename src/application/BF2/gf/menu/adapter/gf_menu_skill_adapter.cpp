@@ -89,7 +89,7 @@ bool GfMenuSkillAdapter::update_SkillCaption() {
     return false;
   }
   ui::UIStr text(bdat, textId);
-  text.option = GfDataDriverSkill::getEnhanceFromBdat(unknown5c, unknown60, unknown64, isHidden);
+  text.unknown12 = GfDataDriverSkill::getEnhanceFromBdat(unknown5c, unknown60, unknown64, isHidden);
   setText(text);
   return true;
 }

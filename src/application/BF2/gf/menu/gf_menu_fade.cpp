@@ -68,14 +68,14 @@ bool GfMenuFade::isFading(u32 type) {
 void GfMenuFade::reciveEvent(const ui::EventData &event, u32 handle) {
   GfMenuFade *fade = get();
   if (fade != nullptr) {
-    switch (event.type) {
+    switch (event.unknown00) {
     case EVENT_LAYER_CREATED:
-      if (event.param1 == 1) {
+      if (event.unknown0c == 1) {
         fade->unknown08 = true;
       }
       break;
     case EVENT_FADE_END: {
-      int type = event.param0;
+      int type = event.unknown08;
       if (type < static_cast<int>(FADE_COUNT)) {
         fade->unknown09[type] = false;
       }

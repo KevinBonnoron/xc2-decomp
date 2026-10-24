@@ -30,16 +30,16 @@ public:
   void writeIndex(const u32 *index, u32 num, u32 offset);
   void setIndexRange(u32 range);
 
-  mm::mtl::Array<layer::LayerPolyVertex> vertices;
-  mm::mtl::Array<u32> indices;
-  u32 indexRange;
-  bool dirty;
+  mm::mtl::Array<layer::LayerPolyVertex> unknown08; // Inferred role: vertices; original member name unknown.
+  mm::mtl::Array<u32> unknown20;                    // Inferred role: indices; original member name unknown.
+  u32 unknown38;                                    // Inferred role: index range; original member name unknown.
+  bool unknown3c;                                   // Inferred role: dirty; original member name unknown.
 };
 
-static_assert(offsetof(UIShape, vertices) == 0x08, "");
-static_assert(offsetof(UIShape, indices) == 0x20, "");
-static_assert(offsetof(UIShape, indexRange) == 0x38, "");
-static_assert(offsetof(UIShape, dirty) == 0x3c, "");
+static_assert(offsetof(UIShape, unknown08) == 0x08, "");
+static_assert(offsetof(UIShape, unknown20) == 0x20, "");
+static_assert(offsetof(UIShape, unknown38) == 0x38, "");
+static_assert(offsetof(UIShape, unknown3c) == 0x3c, "");
 static_assert(sizeof(UIShape) == 0x40, "");
 
 } // namespace ui

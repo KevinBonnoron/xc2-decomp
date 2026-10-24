@@ -37,20 +37,20 @@ public:
   virtual void setTerm();
   void setSuspend(bool suspend);
 
-  bool isTerm() const { return flags.test(UI_OBJECT_FLAG_TERM); }
+  bool isTerm() const { return unknown98.test(UI_OBJECT_FLAG_TERM); }
 
-  UITransform transform;
-  UIDisplayInfo displayInfo;
-  mm::mtl::BitFlag<32> flags;
-  u16 duplicateIndex;
-  mm::mtl::FixStr<32> name;
+  UITransform unknown20;          // Inferred role: transform; original member name unknown.
+  UIDisplayInfo unknown50;        // Inferred role: display info; original member name unknown.
+  mm::mtl::BitFlag<32> unknown98; // Inferred role: flags; original member name unknown.
+  u16 unknown9c;                  // Inferred role: duplicate index; original member name unknown.
+  mm::mtl::FixStr<32> unknowna0;  // Inferred role: name; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectBase, transform) == 0x20, "");
-static_assert(offsetof(UIObjectBase, displayInfo) == 0x50, "");
-static_assert(offsetof(UIObjectBase, flags) == 0x98, "");
-static_assert(offsetof(UIObjectBase, duplicateIndex) == 0x9c, "");
-static_assert(offsetof(UIObjectBase, name) == 0xa0, "");
+static_assert(offsetof(UIObjectBase, unknown20) == 0x20, "");
+static_assert(offsetof(UIObjectBase, unknown50) == 0x50, "");
+static_assert(offsetof(UIObjectBase, unknown98) == 0x98, "");
+static_assert(offsetof(UIObjectBase, unknown9c) == 0x9c, "");
+static_assert(offsetof(UIObjectBase, unknowna0) == 0xa0, "");
 static_assert(sizeof(UIObjectBase) == 0xc8, "");
 
 } // namespace ui

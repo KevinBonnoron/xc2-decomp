@@ -13,7 +13,7 @@ GfMenuObjQuestReward::~GfMenuObjQuestReward() { ; }
 void GfMenuObjQuestReward::initialize() {
   ui::UIObjectAcc main(unknown18, "LAY_main");
   if (main.isValid()) {
-    attachExternalCall(CALL_QUEST_REWARD, main.handle);
+    attachExternalCall(CALL_QUEST_REWARD, main.unknown10);
     GfMenuObject::initialize();
     main.setSuspend(true);
   }

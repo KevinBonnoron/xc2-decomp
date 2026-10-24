@@ -41,28 +41,28 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual bool isNeedUpdate(UIObjectAcc &acc);
 
-  int number;
-  int min;
-  int max;
-  u8 type;
-  bool isReverse;
-  bool interpolate;
-  const char *format;
-  UICtrlSimple<1> interpolation;
-  UICtrlSimpleUpdater<UICtrlSimple<1>> interpolationUpdater;
-  f32 interpolateTime;
+  int unknown7c;                                  // Inferred role: number; original member name unknown.
+  int unknown80;                                  // Inferred role: min; original member name unknown.
+  int unknown84;                                  // Inferred role: max; original member name unknown.
+  u8 unknown88;                                   // Inferred role: type; original member name unknown.
+  bool unknown89;                                 // Inferred role: reverse; original member name unknown.
+  bool unknown8a;                                 // Inferred role: interpolate; original member name unknown.
+  const char *unknown90;                          // Inferred role: format; original member name unknown.
+  UICtrlSimple<1> unknown98;                      // Inferred role: interpolation; original member name unknown.
+  UICtrlSimpleUpdater<UICtrlSimple<1>> unknownc0; // Inferred role: interpolation updater; original member name unknown.
+  f32 unknowne0;                                  // Inferred role: interpolate time; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectNumberPlugin, number) == 0x7c, "");
-static_assert(offsetof(UIObjectNumberPlugin, min) == 0x80, "");
-static_assert(offsetof(UIObjectNumberPlugin, max) == 0x84, "");
-static_assert(offsetof(UIObjectNumberPlugin, type) == 0x88, "");
-static_assert(offsetof(UIObjectNumberPlugin, isReverse) == 0x89, "");
-static_assert(offsetof(UIObjectNumberPlugin, interpolate) == 0x8a, "");
-static_assert(offsetof(UIObjectNumberPlugin, format) == 0x90, "");
-static_assert(offsetof(UIObjectNumberPlugin, interpolation) == 0x98, "");
-static_assert(offsetof(UIObjectNumberPlugin, interpolationUpdater) == 0xc0, "");
-static_assert(offsetof(UIObjectNumberPlugin, interpolateTime) == 0xe0, "");
+static_assert(offsetof(UIObjectNumberPlugin, unknown7c) == 0x7c, "");
+static_assert(offsetof(UIObjectNumberPlugin, unknown80) == 0x80, "");
+static_assert(offsetof(UIObjectNumberPlugin, unknown84) == 0x84, "");
+static_assert(offsetof(UIObjectNumberPlugin, unknown88) == 0x88, "");
+static_assert(offsetof(UIObjectNumberPlugin, unknown89) == 0x89, "");
+static_assert(offsetof(UIObjectNumberPlugin, unknown8a) == 0x8a, "");
+static_assert(offsetof(UIObjectNumberPlugin, unknown90) == 0x90, "");
+static_assert(offsetof(UIObjectNumberPlugin, unknown98) == 0x98, "");
+static_assert(offsetof(UIObjectNumberPlugin, unknownc0) == 0xc0, "");
+static_assert(offsetof(UIObjectNumberPlugin, unknowne0) == 0xe0, "");
 static_assert(sizeof(UIObjectNumberPlugin) == 0xe8, "");
 
 } // namespace ui

@@ -24,13 +24,13 @@ void GfMenuObjChainCount::initialize() {
 #line 58
   MainListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) MainListener(this);
   listener->addRef();
-  ui::UIEventManager::get()->registObjectListener(main.handle, listener);
+  ui::UIEventManager::get()->registObjectListener(main.unknown10, listener);
   if (listener != nullptr) {
     listener->release();
   }
-  attachExternalCall(CALL_CHAIN_COUNT, main.handle);
+  attachExternalCall(CALL_CHAIN_COUNT, main.unknown10);
   GfMenuBattleAdapter::create(main.searchChild("TXT_num"), 11);
-  addNumberEventCondition(main.handle, "TXT_num", 0, 0, 0.0f);
+  addNumberEventCondition(main.unknown10, "TXT_num", 0, 0, 0.0f);
   GfMenuObject::initialize();
 }
 
@@ -42,8 +42,8 @@ void GfMenuObjChainCount::open() {
   ui::UIObjectAcc acc(getAttachedObject(CALL_CHAIN_COUNT));
   if (acc.isValid() && !acc.isTerm()) {
     ui::EventData event;
-    event.type = GfMenuTypes::UI_EVENT_OPEN;
-    sendEvent(acc.handle, event, 0.0f);
+    event.unknown00 = GfMenuTypes::UI_EVENT_OPEN;
+    sendEvent(acc.unknown10, event, 0.0f);
   }
 }
 
@@ -51,8 +51,8 @@ void GfMenuObjChainCount::close() {
   ui::UIObjectAcc acc(getAttachedObject(CALL_CHAIN_COUNT));
   if (acc.isValid() && !acc.isTerm()) {
     ui::EventData event;
-    event.type = GfMenuTypes::UI_EVENT_CLOSE;
-    sendEvent(acc.handle, event, 0.0f);
+    event.unknown00 = GfMenuTypes::UI_EVENT_CLOSE;
+    sendEvent(acc.unknown10, event, 0.0f);
   }
 }
 

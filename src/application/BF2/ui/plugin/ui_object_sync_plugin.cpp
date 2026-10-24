@@ -7,7 +7,7 @@
 
 namespace ui {
 
-UIObjectSyncPlugin::UIObjectSyncPlugin() : targetObject(0), targetFlag(0) {}
+UIObjectSyncPlugin::UIObjectSyncPlugin() : m_targetObject(0), m_targetFlag(0) {}
 
 UIObjectSyncPlugin::~UIObjectSyncPlugin() { ; }
 
@@ -24,9 +24,9 @@ UIObjectSyncPlugin *UIObjectSyncPlugin::create(u32 handle) {
   return plugin;
 }
 
-void UIObjectSyncPlugin::setTargetObject(u32 handle) { targetObject = handle; }
+void UIObjectSyncPlugin::setTargetObject(u32 handle) { m_targetObject = handle; }
 
-void UIObjectSyncPlugin::setTargetFlag(u32 flags) { targetFlag = flags; }
+void UIObjectSyncPlugin::setTargetFlag(u32 flags) { m_targetFlag = flags; }
 
 const mm::mtl::RTTI *UIObjectSyncPlugin::getRTTI() const { return &m_rtti; }
 

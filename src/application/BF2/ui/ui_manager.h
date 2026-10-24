@@ -24,8 +24,8 @@ public:
   };
 
   struct LayerInfo {
-    u16 group;
-    u16 layer;
+    u16 unknown00; // Inferred role: group; original member name unknown.
+    u16 unknown02; // Inferred role: layer; original member name unknown.
   };
 
   UIManager(const UIPadRead *padRead, mtl::ALLOC_HANDLE handle);
@@ -50,17 +50,17 @@ public:
   u32 getLoadedResourceSize();
   bool isTerminated() const;
 
-  UIGroup groups[GROUP_MAX];
-  mm::mtl::FixedVector<LayerInfo, 32> layers;
+  UIGroup unknown08[GROUP_MAX];                   // Inferred role: groups; original member name unknown.
+  mm::mtl::FixedVector<LayerInfo, 32> unknown348; // Inferred role: layers; original member name unknown.
   u8 _3d0[0x3d8 - 0x3d0];
-  const UIPadRead *padRead;
-  UIUpdateCallback *updateCallback;
+  const UIPadRead *unknown3d8; // Inferred role: pad read; original member name unknown.
+  UIUpdateCallback *m_updateCallback;
 };
 
-static_assert(offsetof(UIManager, groups) == 0x08, "");
-static_assert(offsetof(UIManager, layers) == 0x348, "");
-static_assert(offsetof(UIManager, padRead) == 0x3d8, "");
-static_assert(offsetof(UIManager, updateCallback) == 0x3e0, "");
+static_assert(offsetof(UIManager, unknown08) == 0x08, "");
+static_assert(offsetof(UIManager, unknown348) == 0x348, "");
+static_assert(offsetof(UIManager, unknown3d8) == 0x3d8, "");
+static_assert(offsetof(UIManager, m_updateCallback) == 0x3e0, "");
 static_assert(sizeof(UIManager) == 0x3e8, "");
 
 } // namespace ui

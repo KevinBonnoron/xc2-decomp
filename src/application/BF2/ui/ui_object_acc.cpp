@@ -34,264 +34,264 @@ template <typename T, typename U> T *castIfValid(U *object) { return object != n
 
 } // namespace
 
-UIObjectAcc::UIObjectAcc(u32 handle) : object(nullptr), handle(handle) { object = UIUtil::getObject(handle); }
+UIObjectAcc::UIObjectAcc(u32 handle) : unknown08(nullptr), unknown10(handle) { unknown08 = UIUtil::getObject(handle); }
 
-UIObjectAcc::UIObjectAcc(u32 handle, const char *name) : object(nullptr), handle(0) {
+UIObjectAcc::UIObjectAcc(u32 handle, const char *name) : unknown08(nullptr), unknown10(0) {
   if (name != nullptr) {
     handle = UIUtil::searchChild(handle, name);
   }
-  this->handle = handle;
-  object = UIUtil::getObject(handle);
+  this->unknown10 = handle;
+  unknown08 = UIUtil::getObject(handle);
 }
 
-UIObjectAcc::UIObjectAcc(const UIObjectAcc &other) : object(nullptr), handle(other.handle) { object = UIUtil::getObject(handle); }
+UIObjectAcc::UIObjectAcc(const UIObjectAcc &other) : unknown08(nullptr), unknown10(other.unknown10) { unknown08 = UIUtil::getObject(unknown10); }
 
 UIObjectAcc::~UIObjectAcc() { ; }
 
-bool UIObjectAcc::isLayout() const { return object->objectType == UI_OBJECT_TYPE_LAYOUT; }
+bool UIObjectAcc::isLayout() const { return unknown08->unknownd8 == UI_OBJECT_TYPE_LAYOUT; }
 
-bool UIObjectAcc::isText() const { return object->objectType == UI_OBJECT_TYPE_TEXT; }
+bool UIObjectAcc::isText() const { return unknown08->unknownd8 == UI_OBJECT_TYPE_TEXT; }
 
-bool UIObjectAcc::isImage() const { return object->isImageType(); }
+bool UIObjectAcc::isImage() const { return unknown08->isImageType(); }
 
-bool UIObjectAcc::isPolygon() const { return object->objectType == UI_OBJECT_TYPE_POLYGON; }
+bool UIObjectAcc::isPolygon() const { return unknown08->unknownd8 == UI_OBJECT_TYPE_POLYGON; }
 
 void UIObjectAcc::getPos(mm::Pnt<s16> &pos) const {
-  if (object != nullptr) {
-    object->getPos(pos);
+  if (unknown08 != nullptr) {
+    unknown08->getPos(pos);
   }
 }
 
 void UIObjectAcc::getSize(bool scaled, s16 &width, s16 &height) const {
   width = 0;
   height = 0;
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return;
   }
 
   if (scaled) {
-    width = object->displayInfo.pixelWidth * object->transform.scale.x;
-    height = object->displayInfo.pixelHeight * object->transform.scale.y;
+    width = unknown08->unknown50.unknown2c * unknown08->unknown20.unknown10.x;
+    height = unknown08->unknown50.unknown2e * unknown08->unknown20.unknown10.y;
   } else {
-    width = object->displayInfo.pixelWidth;
-    height = object->displayInfo.pixelHeight;
+    width = unknown08->unknown50.unknown2c;
+    height = unknown08->unknown50.unknown2e;
   }
 }
 
 void UIObjectAcc::getDisplayOffs(mm::Pnt<s16> &offset) const {
   offset.x = 0;
   offset.y = 0;
-  if (object != nullptr) {
-    object->getDisplayOffset(UI_DISPLAY_MODE_TOP_LEFT, offset);
+  if (unknown08 != nullptr) {
+    unknown08->getDisplayOffset(UI_DISPLAY_MODE_TOP_LEFT, offset);
   }
 }
 
 void UIObjectAcc::getDisplayOffsCenter(mm::Pnt<s16> &offset) const {
   offset.x = 0;
   offset.y = 0;
-  if (object != nullptr) {
-    object->getDisplayOffset(UI_DISPLAY_MODE_CENTER, offset);
+  if (unknown08 != nullptr) {
+    unknown08->getDisplayOffset(UI_DISPLAY_MODE_CENTER, offset);
   }
 }
 
 void UIObjectAcc::setDisp(bool disp) {
-  if (object != nullptr) {
-    object->displayInfo.setDisp(disp);
+  if (unknown08 != nullptr) {
+    unknown08->unknown50.setDisp(disp);
   }
 }
 
 void UIObjectAcc::setDispChild(bool disp, const char *name) {
-  if (object != nullptr) {
-    UIUtil::setDispChild(handle, disp, name);
+  if (unknown08 != nullptr) {
+    UIUtil::setDispChild(unknown10, disp, name);
   }
 }
 
 bool UIObjectAcc::isDisp() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return false;
   }
-  return object->displayInfo.disp;
+  return unknown08->unknown50.unknown08;
 }
 
 bool UIObjectAcc::isControl() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return false;
   }
-  return object->flags.test(UI_OBJECT_FLAG_CONTROL);
+  return unknown08->unknown98.test(UI_OBJECT_FLAG_CONTROL);
 }
 
 bool UIObjectAcc::isDuplicate() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return false;
   }
-  return object->flags.test(UI_OBJECT_FLAG_DUPLICATE);
+  return unknown08->unknown98.test(UI_OBJECT_FLAG_DUPLICATE);
 }
 
 bool UIObjectAcc::isStreamImage() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return false;
   }
-  return object->flags.test(UI_OBJECT_FLAG_STREAM_IMAGE);
+  return unknown08->unknown98.test(UI_OBJECT_FLAG_STREAM_IMAGE);
 }
 
 bool UIObjectAcc::isStreamImage2nd() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return false;
   }
-  return object->flags.test(UI_OBJECT_FLAG_STREAM_IMAGE_2ND);
+  return unknown08->unknown98.test(UI_OBJECT_FLAG_STREAM_IMAGE_2ND);
 }
 
 bool UIObjectAcc::isStreaming() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return false;
   }
-  return object->flags.test(UI_OBJECT_FLAG_STREAMING);
+  return unknown08->unknown98.test(UI_OBJECT_FLAG_STREAMING);
 }
 
 bool UIObjectAcc::isNotInputTarget() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return false;
   }
-  return object->flags.test(UI_OBJECT_FLAG_NOT_INPUT_TARGET);
+  return unknown08->unknown98.test(UI_OBJECT_FLAG_NOT_INPUT_TARGET);
 }
 
 bool UIObjectAcc::isAlwaysInLayout() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return false;
   }
-  return object->flags.test(UI_OBJECT_FLAG_ALWAYS_IN_LAYOUT);
+  return unknown08->unknown98.test(UI_OBJECT_FLAG_ALWAYS_IN_LAYOUT);
 }
 
 bool UIObjectAcc::isIgnoreSize() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return false;
   }
-  return object->flags.test(UI_OBJECT_FLAG_IGNORE_SIZE);
+  return unknown08->unknown98.test(UI_OBJECT_FLAG_IGNORE_SIZE);
 }
 
 bool UIObjectAcc::isSuspend() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return false;
   }
-  return object->flags.test(UI_OBJECT_FLAG_SUSPEND);
+  return unknown08->unknown98.test(UI_OBJECT_FLAG_SUSPEND);
 }
 
 void UIObjectAcc::setTerm() {
-  if (object != nullptr) {
-    object->setTerm();
+  if (unknown08 != nullptr) {
+    unknown08->setTerm();
   }
 }
 
 bool UIObjectAcc::isTerm() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return true;
   }
-  return object->isTerm();
+  return unknown08->isTerm();
 }
 
 void UIObjectAcc::setSuspend(bool suspend) {
-  if (object != nullptr && !object->isTerm()) {
-    object->setSuspend(suspend);
+  if (unknown08 != nullptr && !unknown08->isTerm()) {
+    unknown08->setSuspend(suspend);
   }
 }
 
 u16 UIObjectAcc::getDuplicateIndex() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return 0;
   }
-  return object->duplicateIndex;
+  return unknown08->unknown9c;
 }
 
 bool UIObjectAcc::isDebugDraw() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return true;
   }
-  return object->isDebugDraw();
+  return unknown08->isDebugDraw();
 }
 
 void UIObjectAcc::getPosCenter(mm::Pnt<s16> &pos) const {
-  if (object != nullptr) {
-    object->getPosCenter(pos);
+  if (unknown08 != nullptr) {
+    unknown08->getPosCenter(pos);
   }
 }
 
 void UIObjectAcc::getPosDraw(mm::Pnt<s16> &pos) const {
-  if (object != nullptr) {
-    pos = object->transform.pos;
+  if (unknown08 != nullptr) {
+    pos = unknown08->unknown20.unknown08;
   }
 }
 
 void UIObjectAcc::setPos(const mm::Pnt<s16> &pos) {
-  if (object != nullptr) {
-    object->setPos(pos);
+  if (unknown08 != nullptr) {
+    unknown08->setPos(pos);
   }
 }
 
 void UIObjectAcc::setPosCenter(const mm::Pnt<s16> &pos) {
-  if (object != nullptr) {
-    object->setPosCenter(pos);
+  if (unknown08 != nullptr) {
+    unknown08->setPosCenter(pos);
   }
 }
 
 void UIObjectAcc::getScale(mm::Vec2 &scale) {
   scale.x = 0.0f;
   scale.y = 0.0f;
-  if (object != nullptr) {
-    scale = object->transform.scale;
+  if (unknown08 != nullptr) {
+    scale = unknown08->unknown20.unknown10;
   }
 }
 
 void UIObjectAcc::setScale(const mm::Vec2 &scale) {
-  if (object != nullptr) {
-    object->transform.setScale(scale.x, scale.y);
+  if (unknown08 != nullptr) {
+    unknown08->unknown20.setScale(scale.x, scale.y);
   }
 }
 
 void UIObjectAcc::getRot(f32 &rot) {
   rot = 0.0f;
-  if (object != nullptr) {
-    rot = object->transform.rot;
+  if (unknown08 != nullptr) {
+    rot = unknown08->unknown20.unknown20;
   }
 }
 
 void UIObjectAcc::setRot(f32 rot) {
-  if (object != nullptr) {
-    object->transform.rot = rot;
+  if (unknown08 != nullptr) {
+    unknown08->unknown20.unknown20 = rot;
   }
 }
 
 void UIObjectAcc::setMatrix(const mm::Mat44 &matrix) {
-  if (object != nullptr) {
-    layer::LayerAccObjBase acc(object->layer);
+  if (unknown08 != nullptr) {
+    layer::LayerAccObjBase acc(unknown08->unknownc8);
     acc.setMatrix(matrix);
   }
 }
 
 void UIObjectAcc::getMatrix(mm::Mat44 &matrix) {
   matrix = mm::Mat44::identity;
-  if (object != nullptr) {
-    layer::LayerAccObjBase acc(object->layer);
+  if (unknown08 != nullptr) {
+    layer::LayerAccObjBase acc(unknown08->unknownc8);
     matrix = acc.getMatrix();
   }
 }
 
 void UIObjectAcc::getAlpha(f32 &alpha) {
   alpha = 0.0f;
-  if (object != nullptr) {
-    alpha = object->displayInfo.getMulColor().a;
+  if (unknown08 != nullptr) {
+    alpha = unknown08->unknown50.getMulColor().a;
   }
 }
 
 void UIObjectAcc::setAlpha(f32 alpha) {
-  if (object != nullptr) {
-    object->displayInfo.mulColor.a = alpha;
+  if (unknown08 != nullptr) {
+    unknown08->unknown50.unknown10.a = alpha;
   }
 }
 
 void UIObjectAcc::setMulColor(const mm::Col3 &color) {
-  if (object != nullptr) {
-    mm::Col4 mulColor = {color.r, color.g, color.b, object->displayInfo.getMulColor().a};
-    object->displayInfo.mulColor = mulColor;
+  if (unknown08 != nullptr) {
+    mm::Col4 mulColor = {color.r, color.g, color.b, unknown08->unknown50.getMulColor().a};
+    unknown08->unknown50.unknown10 = mulColor;
   }
 }
 
@@ -299,104 +299,104 @@ void UIObjectAcc::getMulColor(mm::Col3 &color) {
   color.r = 1.0f;
   color.g = 1.0f;
   color.b = 1.0f;
-  if (object != nullptr) {
-    const mm::Col4 &mulColor = object->displayInfo.getMulColor();
+  if (unknown08 != nullptr) {
+    const mm::Col4 &mulColor = unknown08->unknown50.getMulColor();
     color = mm::Col3(mulColor.r, mulColor.g, mulColor.b);
   }
 }
 
 void UIObjectAcc::setMulColor(const char *name) {
-  if (name != nullptr && object != nullptr) {
+  if (name != nullptr && unknown08 != nullptr) {
     mm::Col4 color;
     if (UIColorLibrary::get()->find(name, color)) {
       color.a = 0.0f;
-      if (object != nullptr) {
-        color.a = object->displayInfo.getMulColor().a;
+      if (unknown08 != nullptr) {
+        color.a = unknown08->unknown50.getMulColor().a;
       }
-      object->displayInfo.mulColor = color;
+      unknown08->unknown50.unknown10 = color;
     }
   }
 }
 
 void UIObjectAcc::setAddColor(const mm::Col3 &color) {
-  if (object != nullptr) {
-    object->setAddColor(color);
+  if (unknown08 != nullptr) {
+    unknown08->setAddColor(color);
   }
 }
 
 void UIObjectAcc::getAddColor(mm::Col3 &color) {
-  if (object != nullptr) {
-    color = object->displayInfo.getAddColor();
+  if (unknown08 != nullptr) {
+    color = unknown08->unknown50.getAddColor();
   }
 }
 
 void UIObjectAcc::setAddColor(const char *name) {
-  if (name != nullptr && object != nullptr) {
+  if (name != nullptr && unknown08 != nullptr) {
     mm::Col4 color;
     if (UIColorLibrary::get()->find(name, color)) {
-      object->setAddColor(mm::Col3(color.r, color.g, color.b));
+      unknown08->setAddColor(mm::Col3(color.r, color.g, color.b));
     }
   }
 }
 
-void UIObjectAcc::saveDefColor() { object->displayInfo.saveDefColor(); }
+void UIObjectAcc::saveDefColor() { unknown08->unknown50.saveDefColor(); }
 
-void UIObjectAcc::loadDefColor() { object->displayInfo.loadDefColor(); }
+void UIObjectAcc::loadDefColor() { unknown08->unknown50.loadDefColor(); }
 
 u16 UIObjectAcc::getDispPriority() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return 0;
   }
-  return object->displayInfo.priority;
+  return unknown08->unknown50.unknown0c;
 }
 
 void UIObjectAcc::setDispPriority(u16 priority) {
-  if (object != nullptr) {
-    object->setPriority(priority);
+  if (unknown08 != nullptr) {
+    unknown08->setPriority(priority);
   }
 }
 
 u8 UIObjectAcc::getDispBlendType() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return 0;
   }
-  return object->displayInfo.blendType;
+  return unknown08->unknown50.unknown0a;
 }
 
 void UIObjectAcc::setDispBlendType(u8 type) {
-  if (object != nullptr) {
-    object->setBlendType(type);
+  if (unknown08 != nullptr) {
+    unknown08->setBlendType(type);
   }
 }
 
 void UIObjectAcc::setTexFilterLinear() {
-  layer::LayerAccObjBase acc(object->layer);
+  layer::LayerAccObjBase acc(unknown08->unknownc8);
   acc.setTexFilterType(layer::LAYER_TEX_FILTER_TYPE_LINEAR);
 }
 
 void UIObjectAcc::setTexFilterNearest() {
-  layer::LayerAccObjBase acc(object->layer);
+  layer::LayerAccObjBase acc(unknown08->unknownc8);
   acc.setTexFilterType(layer::LAYER_TEX_FILTER_TYPE_NEAREST);
 }
 
 const char *UIObjectAcc::getName() const {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return "error";
   }
-  return object->name.c_str();
+  return unknown08->unknowna0.c_str();
 }
 
 void UIObjectAcc::setDebugDraw(bool) {}
 
 u32 UIObjectAcc::getParentHandle() {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return 0;
   }
-  return object->parent;
+  return unknown08->unknowndc;
 }
 
 u32 UIObjectAcc::countChild(const char *name, u32 length) {
-  UILayoutObject *layout = castIfValid<UILayoutObject>(object);
+  UILayoutObject *layout = castIfValid<UILayoutObject>(unknown08);
   if (layout == nullptr) {
     return 0;
   }
@@ -404,7 +404,7 @@ u32 UIObjectAcc::countChild(const char *name, u32 length) {
 }
 
 u32 UIObjectAcc::countActiveChild() {
-  UILayoutObject *layout = castIfValid<UILayoutObject>(object);
+  UILayoutObject *layout = castIfValid<UILayoutObject>(unknown08);
   if (layout == nullptr) {
     return 0;
   }
@@ -412,7 +412,7 @@ u32 UIObjectAcc::countActiveChild() {
 }
 
 u32 UIObjectAcc::searchChild(const char *name) {
-  UILayoutObject *layout = castIfValid<UILayoutObject>(object);
+  UILayoutObject *layout = castIfValid<UILayoutObject>(unknown08);
   if (layout == nullptr) {
     return 0;
   }
@@ -420,7 +420,7 @@ u32 UIObjectAcc::searchChild(const char *name) {
 }
 
 u32 UIObjectAcc::searchDuplicatedChild(const char *name, u16 index) {
-  UILayoutObject *layout = castIfValid<UILayoutObject>(object);
+  UILayoutObject *layout = castIfValid<UILayoutObject>(unknown08);
   if (layout == nullptr) {
     return 0;
   }
@@ -428,11 +428,11 @@ u32 UIObjectAcc::searchDuplicatedChild(const char *name, u16 index) {
 }
 
 u32 UIObjectAcc::searchSibiling(const char *name) {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return 0;
   }
 
-  UILayoutObject *layout = castIfValid<UILayoutObject>(object->getParentPtr());
+  UILayoutObject *layout = castIfValid<UILayoutObject>(unknown08->getParentPtr());
   if (layout == nullptr) {
     return 0;
   }
@@ -440,14 +440,14 @@ u32 UIObjectAcc::searchSibiling(const char *name) {
 }
 
 u32 UIObjectAcc::duplicate(u32 parent) {
-  if (object == nullptr) {
+  if (unknown08 == nullptr) {
     return 0;
   }
-  return object->duplicate(parent);
+  return unknown08->duplicate(parent);
 }
 
 u32 UIObjectAcc::duplicateChild(const char *name) {
-  UILayoutObject *layout = castIfValid<UILayoutObject>(object);
+  UILayoutObject *layout = castIfValid<UILayoutObject>(unknown08);
   if (layout == nullptr) {
     return 0;
   }
@@ -456,74 +456,74 @@ u32 UIObjectAcc::duplicateChild(const char *name) {
   if (child == 0) {
     return 0;
   }
-  return UIUtil::getObject(child)->duplicate(handle);
+  return UIUtil::getObject(child)->duplicate(unknown10);
 }
 
 void UIObjectAcc::availableInputTarget(bool available) {
-  if (object != nullptr) {
-    object->flags.set(UI_OBJECT_FLAG_NOT_INPUT_TARGET, !available);
+  if (unknown08 != nullptr) {
+    unknown08->unknown98.set(UI_OBJECT_FLAG_NOT_INPUT_TARGET, !available);
   }
 }
 
 void UIObjectAcc::setScreenAdjusting(bool adjusting) {
-  if (object != nullptr) {
-    object->flags.set(UI_OBJECT_FLAG_SCREEN_ADJUSTING, adjusting);
+  if (unknown08 != nullptr) {
+    unknown08->unknown98.set(UI_OBJECT_FLAG_SCREEN_ADJUSTING, adjusting);
   }
 }
 
 void UIObjectAcc::setAlwaysInLayout(bool alwaysInLayout) {
-  if (object != nullptr) {
-    object->flags.set(UI_OBJECT_FLAG_ALWAYS_IN_LAYOUT, alwaysInLayout);
+  if (unknown08 != nullptr) {
+    unknown08->unknown98.set(UI_OBJECT_FLAG_ALWAYS_IN_LAYOUT, alwaysInLayout);
   }
 }
 
-bool UIObjectAcc::isScreenAdjusting() { return object->flags.test(UI_OBJECT_FLAG_SCREEN_ADJUSTING); }
+bool UIObjectAcc::isScreenAdjusting() { return unknown08->unknown98.test(UI_OBJECT_FLAG_SCREEN_ADJUSTING); }
 
 void UIObjectAcc::applyText(const char *text) {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject != nullptr) {
     textObject->applyText(text);
   }
 }
 
 void UIObjectAcc::setText(const UIStr &text) {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject != nullptr) {
     textObject->setText(text);
   }
 }
 
 void UIObjectAcc::getText(UIStr &text) const {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject != nullptr) {
-    text.copy(textObject->text);
+    text.copy(textObject->unknown120);
   }
 }
 
 const char *UIObjectAcc::getTextPtr() const {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject == nullptr) {
     return nullptr;
   }
-  return textObject->text.c_str();
+  return textObject->unknown120.c_str();
 }
 
 void UIObjectAcc::setTextAlignH(u8 align) {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject != nullptr) {
     textObject->setTextAlignH(align);
   }
 }
 
 void UIObjectAcc::setTextAlignV(u8 align) {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject != nullptr) {
     textObject->setTextAlignV(align);
   }
 }
 
 u8 UIObjectAcc::getTextAlignH() const {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject == nullptr) {
     return 0;
   }
@@ -531,7 +531,7 @@ u8 UIObjectAcc::getTextAlignH() const {
 }
 
 u8 UIObjectAcc::getTextAlignV() const {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject == nullptr) {
     return 0;
   }
@@ -539,14 +539,14 @@ u8 UIObjectAcc::getTextAlignV() const {
 }
 
 void UIObjectAcc::setBorderWeight(f32 weight) {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject != nullptr) {
     textObject->setBorderWeight(weight);
   }
 }
 
 f32 UIObjectAcc::getBorderWeight() const {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject == nullptr) {
     return 0.0f;
   }
@@ -554,7 +554,7 @@ f32 UIObjectAcc::getBorderWeight() const {
 }
 
 void UIObjectAcc::setSlopeRot(f32 rot) {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject != nullptr) {
     textObject->setSlopeRot(rot * mm::DEG_TO_RAD);
   }
@@ -562,7 +562,7 @@ void UIObjectAcc::setSlopeRot(f32 rot) {
 
 f32 UIObjectAcc::getSlopeRot() const {
   f32 rot = 0.0f;
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject != nullptr) {
     rot = textObject->getSlopeRot() * mm::RAD_TO_DEG;
   }
@@ -570,29 +570,29 @@ f32 UIObjectAcc::getSlopeRot() const {
 }
 
 void UIObjectAcc::setTextFacePattern(u32 index) {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject != nullptr && isValid()) {
     textObject->setTextFacePattern(index);
   }
 }
 
 u32 UIObjectAcc::getTextFacePatternIndex() {
-  UITextObject *textObject = castIfValid<UITextObject>(object);
+  UITextObject *textObject = castIfValid<UITextObject>(unknown08);
   if (textObject == nullptr || !isValid()) {
     return 0;
   }
-  return textObject->facePatternIndex;
+  return textObject->unknown13c;
 }
 
 void UIObjectAcc::setImageIndex(u32 index) {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
     image->setImageIndex(index);
   }
 }
 
 u32 UIObjectAcc::getImageIndex() const {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image == nullptr) {
     return 0;
   }
@@ -600,7 +600,7 @@ u32 UIObjectAcc::getImageIndex() const {
 }
 
 u32 UIObjectAcc::getImageMax() const {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image == nullptr) {
     return 0;
   }
@@ -608,28 +608,28 @@ u32 UIObjectAcc::getImageMax() const {
 }
 
 void UIObjectAcc::setHFlip(bool flip) {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
     image->setHFlip(flip);
   }
 }
 
 void UIObjectAcc::setVFlip(bool flip) {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
     image->setVFlip(flip);
   }
 }
 
 void UIObjectAcc::setExtType(u32 type) {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
     image->setExtType(type);
   }
 }
 
 u32 UIObjectAcc::getExtType() {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image == nullptr) {
     return 0;
   }
@@ -637,14 +637,14 @@ u32 UIObjectAcc::getExtType() {
 }
 
 void UIObjectAcc::setExtParam(f32 param) {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
     image->setExtParam(param);
   }
 }
 
 f32 UIObjectAcc::getExtParam() {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image == nullptr) {
     return 0.0f;
   }
@@ -652,7 +652,7 @@ f32 UIObjectAcc::getExtParam() {
 }
 
 bool UIObjectAcc::hasAnimation() {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image == nullptr) {
     return false;
   }
@@ -660,35 +660,35 @@ bool UIObjectAcc::hasAnimation() {
 }
 
 void UIObjectAcc::startAnimation(const char *name, bool loop) {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
     image->startAnimation(name, loop);
   }
 }
 
 void UIObjectAcc::startAnimationFromID(u32 id, bool loop) {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
     image->startAnimationFromID(id, loop);
   }
 }
 
 void UIObjectAcc::startAnimationFromIndex(u32 index, bool loop) {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
     image->startAnimationFromIndex(index, loop);
   }
 }
 
 void UIObjectAcc::stopAnimation() {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
     image->stopAnimation();
   }
 }
 
 bool UIObjectAcc::isPlayingAnimation() {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image == nullptr) {
     return false;
   }
@@ -696,7 +696,7 @@ bool UIObjectAcc::isPlayingAnimation() {
 }
 
 u32 UIObjectAcc::getAnimationMax() {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image == nullptr) {
     return 0;
   }
@@ -704,7 +704,7 @@ u32 UIObjectAcc::getAnimationMax() {
 }
 
 const char *UIObjectAcc::getAnimationName(u32 index) {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image == nullptr) {
     return nullptr;
   }
@@ -712,7 +712,7 @@ const char *UIObjectAcc::getAnimationName(u32 index) {
 }
 
 f32 UIObjectAcc::getAnimationPlaybackLength() {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image == nullptr) {
     return 0.0f;
   }
@@ -720,7 +720,7 @@ f32 UIObjectAcc::getAnimationPlaybackLength() {
 }
 
 f32 UIObjectAcc::getAnimationPlaybackTime() {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image == nullptr) {
     return 0.0f;
   }
@@ -728,45 +728,45 @@ f32 UIObjectAcc::getAnimationPlaybackTime() {
 }
 
 void UIObjectAcc::setAnimationPlaybackTime(f32 time) {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
     image->setAnimationPlaybackTime(time);
   }
 }
 
 bool UIObjectAcc::isPlaybackControl() const {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image == nullptr) {
     return false;
   }
-  return image->playbackControl;
+  return image->unknown118;
 }
 
 void UIObjectAcc::applyCapture() {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
     image->applyCapture();
   }
 }
 
 void UIObjectAcc::setMaskObject(u32 handle) {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
     image->setMaskObject(UIUtil::getImageObject(handle));
   }
 }
 
 void UIObjectAcc::setStreamImage2nd() {
-  UIImageObject *image = castIfValid<UIImageObject>(object);
+  UIImageObject *image = castIfValid<UIImageObject>(unknown08);
   if (image != nullptr) {
-    image->flags.set(UI_OBJECT_FLAG_STREAM_IMAGE_2ND);
+    image->unknown98.set(UI_OBJECT_FLAG_STREAM_IMAGE_2ND);
   }
 }
 
 void UIObjectAcc::setLayout(u32 handle, const char *name) {
-  UILayoutObject *layout = castIfValid<UILayoutObject>(object);
+  UILayoutObject *layout = castIfValid<UILayoutObject>(unknown08);
   if (layout != nullptr) {
-    UILayoutData *layoutData = layout->layoutData;
+    UILayoutData *layoutData = layout->unknown110;
     UIObject *target = UIUtil::getObject(handle);
     if (layoutData != nullptr && target != nullptr) {
       layoutData->attachLayout(name, target);
@@ -775,45 +775,45 @@ void UIObjectAcc::setLayout(u32 handle, const char *name) {
 }
 
 bool UIObjectAcc::getLayoutRect(const char *name, mm::Rect<s16> &rect) {
-  UILayoutObject *layout = castIfValid<UILayoutObject>(object);
-  if (layout == nullptr || layout->layoutData == nullptr) {
+  UILayoutObject *layout = castIfValid<UILayoutObject>(unknown08);
+  if (layout == nullptr || layout->unknown110 == nullptr) {
     return false;
   }
-  return layout->layoutData->getLayoutRect(name, rect);
+  return layout->unknown110->getLayoutRect(name, rect);
 }
 
 void UIObjectAcc::setLayoutViewport(mm::Rect<s16> viewport) {
-  UILayoutObject *layout = castIfValid<UILayoutObject>(object);
+  UILayoutObject *layout = castIfValid<UILayoutObject>(unknown08);
   if (layout != nullptr) {
     layout->setViewport(viewport);
   }
 }
 
 void UIObjectAcc::updateLayoutSize() {
-  UILayoutObject *layout = castIfValid<UILayoutObject>(object);
+  UILayoutObject *layout = castIfValid<UILayoutObject>(unknown08);
   if (layout != nullptr) {
     layout->updateSize();
   }
 }
 
 bool UIObjectAcc::isRenderViewMode() {
-  UIScreenObject *screen = castIfValid<UIScreenObject>(object);
+  UIScreenObject *screen = castIfValid<UIScreenObject>(unknown08);
   if (screen == nullptr) {
     return false;
   }
-  return screen->mode == UIScreenObject::MODE_RENDER_VIEW;
+  return screen->unknown108 == UIScreenObject::MODE_RENDER_VIEW;
 }
 
 bool UIObjectAcc::isOnMemoryMode() {
-  UIScreenObject *screen = castIfValid<UIScreenObject>(object);
+  UIScreenObject *screen = castIfValid<UIScreenObject>(unknown08);
   if (screen == nullptr) {
     return false;
   }
-  return screen->mode == UIScreenObject::MODE_ON_MEMORY;
+  return screen->unknown108 == UIScreenObject::MODE_ON_MEMORY;
 }
 
 u32 UIObjectAcc::getRenderIndex() {
-  UIScreenObject *screen = castIfValid<UIScreenObject>(object);
+  UIScreenObject *screen = castIfValid<UIScreenObject>(unknown08);
   if (screen == nullptr) {
     return 0;
   }
@@ -821,7 +821,7 @@ u32 UIObjectAcc::getRenderIndex() {
 }
 
 u32 UIObjectAcc::getOnMemoryPixelSize() {
-  UIScreenObject *screen = castIfValid<UIScreenObject>(object);
+  UIScreenObject *screen = castIfValid<UIScreenObject>(unknown08);
   if (screen == nullptr) {
     return 0;
   }
@@ -829,7 +829,7 @@ u32 UIObjectAcc::getOnMemoryPixelSize() {
 }
 
 void *UIObjectAcc::getOnMemoryBuffer() {
-  UIScreenObject *screen = castIfValid<UIScreenObject>(object);
+  UIScreenObject *screen = castIfValid<UIScreenObject>(unknown08);
   if (screen == nullptr) {
     return nullptr;
   }
@@ -837,50 +837,50 @@ void *UIObjectAcc::getOnMemoryBuffer() {
 }
 
 void UIObjectAcc::swapOnMemoryBuffer() {
-  UIScreenObject *screen = castIfValid<UIScreenObject>(object);
+  UIScreenObject *screen = castIfValid<UIScreenObject>(unknown08);
   if (screen != nullptr) {
     screen->swapOnMemoryBuffer();
   }
 }
 
 u32 UIObjectAcc::getShapeType() {
-  UIPolygonObject *polygon = castIfValid<UIPolygonObject>(object);
+  UIPolygonObject *polygon = castIfValid<UIPolygonObject>(unknown08);
   if (polygon == nullptr) {
     return 0;
   }
-  return polygon->info.shapeType;
+  return polygon->unknown110.unknown08;
 }
 
 bool UIObjectAcc::isShapeSimpleFace() {
-  UIPolygonObject *polygon = castIfValid<UIPolygonObject>(object);
+  UIPolygonObject *polygon = castIfValid<UIPolygonObject>(unknown08);
   if (polygon == nullptr) {
     return false;
   }
-  return polygon->info.shapeType == UIPolygonObject::SHAPE_TYPE_SIMPLE_FACE;
+  return polygon->unknown110.unknown08 == UIPolygonObject::SHAPE_TYPE_SIMPLE_FACE;
 }
 
 bool UIObjectAcc::isShapeRing() {
-  UIPolygonObject *polygon = castIfValid<UIPolygonObject>(object);
+  UIPolygonObject *polygon = castIfValid<UIPolygonObject>(unknown08);
   if (polygon == nullptr) {
     return false;
   }
-  return polygon->info.shapeType == UIPolygonObject::SHAPE_TYPE_RING;
+  return polygon->unknown110.unknown08 == UIPolygonObject::SHAPE_TYPE_RING;
 }
 
 bool UIObjectAcc::isShapeParticle() {
-  UIPolygonObject *polygon = castIfValid<UIPolygonObject>(object);
+  UIPolygonObject *polygon = castIfValid<UIPolygonObject>(unknown08);
   if (polygon == nullptr) {
     return false;
   }
-  return polygon->info.shapeType == UIPolygonObject::SHAPE_TYPE_PARTICLE;
+  return polygon->unknown110.unknown08 == UIPolygonObject::SHAPE_TYPE_PARTICLE;
 }
 
 UIShape *UIObjectAcc::getShape() {
-  UIPolygonObject *polygon = castIfValid<UIPolygonObject>(object);
+  UIPolygonObject *polygon = castIfValid<UIPolygonObject>(unknown08);
   if (polygon == nullptr) {
     return nullptr;
   }
-  return polygon->shape;
+  return polygon->unknown108;
 }
 
 void UIObjectAcc::setParicleActivate(bool activate) {

@@ -24,12 +24,12 @@ public:
   virtual void execute(UIObjectAcc &acc);
   virtual bool isNeedUpdate(UIObjectAcc &acc);
 
-  UIObjectPlugin *next;
-  u32 needUpdate;
+  UIObjectPlugin *unknown10; // Inferred role: next; original member name unknown.
+  u32 unknown18;             // Inferred role: need update; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectPlugin, next) == 0x10, "");
-static_assert(offsetof(UIObjectPlugin, needUpdate) == 0x18, "");
+static_assert(offsetof(UIObjectPlugin, unknown10) == 0x10, "");
+static_assert(offsetof(UIObjectPlugin, unknown18) == 0x18, "");
 static_assert(sizeof(UIObjectPlugin) == 0x20, "");
 
 } // namespace ui

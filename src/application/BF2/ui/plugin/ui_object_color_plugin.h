@@ -36,12 +36,12 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual bool isNeedUpdate(UIObjectAcc &acc);
 
-  mm::Col3 color;
-  u32 colorMode;
+  mm::Col3 unknown7c; // Inferred role: color; original member name unknown.
+  u32 unknown88;      // Inferred role: color mode; original member name unknown.
 };
 
-static_assert(offsetof(UIObjectColorPlugin, color) == 0x7c, "");
-static_assert(offsetof(UIObjectColorPlugin, colorMode) == 0x88, "");
+static_assert(offsetof(UIObjectColorPlugin, unknown7c) == 0x7c, "");
+static_assert(offsetof(UIObjectColorPlugin, unknown88) == 0x88, "");
 static_assert(sizeof(UIObjectColorPlugin) == 0x90, "");
 
 } // namespace ui

@@ -17,25 +17,25 @@ bool UIAnimationManager::registObject(u32 object) {
 // __LINE__ is the line argument of the operator new call.
 #line 104
   AnimationInfo *info = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) AnimationInfo;
-  info->object = object;
-  info->handler = object;
-  info->playing = false;
-  animations.push_back(info);
+  info->unknown10 = object;
+  info->unknown18 = object;
+  info->unknown14 = false;
+  unknown08.push_back(info);
   return true;
 }
 
 void UIAnimationManager::changeEventHandleObject(u32 object, u32 handler) {
-  for (mm::mtl::IntrusiveList<AnimationInfo>::iterator it = animations.begin(); it != animations.end(); ++it) {
-    if (it->object == object) {
-      it->handler = handler;
+  for (mm::mtl::IntrusiveList<AnimationInfo>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+    if (it->unknown10 == object) {
+      it->unknown18 = handler;
     }
   }
 }
 
 void UIAnimationManager::resetEventHandleObject(u32 object) {
-  for (mm::mtl::IntrusiveList<AnimationInfo>::iterator it = animations.begin(); it != animations.end(); ++it) {
-    if (it->object == object) {
-      it->handler = object;
+  for (mm::mtl::IntrusiveList<AnimationInfo>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+    if (it->unknown10 == object) {
+      it->unknown18 = object;
     }
   }
 }

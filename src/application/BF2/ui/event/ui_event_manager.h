@@ -21,17 +21,17 @@ class UIObjectListener;
 class UIEventManager : public mm::mtl::PtrSingleton<UIEventManager> {
 public:
   struct EventInfo {
-    EventInfo() : handle(0), delay(0.0f) {}
+    EventInfo() : unknown00(0), unknown04(0.0f) {}
 
-    u32 handle;
-    f32 delay;
-    EventData data;
+    u32 unknown00;       // Inferred role: handle; original member name unknown.
+    f32 unknown04;       // Inferred role: delay; original member name unknown.
+    EventData unknown08; // Inferred role: data; original member name unknown.
   };
 
   struct ListenerInfo : public mm::mtl::IntrusiveListNode<ListenerInfo> {
-    u32 handle;
-    UIObjectListener *listener;
-    UIEventCondition *conditions;
+    u32 unknown10;               // Inferred role: handle; original member name unknown.
+    UIObjectListener *unknown18; // Inferred role: listener; original member name unknown.
+    UIEventCondition *unknown20; // Inferred role: conditions; original member name unknown.
   };
 
   UIEventManager();
@@ -46,21 +46,21 @@ public:
   void setGameListener(UIGameListener *listener);
   bool isObjectListenerFull();
 
-  mm::mtl::IntrusiveList<ListenerInfo> listeners;
-  mm::mtl::FixedVector<EventInfo, 256> objectEvents;
-  UIGameListener *gameListener;
-  mm::mtl::FixedVector<EventInfo, 256> gameEvents;
+  mm::mtl::IntrusiveList<ListenerInfo> unknown08; // Inferred role: listeners; original member name unknown.
+  mm::mtl::FixedVector<EventInfo, 256> unknown20; // Inferred role: object events; original member name unknown.
+  UIGameListener *m_gameListener;
+  mm::mtl::FixedVector<EventInfo, 256> unknown2030; // Inferred role: game events; original member name unknown.
 };
 
 static_assert(sizeof(UIEventManager::EventInfo) == 0x20, "");
-static_assert(offsetof(UIEventManager::ListenerInfo, handle) == 0x10, "");
-static_assert(offsetof(UIEventManager::ListenerInfo, listener) == 0x18, "");
-static_assert(offsetof(UIEventManager::ListenerInfo, conditions) == 0x20, "");
+static_assert(offsetof(UIEventManager::ListenerInfo, unknown10) == 0x10, "");
+static_assert(offsetof(UIEventManager::ListenerInfo, unknown18) == 0x18, "");
+static_assert(offsetof(UIEventManager::ListenerInfo, unknown20) == 0x20, "");
 static_assert(sizeof(UIEventManager::ListenerInfo) == 0x28, "");
-static_assert(offsetof(UIEventManager, listeners) == 0x08, "");
-static_assert(offsetof(UIEventManager, objectEvents) == 0x20, "");
-static_assert(offsetof(UIEventManager, gameListener) == 0x2028, "");
-static_assert(offsetof(UIEventManager, gameEvents) == 0x2030, "");
+static_assert(offsetof(UIEventManager, unknown08) == 0x08, "");
+static_assert(offsetof(UIEventManager, unknown20) == 0x20, "");
+static_assert(offsetof(UIEventManager, m_gameListener) == 0x2028, "");
+static_assert(offsetof(UIEventManager, unknown2030) == 0x2030, "");
 static_assert(sizeof(UIEventManager) == 0x4038, "");
 
 } // namespace ui

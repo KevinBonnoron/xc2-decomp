@@ -7,10 +7,10 @@
 namespace ui {
 
 UIObjectOffsetPlugin::UIObjectOffsetPlugin() {
-  targetPos.x = 0;
-  targetPos.y = 0;
-  maxOffset.x = 0xffff;
-  maxOffset.y = 0xffff;
+  unknown7c.x = 0;
+  unknown7c.y = 0;
+  unknown80.x = 0xffff;
+  unknown80.y = 0xffff;
 }
 
 UIObjectOffsetPlugin::~UIObjectOffsetPlugin() { ; }

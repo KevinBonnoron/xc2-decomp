@@ -147,7 +147,7 @@ void GfMenuObjUtil::setChildAddColor(u32 handle, const char *name, const char *c
 void GfMenuObjUtil::setChildText(u32 handle, const char *name, u16 id) {
   ui::UIObjectAcc acc(handle, name);
   if (acc.isValid()) {
-    GfMenuObject::setText(acc.handle, id);
+    GfMenuObject::setText(acc.unknown10, id);
   }
 }
 
@@ -170,7 +170,7 @@ u32 GfMenuObjUtil::playAnime(u32 handle, const char *name, const char *anime) {
   if (acc.isValid()) {
     acc.setDisp(true);
     acc.startAnimation(anime, false);
-    return acc.handle;
+    return acc.unknown10;
   }
   return 0;
 }

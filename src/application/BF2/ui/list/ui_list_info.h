@@ -19,13 +19,13 @@ namespace ui {
 class UIListInfoBase : public mm::mtl::ReferenceObject {
 public:
   struct SetupParam {
-    SetupParam() : index(0), columnSize(0), pageRowSize(1), pageColumnSize(1), loop(false) {}
+    SetupParam() : unknown00(0), unknown04(0), unknown08(1), unknown0c(1), unknown10(false) {}
 
-    u32 index;
-    u32 columnSize;
-    u32 pageRowSize;
-    u32 pageColumnSize;
-    bool loop;
+    u32 unknown00;  // Inferred role: index; original member name unknown.
+    u32 unknown04;  // Inferred role: column size; original member name unknown.
+    u32 unknown08;  // Inferred role: page row size; original member name unknown.
+    u32 unknown0c;  // Inferred role: page column size; original member name unknown.
+    bool unknown10; // Inferred role: loop; original member name unknown.
   };
 
   UIListInfoBase();
@@ -50,20 +50,20 @@ public:
   u32 getRowOffset() const;
   u32 getColumnOffset() const;
 
-  SetupParam param;
-  u32 size;
-  u32 index;
-  u32 rowOffset;
-  u32 columnOffset;
-  bool changed;
+  SetupParam unknown0c; // Inferred role: param; original member name unknown.
+  u32 m_size;
+  u32 unknown24;  // Inferred role: index; original member name unknown.
+  u32 unknown28;  // Inferred role: row offset; original member name unknown.
+  u32 unknown2c;  // Inferred role: column offset; original member name unknown.
+  bool unknown30; // Inferred role: changed; original member name unknown.
 };
 
-static_assert(offsetof(UIListInfoBase, param) == 0x0c, "");
-static_assert(offsetof(UIListInfoBase, size) == 0x20, "");
-static_assert(offsetof(UIListInfoBase, index) == 0x24, "");
-static_assert(offsetof(UIListInfoBase, rowOffset) == 0x28, "");
-static_assert(offsetof(UIListInfoBase, columnOffset) == 0x2c, "");
-static_assert(offsetof(UIListInfoBase, changed) == 0x30, "");
+static_assert(offsetof(UIListInfoBase, unknown0c) == 0x0c, "");
+static_assert(offsetof(UIListInfoBase, m_size) == 0x20, "");
+static_assert(offsetof(UIListInfoBase, unknown24) == 0x24, "");
+static_assert(offsetof(UIListInfoBase, unknown28) == 0x28, "");
+static_assert(offsetof(UIListInfoBase, unknown2c) == 0x2c, "");
+static_assert(offsetof(UIListInfoBase, unknown30) == 0x30, "");
 static_assert(sizeof(UIListInfoBase) == 0x38, "");
 
 template <typename T> class UIListInfo : public UIListInfoBase {

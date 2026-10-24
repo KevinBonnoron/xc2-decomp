@@ -3,12 +3,12 @@
 namespace ui {
 
 UITransform::UITransform() {
-  pos.x = 0;
-  pos.y = 0;
-  scale.x = 1.0f;
-  scale.y = 1.0f;
-  rot = 0.0f;
-  dirty = false;
+  unknown08.x = 0;
+  unknown08.y = 0;
+  unknown10.x = 1.0f;
+  unknown10.y = 1.0f;
+  unknown20 = 0.0f;
+  unknown24 = false;
 }
 
 UITransform::~UITransform() { ; }
@@ -16,29 +16,29 @@ UITransform::~UITransform() { ; }
 void UITransform::syncParent() {}
 
 void UITransform::setPos(s16 x, s16 y) {
-  if (pos.x != x || pos.y != y) {
-    dirty = true;
+  if (unknown08.x != x || unknown08.y != y) {
+    unknown24 = true;
   }
-  pos.x = x;
-  pos.y = y;
+  unknown08.x = x;
+  unknown08.y = y;
 }
 
 void UITransform::setScale(f32 x, f32 y) {
-  if (scale.x != x || scale.y != y) {
-    dirty = true;
+  if (unknown10.x != x || unknown10.y != y) {
+    unknown24 = true;
   }
-  scale.x = x;
-  scale.y = y;
+  unknown10.x = x;
+  unknown10.y = y;
 }
 
 void UITransform::setParent(const UITransform *, bool) {}
 
 UITransform &UITransform::operator=(const UITransform &other) {
-  pos = other.pos;
-  scale = other.scale;
-  rot = other.rot;
-  rot = other.rot;
-  dirty = true;
+  unknown08 = other.unknown08;
+  unknown10 = other.unknown10;
+  unknown20 = other.unknown20;
+  unknown20 = other.unknown20;
+  unknown24 = true;
   return *this;
 }
 

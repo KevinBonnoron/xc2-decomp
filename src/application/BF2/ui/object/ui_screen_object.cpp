@@ -14,19 +14,19 @@
 namespace ui {
 
 UIScreenObject::UIScreenObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name)
-    : UIObject(layer, name, UI_OBJECT_TYPE_SCREEN), mode(MODE_RENDER_VIEW), renderIndex(0), _114(), model(nullptr) {}
+    : UIObject(layer, name, UI_OBJECT_TYPE_SCREEN), unknown108(MODE_RENDER_VIEW), renderIndex(0), _114(), unknown118(nullptr) {}
 
 UIScreenObject::~UIScreenObject() {
-  if (mode == MODE_RENDER_VIEW) {
-    mm::mtl::safeRelease(model);
+  if (unknown108 == MODE_RENDER_VIEW) {
+    mm::mtl::safeRelease(unknown118);
   }
-  if (mode == MODE_ON_MEMORY && onMemoryInfo.textureSlot >= 1 && onMemoryInfo.textureSlot <= 4) {
-    ml::ScnRenderDrSysParmAcc(ml::Scn::get()->renderDrSys, 0).resetModelTexture(static_cast<u8>(onMemoryInfo.textureSlot - 1));
+  if (unknown108 == MODE_ON_MEMORY && onMemoryInfo.unknown00 >= 1 && onMemoryInfo.unknown00 <= 4) {
+    ml::ScnRenderDrSysParmAcc(ml::Scn::get()->renderDrSys, 0).resetModelTexture(static_cast<u8>(onMemoryInfo.unknown00 - 1));
   }
 }
 
 UIScreenObject *UIScreenObject::create(UILayoutObject *parent, ml::ScnRenderDrViewCtrl *viewCtrl, fw::ModelObject *model, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
-  layer::LayerAccLayoutObj layoutAcc(parent->layer);
+  layer::LayerAccLayoutObj layoutAcc(parent->unknownc8);
   layer::LayerBase *layer = layoutAcc.createTexObj(*viewCtrl->unknown20);
   if (layer == nullptr) {
     return nullptr;
@@ -36,9 +36,9 @@ UIScreenObject *UIScreenObject::create(UILayoutObject *parent, ml::ScnRenderDrVi
 #line 79
   UIScreenObject *screen = new (allocator, 16, __FILE__, __LINE__) UIScreenObject(layer, name.c_str());
   if (screen != nullptr) {
-    screen->mode = MODE_RENDER_VIEW;
+    screen->unknown108 = MODE_RENDER_VIEW;
     screen->renderIndex = viewCtrl->unknown08;
-    screen->model = model;
+    screen->unknown118 = model;
     if (model != nullptr) {
       model->addRef();
     }
@@ -47,8 +47,8 @@ UIScreenObject *UIScreenObject::create(UILayoutObject *parent, ml::ScnRenderDrVi
 }
 
 UIScreenObject *UIScreenObject::createOnMemory(UILayoutObject *parent, u32 width, u32 height, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator, const OnMemoryInfo &info) {
-  layer::LayerAccLayoutObj layoutAcc(parent->layer);
-  layer::LayerBase *layer = layoutAcc.createMemObj(width, height, static_cast<layer::LayerMemType>(info.memType));
+  layer::LayerAccLayoutObj layoutAcc(parent->unknownc8);
+  layer::LayerBase *layer = layoutAcc.createMemObj(width, height, static_cast<layer::LayerMemType>(info.unknown01));
   if (layer == nullptr) {
     return nullptr;
   }
@@ -57,12 +57,12 @@ UIScreenObject *UIScreenObject::createOnMemory(UILayoutObject *parent, u32 width
 #line 116
   UIScreenObject *screen = new (allocator, 16, __FILE__, __LINE__) UIScreenObject(layer, name.c_str());
   if (screen != nullptr) {
-    screen->mode = MODE_ON_MEMORY;
+    screen->unknown108 = MODE_ON_MEMORY;
   }
-  if (info.textureSlot >= 1 && info.textureSlot <= 4) {
+  if (info.unknown00 >= 1 && info.unknown00 <= 4) {
     ml::ScnRenderDrSysParmAcc parmAcc(ml::Scn::get()->renderDrSys, 0);
     layer::LayerAccMemObj memAcc(layer);
-    u8 index = info.textureSlot - 1;
+    u8 index = info.unknown00 - 1;
     ml::ScnRenderDrMdlTexture texture;
     texture.unknown00 = memAcc.getTexture();
     texture.unknown08 = index;
@@ -75,10 +75,10 @@ UIScreenObject *UIScreenObject::createOnMemory(UILayoutObject *parent, u32 width
 }
 
 u32 UIScreenObject::getOnMemoryPixelSize() const {
-  if (mode != MODE_ON_MEMORY) {
+  if (unknown108 != MODE_ON_MEMORY) {
     return 0;
   }
-  switch (onMemoryInfo.memType) {
+  switch (onMemoryInfo.unknown01) {
   case 1:
     return 3;
   case 2:
@@ -91,15 +91,15 @@ u32 UIScreenObject::getOnMemoryPixelSize() const {
 }
 
 void *UIScreenObject::getOnMemoryBuffer() const {
-  if (mode != MODE_ON_MEMORY) {
+  if (unknown108 != MODE_ON_MEMORY) {
     return nullptr;
   }
-  return layer::LayerAccMemObj(layer).getMemBufer();
+  return layer::LayerAccMemObj(unknownc8).getMemBufer();
 }
 
 void UIScreenObject::swapOnMemoryBuffer() {
-  if (mode == MODE_ON_MEMORY) {
-    layer::LayerAccMemObj(layer).updateMemBufer();
+  if (unknown108 == MODE_ON_MEMORY) {
+    layer::LayerAccMemObj(unknownc8).updateMemBufer();
   }
 }
 

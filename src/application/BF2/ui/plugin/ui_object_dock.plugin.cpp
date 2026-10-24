@@ -8,7 +8,7 @@
 
 namespace ui {
 
-UIObjectDockPlugin::UIObjectDockPlugin(u32 target) : target(target), offset(0, 0), dockType(0), alignType(0), reverse(0), area(0, 0, 0, 0) { UIUtil::isValid(target); }
+UIObjectDockPlugin::UIObjectDockPlugin(u32 target) : unknown1c(target), unknown20(0, 0), unknown24(0), unknown28(0), unknown2c(0), unknown30(0, 0, 0, 0) { UIUtil::isValid(target); }
 
 UIObjectDockPlugin::~UIObjectDockPlugin() { ; }
 
@@ -18,8 +18,8 @@ UIObjectDockPlugin *UIObjectDockPlugin::create(u32 handle, s16 offsetX, s16 offs
   UIObjectDockPlugin *plugin = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UIObjectDockPlugin(target);
   plugin->addRef();
   if (UIObjectPluginUtil::attachPlugin(handle, plugin)) {
-    plugin->offset.x = offsetX;
-    plugin->offset.y = offsetY;
+    plugin->unknown20.x = offsetX;
+    plugin->unknown20.y = offsetY;
   } else if (plugin != nullptr) {
     plugin->release();
     plugin = nullptr;

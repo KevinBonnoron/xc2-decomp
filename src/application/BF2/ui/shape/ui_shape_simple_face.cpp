@@ -5,21 +5,21 @@
 
 namespace ui {
 
-UIShapeSimpleFace::UIShapeSimpleFace(u32 vertexNum) : faceDirty(true) {
+UIShapeSimpleFace::UIShapeSimpleFace(u32 vertexNum) : unknown58(true) {
   setupBuffer(vertexNum, vertexNum * 3 - 6);
-  faceVertices.setAllocator(UIUtil::getProgAllocator());
-  faceVertices.reserve(vertexNum);
+  unknown40.setAllocator(UIUtil::getProgAllocator());
+  unknown40.reserve(vertexNum);
   for (u32 i = 0; i < vertexNum; i++) {
-    faceVertices[i].y = 0.0f;
-    faceVertices[i].x = 0.0f;
-    faceVertices[i].a = 0xff;
-    faceVertices[i].b = 0xff;
-    faceVertices[i].g = 0xff;
-    faceVertices[i].r = 0xff;
-    faceVertices[i].v = 0.0f;
-    faceVertices[i].u = 0.0f;
+    unknown40[i].y = 0.0f;
+    unknown40[i].x = 0.0f;
+    unknown40[i].a = 0xff;
+    unknown40[i].b = 0xff;
+    unknown40[i].g = 0xff;
+    unknown40[i].r = 0xff;
+    unknown40[i].v = 0.0f;
+    unknown40[i].u = 0.0f;
   }
-  for (u32 i = 0; i < static_cast<u32>(indices.size()) / 3; i++) {
+  for (u32 i = 0; i < static_cast<u32>(unknown20.size()) / 3; i++) {
     u32 index[3] = {i, i + 1, i + 2};
     writeIndex(index, 3, i * 3);
   }
@@ -34,12 +34,12 @@ void UIShapeSimpleFace::writeFaceVertex(const layer::LayerPolyVertex *vertex, u3
 
   for (u32 i = 0; i < num; i++) {
     u32 index = offset + i;
-    if (index >= faceVertices.size()) {
+    if (index >= unknown40.size()) {
       return;
     }
-    faceVertices[index] = vertex[i];
+    unknown40[index] = vertex[i];
   }
-  faceDirty = true;
+  unknown58 = true;
 }
 
 static bool isCross(const layer::LayerPolyVertex &a, const layer::LayerPolyVertex &b, const layer::LayerPolyVertex &c, const layer::LayerPolyVertex &d) {
@@ -51,32 +51,32 @@ static bool isCross(const layer::LayerPolyVertex &a, const layer::LayerPolyVerte
 }
 
 void UIShapeSimpleFace::update(u32 frame) {
-  if (!faceDirty) {
+  if (!unknown58) {
     return;
   }
 
-  writeVertex(&faceVertices[0], faceVertices.size(), 0);
-  for (u32 i = 0; i < static_cast<u32>(vertices.size()) - 1; i++) {
+  writeVertex(&unknown40[0], unknown40.size(), 0);
+  for (u32 i = 0; i < static_cast<u32>(unknown08.size()) - 1; i++) {
     u32 top = i;
-    for (u32 j = i + 1; j < static_cast<u32>(vertices.size()); j++) {
-      if (vertices[j].y < vertices[top].y || (vertices[j].y == vertices[top].y && vertices[j].x > vertices[top].x)) {
+    for (u32 j = i + 1; j < static_cast<u32>(unknown08.size()); j++) {
+      if (unknown08[j].y < unknown08[top].y || (unknown08[j].y == unknown08[top].y && unknown08[j].x > unknown08[top].x)) {
         top = j;
       }
     }
     if (i != top) {
-      layer::LayerPolyVertex vertex = vertices[i];
-      writeVertex(&vertices[top], 1, i);
+      layer::LayerPolyVertex vertex = unknown08[i];
+      writeVertex(&unknown08[top], 1, i);
       writeVertex(&vertex, 1, top);
     }
   }
-  for (u32 i = 0; i < static_cast<u32>(vertices.size()) - 3; i++) {
-    if (isCross(vertices[i], vertices[i + 2], vertices[i + 1], vertices[i + 3])) {
-      layer::LayerPolyVertex vertex = vertices[i];
-      writeVertex(&vertices[i + 1], 1, i);
+  for (u32 i = 0; i < static_cast<u32>(unknown08.size()) - 3; i++) {
+    if (isCross(unknown08[i], unknown08[i + 2], unknown08[i + 1], unknown08[i + 3])) {
+      layer::LayerPolyVertex vertex = unknown08[i];
+      writeVertex(&unknown08[i + 1], 1, i);
       writeVertex(&vertex, 1, i + 1);
     }
   }
-  faceDirty = false;
+  unknown58 = false;
 }
 
 const mm::mtl::RTTI *UIShapeSimpleFace::getRTTI() const { return &m_rtti; }
