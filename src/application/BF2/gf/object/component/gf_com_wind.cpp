@@ -10,15 +10,15 @@
 
 namespace gf {
 
-GfComWind::GfComWind() : probe(nullptr) {}
+GfComWind::GfComWind() : unknown10(nullptr) {}
 
 void GfComWind::setup(const SetupInfo &info) {
   GfComTransform *transform = owner->getComponent<GfComTransform>();
-  mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame = transform->childFrame.get() == nullptr ? transform->frame : transform->childFrame;
-  probe = fw::WindFactory::createProbe(info.group, info.radius, frame, info.isFollowFrame);
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame = transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18;
+  unknown10 = fw::WindFactory::createProbe(info.group, info.radius, frame, info.isFollowFrame);
 }
 
-void GfComWind::cleanup() { mm::mtl::safeRelease(probe); }
+void GfComWind::cleanup() { mm::mtl::safeRelease(unknown10); }
 
 const mm::mtl::RTTI *GfComWind::getRTTI() const { return &m_rtti; }
 

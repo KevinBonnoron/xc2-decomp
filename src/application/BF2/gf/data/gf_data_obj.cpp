@@ -801,8 +801,8 @@ void DataObjDriver::setBladeSet(int slot) {
 
 u32 DataObjDriver::getBlade(bool isVirtual, int slot) const {
   GfObjSetup *setup = GfObjUtil::getObjSetup(unknown18);
-  if (setup != nullptr && setup->hasFixedBlade && setup->fixedBlade != 0) {
-    return setup->fixedBlade;
+  if (setup != nullptr && setup->unknown54 && setup->unknown58 != 0) {
+    return setup->unknown58;
   }
 
   if (slot >= 0) {
@@ -847,8 +847,8 @@ u32 DataObjBlade::getEquipWeapon(bool isVirtual, int) const { return get(isVirtu
 u32 DataObjDriver::getWeaponType(bool isVirtual, int slot) const {
   u32 blade = getBlade(isVirtual, slot);
   GfObjSetup *setup = GfObjUtil::getObjSetup(unknown18);
-  if (setup != nullptr && setup->hasFixedBlade && setup->fixedBlade != 0) {
-    blade = setup->fixedBlade;
+  if (setup != nullptr && setup->unknown54 && setup->unknown58 != 0) {
+    blade = setup->unknown58;
   }
 
   if (blade == 0) {
@@ -886,8 +886,8 @@ u32 DataObjDriver::getAttribute(bool isVirtual, int slot) const {
 
   u32 blade = slot >= 0 ? unknown10->unknown26[slot] : 0;
   GfObjSetup *setup = GfObjUtil::getObjSetup(unknown18);
-  if (setup != nullptr && setup->hasFixedBlade && setup->fixedBlade != 0) {
-    blade = setup->fixedBlade;
+  if (setup != nullptr && setup->unknown54 && setup->unknown58 != 0) {
+    blade = setup->unknown58;
   }
 
   DataObjBlade dataObjBlade(blade);
@@ -1145,7 +1145,7 @@ u32 DataObjPcWpn::getAttribute(bool, int slot) const {
     return 0;
   }
 
-  int member = GfObjUtil::getObjSetup(unknown08)->partyMember;
+  int member = GfObjUtil::getObjSetup(unknown08)->unknown14;
   if (member == -1) {
     return 0;
   }
@@ -1163,7 +1163,7 @@ int DataObjPcWpn::getBladeSet(bool isVirtual) const {
     return -1;
   }
 
-  int member = GfObjUtil::getObjSetup(unknown08)->partyMember;
+  int member = GfObjUtil::getObjSetup(unknown08)->unknown14;
   if (member == -1) {
     return -1;
   }
@@ -1581,9 +1581,9 @@ DataObjEnemyBlade::~DataObjEnemyBlade() {}
 
 SDataBlade *DataObjEnemyBlade::get(bool) const { return unknowne0; }
 
-const char *DataObjEnemyBlade::getName() const { return GfDataBlade::getName(unknownd8->blade, 0); }
+const char *DataObjEnemyBlade::getName() const { return GfDataBlade::getName(unknownd8->unknownb8, 0); }
 
-bool DataObjEnemyBlade::getName(u8 *&bdat, u32 &textId) const { return GfDataBlade::getName(bdat, textId, unknownd8->blade); }
+bool DataObjEnemyBlade::getName(u8 *&bdat, u32 &textId) const { return GfDataBlade::getName(bdat, textId, unknownd8->unknownb8); }
 
 const char *DataObjEnemyBlade::getModelResourceName() const { return unknowne0->unknown70c.c_str(); }
 
@@ -1681,8 +1681,8 @@ u32 DataObjEnemyBlade::getAttribute(bool, int) const {
 }
 
 bool DataObjEnemyBlade::isDispInitExtraParts(u32 part) const {
-  if (unknownd8 != nullptr && unknownd8->dataEnemy->unknown42 != 0) {
-    return (unknownd8->dataEnemy->unknown42 & 1 << part) != 0;
+  if (unknownd8 != nullptr && unknownd8->unknowna0->unknown42 != 0) {
+    return (unknownd8->unknowna0->unknown42 & 1 << part) != 0;
   }
 
   return unknowne0->unknownc0[part] != 0;
@@ -1712,7 +1712,7 @@ u32 DataObjEnemyBlade::getPersonality() const { return unknowne0->unknown824; }
 
 u32 DataObjEnemyBlade::getCoolTime() const { return unknowne0->unknown828; }
 
-DataObjNpc::DataObjNpc(GF_OBJ_HANDLE *handle) : unknown08(handle), m_bdatId(0) { m_bdatId = mm::mtl::dynamicCast<GfObjSetupNpc>(GfObjManager::getObjInfo(handle)->setup)->id; }
+DataObjNpc::DataObjNpc(GF_OBJ_HANDLE *handle) : unknown08(handle), m_bdatId(0) { m_bdatId = mm::mtl::dynamicCast<GfObjSetupNpc>(GfObjManager::getObjInfo(handle)->unknown30)->unknown10; }
 
 DataObjNpc::DataObjNpc(u32 id) : unknown08(INVALID_HANDLE), m_bdatId(id) {}
 
@@ -1738,7 +1738,7 @@ u32 DataObjNpc::getFootStepEffect() const { return GfDataNpc::getFootStepEffect(
 
 u32 DataObjNpc::getEyeRotControl() const { return GfDataNpc::getEyeRotControl(getBdatId()); }
 
-DataObjMap::DataObjMap(GF_OBJ_HANDLE *handle) : unknown08(handle), m_bdatId(0) { m_bdatId = mm::mtl::dynamicCast<GfObjSetupMap>(GfObjManager::getObjInfo(handle)->setup)->id; }
+DataObjMap::DataObjMap(GF_OBJ_HANDLE *handle) : unknown08(handle), m_bdatId(0) { m_bdatId = mm::mtl::dynamicCast<GfObjSetupMap>(GfObjManager::getObjInfo(handle)->unknown30)->unknown10; }
 
 DataObjMap::DataObjMap(u32 id) : unknown08(INVALID_HANDLE), m_bdatId(id) {}
 
@@ -1748,7 +1748,7 @@ const char *DataObjMap::getName() const { return GfBdatMaplist::get()->getMaplis
 
 u32 DataObjMap::getBdatId() const { return m_bdatId; }
 
-DataObjMob::DataObjMob(GF_OBJ_HANDLE *handle) : unknown08(handle), m_bdatId(0) { m_bdatId = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(handle)->setup)->id; }
+DataObjMob::DataObjMob(GF_OBJ_HANDLE *handle) : unknown08(handle), m_bdatId(0) { m_bdatId = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(handle)->unknown30)->unknown10; }
 
 DataObjMob::DataObjMob(u32 id) : unknown08(INVALID_HANDLE), m_bdatId(id) {}
 
@@ -1772,7 +1772,7 @@ u32 DataObjMob::getFootStep() const { return GfDataMob::getFootStep(getBdatId())
 
 u32 DataObjMob::getFootStepEffect() const { return GfDataMob::getFootStepEffect(getBdatId()); }
 
-DataObjUiObj::DataObjUiObj(GF_OBJ_HANDLE *handle) : unknown08(handle), m_bdatId(0) { m_bdatId = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(handle)->setup)->id; }
+DataObjUiObj::DataObjUiObj(GF_OBJ_HANDLE *handle) : unknown08(handle), m_bdatId(0) { m_bdatId = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(handle)->unknown30)->unknown10; }
 
 DataObjUiObj::DataObjUiObj(u32 id) : unknown08(INVALID_HANDLE), m_bdatId(id) {}
 
@@ -1791,9 +1791,9 @@ u32 DataObjUiObj::getBdatId() const { return m_bdatId; }
 bool DataObjUiObj::isDispInitExtraParts(u32) const { return false; }
 
 DataObjGmk::DataObjGmk(GF_OBJ_HANDLE *handle) : unknown08(handle), m_bdatId(0) {
-  GfObjSetupGimmick *setup = mm::mtl::dynamicCast<GfObjSetupGimmick>(GfObjManager::getObjInfo(handle)->setup);
-  m_bdatId = setup->id;
-  m_gimmickType = setup->gimmickType;
+  GfObjSetupGimmick *setup = mm::mtl::dynamicCast<GfObjSetupGimmick>(GfObjManager::getObjInfo(handle)->unknown30);
+  m_bdatId = setup->unknown10;
+  m_gimmickType = setup->unknown5c;
 }
 
 DataObjGmk::DataObjGmk(u32 id, GimmickType gimmickType) : unknown08(INVALID_HANDLE), m_bdatId(id), m_gimmickType(gimmickType) {}

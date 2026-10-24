@@ -11,7 +11,7 @@ namespace pc {
 
 void StateFieldStart::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   StateUtilField::setSpecialActStatus(*behavior, true);
-  if (!behavior->getProperty()->isPadControl) {
+  if (!behavior->getProperty()->unknown111_2) {
     StateUtil::setTarget(*behavior, INVALID_HANDLE);
   }
 }

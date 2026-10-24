@@ -8,22 +8,22 @@ namespace pc {
 
 TimerPlugin::TimerPlugin() {
   for (u32 i = 0; i < TYPE_MAX; i++) {
-    timers[i].isActive = false;
-    timers[i].time = 0.0f;
+    unknown0c[i].unknown00 = false;
+    unknown0c[i].unknown04 = 0.0f;
   }
 }
 
 void TimerPlugin::setActivateTimer(TYPE type, bool isActive) {
-  if (timers[type].isActive != isActive) {
-    timers[type].isActive = isActive;
-    timers[type].time = 0.0f;
+  if (unknown0c[type].unknown00 != isActive) {
+    unknown0c[type].unknown00 = isActive;
+    unknown0c[type].unknown04 = 0.0f;
   }
 }
 
 void TimerPlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &info) {
   for (u32 i = 0; i < TYPE_MAX; i++) {
-    if (timers[i].isActive) {
-      timers[i].time += info.deltaTime;
+    if (unknown0c[i].unknown00) {
+      unknown0c[i].unknown04 += info.deltaTime;
     }
   }
 }

@@ -10,8 +10,8 @@ namespace pc {
 
 void StateFieldWaterSink::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  property->velocity = mm::Vec3::zero;
-  elapsedTime = 0.0f;
+  property->unknown80 = mm::Vec3::zero;
+  unknown18 = 0.0f;
 }
 
 void StateFieldWaterSink::leave(GfComBehaviorPc *behavior, ai::State *next) {}

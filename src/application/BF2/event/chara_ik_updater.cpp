@@ -93,7 +93,7 @@ void CharaIKUpdater::setLensIK(bool isEnable, f32 x, f32 y) {
 }
 
 bool CharaIKUpdater::checkField(gf::GfObj *obj) {
-  gf::GF_OBJ_HANDLE *handle = obj->handle;
+  gf::GF_OBJ_HANDLE *handle = obj->unknownf8;
   for (u32 i = 0; i < 3; i++) {
     gf::GF_OBJ_HANDLE *driver = gf::GfGameParty::getHandleDriver(i);
     if (gf::GfGameParty::isLeaderDriver(driver)) {

@@ -3,18 +3,18 @@
 namespace gf {
 namespace pc {
 
-WaterInPlugin::WaterInPlugin() : behavior(nullptr), isEventDone(false) {}
+WaterInPlugin::WaterInPlugin() : unknown10(nullptr), unknown18(false) {}
 
 WaterInPlugin::~WaterInPlugin() {}
 
 bool WaterInPlugin::setup(GfComBehaviorPc &behavior) {
-  this->behavior = &behavior;
+  this->unknown10 = &behavior;
   return true;
 }
 
-void WaterInPlugin::cleanup(GfComBehaviorPc &) { behavior = nullptr; }
+void WaterInPlugin::cleanup(GfComBehaviorPc &) { unknown10 = nullptr; }
 
-void WaterInPlugin::onActivate() { isEventDone = false; }
+void WaterInPlugin::onActivate() { unknown18 = false; }
 
 } // namespace pc
 } // namespace gf

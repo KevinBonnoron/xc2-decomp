@@ -16,10 +16,10 @@ class StateBattleDead : public StateBattleActionBase {
   void Leave(GfComBehaviorPc *behavior, ai::State *next) override;
   void Update(btl::BattleCharacter *character, GfComBehaviorPc *behavior, const fw::UpdateInfo &info) override;
 
-  bool isDeadNotified;
+  bool unknown22; // Inferred role: dead notified; original member name unknown.
 };
 
-static_assert(offsetof(StateBattleDead, isDeadNotified) == 0x22, "");
+static_assert(offsetof(StateBattleDead, unknown22) == 0x22, "");
 static_assert(sizeof(StateBattleDead) == 0x28, "");
 
 } // namespace pc

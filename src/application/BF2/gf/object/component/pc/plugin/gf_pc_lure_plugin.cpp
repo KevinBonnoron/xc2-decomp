@@ -5,11 +5,11 @@
 namespace gf {
 namespace pc {
 
-LurePlugin::LurePlugin() : target(INVALID_HANDLE), behavior(nullptr) {}
+LurePlugin::LurePlugin() : unknown10(INVALID_HANDLE), unknown20(nullptr) {}
 
 bool LurePlugin::setup(GfComBehaviorPc &behavior) {
-  paramList = fw::ParamManager::get()->lureParamList;
-  this->behavior = &behavior;
+  unknown18 = fw::ParamManager::get()->lureParamList;
+  this->unknown20 = &behavior;
   return true;
 }
 
@@ -18,13 +18,13 @@ void LurePlugin::cleanup(GfComBehaviorPc &) {}
 void LurePlugin::onActivate() {}
 
 void LurePlugin::onDeactivate() {
-  if (target != INVALID_HANDLE) {
-    target = INVALID_HANDLE;
+  if (unknown10 != INVALID_HANDLE) {
+    unknown10 = INVALID_HANDLE;
   }
 }
 
 const LureParam *LurePlugin::getParam() const {
-  const fw::ParamList *list = paramList.operator->();
+  const fw::ParamList *list = unknown18.operator->();
   if (list->count == 0 || list->entries == nullptr) {
     return nullptr;
   }

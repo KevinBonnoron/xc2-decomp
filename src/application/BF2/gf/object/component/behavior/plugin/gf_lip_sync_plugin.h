@@ -31,18 +31,18 @@ public:
   void setSpeed(f32 speed);
   void setWeight(f32 weight);
 
-  GfComBehavior *behavior;
-  f32 speed;
-  f32 weight;
-  bool isTalking;
-  bool isForceTalk;
+  GfComBehavior *unknown10; // Inferred role: behavior; original member name unknown.
+  f32 unknown18;            // Inferred role: speed; original member name unknown.
+  f32 unknown1c;            // Inferred role: weight; original member name unknown.
+  bool unknown20;           // Inferred role: talking; original member name unknown.
+  bool unknown21;           // Inferred role: force talk; original member name unknown.
 };
 
-static_assert(offsetof(LipSyncPlugin, behavior) == 0x10, "");
-static_assert(offsetof(LipSyncPlugin, speed) == 0x18, "");
-static_assert(offsetof(LipSyncPlugin, weight) == 0x1c, "");
-static_assert(offsetof(LipSyncPlugin, isTalking) == 0x20, "");
-static_assert(offsetof(LipSyncPlugin, isForceTalk) == 0x21, "");
+static_assert(offsetof(LipSyncPlugin, unknown10) == 0x10, "");
+static_assert(offsetof(LipSyncPlugin, unknown18) == 0x18, "");
+static_assert(offsetof(LipSyncPlugin, unknown1c) == 0x1c, "");
+static_assert(offsetof(LipSyncPlugin, unknown20) == 0x20, "");
+static_assert(offsetof(LipSyncPlugin, unknown21) == 0x21, "");
 static_assert(sizeof(LipSyncPlugin) == 0x28, "");
 
 } // namespace gf

@@ -27,10 +27,10 @@ public:
   virtual void cleanup(GfComBehaviorPc &) {}
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
 
-  bool isFirstFrame;
+  bool unknown09; // Inferred role: first frame; original member name unknown.
 };
 
-static_assert(offsetof(ColVelCalculatorPlugin, isFirstFrame) == 0x09, "");
+static_assert(offsetof(ColVelCalculatorPlugin, unknown09) == 0x09, "");
 static_assert(sizeof(ColVelCalculatorPlugin) == 0x10, "");
 
 } // namespace pc

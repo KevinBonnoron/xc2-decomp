@@ -52,9 +52,9 @@ enum InputID {
 class GfComPropertyPc : public GfComProperty {
 public:
   struct Input {
-    f32 x;
-    f32 y;
-    mm::mtl::BitFlag<32> flags;
+    f32 unknown00;                  // Inferred role: x; original member name unknown.
+    f32 unknown04;                  // Inferred role: y; original member name unknown.
+    mm::mtl::BitFlag<32> unknown08; // Inferred role: flags; original member name unknown.
   };
 
   static mm::mtl::RTTI m_rtti;
@@ -64,32 +64,32 @@ public:
   void setEnvSensorCheckFlags(u32 flags, bool isEnable);
 
   u8 _38[0x60 - 0x38];
-  Input input;
-  Input previousInput;
+  Input unknown60; // Inferred role: input; original member name unknown.
+  Input unknown6c; // Inferred role: previous input; original member name unknown.
   u8 _78[0x80 - 0x78];
-  mm::Vec3 velocity;
-  f32 verticalSpeed;
-  f32 horizontalSpeed;
+  mm::Vec3 unknown80; // Inferred role: velocity; original member name unknown.
+  f32 unknown90;      // Inferred role: vertical speed; original member name unknown.
+  f32 unknown94;      // Inferred role: horizontal speed; original member name unknown.
   u8 _98[0x110 - 0x98];
-  u32 isFieldControl : 1;
-  u32 isBattleControl : 1;
+  u32 unknown110_0 : 1; // Inferred role: field control; original member name unknown.
+  u32 unknown110_1 : 1; // Inferred role: battle control; original member name unknown.
   u32 : 1;
-  u32 isEnableGravity : 1;
+  u32 unknown110_3 : 1; // Inferred role: enable gravity; original member name unknown.
   u32 : 6;
-  u32 isPadControl : 1;
+  u32 unknown111_2 : 1; // Inferred role: pad control; original member name unknown.
   u32 : 21;
   u8 _114[0x160 - 0x114];
-  mm::Vec3 position;
+  mm::Vec3 unknown160; // Inferred role: position; original member name unknown.
   u8 _170[0x310 - 0x170];
-  pc::GfPropertyField field;
+  pc::GfPropertyField unknown310; // Inferred role: field; original member name unknown.
 };
 
-static_assert(offsetof(GfComPropertyPc, input) == 0x60, "");
-static_assert(offsetof(GfComPropertyPc, previousInput) == 0x6c, "");
-static_assert(offsetof(GfComPropertyPc, velocity) == 0x80, "");
-static_assert(offsetof(GfComPropertyPc, verticalSpeed) == 0x90, "");
-static_assert(offsetof(GfComPropertyPc, horizontalSpeed) == 0x94, "");
-static_assert(offsetof(GfComPropertyPc, position) == 0x160, "");
-static_assert(offsetof(GfComPropertyPc, field) == 0x310, "");
+static_assert(offsetof(GfComPropertyPc, unknown60) == 0x60, "");
+static_assert(offsetof(GfComPropertyPc, unknown6c) == 0x6c, "");
+static_assert(offsetof(GfComPropertyPc, unknown80) == 0x80, "");
+static_assert(offsetof(GfComPropertyPc, unknown90) == 0x90, "");
+static_assert(offsetof(GfComPropertyPc, unknown94) == 0x94, "");
+static_assert(offsetof(GfComPropertyPc, unknown160) == 0x160, "");
+static_assert(offsetof(GfComPropertyPc, unknown310) == 0x310, "");
 
 } // namespace gf

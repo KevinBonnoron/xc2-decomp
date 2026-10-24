@@ -26,11 +26,11 @@ class StateFieldDead : public GfStateBase {
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
   void recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
 
-  bool isDownPosePending;
+  bool unknown18; // Inferred role: down pose pending; original member name unknown.
   u8 _19[0x20 - 0x19];
 };
 
-static_assert(offsetof(StateFieldDead, isDownPosePending) == 0x18, "");
+static_assert(offsetof(StateFieldDead, unknown18) == 0x18, "");
 static_assert(sizeof(StateFieldDead) == 0x20, "");
 
 } // namespace pc

@@ -25,11 +25,11 @@ class StateFieldStopBrake : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
-  bool isStopped;
+  bool unknown18; // Inferred role: stopped; original member name unknown.
   u8 _19[0x20 - 0x19];
 };
 
-static_assert(offsetof(StateFieldStopBrake, isStopped) == 0x18, "");
+static_assert(offsetof(StateFieldStopBrake, unknown18) == 0x18, "");
 static_assert(sizeof(StateFieldStopBrake) == 0x20, "");
 
 } // namespace pc

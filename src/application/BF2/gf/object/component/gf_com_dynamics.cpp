@@ -37,7 +37,7 @@ bool GfComDynamics::recieveMessage(fw::MessageObject *sender, fw::Message &messa
 
 void GfComDynamics::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
 
-GfComDynamics::GfComDynamics() : iterationCount(ITERATION_COUNT_DEFAULT), isMaxIteration(false), viewer(nullptr) { viewerListener.owner = this; }
+GfComDynamics::GfComDynamics() : unknowne8(ITERATION_COUNT_DEFAULT), unknownec(false), unknown100(nullptr) { unknownf0.unknown08 = this; }
 
 GfComDynamics::~GfComDynamics() {}
 
@@ -51,7 +51,7 @@ void GfComDynamics::setup(const SetupInfo &info) {
     return;
   }
 
-  anm::Pose *pose = model->pose;
+  anm::Pose *pose = model->unknown30;
   if (pose == nullptr) {
     return;
   }
@@ -64,40 +64,40 @@ void GfComDynamics::setup(const SetupInfo &info) {
   }
 
   if (info.forceCalculator != nullptr) {
-    forceCalculator = info.forceCalculator;
+    unknowne0 = info.forceCalculator;
   } else {
     GfComWind *wind = owner->getComponent<GfComWind>();
     if (wind != nullptr) {
-      forceCalculator = fw::WindForceCalculator::create().get();
-      fw::WindProbe *probe = wind->probe;
-      fw::ForceCalculator *calculator = forceCalculator.operator->();
+      unknowne0 = fw::WindForceCalculator::create().get();
+      fw::WindProbe *probe = wind->unknown10;
+      fw::ForceCalculator *calculator = unknowne0.operator->();
       fw::WindForceCalculator *windForceCalculator = calculator != nullptr ? mm::mtl::dynamicCast<fw::WindForceCalculator>(calculator) : nullptr;
       windForceCalculator->bindProbe(*probe);
     }
   }
 
-  skd::Dynamics *dynamics = skd::Factory::createDynamics(collisionObject, *info.resDynamics->solvers, *pose, forceCalculator.get(), getAllocator(ALLOCATOR_DEFAULT));
+  skd::Dynamics *dynamics = skd::Factory::createDynamics(collisionObject, *info.resDynamics->solvers, *pose, unknowne0.get(), getAllocator(ALLOCATOR_DEFAULT));
   dynamics->iterationCount = info.iterationCount;
   fw::DyanmicsManager *manager = fw::DyanmicsManager::get();
   if (manager != nullptr) {
     u32 layer = getLayer();
-    updater.bind(dynamics, model->referenceFrame);
-    updater.preUpdateCallback.bind(this, &GfComDynamics::applyAttribute);
-    manager->addUpdater(layer, updater);
+    unknown10.bind(dynamics, model->unknown20);
+    unknown10.preUpdateCallback.bind(this, &GfComDynamics::applyAttribute);
+    manager->addUpdater(layer, unknown10);
     if (dynamics != nullptr) {
       dynamics->release();
     }
 
     if (isCreateCollision) {
-      colObjUpdater.bind(collisionObject);
-      manager->addColUpdater(layer, colObjUpdater);
+      unknownc0.bind(collisionObject);
+      manager->addColUpdater(layer, unknownc0);
       if (collisionObject != nullptr) {
         collisionObject->release();
       }
     }
   }
 
-  iterationCount = info.iterationCount;
+  unknowne8 = info.iterationCount;
 }
 
 void GfComDynamics::applyAttribute() {
@@ -106,23 +106,23 @@ void GfComDynamics::applyAttribute() {
     return;
   }
 
-  skd::Dynamics *dynamics = updater.dynamics;
+  skd::Dynamics *dynamics = unknown10.dynamics;
   u64 attribute = comAsm->getAttribute(static_cast<AsmCategory>(0), ANIM_LAYER_BASE);
   bool isFreeMovement = (attribute & ASM_ATTRIBUTE_LIMIT_MOVEMENT) == 0;
   f32 maxMoveDistance = isFreeMovement ? 0.1f : 0.03f;
   f32 maxRotation = isFreeMovement ? 0.0f : 0.1f;
   dynamics->maxMoveDistance = maxMoveDistance;
   dynamics->maxRotation = maxRotation;
-  if ((attribute & ASM_ATTRIBUTE_MAX_ITERATION) != 0 || isMaxIteration) {
+  if ((attribute & ASM_ATTRIBUTE_MAX_ITERATION) != 0 || unknownec) {
     dynamics->iterationCount = ITERATION_COUNT_MAX;
   } else {
-    dynamics->iterationCount = iterationCount;
+    dynamics->iterationCount = unknowne8;
   }
 }
 
 void GfComDynamics::cleanup() {
-  if (forceCalculator.get() != nullptr) {
-    fw::WindForceCalculator *windForceCalculator = mm::mtl::dynamicCast<fw::WindForceCalculator>(forceCalculator.get());
+  if (unknowne0.get() != nullptr) {
+    fw::WindForceCalculator *windForceCalculator = mm::mtl::dynamicCast<fw::WindForceCalculator>(unknowne0.get());
     if (windForceCalculator != nullptr) {
       windForceCalculator->unbindProbe();
     }
@@ -134,14 +134,14 @@ void GfComDynamics::cleanup() {
   }
 
   u32 layer = getLayer();
-  if (updater.dynamics != nullptr && updater.referenceFrame.get() != nullptr) {
-    manager->removeUpdater(layer, updater);
-    updater.preUpdateCallback.clear();
-    updater.unbind();
+  if (unknown10.dynamics != nullptr && unknown10.referenceFrame.get() != nullptr) {
+    manager->removeUpdater(layer, unknown10);
+    unknown10.preUpdateCallback.clear();
+    unknown10.unbind();
   }
-  if (colObjUpdater.collisionObject != nullptr) {
-    manager->removeColUpdater(layer, colObjUpdater);
-    colObjUpdater.unbind();
+  if (unknownc0.collisionObject != nullptr) {
+    manager->removeColUpdater(layer, unknownc0);
+    unknownc0.unbind();
   }
 }
 
@@ -151,24 +151,24 @@ void GfComDynamics::changeLayer(u32 oldLayer, u32 newLayer) {
     return;
   }
 
-  if (updater.dynamics != nullptr && updater.referenceFrame.get() != nullptr) {
-    manager->removeUpdater(oldLayer, updater);
-    manager->addUpdater(newLayer, updater);
+  if (unknown10.dynamics != nullptr && unknown10.referenceFrame.get() != nullptr) {
+    manager->removeUpdater(oldLayer, unknown10);
+    manager->addUpdater(newLayer, unknown10);
   }
-  if (colObjUpdater.collisionObject != nullptr) {
-    manager->removeColUpdater(oldLayer, colObjUpdater);
-    manager->addColUpdater(newLayer, colObjUpdater);
+  if (unknownc0.collisionObject != nullptr) {
+    manager->removeColUpdater(oldLayer, unknownc0);
+    manager->addColUpdater(newLayer, unknownc0);
   }
 }
 
 void GfComDynamics::resetMovement() {
-  updater.setEnableMovement(false);
-  updater.setEnableMovement(true);
+  unknown10.setEnableMovement(false);
+  unknown10.setEnableMovement(true);
 }
 
 u32 GfComDynamics::getSolverCount() const {
-  if (updater.dynamics != nullptr) {
-    return updater.dynamics->solvers.size();
+  if (unknown10.dynamics != nullptr) {
+    return unknown10.dynamics->solvers.size();
   }
 
   return 0;
@@ -187,25 +187,25 @@ static const char *findSolverName(const skd::Dynamics *dynamics, u32 index) {
   return nullptr;
 }
 
-const char *GfComDynamics::getSolverName(u32 index) const { return findSolverName(updater.dynamics, index); }
+const char *GfComDynamics::getSolverName(u32 index) const { return findSolverName(unknown10.dynamics, index); }
 
 u32 GfComDynamics::getSolverID(const char *name) const {
-  if (updater.dynamics != nullptr) {
-    return updater.dynamics->solvers.size();
+  if (unknown10.dynamics != nullptr) {
+    return unknown10.dynamics->solvers.size();
   }
 
   return static_cast<u32>(-1);
 }
 
 void GfComDynamics::setSolverBlendWeight(u32 index, f32 weight) {
-  if (updater.dynamics != nullptr) {
-    updater.dynamics->setSolverBlendWeight(index, weight);
+  if (unknown10.dynamics != nullptr) {
+    unknown10.dynamics->setSolverBlendWeight(index, weight);
   }
 }
 
 f32 GfComDynamics::getSolverBlendWeight(u32 index) const {
-  if (updater.dynamics != nullptr) {
-    return updater.dynamics->getSolverBlendWeight(index);
+  if (unknown10.dynamics != nullptr) {
+    return unknown10.dynamics->getSolverBlendWeight(index);
   }
 
   return 1.0f;

@@ -41,14 +41,14 @@ public:
   virtual void update(const fw::UpdateInfo &info, GfComPropertyPc &property);
   void setInput(InputID id) const;
 
-  fw::PadRelay relay;
-  fw::PadRelay targetRelay;
-  GfComPropertyPc *property;
+  fw::PadRelay unknown08;     // Inferred role: relay; original member name unknown.
+  fw::PadRelay unknown40;     // Inferred role: target relay; original member name unknown.
+  GfComPropertyPc *unknown78; // Inferred role: property; original member name unknown.
 };
 
-static_assert(offsetof(PadBattle, relay) == 0x08, "");
-static_assert(offsetof(PadBattle, targetRelay) == 0x40, "");
-static_assert(offsetof(PadBattle, property) == 0x78, "");
+static_assert(offsetof(PadBattle, unknown08) == 0x08, "");
+static_assert(offsetof(PadBattle, unknown40) == 0x40, "");
+static_assert(offsetof(PadBattle, unknown78) == 0x78, "");
 static_assert(sizeof(PadBattle) == 0x80, "");
 
 } // namespace pc

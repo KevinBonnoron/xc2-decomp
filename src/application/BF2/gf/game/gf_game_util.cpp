@@ -565,9 +565,9 @@ u32 GfGameUtil::getFormationPlayerID(GF_OBJ_HANDLE *handle) {
   if (objAcc.isRebuild()) {
     int *formationPlayerId;
     if (objAcc.getType() == OBJECT_TYPE_DRIVER) {
-      formationPlayerId = &mm::mtl::dynamicCast<GfObjSetupDriver>(GfObjManager::getObjInfo(handle)->setup)->formationPlayerId;
+      formationPlayerId = &mm::mtl::dynamicCast<GfObjSetupDriver>(GfObjManager::getObjInfo(handle)->unknown30)->unknown70;
     } else if (objAcc.getType() == OBJECT_TYPE_BLADE) {
-      formationPlayerId = &mm::mtl::dynamicCast<GfObjSetupBlade>(GfObjManager::getObjInfo(handle)->setup)->formationPlayerId;
+      formationPlayerId = &mm::mtl::dynamicCast<GfObjSetupBlade>(GfObjManager::getObjInfo(handle)->unknown30)->unknown74;
     } else {
       return hierarchy - 1;
     }
@@ -587,7 +587,7 @@ void GfGameUtil::setHp(GF_OBJ_HANDLE *handle, u32 hp) {
   }
 
   MsgObjectHealHp message(hp, HEAL_TYPE_SET);
-  message.isRevive = true;
+  message.unknown21 = true;
   obj->sendMessage(obj, message);
 }
 
@@ -603,7 +603,7 @@ void GfGameUtil::debugFallDead(GF_OBJ_HANDLE *handle) {
 
 bool GfGameUtil::isDriverRide(GF_OBJ_HANDLE *handle) {
   GfObjSetupDriver *setup = GfObjUtil::getObjSetup<GfObjSetupDriver>(handle);
-  return setup != nullptr && setup->isRide;
+  return setup != nullptr && setup->unknown6c;
 }
 
 bool GfGameUtil::isSceneRide() {
@@ -684,8 +684,8 @@ u32 GfGameUtil::getNowHp(GF_OBJ_HANDLE *handle, u32 objectType, u32 id) {
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->status != nullptr) {
-      return property->status->hp;
+    if (property != nullptr && property->unknown10 != nullptr) {
+      return property->unknown10->unknown10;
     }
   }
 
@@ -697,8 +697,8 @@ u32 GfGameUtil::getMaxHp(GF_OBJ_HANDLE *handle, u32 objectType, u32 id) {
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->status != nullptr) {
-      return property->status->maxHp;
+    if (property != nullptr && property->unknown10 != nullptr) {
+      return property->unknown10->unknown0c;
     }
   }
 
@@ -708,21 +708,21 @@ u32 GfGameUtil::getMaxHp(GF_OBJ_HANDLE *handle, u32 objectType, u32 id) {
 
 bool GfGameUtil::getNowHpForUi(GF_OBJ_HANDLE *handle, u32 *hp) {
   GfObjProperty *property = GfObjUtil::getProperty(handle);
-  if (property == nullptr || property->character == nullptr) {
+  if (property == nullptr || property->unknown10 == nullptr) {
     return false;
   }
 
-  *hp = property->character->hp;
+  *hp = property->unknown10->unknown04;
   return true;
 }
 
 bool GfGameUtil::getMaxHpForUi(GF_OBJ_HANDLE *handle, u32 *maxHp) {
   GfObjProperty *property = GfObjUtil::getProperty(handle);
-  if (property == nullptr || property->character == nullptr) {
+  if (property == nullptr || property->unknown10 == nullptr) {
     return false;
   }
 
-  *maxHp = property->character->maxHp;
+  *maxHp = property->unknown10->unknown00;
   return true;
 }
 
@@ -898,8 +898,8 @@ void GfGameUtil::setBladeSelect(GF_OBJ_HANDLE *handle, int slot) {
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj != nullptr) {
     MsgObjectChangeAttribute message;
-    message.attribute = dataParamAcc.getAttribute(-1, false);
-    message.oldAttribute = oldAttribute;
+    message.unknown08 = dataParamAcc.getAttribute(-1, false);
+    message.unknown0c = oldAttribute;
     obj->sendMessage(obj, message);
   }
 }
@@ -973,7 +973,7 @@ void GfGameUtil::levelupForEnemy(GF_OBJ_HANDLE *handle, u32 addLevel) {
 
   u32 levelMax = GfBdatChrEnParam::get()->getChrEnParamTableEnd() - 1;
   u32 level = dataParamAcc.getLevel(false) + addLevel;
-  GfDataEnemy::setupGameParamForLevel(*setup->dataEnemy, level > levelMax ? levelMax : level);
+  GfDataEnemy::setupGameParamForLevel(*setup->unknowna0, level > levelMax ? levelMax : level);
   GfObj *obj = GfObjUtil::getObj(handle);
   MsgObjectChangeHpMax changeHpMax(dataParamAcc.getHpMax(false));
   obj->sendMessage(obj, changeHpMax);

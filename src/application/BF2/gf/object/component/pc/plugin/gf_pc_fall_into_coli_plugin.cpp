@@ -5,23 +5,23 @@
 namespace gf {
 namespace pc {
 
-FallIntoColiPlugin::FallIntoColiPlugin() : searchTimer(0.0f), stayTimer(0.0f) {}
+FallIntoColiPlugin::FallIntoColiPlugin() : unknown0c(0.0f), unknown10(0.0f) {}
 
 FallIntoColiPlugin::~FallIntoColiPlugin() {}
 
 void FallIntoColiPlugin::cleanup(GfComBehaviorPc &) {
-  if (searchObj != INVALID_SEARCH_OBJ) {
-    GfGameSearchObj::destroyObj(searchObj);
-    searchObj = INVALID_SEARCH_OBJ;
+  if (unknown18 != INVALID_SEARCH_OBJ) {
+    GfGameSearchObj::destroyObj(unknown18);
+    unknown18 = INVALID_SEARCH_OBJ;
   }
 }
 
 void FallIntoColiPlugin::onActivate() {
-  searchTimer = 0.0f;
-  stayTimer = 0.0f;
+  unknown0c = 0.0f;
+  unknown10 = 0.0f;
 }
 
-void FallIntoColiPlugin::onDeactivate() { GfGameSearchObj::setEnable(searchObj, false); }
+void FallIntoColiPlugin::onDeactivate() { GfGameSearchObj::setEnable(unknown18, false); }
 
 } // namespace pc
 } // namespace gf

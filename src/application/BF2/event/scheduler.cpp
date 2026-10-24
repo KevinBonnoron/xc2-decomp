@@ -144,7 +144,7 @@ void Scheduler::func_look(gf::GfObj *obj) {
     lookTo(true, obj, target, static_cast<EVT_aimtype>(mAimType), false);
     return;
   }
-  if (CharaUtil::isCanTarget(obj->handle, target->handle)) {
+  if (CharaUtil::isCanTarget(obj->unknownf8, target->unknownf8)) {
     lookTo(true, obj, target, static_cast<EVT_aimtype>(mAimType), true);
     flags &= ~FLAG_LOOK_START;
   }

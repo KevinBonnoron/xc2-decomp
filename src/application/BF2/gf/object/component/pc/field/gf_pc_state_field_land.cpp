@@ -12,9 +12,9 @@ namespace pc {
 
 void StateFieldLand::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  property->velocity = mm::Vec3::zero;
-  property->verticalSpeed = 0.0f;
-  property->horizontalSpeed = 0.0f;
+  property->unknown80 = mm::Vec3::zero;
+  property->unknown90 = 0.0f;
+  property->unknown94 = 0.0f;
   StateUtilField::setAirStatus(*behavior, true);
   StateUtil::setEnableDownIK(*behavior, true);
 }

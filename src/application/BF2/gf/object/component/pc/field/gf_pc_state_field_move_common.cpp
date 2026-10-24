@@ -10,15 +10,15 @@
 namespace gf {
 namespace pc {
 
-void StateFieldMoveCommon::enter(GfComBehaviorPc *behavior, ai::State *previous) { noInputFrameCount = 0; }
+void StateFieldMoveCommon::enter(GfComBehaviorPc *behavior, ai::State *previous) { unknown18 = 0; }
 
 void StateFieldMoveCommon::leave(GfComBehaviorPc *behavior, ai::State *next) { behavior->owner->getComponent<GfComPropertyPc>(); }
 
 void StateFieldMoveCommon::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  noInputFrameCount = property->existInputXY() ? 0 : noInputFrameCount + 1;
+  unknown18 = property->existInputXY() ? 0 : unknown18 + 1;
   behavior->owner->getComponent<GfComAsm>();
-  if (StateUtilField::isStop(*property, noInputFrameCount)) {
+  if (StateUtilField::isStop(*property, unknown18)) {
     reqState(STATE_ID_FIELD_STOP_BRAKE);
   }
 }

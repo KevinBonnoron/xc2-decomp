@@ -51,16 +51,16 @@ void AFieldSeq::setTargetable(bool isTargetable) {
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj != nullptr) {
     if (isTargetable) {
-      obj->attribute |= OBJ_ATTRIBUTE_TARGETABLE;
+      obj->unknown110 |= OBJ_ATTRIBUTE_TARGETABLE;
     } else {
-      obj->attribute &= ~OBJ_ATTRIBUTE_TARGETABLE;
+      obj->unknown110 &= ~OBJ_ATTRIBUTE_TARGETABLE;
     }
   }
 }
 
 bool AFieldSeq::isTargetable() const {
   GfObj *obj = GfObjUtil::getObj(handle);
-  return obj != nullptr ? (obj->attribute >> 2) & 1 : false;
+  return obj != nullptr ? (obj->unknown110 >> 2) & 1 : false;
 }
 
 void AFieldSeq::seqWaitUIEnd(f32) {

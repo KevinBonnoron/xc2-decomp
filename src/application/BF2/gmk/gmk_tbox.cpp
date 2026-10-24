@@ -71,19 +71,19 @@ void setGobTargetable(gf::GF_OBJ_HANDLE *handle, bool isTargetable) {
   }
   gf::GfObjAcc acc(handle);
   if (acc.isValid()) {
-    gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(handle)->setup);
+    gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(handle)->unknown30);
     if (isTargetable) {
-      setup->attribute |= gf::OBJ_ATTRIBUTE_TARGET_MASK;
+      setup->unknown6c |= gf::OBJ_ATTRIBUTE_TARGET_MASK;
     } else {
-      setup->attribute &= ~gf::OBJ_ATTRIBUTE_TARGET_MASK;
+      setup->unknown6c &= ~gf::OBJ_ATTRIBUTE_TARGET_MASK;
     }
   }
   gf::GfObj *obj = acc.getObj();
   if (obj != nullptr) {
     if (isTargetable) {
-      obj->attribute |= gf::OBJ_ATTRIBUTE_TARGET_MASK;
+      obj->unknown110 |= gf::OBJ_ATTRIBUTE_TARGET_MASK;
     } else {
-      obj->attribute &= ~gf::OBJ_ATTRIBUTE_TARGET_MASK;
+      obj->unknown110 &= ~gf::OBJ_ATTRIBUTE_TARGET_MASK;
     }
   }
 }
@@ -171,15 +171,15 @@ void GmkTbox::createGobInst() {
   validateDisp();
   bool isOpened = getProgress() == PROGRESS_OPENED;
   gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(handle);
-  setup->motion = isOpened ? "S_open_02" : "S_open_00";
+  setup->unknown70 = isOpened ? "S_open_02" : "S_open_00";
   const Xform *xform = baseInfo.xform;
-  setup->position = xform->position;
-  setup->rotation = xform->rotation;
+  setup->unknown20 = xform->position;
+  setup->unknown30 = xform->rotation;
   setup->setInitialScale(getData()->scale * 0.1f);
   if (getBdatInfo()->isDig && getProgress() == PROGRESS_CLOSED) {
-    setup->opacity = 0.0f;
+    setup->unknown50 = 0.0f;
   }
-  setup->isAccessible = !isOpened;
+  setup->unknowna1 = !isOpened;
   setGobTargetable(handle, !isOpened);
 }
 

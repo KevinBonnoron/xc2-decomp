@@ -30,12 +30,12 @@ public:
   void onEvent(GfComBehaviorPc &behavior);
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
 
-  GfComBehaviorPc *behavior;
-  bool isEventDone;
+  GfComBehaviorPc *unknown10; // Inferred role: behavior; original member name unknown.
+  bool unknown18;             // Inferred role: event done; original member name unknown.
 };
 
-static_assert(offsetof(WaterInPlugin, behavior) == 0x10, "");
-static_assert(offsetof(WaterInPlugin, isEventDone) == 0x18, "");
+static_assert(offsetof(WaterInPlugin, unknown10) == 0x10, "");
+static_assert(offsetof(WaterInPlugin, unknown18) == 0x18, "");
 static_assert(sizeof(WaterInPlugin) == 0x20, "");
 
 } // namespace pc

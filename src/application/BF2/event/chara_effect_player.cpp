@@ -39,7 +39,7 @@ void CharaEffectPlayer::stopAfterImage() {
   if (obj != nullptr) {
     gf::GfComModel *model = obj->getComponent<gf::GfComModel>();
     if (model != nullptr) {
-      ml::ScnObjAccResMdlInfo info(model->modelObject->getInterface());
+      ml::ScnObjAccResMdlInfo info(model->unknown18->getInterface());
       info.releaseAfterImage();
     }
   }

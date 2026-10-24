@@ -15,13 +15,13 @@ namespace pc {
 
 void StateFieldWaterIdleTurn::leave(GfComBehaviorPc *behavior, ai::State *next) {
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  property->velocity = mm::Vec3::zero;
-  property->horizontalSpeed = 0.0f;
+  property->unknown80 = mm::Vec3::zero;
+  property->unknown94 = 0.0f;
 }
 
 void StateFieldWaterIdleTurn::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  if (StateUtilField::isTurnEndRangeCacheInput(*property, inputDirection)) {
+  if (StateUtilField::isTurnEndRangeCacheInput(*property, unknown20)) {
     GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
     if (!property->existInputXY()) {
       reqState(STATE_ID_FIELD_WATER_IDLE);
@@ -32,7 +32,7 @@ void StateFieldWaterIdleTurn::update(GfComBehaviorPc *behavior, const fw::Update
       return;
     }
   }
-  MoveUtilField::updateMoveWaterTurn(info, *property, inputDirection);
+  MoveUtilField::updateMoveWaterTurn(info, *property, unknown20);
 }
 
 } // namespace pc

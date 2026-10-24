@@ -27,7 +27,7 @@
 
 namespace gf {
 
-static bool isSeamlessMap(GF_OBJ_HANDLE *handle) { return mm::mtl::dynamicCast<GfObjSetupMap>(GfObjManager::getObjInfo(handle)->setup)->isSeamless; }
+static bool isSeamlessMap(GF_OBJ_HANDLE *handle) { return mm::mtl::dynamicCast<GfObjSetupMap>(GfObjManager::getObjInfo(handle)->unknown30)->unknown75; }
 
 GfMapManager::GfMapManager(const GfSetupParam &param) : initialized(false), mapHandle(INVALID_HANDLE), mapJumpId(0), mapId(0), assetHandle(INVALID_ASSET_HANDLE) {
   initialize(param);
@@ -149,7 +149,7 @@ fw::ModelObject *GfMapManager::getModelObject() {
   if (obj != nullptr) {
     GfComModel *model = obj->getComponent<GfComModel>();
     if (model != nullptr) {
-      return model->modelObject;
+      return model->unknown18;
     }
   }
   return nullptr;

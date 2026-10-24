@@ -3,7 +3,7 @@
 namespace gf {
 namespace pc {
 
-void StateFieldWaterSwimSink::enter(GfComBehaviorPc *behavior, ai::State *previous) { elapsedTime = 0.0f; }
+void StateFieldWaterSwimSink::enter(GfComBehaviorPc *behavior, ai::State *previous) { unknown18 = 0.0f; }
 
 void StateFieldWaterSwimSink::leave(GfComBehaviorPc *behavior, ai::State *next) {}
 

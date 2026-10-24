@@ -25,11 +25,11 @@ class StateFieldMoveCommon : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
-  u32 noInputFrameCount;
+  u32 unknown18; // Inferred role: no input frame count; original member name unknown.
   u8 _1c[0x20 - 0x1c];
 };
 
-static_assert(offsetof(StateFieldMoveCommon, noInputFrameCount) == 0x18, "");
+static_assert(offsetof(StateFieldMoveCommon, unknown18) == 0x18, "");
 static_assert(sizeof(StateFieldMoveCommon) == 0x20, "");
 
 } // namespace pc

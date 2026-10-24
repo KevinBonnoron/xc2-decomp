@@ -120,15 +120,15 @@ public:
 
   template <typename T> static T *getObjSetup(GF_OBJ_HANDLE *handle) {
     GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-    if (info == nullptr || info->setup == nullptr) {
+    if (info == nullptr || info->unknown30 == nullptr) {
       return nullptr;
     }
 
-    if (info->setup->objType != info->obj->type || info->obj->type != T::OBJECT_TYPE) {
+    if (info->unknown30->unknown08 != info->unknown18->type || info->unknown18->type != T::OBJECT_TYPE) {
       return nullptr;
     }
 
-    return mm::mtl::dynamicCast<T>(info->setup);
+    return mm::mtl::dynamicCast<T>(info->unknown30);
   }
 };
 

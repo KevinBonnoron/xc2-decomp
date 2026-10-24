@@ -30,14 +30,14 @@ static const char *const TYPE_NAMES[] = {
 };
 
 GfObj::GfObj(u32 type, const fw::HandlePtr<fw::UpdatableObject> &handle, u32 layer)
-    : fw::UpdatableObject(type, handle, layer), handle(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), info(nullptr), _108(), attribute(0), isExecUpdate(false) {}
+    : fw::UpdatableObject(type, handle, layer), unknownf8(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown100(nullptr), _108(), unknown110(0), unknown118(false) {}
 
 GfObj::~GfObj() {}
 
 void GfObj::update(const fw::UpdateInfo &info) {
-  flags.set(OBJ_STATE_UPDATING);
+  unknown114.set(OBJ_STATE_UPDATING);
   GfObjUpdate::updateComponent(this, info);
-  flags.set(OBJ_STATE_UPDATING, false);
+  unknown114.set(OBJ_STATE_UPDATING, false);
 }
 
 void GfObj::onEvent(const fw::ObjectEvent &event) {
@@ -78,7 +78,7 @@ void GfObj::procMsgActivateObjectDebugWindow(fw::MessageObject *sender, MsgDebug
 void GfObj::procMsgDeactivateObjectDebugWindow(fw::MessageObject *sender, MsgDebugDeactivateObjectWindow &message) {}
 
 void GfObj::setUpdateComponent(bool isUpdate) {
-  flags.set(OBJ_STATE_UPDATE_ENABLE, isUpdate);
+  unknown114.set(OBJ_STATE_UPDATE_ENABLE, isUpdate);
   GfObjUtil::applyExecUpdate(this);
 }
 
@@ -93,13 +93,13 @@ void GfObjLayerSpeed::initialize() {
 void GfObjLayerSpeed::finalize() {}
 
 void GfObjLayerSpeed::reqApplyModelLayerSpeed(u32 layer, f32 speed) {
-  s_info[layer].request = true;
-  s_info[layer].speed = speed;
+  s_info[layer].unknown00 = true;
+  s_info[layer].unknown04 = speed;
 }
 
-bool GfObjLayerSpeed::isRequest(u32 layer) { return s_info[layer].request; }
+bool GfObjLayerSpeed::isRequest(u32 layer) { return s_info[layer].unknown00; }
 
-f32 GfObjLayerSpeed::getSpeed(u32 layer) { return s_info[layer].speed; }
+f32 GfObjLayerSpeed::getSpeed(u32 layer) { return s_info[layer].unknown04; }
 
 void GfObjLayerSpeed::cleanup() {
   for (u32 layer = 0; layer < fw::Framework::LAYER_MAX; layer++) {

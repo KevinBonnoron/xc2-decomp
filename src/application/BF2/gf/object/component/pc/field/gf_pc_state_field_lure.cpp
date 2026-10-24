@@ -11,9 +11,9 @@ namespace pc {
 
 void StateFieldLure::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  property->velocity = mm::Vec3::zero;
-  property->horizontalSpeed = 0.0f;
-  target = StateUtilField::getLureTargetHandle(*behavior);
+  property->unknown80 = mm::Vec3::zero;
+  property->unknown94 = 0.0f;
+  unknown18 = StateUtilField::getLureTargetHandle(*behavior);
 }
 
 void StateFieldLure::leave(GfComBehaviorPc *behavior, ai::State *next) { StateUtilField::setEnableLure(*behavior, false); }

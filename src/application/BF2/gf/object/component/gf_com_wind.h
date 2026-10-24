@@ -32,9 +32,9 @@ public:
   const mm::mtl::RTTI *getRTTI() const override;
   void changeLayer(u32 oldLayer, u32 newLayer) override;
 
-  fw::WindProbe *probe;
+  fw::WindProbe *unknown10; // Inferred role: probe; original member name unknown.
 };
 
-static_assert(offsetof(GfComWind, probe) == 0x10, "");
+static_assert(offsetof(GfComWind, unknown10) == 0x10, "");
 
 } // namespace gf

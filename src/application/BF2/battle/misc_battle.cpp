@@ -142,7 +142,7 @@ int Misc::GetPartyID(const gf::GfObj *obj) {
     return -1;
   }
 
-  return GetPartyID(obj->handle);
+  return GetPartyID(obj->unknownf8);
 }
 
 void Misc::GetKizunaMinMax(int stage, int &minimum, int &maximum) {

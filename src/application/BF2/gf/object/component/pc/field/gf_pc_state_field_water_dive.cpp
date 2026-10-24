@@ -13,7 +13,7 @@ namespace pc {
 
 void StateFieldWaterDive::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComPropertyPc *property = behavior->getProperty();
-  property->horizontalSpeed = 0.0f;
+  property->unknown94 = 0.0f;
   StateUtilField::setWaterDiveMove(*property, true);
   StateUtil::setFallDamageDisable(*behavior, true);
 }
@@ -22,7 +22,7 @@ void StateFieldWaterDive::leave(GfComBehaviorPc *behavior, ai::State *next) {
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
   if (next == nullptr || next->stateID != STATE_ID_FIELD_WATER_DEAD_SINK) {
     StateUtilField::setWaterDiveMove(*property, false);
-    property->verticalSpeed = 0.0f;
+    property->unknown90 = 0.0f;
   }
   StateUtil::setFallDamageDisable(*behavior, false);
 }

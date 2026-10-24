@@ -11,11 +11,11 @@ namespace pc {
 
 void StateFieldAirDead::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
-  isDownMotion = __builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_down_00") == 0;
+  unknown18 = __builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_down_00") == 0;
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  property->velocity = mm::Vec3::zero;
-  property->verticalSpeed = 4.3f;
-  property->horizontalSpeed = 0.0f;
+  property->unknown80 = mm::Vec3::zero;
+  property->unknown90 = 4.3f;
+  property->unknown94 = 0.0f;
 }
 
 void StateFieldAirDead::leave(GfComBehaviorPc *behavior, ai::State *next) {}

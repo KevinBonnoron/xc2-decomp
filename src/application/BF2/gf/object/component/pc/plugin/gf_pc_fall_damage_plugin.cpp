@@ -8,40 +8,40 @@
 namespace gf {
 namespace pc {
 
-FallDamagePlugin::FallDamagePlugin() : property(nullptr), maxHeight(0.0f), isDamageDisabled(false), attachObj(INVALID_HANDLE) {}
+FallDamagePlugin::FallDamagePlugin() : unknown10(nullptr), unknown18(0.0f), unknown1c(false), unknown20(INVALID_HANDLE) {}
 
 FallDamagePlugin::~FallDamagePlugin() {}
 
 bool FallDamagePlugin::setup(GfComBehaviorPc &behavior) {
-  property = behavior.owner->getComponent<GfComPropertyPc>();
+  unknown10 = behavior.owner->getComponent<GfComPropertyPc>();
   return true;
 }
 
 void FallDamagePlugin::cleanup(GfComBehaviorPc &) {}
 
 void FallDamagePlugin::onActivate() {
-  maxHeight = property->position.y;
-  attachObj = getAttachObj();
+  unknown18 = unknown10->unknown160.y;
+  unknown20 = getAttachObj();
 }
 
 void FallDamagePlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &) {
-  if (property->position.y > maxHeight) {
-    maxHeight = property->position.y;
+  if (unknown10->unknown160.y > unknown18) {
+    unknown18 = unknown10->unknown160.y;
   }
-  attachObj = getAttachObj();
+  unknown20 = getAttachObj();
 }
 
 void FallDamagePlugin::procMsgPcFieldGetFallMaxHeight(fw::MessageObject *, MsgPcFieldGetFallMaxHeight &message) {
-  bool isValid = isActive;
-  message.isValid = isValid;
+  bool isValid = unknown08;
+  message.unknown0c = isValid;
   if (isValid) {
-    message.maxHeight = maxHeight;
+    message.unknown08 = unknown18;
   }
 }
 
 void FallDamagePlugin::procMsgPcFieldSetFallMaxHeight(fw::MessageObject *, MsgPcFieldSetFallMaxHeight &message) {
-  if (isActive) {
-    maxHeight = message.maxHeight;
+  if (unknown08) {
+    unknown18 = message.unknown08;
   }
 }
 

@@ -2,7 +2,7 @@
 
 namespace gf {
 
-FootStepPlugin::FootStepPlugin() : isRunning(false) {}
+FootStepPlugin::FootStepPlugin() : unknown09(false) {}
 
 bool FootStepPlugin::setup(GfComBehavior &behavior) {
   setAnkleHeight(behavior);
@@ -11,7 +11,7 @@ bool FootStepPlugin::setup(GfComBehavior &behavior) {
 
 void FootStepPlugin::cleanup(GfComBehavior &) {}
 
-void FootStepPlugin::onActivate() { isRunning = false; }
+void FootStepPlugin::onActivate() { unknown09 = false; }
 
 void FootStepPlugin::onDeactivate() {}
 

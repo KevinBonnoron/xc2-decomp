@@ -27,10 +27,10 @@ class StateFieldWaterIdleTurn : public GfStateBase {
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
   u8 _18[0x20 - 0x18];
-  mm::Vec3 inputDirection;
+  mm::Vec3 unknown20; // Inferred role: input direction; original member name unknown.
 };
 
-static_assert(offsetof(StateFieldWaterIdleTurn, inputDirection) == 0x20, "");
+static_assert(offsetof(StateFieldWaterIdleTurn, unknown20) == 0x20, "");
 static_assert(sizeof(StateFieldWaterIdleTurn) == 0x30, "");
 
 } // namespace pc

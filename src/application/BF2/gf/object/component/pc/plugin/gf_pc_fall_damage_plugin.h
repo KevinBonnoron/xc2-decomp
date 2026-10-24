@@ -22,18 +22,18 @@ struct GF_OBJ_HANDLE;
 class GfComPropertyPc;
 
 struct MsgPcFieldGetFallMaxHeight : fw::Message {
-  f32 maxHeight;
-  bool isValid;
+  f32 unknown08;  // Inferred role: max height; original member name unknown.
+  bool unknown0c; // Inferred role: valid; original member name unknown.
 };
 
-static_assert(offsetof(MsgPcFieldGetFallMaxHeight, maxHeight) == 0x08, "");
-static_assert(offsetof(MsgPcFieldGetFallMaxHeight, isValid) == 0x0c, "");
+static_assert(offsetof(MsgPcFieldGetFallMaxHeight, unknown08) == 0x08, "");
+static_assert(offsetof(MsgPcFieldGetFallMaxHeight, unknown0c) == 0x0c, "");
 
 struct MsgPcFieldSetFallMaxHeight : fw::Message {
-  f32 maxHeight;
+  f32 unknown08; // Inferred role: max height; original member name unknown.
 };
 
-static_assert(offsetof(MsgPcFieldSetFallMaxHeight, maxHeight) == 0x08, "");
+static_assert(offsetof(MsgPcFieldSetFallMaxHeight, unknown08) == 0x08, "");
 
 namespace pc {
 
@@ -53,15 +53,15 @@ public:
   void procMsgPcFieldGetFallMaxHeight(fw::MessageObject *sender, MsgPcFieldGetFallMaxHeight &message);
   void procMsgPcFieldSetFallMaxHeight(fw::MessageObject *sender, MsgPcFieldSetFallMaxHeight &message);
 
-  GfComPropertyPc *property;
-  f32 maxHeight;
-  bool isDamageDisabled;
-  GF_OBJ_HANDLE *attachObj;
+  GfComPropertyPc *unknown10; // Inferred role: property; original member name unknown.
+  f32 unknown18;              // Inferred role: max height; original member name unknown.
+  bool unknown1c;             // Inferred role: damage disabled; original member name unknown.
+  GF_OBJ_HANDLE *unknown20;   // Inferred role: attach object; original member name unknown.
 };
 
-static_assert(offsetof(FallDamagePlugin, property) == 0x10, "");
-static_assert(offsetof(FallDamagePlugin, maxHeight) == 0x18, "");
-static_assert(offsetof(FallDamagePlugin, attachObj) == 0x20, "");
+static_assert(offsetof(FallDamagePlugin, unknown10) == 0x10, "");
+static_assert(offsetof(FallDamagePlugin, unknown18) == 0x18, "");
+static_assert(offsetof(FallDamagePlugin, unknown20) == 0x20, "");
 static_assert(sizeof(FallDamagePlugin) == 0x28, "");
 
 } // namespace pc

@@ -36,12 +36,12 @@ public:
   void onDeactivate() override;
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
 
-  GfComPropertyPc *property;
-  f32 maxHeight;
+  GfComPropertyPc *unknown10; // Inferred role: property; original member name unknown.
+  f32 unknown18;              // Inferred role: max height; original member name unknown.
 };
 
-static_assert(offsetof(FallDistancePlugin, property) == 0x10, "");
-static_assert(offsetof(FallDistancePlugin, maxHeight) == 0x18, "");
+static_assert(offsetof(FallDistancePlugin, unknown10) == 0x10, "");
+static_assert(offsetof(FallDistancePlugin, unknown18) == 0x18, "");
 static_assert(sizeof(FallDistancePlugin) == 0x20, "");
 
 } // namespace pc

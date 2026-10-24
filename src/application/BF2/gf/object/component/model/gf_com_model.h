@@ -31,17 +31,17 @@ public:
   void setModelScale(f32 scale);
 
   u8 _10[0x18 - 0x10];
-  fw::ModelObject *modelObject;
-  mm::mtl::IntrusivePtr<fw::ReferenceFrame> referenceFrame;
-  const anm::Skeleton *skeleton;
-  anm::Pose *pose;
-  anm::ExtraTruckBuffer *extraTruckBuffer;
+  fw::ModelObject *unknown18;                          // Inferred role: model object; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown20; // Inferred role: reference frame; original member name unknown.
+  const anm::Skeleton *unknown28;                      // Inferred role: skeleton; original member name unknown.
+  anm::Pose *unknown30;                                // Inferred role: pose; original member name unknown.
+  anm::ExtraTruckBuffer *unknown38;                    // Inferred role: extra truck buffer; original member name unknown.
 };
 
-static_assert(offsetof(GfComModel, modelObject) == 0x18, "");
-static_assert(offsetof(GfComModel, referenceFrame) == 0x20, "");
-static_assert(offsetof(GfComModel, skeleton) == 0x28, "");
-static_assert(offsetof(GfComModel, pose) == 0x30, "");
-static_assert(offsetof(GfComModel, extraTruckBuffer) == 0x38, "");
+static_assert(offsetof(GfComModel, unknown18) == 0x18, "");
+static_assert(offsetof(GfComModel, unknown20) == 0x20, "");
+static_assert(offsetof(GfComModel, unknown28) == 0x28, "");
+static_assert(offsetof(GfComModel, unknown30) == 0x30, "");
+static_assert(offsetof(GfComModel, unknown38) == 0x38, "");
 
 } // namespace gf

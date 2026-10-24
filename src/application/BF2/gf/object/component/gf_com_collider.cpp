@@ -13,33 +13,33 @@ struct ColiPhantomInfo;
 
 namespace gf {
 
-GfComCollider::GfComCollider() : colis(getAllocator(ALLOCATOR_DEFAULT)) { userData.owner = this; }
+GfComCollider::GfComCollider() : unknown18(getAllocator(ALLOCATOR_DEFAULT)) { unknown40.unknown08 = this; }
 
 GfComCollider::~GfComCollider() {}
 
 void GfComCollider::cleanup() {
-  if (poseModifier.modelObject != nullptr && poseModifier.coliObject != nullptr) {
+  if (unknown50.modelObject != nullptr && unknown50.coliObject != nullptr) {
     fw::AnimationManager *manager = fw::AnimationManager::get();
     if (manager != nullptr) {
-      manager->removeAfterModifier(getLayer(), poseModifier);
+      manager->removeAfterModifier(getLayer(), unknown50);
     }
-    poseModifier.unbind();
+    unknown50.unbind();
   }
 
-  for (u32 i = 0; i < colis.size(); i++) {
-    fw::ColiObject *coli = colis[i];
+  for (u32 i = 0; i < unknown18.size(); i++) {
+    fw::ColiObject *coli = unknown18[i];
     if (coli != nullptr) {
       coli->eventFlags.clear();
       coli->listener = nullptr;
       coli->coliUserData = nullptr;
     }
-    if (colis[i] != nullptr) {
-      colis[i]->release();
-      colis[i] = nullptr;
+    if (unknown18[i] != nullptr) {
+      unknown18[i]->release();
+      unknown18[i] = nullptr;
     }
   }
 
-  colis.clear();
+  unknown18.clear();
 }
 
 void GfComCollider::createColiCharacter(u32 index, const fw::ColiCharacterInfo &info, mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame) {
@@ -61,8 +61,8 @@ void GfComCollider::enter(const EnterInfo &info) {
   }
 
   MsgObjectColiEnter message;
-  message.handle = static_cast<GfObj *>(static_cast<UserData *>(userData)->owner->owner)->handle;
-  message.info = &info;
+  message.unknown08 = static_cast<GfObj *>(static_cast<UserData *>(userData)->unknown08->owner)->unknownf8;
+  message.unknown10 = &info;
   GfObj *obj = static_cast<GfObj *>(owner);
   obj->sendMessage(obj, message);
 }
@@ -74,8 +74,8 @@ void GfComCollider::leave(const LeaveInfo &info) {
   }
 
   MsgObjectColiLeave message;
-  message.handle = static_cast<GfObj *>(static_cast<UserData *>(userData)->owner->owner)->handle;
-  message.info = &info;
+  message.unknown08 = static_cast<GfObj *>(static_cast<UserData *>(userData)->unknown08->owner)->unknownf8;
+  message.unknown10 = &info;
   GfObj *obj = static_cast<GfObj *>(owner);
   obj->sendMessage(obj, message);
 }
@@ -87,8 +87,8 @@ void GfComCollider::contact(const EnterInfo &info) {
   }
 
   MsgObjectColiContact message;
-  message.handle = static_cast<GfObj *>(static_cast<UserData *>(userData)->owner->owner)->handle;
-  message.info = &info;
+  message.unknown08 = static_cast<GfObj *>(static_cast<UserData *>(userData)->unknown08->owner)->unknownf8;
+  message.unknown10 = &info;
   GfObj *obj = static_cast<GfObj *>(owner);
   obj->sendMessage(obj, message);
 }

@@ -30,10 +30,10 @@ public:
 
   void setActivate(bool isActive);
 
-  bool isActive;
+  bool unknown08; // Inferred role: active; original member name unknown.
 };
 
-static_assert(offsetof(Plugin, isActive) == 0x08, "");
+static_assert(offsetof(Plugin, unknown08) == 0x08, "");
 
 #define GF_PLUGIN(Behavior)                                                                                                                                                                            \
 public:                                                                                                                                                                                                \

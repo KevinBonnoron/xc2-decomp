@@ -34,16 +34,16 @@ public:
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
   f32 getHeight(GfComBehaviorPc &behavior) const;
 
-  f32 searchTimer;
-  f32 stayTimer;
-  GF_SEARCH_OBJ *searchObj;
-  f32 height;
+  f32 unknown0c;            // Inferred role: search timer; original member name unknown.
+  f32 unknown10;            // Inferred role: stay timer; original member name unknown.
+  GF_SEARCH_OBJ *unknown18; // Inferred role: search object; original member name unknown.
+  f32 unknown20;            // Inferred role: height; original member name unknown.
 };
 
-static_assert(offsetof(FallIntoColiPlugin, searchTimer) == 0x0c, "");
-static_assert(offsetof(FallIntoColiPlugin, stayTimer) == 0x10, "");
-static_assert(offsetof(FallIntoColiPlugin, searchObj) == 0x18, "");
-static_assert(offsetof(FallIntoColiPlugin, height) == 0x20, "");
+static_assert(offsetof(FallIntoColiPlugin, unknown0c) == 0x0c, "");
+static_assert(offsetof(FallIntoColiPlugin, unknown10) == 0x10, "");
+static_assert(offsetof(FallIntoColiPlugin, unknown18) == 0x18, "");
+static_assert(offsetof(FallIntoColiPlugin, unknown20) == 0x20, "");
 static_assert(sizeof(FallIntoColiPlugin) == 0x28, "");
 
 } // namespace pc

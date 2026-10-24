@@ -29,8 +29,8 @@ public:
   };
 
   struct Timer {
-    bool isActive;
-    f32 time;
+    bool unknown00; // Inferred role: active; original member name unknown.
+    f32 unknown04;  // Inferred role: time; original member name unknown.
   };
 
   TimerPlugin();
@@ -39,10 +39,10 @@ public:
   virtual void cleanup(GfComBehaviorPc &) {}
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
 
-  Timer timers[TYPE_MAX];
+  Timer unknown0c[TYPE_MAX]; // Inferred role: timers; original member name unknown.
 };
 
-static_assert(offsetof(TimerPlugin, timers) == 0x0c, "");
+static_assert(offsetof(TimerPlugin, unknown0c) == 0x0c, "");
 static_assert(sizeof(TimerPlugin) == 0x18, "");
 
 } // namespace pc

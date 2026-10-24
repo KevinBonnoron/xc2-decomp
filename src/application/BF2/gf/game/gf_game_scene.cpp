@@ -130,7 +130,7 @@ void unknown001(const DataParamAcc &paramAcc, bool isDead, bool isSwim) { // Inf
   if (obj == nullptr) {
     return;
   }
-  int priority = obj->info->coliPriority;
+  int priority = obj->unknown100->unknownb0;
   if (priority < 0) {
     return;
   }
@@ -142,7 +142,7 @@ void unknown001(const DataParamAcc &paramAcc, bool isDead, bool isSwim) { // Inf
   if (collider == nullptr) {
     return;
   }
-  fw::ColiObject *coli = collider->colis[0];
+  fw::ColiObject *coli = collider->unknown18[0];
   if (coli == nullptr) {
     return;
   }
@@ -248,20 +248,20 @@ void GfGameScene::BattleAchievement::battleEnd() {
 }
 
 void GfGameScene::BattleAchievement::enemyDamage(GF_OBJ_HANDLE *, const MsgObjectNotifyDamage &damage) {
-  if (unknown08 < damage.damage->damage) {
-    unknown08 = damage.damage->damage;
-    SCOM_ACHIEV_INC::createDamageMax(damage.attacker, damage.damage->damage);
+  if (unknown08 < damage.unknown08->unknown08) {
+    unknown08 = damage.unknown08->unknown08;
+    SCOM_ACHIEV_INC::createDamageMax(damage.unknown10, damage.unknown08->unknown08);
   }
-  SCOM_ACHIEV_INC::createDamageAdd(damage.attacker, damage.damage->damage);
-  if (damage.damage->isCritical) {
-    SCOM_ACHIEV_INC::createCriticalHit(damage.attacker);
+  SCOM_ACHIEV_INC::createDamageAdd(damage.unknown10, damage.unknown08->unknown08);
+  if (damage.unknown08->unknown28_1) {
+    SCOM_ACHIEV_INC::createCriticalHit(damage.unknown10);
   }
   unknown04++;
 }
 
 void GfGameScene::BattleAchievement::driverDamage(GF_OBJ_HANDLE *handle, const MsgObjectNotifyDamage &damage) {
-  SCOM_ACHIEV_INC::createDamageGet(handle, damage.damage->damage);
-  if (damage.damage->isCritical) {
+  SCOM_ACHIEV_INC::createDamageGet(handle, damage.unknown08->unknown08);
+  if (damage.unknown08->unknown28_1) {
     SCOM_ACHIEV_INC::createCriticalGet(handle);
   }
   unknown04++;
@@ -357,12 +357,12 @@ void GfGameScene::clearPartyState() {
 
 bool GfGameScene::isPlayerSwimOnCloud() {
   GfObjProperty *property = GfObjUtil::getProperty(GfGameManager::getControlMover());
-  return property != nullptr && property->move->type == PROPERTY_MOVE_SWIM_ON_CLOUD;
+  return property != nullptr && property->unknown18->unknown00 == PROPERTY_MOVE_SWIM_ON_CLOUD;
 }
 
 bool GfGameScene::isPlayerWalkAndRun() {
   GfObjProperty *property = GfObjUtil::getProperty(GfGameManager::getControlMover());
-  return property != nullptr && property->move->type == PROPERTY_MOVE_WALK;
+  return property != nullptr && property->unknown18->unknown00 == PROPERTY_MOVE_WALK;
 }
 
 bool GfGameScene::isInitialized() const { return m_initialized; }
@@ -501,7 +501,7 @@ void GfGameScene::setEnemyDead(GF_OBJ_HANDLE *handle) {
   if (collider == nullptr) {
     return;
   }
-  fw::ColiObject *coli = collider->colis[0];
+  fw::ColiObject *coli = collider->unknown18[0];
   if (coli != nullptr) {
     coli->clearState(fw::COLI_STATE_ENABLE);
   }
@@ -700,7 +700,8 @@ void GfGameScene::createDriverAppendModelControl(GF_OBJ_HANDLE *handle) {
 }
 
 void GfGameScene::destroyDriverAppendModelControl(GF_OBJ_HANDLE *handle) {
-  mm::mtl::FixedList<GfAppendWire *, 8>::iterator it = mm::mtl::find_if(unknown70.begin(), unknown70.end(), [handle](GfAppendWire *wire) { return wire->owner == handle || wire->wire == handle; });
+  mm::mtl::FixedList<GfAppendWire *, 8>::iterator it =
+      mm::mtl::find_if(unknown70.begin(), unknown70.end(), [handle](GfAppendWire *wire) { return wire->unknown08 == handle || wire->unknown00 == handle; });
   if (it != unknown70.end()) {
     delete *it;
     unknown70.erase(it);
@@ -728,7 +729,8 @@ void GfGameScene::leaveExtraControlForHanaJS(GF_OBJ_HANDLE *handle) {
 }
 
 GfAppendWire *GfGameScene::getAppendControl(GF_OBJ_HANDLE *handle) {
-  mm::mtl::FixedList<GfAppendWire *, 8>::iterator it = mm::mtl::find_if(unknown70.begin(), unknown70.end(), [handle](GfAppendWire *wire) { return wire->owner == handle || wire->wire == handle; });
+  mm::mtl::FixedList<GfAppendWire *, 8>::iterator it =
+      mm::mtl::find_if(unknown70.begin(), unknown70.end(), [handle](GfAppendWire *wire) { return wire->unknown08 == handle || wire->unknown00 == handle; });
   if (it == unknown70.end()) {
     return nullptr;
   }
@@ -935,8 +937,8 @@ void GfGameScene::gevGameObjLeave(GF_OBJ_HANDLE *handle) {
   switch (GfObjUtil::getObjType(handle)) {
   case OBJECT_TYPE_DRIVER: {
     GfObjSetupDriver *setup = GfObjUtil::getObjSetup<GfObjSetupDriver>(handle);
-    if (setup != nullptr && setup->partyMember != -1) {
-      unknown228[setup->partyMember] = 0;
+    if (setup != nullptr && setup->unknown14 != -1) {
+      unknown228[setup->unknown14] = 0;
     }
     break;
   }
@@ -1125,10 +1127,10 @@ void GfGameScene::updatePlayerState() {
     state.unknown04 = MOVER_STATE_NONE;
     state.unknown0d = false;
     GfObjProperty *property = GfObjUtil::getProperty(GfGameParty::getHandleMover(state.unknown00));
-    if (property != nullptr && property->move != nullptr) {
-      GfObjPropertyMove *move = property->move;
+    if (property != nullptr && property->unknown18 != nullptr) {
+      GfObjPropertyMove *move = property->unknown18;
       state.unknown04 = MOVER_STATE_FIELD;
-      switch (move->type) {
+      switch (move->unknown00) {
       case PROPERTY_MOVE_SWIM:
         state.unknown04 = MOVER_STATE_SWIM;
         break;
@@ -1139,13 +1141,13 @@ void GfGameScene::updatePlayerState() {
         state.unknown04 = MOVER_STATE_BUSY;
         break;
       }
-      if (move->isJump) {
+      if (move->unknown80) {
         state.unknown04 = MOVER_STATE_JUMP;
       }
-      if (move->groundObj != INVALID_HANDLE) {
+      if (move->unknownc0 != INVALID_HANDLE) {
         state.unknown04 = MOVER_STATE_BUSY;
       }
-      if (move->floatTime != 0.0f) {
+      if (move->unknownc8 != 0.0f) {
         state.unknown0d = true;
       }
     }
@@ -1204,7 +1206,7 @@ void GfGameScene::updateAppendModel(const fw::UpdateInfo &info) {
     (*it)->update(info);
   }
   for (auto it = unknown70.begin(); it != unknown70.end();) {
-    if (!GfObjUtil::isValid((*it)->owner)) {
+    if (!GfObjUtil::isValid((*it)->unknown08)) {
       delete *it;
       it = unknown70.erase(it);
     } else {
@@ -1608,7 +1610,7 @@ void GfGameScene::updateMaxHp(const fw::UpdateInfo &) {
     if (obj == nullptr) {
       continue;
     }
-    DataParamAcc paramAcc(obj->handle);
+    DataParamAcc paramAcc(obj->unknownf8);
     paramAcc.getHp();
     paramAcc.getHpMax(false);
     if (paramAcc.getHp() > paramAcc.getHpMax(false)) {
@@ -1758,12 +1760,12 @@ void GfGameScene::updateEnemySaveHp(const fw::UpdateInfo &) {
   const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> *enemies = GfGameObj::getList(OBJECT_TYPE_ENEMY);
   for (mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY>::const_iterator it = enemies->begin(); it != enemies->end(); ++it) {
     GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(*it);
-    if (setup != nullptr && setup->savedHp != 0) {
+    if (setup != nullptr && setup->unknownb4 != 0) {
       GfObjAcc obj(*it);
       if (obj.isBattle()) {
-        MsgObjectChangeHp message(setup->savedHp);
+        MsgObjectChangeHp message(setup->unknownb4);
         obj.getObj()->sendMessage(obj.getObj(), message);
-        setup->savedHp = 0;
+        setup->unknownb4 = 0;
       }
     }
   }

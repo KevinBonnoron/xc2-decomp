@@ -2,16 +2,16 @@
 
 namespace gf {
 
-Plugin::Plugin() : isActive(false) {}
+Plugin::Plugin() : unknown08(false) {}
 
 Plugin::~Plugin() {}
 
 void Plugin::setActivate(bool isActive) {
-  if (this->isActive == isActive) {
+  if (this->unknown08 == isActive) {
     return;
   }
 
-  this->isActive = isActive;
+  this->unknown08 = isActive;
   if (isActive) {
     onActivate();
   } else {

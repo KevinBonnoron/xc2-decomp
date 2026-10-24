@@ -45,16 +45,16 @@ public:
   void onDeactivate() override;
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
 
-  const FadeParam *getParam() const { return paramEntry != nullptr ? static_cast<const FadeParam *>(paramEntry->param) : nullptr; }
+  const FadeParam *getParam() const { return unknown18 != nullptr ? static_cast<const FadeParam *>(unknown18->param) : nullptr; }
 
-  Mode mode;
-  f32 timer;
-  const fw::ParamList::Entry *paramEntry;
+  Mode unknown0c;                        // Inferred role: mode; original member name unknown.
+  f32 unknown10;                         // Inferred role: timer; original member name unknown.
+  const fw::ParamList::Entry *unknown18; // Inferred role: param entry; original member name unknown.
 };
 
-static_assert(offsetof(FadePlugin, mode) == 0x0c, "");
-static_assert(offsetof(FadePlugin, timer) == 0x10, "");
-static_assert(offsetof(FadePlugin, paramEntry) == 0x18, "");
+static_assert(offsetof(FadePlugin, unknown0c) == 0x0c, "");
+static_assert(offsetof(FadePlugin, unknown10) == 0x10, "");
+static_assert(offsetof(FadePlugin, unknown18) == 0x18, "");
 static_assert(sizeof(FadePlugin) == 0x20, "");
 
 } // namespace pc

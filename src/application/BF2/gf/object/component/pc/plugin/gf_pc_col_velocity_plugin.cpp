@@ -3,9 +3,9 @@
 namespace gf {
 namespace pc {
 
-ColVelCalculatorPlugin::ColVelCalculatorPlugin() : isFirstFrame(true) {}
+ColVelCalculatorPlugin::ColVelCalculatorPlugin() : unknown09(true) {}
 
-void ColVelCalculatorPlugin::onActivate() { isFirstFrame = true; }
+void ColVelCalculatorPlugin::onActivate() { unknown09 = true; }
 
 } // namespace pc
 } // namespace gf

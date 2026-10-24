@@ -11,31 +11,31 @@ namespace pc {
 constexpr int PAD_TYPE_BATTLE = 1;
 constexpr int PAD_TYPE_BATTLE_TARGET = 3;
 
-PadBattle::PadBattle() : property(nullptr) {}
+PadBattle::PadBattle() : unknown78(nullptr) {}
 
 void PadBattle::setup(int padNo, GfComPropertyPc &property) {
-  relay.bind(padNo, PAD_TYPE_BATTLE, getAllocator(ALLOCATOR_DEFAULT));
-  relay.bindAction("btl_start", this, &PadBattle::battleStart);
-  relay.bindAction("btl_end", this, &PadBattle::battleEnd);
-  relay.bindAction("art_01", this, &PadBattle::art01);
-  relay.bindAction("art_02", this, &PadBattle::art02);
-  relay.bindAction("art_03", this, &PadBattle::art03);
-  relay.bindAction("blade_change_00", this, &PadBattle::bladeChange00);
-  relay.bindAction("blade_change_01", this, &PadBattle::bladeChange01);
-  relay.bindAction("blade_change_02", this, &PadBattle::bladeChange02);
-  relay.bindAction("kakusei", this, &PadBattle::kakusei);
-  relay.bindAction("request_permit_01", this, &PadBattle::requestPermit01);
-  relay.bindAction("request_permit_02", this, &PadBattle::requestPermit02);
-  relay.bindAction("sp_attack", this, &PadBattle::spAttack);
-  relay.bindAction("chain_attack", this, &PadBattle::chainAttack);
-  relay.bindAction("battle_rescue", this, &PadBattle::battlRescue);
-  relay.bindAction("change_camera_mode", this, &PadBattle::changeCameraMode);
-  relay.bindAction("tactics", this, &PadBattle::orderRally);
-  relay.bindAxis("move_front", this, &PadBattle::moveFront);
-  relay.bindAxis("move_side", this, &PadBattle::moveSide);
-  targetRelay.bind(padNo, PAD_TYPE_BATTLE_TARGET, getAllocator(ALLOCATOR_DEFAULT));
-  targetRelay.bindAction("select_right", this, &PadBattle::changeTargetR);
-  targetRelay.bindAction("select_left", this, &PadBattle::changeTargetL);
+  unknown08.bind(padNo, PAD_TYPE_BATTLE, getAllocator(ALLOCATOR_DEFAULT));
+  unknown08.bindAction("btl_start", this, &PadBattle::battleStart);
+  unknown08.bindAction("btl_end", this, &PadBattle::battleEnd);
+  unknown08.bindAction("art_01", this, &PadBattle::art01);
+  unknown08.bindAction("art_02", this, &PadBattle::art02);
+  unknown08.bindAction("art_03", this, &PadBattle::art03);
+  unknown08.bindAction("blade_change_00", this, &PadBattle::bladeChange00);
+  unknown08.bindAction("blade_change_01", this, &PadBattle::bladeChange01);
+  unknown08.bindAction("blade_change_02", this, &PadBattle::bladeChange02);
+  unknown08.bindAction("kakusei", this, &PadBattle::kakusei);
+  unknown08.bindAction("request_permit_01", this, &PadBattle::requestPermit01);
+  unknown08.bindAction("request_permit_02", this, &PadBattle::requestPermit02);
+  unknown08.bindAction("sp_attack", this, &PadBattle::spAttack);
+  unknown08.bindAction("chain_attack", this, &PadBattle::chainAttack);
+  unknown08.bindAction("battle_rescue", this, &PadBattle::battlRescue);
+  unknown08.bindAction("change_camera_mode", this, &PadBattle::changeCameraMode);
+  unknown08.bindAction("tactics", this, &PadBattle::orderRally);
+  unknown08.bindAxis("move_front", this, &PadBattle::moveFront);
+  unknown08.bindAxis("move_side", this, &PadBattle::moveSide);
+  unknown40.bind(padNo, PAD_TYPE_BATTLE_TARGET, getAllocator(ALLOCATOR_DEFAULT));
+  unknown40.bindAction("select_right", this, &PadBattle::changeTargetR);
+  unknown40.bindAction("select_left", this, &PadBattle::changeTargetL);
 }
 
 void PadBattle::battleStart() const { setInput(INPUT_ID_BATTLE_START); }
@@ -71,14 +71,14 @@ void PadBattle::changeCameraMode() const { setInput(INPUT_ID_CHANGE_CAMERA_MODE)
 void PadBattle::orderRally() const { setInput(INPUT_ID_ORDER_RALLY); }
 
 void PadBattle::moveFront(f32 value) {
-  if (property != nullptr && property->isBattleControl) {
-    property->input.y = value;
+  if (unknown78 != nullptr && unknown78->unknown110_1) {
+    unknown78->unknown60.unknown04 = value;
   }
 }
 
 void PadBattle::moveSide(f32 value) {
-  if (property != nullptr && property->isBattleControl) {
-    property->input.x = value;
+  if (unknown78 != nullptr && unknown78->unknown110_1) {
+    unknown78->unknown60.unknown00 = value;
   }
 }
 
@@ -87,19 +87,19 @@ void PadBattle::changeTargetR() const { setInput(INPUT_ID_CHANGE_TARGET_R); }
 void PadBattle::changeTargetL() const { setInput(INPUT_ID_CHANGE_TARGET_L); }
 
 void PadBattle::cleanup(GfComPropertyPc &property) {
-  relay.unbind();
-  targetRelay.unbind();
+  unknown08.unbind();
+  unknown40.unbind();
 }
 
 void PadBattle::update(const fw::UpdateInfo &info, GfComPropertyPc &property) {
-  this->property = &property;
-  relay.update();
-  targetRelay.update();
-  this->property = nullptr;
+  this->unknown78 = &property;
+  unknown08.update();
+  unknown40.update();
+  this->unknown78 = nullptr;
 }
 
 void PadBattle::setInput(InputID id) const {
-  if (property == nullptr) {
+  if (unknown78 == nullptr) {
     return;
   }
 
@@ -123,7 +123,7 @@ void PadBattle::setInput(InputID id) const {
   default:
     break;
   }
-  property->input.flags.set(id);
+  unknown78->unknown60.unknown08.set(id);
 }
 
 } // namespace pc

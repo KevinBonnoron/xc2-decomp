@@ -34,56 +34,56 @@ enum {
 };
 
 struct GFOBJ_MOUNT {
-  GF_MOUNT_HANDLE *handle;
+  GF_MOUNT_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
   u8 _08[0xc8 - 0x08];
 };
 
 static_assert(sizeof(GFOBJ_MOUNT) == 0xc8, "");
 
 struct GFOBJ_INFO {
-  u16 multiBindUniqId;
-  u16 view;
+  u16 unknown00; // Inferred role: multi bind unique id; original member name unknown.
+  u16 unknown02; // Inferred role: view; original member name unknown.
   u8 _04[0x06 - 0x04];
-  u16 state;
-  GF_OBJ_HANDLE *handle;
-  GF_ASSET_HANDLE *assetHandle;
-  GfObj *obj;
+  u16 unknown06;              // Inferred role: state; original member name unknown.
+  GF_OBJ_HANDLE *unknown08;   // Inferred role: handle; original member name unknown.
+  GF_ASSET_HANDLE *unknown10; // Inferred role: asset handle; original member name unknown.
+  GfObj *unknown18;           // Inferred role: object; original member name unknown.
   u8 _20[0x30 - 0x20];
-  GfObjSetup *setup;
-  mm::mtl::BitFlag<64> flags;
+  GfObjSetup *unknown30;          // Inferred role: setup; original member name unknown.
+  mm::mtl::BitFlag<64> unknown38; // Inferred role: flags; original member name unknown.
   u8 _40[0x48 - 0x40];
-  u32 dispFlags;
+  u32 unknown48; // Inferred role: disp flags; original member name unknown.
   u8 _4c[0x70 - 0x4c];
-  u64 userData[3];
-  GF_OBJ_HANDLE *master;
-  GF_OBJ_HANDLE *owner;
-  GfObjProperty *property;
-  mm::Vec3 modelScale;
-  int coliPriority;
+  u64 unknown70[3];         // Inferred role: user data; original member name unknown.
+  GF_OBJ_HANDLE *unknown88; // Inferred role: master; original member name unknown.
+  GF_OBJ_HANDLE *unknown90; // Inferred role: owner; original member name unknown.
+  GfObjProperty *unknown98; // Inferred role: property; original member name unknown.
+  mm::Vec3 unknowna0;       // Inferred role: model scale; original member name unknown.
+  int unknownb0;            // Inferred role: coli priority; original member name unknown.
   u8 _b4[0xb8 - 0xb4];
-  GFOBJ_MOUNT mounts[4];
-  GfVolumeFade *volumeFade;
+  GFOBJ_MOUNT unknownb8[4]; // Inferred role: mounts; original member name unknown.
+  GfVolumeFade *unknown3d8; // Inferred role: volume fade; original member name unknown.
   u8 _3e0[0x404 - 0x3e0];
-  char modelBaseName[0x10];
+  char unknown404[0x10]; // Inferred role: model base name; original member name unknown.
 };
 
-static_assert(offsetof(GFOBJ_INFO, view) == 0x02, "");
-static_assert(offsetof(GFOBJ_INFO, state) == 0x06, "");
-static_assert(offsetof(GFOBJ_INFO, handle) == 0x08, "");
-static_assert(offsetof(GFOBJ_INFO, assetHandle) == 0x10, "");
-static_assert(offsetof(GFOBJ_INFO, obj) == 0x18, "");
-static_assert(offsetof(GFOBJ_INFO, coliPriority) == 0xb0, "");
-static_assert(offsetof(GFOBJ_INFO, setup) == 0x30, "");
-static_assert(offsetof(GFOBJ_INFO, flags) == 0x38, "");
-static_assert(offsetof(GFOBJ_INFO, dispFlags) == 0x48, "");
-static_assert(offsetof(GFOBJ_INFO, userData) == 0x70, "");
-static_assert(offsetof(GFOBJ_INFO, master) == 0x88, "");
-static_assert(offsetof(GFOBJ_INFO, owner) == 0x90, "");
-static_assert(offsetof(GFOBJ_INFO, property) == 0x98, "");
-static_assert(offsetof(GFOBJ_INFO, modelScale) == 0xa0, "");
-static_assert(offsetof(GFOBJ_INFO, mounts) == 0xb8, "");
-static_assert(offsetof(GFOBJ_INFO, volumeFade) == 0x3d8, "");
-static_assert(offsetof(GFOBJ_INFO, modelBaseName) == 0x404, "");
+static_assert(offsetof(GFOBJ_INFO, unknown02) == 0x02, "");
+static_assert(offsetof(GFOBJ_INFO, unknown06) == 0x06, "");
+static_assert(offsetof(GFOBJ_INFO, unknown08) == 0x08, "");
+static_assert(offsetof(GFOBJ_INFO, unknown10) == 0x10, "");
+static_assert(offsetof(GFOBJ_INFO, unknown18) == 0x18, "");
+static_assert(offsetof(GFOBJ_INFO, unknownb0) == 0xb0, "");
+static_assert(offsetof(GFOBJ_INFO, unknown30) == 0x30, "");
+static_assert(offsetof(GFOBJ_INFO, unknown38) == 0x38, "");
+static_assert(offsetof(GFOBJ_INFO, unknown48) == 0x48, "");
+static_assert(offsetof(GFOBJ_INFO, unknown70) == 0x70, "");
+static_assert(offsetof(GFOBJ_INFO, unknown88) == 0x88, "");
+static_assert(offsetof(GFOBJ_INFO, unknown90) == 0x90, "");
+static_assert(offsetof(GFOBJ_INFO, unknown98) == 0x98, "");
+static_assert(offsetof(GFOBJ_INFO, unknowna0) == 0xa0, "");
+static_assert(offsetof(GFOBJ_INFO, unknownb8) == 0xb8, "");
+static_assert(offsetof(GFOBJ_INFO, unknown3d8) == 0x3d8, "");
+static_assert(offsetof(GFOBJ_INFO, unknown404) == 0x404, "");
 
 class IGfObjListener {
 public:

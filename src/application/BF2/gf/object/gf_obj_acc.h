@@ -52,7 +52,7 @@ public:
   const fw::Transform &getWorldTransformNoSync() const;
   bool getObjPosRot(mm::Vec3 &position, f32 &rotation);
 
-  bool isValid() const { return mObj != nullptr; }
+  bool isValid() const { return m_obj != nullptr; }
   bool isValidTransform() const;
   const fw::Transform &getWorldTransform() const;
   f32 getAlpha(OBJ_ALPHA type) const;
@@ -154,8 +154,8 @@ public:
   void setCollisionGround(bool isCollisionGround);
 
 private:
-  GFOBJ_INFO *mInfo;
-  GfObj *mObj;
+  GFOBJ_INFO *unknown00; // Inferred role: m info; original member name unknown.
+  GfObj *m_obj;
 };
 
 static_assert(sizeof(GfObjAcc) == 0x10, "");

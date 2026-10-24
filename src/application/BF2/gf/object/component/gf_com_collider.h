@@ -31,28 +31,28 @@ enum {
 };
 
 struct MsgObjectColiEnter : fw::Message {
-  MsgObjectColiEnter() : fw::Message(MSG_OBJECT_COLI_ENTER, 0x40), handle(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), info(nullptr) {}
+  MsgObjectColiEnter() : fw::Message(MSG_OBJECT_COLI_ENTER, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
 
-  GF_OBJ_HANDLE *handle;
-  const fw::IColiEventListener::EnterInfo *info;
+  GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
+  const fw::IColiEventListener::EnterInfo *unknown10; // Inferred role: info; original member name unknown.
 };
 
 struct MsgObjectColiLeave : fw::Message {
-  MsgObjectColiLeave() : fw::Message(MSG_OBJECT_COLI_LEAVE, 0x40), handle(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), info(nullptr) {}
+  MsgObjectColiLeave() : fw::Message(MSG_OBJECT_COLI_LEAVE, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
 
-  GF_OBJ_HANDLE *handle;
-  const fw::IColiEventListener::LeaveInfo *info;
+  GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
+  const fw::IColiEventListener::LeaveInfo *unknown10; // Inferred role: info; original member name unknown.
 };
 
 struct MsgObjectColiContact : fw::Message {
-  MsgObjectColiContact() : fw::Message(MSG_OBJECT_COLI_CONTACT, 0x40), handle(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), info(nullptr) {}
+  MsgObjectColiContact() : fw::Message(MSG_OBJECT_COLI_CONTACT, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
 
-  GF_OBJ_HANDLE *handle;
-  const fw::IColiEventListener::EnterInfo *info;
+  GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
+  const fw::IColiEventListener::EnterInfo *unknown10; // Inferred role: info; original member name unknown.
 };
 
-static_assert(offsetof(MsgObjectColiEnter, handle) == 0x08, "");
-static_assert(offsetof(MsgObjectColiEnter, info) == 0x10, "");
+static_assert(offsetof(MsgObjectColiEnter, unknown08) == 0x08, "");
+static_assert(offsetof(MsgObjectColiEnter, unknown10) == 0x10, "");
 
 class GfComCollider : public GfComponent, public fw::IColiEventListener {
 public:
@@ -63,10 +63,10 @@ public:
   public:
     static mm::mtl::RTTI m_rtti;
 
-    UserData() : owner(nullptr) {}
+    UserData() : unknown08(nullptr) {}
     const mm::mtl::RTTI *getRTTI() const override;
 
-    GfComCollider *owner;
+    GfComCollider *unknown08; // Inferred role: owner; original member name unknown.
   };
 
   GfComCollider();
@@ -82,13 +82,13 @@ public:
   const mm::mtl::RTTI *getRTTI() const override;
   void changeLayer(u32 oldLayer, u32 newLayer) override;
 
-  mm::mtl::Vector<fw::ColiObject *> colis;
-  UserData userData;
-  fw::AnimColPoseModifier poseModifier;
+  mm::mtl::Vector<fw::ColiObject *> unknown18; // Inferred role: colis; original member name unknown.
+  UserData unknown40;                          // Inferred role: user data; original member name unknown.
+  fw::AnimColPoseModifier unknown50;           // Inferred role: pose modifier; original member name unknown.
 };
 
-static_assert(offsetof(GfComCollider, colis) == 0x18, "");
-static_assert(offsetof(GfComCollider, userData) == 0x40, "");
-static_assert(offsetof(GfComCollider, poseModifier) == 0x50, "");
+static_assert(offsetof(GfComCollider, unknown18) == 0x18, "");
+static_assert(offsetof(GfComCollider, unknown40) == 0x40, "");
+static_assert(offsetof(GfComCollider, unknown50) == 0x50, "");
 
 } // namespace gf

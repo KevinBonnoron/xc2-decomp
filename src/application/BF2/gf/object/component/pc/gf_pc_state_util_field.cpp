@@ -13,17 +13,17 @@ namespace pc {
 
 bool StateUtilField::execAsmCmd(GfComAsm &comAsm, ASM_CMD_ID_FIELD id) { return comAsm.execCmd(getASMCmdNameField(id), ANIM_LAYER_BASE); }
 
-bool StateUtilField::testVechile(GfComBehaviorPc &behavior) { return GfGameRide::isVehicle(static_cast<GfObj *>(behavior.owner)->handle); }
+bool StateUtilField::testVechile(GfComBehaviorPc &behavior) { return GfGameRide::isVehicle(static_cast<GfObj *>(behavior.owner)->unknownf8); }
 
-bool StateUtilField::isWalkMode(GfComPropertyPc &property) { return property.field.isWalkMode; }
+bool StateUtilField::isWalkMode(GfComPropertyPc &property) { return property.unknown310.unknown10_0; }
 
-bool StateUtilField::testAutoRun(GfComPropertyPc &property) { return property.field.isAutoRun; }
+bool StateUtilField::testAutoRun(GfComPropertyPc &property) { return property.unknown310.unknown11_0; }
 
 void StateUtilField::setIdleStatus(GfComPropertyPc &property, bool isIdle) {
   if (isIdle) {
-    property.field.isIdle = true;
+    property.unknown310.unknown10_2 = true;
   } else {
-    property.field.isIdle = false;
+    property.unknown310.unknown10_2 = false;
   }
 }
 
@@ -51,7 +51,7 @@ ASM_CMD_ID_FIELD StateUtilField::getAsmID(GfPropertyField::WALL_MOVE_MODE mode) 
 }
 
 void StateUtilField::resetCameraForWall(GfComBehaviorPc &behavior, Timing timing) {
-  if (!behavior.getProperty()->isPadControl) {
+  if (!behavior.getProperty()->unknown111_2) {
     return;
   }
   static const ResetCameraWallTiming CAMERA_TIMINGS[] = {RESET_CAMERA_WALL_TIMING_UNDER_GROUND, RESET_CAMERA_WALL_TIMING_GROUND, RESET_CAMERA_WALL_TIMING_AIR};

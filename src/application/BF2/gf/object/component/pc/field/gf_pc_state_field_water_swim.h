@@ -25,17 +25,17 @@ class StateFieldWaterSwim : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
-  StateFieldWaterSwim() : directionQueueSize(0), directionQueueFront(0) {}
+  StateFieldWaterSwim() : unknown40(0), unknown48(0) {}
 
   u8 _18[0x20 - 0x18];
   // FixedQueue<mm::Vec2, 2> of the game, whose mm::Vec2 is 16 bytes wide.
-  u8 directionQueue[0x40 - 0x20];
-  size_t directionQueueSize;
-  size_t directionQueueFront;
+  u8 unknown20[0x40 - 0x20]; // Inferred role: direction queue; original member name unknown.
+  size_t unknown40;          // Inferred role: direction queue size; original member name unknown.
+  size_t unknown48;          // Inferred role: direction queue front; original member name unknown.
 };
 
-static_assert(offsetof(StateFieldWaterSwim, directionQueue) == 0x20, "");
-static_assert(offsetof(StateFieldWaterSwim, directionQueueSize) == 0x40, "");
+static_assert(offsetof(StateFieldWaterSwim, unknown20) == 0x20, "");
+static_assert(offsetof(StateFieldWaterSwim, unknown40) == 0x40, "");
 static_assert(sizeof(StateFieldWaterSwim) == 0x50, "");
 
 } // namespace pc

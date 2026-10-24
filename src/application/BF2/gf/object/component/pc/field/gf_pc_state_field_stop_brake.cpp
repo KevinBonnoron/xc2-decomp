@@ -7,8 +7,8 @@ namespace gf {
 namespace pc {
 
 void StateFieldStopBrake::enter(GfComBehaviorPc *behavior, ai::State *previous) {
-  behavior->getProperty()->horizontalSpeed = 0.0f;
-  isStopped = false;
+  behavior->getProperty()->unknown94 = 0.0f;
+  unknown18 = false;
 }
 
 void StateFieldStopBrake::leave(GfComBehaviorPc *behavior, ai::State *next) {}

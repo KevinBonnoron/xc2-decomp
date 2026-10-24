@@ -20,7 +20,7 @@ bool GfComTransform::recieveMessage(fw::MessageObject *sender, fw::Message &mess
 
 void GfComTransform::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
 
-GfComTransform::GfComTransform() : viewer(nullptr) { listener.owner = this; }
+GfComTransform::GfComTransform() : unknown80(nullptr) { unknown88.unknown08 = this; }
 
 GfComTransform::~GfComTransform() {}
 
@@ -29,105 +29,105 @@ void GfComTransform::setup(const SetupInfo &setup_info) {
 #line 46
   MM_ASSERT(setup_info.frame_max != 0);
 
-  frame = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) fw::ReferenceFrame();
-  fw::ReferenceFrame *referenceFrame = frame.get();
+  unknown10 = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) fw::ReferenceFrame();
+  fw::ReferenceFrame *referenceFrame = unknown10.get();
   referenceFrame->invalidateLocal();
-  referenceFrame->worldTransform.position = setup_info.position;
-  referenceFrame->worldTransform.rotation = setup_info.rotation;
-  frame->syncLocalTransform();
-  if (setup_info.isUseChildFrame) {
+  referenceFrame->worldTransform.position = setup_info.unknown00;
+  referenceFrame->worldTransform.rotation = setup_info.unknown10;
+  unknown10->syncLocalTransform();
+  if (setup_info.unknown24) {
     // __LINE__ must be 62 as in the original source: it is the line argument of operator new.
 #line 62
-    childFrame = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) fw::ReferenceFrame();
-    frame->addChild(*childFrame.get());
-    childFrame->invalidateWorld();
-    childFrame->syncWorldTransform();
+    unknown18 = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) fw::ReferenceFrame();
+    unknown10->addChild(*unknown18.get());
+    unknown18->invalidateWorld();
+    unknown18->syncWorldTransform();
   }
 
-  updater.frames.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
-  updater.frames.reserve(setup_info.frame_max);
-  updater.afterFrames.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
-  updater.afterFrames.reserve(setup_info.frame_max);
-  updater.frames.push_back(frame.get());
-  if (childFrame.get() != nullptr) {
-    updater.frames.push_back(childFrame.get());
+  unknown20.frames.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
+  unknown20.frames.reserve(setup_info.frame_max);
+  unknown20.afterFrames.setAllocator(getAllocator(ALLOCATOR_DEFAULT));
+  unknown20.afterFrames.reserve(setup_info.frame_max);
+  unknown20.frames.push_back(unknown10.get());
+  if (unknown18.get() != nullptr) {
+    unknown20.frames.push_back(unknown18.get());
   }
 
-  fw::TransformManager::get()->addUpdater(getLayer(), updater);
+  fw::TransformManager::get()->addUpdater(getLayer(), unknown20);
 }
 
 void GfComTransform::cleanup() {
-  fw::ReferenceFrame *referenceFrame = childFrame.get();
+  fw::ReferenceFrame *referenceFrame = unknown18.get();
   if (referenceFrame != nullptr) {
     fw::ReferenceFrame::unlinkParent(*referenceFrame);
     fw::ReferenceFrame::unlinkChild(*referenceFrame);
   }
 
-  referenceFrame = frame.get();
+  referenceFrame = unknown10.get();
   fw::ReferenceFrame::unlinkParent(*referenceFrame);
   fw::ReferenceFrame::unlinkChild(*referenceFrame);
-  fw::TransformManager::get()->removeUpdater(getLayer(), updater);
-  if (updater.frames.capacity() != 0) {
-    updater.frames.clear();
-    updater.frames.destroy();
+  fw::TransformManager::get()->removeUpdater(getLayer(), unknown20);
+  if (unknown20.frames.capacity() != 0) {
+    unknown20.frames.clear();
+    unknown20.frames.destroy();
   }
-  if (updater.afterFrames.capacity() != 0) {
-    updater.afterFrames.clear();
-    updater.afterFrames.destroy();
+  if (unknown20.afterFrames.capacity() != 0) {
+    unknown20.afterFrames.clear();
+    unknown20.afterFrames.destroy();
   }
 }
 
-void GfComTransform::addReferenceFrame(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame) { updater.frames.push_back(frame); }
+void GfComTransform::addReferenceFrame(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame) { unknown20.frames.push_back(frame); }
 
 void GfComTransform::removeReferenceFrame(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame) {
-  mm::mtl::IntrusivePtr<fw::ReferenceFrame> *found = mm::mtl::find(updater.frames.begin(), updater.frames.end(), frame);
-  if (found != updater.frames.end()) {
-    updater.frames.erase(found);
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> *found = mm::mtl::find(unknown20.frames.begin(), unknown20.frames.end(), frame);
+  if (found != unknown20.frames.end()) {
+    unknown20.frames.erase(found);
   }
 }
 
-void GfComTransform::addAfterReferenceFrame(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame) { updater.afterFrames.push_back(frame); }
+void GfComTransform::addAfterReferenceFrame(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame) { unknown20.afterFrames.push_back(frame); }
 
 void GfComTransform::removeAfterReferenceFrame(mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame) {
-  mm::mtl::IntrusivePtr<fw::ReferenceFrame> *found = mm::mtl::find(updater.afterFrames.begin(), updater.afterFrames.end(), frame);
-  if (found != updater.afterFrames.end()) {
-    updater.afterFrames.erase(found);
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> *found = mm::mtl::find(unknown20.afterFrames.begin(), unknown20.afterFrames.end(), frame);
+  if (found != unknown20.afterFrames.end()) {
+    unknown20.afterFrames.erase(found);
   }
 }
 
 void GfComTransform::setPosition(const mm::Vec3 &position) {
-  fw::ReferenceFrame *referenceFrame = frame.get();
+  fw::ReferenceFrame *referenceFrame = unknown10.get();
   referenceFrame->invalidateLocal();
   referenceFrame->worldTransform.position = position;
 }
 
-const mm::Vec3 &GfComTransform::getPosition() const { return frame.get()->worldTransform.position; }
+const mm::Vec3 &GfComTransform::getPosition() const { return unknown10.get()->worldTransform.position; }
 
 void GfComTransform::setRotation(const mm::Quat &rotation) {
-  fw::ReferenceFrame *referenceFrame = frame.get();
+  fw::ReferenceFrame *referenceFrame = unknown10.get();
   referenceFrame->invalidateLocal();
   referenceFrame->worldTransform.rotation = rotation;
 }
 
-const mm::Quat &GfComTransform::getRotation() const { return frame.get()->worldTransform.rotation; }
+const mm::Quat &GfComTransform::getRotation() const { return unknown10.get()->worldTransform.rotation; }
 
 void GfComTransform::syncFrame() {
-  if (frame.get() != nullptr) {
-    frame.get()->syncLocalTransform();
+  if (unknown10.get() != nullptr) {
+    unknown10.get()->syncLocalTransform();
   }
 
-  fw::ReferenceFrame *referenceFrame = childFrame.get();
+  fw::ReferenceFrame *referenceFrame = unknown18.get();
   if (referenceFrame != nullptr) {
     referenceFrame->invalidateWorld();
-    childFrame->syncWorldTransform();
+    unknown18->syncWorldTransform();
   }
 }
 
 void GfComTransform::openDebugWindow(ml::WinProc *window) {}
 
 void GfComTransform::changeLayer(u32 oldLayer, u32 newLayer) {
-  fw::TransformManager::get()->removeUpdater(getLayer(), updater);
-  fw::TransformManager::get()->addUpdater(newLayer, updater);
+  fw::TransformManager::get()->removeUpdater(getLayer(), unknown20);
+  fw::TransformManager::get()->addUpdater(newLayer, unknown20);
 }
 
 const mm::mtl::RTTI *GfComTransform::getRTTI() const { return &m_rtti; }

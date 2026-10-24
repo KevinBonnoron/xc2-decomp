@@ -52,26 +52,26 @@ public:
   void setUpdateComponent(bool isUpdate);
   virtual const mm::mtl::RTTI *getRTTI() const;
 
-  GF_OBJ_HANDLE *handle;
-  GFOBJ_INFO *info;
+  GF_OBJ_HANDLE *unknownf8; // Inferred role: handle; original member name unknown.
+  GFOBJ_INFO *unknown100;   // Inferred role: info; original member name unknown.
   u8 _108[0x110 - 0x108];
-  u32 attribute;
-  mm::mtl::BitFlag<32> flags;
-  bool isExecUpdate;
+  u32 unknown110;                  // Inferred role: attribute; original member name unknown.
+  mm::mtl::BitFlag<32> unknown114; // Inferred role: flags; original member name unknown.
+  bool unknown118;                 // Inferred role: exec update; original member name unknown.
 };
 
-static_assert(offsetof(GfObj, handle) == 0xf8, "");
-static_assert(offsetof(GfObj, info) == 0x100, "");
-static_assert(offsetof(GfObj, attribute) == 0x110, "");
-static_assert(offsetof(GfObj, isExecUpdate) == 0x118, "");
+static_assert(offsetof(GfObj, unknownf8) == 0xf8, "");
+static_assert(offsetof(GfObj, unknown100) == 0x100, "");
+static_assert(offsetof(GfObj, unknown110) == 0x110, "");
+static_assert(offsetof(GfObj, unknown118) == 0x118, "");
 
 class GfObjLayerSpeed {
 public:
   struct Info {
-    Info() : request(false), speed(1.0f) {}
+    Info() : unknown00(false), unknown04(1.0f) {}
 
-    bool request;
-    f32 speed;
+    bool unknown00; // Inferred role: request; original member name unknown.
+    f32 unknown04;  // Inferred role: speed; original member name unknown.
   };
 
   static void initialize();

@@ -28,12 +28,12 @@ public:
   virtual void update(const fw::UpdateInfo &info, GfComPropertyPc &property);
   void setInput(InputID id) const;
 
-  fw::PadRelay relay;
-  GfComPropertyPc *property;
+  fw::PadRelay unknown08;     // Inferred role: relay; original member name unknown.
+  GfComPropertyPc *unknown40; // Inferred role: property; original member name unknown.
 };
 
-static_assert(offsetof(PadField, relay) == 0x08, "");
-static_assert(offsetof(PadField, property) == 0x40, "");
+static_assert(offsetof(PadField, unknown08) == 0x08, "");
+static_assert(offsetof(PadField, unknown40) == 0x40, "");
 static_assert(sizeof(PadField) == 0x48, "");
 
 } // namespace pc

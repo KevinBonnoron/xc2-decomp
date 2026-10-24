@@ -16,8 +16,8 @@ namespace pc {
 void StateFieldIdle::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   StateUtil::setEnableDownIK(*behavior, true);
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  property->velocity = mm::Vec3::zero;
-  property->horizontalSpeed = 0.0f;
+  property->unknown80 = mm::Vec3::zero;
+  property->unknown94 = 0.0f;
   StateUtilField::setIdleStatus(*property, true);
 }
 

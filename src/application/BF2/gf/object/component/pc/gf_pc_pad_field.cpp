@@ -10,17 +10,17 @@ namespace pc {
 
 constexpr int PAD_TYPE_FIELD = 0;
 
-PadField::PadField() : property(nullptr) {}
+PadField::PadField() : unknown40(nullptr) {}
 
 void PadField::setup(int padNo, GfComPropertyPc &property) {
-  relay.bind(padNo, PAD_TYPE_FIELD, getAllocator(ALLOCATOR_DEFAULT));
-  relay.bindAction("decide", this, &PadField::decideAction);
-  relay.bindAction("jump", this, &PadField::jumpAction);
-  relay.bindAction("lock", this, &PadField::lockAction);
-  relay.bindAction("wall_release", this, &PadField::wallReleaseAction);
-  relay.bindAction("lure", this, &PadField::lureAction);
-  relay.bindAxis("move_front", this, &PadField::moveFront);
-  relay.bindAxis("move_side", this, &PadField::moveSide);
+  unknown08.bind(padNo, PAD_TYPE_FIELD, getAllocator(ALLOCATOR_DEFAULT));
+  unknown08.bindAction("decide", this, &PadField::decideAction);
+  unknown08.bindAction("jump", this, &PadField::jumpAction);
+  unknown08.bindAction("lock", this, &PadField::lockAction);
+  unknown08.bindAction("wall_release", this, &PadField::wallReleaseAction);
+  unknown08.bindAction("lure", this, &PadField::lureAction);
+  unknown08.bindAxis("move_front", this, &PadField::moveFront);
+  unknown08.bindAxis("move_side", this, &PadField::moveSide);
 }
 
 void PadField::decideAction() const { setInput(INPUT_ID_DECIDE); }
@@ -42,28 +42,28 @@ void PadField::wallReleaseAction() const { setInput(INPUT_ID_WALL_RELEASE); }
 void PadField::lureAction() const { setInput(INPUT_ID_LURE); }
 
 void PadField::moveFront(f32 value) {
-  if (property != nullptr && property->isFieldControl) {
-    property->input.y = value;
+  if (unknown40 != nullptr && unknown40->unknown110_0) {
+    unknown40->unknown60.unknown04 = value;
   }
 }
 
 void PadField::moveSide(f32 value) {
-  if (property != nullptr && property->isFieldControl) {
-    property->input.x = value;
+  if (unknown40 != nullptr && unknown40->unknown110_0) {
+    unknown40->unknown60.unknown00 = value;
   }
 }
 
-void PadField::cleanup(GfComPropertyPc &property) { relay.unbind(); }
+void PadField::cleanup(GfComPropertyPc &property) { unknown08.unbind(); }
 
 void PadField::update(const fw::UpdateInfo &info, GfComPropertyPc &property) {
-  this->property = &property;
-  relay.update();
-  this->property = nullptr;
+  this->unknown40 = &property;
+  unknown08.update();
+  this->unknown40 = nullptr;
 }
 
 void PadField::setInput(InputID id) const {
-  if (property != nullptr) {
-    property->input.flags.set(id);
+  if (unknown40 != nullptr) {
+    unknown40->unknown60.unknown08.set(id);
   }
 }
 

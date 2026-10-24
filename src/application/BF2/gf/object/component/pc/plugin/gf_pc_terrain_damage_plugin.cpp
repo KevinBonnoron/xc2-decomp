@@ -6,7 +6,7 @@
 namespace gf {
 namespace pc {
 
-TerrainDamagePlugin::TerrainDamagePlugin() : damageTimer(0.0f), isInDamage(false) {}
+TerrainDamagePlugin::TerrainDamagePlugin() : unknown0c(0.0f), unknown10(false) {}
 
 bool TerrainDamagePlugin::setup(GfComBehaviorPc &) { return true; }
 
@@ -15,14 +15,14 @@ void TerrainDamagePlugin::cleanup(GfComBehaviorPc &) {}
 void TerrainDamagePlugin::onActivate() { reset(); }
 
 void TerrainDamagePlugin::reset() {
-  damageTimer = 0.0f;
-  isInDamage = false;
+  unknown0c = 0.0f;
+  unknown10 = false;
 }
 
 void TerrainDamagePlugin::onDeactivate() {}
 
 void TerrainDamagePlugin::onEnterDamage(GfComBehaviorPc &behavior) {
-  isInDamage = true;
+  unknown10 = true;
   MsgObjectStopAutoHeal message(true);
   GfObj *obj = static_cast<GfObj *>(behavior.owner);
   obj->sendMessage(obj, message);

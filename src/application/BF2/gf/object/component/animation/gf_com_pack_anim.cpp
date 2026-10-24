@@ -19,84 +19,84 @@ class Pose;
 
 namespace gf {
 
-GfComPackAnim::Mot::Mot() : model(nullptr), control(nullptr), playBackTime(0.0f) {}
+GfComPackAnim::Mot::Mot() : unknown00(nullptr), unknown08(nullptr), unknown68(0.0f) {}
 
 void GfComPackAnim::Mot::cleanup(u32 layer) { stop(layer); }
 
 void GfComPackAnim::Mot::stop(u32 layer) {
-  if (control == nullptr) {
+  if (unknown08 == nullptr) {
     return;
   }
 
-  playBackTime = 0.0f;
+  unknown68 = 0.0f;
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr) {
-    if (poseSampler.control != nullptr && poseSampler.pose != nullptr) {
-      manager->removePoseSampler(layer, poseSampler);
+    if (unknown30.control != nullptr && unknown30.pose != nullptr) {
+      manager->removePoseSampler(layer, unknown30);
     }
-    if (updater.control != nullptr) {
-      manager->removeControlUpdater(layer, updater);
+    if (unknown10.control != nullptr) {
+      manager->removeControlUpdater(layer, unknown10);
     }
   }
 
-  poseSampler.unbind();
-  updater.unbind();
-  if (control != nullptr) {
-    control->release();
-    control = nullptr;
+  unknown30.unbind();
+  unknown10.unbind();
+  if (unknown08 != nullptr) {
+    unknown08->release();
+    unknown08 = nullptr;
   }
 }
 
-void GfComPackAnim::Mot::setup(GfComModel *model, u32 layer) { this->model = model; }
+void GfComPackAnim::Mot::setup(GfComModel *model, u32 layer) { this->unknown00 = model; }
 
 void GfComPackAnim::Mot::play(u32 layer, void *motion, bool isLocalSpace) {
-  if (model == nullptr) {
+  if (unknown00 == nullptr) {
     return;
   }
 
-  anm::Pose *pose = model->pose;
+  anm::Pose *pose = unknown00->unknown30;
   if (pose == nullptr) {
     return;
   }
 
-  anm::ExtraTruckBuffer *extraTruckBuffer = model->extraTruckBuffer;
+  anm::ExtraTruckBuffer *extraTruckBuffer = unknown00->unknown38;
   anm::Binding *binding = anm::AnimationImporter::import(motion);
-  playBackTime = anm::Util::getPlayBackTime(*binding);
-  control = anm::Factory::createControl(binding, getAllocator(ALLOCATOR_ANIMATION));
+  unknown68 = anm::Util::getPlayBackTime(*binding);
+  unknown08 = anm::Factory::createControl(binding, getAllocator(ALLOCATOR_ANIMATION));
   if (binding != nullptr) {
     binding->release();
   }
 
-  updater.bind(control);
-  poseSampler.isLocalSpace = isLocalSpace;
-  poseSampler.bind(control, pose, extraTruckBuffer);
+  unknown10.bind(unknown08);
+  unknown30.isLocalSpace = isLocalSpace;
+  unknown30.bind(unknown08, pose, extraTruckBuffer);
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr) {
-    if (updater.control != nullptr) {
-      manager->addControlUpdater(layer, updater);
+    if (unknown10.control != nullptr) {
+      manager->addControlUpdater(layer, unknown10);
     }
-    if (poseSampler.control != nullptr && poseSampler.pose != nullptr) {
-      manager->addPoseSampler(layer, poseSampler);
+    if (unknown30.control != nullptr && unknown30.pose != nullptr) {
+      manager->addPoseSampler(layer, unknown30);
     }
   }
 }
 
 bool GfComPackAnim::Mot::isPlayEnd() const {
-  if (control != nullptr) {
-    return playBackTime <= control->m_localTime;
+  if (unknown08 != nullptr) {
+    return unknown68 <= unknown08->m_localTime;
   }
 
   return true;
 }
 
 void GfComPackAnim::Mot::setSpeed(f32 speed) {
-  if (control != nullptr) {
-    control->m_speed = speed;
+  if (unknown08 != nullptr) {
+    unknown08->m_speed = speed;
   }
 }
 
 void GfComPackAnim::Mot::changeLayer(u32 oldLayer, u32 newLayer) {
-  if (control == nullptr) {
+  if (unknown08 == nullptr) {
     return;
   }
 
@@ -105,42 +105,42 @@ void GfComPackAnim::Mot::changeLayer(u32 oldLayer, u32 newLayer) {
     return;
   }
 
-  if (poseSampler.control != nullptr && poseSampler.pose != nullptr) {
-    manager->removePoseSampler(oldLayer, poseSampler);
-    manager->addPoseSampler(newLayer, poseSampler);
+  if (unknown30.control != nullptr && unknown30.pose != nullptr) {
+    manager->removePoseSampler(oldLayer, unknown30);
+    manager->addPoseSampler(newLayer, unknown30);
   }
-  if (updater.control != nullptr) {
-    manager->removeControlUpdater(oldLayer, updater);
-    manager->addControlUpdater(newLayer, updater);
+  if (unknown10.control != nullptr) {
+    manager->removeControlUpdater(oldLayer, unknown10);
+    manager->addControlUpdater(newLayer, unknown10);
   }
 }
 
-GfComPackAnim::GfComPackAnim() : isLocalSpace(true) {}
+GfComPackAnim::GfComPackAnim() : unknownc8(true) {}
 
 void GfComPackAnim::cleanup() {
-  mot.cleanup(getLayer());
-  for (arc::CArcData **arc = arcs.begin(); arc != arcs.end(); arc++) {
+  unknown10.cleanup(getLayer());
+  for (arc::CArcData **arc = unknown80.begin(); arc != unknown80.end(); arc++) {
     if (*arc != nullptr) {
       delete *arc;
       *arc = nullptr;
     }
   }
 
-  arcs.clear();
+  unknown80.clear();
 }
 
 void GfComPackAnim::setup(const SetupInfo &info) {
   cleanup();
-  for (void *const *data = info.arcs.begin(); data != info.arcs.end(); data++) {
+  for (void *const *data = info.unknown00.begin(); data != info.unknown00.end(); data++) {
     if (*data != nullptr) {
       // __LINE__ must be 208 as in the original source: it is the line argument of operator new.
 #line 208
-      arcs.push_back(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) arc::CArcData(*data));
+      unknown80.push_back(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) arc::CArcData(*data));
     }
   }
 
-  isLocalSpace = info.isLocalSpace;
-  play(info.name);
+  unknownc8 = info.unknown50;
+  play(info.unknown48);
 }
 
 void GfComPackAnim::play(const char *name) {
@@ -151,16 +151,16 @@ void GfComPackAnim::play(const char *name) {
 
   GfComModel *model = owner->getComponent<GfComModel>();
   if (model != nullptr) {
-    mot.setup(model, getLayer());
+    unknown10.setup(model, getLayer());
   }
 
-  mot.stop(getLayer());
+  unknown10.stop(getLayer());
   mm::mtl::FixStr<64> fileName;
   fileName.format("%s.anm", name);
-  for (arc::CArcData **arc = arcs.begin(); arc != arcs.end(); arc++) {
+  for (arc::CArcData **arc = unknown80.begin(); arc != unknown80.end(); arc++) {
     void *motion = (*arc)->getFileAdr(fileName.c_str());
     if (motion != nullptr) {
-      mot.play(getLayer(), motion, isLocalSpace);
+      unknown10.play(getLayer(), motion, unknownc8);
       return;
     }
   }
@@ -173,21 +173,21 @@ void GfComPackAnim::play(void *motion) {
 
   GfComModel *model = owner->getComponent<GfComModel>();
   if (model != nullptr) {
-    mot.setup(model, getLayer());
+    unknown10.setup(model, getLayer());
   }
 
-  mot.stop(getLayer());
-  mot.play(getLayer(), motion, isLocalSpace);
+  unknown10.stop(getLayer());
+  unknown10.play(getLayer(), motion, unknownc8);
 }
 
 void GfComPackAnim::stop() {
-  mot.stop(getLayer());
-  mot.cleanup(getLayer());
+  unknown10.stop(getLayer());
+  unknown10.cleanup(getLayer());
 }
 
-bool GfComPackAnim::isPlayEnd() const { return mot.isPlayEnd(); }
+bool GfComPackAnim::isPlayEnd() const { return unknown10.isPlayEnd(); }
 
-void GfComPackAnim::setSpeed(f32 speed) { mot.setSpeed(speed); }
+void GfComPackAnim::setSpeed(f32 speed) { unknown10.setSpeed(speed); }
 
 void GfComPackAnim::changeLayer(u32 oldLayer, u32 newLayer) {}
 

@@ -26,14 +26,14 @@ void GfObjUtil::addDebugName(GF_OBJ_HANDLE *handle) {}
 void GfObjUtil::addGfObj(GF_OBJ_HANDLE *handle, GfObj *obj) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
   if (info != nullptr) {
-    info->obj = obj;
+    info->unknown18 = obj;
   }
 }
 
 void GfObjUtil::removeGfObj(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
   if (info != nullptr) {
-    info->obj = nullptr;
+    info->unknown18 = nullptr;
   }
 }
 
@@ -48,7 +48,7 @@ GfObj *GfObjUtil::getObj(GF_OBJ_HANDLE *handle) {
   }
 
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr ? info->obj : nullptr;
+  return info != nullptr ? info->unknown18 : nullptr;
 }
 
 u32 GfObjUtil::getObjLayer(GF_OBJ_HANDLE *handle) {
@@ -58,20 +58,20 @@ u32 GfObjUtil::getObjLayer(GF_OBJ_HANDLE *handle) {
 
 f32 GfObjUtil::getSetupScale(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr && info->setup != nullptr ? info->setup->scale : 1.0f;
+  return info != nullptr && info->unknown30 != nullptr ? info->unknown30->unknown40 : 1.0f;
 }
 
 GfObjSetup *GfObjUtil::getObjSetup(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr ? info->setup : nullptr;
+  return info != nullptr ? info->unknown30 : nullptr;
 }
 
 GF_ASSET_HANDLE *GfObjUtil::getAssetHandle(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr ? info->assetHandle : reinterpret_cast<GF_ASSET_HANDLE *>(-1);
+  return info != nullptr ? info->unknown10 : reinterpret_cast<GF_ASSET_HANDLE *>(-1);
 }
 
-void GfObjUtil::applyExecUpdate(GfObj *obj) { obj->isExecUpdate = isUpdateComponent(obj) && !isFollowObjNotReady(obj->handle); }
+void GfObjUtil::applyExecUpdate(GfObj *obj) { obj->unknown118 = isUpdateComponent(obj) && !isFollowObjNotReady(obj->unknownf8); }
 
 GF_OBJ_HANDLE *GfObjUtil::getParentHandle(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
@@ -80,7 +80,7 @@ GF_OBJ_HANDLE *GfObjUtil::getParentHandle(GF_OBJ_HANDLE *handle) {
     if (parent != nullptr) {
       GfObj *parentObj = mm::mtl::dynamicCast<GfObj>(parent);
       if (parentObj != nullptr) {
-        return parentObj->handle;
+        return parentObj->unknownf8;
       }
     }
   }
@@ -176,20 +176,20 @@ const char *GfObjUtil::getAddResourceName(GF_OBJ_HANDLE *handle) {
 
 GF_MOUNT_HANDLE *GfObjUtil::getMountHandle(GF_OBJ_HANDLE *handle, GFATTACH attach) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr ? info->mounts[attach].handle : reinterpret_cast<GF_MOUNT_HANDLE *>(-1);
+  return info != nullptr ? info->unknownb8[attach].unknown00 : reinterpret_cast<GF_MOUNT_HANDLE *>(-1);
 }
 
 u32 GfObjUtil::getGameObjectID(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  if (info != nullptr && info->setup != nullptr) {
-    GfObjSetup *setup = info->setup;
+  if (info != nullptr && info->unknown30 != nullptr) {
+    GfObjSetup *setup = info->unknown30;
     if (getObjType(handle) != OBJECT_TYPE_ENEMY) {
-      return setup->id;
+      return setup->unknown10;
     }
 
     GfObjSetupEnemy *setupEnemy = mm::mtl::dynamicCast<GfObjSetupEnemy>(setup);
     if (setupEnemy != nullptr) {
-      return setupEnemy->enArrangeId;
+      return setupEnemy->m_enArrangeID;
     }
   }
 
@@ -208,8 +208,8 @@ u32 GfObjUtil::getLimitHP(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->status != nullptr) {
-      return property->status->limitHp;
+    if (property != nullptr && property->unknown10 != nullptr) {
+      return property->unknown10->unknown14;
     }
   }
 
@@ -230,8 +230,8 @@ bool GfObjUtil::testInvincible(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->status != nullptr) {
-      invincible = property->status->invincible;
+    if (property != nullptr && property->unknown10 != nullptr) {
+      invincible = property->unknown10->unknown18;
       isFound = true;
     }
   }
@@ -243,8 +243,8 @@ void GfObjUtil::setInvincibleForDebug(GF_OBJ_HANDLE *handle, bool invincible) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->debugFlags != nullptr) {
-      property->debugFlags->invincible = invincible;
+    if (property != nullptr && property->unknown30 != nullptr) {
+      property->unknown30->invincible = invincible;
     }
   }
 }
@@ -255,8 +255,8 @@ bool GfObjUtil::testInvincibleForDebug(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->debugFlags != nullptr) {
-      invincible = property->debugFlags->invincible;
+    if (property != nullptr && property->unknown30 != nullptr) {
+      invincible = property->unknown30->invincible;
       isFound = true;
     }
   }
@@ -268,8 +268,8 @@ void GfObjUtil::setDisableFallDeadForDebug(GF_OBJ_HANDLE *handle, bool disableFa
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->debugFlags != nullptr) {
-      property->debugFlags->disableFallDead = disableFallDead;
+    if (property != nullptr && property->unknown30 != nullptr) {
+      property->unknown30->disableFallDead = disableFallDead;
     }
   }
 }
@@ -280,8 +280,8 @@ bool GfObjUtil::testDisableFallDeadForDebug(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->debugFlags != nullptr) {
-      disableFallDead = property->debugFlags->disableFallDead;
+    if (property != nullptr && property->unknown30 != nullptr) {
+      disableFallDead = property->unknown30->disableFallDead;
       isFound = true;
     }
   }
@@ -303,8 +303,8 @@ bool GfObjUtil::testDisableAutoHeal(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->status != nullptr) {
-      disableAutoHeal = property->status->disableAutoHeal;
+    if (property != nullptr && property->unknown10 != nullptr) {
+      disableAutoHeal = property->unknown10->unknown1a;
       isFound = true;
     }
   }
@@ -314,15 +314,15 @@ bool GfObjUtil::testDisableAutoHeal(GF_OBJ_HANDLE *handle) {
 
 GfObjProperty *GfObjUtil::getProperty(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr ? info->property : nullptr;
+  return info != nullptr ? info->unknown98 : nullptr;
 }
 
 u32 GfObjUtil::getHp(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComProperty *property = obj->getComponent<GfComProperty>();
-    if (property != nullptr && property->status != nullptr) {
-      return property->status->hp;
+    if (property != nullptr && property->unknown10 != nullptr) {
+      return property->unknown10->unknown10;
     }
   }
 
@@ -331,35 +331,35 @@ u32 GfObjUtil::getHp(GF_OBJ_HANDLE *handle) {
 
 int GfObjUtil::getPartyID(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  if (info == nullptr || info->setup == nullptr) {
+  if (info == nullptr || info->unknown30 == nullptr) {
     return -1;
   }
 
-  return info->setup->partyMember;
+  return info->unknown30->unknown14;
 }
 
 bool GfObjUtil::isValid(GF_OBJ_HANDLE *handle) { return getObj(handle) != nullptr; }
 
 bool GfObjUtil::isLoading(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr && info->state == GFOBJ_STATE_LOADING;
+  return info != nullptr && info->unknown06 == GFOBJ_STATE_LOADING;
 }
 
 bool GfObjUtil::isUpdate(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr && info->state == GFOBJ_STATE_UPDATE;
+  return info != nullptr && info->unknown06 == GFOBJ_STATE_UPDATE;
 }
 
 void GfObjUtil::setOwner(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *owner) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
   if (info != nullptr) {
-    info->owner = owner;
+    info->unknown90 = owner;
   }
 }
 
 GF_OBJ_HANDLE *GfObjUtil::getOwner(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr ? info->owner : INVALID_HANDLE;
+  return info != nullptr ? info->unknown90 : INVALID_HANDLE;
 }
 
 void GfObjUtil::reload(GF_OBJ_HANDLE *handle) {}
@@ -371,19 +371,19 @@ bool GfObjUtil::isEnemyBlade(GF_OBJ_HANDLE *handle) {
   }
 
   GfObjSetup *setup = getObjSetup(handle);
-  return setup != nullptr && setup->characterType == CHARACTER_TYPE_ENEMY_BLADE;
+  return setup != nullptr && setup->unknown1c == CHARACTER_TYPE_ENEMY_BLADE;
 }
 
 bool GfObjUtil::testFlag(GF_OBJ_HANDLE *handle, u32 flag) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr && info->flags.test(flag);
+  return info != nullptr && info->unknown38.test(flag);
 }
 
-bool GfObjUtil::testFlag(const GfObj *obj, u32 flag) { return obj->info != nullptr && obj->info->flags.test(flag); }
+bool GfObjUtil::testFlag(const GfObj *obj, u32 flag) { return obj->unknown100 != nullptr && obj->unknown100->unknown38.test(flag); }
 
 const char *GfObjUtil::getModelBaseName(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info == nullptr ? "" : info->modelBaseName;
+  return info == nullptr ? "" : info->unknown404;
 }
 
 const char *GfObjUtil::getAssetModelName(GF_OBJ_HANDLE *handle) { return GfAssetManager::getModelInfo(getAssetHandle(handle)); }
@@ -402,15 +402,15 @@ GfComModel *GfObjUtil::getComModel(GF_OBJ_HANDLE *handle) {
 
 GfVolumeFade *GfObjUtil::getVolumeFade(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr ? info->volumeFade : nullptr;
+  return info != nullptr ? info->unknown3d8 : nullptr;
 }
 
 bool GfObjUtil::isBattle(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
   bool isFound = false;
   bool isBattle;
-  if (info != nullptr && info->property != nullptr && info->property->character != nullptr) {
-    isBattle = info->property->character->isBattle;
+  if (info != nullptr && info->unknown98 != nullptr && info->unknown98->unknown10 != nullptr) {
+    isBattle = info->unknown98->unknown10->unknown30;
     isFound = true;
   }
 
@@ -419,26 +419,26 @@ bool GfObjUtil::isBattle(GF_OBJ_HANDLE *handle) {
 
 bool GfObjUtil::isVolumeFadeForUser(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr && info->flags.test(OBJ_FLAG_VOLUME_FADE_FOR_USER);
+  return info != nullptr && info->unknown38.test(OBJ_FLAG_VOLUME_FADE_FOR_USER);
 }
 
 void GfObjUtil::setVolumeFadeUserFlag(GF_OBJ_HANDLE *handle, bool isForUser) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  if (info != nullptr && info->flags.test(OBJ_FLAG_VOLUME_FADE_FOR_USER) != isForUser) {
-    info->flags.set(OBJ_FLAG_VOLUME_FADE_FOR_USER, isForUser);
+  if (info != nullptr && info->unknown38.test(OBJ_FLAG_VOLUME_FADE_FOR_USER) != isForUser) {
+    info->unknown38.set(OBJ_FLAG_VOLUME_FADE_FOR_USER, isForUser);
   }
 }
 
 void GfObjUtil::setTalking(GF_OBJ_HANDLE *handle, bool isTalking) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
   if (info != nullptr) {
-    info->flags.set(OBJ_FLAG_TALKING, isTalking);
+    info->unknown38.set(OBJ_FLAG_TALKING, isTalking);
   }
 }
 
 bool GfObjUtil::isTalking(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr && info->flags.test(OBJ_FLAG_TALKING);
+  return info != nullptr && info->unknown38.test(OBJ_FLAG_TALKING);
 }
 
 bool GfObjUtil::isSearchEmptyResource(GF_OBJ_HANDLE *handle) {
@@ -461,13 +461,13 @@ bool GfObjUtil::getMobSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slo
 
 bool GfObjUtil::isTrinityBlade(GF_OBJ_HANDLE *handle) {
   GfObjSetup *setup = getObjSetup(handle);
-  return setup != nullptr && setup->characterType == CHARACTER_TYPE_TRINITY_BLADE;
+  return setup != nullptr && setup->unknown1c == CHARACTER_TYPE_TRINITY_BLADE;
 }
 
 bool GfObjUtil::isUpdateComponent(const GfObj *obj) {
-  const GFOBJ_INFO *info = obj->info;
-  if (!obj->flags.test(OBJ_STATE_UPDATE_ENABLE) || (info != nullptr && info->flags.test(OBJ_FLAG_DESTROY)) || (GfObjManager::get() != nullptr && GfObjManager::get()->isSuspendUpdate()) ||
-      (info != nullptr && info->flags.test(OBJ_FLAG_PARTY_OBJ) && !GfGameParty::isPartyMemberInGameObj())) {
+  const GFOBJ_INFO *info = obj->unknown100;
+  if (!obj->unknown114.test(OBJ_STATE_UPDATE_ENABLE) || (info != nullptr && info->unknown38.test(OBJ_FLAG_DESTROY)) || (GfObjManager::get() != nullptr && GfObjManager::get()->isSuspendUpdate()) ||
+      (info != nullptr && info->unknown38.test(OBJ_FLAG_PARTY_OBJ) && !GfGameParty::isPartyMemberInGameObj())) {
     return false;
   }
 

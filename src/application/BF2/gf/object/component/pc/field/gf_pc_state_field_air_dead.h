@@ -25,11 +25,11 @@ class StateFieldAirDead : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
-  bool isDownMotion;
+  bool unknown18; // Inferred role: down motion; original member name unknown.
   u8 _19[0x20 - 0x19];
 };
 
-static_assert(offsetof(StateFieldAirDead, isDownMotion) == 0x18, "");
+static_assert(offsetof(StateFieldAirDead, unknown18) == 0x18, "");
 static_assert(sizeof(StateFieldAirDead) == 0x20, "");
 
 } // namespace pc

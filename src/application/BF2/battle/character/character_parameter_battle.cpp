@@ -76,7 +76,7 @@ gf::GfStatusProperty *CharacterParameter::GetStatusProperty() const {
   if (obj != nullptr) {
     gf::GfComProperty *property = obj->getComponent<gf::GfComProperty>();
     if (property != nullptr) {
-      return property->status;
+      return property->unknown10;
     }
   }
 
@@ -86,7 +86,7 @@ gf::GfStatusProperty *CharacterParameter::GetStatusProperty() const {
 void CharacterParameter::SetHP(u32 hp) {
   gf::GfStatusProperty *status = GetStatusProperty();
   if (status != nullptr) {
-    status->hp = hp;
+    status->unknown10 = hp;
   }
 }
 

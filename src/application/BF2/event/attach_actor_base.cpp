@@ -38,8 +38,8 @@ void AttachActorBase::render() {
   if (!transform && !model) {
     return;
   }
-  const anm::Skeleton *skeleton = model->skeleton;
-  anm::Pose *pose = model->pose;
+  const anm::Skeleton *skeleton = model->unknown28;
+  anm::Pose *pose = model->unknown30;
   if (!skeleton && !pose) {
     return;
   }
@@ -48,7 +48,7 @@ void AttachActorBase::render() {
     const char *name = skeleton->bones[static_cast<u16>(i)].name;
     mm::Mat44 matrix;
     fw::Transform world;
-    fw::TransformUtil::mul(transform->frame->getSyncedWorldTransform(), pose->getBoneModelSpace(i), 1.0f, &world);
+    fw::TransformUtil::mul(transform->unknown10->getSyncedWorldTransform(), pose->getBoneModelSpace(i), 1.0f, &world);
     world.unknown001(matrix);
     mm::Vec3 screen;
     if (ml::ScnCamUtil::getScreenPos(screen, camera, matrix.unknown004())) {

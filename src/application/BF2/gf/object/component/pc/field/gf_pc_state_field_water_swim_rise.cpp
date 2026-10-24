@@ -12,7 +12,7 @@
 namespace gf {
 namespace pc {
 
-void StateFieldWaterSwimRise::enter(GfComBehaviorPc *behavior, ai::State *previous) { behavior->getProperty()->verticalSpeed = 0.0f; }
+void StateFieldWaterSwimRise::enter(GfComBehaviorPc *behavior, ai::State *previous) { behavior->getProperty()->unknown90 = 0.0f; }
 
 void StateFieldWaterSwimRise::leave(GfComBehaviorPc *behavior, ai::State *next) {}
 
@@ -20,7 +20,7 @@ void StateFieldWaterSwimRise::update(GfComBehaviorPc *behavior, const fw::Update
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
   MoveUtilField::updateMoveSwim(info, *property);
   MoveUtilField::updateMoveWaterRise(info, *property);
-  f32 distance = info.deltaTime * property->verticalSpeed;
+  f32 distance = info.deltaTime * property->unknown90;
   if (StateUtilField::getChildFrameHeight(*behavior) + distance >= 0.0f) {
     reqState(STATE_ID_FIELD_WATER_SWIM);
   }

@@ -164,7 +164,7 @@ bool CharaUtil::setEaseSpeed(gf::GfObj *obj, const char *name, gf::AnimLayer lay
 
 bool CharaUtil::hasResAsm(gf::GfObj *obj) {
   gf::GfComEvtAnim *anim = obj->getComponent<gf::GfComEvtAnim>();
-  if (anim != nullptr && anim->resAsm != nullptr) {
+  if (anim != nullptr && anim->unknown550 != nullptr) {
     return true;
   }
   return false;

@@ -6,17 +6,17 @@
 namespace gf {
 namespace pc {
 
-AccessPlugin::AccessPlugin() : target(INVALID_HANDLE), behavior(nullptr), paramIndex(-1) {}
+AccessPlugin::AccessPlugin() : unknown10(INVALID_HANDLE), unknown20(nullptr), unknown28(-1) {}
 
 bool AccessPlugin::setup(GfComBehaviorPc &behavior) {
-  paramList = fw::ParamManager::get()->pcParamList;
-  this->behavior = &behavior;
+  unknown18 = fw::ParamManager::get()->pcParamList;
+  this->unknown20 = &behavior;
   return true;
 }
 
 void AccessPlugin::cleanup(GfComBehaviorPc &) {
-  if (target != INVALID_HANDLE) {
-    target = INVALID_HANDLE;
+  if (unknown10 != INVALID_HANDLE) {
+    unknown10 = INVALID_HANDLE;
     SCOM_ACCESS_TARGET::create(INVALID_HANDLE);
   }
 }
@@ -24,14 +24,14 @@ void AccessPlugin::cleanup(GfComBehaviorPc &) {
 void AccessPlugin::onActivate() {}
 
 void AccessPlugin::onDeactivate() {
-  if (target != INVALID_HANDLE) {
-    target = INVALID_HANDLE;
+  if (unknown10 != INVALID_HANDLE) {
+    unknown10 = INVALID_HANDLE;
     SCOM_ACCESS_TARGET::create(INVALID_HANDLE);
   }
 }
 
 const AccessParam *AccessPlugin::getParam(u32 index) const {
-  const fw::ParamList *list = paramList.operator->();
+  const fw::ParamList *list = unknown18.operator->();
   const fw::ParamList::Entry *entry = index < list->count ? &list->entries[index] : nullptr;
   return entry != nullptr ? static_cast<const AccessParam *>(entry->param) : nullptr;
 }

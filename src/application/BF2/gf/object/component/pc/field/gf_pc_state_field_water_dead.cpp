@@ -10,8 +10,8 @@ namespace pc {
 
 void StateFieldWaterDead::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  property->velocity = mm::Vec3::zero;
-  property->horizontalSpeed = 0.0f;
+  property->unknown80 = mm::Vec3::zero;
+  property->unknown94 = 0.0f;
 }
 
 void StateFieldWaterDead::leave(GfComBehaviorPc *behavior, ai::State *next) {}

@@ -28,9 +28,9 @@ public:
   bool isRender() const;
   const mm::mtl::RTTI *getRTTI() const override;
 
-  fw::VisibleObject *visible;
+  fw::VisibleObject *unknown10; // Inferred role: visible; original member name unknown.
 };
 
-static_assert(offsetof(GfComVisible, visible) == 0x10, "");
+static_assert(offsetof(GfComVisible, unknown10) == 0x10, "");
 
 } // namespace gf

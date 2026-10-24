@@ -32,12 +32,12 @@ public:
   void onEnterDamage(GfComBehaviorPc &behavior);
   void onLeaveDamage(GfComBehaviorPc &behavior);
 
-  f32 damageTimer;
-  bool isInDamage;
+  f32 unknown0c;  // Inferred role: damage timer; original member name unknown.
+  bool unknown10; // Inferred role: in damage; original member name unknown.
 };
 
-static_assert(offsetof(TerrainDamagePlugin, damageTimer) == 0x0c, "");
-static_assert(offsetof(TerrainDamagePlugin, isInDamage) == 0x10, "");
+static_assert(offsetof(TerrainDamagePlugin, unknown0c) == 0x0c, "");
+static_assert(offsetof(TerrainDamagePlugin, unknown10) == 0x10, "");
 static_assert(sizeof(TerrainDamagePlugin) == 0x18, "");
 
 } // namespace pc

@@ -26,14 +26,14 @@ public:
   void update(const fw::UpdateInfo &info, GfComPropertyPc &property) override;
   const mm::mtl::RTTI *getRTTI() const override;
 
-  u32 padNo;
-  PadBattle battle;
-  PadField field;
+  u32 unknown08;       // Inferred role: pad no; original member name unknown.
+  PadBattle unknown10; // Inferred role: battle; original member name unknown.
+  PadField unknown90;  // Inferred role: field; original member name unknown.
 };
 
-static_assert(offsetof(PadAgent, padNo) == 0x08, "");
-static_assert(offsetof(PadAgent, battle) == 0x10, "");
-static_assert(offsetof(PadAgent, field) == 0x90, "");
+static_assert(offsetof(PadAgent, unknown08) == 0x08, "");
+static_assert(offsetof(PadAgent, unknown10) == 0x10, "");
+static_assert(offsetof(PadAgent, unknown90) == 0x90, "");
 static_assert(sizeof(PadAgent) == 0xd8, "");
 
 } // namespace pc

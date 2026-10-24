@@ -556,7 +556,7 @@ GfEvtModelWeapon *GfGameEvent::createWeapon(GfInitParamWeapon &param) { return G
 
 GfEvtModelEvent *GfGameEvent::createEventObj(GfInitParamEventObj &param) {
   if (GfGameManager::isFullScreenMenu()) {
-    param.layer = GfEvtModel::changeLayerUI(param.layer);
+    param.unknown40 = GfEvtModel::changeLayerUI(param.unknown40);
   }
   return GfEvtModelEvent::create(param);
 }

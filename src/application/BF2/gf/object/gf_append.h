@@ -19,8 +19,8 @@ public:
   static const u32 MOUNT_MAX = 4;
 
   struct MOUNT_INFO {
-    mm::mtl::FixStr<16> bone;
-    OPTMNT mount;
+    mm::mtl::FixStr<16> unknown00; // Inferred role: bone; original member name unknown.
+    OPTMNT unknown14;              // Inferred role: mount; original member name unknown.
   };
 
   GfAppend();
@@ -33,22 +33,22 @@ public:
   u16 getMountIndex() const;
   u16 getRscID() const;
 
-  mm::mtl::FixedVector<MOUNT_INFO, MOUNT_MAX> mounts;
-  const char *modelName;
-  const char *motionName;
-  u16 mountIndex;
-  u16 rscId;
-  f32 scale;
-  bool isMultiMount;
+  mm::mtl::FixedVector<MOUNT_INFO, MOUNT_MAX> unknown00; // Inferred role: mounts; original member name unknown.
+  const char *m_modelName;
+  const char *m_motionName;
+  u16 m_mountIndex;
+  u16 m_rscID;
+  f32 unknown7c;  // Inferred role: scale; original member name unknown.
+  bool unknown80; // Inferred role: multi mount; original member name unknown.
 };
 
 static_assert(sizeof(GfAppend::MOUNT_INFO) == 0x18, "");
-static_assert(offsetof(GfAppend, modelName) == 0x68, "");
-static_assert(offsetof(GfAppend, motionName) == 0x70, "");
-static_assert(offsetof(GfAppend, mountIndex) == 0x78, "");
-static_assert(offsetof(GfAppend, rscId) == 0x7a, "");
-static_assert(offsetof(GfAppend, scale) == 0x7c, "");
-static_assert(offsetof(GfAppend, isMultiMount) == 0x80, "");
+static_assert(offsetof(GfAppend, m_modelName) == 0x68, "");
+static_assert(offsetof(GfAppend, m_motionName) == 0x70, "");
+static_assert(offsetof(GfAppend, m_mountIndex) == 0x78, "");
+static_assert(offsetof(GfAppend, m_rscID) == 0x7a, "");
+static_assert(offsetof(GfAppend, unknown7c) == 0x7c, "");
+static_assert(offsetof(GfAppend, unknown80) == 0x80, "");
 static_assert(sizeof(GfAppend) == 0x88, "");
 
 class GfAppendWire {
@@ -61,12 +61,12 @@ public:
   void startWireWithBone(GF_OBJ_HANDLE *target, const char *bone, f32 time);
   void update(const fw::UpdateInfo &info);
 
-  GF_OBJ_HANDLE *wire;
-  GF_OBJ_HANDLE *owner;
+  GF_OBJ_HANDLE *unknown00; // Inferred role: wire; original member name unknown.
+  GF_OBJ_HANDLE *unknown08; // Inferred role: owner; original member name unknown.
   u8 _10[0x50 - 0x10];
 };
 
-static_assert(offsetof(GfAppendWire, owner) == 0x08, "");
+static_assert(offsetof(GfAppendWire, unknown08) == 0x08, "");
 static_assert(sizeof(GfAppendWire) == 0x50, "");
 
 } // namespace gf

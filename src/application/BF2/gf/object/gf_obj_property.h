@@ -20,16 +20,16 @@ class GfObjPropertyPcWeapon;
 class GfObjPropertyUi;
 
 struct GfObjPropertyCharacter {
-  u32 maxHp;
-  u32 hp;
-  u16 level;
+  u32 unknown00; // Inferred role: max hp; original member name unknown.
+  u32 unknown04; // Inferred role: hp; original member name unknown.
+  u16 unknown08; // Inferred role: level; original member name unknown.
   u8 _0a[0x30 - 0x0a];
-  bool isBattle;
+  bool unknown30; // Inferred role: battle; original member name unknown.
 };
 
-static_assert(offsetof(GfObjPropertyCharacter, hp) == 0x04, "");
-static_assert(offsetof(GfObjPropertyCharacter, level) == 0x08, "");
-static_assert(offsetof(GfObjPropertyCharacter, isBattle) == 0x30, "");
+static_assert(offsetof(GfObjPropertyCharacter, unknown04) == 0x04, "");
+static_assert(offsetof(GfObjPropertyCharacter, unknown08) == 0x08, "");
+static_assert(offsetof(GfObjPropertyCharacter, unknown30) == 0x30, "");
 
 enum {
   PROPERTY_MOVE_WALK = 0,
@@ -40,17 +40,17 @@ enum {
 };
 
 struct GfObjPropertyMove {
-  u32 type;
+  u32 unknown00; // Inferred role: type; original member name unknown.
   u8 _04[0x80 - 0x04];
-  bool isJump;
+  bool unknown80; // Inferred role: jump; original member name unknown.
   u8 _81[0xc0 - 0x81];
-  GF_OBJ_HANDLE *groundObj;
-  f32 floatTime;
+  GF_OBJ_HANDLE *unknownc0; // Inferred role: ground object; original member name unknown.
+  f32 unknownc8;            // Inferred role: float time; original member name unknown.
 };
 
-static_assert(offsetof(GfObjPropertyMove, isJump) == 0x80, "");
-static_assert(offsetof(GfObjPropertyMove, groundObj) == 0xc0, "");
-static_assert(offsetof(GfObjPropertyMove, floatTime) == 0xc8, "");
+static_assert(offsetof(GfObjPropertyMove, unknown80) == 0x80, "");
+static_assert(offsetof(GfObjPropertyMove, unknownc0) == 0xc0, "");
+static_assert(offsetof(GfObjPropertyMove, unknownc8) == 0xc8, "");
 
 class GfObjProperty {
 public:
@@ -69,13 +69,13 @@ public:
   GfObjPropertyUi *getUi();
   virtual ~GfObjProperty() {}
 
-  GF_OBJ_HANDLE *handle;
-  GfObjPropertyCharacter *character;
-  GfObjPropertyMove *move;
+  GF_OBJ_HANDLE *unknown08;          // Inferred role: handle; original member name unknown.
+  GfObjPropertyCharacter *unknown10; // Inferred role: character; original member name unknown.
+  GfObjPropertyMove *unknown18;      // Inferred role: move; original member name unknown.
 };
 
-static_assert(offsetof(GfObjProperty, character) == 0x10, "");
-static_assert(offsetof(GfObjProperty, move) == 0x18, "");
+static_assert(offsetof(GfObjProperty, unknown10) == 0x10, "");
+static_assert(offsetof(GfObjProperty, unknown18) == 0x18, "");
 
 class GfObjPropertyMap : public GfObjProperty {};
 

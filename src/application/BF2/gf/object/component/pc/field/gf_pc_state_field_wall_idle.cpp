@@ -10,7 +10,7 @@ namespace pc {
 
 void StateFieldWallIdle::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  property->velocity = mm::Vec3::zero;
+  property->unknown80 = mm::Vec3::zero;
 }
 
 void StateFieldWallIdle::leave(GfComBehaviorPc *behavior, ai::State *next) {}

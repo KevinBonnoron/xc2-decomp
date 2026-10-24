@@ -20,35 +20,35 @@ struct GF_OBJ_HANDLE;
 
 class GfStatusProperty : public mm::mtl::ReferenceObject {
 public:
-  GfStatusProperty(u32 hp) : maxHp(hp), hp(hp), limitHp(0), invincible(false), _19(), disableAutoHeal(false), _1b() {}
+  GfStatusProperty(u32 hp) : unknown0c(hp), unknown10(hp), unknown14(0), unknown18(false), _19(), unknown1a(false), _1b() {}
 
-  u32 maxHp;
-  u32 hp;
-  u32 limitHp;
-  bool invincible;
+  u32 unknown0c;  // Inferred role: max hp; original member name unknown.
+  u32 unknown10;  // Inferred role: hp; original member name unknown.
+  u32 unknown14;  // Inferred role: limit hp; original member name unknown.
+  bool unknown18; // Inferred role: invincible; original member name unknown.
   u8 _19[0x1a - 0x19];
-  bool disableAutoHeal;
+  bool unknown1a; // Inferred role: disable auto heal; original member name unknown.
   u8 _1b[0x1c - 0x1b];
 };
 
-static_assert(offsetof(GfStatusProperty, maxHp) == 0x0c, "");
-static_assert(offsetof(GfStatusProperty, hp) == 0x10, "");
-static_assert(offsetof(GfStatusProperty, limitHp) == 0x14, "");
-static_assert(offsetof(GfStatusProperty, invincible) == 0x18, "");
-static_assert(offsetof(GfStatusProperty, disableAutoHeal) == 0x1a, "");
+static_assert(offsetof(GfStatusProperty, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfStatusProperty, unknown10) == 0x10, "");
+static_assert(offsetof(GfStatusProperty, unknown14) == 0x14, "");
+static_assert(offsetof(GfStatusProperty, unknown18) == 0x18, "");
+static_assert(offsetof(GfStatusProperty, unknown1a) == 0x1a, "");
 
 struct GfPropertyTarget {
   GF_OBJ_HANDLE *handle;
 };
 
 struct GfPropertyAlpha {
-  f32 alphas[OBJ_ALPHA_MAX];
-  f32 totalAlpha;
-  bool isChanged;
+  f32 unknown00[OBJ_ALPHA_MAX]; // Inferred role: alphas; original member name unknown.
+  f32 unknown18;                // Inferred role: total alpha; original member name unknown.
+  bool unknown1c;               // Inferred role: changed; original member name unknown.
 };
 
-static_assert(offsetof(GfPropertyAlpha, totalAlpha) == 0x18, "");
-static_assert(offsetof(GfPropertyAlpha, isChanged) == 0x1c, "");
+static_assert(offsetof(GfPropertyAlpha, unknown18) == 0x18, "");
+static_assert(offsetof(GfPropertyAlpha, unknown1c) == 0x1c, "");
 
 struct GfPropertyDebugFlags {
   bool invincible;
@@ -62,17 +62,17 @@ public:
 
   void flush();
 
-  GfStatusProperty *status;
-  GfPropertyTarget *target;
-  GfPropertyAlpha *alpha;
+  GfStatusProperty *unknown10; // Inferred role: status; original member name unknown.
+  GfPropertyTarget *unknown18; // Inferred role: target; original member name unknown.
+  GfPropertyAlpha *unknown20;  // Inferred role: alpha; original member name unknown.
   u8 _28[0x30 - 0x28];
-  GfPropertyDebugFlags *debugFlags;
+  GfPropertyDebugFlags *unknown30; // Inferred role: debug flags; original member name unknown.
 };
 
-static_assert(offsetof(GfComProperty, status) == 0x10, "");
-static_assert(offsetof(GfComProperty, target) == 0x18, "");
-static_assert(offsetof(GfComProperty, alpha) == 0x20, "");
-static_assert(offsetof(GfComProperty, debugFlags) == 0x30, "");
+static_assert(offsetof(GfComProperty, unknown10) == 0x10, "");
+static_assert(offsetof(GfComProperty, unknown18) == 0x18, "");
+static_assert(offsetof(GfComProperty, unknown20) == 0x20, "");
+static_assert(offsetof(GfComProperty, unknown30) == 0x30, "");
 
 enum {
   HEAL_TYPE_NORMAL = 0,
@@ -81,39 +81,40 @@ enum {
 };
 
 struct MsgObjectDamage : fw::Message {
-  u32 damage;
+  u32 unknown08; // Inferred role: damage; original member name unknown.
   u8 _0c[0x28 - 0x0c];
   u8 : 1;
-  u8 isCritical : 1;
+  u8 unknown28_1 : 1; // Inferred role: critical; original member name unknown.
 };
 
-static_assert(offsetof(MsgObjectDamage, damage) == 0x08, "");
+static_assert(offsetof(MsgObjectDamage, unknown08) == 0x08, "");
 
 struct MsgObjectNotifyDamage : fw::Message {
-  const MsgObjectDamage *damage;
-  GF_OBJ_HANDLE *attacker;
+  const MsgObjectDamage *unknown08; // Inferred role: damage; original member name unknown.
+  GF_OBJ_HANDLE *unknown10;         // Inferred role: attacker; original member name unknown.
 };
 
-static_assert(offsetof(MsgObjectNotifyDamage, attacker) == 0x10, "");
+static_assert(offsetof(MsgObjectNotifyDamage, unknown10) == 0x10, "");
 
 struct MsgObjectHealHp : fw::Message {
   MsgObjectHealHp(u32 hp, u32 healType)
-      : fw::Message(0x1000033, 0x20), hp(hp), healType(healType), position(nullptr), healer(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), _20(), isRevive(false), isHpMax(false), isHealed(false) {}
+      : fw::Message(0x1000033, 0x20), unknown08(hp), unknown0c(healType), unknown10(nullptr), unknown18(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), _20(), unknown21(false), unknown22(false),
+        unknown23(false) {}
 
-  u32 hp;
-  u32 healType;
-  const mm::Vec3 *position;
-  GF_OBJ_HANDLE *healer;
+  u32 unknown08;             // Inferred role: hp; original member name unknown.
+  u32 unknown0c;             // Inferred role: heal type; original member name unknown.
+  const mm::Vec3 *unknown10; // Inferred role: position; original member name unknown.
+  GF_OBJ_HANDLE *unknown18;  // Inferred role: healer; original member name unknown.
   u8 _20[0x21 - 0x20];
-  bool isRevive;
-  bool isHpMax;
-  bool isHealed;
+  bool unknown21; // Inferred role: revive; original member name unknown.
+  bool unknown22; // Inferred role: hp max; original member name unknown.
+  bool unknown23; // Inferred role: healed; original member name unknown.
 };
 
-static_assert(offsetof(MsgObjectHealHp, position) == 0x10, "");
-static_assert(offsetof(MsgObjectHealHp, healer) == 0x18, "");
-static_assert(offsetof(MsgObjectHealHp, isRevive) == 0x21, "");
-static_assert(offsetof(MsgObjectHealHp, isHealed) == 0x23, "");
+static_assert(offsetof(MsgObjectHealHp, unknown10) == 0x10, "");
+static_assert(offsetof(MsgObjectHealHp, unknown18) == 0x18, "");
+static_assert(offsetof(MsgObjectHealHp, unknown21) == 0x21, "");
+static_assert(offsetof(MsgObjectHealHp, unknown23) == 0x23, "");
 
 struct MsgObjectAlpha : fw::Message {
   MsgObjectAlpha(OBJ_ALPHA type, f32 alpha) : fw::Message(0x100003a, 0x20), type(type), alpha(alpha) {}
@@ -137,8 +138,8 @@ struct MsgObjectChangeHp : fw::Message {
 struct MsgObjectChangeAttribute : fw::Message {
   MsgObjectChangeAttribute() : fw::Message(0x1000042, 0x20) {}
 
-  u32 attribute;
-  u32 oldAttribute;
+  u32 unknown08; // Inferred role: attribute; original member name unknown.
+  u32 unknown0c; // Inferred role: old attribute; original member name unknown.
 };
 
 enum {

@@ -18,14 +18,14 @@ constexpr u32 PC_PARAM_FADE = 18;
 constexpr u32 FADE_CHANNEL = 1;
 constexpr f32 FRAMES_PER_SECOND = 30.0f;
 
-FadePlugin::FadePlugin() : mode(MODE_NONE), paramEntry(nullptr) {}
+FadePlugin::FadePlugin() : unknown0c(MODE_NONE), unknown18(nullptr) {}
 
 FadePlugin::~FadePlugin() {}
 
 bool FadePlugin::setup(GfComBehaviorPc &behavior) {
   GfComPropertyPc *property = mm::mtl::dynamicCast<GfComPropertyPc>(behavior.owner->components[GfComProperty::COMPONENT_INDEX]);
-  const fw::ParamList *paramList = property->field.paramList.operator->();
-  paramEntry = paramList->count > PC_PARAM_FADE ? &paramList->entries[PC_PARAM_FADE] : nullptr;
+  const fw::ParamList *paramList = property->unknown310.unknown08.operator->();
+  unknown18 = paramList->count > PC_PARAM_FADE ? &paramList->entries[PC_PARAM_FADE] : nullptr;
   return true;
 }
 
@@ -35,12 +35,12 @@ void FadePlugin::onActivate() { changeMode(MODE_FADE_OUT); }
 
 void FadePlugin::changeMode(Mode mode) {
   const FadeParam *param = getParam();
-  if (this->mode == mode) {
+  if (this->unknown0c == mode) {
     return;
   }
 
-  this->mode = mode;
-  timer = 0.0f;
+  this->unknown0c = mode;
+  unknown10 = 0.0f;
   if (mode == MODE_FADE_IN) {
     SCOM_FADE::create(FADE_CHANNEL, param->fadeTime * FRAMES_PER_SECOND, mm::Col4::zero);
   } else if (mode == MODE_FADE_OUT) {
@@ -52,20 +52,20 @@ void FadePlugin::onDeactivate() { changeMode(MODE_NONE); }
 
 void FadePlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &info) {
   const FadeParam *param = getParam();
-  timer += info.deltaTime;
-  switch (mode) {
+  unknown10 += info.deltaTime;
+  switch (unknown0c) {
   case MODE_FADE_OUT:
-    if (timer >= param->fadeOutTime) {
+    if (unknown10 >= param->fadeOutTime) {
       changeMode(MODE_BLACK);
     }
     break;
   case MODE_BLACK:
-    if (timer >= param->blackTime) {
+    if (unknown10 >= param->blackTime) {
       changeMode(MODE_FADE_IN);
     }
     break;
   case MODE_FADE_IN:
-    if (timer >= param->fadeTime) {
+    if (unknown10 >= param->fadeTime) {
       setActivate(false);
     }
     break;

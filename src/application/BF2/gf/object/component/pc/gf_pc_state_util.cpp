@@ -30,13 +30,13 @@ void StateUtil::setEnableAgentBattle(GfComBehaviorPc &behavior, bool isEnable) {
 void StateUtil::setEnableGravity(GfComBehaviorPc &behavior, bool isEnable) {
   GfComPropertyPc *property = behavior.getProperty();
   if (isEnable) {
-    property->isEnableGravity = true;
+    property->unknown110_3 = true;
   } else {
-    property->isEnableGravity = false;
+    property->unknown110_3 = false;
   }
 }
 
-bool StateUtil::testEnableGravity(GfComBehaviorPc &behavior) { return behavior.getProperty()->isEnableGravity; }
+bool StateUtil::testEnableGravity(GfComBehaviorPc &behavior) { return behavior.getProperty()->unknown110_3; }
 
 void StateUtil::setEnvSensor(GfComBehaviorPc &behavior, u32 flags, bool isEnable) { behavior.owner->getComponent<GfComPropertyPc>()->setEnvSensorCheckFlags(flags, isEnable); }
 

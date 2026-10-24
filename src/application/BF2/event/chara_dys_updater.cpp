@@ -46,7 +46,7 @@ void CharaDysUpdater::resetDynamics(gf::GF_OBJ_HANDLE *handle) {
 
   gf::GfComDynamics *dynamics = obj->getComponent<gf::GfComDynamics>();
   if (dynamics != nullptr) {
-    dynamics->updater.isResetRequested = true;
+    dynamics->unknown10.isResetRequested = true;
     dynamics->resetMovement();
   }
 }

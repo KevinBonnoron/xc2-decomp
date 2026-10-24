@@ -107,8 +107,8 @@ void GmkMapObj::createGobInst() {
   validateDisp();
   gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(handle);
   const Xform *xform = baseInfo.xform;
-  setup->position = xform->position;
-  setup->rotation = xform->rotation;
+  setup->unknown20 = xform->position;
+  setup->unknown30 = xform->rotation;
   setup->setInitialScale(baseInfo.xform->scale.x);
 }
 
@@ -175,10 +175,10 @@ void GmkRoutedMapObj::createGobInst() {
   handle = gf::GfObjFactory::createGmkMapObj(bdat, createInfo.bdatIndex);
   bindToGameObj(handle);
   validateDisp();
-  gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(handle)->setup);
+  gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(handle)->unknown30);
   const Xform *xform = baseInfo.xform;
-  setup->position = xform->position;
-  setup->rotation = xform->rotation;
+  setup->unknown20 = xform->position;
+  setup->unknown30 = xform->rotation;
 }
 
 void GmkRoutedMapObj::validateDisp() const {

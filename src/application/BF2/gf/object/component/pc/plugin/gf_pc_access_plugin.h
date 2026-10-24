@@ -40,16 +40,16 @@ public:
   const AccessParam *getParam(u32 index) const;
   void drawDebug(GfComBehaviorPc &behavior, u32 index);
 
-  GF_OBJ_HANDLE *target;
-  mm::mtl::IntrusivePtr<fw::ParamList> paramList;
-  GfComBehaviorPc *behavior;
-  int paramIndex;
+  GF_OBJ_HANDLE *unknown10;                       // Inferred role: target; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::ParamList> unknown18; // Inferred role: param list; original member name unknown.
+  GfComBehaviorPc *unknown20;                     // Inferred role: behavior; original member name unknown.
+  int unknown28;                                  // Inferred role: param index; original member name unknown.
 };
 
-static_assert(offsetof(AccessPlugin, target) == 0x10, "");
-static_assert(offsetof(AccessPlugin, paramList) == 0x18, "");
-static_assert(offsetof(AccessPlugin, behavior) == 0x20, "");
-static_assert(offsetof(AccessPlugin, paramIndex) == 0x28, "");
+static_assert(offsetof(AccessPlugin, unknown10) == 0x10, "");
+static_assert(offsetof(AccessPlugin, unknown18) == 0x18, "");
+static_assert(offsetof(AccessPlugin, unknown20) == 0x20, "");
+static_assert(offsetof(AccessPlugin, unknown28) == 0x28, "");
 static_assert(sizeof(AccessPlugin) == 0x30, "");
 
 } // namespace pc

@@ -44,12 +44,12 @@ public:
   class ViewerListener {
   public:
     virtual void onWkStandbyLogout() {
-      if (owner != nullptr) {
-        owner->viewer = nullptr;
+      if (unknown08 != nullptr) {
+        unknown08->unknown100 = nullptr;
       }
     }
 
-    GfComDynamics *owner;
+    GfComDynamics *unknown08; // Inferred role: owner; original member name unknown.
   };
 
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
@@ -68,21 +68,21 @@ public:
   f32 getSolverBlendWeight(u32 index) const;
   const mm::mtl::RTTI *getRTTI() const override;
 
-  fw::DynamicsUpdater updater;
-  fw::DynamicsColObjUpdater colObjUpdater;
-  mm::mtl::IntrusivePtr<fw::ForceCalculator> forceCalculator;
-  u32 iterationCount;
-  bool isMaxIteration;
-  ViewerListener viewerListener;
-  void *viewer;
+  fw::DynamicsUpdater unknown10;                        // Inferred role: updater; original member name unknown.
+  fw::DynamicsColObjUpdater unknownc0;                  // Inferred role: col object updater; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::ForceCalculator> unknowne0; // Inferred role: force calculator; original member name unknown.
+  u32 unknowne8;                                        // Inferred role: iteration count; original member name unknown.
+  bool unknownec;                                       // Inferred role: max iteration; original member name unknown.
+  ViewerListener unknownf0;                             // Inferred role: viewer listener; original member name unknown.
+  void *unknown100;                                     // Inferred role: viewer; original member name unknown.
 };
 
-static_assert(offsetof(GfComDynamics, updater) == 0x10, "");
-static_assert(offsetof(GfComDynamics, colObjUpdater) == 0xc0, "");
-static_assert(offsetof(GfComDynamics, forceCalculator) == 0xe0, "");
-static_assert(offsetof(GfComDynamics, iterationCount) == 0xe8, "");
-static_assert(offsetof(GfComDynamics, isMaxIteration) == 0xec, "");
-static_assert(offsetof(GfComDynamics, viewerListener) == 0xf0, "");
-static_assert(offsetof(GfComDynamics, viewer) == 0x100, "");
+static_assert(offsetof(GfComDynamics, unknown10) == 0x10, "");
+static_assert(offsetof(GfComDynamics, unknownc0) == 0xc0, "");
+static_assert(offsetof(GfComDynamics, unknowne0) == 0xe0, "");
+static_assert(offsetof(GfComDynamics, unknowne8) == 0xe8, "");
+static_assert(offsetof(GfComDynamics, unknownec) == 0xec, "");
+static_assert(offsetof(GfComDynamics, unknownf0) == 0xf0, "");
+static_assert(offsetof(GfComDynamics, unknown100) == 0x100, "");
 
 } // namespace gf

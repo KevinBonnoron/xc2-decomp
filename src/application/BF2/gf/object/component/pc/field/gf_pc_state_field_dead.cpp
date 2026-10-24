@@ -13,20 +13,20 @@ namespace pc {
 
 void StateFieldDead::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
-  isDownPosePending = __builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_downpose") != 0;
+  unknown18 = __builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_downpose") != 0;
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  property->velocity = mm::Vec3::zero;
-  property->verticalSpeed = 0.0f;
-  property->horizontalSpeed = 0.0f;
+  property->unknown80 = mm::Vec3::zero;
+  property->unknown90 = 0.0f;
+  property->unknown94 = 0.0f;
 }
 
 void StateFieldDead::leave(GfComBehaviorPc *behavior, ai::State *next) {}
 
 void StateFieldDead::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  if (isDownPosePending) {
+  if (unknown18) {
     GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
     if (comAsm->isEnd(ANIM_LAYER_BASE) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_DOWNPOSE)) {
-      isDownPosePending = false;
+      unknown18 = false;
     }
   }
 }

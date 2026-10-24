@@ -556,20 +556,20 @@ void GfGameParty::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectT
 void GfGameParty::entryHandle(GF_OBJ_HANDLE *handle, u32 objectType) {
   switch (objectType) {
   case OBJECT_TYPE_DRIVER: {
-    GfObjSetupDriver *setup = mm::mtl::dynamicCast<GfObjSetupDriver>(GfObjManager::getObjInfo(handle)->setup);
-    if (setup->partyMember != PARTY_ID_NONE) {
-      unknown10[setup->partyMember].unknown00 = handle;
+    GfObjSetupDriver *setup = mm::mtl::dynamicCast<GfObjSetupDriver>(GfObjManager::getObjInfo(handle)->unknown30);
+    if (setup->unknown14 != PARTY_ID_NONE) {
+      unknown10[setup->unknown14].unknown00 = handle;
     }
     break;
   }
   case OBJECT_TYPE_BLADE: {
-    GfObjSetupBlade *setup = mm::mtl::dynamicCast<GfObjSetupBlade>(GfObjManager::getObjInfo(handle)->setup);
-    if (setup->partyMember == PARTY_ID_NONE) {
+    GfObjSetupBlade *setup = mm::mtl::dynamicCast<GfObjSetupBlade>(GfObjManager::getObjInfo(handle)->unknown30);
+    if (setup->unknown14 == PARTY_ID_NONE) {
       break;
     }
 
-    int slot = getBladeSetId(setup->partyMember, setup->slot);
-    GfMemberInfo &member = unknown10[setup->partyMember];
+    int slot = getBladeSetId(setup->unknown14, setup->unknown6c);
+    GfMemberInfo &member = unknown10[setup->unknown14];
     if (GfObjUtil::isTrinityBlade(handle)) {
       member.unknown30 = handle;
     } else {
@@ -578,15 +578,15 @@ void GfGameParty::entryHandle(GF_OBJ_HANDLE *handle, u32 objectType) {
     break;
   }
   case OBJECT_TYPE_PC_WEAPON: {
-    GfObjSetupWeapon *setup = mm::mtl::dynamicCast<GfObjSetupWeapon>(GfObjManager::getObjInfo(handle)->setup);
-    if (setup->partyMember == PARTY_ID_NONE) {
+    GfObjSetupWeapon *setup = mm::mtl::dynamicCast<GfObjSetupWeapon>(GfObjManager::getObjInfo(handle)->unknown30);
+    if (setup->unknown14 == PARTY_ID_NONE) {
       break;
     }
 
-    int slot = getBladeSetId(setup->partyMember, setup->slot);
-    GfWeapon *weapon = GfMountManager::getGfWeapon(getHandleBlade(setup->partyMember, slot), GFATTACH_WEAPON);
+    int slot = getBladeSetId(setup->unknown14, setup->unknown6c);
+    GfWeapon *weapon = GfMountManager::getGfWeapon(getHandleBlade(setup->unknown14, slot), GFATTACH_WEAPON);
     GfAppend *append = GfObjUtil::getAppend(handle, GFATTACH_WEAPON);
-    if (append != nullptr && setup->partyMember != PARTY_ID_NONE) {
+    if (append != nullptr && setup->unknown14 != PARTY_ID_NONE) {
       u16 index = append->getMountIndex();
       weapon->getCurrentHandles()[index] = handle;
     }
@@ -615,34 +615,34 @@ void GfGameParty::destroyedObject(GF_OBJ_HANDLE *handle) {
 void GfGameParty::removeHandle(GF_OBJ_HANDLE *handle) {
   switch (GfObjUtil::getObjType(handle)) {
   case OBJECT_TYPE_DRIVER: {
-    GfObjSetupDriver *setup = mm::mtl::dynamicCast<GfObjSetupDriver>(GfObjManager::getObjInfo(handle)->setup);
-    if (setup->partyMember != PARTY_ID_NONE) {
-      unknown10[setup->partyMember].unknown00 = INVALID_HANDLE;
+    GfObjSetupDriver *setup = mm::mtl::dynamicCast<GfObjSetupDriver>(GfObjManager::getObjInfo(handle)->unknown30);
+    if (setup->unknown14 != PARTY_ID_NONE) {
+      unknown10[setup->unknown14].unknown00 = INVALID_HANDLE;
     }
     break;
   }
   case OBJECT_TYPE_BLADE: {
-    GfObjSetupBlade *setup = mm::mtl::dynamicCast<GfObjSetupBlade>(GfObjManager::getObjInfo(handle)->setup);
-    if (setup->partyMember == PARTY_ID_NONE) {
+    GfObjSetupBlade *setup = mm::mtl::dynamicCast<GfObjSetupBlade>(GfObjManager::getObjInfo(handle)->unknown30);
+    if (setup->unknown14 == PARTY_ID_NONE) {
       break;
     }
 
-    GfMemberInfo &member = unknown10[setup->partyMember];
+    GfMemberInfo &member = unknown10[setup->unknown14];
     if (GfObjUtil::isTrinityBlade(handle)) {
       member.unknown30 = INVALID_HANDLE;
     } else {
-      member.unknown08[getBladeSetId(setup->partyMember, setup->slot)] = INVALID_HANDLE;
+      member.unknown08[getBladeSetId(setup->unknown14, setup->unknown6c)] = INVALID_HANDLE;
     }
     break;
   }
   case OBJECT_TYPE_PC_WEAPON: {
-    GfObjSetupWeapon *setup = mm::mtl::dynamicCast<GfObjSetupWeapon>(GfObjManager::getObjInfo(handle)->setup);
-    if (setup->partyMember == PARTY_ID_NONE) {
+    GfObjSetupWeapon *setup = mm::mtl::dynamicCast<GfObjSetupWeapon>(GfObjManager::getObjInfo(handle)->unknown30);
+    if (setup->unknown14 == PARTY_ID_NONE) {
       break;
     }
 
-    int slot = getBladeSetId(setup->partyMember, setup->slot);
-    GfWeapon *weapon = GfMountManager::getGfWeapon(getHandleBlade(setup->partyMember, slot), GFATTACH_WEAPON);
+    int slot = getBladeSetId(setup->unknown14, setup->unknown6c);
+    GfWeapon *weapon = GfMountManager::getGfWeapon(getHandleBlade(setup->unknown14, slot), GFATTACH_WEAPON);
     if (weapon == nullptr) {
       break;
     }
@@ -671,8 +671,8 @@ void GfGameParty::gevGameObjEnter(GF_OBJ_HANDLE *handle) {
     break;
   }
 
-  if (GfObjUtil::getObjType(handle) == OBJECT_TYPE_DRIVER && GfObjUtil::getObjSetup(handle)->characterType == CHARACTER_TYPE_PARTY) {
-    GfEvent::callPartyDriver(handle, GfObjUtil::getObjSetup(handle)->partyMember, true);
+  if (GfObjUtil::getObjType(handle) == OBJECT_TYPE_DRIVER && GfObjUtil::getObjSetup(handle)->unknown1c == CHARACTER_TYPE_PARTY) {
+    GfEvent::callPartyDriver(handle, GfObjUtil::getObjSetup(handle)->unknown14, true);
   }
 }
 
@@ -691,8 +691,8 @@ void GfGameParty::createdObject(GF_OBJ_HANDLE *handle) {
 }
 
 void GfGameParty::gevGameObjLeave(GF_OBJ_HANDLE *handle) {
-  if (GfObjUtil::getObjType(handle) == OBJECT_TYPE_DRIVER && GfObjUtil::getObjSetup(handle)->characterType == CHARACTER_TYPE_PARTY) {
-    GfEvent::callPartyDriver(handle, GfObjUtil::getObjSetup(handle)->partyMember, false);
+  if (GfObjUtil::getObjType(handle) == OBJECT_TYPE_DRIVER && GfObjUtil::getObjSetup(handle)->unknown1c == CHARACTER_TYPE_PARTY) {
+    GfEvent::callPartyDriver(handle, GfObjUtil::getObjSetup(handle)->unknown14, false);
   }
 }
 
@@ -716,20 +716,20 @@ void GfSelectBlade::setupBattleStart(u32 partyId) {
 }
 
 void GfGameParty::buildObjDriver(GF_OBJ_HANDLE *handle) {
-  GfObjSetupDriver *setup = mm::mtl::dynamicCast<GfObjSetupDriver>(GfObjManager::getObjInfo(handle)->setup);
-  if (setup->partyMember != PARTY_ID_NONE && unknown10[setup->partyMember].unknown00 == INVALID_HANDLE) {
-    unknown10[setup->partyMember].unknown00 = handle;
+  GfObjSetupDriver *setup = mm::mtl::dynamicCast<GfObjSetupDriver>(GfObjManager::getObjInfo(handle)->unknown30);
+  if (setup->unknown14 != PARTY_ID_NONE && unknown10[setup->unknown14].unknown00 == INVALID_HANDLE) {
+    unknown10[setup->unknown14].unknown00 = handle;
   }
 }
 
 void GfGameParty::buildObjBlade(GF_OBJ_HANDLE *handle) {
-  GfObjSetupBlade *setup = mm::mtl::dynamicCast<GfObjSetupBlade>(GfObjManager::getObjInfo(handle)->setup);
-  if (setup->partyMember == PARTY_ID_NONE) {
+  GfObjSetupBlade *setup = mm::mtl::dynamicCast<GfObjSetupBlade>(GfObjManager::getObjInfo(handle)->unknown30);
+  if (setup->unknown14 == PARTY_ID_NONE) {
     return;
   }
 
-  int slot = getBladeSetId(setup->partyMember, setup->slot);
-  GfMemberInfo &member = unknown10[setup->partyMember];
+  int slot = getBladeSetId(setup->unknown14, setup->unknown6c);
+  GfMemberInfo &member = unknown10[setup->unknown14];
   if (GfObjUtil::isTrinityBlade(handle)) {
     if (member.unknown30 == INVALID_HANDLE) {
       member.unknown30 = INVALID_HANDLE;
@@ -740,8 +740,8 @@ void GfGameParty::buildObjBlade(GF_OBJ_HANDLE *handle) {
 }
 
 void GfGameParty::buildObjWeapon(GF_OBJ_HANDLE *handle) {
-  GfObjSetupWeapon *setup = mm::mtl::dynamicCast<GfObjSetupWeapon>(GfObjManager::getObjInfo(handle)->setup);
-  if (setup->partyMember == PARTY_ID_NONE) {
+  GfObjSetupWeapon *setup = mm::mtl::dynamicCast<GfObjSetupWeapon>(GfObjManager::getObjInfo(handle)->unknown30);
+  if (setup->unknown14 == PARTY_ID_NONE) {
     return;
   }
 
@@ -751,21 +751,21 @@ void GfGameParty::buildObjWeapon(GF_OBJ_HANDLE *handle) {
     return;
   }
 
-  if (weapon->getHandle(setup->isAlternate, append->getMountIndex()) == INVALID_HANDLE) {
+  if (weapon->getHandle(setup->unknown78, append->getMountIndex()) == INVALID_HANDLE) {
     u16 index = append->getMountIndex();
     weapon->getCurrentHandles()[index] = handle;
   }
 }
 
-void GfGameParty::destroyObjDriver(GF_OBJ_HANDLE *handle) { mm::mtl::dynamicCast<GfObjSetupDriver>(GfObjManager::getObjInfo(handle)->setup); }
+void GfGameParty::destroyObjDriver(GF_OBJ_HANDLE *handle) { mm::mtl::dynamicCast<GfObjSetupDriver>(GfObjManager::getObjInfo(handle)->unknown30); }
 
 void GfGameParty::destroyObjBlade(GF_OBJ_HANDLE *handle) {
-  GfObjSetupBlade *setup = mm::mtl::dynamicCast<GfObjSetupBlade>(GfObjManager::getObjInfo(handle)->setup);
-  if (setup->partyMember == PARTY_ID_NONE) {
+  GfObjSetupBlade *setup = mm::mtl::dynamicCast<GfObjSetupBlade>(GfObjManager::getObjInfo(handle)->unknown30);
+  if (setup->unknown14 == PARTY_ID_NONE) {
     return;
   }
 
-  getBladeSetId(setup->partyMember, setup->slot);
+  getBladeSetId(setup->unknown14, setup->unknown6c);
   GfObjUtil::isTrinityBlade(handle);
 }
 
@@ -1154,10 +1154,10 @@ bool GfGameParty::reviveMembere() {
       continue;
     }
 
-    DataParamAcc paramAcc(obj->handle);
+    DataParamAcc paramAcc(obj->unknownf8);
     if (paramAcc.getHp() == 0) {
       MsgObjectHealHp message(0, HEAL_TYPE_FULL);
-      message.isRevive = true;
+      message.unknown21 = true;
       obj->sendMessage(obj, message);
       isRevived = true;
     }

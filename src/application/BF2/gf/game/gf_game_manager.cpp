@@ -1061,7 +1061,7 @@ bool GfGameManager::isBusyBladeCreateEvent() {
       continue;
     }
 
-    if (!isEventCharacter(setup->characterType)) {
+    if (!isEventCharacter(setup->unknown1c)) {
       continue;
     }
 

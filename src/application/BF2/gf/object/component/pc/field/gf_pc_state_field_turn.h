@@ -26,13 +26,13 @@ class StateFieldTurn : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
-  bool isWalkTurn;
+  bool unknown18; // Inferred role: walk turn; original member name unknown.
   u8 _19[0x20 - 0x19];
-  mm::Vec3 inputDirection;
+  mm::Vec3 unknown20; // Inferred role: input direction; original member name unknown.
 };
 
-static_assert(offsetof(StateFieldTurn, isWalkTurn) == 0x18, "");
-static_assert(offsetof(StateFieldTurn, inputDirection) == 0x20, "");
+static_assert(offsetof(StateFieldTurn, unknown18) == 0x18, "");
+static_assert(offsetof(StateFieldTurn, unknown20) == 0x20, "");
 static_assert(sizeof(StateFieldTurn) == 0x30, "");
 
 } // namespace pc

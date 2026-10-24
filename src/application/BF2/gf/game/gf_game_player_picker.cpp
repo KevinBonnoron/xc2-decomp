@@ -102,7 +102,7 @@ bool GfGamePlayerPicker::isEnableChange() const {
   }
 
   GfObjProperty *property = GfObjUtil::getProperty(getPlayerHandle());
-  return property != nullptr && !property->character->isBattle;
+  return property != nullptr && !property->unknown10->unknown30;
 }
 
 void GfGamePlayerPicker::onActive() {

@@ -7,11 +7,11 @@ namespace pc {
 
 bool StateBattleDead::Enter(GfComBehaviorPc *behavior, ai::State *previous) {
   StateUtil::setFallDamageDisable(*behavior, false);
-  isDeadNotified = false;
+  unknown22 = false;
   return StateBattleActionBase::Enter(behavior, previous);
 }
 
-void StateBattleDead::Leave(GfComBehaviorPc *behavior, ai::State *next) { isDeadNotified = false; }
+void StateBattleDead::Leave(GfComBehaviorPc *behavior, ai::State *next) { unknown22 = false; }
 
 } // namespace pc
 } // namespace gf

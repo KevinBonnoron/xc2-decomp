@@ -13,11 +13,11 @@ namespace pc {
 
 bool StateBattleStart::Enter(GfComBehaviorPc *behavior, ai::State *previous) {
   StateUtil::setFallDamageDisable(*behavior, false);
-  GfObjUtil::setEnableEyeBlink(static_cast<GfObj *>(behavior->owner)->handle, false);
+  GfObjUtil::setEnableEyeBlink(static_cast<GfObj *>(behavior->owner)->unknownf8, false);
   if (!StateBattleActionBase::Enter(behavior, previous)) {
     return false;
   }
-  DataParamAcc acc(static_cast<GfObj *>(behavior->owner)->handle);
+  DataParamAcc acc(static_cast<GfObj *>(behavior->owner)->unknownf8);
   u32 weaponType = acc.getWeaponType(-1, false);
   GetBattleCharacter()->SetWeaponType(weaponType);
   return true;

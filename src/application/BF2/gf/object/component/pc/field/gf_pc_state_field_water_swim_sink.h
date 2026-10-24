@@ -25,11 +25,11 @@ class StateFieldWaterSwimSink : public GfStateBase {
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
 
-  f32 elapsedTime;
+  f32 unknown18; // Inferred role: elapsed time; original member name unknown.
   u8 _1c[0x20 - 0x1c];
 };
 
-static_assert(offsetof(StateFieldWaterSwimSink, elapsedTime) == 0x18, "");
+static_assert(offsetof(StateFieldWaterSwimSink, unknown18) == 0x18, "");
 static_assert(sizeof(StateFieldWaterSwimSink) == 0x20, "");
 
 } // namespace pc

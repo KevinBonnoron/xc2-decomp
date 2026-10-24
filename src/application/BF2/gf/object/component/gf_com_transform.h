@@ -29,17 +29,17 @@ public:
   static const u32 COMPONENT_INDEX = 0;
 
   struct SetupInfo {
-    mm::Vec3 position;
-    mm::Quat rotation;
+    mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
+    mm::Quat unknown10; // Inferred role: rotation; original member name unknown.
     u32 frame_max;
-    bool isUseChildFrame;
+    bool unknown24; // Inferred role: use child frame; original member name unknown.
   };
 
   class Listener {
   public:
-    virtual void onWkStandbyLogout() { owner->viewer = nullptr; }
+    virtual void onWkStandbyLogout() { unknown08->unknown80 = nullptr; }
 
-    GfComTransform *owner;
+    GfComTransform *unknown08; // Inferred role: owner; original member name unknown.
   };
 
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
@@ -61,20 +61,20 @@ public:
   void changeLayer(u32 oldLayer, u32 newLayer) override;
   const mm::mtl::RTTI *getRTTI() const override;
 
-  mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame;
-  mm::mtl::IntrusivePtr<fw::ReferenceFrame> childFrame;
-  fw::TransformUpdater updater;
-  void *viewer;
-  Listener listener;
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown10; // Inferred role: frame; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown18; // Inferred role: child frame; original member name unknown.
+  fw::TransformUpdater unknown20;                      // Inferred role: updater; original member name unknown.
+  void *unknown80;                                     // Inferred role: viewer; original member name unknown.
+  Listener unknown88;                                  // Inferred role: listener; original member name unknown.
 };
 
-static_assert(offsetof(GfComTransform::SetupInfo, rotation) == 0x10, "");
+static_assert(offsetof(GfComTransform::SetupInfo, unknown10) == 0x10, "");
 static_assert(offsetof(GfComTransform::SetupInfo, frame_max) == 0x20, "");
-static_assert(offsetof(GfComTransform::SetupInfo, isUseChildFrame) == 0x24, "");
-static_assert(offsetof(GfComTransform, frame) == 0x10, "");
-static_assert(offsetof(GfComTransform, childFrame) == 0x18, "");
-static_assert(offsetof(GfComTransform, updater) == 0x20, "");
-static_assert(offsetof(GfComTransform, viewer) == 0x80, "");
-static_assert(offsetof(GfComTransform, listener) == 0x88, "");
+static_assert(offsetof(GfComTransform::SetupInfo, unknown24) == 0x24, "");
+static_assert(offsetof(GfComTransform, unknown10) == 0x10, "");
+static_assert(offsetof(GfComTransform, unknown18) == 0x18, "");
+static_assert(offsetof(GfComTransform, unknown20) == 0x20, "");
+static_assert(offsetof(GfComTransform, unknown80) == 0x80, "");
+static_assert(offsetof(GfComTransform, unknown88) == 0x88, "");
 
 } // namespace gf

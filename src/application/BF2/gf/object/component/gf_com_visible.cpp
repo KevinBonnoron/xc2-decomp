@@ -10,27 +10,27 @@
 
 namespace gf {
 
-GfComVisible::GfComVisible() : visible(nullptr) {}
+GfComVisible::GfComVisible() : unknown10(nullptr) {}
 
 void GfComVisible::setup(const SetupInfo &info) {
   fw::VisibleObject::SetupInfo visibleInfo;
   visibleInfo.layer = getLayer();
-  visible = fw::VisibleObject::create(visibleInfo, getAllocator(ALLOCATOR_DEFAULT));
+  unknown10 = fw::VisibleObject::create(visibleInfo, getAllocator(ALLOCATOR_DEFAULT));
   GfComTransform *transform = owner->getComponent<GfComTransform>();
   if (transform != nullptr) {
-    visible->referenceFrame = transform->childFrame.get() == nullptr ? transform->frame : transform->childFrame;
+    unknown10->referenceFrame = transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18;
   }
 }
 
-void GfComVisible::cleanup() { mm::mtl::safeRelease(visible); }
+void GfComVisible::cleanup() { mm::mtl::safeRelease(unknown10); }
 
 void GfComVisible::changeLayer(u32 oldLayer, u32 newLayer) {
-  if (oldLayer != newLayer && visible != nullptr) {
-    visible->changeLayer(newLayer);
+  if (oldLayer != newLayer && unknown10 != nullptr) {
+    unknown10->changeLayer(newLayer);
   }
 }
 
-bool GfComVisible::isRender() const { return visible != nullptr && visible->isRender(); }
+bool GfComVisible::isRender() const { return unknown10 != nullptr && unknown10->isRender(); }
 
 const mm::mtl::RTTI *GfComVisible::getRTTI() const { return &m_rtti; }
 

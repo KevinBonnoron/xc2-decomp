@@ -28,10 +28,10 @@ public:
   void onDeactivate() override;
   virtual void update(GfComBehavior &behavior, const fw::UpdateInfo &info);
 
-  bool isRunning;
+  bool unknown09; // Inferred role: running; original member name unknown.
 };
 
-static_assert(offsetof(FootStepPlugin, isRunning) == 0x09, "");
+static_assert(offsetof(FootStepPlugin, unknown09) == 0x09, "");
 static_assert(sizeof(FootStepPlugin) == 0x10, "");
 
 } // namespace gf

@@ -16,7 +16,7 @@ bool isInBdat(unsigned char *bdat, int id) { return Bdat::getIdTop(bdat) <= id &
 } // namespace
 
 const char *CharaFacialUtil::getFacialBdat(gf::GfObj *obj) {
-  gf::GfObjAcc acc(obj->handle);
+  gf::GfObjAcc acc(obj->unknownf8);
   int id = acc.getBdatId();
   int asset;
   switch (transferGroup(id, obj->type)) {
@@ -69,7 +69,7 @@ void CharaFacialUtil::getLensLimit(mm::Vec2 &translateMin, mm::Vec2 &translateMa
   rotateMin = mm::Vec2::zero;
   rotateMax = mm::Vec2::zero;
 
-  gf::GfObjAcc acc(obj->handle);
+  gf::GfObjAcc acc(obj->unknownf8);
   int id = acc.getBdatId();
   unsigned char *bdat;
   int asset;

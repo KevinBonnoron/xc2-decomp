@@ -10,7 +10,7 @@ namespace pc {
 
 void StateField::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComPropertyPc *property = behavior->getProperty();
-  if (property->input.flags.test(INPUT_ID_LOCK)) {
+  if (property->unknown60.unknown08.test(INPUT_ID_LOCK)) {
     StateUtilField::flipAutoRun(*property);
   }
   if (StateUtilField::isInputInverseDirAutoRun(*property)) {

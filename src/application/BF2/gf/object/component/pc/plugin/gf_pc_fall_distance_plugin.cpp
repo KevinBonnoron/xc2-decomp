@@ -8,31 +8,31 @@
 namespace gf {
 namespace pc {
 
-FallDistancePlugin::FallDistancePlugin() : property(nullptr), maxHeight(0.0f) {}
+FallDistancePlugin::FallDistancePlugin() : unknown10(nullptr), unknown18(0.0f) {}
 
 FallDistancePlugin::~FallDistancePlugin() {}
 
 bool FallDistancePlugin::setup(GfComBehaviorPc &behavior) {
-  property = behavior.owner->getComponent<GfComPropertyPc>();
+  unknown10 = behavior.owner->getComponent<GfComPropertyPc>();
   return true;
 }
 
 void FallDistancePlugin::cleanup(GfComBehaviorPc &) {}
 
 f32 FallDistancePlugin::calcDistance(const mm::Vec3 &position) const {
-  if (isActive) {
-    return maxHeight - position.y;
+  if (unknown08) {
+    return unknown18 - position.y;
   }
   return 0.0f;
 }
 
-void FallDistancePlugin::onActivate() { maxHeight = property->position.y; }
+void FallDistancePlugin::onActivate() { unknown18 = unknown10->unknown160.y; }
 
 void FallDistancePlugin::onDeactivate() {}
 
 void FallDistancePlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &) {
-  if (property->position.y > maxHeight) {
-    maxHeight = property->position.y;
+  if (unknown10->unknown160.y > unknown18) {
+    unknown18 = unknown10->unknown160.y;
   }
 }
 

@@ -27,10 +27,10 @@ class StateFieldRideOn : public GfStateBase {
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
   void recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
 
-  mm::mtl::FixedQueue<mm::mtl::FixStr<32>, 8> commands;
+  mm::mtl::FixedQueue<mm::mtl::FixStr<32>, 8> unknown18; // Inferred role: commands; original member name unknown.
 };
 
-static_assert(offsetof(StateFieldRideOn, commands) == 0x18, "");
+static_assert(offsetof(StateFieldRideOn, unknown18) == 0x18, "");
 static_assert(sizeof(StateFieldRideOn) == 0x148, "");
 
 } // namespace pc

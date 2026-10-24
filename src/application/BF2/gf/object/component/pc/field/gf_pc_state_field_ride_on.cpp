@@ -6,9 +6,9 @@
 namespace gf {
 namespace pc {
 
-void StateFieldRideOn::enter(GfComBehaviorPc *behavior, ai::State *previous) { behavior->getProperty()->isFieldControl = true; }
+void StateFieldRideOn::enter(GfComBehaviorPc *behavior, ai::State *previous) { behavior->getProperty()->unknown110_0 = true; }
 
-void StateFieldRideOn::leave(GfComBehaviorPc *behavior, ai::State *next) { behavior->getProperty()->isFieldControl = false; }
+void StateFieldRideOn::leave(GfComBehaviorPc *behavior, ai::State *next) { behavior->getProperty()->unknown110_0 = false; }
 
 } // namespace pc
 } // namespace gf

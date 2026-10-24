@@ -15,21 +15,21 @@ namespace pc {
 void StateFieldTurn::leave(GfComBehaviorPc *behavior, ai::State *next) {
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
   if (next != nullptr && next->stateID != STATE_ID_FIELD_JUMP) {
-    property->velocity = mm::Vec3::zero;
+    property->unknown80 = mm::Vec3::zero;
   }
-  property->horizontalSpeed = 0.0f;
+  property->unknown94 = 0.0f;
 }
 
 void StateFieldTurn::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  if (StateUtilField::isTurnEndRangeCacheInput(*property, inputDirection)) {
+  if (StateUtilField::isTurnEndRangeCacheInput(*property, unknown20)) {
     reqState(STATE_ID_FIELD_MOVE);
     return;
   }
-  if (isWalkTurn) {
-    MoveUtilField::updateMoveWalkTurn(info, *property, inputDirection);
+  if (unknown18) {
+    MoveUtilField::updateMoveWalkTurn(info, *property, unknown20);
   } else {
-    MoveUtilField::updateMoveTurn(info, *property, inputDirection);
+    MoveUtilField::updateMoveTurn(info, *property, unknown20);
   }
 }
 
