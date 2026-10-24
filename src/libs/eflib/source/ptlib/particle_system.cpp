@@ -54,21 +54,21 @@ void ParticleManager::setUserDrFunc(void *(*createMdl)(const void *, const char 
                                     void (*setMdlPos)(void *, void *), void (*setMdlMatrix)(void *, void *), void (*setMdlColor)(void *, void *), void (*setMdlAlpha)(void *, f32),
                                     void (*setMdlSpd)(void *, void *), void (*setLgtPos)(u32, void *, void *), void (*setLgtMatrix)(u32, void *, void *), void (*setLgtParam)(u32, void *, void *),
                                     void (*debugRenderer)(void *), void *(*createGrp)(int, int), void (*destroyGrp)(void *)) {
-  s_pDrFunc.m_createMdl = createMdl;
-  s_pDrFunc.m_deleteMdl = deleteMdl;
-  s_pDrFunc.m_createLgt = createLgt;
-  s_pDrFunc.m_deleteLgt = deleteLgt;
-  s_pDrFunc.m_setMdlPos = setMdlPos;
-  s_pDrFunc.m_setMdlMatrix = setMdlMatrix;
-  s_pDrFunc.m_setMdlColor = setMdlColor;
-  s_pDrFunc.m_setMdlAlpha = setMdlAlpha;
-  s_pDrFunc.m_setMdlSpd = setMdlSpd;
-  s_pDrFunc.m_setLgtPos = setLgtPos;
-  s_pDrFunc.m_setLgtMatrix = setLgtMatrix;
-  s_pDrFunc.m_setLgtParam = setLgtParam;
-  s_pDrFunc.m_createGrp = createGrp;
-  s_pDrFunc.m_destroyGrp = destroyGrp;
-  s_pDrFunc.m_debugRenderer = debugRenderer;
+  s_pDrFunc.unknown00 = createMdl;
+  s_pDrFunc.unknown08 = deleteMdl;
+  s_pDrFunc.unknown10 = createLgt;
+  s_pDrFunc.unknown18 = deleteLgt;
+  s_pDrFunc.unknown20 = setMdlPos;
+  s_pDrFunc.unknown28 = setMdlMatrix;
+  s_pDrFunc.unknown30 = setMdlColor;
+  s_pDrFunc.unknown38 = setMdlAlpha;
+  s_pDrFunc.unknown40 = setMdlSpd;
+  s_pDrFunc.unknown48 = setLgtPos;
+  s_pDrFunc.unknown50 = setLgtMatrix;
+  s_pDrFunc.unknown58 = setLgtParam;
+  s_pDrFunc.unknown60 = createGrp;
+  s_pDrFunc.unknown68 = destroyGrp;
+  s_pDrFunc.unknown70 = debugRenderer;
 }
 
 void *ParticleManager::sysAlloc(u32 size, u32 alignment, const char *file, u32 line) {
@@ -78,15 +78,15 @@ void *ParticleManager::sysAlloc(u32 size, u32 alignment, const char *file, u32 l
 }
 
 void ParticleManager::clear() {
-  m_modelTable = nullptr;
-  m_frameCount = 0.0f;
-  m_responsiveAA = 0.25f;
-  m_specScale = 0.0f;
-  m_dirScale = 1.0f;
+  unknown160 = nullptr;
+  unknown15c = 0.0f;
+  unknown148 = 0.25f;
+  unknown14c = 0.0f;
+  unknown150 = 1.0f;
   _154 = 1.0f;
-  m_iblSaturation = 1.0f;
+  unknown158 = 1.0f;
   for (int i = 0; i < 4; i++) {
-    m_groups[i] = nullptr;
+    unknown170[i] = nullptr;
   }
 }
 
@@ -98,9 +98,9 @@ void ParticleManager::fxcore_setup_target() {
   }
 }
 
-void *ParticleManager::createGrp(int index, int count) { return s_pDrFunc.m_createGrp(index, count); }
+void *ParticleManager::createGrp(int index, int count) { return s_pDrFunc.unknown60(index, count); }
 
-void ParticleManager::destroyGrp(void *group) { s_pDrFunc.m_destroyGrp(group); }
+void ParticleManager::destroyGrp(void *group) { s_pDrFunc.unknown68(group); }
 
 void ParticleManager::sysFree(void *ptr) { s_pFreeFuncSys(nullptr, ptr); }
 
@@ -118,31 +118,31 @@ void ParticleManager::outputString(const char *text) { s_pOutputDebugStringFunc(
 
 void ParticleManager::outputWarning(const char *text) { s_pOutputWarnStringFunc(text); }
 
-void *ParticleManager::createMdl(const void *model, const char *name, int index, const void *texture, int textureIndex) { return s_pDrFunc.m_createMdl(model, name, index, texture, textureIndex); }
+void *ParticleManager::createMdl(const void *model, const char *name, int index, const void *texture, int textureIndex) { return s_pDrFunc.unknown00(model, name, index, texture, textureIndex); }
 
-void ParticleManager::deleteMdl(void *model) { s_pDrFunc.m_deleteMdl(model); }
+void ParticleManager::deleteMdl(void *model) { s_pDrFunc.unknown08(model); }
 
-void ParticleManager::setMdlPos(void *model, void *pos) { s_pDrFunc.m_setMdlPos(model, pos); }
+void ParticleManager::setMdlPos(void *model, void *pos) { s_pDrFunc.unknown20(model, pos); }
 
-void ParticleManager::setMdlMatrix(void *model, void *matrix) { s_pDrFunc.m_setMdlMatrix(model, matrix); }
+void ParticleManager::setMdlMatrix(void *model, void *matrix) { s_pDrFunc.unknown28(model, matrix); }
 
-void ParticleManager::setMdlColor(void *model, void *color) { s_pDrFunc.m_setMdlColor(model, color); }
+void ParticleManager::setMdlColor(void *model, void *color) { s_pDrFunc.unknown30(model, color); }
 
-void ParticleManager::setMdlAlpha(void *model, f32 alpha) { s_pDrFunc.m_setMdlAlpha(model, alpha); }
+void ParticleManager::setMdlAlpha(void *model, f32 alpha) { s_pDrFunc.unknown38(model, alpha); }
 
-void ParticleManager::setMdlSpd(void *model, void *speed) { s_pDrFunc.m_setMdlSpd(model, speed); }
+void ParticleManager::setMdlSpd(void *model, void *speed) { s_pDrFunc.unknown40(model, speed); }
 
-void *ParticleManager::createLgt(u32 type, int index) { return s_pDrFunc.m_createLgt(type, index); }
+void *ParticleManager::createLgt(u32 type, int index) { return s_pDrFunc.unknown10(type, index); }
 
-void ParticleManager::deleteLgt(u32 type, void *light) { s_pDrFunc.m_deleteLgt(type, light); }
+void ParticleManager::deleteLgt(u32 type, void *light) { s_pDrFunc.unknown18(type, light); }
 
-void ParticleManager::setLgtPos(u32 type, void *light, void *pos) { s_pDrFunc.m_setLgtPos(type, light, pos); }
+void ParticleManager::setLgtPos(u32 type, void *light, void *pos) { s_pDrFunc.unknown48(type, light, pos); }
 
-void ParticleManager::setLgtMatrix(u32 type, void *light, void *matrix) { s_pDrFunc.m_setLgtMatrix(type, light, matrix); }
+void ParticleManager::setLgtMatrix(u32 type, void *light, void *matrix) { s_pDrFunc.unknown50(type, light, matrix); }
 
-void ParticleManager::setLgtParam(u32 type, void *light, void *param) { s_pDrFunc.m_setLgtParam(type, light, param); }
+void ParticleManager::setLgtParam(u32 type, void *light, void *param) { s_pDrFunc.unknown58(type, light, param); }
 
-void ParticleManager::debugRenderer(void *renderer) { s_pDrFunc.m_debugRenderer(renderer); }
+void ParticleManager::debugRenderer(void *renderer) { s_pDrFunc.unknown70(renderer); }
 
 int ParticleManager::get_prio_idx(int priority) {
   int index = 0;
@@ -216,7 +216,7 @@ void ParticleManager::emitter_set_fadeout(FxHeader *header, int frame) { emitter
 
 void ParticleManager::emitter_set_fadeout(void *owner, int frame) { emitter::EmitterManager::get()->emitter_set_fadeout(owner, frame); }
 
-void ParticleManager::set_pause(bool isPause) { m_fxParam.m_isPauseRequest = isPause; }
+void ParticleManager::set_pause(bool isPause) { m_fxParam.unknown0e = isPause; }
 
 void ParticleManager::emitter_pack_free(u64 pack) { emitter::EmitterManager::get()->emitter_pack_free(pack); }
 
@@ -225,16 +225,16 @@ void ParticleManager::emitter_set_free(FxHeader *header, int frame) { emitter::E
 void ParticleManager::emitter_alloc01_set_draw(emitter::EmitterObj *emitter, emitter::EmitterArg *arg) { renderer::RenderManager::get()->setEmitterDraw(emitter, arg); }
 
 void ParticleManager::move() {
-  if (m_fxParam.m_isStop) {
+  if (m_fxParam.unknown10) {
     return;
   }
-  if (!m_fxParam.m_isPause) {
-    m_frameCount += 1.0f;
-    if (m_frameCount >= 1.0f) {
+  if (!m_fxParam.unknown0d) {
+    unknown15c += 1.0f;
+    if (unknown15c >= 1.0f) {
       do {
         emitter::EmitterManager::get()->emitter_update(0, 1.0f, false);
-        m_frameCount -= 1.0f;
-      } while (m_frameCount >= 1.0f);
+        unknown15c -= 1.0f;
+      } while (unknown15c >= 1.0f);
     } else {
       emitter::EmitterManager::get()->emitter_update(0, 1.0f, true);
     }

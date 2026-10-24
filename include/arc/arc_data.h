@@ -9,8 +9,8 @@ public:
   void setData(void *data);
   void *getFileAdr(const char *name) const;
 
-  void *data;
-  void *names;
+  void *unknown00; // Inferred role: data; original member name unknown.
+  void *unknown08; // Inferred role: names; original member name unknown.
 };
 
 static_assert(sizeof(CArcData) == 0x10, "");

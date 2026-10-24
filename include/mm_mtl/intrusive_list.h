@@ -7,14 +7,14 @@ namespace mtl {
 class IntrusiveListNodeBase {
 public:
   IntrusiveListNodeBase() {
-    m_prev = this;
-    m_next = this;
+    unknown08 = this;
+    unknown00 = this;
   }
 
-  bool intoNode() const { return m_next != this; }
+  bool intoNode() const { return unknown00 != this; }
 
-  IntrusiveListNodeBase *m_next;
-  IntrusiveListNodeBase *m_prev;
+  IntrusiveListNodeBase *unknown00; // Inferred role: next; original member name unknown.
+  IntrusiveListNodeBase *unknown08; // Inferred role: prev; original member name unknown.
 };
 
 template <typename T> class IntrusiveListNode : public IntrusiveListNodeBase {};
@@ -50,12 +50,12 @@ public:
     }
 
     iterator &operator++() {
-      m_node = static_cast<T *>(m_node->m_next);
+      m_node = static_cast<T *>(m_node->unknown00);
       return *this;
     }
 
     iterator &operator--() {
-      m_node = static_cast<T *>(m_node->m_prev);
+      m_node = static_cast<T *>(m_node->unknown08);
       return *this;
     }
 
@@ -67,11 +67,11 @@ public:
     T *m_node;
   };
 
-  iterator begin() { return iterator(static_cast<T *>(m_head.m_next)); }
+  iterator begin() { return iterator(static_cast<T *>(m_head.unknown00)); }
   iterator end() { return iterator(static_cast<T *>(&m_head)); }
 
   int size() const { return m_size; }
-  bool empty() const { return m_head.m_next == &m_head; }
+  bool empty() const { return m_head.unknown00 == &m_head; }
 
   // __LINE__ must be 170 as in the original header: it is the line argument of the assert.
 #line 167
@@ -93,7 +93,7 @@ public:
 #line 242
   void push_front(T *ptr) {
     MM_ASSERT(ptr);
-    linkNode(ptr, m_head.m_next);
+    linkNode(ptr, m_head.unknown00);
     m_size++;
   }
 
@@ -102,7 +102,7 @@ public:
   iterator erase(iterator it) {
     MM_ASSERT(!empty());
     MM_ASSERT(it != end());
-    T *next = static_cast<T *>(it.get()->m_next);
+    T *next = static_cast<T *>(it.get()->unknown00);
     erase(it.get());
     return iterator(next);
   }

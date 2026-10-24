@@ -24,11 +24,11 @@ public:
   bool isKill(f32 frame) const;
   void getSpeed(f32 &speed, f32 frame) const;
 
-  int getFrameCount() const { return frameCount; }
+  int getFrameCount() const { return unknown199c; }
 
 private:
   u8 _8[0x199c - 0x8];
-  int frameCount;
+  int unknown199c; // Inferred role: frame count; original member name unknown.
   u8 _19a0[0x19f8 - 0x19a0];
 };
 

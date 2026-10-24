@@ -22,7 +22,7 @@ void DrIniSys::loadToonRimTexture() {
     unknown38 = nullptr;
   }
   unknown38 = readTextureMapFile(TOON_RIM_FILE);
-  grlib::CGLibTexture::createTextureImagePtrs(unknown98[6], unknown38->buffer, unknown38->size, false, nullptr, true);
+  grlib::CGLibTexture::createTextureImagePtrs(unknown98[6], unknown38->unknownc8, unknown38->unknownd0, false, nullptr, true);
 }
 
 void DrIniSys::reloadToonGradTexture() { loadToonGradTexture(); }
@@ -33,7 +33,7 @@ void DrIniSys::reloadToonRimTexture() {
     unknown38 = nullptr;
   }
   unknown38 = readTextureMapFile(TOON_RIM_FILE);
-  grlib::CGLibTexture::createTextureImagePtrs(unknown98[6], unknown38->buffer, unknown38->size, false, nullptr, true);
+  grlib::CGLibTexture::createTextureImagePtrs(unknown98[6], unknown38->unknownc8, unknown38->unknownd0, false, nullptr, true);
 }
 
 void DrIniSys::reloadIBLEnvTexture() { loadIBLEnvTexture(); }
@@ -81,6 +81,6 @@ void DrIniSys::reloadRainDropTexture() { loadRainDropTexture(); }
 
 void DrIniSys::reloadFlagWaveTexture() { loadFlagWaveTexture(); }
 
-const void *DrIniSys::getGlassBreakage() const { return unknown898->buffer; }
+const void *DrIniSys::getGlassBreakage() const { return unknown898->unknownc8; }
 
 } // namespace ml

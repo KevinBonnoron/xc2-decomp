@@ -48,12 +48,12 @@ public:
   u64 CheckAccessSize(u64 size) override;
 
   u8 _18[0x20 - 0x18];
-  u8 *data;
-  u64 size;
-  u64 position;
+  u8 *unknown20; // Inferred role: data; original member name unknown.
+  u64 unknown28; // Inferred role: size; original member name unknown.
+  u64 unknown30; // Inferred role: position; original member name unknown.
 };
 
-static_assert(offsetof(MemoryStream, data) == 0x20, "");
-static_assert(offsetof(MemoryStream, position) == 0x30, "");
+static_assert(offsetof(MemoryStream, unknown20) == 0x20, "");
+static_assert(offsetof(MemoryStream, unknown30) == 0x30, "");
 
 } // namespace ssd

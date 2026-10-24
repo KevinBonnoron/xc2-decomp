@@ -59,7 +59,7 @@ void GfComDynamics::setup(const SetupInfo &info) {
   skd::CollisionObject *collisionObject = info.collisionObject;
   bool isCreateCollision = false;
   if (collisionObject == nullptr) {
-    collisionObject = skd::Factory::createColObject(info.resDynamics->collisions, *pose, getAllocator(ALLOCATOR_DEFAULT));
+    collisionObject = skd::Factory::createColObject(info.resDynamics->unknown18, *pose, getAllocator(ALLOCATOR_DEFAULT));
     isCreateCollision = true;
   }
 
@@ -76,8 +76,8 @@ void GfComDynamics::setup(const SetupInfo &info) {
     }
   }
 
-  skd::Dynamics *dynamics = skd::Factory::createDynamics(collisionObject, *info.resDynamics->solvers, *pose, unknowne0.get(), getAllocator(ALLOCATOR_DEFAULT));
-  dynamics->iterationCount = info.iterationCount;
+  skd::Dynamics *dynamics = skd::Factory::createDynamics(collisionObject, *info.resDynamics->unknown20, *pose, unknowne0.get(), getAllocator(ALLOCATOR_DEFAULT));
+  dynamics->unknown188 = info.iterationCount;
   fw::DyanmicsManager *manager = fw::DyanmicsManager::get();
   if (manager != nullptr) {
     u32 layer = getLayer();
@@ -111,12 +111,12 @@ void GfComDynamics::applyAttribute() {
   bool isFreeMovement = (attribute & ASM_ATTRIBUTE_LIMIT_MOVEMENT) == 0;
   f32 maxMoveDistance = isFreeMovement ? 0.1f : 0.03f;
   f32 maxRotation = isFreeMovement ? 0.0f : 0.1f;
-  dynamics->maxMoveDistance = maxMoveDistance;
-  dynamics->maxRotation = maxRotation;
+  dynamics->unknown198 = maxMoveDistance;
+  dynamics->unknown19c = maxRotation;
   if ((attribute & ASM_ATTRIBUTE_MAX_ITERATION) != 0 || unknownec) {
-    dynamics->iterationCount = ITERATION_COUNT_MAX;
+    dynamics->unknown188 = ITERATION_COUNT_MAX;
   } else {
-    dynamics->iterationCount = unknowne8;
+    dynamics->unknown188 = unknowne8;
   }
 }
 
@@ -168,7 +168,7 @@ void GfComDynamics::resetMovement() {
 
 u32 GfComDynamics::getSolverCount() const {
   if (unknown10.unknown18 != nullptr) {
-    return unknown10.unknown18->solvers.size();
+    return unknown10.unknown18->unknown20.size();
   }
 
   return 0;
@@ -179,9 +179,9 @@ static const char *findSolverName(const skd::Dynamics *dynamics, u32 index) {
     return nullptr;
   }
 
-  const anm::Array<skd::ResSolver> &solvers = *dynamics->resSolvers;
+  const anm::Array<skd::ResSolver> &solvers = *dynamics->unknown18;
   if (index < solvers.size()) {
-    return solvers[index].name;
+    return solvers[index].unknown00;
   }
 
   return nullptr;
@@ -191,7 +191,7 @@ const char *GfComDynamics::getSolverName(u32 index) const { return findSolverNam
 
 u32 GfComDynamics::getSolverID(const char *name) const {
   if (unknown10.unknown18 != nullptr) {
-    return unknown10.unknown18->solvers.size();
+    return unknown10.unknown18->unknown20.size();
   }
 
   return static_cast<u32>(-1);

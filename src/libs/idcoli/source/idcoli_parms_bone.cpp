@@ -8,7 +8,7 @@ namespace idcoli {
 
 IDColiParmsBone::IDColiParmsBone(IDColiObj *object) : m_data(static_cast<IDColiObjData *>(object)) {}
 
-int IDColiParmsBone::getBoneMax() const { return m_data->m_boneMax; }
+int IDColiParmsBone::getBoneMax() const { return m_data->unknown1f8; }
 
 const char *IDColiParmsBone::getBoneName(int index) const { return m_data->getBoneName(index); }
 
@@ -18,6 +18,6 @@ void IDColiParmsBone::setBoneMatrix(int index, const mm::Mat44 &matrix) { m_data
 
 const mm::Mat44 &IDColiParmsBone::getBoneMatrix(int index) const { return m_data->getBoneMatrix(index); }
 
-mm::Mat44 *IDColiParmsBone::getBoneMatrixTbl() { return m_data->m_boneMatrixTbl; }
+mm::Mat44 *IDColiParmsBone::getBoneMatrixTbl() { return m_data->unknown1f0; }
 
 } // namespace idcoli

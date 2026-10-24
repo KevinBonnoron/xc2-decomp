@@ -8,7 +8,7 @@
 
 namespace ml {
 
-ScnRenderDrSys::ScnRenderDrSys(Scn *scn) : ScnRender(scn) { unknown10 = new (scn->allocHandle) DrMan(scn); }
+ScnRenderDrSys::ScnRenderDrSys(Scn *scn) : ScnRender(scn) { unknown10 = new (scn->unknown64) DrMan(scn); }
 
 ScnRenderDrSys::~ScnRenderDrSys() {
   if (unknown10 != nullptr) {
@@ -90,8 +90,8 @@ void ScnRenderDrSys::createDrRender(Scn *scn) { WorkCpu::runThread(WorkCpu::getR
 
 u32 ScnRenderDrSys::thDrSysInitialize(void *argument, void *userData) {
   Scn *scn = static_cast<Scn *>(argument);
-  if (scn->renderDrSys == nullptr) {
-    scn->renderDrSys = new (scn->allocHandle) ScnRenderDrSys(scn);
+  if (scn->unknown38 == nullptr) {
+    scn->unknown38 = new (scn->unknown64) ScnRenderDrSys(scn);
   }
   return 0;
 }

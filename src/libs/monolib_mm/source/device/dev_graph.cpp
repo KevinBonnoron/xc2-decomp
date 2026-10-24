@@ -66,15 +66,15 @@ void DevGraph::grSetScissor(const mm::Rect<int> &scissor) {
 void DevGraph::grClearScreen() {
   DevGraph *graph = get();
   if (graph != nullptr) {
-    grlib::CGLibColorCtl::clearMainFrameBuffer(graph->m_clearCol);
+    grlib::CGLibColorCtl::clearMainFrameBuffer(graph->unknown318);
   }
 }
 
 void DevGraph::grSetClearCol(const mm::Col4 &color) {
   DevGraph *graph = get();
   if (graph != nullptr) {
-    graph->m_clearCol = color;
-    graph->m_clearDepth = 1.0f;
+    graph->unknown318 = color;
+    graph->unknown328 = 1.0f;
   }
 }
 
@@ -112,11 +112,11 @@ void DevGraph::grInitContext() {
   DevGraph *graph = get();
   if (graph != nullptr) {
     graph->grInitContextSys();
-    get()->m_graphQue->flushViewport();
+    get()->unknown330->flushViewport();
   }
 }
 
-void DevGraph::grFlushViewport() { get()->m_graphQue->flushViewport(); }
+void DevGraph::grFlushViewport() { get()->unknown330->flushViewport(); }
 
 int DevGraph::getRootWidth() {
   DevGraph *graph = get();
@@ -180,10 +180,10 @@ bool DevGraph::cmdIsOpenDisplayList() {
 }
 
 void DevGraph::pushRect(const mm::Rect<int> &viewport, const mm::Rect<int> &scissor, const mm::Rect<int> &renderRect, bool isFlush) {
-  get()->m_graphQue->pushRect(viewport, scissor, renderRect, isFlush);
+  get()->unknown330->pushRect(viewport, scissor, renderRect, isFlush);
 }
 
-void DevGraph::popRect() { get()->m_graphQue->popRect(); }
+void DevGraph::popRect() { get()->unknown330->popRect(); }
 
 void DevGraph::getPers(mm::Mat44 &matrix, f32 fovy, f32 near, f32 far) { get()->getPersSys(matrix, fovy, near, far); }
 
@@ -191,20 +191,20 @@ void DevGraph::getOrtho(mm::Mat44 &matrix) { get()->getOrthoSys(matrix); }
 
 f32 DevGraph::getAspect() {
   DevGraph *graph = get();
-  if (graph->m_renderH != 0 && graph->m_renderW != 0) {
-    return static_cast<f32>(graph->m_renderW) / static_cast<f32>(graph->m_renderH);
+  if (graph->unknown234 != 0 && graph->unknown230 != 0) {
+    return static_cast<f32>(graph->unknown230) / static_cast<f32>(graph->unknown234);
   }
 
   return 1.0f;
 }
 
-const mm::Rect<int> &DevGraph::getViewport() { return get()->m_viewport; }
+const mm::Rect<int> &DevGraph::getViewport() { return get()->unknown208; }
 
-const mm::Rect<int> &DevGraph::getRenderPort() { return get()->m_renderPort; }
+const mm::Rect<int> &DevGraph::getRenderPort() { return get()->unknown218; }
 
-int DevGraph::getRenderW() { return get()->m_renderW; }
+int DevGraph::getRenderW() { return get()->unknown230; }
 
-int DevGraph::getRenderH() { return get()->m_renderH; }
+int DevGraph::getRenderH() { return get()->unknown234; }
 
 f32 DevGraph::getScreenScaleW() { return get()->getScreenScaleWSys(); }
 
@@ -219,25 +219,25 @@ f32 DevGraph::getVSyncSec() {
 
 int DevGraph::getVSync() { return dg::s_nVSync; }
 
-void DevGraph::setEnableFrustum(bool isEnable) { get()->m_isEnableFrustum = isEnable; }
+void DevGraph::setEnableFrustum(bool isEnable) { get()->unknown310 = isEnable; }
 
-bool DevGraph::getEnableFrustum() { return get()->m_isEnableFrustum; }
+bool DevGraph::getEnableFrustum() { return get()->unknown310; }
 
 void DevGraph::setFrustumPort(const mm::Rect<int> &port) {
   DevGraph *graph = get();
   if (graph != nullptr) {
-    graph->m_frustumPort = port;
+    graph->unknown238 = port;
   }
 }
 
-const mm::Rect<int> &DevGraph::getFrustumPort() { return get()->m_frustumPort; }
+const mm::Rect<int> &DevGraph::getFrustumPort() { return get()->unknown238; }
 
 void DevGraph::renderEnd() {
   DevGraph *graph = get();
   if (graph != nullptr) {
     for (int i = 0; i < 4; i++) {
-      if (graph->m_outerRenders[i] != nullptr) {
-        graph->m_outerRenders[i]();
+      if (graph->unknown350[i] != nullptr) {
+        graph->unknown350[i]();
       }
     }
 
@@ -266,7 +266,7 @@ f32 DevGraph::getCost() {
   return 0.0f;
 }
 
-DevGraphQue *DevGraph::getGraphQue() { return get()->m_graphQue; }
+DevGraphQue *DevGraph::getGraphQue() { return get()->unknown330; }
 
 bool DevGraph::isInitialized() {
   DevGraph *graph = get();
@@ -296,7 +296,7 @@ void DevGraph::wkUpdate() { ErrViewer::update(); }
 void DevGraph::setFrameSpd(f32 speed) {
   DevGraph *graph = get();
   if (graph != nullptr) {
-    graph->m_frameSpd = speed;
+    graph->unknown348 = speed;
   }
 }
 
@@ -304,8 +304,8 @@ void DevGraph::addOuterRender(void (*render)()) {
   DevGraph *graph = get();
   if (graph != nullptr) {
     for (int i = 0; i < 4; i++) {
-      if (graph->m_outerRenders[i] == nullptr) {
-        graph->m_outerRenders[i] = render;
+      if (graph->unknown350[i] == nullptr) {
+        graph->unknown350[i] = render;
         return;
       }
     }
@@ -316,8 +316,8 @@ void DevGraph::removeOuterRender(void (*render)()) {
   DevGraph *graph = get();
   if (graph != nullptr) {
     for (int i = 0; i < 4; i++) {
-      if (graph->m_outerRenders[i] == render) {
-        graph->m_outerRenders[i] = nullptr;
+      if (graph->unknown350[i] == render) {
+        graph->unknown350[i] = nullptr;
         return;
       }
     }

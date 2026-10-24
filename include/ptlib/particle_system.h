@@ -19,33 +19,33 @@ class RenderManager;
 
 struct DrDrawWorkInfoEF {
   u8 _000[0x560 - 0x000];
-  u32 m_viewIndex;
+  u32 unknown560; // Inferred role: view index; original member name unknown.
 };
 
-static_assert(offsetof(DrDrawWorkInfoEF, m_viewIndex) == 0x560, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown560) == 0x560, "");
 
 struct FxHeader {
   u8 _00[0x09 - 0x00];
-  u8 m_isLoop;
-  u8 m_isCamAxis;
+  u8 unknown09; // Inferred role: loop; original member name unknown.
+  u8 unknown0a; // Inferred role: cam axis; original member name unknown.
   u8 _0b[0x14 - 0x0b];
-  char m_name[0x20];
+  char unknown14[0x20]; // Inferred role: name; original member name unknown.
 };
 
-static_assert(offsetof(FxHeader, m_isLoop) == 0x09, "");
-static_assert(offsetof(FxHeader, m_name) == 0x14, "");
+static_assert(offsetof(FxHeader, unknown09) == 0x09, "");
+static_assert(offsetof(FxHeader, unknown14) == 0x14, "");
 
 struct FxParam {
   u8 _00[0x0d - 0x00];
-  bool m_isPause;
-  bool m_isPauseRequest;
+  bool unknown0d; // Inferred role: pause; original member name unknown.
+  bool unknown0e; // Inferred role: pause request; original member name unknown.
   u8 _0f[0x10 - 0x0f];
-  bool m_isStop;
+  bool unknown10; // Inferred role: stop; original member name unknown.
   u8 _11[0x18 - 0x11];
 };
 
-static_assert(offsetof(FxParam, m_isPause) == 0x0d, "");
-static_assert(offsetof(FxParam, m_isStop) == 0x10, "");
+static_assert(offsetof(FxParam, unknown0d) == 0x0d, "");
+static_assert(offsetof(FxParam, unknown10) == 0x10, "");
 static_assert(sizeof(FxParam) == 0x18, "");
 
 struct CamParam {
@@ -62,21 +62,21 @@ public:
   using OutputStringFunc = void (*)(const char *text);
 
   struct DrFunc {
-    void *(*m_createMdl)(const void *model, const char *name, int index, const void *texture, int textureIndex);
-    void (*m_deleteMdl)(void *model);
-    void *(*m_createLgt)(u32 type, int index);
-    void (*m_deleteLgt)(u32 type, void *light);
-    void (*m_setMdlPos)(void *model, void *pos);
-    void (*m_setMdlMatrix)(void *model, void *matrix);
-    void (*m_setMdlColor)(void *model, void *color);
-    void (*m_setMdlAlpha)(void *model, f32 alpha);
-    void (*m_setMdlSpd)(void *model, void *speed);
-    void (*m_setLgtPos)(u32 type, void *light, void *pos);
-    void (*m_setLgtMatrix)(u32 type, void *light, void *matrix);
-    void (*m_setLgtParam)(u32 type, void *light, void *param);
-    void *(*m_createGrp)(int index, int count);
-    void (*m_destroyGrp)(void *group);
-    void (*m_debugRenderer)(void *renderer);
+    void *(*unknown00)(const void *model, const char *name, int index, const void *texture, int textureIndex); // Inferred role: create mdl; original member name unknown.
+    void (*unknown08)(void *model);                                                                            // Inferred role: delete mdl; original member name unknown.
+    void *(*unknown10)(u32 type, int index);                                                                   // Inferred role: create lgt; original member name unknown.
+    void (*unknown18)(u32 type, void *light);                                                                  // Inferred role: delete lgt; original member name unknown.
+    void (*unknown20)(void *model, void *pos);                                                                 // Inferred role: set mdl pos; original member name unknown.
+    void (*unknown28)(void *model, void *matrix);                                                              // Inferred role: set mdl matrix; original member name unknown.
+    void (*unknown30)(void *model, void *color);                                                               // Inferred role: set mdl color; original member name unknown.
+    void (*unknown38)(void *model, f32 alpha);                                                                 // Inferred role: set mdl alpha; original member name unknown.
+    void (*unknown40)(void *model, void *speed);                                                               // Inferred role: set mdl spd; original member name unknown.
+    void (*unknown48)(u32 type, void *light, void *pos);                                                       // Inferred role: set lgt pos; original member name unknown.
+    void (*unknown50)(u32 type, void *light, void *matrix);                                                    // Inferred role: set lgt matrix; original member name unknown.
+    void (*unknown58)(u32 type, void *light, void *param);                                                     // Inferred role: set lgt param; original member name unknown.
+    void *(*unknown60)(int index, int count);                                                                  // Inferred role: create grp; original member name unknown.
+    void (*unknown68)(void *group);                                                                            // Inferred role: destroy grp; original member name unknown.
+    void (*unknown70)(void *renderer);                                                                         // Inferred role: debug renderer; original member name unknown.
     u8 _78[0x80 - 0x78];
   };
 
@@ -163,24 +163,24 @@ public:
 
   u8 _000[0x130 - 0x000];
   FxParam m_fxParam;
-  f32 m_responsiveAA;
-  f32 m_specScale;
-  f32 m_dirScale;
+  f32 unknown148; // Inferred role: responsive aa; original member name unknown.
+  f32 unknown14c; // Inferred role: spec scale; original member name unknown.
+  f32 unknown150; // Inferred role: dir scale; original member name unknown.
   f32 _154;
-  f32 m_iblSaturation;
-  f32 m_frameCount;
-  const u8 *m_modelTable;
-  bool m_isAllDisp;
+  f32 unknown158;       // Inferred role: ibl saturation; original member name unknown.
+  f32 unknown15c;       // Inferred role: frame count; original member name unknown.
+  const u8 *unknown160; // Inferred role: model table; original member name unknown.
+  bool unknown168;      // Inferred role: all disp; original member name unknown.
   u8 _169[0x170 - 0x169];
-  void *m_groups[4];
+  void *unknown170[4]; // Inferred role: groups; original member name unknown.
 };
 
 static_assert(offsetof(ParticleManager, m_fxParam) == 0x130, "");
-static_assert(offsetof(ParticleManager, m_responsiveAA) == 0x148, "");
-static_assert(offsetof(ParticleManager, m_isAllDisp) == 0x168, "");
-static_assert(offsetof(ParticleManager, m_frameCount) == 0x15c, "");
-static_assert(offsetof(ParticleManager, m_modelTable) == 0x160, "");
-static_assert(offsetof(ParticleManager, m_groups) == 0x170, "");
+static_assert(offsetof(ParticleManager, unknown148) == 0x148, "");
+static_assert(offsetof(ParticleManager, unknown168) == 0x168, "");
+static_assert(offsetof(ParticleManager, unknown15c) == 0x15c, "");
+static_assert(offsetof(ParticleManager, unknown160) == 0x160, "");
+static_assert(offsetof(ParticleManager, unknown170) == 0x170, "");
 static_assert(sizeof(ParticleManager::DrFunc) == 0x80, "");
 
 void efAstMsg(const char *cond, const char *format, ...);

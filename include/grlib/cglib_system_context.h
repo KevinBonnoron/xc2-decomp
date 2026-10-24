@@ -57,56 +57,56 @@ public:
   void releaseDelayVertex(CGLibMemType &memType);
 
   u8 _0008[0x0538 - 0x0008];
-  CGLibTexDescriptor m_texDescriptor;
+  CGLibTexDescriptor unknown538; // Inferred role: tex descriptor; original member name unknown.
   u8 _05a0[0x0608 - 0x05a0];
-  CGLibBuffSamplerTbl m_buffSamplerTbl;
+  CGLibBuffSamplerTbl unknown608; // Inferred role: buff sampler tbl; original member name unknown.
   u8 _0e38[0x0e60 - 0x0e38];
-  CGLibBuffTexture m_buffTexture;
-  CGLibBuffMemPoolTbl m_buffMemPoolTbl;
+  CGLibBuffTexture unknowne60;    // Inferred role: buff texture; original member name unknown.
+  CGLibBuffMemPoolTbl unknowne90; // Inferred role: buff mem pool tbl; original member name unknown.
   u8 _0eb8[0x1070 - 0x0eb8];
-  CGLibPipeline m_pipeline;
-  CGLibRenderTarget m_mainRenderTargets[2];
-  CGLibDepthTarget m_mainDepthTarget;
+  CGLibPipeline unknown1070;        // Inferred role: pipeline; original member name unknown.
+  CGLibRenderTarget unknown1110[2]; // Inferred role: main render targets; original member name unknown.
+  CGLibDepthTarget unknown18a0;     // Inferred role: main depth target; original member name unknown.
   u8 _19c8[0x20d4 - 0x19c8];
-  s32 m_mainRenderTargetIndex;
+  s32 unknown20d4; // Inferred role: main render target index; original member name unknown.
   u8 _20d8[0x2320 - 0x20d8];
-  CGLibDecShader m_decShader;
-  CGLibVtxFetch m_vtxFetches[3];
+  CGLibDecShader unknown2320;   // Inferred role: dec shader; original member name unknown.
+  CGLibVtxFetch unknown2388[3]; // Inferred role: vtx fetches; original member name unknown.
   u8 _23b8[0x2548 - 0x23b8];
-  u64 m_glbUniformGpuAddress;
-  u8 *m_glbUniformBuffer;
+  u64 unknown2548; // Inferred role: glb uniform gpu address; original member name unknown.
+  u8 *unknown2550; // Inferred role: glb uniform buffer; original member name unknown.
   u8 _2558[0x2568 - 0x2558];
-  u64 m_glbUniformOffset;
-  u32 m_glbUniformSize;
-  u32 m_glbUniformRest;
+  u64 unknown2568; // Inferred role: glb uniform offset; original member name unknown.
+  u32 unknown2570; // Inferred role: glb uniform size; original member name unknown.
+  u32 unknown2574; // Inferred role: glb uniform rest; original member name unknown.
   u8 _2578[0x25a0 - 0x2578];
-  u64 m_pixelResAreaGpuAddress;
-  u32 m_pixelResAreaOffset;
-  s32 m_registerNum;
-  const NVNtextureView *m_registerViews[8];
-  const NVNtexture *m_registerTextures[8];
-  LibMainStateViewPort m_defViewPort;
-  const NVNtexture *m_registerDepth;
+  u64 unknown25a0;                      // Inferred role: pixel res area gpu address; original member name unknown.
+  u32 unknown25a8;                      // Inferred role: pixel res area offset; original member name unknown.
+  s32 unknown25ac;                      // Inferred role: register num; original member name unknown.
+  const NVNtextureView *unknown25b0[8]; // Inferred role: register views; original member name unknown.
+  const NVNtexture *unknown25f0[8];     // Inferred role: register textures; original member name unknown.
+  LibMainStateViewPort unknown2630;     // Inferred role: def view port; original member name unknown.
+  const NVNtexture *unknown2648;        // Inferred role: register depth; original member name unknown.
 };
 
-static_assert(offsetof(CGLibSystemContext, m_texDescriptor) == 0x0538, "");
-static_assert(offsetof(CGLibSystemContext, m_buffSamplerTbl) == 0x0608, "");
-static_assert(offsetof(CGLibSystemContext, m_buffTexture) == 0x0e60, "");
-static_assert(offsetof(CGLibSystemContext, m_buffMemPoolTbl) == 0x0e90, "");
-static_assert(offsetof(CGLibSystemContext, m_pipeline) == 0x1070, "");
-static_assert(offsetof(CGLibSystemContext, m_mainRenderTargets) == 0x1110, "");
-static_assert(offsetof(CGLibSystemContext, m_mainDepthTarget) == 0x18a0, "");
-static_assert(offsetof(CGLibSystemContext, m_mainRenderTargetIndex) == 0x20d4, "");
-static_assert(offsetof(CGLibSystemContext, m_decShader) == 0x2320, "");
-static_assert(offsetof(CGLibSystemContext, m_vtxFetches) == 0x2388, "");
-static_assert(offsetof(CGLibSystemContext, m_glbUniformGpuAddress) == 0x2548, "");
-static_assert(offsetof(CGLibSystemContext, m_glbUniformOffset) == 0x2568, "");
-static_assert(offsetof(CGLibSystemContext, m_pixelResAreaGpuAddress) == 0x25a0, "");
-static_assert(offsetof(CGLibSystemContext, m_registerNum) == 0x25ac, "");
-static_assert(offsetof(CGLibSystemContext, m_registerViews) == 0x25b0, "");
-static_assert(offsetof(CGLibSystemContext, m_registerTextures) == 0x25f0, "");
-static_assert(offsetof(CGLibSystemContext, m_defViewPort) == 0x2630, "");
-static_assert(offsetof(CGLibSystemContext, m_registerDepth) == 0x2648, "");
+static_assert(offsetof(CGLibSystemContext, unknown538) == 0x0538, "");
+static_assert(offsetof(CGLibSystemContext, unknown608) == 0x0608, "");
+static_assert(offsetof(CGLibSystemContext, unknowne60) == 0x0e60, "");
+static_assert(offsetof(CGLibSystemContext, unknowne90) == 0x0e90, "");
+static_assert(offsetof(CGLibSystemContext, unknown1070) == 0x1070, "");
+static_assert(offsetof(CGLibSystemContext, unknown1110) == 0x1110, "");
+static_assert(offsetof(CGLibSystemContext, unknown18a0) == 0x18a0, "");
+static_assert(offsetof(CGLibSystemContext, unknown20d4) == 0x20d4, "");
+static_assert(offsetof(CGLibSystemContext, unknown2320) == 0x2320, "");
+static_assert(offsetof(CGLibSystemContext, unknown2388) == 0x2388, "");
+static_assert(offsetof(CGLibSystemContext, unknown2548) == 0x2548, "");
+static_assert(offsetof(CGLibSystemContext, unknown2568) == 0x2568, "");
+static_assert(offsetof(CGLibSystemContext, unknown25a0) == 0x25a0, "");
+static_assert(offsetof(CGLibSystemContext, unknown25ac) == 0x25ac, "");
+static_assert(offsetof(CGLibSystemContext, unknown25b0) == 0x25b0, "");
+static_assert(offsetof(CGLibSystemContext, unknown25f0) == 0x25f0, "");
+static_assert(offsetof(CGLibSystemContext, unknown2630) == 0x2630, "");
+static_assert(offsetof(CGLibSystemContext, unknown2648) == 0x2648, "");
 
 } // namespace context
 } // namespace grlib

@@ -14,7 +14,7 @@ void EffectCasterSend::sendData(f32 scale) {
     return;
   }
 
-  unknown88[effect::SystemManager::getPtr()->writeBuffer != 0] = scale;
+  unknown88[effect::SystemManager::getPtr()->unknown7824d != 0] = scale;
 }
 
 void EffectCasterSend::sendDataFrame(f32 frame) {
@@ -22,7 +22,7 @@ void EffectCasterSend::sendDataFrame(f32 frame) {
     return;
   }
 
-  unknown90[effect::SystemManager::getPtr()->writeBuffer != 0] = frame;
+  unknown90[effect::SystemManager::getPtr()->unknown7824d != 0] = frame;
 }
 
 void EffectCasterSend::sendDataStateName(const char *name) {
@@ -30,10 +30,10 @@ void EffectCasterSend::sendDataStateName(const char *name) {
     return;
   }
 
-  unknown98[effect::SystemManager::getPtr()->writeBuffer != 0] = name;
+  unknown98[effect::SystemManager::getPtr()->unknown7824d != 0] = name;
 }
 
-const char *EffectCasterSend::getStateName() { return unknown98[effect::SystemManager::getPtr()->writeBuffer == 0].c_str(); }
+const char *EffectCasterSend::getStateName() { return unknown98[effect::SystemManager::getPtr()->unknown7824d == 0].c_str(); }
 
 EffectBindData *EffectCasterSend::getBindData(u32 &count) {
   if (m_caster == nullptr) {
@@ -45,8 +45,8 @@ EffectBindData *EffectCasterSend::getBindData(u32 &count) {
   return datas;
 }
 
-f32 EffectCasterSend::getMdlFrame() { return unknown90[effect::SystemManager::getPtr()->writeBuffer == 0]; }
+f32 EffectCasterSend::getMdlFrame() { return unknown90[effect::SystemManager::getPtr()->unknown7824d == 0]; }
 
-f32 EffectCasterSend::getMdlScl() { return unknown88[effect::SystemManager::getPtr()->writeBuffer == 0]; }
+f32 EffectCasterSend::getMdlScl() { return unknown88[effect::SystemManager::getPtr()->unknown7824d == 0]; }
 
 } // namespace fw

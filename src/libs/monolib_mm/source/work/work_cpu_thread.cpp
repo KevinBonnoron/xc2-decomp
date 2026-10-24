@@ -9,61 +9,61 @@
 namespace ml {
 
 bool WorkCpuThread::isSuspendThread() const {
-  if (m_thread == nullptr) {
+  if (unknown1b8 == nullptr) {
     return true;
   }
-  return m_thread->isSuspended();
+  return unknown1b8->isSuspended();
 }
 
-CPUID WorkCpuThread::getCPUID() const { return m_cpuId; }
+CPUID WorkCpuThread::getCPUID() const { return m_CPUID; }
 
 void WorkCpuThread::getStackInfo(unsigned long &address, unsigned long &size) {
-  address = m_stackAddress;
-  size = m_stackSize;
+  address = unknown660;
+  size = unknown668;
 }
 
-u64 WorkCpuThread::getThreadID() const { return m_threadId; }
+u64 WorkCpuThread::getThreadID() const { return m_threadID; }
 
-f32 WorkCpuThread::getJobCost() const { return m_jobCost / DevGraph::getFrameSyncSec() * 100.0f; }
+f32 WorkCpuThread::getJobCost() const { return unknown1e4 / DevGraph::getFrameSyncSec() * 100.0f; }
 
 int WorkCpuThread::getJobNum() const {
-  CS cs(*m_cs);
-  return m_jobNum;
+  CS cs(*unknown1e8);
+  return unknown648;
 }
 
 void WorkCpuThread::setEvent(bool isSignal) {
-  if (m_thread != nullptr) {
-    m_thread->setSignalEvent(isSignal);
+  if (unknown1b8 != nullptr) {
+    unknown1b8->setSignalEvent(isSignal);
   }
 }
 
 u32 WorkCpuThread::updateDirect(bool isDirect) {
-  m_isDirect = isDirect;
+  unknown671 = isDirect;
   threadFunc(this);
-  m_isDirect = false;
+  unknown671 = false;
   return 0;
 }
 
 bool WorkCpuThread::hasWorkingJob() const {
-  CS cs(*m_cs);
-  return m_workingJob != nullptr;
+  CS cs(*unknown1e8);
+  return unknown650 != nullptr;
 }
 
 u32 WorkCpuThread::getAboutJobNumC() const { return m_aboutJobNumC; }
 
 void WorkCpuThread::beginUpdate() {
-  m_jobClock = 0.0f;
-  DevClock::getClockNow(m_beginClock);
-  m_endClock = m_beginClock;
+  unknown1e0 = 0.0f;
+  DevClock::getClockNow(unknown1d0);
+  unknown1d8 = unknown1d0;
 }
 
 void WorkCpuThread::calcPerformance(bool isCalc) {
   if (isCalc) {
-    if (m_cpuId == CPUID_CORE_0) {
-      long clock = m_endClock - m_beginClock;
-      m_jobCost = DevClock::getClock2Sec(clock);
+    if (m_CPUID == CPUID_CORE_0) {
+      long clock = unknown1d8 - unknown1d0;
+      unknown1e4 = DevClock::getClock2Sec(clock);
     } else {
-      m_jobCost = m_jobClock;
+      unknown1e4 = unknown1e0;
     }
   }
 }
@@ -72,69 +72,69 @@ void WorkCpuThread::changeFrame() {}
 
 bool WorkCpuThread::isStackOverFlow() const { return false; }
 
-bool WorkCpuThread::isBeginTerm() const { return m_isBeginTerm; }
+bool WorkCpuThread::isBeginTerm() const { return m_beginTerm; }
 
 void WorkCpuThread::addJobClock(f32 clock) {
-  m_jobClock += clock;
-  DevClock::getClockNow(m_endClock);
+  unknown1e0 += clock;
+  DevClock::getClockNow(unknown1d8);
 }
 
 void WorkCpuThread::terminateWorkingJob(const TJOB *job) {
-  CS cs(*m_cs);
-  m_workingJob = nullptr;
+  CS cs(*unknown1e8);
+  unknown650 = nullptr;
 }
 
 void WorkCpuThread::waitEvent() {
-  if (m_thread != nullptr) {
-    m_thread->waitSignalEvent();
+  if (unknown1b8 != nullptr) {
+    unknown1b8->waitSignalEvent();
   }
 }
 
 void WorkCpuThread::setWorkingJob(TJOB *job) {
-  CS cs(*m_cs);
-  m_workingJob = job;
+  CS cs(*unknown1e8);
+  unknown650 = job;
 }
 
-void WorkCpuThread::setBackground(bool isBackground) { m_isBackground = isBackground; }
+void WorkCpuThread::setBackground(bool isBackground) { m_background = isBackground; }
 
-bool WorkCpuThread::isBackground() const { return m_isBackground; }
+bool WorkCpuThread::isBackground() const { return m_background; }
 
 void WorkCpuThread::setStackInfo(unsigned long address, unsigned long size, void *stack) {
-  m_stackAddress = address;
-  m_stackSize = size;
+  unknown660 = address;
+  unknown668 = size;
 }
 
 void WorkCpuThread::suspendThread() {
-  if (m_thread != nullptr) {
-    m_thread->suspend();
+  if (unknown1b8 != nullptr) {
+    unknown1b8->suspend();
   }
 }
 
 void WorkCpuThread::resumeThread() {
-  if (m_thread != nullptr) {
-    m_thread->resume();
+  if (unknown1b8 != nullptr) {
+    unknown1b8->resume();
   }
 }
 
 void WorkCpuThread::wkTail() {
   const mm::Col3 &color = mm::Col3::yellow;
-  m_color = static_cast<u32>(color.r * 255.0f) | static_cast<u32>(color.g * 255.0f) << 8 | static_cast<u32>(color.b * 255.0f) << 16 | 0xff000000;
+  unknown658 = static_cast<u32>(color.r * 255.0f) | static_cast<u32>(color.g * 255.0f) << 8 | static_cast<u32>(color.b * 255.0f) << 16 | 0xff000000;
 }
 
 bool WorkCpuThread::wkStandbyLogin() { return WorkObj::wkStandbyLogin(); }
 
-void WorkCpuThread::termThread() { m_isBeginTerm = true; }
+void WorkCpuThread::termThread() { m_beginTerm = true; }
 
 bool WorkCpuThread::isTermThread() {
-  if (m_thread == nullptr) {
+  if (unknown1b8 == nullptr) {
     return true;
   }
-  return m_thread->isTerminated();
+  return unknown1b8->isTerminated();
 }
 
 void WorkCpuThread::exitThread() {
-  if (m_thread != nullptr) {
-    m_thread->exitThread();
+  if (unknown1b8 != nullptr) {
+    unknown1b8->exitThread();
   }
 }
 

@@ -10,9 +10,9 @@ class IDColiResult;
 struct CLBoxWork;
 
 struct CLSphereWork {
-  mm::Vec3 center;
+  mm::Vec3 unknown00; // Inferred role: center; original member name unknown.
   u8 _0c[0x10 - 0xc];
-  f32 radius;
+  f32 unknown14; // Inferred role: radius; original member name unknown.
 };
 
 struct CLCapsuleWork {
@@ -24,7 +24,7 @@ struct CLLineWork {
 };
 
 struct CLRayWork {
-  CLLineWork lines[2];
+  CLLineWork unknown00[2]; // Inferred role: lines; original member name unknown.
 };
 
 struct IDColiInput {

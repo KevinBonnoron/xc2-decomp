@@ -71,10 +71,10 @@ f32 drawFontGetWidth(const char *format, ...) {
   va_start(arguments, format);
   vsnprintf(text, FONT_BUFFER_SIZE - 1, format, arguments);
   va_end(arguments);
-  return ml::DevGraph::fontGetWidth(text, ml::FONT_STYLE_NORMAL, ml::DebDraw::getCacheDraw()->fontScaleX);
+  return ml::DevGraph::fontGetWidth(text, ml::FONT_STYLE_NORMAL, ml::DebDraw::getCacheDraw()->unknown6054);
 }
 
-f32 drawFontGetHeight() { return ml::DevGraph::fontGetHeight(ml::FONT_STYLE_NORMAL, ml::DebDraw::getCacheDraw()->fontScaleY); }
+f32 drawFontGetHeight() { return ml::DevGraph::fontGetHeight(ml::FONT_STYLE_NORMAL, ml::DebDraw::getCacheDraw()->unknown6058); }
 
 bool drawFontScale(f32 x, f32 y) { return ml::DebDraw::getCacheDraw()->fontScale(x, y); }
 
@@ -138,7 +138,7 @@ bool drawLineSquare2D(const mm::Rect<int> &rect, const mm::Col4 &color) {
 
 bool drawSphere(const mm::Mat44 &matrix, f32 radius, const mm::Col4 &color, u32 division) {
   ml::CacheDraw *cacheDraw = ml::DebDraw::getCacheDraw();
-  bool isZWrite = cacheDraw->isZWrite;
+  bool isZWrite = cacheDraw->unknown6070;
   if (color.a < 1.0f && isZWrite) {
     cacheDraw->setZWrite(false);
   }
@@ -176,7 +176,7 @@ bool drawSphereLine(const PrimSphere &sphere, const mm::Col4 &color, u32 divisio
 bool drawPlaneSphere(const mm::Mat44 &matrix, f32 radius, const mm::Col4 &color, u32 division) {
   ml::CacheDraw *cacheDraw = ml::DebDraw::getCacheDraw();
   mm::Vec3 position(matrix.rows[3][0], matrix.rows[3][1], matrix.rows[3][2]);
-  bool isZWrite = cacheDraw->isZWrite;
+  bool isZWrite = cacheDraw->unknown6070;
   if (color.a < 1.0f && isZWrite) {
     cacheDraw->setZWrite(false);
   }
@@ -202,7 +202,7 @@ bool drawPlaneSphereLine(const mm::Mat44 &matrix, f32 radius, const mm::Col4 &co
 
 bool drawCone(const mm::Mat44 &matrix, f32 radius, f32 height, const mm::Col4 &color, u32 division) {
   ml::CacheDraw *cacheDraw = ml::DebDraw::getCacheDraw();
-  bool isZWrite = cacheDraw->isZWrite;
+  bool isZWrite = cacheDraw->unknown6070;
   if (color.a < 1.0f && isZWrite) {
     cacheDraw->setZWrite(false);
   }
@@ -227,7 +227,7 @@ bool drawConeLine(const mm::Mat44 &matrix, f32 radius, f32 height, const mm::Col
 
 bool drawCylinder(const mm::Mat44 &matrix, f32 radius, f32 height, const mm::Col4 &color, u32 division) {
   ml::CacheDraw *cacheDraw = ml::DebDraw::getCacheDraw();
-  bool isZWrite = cacheDraw->isZWrite;
+  bool isZWrite = cacheDraw->unknown6070;
   if (color.a < 1.0f && isZWrite) {
     cacheDraw->setZWrite(false);
   }
@@ -252,7 +252,7 @@ bool drawCylinderLine(const mm::Mat44 &matrix, f32 radius, f32 height, const mm:
 
 bool drawCapsule(const mm::Mat44 &matrix, f32 radius, f32 height, const mm::Col4 &color, u32 division) {
   ml::CacheDraw *cacheDraw = ml::DebDraw::getCacheDraw();
-  bool isZWrite = cacheDraw->isZWrite;
+  bool isZWrite = cacheDraw->unknown6070;
   if (color.a < 1.0f && isZWrite) {
     cacheDraw->setZWrite(false);
   }
@@ -289,7 +289,7 @@ bool drawCapsuleLine(const PrimCapsule &capsule, const mm::Col4 &color, u32 divi
 
 bool drawSquare(const mm::Mat44 &matrix, f32 width, f32 height, const mm::Col4 &color) {
   ml::CacheDraw *cacheDraw = ml::DebDraw::getCacheDraw();
-  bool isZWrite = cacheDraw->isZWrite;
+  bool isZWrite = cacheDraw->unknown6070;
   if (color.a < 1.0f && isZWrite) {
     cacheDraw->setZWrite(false);
   }
@@ -411,7 +411,7 @@ bool drawTriangle2D(const mm::Pnt<int> &first, const mm::Pnt<int> &second, const
 
 bool drawTriangle(const mm::Mat44 &matrix, const mm::Vec3 &first, const mm::Vec3 &second, const mm::Vec3 &third, const mm::Col4 &color) {
   ml::CacheDraw *cacheDraw = ml::DebDraw::getCacheDraw();
-  bool isZWrite = cacheDraw->isZWrite;
+  bool isZWrite = cacheDraw->unknown6070;
   if (color.a < 1.0f && isZWrite) {
     cacheDraw->setZWrite(false);
   }

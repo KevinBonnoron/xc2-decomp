@@ -138,7 +138,7 @@ void SeqManager::login() {
 
 void SeqManager::logout() {
   ml::DevSetting::setAutoSleepExtended(static_cast<ml::SleepExtendType>(0));
-  ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+  ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
   if (parmAcc.isGlassBr()) {
     parmAcc.setGlassBr(false, 0);
   }

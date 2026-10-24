@@ -8,44 +8,44 @@ IDColiParmsCharacter::IDColiParmsCharacter(IDColiObj *object) : IDColiParmsBase(
 
 void IDColiParmsCharacter::createSphere(f32 radius) {
   m_character->m_size = mm::Vec3(radius, radius, radius);
-  m_character->m_shapeType = SHAPE_TYPE_SPHERE;
-  m_character->m_updateFlags |= IDColiObj::UPDATE_SIZE;
+  m_character->unknownc0 = SHAPE_TYPE_SPHERE;
+  m_character->unknown1c |= IDColiObj::UPDATE_SIZE;
 }
 
 void IDColiParmsCharacter::createCapsule(f32 radius, f32 height, bool isRotate) {
   m_character->m_size = mm::Vec3(height, radius, height);
   if (isRotate) {
-    m_character->m_shapeType = SHAPE_TYPE_CAPSULE_ROTATE;
-    m_character->m_updateFlags |= IDColiObj::UPDATE_ROTATE;
+    m_character->unknownc0 = SHAPE_TYPE_CAPSULE_ROTATE;
+    m_character->unknown1c |= IDColiObj::UPDATE_ROTATE;
   } else {
-    m_character->m_shapeType = SHAPE_TYPE_CAPSULE;
-    m_character->m_updateFlags &= ~IDColiObj::UPDATE_ROTATE;
+    m_character->unknownc0 = SHAPE_TYPE_CAPSULE;
+    m_character->unknown1c &= ~IDColiObj::UPDATE_ROTATE;
   }
-  m_character->m_updateFlags |= IDColiObj::UPDATE_SIZE;
+  m_character->unknown1c |= IDColiObj::UPDATE_SIZE;
 }
 
 void IDColiParmsCharacter::createBox(const mm::Vec3 &size, bool isRotate) {
   m_character->m_size = size;
   if (isRotate) {
-    m_character->m_shapeType = SHAPE_TYPE_BOX_ROTATE;
-    m_character->m_updateFlags |= IDColiObj::UPDATE_ROTATE;
+    m_character->unknownc0 = SHAPE_TYPE_BOX_ROTATE;
+    m_character->unknown1c |= IDColiObj::UPDATE_ROTATE;
   } else {
-    m_character->m_shapeType = SHAPE_TYPE_BOX;
-    m_character->m_updateFlags &= ~IDColiObj::UPDATE_ROTATE;
+    m_character->unknownc0 = SHAPE_TYPE_BOX;
+    m_character->unknown1c &= ~IDColiObj::UPDATE_ROTATE;
   }
-  m_character->m_updateFlags |= IDColiObj::UPDATE_SIZE;
+  m_character->unknown1c |= IDColiObj::UPDATE_SIZE;
 }
 
 void IDColiParmsCharacter::createCharacter(f32 radius, f32 height) {
   m_character->m_size = mm::Vec3(height, radius, height);
-  m_character->m_shapeType = SHAPE_TYPE_CHARACTER;
-  m_character->m_updateFlags |= IDColiObj::UPDATE_SIZE;
+  m_character->unknownc0 = SHAPE_TYPE_CHARACTER;
+  m_character->unknown1c |= IDColiObj::UPDATE_SIZE;
 }
 
 void IDColiParmsCharacter::createData(const void *binary) { m_character->createBinary(binary); }
 
-void IDColiParmsCharacter::setAdsorption(f32 adsorption) { m_character->m_adsorption = adsorption; }
+void IDColiParmsCharacter::setAdsorption(f32 adsorption) { m_character->unknown220 = adsorption; }
 
-f32 IDColiParmsCharacter::getAdsorption() const { return m_character->m_adsorption; }
+f32 IDColiParmsCharacter::getAdsorption() const { return m_character->unknown220; }
 
 } // namespace idcoli

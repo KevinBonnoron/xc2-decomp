@@ -21,7 +21,7 @@ bool WinProcRoot::isInitialized() {
 }
 
 bool WinProcRoot::wkStandbyLogout() {
-  if (m_children.size() != 0) {
+  if (unknown60.size() != 0) {
     return false;
   }
 

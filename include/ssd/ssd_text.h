@@ -26,12 +26,12 @@ public:
 
   static const char16_t *EmptyText;
 
-  Hash hash;
-  const void *text;
-  TextEncodeType encodeType;
+  Hash unknown08;           // Inferred role: hash; original member name unknown.
+  const void *unknown10;    // Inferred role: text; original member name unknown.
+  TextEncodeType unknown18; // Inferred role: encode type; original member name unknown.
 };
 
-static_assert(offsetof(TextRef, hash) == 0x8, "");
-static_assert(offsetof(TextRef, encodeType) == 0x18, "");
+static_assert(offsetof(TextRef, unknown08) == 0x8, "");
+static_assert(offsetof(TextRef, unknown18) == 0x18, "");
 
 } // namespace ssd

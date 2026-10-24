@@ -40,7 +40,7 @@ public:
   IMemAllocator *m_allocator;
   void *m_buffer;
   size_t m_capacity;
-  size_t m_allocNum;
+  size_t unknown18; // Inferred role: alloc num; original member name unknown.
   mm::mtl::FixStr<64> m_name;
 };
 

@@ -18,7 +18,7 @@ bool DevFileParser::isInitialized() {
 bool DevFileParser::wkStandbyLogin() { return WorkObj::wkStandbyLogin(); }
 
 bool DevFileParser::wkStandbyLogout() {
-  if (m_children.size() == 0 && WorkSystem::get() == nullptr && LibMain::get() == nullptr) {
+  if (unknown60.size() == 0 && WorkSystem::get() == nullptr && LibMain::get() == nullptr) {
     return WorkObj::wkStandbyLogout();
   }
 

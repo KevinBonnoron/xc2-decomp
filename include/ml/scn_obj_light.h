@@ -43,14 +43,14 @@ public:
   virtual int getGroup() const = 0;
   virtual void setOffsetPos(const mm::Vec3 &position) = 0;
   virtual const mm::Vec3 &getOffsetPos() const = 0;
-  virtual void setPos(const mm::Vec3 &position) { m_renderInfo.m_back->unknown00.m_pos = position; }
-  virtual void setRot(const mm::Vec3 &rotation) { m_renderInfo.m_back->unknown00.m_rot = rotation; }
-  virtual void setScl(const mm::Vec3 &scale) { m_renderInfo.m_back->unknown00.m_scl = scale; }
+  virtual void setPos(const mm::Vec3 &position) { unknown60.m_back->unknown00.unknown00 = position; }
+  virtual void setRot(const mm::Vec3 &rotation) { unknown60.m_back->unknown00.unknownf0 = rotation; }
+  virtual void setScl(const mm::Vec3 &scale) { unknown60.m_back->unknown00.unknown20 = scale; }
 
   virtual void setMat(const mm::Mat44 &matrix) {
-    AttrTransform &transform = m_renderInfo.m_back->unknown00;
-    transform.m_matrix = matrix;
-    transform.m_flags |= AttrTransform::FLAG_MATRIX;
+    AttrTransform &transform = unknown60.m_back->unknown00;
+    transform.unknown30 = matrix;
+    transform.unknown130 |= AttrTransform::FLAG_MATRIX;
   }
 
   virtual void setDeugDisp2D(bool isDisp) {}
@@ -58,12 +58,12 @@ public:
   virtual void setLocalIBLName(const char *name) = 0;
 
   mm::mtl::FixStr<64> m_name;
-  threadval<RENDER_INFO> m_renderInfo;
-  u32 m_flags;
+  threadval<RENDER_INFO> unknown60; // Inferred role: render info; original member name unknown.
+  u32 unknown310;                   // Inferred role: flags; original member name unknown.
 };
 
 static_assert(offsetof(ScnObjLight, m_name) == 0x14, "");
-static_assert(offsetof(ScnObjLight, m_renderInfo) == 0x60, "");
-static_assert(offsetof(ScnObjLight, m_flags) == 0x310, "");
+static_assert(offsetof(ScnObjLight, unknown60) == 0x60, "");
+static_assert(offsetof(ScnObjLight, unknown310) == 0x310, "");
 
 } // namespace ml

@@ -17,16 +17,16 @@ public:
   void createIconInfo(u32 num);
 
   u8 _1c[0x28 - 0x1c];
-  u32 m_styleDataMax;
+  u32 unknown28; // Inferred role: style data max; original member name unknown.
   u8 _2c[0x40 - 0x2c];
-  f32 m_rubyScale;
+  f32 unknown40; // Inferred role: ruby scale; original member name unknown.
   u8 _44[0x48 - 0x44];
-  void *m_colorInfo;
-  void *m_iconInfo;
+  void *unknown48; // Inferred role: color info; original member name unknown.
+  void *unknown50; // Inferred role: icon info; original member name unknown.
 };
 
-static_assert(offsetof(LayerFontStyleObj, m_styleDataMax) == 0x28, "");
-static_assert(offsetof(LayerFontStyleObj, m_rubyScale) == 0x40, "");
-static_assert(offsetof(LayerFontStyleObj, m_colorInfo) == 0x48, "");
+static_assert(offsetof(LayerFontStyleObj, unknown28) == 0x28, "");
+static_assert(offsetof(LayerFontStyleObj, unknown40) == 0x40, "");
+static_assert(offsetof(LayerFontStyleObj, unknown48) == 0x48, "");
 
 } // namespace layer

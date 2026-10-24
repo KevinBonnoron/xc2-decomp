@@ -19,21 +19,21 @@ public:
 };
 
 struct DevFileParamTh {
-  DevFileParamTh() : path(nullptr), _08(0), _10(0), buffer(nullptr), offset(0), readSize(0), _54(0), _58(1), _5c(0), event(nullptr), priority(10), _6c(true), _6d(false), _6e(false) {}
+  DevFileParamTh() : unknown00(nullptr), _08(0), _10(0), unknown40(nullptr), unknown4c(0), unknown50(0), _54(0), _58(1), _5c(0), unknown60(nullptr), unknown68(10), _6c(true), _6d(false), _6e(false) {}
 
-  const char *path;
+  const char *unknown00; // Inferred role: path; original member name unknown.
   u32 _08;
   u64 _10;
   mm::mtl::FixedVector<u64, 4> _18;
-  void *buffer;
-  u32 size;
-  u32 offset;
-  u32 readSize;
+  void *unknown40; // Inferred role: buffer; original member name unknown.
+  u32 unknown48;   // Inferred role: size; original member name unknown.
+  u32 unknown4c;   // Inferred role: offset; original member name unknown.
+  u32 unknown50;   // Inferred role: read size; original member name unknown.
   u32 _54;
   u32 _58;
   u32 _5c;
-  IWorkEvent *event;
-  u32 priority;
+  IWorkEvent *unknown60; // Inferred role: event; original member name unknown.
+  u32 unknown68;         // Inferred role: priority; original member name unknown.
   bool _6c;
   bool _6d;
   bool _6e;

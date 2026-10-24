@@ -47,80 +47,80 @@ class LayerFontResObj;
 
 LayerAccManager::LayerAccManager() {}
 
-LayerBase *LayerAccManager::createObj(const void *data) { return LayerManager::get()->m_objManager->createObj(data); }
+LayerBase *LayerAccManager::createObj(const void *data) { return LayerManager::get()->unknown60->createObj(data); }
 
-LayerBase *LayerAccManager::createMaskObj(const void *data) { return LayerManager::get()->m_objManager->createMaskObj(data); }
+LayerBase *LayerAccManager::createMaskObj(const void *data) { return LayerManager::get()->unknown60->createMaskObj(data); }
 
-LayerBase *LayerAccManager::createFontObj() { return LayerManager::get()->m_objManager->createFontObj(); }
+LayerBase *LayerAccManager::createFontObj() { return LayerManager::get()->unknown60->createFontObj(); }
 
-LayerBase *LayerAccManager::createLayoutObj() { return LayerManager::get()->m_objManager->createLayoutObj(); }
+LayerBase *LayerAccManager::createLayoutObj() { return LayerManager::get()->unknown60->createLayoutObj(); }
 
-LayerBase *LayerAccManager::createTexObj(const grlib::CGLibTextureBuffer &texture) { return LayerManager::get()->m_objManager->createTexObj(texture); }
+LayerBase *LayerAccManager::createTexObj(const grlib::CGLibTextureBuffer &texture) { return LayerManager::get()->unknown60->createTexObj(texture); }
 
-LayerBase *LayerAccManager::createMemObj(u32 width, u32 height, LayerMemType type) { return LayerManager::get()->m_objManager->createMemObj(width, height, type); }
+LayerBase *LayerAccManager::createMemObj(u32 width, u32 height, LayerMemType type) { return LayerManager::get()->unknown60->createMemObj(width, height, type); }
 
 LayerBase *LayerAccManager::createPolyObj(u32 vertexNum, u32 indexNum, u16 width, u16 height, LayerPrimitiveType type) {
-  return LayerManager::get()->m_objManager->createPolyObj(vertexNum, indexNum, width, height, type);
+  return LayerManager::get()->unknown60->createPolyObj(vertexNum, indexNum, width, height, type);
 }
 
-LayerBase *LayerAccManager::createFilterObj() { return LayerManager::get()->m_objManager->createFilterObj(); }
+LayerBase *LayerAccManager::createFilterObj() { return LayerManager::get()->unknown60->createFilterObj(); }
 
-LayerBase *LayerAccManager::createFontResObj(const void *data) { return LayerManager::get()->m_fontManager->createFontResObj(data); }
+LayerBase *LayerAccManager::createFontResObj(const void *data) { return LayerManager::get()->unknown68->createFontResObj(data); }
 
-LayerBase *LayerAccManager::createFontIconObj(const void *data) { return LayerManager::get()->m_fontManager->createFontIconObj(data); }
+LayerBase *LayerAccManager::createFontIconObj(const void *data) { return LayerManager::get()->unknown68->createFontIconObj(data); }
 
-LayerBase *LayerAccManager::createFontStyleObj(const void *data) { return LayerManager::get()->m_fontManager->createStyleObj(data); }
+LayerBase *LayerAccManager::createFontStyleObj(const void *data) { return LayerManager::get()->unknown68->createStyleObj(data); }
 
-LayerBase *LayerAccManager::createFontColorMapObj(const void *data) { return LayerManager::get()->m_fontManager->createFontColMapObj(data); }
+LayerBase *LayerAccManager::createFontColorMapObj(const void *data) { return LayerManager::get()->unknown68->createFontColMapObj(data); }
 
-f32 LayerAccManager::getFrameRate() const { return LayerManager::get()->m_frameRate; }
+f32 LayerAccManager::getFrameRate() const { return LayerManager::get()->unknown7c; }
 
 void LayerAccManager::setFrameRate(f32 rate) { LayerManager::get()->setFrameRate(rate); }
 
 void LayerManager::setFrameRate(f32 rate) {
-  m_frameRate = rate;
-  m_frameTime = 1.0f / rate;
+  unknown7c = rate;
+  unknown80 = 1.0f / rate;
 }
 
 f32 LayerAccManager::getScreenWidth() const { return LayerManager::get()->getScreenWidth(); }
 
-f32 LayerManager::getScreenWidth() const { return m_shdManager->m_screenWidth; }
+f32 LayerManager::getScreenWidth() const { return unknown58->unknown530; }
 
 f32 LayerAccManager::getScreenHeight() const { return LayerManager::get()->getScreenHeight(); }
 
-f32 LayerManager::getScreenHeight() const { return m_shdManager->m_screenHeight; }
+f32 LayerManager::getScreenHeight() const { return unknown58->unknown534; }
 
-f32 LayerAccManager::getScreenSclWidth() const { return LayerManager::get()->m_screenSclWidth; }
+f32 LayerAccManager::getScreenSclWidth() const { return LayerManager::get()->unknown90; }
 
-f32 LayerAccManager::getScreenSclHeight() const { return LayerManager::get()->m_screenSclHeight; }
+f32 LayerAccManager::getScreenSclHeight() const { return LayerManager::get()->unknown94; }
 
-f32 LayerAccManager::getScreenPosWidth() const { return LayerManager::get()->m_screenPosWidth; }
+f32 LayerAccManager::getScreenPosWidth() const { return LayerManager::get()->unknown88; }
 
-f32 LayerAccManager::getScreenPosHeight() const { return LayerManager::get()->m_screenPosHeight; }
+f32 LayerAccManager::getScreenPosHeight() const { return LayerManager::get()->unknown8c; }
 
-void LayerAccManager::setScreenSclWidth(f32 width) { LayerManager::get()->m_screenSclWidth = width; }
+void LayerAccManager::setScreenSclWidth(f32 width) { LayerManager::get()->unknown90 = width; }
 
-void LayerAccManager::setScreenSclHeight(f32 height) { LayerManager::get()->m_screenSclWidth = height; }
+void LayerAccManager::setScreenSclHeight(f32 height) { LayerManager::get()->unknown90 = height; }
 
-void LayerAccManager::setScreenPosWidth(f32 width) { LayerManager::get()->m_screenPosWidth = width; }
+void LayerAccManager::setScreenPosWidth(f32 width) { LayerManager::get()->unknown88 = width; }
 
-void LayerAccManager::setScreenPosHeight(f32 height) { LayerManager::get()->m_screenPosHeight = height; }
+void LayerAccManager::setScreenPosHeight(f32 height) { LayerManager::get()->unknown8c = height; }
 
 void LayerAccManager::setScreenOrgSize(f32 width, f32 height) {
-  LayerShdManager *shdManager = LayerManager::get()->m_shdManager;
-  shdManager->m_screenOrgWidth = width;
-  shdManager->m_screenOrgHeight = height;
+  LayerShdManager *shdManager = LayerManager::get()->unknown58;
+  shdManager->unknown550 = width;
+  shdManager->unknown554 = height;
 }
 
-f32 LayerAccManager::getFontBorderWeight() const { return LayerManager::get()->m_fontBorderWeight; }
+f32 LayerAccManager::getFontBorderWeight() const { return LayerManager::get()->unknown84; }
 
-void LayerAccManager::setFontBorderWeight(f32 weight) { LayerManager::get()->m_fontBorderWeight = weight; }
+void LayerAccManager::setFontBorderWeight(f32 weight) { LayerManager::get()->unknown84 = weight; }
 
-LayerCoordinate LayerAccManager::getCoordinate() const { return LayerManager::get()->m_coordinate; }
+LayerCoordinate LayerAccManager::getCoordinate() const { return LayerManager::get()->unknown9c; }
 
 bool LayerAccManager::getScreenPos(mm::Vec3 &screenPos, const mm::Vec3 &pos) {
-  const LayerShdManager *shdManager = LayerManager::get()->m_shdManager;
-  const f32(*matrix)[4] = shdManager->m_viewProjectionMatrix.rows;
+  const LayerShdManager *shdManager = LayerManager::get()->unknown58;
+  const f32(*matrix)[4] = shdManager->unknown4a0.rows;
   f32 posX = pos.x;
   f32 posY = pos.y;
   f32 posZ = pos.z;
@@ -137,17 +137,17 @@ bool LayerAccManager::getScreenPos(mm::Vec3 &screenPos, const mm::Vec3 &pos) {
   }
 
   f32 inverse = 1.0f / w;
-  screenPos.x = (x * inverse + 1.0f) * (shdManager->m_screenOrgWidth * 0.5f);
-  screenPos.y = (1.0f - y * inverse) * (shdManager->m_screenOrgHeight * 0.5f);
+  screenPos.x = (x * inverse + 1.0f) * (shdManager->unknown550 * 0.5f);
+  screenPos.y = (1.0f - y * inverse) * (shdManager->unknown554 * 0.5f);
   screenPos.z = z * inverse;
   return true;
 }
 
-void LayerAccManager::setCoordinate(LayerCoordinate coordinate) { LayerManager::get()->m_coordinate = coordinate; }
+void LayerAccManager::setCoordinate(LayerCoordinate coordinate) { LayerManager::get()->unknown9c = coordinate; }
 
-f32 LayerAccManager::getGamma() const { return LayerManager::get()->m_shdManager->m_gamma; }
+f32 LayerAccManager::getGamma() const { return LayerManager::get()->unknown58->unknown578; }
 
-void LayerAccManager::setGamma(f32 gamma) { LayerManager::get()->m_shdManager->m_gamma = gamma; }
+void LayerAccManager::setGamma(f32 gamma) { LayerManager::get()->unknown58->unknown578 = gamma; }
 
 void LayerAccManager::openDebugWindow(ml::WinProc *window) {}
 
@@ -155,10 +155,10 @@ void LayerManager::openDebugWindow(ml::WinProc *window) {}
 
 LayerAccAction::LayerAccAction(LayerBase *layer) : m_layer(static_cast<LayerActBase *>(layer)) {}
 
-bool LayerAccAction::isActionData() const { return m_layer->m_actWork != nullptr; }
+bool LayerAccAction::isActionData() const { return m_layer->unknown250 != nullptr; }
 
 bool LayerAccAction::isRunning() const {
-  if (m_layer->m_flags & 0x40) {
+  if (m_layer->unknowna8 & 0x40) {
     return true;
   }
 
@@ -167,12 +167,12 @@ bool LayerAccAction::isRunning() const {
 
 s32 LayerAccAction::getRunningActIdx() const {
   const LayerActBase *layer = m_layer;
-  if (layer->m_flags & 0x40) {
-    return layer->m_actWork->actionIdx;
+  if (layer->unknowna8 & 0x40) {
+    return layer->unknown250->unknown20;
   }
 
   if (layer->getStateFlags(LayerManager::s_nDebIdx) & 0x10000) {
-    return layer->m_actionIdx[LayerManager::s_nDebIdx];
+    return layer->unknown1d8[LayerManager::s_nDebIdx];
   }
 
   return -1;
@@ -180,8 +180,8 @@ s32 LayerAccAction::getRunningActIdx() const {
 
 f32 LayerAccAction::getRunningActSec() const {
   const LayerActBase *layer = m_layer;
-  if ((layer->m_flags & 0x40) || (layer->getStateFlags(LayerManager::s_nDebIdx) & 0x10000)) {
-    return layer->m_actWork->sec;
+  if ((layer->unknowna8 & 0x40) || (layer->getStateFlags(LayerManager::s_nDebIdx) & 0x10000)) {
+    return layer->unknown250->unknown14;
   }
 
   return 0.0f;
@@ -189,67 +189,67 @@ f32 LayerAccAction::getRunningActSec() const {
 
 void LayerAccAction::setRunningActSec(f32 sec) {
   LayerActBase *layer = m_layer;
-  if ((layer->m_flags & 0x40) || (layer->getStateFlags(LayerManager::s_nDebIdx) & 0x10000)) {
-    layer->m_actWork->sec = sec;
+  if ((layer->unknowna8 & 0x40) || (layer->getStateFlags(LayerManager::s_nDebIdx) & 0x10000)) {
+    layer->unknown250->unknown14 = sec;
   }
 }
 
 u32 LayerAccAction::getActionMax() const {
-  const LayerActWork *work = m_layer->m_actWork;
+  const LayerActWork *work = m_layer->unknown250;
   if (work == nullptr) {
     return 0;
   }
 
-  return work->actionNum;
+  return work->unknown10;
 }
 
 u32 LayerAccAction::getActionID(u32 index) const {
-  const LayerActWork *work = m_layer->m_actWork;
+  const LayerActWork *work = m_layer->unknown250;
   if (work == nullptr) {
     return -1;
   }
 
-  if (index >= work->actionNum) {
+  if (index >= work->unknown10) {
     return -1;
   }
 
-  return work->actions[index].id;
+  return work->unknown08[index].unknown08;
 }
 
 const char *LayerAccAction::getActionName(u32 index) const {
-  const LayerActWork *work = m_layer->m_actWork;
+  const LayerActWork *work = m_layer->unknown250;
   if (work == nullptr) {
     return nullptr;
   }
 
-  if (index >= work->actionNum) {
+  if (index >= work->unknown10) {
     return nullptr;
   }
 
-  const LyrActionData &action = work->actions[index];
-  return reinterpret_cast<const char *>(work->data + (action.nameOffset + action.nameIdx));
+  const LyrActionData &action = work->unknown08[index];
+  return reinterpret_cast<const char *>(work->unknown00 + (action.unknown0c + action.unknown14));
 }
 
 f32 LayerAccAction::getActionSec(u32 index) const {
-  const LayerActWork *work = m_layer->m_actWork;
+  const LayerActWork *work = m_layer->unknown250;
   if (work == nullptr) {
     return 0.0f;
   }
 
-  if (index >= work->actionNum) {
+  if (index >= work->unknown10) {
     return 0.0f;
   }
 
-  return work->actions[index].sec;
+  return work->unknown08[index].unknown18;
 }
 
 bool LayerAccAction::actionIdx(u32 index) {
-  const LayerActWork *work = m_layer->m_actWork;
+  const LayerActWork *work = m_layer->unknown250;
   if (work == nullptr) {
     return false;
   }
 
-  if (index >= work->actionNum) {
+  if (index >= work->unknown10) {
     return false;
   }
 
@@ -258,13 +258,13 @@ bool LayerAccAction::actionIdx(u32 index) {
 }
 
 bool LayerAccAction::actionID(u32 id) {
-  const LayerActWork *work = m_layer->m_actWork;
+  const LayerActWork *work = m_layer->unknown250;
   if (work == nullptr) {
     return false;
   }
 
-  for (s32 i = 0; i < work->actionNum; i++) {
-    if (work->actions[i].id == id) {
+  for (s32 i = 0; i < work->unknown10; i++) {
+    if (work->unknown08[i].unknown08 == id) {
       m_layer->actionIdx(i);
       return true;
     }
@@ -274,165 +274,165 @@ bool LayerAccAction::actionID(u32 id) {
 }
 
 void LayerAccAction::actionEnd() {
-  if (m_layer->m_actWork != nullptr) {
+  if (m_layer->unknown250 != nullptr) {
     m_layer->actionEnd();
   }
 }
 
-LayerAccObjBase::LayerAccObjBase(LayerBase *layer) : m_layer(static_cast<LayerObj *>(layer)) {}
+LayerAccObjBase::LayerAccObjBase(LayerBase *layer) : unknown00(static_cast<LayerObj *>(layer)) {}
 
-void LayerAccObjBase::setSpace(LAYER_SPACE_TYPE space) { m_layer->m_space = space; }
+void LayerAccObjBase::setSpace(LAYER_SPACE_TYPE space) { unknown00->unknownc3 = space; }
 
-void LayerAccObjBase::setPos(f32 x, f32 y) { m_layer->setPos(x, y); }
+void LayerAccObjBase::setPos(f32 x, f32 y) { unknown00->setPos(x, y); }
 
-void LayerAccObjBase::setRot(f32 rot) { m_layer->setRot(rot); }
+void LayerAccObjBase::setRot(f32 rot) { unknown00->setRot(rot); }
 
-void LayerAccObjBase::setScale(f32 x, f32 y) { m_layer->setScale(x, y); }
+void LayerAccObjBase::setScale(f32 x, f32 y) { unknown00->setScale(x, y); }
 
-void LayerAccObjBase::setAnchor(f32 x, f32 y) { m_layer->setAnchor(x, y); }
+void LayerAccObjBase::setAnchor(f32 x, f32 y) { unknown00->setAnchor(x, y); }
 
-void LayerAccObjBase::setMulCol(const mm::Col4 &color) { m_layer->setMulCol(color); }
+void LayerAccObjBase::setMulCol(const mm::Col4 &color) { unknown00->setMulCol(color); }
 
-void LayerAccObjBase::setAddCol(const mm::Col3 &color) { m_layer->setAddCol(color); }
+void LayerAccObjBase::setAddCol(const mm::Col3 &color) { unknown00->setAddCol(color); }
 
-void LayerAccObjBase::setMatrix(const mm::Mat44 &matrix) { m_layer->setMatrix(matrix); }
+void LayerAccObjBase::setMatrix(const mm::Mat44 &matrix) { unknown00->setMatrix(matrix); }
 
-void LayerAccObjBase::setUVParams(f32 u, f32 v, f32 scaleU, f32 scaleV, f32 rot) { m_layer->setUVParams(u, v, scaleU, scaleV, rot); }
+void LayerAccObjBase::setUVParams(f32 u, f32 v, f32 scaleU, f32 scaleV, f32 rot) { unknown00->setUVParams(u, v, scaleU, scaleV, rot); }
 
-void LayerAccObjBase::getUVParams(f32 &u, f32 &v, f32 &scaleU, f32 &scaleV, f32 &rot) { m_layer->getUVParams(u, v, scaleU, scaleV, rot); }
+void LayerAccObjBase::getUVParams(f32 &u, f32 &v, f32 &scaleU, f32 &scaleV, f32 &rot) { unknown00->getUVParams(u, v, scaleU, scaleV, rot); }
 
-void LayerAccObjBase::getPos(f32 &x, f32 &y) const { m_layer->getPos(x, y); }
+void LayerAccObjBase::getPos(f32 &x, f32 &y) const { unknown00->getPos(x, y); }
 
-void LayerAccObjBase::getRot(f32 &rot) const { m_layer->getRot(rot); }
+void LayerAccObjBase::getRot(f32 &rot) const { unknown00->getRot(rot); }
 
-void LayerAccObjBase::getScale(f32 &x, f32 &y) const { m_layer->getScale(x, y); }
+void LayerAccObjBase::getScale(f32 &x, f32 &y) const { unknown00->getScale(x, y); }
 
-void LayerAccObjBase::getAnchor(f32 &x, f32 &y) const { m_layer->getAnchor(x, y); }
+void LayerAccObjBase::getAnchor(f32 &x, f32 &y) const { unknown00->getAnchor(x, y); }
 
-const mm::Col4 &LayerAccObjBase::getMulCol() const { return *m_layer->getMulCol(); }
+const mm::Col4 &LayerAccObjBase::getMulCol() const { return *unknown00->getMulCol(); }
 
-const mm::Col3 &LayerAccObjBase::getAddCol() const { return *m_layer->getAddCol(); }
+const mm::Col3 &LayerAccObjBase::getAddCol() const { return *unknown00->getAddCol(); }
 
-const mm::Mat44 &LayerAccObjBase::getMatrix() const { return *m_layer->getMatrix(); }
+const mm::Mat44 &LayerAccObjBase::getMatrix() const { return *unknown00->getMatrix(); }
 
-void LayerAccObjBase::setBlendType(LayerBlendType type) { m_layer->m_blendType = type; }
+void LayerAccObjBase::setBlendType(LayerBlendType type) { unknown00->unknownc4 = type; }
 
-LayerBlendType LayerAccObjBase::getBlendType() const { return static_cast<LayerBlendType>(m_layer->m_blendType); }
+LayerBlendType LayerAccObjBase::getBlendType() const { return static_cast<LayerBlendType>(unknown00->unknownc4); }
 
-void LayerAccObjBase::setTexFilterType(LayerTexFilterType type) { m_layer->m_texFilterType = type; }
+void LayerAccObjBase::setTexFilterType(LayerTexFilterType type) { unknown00->unknownc6 = type; }
 
-LayerTexFilterType LayerAccObjBase::getTexFilterType() const { return static_cast<LayerTexFilterType>(m_layer->m_texFilterType); }
+LayerTexFilterType LayerAccObjBase::getTexFilterType() const { return static_cast<LayerTexFilterType>(unknown00->unknownc6); }
 
-void LayerAccObjBase::setPriority(u16 priority) { m_layer->m_priority = priority; }
+void LayerAccObjBase::setPriority(u16 priority) { unknown00->unknownc0 = priority; }
 
-u16 LayerAccObjBase::getPriority() const { return m_layer->m_priority; }
+u16 LayerAccObjBase::getPriority() const { return unknown00->unknownc0; }
 
-void LayerAccObjBase::setDisp(bool disp) { m_layer->setDisp(disp); }
+void LayerAccObjBase::setDisp(bool disp) { unknown00->setDisp(disp); }
 
-bool LayerAccObjBase::isDisp() const { return m_layer->isDisp(); }
+bool LayerAccObjBase::isDisp() const { return unknown00->isDisp(); }
 
-void LayerAccObjBase::setFlip(LayerFlipType type, bool flip) { m_layer->setFlip(type, flip); }
+void LayerAccObjBase::setFlip(LayerFlipType type, bool flip) { unknown00->setFlip(type, flip); }
 
-bool LayerAccObjBase::isFlip(LayerFlipType type) const { return m_layer->isFlip(type); }
+bool LayerAccObjBase::isFlip(LayerFlipType type) const { return unknown00->isFlip(type); }
 
-void LayerAccObjBase::setCtrlSpd(f32 speed) { m_layer->m_ctrlSpd = speed; }
+void LayerAccObjBase::setCtrlSpd(f32 speed) { unknown00->unknown1f4 = speed; }
 
-f32 LayerAccObjBase::getCtrlSpd() const { return m_layer->m_ctrlSpd; }
+f32 LayerAccObjBase::getCtrlSpd() const { return unknown00->unknown1f4; }
 
-u16 LayerAccObjBase::getPixelX() const { return m_layer->m_pixelX; }
+u16 LayerAccObjBase::getPixelX() const { return unknown00->unknown190; }
 
-u16 LayerAccObjBase::getPixelY() const { return m_layer->m_pixelY; }
+u16 LayerAccObjBase::getPixelY() const { return unknown00->unknown192; }
 
-u16 LayerAccObjBase::getPixelWidth() const { return m_layer->m_pixelWidth; }
+u16 LayerAccObjBase::getPixelWidth() const { return unknown00->unknown194; }
 
-u16 LayerAccObjBase::getPixelHeight() const { return m_layer->m_pixelHeight; }
+u16 LayerAccObjBase::getPixelHeight() const { return unknown00->unknown196; }
 
-void LayerAccObjBase::setCenterType(LayerCenterType type) { m_layer->m_centerType = type; }
+void LayerAccObjBase::setCenterType(LayerCenterType type) { unknown00->unknown198 = type; }
 
-LayerCenterType LayerAccObjBase::getCenterType() const { return static_cast<LayerCenterType>(m_layer->m_centerType); }
+LayerCenterType LayerAccObjBase::getCenterType() const { return static_cast<LayerCenterType>(unknown00->unknown198); }
 
-void LayerAccObjBase::setMaskObj(const LayerBase *mask) { m_layer->m_maskObj = mask; }
+void LayerAccObjBase::setMaskObj(const LayerBase *mask) { unknown00->unknown240 = mask; }
 
-void LayerAccObjBase::resetMaskObj() { m_layer->m_maskObj = nullptr; }
+void LayerAccObjBase::resetMaskObj() { unknown00->unknown240 = nullptr; }
 
-const void *LayerAccObjBase::getResData() const { return m_layer->m_resData; }
+const void *LayerAccObjBase::getResData() const { return unknown00->unknownb8; }
 
-void LayerAccObjBase::createAnimObj(u32 id) { m_layer->createAnimObj(id); }
+void LayerAccObjBase::createAnimObj(u32 id) { unknown00->createAnimObj(id); }
 
-void LayerAccObjBase::endAnime() { m_layer->endAnime(); }
+void LayerAccObjBase::endAnime() { unknown00->endAnime(); }
 
-void LayerAccObjBase::createSecondTex(const void *data) { m_layer->createSecondTex(data); }
+void LayerAccObjBase::createSecondTex(const void *data) { unknown00->createSecondTex(data); }
 
-void LayerAccObjBase::releaseSecondTex() { m_layer->releaseSecondTex(); }
+void LayerAccObjBase::releaseSecondTex() { unknown00->releaseSecondTex(); }
 
-u16 LayerAccObjBase::getSecondTexIconMax() const { return m_layer->getSecondTexIconMax(); }
+u16 LayerAccObjBase::getSecondTexIconMax() const { return unknown00->getSecondTexIconMax(); }
 
-void LayerAccObjBase::setSecondTexIconNum(u32 num) { m_layer->setSecondTexIconNum(num); }
+void LayerAccObjBase::setSecondTexIconNum(u32 num) { unknown00->setSecondTexIconNum(num); }
 
-u16 LayerAccObjBase::getSecondTexIconNum() const { return m_layer->getSecondTexIconNum(); }
+u16 LayerAccObjBase::getSecondTexIconNum() const { return unknown00->getSecondTexIconNum(); }
 
-void LayerAccObjBase::setSecondTexBlend(f32 blend) { m_layer->setSecondTexBlend(blend); }
+void LayerAccObjBase::setSecondTexBlend(f32 blend) { unknown00->setSecondTexBlend(blend); }
 
-f32 LayerAccObjBase::getSecondTexBlend() const { return m_layer->getSecondTexBlend(); }
+f32 LayerAccObjBase::getSecondTexBlend() const { return unknown00->getSecondTexBlend(); }
 
 LayerAccDefObj::LayerAccDefObj(LayerBase *layer) : LayerAccObjBase(layer) {}
 
 void LayerAccDefObj::setParm(f32 parm) {
-  if (m_layer->type == LAYER_OBJ_TYPE_OBJ) {
-    static_cast<LayerObjWork *>(m_layer)->m_parm = parm;
+  if (unknown00->unknown18 == LAYER_OBJ_TYPE_OBJ) {
+    static_cast<LayerObjWork *>(unknown00)->unknown2a0 = parm;
   }
 }
 
 f32 LayerAccDefObj::getParm() const {
-  if (m_layer->type == LAYER_OBJ_TYPE_OBJ) {
-    return static_cast<LayerObjWork *>(m_layer)->m_parm;
+  if (unknown00->unknown18 == LAYER_OBJ_TYPE_OBJ) {
+    return static_cast<LayerObjWork *>(unknown00)->unknown2a0;
   }
 
   return 0.0f;
 }
 
 void LayerAccDefObj::setIconNum(u16 num) {
-  switch (m_layer->type) {
+  switch (unknown00->unknown18) {
   case LAYER_OBJ_TYPE_OBJ:
-    static_cast<LayerObjWork *>(m_layer)->m_iconNum = num;
+    static_cast<LayerObjWork *>(unknown00)->unknown2a4 = num;
     break;
   case LAYER_OBJ_TYPE_MASK:
-    static_cast<LayerObjTopMaskObj *>(m_layer)->m_iconNum = num;
+    static_cast<LayerObjTopMaskObj *>(unknown00)->unknown2d0 = num;
     break;
   }
 }
 
 u16 LayerAccDefObj::getIconNum() const {
-  switch (m_layer->type) {
+  switch (unknown00->unknown18) {
   case LAYER_OBJ_TYPE_OBJ:
-    return static_cast<LayerObjWork *>(m_layer)->m_iconNum;
+    return static_cast<LayerObjWork *>(unknown00)->unknown2a4;
   case LAYER_OBJ_TYPE_MASK:
-    return static_cast<LayerObjTopMaskObj *>(m_layer)->m_iconNum;
+    return static_cast<LayerObjTopMaskObj *>(unknown00)->unknown2d0;
   }
 
   return 0;
 }
 
 u16 LayerAccDefObj::getIconMax() const {
-  switch (m_layer->type) {
+  switch (unknown00->unknown18) {
   case LAYER_OBJ_TYPE_OBJ:
-    return static_cast<LayerObjWork *>(m_layer)->m_iconMax;
+    return static_cast<LayerObjWork *>(unknown00)->unknown2a6;
   case LAYER_OBJ_TYPE_MASK:
-    return static_cast<LayerObjTopMaskObj *>(m_layer)->m_iconMax;
+    return static_cast<LayerObjTopMaskObj *>(unknown00)->unknown2d2;
   }
 
   return 0;
 }
 
 void LayerAccDefObj::setGauge(LAYER_GAUGE gauge) {
-  if (m_layer->type == LAYER_OBJ_TYPE_OBJ) {
-    static_cast<LayerObjWork *>(m_layer)->m_gauge = gauge;
+  if (unknown00->unknown18 == LAYER_OBJ_TYPE_OBJ) {
+    static_cast<LayerObjWork *>(unknown00)->unknown2a8 = gauge;
   }
 }
 
 LAYER_GAUGE LayerAccDefObj::getGauge() const {
-  if (m_layer->type == LAYER_OBJ_TYPE_OBJ) {
-    return static_cast<LAYER_GAUGE>(static_cast<LayerObjWork *>(m_layer)->m_gauge);
+  if (unknown00->unknown18 == LAYER_OBJ_TYPE_OBJ) {
+    return static_cast<LAYER_GAUGE>(static_cast<LayerObjWork *>(unknown00)->unknown2a8);
   }
 
   return LAYER_GAUGE_NONE;
@@ -441,70 +441,70 @@ LAYER_GAUGE LayerAccDefObj::getGauge() const {
 LayerAccDefAnmObj::LayerAccDefAnmObj(LayerBase *layer) : LayerAccObjBase(layer) {}
 
 f32 LayerAccDefAnmObj::getMaxSecond() const {
-  if (m_layer->type == LAYER_OBJ_TYPE_OBJ) {
-    static_cast<LayerObjWork *>(m_layer)->getMaxSecond();
+  if (unknown00->unknown18 == LAYER_OBJ_TYPE_OBJ) {
+    static_cast<LayerObjWork *>(unknown00)->getMaxSecond();
   }
 
   return 0.0f;
 }
 
 f32 LayerAccDefAnmObj::getSecond() const {
-  if (m_layer->type == LAYER_OBJ_TYPE_OBJ) {
-    static_cast<LayerObjWork *>(m_layer)->getSecond();
+  if (unknown00->unknown18 == LAYER_OBJ_TYPE_OBJ) {
+    static_cast<LayerObjWork *>(unknown00)->getSecond();
   }
 
   return 0.0f;
 }
 
 void LayerAccDefAnmObj::setSecond(f32 second) {
-  if (m_layer->type == LAYER_OBJ_TYPE_OBJ) {
-    static_cast<LayerObjWork *>(m_layer)->setSecond(second);
+  if (unknown00->unknown18 == LAYER_OBJ_TYPE_OBJ) {
+    static_cast<LayerObjWork *>(unknown00)->setSecond(second);
   }
 }
 
 void LayerAccDefAnmObj::setLoop(bool loop) {
-  if (m_layer->type == LAYER_OBJ_TYPE_OBJ) {
+  if (unknown00->unknown18 == LAYER_OBJ_TYPE_OBJ) {
     if (loop) {
-      m_layer->onStateFlags(0x4000);
-      m_layer->offStateFlags(0x8000);
+      unknown00->onStateFlags(0x4000);
+      unknown00->offStateFlags(0x8000);
     } else {
-      m_layer->onStateFlags(0x8000);
-      m_layer->offStateFlags(0x4000);
+      unknown00->onStateFlags(0x8000);
+      unknown00->offStateFlags(0x4000);
     }
   }
 }
 
 bool LayerAccDefAnmObj::isLoop() const {
-  if (m_layer->type == LAYER_OBJ_TYPE_OBJ) {
-    return (m_layer->m_flags & 0x80) != 0;
+  if (unknown00->unknown18 == LAYER_OBJ_TYPE_OBJ) {
+    return (unknown00->unknowna8 & 0x80) != 0;
   }
 
   return false;
 }
 
 void LayerAccDefAnmObj::setPause(bool pause) {
-  if (m_layer->type == LAYER_OBJ_TYPE_OBJ) {
+  if (unknown00->unknown18 == LAYER_OBJ_TYPE_OBJ) {
     if (pause) {
-      m_layer->onStateFlags(0x1000);
-      m_layer->offStateFlags(0x2000);
+      unknown00->onStateFlags(0x1000);
+      unknown00->offStateFlags(0x2000);
     } else {
-      m_layer->onStateFlags(0x2000);
-      m_layer->offStateFlags(0x1000);
+      unknown00->onStateFlags(0x2000);
+      unknown00->offStateFlags(0x1000);
     }
   }
 }
 
 bool LayerAccDefAnmObj::isPause() const {
-  if (m_layer->type == LAYER_OBJ_TYPE_OBJ) {
-    return (m_layer->m_flags & 0x200) != 0;
+  if (unknown00->unknown18 == LAYER_OBJ_TYPE_OBJ) {
+    return (unknown00->unknowna8 & 0x200) != 0;
   }
 
   return false;
 }
 
 u32 LayerAccDefAnmObj::getDataType() const {
-  if (m_layer->type == LAYER_OBJ_TYPE_OBJ) {
-    return static_cast<LayerObjWork *>(m_layer)->m_dataType;
+  if (unknown00->unknown18 == LAYER_OBJ_TYPE_OBJ) {
+    return static_cast<LayerObjWork *>(unknown00)->unknown2ac;
   }
 
   return 0;
@@ -512,7 +512,7 @@ u32 LayerAccDefAnmObj::getDataType() const {
 
 LayerAccDefTexture::LayerAccDefTexture(LayerBase *layer) : m_layer(static_cast<LayerObjWork *>(layer)) {}
 
-u32 LayerAccDefTexture::getTextureMax() const { return m_layer->m_textureMax; }
+u32 LayerAccDefTexture::getTextureMax() const { return m_layer->unknown288; }
 
 void LayerAccDefTexture::setTexutre(const void *data) { m_layer->setAddTexture(data, 0); }
 
@@ -528,15 +528,15 @@ void *LayerAccMemObj::getMemBufer() { return m_memObj->getBuffer(); }
 
 void LayerAccMemObj::updateMemBufer() { m_memObj->updateBufer(); }
 
-u16 LayerAccMemObj::getMemWidth() const { return m_memObj->m_width; }
+u16 LayerAccMemObj::getMemWidth() const { return m_memObj->unknown740; }
 
-u16 LayerAccMemObj::getMemHeight() const { return m_memObj->m_height; }
+u16 LayerAccMemObj::getMemHeight() const { return m_memObj->unknown744; }
 
 void LayerAccMemObj::setRender(bool render) { m_memObj->setRender(render); }
 
 bool LayerAccMemObj::isRender() const { return m_memObj->isRender(); }
 
-grlib::CGLibTextureBuffer *LayerAccMemObj::getTexture() { return m_memObj->m_texture; }
+grlib::CGLibTextureBuffer *LayerAccMemObj::getTexture() { return m_memObj->unknown2e8; }
 
 LayerAccPolyObj::LayerAccPolyObj(LayerBase *layer) : LayerAccObjBase(layer), m_polyObj(static_cast<LayerObjTopPolyObj *>(layer)) {}
 
@@ -562,7 +562,7 @@ void LayerAccPolyObj::resetTexutre() { m_polyObj->resetTexutre(); }
 
 LayerAccFontStyle::LayerAccFontStyle(LayerBase *layer) : m_style(static_cast<LayerFontStyleObj *>(layer)) {}
 
-u32 LayerAccFontStyle::getStyleDataMax() const { return m_style->m_styleDataMax; }
+u32 LayerAccFontStyle::getStyleDataMax() const { return m_style->unknown28; }
 
 s32 LayerAccFontStyle::getStyleIndex(const char *name) const { return m_style->getStyleIndex(name); }
 
@@ -574,142 +574,138 @@ void LayerAccFontStyle::createColorInfo(u32 num) { m_style->createColorInfo(num)
 
 void LayerAccFontStyle::releaseColorInfo() { m_style->releaseColorInfo(); }
 
-void *LayerAccFontStyle::getColorInfo() { return m_style->m_colorInfo; }
+void *LayerAccFontStyle::getColorInfo() { return m_style->unknown48; }
 
 void LayerAccFontStyle::createIconInfo(u32 num) { m_style->createIconInfo(num); }
 
 void LayerAccFontStyle::releaseIconInfo() { m_style->releaseIconInfo(); }
 
-void *LayerAccFontStyle::getIconInfo() { return m_style->m_iconInfo; }
+void *LayerAccFontStyle::getIconInfo() { return m_style->unknown50; }
 
-f32 LayerAccFontStyle::getRubyScale() const { return m_style->m_rubyScale; }
+f32 LayerAccFontStyle::getRubyScale() const { return m_style->unknown40; }
 
-void LayerAccFontStyle::setRubyScale(f32 scale) { m_style->m_rubyScale = scale; }
+void LayerAccFontStyle::setRubyScale(f32 scale) { m_style->unknown40 = scale; }
 
 LayerAccFontObj::LayerAccFontObj(LayerBase *layer) : LayerAccObjBase(layer) {}
 
-void LayerAccFontObj::setHorizontal(LayerFontHorizontal horizontal) { static_cast<LayerObjFont *>(m_layer)->m_horizontal = horizontal; }
+void LayerAccFontObj::setHorizontal(LayerFontHorizontal horizontal) { static_cast<LayerObjFont *>(unknown00)->unknown2a8 = horizontal; }
 
-void LayerAccFontObj::setVertical(LayerFontVertical vertical) { static_cast<LayerObjFont *>(m_layer)->m_vertical = vertical; }
+void LayerAccFontObj::setVertical(LayerFontVertical vertical) { static_cast<LayerObjFont *>(unknown00)->unknown2ac = vertical; }
 
-void LayerAccFontObj::setDisplayArea(LayerFontDisplayArea area) { static_cast<LayerObjFont *>(m_layer)->m_displayArea = area; }
+void LayerAccFontObj::setDisplayArea(LayerFontDisplayArea area) { static_cast<LayerObjFont *>(unknown00)->unknown2b0 = area; }
 
-void LayerAccFontObj::setDispSetting(LayerFontSetting setting) { static_cast<LayerObjFont *>(m_layer)->m_dispSetting = setting; }
+void LayerAccFontObj::setDispSetting(LayerFontSetting setting) { static_cast<LayerObjFont *>(unknown00)->unknown2b4 = setting; }
 
-void LayerAccFontObj::setBorderWeight(f32 weight) { static_cast<LayerObjFont *>(m_layer)->setBorderWeight(weight); }
+void LayerAccFontObj::setBorderWeight(f32 weight) { static_cast<LayerObjFont *>(unknown00)->setBorderWeight(weight); }
 
-void LayerAccFontObj::setSlopeRot(f32 rot) { static_cast<LayerObjFont *>(m_layer)->setSlopeRot(rot); }
+void LayerAccFontObj::setSlopeRot(f32 rot) { static_cast<LayerObjFont *>(unknown00)->setSlopeRot(rot); }
 
-LayerFontHorizontal LayerAccFontObj::getHorizontal() const { return static_cast<LayerFontHorizontal>(static_cast<LayerObjFont *>(m_layer)->m_horizontal); }
+LayerFontHorizontal LayerAccFontObj::getHorizontal() const { return static_cast<LayerFontHorizontal>(static_cast<LayerObjFont *>(unknown00)->unknown2a8); }
 
-LayerFontVertical LayerAccFontObj::getVertical() const { return static_cast<LayerFontVertical>(static_cast<LayerObjFont *>(m_layer)->m_vertical); }
+LayerFontVertical LayerAccFontObj::getVertical() const { return static_cast<LayerFontVertical>(static_cast<LayerObjFont *>(unknown00)->unknown2ac); }
 
-LayerFontDisplayArea LayerAccFontObj::getDisplayArea() const { return static_cast<LayerFontDisplayArea>(static_cast<LayerObjFont *>(m_layer)->m_displayArea); }
+LayerFontDisplayArea LayerAccFontObj::getDisplayArea() const { return static_cast<LayerFontDisplayArea>(static_cast<LayerObjFont *>(unknown00)->unknown2b0); }
 
-LayerFontSetting LayerAccFontObj::getDispSetting() const { return static_cast<LayerFontSetting>(static_cast<LayerObjFont *>(m_layer)->m_dispSetting); }
+LayerFontSetting LayerAccFontObj::getDispSetting() const { return static_cast<LayerFontSetting>(static_cast<LayerObjFont *>(unknown00)->unknown2b4); }
 
-f32 LayerAccFontObj::getBorderWeight() const { return static_cast<LayerObjFont *>(m_layer)->getBorderWeight(); }
+f32 LayerAccFontObj::getBorderWeight() const { return static_cast<LayerObjFont *>(unknown00)->getBorderWeight(); }
 
-f32 LayerAccFontObj::getSlopeRot() const { return static_cast<LayerObjFont *>(m_layer)->getSlopeRot(); }
+f32 LayerAccFontObj::getSlopeRot() const { return static_cast<LayerObjFont *>(unknown00)->getSlopeRot(); }
 
-u16 LayerAccFontObj::getFontPixelX() const { return static_cast<LayerObjFont *>(m_layer)->m_fontPixelX; }
+u16 LayerAccFontObj::getFontPixelX() const { return static_cast<LayerObjFont *>(unknown00)->unknown2a0; }
 
-u16 LayerAccFontObj::getFontPixelY() const { return static_cast<LayerObjFont *>(m_layer)->m_fontPixelY; }
+u16 LayerAccFontObj::getFontPixelY() const { return static_cast<LayerObjFont *>(unknown00)->unknown2a2; }
 
-u16 LayerAccFontObj::getFontPixelWidth() const { return static_cast<LayerObjFont *>(m_layer)->m_fontPixelWidth; }
+u16 LayerAccFontObj::getFontPixelWidth() const { return static_cast<LayerObjFont *>(unknown00)->unknown2a4; }
 
-u16 LayerAccFontObj::getFontPixelHeight() const { return static_cast<LayerObjFont *>(m_layer)->m_fontPixelHeight; }
+u16 LayerAccFontObj::getFontPixelHeight() const { return static_cast<LayerObjFont *>(unknown00)->unknown2a6; }
 
 void LayerAccFontObj::setMsg(const char *text, const LayerBase *res, const LayerBase *style, u32 flags) {
-  static_cast<LayerObjFont *>(m_layer)->setMsg(reinterpret_cast<const u8 *>(text),
-                                               reinterpret_cast<const LayerFontResObj *>(res),
-                                               reinterpret_cast<const LayerFontStyleObj *>(style),
-                                               LayerManager::get()->m_fontManager->m_defaultIconObj,
-                                               flags);
+  static_cast<LayerObjFont *>(unknown00)->setMsg(
+      reinterpret_cast<const u8 *>(text), reinterpret_cast<const LayerFontResObj *>(res), reinterpret_cast<const LayerFontStyleObj *>(style), LayerManager::get()->unknown68->unknown68, flags);
 }
 
 void LayerAccFontObj::setMsg(const wchar_t *text, const LayerBase *res, const LayerBase *style, u32 flags) {
-  static_cast<LayerObjFont *>(m_layer)->setMsg(
-      text, reinterpret_cast<const LayerFontResObj *>(res), reinterpret_cast<const LayerFontStyleObj *>(style), LayerManager::get()->m_fontManager->m_defaultIconObj, flags);
+  static_cast<LayerObjFont *>(unknown00)->setMsg(
+      text, reinterpret_cast<const LayerFontResObj *>(res), reinterpret_cast<const LayerFontStyleObj *>(style), LayerManager::get()->unknown68->unknown68, flags);
 }
 
 void LayerAccFontObj::setMsg(const char *text, const LayerBase *res, u32 flags) {
-  LayerFontManager *fontManager = LayerManager::get()->m_fontManager;
-  static_cast<LayerObjFont *>(m_layer)->setMsg(
-      reinterpret_cast<const u8 *>(text), reinterpret_cast<const LayerFontResObj *>(res), fontManager->m_defaultStyleObj, fontManager->m_defaultIconObj, flags);
+  LayerFontManager *fontManager = LayerManager::get()->unknown68;
+  static_cast<LayerObjFont *>(unknown00)->setMsg(reinterpret_cast<const u8 *>(text), reinterpret_cast<const LayerFontResObj *>(res), fontManager->unknown70, fontManager->unknown68, flags);
 }
 
 void LayerAccFontObj::setMsg(const wchar_t *text, const LayerBase *res, u32 flags) {
-  LayerFontManager *fontManager = LayerManager::get()->m_fontManager;
-  static_cast<LayerObjFont *>(m_layer)->setMsg(text, reinterpret_cast<const LayerFontResObj *>(res), fontManager->m_defaultStyleObj, fontManager->m_defaultIconObj, flags);
+  LayerFontManager *fontManager = LayerManager::get()->unknown68;
+  static_cast<LayerObjFont *>(unknown00)->setMsg(text, reinterpret_cast<const LayerFontResObj *>(res), fontManager->unknown70, fontManager->unknown68, flags);
 }
 
-void LayerAccFontObj::setColorMap(const LayerBase *colorMap, u32 index) { static_cast<LayerObjFont *>(m_layer)->setColorMap(reinterpret_cast<const LayerFontIconObj *>(colorMap), index); }
+void LayerAccFontObj::setColorMap(const LayerBase *colorMap, u32 index) { static_cast<LayerObjFont *>(unknown00)->setColorMap(reinterpret_cast<const LayerFontIconObj *>(colorMap), index); }
 
 LayerAccLayoutObj::LayerAccLayoutObj(LayerBase *layer) : LayerAccObjBase(layer) {}
 
 void LayerAccLayoutObj::setViewPortMode(bool viewPortMode) {
   if (viewPortMode) {
-    m_layer->m_flags |= 0x10;
+    unknown00->unknowna8 |= 0x10;
   } else {
-    m_layer->m_flags &= ~0x10;
+    unknown00->unknowna8 &= ~0x10;
   }
 }
 
 void LayerAccLayoutObj::setViewPort(f32 x, f32 y, f32 width, f32 height) {
-  LayerObjLayout *layout = static_cast<LayerObjLayout *>(m_layer);
-  layout->m_viewPortX = x;
-  layout->m_viewPortY = y;
-  layout->m_viewPortWidth = width;
-  layout->m_viewPortHeight = height;
+  LayerObjLayout *layout = static_cast<LayerObjLayout *>(unknown00);
+  layout->unknown2b0 = x;
+  layout->unknown2b4 = y;
+  layout->unknown2b8 = width;
+  layout->unknown2bc = height;
 }
 
-void LayerAccLayoutObj::createRenderTarget(f32 x, f32 y, f32 width, f32 height, mm::Col4 clearColor) { static_cast<LayerObjLayout *>(m_layer)->createRenderTarget(x, y, width, height, clearColor); }
+void LayerAccLayoutObj::createRenderTarget(f32 x, f32 y, f32 width, f32 height, mm::Col4 clearColor) { static_cast<LayerObjLayout *>(unknown00)->createRenderTarget(x, y, width, height, clearColor); }
 
-void LayerAccLayoutObj::releaseRenderTarget() { static_cast<LayerObjLayout *>(m_layer)->releaseRenderTarget(); }
+void LayerAccLayoutObj::releaseRenderTarget() { static_cast<LayerObjLayout *>(unknown00)->releaseRenderTarget(); }
 
 void LayerAccLayoutObj::createPriorityTbl(u32 num) {
-  static_cast<LayerObjLayout *>(m_layer)->m_priorityTbls[LayerManager::s_nStkIdx] = num;
-  m_layer->offStateFlags(0x800);
+  static_cast<LayerObjLayout *>(unknown00)->unknown2c4[LayerManager::s_nStkIdx] = num;
+  unknown00->offStateFlags(0x800);
 }
 
 void LayerAccLayoutObj::releasePriorityTbl() {
-  static_cast<LayerObjLayout *>(m_layer)->m_priorityTbls[LayerManager::s_nStkIdx] = 0;
-  m_layer->onStateFlags(0x800);
+  static_cast<LayerObjLayout *>(unknown00)->unknown2c4[LayerManager::s_nStkIdx] = 0;
+  unknown00->onStateFlags(0x800);
 }
 
 u16 LayerAccLayoutObj::getPriorityTbl() const {
-  const LayerObjLayout *layout = static_cast<LayerObjLayout *>(m_layer);
-  u16 priorityTbl = layout->m_priorityTbls[LayerManager::s_nStkIdx];
+  const LayerObjLayout *layout = static_cast<LayerObjLayout *>(unknown00);
+  u16 priorityTbl = layout->unknown2c4[LayerManager::s_nStkIdx];
   if (priorityTbl == 0) {
-    priorityTbl = layout->m_priorityTbl;
+    priorityTbl = layout->unknown2c8;
   }
 
   return priorityTbl;
 }
 
-void LayerAccLayoutObj::setAutoAnchorMode(LAYER_ANCHOR mode) { static_cast<LayerObjLayout *>(m_layer)->m_autoAnchorMode = mode; }
+void LayerAccLayoutObj::setAutoAnchorMode(LAYER_ANCHOR mode) { static_cast<LayerObjLayout *>(unknown00)->unknown2c0 = mode; }
 
-LAYER_ANCHOR LayerAccLayoutObj::getAutoAnchorMode() const { return static_cast<LAYER_ANCHOR>(static_cast<LayerObjLayout *>(m_layer)->m_autoAnchorMode); }
+LAYER_ANCHOR LayerAccLayoutObj::getAutoAnchorMode() const { return static_cast<LAYER_ANCHOR>(static_cast<LayerObjLayout *>(unknown00)->unknown2c0); }
 
-grlib::CGLibTextureBuffer *LayerAccLayoutObj::getTexture() { return static_cast<LayerObjLayout *>(m_layer)->getTexture(); }
+grlib::CGLibTextureBuffer *LayerAccLayoutObj::getTexture() { return static_cast<LayerObjLayout *>(unknown00)->getTexture(); }
 
-void LayerAccLayoutObj::setRender(bool render) { static_cast<LayerObjLayout *>(m_layer)->setRender(render); }
+void LayerAccLayoutObj::setRender(bool render) { static_cast<LayerObjLayout *>(unknown00)->setRender(render); }
 
-bool LayerAccLayoutObj::isRender() const { return static_cast<LayerObjLayout *>(m_layer)->isRender(); }
+bool LayerAccLayoutObj::isRender() const { return static_cast<LayerObjLayout *>(unknown00)->isRender(); }
 
 LayerAccFilterObj::LayerAccFilterObj(LayerBase *layer) : LayerAccObjBase(layer) {}
 
-u32 LayerAccFilterObj::getFilterType() const { return static_cast<LayerObjTopFilter *>(m_layer)->getFilterType(); }
+u32 LayerAccFilterObj::getFilterType() const { return static_cast<LayerObjTopFilter *>(unknown00)->getFilterType(); }
 
-void LayerAccFilterObj::selectFilterOfGaussianBlur(u32 width, u32 height) { static_cast<LayerObjTopFilter *>(m_layer)->createGaussianBlur(width, height); }
+void LayerAccFilterObj::selectFilterOfGaussianBlur(u32 width, u32 height) { static_cast<LayerObjTopFilter *>(unknown00)->createGaussianBlur(width, height); }
 
 void LayerAccFilterObj::setGaussianBlurParameter(f32 strength, f32 scale, u32 sampleNum, bool isHalf, u32 passNum) {
-  static_cast<LayerObjTopFilter *>(m_layer)->setGaussianBlurParameter(strength, scale, sampleNum, isHalf, passNum);
+  static_cast<LayerObjTopFilter *>(unknown00)->setGaussianBlurParameter(strength, scale, sampleNum, isHalf, passNum);
 }
 
-void LayerAccFilterObj::selectFilterOfFlowMap(u32 width, u32 height, const void *data) { static_cast<LayerObjTopFilter *>(m_layer)->createFlowMap(width, height, data); }
+void LayerAccFilterObj::selectFilterOfFlowMap(u32 width, u32 height, const void *data) { static_cast<LayerObjTopFilter *>(unknown00)->createFlowMap(width, height, data); }
 
-void LayerAccFilterObj::setFlowMapParameter(f32 speed, f32 strength) { static_cast<LayerObjTopFilter *>(m_layer)->setFlowMapParameter(speed, strength); }
+void LayerAccFilterObj::setFlowMapParameter(f32 speed, f32 strength) { static_cast<LayerObjTopFilter *>(unknown00)->setFlowMapParameter(speed, strength); }
 
 } // namespace layer

@@ -23,17 +23,17 @@ public:
   bool isRender() const;
 
   u8 _258[0x2b0 - 0x258];
-  f32 m_viewPortX;
-  f32 m_viewPortY;
-  f32 m_viewPortWidth;
-  f32 m_viewPortHeight;
-  u32 m_autoAnchorMode;
-  u16 m_priorityTbls[2];
-  u16 m_priorityTbl;
+  f32 unknown2b0;    // Inferred role: view port x; original member name unknown.
+  f32 unknown2b4;    // Inferred role: view port y; original member name unknown.
+  f32 unknown2b8;    // Inferred role: view port width; original member name unknown.
+  f32 unknown2bc;    // Inferred role: view port height; original member name unknown.
+  u32 unknown2c0;    // Inferred role: auto anchor mode; original member name unknown.
+  u16 unknown2c4[2]; // Inferred role: priority tbls; original member name unknown.
+  u16 unknown2c8;    // Inferred role: priority tbl; original member name unknown.
 };
 
-static_assert(offsetof(LayerObjLayout, m_viewPortX) == 0x2b0, "");
-static_assert(offsetof(LayerObjLayout, m_autoAnchorMode) == 0x2c0, "");
-static_assert(offsetof(LayerObjLayout, m_priorityTbl) == 0x2c8, "");
+static_assert(offsetof(LayerObjLayout, unknown2b0) == 0x2b0, "");
+static_assert(offsetof(LayerObjLayout, unknown2c0) == 0x2c0, "");
+static_assert(offsetof(LayerObjLayout, unknown2c8) == 0x2c8, "");
 
 } // namespace layer

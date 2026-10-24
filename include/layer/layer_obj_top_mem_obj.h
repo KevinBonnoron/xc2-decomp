@@ -18,13 +18,13 @@ public:
   bool isRender() const;
 
   u8 _250[0x2e8 - 0x250];
-  grlib::CGLibTextureBuffer *m_texture;
+  grlib::CGLibTextureBuffer *unknown2e8; // Inferred role: texture; original member name unknown.
   u8 _2f0[0x740 - 0x2f0];
-  u32 m_width;
-  u32 m_height;
+  u32 unknown740; // Inferred role: width; original member name unknown.
+  u32 unknown744; // Inferred role: height; original member name unknown.
 };
 
-static_assert(offsetof(LayerObjTopMemObj, m_texture) == 0x2e8, "");
-static_assert(offsetof(LayerObjTopMemObj, m_width) == 0x740, "");
+static_assert(offsetof(LayerObjTopMemObj, unknown2e8) == 0x2e8, "");
+static_assert(offsetof(LayerObjTopMemObj, unknown740) == 0x740, "");
 
 } // namespace layer

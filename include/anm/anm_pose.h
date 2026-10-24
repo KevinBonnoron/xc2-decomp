@@ -15,9 +15,9 @@ public:
   void syncModelSpace();
   const QsTransform &getBoneModelSpace(u16 bone);
 
-  const Skeleton *skeleton;
+  const Skeleton *unknown18; // Inferred role: skeleton; original member name unknown.
 };
 
-static_assert(offsetof(Pose, skeleton) == 0x18, "");
+static_assert(offsetof(Pose, unknown18) == 0x18, "");
 
 } // namespace anm

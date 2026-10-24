@@ -176,26 +176,26 @@ int DrMdoSetup::unimate_NomProjectionMat(f32 *work, DrResMdoMat *mat, const MdsM
 void DrMdoSetup::varStTex_ColorTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->beginTexSampling(2, 0);
-  cache->setTexture(*m_drMan->unknown78->getPixlObj(0)->m_texture, location);
+  cache->setTexture(*m_drMan->unknown78->getPixlObj(0)->unknown70, location);
 }
 
 void DrMdoSetup::varStTex_NormalTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->beginTexSampling(2, 0);
-  cache->setTexture(*m_drMan->unknown78->getPixlObj(2)->m_texture, location);
+  cache->setTexture(*m_drMan->unknown78->getPixlObj(2)->unknown70, location);
 }
 
 void DrMdoSetup::varStTex_LightTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   grlib::CGLibCtlShader::setMemoryBarrierBit(4);
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->beginTexSampling(2, 0);
-  cache->setTexture(*m_drMan->unknown78->getPixlObj(15)->m_texture, location);
+  cache->setTexture(*m_drMan->unknown78->getPixlObj(15)->unknown70, location);
 }
 
 void DrMdoSetup::varStTex_DepthTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->beginTexSampling(2, 0);
-  cache->setTexture(*m_drMan->unknown78->getPixlObj(4)->m_texture, location);
+  cache->setTexture(*m_drMan->unknown78->getPixlObj(4)->unknown70, location);
 }
 
 void DrMdoSetup::varStTex_RefTex(const MdsMatInfoHeader *header, u32 location, u32 index) {}
@@ -219,7 +219,7 @@ void DrMdoSetup::varStTex_Capture1(const MdsMatInfoHeader *header, u32 location,
   DrAPCache *cache = m_drMan->unknown5c0;
   grlib::CGLibRenderTarget *target = pixlMan->unknown10[1].unknown1d0;
   cache->beginTexSampling(2, 1);
-  cache->setTexture(target != nullptr ? *pixlMan->unknown10[1].unknown1d0->m_texture : *pixlMan->getDammyTexObj(), location);
+  cache->setTexture(target != nullptr ? *pixlMan->unknown10[1].unknown1d0->unknown70 : *pixlMan->getDammyTexObj(), location);
 }
 
 void DrMdoSetup::varStTex_Capture2(const MdsMatInfoHeader *header, u32 location, u32 index) {
@@ -227,7 +227,7 @@ void DrMdoSetup::varStTex_Capture2(const MdsMatInfoHeader *header, u32 location,
   DrPixlMan *pixlMan = m_drMan->unknown78;
   cache->beginTexSampling(2, 1);
   grlib::CGLibRenderTarget *target = pixlMan->unknown10[2].unknown1d0;
-  cache->setTexture(target != nullptr ? *target->m_texture : *pixlMan->getDammyTexObj(), location);
+  cache->setTexture(target != nullptr ? *target->unknown70 : *pixlMan->getDammyTexObj(), location);
 }
 
 void DrMdoSetup::varStTex_Capture3(const MdsMatInfoHeader *header, u32 location, u32 index) {
@@ -235,7 +235,7 @@ void DrMdoSetup::varStTex_Capture3(const MdsMatInfoHeader *header, u32 location,
   DrPixlMan *pixlMan = m_drMan->unknown78;
   cache->beginTexSampling(2, 1);
   grlib::CGLibRenderTarget *target = pixlMan->unknown10[3].unknown1d0;
-  cache->setTexture(target != nullptr ? *target->m_texture : *pixlMan->getDammyTexObj(), location);
+  cache->setTexture(target != nullptr ? *target->unknown70 : *pixlMan->getDammyTexObj(), location);
 }
 
 void DrMdoSetup::varStTex_RefractionMap(const MdsMatInfoHeader *header, u32 location, u32 index) {
@@ -243,13 +243,13 @@ void DrMdoSetup::varStTex_RefractionMap(const MdsMatInfoHeader *header, u32 loca
   DrAPCache *cache = m_drMan->unknown5c0;
   grlib::CGLibRenderTarget *target = pixlMan->unknown7f0->unknown180->unknownd0;
   cache->beginTexSampling(2, 1);
-  cache->setTexture(target != nullptr ? *target->m_texture : *pixlMan->getDammyTexObj(), location);
+  cache->setTexture(target != nullptr ? *target->unknown70 : *pixlMan->getDammyTexObj(), location);
 }
 
 void DrMdoSetup::varStTex_ColorDepTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->beginTexSampling(2, 0);
-  cache->setTexture(*m_drMan->unknown78->getPixlObj(0)->m_texture, location);
+  cache->setTexture(*m_drMan->unknown78->getPixlObj(0)->unknown70, location);
 }
 
 void DrMdoSetup::varStTex_AvatarFaceMap2(const MdsMatInfoHeader *header, u32 location, u32 index) {
@@ -271,13 +271,13 @@ void DrMdoSetup::varStTex_CaptureMain(const MdsMatInfoHeader *header, u32 locati
   DrAPCache *cache = m_drMan->unknown5c0;
   grlib::CGLibRenderTarget *target = pixlMan->unknown10[0].unknown1d0;
   cache->beginTexSampling(2, 1);
-  cache->setTexture(target != nullptr ? *pixlMan->unknown10[0].unknown1d0->m_texture : *pixlMan->getDammyTexObj(), location);
+  cache->setTexture(target != nullptr ? *pixlMan->unknown10[0].unknown1d0->unknown70 : *pixlMan->getDammyTexObj(), location);
 }
 
 void DrMdoSetup::varStTex_BaseColorTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->beginTexSampling(2, 0);
-  cache->setTexture(*m_drMan->unknown78->getPixlObj(0)->m_texture, location);
+  cache->setTexture(*m_drMan->unknown78->getPixlObj(0)->unknown70, location);
 }
 
 void DrMdoSetup::varStTex_ScreenCapTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
@@ -285,7 +285,7 @@ void DrMdoSetup::varStTex_ScreenCapTex(const MdsMatInfoHeader *header, u32 locat
   if (target != nullptr) {
     DrAPCache *cache = m_drMan->unknown5c0;
     cache->beginTexSampling(2, 1);
-    cache->setTexture(*target->m_texture, location);
+    cache->setTexture(*target->unknown70, location);
   }
 }
 
@@ -305,13 +305,13 @@ void DrMdoSetup::varStTex_GlobalIBLIndexTex(const MdsMatInfoHeader *header, u32 
 void DrMdoSetup::varStTex_BackFaceDepthTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->beginTexSampling(2, 0);
-  cache->setTexture(*m_drMan->unknown78->getBackFaceDepthTexture()->m_texture, location);
+  cache->setTexture(*m_drMan->unknown78->getBackFaceDepthTexture()->unknown70, location);
 }
 
 void DrMdoSetup::varStTex_DownDepthTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->beginTexSampling(2, 1);
-  cache->setTexture(*m_drMan->unknown78->unknown7f0->unknown180->getDownDepth()->m_texture, location);
+  cache->setTexture(*m_drMan->unknown78->unknown7f0->unknown180->getDownDepth()->unknown70, location);
 }
 
 void DrMdoSetup::varStTex_ClusterIdxListTex(const MdsMatInfoHeader *header, u32 location, u32 index) {}
@@ -319,7 +319,7 @@ void DrMdoSetup::varStTex_ClusterIdxListTex(const MdsMatInfoHeader *header, u32 
 void DrMdoSetup::varStTex_VelocityTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->beginTexSampling(2, 0);
-  cache->setTexture(*m_drMan->unknown78->getPixlObj(3)->m_texture, location);
+  cache->setTexture(*m_drMan->unknown78->getPixlObj(3)->unknown70, location);
 }
 
 void DrMdoSetup::varStTex_RefractionAfterTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
@@ -327,25 +327,25 @@ void DrMdoSetup::varStTex_RefractionAfterTex(const MdsMatInfoHeader *header, u32
   DrAPCache *cache = m_drMan->unknown5c0;
   grlib::CGLibRenderTarget *target = pixlMan->unknown7f0->unknown180->unknownd0;
   cache->beginTexSampling(2, 1);
-  cache->setTexture(target != nullptr ? *target->m_texture : *pixlMan->getDammyTexObj(), location);
+  cache->setTexture(target != nullptr ? *target->unknown70 : *pixlMan->getDammyTexObj(), location);
 }
 
 void DrMdoSetup::varStTex_DiffuseIBL(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->beginTexSampling(2, 1);
-  cache->setTexture(*m_drMan->unknown78->getDiffIBLObj()->m_texture, location);
+  cache->setTexture(*m_drMan->unknown78->getDiffIBLObj()->unknown70, location);
 }
 
 void DrMdoSetup::varStTex_AOTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->beginTexSampling(2, 0);
-  cache->setTexture(*m_drMan->unknown78->getPixlObj(2)->m_texture, location);
+  cache->setTexture(*m_drMan->unknown78->getPixlObj(2)->unknown70, location);
 }
 
 void DrMdoSetup::varStTex_EtcTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
   DrAPCache *cache = m_drMan->unknown5c0;
   cache->beginTexSampling(2, 0);
-  cache->setTexture(*m_drMan->unknown78->getPixlObj(1)->m_texture, location);
+  cache->setTexture(*m_drMan->unknown78->getPixlObj(1)->unknown70, location);
 }
 
 void DrMdoSetup::varStTex_ToonDarkGradTex(const MdsMatInfoHeader *header, u32 location, u32 index) {
@@ -357,14 +357,14 @@ void DrMdoSetup::varStTex_ToonDarkGradTex(const MdsMatInfoHeader *header, u32 lo
   }
 }
 
-void DrMdoSetup::varStImg_BaseColor(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->unknown78->getPixlObj(0)->m_texture, location, 0, 0); }
+void DrMdoSetup::varStImg_BaseColor(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->unknown78->getPixlObj(0)->unknown70, location, 0, 0); }
 
-void DrMdoSetup::varStImg_Etc(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->unknown78->getPixlObj(1)->m_texture, location, 0, 0); }
+void DrMdoSetup::varStImg_Etc(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->unknown78->getPixlObj(1)->unknown70, location, 0, 0); }
 
-void DrMdoSetup::varStImg_Normal(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->unknown78->getPixlObj(2)->m_texture, location, 0, 0); }
+void DrMdoSetup::varStImg_Normal(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->unknown78->getPixlObj(2)->unknown70, location, 0, 0); }
 
-void DrMdoSetup::varStImg_Velocity(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->unknown78->getPixlObj(3)->m_texture, location, 0, 0); }
+void DrMdoSetup::varStImg_Velocity(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->unknown78->getPixlObj(3)->unknown70, location, 0, 0); }
 
-void DrMdoSetup::varStImg_ZBuff(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->unknown78->getPixlObj(4)->m_texture, location, 0, 0); }
+void DrMdoSetup::varStImg_ZBuff(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->unknown78->getPixlObj(4)->unknown70, location, 0, 0); }
 
 } // namespace ml

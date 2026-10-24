@@ -35,14 +35,14 @@ bool WorkRoot::initialize(const WorkRootParam *param) {
 }
 
 WorkRootParam &WorkRootParam::operator=(const WorkRootParam &other) {
-  productMem = other.productMem;
-  productMemSize = other.productMemSize;
-  debugMem = other.debugMem;
-  debugMemSize = other.debugMemSize;
-  graphicMem = other.graphicMem;
-  graphicMemSize = other.graphicMemSize;
-  isProductMem = other.isProductMem;
-  fgMemSize = other.fgMemSize;
+  unknown08 = other.unknown08;
+  unknown10 = other.unknown10;
+  unknown18 = other.unknown18;
+  unknown20 = other.unknown20;
+  unknown28 = other.unknown28;
+  unknown30 = other.unknown30;
+  unknown00 = other.unknown00;
+  unknown38 = other.unknown38;
   return *this;
 }
 
@@ -78,7 +78,7 @@ bool WorkRoot::isWinDestroy() { return false; }
 
 void WorkRoot::reqShutdown() {}
 
-bool WorkRoot::isProductMem() { return _wroot::s_inParam.isProductMem; }
+bool WorkRoot::isProductMem() { return _wroot::s_inParam.unknown00; }
 
 mtl::ALLOC_HANDLE WorkRoot::getMemFG() { return WorkRootMem::getMemFG(); }
 

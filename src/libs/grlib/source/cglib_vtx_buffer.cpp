@@ -18,230 +18,230 @@
 
 namespace grlib {
 
-CGLibVtxIndex::CGLibVtxIndex() { m_count = 0; }
+CGLibVtxIndex::CGLibVtxIndex() { unknown00 = 0; }
 
 CGLibVtxIndex::~CGLibVtxIndex() { release(); }
 
-void CGLibVtxIndex::release() { CGLibMemHandle::free(m_memType); }
+void CGLibVtxIndex::release() { CGLibMemHandle::free(unknown10); }
 
 void CGLibVtxIndex::createIndexBuff(u32 count, GrlPrimitiveType type, GrlIndexFormat format) {
   release();
-  m_type = type;
-  m_format = format;
-  m_count = count;
+  unknown08 = type;
+  unknown04 = format;
+  unknown00 = count;
   int size = getSize();
-  CGLibMemHandle::allocVertex(m_memType, size + (4 - size % 4) % 4);
-  context::CGLibSystemContext::get()->getVertexGpuAddress(m_gpuAddress, m_memType);
+  CGLibMemHandle::allocVertex(unknown10, size + (4 - size % 4) % 4);
+  context::CGLibSystemContext::get()->getVertexGpuAddress(unknown20, unknown10);
 }
 
 void CGLibVtxIndex::createMemIndexBuff(CGLibVtlMemPool *memPool, u32 offset, u32 count, GrlPrimitiveType type, GrlIndexFormat format) {
   release();
-  m_type = type;
-  m_format = format;
-  m_count = count;
-  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memPool->m_buffer) + offset);
-  m_gpuAddress = memPool->m_address + offset;
+  unknown08 = type;
+  unknown04 = format;
+  unknown00 = count;
+  CGLibMemHandle::setMemBuff(unknown10, static_cast<u8 *>(memPool->m_buffer) + offset);
+  unknown20 = memPool->unknown08 + offset;
 }
 
 void CGLibVtxIndex::createCopyIndexBuff(const void *data, u32 count, GrlPrimitiveType type, GrlIndexFormat format) {
   release();
-  m_type = type;
-  m_format = format;
-  m_count = count;
+  unknown08 = type;
+  unknown04 = format;
+  unknown00 = count;
   int size = getSize();
-  CGLibMemHandle::allocVertex(m_memType, size + (4 - size % 4) % 4);
-  memcpy(m_memType.m_buffer, data, size);
-  nn::os::FlushDataCache(m_memType.m_buffer, size);
-  context::CGLibSystemContext::get()->getVertexGpuAddress(m_gpuAddress, m_memType);
+  CGLibMemHandle::allocVertex(unknown10, size + (4 - size % 4) % 4);
+  memcpy(unknown10.m_buffer, data, size);
+  nn::os::FlushDataCache(unknown10.m_buffer, size);
+  context::CGLibSystemContext::get()->getVertexGpuAddress(unknown20, unknown10);
 }
 
 void CGLibVtxIndex::resetIndexBuff(CGLibVtlMemPool *memPool, u32 offset) {
-  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memPool->m_buffer) + offset);
-  m_gpuAddress = memPool->m_address + offset;
+  CGLibMemHandle::setMemBuff(unknown10, static_cast<u8 *>(memPool->m_buffer) + offset);
+  unknown20 = memPool->unknown08 + offset;
 }
 
 void CGLibVtxIndex::drawIndex() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  context->m_pipeline.updateVertex();
-  nvnCommandBufferDrawElements(context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), m_count, m_gpuAddress);
+  context->unknown1070.updateVertex();
+  nvnCommandBufferDrawElements(context->unknown1070.unknown00, static_cast<NVNdrawPrimitive>(unknown08), static_cast<NVNindexType>(unknown04), unknown00, unknown20);
 }
 
 void CGLibVtxIndex::drawIndex(u32 count, u32 offset) {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  context->m_pipeline.updateVertex();
-  nvnCommandBufferDrawElements(context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), count, m_gpuAddress + offset);
+  context->unknown1070.updateVertex();
+  nvnCommandBufferDrawElements(context->unknown1070.unknown00, static_cast<NVNdrawPrimitive>(unknown08), static_cast<NVNindexType>(unknown04), count, unknown20 + offset);
 }
 
 void CGLibVtxIndex::drawInsIndex(int instanceCount) {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  context->m_pipeline.updateVertex();
-  nvnCommandBufferDrawElementsInstanced(context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), m_count, m_gpuAddress, 0, 0, instanceCount);
+  context->unknown1070.updateVertex();
+  nvnCommandBufferDrawElementsInstanced(context->unknown1070.unknown00, static_cast<NVNdrawPrimitive>(unknown08), static_cast<NVNindexType>(unknown04), unknown00, unknown20, 0, 0, instanceCount);
 }
 
 void CGLibVtxIndex::drawInsIndex(int instanceCount, u32 count, u32 offset) {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  context->m_pipeline.updateVertex();
-  nvnCommandBufferDrawElementsInstanced(context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), count, m_gpuAddress + offset, 0, 0, instanceCount);
+  context->unknown1070.updateVertex();
+  nvnCommandBufferDrawElementsInstanced(context->unknown1070.unknown00, static_cast<NVNdrawPrimitive>(unknown08), static_cast<NVNindexType>(unknown04), count, unknown20 + offset, 0, 0, instanceCount);
 }
 
 void CGLibVtxIndex::drawIndirect(const CGLibOneUniformBlock &block, u32 offset) {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  context->m_pipeline.updateVertex();
-  nvnCommandBufferDrawElementsIndirect(context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), m_gpuAddress, block.m_gpuAddress + offset);
+  context->unknown1070.updateVertex();
+  nvnCommandBufferDrawElementsIndirect(context->unknown1070.unknown00, static_cast<NVNdrawPrimitive>(unknown08), static_cast<NVNindexType>(unknown04), unknown20, block.unknown10 + offset);
 }
 
 void CGLibVtxIndex::lock(void **buffer, u32 *size) {
-  *buffer = m_memType.m_buffer;
+  *buffer = unknown10.m_buffer;
   *size = getSize();
 }
 
 void CGLibVtxIndex::unlock() {
   int size = getSize();
-  nn::os::FlushDataCache(m_memType.m_buffer, size);
+  nn::os::FlushDataCache(unknown10.m_buffer, size);
 }
 
 void CGLibVtxIndex::copyIndexBuff(const void *data) {
   int size = getSize();
-  memcpy(m_memType.m_buffer, data, size);
-  nn::os::FlushDataCache(m_memType.m_buffer, size);
+  memcpy(unknown10.m_buffer, data, size);
+  nn::os::FlushDataCache(unknown10.m_buffer, size);
 }
 
-CGLibVtxInstans::CGLibVtxInstans() { m_bankOffset = 0; }
+CGLibVtxInstans::CGLibVtxInstans() { unknown10 = 0; }
 
 CGLibVtxInstans::~CGLibVtxInstans() { release(); }
 
-void CGLibVtxInstans::release() { CGLibMemHandle::free(m_memType); }
+void CGLibVtxInstans::release() { CGLibMemHandle::free(unknown18); }
 
 void CGLibVtxInstans::createInstansBuffer(int size) {
   release();
   m_size = size;
-  m_bankSize = static_cast<u32>(size) / 2;
-  CGLibMemHandle::allocVertex(m_memType, size);
-  context::CGLibSystemContext::get()->getVertexGpuAddress(m_gpuAddress, m_memType);
+  unknown04 = static_cast<u32>(size) / 2;
+  CGLibMemHandle::allocVertex(unknown18, size);
+  context::CGLibSystemContext::get()->getVertexGpuAddress(unknown28, unknown18);
 }
 
 void CGLibVtxInstans::beginInstansBuff() {
-  m_bankOffset = CGLibManager::s_nDblNowIdx * m_bankSize;
-  m_writeOffset = 0;
-  m_flushedOffset = 0;
+  unknown10 = CGLibManager::s_nDblNowIdx * unknown04;
+  unknown08 = 0;
+  unknown0c = 0;
 }
 
 void CGLibVtxInstans::updateInstansBuff() {
-  u32 size = m_writeOffset - m_flushedOffset;
+  u32 size = unknown08 - unknown0c;
   if (size != 0) {
-    nn::os::FlushDataCache(static_cast<u8 *>(m_memType.m_buffer) + (m_bankOffset + m_flushedOffset), size);
-    m_flushedOffset = m_writeOffset;
+    nn::os::FlushDataCache(static_cast<u8 *>(unknown18.m_buffer) + (unknown10 + unknown0c), size);
+    unknown0c = unknown08;
   }
 }
 
-void *CGLibVtxInstans::getNextInstansBuff() { return static_cast<u8 *>(m_memType.m_buffer) + (m_writeOffset + m_bankOffset); }
+void *CGLibVtxInstans::getNextInstansBuff() { return static_cast<u8 *>(unknown18.m_buffer) + (unknown08 + unknown10); }
 
 CGLibVtxOneInstans::CGLibVtxOneInstans() {}
 
 CGLibVtxOneInstans::~CGLibVtxOneInstans() { release(); }
 
-void CGLibVtxOneInstans::release() { CGLibMemHandle::free(m_memType); }
+void CGLibVtxOneInstans::release() { CGLibMemHandle::free(unknown18); }
 
 void CGLibVtxOneInstans::createInstansBuffer(int size) {
   release();
   m_size = size;
-  CGLibMemHandle::allocVertex(m_memType, size);
-  context::CGLibSystemContext::get()->getVertexGpuAddress(m_gpuAddress, m_memType);
+  CGLibMemHandle::allocVertex(unknown18, size);
+  context::CGLibSystemContext::get()->getVertexGpuAddress(unknown10, unknown18);
 }
 
 void CGLibVtxOneInstans::beginInstansBuff() {
-  m_writeOffset = 0;
-  m_flushedOffset = 0;
+  unknown04 = 0;
+  unknown08 = 0;
 }
 
 void CGLibVtxOneInstans::updateInstansBuff() {
-  if (m_writeOffset != m_flushedOffset) {
-    nn::os::FlushDataCache(static_cast<u8 *>(m_memType.m_buffer) + m_flushedOffset, m_writeOffset - m_flushedOffset);
-    m_flushedOffset = m_writeOffset;
+  if (unknown04 != unknown08) {
+    nn::os::FlushDataCache(static_cast<u8 *>(unknown18.m_buffer) + unknown08, unknown04 - unknown08);
+    unknown08 = unknown04;
   }
 }
 
-void *CGLibVtxOneInstans::getNextInstansBuff() { return static_cast<u8 *>(m_memType.m_buffer) + m_writeOffset; }
+void *CGLibVtxOneInstans::getNextInstansBuff() { return static_cast<u8 *>(unknown18.m_buffer) + unknown04; }
 
-void *CGLibVtxOneInstans::getBuff() { return m_memType.m_buffer; }
+void *CGLibVtxOneInstans::getBuff() { return unknown18.m_buffer; }
 
 CGLibVtxStmOut::CGLibVtxStmOut() {}
 
 CGLibVtxStmOut::~CGLibVtxStmOut() { release(); }
 
-void CGLibVtxStmOut::release() { CGLibMemHandle::free(m_memType); }
+void CGLibVtxStmOut::release() { CGLibMemHandle::free(unknown10); }
 
 int CGLibVtxStmOut::getStreamOutWorkSize() { return 0; }
 
 void CGLibVtxStmOut::createWorkBuff(int size) {
   release();
   int alignedSize = size + (4 - size % 4) % 4;
-  CGLibMemHandle::allocVertex(m_memType, alignedSize);
-  m_stride = 0;
-  m_writtenSize = 0;
-  m_bufferSize = alignedSize;
-  context::CGLibSystemContext::get()->getVertexGpuAddress(m_gpuAddress, m_memType);
+  CGLibMemHandle::allocVertex(unknown10, alignedSize);
+  unknown08 = 0;
+  unknown00 = 0;
+  m_size = alignedSize;
+  context::CGLibSystemContext::get()->getVertexGpuAddress(unknown20, unknown10);
 }
 
-int CGLibVtxStmOut::getSize() { return m_bufferSize; }
+int CGLibVtxStmOut::getSize() { return m_size; }
 
-void *CGLibVtxStmOut::getBuff() { return m_memType.m_buffer; }
+void *CGLibVtxStmOut::getBuff() { return unknown10.m_buffer; }
 
-void *CGLibVtxStmOut::getMapping() { return m_memType.m_buffer; }
+void *CGLibVtxStmOut::getMapping() { return unknown10.m_buffer; }
 
-CGLibVtxVertex::CGLibVtxVertex() : m_size(0), m_stride(0), m_count(0) {}
+CGLibVtxVertex::CGLibVtxVertex() : m_size(0), unknown04(0), unknown08(0) {}
 
 CGLibVtxVertex::~CGLibVtxVertex() { release(); }
 
-void CGLibVtxVertex::release() { CGLibMemHandle::free(m_memType); }
+void CGLibVtxVertex::release() { CGLibMemHandle::free(unknown10); }
 
-void CGLibVtxVertex::delayRelease() { context::CGLibSystemContext::get()->releaseDelayVertex(m_memType); }
+void CGLibVtxVertex::delayRelease() { context::CGLibSystemContext::get()->releaseDelayVertex(unknown10); }
 
 void CGLibVtxVertex::createVertexBuff(u32 size, u32 stride) {
   release();
-  m_count = size / stride;
+  unknown08 = size / stride;
   m_size = size;
-  m_stride = stride;
-  CGLibMemHandle::allocVertex(m_memType, size + (4 - size % 4) % 4);
-  context::CGLibSystemContext::get()->getVertexGpuAddress(m_gpuAddress, m_memType);
+  unknown04 = stride;
+  CGLibMemHandle::allocVertex(unknown10, size + (4 - size % 4) % 4);
+  context::CGLibSystemContext::get()->getVertexGpuAddress(unknown20, unknown10);
 }
 
 void CGLibVtxVertex::createMemVertexBuff(CGLibVtlMemPool *memPool, u32 offset, u32 size, u32 stride) {
   release();
   m_size = size;
-  m_stride = stride;
-  m_count = size / stride;
-  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memPool->m_buffer) + offset);
-  m_gpuAddress = memPool->m_address + offset;
+  unknown04 = stride;
+  unknown08 = size / stride;
+  CGLibMemHandle::setMemBuff(unknown10, static_cast<u8 *>(memPool->m_buffer) + offset);
+  unknown20 = memPool->unknown08 + offset;
 }
 
 void CGLibVtxVertex::createCopyVertexBuff(const void *data, u32 size, u32 stride) {
   release();
-  m_count = size / m_stride;
+  unknown08 = size / unknown04;
   m_size = size;
-  m_stride = stride;
-  CGLibMemHandle::allocVertex(m_memType, size + (4 - size % 4) % 4);
-  memcpy(m_memType.m_buffer, data, size);
-  nn::os::FlushDataCache(m_memType.m_buffer, size);
-  context::CGLibSystemContext::get()->getVertexGpuAddress(m_gpuAddress, m_memType);
+  unknown04 = stride;
+  CGLibMemHandle::allocVertex(unknown10, size + (4 - size % 4) % 4);
+  memcpy(unknown10.m_buffer, data, size);
+  nn::os::FlushDataCache(unknown10.m_buffer, size);
+  context::CGLibSystemContext::get()->getVertexGpuAddress(unknown20, unknown10);
 }
 
 void CGLibVtxVertex::resetVertexBuff(CGLibVtlMemPool *memPool, u32 offset) {
-  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memPool->m_buffer) + offset);
-  m_gpuAddress = memPool->m_address + offset;
+  CGLibMemHandle::setMemBuff(unknown10, static_cast<u8 *>(memPool->m_buffer) + offset);
+  unknown20 = memPool->unknown08 + offset;
 }
 
 void CGLibVtxVertex::lock(void **buffer, u32 *size) {
-  *buffer = m_memType.m_buffer;
+  *buffer = unknown10.m_buffer;
   *size = m_size;
 }
 
-void CGLibVtxVertex::unlock() { nn::os::FlushDataCache(m_memType.m_buffer, m_size); }
+void CGLibVtxVertex::unlock() { nn::os::FlushDataCache(unknown10.m_buffer, m_size); }
 
-void CGLibVtxVertex::unlock(u32 offset, u32 size) { nn::os::FlushDataCache(static_cast<u8 *>(m_memType.m_buffer) + offset, size); }
+void CGLibVtxVertex::unlock(u32 offset, u32 size) { nn::os::FlushDataCache(static_cast<u8 *>(unknown10.m_buffer) + offset, size); }
 
 void CGLibVtxVertex::copyVertexBuff(const void *data) {
-  void *buffer = m_memType.m_buffer;
+  void *buffer = unknown10.m_buffer;
   memcpy(buffer, data, m_size);
   nn::os::FlushDataCache(buffer, m_size);
 }

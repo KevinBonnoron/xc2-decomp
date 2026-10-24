@@ -7,15 +7,15 @@
 namespace layer {
 
 struct LyrActionData {
-  u32 flags;
-  u16 nextIdx;
-  u16 endType;
-  u32 id;
-  u32 nameOffset;
+  u32 unknown00; // Inferred role: flags; original member name unknown.
+  u16 unknown04; // Inferred role: next idx; original member name unknown.
+  u16 unknown06; // Inferred role: end type; original member name unknown.
+  u32 unknown08; // Inferred role: id; original member name unknown.
+  u32 unknown0c; // Inferred role: name offset; original member name unknown.
   u8 _10[0x14 - 0x10];
-  u16 nameIdx;
+  u16 unknown14; // Inferred role: name idx; original member name unknown.
   u8 _16[0x18 - 0x16];
-  f32 sec;
+  f32 unknown18; // Inferred role: sec; original member name unknown.
   u8 _1c[0x2c - 0x1c];
 };
 
@@ -27,18 +27,18 @@ struct LyrActionHeader {
 };
 
 struct LayerActWork {
-  const u8 *data;
-  const LyrActionData *actions;
-  s32 actionNum;
-  f32 sec;
-  f32 deltaSec;
-  f32 invDeltaSec;
-  u32 actionIdx;
-  u32 flags;
-  u32 *actionWorks;
+  const u8 *unknown00;            // Inferred role: data; original member name unknown.
+  const LyrActionData *unknown08; // Inferred role: actions; original member name unknown.
+  s32 unknown10;                  // Inferred role: action num; original member name unknown.
+  f32 unknown14;                  // Inferred role: sec; original member name unknown.
+  f32 unknown18;                  // Inferred role: delta sec; original member name unknown.
+  f32 unknown1c;                  // Inferred role: inv delta sec; original member name unknown.
+  u32 unknown20;                  // Inferred role: action idx; original member name unknown.
+  u32 unknown24;                  // Inferred role: flags; original member name unknown.
+  u32 *unknown28;                 // Inferred role: action works; original member name unknown.
 };
 
-static_assert(offsetof(LayerActWork, actionIdx) == 0x20, "");
+static_assert(offsetof(LayerActWork, unknown20) == 0x20, "");
 static_assert(sizeof(LayerActWork) == 0x30, "");
 
 class LayerActBase : public LayerObj {
@@ -58,9 +58,9 @@ public:
 
   static bool (LayerActBase::*s_pCallActEnd[])(const LyrActionData *action, bool isCmdEnd);
 
-  LayerActWork *m_actWork;
+  LayerActWork *unknown250; // Inferred role: act work; original member name unknown.
 };
 
-static_assert(offsetof(LayerActBase, m_actWork) == 0x250, "");
+static_assert(offsetof(LayerActBase, unknown250) == 0x250, "");
 
 } // namespace layer

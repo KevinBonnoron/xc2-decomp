@@ -12,7 +12,7 @@ struct MEMIMAGE_HEAD;
 struct MemoryInfo1;
 struct MemoryInfo;
 
-AllocatorWrapper::AllocatorWrapper() : m_allocator(nullptr), m_buffer(nullptr), m_capacity(0), m_allocNum(0) {}
+AllocatorWrapper::AllocatorWrapper() : m_allocator(nullptr), m_buffer(nullptr), m_capacity(0), unknown18(0) {}
 
 AllocatorWrapper::~AllocatorWrapper() {}
 
@@ -20,7 +20,7 @@ void AllocatorWrapper::init(IMemAllocator *allocator, void *buffer, size_t size,
   m_allocator = allocator;
   m_buffer = buffer;
   m_capacity = size;
-  m_allocNum = 0;
+  unknown18 = 0;
   m_name = name != nullptr ? name : "no name";
   if (allocator != nullptr) {
     allocator->create(buffer, size, name);
@@ -35,7 +35,7 @@ void *AllocatorWrapper::allocate(size_t size) {
   }
   void *pointer = m_allocator->allocate(size, 16);
   if (pointer != nullptr) {
-    m_allocNum++;
+    unknown18++;
   }
   return pointer;
 }
@@ -46,7 +46,7 @@ void *AllocatorWrapper::allocate(size_t size, size_t alignment, const char *file
   }
   void *pointer = m_allocator->allocate(size, alignment, file, line);
   if (pointer != nullptr) {
-    m_allocNum++;
+    unknown18++;
   }
   return pointer;
 }
@@ -57,7 +57,7 @@ void *AllocatorWrapper::allocate_tail(size_t size, size_t alignment, const char 
   }
   void *pointer = m_allocator->allocate_tail(size, alignment, file, line);
   if (pointer != nullptr) {
-    m_allocNum++;
+    unknown18++;
   }
   return pointer;
 }
@@ -65,7 +65,7 @@ void *AllocatorWrapper::allocate_tail(size_t size, size_t alignment, const char 
 void AllocatorWrapper::deallocate(void *pointer, size_t size) {
   if (pointer != nullptr && m_allocator != nullptr) {
     m_allocator->deallocate(pointer, size);
-    m_allocNum--;
+    unknown18--;
   }
 }
 

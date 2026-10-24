@@ -21,7 +21,7 @@ void StateGfInitialize::update(GfGameManager *, const fw::UpdateInfo &) {}
 
 void StateGfDestroy::enter(GfGameManager *, ai::State *previous) {
   GfGameState::setStateFlg(0);
-  GfEvent::callGameState(GF_STATE(previous->stateID), GF_STATE(stateID));
+  GfEvent::callGameState(GF_STATE(previous->unknown08), GF_STATE(unknown08));
 }
 
 void StateGfDestroy::leave(GfGameManager *, ai::State *) {}
@@ -31,7 +31,7 @@ void StateGfDestroy::update(GfGameManager *, const fw::UpdateInfo &) {}
 void StateControl::enter(GfGameManager *, ai::State *previous) {
   GfGameState::setStateFlg(GF_STATE_FLAG_CONTROL);
   GfGameUtil::execDevelopLevelUp();
-  GfEvent::callGameState(GF_STATE(previous->stateID), GF_STATE(stateID));
+  GfEvent::callGameState(GF_STATE(previous->unknown08), GF_STATE(unknown08));
 }
 
 void StateControl::leave(GfGameManager *, ai::State *) {}
@@ -111,7 +111,7 @@ void StateGmkCamera::leave(GfGameManager *, ai::State *) {}
 
 void StateEvent::enter(GfGameManager *, ai::State *previous) {
   GfGameState::setStateFlg(GF_STATE_FLAG_EVENT);
-  GfEvent::callGameState(GF_STATE(previous->stateID), GF_STATE(stateID));
+  GfEvent::callGameState(GF_STATE(previous->unknown08), GF_STATE(unknown08));
 }
 
 void StateEvent::leave(GfGameManager *, ai::State *) {}
@@ -120,7 +120,7 @@ void StateEvent::update(GfGameManager *, const fw::UpdateInfo &) {}
 
 void StateTalk::enter(GfGameManager *, ai::State *previous) {
   GfGameState::setStateFlg(GF_STATE_FLAG_TALK | GF_STATE_FLAG_CONTROL);
-  GfEvent::callGameState(GF_STATE(previous->stateID), GF_STATE(stateID));
+  GfEvent::callGameState(GF_STATE(previous->unknown08), GF_STATE(unknown08));
 }
 
 void StateTalk::leave(GfGameManager *, ai::State *) {}
@@ -215,7 +215,7 @@ void GfGameState::clear() {
 
 bool GfGameState::test(u32 flags) { return (get()->unknown80 & flags) != 0; }
 
-GF_STATE GfGameState::getState() { return GF_STATE(get()->unknown08.getState()->stateID); }
+GF_STATE GfGameState::getState() { return GF_STATE(get()->unknown08.getState()->unknown08); }
 
 const char *GfGameState::getStateName() {
   if (get() != nullptr) {

@@ -31,34 +31,34 @@ public:
   virtual void sampleTrucks(f32 time, const Binding &binding, QsTransform *transforms) const = 0;
 
   virtual bool getExtractMotion(f32 time, QsTransform *transform) const {
-    if (m_pLocomotion == nullptr) {
+    if (unknown40 == nullptr) {
       return false;
     }
-    m_pLocomotion->getReference(time, transform);
+    unknown40->getReference(time, transform);
     return true;
   }
 
   virtual bool getDeltaExtractMotion(f32 previousTime, f32 time, bool looped, QsTransform *transform) const {
-    if (m_pLocomotion == nullptr) {
+    if (unknown40 == nullptr) {
       return false;
     }
-    m_pLocomotion->getDeltaReference(previousTime, time, 0.0f, m_invFps * (m_frameCount - 1), looped, transform);
+    unknown40->getDeltaReference(previousTime, time, 0.0f, unknown28 * (unknown2c - 1), looped, transform);
     return true;
   }
 
-  const char *m_name;
+  const char *unknown18; // Inferred role: name; original member name unknown.
   u8 _20[0x22 - 0x20];
-  u8 m_playMode;
-  u8 m_blendHint;
-  f32 m_fps;
-  f32 m_invFps;
-  u32 m_frameCount;
+  u8 unknown22;  // Inferred role: play mode; original member name unknown.
+  u8 unknown23;  // Inferred role: blend hint; original member name unknown.
+  f32 unknown24; // Inferred role: fps; original member name unknown.
+  f32 unknown28; // Inferred role: inv fps; original member name unknown.
+  u32 unknown2c; // Inferred role: frame count; original member name unknown.
   u8 _30[0x40 - 0x30];
-  const Locomotion *m_pLocomotion;
+  const Locomotion *unknown40; // Inferred role: p locomotion; original member name unknown.
 };
 
-static_assert(offsetof(Animation, m_name) == 0x18, "");
-static_assert(offsetof(Animation, m_frameCount) == 0x2c, "");
-static_assert(offsetof(Animation, m_pLocomotion) == 0x40, "");
+static_assert(offsetof(Animation, unknown18) == 0x18, "");
+static_assert(offsetof(Animation, unknown2c) == 0x2c, "");
+static_assert(offsetof(Animation, unknown40) == 0x40, "");
 
 } // namespace anm

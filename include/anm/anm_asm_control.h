@@ -25,17 +25,17 @@ public:
   void setVariable(const char *name, f32 value);
   bool getVariable(const char *name, f32 *value) const;
 
-  const ResASM *resAsm;
-  AsmBlender m_blender;
-  mm::mtl::Vector<Variable> m_variables;
-  StateMachine m_stateMachines[LAYER_MAX];
-  QsTransform locomotion;
+  const ResASM *unknown18;             // Inferred role: res asm; original member name unknown.
+  AsmBlender unknown20;                // Inferred role: blender; original member name unknown.
+  mm::mtl::Vector<Variable> unknown48; // Inferred role: variables; original member name unknown.
+  StateMachine unknown70[LAYER_MAX];   // Inferred role: state machines; original member name unknown.
+  QsTransform unknown380;              // Inferred role: locomotion; original member name unknown.
 };
 
-static_assert(offsetof(ASMControl, resAsm) == 0x18, "");
-static_assert(offsetof(ASMControl, m_blender) == 0x20, "");
-static_assert(offsetof(ASMControl, m_variables) == 0x48, "");
-static_assert(offsetof(ASMControl, m_stateMachines) == 0x70, "");
-static_assert(offsetof(ASMControl, locomotion) == 0x380, "");
+static_assert(offsetof(ASMControl, unknown18) == 0x18, "");
+static_assert(offsetof(ASMControl, unknown20) == 0x20, "");
+static_assert(offsetof(ASMControl, unknown48) == 0x48, "");
+static_assert(offsetof(ASMControl, unknown70) == 0x70, "");
+static_assert(offsetof(ASMControl, unknown380) == 0x380, "");
 
 } // namespace anm

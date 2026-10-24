@@ -12,99 +12,99 @@
 
 namespace grlib {
 
-CGLibDblUniformBlock::CGLibDblUniformBlock() : m_mappings(), m_gpuAddresses() {}
+CGLibDblUniformBlock::CGLibDblUniformBlock() : unknown00(), unknown18() {}
 
 CGLibDblUniformBlock::~CGLibDblUniformBlock() { release(); }
 
 void CGLibDblUniformBlock::release() {
-  CGLibMemHandle::free(m_memType);
-  m_mappings[0] = nullptr;
-  m_mappings[1] = nullptr;
+  CGLibMemHandle::free(unknown28);
+  unknown00[0] = nullptr;
+  unknown00[1] = nullptr;
 }
 
 void CGLibDblUniformBlock::setup(int size) {
   release();
   u32 alignedSize = size + (0x100 - size % 0x100) % 0x100;
-  CGLibMemHandle::allocUniform(m_memType, alignedSize * 2);
-  m_mappings[0] = m_memType.m_buffer;
-  m_mappings[1] = static_cast<u8 *>(m_memType.m_buffer) + alignedSize;
+  CGLibMemHandle::allocUniform(unknown28, alignedSize * 2);
+  unknown00[0] = unknown28.m_buffer;
+  unknown00[1] = static_cast<u8 *>(unknown28.m_buffer) + alignedSize;
   m_size = size;
-  context::CGLibSystemContext::get()->getUniformoGpuAddress(m_gpuAddresses[0], m_memType);
-  m_gpuAddresses[1] = m_gpuAddresses[0] + alignedSize;
+  context::CGLibSystemContext::get()->getUniformoGpuAddress(unknown18[0], unknown28);
+  unknown18[1] = unknown18[0] + alignedSize;
 }
 
 void CGLibDblUniformBlock::setup(CGLibVtlMemPool *memPool, u32 size, u32 offset) {
   release();
-  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memPool->m_buffer) + offset);
+  CGLibMemHandle::setMemBuff(unknown28, static_cast<u8 *>(memPool->m_buffer) + offset);
   u32 alignedSize = size + (0x100 - size % 0x100) % 0x100;
   m_size = size;
-  m_mappings[0] = m_memType.m_buffer;
-  m_mappings[1] = static_cast<u8 *>(m_memType.m_buffer) + alignedSize;
-  m_gpuAddresses[0] = memPool->m_address + offset;
-  m_gpuAddresses[1] = memPool->m_address + (alignedSize + offset);
+  unknown00[0] = unknown28.m_buffer;
+  unknown00[1] = static_cast<u8 *>(unknown28.m_buffer) + alignedSize;
+  unknown18[0] = memPool->unknown08 + offset;
+  unknown18[1] = memPool->unknown08 + (alignedSize + offset);
 }
 
 int CGLibDblUniformBlock::setupArray(int size, CGLibMemType &memType, u32 offset) {
   u32 alignedSize = size + (0x100 - size % 0x100) % 0x100;
-  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memType.m_buffer) + offset);
-  m_mappings[0] = m_memType.m_buffer;
-  m_mappings[1] = static_cast<u8 *>(m_memType.m_buffer) + alignedSize;
+  CGLibMemHandle::setMemBuff(unknown28, static_cast<u8 *>(memType.m_buffer) + offset);
+  unknown00[0] = unknown28.m_buffer;
+  unknown00[1] = static_cast<u8 *>(unknown28.m_buffer) + alignedSize;
   m_size = size;
-  context::CGLibSystemContext::get()->getUniformoGpuAddress(m_gpuAddresses[0], memType);
-  m_gpuAddresses[0] += offset;
-  m_gpuAddresses[1] = m_gpuAddresses[0] + alignedSize;
+  context::CGLibSystemContext::get()->getUniformoGpuAddress(unknown18[0], memType);
+  unknown18[0] += offset;
+  unknown18[1] = unknown18[0] + alignedSize;
   return alignedSize * 2;
 }
 
-void CGLibDblUniformBlock::updateData() { nn::os::FlushDataCache(m_mappings[CGLibManager::s_nDblNowIdx], m_size); }
+void CGLibDblUniformBlock::updateData() { nn::os::FlushDataCache(unknown00[CGLibManager::s_nDblNowIdx], m_size); }
 
-void CGLibDblUniformBlock::updateData(u32 offset, u32 size) { nn::os::FlushDataCache(static_cast<u8 *>(m_mappings[CGLibManager::s_nDblNowIdx]) + offset, size); }
+void CGLibDblUniformBlock::updateData(u32 offset, u32 size) { nn::os::FlushDataCache(static_cast<u8 *>(unknown00[CGLibManager::s_nDblNowIdx]) + offset, size); }
 
-void *CGLibDblUniformBlock::getBuff() { return m_mappings[CGLibManager::s_nDblNowIdx]; }
+void *CGLibDblUniformBlock::getBuff() { return unknown00[CGLibManager::s_nDblNowIdx]; }
 
-void *CGLibDblUniformBlock::getOldBuff() { return m_mappings[CGLibManager::s_nDblNowIdx == 0]; }
+void *CGLibDblUniformBlock::getOldBuff() { return unknown00[CGLibManager::s_nDblNowIdx == 0]; }
 
-void *CGLibDblUniformBlock::getMapping() { return m_mappings[CGLibManager::s_nDblNowIdx]; }
+void *CGLibDblUniformBlock::getMapping() { return unknown00[CGLibManager::s_nDblNowIdx]; }
 
-CGLibOneUniformBlock::CGLibOneUniformBlock() : m_mapping(nullptr), m_gpuAddress(0) {}
+CGLibOneUniformBlock::CGLibOneUniformBlock() : m_mapping(nullptr), unknown10(0) {}
 
 CGLibOneUniformBlock::~CGLibOneUniformBlock() { release(); }
 
 void CGLibOneUniformBlock::release() {
-  CGLibMemHandle::free(m_memType);
+  CGLibMemHandle::free(unknown18);
   m_mapping = nullptr;
 }
 
 void CGLibOneUniformBlock::setup(int size) {
   release();
-  CGLibMemHandle::allocUniform(m_memType, size + (0x100 - size % 0x100) % 0x100);
-  m_mapping = m_memType.m_buffer;
+  CGLibMemHandle::allocUniform(unknown18, size + (0x100 - size % 0x100) % 0x100);
+  m_mapping = unknown18.m_buffer;
   m_size = size;
-  context::CGLibSystemContext::get()->getUniformoGpuAddress(m_gpuAddress, m_memType);
+  context::CGLibSystemContext::get()->getUniformoGpuAddress(unknown10, unknown18);
 }
 
 void CGLibOneUniformBlock::setup(CGLibVtlMemPool *memPool, u32 size, u32 offset) {
   release();
-  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memPool->m_buffer) + offset);
-  m_mapping = m_memType.m_buffer;
+  CGLibMemHandle::setMemBuff(unknown18, static_cast<u8 *>(memPool->m_buffer) + offset);
+  m_mapping = unknown18.m_buffer;
   m_size = size;
-  m_gpuAddress = memPool->m_address + offset;
+  unknown10 = memPool->unknown08 + offset;
 }
 
 int CGLibOneUniformBlock::setupArray(int size, CGLibMemType &memType, u32 offset) {
-  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memType.m_buffer) + offset);
-  m_mapping = m_memType.m_buffer;
+  CGLibMemHandle::setMemBuff(unknown18, static_cast<u8 *>(memType.m_buffer) + offset);
+  m_mapping = unknown18.m_buffer;
   m_size = size;
-  context::CGLibSystemContext::get()->getUniformoGpuAddress(m_gpuAddress, memType);
-  m_gpuAddress += offset;
+  context::CGLibSystemContext::get()->getUniformoGpuAddress(unknown10, memType);
+  unknown10 += offset;
   return size + (0x100 - size % 0x100) % 0x100;
 }
 
 void CGLibOneUniformBlock::setupArray(CGLibVtlMemPool *memPool, u32 size, u32 offset) {
-  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memPool->m_buffer) + offset);
-  m_mapping = m_memType.m_buffer;
+  CGLibMemHandle::setMemBuff(unknown18, static_cast<u8 *>(memPool->m_buffer) + offset);
+  m_mapping = unknown18.m_buffer;
   m_size = size;
-  m_gpuAddress = memPool->m_address + offset;
+  unknown10 = memPool->unknown08 + offset;
 }
 
 void CGLibOneUniformBlock::updateData() { nn::os::FlushDataCache(m_mapping, m_size); }
@@ -113,87 +113,87 @@ void CGLibOneUniformBlock::updateData(u32 offset, u32 size) { nn::os::FlushDataC
 
 void *CGLibOneUniformBlock::getMapping() { return m_mapping; }
 
-CGLibTriUniformBlock::CGLibTriUniformBlock() : m_mappings(), m_gpuAddresses() {}
+CGLibTriUniformBlock::CGLibTriUniformBlock() : unknown00(), unknown20() {}
 
 CGLibTriUniformBlock::~CGLibTriUniformBlock() { release(); }
 
 void CGLibTriUniformBlock::release() {
-  m_gpuAddresses[0] = 0;
-  m_gpuAddresses[1] = 0;
-  m_gpuAddresses[2] = 0;
-  CGLibMemHandle::free(m_memType);
-  m_mappings[0] = nullptr;
-  m_mappings[1] = nullptr;
-  m_mappings[2] = nullptr;
+  unknown20[0] = 0;
+  unknown20[1] = 0;
+  unknown20[2] = 0;
+  CGLibMemHandle::free(unknown38);
+  unknown00[0] = nullptr;
+  unknown00[1] = nullptr;
+  unknown00[2] = nullptr;
 }
 
 void CGLibTriUniformBlock::setup(int size) {
   release();
   u32 alignedSize = size + (0x100 - size % 0x100) % 0x100;
   m_size = size;
-  CGLibMemHandle::allocUniform(m_memType, alignedSize * 3);
-  m_mappings[0] = m_memType.m_buffer;
-  m_mappings[1] = static_cast<u8 *>(m_memType.m_buffer) + alignedSize;
-  m_mappings[2] = static_cast<u8 *>(m_memType.m_buffer) + alignedSize * 2;
-  context::CGLibSystemContext::get()->getUniformoGpuAddress(m_gpuAddresses[0], m_memType);
-  m_gpuAddresses[1] = m_gpuAddresses[0] + alignedSize;
-  m_gpuAddresses[2] = m_gpuAddresses[0] + alignedSize * 2;
+  CGLibMemHandle::allocUniform(unknown38, alignedSize * 3);
+  unknown00[0] = unknown38.m_buffer;
+  unknown00[1] = static_cast<u8 *>(unknown38.m_buffer) + alignedSize;
+  unknown00[2] = static_cast<u8 *>(unknown38.m_buffer) + alignedSize * 2;
+  context::CGLibSystemContext::get()->getUniformoGpuAddress(unknown20[0], unknown38);
+  unknown20[1] = unknown20[0] + alignedSize;
+  unknown20[2] = unknown20[0] + alignedSize * 2;
 }
 
 void CGLibTriUniformBlock::setup(CGLibVtlMemPool *memPool, u32 size, u32 offset) {
   release();
-  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memPool->m_buffer) + offset);
+  CGLibMemHandle::setMemBuff(unknown38, static_cast<u8 *>(memPool->m_buffer) + offset);
   u32 alignedSize = size + (0x100 - size % 0x100) % 0x100;
   m_size = size;
-  m_mappings[0] = m_memType.m_buffer;
-  m_mappings[1] = static_cast<u8 *>(m_memType.m_buffer) + alignedSize;
-  m_mappings[2] = static_cast<u8 *>(m_memType.m_buffer) + alignedSize * 2;
-  m_gpuAddresses[0] = memPool->m_address + offset;
-  m_gpuAddresses[1] = memPool->m_address + (alignedSize + offset);
-  m_gpuAddresses[2] = memPool->m_address + (alignedSize * 2 + offset);
+  unknown00[0] = unknown38.m_buffer;
+  unknown00[1] = static_cast<u8 *>(unknown38.m_buffer) + alignedSize;
+  unknown00[2] = static_cast<u8 *>(unknown38.m_buffer) + alignedSize * 2;
+  unknown20[0] = memPool->unknown08 + offset;
+  unknown20[1] = memPool->unknown08 + (alignedSize + offset);
+  unknown20[2] = memPool->unknown08 + (alignedSize * 2 + offset);
 }
 
 int CGLibTriUniformBlock::setupArray(int size, CGLibMemType &memType, u32 offset) {
   u32 alignedSize = size + (0x100 - size % 0x100) % 0x100;
   m_size = size;
-  CGLibMemHandle::setMemBuff(m_memType, static_cast<u8 *>(memType.m_buffer) + offset);
-  m_mappings[0] = m_memType.m_buffer;
-  m_mappings[1] = static_cast<u8 *>(m_memType.m_buffer) + alignedSize;
-  m_mappings[2] = static_cast<u8 *>(m_memType.m_buffer) + alignedSize * 2;
-  context::CGLibSystemContext::get()->getUniformoGpuAddress(m_gpuAddresses[0], memType);
-  m_gpuAddresses[0] += offset;
-  m_gpuAddresses[1] = m_gpuAddresses[0] + alignedSize;
-  m_gpuAddresses[2] = m_gpuAddresses[0] + alignedSize * 2;
+  CGLibMemHandle::setMemBuff(unknown38, static_cast<u8 *>(memType.m_buffer) + offset);
+  unknown00[0] = unknown38.m_buffer;
+  unknown00[1] = static_cast<u8 *>(unknown38.m_buffer) + alignedSize;
+  unknown00[2] = static_cast<u8 *>(unknown38.m_buffer) + alignedSize * 2;
+  context::CGLibSystemContext::get()->getUniformoGpuAddress(unknown20[0], memType);
+  unknown20[0] += offset;
+  unknown20[1] = unknown20[0] + alignedSize;
+  unknown20[2] = unknown20[0] + alignedSize * 2;
   return alignedSize * 3;
 }
 
-void CGLibTriUniformBlock::updateData() { nn::os::FlushDataCache(m_mappings[CGLibManager::s_nTriNowIdx], m_size); }
+void CGLibTriUniformBlock::updateData() { nn::os::FlushDataCache(unknown00[CGLibManager::s_nTriNowIdx], m_size); }
 
-void CGLibTriUniformBlock::updateData(u32 offset, u32 size) { nn::os::FlushDataCache(static_cast<u8 *>(m_mappings[CGLibManager::s_nTriNowIdx]) + offset, size); }
+void CGLibTriUniformBlock::updateData(u32 offset, u32 size) { nn::os::FlushDataCache(static_cast<u8 *>(unknown00[CGLibManager::s_nTriNowIdx]) + offset, size); }
 
 void CGLibTriUniformBlock::updateOldData() {
   int index = CGLibManager::s_nTriNowIdx;
-  nn::os::FlushDataCache(m_mappings[index < 1 ? 2 : index - 1], m_size);
+  nn::os::FlushDataCache(unknown00[index < 1 ? 2 : index - 1], m_size);
 }
 
 void CGLibTriUniformBlock::updateOldData(u32 offset, u32 size) {
   int index = CGLibManager::s_nTriNowIdx;
-  nn::os::FlushDataCache(static_cast<u8 *>(m_mappings[index < 1 ? 2 : index - 1]) + offset, size);
+  nn::os::FlushDataCache(static_cast<u8 *>(unknown00[index < 1 ? 2 : index - 1]) + offset, size);
 }
 
-void *CGLibTriUniformBlock::getBuff() { return m_mappings[CGLibManager::s_nTriNowIdx]; }
+void *CGLibTriUniformBlock::getBuff() { return unknown00[CGLibManager::s_nTriNowIdx]; }
 
 void *CGLibTriUniformBlock::getOldBuff() {
   int index = CGLibManager::s_nTriNowIdx;
-  return m_mappings[index < 1 ? 2 : index - 1];
+  return unknown00[index < 1 ? 2 : index - 1];
 }
 
 void *CGLibTriUniformBlock::getOldTriBuff() {
   int index = CGLibManager::s_nTriNowIdx;
-  return m_mappings[index > 1 ? 0 : index + 1];
+  return unknown00[index > 1 ? 0 : index + 1];
 }
 
-void *CGLibTriUniformBlock::getMapping() { return m_mappings[CGLibManager::s_nTriNowIdx]; }
+void *CGLibTriUniformBlock::getMapping() { return unknown00[CGLibManager::s_nTriNowIdx]; }
 
 CGLibEtcUniformBlock::~CGLibEtcUniformBlock() {}
 
@@ -204,7 +204,7 @@ void CGLibEtcUniformBlock::updateData(u32 size) {
   }
 }
 
-void CGLibEtcUniformBlock::Rebuilding() { context::CGLibSystemContext::get()->getGlbUniformParam(m_buffer, m_gpuAddress); }
+void CGLibEtcUniformBlock::Rebuilding() { context::CGLibSystemContext::get()->getGlbUniformParam(m_buff, unknown10); }
 
 void CGLibEtcUniformBlock::setMoveMem(u32 size) {
   if (size != 0) {
@@ -213,7 +213,7 @@ void CGLibEtcUniformBlock::setMoveMem(u32 size) {
   }
 }
 
-void CGLibUniformEtcUtility::setMoveMem() { m_block.setMoveMem(m_size); }
+void CGLibUniformEtcUtility::setMoveMem() { unknown20.setMoveMem(m_size); }
 
 void CGLibUniBaseUtility::setMoveMem() {}
 

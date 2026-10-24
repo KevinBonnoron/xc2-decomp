@@ -142,16 +142,16 @@ void CommonResource::update() {
         break;
       }
 
-      if (unknownb8->fileHandle != nullptr) {
+      if (unknownb8->unknownc0 != nullptr) {
         return;
       }
 
-      if (unknownb8->size != -2 && unknownb8->isExist()) {
-        unknownb8->isBufferOwner = false;
+      if (unknownb8->unknownd0 != -2 && unknownb8->isExist()) {
+        unknownb8->unknownf0 = false;
         if (unknown10.isValid()) {
-          unknownc0 = AssetData::AssignFromMemory(unknown10, unknownb8->buffer, unknownb8->size, unknownb8->name.c_str(), unknownb8->timeStamp);
+          unknownc0 = AssetData::AssignFromMemory(unknown10, unknownb8->unknownc8, unknownb8->unknownd0, unknownb8->unknown0c.c_str(), unknownb8->unknowne0);
         } else if (unknown18 != nullptr) {
-          unknownc0 = AssetData::AssignFromMemory(unknown18, unknownb8->buffer, unknownb8->size, unknownb8->name.c_str(), unknownb8->timeStamp);
+          unknownc0 = AssetData::AssignFromMemory(unknown18, unknownb8->unknownc8, unknownb8->unknownd0, unknownb8->unknown0c.c_str(), unknownb8->unknowne0);
         }
 
         if (unknownb4) {

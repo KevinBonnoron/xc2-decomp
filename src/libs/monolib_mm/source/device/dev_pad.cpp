@@ -18,7 +18,7 @@ void DevPad::setRepeatTime(float time) {
   if (pad != nullptr) {
     time = time < 0.03f ? 0.03f : time;
     for (int i = 0; i < 11; i++) {
-      pad->m_repeats[i].time = time;
+      pad->unknown4b0[i].unknown00 = time;
     }
   }
 }
@@ -64,7 +64,7 @@ bool DevPad::isDebugPad(int padNo) { return padNo == s_debugPadNo; }
 u32 DevPad::getBtn(int padNo) {
   DevPad *pad = get();
   if (pad != nullptr) {
-    return pad->m_btn[padNo];
+    return pad->unknown244[padNo];
   }
 
   return 0;
@@ -73,7 +73,7 @@ u32 DevPad::getBtn(int padNo) {
 u32 DevPad::getDown(int padNo) {
   DevPad *pad = get();
   if (pad != nullptr) {
-    return pad->m_down[padNo];
+    return pad->unknown1ec[padNo];
   }
 
   return 0;
@@ -82,7 +82,7 @@ u32 DevPad::getDown(int padNo) {
 u32 DevPad::getUp(int padNo) {
   DevPad *pad = get();
   if (pad != nullptr) {
-    return pad->m_up[padNo];
+    return pad->unknown218[padNo];
   }
 
   return 0;
@@ -91,7 +91,7 @@ u32 DevPad::getUp(int padNo) {
 u32 DevPad::getRepeat(int padNo) {
   DevPad *pad = get();
   if (pad != nullptr) {
-    return pad->m_repeat[padNo];
+    return pad->unknown29c[padNo];
   }
 
   return 0;
@@ -100,7 +100,7 @@ u32 DevPad::getRepeat(int padNo) {
 u32 DevPad::getDbl(int padNo) {
   DevPad *pad = get();
   if (pad != nullptr) {
-    return pad->m_dbl[padNo];
+    return pad->unknown270[padNo];
   }
 
   return 0;
@@ -124,7 +124,7 @@ f32 DevPad::getALX(int padNo, bool isLowCut) {
 f32 DevPad::getLowAnalog() {
   DevPad *pad = get();
   if (pad != nullptr) {
-    return pad->m_lowAnalog;
+    return pad->unknown540;
   }
 
   return 0.0f;
@@ -199,7 +199,7 @@ void DevPad::loadVibration(u32 id, void *data, unsigned long size) {
 void DevPad::setLowAnalog(f32 lowAnalog) {
   DevPad *pad = get();
   if (pad != nullptr) {
-    pad->m_lowAnalog = lowAnalog;
+    pad->unknown540 = lowAnalog;
   }
 }
 
@@ -237,7 +237,7 @@ bool DevPad::wkStandbyLogin() {
 }
 
 bool DevPad::wkStandbyLogout() {
-  if (m_children.size() == 0 && WorkSystem::get() == nullptr && LibMain::get() == nullptr) {
+  if (unknown60.size() == 0 && WorkSystem::get() == nullptr && LibMain::get() == nullptr) {
     releaseDevice();
     return WorkObj::wkStandbyLogout();
   }

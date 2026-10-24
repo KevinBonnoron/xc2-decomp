@@ -3,26 +3,26 @@
 namespace idcoli {
 
 IDColiObj::IDColiObj() {
-  m_next = nullptr;
-  m_updateFlags = 0;
-  m_attr = 9;
-  m_state = 3;
+  unknown10 = nullptr;
+  unknown1c = 0;
+  unknown20 = 9;
+  unknown18 = 3;
   _40 = 0;
-  m_userData = nullptr;
-  m_prev = nullptr;
+  unknown48 = nullptr;
+  unknown08 = nullptr;
   _30 = 0;
   _38 = 0;
-  m_materialData = 0;
-  m_materialBit = 0;
+  unknown28 = 0;
+  unknown2c = 0;
 }
 
 void IDColiObj::release() {
-  m_userData = nullptr;
-  m_updateFlags |= 1 << IDColiManager::s_nStkIdx;
+  unknown48 = nullptr;
+  unknown1c |= 1 << IDColiManager::s_nStkIdx;
 }
 
-void IDColiObj::setDeleteCall() { m_updateFlags |= 1 << IDColiManager::s_nStkIdx; }
+void IDColiObj::setDeleteCall() { unknown1c |= 1 << IDColiManager::s_nStkIdx; }
 
-bool IDColiObj::isDeleteAll() const { return (m_updateFlags & 3) != 0; }
+bool IDColiObj::isDeleteAll() const { return (unknown1c & 3) != 0; }
 
 } // namespace idcoli

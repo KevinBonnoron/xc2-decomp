@@ -19,8 +19,8 @@ void WorkUtil::setDispLogH(bool isDisp) { _wkut::s_bDispLogH = isDisp; }
 bool WorkUtil::isDispLogH() { return _wkut::s_bDispLogH; }
 
 bool WorkUtil::isTopOfParent(const WorkObj *work) {
-  if (work->m_parent != nullptr) {
-    return work->m_parent->m_children.begin()->value == work;
+  if (work->unknown58 != nullptr) {
+    return work->unknown58->unknown60.begin()->value == work;
   }
 
   return false;
@@ -35,7 +35,7 @@ bool WorkUtil::searchWork(const WorkObj *parent, const WorkObj *work) {
     return true;
   }
 
-  for (reslist<WorkObj *>::Node *node = parent->m_children.begin(); node != parent->m_children.end(); node = node->getNext()) {
+  for (reslist<WorkObj *>::Node *node = parent->unknown60.begin(); node != parent->unknown60.end(); node = node->getNext()) {
     if (searchWork(node->value, work)) {
       return true;
     }
@@ -49,9 +49,9 @@ bool WorkUtil::hasChild(WorkObj *parent, const char *name) {
     return false;
   }
 
-  for (reslist<WorkObj *>::Node *node = parent->m_children.begin(); node != parent->m_children.end(); node = node->getNext()) {
+  for (reslist<WorkObj *>::Node *node = parent->unknown60.begin(); node != parent->unknown60.end(); node = node->getNext()) {
     WorkObj *child = node->value;
-    if (strcmp(child->m_name.c_str(), name) == 0) {
+    if (strcmp(child->unknown08.c_str(), name) == 0) {
       return true;
     }
 

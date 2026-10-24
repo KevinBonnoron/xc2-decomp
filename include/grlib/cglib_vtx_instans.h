@@ -17,16 +17,16 @@ public:
   void *getNextInstansBuff();
 
   u32 m_size;
-  u32 m_bankSize;
-  u32 m_writeOffset;
-  u32 m_flushedOffset;
-  u32 m_bankOffset;
-  CGLibMemType m_memType;
-  u64 m_gpuAddress;
+  u32 unknown04;          // Inferred role: bank size; original member name unknown.
+  u32 unknown08;          // Inferred role: write offset; original member name unknown.
+  u32 unknown0c;          // Inferred role: flushed offset; original member name unknown.
+  u32 unknown10;          // Inferred role: bank offset; original member name unknown.
+  CGLibMemType unknown18; // Inferred role: mem type; original member name unknown.
+  u64 unknown28;          // Inferred role: gpu address; original member name unknown.
 };
 
-static_assert(offsetof(CGLibVtxInstans, m_bankOffset) == 0x10, "");
-static_assert(offsetof(CGLibVtxInstans, m_memType) == 0x18, "");
-static_assert(offsetof(CGLibVtxInstans, m_gpuAddress) == 0x28, "");
+static_assert(offsetof(CGLibVtxInstans, unknown10) == 0x10, "");
+static_assert(offsetof(CGLibVtxInstans, unknown18) == 0x18, "");
+static_assert(offsetof(CGLibVtxInstans, unknown28) == 0x28, "");
 
 } // namespace grlib

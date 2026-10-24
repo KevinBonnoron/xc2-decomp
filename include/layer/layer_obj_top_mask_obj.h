@@ -9,10 +9,10 @@ namespace layer {
 class LayerObjTopMaskObj : public LayerObj {
 public:
   u8 _250[0x2d0 - 0x250];
-  u16 m_iconNum;
-  u16 m_iconMax;
+  u16 unknown2d0; // Inferred role: icon num; original member name unknown.
+  u16 unknown2d2; // Inferred role: icon max; original member name unknown.
 };
 
-static_assert(offsetof(LayerObjTopMaskObj, m_iconNum) == 0x2d0, "");
+static_assert(offsetof(LayerObjTopMaskObj, unknown2d0) == 0x2d0, "");
 
 } // namespace layer

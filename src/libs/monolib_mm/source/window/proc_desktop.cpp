@@ -50,11 +50,11 @@ f32 ProcDesktop::setUpdateRatio(f32 ratio) {
   if (desktop == nullptr) {
     return 0.0f;
   }
-  f32 oldRatio = desktop->m_updateRatio;
-  desktop->m_requestUpdateRatio = ratio;
+  f32 oldRatio = desktop->unknown25c;
+  desktop->unknown260 = ratio;
   if (oldRatio != ratio) {
     f32 scale = (_dsk::s_flg & _dsk::FLAG_PAUSE) ? 0.0f : 1.0f;
-    desktop->m_updateRatio = ratio;
+    desktop->unknown25c = ratio;
     DevGraph::setFrameSpd(ratio * scale);
   }
   return oldRatio;
@@ -65,7 +65,7 @@ f32 ProcDesktop::getUpdateSec() {
   if (desktop == nullptr) {
     return 0.0f;
   }
-  return desktop->m_updateRatio * DevGraph::getFrameSyncSec();
+  return desktop->unknown25c * DevGraph::getFrameSyncSec();
 }
 
 f32 ProcDesktop::getUpdateRatio() {
@@ -73,7 +73,7 @@ f32 ProcDesktop::getUpdateRatio() {
   if (desktop == nullptr) {
     return 0.0f;
   }
-  return desktop->m_updateRatio;
+  return desktop->unknown25c;
 }
 
 void ProcDesktop::entryTable(DESKTOP_ICON_DEF *table, bool isAutoExecute) {
@@ -101,7 +101,7 @@ bool ProcDesktop::isDeleteApp() {
   if (desktop == nullptr) {
     return true;
   }
-  return desktop->m_isDeleteApp;
+  return desktop->unknown274;
 }
 
 void ProcDesktop::setDisableFlag(u32 flag) { _dsk::s_bitDisable = flag; }
@@ -114,17 +114,17 @@ void ProcDesktop::setSimpleInfo(bool isSimple) { _dsk::s_flg = !isSimple ? _dsk:
 
 bool ProcDesktop::isDispInfo() { return _dsk::s_flg & _dsk::FLAG_DISP_INFO; }
 
-WinView *ProcDesktop::getSelectedView() { return get()->m_selectedView; }
+WinView *ProcDesktop::getSelectedView() { return get()->unknown248; }
 
 WinView *ProcDesktop::getView() {
   ProcDesktop *desktop = get();
   if (desktop == nullptr) {
     return nullptr;
   }
-  return desktop->m_view;
+  return desktop->unknown208;
 }
 
-const mm::Col4 &ProcDesktop::getDefaultFrameColor() { return get()->m_defaultFrameColor; }
+const mm::Col4 &ProcDesktop::getDefaultFrameColor() { return get()->unknown1f8; }
 
 _dsk::ProcDesktopBackGround *ProcDesktop::getBackGround() { return mm::mtl::PtrSingleton<_dsk::ProcDesktopBackGround>::get(); }
 
@@ -137,7 +137,7 @@ _dsk::ProcDesktopException *ProcDesktop::getException() {
 
 void ProcDesktop::deleteApp() {
   ProcDesktop *desktop = get();
-  desktop->m_isDeleteApp = true;
+  desktop->unknown274 = true;
   desktop->wkSetEventChild(static_cast<EVT>(0));
 }
 
@@ -147,7 +147,7 @@ void ProcDesktop::debugEntryIcon() {
     return;
   }
   for (; def->name != nullptr; def++) {
-    m_icons[m_iconNum++] = DesktopIcon::create(WorkUtil::getWorkMem(), def->name, def->func);
+    unknown210[unknown218++] = DesktopIcon::create(WorkUtil::getWorkMem(), def->name, def->func);
   }
 }
 
@@ -161,8 +161,8 @@ void ProcDesktop::debugSimpleCost(int x, int y) {}
 
 void ProcDesktop::OnPauseTrigger(bool isPause, const char *name) {
   _dsk::s_flg = !isPause ? _dsk::s_flg & ~_dsk::FLAG_PAUSE : _dsk::s_flg | _dsk::FLAG_PAUSE;
-  f32 ratio = m_updateRatio;
-  m_updateRatio = 0.0f;
+  f32 ratio = unknown25c;
+  unknown25c = 0.0f;
   setUpdateRatio(ratio);
 }
 

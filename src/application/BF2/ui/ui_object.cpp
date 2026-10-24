@@ -220,7 +220,7 @@ bool UIObject::isDebugDraw() const { return false; }
 
 void UIObject::importDisplaySize(UIDisplayInfo &displayInfo, layer::LayerBase *layer) {
   layer::LayerAccObjBase acc(layer);
-  switch (layer->type) {
+  switch (layer->unknown18) {
   case layer::LAYER_OBJ_TYPE_FONT: {
     layer::LayerAccFontObj font(layer);
     displayInfo.setPixelWidth(font.getFontPixelWidth());

@@ -38,16 +38,16 @@ public:
   ScnObjCam *getCam(const WinView *view);
 
   u8 _00[0x08 - 0x00];
-  Scn *m_scn;
+  Scn *unknown08; // Inferred role: scn; original member name unknown.
 };
 
-static_assert(offsetof(ScnCamMan, m_scn) == 0x08, "");
+static_assert(offsetof(ScnCamMan, unknown08) == 0x08, "");
 
 class Scn : public mm::mtl::PtrSingleton<Scn> {
 public:
   struct DebDrawInfo {
-    SCNPRIO_CB priority;
-    s32 screen;
+    SCNPRIO_CB unknown00; // Inferred role: priority; original member name unknown.
+    s32 unknown04;        // Inferred role: screen; original member name unknown.
   };
 
   void setPause(bool isPause);
@@ -71,26 +71,26 @@ public:
   const ScnObjCam *getCam(const WinView *view) const;
 
   u8 _08[0x20 - 0x08];
-  ScnPoolObj *poolObj;
-  ScnCamMan *m_camMan;
-  ScnDebug *m_scnDebug;
-  ScnRenderDrSys *renderDrSys;
+  ScnPoolObj *unknown20;     // Inferred role: pool object; original member name unknown.
+  ScnCamMan *unknown28;      // Inferred role: cam man; original member name unknown.
+  ScnDebug *unknown30;       // Inferred role: scn debug; original member name unknown.
+  ScnRenderDrSys *unknown38; // Inferred role: render dr sys; original member name unknown.
   u8 _40[0x64 - 0x40];
-  mtl::ALLOC_HANDLE allocHandle;
+  mtl::ALLOC_HANDLE unknown64; // Inferred role: alloc handle; original member name unknown.
   u8 _68[0xac - 0x68];
-  bool m_isTexStm;
+  bool unknownac; // Inferred role: tex stm; original member name unknown.
   u8 _ad[0xdf8 - 0xad];
-  bool m_isPause;
-  bool m_isRenderStop;
+  bool unknowndf8; // Inferred role: pause; original member name unknown.
+  bool unknowndf9; // Inferred role: render stop; original member name unknown.
   u8 _dfa[0xe00 - 0xdfa];
-  DebDrawInfo m_debDrawInfos[2];
+  DebDrawInfo unknowne00[2]; // Inferred role: deb draw infos; original member name unknown.
 };
 
-static_assert(offsetof(Scn, poolObj) == 0x20, "");
-static_assert(offsetof(Scn, renderDrSys) == 0x38, "");
-static_assert(offsetof(Scn, allocHandle) == 0x64, "");
-static_assert(offsetof(Scn, m_isTexStm) == 0xac, "");
-static_assert(offsetof(Scn, m_isPause) == 0xdf8, "");
-static_assert(offsetof(Scn, m_debDrawInfos) == 0xe00, "");
+static_assert(offsetof(Scn, unknown20) == 0x20, "");
+static_assert(offsetof(Scn, unknown38) == 0x38, "");
+static_assert(offsetof(Scn, unknown64) == 0x64, "");
+static_assert(offsetof(Scn, unknownac) == 0xac, "");
+static_assert(offsetof(Scn, unknowndf8) == 0xdf8, "");
+static_assert(offsetof(Scn, unknowne00) == 0xe00, "");
 
 } // namespace ml

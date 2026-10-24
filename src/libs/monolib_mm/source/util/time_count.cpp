@@ -5,35 +5,35 @@
 
 namespace ml {
 
-void TimeCount::reset() { DevClock::getClockNow(m_clock); }
+void TimeCount::reset() { DevClock::getClockNow(unknown00); }
 
-void TimeCount::start() { DevClock::getClockNow(m_clock); }
+void TimeCount::start() { DevClock::getClockNow(unknown00); }
 
 void TimeCount::getClockLap(long &clock) const {
   long now;
   DevClock::getClockNow(now);
-  clock = now - m_clock;
+  clock = now - unknown00;
 }
 
 u32 TimeCount::getMicroLap() const {
   f32 sec;
-  DevClock::getTimeNow(sec, m_clock);
+  DevClock::getTimeNow(sec, unknown00);
   return sec * 1000000.0f;
 }
 
 f32 TimeCount::getSecLap() const {
   f32 sec;
-  DevClock::getTimeNow(sec, m_clock);
+  DevClock::getTimeNow(sec, unknown00);
   return sec;
 }
 
 f32 TimeCount::getMicro2Cpu(u32 micro) { return micro * 0.000001f / DevGraph::getFrameSyncSec() * 100.0f; }
 
-TimeCountBreak::TimeCountBreak(f32 breakSec, const char *name) : m_clock(0), m_breakSec(breakSec) {
+TimeCountBreak::TimeCountBreak(f32 breakSec, const char *name) : unknown00(0), unknown08(breakSec) {
   if (name != nullptr) {
-    m_name = name;
+    unknown0c = name;
   }
-  DevClock::getClockNow(m_clock);
+  DevClock::getClockNow(unknown00);
 }
 
 TimeCountBreak::~TimeCountBreak() {}

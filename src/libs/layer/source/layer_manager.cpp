@@ -12,13 +12,13 @@ namespace layer {
 
 LayerMemHandleAllocator::LayerMemHandleAllocator() {}
 
-LayerMemHandleAllocator::LayerMemHandleAllocator(mtl::ALLOC_HANDLE handle) : m_handle(handle) {}
+LayerMemHandleAllocator::LayerMemHandleAllocator(mtl::ALLOC_HANDLE handle) : unknown08(handle) {}
 
-void LayerMemHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { m_handle = handle; }
+void LayerMemHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { unknown08 = handle; }
 
-mtl::ALLOC_HANDLE LayerMemHandleAllocator::getMemHandle() const { return m_handle; }
+mtl::ALLOC_HANDLE LayerMemHandleAllocator::getMemHandle() const { return unknown08; }
 
-void *LayerMemHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(m_handle, size, alignment, false, "no name", 0); }
+void *LayerMemHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(unknown08, size, alignment, false, "no name", 0); }
 
 void LayerMemHandleAllocator::deallocate(void *pointer) {
   if (pointer != nullptr) {
@@ -27,9 +27,9 @@ void LayerMemHandleAllocator::deallocate(void *pointer) {
 }
 
 void LayerManager::beginFastSetup() {
-  m_flags |= 1;
-  m_shdManager->readShader();
-  m_setupFunc = &LayerManager::loadWait;
+  unknown78 |= 1;
+  unknown58->readShader();
+  unknown10 = &LayerManager::loadWait;
 }
 
 void LayerManager::tail() {
@@ -38,60 +38,60 @@ void LayerManager::tail() {
   s_nTriIdx = s_nTriIdx > 1 ? 0 : s_nTriIdx + 1;
 }
 
-f32 LayerManager::getScreenDivWidth() const { return m_shdManager->m_screenDivWidth; }
+f32 LayerManager::getScreenDivWidth() const { return unknown58->unknown538; }
 
-f32 LayerManager::getScreenDivHeight() const { return m_shdManager->m_screenDivHeight; }
+f32 LayerManager::getScreenDivHeight() const { return unknown58->unknown53c; }
 
-f32 LayerManager::getScreenCalcSclWidth() const { return m_shdManager->m_screenCalcSclWidth; }
+f32 LayerManager::getScreenCalcSclWidth() const { return unknown58->unknown548; }
 
-f32 LayerManager::getScreenCalcSclHeight() const { return m_shdManager->m_screenCalcSclHeight; }
+f32 LayerManager::getScreenCalcSclHeight() const { return unknown58->unknown54c; }
 
-f32 LayerManager::getScreenCalcPosWidth() const { return m_shdManager->m_screenCalcPosWidth; }
+f32 LayerManager::getScreenCalcPosWidth() const { return unknown58->unknown540; }
 
-f32 LayerManager::getScreenCalcPosHeight() const { return m_shdManager->m_screenCalcPosHeight; }
+f32 LayerManager::getScreenCalcPosHeight() const { return unknown58->unknown544; }
 
-f32 LayerManager::getScreenRatioHeight() const { return m_shdManager->m_screenRatioHeight; }
+f32 LayerManager::getScreenRatioHeight() const { return unknown58->unknown574; }
 
-void LayerManager::begin() { (this->*m_setupFunc)(); }
+void LayerManager::begin() { (this->*unknown10)(); }
 
 void LayerManager::end() {
-  if (!(m_flags & 1)) {
-    m_objManager->end();
+  if (!(unknown78 & 1)) {
+    unknown60->end();
   }
 }
 
 void LayerManager::apply(const ml::IDrDrawWorkInfo *info) {
-  if (!(m_flags & 1) && info->unknown560 == 0) {
-    m_objManager->apply(info);
+  if (!(unknown78 & 1) && info->unknown560 == 0) {
+    unknown60->apply(info);
   }
 }
 
 void LayerManager::finalRender(const ml::IDrDrawWorkInfo *info) {
-  if (!(m_flags & 1) && info->unknown560 == 0) {
-    m_shdManager->beginShader(info);
-    m_objManager->finalRender(info);
-    m_shdManager->endShader(info);
+  if (!(unknown78 & 1) && info->unknown560 == 0) {
+    unknown58->beginShader(info);
+    unknown60->finalRender(info);
+    unknown58->endShader(info);
   }
 }
 
 void LayerManager::loadWait() {
-  m_flags |= 1;
-  if (m_shdManager->setupUpdate()) {
-    m_flags &= ~1;
-    m_fontManager->update();
-    m_rceManager->update();
-    m_objManager->begin();
-    m_setupFunc = &LayerManager::defSetup;
+  unknown78 |= 1;
+  if (unknown58->setupUpdate()) {
+    unknown78 &= ~1;
+    unknown68->update();
+    unknown70->update();
+    unknown60->begin();
+    unknown10 = &LayerManager::defSetup;
   }
 }
 
 void LayerManager::defSetup() {
-  m_flags &= ~1;
-  m_fontManager->update();
-  m_rceManager->update();
-  m_objManager->begin();
+  unknown78 &= ~1;
+  unknown68->update();
+  unknown70->update();
+  unknown60->begin();
 }
 
-void LayerManager::reLoadShd() { m_flags |= 1; }
+void LayerManager::reLoadShd() { unknown78 |= 1; }
 
 } // namespace layer

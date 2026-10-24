@@ -22,17 +22,17 @@ class ResClipData {
 public:
   void sortAnnotation(u32 type);
 
-  const ResClipInfo *m_pInfo;
+  const ResClipInfo *unknown00; // Inferred role: p info; original member name unknown.
   const Binding *m_pBinding;
-  f32 m_startFrame;
-  f32 m_endFrame;
-  mm::mtl::FixedArray<mm::mtl::Vector<AsmKeyframeAnnotation>, 5> m_frameAnnotations;
-  bool m_isAnnotationDirty;
+  f32 unknown10;                                                            // Inferred role: start frame; original member name unknown.
+  f32 unknown14;                                                            // Inferred role: end frame; original member name unknown.
+  mm::mtl::FixedArray<mm::mtl::Vector<AsmKeyframeAnnotation>, 5> unknown18; // Inferred role: frame annotations; original member name unknown.
+  bool unknowne0;                                                           // Inferred role: annotation dirty; original member name unknown.
   u8 _e1[0xe8 - 0xe1];
 };
 
-static_assert(offsetof(ResClipData, m_frameAnnotations) == 0x18, "");
-static_assert(offsetof(ResClipData, m_isAnnotationDirty) == 0xe0, "");
+static_assert(offsetof(ResClipData, unknown18) == 0x18, "");
+static_assert(offsetof(ResClipData, unknowne0) == 0xe0, "");
 static_assert(sizeof(ResClipData) == 0xe8, "");
 
 } // namespace anm

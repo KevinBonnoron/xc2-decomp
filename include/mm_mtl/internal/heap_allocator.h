@@ -26,18 +26,18 @@ public:
   virtual void *allocate(size_t size, size_t alignment, const char *file, int line);
 
   void *m_buffer;
-  size_t m_bufferSize;
+  size_t unknown10; // Inferred role: buffer size; original member name unknown.
   size_t m_allocated;
   void *m_control;
   FixStr<64> m_name;
   unsigned int m_nameHash;
-  HeapAllocUtil::control_t m_controlBuffer;
+  HeapAllocUtil::control_t unknown70; // Inferred role: control buffer; original member name unknown.
 };
 
 static_assert(offsetof(HeapAllocator, m_buffer) == 0x08, "");
 static_assert(offsetof(HeapAllocator, m_name) == 0x28, "");
 static_assert(offsetof(HeapAllocator, m_nameHash) == 0x6c, "");
-static_assert(offsetof(HeapAllocator, m_controlBuffer) == 0x70, "");
+static_assert(offsetof(HeapAllocator, unknown70) == 0x70, "");
 
 } // namespace mtl
 } // namespace mm

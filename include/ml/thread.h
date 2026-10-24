@@ -30,9 +30,9 @@ public:
   virtual bool waitSignalEvent() = 0;
   virtual bool isWaitingEvent() const = 0;
 
-  s32 m_refCount;
+  s32 unknown08; // Inferred role: ref count; original member name unknown.
 };
 
-static_assert(offsetof(Thread, m_refCount) == 0x08, "");
+static_assert(offsetof(Thread, unknown08) == 0x08, "");
 
 } // namespace ml

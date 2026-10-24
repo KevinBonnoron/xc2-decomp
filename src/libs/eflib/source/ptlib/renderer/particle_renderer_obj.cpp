@@ -17,25 +17,26 @@ constexpr int PRIORITY_MAX = 0xff;
 
 void RenderGrObj::prioritySort(emitter::EmitterManager &emitterManager, int prioIdx, FxParam &fxParam, mm::mtl::FixedVector<sort::EmitterSort, EMITTER_SORT_MAX> &sorts) {
   const CamParam &camParam = ParticleManager::get()->getCamParam();
-  if (!ParticleManager::get()->m_isAllDisp) {
+  if (!ParticleManager::get()->unknown168) {
     return;
   }
-  for (emitter::EmitterObj *emitter = emitterManager.m_pEmitterTop; emitter != nullptr; emitter = emitter->m_pNext) {
-    if (emitter->isRenderCheck() && emitter->m_prioIdx == prioIdx && emitter->m_isDisp && emitter->m_alpha > 0.0f && emitter->m_pArg != nullptr && emitter->m_pArg->m_drawType != ARG_DRAW_TYPE_NONE) {
+  for (emitter::EmitterObj *emitter = emitterManager.unknown1750; emitter != nullptr; emitter = emitter->unknownc8) {
+    if (emitter->isRenderCheck() && emitter->unknown274 == prioIdx && emitter->unknown151 && emitter->unknown12c > 0.0f && emitter->unknown98 != nullptr &&
+        emitter->unknown98->unknown100 != ARG_DRAW_TYPE_NONE) {
       const mm::Mat44 &view = camParam.m_viewMatrix;
       sort::EmitterSort entry;
-      entry.isOpaque = emitter->m_pArg->m_blendMode == 0;
-      int priority = emitter->m_priority + emitter->m_priorityOffset;
+      entry.unknown00 = emitter->unknown98->unknownfc == 0;
+      int priority = emitter->unknown260 + emitter->unknown150;
       if (priority < 0) {
         priority = 0;
       }
       if (priority > PRIORITY_MAX) {
         priority = PRIORITY_MAX;
       }
-      entry.priority = priority;
-      entry.depth = emitter->m_pos.x * view.rows[0][2] + emitter->m_pos.y * view.rows[1][2] + emitter->m_pos.z * view.rows[2][2] + view.rows[3][2];
-      entry.isCapture = false;
-      entry.emitter = emitter;
+      entry.unknown01 = priority;
+      entry.unknown04 = emitter->unknown110.x * view.rows[0][2] + emitter->unknown110.y * view.rows[1][2] + emitter->unknown110.z * view.rows[2][2] + view.rows[3][2];
+      entry.unknown08 = false;
+      entry.unknown10 = emitter;
       sorts.push_back(entry);
     }
   }

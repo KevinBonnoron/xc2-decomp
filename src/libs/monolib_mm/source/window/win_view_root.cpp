@@ -29,7 +29,7 @@ bool WinViewRoot::wkStandbyLogin() {
 }
 
 bool WinViewRoot::wkStandbyLogout() {
-  if (m_children.size() == 0 && WinProcRoot::get() == nullptr) {
+  if (unknown60.size() == 0 && WinProcRoot::get() == nullptr) {
     return WorkObj::wkStandbyLogout();
   }
 

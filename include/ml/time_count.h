@@ -17,7 +17,7 @@ public:
   static f32 getMicro2Cpu(u32 micro);
   void logLapRatio(const char *name);
 
-  long m_clock;
+  long unknown00; // Inferred role: clock; original member name unknown.
 };
 
 static_assert(sizeof(TimeCount) == 8, "");
@@ -27,12 +27,12 @@ public:
   TimeCountBreak(f32 breakSec, const char *name);
   ~TimeCountBreak();
 
-  long m_clock;
-  f32 m_breakSec;
-  mm::mtl::FixStr<32> m_name;
+  long unknown00;                // Inferred role: clock; original member name unknown.
+  f32 unknown08;                 // Inferred role: break sec; original member name unknown.
+  mm::mtl::FixStr<32> unknown0c; // Inferred role: name; original member name unknown.
 };
 
-static_assert(offsetof(TimeCountBreak, m_breakSec) == 0x08, "");
-static_assert(offsetof(TimeCountBreak, m_name) == 0x0c, "");
+static_assert(offsetof(TimeCountBreak, unknown08) == 0x08, "");
+static_assert(offsetof(TimeCountBreak, unknown0c) == 0x0c, "");
 
 } // namespace ml

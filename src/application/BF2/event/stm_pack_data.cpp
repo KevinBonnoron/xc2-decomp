@@ -30,8 +30,8 @@ void StmPackData::close() {
 bool StmPackData::open() {
   unknown90 = nullptr;
   ml::DevFileParamTh param;
-  param.event = this;
-  param.path = unknown0c.c_str();
+  param.unknown60 = this;
+  param.unknown00 = unknown0c.c_str();
   unknown90 = ml::DevFileTh::rfOpen(param);
   return unknown90 != nullptr;
 }
@@ -39,11 +39,11 @@ bool StmPackData::open() {
 void StmPackData::read(void *buffer, size_t size, size_t offset) {
   unknown08 |= FLAG_BUSY;
   ml::DevFileParamTh param;
-  param.buffer = buffer;
-  param.offset = offset;
-  param.readSize = size;
-  param.size = size;
-  param.priority = 1;
+  param.unknown40 = buffer;
+  param.unknown4c = offset;
+  param.unknown50 = size;
+  param.unknown48 = size;
+  param.unknown68 = 1;
   ml::DevFileTh::rfRead(unknown90, param);
 }
 

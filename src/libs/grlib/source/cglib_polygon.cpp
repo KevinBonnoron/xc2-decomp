@@ -8,47 +8,47 @@ namespace grlib {
 
 void CGLibPolygon::setCullingOff() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  nvnCommandBufferBindPolygonState(context->m_pipeline.m_cmdBuf, &context->m_pipeline.m_cullingOff);
+  nvnCommandBufferBindPolygonState(context->unknown1070.unknown00, &context->unknown1070.unknown30);
 }
 
 void CGLibPolygon::setCullingFront() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  nvnCommandBufferBindPolygonState(context->m_pipeline.m_cmdBuf, &context->m_pipeline.m_cullingFront);
+  nvnCommandBufferBindPolygonState(context->unknown1070.unknown00, &context->unknown1070.unknown34);
 }
 
 void CGLibPolygon::setCullingBack() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  nvnCommandBufferBindPolygonState(context->m_pipeline.m_cmdBuf, &context->m_pipeline.m_cullingBack);
+  nvnCommandBufferBindPolygonState(context->unknown1070.unknown00, &context->unknown1070.unknown38);
 }
 
 void CGLibPolygon::setCullingDispOff() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  nvnCommandBufferBindPolygonState(context->m_pipeline.m_cmdBuf, &context->m_pipeline.m_cullingDispOff);
+  nvnCommandBufferBindPolygonState(context->unknown1070.unknown00, &context->unknown1070.unknown3c);
 }
 
 void CGLibPolygon::setPointMode() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  nvnCommandBufferBindPolygonState(context->m_pipeline.m_cmdBuf, &context->m_pipeline.m_pointMode);
+  nvnCommandBufferBindPolygonState(context->unknown1070.unknown00, &context->unknown1070.unknown40);
 }
 
 void CGLibPolygon::setLineMode() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  nvnCommandBufferBindPolygonState(context->m_pipeline.m_cmdBuf, &context->m_pipeline.m_lineMode);
+  nvnCommandBufferBindPolygonState(context->unknown1070.unknown00, &context->unknown1070.unknown44);
 }
 
 void CGLibPolygon::setTraiangle() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  nvnCommandBufferBindPolygonState(context->m_pipeline.m_cmdBuf, &context->m_pipeline.m_triangle);
+  nvnCommandBufferBindPolygonState(context->unknown1070.unknown00, &context->unknown1070.unknown48);
 }
 
-void CGLibPolygon::setLineWidth(f32 width) { nvnCommandBufferSetLineWidth(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, width); }
+void CGLibPolygon::setLineWidth(f32 width) { nvnCommandBufferSetLineWidth(context::CGLibSystemContext::get()->unknown1070.unknown00, width); }
 
-void CGLibPolygon::setRasterizer(u8 isDiscard) { nvnCommandBufferSetRasterizerDiscard(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, isDiscard); }
+void CGLibPolygon::setRasterizer(u8 isDiscard) { nvnCommandBufferSetRasterizerDiscard(context::CGLibSystemContext::get()->unknown1070.unknown00, isDiscard); }
 
-void CGLibPolygon::setConservativeRaster(u8 isEnable) { nvnCommandBufferSetConservativeRasterEnable(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, isEnable); }
+void CGLibPolygon::setConservativeRaster(u8 isEnable) { nvnCommandBufferSetConservativeRasterEnable(context::CGLibSystemContext::get()->unknown1070.unknown00, isEnable); }
 
-void CGLibPolygon::setConservativeDilate(f32 dilate) { nvnCommandBufferSetConservativeRasterDilate(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, dilate); }
+void CGLibPolygon::setConservativeDilate(f32 dilate) { nvnCommandBufferSetConservativeRasterDilate(context::CGLibSystemContext::get()->unknown1070.unknown00, dilate); }
 
-void CGLibPolygon::setConservativeSubpixelBias(int xBits, int yBits) { nvnCommandBufferSetSubpixelPrecisionBias(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, xBits, yBits); }
+void CGLibPolygon::setConservativeSubpixelBias(int xBits, int yBits) { nvnCommandBufferSetSubpixelPrecisionBias(context::CGLibSystemContext::get()->unknown1070.unknown00, xBits, yBits); }
 
 } // namespace grlib

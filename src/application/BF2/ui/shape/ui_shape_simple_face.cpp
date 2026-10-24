@@ -10,14 +10,14 @@ UIShapeSimpleFace::UIShapeSimpleFace(u32 vertexNum) : unknown58(true) {
   unknown40.setAllocator(UIUtil::getProgAllocator());
   unknown40.reserve(vertexNum);
   for (u32 i = 0; i < vertexNum; i++) {
-    unknown40[i].y = 0.0f;
-    unknown40[i].x = 0.0f;
-    unknown40[i].a = 0xff;
-    unknown40[i].b = 0xff;
-    unknown40[i].g = 0xff;
-    unknown40[i].r = 0xff;
-    unknown40[i].v = 0.0f;
-    unknown40[i].u = 0.0f;
+    unknown40[i].unknown04 = 0.0f;
+    unknown40[i].unknown00 = 0.0f;
+    unknown40[i].unknown0b = 0xff;
+    unknown40[i].unknown0a = 0xff;
+    unknown40[i].unknown09 = 0xff;
+    unknown40[i].unknown08 = 0xff;
+    unknown40[i].unknown10 = 0.0f;
+    unknown40[i].unknown0c = 0.0f;
   }
   for (u32 i = 0; i < static_cast<u32>(unknown20.size()) / 3; i++) {
     u32 index[3] = {i, i + 1, i + 2};
@@ -43,10 +43,10 @@ void UIShapeSimpleFace::writeFaceVertex(const layer::LayerPolyVertex *vertex, u3
 }
 
 static bool isCross(const layer::LayerPolyVertex &a, const layer::LayerPolyVertex &b, const layer::LayerPolyVertex &c, const layer::LayerPolyVertex &d) {
-  f32 ta = (c.x - d.x) * (a.y - c.y) + (c.y - d.y) * (c.x - a.x);
-  f32 tb = (c.x - d.x) * (b.y - c.y) + (c.y - d.y) * (c.x - b.x);
-  f32 tc = (a.x - b.x) * (c.y - a.y) + (a.y - b.y) * (a.x - c.x);
-  f32 td = (a.x - b.x) * (d.y - a.y) + (a.y - b.y) * (a.x - d.x);
+  f32 ta = (c.unknown00 - d.unknown00) * (a.unknown04 - c.unknown04) + (c.unknown04 - d.unknown04) * (c.unknown00 - a.unknown00);
+  f32 tb = (c.unknown00 - d.unknown00) * (b.unknown04 - c.unknown04) + (c.unknown04 - d.unknown04) * (c.unknown00 - b.unknown00);
+  f32 tc = (a.unknown00 - b.unknown00) * (c.unknown04 - a.unknown04) + (a.unknown04 - b.unknown04) * (a.unknown00 - c.unknown00);
+  f32 td = (a.unknown00 - b.unknown00) * (d.unknown04 - a.unknown04) + (a.unknown04 - b.unknown04) * (a.unknown00 - d.unknown00);
   return tc * td < 0.0f && ta * tb < 0.0f;
 }
 
@@ -59,7 +59,7 @@ void UIShapeSimpleFace::update(u32 frame) {
   for (u32 i = 0; i < static_cast<u32>(unknown08.size()) - 1; i++) {
     u32 top = i;
     for (u32 j = i + 1; j < static_cast<u32>(unknown08.size()); j++) {
-      if (unknown08[j].y < unknown08[top].y || (unknown08[j].y == unknown08[top].y && unknown08[j].x > unknown08[top].x)) {
+      if (unknown08[j].unknown04 < unknown08[top].unknown04 || (unknown08[j].unknown04 == unknown08[top].unknown04 && unknown08[j].unknown00 > unknown08[top].unknown00)) {
         top = j;
       }
     }

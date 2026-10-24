@@ -250,13 +250,13 @@ f32 SoundSsdPlayer::getVolume(SoundVolumeType type) const {
   if (isValid()) {
     switch (type) {
     case SOUND_VOLUME_TYPE_HANDLE:
-      result = unknown88->volume;
+      result = unknown88->unknown84;
       break;
     case SOUND_VOLUME_TYPE_DISTANCE:
       result = unknown88->GetDistanceVolume();
       break;
     case SOUND_VOLUME_TYPE_CATEGORY:
-      result = unknown88->categoryVolume;
+      result = unknown88->unknownb8;
       break;
     }
   }
@@ -289,9 +289,9 @@ void SoundSsdPlayer::setPos(f32 x, f32 y, f32 z) {
 }
 
 void SoundSsdPlayer::getPos(mm::Vec3 &position) const {
-  position.x = this->position.x;
-  position.y = this->position.y;
-  position.z = this->position.z;
+  position.x = this->unknown44.x;
+  position.y = this->unknown44.y;
+  position.z = this->unknown44.z;
 }
 
 int SoundSsdPlayer::getState() const {
@@ -342,8 +342,8 @@ void SoundSsdPlayer::stop(f32 time) {
 }
 
 void SoundSsdBank::setMaxSound(int maxSound) {
-  unknown130.id = unknown25c;
-  unknown130.maxSound = maxSound;
+  unknown130.unknown18 = unknown25c;
+  unknown130.unknown1c = maxSound;
   this->unknown260 = maxSound;
 }
 

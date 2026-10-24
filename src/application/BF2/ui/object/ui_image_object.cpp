@@ -299,7 +299,7 @@ void UIImageObject::setAnimationPlaybackTime(f32 time) {
 
 void UIImageObject::applyCapture() {
   if (unknown110 != nullptr) {
-    ml::ScnRenderDrSysParmAcc(ml::Scn::get()->renderDrSys, 0).startCapture(unknown110);
+    ml::ScnRenderDrSysParmAcc(ml::Scn::get()->unknown38, 0).startCapture(unknown110);
   }
 }
 

@@ -11,13 +11,13 @@ namespace threading {
 
 class ReferenceObject {
 public:
-  ReferenceObject(mtl::IAllocator *allocator) : m_refCount(0), m_allocator(allocator) { MM_ASSERT(allocator); }
+  ReferenceObject(mtl::IAllocator *allocator) : unknown08(0), m_allocator(allocator) { MM_ASSERT(allocator); }
   virtual ~ReferenceObject() {}
 
-  void addRef() { m_refCount++; }
-  s32 getRefCount() const { return m_refCount; }
+  void addRef() { unknown08++; }
+  s32 getRefCount() const { return unknown08; }
 
-  s32 m_refCount;
+  s32 unknown08; // Inferred role: ref count; original member name unknown.
   mtl::IAllocator *m_allocator;
 };
 

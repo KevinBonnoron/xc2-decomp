@@ -6,17 +6,17 @@
 namespace anm {
 
 struct AsmAnnotetion {
-  const char *name;
+  const char *unknown00; // Inferred role: name; original member name unknown.
   u8 _08[0x18 - 0x08];
 };
 
 struct AsmKeyframeAnnotation {
-  f32 frame;
+  f32 unknown00; // Inferred role: frame; original member name unknown.
   u8 _04[0x8 - 0x4];
-  AsmAnnotetion annotation;
+  AsmAnnotetion unknown08; // Inferred role: annotation; original member name unknown.
 };
 
-static_assert(offsetof(AsmKeyframeAnnotation, annotation) == 0x8, "");
+static_assert(offsetof(AsmKeyframeAnnotation, unknown08) == 0x8, "");
 static_assert(sizeof(AsmKeyframeAnnotation) == 0x20, "");
 
 class AsmListener {

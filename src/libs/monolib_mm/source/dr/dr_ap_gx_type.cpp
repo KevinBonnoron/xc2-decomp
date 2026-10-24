@@ -121,8 +121,8 @@ void DrAPGxType::setupStencilTestWriteMask(u8 isTest, u8 isWrite, int compare, u
 void DrAPGxType::setupDepthContl(u8 isTest, u8 isWrite, int compare) { grlib::CGLibDepthCtl::setDepthControl(isTest, isWrite, s_compares[compare]); }
 
 void DrAPGxType::getMainScreenSize(int &width, int &height) {
-  width = grlib::CGLibState::getMainRenderTarget()->m_width;
-  height = grlib::CGLibState::getMainRenderTarget()->m_height;
+  width = grlib::CGLibState::getMainRenderTarget()->unknownbc;
+  height = grlib::CGLibState::getMainRenderTarget()->unknownc0;
 }
 
 } // namespace ml

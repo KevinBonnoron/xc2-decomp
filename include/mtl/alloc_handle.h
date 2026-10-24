@@ -5,19 +5,19 @@ namespace mtl {
 
 class ALLOC_HANDLE {
 public:
-  ALLOC_HANDLE() : mHandle(0) {}
-  ALLOC_HANDLE(const ALLOC_HANDLE &other) : mHandle(other.mHandle) {}
+  ALLOC_HANDLE() : unknown00(0) {}
+  ALLOC_HANDLE(const ALLOC_HANDLE &other) : unknown00(other.unknown00) {}
 
-  bool isValid() const { return mHandle != 0; }
-  bool operator==(const ALLOC_HANDLE &other) const { return mHandle == other.mHandle; }
+  bool isValid() const { return unknown00 != 0; }
+  bool operator==(const ALLOC_HANDLE &other) const { return unknown00 == other.unknown00; }
 
   ALLOC_HANDLE &operator=(const ALLOC_HANDLE &other) {
-    mHandle = other.mHandle;
+    unknown00 = other.unknown00;
     return *this;
   }
 
 private:
-  unsigned int mHandle;
+  unsigned int unknown00; // Inferred role: handle; original member name unknown.
 };
 
 } // namespace mtl

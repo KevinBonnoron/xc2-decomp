@@ -10,8 +10,8 @@ namespace gf {
 namespace pc {
 
 void StateFieldFall::enter(GfComBehaviorPc *behavior, ai::State *previous) {
-  for (ai::State *state = previous; state != nullptr; state = state->childState) {
-    if (state->stateID == STATE_ID_FIELD_WALL) {
+  for (ai::State *state = previous; state != nullptr; state = state->unknown10) {
+    if (state->unknown08 == STATE_ID_FIELD_WALL) {
       StateUtil::setActivateTimer(*behavior, TimerPlugin::TYPE_FALL, true);
       return;
     }
@@ -20,7 +20,7 @@ void StateFieldFall::enter(GfComBehaviorPc *behavior, ai::State *previous) {
 
 void StateFieldFall::leave(GfComBehaviorPc *behavior, ai::State *next) {
   StateUtil::setActivateTimer(*behavior, TimerPlugin::TYPE_FALL, false);
-  if (next == nullptr || next->stateID == STATE_ID_FIELD_LAND) {
+  if (next == nullptr || next->unknown08 == STATE_ID_FIELD_LAND) {
     return;
   }
   StateUtilField::notifyJumpEnd(*behavior);

@@ -15,158 +15,158 @@ namespace {
 
 const LayerResMatrix *getMatrixParm(const LayerObj *layer, u32 flag) {
   if (layer->getStateFlags(LayerManager::s_nStkIdx) & flag) {
-    return &layer->m_parms[LayerManager::s_nStkIdx].matrix;
+    return &layer->unknownc8[LayerManager::s_nStkIdx].unknown00;
   }
 
   if (layer->getStateFlags(LayerManager::s_nDebIdx) & flag) {
-    return &layer->m_parms[LayerManager::s_nDebIdx].matrix;
+    return &layer->unknownc8[LayerManager::s_nDebIdx].unknown00;
   }
 
-  return &layer->m_parms[2].matrix;
+  return &layer->unknownc8[2].unknown00;
 }
 
 const LayerResColor *getColorParm(const LayerObj *layer, u32 flag) {
   if (layer->getStateFlags(LayerManager::s_nStkIdx) & flag) {
-    return &layer->m_parms[LayerManager::s_nStkIdx].color;
+    return &layer->unknownc8[LayerManager::s_nStkIdx].unknown1c;
   }
 
   if (layer->getStateFlags(LayerManager::s_nDebIdx) & flag) {
-    return &layer->m_parms[LayerManager::s_nDebIdx].color;
+    return &layer->unknownc8[LayerManager::s_nDebIdx].unknown1c;
   }
 
-  return &layer->m_parms[2].color;
+  return &layer->unknownc8[2].unknown1c;
 }
 
 } // namespace
 
 void LayerObj::setInitPos(f32 x, f32 y) {
-  m_parms[1].matrix.posX = x;
-  m_parms[0].matrix.posX = x;
-  m_parms[2].matrix.posX = x;
-  m_parms[1].matrix.posY = y;
-  m_parms[0].matrix.posY = y;
-  m_parms[2].matrix.posY = y;
+  unknownc8[1].unknown00.unknown00 = x;
+  unknownc8[0].unknown00.unknown00 = x;
+  unknownc8[2].unknown00.unknown00 = x;
+  unknownc8[1].unknown00.unknown04 = y;
+  unknownc8[0].unknown00.unknown04 = y;
+  unknownc8[2].unknown00.unknown04 = y;
 }
 
 void LayerObj::setInitRot(f32 rot) {
-  m_parms[1].matrix.rot = rot;
-  m_parms[0].matrix.rot = rot;
-  m_parms[2].matrix.rot = rot;
+  unknownc8[1].unknown00.unknown08 = rot;
+  unknownc8[0].unknown00.unknown08 = rot;
+  unknownc8[2].unknown00.unknown08 = rot;
 }
 
 void LayerObj::setInitScl(f32 x, f32 y) {
-  m_parms[1].matrix.sclX = x;
-  m_parms[0].matrix.sclX = x;
-  m_parms[2].matrix.sclX = x;
-  m_parms[1].matrix.sclY = y;
-  m_parms[0].matrix.sclY = y;
-  m_parms[2].matrix.sclY = y;
+  unknownc8[1].unknown00.unknown0c = x;
+  unknownc8[0].unknown00.unknown0c = x;
+  unknownc8[2].unknown00.unknown0c = x;
+  unknownc8[1].unknown00.unknown10 = y;
+  unknownc8[0].unknown00.unknown10 = y;
+  unknownc8[2].unknown00.unknown10 = y;
 }
 
 void LayerObj::updateCtrlSpd(f32 speed) {
-  u32 &flags = m_stateFlags[static_cast<u32>(LayerManager::s_nDebIdx)];
+  u32 &flags = unknowna0[static_cast<u32>(LayerManager::s_nDebIdx)];
   if (flags & 0xf000) {
     if (flags & 0x1000) {
-      m_flags |= 0x200;
+      unknowna8 |= 0x200;
     } else if (flags & 0x2000) {
-      m_flags &= ~0x200;
+      unknowna8 &= ~0x200;
     }
 
     if (flags & 0x4000) {
-      m_flags |= 0x80;
+      unknowna8 |= 0x80;
     } else if (flags & 0x8000) {
-      m_flags &= ~0x80;
+      unknowna8 &= ~0x80;
     }
   }
 
-  m_frameCtrlSpd = m_ctrlSpd * speed;
+  unknown1f8 = unknown1f4 * speed;
 }
 
 void LayerObj::updateSecondTex() {
-  if (m_secondTexs[2] != nullptr) {
-    m_secondTexs[2]->update();
+  if (unknown220[2] != nullptr) {
+    unknown220[2]->update();
   }
 }
 
 void LayerObj::setPos(f32 x, f32 y) {
-  LayerResMatrix &matrix = m_parms[LayerManager::s_nStkIdx].matrix;
-  matrix.posX = x;
-  matrix.posY = y;
+  LayerResMatrix &matrix = unknownc8[LayerManager::s_nStkIdx].unknown00;
+  matrix.unknown00 = x;
+  matrix.unknown04 = y;
   onStateFlags(0x2);
 }
 
 void LayerObj::setRot(f32 rot) {
-  m_parms[LayerManager::s_nStkIdx].matrix.rot = rot;
+  unknownc8[LayerManager::s_nStkIdx].unknown00.unknown08 = rot;
   onStateFlags(0x8);
 }
 
 void LayerObj::setScale(f32 x, f32 y) {
-  LayerResMatrix &matrix = m_parms[LayerManager::s_nStkIdx].matrix;
-  matrix.sclX = x;
-  matrix.sclY = y;
+  LayerResMatrix &matrix = unknownc8[LayerManager::s_nStkIdx].unknown00;
+  matrix.unknown0c = x;
+  matrix.unknown10 = y;
   onStateFlags(0x4);
 }
 
 void LayerObj::setAnchor(f32 x, f32 y) {
-  LayerResMatrix &matrix = m_parms[LayerManager::s_nStkIdx].matrix;
-  matrix.anchorX = x;
-  matrix.anchorY = y;
+  LayerResMatrix &matrix = unknownc8[LayerManager::s_nStkIdx].unknown00;
+  matrix.unknown14 = x;
+  matrix.unknown18 = y;
   onStateFlags(0x10);
 }
 
 void LayerObj::setMulCol(const mm::Col4 &color) {
-  m_parms[LayerManager::s_nStkIdx].color.mulCol = color;
+  unknownc8[LayerManager::s_nStkIdx].unknown1c.unknown00 = color;
   onStateFlags(0x20);
 }
 
 void LayerObj::setAddCol(const mm::Col3 &color) {
-  m_parms[LayerManager::s_nStkIdx].color.addCol = color;
+  unknownc8[LayerManager::s_nStkIdx].unknown1c.unknown10 = color;
   onStateFlags(0x40);
 }
 
 void LayerObj::setMatrix(const mm::Mat44 &matrix) {
-  if (m_matrixIdx) {
-    memcpy(&m_matrices[0], &matrix, sizeof(mm::Mat44));
+  if (unknownc2) {
+    memcpy(&unknown20[0], &matrix, sizeof(mm::Mat44));
   } else {
-    memcpy(&m_matrices[1], &matrix, sizeof(mm::Mat44));
+    memcpy(&unknown20[1], &matrix, sizeof(mm::Mat44));
   }
 
   onStateFlags(0x40000);
 }
 
 void LayerObj::setUVParams(f32 u, f32 v, f32 scaleU, f32 scaleV, f32 rot) {
-  LayerResUvParam &uvParam = m_uvParams[LayerManager::s_nStkIdx];
-  uvParam.u = u;
-  uvParam.v = v;
-  uvParam.scaleU = scaleU;
-  uvParam.scaleV = scaleV;
-  uvParam.rot = rot;
+  LayerResUvParam &uvParam = unknown19c[LayerManager::s_nStkIdx];
+  uvParam.unknown00 = u;
+  uvParam.unknown04 = v;
+  uvParam.unknown08 = scaleU;
+  uvParam.unknown0c = scaleV;
+  uvParam.unknown10 = rot;
   onStateFlags(0x400);
 }
 
 void LayerObj::getPos(f32 &x, f32 &y) const {
   const LayerResMatrix *matrix = getMatrixParm(this, 0x2);
-  x = matrix->posX;
-  y = matrix->posY;
+  x = matrix->unknown00;
+  y = matrix->unknown04;
 }
 
-void LayerObj::getRot(f32 &rot) const { rot = getMatrixParm(this, 0x8)->rot; }
+void LayerObj::getRot(f32 &rot) const { rot = getMatrixParm(this, 0x8)->unknown08; }
 
 void LayerObj::getScale(f32 &x, f32 &y) const {
   const LayerResMatrix *matrix = getMatrixParm(this, 0x4);
-  x = matrix->sclX;
-  y = matrix->sclY;
+  x = matrix->unknown0c;
+  y = matrix->unknown10;
 }
 
 void LayerObj::getAnchor(f32 &x, f32 &y) const {
   const LayerResMatrix *matrix = getMatrixParm(this, 0x10);
-  x = matrix->anchorX;
-  y = matrix->anchorY;
+  x = matrix->unknown14;
+  y = matrix->unknown18;
 }
 
-const mm::Col4 *LayerObj::getMulCol() const { return &getColorParm(this, 0x20)->mulCol; }
+const mm::Col4 *LayerObj::getMulCol() const { return &getColorParm(this, 0x20)->unknown00; }
 
-const mm::Col3 *LayerObj::getAddCol() const { return &getColorParm(this, 0x40)->addCol; }
+const mm::Col3 *LayerObj::getAddCol() const { return &getColorParm(this, 0x40)->unknown10; }
 
 void LayerObj::setDisp(bool disp) {
   if (disp) {
@@ -178,7 +178,7 @@ void LayerObj::setDisp(bool disp) {
   }
 }
 
-bool LayerObj::isDisp() const { return (m_flags & 0x20000) != 0; }
+bool LayerObj::isDisp() const { return (unknowna8 & 0x20000) != 0; }
 
 void LayerObj::setFlip(LayerFlipType type, bool flip) {
   if (flip) {
@@ -190,34 +190,34 @@ void LayerObj::setFlip(LayerFlipType type, bool flip) {
   }
 }
 
-bool LayerObj::isFlip(LayerFlipType type) const { return (m_flags & (0x100000 << type)) != 0; }
+bool LayerObj::isFlip(LayerFlipType type) const { return (unknowna8 & (0x100000 << type)) != 0; }
 
 void LayerObj::createAnimObj(u32 id) {
-  if (m_animObjs[LayerManager::s_nStkIdx] != nullptr) {
-    delete m_animObjs[LayerManager::s_nStkIdx];
-    m_animObjs[LayerManager::s_nStkIdx] = nullptr;
+  if (unknown208[LayerManager::s_nStkIdx] != nullptr) {
+    delete unknown208[LayerManager::s_nStkIdx];
+    unknown208[LayerManager::s_nStkIdx] = nullptr;
   }
 
-  m_animObjs[LayerManager::s_nStkIdx] = LayerAnimeObj::createAnimObj(id);
+  unknown208[LayerManager::s_nStkIdx] = LayerAnimeObj::createAnimObj(id);
 }
 
 void LayerObj::endAnime() { onStateFlags(0x200); }
 
 void LayerObj::createSecondTex(const void *data) {
   onStateFlags(0x1000000);
-  m_secondTexs[LayerManager::s_nStkIdx] = new (LayerManager::get()->m_workMem) LayerResSecTexture(data);
+  unknown220[LayerManager::s_nStkIdx] = new (LayerManager::get()->unknown28) LayerResSecTexture(data);
 }
 
 void LayerObj::releaseSecondTex() { onStateFlags(0x1000000); }
 
 const LayerResSecTexture *LayerObj::getSecondTexObj() const {
   LayerResSecTexture *const *secondTex;
-  if (m_secondTexs[LayerManager::s_nStkIdx] != nullptr) {
-    secondTex = &m_secondTexs[LayerManager::s_nStkIdx];
-  } else if (m_secondTexs[LayerManager::s_nDebIdx] != nullptr) {
-    secondTex = &m_secondTexs[LayerManager::s_nDebIdx];
+  if (unknown220[LayerManager::s_nStkIdx] != nullptr) {
+    secondTex = &unknown220[LayerManager::s_nStkIdx];
+  } else if (unknown220[LayerManager::s_nDebIdx] != nullptr) {
+    secondTex = &unknown220[LayerManager::s_nDebIdx];
   } else {
-    secondTex = &m_secondTexs[2];
+    secondTex = &unknown220[2];
   }
 
   return *secondTex;
@@ -226,7 +226,7 @@ const LayerResSecTexture *LayerObj::getSecondTexObj() const {
 u16 LayerObj::getSecondTexIconMax() const {
   const LayerResSecTexture *secondTex = getSecondTexObj();
   if (secondTex != nullptr) {
-    return secondTex->m_iconMax;
+    return secondTex->unknown12;
   }
 
   return 0;
@@ -235,14 +235,14 @@ u16 LayerObj::getSecondTexIconMax() const {
 void LayerObj::setSecondTexIconNum(u32 num) {
   LayerResSecTexture *secondTex = const_cast<LayerResSecTexture *>(getSecondTexObj());
   if (secondTex != nullptr) {
-    secondTex->m_iconNum = num;
+    secondTex->unknown10 = num;
   }
 }
 
 u16 LayerObj::getSecondTexIconNum() const {
   const LayerResSecTexture *secondTex = getSecondTexObj();
   if (secondTex != nullptr) {
-    return secondTex->m_iconNum;
+    return secondTex->unknown10;
   }
 
   return 0;
@@ -251,66 +251,66 @@ u16 LayerObj::getSecondTexIconNum() const {
 void LayerObj::setSecondTexBlend(f32 blend) {
   LayerResSecTexture *secondTex = const_cast<LayerResSecTexture *>(getSecondTexObj());
   if (secondTex != nullptr) {
-    secondTex->m_blend = blend;
+    secondTex->unknown14 = blend;
   }
 }
 
 f32 LayerObj::getSecondTexBlend() const {
   const LayerResSecTexture *secondTex = getSecondTexObj();
   if (secondTex != nullptr) {
-    return secondTex->m_blend;
+    return secondTex->unknown14;
   }
 
   return 0.0f;
 }
 
 void LayerActBase::startSetupAction() {
-  m_actWork->flags |= 1;
-  m_actWork->sec = 0.0f;
-  const LyrActionData &action = *(m_actWork->actions + m_actWork->actionIdx);
-  if ((action.flags & 0x7e) == 0) {
+  unknown250->unknown24 |= 1;
+  unknown250->unknown14 = 0.0f;
+  const LyrActionData &action = *(unknown250->unknown08 + unknown250->unknown20);
+  if ((action.unknown00 & 0x7e) == 0) {
     return;
   }
-  if (action.flags & 0x2) {
-    m_flags |= 0x80;
-  } else if (action.flags & 0x4) {
-    m_flags &= ~0x80;
+  if (action.unknown00 & 0x2) {
+    unknowna8 |= 0x80;
+  } else if (action.unknown00 & 0x4) {
+    unknowna8 &= ~0x80;
   }
-  if (action.flags & 0x8) {
-    m_flags |= 0x20000;
-  } else if (action.flags & 0x10) {
-    m_flags &= ~0x20000;
+  if (action.unknown00 & 0x8) {
+    unknowna8 |= 0x20000;
+  } else if (action.unknown00 & 0x10) {
+    unknowna8 &= ~0x20000;
   }
-  if (action.flags & 0x20) {
-    m_flags |= 0x200;
-  } else if (action.flags & 0x40) {
-    m_flags &= ~0x200;
+  if (action.unknown00 & 0x20) {
+    unknowna8 |= 0x200;
+  } else if (action.unknown00 & 0x40) {
+    unknowna8 &= ~0x200;
   }
 }
 
 void LayerActBase::checkActionEnd(const LyrActionData *action, bool isCmdEnd) {
-  if (m_actWork->deltaSec == 0.0f) {
+  if (unknown250->unknown18 == 0.0f) {
     return;
   }
-  const LyrActionData *actions = m_actWork->actions;
-  u32 index = m_actWork->actionIdx;
+  const LyrActionData *actions = unknown250->unknown08;
+  u32 index = unknown250->unknown20;
   const LyrActionData &current = actions[index];
-  if (!(this->*s_pCallActEnd[current.endType])(&current, isCmdEnd)) {
+  if (!(this->*s_pCallActEnd[current.unknown06])(&current, isCmdEnd)) {
     return;
   }
-  if (!(current.flags & 1)) {
-    m_flags &= ~0x40;
+  if (!(current.unknown00 & 1)) {
+    unknowna8 &= ~0x40;
     return;
   }
-  m_actWork->sec = 0.0f;
-  m_actWork->actionIdx = actions[index].nextIdx;
+  unknown250->unknown14 = 0.0f;
+  unknown250->unknown20 = actions[index].unknown04;
 }
 
 u32 LayerActBase::calcActionWorkSize(const u8 *data) { return sizeof(LayerActWork) + reinterpret_cast<const LyrActionHeader *>(data)->actionNum * sizeof(u32); }
 
 void LayerActBase::actionIdx(u32 index) {
   onStateFlags(0x10000);
-  m_actionIdx[LayerManager::s_nStkIdx] = index;
+  unknown1d8[LayerManager::s_nStkIdx] = index;
 }
 
 void LayerActBase::actionEnd() { onStateFlags(0x20000); }
@@ -321,7 +321,7 @@ bool LayerActBase::actcmd_no(const u8 *&cmd) {
 }
 
 bool LayerActBase::actcmd_priority(const u8 *&cmd) {
-  m_priority = *reinterpret_cast<const u16 *>(cmd + 2);
+  unknownc0 = *reinterpret_cast<const u16 *>(cmd + 2);
   cmd += 4;
   return false;
 }
@@ -329,11 +329,11 @@ bool LayerActBase::actcmd_priority(const u8 *&cmd) {
 bool LayerActBase::actcmd_wait(const u8 *&cmd) {
   const u8 *data = cmd;
   cmd += 8;
-  return !(*reinterpret_cast<const f32 *>(data + 4) <= m_actWork->sec);
+  return !(*reinterpret_cast<const f32 *>(data + 4) <= unknown250->unknown14);
 }
 
 bool LayerActBase::actcmd_ctrlspd(const u8 *&cmd) {
-  m_ctrlSpd = *reinterpret_cast<const f32 *>(cmd + 4);
+  unknown1f4 = *reinterpret_cast<const f32 *>(cmd + 4);
   cmd += 8;
   return false;
 }

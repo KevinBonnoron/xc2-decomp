@@ -12,36 +12,36 @@
 namespace anm {
 
 LerpAddBlendTree::LerpAddBlendTree(const ResStateData *pResStateData, const ResLerpAddTree *pResTree, mm::mtl::Vector<Variable> &variables, mm::mtl::IAllocator &allocator)
-    : AsmState(pResStateData, allocator), m_pResTree(pResTree) {
-  m_clipNum = pResStateData->m_clips.size();
-  m_pClips = static_cast<AsmClip *>(allocator.allocate(m_clipNum * sizeof(AsmClip), 8));
-  for (u32 i = 0; i < m_clipNum; i++) {
-    AsmClip *clip = new (&m_pClips[i]) AsmClip;
-    clip->createControl(pResStateData->m_clips[i], allocator);
+    : AsmState(pResStateData, allocator), unknown30(pResTree) {
+  unknown40 = pResStateData->unknown08.size();
+  m_baseClip = static_cast<AsmClip *>(allocator.allocate(unknown40 * sizeof(AsmClip), 8));
+  for (u32 i = 0; i < unknown40; i++) {
+    AsmClip *clip = new (&m_baseClip[i]) AsmClip;
+    clip->createControl(pResStateData->unknown08[i], allocator);
   }
-  m_pVariable = &variables[m_pResTree->variableIndex];
+  m_pVariable = &variables[unknown30->variableIndex];
   MM_ASSERT(m_pVariable->getVarType() == VAR_FLOAT);
 }
 
 LerpAddBlendTree::~LerpAddBlendTree() {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    m_pClips[i].destroyControl();
-    m_pClips[i].~AsmClip();
+  for (u32 i = 0; i < unknown40; i++) {
+    m_baseClip[i].destroyControl();
+    m_baseClip[i].~AsmClip();
   }
-  m_pAllocator->deallocate(m_pClips);
-  m_pClips = nullptr;
-  m_clipNum = 0;
+  m_pAllocator->deallocate(m_baseClip);
+  m_baseClip = nullptr;
+  unknown40 = 0;
 }
 
 void LerpAddBlendTree::attach(AsmBlender *blender) {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    blender->addClip(m_pClips[i]);
+  for (u32 i = 0; i < unknown40; i++) {
+    blender->addClip(m_baseClip[i]);
   }
 }
 
 void LerpAddBlendTree::dettach(AsmBlender *blender) {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    blender->removeClip(m_pClips[i]);
+  for (u32 i = 0; i < unknown40; i++) {
+    blender->removeClip(m_baseClip[i]);
   }
 }
 
@@ -55,28 +55,28 @@ void LerpAddBlendTree::onLeave(AsmListener *listener) { notifyLeave(listener); }
 
 void LerpAddBlendTree::update(f32 deltaTime, AsmListener *listener) {
   adjustWeight();
-  updateLoopCount(m_pClips[0].update(deltaTime, listener));
-  for (u32 i = 1; i < m_clipNum; i++) {
-    m_pClips[i].update(deltaTime, nullptr);
+  updateLoopCount(m_baseClip[0].update(deltaTime, listener));
+  for (u32 i = 1; i < unknown40; i++) {
+    m_baseClip[i].update(deltaTime, nullptr);
   }
 }
 
 void LerpAddBlendTree::setLocalTime(f32 time) {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    m_pClips[i].setLocalTime(time);
+  for (u32 i = 0; i < unknown40; i++) {
+    m_baseClip[i].setLocalTime(time);
   }
 }
 
-f32 LerpAddBlendTree::getLocalTime() const { return m_pClips[0].getLocalTime(); }
+f32 LerpAddBlendTree::getLocalTime() const { return m_baseClip[0].getLocalTime(); }
 
 void LerpAddBlendTree::onSetSpeed() {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    m_pClips[i].setSpeed(m_speed);
+  for (u32 i = 0; i < unknown40; i++) {
+    m_baseClip[i].setSpeed(unknown20);
   }
 }
 
 void LerpAddBlendTree::onSetWeight() { adjustWeight(); }
 
-const AsmClip *LerpAddBlendTree::getBaseClip() const { return &m_pClips[0]; }
+const AsmClip *LerpAddBlendTree::getBaseClip() const { return &m_baseClip[0]; }
 
 } // namespace anm

@@ -17,60 +17,60 @@ void LayerShdManager::allRelease() { shaderRelease(); }
 void LayerShdManager::setupMainRenderTarget() { grlib::CGLibState::setMainFrameBuffer(); }
 
 void LayerShdManager::setShaderMaskOff() {
-  m_viewPortUniform = nullptr;
-  m_maskObj = nullptr;
-  m_maskMode = 1;
+  unknown358 = nullptr;
+  unknown50 = nullptr;
+  unknown4fa = 1;
 }
 
 void LayerShdManager::setDepthBufferCheckOn() {
-  if (!m_isDepthCheck) {
+  if (!unknown529) {
     grlib::CGLibDepthCtl::setDepthControl(true, false, GRL_COMPARE_LEQUAL);
-    m_isDepthCheck = true;
+    unknown529 = true;
   }
-  m_depthMode = 1;
-  m_3DSpaceUniform = nullptr;
+  unknown4f4 = 1;
+  unknown350 = nullptr;
 }
 
 void LayerShdManager::setDepthBufferCheckOff() {
-  if (m_isDepthCheck) {
+  if (unknown529) {
     grlib::CGLibDepthCtl::setDepthControl(false, false, GRL_COMPARE_LESS);
-    m_isDepthCheck = false;
+    unknown529 = false;
   }
-  m_depthMode = 1;
-  m_3DSpaceUniform = nullptr;
+  unknown4f4 = 1;
+  unknown350 = nullptr;
 }
 
 void LayerShdManager::set3DSpaceMode(grlib::CGLibDblUniformBlock *uniform) {
-  if (!m_isDepthCheck) {
+  if (!unknown529) {
     grlib::CGLibDepthCtl::setDepthControl(true, false, GRL_COMPARE_LEQUAL);
-    m_isDepthCheck = true;
+    unknown529 = true;
   }
-  m_depthMode = 2;
-  m_3DSpaceUniform = uniform;
+  unknown4f4 = 2;
+  unknown350 = uniform;
 }
 
-void LayerShdManager::setupTexture(const grlib::CGLibTextureBuffer &texture, LayerSamplerType type, u32 location) { grlib::CGLibCtlTexture::setTexture(texture, m_samplers[type], location); }
+void LayerShdManager::setupTexture(const grlib::CGLibTextureBuffer &texture, LayerSamplerType type, u32 location) { grlib::CGLibCtlTexture::setTexture(texture, unknownc0[type], location); }
 
 grlib::CGLibRenderTarget *LayerShdManager::getDefRenderTarget() {
-  if (m_defRenderTarget != nullptr) {
-    return m_defRenderTarget;
+  if (unknown360 != nullptr) {
+    return unknown360;
   }
   return grlib::CGLibState::getMainRenderTarget();
 }
 
 void LayerShdManager::setupVertex(LayerVertexObj *vertex, u32 index) { vertex->setVertex(index); }
 
-void LayerShdManager::setupVertex(LayerDefVertType type) { grlib::CGLibCtlVertex::setVertex(m_vertices[type]); }
+void LayerShdManager::setupVertex(LayerDefVertType type) { grlib::CGLibCtlVertex::setVertex(unknown238[type]); }
 
 void LayerShdManager::setupInstaceVertex(grlib::CGLibVtxInstans &instance, u32 stride, u32 offset) { grlib::CGLibCtlVertex::setInstanceVertex(instance, stride, offset, 1, 1); }
 
 void LayerShdManager::setupInstaceVertex(grlib::CGLibVtxOneInstans &instance, u32 stride, u32 offset) { grlib::CGLibCtlVertex::setInstanceVertex(instance, stride, offset, 1, 1); }
 
-void LayerShdManager::renderQuadsIndex() { m_quadsIndex.drawIndex(); }
+void LayerShdManager::renderQuadsIndex() { unknown300.drawIndex(); }
 
-void LayerShdManager::renderInstaceQuadsIndex(u32 instanceCount) { m_quadsIndex.drawInsIndex(instanceCount); }
+void LayerShdManager::renderInstaceQuadsIndex(u32 instanceCount) { unknown300.drawInsIndex(instanceCount); }
 
-void LayerShdManager::renderLineQuadsIndex() { m_lineQuadsIndex.drawIndex(); }
+void LayerShdManager::renderLineQuadsIndex() { unknown328.drawIndex(); }
 
 void LayerShdManager::setupBlendDef() {
   grlib::CGLibColorCtl::setBlendControl(
@@ -112,13 +112,13 @@ void LayerShdManager::initGamma(u32 index) {}
 
 LayerHandleAllocator::LayerHandleAllocator() {}
 
-LayerHandleAllocator::LayerHandleAllocator(mtl::ALLOC_HANDLE handle) : m_handle(handle) {}
+LayerHandleAllocator::LayerHandleAllocator(mtl::ALLOC_HANDLE handle) : unknown08(handle) {}
 
-void LayerHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { m_handle = handle; }
+void LayerHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { unknown08 = handle; }
 
-mtl::ALLOC_HANDLE LayerHandleAllocator::getMemHandle() const { return m_handle; }
+mtl::ALLOC_HANDLE LayerHandleAllocator::getMemHandle() const { return unknown08; }
 
-void *LayerHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(m_handle, size, alignment, false, "no name", 0); }
+void *LayerHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(unknown08, size, alignment, false, "no name", 0); }
 
 void LayerHandleAllocator::deallocate(void *pointer) {
   if (pointer != nullptr) {

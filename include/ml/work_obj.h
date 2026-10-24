@@ -52,33 +52,33 @@ public:
   virtual bool wkStandbyLogout();
   virtual bool wkStandbyExceptionRetry(u32 wid) { return true; }
 
-  bool wkIsShutdown() const { return (m_flags & 1) | m_isRequestShutdown; }
-  bool wkIsWaitException() const { return (m_flags & 0x10) != 0 || m_msg.find(2) >= 0; }
-  bool wkIsActive() const { return (m_state | 1) == WKSTATE_RUN; }
+  bool wkIsShutdown() const { return (unknowna0 & 1) | unknown19c; }
+  bool wkIsWaitException() const { return (unknowna0 & 0x10) != 0 || unknowna8.find(2) >= 0; }
+  bool wkIsActive() const { return (unknown4c | 1) == WKSTATE_RUN; }
 
-  mm::mtl::FixStr<64> m_name;
-  int m_state;
-  u32 m_wid;
-  mtl::ALLOC_HANDLE m_mem;
-  WorkObj *m_parent;
-  reslist<WorkObj *> m_children;
-  u32 m_flags;
-  MsgParam<8> m_msg;
-  u32 m_exceptionWid;
-  long m_clock;
-  int m_priority;
-  bool m_isRequestShutdown;
-  bool (*m_isEntryAfter)(WorkObj *work, WorkObj *child);
+  mm::mtl::FixStr<64> unknown08;                     // Inferred role: name; original member name unknown.
+  int unknown4c;                                     // Inferred role: state; original member name unknown.
+  u32 unknown50;                                     // Inferred role: wid; original member name unknown.
+  mtl::ALLOC_HANDLE unknown54;                       // Inferred role: mem; original member name unknown.
+  WorkObj *unknown58;                                // Inferred role: parent; original member name unknown.
+  reslist<WorkObj *> unknown60;                      // Inferred role: children; original member name unknown.
+  u32 unknowna0;                                     // Inferred role: flags; original member name unknown.
+  MsgParam<8> unknowna8;                             // Inferred role: msg; original member name unknown.
+  u32 unknown188;                                    // Inferred role: exception wid; original member name unknown.
+  long unknown190;                                   // Inferred role: clock; original member name unknown.
+  int unknown198;                                    // Inferred role: priority; original member name unknown.
+  bool unknown19c;                                   // Inferred role: request shutdown; original member name unknown.
+  bool (*unknown1a0)(WorkObj *work, WorkObj *child); // Inferred role: entry after; original member name unknown.
 };
 
-static_assert(offsetof(WorkObj, m_state) == 0x4c, "");
-static_assert(offsetof(WorkObj, m_parent) == 0x58, "");
-static_assert(offsetof(WorkObj, m_children) == 0x60, "");
-static_assert(offsetof(WorkObj, m_flags) == 0xa0, "");
-static_assert(offsetof(WorkObj, m_msg) == 0xa8, "");
-static_assert(offsetof(WorkObj, m_exceptionWid) == 0x188, "");
-static_assert(offsetof(WorkObj, m_priority) == 0x198, "");
-static_assert(offsetof(WorkObj, m_isEntryAfter) == 0x1a0, "");
+static_assert(offsetof(WorkObj, unknown4c) == 0x4c, "");
+static_assert(offsetof(WorkObj, unknown58) == 0x58, "");
+static_assert(offsetof(WorkObj, unknown60) == 0x60, "");
+static_assert(offsetof(WorkObj, unknowna0) == 0xa0, "");
+static_assert(offsetof(WorkObj, unknowna8) == 0xa8, "");
+static_assert(offsetof(WorkObj, unknown188) == 0x188, "");
+static_assert(offsetof(WorkObj, unknown198) == 0x198, "");
+static_assert(offsetof(WorkObj, unknown1a0) == 0x1a0, "");
 static_assert(sizeof(WorkObj) == 0x1a8, "");
 
 } // namespace ml

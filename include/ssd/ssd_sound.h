@@ -57,7 +57,7 @@ public:
   Object(ObjectType::Id type);
   virtual ~Object() {}
 
-  u32 type;
+  u32 unknown08; // Inferred role: type; original member name unknown.
   u8 _0c[0x18 - 0x0c];
 };
 
@@ -81,17 +81,17 @@ public:
   int CountPlaySoundHandle() const;
   SoundHandle *GetPlaySoundHandle(int index) const;
 
-  bool isInit;
-  bool isConnect;
-  bool is3D;
+  bool unknown30; // Inferred role: init; original member name unknown.
+  bool unknown31; // Inferred role: connect; original member name unknown.
+  bool unknown32; // Inferred role: is3 d; original member name unknown.
   u8 _33[0x38 - 0x33];
-  f32 pitch;
-  f32 volume;
+  f32 m_pitch;
+  f32 m_volume;
   u8 _40[0x44 - 0x40];
 };
 
-static_assert(offsetof(SoundActor, isInit) == 0x30, "");
-static_assert(offsetof(SoundActor, pitch) == 0x38, "");
+static_assert(offsetof(SoundActor, unknown30) == 0x30, "");
+static_assert(offsetof(SoundActor, m_pitch) == 0x38, "");
 static_assert(sizeof(SoundActor) == 0x48, "");
 
 class SoundActor3D : public SoundActor {
@@ -108,25 +108,25 @@ public:
   void UpdateGameFrame(f32 deltaTime) override;
   Result Quit() override;
 
-  Vec3 position;
-  Vec3 velocity;
-  Vec3 prevPosition;
+  Vec3 unknown44; // Inferred role: position; original member name unknown.
+  Vec3 unknown50; // Inferred role: velocity; original member name unknown.
+  Vec3 unknown5c; // Inferred role: prev position; original member name unknown.
   u8 _68[0x69 - 0x68];
-  bool isPositionUpdate;
+  bool unknown69; // Inferred role: position update; original member name unknown.
   u8 _6a[0x6b - 0x6a];
-  bool isVelocityUpdate;
-  const SoundListener *listener;
+  bool unknown6b; // Inferred role: velocity update; original member name unknown.
+  const SoundListener *m_listener;
 };
 
-static_assert(offsetof(SoundActor3D, position) == 0x44, "");
-static_assert(offsetof(SoundActor3D, prevPosition) == 0x5c, "");
-static_assert(offsetof(SoundActor3D, listener) == 0x70, "");
+static_assert(offsetof(SoundActor3D, unknown44) == 0x44, "");
+static_assert(offsetof(SoundActor3D, unknown5c) == 0x5c, "");
+static_assert(offsetof(SoundActor3D, m_listener) == 0x70, "");
 static_assert(sizeof(SoundActor3D) == 0x78, "");
 
 class SoundGroup : public Object {
 public:
-  int id;
-  int maxSound;
+  int unknown18; // Inferred role: id; original member name unknown.
+  int unknown1c; // Inferred role: max sound; original member name unknown.
 };
 
 static_assert(sizeof(SoundGroup) == 0x20, "");
@@ -149,36 +149,36 @@ class SoundHandle {
 public:
   struct Fade {
     void Set(f32 target, f32 time) {
-      f32 current = value;
-      this->time = time;
+      f32 current = unknown00;
+      this->unknown08 = time;
       f32 begin = time != 0.0f ? current : target;
-      this->target = target;
-      start = begin;
-      value = begin;
-      delta = target - begin;
-      elapsed = 0.0f;
+      this->unknown14 = target;
+      unknown10 = begin;
+      unknown00 = begin;
+      unknown0c = target - begin;
+      unknown04 = 0.0f;
     }
 
     void Reset(f32 value) {
-      target = value;
-      start = value;
-      this->value = value;
-      delta = 0.0f;
-      elapsed = 0.0f;
-      time = 0.0f;
+      unknown14 = value;
+      unknown10 = value;
+      this->unknown00 = value;
+      unknown0c = 0.0f;
+      unknown04 = 0.0f;
+      unknown08 = 0.0f;
     }
 
-    f32 value;
-    f32 elapsed;
-    f32 time;
-    f32 delta;
-    f32 start;
-    f32 target;
+    f32 unknown00; // Inferred role: value; original member name unknown.
+    f32 unknown04; // Inferred role: elapsed; original member name unknown.
+    f32 unknown08; // Inferred role: time; original member name unknown.
+    f32 unknown0c; // Inferred role: delta; original member name unknown.
+    f32 unknown10; // Inferred role: start; original member name unknown.
+    f32 unknown14; // Inferred role: target; original member name unknown.
   };
 
   struct Effect {
-    bool isEnable;
-    Fade volume;
+    bool unknown00; // Inferred role: enable; original member name unknown.
+    Fade unknown04; // Inferred role: volume; original member name unknown.
   };
 
   bool IsValidHandle() const;
@@ -217,29 +217,29 @@ public:
   void DisplayDebugVerbose();
 
   u8 _00[0x58 - 0x00];
-  bool isValid;
+  bool unknown58; // Inferred role: valid; original member name unknown.
   u8 _59[0x68 - 0x59];
-  f32 pregapTime;
-  Fade pitch;
-  f32 volume;
-  f32 volumeElapsed;
-  f32 volumeTime;
-  f32 volumeDelta;
-  f32 volumeStart;
-  f32 volumeTarget;
-  Fade pan;
+  f32 unknown68;  // Inferred role: pregap time; original member name unknown.
+  Fade unknown6c; // Inferred role: pitch; original member name unknown.
+  f32 unknown84;  // Inferred role: volume; original member name unknown.
+  f32 unknown88;  // Inferred role: volume elapsed; original member name unknown.
+  f32 unknown8c;  // Inferred role: volume time; original member name unknown.
+  f32 unknown90;  // Inferred role: volume delta; original member name unknown.
+  f32 unknown94;  // Inferred role: volume start; original member name unknown.
+  f32 unknown98;  // Inferred role: volume target; original member name unknown.
+  Fade unknown9c; // Inferred role: pan; original member name unknown.
   u8 _b4[0xb8 - 0xb4];
-  f32 categoryVolume;
+  f32 unknownb8; // Inferred role: category volume; original member name unknown.
   u8 _bc[0xc0 - 0xbc];
-  Effect effects[2];
-  u32 voiceHandleId;
+  Effect unknownc0[2]; // Inferred role: effects; original member name unknown.
+  u32 unknownf8;       // Inferred role: voice handle id; original member name unknown.
 };
 
-static_assert(offsetof(SoundHandle, pregapTime) == 0x68, "");
-static_assert(offsetof(SoundHandle, pan) == 0x9c, "");
-static_assert(offsetof(SoundHandle, effects) == 0xc0, "");
-static_assert(offsetof(SoundHandle, voiceHandleId) == 0xf8, "");
-static_assert(offsetof(SoundHandle, volume) == 0x84, "");
-static_assert(offsetof(SoundHandle, categoryVolume) == 0xb8, "");
+static_assert(offsetof(SoundHandle, unknown68) == 0x68, "");
+static_assert(offsetof(SoundHandle, unknown9c) == 0x9c, "");
+static_assert(offsetof(SoundHandle, unknownc0) == 0xc0, "");
+static_assert(offsetof(SoundHandle, unknownf8) == 0xf8, "");
+static_assert(offsetof(SoundHandle, unknown84) == 0x84, "");
+static_assert(offsetof(SoundHandle, unknownb8) == 0xb8, "");
 
 } // namespace ssd

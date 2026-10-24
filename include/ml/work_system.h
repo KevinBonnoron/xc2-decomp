@@ -23,13 +23,13 @@ public:
   static void setExitFunc(void (*func)());
   static void callExitFunc();
 
-  mtl::ALLOC_HANDLE m_mem;
-  bool m_isPowerOff;
-  bool m_isReset;
-  bool m_isSaveLoadInvalidReset;
+  mtl::ALLOC_HANDLE unknown1b0; // Inferred role: mem; original member name unknown.
+  bool unknown1b4;              // Inferred role: power off; original member name unknown.
+  bool unknown1b5;              // Inferred role: reset; original member name unknown.
+  bool unknown1b6;              // Inferred role: save load invalid reset; original member name unknown.
 };
 
-static_assert(offsetof(WorkSystem, m_mem) == 0x1b0, "");
+static_assert(offsetof(WorkSystem, unknown1b0) == 0x1b0, "");
 static_assert(sizeof(WorkSystem) == 0x1b8, "");
 
 } // namespace ml

@@ -9,85 +9,85 @@
 #include "types.h"
 
 movie::Status MediaClock::SetMediaStartTime(s64 mediaStartTimeUs) {
-  nn::os::LockMutex(&mutex);
-  this->mediaStartTimeUs = mediaStartTimeUs;
-  nn::os::UnlockMutex(&mutex);
+  nn::os::LockMutex(&unknown00);
+  this->unknown38 = mediaStartTimeUs;
+  nn::os::UnlockMutex(&unknown00);
   return movie::Status_Success;
 }
 
 void AudioOutRenderer::OnOutputAvailable(int index, s64 presentationTimeUs, u32 flags) {
   audioData data;
-  data.index = index;
-  data.presentationTimeUs = presentationTimeUs;
-  data.flags = flags;
-  nn::os::LockMutex(&audioDataMutex);
-  audioDataList.push_back(data);
-  nn::os::UnlockMutex(&audioDataMutex);
+  data.unknown00 = index;
+  data.unknown08 = presentationTimeUs;
+  data.unknown10 = flags;
+  nn::os::LockMutex(&unknown490);
+  unknown430.push_back(data);
+  nn::os::UnlockMutex(&unknown490);
   GenerateFixedSizeAudioFrame();
-  if (startTimeUs == -1) {
-    mediaClock->SetMediaStartTime(presentationTimeUs);
-    startTimeUs = presentationTimeUs;
+  if (unknown4c0 == -1) {
+    unknown4b8->SetMediaStartTime(presentationTimeUs);
+    unknown4c0 = presentationTimeUs;
   }
 }
 
 void VideoRenderer::OnOutputAvailable(int index, s64 presentationTimeUs, u32 flags) {
   VideoData data;
-  data.index = index;
-  data.presentationTimeUs = presentationTimeUs;
-  data.flags = flags;
-  nn::os::LockMutex(&videoDataMutex);
-  videoDataList.push_back(data);
-  nn::os::UnlockMutex(&videoDataMutex);
+  data.unknown00 = index;
+  data.unknown08 = presentationTimeUs;
+  data.unknown10 = flags;
+  nn::os::LockMutex(&unknown230);
+  unknown210.push_back(data);
+  nn::os::UnlockMutex(&unknown230);
 }
 
 movie::Status MovieDecoderPlayer::AddBufferToAudioIndexList(int index) {
-  nn::os::LockMutex(&audioIndexListMutex);
-  audioIndexList.push_back(index);
-  nn::os::UnlockMutex(&audioIndexListMutex);
+  nn::os::LockMutex(&unknowna18);
+  unknown9e8.push_back(index);
+  nn::os::UnlockMutex(&unknowna18);
   return movie::Status_Success;
 }
 
 movie::Status MovieDecoderPlayer::RemoveBufferFromAudioIndexList(int *index) {
   int front = -1;
-  nn::os::LockMutex(&audioIndexListMutex);
-  if (static_cast<int>(audioIndexList.size()) > 0) {
-    front = audioIndexList.front();
-    audioIndexList.erase(audioIndexList.begin());
+  nn::os::LockMutex(&unknowna18);
+  if (static_cast<int>(unknown9e8.size()) > 0) {
+    front = unknown9e8.front();
+    unknown9e8.erase(unknown9e8.begin());
   }
   *index = front;
-  nn::os::UnlockMutex(&audioIndexListMutex);
+  nn::os::UnlockMutex(&unknowna18);
   return movie::Status_Success;
 }
 
 movie::Status MovieDecoderPlayer::GetAudioIndexListSize(int *size) {
-  nn::os::LockMutex(&audioIndexListMutex);
-  *size = audioIndexList.size();
-  nn::os::UnlockMutex(&audioIndexListMutex);
+  nn::os::LockMutex(&unknowna18);
+  *size = unknown9e8.size();
+  nn::os::UnlockMutex(&unknowna18);
   return movie::Status_Success;
 }
 
 movie::Status MovieDecoderPlayer::GetVideoIndexListSize(int *size) {
-  nn::os::LockMutex(&videoIndexListMutex);
-  *size = videoIndexList.size();
-  nn::os::UnlockMutex(&videoIndexListMutex);
+  nn::os::LockMutex(&unknowna38);
+  *size = unknowna00.size();
+  nn::os::UnlockMutex(&unknowna38);
   return movie::Status_Success;
 }
 
 movie::Status MovieDecoderPlayer::AddBufferToVideoIndexList(int index) {
-  nn::os::LockMutex(&videoIndexListMutex);
-  videoIndexList.push_back(index);
-  nn::os::UnlockMutex(&videoIndexListMutex);
+  nn::os::LockMutex(&unknowna38);
+  unknowna00.push_back(index);
+  nn::os::UnlockMutex(&unknowna38);
   return movie::Status_Success;
 }
 
 movie::Status MovieDecoderPlayer::RemoveBufferFromVideoIndexList(int *index) {
   int front = -1;
-  nn::os::LockMutex(&videoIndexListMutex);
-  if (static_cast<int>(videoIndexList.size()) > 0) {
-    front = videoIndexList.front();
-    videoIndexList.erase(videoIndexList.begin());
+  nn::os::LockMutex(&unknowna38);
+  if (static_cast<int>(unknowna00.size()) > 0) {
+    front = unknowna00.front();
+    unknowna00.erase(unknowna00.begin());
   }
   *index = front;
-  nn::os::UnlockMutex(&videoIndexListMutex);
+  nn::os::UnlockMutex(&unknowna38);
   return movie::Status_Success;
 }

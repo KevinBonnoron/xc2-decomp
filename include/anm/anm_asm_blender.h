@@ -30,11 +30,11 @@ public:
   void setSpeed(f32 speed);
   void setWeight(f32 weight);
 
-  Control *m_pControl;
-  const ResClipData *m_pResClipData;
+  Control *unknown10;           // Inferred role: p control; original member name unknown.
+  const ResClipData *unknown18; // Inferred role: p res clip data; original member name unknown.
 };
 
-static_assert(offsetof(AsmClip, m_pControl) == 0x10, "");
+static_assert(offsetof(AsmClip, unknown10) == 0x10, "");
 static_assert(sizeof(AsmClip) == 0x20, "");
 
 class AsmBlender {
@@ -47,11 +47,11 @@ public:
   void removeClip(AsmClip &clip);
 
   Blender *m_pBlender;
-  mm::mtl::IntrusiveList<AsmClip> m_clips;
-  bool m_skipSample;
+  mm::mtl::IntrusiveList<AsmClip> unknown08; // Inferred role: clips; original member name unknown.
+  bool unknown20;                            // Inferred role: skip sample; original member name unknown.
 };
 
-static_assert(offsetof(AsmBlender, m_clips) == 0x8, "");
-static_assert(offsetof(AsmBlender, m_skipSample) == 0x20, "");
+static_assert(offsetof(AsmBlender, unknown08) == 0x8, "");
+static_assert(offsetof(AsmBlender, unknown20) == 0x20, "");
 
 } // namespace anm

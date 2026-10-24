@@ -22,10 +22,10 @@ enum GrlVtxFormat {
 namespace grlib {
 
 struct CGLibVtxAttr {
-  GrlVtxFormat format;
-  u32 location;
-  u32 offset;
-  u32 bufferIndex;
+  GrlVtxFormat unknown00; // Inferred role: format; original member name unknown.
+  u32 unknown04;          // Inferred role: location; original member name unknown.
+  u32 unknown08;          // Inferred role: offset; original member name unknown.
+  u32 unknown0c;          // Inferred role: buffer index; original member name unknown.
 };
 
 class CGLibVtxFetch {

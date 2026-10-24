@@ -102,8 +102,8 @@ void GfComEvtAnim::Asm::setup(u32 layer, GfComModel *model, anm::ResASM *resAsm,
 
   unknown10->setListener(&unknown138);
   unknown148.reserve(32);
-  unknown10->m_stateMachines[ANIM_LAYER_BASE].setState(state);
-  unknown10->m_stateMachines[ANIM_LAYER_BASE].executeCmd("C_idle");
+  unknown10->unknown70[ANIM_LAYER_BASE].setState(state);
+  unknown10->unknown70[ANIM_LAYER_BASE].executeCmd("C_idle");
 }
 
 void GfComEvtAnim::Asm::changeLayer(u32 oldLayer, u32 newLayer) {
@@ -180,16 +180,16 @@ void GfComEvtAnim::Asm::setLocalTime(AnimLayer layer, f32 time) {
 }
 
 bool GfComEvtAnim::Asm::getPlaybackTime(const char *state, f32 *time) const {
-  if (unknown10 != nullptr && unknown10->resAsm != nullptr) {
-    return anm::Util::getAsmPlaybackTime(*unknown10->resAsm, state, 0, time);
+  if (unknown10 != nullptr && unknown10->unknown18 != nullptr) {
+    return anm::Util::getAsmPlaybackTime(*unknown10->unknown18, state, 0, time);
   }
 
   return false;
 }
 
 bool GfComEvtAnim::Asm::getLocomotionReference(const char *state, f32 time, anm::QsTransform *transform) const {
-  if (unknown10 != nullptr && unknown10->resAsm != nullptr) {
-    return anm::Util::getAsmLocomotionReference(*unknown10->resAsm, state, time, 0, transform);
+  if (unknown10 != nullptr && unknown10->unknown18 != nullptr) {
+    return anm::Util::getAsmLocomotionReference(*unknown10->unknown18, state, time, 0, transform);
   }
 
   return false;
@@ -197,13 +197,13 @@ bool GfComEvtAnim::Asm::getLocomotionReference(const char *state, f32 time, anm:
 
 const anm::QsTransform &GfComEvtAnim::Asm::getLocomotion() const {
   if (unknown10 != nullptr) {
-    return unknown10->locomotion;
+    return unknown10->unknown380;
   }
 
   static anm::QsTransform identity;
-  identity.translation = mm::Vec4::zero;
-  identity.rotation = mm::Quat::identity;
-  identity.scale = mm::Vec4::unit;
+  identity.unknown00 = mm::Vec4::zero;
+  identity.unknown10 = mm::Quat::identity;
+  identity.unknown20 = mm::Vec4::unit;
   return identity;
 }
 
@@ -219,7 +219,7 @@ bool GfComEvtAnim::Asm::isEnd(AnimLayer layer) const {
   }
 
   if (layer < anm::ASMControl::LAYER_MAX) {
-    return unknown10->m_stateMachines[layer].isEnd();
+    return unknown10->unknown70[layer].isEnd();
   }
 
   return false;
@@ -266,7 +266,7 @@ void GfComEvtAnim::Asm::executeCallback(GfComEvtAnim *owner) {
     const anm::AsmAnnotetion *annotation = unknown148[i].unknown08;
     u32 index;
     for (index = 1; index < CALLBACK_MAX; index++) {
-      if (unknown70[index].unknown08.isValid() && strcmp(unknown70[index].unknown00, annotation->name) == 0) {
+      if (unknown70[index].unknown08.isValid() && strcmp(unknown70[index].unknown00, annotation->unknown00) == 0) {
         break;
       }
     }
@@ -402,8 +402,8 @@ void GfComEvtAnim::Mot::init(u32 layer, void **motions, u64 *sizes, u64 count) {
 
   for (u64 i = 0; i < count; i++) {
     anm::Control *control = unknown348[i];
-    control->m_speed = 0.0f;
-    control->m_weight = i == 0 ? 1.0f : 0.0f;
+    control->unknown50 = 0.0f;
+    control->unknown4c = i == 0 ? 1.0f : 0.0f;
   }
 
   unknown3b0 = 0;
@@ -417,11 +417,11 @@ void GfComEvtAnim::Mot::play(u32 index, f32 time) {
       anm::Control *control = unknown348[i];
       if (index == i) {
         control->setLocalTime(time);
-        control->m_speed = unknown3b4;
-        control->m_weight = 1.0f;
+        control->unknown50 = unknown3b4;
+        control->unknown4c = 1.0f;
       } else {
-        control->m_speed = 0.0f;
-        control->m_weight = 0.0f;
+        control->unknown50 = 0.0f;
+        control->unknown4c = 0.0f;
       }
     }
 
@@ -432,7 +432,7 @@ void GfComEvtAnim::Mot::play(u32 index, f32 time) {
 bool GfComEvtAnim::Mot::isEnd() const {
   if (unknown18 != nullptr) {
     const anm::Control *control = unknown348[unknown3b0];
-    return unknown388[unknown3b0] <= control->m_localTime;
+    return unknown388[unknown3b0] <= control->unknown48;
   }
 
   return true;
@@ -441,7 +441,7 @@ bool GfComEvtAnim::Mot::isEnd() const {
 void GfComEvtAnim::Mot::setSpeed(f32 speed) {
   for (u64 i = 0; i < unknown3a8; i++) {
     anm::Control *control = unknown348[i];
-    control->m_speed = i == unknown3b0 ? speed : 0.0f;
+    control->unknown50 = i == unknown3b0 ? speed : 0.0f;
   }
 
   this->unknown3b4 = speed;
@@ -459,7 +459,7 @@ void GfComEvtAnim::Mot::setWeight(f32 *weights, u64 count) {
       return;
     }
     anm::Control *control = unknown348[i];
-    control->m_weight = weights[i];
+    control->unknown4c = weights[i];
   }
 }
 
@@ -486,8 +486,8 @@ bool GfComEvtAnim::Mot::easeIn(const char *state, AnimLayer layer) {
 
   anm::Control *control = anm::Factory::createControl(binding, getAllocator(ALLOCATOR_ANIMATION));
   unknown18->addControl(control);
-  control->m_weight = 1.0f;
-  control->m_speed = 1.0f;
+  control->unknown4c = 1.0f;
+  control->unknown50 = 1.0f;
   unknown100.push_back(mm::mtl::FixStr<32>(state));
   unknown78.push_back(control);
   return true;
@@ -520,7 +520,7 @@ bool GfComEvtAnim::Mot::setEaseWeight(const char *state, AnimLayer layer, f32 we
   const mm::mtl::FixStr<32> *name = unknown100.begin();
   for (anm::Control **control = unknown78.begin(); control != unknown78.end(); control++, name++) {
     if (strcmp(name->c_str(), state) == 0) {
-      (*control)->m_weight = weight;
+      (*control)->unknown4c = weight;
       isSet = true;
       break;
     }
@@ -534,7 +534,7 @@ bool GfComEvtAnim::Mot::setEaseSpeed(const char *state, AnimLayer layer, f32 spe
   const mm::mtl::FixStr<32> *name = unknown100.begin();
   for (anm::Control **control = unknown78.begin(); control != unknown78.end(); control++, name++) {
     if (strcmp(name->c_str(), state) == 0) {
-      (*control)->m_speed = speed;
+      (*control)->unknown50 = speed;
       isSet = true;
       break;
     }

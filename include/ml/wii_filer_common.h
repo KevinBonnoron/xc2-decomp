@@ -25,22 +25,22 @@ public:
   static char swp(char value);
   static u8 swp(u8 value);
 
-  u32 m_magic;
+  u32 unknown00; // Inferred role: magic; original member name unknown.
   u8 _04[0x18 - 0x04];
-  char m_keyword[0x10];
+  char unknown18[0x10]; // Inferred role: keyword; original member name unknown.
   u32 m_dataSize;
   u8 _2c[0x30 - 0x2c];
-  u32 m_crc;
+  u32 m_CRC;
   u8 _34[0x40 - 0x34];
-  char m_location[0x100];
-  char m_timeStamp[0x100];
+  char unknown40[0x100];  // Inferred role: location; original member name unknown.
+  char unknown140[0x100]; // Inferred role: time stamp; original member name unknown.
 };
 
-static_assert(offsetof(WiiFilerCommon, m_keyword) == 0x18, "");
+static_assert(offsetof(WiiFilerCommon, unknown18) == 0x18, "");
 static_assert(offsetof(WiiFilerCommon, m_dataSize) == 0x28, "");
-static_assert(offsetof(WiiFilerCommon, m_crc) == 0x30, "");
-static_assert(offsetof(WiiFilerCommon, m_location) == 0x40, "");
-static_assert(offsetof(WiiFilerCommon, m_timeStamp) == 0x140, "");
+static_assert(offsetof(WiiFilerCommon, m_CRC) == 0x30, "");
+static_assert(offsetof(WiiFilerCommon, unknown40) == 0x40, "");
+static_assert(offsetof(WiiFilerCommon, unknown140) == 0x140, "");
 static_assert(sizeof(WiiFilerCommon) == 0x240, "");
 
 } // namespace ml

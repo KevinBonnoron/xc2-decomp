@@ -24,7 +24,7 @@ public:
   u16 GetRowCount() const;
   f32 GetFloat(u16 row, u16 column) const;
 
-  u8 _00[0x38 - 0x00];
+  u8 m_rowCount[0x38 - 0x00];
 };
 
 static_assert(sizeof(CCsvbData) == 0x38, "");

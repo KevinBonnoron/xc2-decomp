@@ -23,12 +23,12 @@ void MovieManager::close() {
 void MovieManager::captureScreen(bool isCapture) {
   if (isCapture) {
     if (!(unknown10 & FLAG_CAPTURE)) {
-      ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+      ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
       parmAcc.setCaptureMode(true);
       unknown10 |= FLAG_CAPTURE;
     }
   } else if (unknown10 & FLAG_CAPTURE) {
-    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setCaptureMode(false);
     unknown10 &= ~FLAG_CAPTURE;
   }

@@ -132,32 +132,32 @@ public:
   virtual bool cmdIsOpenDisplayListSys() const;
 
   u8 _1b8[0x208 - 0x1b8];
-  mm::Rect<int> m_viewport;
-  mm::Rect<int> m_renderPort;
+  mm::Rect<int> unknown208; // Inferred role: viewport; original member name unknown.
+  mm::Rect<int> unknown218; // Inferred role: render port; original member name unknown.
   u8 _228[0x230 - 0x228];
-  int m_renderW;
-  int m_renderH;
-  mm::Rect<int> m_frustumPort;
+  int unknown230;           // Inferred role: render w; original member name unknown.
+  int unknown234;           // Inferred role: render h; original member name unknown.
+  mm::Rect<int> unknown238; // Inferred role: frustum port; original member name unknown.
   u8 _248[0x310 - 0x248];
-  bool m_isEnableFrustum;
+  bool unknown310; // Inferred role: enable frustum; original member name unknown.
   u8 _311[0x318 - 0x311];
-  mm::Col4 m_clearCol;
-  f32 m_clearDepth;
+  mm::Col4 unknown318; // Inferred role: clear col; original member name unknown.
+  f32 unknown328;      // Inferred role: clear depth; original member name unknown.
   u8 _32c[0x330 - 0x32c];
-  DevGraphQue *m_graphQue;
+  DevGraphQue *unknown330; // Inferred role: graph que; original member name unknown.
   u8 _338[0x348 - 0x338];
-  f32 m_frameSpd;
+  f32 unknown348; // Inferred role: frame spd; original member name unknown.
   u8 _34c[0x350 - 0x34c];
-  void (*m_outerRenders[4])();
+  void (*unknown350[4])(); // Inferred role: outer renders; original member name unknown.
 };
 
-static_assert(offsetof(DevGraph, m_viewport) == 0x208, "");
-static_assert(offsetof(DevGraph, m_renderW) == 0x230, "");
-static_assert(offsetof(DevGraph, m_isEnableFrustum) == 0x310, "");
-static_assert(offsetof(DevGraph, m_clearCol) == 0x318, "");
-static_assert(offsetof(DevGraph, m_graphQue) == 0x330, "");
-static_assert(offsetof(DevGraph, m_frameSpd) == 0x348, "");
-static_assert(offsetof(DevGraph, m_outerRenders) == 0x350, "");
+static_assert(offsetof(DevGraph, unknown208) == 0x208, "");
+static_assert(offsetof(DevGraph, unknown230) == 0x230, "");
+static_assert(offsetof(DevGraph, unknown310) == 0x310, "");
+static_assert(offsetof(DevGraph, unknown318) == 0x318, "");
+static_assert(offsetof(DevGraph, unknown330) == 0x330, "");
+static_assert(offsetof(DevGraph, unknown348) == 0x348, "");
+static_assert(offsetof(DevGraph, unknown350) == 0x350, "");
 
 class DevGraphQue {
 public:

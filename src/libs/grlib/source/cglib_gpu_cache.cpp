@@ -8,10 +8,10 @@
 
 namespace grlib {
 
-void CGLibGPUCache::setTiledCacheSize(u32 width, u32 height) { nvnCommandBufferSetTiledCacheTileSize(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, width, height); }
+void CGLibGPUCache::setTiledCacheSize(u32 width, u32 height) { nvnCommandBufferSetTiledCacheTileSize(context::CGLibSystemContext::get()->unknown1070.unknown00, width, height); }
 
 void CGLibGPUCache::setTiledCacheAction(GrlTiledCacheAction action) {
-  nvnCommandBufferSetTiledCacheAction(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, static_cast<NVNtiledCacheAction>(action));
+  nvnCommandBufferSetTiledCacheAction(context::CGLibSystemContext::get()->unknown1070.unknown00, static_cast<NVNtiledCacheAction>(action));
 }
 
 void CGLibGPUCache::textreInvalidate(void *buffer, u32 size) {}

@@ -28,7 +28,7 @@ public:
   template <typename T> void registerState(u32 stateID) {
     MM_ASSERT(m_setup);
     m_createFuncs[stateID] = &T::create;
-    m_stateSize = (mm::max(sizeof(T), m_stateSize) + 15) & ~static_cast<size_t>(15);
+    unknown68 = (mm::max(sizeof(T), unknown68) + 15) & ~static_cast<size_t>(15);
   }
 
   void endSetup();
@@ -42,13 +42,13 @@ public:
 private:
   void setStateImpl(u32 stateID);
 
-  void *m_pOwner;
+  void *unknown00; // Inferred role: p owner; original member name unknown.
   State *m_pState;
   mm::mtl::Vector<CreateFunc> m_createFuncs;
   mm::mtl::FixedQueue<void *, 2> m_stateBufferQueue;
   mm::mtl::IAllocator *m_allocator;
-  void *m_stateBuffer;
-  size_t m_stateSize;
+  void *unknown60;  // Inferred role: state buffer; original member name unknown.
+  size_t unknown68; // Inferred role: state size; original member name unknown.
   bool m_setup;
   bool m_inside;
 };

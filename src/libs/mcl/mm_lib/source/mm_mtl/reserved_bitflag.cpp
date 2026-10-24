@@ -50,11 +50,11 @@ void ReservedBitflag::clrLocal(u32 index) {
 
 void ReservedBitflag::clrLocal() {
   if (m_element != nullptr) {
-    __builtin_memset(m_element, 0, m_elementCount * sizeof(u32));
+    __builtin_memset(m_element, 0, unknown0c * sizeof(u32));
   }
 }
 
-ReservedBitflag::ReservedBitflag() : m_element(nullptr), m_size(0), m_elementCount(0), m_allocator(nullptr) {}
+ReservedBitflag::ReservedBitflag() : m_element(nullptr), m_size(0), unknown0c(0), m_allocator(nullptr) {}
 
 ReservedBitflag::~ReservedBitflag() { destroy(); }
 
@@ -64,7 +64,7 @@ void ReservedBitflag::destroy() {
     m_allocator->deallocate(m_element);
     m_element = nullptr;
     m_size = 0;
-    m_elementCount = 0;
+    unknown0c = 0;
     m_allocator = nullptr;
   }
 }
@@ -80,7 +80,7 @@ void ReservedBitflag::initialize(IAllocator *allocator, u32 size) {
   MM_ASSERT(m_element != 0);
   m_allocator = allocator;
   m_size = size;
-  m_elementCount = elementCount;
+  unknown0c = elementCount;
   clrLocal();
 }
 

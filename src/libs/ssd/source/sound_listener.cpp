@@ -8,15 +8,15 @@ namespace ssd {
 void SoundListener::Connect() {
   if (SoundCore::instance_ != nullptr) {
     SoundCore::instance_->AddSoundListener(this);
-    isConnect = true;
+    unknown78 = true;
   }
 }
 
 SoundListener::~SoundListener() { Disconnect(); }
 
 void SoundListener::Disconnect() {
-  if (isConnect) {
-    isConnect = false;
+  if (unknown78) {
+    unknown78 = false;
     SoundCore::instance_->RemoveSoundListener(this);
   }
 }
@@ -26,166 +26,166 @@ void SoundListener::Init() { Connect(); }
 void SoundListener::Quit() { Disconnect(); }
 
 void SoundListener::SetParam(const Vec3 &position, const Vec3 &look, const Vec3 &up) {
-  param.position = position;
-  param.look = look;
-  param.up = up;
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown00 = position;
+  unknown18.unknown0c = look;
+  unknown18.unknown18 = up;
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::SetPosition(const Vec3 &position) {
-  param.position = position;
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown00 = position;
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::SetPosition(const f32 *position) {
-  param.position.x = position[0];
-  param.position.y = position[1];
-  param.position.z = position[2];
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown00.x = position[0];
+  unknown18.unknown00.y = position[1];
+  unknown18.unknown00.z = position[2];
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::SetPosition(f32 x, f32 y, f32 z) {
-  param.position.x = x;
-  param.position.y = y;
-  param.position.z = z;
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown00.x = x;
+  unknown18.unknown00.y = y;
+  unknown18.unknown00.z = z;
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::SetLook(const Vec3 &look) {
-  param.look = look;
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown0c = look;
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::SetLook(const f32 *look) {
-  param.look.x = look[0];
-  param.look.y = look[1];
-  param.look.z = look[2];
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown0c.x = look[0];
+  unknown18.unknown0c.y = look[1];
+  unknown18.unknown0c.z = look[2];
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::SetLook(f32 x, f32 y, f32 z) {
-  param.look.x = x;
-  param.look.y = y;
-  param.look.z = z;
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown0c.x = x;
+  unknown18.unknown0c.y = y;
+  unknown18.unknown0c.z = z;
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::SetUp(const Vec3 &up) {
-  param.up = up;
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown18 = up;
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::SetUp(const f32 *up) {
-  param.up.x = up[0];
-  param.up.y = up[1];
-  param.up.z = up[2];
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown18.x = up[0];
+  unknown18.unknown18.y = up[1];
+  unknown18.unknown18.z = up[2];
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::SetUp(f32 x, f32 y, f32 z) {
-  param.up.x = x;
-  param.up.y = y;
-  param.up.z = z;
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown18.x = x;
+  unknown18.unknown18.y = y;
+  unknown18.unknown18.z = z;
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::SetOrientation(const Vec3 &look, const Vec3 &up) {
-  param.look = look;
-  param.up = up;
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown0c = look;
+  unknown18.unknown18 = up;
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::SetOrientation(f32 lookX, f32 lookY, f32 lookZ, f32 upX, f32 upY, f32 upZ) {
-  param.look.x = lookX;
-  param.look.y = lookY;
-  param.look.z = lookZ;
-  param.up.x = upX;
-  param.up.y = upY;
-  param.up.z = upZ;
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown0c.x = lookX;
+  unknown18.unknown0c.y = lookY;
+  unknown18.unknown0c.z = lookZ;
+  unknown18.unknown18.x = upX;
+  unknown18.unknown18.y = upY;
+  unknown18.unknown18.z = upZ;
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::LookAt(const Vec3 &position, const Vec3 &look, const Vec3 &up) {
-  param.position = position;
-  param.look = look;
-  param.up = up;
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown00 = position;
+  unknown18.unknown0c = look;
+  unknown18.unknown18 = up;
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::LookAt(const f32 *position, const f32 *look, const f32 *up) {
-  param.position.x = position[0];
-  param.position.y = position[1];
-  param.position.z = position[2];
-  param.look.x = look[0];
-  param.look.y = look[1];
-  param.look.z = look[2];
-  param.up.x = up[0];
-  param.up.y = up[1];
-  param.up.z = up[2];
-  isCalcVelocity = true;
-  isUpdate = true;
+  unknown18.unknown00.x = position[0];
+  unknown18.unknown00.y = position[1];
+  unknown18.unknown00.z = position[2];
+  unknown18.unknown0c.x = look[0];
+  unknown18.unknown0c.y = look[1];
+  unknown18.unknown0c.z = look[2];
+  unknown18.unknown18.x = up[0];
+  unknown18.unknown18.y = up[1];
+  unknown18.unknown18.z = up[2];
+  unknown79 = true;
+  unknown7a = true;
 }
 
 void SoundListener::SetVelocity(const Vec3 &velocity) {
-  param.velocity = velocity;
-  isCalcVelocity = false;
-  isUpdateVelocity = true;
+  unknown18.unknown24 = velocity;
+  unknown79 = false;
+  unknown7b = true;
 }
 
 void SoundListener::SetVelocity(f32 x, f32 y, f32 z) {
-  param.velocity.x = x;
-  param.velocity.y = y;
-  param.velocity.z = z;
-  isCalcVelocity = false;
-  isUpdateVelocity = true;
+  unknown18.unknown24.x = x;
+  unknown18.unknown24.y = y;
+  unknown18.unknown24.z = z;
+  unknown79 = false;
+  unknown7b = true;
 }
 
-f32 SoundListener::GetInteriorSize() const { return interiorSize; }
+f32 SoundListener::GetInteriorSize() const { return m_interiorSize; }
 
-void SoundListener::SetInteriorSize(f32 size) { interiorSize = size; }
+void SoundListener::SetInteriorSize(f32 size) { m_interiorSize = size; }
 
-f32 SoundListener::GetDopplerFactor() const { return dopplerFactor; }
+f32 SoundListener::GetDopplerFactor() const { return m_dopplerFactor; }
 
 void SoundListener::SetDopplerFactor(f32 factor) {
-  dopplerFactor = factor;
-  isEnableDoppler = factor != 0.0f;
+  m_dopplerFactor = factor;
+  m_enableDoppler = factor != 0.0f;
 }
 
-bool SoundListener::IsEnableDoppler() const { return isEnableDoppler; }
+bool SoundListener::IsEnableDoppler() const { return m_enableDoppler; }
 
 void SoundListener::UpdateGameFrame(f32 deltaTime) {
-  if (isCalcVelocity) {
-    param.velocity.x = applyParam.position.x - param.position.x;
-    param.velocity.y = applyParam.position.y - param.position.y;
-    param.velocity.z = applyParam.position.z - param.position.z;
-    isUpdateVelocity = true;
+  if (unknown79) {
+    unknown18.unknown24.x = unknown48.unknown00.x - unknown18.unknown00.x;
+    unknown18.unknown24.y = unknown48.unknown00.y - unknown18.unknown00.y;
+    unknown18.unknown24.z = unknown48.unknown00.z - unknown18.unknown00.z;
+    unknown7b = true;
   }
-  if (!isUpdate && !isUpdateVelocity) {
+  if (!unknown7a && !unknown7b) {
     return;
   }
-  isCalcVelocity = false;
-  isUpdate = false;
-  isUpdateVelocity = false;
-  __builtin_memcpy(&applyParam, &param, sizeof(Param));
-  isValidMatrix = true;
+  unknown79 = false;
+  unknown7a = false;
+  unknown7b = false;
+  __builtin_memcpy(&unknown48, &unknown18, sizeof(Param));
+  unknown7c = true;
   UpdateMatrix();
 }
 
-void SoundListener::UpdateMatrix() { Mat34LookAt(&matrix, &applyParam.position, &applyParam.look, &applyParam.up); }
+void SoundListener::UpdateMatrix() { Mat34LookAt(&unknown88, &unknown48.unknown00, &unknown48.unknown0c, &unknown48.unknown18); }
 
-void SoundListener::Vec3Transform(const Vec3 *in, Vec3 *out) { ssd::Vec3Transform(&matrix, in, out); }
+void SoundListener::Vec3Transform(const Vec3 *in, Vec3 *out) { ssd::Vec3Transform(&unknown88, in, out); }
 
 } // namespace ssd

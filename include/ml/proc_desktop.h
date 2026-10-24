@@ -67,23 +67,23 @@ public:
   static const char *getBuildRevision();
   static void setBuildRevision(const char *revision);
 
-  mm::Col4 m_defaultFrameColor;
-  WinView *m_view;
-  DesktopIcon **m_icons;
-  u32 m_iconNum;
+  mm::Col4 unknown1f8;      // Inferred role: default frame color; original member name unknown.
+  WinView *unknown208;      // Inferred role: view; original member name unknown.
+  DesktopIcon **unknown210; // Inferred role: icons; original member name unknown.
+  u32 unknown218;           // Inferred role: icon num; original member name unknown.
   u8 _21c[0x248 - 0x21c];
-  WinView *m_selectedView;
+  WinView *unknown248; // Inferred role: selected view; original member name unknown.
   u8 _250[0x25c - 0x250];
-  f32 m_updateRatio;
-  f32 m_requestUpdateRatio;
+  f32 unknown25c; // Inferred role: update ratio; original member name unknown.
+  f32 unknown260; // Inferred role: request update ratio; original member name unknown.
   u8 _264[0x274 - 0x264];
-  bool m_isDeleteApp;
+  bool unknown274; // Inferred role: delete app; original member name unknown.
 };
 
-static_assert(offsetof(ProcDesktop, m_defaultFrameColor) == 0x1f8, "");
-static_assert(offsetof(ProcDesktop, m_icons) == 0x210, "");
-static_assert(offsetof(ProcDesktop, m_selectedView) == 0x248, "");
-static_assert(offsetof(ProcDesktop, m_updateRatio) == 0x25c, "");
-static_assert(offsetof(ProcDesktop, m_isDeleteApp) == 0x274, "");
+static_assert(offsetof(ProcDesktop, unknown1f8) == 0x1f8, "");
+static_assert(offsetof(ProcDesktop, unknown210) == 0x210, "");
+static_assert(offsetof(ProcDesktop, unknown248) == 0x248, "");
+static_assert(offsetof(ProcDesktop, unknown25c) == 0x25c, "");
+static_assert(offsetof(ProcDesktop, unknown274) == 0x274, "");
 
 } // namespace ml

@@ -108,36 +108,36 @@ public:
   static WriteF32Channel s_pWriteF32Channel[3];
   static WriteIntChannel s_pWriteIntChannel[3];
 
-  ReadF32Call m_readF32;
-  ReadIntCall m_readInt;
-  WriteF32Call m_writeF32;
-  WriteIntCall m_writeInt;
-  u32 m_chanel;
-  u32 m_pixelBytes;
-  u32 m_chanelIndex;
-  u32 m_width;
-  u32 m_height;
-  u32 m_depth;
-  u32 m_sliceSize;
-  u32 m_sectorWidth;
-  u32 m_sectorHeight;
-  u32 m_sectorDepth;
-  u32 m_gobWidth;
-  u32 m_gobHeight;
-  u32 m_blockHeight;
-  u32 m_bufferSize;
+  ReadF32Call unknown00;  // Inferred role: read f32; original member name unknown.
+  ReadIntCall unknown10;  // Inferred role: read int; original member name unknown.
+  WriteF32Call unknown20; // Inferred role: write f32; original member name unknown.
+  WriteIntCall unknown30; // Inferred role: write int; original member name unknown.
+  u32 unknown40;          // Inferred role: chanel; original member name unknown.
+  u32 unknown44;          // Inferred role: pixel bytes; original member name unknown.
+  u32 unknown48;          // Inferred role: chanel index; original member name unknown.
+  u32 unknown4c;          // Inferred role: width; original member name unknown.
+  u32 unknown50;          // Inferred role: height; original member name unknown.
+  u32 unknown54;          // Inferred role: depth; original member name unknown.
+  u32 unknown58;          // Inferred role: slice size; original member name unknown.
+  u32 unknown5c;          // Inferred role: sector width; original member name unknown.
+  u32 unknown60;          // Inferred role: sector height; original member name unknown.
+  u32 unknown64;          // Inferred role: sector depth; original member name unknown.
+  u32 unknown68;          // Inferred role: gob width; original member name unknown.
+  u32 unknown6c;          // Inferred role: gob height; original member name unknown.
+  u32 unknown70;          // Inferred role: block height; original member name unknown.
+  u32 unknown74;          // Inferred role: buffer size; original member name unknown.
   u8 *m_buffer;
-  u8 *m_pixel;
-  bool m_isLinear;
+  u8 *unknown80;  // Inferred role: pixel; original member name unknown.
+  bool unknown88; // Inferred role: linear; original member name unknown.
   u64 _90;
 };
 
-static_assert(offsetof(CGLibAccUtilTexture, m_chanel) == 0x40, "");
-static_assert(offsetof(CGLibAccUtilTexture, m_width) == 0x4c, "");
-static_assert(offsetof(CGLibAccUtilTexture, m_sectorWidth) == 0x5c, "");
-static_assert(offsetof(CGLibAccUtilTexture, m_bufferSize) == 0x74, "");
+static_assert(offsetof(CGLibAccUtilTexture, unknown40) == 0x40, "");
+static_assert(offsetof(CGLibAccUtilTexture, unknown4c) == 0x4c, "");
+static_assert(offsetof(CGLibAccUtilTexture, unknown5c) == 0x5c, "");
+static_assert(offsetof(CGLibAccUtilTexture, unknown74) == 0x74, "");
 static_assert(offsetof(CGLibAccUtilTexture, m_buffer) == 0x78, "");
-static_assert(offsetof(CGLibAccUtilTexture, m_isLinear) == 0x88, "");
+static_assert(offsetof(CGLibAccUtilTexture, unknown88) == 0x88, "");
 
 class CGLibAcc1DTexture : public CGLibAccUtilTexture {
 public:
@@ -162,9 +162,9 @@ public:
   void setInt(int r, int g, int b, u32 x);
   void setInt(int r, int g, int b, int a, u32 x);
 
-  bool m_isLock;
-  bool m_isDirty;
-  CGLibTextureBuffer *m_pTexture;
+  bool unknown98;                // Inferred role: lock; original member name unknown.
+  bool unknown99;                // Inferred role: dirty; original member name unknown.
+  CGLibTextureBuffer *unknowna0; // Inferred role: p texture; original member name unknown.
 };
 
 class CGLibAcc2DTexture : public CGLibAccUtilTexture {
@@ -193,12 +193,12 @@ public:
   void setInt(int r, int g, int b, u32 x, u32 y);
   void setInt(int r, int g, int b, int a, u32 x, u32 y);
 
-  u32 m_mipmap;
-  u32 m_face;
-  bool m_isLock;
-  bool m_isDirty;
-  bool m_isCubemap;
-  CGLibTextureBuffer *m_pTexture;
+  u32 unknown98;                 // Inferred role: mipmap; original member name unknown.
+  u32 unknown9c;                 // Inferred role: face; original member name unknown.
+  bool unknowna0;                // Inferred role: lock; original member name unknown.
+  bool unknowna1;                // Inferred role: dirty; original member name unknown.
+  bool unknowna2;                // Inferred role: cubemap; original member name unknown.
+  CGLibTextureBuffer *unknowna8; // Inferred role: p texture; original member name unknown.
 };
 
 class CGLibAcc3DTexture : public CGLibAccUtilTexture {
@@ -224,16 +224,16 @@ public:
   void setInt(int r, int g, int b, u32 x, u32 y, u32 z);
   void setInt(int r, int g, int b, int a, u32 x, u32 y, u32 z);
 
-  bool m_isDirty;
-  CGLibTextureBuffer *m_pTexture;
+  bool unknown98;                // Inferred role: dirty; original member name unknown.
+  CGLibTextureBuffer *unknowna0; // Inferred role: p texture; original member name unknown.
 };
 
-static_assert(offsetof(CGLibAcc1DTexture, m_isLock) == 0x98, "");
-static_assert(offsetof(CGLibAcc1DTexture, m_pTexture) == 0xa0, "");
-static_assert(offsetof(CGLibAcc2DTexture, m_mipmap) == 0x98, "");
-static_assert(offsetof(CGLibAcc2DTexture, m_isLock) == 0xa0, "");
-static_assert(offsetof(CGLibAcc2DTexture, m_pTexture) == 0xa8, "");
-static_assert(offsetof(CGLibAcc3DTexture, m_isDirty) == 0x98, "");
+static_assert(offsetof(CGLibAcc1DTexture, unknown98) == 0x98, "");
+static_assert(offsetof(CGLibAcc1DTexture, unknowna0) == 0xa0, "");
+static_assert(offsetof(CGLibAcc2DTexture, unknown98) == 0x98, "");
+static_assert(offsetof(CGLibAcc2DTexture, unknowna0) == 0xa0, "");
+static_assert(offsetof(CGLibAcc2DTexture, unknowna8) == 0xa8, "");
+static_assert(offsetof(CGLibAcc3DTexture, unknown98) == 0x98, "");
 static_assert(sizeof(CGLibAcc3DTexture) == 0xa8, "");
 
 } // namespace grlib

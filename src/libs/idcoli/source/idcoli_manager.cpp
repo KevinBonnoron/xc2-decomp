@@ -14,13 +14,13 @@ namespace idcoli {
 
 IDColiMemHandleAllocator::IDColiMemHandleAllocator() {}
 
-IDColiMemHandleAllocator::IDColiMemHandleAllocator(mtl::ALLOC_HANDLE handle) : m_handle(handle) {}
+IDColiMemHandleAllocator::IDColiMemHandleAllocator(mtl::ALLOC_HANDLE handle) : unknown08(handle) {}
 
-void IDColiMemHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { m_handle = handle; }
+void IDColiMemHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { unknown08 = handle; }
 
-mtl::ALLOC_HANDLE IDColiMemHandleAllocator::getMemHandle() const { return m_handle; }
+mtl::ALLOC_HANDLE IDColiMemHandleAllocator::getMemHandle() const { return unknown08; }
 
-void *IDColiMemHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(m_handle, size, alignment, false, "no name", 0); }
+void *IDColiMemHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(unknown08, size, alignment, false, "no name", 0); }
 
 void IDColiMemHandleAllocator::deallocate(void *pointer) {
   if (pointer != nullptr) {
@@ -31,17 +31,17 @@ void IDColiMemHandleAllocator::deallocate(void *pointer) {
 void IDColiManager::update() {
   addDelUpdate();
   for (int i = 0; i < 4; i++) {
-    updateList(m_objLists[i]);
+    updateList(unknown08[i]);
   }
 }
 
 void IDColiManager::consistentUpdate() {
-  m_treeTops[0]->begin();
-  m_treeTops[1]->begin();
-  updateConsistentList(m_objLists[1]);
-  updateConsistentList(m_objLists[2]);
-  m_treeTops[0]->end();
-  m_treeTops[1]->end();
+  unknownd8[0]->begin();
+  unknownd8[1]->begin();
+  updateConsistentList(unknown08[1]);
+  updateConsistentList(unknown08[2]);
+  unknownd8[0]->end();
+  unknownd8[1]->end();
 }
 
 void IDColiManager::tail() {
@@ -50,8 +50,8 @@ void IDColiManager::tail() {
 }
 
 IDColiObj *IDColiManager::getUseObject(ColiLinkList<IDColiObj> &list) {
-  for (IDColiObj *object = list.m_head; object != nullptr; object = object->m_next) {
-    if (!object->isDeleteCall() && !(object->m_state & 4) && !(object->m_updateFlags & 0x80)) {
+  for (IDColiObj *object = list.m_head; object != nullptr; object = object->unknown10) {
+    if (!object->isDeleteCall() && !(object->unknown18 & 4) && !(object->unknown1c & 0x80)) {
       return object;
     }
   }
@@ -59,10 +59,10 @@ IDColiObj *IDColiManager::getUseObject(ColiLinkList<IDColiObj> &list) {
   return nullptr;
 }
 
-bool IDColiObj::isDeleteCall() const { return (m_updateFlags & (1 << IDColiManager::s_nDebIdx)) != 0; }
+bool IDColiObj::isDeleteCall() const { return (unknown1c & (1 << IDColiManager::s_nDebIdx)) != 0; }
 
 void IDColiManager::updateList(ColiLinkList<IDColiObj> &list) {
-  for (IDColiObj *object = list.m_head; object != nullptr; object = object->m_next) {
+  for (IDColiObj *object = list.m_head; object != nullptr; object = object->unknown10) {
     object->update();
   }
 }

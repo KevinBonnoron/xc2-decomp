@@ -28,12 +28,12 @@ UIShapeRing::UIShapeRing(u32 num, f32 weight) : unknown40(num * 4), unknown44(we
 void UIShapeRing::buildVertex() {
   u32 num = unknown40;
   layer::LayerPolyVertex vertex;
-  vertex.u = 0.0f;
-  vertex.r = 0xff;
-  vertex.g = 0xff;
-  vertex.b = 0xff;
-  vertex.a = 0xff;
-  vertex.v = 0.0f;
+  vertex.unknown0c = 0.0f;
+  vertex.unknown08 = 0xff;
+  vertex.unknown09 = 0xff;
+  vertex.unknown0a = 0xff;
+  vertex.unknown0b = 0xff;
+  vertex.unknown10 = 0.0f;
   if (num == 0) {
     return;
   }
@@ -44,16 +44,16 @@ void UIShapeRing::buildVertex() {
     f32 dx = cosf(angle);
     f32 dy = -sinf(angle);
     f32 width = unknown44 * 0.5f * m_weightScale;
-    vertex.x = dx * m_scale + dx * width;
-    vertex.y = dy * m_scale + dy * width;
-    vertex.u = 0.0f;
-    vertex.v = 0.0f;
+    vertex.unknown00 = dx * m_scale + dx * width;
+    vertex.unknown04 = dy * m_scale + dy * width;
+    vertex.unknown0c = 0.0f;
+    vertex.unknown10 = 0.0f;
     writeVertex(&vertex, 1, i * 2);
     width = unknown44 * 0.5f * m_weightScale;
-    vertex.x = dx * m_scale - dx * width;
-    vertex.y = dy * m_scale - dy * width;
-    vertex.u = 0.0f;
-    vertex.v = 1.0f;
+    vertex.unknown00 = dx * m_scale - dx * width;
+    vertex.unknown04 = dy * m_scale - dy * width;
+    vertex.unknown0c = 0.0f;
+    vertex.unknown10 = 1.0f;
     writeVertex(&vertex, 1, i * 2 + 1);
     angle += step;
   }

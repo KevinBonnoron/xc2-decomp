@@ -32,14 +32,14 @@ public:
   u16 m_height;
   u16 m_mipmap;
   u16 m_slice;
-  u32 m_flags;
-  NVNtextureView m_textureView;
-  NVNtexture *m_nvnTexture;
+  u32 unknown0c;            // Inferred role: flags; original member name unknown.
+  NVNtextureView unknown10; // Inferred role: texture view; original member name unknown.
+  NVNtexture *unknown38;    // Inferred role: nvn texture; original member name unknown.
 };
 
 static_assert(offsetof(CGLibColorBuffer, m_mipmap) == 0x08, "");
-static_assert(offsetof(CGLibColorBuffer, m_flags) == 0x0c, "");
-static_assert(offsetof(CGLibColorBuffer, m_textureView) == 0x10, "");
-static_assert(offsetof(CGLibColorBuffer, m_nvnTexture) == 0x38, "");
+static_assert(offsetof(CGLibColorBuffer, unknown0c) == 0x0c, "");
+static_assert(offsetof(CGLibColorBuffer, unknown10) == 0x10, "");
+static_assert(offsetof(CGLibColorBuffer, unknown38) == 0x38, "");
 
 } // namespace grlib

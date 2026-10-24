@@ -17,10 +17,10 @@ public:
   static int s_nDblNowIdx;
   static int s_nTriNowIdx;
 
-  NVNdevice m_device;
+  NVNdevice unknown08; // Inferred role: device; original member name unknown.
   u8 _3008[0x5030 - 0x3008];
 };
 
-static_assert(offsetof(CGLibManager, m_device) == 0x8, "");
+static_assert(offsetof(CGLibManager, unknown08) == 0x8, "");
 
 } // namespace grlib

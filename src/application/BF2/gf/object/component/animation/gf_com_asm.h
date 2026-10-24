@@ -49,7 +49,7 @@ static_assert(offsetof(MsgObjectSetAsmPlaybackSpeed, unknown0c) == 0x0c, "");
 
 inline anm::StateMachine *getStateMachine(anm::ASMControl *asmControl, AnimLayer layer) {
   if (layer < anm::ASMControl::LAYER_MAX && asmControl != nullptr) {
-    return &asmControl->m_stateMachines[layer];
+    return &asmControl->unknown70[layer];
   }
 
   return nullptr;

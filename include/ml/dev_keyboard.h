@@ -131,31 +131,31 @@ public:
   bool wkStandbyLogout() override;
   static void clearKey();
 
-  u32 m_downAccum;
-  u32 m_upAccum;
-  u32 m_hold;
-  u32 m_prevHold;
-  u32 m_vkDown;
-  u32 m_vkUp;
-  u8 m_charDownAccum[32];
-  u8 m_charUpAccum[32];
-  u8 m_charDown[32];
-  u8 m_charUp[32];
-  int m_charDownNumAccum;
-  int m_charUpNumAccum;
-  int m_charDownNum;
-  int m_charUpNum;
-  mm::mtl::FixedVector<u32, 256> m_keyMsgOn;
-  mm::mtl::FixedVector<u32, 256> m_keyMsgOff;
+  u32 unknown1b8;                            // Inferred role: down accum; original member name unknown.
+  u32 unknown1bc;                            // Inferred role: up accum; original member name unknown.
+  u32 unknown1c0;                            // Inferred role: hold; original member name unknown.
+  u32 unknown1c4;                            // Inferred role: prev hold; original member name unknown.
+  u32 unknown1c8;                            // Inferred role: vk down; original member name unknown.
+  u32 unknown1cc;                            // Inferred role: vk up; original member name unknown.
+  u8 unknown1d0[32];                         // Inferred role: char down accum; original member name unknown.
+  u8 unknown1f0[32];                         // Inferred role: char up accum; original member name unknown.
+  u8 unknown210[32];                         // Inferred role: char down; original member name unknown.
+  u8 unknown230[32];                         // Inferred role: char up; original member name unknown.
+  int unknown250;                            // Inferred role: char down num accum; original member name unknown.
+  int unknown254;                            // Inferred role: char up num accum; original member name unknown.
+  int unknown258;                            // Inferred role: char down num; original member name unknown.
+  int unknown25c;                            // Inferred role: char up num; original member name unknown.
+  mm::mtl::FixedVector<u32, 256> unknown260; // Inferred role: key msg on; original member name unknown.
+  mm::mtl::FixedVector<u32, 256> unknown668; // Inferred role: key msg off; original member name unknown.
 };
 
-static_assert(offsetof(DevKeyboard, m_downAccum) == 0x1b8, "");
-static_assert(offsetof(DevKeyboard, m_vkDown) == 0x1c8, "");
-static_assert(offsetof(DevKeyboard, m_charDownAccum) == 0x1d0, "");
-static_assert(offsetof(DevKeyboard, m_charUp) == 0x230, "");
-static_assert(offsetof(DevKeyboard, m_charDownNumAccum) == 0x250, "");
-static_assert(offsetof(DevKeyboard, m_keyMsgOn) == 0x260, "");
-static_assert(offsetof(DevKeyboard, m_keyMsgOff) == 0x668, "");
+static_assert(offsetof(DevKeyboard, unknown1b8) == 0x1b8, "");
+static_assert(offsetof(DevKeyboard, unknown1c8) == 0x1c8, "");
+static_assert(offsetof(DevKeyboard, unknown1d0) == 0x1d0, "");
+static_assert(offsetof(DevKeyboard, unknown230) == 0x230, "");
+static_assert(offsetof(DevKeyboard, unknown250) == 0x250, "");
+static_assert(offsetof(DevKeyboard, unknown260) == 0x260, "");
+static_assert(offsetof(DevKeyboard, unknown668) == 0x668, "");
 static_assert(sizeof(DevKeyboard) == 0xa70, "");
 
 } // namespace ml

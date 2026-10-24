@@ -33,7 +33,7 @@ UIPolygonObject::~UIPolygonObject() {
 UIPolygonObject *UIPolygonObject::create(UILayoutObject *parent, const PolygonInfo &info, const void *data, u32 streamId, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
   if (data != nullptr) {
     layer::LayerAccFormat format(data);
-    if (format.mask) {
+    if (format.unknown05) {
       return nullptr;
     }
   }
@@ -111,8 +111,8 @@ void UIPolygonObject::apply() {
   acc.LockVertex();
   for (u32 i = 0; i < static_cast<u32>(unknown108->unknown08.size()); i++) {
     layer::LayerPolyVertex vertex = unknown108->unknown08[i];
-    vertex.x = vertex.x * 0.5f + 0.5f;
-    vertex.y = vertex.y * 0.5f + 0.5f;
+    vertex.unknown00 = vertex.unknown00 * 0.5f + 0.5f;
+    vertex.unknown04 = vertex.unknown04 * 0.5f + 0.5f;
     acc.setVertex(i, vertex);
   }
   acc.UnlockVertex();

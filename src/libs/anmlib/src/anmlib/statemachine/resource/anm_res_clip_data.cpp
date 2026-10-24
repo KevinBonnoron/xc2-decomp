@@ -4,11 +4,11 @@
 
 namespace anm {
 
-bool lessAsmKeyframeAnnotation(const AsmKeyframeAnnotation &annotation, const AsmKeyframeAnnotation &other) { return annotation.frame < other.frame; }
+bool lessAsmKeyframeAnnotation(const AsmKeyframeAnnotation &annotation, const AsmKeyframeAnnotation &other) { return annotation.unknown00 < other.unknown00; }
 
 void ResClipData::sortAnnotation(u32 type) {
-  std::sort(m_frameAnnotations[type].begin(), m_frameAnnotations[type].end(), lessAsmKeyframeAnnotation);
-  m_isAnnotationDirty = false;
+  std::sort(unknown18[type].begin(), unknown18[type].end(), lessAsmKeyframeAnnotation);
+  unknowne0 = false;
 }
 
 } // namespace anm

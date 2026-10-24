@@ -10,17 +10,17 @@ class SoundListener;
 SoundActor::~SoundActor() { Quit(); }
 
 Result SoundActor::Init() {
-  if (isInit) {
+  if (unknown30) {
     return static_cast<Result>(-15);
   }
   static_cast<SystemCore *>(SoundCore::instance_)->ConnectActor(this);
-  isInit = true;
+  unknown30 = true;
   return set_result(static_cast<Result>(0));
 }
 
 Result SoundActor::Quit() {
-  if (isInit) {
-    isInit = false;
+  if (unknown30) {
+    unknown30 = false;
     static_cast<SystemCore *>(SoundCore::instance_)->DisconnectActor(this);
     return set_result(static_cast<Result>(0));
   }
@@ -35,9 +35,9 @@ bool SoundActor::IsPlay() const {
 }
 
 long SoundActor::Play(SoundHandle *handle, const SoundEntry *entry, f32 volume, f32 fadeTime) {
-  if (!isInit) {
+  if (!unknown30) {
     Init();
-    if (!isInit) {
+    if (!unknown30) {
       return -12;
     }
   }
@@ -54,9 +54,9 @@ Result SoundActor::Pause(bool isPause, f32 fadeTime) {
   return static_cast<Result>(0);
 }
 
-void SoundActor::SetPitch(f32 pitch, f32 fadeTime) { this->pitch = pitch; }
+void SoundActor::SetPitch(f32 pitch, f32 fadeTime) { this->m_pitch = pitch; }
 
-void SoundActor::SetVolume(f32 volume, f32 fadeTime) { this->volume = volume; }
+void SoundActor::SetVolume(f32 volume, f32 fadeTime) { this->m_volume = volume; }
 
 void SoundActor::SetPan(f32 pan, f32 fadeTime) {}
 
@@ -69,56 +69,56 @@ void SoundActor::UpdateGameFrame(f32 deltaTime) {}
 SoundActor3D::~SoundActor3D() {}
 
 Result SoundActor3D::Init() {
-  if (!isInit) {
+  if (!unknown30) {
     static_cast<SystemCore *>(SoundCore::instance_)->ConnectActor(this);
-    isInit = true;
+    unknown30 = true;
     set_result(static_cast<Result>(0));
   }
-  isPositionUpdate = false;
-  isVelocityUpdate = false;
-  listener = nullptr;
+  unknown69 = false;
+  unknown6b = false;
+  m_listener = nullptr;
   return static_cast<Result>(0);
 }
 
 long SoundActor3D::Play(SoundHandle *handle, const SoundEntry *entry, f32 volume, f32 fadeTime) {
-  if (!isInit) {
+  if (!unknown30) {
     Init();
-    if (!isInit) {
+    if (!unknown30) {
       return -12;
     }
   }
   return handle->Play(entry, this, volume, fadeTime);
 }
 
-void SoundActor3D::SetListener(const SoundListener *listener) { this->listener = listener; }
+void SoundActor3D::SetListener(const SoundListener *listener) { this->m_listener = listener; }
 
 void SoundActor3D::SetPosition(const Vec3 &position) {
-  this->position = position;
-  isPositionUpdate = true;
+  this->unknown44 = position;
+  unknown69 = true;
 }
 
 void SoundActor3D::SetPosition(f32 x, f32 y, f32 z) {
-  position.x = x;
-  position.y = y;
-  position.z = z;
-  isPositionUpdate = true;
+  unknown44.x = x;
+  unknown44.y = y;
+  unknown44.z = z;
+  unknown69 = true;
 }
 
 void SoundActor3D::SetVelocity(const Vec3 &velocity) {
-  this->velocity = velocity;
-  isVelocityUpdate = true;
+  this->unknown50 = velocity;
+  unknown6b = true;
 }
 
 void SoundActor3D::SetVelocity(f32 x, f32 y, f32 z) {
-  velocity.x = x;
-  velocity.y = y;
-  velocity.z = z;
-  isVelocityUpdate = true;
+  unknown50.x = x;
+  unknown50.y = y;
+  unknown50.z = z;
+  unknown6b = true;
 }
 
 Result SoundActor3D::Quit() {
-  if (isInit) {
-    isInit = false;
+  if (unknown30) {
+    unknown30 = false;
     static_cast<SystemCore *>(SoundCore::instance_)->DisconnectActor(this);
     return set_result(static_cast<Result>(0));
   }

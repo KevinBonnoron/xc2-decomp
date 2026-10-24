@@ -7,14 +7,16 @@
 
 namespace grlib {
 
-void CGLibCtlShader::setDispatchCompute(u32 groupsX, u32 groupsY, u32 groupsZ) { nvnCommandBufferDispatchCompute(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, groupsX, groupsY, groupsZ); }
+void CGLibCtlShader::setDispatchCompute(u32 groupsX, u32 groupsY, u32 groupsZ) {
+  nvnCommandBufferDispatchCompute(context::CGLibSystemContext::get()->unknown1070.unknown00, groupsX, groupsY, groupsZ);
+}
 
-void CGLibCtlShader::setMemoryBarrier() { nvnCommandBufferBarrier(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, 9); }
+void CGLibCtlShader::setMemoryBarrier() { nvnCommandBufferBarrier(context::CGLibSystemContext::get()->unknown1070.unknown00, 9); }
 
-void CGLibCtlShader::setMemoryBarrierBit(u32 bits) { nvnCommandBufferBarrier(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, bits); }
+void CGLibCtlShader::setMemoryBarrierBit(u32 bits) { nvnCommandBufferBarrier(context::CGLibSystemContext::get()->unknown1070.unknown00, bits); }
 
-CGLibDecShader *CGLibCtlShader::getDecShader() { return &context::CGLibSystemContext::get()->m_decShader; }
+CGLibDecShader *CGLibCtlShader::getDecShader() { return &context::CGLibSystemContext::get()->unknown2320; }
 
-CGLibVtxFetch *CGLibCtlShader::getVtxFetch(GrlUtilVertFetch type) { return &context::CGLibSystemContext::get()->m_vtxFetches[type]; }
+CGLibVtxFetch *CGLibCtlShader::getVtxFetch(GrlUtilVertFetch type) { return &context::CGLibSystemContext::get()->unknown2388[type]; }
 
 } // namespace grlib

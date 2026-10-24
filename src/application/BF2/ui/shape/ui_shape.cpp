@@ -22,14 +22,14 @@ void UIShape::setupBuffer(u32 vertexNum, u32 indexNum) {
   unknown08.reserve(vertexNum);
   unknown20.reserve(indexNum);
   for (u32 i = 0; i < vertexNum; i++) {
-    unknown08[i].y = 0.0f;
-    unknown08[i].x = 0.0f;
-    unknown08[i].a = 0xff;
-    unknown08[i].b = 0xff;
-    unknown08[i].g = 0xff;
-    unknown08[i].r = 0xff;
-    unknown08[i].v = 0.0f;
-    unknown08[i].u = 0.0f;
+    unknown08[i].unknown04 = 0.0f;
+    unknown08[i].unknown00 = 0.0f;
+    unknown08[i].unknown0b = 0xff;
+    unknown08[i].unknown0a = 0xff;
+    unknown08[i].unknown09 = 0xff;
+    unknown08[i].unknown08 = 0xff;
+    unknown08[i].unknown10 = 0.0f;
+    unknown08[i].unknown0c = 0.0f;
   }
   for (u32 i = 0; i < indexNum; i++) {
     unknown20[i] = 0;

@@ -2,7 +2,7 @@
 
 namespace ml {
 
-DevPerf::DevPerf(const char *name, WorkObj *parent) : WorkObj(name, parent, 0), m_impl(nullptr) {}
+DevPerf::DevPerf(const char *name, WorkObj *parent) : WorkObj(name, parent, 0), unknown1b0(nullptr) {}
 
 bool DevPerf::isInitialized() {
   DevPerf *perf = get();
@@ -14,9 +14,9 @@ bool DevPerf::isInitialized() {
 }
 
 DevPerf::~DevPerf() {
-  if (m_impl != nullptr) {
-    delete m_impl;
-    m_impl = nullptr;
+  if (unknown1b0 != nullptr) {
+    delete unknown1b0;
+    unknown1b0 = nullptr;
   }
 }
 
@@ -30,40 +30,40 @@ void DevPerf::finalize() {}
 
 void DevPerf::wkUpdate() {
   if (get() != nullptr) {
-    get()->m_impl->update();
+    get()->unknown1b0->update();
   }
 }
 
 DevPerfOperationMode DevPerf::getOperationMode() {
   if (get() != nullptr) {
-    return get()->m_impl->getOperationMode();
+    return get()->unknown1b0->getOperationMode();
   }
   return DEV_PERF_OPERATION_MODE_CONSOLE;
 }
 
 DevPerfMode DevPerf::getPerformanceMode() {
   if (get() != nullptr) {
-    return get()->m_impl->getPerformanceMode();
+    return get()->unknown1b0->getPerformanceMode();
   }
   return DEV_PERF_MODE_NORMAL;
 }
 
 int DevPerf::getFocusState() {
   if (get() != nullptr) {
-    return get()->m_impl->getFocusState();
+    return get()->unknown1b0->getFocusState();
   }
   return 0;
 }
 
 void DevPerf::setPerfConfig(DevPerfMode mode, DevPerfConfig config) {
   if (get() != nullptr) {
-    get()->m_impl->setPerfConfig(mode, config);
+    get()->unknown1b0->setPerfConfig(mode, config);
   }
 }
 
 DevPerfConfig DevPerf::getPerfConfig(DevPerfMode mode) {
   if (get() != nullptr) {
-    return get()->m_impl->getPerfConfig(mode);
+    return get()->unknown1b0->getPerfConfig(mode);
   }
   return DEV_PERF_CONFIG_HIGH;
 }

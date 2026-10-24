@@ -3,63 +3,63 @@
 namespace grlib {
 
 void CGLibPipeline::setDefaults() {
-  nvnBlendStateSetDefaults(&m_blendState);
-  nvnDepthStencilStateSetDefaults(&m_depthStencilState);
-  nvnPolygonStateSetDefaults(&m_cullingOff);
-  nvnPolygonStateSetFrontFace(&m_cullingOff, NVN_FRONT_FACE_CW);
-  nvnPolygonStateSetDefaults(&m_cullingFront);
-  nvnPolygonStateSetFrontFace(&m_cullingFront, NVN_FRONT_FACE_CW);
-  nvnPolygonStateSetDefaults(&m_cullingBack);
-  nvnPolygonStateSetFrontFace(&m_cullingBack, NVN_FRONT_FACE_CW);
-  nvnPolygonStateSetDefaults(&m_cullingDispOff);
-  nvnPolygonStateSetFrontFace(&m_cullingDispOff, NVN_FRONT_FACE_CW);
-  nvnPolygonStateSetDefaults(&m_pointMode);
-  nvnPolygonStateSetFrontFace(&m_pointMode, NVN_FRONT_FACE_CW);
-  nvnPolygonStateSetDefaults(&m_lineMode);
-  nvnPolygonStateSetFrontFace(&m_lineMode, NVN_FRONT_FACE_CW);
-  nvnPolygonStateSetDefaults(&m_triangle);
-  nvnPolygonStateSetFrontFace(&m_triangle, NVN_FRONT_FACE_CW);
-  nvnPolygonStateSetCullFace(&m_cullingOff, NVN_FACE_NONE);
-  nvnPolygonStateSetCullFace(&m_cullingFront, NVN_FACE_FRONT);
-  nvnPolygonStateSetCullFace(&m_cullingBack, NVN_FACE_BACK);
-  nvnPolygonStateSetCullFace(&m_cullingDispOff, NVN_FACE_FRONT_AND_BACK);
-  nvnPolygonStateSetPolygonMode(&m_pointMode, NVN_POLYGON_MODE_POINT);
-  nvnPolygonStateSetPolygonMode(&m_lineMode, NVN_POLYGON_MODE_LINE);
-  nvnPolygonStateSetPolygonMode(&m_triangle, NVN_POLYGON_MODE_FILL);
-  nvnChannelMaskStateSetDefaults(&m_channelMaskDefault);
-  nvnChannelMaskStateSetDefaults(&m_colorBufferOn);
-  nvnChannelMaskStateSetDefaults(&m_colorBufferOff);
+  nvnBlendStateSetDefaults(&unknown08);
+  nvnDepthStencilStateSetDefaults(&unknown28);
+  nvnPolygonStateSetDefaults(&unknown30);
+  nvnPolygonStateSetFrontFace(&unknown30, NVN_FRONT_FACE_CW);
+  nvnPolygonStateSetDefaults(&unknown34);
+  nvnPolygonStateSetFrontFace(&unknown34, NVN_FRONT_FACE_CW);
+  nvnPolygonStateSetDefaults(&unknown38);
+  nvnPolygonStateSetFrontFace(&unknown38, NVN_FRONT_FACE_CW);
+  nvnPolygonStateSetDefaults(&unknown3c);
+  nvnPolygonStateSetFrontFace(&unknown3c, NVN_FRONT_FACE_CW);
+  nvnPolygonStateSetDefaults(&unknown40);
+  nvnPolygonStateSetFrontFace(&unknown40, NVN_FRONT_FACE_CW);
+  nvnPolygonStateSetDefaults(&unknown44);
+  nvnPolygonStateSetFrontFace(&unknown44, NVN_FRONT_FACE_CW);
+  nvnPolygonStateSetDefaults(&unknown48);
+  nvnPolygonStateSetFrontFace(&unknown48, NVN_FRONT_FACE_CW);
+  nvnPolygonStateSetCullFace(&unknown30, NVN_FACE_NONE);
+  nvnPolygonStateSetCullFace(&unknown34, NVN_FACE_FRONT);
+  nvnPolygonStateSetCullFace(&unknown38, NVN_FACE_BACK);
+  nvnPolygonStateSetCullFace(&unknown3c, NVN_FACE_FRONT_AND_BACK);
+  nvnPolygonStateSetPolygonMode(&unknown40, NVN_POLYGON_MODE_POINT);
+  nvnPolygonStateSetPolygonMode(&unknown44, NVN_POLYGON_MODE_LINE);
+  nvnPolygonStateSetPolygonMode(&unknown48, NVN_POLYGON_MODE_FILL);
+  nvnChannelMaskStateSetDefaults(&unknown10);
+  nvnChannelMaskStateSetDefaults(&unknown14);
+  nvnChannelMaskStateSetDefaults(&unknown18);
   for (int i = 0; i < COLOR_TARGET_NUM; i++) {
-    nvnChannelMaskStateSetChannelMask(&m_colorBufferOn, i, true, true, true, true);
-    nvnChannelMaskStateSetChannelMask(&m_colorBufferOff, i, false, false, false, false);
+    nvnChannelMaskStateSetChannelMask(&unknown14, i, true, true, true, true);
+    nvnChannelMaskStateSetChannelMask(&unknown18, i, false, false, false, false);
   }
-  nvnColorStateSetDefaults(&m_colorStateDefault);
-  nvnColorStateSetDefaults(&m_blendOn);
-  nvnColorStateSetDefaults(&m_blendOff);
+  nvnColorStateSetDefaults(&unknown1c);
+  nvnColorStateSetDefaults(&unknown24);
+  nvnColorStateSetDefaults(&unknown20);
   for (int i = 0; i < COLOR_TARGET_NUM; i++) {
-    nvnColorStateSetBlendEnable(&m_blendOn, i, true);
-    nvnColorStateSetBlendEnable(&m_blendOff, i, false);
+    nvnColorStateSetBlendEnable(&unknown24, i, true);
+    nvnColorStateSetBlendEnable(&unknown20, i, false);
   }
   for (int i = 0; i < VERTEX_STREAM_NUM; i++) {
-    nvnVertexStreamStateSetDefaults(&m_vertexStreams[i]);
+    nvnVertexStreamStateSetDefaults(&unknown50[i]);
   }
-  m_vertexStreamMax = 0;
-  m_isVertexStreamDirty = false;
+  unknown90 = 0;
+  unknown94 = false;
   _98 = 0;
 }
 
 void CGLibPipeline::relase() {}
 
 void CGLibPipeline::begin() {
-  m_isVertexStreamDirty = false;
+  unknown94 = false;
   _98 = 0;
-  m_vertexStreamMax = 0;
+  unknown90 = 0;
 }
 
 void CGLibPipeline::updateVertex() {
-  if (m_isVertexStreamDirty) {
-    nvnCommandBufferBindVertexStreamState(m_cmdBuf, m_vertexStreamMax + 1, m_vertexStreams);
-    m_isVertexStreamDirty = false;
+  if (unknown94) {
+    nvnCommandBufferBindVertexStreamState(unknown00, unknown90 + 1, unknown50);
+    unknown94 = false;
   }
 }
 

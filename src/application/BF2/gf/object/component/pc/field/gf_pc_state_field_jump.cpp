@@ -8,7 +8,7 @@ namespace gf {
 namespace pc {
 
 void StateFieldJump::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  if (next == nullptr || next->stateID == STATE_ID_FIELD_LAND || next->stateID == STATE_ID_FIELD_FALL) {
+  if (next == nullptr || next->unknown08 == STATE_ID_FIELD_LAND || next->unknown08 == STATE_ID_FIELD_FALL) {
     return;
   }
   StateUtilField::notifyJumpEnd(*behavior);

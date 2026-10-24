@@ -44,7 +44,7 @@ ScnDebugManipu *ScnDebug::getManipulator() { return m_manipulator; }
 void ScnDebugManipu::setCalcRotationZXY() {
   CS cs(unknown08);
   if (unknown38 != nullptr) {
-    unknown38->unknownb0.m_back->unknown00.m_flags |= AttrTransform::FLAG_ROTATION_ZXY;
+    unknown38->unknownb0.m_back->unknown00.unknown130 |= AttrTransform::FLAG_ROTATION_ZXY;
   }
 }
 
@@ -141,13 +141,13 @@ void ScnDebugManipu::setTrans(const mm::Vec3 *position, const mm::Vec3 *rotation
   CS cs(unknown08);
   if (unknown38 != nullptr) {
     if (position != nullptr) {
-      unknown38->unknownb0.m_back->unknown00.m_pos = *position;
+      unknown38->unknownb0.m_back->unknown00.unknown00 = *position;
     }
     if (rotation != nullptr) {
-      unknown38->unknownb0.m_back->unknown00.m_rot = *rotation;
+      unknown38->unknownb0.m_back->unknown00.unknownf0 = *rotation;
     }
     if (scale != nullptr) {
-      unknown38->unknownb0.m_back->unknown00.m_scl = *scale;
+      unknown38->unknownb0.m_back->unknown00.unknown20 = *scale;
     }
     unknown38->unknownb0.m_back->unknown00.update();
   }

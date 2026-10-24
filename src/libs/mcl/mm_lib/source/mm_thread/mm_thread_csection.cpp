@@ -24,64 +24,64 @@ bool ReadWriteLock::isLockedReader() const { return nn::os::IsReadLockHeld(&lock
 bool ReadWriteLock::isLockedWriter() const { return nn::os::IsWriteLockHeldByCurrentThread(&lock); }
 
 CriticalSection::CriticalSection() {
-  enabled = true;
-  nn::os::InitializeMutex(&mutex, true, 31);
+  unknown20 = true;
+  nn::os::InitializeMutex(&unknown00, true, 31);
 }
 
-CriticalSection::~CriticalSection() { nn::os::FinalizeMutex(&mutex); }
+CriticalSection::~CriticalSection() { nn::os::FinalizeMutex(&unknown00); }
 
 void CriticalSection::setCostIgnore(bool costIgnore) {}
 
-bool CriticalSection::isLocked() const { return nn::os::IsMutexLockedByCurrentThread(&mutex); }
+bool CriticalSection::isLocked() const { return nn::os::IsMutexLockedByCurrentThread(&unknown00); }
 
 void CriticalSection::enter(const CriticalSection &sect) {
-  if (sect.enabled) {
-    nn::os::LockMutex(const_cast<nn::os::MutexType *>(&sect.mutex));
+  if (sect.unknown20) {
+    nn::os::LockMutex(const_cast<nn::os::MutexType *>(&sect.unknown00));
   }
 }
 
 bool CriticalSection::enterTry(const CriticalSection &sect) {
-  if (sect.enabled) {
-    return nn::os::TryLockMutex(const_cast<nn::os::MutexType *>(&sect.mutex));
+  if (sect.unknown20) {
+    return nn::os::TryLockMutex(const_cast<nn::os::MutexType *>(&sect.unknown00));
   }
 
   return false;
 }
 
 void CriticalSection::leave(const CriticalSection &sect) {
-  if (sect.enabled) {
-    nn::os::UnlockMutex(const_cast<nn::os::MutexType *>(&sect.mutex));
+  if (sect.unknown20) {
+    nn::os::UnlockMutex(const_cast<nn::os::MutexType *>(&sect.unknown00));
   }
 }
 
 CriticalSectionTC::CriticalSectionTC() {
-  enabled = true;
-  nn::os::InitializeMutex(&mutex, true, 31);
+  unknown20 = true;
+  nn::os::InitializeMutex(&unknown00, true, 31);
 }
 
-CriticalSectionTC::~CriticalSectionTC() { nn::os::FinalizeMutex(&mutex); }
+CriticalSectionTC::~CriticalSectionTC() { nn::os::FinalizeMutex(&unknown00); }
 
 void CriticalSectionTC::enter(const CriticalSectionTC &sect) {
-  if (sect.enabled) {
-    nn::os::LockMutex(const_cast<nn::os::MutexType *>(&sect.mutex));
+  if (sect.unknown20) {
+    nn::os::LockMutex(const_cast<nn::os::MutexType *>(&sect.unknown00));
   }
 }
 
 bool CriticalSectionTC::enterTry(const CriticalSectionTC &sect) {
-  if (sect.enabled) {
-    return nn::os::TryLockMutex(const_cast<nn::os::MutexType *>(&sect.mutex));
+  if (sect.unknown20) {
+    return nn::os::TryLockMutex(const_cast<nn::os::MutexType *>(&sect.unknown00));
   }
 
   return false;
 }
 
 void CriticalSectionTC::leave(const CriticalSectionTC &sect) {
-  if (sect.enabled) {
-    nn::os::UnlockMutex(const_cast<nn::os::MutexType *>(&sect.mutex));
+  if (sect.unknown20) {
+    nn::os::UnlockMutex(const_cast<nn::os::MutexType *>(&sect.unknown00));
   }
 }
 
-CriticalSectionNC::CriticalSectionNC() : m_count(0), m_thid(0), enabled(true) {}
+CriticalSectionNC::CriticalSectionNC() : unknown00(0), m_thid(0), unknown10(true) {}
 
 CriticalSectionNC::~CriticalSectionNC() {}
 
@@ -94,7 +94,7 @@ f32 getNowSec() { return nn::os::ConvertToTimeSpan(nn::os::GetSystemTick()).GetN
 } // namespace detail
 
 void CriticalSectionNC::enter(const CriticalSectionNC &sect) {
-  if (!sect.enabled) {
+  if (!sect.unknown10) {
     return;
   }
 
@@ -105,7 +105,7 @@ void CriticalSectionNC::enter(const CriticalSectionNC &sect) {
 
   CriticalSectionNC *self = const_cast<CriticalSectionNC *>(&sect);
   if (self->m_thid == thid) {
-    __atomic_fetch_add(&self->m_count, 1, __ATOMIC_SEQ_CST);
+    __atomic_fetch_add(&self->unknown00, 1, __ATOMIC_SEQ_CST);
     MM_ASSERT(const_cast<CriticalSectionNC *>(&sect)->m_thid == thid);
     return;
   }
@@ -114,7 +114,7 @@ void CriticalSectionNC::enter(const CriticalSectionNC &sect) {
   f32 yieldTime = startTime;
   for (;;) {
     s32 expected = 0;
-    if (__atomic_compare_exchange_n(&self->m_count, &expected, 1, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)) {
+    if (__atomic_compare_exchange_n(&self->unknown00, &expected, 1, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)) {
       break;
     }
 
@@ -134,7 +134,7 @@ void CriticalSectionNC::enter(const CriticalSectionNC &sect) {
 }
 
 bool CriticalSectionNC::enterTry(const CriticalSectionNC &sect) {
-  if (!sect.enabled) {
+  if (!sect.unknown10) {
     return false;
   }
 
@@ -145,13 +145,13 @@ bool CriticalSectionNC::enterTry(const CriticalSectionNC &sect) {
 
   CriticalSectionNC *self = const_cast<CriticalSectionNC *>(&sect);
   if (self->m_thid == thid) {
-    __atomic_fetch_add(&self->m_count, 1, __ATOMIC_SEQ_CST);
+    __atomic_fetch_add(&self->unknown00, 1, __ATOMIC_SEQ_CST);
     MM_ASSERT(const_cast<CriticalSectionNC *>(&sect)->m_thid == thid);
     return true;
   }
 
   s32 expected = 0;
-  if (!__atomic_compare_exchange_n(&self->m_count, &expected, 1, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)) {
+  if (!__atomic_compare_exchange_n(&self->unknown00, &expected, 1, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST)) {
     return false;
   }
 
@@ -160,19 +160,19 @@ bool CriticalSectionNC::enterTry(const CriticalSectionNC &sect) {
 }
 
 void CriticalSectionNC::leave(const CriticalSectionNC &sect) {
-  if (!sect.enabled) {
+  if (!sect.unknown10) {
     return;
   }
 
   CriticalSectionNC *self = const_cast<CriticalSectionNC *>(&sect);
-  s32 count = __atomic_load_n(&self->m_count, __ATOMIC_SEQ_CST);
+  s32 count = __atomic_load_n(&self->unknown00, __ATOMIC_SEQ_CST);
   if (count == 1) {
     self->m_thid = 0;
   } else if (count < 1) {
     return;
   }
 
-  __atomic_fetch_sub(&self->m_count, 1, __ATOMIC_SEQ_CST);
+  __atomic_fetch_sub(&self->unknown00, 1, __ATOMIC_SEQ_CST);
 }
 
 CS::CS(const CriticalSection &sect) {

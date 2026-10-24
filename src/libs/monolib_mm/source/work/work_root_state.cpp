@@ -44,14 +44,14 @@ void WorkRootState::shutdownAll() {
   }
 }
 
-bool WorkRootState::isShutdownAll() { return _wrootst::s_pWorkRoot->m_children.size() == 0; }
+bool WorkRootState::isShutdownAll() { return _wrootst::s_pWorkRoot->unknown60.size() == 0; }
 
 void WorkRootState::updateWork() { updateWork(_wrootst::s_pWorkRoot); }
 
 void WorkRootState::tailWork() { tailWork(_wrootst::s_pWorkRoot); }
 
 bool _wrootst::WorkRoot::wkStandbyLogout() {
-  if (m_children.size() != 0) {
+  if (unknown60.size() != 0) {
     return false;
   }
 

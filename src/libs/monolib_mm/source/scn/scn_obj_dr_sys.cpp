@@ -33,11 +33,11 @@ ScnObjClipDySys::~ScnObjClipDySys() {
 }
 
 ScnObj *ScnObjClipDySys::create(Scn *scn, const void *data, int screen) {
-  if (!scn->poolObj->isValidInsert(TYPE_LIGHT)) {
+  if (!scn->unknown20->isValidInsert(TYPE_LIGHT)) {
     return nullptr;
   }
-  ScnObjClipDySys *clip = new (scn->allocHandle) ScnObjClipDySys(scn, data, screen);
-  scn->poolObj->insert(clip);
+  ScnObjClipDySys *clip = new (scn->unknown64) ScnObjClipDySys(scn, data, screen);
+  scn->unknown20->insert(clip);
   return clip;
 }
 
@@ -68,19 +68,19 @@ bool ScnObjEnvColiDr::isPause() const {
 }
 
 ScnObj *ScnObjEnvColiDr::create(Scn *scn, const void *data, int screen) {
-  if (!scn->poolObj->isValidInsert(TYPE_LIGHT)) {
+  if (!scn->unknown20->isValidInsert(TYPE_LIGHT)) {
     return nullptr;
   }
-  ScnObjEnvColiDr *envColi = new (scn->allocHandle) ScnObjEnvColiDr(scn, data, screen);
-  scn->poolObj->insert(envColi);
+  ScnObjEnvColiDr *envColi = new (scn->unknown64) ScnObjEnvColiDr(scn, data, screen);
+  scn->unknown20->insert(envColi);
   return envColi;
 }
 
 ScnObjIBLDr::ScnObjIBLDr(Scn *scn, const void *data, int screen) : ScnObjIBL(scn), unknown18(nullptr), unknown20(screen) { createIBLObj(data); }
 
 void ScnObjIBLDr::createIBLObj(const void *data) {
-  if (unknown18 == nullptr && m_scn->renderDrSys != nullptr) {
-    DrMan *drMan = m_scn->renderDrSys->unknown10;
+  if (unknown18 == nullptr && unknown08->unknown38 != nullptr) {
+    DrMan *drMan = unknown08->unknown38->unknown10;
     if (drMan != nullptr) {
       DrGlobalIBLMan *globalIBLMan = drMan->unknown160[unknown20];
       if (globalIBLMan != nullptr) {
@@ -91,8 +91,8 @@ void ScnObjIBLDr::createIBLObj(const void *data) {
 }
 
 ScnObjIBLDr::~ScnObjIBLDr() {
-  if (unknown18 != nullptr && m_scn->renderDrSys != nullptr) {
-    DrMan *drMan = m_scn->renderDrSys->unknown10;
+  if (unknown18 != nullptr && unknown08->unknown38 != nullptr) {
+    DrMan *drMan = unknown08->unknown38->unknown10;
     if (drMan != nullptr) {
       DrGlobalIBLMan *globalIBLMan = drMan->unknown160[unknown20];
       if (globalIBLMan != nullptr) {
@@ -103,11 +103,11 @@ ScnObjIBLDr::~ScnObjIBLDr() {
 }
 
 ScnObj *ScnObjIBLDr::create(Scn *scn, const void *data, int screen) {
-  if (!scn->poolObj->isValidInsert(TYPE_IBL)) {
+  if (!scn->unknown20->isValidInsert(TYPE_IBL)) {
     return nullptr;
   }
-  ScnObjIBLDr *ibl = new (scn->allocHandle) ScnObjIBLDr(scn, data, screen);
-  scn->poolObj->insert(ibl);
+  ScnObjIBLDr *ibl = new (scn->unknown64) ScnObjIBLDr(scn, data, screen);
+  scn->unknown20->insert(ibl);
   return ibl;
 }
 
@@ -133,8 +133,8 @@ const char *ScnObjIBLDr::getName() const { return "IBLList"; }
 ScnObjLightDrSys::ScnObjLightDrSys(Scn *scn, const void *data, int screen) : ScnObjLight(scn), m_data(data), unknown320(nullptr), unknown328(screen) { createDrLgt(); }
 
 void ScnObjLightDrSys::createDrLgt() {
-  if (!m_scn->poolObj->isExistLgtEnv()) {
-    DrMan *drMan = m_scn->renderDrSys->unknown10;
+  if (!unknown08->unknown20->isExistLgtEnv()) {
+    DrMan *drMan = unknown08->unknown38->unknown10;
     drMan->unknownc0[unknown328]->releaseFastLight();
   }
   DrCreator creator;
@@ -158,7 +158,7 @@ void ScnObjLightDrSys::apply() {
     }
     if (isOfsMatrix()) {
       unknown320->unknown8c |= DrEnvironmentObj::FLAG_OFS_MATRIX;
-      unknown320->setMatrix(getTrans(false)->m_worldMatrix);
+      unknown320->setMatrix(getTrans(false)->unknown70);
     } else {
       unknown320->unknown8c &= ~DrEnvironmentObj::FLAG_GROUP;
     }
@@ -223,11 +223,11 @@ void ScnObjLightDrSys::setDeugDisp2D(bool isDisp) {
 void ScnObjLightDrSys::setLocalIBLName(const char *name) {}
 
 ScnObj *ScnObjLightDrSys::create(Scn *scn, const void *data, int screen) {
-  if (!scn->poolObj->isValidInsert(TYPE_LIGHT)) {
+  if (!scn->unknown20->isValidInsert(TYPE_LIGHT)) {
     return nullptr;
   }
-  ScnObjLightDrSys *light = new (scn->allocHandle) ScnObjLightDrSys(scn, data, screen);
-  scn->poolObj->insert(light);
+  ScnObjLightDrSys *light = new (scn->unknown64) ScnObjLightDrSys(scn, data, screen);
+  scn->unknown20->insert(light);
   return light;
 }
 
@@ -238,9 +238,9 @@ ScnObjModelDrSysStandard::ScnObjModelDrSysStandard(Scn *scn, const void *data, c
 void ScnObjModelDrSysStandard::createScnMdl(int screen) {
   if (unknown3d8 == nullptr) {
     DrCreator creator;
-    unknown3d8 = creator.createMdl(m_data, m_streamPath.c_str(), screen);
+    unknown3d8 = creator.createMdl(m_data, unknown350.c_str(), screen);
     if (unknown3d8->unknown1c == DR_MDL_TYPE_SEAM) {
-      m_flags |= FLAG_SEAM;
+      unknown34c |= FLAG_SEAM;
     }
   }
 }
@@ -257,11 +257,11 @@ void ScnObjModelDrSysStandard::update() { ScnObjModelDrSys::update(); }
 void ScnObjModelDrSysStandard::tail() { ScnObjModel::tail(); }
 
 ScnObjModelDrSysStandard *ScnObjModelDrSysStandard::create(Scn *scn, const void *data, const char *name, int screen) {
-  if (!scn->poolObj->isValidInsert(TYPE_MODEL)) {
+  if (!scn->unknown20->isValidInsert(TYPE_MODEL)) {
     return nullptr;
   }
-  ScnObjModelDrSysStandard *model = new (scn->allocHandle) ScnObjModelDrSysStandard(scn, data, name, screen);
-  scn->poolObj->insert(model);
+  ScnObjModelDrSysStandard *model = new (scn->unknown64) ScnObjModelDrSysStandard(scn, data, name, screen);
+  scn->unknown20->insert(model);
   return model;
 }
 

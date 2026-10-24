@@ -40,12 +40,12 @@ public:
   FxHeader *emitter_set_search(int type, const char *name, void *owner, u32 category);
 
   u8 _0000[0x1700 - 0x0000];
-  f32 m_categorySpeed[(0x1750 - 0x1700) / sizeof(f32)];
-  EmitterObj *m_pEmitterTop;
+  f32 unknown1700[(0x1750 - 0x1700) / sizeof(f32)]; // Inferred role: category speed; original member name unknown.
+  EmitterObj *unknown1750;                          // Inferred role: p emitter top; original member name unknown.
 };
 
-static_assert(offsetof(EmitterManager, m_categorySpeed) == 0x1700, "");
-static_assert(offsetof(EmitterManager, m_pEmitterTop) == 0x1750, "");
+static_assert(offsetof(EmitterManager, unknown1700) == 0x1700, "");
+static_assert(offsetof(EmitterManager, unknown1750) == 0x1750, "");
 
 } // namespace emitter
 } // namespace ptlib

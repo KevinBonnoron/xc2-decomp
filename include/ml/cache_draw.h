@@ -51,14 +51,14 @@ public:
   bool fontShadow(bool isEnable);
 
   u8 _00[0x6054 - 0x00];
-  f32 fontScaleX;
-  f32 fontScaleY;
+  f32 unknown6054; // Inferred role: font scale x; original member name unknown.
+  f32 unknown6058; // Inferred role: font scale y; original member name unknown.
   u8 _605c[0x6070 - 0x605c];
-  bool isZWrite;
+  bool unknown6070; // Inferred role: z write; original member name unknown.
 };
 
-static_assert(offsetof(CacheDraw, fontScaleX) == 0x6054, "");
-static_assert(offsetof(CacheDraw, isZWrite) == 0x6070, "");
+static_assert(offsetof(CacheDraw, unknown6054) == 0x6054, "");
+static_assert(offsetof(CacheDraw, unknown6070) == 0x6070, "");
 
 class DebDraw {
 public:

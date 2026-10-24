@@ -18,10 +18,10 @@ public:
   void update();
 
   u8 _00[0x68 - 0x00];
-  LayerFontIconObj *m_defaultIconObj;
-  LayerFontStyleObj *m_defaultStyleObj;
+  LayerFontIconObj *unknown68;  // Inferred role: default icon object; original member name unknown.
+  LayerFontStyleObj *unknown70; // Inferred role: default style object; original member name unknown.
 };
 
-static_assert(offsetof(LayerFontManager, m_defaultIconObj) == 0x68, "");
+static_assert(offsetof(LayerFontManager, unknown68) == 0x68, "");
 
 } // namespace layer

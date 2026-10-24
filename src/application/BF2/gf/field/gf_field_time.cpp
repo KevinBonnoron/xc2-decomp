@@ -81,14 +81,14 @@ u32 GfFieldTime::getTimeRangeDN() const { return m_timeRange < TIME_RANGE_EVENIN
 void GfFieldTime::getRealTime(RealTime &realTime) const {
   ml::TimeInfo info;
   ml::TimeUtil::getTime(info);
-  realTime.unknown06_3 = info.year;
-  realTime.unknown05_7 = info.month;
-  realTime.unknown04_6 = info.dayOfYear;
-  realTime.unknown04_1 = info.day;
-  realTime.unknown03_4 = info.hour;
-  realTime.unknown02_6 = info.minute;
-  realTime.unknown02_0 = info.second;
-  realTime.unknown00_6 = info.millisecond;
+  realTime.unknown06_3 = info.unknown06_2;
+  realTime.unknown05_7 = info.unknown05_6;
+  realTime.unknown04_6 = info.unknown04_5;
+  realTime.unknown04_1 = info.unknown04_0;
+  realTime.unknown03_4 = info.unknown03_2;
+  realTime.unknown02_6 = info.unknown02_4;
+  realTime.unknown02_0 = info.unknown01_6;
+  realTime.unknown00_6 = info.unknown00_0;
 }
 
 void GfFieldTime::setTime(u32 hour, u32 minute) {

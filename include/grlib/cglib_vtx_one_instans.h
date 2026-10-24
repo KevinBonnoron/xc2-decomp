@@ -18,14 +18,14 @@ public:
   void *getBuff();
 
   u32 m_size;
-  u32 m_writeOffset;
-  u32 m_flushedOffset;
-  u64 m_gpuAddress;
-  CGLibMemType m_memType;
+  u32 unknown04;          // Inferred role: write offset; original member name unknown.
+  u32 unknown08;          // Inferred role: flushed offset; original member name unknown.
+  u64 unknown10;          // Inferred role: gpu address; original member name unknown.
+  CGLibMemType unknown18; // Inferred role: mem type; original member name unknown.
 };
 
-static_assert(offsetof(CGLibVtxOneInstans, m_flushedOffset) == 0x08, "");
-static_assert(offsetof(CGLibVtxOneInstans, m_gpuAddress) == 0x10, "");
-static_assert(offsetof(CGLibVtxOneInstans, m_memType) == 0x18, "");
+static_assert(offsetof(CGLibVtxOneInstans, unknown08) == 0x08, "");
+static_assert(offsetof(CGLibVtxOneInstans, unknown10) == 0x10, "");
+static_assert(offsetof(CGLibVtxOneInstans, unknown18) == 0x18, "");
 
 } // namespace grlib

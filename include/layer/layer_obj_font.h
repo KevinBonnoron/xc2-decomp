@@ -21,25 +21,25 @@ public:
   f32 getSlopeRot() const;
 
   u8 _250[0x278 - 0x250];
-  const LayerFontResObj *m_res;
-  const LayerFontStyleObj *m_style;
-  const LayerFontIconObj *m_icon;
+  const LayerFontResObj *unknown278;   // Inferred role: res; original member name unknown.
+  const LayerFontStyleObj *unknown280; // Inferred role: style; original member name unknown.
+  const LayerFontIconObj *unknown288;  // Inferred role: icon; original member name unknown.
   u8 _290[0x298 - 0x290];
-  u32 m_msgFlags;
+  u32 unknown298; // Inferred role: msg flags; original member name unknown.
   u8 _29c[0x2a0 - 0x29c];
-  u16 m_fontPixelX;
-  u16 m_fontPixelY;
-  u16 m_fontPixelWidth;
-  u16 m_fontPixelHeight;
-  u32 m_horizontal;
-  u32 m_vertical;
-  u32 m_displayArea;
-  u32 m_dispSetting;
+  u16 unknown2a0; // Inferred role: font pixel x; original member name unknown.
+  u16 unknown2a2; // Inferred role: font pixel y; original member name unknown.
+  u16 unknown2a4; // Inferred role: font pixel width; original member name unknown.
+  u16 unknown2a6; // Inferred role: font pixel height; original member name unknown.
+  u32 unknown2a8; // Inferred role: horizontal; original member name unknown.
+  u32 unknown2ac; // Inferred role: vertical; original member name unknown.
+  u32 unknown2b0; // Inferred role: display area; original member name unknown.
+  u32 unknown2b4; // Inferred role: disp setting; original member name unknown.
 };
 
-static_assert(offsetof(LayerObjFont, m_res) == 0x278, "");
-static_assert(offsetof(LayerObjFont, m_msgFlags) == 0x298, "");
-static_assert(offsetof(LayerObjFont, m_fontPixelX) == 0x2a0, "");
-static_assert(offsetof(LayerObjFont, m_dispSetting) == 0x2b4, "");
+static_assert(offsetof(LayerObjFont, unknown278) == 0x278, "");
+static_assert(offsetof(LayerObjFont, unknown298) == 0x298, "");
+static_assert(offsetof(LayerObjFont, unknown2a0) == 0x2a0, "");
+static_assert(offsetof(LayerObjFont, unknown2b4) == 0x2b4, "");
 
 } // namespace layer

@@ -8,7 +8,7 @@ static const u32 INVALID_STATE_ID = 0xffffffff;
 
 class State {
 public:
-  State() : stateID(INVALID_STATE_ID), m_reqState(INVALID_STATE_ID), childState(nullptr) {}
+  State() : unknown08(INVALID_STATE_ID), m_reqState(INVALID_STATE_ID), unknown10(nullptr) {}
   virtual ~State() {}
   virtual const char *getName() const = 0;
   virtual void onEnter(void *owner, State *previous) = 0;
@@ -23,9 +23,9 @@ public:
     m_reqState = state;
   }
 
-  u32 stateID;
+  u32 unknown08; // Inferred role: state id; original member name unknown.
   u32 m_reqState;
-  State *childState;
+  State *unknown10; // Inferred role: child state; original member name unknown.
 };
 
 } // namespace ai

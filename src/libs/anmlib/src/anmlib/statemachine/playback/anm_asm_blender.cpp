@@ -8,67 +8,67 @@
 
 namespace anm {
 
-AsmBlender::AsmBlender() : m_pBlender(nullptr), m_skipSample(false) {}
+AsmBlender::AsmBlender() : m_pBlender(nullptr), unknown20(false) {}
 
 AsmBlender::~AsmBlender() {}
 
 void AsmBlender::setup(const ResASM &resAsm, mm::mtl::IAllocator &allocator) { m_pBlender = Factory::createBlender(resAsm.m_pSkeleton, &allocator); }
 
 bool AsmBlender::addClip(AsmClip &clip) {
-  if (clip.m_pControl == nullptr || !m_pBlender->addControl(clip.m_pControl)) {
+  if (clip.unknown10 == nullptr || !m_pBlender->addControl(clip.unknown10)) {
     return false;
   }
-  m_clips.push_back(&clip);
-  m_skipSample = false;
+  unknown08.push_back(&clip);
+  unknown20 = false;
   return true;
 }
 
 void AsmBlender::removeClip(AsmClip &clip) {
-  if (clip.m_pControl != nullptr && m_pBlender->removeControl(clip.m_pControl)) {
-    m_clips.erase(&clip);
+  if (clip.unknown10 != nullptr && m_pBlender->removeControl(clip.unknown10)) {
+    unknown08.erase(&clip);
   }
-  m_skipSample = false;
+  unknown20 = false;
 }
 
-AsmClip::AsmClip() : m_pControl(nullptr), m_pResClipData(nullptr) {}
+AsmClip::AsmClip() : unknown10(nullptr), unknown18(nullptr) {}
 
 AsmClip::~AsmClip() { destroyControl(); }
 
 void AsmClip::destroyControl() {
-  if (m_pControl != nullptr) {
-    m_pControl->release();
-    m_pControl = nullptr;
+  if (unknown10 != nullptr) {
+    unknown10->release();
+    unknown10 = nullptr;
   }
-  m_pResClipData = nullptr;
+  unknown18 = nullptr;
 }
 
 void AsmClip::createControl(const ResClipData &resClipData, mm::mtl::IAllocator &allocator) {
-  m_pControl = Factory::createControl(resClipData.m_pBinding, &allocator);
-  m_pResClipData = &resClipData;
+  unknown10 = Factory::createControl(resClipData.m_pBinding, &allocator);
+  unknown18 = &resClipData;
 }
 
 void AsmClip::setLocalTime(f32 time) {
-  if (m_pControl != nullptr) {
-    m_pControl->setLocalTime(time);
+  if (unknown10 != nullptr) {
+    unknown10->setLocalTime(time);
   }
 }
 
 f32 AsmClip::getLocalTime() const {
-  if (m_pControl != nullptr) {
-    return m_pControl->m_localTime;
+  if (unknown10 != nullptr) {
+    return unknown10->unknown48;
   }
   return 0.0f;
 }
 
 void AsmClip::setSpeed(f32 speed) {
-  if (m_pControl != nullptr) {
-    m_pControl->m_speed = m_pResClipData->m_pInfo->speed * speed;
+  if (unknown10 != nullptr) {
+    unknown10->unknown50 = unknown18->unknown00->speed * speed;
   }
 }
 
 void AsmClip::setWeight(f32 weight) {
-  if (m_pControl != nullptr) {
-    m_pControl->m_weight = m_pResClipData->m_pInfo->weight * weight;
+  if (unknown10 != nullptr) {
+    unknown10->unknown4c = unknown18->unknown00->weight * weight;
   }
 }
 

@@ -11,14 +11,14 @@ namespace layer {
 class LayerBase;
 class LayerObjTopPolyObj;
 struct LayerPolyVertex {
-  f32 x;
-  f32 y;
-  u8 r;
-  u8 g;
-  u8 b;
-  u8 a;
-  f32 u;
-  f32 v;
+  f32 unknown00; // Inferred role: x; original member name unknown.
+  f32 unknown04; // Inferred role: y; original member name unknown.
+  u8 unknown08;  // Inferred role: r; original member name unknown.
+  u8 unknown09;  // Inferred role: g; original member name unknown.
+  u8 unknown0a;  // Inferred role: b; original member name unknown.
+  u8 unknown0b;  // Inferred role: a; original member name unknown.
+  f32 unknown0c; // Inferred role: u; original member name unknown.
+  f32 unknown10; // Inferred role: v; original member name unknown.
 };
 
 static_assert(sizeof(LayerPolyVertex) == 0x14, "");

@@ -25,8 +25,8 @@ bool WorkCpu::isInitialized() {
     return false;
   }
 
-  for (u32 i = 0; i < cpu->m_cpuNum; i++) {
-    WorkCpuThread *thread = cpu->m_cpuThreads[i];
+  for (u32 i = 0; i < cpu->unknown1bc; i++) {
+    WorkCpuThread *thread = cpu->unknown1740[i];
     if (thread == nullptr || thread->wkIsWaitException() || !thread->wkIsActive()) {
       return false;
     }
@@ -50,7 +50,7 @@ u64 WorkCpu::getCurrentThreadId() { return ThreadUtil::getCurrentID(); }
 u64 WorkCpu::getMainThreadId() {
   WorkCpu *cpu = get();
   if (cpu != nullptr) {
-    return cpu->m_mainThreadId;
+    return cpu->unknown2020;
   }
 
   return 0;
@@ -63,7 +63,7 @@ void WorkCpu::setProfiler(bool isProfiler) {}
 f32 WorkCpu::getAllCostSec() {
   WorkCpu *cpu = get();
   if (cpu != nullptr) {
-    return cpu->m_allCostSec;
+    return cpu->unknown2034;
   }
 
   return 0.0f;
@@ -74,7 +74,7 @@ void WorkCpu::setRenderSubCpu(bool isRenderSubCpu) { s_bRenderSubCpu = isRenderS
 mtl::ALLOC_HANDLE WorkCpu::getMemWork() {
   WorkCpu *cpu = get();
   if (cpu != nullptr) {
-    return cpu->m_memWork;
+    return cpu->unknown1b4;
   }
 
   return mtl::ALLOC_HANDLE();
@@ -83,7 +83,7 @@ mtl::ALLOC_HANDLE WorkCpu::getMemWork() {
 mtl::ALLOC_HANDLE WorkCpu::getMemStack() {
   WorkCpu *cpu = get();
   if (cpu != nullptr) {
-    return cpu->m_memStack;
+    return cpu->unknown1b8;
   }
 
   return mtl::ALLOC_HANDLE();
@@ -93,7 +93,7 @@ CPUID WorkCpu::getMainCPUID() { return CPUID_CORE_0; }
 
 CPUID WorkCpu::getRenderCPUID() {
   if (s_bRenderSubCpu) {
-    u32 cpuNum = get()->m_cpuNum;
+    u32 cpuNum = get()->unknown1bc;
     if (cpuNum > 2) {
       return CPUID_CORE_2;
     }
@@ -106,35 +106,35 @@ CPUID WorkCpu::getRenderCPUID() {
   return CPUID_CORE_0;
 }
 
-u32 WorkCpu::getCpuNum() { return get()->m_cpuNum; }
+u32 WorkCpu::getCpuNum() { return get()->unknown1bc; }
 
-void WorkCpu::setThread(DO_THREAD thread) { get()->m_nextThread = thread; }
+void WorkCpu::setThread(DO_THREAD thread) { get()->unknown173c = thread; }
 
 DO_THREAD WorkCpu::getThread() {
   WorkCpu *cpu = get();
   if (cpu != nullptr) {
-    return cpu->m_thread;
+    return cpu->unknown1738;
   }
 
   return static_cast<DO_THREAD>(0);
 }
 
-u32 WorkCpu::getEven() { return get()->m_even; }
+u32 WorkCpu::getEven() { return get()->unknown1764; }
 
 bool WorkCpu::isShutdown() {
   WorkCpu *cpu = get();
   if (cpu != nullptr) {
-    return (cpu->m_flags & 0x2) != 0;
+    return (cpu->unknown1b0 & 0x2) != 0;
   }
 
   return false;
 }
 
-u32 WorkCpu::getFrameCountU32() { return get()->m_frameCount; }
+u32 WorkCpu::getFrameCountU32() { return get()->unknown2090; }
 
-const unsigned long &WorkCpu::getFrameCount() { return get()->m_frameCount; }
+const unsigned long &WorkCpu::getFrameCount() { return get()->unknown2090; }
 
-bool WorkCpu::getOdd() { return get()->m_even == 0; }
+bool WorkCpu::getOdd() { return get()->unknown1764 == 0; }
 
 bool WorkCpu::isBackground() { return _mlwcpu::s_bBackGround; }
 
@@ -142,24 +142,24 @@ void WorkCpu::syncSubCpu() {}
 
 void WorkCpu::setHeartBeatCpu(CPUID cpu) { DevClock::getClockNow(_mlwcpu::s_aHearBeat[cpu - 1]); }
 
-u32 WorkCpu::getJobTrans() { return get()->m_jobTrans[getOdd()]; }
+u32 WorkCpu::getJobTrans() { return get()->unknown2028[getOdd()]; }
 
 const long &WorkCpu::getBeginClock(bool isCurrent) {
   WorkCpu *cpu = get();
   int index = isCurrent ? 0 : 4;
-  return cpu->m_beginClocks[index];
+  return cpu->unknown2048[index];
 }
 
-const long &WorkCpu::getTailStartClock() { return get()->m_tailStartClock; }
+const long &WorkCpu::getTailStartClock() { return get()->unknown2070; }
 
-const long &WorkCpu::getTailEndClock() { return get()->m_tailEndClock; }
+const long &WorkCpu::getTailEndClock() { return get()->unknown2078; }
 
-const long &WorkCpu::getSyncClock() { return get()->m_syncClock; }
+const long &WorkCpu::getSyncClock() { return get()->unknown2080; }
 
 u32 WorkCpu::getCounter() {
   WorkCpu *cpu = get();
   if (cpu != nullptr) {
-    return cpu->m_counter;
+    return cpu->unknown195c;
   }
 
   return 0;
@@ -181,9 +181,9 @@ void WorkCpu::setAfterUpdateRender(bool isAfterUpdateRender) {
   WorkCpu *cpu = get();
   if (cpu != nullptr) {
     if (isAfterUpdateRender) {
-      cpu->m_flags |= 0x10;
+      cpu->unknown1b0 |= 0x10;
     } else {
-      cpu->m_flags &= ~0x10;
+      cpu->unknown1b0 &= ~0x10;
     }
   }
 }

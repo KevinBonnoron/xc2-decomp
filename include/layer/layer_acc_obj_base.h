@@ -83,7 +83,7 @@ public:
   void setSecondTexBlend(f32 blend);
   f32 getSecondTexBlend() const;
 
-  LayerObj *m_layer;
+  LayerObj *unknown00; // Inferred role: layer; original member name unknown.
 };
 
 } // namespace layer

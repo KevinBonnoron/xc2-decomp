@@ -9,9 +9,9 @@ class MediaClock {
 public:
   movie::Status SetMediaStartTime(s64 mediaStartTimeUs);
 
-  nn::os::MutexType mutex;
+  nn::os::MutexType unknown00; // Inferred role: mutex; original member name unknown.
   u8 _20[0x38 - 0x20];
-  s64 mediaStartTimeUs;
+  s64 unknown38; // Inferred role: media start time us; original member name unknown.
 };
 
-static_assert(offsetof(MediaClock, mediaStartTimeUs) == 0x38, "");
+static_assert(offsetof(MediaClock, unknown38) == 0x38, "");

@@ -25,12 +25,12 @@ struct ResAddNode {
 
 struct ResAddTree {
   u8 _00[0x10];
-  u32 baseClipNum;
+  u32 unknown10; // Inferred role: base clip num; original member name unknown.
   u8 _14[0x18 - 0x14];
-  Array<ResAddNode> nodes;
+  Array<ResAddNode> unknown18; // Inferred role: nodes; original member name unknown.
 };
 
-static_assert(offsetof(ResAddTree, nodes) == 0x18, "");
+static_assert(offsetof(ResAddTree, unknown18) == 0x18, "");
 
 class AddBlendTree : public AsmState {
 public:
@@ -48,13 +48,13 @@ public:
   void onSetWeight() override;
   const AsmClip *getBaseClip() const override;
 
-  const ResAddTree *m_pResTree;
-  AsmClip *m_pClips;
-  u32 m_clipNum;
-  const mm::mtl::Vector<Variable> *m_pVariables;
+  const ResAddTree *unknown30; // Inferred role: p res tree; original member name unknown.
+  AsmClip *m_baseClip;
+  u32 unknown40;                              // Inferred role: clip num; original member name unknown.
+  const mm::mtl::Vector<Variable> *unknown48; // Inferred role: p variables; original member name unknown.
 };
 
-static_assert(offsetof(AddBlendTree, m_pResTree) == 0x30, "");
-static_assert(offsetof(AddBlendTree, m_pVariables) == 0x48, "");
+static_assert(offsetof(AddBlendTree, unknown30) == 0x30, "");
+static_assert(offsetof(AddBlendTree, unknown48) == 0x48, "");
 
 } // namespace anm

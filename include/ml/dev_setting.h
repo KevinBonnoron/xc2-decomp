@@ -48,9 +48,9 @@ public:
 
   static LangType m_defaultLang;
 
-  IDevSetting *m_impl;
+  IDevSetting *unknown08; // Inferred role: impl; original member name unknown.
 };
 
-static_assert(offsetof(DevSetting, m_impl) == 0x08, "");
+static_assert(offsetof(DevSetting, unknown08) == 0x08, "");
 
 } // namespace ml

@@ -28,9 +28,9 @@ public:
   virtual void setFromCaptureTool() = 0;
   virtual void dispDebugWindow(bool isOpen, const char *title, WinProc *window) {}
 
-  u32 m_flags;
+  u32 unknown14; // Inferred role: flags; original member name unknown.
 };
 
-static_assert(offsetof(ScnObjIBL, m_flags) == 0x14, "");
+static_assert(offsetof(ScnObjIBL, unknown14) == 0x14, "");
 
 } // namespace ml

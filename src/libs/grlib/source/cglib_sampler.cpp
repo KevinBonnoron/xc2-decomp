@@ -14,75 +14,75 @@ const mm::Col4 s_borderColors[] = {
 } // namespace
 
 CGLibSampler::CGLibSampler() {
-  m_params.m_borderColor.b = 1.0f;
-  m_params.m_borderColor.a = 1.0f;
-  m_params.m_value = 0;
-  m_params.m_borderColor.r = 1.0f;
-  m_params.m_borderColor.g = 1.0f;
-  m_params.m_lod = 0.0f;
-  m_resource = nullptr;
+  unknown00.unknown04.b = 1.0f;
+  unknown00.unknown04.a = 1.0f;
+  unknown00.m_value = 0;
+  unknown00.unknown04.r = 1.0f;
+  unknown00.unknown04.g = 1.0f;
+  unknown00.unknown14 = 0.0f;
+  unknown18 = nullptr;
 }
 
 CGLibSampler::~CGLibSampler() { release(); }
 
 void CGLibSampler::release() {
-  if (m_resource != nullptr) {
-    context::CGLibSystemContext::get()->m_buffSamplerTbl.freeSampler(m_resource);
+  if (unknown18 != nullptr) {
+    context::CGLibSystemContext::get()->unknown608.freeSampler(unknown18);
   }
 }
 
 void CGLibSampler::initSampler(GrlTexClamp clamp, GrlTexMagFilterType filter) {
-  m_params.m_value = 0;
+  unknown00.m_value = 0;
   setClamp(clamp, clamp, clamp);
-  m_params.m_magFilter = filter;
+  unknown00.m_magFilter = filter;
   if (filter != GRL_TEX_MAG_FILTER_NEAREST) {
-    m_params.m_minFilter = GRL_TEX_MIN_FILTER_LINEAR;
+    unknown00.m_minFilter = GRL_TEX_MIN_FILTER_LINEAR;
   }
-  m_params.m_borderColor = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
-  m_params.m_lod = 0.0f;
+  unknown00.unknown04 = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
+  unknown00.unknown14 = 0.0f;
 }
 
 void CGLibSampler::setClamp(GrlTexClamp clampS, GrlTexClamp clampT, GrlTexClamp clampR) {
-  m_params.m_clampS = clampS;
-  m_params.m_clampT = clampT;
-  m_params.m_clampR = clampR;
+  unknown00.m_clampS = clampS;
+  unknown00.m_clampT = clampT;
+  unknown00.m_clampR = clampR;
   if (clampS >= GRL_TEX_CLAMP_CLAMP_TO_BORDER || clampT >= GRL_TEX_CLAMP_CLAMP_TO_BORDER || clampR >= GRL_TEX_CLAMP_CLAMP_TO_BORDER) {
-    m_params.m_isBorder = true;
+    unknown00.m_isBorder = true;
   } else {
-    m_params.m_isBorder = false;
+    unknown00.m_isBorder = false;
   }
 }
 
 void CGLibSampler::setFilter(GrlTexMagFilterType magFilter, GrlTexMinFilterType minFilter, GrlTexTexAnisoRatio anisoRatio) {
-  m_params.m_magFilter = magFilter;
-  m_params.m_minFilter = minFilter;
-  m_params.m_anisoRatio = anisoRatio;
+  unknown00.m_magFilter = magFilter;
+  unknown00.m_minFilter = minFilter;
+  unknown00.m_anisoRatio = anisoRatio;
 }
 
-void CGLibSampler::setLOD(f32 lod) { m_params.m_lod = lod; }
+void CGLibSampler::setLOD(f32 lod) { unknown00.unknown14 = lod; }
 
-void CGLibSampler::setDepthCompare(GrlTexCompare compare) { m_params.m_compare = compare; }
+void CGLibSampler::setDepthCompare(GrlTexCompare compare) { unknown00.m_compare = compare; }
 
 void CGLibSampler::setBorderType(GrlTexBorderType type) {
   const mm::Col4 &color = s_borderColors[type];
-  m_params.m_borderColor.r = color.r;
-  m_params.m_borderColor.g = color.g;
-  m_params.m_borderColor.b = color.b;
-  m_params.m_borderColor.a = color.a;
+  unknown00.unknown04.r = color.r;
+  unknown00.unknown04.g = color.g;
+  unknown00.unknown04.b = color.b;
+  unknown00.unknown04.a = color.a;
 }
 
 void CGLibSampler::setBorderColor(const mm::Col4 &color) {
-  m_params.m_borderColor.r = color.r;
-  m_params.m_borderColor.g = color.g;
-  m_params.m_borderColor.b = color.b;
-  m_params.m_borderColor.a = color.a;
+  unknown00.unknown04.r = color.r;
+  unknown00.unknown04.g = color.g;
+  unknown00.unknown04.b = color.b;
+  unknown00.unknown04.a = color.a;
 }
 
 void CGLibSampler::updateData() {
-  if (m_resource != nullptr) {
-    context::CGLibSystemContext::get()->m_buffSamplerTbl.freeSampler(m_resource);
+  if (unknown18 != nullptr) {
+    context::CGLibSystemContext::get()->unknown608.freeSampler(unknown18);
   }
-  m_resource = context::CGLibSystemContext::get()->m_buffSamplerTbl.allocSampler(m_params);
+  unknown18 = context::CGLibSystemContext::get()->unknown608.allocSampler(unknown00);
 }
 
 } // namespace grlib

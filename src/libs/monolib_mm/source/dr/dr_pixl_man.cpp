@@ -51,14 +51,14 @@ void DrPixlMan::selectOpcaityBlmRenderTarget() {
   grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(5), grlib::GRL_MRT_TYPE_0);
   grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(6), grlib::GRL_MRT_TYPE_1);
   grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(9), grlib::GRL_MRT_TYPE_2);
-  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
+  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
   grlib::CGLibState::endRegisterRenderTarget();
 }
 
 void DrPixlMan::selectOpcaityRenderTarget() {
   grlib::CGLibState::beginRegisterRenderTarget();
   grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(5), grlib::GRL_MRT_TYPE_0);
-  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
+  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
   grlib::CGLibState::endRegisterRenderTarget();
 }
 
@@ -71,7 +71,7 @@ DrPixlRenderTarget *DrPixlMan::getPixlObj(int type) {
 
 grlib::CGLibDepthTarget *DrPixlMan::getDepthObj() { return unknown7f0->unknown1a0[DrMan::s_nDblIdx]; }
 
-grlib::CGLibTextureBuffer *DrPixlMan::getDammyWhiteTexObj() { return unknown838->m_texture; }
+grlib::CGLibTextureBuffer *DrPixlMan::getDammyWhiteTexObj() { return unknown838->unknown70; }
 
 DrPixlMan::~DrPixlMan() { releaseColorBuffer(); }
 
@@ -111,7 +111,7 @@ void DrPixlMan::selectZprepassRenderTarget() {
   unknown858 = 1;
   unknown85c = 0;
   grlib::CGLibState::beginRegisterRenderTarget();
-  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
+  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
   grlib::CGLibState::endRegisterRenderTarget();
 }
 
@@ -131,7 +131,7 @@ bool DrPixlMan::selectGBuffRenderTarget(u32 mask) {
       mrt++;
     }
   }
-  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
+  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
   grlib::CGLibState::endRegisterRenderTarget();
   return true;
 }
@@ -162,14 +162,14 @@ void DrPixlMan::selectDeferredRenderTarget() {
   unknown858 = 4;
   grlib::CGLibState::beginRegisterRenderTarget();
   grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(5), grlib::GRL_MRT_TYPE_0);
-  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
+  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
   grlib::CGLibState::endRegisterRenderTarget();
 }
 
 void DrPixlMan::selectRefractRenderTarget() {
   unknown858 = 5;
   grlib::CGLibState::beginRegisterRenderTarget();
-  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
+  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
   grlib::CGLibState::endRegisterRenderTarget();
 }
 
@@ -177,7 +177,7 @@ void DrPixlMan::selectPrePassWrkClearRenderTarget() {
   unknown858 = 0;
   grlib::CGLibState::beginRegisterRenderTarget();
   grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(5), grlib::GRL_MRT_TYPE_0);
-  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
+  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
   grlib::CGLibState::endRegisterRenderTarget();
   setMainViewPort();
 }
@@ -189,7 +189,7 @@ void DrPixlMan::selectGlobalIBLIndexRenderTarget() {
   unknown858 = 11;
   grlib::CGLibState::beginRegisterRenderTarget();
   grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(3), grlib::GRL_MRT_TYPE_0);
-  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
+  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
   grlib::CGLibState::endRegisterRenderTarget();
 }
 
@@ -225,7 +225,7 @@ void DrPixlMan::thicknessFirstBegin() {
   unknown858 = 13;
   grlib::CGLibState::beginRegisterRenderTarget();
   grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown148, grlib::GRL_MRT_TYPE_0);
-  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
+  grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
   grlib::CGLibState::endRegisterRenderTarget();
 }
 
@@ -318,7 +318,7 @@ void DrPixlMan::setToneAveRange(f32 min, f32 max) {
   unknown7f0->unknown198 = max;
 }
 
-grlib::CGLibTextureBuffer *DrPixlMan::getDammyTexObj() { return unknown830->m_texture; }
+grlib::CGLibTextureBuffer *DrPixlMan::getDammyTexObj() { return unknown830->unknown70; }
 
 void DrPixlMan::offScreenAlphaEnd() { DrAPGxType::setupAlphaChanel(true); }
 

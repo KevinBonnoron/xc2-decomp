@@ -35,23 +35,23 @@ public:
   u64 getID() const override;
   CPUID getCPUID() const override;
 
-  nn::os::ThreadType *handle;
-  u64 id;
-  CPUID cpuId;
-  nn::os::ThreadType thread;
-  EventWait event;
-  void *stack;
-  void *argument;
-  ThreadFunc func;
-  ThreadState state;
+  nn::os::ThreadType *m_handle;
+  u64 m_ID;
+  CPUID m_CPUID;
+  nn::os::ThreadType unknown30; // Inferred role: thread; original member name unknown.
+  EventWait unknown1f0;         // Inferred role: event; original member name unknown.
+  void *unknown250;             // Inferred role: stack; original member name unknown.
+  void *unknown258;             // Inferred role: argument; original member name unknown.
+  ThreadFunc unknown260;        // Inferred role: func; original member name unknown.
+  ThreadState unknown268;       // Inferred role: state; original member name unknown.
 };
 
-static_assert(offsetof(ThreadNx, handle) == 0x18, "");
-static_assert(offsetof(ThreadNx, cpuId) == 0x28, "");
-static_assert(offsetof(ThreadNx, thread) == 0x30, "");
-static_assert(offsetof(ThreadNx, event) == 0x1f0, "");
-static_assert(offsetof(ThreadNx, stack) == 0x250, "");
-static_assert(offsetof(ThreadNx, state) == 0x268, "");
+static_assert(offsetof(ThreadNx, m_handle) == 0x18, "");
+static_assert(offsetof(ThreadNx, m_CPUID) == 0x28, "");
+static_assert(offsetof(ThreadNx, unknown30) == 0x30, "");
+static_assert(offsetof(ThreadNx, unknown1f0) == 0x1f0, "");
+static_assert(offsetof(ThreadNx, unknown250) == 0x250, "");
+static_assert(offsetof(ThreadNx, unknown268) == 0x268, "");
 static_assert(sizeof(ThreadNx) == 0x270, "");
 
 } // namespace threading

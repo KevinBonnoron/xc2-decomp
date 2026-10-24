@@ -14,21 +14,21 @@ public:
   f32 calcLocalTimeInternal(f32 time);
 
   void setLocalTime(f32 time) {
-    m_localTime = calcLocalTimeInternal(time);
-    m_flags |= 1;
+    unknown48 = calcLocalTimeInternal(time);
+    unknown58 |= 1;
   }
 
   const Binding *m_pBinding;
   u8 _20[0x48 - 0x20];
-  f32 m_localTime;
-  f32 m_weight;
-  f32 m_speed;
+  f32 unknown48; // Inferred role: local time; original member name unknown.
+  f32 unknown4c; // Inferred role: weight; original member name unknown.
+  f32 unknown50; // Inferred role: speed; original member name unknown.
   u8 _54[0x58 - 0x54];
-  u32 m_flags;
+  u32 unknown58; // Inferred role: flags; original member name unknown.
 };
 
 static_assert(offsetof(Control, m_pBinding) == 0x18, "");
-static_assert(offsetof(Control, m_localTime) == 0x48, "");
-static_assert(offsetof(Control, m_flags) == 0x58, "");
+static_assert(offsetof(Control, unknown48) == 0x48, "");
+static_assert(offsetof(Control, unknown58) == 0x58, "");
 
 } // namespace anm

@@ -24,7 +24,7 @@ SystemManager *&SystemManager::getPtr() { return s_instance; }
 
 bool SystemManager::isValid() {
   if (getPtr() != nullptr) {
-    if (getPtr()->m_clearCount == 0) {
+    if (getPtr()->unknown7824f == 0) {
       return true;
     }
   }
@@ -32,12 +32,12 @@ bool SystemManager::isValid() {
 }
 
 SystemManager::SystemManager()
-    : m_isUpdate(true), m_isDraw(true), dispEmitter(false), isDispEmitterSet(true), m_isClearForce(false), _78249(0), dispParticleTexture(false), workTexture(false), m_commandBuffer(0),
-      writeBuffer(0), m_clearCount(0) {}
+    : unknown09(true), unknown0a(true), unknown0b(false), unknown0c(true), unknown78248(false), _78249(0), unknown7824a(false), unknown7824b(false), unknown7824c(0), unknown7824d(0), unknown7824f(0) {
+}
 
 SystemManager::~SystemManager() {
-  m_commands[0].clear();
-  m_commands[1].clear();
+  unknown220[0].clear();
+  unknown220[1].clear();
 }
 
 SystemManager *SystemManager::create(const ptlib::DrDrawWorkInfoEF *info) {
@@ -104,17 +104,17 @@ void SystemManager::syncUpdateBegin() {}
 
 void SystemManager::syncUpdateEnd() {}
 
-void SystemManager::setIBLSaturation(f32 saturation) { ptlib::ParticleManager::get()->m_iblSaturation = saturation; }
+void SystemManager::setIBLSaturation(f32 saturation) { ptlib::ParticleManager::get()->unknown158 = saturation; }
 
-void SystemManager::setDirScale(f32 scale) { ptlib::ParticleManager::get()->m_dirScale = scale; }
+void SystemManager::setDirScale(f32 scale) { ptlib::ParticleManager::get()->unknown150 = scale; }
 
-void SystemManager::setSpecScale(f32 scale) { ptlib::ParticleManager::get()->m_specScale = scale; }
+void SystemManager::setSpecScale(f32 scale) { ptlib::ParticleManager::get()->unknown14c = scale; }
 
-void SystemManager::setResponsiveAA(f32 responsiveAA) { ptlib::ParticleManager::get()->m_responsiveAA = responsiveAA; }
+void SystemManager::setResponsiveAA(f32 responsiveAA) { ptlib::ParticleManager::get()->unknown148 = responsiveAA; }
 
-void SystemManager::setAllDisp(bool isDisp) { ptlib::ParticleManager::get()->m_isAllDisp = isDisp; }
+void SystemManager::setAllDisp(bool isDisp) { ptlib::ParticleManager::get()->unknown168 = isDisp; }
 
-void SystemManager::setDisableCollision(bool isDisable) { ptlib::ParticleManager::get()->m_isAllDisp = isDisable; }
+void SystemManager::setDisableCollision(bool isDisable) { ptlib::ParticleManager::get()->unknown168 = isDisable; }
 
 void SystemManager::MainDraw(const ptlib::DrDrawWorkInfoEF *info, int viewIndex, bool isBlur) { ptlib::ParticleManager::get()->draw(info, viewIndex, isBlur); }
 
@@ -126,28 +126,28 @@ void SystemManager::es_free(void *data) {
   }
 }
 
-SystemManager::CommandList *SystemManager::getCommand(u32 index) { return index == 0 ? &m_commands[0] : &m_commands[1]; }
+SystemManager::CommandList *SystemManager::getCommand(u32 index) { return index == 0 ? &unknown220[0] : &unknown220[1]; }
 
-f32 SystemManager::getGlobalSpeed() { return m_globalSpeed[m_commandBuffer]; }
+f32 SystemManager::getGlobalSpeed() { return unknown78240[unknown7824c]; }
 
-bool SystemManager::es_is_loop(void *data) const { return static_cast<ptlib::FxHeader *>(data)->m_isLoop != 0; }
+bool SystemManager::es_is_loop(void *data) const { return static_cast<ptlib::FxHeader *>(data)->unknown09 != 0; }
 
-bool SystemManager::es_contais_cam_axis(void *data) { return static_cast<ptlib::FxHeader *>(data)->m_isCamAxis != 0; }
+bool SystemManager::es_contais_cam_axis(void *data) { return static_cast<ptlib::FxHeader *>(data)->unknown0a != 0; }
 
-const char *SystemManager::es_get_name(void *data) { return static_cast<ptlib::FxHeader *>(data)->m_name; }
+const char *SystemManager::es_get_name(void *data) { return static_cast<ptlib::FxHeader *>(data)->unknown14; }
 
-void SystemManager::log() { ptlib::efMsg("%04x log()", m_frame); }
+void SystemManager::log() { ptlib::efMsg("%04x log()", unknown7824e); }
 
-SystemManager::CommandList *SystemManager::getCommandPtr(u32 index) { return index == 0 ? &m_commands[0] : &m_commands[1]; }
+SystemManager::CommandList *SystemManager::getCommandPtr(u32 index) { return index == 0 ? &unknown220[0] : &unknown220[1]; }
 
-void SystemManager::setGlobalSpeed(f32 speed) { m_globalSpeed[m_commandBuffer == 0] = speed; }
+void SystemManager::setGlobalSpeed(f32 speed) { unknown78240[unknown7824c == 0] = speed; }
 
-void SystemManager::setCategorySpd(u32 category, f32 speed) { ptlib::emitter::EmitterManager::getPtr()->m_categorySpeed[category] = speed; }
+void SystemManager::setCategorySpd(u32 category, f32 speed) { ptlib::emitter::EmitterManager::getPtr()->unknown1700[category] = speed; }
 
 void SystemManager::end() {}
 
 void SystemManager::apply(const ptlib::DrDrawWorkInfoEF *info) {
-  if (m_isUpdate) {
+  if (unknown09) {
     MainLoop(info);
   }
 }

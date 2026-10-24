@@ -14,7 +14,7 @@ namespace pc {
 
 void StateFieldTurn::leave(GfComBehaviorPc *behavior, ai::State *next) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  if (next != nullptr && next->stateID != STATE_ID_FIELD_JUMP) {
+  if (next != nullptr && next->unknown08 != STATE_ID_FIELD_JUMP) {
     property->unknown80 = mm::Vec3::zero;
   }
   property->unknown94 = 0.0f;

@@ -32,79 +32,79 @@ void DevMouse::getClipMove(mm::Pnt<int> &move) {
   s_clipMove = mm::Pnt<int>(0, 0);
 }
 
-const mm::Pnt<int> &DevMouse::getPos() { return get()->m_pos; }
+const mm::Pnt<int> &DevMouse::getPos() { return get()->unknown1b8; }
 
-const mm::Pnt<int> &DevMouse::getMove() { return get()->m_move; }
+const mm::Pnt<int> &DevMouse::getMove() { return get()->unknown1c8; }
 
-int DevMouse::getWheel() { return get()->m_wheel; }
+int DevMouse::getWheel() { return get()->unknown1d4; }
 
-u32 DevMouse::buttonOn() { return get()->m_buttonOn; }
+u32 DevMouse::buttonOn() { return get()->unknown1e0; }
 
-u32 DevMouse::buttonOff() { return get()->m_buttonOff; }
+u32 DevMouse::buttonOff() { return get()->unknown1e4; }
 
-u32 DevMouse::button() { return get()->m_button; }
+u32 DevMouse::button() { return get()->unknown1e8; }
 
-u32 DevMouse::buttonDbl() { return get()->m_buttonDbl; }
+u32 DevMouse::buttonDbl() { return get()->unknown1ec; }
 
 void DevMouse::imPos(int x, int y) {
-  imMove(x - m_pos.x, y - m_pos.y);
-  m_pos.x = x;
-  m_pos.y = y;
+  imMove(x - unknown1b8.x, y - unknown1b8.y);
+  unknown1b8.x = x;
+  unknown1b8.y = y;
 }
 
 void DevMouse::imMove(int x, int y) {
-  m_moveAccum.x += x;
-  m_moveAccum.y += y;
+  unknown1c0.x += x;
+  unknown1c0.y += y;
 }
 
-void DevMouse::imWheel(int wheel) { m_wheelAccum += wheel; }
+void DevMouse::imWheel(int wheel) { unknown1d0 += wheel; }
 
 void DevMouse::imLButtonUp() {
-  m_buttonOffAccum |= 0x1;
-  m_button &= ~0x1;
+  unknown1dc |= 0x1;
+  unknown1e8 &= ~0x1;
 }
 
 void DevMouse::imMButtonUp() {
-  m_buttonOffAccum |= 0x2;
-  m_button &= ~0x2;
+  unknown1dc |= 0x2;
+  unknown1e8 &= ~0x2;
 }
 
 void DevMouse::imRButtonUp() {
-  m_buttonOffAccum |= 0x4;
-  m_button &= ~0x4;
+  unknown1dc |= 0x4;
+  unknown1e8 &= ~0x4;
 }
 
 void DevMouse::imLButtonDown() {
-  m_buttonOnAccum |= 0x1;
-  m_button |= 0x1;
+  unknown1d8 |= 0x1;
+  unknown1e8 |= 0x1;
 }
 
 void DevMouse::imMButtonDown() {
-  m_buttonOnAccum |= 0x2;
-  m_button |= 0x2;
+  unknown1d8 |= 0x2;
+  unknown1e8 |= 0x2;
 }
 
 void DevMouse::imRButtonDown() {
-  m_buttonOnAccum |= 0x4;
-  m_button |= 0x4;
+  unknown1d8 |= 0x4;
+  unknown1e8 |= 0x4;
 }
 
-void DevMouse::imLButtonDbl() { m_buttonDblAccum |= 0x1; }
+void DevMouse::imLButtonDbl() { unknown1f0 |= 0x1; }
 
-void DevMouse::imMButtonDbl() { m_buttonDblAccum |= 0x2; }
+void DevMouse::imMButtonDbl() { unknown1f0 |= 0x2; }
 
-void DevMouse::imRButtonDbl() { m_buttonDblAccum |= 0x4; }
+void DevMouse::imRButtonDbl() { unknown1f0 |= 0x4; }
 
 void DevMouse::updateDevice() {
-  if (m_isPadMouse && !m_isMouseInput) {
+  if (unknown1f4 && !unknown1fc) {
     if (!(DevPad::getBtn(9) & 0xf000)) {
-      m_padMouseSpeed = 0.7f;
+      unknown1f8 = 0.7f;
     } else {
-      m_padMouseSpeed += 0.3f;
-      if (m_padMouseSpeed < 0.0f) {
-        m_padMouseSpeed = 0.0f;
-      } else if (m_padMouseSpeed > 8.0f) {
-        m_padMouseSpeed = 8.0f;
+      unknown1f8 += 0.3f;
+      if (unknown1f8 < 0.0f) {
+        unknown1f8 = 0.0f;
+      } else if (unknown1f8 > 8.0f) {
+        unknown1f8 = 8.0f;
       }
     }
   }
@@ -112,16 +112,16 @@ void DevMouse::updateDevice() {
 
 void DevMouse::wkUpdate() {
   updateDevice();
-  m_move = m_moveAccum;
-  m_moveAccum = mm::Pnt<int>(0, 0);
-  m_wheel = m_wheelAccum;
-  m_wheelAccum = 0;
-  m_buttonOn = m_buttonOnAccum;
-  m_buttonOnAccum = 0;
-  m_buttonOff = m_buttonOffAccum;
-  m_buttonOffAccum = 0;
-  m_buttonDbl = m_buttonDblAccum;
-  m_buttonDblAccum = 0;
+  unknown1c8 = unknown1c0;
+  unknown1c0 = mm::Pnt<int>(0, 0);
+  unknown1d4 = unknown1d0;
+  unknown1d0 = 0;
+  unknown1e0 = unknown1d8;
+  unknown1d8 = 0;
+  unknown1e4 = unknown1dc;
+  unknown1dc = 0;
+  unknown1ec = unknown1f0;
+  unknown1f0 = 0;
 }
 
 bool DevMouse::wkStandbyLogin() {
@@ -133,7 +133,7 @@ bool DevMouse::wkStandbyLogin() {
 }
 
 bool DevMouse::wkStandbyLogout() {
-  if (m_children.size() == 0 && WorkSystem::get() == nullptr && LibMain::get() == nullptr) {
+  if (unknown60.size() == 0 && WorkSystem::get() == nullptr && LibMain::get() == nullptr) {
     releaseDevice();
     return WorkObj::wkStandbyLogout();
   }
@@ -141,9 +141,9 @@ bool DevMouse::wkStandbyLogout() {
   return false;
 }
 
-void DevMouse::setPadMouse(bool isPadMouse) { get()->m_isPadMouse = isPadMouse; }
+void DevMouse::setPadMouse(bool isPadMouse) { get()->unknown1f4 = isPadMouse; }
 
-bool DevMouse::isPadMouse() { return get()->m_isPadMouse; }
+bool DevMouse::isPadMouse() { return get()->unknown1f4; }
 
 void DevMouse::resetMouse() { get()->imMove(700, 700); }
 

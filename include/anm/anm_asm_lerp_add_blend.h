@@ -39,13 +39,13 @@ public:
   u32 searchIndex(f32 value) const;
   const AsmClip *getBaseClip() const override;
 
-  const ResLerpAddTree *m_pResTree;
-  AsmClip *m_pClips;
-  u32 m_clipNum;
+  const ResLerpAddTree *unknown30; // Inferred role: p res tree; original member name unknown.
+  AsmClip *m_baseClip;
+  u32 unknown40; // Inferred role: clip num; original member name unknown.
   Variable *m_pVariable;
 };
 
-static_assert(offsetof(LerpAddBlendTree, m_pResTree) == 0x30, "");
+static_assert(offsetof(LerpAddBlendTree, unknown30) == 0x30, "");
 static_assert(offsetof(LerpAddBlendTree, m_pVariable) == 0x48, "");
 
 } // namespace anm

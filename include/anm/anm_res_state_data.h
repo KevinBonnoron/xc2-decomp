@@ -32,16 +32,16 @@ struct ResState {
 
 class ResStateData {
 public:
-  const ResState *m_pResState;
-  mm::mtl::Vector<ResClipData> m_clips;
-  u64 m_attributes[4];
-  mm::mtl::FixedArray<mm::mtl::Vector<AsmAnnotetion>, 5> m_enterAnnotations;
-  mm::mtl::FixedArray<mm::mtl::Vector<AsmAnnotetion>, 5> m_leaveAnnotations;
+  const ResState *unknown00;                                         // Inferred role: p res state; original member name unknown.
+  mm::mtl::Vector<ResClipData> unknown08;                            // Inferred role: clips; original member name unknown.
+  u64 unknown30[4];                                                  // Inferred role: attributes; original member name unknown.
+  mm::mtl::FixedArray<mm::mtl::Vector<AsmAnnotetion>, 5> unknown50;  // Inferred role: enter annotations; original member name unknown.
+  mm::mtl::FixedArray<mm::mtl::Vector<AsmAnnotetion>, 5> unknown118; // Inferred role: leave annotations; original member name unknown.
 };
 
-static_assert(offsetof(ResStateData, m_clips) == 0x8, "");
-static_assert(offsetof(ResStateData, m_enterAnnotations) == 0x50, "");
-static_assert(offsetof(ResStateData, m_leaveAnnotations) == 0x118, "");
+static_assert(offsetof(ResStateData, unknown08) == 0x8, "");
+static_assert(offsetof(ResStateData, unknown50) == 0x50, "");
+static_assert(offsetof(ResStateData, unknown118) == 0x118, "");
 static_assert(sizeof(ResStateData) == 0x1e0, "");
 
 } // namespace anm

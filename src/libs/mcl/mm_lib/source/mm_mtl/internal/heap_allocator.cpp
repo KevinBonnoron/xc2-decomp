@@ -21,7 +21,7 @@ void HeapAllocator::destroy(bool release) {
   m_buffer = nullptr;
   m_control = nullptr;
   m_allocated = 0;
-  m_bufferSize = 0;
+  unknown10 = 0;
   m_nameHash = 0;
   m_name.clear();
 }
@@ -32,7 +32,7 @@ void HeapAllocator::create(void *buffer, size_t bufferSize, const char *name) {
   MM_ASSERT(buffer != nullptr);
   MM_ASSERT(bufferSize > 0);
   MM_ASSERT(name != nullptr);
-  m_control = HeapAllocUtil::heap_create(&m_controlBuffer);
+  m_control = HeapAllocUtil::heap_create(&unknown70);
 // The assert line of the game: it is the line argument of the assert.
 #line 58
   MM_ASSERT(m_control != 0);
@@ -40,7 +40,7 @@ void HeapAllocator::create(void *buffer, size_t bufferSize, const char *name) {
   MM_ASSERT(m_buffer != 0);
   m_name = name;
   m_nameHash = hashStrCrc(m_name.c_str());
-  m_bufferSize = bufferSize;
+  unknown10 = bufferSize;
   m_allocated = 0;
 }
 
@@ -92,7 +92,7 @@ bool HeapAllocator::insideArea(const void *adr) const {
 // The assert line of the game: it is the line argument of the assert.
 #line 160
   MM_ASSERT(m_buffer != 0 && "allocator is not create");
-  return reinterpret_cast<size_t>(m_buffer) < reinterpret_cast<size_t>(adr) && reinterpret_cast<size_t>(adr) < reinterpret_cast<size_t>(m_buffer) + m_bufferSize;
+  return reinterpret_cast<size_t>(m_buffer) < reinterpret_cast<size_t>(adr) && reinterpret_cast<size_t>(adr) < reinterpret_cast<size_t>(m_buffer) + unknown10;
 }
 
 bool HeapAllocator::hasMemory(const void *adr) const {

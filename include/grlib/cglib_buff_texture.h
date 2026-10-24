@@ -13,9 +13,9 @@ public:
   void release();
   void createTexture(u32 num);
 
-  void *m_textures;
+  void *unknown28; // Inferred role: textures; original member name unknown.
 };
 
-static_assert(offsetof(CGLibBuffTexture, m_textures) == 0x28, "");
+static_assert(offsetof(CGLibBuffTexture, unknown28) == 0x28, "");
 
 } // namespace grlib

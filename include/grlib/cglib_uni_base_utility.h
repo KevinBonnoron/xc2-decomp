@@ -55,14 +55,14 @@ public:
   virtual void setStorageBuffer() = 0;
   virtual void setMoveMem();
 
-  const CGLibDecShader *m_decShader;
-  u32 m_index;
+  const CGLibDecShader *unknown08; // Inferred role: dec shader; original member name unknown.
+  u32 unknown10;                   // Inferred role: index; original member name unknown.
   u32 m_size;
-  bool m_isStorageBuffer;
+  bool unknown18; // Inferred role: storage buffer; original member name unknown.
 };
 
-static_assert(offsetof(CGLibUniBaseUtility, m_index) == 0x10, "");
-static_assert(offsetof(CGLibUniBaseUtility, m_isStorageBuffer) == 0x18, "");
+static_assert(offsetof(CGLibUniBaseUtility, unknown10) == 0x10, "");
+static_assert(offsetof(CGLibUniBaseUtility, unknown18) == 0x18, "");
 
 class CGLibUniformEtcUtility : public CGLibUniBaseUtility {
 public:
@@ -74,10 +74,10 @@ public:
   void setUniformBlock() override;
   void setStorageBuffer() override;
 
-  CGLibEtcUniformBlock m_block;
+  CGLibEtcUniformBlock unknown20; // Inferred role: block; original member name unknown.
 };
 
-static_assert(offsetof(CGLibUniformEtcUtility, m_block) == 0x20, "");
+static_assert(offsetof(CGLibUniformEtcUtility, unknown20) == 0x20, "");
 static_assert(sizeof(CGLibUniformEtcUtility) == 0x38, "");
 
 } // namespace grlib

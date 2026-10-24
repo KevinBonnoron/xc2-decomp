@@ -83,7 +83,7 @@ void GfComPackAnim::Mot::play(u32 layer, void *motion, bool isLocalSpace) {
 
 bool GfComPackAnim::Mot::isPlayEnd() const {
   if (unknown08 != nullptr) {
-    return unknown68 <= unknown08->m_localTime;
+    return unknown68 <= unknown08->unknown48;
   }
 
   return true;
@@ -91,7 +91,7 @@ bool GfComPackAnim::Mot::isPlayEnd() const {
 
 void GfComPackAnim::Mot::setSpeed(f32 speed) {
   if (unknown08 != nullptr) {
-    unknown08->m_speed = speed;
+    unknown08->unknown50 = speed;
   }
 }
 

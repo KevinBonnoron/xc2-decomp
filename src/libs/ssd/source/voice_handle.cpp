@@ -12,43 +12,43 @@ void VoiceHandle::DeleteHWVoice() {}
 Result VoiceHandle::AllocHWVoice() { return static_cast<Result>(0); }
 
 Result VoiceHandle::ForceStop() {
-  isStopping_ = true;
-  isStopped_ = false;
-  isPlay_ = false;
-  state_ = 9;
-  if (soundHandle_ != nullptr) {
-    soundHandle_->voiceHandleId = 0;
-    soundHandle_ = nullptr;
+  unknown36 = true;
+  unknown37 = false;
+  unknown32 = false;
+  unknown44 = 9;
+  if (unknown58 != nullptr) {
+    unknown58->unknownf8 = 0;
+    unknown58 = nullptr;
   }
   return set_result(static_cast<Result>(0));
 }
 
 Result VoiceHandle::GetFilePosition(u64 *position) const {
-  *position = stream != nullptr ? stream->filePosition : 0;
+  *position = unknown70 != nullptr ? unknown70->unknown218 : 0;
   return set_result(static_cast<Result>(0));
 }
 
 Result VoiceHandle::GetLoopTime(bool *isLoop, f32 *begin, f32 *end) {
-  f32 sampleRate = waveSource_->sampleRate;
-  *isLoop = waveSource_->isLoop;
-  *begin = waveSource_->loopStart / sampleRate;
-  *end = waveSource_->loopEnd / sampleRate;
+  f32 sampleRate = unknown68->unknown2c;
+  *isLoop = unknown68->unknown50;
+  *begin = unknown68->unknown44 / sampleRate;
+  *end = unknown68->unknown48 / sampleRate;
   return static_cast<Result>(0);
 }
 
 Result VoiceHandle::GetRemainLoopCount(int *count) const {
-  if (count == nullptr || stream == nullptr) {
+  if (count == nullptr || unknown70 == nullptr) {
     return static_cast<Result>(-6);
   }
-  *count = stream->remainLoopCount;
+  *count = unknown70->unknown250;
   return static_cast<Result>(0);
 }
 
 Result VoiceHandle::SetRemainLoopCount(int count) {
-  if (stream == nullptr) {
+  if (unknown70 == nullptr) {
     return static_cast<Result>(-6);
   }
-  stream->remainLoopCount = count;
+  unknown70->unknown250 = count;
   return static_cast<Result>(0);
 }
 
@@ -56,7 +56,7 @@ Result VoiceHandle::GetVoiceQueueCount(int *count) const {
   if (count == nullptr) {
     return static_cast<Result>(-6);
   }
-  *count = voiceQueueCount;
+  *count = unknown88;
   return static_cast<Result>(0);
 }
 
@@ -64,8 +64,8 @@ Result VoiceHandle::IsEmptyVoiceQueue(bool *isEmpty) {
   if (isEmpty == nullptr) {
     return static_cast<Result>(-6);
   }
-  *isEmpty = isEmptyVoiceQueue;
-  isEmptyVoiceQueue = false;
+  *isEmpty = unknown40;
+  unknown40 = false;
   return static_cast<Result>(0);
 }
 
@@ -73,13 +73,13 @@ Result VoiceHandle::IsEmptyStreamBuffer(bool *isEmpty) {
   if (isEmpty == nullptr) {
     return static_cast<Result>(-6);
   }
-  *isEmpty = isEmptyStreamBuffer;
-  isEmptyStreamBuffer = false;
+  *isEmpty = unknown3f;
+  unknown3f = false;
   return static_cast<Result>(0);
 }
 
 void VoiceHandle::UpdateAudioFrame(f32 deltaTime) {
-  if (stream != nullptr) {
+  if (unknown70 != nullptr) {
     UpdateAudioStream(deltaTime);
   } else {
     UpdateAudioInternal(deltaTime);
@@ -90,6 +90,6 @@ void VoiceHandle::NullBufferProcess() {}
 
 void VoiceHandle::LooppingBufferProcess() {}
 
-void VoiceHandle::AddLooppingBuffer() { voiceQueueCount++; }
+void VoiceHandle::AddLooppingBuffer() { unknown88++; }
 
 } // namespace ssd

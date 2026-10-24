@@ -6,9 +6,9 @@ namespace ssd {
 enum Result : long;
 
 TextRef::TextRef(const TextRef &text) {
-  this->text = text.text;
-  encodeType = text.encodeType;
-  hash = text.hash;
+  this->unknown10 = text.unknown10;
+  unknown18 = text.unknown18;
+  unknown08 = text.unknown08;
 }
 
 TextRef::TextRef(const char *text) { InitImpl(text); }
@@ -16,23 +16,23 @@ TextRef::TextRef(const char *text) { InitImpl(text); }
 TextRef::TextRef(const char16_t *text) { InitImpl(text); }
 
 void TextRef::Clear() {
-  hash = Hash();
-  text = nullptr;
-  encodeType = TEXT_ENCODE_NONE;
+  unknown08 = Hash();
+  unknown10 = nullptr;
+  unknown18 = TEXT_ENCODE_NONE;
 }
 
 void TextRef::InitImpl(const char *text) {
-  this->text = text;
-  encodeType = TEXT_ENCODE_UTF8;
-  hash = Hash();
-  hash.CalcTextHash(text);
+  this->unknown10 = text;
+  unknown18 = TEXT_ENCODE_UTF8;
+  unknown08 = Hash();
+  unknown08.CalcTextHash(text);
 }
 
 void TextRef::InitImpl(const char16_t *text) {
-  this->text = text;
-  encodeType = TEXT_ENCODE_UTF16;
-  hash = Hash();
-  hash.CalcTextHash(text);
+  this->unknown10 = text;
+  unknown18 = TEXT_ENCODE_UTF16;
+  unknown08 = Hash();
+  unknown08.CalcTextHash(text);
 }
 
 void TextRef::Set(const TextRef &text) { log_error(static_cast<Result>(-1), Debug::LogFlag::All, u"TextRef::Set は使用できません。", EmptyText); }

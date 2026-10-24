@@ -24,14 +24,14 @@ public:
   void setUniformBlock(u32 index);
   void setStorageBuffer(u32 index);
 
-  void *m_mappings[2];
+  void *unknown00[2]; // Inferred role: mappings; original member name unknown.
   u32 m_size;
-  u64 m_gpuAddresses[2];
-  CGLibMemType m_memType;
+  u64 unknown18[2];       // Inferred role: gpu addresses; original member name unknown.
+  CGLibMemType unknown28; // Inferred role: mem type; original member name unknown.
 };
 
 static_assert(offsetof(CGLibDblUniformBlock, m_size) == 0x10, "");
-static_assert(offsetof(CGLibDblUniformBlock, m_gpuAddresses) == 0x18, "");
-static_assert(offsetof(CGLibDblUniformBlock, m_memType) == 0x28, "");
+static_assert(offsetof(CGLibDblUniformBlock, unknown18) == 0x18, "");
+static_assert(offsetof(CGLibDblUniformBlock, unknown28) == 0x28, "");
 
 } // namespace grlib

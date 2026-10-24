@@ -2,23 +2,23 @@
 
 namespace ml {
 
-void WiiFilerCommon::setLocation(const char *location) { __builtin_strcpy(m_location, location); }
+void WiiFilerCommon::setLocation(const char *location) { __builtin_strcpy(unknown40, location); }
 
-void WiiFilerCommon::setTimeStamp(const char *timeStamp) { __builtin_strcpy(m_timeStamp, timeStamp); }
+void WiiFilerCommon::setTimeStamp(const char *timeStamp) { __builtin_strcpy(unknown140, timeStamp); }
 
 WiiFilerCommon::~WiiFilerCommon() {}
 
-bool WiiFilerCommon::isValid() const { return m_magic == 0x57396651; }
+bool WiiFilerCommon::isValid() const { return unknown00 == 0x57396651; }
 
-void WiiFilerCommon::setKeyword(const char *keyword) { __builtin_strcpy(m_keyword, keyword); }
+void WiiFilerCommon::setKeyword(const char *keyword) { __builtin_strcpy(unknown18, keyword); }
 
 void WiiFilerCommon::setDataSize(unsigned long size) { m_dataSize = size; }
 
 u32 WiiFilerCommon::getDataSize() const { return m_dataSize; }
 
-void WiiFilerCommon::setCRC(u32 crc) { m_crc = crc; }
+void WiiFilerCommon::setCRC(u32 crc) { m_CRC = crc; }
 
-u32 WiiFilerCommon::getCRC() const { return m_crc; }
+u32 WiiFilerCommon::getCRC() const { return m_CRC; }
 
 u32 WiiFilerCommon::swp(u32 value) { return __builtin_bswap32(value); }
 

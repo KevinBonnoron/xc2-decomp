@@ -23,36 +23,36 @@ void CGLibSystemContext::createMemPool(CGLibMemPool &memPool, mtl::ALLOC_HANDLE 
 bool CGLibSystemContext::isRelease() { return true; }
 
 void CGLibSystemContext::beginRegisterRenderTarget() {
-  m_registerNum = 0;
-  m_registerDepth = nullptr;
+  unknown25ac = 0;
+  unknown2648 = nullptr;
 }
 
 void CGLibSystemContext::setRegisterRenderTarget(CGLibColorBuffer &colorBuffer, GrlMrtType mrt) {
-  m_registerViews[mrt] = &colorBuffer.m_textureView;
-  m_registerTextures[mrt] = colorBuffer.m_nvnTexture;
-  m_registerNum++;
+  unknown25b0[mrt] = &colorBuffer.unknown10;
+  unknown25f0[mrt] = colorBuffer.unknown38;
+  unknown25ac++;
 }
 
-void CGLibSystemContext::setRegisterDepthTarget(CGLibDepthBuffer &depthBuffer) { m_registerDepth = depthBuffer.m_nvnTexture; }
+void CGLibSystemContext::setRegisterDepthTarget(CGLibDepthBuffer &depthBuffer) { unknown2648 = depthBuffer.unknown10; }
 
-void CGLibSystemContext::endRegisterRenderTarget() { nvnCommandBufferSetRenderTargets(m_pipeline.m_cmdBuf, m_registerNum, m_registerTextures, m_registerViews, m_registerDepth, nullptr); }
+void CGLibSystemContext::endRegisterRenderTarget() { nvnCommandBufferSetRenderTargets(unknown1070.unknown00, unknown25ac, unknown25f0, unknown25b0, unknown2648, nullptr); }
 
-void CGLibSystemContext::setMainFrameBuffer() { m_mainRenderTargets[m_mainRenderTargetIndex].setRenderTarget(*m_mainDepthTarget.m_depthBuffer); }
+void CGLibSystemContext::setMainFrameBuffer() { unknown1110[unknown20d4].setRenderTarget(*unknown18a0.unknown120); }
 
 void CGLibSystemContext::getGlbUniformParam(u8 *&buffer, u64 &address) {
-  buffer = m_glbUniformBuffer + m_glbUniformOffset;
-  address = m_glbUniformGpuAddress + m_glbUniformOffset;
+  buffer = unknown2550 + unknown2568;
+  address = unknown2548 + unknown2568;
 }
 
 void CGLibSystemContext::nextGlbUniformOfs(u32 size) {
   u32 alignedSize = size + (-size & 0xff);
-  m_glbUniformOffset += alignedSize;
-  m_glbUniformRest -= alignedSize;
+  unknown2568 += alignedSize;
+  unknown2574 -= alignedSize;
 }
 
-u64 CGLibSystemContext::getPixelResAreaGpuAddress(u32 offset) { return m_pixelResAreaGpuAddress + offset; }
+u64 CGLibSystemContext::getPixelResAreaGpuAddress(u32 offset) { return unknown25a0 + offset; }
 
-u32 CGLibSystemContext::getPixelResAreaOffset(u32 offset) { return m_pixelResAreaOffset + offset; }
+u32 CGLibSystemContext::getPixelResAreaOffset(u32 offset) { return unknown25a8 + offset; }
 
 } // namespace context
 } // namespace grlib

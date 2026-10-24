@@ -24,9 +24,9 @@ public:
   virtual void release();
 
   u8 _08[0x18 - 0x08];
-  int type;
+  int unknown18; // Inferred role: type; original member name unknown.
 };
 
-static_assert(offsetof(LayerBase, type) == 0x18, "");
+static_assert(offsetof(LayerBase, unknown18) == 0x18, "");
 
 } // namespace layer

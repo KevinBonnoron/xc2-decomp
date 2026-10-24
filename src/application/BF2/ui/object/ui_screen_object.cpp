@@ -21,7 +21,7 @@ UIScreenObject::~UIScreenObject() {
     mm::mtl::safeRelease(unknown118);
   }
   if (unknown108 == MODE_ON_MEMORY && onMemoryInfo.unknown00 >= 1 && onMemoryInfo.unknown00 <= 4) {
-    ml::ScnRenderDrSysParmAcc(ml::Scn::get()->renderDrSys, 0).resetModelTexture(static_cast<u8>(onMemoryInfo.unknown00 - 1));
+    ml::ScnRenderDrSysParmAcc(ml::Scn::get()->unknown38, 0).resetModelTexture(static_cast<u8>(onMemoryInfo.unknown00 - 1));
   }
 }
 
@@ -60,7 +60,7 @@ UIScreenObject *UIScreenObject::createOnMemory(UILayoutObject *parent, u32 width
     screen->unknown108 = MODE_ON_MEMORY;
   }
   if (info.unknown00 >= 1 && info.unknown00 <= 4) {
-    ml::ScnRenderDrSysParmAcc parmAcc(ml::Scn::get()->renderDrSys, 0);
+    ml::ScnRenderDrSysParmAcc parmAcc(ml::Scn::get()->unknown38, 0);
     layer::LayerAccMemObj memAcc(layer);
     u8 index = info.unknown00 - 1;
     ml::ScnRenderDrMdlTexture texture;

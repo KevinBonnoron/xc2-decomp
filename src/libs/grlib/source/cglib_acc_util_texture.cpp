@@ -77,51 +77,51 @@ u16 CGLibTextureBuffer::getHeight() const { return m_height; }
 
 GrlSurfaceFormat CGLibTextureBuffer::getFormat() const { return m_format; }
 
-CGLibAcc1DTexture::CGLibAcc1DTexture() : m_isLock(false), m_isDirty(false) {}
+CGLibAcc1DTexture::CGLibAcc1DTexture() : unknown98(false), unknown99(false) {}
 
 CGLibAcc1DTexture::~CGLibAcc1DTexture() {}
 
 bool CGLibAcc1DTexture::lock(CGLibTextureBuffer &texture) {
   setup1DTexutreInfo(texture);
-  m_isLock = true;
-  m_pTexture = &texture;
+  unknown98 = true;
+  unknowna0 = &texture;
   return true;
 }
 
 void CGLibAccUtilTexture::setup1DTexutreInfo(CGLibTextureBuffer &texture) {
-  m_width = texture.getWidth();
-  m_isLinear = false;
-  m_height = 1;
-  m_depth = 1;
-  m_sliceSize = m_width * m_height;
-  m_chanel = getCalcChanel(texture.getFormat());
-  m_chanelIndex = m_chanel - 1 > 2 ? 2 : m_chanel - 1;
-  m_pixelBytes = texture.get1PixelImageSize();
+  unknown4c = texture.getWidth();
+  unknown88 = false;
+  unknown50 = 1;
+  unknown54 = 1;
+  unknown58 = unknown4c * unknown50;
+  unknown40 = getCalcChanel(texture.getFormat());
+  unknown48 = unknown40 - 1 > 2 ? 2 : unknown40 - 1;
+  unknown44 = texture.get1PixelImageSize();
   AccCalcType calcType = getCalcType(texture.getFormat());
-  m_readF32 = s_pReadF32Call[calcType];
-  m_readInt = s_pReadIntCall[calcType];
-  m_writeF32 = s_pWriteF32Call[calcType];
-  m_writeInt = s_pWriteIntCall[calcType];
+  unknown00 = s_pReadF32Call[calcType];
+  unknown10 = s_pReadIntCall[calcType];
+  unknown20 = s_pWriteF32Call[calcType];
+  unknown30 = s_pWriteIntCall[calcType];
   m_buffer = static_cast<u8 *>(texture.m_buffer);
-  m_bufferSize = texture.m_bufferSize;
+  unknown74 = texture.unknown30;
   setupFormatParam();
 }
 
 void CGLibAcc1DTexture::unlock() {
-  if (m_isDirty) {
-    textureFlush(*m_pTexture);
+  if (unknown99) {
+    textureFlush(*unknowna0);
   }
 }
 
-void CGLibAccUtilTexture::textureFlush(CGLibTextureBuffer &texture) { nn::os::FlushDataCache(texture.m_buffer, texture.m_bufferSize); }
+void CGLibAccUtilTexture::textureFlush(CGLibTextureBuffer &texture) { nn::os::FlushDataCache(texture.m_buffer, texture.unknown30); }
 
-CGLibAcc2DTexture::CGLibAcc2DTexture() : m_mipmap(0), m_face(0), m_isLock(false), m_isDirty(false), m_isCubemap(false) {}
+CGLibAcc2DTexture::CGLibAcc2DTexture() : unknown98(0), unknown9c(0), unknowna0(false), unknowna1(false), unknowna2(false) {}
 
 CGLibAcc2DTexture::~CGLibAcc2DTexture() {}
 
 bool CGLibAcc2DTexture::lock(CGLibTextureBuffer &texture) {
-  m_pTexture = &texture;
-  m_isLock = true;
+  unknowna8 = &texture;
+  unknowna0 = true;
   setup2DTexutreInfo(texture, 0);
   return true;
 }
@@ -140,29 +140,29 @@ void CGLibAccUtilTexture::setup2DTexutreInfo(CGLibTextureBuffer &texture, u32 mi
     }
   }
 
-  m_width = width;
-  m_height = height;
-  m_depth = 1;
-  m_sliceSize = m_width * m_height;
-  m_chanel = getCalcChanel(texture.getFormat());
-  m_chanelIndex = m_chanel - 1 > 2 ? 2 : m_chanel - 1;
-  m_pixelBytes = texture.get1PixelImageSize();
+  unknown4c = width;
+  unknown50 = height;
+  unknown54 = 1;
+  unknown58 = unknown4c * unknown50;
+  unknown40 = getCalcChanel(texture.getFormat());
+  unknown48 = unknown40 - 1 > 2 ? 2 : unknown40 - 1;
+  unknown44 = texture.get1PixelImageSize();
   AccCalcType calcType = getCalcType(texture.getFormat());
-  m_readF32 = s_pReadF32Call[calcType];
-  m_readInt = s_pReadIntCall[calcType];
-  m_writeF32 = s_pWriteF32Call[calcType];
-  m_writeInt = s_pWriteIntCall[calcType];
+  unknown00 = s_pReadF32Call[calcType];
+  unknown10 = s_pReadIntCall[calcType];
+  unknown20 = s_pWriteF32Call[calcType];
+  unknown30 = s_pWriteIntCall[calcType];
   m_buffer = static_cast<u8 *>(texture.m_buffer);
-  m_bufferSize = texture.m_bufferSize;
+  unknown74 = texture.unknown30;
   setupFormatParam();
-  m_isLinear = (texture.m_flags >> 5) & 1;
+  unknown88 = (texture.unknown10 >> 5) & 1;
 }
 
 bool CGLibAcc2DTexture::lockMipmap(CGLibTextureBuffer &texture, u32 mipmap) {
   if (mipmap < texture.getMipmap()) {
-    m_mipmap = mipmap;
-    m_pTexture = &texture;
-    m_isLock = true;
+    unknown98 = mipmap;
+    unknowna8 = &texture;
+    unknowna0 = true;
     setup2DTexutreInfo(texture, mipmap);
     return true;
   }
@@ -173,10 +173,10 @@ u16 CGLibTextureBuffer::getMipmap() const { return m_mipmap; }
 
 bool CGLibAcc2DTexture::lockCubemap(CGLibTextureBuffer &texture, u32 face) {
   if (face < texture.getDepth()) {
-    m_face = face;
-    m_pTexture = &texture;
-    m_isLock = true;
-    m_isCubemap = true;
+    unknown9c = face;
+    unknowna8 = &texture;
+    unknowna0 = true;
+    unknowna2 = true;
     setupCubeTexutreInfo(texture, face, 0);
     return true;
   }
@@ -199,31 +199,31 @@ void CGLibAccUtilTexture::setupCubeTexutreInfo(CGLibTextureBuffer &texture, u32 
     }
   }
 
-  m_width = width;
-  m_height = height;
-  m_depth = 1;
-  m_sliceSize = m_width * m_height;
-  m_chanel = getCalcChanel(texture.getFormat());
-  m_chanelIndex = m_chanel - 1 > 2 ? 2 : m_chanel - 1;
-  m_pixelBytes = texture.get1PixelImageSize();
+  unknown4c = width;
+  unknown50 = height;
+  unknown54 = 1;
+  unknown58 = unknown4c * unknown50;
+  unknown40 = getCalcChanel(texture.getFormat());
+  unknown48 = unknown40 - 1 > 2 ? 2 : unknown40 - 1;
+  unknown44 = texture.get1PixelImageSize();
   AccCalcType calcType = getCalcType(texture.getFormat());
-  m_readF32 = s_pReadF32Call[calcType];
-  m_readInt = s_pReadIntCall[calcType];
-  m_writeF32 = s_pWriteF32Call[calcType];
-  m_writeInt = s_pWriteIntCall[calcType];
+  unknown00 = s_pReadF32Call[calcType];
+  unknown10 = s_pReadIntCall[calcType];
+  unknown20 = s_pWriteF32Call[calcType];
+  unknown30 = s_pWriteIntCall[calcType];
   m_buffer = static_cast<u8 *>(texture.m_buffer);
-  m_bufferSize = texture.m_bufferSize;
-  m_isLinear = false;
+  unknown74 = texture.unknown30;
+  unknown88 = false;
   setupFormatParam();
 }
 
 bool CGLibAcc2DTexture::lockCubemapMipmap(CGLibTextureBuffer &texture, u32 face, u32 mipmap) {
   if (face < texture.getDepth() && mipmap < texture.getMipmap()) {
-    m_mipmap = mipmap;
-    m_face = face;
-    m_pTexture = &texture;
-    m_isLock = true;
-    m_isCubemap = true;
+    unknown98 = mipmap;
+    unknown9c = face;
+    unknowna8 = &texture;
+    unknowna0 = true;
+    unknowna2 = true;
     setupCubeTexutreInfo(texture, face, mipmap);
     return true;
   }
@@ -231,8 +231,8 @@ bool CGLibAcc2DTexture::lockCubemapMipmap(CGLibTextureBuffer &texture, u32 face,
 }
 
 void CGLibAcc2DTexture::unlock() {
-  if (m_isDirty) {
-    textureFlush(*m_pTexture);
+  if (unknowna1) {
+    textureFlush(*unknowna8);
   }
 }
 
@@ -299,83 +299,83 @@ void CGLibAcc2DTexture::getInt(int &r, int &g, int &b, int &a, u32 x, u32 y) {
 void CGLibAcc2DTexture::setFloat(f32 r, u32 x, u32 y) {
   f32 values[4] = {r, 0.0f, 0.0f, 1.0f};
   setF32(values, x, y);
-  m_isDirty = true;
+  unknowna1 = true;
 }
 
 void CGLibAcc2DTexture::setFloat(f32 r, f32 g, u32 x, u32 y) {
   f32 values[4] = {r, g, 0.0f, 1.0f};
   setF32(values, x, y);
-  m_isDirty = true;
+  unknowna1 = true;
 }
 
 void CGLibAcc2DTexture::setFloat(f32 r, f32 g, f32 b, u32 x, u32 y) {
   f32 values[4] = {r, g, b, 1.0f};
   setF32(values, x, y);
-  m_isDirty = true;
+  unknowna1 = true;
 }
 
 void CGLibAcc2DTexture::setFloat(f32 r, f32 g, f32 b, f32 a, u32 x, u32 y) {
   f32 values[4] = {r, g, b, a};
   setF32(values, x, y);
-  m_isDirty = true;
+  unknowna1 = true;
 }
 
 void CGLibAcc2DTexture::setInt(int r, u32 x, u32 y) {
   int values[4] = {r, 0, 0, 0};
   CGLibAccUtilTexture::setInt(values, x, y);
-  m_isDirty = true;
+  unknowna1 = true;
 }
 
 void CGLibAcc2DTexture::setInt(int r, int g, u32 x, u32 y) {
   int values[4] = {r, g, 0, 0};
   CGLibAccUtilTexture::setInt(values, x, y);
-  m_isDirty = true;
+  unknowna1 = true;
 }
 
 void CGLibAcc2DTexture::setInt(int r, int g, int b, u32 x, u32 y) {
   int values[4] = {r, g, b, 0};
   CGLibAccUtilTexture::setInt(values, x, y);
-  m_isDirty = true;
+  unknowna1 = true;
 }
 
 void CGLibAcc2DTexture::setInt(int r, int g, int b, int a, u32 x, u32 y) {
   int values[4] = {r, g, b, a};
   CGLibAccUtilTexture::setInt(values, x, y);
-  m_isDirty = true;
+  unknowna1 = true;
 }
 
-CGLibAcc3DTexture::CGLibAcc3DTexture() : m_isDirty(false) {}
+CGLibAcc3DTexture::CGLibAcc3DTexture() : unknown98(false) {}
 
 CGLibAcc3DTexture::~CGLibAcc3DTexture() {}
 
 bool CGLibAcc3DTexture::lock(CGLibTextureBuffer &texture) {
-  m_pTexture = &texture;
+  unknowna0 = &texture;
   setup3DTexutreInfo(texture);
   return true;
 }
 
 void CGLibAccUtilTexture::setup3DTexutreInfo(CGLibTextureBuffer &texture) {
-  m_width = texture.getWidth();
-  m_height = texture.getHeight();
-  m_depth = texture.getDepth();
-  m_sliceSize = m_width * m_height;
-  m_chanel = getCalcChanel(texture.getFormat());
-  m_chanelIndex = m_chanel - 1 > 2 ? 2 : m_chanel - 1;
-  m_pixelBytes = texture.get1PixelImageSize();
+  unknown4c = texture.getWidth();
+  unknown50 = texture.getHeight();
+  unknown54 = texture.getDepth();
+  unknown58 = unknown4c * unknown50;
+  unknown40 = getCalcChanel(texture.getFormat());
+  unknown48 = unknown40 - 1 > 2 ? 2 : unknown40 - 1;
+  unknown44 = texture.get1PixelImageSize();
   AccCalcType calcType = getCalcType(texture.getFormat());
-  m_readF32 = s_pReadF32Call[calcType];
-  m_readInt = s_pReadIntCall[calcType];
-  m_writeF32 = s_pWriteF32Call[calcType];
-  m_writeInt = s_pWriteIntCall[calcType];
+  unknown00 = s_pReadF32Call[calcType];
+  unknown10 = s_pReadIntCall[calcType];
+  unknown20 = s_pWriteF32Call[calcType];
+  unknown30 = s_pWriteIntCall[calcType];
   m_buffer = static_cast<u8 *>(texture.m_buffer);
-  m_bufferSize = texture.m_bufferSize;
-  m_isLinear = false;
+  unknown74 = texture.unknown30;
+  unknown88 = false;
   setupFormatParam();
 }
 
 void CGLibAcc3DTexture::unlock() {
-  if (m_isDirty) {
-    textureFlush(*m_pTexture);
+  if (unknown98) {
+    textureFlush(*unknowna0);
   }
 }
 
@@ -469,12 +469,12 @@ u32 CGLibAccUtilTexture::getCalcChanel(GrlSurfaceFormat format) const {
 }
 
 void CGLibAccUtilTexture::setupFormatParam() {
-  m_sectorWidth = 16 / m_pixelBytes;
-  m_sectorHeight = 2;
-  m_sectorDepth = 2;
-  m_gobWidth = 32 / m_pixelBytes;
-  m_gobHeight = 8;
-  m_blockHeight = 8;
+  unknown5c = 16 / unknown44;
+  unknown60 = 2;
+  unknown64 = 2;
+  unknown68 = 32 / unknown44;
+  unknown6c = 8;
+  unknown70 = 8;
 }
 
 u32 CGLibAccUtilTexture::getSquaringPixel(u32 pixel) const { return pixel; }
@@ -550,131 +550,131 @@ u32 CGLibTextureBuffer::get1PixelImageSize() const {
   }
 }
 
-void CGLibAccUtilTexture::texaccread_f32_r(f32 *values) { values[0] = (this->*m_readF32)(0); }
+void CGLibAccUtilTexture::texaccread_f32_r(f32 *values) { values[0] = (this->*unknown00)(0); }
 
 void CGLibAccUtilTexture::texaccread_f32_rg(f32 *values) {
-  values[0] = (this->*m_readF32)(0);
-  values[1] = (this->*m_readF32)(1);
+  values[0] = (this->*unknown00)(0);
+  values[1] = (this->*unknown00)(1);
 }
 
 void CGLibAccUtilTexture::texaccread_f32_rgba(f32 *values) {
-  values[0] = (this->*m_readF32)(0);
-  values[1] = (this->*m_readF32)(1);
-  values[2] = (this->*m_readF32)(2);
-  values[3] = (this->*m_readF32)(3);
+  values[0] = (this->*unknown00)(0);
+  values[1] = (this->*unknown00)(1);
+  values[2] = (this->*unknown00)(2);
+  values[3] = (this->*unknown00)(3);
 }
 
-void CGLibAccUtilTexture::texaccread_int_r(int *values) { values[0] = (this->*m_readInt)(0); }
+void CGLibAccUtilTexture::texaccread_int_r(int *values) { values[0] = (this->*unknown10)(0); }
 
 void CGLibAccUtilTexture::texaccread_int_rg(int *values) {
-  values[0] = (this->*m_readInt)(0);
-  values[1] = (this->*m_readInt)(1);
+  values[0] = (this->*unknown10)(0);
+  values[1] = (this->*unknown10)(1);
 }
 
 void CGLibAccUtilTexture::texaccread_int_rgba(int *values) {
-  values[0] = (this->*m_readInt)(0);
-  values[1] = (this->*m_readInt)(1);
-  values[2] = (this->*m_readInt)(2);
-  values[3] = (this->*m_readInt)(3);
+  values[0] = (this->*unknown10)(0);
+  values[1] = (this->*unknown10)(1);
+  values[2] = (this->*unknown10)(2);
+  values[3] = (this->*unknown10)(3);
 }
 
-void CGLibAccUtilTexture::texaccwrite_f32_r(const f32 *values) { (this->*m_writeF32)(values, 0); }
+void CGLibAccUtilTexture::texaccwrite_f32_r(const f32 *values) { (this->*unknown20)(values, 0); }
 
 void CGLibAccUtilTexture::texaccwrite_f32_rg(const f32 *values) {
-  (this->*m_writeF32)(values, 0);
-  (this->*m_writeF32)(values, 1);
+  (this->*unknown20)(values, 0);
+  (this->*unknown20)(values, 1);
 }
 
 void CGLibAccUtilTexture::texaccwrite_f32_rgba(const f32 *values) {
-  (this->*m_writeF32)(values, 0);
-  (this->*m_writeF32)(values, 1);
-  (this->*m_writeF32)(values, 2);
-  (this->*m_writeF32)(values, 3);
+  (this->*unknown20)(values, 0);
+  (this->*unknown20)(values, 1);
+  (this->*unknown20)(values, 2);
+  (this->*unknown20)(values, 3);
 }
 
-void CGLibAccUtilTexture::texaccwrite_int_r(const int *values) { (this->*m_writeInt)(values, 0); }
+void CGLibAccUtilTexture::texaccwrite_int_r(const int *values) { (this->*unknown30)(values, 0); }
 
 void CGLibAccUtilTexture::texaccwrite_int_rg(const int *values) {
-  (this->*m_writeInt)(values, 0);
-  (this->*m_writeInt)(values, 1);
+  (this->*unknown30)(values, 0);
+  (this->*unknown30)(values, 1);
 }
 
 void CGLibAccUtilTexture::texaccwrite_int_rgba(const int *values) {
-  (this->*m_writeInt)(values, 0);
-  (this->*m_writeInt)(values, 1);
-  (this->*m_writeInt)(values, 2);
-  (this->*m_writeInt)(values, 3);
+  (this->*unknown30)(values, 0);
+  (this->*unknown30)(values, 1);
+  (this->*unknown30)(values, 2);
+  (this->*unknown30)(values, 3);
 }
 
-f32 CGLibAccUtilTexture::texaccread_f32_8(u32 index) { return m_pixel[index] / 255.0f; }
+f32 CGLibAccUtilTexture::texaccread_f32_8(u32 index) { return unknown80[index] / 255.0f; }
 
-f32 CGLibAccUtilTexture::texaccread_f32_16_float(u32 index) { return CGLibUtilPixel::convF16toF32(*reinterpret_cast<u16 *>(m_pixel + index * 2)); }
+f32 CGLibAccUtilTexture::texaccread_f32_16_float(u32 index) { return CGLibUtilPixel::convF16toF32(*reinterpret_cast<u16 *>(unknown80 + index * 2)); }
 
-f32 CGLibAccUtilTexture::texaccread_f32_16_int(u32 index) { return *reinterpret_cast<s16 *>(m_pixel + index * 2); }
+f32 CGLibAccUtilTexture::texaccread_f32_16_int(u32 index) { return *reinterpret_cast<s16 *>(unknown80 + index * 2); }
 
-f32 CGLibAccUtilTexture::texaccread_f32_16_uint(u32 index) { return *reinterpret_cast<u16 *>(m_pixel + index * 2); }
+f32 CGLibAccUtilTexture::texaccread_f32_16_uint(u32 index) { return *reinterpret_cast<u16 *>(unknown80 + index * 2); }
 
-f32 CGLibAccUtilTexture::texaccread_f32_16_unom(u32 index) { return *reinterpret_cast<u16 *>(m_pixel + index * 2) / 65535.0f; }
+f32 CGLibAccUtilTexture::texaccread_f32_16_unom(u32 index) { return *reinterpret_cast<u16 *>(unknown80 + index * 2) / 65535.0f; }
 
-f32 CGLibAccUtilTexture::texaccread_f32_32_float(u32 index) { return *reinterpret_cast<f32 *>(m_pixel + index * 4); }
+f32 CGLibAccUtilTexture::texaccread_f32_32_float(u32 index) { return *reinterpret_cast<f32 *>(unknown80 + index * 4); }
 
-f32 CGLibAccUtilTexture::texaccread_f32_32_int(u32 index) { return *reinterpret_cast<s32 *>(m_pixel + index * 4); }
+f32 CGLibAccUtilTexture::texaccread_f32_32_int(u32 index) { return *reinterpret_cast<s32 *>(unknown80 + index * 4); }
 
-f32 CGLibAccUtilTexture::texaccread_f32_32_uint(u32 index) { return *reinterpret_cast<u32 *>(m_pixel + index * 4); }
+f32 CGLibAccUtilTexture::texaccread_f32_32_uint(u32 index) { return *reinterpret_cast<u32 *>(unknown80 + index * 4); }
 
 f32 CGLibAccUtilTexture::texaccread_f32_err(u32 index) { return 0.0f; }
 
-int CGLibAccUtilTexture::texaccread_int_8(u32 index) { return m_pixel[index]; }
+int CGLibAccUtilTexture::texaccread_int_8(u32 index) { return unknown80[index]; }
 
-int CGLibAccUtilTexture::texaccread_int_16_float(u32 index) { return CGLibUtilPixel::convF16toF32(*reinterpret_cast<u16 *>(m_pixel + index * 2)) * 255.0f; }
+int CGLibAccUtilTexture::texaccread_int_16_float(u32 index) { return CGLibUtilPixel::convF16toF32(*reinterpret_cast<u16 *>(unknown80 + index * 2)) * 255.0f; }
 
-int CGLibAccUtilTexture::texaccread_int_16_int(u32 index) { return *reinterpret_cast<s16 *>(m_pixel + index * 2); }
+int CGLibAccUtilTexture::texaccread_int_16_int(u32 index) { return *reinterpret_cast<s16 *>(unknown80 + index * 2); }
 
-int CGLibAccUtilTexture::texaccread_int_16_uint(u32 index) { return *reinterpret_cast<u16 *>(m_pixel + index * 2); }
+int CGLibAccUtilTexture::texaccread_int_16_uint(u32 index) { return *reinterpret_cast<u16 *>(unknown80 + index * 2); }
 
-int CGLibAccUtilTexture::texaccread_int_16_unom(u32 index) { return *reinterpret_cast<u16 *>(m_pixel + index * 2); }
+int CGLibAccUtilTexture::texaccread_int_16_unom(u32 index) { return *reinterpret_cast<u16 *>(unknown80 + index * 2); }
 
-int CGLibAccUtilTexture::texaccread_int_32_float(u32 index) { return *reinterpret_cast<f32 *>(m_pixel + index * 4) * 255.0f; }
+int CGLibAccUtilTexture::texaccread_int_32_float(u32 index) { return *reinterpret_cast<f32 *>(unknown80 + index * 4) * 255.0f; }
 
-int CGLibAccUtilTexture::texaccread_int_32_int(u32 index) { return *reinterpret_cast<s32 *>(m_pixel + index * 4); }
+int CGLibAccUtilTexture::texaccread_int_32_int(u32 index) { return *reinterpret_cast<s32 *>(unknown80 + index * 4); }
 
-int CGLibAccUtilTexture::texaccread_int_32_uint(u32 index) { return *reinterpret_cast<u32 *>(m_pixel + index * 4); }
+int CGLibAccUtilTexture::texaccread_int_32_uint(u32 index) { return *reinterpret_cast<u32 *>(unknown80 + index * 4); }
 
 int CGLibAccUtilTexture::texaccread_int_err(u32 index) { return 0; }
 
-void CGLibAccUtilTexture::texaccwrite_f32_8(const f32 *values, u32 index) { m_pixel[index] = static_cast<int>(values[index] * 255.0f); }
+void CGLibAccUtilTexture::texaccwrite_f32_8(const f32 *values, u32 index) { unknown80[index] = static_cast<int>(values[index] * 255.0f); }
 
-void CGLibAccUtilTexture::texaccwrite_f32_16_float(const f32 *values, u32 index) { *reinterpret_cast<u16 *>(m_pixel + index * 2) = CGLibUtilPixel::convF32toF16(values[index]); }
+void CGLibAccUtilTexture::texaccwrite_f32_16_float(const f32 *values, u32 index) { *reinterpret_cast<u16 *>(unknown80 + index * 2) = CGLibUtilPixel::convF32toF16(values[index]); }
 
-void CGLibAccUtilTexture::texaccwrite_f32_16_int(const f32 *values, u32 index) { *reinterpret_cast<s16 *>(m_pixel + index * 2) = static_cast<int>(values[index]); }
+void CGLibAccUtilTexture::texaccwrite_f32_16_int(const f32 *values, u32 index) { *reinterpret_cast<s16 *>(unknown80 + index * 2) = static_cast<int>(values[index]); }
 
-void CGLibAccUtilTexture::texaccwrite_f32_16_uint(const f32 *values, u32 index) { *reinterpret_cast<u16 *>(m_pixel + index * 2) = static_cast<int>(values[index]); }
+void CGLibAccUtilTexture::texaccwrite_f32_16_uint(const f32 *values, u32 index) { *reinterpret_cast<u16 *>(unknown80 + index * 2) = static_cast<int>(values[index]); }
 
-void CGLibAccUtilTexture::texaccwrite_f32_16_unom(const f32 *values, u32 index) { *reinterpret_cast<u16 *>(m_pixel + index * 2) = static_cast<int>(values[index] * 65535.0f); }
+void CGLibAccUtilTexture::texaccwrite_f32_16_unom(const f32 *values, u32 index) { *reinterpret_cast<u16 *>(unknown80 + index * 2) = static_cast<int>(values[index] * 65535.0f); }
 
-void CGLibAccUtilTexture::texaccwrite_f32_32_float(const f32 *values, u32 index) { *reinterpret_cast<f32 *>(m_pixel + index * 4) = values[index]; }
+void CGLibAccUtilTexture::texaccwrite_f32_32_float(const f32 *values, u32 index) { *reinterpret_cast<f32 *>(unknown80 + index * 4) = values[index]; }
 
-void CGLibAccUtilTexture::texaccwrite_f32_32_int(const f32 *values, u32 index) { *reinterpret_cast<s32 *>(m_pixel + index * 4) = static_cast<int>(values[index]); }
+void CGLibAccUtilTexture::texaccwrite_f32_32_int(const f32 *values, u32 index) { *reinterpret_cast<s32 *>(unknown80 + index * 4) = static_cast<int>(values[index]); }
 
-void CGLibAccUtilTexture::texaccwrite_f32_32_uint(const f32 *values, u32 index) { *reinterpret_cast<u32 *>(m_pixel + index * 4) = static_cast<int>(values[index]); }
+void CGLibAccUtilTexture::texaccwrite_f32_32_uint(const f32 *values, u32 index) { *reinterpret_cast<u32 *>(unknown80 + index * 4) = static_cast<int>(values[index]); }
 
 void CGLibAccUtilTexture::texaccwrite_f32_err(const f32 *values, u32 index) {}
 
-void CGLibAccUtilTexture::texaccwrite_int_8(const int *values, u32 index) { m_pixel[index] = values[index]; }
+void CGLibAccUtilTexture::texaccwrite_int_8(const int *values, u32 index) { unknown80[index] = values[index]; }
 
-void CGLibAccUtilTexture::texaccwrite_int_16_float(const int *values, u32 index) { *reinterpret_cast<u16 *>(m_pixel + index * 2) = CGLibUtilPixel::convF32toF16(values[index] * (1.0f / 255.0f)); }
+void CGLibAccUtilTexture::texaccwrite_int_16_float(const int *values, u32 index) { *reinterpret_cast<u16 *>(unknown80 + index * 2) = CGLibUtilPixel::convF32toF16(values[index] * (1.0f / 255.0f)); }
 
-void CGLibAccUtilTexture::texaccwrite_int_16_int(const int *values, u32 index) { *reinterpret_cast<s16 *>(m_pixel + index * 2) = values[index]; }
+void CGLibAccUtilTexture::texaccwrite_int_16_int(const int *values, u32 index) { *reinterpret_cast<s16 *>(unknown80 + index * 2) = values[index]; }
 
-void CGLibAccUtilTexture::texaccwrite_int_16_uint(const int *values, u32 index) { *reinterpret_cast<u16 *>(m_pixel + index * 2) = values[index]; }
+void CGLibAccUtilTexture::texaccwrite_int_16_uint(const int *values, u32 index) { *reinterpret_cast<u16 *>(unknown80 + index * 2) = values[index]; }
 
-void CGLibAccUtilTexture::texaccwrite_int_16_unom(const int *values, u32 index) { *reinterpret_cast<u16 *>(m_pixel + index * 2) = values[index]; }
+void CGLibAccUtilTexture::texaccwrite_int_16_unom(const int *values, u32 index) { *reinterpret_cast<u16 *>(unknown80 + index * 2) = values[index]; }
 
-void CGLibAccUtilTexture::texaccwrite_int_32_float(const int *values, u32 index) { *reinterpret_cast<f32 *>(m_pixel + index * 4) = values[index] * (1.0f / 255.0f); }
+void CGLibAccUtilTexture::texaccwrite_int_32_float(const int *values, u32 index) { *reinterpret_cast<f32 *>(unknown80 + index * 4) = values[index] * (1.0f / 255.0f); }
 
-void CGLibAccUtilTexture::texaccwrite_int_32_int(const int *values, u32 index) { *reinterpret_cast<s32 *>(m_pixel + index * 4) = values[index]; }
+void CGLibAccUtilTexture::texaccwrite_int_32_int(const int *values, u32 index) { *reinterpret_cast<s32 *>(unknown80 + index * 4) = values[index]; }
 
-void CGLibAccUtilTexture::texaccwrite_int_32_uint(const int *values, u32 index) { *reinterpret_cast<u32 *>(m_pixel + index * 4) = values[index]; }
+void CGLibAccUtilTexture::texaccwrite_int_32_uint(const int *values, u32 index) { *reinterpret_cast<u32 *>(unknown80 + index * 4) = values[index]; }
 
 void CGLibAccUtilTexture::texaccwrite_int_err(const int *values, u32 index) {}
 

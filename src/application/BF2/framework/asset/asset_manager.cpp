@@ -208,7 +208,7 @@ AssetLoader *AssetManager::searchLoader(mtl::ALLOC_HANDLE handle, const char *pa
   u32 hash = getHash(path);
   for (u32 i = 0; i < unknown68.size(); i++) {
     AssetLoader *item = unknown68[i];
-    if (item != nullptr && item->unknown100 == handle && item->unknown110 == hash && strcmp(item->name.c_str(), path) == 0) {
+    if (item != nullptr && item->unknown100 == handle && item->unknown110 == hash && strcmp(item->unknown0c.c_str(), path) == 0) {
       return item;
     }
   }
@@ -220,7 +220,7 @@ AssetLoader *AssetManager::searchLoader(mm::mtl::IAllocator *allocator, const ch
   u32 hash = getHash(path);
   for (u32 i = 0; i < unknown68.size(); i++) {
     AssetLoader *item = unknown68[i];
-    if (item != nullptr && item->unknown108 == allocator && item->unknown110 == hash && strcmp(item->name.c_str(), path) == 0) {
+    if (item != nullptr && item->unknown108 == allocator && item->unknown110 == hash && strcmp(item->unknown0c.c_str(), path) == 0) {
       return item;
     }
   }

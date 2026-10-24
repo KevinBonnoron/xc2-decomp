@@ -41,40 +41,40 @@ u64 ThreadUtil::getCurrentID() { return reinterpret_cast<u64>(nn::os::GetCurrent
 MMTHREAD *ThreadUtil::getCurrentHandle() { return static_cast<MMTHREAD *>(nn::os::GetCurrentThread()); }
 
 EventWait::EventWait(bool manualClear, bool initiallySignaled) {
-  CS lock(sect);
-  nn::os::InitializeEvent(&event, initiallySignaled, manualClear ? nn::os::EventClearMode_ManualClear : nn::os::EventClearMode_AutoClear);
-  initialized = true;
+  CS lock(unknown30);
+  nn::os::InitializeEvent(&unknown08, initiallySignaled, manualClear ? nn::os::EventClearMode_ManualClear : nn::os::EventClearMode_AutoClear);
+  unknown58 = true;
 }
 
 EventWait::~EventWait() { finalize(); }
 
 void EventWait::finalize() {
-  if (initialized) {
-    nn::os::FinalizeEvent(&event);
-    initialized = false;
+  if (unknown58) {
+    nn::os::FinalizeEvent(&unknown08);
+    unknown58 = false;
   }
 }
 
 void EventWait::setSignal(bool signal) {
   if (signal) {
-    nn::os::SignalEvent(&event);
+    nn::os::SignalEvent(&unknown08);
   } else {
-    CS lock(sect);
-    nn::os::ClearEvent(&event);
+    CS lock(unknown30);
+    nn::os::ClearEvent(&unknown08);
   }
 }
 
 bool EventWait::waitSignal(u32 milliSeconds) {
   if (milliSeconds != 0) {
     nn::TimeSpan timeout = nn::TimeSpan::FromMilliSeconds(milliSeconds);
-    return nn::os::TimedWaitEvent(&event, timeout);
+    return nn::os::TimedWaitEvent(&unknown08, timeout);
   }
 
-  nn::os::WaitEvent(&event);
+  nn::os::WaitEvent(&unknown08);
   return true;
 }
 
-bool EventWait::isSignal() const { return nn::os::TimedWaitEvent(const_cast<nn::os::EventType *>(&event), nn::TimeSpan::FromNanoSeconds(0)); }
+bool EventWait::isSignal() const { return nn::os::TimedWaitEvent(const_cast<nn::os::EventType *>(&unknown08), nn::TimeSpan::FromNanoSeconds(0)); }
 
 SpinLock::SpinLock() : locked(0) {}
 

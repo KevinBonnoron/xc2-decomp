@@ -24,7 +24,7 @@ bool DevTouch::wkStandbyLogin() {
 }
 
 bool DevTouch::wkStandbyLogout() {
-  if (m_children.size() == 0 && WorkSystem::get() == nullptr && LibMain::get() == nullptr) {
+  if (unknown60.size() == 0 && WorkSystem::get() == nullptr && LibMain::get() == nullptr) {
     releaseDevice();
     return WorkObj::wkStandbyLogout();
   }

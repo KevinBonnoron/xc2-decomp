@@ -16,29 +16,29 @@ public:
     FLAG_ROTATION_ZXY = 1 << 3,
   };
 
-  AttrTransform() : m_flags(0) {}
+  AttrTransform() : unknown130(0) {}
   void update();
   void clear();
 
-  mm::Vec3 m_pos;
+  mm::Vec3 unknown00; // Inferred role: pos; original member name unknown.
   mm::Vec3 _10;
-  mm::Vec3 m_scl;
-  mm::Mat44 m_matrix;
-  mm::Mat44 m_worldMatrix;
+  mm::Vec3 unknown20;  // Inferred role: scl; original member name unknown.
+  mm::Mat44 unknown30; // Inferred role: matrix; original member name unknown.
+  mm::Mat44 unknown70; // Inferred role: world matrix; original member name unknown.
   mm::Mat44 _b0;
-  mm::Vec3 m_rot;
+  mm::Vec3 unknownf0; // Inferred role: rot; original member name unknown.
   mm::Vec3 _100;
-  mm::Quat m_quat;
+  mm::Quat unknown110; // Inferred role: quat; original member name unknown.
   mm::Quat _120;
-  u32 m_flags;
+  u32 unknown130; // Inferred role: flags; original member name unknown.
 };
 
-static_assert(offsetof(AttrTransform, m_scl) == 0x20, "");
-static_assert(offsetof(AttrTransform, m_matrix) == 0x30, "");
-static_assert(offsetof(AttrTransform, m_worldMatrix) == 0x70, "");
-static_assert(offsetof(AttrTransform, m_rot) == 0xf0, "");
-static_assert(offsetof(AttrTransform, m_quat) == 0x110, "");
-static_assert(offsetof(AttrTransform, m_flags) == 0x130, "");
+static_assert(offsetof(AttrTransform, unknown20) == 0x20, "");
+static_assert(offsetof(AttrTransform, unknown30) == 0x30, "");
+static_assert(offsetof(AttrTransform, unknown70) == 0x70, "");
+static_assert(offsetof(AttrTransform, unknownf0) == 0xf0, "");
+static_assert(offsetof(AttrTransform, unknown110) == 0x110, "");
+static_assert(offsetof(AttrTransform, unknown130) == 0x130, "");
 static_assert(sizeof(AttrTransform) == 0x140, "");
 
 } // namespace ml

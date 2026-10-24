@@ -13,15 +13,15 @@ struct CGLibMemType {
   static const u32 TYPE_EXTERNAL = 5;
 
   CGLibMemType() {
-    m_type = TYPE_EXTERNAL;
+    unknown08 = TYPE_EXTERNAL;
     m_buffer = nullptr;
   }
 
   void *m_buffer;
-  u32 m_type;
+  u32 unknown08; // Inferred role: type; original member name unknown.
 };
 
-static_assert(offsetof(CGLibMemType, m_type) == 0x8, "");
+static_assert(offsetof(CGLibMemType, unknown08) == 0x8, "");
 
 class CGLibMemHandle {
 public:

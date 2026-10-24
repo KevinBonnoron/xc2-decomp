@@ -45,36 +45,36 @@ public:
   bool isTermThread();
   void exitThread();
 
-  CPUID m_cpuId;
-  u64 m_threadId;
-  Thread *m_thread;
+  CPUID m_CPUID;
+  u64 m_threadID;
+  Thread *unknown1b8; // Inferred role: thread; original member name unknown.
   u8 _1c0[0x1c8 - 0x1c0];
   u32 m_aboutJobNumC;
-  long m_beginClock;
-  long m_endClock;
-  f32 m_jobClock;
-  f32 m_jobCost;
-  CriticalSection *m_cs;
+  long unknown1d0;             // Inferred role: begin clock; original member name unknown.
+  long unknown1d8;             // Inferred role: end clock; original member name unknown.
+  f32 unknown1e0;              // Inferred role: job clock; original member name unknown.
+  f32 unknown1e4;              // Inferred role: job cost; original member name unknown.
+  CriticalSection *unknown1e8; // Inferred role: cs; original member name unknown.
   u8 _1f0[0x648 - 0x1f0];
-  int m_jobNum;
-  TJOB *m_workingJob;
-  u32 m_color;
-  unsigned long m_stackAddress;
-  unsigned long m_stackSize;
-  bool m_isBackground;
-  bool m_isDirect;
-  bool m_isBeginTerm;
+  int unknown648;           // Inferred role: job num; original member name unknown.
+  TJOB *unknown650;         // Inferred role: working job; original member name unknown.
+  u32 unknown658;           // Inferred role: color; original member name unknown.
+  unsigned long unknown660; // Inferred role: stack address; original member name unknown.
+  unsigned long unknown668; // Inferred role: stack size; original member name unknown.
+  bool m_background;
+  bool unknown671; // Inferred role: direct; original member name unknown.
+  bool m_beginTerm;
 };
 
-static_assert(offsetof(WorkCpuThread, m_cpuId) == 0x1a8, "");
-static_assert(offsetof(WorkCpuThread, m_thread) == 0x1b8, "");
+static_assert(offsetof(WorkCpuThread, m_CPUID) == 0x1a8, "");
+static_assert(offsetof(WorkCpuThread, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(WorkCpuThread, m_aboutJobNumC) == 0x1c8, "");
-static_assert(offsetof(WorkCpuThread, m_beginClock) == 0x1d0, "");
-static_assert(offsetof(WorkCpuThread, m_jobCost) == 0x1e4, "");
-static_assert(offsetof(WorkCpuThread, m_cs) == 0x1e8, "");
-static_assert(offsetof(WorkCpuThread, m_jobNum) == 0x648, "");
-static_assert(offsetof(WorkCpuThread, m_color) == 0x658, "");
-static_assert(offsetof(WorkCpuThread, m_stackAddress) == 0x660, "");
-static_assert(offsetof(WorkCpuThread, m_isBeginTerm) == 0x672, "");
+static_assert(offsetof(WorkCpuThread, unknown1d0) == 0x1d0, "");
+static_assert(offsetof(WorkCpuThread, unknown1e4) == 0x1e4, "");
+static_assert(offsetof(WorkCpuThread, unknown1e8) == 0x1e8, "");
+static_assert(offsetof(WorkCpuThread, unknown648) == 0x648, "");
+static_assert(offsetof(WorkCpuThread, unknown658) == 0x658, "");
+static_assert(offsetof(WorkCpuThread, unknown660) == 0x660, "");
+static_assert(offsetof(WorkCpuThread, m_beginTerm) == 0x672, "");
 
 } // namespace ml

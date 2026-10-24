@@ -33,9 +33,9 @@ bool LibMain::wkStandbyLogin() {
 }
 
 bool LibMain::wkStandbyLogout() {
-  int childNum = m_children.size();
+  int childNum = unknown60.size();
   wkCheckTimeout(30000, WorkSystem::get() == nullptr && childNum == 0, "ログアウトに失敗しました");
-  if (m_children.size() != 0 || WorkSystem::get() != nullptr) {
+  if (unknown60.size() != 0 || WorkSystem::get() != nullptr) {
     return false;
   }
 

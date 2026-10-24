@@ -99,31 +99,31 @@ public:
   u32 getEmitterForm(u32 handle);
 
   u8 _08[0x09 - 0x08];
-  bool m_isUpdate;
-  bool m_isDraw;
-  bool dispEmitter;
-  bool isDispEmitterSet;
-  mm::mtl::FixedVector<ptlib::forcefield::AddForceParam, 8> m_forces;
-  CommandList m_commands[2];
-  f32 m_globalSpeed[2];
-  bool m_isClearForce;
+  bool unknown09;                                                      // Inferred role: update; original member name unknown.
+  bool unknown0a;                                                      // Inferred role: draw; original member name unknown.
+  bool unknown0b;                                                      // Inferred role: disp emitter; original member name unknown.
+  bool unknown0c;                                                      // Inferred role: disp emitter set; original member name unknown.
+  mm::mtl::FixedVector<ptlib::forcefield::AddForceParam, 8> unknown10; // Inferred role: forces; original member name unknown.
+  CommandList unknown220[2];                                           // Inferred role: commands; original member name unknown.
+  f32 unknown78240[2];                                                 // Inferred role: global speed; original member name unknown.
+  bool unknown78248;                                                   // Inferred role: clear force; original member name unknown.
   u8 _78249;
-  bool dispParticleTexture;
-  bool workTexture;
-  u8 m_commandBuffer;
-  u8 writeBuffer;
-  u8 m_frame;
-  u8 m_clearCount;
+  bool unknown7824a; // Inferred role: disp particle texture; original member name unknown.
+  bool unknown7824b; // Inferred role: work texture; original member name unknown.
+  u8 unknown7824c;   // Inferred role: command buffer; original member name unknown.
+  u8 unknown7824d;   // Inferred role: write buffer; original member name unknown.
+  u8 unknown7824e;   // Inferred role: frame; original member name unknown.
+  u8 unknown7824f;   // Inferred role: clear count; original member name unknown.
 };
 
-static_assert(offsetof(SystemManager, m_isUpdate) == 0x09, "");
-static_assert(offsetof(SystemManager, dispEmitter) == 0x0b, "");
-static_assert(offsetof(SystemManager, m_forces) == 0x10, "");
-static_assert(offsetof(SystemManager, m_commands) == 0x220, "");
-static_assert(offsetof(SystemManager, m_globalSpeed) == 0x78240, "");
-static_assert(offsetof(SystemManager, dispParticleTexture) == 0x7824a, "");
-static_assert(offsetof(SystemManager, writeBuffer) == 0x7824d, "");
-static_assert(offsetof(SystemManager, m_clearCount) == 0x7824f, "");
+static_assert(offsetof(SystemManager, unknown09) == 0x09, "");
+static_assert(offsetof(SystemManager, unknown0b) == 0x0b, "");
+static_assert(offsetof(SystemManager, unknown10) == 0x10, "");
+static_assert(offsetof(SystemManager, unknown220) == 0x220, "");
+static_assert(offsetof(SystemManager, unknown78240) == 0x78240, "");
+static_assert(offsetof(SystemManager, unknown7824a) == 0x7824a, "");
+static_assert(offsetof(SystemManager, unknown7824d) == 0x7824d, "");
+static_assert(offsetof(SystemManager, unknown7824f) == 0x7824f, "");
 static_assert(sizeof(SystemManager) == 0x78250, "");
 
 } // namespace effect

@@ -51,9 +51,9 @@ public:
   static void setPerfConfig(DevPerfMode mode, DevPerfConfig config);
   static DevPerfConfig getPerfConfig(DevPerfMode mode);
 
-  IDevPerf *m_impl;
+  IDevPerf *unknown1b0; // Inferred role: impl; original member name unknown.
 };
 
-static_assert(offsetof(DevPerf, m_impl) == 0x1b0, "");
+static_assert(offsetof(DevPerf, unknown1b0) == 0x1b0, "");
 
 } // namespace ml

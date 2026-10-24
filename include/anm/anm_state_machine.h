@@ -38,19 +38,19 @@ public:
   bool setAdditiveStateWeight(const char *state, f32 weight);
   bool setAdditiveStateSpeed(const char *state, f32 speed);
 
-  mm::mtl::IntrusivePtr<AsmState> m_state;
-  mm::mtl::IntrusivePtr<AsmState> m_nextState;
+  mm::mtl::IntrusivePtr<AsmState> unknown00; // Inferred role: state; original member name unknown.
+  mm::mtl::IntrusivePtr<AsmState> unknown08; // Inferred role: next state; original member name unknown.
   u8 _10[0x28 - 0x10];
-  const InterpolateInfo *m_pInterpolateInfo;
-  f32 m_interpolateTime;
+  const InterpolateInfo *unknown28; // Inferred role: p interpolate info; original member name unknown.
+  f32 unknown30;                    // Inferred role: interpolate time; original member name unknown.
   u8 _34[0x50 - 0x34];
-  AsmListener *m_listener;
+  AsmListener *unknown50; // Inferred role: listener; original member name unknown.
   u8 _58[0x70 - 0x58];
 };
 
-static_assert(offsetof(StateMachine, m_pInterpolateInfo) == 0x28, "");
-static_assert(offsetof(StateMachine, m_interpolateTime) == 0x30, "");
-static_assert(offsetof(StateMachine, m_listener) == 0x50, "");
+static_assert(offsetof(StateMachine, unknown28) == 0x28, "");
+static_assert(offsetof(StateMachine, unknown30) == 0x30, "");
+static_assert(offsetof(StateMachine, unknown50) == 0x50, "");
 static_assert(sizeof(StateMachine) == 0x70, "");
 
 } // namespace anm

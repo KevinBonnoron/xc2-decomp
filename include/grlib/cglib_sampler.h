@@ -53,12 +53,12 @@ struct CGLibWkrSamplerParams {
     };
     u32 m_value;
   };
-  mm::Col4 m_borderColor;
-  f32 m_lod;
+  mm::Col4 unknown04; // Inferred role: border color; original member name unknown.
+  f32 unknown14;      // Inferred role: lod; original member name unknown.
 };
 
-static_assert(offsetof(CGLibWkrSamplerParams, m_borderColor) == 0x04, "");
-static_assert(offsetof(CGLibWkrSamplerParams, m_lod) == 0x14, "");
+static_assert(offsetof(CGLibWkrSamplerParams, unknown04) == 0x04, "");
+static_assert(offsetof(CGLibWkrSamplerParams, unknown14) == 0x14, "");
 
 class CGLibSampler {
 public:
@@ -74,11 +74,11 @@ public:
   void setBorderColor(const mm::Col4 &color);
   void updateData();
 
-  CGLibWkrSamplerParams m_params;
-  CGLibBuffResSamObj *m_resource;
+  CGLibWkrSamplerParams unknown00; // Inferred role: params; original member name unknown.
+  CGLibBuffResSamObj *unknown18;   // Inferred role: resource; original member name unknown.
 };
 
-static_assert(offsetof(CGLibSampler, m_resource) == 0x18, "");
+static_assert(offsetof(CGLibSampler, unknown18) == 0x18, "");
 static_assert(sizeof(CGLibSampler) == 0x20, "");
 
 } // namespace grlib

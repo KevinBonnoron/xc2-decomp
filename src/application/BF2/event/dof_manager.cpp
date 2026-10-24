@@ -40,7 +40,7 @@ void DofManager::stop() {
   unknown50 = "";
   ml::Scn *scn = Manager::get()->getScn();
   if (scn != nullptr) {
-    ml::ScnRenderDrSysParmAcc parmAcc(scn->renderDrSys, 0);
+    ml::ScnRenderDrSysParmAcc parmAcc(scn->unknown38, 0);
     parmAcc.setDOF(false);
     parmAcc.setDOFOverride(true);
     parmAcc.setDoFDistance(unknown20);
@@ -64,7 +64,7 @@ void DofManager::update() {
     return;
   }
   if (unknown28) {
-    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setDOF(true);
     parmAcc.setDOFOverride(true);
     parmAcc.setDoFDistance(0.0f);
@@ -85,7 +85,7 @@ void DofManager::update() {
     if (unknown14 & FLAG_CHANGED) {
       unknown20 = calcDist(m_axis, m_dist);
     }
-    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setDOF(true);
     parmAcc.setDOFOverride(true);
     parmAcc.setDoFDistance(unknown20);

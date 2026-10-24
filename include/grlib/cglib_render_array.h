@@ -47,17 +47,17 @@ public:
   const CGLibColorBuffer *getColorBuffer(u32 slice) const;
   const CGLibColorBuffer *getMipmapColorBuffer(u32 slice, u32 mipmap) const;
 
-  CGLibTextureBuffer *m_texture;
-  CGLibColorBuffer *m_colorBuffers;
-  bool m_isResArea;
-  u32 m_arrayWidth;
-  u32 m_arrayHeight;
-  u32 m_sliceNum;
-  u32 m_mipmapNum;
+  CGLibTextureBuffer *unknown70; // Inferred role: texture; original member name unknown.
+  CGLibColorBuffer *unknown78;   // Inferred role: color buffers; original member name unknown.
+  bool unknown80;                // Inferred role: res area; original member name unknown.
+  u32 unknown84;                 // Inferred role: array width; original member name unknown.
+  u32 unknown88;                 // Inferred role: array height; original member name unknown.
+  u32 unknown8c;                 // Inferred role: slice num; original member name unknown.
+  u32 unknown90;                 // Inferred role: mipmap num; original member name unknown.
 };
 
-static_assert(offsetof(CGLibRenderArray, m_texture) == 0x70, "");
-static_assert(offsetof(CGLibRenderArray, m_mipmapNum) == 0x90, "");
+static_assert(offsetof(CGLibRenderArray, unknown70) == 0x70, "");
+static_assert(offsetof(CGLibRenderArray, unknown90) == 0x90, "");
 
 class CGLibRenderArrayCubeMap : public CGLibTextureBuffer {
 public:
@@ -82,18 +82,18 @@ public:
   const CGLibColorBuffer *getColorBuffer(GrlCubeMapFace face, u32 slice) const;
   const CGLibColorBuffer *getMipmapColorBuffer(GrlCubeMapFace face, u32 slice, u32 mipmap) const;
 
-  u32 getFaceBufferNum() const { return m_sliceNum + m_mipmapNum * m_sliceNum; }
+  u32 getFaceBufferNum() const { return unknown8c + unknown90 * unknown8c; }
 
-  CGLibTextureBuffer *m_texture;
-  CGLibColorBuffer *m_colorBuffers;
-  bool m_isResArea;
-  u32 m_arrayWidth;
-  u32 m_arrayHeight;
-  u32 m_sliceNum;
-  u32 m_mipmapNum;
+  CGLibTextureBuffer *unknown70; // Inferred role: texture; original member name unknown.
+  CGLibColorBuffer *unknown78;   // Inferred role: color buffers; original member name unknown.
+  bool unknown80;                // Inferred role: res area; original member name unknown.
+  u32 unknown84;                 // Inferred role: array width; original member name unknown.
+  u32 unknown88;                 // Inferred role: array height; original member name unknown.
+  u32 unknown8c;                 // Inferred role: slice num; original member name unknown.
+  u32 unknown90;                 // Inferred role: mipmap num; original member name unknown.
 };
 
-static_assert(offsetof(CGLibRenderArrayCubeMap, m_texture) == 0x70, "");
-static_assert(offsetof(CGLibRenderArrayCubeMap, m_mipmapNum) == 0x90, "");
+static_assert(offsetof(CGLibRenderArrayCubeMap, unknown70) == 0x70, "");
+static_assert(offsetof(CGLibRenderArrayCubeMap, unknown90) == 0x90, "");
 
 } // namespace grlib

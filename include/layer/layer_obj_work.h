@@ -21,19 +21,19 @@ public:
   void resetAddAllTexutre();
 
   u8 _258[0x288 - 0x258];
-  u32 m_textureMax;
+  u32 unknown288; // Inferred role: texture max; original member name unknown.
   u8 _28c[0x2a0 - 0x28c];
-  f32 m_parm;
-  u16 m_iconNum;
-  u16 m_iconMax;
-  u16 m_gauge;
+  f32 unknown2a0; // Inferred role: parm; original member name unknown.
+  u16 unknown2a4; // Inferred role: icon num; original member name unknown.
+  u16 unknown2a6; // Inferred role: icon max; original member name unknown.
+  u16 unknown2a8; // Inferred role: gauge; original member name unknown.
   u8 _2aa[0x2ac - 0x2aa];
-  u32 m_dataType;
+  u32 unknown2ac; // Inferred role: data type; original member name unknown.
 };
 
-static_assert(offsetof(LayerObjWork, m_textureMax) == 0x288, "");
-static_assert(offsetof(LayerObjWork, m_parm) == 0x2a0, "");
-static_assert(offsetof(LayerObjWork, m_gauge) == 0x2a8, "");
-static_assert(offsetof(LayerObjWork, m_dataType) == 0x2ac, "");
+static_assert(offsetof(LayerObjWork, unknown288) == 0x288, "");
+static_assert(offsetof(LayerObjWork, unknown2a0) == 0x2a0, "");
+static_assert(offsetof(LayerObjWork, unknown2a8) == 0x2a8, "");
+static_assert(offsetof(LayerObjWork, unknown2ac) == 0x2ac, "");
 
 } // namespace layer

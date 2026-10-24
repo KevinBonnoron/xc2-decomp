@@ -51,7 +51,7 @@ void UITagParser::parse(const char *text) {
   }
 }
 
-const char *UITagParser::getResult() { return m_stockTbl; }
+const char *UITagParser::getResult() { return m_result; }
 
 const char *UITagParser::parseTagParam(const char *text, const char *tag, const char *param) {
   if (text == nullptr || tag == nullptr || param == nullptr) {

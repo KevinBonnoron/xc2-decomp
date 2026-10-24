@@ -72,18 +72,18 @@ public:
   static SoundCore *instance_;
 
   u8 _08[0x10 - 0x08];
-  bool isInit;
+  bool m_init;
 };
 
-static_assert(offsetof(SoundCore, isInit) == 0x10, "");
+static_assert(offsetof(SoundCore, m_init) == 0x10, "");
 
 class SystemCore : public SoundCore {
 public:
   struct DebugInfo;
 
   struct CpuLoad {
-    f64 processTime;
-    f64 frameTime;
+    f64 unknown00; // Inferred role: process time; original member name unknown.
+    f64 unknown08; // Inferred role: frame time; original member name unknown.
   };
 
   ~SystemCore() override;
@@ -124,47 +124,47 @@ public:
   void UpdateGameFrame(f32 deltaTime);
 
   u8 _011[0x270 - 0x011];
-  u64 gameFrameCounter;
-  u64 audioFrameCounter;
-  f64 audioTimerCounter;
+  u64 unknown270; // Inferred role: game frame counter; original member name unknown.
+  u64 unknown278; // Inferred role: audio frame counter; original member name unknown.
+  f64 unknown280; // Inferred role: audio timer counter; original member name unknown.
   u8 _288[0x300 - 0x288];
-  OutputMode::Type outputMode;
+  OutputMode::Type m_outputMode;
   u8 _304[0x308 - 0x304];
-  BehaviorInstance<SystemCore> masterVolume;
-  BehaviorInstance<SystemCore> masterPitch;
+  BehaviorInstance<SystemCore> unknown308; // Inferred role: master volume; original member name unknown.
+  BehaviorInstance<SystemCore> unknown350; // Inferred role: master pitch; original member name unknown.
   u8 _398[0x3c0 - 0x398];
-  int voiceHandleCount;
+  int m_numPlaySound;
   u8 _3c4[0x410 - 0x3c4];
-  int hwAllocVoiceCount;
+  int unknown410; // Inferred role: hw alloc voice count; original member name unknown.
   u8 _414[0x438 - 0x414];
-  int numSoundBank;
+  int unknown438; // Inferred role: num sound bank; original member name unknown.
   u8 _43c[0x460 - 0x43c];
-  int numSoundActor;
+  int unknown460; // Inferred role: num sound actor; original member name unknown.
   u8 _464[0x4e0 - 0x464];
-  f32 speedOfSound;
+  f32 m_speedOfSound;
   u8 _4e4[0x708 - 0x4e4];
-  mutable Mutex audioMutex;
+  mutable Mutex unknown708; // Inferred role: audio mutex; original member name unknown.
   u8 _730[0x978 - 0x730];
-  List<BehaviorControl> behaviors;
+  List<BehaviorControl> unknown978; // Inferred role: behaviors; original member name unknown.
   u8 _9a0[0x9f8 - 0x9a0];
-  CpuLoad cpuLoads[2];
-  f64 lastCpuLoadTime;
-  s32 cpuLoadIndex;
+  CpuLoad unknown9f8[2]; // Inferred role: cpu loads; original member name unknown.
+  f64 unknowna18;        // Inferred role: last cpu load time; original member name unknown.
+  s32 unknowna20;        // Inferred role: cpu load index; original member name unknown.
 
   static DebugInfo debugInfo_;
 };
 
-static_assert(offsetof(SystemCore, gameFrameCounter) == 0x270, "");
-static_assert(offsetof(SystemCore, voiceHandleCount) == 0x3c0, "");
-static_assert(offsetof(SystemCore, hwAllocVoiceCount) == 0x410, "");
-static_assert(offsetof(SystemCore, numSoundBank) == 0x438, "");
-static_assert(offsetof(SystemCore, numSoundActor) == 0x460, "");
-static_assert(offsetof(SystemCore, masterVolume) == 0x308, "");
-static_assert(offsetof(SystemCore, masterPitch) == 0x350, "");
-static_assert(offsetof(SystemCore, speedOfSound) == 0x4e0, "");
-static_assert(offsetof(SystemCore, audioMutex) == 0x708, "");
-static_assert(offsetof(SystemCore, behaviors) == 0x978, "");
-static_assert(offsetof(SystemCore, cpuLoads) == 0x9f8, "");
-static_assert(offsetof(SystemCore, cpuLoadIndex) == 0xa20, "");
+static_assert(offsetof(SystemCore, unknown270) == 0x270, "");
+static_assert(offsetof(SystemCore, m_numPlaySound) == 0x3c0, "");
+static_assert(offsetof(SystemCore, unknown410) == 0x410, "");
+static_assert(offsetof(SystemCore, unknown438) == 0x438, "");
+static_assert(offsetof(SystemCore, unknown460) == 0x460, "");
+static_assert(offsetof(SystemCore, unknown308) == 0x308, "");
+static_assert(offsetof(SystemCore, unknown350) == 0x350, "");
+static_assert(offsetof(SystemCore, m_speedOfSound) == 0x4e0, "");
+static_assert(offsetof(SystemCore, unknown708) == 0x708, "");
+static_assert(offsetof(SystemCore, unknown978) == 0x978, "");
+static_assert(offsetof(SystemCore, unknown9f8) == 0x9f8, "");
+static_assert(offsetof(SystemCore, unknowna20) == 0xa20, "");
 
 } // namespace ssd

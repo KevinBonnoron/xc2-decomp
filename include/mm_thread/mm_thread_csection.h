@@ -31,11 +31,11 @@ public:
   static bool enterTry(const CriticalSection &sect);
   static void leave(const CriticalSection &sect);
 
-  nn::os::MutexType mutex;
-  bool enabled;
+  nn::os::MutexType unknown00; // Inferred role: mutex; original member name unknown.
+  bool unknown20;              // Inferred role: enabled; original member name unknown.
 };
 
-static_assert(offsetof(CriticalSection, enabled) == 0x20, "");
+static_assert(offsetof(CriticalSection, unknown20) == 0x20, "");
 static_assert(sizeof(CriticalSection) == 0x28, "");
 
 class CriticalSectionTC {
@@ -46,11 +46,11 @@ public:
   static bool enterTry(const CriticalSectionTC &sect);
   static void leave(const CriticalSectionTC &sect);
 
-  nn::os::MutexType mutex;
-  bool enabled;
+  nn::os::MutexType unknown00; // Inferred role: mutex; original member name unknown.
+  bool unknown20;              // Inferred role: enabled; original member name unknown.
 };
 
-static_assert(offsetof(CriticalSectionTC, enabled) == 0x20, "");
+static_assert(offsetof(CriticalSectionTC, unknown20) == 0x20, "");
 
 class CriticalSectionNC {
 public:
@@ -61,13 +61,13 @@ public:
   static bool enterTry(const CriticalSectionNC &sect);
   static void leave(const CriticalSectionNC &sect);
 
-  s32 m_count;
+  s32 unknown00; // Inferred role: count; original member name unknown.
   u64 m_thid;
-  bool enabled;
+  bool unknown10; // Inferred role: enabled; original member name unknown.
 };
 
 static_assert(offsetof(CriticalSectionNC, m_thid) == 0x08, "");
-static_assert(offsetof(CriticalSectionNC, enabled) == 0x10, "");
+static_assert(offsetof(CriticalSectionNC, unknown10) == 0x10, "");
 
 namespace detail {
 

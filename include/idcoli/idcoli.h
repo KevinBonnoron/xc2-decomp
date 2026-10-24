@@ -67,42 +67,42 @@ public:
   virtual bool SweepAndPruneUpdate() { return false; }
   virtual void consistentUpdate() {}
 
-  IDColiObj *m_prev;
-  IDColiObj *m_next;
-  u32 m_state;
-  u32 m_updateFlags;
-  u32 m_attr;
-  ObjType m_type;
-  u32 m_materialData;
-  u32 m_materialBit;
+  IDColiObj *unknown08; // Inferred role: prev; original member name unknown.
+  IDColiObj *unknown10; // Inferred role: next; original member name unknown.
+  u32 unknown18;        // Inferred role: state; original member name unknown.
+  u32 unknown1c;        // Inferred role: update flags; original member name unknown.
+  u32 unknown20;        // Inferred role: attr; original member name unknown.
+  ObjType unknown24;    // Inferred role: type; original member name unknown.
+  u32 unknown28;        // Inferred role: material data; original member name unknown.
+  u32 unknown2c;        // Inferred role: material bit; original member name unknown.
   u64 _30;
   u64 _38;
   u32 _40;
-  void *m_userData;
+  void *unknown48; // Inferred role: user data; original member name unknown.
 };
 
-static_assert(offsetof(IDColiObj, m_state) == 0x18, "");
-static_assert(offsetof(IDColiObj, m_materialBit) == 0x2c, "");
-static_assert(offsetof(IDColiObj, m_userData) == 0x48, "");
+static_assert(offsetof(IDColiObj, unknown18) == 0x18, "");
+static_assert(offsetof(IDColiObj, unknown2c) == 0x2c, "");
+static_assert(offsetof(IDColiObj, unknown48) == 0x48, "");
 static_assert(sizeof(IDColiObj) == 0x50, "");
 
 class IDColiObjBase : public IDColiObj {
 public:
-  mm::Vec3 m_max;
-  mm::Vec3 m_min;
-  mm::Mat44 m_matrix;
+  mm::Vec3 unknown50;  // Inferred role: max; original member name unknown.
+  mm::Vec3 unknown60;  // Inferred role: min; original member name unknown.
+  mm::Mat44 unknown70; // Inferred role: matrix; original member name unknown.
   mm::Vec3 m_size;
-  ShapeType m_shapeType;
+  ShapeType unknownc0; // Inferred role: shape type; original member name unknown.
   u32 _c4;
-  u32 m_offMaterialBit;
+  u32 unknownc8; // Inferred role: off material bit; original member name unknown.
   u8 _cc[0x1cc - 0xcc];
-  int m_priority;
+  int unknown1cc; // Inferred role: priority; original member name unknown.
 };
 
-static_assert(offsetof(IDColiObjBase, m_max) == 0x50, "");
-static_assert(offsetof(IDColiObjBase, m_matrix) == 0x70, "");
-static_assert(offsetof(IDColiObjBase, m_shapeType) == 0xc0, "");
-static_assert(offsetof(IDColiObjBase, m_offMaterialBit) == 0xc8, "");
+static_assert(offsetof(IDColiObjBase, unknown50) == 0x50, "");
+static_assert(offsetof(IDColiObjBase, unknown70) == 0x70, "");
+static_assert(offsetof(IDColiObjBase, unknownc0) == 0xc0, "");
+static_assert(offsetof(IDColiObjBase, unknownc8) == 0xc8, "");
 static_assert(sizeof(IDColiObjBase) == 0x1d0, "");
 
 class IDColiObjData : public IDColiObjBase {
@@ -114,21 +114,21 @@ public:
   mm::Mat44 &getBoneMatrix(int index);
 
   u8 _1d0[0x1f0 - 0x1d0];
-  mm::Mat44 *m_boneMatrixTbl;
-  int m_boneMax;
+  mm::Mat44 *unknown1f0; // Inferred role: bone matrix tbl; original member name unknown.
+  int unknown1f8;        // Inferred role: bone max; original member name unknown.
   u8 _1fc[0x208 - 0x1fc];
 };
 
-static_assert(offsetof(IDColiObjData, m_boneMatrixTbl) == 0x1f0, "");
-static_assert(offsetof(IDColiObjData, m_boneMax) == 0x1f8, "");
+static_assert(offsetof(IDColiObjData, unknown1f0) == 0x1f0, "");
+static_assert(offsetof(IDColiObjData, unknown1f8) == 0x1f8, "");
 
 class IDColiObjChar : public IDColiObjData {
 public:
   u8 _208[0x220 - 0x208];
-  f32 m_adsorption;
+  f32 unknown220; // Inferred role: adsorption; original member name unknown.
 };
 
-static_assert(offsetof(IDColiObjChar, m_adsorption) == 0x220, "");
+static_assert(offsetof(IDColiObjChar, unknown220) == 0x220, "");
 
 class IDColiObjPhantom : public IDColiObjBase {};
 
@@ -137,33 +137,33 @@ public:
   void setMat(const mm::Mat44 &matrix);
 
   u8 _000[0x1a2 - 0x000];
-  u16 m_id;
+  u16 unknown1a2; // Inferred role: id; original member name unknown.
   u8 _1a4[0x1b0 - 0x1a4];
-  const char *m_name;
-  void *m_userData;
+  const char *unknown1b0; // Inferred role: name; original member name unknown.
+  void *unknown1b8;       // Inferred role: user data; original member name unknown.
   u8 _1c0[0x200 - 0x1c0];
 };
 
-static_assert(offsetof(IDColiGrdMoveObj, m_id) == 0x1a2, "");
-static_assert(offsetof(IDColiGrdMoveObj, m_name) == 0x1b0, "");
+static_assert(offsetof(IDColiGrdMoveObj, unknown1a2) == 0x1a2, "");
+static_assert(offsetof(IDColiGrdMoveObj, unknown1b0) == 0x1b0, "");
 static_assert(sizeof(IDColiGrdMoveObj) == 0x200, "");
 
 struct IDColiGrandWork {
   u8 _00[0x70 - 0x00];
-  IDColiGrdMoveObj *m_moveObjs;
-  int m_moveMax;
+  IDColiGrdMoveObj *unknown70; // Inferred role: move objs; original member name unknown.
+  int unknown78;               // Inferred role: move max; original member name unknown.
 };
 
-static_assert(offsetof(IDColiGrandWork, m_moveObjs) == 0x70, "");
+static_assert(offsetof(IDColiGrandWork, unknown70) == 0x70, "");
 
 class IDColiObjGrand : public IDColiObj {
 public:
   bool getGrandAABB(mm::Vec3 &max, mm::Vec3 &min) const;
 
-  IDColiGrandWork m_work;
+  IDColiGrandWork unknown50; // Inferred role: work; original member name unknown.
 };
 
-static_assert(offsetof(IDColiObjGrand, m_work) == 0x50, "");
+static_assert(offsetof(IDColiObjGrand, unknown50) == 0x50, "");
 
 class IDColiManager : public mm::mtl::PtrSingleton<IDColiManager> {
 public:
@@ -191,16 +191,16 @@ public:
   void debugDrawGrand(bool isDraw);
   void debugDrawPhantom(bool isDraw);
 
-  ColiLinkList<IDColiObj> m_objLists[4];
+  ColiLinkList<IDColiObj> unknown08[4]; // Inferred role: object lists; original member name unknown.
   u8 _48[0xd8 - 0x48];
-  IDColiTreeTop *m_treeTops[2];
+  IDColiTreeTop *unknownd8[2]; // Inferred role: tree tops; original member name unknown.
   u32 *m_gblIdTbl;
-  u32 m_subNum;
+  u32 unknownf0; // Inferred role: sub num; original member name unknown.
   u8 _f4[0x108 - 0xf4];
 };
 
-static_assert(offsetof(IDColiManager, m_objLists) == 0x8, "");
-static_assert(offsetof(IDColiManager, m_treeTops) == 0xd8, "");
+static_assert(offsetof(IDColiManager, unknown08) == 0x8, "");
+static_assert(offsetof(IDColiManager, unknownd8) == 0xd8, "");
 static_assert(offsetof(IDColiManager, m_gblIdTbl) == 0xe8, "");
 
 class IDColiAccMan {

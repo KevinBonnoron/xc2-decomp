@@ -41,14 +41,14 @@ public:
   bool waitSignal(u32 milliSeconds);
   bool isSignal() const;
 
-  nn::os::EventType event;
-  CriticalSection sect;
-  bool initialized;
+  nn::os::EventType unknown08; // Inferred role: event; original member name unknown.
+  CriticalSection unknown30;   // Inferred role: sect; original member name unknown.
+  bool unknown58;              // Inferred role: initialized; original member name unknown.
 };
 
-static_assert(offsetof(EventWait, event) == 0x08, "");
-static_assert(offsetof(EventWait, sect) == 0x30, "");
-static_assert(offsetof(EventWait, initialized) == 0x58, "");
+static_assert(offsetof(EventWait, unknown08) == 0x08, "");
+static_assert(offsetof(EventWait, unknown30) == 0x30, "");
+static_assert(offsetof(EventWait, unknown58) == 0x58, "");
 
 class SpinLock {
 public:

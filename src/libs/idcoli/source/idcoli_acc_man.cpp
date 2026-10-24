@@ -20,9 +20,9 @@ bool IDColiAccMan::getGrandAABB(mm::Vec3 &max, mm::Vec3 &min) const {
   IDColiManager *manager = IDColiManager::get();
   max = mm::Vec3(-10000.0f, -10000.0f, -10000.0f);
   min = mm::Vec3(10000.0f, 10000.0f, 10000.0f);
-  IDColiObj *object = manager->m_objLists[0].m_head;
+  IDColiObj *object = manager->unknown08[0].m_head;
   if (object != nullptr) {
-    for (; object != nullptr; object = object->m_next) {
+    for (; object != nullptr; object = object->unknown10) {
       static_cast<IDColiObjGrand *>(object)->getGrandAABB(max, min);
     }
 
@@ -40,7 +40,7 @@ void IDColiAccMan::setGblId(u32 id, bool isClear) { IDColiManager::get()->setGbl
 
 void *IDColiAccMan::getGblIdTbl() { return IDColiManager::get()->getGblIdTbl(); }
 
-void IDColiAccMan::setSubNum(u32 num) { IDColiManager::get()->m_subNum = num; }
+void IDColiAccMan::setSubNum(u32 num) { IDColiManager::get()->unknownf0 = num; }
 
 void IDColiAccMan::openDebugWindow(ml::WinProc *window) {}
 

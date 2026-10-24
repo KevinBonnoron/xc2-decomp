@@ -5,8 +5,8 @@
 namespace layer {
 
 void LayerObjManager::finalRender(const ml::IDrDrawWorkInfo *info) {
-  m_workInfo = info;
-  m_sortMan->finalRender();
+  unknown00 = info;
+  unknown10->finalRender();
 }
 
 void LayerObjManager::end() {}

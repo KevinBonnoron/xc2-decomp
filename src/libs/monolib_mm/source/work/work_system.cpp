@@ -20,14 +20,14 @@ void (*s_exitFunc)();
 
 } // namespace
 
-WorkSystem::WorkSystem(const char *name, WorkObj *parent) : WorkObj(name, parent, 32), m_isPowerOff(false), m_isReset(false), m_isSaveLoadInvalidReset(false) {}
+WorkSystem::WorkSystem(const char *name, WorkObj *parent) : WorkObj(name, parent, 32), unknown1b4(false), unknown1b5(false), unknown1b6(false) {}
 
 WorkSystem::~WorkSystem() {}
 
 bool WorkSystem::isOff() {
   WorkSystem *system = get();
   if (system != nullptr) {
-    return system->m_isPowerOff || system->m_isReset;
+    return system->unknown1b4 || system->unknown1b5;
   }
 
   return false;
@@ -36,7 +36,7 @@ bool WorkSystem::isOff() {
 bool WorkSystem::isPowerOff() {
   WorkSystem *system = get();
   if (system != nullptr) {
-    return system->m_isPowerOff;
+    return system->unknown1b4;
   }
 
   return false;
@@ -45,18 +45,18 @@ bool WorkSystem::isPowerOff() {
 bool WorkSystem::isReset() {
   WorkSystem *system = get();
   if (system != nullptr) {
-    return system->m_isReset;
+    return system->unknown1b5;
   }
 
   return false;
 }
 
-mtl::ALLOC_HANDLE WorkSystem::getMem() { return get()->m_mem; }
+mtl::ALLOC_HANDLE WorkSystem::getMem() { return get()->unknown1b0; }
 
 void WorkSystem::setSaveLoadInvalidReset(bool isInvalid) {
   WorkSystem *system = get();
   if (system != nullptr) {
-    system->m_isSaveLoadInvalidReset = isInvalid;
+    system->unknown1b6 = isInvalid;
   }
 }
 
@@ -74,20 +74,20 @@ bool WorkSystem::wkStandbyLogin() {
     }
   }
 
-  m_mem = mtl::MemManager::create(MlMem::getProductMem(), 0xfe0, m_name.c_str(), false);
+  unknown1b0 = mtl::MemManager::create(MlMem::getProductMem(), 0xfe0, unknown08.c_str(), false);
   WinProcRoot::create(this);
   WinViewRoot::create(this);
   return WorkObj::wkStandbyLogin();
 }
 
 bool WorkSystem::wkStandbyLogout() {
-  if (m_children.size() != 0) {
+  if (unknown60.size() != 0) {
     return false;
   }
 
-  if (m_mem.isValid()) {
-    mtl::MemManager::erase(m_mem);
-    m_mem = mtl::ALLOC_HANDLE();
+  if (unknown1b0.isValid()) {
+    mtl::MemManager::erase(unknown1b0);
+    unknown1b0 = mtl::ALLOC_HANDLE();
   }
 
   return WorkObj::wkStandbyLogout();

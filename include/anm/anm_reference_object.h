@@ -11,19 +11,19 @@ struct SerialiseArg;
 
 class ReferenceObject {
 public:
-  explicit ReferenceObject(mm::mtl::IAllocator *pAllocator) : m_refCount(0), m_isShared(0xffff), m_pAllocator(pAllocator) { MM_ASSERT(pAllocator); }
+  explicit ReferenceObject(mm::mtl::IAllocator *pAllocator) : unknown08(0), unknown0a(0xffff), m_pAllocator(pAllocator) { MM_ASSERT(pAllocator); }
   explicit ReferenceObject(const SerialiseArg &arg) {}
   virtual ~ReferenceObject() {}
 
   void addRef() {
-    if (m_isShared) {
-      m_refCount++;
+    if (unknown0a) {
+      unknown08++;
     }
   }
 
   void release() {
-    if (m_isShared) {
-      if (--m_refCount <= 0) {
+    if (unknown0a) {
+      if (--unknown08 <= 0) {
         MM_ASSERT(m_pAllocator);
         this->~ReferenceObject();
         m_pAllocator->deallocate(this);
@@ -31,13 +31,13 @@ public:
     }
   }
 
-  s16 m_refCount;
-  u16 m_isShared;
+  s16 unknown08; // Inferred role: ref count; original member name unknown.
+  u16 unknown0a; // Inferred role: shared; original member name unknown.
   mm::mtl::IAllocator *m_pAllocator;
 };
 
-static_assert(offsetof(ReferenceObject, m_refCount) == 0x08, "");
-static_assert(offsetof(ReferenceObject, m_isShared) == 0x0a, "");
+static_assert(offsetof(ReferenceObject, unknown08) == 0x08, "");
+static_assert(offsetof(ReferenceObject, unknown0a) == 0x0a, "");
 static_assert(offsetof(ReferenceObject, m_pAllocator) == 0x10, "");
 
 } // namespace anm

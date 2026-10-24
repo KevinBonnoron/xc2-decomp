@@ -51,34 +51,34 @@ public:
   static s32 s_nDebIdx;
   static s32 s_nTriIdx;
 
-  void (LayerManager::*m_setupFunc)();
-  mtl::ALLOC_HANDLE m_topMem;
-  mtl::ALLOC_HANDLE m_dataMem;
-  mtl::ALLOC_HANDLE m_workMem;
-  mtl::ALLOC_HANDLE m_gxMem;
+  void (LayerManager::*unknown10)(); // Inferred role: setup func; original member name unknown.
+  mtl::ALLOC_HANDLE unknown20;       // Inferred role: top mem; original member name unknown.
+  mtl::ALLOC_HANDLE unknown24;       // Inferred role: data mem; original member name unknown.
+  mtl::ALLOC_HANDLE unknown28;       // Inferred role: work mem; original member name unknown.
+  mtl::ALLOC_HANDLE unknown2c;       // Inferred role: gx mem; original member name unknown.
   u8 _30[0x58 - 0x30];
-  LayerShdManager *m_shdManager;
-  LayerObjManager *m_objManager;
-  LayerFontManager *m_fontManager;
-  LayerRceManager *m_rceManager;
-  u32 m_flags;
-  f32 m_frameRate;
-  f32 m_frameTime;
-  f32 m_fontBorderWeight;
-  f32 m_screenPosWidth;
-  f32 m_screenPosHeight;
-  f32 m_screenSclWidth;
-  f32 m_screenSclHeight;
+  LayerShdManager *unknown58;  // Inferred role: shd manager; original member name unknown.
+  LayerObjManager *unknown60;  // Inferred role: object manager; original member name unknown.
+  LayerFontManager *unknown68; // Inferred role: font manager; original member name unknown.
+  LayerRceManager *unknown70;  // Inferred role: rce manager; original member name unknown.
+  u32 unknown78;               // Inferred role: flags; original member name unknown.
+  f32 unknown7c;               // Inferred role: frame rate; original member name unknown.
+  f32 unknown80;               // Inferred role: frame time; original member name unknown.
+  f32 unknown84;               // Inferred role: font border weight; original member name unknown.
+  f32 unknown88;               // Inferred role: screen pos width; original member name unknown.
+  f32 unknown8c;               // Inferred role: screen pos height; original member name unknown.
+  f32 unknown90;               // Inferred role: screen scl width; original member name unknown.
+  f32 unknown94;               // Inferred role: screen scl height; original member name unknown.
   u8 _98[0x9c - 0x98];
-  LayerCoordinate m_coordinate;
+  LayerCoordinate unknown9c; // Inferred role: coordinate; original member name unknown.
   u8 _a0[0xb0 - 0xa0];
 };
 
-static_assert(offsetof(LayerManager, m_setupFunc) == 0x10, "");
-static_assert(offsetof(LayerManager, m_topMem) == 0x20, "");
-static_assert(offsetof(LayerManager, m_shdManager) == 0x58, "");
-static_assert(offsetof(LayerManager, m_frameRate) == 0x7c, "");
-static_assert(offsetof(LayerManager, m_coordinate) == 0x9c, "");
+static_assert(offsetof(LayerManager, unknown10) == 0x10, "");
+static_assert(offsetof(LayerManager, unknown20) == 0x20, "");
+static_assert(offsetof(LayerManager, unknown58) == 0x58, "");
+static_assert(offsetof(LayerManager, unknown7c) == 0x7c, "");
+static_assert(offsetof(LayerManager, unknown9c) == 0x9c, "");
 static_assert(sizeof(LayerManager) == 0xb0, "");
 
 } // namespace layer

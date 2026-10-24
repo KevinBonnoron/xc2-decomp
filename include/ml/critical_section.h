@@ -15,22 +15,22 @@ public:
   static bool enterTry(const CriticalSection &sect);
 
   static void enter(const CriticalSection &sect) {
-    if (sect.enabled) {
-      nn::os::LockMutex(const_cast<nn::os::MutexType *>(&sect.mutex));
+    if (sect.unknown20) {
+      nn::os::LockMutex(const_cast<nn::os::MutexType *>(&sect.unknown00));
     }
   }
 
   static void leave(const CriticalSection &sect) {
-    if (sect.enabled) {
-      nn::os::UnlockMutex(const_cast<nn::os::MutexType *>(&sect.mutex));
+    if (sect.unknown20) {
+      nn::os::UnlockMutex(const_cast<nn::os::MutexType *>(&sect.unknown00));
     }
   }
 
-  nn::os::MutexType mutex;
-  bool enabled;
+  nn::os::MutexType unknown00; // Inferred role: mutex; original member name unknown.
+  bool unknown20;              // Inferred role: enabled; original member name unknown.
 };
 
-static_assert(offsetof(CriticalSection, enabled) == 0x20, "");
+static_assert(offsetof(CriticalSection, unknown20) == 0x20, "");
 
 class CriticalSectionTC {
 public:
@@ -40,11 +40,11 @@ public:
   static bool enterTry(const CriticalSectionTC &sect);
   static void leave(const CriticalSectionTC &sect);
 
-  nn::os::MutexType mutex;
-  bool enabled;
+  nn::os::MutexType unknown00; // Inferred role: mutex; original member name unknown.
+  bool unknown20;              // Inferred role: enabled; original member name unknown.
 };
 
-static_assert(offsetof(CriticalSectionTC, enabled) == 0x20, "");
+static_assert(offsetof(CriticalSectionTC, unknown20) == 0x20, "");
 
 class CriticalSectionNC {
 public:
@@ -54,11 +54,11 @@ public:
   static void enter(const CriticalSectionNC &sect);
   static void leave(const CriticalSectionNC &sect);
 
-  nn::os::MutexType mutex;
-  bool enabled;
+  nn::os::MutexType unknown00; // Inferred role: mutex; original member name unknown.
+  bool unknown20;              // Inferred role: enabled; original member name unknown.
 };
 
-static_assert(offsetof(CriticalSectionNC, enabled) == 0x20, "");
+static_assert(offsetof(CriticalSectionNC, unknown20) == 0x20, "");
 
 namespace detail {
 

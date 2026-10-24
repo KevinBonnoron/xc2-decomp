@@ -26,12 +26,12 @@ public:
 
   u32 *m_element;
   u32 m_size;
-  u32 m_elementCount;
+  u32 unknown0c; // Inferred role: element count; original member name unknown.
   IAllocator *m_allocator;
 };
 
 static_assert(offsetof(ReservedBitflag, m_size) == 0x08, "");
-static_assert(offsetof(ReservedBitflag, m_elementCount) == 0x0c, "");
+static_assert(offsetof(ReservedBitflag, unknown0c) == 0x0c, "");
 static_assert(offsetof(ReservedBitflag, m_allocator) == 0x10, "");
 
 } // namespace mtl

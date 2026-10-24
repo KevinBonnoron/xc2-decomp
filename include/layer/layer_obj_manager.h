@@ -34,11 +34,11 @@ public:
   void finalRender(const ml::IDrDrawWorkInfo *info);
   void end();
 
-  const ml::IDrDrawWorkInfo *m_workInfo;
+  const ml::IDrDrawWorkInfo *unknown00; // Inferred role: work info; original member name unknown.
   u8 _08[0x10 - 0x08];
-  LayerSortMan *m_sortMan;
+  LayerSortMan *unknown10; // Inferred role: sort man; original member name unknown.
 };
 
-static_assert(offsetof(LayerObjManager, m_sortMan) == 0x10, "");
+static_assert(offsetof(LayerObjManager, unknown10) == 0x10, "");
 
 } // namespace layer

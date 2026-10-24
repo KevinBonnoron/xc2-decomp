@@ -16,10 +16,10 @@ public:
   LayerStrInfo();
 
   u8 _00[0x10 - 0x00];
-  mm::mtl::FixStr<16> m_name;
+  mm::mtl::FixStr<16> unknown10; // Inferred role: name; original member name unknown.
 };
 
-static_assert(offsetof(LayerStrInfo, m_name) == 0x10, "");
+static_assert(offsetof(LayerStrInfo, unknown10) == 0x10, "");
 
 class LayerTag {
 public:
@@ -52,12 +52,12 @@ public:
   void parseNotTag(const wchar_t *string, u32 &index) override;
   void callTagNoUse(const u8 *tag) override;
 
-  char *m_stockTbl;
-  int m_stockSize;
-  int m_stockNum;
+  char *m_result;
+  int unknown10; // Inferred role: stock size; original member name unknown.
+  int unknown14; // Inferred role: stock num; original member name unknown.
 };
 
-static_assert(offsetof(LayerTagStr, m_stockTbl) == 0x8, "");
-static_assert(offsetof(LayerTagStr, m_stockNum) == 0x14, "");
+static_assert(offsetof(LayerTagStr, m_result) == 0x8, "");
+static_assert(offsetof(LayerTagStr, unknown14) == 0x14, "");
 
 } // namespace layer

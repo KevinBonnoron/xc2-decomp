@@ -11,7 +11,7 @@ namespace mm {
 namespace threading {
 
 ThreadNx::ThreadNx(mtl::IAllocator *pAllocator, const char *name, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, s32 threadPriority)
-    : Thread(pAllocator), cpuId(cpuId), event(false, false), stack(nullptr), argument(argument), func(func), state(THREAD_STATE_RUNNING) {
+    : Thread(pAllocator), m_CPUID(cpuId), unknown1f0(false, false), unknown250(nullptr), unknown258(argument), unknown260(func), unknown268(THREAD_STATE_RUNNING) {
   MM_ASSERT(pAllocator);
   if (stackSize == 0) {
     stackSize = 0x28000;
@@ -20,66 +20,66 @@ ThreadNx::ThreadNx(mtl::IAllocator *pAllocator, const char *name, ThreadFunc fun
   s32 priority = nn::os::DefaultThreadPriority - threadPriority;
   MM_ASSERT(nn::os::HighestThreadPriority <= priority && priority <= nn::os::LowestThreadPriority);
   s32 coreID = cpuId - 1;
-  nn::Result result = coreID >= 0 ? nn::os::CreateThread(&thread, threadCallback, this, threadStack, stackSize, priority, coreID)
-                                  : nn::os::CreateThread(&thread, threadCallback, this, threadStack, stackSize, priority);
+  nn::Result result = coreID >= 0 ? nn::os::CreateThread(&unknown30, threadCallback, this, threadStack, stackSize, priority, coreID)
+                                  : nn::os::CreateThread(&unknown30, threadCallback, this, threadStack, stackSize, priority);
   MM_ASSERT(result.IsSuccess() && "Cannot create Thread\n");
-  handle = &thread;
-  id = reinterpret_cast<u64>(&thread);
-  stack = threadStack;
+  m_handle = &unknown30;
+  m_ID = reinterpret_cast<u64>(&unknown30);
+  unknown250 = threadStack;
 
   mtl::FixStr<32> defaultName;
   if (name == nullptr) {
     defaultName.format("%p", this);
     name = defaultName.c_str();
   }
-  nn::os::SetThreadName(&thread, name);
+  nn::os::SetThreadName(&unknown30, name);
 }
 
 void ThreadNx::threadCallback(void *param) {
   ThreadNx *pThread = static_cast<ThreadNx *>(param);
   MM_ASSERT(pThread);
-  pThread->state = THREAD_STATE_RUNNING;
-  if (pThread->func != nullptr) {
-    pThread->func(pThread->argument);
+  pThread->unknown268 = THREAD_STATE_RUNNING;
+  if (pThread->unknown260 != nullptr) {
+    pThread->unknown260(pThread->unknown258);
   }
-  pThread->state = THREAD_STATE_TERMINATED;
+  pThread->unknown268 = THREAD_STATE_TERMINATED;
 }
 
 ThreadNx::~ThreadNx() {
-  event.finalize();
+  unknown1f0.finalize();
   ThreadNx::exitThread();
-  if (stack != nullptr && m_allocator != nullptr) {
-    m_allocator->deallocate(stack);
-    stack = nullptr;
+  if (unknown250 != nullptr && m_allocator != nullptr) {
+    m_allocator->deallocate(unknown250);
+    unknown250 = nullptr;
   }
 }
 
 bool ThreadNx::isSuspended() const { return false; }
 
 bool ThreadNx::isTerminated() {
-  if (handle == nullptr) {
+  if (m_handle == nullptr) {
     return true;
   }
 
-  return state == THREAD_STATE_TERMINATED;
+  return unknown268 == THREAD_STATE_TERMINATED;
 }
 
 s32 ThreadNx::exitThread() {
-  if (handle != nullptr) {
-    nn::os::DestroyThread(handle);
-    handle = nullptr;
+  if (m_handle != nullptr) {
+    nn::os::DestroyThread(m_handle);
+    m_handle = nullptr;
   }
 
   return 0;
 }
 
-const char *ThreadNx::getName() const { return nn::os::GetThreadNamePointer(&thread); }
+const char *ThreadNx::getName() const { return nn::os::GetThreadNamePointer(&unknown30); }
 
-void ThreadNx::setSignalEvent(bool signal) { event.setSignal(signal); }
+void ThreadNx::setSignalEvent(bool signal) { unknown1f0.setSignal(signal); }
 
-bool ThreadNx::waitSignalEvent() { return event.waitSignal(0); }
+bool ThreadNx::waitSignalEvent() { return unknown1f0.waitSignal(0); }
 
-bool ThreadNx::isWaitingEvent() const { return !event.isSignal(); }
+bool ThreadNx::isWaitingEvent() const { return !unknown1f0.isSignal(); }
 
 Thread *ThreadNx::create(mtl::IAllocator *pAllocator, const char *name, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, s32 threadPriority) {
   MM_ASSERT(pAllocator != 0);
@@ -91,11 +91,11 @@ Thread *ThreadNx::create(mtl::IAllocator *pAllocator, const char *name, ThreadFu
   return thread;
 }
 
-MMTHREAD *ThreadNx::getHandle() const { return static_cast<MMTHREAD *>(handle); }
+MMTHREAD *ThreadNx::getHandle() const { return static_cast<MMTHREAD *>(m_handle); }
 
-u64 ThreadNx::getID() const { return id; }
+u64 ThreadNx::getID() const { return m_ID; }
 
-CPUID ThreadNx::getCPUID() const { return cpuId; }
+CPUID ThreadNx::getCPUID() const { return m_CPUID; }
 
 } // namespace threading
 } // namespace mm

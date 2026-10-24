@@ -60,29 +60,29 @@ public:
   static bool isPadMouse();
   static void resetMouse();
 
-  mm::Pnt<int> m_pos;
-  mm::Pnt<int> m_moveAccum;
-  mm::Pnt<int> m_move;
-  int m_wheelAccum;
-  int m_wheel;
-  u32 m_buttonOnAccum;
-  u32 m_buttonOffAccum;
-  u32 m_buttonOn;
-  u32 m_buttonOff;
-  u32 m_button;
-  u32 m_buttonDbl;
-  u32 m_buttonDblAccum;
-  bool m_isPadMouse;
-  f32 m_padMouseSpeed;
-  bool m_isMouseInput;
+  mm::Pnt<int> unknown1b8; // Inferred role: pos; original member name unknown.
+  mm::Pnt<int> unknown1c0; // Inferred role: move accum; original member name unknown.
+  mm::Pnt<int> unknown1c8; // Inferred role: move; original member name unknown.
+  int unknown1d0;          // Inferred role: wheel accum; original member name unknown.
+  int unknown1d4;          // Inferred role: wheel; original member name unknown.
+  u32 unknown1d8;          // Inferred role: button on accum; original member name unknown.
+  u32 unknown1dc;          // Inferred role: button off accum; original member name unknown.
+  u32 unknown1e0;          // Inferred role: button on; original member name unknown.
+  u32 unknown1e4;          // Inferred role: button off; original member name unknown.
+  u32 unknown1e8;          // Inferred role: button; original member name unknown.
+  u32 unknown1ec;          // Inferred role: button dbl; original member name unknown.
+  u32 unknown1f0;          // Inferred role: button dbl accum; original member name unknown.
+  bool unknown1f4;         // Inferred role: pad mouse; original member name unknown.
+  f32 unknown1f8;          // Inferred role: pad mouse speed; original member name unknown.
+  bool unknown1fc;         // Inferred role: mouse input; original member name unknown.
   u8 _1fd[0x200 - 0x1fd];
 };
 
-static_assert(offsetof(DevMouse, m_pos) == 0x1b8, "");
-static_assert(offsetof(DevMouse, m_wheelAccum) == 0x1d0, "");
-static_assert(offsetof(DevMouse, m_buttonOnAccum) == 0x1d8, "");
-static_assert(offsetof(DevMouse, m_buttonDblAccum) == 0x1f0, "");
-static_assert(offsetof(DevMouse, m_isPadMouse) == 0x1f4, "");
-static_assert(offsetof(DevMouse, m_padMouseSpeed) == 0x1f8, "");
+static_assert(offsetof(DevMouse, unknown1b8) == 0x1b8, "");
+static_assert(offsetof(DevMouse, unknown1d0) == 0x1d0, "");
+static_assert(offsetof(DevMouse, unknown1d8) == 0x1d8, "");
+static_assert(offsetof(DevMouse, unknown1f0) == 0x1f0, "");
+static_assert(offsetof(DevMouse, unknown1f4) == 0x1f4, "");
+static_assert(offsetof(DevMouse, unknown1f8) == 0x1f8, "");
 
 } // namespace ml

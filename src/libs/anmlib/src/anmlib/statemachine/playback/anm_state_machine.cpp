@@ -6,71 +6,71 @@
 namespace anm {
 
 void StateMachine::resetInterpolate() {
-  m_pInterpolateInfo = nullptr;
-  m_interpolateTime = 0.0f;
+  unknown28 = nullptr;
+  unknown30 = 0.0f;
 }
 
 const char *StateMachine::getStateName() const {
-  if (m_state.get() == nullptr) {
+  if (unknown00.get() == nullptr) {
     return nullptr;
   }
-  return m_state.get()->m_pResStateData->m_pResState->name;
+  return unknown00.get()->unknown18->unknown00->name;
 }
 
 u64 StateMachine::getAttribute(u32 index) const {
-  if (m_state.get() == nullptr) {
+  if (unknown00.get() == nullptr) {
     return 0;
   }
-  const ResStateData *resStateData = m_state.get()->m_pResStateData;
+  const ResStateData *resStateData = unknown00.get()->unknown18;
   if (index == 0) {
-    return resStateData->m_pResState->attribute;
+    return resStateData->unknown00->attribute;
   }
-  return resStateData->m_attributes[index - 1];
+  return resStateData->unknown30[index - 1];
 }
 
 bool StateMachine::isEnd() const {
-  if (m_state.get() == nullptr) {
+  if (unknown00.get() == nullptr) {
     return false;
   }
-  bool isOver = m_state.get()->m_loopCount >= m_state.get()->m_loopNum;
-  bool isFinite = m_state.get()->m_loopNum != 0;
+  bool isOver = unknown00.get()->unknown2c >= unknown00.get()->unknown28;
+  bool isFinite = unknown00.get()->unknown28 != 0;
   return isFinite & isOver;
 }
 
 bool StateMachine::isLoop() const {
-  if (m_state.get() == nullptr) {
+  if (unknown00.get() == nullptr) {
     return false;
   }
-  return m_state.get()->m_loopNum == 0;
+  return unknown00.get()->unknown28 == 0;
 }
 
 void StateMachine::setLocalTime(f32 time) {
-  if (m_state.get() != nullptr) {
-    m_state.get()->setLocalTime(time);
+  if (unknown00.get() != nullptr) {
+    unknown00.get()->setLocalTime(time);
   }
 }
 
 f32 StateMachine::getLocalTime() const {
-  if (m_state.get() == nullptr) {
+  if (unknown00.get() == nullptr) {
     return 0.0f;
   }
-  return m_state.get()->getLocalTime();
+  return unknown00.get()->getLocalTime();
 }
 
 void StateMachine::setSpeed(f32 speed) {
-  if (m_state.get() != nullptr) {
-    m_state.get()->setSpeed(speed);
+  if (unknown00.get() != nullptr) {
+    unknown00.get()->setSpeed(speed);
   }
-  if (m_nextState.get() != nullptr) {
-    m_nextState.get()->setSpeed(speed);
+  if (unknown08.get() != nullptr) {
+    unknown08.get()->setSpeed(speed);
   }
 }
 
 f32 StateMachine::getSpeed() const {
-  if (m_state.get() == nullptr) {
+  if (unknown00.get() == nullptr) {
     return 0.0f;
   }
-  return m_state.get()->m_speed;
+  return unknown00.get()->unknown20;
 }
 
 } // namespace anm

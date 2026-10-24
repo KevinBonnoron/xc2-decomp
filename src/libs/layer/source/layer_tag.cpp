@@ -49,33 +49,33 @@ u32 LayerTag::calcStringLength(const wchar_t *string) {
   return length;
 }
 
-LayerTagStr::LayerTagStr() : m_stockTbl(nullptr), m_stockSize(0), m_stockNum(0) {}
+LayerTagStr::LayerTagStr() : m_result(nullptr), unknown10(0), unknown14(0) {}
 
 LayerTagStr::~LayerTagStr() {}
 
 void LayerTagStr::setStockTbl(char *table, int size) {
-  m_stockTbl = table;
-  m_stockSize = size;
+  m_result = table;
+  unknown10 = size;
 }
 
 void LayerTagStr::stockString(const char *string) {
   for (u32 i = 0; string[i] != 0; i++) {
-    m_stockTbl[m_stockNum++] = string[i];
+    m_result[unknown14++] = string[i];
   }
 }
 
-void LayerTagStr::beginParseString() { m_stockNum = 0; }
+void LayerTagStr::beginParseString() { unknown14 = 0; }
 
-void LayerTagStr::endParseString() { m_stockTbl[m_stockNum] = 0; }
+void LayerTagStr::endParseString() { m_result[unknown14] = 0; }
 
 void LayerTagStr::parseNotTag(const u8 *string, u32 &index) {
-  m_stockTbl[m_stockNum++] = string[index];
+  m_result[unknown14++] = string[index];
   index++;
 }
 
 void LayerTagStr::callTagNoUse(const u8 *tag) {
   for (u32 i = 0; tag[i] != 0; i++) {
-    m_stockTbl[m_stockNum++] = tag[i];
+    m_result[unknown14++] = tag[i];
   }
 }
 

@@ -11,7 +11,7 @@ namespace ml {
 struct PadVibrationInfo;
 
 struct DevPadRepeat {
-  f32 time;
+  f32 unknown00; // Inferred role: time; original member name unknown.
   u8 _04[0xc - 0x4];
 };
 
@@ -72,20 +72,20 @@ public:
   static int s_debugPadNo;
 
   u8 _1b8[0x1ec - 0x1b8];
-  u32 m_down[11];
-  u32 m_up[11];
-  u32 m_btn[11];
-  u32 m_dbl[11];
-  u32 m_repeat[11];
+  u32 unknown1ec[11]; // Inferred role: down; original member name unknown.
+  u32 unknown218[11]; // Inferred role: up; original member name unknown.
+  u32 unknown244[11]; // Inferred role: btn; original member name unknown.
+  u32 unknown270[11]; // Inferred role: dbl; original member name unknown.
+  u32 unknown29c[11]; // Inferred role: repeat; original member name unknown.
   u8 _2c8[0x4b0 - 0x2c8];
-  DevPadRepeat m_repeats[11];
+  DevPadRepeat unknown4b0[11]; // Inferred role: repeats; original member name unknown.
   u8 _534[0x540 - 0x534];
-  f32 m_lowAnalog;
+  f32 unknown540; // Inferred role: low analog; original member name unknown.
 };
 
-static_assert(offsetof(DevPad, m_down) == 0x1ec, "");
-static_assert(offsetof(DevPad, m_repeat) == 0x29c, "");
-static_assert(offsetof(DevPad, m_repeats) == 0x4b0, "");
-static_assert(offsetof(DevPad, m_lowAnalog) == 0x540, "");
+static_assert(offsetof(DevPad, unknown1ec) == 0x1ec, "");
+static_assert(offsetof(DevPad, unknown29c) == 0x29c, "");
+static_assert(offsetof(DevPad, unknown4b0) == 0x4b0, "");
+static_assert(offsetof(DevPad, unknown540) == 0x540, "");
 
 } // namespace ml

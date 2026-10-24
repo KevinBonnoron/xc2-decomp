@@ -26,18 +26,18 @@ public:
   void freeID(u32 id);
 
   u8 *m_buffer;
-  u64 *m_usedBits;
-  u32 m_unitSize;
-  u32 m_usedNum;
-  int m_nextIndex;
-  int m_num;
-  u32 m_bitWordNum;
-  u32 m_searchWord;
+  u64 *unknown08; // Inferred role: used bits; original member name unknown.
+  u32 unknown10;  // Inferred role: unit size; original member name unknown.
+  u32 unknown14;  // Inferred role: used num; original member name unknown.
+  int unknown18;  // Inferred role: next index; original member name unknown.
+  int unknown1c;  // Inferred role: num; original member name unknown.
+  u32 unknown20;  // Inferred role: bit word num; original member name unknown.
+  u32 unknown24;  // Inferred role: search word; original member name unknown.
 };
 
-static_assert(offsetof(CGLibBuffFixAlloc, m_unitSize) == 0x10, "");
-static_assert(offsetof(CGLibBuffFixAlloc, m_nextIndex) == 0x18, "");
-static_assert(offsetof(CGLibBuffFixAlloc, m_searchWord) == 0x24, "");
+static_assert(offsetof(CGLibBuffFixAlloc, unknown10) == 0x10, "");
+static_assert(offsetof(CGLibBuffFixAlloc, unknown18) == 0x18, "");
+static_assert(offsetof(CGLibBuffFixAlloc, unknown24) == 0x24, "");
 static_assert(sizeof(CGLibBuffFixAlloc) == 0x28, "");
 
 } // namespace grlib

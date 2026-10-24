@@ -15,7 +15,7 @@ namespace ml {
 
 u64 ThreadUtil::getCurrentID() { return reinterpret_cast<u64>(nn::os::GetCurrentThread()); }
 
-Thread::Thread() : m_refCount(0) {}
+Thread::Thread() : unknown08(0) {}
 
 s32 Thread::suspend() { return ThreadUtil::suspendThread(getHandle()); }
 
@@ -28,7 +28,7 @@ void ThreadUtil::resumeThread(MLTHREAD *thread) { nn::os::StartThread(thread); }
 Thread *Thread::create(const char *name, bool isStart, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, int priority) {
   Thread *thread = nullptr;
   ThreadNx::create(&thread, name, isStart, func, argument, stackSize, cpuId, priority);
-  thread->m_refCount++;
+  thread->unknown08++;
   return thread;
 }
 
@@ -38,7 +38,7 @@ void ThreadNx::create(Thread **thread, const char *name, bool isStart, ThreadFun
 
 bool Thread::create(Thread **thread, const char *name, bool isStart, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, int priority) {
   new (WorkUtil::getWorkMem()) ThreadNx(thread, name, isStart, func, argument, stackSize, cpuId, priority);
-  (*thread)->m_refCount++;
+  (*thread)->unknown08++;
   return *thread != nullptr;
 }
 
@@ -65,28 +65,28 @@ CPUID ThreadUtil::getCurrentCPUID() { return static_cast<CPUID>(nn::os::GetCurre
 MLTHREAD *ThreadUtil::getCurrentHandle() { return static_cast<MLTHREAD *>(nn::os::GetCurrentThread()); }
 
 ThreadNx::ThreadNx(Thread **thread, const char *name, bool isStart, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, int priority)
-    : m_cpuId(cpuId), m_event(false, false), m_stack(nullptr), m_argument(argument), m_func(func), m_state(STATE_RUNNING) {
+    : m_CPUID(cpuId), unknown1e8(false, false), unknown248(nullptr), unknown250(argument), unknown258(func), unknown260(STATE_RUNNING) {
   *thread = this;
   if (stackSize == 0) {
     stackSize = 0x10000;
   }
-  m_stack = mtl::MemManager::allocate(WorkCpu::getMemStack(), stackSize, 0x1000, false, "no name", 0);
-  memset(m_stack, 0xa5, stackSize);
+  unknown248 = mtl::MemManager::allocate(WorkCpu::getMemStack(), stackSize, 0x1000, false, "no name", 0);
+  memset(unknown248, 0xa5, stackSize);
   int threadPriority = nn::os::DefaultThreadPriority - priority;
   if (cpuId != CPUID_ANY) {
-    nn::os::CreateThread(&m_thread, threadCallback, this, m_stack, stackSize, threadPriority, cpuId - 1);
+    nn::os::CreateThread(&unknown28, threadCallback, this, unknown248, stackSize, threadPriority, cpuId - 1);
   } else {
-    nn::os::CreateThread(&m_thread, threadCallback, this, m_stack, stackSize, threadPriority);
+    nn::os::CreateThread(&unknown28, threadCallback, this, unknown248, stackSize, threadPriority);
   }
-  m_handle = &m_thread;
-  m_id = reinterpret_cast<u64>(&m_thread);
+  m_handle = &unknown28;
+  m_ID = reinterpret_cast<u64>(&unknown28);
 
   mm::mtl::FixStr<32> defaultName;
   if (name == nullptr) {
     defaultName.format("%p", this);
     name = defaultName.c_str();
   }
-  nn::os::SetThreadName(&m_thread, name);
+  nn::os::SetThreadName(&unknown28, name);
   if (isStart) {
     resume();
   }
@@ -94,11 +94,11 @@ ThreadNx::ThreadNx(Thread **thread, const char *name, bool isStart, ThreadFunc f
 
 void ThreadNx::threadCallback(void *param) {
   ThreadNx *thread = static_cast<ThreadNx *>(param);
-  thread->m_state = STATE_RUNNING;
-  if (thread->m_func != nullptr) {
-    thread->m_func(thread->m_argument);
+  thread->unknown260 = STATE_RUNNING;
+  if (thread->unknown258 != nullptr) {
+    thread->unknown258(thread->unknown250);
   }
-  thread->m_state = STATE_TERMINATED;
+  thread->unknown260 = STATE_TERMINATED;
 }
 
 bool ThreadNx::isSuspended() const { return false; }
@@ -107,7 +107,7 @@ bool ThreadNx::isTerminated() {
   if (m_handle == nullptr) {
     return true;
   }
-  return m_state == STATE_TERMINATED;
+  return unknown260 == STATE_TERMINATED;
 }
 
 s32 ThreadNx::exitThread() {
@@ -115,22 +115,22 @@ s32 ThreadNx::exitThread() {
     nn::os::DestroyThread(m_handle);
     m_handle = nullptr;
   }
-  m_state = STATE_TERMINATED;
+  unknown260 = STATE_TERMINATED;
   return 0;
 }
 
-const char *ThreadNx::getName() const { return nn::os::GetThreadNamePointer(&m_thread); }
+const char *ThreadNx::getName() const { return nn::os::GetThreadNamePointer(&unknown28); }
 
-void ThreadNx::setSignalEvent(bool isSignal) { m_event.setSignal(isSignal); }
+void ThreadNx::setSignalEvent(bool isSignal) { unknown1e8.setSignal(isSignal); }
 
-bool ThreadNx::waitSignalEvent() { return m_event.waitSignal(0); }
+bool ThreadNx::waitSignalEvent() { return unknown1e8.waitSignal(0); }
 
-bool ThreadNx::isWaitingEvent() const { return !m_event.isSignal(); }
+bool ThreadNx::isWaitingEvent() const { return !unknown1e8.isSignal(); }
 
 MLTHREAD *ThreadNx::getHandle() const { return static_cast<MLTHREAD *>(m_handle); }
 
-u64 ThreadNx::getID() const { return m_id; }
+u64 ThreadNx::getID() const { return m_ID; }
 
-CPUID ThreadNx::getCPUID() const { return m_cpuId; }
+CPUID ThreadNx::getCPUID() const { return m_CPUID; }
 
 } // namespace ml

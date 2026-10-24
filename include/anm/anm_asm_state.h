@@ -27,8 +27,7 @@ f32 rand();
 
 class AsmState : public ReferenceObject {
 public:
-  AsmState(const ResStateData *pResStateData, mm::mtl::IAllocator &allocator)
-      : ReferenceObject(&allocator), m_pResStateData(pResStateData), m_speed(1.0f), m_weight(1.0f), m_loopNum(0), m_loopCount(0) {}
+  AsmState(const ResStateData *pResStateData, mm::mtl::IAllocator &allocator) : ReferenceObject(&allocator), unknown18(pResStateData), unknown20(1.0f), unknown24(1.0f), unknown28(0), unknown2c(0) {}
   virtual ~AsmState() {}
   virtual void attach(AsmBlender *blender) = 0;
   virtual void dettach(AsmBlender *blender) = 0;
@@ -42,44 +41,44 @@ public:
   virtual const AsmClip *getBaseClip() const = 0;
 
   void setSpeed(f32 speed) {
-    m_speed = speed;
+    unknown20 = speed;
     onSetSpeed();
   }
 
   void updateLoopCount(bool isEnd) {
-    if (m_loopNum <= 0) {
-      if (m_loopNum != 0 || m_loopCount != 0 || !isEnd) {
+    if (unknown28 <= 0) {
+      if (unknown28 != 0 || unknown2c != 0 || !isEnd) {
         return;
       }
     } else if (!isEnd) {
       return;
     }
-    m_loopCount++;
+    unknown2c++;
   }
 
   void initLoopCount() {
-    const ResState *resState = m_pResStateData->m_pResState;
-    const Binding *binding = m_pResStateData->m_clips[0].m_pBinding;
-    m_loopCount = 0;
+    const ResState *resState = unknown18->unknown00;
+    const Binding *binding = unknown18->unknown08[0].m_pBinding;
+    unknown2c = 0;
     if (resState->loopCount != nullptr) {
-      m_loopNum = resState->loopCount->min + static_cast<u32>(resState->loopCount->range * rand());
+      unknown28 = resState->loopCount->min + static_cast<u32>(resState->loopCount->range * rand());
     } else if (binding != nullptr && Util::getPlayMode(*binding) == PLAY_MODE_ONCE) {
-      m_loopNum = 1;
+      unknown28 = 1;
     } else {
-      m_loopNum = 0;
+      unknown28 = 0;
     }
   }
 
   void notifyEnter(AsmListener *listener) {
     for (u32 type = 0; type < 5; type++) {
-      if (listener != nullptr && !m_pResStateData->m_enterAnnotations[type].empty()) {
-        CallBackDetector::execute(*listener, AsmListener::CALLBACK_ENTER, m_pResStateData->m_enterAnnotations[type]);
+      if (listener != nullptr && !unknown18->unknown50[type].empty()) {
+        CallBackDetector::execute(*listener, AsmListener::CALLBACK_ENTER, unknown18->unknown50[type]);
       }
-      const mm::mtl::Vector<ResClipData> &clips = m_pResStateData->m_clips;
+      const mm::mtl::Vector<ResClipData> &clips = unknown18->unknown08;
       for (u32 i = 0; i < clips.size(); i++) {
         const ResClipData &clip = clips[i];
-        if (listener != nullptr && !clip.m_frameAnnotations[type].empty()) {
-          CallBackDetector::executeStartFrame(*listener, clip.m_startFrame, clip.m_frameAnnotations[type]);
+        if (listener != nullptr && !clip.unknown18[type].empty()) {
+          CallBackDetector::executeStartFrame(*listener, clip.unknown10, clip.unknown18[type]);
         }
       }
     }
@@ -90,20 +89,20 @@ public:
       return;
     }
     for (u32 type = 0; type < 5; type++) {
-      if (!m_pResStateData->m_leaveAnnotations[type].empty()) {
-        CallBackDetector::execute(*listener, AsmListener::CALLBACK_LEAVE, m_pResStateData->m_leaveAnnotations[type]);
+      if (!unknown18->unknown118[type].empty()) {
+        CallBackDetector::execute(*listener, AsmListener::CALLBACK_LEAVE, unknown18->unknown118[type]);
       }
     }
   }
 
-  const ResStateData *m_pResStateData;
-  f32 m_speed;
-  f32 m_weight;
-  s32 m_loopNum;
-  s32 m_loopCount;
+  const ResStateData *unknown18; // Inferred role: p res state data; original member name unknown.
+  f32 unknown20;                 // Inferred role: speed; original member name unknown.
+  f32 unknown24;                 // Inferred role: weight; original member name unknown.
+  s32 unknown28;                 // Inferred role: loop num; original member name unknown.
+  s32 unknown2c;                 // Inferred role: loop count; original member name unknown.
 };
 
-static_assert(offsetof(AsmState, m_pResStateData) == 0x18, "");
+static_assert(offsetof(AsmState, unknown18) == 0x18, "");
 static_assert(sizeof(AsmState) == 0x30, "");
 
 } // namespace anm

@@ -12,35 +12,35 @@
 namespace anm {
 
 AddBlendTree::AddBlendTree(const ResStateData *pResStateData, const ResAddTree *pResTree, mm::mtl::Vector<Variable> &variables, mm::mtl::IAllocator &allocator)
-    : AsmState(pResStateData, allocator), m_pResTree(pResTree) {
-  m_clipNum = pResStateData->m_clips.size();
-  m_pClips = static_cast<AsmClip *>(allocator.allocate(m_clipNum * sizeof(AsmClip), 8));
-  for (u32 i = 0; i < m_clipNum; i++) {
-    AsmClip *clip = new (&m_pClips[i]) AsmClip;
-    clip->createControl(pResStateData->m_clips[i], allocator);
+    : AsmState(pResStateData, allocator), unknown30(pResTree) {
+  unknown40 = pResStateData->unknown08.size();
+  m_baseClip = static_cast<AsmClip *>(allocator.allocate(unknown40 * sizeof(AsmClip), 8));
+  for (u32 i = 0; i < unknown40; i++) {
+    AsmClip *clip = new (&m_baseClip[i]) AsmClip;
+    clip->createControl(pResStateData->unknown08[i], allocator);
   }
-  m_pVariables = &variables;
+  unknown48 = &variables;
 }
 
 AddBlendTree::~AddBlendTree() {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    m_pClips[i].destroyControl();
-    m_pClips[i].~AsmClip();
+  for (u32 i = 0; i < unknown40; i++) {
+    m_baseClip[i].destroyControl();
+    m_baseClip[i].~AsmClip();
   }
-  m_pAllocator->deallocate(m_pClips);
-  m_pClips = nullptr;
-  m_clipNum = 0;
+  m_pAllocator->deallocate(m_baseClip);
+  m_baseClip = nullptr;
+  unknown40 = 0;
 }
 
 void AddBlendTree::attach(AsmBlender *blender) {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    blender->addClip(m_pClips[i]);
+  for (u32 i = 0; i < unknown40; i++) {
+    blender->addClip(m_baseClip[i]);
   }
 }
 
 void AddBlendTree::dettach(AsmBlender *blender) {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    blender->removeClip(m_pClips[i]);
+  for (u32 i = 0; i < unknown40; i++) {
+    blender->removeClip(m_baseClip[i]);
   }
 }
 
@@ -54,41 +54,41 @@ void AddBlendTree::onLeave(AsmListener *listener) { notifyLeave(listener); }
 
 void AddBlendTree::update(f32 deltaTime, AsmListener *listener) {
   adjustWeight();
-  updateLoopCount(m_pClips[0].update(deltaTime, listener));
-  for (u32 i = 1; i < m_clipNum; i++) {
-    m_pClips[i].update(deltaTime, nullptr);
+  updateLoopCount(m_baseClip[0].update(deltaTime, listener));
+  for (u32 i = 1; i < unknown40; i++) {
+    m_baseClip[i].update(deltaTime, nullptr);
   }
 }
 
 void AddBlendTree::adjustWeight() {
-  u32 baseClipNum = m_pResTree->baseClipNum;
+  u32 baseClipNum = unknown30->unknown10;
   for (u32 i = 0; i < baseClipNum; i++) {
-    m_pClips[i].setWeight(m_weight);
+    m_baseClip[i].setWeight(unknown24);
   }
-  for (u32 i = 0; i < m_pResTree->nodes.size(); i++) {
-    const ResAddNode &node = m_pResTree->nodes[i];
+  for (u32 i = 0; i < unknown30->unknown18.size(); i++) {
+    const ResAddNode &node = unknown30->unknown18[i];
     f32 value;
-    (*m_pVariables)[node.variableIndex].getValue(&value);
-    m_pClips[baseClipNum + i].setWeight(value * m_weight);
+    (*unknown48)[node.variableIndex].getValue(&value);
+    m_baseClip[baseClipNum + i].setWeight(value * unknown24);
   }
 }
 
 void AddBlendTree::setLocalTime(f32 time) {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    m_pClips[i].setLocalTime(time);
+  for (u32 i = 0; i < unknown40; i++) {
+    m_baseClip[i].setLocalTime(time);
   }
 }
 
-f32 AddBlendTree::getLocalTime() const { return m_pClips[0].getLocalTime(); }
+f32 AddBlendTree::getLocalTime() const { return m_baseClip[0].getLocalTime(); }
 
 void AddBlendTree::onSetSpeed() {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    m_pClips[i].setSpeed(m_speed);
+  for (u32 i = 0; i < unknown40; i++) {
+    m_baseClip[i].setSpeed(unknown20);
   }
 }
 
 void AddBlendTree::onSetWeight() { adjustWeight(); }
 
-const AsmClip *AddBlendTree::getBaseClip() const { return m_pClips; }
+const AsmClip *AddBlendTree::getBaseClip() const { return m_baseClip; }
 
 } // namespace anm

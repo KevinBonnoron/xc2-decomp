@@ -30,16 +30,16 @@ public:
   GrlSurfaceFormat m_format;
   u16 m_width;
   u16 m_height;
-  u32 m_flags;
-  NVNtexture *m_nvnTexture;
-  u64 m_gpuAddress;
+  u32 unknown08;         // Inferred role: flags; original member name unknown.
+  NVNtexture *unknown10; // Inferred role: nvn texture; original member name unknown.
+  u64 unknown18;         // Inferred role: gpu address; original member name unknown.
   void *m_buffer;
-  u32 m_bufferSize;
+  u32 unknown28; // Inferred role: buffer size; original member name unknown.
 };
 
-static_assert(offsetof(CGLibDepthBuffer, m_flags) == 0x08, "");
-static_assert(offsetof(CGLibDepthBuffer, m_nvnTexture) == 0x10, "");
+static_assert(offsetof(CGLibDepthBuffer, unknown08) == 0x08, "");
+static_assert(offsetof(CGLibDepthBuffer, unknown10) == 0x10, "");
 static_assert(offsetof(CGLibDepthBuffer, m_buffer) == 0x20, "");
-static_assert(offsetof(CGLibDepthBuffer, m_bufferSize) == 0x28, "");
+static_assert(offsetof(CGLibDepthBuffer, unknown28) == 0x28, "");
 
 } // namespace grlib

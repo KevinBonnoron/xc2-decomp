@@ -12,15 +12,15 @@ namespace anm {
 
 struct alignas(16) QsTransform {
   QsTransform() {}
-  QsTransform(const mm::Vec3 &translation, const mm::Quat &rotation, const mm::Vec3 &scale) : translation(translation, 1.0f), rotation(rotation), scale(scale, 1.0f) {}
+  QsTransform(const mm::Vec3 &translation, const mm::Quat &rotation, const mm::Vec3 &scale) : unknown00(translation, 1.0f), unknown10(rotation), unknown20(scale, 1.0f) {}
 
-  mm::Vec4 translation;
-  mm::Quat rotation;
-  mm::Vec4 scale;
+  mm::Vec4 unknown00; // Inferred role: translation; original member name unknown.
+  mm::Quat unknown10; // Inferred role: rotation; original member name unknown.
+  mm::Vec4 unknown20; // Inferred role: scale; original member name unknown.
 };
 
-static_assert(offsetof(QsTransform, rotation) == 0x10, "");
-static_assert(offsetof(QsTransform, scale) == 0x20, "");
+static_assert(offsetof(QsTransform, unknown10) == 0x10, "");
+static_assert(offsetof(QsTransform, unknown20) == 0x20, "");
 static_assert(sizeof(QsTransform) == 0x30, "");
 
 } // namespace anm

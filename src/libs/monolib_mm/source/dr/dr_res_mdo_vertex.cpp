@@ -156,7 +156,7 @@ const u8 *DrResMdoVertex::getVertexTbl(int index) const {
   return resource + reinterpret_cast<const MdsVertexBuffInfo *>(resource + unknown28->unknown00)[index].unknown00;
 }
 
-u32 DrResMdoVertex::getVertexMax(int index) const { return unknown50[index].m_count; }
+u32 DrResMdoVertex::getVertexMax(int index) const { return unknown50[index].unknown08; }
 
 void DrResMdoVertex::setVertexBind(int index) {
   if (unknown4e != index) {
@@ -172,7 +172,7 @@ u32 DrResMdoVertex::setWeightVertexBind(int index) {
   }
   grlib::CGLibCtlVertex::setVertex(unknown50[vertexIdx]);
   unknown4e = vertexIdx;
-  return unknown50[vertexIdx].m_count;
+  return unknown50[vertexIdx].unknown08;
 }
 
 const MdsWeightVertexInfo *DrResMdoVertex::getWeightVertexInfo(int index, int pass) {

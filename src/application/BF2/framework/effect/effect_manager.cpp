@@ -128,7 +128,7 @@ void EffectManager::sendCaster(EffectCasterBase *caster, f32 scale) {
       if (it.get()->m_caster == caster) {
         EffectCasterSend *send = it.get();
         if (send->m_caster != nullptr && effect::SystemManager::getPtr() != nullptr) {
-          send->unknown88[effect::SystemManager::getPtr()->writeBuffer != 0] = scale;
+          send->unknown88[effect::SystemManager::getPtr()->unknown7824d != 0] = scale;
         }
         return;
       }
@@ -143,7 +143,7 @@ void EffectManager::sendCasterFrame(EffectCasterBase *caster, f32 frame) {
       if (it.get()->m_caster == caster) {
         EffectCasterSend *send = it.get();
         if (send->m_caster != nullptr && effect::SystemManager::getPtr() != nullptr) {
-          send->unknown90[effect::SystemManager::getPtr()->writeBuffer != 0] = frame;
+          send->unknown90[effect::SystemManager::getPtr()->unknown7824d != 0] = frame;
         }
         return;
       }
@@ -473,7 +473,7 @@ bool *EffectManager::getDispPTex() {
     return &dummy;
   }
 
-  return &effect::SystemManager::getPtr()->dispParticleTexture;
+  return &effect::SystemManager::getPtr()->unknown7824a;
 }
 
 bool *EffectManager::getWorkTex() {
@@ -482,7 +482,7 @@ bool *EffectManager::getWorkTex() {
     return &dummy;
   }
 
-  return &effect::SystemManager::getPtr()->workTexture;
+  return &effect::SystemManager::getPtr()->unknown7824b;
 }
 
 bool EffectManager::getDispEmitter() {
@@ -490,14 +490,14 @@ bool EffectManager::getDispEmitter() {
     return false;
   }
 
-  return effect::SystemManager::getPtr()->dispEmitter;
+  return effect::SystemManager::getPtr()->unknown0b;
 }
 
 void EffectManager::setDispEmitter(bool isDisp) {
   if (effect::SystemManager::getPtr() != nullptr) {
     effect::SystemManager *system = effect::SystemManager::getPtr();
-    system->isDispEmitterSet = true;
-    system->dispEmitter = isDisp;
+    system->unknown0c = true;
+    system->unknown0b = isDisp;
   }
 }
 

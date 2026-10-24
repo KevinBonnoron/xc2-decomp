@@ -80,7 +80,7 @@ void DynamicsUpdater::update(const UpdateInfo &info) {
   }
 
   unknown18->update(info.unknown04 * unknown98);
-  anm::Pose *pose = unknown18->pose;
+  anm::Pose *pose = unknown18->unknown48;
   pose->syncLocalSpace();
   pose->syncModelSpace();
 }

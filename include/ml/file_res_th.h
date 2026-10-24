@@ -33,21 +33,21 @@ public:
   virtual void release();
   bool OnFileEvent(EventFileTh *event) override;
 
-  FileHandleTh *fileHandle;
-  void *buffer;
-  int size;
+  FileHandleTh *unknownc0; // Inferred role: file handle; original member name unknown.
+  void *unknownc8;         // Inferred role: buffer; original member name unknown.
+  int unknownd0;           // Inferred role: size; original member name unknown.
   u8 _d4[0xe0 - 0xd4];
-  u64 timeStamp;
+  u64 unknowne0; // Inferred role: time stamp; original member name unknown.
   u8 _e8[0xf0 - 0xe8];
-  bool isBufferOwner;
+  bool unknownf0; // Inferred role: buffer owner; original member name unknown.
   u8 _f1[0xf8 - 0xf1];
-  mm::mtl::IAllocator *allocator;
+  mm::mtl::IAllocator *unknownf8; // Inferred role: allocator; original member name unknown.
 };
 
-static_assert(offsetof(FileResTh, fileHandle) == 0xc0, "");
-static_assert(offsetof(FileResTh, size) == 0xd0, "");
-static_assert(offsetof(FileResTh, timeStamp) == 0xe0, "");
-static_assert(offsetof(FileResTh, isBufferOwner) == 0xf0, "");
+static_assert(offsetof(FileResTh, unknownc0) == 0xc0, "");
+static_assert(offsetof(FileResTh, unknownd0) == 0xd0, "");
+static_assert(offsetof(FileResTh, unknowne0) == 0xe0, "");
+static_assert(offsetof(FileResTh, unknownf0) == 0xf0, "");
 static_assert(sizeof(FileResTh) == 0x100, "");
 
 } // namespace ml

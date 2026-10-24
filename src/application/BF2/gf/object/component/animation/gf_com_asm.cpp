@@ -59,31 +59,31 @@ void GfComAsm::clearCallback() { unknown148.clear(); }
 
 const anm::ResASM *GfComAsm::getResource() const {
   if (unknown10 != nullptr) {
-    return unknown10->resAsm;
+    return unknown10->unknown18;
   }
 
   return nullptr;
 }
 
 bool GfComAsm::getPlaybackTime(const char *state, f32 *time) const {
-  if (unknown10 != nullptr && unknown10->resAsm != nullptr) {
-    return anm::Util::getAsmPlaybackTime(*unknown10->resAsm, state, 0, time);
+  if (unknown10 != nullptr && unknown10->unknown18 != nullptr) {
+    return anm::Util::getAsmPlaybackTime(*unknown10->unknown18, state, 0, time);
   }
 
   return false;
 }
 
 bool GfComAsm::getLocomotionReference(const char *state, f32 time, anm::QsTransform *transform) const {
-  if (unknown10 != nullptr && unknown10->resAsm != nullptr) {
-    return anm::Util::getAsmLocomotionReference(*unknown10->resAsm, state, time, 0, transform);
+  if (unknown10 != nullptr && unknown10->unknown18 != nullptr) {
+    return anm::Util::getAsmLocomotionReference(*unknown10->unknown18, state, time, 0, transform);
   }
 
   return false;
 }
 
 bool GfComAsm::getLocomotionDeltaReference(const char *state, f32 startTime, f32 endTime, anm::QsTransform *transform) const {
-  if (unknown10 != nullptr && unknown10->resAsm != nullptr) {
-    return anm::Util::getAsmLocomotionDeltaReference(*unknown10->resAsm, state, startTime, endTime, 0, transform);
+  if (unknown10 != nullptr && unknown10->unknown18 != nullptr) {
+    return anm::Util::getAsmLocomotionDeltaReference(*unknown10->unknown18, state, startTime, endTime, 0, transform);
   }
 
   return false;
@@ -94,7 +94,7 @@ bool GfComAsm::getClipInvFps(const char *state, u32 index, f32 *invFps) const {
     return false;
   }
 
-  const anm::ResASM *resAsm = unknown10->resAsm;
+  const anm::ResASM *resAsm = unknown10->unknown18;
   if (resAsm == nullptr) {
     return false;
   }
@@ -113,7 +113,7 @@ bool GfComAsm::getClipFps(const char *state, u32 index, f32 *fps) const {
     return false;
   }
 
-  const anm::ResASM *resAsm = unknown10->resAsm;
+  const anm::ResASM *resAsm = unknown10->unknown18;
   if (resAsm == nullptr) {
     return false;
   }
@@ -132,7 +132,7 @@ bool GfComAsm::existEndTrans(const char *state) {
     return false;
   }
 
-  const anm::ResASM *resAsm = unknown10->resAsm;
+  const anm::ResASM *resAsm = unknown10->unknown18;
   if (resAsm == nullptr) {
     return false;
   }
@@ -142,7 +142,7 @@ bool GfComAsm::existEndTrans(const char *state) {
     return false;
   }
 
-  return stateData->m_pResState->loopCount != nullptr;
+  return stateData->unknown00->loopCount != nullptr;
 }
 
 const void *GfComAsm::getAppendix(const char *name) const {
@@ -150,7 +150,7 @@ const void *GfComAsm::getAppendix(const char *name) const {
     return nullptr;
   }
 
-  const anm::ResASM *resAsm = unknown10->resAsm;
+  const anm::ResASM *resAsm = unknown10->unknown18;
   if (resAsm == nullptr) {
     return nullptr;
   }
@@ -164,7 +164,7 @@ const void *GfComAsm::getAppendix(const char *name) const {
 }
 
 bool GfComAsm::existState(const char *state) {
-  if (unknown10 != nullptr && unknown10->resAsm != nullptr && unknown10->resAsm->findResStateData(state) != nullptr) {
+  if (unknown10 != nullptr && unknown10->unknown18 != nullptr && unknown10->unknown18->findResStateData(state) != nullptr) {
     return true;
   }
 
@@ -176,7 +176,7 @@ void GfComAsm::executeCallback() {
     const anm::AsmAnnotetion *annotation = unknown148[i].unknown08;
     u32 index;
     for (index = 1; index < CALLBACK_MAX; index++) {
-      if (unknown70[index].unknown08.isValid() && strcmp(unknown70[index].unknown00, annotation->name) == 0) {
+      if (unknown70[index].unknown08.isValid() && strcmp(unknown70[index].unknown00, annotation->unknown00) == 0) {
         break;
       }
     }
@@ -297,7 +297,7 @@ bool GfComAsm::isLoop(AnimLayer layer) const {
 
 bool GfComAsm::isInterpolate(AnimLayer layer) const {
   anm::StateMachine *stateMachine = getStateMachine(unknown10, layer);
-  return stateMachine != nullptr && stateMachine->m_pInterpolateInfo != nullptr;
+  return stateMachine != nullptr && stateMachine->unknown28 != nullptr;
 }
 
 void GfComAsm::setLocalTime(f32 time, AnimLayer layer) {
@@ -343,7 +343,7 @@ u64 GfComAsm::getAttribute(AsmCategory category, AnimLayer layer) const {
 
 const anm::QsTransform &GfComAsm::getLocomotion() const {
   if (unknown10 != nullptr) {
-    return unknown10->locomotion;
+    return unknown10->unknown380;
   }
 
   static const anm::QsTransform identity(mm::Vec3::zero, mm::Quat::identity, mm::Vec3::unit);

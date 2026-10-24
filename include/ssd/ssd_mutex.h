@@ -11,21 +11,21 @@ public:
   ~Mutex();
 
   void Lock() {
-    nn::os::LockMutex(&mutex);
-    lockCount++;
+    nn::os::LockMutex(&unknown00);
+    unknown21++;
   }
 
   void Unlock() {
-    lockCount--;
-    nn::os::UnlockMutex(&mutex);
-    nn::os::IsMutexLockedByCurrentThread(&mutex);
+    unknown21--;
+    nn::os::UnlockMutex(&unknown00);
+    nn::os::IsMutexLockedByCurrentThread(&unknown00);
   }
 
-  nn::os::MutexType mutex;
-  bool isInit;
-  u8 lockCount;
+  nn::os::MutexType unknown00; // Inferred role: mutex; original member name unknown.
+  bool unknown20;              // Inferred role: init; original member name unknown.
+  u8 unknown21;                // Inferred role: lock count; original member name unknown.
 };
 
-static_assert(offsetof(Mutex, isInit) == 0x20, "");
+static_assert(offsetof(Mutex, unknown20) == 0x20, "");
 
 } // namespace ssd

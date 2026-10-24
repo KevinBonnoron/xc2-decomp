@@ -29,12 +29,12 @@ void SeamlessManager::clear() {
 
 void SeamlessManager::setReadEnable(bool isEnable, const mm::Vec3 *pos) {
   if (isEnable) {
-    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setSeamMapAddPosMode(true);
     parmAcc.setSeamMapReadPos(*pos);
     unknown10 |= FLAG_READ_ENABLE;
   } else {
-    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setSeamMapAddPosMode(false);
     unknown10 &= ~FLAG_READ_ENABLE;
   }

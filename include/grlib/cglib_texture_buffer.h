@@ -125,23 +125,23 @@ public:
   u16 m_depth;
   u16 m_slice;
   u16 m_mipmap;
-  u16 m_dimension;
-  u32 m_flags;
+  u16 unknown0e; // Inferred role: dimension; original member name unknown.
+  u32 unknown10; // Inferred role: flags; original member name unknown.
   u8 _14[0x18 - 0x14];
-  NVNtexture *m_nvnTexture;
-  u64 m_gpuAddress;
+  NVNtexture *unknown18; // Inferred role: nvn texture; original member name unknown.
+  u64 unknown20;         // Inferred role: gpu address; original member name unknown.
   void *m_buffer;
-  u32 m_bufferSize;
-  int m_textureId;
-  int m_samplerId;
-  CGLibVtlMemPool m_memPool;
+  u32 unknown30;             // Inferred role: buffer size; original member name unknown.
+  int unknown34;             // Inferred role: texture id; original member name unknown.
+  int unknown38;             // Inferred role: sampler id; original member name unknown.
+  CGLibVtlMemPool unknown40; // Inferred role: mem pool; original member name unknown.
 };
 
-static_assert(offsetof(CGLibTextureBuffer, m_flags) == 0x10, "");
-static_assert(offsetof(CGLibTextureBuffer, m_nvnTexture) == 0x18, "");
+static_assert(offsetof(CGLibTextureBuffer, unknown10) == 0x10, "");
+static_assert(offsetof(CGLibTextureBuffer, unknown18) == 0x18, "");
 static_assert(offsetof(CGLibTextureBuffer, m_buffer) == 0x28, "");
-static_assert(offsetof(CGLibTextureBuffer, m_bufferSize) == 0x30, "");
-static_assert(offsetof(CGLibTextureBuffer, m_textureId) == 0x34, "");
-static_assert(offsetof(CGLibTextureBuffer, m_memPool) == 0x40, "");
+static_assert(offsetof(CGLibTextureBuffer, unknown30) == 0x30, "");
+static_assert(offsetof(CGLibTextureBuffer, unknown34) == 0x34, "");
+static_assert(offsetof(CGLibTextureBuffer, unknown40) == 0x40, "");
 
 } // namespace grlib

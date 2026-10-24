@@ -7,7 +7,7 @@
 
 namespace ml {
 
-ScnObjModelDrSys::ScnObjModelDrSys(Scn *scn, const void *data, const char *name) : ScnObjModel(scn, name), unknown3d8(nullptr), m_data(data) { unknown3e0 = m_scn->renderDrSys->unknown10; }
+ScnObjModelDrSys::ScnObjModelDrSys(Scn *scn, const void *data, const char *name) : ScnObjModel(scn, name), unknown3d8(nullptr), m_data(data) { unknown3e0 = unknown08->unknown38->unknown10; }
 
 void ScnObjModelDrSys::update() {}
 
@@ -20,7 +20,7 @@ void ScnObjModelDrSys::apply() {
   } else if (unknown3d8 != nullptr) {
     unknown3d8->setDisp(true);
     unknown3d8->setClip(isClip());
-    unknown3d8->setFrameSpd((m_flags & FLAG_FRAME_SPD) ? m_frameSpd : 0.0f);
+    unknown3d8->setFrameSpd((unknown34c & FLAG_FRAME_SPD) ? m_frameSpd : 0.0f);
   }
 }
 

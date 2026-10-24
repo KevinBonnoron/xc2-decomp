@@ -283,31 +283,31 @@ void DrResShdObjMot::setupShader() { unknown00->setupShader(0u); }
 void DrResShdObjMot::motblur_motObj() {
   unknown08[0] = 0;
   unknown08[1] = 1;
-  unknown08[2] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
-  unknown08[3] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
+  unknown08[2] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_VPam");
+  unknown08[3] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_VPam");
 }
 
 void DrResShdObjMot::motblur_motObjTex() {
   unknown08[0] = 0;
   unknown08[1] = 1;
-  unknown08[2] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
-  unknown08[3] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
-  unknown08[4] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getTextureLocation("tex");
+  unknown08[2] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_VPam");
+  unknown08[3] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_VPam");
+  unknown08[4] = (unknown00->unknown38 + unknown00->unknown58)->getTextureLocation("tex");
 }
 
 void DrResShdObjMot::motblur_notObj() {
-  unknown08[0] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_MDL1");
-  unknown08[1] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_MDL2");
-  unknown08[2] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
-  unknown08[3] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
+  unknown08[0] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_MDL1");
+  unknown08[1] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_MDL2");
+  unknown08[2] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_VPam");
+  unknown08[3] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_VPam");
 }
 
 void DrResShdObjMot::motblur_notObjTex() {
-  unknown08[0] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_MDL1");
-  unknown08[1] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_MDL2");
-  unknown08[2] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
-  unknown08[3] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
-  unknown08[4] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getTextureLocation("tex");
+  unknown08[0] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_MDL1");
+  unknown08[1] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_MDL2");
+  unknown08[2] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_VPam");
+  unknown08[3] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_VPam");
+  unknown08[4] = (unknown00->unknown38 + unknown00->unknown58)->getTextureLocation("tex");
 }
 
 void (DrResShdObjMot::*DrResShdObjMot::s_callMotObjSet[])() = {

@@ -39,7 +39,7 @@ void EnvManager::setCloudSea(EVT_cloudtype cloudType) {
 
 void EnvManager::setMotBlur(bool isEnable) {
   if (isEnable == ((unknown10 & FLAG_MOT_BLUR) != 0)) {
-    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setMotBlurOverride(true);
     parmAcc.setMotBlur(isEnable);
     unknown10 = isEnable ? unknown10 & ~FLAG_MOT_BLUR : unknown10 | FLAG_MOT_BLUR;
@@ -49,7 +49,7 @@ void EnvManager::setMotBlur(bool isEnable) {
 void EnvManager::setToneMap(bool isEnable, f32 toneMap) {
   if (isEnable != ((unknown10 & FLAG_TONE_MAP) != 0)) {
     if (isEnable) {
-      ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+      ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
       parmAcc.setOverrideToneMap(toneMap);
       unknown10 |= FLAG_TONE_MAP;
     } else {
@@ -80,7 +80,7 @@ void EnvManager::updateColorFilter() {
 
 void EnvManager::updateMotBlur() {
   if ((unknown10 & FLAG_MOT_BLUR) != 0) {
-    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setMotBlurOverride(true);
     parmAcc.setMotBlur(false);
   }
@@ -88,7 +88,7 @@ void EnvManager::updateMotBlur() {
 
 void EnvManager::updateToneMap() {
   if ((unknown10 & FLAG_TONE_MAP) != 0) {
-    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setOverrideToneMap(unknown3c);
   }
 }
@@ -178,7 +178,7 @@ void EnvManager::setClock(f32 clock) {
 void EnvManager::setMapWeatherID(gf::WEATHERID weather, f32 frame) {
   gf::GfFieldWeather::getCurrentMapWeatherID(false);
   gf::GfGameEvent::setMapWeather(weather);
-  ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+  ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
   parmAcc.setWeatherFrame(frame);
 }
 
@@ -236,7 +236,7 @@ void EnvManager::loadTransferEnvironment(u32 eventID) { unknown40.load(eventID);
 void EnvManager::loadFieldEnvironment() { unknown60.load(); }
 
 void EnvManager::setAutoResetSceneEnable(bool isEnable) {
-  ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+  ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
   parmAcc.setAutoResetScene(isEnable);
   if (isEnable) {
     unknown10 |= FLAG_AUTO_RESET_SCENE;
@@ -246,7 +246,7 @@ void EnvManager::setAutoResetSceneEnable(bool isEnable) {
 }
 
 void EnvManager::resetScene() {
-  ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
+  ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
   parmAcc.resetScene();
 }
 

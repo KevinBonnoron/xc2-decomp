@@ -43,9 +43,9 @@ void AttachActorBase::render() {
   if (!skeleton && !pose) {
     return;
   }
-  u32 count = skeleton->bones.size();
+  u32 count = skeleton->unknown30.size();
   for (u32 i = 0; i < count; ++i) {
-    const char *name = skeleton->bones[static_cast<u16>(i)].name;
+    const char *name = skeleton->unknown30[static_cast<u16>(i)].unknown00;
     mm::Mat44 matrix;
     fw::Transform world;
     fw::TransformUtil::mul(transform->unknown10->getSyncedWorldTransform(), pose->getBoneModelSpace(i), 1.0f, &world);

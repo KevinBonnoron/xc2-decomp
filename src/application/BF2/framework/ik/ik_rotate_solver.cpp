@@ -24,7 +24,7 @@ RotateIkSolver *RotateIkSolver::create(const char *boneName, mm::mtl::IntrusiveP
 bool RotateIkSolver::setup(const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose) {
   bind(frame, pose);
   if (boneName != nullptr) {
-    u16 index = this->unknown18->skeleton->getBoneID(boneName);
+    u16 index = this->unknown18->unknown18->getBoneID(boneName);
     if (index != anm::Skeleton::INVALID_BONE) {
       unknown50 = index;
       return true;
@@ -53,7 +53,7 @@ RotateLocalIkSolver *RotateLocalIkSolver::create(const char *boneName, mm::mtl::
 bool RotateLocalIkSolver::setup(const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose) {
   bind(frame, pose);
   if (boneName != nullptr) {
-    u16 index = this->unknown18->skeleton->getBoneID(boneName);
+    u16 index = this->unknown18->unknown18->getBoneID(boneName);
     if (index != anm::Skeleton::INVALID_BONE) {
       unknown50 = index;
       return true;

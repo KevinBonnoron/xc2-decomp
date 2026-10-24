@@ -149,11 +149,11 @@ public:
     }
     const mm::Vec3 &cameraPosition = ml::Scn::sys()->getCam(-1)->renderInfo->position;
     for (T *gmk = gmkInsts.begin(); gmk != gmkInsts.end(); gmk++) {
-      if (gmk->unknown08.unknown08 == nullptr) {
+      if (gmk->AGmkBase::unknown08.unknown08 == nullptr) {
         continue;
       }
-      f32 x = cameraPosition.x - gmk->unknown08.unknown08->unknown00.x;
-      f32 z = cameraPosition.z - gmk->unknown08.unknown08->unknown00.z;
+      f32 x = cameraPosition.x - gmk->AGmkBase::unknown08.unknown08->unknown00.x;
+      f32 z = cameraPosition.z - gmk->AGmkBase::unknown08.unknown08->unknown00.z;
       if (x * x + z * z > DEBUG_DISTANCE * DEBUG_DISTANCE) {
         continue;
       }
@@ -170,11 +170,11 @@ public:
     }
     const mm::Vec3 &cameraPosition = ml::Scn::sys()->getCam(-1)->renderInfo->position;
     for (const T *gmk = gmkInsts.begin(); gmk != gmkInsts.end(); gmk++) {
-      if (gmk->unknown08.unknown08 == nullptr) {
+      if (gmk->AGmkBase::unknown08.unknown08 == nullptr) {
         continue;
       }
-      f32 x = cameraPosition.x - gmk->unknown08.unknown08->unknown00.x;
-      f32 z = cameraPosition.z - gmk->unknown08.unknown08->unknown00.z;
+      f32 x = cameraPosition.x - gmk->AGmkBase::unknown08.unknown08->unknown00.x;
+      f32 z = cameraPosition.z - gmk->AGmkBase::unknown08.unknown08->unknown00.z;
       if (x * x + z * z > DEBUG_DISTANCE * DEBUG_DISTANCE) {
         continue;
       }

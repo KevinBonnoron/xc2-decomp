@@ -16,36 +16,36 @@
 namespace anm {
 
 SpeedLerpBlendTree::SpeedLerpBlendTree(const ResStateData *pResStateData, const ResSpeedLerpTree *pResTree, mm::mtl::Vector<Variable> &variables, mm::mtl::IAllocator &allocator)
-    : AsmState(pResStateData, allocator), m_pResTree(pResTree) {
-  m_clipNum = pResStateData->m_clips.size();
-  m_pClips = static_cast<AsmClip *>(allocator.allocate(m_clipNum * sizeof(AsmClip), 8));
-  for (u32 i = 0; i < m_clipNum; i++) {
-    AsmClip *clip = new (&m_pClips[i]) AsmClip;
-    clip->createControl(pResStateData->m_clips[i], allocator);
+    : AsmState(pResStateData, allocator), unknown30(pResTree) {
+  unknown40 = pResStateData->unknown08.size();
+  m_baseClip = static_cast<AsmClip *>(allocator.allocate(unknown40 * sizeof(AsmClip), 8));
+  for (u32 i = 0; i < unknown40; i++) {
+    AsmClip *clip = new (&m_baseClip[i]) AsmClip;
+    clip->createControl(pResStateData->unknown08[i], allocator);
   }
-  m_pVariable = &variables[m_pResTree->variableIndex];
+  m_pVariable = &variables[unknown30->variableIndex];
   MM_ASSERT(m_pVariable->getVarType() == VAR_FLOAT);
 }
 
 SpeedLerpBlendTree::~SpeedLerpBlendTree() {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    m_pClips[i].destroyControl();
-    m_pClips[i].~AsmClip();
+  for (u32 i = 0; i < unknown40; i++) {
+    m_baseClip[i].destroyControl();
+    m_baseClip[i].~AsmClip();
   }
-  m_pAllocator->deallocate(m_pClips);
-  m_pClips = nullptr;
-  m_clipNum = 0;
+  m_pAllocator->deallocate(m_baseClip);
+  m_baseClip = nullptr;
+  unknown40 = 0;
 }
 
 void SpeedLerpBlendTree::attach(AsmBlender *blender) {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    blender->addClip(m_pClips[i]);
+  for (u32 i = 0; i < unknown40; i++) {
+    blender->addClip(m_baseClip[i]);
   }
 }
 
 void SpeedLerpBlendTree::dettach(AsmBlender *blender) {
-  for (u32 i = 0; i < m_clipNum; i++) {
-    blender->removeClip(m_pClips[i]);
+  for (u32 i = 0; i < unknown40; i++) {
+    blender->removeClip(m_baseClip[i]);
   }
 }
 
@@ -59,33 +59,33 @@ void SpeedLerpBlendTree::onLeave(AsmListener *listener) { notifyLeave(listener);
 
 void SpeedLerpBlendTree::update(f32 deltaTime, AsmListener *listener) {
   adjustSpeesAndWeight();
-  updateLoopCount(m_pClips[0].update(deltaTime, listener));
-  for (u32 i = 1; i < m_clipNum; i++) {
-    m_pClips[i].update(deltaTime, nullptr);
+  updateLoopCount(m_baseClip[0].update(deltaTime, listener));
+  for (u32 i = 1; i < unknown40; i++) {
+    m_baseClip[i].update(deltaTime, nullptr);
   }
 }
 
 void SpeedLerpBlendTree::setLocalTime(f32 time) {
-  m_pClips[0].setLocalTime(time);
-  if (m_pClips[0].m_pControl == nullptr) {
+  m_baseClip[0].setLocalTime(time);
+  if (m_baseClip[0].unknown10 == nullptr) {
     return;
   }
-  f32 basePlayBackTime = Util::getPlayBackTime(*m_pClips[0].m_pControl->m_pBinding);
-  for (u32 i = 1; i < m_clipNum; i++) {
-    if (m_pClips[i].m_pControl != nullptr) {
-      f32 playBackTime = Util::getPlayBackTime(*m_pClips[i].m_pControl->m_pBinding);
+  f32 basePlayBackTime = Util::getPlayBackTime(*m_baseClip[0].unknown10->m_pBinding);
+  for (u32 i = 1; i < unknown40; i++) {
+    if (m_baseClip[i].unknown10 != nullptr) {
+      f32 playBackTime = Util::getPlayBackTime(*m_baseClip[i].unknown10->m_pBinding);
       f32 rate = basePlayBackTime > FLT_EPSILON ? playBackTime / basePlayBackTime : 0.0f;
-      m_pClips[i].setLocalTime(rate * time);
+      m_baseClip[i].setLocalTime(rate * time);
     }
   }
 }
 
-f32 SpeedLerpBlendTree::getLocalTime() const { return m_pClips[0].getLocalTime(); }
+f32 SpeedLerpBlendTree::getLocalTime() const { return m_baseClip[0].getLocalTime(); }
 
 void SpeedLerpBlendTree::onSetSpeed() { adjustSpeesAndWeight(); }
 
 void SpeedLerpBlendTree::onSetWeight() { adjustSpeesAndWeight(); }
 
-const AsmClip *SpeedLerpBlendTree::getBaseClip() const { return &m_pClips[0]; }
+const AsmClip *SpeedLerpBlendTree::getBaseClip() const { return &m_baseClip[0]; }
 
 } // namespace anm

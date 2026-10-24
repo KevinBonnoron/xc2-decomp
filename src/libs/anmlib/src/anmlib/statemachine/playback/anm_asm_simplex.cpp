@@ -12,7 +12,7 @@ class IAllocator;
 
 namespace anm {
 
-SimplexState::SimplexState(const ResStateData *pResStateData, mm::mtl::IAllocator &allocator) : AsmState(pResStateData, allocator) { m_clip.createControl(pResStateData->m_clips[0], allocator); }
+SimplexState::SimplexState(const ResStateData *pResStateData, mm::mtl::IAllocator &allocator) : AsmState(pResStateData, allocator) { m_clip.createControl(pResStateData->unknown08[0], allocator); }
 
 SimplexState::~SimplexState() { m_clip.destroyControl(); }
 
@@ -30,9 +30,9 @@ void SimplexState::onLeave(AsmListener *listener) { notifyLeave(listener); }
 
 void SimplexState::update(f32 deltaTime, AsmListener *listener) { updateLoopCount(m_clip.update(deltaTime, listener)); }
 
-void SimplexState::onSetSpeed() { m_clip.setSpeed(m_speed); }
+void SimplexState::onSetSpeed() { m_clip.setSpeed(unknown20); }
 
-void SimplexState::onSetWeight() { m_clip.setWeight(m_weight); }
+void SimplexState::onSetWeight() { m_clip.setWeight(unknown24); }
 
 void SimplexState::setLocalTime(f32 time) { m_clip.setLocalTime(time); }
 

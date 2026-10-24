@@ -22,7 +22,7 @@ public:
   };
 
   struct RENDER_OFFSET_INFO {
-    mm::Vec3 offset;
+    mm::Vec3 unknown00; // Inferred role: offset; original member name unknown.
   };
 
   enum Flag {
@@ -50,31 +50,31 @@ public:
   ~ScnObjModel() override {}
   const char *getName() const override { return m_name.c_str(); }
 
-  virtual void setPos(const mm::Vec3 &position) { m_renderInfo.m_back->unknown00.m_pos = position; }
+  virtual void setPos(const mm::Vec3 &position) { unknown20.m_back->unknown00.unknown00 = position; }
 
   virtual void setPosWarp(const mm::Vec3 &position) {
-    m_renderInfo.m_back->unknown00.m_pos = position;
-    m_flags |= FLAG_WARP;
+    unknown20.m_back->unknown00.unknown00 = position;
+    unknown34c |= FLAG_WARP;
   }
 
-  virtual void addPos(const mm::Vec3 &position) { m_renderInfo.m_back->unknown00.m_pos += position; }
-  virtual void setRot(const mm::Vec3 &rotation) { m_renderInfo.m_back->unknown00.m_rot = rotation; }
-  virtual void addRot(const mm::Vec3 &rotation) { m_renderInfo.m_back->unknown00.m_rot += rotation; }
+  virtual void addPos(const mm::Vec3 &position) { unknown20.m_back->unknown00.unknown00 += position; }
+  virtual void setRot(const mm::Vec3 &rotation) { unknown20.m_back->unknown00.unknownf0 = rotation; }
+  virtual void addRot(const mm::Vec3 &rotation) { unknown20.m_back->unknown00.unknownf0 += rotation; }
 
   virtual void addRot(const mm::Quat &rotation) {
-    AttrTransform &transform = m_renderInfo.m_back->unknown00;
-    transform.m_quat = rotation;
-    transform.m_flags |= AttrTransform::FLAG_QUAT;
+    AttrTransform &transform = unknown20.m_back->unknown00;
+    transform.unknown110 = rotation;
+    transform.unknown130 |= AttrTransform::FLAG_QUAT;
   }
 
-  virtual void setScl(const mm::Vec3 &scale) { m_renderInfo.m_back->unknown00.m_scl = scale; }
+  virtual void setScl(const mm::Vec3 &scale) { unknown20.m_back->unknown00.unknown20 = scale; }
 
   virtual void addScl(const mm::Vec3 &scale);
 
   virtual void setMat(const mm::Mat44 &matrix) {
-    AttrTransform &transform = m_renderInfo.m_back->unknown00;
-    transform.m_matrix = matrix;
-    transform.m_flags |= AttrTransform::FLAG_MATRIX;
+    AttrTransform &transform = unknown20.m_back->unknown00;
+    transform.unknown30 = matrix;
+    transform.unknown130 |= AttrTransform::FLAG_MATRIX;
   }
 
   virtual void setAlpha(f32 alpha) = 0;
@@ -91,19 +91,19 @@ public:
   virtual int getGroups() = 0;
   virtual void dispDebugWindow(bool isOpen, const char *title, WinProc *window) {}
 
-  threadval<RENDER_INFO> m_renderInfo;
-  threadval<RENDER_OFFSET_INFO> m_offsetInfo;
+  threadval<RENDER_INFO> unknown20;         // Inferred role: render info; original member name unknown.
+  threadval<RENDER_OFFSET_INFO> unknown2d0; // Inferred role: offset info; original member name unknown.
   mm::mtl::FixStr<32> m_name;
   f32 m_frameSpd;
   f32 _348;
-  u32 m_flags;
-  mm::mtl::FixStr<128> m_streamPath;
+  u32 unknown34c;                  // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<128> unknown350; // Inferred role: stream path; original member name unknown.
 };
 
-static_assert(offsetof(ScnObjModel, m_renderInfo) == 0x20, "");
-static_assert(offsetof(ScnObjModel, m_offsetInfo) == 0x2d0, "");
+static_assert(offsetof(ScnObjModel, unknown20) == 0x20, "");
+static_assert(offsetof(ScnObjModel, unknown2d0) == 0x2d0, "");
 static_assert(offsetof(ScnObjModel, m_name) == 0x320, "");
-static_assert(offsetof(ScnObjModel, m_flags) == 0x34c, "");
-static_assert(offsetof(ScnObjModel, m_streamPath) == 0x350, "");
+static_assert(offsetof(ScnObjModel, unknown34c) == 0x34c, "");
+static_assert(offsetof(ScnObjModel, unknown350) == 0x350, "");
 
 } // namespace ml

@@ -7,32 +7,32 @@
 namespace ml {
 
 WorkObj::WorkObj(const char *name, WorkObj *parent, int childNum)
-    : m_state(WKSTATE_NONE), m_wid(-1), m_parent(parent), m_flags(0), m_exceptionWid(-1), m_clock(0), m_priority(10), m_isRequestShutdown(false), m_isEntryAfter(nullptr) {
-  m_mem = WorkUtil::getWorkMem();
-  m_name = name;
-  m_wid = WorkRootState::allocWID(this);
+    : unknown4c(WKSTATE_NONE), unknown50(-1), unknown58(parent), unknowna0(0), unknown188(-1), unknown190(0), unknown198(10), unknown19c(false), unknown1a0(nullptr) {
+  unknown54 = WorkUtil::getWorkMem();
+  unknown08 = name;
+  unknown50 = WorkRootState::allocWID(this);
   if (childNum > 0) {
-    m_children.create(childNum, m_mem);
+    unknown60.create(childNum, unknown54);
   }
 
   if (parent != nullptr) {
-    if (parent->m_flags & 0x40) {
-      m_flags |= 0x40;
+    if (parent->unknowna0 & 0x40) {
+      unknowna0 |= 0x40;
     }
-    if (parent->m_flags & 0x80) {
-      m_flags |= 0x80;
+    if (parent->unknowna0 & 0x80) {
+      unknowna0 |= 0x80;
     }
-    if (parent->m_flags & 0x200) {
-      m_flags |= 0x200;
+    if (parent->unknowna0 & 0x200) {
+      unknowna0 |= 0x200;
     }
-    if (parent->m_flags & 0x100) {
-      m_flags |= 0x100;
+    if (parent->unknowna0 & 0x100) {
+      unknowna0 |= 0x100;
     }
-    if (parent->m_flags & 0x400) {
-      m_flags |= 0x400;
+    if (parent->unknowna0 & 0x400) {
+      unknowna0 |= 0x400;
     }
     if (parent->wkIsShutdown()) {
-      m_flags |= 1;
+      unknowna0 |= 1;
     }
   }
 }
@@ -40,21 +40,21 @@ WorkObj::WorkObj(const char *name, WorkObj *parent, int childNum)
 mtl::ALLOC_HANDLE WorkUtil::getWorkMem() { return WorkRootState::getWorkMem(); }
 
 WorkObj::~WorkObj() {
-  if (m_children.size() != 0) {
-    for (reslist<WorkObj *>::Node *node = m_children.begin(); node != m_children.end(); node = node->getNext()) {
+  if (unknown60.size() != 0) {
+    for (reslist<WorkObj *>::Node *node = unknown60.begin(); node != unknown60.end(); node = node->getNext()) {
     }
   }
 
-  WorkRootState::freeWID(m_wid);
+  WorkRootState::freeWID(unknown50);
 }
 
-const reslist<WorkObj *> *WorkObj::wkGetChild() const { return &m_children; }
+const reslist<WorkObj *> *WorkObj::wkGetChild() const { return &unknown60; }
 
-reslist<WorkObj *> *WorkObj::wkGetChild() { return &m_children; }
+reslist<WorkObj *> *WorkObj::wkGetChild() { return &unknown60; }
 
 bool WorkObj::wkIsCurrent() const {
-  if (m_parent != nullptr) {
-    return m_parent->m_children.begin()->value == this;
+  if (unknown58 != nullptr) {
+    return unknown58->unknown60.begin()->value == this;
   }
 
   return true;
@@ -62,42 +62,42 @@ bool WorkObj::wkIsCurrent() const {
 
 void WorkObj::wkDispState() {}
 
-void WorkObj::wkRequestShutdown() { m_isRequestShutdown = true; }
+void WorkObj::wkRequestShutdown() { unknown19c = true; }
 
 void WorkObj::wkSetEvent(EVT event) {
   if (event == 0) {
-    m_flags |= 1;
+    unknowna0 |= 1;
   } else {
-    m_msg.add(event);
-    m_msg.set("");
+    unknowna8.add(event);
+    unknowna8.set("");
   }
 
-  for (reslist<WorkObj *>::Node *node = m_children.begin(); node != m_children.end(); node = node->getNext()) {
+  for (reslist<WorkObj *>::Node *node = unknown60.begin(); node != unknown60.end(); node = node->getNext()) {
     node->value->wkSetEvent(event);
   }
 }
 
 void WorkObj::wkSetEventCurrent(EVT event) {
   if (event == 0) {
-    m_flags |= 1;
+    unknowna0 |= 1;
   } else {
-    m_msg.add(event);
-    m_msg.set("");
+    unknowna8.add(event);
+    unknowna8.set("");
   }
 }
 
 void WorkObj::wkSetEventChild(EVT event) {
-  for (reslist<WorkObj *>::Node *node = m_children.begin(); node != m_children.end(); node = node->getNext()) {
+  for (reslist<WorkObj *>::Node *node = unknown60.begin(); node != unknown60.end(); node = node->getNext()) {
     node->value->wkSetEvent(event);
   }
 }
 
 bool WorkObj::wkCheckTimeout(u32 time, bool isTimeout, const char *message) {
-  if (m_flags & 2) {
+  if (unknowna0 & 2) {
     return true;
   }
 
-  return m_state < WKSTATE_INIT || m_state > WKSTATE_RUN || isTimeout;
+  return unknown4c < WKSTATE_INIT || unknown4c > WKSTATE_RUN || isTimeout;
 }
 
 void WorkObj::wkReplaceHasChild(int childNum) {
@@ -105,82 +105,82 @@ void WorkObj::wkReplaceHasChild(int childNum) {
     return;
   }
 
-  m_children.release();
-  m_children.create(childNum, m_mem);
+  unknown60.release();
+  unknown60.create(childNum, unknown54);
 }
 
 void WorkObj::wkTimeoutInit() {
   if (DevClock::get() != nullptr) {
-    DevClock::getClockNow(m_clock);
+    DevClock::getClockNow(unknown190);
   }
 }
 
 void WorkObj::wkStandby() {
-  if (m_isRequestShutdown) {
-    m_flags |= 1;
-    m_isRequestShutdown = false;
+  if (unknown19c) {
+    unknowna0 |= 1;
+    unknown19c = false;
   }
 
-  m_flags &= 0xffff;
-  while (m_msg.size() != 0) {
-    MsgParam<8>::Param &param = m_msg.get(0);
+  unknowna0 &= 0xffff;
+  while (unknowna8.size() != 0) {
+    MsgParam<8>::Param &param = unknowna8.get(0);
     switch (param.msg) {
     case 1:
-      m_flags |= 2;
+      unknowna0 |= 2;
       break;
     case 2:
-      m_flags |= 0x10;
-      m_exceptionWid = *reinterpret_cast<u32 *>(param.data);
+      unknowna0 |= 0x10;
+      unknown188 = *reinterpret_cast<u32 *>(param.data);
       break;
     case 4:
-      m_flags |= 0x40;
+      unknowna0 |= 0x40;
       break;
     case 5:
-      m_flags |= 0x80;
+      unknowna0 |= 0x80;
       OnPauseTrigger(true, param.data);
       break;
     case 6:
-      m_flags &= ~0x80;
+      unknowna0 &= ~0x80;
       OnPauseTrigger(false, param.data);
       break;
     case 7:
-      if (!(m_flags & 0x100)) {
-        m_flags |= 0x200;
+      if (!(unknowna0 & 0x100)) {
+        unknowna0 |= 0x200;
       }
       break;
     case 8:
-      if (!(m_flags & 0x100)) {
-        m_flags &= ~0x200;
+      if (!(unknowna0 & 0x100)) {
+        unknowna0 &= ~0x200;
       }
       break;
     case 10:
-      m_flags |= 0x400;
+      unknowna0 |= 0x400;
       OnPauseTrigger(true, param.data);
       break;
     case 11:
-      m_flags &= ~0x400;
+      unknowna0 &= ~0x400;
       OnPauseTrigger(false, param.data);
       break;
     case 9:
-      m_flags |= 0x100;
+      unknowna0 |= 0x100;
       break;
     }
-    m_msg.pop();
+    unknowna8.pop();
   }
 
   if (wkIsWaitException()) {
-    if (wkStandbyExceptionRetry(m_exceptionWid)) {
-      WorkObj *work = WorkRootState::getWork(m_exceptionWid);
+    if (wkStandbyExceptionRetry(unknown188)) {
+      WorkObj *work = WorkRootState::getWork(unknown188);
       if (work != nullptr) {
         work->wkSetEvent(static_cast<EVT>(0));
       }
-      m_exceptionWid = -1;
-      m_flags &= ~0x10;
+      unknown188 = -1;
+      unknowna0 &= ~0x10;
     }
     return;
   }
 
-  switch (m_state) {
+  switch (unknown4c) {
   case WKSTATE_NONE:
     wkStandbyInit();
   case WKSTATE_INIT:
@@ -201,22 +201,22 @@ void WorkObj::wkStandby() {
 }
 
 bool WorkObj::wkStandbyInit() {
-  m_state = WKSTATE_INIT;
+  unknown4c = WKSTATE_INIT;
   wkTimeoutInit();
   return true;
 }
 
 bool WorkObj::wkStandbyRun() {
-  if (m_flags & 1) {
-    m_state = WKSTATE_RUN;
+  if (unknowna0 & 1) {
+    unknown4c = WKSTATE_RUN;
     wkTimeoutInit();
   }
 
-  return m_state == WKSTATE_RUN;
+  return unknown4c == WKSTATE_RUN;
 }
 
 bool WorkObj::wkStandbyShutdown() {
-  m_state = WKSTATE_SHUTDOWN;
+  unknown4c = WKSTATE_SHUTDOWN;
   wkTimeoutInit();
   return true;
 }
@@ -224,13 +224,13 @@ bool WorkObj::wkStandbyShutdown() {
 bool WorkObj::wkStandbyDestruct() { return false; }
 
 bool WorkObj::wkStandbyLogin() {
-  m_state = WKSTATE_LOGIN;
+  unknown4c = WKSTATE_LOGIN;
   wkTimeoutInit();
   return true;
 }
 
 bool WorkObj::wkStandbyLogout() {
-  m_state = WKSTATE_LOGOUT;
+  unknown4c = WKSTATE_LOGOUT;
   wkTimeoutInit();
   return true;
 }

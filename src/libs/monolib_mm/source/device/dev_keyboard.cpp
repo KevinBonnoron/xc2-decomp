@@ -42,9 +42,9 @@ static u8 convertKeyCode(u8 code) {
   const u8 *converted = &s_keyCodeTbl[code];
   DevKeyboard *keyboard = DevKeyboard::get();
   if (keyboard != nullptr) {
-    if (keyboard->m_hold & VK_SHIFT) {
+    if (keyboard->unknown1c0 & VK_SHIFT) {
       converted = &s_keyCodeShiftTbl[code];
-    } else if (keyboard->m_hold & VK_CTRL) {
+    } else if (keyboard->unknown1c0 & VK_CTRL) {
       converted = &s_keyCodeCtrlTbl[code];
     }
   }
@@ -66,7 +66,7 @@ bool DevKeyboard::isInitialized() {
 u32 DevKeyboard::getVkDown() {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    return keyboard->m_vkDown;
+    return keyboard->unknown1c8;
   }
 
   return 0;
@@ -75,7 +75,7 @@ u32 DevKeyboard::getVkDown() {
 u32 DevKeyboard::getVkUp() {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    return keyboard->m_vkUp;
+    return keyboard->unknown1cc;
   }
 
   return 0;
@@ -84,7 +84,7 @@ u32 DevKeyboard::getVkUp() {
 u32 DevKeyboard::getVkHold() {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    return keyboard->m_hold;
+    return keyboard->unknown1c0;
   }
 
   return 0;
@@ -93,7 +93,7 @@ u32 DevKeyboard::getVkHold() {
 bool DevKeyboard::isVkDown(u32 key) {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    return (keyboard->m_vkDown & key) != 0;
+    return (keyboard->unknown1c8 & key) != 0;
   }
 
   return false;
@@ -102,7 +102,7 @@ bool DevKeyboard::isVkDown(u32 key) {
 bool DevKeyboard::isVkUp(u32 key) {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    return (keyboard->m_vkUp & key) != 0;
+    return (keyboard->unknown1cc & key) != 0;
   }
 
   return false;
@@ -111,7 +111,7 @@ bool DevKeyboard::isVkUp(u32 key) {
 int DevKeyboard::getCharDownNum() {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    return keyboard->m_charDownNum;
+    return keyboard->unknown258;
   }
 
   return 0;
@@ -120,7 +120,7 @@ int DevKeyboard::getCharDownNum() {
 u8 DevKeyboard::getCharDown(u32 index) {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    return convertKeyCode(keyboard->m_charDown[index]);
+    return convertKeyCode(keyboard->unknown210[index]);
   }
 
   return 0;
@@ -129,7 +129,7 @@ u8 DevKeyboard::getCharDown(u32 index) {
 bool DevKeyboard::isCharDown(u8 code) {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    for (u32 i = 0; i < keyboard->m_charDownNum; i++) {
+    for (u32 i = 0; i < keyboard->unknown258; i++) {
       if (getCharDown(i) == code) {
         return true;
       }
@@ -142,7 +142,7 @@ bool DevKeyboard::isCharDown(u8 code) {
 u8 DevKeyboard::getCodeDown(u32 index) {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    return keyboard->m_charDown[index];
+    return keyboard->unknown210[index];
   }
 
   return 0;
@@ -151,7 +151,7 @@ u8 DevKeyboard::getCodeDown(u32 index) {
 int DevKeyboard::getCharUpNum() {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    return keyboard->m_charUpNum;
+    return keyboard->unknown25c;
   }
 
   return 0;
@@ -160,7 +160,7 @@ int DevKeyboard::getCharUpNum() {
 u8 DevKeyboard::getCharUp(u32 index) {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    return convertKeyCode(keyboard->m_charUp[index]);
+    return convertKeyCode(keyboard->unknown230[index]);
   }
 
   return 0;
@@ -169,7 +169,7 @@ u8 DevKeyboard::getCharUp(u32 index) {
 bool DevKeyboard::isCharUp(u8 code) {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    for (u32 i = 0; i < keyboard->m_charUpNum; i++) {
+    for (u32 i = 0; i < keyboard->unknown25c; i++) {
       if (getCharUp(i) == code) {
         return true;
       }
@@ -182,146 +182,146 @@ bool DevKeyboard::isCharUp(u8 code) {
 u8 DevKeyboard::getCodeUp(u32 index) {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    return keyboard->m_charUp[index];
+    return keyboard->unknown230[index];
   }
 
   return 0;
 }
 
 void DevKeyboard::updateKey() {
-  u32 up = m_upAccum;
-  m_prevHold = m_hold;
-  m_hold = (m_hold | m_downAccum) & ~up;
-  m_vkDown = (m_prevHold ^ m_hold) & m_downAccum;
-  m_vkUp = (m_prevHold ^ m_hold) & up;
-  m_downAccum = 0;
-  m_upAccum = 0;
+  u32 up = unknown1bc;
+  unknown1c4 = unknown1c0;
+  unknown1c0 = (unknown1c0 | unknown1b8) & ~up;
+  unknown1c8 = (unknown1c4 ^ unknown1c0) & unknown1b8;
+  unknown1cc = (unknown1c4 ^ unknown1c0) & up;
+  unknown1b8 = 0;
+  unknown1bc = 0;
 }
 
 void DevKeyboard::ikReturnUp() {
-  m_upAccum |= VK_RETURN;
+  unknown1bc |= VK_RETURN;
   updateKey();
 }
 
 void DevKeyboard::ikTabUp() {
-  m_upAccum |= VK_TAB;
+  unknown1bc |= VK_TAB;
   updateKey();
 }
 
 void DevKeyboard::ikDeleteUp() {
-  if (!(m_vkUp & VK_DELETE)) {
-    m_upAccum |= VK_DELETE;
+  if (!(unknown1cc & VK_DELETE)) {
+    unknown1bc |= VK_DELETE;
     updateKey();
   }
 }
 
 void DevKeyboard::ikShiftUp() {
-  m_upAccum |= VK_SHIFT;
+  unknown1bc |= VK_SHIFT;
   updateKey();
 }
 
 void DevKeyboard::ikCtrlUp() {
-  m_upAccum |= VK_CTRL;
+  unknown1bc |= VK_CTRL;
   updateKey();
 }
 
 void DevKeyboard::ikAltUp() {
-  m_upAccum |= VK_ALT;
+  unknown1bc |= VK_ALT;
   updateKey();
 }
 
 void DevKeyboard::ikFuncUp(u8 index) {
-  m_upAccum |= 1 << (index + VK_FUNC_SHIFT);
+  unknown1bc |= 1 << (index + VK_FUNC_SHIFT);
   updateKey();
 }
 
-bool DevKeyboard::ikIsAltDown() const { return (m_downAccum & VK_ALT) || (m_hold & VK_ALT); }
+bool DevKeyboard::ikIsAltDown() const { return (unknown1b8 & VK_ALT) || (unknown1c0 & VK_ALT); }
 
-bool DevKeyboard::ikIsAltUp() const { return (m_upAccum & VK_ALT) || !(m_hold & VK_ALT); }
+bool DevKeyboard::ikIsAltUp() const { return (unknown1bc & VK_ALT) || !(unknown1c0 & VK_ALT); }
 
-bool DevKeyboard::ikIsHomeDown() const { return (m_downAccum & VK_HOME) || (m_hold & VK_HOME); }
+bool DevKeyboard::ikIsHomeDown() const { return (unknown1b8 & VK_HOME) || (unknown1c0 & VK_HOME); }
 
-bool DevKeyboard::ikIsHomeUp() const { return (m_upAccum & VK_HOME) || !(m_hold & VK_HOME); }
+bool DevKeyboard::ikIsHomeUp() const { return (unknown1bc & VK_HOME) || !(unknown1c0 & VK_HOME); }
 
-bool DevKeyboard::ikIsEndDown() const { return (m_downAccum & VK_END) || (m_hold & VK_END); }
+bool DevKeyboard::ikIsEndDown() const { return (unknown1b8 & VK_END) || (unknown1c0 & VK_END); }
 
-bool DevKeyboard::ikIsEndUp() const { return (m_upAccum & VK_END) || !(m_hold & VK_END); }
+bool DevKeyboard::ikIsEndUp() const { return (unknown1bc & VK_END) || !(unknown1c0 & VK_END); }
 
 void DevKeyboard::ikHomeUp() {
-  m_upAccum |= VK_HOME;
+  unknown1bc |= VK_HOME;
   updateKey();
 }
 
 void DevKeyboard::ikEndUp() {
-  m_upAccum |= VK_END;
+  unknown1bc |= VK_END;
   updateKey();
 }
 
 void DevKeyboard::ikPageUpUp() {
-  m_upAccum |= VK_PAGE_UP;
+  unknown1bc |= VK_PAGE_UP;
   updateKey();
 }
 
 void DevKeyboard::ikPageDownUp() {
-  m_upAccum |= VK_PAGE_DOWN;
+  unknown1bc |= VK_PAGE_DOWN;
   updateKey();
 }
 
 void DevKeyboard::ikCharUp(u8 code) {
   switch (code) {
   case KEY_LEFT:
-    m_upAccum |= VK_LEFT;
-    m_downAccum &= ~VK_LEFT;
+    unknown1bc |= VK_LEFT;
+    unknown1b8 &= ~VK_LEFT;
     updateKey();
     break;
   case KEY_UP:
-    m_upAccum |= VK_UP;
-    m_downAccum &= ~VK_UP;
+    unknown1bc |= VK_UP;
+    unknown1b8 &= ~VK_UP;
     updateKey();
     break;
   case KEY_RIGHT:
-    m_upAccum |= VK_RIGHT;
-    m_downAccum &= ~VK_RIGHT;
+    unknown1bc |= VK_RIGHT;
+    unknown1b8 &= ~VK_RIGHT;
     updateKey();
     break;
   case KEY_DOWN:
-    m_upAccum |= VK_DOWN;
-    m_downAccum &= ~VK_DOWN;
+    unknown1bc |= VK_DOWN;
+    unknown1b8 &= ~VK_DOWN;
     updateKey();
     break;
   }
-  if (m_charUpNumAccum < 32) {
-    m_charUpAccum[m_charUpNumAccum++] = code;
+  if (unknown254 < 32) {
+    unknown1f0[unknown254++] = code;
   }
 }
 
 void DevKeyboard::ikPauseUp() {
-  m_upAccum |= VK_PAUSE;
+  unknown1bc |= VK_PAUSE;
   updateKey();
 }
 
 void DevKeyboard::ikScrollUp() {
-  m_upAccum |= VK_SCROLL;
+  unknown1bc |= VK_SCROLL;
   updateKey();
 }
 
 void DevKeyboard::wkFrameEnd() {
-  for (int i = 0; i < m_charDownNumAccum; i++) {
-    m_charDown[i] = m_charDownAccum[i];
+  for (int i = 0; i < unknown250; i++) {
+    unknown210[i] = unknown1d0[i];
   }
 
-  for (int i = 0; i < m_charUpNumAccum; i++) {
-    m_charUp[i] = m_charUpAccum[i];
+  for (int i = 0; i < unknown254; i++) {
+    unknown230[i] = unknown1f0[i];
   }
 
-  m_charDownNum = m_charDownNumAccum;
-  m_charUpNum = m_charUpNumAccum;
-  m_charDownNumAccum = 0;
-  m_charUpNumAccum = 0;
-  m_vkDown = 0;
-  m_vkUp = 0;
-  m_keyMsgOn.clear();
-  m_keyMsgOff.clear();
+  unknown258 = unknown250;
+  unknown25c = unknown254;
+  unknown250 = 0;
+  unknown254 = 0;
+  unknown1c8 = 0;
+  unknown1cc = 0;
+  unknown260.clear();
+  unknown668.clear();
 }
 
 bool DevKeyboard::wkStandbyLogin() {
@@ -330,7 +330,7 @@ bool DevKeyboard::wkStandbyLogin() {
 }
 
 bool DevKeyboard::wkStandbyLogout() {
-  if (m_children.size() != 0) {
+  if (unknown60.size() != 0) {
     return false;
   }
 
@@ -341,21 +341,21 @@ bool DevKeyboard::wkStandbyLogout() {
 void DevKeyboard::clearKey() {
   DevKeyboard *keyboard = get();
   if (keyboard != nullptr) {
-    keyboard->m_hold = 0;
-    keyboard->m_prevHold = 0;
-    keyboard->m_vkDown = 0;
-    keyboard->m_vkUp = 0;
-    keyboard->m_downAccum = 0;
-    keyboard->m_upAccum = 0;
-    keyboard->m_charDownNum = 0;
-    keyboard->m_charUpNum = 0;
-    keyboard->m_charDownNumAccum = 0;
-    keyboard->m_charUpNumAccum = 0;
+    keyboard->unknown1c0 = 0;
+    keyboard->unknown1c4 = 0;
+    keyboard->unknown1c8 = 0;
+    keyboard->unknown1cc = 0;
+    keyboard->unknown1b8 = 0;
+    keyboard->unknown1bc = 0;
+    keyboard->unknown258 = 0;
+    keyboard->unknown25c = 0;
+    keyboard->unknown250 = 0;
+    keyboard->unknown254 = 0;
   }
 }
 
-void DevKeyboard::ikKeyMsgOn(u32 message) { m_keyMsgOn.push_back(message); }
+void DevKeyboard::ikKeyMsgOn(u32 message) { unknown260.push_back(message); }
 
-void DevKeyboard::ikKeyMsgOff(u32 message) { m_keyMsgOff.push_back(message); }
+void DevKeyboard::ikKeyMsgOff(u32 message) { unknown668.push_back(message); }
 
 } // namespace ml
