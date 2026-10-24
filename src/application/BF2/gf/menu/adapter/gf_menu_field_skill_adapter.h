@@ -67,14 +67,14 @@ public:
   static GfMenuFieldSkillAdapter *createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceFs> reference);
   void update(const fw::UpdateInfo &info) override;
 
-  mm::mtl::Delegate<bool(const MenuFieldSkill &)> updater;
-  IConverter *converter;
-  MenuFieldSkill fieldSkill;
+  mm::mtl::Delegate<bool(const MenuFieldSkill &)> unknown30; // Inferred role: updater; original member name unknown.
+  IConverter *unknown50;                                     // Inferred role: converter; original member name unknown.
+  MenuFieldSkill unknown58;                                  // Inferred role: field skill; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuFieldSkillAdapter, updater) == 0x30, "");
-static_assert(offsetof(GfMenuFieldSkillAdapter, converter) == 0x50, "");
-static_assert(offsetof(GfMenuFieldSkillAdapter, fieldSkill) == 0x58, "");
+static_assert(offsetof(GfMenuFieldSkillAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuFieldSkillAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuFieldSkillAdapter, unknown58) == 0x58, "");
 static_assert(sizeof(GfMenuFieldSkillAdapter) == 0x60, "");
 
 } // namespace gf

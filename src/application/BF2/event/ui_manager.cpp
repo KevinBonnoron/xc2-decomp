@@ -186,7 +186,7 @@ bool UIManager::openSkip(bool &isSkip) {
       flags &= ~FLAG_SKIP;
       mm::mtl::safeRelease(skipContext);
       skipWait = -1;
-      isSkip = result.type == 0;
+      isSkip = result.unknown04 == 0;
       return true;
     }
   }
@@ -230,7 +230,7 @@ bool UIManager::openShopUI(u32 shop, bool &isBought) {
   if ((flags & FLAG_SHOP) == 0) {
     shopContext = gf::GfMenuCallContext::create();
     gf::GfMenuObjShop::OpenParam param;
-    param.shop = shop;
+    param.unknown00 = shop;
     gf::GfMenuObjShop::open(shopContext, param);
     flags |= FLAG_SHOP;
   }
@@ -245,7 +245,7 @@ bool UIManager::openShopUI(u32 shop, bool &isBought) {
   mm::mtl::Singleton<FrameManager>::getPtr()->pause(FrameManager::PAUSE_TYPE_SHOP_UI, false);
   flags &= ~FLAG_SHOP;
   mm::mtl::safeRelease(shopContext);
-  isBought = result.type == 1;
+  isBought = result.unknown04 == 1;
   return true;
 }
 
@@ -259,28 +259,28 @@ bool UIManager::openPayoffUI(const char *title, const mm::mtl::FixedVector<u32, 
     u8 *bdat = mm::mtl::Singleton<MstxtManager>::getPtr()->getFp();
     payoffContext = gf::GfMenuCallContext::create();
     gf::GfMenuObjBalloon::OpenSelectMoneyParam param;
-    param.bdat = bdat;
+    param.unknown00 = bdat;
     if (title != nullptr && *title != '\0') {
       int textId = mm::mtl::Singleton<MstxtManager>::getPtr()->getSeatID(title);
       if (textId >= 0) {
-        param.textId = textId;
+        param.unknown08 = textId;
       }
     }
-    for (size_t i = 0; i < values.size() && i < param.moneys.capacity(); i++) {
-      param.moneys.push_back(values[i]);
+    for (size_t i = 0; i < values.size() && i < param.unknown10.capacity(); i++) {
+      param.unknown10.push_back(values[i]);
     }
-    for (size_t i = 0; i < names.size() && i < param.nameIds.capacity(); i++) {
+    for (size_t i = 0; i < names.size() && i < param.unknown28.capacity(); i++) {
       if (names[i] != nullptr && *names[i] != '\0') {
         int nameId = mm::mtl::Singleton<MstxtManager>::getPtr()->getSeatID(names[i]);
         if (nameId >= 0) {
-          param.nameIds.push_back(nameId);
+          param.unknown28.push_back(nameId);
         }
       }
     }
     if (message != nullptr && *message != '\0') {
       int messageId = mm::mtl::Singleton<MstxtManager>::getPtr()->getSeatID(message);
       if (messageId >= 0) {
-        param.messageId = messageId;
+        param.unknown0c = messageId;
       }
     }
     gf::GfMenuObjBalloon::openEventSelectMoney(payoffContext, param);
@@ -299,7 +299,7 @@ bool UIManager::openPayoffUI(const char *title, const mm::mtl::FixedVector<u32, 
   mm::mtl::safeRelease(payoffContext);
   int index = -1;
   for (size_t i = 0; i < values.size(); i++) {
-    if (values[i] == static_cast<u32>(result.value)) {
+    if (values[i] == static_cast<u32>(result.unknown00)) {
       index = i;
       break;
     }
@@ -317,7 +317,7 @@ bool UIManager::openRewardUI(u32 item) {
   if ((flags & FLAG_REWARD) == 0) {
     rewardContext = gf::GfMenuCallContext::create();
     gf::GfMenuObjBalloon::OpenGetItemParam param;
-    param.item = item;
+    param.unknown00 = item;
     isOpen = gf::GfMenuObjBalloon::openGetItem(rewardContext, param);
     flags |= FLAG_REWARD;
   }

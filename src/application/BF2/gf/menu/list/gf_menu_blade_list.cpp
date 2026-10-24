@@ -55,31 +55,31 @@ void GfMenuBladeList::sort(u32 type, bool ascending) {
 }
 
 bool GfMenuBladeList::sortTimeAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u32 time = GfDataBlade::getBornTime(info.blade);
-  u32 otherTime = GfDataBlade::getBornTime(other.blade);
+  u32 time = GfDataBlade::getBornTime(info.unknown00);
+  u32 otherTime = GfDataBlade::getBornTime(other.unknown00);
   if (time == otherTime) {
-    return info.blade < other.blade;
+    return info.unknown00 < other.unknown00;
   }
   return time < otherTime;
 }
 
 bool GfMenuBladeList::sortTimeDescending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u32 time = GfDataBlade::getBornTime(info.blade);
-  u32 otherTime = GfDataBlade::getBornTime(other.blade);
+  u32 time = GfDataBlade::getBornTime(info.unknown00);
+  u32 otherTime = GfDataBlade::getBornTime(other.unknown00);
   if (time == otherTime) {
-    return info.blade < other.blade;
+    return info.unknown00 < other.unknown00;
   }
   return time > otherTime;
 }
 
 bool GfMenuBladeList::sortRarityAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u32 rarity = GfMenuObjUtil::getBladeRarity(info.blade);
-  u32 otherRarity = GfMenuObjUtil::getBladeRarity(other.blade);
+  u32 rarity = GfMenuObjUtil::getBladeRarity(info.unknown00);
+  u32 otherRarity = GfMenuObjUtil::getBladeRarity(other.unknown00);
   if (rarity == otherRarity) {
-    u32 rank = GfMenuObjUtil::getBladeRank(info.blade);
-    u32 otherRank = GfMenuObjUtil::getBladeRank(other.blade);
+    u32 rank = GfMenuObjUtil::getBladeRank(info.unknown00);
+    u32 otherRank = GfMenuObjUtil::getBladeRank(other.unknown00);
     if (rank == otherRank) {
-      return info.blade < other.blade;
+      return info.unknown00 < other.unknown00;
     }
     return rank < otherRank;
   }
@@ -87,13 +87,13 @@ bool GfMenuBladeList::sortRarityAscending(const MenuBladeInfo &info, const MenuB
 }
 
 bool GfMenuBladeList::sortRarityDescending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u32 rarity = GfMenuObjUtil::getBladeRarity(info.blade);
-  u32 otherRarity = GfMenuObjUtil::getBladeRarity(other.blade);
+  u32 rarity = GfMenuObjUtil::getBladeRarity(info.unknown00);
+  u32 otherRarity = GfMenuObjUtil::getBladeRarity(other.unknown00);
   if (rarity == otherRarity) {
-    u32 rank = GfMenuObjUtil::getBladeRank(info.blade);
-    u32 otherRank = GfMenuObjUtil::getBladeRank(other.blade);
+    u32 rank = GfMenuObjUtil::getBladeRank(info.unknown00);
+    u32 otherRank = GfMenuObjUtil::getBladeRank(other.unknown00);
     if (rank == otherRank) {
-      return info.blade < other.blade;
+      return info.unknown00 < other.unknown00;
     }
     return rank > otherRank;
   }
@@ -101,69 +101,69 @@ bool GfMenuBladeList::sortRarityDescending(const MenuBladeInfo &info, const Menu
 }
 
 bool GfMenuBladeList::sortWeaponAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 weaponType = GfDataBlade::getSDataBlade(info.blade)->unknown821;
-  u8 otherWeaponType = GfDataBlade::getSDataBlade(other.blade)->unknown821;
+  u8 weaponType = GfDataBlade::getSDataBlade(info.unknown00)->unknown821;
+  u8 otherWeaponType = GfDataBlade::getSDataBlade(other.unknown00)->unknown821;
   if (weaponType == otherWeaponType) {
-    return info.blade < other.blade;
+    return info.unknown00 < other.unknown00;
   }
   return weaponType < otherWeaponType;
 }
 
 bool GfMenuBladeList::sortWeaponDescending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 weaponType = GfDataBlade::getSDataBlade(info.blade)->unknown821;
-  u8 otherWeaponType = GfDataBlade::getSDataBlade(other.blade)->unknown821;
+  u8 weaponType = GfDataBlade::getSDataBlade(info.unknown00)->unknown821;
+  u8 otherWeaponType = GfDataBlade::getSDataBlade(other.unknown00)->unknown821;
   if (weaponType == otherWeaponType) {
-    return info.blade < other.blade;
+    return info.unknown00 < other.unknown00;
   }
   return weaponType > otherWeaponType;
 }
 
 bool GfMenuBladeList::sortAttrAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 attribute = GfDataBlade::getAttribute(info.blade);
-  u8 otherAttribute = GfDataBlade::getAttribute(other.blade);
+  u8 attribute = GfDataBlade::getAttribute(info.unknown00);
+  u8 otherAttribute = GfDataBlade::getAttribute(other.unknown00);
   if (attribute == otherAttribute) {
-    return info.blade < other.blade;
+    return info.unknown00 < other.unknown00;
   }
   return attribute < otherAttribute;
 }
 
 bool GfMenuBladeList::sortAttrDescending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 attribute = GfDataBlade::getAttribute(info.blade);
-  u8 otherAttribute = GfDataBlade::getAttribute(other.blade);
+  u8 attribute = GfDataBlade::getAttribute(info.unknown00);
+  u8 otherAttribute = GfDataBlade::getAttribute(other.unknown00);
   if (attribute == otherAttribute) {
-    return info.blade < other.blade;
+    return info.unknown00 < other.unknown00;
   }
   return attribute > otherAttribute;
 }
 
 bool GfMenuBladeList::sortCreatorAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  if (info.creator == other.creator) {
-    return info.blade < other.blade;
+  if (info.unknown04 == other.unknown04) {
+    return info.unknown00 < other.unknown00;
   }
-  return info.creator < other.creator;
+  return info.unknown04 < other.unknown04;
 }
 
 bool GfMenuBladeList::sortCreatorDescending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  if (info.creator == other.creator) {
-    return info.blade < other.blade;
+  if (info.unknown04 == other.unknown04) {
+    return info.unknown00 < other.unknown00;
   }
-  return info.creator > other.creator;
+  return info.unknown04 > other.unknown04;
 }
 
 bool GfMenuBladeList::sortGenderDescending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 gender = GfDataBlade::getSDataBlade(info.blade)->unknown709;
-  u8 otherGender = GfDataBlade::getSDataBlade(other.blade)->unknown709;
+  u8 gender = GfDataBlade::getSDataBlade(info.unknown00)->unknown709;
+  u8 otherGender = GfDataBlade::getSDataBlade(other.unknown00)->unknown709;
   if (gender == otherGender) {
-    return info.blade < other.blade;
+    return info.unknown00 < other.unknown00;
   }
   return gender > otherGender;
 }
 
 bool GfMenuBladeList::sortGenderAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 gender = GfDataBlade::getSDataBlade(info.blade)->unknown709;
-  u8 otherGender = GfDataBlade::getSDataBlade(other.blade)->unknown709;
+  u8 gender = GfDataBlade::getSDataBlade(info.unknown00)->unknown709;
+  u8 otherGender = GfDataBlade::getSDataBlade(other.unknown00)->unknown709;
   if (gender == otherGender) {
-    return info.blade < other.blade;
+    return info.unknown00 < other.unknown00;
   }
   return gender < otherGender;
 }
@@ -171,7 +171,7 @@ bool GfMenuBladeList::sortGenderAscending(const MenuBladeInfo &info, const MenuB
 void GfMenuBladeList::updateOwner() {
   for (u32 i = 0; i < getSize(); i++) {
     MenuBladeInfo &info = getContents(i);
-    info.creator = GfDataBlade::getCreator(info.blade);
+    info.unknown04 = GfDataBlade::getCreator(info.unknown00);
   }
 }
 

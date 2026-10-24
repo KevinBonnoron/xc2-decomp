@@ -14,7 +14,7 @@ namespace gf {
 constexpr u32 ORDER_DISTANCE_OTHER_MAP = 0xffffffff;
 
 void GfMenuLocation::updateDataNum(u32 type) {
-  LocatorGroup &group = groups[type];
+  LocatorGroup &group = unknown10[type];
   if (type >= LOCATOR_TYPE_COUNT) {
     return;
   }
@@ -26,33 +26,33 @@ void GfMenuLocation::updateDataNum(u32 type) {
     }
     position = acc.getWorldTransform().position;
   }
-  group.orders.clear();
+  group.unknown30.clear();
   u32 dataNum = 0;
-  for (u32 i = 0; i < group.locators.size(); i++) {
-    if (group.locators[i].locator == nullptr) {
+  for (u32 i = 0; i < group.unknown00.size(); i++) {
+    if (group.unknown00[i].locator == nullptr) {
       continue;
     }
-    u32 posNum = group.locators[i].locator->getPosNum();
+    u32 posNum = group.unknown00[i].locator->getPosNum();
     if (posNum != 0) {
       for (u32 j = 0; j < posNum; j++) {
-        mm::Vec3 delta = *group.locators[i].locator->getPos(j);
+        mm::Vec3 delta = *group.unknown00[i].locator->getPos(j);
         delta -= position;
         int distance = static_cast<int>(sqrtf(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z)) - 1;
         if (distance < 0) {
           distance = 0;
         }
         OrderInfo order = {dataNum + j, static_cast<u32>(distance)};
-        group.orders.push_back(order);
+        group.unknown30.push_back(order);
       }
-    } else if (group.locators[i].isOtherMap()) {
+    } else if (group.unknown00[i].isOtherMap()) {
       OrderInfo order = {dataNum, ORDER_DISTANCE_OTHER_MAP};
-      group.orders.push_back(order);
+      group.unknown30.push_back(order);
       posNum = 1;
     }
     dataNum += posNum;
   }
-  group.dataNum = dataNum;
-  std::sort(group.orders.begin(), group.orders.end(), CompareOrder());
+  group.unknown28 = dataNum;
+  std::sort(group.unknown30.begin(), group.unknown30.end(), CompareOrder());
 }
 
 } // namespace gf

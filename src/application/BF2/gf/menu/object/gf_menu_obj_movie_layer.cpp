@@ -11,7 +11,7 @@ GfMenuObjMovieLayer::GfMenuObjMovieLayer(u32 handle) : GfMenuObject(handle) {}
 GfMenuObjMovieLayer::~GfMenuObjMovieLayer() { ; }
 
 void GfMenuObjMovieLayer::initialize() {
-  attachExternalCall(CALL_MOVIE_LAYER, handle);
+  attachExternalCall(CALL_MOVIE_LAYER, unknown18);
   GfMenuObject::initialize();
 }
 

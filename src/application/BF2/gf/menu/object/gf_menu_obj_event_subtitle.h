@@ -11,11 +11,11 @@ class GfMenuObjEventSubtitle : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjEventSubtitle *owner) : _0c(), owner(owner) {}
+    MainListener(GfMenuObjEventSubtitle *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjEventSubtitle *owner;
+    GfMenuObjEventSubtitle *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjEventSubtitle(u32 handle);
@@ -28,7 +28,7 @@ public:
   static void endText();
 };
 
-static_assert(offsetof(GfMenuObjEventSubtitle::MainListener, owner) == 0x20, "");
+static_assert(offsetof(GfMenuObjEventSubtitle::MainListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjEventSubtitle::MainListener) == 0x28, "");
 
 } // namespace gf

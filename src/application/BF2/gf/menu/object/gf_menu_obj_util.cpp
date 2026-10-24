@@ -39,8 +39,8 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 
 struct IconTable {
-  u32 key;
-  u32 icon;
+  u32 unknown00; // Inferred role: key; original member name unknown.
+  u32 unknown04; // Inferred role: icon; original member name unknown.
 };
 
 enum MENU_SE {
@@ -105,8 +105,8 @@ static const u16 s_commonSes[] = {MENU_SE_DECIDE, MENU_SE_CANCEL, MENU_SE_INVALI
 
 u32 GfMenuObjUtil::getBtnIconNumber(u32 button) {
   for (u32 i = 0; i < sizeof(s_buttonIcons) / sizeof(s_buttonIcons[0]); i++) {
-    if ((button & s_buttonIcons[i].key) != 0) {
-      return s_buttonIcons[i].icon;
+    if ((button & s_buttonIcons[i].unknown00) != 0) {
+      return s_buttonIcons[i].unknown04;
     }
   }
   return ICON_NONE;
@@ -114,8 +114,8 @@ u32 GfMenuObjUtil::getBtnIconNumber(u32 button) {
 
 u32 GfMenuObjUtil::getPadSelectIconNumber(u32 select) {
   for (u32 i = 0; i < sizeof(s_padSelectIcons) / sizeof(s_padSelectIcons[0]); i++) {
-    if (s_padSelectIcons[i].key == select) {
-      return s_padSelectIcons[i].icon;
+    if (s_padSelectIcons[i].unknown00 == select) {
+      return s_padSelectIcons[i].unknown04;
     }
   }
   return ICON_NONE;
@@ -456,7 +456,7 @@ u16 GfMenuObjUtil::getMsgIDFromList(u32 bdat, u16 id) {
 
 bool GfMenuObjUtil::checkCCStart(GfMenuCallContext *context) { return context != nullptr && !context->isActive(); }
 
-bool GfMenuObjUtil::checkCCNext(GfMenuCallContext *context, u32 menu) { return context != nullptr && context->menu == menu; }
+bool GfMenuObjUtil::checkCCNext(GfMenuCallContext *context, u32 menu) { return context != nullptr && context->unknown10 == menu; }
 
 u32 GfMenuObjUtil::convIdeaPointToLevel(u32 point) {
   for (u32 level = 0; level < sizeof(s_ideaLevelPoints) / sizeof(s_ideaLevelPoints[0]); level++) {

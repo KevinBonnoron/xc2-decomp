@@ -36,7 +36,7 @@ public:
   public:
     ReferenceNumberConverter(mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number) : number(number) {}
     ~ReferenceNumberConverter() override { number = nullptr; }
-    u32 getZoneId() override { return number->number; }
+    u32 getZoneId() override { return number->unknown0c; }
 
     mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number;
   };
@@ -56,16 +56,16 @@ public:
   static GfMenuZoneAdapter *createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, bool isUpdateAlways);
   void update(const fw::UpdateInfo &info) override;
 
-  mm::mtl::Delegate<bool()> updater;
-  IConverter *converter;
-  u16 zone;
-  u32 team;
+  mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
+  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
+  u16 unknown58;                       // Inferred role: zone; original member name unknown.
+  u32 unknown5c;                       // Inferred role: team; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuZoneAdapter, updater) == 0x30, "");
-static_assert(offsetof(GfMenuZoneAdapter, converter) == 0x50, "");
-static_assert(offsetof(GfMenuZoneAdapter, zone) == 0x58, "");
-static_assert(offsetof(GfMenuZoneAdapter, team) == 0x5c, "");
+static_assert(offsetof(GfMenuZoneAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuZoneAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuZoneAdapter, unknown58) == 0x58, "");
+static_assert(offsetof(GfMenuZoneAdapter, unknown5c) == 0x5c, "");
 static_assert(sizeof(GfMenuZoneAdapter) == 0x60, "");
 
 } // namespace gf

@@ -25,12 +25,12 @@ static GfMenuSkillAdapter::TypeInfo TYPE_INFOS[] = {
 };
 
 GfMenuSkillAdapter::GfMenuSkillAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), _58(), driver(0), line(0), level(0), round(0) {}
+    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), _58(), unknown5c(0), unknown60(0), unknown64(0), unknown68(0) {}
 
 GfMenuSkillAdapter::~GfMenuSkillAdapter() {
-  if (converter != nullptr) {
-    delete converter;
-    converter = nullptr;
+  if (unknown50 != nullptr) {
+    delete unknown50;
+    unknown50 = nullptr;
   }
 }
 
@@ -43,11 +43,11 @@ GfMenuSkillAdapter *GfMenuSkillAdapter::create(u32 handle, u32 type, u32 driver,
       // __LINE__ must be 192 as in the original source: it is the line argument of operator new.
 #line 192
       GfMenuSkillAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuSkillAdapter(plugin, isUpdateAlways);
-      adapter->updater.bind(adapter, info.update);
-      adapter->driver = driver;
-      adapter->line = line;
-      adapter->level = level;
-      adapter->round = round;
+      adapter->unknown30.bind(adapter, info.update);
+      adapter->unknown5c = driver;
+      adapter->unknown60 = line;
+      adapter->unknown64 = level;
+      adapter->unknown68 = round;
       plugin->release();
       return adapter;
     }
@@ -56,10 +56,10 @@ GfMenuSkillAdapter *GfMenuSkillAdapter::create(u32 handle, u32 type, u32 driver,
 }
 
 bool GfMenuSkillAdapter::update_SkillName() {
-  if (line >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_ROW_COUNT) {
     return false;
   }
-  u32 skill = GfDataDriverSkill::getSkillFromBdat(driver, line, level, round != 0);
+  u32 skill = GfDataDriverSkill::getSkillFromBdat(unknown5c, unknown60, unknown64, unknown68 != 0);
   if (skill == 0) {
     return false;
   }
@@ -74,11 +74,11 @@ bool GfMenuSkillAdapter::update_SkillName() {
 }
 
 bool GfMenuSkillAdapter::update_SkillCaption() {
-  if (line >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_ROW_COUNT) {
     return false;
   }
-  bool isHidden = round != 0;
-  u32 skill = GfDataDriverSkill::getSkillFromBdat(driver, line, level, isHidden);
+  bool isHidden = unknown68 != 0;
+  u32 skill = GfDataDriverSkill::getSkillFromBdat(unknown5c, unknown60, unknown64, isHidden);
   if (skill == 0) {
     return false;
   }
@@ -89,33 +89,33 @@ bool GfMenuSkillAdapter::update_SkillCaption() {
     return false;
   }
   ui::UIStr text(bdat, textId);
-  text.option = GfDataDriverSkill::getEnhanceFromBdat(driver, line, level, isHidden);
+  text.option = GfDataDriverSkill::getEnhanceFromBdat(unknown5c, unknown60, unknown64, isHidden);
   setText(text);
   return true;
 }
 
 bool GfMenuSkillAdapter::update_SkillPoint() {
-  if (line >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_ROW_COUNT) {
     return false;
   }
-  bool isHidden = round != 0;
-  if (GfDataDriverSkill::getSkillFromBdat(driver, line, level, isHidden) == 0) {
+  bool isHidden = unknown68 != 0;
+  if (GfDataDriverSkill::getSkillFromBdat(unknown5c, unknown60, unknown64, isHidden) == 0) {
     return false;
   }
-  if (GfDataDriverSkill::getSkill(driver, line, level, isHidden) != 0) {
+  if (GfDataDriverSkill::getSkill(unknown5c, unknown60, unknown64, isHidden) != 0) {
     return false;
   }
-  setNumber(GfDataDriverSkill::getSkillPointFromBdat(driver, line, level, isHidden));
+  setNumber(GfDataDriverSkill::getSkillPointFromBdat(unknown5c, unknown60, unknown64, isHidden));
   return true;
 }
 
 bool GfMenuSkillAdapter::update_SkillReleaseFlagIcon() {
-  if (line >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_ROW_COUNT) {
     return false;
   }
-  bool isHidden = round != 0;
-  if (GfDataDriverSkill::isSkillUnlock(driver, line, level, isHidden)) {
-    setNumber(GfDataDriverSkill::getSkillCategoryFromBdat(driver, line, level, isHidden) + 6);
+  bool isHidden = unknown68 != 0;
+  if (GfDataDriverSkill::isSkillUnlock(unknown5c, unknown60, unknown64, isHidden)) {
+    setNumber(GfDataDriverSkill::getSkillCategoryFromBdat(unknown5c, unknown60, unknown64, isHidden) + 6);
   } else {
     setNumber(23);
   }
@@ -123,12 +123,12 @@ bool GfMenuSkillAdapter::update_SkillReleaseFlagIcon() {
 }
 
 bool GfMenuSkillAdapter::update_SkillReleaseFlagColor() {
-  if (line >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_ROW_COUNT) {
     return false;
   }
-  bool isHidden = round != 0;
+  bool isHidden = unknown68 != 0;
   const char *color = "gray";
-  if (GfDataDriverSkill::isSkillUnlock(driver, line, level, isHidden) && GfDataDriverSkill::getSkill(driver, line, level, isHidden) != 0) {
+  if (GfDataDriverSkill::isSkillUnlock(unknown5c, unknown60, unknown64, isHidden) && GfDataDriverSkill::getSkill(unknown5c, unknown60, unknown64, isHidden) != 0) {
     color = "white";
   }
   setColorMode(0);
@@ -137,22 +137,22 @@ bool GfMenuSkillAdapter::update_SkillReleaseFlagColor() {
 }
 
 bool GfMenuSkillAdapter::update_SkillReleaseFlagColorIcon() {
-  if (line >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_ROW_COUNT) {
     return false;
   }
-  setNumber(GfDataDriverSkill::getSkillCategoryFromBdat(driver, line, level, round != 0) + 18);
+  setNumber(GfDataDriverSkill::getSkillCategoryFromBdat(unknown5c, unknown60, unknown64, unknown68 != 0) + 18);
   return true;
 }
 
 bool GfMenuSkillAdapter::update_SkillLearnDisp() {
-  if (line >= SKILL_ROW_COUNT) {
+  if (unknown60 >= SKILL_ROW_COUNT) {
     return false;
   }
-  bool isHidden = round != 0;
-  if (!GfDataDriverSkill::isSkillUnlock(driver, line, level, isHidden)) {
+  bool isHidden = unknown68 != 0;
+  if (!GfDataDriverSkill::isSkillUnlock(unknown5c, unknown60, unknown64, isHidden)) {
     return false;
   }
-  if (GfDataDriverSkill::getSkill(driver, line, level, isHidden) != 0) {
+  if (GfDataDriverSkill::getSkill(unknown5c, unknown60, unknown64, isHidden) != 0) {
     setMulColor("white");
   } else {
     setMulColor("black");
@@ -161,12 +161,12 @@ bool GfMenuSkillAdapter::update_SkillLearnDisp() {
 }
 
 bool GfMenuSkillAdapter::update_SkillLevelLockIcon() {
-  setNumber(level == SKILL_LEVEL_FIRST || GfDataDriverSkill::isSkillLevelUnlock(driver, level, round != 0) ? 5 : 11);
+  setNumber(unknown64 == SKILL_LEVEL_FIRST || GfDataDriverSkill::isSkillLevelUnlock(unknown5c, unknown64, unknown68 != 0) ? 5 : 11);
   return true;
 }
 
 bool GfMenuSkillAdapter::update_SkillLearnNum() {
-  setNumber(GfDataDriverSkill::getValidSkillNum(driver, round != 0));
+  setNumber(GfDataDriverSkill::getValidSkillNum(unknown5c, unknown68 != 0));
   return true;
 }
 
@@ -176,8 +176,8 @@ bool GfMenuSkillAdapter::update_SkillLearnMax() {
 }
 
 bool GfMenuSkillAdapter::update_SkillLevelUnlockNum() {
-  if (line == SKILL_ROW_COUNT) {
-    u32 num = GfDataDriverSkill::getSkillLevelUnlockNum(driver, level, round != 0);
+  if (unknown60 == SKILL_ROW_COUNT) {
+    u32 num = GfDataDriverSkill::getSkillLevelUnlockNum(unknown5c, unknown64, unknown68 != 0);
     if (num != 0) {
       setNumber(num);
       return true;
@@ -193,7 +193,7 @@ GfMenuSkillAdapter *GfMenuSkillAdapter::createFromCoverter(u32 handle, u32 type,
   u16 round = converter->getRound();
   GfMenuSkillAdapter *adapter = create(handle, type, driver, line, level, round, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->converter = converter;
+    adapter->unknown50 = converter;
   }
   return adapter;
 }
@@ -213,32 +213,32 @@ GfMenuSkillAdapter *GfMenuSkillAdapter::createFromReferenceDriverLineLevel(u32 h
 }
 
 void GfMenuSkillAdapter::update(const fw::UpdateInfo &info) {
-  if (converter != nullptr) {
-    u32 newDriver = converter->getDriverId();
-    if (driver != newDriver) {
-      driver = newDriver;
+  if (unknown50 != nullptr) {
+    u32 newDriver = unknown50->getDriverId();
+    if (unknown5c != newDriver) {
+      unknown5c = newDriver;
       setChange();
     }
-    u32 newLine = converter->getKizunaLine();
-    if (line != newLine) {
-      line = newLine;
+    u32 newLine = unknown50->getKizunaLine();
+    if (unknown60 != newLine) {
+      unknown60 = newLine;
       setChange();
     }
-    u32 newLevel = converter->getKizunaLevel();
-    if (level != newLevel) {
-      level = newLevel;
+    u32 newLevel = unknown50->getKizunaLevel();
+    if (unknown64 != newLevel) {
+      unknown64 = newLevel;
       setChange();
     }
-    u32 newRound = converter->getRound();
-    if (round != newRound) {
-      round = newRound;
+    u32 newRound = unknown50->getRound();
+    if (unknown68 != newRound) {
+      unknown68 = newRound;
       setChange();
     }
   }
 
-  if (updater.isValid() && (flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
-    setDisp(updater());
-    flags &= ~FLAG_CHANGED;
+  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+    setDisp(unknown30());
+    unknown20 &= ~FLAG_CHANGED;
   }
 }
 

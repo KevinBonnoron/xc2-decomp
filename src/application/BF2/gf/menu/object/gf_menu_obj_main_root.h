@@ -10,16 +10,16 @@ namespace gf {
 class GfMenuObjMainRoot : public GfMenuObject {
 public:
   struct OpenParam {
-    u32 menu;
+    u32 unknown00; // Inferred role: menu; original member name unknown.
   };
 
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjMainRoot *owner) : _0c(), owner(owner) {}
+    MainListener(GfMenuObjMainRoot *owner) : _0c(), unknown20(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjMainRoot *owner;
+    GfMenuObjMainRoot *unknown20; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjMainRoot(u32 handle);
@@ -30,7 +30,7 @@ public:
   void update() override;
 };
 
-static_assert(offsetof(GfMenuObjMainRoot::MainListener, owner) == 0x20, "");
+static_assert(offsetof(GfMenuObjMainRoot::MainListener, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjMainRoot::MainListener) == 0x28, "");
 
 } // namespace gf

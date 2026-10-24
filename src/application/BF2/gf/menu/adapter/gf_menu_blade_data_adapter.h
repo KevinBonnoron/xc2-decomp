@@ -69,18 +69,18 @@ public:
   void update(const fw::UpdateInfo &info) override;
   void changeBladeData(u32 blade, u32 driver) override;
 
-  mm::mtl::Delegate<bool()> updater;
-  IConverter *converter;
-  u32 blade;
-  u32 driver;
-  u32 artsSlot;
+  mm::mtl::Delegate<bool()> unknown38; // Inferred role: updater; original member name unknown.
+  IConverter *unknown58;               // Inferred role: converter; original member name unknown.
+  u32 unknown60;                       // Inferred role: blade; original member name unknown.
+  u32 unknown64;                       // Inferred role: driver; original member name unknown.
+  u32 unknown68;                       // Inferred role: arts slot; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuBladeDataAdapter, updater) == 0x38, "");
-static_assert(offsetof(GfMenuBladeDataAdapter, converter) == 0x58, "");
-static_assert(offsetof(GfMenuBladeDataAdapter, blade) == 0x60, "");
-static_assert(offsetof(GfMenuBladeDataAdapter, driver) == 0x64, "");
-static_assert(offsetof(GfMenuBladeDataAdapter, artsSlot) == 0x68, "");
+static_assert(offsetof(GfMenuBladeDataAdapter, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuBladeDataAdapter, unknown58) == 0x58, "");
+static_assert(offsetof(GfMenuBladeDataAdapter, unknown60) == 0x60, "");
+static_assert(offsetof(GfMenuBladeDataAdapter, unknown64) == 0x64, "");
+static_assert(offsetof(GfMenuBladeDataAdapter, unknown68) == 0x68, "");
 static_assert(sizeof(GfMenuBladeDataAdapter) == 0x70, "");
 
 } // namespace gf

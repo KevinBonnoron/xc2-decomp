@@ -50,19 +50,19 @@ public:
   static GfMenuZoneMapAdapter *createFromList(u32 handle, u32 type, GfMenuZoneMapList *list, u32 listIndex, bool isPageIndex, bool isUpdateAlways);
   void update(const fw::UpdateInfo &info) override;
 
-  mm::mtl::Delegate<bool()> updater;
-  IConverter *converter;
-  u32 mapId;
-  u32 param;
+  mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
+  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
+  u32 unknown58;                       // Inferred role: map id; original member name unknown.
+  u32 unknown5c;                       // Inferred role: param; original member name unknown.
   u8 _60[0x64 - 0x60];
-  bool isGroupMode;
+  bool unknown64; // Inferred role: group mode; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuZoneMapAdapter, updater) == 0x30, "");
-static_assert(offsetof(GfMenuZoneMapAdapter, converter) == 0x50, "");
-static_assert(offsetof(GfMenuZoneMapAdapter, mapId) == 0x58, "");
-static_assert(offsetof(GfMenuZoneMapAdapter, param) == 0x5c, "");
-static_assert(offsetof(GfMenuZoneMapAdapter, isGroupMode) == 0x64, "");
+static_assert(offsetof(GfMenuZoneMapAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuZoneMapAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuZoneMapAdapter, unknown58) == 0x58, "");
+static_assert(offsetof(GfMenuZoneMapAdapter, unknown5c) == 0x5c, "");
+static_assert(offsetof(GfMenuZoneMapAdapter, unknown64) == 0x64, "");
 static_assert(sizeof(GfMenuZoneMapAdapter) == 0x68, "");
 
 } // namespace gf

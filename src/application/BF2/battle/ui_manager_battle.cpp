@@ -43,7 +43,7 @@ void UIManager::RegisterRescueUI(gf::GF_OBJ_HANDLE *handle) { unknown20 = handle
 
 void UIManager::DispChainUI(gf::GF_OBJ_HANDLE *handle) {
   gf::GfMenuObjChainIcon::OpenParam param;
-  param.handle = handle;
+  param.unknown00 = handle;
   gf::GfMenuObjChainIcon::open(param);
 }
 

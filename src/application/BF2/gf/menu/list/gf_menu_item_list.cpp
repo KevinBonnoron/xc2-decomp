@@ -29,24 +29,24 @@ void GfMenuItemList::sort(u32 type, bool ascending) {
   case SORT_TIME: {
     u32 *times = new (getAllocator(ALLOCATOR_DEFAULT), nullptr, 0, 8) u32[getSize()];
     for (u32 i = 0; i < getSize(); i++) {
-      times[i] = GfItemUtil::getItemTime(getContents(i).item, getContents(i).handle);
-      getContents(i).index = i;
+      times[i] = GfItemUtil::getItemTime(getContents(i).unknown04, getContents(i).unknown0c);
+      getContents(i).unknown0a = i;
     }
     if (ascending) {
       UIListInfo<MenuItemInfo>::sort([times](const MenuItemInfo &info, const MenuItemInfo &other) {
-        u32 time = times[info.index];
-        u32 otherTime = times[other.index];
+        u32 time = times[info.unknown0a];
+        u32 otherTime = times[other.unknown0a];
         if (time == otherTime) {
-          return info.item < other.item;
+          return info.unknown04 < other.unknown04;
         }
         return time < otherTime;
       });
     } else {
       UIListInfo<MenuItemInfo>::sort([times](const MenuItemInfo &info, const MenuItemInfo &other) {
-        u32 time = times[info.index];
-        u32 otherTime = times[other.index];
+        u32 time = times[info.unknown0a];
+        u32 otherTime = times[other.unknown0a];
         if (time == otherTime) {
-          return info.item < other.item;
+          return info.unknown04 < other.unknown04;
         }
         return time > otherTime;
       });
@@ -67,7 +67,7 @@ void GfMenuItemList::sort(u32 type, bool ascending) {
     compare = ascending ? sortFavoriteTimeAscending : sortFavoriteTimeDescending;
     break;
   case SORT_TYPE:
-    switch (GfItemUtil::getType(getContents(0).item)) {
+    switch (GfItemUtil::getType(getContents(0).unknown04)) {
     case ItemType::EQUIP_ORB:
       compare = ascending ? sortTypeAsCoreEquipAscending : sortTypeAsCoreEquipDescending;
       break;

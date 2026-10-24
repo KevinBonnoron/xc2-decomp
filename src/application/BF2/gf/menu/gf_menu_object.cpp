@@ -34,15 +34,15 @@
 
 namespace gf {
 
-GfMenuObject::GfMenuObject(u32 handle) : handle(handle), flags(0) {}
+GfMenuObject::GfMenuObject(u32 handle) : unknown18(handle), unknown1c(0) {}
 
 GfMenuObject::~GfMenuObject() { ; }
 
-void GfMenuObject::initialize() { flags |= FLAG_INITIALIZED; }
+void GfMenuObject::initialize() { unknown1c |= FLAG_INITIALIZED; }
 
 void GfMenuObject::finalize() {
-  handle = 0;
-  flags |= FLAG_FINALIZED;
+  unknown18 = 0;
+  unknown1c |= FLAG_FINALIZED;
 }
 
 void GfMenuObject::update() {}

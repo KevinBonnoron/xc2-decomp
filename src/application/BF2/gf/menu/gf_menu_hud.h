@@ -44,20 +44,20 @@ public:
   void systemWait();
   void systemUpdate();
 
-  bool initialized;
-  u32 sceneID;
-  u32 nextSceneID;
-  mm::mtl::FixedVector<u32, LAYER_MAX> layers;
-  mm::mtl::Delegate<void()> systemUpdater;
-  mm::mtl::Delegate<void()> sceneUpdater;
+  bool unknown08;                                 // Inferred role: initialized; original member name unknown.
+  u32 unknown0c;                                  // Inferred role: scene id; original member name unknown.
+  u32 unknown10;                                  // Inferred role: next scene id; original member name unknown.
+  mm::mtl::FixedVector<u32, LAYER_MAX> unknown18; // Inferred role: layers; original member name unknown.
+  mm::mtl::Delegate<void()> unknown40;            // Inferred role: system updater; original member name unknown.
+  mm::mtl::Delegate<void()> unknown60;            // Inferred role: scene updater; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuHUD, initialized) == 0x08, "");
-static_assert(offsetof(GfMenuHUD, sceneID) == 0x0c, "");
-static_assert(offsetof(GfMenuHUD, nextSceneID) == 0x10, "");
-static_assert(offsetof(GfMenuHUD, layers) == 0x18, "");
-static_assert(offsetof(GfMenuHUD, systemUpdater) == 0x40, "");
-static_assert(offsetof(GfMenuHUD, sceneUpdater) == 0x60, "");
+static_assert(offsetof(GfMenuHUD, unknown08) == 0x08, "");
+static_assert(offsetof(GfMenuHUD, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuHUD, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuHUD, unknown18) == 0x18, "");
+static_assert(offsetof(GfMenuHUD, unknown40) == 0x40, "");
+static_assert(offsetof(GfMenuHUD, unknown60) == 0x60, "");
 static_assert(sizeof(GfMenuHUD) == 0x80, "");
 
 } // namespace gf

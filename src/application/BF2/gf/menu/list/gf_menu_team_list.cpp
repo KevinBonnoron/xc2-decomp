@@ -29,7 +29,7 @@ void GfMenuTeamList::setupFromMercenaries(const TeamSetup &setup) {
   if (isValid()) {
     MenuTeamInfo info = {};
     for (u32 i = 0; i < teams.size(); i++) {
-      info.team = *teams.at(i);
+      info.unknown00 = *teams.at(i);
       addContents(info);
     }
   }

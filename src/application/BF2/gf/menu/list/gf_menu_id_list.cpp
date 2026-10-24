@@ -14,8 +14,8 @@ constexpr u32 MERCENARY_ZONE_FIRST = 1;
 constexpr u32 MERCENARY_ZONE_LAST = 7;
 
 struct MercenaryZone {
-  u32 zone;
-  u32 condition;
+  u32 unknown00; // Inferred role: zone; original member name unknown.
+  u32 unknown04; // Inferred role: condition; original member name unknown.
 };
 
 static const MercenaryZone MERCENARY_ZONES[] = {
@@ -45,9 +45,9 @@ void GfMenuIDList::setupMercenaryZoneList(const SetupParam &param, bool isCondit
   UIListInfo<MenuID>::setup(getAllocator(ALLOCATOR_DEFAULT), setupParam);
   if (isCondition) {
     for (u32 i = 0; i < sizeof(MERCENARY_ZONES) / sizeof(MERCENARY_ZONES[0]); i++) {
-      if (GfMenuObjUtil::getMenuCondition(MERCENARY_ZONES[i].condition)) {
+      if (GfMenuObjUtil::getMenuCondition(MERCENARY_ZONES[i].unknown04)) {
         mm::mtl::FixedVector<u16, 500> missions;
-        u32 zone = MERCENARY_ZONES[i].zone;
+        u32 zone = MERCENARY_ZONES[i].unknown00;
         GfGameMercenaries::getZoneMission(missions, zone);
         if (!missions.empty()) {
           MenuID id = {zone};
@@ -75,7 +75,7 @@ void GfMenuIDList::setupMissionListFromZone(const SetupParam &param, u32 zone) {
   if (isValid()) {
     MenuID id = {};
     for (u32 i = 0; i < missions.size(); i++) {
-      id.id = *missions.at(i);
+      id.unknown00 = *missions.at(i);
       addContents(id);
     }
     sort(sortMissionComplete);
@@ -83,12 +83,12 @@ void GfMenuIDList::setupMissionListFromZone(const SetupParam &param, u32 zone) {
 }
 
 bool GfMenuIDList::sortMissionComplete(const MenuID &mission, const MenuID &other) {
-  bool isComplete = GfDataMercenaries::isOrderOnlyOne(mission.id) && GfDataMercenaries::isMissionCompleteFlag(mission.id);
-  bool isOtherComplete = GfDataMercenaries::isOrderOnlyOne(other.id) && GfDataMercenaries::isMissionCompleteFlag(other.id);
+  bool isComplete = GfDataMercenaries::isOrderOnlyOne(mission.unknown00) && GfDataMercenaries::isMissionCompleteFlag(mission.unknown00);
+  bool isOtherComplete = GfDataMercenaries::isOrderOnlyOne(other.unknown00) && GfDataMercenaries::isMissionCompleteFlag(other.unknown00);
   if (isComplete != isOtherComplete) {
     return !isComplete;
   }
-  return mission.id < other.id;
+  return mission.unknown00 < other.unknown00;
 }
 
 void GfMenuIDList::setupTeamList(const SetupParam &param) {
@@ -101,7 +101,7 @@ void GfMenuIDList::setupTeamList(const SetupParam &param) {
   if (isValid()) {
     MenuID id = {};
     for (u32 i = 0; i < teams.size(); i++) {
-      id.id = *teams.at(i);
+      id.unknown00 = *teams.at(i);
       addContents(id);
     }
   }

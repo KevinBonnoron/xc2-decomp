@@ -11,7 +11,7 @@ GfMenuObjQuestReward::GfMenuObjQuestReward(u32 handle) : GfMenuObject(handle) {}
 GfMenuObjQuestReward::~GfMenuObjQuestReward() { ; }
 
 void GfMenuObjQuestReward::initialize() {
-  ui::UIObjectAcc main(handle, "LAY_main");
+  ui::UIObjectAcc main(unknown18, "LAY_main");
   if (main.isValid()) {
     attachExternalCall(CALL_QUEST_REWARD, main.handle);
     GfMenuObject::initialize();

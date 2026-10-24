@@ -8,7 +8,7 @@ class GfMenuCallContext;
 class GfMenuObjShop {
 public:
   struct OpenParam {
-    u32 shop;
+    u32 unknown00; // Inferred role: shop; original member name unknown.
   };
 
   static void open(GfMenuCallContext *context, const OpenParam &param);

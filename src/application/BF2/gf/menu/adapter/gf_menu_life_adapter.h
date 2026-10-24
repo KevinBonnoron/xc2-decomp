@@ -24,14 +24,14 @@ public:
   void update_Number_Bonus(u8 index);
   void update(const fw::UpdateInfo &info) override;
 
-  u8 index;
-  mm::mtl::Delegate<void(u8)> updater;
-  bool isUpdateRequested;
+  u8 unknown30;                          // Inferred role: index; original member name unknown.
+  mm::mtl::Delegate<void(u8)> unknown38; // Inferred role: updater; original member name unknown.
+  bool unknown58;                        // Inferred role: update requested; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuLifeAdapter, index) == 0x30, "");
-static_assert(offsetof(GfMenuLifeAdapter, updater) == 0x38, "");
-static_assert(offsetof(GfMenuLifeAdapter, isUpdateRequested) == 0x58, "");
+static_assert(offsetof(GfMenuLifeAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuLifeAdapter, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuLifeAdapter, unknown58) == 0x58, "");
 static_assert(sizeof(GfMenuLifeAdapter) == 0x60, "");
 
 } // namespace gf

@@ -6,7 +6,7 @@
 
 namespace gf {
 
-GfMenuZoneMapList::GfMenuZoneMapList() : isGroupMode(false) {}
+GfMenuZoneMapList::GfMenuZoneMapList() : unknown79(false) {}
 
 GfMenuZoneMapList::~GfMenuZoneMapList() { ; }
 
@@ -21,10 +21,10 @@ GfMenuZoneMapList *GfMenuZoneMapList::create() {
 void GfMenuZoneMapList::sortFromPriority() { sort(sortPriority); }
 
 bool GfMenuZoneMapList::sortPriority(const MenuZoneMapInfo &info, const MenuZoneMapInfo &other) {
-  if (info.priority == other.priority) {
-    return info.mapId < other.mapId;
+  if (info.unknown14 == other.unknown14) {
+    return info.unknown00 < other.unknown00;
   }
-  return info.priority < other.priority;
+  return info.unknown14 < other.unknown14;
 }
 
 } // namespace gf

@@ -25,24 +25,24 @@
 
 namespace gf {
 
-GfMenuAdapter::GfMenuAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAfter, bool isUpdateAlways) : plugin(nullptr), flags(0), linkedObject(0), rewriteNumber(nullptr) {
+GfMenuAdapter::GfMenuAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAfter, bool isUpdateAlways) : unknown18(nullptr), unknown20(0), unknown24(0), unknown28(nullptr) {
   attachPlugin(plugin);
-  flags |= FLAG_CHANGED;
+  unknown20 |= FLAG_CHANGED;
   if (isUpdateAlways) {
-    flags |= FLAG_UPDATE_ALWAYS;
+    unknown20 |= FLAG_UPDATE_ALWAYS;
   }
   GfMenuAdapterManager::get()->addAdapter(this, isUpdateAfter);
 }
 
 GfMenuAdapter::~GfMenuAdapter() {
-  mm::mtl::safeRelease(plugin);
-  mm::mtl::safeRelease(rewriteNumber);
+  mm::mtl::safeRelease(unknown18);
+  mm::mtl::safeRelease(unknown28);
 }
 
 void GfMenuAdapter::setChange() {
-  flags |= FLAG_CHANGED;
-  if (plugin != nullptr) {
-    plugin->needUpdate |= 2;
+  unknown20 |= FLAG_CHANGED;
+  if (unknown18 != nullptr) {
+    unknown18->needUpdate |= 2;
   }
 }
 
@@ -52,12 +52,12 @@ ui::UIObjectPlugin *GfMenuAdapter::createPlugin(u32 handle, const PluginSetup &s
   ui::UIObjectAcc acc(handle);
   ui::UIObjectPlugin *plugin = nullptr;
   if (acc.isValid()) {
-    switch (setup.type) {
+    switch (setup.unknown00) {
     case PLUGIN_TYPE_NUMBER: {
       ui::UIObjectNumberPlugin *numberPlugin = ui::UIObjectNumberPlugin::create(handle);
       if (numberPlugin != nullptr) {
-        numberPlugin->setMin(setup.param);
-        numberPlugin->setMax(setup.max);
+        numberPlugin->setMin(setup.unknown04);
+        numberPlugin->setMax(setup.unknown08);
       }
       plugin = numberPlugin;
       break;
@@ -90,7 +90,7 @@ ui::UIObjectPlugin *GfMenuAdapter::createPlugin(u32 handle, const PluginSetup &s
       plugin = ui::UIObjectOffsetPlugin::create(handle);
       break;
     case PLUGIN_TYPE_TIME:
-      plugin = ui::UIObjectTimePlugin::create(handle, setup.param);
+      plugin = ui::UIObjectTimePlugin::create(handle, setup.unknown04);
       break;
     case PLUGIN_TYPE_COLOR:
       plugin = ui::UIObjectColorPlugin::create(handle);
@@ -104,9 +104,9 @@ ui::UIObjectPlugin *GfMenuAdapter::createPlugin(u32 handle, const PluginSetup &s
 }
 
 GfMenuAdapter::CompareResult GfMenuAdapter::compare(GfMenuAdapter *adapter, GfMenuAdapter *other) {
-  ui::UIObjectNumberPlugin *number = adapter->plugin != nullptr ? mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(adapter->plugin) : nullptr;
-  if (other->plugin != nullptr) {
-    ui::UIObjectNumberPlugin *otherNumber = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(other->plugin);
+  ui::UIObjectNumberPlugin *number = adapter->unknown18 != nullptr ? mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(adapter->unknown18) : nullptr;
+  if (other->unknown18 != nullptr) {
+    ui::UIObjectNumberPlugin *otherNumber = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(other->unknown18);
     if (number != nullptr && otherNumber != nullptr) {
       if (number->number == otherNumber->number) {
         return COMPARE_RESULT_SAME;
@@ -120,11 +120,11 @@ GfMenuAdapter::CompareResult GfMenuAdapter::compare(GfMenuAdapter *adapter, GfMe
     }
   }
 
-  ui::UIObjectTextPlugin *text = adapter->plugin != nullptr ? mm::mtl::dynamicCast<ui::UIObjectTextPlugin>(adapter->plugin) : nullptr;
-  if (other->plugin == nullptr) {
+  ui::UIObjectTextPlugin *text = adapter->unknown18 != nullptr ? mm::mtl::dynamicCast<ui::UIObjectTextPlugin>(adapter->unknown18) : nullptr;
+  if (other->unknown18 == nullptr) {
     return COMPARE_RESULT_SAME;
   }
-  ui::UIObjectTextPlugin *otherText = mm::mtl::dynamicCast<ui::UIObjectTextPlugin>(other->plugin);
+  ui::UIObjectTextPlugin *otherText = mm::mtl::dynamicCast<ui::UIObjectTextPlugin>(other->unknown18);
   if (text == nullptr || otherText == nullptr) {
     return COMPARE_RESULT_SAME;
   }
@@ -144,12 +144,12 @@ GfMenuAdapter::CompareResult GfMenuAdapter::compare(GfMenuAdapter *adapter, GfMe
 
 void GfMenuAdapter::attachPlugin(ui::UIObjectPlugin *plugin) {
   plugin->addRef();
-  this->plugin = plugin;
+  this->unknown18 = plugin;
 }
 
 void GfMenuAdapter::setDispAlphaMode(bool isAlphaMode) {
-  if (plugin != nullptr) {
-    ui::UIObjectDispPlugin *dispPlugin = mm::mtl::dynamicCast<ui::UIObjectDispPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectDispPlugin *dispPlugin = mm::mtl::dynamicCast<ui::UIObjectDispPlugin>(unknown18);
     if (dispPlugin != nullptr) {
       dispPlugin->setAlphaMode(isAlphaMode);
     }
@@ -157,8 +157,8 @@ void GfMenuAdapter::setDispAlphaMode(bool isAlphaMode) {
 }
 
 void GfMenuAdapter::setDispReverseMode(bool isReverseMode) {
-  if (plugin != nullptr) {
-    ui::UIObjectDispPlugin *dispPlugin = mm::mtl::dynamicCast<ui::UIObjectDispPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectDispPlugin *dispPlugin = mm::mtl::dynamicCast<ui::UIObjectDispPlugin>(unknown18);
     if (dispPlugin != nullptr) {
       dispPlugin->setReverseMode(isReverseMode);
     }
@@ -166,8 +166,8 @@ void GfMenuAdapter::setDispReverseMode(bool isReverseMode) {
 }
 
 void GfMenuAdapter::setDispFadeMode(f32 fadeTime) {
-  if (plugin != nullptr) {
-    ui::UIObjectDispPlugin *dispPlugin = mm::mtl::dynamicCast<ui::UIObjectDispPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectDispPlugin *dispPlugin = mm::mtl::dynamicCast<ui::UIObjectDispPlugin>(unknown18);
     if (dispPlugin != nullptr) {
       dispPlugin->setFadeMode(fadeTime);
     }
@@ -175,8 +175,8 @@ void GfMenuAdapter::setDispFadeMode(f32 fadeTime) {
 }
 
 void GfMenuAdapter::setDispSuspendMode(bool isSuspendMode) {
-  if (plugin != nullptr) {
-    ui::UIObjectDispPlugin *dispPlugin = mm::mtl::dynamicCast<ui::UIObjectDispPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectDispPlugin *dispPlugin = mm::mtl::dynamicCast<ui::UIObjectDispPlugin>(unknown18);
     if (dispPlugin != nullptr) {
       dispPlugin->setSuspendMode(true);
     }
@@ -184,8 +184,8 @@ void GfMenuAdapter::setDispSuspendMode(bool isSuspendMode) {
 }
 
 void GfMenuAdapter::setNumberReverseMode(bool isReverseMode) {
-  if (plugin != nullptr) {
-    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
       numberPlugin->isReverse = isReverseMode;
     }
@@ -193,8 +193,8 @@ void GfMenuAdapter::setNumberReverseMode(bool isReverseMode) {
 }
 
 void GfMenuAdapter::setNumberInterpolateMode(f32 time) {
-  if (plugin != nullptr) {
-    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
       numberPlugin->setInterpolate(time);
     }
@@ -202,8 +202,8 @@ void GfMenuAdapter::setNumberInterpolateMode(f32 time) {
 }
 
 void GfMenuAdapter::setPosAdjustScreen(bool isAdjustScreen) {
-  if (plugin != nullptr) {
-    ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(unknown18);
     if (posPlugin != nullptr) {
       posPlugin->isAdjustScreen = isAdjustScreen;
     }
@@ -211,8 +211,8 @@ void GfMenuAdapter::setPosAdjustScreen(bool isAdjustScreen) {
 }
 
 void GfMenuAdapter::setPosAdjustSize(u32 width, u32 height) {
-  if (plugin != nullptr) {
-    ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(unknown18);
     if (posPlugin != nullptr) {
       posPlugin->adjustWidth = width;
       posPlugin->adjustHeight = height;
@@ -221,8 +221,8 @@ void GfMenuAdapter::setPosAdjustSize(u32 width, u32 height) {
 }
 
 void GfMenuAdapter::setPosAdjustSizeOffs(s16 x, s16 y) {
-  if (plugin != nullptr) {
-    ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(unknown18);
     if (posPlugin != nullptr) {
       posPlugin->adjustOffsetX = x;
       posPlugin->adjustOffsetY = y;
@@ -231,8 +231,8 @@ void GfMenuAdapter::setPosAdjustSizeOffs(s16 x, s16 y) {
 }
 
 void GfMenuAdapter::setPosOffsMode(u32 mode) {
-  if (plugin != nullptr) {
-    ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(unknown18);
     if (posPlugin != nullptr) {
       posPlugin->offsetMode = mode;
     }
@@ -240,8 +240,8 @@ void GfMenuAdapter::setPosOffsMode(u32 mode) {
 }
 
 void GfMenuAdapter::setOffsetLimit(u16 x, u16 y) {
-  if (plugin != nullptr) {
-    ui::UIObjectOffsetPlugin *offsetPlugin = mm::mtl::dynamicCast<ui::UIObjectOffsetPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectOffsetPlugin *offsetPlugin = mm::mtl::dynamicCast<ui::UIObjectOffsetPlugin>(unknown18);
     if (offsetPlugin != nullptr) {
       offsetPlugin->maxOffset.x = x;
       offsetPlugin->maxOffset.y = y;
@@ -250,15 +250,15 @@ void GfMenuAdapter::setOffsetLimit(u16 x, u16 y) {
 }
 
 bool GfMenuAdapter::checkOwner(u32 handle) {
-  if (plugin != nullptr) {
-    return ui::UIUtil::getObject(handle)->isPluginOwner(plugin);
+  if (unknown18 != nullptr) {
+    return ui::UIUtil::getObject(handle)->isPluginOwner(unknown18);
   }
   return false;
 }
 
 int GfMenuAdapter::getNumber() const {
-  if (plugin != nullptr) {
-    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
       return numberPlugin->number;
     }
@@ -267,8 +267,8 @@ int GfMenuAdapter::getNumber() const {
 }
 
 int GfMenuAdapter::getNumberMin() const {
-  if (plugin != nullptr) {
-    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
       return numberPlugin->min;
     }
@@ -277,8 +277,8 @@ int GfMenuAdapter::getNumberMin() const {
 }
 
 int GfMenuAdapter::getNumberMax() const {
-  if (plugin != nullptr) {
-    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
       return numberPlugin->max;
     }
@@ -287,16 +287,16 @@ int GfMenuAdapter::getNumberMax() const {
 }
 
 void GfMenuAdapter::setRewriteNumber(GfMenuRewriteNumber *rewriteNumber) {
-  this->rewriteNumber = rewriteNumber;
+  this->unknown28 = rewriteNumber;
   rewriteNumber->addRef();
 }
 
 void GfMenuAdapter::setNumber(int number) {
-  if (plugin != nullptr) {
-    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
-      if (rewriteNumber != nullptr && rewriteNumber->isRewrite) {
-        number = rewriteNumber->number;
+      if (unknown28 != nullptr && unknown28->unknown10) {
+        number = unknown28->unknown0c;
       }
       numberPlugin->setNumber(number);
     }
@@ -304,8 +304,8 @@ void GfMenuAdapter::setNumber(int number) {
 }
 
 void GfMenuAdapter::setNumberMin(int min) {
-  if (plugin != nullptr) {
-    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
       numberPlugin->setMin(min);
     }
@@ -313,8 +313,8 @@ void GfMenuAdapter::setNumberMin(int min) {
 }
 
 void GfMenuAdapter::setNumberMax(int max) {
-  if (plugin != nullptr) {
-    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectNumberPlugin *numberPlugin = mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18);
     if (numberPlugin != nullptr) {
       numberPlugin->setMax(max);
     }
@@ -322,8 +322,8 @@ void GfMenuAdapter::setNumberMax(int max) {
 }
 
 void GfMenuAdapter::setText(const ui::UIStr &text) {
-  if (plugin != nullptr) {
-    ui::UIObjectTextPlugin *textPlugin = mm::mtl::dynamicCast<ui::UIObjectTextPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectTextPlugin *textPlugin = mm::mtl::dynamicCast<ui::UIObjectTextPlugin>(unknown18);
     if (textPlugin != nullptr) {
       textPlugin->setText(text);
     }
@@ -331,20 +331,20 @@ void GfMenuAdapter::setText(const ui::UIStr &text) {
 }
 
 void GfMenuAdapter::setDisp(bool isDisp) {
-  if (plugin != nullptr) {
-    ui::UIObjectDispPlugin *dispPlugin = mm::mtl::dynamicCast<ui::UIObjectDispPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectDispPlugin *dispPlugin = mm::mtl::dynamicCast<ui::UIObjectDispPlugin>(unknown18);
     if (dispPlugin != nullptr) {
       dispPlugin->setDisp(isDisp);
-      if (linkedObject != 0) {
-        ui::UIObjectAcc(linkedObject).setDisp(isDisp);
+      if (unknown24 != 0) {
+        ui::UIObjectAcc(unknown24).setDisp(isDisp);
       }
     }
   }
 }
 
 void GfMenuAdapter::setPos(const mm::Pnt<s16> &pos) {
-  if (plugin != nullptr) {
-    ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(unknown18);
     if (posPlugin != nullptr) {
       posPlugin->pos = pos;
     }
@@ -352,8 +352,8 @@ void GfMenuAdapter::setPos(const mm::Pnt<s16> &pos) {
 }
 
 void GfMenuAdapter::setPosWorld(const mm::Vec3 &pos) {
-  if (plugin != nullptr) {
-    ui::UIObjectWorldPosPlugin *worldPosPlugin = mm::mtl::dynamicCast<ui::UIObjectWorldPosPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectWorldPosPlugin *worldPosPlugin = mm::mtl::dynamicCast<ui::UIObjectWorldPosPlugin>(unknown18);
     if (worldPosPlugin != nullptr) {
       worldPosPlugin->worldPos = pos;
     }
@@ -361,8 +361,8 @@ void GfMenuAdapter::setPosWorld(const mm::Vec3 &pos) {
 }
 
 void GfMenuAdapter::setOffsetTargetPos(const mm::Pnt<s16> &pos) {
-  if (plugin != nullptr) {
-    ui::UIObjectOffsetPlugin *offsetPlugin = mm::mtl::dynamicCast<ui::UIObjectOffsetPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectOffsetPlugin *offsetPlugin = mm::mtl::dynamicCast<ui::UIObjectOffsetPlugin>(unknown18);
     if (offsetPlugin != nullptr) {
       offsetPlugin->targetPos = pos;
     }
@@ -370,8 +370,8 @@ void GfMenuAdapter::setOffsetTargetPos(const mm::Pnt<s16> &pos) {
 }
 
 bool GfMenuAdapter::isPosScreenAdjust() const {
-  if (plugin != nullptr) {
-    ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectPosPlugin *posPlugin = mm::mtl::dynamicCast<ui::UIObjectPosPlugin>(unknown18);
     if (posPlugin != nullptr) {
       return posPlugin->isAdjustScreen;
     }
@@ -380,8 +380,8 @@ bool GfMenuAdapter::isPosScreenAdjust() const {
 }
 
 void GfMenuAdapter::setTime(const ui::uiDateTime &time) {
-  if (plugin != nullptr) {
-    ui::UIObjectTimePlugin *timePlugin = mm::mtl::dynamicCast<ui::UIObjectTimePlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectTimePlugin *timePlugin = mm::mtl::dynamicCast<ui::UIObjectTimePlugin>(unknown18);
     if (timePlugin != nullptr) {
       timePlugin->setYear(time.year);
       timePlugin->setMonth(time.month);
@@ -395,8 +395,8 @@ void GfMenuAdapter::setTime(const ui::uiDateTime &time) {
 }
 
 void GfMenuAdapter::setElapseTime(const ElapseTime &time) {
-  if (plugin != nullptr) {
-    ui::UIObjectTimePlugin *timePlugin = mm::mtl::dynamicCast<ui::UIObjectTimePlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectTimePlugin *timePlugin = mm::mtl::dynamicCast<ui::UIObjectTimePlugin>(unknown18);
     if (timePlugin != nullptr) {
       timePlugin->setElapseHour(time.hour);
       timePlugin->setMin(time.minute);
@@ -406,8 +406,8 @@ void GfMenuAdapter::setElapseTime(const ElapseTime &time) {
 }
 
 void GfMenuAdapter::setMulColor(const char *name) {
-  if (plugin != nullptr) {
-    ui::UIObjectColorPlugin *colorPlugin = mm::mtl::dynamicCast<ui::UIObjectColorPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectColorPlugin *colorPlugin = mm::mtl::dynamicCast<ui::UIObjectColorPlugin>(unknown18);
     if (colorPlugin != nullptr) {
       if (name != nullptr) {
         colorPlugin->setMulColor(name);
@@ -419,8 +419,8 @@ void GfMenuAdapter::setMulColor(const char *name) {
 }
 
 void GfMenuAdapter::setAddColor(const char *name) {
-  if (plugin != nullptr) {
-    ui::UIObjectColorPlugin *colorPlugin = mm::mtl::dynamicCast<ui::UIObjectColorPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectColorPlugin *colorPlugin = mm::mtl::dynamicCast<ui::UIObjectColorPlugin>(unknown18);
     if (colorPlugin != nullptr) {
       colorPlugin->setAddColor(name == nullptr ? "" : name);
     }
@@ -428,30 +428,30 @@ void GfMenuAdapter::setAddColor(const char *name) {
 }
 
 void GfMenuAdapter::setColorMode(u32 mode) {
-  if (plugin != nullptr) {
-    ui::UIObjectColorPlugin *colorPlugin = mm::mtl::dynamicCast<ui::UIObjectColorPlugin>(plugin);
+  if (unknown18 != nullptr) {
+    ui::UIObjectColorPlugin *colorPlugin = mm::mtl::dynamicCast<ui::UIObjectColorPlugin>(unknown18);
     if (colorPlugin != nullptr) {
       colorPlugin->setColorMode(mode);
     }
   }
 }
 
-bool GfMenuAdapter::isUpdateAlways() const { return (flags & FLAG_UPDATE_ALWAYS) != 0; }
+bool GfMenuAdapter::isUpdateAlways() const { return (unknown20 & FLAG_UPDATE_ALWAYS) != 0; }
 
 void GfMenuAdapter::setColor(const char *name) {
-  ui::UIObjectColorPlugin *colorPlugin = plugin != nullptr ? mm::mtl::dynamicCast<ui::UIObjectColorPlugin>(plugin) : nullptr;
+  ui::UIObjectColorPlugin *colorPlugin = unknown18 != nullptr ? mm::mtl::dynamicCast<ui::UIObjectColorPlugin>(unknown18) : nullptr;
   if (name != nullptr && colorPlugin != nullptr) {
     colorPlugin->setColor(name);
   }
 }
 
 void GfMenuAdapter::setTextFacePattern(const char *name) {
-  ui::UIObjectPatternPlugin *patternPlugin = plugin != nullptr ? mm::mtl::dynamicCast<ui::UIObjectPatternPlugin>(plugin) : nullptr;
+  ui::UIObjectPatternPlugin *patternPlugin = unknown18 != nullptr ? mm::mtl::dynamicCast<ui::UIObjectPatternPlugin>(unknown18) : nullptr;
   if (name != nullptr && patternPlugin != nullptr) {
     patternPlugin->setFacePattern(name);
   }
 }
 
-void GfMenuAdapter::update(const fw::UpdateInfo &info) { flags &= ~FLAG_CHANGED; }
+void GfMenuAdapter::update(const fw::UpdateInfo &info) { unknown20 &= ~FLAG_CHANGED; }
 
 } // namespace gf

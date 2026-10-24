@@ -20,13 +20,13 @@ GfMenuMissionList *GfMenuMissionList::create() {
 
 void GfMenuMissionList::setupFromZone(const MissionSetup &setup) {
   mm::mtl::FixedVector<u16, 500> missions;
-  GfGameMercenaries::getZoneMission(missions, setup.zone);
-  SetupParam param = setup.param;
+  GfGameMercenaries::getZoneMission(missions, setup.unknown14);
+  SetupParam param = setup.unknown00;
   UIListInfo<MenuMissionInfo>::setup(getAllocator(ALLOCATOR_DEFAULT), param);
   if (isValid()) {
     MenuMissionInfo info = {};
     for (u32 i = 0; i < missions.size(); i++) {
-      info.mission = *missions.at(i);
+      info.unknown00 = *missions.at(i);
       addContents(info);
     }
   }

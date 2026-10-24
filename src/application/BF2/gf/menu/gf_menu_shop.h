@@ -24,10 +24,10 @@ public:
   static void setDisp(bool disp);
   static bool isDisp();
 
-  bool initialized;
+  bool unknown08; // Inferred role: initialized; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuShop, initialized) == 0x08, "");
+static_assert(offsetof(GfMenuShop, unknown08) == 0x08, "");
 static_assert(sizeof(GfMenuShop) == 0x10, "");
 
 } // namespace gf

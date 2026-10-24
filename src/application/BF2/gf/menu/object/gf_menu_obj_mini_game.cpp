@@ -13,17 +13,17 @@ GfMenuObjMiniGame::GfMenuObjMiniGame(u32 handle) : GfMenuObject(handle) {}
 GfMenuObjMiniGame::~GfMenuObjMiniGame() { ; }
 
 void GfMenuObjMiniGame::initialize() {
-  ui::UIObjectAcc *screen = new (getAllocator(ALLOCATOR_DEFAULT)->getMemHandle()) ui::UIObjectAcc(handle, "SCR_minigame");
-  miniGame = minigame::tora::factory::create(screen);
+  ui::UIObjectAcc *screen = new (getAllocator(ALLOCATOR_DEFAULT)->getMemHandle()) ui::UIObjectAcc(unknown18, "SCR_minigame");
+  unknown28 = minigame::tora::factory::create(screen);
   GfMenuObject::initialize();
 }
 
 void GfMenuObjMiniGame::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjMiniGame::update() {
-  if (miniGame != nullptr && miniGame->isTerminate()) {
-    closeFSLayer(handle, true, true);
-    miniGame = nullptr;
+  if (unknown28 != nullptr && unknown28->isTerminate()) {
+    closeFSLayer(unknown18, true, true);
+    unknown28 = nullptr;
   }
   GfMenuObject::update();
 }

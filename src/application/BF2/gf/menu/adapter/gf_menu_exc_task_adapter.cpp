@@ -16,12 +16,12 @@ static GfMenuExcTaskAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuExcTaskAdapter::update_Name, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
 };
 
-GfMenuExcTaskAdapter::GfMenuExcTaskAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), taskId(0), converter(nullptr) {}
+GfMenuExcTaskAdapter::GfMenuExcTaskAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown30(0), unknown58(nullptr) {}
 
 GfMenuExcTaskAdapter::~GfMenuExcTaskAdapter() {
-  if (converter != nullptr) {
-    delete converter;
-    converter = nullptr;
+  if (unknown58 != nullptr) {
+    delete unknown58;
+    unknown58 = nullptr;
   }
 }
 
@@ -34,8 +34,8 @@ GfMenuExcTaskAdapter *GfMenuExcTaskAdapter::create(u32 handle, u32 type, u32 tas
       // __LINE__ must be 113 as in the original source: it is the line argument of operator new.
 #line 113
       GfMenuExcTaskAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuExcTaskAdapter(plugin, isUpdateAlways);
-      adapter->updater.bind(adapter, info.update);
-      adapter->taskId = taskId;
+      adapter->unknown38.bind(adapter, info.update);
+      adapter->unknown30 = taskId;
       plugin->release();
       return adapter;
     }
@@ -58,7 +58,7 @@ GfMenuExcTaskAdapter *GfMenuExcTaskAdapter::createFromCoverter(u32 handle, u32 t
   converter->getTaskID(taskId);
   GfMenuExcTaskAdapter *adapter = create(handle, type, taskId, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->converter = converter;
+    adapter->unknown58 = converter;
   }
   return adapter;
 }
@@ -71,30 +71,30 @@ GfMenuExcTaskAdapter *GfMenuExcTaskAdapter::createFromList(u32 handle, u32 type,
 }
 
 void GfMenuExcTaskAdapter::update(const fw::UpdateInfo &info) {
-  if (converter != nullptr) {
+  if (unknown58 != nullptr) {
     u32 newTaskId = 0;
-    converter->getTaskID(newTaskId);
-    if (taskId != newTaskId) {
-      taskId = newTaskId;
+    unknown58->getTaskID(newTaskId);
+    if (unknown30 != newTaskId) {
+      unknown30 = newTaskId;
       setChange();
     }
   }
 
-  if (updater.isValid() && (flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
-    if (taskId != 0) {
-      setDisp(updater(taskId));
+  if (unknown38.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+    if (unknown30 != 0) {
+      setDisp(unknown38(unknown30));
     } else {
       setDisp(false);
     }
-    flags &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_CHANGED;
   }
 }
 
 void GfMenuExcTaskAdapter::ListConverter::getTaskID(u32 &taskId) {
   if (listIndex == -1) {
-    taskId = list->getContents(list->getIndex(false)).id;
+    taskId = list->getContents(list->getIndex(false)).unknown00;
   } else if (static_cast<u32>(listIndex) < list->getSize()) {
-    taskId = list->getContents(list->getPageIndex(listIndex)).id;
+    taskId = list->getContents(list->getPageIndex(listIndex)).unknown00;
   }
 }
 

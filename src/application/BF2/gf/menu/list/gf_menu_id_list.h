@@ -5,7 +5,7 @@
 namespace gf {
 
 struct MenuID {
-  u32 id;
+  u32 unknown00; // Inferred role: id; original member name unknown.
   u8 _04[0x8 - 0x4];
 };
 

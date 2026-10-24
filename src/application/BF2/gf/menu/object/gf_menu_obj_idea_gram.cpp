@@ -11,8 +11,8 @@ GfMenuObjIdeaGram::GfMenuObjIdeaGram(u32 handle) : GfMenuObject(handle) {}
 GfMenuObjIdeaGram::~GfMenuObjIdeaGram() { ; }
 
 void GfMenuObjIdeaGram::initialize() {
-  ui::UIObjectAcc root(handle);
-  attachExternalCall(CALL_IDEA_GRAM, ui::UIObjectAcc(handle, "LAY_driver").handle);
+  ui::UIObjectAcc root(unknown18);
+  attachExternalCall(CALL_IDEA_GRAM, ui::UIObjectAcc(unknown18, "LAY_driver").handle);
   GfMenuObject::initialize();
 }
 

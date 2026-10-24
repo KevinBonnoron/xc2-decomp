@@ -76,21 +76,21 @@ public:
   static GfMenuSkillAdapter *createFromReferenceDriverLineLevel(u32 handle, u32 type, u32 driverIndex, u16 lineIndex, u16 levelIndex, u16 roundIndex, bool isUpdateAlways);
   void update(const fw::UpdateInfo &info) override;
 
-  mm::mtl::Delegate<bool()> updater;
-  IConverter *converter;
+  mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
+  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
   u8 _58[0x5c - 0x58];
-  u32 driver;
-  u32 line;
-  u32 level;
-  u32 round;
+  u32 unknown5c; // Inferred role: driver; original member name unknown.
+  u32 unknown60; // Inferred role: line; original member name unknown.
+  u32 unknown64; // Inferred role: level; original member name unknown.
+  u32 unknown68; // Inferred role: round; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuSkillAdapter, updater) == 0x30, "");
-static_assert(offsetof(GfMenuSkillAdapter, converter) == 0x50, "");
-static_assert(offsetof(GfMenuSkillAdapter, driver) == 0x5c, "");
-static_assert(offsetof(GfMenuSkillAdapter, line) == 0x60, "");
-static_assert(offsetof(GfMenuSkillAdapter, level) == 0x64, "");
-static_assert(offsetof(GfMenuSkillAdapter, round) == 0x68, "");
+static_assert(offsetof(GfMenuSkillAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuSkillAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuSkillAdapter, unknown5c) == 0x5c, "");
+static_assert(offsetof(GfMenuSkillAdapter, unknown60) == 0x60, "");
+static_assert(offsetof(GfMenuSkillAdapter, unknown64) == 0x64, "");
+static_assert(offsetof(GfMenuSkillAdapter, unknown68) == 0x68, "");
 static_assert(sizeof(GfMenuSkillAdapter) == 0x70, "");
 
 } // namespace gf

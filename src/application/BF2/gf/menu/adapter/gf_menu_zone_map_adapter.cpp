@@ -16,12 +16,12 @@ static GfMenuZoneMapAdapter::TypeInfo TYPE_INFOS[] = {
 };
 
 GfMenuZoneMapAdapter::GfMenuZoneMapAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), mapId(0), param(0), _60(), isGroupMode(false) {}
+    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0), _60(), unknown64(false) {}
 
 GfMenuZoneMapAdapter::~GfMenuZoneMapAdapter() {
-  if (converter != nullptr) {
-    delete converter;
-    converter = nullptr;
+  if (unknown50 != nullptr) {
+    delete unknown50;
+    unknown50 = nullptr;
   }
 }
 
@@ -34,9 +34,9 @@ GfMenuZoneMapAdapter *GfMenuZoneMapAdapter::create(u32 handle, u32 type, u32 map
       // __LINE__ must be 195 as in the original source: it is the line argument of operator new.
 #line 195
       GfMenuZoneMapAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuZoneMapAdapter(plugin, isUpdateAlways);
-      adapter->updater.bind(adapter, info.update);
-      adapter->mapId = mapId;
-      adapter->param = param;
+      adapter->unknown30.bind(adapter, info.update);
+      adapter->unknown58 = mapId;
+      adapter->unknown5c = param;
       plugin->release();
       return adapter;
     }
@@ -45,14 +45,14 @@ GfMenuZoneMapAdapter *GfMenuZoneMapAdapter::create(u32 handle, u32 type, u32 map
 }
 
 bool GfMenuZoneMapAdapter::update_ZoneMapName() {
-  u8 *bdat = isGroupMode ? GfDataBdat::getFP(BDAT_MNU_MAP_GROUP) : GfDataBdat::getFP(BDAT_MNU_MAP_INFO);
-  u32 nameId = Bdat::getVal(bdat, "disp_name", mapId).valueU16;
+  u8 *bdat = unknown64 ? GfDataBdat::getFP(BDAT_MNU_MAP_GROUP) : GfDataBdat::getFP(BDAT_MNU_MAP_INFO);
+  u32 nameId = Bdat::getVal(bdat, "disp_name", unknown58).valueU16;
   setText(ui::UIStr(GfDataBdat::getFP(BDAT_MNU_MAP_LEVEL_NAME_MS), nameId));
   return true;
 }
 
 bool GfMenuZoneMapAdapter::update_ZonePointName() {
-  setText(ui::UIStr(GfDataBdat::getFP(BDAT_FLD_LANDMARK), param));
+  setText(ui::UIStr(GfDataBdat::getFP(BDAT_FLD_LANDMARK), unknown5c));
   return true;
 }
 
@@ -63,7 +63,7 @@ GfMenuZoneMapAdapter *GfMenuZoneMapAdapter::createFromCoverter(u32 handle, u32 t
   u32 mapId = converter->getMapId();
   GfMenuZoneMapAdapter *adapter = create(handle, type, mapId, converter->getParam(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->converter = converter;
+    adapter->unknown50 = converter;
   }
   return adapter;
 }
@@ -79,34 +79,34 @@ GfMenuZoneMapAdapter *GfMenuZoneMapAdapter::createFromList(u32 handle, u32 type,
 }
 
 void GfMenuZoneMapAdapter::update(const fw::UpdateInfo &info) {
-  if (converter != nullptr) {
-    u32 newMapId = converter->getMapId();
-    u32 newParam = converter->getParam();
-    bool newIsGroupMode = converter->isGroupMode();
-    if (mapId != newMapId) {
-      mapId = newMapId;
+  if (unknown50 != nullptr) {
+    u32 newMapId = unknown50->getMapId();
+    u32 newParam = unknown50->getParam();
+    bool newIsGroupMode = unknown50->isGroupMode();
+    if (unknown58 != newMapId) {
+      unknown58 = newMapId;
       setChange();
     }
-    if (param != newParam) {
-      param = newParam;
+    if (unknown5c != newParam) {
+      unknown5c = newParam;
       setChange();
     }
-    if (isGroupMode != newIsGroupMode) {
-      isGroupMode = newIsGroupMode;
+    if (unknown64 != newIsGroupMode) {
+      unknown64 = newIsGroupMode;
       setChange();
     }
   }
 
-  if (updater.isValid() && (flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
-    if (mapId != 0) {
-      setDisp(updater());
+  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+    if (unknown58 != 0) {
+      setDisp(unknown30());
     } else {
       setDisp(false);
     }
-    flags &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_CHANGED;
   }
 }
 
-bool GfMenuZoneMapAdapter::ListConverter::isGroupMode() { return list->isGroupMode; }
+bool GfMenuZoneMapAdapter::ListConverter::isGroupMode() { return list->unknown79; }
 
 } // namespace gf

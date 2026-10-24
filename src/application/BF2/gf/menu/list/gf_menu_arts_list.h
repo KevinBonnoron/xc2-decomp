@@ -5,8 +5,8 @@
 namespace gf {
 
 struct MenuArtsInfo {
-  u32 arts;
-  u32 level;
+  u32 unknown00; // Inferred role: arts; original member name unknown.
+  u32 unknown04; // Inferred role: level; original member name unknown.
 };
 
 static_assert(sizeof(MenuArtsInfo) == 0x8, "");

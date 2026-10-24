@@ -21,12 +21,13 @@ static GfMenuBladeDataAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuBladeDataAdapter::update_AffinityIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
 };
 
-GfMenuBladeDataAdapter::GfMenuBladeDataAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), blade(0), driver(0), artsSlot(0) {}
+GfMenuBladeDataAdapter::GfMenuBladeDataAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
+    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown58(nullptr), unknown60(0), unknown64(0), unknown68(0) {}
 
 GfMenuBladeDataAdapter::~GfMenuBladeDataAdapter() {
-  if (converter != nullptr) {
-    delete converter;
-    converter = nullptr;
+  if (unknown58 != nullptr) {
+    delete unknown58;
+    unknown58 = nullptr;
   }
 }
 
@@ -40,9 +41,9 @@ GfMenuBladeDataAdapter *GfMenuBladeDataAdapter::create(u32 handle, u32 type, u32
 #line 162
       GfMenuBladeDataAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuBladeDataAdapter(plugin, isUpdateAlways);
       if (adapter != nullptr) {
-        adapter->updater.bind(adapter, info.update);
-        adapter->blade = blade;
-        adapter->driver = driver;
+        adapter->unknown38.bind(adapter, info.update);
+        adapter->unknown60 = blade;
+        adapter->unknown64 = driver;
         plugin->release();
         return adapter;
       }
@@ -52,7 +53,7 @@ GfMenuBladeDataAdapter *GfMenuBladeDataAdapter::create(u32 handle, u32 type, u32
 }
 
 bool GfMenuBladeDataAdapter::update_DrArtsName() {
-  u32 arts = GfDataDriver::getDriverArtsID(driver, blade, artsSlot);
+  u32 arts = GfDataDriver::getDriverArtsID(unknown64, unknown60, unknown68);
   if (arts == 0) {
     return false;
   }
@@ -62,7 +63,7 @@ bool GfMenuBladeDataAdapter::update_DrArtsName() {
 }
 
 bool GfMenuBladeDataAdapter::update_DrArtsIcon() {
-  u32 arts = GfDataDriver::getDriverArtsID(driver, blade, artsSlot);
+  u32 arts = GfDataDriver::getDriverArtsID(unknown64, unknown60, unknown68);
   if (arts == 0) {
     return false;
   }
@@ -71,15 +72,15 @@ bool GfMenuBladeDataAdapter::update_DrArtsIcon() {
 }
 
 bool GfMenuBladeDataAdapter::update_DrArtsLv() {
-  if (GfDataDriver::getDriverArtsID(driver, blade, artsSlot) == 0) {
+  if (GfDataDriver::getDriverArtsID(unknown64, unknown60, unknown68) == 0) {
     return false;
   }
-  setNumber(GfDataDriver::getDriverArtsLevel(driver, blade, artsSlot));
+  setNumber(GfDataDriver::getDriverArtsLevel(unknown64, unknown60, unknown68));
   return true;
 }
 
 bool GfMenuBladeDataAdapter::update_AffinityIcon() {
-  u16 icon = GfMenuObjUtil::getBladeCompatibilityIconID(driver, blade);
+  u16 icon = GfMenuObjUtil::getBladeCompatibilityIconID(unknown64, unknown60);
   if (icon == 0) {
     return false;
   }
@@ -93,7 +94,7 @@ GfMenuBladeDataAdapter *GfMenuBladeDataAdapter::createFromCoverter(u32 handle, u
   converter->getID(blade, driver);
   GfMenuBladeDataAdapter *adapter = create(handle, type, blade, driver, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->converter = converter;
+    adapter->unknown58 = converter;
   }
   return adapter;
 }
@@ -120,33 +121,33 @@ GfMenuBladeDataAdapter *GfMenuBladeDataAdapter::createFromReferenceBladeSet(u32 
 }
 
 void GfMenuBladeDataAdapter::update(const fw::UpdateInfo &info) {
-  if (converter != nullptr) {
+  if (unknown58 != nullptr) {
     u32 newDriver;
     u32 newBlade;
-    converter->getID(newBlade, newDriver);
-    if (blade != newBlade) {
-      blade = newBlade;
+    unknown58->getID(newBlade, newDriver);
+    if (unknown60 != newBlade) {
+      unknown60 = newBlade;
       setChange();
     }
-    if (driver != newDriver) {
-      driver = newDriver;
+    if (unknown64 != newDriver) {
+      unknown64 = newDriver;
       setChange();
     }
   }
 
-  if ((flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0 && updater.isValid()) {
-    setDisp(blade != 0 && driver != 0 && updater());
-    flags &= ~FLAG_CHANGED;
+  if ((unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0 && unknown38.isValid()) {
+    setDisp(unknown60 != 0 && unknown64 != 0 && unknown38());
+    unknown20 &= ~FLAG_CHANGED;
   }
 }
 
 void GfMenuBladeDataAdapter::changeBladeData(u32 blade, u32 driver) {
-  if (this->blade != blade) {
-    this->blade = blade;
+  if (this->unknown60 != blade) {
+    this->unknown60 = blade;
     setChange();
   }
-  if (this->driver != driver) {
-    this->driver = driver;
+  if (this->unknown64 != driver) {
+    this->unknown64 = driver;
     setChange();
   }
 }

@@ -12,9 +12,9 @@ class GfMenuCallContext;
 class GfMenuObjFieldIcon : public GfMenuObject {
 public:
   struct OpenParam {
-    int icon;
-    mm::Vec3 position;
-    mm::Vec3 offset;
+    int unknown00;      // Inferred role: icon; original member name unknown.
+    mm::Vec3 unknown10; // Inferred role: position; original member name unknown.
+    mm::Vec3 unknown20; // Inferred role: offset; original member name unknown.
   };
 
   GfMenuObjFieldIcon(u32 handle);
@@ -28,7 +28,7 @@ public:
   void update() override;
 };
 
-static_assert(offsetof(GfMenuObjFieldIcon::OpenParam, position) == 0x10, "");
-static_assert(offsetof(GfMenuObjFieldIcon::OpenParam, offset) == 0x20, "");
+static_assert(offsetof(GfMenuObjFieldIcon::OpenParam, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuObjFieldIcon::OpenParam, unknown20) == 0x20, "");
 
 } // namespace gf

@@ -22,10 +22,10 @@ public:
   static bool isInitialized();
   static void postUpdate(const fw::UpdateInfo &info);
 
-  bool initialized;
+  bool unknown08; // Inferred role: initialized; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuStatus, initialized) == 0x08, "");
+static_assert(offsetof(GfMenuStatus, unknown08) == 0x08, "");
 static_assert(sizeof(GfMenuStatus) == 0x10, "");
 
 } // namespace gf

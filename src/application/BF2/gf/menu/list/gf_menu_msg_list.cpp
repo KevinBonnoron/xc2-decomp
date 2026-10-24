@@ -5,7 +5,7 @@
 
 namespace gf {
 
-GfMenuMsgList::GfMenuMsgList() : nameBdat(nullptr), msgBdat(nullptr) {}
+GfMenuMsgList::GfMenuMsgList() : unknown68(nullptr), unknown70(nullptr) {}
 
 GfMenuMsgList::~GfMenuMsgList() { ; }
 
@@ -27,8 +27,8 @@ void GfMenuMsgList::setBdat(u32 nameBdatId, u32 msgBdatId) {
   }
   u8 *msgs = GfDataBdat::getFP(msgBdatId);
   if (msgs != nullptr) {
-    nameBdat = names;
-    msgBdat = msgs;
+    unknown68 = names;
+    unknown70 = msgs;
   }
 }
 

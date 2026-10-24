@@ -7,15 +7,15 @@
 namespace gf {
 
 struct MenuZoneMapInfo {
-  MenuZoneMapInfo() : mapId(0), param(0), _08(), priority(0) {}
+  MenuZoneMapInfo() : unknown00(0), unknown04(0), _08(), unknown14(0) {}
 
-  u32 mapId;
-  u32 param;
+  u32 unknown00; // Inferred role: map id; original member name unknown.
+  u32 unknown04; // Inferred role: param; original member name unknown.
   u8 _08[0x14 - 0x8];
-  u16 priority;
+  u16 unknown14; // Inferred role: priority; original member name unknown.
 };
 
-static_assert(offsetof(MenuZoneMapInfo, priority) == 0x14, "");
+static_assert(offsetof(MenuZoneMapInfo, unknown14) == 0x14, "");
 static_assert(sizeof(MenuZoneMapInfo) == 0x18, "");
 
 class GfMenuZoneMapList : public ui::UIListInfo<MenuZoneMapInfo> {
@@ -26,10 +26,10 @@ public:
   void sortFromPriority();
   static bool sortPriority(const MenuZoneMapInfo &info, const MenuZoneMapInfo &other);
 
-  bool isGroupMode;
+  bool unknown79; // Inferred role: group mode; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuZoneMapList, isGroupMode) == 0x79, "");
+static_assert(offsetof(GfMenuZoneMapList, unknown79) == 0x79, "");
 static_assert(sizeof(GfMenuZoneMapList) == 0x80, "");
 
 } // namespace gf

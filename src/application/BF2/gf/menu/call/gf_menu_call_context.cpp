@@ -9,8 +9,8 @@ namespace gf {
 
 static u32 nextId;
 
-GfMenuCallContext::GfMenuCallContext() : menu(0), object(0), isTerminated(false) {
-  id = nextId;
+GfMenuCallContext::GfMenuCallContext() : unknown10(0), unknown14(0), unknown40(false) {
+  unknown0c = nextId;
   nextId++;
 }
 
@@ -23,74 +23,74 @@ GfMenuCallContext *GfMenuCallContext::create() {
 }
 
 GfMenuCallContext::STATE GfMenuCallContext::getState() {
-  if (object != 0 && ui::UIObjectAcc(object).isTerm()) {
+  if (unknown14 != 0 && ui::UIObjectAcc(unknown14).isTerm()) {
     return STATE_TERM;
   }
-  if (isTerminated) {
+  if (unknown40) {
     return STATE_TERM;
   }
-  return object != 0 ? STATE_ACTIVE : STATE_IDLE;
+  return unknown14 != 0 ? STATE_ACTIVE : STATE_IDLE;
 }
 
 bool GfMenuCallContext::isTerm() const {
-  if (object != 0 && ui::UIObjectAcc(object).isTerm()) {
+  if (unknown14 != 0 && ui::UIObjectAcc(unknown14).isTerm()) {
     return true;
   }
-  return isTerminated;
+  return unknown40;
 }
 
-bool GfMenuCallContext::isActive() const { return object != 0; }
+bool GfMenuCallContext::isActive() const { return unknown14 != 0; }
 
 void GfMenuCallContext::reset() {
-  if (!isTerminated) {
+  if (!unknown40) {
     terminate();
   }
-  isTerminated = false;
-  menu = 0;
-  results.clear();
+  unknown40 = false;
+  unknown10 = 0;
+  unknown18.clear();
 }
 
 void GfMenuCallContext::terminate() {
-  isTerminated = true;
-  object = 0;
+  unknown40 = true;
+  unknown14 = 0;
 }
 
 void GfMenuCallContext::abort() {
-  if (object != 0) {
+  if (unknown14 != 0) {
     ui::EventData event;
     event.type = 2;
-    ui::UIManager::get()->requestObjectEvent(object, event, 0.0f);
+    ui::UIManager::get()->requestObjectEvent(unknown14, event, 0.0f);
     return;
   }
-  isTerminated = true;
+  unknown40 = true;
 }
 
 bool GfMenuCallContext::popResult(GfMenuResult &result) {
-  if (results.empty()) {
+  if (unknown18.empty()) {
     return false;
   }
-  result = results.front();
-  results.erase(results.begin());
+  result = unknown18.front();
+  unknown18.erase(unknown18.begin());
   return true;
 }
 
 void GfMenuCallContext::addResult(const GfMenuResult &result) {
-  if (results.size() < results.capacity()) {
-    results.push_back(result);
+  if (unknown18.size() < unknown18.capacity()) {
+    unknown18.push_back(result);
   }
 }
 
 void GfMenuCallContext::setup(u32 object, u32 menu) {
-  if (this->object == 0) {
-    isTerminated = false;
-    this->menu = menu;
-    this->object = object;
+  if (this->unknown14 == 0) {
+    unknown40 = false;
+    this->unknown10 = menu;
+    this->unknown14 = object;
   }
 }
 
 void GfMenuCallContext::callNext(u32 menu) {
-  if (object != 0) {
-    this->menu = menu;
+  if (unknown14 != 0) {
+    this->unknown10 = menu;
   }
 }
 

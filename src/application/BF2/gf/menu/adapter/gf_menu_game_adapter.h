@@ -41,12 +41,12 @@ public:
   bool update_DispAccess();
   void update(const fw::UpdateInfo &info) override;
 
-  mm::mtl::Delegate<bool()> updater;
-  u32 referenceIndex;
+  mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
+  u32 unknown50;                       // Inferred role: reference index; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuGameAdapter, updater) == 0x30, "");
-static_assert(offsetof(GfMenuGameAdapter, referenceIndex) == 0x50, "");
+static_assert(offsetof(GfMenuGameAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuGameAdapter, unknown50) == 0x50, "");
 static_assert(sizeof(GfMenuGameAdapter) == 0x58, "");
 
 } // namespace gf

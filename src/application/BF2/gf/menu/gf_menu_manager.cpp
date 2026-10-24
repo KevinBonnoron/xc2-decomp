@@ -45,14 +45,14 @@ constexpr u16 SAVE_LOAD_SAVE = 1;
 constexpr u32 SE_ACCEPT_ACCESS = 27;
 
 bool isOpenCallMenu(GfMenuManager *manager, u32 menu) {
-  if (manager->callContext == nullptr) {
+  if (manager->unknown40d0 == nullptr) {
     return false;
   }
-  if (manager->callContext->getState() == GfMenuCallContext::STATE_IDLE) {
+  if (manager->unknown40d0->getState() == GfMenuCallContext::STATE_IDLE) {
     return false;
   }
-  if (manager->callContext->isActive()) {
-    return manager->callContext->menu == menu;
+  if (manager->unknown40d0->isActive()) {
+    return manager->unknown40d0->unknown10 == menu;
   }
   return false;
 }
@@ -73,13 +73,13 @@ void GfMenuManager::destroy() {
 
 bool GfMenuManager::isRegionJP() {
   if (get() != nullptr) {
-    return get()->region == REGION_JP;
+    return get()->unknown4104 == REGION_JP;
   }
   return false;
 }
 
 bool GfMenuManager::isFading(u32 fade) {
-  if (get() != nullptr && get()->initialized) {
+  if (get() != nullptr && get()->unknown4090) {
     return GfMenuFade::isFading(fade);
   }
   return false;
@@ -88,8 +88,8 @@ bool GfMenuManager::isFading(u32 fade) {
 f32 GfMenuManager::getUpdateDT() {
   GfMenuManager *manager = get();
   f32 updateDT = 0.0f;
-  if (manager != nullptr && manager->initialized) {
-    updateDT = manager->updateDT;
+  if (manager != nullptr && manager->unknown4090) {
+    updateDT = manager->unknown40f8;
   }
   return updateDT;
 }
@@ -99,8 +99,8 @@ GF_OBJ_HANDLE *GfMenuManager::getTargetObjHandle() {
   if (manager == nullptr) {
     return INVALID_HANDLE;
   }
-  if (manager->initialized) {
-    return manager->targetObj;
+  if (manager->unknown4090) {
+    return manager->unknown40b8;
   }
   return INVALID_HANDLE;
 }
@@ -110,8 +110,8 @@ GF_OBJ_HANDLE *GfMenuManager::getAccessObjHandle() {
   if (manager == nullptr) {
     return INVALID_HANDLE;
   }
-  if (manager->initialized) {
-    return manager->accessObj;
+  if (manager->unknown4090) {
+    return manager->unknown40c0;
   }
   return INVALID_HANDLE;
 }
@@ -121,8 +121,8 @@ bool GfMenuManager::isTargetChanged() {
   if (manager == nullptr) {
     return false;
   }
-  if (manager->initialized) {
-    return manager->isTargetObjChanged;
+  if (manager->unknown4090) {
+    return manager->unknown40c8;
   }
   return false;
 }
@@ -132,8 +132,8 @@ bool GfMenuManager::isAccessChanged() {
   if (manager == nullptr) {
     return false;
   }
-  if (manager->initialized) {
-    return manager->isAccessObjChanged;
+  if (manager->unknown4090) {
+    return manager->unknown40c9;
   }
   return false;
 }
@@ -143,39 +143,39 @@ u32 GfMenuManager::getCurCameraType() {
   if (manager == nullptr) {
     return 0;
   }
-  if (manager->initialized) {
-    return manager->cameraType;
+  if (manager->unknown4090) {
+    return manager->unknown40cc;
   }
   return 0;
 }
 
 void GfMenuManager::openCommonWindow(u16 window) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized && manager->callContext != nullptr) {
-    manager->callContext->reset();
-    GfMenuObjCommonText::open(manager->callContext, window, 0);
-    manager->latestCommonWindow = window;
+  if (manager != nullptr && manager->unknown4090 && manager->unknown40d0 != nullptr) {
+    manager->unknown40d0->reset();
+    GfMenuObjCommonText::open(manager->unknown40d0, window, 0);
+    manager->unknown4154 = window;
   }
 }
 
 void GfMenuManager::openCommonWindow(const MenuCommonWindowParam &param) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized && manager->callContext != nullptr) {
-    manager->callContext->reset();
-    GfMenuObjCommonText::open(manager->callContext, param);
+  if (manager != nullptr && manager->unknown4090 && manager->unknown40d0 != nullptr) {
+    manager->unknown40d0->reset();
+    GfMenuObjCommonText::open(manager->unknown40d0, param);
   }
 }
 
 void GfMenuManager::closeCommonWindow() {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized && manager->callContext != nullptr) {
+  if (manager != nullptr && manager->unknown4090 && manager->unknown40d0 != nullptr) {
     GfMenuObjCommonText::close();
   }
 }
 
 bool GfMenuManager::isOpenCommonWindow() {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized) {
+  if (manager != nullptr && manager->unknown4090) {
     return isOpenCallMenu(manager, MENU_COMMON_TEXT);
   }
   return false;
@@ -186,8 +186,8 @@ int GfMenuManager::getCommonWindowResult() {
   if (manager == nullptr) {
     return 0;
   }
-  if (manager->initialized) {
-    return manager->commonWindowResult;
+  if (manager->unknown4090) {
+    return manager->unknown40d8;
   }
   return 0;
 }
@@ -197,23 +197,23 @@ u32 GfMenuManager::getLatestCommonWinID() {
   if (manager == nullptr) {
     return 0;
   }
-  if (manager->initialized) {
-    return manager->latestCommonWindow;
+  if (manager->unknown4090) {
+    return manager->unknown4154;
   }
   return 0;
 }
 
 void GfMenuManager::openPreciousWindow(u16 item) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized && manager->callContext != nullptr) {
-    manager->callContext->reset();
-    GfMenuObjCommonText::openItem(manager->callContext, COMMON_TEXT_PRECIOUS, item);
+  if (manager != nullptr && manager->unknown4090 && manager->unknown40d0 != nullptr) {
+    manager->unknown40d0->reset();
+    GfMenuObjCommonText::openItem(manager->unknown40d0, COMMON_TEXT_PRECIOUS, item);
   }
 }
 
 bool GfMenuManager::isOpenPreciousWindow() {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized) {
+  if (manager != nullptr && manager->unknown4090) {
     return isOpenCallMenu(manager, MENU_COMMON_TEXT);
   }
   return false;
@@ -221,23 +221,23 @@ bool GfMenuManager::isOpenPreciousWindow() {
 
 void GfMenuManager::openChapterTelop(u8 chapter) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized && chapter >= 1 && chapter <= CHAPTER_MAX && manager->callContext != nullptr) {
-    manager->callContext->reset();
-    GfMenuObjChapterTelop::openBeginTelop(manager->callContext, chapter);
+  if (manager != nullptr && manager->unknown4090 && chapter >= 1 && chapter <= CHAPTER_MAX && manager->unknown40d0 != nullptr) {
+    manager->unknown40d0->reset();
+    GfMenuObjChapterTelop::openBeginTelop(manager->unknown40d0, chapter);
   }
 }
 
 void GfMenuManager::openChapterEndTelop(u8 chapter) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized && chapter >= 1 && chapter <= CHAPTER_MAX && manager->callContext != nullptr) {
-    manager->callContext->reset();
-    GfMenuObjChapterTelop::openEndTelop(manager->callContext, chapter);
+  if (manager != nullptr && manager->unknown4090 && chapter >= 1 && chapter <= CHAPTER_MAX && manager->unknown40d0 != nullptr) {
+    manager->unknown40d0->reset();
+    GfMenuObjChapterTelop::openEndTelop(manager->unknown40d0, chapter);
   }
 }
 
 bool GfMenuManager::isOpenChapterTelop() {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized) {
+  if (manager != nullptr && manager->unknown4090) {
     return isOpenCallMenu(manager, MENU_CHAPTER_TELOP);
   }
   return false;
@@ -245,7 +245,7 @@ bool GfMenuManager::isOpenChapterTelop() {
 
 bool GfMenuManager::isOpenZoneTelop() {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized) {
+  if (manager != nullptr && manager->unknown4090) {
     return isOpenCallMenu(manager, MENU_ZONE_TELOP);
   }
   return false;
@@ -253,17 +253,17 @@ bool GfMenuManager::isOpenZoneTelop() {
 
 void GfMenuManager::openDummyTutorial(u8 tutorial) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized && manager->callContext != nullptr) {
-    manager->callContext->reset();
+  if (manager != nullptr && manager->unknown4090 && manager->unknown40d0 != nullptr) {
+    manager->unknown40d0->reset();
     GfMenuObjDummyTutorial::OpenParam param;
-    param.tutorial = tutorial;
-    GfMenuObjDummyTutorial::open(manager->callContext, param);
+    param.unknown00 = tutorial;
+    GfMenuObjDummyTutorial::open(manager->unknown40d0, param);
   }
 }
 
 bool GfMenuManager::isOpenDummyTutorial() {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized) {
+  if (manager != nullptr && manager->unknown4090) {
     return isOpenCallMenu(manager, MENU_DUMMY_TUTORIAL);
   }
   return false;
@@ -271,8 +271,8 @@ bool GfMenuManager::isOpenDummyTutorial() {
 
 void GfMenuManager::setEnableQuestOpen(bool isEnable) {
   GfMenuManager *manager = get();
-  if (manager != nullptr && manager->initialized) {
-    manager->isQuestOpenEnable = isEnable;
+  if (manager != nullptr && manager->unknown4090) {
+    manager->unknown4101 = isEnable;
   }
 }
 
@@ -281,22 +281,22 @@ bool GfMenuManager::isEnableQuestOpen() {
   if (manager == nullptr) {
     return false;
   }
-  if (manager->initialized) {
-    return manager->isQuestOpenEnable;
+  if (manager->unknown4090) {
+    return manager->unknown4101;
   }
   return false;
 }
 
 GfMenuManager::REGION GfMenuManager::getRegion() {
   if (get() != nullptr) {
-    return get()->region;
+    return get()->unknown4104;
   }
   return REGION_JP;
 }
 
 bool GfMenuManager::isRegionUS() {
   if (get() != nullptr) {
-    return get()->region == REGION_US;
+    return get()->unknown4104 == REGION_US;
   }
   return false;
 }
@@ -305,7 +305,7 @@ void GfMenuManager::openFullScreen(u32 screen, bool isFadeOut, bool isFadeIn) { 
 
 void GfMenuManager::openMenu(u32 menu) {
   GfMenuObjMainRoot::OpenParam param;
-  param.menu = menu;
+  param.unknown00 = menu;
   GfMenuObjMainRoot::registOpenParam(param);
   GfMenuFullScreen::open(FULL_SCREEN_MAIN_ROOT, true, true);
 }
@@ -313,9 +313,9 @@ void GfMenuManager::openMenu(u32 menu) {
 void GfMenuManager::openBladeCreateFromEvent(u32 event) {
   GfMenuObjMainRoot::OpenParam mainRootParam;
   GfMenuObjBladeCreate::OpenParam bladeCreateParam;
-  bladeCreateParam.event = event;
+  bladeCreateParam.unknown00 = event;
   GfMenuObjBladeCreate::registOpenParam(bladeCreateParam);
-  mainRootParam.menu = MAIN_ROOT_BLADE_CREATE;
+  mainRootParam.unknown00 = MAIN_ROOT_BLADE_CREATE;
   GfMenuObjMainRoot::registOpenParam(mainRootParam);
   GfMenuFullScreen::open(FULL_SCREEN_MAIN_ROOT, true, true);
 }
@@ -327,14 +327,14 @@ void GfMenuManager::openBtlModelView() {
 }
 
 void GfMenuManager::closeBtlModelView() {
-  if (get() != nullptr && get()->isBtlModelViewOpen) {
+  if (get() != nullptr && get()->unknown40fd) {
     ui::UIManager::get()->terminateLayer(LAYER_BTL_MODEL_VIEW, true);
   }
 }
 
 bool GfMenuManager::isOpenBtlModelView() {
   if (get() != nullptr) {
-    return get()->isBtlModelViewOpen;
+    return get()->unknown40fd;
   }
   return false;
 }
@@ -343,13 +343,13 @@ void GfMenuManager::openNameSelect() {
   GfMenuManager *manager = get();
   if (manager != nullptr) {
     ui::UIManager::get()->createLayer(LAYER_NAME_SELECT);
-    manager->isNameSelectOpen = true;
+    manager->unknown40fe = true;
   }
 }
 
 bool GfMenuManager::isOpenNameSelect() {
   if (get() != nullptr) {
-    return get()->isNameSelectOpen;
+    return get()->unknown40fe;
   }
   return false;
 }
@@ -358,7 +358,7 @@ void GfMenuManager::openOpeningTelop() {
   GfMenuManager *manager = get();
   if (manager != nullptr) {
     ui::UIManager::get()->createLayer(LAYER_OPENING_TELOP);
-    manager->isOpeningTelopOpen = true;
+    manager->unknown40ff = true;
   }
 }
 
@@ -370,7 +370,7 @@ void GfMenuManager::closeOpeningTelop() {
 
 bool GfMenuManager::isOpenOpeningTelop() {
   if (get() != nullptr) {
-    return get()->isOpeningTelopOpen;
+    return get()->unknown40ff;
   }
   return false;
 }
@@ -389,13 +389,13 @@ void GfMenuManager::closeStaffroll() {
 
 void GfMenuManager::setMainmenuOpenMap() {
   GfMenuObjMainMenu2::OpenParam param;
-  param.page = MAINMENU2_MAP;
+  param.unknown00 = MAINMENU2_MAP;
   GfMenuObjMainMenu2::registOpenParam(param);
 }
 
 void GfMenuManager::setMainmenuOpenSystem() {
   GfMenuObjMainMenu2::OpenParam param;
-  param.page = MAINMENU2_SYSTEM;
+  param.unknown00 = MAINMENU2_SYSTEM;
   GfMenuObjMainMenu2::registOpenParam(param);
 }
 
@@ -418,9 +418,9 @@ bool GfMenuManager::isFieldHudInputEnable() { return !GfMenuObjTutorial::isWaiti
 void GfMenuManager::openSave() {
   GfMenuObjMainRoot::OpenParam mainRootParam;
   GfMenuObjSaveLoad2::OpenParam saveLoadParam;
-  saveLoadParam.mode = SAVE_LOAD_SAVE;
+  saveLoadParam.unknown00 = SAVE_LOAD_SAVE;
   GfMenuObjSaveLoad2::registOpenParam(saveLoadParam);
-  mainRootParam.menu = MAIN_ROOT_SAVE_LOAD;
+  mainRootParam.unknown00 = MAIN_ROOT_SAVE_LOAD;
   GfMenuObjMainRoot::registOpenParam(mainRootParam);
   GfMenuFullScreen::open(FULL_SCREEN_MAIN_ROOT, true, true);
 }

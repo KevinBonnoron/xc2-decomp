@@ -14,14 +14,14 @@ enum EVENT {
   EVENT_FADE_END = 0xb,
 };
 
-GfMenuFade::GfMenuFade(const GfSetupParam &param) : initialized(false) { initialize(param); }
+GfMenuFade::GfMenuFade(const GfSetupParam &param) : unknown08(false) { initialize(param); }
 
 void GfMenuFade::initialize(const GfSetupParam &param) {
   for (u32 i = 0; i < FADE_COUNT; i++) {
-    fading[i] = false;
+    unknown09[i] = false;
   }
   ui::UIManager::get()->createLayer(FADE_LAYER);
-  initialized = false;
+  unknown08 = false;
 }
 
 GfMenuFade::~GfMenuFade() {}
@@ -38,11 +38,11 @@ void GfMenuFade::destroy() {
   delete fade;
 }
 
-void GfMenuFade::finalize() { initialized = false; }
+void GfMenuFade::finalize() { unknown08 = false; }
 
 bool GfMenuFade::isInitialized() {
   if (get() != nullptr) {
-    return get()->initialized;
+    return get()->unknown08;
   }
   return false;
 }
@@ -50,7 +50,7 @@ bool GfMenuFade::isInitialized() {
 void GfMenuFade::postUpdate(const fw::UpdateInfo &info) {}
 
 void GfMenuFade::getFadeColor(u32 type, mm::Col4 &color) {
-  if (get() != nullptr && get()->initialized) {
+  if (get() != nullptr && get()->unknown08) {
     GfMenuObjFade::getFadeColor(type, color);
   }
 }
@@ -60,7 +60,7 @@ void GfMenuFade::setLoading(u32 type, bool disp) { GfMenuObjFade::dispLoading(di
 bool GfMenuFade::isFading(u32 type) {
   GfMenuFade *fade = get();
   if (type < FADE_COUNT && fade != nullptr) {
-    return fade->fading[type];
+    return fade->unknown09[type];
   }
   return false;
 }
@@ -71,13 +71,13 @@ void GfMenuFade::reciveEvent(const ui::EventData &event, u32 handle) {
     switch (event.type) {
     case EVENT_LAYER_CREATED:
       if (event.param1 == 1) {
-        fade->initialized = true;
+        fade->unknown08 = true;
       }
       break;
     case EVENT_FADE_END: {
       int type = event.param0;
       if (type < static_cast<int>(FADE_COUNT)) {
-        fade->fading[type] = false;
+        fade->unknown09[type] = false;
       }
       break;
     }

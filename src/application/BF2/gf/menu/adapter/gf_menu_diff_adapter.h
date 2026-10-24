@@ -36,13 +36,13 @@ public:
   bool update_DispSameOff(int result);
   void update(const fw::UpdateInfo &info) override;
 
-  mm::mtl::Delegate<bool(int)> updater;
-  GfMenuAdapter *adapter;
-  GfMenuAdapter *other;
+  mm::mtl::Delegate<bool(int)> unknown30; // Inferred role: updater; original member name unknown.
+  GfMenuAdapter *unknown50;               // Inferred role: adapter; original member name unknown.
+  GfMenuAdapter *unknown58;               // Inferred role: other; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuDiffAdapter, updater) == 0x30, "");
-static_assert(offsetof(GfMenuDiffAdapter, adapter) == 0x50, "");
+static_assert(offsetof(GfMenuDiffAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuDiffAdapter, unknown50) == 0x50, "");
 static_assert(sizeof(GfMenuDiffAdapter) == 0x60, "");
 
 } // namespace gf

@@ -38,26 +38,26 @@ public:
   void changeFixedPoint(const mm::Vec3 &pos);
   void update(const fw::UpdateInfo &info) override;
 
-  GF_OBJ_HANDLE *objHandle;
-  mm::Vec3 offset;
-  mm::mtl::FixStr<16> boneName;
-  mm::Vec3 worldPos;
-  bool isWorld;
-  bool isFixedPoint;
-  bool isDiffOffset;
-  mm::Pnt<s16> screenOffset;
-  PartyDriverConverter *converter;
+  GF_OBJ_HANDLE *unknown30;        // Inferred role: object handle; original member name unknown.
+  mm::Vec3 unknown40;              // Inferred role: offset; original member name unknown.
+  mm::mtl::FixStr<16> unknown50;   // Inferred role: bone name; original member name unknown.
+  mm::Vec3 unknown70;              // Inferred role: world pos; original member name unknown.
+  bool unknown80;                  // Inferred role: world; original member name unknown.
+  bool unknown81;                  // Inferred role: fixed point; original member name unknown.
+  bool unknown82;                  // Inferred role: diff offset; original member name unknown.
+  mm::Pnt<s16> unknown84;          // Inferred role: screen offset; original member name unknown.
+  PartyDriverConverter *unknown88; // Inferred role: converter; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuPosAdapter, objHandle) == 0x30, "");
-static_assert(offsetof(GfMenuPosAdapter, offset) == 0x40, "");
-static_assert(offsetof(GfMenuPosAdapter, boneName) == 0x50, "");
-static_assert(offsetof(GfMenuPosAdapter, worldPos) == 0x70, "");
-static_assert(offsetof(GfMenuPosAdapter, isWorld) == 0x80, "");
-static_assert(offsetof(GfMenuPosAdapter, isFixedPoint) == 0x81, "");
-static_assert(offsetof(GfMenuPosAdapter, isDiffOffset) == 0x82, "");
-static_assert(offsetof(GfMenuPosAdapter, screenOffset) == 0x84, "");
-static_assert(offsetof(GfMenuPosAdapter, converter) == 0x88, "");
+static_assert(offsetof(GfMenuPosAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuPosAdapter, unknown40) == 0x40, "");
+static_assert(offsetof(GfMenuPosAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuPosAdapter, unknown70) == 0x70, "");
+static_assert(offsetof(GfMenuPosAdapter, unknown80) == 0x80, "");
+static_assert(offsetof(GfMenuPosAdapter, unknown81) == 0x81, "");
+static_assert(offsetof(GfMenuPosAdapter, unknown82) == 0x82, "");
+static_assert(offsetof(GfMenuPosAdapter, unknown84) == 0x84, "");
+static_assert(offsetof(GfMenuPosAdapter, unknown88) == 0x88, "");
 static_assert(sizeof(GfMenuPosAdapter) == 0x90, "");
 
 } // namespace gf

@@ -38,12 +38,12 @@ public:
   static bool isFading(u32 type);
   static void reciveEvent(const ui::EventData &event, u32 handle);
 
-  bool initialized;
-  bool fading[FADE_COUNT];
+  bool unknown08;             // Inferred role: initialized; original member name unknown.
+  bool unknown09[FADE_COUNT]; // Inferred role: fading; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuFade, initialized) == 0x08, "");
-static_assert(offsetof(GfMenuFade, fading) == 0x09, "");
+static_assert(offsetof(GfMenuFade, unknown08) == 0x08, "");
+static_assert(offsetof(GfMenuFade, unknown09) == 0x09, "");
 static_assert(sizeof(GfMenuFade) == 0x10, "");
 
 } // namespace gf

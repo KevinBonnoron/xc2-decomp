@@ -5,7 +5,7 @@
 namespace gf {
 
 struct MenuTeamInfo {
-  u32 team;
+  u32 unknown00; // Inferred role: team; original member name unknown.
 };
 
 static_assert(sizeof(MenuTeamInfo) == 0x4, "");

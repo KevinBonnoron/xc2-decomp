@@ -29,12 +29,12 @@ static GfMenuZoneAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuZoneAdapter::update_ZoneNotice, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
 };
 
-GfMenuZoneAdapter::GfMenuZoneAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), zone(0), team(0) {}
+GfMenuZoneAdapter::GfMenuZoneAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0) {}
 
 GfMenuZoneAdapter::~GfMenuZoneAdapter() {
-  if (converter != nullptr) {
-    delete converter;
-    converter = nullptr;
+  if (unknown50 != nullptr) {
+    delete unknown50;
+    unknown50 = nullptr;
   }
 }
 
@@ -47,8 +47,8 @@ GfMenuZoneAdapter *GfMenuZoneAdapter::create(u32 handle, u32 type, u16 zone, boo
       // __LINE__ must be 125 as in the original source: it is the line argument of operator new.
 #line 125
       GfMenuZoneAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuZoneAdapter(plugin, isUpdateAlways);
-      adapter->updater.bind(adapter, info.update);
-      adapter->zone = zone;
+      adapter->unknown30.bind(adapter, info.update);
+      adapter->unknown58 = zone;
       plugin->release();
       return adapter;
     }
@@ -57,41 +57,41 @@ GfMenuZoneAdapter *GfMenuZoneAdapter::create(u32 handle, u32 type, u16 zone, boo
 }
 
 bool GfMenuZoneAdapter::update_ZoneName() {
-  setText(ui::UIStr(GfDataBdat::getFP(BDAT_FLD_DEVELOPMENTNAME), zone));
+  setText(ui::UIStr(GfDataBdat::getFP(BDAT_FLD_DEVELOPMENTNAME), unknown58));
   return true;
 }
 
 bool GfMenuZoneAdapter::update_ZoneLv() {
-  setNumber(GfDataDevelop::getLevel(zone));
+  setNumber(GfDataDevelop::getLevel(unknown58));
   return true;
 }
 
 bool GfMenuZoneAdapter::update_ZoneIcon() {
-  if (zone == 0) {
+  if (unknown58 == 0) {
     return false;
   }
-  setNumber(zone - 1);
+  setNumber(unknown58 - 1);
   return true;
 }
 
 bool GfMenuZoneAdapter::update_ZoneLvIcon() {
-  setNumber(GfDataDevelop::getLevel(zone));
+  setNumber(GfDataDevelop::getLevel(unknown58));
   return true;
 }
 
 bool GfMenuZoneAdapter::update_ZoneStatColor() {
-  if (GfDataMercenaries::getTeamNum() < team) {
+  if (GfDataMercenaries::getTeamNum() < unknown5c) {
     return false;
   }
   mm::mtl::FixedVector<u16, 3> workingTeams;
-  GfDataMercenaries::getTeamByZoneMissionWorking(workingTeams, zone);
+  GfDataMercenaries::getTeamByZoneMissionWorking(workingTeams, unknown58);
   mm::mtl::FixedVector<u16, 3> completeTeams;
-  GfDataMercenaries::getTeamByZoneMissionComplete(completeTeams, zone);
+  GfDataMercenaries::getTeamByZoneMissionComplete(completeTeams, unknown58);
 
   const char *color = "mer_unit_ready";
   bool isWorking = false;
   for (u16 i = 0; i < workingTeams.size(); i++) {
-    if (*workingTeams.at(i) == team) {
+    if (*workingTeams.at(i) == unknown5c) {
       color = "mer_unit_active";
       isWorking = true;
       break;
@@ -99,7 +99,7 @@ bool GfMenuZoneAdapter::update_ZoneStatColor() {
   }
   bool isComplete = false;
   for (u16 i = 0; i < completeTeams.size(); i++) {
-    if (*completeTeams.at(i) == team) {
+    if (*completeTeams.at(i) == unknown5c) {
       isComplete = true;
       break;
     }
@@ -107,7 +107,7 @@ bool GfMenuZoneAdapter::update_ZoneStatColor() {
   if (isComplete) {
     color = "blue";
   } else if (!isWorking) {
-    color = GfDataMercenaries::isTeamStateExpedition(team) || GfDataMercenaries::isTeamStateReward(team) ? "darkgray" : color;
+    color = GfDataMercenaries::isTeamStateExpedition(unknown5c) || GfDataMercenaries::isTeamStateReward(unknown5c) ? "darkgray" : color;
   }
   setAddColor(color);
   return true;
@@ -115,7 +115,7 @@ bool GfMenuZoneAdapter::update_ZoneStatColor() {
 
 bool GfMenuZoneAdapter::update_ZoneNoticeDisp() {
   mm::mtl::FixedVector<u16, 500> missions;
-  GfGameMercenaries::getZoneMission(missions, zone);
+  GfGameMercenaries::getZoneMission(missions, unknown58);
   for (u16 *mission = missions.begin(); mission != missions.end(); mission++) {
     if (GfDataMercenaries::getMissionCategory(*mission) == MISSION_CATEGORY_QUEST) {
       return true;
@@ -129,7 +129,7 @@ bool GfMenuZoneAdapter::update_ZoneNoticeDisp() {
 
 bool GfMenuZoneAdapter::update_ZoneNotice() {
   mm::mtl::FixedVector<u16, 500> missions;
-  GfGameMercenaries::getZoneMission(missions, zone);
+  GfGameMercenaries::getZoneMission(missions, unknown58);
   int questNum = 0;
   int newNum = 0;
   for (u16 *mission = missions.begin(); mission != missions.end(); mission++) {
@@ -143,7 +143,7 @@ bool GfMenuZoneAdapter::update_ZoneNotice() {
   u8 *menuBdat = GfDataBdat::getFP(BDAT_MENU_MS);
   u8 *msgBdat = GfDataBdat::getFP(BDAT_MNU_MSG_MERCENARIES);
   int msg;
-  if (team == NOTICE_TEAM_FIRST) {
+  if (unknown5c == NOTICE_TEAM_FIRST) {
     if (hasQuest) {
       msg = MERCENARIES_MSG_QUEST_MISSION;
     } else if (newNum > 0) {
@@ -163,7 +163,7 @@ bool GfMenuZoneAdapter::update_ZoneNotice() {
 GfMenuZoneAdapter *GfMenuZoneAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
   GfMenuZoneAdapter *adapter = create(handle, type, converter->getZoneId(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->converter = converter;
+    adapter->unknown50 = converter;
   }
   return adapter;
 }
@@ -183,21 +183,21 @@ GfMenuZoneAdapter *GfMenuZoneAdapter::createFromReference(u32 handle, u32 type, 
 }
 
 void GfMenuZoneAdapter::update(const fw::UpdateInfo &info) {
-  if (converter != nullptr) {
-    u32 newZone = converter->getZoneId();
-    if (zone != newZone) {
-      zone = newZone;
+  if (unknown50 != nullptr) {
+    u32 newZone = unknown50->getZoneId();
+    if (unknown58 != newZone) {
+      unknown58 = newZone;
       setChange();
     }
   }
 
-  if (updater.isValid() && (flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
-    if (zone != 0) {
-      setDisp(updater());
+  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+    if (unknown58 != 0) {
+      setDisp(unknown30());
     } else {
       setDisp(false);
     }
-    flags &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_CHANGED;
   }
 }
 

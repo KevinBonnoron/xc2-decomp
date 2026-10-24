@@ -9,9 +9,9 @@ struct MenuCommonWindowParam;
 class GfMenuObjCommonText {
 public:
   struct OpenKizunaParam {
-    const u8 *bdat;
-    u32 textId;
-    u32 condition;
+    const u8 *unknown00; // Inferred role: bdat; original member name unknown.
+    u32 unknown08;       // Inferred role: text id; original member name unknown.
+    u32 unknown0c;       // Inferred role: condition; original member name unknown.
   };
 
   static void close();

@@ -6,7 +6,7 @@ namespace gf {
 
 GfMenuStatus::GfMenuStatus(const GfSetupParam &param) { initialize(param); }
 
-void GfMenuStatus::initialize(const GfSetupParam &param) { initialized = true; }
+void GfMenuStatus::initialize(const GfSetupParam &param) { unknown08 = true; }
 
 GfMenuStatus::~GfMenuStatus() {}
 
@@ -22,11 +22,11 @@ void GfMenuStatus::destroy() {
   delete menu;
 }
 
-void GfMenuStatus::finalize() { initialized = false; }
+void GfMenuStatus::finalize() { unknown08 = false; }
 
 bool GfMenuStatus::isInitialized() {
   if (get() != nullptr) {
-    return get()->initialized;
+    return get()->unknown08;
   }
   return false;
 }

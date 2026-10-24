@@ -15,7 +15,7 @@ constexpr int EFF_TIME_MINUTE_MAX = 99;
 constexpr int EFF_TIME_SECOND_MAX = 59;
 constexpr int BONUS_MAX = 99;
 
-GfMenuLifeAdapter::GfMenuLifeAdapter(ui::UIObjectPlugin *plugin) : GfMenuAdapter(plugin, false, false), index(0), isUpdateRequested(true) {}
+GfMenuLifeAdapter::GfMenuLifeAdapter(ui::UIObjectPlugin *plugin) : GfMenuAdapter(plugin, false, false), unknown30(0), unknown58(true) {}
 
 GfMenuLifeAdapter::~GfMenuLifeAdapter() {}
 
@@ -35,15 +35,15 @@ GfMenuLifeAdapter *GfMenuLifeAdapter::create(ui::UIObjectPlugin *plugin, u8 inde
 #line 95
   GfMenuLifeAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuLifeAdapter(plugin);
   if (adapter != nullptr) {
-    adapter->index = index;
-    adapter->updater.bind(adapter, update);
+    adapter->unknown30 = index;
+    adapter->unknown38.bind(adapter, update);
   }
   plugin->release();
   return adapter;
 }
 
 void GfMenuLifeAdapter::update_Time_EffTime(u8 index) {
-  ui::UIObjectTimePlugin *timePlugin = static_cast<ui::UIObjectTimePlugin *>(plugin);
+  ui::UIObjectTimePlugin *timePlugin = static_cast<ui::UIObjectTimePlugin *>(unknown18);
   if (timePlugin != nullptr && timePlugin->getRTTI()->isKindOf(&ui::UIObjectTimePlugin::m_rtti)) {
     timePlugin->setMin(ml::mtRand(0, EFF_TIME_MINUTE_MAX));
     timePlugin->setSec(ml::mtRand(0, EFF_TIME_SECOND_MAX));
@@ -59,7 +59,7 @@ GfMenuLifeAdapter *GfMenuLifeAdapter::create_Text_BonusName(u32 handle, const ch
 }
 
 void GfMenuLifeAdapter::update_Text_BonusName(u8 index) {
-  ui::UIObjectTextPlugin *textPlugin = static_cast<ui::UIObjectTextPlugin *>(plugin);
+  ui::UIObjectTextPlugin *textPlugin = static_cast<ui::UIObjectTextPlugin *>(unknown18);
   if (textPlugin != nullptr && textPlugin->getRTTI()->isKindOf(&ui::UIObjectTextPlugin::m_rtti)) {
   }
 }
@@ -76,16 +76,16 @@ GfMenuLifeAdapter *GfMenuLifeAdapter::create_Number_Bonus(u32 handle, const char
 }
 
 void GfMenuLifeAdapter::update_Number_Bonus(u8 index) {
-  ui::UIObjectNumberPlugin *numberPlugin = static_cast<ui::UIObjectNumberPlugin *>(plugin);
+  ui::UIObjectNumberPlugin *numberPlugin = static_cast<ui::UIObjectNumberPlugin *>(unknown18);
   if (numberPlugin != nullptr && numberPlugin->getRTTI()->isKindOf(&ui::UIObjectNumberPlugin::m_rtti)) {
     numberPlugin->setNumber(ml::mtRand(numberPlugin->min, numberPlugin->max));
   }
 }
 
 void GfMenuLifeAdapter::update(const fw::UpdateInfo &info) {
-  if (updater.isValid() && isUpdateRequested) {
-    updater(index);
-    isUpdateRequested = false;
+  if (unknown38.isValid() && unknown58) {
+    unknown38(unknown30);
+    unknown58 = false;
   }
 }
 

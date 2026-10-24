@@ -16,7 +16,7 @@ GfMenuObjEventSkip::GfMenuObjEventSkip(u32 handle) : GfMenuObject(handle) {}
 GfMenuObjEventSkip::~GfMenuObjEventSkip() { ; }
 
 void GfMenuObjEventSkip::initialize() {
-  ui::UIObjectAcc acc(handle);
+  ui::UIObjectAcc acc(unknown18);
   u32 main = acc.searchChild("LAY_main");
   if (ui::UIObjectAcc(main).isValid()) {
 // __LINE__ must be 72 as in the original file: it is the line argument of operator new.

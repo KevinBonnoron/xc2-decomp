@@ -58,9 +58,9 @@ GfMenuArtsAdapter *GfMenuArtsAdapter::createFromCoverter(u32 handle, u32 type, I
   MenuArtsInfo info = {};
   converter->getArtsInfo(info);
   u32 driver = converter->getDriverId();
-  GfMenuArtsAdapter *adapter = create(handle, type, info.arts, driver, info.level, isUpdateAlways);
+  GfMenuArtsAdapter *adapter = create(handle, type, info.unknown00, driver, info.unknown04, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->converter = converter;
+    adapter->unknown50 = converter;
     return adapter;
   }
   return nullptr;
@@ -80,12 +80,12 @@ GfMenuArtsAdapter *GfMenuArtsAdapter::createFromReferenceDriverSlot(u32 handle, 
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
-GfMenuArtsAdapter::GfMenuArtsAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), arts(0), level(0) {}
+GfMenuArtsAdapter::GfMenuArtsAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown60(0) {}
 
 GfMenuArtsAdapter::~GfMenuArtsAdapter() {
-  if (converter != nullptr) {
-    delete converter;
-    converter = nullptr;
+  if (unknown50 != nullptr) {
+    delete unknown50;
+    unknown50 = nullptr;
   }
 }
 
@@ -98,10 +98,10 @@ GfMenuArtsAdapter *GfMenuArtsAdapter::create(u32 handle, u32 type, u32 arts, u32
       // __LINE__ must be 374 as in the original source: it is the line argument of operator new.
 #line 374
       GfMenuArtsAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuArtsAdapter(plugin, isUpdateAlways);
-      adapter->updater.bind(adapter, info.update);
-      adapter->arts = arts;
-      adapter->driver = driver;
-      adapter->level = level;
+      adapter->unknown30.bind(adapter, info.update);
+      adapter->unknown58 = arts;
+      adapter->unknown5c = driver;
+      adapter->unknown60 = level;
       plugin->release();
       return adapter;
     }
@@ -111,7 +111,7 @@ GfMenuArtsAdapter *GfMenuArtsAdapter::create(u32 handle, u32 type, u32 arts, u32
 
 bool GfMenuArtsAdapter::update_ArtsName() {
   u8 *bdat = GfDataDriverArts::getNameFP();
-  u32 textId = GfDataDriverArts::getNameID(arts);
+  u32 textId = GfDataDriverArts::getNameID(unknown58);
   if (textId != 0) {
     setText(ui::UIStr(bdat, textId));
     return true;
@@ -121,7 +121,7 @@ bool GfMenuArtsAdapter::update_ArtsName() {
 
 bool GfMenuArtsAdapter::update_ArtsDescription() {
   u8 *bdat = GfDataDriverArts::getCaptionFP();
-  u32 textId = GfDataDriverArts::getCaptionID(arts);
+  u32 textId = GfDataDriverArts::getCaptionID(unknown58);
   if (textId != 0) {
     setText(ui::UIStr(bdat, textId));
     return true;
@@ -130,14 +130,14 @@ bool GfMenuArtsAdapter::update_ArtsDescription() {
 }
 
 bool GfMenuArtsAdapter::update_ArtsIconType() {
-  if (driver != 0) {
-    if (arts == 0) {
+  if (unknown5c != 0) {
+    if (unknown58 == 0) {
       return false;
     }
-    if (level != 0) {
+    if (unknown60 != 0) {
       GfMenuObjUtil::ArtsIconInfo iconInfo;
-      if (GfMenuObjUtil::getArtsIconInfo(arts, level, iconInfo)) {
-        setNumber(iconInfo.iconType);
+      if (GfMenuObjUtil::getArtsIconInfo(unknown58, unknown60, iconInfo)) {
+        setNumber(iconInfo.unknown00);
         return true;
       }
     }
@@ -146,14 +146,14 @@ bool GfMenuArtsAdapter::update_ArtsIconType() {
 }
 
 bool GfMenuArtsAdapter::update_ArtsIconEnhance() {
-  if (driver != 0) {
-    if (arts == 0) {
+  if (unknown5c != 0) {
+    if (unknown58 == 0) {
       return false;
     }
-    if (level != 0) {
+    if (unknown60 != 0) {
       GfMenuObjUtil::ArtsIconInfo iconInfo;
-      if (GfMenuObjUtil::getArtsIconInfo(arts, level, iconInfo)) {
-        setNumber(iconInfo.enhanceIcon);
+      if (GfMenuObjUtil::getArtsIconInfo(unknown58, unknown60, iconInfo)) {
+        setNumber(iconInfo.unknown04);
         return true;
       }
     }
@@ -162,14 +162,14 @@ bool GfMenuArtsAdapter::update_ArtsIconEnhance() {
 }
 
 bool GfMenuArtsAdapter::update_ArtsIconReact() {
-  if (driver != 0) {
-    if (arts == 0) {
+  if (unknown5c != 0) {
+    if (unknown58 == 0) {
       return false;
     }
-    if (level != 0) {
+    if (unknown60 != 0) {
       GfMenuObjUtil::ArtsIconInfo iconInfo;
-      if (GfMenuObjUtil::getArtsIconInfo(arts, level, iconInfo)) {
-        setNumber(iconInfo.reactionIcon);
+      if (GfMenuObjUtil::getArtsIconInfo(unknown58, unknown60, iconInfo)) {
+        setNumber(iconInfo.unknown08);
         return true;
       }
     }
@@ -178,14 +178,14 @@ bool GfMenuArtsAdapter::update_ArtsIconReact() {
 }
 
 bool GfMenuArtsAdapter::update_ArtsIconRange() {
-  if (driver != 0) {
-    if (arts == 0) {
+  if (unknown5c != 0) {
+    if (unknown58 == 0) {
       return false;
     }
-    if (level != 0) {
+    if (unknown60 != 0) {
       GfMenuObjUtil::ArtsIconInfo iconInfo;
-      if (GfMenuObjUtil::getArtsIconInfo(arts, level, iconInfo)) {
-        setNumber(iconInfo.rangeIcon);
+      if (GfMenuObjUtil::getArtsIconInfo(unknown58, unknown60, iconInfo)) {
+        setNumber(iconInfo.unknown10);
         return true;
       }
     }
@@ -194,49 +194,49 @@ bool GfMenuArtsAdapter::update_ArtsIconRange() {
 }
 
 bool GfMenuArtsAdapter::update_ArtsWp() {
-  if (driver == 0 || arts == 0) {
+  if (unknown5c == 0 || unknown58 == 0) {
     return false;
   }
-  if (level >= GfDataDriverArts::getLevelMax(arts)) {
+  if (unknown60 >= GfDataDriverArts::getLevelMax(unknown58)) {
     return false;
   }
-  setNumber(GfDataDriverArts::getNeedLevelupWp(driver, arts));
+  setNumber(GfDataDriverArts::getNeedLevelupWp(unknown5c, unknown58));
   return true;
 }
 
 bool GfMenuArtsAdapter::update_ArtsIconLevel() {
-  if (driver == 0 || arts == 0 || level == 0) {
+  if (unknown5c == 0 || unknown58 == 0 || unknown60 == 0) {
     return false;
   }
-  setNumber(level - 1);
+  setNumber(unknown60 - 1);
   return true;
 }
 
 bool GfMenuArtsAdapter::update_ArtsNumLevel() {
-  if (driver == 0 || arts == 0) {
+  if (unknown5c == 0 || unknown58 == 0) {
     return false;
   }
-  setNumber(level);
+  setNumber(unknown60);
   return true;
 }
 
 bool GfMenuArtsAdapter::update_ArtsReleseLv() {
-  if (driver == 0 || arts == 0) {
+  if (unknown5c == 0 || unknown58 == 0) {
     return false;
   }
-  setNumber(GfDataDriverArts::getLevelCap(arts, capLevel));
+  setNumber(GfDataDriverArts::getLevelCap(unknown58, unknown64));
   return true;
 }
 
 bool GfMenuArtsAdapter::update_ArtsTextRange() {
-  if (driver == 0 || arts == 0 || level == 0) {
+  if (unknown5c == 0 || unknown58 == 0 || unknown60 == 0) {
     return false;
   }
   GfMenuObjUtil::ArtsIconInfo iconInfo;
-  if (!GfMenuObjUtil::getArtsIconInfo(arts, level, iconInfo)) {
+  if (!GfMenuObjUtil::getArtsIconInfo(unknown58, unknown60, iconInfo)) {
     return false;
   }
-  u16 textId = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_ARTS_RANGE, iconInfo.rangeIcon + 1);
+  u16 textId = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_ARTS_RANGE, iconInfo.unknown10 + 1);
   if (textId == 0) {
     return false;
   }
@@ -245,23 +245,23 @@ bool GfMenuArtsAdapter::update_ArtsTextRange() {
 }
 
 bool GfMenuArtsAdapter::update_ArtsTextReact() {
-  if (driver != 0) {
-    if (arts == 0) {
+  if (unknown5c != 0) {
+    if (unknown58 == 0) {
       return false;
     }
-    if (level != 0) {
+    if (unknown60 != 0) {
       GfMenuObjUtil::ArtsIconInfo iconInfo;
-      if (!GfMenuObjUtil::getArtsIconInfo(arts, level, iconInfo)) {
+      if (!GfMenuObjUtil::getArtsIconInfo(unknown58, unknown60, iconInfo)) {
         return false;
       }
       u32 textId;
-      if (iconInfo.reactionIcon == 0) {
+      if (iconInfo.unknown08 == 0) {
         textId = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_REACTION_ALL, REACTION_MSG_NONE);
         if (textId == 0) {
           return false;
         }
       } else {
-        textId = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_REACTION_ALL, iconInfo.reactionIcon);
+        textId = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_REACTION_ALL, iconInfo.unknown08);
         if (textId == 0) {
           return false;
         }
@@ -274,14 +274,14 @@ bool GfMenuArtsAdapter::update_ArtsTextReact() {
 }
 
 bool GfMenuArtsAdapter::update_ArtsNumDamage() {
-  if (driver != 0) {
-    if (arts == 0) {
+  if (unknown5c != 0) {
+    if (unknown58 == 0) {
       return false;
     }
-    u32 currentLevel = level;
+    u32 currentLevel = unknown60;
     if (currentLevel != 0) {
-      u32 artsType = GfDataDriverArts::getArtsType(arts);
-      u32 damage = GfDataDriverArts::getDamageMul(arts, currentLevel);
+      u32 artsType = GfDataDriverArts::getArtsType(unknown58);
+      u32 damage = GfDataDriverArts::getDamageMul(unknown58, currentLevel);
       if (artsType == 11) {
         setNumber(damage / TALENT_ARTS_DAMAGE_DIVISOR);
       } else {
@@ -294,18 +294,18 @@ bool GfMenuArtsAdapter::update_ArtsNumDamage() {
 }
 
 bool GfMenuArtsAdapter::update_ArtsNumRecast() {
-  if (driver == 0 || arts == 0 || level == 0) {
+  if (unknown5c == 0 || unknown58 == 0 || unknown60 == 0) {
     return false;
   }
-  setNumber(GfDataDriverArts::getRecast(arts, level));
+  setNumber(GfDataDriverArts::getRecast(unknown58, unknown60));
   return true;
 }
 
 bool GfMenuArtsAdapter::update_ArtsEnhanceDescription() {
-  if (driver == 0 || arts == 0 || level == 0) {
+  if (unknown5c == 0 || unknown58 == 0 || unknown60 == 0) {
     return false;
   }
-  u32 enhance = GfDataDriverArts::getEnhance(arts, level);
+  u32 enhance = GfDataDriverArts::getEnhance(unknown58, unknown60);
   if (enhance == 0) {
     u32 textId = Bdat::getVal(GfDataBdat::getFP(BDAT_MNU_MSG_POUCH), "name", POUCH_MSG_NO_ENHANCE).valueU16;
     ui::UIStr caption(GfDataBdat::getFP(BDAT_MENU_MS), textId);
@@ -319,11 +319,11 @@ bool GfMenuArtsAdapter::update_ArtsEnhanceDescription() {
 }
 
 bool GfMenuArtsAdapter::update_ArtsIconReleseLv() {
-  if (driver == 0 || arts == 0) {
+  if (unknown5c == 0 || unknown58 == 0) {
     return false;
   }
-  u32 cap = GfDataDriverArts::getLevelCap(arts, capLevel);
-  DataParamAcc acc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+  u32 cap = GfDataDriverArts::getLevelCap(unknown58, unknown64);
+  DataParamAcc acc(OBJECT_TYPE_DRIVER, unknown5c, GIMMICK_TYPE_NONE);
   if (acc.isValid()) {
     setNumber(cap <= acc.getLevel(false));
     return true;
@@ -332,15 +332,15 @@ bool GfMenuArtsAdapter::update_ArtsIconReleseLv() {
 }
 
 bool GfMenuArtsAdapter::update_ArtsNumDamageNextLv() {
-  if (driver == 0 || arts == 0) {
+  if (unknown5c == 0 || unknown58 == 0) {
     return false;
   }
-  u32 nextLevel = level + 1;
-  if (nextLevel > GfDataDriverArts::getLevelMax(arts)) {
+  u32 nextLevel = unknown60 + 1;
+  if (nextLevel > GfDataDriverArts::getLevelMax(unknown58)) {
     return false;
   }
-  u32 artsType = GfDataDriverArts::getArtsType(arts);
-  u32 damage = GfDataDriverArts::getDamageMul(arts, nextLevel);
+  u32 artsType = GfDataDriverArts::getArtsType(unknown58);
+  u32 damage = GfDataDriverArts::getDamageMul(unknown58, nextLevel);
   if (artsType == 11) {
     setNumber(damage / TALENT_ARTS_DAMAGE_DIVISOR);
   } else {
@@ -350,26 +350,26 @@ bool GfMenuArtsAdapter::update_ArtsNumDamageNextLv() {
 }
 
 bool GfMenuArtsAdapter::update_ArtsNumRecastNextLv() {
-  if (driver == 0 || arts == 0) {
+  if (unknown5c == 0 || unknown58 == 0) {
     return false;
   }
-  u32 nextLevel = level + 1;
-  if (nextLevel > GfDataDriverArts::getLevelMax(arts)) {
+  u32 nextLevel = unknown60 + 1;
+  if (nextLevel > GfDataDriverArts::getLevelMax(unknown58)) {
     return false;
   }
-  setNumber(GfDataDriverArts::getRecast(arts, nextLevel));
+  setNumber(GfDataDriverArts::getRecast(unknown58, nextLevel));
   return true;
 }
 
 bool GfMenuArtsAdapter::update_ArtsEnhanceDescriptionNextLv() {
-  if (driver == 0 || arts == 0) {
+  if (unknown5c == 0 || unknown58 == 0) {
     return false;
   }
-  u32 nextLevel = level + 1;
-  if (nextLevel > GfDataDriverArts::getLevelMax(arts)) {
+  u32 nextLevel = unknown60 + 1;
+  if (nextLevel > GfDataDriverArts::getLevelMax(unknown58)) {
     return false;
   }
-  u32 enhance = GfDataDriverArts::getEnhance(arts, nextLevel);
+  u32 enhance = GfDataDriverArts::getEnhance(unknown58, nextLevel);
   if (enhance == 0) {
     u32 textId = Bdat::getVal(GfDataBdat::getFP(BDAT_MNU_MSG_POUCH), "name", POUCH_MSG_NO_ENHANCE).valueU16;
     ui::UIStr caption(GfDataBdat::getFP(BDAT_MENU_MS), textId);
@@ -383,12 +383,12 @@ bool GfMenuArtsAdapter::update_ArtsEnhanceDescriptionNextLv() {
 }
 
 bool GfMenuArtsAdapter::update_ArtsTextIndex() {
-  if (driver != 0) {
-    if (arts == 0) {
+  if (unknown5c != 0) {
+    if (unknown58 == 0) {
       return false;
     }
-    if (level != 0) {
-      u32 artsType = GfDataDriverArts::getArtsType(arts);
+    if (unknown60 != 0) {
+      u32 artsType = GfDataDriverArts::getArtsType(unknown58);
       u16 index;
       if (artsType == 11) {
         index = 2;
@@ -410,30 +410,30 @@ bool GfMenuArtsAdapter::update_ArtsTextIndex() {
 }
 
 void GfMenuArtsAdapter::update(const fw::UpdateInfo &info) {
-  if (converter != nullptr) {
+  if (unknown50 != nullptr) {
     MenuArtsInfo newInfo = {};
-    converter->getArtsInfo(newInfo);
-    if (arts != newInfo.arts) {
-      arts = newInfo.arts;
+    unknown50->getArtsInfo(newInfo);
+    if (unknown58 != newInfo.unknown00) {
+      unknown58 = newInfo.unknown00;
       setChange();
     }
-    if (driver != converter->getDriverId()) {
-      driver = converter->getDriverId();
+    if (unknown5c != unknown50->getDriverId()) {
+      unknown5c = unknown50->getDriverId();
       setChange();
     }
-    if (level != newInfo.level) {
-      level = newInfo.level;
+    if (unknown60 != newInfo.unknown04) {
+      unknown60 = newInfo.unknown04;
       setChange();
     }
   }
 
-  if (updater.isValid() && (flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
-    if (arts != 0) {
-      setDisp(updater());
+  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+    if (unknown58 != 0) {
+      setDisp(unknown30());
     } else {
       setDisp(false);
     }
-    flags &= ~FLAG_CHANGED;
+    unknown20 &= ~FLAG_CHANGED;
   }
 }
 
@@ -466,14 +466,14 @@ void GfMenuArtsAdapter::ListReferenceDriverConverter::getArtsInfo(MenuArtsInfo &
 u32 GfMenuArtsAdapter::ListReferenceDriverConverter::getDriverId() { return GfMenuReference::getReferenceDriverID(driverIndex); }
 
 void GfMenuArtsAdapter::ListReferenceDriverConverterReferenceIndex::getArtsInfo(MenuArtsInfo &info) {
-  if (number->number == -1) {
+  if (number->unknown0c == -1) {
     info = list->getContents(list->getIndex(false));
   } else {
-    if (number->number >= static_cast<int>(list->getSize())) {
-      info.arts = 0;
+    if (number->unknown0c >= static_cast<int>(list->getSize())) {
+      info.unknown00 = 0;
       return;
     }
-    info = list->getContents(list->getPageIndex(number->number));
+    info = list->getContents(list->getPageIndex(number->unknown0c));
   }
 }
 
@@ -495,8 +495,8 @@ void GfMenuArtsAdapter::ReferenceDriverSlotConverter::getArtsInfo(MenuArtsInfo &
   }
   mm::mtl::FixedArray<u32, 3> slotArts;
   GfDataDriverArts::getSlotArts(slotArts, driver, weaponType);
-  info.arts = slotArts[slot];
-  info.level = GfDataDriverArts::getArtsLevel(driver, info.arts);
+  info.unknown00 = slotArts[slot];
+  info.unknown04 = GfDataDriverArts::getArtsLevel(driver, info.unknown00);
 }
 
 u32 GfMenuArtsAdapter::ReferenceDriverSlotConverter::getDriverId() { return GfMenuReference::getReferenceDriverID(driverIndex); }

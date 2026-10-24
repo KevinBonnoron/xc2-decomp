@@ -5,7 +5,7 @@
 namespace gf {
 
 struct MenuEnemyInfo {
-  u32 enemy;
+  u32 unknown00; // Inferred role: enemy; original member name unknown.
   u8 _04[0x8 - 0x4];
 };
 

@@ -42,7 +42,7 @@ void TextWindow::update() {
   }
   if ((flags & FLAG_CLOSE) == 0) {
     gf::GfMenuCallContext::GfMenuResult result = {};
-    if (context->popResult(result) && result.type == 1) {
+    if (context->popResult(result) && result.unknown04 == 1) {
       flags |= FLAG_CLOSE;
       closeWait = 4;
     }
@@ -88,33 +88,33 @@ void TextWindow::write(const char *text, const char *name, u8 *bdat, u32 textId,
     erase();
     context = gf::GfMenuCallContext::create();
     gf::GfMenuObjBalloon::OpenParam param;
-    param.bdat = bdat;
-    param.textId = textId;
-    param.handle = handle;
+    param.unknown00 = bdat;
+    param.unknown08 = textId;
+    param.unknown20 = handle;
     if (handle != gf::INVALID_HANDLE) {
       gf::DataParamAcc paramAcc(handle);
       switch (paramAcc.getObjType()) {
       case gf::OBJECT_TYPE_DRIVER:
-        gf::GfDataDriver::getName(param.nameBdat, param.nameId, paramAcc.isValid() && paramAcc.getObjType() == gf::OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0);
+        gf::GfDataDriver::getName(param.unknown10, param.unknown18, paramAcc.isValid() && paramAcc.getObjType() == gf::OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0);
         break;
       case gf::OBJECT_TYPE_BLADE:
-        gf::GfDataBlade::getName(param.nameBdat, param.nameId, paramAcc.isValid() ? paramAcc.getBdatId() : 0);
+        gf::GfDataBlade::getName(param.unknown10, param.unknown18, paramAcc.isValid() ? paramAcc.getBdatId() : 0);
         break;
       case gf::OBJECT_TYPE_ENEMY:
-        gf::GfDataEnemy::getName(param.nameBdat, param.nameId, paramAcc.isValid() ? paramAcc.getBdatId() : 0);
+        gf::GfDataEnemy::getName(param.unknown10, param.unknown18, paramAcc.isValid() ? paramAcc.getBdatId() : 0);
         break;
       case gf::OBJECT_TYPE_NPC:
-        gf::GfDataNpc::getName(param.nameBdat, param.nameId, paramAcc.isValid() ? paramAcc.getBdatId() : 0);
+        gf::GfDataNpc::getName(param.unknown10, param.unknown18, paramAcc.isValid() ? paramAcc.getBdatId() : 0);
         break;
       }
     }
     gf::DataParamAcc paramAcc(handle);
-    gf::GfMenuBdat::getMenuOffset(paramAcc.getMenuOffset(), param.offset);
+    gf::GfMenuBdat::getMenuOffset(paramAcc.getMenuOffset(), param.unknown30);
     gf::GfMenuObjBalloon::openEvent(context, param);
   } else {
     gf::GfMenuObjBalloon::NextParam param;
-    param.bdat = bdat;
-    param.textId = textId;
+    param.unknown00 = bdat;
+    param.unknown08 = textId;
     gf::GfMenuObjBalloon::nextEvent(context, param);
   }
   this->text = text;

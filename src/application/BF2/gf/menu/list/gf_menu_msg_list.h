@@ -11,7 +11,7 @@ class UIStr;
 namespace gf {
 
 struct MsgID {
-  u32 id;
+  u32 unknown00; // Inferred role: id; original member name unknown.
 };
 
 static_assert(sizeof(MsgID) == 0x4, "");
@@ -24,12 +24,12 @@ public:
   void setBdat(u32 nameBdatId, u32 msgBdatId);
   bool getMsg(int index, ui::UIStr &msg, bool isPage);
 
-  u8 *nameBdat;
-  u8 *msgBdat;
+  u8 *unknown68; // Inferred role: name bdat; original member name unknown.
+  u8 *unknown70; // Inferred role: msg bdat; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuMsgList, nameBdat) == 0x68, "");
-static_assert(offsetof(GfMenuMsgList, msgBdat) == 0x70, "");
+static_assert(offsetof(GfMenuMsgList, unknown68) == 0x68, "");
+static_assert(offsetof(GfMenuMsgList, unknown70) == 0x70, "");
 static_assert(sizeof(GfMenuMsgList) == 0x78, "");
 
 } // namespace gf

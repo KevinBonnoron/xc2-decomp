@@ -57,7 +57,7 @@ GfMenuAdapter *GfMenuGameAdapter::create(u32 handle, u32 type, bool isUpdateAlwa
       // __LINE__ must be 79 as in the original source: it is the line argument of operator new.
 #line 79
       GfMenuGameAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuGameAdapter(plugin, isUpdateAlways);
-      adapter->updater.bind(adapter, info.update);
+      adapter->unknown30.bind(adapter, info.update);
       plugin->release();
       return adapter;
     }
@@ -142,9 +142,9 @@ bool GfMenuGameAdapter::update_TimeZoneIcon() {
 }
 
 bool GfMenuGameAdapter::update_ReferenceNum() {
-  int number = GfMenuReference::getReferenceNumber(referenceIndex);
+  int number = GfMenuReference::getReferenceNumber(unknown50);
   setNumber(number);
-  return number >= GfMenuReference::getReferenceNumberMin(referenceIndex) && number <= GfMenuReference::getReferenceNumberMax(referenceIndex);
+  return number >= GfMenuReference::getReferenceNumberMin(unknown50) && number <= GfMenuReference::getReferenceNumberMax(unknown50);
 }
 
 bool GfMenuGameAdapter::update_MercenariesName() {
@@ -203,9 +203,9 @@ bool GfMenuGameAdapter::update_Chapter() {
 bool GfMenuGameAdapter::update_DispAccess() { return GfGameManager::isPlaySequenceClear(); }
 
 void GfMenuGameAdapter::update(const fw::UpdateInfo &info) {
-  if (updater.isValid() && (flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
-    setDisp(updater());
-    flags &= ~FLAG_CHANGED;
+  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+    setDisp(unknown30());
+    unknown20 &= ~FLAG_CHANGED;
   }
 }
 

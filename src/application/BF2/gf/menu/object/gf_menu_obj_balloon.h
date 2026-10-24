@@ -13,46 +13,46 @@ struct GF_OBJ_HANDLE;
 class GfMenuObjBalloon {
 public:
   struct NextParam {
-    u8 *bdat;
-    u32 textId;
+    u8 *unknown00; // Inferred role: bdat; original member name unknown.
+    u32 unknown08; // Inferred role: text id; original member name unknown.
   };
 
   struct OpenParam : NextParam {
-    OpenParam() : nameBdat(nullptr), nameId(0) {}
+    OpenParam() : unknown10(nullptr), unknown18(0) {}
 
-    u8 *nameBdat;
-    u32 nameId;
-    GF_OBJ_HANDLE *handle;
+    u8 *unknown10;            // Inferred role: name bdat; original member name unknown.
+    u32 unknown18;            // Inferred role: name id; original member name unknown.
+    GF_OBJ_HANDLE *unknown20; // Inferred role: handle; original member name unknown.
     u8 _28[0x30 - 0x28];
-    MenuOffset offset;
+    MenuOffset unknown30; // Inferred role: offset; original member name unknown.
     u8 _48[0x50 - 0x48];
   };
 
   struct OpenSelectParam : OpenParam {
-    OpenSelectParam() : selectBdat(nullptr) {}
+    OpenSelectParam() : unknown50(nullptr) {}
 
-    u8 *selectBdat;
-    mm::mtl::FixedVector<u32, 2> selectIds;
+    u8 *unknown50;                          // Inferred role: select bdat; original member name unknown.
+    mm::mtl::FixedVector<u32, 2> unknown58; // Inferred role: select ids; original member name unknown.
     u8 _68[0x70 - 0x68];
   };
 
   struct OpenSelectBoxParam : NextParam {
-    u8 *selectBdat;
-    mm::mtl::FixedVector<u32, 3> selectIds;
+    u8 *unknown10;                          // Inferred role: select bdat; original member name unknown.
+    mm::mtl::FixedVector<u32, 3> unknown18; // Inferred role: select ids; original member name unknown.
   };
 
   struct OpenSelectMoneyParam {
-    OpenSelectMoneyParam() : textId(0), messageId(0) {}
+    OpenSelectMoneyParam() : unknown08(0), unknown0c(0) {}
 
-    u8 *bdat;
-    u32 textId;
-    u16 messageId;
-    mm::mtl::FixedVector<u32, 3> moneys;
-    mm::mtl::FixedVector<u16, 3> nameIds;
+    u8 *unknown00;                          // Inferred role: bdat; original member name unknown.
+    u32 unknown08;                          // Inferred role: text id; original member name unknown.
+    u16 unknown0c;                          // Inferred role: message id; original member name unknown.
+    mm::mtl::FixedVector<u32, 3> unknown10; // Inferred role: moneys; original member name unknown.
+    mm::mtl::FixedVector<u16, 3> unknown28; // Inferred role: name ids; original member name unknown.
   };
 
   struct OpenGetItemParam {
-    u32 item;
+    u32 unknown00; // Inferred role: item; original member name unknown.
   };
 
   static void openEvent(GfMenuCallContext *context, const OpenParam &param);
@@ -64,16 +64,16 @@ public:
   static bool openGetItem(GfMenuCallContext *context, const OpenGetItemParam &param);
 };
 
-static_assert(offsetof(GfMenuObjBalloon::OpenParam, nameBdat) == 0x10, "");
-static_assert(offsetof(GfMenuObjBalloon::OpenParam, handle) == 0x20, "");
-static_assert(offsetof(GfMenuObjBalloon::OpenParam, offset) == 0x30, "");
+static_assert(offsetof(GfMenuObjBalloon::OpenParam, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuObjBalloon::OpenParam, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBalloon::OpenParam, unknown30) == 0x30, "");
 static_assert(sizeof(GfMenuObjBalloon::OpenParam) == 0x50, "");
-static_assert(offsetof(GfMenuObjBalloon::OpenSelectParam, selectIds) == 0x58, "");
+static_assert(offsetof(GfMenuObjBalloon::OpenSelectParam, unknown58) == 0x58, "");
 static_assert(sizeof(GfMenuObjBalloon::OpenSelectParam) == 0x70, "");
-static_assert(offsetof(GfMenuObjBalloon::OpenSelectBoxParam, selectIds) == 0x18, "");
+static_assert(offsetof(GfMenuObjBalloon::OpenSelectBoxParam, unknown18) == 0x18, "");
 static_assert(sizeof(GfMenuObjBalloon::OpenSelectBoxParam) == 0x30, "");
-static_assert(offsetof(GfMenuObjBalloon::OpenSelectMoneyParam, messageId) == 0x0c, "");
-static_assert(offsetof(GfMenuObjBalloon::OpenSelectMoneyParam, nameIds) == 0x28, "");
+static_assert(offsetof(GfMenuObjBalloon::OpenSelectMoneyParam, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjBalloon::OpenSelectMoneyParam, unknown28) == 0x28, "");
 static_assert(sizeof(GfMenuObjBalloon::OpenSelectMoneyParam) == 0x38, "");
 
 } // namespace gf

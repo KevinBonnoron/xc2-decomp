@@ -6,7 +6,7 @@ namespace gf {
 
 GfMenuKizunaring::GfMenuKizunaring(const GfSetupParam &param) { initialize(param); }
 
-void GfMenuKizunaring::initialize(const GfSetupParam &param) { initialized = true; }
+void GfMenuKizunaring::initialize(const GfSetupParam &param) { unknown08 = true; }
 
 GfMenuKizunaring::~GfMenuKizunaring() {}
 
@@ -22,11 +22,11 @@ void GfMenuKizunaring::destroy() {
   delete menu;
 }
 
-void GfMenuKizunaring::finalize() { initialized = false; }
+void GfMenuKizunaring::finalize() { unknown08 = false; }
 
 bool GfMenuKizunaring::isInitialized() {
   if (get() != nullptr) {
-    return get()->initialized;
+    return get()->unknown08;
   }
   return false;
 }

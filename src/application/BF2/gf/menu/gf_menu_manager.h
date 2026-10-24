@@ -87,37 +87,37 @@ public:
   static void openSave();
 
   u8 _08[0x4090 - 0x08];
-  bool initialized;
+  bool unknown4090; // Inferred role: initialized; original member name unknown.
   u8 _4091[0x40b8 - 0x4091];
-  GF_OBJ_HANDLE *targetObj;
-  GF_OBJ_HANDLE *accessObj;
-  bool isTargetObjChanged;
-  bool isAccessObjChanged;
+  GF_OBJ_HANDLE *unknown40b8; // Inferred role: target object; original member name unknown.
+  GF_OBJ_HANDLE *unknown40c0; // Inferred role: access object; original member name unknown.
+  bool unknown40c8;           // Inferred role: target object changed; original member name unknown.
+  bool unknown40c9;           // Inferred role: access object changed; original member name unknown.
   u8 _40ca[0x40cc - 0x40ca];
-  u32 cameraType;
-  GfMenuCallContext *callContext;
-  int commonWindowResult;
+  u32 unknown40cc;                // Inferred role: camera type; original member name unknown.
+  GfMenuCallContext *unknown40d0; // Inferred role: call context; original member name unknown.
+  int unknown40d8;                // Inferred role: common window result; original member name unknown.
   u8 _40dc[0x40f8 - 0x40dc];
-  f32 updateDT;
+  f32 unknown40f8; // Inferred role: update dt; original member name unknown.
   u8 _40fc[0x40fd - 0x40fc];
-  bool isBtlModelViewOpen;
-  bool isNameSelectOpen;
-  bool isOpeningTelopOpen;
+  bool unknown40fd; // Inferred role: btl model view open; original member name unknown.
+  bool unknown40fe; // Inferred role: name select open; original member name unknown.
+  bool unknown40ff; // Inferred role: opening telop open; original member name unknown.
   u8 _4100[0x4101 - 0x4100];
-  bool isQuestOpenEnable;
-  REGION region;
+  bool unknown4101;   // Inferred role: quest open enable; original member name unknown.
+  REGION unknown4104; // Inferred role: region; original member name unknown.
   u8 _4108[0x4154 - 0x4108];
-  u32 latestCommonWindow;
+  u32 unknown4154; // Inferred role: latest common window; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuManager, initialized) == 0x4090, "");
-static_assert(offsetof(GfMenuManager, targetObj) == 0x40b8, "");
-static_assert(offsetof(GfMenuManager, cameraType) == 0x40cc, "");
-static_assert(offsetof(GfMenuManager, callContext) == 0x40d0, "");
-static_assert(offsetof(GfMenuManager, updateDT) == 0x40f8, "");
-static_assert(offsetof(GfMenuManager, isBtlModelViewOpen) == 0x40fd, "");
-static_assert(offsetof(GfMenuManager, region) == 0x4104, "");
-static_assert(offsetof(GfMenuManager, latestCommonWindow) == 0x4154, "");
+static_assert(offsetof(GfMenuManager, unknown4090) == 0x4090, "");
+static_assert(offsetof(GfMenuManager, unknown40b8) == 0x40b8, "");
+static_assert(offsetof(GfMenuManager, unknown40cc) == 0x40cc, "");
+static_assert(offsetof(GfMenuManager, unknown40d0) == 0x40d0, "");
+static_assert(offsetof(GfMenuManager, unknown40f8) == 0x40f8, "");
+static_assert(offsetof(GfMenuManager, unknown40fd) == 0x40fd, "");
+static_assert(offsetof(GfMenuManager, unknown4104) == 0x4104, "");
+static_assert(offsetof(GfMenuManager, unknown4154) == 0x4154, "");
 static_assert(sizeof(GfMenuManager) == 0x4158, "");
 
 } // namespace gf

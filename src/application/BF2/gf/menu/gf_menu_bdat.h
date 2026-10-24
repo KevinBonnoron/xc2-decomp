@@ -6,15 +6,15 @@
 namespace gf {
 
 struct MenuOffset {
-  MenuOffset() : x(0.0f), y(0.0f), z(0.0f), boneName(nullptr) {}
+  MenuOffset() : unknown00(0.0f), unknown04(0.0f), unknown08(0.0f), unknown10(nullptr) {}
 
-  f32 x;
-  f32 y;
-  f32 z;
-  const char *boneName;
+  f32 unknown00;         // Inferred role: x; original member name unknown.
+  f32 unknown04;         // Inferred role: y; original member name unknown.
+  f32 unknown08;         // Inferred role: z; original member name unknown.
+  const char *unknown10; // Inferred role: bone name; original member name unknown.
 };
 
-static_assert(offsetof(MenuOffset, boneName) == 0x10, "");
+static_assert(offsetof(MenuOffset, unknown10) == 0x10, "");
 static_assert(sizeof(MenuOffset) == 0x18, "");
 
 class GfMenuBdat {

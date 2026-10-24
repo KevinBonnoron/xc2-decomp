@@ -15,12 +15,12 @@ static GfMenuFieldSkillAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuFieldSkillAdapter::update_Lv, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99}},
 };
 
-GfMenuFieldSkillAdapter::GfMenuFieldSkillAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr) {}
+GfMenuFieldSkillAdapter::GfMenuFieldSkillAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr) {}
 
 GfMenuFieldSkillAdapter::~GfMenuFieldSkillAdapter() {
-  if (converter != nullptr) {
-    delete converter;
-    converter = nullptr;
+  if (unknown50 != nullptr) {
+    delete unknown50;
+    unknown50 = nullptr;
   }
 }
 
@@ -33,8 +33,8 @@ GfMenuFieldSkillAdapter *GfMenuFieldSkillAdapter::create(u32 handle, u32 type, c
       // __LINE__ must be 176 as in the original source: it is the line argument of operator new.
 #line 176
       GfMenuFieldSkillAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuFieldSkillAdapter(plugin, false);
-      adapter->updater.bind(adapter, info.update);
-      adapter->fieldSkill = fieldSkill;
+      adapter->unknown30.bind(adapter, info.update);
+      adapter->unknown58 = fieldSkill;
       plugin->release();
       return adapter;
     }
@@ -45,7 +45,7 @@ GfMenuFieldSkillAdapter *GfMenuFieldSkillAdapter::create(u32 handle, u32 type, c
 bool GfMenuFieldSkillAdapter::update_Name(const MenuFieldSkill &fieldSkill) {
   u8 *bdat;
   u32 textId;
-  if (fieldSkill.fieldSkill == 0 || !GfDataFieldSkill::getName(bdat, textId, fieldSkill.fieldSkill)) {
+  if (fieldSkill.unknown00 == 0 || !GfDataFieldSkill::getName(bdat, textId, fieldSkill.unknown00)) {
     return false;
   }
   setText(ui::UIStr(bdat, textId));
@@ -53,10 +53,10 @@ bool GfMenuFieldSkillAdapter::update_Name(const MenuFieldSkill &fieldSkill) {
 }
 
 bool GfMenuFieldSkillAdapter::update_Lv(const MenuFieldSkill &fieldSkill) {
-  if (fieldSkill.fieldSkill == 0) {
+  if (fieldSkill.unknown00 == 0) {
     return false;
   }
-  setNumber(fieldSkill.level);
+  setNumber(fieldSkill.unknown02);
   return true;
 }
 
@@ -65,7 +65,7 @@ GfMenuFieldSkillAdapter *GfMenuFieldSkillAdapter::createFromCoverter(u32 handle,
   converter->getFieldSkill(fieldSkill);
   GfMenuFieldSkillAdapter *adapter = create(handle, type, fieldSkill);
   if (adapter != nullptr) {
-    adapter->converter = converter;
+    adapter->unknown50 = converter;
   }
   return adapter;
 }
@@ -92,38 +92,38 @@ GfMenuFieldSkillAdapter *GfMenuFieldSkillAdapter::createFromReference(u32 handle
 }
 
 void GfMenuFieldSkillAdapter::update(const fw::UpdateInfo &info) {
-  if (converter != nullptr) {
+  if (unknown50 != nullptr) {
     MenuFieldSkill newFieldSkill;
-    converter->getFieldSkill(newFieldSkill);
-    if (fieldSkill.fieldSkill != newFieldSkill.fieldSkill) {
-      fieldSkill.fieldSkill = newFieldSkill.fieldSkill;
+    unknown50->getFieldSkill(newFieldSkill);
+    if (unknown58.unknown00 != newFieldSkill.unknown00) {
+      unknown58.unknown00 = newFieldSkill.unknown00;
       setChange();
     }
-    if (fieldSkill.level != newFieldSkill.level) {
-      fieldSkill.level = newFieldSkill.level;
+    if (unknown58.unknown02 != newFieldSkill.unknown02) {
+      unknown58.unknown02 = newFieldSkill.unknown02;
       setChange();
     }
   }
 
-  if ((flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0 && updater.isValid()) {
-    setDisp(fieldSkill.fieldSkill != 0 && updater(fieldSkill));
-    flags &= ~FLAG_CHANGED;
+  if ((unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0 && unknown30.isValid()) {
+    setDisp(unknown58.unknown00 != 0 && unknown30(unknown58));
+    unknown20 &= ~FLAG_CHANGED;
   }
 }
 
 void GfMenuFieldSkillAdapter::BladeConverter::getFieldSkill(MenuFieldSkill &fieldSkill) {
   DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_NONE);
   if (acc.isValid() && acc.getObjType() == OBJECT_TYPE_BLADE) {
-    fieldSkill.fieldSkill = acc.getFieldSkill(slot, false);
-    fieldSkill.level = acc.getFieldSkillLevel(slot, false);
+    fieldSkill.unknown00 = acc.getFieldSkill(slot, false);
+    fieldSkill.unknown02 = acc.getFieldSkillLevel(slot, false);
   }
 }
 
 void GfMenuFieldSkillAdapter::ListConverter::getFieldSkill(MenuFieldSkill &fieldSkill) {
   if (listIndex != -1 && listIndex < static_cast<int>(list->getSize())) {
     MenuFieldSkill &current = list->getContents(list->getPageIndex(listIndex));
-    fieldSkill.fieldSkill = current.fieldSkill;
-    fieldSkill.level = current.level;
+    fieldSkill.unknown00 = current.unknown00;
+    fieldSkill.unknown02 = current.unknown02;
   }
 }
 

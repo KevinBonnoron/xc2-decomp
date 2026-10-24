@@ -46,12 +46,12 @@ static GfMenuBattleAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuBattleAdapter::update_ReverseIconCol, {GfMenuAdapter::PLUGIN_TYPE_COLOR, 0, 0}},
 };
 
-GfMenuBattleAdapter::GfMenuBattleAdapter(ui::UIObjectPlugin *plugin) : GfMenuAdapter(plugin, true, true), index(0), converter(nullptr) {}
+GfMenuBattleAdapter::GfMenuBattleAdapter(ui::UIObjectPlugin *plugin) : GfMenuAdapter(plugin, true, true), unknown30(0), unknown58(nullptr) {}
 
 GfMenuBattleAdapter::~GfMenuBattleAdapter() {
-  if (converter != nullptr) {
-    delete converter;
-    converter = nullptr;
+  if (unknown58 != nullptr) {
+    delete unknown58;
+    unknown58 = nullptr;
   }
 }
 
@@ -64,7 +64,7 @@ GfMenuBattleAdapter *GfMenuBattleAdapter::create(u32 handle, u32 type) {
       // __LINE__ must be 130 as in the original source: it is the line argument of operator new.
 #line 130
       GfMenuBattleAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuBattleAdapter(plugin);
-      adapter->updater.bind(adapter, info.update);
+      adapter->unknown38.bind(adapter, info.update);
       plugin->release();
       return adapter;
     }
@@ -73,13 +73,13 @@ GfMenuBattleAdapter *GfMenuBattleAdapter::create(u32 handle, u32 type) {
 }
 
 bool GfMenuBattleAdapter::update_ArtsSlotRecast() {
-  const GfMenuReference::ArtsPaletteInfo &info = GfMenuReference::getArtsPaletteInfo(index);
-  setNumber(info.recast * PERCENT);
-  return info.recast > 0.0f;
+  const GfMenuReference::ArtsPaletteInfo &info = GfMenuReference::getArtsPaletteInfo(unknown30);
+  setNumber(info.unknown04 * PERCENT);
+  return info.unknown04 > 0.0f;
 }
 
 bool GfMenuBattleAdapter::update_ArtsSlotIcon() {
-  u16 artsId = GfMenuReference::getArtsPaletteInfo(index).artsId;
+  u16 artsId = GfMenuReference::getArtsPaletteInfo(unknown30).unknown00;
   if (artsId != 0) {
     setNumber(GfMenuBdat::getIconImageIndex(GfMenuBdat::getIconIDFromArtsID(artsId)));
   }
@@ -87,72 +87,72 @@ bool GfMenuBattleAdapter::update_ArtsSlotIcon() {
 }
 
 bool GfMenuBattleAdapter::update_ArtsSlotIconElem() {
-  u16 artsId = GfMenuReference::getArtsPaletteInfo(index).artsId;
+  u16 artsId = GfMenuReference::getArtsPaletteInfo(unknown30).unknown00;
   if (artsId != 0) {
     mm::mtl::FixStr<32> color;
-    color.format("elemental%02d", GfMenuReference::getArtsPaletteElementType(index));
+    color.format("elemental%02d", GfMenuReference::getArtsPaletteElementType(unknown30));
     setMulColor(color.c_str());
   }
   return artsId != 0;
 }
 
 bool GfMenuBattleAdapter::update_ArtsSlotIconType() {
-  u16 artsId = GfMenuReference::getArtsPaletteInfo(index).artsId;
+  u16 artsId = GfMenuReference::getArtsPaletteInfo(unknown30).unknown00;
   if (artsId != 0) {
-    setNumber(GfMenuReference::getArtsPaletteIconInfo(index).iconType);
+    setNumber(GfMenuReference::getArtsPaletteIconInfo(unknown30).unknown00);
   }
   return artsId != 0;
 }
 
 bool GfMenuBattleAdapter::update_ArtsSlotIconEnhance() {
-  u16 artsId = GfMenuReference::getArtsPaletteInfo(index).artsId;
+  u16 artsId = GfMenuReference::getArtsPaletteInfo(unknown30).unknown00;
   if (artsId != 0) {
-    setNumber(GfMenuReference::getArtsPaletteIconInfo(index).enhanceIcon);
+    setNumber(GfMenuReference::getArtsPaletteIconInfo(unknown30).unknown04);
   }
   return artsId != 0;
 }
 
 bool GfMenuBattleAdapter::update_ArtsSlotIconReaction() {
-  u16 artsId = GfMenuReference::getArtsPaletteInfo(index).artsId;
+  u16 artsId = GfMenuReference::getArtsPaletteInfo(unknown30).unknown00;
   if (artsId != 0) {
-    setNumber(GfMenuReference::getArtsPaletteIconInfo(index).reactionIcon);
+    setNumber(GfMenuReference::getArtsPaletteIconInfo(unknown30).unknown08);
   }
   return artsId != 0;
 }
 
 bool GfMenuBattleAdapter::update_ArtsSlotIconRange() {
-  u16 artsId = GfMenuReference::getArtsPaletteInfo(index).artsId;
+  u16 artsId = GfMenuReference::getArtsPaletteInfo(unknown30).unknown00;
   if (artsId != 0) {
-    setNumber(GfMenuReference::getArtsPaletteIconInfo(index).rangeIcon);
+    setNumber(GfMenuReference::getArtsPaletteIconInfo(unknown30).unknown10);
   }
   return artsId != 0;
 }
 
 bool GfMenuBattleAdapter::update_ArtsSlotName() {
-  const GfMenuReference::ArtsPaletteInfo &info = GfMenuReference::getArtsPaletteInfo(index);
-  u16 artsId = info.artsId;
+  const GfMenuReference::ArtsPaletteInfo &info = GfMenuReference::getArtsPaletteInfo(unknown30);
+  u16 artsId = info.unknown00;
   if (artsId != 0) {
-    setText(ui::UIStr(GfDataDriverArts::getNameFP(), GfDataDriverArts::getNameID(info.artsId)));
+    setText(ui::UIStr(GfDataDriverArts::getNameFP(), GfDataDriverArts::getNameID(info.unknown00)));
   }
   return artsId != 0;
 }
 
 bool GfMenuBattleAdapter::update_ArtsSlotInfo() {
-  const GfMenuReference::ArtsPaletteInfo &info = GfMenuReference::getArtsPaletteInfo(index);
-  u16 artsId = info.artsId;
+  const GfMenuReference::ArtsPaletteInfo &info = GfMenuReference::getArtsPaletteInfo(unknown30);
+  u16 artsId = info.unknown00;
   if (artsId != 0) {
-    setText(ui::UIStr(GfDataDriverArts::getCaptionFP(), GfDataDriverArts::getCaptionID(info.artsId)));
+    setText(ui::UIStr(GfDataDriverArts::getCaptionFP(), GfDataDriverArts::getCaptionID(info.unknown00)));
   }
   return artsId != 0;
 }
 
 bool GfMenuBattleAdapter::update_ArtsFightComboIcon() {
-  const GfMenuReference::ArtsPaletteInfo &info = GfMenuReference::getArtsPaletteInfo(index);
+  const GfMenuReference::ArtsPaletteInfo &info = GfMenuReference::getArtsPaletteInfo(unknown30);
   btl::ARTS_DATA data;
-  if (info.artsId == 0) {
+  if (info.unknown00 == 0) {
     return false;
   }
-  btl::Utility::GetArtsData(btl::ARTS_DATA::DATA_TYPE_DRIVER, info.artsId, data);
+  btl::Utility::GetArtsData(btl::ARTS_DATA::DATA_TYPE_DRIVER, info.unknown00, data);
   if (data.unknown0c_0 == 0) {
     return false;
   }
@@ -166,7 +166,7 @@ bool GfMenuBattleAdapter::update_ChainCount() {
 }
 
 bool GfMenuBattleAdapter::update_PartyGauge() {
-  int gauge = GfGameParty::getPartyGauge() - index * PARTY_GAUGE_SEGMENT;
+  int gauge = GfGameParty::getPartyGauge() - unknown30 * PARTY_GAUGE_SEGMENT;
   setNumber(gauge < 0 ? 0 : (gauge > PARTY_GAUGE_SEGMENT ? PARTY_GAUGE_SEGMENT : gauge));
   return true;
 }
@@ -217,20 +217,20 @@ bool GfMenuBattleAdapter::update_AwakeningRestTime() {
 }
 
 bool GfMenuBattleAdapter::update_ElemComboEffTime() {
-  if (GfMenuReference::getElementComboParty(index) == 0) {
+  if (GfMenuReference::getElementComboParty(unknown30) == 0) {
     return false;
   }
-  setNumber(GfMenuReference::getElementComboPartyTimeLeft(index) * PERCENT);
+  setNumber(GfMenuReference::getElementComboPartyTimeLeft(unknown30) * PERCENT);
   return true;
 }
 
 bool GfMenuBattleAdapter::update_ArtsRange() { return GfMenuReference::isWeaponJustRange(); }
 
 bool GfMenuBattleAdapter::update_ReverseIconCol() {
-  if (!GfMenuReference::isReversePaletteBtnState(index, 0)) {
+  if (!GfMenuReference::isReversePaletteBtnState(unknown30, 0)) {
     return false;
   }
-  if (GfMenuReference::isReversePaletteBtnState(index, 1)) {
+  if (GfMenuReference::isReversePaletteBtnState(unknown30, 1)) {
     setColor("white");
   } else {
     setColor("gray");
@@ -243,35 +243,35 @@ GfMenuBattleAdapter *GfMenuBattleAdapter::createFromReferenceIndex(u32 handle, m
 #line 146
   ReferenceIndexConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceIndexConverter(number);
   GfMenuBattleAdapter *adapter = create(handle, type);
-  adapter->converter = converter;
+  adapter->unknown58 = converter;
   return adapter;
 }
 
 void GfMenuBattleAdapter::update(const fw::UpdateInfo &info) {
-  if (converter != nullptr) {
+  if (unknown58 != nullptr) {
     int newIndex = 0;
-    converter->getIndex(newIndex);
-    if (index != newIndex) {
-      index = newIndex;
+    unknown58->getIndex(newIndex);
+    if (unknown30 != newIndex) {
+      unknown30 = newIndex;
       setChange();
     }
   }
 
-  if (updater.isValid() && (flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+  if (unknown38.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
     if (GfMenuManager::isBattleState(0) || GfMenuManager::isBattleState(1)) {
-      if (index >= 0) {
-        setDisp(updater());
+      if (unknown30 >= 0) {
+        setDisp(unknown38());
       } else {
         setDisp(false);
       }
-      flags &= ~FLAG_CHANGED;
+      unknown20 &= ~FLAG_CHANGED;
     }
   }
 }
 
 void GfMenuBattleAdapter::ReferenceIndexConverter::getIndex(int &index) {
   if (number.get() != nullptr) {
-    index = number->number;
+    index = number->unknown0c;
   }
 }
 

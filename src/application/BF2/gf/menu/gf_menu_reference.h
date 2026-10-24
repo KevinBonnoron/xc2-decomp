@@ -25,40 +25,40 @@ public:
   enum HOMURA_MODE {};
 
   struct FieldSkillInfo {
-    u32 id;
+    u32 unknown00; // Inferred role: id; original member name unknown.
   };
 
   struct ElemComboRoot {
-    ElemComboRoot() : id(0), flags() {}
+    ElemComboRoot() : unknown00(0), unknown04() {}
 
-    u32 id;
-    mm::mtl::BitFlag<32> flags;
+    u32 unknown00;                  // Inferred role: id; original member name unknown.
+    mm::mtl::BitFlag<32> unknown04; // Inferred role: flags; original member name unknown.
   };
 
   struct ElementComboParty {
-    u32 id;
-    f32 timeLeft;
+    u32 unknown00; // Inferred role: id; original member name unknown.
+    f32 unknown04; // Inferred role: time left; original member name unknown.
   };
 
   struct ReferenceNumber {
-    int min;
-    int max;
-    int value;
+    int unknown00; // Inferred role: min; original member name unknown.
+    int unknown04; // Inferred role: max; original member name unknown.
+    int unknown08; // Inferred role: value; original member name unknown.
   };
 
   struct ArtsPaletteInfo {
-    ArtsPaletteInfo() : artsId(0), recast(0.0f) {}
+    ArtsPaletteInfo() : unknown00(0), unknown04(0.0f) {}
 
-    u16 artsId;
-    f32 recast;
+    u16 unknown00; // Inferred role: arts id; original member name unknown.
+    f32 unknown04; // Inferred role: recast; original member name unknown.
   };
 
   struct ArtsPalette {
-    ArtsPaletteInfo info;
-    GfMenuObjUtil::ArtsIconInfo iconInfo;
-    u32 elementType;
-    bool isEnable;
-    u32 disableFlags;
+    ArtsPaletteInfo unknown00;             // Inferred role: info; original member name unknown.
+    GfMenuObjUtil::ArtsIconInfo unknown08; // Inferred role: icon info; original member name unknown.
+    u32 unknown1c;                         // Inferred role: element type; original member name unknown.
+    bool unknown20;                        // Inferred role: enable; original member name unknown.
+    u32 unknown24;                         // Inferred role: disable flags; original member name unknown.
   };
 
   static bool isInitialized();
@@ -153,105 +153,105 @@ public:
   static void clearPartyStatusLock();
 
   u8 _08[0x4ca18 - 0x08];
-  mm::threading::CriticalSection criticalSection;
-  bool initialized;
-  mm::mtl::FixedVector<FieldSkillInfo, 28> fieldSkills;
-  ArtsPalette artsPalettes[ARTS_PALETTE_COUNT];
+  mm::threading::CriticalSection unknown4ca18;           // Inferred role: critical section; original member name unknown.
+  bool unknown4ca40;                                     // Inferred role: initialized; original member name unknown.
+  mm::mtl::FixedVector<FieldSkillInfo, 28> unknown4ca48; // Inferred role: field skills; original member name unknown.
+  ArtsPalette unknown4cac0[ARTS_PALETTE_COUNT];          // Inferred role: arts palettes; original member name unknown.
   u8 _4cb38[0x4cb3c - 0x4cb38];
-  bool isJustRange;
-  f32 awakeningRestTimeRatio;
-  f32 chainAttackActionRecast;
-  u32 chainAttackActionCount;
-  int chainAttackActionPartyId;
-  f32 chainAttackDamageRatio;
-  f32 chainAttackExpRatio;
-  u32 chainAttackTotalDamage;
-  u32 chainAttackBurstCount;
-  u32 targetEnemyBuffs[2];
+  bool unknown4cb3c;   // Inferred role: just range; original member name unknown.
+  f32 unknown4cb40;    // Inferred role: awakening rest time ratio; original member name unknown.
+  f32 unknown4cb44;    // Inferred role: chain attack action recast; original member name unknown.
+  u32 unknown4cb48;    // Inferred role: chain attack action count; original member name unknown.
+  int unknown4cb4c;    // Inferred role: chain attack action party id; original member name unknown.
+  f32 unknown4cb50;    // Inferred role: chain attack damage ratio; original member name unknown.
+  f32 unknown4cb54;    // Inferred role: chain attack exp ratio; original member name unknown.
+  u32 unknown4cb58;    // Inferred role: chain attack total damage; original member name unknown.
+  u32 unknown4cb5c;    // Inferred role: chain attack burst count; original member name unknown.
+  u32 unknown4cb60[2]; // Inferred role: target enemy buffs; original member name unknown.
   u8 _4cb68[0x4cb6c - 0x4cb68];
-  u16 chainNum;
+  u16 unknown4cb6c; // Inferred role: chain num; original member name unknown.
   u8 _4cb6e[0x4cb74 - 0x4cb6e];
-  u32 targetEnemyDebuff;
-  u32 targetEnemyWeakAttr;
-  HOMURA_MODE homuraMode;
-  bool isPaletteReverse;
-  mm::mtl::BitFlag<8> reversePaletteBtnStates[4];
+  u32 unknown4cb74;                    // Inferred role: target enemy debuff; original member name unknown.
+  u32 unknown4cb78;                    // Inferred role: target enemy weak attr; original member name unknown.
+  HOMURA_MODE unknown4cb7c;            // Inferred role: homura mode; original member name unknown.
+  bool unknown4cb80;                   // Inferred role: palette reverse; original member name unknown.
+  mm::mtl::BitFlag<8> unknown4cb84[4]; // Inferred role: reverse palette btn states; original member name unknown.
   u8 _4cb94[0x4cb98 - 0x4cb94];
-  ui::UIListInfo<MenuEnemyInfo> *enemyLinks;
-  ui::UIListInfo<MenuItemInfo> *itemLinks;
-  ElemComboRoot elementComboRoots[7];
-  ElementComboParty elementComboParties[2];
-  u32 elementComboRequest;
+  ui::UIListInfo<MenuEnemyInfo> *unknown4cb98; // Inferred role: enemy links; original member name unknown.
+  ui::UIListInfo<MenuItemInfo> *unknown4cba0;  // Inferred role: item links; original member name unknown.
+  ElemComboRoot unknown4cba8[7];               // Inferred role: element combo roots; original member name unknown.
+  ElementComboParty unknown4cbe0[2];           // Inferred role: element combo parties; original member name unknown.
+  u32 unknown4cbf0;                            // Inferred role: element combo request; original member name unknown.
   u8 _4cbf4[0x4cbf8 - 0x4cbf4];
-  u32 referenceDriverIds[8];
-  u32 referenceBladeIds[8];
-  ReferenceNumber referenceNumbers[8];
-  u32 referenceTeamId;
-  u32 referenceZoneId;
-  u32 referenceMissionId;
-  u32 referenceShopId;
-  u32 referenceWorldMapId;
-  u32 driverVirtualLevel;
-  u32 driverVirtualBladeId;
-  u32 driverVirtualBladeSlot;
-  u32 driverVirtualEquipAcc;
-  u32 driverVirtualEquipAccSlot;
-  int driverAddIdeaLvs[4];
-  u32 bladeVirtualEquipWpnChip;
-  u32 bladeVirtualEquipOrb;
-  u32 bladeVirtualEquipOrbSlot;
+  u32 unknown4cbf8[8];             // Inferred role: reference driver ids; original member name unknown.
+  u32 unknown4cc18[8];             // Inferred role: reference blade ids; original member name unknown.
+  ReferenceNumber unknown4cc38[8]; // Inferred role: reference numbers; original member name unknown.
+  u32 unknown4cc98;                // Inferred role: reference team id; original member name unknown.
+  u32 unknown4cc9c;                // Inferred role: reference zone id; original member name unknown.
+  u32 unknown4cca0;                // Inferred role: reference mission id; original member name unknown.
+  u32 unknown4cca4;                // Inferred role: reference shop id; original member name unknown.
+  u32 unknown4cca8;                // Inferred role: reference world map id; original member name unknown.
+  u32 unknown4ccac;                // Inferred role: driver virtual level; original member name unknown.
+  u32 unknown4ccb0;                // Inferred role: driver virtual blade id; original member name unknown.
+  u32 unknown4ccb4;                // Inferred role: driver virtual blade slot; original member name unknown.
+  u32 unknown4ccb8;                // Inferred role: driver virtual equip acc; original member name unknown.
+  u32 unknown4ccbc;                // Inferred role: driver virtual equip acc slot; original member name unknown.
+  int unknown4ccc0[4];             // Inferred role: driver add idea lvs; original member name unknown.
+  u32 unknown4ccd0;                // Inferred role: blade virtual equip wpn chip; original member name unknown.
+  u32 unknown4ccd4;                // Inferred role: blade virtual equip orb; original member name unknown.
+  u32 unknown4ccd8;                // Inferred role: blade virtual equip orb slot; original member name unknown.
   u8 _4ccdc[0x4cce0 - 0x4ccdc];
-  ui::UIStr referenceStrings[8];
-  ArtsPalette allArtsPalettes[ALL_ARTS_PALETTE_COUNT];
-  mm::mtl::BitFlag<32> partyStatusLock;
+  ui::UIStr unknown4cce0[8];                        // Inferred role: reference strings; original member name unknown.
+  ArtsPalette unknown4cda0[ALL_ARTS_PALETTE_COUNT]; // Inferred role: all arts palettes; original member name unknown.
+  mm::mtl::BitFlag<32> unknown4cf08;                // Inferred role: party status lock; original member name unknown.
   u8 _4cf0c[0x4cf10 - 0x4cf0c];
 };
 
-static_assert(offsetof(GfMenuReference, criticalSection) == 0x4ca18, "");
-static_assert(offsetof(GfMenuReference, initialized) == 0x4ca40, "");
-static_assert(offsetof(GfMenuReference, fieldSkills) == 0x4ca48, "");
-static_assert(offsetof(GfMenuReference, artsPalettes) == 0x4cac0, "");
-static_assert(offsetof(GfMenuReference, isJustRange) == 0x4cb3c, "");
-static_assert(offsetof(GfMenuReference, awakeningRestTimeRatio) == 0x4cb40, "");
-static_assert(offsetof(GfMenuReference, chainAttackActionRecast) == 0x4cb44, "");
-static_assert(offsetof(GfMenuReference, chainAttackActionCount) == 0x4cb48, "");
-static_assert(offsetof(GfMenuReference, chainAttackActionPartyId) == 0x4cb4c, "");
-static_assert(offsetof(GfMenuReference, chainAttackDamageRatio) == 0x4cb50, "");
-static_assert(offsetof(GfMenuReference, chainAttackExpRatio) == 0x4cb54, "");
-static_assert(offsetof(GfMenuReference, chainAttackTotalDamage) == 0x4cb58, "");
-static_assert(offsetof(GfMenuReference, chainAttackBurstCount) == 0x4cb5c, "");
-static_assert(offsetof(GfMenuReference, targetEnemyBuffs) == 0x4cb60, "");
-static_assert(offsetof(GfMenuReference, chainNum) == 0x4cb6c, "");
-static_assert(offsetof(GfMenuReference, targetEnemyDebuff) == 0x4cb74, "");
-static_assert(offsetof(GfMenuReference, targetEnemyWeakAttr) == 0x4cb78, "");
-static_assert(offsetof(GfMenuReference, homuraMode) == 0x4cb7c, "");
-static_assert(offsetof(GfMenuReference, isPaletteReverse) == 0x4cb80, "");
-static_assert(offsetof(GfMenuReference, reversePaletteBtnStates) == 0x4cb84, "");
-static_assert(offsetof(GfMenuReference, enemyLinks) == 0x4cb98, "");
-static_assert(offsetof(GfMenuReference, itemLinks) == 0x4cba0, "");
-static_assert(offsetof(GfMenuReference, elementComboRoots) == 0x4cba8, "");
-static_assert(offsetof(GfMenuReference, elementComboParties) == 0x4cbe0, "");
-static_assert(offsetof(GfMenuReference, elementComboRequest) == 0x4cbf0, "");
-static_assert(offsetof(GfMenuReference, referenceDriverIds) == 0x4cbf8, "");
-static_assert(offsetof(GfMenuReference, referenceBladeIds) == 0x4cc18, "");
-static_assert(offsetof(GfMenuReference, referenceNumbers) == 0x4cc38, "");
-static_assert(offsetof(GfMenuReference, referenceTeamId) == 0x4cc98, "");
-static_assert(offsetof(GfMenuReference, referenceWorldMapId) == 0x4cca8, "");
-static_assert(offsetof(GfMenuReference, driverVirtualLevel) == 0x4ccac, "");
-static_assert(offsetof(GfMenuReference, driverAddIdeaLvs) == 0x4ccc0, "");
-static_assert(offsetof(GfMenuReference, bladeVirtualEquipWpnChip) == 0x4ccd0, "");
-static_assert(offsetof(GfMenuReference, bladeVirtualEquipOrbSlot) == 0x4ccd8, "");
-static_assert(offsetof(GfMenuReference, referenceStrings) == 0x4cce0, "");
-static_assert(offsetof(GfMenuReference, partyStatusLock) == 0x4cf08, "");
+static_assert(offsetof(GfMenuReference, unknown4ca18) == 0x4ca18, "");
+static_assert(offsetof(GfMenuReference, unknown4ca40) == 0x4ca40, "");
+static_assert(offsetof(GfMenuReference, unknown4ca48) == 0x4ca48, "");
+static_assert(offsetof(GfMenuReference, unknown4cac0) == 0x4cac0, "");
+static_assert(offsetof(GfMenuReference, unknown4cb3c) == 0x4cb3c, "");
+static_assert(offsetof(GfMenuReference, unknown4cb40) == 0x4cb40, "");
+static_assert(offsetof(GfMenuReference, unknown4cb44) == 0x4cb44, "");
+static_assert(offsetof(GfMenuReference, unknown4cb48) == 0x4cb48, "");
+static_assert(offsetof(GfMenuReference, unknown4cb4c) == 0x4cb4c, "");
+static_assert(offsetof(GfMenuReference, unknown4cb50) == 0x4cb50, "");
+static_assert(offsetof(GfMenuReference, unknown4cb54) == 0x4cb54, "");
+static_assert(offsetof(GfMenuReference, unknown4cb58) == 0x4cb58, "");
+static_assert(offsetof(GfMenuReference, unknown4cb5c) == 0x4cb5c, "");
+static_assert(offsetof(GfMenuReference, unknown4cb60) == 0x4cb60, "");
+static_assert(offsetof(GfMenuReference, unknown4cb6c) == 0x4cb6c, "");
+static_assert(offsetof(GfMenuReference, unknown4cb74) == 0x4cb74, "");
+static_assert(offsetof(GfMenuReference, unknown4cb78) == 0x4cb78, "");
+static_assert(offsetof(GfMenuReference, unknown4cb7c) == 0x4cb7c, "");
+static_assert(offsetof(GfMenuReference, unknown4cb80) == 0x4cb80, "");
+static_assert(offsetof(GfMenuReference, unknown4cb84) == 0x4cb84, "");
+static_assert(offsetof(GfMenuReference, unknown4cb98) == 0x4cb98, "");
+static_assert(offsetof(GfMenuReference, unknown4cba0) == 0x4cba0, "");
+static_assert(offsetof(GfMenuReference, unknown4cba8) == 0x4cba8, "");
+static_assert(offsetof(GfMenuReference, unknown4cbe0) == 0x4cbe0, "");
+static_assert(offsetof(GfMenuReference, unknown4cbf0) == 0x4cbf0, "");
+static_assert(offsetof(GfMenuReference, unknown4cbf8) == 0x4cbf8, "");
+static_assert(offsetof(GfMenuReference, unknown4cc18) == 0x4cc18, "");
+static_assert(offsetof(GfMenuReference, unknown4cc38) == 0x4cc38, "");
+static_assert(offsetof(GfMenuReference, unknown4cc98) == 0x4cc98, "");
+static_assert(offsetof(GfMenuReference, unknown4cca8) == 0x4cca8, "");
+static_assert(offsetof(GfMenuReference, unknown4ccac) == 0x4ccac, "");
+static_assert(offsetof(GfMenuReference, unknown4ccc0) == 0x4ccc0, "");
+static_assert(offsetof(GfMenuReference, unknown4ccd0) == 0x4ccd0, "");
+static_assert(offsetof(GfMenuReference, unknown4ccd8) == 0x4ccd8, "");
+static_assert(offsetof(GfMenuReference, unknown4cce0) == 0x4cce0, "");
+static_assert(offsetof(GfMenuReference, unknown4cf08) == 0x4cf08, "");
 static_assert(sizeof(GfMenuReference) == 0x4cf10, "");
 
 class GfMenuReferenceFs : public mm::mtl::ReferenceObject {
 public:
-  virtual void getFs(MenuFieldSkill &fs) const { fs = fieldSkill; }
+  virtual void getFs(MenuFieldSkill &fs) const { fs = unknown0c; }
 
-  MenuFieldSkill fieldSkill;
+  MenuFieldSkill unknown0c; // Inferred role: field skill; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuReferenceFs, fieldSkill) == 0x0c, "");
+static_assert(offsetof(GfMenuReferenceFs, unknown0c) == 0x0c, "");
 
 } // namespace gf

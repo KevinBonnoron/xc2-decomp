@@ -26,10 +26,10 @@ public:
   static void closeMenu();
   static bool isOpenMenu();
 
-  bool initialized;
+  bool unknown08; // Inferred role: initialized; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuKizunaring, initialized) == 0x08, "");
+static_assert(offsetof(GfMenuKizunaring, unknown08) == 0x08, "");
 static_assert(sizeof(GfMenuKizunaring) == 0x10, "");
 
 } // namespace gf

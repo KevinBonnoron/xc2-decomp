@@ -57,12 +57,12 @@ static GfMenuAchievementAdapter::TypeInfo TYPE_INFOS[] = {
 };
 
 GfMenuAchievementAdapter::GfMenuAchievementAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), isDispComplete(0), blade(0), line(0), level(0) {}
+    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0), unknown60(0), unknown64(0) {}
 
 GfMenuAchievementAdapter::~GfMenuAchievementAdapter() {
-  if (converter != nullptr) {
-    delete converter;
-    converter = nullptr;
+  if (unknown50 != nullptr) {
+    delete unknown50;
+    unknown50 = nullptr;
   }
 }
 
@@ -75,10 +75,10 @@ GfMenuAchievementAdapter *GfMenuAchievementAdapter::create(u32 handle, u32 type,
       // __LINE__ must be 190 as in the original source: it is the line argument of operator new.
 #line 190
       GfMenuAchievementAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuAchievementAdapter(plugin, isUpdateAlways);
-      adapter->updater.bind(adapter, info.update);
-      adapter->blade = blade;
-      adapter->line = line;
-      adapter->level = level;
+      adapter->unknown30.bind(adapter, info.update);
+      adapter->unknown5c = blade;
+      adapter->unknown60 = line;
+      adapter->unknown64 = level;
       plugin->release();
       return adapter;
     }
@@ -87,25 +87,25 @@ GfMenuAchievementAdapter *GfMenuAchievementAdapter::create(u32 handle, u32 type,
 }
 
 bool GfMenuAchievementAdapter::update_AchievementReleaseFlagIcon() {
-  setNumber(GfKizunaringBlade::getReleaseAchievement(blade, line, level));
+  setNumber(GfKizunaringBlade::getReleaseAchievement(unknown5c, unknown60, unknown64));
   return true;
 }
 
 bool GfMenuAchievementAdapter::update_AchievementCategory() {
-  setNumber(GfKizunaringBlade::getAchievementCategory(blade, line, level));
+  setNumber(GfKizunaringBlade::getAchievementCategory(unknown5c, unknown60, unknown64));
   return true;
 }
 
 bool GfMenuAchievementAdapter::update_AchievementTitle() {
-  if (line == ACHIEVEMENT_LINE_KEY && level == KEY_LEVEL_FIRST) {
+  if (unknown60 == ACHIEVEMENT_LINE_KEY && unknown64 == KEY_LEVEL_FIRST) {
     return false;
   }
-  if (GfKizunaringBlade::getReleaseAchievement(blade, line, level) == 0) {
+  if (GfKizunaringBlade::getReleaseAchievement(unknown5c, unknown60, unknown64) == 0) {
     return false;
   }
   u8 *bdat;
   u32 textId;
-  if (!GfDataBlade::getTaskSkillMessage(bdat, textId, blade, line)) {
+  if (!GfDataBlade::getTaskSkillMessage(bdat, textId, unknown5c, unknown60)) {
     return false;
   }
   setText(ui::UIStr(bdat, textId));
@@ -113,19 +113,19 @@ bool GfMenuAchievementAdapter::update_AchievementTitle() {
 }
 
 bool GfMenuAchievementAdapter::update_AchievementResult() {
-  if (GfKizunaringBlade::getReleaseAchievement(blade, line, level) == 0) {
+  if (GfKizunaringBlade::getReleaseAchievement(unknown5c, unknown60, unknown64) == 0) {
     return false;
   }
   u8 *bdat;
   u32 textId;
-  if (GfKizunaringBlade::getAchievementResultMsg(bdat, textId, blade, line, level)) {
-    u16 enhance = GfKizunaringBlade::getAchievementResultEnhance(blade, line, level);
+  if (GfKizunaringBlade::getAchievementResultMsg(bdat, textId, unknown5c, unknown60, unknown64)) {
+    u16 enhance = GfKizunaringBlade::getAchievementResultEnhance(unknown5c, unknown60, unknown64);
     ui::UIStr text(bdat, textId);
     text.option = enhance;
     setText(text);
-  } else if (line == ACHIEVEMENT_LINE_KEY && level >= 2 && level <= 5) {
-    u32 index = level;
-    u32 linkNum = GfDataBlade::getLinkChNum(blade);
+  } else if (unknown60 == ACHIEVEMENT_LINE_KEY && unknown64 >= 2 && unknown64 <= 5) {
+    u32 index = unknown64;
+    u32 linkNum = GfDataBlade::getLinkChNum(unknown5c);
     if (linkNum == 3 && index == 3) {
       index = KEY_ACHIEVEMENT_LINK_THREE;
     }
@@ -134,7 +134,7 @@ bool GfMenuAchievementAdapter::update_AchievementResult() {
     }
     u32 nameId = Bdat::getVal(GfDataBdat::getFP(BDAT_MNU_MSG_KEY_ACHIEVE), "name", index).valueU16;
     setText(ui::UIStr(GfDataBdat::getFP(BDAT_FLD_QUEST_ACHIEVEMENT), nameId));
-  } else if (line != ACHIEVEMENT_LINE_KEY && GfDataHana::isValid(blade)) {
+  } else if (unknown60 != ACHIEVEMENT_LINE_KEY && GfDataHana::isValid(unknown5c)) {
     textId = Bdat::getVal(GfDataBdat::getFP(BDAT_MNU_MSG_POUCH), "name", POUCH_MSG_HANA).valueU16;
     bdat = GfDataBdat::getFP(BDAT_MENU_MS);
     setText(ui::UIStr(bdat, textId));
@@ -145,45 +145,45 @@ bool GfMenuAchievementAdapter::update_AchievementResult() {
 }
 
 bool GfMenuAchievementAdapter::update_AchievementIcon() {
-  setNumber(GfKizunaringBlade::getAchievementIcon(blade, line, level));
+  setNumber(GfKizunaringBlade::getAchievementIcon(unknown5c, unknown60, unknown64));
   return true;
 }
 
 bool GfMenuAchievementAdapter::update_AchievementVoiceCategory() {
-  setNumber(GfKizunaringBlade::getAchievementVoiceCategory(blade, line, level));
+  setNumber(GfKizunaringBlade::getAchievementVoiceCategory(unknown5c, unknown60, unknown64));
   return true;
 }
 
 bool GfMenuAchievementAdapter::update_AchievementVoiceAfter() {
-  GfKizunaringBlade::getAchievementAfterVoice(blade, line, level);
+  GfKizunaringBlade::getAchievementAfterVoice(unknown5c, unknown60, unknown64);
   return true;
 }
 
 bool GfMenuAchievementAdapter::update_AchievementDifficulty() {
-  setNumber(GfKizunaringBlade::getAchievementDifficulty(blade, line, level));
+  setNumber(GfKizunaringBlade::getAchievementDifficulty(unknown5c, unknown60, unknown64));
   return true;
 }
 
 bool GfMenuAchievementAdapter::update_AchievementQuest() {
-  setNumber(GfKizunaringBlade::getAchievementQuest(blade, line, level));
+  setNumber(GfKizunaringBlade::getAchievementQuest(unknown5c, unknown60, unknown64));
   return true;
 }
 
 bool GfMenuAchievementAdapter::update_AchievementSetCategory() {
-  setNumber(GfKizunaringBlade::getAchievementSetCategory(blade, line));
+  setNumber(GfKizunaringBlade::getAchievementSetCategory(unknown5c, unknown60));
   return true;
 }
 
 bool GfMenuAchievementAdapter::update_AchievementSetAbilityLevel() {
-  setNumber(GfKizunaringBlade::getAchievementSetAbilityLevel(blade, line));
+  setNumber(GfKizunaringBlade::getAchievementSetAbilityLevel(unknown5c, unknown60));
   return true;
 }
 
 bool GfMenuAchievementAdapter::update_AchievementTypeIcon() {
-  u32 release = GfKizunaringBlade::getReleaseAchievement(blade, line, level);
+  u32 release = GfKizunaringBlade::getReleaseAchievement(unknown5c, unknown60, unknown64);
   int icon;
-  if (line == ACHIEVEMENT_LINE_KEY) {
-    if (level == KEY_LEVEL_FIRST) {
+  if (unknown60 == ACHIEVEMENT_LINE_KEY) {
+    if (unknown64 == KEY_LEVEL_FIRST) {
       return false;
     }
     icon = (release == 4 || release == 5) ? 5 : 11;
@@ -195,7 +195,7 @@ bool GfMenuAchievementAdapter::update_AchievementTypeIcon() {
     ACHIEVEMENT_TYPE type;
     u32 index;
     icon = 10;
-    if (GfDataAchievement::getAchievementType(type, index, line)) {
+    if (GfDataAchievement::getAchievementType(type, index, unknown60)) {
       switch (type) {
       case ACHIEVEMENT_TYPE_ARTS:
         icon = 12;
@@ -216,12 +216,12 @@ bool GfMenuAchievementAdapter::update_AchievementTypeIcon() {
 }
 
 bool GfMenuAchievementAdapter::update_AchievementCategoryIcon() {
-  if (GfKizunaringBlade::getReleaseAchievement(blade, line, level) == 0) {
+  if (GfKizunaringBlade::getReleaseAchievement(unknown5c, unknown60, unknown64) == 0) {
     return false;
   }
   ACHIEVEMENT_TYPE type;
   u32 index;
-  if (GfDataAchievement::getAchievementType(type, index, line) && type == ACHIEVEMENT_TYPE_KEY && line == ACHIEVEMENT_LINE_KEY && level == KEY_LEVEL_FIRST) {
+  if (GfDataAchievement::getAchievementType(type, index, unknown60) && type == ACHIEVEMENT_TYPE_KEY && unknown60 == ACHIEVEMENT_LINE_KEY && unknown64 == KEY_LEVEL_FIRST) {
     return false;
   }
   int icon;
@@ -244,7 +244,7 @@ bool GfMenuAchievementAdapter::update_AchievementCategoryIcon() {
 }
 
 bool GfMenuAchievementAdapter::update_AchievementReleaseFlagColor() {
-  u32 release = GfKizunaringBlade::getReleaseAchievement(blade, line, level);
+  u32 release = GfKizunaringBlade::getReleaseAchievement(unknown5c, unknown60, unknown64);
   if (release == 0 || release == 1) {
     return true;
   }
@@ -259,10 +259,10 @@ bool GfMenuAchievementAdapter::update_AchievementReleaseFlagColor() {
 bool GfMenuAchievementAdapter::update_AchievementSkillName() {
   ACHIEVEMENT_TYPE type;
   u32 index;
-  if (!GfDataAchievement::getAchievementType(type, index, line)) {
+  if (!GfDataAchievement::getAchievementType(type, index, unknown60)) {
     return false;
   }
-  u32 skill = GfDataBlade::getSkillLineId(blade, line);
+  u32 skill = GfDataBlade::getSkillLineId(unknown5c, unknown60);
   if (skill == 0) {
     return false;
   }
@@ -286,20 +286,20 @@ bool GfMenuAchievementAdapter::update_AchievementSkillName() {
 }
 
 bool GfMenuAchievementAdapter::update_LearnNum() {
-  setNumber(GfDataBlade::getKizunaringCompleteNum(blade));
+  setNumber(GfDataBlade::getKizunaringCompleteNum(unknown5c));
   return true;
 }
 
 bool GfMenuAchievementAdapter::update_LearnMax() {
-  setNumber(GfDataBlade::getKizunaringMax(blade));
+  setNumber(GfDataBlade::getKizunaringMax(unknown5c));
   return true;
 }
 
 bool GfMenuAchievementAdapter::update_QuestNum() {
-  SDataBladeAchievement *info = GfDataBlade::getAchievInfo(blade, line);
+  SDataBladeAchievement *info = GfDataBlade::getAchievInfo(unknown5c, unknown60);
   u32 count;
   u32 limit;
-  if (!GfQuestUtil::getDispCount(count, limit, info->unknown04[level - 1])) {
+  if (!GfQuestUtil::getDispCount(count, limit, info->unknown04[unknown64 - 1])) {
     return false;
   }
   setNumber(count);
@@ -307,10 +307,10 @@ bool GfMenuAchievementAdapter::update_QuestNum() {
 }
 
 bool GfMenuAchievementAdapter::update_QuestMax() {
-  SDataBladeAchievement *info = GfDataBlade::getAchievInfo(blade, line);
+  SDataBladeAchievement *info = GfDataBlade::getAchievInfo(unknown5c, unknown60);
   u32 count;
   u32 limit;
-  if (!GfQuestUtil::getDispCount(count, limit, info->unknown04[level - 1])) {
+  if (!GfQuestUtil::getDispCount(count, limit, info->unknown04[unknown64 - 1])) {
     return false;
   }
   setNumber(limit);
@@ -320,7 +320,7 @@ bool GfMenuAchievementAdapter::update_QuestMax() {
 bool GfMenuAchievementAdapter::update_IdeaText() {
   u32 category;
   u32 value;
-  if (GfQuestUtil::getResultIdea(category, value, blade, line, level) && value != 0) {
+  if (GfQuestUtil::getResultIdea(category, value, unknown5c, unknown60, unknown64) && value != 0) {
     setText(ui::UIStr(GfDataBdat::getFP(BDAT_MENU_IDEACOLLAR_MS), category + 1));
     return true;
   }
@@ -330,7 +330,7 @@ bool GfMenuAchievementAdapter::update_IdeaText() {
 bool GfMenuAchievementAdapter::update_IdeaIcon() {
   u32 category;
   u32 value;
-  if (GfQuestUtil::getResultIdea(category, value, blade, line, level) && value != 0) {
+  if (GfQuestUtil::getResultIdea(category, value, unknown5c, unknown60, unknown64) && value != 0) {
     setNumber(category);
     return true;
   }
@@ -340,14 +340,14 @@ bool GfMenuAchievementAdapter::update_IdeaIcon() {
 bool GfMenuAchievementAdapter::update_QuestCaptionText() {
   u8 *bdat;
   u32 textId;
-  if (!GfKizunaringBlade::isNetabareOK(blade, line, level)) {
+  if (!GfKizunaringBlade::isNetabareOK(unknown5c, unknown60, unknown64)) {
     u32 nameId = Bdat::getVal(GfDataBdat::getFP(BDAT_MNU_MSG_POUCH), "name", POUCH_MSG_HIDDEN).valueU16;
     setText(ui::UIStr(GfDataBdat::getFP(BDAT_MENU_MS), nameId));
     return true;
   }
-  if (GfDataBlade::getTaskTitleMessage(bdat, textId, blade, line, level)) {
+  if (GfDataBlade::getTaskTitleMessage(bdat, textId, unknown5c, unknown60, unknown64)) {
     ui::UIStr text(bdat, textId);
-    if (text.size() != 0 && GfDataBlade::getTaskSkillMessage(bdat, textId, blade, line)) {
+    if (text.size() != 0 && GfDataBlade::getTaskSkillMessage(bdat, textId, unknown5c, unknown60)) {
       ui::UIStr skillName(bdat, textId);
       GfMenuReference::setReferenceString(skillName, 0);
       text.option = 0;
@@ -361,9 +361,9 @@ bool GfMenuAchievementAdapter::update_QuestCaptionText() {
 bool GfMenuAchievementAdapter::update_QuestResultText() {
   u8 *bdat;
   u32 textId;
-  if (GfDataBlade::getTaskResultMessage(bdat, textId, blade, line, level)) {
+  if (GfDataBlade::getTaskResultMessage(bdat, textId, unknown5c, unknown60, unknown64)) {
     ui::UIStr text(bdat, textId);
-    if (text.size() != 0 && GfDataBlade::getTaskSkillMessage(bdat, textId, blade, line)) {
+    if (text.size() != 0 && GfDataBlade::getTaskSkillMessage(bdat, textId, unknown5c, unknown60)) {
       ui::UIStr skillName(bdat, textId);
       GfMenuReference::setReferenceString(skillName, 1);
       text.option = 1;
@@ -375,12 +375,12 @@ bool GfMenuAchievementAdapter::update_QuestResultText() {
 }
 
 bool GfMenuAchievementAdapter::update_KeyIcon() {
-  u32 release = GfKizunaringBlade::getReleaseAchievement(blade, line, level);
-  setNumber(level == KEY_LEVEL_FIRST || release == 4 || release == 5 ? 5 : 11);
+  u32 release = GfKizunaringBlade::getReleaseAchievement(unknown5c, unknown60, unknown64);
+  setNumber(unknown64 == KEY_LEVEL_FIRST || release == 4 || release == 5 ? 5 : 11);
   return true;
 }
 
-bool GfMenuAchievementAdapter::update_NetabareOkDisp() { return GfKizunaringBlade::isNetabareOK(blade, line, level); }
+bool GfMenuAchievementAdapter::update_NetabareOkDisp() { return GfKizunaringBlade::isNetabareOK(unknown5c, unknown60, unknown64); }
 
 GfMenuAchievementAdapter *GfMenuAchievementAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
   u32 blade = converter->getBladeId();
@@ -388,7 +388,7 @@ GfMenuAchievementAdapter *GfMenuAchievementAdapter::createFromCoverter(u32 handl
   u16 level = converter->getKizunaLevel();
   GfMenuAchievementAdapter *adapter = create(handle, type, blade, line, level, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->converter = converter;
+    adapter->unknown50 = converter;
   }
   return adapter;
 }
@@ -408,39 +408,39 @@ GfMenuAchievementAdapter *GfMenuAchievementAdapter::createFromReferenceBladeLine
 }
 
 void GfMenuAchievementAdapter::update(const fw::UpdateInfo &info) {
-  if (converter != nullptr) {
-    u32 newBlade = converter->getBladeId();
-    if (blade != newBlade) {
-      blade = newBlade;
+  if (unknown50 != nullptr) {
+    u32 newBlade = unknown50->getBladeId();
+    if (unknown5c != newBlade) {
+      unknown5c = newBlade;
       setChange();
     }
-    u32 newLine = converter->getKizunaLine();
-    if (line != newLine) {
-      line = newLine;
+    u32 newLine = unknown50->getKizunaLine();
+    if (unknown60 != newLine) {
+      unknown60 = newLine;
       setChange();
     }
-    u32 newLevel = converter->getKizunaLevel();
-    if (level != newLevel) {
-      level = newLevel;
+    u32 newLevel = unknown50->getKizunaLevel();
+    if (unknown64 != newLevel) {
+      unknown64 = newLevel;
       setChange();
     }
   }
 
-  if (updater.isValid() && (flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
-    setDisp(updater());
-    flags &= ~FLAG_CHANGED;
+  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+    setDisp(unknown30());
+    unknown20 &= ~FLAG_CHANGED;
   }
 }
 
 bool GfMenuAchievementAdapter::update_AchievementReleaseFlagDisp() {
-  if (line == ACHIEVEMENT_LINE_KEY && level == KEY_LEVEL_FIRST) {
+  if (unknown60 == ACHIEVEMENT_LINE_KEY && unknown64 == KEY_LEVEL_FIRST) {
     return false;
   }
-  u32 release = GfKizunaringBlade::getReleaseAchievement(blade, line, level);
+  u32 release = GfKizunaringBlade::getReleaseAchievement(unknown5c, unknown60, unknown64);
   if (release == 0) {
     return false;
   }
-  return (release == 4 || release == 5) != (isDispComplete == 0);
+  return (release == 4 || release == 5) != (unknown58 == 0);
 }
 
 } // namespace gf

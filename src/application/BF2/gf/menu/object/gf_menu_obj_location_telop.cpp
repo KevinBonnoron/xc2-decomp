@@ -22,7 +22,7 @@ GfMenuObjLocationTelop::GfMenuObjLocationTelop(u32 handle) : GfMenuObject(handle
 GfMenuObjLocationTelop::~GfMenuObjLocationTelop() { ; }
 
 void GfMenuObjLocationTelop::initialize() {
-  ui::UIObjectAcc main(handle, "LAY_main");
+  ui::UIObjectAcc main(unknown18, "LAY_main");
   if (!main.isValid()) {
     return;
   }
@@ -45,14 +45,14 @@ void GfMenuObjLocationTelop::update() { GfMenuObject::update(); }
 
 void GfMenuObjLocationTelop::open(const OpenParam &param) {
   ui::UIObjectAcc acc(getAttachedObject(CALL_LOCATION_TELOP));
-  if (acc.isValid() && !acc.isTerm() && param.isNew) {
-    u16 text = registString(ui::UIStr(param.bdat, param.textId));
+  if (acc.isValid() && !acc.isTerm() && param.unknown10) {
+    u16 text = registString(ui::UIStr(param.unknown00, param.unknown08));
     ui::EventData event;
     event.type = EVENT_OPEN_TELOP;
     event.param0 = text;
     event.param1 = TELOP_FRAME;
-    event.param2 = param.type;
-    event.param3 = param.isNew;
+    event.param2 = param.unknown0c;
+    event.param3 = param.unknown10;
     GfMenuOrderMgr::setOrder(ORDER_LOCATION_TELOP, acc.handle, event);
   }
 }

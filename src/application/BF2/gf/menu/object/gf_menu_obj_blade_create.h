@@ -8,7 +8,7 @@ class GfMenuCallContext;
 class GfMenuObjBladeCreate {
 public:
   struct OpenParam {
-    u32 event;
+    u32 unknown00; // Inferred role: event; original member name unknown.
   };
 
   static void registOpenParam(const OpenParam &param);

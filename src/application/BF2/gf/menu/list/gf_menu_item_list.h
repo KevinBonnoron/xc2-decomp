@@ -9,18 +9,18 @@
 namespace gf {
 
 struct MenuItemInfo {
-  MenuItemInfo() : type(ItemType::NONE), item(0), count(0), handle(0) {}
+  MenuItemInfo() : unknown00(ItemType::NONE), unknown04(0), unknown08(0), unknown0c(0) {}
 
-  ItemType::Type type;
-  u32 item;
-  s16 count;
-  u16 index;
-  GfItemHandle handle;
+  ItemType::Type unknown00; // Inferred role: type; original member name unknown.
+  u32 unknown04;            // Inferred role: item; original member name unknown.
+  s16 unknown08;            // Inferred role: count; original member name unknown.
+  u16 unknown0a;            // Inferred role: index; original member name unknown.
+  GfItemHandle unknown0c;   // Inferred role: handle; original member name unknown.
 };
 
-static_assert(offsetof(MenuItemInfo, count) == 0x8, "");
-static_assert(offsetof(MenuItemInfo, index) == 0xa, "");
-static_assert(offsetof(MenuItemInfo, handle) == 0xc, "");
+static_assert(offsetof(MenuItemInfo, unknown08) == 0x8, "");
+static_assert(offsetof(MenuItemInfo, unknown0a) == 0xa, "");
+static_assert(offsetof(MenuItemInfo, unknown0c) == 0xc, "");
 static_assert(sizeof(MenuItemInfo) == 0x10, "");
 
 class GfMenuItemList : public ui::UIListInfo<MenuItemInfo> {

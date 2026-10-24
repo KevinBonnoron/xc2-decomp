@@ -107,14 +107,14 @@ public:
   static void setTextWithStyle(u32 handle, u16 id);
   virtual void eventHudSceneChange(u32 scene);
 
-  u32 handle;
-  u32 flags;
-  u32 layer;
+  u32 unknown18; // Inferred role: handle; original member name unknown.
+  u32 unknown1c; // Inferred role: flags; original member name unknown.
+  u32 unknown20; // Inferred role: layer; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObject, handle) == 0x18, "");
-static_assert(offsetof(GfMenuObject, flags) == 0x1c, "");
-static_assert(offsetof(GfMenuObject, layer) == 0x20, "");
+static_assert(offsetof(GfMenuObject, unknown18) == 0x18, "");
+static_assert(offsetof(GfMenuObject, unknown1c) == 0x1c, "");
+static_assert(offsetof(GfMenuObject, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObject) == 0x28, "");
 
 } // namespace gf

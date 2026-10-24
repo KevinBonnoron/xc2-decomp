@@ -29,9 +29,9 @@ GfMenuFieldSkillList *GfMenuFieldSkillList::create() {
 void GfMenuFieldSkillList::addFieldSkill(const MenuFieldSkill &fieldSkill) {
   for (u32 i = 0; i < getSize(); i++) {
     MenuFieldSkill &current = getContents(i);
-    if (current.fieldSkill == fieldSkill.fieldSkill) {
-      u8 level = fieldSkill.level + current.level;
-      current.level = level > FIELD_SKILL_LEVEL_MAX ? FIELD_SKILL_LEVEL_MAX : level;
+    if (current.unknown00 == fieldSkill.unknown00) {
+      u8 level = fieldSkill.unknown02 + current.unknown02;
+      current.unknown02 = level > FIELD_SKILL_LEVEL_MAX ? FIELD_SKILL_LEVEL_MAX : level;
       return;
     }
   }
@@ -47,8 +47,8 @@ void GfMenuFieldSkillList::addFieldSkillFromBlade(u32 blade) {
     for (u32 i = 0; i < BLADE_FIELD_SKILL_COUNT; i++) {
       if (acc.getFieldSkill(i, false) != 0) {
         MenuFieldSkill fieldSkill;
-        fieldSkill.fieldSkill = acc.getFieldSkill(i, false);
-        fieldSkill.level = acc.getFieldSkillLevel(i, false);
+        fieldSkill.unknown00 = acc.getFieldSkill(i, false);
+        fieldSkill.unknown02 = acc.getFieldSkillLevel(i, false);
         addFieldSkill(fieldSkill);
       }
     }
@@ -60,7 +60,7 @@ void GfMenuFieldSkillList::addFieldSkillFromBladeList(const GfMenuBladeList *lis
     return;
   }
   for (u32 i = 0; i < list->getSize(); i++) {
-    addFieldSkillFromBlade(list->getContents(i).blade);
+    addFieldSkillFromBlade(list->getContents(i).unknown00);
   }
 }
 

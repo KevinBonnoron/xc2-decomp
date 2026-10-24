@@ -5,8 +5,8 @@
 namespace gf {
 
 struct MenuBladeInfo {
-  u32 blade;
-  u32 creator;
+  u32 unknown00; // Inferred role: blade; original member name unknown.
+  u32 unknown04; // Inferred role: creator; original member name unknown.
 };
 
 static_assert(sizeof(MenuBladeInfo) == 0x8, "");

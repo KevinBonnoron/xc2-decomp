@@ -46,14 +46,14 @@ public:
   static GfMenuExcTaskAdapter *createFromList(u32 handle, u32 type, GfMenuIDList *list, int listIndex, bool isUpdateAlways);
   void update(const fw::UpdateInfo &info) override;
 
-  u32 taskId;
-  mm::mtl::Delegate<bool(u32)> updater;
-  IConverter *converter;
+  u32 unknown30;                          // Inferred role: task id; original member name unknown.
+  mm::mtl::Delegate<bool(u32)> unknown38; // Inferred role: updater; original member name unknown.
+  IConverter *unknown58;                  // Inferred role: converter; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuExcTaskAdapter, taskId) == 0x30, "");
-static_assert(offsetof(GfMenuExcTaskAdapter, updater) == 0x38, "");
-static_assert(offsetof(GfMenuExcTaskAdapter, converter) == 0x58, "");
+static_assert(offsetof(GfMenuExcTaskAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuExcTaskAdapter, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuExcTaskAdapter, unknown58) == 0x58, "");
 static_assert(sizeof(GfMenuExcTaskAdapter) == 0x60, "");
 
 } // namespace gf

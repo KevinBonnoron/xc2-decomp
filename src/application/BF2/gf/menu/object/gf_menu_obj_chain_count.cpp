@@ -16,7 +16,7 @@ GfMenuObjChainCount::GfMenuObjChainCount(u32 handle) : GfMenuObject(handle) {}
 GfMenuObjChainCount::~GfMenuObjChainCount() { ; }
 
 void GfMenuObjChainCount::initialize() {
-  ui::UIObjectAcc main(handle, "LAY_main");
+  ui::UIObjectAcc main(unknown18, "LAY_main");
   if (!main.isValid()) {
     return;
   }

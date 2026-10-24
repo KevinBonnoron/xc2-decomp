@@ -12,7 +12,7 @@ static GfMenuFlagAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuFlagAdapter::update_FlagNum, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 1, 99}},
 };
 
-GfMenuFlagAdapter::GfMenuFlagAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), flagBits(0), flagIndex(0), flagValue(0) {}
+GfMenuFlagAdapter::GfMenuFlagAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(0), unknown52(0), unknown54(0) {}
 
 GfMenuFlagAdapter::~GfMenuFlagAdapter() {}
 
@@ -25,9 +25,9 @@ GfMenuFlagAdapter *GfMenuFlagAdapter::create(u32 handle, u32 type, u16 flagBits,
       // __LINE__ must be 58 as in the original source: it is the line argument of operator new.
 #line 58
       GfMenuFlagAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuFlagAdapter(plugin, isUpdateAlways);
-      adapter->updater.bind(adapter, info.update);
-      adapter->flagBits = flagBits;
-      adapter->flagIndex = flagIndex;
+      adapter->unknown30.bind(adapter, info.update);
+      adapter->unknown50 = flagBits;
+      adapter->unknown52 = flagIndex;
       plugin->release();
       return adapter;
     }
@@ -50,23 +50,23 @@ bool GfMenuFlagAdapter::update_FlagNum() {
 }
 
 void GfMenuFlagAdapter::update(const fw::UpdateInfo &info) {
-  if (updater.isValid() && (flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
-    setDisp(updater());
-    flags &= ~FLAG_CHANGED;
+  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+    setDisp(unknown30());
+    unknown20 &= ~FLAG_CHANGED;
   }
 }
 
 bool GfMenuFlagAdapter::getFlagValue(u32 &value) {
   value = 0;
-  switch (flagBits) {
+  switch (unknown50) {
   case 1:
-    value = GfMenuFlag::get1(flagIndex);
+    value = GfMenuFlag::get1(unknown52);
     break;
   case 2:
-    value = GfMenuFlag::get2(flagIndex);
+    value = GfMenuFlag::get2(unknown52);
     break;
   case 4:
-    value = GfMenuFlag::get4(flagIndex);
+    value = GfMenuFlag::get4(unknown52);
     break;
   default:
     return false;

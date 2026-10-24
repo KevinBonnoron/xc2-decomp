@@ -9,14 +9,14 @@ namespace gf {
 class GfMenuBladeList;
 
 struct MenuFieldSkill {
-  MenuFieldSkill() : fieldSkill(0), level(0) {}
+  MenuFieldSkill() : unknown00(0), unknown02(0) {}
 
-  u16 fieldSkill;
-  u8 level;
+  u16 unknown00; // Inferred role: field skill; original member name unknown.
+  u8 unknown02;  // Inferred role: level; original member name unknown.
   u8 _03[0x4 - 0x3];
 };
 
-static_assert(offsetof(MenuFieldSkill, level) == 0x2, "");
+static_assert(offsetof(MenuFieldSkill, unknown02) == 0x2, "");
 static_assert(sizeof(MenuFieldSkill) == 0x4, "");
 
 class GfMenuFieldSkillList : public ui::UIListInfo<MenuFieldSkill> {

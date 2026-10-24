@@ -33,7 +33,7 @@ GfMenuObjEventSubtitle::GfMenuObjEventSubtitle(u32 handle) : GfMenuObject(handle
 GfMenuObjEventSubtitle::~GfMenuObjEventSubtitle() { ; }
 
 void GfMenuObjEventSubtitle::initialize() {
-  ui::UIObjectAcc main(handle, "LAY_main");
+  ui::UIObjectAcc main(unknown18, "LAY_main");
 // __LINE__ must be 71 as in the original file: its value changes the instruction order.
 #line 71
   MainListener *listener = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) MainListener(this);
@@ -51,7 +51,7 @@ void GfMenuObjEventSubtitle::initialize() {
       GfMenuObjUtil::addPos(vertical.handle, 92, 0);
     }
   }
-  ui::UIObjectAcc(handle).setTerm();
+  ui::UIObjectAcc(unknown18).setTerm();
   GfMenuObject::initialize();
 }
 

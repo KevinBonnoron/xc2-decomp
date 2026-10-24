@@ -18,9 +18,9 @@ public:
   void finalize() override;
   void update() override;
 
-  fw::UpdatableObject *miniGame;
+  fw::UpdatableObject *unknown28; // Inferred role: mini game; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjMiniGame, miniGame) == 0x28, "");
+static_assert(offsetof(GfMenuObjMiniGame, unknown28) == 0x28, "");
 
 } // namespace gf

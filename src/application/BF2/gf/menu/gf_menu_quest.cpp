@@ -4,9 +4,9 @@
 
 namespace gf {
 
-GfMenuQuest::GfMenuQuest(const GfSetupParam &param) : openPage(0), openQuestId(-1) { initialize(param); }
+GfMenuQuest::GfMenuQuest(const GfSetupParam &param) : unknown0c(0), unknown10(-1) { initialize(param); }
 
-void GfMenuQuest::initialize(const GfSetupParam &param) { initialized = true; }
+void GfMenuQuest::initialize(const GfSetupParam &param) { unknown08 = true; }
 
 GfMenuQuest::~GfMenuQuest() {}
 
@@ -22,11 +22,11 @@ void GfMenuQuest::destroy() {
   delete menu;
 }
 
-void GfMenuQuest::finalize() { initialized = false; }
+void GfMenuQuest::finalize() { unknown08 = false; }
 
 bool GfMenuQuest::isInitialized() {
   if (get() != nullptr) {
-    return get()->initialized;
+    return get()->unknown08;
   }
   return false;
 }
@@ -38,9 +38,9 @@ void GfMenuQuest::updateQuestTaskLog(const fw::UpdateInfo &info) {}
 void GfMenuQuest::openMenu(u32 questId, u32 page, bool isTaskLog) {
   GfMenuQuest *quest = get();
   if (quest != nullptr) {
-    quest->openQuestId = questId;
-    quest->openPage = page;
-    quest->openTaskLog = isTaskLog;
+    quest->unknown10 = questId;
+    quest->unknown0c = page;
+    quest->unknown14 = isTaskLog;
   }
 }
 

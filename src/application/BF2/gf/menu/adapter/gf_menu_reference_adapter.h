@@ -19,18 +19,18 @@ public:
   static GfMenuReferenceAdapter *create(u32 handle, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> reference, bool isUpdateAlways);
   void update(const fw::UpdateInfo &info) override;
 
-  mm::mtl::IntrusivePtr<GfMenuReferenceNumber> reference;
-  int lastNumber;
-  int lastMax;
-  int lastMin;
-  int offset;
+  mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown30; // Inferred role: reference; original member name unknown.
+  int unknown38;                                          // Inferred role: last number; original member name unknown.
+  int unknown3c;                                          // Inferred role: last max; original member name unknown.
+  int unknown40;                                          // Inferred role: last min; original member name unknown.
+  int unknown44;                                          // Inferred role: offset; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuReferenceAdapter, reference) == 0x30, "");
-static_assert(offsetof(GfMenuReferenceAdapter, lastNumber) == 0x38, "");
-static_assert(offsetof(GfMenuReferenceAdapter, lastMax) == 0x3c, "");
-static_assert(offsetof(GfMenuReferenceAdapter, lastMin) == 0x40, "");
-static_assert(offsetof(GfMenuReferenceAdapter, offset) == 0x44, "");
+static_assert(offsetof(GfMenuReferenceAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuReferenceAdapter, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuReferenceAdapter, unknown3c) == 0x3c, "");
+static_assert(offsetof(GfMenuReferenceAdapter, unknown40) == 0x40, "");
+static_assert(offsetof(GfMenuReferenceAdapter, unknown44) == 0x44, "");
 static_assert(sizeof(GfMenuReferenceAdapter) == 0x48, "");
 
 } // namespace gf

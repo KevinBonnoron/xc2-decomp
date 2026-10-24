@@ -59,14 +59,14 @@ public:
   static GfMenuBattleAdapter *createFromReferenceIndex(u32 handle, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 type);
   void update(const fw::UpdateInfo &info) override;
 
-  int index;
-  mm::mtl::Delegate<bool()> updater;
-  ReferenceIndexConverter *converter;
+  int unknown30;                       // Inferred role: index; original member name unknown.
+  mm::mtl::Delegate<bool()> unknown38; // Inferred role: updater; original member name unknown.
+  ReferenceIndexConverter *unknown58;  // Inferred role: converter; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuBattleAdapter, index) == 0x30, "");
-static_assert(offsetof(GfMenuBattleAdapter, updater) == 0x38, "");
-static_assert(offsetof(GfMenuBattleAdapter, converter) == 0x58, "");
+static_assert(offsetof(GfMenuBattleAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuBattleAdapter, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuBattleAdapter, unknown58) == 0x58, "");
 static_assert(sizeof(GfMenuBattleAdapter) == 0x60, "");
 
 } // namespace gf

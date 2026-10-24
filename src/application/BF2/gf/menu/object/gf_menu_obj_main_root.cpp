@@ -22,7 +22,7 @@ void GfMenuObjMainRoot::registOpenParam(const OpenParam &param) {
 }
 
 void GfMenuObjMainRoot::initialize() {
-  ui::UIObjectAcc main(handle, "LAY_main");
+  ui::UIObjectAcc main(unknown18, "LAY_main");
   if (!main.isValid()) {
     return;
   }
@@ -35,11 +35,11 @@ void GfMenuObjMainRoot::initialize() {
     listener->release();
   }
   GfMenuTypes::Param param;
-  u32 menu = getFSLayerParam(layer, param) ? param.get<OpenParam>().menu : 1;
+  u32 menu = getFSLayerParam(unknown20, param) ? param.get<OpenParam>().unknown00 : 1;
   u16 menuLayer = getMenuLayerID(menu);
   changeFSSubLayer(main.handle, 1, menuLayer, true);
   main.setDispChild(true, "IMG_bg_black");
-  setFSShadowLayer(layer, true);
+  setFSShadowLayer(unknown20, true);
   disableInput(main.handle);
   GfMenuObject::initialize();
 }

@@ -14,7 +14,7 @@ namespace gf {
 
 constexpr s16 HIDDEN_POS = 10000;
 
-GfMenuFieldPosAdapter::GfMenuFieldPosAdapter(ui::UIObjectPlugin *plugin) : GfMenuAdapter(plugin, false, true), isOutOfScreen(false), handle(0), isFirstUpdate(true) {}
+GfMenuFieldPosAdapter::GfMenuFieldPosAdapter(ui::UIObjectPlugin *plugin) : GfMenuAdapter(plugin, false, true), unknown40(false), unknown44(0), unknown48(true) {}
 
 GfMenuFieldPosAdapter::~GfMenuFieldPosAdapter() { ; }
 
@@ -25,10 +25,10 @@ GfMenuFieldPosAdapter *GfMenuFieldPosAdapter::create(u32 handle, const mm::Vec3 
 #line 51
     GfMenuFieldPosAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuFieldPosAdapter(plugin);
     if (adapter != nullptr) {
-      adapter->pos = pos;
-      adapter->handle = handle;
-      adapter->isOutOfScreen = false;
-      adapter->isFirstUpdate = true;
+      adapter->unknown30 = pos;
+      adapter->unknown44 = handle;
+      adapter->unknown40 = false;
+      adapter->unknown48 = true;
     }
     plugin->release();
     return adapter;
@@ -37,25 +37,25 @@ GfMenuFieldPosAdapter *GfMenuFieldPosAdapter::create(u32 handle, const mm::Vec3 
 }
 
 void GfMenuFieldPosAdapter::update(const fw::UpdateInfo &info) {
-  ui::UIObjectPosPlugin *posPlugin = static_cast<ui::UIObjectPosPlugin *>(plugin);
+  ui::UIObjectPosPlugin *posPlugin = static_cast<ui::UIObjectPosPlugin *>(unknown18);
   if (posPlugin == nullptr || !posPlugin->getRTTI()->isKindOf(&ui::UIObjectPosPlugin::m_rtti)) {
     return;
   }
   mm::Vec3 screenPos;
-  if (!util::getScreenPos(screenPos, pos)) {
+  if (!util::getScreenPos(screenPos, unknown30)) {
     return;
   }
   if (!mm::isValidFloat(screenPos.x) || !mm::isValidFloat(screenPos.y)) {
     return;
   }
   mm::Pnt<s16> point(screenPos.x, screenPos.y);
-  if (!isOutOfScreen) {
-    ui::UIObjectAcc acc(handle);
+  if (!unknown40) {
+    ui::UIObjectAcc acc(unknown44);
     if (acc.isValid()) {
-      if (isFirstUpdate) {
+      if (unknown48) {
         point.x = HIDDEN_POS;
         point.y = HIDDEN_POS;
-        isFirstUpdate = false;
+        unknown48 = false;
       } else {
         mm::Rect<s16> rect;
         acc.getRect(rect, 2);
@@ -65,7 +65,7 @@ void GfMenuFieldPosAdapter::update(const fw::UpdateInfo &info) {
           point.x = rect.x + rect.width / 2;
           point.y = rect.y + rect.height / 2;
         } else {
-          isOutOfScreen = true;
+          unknown40 = true;
         }
       }
     }

@@ -28,9 +28,9 @@ GfMenuAdapter *GfMenuDiffAdapter::create(u32 handle, GfMenuAdapter *adapter, GfM
       // __LINE__ must be 54 as in the original source: it is the line argument of operator new.
 #line 54
       GfMenuDiffAdapter *diffAdapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuDiffAdapter(plugin, isUpdateAlways);
-      diffAdapter->updater.bind(diffAdapter, info.update);
-      diffAdapter->adapter = adapter;
-      diffAdapter->other = other;
+      diffAdapter->unknown30.bind(diffAdapter, info.update);
+      diffAdapter->unknown50 = adapter;
+      diffAdapter->unknown58 = other;
       plugin->release();
       result = diffAdapter;
     }
@@ -68,7 +68,7 @@ bool GfMenuDiffAdapter::update_MulCol(int result) {
 }
 
 bool GfMenuDiffAdapter::update_Sub(int result) {
-  setNumber(adapter->getNumber() - other->getNumber());
+  setNumber(unknown50->getNumber() - unknown58->getNumber());
   return true;
 }
 
@@ -77,9 +77,9 @@ bool GfMenuDiffAdapter::update_DispSameOn(int result) { return result == COMPARE
 bool GfMenuDiffAdapter::update_DispSameOff(int result) { return result != COMPARE_RESULT_SAME; }
 
 void GfMenuDiffAdapter::update(const fw::UpdateInfo &info) {
-  if (updater.isValid() && (flags & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
-    setDisp(updater(compare(adapter, other)));
-    flags &= ~FLAG_CHANGED;
+  if (unknown30.isValid() && (unknown20 & (FLAG_CHANGED | FLAG_UPDATE_ALWAYS)) != 0) {
+    setDisp(unknown30(compare(unknown50, unknown58)));
+    unknown20 &= ~FLAG_CHANGED;
   }
 }
 

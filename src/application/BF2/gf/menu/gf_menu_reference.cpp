@@ -8,7 +8,7 @@ namespace gf {
 bool GfMenuReference::isInitialized() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->initialized;
+    return reference->unknown4ca40;
   }
   return false;
 }
@@ -16,23 +16,23 @@ bool GfMenuReference::isInitialized() {
 void GfMenuReference::initReferenceNumber(u32 index) {
   GfMenuReference *reference = get();
   if (index < 8 && reference != nullptr) {
-    ReferenceNumber &number = reference->referenceNumbers[index];
-    number.value = 0;
-    number.min = 0;
-    number.max = 9999;
+    ReferenceNumber &number = reference->unknown4cc38[index];
+    number.unknown08 = 0;
+    number.unknown00 = 0;
+    number.unknown04 = 9999;
   }
 }
 
 void GfMenuReference::resetDriverVirtual() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->driverVirtualLevel = 0;
-    reference->driverVirtualBladeId = 0;
-    reference->driverVirtualBladeSlot = 0;
-    reference->driverVirtualEquipAcc = 0;
-    reference->driverVirtualEquipAccSlot = 0;
+    reference->unknown4ccac = 0;
+    reference->unknown4ccb0 = 0;
+    reference->unknown4ccb4 = 0;
+    reference->unknown4ccb8 = 0;
+    reference->unknown4ccbc = 0;
     for (int i = 0; i < 4; i++) {
-      reference->driverAddIdeaLvs[i] = 0;
+      reference->unknown4ccc0[i] = 0;
     }
   }
 }
@@ -41,7 +41,7 @@ void GfMenuReference::postReset() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
     for (int i = 0; i < 4; i++) {
-      reference->reversePaletteBtnStates[i].set(2, false);
+      reference->unknown4cb84[i].set(2, false);
     }
   }
 }
@@ -49,15 +49,15 @@ void GfMenuReference::postReset() {
 u32 GfMenuReference::getFieldSkillMax() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->fieldSkills.size();
+    return reference->unknown4ca48.size();
   }
   return 0;
 }
 
 void GfMenuReference::getFieldSkillInfo(u8 index, FieldSkillInfo &info) {
   GfMenuReference *reference = get();
-  if (reference != nullptr && index < reference->fieldSkills.size()) {
-    info = reference->fieldSkills.begin()[index];
+  if (reference != nullptr && index < reference->unknown4ca48.size()) {
+    info = reference->unknown4ca48.begin()[index];
   }
 }
 
@@ -65,9 +65,9 @@ u32 GfMenuReference::getTargetEnemyBuff(u32 index) {
   GfMenuReference *reference = get();
   if (index < 3 && reference != nullptr) {
     if (index == 2) {
-      return reference->targetEnemyDebuff;
+      return reference->unknown4cb74;
     }
-    return reference->targetEnemyBuffs[index];
+    return reference->unknown4cb60[index];
   }
   return 0;
 }
@@ -75,7 +75,7 @@ u32 GfMenuReference::getTargetEnemyBuff(u32 index) {
 u32 GfMenuReference::getTargetEnemyWeakAttr() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->targetEnemyWeakAttr;
+    return reference->unknown4cb78;
   }
   return 0;
 }
@@ -83,14 +83,14 @@ u32 GfMenuReference::getTargetEnemyWeakAttr() {
 void GfMenuReference::setChainNum(u32 chainNum) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->chainNum = chainNum;
+    reference->unknown4cb6c = chainNum;
   }
 }
 
 u32 GfMenuReference::getChainNum() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->chainNum;
+    return reference->unknown4cb6c;
   }
   return 0;
 }
@@ -98,14 +98,14 @@ u32 GfMenuReference::getChainNum() {
 void GfMenuReference::setWeaponJustRange(bool isJustRange) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->isJustRange = isJustRange;
+    reference->unknown4cb3c = isJustRange;
   }
 }
 
 bool GfMenuReference::isWeaponJustRange() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->isJustRange;
+    return reference->unknown4cb3c;
   }
   return false;
 }
@@ -113,14 +113,14 @@ bool GfMenuReference::isWeaponJustRange() {
 void GfMenuReference::setAwakeningRestTimeRatio(f32 ratio) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->awakeningRestTimeRatio = ratio;
+    reference->unknown4cb40 = ratio;
   }
 }
 
 f32 GfMenuReference::getAwakeningRestTimeRatio() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->awakeningRestTimeRatio;
+    return reference->unknown4cb40;
   }
   return 0.0f;
 }
@@ -128,14 +128,14 @@ f32 GfMenuReference::getAwakeningRestTimeRatio() {
 void GfMenuReference::setChainAttackActionRecast(f32 recast) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->chainAttackActionRecast = recast;
+    reference->unknown4cb44 = recast;
   }
 }
 
 f32 GfMenuReference::getChainAttackActionRecast() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->chainAttackActionRecast;
+    return reference->unknown4cb44;
   }
   return 0.0f;
 }
@@ -143,14 +143,14 @@ f32 GfMenuReference::getChainAttackActionRecast() {
 void GfMenuReference::setChainAttackActionPartyID(int partyId) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->chainAttackActionPartyId = partyId;
+    reference->unknown4cb4c = partyId;
   }
 }
 
 int GfMenuReference::getChainAttackActionPartyID() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->chainAttackActionPartyId;
+    return reference->unknown4cb4c;
   }
   return -1;
 }
@@ -158,14 +158,14 @@ int GfMenuReference::getChainAttackActionPartyID() {
 void GfMenuReference::setChainAttackActionCount(u32 count) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->chainAttackActionCount = count;
+    reference->unknown4cb48 = count;
   }
 }
 
 u32 GfMenuReference::getChainAttackActionCount() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->chainAttackActionCount;
+    return reference->unknown4cb48;
   }
   return 0;
 }
@@ -173,14 +173,14 @@ u32 GfMenuReference::getChainAttackActionCount() {
 void GfMenuReference::setChainAttackDamageRatio(f32 ratio) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->chainAttackDamageRatio = ratio;
+    reference->unknown4cb50 = ratio;
   }
 }
 
 f32 GfMenuReference::getChainAttackDamageRatio() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->chainAttackDamageRatio;
+    return reference->unknown4cb50;
   }
   return 0.0f;
 }
@@ -188,14 +188,14 @@ f32 GfMenuReference::getChainAttackDamageRatio() {
 void GfMenuReference::setChainAttackExpRatio(f32 ratio) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->chainAttackExpRatio = ratio;
+    reference->unknown4cb54 = ratio;
   }
 }
 
 f32 GfMenuReference::getChainAttackExpRatio() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->chainAttackExpRatio;
+    return reference->unknown4cb54;
   }
   return 0.0f;
 }
@@ -203,14 +203,14 @@ f32 GfMenuReference::getChainAttackExpRatio() {
 void GfMenuReference::setChainAttackTotalDamage(u32 damage) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->chainAttackTotalDamage = damage;
+    reference->unknown4cb58 = damage;
   }
 }
 
 u32 GfMenuReference::getChainAttackTotalDamage() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->chainAttackTotalDamage;
+    return reference->unknown4cb58;
   }
   return 0;
 }
@@ -218,14 +218,14 @@ u32 GfMenuReference::getChainAttackTotalDamage() {
 void GfMenuReference::setChainAttackBurstCount(u32 count) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->chainAttackBurstCount = count;
+    reference->unknown4cb5c = count;
   }
 }
 
 u32 GfMenuReference::getChainAttackBurstCount() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->chainAttackBurstCount;
+    return reference->unknown4cb5c;
   }
   return 0;
 }
@@ -241,15 +241,15 @@ u32 GfMenuReference::getElementComboRootLevel(u32 index) {
 void GfMenuReference::setElementComboParty(u32 index, u32 id, f32 timeLeft) {
   GfMenuReference *reference = get();
   if (index < 2 && reference != nullptr) {
-    reference->elementComboParties[index].id = id;
-    reference->elementComboParties[index].timeLeft = timeLeft;
+    reference->unknown4cbe0[index].unknown00 = id;
+    reference->unknown4cbe0[index].unknown04 = timeLeft;
   }
 }
 
 u32 GfMenuReference::getElementComboParty(u32 index) {
   GfMenuReference *reference = get();
   if (index < 2 && reference != nullptr) {
-    return reference->elementComboParties[index].id;
+    return reference->unknown4cbe0[index].unknown00;
   }
   return 0;
 }
@@ -257,7 +257,7 @@ u32 GfMenuReference::getElementComboParty(u32 index) {
 f32 GfMenuReference::getElementComboPartyTimeLeft(u32 index) {
   GfMenuReference *reference = get();
   if (index < 2 && reference != nullptr) {
-    return reference->elementComboParties[index].timeLeft;
+    return reference->unknown4cbe0[index].unknown04;
   }
   return 0.0f;
 }
@@ -265,14 +265,14 @@ f32 GfMenuReference::getElementComboPartyTimeLeft(u32 index) {
 void GfMenuReference::setElementComboRequest(u32 request) {
   GfMenuReference *reference = get();
   if (request < 4 && reference != nullptr) {
-    reference->elementComboRequest = request;
+    reference->unknown4cbf0 = request;
   }
 }
 
 u32 GfMenuReference::getElementComboRequest() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->elementComboRequest;
+    return reference->unknown4cbf0;
   }
   return 0;
 }
@@ -280,14 +280,14 @@ u32 GfMenuReference::getElementComboRequest() {
 void GfMenuReference::setHomuraModeInBattle(HOMURA_MODE mode) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->homuraMode = mode;
+    reference->unknown4cb7c = mode;
   }
 }
 
 GfMenuReference::HOMURA_MODE GfMenuReference::getHomuraModeInBattle() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->homuraMode;
+    return reference->unknown4cb7c;
   }
   return static_cast<HOMURA_MODE>(0);
 }
@@ -295,7 +295,7 @@ GfMenuReference::HOMURA_MODE GfMenuReference::getHomuraModeInBattle() {
 bool GfMenuReference::isPaletteModeReverse() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->isPaletteReverse;
+    return reference->unknown4cb80;
   }
   return false;
 }
@@ -303,7 +303,7 @@ bool GfMenuReference::isPaletteModeReverse() {
 bool GfMenuReference::isReversePaletteBtnState(u32 index, u32 button) {
   GfMenuReference *reference = get();
   if (index < 4 && reference != nullptr) {
-    return reference->reversePaletteBtnStates[index].test(button);
+    return reference->unknown4cb84[index].test(button);
   }
   return false;
 }
@@ -311,7 +311,7 @@ bool GfMenuReference::isReversePaletteBtnState(u32 index, u32 button) {
 ui::UIListInfo<MenuEnemyInfo> *GfMenuReference::getEnemyLinkList() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->enemyLinks;
+    return reference->unknown4cb98;
   }
   return nullptr;
 }
@@ -319,7 +319,7 @@ ui::UIListInfo<MenuEnemyInfo> *GfMenuReference::getEnemyLinkList() {
 ui::UIListInfo<MenuItemInfo> *GfMenuReference::getItemLinkList() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->itemLinks;
+    return reference->unknown4cba0;
   }
   return nullptr;
 }
@@ -327,14 +327,14 @@ ui::UIListInfo<MenuItemInfo> *GfMenuReference::getItemLinkList() {
 void GfMenuReference::setReferenceDriverID(u32 index, u32 id) {
   GfMenuReference *reference = get();
   if (index < 8 && reference != nullptr) {
-    reference->referenceDriverIds[index] = id;
+    reference->unknown4cbf8[index] = id;
   }
 }
 
 u32 GfMenuReference::getReferenceDriverID(u32 index) {
   GfMenuReference *reference = get();
   if (index < 8 && reference != nullptr) {
-    return reference->referenceDriverIds[index];
+    return reference->unknown4cbf8[index];
   }
   return 0;
 }
@@ -342,14 +342,14 @@ u32 GfMenuReference::getReferenceDriverID(u32 index) {
 void GfMenuReference::setReferenceBladeID(u32 index, u32 id) {
   GfMenuReference *reference = get();
   if (index < 8 && reference != nullptr) {
-    reference->referenceBladeIds[index] = id;
+    reference->unknown4cc18[index] = id;
   }
 }
 
 u32 GfMenuReference::getReferenceBladeID(u32 index) {
   GfMenuReference *reference = get();
   if (index < 8 && reference != nullptr) {
-    return reference->referenceBladeIds[index];
+    return reference->unknown4cc18[index];
   }
   return 0;
 }
@@ -357,28 +357,28 @@ u32 GfMenuReference::getReferenceBladeID(u32 index) {
 void GfMenuReference::setReferenceNumber(u32 index, int value) {
   GfMenuReference *reference = get();
   if (index < 8 && reference != nullptr) {
-    reference->referenceNumbers[index].value = value;
+    reference->unknown4cc38[index].unknown08 = value;
   }
 }
 
 void GfMenuReference::setReferenceNumberMin(u32 index, int min) {
   GfMenuReference *reference = get();
   if (index < 8 && reference != nullptr) {
-    reference->referenceNumbers[index].min = min;
+    reference->unknown4cc38[index].unknown00 = min;
   }
 }
 
 void GfMenuReference::setReferenceNumberMax(u32 index, int max) {
   GfMenuReference *reference = get();
   if (index < 8 && reference != nullptr) {
-    reference->referenceNumbers[index].max = max;
+    reference->unknown4cc38[index].unknown04 = max;
   }
 }
 
 int GfMenuReference::getReferenceNumber(u32 index) {
   GfMenuReference *reference = get();
   if (index < 8 && reference != nullptr) {
-    return reference->referenceNumbers[index].value;
+    return reference->unknown4cc38[index].unknown08;
   }
   return 0;
 }
@@ -386,7 +386,7 @@ int GfMenuReference::getReferenceNumber(u32 index) {
 int GfMenuReference::getReferenceNumberMin(u32 index) {
   GfMenuReference *reference = get();
   if (index < 8 && reference != nullptr) {
-    return reference->referenceNumbers[index].min;
+    return reference->unknown4cc38[index].unknown00;
   }
   return 0;
 }
@@ -394,7 +394,7 @@ int GfMenuReference::getReferenceNumberMin(u32 index) {
 int GfMenuReference::getReferenceNumberMax(u32 index) {
   GfMenuReference *reference = get();
   if (index < 8 && reference != nullptr) {
-    return reference->referenceNumbers[index].max;
+    return reference->unknown4cc38[index].unknown04;
   }
   return 0;
 }
@@ -402,14 +402,14 @@ int GfMenuReference::getReferenceNumberMax(u32 index) {
 void GfMenuReference::setReferenceTeamID(u32 id) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->referenceTeamId = id > 3 ? 3 : id;
+    reference->unknown4cc98 = id > 3 ? 3 : id;
   }
 }
 
 u32 GfMenuReference::getReferenceTeamID() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->referenceTeamId;
+    return reference->unknown4cc98;
   }
   return 0;
 }
@@ -417,14 +417,14 @@ u32 GfMenuReference::getReferenceTeamID() {
 void GfMenuReference::setReferenceZoneID(u32 id) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->referenceZoneId = id == 0 ? 1 : (id > 8 ? 8 : id);
+    reference->unknown4cc9c = id == 0 ? 1 : (id > 8 ? 8 : id);
   }
 }
 
 u32 GfMenuReference::getReferenceZoneID() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->referenceZoneId;
+    return reference->unknown4cc9c;
   }
   return 0;
 }
@@ -432,14 +432,14 @@ u32 GfMenuReference::getReferenceZoneID() {
 void GfMenuReference::setReferenceMissionID(u32 id) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->referenceMissionId = id == 0 ? 1 : (id > 500 ? 500 : id);
+    reference->unknown4cca0 = id == 0 ? 1 : (id > 500 ? 500 : id);
   }
 }
 
 u32 GfMenuReference::getReferenceMissionID() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->referenceMissionId;
+    return reference->unknown4cca0;
   }
   return 0;
 }
@@ -447,14 +447,14 @@ u32 GfMenuReference::getReferenceMissionID() {
 void GfMenuReference::setReferenceShopID(u32 id) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->referenceShopId = id;
+    reference->unknown4cca4 = id;
   }
 }
 
 u32 GfMenuReference::getReferenceShopID() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->referenceShopId;
+    return reference->unknown4cca4;
   }
   return 0;
 }
@@ -462,14 +462,14 @@ u32 GfMenuReference::getReferenceShopID() {
 void GfMenuReference::setReferenceWorldMapID(u32 id) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->referenceWorldMapId = id == 0 ? 1 : (id > 51 ? 51 : id);
+    reference->unknown4cca8 = id == 0 ? 1 : (id > 51 ? 51 : id);
   }
 }
 
 u32 GfMenuReference::getReferenceWorldMapID() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->referenceWorldMapId;
+    return reference->unknown4cca8;
   }
   return 0;
 }
@@ -477,14 +477,14 @@ u32 GfMenuReference::getReferenceWorldMapID() {
 void GfMenuReference::setDriverVirtualLevel(u32 level) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->driverVirtualLevel = level;
+    reference->unknown4ccac = level;
   }
 }
 
 u32 GfMenuReference::getDriverVirtualLevel() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->driverVirtualLevel;
+    return reference->unknown4ccac;
   }
   return 0;
 }
@@ -492,14 +492,14 @@ u32 GfMenuReference::getDriverVirtualLevel() {
 void GfMenuReference::setDriverVirtualBladeID(u32 id) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->driverVirtualBladeId = id;
+    reference->unknown4ccb0 = id;
   }
 }
 
 u32 GfMenuReference::getDriverVirtualBladeID() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->driverVirtualBladeId;
+    return reference->unknown4ccb0;
   }
   return 0;
 }
@@ -507,14 +507,14 @@ u32 GfMenuReference::getDriverVirtualBladeID() {
 void GfMenuReference::setDriverVirtualBladeSlot(u32 slot) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->driverVirtualBladeSlot = slot;
+    reference->unknown4ccb4 = slot;
   }
 }
 
 u32 GfMenuReference::getDriverVirtualBladeSlot() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->driverVirtualBladeSlot;
+    return reference->unknown4ccb4;
   }
   return 0;
 }
@@ -522,14 +522,14 @@ u32 GfMenuReference::getDriverVirtualBladeSlot() {
 void GfMenuReference::setDriverVirtualEquipAcc(u32 id) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->driverVirtualEquipAcc = id;
+    reference->unknown4ccb8 = id;
   }
 }
 
 u32 GfMenuReference::getDriverVirtualEquipAcc() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->driverVirtualEquipAcc;
+    return reference->unknown4ccb8;
   }
   return 0;
 }
@@ -537,14 +537,14 @@ u32 GfMenuReference::getDriverVirtualEquipAcc() {
 void GfMenuReference::setDriverVirtualEquipAccSlot(u32 slot) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->driverVirtualEquipAccSlot = slot;
+    reference->unknown4ccbc = slot;
   }
 }
 
 u32 GfMenuReference::getDriverVirtualEquipAccSlot() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->driverVirtualEquipAccSlot;
+    return reference->unknown4ccbc;
   }
   return 0;
 }
@@ -553,7 +553,7 @@ void GfMenuReference::resetDriverAddIdeaLv() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
     for (int i = 0; i < 4; i++) {
-      reference->driverAddIdeaLvs[i] = 0;
+      reference->unknown4ccc0[i] = 0;
     }
   }
 }
@@ -561,14 +561,14 @@ void GfMenuReference::resetDriverAddIdeaLv() {
 void GfMenuReference::setDriverAddIdeaLv(u32 index, int level) {
   GfMenuReference *reference = get();
   if (index < 4 && reference != nullptr) {
-    reference->driverAddIdeaLvs[index] = level;
+    reference->unknown4ccc0[index] = level;
   }
 }
 
 int GfMenuReference::getDriverAddIdeaLv(u32 index) {
   GfMenuReference *reference = get();
   if (index < 4 && reference != nullptr) {
-    return reference->driverAddIdeaLvs[index];
+    return reference->unknown4ccc0[index];
   }
   return 0;
 }
@@ -576,14 +576,14 @@ int GfMenuReference::getDriverAddIdeaLv(u32 index) {
 void GfMenuReference::setBladeVirtualEquipWpnChip(u32 id) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->bladeVirtualEquipWpnChip = id;
+    reference->unknown4ccd0 = id;
   }
 }
 
 u32 GfMenuReference::getBladeVirtualEquipWpnChip() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->bladeVirtualEquipWpnChip;
+    return reference->unknown4ccd0;
   }
   return 0;
 }
@@ -591,14 +591,14 @@ u32 GfMenuReference::getBladeVirtualEquipWpnChip() {
 void GfMenuReference::setBladeVirtualEquipOrb(u32 id) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->bladeVirtualEquipOrb = id;
+    reference->unknown4ccd4 = id;
   }
 }
 
 u32 GfMenuReference::getBladeVirtualEquipOrb() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->bladeVirtualEquipOrb;
+    return reference->unknown4ccd4;
   }
   return 0;
 }
@@ -606,31 +606,31 @@ u32 GfMenuReference::getBladeVirtualEquipOrb() {
 void GfMenuReference::setBladeVirtualEquipOrbSlot(u32 slot) {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->bladeVirtualEquipOrbSlot = slot;
+    reference->unknown4ccd8 = slot;
   }
 }
 
 u32 GfMenuReference::getBladeVirtualEquipOrbSlot() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->bladeVirtualEquipOrbSlot;
+    return reference->unknown4ccd8;
   }
   return 0;
 }
 
-mm::threading::CriticalSection &GfMenuReference::getCriticalSection() { return get()->criticalSection; }
+mm::threading::CriticalSection &GfMenuReference::getCriticalSection() { return get()->unknown4ca18; }
 
 ui::UIStr &GfMenuReference::getReferenceString(u16 index) {
   GfMenuReference *reference = get();
-  return reference->referenceStrings[index];
+  return reference->unknown4cce0[index];
 }
 
-void GfMenuReference::setReferenceString(ui::UIStr &string, u16 index) { get()->referenceStrings[index].copy(string); }
+void GfMenuReference::setReferenceString(ui::UIStr &string, u16 index) { get()->unknown4cce0[index].copy(string); }
 
 void GfMenuReference::clearPartyStatusLock() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    reference->partyStatusLock.clear();
+    reference->unknown4cf08.clear();
   }
   GfMenuObjPartyStatus::lock(false);
 }

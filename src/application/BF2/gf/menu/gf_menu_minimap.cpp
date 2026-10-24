@@ -6,7 +6,7 @@ namespace gf {
 
 GfMenuMinimap::GfMenuMinimap(const GfSetupParam &param) { initialize(param); }
 
-void GfMenuMinimap::initialize(const GfSetupParam &param) { initialized = true; }
+void GfMenuMinimap::initialize(const GfSetupParam &param) { unknown08 = true; }
 
 GfMenuMinimap::~GfMenuMinimap() {}
 
@@ -22,11 +22,11 @@ void GfMenuMinimap::destroy() {
   delete menu;
 }
 
-void GfMenuMinimap::finalize() { initialized = false; }
+void GfMenuMinimap::finalize() { unknown08 = false; }
 
 bool GfMenuMinimap::isInitialized() {
   if (get() != nullptr) {
-    return get()->initialized;
+    return get()->unknown08;
   }
   return false;
 }

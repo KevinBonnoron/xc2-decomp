@@ -85,20 +85,20 @@ public:
   void update(const fw::UpdateInfo &info) override;
   bool update_AchievementReleaseFlagDisp();
 
-  mm::mtl::Delegate<bool()> updater;
-  IConverter *converter;
-  u32 isDispComplete;
-  u32 blade;
-  u32 line;
-  u32 level;
+  mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
+  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
+  u32 unknown58;                       // Inferred role: disp complete; original member name unknown.
+  u32 unknown5c;                       // Inferred role: blade; original member name unknown.
+  u32 unknown60;                       // Inferred role: line; original member name unknown.
+  u32 unknown64;                       // Inferred role: level; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuAchievementAdapter, updater) == 0x30, "");
-static_assert(offsetof(GfMenuAchievementAdapter, converter) == 0x50, "");
-static_assert(offsetof(GfMenuAchievementAdapter, isDispComplete) == 0x58, "");
-static_assert(offsetof(GfMenuAchievementAdapter, blade) == 0x5c, "");
-static_assert(offsetof(GfMenuAchievementAdapter, line) == 0x60, "");
-static_assert(offsetof(GfMenuAchievementAdapter, level) == 0x64, "");
+static_assert(offsetof(GfMenuAchievementAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuAchievementAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuAchievementAdapter, unknown58) == 0x58, "");
+static_assert(offsetof(GfMenuAchievementAdapter, unknown5c) == 0x5c, "");
+static_assert(offsetof(GfMenuAchievementAdapter, unknown60) == 0x60, "");
+static_assert(offsetof(GfMenuAchievementAdapter, unknown64) == 0x64, "");
 static_assert(sizeof(GfMenuAchievementAdapter) == 0x68, "");
 
 } // namespace gf

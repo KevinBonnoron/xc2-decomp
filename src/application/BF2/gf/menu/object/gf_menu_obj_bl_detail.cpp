@@ -11,7 +11,7 @@ GfMenuObjBlDetail::GfMenuObjBlDetail(u32 handle) : GfMenuObject(handle) {}
 GfMenuObjBlDetail::~GfMenuObjBlDetail() { ; }
 
 void GfMenuObjBlDetail::initialize() {
-  ui::UIObjectAcc main(handle, "LAY_main");
+  ui::UIObjectAcc main(unknown18, "LAY_main");
   if (main.isValid()) {
     attachExternalCall(CALL_BL_DETAIL, main.handle);
     GfMenuObject::initialize();

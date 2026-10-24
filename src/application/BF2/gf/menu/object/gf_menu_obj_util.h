@@ -15,13 +15,13 @@ struct GF_OBJ_HANDLE;
 class GfMenuObjUtil {
 public:
   struct ArtsIconInfo {
-    ArtsIconInfo() : iconType(0), enhanceIcon(0), reactionIcon(0), _0c(), rangeIcon(0) {}
+    ArtsIconInfo() : unknown00(0), unknown04(0), unknown08(0), _0c(), unknown10(0) {}
 
-    int iconType;
-    int enhanceIcon;
-    int reactionIcon;
+    int unknown00; // Inferred role: icon type; original member name unknown.
+    int unknown04; // Inferred role: enhance icon; original member name unknown.
+    int unknown08; // Inferred role: reaction icon; original member name unknown.
     u8 _0c[0x10 - 0x0c];
-    int rangeIcon;
+    int unknown10; // Inferred role: range icon; original member name unknown.
   };
 
   static u32 getBtnIconNumber(u32 button);

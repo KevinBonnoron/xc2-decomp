@@ -10,7 +10,7 @@ constexpr u32 MAIN_LAYER = 3;
 
 GfMenuMain::GfMenuMain(const GfSetupParam &param) { initialize(param); }
 
-void GfMenuMain::initialize(const GfSetupParam &param) { initialized = true; }
+void GfMenuMain::initialize(const GfSetupParam &param) { unknown08 = true; }
 
 GfMenuMain::~GfMenuMain() {}
 
@@ -22,11 +22,11 @@ void GfMenuMain::destroy() {
   delete menu;
 }
 
-void GfMenuMain::finalize() { initialized = false; }
+void GfMenuMain::finalize() { unknown08 = false; }
 
 bool GfMenuMain::isInitialized() {
   if (get() != nullptr) {
-    return get()->initialized;
+    return get()->unknown08;
   }
   return false;
 }
