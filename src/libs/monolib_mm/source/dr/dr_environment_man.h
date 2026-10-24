@@ -12,9 +12,9 @@ public:
   DrEnvironmentObj *createObj(const void *data);
 
   u8 _00[0x18 - 0x00];
-  DrEnvColiMan *m_envColiMan;
+  DrEnvColiMan *unknown18; // Inferred role: env coli man; original member name unknown.
 };
 
-static_assert(offsetof(DrEnvironmentMan, m_envColiMan) == 0x18, "");
+static_assert(offsetof(DrEnvironmentMan, unknown18) == 0x18, "");
 
 } // namespace ml

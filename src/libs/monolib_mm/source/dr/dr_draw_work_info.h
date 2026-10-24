@@ -6,7 +6,7 @@ namespace ml {
 class IDrDrawWorkInfo {
 public:
   u8 _000[0x560 - 0x000];
-  int m_loop;
+  int unknown560; // Inferred role: loop; original member name unknown.
   u8 _564[0x580 - 0x564];
 };
 

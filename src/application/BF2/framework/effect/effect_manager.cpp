@@ -365,7 +365,7 @@ void EffectManager::deleteLgt(u32 type, void *light) {
     return;
   }
 
-  ml::DrLightMan *lightMan = drMan->lightMan;
+  ml::DrLightMan *lightMan = drMan->unknown588;
   if (lightMan == nullptr) {
     return;
   }
@@ -407,7 +407,7 @@ void EffectManager::setMdlSpeed(void *model, void *speed) {
 void EffectManager::setLgtPos(u32 type, void *light, void *position) {
   if (Framework::get() != nullptr && light != nullptr && position != nullptr) {
     ml::DrMan *drMan = ml::DrMan::getIns();
-    if (drMan != nullptr && drMan->lightMan != nullptr) {
+    if (drMan != nullptr && drMan->unknown588 != nullptr) {
       switch (type) {
       case 1:
         static_cast<ml::DrLightObjPnt *>(light)->setPos(*static_cast<mm::Vec3 *>(position));
@@ -423,7 +423,7 @@ void EffectManager::setLgtPos(u32 type, void *light, void *position) {
 void EffectManager::setLgtMatrix(u32 type, void *light, void *matrix) {
   if (Framework::get() != nullptr && light != nullptr && matrix != nullptr) {
     ml::DrMan *drMan = ml::DrMan::getIns();
-    if (drMan != nullptr && drMan->lightMan != nullptr) {
+    if (drMan != nullptr && drMan->unknown588 != nullptr) {
       switch (type) {
       case 1:
         static_cast<ml::DrLightObjPnt *>(light)->setMat(*static_cast<mm::Mat44 *>(matrix));

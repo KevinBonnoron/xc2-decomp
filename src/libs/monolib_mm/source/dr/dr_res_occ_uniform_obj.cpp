@@ -7,10 +7,10 @@
 
 namespace ml {
 
-DrResOccUniformObj::DrResOccUniformObj(DrMan *drMan, int max) : m_max(max), m_num(0), m_buffer(nullptr) {
+DrResOccUniformObj::DrResOccUniformObj(DrMan *drMan, int max) : unknown00(max), unknown04(0), m_buffer(nullptr) {
   int size = max * sizeof(mm::Mat44);
-  m_buffer = mtl::MemManager::allocate(drMan->memWork, size, 0x10, false, "no name", 0);
-  m_mats = static_cast<mm::Mat44 *>(m_buffer);
+  m_buffer = mtl::MemManager::allocate(drMan->unknown14, size, 0x10, false, "no name", 0);
+  unknown10 = static_cast<mm::Mat44 *>(m_buffer);
 }
 
 DrResOccUniformObj::~DrResOccUniformObj() {
@@ -20,13 +20,13 @@ DrResOccUniformObj::~DrResOccUniformObj() {
   }
 }
 
-void DrResOccUniformObj::begin() { m_num = 0; }
+void DrResOccUniformObj::begin() { unknown04 = 0; }
 
 void DrResOccUniformObj::end() {}
 
 mm::Mat44 *DrResOccUniformObj::getMatTbl() {
-  if (m_max > m_num) {
-    return &m_mats[m_num++];
+  if (unknown00 > unknown04) {
+    return &unknown10[unknown04++];
   }
   return nullptr;
 }

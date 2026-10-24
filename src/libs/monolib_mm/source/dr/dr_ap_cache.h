@@ -59,31 +59,31 @@ public:
   void setTexture(const grlib::CGLibTextureBuffer &texture, const grlib::CGLibSampler &sampler, u32 location);
 
   u8 _00[0x08 - 0x00];
-  s32 m_alphaBlend;
-  s32 m_mrtAlphaBlend;
-  DrApCullType m_cullType;
-  s32 m_stencilRef;
-  s32 m_stencilType;
-  s32 m_depthWrite;
-  u32 m_gbuffMask;
-  s32 m_depthTest;
+  s32 unknown08;          // Inferred role: alpha blend; original member name unknown.
+  s32 unknown0c;          // Inferred role: mrt alpha blend; original member name unknown.
+  DrApCullType unknown10; // Inferred role: cull type; original member name unknown.
+  s32 unknown14;          // Inferred role: stencil ref; original member name unknown.
+  s32 unknown18;          // Inferred role: stencil type; original member name unknown.
+  s32 unknown1c;          // Inferred role: depth write; original member name unknown.
+  u32 unknown20;          // Inferred role: gbuff mask; original member name unknown.
+  s32 unknown24;          // Inferred role: depth test; original member name unknown.
   u8 _28[0x30 - 0x28];
-  grlib::CGLibSampler *m_samplers;
-  u16 m_clampU;
-  u16 m_clampV;
+  grlib::CGLibSampler *unknown30; // Inferred role: samplers; original member name unknown.
+  u16 unknown38;                  // Inferred role: clamp u; original member name unknown.
+  u16 unknown3a;                  // Inferred role: clamp v; original member name unknown.
   u16 m_filter;
-  u16 m_mipMap;
-  u16 m_samplerID;
-  u16 m_samplerType;
+  u16 unknown3e; // Inferred role: mip map; original member name unknown.
+  u16 unknown40; // Inferred role: sampler id; original member name unknown.
+  u16 unknown42; // Inferred role: sampler type; original member name unknown.
 };
 
-static_assert(offsetof(DrAPCache, m_alphaBlend) == 0x08, "");
-static_assert(offsetof(DrAPCache, m_cullType) == 0x10, "");
-static_assert(offsetof(DrAPCache, m_gbuffMask) == 0x20, "");
-static_assert(offsetof(DrAPCache, m_depthTest) == 0x24, "");
-static_assert(offsetof(DrAPCache, m_samplers) == 0x30, "");
-static_assert(offsetof(DrAPCache, m_clampU) == 0x38, "");
-static_assert(offsetof(DrAPCache, m_samplerID) == 0x40, "");
-static_assert(offsetof(DrAPCache, m_samplerType) == 0x42, "");
+static_assert(offsetof(DrAPCache, unknown08) == 0x08, "");
+static_assert(offsetof(DrAPCache, unknown10) == 0x10, "");
+static_assert(offsetof(DrAPCache, unknown20) == 0x20, "");
+static_assert(offsetof(DrAPCache, unknown24) == 0x24, "");
+static_assert(offsetof(DrAPCache, unknown30) == 0x30, "");
+static_assert(offsetof(DrAPCache, unknown38) == 0x38, "");
+static_assert(offsetof(DrAPCache, unknown40) == 0x40, "");
+static_assert(offsetof(DrAPCache, unknown42) == 0x42, "");
 
 } // namespace ml

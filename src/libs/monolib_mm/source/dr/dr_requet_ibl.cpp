@@ -5,22 +5,22 @@
 
 namespace ml {
 
-DrRequetIBL::DrRequetIBL(DrLightObjGlobalIBL *light) : m_light(light), _20(light) {}
+DrRequetIBL::DrRequetIBL(DrLightObjGlobalIBL *light) : unknown18(light), _20(light) {}
 
-int DrRequetIBL::getTextureNum() const { return m_light->m_textureNum; }
+int DrRequetIBL::getTextureNum() const { return unknown18->unknown14; }
 
-const grlib::CGLibTextureBuffer *DrRequetIBL::getTexture(u32 index) const { return &m_light->m_textures[index]; }
+const grlib::CGLibTextureBuffer *DrRequetIBL::getTexture(u32 index) const { return &unknown18->unknown78[index]; }
 
-const mm::Mat44 *DrRequetIBL::getSHMatrix(u32 index, u32 term) const { return m_light->m_shMatrices + (index * DrLightObjGlobalIBL::SH_TERM_NUM + term); }
+const mm::Mat44 *DrRequetIBL::getSHMatrix(u32 index, u32 term) const { return unknown18->unknown840 + (index * DrLightObjGlobalIBL::SH_TERM_NUM + term); }
 
-const f32 *DrRequetIBL::getSHTerm(u32 index, u32 term) const { return m_light->m_shTerms[index][term]; }
+const f32 *DrRequetIBL::getSHTerm(u32 index, u32 term) const { return unknown18->unknown450[index][term]; }
 
-f32 DrRequetIBL::getSkyIntensity() const { return m_light->m_skyIntensity; }
+f32 DrRequetIBL::getSkyIntensity() const { return unknown18->unknown3b0; }
 
-f32 DrRequetIBL::getDirLightIntensity() const { return m_light->m_dirLightIntensity; }
+f32 DrRequetIBL::getDirLightIntensity() const { return unknown18->unknown3b4; }
 
-const mm::Col3 *DrRequetIBL::getAdditionalAmbient() const { return &m_light->m_additionalAmbient; }
+const mm::Col3 *DrRequetIBL::getAdditionalAmbient() const { return &unknown18->unknown3a0; }
 
-int DrRequetIBL::getVersion() const { return m_light->m_version; }
+int DrRequetIBL::getVersion() const { return unknown18->unknown08; }
 
 } // namespace ml

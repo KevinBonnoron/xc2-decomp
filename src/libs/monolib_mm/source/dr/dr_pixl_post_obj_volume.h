@@ -9,9 +9,9 @@ namespace ml {
 class DrPixlPostObjVolume {
 public:
   u8 _00[0x30 - 0x00];
-  mm::Vec3 m_pos;
+  mm::Vec3 unknown30; // Inferred role: pos; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlPostObjVolume, m_pos) == 0x30, "");
+static_assert(offsetof(DrPixlPostObjVolume, unknown30) == 0x30, "");
 
 } // namespace ml

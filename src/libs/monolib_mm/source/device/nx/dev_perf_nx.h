@@ -20,13 +20,13 @@ public:
   void setPerfConfig(DevPerfMode mode, DevPerfConfig config) override;
   DevPerfConfig getPerfConfig(DevPerfMode mode) const override;
 
-  DevPerfConfig m_perfConfigs[DEV_PERF_MODE_NUM];
+  DevPerfConfig unknown10[DEV_PERF_MODE_NUM]; // Inferred role: perf configs; original member name unknown.
   DevPerfOperationMode m_operationMode;
   DevPerfMode m_performanceMode;
   int m_focusState;
 };
 
-static_assert(offsetof(DevPerfNx, m_perfConfigs) == 0x10, "");
+static_assert(offsetof(DevPerfNx, unknown10) == 0x10, "");
 static_assert(offsetof(DevPerfNx, m_focusState) == 0x24, "");
 
 } // namespace ml

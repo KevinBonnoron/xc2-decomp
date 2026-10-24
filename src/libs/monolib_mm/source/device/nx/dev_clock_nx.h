@@ -20,9 +20,9 @@ public:
   f32 getClock2SecSys(const long &clock) const override;
 
   u8 _1b8[0x1c0 - 0x1b8];
-  nn::os::Tick m_powerOnTick;
+  nn::os::Tick unknown1c0; // Inferred role: power on tick; original member name unknown.
 };
 
-static_assert(offsetof(DevClockNx, m_powerOnTick) == 0x1c0, "");
+static_assert(offsetof(DevClockNx, unknown1c0) == 0x1c0, "");
 
 } // namespace ml

@@ -22,7 +22,7 @@ public:
   virtual void stockBegin() = 0;
   virtual void stockEnd() = 0;
   virtual void update() = 0;
-  virtual void setupCate(int cate) { m_cate = cate; }
+  virtual void setupCate(int cate) { unknown08 = cate; }
   virtual void addViewInfo(int cate) = 0;
   virtual void delViewInfo(int cate) = 0;
   virtual void stockPntList(DrLightObjPnt *light) = 0;
@@ -30,11 +30,11 @@ public:
   virtual void render(DrShdLgtMan *shdLgtMan, DrLightMan *lightMan) = 0;
   virtual void debugRender() = 0;
 
-  s32 m_cate;
-  DrMan *m_drMan;
+  s32 unknown08;    // Inferred role: cate; original member name unknown.
+  DrMan *unknown10; // Inferred role: dr man; original member name unknown.
 };
 
-static_assert(offsetof(DrShdLgtDynamic, m_cate) == 0x8, "");
-static_assert(offsetof(DrShdLgtDynamic, m_drMan) == 0x10, "");
+static_assert(offsetof(DrShdLgtDynamic, unknown08) == 0x8, "");
+static_assert(offsetof(DrShdLgtDynamic, unknown10) == 0x10, "");
 
 } // namespace ml

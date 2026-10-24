@@ -80,19 +80,19 @@ public:
   bool isAmbModeOn() const;
   bool isCacheShadow() const;
 
-  DrLightObj *m_prev;
-  DrLightObj *m_next;
-  Type m_type;
-  u32 m_flags;
-  DrPixlMan *m_pixlMan;
-  DrPixlShadowObj *m_shadow;
+  DrLightObj *unknown08;      // Inferred role: prev; original member name unknown.
+  DrLightObj *unknown10;      // Inferred role: next; original member name unknown.
+  Type unknown18;             // Inferred role: type; original member name unknown.
+  u32 unknown1c;              // Inferred role: flags; original member name unknown.
+  DrPixlMan *unknown20;       // Inferred role: pixl man; original member name unknown.
+  DrPixlShadowObj *unknown28; // Inferred role: shadow; original member name unknown.
 };
 
-static_assert(offsetof(DrLightObj, m_prev) == 0x08, "");
-static_assert(offsetof(DrLightObj, m_type) == 0x18, "");
-static_assert(offsetof(DrLightObj, m_flags) == 0x1c, "");
-static_assert(offsetof(DrLightObj, m_pixlMan) == 0x20, "");
-static_assert(offsetof(DrLightObj, m_shadow) == 0x28, "");
+static_assert(offsetof(DrLightObj, unknown08) == 0x08, "");
+static_assert(offsetof(DrLightObj, unknown18) == 0x18, "");
+static_assert(offsetof(DrLightObj, unknown1c) == 0x1c, "");
+static_assert(offsetof(DrLightObj, unknown20) == 0x20, "");
+static_assert(offsetof(DrLightObj, unknown28) == 0x28, "");
 
 class DrLightObjAmb : public DrLightObj {
 public:
@@ -113,10 +113,10 @@ public:
   void update(DrLightMan *lightMan) override;
 
   u8 _30[0x90 - 0x30];
-  f32 m_intensity;
+  f32 unknown90; // Inferred role: intensity; original member name unknown.
 };
 
-static_assert(offsetof(DrLightObjDir, m_intensity) == 0x90, "");
+static_assert(offsetof(DrLightObjDir, unknown90) == 0x90, "");
 
 class DrLightObjPnt : public DrLightObj {
 public:
@@ -131,11 +131,11 @@ public:
   u8 _30[0x9c - 0x30];
   f32 m_size;
   u8 _a0[0xb0 - 0xa0];
-  f32 m_speIntensity;
+  f32 unknownb0; // Inferred role: spe intensity; original member name unknown.
 };
 
 static_assert(offsetof(DrLightObjPnt, m_size) == 0x9c, "");
-static_assert(offsetof(DrLightObjPnt, m_speIntensity) == 0xb0, "");
+static_assert(offsetof(DrLightObjPnt, unknownb0) == 0xb0, "");
 
 class DrLightObjSpt : public DrLightObj {
 public:
@@ -149,14 +149,14 @@ public:
   void setDir(const mm::Vec3 &direction);
 
   u8 _30[0xbc - 0x30];
-  f32 m_angle;
+  f32 unknownbc; // Inferred role: angle; original member name unknown.
   f32 m_size;
   u8 _c4[0xd4 - 0xc4];
-  f32 m_speIntensity;
+  f32 unknownd4; // Inferred role: spe intensity; original member name unknown.
 };
 
-static_assert(offsetof(DrLightObjSpt, m_angle) == 0xbc, "");
+static_assert(offsetof(DrLightObjSpt, unknownbc) == 0xbc, "");
 static_assert(offsetof(DrLightObjSpt, m_size) == 0xc0, "");
-static_assert(offsetof(DrLightObjSpt, m_speIntensity) == 0xd4, "");
+static_assert(offsetof(DrLightObjSpt, unknownd4) == 0xd4, "");
 
 } // namespace ml

@@ -17,9 +17,9 @@ public:
   };
 
   u8 _0000[0x2068 - 0x0000];
-  u32 m_flags;
+  u32 unknown2068; // Inferred role: flags; original member name unknown.
 };
 
-static_assert(offsetof(DrCalcTexStreamMan, m_flags) == 0x2068, "");
+static_assert(offsetof(DrCalcTexStreamMan, unknown2068) == 0x2068, "");
 
 } // namespace ml

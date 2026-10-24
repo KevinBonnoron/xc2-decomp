@@ -25,17 +25,17 @@ class DrShdMdoDecExtTbl;
 
 struct MdsMatInfoHeader {
   u8 _00[0x20 - 0x00];
-  u32 textureIndexOffset;
+  u32 unknown20; // Inferred role: texture index offset; original member name unknown.
   u8 _24[0x40 - 0x24];
-  u32 valueOffset;
+  u32 unknown40; // Inferred role: value offset; original member name unknown.
   u8 _44[0x64 - 0x44];
-  u16 timeValueIndex;
+  u16 unknown64; // Inferred role: time value index; original member name unknown.
   u8 _66[0x74 - 0x66];
 };
 
-static_assert(offsetof(MdsMatInfoHeader, textureIndexOffset) == 0x20, "");
-static_assert(offsetof(MdsMatInfoHeader, valueOffset) == 0x40, "");
-static_assert(offsetof(MdsMatInfoHeader, timeValueIndex) == 0x64, "");
+static_assert(offsetof(MdsMatInfoHeader, unknown20) == 0x20, "");
+static_assert(offsetof(MdsMatInfoHeader, unknown40) == 0x40, "");
+static_assert(offsetof(MdsMatInfoHeader, unknown64) == 0x64, "");
 
 static_assert(sizeof(MdsMatInfoHeader) == 0x74, "");
 
@@ -44,7 +44,7 @@ struct MdoWrkVanishEffect;
 
 struct MdsMeshPartsInfo {
   u8 _00[0x08 - 0x00];
-  u8 flags;
+  u8 unknown08; // Inferred role: flags; original member name unknown.
   u8 _09[0x10 - 0x09];
 };
 
@@ -55,50 +55,50 @@ struct MdsMeshHeader {
     FLAG_VANISH_EFFECT = 1 << 13,
   };
 
-  u16 flags;
+  u16 unknown00; // Inferred role: flags; original member name unknown.
   u8 _02[0x64 - 0x02];
-  u32 partsInfoOffset;
+  u32 unknown64; // Inferred role: parts info offset; original member name unknown.
   u8 _68[0x94 - 0x68];
-  u8 vanishEffectNum;
+  u8 unknown94; // Inferred role: vanish effect num; original member name unknown.
 };
 
-static_assert(offsetof(MdsMeshHeader, partsInfoOffset) == 0x64, "");
-static_assert(offsetof(MdsMeshHeader, vanishEffectNum) == 0x94, "");
+static_assert(offsetof(MdsMeshHeader, unknown64) == 0x64, "");
+static_assert(offsetof(MdsMeshHeader, unknown94) == 0x94, "");
 
 struct MdoWrkMatEntry {
-  const char *name;
+  const char *unknown00; // Inferred role: name; original member name unknown.
   u8 _08[0x20 - 0x08];
 };
 
 static_assert(sizeof(MdoWrkMatEntry) == 0x20, "");
 
 struct MdoWrkAvatar {
-  u32 flags;
+  u32 unknown00; // Inferred role: flags; original member name unknown.
   u8 _04[0x08 - 0x04];
-  grlib::CGLibTextureBuffer *baseTextures[2];
-  void *textures[2];
-  grlib::CGLibTextureBuffer *eyeBaseTexture;
-  void *eyeTexture;
-  bool dollMat;
+  grlib::CGLibTextureBuffer *unknown08[2]; // Inferred role: base textures; original member name unknown.
+  void *unknown18[2];                      // Inferred role: textures; original member name unknown.
+  grlib::CGLibTextureBuffer *unknown28;    // Inferred role: eye base texture; original member name unknown.
+  void *unknown30;                         // Inferred role: eye texture; original member name unknown.
+  bool unknown38;                          // Inferred role: doll mat; original member name unknown.
   u8 _39[0x40 - 0x39];
-  grlib::CGLibOneUniformBlock *charColors;
-  grlib::CGLibOneUniformBlock *dollColors;
+  grlib::CGLibOneUniformBlock *unknown40; // Inferred role: char colors; original member name unknown.
+  grlib::CGLibOneUniformBlock *unknown48; // Inferred role: doll colors; original member name unknown.
 };
 
-static_assert(offsetof(MdoWrkAvatar, baseTextures) == 0x08, "");
-static_assert(offsetof(MdoWrkAvatar, textures) == 0x18, "");
-static_assert(offsetof(MdoWrkAvatar, eyeBaseTexture) == 0x28, "");
-static_assert(offsetof(MdoWrkAvatar, eyeTexture) == 0x30, "");
-static_assert(offsetof(MdoWrkAvatar, dollMat) == 0x38, "");
-static_assert(offsetof(MdoWrkAvatar, charColors) == 0x40, "");
-static_assert(offsetof(MdoWrkAvatar, dollColors) == 0x48, "");
+static_assert(offsetof(MdoWrkAvatar, unknown08) == 0x08, "");
+static_assert(offsetof(MdoWrkAvatar, unknown18) == 0x18, "");
+static_assert(offsetof(MdoWrkAvatar, unknown28) == 0x28, "");
+static_assert(offsetof(MdoWrkAvatar, unknown30) == 0x30, "");
+static_assert(offsetof(MdoWrkAvatar, unknown38) == 0x38, "");
+static_assert(offsetof(MdoWrkAvatar, unknown40) == 0x40, "");
+static_assert(offsetof(MdoWrkAvatar, unknown48) == 0x48, "");
 
 struct MdoWrkShaderParm {
-  mm::Col3 colors[4];
-  f32 values[1];
+  mm::Col3 unknown00[4]; // Inferred role: colors; original member name unknown.
+  f32 unknown30[1];      // Inferred role: values; original member name unknown.
 };
 
-static_assert(offsetof(MdoWrkShaderParm, values) == 0x30, "");
+static_assert(offsetof(MdoWrkShaderParm, unknown30) == 0x30, "");
 
 struct MdsMdlInfoHeader {
   u8 _00[0x30 - 0x00];
@@ -107,86 +107,86 @@ struct MdsMdlInfoHeader {
 static_assert(sizeof(MdsMdlInfoHeader) == 0x30, "");
 
 struct MdsMdlEntry {
-  u32 infoOffset;
-  s32 infoCount;
+  u32 unknown00; // Inferred role: info offset; original member name unknown.
+  s32 unknown04; // Inferred role: info count; original member name unknown.
   u8 _08[0x0c - 0x08];
-  f32 aabbMax[3];
-  f32 aabbMin[3];
+  f32 unknown0c[3]; // Inferred role: aabb max; original member name unknown.
+  f32 unknown18[3]; // Inferred role: aabb min; original member name unknown.
   u8 _24[0x44 - 0x24];
 };
 
-static_assert(offsetof(MdsMdlEntry, aabbMax) == 0x0c, "");
-static_assert(offsetof(MdsMdlEntry, aabbMin) == 0x18, "");
+static_assert(offsetof(MdsMdlEntry, unknown0c) == 0x0c, "");
+static_assert(offsetof(MdsMdlEntry, unknown18) == 0x18, "");
 static_assert(sizeof(MdsMdlEntry) == 0x44, "");
 
 struct MdoWrkMatRes {
   u8 _000[0x010 - 0x000];
-  const u8 *textureIndices;
-  const u8 *modelData;
-  const MdsMeshHeader *meshHeader;
-  MdsMatInfoHeader *matData;
-  s32 matCount;
+  const u8 *unknown10;            // Inferred role: texture indices; original member name unknown.
+  const u8 *unknown18;            // Inferred role: model data; original member name unknown.
+  const MdsMeshHeader *unknown20; // Inferred role: mesh header; original member name unknown.
+  MdsMatInfoHeader *unknown28;    // Inferred role: mat data; original member name unknown.
+  s32 unknown30;                  // Inferred role: mat count; original member name unknown.
   u8 _034[0x038 - 0x034];
-  f32 *baseValues;
+  f32 *unknown38; // Inferred role: base values; original member name unknown.
   u8 _040[0x090 - 0x040];
-  grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *materialUniforms;
+  grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *unknown90; // Inferred role: material uniforms; original member name unknown.
   u8 _098[0x0a0 - 0x098];
-  grlib::CGLibUniformArray<grlib::CGLibTriUniformBlock> *mdlUniforms;
+  grlib::CGLibUniformArray<grlib::CGLibTriUniformBlock> *unknowna0; // Inferred role: mdl uniforms; original member name unknown.
   u8 _0a8[0x0b0 - 0x0a8];
-  grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *volTexUniforms;
-  grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *rimBloomUniforms;
-  MdoWrkMatEntry *matEntries;
-  DrResMdoVertex *vertex;
-  DrResMdoTexList *textureList;
+  grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *unknownb0; // Inferred role: vol tex uniforms; original member name unknown.
+  grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *unknownb8; // Inferred role: rim bloom uniforms; original member name unknown.
+  MdoWrkMatEntry *unknownc0;                                        // Inferred role: mat entries; original member name unknown.
+  DrResMdoVertex *unknownc8;                                        // Inferred role: vertex; original member name unknown.
+  DrResMdoTexList *unknownd0;                                       // Inferred role: texture list; original member name unknown.
   u8 _0d8[0x0e8 - 0x0d8];
-  grlib::CGLibTextureBuffer **textures;
-  s32 textureCount;
+  grlib::CGLibTextureBuffer **unknowne8; // Inferred role: textures; original member name unknown.
+  s32 unknownf0;                         // Inferred role: texture count; original member name unknown.
   u8 _0f4[0x0f8 - 0x0f4];
-  f32 *values;
+  f32 *unknownf8; // Inferred role: values; original member name unknown.
   u8 _100[0x110 - 0x100];
-  MdoWrkAvatar *avatar;
-  MdoWrkShaderParm *shaderParm;
+  MdoWrkAvatar *unknown110;     // Inferred role: avatar; original member name unknown.
+  MdoWrkShaderParm *unknown118; // Inferred role: shader parm; original member name unknown.
   u8 _120[0x150 - 0x120];
-  MdoWrkVanishEffect *vanishEffects;
-  MdoWrkRimBloom *rimBlooms;
+  MdoWrkVanishEffect *unknown150; // Inferred role: vanish effects; original member name unknown.
+  MdoWrkRimBloom *unknown158;     // Inferred role: rim blooms; original member name unknown.
   u8 _160[0x168 - 0x160];
-  const MdsMdlEntry *mdlEntries;
-  u32 mdlEntryCount;
+  const MdsMdlEntry *unknown168; // Inferred role: mdl entries; original member name unknown.
+  u32 unknown170;                // Inferred role: mdl entry count; original member name unknown.
 };
 
-static_assert(offsetof(MdoWrkMatRes, textureIndices) == 0x010, "");
-static_assert(offsetof(MdoWrkMatRes, modelData) == 0x018, "");
-static_assert(offsetof(MdoWrkMatRes, meshHeader) == 0x020, "");
-static_assert(offsetof(MdoWrkMatRes, matData) == 0x028, "");
-static_assert(offsetof(MdoWrkMatRes, matCount) == 0x030, "");
-static_assert(offsetof(MdoWrkMatRes, baseValues) == 0x038, "");
-static_assert(offsetof(MdoWrkMatRes, materialUniforms) == 0x090, "");
-static_assert(offsetof(MdoWrkMatRes, mdlUniforms) == 0x0a0, "");
-static_assert(offsetof(MdoWrkMatRes, volTexUniforms) == 0x0b0, "");
-static_assert(offsetof(MdoWrkMatRes, rimBloomUniforms) == 0x0b8, "");
-static_assert(offsetof(MdoWrkMatRes, matEntries) == 0x0c0, "");
-static_assert(offsetof(MdoWrkMatRes, vertex) == 0x0c8, "");
-static_assert(offsetof(MdoWrkMatRes, textureList) == 0x0d0, "");
-static_assert(offsetof(MdoWrkMatRes, textures) == 0x0e8, "");
-static_assert(offsetof(MdoWrkMatRes, textureCount) == 0x0f0, "");
-static_assert(offsetof(MdoWrkMatRes, values) == 0x0f8, "");
-static_assert(offsetof(MdoWrkMatRes, avatar) == 0x110, "");
-static_assert(offsetof(MdoWrkMatRes, shaderParm) == 0x118, "");
-static_assert(offsetof(MdoWrkMatRes, vanishEffects) == 0x150, "");
-static_assert(offsetof(MdoWrkMatRes, rimBlooms) == 0x158, "");
-static_assert(offsetof(MdoWrkMatRes, mdlEntries) == 0x168, "");
-static_assert(offsetof(MdoWrkMatRes, mdlEntryCount) == 0x170, "");
+static_assert(offsetof(MdoWrkMatRes, unknown10) == 0x010, "");
+static_assert(offsetof(MdoWrkMatRes, unknown18) == 0x018, "");
+static_assert(offsetof(MdoWrkMatRes, unknown20) == 0x020, "");
+static_assert(offsetof(MdoWrkMatRes, unknown28) == 0x028, "");
+static_assert(offsetof(MdoWrkMatRes, unknown30) == 0x030, "");
+static_assert(offsetof(MdoWrkMatRes, unknown38) == 0x038, "");
+static_assert(offsetof(MdoWrkMatRes, unknown90) == 0x090, "");
+static_assert(offsetof(MdoWrkMatRes, unknowna0) == 0x0a0, "");
+static_assert(offsetof(MdoWrkMatRes, unknownb0) == 0x0b0, "");
+static_assert(offsetof(MdoWrkMatRes, unknownb8) == 0x0b8, "");
+static_assert(offsetof(MdoWrkMatRes, unknownc0) == 0x0c0, "");
+static_assert(offsetof(MdoWrkMatRes, unknownc8) == 0x0c8, "");
+static_assert(offsetof(MdoWrkMatRes, unknownd0) == 0x0d0, "");
+static_assert(offsetof(MdoWrkMatRes, unknowne8) == 0x0e8, "");
+static_assert(offsetof(MdoWrkMatRes, unknownf0) == 0x0f0, "");
+static_assert(offsetof(MdoWrkMatRes, unknownf8) == 0x0f8, "");
+static_assert(offsetof(MdoWrkMatRes, unknown110) == 0x110, "");
+static_assert(offsetof(MdoWrkMatRes, unknown118) == 0x118, "");
+static_assert(offsetof(MdoWrkMatRes, unknown150) == 0x150, "");
+static_assert(offsetof(MdoWrkMatRes, unknown158) == 0x158, "");
+static_assert(offsetof(MdoWrkMatRes, unknown168) == 0x168, "");
+static_assert(offsetof(MdoWrkMatRes, unknown170) == 0x170, "");
 
 struct MdoWrkVanishEffect {
   u8 _00[0xa4 - 0x00];
-  f32 ratio;
+  f32 unknowna4; // Inferred role: ratio; original member name unknown.
   u8 _a8[0xd4 - 0xa8];
-  u32 flags;
+  u32 unknownd4; // Inferred role: flags; original member name unknown.
   u8 _d8[0xe0 - 0xd8];
 };
 
-static_assert(offsetof(MdoWrkVanishEffect, ratio) == 0xa4, "");
-static_assert(offsetof(MdoWrkVanishEffect, flags) == 0xd4, "");
+static_assert(offsetof(MdoWrkVanishEffect, unknowna4) == 0xa4, "");
+static_assert(offsetof(MdoWrkVanishEffect, unknownd4) == 0xd4, "");
 static_assert(sizeof(MdoWrkVanishEffect) == 0xe0, "");
 
 class DrMdoMat : public DrMdlBase {
@@ -256,58 +256,58 @@ public:
 
   u8 _24[0x28 - 0x24];
   DrMan *m_drMan;
-  MdoWrkMatRes *m_matRes;
-  DrShdMdoDecExtTbl *m_decExtTbl;
-  mm::Col3 *m_avatarMapColors;
-  const MdsMatCharMkTexTbl *m_charMkTextures;
+  MdoWrkMatRes *unknown30;             // Inferred role: mat res; original member name unknown.
+  DrShdMdoDecExtTbl *unknown38;        // Inferred role: dec ext tbl; original member name unknown.
+  mm::Col3 *unknown40;                 // Inferred role: avatar map colors; original member name unknown.
+  const MdsMatCharMkTexTbl *unknown48; // Inferred role: char mk textures; original member name unknown.
   u8 _50[0x58 - 0x50];
-  DrMdoSmlShadowObj *m_smlShadow;
+  DrMdoSmlShadowObj *unknown58; // Inferred role: sml shadow; original member name unknown.
   u8 _60[0x70 - 0x60];
   mm::Mat44 m_matrix;
   u8 _b0[0xd0 - 0xb0];
-  f32 m_alphas[2];
-  f32 m_bloom;
-  f32 m_frameSpd;
-  f32 m_alpha;
+  f32 unknownd0[2]; // Inferred role: alphas; original member name unknown.
+  f32 unknownd8;    // Inferred role: bloom; original member name unknown.
+  f32 unknowndc;    // Inferred role: frame spd; original member name unknown.
+  f32 unknowne0;    // Inferred role: alpha; original member name unknown.
   u8 _e4[0xe8 - 0xe4];
-  f32 m_scale;
+  f32 unknowne8; // Inferred role: scale; original member name unknown.
   u8 _ec[0xf0 - 0xec];
-  bool m_isGpuRender;
+  bool m_gpuRender;
   u8 _f1[0xf8 - 0xf1];
-  u32 m_mdlFlags;
-  u32 m_drawFlags;
-  u32 m_alphaFlags;
+  u32 unknownf8;  // Inferred role: mdl flags; original member name unknown.
+  u32 unknownfc;  // Inferred role: draw flags; original member name unknown.
+  u32 unknown100; // Inferred role: alpha flags; original member name unknown.
   u8 _104[0x110 - 0x104];
-  mm::Vec3 m_aabbMax;
-  mm::Vec3 m_aabbMin;
-  mm::Vec3 m_center;
+  mm::Vec3 m_AABBMax;
+  mm::Vec3 m_AABBMin;
+  mm::Vec3 unknown130; // Inferred role: center; original member name unknown.
   u8 _140[0x160 - 0x140];
-  f32 m_length;
+  f32 unknown160; // Inferred role: length; original member name unknown.
   u8 _164[0x16a - 0x164];
-  u8 m_charMkTextureCount;
+  u8 unknown16a; // Inferred role: char mk texture count; original member name unknown.
   u8 _16b;
 };
 
 static_assert(offsetof(DrMdoMat, m_drMan) == 0x28, "");
-static_assert(offsetof(DrMdoMat, m_matRes) == 0x30, "");
-static_assert(offsetof(DrMdoMat, m_decExtTbl) == 0x38, "");
-static_assert(offsetof(DrMdoMat, m_avatarMapColors) == 0x40, "");
-static_assert(offsetof(DrMdoMat, m_charMkTextures) == 0x48, "");
-static_assert(offsetof(DrMdoMat, m_smlShadow) == 0x58, "");
+static_assert(offsetof(DrMdoMat, unknown30) == 0x30, "");
+static_assert(offsetof(DrMdoMat, unknown38) == 0x38, "");
+static_assert(offsetof(DrMdoMat, unknown40) == 0x40, "");
+static_assert(offsetof(DrMdoMat, unknown48) == 0x48, "");
+static_assert(offsetof(DrMdoMat, unknown58) == 0x58, "");
 static_assert(offsetof(DrMdoMat, m_matrix) == 0x70, "");
-static_assert(offsetof(DrMdoMat, m_alphas) == 0xd0, "");
-static_assert(offsetof(DrMdoMat, m_bloom) == 0xd8, "");
-static_assert(offsetof(DrMdoMat, m_frameSpd) == 0xdc, "");
-static_assert(offsetof(DrMdoMat, m_alpha) == 0xe0, "");
-static_assert(offsetof(DrMdoMat, m_scale) == 0xe8, "");
-static_assert(offsetof(DrMdoMat, m_isGpuRender) == 0xf0, "");
-static_assert(offsetof(DrMdoMat, m_mdlFlags) == 0xf8, "");
-static_assert(offsetof(DrMdoMat, m_drawFlags) == 0xfc, "");
-static_assert(offsetof(DrMdoMat, m_alphaFlags) == 0x100, "");
-static_assert(offsetof(DrMdoMat, m_aabbMax) == 0x110, "");
-static_assert(offsetof(DrMdoMat, m_aabbMin) == 0x120, "");
-static_assert(offsetof(DrMdoMat, m_center) == 0x130, "");
-static_assert(offsetof(DrMdoMat, m_length) == 0x160, "");
-static_assert(offsetof(DrMdoMat, m_charMkTextureCount) == 0x16a, "");
+static_assert(offsetof(DrMdoMat, unknownd0) == 0xd0, "");
+static_assert(offsetof(DrMdoMat, unknownd8) == 0xd8, "");
+static_assert(offsetof(DrMdoMat, unknowndc) == 0xdc, "");
+static_assert(offsetof(DrMdoMat, unknowne0) == 0xe0, "");
+static_assert(offsetof(DrMdoMat, unknowne8) == 0xe8, "");
+static_assert(offsetof(DrMdoMat, m_gpuRender) == 0xf0, "");
+static_assert(offsetof(DrMdoMat, unknownf8) == 0xf8, "");
+static_assert(offsetof(DrMdoMat, unknownfc) == 0xfc, "");
+static_assert(offsetof(DrMdoMat, unknown100) == 0x100, "");
+static_assert(offsetof(DrMdoMat, m_AABBMax) == 0x110, "");
+static_assert(offsetof(DrMdoMat, m_AABBMin) == 0x120, "");
+static_assert(offsetof(DrMdoMat, unknown130) == 0x130, "");
+static_assert(offsetof(DrMdoMat, unknown160) == 0x160, "");
+static_assert(offsetof(DrMdoMat, unknown16a) == 0x16a, "");
 
 } // namespace ml

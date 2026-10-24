@@ -6,8 +6,8 @@
 namespace ml {
 
 DrEnvironmentAnim::DrEnvironmentAnim() {
-  m_frames = nullptr;
-  m_animNum = 0;
+  unknown30 = nullptr;
+  unknown28 = 0;
 }
 
 u32 DrEnvironmentAnim::getAnimWork(const u8 *data, u32 offset) {
@@ -18,34 +18,34 @@ u32 DrEnvironmentAnim::getAnimWork(const u8 *data, u32 offset) {
 }
 
 void DrEnvironmentAnim::setupAnmVal(const f32 *values) {
-  m_anmVal[2] = values[0];
-  m_anmVal[1] = values[1];
-  m_anmVal[0] = values[2];
+  unknown60[2] = values[0];
+  unknown60[1] = values[1];
+  unknown60[0] = values[2];
 }
 
-void DrEnvironmentAnim::envlgt_amb_color_R(const LgtAnimInf *inf, f32 frame) { m_color.r = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_amb_color_R(const LgtAnimInf *inf, f32 frame) { unknown38.r = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_amb_color_G(const LgtAnimInf *inf, f32 frame) { m_color.g = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_amb_color_G(const LgtAnimInf *inf, f32 frame) { unknown38.g = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_amb_color_B(const LgtAnimInf *inf, f32 frame) { m_color.b = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_amb_color_B(const LgtAnimInf *inf, f32 frame) { unknown38.b = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_amb_color_Intensity(const LgtAnimInf *inf, f32 frame) { m_intensity = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_amb_color_Intensity(const LgtAnimInf *inf, f32 frame) { unknown5c = getHermiteAttr(inf, frame); }
 
 void DrEnvironmentAnim::envlgt_amb_non(const LgtAnimInf *inf, f32 frame) {}
 
 inline f32 DrEnvironmentAnim::getHermiteAttr(const LgtAnimInf *inf, f32 frame) {
-  if (inf->startFrame >= frame) {
-    return m_hermiteKeys[inf->keyIndex].value;
+  if (inf->unknown04 >= frame) {
+    return unknown10[inf->unknown00].unknown08;
   }
-  if (inf->endFrame <= frame) {
-    return m_hermiteKeys[inf->keyIndex + inf->keyNum - 1].value;
+  if (inf->unknown08 <= frame) {
+    return unknown10[inf->unknown00 + inf->unknown0e - 1].unknown08;
   }
-  const LgtHermiteKey *key = &m_hermiteKeys[inf->keyIndex + 1];
-  for (int i = 1; i < inf->keyNum; i++, key++) {
-    f32 keyFrame = key->frame;
+  const LgtHermiteKey *key = &unknown10[inf->unknown00 + 1];
+  for (int i = 1; i < inf->unknown0e; i++, key++) {
+    f32 keyFrame = key->unknown0c;
     if (frame < keyFrame) {
       const LgtHermiteKey *prev = key - 1;
-      f32 prevFrame = prev->frame;
+      f32 prevFrame = prev->unknown0c;
       f32 length = keyFrame - prevFrame;
       f32 t = (frame - prevFrame) / length;
       f32 t2 = t * t;
@@ -54,19 +54,19 @@ inline f32 DrEnvironmentAnim::getHermiteAttr(const LgtAnimInf *inf, f32 frame) {
       f32 h10 = t3 - 2.0f * t2 + t;
       f32 h01 = 3.0f * t2 - 2.0f * t3;
       f32 h11 = t3 - t2;
-      return prev->value * h00 + prev->outSlope * h10 + key->value * h01 + key->inSlope * h11;
+      return prev->unknown08 * h00 + prev->unknown00 * h10 + key->unknown08 * h01 + key->unknown04 * h11;
     }
   }
   return 0.0f;
 }
 
-void DrEnvironmentAnim::envlgt_dir_color_R(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { m_color.r = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_dir_color_R(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { unknown38.r = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_dir_color_G(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { m_color.g = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_dir_color_G(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { unknown38.g = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_dir_color_B(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { m_color.b = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_dir_color_B(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { unknown38.b = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_dir_color_Intensity(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { m_intensity = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_dir_color_Intensity(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { unknown5c = getHermiteAttr(inf, frame); }
 
 void DrEnvironmentAnim::envlgt_dir_spe_Intensity(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) {}
 
@@ -80,21 +80,21 @@ void DrEnvironmentAnim::envlgt_dir_texofsY(DrLightObjDir *light, const LgtAnimIn
 
 void DrEnvironmentAnim::envlgt_dir_size(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) {}
 
-void DrEnvironmentAnim::envlgt_dir_rotz(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { m_anmVal[2] = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_dir_rotz(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { unknown60[2] = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_dir_roty(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { m_anmVal[1] = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_dir_roty(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { unknown60[1] = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_dir_rotx(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { m_anmVal[0] = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_dir_rotx(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { unknown60[0] = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_pnt_color_R(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { m_color.r = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_pnt_color_R(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { unknown38.r = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_pnt_color_G(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { m_color.g = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_pnt_color_G(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { unknown38.g = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_pnt_color_B(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { m_color.b = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_pnt_color_B(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { unknown38.b = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_pnt_color_Intensity(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { m_intensity = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_pnt_color_Intensity(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { unknown5c = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_pnt_spe_Intensity(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { light->m_speIntensity = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_pnt_spe_Intensity(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { light->unknownb0 = getHermiteAttr(inf, frame); }
 
 void DrEnvironmentAnim::envlgt_pnt_non(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) {}
 
@@ -106,23 +106,23 @@ void DrEnvironmentAnim::envlgt_pnt_texofsY(DrLightObjPnt *light, const LgtAnimIn
 
 void DrEnvironmentAnim::envlgt_pnt_size(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { light->m_size = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_pnt_rotz(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { m_anmVal[2] = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_pnt_rotz(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { unknown60[2] = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_pnt_roty(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { m_anmVal[1] = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_pnt_roty(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { unknown60[1] = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_pnt_rotx(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { m_anmVal[0] = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_pnt_rotx(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { unknown60[0] = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_spt_color_R(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { m_color.r = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_spt_color_R(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { unknown38.r = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_spt_color_G(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { m_color.g = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_spt_color_G(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { unknown38.g = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_spt_color_B(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { m_color.b = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_spt_color_B(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { unknown38.b = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_spt_color_Intensity(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { m_intensity = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_spt_color_Intensity(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { unknown5c = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_spt_spe_Intensity(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { light->m_speIntensity = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_spt_spe_Intensity(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { light->unknownd4 = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_spt_angle(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { light->m_angle = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_spt_angle(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { light->unknownbc = getHermiteAttr(inf, frame); }
 
 void DrEnvironmentAnim::envlgt_spt_texonoff(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) {}
 
@@ -132,53 +132,53 @@ void DrEnvironmentAnim::envlgt_spt_texofsY(DrLightObjSpt *light, const LgtAnimIn
 
 void DrEnvironmentAnim::envlgt_spt_size(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { light->m_size = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_spt_rotz(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { m_anmVal[2] = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_spt_rotz(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { unknown60[2] = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_spt_roty(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { m_anmVal[1] = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_spt_roty(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { unknown60[1] = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_spt_rotx(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { m_anmVal[0] = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_spt_rotx(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { unknown60[0] = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_trans_posx(const LgtAnimInf *inf, f32 frame) { m_anmVal[0] = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_trans_posx(const LgtAnimInf *inf, f32 frame) { unknown60[0] = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_trans_posy(const LgtAnimInf *inf, f32 frame) { m_anmVal[1] = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_trans_posy(const LgtAnimInf *inf, f32 frame) { unknown60[1] = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_trans_posz(const LgtAnimInf *inf, f32 frame) { m_anmVal[2] = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envlgt_trans_posz(const LgtAnimInf *inf, f32 frame) { unknown60[2] = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_color_R(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { m_color.r = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_color_R(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { unknown38.r = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_color_G(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { m_color.g = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_color_G(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { unknown38.g = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_color_B(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { m_color.b = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_color_B(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { unknown38.b = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_color_sideR(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { m_sideColor.r = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_color_sideR(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { unknown44.r = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_color_sideG(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { m_sideColor.g = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_color_sideG(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { unknown44.g = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_color_sideB(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { m_sideColor.b = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_color_sideB(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { unknown44.b = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_near(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { fog->m_near = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_near(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { fog->unknown44 = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_far(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { fog->m_far = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_far(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { fog->unknown48 = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_str(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { fog->m_str = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_str(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { fog->unknown4c = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_pow(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { fog->m_pow = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_pow(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { fog->unknown54 = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_color_sunR(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { m_sunColor.r = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_color_sunR(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { unknown50.r = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_color_sunG(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { m_sunColor.g = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_color_sunG(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { unknown50.g = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envfog_parm_color_sunB(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { m_sunColor.b = getHermiteAttr(inf, frame); }
+void DrEnvironmentAnim::envfog_parm_color_sunB(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame) { unknown50.b = getHermiteAttr(inf, frame); }
 
 u16 DrEnvironmentAnim::getBitAttr(const LgtAnimInf *inf, f32 frame) {
-  if (inf->startFrame >= frame) {
-    return m_bitKeys[inf->keyIndex].value;
+  if (inf->unknown04 >= frame) {
+    return unknown18[inf->unknown00].value;
   }
-  if (inf->endFrame <= frame) {
-    return m_bitKeys[inf->keyIndex + inf->keyNum - 1].value;
+  if (inf->unknown08 <= frame) {
+    return unknown18[inf->unknown00 + inf->unknown0e - 1].value;
   }
-  const LgtBitKey *key = &m_bitKeys[inf->keyIndex + 1];
-  for (int i = 1; i < inf->keyNum; i++, key++) {
+  const LgtBitKey *key = &unknown18[inf->unknown00 + 1];
+  for (int i = 1; i < inf->unknown0e; i++, key++) {
     f32 keyFrame = key->frame;
     if (frame < keyFrame) {
       return key[-1].value;

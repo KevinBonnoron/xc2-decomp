@@ -37,9 +37,9 @@ public:
   virtual ScnObj *createIBL(Scn *scn, const void *data, int screen) = 0;
   virtual ScnObj *createEnvColi(Scn *scn, const void *data, int screen) = 0;
 
-  Scn *m_scn;
+  Scn *unknown08; // Inferred role: scn; original member name unknown.
 };
 
-static_assert(offsetof(ScnRender, m_scn) == 0x08, "");
+static_assert(offsetof(ScnRender, unknown08) == 0x08, "");
 
 } // namespace ml

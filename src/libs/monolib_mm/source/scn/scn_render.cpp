@@ -2,7 +2,7 @@
 
 namespace ml {
 
-ScnRender::ScnRender(Scn *scn) : m_scn(scn) {}
+ScnRender::ScnRender(Scn *scn) : unknown08(scn) {}
 
 ScnRender::~ScnRender() {}
 

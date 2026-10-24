@@ -8,71 +8,71 @@
 namespace ml {
 
 DrShdLgtHybrid::DrShdLgtHybrid(DrMan *drMan) {
-  m_cate = 0;
-  m_drMan = drMan;
-  m_clustered = new (drMan->memSys) DrShdLgtClustered(drMan, false);
-  m_tileBasedDr = new (drMan->memSys) DrShdLgtTileBasedDr(drMan);
+  unknown08 = 0;
+  unknown10 = drMan;
+  unknown18 = new (drMan->unknown0c) DrShdLgtClustered(drMan, false);
+  unknown20 = new (drMan->unknown0c) DrShdLgtTileBasedDr(drMan);
 }
 
 DrShdLgtHybrid::~DrShdLgtHybrid() {
-  if (m_clustered != nullptr) {
-    delete m_clustered;
-    m_clustered = nullptr;
+  if (unknown18 != nullptr) {
+    delete unknown18;
+    unknown18 = nullptr;
   }
-  if (m_tileBasedDr != nullptr) {
-    delete m_tileBasedDr;
-    m_tileBasedDr = nullptr;
+  if (unknown20 != nullptr) {
+    delete unknown20;
+    unknown20 = nullptr;
   }
 }
 
 void DrShdLgtHybrid::stockBegin() {
-  m_clustered->stockBegin();
-  m_tileBasedDr->stockBegin();
+  unknown18->stockBegin();
+  unknown20->stockBegin();
 }
 
 void DrShdLgtHybrid::stockEnd() {
-  m_clustered->stockEnd();
-  m_tileBasedDr->stockEnd();
+  unknown18->stockEnd();
+  unknown20->stockEnd();
 }
 
 void DrShdLgtHybrid::update() {
-  m_clustered->update();
-  m_tileBasedDr->update();
+  unknown18->update();
+  unknown20->update();
 }
 
 void DrShdLgtHybrid::setupCate(int cate) {
-  m_cate = cate;
-  m_clustered->setupCate(cate);
-  m_tileBasedDr->setupCate(cate);
+  unknown08 = cate;
+  unknown18->setupCate(cate);
+  unknown20->setupCate(cate);
 }
 
 void DrShdLgtHybrid::addViewInfo(int cate) {
-  m_clustered->addViewInfo(cate);
-  m_tileBasedDr->addViewInfo(cate);
+  unknown18->addViewInfo(cate);
+  unknown20->addViewInfo(cate);
 }
 
 void DrShdLgtHybrid::delViewInfo(int cate) {
-  m_clustered->delViewInfo(cate);
-  m_tileBasedDr->delViewInfo(cate);
+  unknown18->delViewInfo(cate);
+  unknown20->delViewInfo(cate);
 }
 
 void DrShdLgtHybrid::stockPntList(DrLightObjPnt *light) {
-  m_clustered->stockPntList(light);
-  m_tileBasedDr->stockPntList(light);
+  unknown18->stockPntList(light);
+  unknown20->stockPntList(light);
 }
 
 void DrShdLgtHybrid::stockSptList(DrLightObjSpt *light) {
-  m_clustered->stockSptList(light);
-  m_tileBasedDr->stockSptList(light);
+  unknown18->stockSptList(light);
+  unknown20->stockSptList(light);
 }
 
 void DrShdLgtHybrid::debugRender() {
-  switch (m_drMan->dynamicLightType) {
+  switch (unknown10->unknown1da4) {
   case DR_SHD_LGT_DYNAMIC_TILE_BASED:
-    m_tileBasedDr->debugRender();
+    unknown20->debugRender();
     break;
   case DR_SHD_LGT_DYNAMIC_CLUSTERED:
-    m_clustered->debugRender();
+    unknown18->debugRender();
     break;
   }
 }

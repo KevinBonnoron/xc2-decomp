@@ -13,136 +13,136 @@ namespace ml {
 
 DrResMdoSortNom::DrResMdoSortNom(DrMdoCtlNom *owner) : DrMdoZSortObj(owner) {}
 
-void DrResMdoSortNom::SetupRender() { static_cast<DrMdoCtlNom *>(m_owner)->callNomSetupRender(); }
+void DrResMdoSortNom::SetupRender() { static_cast<DrMdoCtlNom *>(unknown18)->callNomSetupRender(); }
 
-void DrResMdoSortNom::ZPrepassRender() { static_cast<DrMdoCtlNom *>(m_owner)->callZSortNomZpreePassRender(); }
+void DrResMdoSortNom::ZPrepassRender() { static_cast<DrMdoCtlNom *>(unknown18)->callZSortNomZpreePassRender(); }
 
-void DrResMdoSortNom::ThicknessRenderFirst() { static_cast<DrMdoCtlNom *>(m_owner)->callZSortThicknessRenderFirst(); }
+void DrResMdoSortNom::ThicknessRenderFirst() { static_cast<DrMdoCtlNom *>(unknown18)->callZSortThicknessRenderFirst(); }
 
-void DrResMdoSortNom::ThicknessRenderSecond() { static_cast<DrMdoCtlNom *>(m_owner)->callZSortThicknessRenderSecond(); }
+void DrResMdoSortNom::ThicknessRenderSecond() { static_cast<DrMdoCtlNom *>(unknown18)->callZSortThicknessRenderSecond(); }
 
-void DrResMdoSortNom::render() { static_cast<DrMdoCtlNom *>(m_owner)->callZSortNomRender(); }
+void DrResMdoSortNom::render() { static_cast<DrMdoCtlNom *>(unknown18)->callZSortNomRender(); }
 
-void DrResMdoSortNom::GBuffRender() { static_cast<DrMdoCtlNom *>(m_owner)->callZSortGBuffRender(); }
+void DrResMdoSortNom::GBuffRender() { static_cast<DrMdoCtlNom *>(unknown18)->callZSortGBuffRender(); }
 
-void DrResMdoSortNom::lightPrePassRender() { static_cast<DrMdoCtlNom *>(m_owner)->callZSortLightPrePassRender(); }
+void DrResMdoSortNom::lightPrePassRender() { static_cast<DrMdoCtlNom *>(unknown18)->callZSortLightPrePassRender(); }
 
-void DrResMdoSortNom::alphaRender() { static_cast<DrMdoCtlNom *>(m_owner)->callZSortNomAlphaRender(); }
+void DrResMdoSortNom::alphaRender() { static_cast<DrMdoCtlNom *>(unknown18)->callZSortNomAlphaRender(); }
 
-void DrResMdoSortNom::spAlphaRender() { static_cast<DrMdoCtlNom *>(m_owner)->callZSortNomSpAlphaRender(); }
+void DrResMdoSortNom::spAlphaRender() { static_cast<DrMdoCtlNom *>(unknown18)->callZSortNomSpAlphaRender(); }
 
-void DrResMdoSortNom::refractionRender() { static_cast<DrMdoCtlNom *>(m_owner)->callZSortNomRefractionRender(); }
+void DrResMdoSortNom::refractionRender() { static_cast<DrMdoCtlNom *>(unknown18)->callZSortNomRefractionRender(); }
 
 DrResMdoSortNomLastApha::DrResMdoSortNomLastApha(DrMdoCtlNom *owner) : DrMdoZSortObj(owner) {}
 
-void DrResMdoSortNomLastApha::alphaRender() { static_cast<DrMdoCtlNom *>(m_owner)->callLastAlphaNomRender(); }
+void DrResMdoSortNomLastApha::alphaRender() { static_cast<DrMdoCtlNom *>(unknown18)->callLastAlphaNomRender(); }
 
 DrResMdoSortNomFastApha::DrResMdoSortNomFastApha(DrMdoCtlNom *owner) : DrMdoZSortObj(owner) {}
 
-void DrResMdoSortNomFastApha::alphaRender() { static_cast<DrMdoCtlNom *>(m_owner)->callFastAlphaNomRender(); }
+void DrResMdoSortNomFastApha::alphaRender() { static_cast<DrMdoCtlNom *>(unknown18)->callFastAlphaNomRender(); }
 
 DrResMdoSortNomCldBackApha::DrResMdoSortNomCldBackApha(DrMdoCtlNom *owner) : DrMdoZSortObj(owner) {}
 
-void DrResMdoSortNomCldBackApha::alphaRender() { static_cast<DrMdoCtlNom *>(m_owner)->callCldBackAlphaNomRender(); }
+void DrResMdoSortNomCldBackApha::alphaRender() { static_cast<DrMdoCtlNom *>(unknown18)->callCldBackAlphaNomRender(); }
 
 DrResMdoSortPos::DrResMdoSortPos(DrMdoCtlPos *owner) : DrMdoZSortObj(owner) {}
 
 DrResMdoSortPos::~DrResMdoSortPos() {}
 
-void DrResMdoSortPos::ZPrepassRender() { static_cast<DrMdoCtlPos *>(m_owner)->callZpreePassRenderPosAll(); }
+void DrResMdoSortPos::ZPrepassRender() { static_cast<DrMdoCtlPos *>(unknown18)->callZpreePassRenderPosAll(); }
 
-void DrResMdoSortPos::ThicknessRenderFirst() { static_cast<DrMdoCtlPos *>(m_owner)->callThicknessRenderFirstPosAll(); }
+void DrResMdoSortPos::ThicknessRenderFirst() { static_cast<DrMdoCtlPos *>(unknown18)->callThicknessRenderFirstPosAll(); }
 
-void DrResMdoSortPos::ThicknessRenderSecond() { static_cast<DrMdoCtlPos *>(m_owner)->callThicknessRenderSecondPosAll(); }
+void DrResMdoSortPos::ThicknessRenderSecond() { static_cast<DrMdoCtlPos *>(unknown18)->callThicknessRenderSecondPosAll(); }
 
-void DrResMdoSortPos::render() { static_cast<DrMdoCtlPos *>(m_owner)->callRenderPosAll(); }
+void DrResMdoSortPos::render() { static_cast<DrMdoCtlPos *>(unknown18)->callRenderPosAll(); }
 
-void DrResMdoSortPos::GBuffRender() { static_cast<DrMdoCtlPos *>(m_owner)->callGBuffRenderPosAll(); }
+void DrResMdoSortPos::GBuffRender() { static_cast<DrMdoCtlPos *>(unknown18)->callGBuffRenderPosAll(); }
 
-void DrResMdoSortPos::alphaRender() { static_cast<DrMdoCtlPos *>(m_owner)->callAlphaRenderPosAll(); }
+void DrResMdoSortPos::alphaRender() { static_cast<DrMdoCtlPos *>(unknown18)->callAlphaRenderPosAll(); }
 
-void DrResMdoSortPos::spAlphaRender() { static_cast<DrMdoCtlPos *>(m_owner)->callSpAlphaRenderPosAll(); }
+void DrResMdoSortPos::spAlphaRender() { static_cast<DrMdoCtlPos *>(unknown18)->callSpAlphaRenderPosAll(); }
 
-void DrResMdoSortPos::lightPrePassRender() { static_cast<DrMdoCtlPos *>(m_owner)->callLightPrePassRenderPosAll(); }
+void DrResMdoSortPos::lightPrePassRender() { static_cast<DrMdoCtlPos *>(unknown18)->callLightPrePassRenderPosAll(); }
 
-void DrResMdoSortPos::refractionRender() { static_cast<DrMdoCtlPos *>(m_owner)->callRefractionRenderPosAll(); }
+void DrResMdoSortPos::refractionRender() { static_cast<DrMdoCtlPos *>(unknown18)->callRefractionRenderPosAll(); }
 
 DrResMdoSortMpf::DrResMdoSortMpf(DrMdoCtlMpf *owner) : DrMdoZSortObj(owner) {}
 
 DrResMdoSortMpf::~DrResMdoSortMpf() {}
 
-void DrResMdoSortMpf::ZPrepassRender() { static_cast<DrMdoCtlMpf *>(m_owner)->callZPrepassRender(); }
+void DrResMdoSortMpf::ZPrepassRender() { static_cast<DrMdoCtlMpf *>(unknown18)->callZPrepassRender(); }
 
-void DrResMdoSortMpf::render() { static_cast<DrMdoCtlMpf *>(m_owner)->callRenderMpf(); }
+void DrResMdoSortMpf::render() { static_cast<DrMdoCtlMpf *>(unknown18)->callRenderMpf(); }
 
 DrResMdoSortGrp::DrResMdoSortGrp(DrMdoGrpObj *owner) : DrMdoZSortObj(owner) {}
 
-void DrResMdoSortGrp::SetupRender() { static_cast<DrMdoGrpObj *>(m_owner)->callNomSetupRender(); }
+void DrResMdoSortGrp::SetupRender() { static_cast<DrMdoGrpObj *>(unknown18)->callNomSetupRender(); }
 
-void DrResMdoSortGrp::ZPrepassRender() { static_cast<DrMdoGrpObj *>(m_owner)->callZSortNomZpreePassRender(); }
+void DrResMdoSortGrp::ZPrepassRender() { static_cast<DrMdoGrpObj *>(unknown18)->callZSortNomZpreePassRender(); }
 
-void DrResMdoSortGrp::ThicknessRenderFirst() { static_cast<DrMdoGrpObj *>(m_owner)->callZSortThicknessRenderFirst(); }
+void DrResMdoSortGrp::ThicknessRenderFirst() { static_cast<DrMdoGrpObj *>(unknown18)->callZSortThicknessRenderFirst(); }
 
-void DrResMdoSortGrp::ThicknessRenderSecond() { static_cast<DrMdoGrpObj *>(m_owner)->callZSortThicknessRenderSecond(); }
+void DrResMdoSortGrp::ThicknessRenderSecond() { static_cast<DrMdoGrpObj *>(unknown18)->callZSortThicknessRenderSecond(); }
 
-void DrResMdoSortGrp::render() { static_cast<DrMdoGrpObj *>(m_owner)->callZSortNomRender(); }
+void DrResMdoSortGrp::render() { static_cast<DrMdoGrpObj *>(unknown18)->callZSortNomRender(); }
 
-void DrResMdoSortGrp::GBuffRender() { static_cast<DrMdoGrpObj *>(m_owner)->callZSortGBuffRender(); }
+void DrResMdoSortGrp::GBuffRender() { static_cast<DrMdoGrpObj *>(unknown18)->callZSortGBuffRender(); }
 
-void DrResMdoSortGrp::lightPrePassRender() { static_cast<DrMdoGrpObj *>(m_owner)->callZSortLightPrePassRender(); }
+void DrResMdoSortGrp::lightPrePassRender() { static_cast<DrMdoGrpObj *>(unknown18)->callZSortLightPrePassRender(); }
 
-void DrResMdoSortGrp::alphaRender() { static_cast<DrMdoGrpObj *>(m_owner)->callZSortNomAlphaRender(); }
+void DrResMdoSortGrp::alphaRender() { static_cast<DrMdoGrpObj *>(unknown18)->callZSortNomAlphaRender(); }
 
-void DrResMdoSortGrp::spAlphaRender() { static_cast<DrMdoGrpObj *>(m_owner)->callZSortNomSpAlphaRender(); }
+void DrResMdoSortGrp::spAlphaRender() { static_cast<DrMdoGrpObj *>(unknown18)->callZSortNomSpAlphaRender(); }
 
-void DrResMdoSortGrp::refractionRender() { static_cast<DrMdoGrpObj *>(m_owner)->callZSortNomRefractionRender(); }
+void DrResMdoSortGrp::refractionRender() { static_cast<DrMdoGrpObj *>(unknown18)->callZSortNomRefractionRender(); }
 
 DrResMdoSortSeamAll::DrResMdoSortSeamAll(void *owner) : DrMdoZSortObj(owner) {}
 
 DrResMdoSortSeamAll::~DrResMdoSortSeamAll() {}
 
-void DrResMdoSortSeamAll::ZPrepassRender() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callZPrePassSeamAll(); }
+void DrResMdoSortSeamAll::ZPrepassRender() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callZPrePassSeamAll(); }
 
-void DrResMdoSortSeamAll::ThicknessRenderFirst() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callThicknessFirstSeamAll(); }
+void DrResMdoSortSeamAll::ThicknessRenderFirst() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callThicknessFirstSeamAll(); }
 
-void DrResMdoSortSeamAll::ThicknessRenderSecond() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callThicknessSecondSeamAll(); }
+void DrResMdoSortSeamAll::ThicknessRenderSecond() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callThicknessSecondSeamAll(); }
 
-void DrResMdoSortSeamAll::render() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callRenderSeamAll(); }
+void DrResMdoSortSeamAll::render() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callRenderSeamAll(); }
 
-void DrResMdoSortSeamAll::GBuffRender() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callGBuffRenderSeamAll(); }
+void DrResMdoSortSeamAll::GBuffRender() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callGBuffRenderSeamAll(); }
 
-void DrResMdoSortSeamAll::lightPrePassRender() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callLightPrePassRenderSeamAll(); }
+void DrResMdoSortSeamAll::lightPrePassRender() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callLightPrePassRenderSeamAll(); }
 
-void DrResMdoSortSeamAll::alphaRender() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callAlphaRenderSeamAll(); }
+void DrResMdoSortSeamAll::alphaRender() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callAlphaRenderSeamAll(); }
 
-void DrResMdoSortSeamAll::spAlphaRender() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callSpAlphaRenderSeamAll(); }
+void DrResMdoSortSeamAll::spAlphaRender() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callSpAlphaRenderSeamAll(); }
 
-void DrResMdoSortSeamAll::refractionRender() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callRefractionRenderSeamAll(); }
+void DrResMdoSortSeamAll::refractionRender() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callRefractionRenderSeamAll(); }
 
 DrResMdoSortSeamEnvMap::DrResMdoSortSeamEnvMap(void *owner) : DrMdoZSortObj(owner) {}
 
 DrResMdoSortSeamEnvMap::~DrResMdoSortSeamEnvMap() {}
 
-void DrResMdoSortSeamEnvMap::render() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callRenderSeamEnvMap(); }
+void DrResMdoSortSeamEnvMap::render() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callRenderSeamEnvMap(); }
 
-void DrResMdoSortSeamEnvMap::GBuffRender() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callGBuffRenderSeamEnvMap(); }
+void DrResMdoSortSeamEnvMap::GBuffRender() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callGBuffRenderSeamEnvMap(); }
 
-void DrResMdoSortSeamEnvMap::lightPrePassRender() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callLightPrePassRenderSeamEnvMap(); }
+void DrResMdoSortSeamEnvMap::lightPrePassRender() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callLightPrePassRenderSeamEnvMap(); }
 
-void DrResMdoSortSeamEnvMap::alphaRender() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callAlphaRenderSeamEnvMap(); }
+void DrResMdoSortSeamEnvMap::alphaRender() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callAlphaRenderSeamEnvMap(); }
 
-void DrResMdoSortSeamEnvMap::spAlphaRender() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callSpAlphaRenderSeamEnvMap(); }
+void DrResMdoSortSeamEnvMap::spAlphaRender() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callSpAlphaRenderSeamEnvMap(); }
 
-void DrResMdoSortSeamEnvMap::refractionRender() { static_cast<DrMdoCtlSeamAll *>(m_owner)->callRefractionRenderSeamEnvMap(); }
+void DrResMdoSortSeamEnvMap::refractionRender() { static_cast<DrMdoCtlSeamAll *>(unknown18)->callRefractionRenderSeamEnvMap(); }
 
 DrResMdoSortCloud::DrResMdoSortCloud(void *owner) : DrMdoZSortObj(owner) {}
 
 DrResMdoSortCloud::~DrResMdoSortCloud() {}
 
 void DrResMdoSortCloud::alphaRender() {
-  cloud::CloudMan *cloudMan = static_cast<cloud::CloudMan *>(m_owner);
+  cloud::CloudMan *cloudMan = static_cast<cloud::CloudMan *>(unknown18);
   DrMan *drMan = DrMan::getIns();
-  cloudMan->alphaRender(&drMan->drawWorkInfos[drMan->viewIndex]);
+  cloudMan->alphaRender(&drMan->unknown660[drMan->unknown1c98]);
 }
 
 } // namespace ml

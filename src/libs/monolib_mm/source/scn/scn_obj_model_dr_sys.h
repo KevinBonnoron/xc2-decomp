@@ -28,13 +28,13 @@ public:
   const mm::Vec3 &getCenter() const override;
   f32 getLength() const override;
 
-  DrMdlObj *m_drMdl;
-  DrMan *m_drMan;
+  DrMdlObj *unknown3d8; // Inferred role: dr mdl; original member name unknown.
+  DrMan *unknown3e0;    // Inferred role: dr man; original member name unknown.
   const void *m_data;
   mm::mtl::FixStr<64> _3f0;
 };
 
-static_assert(offsetof(ScnObjModelDrSys, m_drMdl) == 0x3d8, "");
+static_assert(offsetof(ScnObjModelDrSys, unknown3d8) == 0x3d8, "");
 static_assert(offsetof(ScnObjModelDrSys, m_data) == 0x3e8, "");
 static_assert(offsetof(ScnObjModelDrSys, _3f0) == 0x3f0, "");
 

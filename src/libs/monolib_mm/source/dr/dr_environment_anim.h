@@ -11,21 +11,21 @@ class DrLightObjPnt;
 class DrLightObjSpt;
 
 struct LgtAnimInf {
-  u32 keyIndex;
-  f32 startFrame;
-  f32 endFrame;
+  u32 unknown00; // Inferred role: key index; original member name unknown.
+  f32 unknown04; // Inferred role: start frame; original member name unknown.
+  f32 unknown08; // Inferred role: end frame; original member name unknown.
   u8 _0c[0x0e - 0x0c];
-  u16 keyNum;
+  u16 unknown0e; // Inferred role: key num; original member name unknown.
 };
 
-static_assert(offsetof(LgtAnimInf, keyNum) == 0x0e, "");
+static_assert(offsetof(LgtAnimInf, unknown0e) == 0x0e, "");
 static_assert(sizeof(LgtAnimInf) == 0x10, "");
 
 struct LgtHermiteKey {
-  f32 outSlope;
-  f32 inSlope;
-  f32 value;
-  u16 frame;
+  f32 unknown00; // Inferred role: out slope; original member name unknown.
+  f32 unknown04; // Inferred role: in slope; original member name unknown.
+  f32 unknown08; // Inferred role: value; original member name unknown.
+  u16 unknown0c; // Inferred role: frame; original member name unknown.
   u8 _0e[0x10 - 0x0e];
 };
 
@@ -105,24 +105,24 @@ public:
   u16 getBitAttr(const LgtAnimInf *inf, f32 frame);
 
   u8 _00[0x10 - 0x00];
-  const LgtHermiteKey *m_hermiteKeys;
-  const LgtBitKey *m_bitKeys;
+  const LgtHermiteKey *unknown10; // Inferred role: hermite keys; original member name unknown.
+  const LgtBitKey *unknown18;     // Inferred role: bit keys; original member name unknown.
   u8 _20[0x28 - 0x20];
-  int m_animNum;
-  f32 *m_frames;
-  mm::Col3 m_color;
-  mm::Col3 m_sideColor;
-  mm::Col3 m_sunColor;
-  f32 m_intensity;
-  f32 m_anmVal[3];
+  int unknown28;      // Inferred role: anim num; original member name unknown.
+  f32 *unknown30;     // Inferred role: frames; original member name unknown.
+  mm::Col3 unknown38; // Inferred role: color; original member name unknown.
+  mm::Col3 unknown44; // Inferred role: side color; original member name unknown.
+  mm::Col3 unknown50; // Inferred role: sun color; original member name unknown.
+  f32 unknown5c;      // Inferred role: intensity; original member name unknown.
+  f32 unknown60[3];   // Inferred role: anm val; original member name unknown.
 };
 
-static_assert(offsetof(DrEnvironmentAnim, m_hermiteKeys) == 0x10, "");
-static_assert(offsetof(DrEnvironmentAnim, m_animNum) == 0x28, "");
-static_assert(offsetof(DrEnvironmentAnim, m_color) == 0x38, "");
-static_assert(offsetof(DrEnvironmentAnim, m_sideColor) == 0x44, "");
-static_assert(offsetof(DrEnvironmentAnim, m_sunColor) == 0x50, "");
-static_assert(offsetof(DrEnvironmentAnim, m_intensity) == 0x5c, "");
-static_assert(offsetof(DrEnvironmentAnim, m_anmVal) == 0x60, "");
+static_assert(offsetof(DrEnvironmentAnim, unknown10) == 0x10, "");
+static_assert(offsetof(DrEnvironmentAnim, unknown28) == 0x28, "");
+static_assert(offsetof(DrEnvironmentAnim, unknown38) == 0x38, "");
+static_assert(offsetof(DrEnvironmentAnim, unknown44) == 0x44, "");
+static_assert(offsetof(DrEnvironmentAnim, unknown50) == 0x50, "");
+static_assert(offsetof(DrEnvironmentAnim, unknown5c) == 0x5c, "");
+static_assert(offsetof(DrEnvironmentAnim, unknown60) == 0x60, "");
 
 } // namespace ml

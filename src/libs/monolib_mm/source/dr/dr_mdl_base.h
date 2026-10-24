@@ -43,25 +43,25 @@ public:
 
   void setClip(bool isClip) {
     if (isClip) {
-      m_updateFlags |= UPDATE_FLAG_CLIP;
+      unknown20 |= UPDATE_FLAG_CLIP;
     } else {
-      m_updateFlags &= ~UPDATE_FLAG_CLIP;
+      unknown20 &= ~UPDATE_FLAG_CLIP;
     }
   }
 
   u8 _08[0x18 - 0x08];
-  s16 m_groups;
-  s16 m_viewNum;
-  u8 m_type;
-  u8 m_changeViewNum;
+  s16 unknown18; // Inferred role: groups; original member name unknown.
+  s16 unknown1a; // Inferred role: view num; original member name unknown.
+  u8 unknown1c;  // Inferred role: type; original member name unknown.
+  u8 unknown1d;  // Inferred role: change view num; original member name unknown.
   u8 _1e[0x20 - 0x1e];
-  u32 m_updateFlags;
+  u32 unknown20; // Inferred role: update flags; original member name unknown.
 };
 
-static_assert(offsetof(DrMdlBase, m_groups) == 0x18, "");
-static_assert(offsetof(DrMdlBase, m_viewNum) == 0x1a, "");
-static_assert(offsetof(DrMdlBase, m_type) == 0x1c, "");
-static_assert(offsetof(DrMdlBase, m_changeViewNum) == 0x1d, "");
-static_assert(offsetof(DrMdlBase, m_updateFlags) == 0x20, "");
+static_assert(offsetof(DrMdlBase, unknown18) == 0x18, "");
+static_assert(offsetof(DrMdlBase, unknown1a) == 0x1a, "");
+static_assert(offsetof(DrMdlBase, unknown1c) == 0x1c, "");
+static_assert(offsetof(DrMdlBase, unknown1d) == 0x1d, "");
+static_assert(offsetof(DrMdlBase, unknown20) == 0x20, "");
 
 } // namespace ml

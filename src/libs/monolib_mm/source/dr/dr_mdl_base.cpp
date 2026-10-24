@@ -22,9 +22,9 @@ void DrMdlBase::occRender() {}
 
 bool DrMdlBase::cloneMdlObj(DrMdlObj *source) { return false; }
 
-void DrMdlBase::setDisp(bool isDisp) { m_updateFlags = !isDisp ? m_updateFlags & ~UPDATE_FLAG_DISP : m_updateFlags | UPDATE_FLAG_DISP; }
+void DrMdlBase::setDisp(bool isDisp) { unknown20 = !isDisp ? unknown20 & ~UPDATE_FLAG_DISP : unknown20 | UPDATE_FLAG_DISP; }
 
-void DrMdlBase::setDeleteCall(int deleteCall) { m_updateFlags |= UPDATE_FLAG_DELETE_CALL << deleteCall; }
+void DrMdlBase::setDeleteCall(int deleteCall) { unknown20 |= UPDATE_FLAG_DELETE_CALL << deleteCall; }
 
 void DrMdlBase::chageShadowObject(DrMdoSmlShadowMan *shadowMan) {}
 

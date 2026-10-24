@@ -9,9 +9,9 @@ class DrCalcViewWork;
 class DrCalcMan {
 public:
   u8 _00[0x10 - 0x00];
-  DrCalcViewWork *m_viewWork;
+  DrCalcViewWork *unknown10; // Inferred role: view work; original member name unknown.
 };
 
-static_assert(offsetof(DrCalcMan, m_viewWork) == 0x10, "");
+static_assert(offsetof(DrCalcMan, unknown10) == 0x10, "");
 
 } // namespace ml

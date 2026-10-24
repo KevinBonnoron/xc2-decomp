@@ -22,18 +22,18 @@ struct MdsMdlVertexFmt;
 struct MdoWrkMatEntry;
 
 struct MdoWrkRimBloom {
-  mm::Col3 color;
-  f32 power;
-  f32 blackRatio;
-  f32 emissive;
+  mm::Col3 unknown00; // Inferred role: color; original member name unknown.
+  f32 unknown0c;      // Inferred role: power; original member name unknown.
+  f32 unknown10;      // Inferred role: black ratio; original member name unknown.
+  f32 unknown14;      // Inferred role: emissive; original member name unknown.
   u8 _18[0x1c - 0x18];
-  u32 flags;
+  u32 unknown1c; // Inferred role: flags; original member name unknown.
 };
 
-static_assert(offsetof(MdoWrkRimBloom, power) == 0x0c, "");
-static_assert(offsetof(MdoWrkRimBloom, blackRatio) == 0x10, "");
-static_assert(offsetof(MdoWrkRimBloom, emissive) == 0x14, "");
-static_assert(offsetof(MdoWrkRimBloom, flags) == 0x1c, "");
+static_assert(offsetof(MdoWrkRimBloom, unknown0c) == 0x0c, "");
+static_assert(offsetof(MdoWrkRimBloom, unknown10) == 0x10, "");
+static_assert(offsetof(MdoWrkRimBloom, unknown14) == 0x14, "");
+static_assert(offsetof(MdoWrkRimBloom, unknown1c) == 0x1c, "");
 static_assert(sizeof(MdoWrkRimBloom) == 0x20, "");
 
 class DrMdlObj : public DrMdoCtl {

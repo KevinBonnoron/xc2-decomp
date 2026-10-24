@@ -27,7 +27,7 @@ public:
   DrStmReadObj *createStmSizeObj(u32 size);
 
 private:
-  DrMan *m_drMan;
+  DrMan *unknown00; // Inferred role: dr man; original member name unknown.
 };
 
 static_assert(sizeof(DrCreator) == 0x08, "");

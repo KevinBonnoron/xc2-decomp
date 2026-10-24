@@ -24,12 +24,12 @@ public:
 
   DrMdoZSortObj *m_next;
   DrMdoZSortObj *m_parent;
-  void *m_owner;
+  void *unknown18; // Inferred role: owner; original member name unknown.
 };
 
 static_assert(offsetof(DrMdoZSortObj, m_next) == 0x08, "");
 static_assert(offsetof(DrMdoZSortObj, m_parent) == 0x10, "");
-static_assert(offsetof(DrMdoZSortObj, m_owner) == 0x18, "");
+static_assert(offsetof(DrMdoZSortObj, unknown18) == 0x18, "");
 
 class DrMdoZSortMan {
 public:

@@ -10,13 +10,13 @@ class CGLibTextureBuffer;
 namespace ml {
 
 struct DrCalcStmRes {
-  const u8 *data;
+  const u8 *unknown00; // Inferred role: data; original member name unknown.
   u8 _08[0x10 - 0x08];
-  u8 flags;
+  u8 unknown10; // Inferred role: flags; original member name unknown.
   u8 _11[0x18 - 0x11];
 };
 
-static_assert(offsetof(DrCalcStmRes, flags) == 0x10, "");
+static_assert(offsetof(DrCalcStmRes, unknown10) == 0x10, "");
 static_assert(sizeof(DrCalcStmRes) == 0x18, "");
 
 class DrCalcStmListObj {

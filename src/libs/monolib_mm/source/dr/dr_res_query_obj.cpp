@@ -7,47 +7,47 @@
 namespace ml {
 
 u32 DrResQueryObj::getOccZPassCount() {
-  if (flags & (DrResUseQueryObj::QUERY_FLAG_RESULT << DrMan::s_nDblNowIdx)) {
-    return query.getQueryPixel();
+  if (unknown38 & (DrResUseQueryObj::QUERY_FLAG_RESULT << DrMan::s_nDblNowIdx)) {
+    return unknown10.getQueryPixel();
   }
   return 0;
 }
 
-DrResQueryObj::DrResQueryObj() : next(nullptr), prev(nullptr), user(nullptr), subNext(nullptr), flags(0) {}
+DrResQueryObj::DrResQueryObj() : unknown00(nullptr), unknown08(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(0) {}
 
-DrResQueryObj::~DrResQueryObj() { query.release(); }
+DrResQueryObj::~DrResQueryObj() { unknown10.release(); }
 
 bool DrResQueryObj::update() {
-  if (user == nullptr) {
-    if (flags & DrResUseQueryObj::QUERY_FLAG_BEGIN) {
-      flags &= ~3;
+  if (unknown28 == nullptr) {
+    if (unknown38 & DrResUseQueryObj::QUERY_FLAG_BEGIN) {
+      unknown38 &= ~3;
       return false;
     }
-  } else if (flags & 2) {
-    if (flags & DrResUseQueryObj::QUERY_FLAG_BEGIN) {
-      flags &= ~DrResUseQueryObj::QUERY_FLAG_BEGIN;
+  } else if (unknown38 & 2) {
+    if (unknown38 & DrResUseQueryObj::QUERY_FLAG_BEGIN) {
+      unknown38 &= ~DrResUseQueryObj::QUERY_FLAG_BEGIN;
       return false;
     }
-    user->m_query = nullptr;
+    unknown28->m_query = nullptr;
   } else {
-    if (flags & DrResUseQueryObj::QUERY_FLAG_BEGIN) {
-      flags &= ~DrResUseQueryObj::QUERY_FLAG_BEGIN;
+    if (unknown38 & DrResUseQueryObj::QUERY_FLAG_BEGIN) {
+      unknown38 &= ~DrResUseQueryObj::QUERY_FLAG_BEGIN;
       return false;
     }
-    flags = 2;
+    unknown38 = 2;
     return false;
   }
-  flags = 0;
-  user = nullptr;
-  subNext = nullptr;
+  unknown38 = 0;
+  unknown28 = nullptr;
+  unknown30 = nullptr;
   return true;
 }
 
 void DrResQueryObj::begin() {
-  query.beginQuery();
-  flags |= DrResUseQueryObj::QUERY_FLAG_RESULT << DrMan::s_nDblNowIdx;
+  unknown10.beginQuery();
+  unknown38 |= DrResUseQueryObj::QUERY_FLAG_RESULT << DrMan::s_nDblNowIdx;
 }
 
-void DrResQueryObj::end() { query.endQuery(); }
+void DrResQueryObj::end() { unknown10.endQuery(); }
 
 } // namespace ml

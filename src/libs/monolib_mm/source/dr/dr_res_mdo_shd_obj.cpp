@@ -8,20 +8,20 @@ static const MdsDecShdHeader *getDecShdHeader(const u8 *resource) { return reint
 
 static const MdsDecShdInfo *getDecShdInfos(const MdsDecShdHeader *header) { return reinterpret_cast<const MdsDecShdInfo *>(reinterpret_cast<const u8 *>(header) + header->infoOfs); }
 
-DrResMdoShdObj::DrResMdoShdObj() : m_header(nullptr), m_decShds(nullptr), m_decShdMax(0) {}
+DrResMdoShdObj::DrResMdoShdObj() : unknown00(nullptr), unknown08(nullptr), unknown10(0) {}
 
 DrResMdoShdObj::~DrResMdoShdObj() {}
 
 u32 DrResMdoShdObj::getDecShdID(u32 index) const {
-  if (index < m_decShdMax) {
-    return m_decShds[index].info->id;
+  if (index < unknown10) {
+    return unknown08[index].unknown00->unknown04;
   }
   return 0;
 }
 
 int DrResMdoShdObj::getDecShdIdx(const char *name) const {
-  for (u32 i = 0; i < m_decShdMax; i++) {
-    if (strcmp(reinterpret_cast<const char *>(m_header) + m_decShds[i].info->nameOfs, name) == 0) {
+  for (u32 i = 0; i < unknown10; i++) {
+    if (strcmp(reinterpret_cast<const char *>(unknown00) + unknown08[i].unknown00->unknown00, name) == 0) {
       return i;
     }
   }
@@ -29,8 +29,8 @@ int DrResMdoShdObj::getDecShdIdx(const char *name) const {
 }
 
 int DrResMdoShdObj::getDecShdIdx(u32 id) const {
-  for (u32 i = 0; i < m_decShdMax; i++) {
-    if (m_decShds[i].info->id == id) {
+  for (u32 i = 0; i < unknown10; i++) {
+    if (unknown08[i].unknown00->unknown04 == id) {
       return i;
     }
   }
@@ -38,21 +38,21 @@ int DrResMdoShdObj::getDecShdIdx(u32 id) const {
 }
 
 void DrResMdoShdObj::setDecShdParm(u32 index, u32 parm) {
-  if (index < m_decShdMax) {
-    m_decShds[index].parm = parm;
+  if (index < unknown10) {
+    unknown08[index].unknown10 = parm;
   }
 }
 
 u32 DrResMdoShdObj::getDecShdParm(u32 index) const {
-  if (index < m_decShdMax) {
-    return m_decShds[index].parm;
+  if (index < unknown10) {
+    return unknown08[index].unknown10;
   }
   return 0;
 }
 
 u32 DrResMdoShdObj::getDecShdParmMax(u32 index) const {
-  if (index < m_decShdMax) {
-    return m_decShds[index].info->parmMax;
+  if (index < unknown10) {
+    return unknown08[index].unknown00->unknown08;
   }
   return 0;
 }
@@ -62,7 +62,7 @@ int DrResMdoShdObj::calcWorkSize(const u8 *resource) {
   int size = 0;
   const MdsDecShdInfo *info = getDecShdInfos(header);
   for (int i = 0; i < header->num; i++, info++) {
-    size += info->shaderNum;
+    size += info->unknown10;
   }
   return size + (-size & 3) + header->num * sizeof(DrResMdoDecShd) + sizeof(DrResMdoShdObj);
 }

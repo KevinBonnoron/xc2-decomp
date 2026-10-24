@@ -16,10 +16,10 @@ public:
   void fastRender();
   void endMode();
 
-  u32 m_flags;
-  DrPixlMan *m_pixlMan;
+  u32 unknown00;        // Inferred role: flags; original member name unknown.
+  DrPixlMan *unknown08; // Inferred role: pixl man; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlShadowCacheMan, m_pixlMan) == 0x8, "");
+static_assert(offsetof(DrPixlShadowCacheMan, unknown08) == 0x8, "");
 
 } // namespace ml

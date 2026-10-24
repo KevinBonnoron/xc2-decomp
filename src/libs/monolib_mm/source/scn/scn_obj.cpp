@@ -15,15 +15,15 @@ namespace ml {
 class Scn;
 
 ScnObjLight::ScnObjLight(Scn *scn) : ScnObj(scn, TYPE_LIGHT), m_flags(0) {
-  m_renderInfo.m_back->transform.clear();
+  m_renderInfo.m_back->unknown00.clear();
   memcpy(m_renderInfo.m_front, m_renderInfo.m_back, sizeof(RENDER_INFO));
   m_renderInfo.m_flags.set(threadval<RENDER_INFO>::FLAG_SYNC);
   m_flags |= FLAG_DISP;
 }
 
-const AttrTransform *ScnObjLight::getTrans(bool isBack) const { return &(isBack ? m_renderInfo.m_back : m_renderInfo.m_front)->transform; }
+const AttrTransform *ScnObjLight::getTrans(bool isBack) const { return &(isBack ? m_renderInfo.m_back : m_renderInfo.m_front)->unknown00; }
 
-AttrTransform *ScnObjLight::getTrans(bool isBack) { return &(isBack ? m_renderInfo.m_back : m_renderInfo.m_front)->transform; }
+AttrTransform *ScnObjLight::getTrans(bool isBack) { return &(isBack ? m_renderInfo.m_back : m_renderInfo.m_front)->unknown00; }
 
 void ScnObjLight::setDisp(bool isDisp) {
   if (isDisp) {
@@ -75,9 +75,9 @@ void ScnObjModel::setClip(bool isClip) {
   }
 }
 
-AttrTransform *ScnObjModel::getTrans(bool isBack) { return &(isBack ? m_renderInfo.m_back : m_renderInfo.m_front)->transform; }
+AttrTransform *ScnObjModel::getTrans(bool isBack) { return &(isBack ? m_renderInfo.m_back : m_renderInfo.m_front)->unknown00; }
 
-const AttrTransform *ScnObjModel::getTrans(bool isBack) const { return &(isBack ? m_renderInfo.m_back : m_renderInfo.m_front)->transform; }
+const AttrTransform *ScnObjModel::getTrans(bool isBack) const { return &(isBack ? m_renderInfo.m_back : m_renderInfo.m_front)->unknown00; }
 
 ScnObjModel::RENDER_OFFSET_INFO *ScnObjModel::getOffsetInfo(bool isBack) { return isBack ? m_offsetInfo.m_back : m_offsetInfo.m_front; }
 

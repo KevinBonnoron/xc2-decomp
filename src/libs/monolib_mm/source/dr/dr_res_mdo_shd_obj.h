@@ -8,11 +8,11 @@ namespace ml {
 class DrShdMdoExtTblObj;
 
 struct MdsDecShdInfo {
-  u32 nameOfs;
-  u32 id;
-  u32 parmMax;
-  u32 shaderIdxOfs;
-  s32 shaderNum;
+  u32 unknown00; // Inferred role: name ofs; original member name unknown.
+  u32 unknown04; // Inferred role: id; original member name unknown.
+  u32 unknown08; // Inferred role: parm max; original member name unknown.
+  u32 unknown0c; // Inferred role: shader idx ofs; original member name unknown.
+  s32 unknown10; // Inferred role: shader num; original member name unknown.
 };
 
 static_assert(sizeof(MdsDecShdInfo) == 0x14, "");
@@ -23,10 +23,10 @@ struct MdsDecShdHeader {
 };
 
 struct DrResMdoDecShd {
-  const MdsDecShdInfo *info;
-  u8 *declOfs;
-  u32 parm;
-  u32 prevParm;
+  const MdsDecShdInfo *unknown00; // Inferred role: info; original member name unknown.
+  u8 *unknown08;                  // Inferred role: decl ofs; original member name unknown.
+  u32 unknown10;                  // Inferred role: parm; original member name unknown.
+  u32 unknown14;                  // Inferred role: prev parm; original member name unknown.
 };
 
 static_assert(sizeof(DrResMdoDecShd) == 0x18, "");
@@ -48,13 +48,13 @@ public:
   static int create(u8 *work, const u8 *resource);
   static void release(DrResMdoShdObj *&shdObj);
 
-  const MdsDecShdHeader *m_header;
-  DrResMdoDecShd *m_decShds;
-  u32 m_decShdMax;
+  const MdsDecShdHeader *unknown00; // Inferred role: header; original member name unknown.
+  DrResMdoDecShd *unknown08;        // Inferred role: dec shds; original member name unknown.
+  u32 unknown10;                    // Inferred role: dec shd max; original member name unknown.
 };
 
-static_assert(offsetof(DrResMdoShdObj, m_decShds) == 0x08, "");
-static_assert(offsetof(DrResMdoShdObj, m_decShdMax) == 0x10, "");
+static_assert(offsetof(DrResMdoShdObj, unknown08) == 0x08, "");
+static_assert(offsetof(DrResMdoShdObj, unknown10) == 0x10, "");
 static_assert(sizeof(DrResMdoShdObj) == 0x18, "");
 
 } // namespace ml

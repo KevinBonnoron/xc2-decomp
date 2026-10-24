@@ -11,7 +11,7 @@ class DrCalcStmListObj;
 
 struct MdsTexInfo {
   u8 _00[0x0c - 0x00];
-  u32 nameOffset;
+  u32 unknown0c; // Inferred role: name offset; original member name unknown.
 };
 
 static_assert(sizeof(MdsTexInfo) == 0x10, "");
@@ -44,29 +44,29 @@ public:
   void changeMemTexList(const u8 *texData);
   static int calcTextureMax(const u8 *texHeader);
 
-  DrResMdoTexList *m_prev;
-  DrResMdoTexList *m_next;
-  const u8 *m_resourceKey;
-  s32 m_refCount;
-  grlib::CGLibTextureBuffer *m_textures;
-  grlib::CGLibVtlMemPool m_memPool;
-  DrCalcStmListObj *m_stmList;
+  DrResMdoTexList *unknown00;           // Inferred role: prev; original member name unknown.
+  DrResMdoTexList *unknown08;           // Inferred role: next; original member name unknown.
+  const u8 *unknown10;                  // Inferred role: resource key; original member name unknown.
+  s32 unknown18;                        // Inferred role: ref count; original member name unknown.
+  grlib::CGLibTextureBuffer *unknown20; // Inferred role: textures; original member name unknown.
+  grlib::CGLibVtlMemPool unknown28;     // Inferred role: mem pool; original member name unknown.
+  DrCalcStmListObj *unknown58;          // Inferred role: stm list; original member name unknown.
   void *m_buffer;
-  s32 m_texMax;
-  u32 m_flags;
+  s32 unknown68; // Inferred role: tex max; original member name unknown.
+  u32 unknown6c; // Inferred role: flags; original member name unknown.
   u8 _70[0x74 - 0x70];
   u8 _74[0x78 - 0x74];
-  const u16 *m_stmTexIdx;
-  const u8 *m_texHeader;
-  const u8 *m_texData;
+  const u16 *unknown78; // Inferred role: stm tex idx; original member name unknown.
+  const u8 *unknown80;  // Inferred role: tex header; original member name unknown.
+  const u8 *unknown88;  // Inferred role: tex data; original member name unknown.
   u8 _90[0x98 - 0x90];
   u8 _98[0xa0 - 0x98];
 };
 
-static_assert(offsetof(DrResMdoTexList, m_memPool) == 0x28, "");
-static_assert(offsetof(DrResMdoTexList, m_stmList) == 0x58, "");
-static_assert(offsetof(DrResMdoTexList, m_texMax) == 0x68, "");
-static_assert(offsetof(DrResMdoTexList, m_stmTexIdx) == 0x78, "");
+static_assert(offsetof(DrResMdoTexList, unknown28) == 0x28, "");
+static_assert(offsetof(DrResMdoTexList, unknown58) == 0x58, "");
+static_assert(offsetof(DrResMdoTexList, unknown68) == 0x68, "");
+static_assert(offsetof(DrResMdoTexList, unknown78) == 0x78, "");
 static_assert(sizeof(DrResMdoTexList) == 0xa0, "");
 
 class DrResMdoTexSimple {
@@ -77,15 +77,15 @@ public:
   void release();
   void createTex();
 
-  DrResMdoTexSimple *m_prev;
-  DrResMdoTexSimple *m_next;
-  grlib::CGLibTextureBuffer m_texture;
-  const void *m_texData;
+  DrResMdoTexSimple *unknown00;        // Inferred role: prev; original member name unknown.
+  DrResMdoTexSimple *unknown08;        // Inferred role: next; original member name unknown.
+  grlib::CGLibTextureBuffer unknown10; // Inferred role: texture; original member name unknown.
+  const void *unknown80;               // Inferred role: tex data; original member name unknown.
   int m_size;
-  u32 m_flags;
+  u32 unknown8c; // Inferred role: flags; original member name unknown.
 };
 
-static_assert(offsetof(DrResMdoTexSimple, m_texData) == 0x80, "");
+static_assert(offsetof(DrResMdoTexSimple, unknown80) == 0x80, "");
 static_assert(sizeof(DrResMdoTexSimple) == 0x90, "");
 
 } // namespace ml

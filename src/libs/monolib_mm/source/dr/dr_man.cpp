@@ -25,42 +25,42 @@ int DrMan::loopCnt() { return 1; }
 void DrMan::applyEnd(int loop) {}
 
 void DrMan::applyViewBegin() {
-  apCache->begin();
-  pixlMan->updateShadowDisplayList();
+  unknown5c0->begin();
+  unknown78->updateShadowDisplayList();
 }
 
-void DrMan::renderBegin(int loop) { tileParm->begin(DrPixlTileParm::TILE_TYPE_MAIN); }
+void DrMan::renderBegin(int loop) { unknown180->begin(DrPixlTileParm::TILE_TYPE_MAIN); }
 
-void DrMan::setMainRenderTarget() { pixlMan->setMainRenderTarget(); }
+void DrMan::setMainRenderTarget() { unknown78->setMainRenderTarget(); }
 
 bool DrMan::isIBLHalfRes() const { return true; }
 
 void DrMdlMan::renderBegin() {}
 
-void DrMan::fastRender() { pixlMan->fastRender(); }
+void DrMan::fastRender() { unknown78->fastRender(); }
 
 void DrMan::setCallBack(IDrDrawCallback *callback) {
-  if (callbackNum < 16) {
-    callbacks[callbackNum] = callback;
-    callbackNum++;
+  if (unknown658 < 16) {
+    unknown5d8[unknown658] = callback;
+    unknown658++;
   }
 }
 
 void DrMan::releaseCallBack(IDrDrawCallback *callback) {
-  for (int i = 0; i < callbackNum; i++) {
-    if (callbacks[i] == callback) {
-      for (; i < callbackNum - 1; i++) {
-        callbacks[i] = callbacks[i + 1];
+  for (int i = 0; i < unknown658; i++) {
+    if (unknown5d8[i] == callback) {
+      for (; i < unknown658 - 1; i++) {
+        unknown5d8[i] = unknown5d8[i + 1];
       }
-      callbackNum--;
-      callbacks[callbackNum] = nullptr;
+      unknown658--;
+      unknown5d8[unknown658] = nullptr;
       return;
     }
   }
 }
 
 void DrMan::setCacherClearMode(bool cacherClearMode) {
-  texStreamMan->m_flags = !cacherClearMode ? texStreamMan->m_flags & ~DrCalcTexStreamMan::FLAG_CACHER_CLEAR_MODE : texStreamMan->m_flags | DrCalcTexStreamMan::FLAG_CACHER_CLEAR_MODE;
+  unknown5b0->unknown2068 = !cacherClearMode ? unknown5b0->unknown2068 & ~DrCalcTexStreamMan::FLAG_CACHER_CLEAR_MODE : unknown5b0->unknown2068 | DrCalcTexStreamMan::FLAG_CACHER_CLEAR_MODE;
 }
 
 void DrMan::openPixelDebugWindow(WinProc *window) {}
@@ -69,79 +69,79 @@ void DrMan::openHistgramDebugWindow(WinProc *window) {}
 
 void DrMan::memcpyLcDMA(void *destination, const void *source, u32 size) { memcpy(destination, source, size); }
 
-u32 DrMan::getMem1AlphaFree() { return DrPixlMemMan::get()->m_mem1AlphaFree; }
+u32 DrMan::getMem1AlphaFree() { return DrPixlMemMan::get()->unknown434; }
 
 void DrMan::setGblIdx(s32 id) {
-  if (!(gblTbl[id >> 5] & (1 << (id & 31)))) {
-    pixlMan->callShadowCacheVariance();
-    gblTbl[id >> 5] |= 1 << (id & 31);
+  if (!(unknown1d20[id >> 5] & (1 << (id & 31)))) {
+    unknown78->callShadowCacheVariance();
+    unknown1d20[id >> 5] |= 1 << (id & 31);
   }
 }
 
 void DrMan::offGblIdx(s32 id) {
-  if (gblTbl[id >> 5] & (1 << (id & 31))) {
-    pixlMan->callShadowCacheVariance();
-    gblTbl[id >> 5] &= ~(1 << (id & 31));
+  if (unknown1d20[id >> 5] & (1 << (id & 31))) {
+    unknown78->callShadowCacheVariance();
+    unknown1d20[id >> 5] &= ~(1 << (id & 31));
   }
 }
 
 void DrMan::setTimeVal(f32 timeVal) {
   s32 index = s_nDblStockIdx;
   if (timeVal > 1.0f) {
-    timeVals[index] = 1.0f;
+    unknown1ca4[index] = 1.0f;
   } else if (timeVal < 0.0f) {
-    timeVals[index] = 0.0f;
+    unknown1ca4[index] = 0.0f;
   } else {
-    timeVals[index] = timeVal;
+    unknown1ca4[index] = timeVal;
   }
 }
 
-void DrMan::setGroupsDisp(s32 group, bool disp) { mdlMan->setGroupsDisp(group, disp); }
+void DrMan::setGroupsDisp(s32 group, bool disp) { unknown88->setGroupsDisp(group, disp); }
 
 void DrMdlMan::setGroupsDisp(s32 group, bool disp) {
   if (disp) {
-    m_groupsDisp |= 1 << group;
+    unknown23c |= 1 << group;
   } else {
-    m_groupsDisp &= ~(1 << group);
+    unknown23c &= ~(1 << group);
   }
 }
 
 void DrMan::setReduction(bool isReduction, f32 scaleX, f32 scaleY) {
-  DrPixlPostParm *postParm = postParms[0];
-  postParm->reduction = isReduction;
-  postParm->reductionScX = scaleX;
-  postParm->reductionScY = scaleY;
+  DrPixlPostParm *postParm = unknown120[0];
+  postParm->unknownfb2 = isReduction;
+  postParm->unknownfb8 = scaleX;
+  postParm->unknownfbc = scaleY;
 }
 
-void DrMan::setAutoReduction(bool autoReduction) { gpuCost->m_autoReduction = autoReduction; }
+void DrMan::setAutoReduction(bool autoReduction) { unknown5c8->m_autoReduction = autoReduction; }
 
-void DrMan::setAA(bool isAA) { postParms[0]->aa = isAA; }
+void DrMan::setAA(bool isAA) { unknown120[0]->m_AAOn = isAA; }
 
-void DrMan::setColorFilter(bool isColorFilter) { postParms[0]->colorFilter = isColorFilter; }
+void DrMan::setColorFilter(bool isColorFilter) { unknown120[0]->m_colTblOn = isColorFilter; }
 
-void DrMan::setSSAO(bool isSSAO) { postParms[0]->ssao = isSSAO; }
+void DrMan::setSSAO(bool isSSAO) { unknown120[0]->unknown194 = isSSAO; }
 
-void DrMan::setBloom(bool isBloom, bool isLensFlare) { postParms[0]->bloom = isBloom; }
+void DrMan::setBloom(bool isBloom, bool isLensFlare) { unknown120[0]->m_bloomOn = isBloom; }
 
-void DrMan::setToneMap(bool isToneMap) { postParms[0]->toneMap = isToneMap; }
+void DrMan::setToneMap(bool isToneMap) { unknown120[0]->m_toneMapOn = isToneMap; }
 
-void DrMan::setMotionBlur(bool isMotionBlur) { postParms[0]->motBlur = isMotionBlur; }
+void DrMan::setMotionBlur(bool isMotionBlur) { unknown120[0]->unknown1ca = isMotionBlur; }
 
 void DrMan::setMotionBlur(f32 strength, f32 sub) {}
 
-void DrMan::setDepthOfField(bool isDepthOfField) { postParms[0]->setDOF(isDepthOfField); }
+void DrMan::setDepthOfField(bool isDepthOfField) { unknown120[0]->setDOF(isDepthOfField); }
 
 void DrMan::setDepthOfFieldParm(f32 distance, f32 range, f32 strength, f32 blend) {
-  DrPixlPostParm *postParm = postParms[0];
+  DrPixlPostParm *postParm = unknown120[0];
   postParm->setDoFDistance(distance);
   postParm->setDoFRange(range);
   postParm->setDoFPixlRatio(strength);
   postParm->setDoFLens(blend);
 }
 
-void DrMan::setGlobalWind(const mm::Vec3 &globalWind) { globalWinds[s_nDblStockIdx] = globalWind; }
+void DrMan::setGlobalWind(const mm::Vec3 &globalWind) { unknown1d30[s_nDblStockIdx] = globalWind; }
 
-const mm::Vec3 &DrMan::getGlobalWind() const { return globalWinds[s_nDblNowIdx]; }
+const mm::Vec3 &DrMan::getGlobalWind() const { return unknown1d30[s_nDblNowIdx]; }
 
 void DrMan::callCubeMapRender(const DR_CAPCUBE_PARAM &param) {}
 
@@ -156,18 +156,18 @@ void DrMan::beginMetric(const char *name) { grlib::CGLibDebug::setPushDebugGroup
 void DrMan::endMetric(const char *name) { grlib::CGLibDebug::setPopDebugGroup(); }
 
 void DrMan::releaseFastLight(s32 index) {
-  if (lightMans[index] != nullptr) {
-    lightMans[index]->releaseFastLight();
+  if (unknownc0[index] != nullptr) {
+    unknownc0[index]->releaseFastLight();
   }
 }
 
-void DrMan::setAllMiddelTexStmChk(bool isCheck) { allMiddelTexStmChks[s_nDblIdx] |= isCheck; }
+void DrMan::setAllMiddelTexStmChk(bool isCheck) { unknown1d9c[s_nDblIdx] |= isCheck; }
 
-bool DrMan::isAllMiddelTexStmChk() const { return allMiddelTexStmChks[s_nDblStockIdx]; }
+bool DrMan::isAllMiddelTexStmChk() const { return unknown1d9c[s_nDblStockIdx]; }
 
-void DrMan::setSeamMapStmOk(bool isOk) { seamMapStmOks[s_nDblIdx] = isOk; }
+void DrMan::setSeamMapStmOk(bool isOk) { unknown1d9e[s_nDblIdx] = isOk; }
 
-bool DrMan::isSeamMapStmOk() const { return seamMapStmOks[s_nDblStockIdx]; }
+bool DrMan::isSeamMapStmOk() const { return unknown1d9e[s_nDblStockIdx]; }
 
 void DrMan::setAvatarCapMode(s32 avatarCapMode) {}
 
@@ -178,7 +178,7 @@ void DrMan::setDblNowIdx(int index) {
 
 void DrMan::bkgHomeMenu(bool isOpen) {
   if (isOpen) {
-    homeMenuOpened = true;
+    unknown1cc0 = true;
   }
 }
 

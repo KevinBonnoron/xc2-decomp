@@ -16,7 +16,7 @@ class Scn;
 class ScnObjLight : public ScnObj {
 public:
   struct RENDER_INFO {
-    AttrTransform transform;
+    AttrTransform unknown00; // Inferred role: transform; original member name unknown.
   };
 
   enum Flag {
@@ -43,12 +43,12 @@ public:
   virtual int getGroup() const = 0;
   virtual void setOffsetPos(const mm::Vec3 &position) = 0;
   virtual const mm::Vec3 &getOffsetPos() const = 0;
-  virtual void setPos(const mm::Vec3 &position) { m_renderInfo.m_back->transform.m_pos = position; }
-  virtual void setRot(const mm::Vec3 &rotation) { m_renderInfo.m_back->transform.m_rot = rotation; }
-  virtual void setScl(const mm::Vec3 &scale) { m_renderInfo.m_back->transform.m_scl = scale; }
+  virtual void setPos(const mm::Vec3 &position) { m_renderInfo.m_back->unknown00.m_pos = position; }
+  virtual void setRot(const mm::Vec3 &rotation) { m_renderInfo.m_back->unknown00.m_rot = rotation; }
+  virtual void setScl(const mm::Vec3 &scale) { m_renderInfo.m_back->unknown00.m_scl = scale; }
 
   virtual void setMat(const mm::Mat44 &matrix) {
-    AttrTransform &transform = m_renderInfo.m_back->transform;
+    AttrTransform &transform = m_renderInfo.m_back->unknown00;
     transform.m_matrix = matrix;
     transform.m_flags |= AttrTransform::FLAG_MATRIX;
   }

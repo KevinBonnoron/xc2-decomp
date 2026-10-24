@@ -10,7 +10,7 @@ DrResUseQueryObj::DrResUseQueryObj() : m_query(nullptr), m_pixel(0) {}
 
 DrResUseQueryObj::~DrResUseQueryObj() {
   if (m_query != nullptr) {
-    m_query->user = nullptr;
+    m_query->unknown28 = nullptr;
     m_query = nullptr;
   }
 }
@@ -20,7 +20,7 @@ void DrResUseQueryObj::update() {
     m_pixel = 0;
     return;
   }
-  m_pixel = (m_query->flags & (QUERY_FLAG_RESULT << DrMan::s_nDblNowIdx)) ? m_query->query.getQueryPixel() : 0;
+  m_pixel = (m_query->unknown38 & (QUERY_FLAG_RESULT << DrMan::s_nDblNowIdx)) ? m_query->unknown10.getQueryPixel() : 0;
 }
 
 void DrResUseQueryObj::begin(DrPixlOccQuery *occQuery) {
@@ -31,16 +31,16 @@ void DrResUseQueryObj::begin(DrPixlOccQuery *occQuery) {
       return;
     }
     m_query = query;
-    query->user = this;
+    query->unknown28 = this;
   }
-  query->flags |= QUERY_FLAG_BEGIN;
-  query->query.beginQuery();
-  query->flags |= QUERY_FLAG_RESULT << DrMan::s_nDblNowIdx;
+  query->unknown38 |= QUERY_FLAG_BEGIN;
+  query->unknown10.beginQuery();
+  query->unknown38 |= QUERY_FLAG_RESULT << DrMan::s_nDblNowIdx;
 }
 
 void DrResUseQueryObj::end() {
   if (m_query != nullptr) {
-    m_query->query.endQuery();
+    m_query->unknown10.endQuery();
   }
 }
 

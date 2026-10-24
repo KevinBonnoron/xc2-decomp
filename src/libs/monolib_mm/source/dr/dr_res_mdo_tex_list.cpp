@@ -9,104 +9,104 @@
 namespace ml {
 
 DrResMdoTexList::DrResMdoTexList(const u8 *texData)
-    : m_prev(nullptr), m_next(nullptr), m_resourceKey(texData), m_refCount(1), m_textures(nullptr), m_stmList(nullptr), m_buffer(nullptr), m_texMax(0), m_flags(0), _70(), m_texHeader(texData),
-      m_texData(texData), _90(), _98() {
+    : unknown00(nullptr), unknown08(nullptr), unknown10(texData), unknown18(1), unknown20(nullptr), unknown58(nullptr), m_buffer(nullptr), unknown68(0), unknown6c(0), _70(), unknown80(texData),
+      unknown88(texData), _90(), _98() {
   createTexInfoList();
-  createTexList(m_texHeader, m_texData);
+  createTexList(unknown80, unknown88);
 }
 
 DrResMdoTexList::DrResMdoTexList(const u8 *texHeader, DrCalcStmListObj *stmList, const u8 *texData, const MdsTexHeader *stmHeader)
-    : m_prev(nullptr), m_next(nullptr), m_resourceKey(texHeader), m_refCount(1), m_textures(nullptr), m_stmList(stmList), m_buffer(nullptr), m_texMax(0), m_flags(0), _70(), m_texHeader(texHeader),
-      m_texData(texData), _90(), _98() {
+    : unknown00(nullptr), unknown08(nullptr), unknown10(texHeader), unknown18(1), unknown20(nullptr), unknown58(stmList), m_buffer(nullptr), unknown68(0), unknown6c(0), _70(), unknown80(texHeader),
+      unknown88(texData), _90(), _98() {
   createStmTexInfoList(stmList, reinterpret_cast<const u8 *>(stmHeader), true);
-  createTexList(m_texHeader, m_texData);
+  createTexList(unknown80, unknown88);
 }
 
 DrResMdoTexList::DrResMdoTexList(const u8 *texHeader, DrCalcStmListObj *stmList, const u8 *texData, const u16 *stmTexIdx)
-    : m_prev(nullptr), m_next(nullptr), m_resourceKey(texHeader), m_refCount(1), m_textures(nullptr), m_stmList(stmList), m_buffer(nullptr), m_texMax(0), m_flags(0), _70(), m_texHeader(texHeader),
-      m_texData(texData), _90(), _98() {
+    : unknown00(nullptr), unknown08(nullptr), unknown10(texHeader), unknown18(1), unknown20(nullptr), unknown58(stmList), m_buffer(nullptr), unknown68(0), unknown6c(0), _70(), unknown80(texHeader),
+      unknown88(texData), _90(), _98() {
   createStmTexInfoList(stmList, reinterpret_cast<const u8 *>(stmTexIdx), false);
-  createTexList(m_texHeader, m_texData);
+  createTexList(unknown80, unknown88);
 }
 
 DrResMdoTexList::DrResMdoTexList(const u8 *texHeader, const u8 *texData)
-    : m_prev(nullptr), m_next(nullptr), m_resourceKey(texHeader), m_refCount(1), m_textures(nullptr), m_stmList(nullptr), m_buffer(nullptr), m_texMax(0), m_flags(0), _70(), m_texHeader(texHeader),
-      m_texData(texData), _90(), _98() {
+    : unknown00(nullptr), unknown08(nullptr), unknown10(texHeader), unknown18(1), unknown20(nullptr), unknown58(nullptr), m_buffer(nullptr), unknown68(0), unknown6c(0), _70(), unknown80(texHeader),
+      unknown88(texData), _90(), _98() {
   createTexInfoList();
-  createTexList(m_texHeader, m_texData);
+  createTexList(unknown80, unknown88);
 }
 
 DrResMdoTexList::~DrResMdoTexList() { release(); }
 
 void DrResMdoTexList::release() {
-  if (m_texMax != 0) {
-    for (int i = 0; i < m_texMax; i++) {
-      m_textures[i].~CGLibTextureBuffer();
+  if (unknown68 != 0) {
+    for (int i = 0; i < unknown68; i++) {
+      unknown20[i].~CGLibTextureBuffer();
     }
-    m_textures = nullptr;
-    m_texMax = 0;
+    unknown20 = nullptr;
+    unknown68 = 0;
   }
   if (m_buffer != nullptr) {
     mtl::MemManager::deallocate(m_buffer, 0, false);
     m_buffer = nullptr;
   }
-  m_memPool.release();
-  m_flags = 0;
+  unknown28.release();
+  unknown6c = 0;
 }
 
 void DrResMdoTexList::update() {
   texStmUpdate();
-  m_flags &= ~0x30000;
+  unknown6c &= ~0x30000;
 }
 
 void DrResMdoTexList::callStmRead(int mode) {
   if (mode != 0) {
-    m_flags |= 0x10000;
+    unknown6c |= 0x10000;
     if (mode == 2) {
-      m_flags |= 0x20000;
+      unknown6c |= 0x20000;
     }
   }
 }
 
-grlib::CGLibTextureBuffer *DrResMdoTexList::getTexObj(u32 index) { return &m_textures[index]; }
+grlib::CGLibTextureBuffer *DrResMdoTexList::getTexObj(u32 index) { return &unknown20[index]; }
 
 grlib::CGLibTextureBuffer *DrResMdoTexList::getStmTexObj(u32 index) {
-  u32 stmIdx = m_stmTexIdx[index];
+  u32 stmIdx = unknown78[index];
   if (stmIdx != 0) {
-    return m_stmList->getTexObj(stmIdx - 1);
+    return unknown58->getTexObj(stmIdx - 1);
   }
-  return &m_textures[index];
+  return &unknown20[index];
 }
 
 const char *DrResMdoTexList::getTexName(u32 index) {
-  const MdsTexHeader *header = reinterpret_cast<const MdsTexHeader *>(m_texHeader);
-  const MdsTexInfo *infos = reinterpret_cast<const MdsTexInfo *>(m_texHeader + header->infoOffset);
-  return reinterpret_cast<const char *>(m_texHeader + infos[index].nameOffset);
+  const MdsTexHeader *header = reinterpret_cast<const MdsTexHeader *>(unknown80);
+  const MdsTexInfo *infos = reinterpret_cast<const MdsTexInfo *>(unknown80 + header->infoOffset);
+  return reinterpret_cast<const char *>(unknown80 + infos[index].unknown0c);
 }
 
 bool DrResMdoTexList::isTexMiddelStmCheck() const {
-  if (!(m_flags & 0x8000)) {
+  if (!(unknown6c & 0x8000)) {
     return false;
   }
-  return !m_stmList->isResSafe();
+  return !unknown58->isResSafe();
 }
 
 int DrResMdoTexList::calcTextureMax(const u8 *texHeader) { return reinterpret_cast<const MdsTexHeader *>(texHeader)->texNum; }
 
-DrResMdoTexSimple::DrResMdoTexSimple(const void *texData, int size, bool isMiddle) : m_prev(nullptr), m_next(nullptr), m_texData(texData), m_size(size), m_flags(isMiddle ? 2 : 0) {}
+DrResMdoTexSimple::DrResMdoTexSimple(const void *texData, int size, bool isMiddle) : unknown00(nullptr), unknown08(nullptr), unknown80(texData), m_size(size), unknown8c(isMiddle ? 2 : 0) {}
 
 DrResMdoTexSimple::~DrResMdoTexSimple() { releaseTex(); }
 
 void DrResMdoTexSimple::releaseTex() {
-  m_texture.release();
-  m_flags &= ~0xd;
+  unknown10.release();
+  unknown8c &= ~0xd;
 }
 
-void DrResMdoTexSimple::release() { m_flags |= 4 << DrMan::s_nDblStockIdx; }
+void DrResMdoTexSimple::release() { unknown8c |= 4 << DrMan::s_nDblStockIdx; }
 
 void DrResMdoTexSimple::createTex() {
-  grlib::CGLibTexture::createTextureImagePtrs(m_texture, m_texData, m_size, false, nullptr, false);
-  m_flags |= 1;
+  grlib::CGLibTexture::createTextureImagePtrs(unknown10, unknown80, m_size, false, nullptr, false);
+  unknown8c |= 1;
 }
 
 } // namespace ml

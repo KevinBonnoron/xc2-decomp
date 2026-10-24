@@ -8,12 +8,12 @@ namespace ml {
 class DrFogMan;
 class DrLightMan;
 
-void DrEnvironmentObj::release() { m_flags |= FLAG_RELEASE << DrMan::s_nDblStockIdx; }
+void DrEnvironmentObj::release() { unknown8c |= FLAG_RELEASE << DrMan::s_nDblStockIdx; }
 
 DrEnvironmentObj::DrEnvironmentObj(DrMan *drMan, DrLightMan *lightMan, DrFogMan *fogMan)
-    : m_prev(nullptr), m_next(nullptr), m_drMan(drMan), m_lightMan(lightMan), m_fogMan(fogMan), m_offsetPos(0.0f, 0.0f, 0.0f), m_frame(0.0f), m_frameSpd(1.0f), m_maxFrame(0.0f), m_flags(0),
-      m_group(0) {
-  m_matrix = mm::Mat44::identity;
+    : unknown08(nullptr), unknown10(nullptr), unknown18(drMan), unknown20(lightMan), unknown28(fogMan), unknown70(0.0f, 0.0f, 0.0f), m_frame(0.0f), m_frameSpd(1.0f), m_maxFrame(0.0f), unknown8c(0),
+      unknown90(0) {
+  unknown30 = mm::Mat44::identity;
 }
 
 f32 DrEnvironmentObj::getFrame() const { return m_frame; }

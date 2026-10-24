@@ -7,9 +7,9 @@ class WorkObj;
 
 const f32 DevClockNx::NANO_TO_SEC = 1000000000.0f;
 
-DevClockNx::DevClockNx(const char *name, WorkObj *parent) : DevClock(name, parent) { m_powerOnTick = nn::os::GetSystemTick(); }
+DevClockNx::DevClockNx(const char *name, WorkObj *parent) : DevClock(name, parent) { unknown1c0 = nn::os::GetSystemTick(); }
 
-f32 DevClockNx::getPowerOnTimeSys() const { return getClock2SecSys(nn::os::GetSystemTick().GetInt64Value() - m_powerOnTick.GetInt64Value()); }
+f32 DevClockNx::getPowerOnTimeSys() const { return getClock2SecSys(nn::os::GetSystemTick().GetInt64Value() - unknown1c0.GetInt64Value()); }
 
 void DevClockNx::getClockNowSys(long &clock) const { clock = nn::os::GetSystemTick().GetInt64Value(); }
 

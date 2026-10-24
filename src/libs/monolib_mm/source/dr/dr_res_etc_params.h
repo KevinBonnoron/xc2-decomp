@@ -18,7 +18,7 @@ public:
 static_assert(sizeof(DrResEtcParams) == 0x18, "");
 
 struct DrResEtcPamName {
-  u32 nameOffset;
+  u32 unknown00; // Inferred role: name offset; original member name unknown.
   u8 _04[0x10 - 0x04];
 };
 
@@ -26,15 +26,15 @@ static_assert(sizeof(DrResEtcPamName) == 0x10, "");
 
 class DrResEtcPamObj {
 public:
-  const char *m_names;
-  const DrResEtcPamName *m_nameTable;
-  DrResEtcParams *m_params;
-  u32 m_paramsMax;
-  u32 m_flags;
+  const char *unknown00;            // Inferred role: names; original member name unknown.
+  const DrResEtcPamName *unknown08; // Inferred role: name table; original member name unknown.
+  DrResEtcParams *unknown10;        // Inferred role: params; original member name unknown.
+  u32 unknown18;                    // Inferred role: params max; original member name unknown.
+  u32 unknown1c;                    // Inferred role: flags; original member name unknown.
 };
 
-static_assert(offsetof(DrResEtcPamObj, m_params) == 0x10, "");
-static_assert(offsetof(DrResEtcPamObj, m_paramsMax) == 0x18, "");
-static_assert(offsetof(DrResEtcPamObj, m_flags) == 0x1c, "");
+static_assert(offsetof(DrResEtcPamObj, unknown10) == 0x10, "");
+static_assert(offsetof(DrResEtcPamObj, unknown18) == 0x18, "");
+static_assert(offsetof(DrResEtcPamObj, unknown1c) == 0x1c, "");
 
 } // namespace ml

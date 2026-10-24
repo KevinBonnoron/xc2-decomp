@@ -19,10 +19,10 @@ public:
   void setupShader(DrResFetch *fetch);
   void setupComputeShader();
 
-  DrResFetch *m_fetches[2];
+  DrResFetch *unknown68[2]; // Inferred role: fetches; original member name unknown.
 };
 
-static_assert(offsetof(DrShdDataObj, m_fetches) == 0x68, "");
+static_assert(offsetof(DrShdDataObj, unknown68) == 0x68, "");
 static_assert(sizeof(DrShdDataObj) == 0x78, "");
 
 } // namespace ml

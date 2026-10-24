@@ -16,10 +16,10 @@ public:
   void *allocate(size_t size, size_t alignment) override;
   void deallocate(void *pointer) override;
 
-  mtl::ALLOC_HANDLE m_handle;
+  mtl::ALLOC_HANDLE unknown08; // Inferred role: handle; original member name unknown.
 };
 
-static_assert(offsetof(MemHandlebaseAllocator, m_handle) == 0x08, "");
+static_assert(offsetof(MemHandlebaseAllocator, unknown08) == 0x08, "");
 
 } // namespace irrvol
 } // namespace ml

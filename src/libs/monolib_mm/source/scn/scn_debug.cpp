@@ -9,216 +9,216 @@
 namespace ml {
 class EventView;
 
-ScnDebug::ScnDebug(Scn *scn, mtl::ALLOC_HANDLE mem) : m_scn(scn), m_manipu(nullptr), _20(-1), _28(nullptr), _30(true) { m_manipu = new (mem) ScnDebugManipu(scn); }
+ScnDebug::ScnDebug(Scn *scn, mtl::ALLOC_HANDLE mem) : unknown10(scn), m_manipulator(nullptr), _20(-1), _28(nullptr), _30(true) { m_manipulator = new (mem) ScnDebugManipu(scn); }
 
 ScnDebug::~ScnDebug() {
-  if (m_manipu != nullptr) {
-    delete m_manipu;
-    m_manipu = nullptr;
+  if (m_manipulator != nullptr) {
+    delete m_manipulator;
+    m_manipulator = nullptr;
   }
 }
 
 mtl::ALLOC_HANDLE ScnDebug::getMem() const { return MlMem::getProductMem(); }
 
 bool ScnDebug::isPickManipu() const {
-  if (m_manipu == nullptr) {
+  if (m_manipulator == nullptr) {
     return false;
   }
-  return m_manipu->isPick();
+  return m_manipulator->isPick();
 }
 
-const ScnDebugManipu *ScnDebug::getManipulator() const { return m_manipu; }
+const ScnDebugManipu *ScnDebug::getManipulator() const { return m_manipulator; }
 
 bool ScnDebugManipu::isPick() const {
-  CS cs(m_cs);
-  if (m_obj == nullptr) {
+  CS cs(unknown08);
+  if (unknown38 == nullptr) {
     return false;
   }
-  return m_obj->m_pick != 0;
+  return unknown38->unknown18 != 0;
 }
 
-void ScnDebug::setManipuCalcRotationZXY() { m_manipu->setCalcRotationZXY(); }
+void ScnDebug::setManipuCalcRotationZXY() { m_manipulator->setCalcRotationZXY(); }
 
-ScnDebugManipu *ScnDebug::getManipulator() { return m_manipu; }
+ScnDebugManipu *ScnDebug::getManipulator() { return m_manipulator; }
 
 void ScnDebugManipu::setCalcRotationZXY() {
-  CS cs(m_cs);
-  if (m_obj != nullptr) {
-    m_obj->m_renderInfo.m_back->transform.m_flags |= AttrTransform::FLAG_ROTATION_ZXY;
+  CS cs(unknown08);
+  if (unknown38 != nullptr) {
+    unknown38->unknownb0.m_back->unknown00.m_flags |= AttrTransform::FLAG_ROTATION_ZXY;
   }
 }
 
-void ScnDebug::setManipuAxisLock(SCNAXIS axis) { m_manipu->setAxisLock(axis); }
+void ScnDebug::setManipuAxisLock(SCNAXIS axis) { m_manipulator->setAxisLock(axis); }
 
 void ScnDebugManipu::setAxisLock(SCNAXIS axis) {
-  CS cs(m_cs);
-  if (m_obj != nullptr) {
-    m_obj->m_axisLock = axis;
+  CS cs(unknown08);
+  if (unknown38 != nullptr) {
+    unknown38->unknown14 = axis;
   }
 }
 
-SCNAXIS ScnDebug::getManipuAxisLock() const { return m_manipu->getAxisLock(); }
+SCNAXIS ScnDebug::getManipuAxisLock() const { return m_manipulator->getAxisLock(); }
 
 SCNAXIS ScnDebugManipu::getAxisLock() const {
-  CS cs(m_cs);
-  if (m_obj == nullptr) {
+  CS cs(unknown08);
+  if (unknown38 == nullptr) {
     return SCNAXIS();
   }
-  return m_obj->m_axisLock;
+  return unknown38->unknown14;
 }
 
-SCNMANIPU ScnDebug::getManipuType() const { return m_manipu->getType(); }
+SCNMANIPU ScnDebug::getManipuType() const { return m_manipulator->getType(); }
 
 SCNMANIPU ScnDebugManipu::getType() const {
-  CS cs(m_cs);
-  if (m_obj == nullptr) {
+  CS cs(unknown08);
+  if (unknown38 == nullptr) {
     return SCNMANIPU_NONE;
   }
-  return m_obj->m_type;
+  return unknown38->unknown10;
 }
 
-void ScnDebug::setManipulatorTrans(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipu->createTrans(matrix, scale); }
+void ScnDebug::setManipulatorTrans(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipulator->createTrans(matrix, scale); }
 
-void ScnDebug::setManipulatorTrans2D(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipu->createTrans2D(matrix, scale); }
+void ScnDebug::setManipulatorTrans2D(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipulator->createTrans2D(matrix, scale); }
 
-void ScnDebug::setManipulatorRot(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipu->createRot(matrix, scale); }
+void ScnDebug::setManipulatorRot(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipulator->createRot(matrix, scale); }
 
-void ScnDebug::setManipulatorScale(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipu->createScale(matrix, scale); }
+void ScnDebug::setManipulatorScale(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipulator->createScale(matrix, scale); }
 
-void ScnDebug::setManipulatorScale2D(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipu->createScale2D(matrix, scale); }
+void ScnDebug::setManipulatorScale2D(const mm::Mat44 *matrix, const mm::Vec3 *scale) { m_manipulator->createScale2D(matrix, scale); }
 
-void ScnDebug::setManipulatorRadius(f32 radius) { m_manipu->setRadius(radius); }
+void ScnDebug::setManipulatorRadius(f32 radius) { m_manipulator->setRadius(radius); }
 
 void ScnDebugManipu::setRadius(f32 radius) {
-  CS cs(m_cs);
-  if (m_obj != nullptr) {
-    m_obj->setRadius(radius);
+  CS cs(unknown08);
+  if (unknown38 != nullptr) {
+    unknown38->setRadius(radius);
   }
 }
 
-void ScnDebug::setManipulatorDisp(bool isDisp) { m_manipu->setDisp(isDisp); }
+void ScnDebug::setManipulatorDisp(bool isDisp) { m_manipulator->setDisp(isDisp); }
 
 void ScnDebugManipu::setDisp(bool isDisp) {
-  CS cs(m_cs);
-  m_isDisp = isDisp;
-  if (m_obj != nullptr) {
-    m_obj->m_isDisp = isDisp;
+  CS cs(unknown08);
+  unknown40 = isDisp;
+  if (unknown38 != nullptr) {
+    unknown38->unknown20 = isDisp;
   }
 }
 
-void ScnDebug::clrManipulator() { m_manipu->clear(); }
+void ScnDebug::clrManipulator() { m_manipulator->clear(); }
 
 void ScnDebugManipu::clear() {
-  CS cs(m_cs);
-  if (m_obj != nullptr) {
-    delete m_obj;
-    m_obj = nullptr;
+  CS cs(unknown08);
+  if (unknown38 != nullptr) {
+    delete unknown38;
+    unknown38 = nullptr;
   }
 }
 
 const AttrTransform *ScnDebug::getManipuTrans(bool isBack) const {
-  if (m_manipu->getTrans(isBack) == nullptr) {
+  if (m_manipulator->getTrans(isBack) == nullptr) {
     return nullptr;
   }
-  return m_manipu->getTrans(isBack);
+  return m_manipulator->getTrans(isBack);
 }
 
 const AttrTransform *ScnDebugManipu::getTrans(bool isBack) const {
-  CS cs(m_cs);
-  if (m_obj == nullptr) {
+  CS cs(unknown08);
+  if (unknown38 == nullptr) {
     return nullptr;
   }
-  return &(isBack ? m_obj->m_renderInfo.m_back : m_obj->m_renderInfo.m_front)->transform;
+  return &(isBack ? unknown38->unknownb0.m_back : unknown38->unknownb0.m_front)->unknown00;
 }
 
 void ScnDebug::setManipuTrans(const mm::Vec3 *position, const mm::Vec3 *rotation, const mm::Vec3 *scale) {
-  if (m_manipu->getTrans(true) != nullptr) {
-    m_manipu->setTrans(position, rotation, scale);
+  if (m_manipulator->getTrans(true) != nullptr) {
+    m_manipulator->setTrans(position, rotation, scale);
   }
 }
 
 void ScnDebugManipu::setTrans(const mm::Vec3 *position, const mm::Vec3 *rotation, const mm::Vec3 *scale) {
-  CS cs(m_cs);
-  if (m_obj != nullptr) {
+  CS cs(unknown08);
+  if (unknown38 != nullptr) {
     if (position != nullptr) {
-      m_obj->m_renderInfo.m_back->transform.m_pos = *position;
+      unknown38->unknownb0.m_back->unknown00.m_pos = *position;
     }
     if (rotation != nullptr) {
-      m_obj->m_renderInfo.m_back->transform.m_rot = *rotation;
+      unknown38->unknownb0.m_back->unknown00.m_rot = *rotation;
     }
     if (scale != nullptr) {
-      m_obj->m_renderInfo.m_back->transform.m_scl = *scale;
+      unknown38->unknownb0.m_back->unknown00.m_scl = *scale;
     }
-    m_obj->m_renderInfo.m_back->transform.update();
+    unknown38->unknownb0.m_back->unknown00.update();
   }
 }
 
 void ScnDebug::setManipuTrans(const AttrTransform &transform) {
-  if (m_manipu->getTrans(true) != nullptr) {
-    m_manipu->setTrans(transform);
+  if (m_manipulator->getTrans(true) != nullptr) {
+    m_manipulator->setTrans(transform);
   }
 }
 
 void ScnDebugManipu::setTrans(const AttrTransform &transform) {
-  CS cs(m_cs);
-  if (m_obj != nullptr) {
-    m_obj->m_renderInfo.m_back->transform = transform;
-    m_obj->m_renderInfo.m_back->transform.update();
+  CS cs(unknown08);
+  if (unknown38 != nullptr) {
+    unknown38->unknownb0.m_back->unknown00 = transform;
+    unknown38->unknownb0.m_back->unknown00.update();
   }
 }
 
 void ScnDebug::update() {}
 
 void ScnDebugManipu::render(DebDraw *debDraw) {
-  CS cs(m_cs);
-  if (m_isDisp && m_obj != nullptr) {
-    m_obj->render(debDraw);
+  CS cs(unknown08);
+  if (unknown40 && unknown38 != nullptr) {
+    unknown38->render(debDraw);
   }
 }
 
 void ScnDebug::cbRenderAfter(Scn *scn, SCNPRIO_CB priority) { render(DebDraw::get(-1)); }
 
-ScnDebugManipu::ScnDebugManipu(Scn *scn) : m_scn(scn), m_obj(nullptr), m_isDisp(true) {}
+ScnDebugManipu::ScnDebugManipu(Scn *scn) : unknown30(scn), unknown38(nullptr), unknown40(true) {}
 
 ScnDebugManipu::~ScnDebugManipu() { clear(); }
 
 bool ScnDebugManipu::getGblMat(mm::Mat44 &matrix, bool isBack) {
-  CS cs(m_cs);
-  if (m_obj != nullptr) {
-    m_obj->getGblMat(matrix, isBack);
+  CS cs(unknown08);
+  if (unknown38 != nullptr) {
+    unknown38->getGblMat(matrix, isBack);
     return true;
   }
   return false;
 }
 
 bool ScnDebugManipu::OnMouseButtonDown(EventView *event) {
-  CS cs(m_cs);
-  if (m_obj == nullptr) {
+  CS cs(unknown08);
+  if (unknown38 == nullptr) {
     return false;
   }
-  return m_obj->checkMouseButtonDown(event);
+  return unknown38->checkMouseButtonDown(event);
 }
 
 bool ScnDebugManipu::OnMouseButtonUp(EventView *event) {
-  CS cs(m_cs);
-  if (m_obj == nullptr) {
+  CS cs(unknown08);
+  if (unknown38 == nullptr) {
     return false;
   }
-  return m_obj->checkMouseButtonUp(event);
+  return unknown38->checkMouseButtonUp(event);
 }
 
 bool ScnDebugManipu::OnMouseMove(EventView *event) {
-  CS cs(m_cs);
-  if (m_obj == nullptr) {
+  CS cs(unknown08);
+  if (unknown38 == nullptr) {
     return false;
   }
-  return m_obj->checkMouseMove(event);
+  return unknown38->checkMouseMove(event);
 }
 
 void ScnDebugManipu::update() {
-  CS cs(m_cs);
-  if (m_obj != nullptr) {
-    m_obj->update();
+  CS cs(unknown08);
+  if (unknown38 != nullptr) {
+    unknown38->update();
   }
 }
 

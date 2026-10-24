@@ -7,45 +7,45 @@
 
 namespace ml {
 
-ScnObjModelDrSys::ScnObjModelDrSys(Scn *scn, const void *data, const char *name) : ScnObjModel(scn, name), m_drMdl(nullptr), m_data(data) { m_drMan = m_scn->renderDrSys->drMan; }
+ScnObjModelDrSys::ScnObjModelDrSys(Scn *scn, const void *data, const char *name) : ScnObjModel(scn, name), unknown3d8(nullptr), m_data(data) { unknown3e0 = m_scn->renderDrSys->unknown10; }
 
 void ScnObjModelDrSys::update() {}
 
 void ScnObjModelDrSys::apply() {
   getTrans(false)->update();
   if (!isDisp()) {
-    if (m_drMdl != nullptr) {
-      m_drMdl->setDisp(false);
+    if (unknown3d8 != nullptr) {
+      unknown3d8->setDisp(false);
     }
-  } else if (m_drMdl != nullptr) {
-    m_drMdl->setDisp(true);
-    m_drMdl->setClip(isClip());
-    m_drMdl->setFrameSpd((m_flags & FLAG_FRAME_SPD) ? m_frameSpd : 0.0f);
+  } else if (unknown3d8 != nullptr) {
+    unknown3d8->setDisp(true);
+    unknown3d8->setClip(isClip());
+    unknown3d8->setFrameSpd((m_flags & FLAG_FRAME_SPD) ? m_frameSpd : 0.0f);
   }
 }
 
-void ScnObjModelDrSys::setGroups(int groups) { m_drMdl->m_groups = groups; }
+void ScnObjModelDrSys::setGroups(int groups) { unknown3d8->unknown18 = groups; }
 
-int ScnObjModelDrSys::getGroups() { return m_drMdl->m_groups; }
+int ScnObjModelDrSys::getGroups() { return unknown3d8->unknown18; }
 
-void ScnObjModelDrSys::setAlpha(f32 alpha) { m_drMdl->setAlpha(alpha); }
+void ScnObjModelDrSys::setAlpha(f32 alpha) { unknown3d8->setAlpha(alpha); }
 
-f32 ScnObjModelDrSys::getAlpha() const { return m_drMdl->getAlpha(); }
+f32 ScnObjModelDrSys::getAlpha() const { return unknown3d8->getAlpha(); }
 
-void ScnObjModelDrSys::setWriteStencil(bool isWriteStencil) { m_drMdl->setWriteStencil(isWriteStencil); }
+void ScnObjModelDrSys::setWriteStencil(bool isWriteStencil) { unknown3d8->setWriteStencil(isWriteStencil); }
 
-void ScnObjModelDrSys::setAlwaysTexStm(bool isAlwaysTexStm) { m_drMdl->setAlwaysTexStm(isAlwaysTexStm); }
+void ScnObjModelDrSys::setAlwaysTexStm(bool isAlwaysTexStm) { unknown3d8->setAlwaysTexStm(isAlwaysTexStm); }
 
-bool ScnObjModelDrSys::isMdlTexStm() const { return m_drMdl->isMdlTexStm(); }
+bool ScnObjModelDrSys::isMdlTexStm() const { return unknown3d8->isMdlTexStm(); }
 
-bool ScnObjModelDrSys::isMemTexStm() const { return m_drMdl->isMemTexStm(); }
+bool ScnObjModelDrSys::isMemTexStm() const { return unknown3d8->isMemTexStm(); }
 
-const mm::Vec3 &ScnObjModelDrSys::getAABBMax() const { return m_drMdl->getAABBMax(); }
+const mm::Vec3 &ScnObjModelDrSys::getAABBMax() const { return unknown3d8->getAABBMax(); }
 
-const mm::Vec3 &ScnObjModelDrSys::getAABBMin() const { return m_drMdl->getAABBMin(); }
+const mm::Vec3 &ScnObjModelDrSys::getAABBMin() const { return unknown3d8->getAABBMin(); }
 
-const mm::Vec3 &ScnObjModelDrSys::getCenter() const { return m_drMdl->m_center; }
+const mm::Vec3 &ScnObjModelDrSys::getCenter() const { return unknown3d8->unknown130; }
 
-f32 ScnObjModelDrSys::getLength() const { return m_drMdl->m_length; }
+f32 ScnObjModelDrSys::getLength() const { return unknown3d8->unknown160; }
 
 } // namespace ml

@@ -97,47 +97,47 @@ public:
   const grlib::CGLibTextureBuffer *getToonGradTex() const;
   const grlib::CGLibTextureBuffer *getToonDarkGradTex() const;
 
-  DrMan *m_drMan;
-  DrPixlMan *m_pixlMan;
+  DrMan *unknown00;     // Inferred role: dr man; original member name unknown.
+  DrPixlMan *unknown08; // Inferred role: pixl man; original member name unknown.
   u8 _010[0x018 - 0x010];
-  DrPixlPostObjToneMap *m_toneMap;
-  DrPixlPostObjBloom *m_bloom;
-  DrPixlPostObjVolume *m_volume;
-  DrPixlPostObjDepthofField *m_depthofField;
+  DrPixlPostObjToneMap *unknown18;      // Inferred role: tone map; original member name unknown.
+  DrPixlPostObjBloom *unknown20;        // Inferred role: bloom; original member name unknown.
+  DrPixlPostObjVolume *unknown28;       // Inferred role: volume; original member name unknown.
+  DrPixlPostObjDepthofField *unknown30; // Inferred role: depthof field; original member name unknown.
   u8 _038[0x040 - 0x038];
-  DrPixlPostObjCubeMapMultiIBL *m_cubeMapMultiIBL;
-  DrPixlPostObjCubeMapIBL *m_cubeMapIBL;
-  DrPixlPostObjMotionBlur *m_motionBlur;
-  DrPixlPostObjMotionBlur2 *m_motionBlur2;
-  DrPixlPostObjHistgram *m_histgram;
-  DrPixlPostObjTMAA *m_tmaa;
-  DrPixlPostObjSSR *m_ssr;
-  DrPixlPostObjTSSAO *m_tssao;
-  DrPixlPostObjExpStencil *m_expStencil;
-  DrPixlShadowRaytrace *m_shadowRaytrace;
-  DrPixlSkyDome *m_skyDome;
-  DrPixlToonGrad *m_toonGrad;
-  DrPixlPostObjRainDrop *m_rainDrop;
-  DrPixlPostObjGlassBr *m_glassBr;
-  DrPixlPostObjCapture *m_capture;
-  DrPixlPostObjUnbranchToDepth *m_unbranchToDepth;
-  DrPixlRenderTarget *m_downDepths[2];
-  DrPixlRenderTarget *m_refractionMap;
+  DrPixlPostObjCubeMapMultiIBL *unknown40; // Inferred role: cube map multi ibl; original member name unknown.
+  DrPixlPostObjCubeMapIBL *unknown48;      // Inferred role: cube map ibl; original member name unknown.
+  DrPixlPostObjMotionBlur *unknown50;      // Inferred role: motion blur; original member name unknown.
+  DrPixlPostObjMotionBlur2 *unknown58;     // Inferred role: motion blur2; original member name unknown.
+  DrPixlPostObjHistgram *unknown60;        // Inferred role: histgram; original member name unknown.
+  DrPixlPostObjTMAA *unknown68;            // Inferred role: tmaa; original member name unknown.
+  DrPixlPostObjSSR *unknown70;             // Inferred role: ssr; original member name unknown.
+  DrPixlPostObjTSSAO *unknown78;           // Inferred role: tssao; original member name unknown.
+  DrPixlPostObjExpStencil *unknown80;      // Inferred role: exp stencil; original member name unknown.
+  DrPixlShadowRaytrace *unknown88;         // Inferred role: shadow raytrace; original member name unknown.
+  DrPixlSkyDome *unknown90;                // Inferred role: sky dome; original member name unknown.
+  DrPixlToonGrad *unknown98;               // Inferred role: toon grad; original member name unknown.
+  DrPixlPostObjRainDrop *unknowna0;        // Inferred role: rain drop; original member name unknown.
+  DrPixlPostObjGlassBr *unknowna8;         // Inferred role: glass br; original member name unknown.
+  DrPixlPostObjCapture *unknownb0;         // Inferred role: capture; original member name unknown.
+  DrPixlPostObjUnbranchToDepth *unknownb8; // Inferred role: unbranch to depth; original member name unknown.
+  DrPixlRenderTarget *unknownc0[2];        // Inferred role: down depths; original member name unknown.
+  DrPixlRenderTarget *unknownd0;           // Inferred role: refraction map; original member name unknown.
   u8 _0d8[0x0f0 - 0x0d8];
-  DrResUseQueryObj *m_refractionQuery;
-  u32 m_flags;
+  DrResUseQueryObj *unknownf0; // Inferred role: refraction query; original member name unknown.
+  u32 unknownf8;               // Inferred role: flags; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlPostMan, m_toneMap) == 0x018, "");
-static_assert(offsetof(DrPixlPostMan, m_cubeMapMultiIBL) == 0x040, "");
-static_assert(offsetof(DrPixlPostMan, m_motionBlur) == 0x050, "");
-static_assert(offsetof(DrPixlPostMan, m_tmaa) == 0x068, "");
-static_assert(offsetof(DrPixlPostMan, m_tssao) == 0x078, "");
-static_assert(offsetof(DrPixlPostMan, m_skyDome) == 0x090, "");
-static_assert(offsetof(DrPixlPostMan, m_rainDrop) == 0x0a0, "");
-static_assert(offsetof(DrPixlPostMan, m_capture) == 0x0b0, "");
-static_assert(offsetof(DrPixlPostMan, m_downDepths) == 0x0c0, "");
-static_assert(offsetof(DrPixlPostMan, m_refractionQuery) == 0x0f0, "");
-static_assert(offsetof(DrPixlPostMan, m_flags) == 0x0f8, "");
+static_assert(offsetof(DrPixlPostMan, unknown18) == 0x018, "");
+static_assert(offsetof(DrPixlPostMan, unknown40) == 0x040, "");
+static_assert(offsetof(DrPixlPostMan, unknown50) == 0x050, "");
+static_assert(offsetof(DrPixlPostMan, unknown68) == 0x068, "");
+static_assert(offsetof(DrPixlPostMan, unknown78) == 0x078, "");
+static_assert(offsetof(DrPixlPostMan, unknown90) == 0x090, "");
+static_assert(offsetof(DrPixlPostMan, unknowna0) == 0x0a0, "");
+static_assert(offsetof(DrPixlPostMan, unknownb0) == 0x0b0, "");
+static_assert(offsetof(DrPixlPostMan, unknownc0) == 0x0c0, "");
+static_assert(offsetof(DrPixlPostMan, unknownf0) == 0x0f0, "");
+static_assert(offsetof(DrPixlPostMan, unknownf8) == 0x0f8, "");
 
 } // namespace ml

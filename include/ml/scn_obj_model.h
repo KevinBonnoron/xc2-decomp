@@ -18,7 +18,7 @@ class WinProc;
 class ScnObjModel : public ScnObj {
 public:
   struct RENDER_INFO {
-    AttrTransform transform;
+    AttrTransform unknown00; // Inferred role: transform; original member name unknown.
   };
 
   struct RENDER_OFFSET_INFO {
@@ -50,29 +50,29 @@ public:
   ~ScnObjModel() override {}
   const char *getName() const override { return m_name.c_str(); }
 
-  virtual void setPos(const mm::Vec3 &position) { m_renderInfo.m_back->transform.m_pos = position; }
+  virtual void setPos(const mm::Vec3 &position) { m_renderInfo.m_back->unknown00.m_pos = position; }
 
   virtual void setPosWarp(const mm::Vec3 &position) {
-    m_renderInfo.m_back->transform.m_pos = position;
+    m_renderInfo.m_back->unknown00.m_pos = position;
     m_flags |= FLAG_WARP;
   }
 
-  virtual void addPos(const mm::Vec3 &position) { m_renderInfo.m_back->transform.m_pos += position; }
-  virtual void setRot(const mm::Vec3 &rotation) { m_renderInfo.m_back->transform.m_rot = rotation; }
-  virtual void addRot(const mm::Vec3 &rotation) { m_renderInfo.m_back->transform.m_rot += rotation; }
+  virtual void addPos(const mm::Vec3 &position) { m_renderInfo.m_back->unknown00.m_pos += position; }
+  virtual void setRot(const mm::Vec3 &rotation) { m_renderInfo.m_back->unknown00.m_rot = rotation; }
+  virtual void addRot(const mm::Vec3 &rotation) { m_renderInfo.m_back->unknown00.m_rot += rotation; }
 
   virtual void addRot(const mm::Quat &rotation) {
-    AttrTransform &transform = m_renderInfo.m_back->transform;
+    AttrTransform &transform = m_renderInfo.m_back->unknown00;
     transform.m_quat = rotation;
     transform.m_flags |= AttrTransform::FLAG_QUAT;
   }
 
-  virtual void setScl(const mm::Vec3 &scale) { m_renderInfo.m_back->transform.m_scl = scale; }
+  virtual void setScl(const mm::Vec3 &scale) { m_renderInfo.m_back->unknown00.m_scl = scale; }
 
   virtual void addScl(const mm::Vec3 &scale);
 
   virtual void setMat(const mm::Mat44 &matrix) {
-    AttrTransform &transform = m_renderInfo.m_back->transform;
+    AttrTransform &transform = m_renderInfo.m_back->unknown00;
     transform.m_matrix = matrix;
     transform.m_flags |= AttrTransform::FLAG_MATRIX;
   }

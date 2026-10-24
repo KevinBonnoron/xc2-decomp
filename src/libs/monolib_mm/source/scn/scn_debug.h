@@ -47,22 +47,22 @@ public:
   bool OnMouseMove(EventView *event);
   void update();
 
-  CriticalSection m_cs;
-  Scn *m_scn;
-  ScnDebugManipuObj *m_obj;
-  bool m_isDisp;
+  CriticalSection unknown08;    // Inferred role: cs; original member name unknown.
+  Scn *unknown30;               // Inferred role: scn; original member name unknown.
+  ScnDebugManipuObj *unknown38; // Inferred role: object; original member name unknown.
+  bool unknown40;               // Inferred role: disp; original member name unknown.
 };
 
-static_assert(offsetof(ScnDebugManipu, m_cs) == 0x08, "");
-static_assert(offsetof(ScnDebugManipu, m_scn) == 0x30, "");
-static_assert(offsetof(ScnDebugManipu, m_obj) == 0x38, "");
-static_assert(offsetof(ScnDebugManipu, m_isDisp) == 0x40, "");
+static_assert(offsetof(ScnDebugManipu, unknown08) == 0x08, "");
+static_assert(offsetof(ScnDebugManipu, unknown30) == 0x30, "");
+static_assert(offsetof(ScnDebugManipu, unknown38) == 0x38, "");
+static_assert(offsetof(ScnDebugManipu, unknown40) == 0x40, "");
 
 class ScnDebug : public IWorkEvent, public IScnRender {
 public:
   void render(DebDraw *debDraw) {
-    if (m_manipu != nullptr) {
-      m_manipu->render(debDraw);
+    if (m_manipulator != nullptr) {
+      m_manipulator->render(debDraw);
     }
   }
 
@@ -90,15 +90,15 @@ public:
   void update();
   void cbRenderAfter(Scn *scn, SCNPRIO_CB priority) override;
 
-  Scn *m_scn;
-  ScnDebugManipu *m_manipu;
+  Scn *unknown10; // Inferred role: scn; original member name unknown.
+  ScnDebugManipu *m_manipulator;
   int _20;
   void *_28;
   bool _30;
 };
 
-static_assert(offsetof(ScnDebug, m_scn) == 0x10, "");
-static_assert(offsetof(ScnDebug, m_manipu) == 0x18, "");
+static_assert(offsetof(ScnDebug, unknown10) == 0x10, "");
+static_assert(offsetof(ScnDebug, m_manipulator) == 0x18, "");
 static_assert(offsetof(ScnDebug, _20) == 0x20, "");
 static_assert(offsetof(ScnDebug, _30) == 0x30, "");
 

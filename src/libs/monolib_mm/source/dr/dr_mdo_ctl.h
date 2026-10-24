@@ -17,7 +17,7 @@ public:
   void setMatrix(const mm::Mat44 &matrix);
   void setOffsetPos(const mm::Vec3 &position);
   const mm::Mat44 &getMatrix() const;
-  void setFrameSpd(f32 speed) { m_frameSpd = speed; }
+  void setFrameSpd(f32 speed) { unknowndc = speed; }
 
   u8 _16c[0x180 - 0x16c];
   s16 m_nodeMax;

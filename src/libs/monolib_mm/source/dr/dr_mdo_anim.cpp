@@ -18,11 +18,11 @@ void DrMdoAnim::animcall_WorkFloat1(DrResMdoMat *mat, f32 *work, f32 value) { wo
 
 void DrMdoAnim::animcall_MatAlpha(DrResMdoMat *mat, f32 *work, f32 value) { mat->setAlpha(value); }
 
-void DrMdoAnim::animcall_MatColorR(DrResMdoMat *mat, f32 *work, f32 value) { mat->m_color.r = value; }
+void DrMdoAnim::animcall_MatColorR(DrResMdoMat *mat, f32 *work, f32 value) { mat->unknown08.r = value; }
 
-void DrMdoAnim::animcall_MatColorG(DrResMdoMat *mat, f32 *work, f32 value) { mat->m_color.g = value; }
+void DrMdoAnim::animcall_MatColorG(DrResMdoMat *mat, f32 *work, f32 value) { mat->unknown08.g = value; }
 
-void DrMdoAnim::animcall_MatColorB(DrResMdoMat *mat, f32 *work, f32 value) { mat->m_color.b = value; }
+void DrMdoAnim::animcall_MatColorB(DrResMdoMat *mat, f32 *work, f32 value) { mat->unknown08.b = value; }
 
 void DrMdoAnim::anmNodeParm_TranX(mm::Vec3 *transform, f32 value) { transform[0].x = value; }
 

@@ -2,6 +2,6 @@
 
 namespace ml {
 
-u32 DrShdMdoDecExtTbl::getValGlobalParam(int index) { return m_globalParams[index]; }
+u32 DrShdMdoDecExtTbl::getValGlobalParam(int index) { return unknown28[index]; }
 
 } // namespace ml

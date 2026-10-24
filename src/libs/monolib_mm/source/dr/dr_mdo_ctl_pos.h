@@ -20,9 +20,9 @@ public:
   void callSpAlphaRenderPosAll();
 
   u8 _190[0x1e8 - 0x190];
-  DrResMdoInstAnmObj m_instAnmObj;
+  DrResMdoInstAnmObj unknown1e8; // Inferred role: inst anm object; original member name unknown.
 };
 
-static_assert(offsetof(DrMdoCtlPos, m_instAnmObj) == 0x1e8, "");
+static_assert(offsetof(DrMdoCtlPos, unknown1e8) == 0x1e8, "");
 
 } // namespace ml

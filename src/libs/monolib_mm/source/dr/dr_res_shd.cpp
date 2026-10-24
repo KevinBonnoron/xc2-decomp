@@ -6,146 +6,146 @@
 namespace ml {
 
 void DrResShdMpf::setupShader(u32 mode) {
-  m_dataObj->setDeclarationIdx(m_declOfs[0], 2 - (mode & 1));
-  m_dataObj->setDeclarationIdx(m_declOfs[1], 2 - ((mode >> 1) & 1));
-  m_dataObj->setupShader((mode >> 1) & 1);
+  unknown00->setDeclarationIdx(unknown2c[0], 2 - (mode & 1));
+  unknown00->setDeclarationIdx(unknown2c[1], 2 - ((mode >> 1) & 1));
+  unknown00->setupShader((mode >> 1) & 1);
 }
 
-DrResShdPrePass::DrResShdPrePass(DrShdDataObj *dataObj, int type) : m_dataObj(dataObj) {
+DrResShdPrePass::DrResShdPrePass(DrShdDataObj *dataObj, int type) : unknown00(dataObj) {
   for (int i = 0; i < 11; i++) {
-    m_locations[i] = -1;
+    unknown08[i] = -1;
   }
-  m_type = type;
-  m_flags = 1;
-  m_passTypeOfs = m_dataObj->getDeclarationOfs("DECL_PASS_TYPE");
+  unknown3a = type;
+  unknown38 = 1;
+  unknown34 = unknown00->getDeclarationOfs("DECL_PASS_TYPE");
   setShaderParam();
 }
 
 void DrResShdPrePass::setShaderParam() {
-  (this->*s_callShdSet[m_type])();
-  m_flags &= ~1;
+  (this->*s_callShdSet[unknown3a])();
+  unknown38 &= ~1;
 }
 
 void DrResShdPrePass::setupShader(u32 index, u32 passType) {
-  m_dataObj->setDeclarationIdx(m_passTypeOfs, passType);
-  m_dataObj->setupShader(index);
+  unknown00->setDeclarationIdx(unknown34, passType);
+  unknown00->setupShader(index);
 }
 
-void DrResShdPrePass::preshdset_Obj() { m_locations[5] = 2; }
+void DrResShdPrePass::preshdset_Obj() { unknown08[5] = 2; }
 
 void DrResShdPrePass::preshdset_ObjT() {
-  m_locations[5] = 2;
-  m_locations[8] = 1;
-  m_locations[0] = 0;
+  unknown08[5] = 2;
+  unknown08[8] = 1;
+  unknown08[0] = 0;
 }
 
 void DrResShdPrePass::preshdset_ObjT_Al() {
-  m_locations[5] = 2;
-  m_locations[6] = 0;
-  m_locations[9] = 4;
-  m_locations[8] = 1;
-  m_locations[0] = 0;
-  m_locations[1] = 1;
+  unknown08[5] = 2;
+  unknown08[6] = 0;
+  unknown08[9] = 4;
+  unknown08[8] = 1;
+  unknown08[0] = 0;
+  unknown08[1] = 1;
 }
 
-void DrResShdPrePass::preshdset_Mot() { m_locations[6] = 0; }
+void DrResShdPrePass::preshdset_Mot() { unknown08[6] = 0; }
 
 void DrResShdPrePass::preshdset_MotT() {
-  m_locations[6] = 0;
-  m_locations[0] = 0;
-  m_locations[8] = 1;
+  unknown08[6] = 0;
+  unknown08[0] = 0;
+  unknown08[8] = 1;
 }
 
 void DrResShdPrePass::preshdset_MotT_Al() {
-  m_locations[5] = 2;
-  m_locations[6] = 0;
-  m_locations[9] = 4;
-  m_locations[8] = 1;
-  m_locations[0] = 0;
-  m_locations[1] = 1;
+  unknown08[5] = 2;
+  unknown08[6] = 0;
+  unknown08[9] = 4;
+  unknown08[8] = 1;
+  unknown08[0] = 0;
+  unknown08[1] = 1;
 }
 
-void DrResShdPrePass::preshdset_Inst() { m_locations[6] = 0; }
+void DrResShdPrePass::preshdset_Inst() { unknown08[6] = 0; }
 
 void DrResShdPrePass::preshdset_InstT() {
-  m_locations[6] = 0;
-  m_locations[0] = 0;
-  m_locations[8] = 1;
+  unknown08[6] = 0;
+  unknown08[0] = 0;
+  unknown08[8] = 1;
 }
 
 void DrResShdPrePass::preshdset_Obj_Al() {
-  m_locations[5] = 2;
-  m_locations[6] = 0;
-  m_locations[9] = 4;
-  m_locations[1] = 1;
-  m_locations[8] = 1;
+  unknown08[5] = 2;
+  unknown08[6] = 0;
+  unknown08[9] = 4;
+  unknown08[1] = 1;
+  unknown08[8] = 1;
 }
 
 void DrResShdPrePass::preshdset_Mot_Al() {
-  m_locations[5] = 2;
-  m_locations[6] = 0;
-  m_locations[9] = 4;
-  m_locations[1] = 1;
-  m_locations[8] = 1;
+  unknown08[5] = 2;
+  unknown08[6] = 0;
+  unknown08[9] = 4;
+  unknown08[1] = 1;
+  unknown08[8] = 1;
 }
 
 void DrResShdPrePass::preshdset_Inst_Al() {
-  m_locations[6] = 0;
-  m_locations[9] = 4;
-  m_locations[1] = 1;
-  m_locations[8] = 1;
+  unknown08[6] = 0;
+  unknown08[9] = 4;
+  unknown08[1] = 1;
+  unknown08[8] = 1;
 }
 
 void DrResShdPrePass::preshdset_InstT_Al() {
-  m_locations[6] = 0;
-  m_locations[9] = 4;
-  m_locations[8] = 1;
-  m_locations[0] = 0;
-  m_locations[1] = 1;
+  unknown08[6] = 0;
+  unknown08[9] = 4;
+  unknown08[8] = 1;
+  unknown08[0] = 0;
+  unknown08[1] = 1;
 }
 
 void DrResShdPrePass::preshdset_Inst_Bill_Al() {
-  m_locations[5] = 3;
-  m_locations[6] = 0;
-  m_locations[9] = 4;
-  m_locations[1] = 1;
-  m_locations[8] = 1;
+  unknown08[5] = 3;
+  unknown08[6] = 0;
+  unknown08[9] = 4;
+  unknown08[1] = 1;
+  unknown08[8] = 1;
 }
 
 void DrResShdPrePass::preshdset_InstT_Bill_Al() {
-  m_locations[5] = 3;
-  m_locations[6] = 0;
-  m_locations[9] = 4;
-  m_locations[8] = 1;
-  m_locations[0] = 0;
-  m_locations[1] = 1;
+  unknown08[5] = 3;
+  unknown08[6] = 0;
+  unknown08[9] = 4;
+  unknown08[8] = 1;
+  unknown08[0] = 0;
+  unknown08[1] = 1;
 }
 
 void DrResShdPrePass::preshdset_Fw() {
-  m_locations[5] = 2;
-  m_locations[10] = 3;
-  m_locations[3] = 3;
-  m_locations[4] = 4;
+  unknown08[5] = 2;
+  unknown08[10] = 3;
+  unknown08[3] = 3;
+  unknown08[4] = 4;
 }
 
 void DrResShdPrePass::preshdset_FwT() {
-  m_locations[3] = 3;
-  m_locations[5] = 2;
-  m_locations[8] = 1;
-  m_locations[0] = 0;
-  m_locations[10] = 3;
-  m_locations[4] = 4;
+  unknown08[3] = 3;
+  unknown08[5] = 2;
+  unknown08[8] = 1;
+  unknown08[0] = 0;
+  unknown08[10] = 3;
+  unknown08[4] = 4;
 }
 
 void DrResShdPrePass::preshdset_Fw_Al() {
-  m_locations[5] = 2;
-  m_locations[6] = 0;
-  m_locations[9] = 4;
-  m_locations[3] = 3;
-  m_locations[1] = 1;
-  m_locations[10] = 3;
-  m_locations[8] = 1;
-  m_locations[4] = 4;
+  unknown08[5] = 2;
+  unknown08[6] = 0;
+  unknown08[9] = 4;
+  unknown08[3] = 3;
+  unknown08[1] = 1;
+  unknown08[10] = 3;
+  unknown08[8] = 1;
+  unknown08[4] = 4;
 }
 
 void (DrResShdPrePass::*DrResShdPrePass::s_callShdSet[])() = {
@@ -165,64 +165,64 @@ void (DrResShdPrePass::*DrResShdPrePass::s_callShdSet[])() = {
     &DrResShdPrePass::preshdset_FwT_Al,        &DrResShdPrePass::preshdset_FwT_Al_Fs,     &DrResShdPrePass::preshdset_FwT_Al_Fs,
 };
 
-DrResShdShw::DrResShdShw(DrShdDataObj *dataObj, int type) : m_dataObj(dataObj) {
+DrResShdShw::DrResShdShw(DrShdDataObj *dataObj, int type) : unknown00(dataObj) {
   for (int i = 0; i < 7; i++) {
-    m_locations[i] = -1;
+    unknown08[i] = -1;
   }
-  m_flags = 1;
-  m_type = type;
-  m_texTypeOfs = m_dataObj->getDeclarationOfs("TEX_TYPE");
-  m_sptTypeOfs = m_dataObj->getDeclarationOfs("SPT_TYPE");
+  unknown28 = 1;
+  unknown2a = type;
+  unknown24 = unknown00->getDeclarationOfs("TEX_TYPE");
+  unknown26 = unknown00->getDeclarationOfs("SPT_TYPE");
   setShaderParam();
 }
 
 void DrResShdShw::setShaderParam() {
-  (this->*s_callShwSet[m_type])();
-  m_flags &= ~1;
+  (this->*s_callShwSet[unknown2a])();
+  unknown28 &= ~1;
 }
 
-void DrResShdShw::setupShader(DrResFetch *fetch) { m_dataObj->setupShader(fetch); }
+void DrResShdShw::setupShader(DrResFetch *fetch) { unknown00->setupShader(fetch); }
 
-void DrResShdShw::setDecAType(u32 index) { m_dataObj->setDeclarationIdx(m_texTypeOfs, index); }
+void DrResShdShw::setDecAType(u32 index) { unknown00->setDeclarationIdx(unknown24, index); }
 
-void DrResShdShw::setDecBType(u32 index) { m_dataObj->setDeclarationIdx(m_sptTypeOfs, index); }
+void DrResShdShw::setDecBType(u32 index) { unknown00->setDeclarationIdx(unknown26, index); }
 
 void DrResShdShw::shwShdset_DefObj() {
-  m_locations[2] = 1;
-  m_locations[0] = 0;
-  m_locations[3] = 2;
-  m_locations[1] = 0;
+  unknown08[2] = 1;
+  unknown08[0] = 0;
+  unknown08[3] = 2;
+  unknown08[1] = 0;
 }
 
 void DrResShdShw::shwShdset_Inst() {
-  m_locations[2] = 1;
-  m_locations[0] = 0;
-  m_locations[3] = 2;
-  m_locations[1] = 0;
+  unknown08[2] = 1;
+  unknown08[0] = 0;
+  unknown08[3] = 2;
+  unknown08[1] = 0;
 }
 
 void DrResShdShw::shwShdset_Mot() {
-  m_locations[2] = 1;
-  m_locations[0] = 0;
-  m_locations[3] = 2;
-  m_locations[1] = 0;
+  unknown08[2] = 1;
+  unknown08[0] = 0;
+  unknown08[3] = 2;
+  unknown08[1] = 0;
 }
 
 void DrResShdShw::shwShdset_InstMot() {
-  m_locations[2] = 1;
-  m_locations[0] = 0;
-  m_locations[3] = 2;
-  m_locations[1] = 0;
+  unknown08[2] = 1;
+  unknown08[0] = 0;
+  unknown08[3] = 2;
+  unknown08[1] = 0;
 }
 
 void DrResShdShw::shwShdset_Fw() {
-  m_locations[1] = 0;
-  m_locations[2] = 1;
-  m_locations[3] = 2;
-  m_locations[0] = 0;
-  m_locations[4] = 3;
-  m_locations[5] = 1;
-  m_locations[6] = 2;
+  unknown08[1] = 0;
+  unknown08[2] = 1;
+  unknown08[3] = 2;
+  unknown08[0] = 0;
+  unknown08[4] = 3;
+  unknown08[5] = 1;
+  unknown08[6] = 2;
 }
 
 void (DrResShdShw::*DrResShdShw::s_callShwSet[])() = {
@@ -233,23 +233,23 @@ void (DrResShdShw::*DrResShdShw::s_callShwSet[])() = {
     &DrResShdShw::shwShdset_Fw,
 };
 
-void DrResShdStreamOut::setShaderParam() { (this->*s_callStmOuSet[m_type])(); }
+void DrResShdStreamOut::setShaderParam() { (this->*s_callStmOuSet[unknown14])(); }
 
-void DrResShdStreamOut::setDecNum(u32 num) { m_dataObj->setDeclarationIdx(m_wetNumOfs, num); }
+void DrResShdStreamOut::setDecNum(u32 num) { unknown00->setDeclarationIdx(unknown16, num); }
 
 void DrResShdStreamOut::stmShdset_Weight() {
-  m_locations[0] = 1;
-  m_locations[1] = 0;
+  unknown08[0] = 1;
+  unknown08[1] = 0;
 }
 
 void DrResShdStreamOut::stmShdset_MofSet() {
-  m_locations[0] = 0;
-  m_locations[1] = 0;
+  unknown08[0] = 0;
+  unknown08[1] = 0;
 }
 
 void DrResShdStreamOut::stmShdset_MeshVtxSet() {
-  m_locations[0] = 0;
-  m_locations[1] = 1;
+  unknown08[0] = 0;
+  unknown08[1] = 1;
 }
 
 void (DrResShdStreamOut::*DrResShdStreamOut::s_callStmOuSet[])() = {
@@ -264,50 +264,50 @@ void (DrResShdStreamOut::*DrResShdStreamOut::s_callStmOuSet[])() = {
     &DrResShdStreamOut::stmShdset_MofSet,
 };
 
-DrResShdObjMot::DrResShdObjMot(DrShdDataObj *dataObj, int type) : m_dataObj(dataObj) {
+DrResShdObjMot::DrResShdObjMot(DrShdDataObj *dataObj, int type) : unknown00(dataObj) {
   for (int i = 0; i < 5; i++) {
-    m_locations[i] = -1;
+    unknown08[i] = -1;
   }
-  m_flags = 1;
-  m_type = type;
+  unknown1c = 1;
+  unknown1e = type;
   setShaderParam();
 }
 
 void DrResShdObjMot::setShaderParam() {
-  (this->*s_callMotObjSet[m_type])();
-  m_flags &= ~1;
+  (this->*s_callMotObjSet[unknown1e])();
+  unknown1c &= ~1;
 }
 
-void DrResShdObjMot::setupShader() { m_dataObj->setupShader(0u); }
+void DrResShdObjMot::setupShader() { unknown00->setupShader(0u); }
 
 void DrResShdObjMot::motblur_motObj() {
-  m_locations[0] = 0;
-  m_locations[1] = 1;
-  m_locations[2] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getUniformBlockOfs("U_VPam");
-  m_locations[3] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getUniformBlockOfs("U_VPam");
+  unknown08[0] = 0;
+  unknown08[1] = 1;
+  unknown08[2] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
+  unknown08[3] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
 }
 
 void DrResShdObjMot::motblur_motObjTex() {
-  m_locations[0] = 0;
-  m_locations[1] = 1;
-  m_locations[2] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getUniformBlockOfs("U_VPam");
-  m_locations[3] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getUniformBlockOfs("U_VPam");
-  m_locations[4] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getTextureLocation("tex");
+  unknown08[0] = 0;
+  unknown08[1] = 1;
+  unknown08[2] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
+  unknown08[3] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
+  unknown08[4] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getTextureLocation("tex");
 }
 
 void DrResShdObjMot::motblur_notObj() {
-  m_locations[0] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getUniformBlockOfs("U_MDL1");
-  m_locations[1] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getUniformBlockOfs("U_MDL2");
-  m_locations[2] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getUniformBlockOfs("U_VPam");
-  m_locations[3] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getUniformBlockOfs("U_VPam");
+  unknown08[0] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_MDL1");
+  unknown08[1] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_MDL2");
+  unknown08[2] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
+  unknown08[3] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
 }
 
 void DrResShdObjMot::motblur_notObjTex() {
-  m_locations[0] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getUniformBlockOfs("U_MDL1");
-  m_locations[1] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getUniformBlockOfs("U_MDL2");
-  m_locations[2] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getUniformBlockOfs("U_VPam");
-  m_locations[3] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getUniformBlockOfs("U_VPam");
-  m_locations[4] = (m_dataObj->m_shaders + m_dataObj->m_shaderIdx)->getTextureLocation("tex");
+  unknown08[0] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_MDL1");
+  unknown08[1] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_MDL2");
+  unknown08[2] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
+  unknown08[3] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getUniformBlockOfs("U_VPam");
+  unknown08[4] = (unknown00->m_shaders + unknown00->m_shaderIdx)->getTextureLocation("tex");
 }
 
 void (DrResShdObjMot::*DrResShdObjMot::s_callMotObjSet[])() = {

@@ -27,7 +27,7 @@ UIScreenObject::~UIScreenObject() {
 
 UIScreenObject *UIScreenObject::create(UILayoutObject *parent, ml::ScnRenderDrViewCtrl *viewCtrl, fw::ModelObject *model, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
   layer::LayerAccLayoutObj layoutAcc(parent->layer);
-  layer::LayerBase *layer = layoutAcc.createTexObj(*viewCtrl->texture);
+  layer::LayerBase *layer = layoutAcc.createTexObj(*viewCtrl->unknown20);
   if (layer == nullptr) {
     return nullptr;
   }
@@ -37,7 +37,7 @@ UIScreenObject *UIScreenObject::create(UILayoutObject *parent, ml::ScnRenderDrVi
   UIScreenObject *screen = new (allocator, 16, __FILE__, __LINE__) UIScreenObject(layer, name.c_str());
   if (screen != nullptr) {
     screen->mode = MODE_RENDER_VIEW;
-    screen->renderIndex = viewCtrl->viewId;
+    screen->renderIndex = viewCtrl->unknown08;
     screen->model = model;
     if (model != nullptr) {
       model->addRef();
@@ -64,9 +64,9 @@ UIScreenObject *UIScreenObject::createOnMemory(UILayoutObject *parent, u32 width
     layer::LayerAccMemObj memAcc(layer);
     u8 index = info.textureSlot - 1;
     ml::ScnRenderDrMdlTexture texture;
-    texture.texture = memAcc.getTexture();
-    texture.index = index;
-    texture.enable = true;
+    texture.unknown00 = memAcc.getTexture();
+    texture.unknown08 = index;
+    texture.unknown0c = true;
     parmAcc.setModelTexture(texture);
     memAcc.setRender(false);
   }

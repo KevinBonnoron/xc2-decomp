@@ -25,14 +25,14 @@ public:
   static ScnObj *create(Scn *scn, const void *data, int screen);
   const char *getName() const override;
 
-  DrCalcClipObj *m_clipObj;
-  int m_screen;
-  mm::mtl::FixStr<64> m_listName;
+  DrCalcClipObj *unknown58; // Inferred role: clip object; original member name unknown.
+  int unknown60;            // Inferred role: screen; original member name unknown.
+  mm::mtl::FixStr<64> m_name;
 };
 
-static_assert(offsetof(ScnObjClipDySys, m_clipObj) == 0x58, "");
-static_assert(offsetof(ScnObjClipDySys, m_screen) == 0x60, "");
-static_assert(offsetof(ScnObjClipDySys, m_listName) == 0x64, "");
+static_assert(offsetof(ScnObjClipDySys, unknown58) == 0x58, "");
+static_assert(offsetof(ScnObjClipDySys, unknown60) == 0x60, "");
+static_assert(offsetof(ScnObjClipDySys, m_name) == 0x64, "");
 
 class ScnObjEnvColiDr : public ScnObjEnvColi {
 public:
@@ -42,10 +42,10 @@ public:
   bool isPause() const;
   static ScnObj *create(Scn *scn, const void *data, int screen);
 
-  DrEnvColiObj *m_envColiObj;
+  DrEnvColiObj *unknown58; // Inferred role: env coli object; original member name unknown.
 };
 
-static_assert(offsetof(ScnObjEnvColiDr, m_envColiObj) == 0x58, "");
+static_assert(offsetof(ScnObjEnvColiDr, unknown58) == 0x58, "");
 
 class ScnObjIBLDr : public ScnObjIBL {
 public:
@@ -61,12 +61,12 @@ public:
   virtual void setName(const char *name);
   const char *getName() const override;
 
-  DrGlobalIBLPack *m_pack;
-  int m_screen;
+  DrGlobalIBLPack *unknown18; // Inferred role: pack; original member name unknown.
+  int unknown20;              // Inferred role: screen; original member name unknown.
 };
 
-static_assert(offsetof(ScnObjIBLDr, m_pack) == 0x18, "");
-static_assert(offsetof(ScnObjIBLDr, m_screen) == 0x20, "");
+static_assert(offsetof(ScnObjIBLDr, unknown18) == 0x18, "");
+static_assert(offsetof(ScnObjIBLDr, unknown20) == 0x20, "");
 
 class ScnObjLightDrSys : public ScnObjLight {
 public:
@@ -91,13 +91,13 @@ public:
   bool isEnv() const override;
 
   const void *m_data;
-  DrEnvironmentObj *m_drEnv;
-  int m_screen;
+  DrEnvironmentObj *unknown320; // Inferred role: dr env; original member name unknown.
+  int unknown328;               // Inferred role: screen; original member name unknown.
 };
 
 static_assert(offsetof(ScnObjLightDrSys, m_data) == 0x318, "");
-static_assert(offsetof(ScnObjLightDrSys, m_drEnv) == 0x320, "");
-static_assert(offsetof(ScnObjLightDrSys, m_screen) == 0x328, "");
+static_assert(offsetof(ScnObjLightDrSys, unknown320) == 0x320, "");
+static_assert(offsetof(ScnObjLightDrSys, unknown328) == 0x328, "");
 
 class ScnObjModelDrSysStandard : public ScnObjModelDrSys {
 public:

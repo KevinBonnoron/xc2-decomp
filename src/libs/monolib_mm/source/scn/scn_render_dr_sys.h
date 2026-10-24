@@ -52,22 +52,22 @@ public:
   static void createDrRender(Scn *scn);
   static u32 thDrSysInitialize(void *argument, void *userData);
 
-  DrMan *drMan;
+  DrMan *unknown10; // Inferred role: dr man; original member name unknown.
 };
 
-static_assert(offsetof(ScnRenderDrSys, drMan) == 0x10, "");
+static_assert(offsetof(ScnRenderDrSys, unknown10) == 0x10, "");
 static_assert(sizeof(ScnRenderDrSys) == 0x18, "");
 
 class ScnRenderDrViewCtrl {
 public:
   u8 _00[0x08 - 0x00];
-  s32 viewId;
+  s32 unknown08; // Inferred role: view id; original member name unknown.
   u8 _0c[0x20 - 0x0c];
-  grlib::CGLibTextureBuffer *texture;
+  grlib::CGLibTextureBuffer *unknown20; // Inferred role: texture; original member name unknown.
 };
 
-static_assert(offsetof(ScnRenderDrViewCtrl, viewId) == 0x08, "");
-static_assert(offsetof(ScnRenderDrViewCtrl, texture) == 0x20, "");
+static_assert(offsetof(ScnRenderDrViewCtrl, unknown08) == 0x08, "");
+static_assert(offsetof(ScnRenderDrViewCtrl, unknown20) == 0x20, "");
 
 class ScnRenderDrCapture {
 public:

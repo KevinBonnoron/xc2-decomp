@@ -61,13 +61,13 @@ void LayerManager::end() {
 }
 
 void LayerManager::apply(const ml::IDrDrawWorkInfo *info) {
-  if (!(m_flags & 1) && info->m_loop == 0) {
+  if (!(m_flags & 1) && info->unknown560 == 0) {
     m_objManager->apply(info);
   }
 }
 
 void LayerManager::finalRender(const ml::IDrDrawWorkInfo *info) {
-  if (!(m_flags & 1) && info->m_loop == 0) {
+  if (!(m_flags & 1) && info->unknown560 == 0) {
     m_shdManager->beginShader(info);
     m_objManager->finalRender(info);
     m_shdManager->endShader(info);

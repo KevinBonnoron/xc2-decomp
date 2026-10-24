@@ -38,23 +38,23 @@ struct MdsMatInfoHeader;
 struct VolumeFadeParams;
 
 struct DrMdlAfterImageParams {
-  f32 count;
-  f32 span;
-  f32 fade;
-  mm::Col3 headColor;
-  f32 headAlpha;
-  f32 headEmissive;
-  f32 headScale;
-  mm::Col3 tailColor;
-  f32 tailAlpha;
-  f32 tailEmissive;
-  f32 tailScale;
+  f32 unknown00;      // Inferred role: count; original member name unknown.
+  f32 unknown04;      // Inferred role: span; original member name unknown.
+  f32 unknown08;      // Inferred role: fade; original member name unknown.
+  mm::Col3 unknown0c; // Inferred role: head color; original member name unknown.
+  f32 unknown18;      // Inferred role: head alpha; original member name unknown.
+  f32 unknown1c;      // Inferred role: head emissive; original member name unknown.
+  f32 unknown20;      // Inferred role: head scale; original member name unknown.
+  mm::Col3 unknown24; // Inferred role: tail color; original member name unknown.
+  f32 unknown30;      // Inferred role: tail alpha; original member name unknown.
+  f32 unknown34;      // Inferred role: tail emissive; original member name unknown.
+  f32 unknown38;      // Inferred role: tail scale; original member name unknown.
 };
 
-static_assert(offsetof(DrMdlAfterImageParams, headColor) == 0x0c, "");
-static_assert(offsetof(DrMdlAfterImageParams, headAlpha) == 0x18, "");
-static_assert(offsetof(DrMdlAfterImageParams, tailColor) == 0x24, "");
-static_assert(offsetof(DrMdlAfterImageParams, tailScale) == 0x38, "");
+static_assert(offsetof(DrMdlAfterImageParams, unknown0c) == 0x0c, "");
+static_assert(offsetof(DrMdlAfterImageParams, unknown18) == 0x18, "");
+static_assert(offsetof(DrMdlAfterImageParams, unknown24) == 0x24, "");
+static_assert(offsetof(DrMdlAfterImageParams, unknown38) == 0x38, "");
 
 struct ScnObjModelDrTexutre {
   grlib::CGLibTextureBuffer *texture;

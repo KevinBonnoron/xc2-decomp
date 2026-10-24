@@ -12,36 +12,36 @@
 namespace ml {
 
 u16 DrAPCache::getSamplerID() {
-  if (m_samplerID != 0) {
-    return m_samplerID;
+  if (unknown40 != 0) {
+    return unknown40;
   }
-  return m_clampV + m_clampU * 4 + m_filter * 16 + m_mipMap * 32;
+  return unknown3a + unknown38 * 4 + m_filter * 16 + unknown3e * 32;
 }
 
 void DrAPCache::depthBegin() {
-  m_depthWrite = -1;
-  m_depthTest = -1;
-  m_stencilRef = -1;
+  unknown1c = -1;
+  unknown24 = -1;
+  unknown14 = -1;
 }
 
 void DrAPCache::shadowBegin() {
-  m_depthWrite = 1;
-  m_stencilType = -1;
-  m_depthTest = 2;
-  m_alphaBlend = 0;
-  m_cullType = DR_AP_CULL_TYPE_OFF;
-  m_stencilRef = -1;
+  unknown1c = 1;
+  unknown18 = -1;
+  unknown24 = 2;
+  unknown08 = 0;
+  unknown10 = DR_AP_CULL_TYPE_OFF;
+  unknown14 = -1;
   grlib::CGLibDepthCtl::setDepthControl(true, true, GRL_COMPARE_LESS);
   grlib::CGLibPolygon::setCullingOff();
   grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
 }
 
 void DrAPCache::beginZRender() {
-  m_depthTest = 2;
-  m_depthWrite = 1;
-  m_stencilType = -1;
-  m_cullType = DR_AP_CULL_TYPE_OFF;
-  m_stencilRef = -1;
+  unknown24 = 2;
+  unknown1c = 1;
+  unknown18 = -1;
+  unknown10 = DR_AP_CULL_TYPE_OFF;
+  unknown14 = -1;
   grlib::CGLibDepthCtl::setDepthControl(true, true, GRL_COMPARE_LESS);
   grlib::CGLibPolygon::setCullingOff();
   grlib::CGLibColorCtl::setColorBufferOff();
@@ -50,11 +50,11 @@ void DrAPCache::beginZRender() {
 void DrAPCache::endZRender() { grlib::CGLibColorCtl::setColorBufferOn(); }
 
 void DrAPCache::beginThicknessRenderFirst() {
-  m_depthTest = 2;
-  m_stencilType = -1;
-  m_depthWrite = 0;
-  m_cullType = DR_AP_CULL_TYPE_OFF;
-  m_stencilRef = -1;
+  unknown24 = 2;
+  unknown18 = -1;
+  unknown1c = 0;
+  unknown10 = DR_AP_CULL_TYPE_OFF;
+  unknown14 = -1;
   grlib::CGLibDepthCtl::setDepthControl(true, false, GRL_COMPARE_LESS);
   grlib::CGLibPolygon::setCullingOff();
   grlib::CGLibColorCtl::setColorChannelMask(true, false, false, false);
@@ -64,11 +64,11 @@ void DrAPCache::beginThicknessRenderFirst() {
 void DrAPCache::endThicknessRenderFirst() { grlib::CGLibColorCtl::setColorBufferOn(); }
 
 void DrAPCache::beginThicknessRenderSecond() {
-  m_depthTest = 2;
-  m_depthWrite = 1;
-  m_stencilType = -1;
-  m_cullType = DR_AP_CULL_TYPE_OFF;
-  m_stencilRef = -1;
+  unknown24 = 2;
+  unknown1c = 1;
+  unknown18 = -1;
+  unknown10 = DR_AP_CULL_TYPE_OFF;
+  unknown14 = -1;
   grlib::CGLibDepthCtl::setDepthControl(true, true, GRL_COMPARE_LESS);
   grlib::CGLibPolygon::setCullingOff();
   grlib::CGLibColorCtl::setColorBufferOff();
@@ -77,10 +77,10 @@ void DrAPCache::beginThicknessRenderSecond() {
 void DrAPCache::endThicknessRenderSecond() { grlib::CGLibColorCtl::setColorBufferOn(); }
 
 void DrAPCache::beginMdlZRender() {
-  m_depthTest = 2;
-  m_depthWrite = 1;
-  m_stencilRef = -1;
-  m_stencilType = -1;
+  unknown24 = 2;
+  unknown1c = 1;
+  unknown14 = -1;
+  unknown18 = -1;
   grlib::CGLibDepthCtl::setDepthControl(true, true, GRL_COMPARE_LESS);
   grlib::CGLibColorCtl::setColorBufferOff();
 }
@@ -88,10 +88,10 @@ void DrAPCache::beginMdlZRender() {
 void DrAPCache::endMdlZRender() { grlib::CGLibColorCtl::setColorBufferOn(); }
 
 void DrAPCache::setGBuffRender(u32 mask) {
-  if (m_gbuffMask == mask) {
+  if (unknown20 == mask) {
     return;
   }
-  m_gbuffMask = mask;
+  unknown20 = mask;
   if (mask == 0x77777777) {
     grlib::CGLibColorCtl::setColorChannelMask(true, true, true, true);
   } else if (mask == 0xffffffff) {
@@ -106,10 +106,10 @@ void DrAPCache::setRefractionRender() { grlib::CGLibColorCtl::setColorChannelMas
 void DrAPCache::endRefractionRender() { grlib::CGLibColorCtl::setColorChannelMask(true, true, true, true); }
 
 void DrAPCache::setupCulling(DrApCullType cullType) {
-  if (m_cullType == cullType) {
+  if (unknown10 == cullType) {
     return;
   }
-  m_cullType = cullType;
+  unknown10 = cullType;
   switch (cullType) {
   case DR_AP_CULL_TYPE_BACK:
     grlib::CGLibPolygon::setCullingBack();
@@ -127,81 +127,81 @@ void DrAPCache::setupCulling(DrApCullType cullType) {
 }
 
 void DrAPCache::beginTexSampling(int clamp, int filter) {
-  m_samplerID = 0;
-  m_samplerType = 0;
-  m_clampU = clamp;
-  m_clampV = clamp;
+  unknown40 = 0;
+  unknown42 = 0;
+  unknown38 = clamp;
+  unknown3a = clamp;
   m_filter = filter;
-  m_mipMap = 0;
+  unknown3e = 0;
 }
 
 void DrAPCache::begin3DTextureSampling() {
-  m_samplerID = 0x41;
-  m_samplerType = 1;
+  unknown40 = 0x41;
+  unknown42 = 1;
 }
 
 void DrAPCache::begin3DTexturePointSampling() {
-  m_samplerID = 0x42;
-  m_samplerType = 1;
+  unknown40 = 0x42;
+  unknown42 = 1;
 }
 
 void DrAPCache::begin3DTextureWarpSampling() {
-  m_samplerID = 0x43;
-  m_samplerType = 1;
+  unknown40 = 0x43;
+  unknown42 = 1;
 }
 
 void DrAPCache::begin3DTextureWarpPointSampling() {
-  m_samplerID = 0x44;
-  m_samplerType = 1;
+  unknown40 = 0x44;
+  unknown42 = 1;
 }
 
 void DrAPCache::beginCubeTextureSampling(bool isArray) {
-  m_samplerID = isArray ? 0x47 : 0x45;
-  m_samplerType = 2;
+  unknown40 = isArray ? 0x47 : 0x45;
+  unknown42 = 2;
 }
 
 void DrAPCache::beginCubeTexturePointSampling(bool isArray) {
-  m_samplerID = isArray ? 0x48 : 0x46;
-  m_samplerType = 2;
+  unknown40 = isArray ? 0x48 : 0x46;
+  unknown42 = 2;
 }
 
 void DrAPCache::beginDepthCompare() {
-  m_samplerID = 0x49;
-  m_samplerType = 0;
+  unknown40 = 0x49;
+  unknown42 = 0;
 }
 
 void DrAPCache::beginBorderWhite() {
-  m_samplerID = 0x4a;
-  m_samplerType = 0;
+  unknown40 = 0x4a;
+  unknown42 = 0;
 }
 
 void DrAPCache::beginBorderBlack() {
-  m_samplerID = 0x4b;
-  m_samplerType = 0;
+  unknown40 = 0x4b;
+  unknown42 = 0;
 }
 
 void DrAPCache::beginBorderDepthMax() {
-  m_samplerID = 0x4c;
-  m_samplerType = 0;
+  unknown40 = 0x4c;
+  unknown42 = 0;
 }
 
 void DrAPCache::beginBorderDepthMinusMax() {
-  m_samplerID = 0x4d;
-  m_samplerType = 0;
+  unknown40 = 0x4d;
+  unknown42 = 0;
 }
 
 void DrAPCache::texSampClamping(int clampU, int clampV) {
-  m_clampU = static_cast<u8>(clampU);
-  m_clampV = static_cast<u8>(clampV);
+  unknown38 = static_cast<u8>(clampU);
+  unknown3a = static_cast<u8>(clampV);
 }
 
-void DrAPCache::setMipMapOn(const grlib::CGLibTextureBuffer &texture) { m_mipMap = texture.getMipmap() != 0; }
+void DrAPCache::setMipMapOn(const grlib::CGLibTextureBuffer &texture) { unknown3e = texture.getMipmap() != 0; }
 
 void DrAPCache::setupShader(grlib::CGLibDecShader *shader, DrResFetch *fetch) { grlib::CGLibCtlShader::setShader(*shader, *fetch); }
 
 void DrAPCache::setupShader(grlib::CGLibDecShdExtTbl *shader, DrResFetch *fetch) { grlib::CGLibCtlShader::setShader(*shader, *fetch); }
 
-void DrAPCache::setTexture(const grlib::CGLibTextureBuffer &texture, u32 location) { grlib::CGLibCtlTexture::setTexture(texture, m_samplers[getSamplerID()], location); }
+void DrAPCache::setTexture(const grlib::CGLibTextureBuffer &texture, u32 location) { grlib::CGLibCtlTexture::setTexture(texture, unknown30[getSamplerID()], location); }
 
 void DrAPCache::setTexture(const grlib::CGLibTextureBuffer &texture, const grlib::CGLibSampler &sampler, u32 location) { grlib::CGLibCtlTexture::setTexture(texture, sampler, location); }
 

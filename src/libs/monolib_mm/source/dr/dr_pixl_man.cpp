@@ -19,34 +19,34 @@ static const s32 s_gbuffPixlObjs[] = {0, 1, 2, 3, 4, 8, 5, 6, 7, 15, 18};
 
 static bool isDblPixlObj(int type) { return (0x27200ULL >> type) & 1; }
 
-void DrPixlMan::endDeferredRenderTarget() { m_res->pixlObjs[5][0]->setColorInvalidate(); }
+void DrPixlMan::endDeferredRenderTarget() { unknown7f0->unknown00[5][0]->setColorInvalidate(); }
 
 void DrPixlMan::setMainViewPort() {
-  grlib::LibMainStateViewPort viewPort(0.0f, 0.0f, static_cast<f32>(m_drMan->screenInfo->width), static_cast<f32>(m_drMan->screenInfo->height), 0.0f, 1.0f);
+  grlib::LibMainStateViewPort viewPort(0.0f, 0.0f, static_cast<f32>(unknown08->unknown5b8->unknown18), static_cast<f32>(unknown08->unknown5b8->unknown1c), 0.0f, 1.0f);
   grlib::CGLibState::setViewport(viewPort);
 }
 
-void DrPixlMan::resetRenderTarget() { m_renderTarget = 0; }
+void DrPixlMan::resetRenderTarget() { unknown858 = 0; }
 
 void DrPixlMan::endGBuffTexture() {
-  if (m_drMan->postParms[m_drMan->viewIndex]->toneMap) {
-    m_res->pixlObjs[6][0]->setColorInvalidate();
+  if (unknown08->unknown120[unknown08->unknown1c98]->m_toneMapOn) {
+    unknown7f0->unknown00[6][0]->setColorInvalidate();
   }
 }
 
 void DrPixlMan::setMainRenderTarget() {
-  if (m_res->mainRenderTarget == nullptr) {
+  if (unknown7f0->unknown1d0 == nullptr) {
     grlib::CGLibState::setMainFrameBuffer();
   } else {
     grlib::CGLibState::beginRegisterRenderTarget();
-    grlib::CGLibState::setRegisterRenderTarget(*m_res->mainRenderTarget, grlib::GRL_MRT_TYPE_0);
+    grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown1d0, grlib::GRL_MRT_TYPE_0);
     grlib::CGLibState::endRegisterRenderTarget();
   }
   setFinalViewPort();
 }
 
 void DrPixlMan::selectOpcaityBlmRenderTarget() {
-  m_renderTarget = 6;
+  unknown858 = 6;
   grlib::CGLibState::beginRegisterRenderTarget();
   grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(5), grlib::GRL_MRT_TYPE_0);
   grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(6), grlib::GRL_MRT_TYPE_1);
@@ -64,52 +64,52 @@ void DrPixlMan::selectOpcaityRenderTarget() {
 
 DrPixlRenderTarget *DrPixlMan::getPixlObj(int type) {
   if (isDblPixlObj(type)) {
-    return m_res->pixlObjs[type][DrMan::s_nDblIdx];
+    return unknown7f0->unknown00[type][DrMan::s_nDblIdx];
   }
-  return m_res->pixlObjs[type][0];
+  return unknown7f0->unknown00[type][0];
 }
 
-grlib::CGLibDepthTarget *DrPixlMan::getDepthObj() { return m_res->depthObjs[DrMan::s_nDblIdx]; }
+grlib::CGLibDepthTarget *DrPixlMan::getDepthObj() { return unknown7f0->unknown1a0[DrMan::s_nDblIdx]; }
 
-grlib::CGLibTextureBuffer *DrPixlMan::getDammyWhiteTexObj() { return m_dammyWhiteTex->m_texture; }
+grlib::CGLibTextureBuffer *DrPixlMan::getDammyWhiteTexObj() { return unknown838->m_texture; }
 
 DrPixlMan::~DrPixlMan() { releaseColorBuffer(); }
 
 void DrPixlMan::resetLightBuffOnly() {}
 
-void DrPixlMan::createShadowParmDisplayList(wkPixlManRes *res) { res->flags &= ~RES_FLAG_SHADOW_DISPLAY_LIST; }
+void DrPixlMan::createShadowParmDisplayList(wkPixlManRes *res) { res->unknown1d8 &= ~RES_FLAG_SHADOW_DISPLAY_LIST; }
 
 void DrPixlMan::setupCate(int cate) {
-  m_res = &m_resources[cate];
-  m_cate = cate;
+  unknown7f0 = &unknown10[cate];
+  unknown860 = cate;
 }
 
 void DrPixlMan::updateShadowDisplayList() {
-  if (m_res->flags & RES_FLAG_SHADOW_DISPLAY_LIST) {
-    createShadowParmDisplayList(m_res);
+  if (unknown7f0->unknown1d8 & RES_FLAG_SHADOW_DISPLAY_LIST) {
+    createShadowParmDisplayList(unknown7f0);
   }
 }
 
-DrPixlRenderTarget *DrPixlMan::getResponsiveAAMask() { return m_res->pixlObjs[18][0]; }
+DrPixlRenderTarget *DrPixlMan::getResponsiveAAMask() { return unknown7f0->unknown00[18][0]; }
 
 grlib::CGLibDepthTarget *DrPixlMan::getSeparateTransDepthObj() {
-  if (m_drMan->postParms[m_drMan->viewIndex]->separateTrans) {
-    return m_res->separateTransDepthObj;
+  if (unknown08->unknown120[unknown08->unknown1c98]->unknownfb4) {
+    return unknown7f0->unknown1b0;
   }
   return getDepthObj();
 }
 
-void DrPixlMan::displayUpdate() { m_res->deferred->displayUpdate(); }
+void DrPixlMan::displayUpdate() { unknown7f0->unknown170->displayUpdate(); }
 
 void DrPixlMan::renderEnd(int loop) {
-  if (m_res->mainRenderTarget != nullptr) {
-    m_res->mainRenderTarget->setColorInvalidate();
+  if (unknown7f0->unknown1d0 != nullptr) {
+    unknown7f0->unknown1d0->setColorInvalidate();
   }
 }
 
 void DrPixlMan::selectZprepassRenderTarget() {
-  m_renderTarget = 1;
-  m_gbuffMask = 0;
+  unknown858 = 1;
+  unknown85c = 0;
   grlib::CGLibState::beginRegisterRenderTarget();
   grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
   grlib::CGLibState::endRegisterRenderTarget();
@@ -118,11 +118,11 @@ void DrPixlMan::selectZprepassRenderTarget() {
 void DrPixlMan::selectGBuffRenderTarget() { selectGBuffRenderTarget(0xff); }
 
 bool DrPixlMan::selectGBuffRenderTarget(u32 mask) {
-  if (m_renderTarget == 2 && m_gbuffMask == mask) {
+  if (unknown858 == 2 && unknown85c == mask) {
     return false;
   }
-  m_renderTarget = 2;
-  m_gbuffMask = mask;
+  unknown858 = 2;
+  unknown85c = mask;
   grlib::CGLibState::beginRegisterRenderTarget();
   int mrt = 0;
   for (int i = 0; i < 11; i++) {
@@ -137,29 +137,29 @@ bool DrPixlMan::selectGBuffRenderTarget(u32 mask) {
 }
 
 void DrPixlMan::refractionGBuffInvalidate() {
-  m_res->pixlObjs[0][0]->setColorInvalidate();
-  m_res->pixlObjs[1][0]->setColorInvalidate();
-  m_res->pixlObjs[2][0]->setColorInvalidate();
-  m_res->pixlObjs[3][0]->setColorInvalidate();
-  m_res->pixlObjs[4][0]->setColorInvalidate();
+  unknown7f0->unknown00[0][0]->setColorInvalidate();
+  unknown7f0->unknown00[1][0]->setColorInvalidate();
+  unknown7f0->unknown00[2][0]->setColorInvalidate();
+  unknown7f0->unknown00[3][0]->setColorInvalidate();
+  unknown7f0->unknown00[4][0]->setColorInvalidate();
 }
 
 void DrPixlMan::endGBuffRenderTarget() {
-  m_res->pixlObjs[0][0]->setColorInvalidate();
-  m_res->pixlObjs[1][0]->setColorInvalidate();
-  m_res->pixlObjs[2][0]->setColorInvalidate();
-  m_res->pixlObjs[3][0]->setColorInvalidate();
-  m_res->pixlObjs[4][0]->setColorInvalidate();
-  m_res->pixlObjs[8][0]->setColorInvalidate();
-  m_res->pixlObjs[5][0]->setColorInvalidate();
-  m_res->pixlObjs[6][0]->setColorInvalidate();
+  unknown7f0->unknown00[0][0]->setColorInvalidate();
+  unknown7f0->unknown00[1][0]->setColorInvalidate();
+  unknown7f0->unknown00[2][0]->setColorInvalidate();
+  unknown7f0->unknown00[3][0]->setColorInvalidate();
+  unknown7f0->unknown00[4][0]->setColorInvalidate();
+  unknown7f0->unknown00[8][0]->setColorInvalidate();
+  unknown7f0->unknown00[5][0]->setColorInvalidate();
+  unknown7f0->unknown00[6][0]->setColorInvalidate();
 }
 
 void DrPixlMan::selectDeferredRenderTarget() {
-  if (m_renderTarget == 4) {
+  if (unknown858 == 4) {
     return;
   }
-  m_renderTarget = 4;
+  unknown858 = 4;
   grlib::CGLibState::beginRegisterRenderTarget();
   grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(5), grlib::GRL_MRT_TYPE_0);
   grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
@@ -167,14 +167,14 @@ void DrPixlMan::selectDeferredRenderTarget() {
 }
 
 void DrPixlMan::selectRefractRenderTarget() {
-  m_renderTarget = 5;
+  unknown858 = 5;
   grlib::CGLibState::beginRegisterRenderTarget();
   grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
   grlib::CGLibState::endRegisterRenderTarget();
 }
 
 void DrPixlMan::selectPrePassWrkClearRenderTarget() {
-  m_renderTarget = 0;
+  unknown858 = 0;
   grlib::CGLibState::beginRegisterRenderTarget();
   grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(5), grlib::GRL_MRT_TYPE_0);
   grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
@@ -183,17 +183,17 @@ void DrPixlMan::selectPrePassWrkClearRenderTarget() {
 }
 
 void DrPixlMan::selectGlobalIBLIndexRenderTarget() {
-  if (m_renderTarget == 11) {
+  if (unknown858 == 11) {
     return;
   }
-  m_renderTarget = 11;
+  unknown858 = 11;
   grlib::CGLibState::beginRegisterRenderTarget();
   grlib::CGLibState::setRegisterRenderTarget(*getPixlObj(3), grlib::GRL_MRT_TYPE_0);
   grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
   grlib::CGLibState::endRegisterRenderTarget();
 }
 
-void DrPixlMan::endGlobalIBLIndexRenderTarget() { m_res->pixlObjs[3][0]->setColorInvalidate(); }
+void DrPixlMan::endGlobalIBLIndexRenderTarget() { unknown7f0->unknown00[3][0]->setColorInvalidate(); }
 
 void DrPixlMan::alphaRenderTarget() {
   if (selectGBuffRenderTarget(0x1c0)) {
@@ -209,38 +209,38 @@ void DrPixlMan::skyGodRayRenderTarget() {
   }
 }
 
-void DrPixlMan::renderRefractionMap(bool isRefractionMap, bool isHalfMap) { m_res->postMan->renderRefractionMap(isRefractionMap, isHalfMap); }
+void DrPixlMan::renderRefractionMap(bool isRefractionMap, bool isHalfMap) { unknown7f0->unknown180->renderRefractionMap(isRefractionMap, isHalfMap); }
 
-void DrPixlMan::renderSkyDome() { m_res->postMan->renderSkyDome(); }
+void DrPixlMan::renderSkyDome() { unknown7f0->unknown180->renderSkyDome(); }
 
-void DrPixlMan::renderSkyGodRay() { m_res->postMan->renderSkyGodRay(); }
+void DrPixlMan::renderSkyGodRay() { unknown7f0->unknown180->renderSkyGodRay(); }
 
-void DrPixlMan::renderRainDrop() { m_res->postMan->renderRainDrop(); }
+void DrPixlMan::renderRainDrop() { unknown7f0->unknown180->renderRainDrop(); }
 
-void DrPixlMan::renderTMAA() { m_res->postMan->renderTMAA(); }
+void DrPixlMan::renderTMAA() { unknown7f0->unknown180->renderTMAA(); }
 
-bool DrPixlMan::isRefractionMap() { return m_res->postMan->m_refractionMap != nullptr; }
+bool DrPixlMan::isRefractionMap() { return unknown7f0->unknown180->unknownd0 != nullptr; }
 
 void DrPixlMan::thicknessFirstBegin() {
-  m_renderTarget = 13;
+  unknown858 = 13;
   grlib::CGLibState::beginRegisterRenderTarget();
-  grlib::CGLibState::setRegisterRenderTarget(*m_res->backFaceDepthTexture, grlib::GRL_MRT_TYPE_0);
+  grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown148, grlib::GRL_MRT_TYPE_0);
   grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->m_depthBuffer);
   grlib::CGLibState::endRegisterRenderTarget();
 }
 
-DrPixlRenderTarget *DrPixlMan::getBackFaceDepthTexture() { return m_res->backFaceDepthTexture; }
+DrPixlRenderTarget *DrPixlMan::getBackFaceDepthTexture() { return unknown7f0->unknown148; }
 
-void DrPixlMan::thicknessFirstEnd() { m_res->backFaceDepthTexture->setColorInvalidate(); }
+void DrPixlMan::thicknessFirstEnd() { unknown7f0->unknown148->setColorInvalidate(); }
 
-void DrPixlMan::lastDeferredRender() { m_res->deferred->lastDeferredRender(); }
+void DrPixlMan::lastDeferredRender() { unknown7f0->unknown170->lastDeferredRender(); }
 
 void DrPixlMan::occRenderEnd() { DrAPGxType::endOccQuery(); }
 
 void DrPixlMan::depCheckEnd() { grlib::CGLibColorCtl::setColorBufferOn(); }
 
 void DrPixlMan::shadowCallDirBegin() {
-  m_drMan->apCache->shadowBegin();
+  unknown08->unknown5c0->shadowBegin();
   DrAPGxType::beginShadow();
 }
 
@@ -252,7 +252,7 @@ void DrPixlMan::shadowCallDirEnd() {
 }
 
 void DrPixlMan::shadowDirBegin() {
-  m_drMan->apCache->shadowBegin();
+  unknown08->unknown5c0->shadowBegin();
   DrAPGxType::beginShadow();
 }
 
@@ -263,24 +263,24 @@ void DrPixlMan::shadowDirEnd() {
   setMainViewPort();
 }
 
-void DrPixlMan::callShadowCacheUpdate(bool isAll) { m_shadowCacheMan->callShadowCacheUpdate(isAll); }
+void DrPixlMan::callShadowCacheUpdate(bool isAll) { unknown800->callShadowCacheUpdate(isAll); }
 
-void DrPixlMan::callShadowCacheVariance() { m_shadowCacheMan->callShadowCacheVariance(); }
+void DrPixlMan::callShadowCacheVariance() { unknown800->callShadowCacheVariance(); }
 
-void DrPixlMan::callFgShadowCacheUpdate() { m_shadowCacheMan->callFgShadowCacheUpdate(); }
+void DrPixlMan::callFgShadowCacheUpdate() { unknown800->callFgShadowCacheUpdate(); }
 
 void DrPixlMan::fastRender() {
-  m_res->postMan->fastRender();
-  if (m_cate == 0) {
-    m_shadowCacheMan->shadowCacheRender();
-    m_shadowCacheMan->fastRender();
+  unknown7f0->unknown180->fastRender();
+  if (unknown860 == 0) {
+    unknown800->shadowCacheRender();
+    unknown800->fastRender();
   }
 }
 
-void DrPixlMan::lastCapRender() { m_res->postMan->capRender(); }
+void DrPixlMan::lastCapRender() { unknown7f0->unknown180->capRender(); }
 
 void DrPixlMan::setFinalViewPort() {
-  grlib::LibMainStateViewPort viewPort(0.0f, 0.0f, static_cast<f32>(m_drMan->screenInfo->renderWidth), static_cast<f32>(m_drMan->screenInfo->renderHeight), 0.0f, 1.0f);
+  grlib::LibMainStateViewPort viewPort(0.0f, 0.0f, static_cast<f32>(unknown08->unknown5b8->unknown20), static_cast<f32>(unknown08->unknown5b8->unknown24), 0.0f, 1.0f);
   grlib::CGLibState::setViewport(viewPort);
 }
 
@@ -289,36 +289,36 @@ void DrPixlMan::setMainSRGBRenderTarget() { grlib::CGLibState::setMainFrameBuffe
 void DrPixlMan::setMainSRGBAfterRenderTarget() {}
 
 void DrPixlMan::changeColorBuff() {
-  m_res->activeColorBuff->setColorInvalidate();
-  if (m_res->activeColorBuff == m_res->colorBuff) {
-    m_res->activeColorBuff = m_res->hdrBuff;
+  unknown7f0->unknown138->setColorInvalidate();
+  if (unknown7f0->unknown138 == unknown7f0->unknown130) {
+    unknown7f0->unknown138 = unknown7f0->unknown140;
   }
 }
 
 void DrPixlMan::changeHDRBuff(DrPixlRenderTarget *hdrBuff) {
-  if (m_res->activeColorBuff == m_res->hdrBuff) {
-    m_res->activeColorBuff = hdrBuff;
+  if (unknown7f0->unknown138 == unknown7f0->unknown140) {
+    unknown7f0->unknown138 = hdrBuff;
   }
-  m_res->hdrBuff = hdrBuff;
+  unknown7f0->unknown140 = hdrBuff;
 }
 
 void DrPixlMan::setTempColorBuff() { getTempColorBuff()->setRenderTarget(); }
 
 DrPixlRenderTarget *DrPixlMan::getTempColorBuff() {
-  if (m_res->activeColorBuff != m_res->colorBuff) {
-    return m_res->colorBuff;
+  if (unknown7f0->unknown138 != unknown7f0->unknown130) {
+    return unknown7f0->unknown130;
   }
-  return m_res->hdrBuff;
+  return unknown7f0->unknown140;
 }
 
-void DrPixlMan::pixelEndMode() { m_shadowCacheMan->endMode(); }
+void DrPixlMan::pixelEndMode() { unknown800->endMode(); }
 
 void DrPixlMan::setToneAveRange(f32 min, f32 max) {
-  m_res->toneAveMin = min;
-  m_res->toneAveMax = max;
+  unknown7f0->unknown194 = min;
+  unknown7f0->unknown198 = max;
 }
 
-grlib::CGLibTextureBuffer *DrPixlMan::getDammyTexObj() { return m_dammyTex->m_texture; }
+grlib::CGLibTextureBuffer *DrPixlMan::getDammyTexObj() { return unknown830->m_texture; }
 
 void DrPixlMan::offScreenAlphaEnd() { DrAPGxType::setupAlphaChanel(true); }
 
@@ -328,19 +328,19 @@ DrPixlRenderTarget *DrPixlMan::getDeactivePixlObj(int type) {
   if (!isDblPixlObj(type)) {
     return nullptr;
   }
-  return m_res->pixlObjs[type][DrMan::s_nDblIdx ^ 1];
+  return unknown7f0->unknown00[type][DrMan::s_nDblIdx ^ 1];
 }
 
-grlib::CGLibDepthTarget *DrPixlMan::getDeactiveDepthObj() { return m_res->depthObjs[DrMan::s_nDblStockIdx]; }
+grlib::CGLibDepthTarget *DrPixlMan::getDeactiveDepthObj() { return unknown7f0->unknown1a0[DrMan::s_nDblStockIdx]; }
 
 void DrPixlMan::swapPixlObj(int type) {
   if (isDblPixlObj(type)) {
-    DrPixlRenderTarget *deactive = m_res->pixlObjs[type][DrMan::s_nDblIdx ^ 1];
-    m_res->pixlObjs[type][DrMan::s_nDblIdx ^ 1] = m_res->pixlObjs[type][DrMan::s_nDblIdx];
-    m_res->pixlObjs[type][DrMan::s_nDblIdx] = deactive;
+    DrPixlRenderTarget *deactive = unknown7f0->unknown00[type][DrMan::s_nDblIdx ^ 1];
+    unknown7f0->unknown00[type][DrMan::s_nDblIdx ^ 1] = unknown7f0->unknown00[type][DrMan::s_nDblIdx];
+    unknown7f0->unknown00[type][DrMan::s_nDblIdx] = deactive;
   }
 }
 
-DrPixlRenderTarget *DrPixlMan::getBackFaceDepthTexture() const { return m_res->backFaceDepthTexture; }
+DrPixlRenderTarget *DrPixlMan::getBackFaceDepthTexture() const { return unknown7f0->unknown148; }
 
 } // namespace ml

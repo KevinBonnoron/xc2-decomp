@@ -19,118 +19,118 @@
 
 namespace ml {
 
-void DrPixlPostMan::setDownDepth() { m_flags |= FLAG_DEPTH_DOWN; }
+void DrPixlPostMan::setDownDepth() { unknownf8 |= FLAG_DEPTH_DOWN; }
 
 void DrPixlPostMan::renderDeferred() {}
 
 void DrPixlPostMan::renderDeferredLast() {
-  if (m_toneMap != nullptr) {
-    m_toneMap->fastRender();
+  if (unknown18 != nullptr) {
+    unknown18->fastRender();
   }
-  if (m_histgram != nullptr) {
-    m_histgram->render();
+  if (unknown60 != nullptr) {
+    unknown60->render();
   }
 }
 
-DrPixlRenderTarget *DrPixlPostMan::getDownDepth() { return m_downDepths[DrMan::s_nDblIdx]; }
+DrPixlRenderTarget *DrPixlPostMan::getDownDepth() { return unknownc0[DrMan::s_nDblIdx]; }
 
-bool DrPixlPostMan::isCalcVolume() { return m_flags & FLAG_CALC_VOLUME; }
+bool DrPixlPostMan::isCalcVolume() { return unknownf8 & FLAG_CALC_VOLUME; }
 
-void DrPixlPostMan::setRefRactionMap() { m_flags |= FLAG_REFRACTION_MAP; }
+void DrPixlPostMan::setRefRactionMap() { unknownf8 |= FLAG_REFRACTION_MAP; }
 
 bool DrPixlPostMan::renderRefractionBegin() {
-  if (!(m_flags & FLAG_REFRACTION_MAP)) {
+  if (!(unknownf8 & FLAG_REFRACTION_MAP)) {
     return false;
   }
-  if (m_refractionQuery != nullptr) {
-    m_refractionQuery->begin(m_pixlMan->m_occQuery);
+  if (unknownf0 != nullptr) {
+    unknownf0->begin(unknown08->unknown7f8);
   }
   return true;
 }
 
 void DrPixlPostMan::renderRefractionEnd() {
-  if (m_refractionQuery != nullptr) {
-    m_refractionQuery->end();
+  if (unknownf0 != nullptr) {
+    unknownf0->end();
   }
 }
 
 void DrPixlPostMan::renderSkyDome() {
-  if (m_skyDome != nullptr) {
-    m_skyDome->baseRender();
+  if (unknown90 != nullptr) {
+    unknown90->baseRender();
   }
 }
 
 void DrPixlPostMan::renderSkyGodRay() {
-  if (m_skyDome != nullptr) {
-    m_skyDome->godRayRender();
+  if (unknown90 != nullptr) {
+    unknown90->godRayRender();
   }
 }
 
 void DrPixlPostMan::renderRainDrop() {
-  if (m_rainDrop != nullptr) {
-    m_rainDrop->render();
+  if (unknowna0 != nullptr) {
+    unknowna0->render();
   }
 }
 
 void DrPixlPostMan::renderTMAA() {
-  if (m_drMan->postParms[m_drMan->viewIndex]->tmaa) {
-    m_tmaa->render();
+  if (unknown00->unknown120[unknown00->unknown1c98]->m_TMAAOn) {
+    unknown68->render();
   }
 }
 
 void DrPixlPostMan::renderDeferredFast_AfterTemporal() {
-  if (m_tssao != nullptr) {
-    m_tssao->render_afterTemporal();
+  if (unknown78 != nullptr) {
+    unknown78->render_afterTemporal();
   }
 }
 
 void DrPixlPostMan::fastRender() {
-  if (m_cubeMapMultiIBL != nullptr) {
-    m_cubeMapMultiIBL->render();
+  if (unknown40 != nullptr) {
+    unknown40->render();
   }
-  if (m_cubeMapIBL != nullptr) {
-    m_cubeMapIBL->render();
+  if (unknown48 != nullptr) {
+    unknown48->render();
   }
-  if (m_toonGrad != nullptr) {
-    m_toonGrad->render();
+  if (unknown98 != nullptr) {
+    unknown98->render();
   }
 }
 
 void DrPixlPostMan::capRender() {
-  if (m_capture != nullptr) {
-    m_capture->render();
+  if (unknownb0 != nullptr) {
+    unknownb0->render();
   }
 }
 
-void DrPixlPostMan::setBloom(bool isBloom) { m_flags = !isBloom ? m_flags & ~(FLAG_BLOOM | FLAG_VOLUME) : m_flags | (FLAG_BLOOM | FLAG_VOLUME); }
+void DrPixlPostMan::setBloom(bool isBloom) { unknownf8 = !isBloom ? unknownf8 & ~(FLAG_BLOOM | FLAG_VOLUME) : unknownf8 | (FLAG_BLOOM | FLAG_VOLUME); }
 
 void DrPixlPostMan::setSSAO(bool isSSAO) {
   if (isSSAO) {
-    m_flags |= FLAG_SSAO;
-  } else if (m_flags & FLAG_SSAO) {
-    m_flags &= ~FLAG_SSAO;
+    unknownf8 |= FLAG_SSAO;
+  } else if (unknownf8 & FLAG_SSAO) {
+    unknownf8 &= ~FLAG_SSAO;
   }
 }
 
-DrPixlRenderTarget *DrPixlPostMan::getOldDownDepth() { return m_downDepths[DrMan::s_nDblStockIdx]; }
+DrPixlRenderTarget *DrPixlPostMan::getOldDownDepth() { return unknownc0[DrMan::s_nDblStockIdx]; }
 
-void DrPixlPostMan::setToneMaping(bool isToneMaping) { m_flags = !isToneMaping ? m_flags & ~FLAG_TONE_MAPING : m_flags | FLAG_TONE_MAPING; }
+void DrPixlPostMan::setToneMaping(bool isToneMaping) { unknownf8 = !isToneMaping ? unknownf8 & ~FLAG_TONE_MAPING : unknownf8 | FLAG_TONE_MAPING; }
 
-void DrPixlPostMan::setVolume(bool isVolume) { m_flags = !isVolume ? m_flags & ~FLAG_VOLUME : m_flags | FLAG_VOLUME; }
+void DrPixlPostMan::setVolume(bool isVolume) { unknownf8 = !isVolume ? unknownf8 & ~FLAG_VOLUME : unknownf8 | FLAG_VOLUME; }
 
-void DrPixlPostMan::set3DLut(bool is3DLut) { m_flags = !is3DLut ? m_flags & ~FLAG_3D_LUT : m_flags | FLAG_3D_LUT; }
+void DrPixlPostMan::set3DLut(bool is3DLut) { unknownf8 = !is3DLut ? unknownf8 & ~FLAG_3D_LUT : unknownf8 | FLAG_3D_LUT; }
 
 void DrPixlPostMan::setSSAOAv(bool isSSAO) {
   if (isSSAO) {
-    m_flags |= FLAG_SSAO;
-  } else if (m_flags & FLAG_SSAO) {
-    m_flags &= ~FLAG_SSAO;
+    unknownf8 |= FLAG_SSAO;
+  } else if (unknownf8 & FLAG_SSAO) {
+    unknownf8 &= ~FLAG_SSAO;
   }
 }
 
 void DrPixlPostMan::setVolumePos(const mm::Vec3 &pos) {
-  if (m_volume != nullptr) {
-    m_volume->m_pos = pos;
+  if (unknown28 != nullptr) {
+    unknown28->unknown30 = pos;
   }
 }
 
@@ -138,40 +138,40 @@ void DrPixlPostMan::setDepthFieldParm(f32 distance, f32 range, f32 strength) {}
 
 void DrPixlPostMan::setBlurParm(f32 strength, f32 sub) {}
 
-bool DrPixlPostMan::isToneMaping() { return m_flags & FLAG_TONE_MAPING; }
+bool DrPixlPostMan::isToneMaping() { return unknownf8 & FLAG_TONE_MAPING; }
 
-bool DrPixlPostMan::isBloom() { return m_flags & FLAG_BLOOM; }
+bool DrPixlPostMan::isBloom() { return unknownf8 & FLAG_BLOOM; }
 
-bool DrPixlPostMan::isCalcBloom() { return m_flags & FLAG_CALC_BLOOM; }
+bool DrPixlPostMan::isCalcBloom() { return unknownf8 & FLAG_CALC_BLOOM; }
 
-bool DrPixlPostMan::is3DLut() { return m_flags & FLAG_3D_LUT; }
+bool DrPixlPostMan::is3DLut() { return unknownf8 & FLAG_3D_LUT; }
 
-bool DrPixlPostMan::isVolume() { return m_flags & FLAG_VOLUME; }
+bool DrPixlPostMan::isVolume() { return unknownf8 & FLAG_VOLUME; }
 
-bool DrPixlPostMan::isBluer() { return m_flags & FLAG_BLUR; }
+bool DrPixlPostMan::isBluer() { return unknownf8 & FLAG_BLUR; }
 
-bool DrPixlPostMan::isDepthField() { return m_flags & FLAG_DEPTH_FIELD; }
+bool DrPixlPostMan::isDepthField() { return unknownf8 & FLAG_DEPTH_FIELD; }
 
-bool DrPixlPostMan::isSSAO() { return m_flags & FLAG_SSAO; }
+bool DrPixlPostMan::isSSAO() { return unknownf8 & FLAG_SSAO; }
 
-bool DrPixlPostMan::isSSS() { return m_flags & FLAG_SSS; }
+bool DrPixlPostMan::isSSS() { return unknownf8 & FLAG_SSS; }
 
-bool DrPixlPostMan::isReflection() { return m_flags & FLAG_REFLECTION; }
+bool DrPixlPostMan::isReflection() { return unknownf8 & FLAG_REFLECTION; }
 
-bool DrPixlPostMan::isChgShader() { return m_flags & FLAG_CHG_SHADER; }
+bool DrPixlPostMan::isChgShader() { return unknownf8 & FLAG_CHG_SHADER; }
 
-bool DrPixlPostMan::isDepthDown() { return m_flags & FLAG_DEPTH_DOWN; }
+bool DrPixlPostMan::isDepthDown() { return unknownf8 & FLAG_DEPTH_DOWN; }
 
 const grlib::CGLibTextureBuffer *DrPixlPostMan::getToonGradTex() const {
-  if (m_toonGrad != nullptr) {
-    return &m_toonGrad->getGradTex();
+  if (unknown98 != nullptr) {
+    return &unknown98->getGradTex();
   }
   return nullptr;
 }
 
 const grlib::CGLibTextureBuffer *DrPixlPostMan::getToonDarkGradTex() const {
-  if (m_toonGrad != nullptr) {
-    return &m_toonGrad->getDarkGradTex();
+  if (unknown98 != nullptr) {
+    return &unknown98->getDarkGradTex();
   }
   return nullptr;
 }

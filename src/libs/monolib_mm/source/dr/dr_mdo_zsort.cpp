@@ -14,6 +14,6 @@ DrMdoZSortObj *DrMdoZSortObj::getNext() { return m_next; }
 
 DrMdoZSortObj *DrMdoZSortObj::getParent() { return m_parent; }
 
-DrMdoZSortObj::DrMdoZSortObj(void *owner) : m_next(nullptr), m_parent(nullptr), m_owner(owner) {}
+DrMdoZSortObj::DrMdoZSortObj(void *owner) : m_next(nullptr), m_parent(nullptr), unknown18(owner) {}
 
 } // namespace ml

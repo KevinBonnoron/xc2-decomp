@@ -23,12 +23,12 @@ public:
   void render(DrShdLgtMan *shdLgtMan, DrLightMan *lightMan) override;
   void debugRender() override;
 
-  DrShdLgtClustered *m_clustered;
-  DrShdLgtTileBasedDr *m_tileBasedDr;
+  DrShdLgtClustered *unknown18;   // Inferred role: clustered; original member name unknown.
+  DrShdLgtTileBasedDr *unknown20; // Inferred role: tile based dr; original member name unknown.
 };
 
-static_assert(offsetof(DrShdLgtHybrid, m_drMan) == 0x10, "");
-static_assert(offsetof(DrShdLgtHybrid, m_clustered) == 0x18, "");
-static_assert(offsetof(DrShdLgtHybrid, m_tileBasedDr) == 0x20, "");
+static_assert(offsetof(DrShdLgtHybrid, unknown10) == 0x10, "");
+static_assert(offsetof(DrShdLgtHybrid, unknown18) == 0x18, "");
+static_assert(offsetof(DrShdLgtHybrid, unknown20) == 0x20, "");
 
 } // namespace ml

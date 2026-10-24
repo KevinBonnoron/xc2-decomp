@@ -15,21 +15,21 @@ class DrMan;
 class DrShdLgtClustered : public DrShdLgtDynamic {
 public:
   struct ClusterSetting {
-    s32 divX;
-    s32 divY;
-    s32 divZ;
+    s32 unknown00; // Inferred role: div x; original member name unknown.
+    s32 unknown04; // Inferred role: div y; original member name unknown.
+    s32 unknown08; // Inferred role: div z; original member name unknown.
     u8 _0c[0x14 - 0xc];
   };
 
   struct ViewInfo {
-    grlib::CGLibDblUniformBlock pntLight;
-    grlib::CGLibDblUniformBlock sptLight;
-    grlib::CGLibDblUniformBlock pointerList;
-    grlib::CGLibDblUniformBlock lightList;
+    grlib::CGLibDblUniformBlock unknown00; // Inferred role: pnt light; original member name unknown.
+    grlib::CGLibDblUniformBlock unknown38; // Inferred role: spt light; original member name unknown.
+    grlib::CGLibDblUniformBlock unknown70; // Inferred role: pointer list; original member name unknown.
+    grlib::CGLibDblUniformBlock unknowna8; // Inferred role: light list; original member name unknown.
     u8 _e0[0x118 - 0xe0];
-    grlib::CGLibDblUniformBlock param;
+    grlib::CGLibDblUniformBlock unknown118; // Inferred role: param; original member name unknown.
     u8 _150[0x188 - 0x150];
-    u8 *lightListData;
+    u8 *unknown188; // Inferred role: light list data; original member name unknown.
   };
 
   DrShdLgtClustered(DrMan *drMan, bool isLowResolution);
@@ -62,14 +62,14 @@ public:
 
   static const ClusterSetting c_ClusterSettings[4];
 
-  bool m_isLowResolution;
-  ViewInfo m_viewInfos[3];
+  bool unknown18;        // Inferred role: is low resolution; original member name unknown.
+  ViewInfo unknown20[3]; // Inferred role: view infos; original member name unknown.
   u8 _4d0[0x6b0 - 0x4d0];
 };
 
 static_assert(sizeof(DrShdLgtClustered::ViewInfo) == 0x190, "");
-static_assert(offsetof(DrShdLgtClustered, m_isLowResolution) == 0x18, "");
-static_assert(offsetof(DrShdLgtClustered, m_viewInfos) == 0x20, "");
+static_assert(offsetof(DrShdLgtClustered, unknown18) == 0x18, "");
+static_assert(offsetof(DrShdLgtClustered, unknown20) == 0x20, "");
 static_assert(sizeof(DrShdLgtClustered) == 0x6b0, "");
 
 } // namespace ml

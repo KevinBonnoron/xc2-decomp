@@ -9,20 +9,20 @@ class DrCalcStmListObj;
 
 class DrStmReadObj {
 public:
-  DrStmReadObj() : m_next(nullptr), m_prev(nullptr) {}
+  DrStmReadObj() : unknown08(nullptr), unknown10(nullptr) {}
   virtual ~DrStmReadObj() {}
   virtual void release() = 0;
   virtual bool update() = 0;
   virtual u64 getAdder() = 0;
 
-  DrStmReadObj *m_next;
-  DrStmReadObj *m_prev;
-  u32 m_readType;
-  u32 m_flags;
+  DrStmReadObj *unknown08; // Inferred role: next; original member name unknown.
+  DrStmReadObj *unknown10; // Inferred role: prev; original member name unknown.
+  u32 unknown18;           // Inferred role: read type; original member name unknown.
+  u32 unknown1c;           // Inferred role: flags; original member name unknown.
 };
 
-static_assert(offsetof(DrStmReadObj, m_readType) == 0x18, "");
-static_assert(offsetof(DrStmReadObj, m_flags) == 0x1c, "");
+static_assert(offsetof(DrStmReadObj, unknown18) == 0x18, "");
+static_assert(offsetof(DrStmReadObj, unknown1c) == 0x1c, "");
 
 class DrStmReadCheck : public DrStmReadObj {
 public:
@@ -33,9 +33,9 @@ public:
   u64 getAdder() override;
   bool update() override;
 
-  DrCalcStmListObj *m_stmList;
+  DrCalcStmListObj *unknown20; // Inferred role: stm list; original member name unknown.
 };
 
-static_assert(offsetof(DrStmReadCheck, m_stmList) == 0x20, "");
+static_assert(offsetof(DrStmReadCheck, unknown20) == 0x20, "");
 
 } // namespace ml

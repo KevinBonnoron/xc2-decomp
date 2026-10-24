@@ -8,9 +8,9 @@ namespace ml {
 DevPerfNx::DevPerfNx() {
   m_operationMode = nn::oe::GetOperationMode() != nn::oe::OperationMode_Handheld ? DEV_PERF_OPERATION_MODE_CONSOLE : DEV_PERF_OPERATION_MODE_HANDHELD;
   m_performanceMode = nn::oe::GetPerformanceMode() == nn::oe::PerformanceMode_Boost ? DEV_PERF_MODE_BOOST : DEV_PERF_MODE_NORMAL;
-  m_perfConfigs[DEV_PERF_MODE_NONE] = DEV_PERF_CONFIG_LOW;
-  m_perfConfigs[DEV_PERF_MODE_NORMAL] = DEV_PERF_CONFIG_LOW;
-  m_perfConfigs[DEV_PERF_MODE_BOOST] = DEV_PERF_CONFIG_HIGH;
+  unknown10[DEV_PERF_MODE_NONE] = DEV_PERF_CONFIG_LOW;
+  unknown10[DEV_PERF_MODE_NORMAL] = DEV_PERF_CONFIG_LOW;
+  unknown10[DEV_PERF_MODE_BOOST] = DEV_PERF_CONFIG_HIGH;
   WorkCpu::addSystemInfoListener(this);
   nn::oe::SetOperationModeChangedNotificationEnabled(true);
   nn::oe::SetPerformanceModeChangedNotificationEnabled(true);
@@ -57,9 +57,9 @@ void DevPerfNx::setPerfConfig(DevPerfMode mode, DevPerfConfig config) {
                                             : mode == DEV_PERF_MODE_BOOST ? nn::oe::PerformanceMode_Boost
                                                                           : nn::oe::PerformanceMode_Invalid;
   nn::oe::SetPerformanceConfiguration(performanceMode, configuration);
-  m_perfConfigs[mode] = config;
+  unknown10[mode] = config;
 }
 
-DevPerfConfig DevPerfNx::getPerfConfig(DevPerfMode mode) const { return m_perfConfigs[mode]; }
+DevPerfConfig DevPerfNx::getPerfConfig(DevPerfMode mode) const { return unknown10[mode]; }
 
 } // namespace ml

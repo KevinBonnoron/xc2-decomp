@@ -6,56 +6,56 @@
 namespace ml {
 
 struct GBuffDebugRange {
-  f32 min;
-  f32 max;
+  f32 unknown00; // Inferred role: min; original member name unknown.
+  f32 unknown04; // Inferred role: max; original member name unknown.
 };
 
 static_assert(sizeof(GBuffDebugRange) == 0x8, "");
 
 struct DrPixlPostDblParm {
-  bool overrideToneMap;
+  bool unknown00; // Inferred role: override tone map; original member name unknown.
   u8 _001[0x004 - 0x001];
-  f32 toneMap;
+  f32 unknown04; // Inferred role: tone map; original member name unknown.
   u8 _008[0x200 - 0x008];
-  bool overrideMotBlur;
-  bool motBlur2;
+  bool unknown200; // Inferred role: override mot blur; original member name unknown.
+  bool unknown201; // Inferred role: mot blur2; original member name unknown.
   u8 _202[0x21c - 0x202];
-  bool overrideDOF;
-  bool dof;
+  bool unknown21c; // Inferred role: override dof; original member name unknown.
+  bool unknown21d; // Inferred role: dof; original member name unknown.
   u8 _21e[0x21f - 0x21e];
-  bool dofHlv;
-  bool dofDownSec;
-  bool dofAutoFocus;
+  bool unknown21f; // Inferred role: dof hlv; original member name unknown.
+  bool unknown220; // Inferred role: dof down sec; original member name unknown.
+  bool unknown221; // Inferred role: dof auto focus; original member name unknown.
   u8 _222[0x224 - 0x222];
-  f32 dofPixlRatio;
-  f32 dofDistance;
-  f32 dofRange;
-  f32 dofStrength;
-  f32 dofLens;
-  f32 dofBlend;
-  s32 dofPixlLv;
-  s32 dofFocusNum;
-  f32 dofFocusRatio;
-  f32 dofFocusMin;
+  f32 unknown224; // Inferred role: dof pixl ratio; original member name unknown.
+  f32 unknown228; // Inferred role: dof distance; original member name unknown.
+  f32 unknown22c; // Inferred role: dof range; original member name unknown.
+  f32 unknown230; // Inferred role: dof strength; original member name unknown.
+  f32 unknown234; // Inferred role: dof lens; original member name unknown.
+  f32 unknown238; // Inferred role: dof blend; original member name unknown.
+  s32 unknown23c; // Inferred role: dof pixl lv; original member name unknown.
+  s32 unknown240; // Inferred role: dof focus num; original member name unknown.
+  f32 unknown244; // Inferred role: dof focus ratio; original member name unknown.
+  f32 unknown248; // Inferred role: dof focus min; original member name unknown.
   u8 _24c[0x26e - 0x24c];
-  bool overrideColorFilter;
+  bool unknown26e; // Inferred role: override color filter; original member name unknown.
   u8 _26f[0x270 - 0x26f];
-  s32 colorFilterNum;
-  f32 colorFilterFrm;
+  s32 unknown270; // Inferred role: color filter num; original member name unknown.
+  f32 unknown274; // Inferred role: color filter frm; original member name unknown.
   u8 _278[0x27c - 0x278];
-  s32 colorFilterFarNum;
+  s32 unknown27c; // Inferred role: color filter far num; original member name unknown.
   u8 _280[0x520 - 0x280];
 };
 
-static_assert(offsetof(DrPixlPostDblParm, toneMap) == 0x004, "");
-static_assert(offsetof(DrPixlPostDblParm, overrideMotBlur) == 0x200, "");
-static_assert(offsetof(DrPixlPostDblParm, overrideDOF) == 0x21c, "");
-static_assert(offsetof(DrPixlPostDblParm, dofHlv) == 0x21f, "");
-static_assert(offsetof(DrPixlPostDblParm, dofPixlRatio) == 0x224, "");
-static_assert(offsetof(DrPixlPostDblParm, dofFocusMin) == 0x248, "");
-static_assert(offsetof(DrPixlPostDblParm, overrideColorFilter) == 0x26e, "");
-static_assert(offsetof(DrPixlPostDblParm, colorFilterNum) == 0x270, "");
-static_assert(offsetof(DrPixlPostDblParm, colorFilterFarNum) == 0x27c, "");
+static_assert(offsetof(DrPixlPostDblParm, unknown04) == 0x004, "");
+static_assert(offsetof(DrPixlPostDblParm, unknown200) == 0x200, "");
+static_assert(offsetof(DrPixlPostDblParm, unknown21c) == 0x21c, "");
+static_assert(offsetof(DrPixlPostDblParm, unknown21f) == 0x21f, "");
+static_assert(offsetof(DrPixlPostDblParm, unknown224) == 0x224, "");
+static_assert(offsetof(DrPixlPostDblParm, unknown248) == 0x248, "");
+static_assert(offsetof(DrPixlPostDblParm, unknown26e) == 0x26e, "");
+static_assert(offsetof(DrPixlPostDblParm, unknown270) == 0x270, "");
+static_assert(offsetof(DrPixlPostDblParm, unknown27c) == 0x27c, "");
 static_assert(sizeof(DrPixlPostDblParm) == 0x520, "");
 
 class DrPixlPostParm {
@@ -120,244 +120,244 @@ public:
 
   static DrPixlPostParm *s_pIns;
 
-  bool toneMap;
+  bool m_toneMapOn;
   u8 _0001[0x0008 - 0x0001];
-  f32 toneMax;
-  f32 toneMin;
-  f32 toneRatio;
-  f32 toneRatioLast;
-  f32 toneBlmMax;
-  f32 toneBlmMin;
-  f32 toneBlmRatio;
-  f32 toneBlmRatioLast;
+  f32 unknown08; // Inferred role: tone max; original member name unknown.
+  f32 unknown0c; // Inferred role: tone min; original member name unknown.
+  f32 unknown10; // Inferred role: tone ratio; original member name unknown.
+  f32 unknown14; // Inferred role: tone ratio last; original member name unknown.
+  f32 unknown18; // Inferred role: tone blm max; original member name unknown.
+  f32 unknown1c; // Inferred role: tone blm min; original member name unknown.
+  f32 unknown20; // Inferred role: tone blm ratio; original member name unknown.
+  f32 unknown24; // Inferred role: tone blm ratio last; original member name unknown.
   u8 _0028[0x003c - 0x0028];
-  bool bloom;
+  bool m_bloomOn;
   u8 _003d[0x003e - 0x003d];
-  bool lensFlare;
+  bool unknown3e; // Inferred role: lens flare; original member name unknown.
   u8 _003f[0x0040 - 0x003f];
-  f32 borderBlmSub;
-  f32 borderBlmMul;
-  f32 borderBlmSecSub;
-  f32 borderBlmSecMul;
-  f32 borderBlmMax;
-  f32 blmWeight[3];
+  f32 unknown40; // Inferred role: border blm sub; original member name unknown.
+  f32 m_borderBlmMul;
+  f32 unknown48;    // Inferred role: border blm sec sub; original member name unknown.
+  f32 unknown4c;    // Inferred role: border blm sec mul; original member name unknown.
+  f32 unknown50;    // Inferred role: border blm max; original member name unknown.
+  f32 unknown54[3]; // Inferred role: blm weight; original member name unknown.
   u8 _0060[0x007c - 0x0060];
-  f32 blmStr[3];
+  f32 unknown7c[3]; // Inferred role: blm str; original member name unknown.
   u8 _0088[0x0090 - 0x0088];
-  f32 blmGauss[3];
+  f32 unknown90[3]; // Inferred role: blm gauss; original member name unknown.
   u8 _009c[0x00c8 - 0x009c];
-  f32 blmLensSub;
-  f32 blmLensMul;
-  s32 blmLensMax;
-  f32 blmLensRot;
-  f32 blmLensWeight;
-  f32 blmLensDecay;
-  f32 blmLensStrength;
-  f32 blmLensParmMax;
-  f32 blmLensUVDecay;
-  bool godRay;
+  f32 unknownc8;  // Inferred role: blm lens sub; original member name unknown.
+  f32 unknowncc;  // Inferred role: blm lens mul; original member name unknown.
+  s32 unknownd0;  // Inferred role: blm lens max; original member name unknown.
+  f32 unknownd4;  // Inferred role: blm lens rot; original member name unknown.
+  f32 unknownd8;  // Inferred role: blm lens weight; original member name unknown.
+  f32 unknowndc;  // Inferred role: blm lens decay; original member name unknown.
+  f32 unknowne0;  // Inferred role: blm lens strength; original member name unknown.
+  f32 unknowne4;  // Inferred role: blm lens parm max; original member name unknown.
+  f32 unknowne8;  // Inferred role: blm lens uv decay; original member name unknown.
+  bool unknownec; // Inferred role: god ray; original member name unknown.
   u8 _00ed[0x00f0 - 0x00ed];
-  f32 godRayWeight;
-  f32 godRayDecay;
-  f32 godRayStrength;
-  bool aa;
+  f32 unknownf0; // Inferred role: god ray weight; original member name unknown.
+  f32 unknownf4; // Inferred role: god ray decay; original member name unknown.
+  f32 unknownf8; // Inferred role: god ray strength; original member name unknown.
+  bool m_AAOn;
   u8 _00fd[0x0100 - 0x00fd];
-  f32 aaEdgeSharpness;
-  f32 aaEdgeThreshold;
-  f32 aaEdgeThresholdMin;
-  f32 aaEdgeRanges;
+  f32 unknown100; // Inferred role: aa edge sharpness; original member name unknown.
+  f32 unknown104; // Inferred role: aa edge threshold; original member name unknown.
+  f32 unknown108; // Inferred role: aa edge threshold min; original member name unknown.
+  f32 unknown10c; // Inferred role: aa edge ranges; original member name unknown.
   u8 _0110[0x0111 - 0x0110];
-  bool tmaa;
+  bool m_TMAAOn;
   u8 _0112[0x0194 - 0x0112];
-  bool ssao;
+  bool unknown194; // Inferred role: ssao; original member name unknown.
   u8 _0195[0x019c - 0x0195];
-  f32 ssaoBlurStr;
+  f32 unknown19c; // Inferred role: ssao blur str; original member name unknown.
   u8 _01a0[0x01ca - 0x01a0];
-  bool motBlur;
+  bool unknown1ca; // Inferred role: mot blur; original member name unknown.
   u8 _01cb[0x01ce - 0x01cb];
-  bool appBlur;
+  bool unknown1ce; // Inferred role: app blur; original member name unknown.
   u8 _01cf[0x01d0 - 0x01cf];
-  bool spBlur;
+  bool unknown1d0; // Inferred role: sp blur; original member name unknown.
   u8 _01d1[0x01d4 - 0x01d1];
-  f32 motBlurStrength;
-  f32 motBlurSub;
+  f32 unknown1d4; // Inferred role: mot blur strength; original member name unknown.
+  f32 unknown1d8; // Inferred role: mot blur sub; original member name unknown.
   u8 _01dc[0x01f0 - 0x01dc];
-  f32 blurSpParm;
+  f32 unknown1f0; // Inferred role: blur sp parm; original member name unknown.
   u8 _01f4[0x01fc - 0x01f4];
-  bool motBlur2;
+  bool m_motBlur2;
   u8 _01fd[0x0218 - 0x01fd];
-  bool dof;
-  bool dofOverride;
-  bool dofHLvMode;
+  bool unknown218; // Inferred role: dof; original member name unknown.
+  bool unknown219; // Inferred role: dof override; original member name unknown.
+  bool unknown21a; // Inferred role: dof h lv mode; original member name unknown.
   u8 _021b[0x021c - 0x021b];
-  bool dofAutoFocus;
+  bool unknown21c; // Inferred role: dof auto focus; original member name unknown.
   u8 _021d[0x021e - 0x021d];
-  bool dofFocusDebug;
+  bool unknown21e; // Inferred role: dof focus debug; original member name unknown.
   u8 _021f[0x0220 - 0x021f];
-  f32 dofPixlRatio;
-  f32 dofDistance;
-  f32 dofRange;
-  f32 dofStrength;
-  f32 dofLens;
-  f32 dofBlend;
-  s32 dofPixlLv;
-  s32 dofFocusNum;
-  f32 dofFocusRatio;
-  f32 dofFocusMin;
-  bool dispGlobalIBLTex;
+  f32 unknown220;  // Inferred role: dof pixl ratio; original member name unknown.
+  f32 unknown224;  // Inferred role: dof distance; original member name unknown.
+  f32 unknown228;  // Inferred role: dof range; original member name unknown.
+  f32 unknown22c;  // Inferred role: dof strength; original member name unknown.
+  f32 unknown230;  // Inferred role: dof lens; original member name unknown.
+  f32 unknown234;  // Inferred role: dof blend; original member name unknown.
+  s32 unknown238;  // Inferred role: dof pixl lv; original member name unknown.
+  s32 unknown23c;  // Inferred role: dof focus num; original member name unknown.
+  f32 unknown240;  // Inferred role: dof focus ratio; original member name unknown.
+  f32 unknown244;  // Inferred role: dof focus min; original member name unknown.
+  bool unknown248; // Inferred role: disp global ibl tex; original member name unknown.
   u8 _0249[0x026a - 0x0249];
-  bool colorFilter;
+  bool m_colTblOn;
   u8 _026b[0x0270 - 0x026b];
-  f32 colorFilterFrm;
-  bool colorFilterTransZ;
+  f32 unknown270;  // Inferred role: color filter frm; original member name unknown.
+  bool unknown274; // Inferred role: color filter trans z; original member name unknown.
   u8 _0275[0x02a0 - 0x0275];
-  f32 toonDirLightScale;
+  f32 unknown2a0; // Inferred role: toon dir light scale; original member name unknown.
   u8 _02a4[0x0304 - 0x02a4];
-  bool defferedColor;
+  bool unknown304; // Inferred role: deffered color; original member name unknown.
   u8 _0305[0x0320 - 0x0305];
-  GBuffDebugRange gBuffDebugRanges[5];
+  GBuffDebugRange unknown320[5]; // Inferred role: g buff debug ranges; original member name unknown.
   u8 _0348[0x0360 - 0x0348];
-  f32 shadowStr;
+  f32 unknown360; // Inferred role: shadow str; original member name unknown.
   u8 _0364[0x037c - 0x0364];
-  f32 shadowChacheAngle;
+  f32 unknown37c; // Inferred role: shadow chache angle; original member name unknown.
   u8 _0380[0x03b8 - 0x0380];
-  bool rainDrop;
+  bool m_rainDropOn;
   u8 _03b9[0x0460 - 0x03b9];
-  bool shwRaytrace;
+  bool m_shwRaytrace;
   u8 _0461[0x0470 - 0x0461];
-  f32 specularStr;
+  f32 unknown470; // Inferred role: specular str; original member name unknown.
   u8 _0474[0x0488 - 0x0474];
-  bool gBuffDebug;
+  bool unknown488; // Inferred role: g buff debug; original member name unknown.
   u8 _0489[0x04d0 - 0x0489];
-  bool glassBr;
+  bool unknown4d0; // Inferred role: glass br; original member name unknown.
   u8 _04d1[0x0518 - 0x04d1];
-  DrPixlPostDblParm dblParms[2];
+  DrPixlPostDblParm unknown518[2]; // Inferred role: dbl parms; original member name unknown.
   u8 _0f58[0x0fb2 - 0x0f58];
-  bool reduction;
-  bool reductionBuffer;
-  bool separateTrans;
+  bool unknownfb2; // Inferred role: reduction; original member name unknown.
+  bool unknownfb3; // Inferred role: reduction buffer; original member name unknown.
+  bool unknownfb4; // Inferred role: separate trans; original member name unknown.
   u8 _0fb5[0x0fb8 - 0x0fb5];
-  f32 reductionScX;
-  f32 reductionScY;
-  f32 reductionBufferScX;
-  f32 reductionBufferScY;
-  u32 ofsRenderCheck;
+  f32 unknownfb8; // Inferred role: reduction sc x; original member name unknown.
+  f32 unknownfbc; // Inferred role: reduction sc y; original member name unknown.
+  f32 unknownfc0; // Inferred role: reduction buffer sc x; original member name unknown.
+  f32 unknownfc4; // Inferred role: reduction buffer sc y; original member name unknown.
+  u32 unknownfc8; // Inferred role: ofs render check; original member name unknown.
   u8 _0fcc[0x0fdc - 0x0fcc];
-  f32 reductionTransScX;
-  f32 reductionTransScY;
+  f32 unknownfdc; // Inferred role: reduction trans sc x; original member name unknown.
+  f32 unknownfe0; // Inferred role: reduction trans sc y; original member name unknown.
   u8 _0fe4[0x0ff0 - 0x0fe4];
-  mm::Vec3 spBlurTarget;
+  mm::Vec3 unknownff0; // Inferred role: sp blur target; original member name unknown.
   u8 _1000[0x103e - 0x1000];
-  bool charDirShadow;
+  bool unknown103e; // Inferred role: char dir shadow; original member name unknown.
   u8 _103f[0x107c - 0x103f];
-  s32 lightNum;
-  bool inOut;
+  s32 unknown107c;  // Inferred role: light num; original member name unknown.
+  bool unknown1080; // Inferred role: in out; original member name unknown.
   u8 _1081[0x1084 - 0x1081];
-  s32 weather;
-  f32 weatherFrames[2];
+  s32 unknown1084;    // Inferred role: weather; original member name unknown.
+  f32 unknown1088[2]; // Inferred role: weather frames; original member name unknown.
   u8 _1090[0x10fc - 0x1090];
-  bool attriMenuClosed;
+  bool unknown10fc; // Inferred role: attri menu closed; original member name unknown.
   u8 _10fd[0x10fe - 0x10fd];
-  bool dispReduction;
+  bool unknown10fe; // Inferred role: disp reduction; original member name unknown.
   u8 _10ff[0x1105 - 0x10ff];
-  bool resetScenes[2];
+  bool unknown1105[2]; // Inferred role: reset scenes; original member name unknown.
   u8 _1107[0x1110 - 0x1107];
 };
 
-static_assert(offsetof(DrPixlPostParm, toneMap) == 0x0000, "");
-static_assert(offsetof(DrPixlPostParm, toneMax) == 0x0008, "");
-static_assert(offsetof(DrPixlPostParm, toneMin) == 0x000c, "");
-static_assert(offsetof(DrPixlPostParm, toneRatio) == 0x0010, "");
-static_assert(offsetof(DrPixlPostParm, toneRatioLast) == 0x0014, "");
-static_assert(offsetof(DrPixlPostParm, toneBlmMax) == 0x0018, "");
-static_assert(offsetof(DrPixlPostParm, toneBlmMin) == 0x001c, "");
-static_assert(offsetof(DrPixlPostParm, toneBlmRatio) == 0x0020, "");
-static_assert(offsetof(DrPixlPostParm, toneBlmRatioLast) == 0x0024, "");
-static_assert(offsetof(DrPixlPostParm, bloom) == 0x003c, "");
-static_assert(offsetof(DrPixlPostParm, lensFlare) == 0x003e, "");
-static_assert(offsetof(DrPixlPostParm, borderBlmSub) == 0x0040, "");
-static_assert(offsetof(DrPixlPostParm, borderBlmMul) == 0x0044, "");
-static_assert(offsetof(DrPixlPostParm, borderBlmSecSub) == 0x0048, "");
-static_assert(offsetof(DrPixlPostParm, borderBlmSecMul) == 0x004c, "");
-static_assert(offsetof(DrPixlPostParm, borderBlmMax) == 0x0050, "");
-static_assert(offsetof(DrPixlPostParm, blmWeight) == 0x0054, "");
-static_assert(offsetof(DrPixlPostParm, blmStr) == 0x007c, "");
-static_assert(offsetof(DrPixlPostParm, blmGauss) == 0x0090, "");
-static_assert(offsetof(DrPixlPostParm, blmLensSub) == 0x00c8, "");
-static_assert(offsetof(DrPixlPostParm, blmLensMul) == 0x00cc, "");
-static_assert(offsetof(DrPixlPostParm, blmLensMax) == 0x00d0, "");
-static_assert(offsetof(DrPixlPostParm, blmLensRot) == 0x00d4, "");
-static_assert(offsetof(DrPixlPostParm, blmLensWeight) == 0x00d8, "");
-static_assert(offsetof(DrPixlPostParm, blmLensDecay) == 0x00dc, "");
-static_assert(offsetof(DrPixlPostParm, blmLensStrength) == 0x00e0, "");
-static_assert(offsetof(DrPixlPostParm, blmLensParmMax) == 0x00e4, "");
-static_assert(offsetof(DrPixlPostParm, blmLensUVDecay) == 0x00e8, "");
-static_assert(offsetof(DrPixlPostParm, godRay) == 0x00ec, "");
-static_assert(offsetof(DrPixlPostParm, godRayWeight) == 0x00f0, "");
-static_assert(offsetof(DrPixlPostParm, godRayDecay) == 0x00f4, "");
-static_assert(offsetof(DrPixlPostParm, godRayStrength) == 0x00f8, "");
-static_assert(offsetof(DrPixlPostParm, aa) == 0x00fc, "");
-static_assert(offsetof(DrPixlPostParm, aaEdgeSharpness) == 0x0100, "");
-static_assert(offsetof(DrPixlPostParm, aaEdgeThreshold) == 0x0104, "");
-static_assert(offsetof(DrPixlPostParm, aaEdgeThresholdMin) == 0x0108, "");
-static_assert(offsetof(DrPixlPostParm, aaEdgeRanges) == 0x010c, "");
-static_assert(offsetof(DrPixlPostParm, tmaa) == 0x0111, "");
-static_assert(offsetof(DrPixlPostParm, ssao) == 0x0194, "");
-static_assert(offsetof(DrPixlPostParm, ssaoBlurStr) == 0x019c, "");
-static_assert(offsetof(DrPixlPostParm, motBlur) == 0x01ca, "");
-static_assert(offsetof(DrPixlPostParm, appBlur) == 0x01ce, "");
-static_assert(offsetof(DrPixlPostParm, spBlur) == 0x01d0, "");
-static_assert(offsetof(DrPixlPostParm, motBlurStrength) == 0x01d4, "");
-static_assert(offsetof(DrPixlPostParm, motBlurSub) == 0x01d8, "");
-static_assert(offsetof(DrPixlPostParm, blurSpParm) == 0x01f0, "");
-static_assert(offsetof(DrPixlPostParm, motBlur2) == 0x01fc, "");
-static_assert(offsetof(DrPixlPostParm, dof) == 0x0218, "");
-static_assert(offsetof(DrPixlPostParm, dofOverride) == 0x0219, "");
-static_assert(offsetof(DrPixlPostParm, dofHLvMode) == 0x021a, "");
-static_assert(offsetof(DrPixlPostParm, dofAutoFocus) == 0x021c, "");
-static_assert(offsetof(DrPixlPostParm, dofFocusDebug) == 0x021e, "");
-static_assert(offsetof(DrPixlPostParm, dofPixlRatio) == 0x0220, "");
-static_assert(offsetof(DrPixlPostParm, dofDistance) == 0x0224, "");
-static_assert(offsetof(DrPixlPostParm, dofRange) == 0x0228, "");
-static_assert(offsetof(DrPixlPostParm, dofStrength) == 0x022c, "");
-static_assert(offsetof(DrPixlPostParm, dofLens) == 0x0230, "");
-static_assert(offsetof(DrPixlPostParm, dofBlend) == 0x0234, "");
-static_assert(offsetof(DrPixlPostParm, dofPixlLv) == 0x0238, "");
-static_assert(offsetof(DrPixlPostParm, dofFocusNum) == 0x023c, "");
-static_assert(offsetof(DrPixlPostParm, dofFocusRatio) == 0x0240, "");
-static_assert(offsetof(DrPixlPostParm, dofFocusMin) == 0x0244, "");
-static_assert(offsetof(DrPixlPostParm, dispGlobalIBLTex) == 0x0248, "");
-static_assert(offsetof(DrPixlPostParm, colorFilter) == 0x026a, "");
-static_assert(offsetof(DrPixlPostParm, colorFilterFrm) == 0x0270, "");
-static_assert(offsetof(DrPixlPostParm, colorFilterTransZ) == 0x0274, "");
-static_assert(offsetof(DrPixlPostParm, toonDirLightScale) == 0x02a0, "");
-static_assert(offsetof(DrPixlPostParm, defferedColor) == 0x0304, "");
-static_assert(offsetof(DrPixlPostParm, gBuffDebugRanges) == 0x0320, "");
-static_assert(offsetof(DrPixlPostParm, shadowStr) == 0x0360, "");
-static_assert(offsetof(DrPixlPostParm, shadowChacheAngle) == 0x037c, "");
-static_assert(offsetof(DrPixlPostParm, rainDrop) == 0x03b8, "");
-static_assert(offsetof(DrPixlPostParm, shwRaytrace) == 0x0460, "");
-static_assert(offsetof(DrPixlPostParm, specularStr) == 0x0470, "");
-static_assert(offsetof(DrPixlPostParm, gBuffDebug) == 0x0488, "");
-static_assert(offsetof(DrPixlPostParm, glassBr) == 0x04d0, "");
-static_assert(offsetof(DrPixlPostParm, dblParms) == 0x0518, "");
-static_assert(offsetof(DrPixlPostParm, reduction) == 0x0fb2, "");
-static_assert(offsetof(DrPixlPostParm, reductionBuffer) == 0x0fb3, "");
-static_assert(offsetof(DrPixlPostParm, separateTrans) == 0x0fb4, "");
-static_assert(offsetof(DrPixlPostParm, reductionTransScX) == 0x0fdc, "");
-static_assert(offsetof(DrPixlPostParm, reductionScX) == 0x0fb8, "");
-static_assert(offsetof(DrPixlPostParm, reductionScY) == 0x0fbc, "");
-static_assert(offsetof(DrPixlPostParm, reductionBufferScX) == 0x0fc0, "");
-static_assert(offsetof(DrPixlPostParm, ofsRenderCheck) == 0x0fc8, "");
-static_assert(offsetof(DrPixlPostParm, spBlurTarget) == 0x0ff0, "");
-static_assert(offsetof(DrPixlPostParm, charDirShadow) == 0x103e, "");
-static_assert(offsetof(DrPixlPostParm, lightNum) == 0x107c, "");
-static_assert(offsetof(DrPixlPostParm, inOut) == 0x1080, "");
-static_assert(offsetof(DrPixlPostParm, weather) == 0x1084, "");
-static_assert(offsetof(DrPixlPostParm, weatherFrames) == 0x1088, "");
-static_assert(offsetof(DrPixlPostParm, attriMenuClosed) == 0x10fc, "");
-static_assert(offsetof(DrPixlPostParm, dispReduction) == 0x10fe, "");
-static_assert(offsetof(DrPixlPostParm, resetScenes) == 0x1105, "");
+static_assert(offsetof(DrPixlPostParm, m_toneMapOn) == 0x0000, "");
+static_assert(offsetof(DrPixlPostParm, unknown08) == 0x0008, "");
+static_assert(offsetof(DrPixlPostParm, unknown0c) == 0x000c, "");
+static_assert(offsetof(DrPixlPostParm, unknown10) == 0x0010, "");
+static_assert(offsetof(DrPixlPostParm, unknown14) == 0x0014, "");
+static_assert(offsetof(DrPixlPostParm, unknown18) == 0x0018, "");
+static_assert(offsetof(DrPixlPostParm, unknown1c) == 0x001c, "");
+static_assert(offsetof(DrPixlPostParm, unknown20) == 0x0020, "");
+static_assert(offsetof(DrPixlPostParm, unknown24) == 0x0024, "");
+static_assert(offsetof(DrPixlPostParm, m_bloomOn) == 0x003c, "");
+static_assert(offsetof(DrPixlPostParm, unknown3e) == 0x003e, "");
+static_assert(offsetof(DrPixlPostParm, unknown40) == 0x0040, "");
+static_assert(offsetof(DrPixlPostParm, m_borderBlmMul) == 0x0044, "");
+static_assert(offsetof(DrPixlPostParm, unknown48) == 0x0048, "");
+static_assert(offsetof(DrPixlPostParm, unknown4c) == 0x004c, "");
+static_assert(offsetof(DrPixlPostParm, unknown50) == 0x0050, "");
+static_assert(offsetof(DrPixlPostParm, unknown54) == 0x0054, "");
+static_assert(offsetof(DrPixlPostParm, unknown7c) == 0x007c, "");
+static_assert(offsetof(DrPixlPostParm, unknown90) == 0x0090, "");
+static_assert(offsetof(DrPixlPostParm, unknownc8) == 0x00c8, "");
+static_assert(offsetof(DrPixlPostParm, unknowncc) == 0x00cc, "");
+static_assert(offsetof(DrPixlPostParm, unknownd0) == 0x00d0, "");
+static_assert(offsetof(DrPixlPostParm, unknownd4) == 0x00d4, "");
+static_assert(offsetof(DrPixlPostParm, unknownd8) == 0x00d8, "");
+static_assert(offsetof(DrPixlPostParm, unknowndc) == 0x00dc, "");
+static_assert(offsetof(DrPixlPostParm, unknowne0) == 0x00e0, "");
+static_assert(offsetof(DrPixlPostParm, unknowne4) == 0x00e4, "");
+static_assert(offsetof(DrPixlPostParm, unknowne8) == 0x00e8, "");
+static_assert(offsetof(DrPixlPostParm, unknownec) == 0x00ec, "");
+static_assert(offsetof(DrPixlPostParm, unknownf0) == 0x00f0, "");
+static_assert(offsetof(DrPixlPostParm, unknownf4) == 0x00f4, "");
+static_assert(offsetof(DrPixlPostParm, unknownf8) == 0x00f8, "");
+static_assert(offsetof(DrPixlPostParm, m_AAOn) == 0x00fc, "");
+static_assert(offsetof(DrPixlPostParm, unknown100) == 0x0100, "");
+static_assert(offsetof(DrPixlPostParm, unknown104) == 0x0104, "");
+static_assert(offsetof(DrPixlPostParm, unknown108) == 0x0108, "");
+static_assert(offsetof(DrPixlPostParm, unknown10c) == 0x010c, "");
+static_assert(offsetof(DrPixlPostParm, m_TMAAOn) == 0x0111, "");
+static_assert(offsetof(DrPixlPostParm, unknown194) == 0x0194, "");
+static_assert(offsetof(DrPixlPostParm, unknown19c) == 0x019c, "");
+static_assert(offsetof(DrPixlPostParm, unknown1ca) == 0x01ca, "");
+static_assert(offsetof(DrPixlPostParm, unknown1ce) == 0x01ce, "");
+static_assert(offsetof(DrPixlPostParm, unknown1d0) == 0x01d0, "");
+static_assert(offsetof(DrPixlPostParm, unknown1d4) == 0x01d4, "");
+static_assert(offsetof(DrPixlPostParm, unknown1d8) == 0x01d8, "");
+static_assert(offsetof(DrPixlPostParm, unknown1f0) == 0x01f0, "");
+static_assert(offsetof(DrPixlPostParm, m_motBlur2) == 0x01fc, "");
+static_assert(offsetof(DrPixlPostParm, unknown218) == 0x0218, "");
+static_assert(offsetof(DrPixlPostParm, unknown219) == 0x0219, "");
+static_assert(offsetof(DrPixlPostParm, unknown21a) == 0x021a, "");
+static_assert(offsetof(DrPixlPostParm, unknown21c) == 0x021c, "");
+static_assert(offsetof(DrPixlPostParm, unknown21e) == 0x021e, "");
+static_assert(offsetof(DrPixlPostParm, unknown220) == 0x0220, "");
+static_assert(offsetof(DrPixlPostParm, unknown224) == 0x0224, "");
+static_assert(offsetof(DrPixlPostParm, unknown228) == 0x0228, "");
+static_assert(offsetof(DrPixlPostParm, unknown22c) == 0x022c, "");
+static_assert(offsetof(DrPixlPostParm, unknown230) == 0x0230, "");
+static_assert(offsetof(DrPixlPostParm, unknown234) == 0x0234, "");
+static_assert(offsetof(DrPixlPostParm, unknown238) == 0x0238, "");
+static_assert(offsetof(DrPixlPostParm, unknown23c) == 0x023c, "");
+static_assert(offsetof(DrPixlPostParm, unknown240) == 0x0240, "");
+static_assert(offsetof(DrPixlPostParm, unknown244) == 0x0244, "");
+static_assert(offsetof(DrPixlPostParm, unknown248) == 0x0248, "");
+static_assert(offsetof(DrPixlPostParm, m_colTblOn) == 0x026a, "");
+static_assert(offsetof(DrPixlPostParm, unknown270) == 0x0270, "");
+static_assert(offsetof(DrPixlPostParm, unknown274) == 0x0274, "");
+static_assert(offsetof(DrPixlPostParm, unknown2a0) == 0x02a0, "");
+static_assert(offsetof(DrPixlPostParm, unknown304) == 0x0304, "");
+static_assert(offsetof(DrPixlPostParm, unknown320) == 0x0320, "");
+static_assert(offsetof(DrPixlPostParm, unknown360) == 0x0360, "");
+static_assert(offsetof(DrPixlPostParm, unknown37c) == 0x037c, "");
+static_assert(offsetof(DrPixlPostParm, m_rainDropOn) == 0x03b8, "");
+static_assert(offsetof(DrPixlPostParm, m_shwRaytrace) == 0x0460, "");
+static_assert(offsetof(DrPixlPostParm, unknown470) == 0x0470, "");
+static_assert(offsetof(DrPixlPostParm, unknown488) == 0x0488, "");
+static_assert(offsetof(DrPixlPostParm, unknown4d0) == 0x04d0, "");
+static_assert(offsetof(DrPixlPostParm, unknown518) == 0x0518, "");
+static_assert(offsetof(DrPixlPostParm, unknownfb2) == 0x0fb2, "");
+static_assert(offsetof(DrPixlPostParm, unknownfb3) == 0x0fb3, "");
+static_assert(offsetof(DrPixlPostParm, unknownfb4) == 0x0fb4, "");
+static_assert(offsetof(DrPixlPostParm, unknownfdc) == 0x0fdc, "");
+static_assert(offsetof(DrPixlPostParm, unknownfb8) == 0x0fb8, "");
+static_assert(offsetof(DrPixlPostParm, unknownfbc) == 0x0fbc, "");
+static_assert(offsetof(DrPixlPostParm, unknownfc0) == 0x0fc0, "");
+static_assert(offsetof(DrPixlPostParm, unknownfc8) == 0x0fc8, "");
+static_assert(offsetof(DrPixlPostParm, unknownff0) == 0x0ff0, "");
+static_assert(offsetof(DrPixlPostParm, unknown103e) == 0x103e, "");
+static_assert(offsetof(DrPixlPostParm, unknown107c) == 0x107c, "");
+static_assert(offsetof(DrPixlPostParm, unknown1080) == 0x1080, "");
+static_assert(offsetof(DrPixlPostParm, unknown1084) == 0x1084, "");
+static_assert(offsetof(DrPixlPostParm, unknown1088) == 0x1088, "");
+static_assert(offsetof(DrPixlPostParm, unknown10fc) == 0x10fc, "");
+static_assert(offsetof(DrPixlPostParm, unknown10fe) == 0x10fe, "");
+static_assert(offsetof(DrPixlPostParm, unknown1105) == 0x1105, "");
 static_assert(sizeof(DrPixlPostParm) == 0x1110, "");
 
 } // namespace ml

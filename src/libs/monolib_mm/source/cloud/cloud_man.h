@@ -53,26 +53,26 @@ public:
   const mm::Col3 &getPlaneCol(u32 index) const;
   void openDebugWindow(ml::WinProc *window);
 
-  mtl::ALLOC_HANDLE m_memTop;
-  mtl::ALLOC_HANDLE m_memData;
-  mtl::ALLOC_HANDLE m_memWork;
-  ml::Scn *m_scn;
-  bool m_isSetupRequest;
+  mtl::ALLOC_HANDLE unknown08; // Inferred role: mem top; original member name unknown.
+  mtl::ALLOC_HANDLE unknown0c; // Inferred role: mem data; original member name unknown.
+  mtl::ALLOC_HANDLE unknown10; // Inferred role: mem work; original member name unknown.
+  ml::Scn *unknown18;          // Inferred role: scn; original member name unknown.
+  bool unknown20;              // Inferred role: is setup request; original member name unknown.
   u64 _28;
-  CloudDataMan *m_dataMan;
-  CloudVertexMan *m_vertexMan;
-  CloudTextureMan *m_textureMan;
-  CloudShaderMan *m_shaderMan;
-  CloudObjMan *m_objMan;
-  ml::DrResMdoSortCloud *m_sortCloud;
-  f32 m_speed;
+  CloudDataMan *unknown30;          // Inferred role: data man; original member name unknown.
+  CloudVertexMan *unknown38;        // Inferred role: vertex man; original member name unknown.
+  CloudTextureMan *unknown40;       // Inferred role: texture man; original member name unknown.
+  CloudShaderMan *unknown48;        // Inferred role: shader man; original member name unknown.
+  CloudObjMan *unknown50;           // Inferred role: object man; original member name unknown.
+  ml::DrResMdoSortCloud *unknown58; // Inferred role: sort cloud; original member name unknown.
+  f32 unknown60;                    // Inferred role: speed; original member name unknown.
   f32 _64;
 };
 
-static_assert(offsetof(CloudMan, m_memTop) == 0x08, "");
-static_assert(offsetof(CloudMan, m_scn) == 0x18, "");
-static_assert(offsetof(CloudMan, m_dataMan) == 0x30, "");
-static_assert(offsetof(CloudMan, m_sortCloud) == 0x58, "");
-static_assert(offsetof(CloudMan, m_speed) == 0x60, "");
+static_assert(offsetof(CloudMan, unknown08) == 0x08, "");
+static_assert(offsetof(CloudMan, unknown18) == 0x18, "");
+static_assert(offsetof(CloudMan, unknown30) == 0x30, "");
+static_assert(offsetof(CloudMan, unknown58) == 0x58, "");
+static_assert(offsetof(CloudMan, unknown60) == 0x60, "");
 
 } // namespace cloud

@@ -18,93 +18,93 @@ namespace ml {
 static const GrlPrimitiveType s_primitiveTbl[] = {GRL_PRIMITIVE_TRIANGLES, GRL_PRIMITIVE_QUADS, GRL_PRIMITIVE_TRIANGLE_STRIP};
 static const GrlIndexFormat s_indexFormatTbl[] = {GRL_INDEX_FORMAT_U16, GRL_INDEX_FORMAT_U32};
 
-DrResMdoVertex::DrResMdoVertex(const u8 *resource) : m_prev(nullptr), m_next(nullptr), m_resourceKey(resource), m_refCount(1), m_buffer(nullptr), m_stmList(nullptr) { setupVertex(resource); }
+DrResMdoVertex::DrResMdoVertex(const u8 *resource) : unknown00(nullptr), unknown08(nullptr), unknown10(resource), unknown18(1), m_buffer(nullptr), unknown78(nullptr) { setupVertex(resource); }
 
 void DrResMdoVertex::setupVertex(const u8 *resource) {
   vertexRelease();
   const MdsVertexHeader *header = reinterpret_cast<const MdsVertexHeader *>(resource);
-  m_header = header;
-  u32 vertexOffset = header->vertexOffset;
-  m_vertexNum = header->vertexNum;
-  u32 indexOffset = header->indexOffset;
-  m_indexNum = header->indexNum;
-  u32 etcVertexOffset = header->etcVertexOffset;
-  m_etcVertexNum = header->etcVertexNum;
-  if (header->etcInfoOffset != 0) {
-    m_etcInfos = reinterpret_cast<const MdsEtcVertexInfo *>(resource + header->etcInfoOffset);
+  unknown28 = header;
+  u32 vertexOffset = header->unknown00;
+  unknown48 = header->unknown04;
+  u32 indexOffset = header->unknown08;
+  unknown4a = header->unknown0c;
+  u32 etcVertexOffset = header->unknown20;
+  unknown4c = header->unknown24;
+  if (header->unknown1c != 0) {
+    unknown30 = reinterpret_cast<const MdsEtcVertexInfo *>(resource + header->unknown1c);
   } else {
-    m_etcInfos = nullptr;
+    unknown30 = nullptr;
   }
-  if (header->mofBlendOffset != 0) {
-    const MdsMofBlendHeader *mofBlendHeader = reinterpret_cast<const MdsMofBlendHeader *>(resource + header->mofBlendOffset);
-    m_mofBlendInfos = reinterpret_cast<const MdsMofBlendInfo *>(resource + mofBlendHeader->infoOffset);
+  if (header->unknown28 != 0) {
+    const MdsMofBlendHeader *mofBlendHeader = reinterpret_cast<const MdsMofBlendHeader *>(resource + header->unknown28);
+    unknown38 = reinterpret_cast<const MdsMofBlendInfo *>(resource + mofBlendHeader->infoOffset);
   } else {
-    m_mofBlendInfos = nullptr;
+    unknown38 = nullptr;
   }
 
-  u32 uniformVertexOffset = header->uniformVertexOffset;
+  u32 uniformVertexOffset = header->unknown34;
   m_buffer = static_cast<u8 *>(
-      mtl::MemManager::allocate(DrMan::getIns()->memClass,
-                                (m_vertexNum + m_etcVertexNum + m_indexNum) * sizeof(grlib::CGLibVtxVertex) +
+      mtl::MemManager::allocate(DrMan::getIns()->unknown10,
+                                (unknown48 + unknown4c + unknown4a) * sizeof(grlib::CGLibVtxVertex) +
                                     (uniformVertexOffset != 0 ? sizeof(grlib::CGLibVtlMemPool) + sizeof(DrResUniformVertex) + sizeof(grlib::CGLibVtxVertex) + sizeof(grlib::CGLibOneUniformBlock)
                                                               : sizeof(grlib::CGLibVtlMemPool)),
                                 0x10,
                                 false,
                                 "no name",
                                 0));
-  m_vertices = reinterpret_cast<grlib::CGLibVtxVertex *>(m_buffer);
-  for (int i = 0; i < m_vertexNum; i++) {
-    new (&m_vertices[i]) grlib::CGLibVtxVertex;
+  unknown50 = reinterpret_cast<grlib::CGLibVtxVertex *>(m_buffer);
+  for (int i = 0; i < unknown48; i++) {
+    new (&unknown50[i]) grlib::CGLibVtxVertex;
   }
-  int offset = m_vertexNum * sizeof(grlib::CGLibVtxVertex);
-  if (m_etcVertexNum != 0) {
-    m_etcVertices = reinterpret_cast<grlib::CGLibVtxVertex *>(m_buffer + offset);
-    for (int i = 0; i < m_etcVertexNum; i++) {
-      new (&m_etcVertices[i]) grlib::CGLibVtxVertex;
+  int offset = unknown48 * sizeof(grlib::CGLibVtxVertex);
+  if (unknown4c != 0) {
+    unknown60 = reinterpret_cast<grlib::CGLibVtxVertex *>(m_buffer + offset);
+    for (int i = 0; i < unknown4c; i++) {
+      new (&unknown60[i]) grlib::CGLibVtxVertex;
     }
-    offset += m_etcVertexNum * sizeof(grlib::CGLibVtxVertex);
+    offset += unknown4c * sizeof(grlib::CGLibVtxVertex);
   }
-  if (header->uniformVertexOffset != 0) {
-    m_uniformVertex = reinterpret_cast<DrResUniformVertex *>(m_buffer + offset);
-    m_uniformVertex->vertex = reinterpret_cast<grlib::CGLibVtxVertex *>(m_buffer + offset + sizeof(DrResUniformVertex));
-    new (m_uniformVertex->vertex) grlib::CGLibVtxVertex;
-    m_uniformVertex->uniformBlock = reinterpret_cast<grlib::CGLibOneUniformBlock *>(m_buffer + offset + sizeof(DrResUniformVertex) + sizeof(grlib::CGLibVtxVertex));
-    new (m_uniformVertex->uniformBlock) grlib::CGLibOneUniformBlock;
+  if (header->unknown34 != 0) {
+    unknown70 = reinterpret_cast<DrResUniformVertex *>(m_buffer + offset);
+    unknown70->unknown00 = reinterpret_cast<grlib::CGLibVtxVertex *>(m_buffer + offset + sizeof(DrResUniformVertex));
+    new (unknown70->unknown00) grlib::CGLibVtxVertex;
+    unknown70->unknown08 = reinterpret_cast<grlib::CGLibOneUniformBlock *>(m_buffer + offset + sizeof(DrResUniformVertex) + sizeof(grlib::CGLibVtxVertex));
+    new (unknown70->unknown08) grlib::CGLibOneUniformBlock;
     offset += sizeof(DrResUniformVertex) + sizeof(grlib::CGLibVtxVertex) + sizeof(grlib::CGLibOneUniformBlock);
   } else {
-    m_uniformVertex = nullptr;
+    unknown70 = nullptr;
   }
-  m_indices = reinterpret_cast<grlib::CGLibVtxIndex *>(m_buffer + offset);
-  for (int i = 0; i < m_indexNum; i++) {
-    new (&m_indices[i]) grlib::CGLibVtxIndex;
+  unknown58 = reinterpret_cast<grlib::CGLibVtxIndex *>(m_buffer + offset);
+  for (int i = 0; i < unknown4a; i++) {
+    new (&unknown58[i]) grlib::CGLibVtxIndex;
   }
-  offset += m_indexNum * sizeof(grlib::CGLibVtxIndex);
-  m_memPool = reinterpret_cast<grlib::CGLibVtlMemPool *>(m_buffer + offset);
-  new (m_memPool) grlib::CGLibVtlMemPool;
-  m_memPool->setupBuffer(const_cast<u8 *>(reinterpret_cast<const u8 *>(m_header)) + header->bufferOffset, header->bufferSize);
+  offset += unknown4a * sizeof(grlib::CGLibVtxIndex);
+  unknown68 = reinterpret_cast<grlib::CGLibVtlMemPool *>(m_buffer + offset);
+  new (unknown68) grlib::CGLibVtlMemPool;
+  unknown68->setupBuffer(const_cast<u8 *>(reinterpret_cast<const u8 *>(unknown28)) + header->unknown30, header->unknown2c);
 
   const MdsVertexBuffInfo *vertexInfos = reinterpret_cast<const MdsVertexBuffInfo *>(resource + vertexOffset);
-  for (int i = 0; i < m_vertexNum; i++) {
-    m_vertices[i].createMemVertexBuff(m_memPool, vertexInfos[i].offset, vertexInfos[i].stride * vertexInfos[i].count, vertexInfos[i].stride);
+  for (int i = 0; i < unknown48; i++) {
+    unknown50[i].createMemVertexBuff(unknown68, vertexInfos[i].unknown00, vertexInfos[i].unknown08 * vertexInfos[i].unknown04, vertexInfos[i].unknown08);
   }
   const MdsEtcVertexBuffInfo *etcVertexInfos = reinterpret_cast<const MdsEtcVertexBuffInfo *>(resource + etcVertexOffset);
-  for (int i = 0; i < m_etcVertexNum; i++) {
-    m_etcVertices[i].createMemVertexBuff(m_memPool, etcVertexInfos[i].offset, etcVertexInfos[i].stride * etcVertexInfos[i].count, etcVertexInfos[i].stride);
+  for (int i = 0; i < unknown4c; i++) {
+    unknown60[i].createMemVertexBuff(unknown68, etcVertexInfos[i].unknown00, etcVertexInfos[i].unknown08 * etcVertexInfos[i].unknown04, etcVertexInfos[i].unknown08);
   }
   const MdsIndexBuffInfo *indexInfos = reinterpret_cast<const MdsIndexBuffInfo *>(resource + indexOffset);
-  for (int i = 0; i < m_indexNum; i++) {
-    m_indices[i].createMemIndexBuff(m_memPool, indexInfos[i].offset, indexInfos[i].count, s_primitiveTbl[indexInfos[i].primitive], s_indexFormatTbl[indexInfos[i].format]);
+  for (int i = 0; i < unknown4a; i++) {
+    unknown58[i].createMemIndexBuff(unknown68, indexInfos[i].unknown00, indexInfos[i].unknown04, s_primitiveTbl[indexInfos[i].unknown08], s_indexFormatTbl[indexInfos[i].unknown0a]);
   }
-  if (header->weightOffset != 0) {
-    m_weightInfo = reinterpret_cast<const MdsWeightInfo *>(reinterpret_cast<const u8 *>(m_header) + header->weightOffset);
+  if (header->unknown38 != 0) {
+    unknown40 = reinterpret_cast<const MdsWeightInfo *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown38);
   } else {
-    m_weightInfo = nullptr;
+    unknown40 = nullptr;
   }
-  if (header->uniformVertexOffset != 0) {
-    const MdsUniformVertexInfo *uniformInfo = reinterpret_cast<const MdsUniformVertexInfo *>(reinterpret_cast<const u8 *>(m_header) + header->uniformVertexOffset);
-    m_uniformVertex->vertex->createMemVertexBuff(m_memPool, uniformInfo->vertexOffset, uniformInfo->vertexSize, uniformInfo->vertexStride);
-    m_uniformVertex->uniformBlock->setup(m_memPool, uniformInfo->uniformSize, uniformInfo->uniformOffset);
-    m_uniformVertex->uniformBlock->updateData();
+  if (header->unknown34 != 0) {
+    const MdsUniformVertexInfo *uniformInfo = reinterpret_cast<const MdsUniformVertexInfo *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown34);
+    unknown70->unknown00->createMemVertexBuff(unknown68, uniformInfo->vertexOffset, uniformInfo->vertexSize, uniformInfo->vertexStride);
+    unknown70->unknown08->setup(unknown68, uniformInfo->uniformSize, uniformInfo->uniformOffset);
+    unknown70->unknown08->updateData();
   }
 }
 
@@ -114,21 +114,21 @@ void DrResMdoVertex::vertexRelease() {
   if (m_buffer == nullptr) {
     return;
   }
-  for (int i = 0; i < m_vertexNum; i++) {
-    m_vertices[i].~CGLibVtxVertex();
+  for (int i = 0; i < unknown48; i++) {
+    unknown50[i].~CGLibVtxVertex();
   }
-  for (int i = 0; i < m_etcVertexNum; i++) {
-    m_etcVertices[i].~CGLibVtxVertex();
+  for (int i = 0; i < unknown4c; i++) {
+    unknown60[i].~CGLibVtxVertex();
   }
-  for (int i = 0; i < m_indexNum; i++) {
-    m_indices[i].~CGLibVtxIndex();
+  for (int i = 0; i < unknown4a; i++) {
+    unknown58[i].~CGLibVtxIndex();
   }
-  if (m_uniformVertex != nullptr) {
-    m_uniformVertex->vertex->~CGLibVtxVertex();
-    m_uniformVertex->uniformBlock->~CGLibOneUniformBlock();
-    m_uniformVertex = nullptr;
+  if (unknown70 != nullptr) {
+    unknown70->unknown00->~CGLibVtxVertex();
+    unknown70->unknown08->~CGLibOneUniformBlock();
+    unknown70 = nullptr;
   }
-  m_memPool->~CGLibVtlMemPool();
+  unknown68->~CGLibVtlMemPool();
   if (m_buffer != nullptr) {
     mtl::MemManager::deallocate(m_buffer, 0, false);
     m_buffer = nullptr;
@@ -136,96 +136,96 @@ void DrResMdoVertex::vertexRelease() {
 }
 
 void DrResMdoVertex::update() {
-  if (m_stmList != nullptr) {
-    DrCalcStmRes *res = m_stmList->getResVertexObj();
-    if (res->flags & 1) {
-      changeMemVertex(res->data);
+  if (unknown78 != nullptr) {
+    DrCalcStmRes *res = unknown78->getResVertexObj();
+    if (res->unknown10 & 1) {
+      changeMemVertex(res->unknown00);
     }
   }
 }
 
 bool DrResMdoVertex::isEtcVertex(int index) {
-  if (m_etcInfos != nullptr && (m_etcInfos[index].flags & 1)) {
+  if (unknown30 != nullptr && (unknown30[index].unknown00 & 1)) {
     return true;
   }
   return false;
 }
 
 const u8 *DrResMdoVertex::getVertexTbl(int index) const {
-  const u8 *resource = reinterpret_cast<const u8 *>(m_header);
-  return resource + reinterpret_cast<const MdsVertexBuffInfo *>(resource + m_header->vertexOffset)[index].offset;
+  const u8 *resource = reinterpret_cast<const u8 *>(unknown28);
+  return resource + reinterpret_cast<const MdsVertexBuffInfo *>(resource + unknown28->unknown00)[index].unknown00;
 }
 
-u32 DrResMdoVertex::getVertexMax(int index) const { return m_vertices[index].m_count; }
+u32 DrResMdoVertex::getVertexMax(int index) const { return unknown50[index].m_count; }
 
 void DrResMdoVertex::setVertexBind(int index) {
-  if (m_bindVertex != index) {
-    grlib::CGLibCtlVertex::setVertex(m_vertices[index]);
-    m_bindVertex = index;
+  if (unknown4e != index) {
+    grlib::CGLibCtlVertex::setVertex(unknown50[index]);
+    unknown4e = index;
   }
 }
 
 u32 DrResMdoVertex::setWeightVertexBind(int index) {
-  const u16 &vertexIdx = m_header->weightVertexIdx[index];
+  const u16 &vertexIdx = unknown28->unknown10[index];
   if (vertexIdx == 0) {
     return 0;
   }
-  grlib::CGLibCtlVertex::setVertex(m_vertices[vertexIdx]);
-  m_bindVertex = vertexIdx;
-  return m_vertices[vertexIdx].m_count;
+  grlib::CGLibCtlVertex::setVertex(unknown50[vertexIdx]);
+  unknown4e = vertexIdx;
+  return unknown50[vertexIdx].m_count;
 }
 
 const MdsWeightVertexInfo *DrResMdoVertex::getWeightVertexInfo(int index, int pass) {
-  const u8 *resource = reinterpret_cast<const u8 *>(m_header);
-  const u16 *infoIdxTbl = reinterpret_cast<const u16 *>(resource + m_weightInfo->vertexInfoIdxOffset);
+  const u8 *resource = reinterpret_cast<const u8 *>(unknown28);
+  const u16 *infoIdxTbl = reinterpret_cast<const u16 *>(resource + unknown40->unknown0c);
   u32 infoIdx = infoIdxTbl[pass * 9 + index];
   if (infoIdx != 0) {
-    const MdsWeightVertexInfo *infos = reinterpret_cast<const MdsWeightVertexInfo *>(resource + m_weightInfo->vertexInfoOffset);
+    const MdsWeightVertexInfo *infos = reinterpret_cast<const MdsWeightVertexInfo *>(resource + unknown40->unknown04);
     return &infos[infoIdx - 1];
   }
   return nullptr;
 }
 
-grlib::CGLibVtxVertex *DrResMdoVertex::getWeightVertex() { return &m_vertices[m_weightInfo->vertexIdx]; }
+grlib::CGLibVtxVertex *DrResMdoVertex::getWeightVertex() { return &unknown50[unknown40->unknown08]; }
 
 void DrResMdoVertex::setEtcVertexBind(int index, int stream) {
-  m_bindVertex = -1;
-  grlib::CGLibCtlVertex::setAddVertex(m_etcVertices[m_etcInfos[index].etcVertexIdx], 0, stream, 0);
+  unknown4e = -1;
+  grlib::CGLibCtlVertex::setAddVertex(unknown60[unknown30[index].unknown02], 0, stream, 0);
 }
 
 void DrResMdoVertex::setMofBlendVertexBind(grlib::CGLibOneUniformArray *uniforms, int index, int stream) {
-  m_bindVertex = -1;
-  u16 mofBlendIdx = m_etcInfos[index].mofBlendIdx;
-  grlib::CGLibCtlVertex::setUniformVertex((*uniforms)[mofBlendIdx], m_mofBlendInfos[mofBlendIdx].stride, 0, stream, 0);
+  unknown4e = -1;
+  u16 mofBlendIdx = unknown30[index].unknown04;
+  grlib::CGLibCtlVertex::setUniformVertex((*uniforms)[mofBlendIdx], unknown38[mofBlendIdx].unknown08, 0, stream, 0);
 }
 
-grlib::CGLibVtxVertex *DrResMdoVertex::getResVertexObj(int index) { return &m_vertices[index]; }
+grlib::CGLibVtxVertex *DrResMdoVertex::getResVertexObj(int index) { return &unknown50[index]; }
 
-grlib::CGLibVtxIndex *DrResMdoVertex::getResIndexObj(int index) { return &m_indices[index]; }
+grlib::CGLibVtxIndex *DrResMdoVertex::getResIndexObj(int index) { return &unknown58[index]; }
 
 grlib::CGLibVtxVertex *DrResMdoVertex::getResEtcVertexObj(int index) {
-  if (m_etcInfos == nullptr) {
+  if (unknown30 == nullptr) {
     return nullptr;
   }
-  if (!(m_etcInfos[index].flags & 1)) {
+  if (!(unknown30[index].unknown00 & 1)) {
     return nullptr;
   }
-  return &m_etcVertices[m_etcInfos[index].etcVertexIdx];
+  return &unknown60[unknown30[index].unknown02];
 }
 
 bool DrResMdoVertex::getVertexInfo(int index, const MdsMdlVertexFmt **format, int *count) {
-  if (index < m_vertexNum) {
-    const u8 *resource = reinterpret_cast<const u8 *>(m_header);
-    const MdsVertexBuffInfo *infos = reinterpret_cast<const MdsVertexBuffInfo *>(resource + m_header->vertexOffset);
-    *format = reinterpret_cast<const MdsMdlVertexFmt *>(resource + infos[index].fmtOffset);
-    *count = infos[index].fmtNum;
+  if (index < unknown48) {
+    const u8 *resource = reinterpret_cast<const u8 *>(unknown28);
+    const MdsVertexBuffInfo *infos = reinterpret_cast<const MdsVertexBuffInfo *>(resource + unknown28->unknown00);
+    *format = reinterpret_cast<const MdsMdlVertexFmt *>(resource + infos[index].unknown0c);
+    *count = infos[index].unknown10;
     return true;
   }
   return false;
 }
 
-void DrResMdoVertex::render(int index) { m_indices[index].drawIndex(); }
+void DrResMdoVertex::render(int index) { unknown58[index].drawIndex(); }
 
-void DrResMdoVertex::renderIns(int index, int instanceCount) { m_indices[index].drawInsIndex(instanceCount); }
+void DrResMdoVertex::renderIns(int index, int instanceCount) { unknown58[index].drawInsIndex(instanceCount); }
 
 } // namespace ml

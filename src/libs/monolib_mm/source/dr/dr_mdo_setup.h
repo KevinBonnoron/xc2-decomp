@@ -10,13 +10,13 @@ struct MdsMatInfoHeader;
 
 struct MdsMatVariableTbl {
   u8 _00[0x02 - 0x00];
-  u16 valueIndex;
+  u16 unknown02; // Inferred role: value index; original member name unknown.
   u8 _04[0x06 - 0x04];
-  u16 count;
+  u16 unknown06; // Inferred role: count; original member name unknown.
 };
 
-static_assert(offsetof(MdsMatVariableTbl, valueIndex) == 0x02, "");
-static_assert(offsetof(MdsMatVariableTbl, count) == 0x06, "");
+static_assert(offsetof(MdsMatVariableTbl, unknown02) == 0x02, "");
+static_assert(offsetof(MdsMatVariableTbl, unknown06) == 0x06, "");
 
 struct MdsMatValShaderCate {
   enum Flag {
@@ -24,10 +24,10 @@ struct MdsMatValShaderCate {
   };
 
   u8 _00[0x03 - 0x00];
-  u8 flags;
+  u8 unknown03; // Inferred role: flags; original member name unknown.
 };
 
-static_assert(offsetof(MdsMatValShaderCate, flags) == 0x03, "");
+static_assert(offsetof(MdsMatValShaderCate, unknown03) == 0x03, "");
 
 class DrMdoSetup : public DrMdoNode {
 public:

@@ -21,9 +21,9 @@ class ScnRenderDrViewCtrl;
 struct DR_CAPCUBE_PARAM;
 
 struct ScnRenderDrMdlTexture {
-  grlib::CGLibTextureBuffer *texture;
-  u32 index;
-  bool enable;
+  grlib::CGLibTextureBuffer *unknown00; // Inferred role: texture; original member name unknown.
+  u32 unknown08;                        // Inferred role: index; original member name unknown.
+  bool unknown0c;                       // Inferred role: enable; original member name unknown.
 };
 
 class ScnRenderDrSysParmAcc {
@@ -255,13 +255,13 @@ public:
   void startCapture(ScnRenderDrCapture *capture);
   void setCaptureMode(bool captureMode);
 
-  DrMan *drMan;
-  DrPixlPostParm *postParm;
-  s32 viewIndex;
+  DrMan *unknown00;          // Inferred role: dr man; original member name unknown.
+  DrPixlPostParm *unknown08; // Inferred role: post parm; original member name unknown.
+  s32 unknown10;             // Inferred role: view index; original member name unknown.
 };
 
-static_assert(offsetof(ScnRenderDrSysParmAcc, drMan) == 0x00, "");
-static_assert(offsetof(ScnRenderDrSysParmAcc, postParm) == 0x08, "");
-static_assert(offsetof(ScnRenderDrSysParmAcc, viewIndex) == 0x10, "");
+static_assert(offsetof(ScnRenderDrSysParmAcc, unknown00) == 0x00, "");
+static_assert(offsetof(ScnRenderDrSysParmAcc, unknown08) == 0x08, "");
+static_assert(offsetof(ScnRenderDrSysParmAcc, unknown10) == 0x10, "");
 
 } // namespace ml

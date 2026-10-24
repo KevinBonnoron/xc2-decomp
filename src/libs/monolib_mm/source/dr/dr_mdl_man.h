@@ -24,9 +24,9 @@ public:
   DrStmReadObj *createStmSizeObj(u32 size);
 
   u8 _000[0x23c - 0x000];
-  u32 m_groupsDisp;
+  u32 unknown23c; // Inferred role: groups disp; original member name unknown.
 };
 
-static_assert(offsetof(DrMdlMan, m_groupsDisp) == 0x23c, "");
+static_assert(offsetof(DrMdlMan, unknown23c) == 0x23c, "");
 
 } // namespace ml

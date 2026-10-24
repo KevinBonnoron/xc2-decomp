@@ -35,70 +35,70 @@ public:
   int unistatic_mpf_OldViewPos(f32 *work);
   int unistatic_mpf_Fade(f32 *work);
 
-  mm::Mat44 m_invView;
-  mm::Mat44 m_view;
+  mm::Mat44 unknown00; // Inferred role: inv view; original member name unknown.
+  mm::Mat44 unknown40; // Inferred role: view; original member name unknown.
   u8 _80[0xc0 - 0x80];
-  mm::Mat44 m_billboard;
-  mm::Mat44 m_prevBillboard;
+  mm::Mat44 unknownc0;  // Inferred role: billboard; original member name unknown.
+  mm::Mat44 unknown100; // Inferred role: prev billboard; original member name unknown.
   u8 _140[0x180 - 0x140];
-  mm::Mat44 m_proj;
+  mm::Mat44 unknown180; // Inferred role: proj; original member name unknown.
   u8 _1c0[0x200 - 0x1c0];
-  mm::Mat44 m_viewProj;
-  mm::Mat44 m_billboardYVec;
+  mm::Mat44 unknown200; // Inferred role: view proj; original member name unknown.
+  mm::Mat44 unknown240; // Inferred role: billboard y vec; original member name unknown.
   u8 _280[0x2c0 - 0x280];
-  mm::Mat44 m_prevViewProj;
-  mm::Mat44 m_diffPreOrijMatrix;
-  mm::Mat44 m_viewProjNonJitter;
-  mm::Mat44 m_projNonJitter;
+  mm::Mat44 unknown2c0; // Inferred role: prev view proj; original member name unknown.
+  mm::Mat44 unknown300; // Inferred role: diff pre orij matrix; original member name unknown.
+  mm::Mat44 unknown340; // Inferred role: view proj non jitter; original member name unknown.
+  mm::Mat44 unknown380; // Inferred role: proj non jitter; original member name unknown.
   u8 _3c0[0x400 - 0x3c0];
-  mm::Vec3 m_viewPos;
+  mm::Vec3 unknown400; // Inferred role: view pos; original member name unknown.
   u8 _410[0x430 - 0x410];
-  mm::Vec3 m_depthParm;
+  mm::Vec3 unknown430; // Inferred role: depth parm; original member name unknown.
   u8 _440[0x460 - 0x440];
-  mm::Vec3 m_viewYVec;
+  mm::Vec3 unknown460; // Inferred role: view y vec; original member name unknown.
   u8 _470[0x490 - 0x470];
-  f32 m_fades[12];
+  f32 unknown490[12]; // Inferred role: fades; original member name unknown.
   u8 _4c0[0x4d0 - 0x4c0];
-  f32 m_pixlScale;
+  f32 unknown4d0; // Inferred role: pixl scale; original member name unknown.
   u8 _4d4[0x700 - 0x4d4];
-  DrMan *m_drMan;
+  DrMan *unknown700; // Inferred role: dr man; original member name unknown.
   u8 _708[0x770 - 0x708];
-  mm::Vec3 m_prevViewPos;
+  mm::Vec3 unknown770; // Inferred role: prev view pos; original member name unknown.
   u8 _780[0x7b0 - 0x780];
-  grlib::CGLibDblUniformBlock m_staticUniform;
+  grlib::CGLibDblUniformBlock unknown7b0; // Inferred role: static uniform; original member name unknown.
   u8 _7e8[0x820 - 0x7e8];
-  grlib::CGLibDblUniformBlock m_fogUniform;
-  grlib::CGLibDblUniformBlock m_toonUniform;
-  grlib::CGLibDblUniformBlock m_toon2Uniform;
-  grlib::CGLibDblUniformBlock m_lightUniform;
+  grlib::CGLibDblUniformBlock unknown820; // Inferred role: fog uniform; original member name unknown.
+  grlib::CGLibDblUniformBlock unknown858; // Inferred role: toon uniform; original member name unknown.
+  grlib::CGLibDblUniformBlock unknown890; // Inferred role: toon2 uniform; original member name unknown.
+  grlib::CGLibDblUniformBlock unknown8c8; // Inferred role: light uniform; original member name unknown.
   u8 _900[0xae0 - 0x900];
-  f32 m_jitter[2];
+  f32 unknownae0[2]; // Inferred role: jitter; original member name unknown.
   u8 _ae8[0xaf0 - 0xae8];
-  f32 m_prevJitter[2];
+  f32 unknownaf0[2]; // Inferred role: prev jitter; original member name unknown.
   u8 _af8[0xb00 - 0xaf8];
-  f32 m_ditherTmaaValues[4];
+  f32 unknownb00[4]; // Inferred role: dither tmaa values; original member name unknown.
 };
 
-static_assert(offsetof(DrCalcViewWork, m_view) == 0x40, "");
-static_assert(offsetof(DrCalcViewWork, m_billboard) == 0xc0, "");
-static_assert(offsetof(DrCalcViewWork, m_proj) == 0x180, "");
-static_assert(offsetof(DrCalcViewWork, m_viewProj) == 0x200, "");
-static_assert(offsetof(DrCalcViewWork, m_prevViewProj) == 0x2c0, "");
-static_assert(offsetof(DrCalcViewWork, m_projNonJitter) == 0x380, "");
-static_assert(offsetof(DrCalcViewWork, m_viewPos) == 0x400, "");
-static_assert(offsetof(DrCalcViewWork, m_depthParm) == 0x430, "");
-static_assert(offsetof(DrCalcViewWork, m_viewYVec) == 0x460, "");
-static_assert(offsetof(DrCalcViewWork, m_fades) == 0x490, "");
-static_assert(offsetof(DrCalcViewWork, m_pixlScale) == 0x4d0, "");
-static_assert(offsetof(DrCalcViewWork, m_drMan) == 0x700, "");
-static_assert(offsetof(DrCalcViewWork, m_prevViewPos) == 0x770, "");
-static_assert(offsetof(DrCalcViewWork, m_staticUniform) == 0x7b0, "");
-static_assert(offsetof(DrCalcViewWork, m_fogUniform) == 0x820, "");
-static_assert(offsetof(DrCalcViewWork, m_toonUniform) == 0x858, "");
-static_assert(offsetof(DrCalcViewWork, m_toon2Uniform) == 0x890, "");
-static_assert(offsetof(DrCalcViewWork, m_lightUniform) == 0x8c8, "");
-static_assert(offsetof(DrCalcViewWork, m_jitter) == 0xae0, "");
-static_assert(offsetof(DrCalcViewWork, m_prevJitter) == 0xaf0, "");
-static_assert(offsetof(DrCalcViewWork, m_ditherTmaaValues) == 0xb00, "");
+static_assert(offsetof(DrCalcViewWork, unknown40) == 0x40, "");
+static_assert(offsetof(DrCalcViewWork, unknownc0) == 0xc0, "");
+static_assert(offsetof(DrCalcViewWork, unknown180) == 0x180, "");
+static_assert(offsetof(DrCalcViewWork, unknown200) == 0x200, "");
+static_assert(offsetof(DrCalcViewWork, unknown2c0) == 0x2c0, "");
+static_assert(offsetof(DrCalcViewWork, unknown380) == 0x380, "");
+static_assert(offsetof(DrCalcViewWork, unknown400) == 0x400, "");
+static_assert(offsetof(DrCalcViewWork, unknown430) == 0x430, "");
+static_assert(offsetof(DrCalcViewWork, unknown460) == 0x460, "");
+static_assert(offsetof(DrCalcViewWork, unknown490) == 0x490, "");
+static_assert(offsetof(DrCalcViewWork, unknown4d0) == 0x4d0, "");
+static_assert(offsetof(DrCalcViewWork, unknown700) == 0x700, "");
+static_assert(offsetof(DrCalcViewWork, unknown770) == 0x770, "");
+static_assert(offsetof(DrCalcViewWork, unknown7b0) == 0x7b0, "");
+static_assert(offsetof(DrCalcViewWork, unknown820) == 0x820, "");
+static_assert(offsetof(DrCalcViewWork, unknown858) == 0x858, "");
+static_assert(offsetof(DrCalcViewWork, unknown890) == 0x890, "");
+static_assert(offsetof(DrCalcViewWork, unknown8c8) == 0x8c8, "");
+static_assert(offsetof(DrCalcViewWork, unknownae0) == 0xae0, "");
+static_assert(offsetof(DrCalcViewWork, unknownaf0) == 0xaf0, "");
+static_assert(offsetof(DrCalcViewWork, unknownb00) == 0xb00, "");
 
 } // namespace ml

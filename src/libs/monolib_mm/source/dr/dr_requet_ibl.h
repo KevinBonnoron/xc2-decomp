@@ -28,10 +28,10 @@ public:
   int getVersion() const;
 
   u8 _00[0x18 - 0x00];
-  DrLightObjGlobalIBL *m_light;
+  DrLightObjGlobalIBL *unknown18; // Inferred role: light; original member name unknown.
   DrLightObjGlobalIBL *_20;
 };
 
-static_assert(offsetof(DrRequetIBL, m_light) == 0x18, "");
+static_assert(offsetof(DrRequetIBL, unknown18) == 0x18, "");
 
 } // namespace ml

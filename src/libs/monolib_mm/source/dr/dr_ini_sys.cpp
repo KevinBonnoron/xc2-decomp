@@ -14,43 +14,43 @@ f32 DrIniSys::getFloatWork(const char *value) { return atof(value); }
 
 int DrIniSys::getIntWork(const char *value) { return atoi(value); }
 
-void DrIniSys::setDefTexture(int index, void *data, int size) { grlib::CGLibTexture::createTextureImagePtrs(m_textures[index], data, size, false, nullptr, true); }
+void DrIniSys::setDefTexture(int index, void *data, int size) { grlib::CGLibTexture::createTextureImagePtrs(unknown98[index], data, size, false, nullptr, true); }
 
 void DrIniSys::loadToonRimTexture() {
-  if (m_toonRimRes != nullptr) {
-    m_toonRimRes->Release();
-    m_toonRimRes = nullptr;
+  if (unknown38 != nullptr) {
+    unknown38->Release();
+    unknown38 = nullptr;
   }
-  m_toonRimRes = readTextureMapFile(TOON_RIM_FILE);
-  grlib::CGLibTexture::createTextureImagePtrs(m_textures[6], m_toonRimRes->buffer, m_toonRimRes->size, false, nullptr, true);
+  unknown38 = readTextureMapFile(TOON_RIM_FILE);
+  grlib::CGLibTexture::createTextureImagePtrs(unknown98[6], unknown38->buffer, unknown38->size, false, nullptr, true);
 }
 
 void DrIniSys::reloadToonGradTexture() { loadToonGradTexture(); }
 
 void DrIniSys::reloadToonRimTexture() {
-  if (m_toonRimRes != nullptr) {
-    m_toonRimRes->Release();
-    m_toonRimRes = nullptr;
+  if (unknown38 != nullptr) {
+    unknown38->Release();
+    unknown38 = nullptr;
   }
-  m_toonRimRes = readTextureMapFile(TOON_RIM_FILE);
-  grlib::CGLibTexture::createTextureImagePtrs(m_textures[6], m_toonRimRes->buffer, m_toonRimRes->size, false, nullptr, true);
+  unknown38 = readTextureMapFile(TOON_RIM_FILE);
+  grlib::CGLibTexture::createTextureImagePtrs(unknown98[6], unknown38->buffer, unknown38->size, false, nullptr, true);
 }
 
 void DrIniSys::reloadIBLEnvTexture() { loadIBLEnvTexture(); }
 
 bool DrIniSys::getDispMirrorBall() const {
-  if (m_mirrorBall == nullptr) {
+  if (unknown880 == nullptr) {
     return false;
   }
-  return m_mirrorBall->isDisp();
+  return unknown880->isDisp();
 }
 
 void DrIniSys::setDispMirrorBall(bool isDisp) {
-  if (isDisp && m_mirrorBall == nullptr) {
+  if (isDisp && unknown880 == nullptr) {
     loadMirrorBallModel();
   }
-  if (m_mirrorBall != nullptr) {
-    m_mirrorBall->setDisp(isDisp);
+  if (unknown880 != nullptr) {
+    unknown880->setDisp(isDisp);
   }
 }
 
@@ -59,8 +59,8 @@ bool DrIniSys::getUpdateMirrorBallPos() const { return m_updateMirrorBallPos; }
 void DrIniSys::setUpdateMirrorBallPos(bool isUpdate) { m_updateMirrorBallPos = isUpdate; }
 
 void DrIniSys::setMirrorBallPosition(const mm::Vec3 &position) {
-  if (m_mirrorBall != nullptr && m_updateMirrorBallPos) {
-    m_mirrorBall->setPos(position);
+  if (unknown880 != nullptr && m_updateMirrorBallPos) {
+    unknown880->setPos(position);
   }
 }
 
@@ -71,9 +71,9 @@ void DrIniSys::setStrWork(char *dst, const char *src) {
   *dst = '\0';
 }
 
-void DrIniSys::setLutTexture(int index, void *data, int size) { grlib::CGLibTexture::createTextureImagePtrs(m_textures[index], data, size, false, nullptr, true); }
+void DrIniSys::setLutTexture(int index, void *data, int size) { grlib::CGLibTexture::createTextureImagePtrs(unknown98[index], data, size, false, nullptr, true); }
 
-void DrIniSys::setCubeTexture(int index, void *data, int size) { grlib::CGLibTexture::createTextureImagePtrs(m_textures[index], data, size, false, nullptr, true); }
+void DrIniSys::setCubeTexture(int index, void *data, int size) { grlib::CGLibTexture::createTextureImagePtrs(unknown98[index], data, size, false, nullptr, true); }
 
 void DrIniSys::reloadMirrorBallModel() { loadMirrorBallModel(); }
 
@@ -81,6 +81,6 @@ void DrIniSys::reloadRainDropTexture() { loadRainDropTexture(); }
 
 void DrIniSys::reloadFlagWaveTexture() { loadFlagWaveTexture(); }
 
-const void *DrIniSys::getGlassBreakage() const { return m_glassBreakageRes->buffer; }
+const void *DrIniSys::getGlassBreakage() const { return unknown898->buffer; }
 
 } // namespace ml

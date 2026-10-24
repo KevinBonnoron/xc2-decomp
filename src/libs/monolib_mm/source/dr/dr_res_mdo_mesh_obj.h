@@ -27,22 +27,22 @@ public:
 
   const char *m_name;
   const char *m_boneName;
-  mm::Mat44 *m_matrix;
-  const mm::Mat44 *m_baseMat;
-  mm::Mat44 *m_ofsMat;
-  u32 m_flags;
-  f32 m_defAlphas[2];
-  f32 m_alpha;
-  u16 m_matIndex;
-  u8 m_volumeFadeEffect;
+  mm::Mat44 *unknown10;       // Inferred role: matrix; original member name unknown.
+  const mm::Mat44 *unknown18; // Inferred role: base mat; original member name unknown.
+  mm::Mat44 *unknown20;       // Inferred role: ofs mat; original member name unknown.
+  u32 unknown28;              // Inferred role: flags; original member name unknown.
+  f32 unknown2c[2];           // Inferred role: def alphas; original member name unknown.
+  f32 unknown34;              // Inferred role: alpha; original member name unknown.
+  u16 unknown38;              // Inferred role: mat index; original member name unknown.
+  u8 unknown3a;               // Inferred role: volume fade effect; original member name unknown.
   u8 _3b[0x40 - 0x3b];
 };
 
 static_assert(offsetof(DrResMdoMeshParts, m_boneName) == 0x08, "");
-static_assert(offsetof(DrResMdoMeshParts, m_ofsMat) == 0x20, "");
-static_assert(offsetof(DrResMdoMeshParts, m_flags) == 0x28, "");
-static_assert(offsetof(DrResMdoMeshParts, m_alpha) == 0x34, "");
-static_assert(offsetof(DrResMdoMeshParts, m_volumeFadeEffect) == 0x3a, "");
+static_assert(offsetof(DrResMdoMeshParts, unknown20) == 0x20, "");
+static_assert(offsetof(DrResMdoMeshParts, unknown28) == 0x28, "");
+static_assert(offsetof(DrResMdoMeshParts, unknown34) == 0x34, "");
+static_assert(offsetof(DrResMdoMeshParts, unknown3a) == 0x3a, "");
 static_assert(sizeof(DrResMdoMeshParts) == 0x40, "");
 
 class DrResMdoMeshObj {
@@ -56,12 +56,12 @@ public:
   static void release(DrResMdoMeshObj *&meshObj);
   DrResMdoMeshObj &operator=(const DrResMdoMeshObj &other);
 
-  DrResMdoMeshParts *getParts(u32 index) const { return &m_parts[index]; }
+  DrResMdoMeshParts *getParts(u32 index) const { return &unknown00[index]; }
 
-  DrResMdoMeshParts *m_parts;
-  u32 m_partsMax;
+  DrResMdoMeshParts *unknown00; // Inferred role: parts; original member name unknown.
+  u32 unknown08;                // Inferred role: parts max; original member name unknown.
 };
 
-static_assert(offsetof(DrResMdoMeshObj, m_partsMax) == 0x08, "");
+static_assert(offsetof(DrResMdoMeshObj, unknown08) == 0x08, "");
 
 } // namespace ml

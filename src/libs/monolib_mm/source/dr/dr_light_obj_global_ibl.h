@@ -14,28 +14,28 @@ public:
   static const int SH_TERM_NUM = 4;
 
   u8 _00[0x08 - 0x00];
-  int m_version;
-  u8 _0c[0x14 - 0x0c];
-  int m_textureNum;
+  int unknown08; // Inferred role: version; original member name unknown.
+  u8 m_priority[0x14 - 0x0c];
+  int unknown14; // Inferred role: texture num; original member name unknown.
   u8 _18[0x78 - 0x18];
-  grlib::CGLibTextureBuffer m_textures[TEXTURE_MAX];
+  grlib::CGLibTextureBuffer unknown78[TEXTURE_MAX]; // Inferred role: textures; original member name unknown.
   u8 _388[0x3a0 - 0x388];
-  mm::Col3 m_additionalAmbient;
+  mm::Col3 unknown3a0; // Inferred role: additional ambient; original member name unknown.
   u8 _3ac[0x3b0 - 0x3ac];
-  f32 m_skyIntensity;
-  f32 m_dirLightIntensity;
+  f32 unknown3b0; // Inferred role: sky intensity; original member name unknown.
+  f32 unknown3b4; // Inferred role: dir light intensity; original member name unknown.
   u8 _3b8[0x450 - 0x3b8];
-  f32 m_shTerms[TEXTURE_MAX][SH_TERM_NUM][9];
-  mm::Mat44 m_shMatrices[TEXTURE_MAX * SH_TERM_NUM];
+  f32 unknown450[TEXTURE_MAX][SH_TERM_NUM][9];     // Inferred role: sh terms; original member name unknown.
+  mm::Mat44 unknown840[TEXTURE_MAX * SH_TERM_NUM]; // Inferred role: sh matrices; original member name unknown.
 };
 
-static_assert(offsetof(DrLightObjGlobalIBL, m_version) == 0x08, "");
-static_assert(offsetof(DrLightObjGlobalIBL, m_textureNum) == 0x14, "");
-static_assert(offsetof(DrLightObjGlobalIBL, m_textures) == 0x78, "");
-static_assert(offsetof(DrLightObjGlobalIBL, m_additionalAmbient) == 0x3a0, "");
-static_assert(offsetof(DrLightObjGlobalIBL, m_skyIntensity) == 0x3b0, "");
-static_assert(offsetof(DrLightObjGlobalIBL, m_dirLightIntensity) == 0x3b4, "");
-static_assert(offsetof(DrLightObjGlobalIBL, m_shTerms) == 0x450, "");
-static_assert(offsetof(DrLightObjGlobalIBL, m_shMatrices) == 0x840, "");
+static_assert(offsetof(DrLightObjGlobalIBL, unknown08) == 0x08, "");
+static_assert(offsetof(DrLightObjGlobalIBL, unknown14) == 0x14, "");
+static_assert(offsetof(DrLightObjGlobalIBL, unknown78) == 0x78, "");
+static_assert(offsetof(DrLightObjGlobalIBL, unknown3a0) == 0x3a0, "");
+static_assert(offsetof(DrLightObjGlobalIBL, unknown3b0) == 0x3b0, "");
+static_assert(offsetof(DrLightObjGlobalIBL, unknown3b4) == 0x3b4, "");
+static_assert(offsetof(DrLightObjGlobalIBL, unknown450) == 0x450, "");
+static_assert(offsetof(DrLightObjGlobalIBL, unknown840) == 0x840, "");
 
 } // namespace ml

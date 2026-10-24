@@ -2,14 +2,14 @@
 
 namespace ml {
 
-bool DrPixlShadowCacheMan::isShadowMap() const { return m_flags & 8; }
+bool DrPixlShadowCacheMan::isShadowMap() const { return unknown00 & 8; }
 
-void DrPixlShadowCacheMan::callShadowCacheUpdate(bool isAll) { m_flags = m_flags | (isAll ? 0x180 : 0x80); }
+void DrPixlShadowCacheMan::callShadowCacheUpdate(bool isAll) { unknown00 = unknown00 | (isAll ? 0x180 : 0x80); }
 
-void DrPixlShadowCacheMan::callShadowCacheVariance() { m_flags |= 0x400; }
+void DrPixlShadowCacheMan::callShadowCacheVariance() { unknown00 |= 0x400; }
 
 void DrPixlShadowCacheMan::callFgShadowCacheUpdate() {}
 
-void DrPixlShadowCacheMan::endMode() { m_flags |= 0x40; }
+void DrPixlShadowCacheMan::endMode() { unknown00 |= 0x40; }
 
 } // namespace ml

@@ -69,50 +69,50 @@ public:
   static u8 s_etcNextVertex[];
 
   u8 _000[0x008 - 0x000];
-  DrMan *m_drMan;
+  DrMan *unknown08; // Inferred role: dr man; original member name unknown.
   u8 _010[0x018 - 0x010];
-  DrShdDataObj *m_shdObjs[10];
-  DrResFetch m_fetches[91];
+  DrShdDataObj *unknown18[10]; // Inferred role: shd objs; original member name unknown.
+  DrResFetch unknown68[91];    // Inferred role: fetches; original member name unknown.
   u8 _618[0x620 - 0x618];
-  DrResShdMpf *m_mpfObjs;
-  DrResShdPrePass *m_prePassObjs;
-  DrResShdShw *m_shwObjs;
-  grlib::CGLibVtxVertex m_shdVertex;
-  grlib::CGLibVtxVertex m_quadsTexVertex;
-  grlib::CGLibVtxVertex m_triangleVertex;
-  grlib::CGLibVtxVertex m_triangleTexVertex;
-  grlib::CGLibVtxVertex m_boxVertex;
-  grlib::CGLibVtxVertex m_sphereVertex;
-  grlib::CGLibVtxVertex m_cylinderVertex;
-  grlib::CGLibVtxVertex m_spotVertex;
-  grlib::CGLibVtxVertex m_rainDropVertex;
-  grlib::CGLibVtxVertex m_effVertex;
-  grlib::CGLibVtxVertex m_depthCheckVertex;
-  grlib::CGLibVtxVertex m_planeVertex;
-  grlib::CGLibVtxIndex m_quadsIndex;
-  grlib::CGLibVtxIndex m_triangleIndex;
-  grlib::CGLibVtxIndex m_boxIndex;
-  grlib::CGLibVtxIndex m_sphereIndex;
-  grlib::CGLibVtxIndex m_cylinderIndex;
-  grlib::CGLibVtxIndex m_spotIndex;
-  grlib::CGLibVtxIndex m_rainDropIndex;
-  grlib::CGLibVtxIndex m_effIndex;
-  grlib::CGLibVtxStmOut m_stmOuts[2];
-  grlib::CGLibUniformArray<grlib::CGLibOneUniformBlock> m_alphaTestUniforms;
+  DrResShdMpf *unknown620;                                          // Inferred role: mpf objs; original member name unknown.
+  DrResShdPrePass *unknown628;                                      // Inferred role: pre pass objs; original member name unknown.
+  DrResShdShw *unknown630;                                          // Inferred role: shw objs; original member name unknown.
+  grlib::CGLibVtxVertex unknown638;                                 // Inferred role: shd vertex; original member name unknown.
+  grlib::CGLibVtxVertex unknown660;                                 // Inferred role: quads tex vertex; original member name unknown.
+  grlib::CGLibVtxVertex unknown688;                                 // Inferred role: triangle vertex; original member name unknown.
+  grlib::CGLibVtxVertex unknown6b0;                                 // Inferred role: triangle tex vertex; original member name unknown.
+  grlib::CGLibVtxVertex unknown6d8;                                 // Inferred role: box vertex; original member name unknown.
+  grlib::CGLibVtxVertex unknown700;                                 // Inferred role: sphere vertex; original member name unknown.
+  grlib::CGLibVtxVertex unknown728;                                 // Inferred role: cylinder vertex; original member name unknown.
+  grlib::CGLibVtxVertex unknown750;                                 // Inferred role: spot vertex; original member name unknown.
+  grlib::CGLibVtxVertex unknown778;                                 // Inferred role: rain drop vertex; original member name unknown.
+  grlib::CGLibVtxVertex unknown7a0;                                 // Inferred role: eff vertex; original member name unknown.
+  grlib::CGLibVtxVertex unknown7c8;                                 // Inferred role: depth check vertex; original member name unknown.
+  grlib::CGLibVtxVertex unknown7f0;                                 // Inferred role: plane vertex; original member name unknown.
+  grlib::CGLibVtxIndex unknown818;                                  // Inferred role: quads index; original member name unknown.
+  grlib::CGLibVtxIndex unknown840;                                  // Inferred role: triangle index; original member name unknown.
+  grlib::CGLibVtxIndex unknown868;                                  // Inferred role: box index; original member name unknown.
+  grlib::CGLibVtxIndex unknown890;                                  // Inferred role: sphere index; original member name unknown.
+  grlib::CGLibVtxIndex unknown8b8;                                  // Inferred role: cylinder index; original member name unknown.
+  grlib::CGLibVtxIndex unknown8e0;                                  // Inferred role: spot index; original member name unknown.
+  grlib::CGLibVtxIndex unknown908;                                  // Inferred role: rain drop index; original member name unknown.
+  grlib::CGLibVtxIndex unknown930;                                  // Inferred role: eff index; original member name unknown.
+  grlib::CGLibVtxStmOut unknown958[2];                              // Inferred role: stm outs; original member name unknown.
+  grlib::CGLibUniformArray<grlib::CGLibOneUniformBlock> unknown9a8; // Inferred role: alpha test uniforms; original member name unknown.
   u8 _9b0[0x9d0 - 0x9b0];
-  DrResShdStreamOut *m_stmOutObjs;
-  DrResShdObjMot *m_objMotBlurObjs;
+  DrResShdStreamOut *unknown9d0; // Inferred role: stm out objs; original member name unknown.
+  DrResShdObjMot *unknown9d8;    // Inferred role: object mot blur objs; original member name unknown.
 };
 
-static_assert(offsetof(DrShdDataList, m_drMan) == 0x008, "");
-static_assert(offsetof(DrShdDataList, m_shdObjs) == 0x018, "");
-static_assert(offsetof(DrShdDataList, m_fetches) == 0x068, "");
-static_assert(offsetof(DrShdDataList, m_mpfObjs) == 0x620, "");
-static_assert(offsetof(DrShdDataList, m_shdVertex) == 0x638, "");
-static_assert(offsetof(DrShdDataList, m_quadsIndex) == 0x818, "");
-static_assert(offsetof(DrShdDataList, m_stmOuts) == 0x958, "");
-static_assert(offsetof(DrShdDataList, m_alphaTestUniforms) == 0x9a8, "");
-static_assert(offsetof(DrShdDataList, m_stmOutObjs) == 0x9d0, "");
-static_assert(offsetof(DrShdDataList, m_objMotBlurObjs) == 0x9d8, "");
+static_assert(offsetof(DrShdDataList, unknown08) == 0x008, "");
+static_assert(offsetof(DrShdDataList, unknown18) == 0x018, "");
+static_assert(offsetof(DrShdDataList, unknown68) == 0x068, "");
+static_assert(offsetof(DrShdDataList, unknown620) == 0x620, "");
+static_assert(offsetof(DrShdDataList, unknown638) == 0x638, "");
+static_assert(offsetof(DrShdDataList, unknown818) == 0x818, "");
+static_assert(offsetof(DrShdDataList, unknown958) == 0x958, "");
+static_assert(offsetof(DrShdDataList, unknown9a8) == 0x9a8, "");
+static_assert(offsetof(DrShdDataList, unknown9d0) == 0x9d0, "");
+static_assert(offsetof(DrShdDataList, unknown9d8) == 0x9d8, "");
 
 } // namespace ml

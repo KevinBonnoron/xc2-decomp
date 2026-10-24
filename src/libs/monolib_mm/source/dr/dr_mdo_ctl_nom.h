@@ -34,17 +34,17 @@ public:
   void releaseAfterImage();
 
   u8 _190[0x1d0 - 0x190];
-  DrResMdoShdObj *m_shdObj;
-  DrResMdoVtxMeshObj *m_vtxMeshObj;
+  DrResMdoShdObj *unknown1d0;     // Inferred role: shd object; original member name unknown.
+  DrResMdoVtxMeshObj *unknown1d8; // Inferred role: vtx mesh object; original member name unknown.
   u8 _1e0[0x1e8 - 0x1e0];
-  DrResMdoMeshObj *m_meshObj;
+  DrResMdoMeshObj *unknown1e8; // Inferred role: mesh object; original member name unknown.
   u8 _1f0[0x200 - 0x1f0];
-  DrResEtcPamObj *m_etcPamObj;
+  DrResEtcPamObj *unknown200; // Inferred role: etc pam object; original member name unknown.
 };
 
-static_assert(offsetof(DrMdoCtlNom, m_shdObj) == 0x1d0, "");
-static_assert(offsetof(DrMdoCtlNom, m_vtxMeshObj) == 0x1d8, "");
-static_assert(offsetof(DrMdoCtlNom, m_meshObj) == 0x1e8, "");
-static_assert(offsetof(DrMdoCtlNom, m_etcPamObj) == 0x200, "");
+static_assert(offsetof(DrMdoCtlNom, unknown1d0) == 0x1d0, "");
+static_assert(offsetof(DrMdoCtlNom, unknown1d8) == 0x1d8, "");
+static_assert(offsetof(DrMdoCtlNom, unknown1e8) == 0x1e8, "");
+static_assert(offsetof(DrMdoCtlNom, unknown200) == 0x200, "");
 
 } // namespace ml
