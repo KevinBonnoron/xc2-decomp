@@ -514,9 +514,9 @@ void GfGameUtil::setAchievementReleaseLevel(u32 blade, u32 line, u32 level) {
   }
 
   GfAchievementRelease release;
-  release.blade = blade;
-  release.achievementType = achievementType;
-  release.level = level;
+  release.unknown00 = blade;
+  release.unknown04 = achievementType;
+  release.unknown02 = level;
   GfEvent::callAchievmentRelease(release);
 }
 

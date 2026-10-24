@@ -254,7 +254,7 @@ GfGameSalvage::AnimationType GfGameSalvage::getClimbAnimationType() const { retu
 
 void GfGameSalvage::playWireStart(f32 time, f32 speed, f32 length) {
   if (unknownc0 != nullptr) {
-    GfGameUtil::startWireWithClose(unknownc0->handle, unknowna8, time, speed, length);
+    GfGameUtil::startWireWithClose(unknownc0->unknown20, unknowna8, time, speed, length);
   }
 }
 

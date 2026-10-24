@@ -12,7 +12,7 @@ constexpr size_t LARGE_SCRIPT_SIZE = 0x100000;
 constexpr size_t AI_SCRIPT_SIZE = 0x4000;
 const ml::FILE_PRIO SCRIPT_FILE_PRIO = static_cast<ml::FILE_PRIO>(7);
 
-GfScriptManager::GfScriptManager(const GfSetupParam &param) : initialized(false) { initialize(param); }
+GfScriptManager::GfScriptManager(const GfSetupParam &param) : unknown08(false) { initialize(param); }
 
 void GfScriptManager::initialize(const GfSetupParam &) {
   fw::ScriptManager *scriptManager = fw::ScriptManager::get();
@@ -27,7 +27,7 @@ void GfScriptManager::initialize(const GfSetupParam &) {
     scriptManager->createScript(slot, getAllocator(ALLOCATOR_SCRIPT), AI_SCRIPT_SIZE);
   }
   scriptManager->createScript(SCRIPT_SLOT_GMK_TUTORIAL, getAllocator(ALLOCATOR_SCRIPT), SCRIPT_SIZE);
-  initialized = true;
+  unknown08 = true;
 }
 
 GfScriptManager::~GfScriptManager() {}
@@ -57,12 +57,12 @@ void GfScriptManager::finalize() {
   scriptManager->destroyScript(SCRIPT_SLOT_LARGE, true);
   scriptManager->destroyScript(SCRIPT_SLOT_FIELD, true);
   scriptManager->destroyScript(SCRIPT_SLOT_FIELD_SYSTEM, true);
-  initialized = false;
+  unknown08 = false;
 }
 
 bool GfScriptManager::isInitialized() {
   GfScriptManager *scriptManager = get();
-  return scriptManager != nullptr ? scriptManager->initialized : false;
+  return scriptManager != nullptr ? scriptManager->unknown08 : false;
 }
 
 void GfScriptManager::loadScript(u32 slot, const char *filename) {

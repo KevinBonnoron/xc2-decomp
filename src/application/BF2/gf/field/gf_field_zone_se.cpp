@@ -6,7 +6,7 @@ namespace gf {
 GfFieldZoneSe::GfFieldZoneSe(const GfSetupParam &param) { initialize(param); }
 
 void GfFieldZoneSe::initialize(const GfSetupParam &) {
-  mInitialized = true;
+  unknown10 = true;
   GfFieldZone::addEvent(this);
 }
 
@@ -26,12 +26,12 @@ void GfFieldZoneSe::destroy() {
 
 void GfFieldZoneSe::finalize() {
   GfFieldZone::removeEvent(this);
-  mInitialized = false;
+  unknown10 = false;
 }
 
 bool GfFieldZoneSe::isInitialized() {
   if (get() != nullptr) {
-    return get()->mInitialized;
+    return get()->unknown10;
   }
 
   return false;

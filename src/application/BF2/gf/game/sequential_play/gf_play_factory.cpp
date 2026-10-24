@@ -336,14 +336,14 @@ bool GfPlayFactory::createTalk(const GfSetupPfTalk &talk) {
 
 void GfPlayFactory::createMapjump(const GfMapjumpInfo &info) {
   GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  if (info.isSkipTravel) {
+  if (info.unknown104) {
     GfSequentialPlay::addEventPlayerStop(true);
   }
-  GfSequentialPlay::pushState(info.isSkipTravel ? GF_STATE_MAPJUMP_SKIP_TRAVEL : GF_STATE_MAPJUMP);
+  GfSequentialPlay::pushState(info.unknown104 ? GF_STATE_MAPJUMP_SKIP_TRAVEL : GF_STATE_MAPJUMP);
   GfSequentialPlay::addWaitBattleEnd(0);
   GfSequentialPlay::addMapjump(info);
   GfSequentialPlay::popState();
-  if (info.isSkipTravel) {
+  if (info.unknown104) {
     GfSequentialPlay::addEventPlayerStop(false);
   }
   GfSequentialPlay::play();
@@ -705,7 +705,7 @@ bool GfPlayFactory::createArtsMovie(const char *name) {
 void GfPlayFactory::createSkipTravel(u32 mapjump) {
   if (!GfGameManager::isLeaveGameForDebug()) {
     GfMapjumpInfo info(mapjump);
-    info.isSkipTravel = true;
+    info.unknown104 = true;
     createMapjump(info);
   }
 }

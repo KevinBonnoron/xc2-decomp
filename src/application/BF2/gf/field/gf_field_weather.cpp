@@ -65,7 +65,7 @@ bool isCurrentSE() {
 WEATYPE getCurrentWtrType(bool isPrevious) {
   WeatherInfo *info = getCurrentInfo(isPrevious);
   if (info != nullptr) {
-    return info->type;
+    return info->unknown08;
   }
 
   return WEATYPE_INVALID;
@@ -74,7 +74,7 @@ WEATYPE getCurrentWtrType(bool isPrevious) {
 WEATHERID getCurrentMapWeatherID(bool isPrevious) {
   WeatherInfo *info = getCurrentInfo(isPrevious);
   if (info != nullptr) {
-    return info->weather;
+    return info->unknown0c;
   }
 
   return WEATHER_F;
@@ -83,7 +83,7 @@ WEATHERID getCurrentMapWeatherID(bool isPrevious) {
 u32 getCurrentMapID(bool isPrevious) {
   WeatherInfo *info = getCurrentInfo(isPrevious);
   if (info != nullptr) {
-    return info->map;
+    return info->unknown18;
   }
 
   return 0;
@@ -93,7 +93,7 @@ f32 getCurrentPastSec(bool isPrevious) {
   f32 pastSec = 0.0f;
   WeatherInfo *info = getCurrentInfo(isPrevious);
   if (info != nullptr) {
-    pastSec = info->pastSec;
+    pastSec = info->unknown10;
   }
 
   return pastSec;
@@ -103,7 +103,7 @@ f32 getCurrentExistSec(bool isPrevious) {
   f32 existSec = 0.0f;
   WeatherInfo *info = getCurrentInfo(isPrevious);
   if (info != nullptr) {
-    existSec = info->existSec;
+    existSec = info->unknown14;
   }
 
   return existSec;
@@ -113,7 +113,7 @@ f32 getCurrentFadePastSec(bool isPrevious) {
   f32 fadePastSec = 0.0f;
   WeatherInfo *info = getCurrentInfo(isPrevious);
   if (info != nullptr) {
-    fadePastSec = info->fadePastSec;
+    fadePastSec = info->unknown24;
   }
 
   return fadePastSec;
@@ -123,7 +123,7 @@ f32 getCurrentFadeExistSec(bool isPrevious) {
   f32 fadeExistSec = 0.0f;
   WeatherInfo *info = getCurrentInfo(isPrevious);
   if (info != nullptr) {
-    fadeExistSec = info->fadeExistSec;
+    fadeExistSec = info->unknown28;
   }
 
   return fadeExistSec;
@@ -150,7 +150,7 @@ void destroyFadeWeather() {
 f32 getWeatherRand() { return (1.0f - ml::mtRandf1()) * WEATHER_RAND_SCALE; }
 
 WeatherInfo *getCurrentWeatherInfo() {
-  if (s_list.size() != 1 || s_list.back()->fadeRate < 1.0f) {
+  if (s_list.size() != 1 || s_list.back()->unknown20 < 1.0f) {
     return nullptr;
   }
 
@@ -162,7 +162,7 @@ WeatherInfo *getFadeinWeatherInfo() {
     return nullptr;
   }
 
-  if (s_list.size() == 1 && s_list.back()->fadeRate >= 1.0f) {
+  if (s_list.size() == 1 && s_list.back()->unknown20 >= 1.0f) {
     return nullptr;
   }
 
@@ -188,7 +188,7 @@ void setPause(bool isPause) {
 void GfFieldWeather::initialize(const GfSetupParam &) {
   _gffwt::destroyList();
   createCloudSeaDefault();
-  mInitialized = true;
+  unknown08 = true;
 }
 
 GfFieldWeather::~GfFieldWeather() {}
@@ -207,8 +207,8 @@ void GfFieldWeather::applyNowMapWeatherForMapModel(u32 map) {
 
 void GfFieldWeather::gevMapjump(GEV gev, const MapjumpCallbackInfo &info) {
   GfFieldWeather *weather = get();
-  weather->mEvents.push(gev);
-  weather->mMapjumpInfo = info;
+  weather->unknown10.push(gev);
+  weather->unknown60 = info;
 }
 
 void GfFieldWeather::gevGameMapModel(GF_OBJ_HANDLE *, bool) {}
@@ -247,7 +247,7 @@ void GfFieldWeather::execChangeCloud(u32 map) { setCloudSeaForDebug(map, GfDataM
 
 void GfFieldWeather::setCloudSeaForDebug(u32, CLOUD_SEA cloudSea) {
   if (get() != nullptr) {
-    get()->mCloudSeaRequest = cloudSea != 0 ? CLOUD_SEA_REQUEST_HIGH : CLOUD_SEA_REQUEST_LOW;
+    get()->unknown7c = cloudSea != 0 ? CLOUD_SEA_REQUEST_HIGH : CLOUD_SEA_REQUEST_LOW;
   }
 }
 
@@ -271,16 +271,16 @@ const char *GfFieldWeather::getCurrentWeatherName(bool isPrevious) { return GfDa
 void GfFieldWeather::setCurrentRemainSecZero() {
   if (_gffwt::s_list.size() == 1) {
     WeatherInfo *info = _gffwt::s_list.front();
-    info->pastSec = info->existSec;
+    info->unknown10 = info->unknown14;
   }
 }
 
 void GfFieldWeather::setCloudSea(u32, CLOUD_SEA cloudSea) {
   GfFieldWeather *weather = get();
-  weather->mCloudSeaRequest = cloudSea != 0 ? CLOUD_SEA_REQUEST_HIGH : CLOUD_SEA_REQUEST_LOW;
+  weather->unknown7c = cloudSea != 0 ? CLOUD_SEA_REQUEST_HIGH : CLOUD_SEA_REQUEST_LOW;
 }
 
-bool GfFieldWeather::isInfiniteTime() { return get()->mIsInfiniteTime; }
+bool GfFieldWeather::isInfiniteTime() { return get()->unknown09; }
 
 bool GfFieldWeather::isWeatherSE() { return _gffwt::isCurrentSE(); }
 
@@ -317,12 +317,12 @@ void GfFieldWeather::setupGame() {
 void GfFieldWeather::updateCloudSea(const fw::UpdateInfo &) {
   u32 map = GfGameManager::getMapID();
   if (GfGameCond::isGameCond(GfBdatMaplist::get()->getMaplistebb_ON_cndID(map))) {
-    if (mCloudSeaCondition == 0) {
+    if (unknown80 == 0) {
       createCloudSeaCondition();
       GfGameUtilCloudSea::setInnCloudSea(static_cast<CLOUD_SEA>(1));
     }
   } else {
-    if (mCloudSeaCondition != 0) {
+    if (unknown80 != 0) {
       destroyCloudSeaCondition();
       GfGameUtilCloudSea::setInnCloudSea(static_cast<CLOUD_SEA>(0));
     }
@@ -332,36 +332,36 @@ void GfFieldWeather::updateCloudSea(const fw::UpdateInfo &) {
 
 void GfFieldWeather::createCloudSeaCondition() {
   destroyCloudSeaCondition();
-  mCloudSeaCondition = GfGameEnv::createCloudSea(static_cast<CLOUD_SEA>(1), static_cast<CLOUD_SEA_PRIO>(1));
+  unknown80 = GfGameEnv::createCloudSea(static_cast<CLOUD_SEA>(1), static_cast<CLOUD_SEA_PRIO>(1));
 }
 
 void GfFieldWeather::destroyCloudSeaCondition() {
-  if (mCloudSeaCondition != 0) {
-    GfGameEnv::destroyCloudSea(mCloudSeaCondition);
-    mCloudSeaCondition = static_cast<CLOUD_SEA_HANDLE>(0);
+  if (unknown80 != 0) {
+    GfGameEnv::destroyCloudSea(unknown80);
+    unknown80 = static_cast<CLOUD_SEA_HANDLE>(0);
   }
 }
 
 void GfFieldWeather::applyCloudSelect() {
-  if (mCloudSeaRequest != CLOUD_SEA_REQUEST_NONE) {
-    GfGameEnv::setCloudSea(mCloudSeaDefault, static_cast<CLOUD_SEA>(mCloudSeaRequest != CLOUD_SEA_REQUEST_LOW));
-    mCloudSeaRequest = CLOUD_SEA_REQUEST_NONE;
+  if (unknown7c != CLOUD_SEA_REQUEST_NONE) {
+    GfGameEnv::setCloudSea(unknown78, static_cast<CLOUD_SEA>(unknown7c != CLOUD_SEA_REQUEST_LOW));
+    unknown7c = CLOUD_SEA_REQUEST_NONE;
   }
 }
 
 void GfFieldWeather::createCloudSeaDefault() {
   destroyCloudSeaDefault();
-  mCloudSeaDefault = GfGameEnv::createCloudSea(static_cast<CLOUD_SEA>(0), static_cast<CLOUD_SEA_PRIO>(0));
+  unknown78 = GfGameEnv::createCloudSea(static_cast<CLOUD_SEA>(0), static_cast<CLOUD_SEA_PRIO>(0));
 }
 
 void GfFieldWeather::destroyCloudSeaDefault() {
-  if (mCloudSeaDefault != 0) {
-    GfGameEnv::destroyCloudSea(mCloudSeaDefault);
-    mCloudSeaDefault = static_cast<CLOUD_SEA_HANDLE>(0);
+  if (unknown78 != 0) {
+    GfGameEnv::destroyCloudSea(unknown78);
+    unknown78 = static_cast<CLOUD_SEA_HANDLE>(0);
   }
 }
 
-CLOUD_SEA GfFieldWeather::getCloudSeaCondition() { return GfGameEnv::getCloudType(get()->mCloudSeaCondition); }
+CLOUD_SEA GfFieldWeather::getCloudSeaCondition() { return GfGameEnv::getCloudType(get()->unknown80); }
 
 CLOUD_SEA GfFieldWeather::getCloudSea(u32 map) {
   if (map != 0) {
@@ -375,13 +375,13 @@ CLOUD_SEA GfFieldWeather::getCurrentCloudSea() { return GfGameEnv::getCurrentClo
 
 void GfFieldWeather::setDispWeather(bool isDisp) {
   if (get() != nullptr) {
-    get()->mIsDispWeather = isDisp;
+    get()->unknown84 = isDisp;
   }
 }
 
 bool GfFieldWeather::isDispWeather() {
   if (get() != nullptr) {
-    return get()->mIsDispWeather;
+    return get()->unknown84;
   }
 
   return false;
@@ -403,12 +403,12 @@ void GfFieldWeather::finalize() {
   destroyCloudSeaDefault();
   destroyCloudSeaCondition();
   _gffwt::destroyList();
-  mInitialized = false;
+  unknown08 = false;
 }
 
 bool GfFieldWeather::isInitialized() {
   if (get() != nullptr) {
-    return get()->mInitialized;
+    return get()->unknown08;
   }
 
   return false;

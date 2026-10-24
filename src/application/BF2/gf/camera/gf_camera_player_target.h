@@ -21,9 +21,9 @@ public:
   static PlayerCameraTarget *create();
 
   u8 _10[0x70 - 0x10];
-  GF_OBJ_HANDLE *player;
+  GF_OBJ_HANDLE *unknown70; // Inferred role: player; original member name unknown.
 };
 
-static_assert(offsetof(PlayerCameraTarget, player) == 0x70, "");
+static_assert(offsetof(PlayerCameraTarget, unknown70) == 0x70, "");
 
 } // namespace gf

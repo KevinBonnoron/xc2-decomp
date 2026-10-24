@@ -14,30 +14,30 @@ constexpr f32 SE_VOLUME_SPEED_DOWN = -0.5f;
 constexpr f32 SE_VOLUME_SPEED_LEAVE = -1.0f;
 constexpr f32 SE_VOLUME_ROOM = 0.5f;
 
-WeatherEff::WeatherEff() : mIsErased(false), mAlpha(1.0f), mEffectHandle(0) {}
+WeatherEff::WeatherEff() : unknown0c(false), unknown10(1.0f), unknown14(0) {}
 
-bool WeatherEff::isPlay() const { return mEffectHandle != 0; }
+bool WeatherEff::isPlay() const { return unknown14 != 0; }
 
 void WeatherEff::destroy() {
-  if (mEffectHandle != 0) {
-    fw::EffectManager::get()->remove(mEffectHandle);
-    mEffectHandle = 0;
+  if (unknown14 != 0) {
+    fw::EffectManager::get()->remove(unknown14);
+    unknown14 = 0;
   }
 }
 
 void WeatherEff::fadeout() {
-  if (mEffectHandle != 0) {
+  if (unknown14 != 0) {
     if (GfGameManager::isFadeout()) {
-      fw::EffectManager::get()->remove(mEffectHandle);
+      fw::EffectManager::get()->remove(unknown14);
     } else {
-      fw::EffectManager::get()->dead(mEffectHandle);
+      fw::EffectManager::get()->dead(unknown14);
     }
-    mEffectHandle = 0;
+    unknown14 = 0;
   }
 }
 
 bool WeatherEff::isEraseEffect() const {
-  if (mIsErased || mType == WEATYPE_DEFAULT) {
+  if (unknown0c || unknown08 == WEATYPE_DEFAULT) {
     return false;
   }
 
@@ -45,7 +45,7 @@ bool WeatherEff::isEraseEffect() const {
 }
 
 bool WeatherEff::isDispEffect() const {
-  if (!mIsErased || mType == WEATYPE_DEFAULT || GfGameManager::isRoom()) {
+  if (!unknown0c || unknown08 == WEATYPE_DEFAULT || GfGameManager::isRoom()) {
     return false;
   }
 
@@ -53,8 +53,8 @@ bool WeatherEff::isDispEffect() const {
 }
 
 void WeatherEff::applyAlpha(const fw::UpdateInfo &) {
-  if (mEffectHandle != 0) {
-    fw::EffectManager::get()->setAlpha(mEffectHandle, mAlpha);
+  if (unknown14 != 0) {
+    fw::EffectManager::get()->setAlpha(unknown14, unknown10);
   }
 }
 
@@ -62,12 +62,12 @@ void WeatherEff::setForceName(const char *) {}
 
 void WeatherEff::setPause(bool) {}
 
-WeatherSnd::WeatherSnd() : mType(WEATYPE_DEFAULT), mIsSkipped(false), mVolume(1.0f) {}
+WeatherSnd::WeatherSnd() : unknown10(WEATYPE_DEFAULT), unknown14(false), unknown18(1.0f) {}
 
-bool WeatherSnd::isPlay() const { return mSoundHandle.isValid(); }
+bool WeatherSnd::isPlay() const { return unknown08.isValid(); }
 
 void WeatherSnd::destroy() {
-  SoundHandle &handle = mSoundHandle;
+  SoundHandle &handle = unknown08;
   if (handle.isValid()) {
     if (GfSound::get() != nullptr) {
       GfSound::get()->stopSe(handle, SE_FADE_SEC);
@@ -78,7 +78,7 @@ void WeatherSnd::destroy() {
 
 void WeatherSnd::fadeout() {
   GfSound *sound = GfSound::get();
-  SoundHandle &handle = mSoundHandle;
+  SoundHandle &handle = unknown08;
   if (sound != nullptr && handle.isValid()) {
     sound->stopSe(handle, SE_FADE_SEC);
     handle.clear();
@@ -95,29 +95,29 @@ void WeatherSnd::update(const fw::UpdateInfo &info, f32 rate, bool isFadeout) {
   if (GfGameManager::isLeaveGameForDebug()) {
     speed = SE_VOLUME_SPEED_LEAVE;
   }
-  mVolume += info.deltaTime * speed;
+  unknown18 += info.deltaTime * speed;
 
   f32 minVolume = GfGameManager::isRoom() ? SE_VOLUME_ROOM : 0.0f;
   if (isEraseSe()) {
     minVolume = 0.0f;
   }
-  if (mVolume < minVolume) {
-    mVolume = minVolume;
-  } else if (mVolume > 1.0f) {
-    mVolume = 1.0f;
+  if (unknown18 < minVolume) {
+    unknown18 = minVolume;
+  } else if (unknown18 > 1.0f) {
+    unknown18 = 1.0f;
   }
 
-  SoundHandle &handle = mSoundHandle;
+  SoundHandle &handle = unknown08;
   if (handle.isValid() && !sound->isPlaying(handle)) {
     handle.clear();
   }
 
   if (isCreateSe(rate)) {
     if (!isFadeout) {
-      create(mType);
+      create(unknown10);
     }
-  } else if (mVolume * rate <= 0.0f) {
-    mVolume = 0.0f;
+  } else if (unknown18 * rate <= 0.0f) {
+    unknown18 = 0.0f;
     destroy();
   }
 
@@ -133,11 +133,11 @@ bool WeatherSnd::isEraseSe() const {
 }
 
 bool WeatherSnd::isCreateSe(f32 rate) const {
-  if (mSoundHandle.isValid()) {
+  if (unknown08.isValid()) {
     return false;
   }
 
-  if (mVolume * rate > 0.0f && GfFieldWeather::isDispWeather() && !GfGameManager::isStartGame()) {
+  if (unknown18 * rate > 0.0f && GfFieldWeather::isDispWeather() && !GfGameManager::isStartGame()) {
     return !GfGameManager::isLeaveGameForDebug();
   }
 
@@ -145,34 +145,34 @@ bool WeatherSnd::isCreateSe(f32 rate) const {
 }
 
 void WeatherSnd::applyVolume(const fw::UpdateInfo &, f32 rate) {
-  if (mSoundHandle.isValid() && GfSound::get() != nullptr) {
-    GfSound::get()->setVolume(mSoundHandle, mVolume * rate, 0.0f);
+  if (unknown08.isValid() && GfSound::get() != nullptr) {
+    GfSound::get()->setVolume(unknown08, unknown18 * rate, 0.0f);
   }
 }
 
 void WeatherSnd::setPause(bool) {}
 
 WeatherInfo::~WeatherInfo() {
-  eff->destroy();
-  snd->destroy();
-  if (eff != nullptr) {
-    delete eff;
-    eff = nullptr;
+  unknown30->destroy();
+  unknown38->destroy();
+  if (unknown30 != nullptr) {
+    delete unknown30;
+    unknown30 = nullptr;
   }
-  if (snd != nullptr) {
-    delete snd;
-    snd = nullptr;
+  if (unknown38 != nullptr) {
+    delete unknown38;
+    unknown38 = nullptr;
   }
 }
 
 void WeatherInfo::destroyEnv() {
-  eff->destroy();
-  snd->destroy();
+  unknown30->destroy();
+  unknown38->destroy();
 }
 
 bool WeatherInfo::isTimeRangeOK() const {
-  if (weather >= WEATHER_A && weather <= WEATHER_D) {
-    u32 timeBonus = GfDataMap::getWeatherTimeBonus(map, weather);
+  if (unknown0c >= WEATHER_A && unknown0c <= WEATHER_D) {
+    u32 timeBonus = GfDataMap::getWeatherTimeBonus(unknown18, unknown0c);
     if (GfFieldTime::get() != nullptr) {
       return (GfFieldTime::get()->getTimeRangeBits() & timeBonus) != 0;
     }
@@ -181,48 +181,48 @@ bool WeatherInfo::isTimeRangeOK() const {
   return true;
 }
 
-bool WeatherInfo::isTimeup() const { return pastSec == existSec; }
+bool WeatherInfo::isTimeup() const { return unknown10 == unknown14; }
 
 void WeatherInfo::fadeoutEnv() {
-  eff->fadeout();
-  snd->fadeout();
+  unknown30->fadeout();
+  unknown38->fadeout();
 }
 
 void WeatherInfo::update(const fw::UpdateInfo &info, bool isFadeout) {
-  eff->update(info, fadeRate, isFadeout);
-  snd->update(info, fadeRate, isFadeout);
-  if (!GfPause::isPause(PAUSE_BIT_FIELD_TIME) && pastSec < existSec) {
-    pastSec += info.deltaTime;
-    if (pastSec > existSec) {
-      pastSec = existSec;
+  unknown30->update(info, unknown20, isFadeout);
+  unknown38->update(info, unknown20, isFadeout);
+  if (!GfPause::isPause(PAUSE_BIT_FIELD_TIME) && unknown10 < unknown14) {
+    unknown10 += info.deltaTime;
+    if (unknown10 > unknown14) {
+      unknown10 = unknown14;
     }
   }
 }
 
 bool WeatherInfo::updateFadein(const fw::UpdateInfo &info) {
-  if (info.deltaTime > 0.0f && fadePastSec == 0.0f) {
-    eff->create(type);
-    snd->create(type);
+  if (info.deltaTime > 0.0f && unknown24 == 0.0f) {
+    unknown30->create(unknown08);
+    unknown38->create(unknown08);
   }
 
-  if (fadePastSec >= fadeExistSec) {
+  if (unknown24 >= unknown28) {
     return true;
   }
 
-  fadePastSec += info.deltaTime;
-  if (fadePastSec >= fadeExistSec) {
-    fadePastSec = fadeExistSec;
-    fadeRate = 1.0f;
+  unknown24 += info.deltaTime;
+  if (unknown24 >= unknown28) {
+    unknown24 = unknown28;
+    unknown20 = 1.0f;
     return true;
   }
 
-  fadeRate = fadePastSec / fadeExistSec;
-  eff->update(info, fadeRate, false);
-  snd->update(info, fadeRate, false);
-  if (!GfPause::isPause(PAUSE_BIT_FIELD_TIME) && pastSec < existSec) {
-    pastSec += info.deltaTime;
-    if (pastSec > existSec) {
-      pastSec = existSec;
+  unknown20 = unknown24 / unknown28;
+  unknown30->update(info, unknown20, false);
+  unknown38->update(info, unknown20, false);
+  if (!GfPause::isPause(PAUSE_BIT_FIELD_TIME) && unknown10 < unknown14) {
+    unknown10 += info.deltaTime;
+    if (unknown10 > unknown14) {
+      unknown10 = unknown14;
     }
   }
 
@@ -230,64 +230,64 @@ bool WeatherInfo::updateFadein(const fw::UpdateInfo &info) {
 }
 
 void WeatherInfo::createEnv() {
-  eff->create(type);
-  snd->create(type);
+  unknown30->create(unknown08);
+  unknown38->create(unknown08);
 }
 
 bool WeatherInfo::updateFadeout(const fw::UpdateInfo &info) {
-  if (fadePastSec <= 0.0f) {
+  if (unknown24 <= 0.0f) {
     return true;
   }
 
-  fadePastSec -= info.deltaTime;
-  if (fadePastSec <= 0.0f) {
-    fadeRate = 0.0f;
-    fadePastSec = 0.0f;
+  unknown24 -= info.deltaTime;
+  if (unknown24 <= 0.0f) {
+    unknown20 = 0.0f;
+    unknown24 = 0.0f;
     return true;
   }
 
-  fadeRate = fadePastSec / fadeExistSec;
-  eff->update(info, fadeRate, true);
-  snd->update(info, fadeRate, true);
-  if (!GfPause::isPause(PAUSE_BIT_FIELD_TIME) && pastSec < existSec) {
-    pastSec += info.deltaTime;
-    if (pastSec > existSec) {
-      pastSec = existSec;
+  unknown20 = unknown24 / unknown28;
+  unknown30->update(info, unknown20, true);
+  unknown38->update(info, unknown20, true);
+  if (!GfPause::isPause(PAUSE_BIT_FIELD_TIME) && unknown10 < unknown14) {
+    unknown10 += info.deltaTime;
+    if (unknown10 > unknown14) {
+      unknown10 = unknown14;
     }
   }
   return false;
 }
 
 bool WeatherInfo::isTimeEnd() const {
-  if (existSec > 0.0f) {
-    return pastSec >= existSec;
+  if (unknown14 > 0.0f) {
+    return unknown10 >= unknown14;
   }
 
   return false;
 }
 
-bool WeatherInfo::isPlaySE() const { return snd->isPlay(); }
+bool WeatherInfo::isPlaySE() const { return unknown38->isPlay(); }
 
 void WeatherInfo::setForceEffect(const char *effect) {
-  eff->setForceName(effect);
-  snd->setForceName(effect);
+  unknown30->setForceName(effect);
+  unknown38->setForceName(effect);
 }
 
 void WeatherInfo::resetParam(f32 pastSec, f32 existSec, f32 fadeExistSec) {
-  this->pastSec = pastSec;
-  this->existSec = existSec;
-  this->fadeExistSec = fadeExistSec;
-  fadePastSec = fadeExistSec;
+  this->unknown10 = pastSec;
+  this->unknown14 = existSec;
+  this->unknown28 = fadeExistSec;
+  unknown24 = fadeExistSec;
   if (fadeExistSec > 0.0f) {
-    fadeRate = fadePastSec / this->fadeExistSec;
+    unknown20 = unknown24 / this->unknown28;
   } else {
-    fadeRate = 1.0f;
+    unknown20 = 1.0f;
   }
 }
 
 void WeatherInfo::setPause(bool isPause) {
-  eff->setPause(isPause);
-  snd->setPause(isPause);
+  unknown30->setPause(isPause);
+  unknown38->setPause(isPause);
 }
 
 } // namespace gf

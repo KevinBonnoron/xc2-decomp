@@ -32,9 +32,9 @@ public:
   void setCategorySeFadeoutForEvent(f32 volume);
 
   u8 _08[0xc4 - 0x08];
-  mm::mtl::FixStr<64> mapSePackName;
+  mm::mtl::FixStr<64> unknownc4; // Inferred role: map se pack name; original member name unknown.
 };
 
-static_assert(offsetof(GfFieldSound, mapSePackName) == 0xc4, "");
+static_assert(offsetof(GfFieldSound, unknownc4) == 0xc4, "");
 
 } // namespace gf

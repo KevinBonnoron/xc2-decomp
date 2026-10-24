@@ -50,12 +50,12 @@ public:
   static u32 changeLayerUI(u32 layer);
 
   u8 _08[0x18 - 0x08];
-  GF_EVT_MODEL type;
-  GF_OBJ_HANDLE *handle;
+  GF_EVT_MODEL unknown18;   // Inferred role: type; original member name unknown.
+  GF_OBJ_HANDLE *unknown20; // Inferred role: handle; original member name unknown.
 };
 
-static_assert(offsetof(GfEvtModel, type) == 0x18, "");
-static_assert(offsetof(GfEvtModel, handle) == 0x20, "");
+static_assert(offsetof(GfEvtModel, unknown18) == 0x18, "");
+static_assert(offsetof(GfEvtModel, unknown20) == 0x20, "");
 
 class GfEvtModelDriver : public GfEvtModel {
 public:

@@ -34,10 +34,10 @@ public:
   static bool isScriptActive(u32 slot);
   static bool isScriptFinish(u32 slot);
 
-  bool initialized;
+  bool unknown08; // Inferred role: initialized; original member name unknown.
 };
 
-static_assert(offsetof(GfScriptManager, initialized) == 0x08, "");
+static_assert(offsetof(GfScriptManager, unknown08) == 0x08, "");
 static_assert(sizeof(GfScriptManager) == 0x10, "");
 
 } // namespace gf

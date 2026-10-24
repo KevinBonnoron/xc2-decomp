@@ -29,10 +29,10 @@ class GfSlotAllocator;
 class GfSlotMapping {
 public:
   struct REQ {
-    GF_ASSET_HANDLE *handle;
-    GfAssetPack *pack;
-    u16 retryCount;
-    f32 timer;
+    GF_ASSET_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
+    GfAssetPack *unknown08;     // Inferred role: pack; original member name unknown.
+    u16 unknown10;              // Inferred role: retry count; original member name unknown.
+    f32 unknown14;              // Inferred role: timer; original member name unknown.
   };
 
   struct BiggerPrio {
@@ -44,9 +44,9 @@ public:
     void createAllocator(size_t size, const char *name);
     void destroyAllocator();
 
-    GfSlotAllocator *allocator;
-    void *memory;
-    mtl::ALLOC_HANDLE handle;
+    GfSlotAllocator *unknown00;  // Inferred role: allocator; original member name unknown.
+    void *unknown08;             // Inferred role: memory; original member name unknown.
+    mtl::ALLOC_HANDLE unknown10; // Inferred role: handle; original member name unknown.
   };
 
   static const u32 REQUEST_MAX = 256;
@@ -85,17 +85,17 @@ public:
   void *allocateSize(size_t size, size_t alignment);
   bool deallocateSize(void *pointer);
 
-  GfSlotAllocator *allocator;
-  GfSlotAll *slotAll;
-  mm::mtl::FixedVector<REQ, REQUEST_MAX> requests;
-  u64 topAddress;
-  u64 endAddress;
+  GfSlotAllocator *unknown00;                       // Inferred role: allocator; original member name unknown.
+  GfSlotAll *unknown08;                             // Inferred role: slot all; original member name unknown.
+  mm::mtl::FixedVector<REQ, REQUEST_MAX> unknown10; // Inferred role: requests; original member name unknown.
+  u64 unknown1818;                                  // Inferred role: top address; original member name unknown.
+  u64 unknown1820;                                  // Inferred role: end address; original member name unknown.
 };
 
 static_assert(sizeof(GfSlotMapping::REQ) == 0x18, "");
 static_assert(sizeof(GfSlotMapping::ExtendSlotAllocator) == 0x18, "");
-static_assert(offsetof(GfSlotMapping, requests) == 0x10, "");
-static_assert(offsetof(GfSlotMapping, topAddress) == 0x1818, "");
+static_assert(offsetof(GfSlotMapping, unknown10) == 0x10, "");
+static_assert(offsetof(GfSlotMapping, unknown1818) == 0x1818, "");
 static_assert(sizeof(GfSlotMapping) == 0x1828, "");
 
 } // namespace gf

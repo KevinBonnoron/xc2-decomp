@@ -26,9 +26,9 @@ enum TIME_RANGE {
 };
 
 struct ElapseTime {
-  u32 second : 6;
-  u32 minute : 6;
-  u32 hour : 20;
+  u32 unknown00_0 : 6;  // Inferred role: second; original member name unknown.
+  u32 unknown00_6 : 6;  // Inferred role: minute; original member name unknown.
+  u32 unknown01_4 : 20; // Inferred role: hour; original member name unknown.
 
   void getTime(mm::mtl::FixStr<16> &string) const;
 };
@@ -36,10 +36,10 @@ struct ElapseTime {
 static_assert(sizeof(ElapseTime) == 4, "");
 
 struct GameTime {
-  u32 second : 6;
-  u32 minute : 6;
-  u32 hour : 5;
-  u32 day : 15;
+  u32 unknown00_0 : 6;  // Inferred role: second; original member name unknown.
+  u32 unknown00_6 : 6;  // Inferred role: minute; original member name unknown.
+  u32 unknown01_4 : 5;  // Inferred role: hour; original member name unknown.
+  u32 unknown02_1 : 15; // Inferred role: day; original member name unknown.
 
   u32 convMin() const;
   u32 convSec() const;
@@ -49,23 +49,23 @@ static_assert(sizeof(GameTime) == 4, "");
 
 struct RealTime {
   u64 : 6;
-  u64 millisecond : 10;
-  u64 second : 6;
-  u64 minute : 6;
-  u64 hour : 5;
-  u64 day : 5;
-  u64 dayOfYear : 9;
-  u64 month : 4;
-  u64 year : 13;
+  u64 unknown00_6 : 10; // Inferred role: millisecond; original member name unknown.
+  u64 unknown02_0 : 6;  // Inferred role: second; original member name unknown.
+  u64 unknown02_6 : 6;  // Inferred role: minute; original member name unknown.
+  u64 unknown03_4 : 5;  // Inferred role: hour; original member name unknown.
+  u64 unknown04_1 : 5;  // Inferred role: day; original member name unknown.
+  u64 unknown04_6 : 9;  // Inferred role: day of year; original member name unknown.
+  u64 unknown05_7 : 4;  // Inferred role: month; original member name unknown.
+  u64 unknown06_3 : 13; // Inferred role: year; original member name unknown.
 };
 
 static_assert(sizeof(RealTime) == 8, "");
 
 struct TimeRangeData {
-  u16 startHour;
-  u16 startMinute;
-  u16 endHour;
-  u16 endMinute;
+  u16 unknown00; // Inferred role: start hour; original member name unknown.
+  u16 unknown02; // Inferred role: start minute; original member name unknown.
+  u16 unknown04; // Inferred role: end hour; original member name unknown.
+  u16 unknown06; // Inferred role: end minute; original member name unknown.
 };
 
 static_assert(sizeof(TimeRangeData) == 8, "");
@@ -132,23 +132,23 @@ public:
   bool isDebugStop() const;
 
 private:
-  bool mInitialized;
-  u32 mTimeStopBits;
-  ElapseTime mBaseElapseTime;
-  ElapseTime mElapseTime;
-  RealTime mRealTime;
-  RealTime mElapseStartRealTime;
-  u32 mUnused28;
-  GameTime mGameTime;
-  f32 mTime;
-  f32 mPrevTime;
-  f32 mTimeFraction;
-  f32 mTimeSpeed;
-  u32 mTimeRange;
-  u32 mPrevTimeRange;
-  u32 mTimeRangeDN;
-  u32 mUnused4c;
-  bool mIsDebugStop;
+  bool unknown08;       // Inferred role: m initialized; original member name unknown.
+  u32 unknown0c;        // Inferred role: m time stop bits; original member name unknown.
+  ElapseTime unknown10; // Inferred role: m base elapse time; original member name unknown.
+  ElapseTime m_elapseTime;
+  RealTime unknown18; // Inferred role: m real time; original member name unknown.
+  RealTime unknown20; // Inferred role: m elapse start real time; original member name unknown.
+  u32 unknown28;      // Inferred role: m unused28; original member name unknown.
+  GameTime m_gameTime;
+  f32 unknown30; // Inferred role: m time; original member name unknown.
+  f32 unknown34; // Inferred role: m prev time; original member name unknown.
+  f32 unknown38; // Inferred role: m time fraction; original member name unknown.
+  f32 m_timeSpeed;
+  u32 m_timeRange;
+  u32 unknown44; // Inferred role: m prev time range; original member name unknown.
+  u32 unknown48; // Inferred role: m time range dn; original member name unknown.
+  u32 unknown4c; // Inferred role: m unused4c; original member name unknown.
+  bool m_debugStop;
 };
 
 static_assert(sizeof(GfFieldTime) == 0x58, "");

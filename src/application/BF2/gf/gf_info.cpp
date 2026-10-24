@@ -37,7 +37,7 @@ int GfInfo::m_nScreenW;
 int GfInfo::m_nScreenH;
 bool GfInfo::m_bDispNpcMobInfo;
 
-GfInfo::GfInfo(const GfSetupParam &param) : initialized(false) { initialize(param); }
+GfInfo::GfInfo(const GfSetupParam &param) : unknown08(false) { initialize(param); }
 
 void GfInfo::initialize(const GfSetupParam &) {
   m_nScreenW = ml::DevGraph::getRootWidth();
@@ -62,7 +62,7 @@ void GfInfo::initialize(const GfSetupParam &) {
   m_camAspect = 1.0f;
   m_camLength = 1.0f;
   m_fSecPerFrame = ml::DevGraph::getFrameSyncSec();
-  initialized = true;
+  unknown08 = true;
 }
 
 GfInfo::~GfInfo() {}
@@ -79,9 +79,9 @@ void GfInfo::destroy() {
   delete info;
 }
 
-void GfInfo::finalize() { initialized = false; }
+void GfInfo::finalize() { unknown08 = false; }
 
-bool GfInfo::isInitialized() { return get() != nullptr && get()->initialized; }
+bool GfInfo::isInitialized() { return get() != nullptr && get()->unknown08; }
 
 u64 GfInfo::getFrameCount64() { return ml::WorkCpu::getFrameCount(); }
 

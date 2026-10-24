@@ -29,13 +29,13 @@ void GfMenuLocation::updateDataNum(u32 type) {
   group.unknown30.clear();
   u32 dataNum = 0;
   for (u32 i = 0; i < group.unknown00.size(); i++) {
-    if (group.unknown00[i].locator == nullptr) {
+    if (group.unknown00[i].unknown18 == nullptr) {
       continue;
     }
-    u32 posNum = group.unknown00[i].locator->getPosNum();
+    u32 posNum = group.unknown00[i].unknown18->getPosNum();
     if (posNum != 0) {
       for (u32 j = 0; j < posNum; j++) {
-        mm::Vec3 delta = *group.unknown00[i].locator->getPos(j);
+        mm::Vec3 delta = *group.unknown00[i].unknown18->getPos(j);
         delta -= position;
         int distance = static_cast<int>(sqrtf(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z)) - 1;
         if (distance < 0) {

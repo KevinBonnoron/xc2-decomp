@@ -68,10 +68,10 @@ GfMenuAdapter *GfMenuGameAdapter::create(u32 handle, u32 type, bool isUpdateAlwa
 bool GfMenuGameAdapter::update_GamePlayTime() {
   if (GfFieldTime::get() != nullptr) {
     ElapseTime time = GfFieldTime::get()->getElapseTime();
-    if (time.hour > ELAPSE_HOUR_MAX) {
-      time.hour = ELAPSE_HOUR_MAX;
-      time.minute = ELAPSE_MINUTE_MAX;
-      time.second = ELAPSE_SECOND_MAX;
+    if (time.unknown01_4 > ELAPSE_HOUR_MAX) {
+      time.unknown01_4 = ELAPSE_HOUR_MAX;
+      time.unknown00_6 = ELAPSE_MINUTE_MAX;
+      time.unknown00_0 = ELAPSE_SECOND_MAX;
     }
     setElapseTime(time);
   }
@@ -177,9 +177,9 @@ bool GfMenuGameAdapter::update_RealYear() {
   RealTime realTime = {};
   GfFieldTime::get()->getRealTime(realTime);
   ui::uiDateTime time = {};
-  time.year = realTime.year;
-  time.month = realTime.month;
-  time.day = realTime.day;
+  time.year = realTime.unknown06_3;
+  time.month = realTime.unknown05_7;
+  time.day = realTime.unknown04_1;
   setTime(time);
   return true;
 }
@@ -188,8 +188,8 @@ bool GfMenuGameAdapter::update_RealTime() {
   RealTime realTime = {};
   GfFieldTime::get()->getRealTime(realTime);
   ui::uiDateTime time = {};
-  time.hour = realTime.hour;
-  time.minute = realTime.minute;
+  time.hour = realTime.unknown03_4;
+  time.minute = realTime.unknown02_6;
   setTime(time);
   return true;
 }

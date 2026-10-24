@@ -9,7 +9,7 @@ namespace gf {
 GfFieldZoneScript::GfFieldZoneScript(const GfSetupParam &param) { initialize(param); }
 
 void GfFieldZoneScript::initialize(const GfSetupParam &) {
-  mInitialized = true;
+  unknown10 = true;
   GfFieldZone::addEvent(this);
 }
 
@@ -29,12 +29,12 @@ void GfFieldZoneScript::destroy() {
 
 void GfFieldZoneScript::finalize() {
   GfFieldZone::addEvent(this);
-  mInitialized = false;
+  unknown10 = false;
 }
 
 bool GfFieldZoneScript::isInitialized() {
   if (get() != nullptr) {
-    return get()->mInitialized;
+    return get()->unknown10;
   }
 
   return false;

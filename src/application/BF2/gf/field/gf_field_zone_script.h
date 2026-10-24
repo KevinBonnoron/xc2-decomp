@@ -26,7 +26,7 @@ public:
   static bool isDestroyScriptBusy();
 
 private:
-  bool mInitialized;
+  bool unknown10; // Inferred role: m initialized; original member name unknown.
 };
 
 static_assert(sizeof(GfFieldZoneScript) == 0x18, "");

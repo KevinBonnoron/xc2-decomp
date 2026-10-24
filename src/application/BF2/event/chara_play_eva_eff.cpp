@@ -16,7 +16,7 @@
 namespace event {
 
 ICmd::RESULT CharaPlayEvaEff::update(const Param &param) {
-  if (model != nullptr && gf::GfObjUtil::getObj(model->handle) != nullptr) {
+  if (model != nullptr && gf::GfObjUtil::getObj(model->unknown20) != nullptr) {
     f32 delta = static_cast<CharaObj *>(param.val(0).getUserdata())->getFrameInfo().streamDelta;
     if (param.getFrame() <= 0) {
       const char *name = mm::mtl::Singleton<Extend>::getPtr()->replaceString(param.val(1).getStr(), "event", "effect");

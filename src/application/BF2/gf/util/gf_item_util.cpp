@@ -155,30 +155,30 @@ static u32 atLeastOne(u32 value) { return value == 0 ? 1 : value; }
 
 void GfItemUtil::getPrice(ItemPrice &price, u32 item, u32 shop) {
   u32 value = GfDataItem::getPrice(item);
-  price.price = value;
-  price.buyPrice = value;
-  price.sellPrice = value / 2;
-  price.buyDevelop = 0;
-  price.sellDevelop = 0;
+  price.unknown00 = value;
+  price.unknown04 = value;
+  price.unknown08 = value / 2;
+  price.unknown0c = 0;
+  price.unknown10 = 0;
   if (value == 0) {
     return;
   }
 
   GfBdatShop *bdatShop = GfBdatShop::get();
   u32 level = GfDataDevelop::getLevel(GfGameManager::getMapZoneID());
-  f32 buyPrice = price.price;
+  f32 buyPrice = price.unknown00;
   if (shop != 0 && level != 0) {
     buyPrice -= buyPrice * bdatShop->getShopListDiscount(shop, level - 1) * 0.01f;
   }
-  price.buyPrice = atLeastOne(buyPrice);
-  price.buyDevelop = atLeastOne(price.price * 0.01f);
-  price.sellDevelop = atLeastOne(price.price * 0.005f);
+  price.unknown04 = atLeastOne(buyPrice);
+  price.unknown0c = atLeastOne(price.unknown00 * 0.01f);
+  price.unknown10 = atLeastOne(price.unknown00 * 0.005f);
 }
 
 GfItem GfItemUtil::getInfo(u32 item) {
   GfItem info;
-  info.count = getItemBoxCount(item);
-  info.id = item;
+  info.unknown02 = getItemBoxCount(item);
+  info.unknown00 = item;
   return info;
 }
 
@@ -186,47 +186,47 @@ bool GfItemUtil::isPrecious(u32 item) { return GfDataItem::getItemType(item) == 
 
 void GfItemUtil::getPropertyChip(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.debugName = bdatItem->getPcWpnChipDebugName(property.id);
-  property.chipRank = bdatItem->getPcWpnChipRank(property.id);
+  property.unknown18 = bdatItem->getPcWpnChipDebugName(property.unknown04);
+  property.unknown64 = bdatItem->getPcWpnChipRank(property.unknown04);
 }
 
 void GfItemUtil::getPropertyAcce(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.debugName = bdatItem->getPcEquipDebugName(property.id);
-  property.enhance = bdatItem->getPcEquipEnhance1(property.id);
-  property.enhanceCategory = 0;
-  property.flags.set(ItemProperty::FLAG_EQUIP_DRIVER + 0, bdatItem->isPcEquipFlagEqPC01(property.id));
-  property.flags.set(ItemProperty::FLAG_EQUIP_DRIVER + 1, bdatItem->isPcEquipFlagEqPC02(property.id));
-  property.flags.set(ItemProperty::FLAG_EQUIP_DRIVER + 2, bdatItem->isPcEquipFlagEqPC03(property.id));
-  property.flags.set(ItemProperty::FLAG_EQUIP_DRIVER + 3, bdatItem->isPcEquipFlagEqPC04(property.id));
-  property.flags.set(ItemProperty::FLAG_EQUIP_DRIVER + 4, bdatItem->isPcEquipFlagEqPC05(property.id));
-  property.flags.set(ItemProperty::FLAG_EQUIP_DRIVER + 5, bdatItem->isPcEquipFlagEqPC06(property.id));
-  property.flags.set(ItemProperty::FLAG_EQUIP_DRIVER + 6, bdatItem->isPcEquipFlagEqPC07(property.id));
-  property.flags.set(ItemProperty::FLAG_EQUIP_DRIVER + 7, bdatItem->isPcEquipFlagEqPC08(property.id));
-  property.flags.set(ItemProperty::FLAG_EQUIP_DRIVER + 8, bdatItem->isPcEquipFlagEqPC09(property.id));
-  property.icon = bdatItem->getPcEquipIcon(property.id);
+  property.unknown18 = bdatItem->getPcEquipDebugName(property.unknown04);
+  property.unknown4a = bdatItem->getPcEquipEnhance1(property.unknown04);
+  property.unknown4c = 0;
+  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 0, bdatItem->isPcEquipFlagEqPC01(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 1, bdatItem->isPcEquipFlagEqPC02(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 2, bdatItem->isPcEquipFlagEqPC03(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 3, bdatItem->isPcEquipFlagEqPC04(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 4, bdatItem->isPcEquipFlagEqPC05(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 5, bdatItem->isPcEquipFlagEqPC06(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 6, bdatItem->isPcEquipFlagEqPC07(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 7, bdatItem->isPcEquipFlagEqPC08(property.unknown04));
+  property.unknown00.set(ItemProperty::FLAG_EQUIP_DRIVER + 8, bdatItem->isPcEquipFlagEqPC09(property.unknown04));
+  property.unknown65 = bdatItem->getPcEquipIcon(property.unknown04);
 }
 
 void GfItemUtil::getPropertyOrb(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.debugName = bdatItem->getEmptyOrbDebugName(property.id);
-  property.recipe = bdatItem->getEmptyOrbRecipe(property.id);
-  property.equipItem = bdatItem->getEmptyOrbEquipItemID(property.id);
+  property.unknown18 = bdatItem->getEmptyOrbDebugName(property.unknown04);
+  property.unknown54 = bdatItem->getEmptyOrbRecipe(property.unknown04);
+  property.unknown56 = bdatItem->getEmptyOrbEquipItemID(property.unknown04);
 }
 
 void GfItemUtil::getPropertyOrbEquip(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.debugName = bdatItem->getEmptyOrbDebugName(property.id);
-  property.enhance = bdatItem->getEquipOrbEnhance(property.id);
-  property.enhanceCategory = bdatItem->getEquipOrbEnhanceCategory(property.id);
+  property.unknown18 = bdatItem->getEmptyOrbDebugName(property.unknown04);
+  property.unknown4a = bdatItem->getEquipOrbEnhance(property.unknown04);
+  property.unknown4c = bdatItem->getEquipOrbEnhanceCategory(property.unknown04);
 }
 
-void GfItemUtil::getPropertySalvage(ItemProperty &property) { property.flags.set(ItemProperty::FLAG_QUEST, GfBdatItem::get()->getSalvageQuest(property.id) != 0); }
+void GfItemUtil::getPropertySalvage(ItemProperty &property) { property.unknown00.set(ItemProperty::FLAG_QUEST, GfBdatItem::get()->getSalvageQuest(property.unknown04) != 0); }
 
 void GfItemUtil::getPropertyPrecious(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.preciousCategory = bdatItem->getPreciousCategory(property.id);
-  property.preciousType = bdatItem->getPreciousType(property.id);
+  property.unknown58 = bdatItem->getPreciousCategory(property.unknown04);
+  property.unknown5a = bdatItem->getPreciousType(property.unknown04);
 }
 
 void GfItemUtil::getPropertyInfo(ItemProperty &property) {}
@@ -235,81 +235,81 @@ void GfItemUtil::getPropertyEvent(ItemProperty &property) {}
 
 void GfItemUtil::getPropertyCollect(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.collectionCategory = bdatItem->getCollectionListCategory(property.id);
-  property.zone = bdatItem->getCollectionListZone(property.id);
+  property.unknown4d = bdatItem->getCollectionListCategory(property.unknown04);
+  property.unknown12 = bdatItem->getCollectionListZone(property.unknown04);
 }
 
 void GfItemUtil::getPropertyTresure(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.tresureCategory = bdatItem->getTresureCategory(property.id);
-  property.tresureGraphic = bdatItem->getTresureGraphic(property.id);
-  property.zone = bdatItem->getTresureZone(property.id);
-  property.tresureFlag = bdatItem->getTresureFlag(property.id);
-  property.flags.set(ItemProperty::FLAG_NO_MULTIPLE, bdatItem->getTresureNoMultiple(property.id) != 0);
+  property.unknown5d = bdatItem->getTresureCategory(property.unknown04);
+  property.unknown5e = bdatItem->getTresureGraphic(property.unknown04);
+  property.unknown12 = bdatItem->getTresureZone(property.unknown04);
+  property.unknown60 = bdatItem->getTresureFlag(property.unknown04);
+  property.unknown00.set(ItemProperty::FLAG_NO_MULTIPLE, bdatItem->getTresureNoMultiple(property.unknown04) != 0);
 }
 
 void GfItemUtil::getPropertyFavorite(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.favoriteCategory = bdatItem->getFavoriteCategory(property.id);
-  property.zone = bdatItem->getFavoriteZone(property.id);
-  property.favoriteType = bdatItem->getFavoriteType(property.id);
-  property.favoriteTime = bdatItem->getFavoriteTime(property.id);
+  property.unknown4e = bdatItem->getFavoriteCategory(property.unknown04);
+  property.unknown12 = bdatItem->getFavoriteZone(property.unknown04);
+  property.unknown50 = bdatItem->getFavoriteType(property.unknown04);
+  property.unknown52 = bdatItem->getFavoriteTime(property.unknown04);
 }
 
 void GfItemUtil::getPropertyCrystal(ItemProperty &property) {}
 
 void GfItemUtil::getPropertyBooster(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.boosterCategory = bdatItem->getBoosterCategory(property.id);
-  property.boosterIdea = bdatItem->getBoosterIdea(property.id);
+  property.unknown45 = bdatItem->getBoosterCategory(property.unknown04);
+  property.unknown46 = bdatItem->getBoosterIdea(property.unknown04);
 }
 
 void GfItemUtil::getPropertyHanaArts(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.enhance = bdatItem->getITM_HanaArtsEnhEnhance(property.id);
-  property.condition = bdatItem->getITM_HanaArtsEnhCondition(property.id);
-  property.needEther = bdatItem->getITM_HanaArtsEnhNeedEther(property.id);
-  property.dustEther = bdatItem->getITM_HanaArtsEnhDustEther(property.id);
+  property.unknown4a = bdatItem->getITM_HanaArtsEnhEnhance(property.unknown04);
+  property.unknown70 = bdatItem->getITM_HanaArtsEnhCondition(property.unknown04);
+  property.unknown68 = bdatItem->getITM_HanaArtsEnhNeedEther(property.unknown04);
+  property.unknown6c = bdatItem->getITM_HanaArtsEnhDustEther(property.unknown04);
 }
 
 void GfItemUtil::getPropertyHanaAssist(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.enhance = bdatItem->getITM_HanaAssistEnhance(property.id);
-  property.condition = bdatItem->getITM_HanaAssistCondition(property.id);
-  property.needEther = bdatItem->getITM_HanaAssistNeedEther(property.id);
-  property.dustEther = bdatItem->getITM_HanaAssistDustEther(property.id);
+  property.unknown4a = bdatItem->getITM_HanaAssistEnhance(property.unknown04);
+  property.unknown70 = bdatItem->getITM_HanaAssistCondition(property.unknown04);
+  property.unknown68 = bdatItem->getITM_HanaAssistNeedEther(property.unknown04);
+  property.unknown6c = bdatItem->getITM_HanaAssistDustEther(property.unknown04);
 }
 
 void GfItemUtil::getPropertyHanaAttribute(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.hanaAttribute = bdatItem->getITM_HanaAtrAtr(property.id);
-  property.condition = bdatItem->getITM_HanaAtrCondition(property.id);
-  property.needEther = bdatItem->getITM_HanaAtrNeedEther(property.id);
-  property.dustEther = bdatItem->getITM_HanaAtrDustEther(property.id);
+  property.unknown74 = bdatItem->getITM_HanaAtrAtr(property.unknown04);
+  property.unknown70 = bdatItem->getITM_HanaAtrCondition(property.unknown04);
+  property.unknown68 = bdatItem->getITM_HanaAtrNeedEther(property.unknown04);
+  property.unknown6c = bdatItem->getITM_HanaAtrDustEther(property.unknown04);
 }
 
 void GfItemUtil::getPropertyHanaNArts(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.nArts = bdatItem->getITM_HanaNArtsSetNArts(property.id);
-  property.condition = bdatItem->getITM_HanaNArtsSetCondition(property.id);
-  property.needEther = bdatItem->getITM_HanaNArtsSetNeedEther(property.id);
-  property.dustEther = bdatItem->getITM_HanaNArtsSetDustEther(property.id);
+  property.unknown72 = bdatItem->getITM_HanaNArtsSetNArts(property.unknown04);
+  property.unknown70 = bdatItem->getITM_HanaNArtsSetCondition(property.unknown04);
+  property.unknown68 = bdatItem->getITM_HanaNArtsSetNeedEther(property.unknown04);
+  property.unknown6c = bdatItem->getITM_HanaNArtsSetDustEther(property.unknown04);
 }
 
 void GfItemUtil::getPropertyHanaRole(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
-  property.condition = bdatItem->getITM_HanaRoleCondition(property.id);
-  property.needEther = bdatItem->getITM_HanaRoleNeedEther(property.id);
-  property.dustEther = bdatItem->getITM_HanaRoleDustEther(property.id);
-  property.hanaRole = bdatItem->getITM_HanaRoleRole(property.id);
-  property.pArmor = bdatItem->getITM_HanaRolePArmor(property.id);
-  property.eArmor = bdatItem->getITM_HanaRoleEArmor(property.id);
-  property.hpMaxRev = bdatItem->getITM_HanaRoleHpMaxRev(property.id);
-  property.strengthRev = bdatItem->getITM_HanaRoleStrengthRev(property.id);
-  property.powEtherRev = bdatItem->getITM_HanaRolePowEtherRev(property.id);
-  property.dexRev = bdatItem->getITM_HanaRoleDexRev(property.id);
-  property.agilityRev = bdatItem->getITM_HanaRoleAgilityRev(property.id);
-  property.luckRev = bdatItem->getITM_HanaRoleLuckRev(property.id);
+  property.unknown70 = bdatItem->getITM_HanaRoleCondition(property.unknown04);
+  property.unknown68 = bdatItem->getITM_HanaRoleNeedEther(property.unknown04);
+  property.unknown6c = bdatItem->getITM_HanaRoleDustEther(property.unknown04);
+  property.unknown75 = bdatItem->getITM_HanaRoleRole(property.unknown04);
+  property.unknown76 = bdatItem->getITM_HanaRolePArmor(property.unknown04);
+  property.unknown77 = bdatItem->getITM_HanaRoleEArmor(property.unknown04);
+  property.unknown78 = bdatItem->getITM_HanaRoleHpMaxRev(property.unknown04);
+  property.unknown79 = bdatItem->getITM_HanaRoleStrengthRev(property.unknown04);
+  property.unknown7a = bdatItem->getITM_HanaRolePowEtherRev(property.unknown04);
+  property.unknown7b = bdatItem->getITM_HanaRoleDexRev(property.unknown04);
+  property.unknown7c = bdatItem->getITM_HanaRoleAgilityRev(property.unknown04);
+  property.unknown7d = bdatItem->getITM_HanaRoleLuckRev(property.unknown04);
 }
 
 bool GfItemUtil::getProperty(ItemProperty &property, u32 item, u32 shop) {
@@ -317,21 +317,21 @@ bool GfItemUtil::getProperty(ItemProperty &property, u32 item, u32 shop) {
   ItemType::Type type;
   u32 index;
   if (!GfDataItem::getItemType(type, index, item)) {
-    return property.flags.test(ItemProperty::FLAG_VALID);
+    return property.unknown00.test(ItemProperty::FLAG_VALID);
   }
 
-  property.flags.set(ItemProperty::FLAG_VALID);
-  property.id = item;
-  property.index = index;
-  property.type = type;
-  property.count = getItemBoxCount(item);
-  property.enableStock = getEnableStock(item);
-  property.time = getItemTime(item);
-  GfDataItem::getName(property.bdat, property.nameTextId, item);
-  GfDataItem::getCaption(property.bdat, property.captionTextId, item);
-  getPrice(property.price, item, shop);
-  property.rarity = GfDataItem::getRarity(item);
-  property.flags.set(ItemProperty::FLAG_NO_SELL, !GfDataItem::isEnableSell(item));
+  property.unknown00.set(ItemProperty::FLAG_VALID);
+  property.unknown04 = item;
+  property.unknown06 = index;
+  property.unknown08 = type;
+  property.unknown0c = getItemBoxCount(item);
+  property.unknown10 = getEnableStock(item);
+  property.unknown14 = getItemTime(item);
+  GfDataItem::getName(property.unknown20, property.unknown28, item);
+  GfDataItem::getCaption(property.unknown20, property.unknown2c, item);
+  getPrice(property.unknown30, item, shop);
+  property.unknown44 = GfDataItem::getRarity(item);
+  property.unknown00.set(ItemProperty::FLAG_NO_SELL, !GfDataItem::isEnableSell(item));
 
   switch (type) {
   case ItemType::PC_WPN_CHIP:
@@ -391,7 +391,7 @@ bool GfItemUtil::getProperty(ItemProperty &property, u32 item, u32 shop) {
   default:
     return false;
   }
-  return property.flags.test(ItemProperty::FLAG_VALID);
+  return property.unknown00.test(ItemProperty::FLAG_VALID);
 }
 
 u32 GfItemUtil::getItemTime(u32 item) { return GfItemBox::get()->getItemTime(item); }

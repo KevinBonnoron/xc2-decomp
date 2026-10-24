@@ -1133,7 +1133,7 @@ void GfGameManager::destroyBattleEnemy() {
 
 const char *GfGameManager::getMapSePackName() {
   GfFieldSound *fieldSound = GfFieldSound::get();
-  return fieldSound != nullptr ? fieldSound->mapSePackName.c_str() : nullptr;
+  return fieldSound != nullptr ? fieldSound->unknownc4.c_str() : nullptr;
 }
 
 u32 GfGameManager::getScenarioId() {

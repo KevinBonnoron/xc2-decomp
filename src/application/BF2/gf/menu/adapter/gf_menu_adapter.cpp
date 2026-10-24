@@ -398,9 +398,9 @@ void GfMenuAdapter::setElapseTime(const ElapseTime &time) {
   if (unknown18 != nullptr) {
     ui::UIObjectTimePlugin *timePlugin = mm::mtl::dynamicCast<ui::UIObjectTimePlugin>(unknown18);
     if (timePlugin != nullptr) {
-      timePlugin->setElapseHour(time.hour);
-      timePlugin->setMin(time.minute);
-      timePlugin->setSec(time.second);
+      timePlugin->setElapseHour(time.unknown01_4);
+      timePlugin->setMin(time.unknown00_6);
+      timePlugin->setSec(time.unknown00_0);
     }
   }
 }

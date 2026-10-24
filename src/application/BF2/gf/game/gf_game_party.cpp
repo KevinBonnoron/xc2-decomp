@@ -888,7 +888,7 @@ u32 GfGameParty::getPartySetBlade(u32 index) {
 
 void GfGameParty::getCurrentPartyInfo(RQ_SETUP_PARTY &info) {
   for (u32 partyId = 0; partyId < PARTY_MEMBER_MAX; partyId++) {
-    RQ_SETUP_PARTY::Member &member = info.members[partyId];
+    RQ_SETUP_PARTY::Member &member = info.unknown00[partyId];
     member.unknown00 = GfDataParty::getPartyMember(partyId)->unknown00;
     member.unknown04 = GfDataDriver::getBladeSet(GfDataParty::getPartyMember(partyId)->unknown00);
     int setBladeNum = GfDataDriver::getMaxSetBladeNum(member.unknown00);
@@ -898,18 +898,18 @@ void GfGameParty::getCurrentPartyInfo(RQ_SETUP_PARTY &info) {
   }
 
   SDataParty *dataParty = GfDataParty::getSDataParty();
-  info.leaderObjectType = dataParty->unknown3c;
-  info.savedLeaderObjectType = dataParty->unknown44;
-  info.leader = dataParty->unknown40;
-  info.savedLeader = dataParty->unknown48;
+  info.unknownc8 = dataParty->unknown3c;
+  info.unknownd0 = dataParty->unknown44;
+  info.unknowncc = dataParty->unknown40;
+  info.unknownd4 = dataParty->unknown48;
 }
 
 void GfGameParty::getCurrentPartyInfo(RQ_SETUP_PARTY_DRIVER &info) {
   for (u32 partyId = 0; partyId < PARTY_MEMBER_MAX; partyId++) {
-    info.drivers[partyId] = GfDataParty::getPartyMember(partyId)->unknown00;
+    info.unknown00[partyId] = GfDataParty::getPartyMember(partyId)->unknown00;
   }
 
-  info.leader = GfDataParty::getSDataParty()->unknown40;
+  info.unknown14 = GfDataParty::getSDataParty()->unknown40;
 }
 
 u16 GfGameParty::getPartyGauge() { return GfDataParty::getSDataParty()->unknown4c; }
@@ -1068,9 +1068,9 @@ GfStatusProperty *GfGameParty::getPartyStatusProperty(u32 partyId) {
 
 void GfGameParty::setupNewGameParty() {
   RQ_SETUP_PARTY info;
-  info.members[0].unknown00 = DRIVER_REX;
-  info.members[0].unknown04 = 0;
-  info.members[0].unknown08[0] = BLADE_NEW_GAME;
+  info.unknown00[0].unknown00 = DRIVER_REX;
+  info.unknown00[0].unknown04 = 0;
+  info.unknown00[0].unknown08[0] = BLADE_NEW_GAME;
   setupRequestData(info);
 }
 

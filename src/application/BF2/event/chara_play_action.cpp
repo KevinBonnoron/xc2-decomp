@@ -91,7 +91,7 @@ void CharaPlayAction::play(gf::GfObj *obj) {
     if ((flags & FLAG_BLEND_IN) == 0) {
       if (type == TYPE_COMBAT) {
         if (model != nullptr) {
-          switch (model->type) {
+          switch (model->unknown18) {
           case gf::GF_EVT_MODEL_DRIVER:
             model->setWeaponBattleState();
             break;
@@ -114,7 +114,7 @@ void CharaPlayAction::play(gf::GfObj *obj) {
       }
     } else if (type == TYPE_COMBAT) {
       if (model != nullptr) {
-        switch (model->type) {
+        switch (model->unknown18) {
         case gf::GF_EVT_MODEL_DRIVER:
           model->setWeaponBattleCommand();
           break;

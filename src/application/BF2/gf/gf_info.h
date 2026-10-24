@@ -51,7 +51,7 @@ public:
   static bool m_bDispNpcMobInfo;
 
 private:
-  bool initialized;
+  bool unknown08; // Inferred role: initialized; original member name unknown.
 };
 
 static_assert(sizeof(GfInfo) == 0x10, "");

@@ -17,14 +17,14 @@ u32 GfShopUtil::execBuy(u32 item, u32 count, u32 shop) {
 
   ItemPrice price;
   GfItemUtil::getPrice(price, item, shop);
-  u32 money = price.buyPrice * count;
+  u32 money = price.unknown04 * count;
   if (GfDataUtil::getMoney() < money) {
     return SHOP_RESULT_NO_MONEY;
   }
 
   GfItemUtil::addItemBox(item, count);
   SCOM_ADD_MONEY::create(-money);
-  SCOM_ADD_DEVELOP::create(GfGameManager::getMapZoneID(), price.buyDevelop * count);
+  SCOM_ADD_DEVELOP::create(GfGameManager::getMapZoneID(), price.unknown0c * count);
   GfDataShop::setBuyItem(shop, item);
   GfAchievStats::checkBuyItemFromShop(item, count, shop, money);
   GfEvent::callExecBuy(item, count, shop);
@@ -42,9 +42,9 @@ u32 GfShopUtil::execSell(u32 item, u32 count, u32 shop) {
   ItemPrice price;
   GfItemUtil::getPrice(price, item, shop);
   GfItemUtil::addItemBox(item, -static_cast<int>(count));
-  u32 money = price.sellPrice * count;
+  u32 money = price.unknown08 * count;
   SCOM_ADD_MONEY::create(money);
-  SCOM_ADD_DEVELOP::create(GfGameManager::getMapZoneID(), price.sellDevelop * count);
+  SCOM_ADD_DEVELOP::create(GfGameManager::getMapZoneID(), price.unknown10 * count);
   GfAchievStats::checkSellItemFromShop(item, count, shop, money);
   return SHOP_RESULT_OK;
 }

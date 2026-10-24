@@ -579,7 +579,7 @@ void CharaObj::setScaleWeapon(f32 scale) {
 }
 
 void CharaObj::updateScaleWeapon() {
-  if (model != nullptr && model->type == gf::GF_EVT_MODEL_WEAPON) {
+  if (model != nullptr && model->unknown18 == gf::GF_EVT_MODEL_WEAPON) {
     static_cast<gf::GfEvtModelWeapon *>(model)->setScale(weaponScale);
   }
 }
@@ -597,9 +597,9 @@ void CharaObj::setDispJiji(bool isDisp) {
 }
 
 void CharaObj::updateDispJiji() {
-  if (model != nullptr && model->type == gf::GF_EVT_MODEL_DRIVER) {
+  if (model != nullptr && model->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
     bool isDisp = (flags & FLAG_DISP_JIJI) != 0;
-    if (gf::GfObjAcc(model->handle).getBdatId() == 1 && model != nullptr) {
+    if (gf::GfObjAcc(model->unknown20).getBdatId() == 1 && model != nullptr) {
       static_cast<gf::GfEvtModelDriver *>(model)->setDispJiji(isDisp);
     }
   }

@@ -24,10 +24,10 @@ public:
   bool isOtherMap() const;
 
   u8 _08[0x18 - 0x08];
-  AFieldLocator *locator;
+  AFieldLocator *unknown18; // Inferred role: locator; original member name unknown.
 };
 
-static_assert(offsetof(GfFieldLocator, locator) == 0x18, "");
+static_assert(offsetof(GfFieldLocator, unknown18) == 0x18, "");
 static_assert(sizeof(GfFieldLocator) == 0x20, "");
 
 } // namespace gf

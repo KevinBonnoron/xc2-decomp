@@ -144,7 +144,7 @@ void GfGameSpeed::build(const GfSetupParam &param) {
   // __LINE__ must be 347 as in the original file: its value changes the instruction order.
 #line 347
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameSpeed(param);
-  setGlobalSpeed(param.globalSpeed);
+  setGlobalSpeed(param.unknown20);
 }
 
 void GfGameSpeed::setGlobalSpeed(f32 speed) { get()->setSpeed(GF_SPEED_GLOBAL, speed); }
@@ -460,13 +460,13 @@ void GfGameEnv::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
   switch (event) {
   case GEV_MAPJUMP_START:
     gameEnv->unknown08 = true;
-    gameEnv->unknown0a = info.isWithSaveData;
+    gameEnv->unknown0a = info.unknown0c;
     break;
   case GEV_MAPJUMP_DESTROY_FIELD:
     gameEnv->unknown09 = true;
     break;
   case GEV_MAPJUMP_CREATE_FIELD:
-    gameEnv->unknown14 = info.jumpType == MAPJUMP_TYPE_SAVE_DATA ? 0.0f : STOP_ENEMY_SEARCH_SEC;
+    gameEnv->unknown14 = info.unknown10 == MAPJUMP_TYPE_SAVE_DATA ? 0.0f : STOP_ENEMY_SEARCH_SEC;
     break;
   case GEV_MAPJUMP_FADEIN:
     gameEnv->unknown08 = false;

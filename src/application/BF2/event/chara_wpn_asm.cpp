@@ -16,7 +16,7 @@ void CharaWpnAsm::clear() {
 }
 
 bool CharaWpnAsm::isPlayEnd(gf::GfEvtModel *model, bool isLeft) {
-  switch (model->type) {
+  switch (model->unknown18) {
   case gf::GF_EVT_MODEL_WEAPON:
     if (!static_cast<gf::GfEvtModelWeapon *>(model)->isPlayEndAnimCS()) {
       return false;
@@ -47,7 +47,7 @@ bool CharaWpnAsm::isPlayEnd(gf::GfEvtModel *model, bool isLeft) {
 }
 
 void CharaWpnAsm::setSpeed(gf::GfEvtModel *model, f32 speed, bool isLeft) {
-  switch (model->type) {
+  switch (model->unknown18) {
   case gf::GF_EVT_MODEL_WEAPON:
     static_cast<gf::GfEvtModelWeapon *>(model)->setAnimSpeedCS(speed);
     break;
@@ -85,11 +85,11 @@ void CharaWpnAsm::mount(gf::GfEvtModel *model, bool isMount, bool isLeft) {
 }
 
 void CharaWpnAsm::execCmd(gf::GfEvtModel *model, CMD cmd, bool isLeft, void *data) {
-  if (model->type == gf::GF_EVT_MODEL_DRIVER) {
+  if (model->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
     if ((flags & FLAG_MOUNT) == 0) {
       return;
     }
-  } else if (model->type == gf::GF_EVT_MODEL_BLADE) {
+  } else if (model->unknown18 == gf::GF_EVT_MODEL_BLADE) {
     if ((flags & FLAG_MOUNT) == 0) {
       return;
     }

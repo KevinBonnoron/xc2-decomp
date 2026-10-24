@@ -29,43 +29,43 @@ public:
   void setMenuBgmVolume(f32 volume);
   static u16 getU16Volume(f32 volume);
 
-  f32 getEventVoiceVolume() const { return eventVoiceVolume; }
-  f32 getEventCsVolume() const { return eventCsVolume; }
-  f32 getEventBgmVolume() const { return eventBgmVolume; }
-  f32 getEventSeVolume() const { return eventSeVolume; }
-  f32 getGameBgmVolume() const { return gameBgmVolume; }
-  f32 getGameEnvVolume() const { return gameEnvVolume; }
-  f32 getGameWeatherVolume() const { return gameWeatherVolume; }
-  f32 getGameSeVolume() const { return gameSeVolume; }
-  f32 getPlayerVoiceVolume() const { return playerVoiceVolume; }
-  f32 getEnemyVoiceVolume() const { return enemyVoiceVolume; }
-  f32 getNareVoiceVolume() const { return nareVoiceVolume; }
-  f32 getSystemVolume() const { return systemVolume; }
-  f32 getMenuBgmVolume() const { return menuBgmVolume; }
+  f32 getEventVoiceVolume() const { return unknown08; }
+  f32 getEventCsVolume() const { return unknown0c; }
+  f32 getEventBgmVolume() const { return unknown10; }
+  f32 getEventSeVolume() const { return unknown14; }
+  f32 getGameBgmVolume() const { return unknown18; }
+  f32 getGameEnvVolume() const { return unknown1c; }
+  f32 getGameWeatherVolume() const { return unknown20; }
+  f32 getGameSeVolume() const { return unknown24; }
+  f32 getPlayerVoiceVolume() const { return unknown28; }
+  f32 getEnemyVoiceVolume() const { return unknown2c; }
+  f32 getNareVoiceVolume() const { return unknown30; }
+  f32 getSystemVolume() const { return unknown34; }
+  f32 getMenuBgmVolume() const { return unknown38; }
 
 private:
-  GF_SE_CATEGORY_HANDLE *categoryHandle;
-  f32 eventVoiceVolume;
-  f32 eventCsVolume;
-  f32 eventBgmVolume;
-  f32 eventSeVolume;
-  f32 gameBgmVolume;
-  f32 gameEnvVolume;
-  f32 gameWeatherVolume;
-  f32 gameSeVolume;
-  f32 playerVoiceVolume;
-  f32 enemyVoiceVolume;
-  f32 nareVoiceVolume;
-  f32 systemVolume;
-  f32 menuBgmVolume;
+  GF_SE_CATEGORY_HANDLE *unknown00; // Inferred role: category handle; original member name unknown.
+  f32 unknown08;                    // Inferred role: event voice volume; original member name unknown.
+  f32 unknown0c;                    // Inferred role: event cs volume; original member name unknown.
+  f32 unknown10;                    // Inferred role: event bgm volume; original member name unknown.
+  f32 unknown14;                    // Inferred role: event se volume; original member name unknown.
+  f32 unknown18;                    // Inferred role: game bgm volume; original member name unknown.
+  f32 unknown1c;                    // Inferred role: game env volume; original member name unknown.
+  f32 unknown20;                    // Inferred role: game weather volume; original member name unknown.
+  f32 unknown24;                    // Inferred role: game se volume; original member name unknown.
+  f32 unknown28;                    // Inferred role: player voice volume; original member name unknown.
+  f32 unknown2c;                    // Inferred role: enemy voice volume; original member name unknown.
+  f32 unknown30;                    // Inferred role: nare voice volume; original member name unknown.
+  f32 unknown34;                    // Inferred role: system volume; original member name unknown.
+  f32 unknown38;                    // Inferred role: menu bgm volume; original member name unknown.
 
   friend struct GfMasterVolumeLayout;
 };
 
 struct GfMasterVolumeLayout {
-  static_assert(offsetof(GfMasterVolume, eventVoiceVolume) == 0x08, "");
-  static_assert(offsetof(GfMasterVolume, gameBgmVolume) == 0x18, "");
-  static_assert(offsetof(GfMasterVolume, menuBgmVolume) == 0x38, "");
+  static_assert(offsetof(GfMasterVolume, unknown08) == 0x08, "");
+  static_assert(offsetof(GfMasterVolume, unknown18) == 0x18, "");
+  static_assert(offsetof(GfMasterVolume, unknown38) == 0x38, "");
 };
 
 static_assert(sizeof(GfMasterVolume) == 0x40, "");

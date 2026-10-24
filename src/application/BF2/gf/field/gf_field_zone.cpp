@@ -5,12 +5,12 @@
 
 namespace gf {
 
-GfFieldZone::GfFieldZone(const GfSetupParam &param) : mInitialized(false) { initialize(param); }
+GfFieldZone::GfFieldZone(const GfSetupParam &param) : unknown98(false) { initialize(param); }
 
 void GfFieldZone::initialize(const GfSetupParam &param) {
   GfFieldZoneSe::build(param);
   GfFieldZoneScript::build(param);
-  mInitialized = true;
+  unknown98 = true;
 }
 
 GfFieldZone::~GfFieldZone() {}
@@ -26,12 +26,12 @@ void GfFieldZone::destroy() {
 void GfFieldZone::finalize() {
   GfFieldZoneScript::destroy();
   GfFieldZoneSe::destroy();
-  mInitialized = false;
+  unknown98 = false;
 }
 
 bool GfFieldZone::isInitialized() {
   if (get() != nullptr) {
-    return get()->mInitialized;
+    return get()->unknown98;
   }
 
   return false;

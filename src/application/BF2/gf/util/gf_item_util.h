@@ -9,18 +9,18 @@ namespace gf {
 
 struct ItemPrice {
   void clear() {
-    price = 0;
-    buyPrice = 0;
-    sellPrice = 0;
-    buyDevelop = 0;
-    sellDevelop = 0;
+    unknown00 = 0;
+    unknown04 = 0;
+    unknown08 = 0;
+    unknown0c = 0;
+    unknown10 = 0;
   }
 
-  u32 price;
-  u32 buyPrice;
-  u32 sellPrice;
-  u32 buyDevelop;
-  u32 sellDevelop;
+  u32 unknown00; // Inferred role: price; original member name unknown.
+  u32 unknown04; // Inferred role: buy price; original member name unknown.
+  u32 unknown08; // Inferred role: sell price; original member name unknown.
+  u32 unknown0c; // Inferred role: buy develop; original member name unknown.
+  u32 unknown10; // Inferred role: sell develop; original member name unknown.
 };
 
 static_assert(sizeof(ItemPrice) == 0x14, "");
@@ -36,139 +36,139 @@ struct ItemProperty {
 
   void clear() {
     static const char *szNull = "";
-    flags.clear();
-    id = 0;
-    index = 0;
-    type = ItemType::NONE;
-    count = 0;
+    unknown00.clear();
+    unknown04 = 0;
+    unknown06 = 0;
+    unknown08 = ItemType::NONE;
+    unknown0c = 0;
     _0e = 0;
-    enableStock = 0;
-    zone = 0;
-    debugName = szNull;
-    bdat = nullptr;
-    nameTextId = 0;
-    captionTextId = 0;
-    price.clear();
-    rarity = 0;
-    boosterCategory = 0;
-    boosterIdea = 0;
+    unknown10 = 0;
+    unknown12 = 0;
+    unknown18 = szNull;
+    unknown20 = nullptr;
+    unknown28 = 0;
+    unknown2c = 0;
+    unknown30.clear();
+    unknown44 = 0;
+    unknown45 = 0;
+    unknown46 = 0;
     _48 = 0;
-    enhance = 0;
-    enhanceCategory = 0;
-    collectionCategory = 0;
-    favoriteCategory = 0;
-    favoriteType = 0;
-    favoriteTime = 0;
-    recipe = 0;
-    equipItem = 0;
-    preciousCategory = 0;
-    preciousType = 0;
+    unknown4a = 0;
+    unknown4c = 0;
+    unknown4d = 0;
+    unknown4e = 0;
+    unknown50 = 0;
+    unknown52 = 0;
+    unknown54 = 0;
+    unknown56 = 0;
+    unknown58 = 0;
+    unknown5a = 0;
     _5c = 0;
-    tresureCategory = 0;
-    tresureGraphic = 0;
-    tresureFlag = 0;
+    unknown5d = 0;
+    unknown5e = 0;
+    unknown60 = 0;
     _62 = 0;
-    chipRank = 0;
-    icon = 0;
-    needEther = 0;
-    dustEther = 0;
-    condition = 0;
-    nArts = 0;
-    hanaAttribute = 0;
-    hanaRole = 0;
-    pArmor = 0;
-    eArmor = 0;
-    hpMaxRev = 0;
-    strengthRev = 0;
-    powEtherRev = 0;
-    dexRev = 0;
-    agilityRev = 0;
-    luckRev = 0;
+    unknown64 = 0;
+    unknown65 = 0;
+    unknown68 = 0;
+    unknown6c = 0;
+    unknown70 = 0;
+    unknown72 = 0;
+    unknown74 = 0;
+    unknown75 = 0;
+    unknown76 = 0;
+    unknown77 = 0;
+    unknown78 = 0;
+    unknown79 = 0;
+    unknown7a = 0;
+    unknown7b = 0;
+    unknown7c = 0;
+    unknown7d = 0;
     _7e = 0;
   }
 
-  mm::mtl::BitFlag<32> flags;
-  u16 id;
-  u16 index;
-  ItemType::Type type;
-  u16 count;
+  mm::mtl::BitFlag<32> unknown00; // Inferred role: flags; original member name unknown.
+  u16 unknown04;                  // Inferred role: id; original member name unknown.
+  u16 unknown06;                  // Inferred role: index; original member name unknown.
+  ItemType::Type unknown08;       // Inferred role: type; original member name unknown.
+  u16 unknown0c;                  // Inferred role: count; original member name unknown.
   u16 _0e;
-  u16 enableStock;
-  u16 zone;
-  u32 time;
-  const char *debugName;
-  u8 *bdat;
-  u32 nameTextId;
-  u32 captionTextId;
-  ItemPrice price;
-  u8 rarity;
-  u8 boosterCategory;
-  s8 boosterIdea;
+  u16 unknown10;         // Inferred role: enable stock; original member name unknown.
+  u16 unknown12;         // Inferred role: zone; original member name unknown.
+  u32 unknown14;         // Inferred role: time; original member name unknown.
+  const char *unknown18; // Inferred role: debug name; original member name unknown.
+  u8 *unknown20;         // Inferred role: bdat; original member name unknown.
+  u32 unknown28;         // Inferred role: name text id; original member name unknown.
+  u32 unknown2c;         // Inferred role: caption text id; original member name unknown.
+  ItemPrice unknown30;   // Inferred role: price; original member name unknown.
+  u8 unknown44;          // Inferred role: rarity; original member name unknown.
+  u8 unknown45;          // Inferred role: booster category; original member name unknown.
+  s8 unknown46;          // Inferred role: booster idea; original member name unknown.
   u8 _47[0x48 - 0x47];
   u16 _48;
-  u16 enhance;
-  u8 enhanceCategory;
-  u8 collectionCategory;
-  u8 favoriteCategory;
+  u16 unknown4a; // Inferred role: enhance; original member name unknown.
+  u8 unknown4c;  // Inferred role: enhance category; original member name unknown.
+  u8 unknown4d;  // Inferred role: collection category; original member name unknown.
+  u8 unknown4e;  // Inferred role: favorite category; original member name unknown.
   u8 _4f[0x50 - 0x4f];
-  u16 favoriteType;
-  u16 favoriteTime;
-  u16 recipe;
-  u16 equipItem;
-  u16 preciousCategory;
-  u16 preciousType;
+  u16 unknown50; // Inferred role: favorite type; original member name unknown.
+  u16 unknown52; // Inferred role: favorite time; original member name unknown.
+  u16 unknown54; // Inferred role: recipe; original member name unknown.
+  u16 unknown56; // Inferred role: equip item; original member name unknown.
+  u16 unknown58; // Inferred role: precious category; original member name unknown.
+  u16 unknown5a; // Inferred role: precious type; original member name unknown.
   u8 _5c;
-  u8 tresureCategory;
-  u16 tresureGraphic;
-  u16 tresureFlag;
+  u8 unknown5d;  // Inferred role: tresure category; original member name unknown.
+  u16 unknown5e; // Inferred role: tresure graphic; original member name unknown.
+  u16 unknown60; // Inferred role: tresure flag; original member name unknown.
   u16 _62;
-  u8 chipRank;
-  u8 icon;
+  u8 unknown64; // Inferred role: chip rank; original member name unknown.
+  u8 unknown65; // Inferred role: icon; original member name unknown.
   u8 _66[0x68 - 0x66];
-  u32 needEther;
-  u32 dustEther;
-  u16 condition;
-  u16 nArts;
-  u8 hanaAttribute;
-  u8 hanaRole;
-  u8 pArmor;
-  u8 eArmor;
-  u8 hpMaxRev;
-  u8 strengthRev;
-  u8 powEtherRev;
-  u8 dexRev;
-  u8 agilityRev;
-  u8 luckRev;
+  u32 unknown68; // Inferred role: need ether; original member name unknown.
+  u32 unknown6c; // Inferred role: dust ether; original member name unknown.
+  u16 unknown70; // Inferred role: condition; original member name unknown.
+  u16 unknown72; // Inferred role: n arts; original member name unknown.
+  u8 unknown74;  // Inferred role: hana attribute; original member name unknown.
+  u8 unknown75;  // Inferred role: hana role; original member name unknown.
+  u8 unknown76;  // Inferred role: p armor; original member name unknown.
+  u8 unknown77;  // Inferred role: e armor; original member name unknown.
+  u8 unknown78;  // Inferred role: hp max rev; original member name unknown.
+  u8 unknown79;  // Inferred role: strength rev; original member name unknown.
+  u8 unknown7a;  // Inferred role: pow ether rev; original member name unknown.
+  u8 unknown7b;  // Inferred role: dex rev; original member name unknown.
+  u8 unknown7c;  // Inferred role: agility rev; original member name unknown.
+  u8 unknown7d;  // Inferred role: luck rev; original member name unknown.
   u16 _7e;
 };
 
-static_assert(offsetof(ItemProperty, id) == 0x04, "");
-static_assert(offsetof(ItemProperty, type) == 0x08, "");
-static_assert(offsetof(ItemProperty, enableStock) == 0x10, "");
-static_assert(offsetof(ItemProperty, time) == 0x14, "");
-static_assert(offsetof(ItemProperty, debugName) == 0x18, "");
-static_assert(offsetof(ItemProperty, price) == 0x30, "");
-static_assert(offsetof(ItemProperty, rarity) == 0x44, "");
-static_assert(offsetof(ItemProperty, enhance) == 0x4a, "");
-static_assert(offsetof(ItemProperty, favoriteType) == 0x50, "");
-static_assert(offsetof(ItemProperty, tresureCategory) == 0x5d, "");
-static_assert(offsetof(ItemProperty, chipRank) == 0x64, "");
-static_assert(offsetof(ItemProperty, needEther) == 0x68, "");
-static_assert(offsetof(ItemProperty, hanaAttribute) == 0x74, "");
-static_assert(offsetof(ItemProperty, luckRev) == 0x7d, "");
+static_assert(offsetof(ItemProperty, unknown04) == 0x04, "");
+static_assert(offsetof(ItemProperty, unknown08) == 0x08, "");
+static_assert(offsetof(ItemProperty, unknown10) == 0x10, "");
+static_assert(offsetof(ItemProperty, unknown14) == 0x14, "");
+static_assert(offsetof(ItemProperty, unknown18) == 0x18, "");
+static_assert(offsetof(ItemProperty, unknown30) == 0x30, "");
+static_assert(offsetof(ItemProperty, unknown44) == 0x44, "");
+static_assert(offsetof(ItemProperty, unknown4a) == 0x4a, "");
+static_assert(offsetof(ItemProperty, unknown50) == 0x50, "");
+static_assert(offsetof(ItemProperty, unknown5d) == 0x5d, "");
+static_assert(offsetof(ItemProperty, unknown64) == 0x64, "");
+static_assert(offsetof(ItemProperty, unknown68) == 0x68, "");
+static_assert(offsetof(ItemProperty, unknown74) == 0x74, "");
+static_assert(offsetof(ItemProperty, unknown7d) == 0x7d, "");
 static_assert(sizeof(ItemProperty) == 0x80, "");
 
 struct GfItem {
-  GfItem() : id(0), count(0), character(0), handle(0) {}
+  GfItem() : unknown00(0), unknown02(0), unknown04(0), unknown08(0) {}
 
-  u16 id;
-  u16 count;
-  u16 character;
-  GfItemHandle handle;
+  u16 unknown00;          // Inferred role: id; original member name unknown.
+  u16 unknown02;          // Inferred role: count; original member name unknown.
+  u16 unknown04;          // Inferred role: character; original member name unknown.
+  GfItemHandle unknown08; // Inferred role: handle; original member name unknown.
 };
 
-static_assert(offsetof(GfItem, character) == 0x04, "");
-static_assert(offsetof(GfItem, handle) == 0x08, "");
+static_assert(offsetof(GfItem, unknown04) == 0x04, "");
+static_assert(offsetof(GfItem, unknown08) == 0x08, "");
 static_assert(sizeof(GfItem) == 0x0c, "");
 
 class GfItemUtil {

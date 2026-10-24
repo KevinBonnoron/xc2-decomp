@@ -76,23 +76,23 @@ enum {
 };
 
 struct MapjumpCallbackInfo {
-  u32 mapJumpId;
-  u32 map;
-  u32 prevMap;
-  bool isWithSaveData;
-  u32 jumpType;
+  u32 unknown00;  // Inferred role: map jump id; original member name unknown.
+  u32 unknown04;  // Inferred role: map; original member name unknown.
+  u32 unknown08;  // Inferred role: prev map; original member name unknown.
+  bool unknown0c; // Inferred role: with save data; original member name unknown.
+  u32 unknown10;  // Inferred role: jump type; original member name unknown.
 };
 
 static_assert(sizeof(MapjumpCallbackInfo) == 0x14, "");
 
 struct GfAchievementRelease {
-  u16 blade;
-  u16 level;
-  u32 achievementType;
+  u16 unknown00; // Inferred role: blade; original member name unknown.
+  u16 unknown02; // Inferred role: level; original member name unknown.
+  u32 unknown04; // Inferred role: achievement type; original member name unknown.
 };
 
-static_assert(offsetof(GfAchievementRelease, level) == 0x02, "");
-static_assert(offsetof(GfAchievementRelease, achievementType) == 0x04, "");
+static_assert(offsetof(GfAchievementRelease, unknown02) == 0x02, "");
+static_assert(offsetof(GfAchievementRelease, unknown04) == 0x04, "");
 static_assert(sizeof(GfAchievementRelease) == 0x08, "");
 
 class IGfEvent {
@@ -217,14 +217,14 @@ public:
 
   static void callLayerPause(u32 layer, bool isPause) {
     GfEvent *gfEvent = get();
-    for (size_t i = 0; i < gfEvent->callbacks.size(); i++) {
-      gfEvent->callbacks[i]->gevLayerPause(layer, isPause);
+    for (size_t i = 0; i < gfEvent->unknown08.size(); i++) {
+      gfEvent->unknown08[i]->gevLayerPause(layer, isPause);
     }
   }
 
 private:
-  mm::mtl::FixedQueue<IGfEvent *, CALLBACK_MAX> callbacks;
-  bool initialized;
+  mm::mtl::FixedQueue<IGfEvent *, CALLBACK_MAX> unknown08; // Inferred role: callbacks; original member name unknown.
+  bool unknown118;                                         // Inferred role: initialized; original member name unknown.
 };
 
 static_assert(sizeof(GfEvent) == 0x120, "");

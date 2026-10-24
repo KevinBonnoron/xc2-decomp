@@ -78,16 +78,16 @@ public:
   static void update(const fw::UpdateInfo &info);
 
 private:
-  bool mInitialized;
-  bool mIsInfiniteTime;
+  bool unknown08; // Inferred role: m initialized; original member name unknown.
+  bool unknown09; // Inferred role: m is infinite time; original member name unknown.
   u8 _0a[0x10 - 0x0a];
-  mm::mtl::FixedQueue<GEV, 16> mEvents;
-  MapjumpCallbackInfo mMapjumpInfo;
+  mm::mtl::FixedQueue<GEV, 16> unknown10; // Inferred role: m events; original member name unknown.
+  MapjumpCallbackInfo unknown60;          // Inferred role: m mapjump info; original member name unknown.
   u8 _74[0x78 - 0x74];
-  CLOUD_SEA_HANDLE mCloudSeaDefault;
-  CLOUD_SEA_REQUEST mCloudSeaRequest;
-  CLOUD_SEA_HANDLE mCloudSeaCondition;
-  bool mIsDispWeather;
+  CLOUD_SEA_HANDLE unknown78;  // Inferred role: m cloud sea default; original member name unknown.
+  CLOUD_SEA_REQUEST unknown7c; // Inferred role: m cloud sea request; original member name unknown.
+  CLOUD_SEA_HANDLE unknown80;  // Inferred role: m cloud sea condition; original member name unknown.
+  bool unknown84;              // Inferred role: m is disp weather; original member name unknown.
 };
 
 static_assert(sizeof(GfFieldWeather) == 0x88, "");

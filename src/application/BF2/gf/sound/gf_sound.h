@@ -60,12 +60,12 @@ enum SOUND_TRANSFORM {
 
 struct SoundParam {
   SoundParam() {
-    volume = 1.0f;
-    category = 0;
-    transform = SOUND_TRANSFORM_NONE;
-    seInfo = SEINFO_SEARCH;
-    handle = INVALID_HANDLE;
-    id = 0;
+    unknown28 = 1.0f;
+    unknown38 = 0;
+    unknown39 = SOUND_TRANSFORM_NONE;
+    unknown3a = SEINFO_SEARCH;
+    unknown30 = INVALID_HANDLE;
+    unknown00 = 0;
   }
 
   void clear();
@@ -73,23 +73,23 @@ struct SoundParam {
   void setupTransformObj(GF_OBJ_HANDLE *handle, const mm::Vec3 &offset);
   void setupTransformBone(GF_OBJ_HANDLE *handle, const char *bone, const mm::Vec3 &offset);
 
-  u32 id;
-  mm::mtl::FixStr<32> name;
-  f32 volume;
-  GF_OBJ_HANDLE *handle;
-  u8 category;
-  u8 transform;
-  u8 seInfo;
-  mm::Vec3 position;
-  const char *bone;
+  u32 unknown00;                 // Inferred role: id; original member name unknown.
+  mm::mtl::FixStr<32> unknown04; // Inferred role: name; original member name unknown.
+  f32 unknown28;                 // Inferred role: volume; original member name unknown.
+  GF_OBJ_HANDLE *unknown30;      // Inferred role: handle; original member name unknown.
+  u8 unknown38;                  // Inferred role: category; original member name unknown.
+  u8 unknown39;                  // Inferred role: transform; original member name unknown.
+  u8 unknown3a;                  // Inferred role: se info; original member name unknown.
+  mm::Vec3 unknown40;            // Inferred role: position; original member name unknown.
+  const char *unknown50;         // Inferred role: bone; original member name unknown.
 };
 
-static_assert(offsetof(SoundParam, name) == 0x04, "");
-static_assert(offsetof(SoundParam, volume) == 0x28, "");
-static_assert(offsetof(SoundParam, handle) == 0x30, "");
-static_assert(offsetof(SoundParam, category) == 0x38, "");
-static_assert(offsetof(SoundParam, position) == 0x40, "");
-static_assert(offsetof(SoundParam, bone) == 0x50, "");
+static_assert(offsetof(SoundParam, unknown04) == 0x04, "");
+static_assert(offsetof(SoundParam, unknown28) == 0x28, "");
+static_assert(offsetof(SoundParam, unknown30) == 0x30, "");
+static_assert(offsetof(SoundParam, unknown38) == 0x38, "");
+static_assert(offsetof(SoundParam, unknown40) == 0x40, "");
+static_assert(offsetof(SoundParam, unknown50) == 0x50, "");
 
 class SoundHandle {
 public:
@@ -98,8 +98,8 @@ public:
   SoundHandle(u32 handle);
   bool isValid() const;
 
-  u32 handle;
-  u32 seParam;
+  u32 unknown00; // Inferred role: handle; original member name unknown.
+  u32 unknown04; // Inferred role: se param; original member name unknown.
 };
 
 static_assert(sizeof(SoundHandle) == 0x08, "");
@@ -113,45 +113,45 @@ public:
   struct SeParam {
     void clear();
 
-    u8 seInfo;
-    u8 category;
-    bool isLoop;
-    u8 pauseBits;
-    GF_OBJ_HANDLE *handle;
-    SoundHandle soundHandle;
+    u8 unknown00;             // Inferred role: se info; original member name unknown.
+    u8 unknown01;             // Inferred role: category; original member name unknown.
+    bool unknown02;           // Inferred role: loop; original member name unknown.
+    u8 unknown03;             // Inferred role: pause bits; original member name unknown.
+    GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+    SoundHandle unknown10;    // Inferred role: sound handle; original member name unknown.
   };
 
   struct CategoryVolume {
     struct Volume {
-      Volume() : current(1.0f), target(1.0f), start(1.0f), duration(0.0f), time(0.0f) {}
+      Volume() : unknown00(1.0f), unknown04(1.0f), unknown08(1.0f), unknown0c(0.0f), unknown10(0.0f) {}
 
       void clear() {
-        current = 1.0f;
-        target = 1.0f;
-        start = 1.0f;
-        duration = 0.0f;
-        time = 0.0f;
+        unknown00 = 1.0f;
+        unknown04 = 1.0f;
+        unknown08 = 1.0f;
+        unknown0c = 0.0f;
+        unknown10 = 0.0f;
       }
 
       void set(f32 volume, f32 fadeTime) {
-        time = fadeTime;
-        duration = fadeTime;
-        start = current;
-        target = volume;
+        unknown10 = fadeTime;
+        unknown0c = fadeTime;
+        unknown08 = unknown00;
+        unknown04 = volume;
       }
 
-      f32 current;
-      f32 target;
-      f32 start;
-      f32 duration;
-      f32 time;
+      f32 unknown00; // Inferred role: current; original member name unknown.
+      f32 unknown04; // Inferred role: target; original member name unknown.
+      f32 unknown08; // Inferred role: start; original member name unknown.
+      f32 unknown0c; // Inferred role: duration; original member name unknown.
+      f32 unknown10; // Inferred role: time; original member name unknown.
     };
 
     CategoryVolume();
 
-    Volume volumes[CATEGORY_NUM];
-    int index;
-    bool isChanged;
+    Volume unknown00[CATEGORY_NUM]; // Inferred role: volumes; original member name unknown.
+    int unknown168;                 // Inferred role: index; original member name unknown.
+    bool unknown16c;                // Inferred role: changed; original member name unknown.
   };
 
   GfSound(const GfSetupParam &param);
@@ -200,21 +200,21 @@ public:
   void setPauseGameWeatherSe(bool isPause);
   void setPauseEventSe(bool isPause);
 
-  bool initialized;
-  bool isReleased;
-  u64 handleSerial;
-  mm::mtl::FixedArray<CategoryVolume, CATEGORY_VOLUME_NUM> categoryVolumes;
+  bool unknown10;                                                     // Inferred role: initialized; original member name unknown.
+  bool unknown11;                                                     // Inferred role: released; original member name unknown.
+  u64 unknown18;                                                      // Inferred role: handle serial; original member name unknown.
+  mm::mtl::FixedArray<CategoryVolume, CATEGORY_VOLUME_NUM> unknown20; // Inferred role: category volumes; original member name unknown.
   u8 _2e20[0x6690 - 0x2e20];
-  GfMasterVolume masterVolume;
-  GF_SE_CATEGORY_HANDLE *categoryHandle;
+  GfMasterVolume unknown6690;         // Inferred role: master volume; original member name unknown.
+  GF_SE_CATEGORY_HANDLE *unknown66d0; // Inferred role: category handle; original member name unknown.
 };
 
 static_assert(sizeof(GfSound::SeParam) == 0x18, "");
 static_assert(sizeof(GfSound::CategoryVolume) == 0x170, "");
-static_assert(offsetof(GfSound, initialized) == 0x10, "");
-static_assert(offsetof(GfSound, categoryVolumes) == 0x20, "");
-static_assert(offsetof(GfSound, masterVolume) == 0x6690, "");
-static_assert(offsetof(GfSound, categoryHandle) == 0x66d0, "");
+static_assert(offsetof(GfSound, unknown10) == 0x10, "");
+static_assert(offsetof(GfSound, unknown20) == 0x20, "");
+static_assert(offsetof(GfSound, unknown6690) == 0x6690, "");
+static_assert(offsetof(GfSound, unknown66d0) == 0x66d0, "");
 static_assert(sizeof(GfSound) == 0x66d8, "");
 
 void bindGFSoundSource();

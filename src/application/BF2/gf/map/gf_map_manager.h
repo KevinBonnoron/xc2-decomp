@@ -35,58 +35,58 @@ const GfFileIdx MAP_FILE_IDX_COLLISION = static_cast<GfFileIdx>(1);
 
 class MapEff {
 public:
-  MapEff() : isInitialized(false), effectPack(nullptr) {}
+  MapEff() : unknown00(false), unknown08(nullptr) {}
   ~MapEff();
   void create(GF_ASSET_HANDLE *handle, fw::ModelObject *model);
   void destroy();
   void destroyEffefct();
   void update(const fw::UpdateInfo &info);
 
-  bool isInitialized;
-  fw::EffectPack *effectPack;
+  bool unknown00;            // Inferred role: initialized; original member name unknown.
+  fw::EffectPack *unknown08; // Inferred role: effect pack; original member name unknown.
 };
 
 static_assert(sizeof(MapEff) == 0x10, "");
 
 class MapNavi {
 public:
-  MapNavi() : isCreated(false) {}
+  MapNavi() : unknown00(false) {}
   ~MapNavi();
   void create(GF_ASSET_HANDLE *handle);
   void destroy();
 
-  bool isCreated;
+  bool unknown00; // Inferred role: created; original member name unknown.
 };
 
 class MapColi {
 public:
-  MapColi() : coliObject(nullptr) {}
+  MapColi() : unknown00(nullptr) {}
   ~MapColi();
   void create(GF_ASSET_HANDLE *handle);
   void destroy();
 
-  fw::ColiObject *coliObject;
+  fw::ColiObject *unknown00; // Inferred role: coli object; original member name unknown.
 };
 
 class MapGIBL {
 public:
-  MapGIBL() : ibl(nullptr) {}
+  MapGIBL() : unknown00(nullptr) {}
   ~MapGIBL();
   void create(GF_ASSET_HANDLE *handle);
   void destroy();
   void setReferencePos(const mm::Vec3 &position);
 
-  ml::ScnObj *ibl;
+  ml::ScnObj *unknown00; // Inferred role: ibl; original member name unknown.
 };
 
 class MapLIBL {
 public:
-  MapLIBL() : ibl(nullptr) {}
+  MapLIBL() : unknown00(nullptr) {}
   ~MapLIBL();
   void create(GF_ASSET_HANDLE *handle);
   void destroy();
 
-  ml::ScnObj *ibl;
+  ml::ScnObj *unknown00; // Inferred role: ibl; original member name unknown.
 };
 
 class GfMapManager : public mm::mtl::PtrSingleton<GfMapManager>, public IGfObjListener, public IGfEvent {
@@ -137,30 +137,30 @@ public:
   void postUpdate(const fw::UpdateInfo &info);
   void update(const fw::UpdateInfo &info);
 
-  bool initialized;
-  GF_OBJ_HANDLE *mapHandle;
-  u32 mapJumpId;
-  u32 mapId;
-  GF_ASSET_HANDLE *assetHandle;
-  mm::mtl::IntrusivePtr<fw::DynamicWindResource> windResource;
-  MapEff effect;
-  MapNavi navi;
-  MapColi coli;
-  MapGIBL globalIbl;
-  MapLIBL localIbl;
+  bool unknown18;                                           // Inferred role: initialized; original member name unknown.
+  GF_OBJ_HANDLE *unknown20;                                 // Inferred role: map handle; original member name unknown.
+  u32 unknown28;                                            // Inferred role: map jump id; original member name unknown.
+  u32 unknown2c;                                            // Inferred role: map id; original member name unknown.
+  GF_ASSET_HANDLE *unknown30;                               // Inferred role: asset handle; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::DynamicWindResource> unknown38; // Inferred role: wind resource; original member name unknown.
+  MapEff unknown40;                                         // Inferred role: effect; original member name unknown.
+  MapNavi unknown50;                                        // Inferred role: navi; original member name unknown.
+  MapColi unknown58;                                        // Inferred role: coli; original member name unknown.
+  MapGIBL unknown60;                                        // Inferred role: global ibl; original member name unknown.
+  MapLIBL unknown68;                                        // Inferred role: local ibl; original member name unknown.
 };
 
-static_assert(offsetof(GfMapManager, initialized) == 0x18, "");
-static_assert(offsetof(GfMapManager, mapHandle) == 0x20, "");
-static_assert(offsetof(GfMapManager, mapJumpId) == 0x28, "");
-static_assert(offsetof(GfMapManager, mapId) == 0x2c, "");
-static_assert(offsetof(GfMapManager, assetHandle) == 0x30, "");
-static_assert(offsetof(GfMapManager, windResource) == 0x38, "");
-static_assert(offsetof(GfMapManager, effect) == 0x40, "");
-static_assert(offsetof(GfMapManager, navi) == 0x50, "");
-static_assert(offsetof(GfMapManager, coli) == 0x58, "");
-static_assert(offsetof(GfMapManager, globalIbl) == 0x60, "");
-static_assert(offsetof(GfMapManager, localIbl) == 0x68, "");
+static_assert(offsetof(GfMapManager, unknown18) == 0x18, "");
+static_assert(offsetof(GfMapManager, unknown20) == 0x20, "");
+static_assert(offsetof(GfMapManager, unknown28) == 0x28, "");
+static_assert(offsetof(GfMapManager, unknown2c) == 0x2c, "");
+static_assert(offsetof(GfMapManager, unknown30) == 0x30, "");
+static_assert(offsetof(GfMapManager, unknown38) == 0x38, "");
+static_assert(offsetof(GfMapManager, unknown40) == 0x40, "");
+static_assert(offsetof(GfMapManager, unknown50) == 0x50, "");
+static_assert(offsetof(GfMapManager, unknown58) == 0x58, "");
+static_assert(offsetof(GfMapManager, unknown60) == 0x60, "");
+static_assert(offsetof(GfMapManager, unknown68) == 0x68, "");
 static_assert(sizeof(GfMapManager) == 0x70, "");
 
 } // namespace gf

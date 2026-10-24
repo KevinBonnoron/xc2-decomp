@@ -18,7 +18,7 @@ constexpr u32 OBJ_ATTRIBUTE_TARGETABLE = 7;
 constexpr u16 COMMON_WINDOW_GRAVE = 0x33;
 const ml::FILE_PRIO GMK_TUTORIAL_FILE_PRIO = static_cast<ml::FILE_PRIO>(7);
 
-AFieldSeq::AFieldSeq(const GfSetupParam &) : handle(INVALID_HANDLE), sequence(nullptr), isEndSeq(false), isFsSucceeded(false) {}
+AFieldSeq::AFieldSeq(const GfSetupParam &) : unknown08(INVALID_HANDLE), unknown10(nullptr), m_end(false), unknown21(false) {}
 
 void AFieldSeq::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
   if (event == GEV_MAPJUMP_START) {
@@ -26,29 +26,29 @@ void AFieldSeq::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
   }
 }
 
-gmk::AGmkBase *AFieldSeq::findBindedGmk() const { return gmk::getBindedGmkInst(handle); }
+gmk::AGmkBase *AFieldSeq::findBindedGmk() const { return gmk::getBindedGmkInst(unknown08); }
 
 void AFieldSeq::create(GF_OBJ_HANDLE *handle) {
   dispose();
-  this->handle = handle;
-  sequence = &AFieldSeq::seqCheckFs;
+  this->unknown08 = handle;
+  unknown10 = &AFieldSeq::seqCheckFs;
 }
 
 void AFieldSeq::dispose() {
-  isEndSeq = false;
-  isFsSucceeded = false;
-  handle = INVALID_HANDLE;
-  sequence = nullptr;
+  m_end = false;
+  unknown21 = false;
+  unknown08 = INVALID_HANDLE;
+  unknown10 = nullptr;
 }
 
 void AFieldSeq::update(f32 deltaTime) {
-  if (handle != INVALID_HANDLE && sequence) {
-    (this->*sequence)(deltaTime);
+  if (unknown08 != INVALID_HANDLE && unknown10) {
+    (this->*unknown10)(deltaTime);
   }
 }
 
 void AFieldSeq::setTargetable(bool isTargetable) {
-  GfObj *obj = GfObjUtil::getObj(handle);
+  GfObj *obj = GfObjUtil::getObj(unknown08);
   if (obj != nullptr) {
     if (isTargetable) {
       obj->unknown110 |= OBJ_ATTRIBUTE_TARGETABLE;
@@ -59,7 +59,7 @@ void AFieldSeq::setTargetable(bool isTargetable) {
 }
 
 bool AFieldSeq::isTargetable() const {
-  GfObj *obj = GfObjUtil::getObj(handle);
+  GfObj *obj = GfObjUtil::getObj(unknown08);
   return obj != nullptr ? (obj->unknown110 >> 2) & 1 : false;
 }
 
@@ -68,8 +68,8 @@ void AFieldSeq::seqWaitUIEnd(f32) {
     return;
   }
 
-  if (isFsSucceeded) {
-    GfObjAcc acc(handle);
+  if (unknown21) {
+    GfObjAcc acc(unknown08);
     if (acc.isValid()) {
       GfComBehaviorGmk *behavior = acc.getObj()->getComponent<GfComBehaviorGmk>();
       if (behavior != nullptr) {
@@ -80,11 +80,11 @@ void AFieldSeq::seqWaitUIEnd(f32) {
   } else {
     onFsFailed();
   }
-  sequence = nullptr;
-  isEndSeq = true;
+  unknown10 = nullptr;
+  m_end = true;
 }
 
-GfFieldGrave::GfFieldGrave(const GfSetupParam &) : handle(INVALID_HANDLE), sequence(nullptr) {}
+GfFieldGrave::GfFieldGrave(const GfSetupParam &) : unknown10(INVALID_HANDLE), unknown20(nullptr) {}
 
 void GfFieldGrave::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
   if (event == GEV_MAPJUMP_START) {
@@ -94,23 +94,23 @@ void GfFieldGrave::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
 
 void GfFieldGrave::create(GF_OBJ_HANDLE *handle) {
   dispose();
-  this->handle = handle;
+  this->unknown10 = handle;
   GfMenuManager::openCommonWindow(COMMON_WINDOW_GRAVE);
-  sequence = &GfFieldGrave::seqWaitToSelect;
+  unknown20 = &GfFieldGrave::seqWaitToSelect;
 }
 
 void GfFieldGrave::dispose() {
   if (GfMenuManager::isOpenCommonWindow()) {
     GfMenuManager::closeCommonWindow();
   }
-  isEndSeq = false;
-  handle = INVALID_HANDLE;
-  sequence = nullptr;
+  m_end = false;
+  unknown10 = INVALID_HANDLE;
+  unknown20 = nullptr;
 }
 
 void GfFieldGrave::update(f32 deltaTime) {
-  if (sequence) {
-    (this->*sequence)(deltaTime);
+  if (unknown20) {
+    (this->*unknown20)(deltaTime);
   }
 }
 
@@ -127,19 +127,19 @@ void GfFieldGmkTutorial::destroy() {
 }
 
 void GfFieldGmkTutorial::dispose() {
-  tutorial = 0;
-  scriptName.clear();
+  unknown50 = 0;
+  unknown0c.clear();
 }
 
 void GfFieldGmkTutorial::create(const char *name, u32 tutorial) {
   dispose();
-  scriptName = name;
-  this->tutorial = tutorial;
-  fw::ScriptManager::get()->loadScript(scriptSlot, name, GMK_TUTORIAL_FILE_PRIO);
-  fw::ScriptManager::get()->scripts[scriptSlot].start();
+  unknown0c = name;
+  this->unknown50 = tutorial;
+  fw::ScriptManager::get()->loadScript(unknown08, name, GMK_TUTORIAL_FILE_PRIO);
+  fw::ScriptManager::get()->scripts[unknown08].start();
 }
 
-bool GfFieldGmkTutorial::isEnd() const { return fw::ScriptManager::get()->scripts[scriptSlot].isFinish(); }
+bool GfFieldGmkTutorial::isEnd() const { return fw::ScriptManager::get()->scripts[unknown08].isFinish(); }
 
 void GfFieldGmkTutorial::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
   if (event == GEV_MAPJUMP_START) {

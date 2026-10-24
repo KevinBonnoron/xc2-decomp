@@ -11,7 +11,7 @@ void CharaMount::init() {}
 
 void CharaMount::term() {
   if (model != nullptr && parent != nullptr) {
-    gf::GfComTransform *transform = gf::GfObjUtil::getObj(model->handle)->getComponent<gf::GfComTransform>();
+    gf::GfComTransform *transform = gf::GfObjUtil::getObj(model->unknown20)->getComponent<gf::GfComTransform>();
     model->resetMount(parent);
     transform->setPosition(position);
     transform->setRotation(rotation);

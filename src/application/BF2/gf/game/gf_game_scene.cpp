@@ -789,7 +789,7 @@ bool GfGameScene::isResetBladePlay() const {
 
 void GfGameScene::applyMapjumpForCleanup(const MapjumpCallbackInfo &info) {
   unknown130 = false;
-  if (info.map != info.prevMap && info.map != 0) {
+  if (info.unknown04 != info.unknown08 && info.unknown04 != 0) {
     m_forceBossBattleBgm = false;
     unknown132 = false;
     m_forceEventBgm = 0.0f;
@@ -818,7 +818,7 @@ void GfGameScene::applyMapjumpForStart(const MapjumpCallbackInfo &) {
 }
 
 void GfGameScene::applyMapjumpForEnd(const MapjumpCallbackInfo &info) {
-  SCOM_ZONE::create(info.map);
+  SCOM_ZONE::create(info.unknown04);
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
     sound->setCategoryVolume(unknown658, CATEGORY_GAME_WEATHER, 1.0f, 1.0f);

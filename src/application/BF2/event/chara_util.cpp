@@ -224,7 +224,7 @@ void CharaUtil::adjestPosY(mm::Vec3 &position, mm::Vec3 *reference) {
 }
 
 void CharaUtil::combat(gf::GfEvtModel *model, bool isBattle, bool isState) {
-  gf::GF_EVT_MODEL type = model->type;
+  gf::GF_EVT_MODEL type = model->unknown18;
   if (model != nullptr && type == gf::GF_EVT_MODEL_DRIVER) {
     setWeaponMode(model, isBattle, isState);
   } else if (model != nullptr && type == gf::GF_EVT_MODEL_BLADE) {

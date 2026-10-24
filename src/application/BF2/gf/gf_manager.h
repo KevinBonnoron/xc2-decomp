@@ -23,19 +23,19 @@ struct SDataOption;
 struct SDataSystem;
 
 struct GfSetupParam {
-  GfSetupParam() : scn(), _08(), _10(), memHandle(ml::MlMem::getProductMem()), slotMappingType(0), globalSpeed(1.0f), exec(EXEC_STATE_DEBUG) {}
+  GfSetupParam() : unknown00(), _08(), _10(), unknown18(ml::MlMem::getProductMem()), unknown1c(0), unknown20(1.0f), unknown24(EXEC_STATE_DEBUG) {}
 
-  ml::Scn *scn;
+  ml::Scn *unknown00; // Inferred role: scn; original member name unknown.
   u8 _08[0x10 - 0x08];
   u8 _10[0x18 - 0x10];
-  mtl::ALLOC_HANDLE memHandle;
-  u32 slotMappingType;
-  f32 globalSpeed;
-  EXEC_STATE exec;
+  mtl::ALLOC_HANDLE unknown18; // Inferred role: mem handle; original member name unknown.
+  u32 unknown1c;               // Inferred role: slot mapping type; original member name unknown.
+  f32 unknown20;               // Inferred role: global speed; original member name unknown.
+  EXEC_STATE unknown24;        // Inferred role: exec; original member name unknown.
 };
 
-static_assert(offsetof(GfSetupParam, memHandle) == 0x18, "");
-static_assert(offsetof(GfSetupParam, exec) == 0x24, "");
+static_assert(offsetof(GfSetupParam, unknown18) == 0x18, "");
+static_assert(offsetof(GfSetupParam, unknown24) == 0x24, "");
 static_assert(sizeof(GfSetupParam) == 0x28, "");
 
 void GfSleep(u32 frame);
@@ -88,24 +88,24 @@ public:
 
   static GfManager *s_pThis;
 
-  GfSetupParam setupParam;
-  bool initialized;
-  bool destroyNow;
-  EXEC_STATE exec;
-  u16 execFlags;
-  GAME_START gameStart;
-  u32 frameCount;
-  f32 loadGameTime;
-  bool existSaveData;
+  GfSetupParam unknown18; // Inferred role: setup param; original member name unknown.
+  bool unknown40;         // Inferred role: initialized; original member name unknown.
+  bool unknown41;         // Inferred role: destroy now; original member name unknown.
+  EXEC_STATE unknown44;   // Inferred role: exec; original member name unknown.
+  u16 unknown48;          // Inferred role: exec flags; original member name unknown.
+  GAME_START unknown4c;   // Inferred role: game start; original member name unknown.
+  u32 unknown50;          // Inferred role: frame count; original member name unknown.
+  f32 unknown54;          // Inferred role: load game time; original member name unknown.
+  bool unknown58;         // Inferred role: exist save data; original member name unknown.
 };
 
-static_assert(offsetof(GfManager, setupParam) == 0x18, "");
-static_assert(offsetof(GfManager, initialized) == 0x40, "");
-static_assert(offsetof(GfManager, exec) == 0x44, "");
-static_assert(offsetof(GfManager, execFlags) == 0x48, "");
-static_assert(offsetof(GfManager, gameStart) == 0x4c, "");
-static_assert(offsetof(GfManager, loadGameTime) == 0x54, "");
-static_assert(offsetof(GfManager, existSaveData) == 0x58, "");
+static_assert(offsetof(GfManager, unknown18) == 0x18, "");
+static_assert(offsetof(GfManager, unknown40) == 0x40, "");
+static_assert(offsetof(GfManager, unknown44) == 0x44, "");
+static_assert(offsetof(GfManager, unknown48) == 0x48, "");
+static_assert(offsetof(GfManager, unknown4c) == 0x4c, "");
+static_assert(offsetof(GfManager, unknown54) == 0x54, "");
+static_assert(offsetof(GfManager, unknown58) == 0x58, "");
 static_assert(sizeof(GfManager) == 0x60, "");
 
 } // namespace gf

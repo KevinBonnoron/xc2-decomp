@@ -65,19 +65,19 @@ ml::TimeCount s_loadGameTimer;
 
 } // namespace
 
-GfManager::GfManager(const GfSetupParam &param) : initialized(false), destroyNow(false), execFlags(0), gameStart(GAME_START_NONE), frameCount(0), loadGameTime(-1.0f), existSaveData(false) {
+GfManager::GfManager(const GfSetupParam &param) : unknown40(false), unknown41(false), unknown48(0), unknown4c(GAME_START_NONE), unknown50(0), unknown54(-1.0f), unknown58(false) {
   s_pThis = this;
-  setupParam = param;
-  exec = param.exec;
-  execFlags = EXEC_FLAGS[exec];
+  unknown18 = param;
+  unknown44 = param.unknown24;
+  unknown48 = EXEC_FLAGS[unknown44];
 }
 
 void GfManager::setExec(EXEC_STATE exec) {
   GfManager *manager = s_pThis;
   if (manager != nullptr) {
-    manager->exec = exec;
-    manager->execFlags = EXEC_FLAGS[exec];
-    if (manager->initialized) {
+    manager->unknown44 = exec;
+    manager->unknown48 = EXEC_FLAGS[exec];
+    if (manager->unknown40) {
       GfEvent::callExecState(exec);
     }
   }
@@ -97,35 +97,35 @@ void GfManager::build(const GfSetupParam &param) {
 
 void GfManager::initialize() {
   fw::Framework::addPauseCallback(this);
-  GfEvent::build(setupParam);
+  GfEvent::build(unknown18);
   createGfParameter();
   bindPadResources();
   bindGFSoundSource();
-  GfPause::build(setupParam);
-  GfInfo::build(setupParam);
-  GfMemManager::build(setupParam);
-  GfDataManager::build(setupParam);
-  GfScriptManager::build(setupParam);
-  GfReqManager::build(setupParam);
-  GfAssetManager::build(setupParam);
-  GfObjManager::build(setupParam);
-  GfSound::build(setupParam);
-  GfMapManager::build(setupParam);
-  GfGameManager::build(setupParam);
-  GfFieldManager::build(setupParam);
-  GfMenuManager::build(setupParam);
+  GfPause::build(unknown18);
+  GfInfo::build(unknown18);
+  GfMemManager::build(unknown18);
+  GfDataManager::build(unknown18);
+  GfScriptManager::build(unknown18);
+  GfReqManager::build(unknown18);
+  GfAssetManager::build(unknown18);
+  GfObjManager::build(unknown18);
+  GfSound::build(unknown18);
+  GfMapManager::build(unknown18);
+  GfGameManager::build(unknown18);
+  GfFieldManager::build(unknown18);
+  GfMenuManager::build(unknown18);
   GfGameManager::setState(GF_STATE_CONTROL, false);
-  GfMovieManager::build(setupParam);
+  GfMovieManager::build(unknown18);
   GfEvent::addEventCallback(this);
   while (!GfMenuManager::isInitialized()) {
     GfSleep(1);
   }
-  btl::BattleManager::build(setupParam);
-  initialized = true;
+  btl::BattleManager::build(unknown18);
+  unknown40 = true;
 }
 
 void GfManager::setupDeafult() {
-  s_pThis->gameStart = GAME_START_NONE;
+  s_pThis->unknown4c = GAME_START_NONE;
   GfDataManager::clear();
   GfAssetManager::clear();
   GfFieldManager::clear();
@@ -150,7 +150,7 @@ void GfManager::finalize() {
   while (!GfGameManager::isField()) {
     GfSleep(1);
   }
-  destroyNow = true;
+  unknown41 = true;
   GfReqCommand::reqDestroyGf();
   while (GfReqManager::isExistCommand(nullptr)) {
     GfSleep(1);
@@ -177,31 +177,31 @@ void GfManager::finalize() {
   destroyGfParameter();
   GfEvent::destroy();
   fw::Framework::removePauseCallback(this);
-  initialized = false;
+  unknown40 = false;
 }
 
 bool GfManager::isInitialized() {
   if (s_pThis != nullptr) {
-    return s_pThis->initialized;
+    return s_pThis->unknown40;
   }
   return false;
 }
 
 bool GfManager::isDestroyed() {
   if (s_pThis != nullptr) {
-    return s_pThis->initialized;
+    return s_pThis->unknown40;
   }
   return false;
 }
 
 bool GfManager::isDestroyNow() {
   if (s_pThis != nullptr) {
-    return s_pThis->destroyNow;
+    return s_pThis->unknown41;
   }
   return false;
 }
 
-GfSetupParam &GfManager::getSetupParam() { return s_pThis->setupParam; }
+GfSetupParam &GfManager::getSetupParam() { return s_pThis->unknown18; }
 
 void GfManager::updatePauseCallback() {
   if (s_pThis != nullptr) {
@@ -211,55 +211,55 @@ void GfManager::updatePauseCallback() {
 
 u32 GfManager::getFrameCount() {
   if (s_pThis != nullptr) {
-    return s_pThis->frameCount;
+    return s_pThis->unknown50;
   }
   return 0;
 }
 
 bool GfManager::isExecKillPartyCreate() {
   if (s_pThis != nullptr) {
-    return s_pThis->execFlags & EXEC_FLAG_KILL_PARTY_CREATE;
+    return s_pThis->unknown48 & EXEC_FLAG_KILL_PARTY_CREATE;
   }
   return false;
 }
 
 bool GfManager::isExecModeScenarioGame() {
   if (s_pThis != nullptr) {
-    return s_pThis->execFlags & EXEC_FLAG_SCENARIO_GAME;
+    return s_pThis->unknown48 & EXEC_FLAG_SCENARIO_GAME;
   }
   return false;
 }
 
 bool GfManager::isExecModeAdvertize() {
   if (s_pThis != nullptr) {
-    return s_pThis->execFlags & EXEC_FLAG_ADVERTIZE;
+    return s_pThis->unknown48 & EXEC_FLAG_ADVERTIZE;
   }
   return false;
 }
 
 bool GfManager::isExecModeTool() {
   if (s_pThis != nullptr) {
-    return s_pThis->exec == EXEC_STATE_TOOL;
+    return s_pThis->unknown44 == EXEC_STATE_TOOL;
   }
   return false;
 }
 
 bool GfManager::isExecModeDebug() {
   if (s_pThis != nullptr) {
-    return s_pThis->exec == EXEC_STATE_DEBUG;
+    return s_pThis->unknown44 == EXEC_STATE_DEBUG;
   }
   return false;
 }
 
 bool GfManager::isExecModeThater() {
   if (s_pThis != nullptr) {
-    return s_pThis->exec == EXEC_STATE_THEATER;
+    return s_pThis->unknown44 == EXEC_STATE_THEATER;
   }
   return false;
 }
 
 void GfManager::setupNewGame() {
-  s_pThis->gameStart = GAME_START_NEW;
+  s_pThis->unknown4c = GAME_START_NEW;
   GfGameParty::setupNewGameParty();
 }
 
@@ -270,7 +270,7 @@ void GfManager::setupPowerNewGame(const SDataSystem &, const SDataGame &dataGame
 }
 
 void GfManager::setupContinueGame(const SDataSystem &dataSystem, const SDataGame &dataGame, const SDataOption &dataOption) {
-  s_pThis->gameStart = GAME_START_CONTINUE;
+  s_pThis->unknown4c = GAME_START_CONTINUE;
   GfDataManager::clear();
   GfAssetManager::clear();
   GfFieldManager::clear();
@@ -278,7 +278,7 @@ void GfManager::setupContinueGame(const SDataSystem &dataSystem, const SDataGame
   GfDataManager::setupGame(&dataSystem, &dataGame, &dataOption);
   GfGameManager::setupGame();
   GfFieldManager::setupGame();
-  s_pThis->loadGameTime = 0.0f;
+  s_pThis->unknown54 = 0.0f;
   s_loadGameTimer.reset();
 }
 
@@ -295,34 +295,34 @@ void GfManager::setupOptionData(const SDataOption &dataOption) {
 
 bool GfManager::isContinueGame() {
   if (s_pThis != nullptr) {
-    return s_pThis->gameStart == GAME_START_CONTINUE;
+    return s_pThis->unknown4c == GAME_START_CONTINUE;
   }
   return false;
 }
 
 bool GfManager::isNewGame() {
   if (s_pThis != nullptr) {
-    return s_pThis->gameStart == GAME_START_NEW;
+    return s_pThis->unknown4c == GAME_START_NEW;
   }
   return false;
 }
 
 bool GfManager::isExistSaveData() {
   if (get() != nullptr) {
-    return get()->existSaveData;
+    return get()->unknown58;
   }
   return false;
 }
 
 void GfManager::setSaveDataCreated() {
   if (get() != nullptr) {
-    get()->existSaveData = true;
+    get()->unknown58 = true;
   }
 }
 
 void GfManager::startGame(bool isExistSaveData, bool isClearGameCheck) {
   if (get() != nullptr) {
-    get()->existSaveData = isExistSaveData;
+    get()->unknown58 = isExistSaveData;
   }
   setExec(EXEC_STATE_SCENARIO_GAME);
   if (isContinueGame()) {
@@ -350,7 +350,7 @@ void GfManager::startEventTheater(const mm::mtl::FixedVector<u16, 8> &events) {
   info.setMapjump(mapjumpId);
   u32 eventType = GfDataEvent::getEventType(events[0]);
   if (eventType == 3 || eventType == 4) {
-    info.isNoFadeIn = true;
+    info.unknown101 = true;
   }
   GfPlayFactory::createEventMapjump(info);
   for (u32 i = 0; i < events.size(); i++) {
@@ -371,7 +371,7 @@ void GfManager::execToAdvertize() {
 }
 
 void GfManager::gevGameState(GF_STATE, GF_STATE state) {
-  if (loadGameTime == 0.0f) {
+  if (unknown54 == 0.0f) {
     switch (state) {
     case GF_STATE_NONE:
     case GF_STATE_INITIALIZE:
@@ -379,8 +379,8 @@ void GfManager::gevGameState(GF_STATE, GF_STATE state) {
     case GF_STATE_MAPJUMP:
       break;
     default:
-      loadGameTime = s_loadGameTimer.getSecLap();
-      GfEvent::callLoadGameTime(loadGameTime);
+      unknown54 = s_loadGameTimer.getSecLap();
+      GfEvent::callLoadGameTime(unknown54);
       break;
     }
   }
@@ -461,7 +461,7 @@ void GfManager::update(const fw::UpdateInfo &info) {
   if (GfGameManager::get() != nullptr) {
     GfGameManager::get()->updateParam(info);
   }
-  s_pThis->frameCount++;
+  s_pThis->unknown50++;
   s64 clock;
   timer.getClockLap(clock);
   u32 count = clock & 0xf;

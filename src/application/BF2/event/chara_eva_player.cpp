@@ -21,7 +21,7 @@ CharaEvaPlayer::CharaEvaPlayer()
       faceType(0), eyeType(0), dispWeapon(1), mountWeapon(1), battleWeapon(1) {}
 
 void CharaEvaPlayer::setScaleWeapon(f32 scale) {
-  if (model->type == gf::GF_EVT_MODEL_WEAPON) {
+  if (model->unknown18 == gf::GF_EVT_MODEL_WEAPON) {
     chara->setScaleWeapon(scale);
   }
 }
@@ -43,7 +43,7 @@ void CharaEvaPlayer::playAction(int type) {
   if (model == nullptr) {
     return;
   }
-  gf::GfObj *obj = gf::GfObjUtil::getObj(model->handle);
+  gf::GfObj *obj = gf::GfObjUtil::getObj(model->unknown20);
   if (obj == nullptr || (flags & FLAG_CHARA) == 0) {
     return;
   }
@@ -62,10 +62,10 @@ void CharaEvaPlayer::playAction(int type) {
 }
 
 void CharaEvaPlayer::setDispWeapon(int type) {
-  if (model->type == gf::GF_EVT_MODEL_DRIVER) {
+  if (model->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
     chara->setHideWeapon(WPNHIDEID_EVA, type > 1, false);
     chara->setHideWeapon(WPNHIDEID_EVA, type > 1, true);
-  } else if (model->type == gf::GF_EVT_MODEL_BLADE) {
+  } else if (model->unknown18 == gf::GF_EVT_MODEL_BLADE) {
     chara->setHideWeapon(WPNHIDEID_EVA, type > 1, false);
     chara->setHideWeapon(WPNHIDEID_EVA, type > 1, true);
   }
@@ -73,10 +73,10 @@ void CharaEvaPlayer::setDispWeapon(int type) {
 }
 
 void CharaEvaPlayer::setMountWeapon(int type) {
-  if (model->type == gf::GF_EVT_MODEL_DRIVER) {
+  if (model->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
     wpnAsmRight.mount(model, type > 1, false);
     wpnAsmLeft.mount(model, type > 1, true);
-  } else if (model->type == gf::GF_EVT_MODEL_BLADE) {
+  } else if (model->unknown18 == gf::GF_EVT_MODEL_BLADE) {
     wpnAsmRight.mount(model, type > 1, false);
     wpnAsmLeft.mount(model, type > 1, true);
   }
@@ -94,7 +94,7 @@ void CharaEvaPlayer::stopAction() {
   if (model == nullptr) {
     return;
   }
-  gf::GfObj *obj = gf::GfObjUtil::getObj(model->handle);
+  gf::GfObj *obj = gf::GfObjUtil::getObj(model->unknown20);
   if (obj == nullptr || action <= 0) {
     return;
   }

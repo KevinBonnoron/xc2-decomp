@@ -45,12 +45,12 @@ public:
   static mm::mtl::RTTI m_rtti;
 
   struct RefResource {
-    RefResource() : data(nullptr), size(0), index(0) {}
+    RefResource() : unknown88(nullptr), unknown90(0), unknown94(0) {}
 
-    mm::mtl::FixStr<128> name;
-    void *data;
-    u32 size;
-    u32 index;
+    mm::mtl::FixStr<128> unknown00; // Inferred role: name; original member name unknown.
+    void *unknown88;                // Inferred role: data; original member name unknown.
+    u32 unknown90;                  // Inferred role: size; original member name unknown.
+    u32 unknown94;                  // Inferred role: index; original member name unknown.
   };
 
   static const u32 REF_RESOURCE_MAX = 24;
@@ -108,24 +108,24 @@ public:
   static void requestFootStepSePackFile(GfAssetFilesInfo &info, u32 footStep, GfFileIdx firstIndex, GfFileIdx secondIndex);
   static void requestWpnSePackFile(GfAssetFilesInfo &info, u32 weaponType, GfFileIdx index);
 
-  u32 id;
-  GF_ASSET_HANDLE *handle;
-  CBdatWrapper *bdat;
-  mm::mtl::FixedVector<RefResource *, REF_RESOURCE_MAX> refResources;
-  const GfInitParam *initParam;
-  bool hasRefResource;
-  mm::mtl::FixStr<128> debugModelName;
-  mm::mtl::FixStr<128> debugMotionName;
+  u32 unknown08;                                                   // Inferred role: id; original member name unknown.
+  GF_ASSET_HANDLE *unknown10;                                      // Inferred role: handle; original member name unknown.
+  CBdatWrapper *unknown18;                                         // Inferred role: bdat; original member name unknown.
+  mm::mtl::FixedVector<RefResource *, REF_RESOURCE_MAX> unknown20; // Inferred role: ref resources; original member name unknown.
+  const GfInitParam *unknowne8;                                    // Inferred role: init param; original member name unknown.
+  bool unknownf0;                                                  // Inferred role: has ref resource; original member name unknown.
+  mm::mtl::FixStr<128> unknownf4;                                  // Inferred role: debug model name; original member name unknown.
+  mm::mtl::FixStr<128> unknown178;                                 // Inferred role: debug motion name; original member name unknown.
 };
 
 static_assert(sizeof(GfAssetSetup::RefResource) == 0x98, "");
-static_assert(offsetof(GfAssetSetup, id) == 0x08, "");
-static_assert(offsetof(GfAssetSetup, handle) == 0x10, "");
-static_assert(offsetof(GfAssetSetup, bdat) == 0x18, "");
-static_assert(offsetof(GfAssetSetup, refResources) == 0x20, "");
-static_assert(offsetof(GfAssetSetup, initParam) == 0xe8, "");
-static_assert(offsetof(GfAssetSetup, hasRefResource) == 0xf0, "");
-static_assert(offsetof(GfAssetSetup, debugModelName) == 0xf4, "");
+static_assert(offsetof(GfAssetSetup, unknown08) == 0x08, "");
+static_assert(offsetof(GfAssetSetup, unknown10) == 0x10, "");
+static_assert(offsetof(GfAssetSetup, unknown18) == 0x18, "");
+static_assert(offsetof(GfAssetSetup, unknown20) == 0x20, "");
+static_assert(offsetof(GfAssetSetup, unknowne8) == 0xe8, "");
+static_assert(offsetof(GfAssetSetup, unknownf0) == 0xf0, "");
+static_assert(offsetof(GfAssetSetup, unknownf4) == 0xf4, "");
 
 class GfAssetSetupDriver : public GfAssetSetup {
 public:
@@ -158,10 +158,10 @@ public:
   virtual GfAssetType getAssetTypeMot() const { return ASSET_TYPE_PC_MOTION; }
   virtual GfAssetType getAssetTypeEvtMot() const { return ASSET_TYPE_TEMPORARY; }
 
-  GfFileIdx reservedFileIndex;
+  GfFileIdx unknown1fc; // Inferred role: reserved file index; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupDriver, reservedFileIndex) == 0x1fc, "");
+static_assert(offsetof(GfAssetSetupDriver, unknown1fc) == 0x1fc, "");
 
 class GfAssetSetupEventDriver : public GfAssetSetupDriver {
 public:
@@ -236,10 +236,10 @@ public:
   virtual GfAssetType getAssetTypeEventMot() const { return ASSET_TYPE_TEMPORARY; }
   virtual GfAssetType getAssetTypeEfb() const { return ASSET_TYPE_WEAPON_EFFECT; }
 
-  bool useCondModel;
+  bool unknown1fc; // Inferred role: use cond model; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupBlade, useCondModel) == 0x1fc, "");
+static_assert(offsetof(GfAssetSetupBlade, unknown1fc) == 0x1fc, "");
 
 class GfAssetSetupEventBlade : public GfAssetSetupBlade {
 public:
@@ -309,10 +309,10 @@ public:
   virtual GfAssetType getAssetTypeMot() const { return ASSET_TYPE_ENEMY_MOTION; }
   virtual GfAssetType getAssetTypeArc() const { return ASSET_TYPE_ENEMY_ARC; }
 
-  const GfInitParamEnemy *initParamEnemy;
+  const GfInitParamEnemy *unknown200; // Inferred role: init param enemy; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupEnemy, initParamEnemy) == 0x200, "");
+static_assert(offsetof(GfAssetSetupEnemy, unknown200) == 0x200, "");
 
 class GfAssetSetupEnemyBlade : public GfAssetSetupEnemy {
 public:
@@ -452,10 +452,10 @@ public:
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(6); }
   GfAssetType getAssetType() const override { return ASSET_TYPE_MAP_OBJECT; }
 
-  u32 gimmickType;
+  u32 unknown1fc; // Inferred role: gimmick type; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupGimmick, gimmickType) == 0x1fc, "");
+static_assert(offsetof(GfAssetSetupGimmick, unknown1fc) == 0x1fc, "");
 
 class GfAssetSetupMapObj : public GfAssetSetup {
 public:
@@ -511,10 +511,10 @@ public:
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(5); }
   GfAssetType getAssetType() const override { return ASSET_TYPE_WEAPON; }
 
-  GfAppend append;
+  GfAppend unknown200; // Inferred role: append; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupWeapon, append) == 0x200, "");
+static_assert(offsetof(GfAssetSetupWeapon, unknown200) == 0x200, "");
 
 class GfAssetSetupWeaponEventCS : public GfAssetSetupWeapon {
 public:
@@ -548,10 +548,10 @@ public:
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(5); }
   GfAssetType getAssetType() const override { return ASSET_TYPE_OPTION; }
 
-  GfAppend append;
+  GfAppend unknown200; // Inferred role: append; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupEnWeapon, append) == 0x200, "");
+static_assert(offsetof(GfAssetSetupEnWeapon, unknown200) == 0x200, "");
 
 class GfAssetSetupBelonging : public GfAssetSetup {
 public:
@@ -568,10 +568,10 @@ public:
   GfFileIdx getArcSlot() const override { return static_cast<GfFileIdx>(1); }
   GfAssetType getAssetType() const override { return ASSET_TYPE_OPTION; }
 
-  GfAppend append;
+  GfAppend unknown200; // Inferred role: append; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupBelonging, append) == 0x200, "");
+static_assert(offsetof(GfAssetSetupBelonging, unknown200) == 0x200, "");
 
 class GfAssetSetupExtra : public GfAssetSetup {
 public:
@@ -591,10 +591,10 @@ public:
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(5); }
   GfAssetType getAssetType() const override { return ASSET_TYPE_OPTION; }
 
-  GfAppend append;
+  GfAppend unknown200; // Inferred role: append; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupExtra, append) == 0x200, "");
+static_assert(offsetof(GfAssetSetupExtra, unknown200) == 0x200, "");
 
 class GfAssetSetupMapSeamless : public GfAssetSetup {
 public:
@@ -619,14 +619,14 @@ public:
   virtual GfFileIdx getGIblSlot() const { return static_cast<GfFileIdx>(7); }
   virtual GfFileIdx getLIblSlot() const { return static_cast<GfFileIdx>(8); }
 
-  bool useMapId;
-  mm::mtl::FixStr<128> modelName;
-  mm::mtl::FixStr<128> effectPackName;
+  bool unknown1fc;                 // Inferred role: use map id; original member name unknown.
+  mm::mtl::FixStr<128> unknown200; // Inferred role: model name; original member name unknown.
+  mm::mtl::FixStr<128> unknown284; // Inferred role: effect pack name; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupMapSeamless, useMapId) == 0x1fc, "");
-static_assert(offsetof(GfAssetSetupMapSeamless, modelName) == 0x200, "");
-static_assert(offsetof(GfAssetSetupMapSeamless, effectPackName) == 0x284, "");
+static_assert(offsetof(GfAssetSetupMapSeamless, unknown1fc) == 0x1fc, "");
+static_assert(offsetof(GfAssetSetupMapSeamless, unknown200) == 0x200, "");
+static_assert(offsetof(GfAssetSetupMapSeamless, unknown284) == 0x284, "");
 
 class GfAssetSetupMapMdl : public GfAssetSetup {
 public:
@@ -655,10 +655,10 @@ public:
   virtual GfFileIdx getAcoSlot() const { return static_cast<GfFileIdx>(9); }
   virtual GfFileIdx getClpSlot() const { return static_cast<GfFileIdx>(10); }
 
-  mm::mtl::FixStr<256> path;
+  mm::mtl::FixStr<256> m_path;
 };
 
-static_assert(offsetof(GfAssetSetupMapMdl, path) == 0x1fc, "");
+static_assert(offsetof(GfAssetSetupMapMdl, m_path) == 0x1fc, "");
 
 class GfAssetSetupEventObj : public GfAssetSetup {
 public:

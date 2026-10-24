@@ -34,7 +34,7 @@
 
 namespace gf {
 
-GfFieldManager::GfFieldManager(const GfSetupParam &param) : initialized(false), enemyBaloonRadius(0.0f) {
+GfFieldManager::GfFieldManager(const GfSetupParam &param) : unknown18(false), unknown1c(0.0f) {
   initialize(param);
   GfObjManager::addListener(this, OBJEVT_ALL);
 }
@@ -56,7 +56,7 @@ void GfFieldManager::initialize(const GfSetupParam &param) {
   GfFieldLod::build(param);
   GfFobjManager::build(param);
   GfFieldDmgManager::build(param);
-  initialized = true;
+  unknown18 = true;
   SCOM_SCRIPT::create(SCRIPT_SLOT_FIELD_SYSTEM, "field", false);
 }
 
@@ -94,12 +94,12 @@ void GfFieldManager::finalize() {
   GfFieldWeather::destroy();
   GfFieldTime::destroy();
   GfEvent::removeEventCallback(this);
-  initialized = false;
+  unknown18 = false;
 }
 
 bool GfFieldManager::isInitialized() {
   GfFieldManager *fieldManager = get();
-  return fieldManager != nullptr ? fieldManager->initialized : false;
+  return fieldManager != nullptr ? fieldManager->unknown18 : false;
 }
 
 void GfFieldManager::clear() {
@@ -144,7 +144,7 @@ void GfFieldManager::gevReloadBdat(RELOAD_BDAT reload, u32 value) {
 void GfFieldManager::getFieldParam(u32 mapJump) {
   u32 map = GfDataMap::getMapID(mapJump);
   if (map != 0) {
-    enemyBaloonRadius = GfBdatMaplist::get()->getMapliste_balloondisp_r(map);
+    unknown1c = GfBdatMaplist::get()->getMapliste_balloondisp_r(map);
   }
 }
 
@@ -158,7 +158,7 @@ bool GfFieldManager::isDestroyMapScriptBusy() { return GfFieldZoneScript::isDest
 
 void GfFieldManager::updateGlobalWind() { fw::RenderParam::setGlobalWindPower(fw::WindManager::getGlobalWindPower(), fw::CAMERA_TYPE_MAIN); }
 
-f32 GfFieldManager::getEnemyBaloonRadius() { return get()->enemyBaloonRadius; }
+f32 GfFieldManager::getEnemyBaloonRadius() { return get()->unknown1c; }
 
 const char *GfFieldManager::getMapName() { return GfMapManager::getMapName(); }
 
@@ -199,7 +199,7 @@ f32 GfFieldManager::getLandmarkRotY() {
 
 void GfFieldManager::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
   if (event == GEV_MAPJUMP_CREATE_FIELD) {
-    getFieldParam(info.mapJumpId);
+    getFieldParam(info.unknown00);
   }
   GfFieldZone::get()->gevMapjump(event, info);
   GfFieldLod::get()->gevMapjump(event, info);

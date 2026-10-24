@@ -14,22 +14,22 @@ struct GF_ASSET_HANDLE;
 struct GF_SLOT_HANDLE;
 
 struct GfAssetFilesInfo {
-  GfAssetFilesInfo() : handle(INVALID_ASSET_HANDLE), assetType(ASSET_TYPE_BASE), name(nullptr), _38(), slotNum(1), priority(0) {}
+  GfAssetFilesInfo() : unknown00(INVALID_ASSET_HANDLE), unknown08(ASSET_TYPE_BASE), unknown30(nullptr), _38(), unknown3c(1), unknown40(0) {}
 
-  GF_ASSET_HANDLE *handle;
-  GfAssetType assetType;
-  mm::mtl::FixedQueue<GfAssetType, 4> backupAssetTypes;
-  const char *name;
+  GF_ASSET_HANDLE *unknown00;                    // Inferred role: handle; original member name unknown.
+  GfAssetType unknown08;                         // Inferred role: asset type; original member name unknown.
+  mm::mtl::FixedQueue<GfAssetType, 4> unknown10; // Inferred role: backup asset types; original member name unknown.
+  const char *unknown30;                         // Inferred role: name; original member name unknown.
   u8 _38[0x3c - 0x38];
-  u32 slotNum;
-  u32 priority;
+  u32 unknown3c; // Inferred role: slot num; original member name unknown.
+  u32 unknown40; // Inferred role: priority; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetFilesInfo, assetType) == 0x08, "");
-static_assert(offsetof(GfAssetFilesInfo, backupAssetTypes) == 0x10, "");
-static_assert(offsetof(GfAssetFilesInfo, name) == 0x30, "");
-static_assert(offsetof(GfAssetFilesInfo, slotNum) == 0x3c, "");
-static_assert(offsetof(GfAssetFilesInfo, priority) == 0x40, "");
+static_assert(offsetof(GfAssetFilesInfo, unknown08) == 0x08, "");
+static_assert(offsetof(GfAssetFilesInfo, unknown10) == 0x10, "");
+static_assert(offsetof(GfAssetFilesInfo, unknown30) == 0x30, "");
+static_assert(offsetof(GfAssetFilesInfo, unknown3c) == 0x3c, "");
+static_assert(offsetof(GfAssetFilesInfo, unknown40) == 0x40, "");
 static_assert(sizeof(GfAssetFilesInfo) == 0x48, "");
 
 class GfAssetFiles {
@@ -37,7 +37,7 @@ public:
   bool addResource(GfFileIdx index, const char *name);
   const mm::mtl::FixStr<128> &getFileName(GfFileIdx index) const;
 
-  GfAssetType assetType;
+  GfAssetType unknown00; // Inferred role: asset type; original member name unknown.
 };
 
 class GfAssetPack : public mm::mtl::ReferenceObject {
@@ -52,28 +52,28 @@ public:
   void setTimeout();
   bool changeBackupAssetType();
 
-  void setLoadSlotNum(u32 num) { loadSlotNum = num; }
+  void setLoadSlotNum(u32 num) { unknown24c = num; }
 
   u8 _0c[0x120 - 0x0c];
-  GfAssetFiles files;
+  GfAssetFiles m_assetType;
   u8 _124[0x230 - 0x124];
-  GF_SLOT_HANDLE *slotHandle;
+  GF_SLOT_HANDLE *unknown230; // Inferred role: slot handle; original member name unknown.
   u8 _238[0x23a - 0x238];
-  bool isWaitingSlot;
+  bool unknown23a; // Inferred role: waiting slot; original member name unknown.
   u8 _23b[0x248 - 0x23b];
-  u32 slotNum;
-  u32 loadSlotNum;
-  u32 priority;
-  u32 userCount;
+  u32 unknown248; // Inferred role: slot num; original member name unknown.
+  u32 unknown24c; // Inferred role: load slot num; original member name unknown.
+  u32 unknown250; // Inferred role: priority; original member name unknown.
+  u32 unknown254; // Inferred role: user count; original member name unknown.
   u8 _258[0x2b0 - 0x258];
-  GfFileIdx sePackFileIndex;
+  GfFileIdx unknown2b0; // Inferred role: se pack file index; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetPack, files) == 0x120, "");
-static_assert(offsetof(GfAssetPack, slotHandle) == 0x230, "");
-static_assert(offsetof(GfAssetPack, isWaitingSlot) == 0x23a, "");
-static_assert(offsetof(GfAssetPack, slotNum) == 0x248, "");
-static_assert(offsetof(GfAssetPack, userCount) == 0x254, "");
-static_assert(offsetof(GfAssetPack, sePackFileIndex) == 0x2b0, "");
+static_assert(offsetof(GfAssetPack, m_assetType) == 0x120, "");
+static_assert(offsetof(GfAssetPack, unknown230) == 0x230, "");
+static_assert(offsetof(GfAssetPack, unknown23a) == 0x23a, "");
+static_assert(offsetof(GfAssetPack, unknown248) == 0x248, "");
+static_assert(offsetof(GfAssetPack, unknown254) == 0x254, "");
+static_assert(offsetof(GfAssetPack, unknown2b0) == 0x2b0, "");
 
 } // namespace gf

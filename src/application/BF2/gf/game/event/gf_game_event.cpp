@@ -51,7 +51,7 @@ GfGameEvent::GfGameEvent(const GfSetupParam &param)
 void GfGameEvent::initialize(const GfSetupParam &param) {
   unknown10 = mtl::MemManager::create(ml::MlMem::getProductMem(), EVENT_MEM_SIZE, "GfTalk", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10);
   if (event::Manager::get() == nullptr) {
-    event::Manager::create(param.scn);
+    event::Manager::create(param.unknown00);
   }
   for (u32 i = 0; i < EVTDISP_NUM; i++) {
     unknown28[i] = true;

@@ -12,15 +12,15 @@ CameraPadData::CameraPadData() {
 }
 
 void CameraPadData::reset() {
-  arx = 0.0f;
-  ary = 0.0f;
-  isReset = false;
-  isAllReset = false;
-  isZoom = false;
-  isHeight = false;
-  isSideLeft = false;
-  isSideRight = false;
-  isSideReset = false;
+  m_ARX = 0.0f;
+  m_ARY = 0.0f;
+  unknown40 = false;
+  unknown41 = false;
+  unknown42 = false;
+  unknown43 = false;
+  unknown44 = false;
+  unknown45 = false;
+  unknown46 = false;
 }
 
 void CameraPadData::bind() {
@@ -45,22 +45,22 @@ void CameraPadData::update() {
   PadRelay::update();
 }
 
-void CameraPadData::resetAction() { isReset = true; }
+void CameraPadData::resetAction() { unknown40 = true; }
 
-void CameraPadData::zoomCamera() { isZoom = true; }
+void CameraPadData::zoomCamera() { unknown42 = true; }
 
-void CameraPadData::heightCamera() { isHeight = true; }
+void CameraPadData::heightCamera() { unknown43 = true; }
 
-void CameraPadData::sideLeftCamera() { isSideLeft = true; }
+void CameraPadData::sideLeftCamera() { unknown44 = true; }
 
-void CameraPadData::sideRightCamera() { isSideRight = true; }
+void CameraPadData::sideRightCamera() { unknown45 = true; }
 
-void CameraPadData::sideResetCamera() { isSideReset = true; }
+void CameraPadData::sideResetCamera() { unknown46 = true; }
 
-void CameraPadData::allResetAction() { isAllReset = true; }
+void CameraPadData::allResetAction() { unknown41 = true; }
 
-void CameraPadData::setARX(f32 value) { arx = value; }
+void CameraPadData::setARX(f32 value) { m_ARX = value; }
 
-void CameraPadData::setARY(f32 value) { ary = value; }
+void CameraPadData::setARY(f32 value) { m_ARY = value; }
 
 } // namespace gf

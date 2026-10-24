@@ -38,8 +38,8 @@ public:
   void gevMapjump(GEV gev, const MapjumpCallbackInfo &info);
 
 private:
-  mm::mtl::FixedQueue<IEventZone *, EVENT_MAX> mEvents;
-  bool mInitialized;
+  mm::mtl::FixedQueue<IEventZone *, EVENT_MAX> unknown08; // Inferred role: m events; original member name unknown.
+  bool unknown98;                                         // Inferred role: m initialized; original member name unknown.
 };
 
 static_assert(sizeof(GfFieldZone) == 0xa0, "");

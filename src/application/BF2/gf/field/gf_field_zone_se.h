@@ -22,7 +22,7 @@ public:
   static void update(const fw::UpdateInfo &info);
 
 private:
-  bool mInitialized;
+  bool unknown10; // Inferred role: m initialized; original member name unknown.
 };
 
 static_assert(sizeof(GfFieldZoneSe) == 0x18, "");
