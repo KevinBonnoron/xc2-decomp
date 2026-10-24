@@ -17,10 +17,10 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 
-    u16 mapJumpId;
-    u16 condition;
-    ScenarioFlagCond scenarioFlag;
-    QuestFlagCond questFlag;
+    u16 unknown00;              // Inferred role: map jump id; original member name unknown.
+    u16 unknown02;              // Inferred role: condition; original member name unknown.
+    ScenarioFlagCond unknown04; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond unknown08;    // Inferred role: quest flag; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_MAP_JUMP;

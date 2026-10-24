@@ -22,9 +22,9 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 
-    u16 condition;
-    u16 title;
-    u16 eventCondition;
+    u16 unknown00; // Inferred role: condition; original member name unknown.
+    u16 unknown02; // Inferred role: title; original member name unknown.
+    u16 unknown04; // Inferred role: event condition; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_KIZUNA_TALK;
@@ -41,16 +41,16 @@ public:
   void validateDisp() const;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(createInfo.info); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
-  gf::GF_OBJ_HANDLE *handle;
-  DistCond distCond;
-  bool isDisp;
+  gf::GF_OBJ_HANDLE *unknown48; // Inferred role: handle; original member name unknown.
+  DistCond unknown50;           // Inferred role: dist cond; original member name unknown.
+  bool unknown54;               // Inferred role: disp; original member name unknown.
 };
 
-static_assert(offsetof(GmkKizunaTalk, handle) == 0x48, "");
-static_assert(offsetof(GmkKizunaTalk, distCond) == 0x50, "");
-static_assert(offsetof(GmkKizunaTalk, isDisp) == 0x54, "");
+static_assert(offsetof(GmkKizunaTalk, unknown48) == 0x48, "");
+static_assert(offsetof(GmkKizunaTalk, unknown50) == 0x50, "");
+static_assert(offsetof(GmkKizunaTalk, unknown54) == 0x54, "");
 
 static_assert(sizeof(GmkKizunaTalk::BdatInfo) == 0x6, "");
 static_assert(sizeof(GmkKizunaTalk) == 0x58, "");

@@ -18,18 +18,18 @@ struct GmkInfo {
 };
 
 struct Xform {
-  mm::Vec3 position;
-  mm::Vec3 rotation;
-  mm::Vec3 scale;
+  mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
+  mm::Vec3 unknown10; // Inferred role: rotation; original member name unknown.
+  mm::Vec3 unknown20; // Inferred role: scale; original member name unknown.
   u8 _30[0x40 - 0x30];
 };
 
 static_assert(sizeof(Xform) == 0x40, "");
 
 struct GobInfo {
-  const char *name;
-  u32 xformIndex;
-  ShapeType shapeType;
+  const char *unknown00; // Inferred role: name; original member name unknown.
+  u32 unknown08;         // Inferred role: xform index; original member name unknown.
+  ShapeType unknown0c;   // Inferred role: shape type; original member name unknown.
 };
 
 static_assert(sizeof(GobInfo) == 0x10, "");
@@ -37,34 +37,34 @@ static_assert(sizeof(GobInfo) == 0x10, "");
 class AGmkBase {
 public:
   struct CreateBaseInfo {
-    IGmkList *list;
-    const Xform *xform;
-    const GobInfo *gobInfo;
+    IGmkList *unknown00;      // Inferred role: list; original member name unknown.
+    const Xform *unknown08;   // Inferred role: xform; original member name unknown.
+    const GobInfo *unknown10; // Inferred role: gob info; original member name unknown.
   };
 
   struct CreateInfo {
-    CreateInfo() : version(0), data(nullptr), info(nullptr), bdatIndex(-1) {}
+    CreateInfo() : unknown00(0), unknown08(nullptr), unknown10(nullptr), unknown18(-1) {}
 
-    u32 version;
-    const void *data;
-    const GmkInfo *info;
-    int bdatIndex;
+    u32 unknown00;            // Inferred role: version; original member name unknown.
+    const void *unknown08;    // Inferred role: data; original member name unknown.
+    const GmkInfo *unknown10; // Inferred role: info; original member name unknown.
+    int unknown18;            // Inferred role: bdat index; original member name unknown.
   };
 
   AGmkBase();
   virtual ~AGmkBase() { disposeBase(); }
   virtual GmkType getGmkType() const = 0;
-  virtual bool isValid() const { return baseInfo.list != nullptr && createInfo.data != nullptr && createInfo.info != nullptr; }
+  virtual bool isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr && unknown20.unknown10 != nullptr; }
 
   virtual void create(const CreateInfo &info) {
     dispose();
-    createInfo = info;
+    unknown20 = info;
   }
 
   virtual void dispose() {
-    createInfo.version = 0;
-    createInfo.data = nullptr;
-    createInfo.info = nullptr;
+    unknown20.unknown00 = 0;
+    unknown20.unknown08 = nullptr;
+    unknown20.unknown10 = nullptr;
   }
 
   virtual void update(f32 deltaTime);
@@ -82,13 +82,13 @@ public:
   void unbindToGameObj(gf::GF_OBJ_HANDLE *handle) const;
   int findBdatRowIndex() const;
 
-  CreateBaseInfo baseInfo;
-  CreateInfo createInfo;
+  CreateBaseInfo unknown08; // Inferred role: base info; original member name unknown.
+  CreateInfo unknown20;     // Inferred role: create info; original member name unknown.
   alignas(8) u8 _40[0x48 - 0x40];
 };
 
-static_assert(offsetof(AGmkBase, baseInfo) == 0x08, "");
-static_assert(offsetof(AGmkBase, createInfo) == 0x20, "");
+static_assert(offsetof(AGmkBase, unknown08) == 0x08, "");
+static_assert(offsetof(AGmkBase, unknown20) == 0x20, "");
 static_assert(sizeof(AGmkBase) == 0x48, "");
 
 } // namespace gmk

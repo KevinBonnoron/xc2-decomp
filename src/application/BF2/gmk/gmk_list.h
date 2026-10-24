@@ -20,13 +20,13 @@ struct GobInfo;
 struct Xform;
 
 struct LvbChunk {
-  u32 magic;
-  u32 size;
-  u32 version;
-  u32 count;
-  u32 stride;
-  u32 gobInfoIndex;
-  u8 flags;
+  u32 unknown00; // Inferred role: magic; original member name unknown.
+  u32 unknown04; // Inferred role: size; original member name unknown.
+  u32 unknown08; // Inferred role: version; original member name unknown.
+  u32 unknown0c; // Inferred role: count; original member name unknown.
+  u32 unknown10; // Inferred role: stride; original member name unknown.
+  u32 unknown14; // Inferred role: gob info index; original member name unknown.
+  u8 unknown18;  // Inferred role: flags; original member name unknown.
   u8 _19[0x20 - 0x19];
 };
 
@@ -35,14 +35,14 @@ static_assert(sizeof(LvbChunk) == 0x20, "");
 class IGmkList {
 public:
   struct CreateInfo {
-    CreateInfo() : set(nullptr), position(0.0f, 0.0f, 0.0f), rotation(0.0f) {}
+    CreateInfo() : unknown08(nullptr), unknown140(0.0f, 0.0f, 0.0f), unknown150(0.0f) {}
 
-    mtl::ALLOC_HANDLE memory;
-    GmkSet *set;
-    mm::mtl::FixStr<256> path;
-    mm::mtl::FixStr<32> bdatName;
-    mm::Vec3 position;
-    f32 rotation;
+    mtl::ALLOC_HANDLE unknown00;    // Inferred role: memory; original member name unknown.
+    GmkSet *unknown08;              // Inferred role: set; original member name unknown.
+    mm::mtl::FixStr<256> unknown10; // Inferred role: path; original member name unknown.
+    mm::mtl::FixStr<32> unknown114; // Inferred role: bdat name; original member name unknown.
+    mm::Vec3 unknown140;            // Inferred role: position; original member name unknown.
+    f32 unknown150;                 // Inferred role: rotation; original member name unknown.
   };
 
   virtual ~IGmkList() {}
@@ -81,13 +81,13 @@ public:
     if (data == nullptr) {
       return false;
     }
-    if (!createInfo.bdatName.empty() && bdatFp == nullptr) {
+    if (!createInfo.unknown114.empty() && bdatFp == nullptr) {
       return false;
     }
     if (gmkChunk == nullptr) {
       return false;
     }
-    return gmkChunk->magic == MAGIC;
+    return gmkChunk->unknown00 == MAGIC;
   }
 
   const CreateInfo &getCreateInfo() const override { return createInfo; }
@@ -99,10 +99,10 @@ public:
   void create(const CreateInfo &info) override {
     dispose();
     createInfo = info;
-    resource = fw::CommonResource::request(info.memory, createInfo.path.c_str(), 9, false);
+    resource = fw::CommonResource::request(info.unknown00, createInfo.unknown10.c_str(), 9, false);
     seq = &TGmkList::seqWaitResourceLoaded;
-    if (!createInfo.bdatName.empty()) {
-      bdatFp = Bdat::getFP(createInfo.bdatName.c_str());
+    if (!createInfo.unknown114.empty()) {
+      bdatFp = Bdat::getFP(createInfo.unknown114.c_str());
       if (bdatFp == nullptr) {
         dispose();
       }
@@ -149,11 +149,11 @@ public:
     }
     const mm::Vec3 &cameraPosition = ml::Scn::sys()->getCam(-1)->renderInfo->position;
     for (T *gmk = gmkInsts.begin(); gmk != gmkInsts.end(); gmk++) {
-      if (gmk->baseInfo.xform == nullptr) {
+      if (gmk->unknown08.unknown08 == nullptr) {
         continue;
       }
-      f32 x = cameraPosition.x - gmk->baseInfo.xform->position.x;
-      f32 z = cameraPosition.z - gmk->baseInfo.xform->position.z;
+      f32 x = cameraPosition.x - gmk->unknown08.unknown08->unknown00.x;
+      f32 z = cameraPosition.z - gmk->unknown08.unknown08->unknown00.z;
       if (x * x + z * z > DEBUG_DISTANCE * DEBUG_DISTANCE) {
         continue;
       }
@@ -170,11 +170,11 @@ public:
     }
     const mm::Vec3 &cameraPosition = ml::Scn::sys()->getCam(-1)->renderInfo->position;
     for (const T *gmk = gmkInsts.begin(); gmk != gmkInsts.end(); gmk++) {
-      if (gmk->baseInfo.xform == nullptr) {
+      if (gmk->unknown08.unknown08 == nullptr) {
         continue;
       }
-      f32 x = cameraPosition.x - gmk->baseInfo.xform->position.x;
-      f32 z = cameraPosition.z - gmk->baseInfo.xform->position.z;
+      f32 x = cameraPosition.x - gmk->unknown08.unknown08->unknown00.x;
+      f32 z = cameraPosition.z - gmk->unknown08.unknown08->unknown00.z;
       if (x * x + z * z > DEBUG_DISTANCE * DEBUG_DISTANCE) {
         continue;
       }

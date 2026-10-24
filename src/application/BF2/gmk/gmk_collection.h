@@ -19,11 +19,11 @@ public:
     bool isPopCondMatched(const AGmkBase &gmk) const;
     void debugDraw(const AGmkBase &gmk) const;
 
-    u16 nameRadius;
-    u16 condition;
-    TimeCond timeCond;
-    WeatherCond weatherCond;
-    DistCond distCond;
+    u16 unknown00;         // Inferred role: name radius; original member name unknown.
+    u16 unknown02;         // Inferred role: condition; original member name unknown.
+    TimeCond unknown08;    // Inferred role: time cond; original member name unknown.
+    WeatherCond unknown18; // Inferred role: weather cond; original member name unknown.
+    DistCond unknown28;    // Inferred role: dist cond; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_COLLECTION;
@@ -45,12 +45,12 @@ static_assert(sizeof(GmkCollection) == 0x70, "");
 class GmkCollectionList : public TGmkList<GmkCollection, GmkCollection::BdatInfo, 0x54434c43, 5, GmkCollectionGob> {
 public:
   struct BdatInfo {
-    BdatInfo() : mapId(-1), repopTime(1) {}
+    BdatInfo() : unknown00(-1), unknown04(1) {}
 
     bool create();
 
-    int mapId;
-    u8 repopTime;
+    int unknown00; // Inferred role: map id; original member name unknown.
+    u8 unknown04;  // Inferred role: repop time; original member name unknown.
   };
 
   explicit GmkCollectionList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame) {}
@@ -59,7 +59,7 @@ public:
   void create(const CreateInfo &info) override;
 
 private:
-  BdatInfo bdatInfo;
+  BdatInfo unknown228; // Inferred role: bdat info; original member name unknown.
 };
 
 static_assert(sizeof(GmkCollectionList::BdatInfo) == 0x8, "");

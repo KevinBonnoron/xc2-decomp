@@ -14,9 +14,9 @@ class GmkAreaBgm : public AGmkBase {
 public:
   struct BdatInfo {
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
-    void dispose() { bgmCondition = 0; }
+    void dispose() { unknown00 = 0; }
 
-    u16 bgmCondition;
+    u16 unknown00; // Inferred role: bgm condition; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_AREA_BGM;

@@ -17,11 +17,11 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 
-    u16 condition;
-    u8 lockType;
-    u16 textId;
-    ScenarioFlagCond scenarioFlag;
-    QuestFlagCond questFlag;
+    u16 unknown00;              // Inferred role: condition; original member name unknown.
+    u8 unknown02;               // Inferred role: lock type; original member name unknown.
+    u16 unknown04;              // Inferred role: text id; original member name unknown.
+    ScenarioFlagCond unknown06; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond unknown0a;    // Inferred role: quest flag; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_FIELD_LOCK;

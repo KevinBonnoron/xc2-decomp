@@ -26,19 +26,19 @@ constexpr u32 WARP_ICON_FADE_OUT_FRAME = 5;
 const fw::EF_CATEGORY WARP_ICON_EFFECT_CATEGORY = static_cast<fw::EF_CATEGORY>(1);
 
 void GmkWarp::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  condition = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
-  bootedGmk = BootedGmkCond(bdat, id, nullptr);
-  nameRadius = bdat.getValCheck("nameRadius", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
+  unknown04 = BootedGmkCond(bdat, id, nullptr);
+  unknown02 = bdat.getValCheck("nameRadius", id, BDAT_TYPE_U16);
   u8 *mapList = gf::GfDataBdat::getFP(gf::BDAT_FLD_MAPLIST);
   if (mapList != nullptr) {
     int map = gf::GfGameManager::getMapID();
     if (map >= Bdat::getIdTop(mapList) && Bdat::getIdTop(mapList) + Bdat::getIdCount(mapList) > map) {
       u8 displayRadius = Bdat::getValCheck(mapList, "ene_disp_r", map, BDAT_TYPE_U8);
       u8 displayHeight = Bdat::getValCheck(mapList, "ene_disp_h", map, BDAT_TYPE_U8);
-      popDist.set(displayRadius, displayHeight);
+      unknown08.set(displayRadius, displayHeight);
       u8 releaseRadius = Bdat::getValCheck(mapList, "ene_release_r", map, BDAT_TYPE_U8);
       u8 releaseHeight = Bdat::getValCheck(mapList, "ene_release_h", map, BDAT_TYPE_U8);
-      depopDist.set(displayRadius + releaseRadius, displayHeight + releaseHeight);
+      unknown10.set(displayRadius + releaseRadius, displayHeight + releaseHeight);
     }
   }
 }
@@ -47,14 +47,14 @@ bool GmkWarp::BdatInfo::isPopCondMatched(const mm::Vec3 &position) const {
   if (!isPopCondCommonMatched()) {
     return false;
   }
-  return popDist.isMatch(position);
+  return unknown08.isMatch(position);
 }
 
 bool GmkWarp::BdatInfo::isPopCondCommonMatched() const {
-  if (condition != 0 && !gf::GfGameCond::isGameCond(condition)) {
+  if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
     return false;
   }
-  if (bootedGmk.isEnable() && !bootedGmk.isMatch()) {
+  if (unknown04.isEnable() && !unknown04.isMatch()) {
     return false;
   }
   return true;
@@ -64,7 +64,7 @@ bool GmkWarp::BdatInfo::isDepopCondMatched(const mm::Vec3 &position) const {
   if (!isPopCondCommonMatched()) {
     return true;
   }
-  return !depopDist.isMatch(position);
+  return !unknown10.isMatch(position);
 }
 
 void GmkWarp::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
@@ -72,7 +72,7 @@ void GmkWarp::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
 void GmkWarp::create(const CreateInfo &info) {
   AGmkBase::create(info);
   f32 iconDistance = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_WARP_ICON_DIST_ROW, BDAT_TYPE_F32).valueF32;
-  iconDist.distSq = iconDistance * iconDistance;
+  unknown68.unknown00 = iconDistance * iconDistance;
 }
 
 void GmkWarp::dispose() {
@@ -89,10 +89,10 @@ void GmkWarp::clearIcons() {
 
 void GmkWarp::clearGobInsts() {
   for (u32 i = 0; i < POINT_NUM; i++) {
-    if (handles[i] != gf::INVALID_HANDLE) {
-      unbindToGameObj(handles[i]);
-      gf::GfObjUtil::destroy(handles[i]);
-      handles[i] = gf::INVALID_HANDLE;
+    if (unknown50[i] != gf::INVALID_HANDLE) {
+      unbindToGameObj(unknown50[i]);
+      gf::GfObjUtil::destroy(unknown50[i]);
+      unknown50[i] = gf::INVALID_HANDLE;
     }
   }
 }
@@ -106,48 +106,48 @@ void GmkWarp::createIcon(u32 index) {
   if (data == nullptr) {
     return;
   }
-  iconHandles[index] = fw::EffectManager::get()->create(data, true);
-  if (iconHandles[index] == 0) {
+  unknown60[index] = fw::EffectManager::get()->create(data, true);
+  if (unknown60[index] == 0) {
     return;
   }
-  fw::EffectManager::get()->setCategory(iconHandles[index], WARP_ICON_EFFECT_CATEGORY);
+  fw::EffectManager::get()->setCategory(unknown60[index], WARP_ICON_EFFECT_CATEGORY);
   validateIconPos();
 }
 
 void GmkWarp::disposeIcon(u32 index, bool isFadeOut) {
-  if (iconHandles[index] == 0) {
+  if (unknown60[index] == 0) {
     return;
   }
   if (isFadeOut) {
-    fw::EffectManager::get()->fadeOutDead(iconHandles[index], WARP_ICON_FADE_OUT_FRAME);
+    fw::EffectManager::get()->fadeOutDead(unknown60[index], WARP_ICON_FADE_OUT_FRAME);
   } else {
-    fw::EffectManager::get()->remove(iconHandles[index]);
+    fw::EffectManager::get()->remove(unknown60[index]);
   }
-  iconHandles[index] = 0;
+  unknown60[index] = 0;
 }
 
 void GmkWarp::debugUpdateMmf() {}
 
 void GmkWarp::reqDeadIcon() {
-  if (isIconDead) {
+  if (unknown6c) {
     return;
   }
-  isIconDead = true;
+  unknown6c = true;
   for (u32 i = 0; i < POINT_NUM; i++) {
-    if (iconHandles[i] != 0) {
-      fw::EffectManager::get()->dead(iconHandles[i]);
-      iconHandles[i] = 0;
+    if (unknown60[i] != 0) {
+      fw::EffectManager::get()->dead(unknown60[i]);
+      unknown60[i] = 0;
     }
   }
 }
 
 void GmkWarp::reqRecreateIcon() {
-  if (!isIconDead) {
+  if (!unknown6c) {
     return;
   }
-  isIconDead = false;
+  unknown6c = false;
   for (u32 i = 0; i < POINT_NUM; i++) {
-    if (iconHandles[i] == 0) {
+    if (unknown60[i] == 0) {
       createIcon(i);
     }
   }
@@ -159,8 +159,8 @@ void GmkWarp::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *ha
     return;
   }
   for (u32 i = 0; i < POINT_NUM; i++) {
-    if (handles[i] == handle) {
-      handles[i] = gf::INVALID_HANDLE;
+    if (unknown50[i] == handle) {
+      unknown50[i] = gf::INVALID_HANDLE;
       break;
     }
   }

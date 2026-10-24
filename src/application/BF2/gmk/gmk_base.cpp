@@ -8,39 +8,39 @@
 
 namespace gmk {
 
-AGmkBase::AGmkBase() : baseInfo(), _40() {}
+AGmkBase::AGmkBase() : unknown08(), _40() {}
 
 void AGmkBase::disposeBase() {
-  baseInfo.list = nullptr;
-  baseInfo.xform = nullptr;
-  baseInfo.gobInfo = nullptr;
+  unknown08.unknown00 = nullptr;
+  unknown08.unknown08 = nullptr;
+  unknown08.unknown10 = nullptr;
 }
 
-u8 *AGmkBase::getBindedBdatFp() const { return baseInfo.list->getBindedBdatFp(); }
+u8 *AGmkBase::getBindedBdatFp() const { return unknown08.unknown00->getBindedBdatFp(); }
 
 bool AGmkBase::canCreateGameEntity() const {
-  const GmkSet *set = baseInfo.list->getCreateInfo().set;
+  const GmkSet *set = unknown08.unknown00->getCreateInfo().unknown08;
   if (set == nullptr) {
     return true;
   }
-  return !set->createInfo.isGameEntityDisabled;
+  return !set->unknown10.unknown24;
 }
 
 f32 AGmkBase::getYSnapRayLength() const {
-  switch (baseInfo.gobInfo->shapeType) {
+  switch (unknown08.unknown10->unknown0c) {
   case SHAPE_TYPE_POINT:
   case SHAPE_TYPE_BOX:
-    return baseInfo.xform->scale.y;
+    return unknown08.unknown08->unknown20.y;
   case SHAPE_TYPE_SPHERE:
-    return baseInfo.xform->scale.x;
+    return unknown08.unknown08->unknown20.x;
   case SHAPE_TYPE_CAPSULE:
-    return baseInfo.xform->scale.x + baseInfo.xform->scale.y;
+    return unknown08.unknown08->unknown20.x + unknown08.unknown08->unknown20.y;
   default:
     return 1.0f;
   }
 }
 
-void AGmkBase::createBase(const CreateBaseInfo &info) { baseInfo = info; }
+void AGmkBase::createBase(const CreateBaseInfo &info) { unknown08 = info; }
 
 void AGmkBase::bindToGameObj(gf::GF_OBJ_HANDLE *handle) const {
   gf::GfObjAcc acc(handle);
@@ -59,7 +59,7 @@ void AGmkBase::unbindToGameObj(gf::GF_OBJ_HANDLE *handle) const {
 
 int AGmkBase::findBdatRowIndex() const {
   u8 *bdat = getBindedBdatFp();
-  const char *name = baseInfo.gobInfo->name;
+  const char *name = unknown08.unknown10->unknown00;
   if (name[0] == '\0') {
     return -1;
   }

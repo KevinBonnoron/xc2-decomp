@@ -15,13 +15,13 @@ class IGmkList;
 class GmkSet {
 public:
   struct CreateInfo {
-    CreateInfo() : gmkSetId(-1), position(0.0f, 0.0f, 0.0f), rotation(0.0f), isGameEntityDisabled(false) {}
+    CreateInfo() : unknown04(-1), unknown10(0.0f, 0.0f, 0.0f), unknown20(0.0f), unknown24(false) {}
 
-    mtl::ALLOC_HANDLE memory;
-    int gmkSetId;
-    mm::Vec3 position;
-    f32 rotation;
-    bool isGameEntityDisabled;
+    mtl::ALLOC_HANDLE unknown00; // Inferred role: memory; original member name unknown.
+    int unknown04;               // Inferred role: gmk set id; original member name unknown.
+    mm::Vec3 unknown10;          // Inferred role: position; original member name unknown.
+    f32 unknown20;               // Inferred role: rotation; original member name unknown.
+    bool unknown24;              // Inferred role: game entity disabled; original member name unknown.
   };
 
   virtual ~GmkSet();
@@ -47,18 +47,18 @@ public:
   void seqCreateMapBdat(f32 deltaTime);
   void seqCreateMapGmk(f32 deltaTime);
 
-  CreateInfo createInfo;
-  GmkBdat mapBdat;
-  GmkNpcManager npcManager;
-  IGmkList *lists[GMK_TYPE_NUM];
-  void (GmkSet::*seq)(f32);
+  CreateInfo unknown10;               // Inferred role: create info; original member name unknown.
+  GmkBdat unknown40;                  // Inferred role: map bdat; original member name unknown.
+  GmkNpcManager unknown178;           // Inferred role: npc manager; original member name unknown.
+  IGmkList *unknown1b8[GMK_TYPE_NUM]; // Inferred role: lists; original member name unknown.
+  void (GmkSet::*unknown388)(f32);    // Inferred role: seq; original member name unknown.
 };
 
 static_assert(sizeof(GmkSet::CreateInfo) == 0x30, "");
-static_assert(offsetof(GmkSet, createInfo) == 0x10, "");
-static_assert(offsetof(GmkSet, mapBdat) == 0x40, "");
-static_assert(offsetof(GmkSet, npcManager) == 0x178, "");
-static_assert(offsetof(GmkSet, lists) == 0x1b8, "");
-static_assert(offsetof(GmkSet, seq) == 0x388, "");
+static_assert(offsetof(GmkSet, unknown10) == 0x10, "");
+static_assert(offsetof(GmkSet, unknown40) == 0x40, "");
+static_assert(offsetof(GmkSet, unknown178) == 0x178, "");
+static_assert(offsetof(GmkSet, unknown1b8) == 0x1b8, "");
+static_assert(offsetof(GmkSet, unknown388) == 0x388, "");
 
 } // namespace gmk

@@ -17,11 +17,11 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched() const;
 
-    u16 condition;
-    u16 climbIconRadius;
-    ScenarioFlagCond scenarioFlag;
-    QuestFlagCond questFlag;
-    BootedGmkCond bootedGmk;
+    u16 unknown00;              // Inferred role: condition; original member name unknown.
+    u16 unknown02;              // Inferred role: climb icon radius; original member name unknown.
+    ScenarioFlagCond unknown04; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond unknown08;    // Inferred role: quest flag; original member name unknown.
+    BootedGmkCond unknown0c;    // Inferred role: booted gmk; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_CLIMBING;

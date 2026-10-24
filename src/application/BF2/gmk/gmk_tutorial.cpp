@@ -11,27 +11,27 @@ constexpr int GAME_FLAG_SYS_MULTI_FLAG = 35322;
 
 void GmkTutorial::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   ScenarioFlagCond minScenarioFlag(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), 0xffff);
-  if (minScenarioFlag.min != 0) {
-    scenarioFlag = minScenarioFlag;
+  if (minScenarioFlag.unknown00 != 0) {
+    unknown02 = minScenarioFlag;
   }
-  questFlag = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
-  sysMultiFlag = bdat.getValCheck("SysMultiFlag", id, BDAT_TYPE_U8);
+  unknown06 = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
+  unknown00 = bdat.getValCheck("SysMultiFlag", id, BDAT_TYPE_U8);
 }
 
 bool GmkTutorial::BdatInfo::isCondMatched() const {
-  if (scenarioFlag.isEnable()) {
+  if (unknown02.isEnable()) {
     u16 flag = gf::GfDataUtil::getScenarioFlag();
-    if (scenarioFlag.min > flag) {
+    if (unknown02.unknown00 > flag) {
       return false;
     }
-    if (flag > scenarioFlag.max) {
+    if (flag > unknown02.unknown02) {
       return false;
     }
   }
-  if (questFlag.isEnable() && !questFlag.isMatch()) {
+  if (unknown06.isEnable() && !unknown06.isMatch()) {
     return false;
   }
-  if (sysMultiFlag != 0 && gf::GfGameFlag::getLocal(1, sysMultiFlag + GAME_FLAG_SYS_MULTI_FLAG) == 0) {
+  if (unknown00 != 0 && gf::GfGameFlag::getLocal(1, unknown00 + GAME_FLAG_SYS_MULTI_FLAG) == 0) {
     return false;
   }
   return true;

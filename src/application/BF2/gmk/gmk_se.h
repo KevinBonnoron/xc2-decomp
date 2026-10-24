@@ -24,19 +24,19 @@ public:
     bool isPopCondMatched() const;
     fw::SoundPack *getSoundPack() const;
 
-    bool isMapPack;
-    bool isPlayOnce;
-    u16 seName;
-    u8 volumeMax;
-    u8 volumeMin;
-    u16 condition;
-    u8 inRoomVolume;
-    ScenarioFlagCond scenarioFlag;
-    QuestFlagCond questFlag;
-    TimeCond timeCond;
-    WeatherCond weatherCond;
-    BootedGmkCond bootedGmk;
-    BootedGmkCond opBootedGmk;
+    bool unknown00;             // Inferred role: map pack; original member name unknown.
+    bool unknown01;             // Inferred role: play once; original member name unknown.
+    u16 unknown02;              // Inferred role: se name; original member name unknown.
+    u8 unknown04;               // Inferred role: volume max; original member name unknown.
+    u8 unknown05;               // Inferred role: volume min; original member name unknown.
+    u16 unknown06;              // Inferred role: condition; original member name unknown.
+    u8 unknown08;               // Inferred role: in room volume; original member name unknown.
+    ScenarioFlagCond unknown0a; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond unknown0e;    // Inferred role: quest flag; original member name unknown.
+    TimeCond unknown18;         // Inferred role: time cond; original member name unknown.
+    WeatherCond unknown28;      // Inferred role: weather cond; original member name unknown.
+    BootedGmkCond unknown38;    // Inferred role: booted gmk; original member name unknown.
+    BootedGmkCond unknown3c;    // Inferred role: op booted gmk; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_SE;

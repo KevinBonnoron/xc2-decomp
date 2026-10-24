@@ -27,18 +27,18 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 
-    u16 condition;
-    u16 depopCondition;
-    f32 damageInterval;
-    u8 pcDamage;
-    u8 enemyDamage;
-    const char *effectName;
-    u8 seName;
-    u8 volumeMax;
-    u8 volumeMin;
-    BootedGmkCond depopBootedGmk;
-    DistCond effectDispDist;
-    DistCond effectReleaseDist;
+    u16 unknown00;           // Inferred role: condition; original member name unknown.
+    u16 unknown02;           // Inferred role: depop condition; original member name unknown.
+    f32 unknown04;           // Inferred role: damage interval; original member name unknown.
+    u8 unknown08;            // Inferred role: pc damage; original member name unknown.
+    u8 unknown09;            // Inferred role: enemy damage; original member name unknown.
+    const char *unknown10;   // Inferred role: effect name; original member name unknown.
+    u8 unknown18;            // Inferred role: se name; original member name unknown.
+    u8 unknown19;            // Inferred role: volume max; original member name unknown.
+    u8 unknown1a;            // Inferred role: volume min; original member name unknown.
+    BootedGmkCond unknown1c; // Inferred role: depop booted gmk; original member name unknown.
+    DistCond unknown20;      // Inferred role: effect disp dist; original member name unknown.
+    DistCond unknown24;      // Inferred role: effect release dist; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_GIMMICK;
@@ -113,7 +113,7 @@ public:
 
   ~GmkDmgSe() override { dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
-  bool isValid() const override { return baseInfo.list != nullptr && createInfo.data != nullptr; }
+  bool isValid() const override { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
   void createGmkPhantom() const;
   void createSeInst(fw::SoundPack *pack, u32 id) const;
   void disposeSeInst(bool isFadeOut) const;
@@ -122,16 +122,16 @@ public:
   void validateMute() const;
 
   u8 _48[0x50 - 0x48];
-  mutable GmkPhantom phantom;
-  bool isMute;
-  mutable u32 seHandle;
-  mutable f32 seVolume;
+  mutable GmkPhantom unknown50; // Inferred role: phantom; original member name unknown.
+  bool unknowne0;               // Inferred role: mute; original member name unknown.
+  mutable u32 unknowne4;        // Inferred role: se handle; original member name unknown.
+  mutable f32 unknowne8;        // Inferred role: se volume; original member name unknown.
 };
 
-static_assert(offsetof(GmkDmgSe, phantom) == 0x50, "");
-static_assert(offsetof(GmkDmgSe, isMute) == 0xe0, "");
-static_assert(offsetof(GmkDmgSe, seHandle) == 0xe4, "");
-static_assert(offsetof(GmkDmgSe, seVolume) == 0xe8, "");
+static_assert(offsetof(GmkDmgSe, unknown50) == 0x50, "");
+static_assert(offsetof(GmkDmgSe, unknowne0) == 0xe0, "");
+static_assert(offsetof(GmkDmgSe, unknowne4) == 0xe4, "");
+static_assert(offsetof(GmkDmgSe, unknowne8) == 0xe8, "");
 static_assert(sizeof(GmkDmgSe) == 0xf0, "");
 
 class GmkDmgSeList : public TGmkList<GmkDmgSe, GmkDmgSe::BdatInfo, 0x45534d44, 2, GmkDmgSeGob> {

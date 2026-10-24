@@ -15,41 +15,41 @@
 namespace gmk {
 
 void GmkMapObj::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  condition = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
   u16 visibleXZ = bdat.getValCheck("Visible_XZ", id, BDAT_TYPE_U16);
   u16 visibleY = bdat.getValCheck("Visible_Y", id, BDAT_TYPE_U16);
-  popDist.set(visibleXZ, visibleY);
+  unknown04.set(visibleXZ, visibleY);
   u16 invisibleXZ = DistHvCond::clampDepopDist(bdat.getValCheck("Invisible_XZ", id, BDAT_TYPE_U16), visibleXZ);
   u16 invisibleY = DistHvCond::clampDepopDist(bdat.getValCheck("Invisible_Y", id, BDAT_TYPE_U16), visibleY);
-  depopDist.set(invisibleXZ, invisibleY);
+  unknown0c.set(invisibleXZ, invisibleY);
   if (Bdat::getMember(bdat.unknown00, "Priority") != nullptr) {
-    priority = bdat.getValCheck("Priority", id, BDAT_TYPE_U8);
+    unknown02 = bdat.getValCheck("Priority", id, BDAT_TYPE_U8);
   }
 }
 
 bool GmkMapObj::BdatInfo::isPopCondMatched(const mm::Vec3 &position) const {
-  if (!popDist.isMatch(position)) {
+  if (!unknown04.isMatch(position)) {
     return false;
   }
-  if (condition != 0 && !gf::GfGameCond::isGameCond(condition)) {
+  if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
     return false;
   }
   return true;
 }
 
 bool GmkMapObj::BdatInfo::isDepopCondMatched(const mm::Vec3 &position) const {
-  if (!depopDist.isMatch(position)) {
+  if (!unknown0c.isMatch(position)) {
     return true;
   }
-  if (condition != 0 && !gf::GfGameCond::isGameCond(condition)) {
+  if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
     return true;
   }
   return false;
 }
 
 void GmkMapObj::reqDisposeGob(f32 fadeTime, u32 attribute) const {
-  disposeFadeTime = fadeTime;
-  disposeAttribute = attribute;
+  unknown54 = fadeTime;
+  unknown58 = attribute;
 }
 
 void GmkMapObj::dispose() {
@@ -58,16 +58,16 @@ void GmkMapObj::dispose() {
 }
 
 void GmkMapObj::disposeGobInst(bool isFadeOut) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (unknown48 == gf::INVALID_HANDLE) {
     return;
   }
-  if (isFadeOut && disposeFadeTime > 0.0f) {
-    disposeGobInstWithAttr(handle, disposeAttribute, disposeFadeTime);
-    disposeFadeTime = 0.0f;
+  if (isFadeOut && unknown54 > 0.0f) {
+    disposeGobInstWithAttr(unknown48, unknown58, unknown54);
+    unknown54 = 0.0f;
   } else {
-    unbindToGameObj(handle);
-    gmk::disposeGobInst(handle, 0.0f);
-    handle = gf::INVALID_HANDLE;
+    unbindToGameObj(unknown48);
+    gmk::disposeGobInst(unknown48, 0.0f);
+    unknown48 = gf::INVALID_HANDLE;
   }
 }
 
@@ -87,10 +87,10 @@ void GmkMapObj::update(f32 deltaTime) {
 }
 
 bool GmkMapObj::canPopGobInst() const {
-  if (handle != gf::INVALID_HANDLE || !getBdatInfo()->isPopCondMatched(baseInfo.xform->position)) {
+  if (unknown48 != gf::INVALID_HANDLE || !getBdatInfo()->isPopCondMatched(unknown08.unknown08->unknown00)) {
     return false;
   }
-  if (isRemoved && !isRevived) {
+  if (unknown51 && !unknown52) {
     return false;
   }
   return true;
@@ -102,28 +102,28 @@ void GmkMapObj::createGobInst() {
   }
   disposeGobInst(false);
   CBdatWrapper bdat = {getBindedBdatFp()};
-  handle = gf::GfObjFactory::createGmkMapObj(bdat, createInfo.bdatIndex);
-  bindToGameObj(handle);
+  unknown48 = gf::GfObjFactory::createGmkMapObj(bdat, unknown20.unknown18);
+  bindToGameObj(unknown48);
   validateDisp();
-  gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(handle);
-  const Xform *xform = baseInfo.xform;
-  setup->unknown20 = xform->position;
-  setup->unknown30 = xform->rotation;
-  setup->setInitialScale(baseInfo.xform->scale.x);
+  gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(unknown48);
+  const Xform *xform = unknown08.unknown08;
+  setup->unknown20 = xform->unknown00;
+  setup->unknown30 = xform->unknown10;
+  setup->setInitialScale(unknown08.unknown08->unknown20.x);
 }
 
 bool GmkMapObj::canDepopGobInst() const {
-  if (handle != gf::INVALID_HANDLE && (getBdatInfo()->isDepopCondMatched(baseInfo.xform->position) || (isRemoved && !isRevived))) {
+  if (unknown48 != gf::INVALID_HANDLE && (getBdatInfo()->isDepopCondMatched(unknown08.unknown08->unknown00) || (unknown51 && !unknown52))) {
     return true;
   }
   return false;
 }
 
 void GmkMapObj::validateDisp() const {
-  if (handle == gf::INVALID_HANDLE) {
+  if (unknown48 == gf::INVALID_HANDLE) {
     return;
   }
-  setEventDisp(handle, isDisp && debugIsDispGmkType(getGmkType()));
+  setEventDisp(unknown48, unknown50 && debugIsDispGmkType(getGmkType()));
 }
 
 void GmkMapObj::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
@@ -133,7 +133,7 @@ void GmkMapObj::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *
   }
 }
 
-GmkRoutedMapObj::GmkRoutedMapObj() : handle(gf::INVALID_HANDLE), isDisp(true) {}
+GmkRoutedMapObj::GmkRoutedMapObj() : unknown50(gf::INVALID_HANDLE), unknown58(true) {}
 
 void GmkRoutedMapObj::create(const CreateInfo &info) { GmkRoute::create(info); }
 
@@ -143,12 +143,12 @@ void GmkRoutedMapObj::dispose() {
 }
 
 void GmkRoutedMapObj::disposeGobInst() {
-  if (handle == gf::INVALID_HANDLE) {
+  if (unknown50 == gf::INVALID_HANDLE) {
     return;
   }
-  unbindToGameObj(handle);
-  gf::GfObjUtil::destroy(handle);
-  handle = gf::INVALID_HANDLE;
+  unbindToGameObj(unknown50);
+  gf::GfObjUtil::destroy(unknown50);
+  unknown50 = gf::INVALID_HANDLE;
 }
 
 void GmkRoutedMapObj::update(f32 deltaTime) {
@@ -172,28 +172,28 @@ void GmkRoutedMapObj::createGobInst() {
   }
   disposeGobInst();
   CBdatWrapper bdat = {getBindedBdatFp()};
-  handle = gf::GfObjFactory::createGmkMapObj(bdat, createInfo.bdatIndex);
-  bindToGameObj(handle);
+  unknown50 = gf::GfObjFactory::createGmkMapObj(bdat, unknown20.unknown18);
+  bindToGameObj(unknown50);
   validateDisp();
-  gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(handle)->unknown30);
-  const Xform *xform = baseInfo.xform;
-  setup->unknown20 = xform->position;
-  setup->unknown30 = xform->rotation;
+  gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(unknown50)->unknown30);
+  const Xform *xform = unknown08.unknown08;
+  setup->unknown20 = xform->unknown00;
+  setup->unknown30 = xform->unknown10;
 }
 
 void GmkRoutedMapObj::validateDisp() const {
-  if (handle == gf::INVALID_HANDLE) {
+  if (unknown50 == gf::INVALID_HANDLE) {
     return;
   }
-  setEventDisp(handle, isDisp && debugIsDispGmkType(getGmkType()));
+  setEventDisp(unknown50, unknown58 && debugIsDispGmkType(getGmkType()));
 }
 
-const IGmkList *GmkRoutedMapObj::getBindedRoutePointList() const { return baseInfo.list->getCreateInfo().set->lists[GMK_TYPE_MAP_OBJ_ROUTE_POINT]; }
+const IGmkList *GmkRoutedMapObj::getBindedRoutePointList() const { return unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_MAP_OBJ_ROUTE_POINT]; }
 
 void GmkRoutedMapObj::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
   if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
-    this->handle = gf::INVALID_HANDLE;
+    this->unknown50 = gf::INVALID_HANDLE;
   }
 }
 

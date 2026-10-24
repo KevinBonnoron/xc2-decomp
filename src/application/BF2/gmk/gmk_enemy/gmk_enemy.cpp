@@ -17,28 +17,28 @@ static u32 getU8OrU16(const CBdatWrapper &bdat, const char *name, int id) {
 }
 
 void GmkEnemy::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  targetPointName = bdat.getValCheck("tagetpoint_name", id, BDAT_TYPE_U16);
-  isPopSummon = Bdat::getFlagVal(bdat.unknown00, "flag", id, "pop_smn") != 0;
-  displayRadius = getU8OrU16(bdat, "ene_disp_r", id);
-  displayHeight = getU8OrU16(bdat, "ene_disp_h", id);
+  unknown00 = bdat.getValCheck("tagetpoint_name", id, BDAT_TYPE_U16);
+  unknown02 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "pop_smn") != 0;
+  unknown04 = getU8OrU16(bdat, "ene_disp_r", id);
+  unknown06 = getU8OrU16(bdat, "ene_disp_h", id);
 }
 
 bool GmkEnemyList::BdatInfo::create() {
   u8 *mapList = gf::GfDataBdat::getFP(gf::BDAT_FLD_MAPLIST);
   if (mapList == nullptr) {
-    mapId = -1;
+    unknown00 = -1;
     return false;
   }
-  mapId = gf::GfGameManager::getMapID();
-  if (mapId < Bdat::getIdTop(mapList) || Bdat::getIdTop(mapList) + Bdat::getIdCount(mapList) <= mapId) {
-    mapId = -1;
+  unknown00 = gf::GfGameManager::getMapID();
+  if (unknown00 < Bdat::getIdTop(mapList) || Bdat::getIdTop(mapList) + Bdat::getIdCount(mapList) <= unknown00) {
+    unknown00 = -1;
     return false;
   }
-  enemyDisplayRadius = Bdat::getValCheck(mapList, "ene_disp_r", mapId, BDAT_TYPE_U8);
-  enemyDisplayHeight = Bdat::getValCheck(mapList, "ene_disp_h", mapId, BDAT_TYPE_U8);
-  enemyReleaseRadius = Bdat::getValCheck(mapList, "ene_release_r", mapId, BDAT_TYPE_U8);
-  enemyReleaseHeight = Bdat::getValCheck(mapList, "ene_release_h", mapId, BDAT_TYPE_U8);
-  enemyRepopTime = Bdat::getValCheck(mapList, "e_repoptime", mapId, BDAT_TYPE_U8);
+  unknown04 = Bdat::getValCheck(mapList, "ene_disp_r", unknown00, BDAT_TYPE_U8);
+  unknown05 = Bdat::getValCheck(mapList, "ene_disp_h", unknown00, BDAT_TYPE_U8);
+  unknown06 = Bdat::getValCheck(mapList, "ene_release_r", unknown00, BDAT_TYPE_U8);
+  unknown07 = Bdat::getValCheck(mapList, "ene_release_h", unknown00, BDAT_TYPE_U8);
+  unknown08 = Bdat::getValCheck(mapList, "e_repoptime", unknown00, BDAT_TYPE_U8);
   return true;
 }
 

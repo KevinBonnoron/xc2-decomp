@@ -9,49 +9,49 @@
 namespace gmk {
 
 void GmkSe::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  isMapPack = Bdat::getFlagVal(bdat.unknown00, "flag", id, "se_type") != 0;
-  isPlayOnce = Bdat::getFlagVal(bdat.unknown00, "flag", id, "play_once") != 0;
-  seName = bdat.getValCheck("seName", id, BDAT_TYPE_U16);
-  volumeMax = bdat.getValCheck("volumeMAX", id, BDAT_TYPE_U8);
-  volumeMin = bdat.getValCheck("volumeMIN", id, BDAT_TYPE_U8);
-  scenarioFlag = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
-  questFlag = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
-  condition = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
+  unknown00 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "se_type") != 0;
+  unknown01 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "play_once") != 0;
+  unknown02 = bdat.getValCheck("seName", id, BDAT_TYPE_U16);
+  unknown04 = bdat.getValCheck("volumeMAX", id, BDAT_TYPE_U8);
+  unknown05 = bdat.getValCheck("volumeMIN", id, BDAT_TYPE_U8);
+  unknown0a = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
+  unknown0e = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
+  unknown06 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
   u16 popTime = bdat.getValCheck("SEpopTime", id, BDAT_TYPE_U16);
-  timeCond.timeRangeBits = popTime;
-  weatherCond.weatherBits = bdat.getValCheck("wtrSEType", id, BDAT_TYPE_U8);
-  bootedGmk = BootedGmkCond(bdat, id, nullptr);
-  opBootedGmk = BootedGmkCond(bdat, id, "OP_");
-  inRoomVolume = bdat.getValCheck("InRoom_volume", id, BDAT_TYPE_U8);
+  unknown18.unknown08 = popTime;
+  unknown28.unknown08 = bdat.getValCheck("wtrSEType", id, BDAT_TYPE_U8);
+  unknown38 = BootedGmkCond(bdat, id, nullptr);
+  unknown3c = BootedGmkCond(bdat, id, "OP_");
+  unknown08 = bdat.getValCheck("InRoom_volume", id, BDAT_TYPE_U8);
 }
 
 bool GmkSe::BdatInfo::isPopCondMatched() const {
-  if (scenarioFlag.isEnable() && !scenarioFlag.isMatch()) {
+  if (unknown0a.isEnable() && !unknown0a.isMatch()) {
     return false;
   }
-  if (questFlag.isEnable() && !questFlag.isMatch()) {
+  if (unknown0e.isEnable() && !unknown0e.isMatch()) {
     return false;
   }
-  if (condition != 0 && !gf::GfGameCond::isGameCond(condition)) {
+  if (unknown06 != 0 && !gf::GfGameCond::isGameCond(unknown06)) {
     return false;
   }
-  if (timeCond.isEnable() && !timeCond.isMatch()) {
+  if (unknown18.isEnable() && !unknown18.isMatch()) {
     return false;
   }
-  if (weatherCond.isEnable() && !weatherCond.isMatch()) {
+  if (unknown28.isEnable() && !unknown28.isMatch()) {
     return false;
   }
-  if (bootedGmk.isEnable() && !bootedGmk.isMatch()) {
+  if (unknown38.isEnable() && !unknown38.isMatch()) {
     return false;
   }
-  if (opBootedGmk.isEnable() && opBootedGmk.isMatch()) {
+  if (unknown3c.isEnable() && unknown3c.isMatch()) {
     return false;
   }
   return true;
 }
 
 fw::SoundPack *GmkSe::BdatInfo::getSoundPack() const {
-  if (isMapPack) {
+  if (unknown00) {
     return gf::GfFieldSound::get()->getMapPack();
   }
   return gf::GfFieldSound::get()->getCommonPack();

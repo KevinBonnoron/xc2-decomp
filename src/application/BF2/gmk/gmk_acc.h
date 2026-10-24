@@ -13,25 +13,25 @@ class IGmkList;
 class GmkAcc : public mm::mtl::IntrusiveListNode<GmkAcc> {
 public:
   struct CreateInfo {
-    CreateInfo() : gmkSetId(-1), type(GMK_TYPE_NUM), index(0), isUpdateImmediate(true) {}
+    CreateInfo() : unknown00(-1), unknown04(GMK_TYPE_NUM), unknown08(0), unknown0c(true) {}
 
-    bool isValid() const { return gmkSetId > 0 && type != GMK_TYPE_NUM; }
+    bool isValid() const { return unknown00 > 0 && unknown04 != GMK_TYPE_NUM; }
     void validate(const AGmkBase &gmk);
 
-    int gmkSetId;
-    GmkType type;
-    u32 index;
-    bool isUpdateImmediate;
+    int unknown00;     // Inferred role: gmk set id; original member name unknown.
+    GmkType unknown04; // Inferred role: type; original member name unknown.
+    u32 unknown08;     // Inferred role: index; original member name unknown.
+    bool unknown0c;    // Inferred role: update immediate; original member name unknown.
   };
 
   struct CreateInfoByBdatId {
-    CreateInfoByBdatId() : type(GMK_TYPE_NUM), bdatId(-1), isUpdateImmediate(true) {}
+    CreateInfoByBdatId() : unknown00(GMK_TYPE_NUM), unknown04(-1), unknown08(true) {}
 
-    bool isValid() const { return type != GMK_TYPE_NUM && bdatId > 0; }
+    bool isValid() const { return unknown00 != GMK_TYPE_NUM && unknown04 > 0; }
 
-    GmkType type;
-    int bdatId;
-    bool isUpdateImmediate;
+    GmkType unknown00; // Inferred role: type; original member name unknown.
+    int unknown04;     // Inferred role: bdat id; original member name unknown.
+    bool unknown08;    // Inferred role: update immediate; original member name unknown.
   };
 
   GmkAcc();
@@ -46,14 +46,14 @@ public:
   void dispose();
   void update();
 
-  CreateInfo createInfo;
-  CreateInfoByBdatId createInfoByBdatId;
-  const AGmkBase *gmk;
+  CreateInfo unknown18;         // Inferred role: create info; original member name unknown.
+  CreateInfoByBdatId unknown28; // Inferred role: create info by bdat id; original member name unknown.
+  const AGmkBase *unknown38;    // Inferred role: gmk; original member name unknown.
 };
 
-static_assert(offsetof(GmkAcc, createInfo) == 0x18, "");
-static_assert(offsetof(GmkAcc, createInfoByBdatId) == 0x28, "");
-static_assert(offsetof(GmkAcc, gmk) == 0x38, "");
+static_assert(offsetof(GmkAcc, unknown18) == 0x18, "");
+static_assert(offsetof(GmkAcc, unknown28) == 0x28, "");
+static_assert(offsetof(GmkAcc, unknown38) == 0x38, "");
 static_assert(sizeof(GmkAcc) == 0x40, "");
 
 class GmkAccManager : public mm::mtl::PtrSingleton<GmkAccManager> {
@@ -65,11 +65,11 @@ public:
   void update();
   static void invalidateAccs(const IGmkList &list);
 
-  mm::mtl::IntrusiveList<GmkAcc> invalidAccs;
-  mm::mtl::IntrusiveList<GmkAcc> validAccs;
+  mm::mtl::IntrusiveList<GmkAcc> unknown08; // Inferred role: invalid accs; original member name unknown.
+  mm::mtl::IntrusiveList<GmkAcc> unknown20; // Inferred role: valid accs; original member name unknown.
 };
 
-static_assert(offsetof(GmkAccManager, invalidAccs) == 0x08, "");
-static_assert(offsetof(GmkAccManager, validAccs) == 0x20, "");
+static_assert(offsetof(GmkAccManager, unknown08) == 0x08, "");
+static_assert(offsetof(GmkAccManager, unknown20) == 0x20, "");
 
 } // namespace gmk

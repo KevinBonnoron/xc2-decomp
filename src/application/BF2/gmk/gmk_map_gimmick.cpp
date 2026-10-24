@@ -9,26 +9,26 @@ namespace gmk {
 
 void GmkMapGimmick::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   u16 popTime = bdat.getValCheck("popTime", id, BDAT_TYPE_U32);
-  timeCond.timeRangeBits = popTime;
-  weatherCond.weatherBits = bdat.getValCheck("popWeather", id, BDAT_TYPE_U8);
-  bootedGmk = BootedGmkCond(bdat, id, nullptr);
-  condition = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
-  nameRadius = bdat.getValCheck("nameRadius", id, BDAT_TYPE_U16);
-  mapObjId = bdat.getValCheck("mapobjID", id, BDAT_TYPE_U16);
-  isMsgRay = Bdat::getFlagVal(bdat.unknown00, "flag", id, "MSG_ray") != 0;
+  unknown08.unknown08 = popTime;
+  unknown18.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_U8);
+  unknown28 = BootedGmkCond(bdat, id, nullptr);
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
+  unknown02 = bdat.getValCheck("nameRadius", id, BDAT_TYPE_U16);
+  unknown04 = bdat.getValCheck("mapobjID", id, BDAT_TYPE_U16);
+  unknown06 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "MSG_ray") != 0;
 }
 
 bool GmkMapGimmick::BdatInfo::isPopCondMatched() const {
-  if (timeCond.isEnable() && !timeCond.isMatch()) {
+  if (unknown08.isEnable() && !unknown08.isMatch()) {
     return false;
   }
-  if (weatherCond.isEnable() && !weatherCond.isMatch()) {
+  if (unknown18.isEnable() && !unknown18.isMatch()) {
     return false;
   }
-  if (bootedGmk.isEnable() && !bootedGmk.isMatch()) {
+  if (unknown28.isEnable() && !unknown28.isMatch()) {
     return false;
   }
-  if (condition != 0 && !gf::GfGameCond::isGameCond(condition)) {
+  if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
     return false;
   }
   return true;

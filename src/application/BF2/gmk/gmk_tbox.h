@@ -30,18 +30,18 @@ public:
     bool isDepopCondMatched(const mm::Vec3 &position) const;
     void debugDraw(const AGmkBase &gmk) const;
 
-    u16 condition;
-    bool isDig;
-    u8 msgVisible;
-    u8 msgDigVisible;
-    bool isTboxCategory;
-    DistCond popDist;
-    DistCond depopDist;
+    u16 unknown00;      // Inferred role: condition; original member name unknown.
+    bool unknown02;     // Inferred role: dig; original member name unknown.
+    u8 unknown03;       // Inferred role: msg visible; original member name unknown.
+    u8 unknown04;       // Inferred role: msg dig visible; original member name unknown.
+    bool unknown05;     // Inferred role: tbox category; original member name unknown.
+    DistCond unknown08; // Inferred role: pop dist; original member name unknown.
+    DistCond unknown0c; // Inferred role: depop dist; original member name unknown.
   };
 
   struct Data {
     u8 _00[0x4 - 0x0];
-    u8 scale;
+    u8 unknown04; // Inferred role: scale; original member name unknown.
   };
 
   enum Progress {
@@ -72,21 +72,21 @@ public:
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
 
-  const Data *getData() const { return static_cast<const Data *>(createInfo.data); }
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(createInfo.info); }
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
-  gf::GF_OBJ_HANDLE *handle;
-  bool isDisp;
-  f32 openedDisposeTime;
-  f32 openedTimer;
+  gf::GF_OBJ_HANDLE *unknown48; // Inferred role: handle; original member name unknown.
+  bool unknown50;               // Inferred role: disp; original member name unknown.
+  f32 unknown54;                // Inferred role: opened dispose time; original member name unknown.
+  f32 unknown58;                // Inferred role: opened timer; original member name unknown.
 };
 
 static_assert(sizeof(GmkTbox::BdatInfo) == 0x10, "");
-static_assert(offsetof(GmkTbox::Data, scale) == 0x4, "");
-static_assert(offsetof(GmkTbox, handle) == 0x48, "");
-static_assert(offsetof(GmkTbox, isDisp) == 0x50, "");
-static_assert(offsetof(GmkTbox, openedDisposeTime) == 0x54, "");
-static_assert(offsetof(GmkTbox, openedTimer) == 0x58, "");
+static_assert(offsetof(GmkTbox::Data, unknown04) == 0x4, "");
+static_assert(offsetof(GmkTbox, unknown48) == 0x48, "");
+static_assert(offsetof(GmkTbox, unknown50) == 0x50, "");
+static_assert(offsetof(GmkTbox, unknown54) == 0x54, "");
+static_assert(offsetof(GmkTbox, unknown58) == 0x58, "");
 static_assert(sizeof(GmkTbox) == 0x60, "");
 
 typedef TGmkList<GmkTbox, GmkTbox::BdatInfo, 0x584f4254, 6, GmkTboxGob> GmkTboxList;

@@ -163,10 +163,10 @@ f32 GfFieldManager::getEnemyBaloonRadius() { return get()->unknown1c; }
 const char *GfFieldManager::getMapName() { return GfMapManager::getMapName(); }
 
 bool GfFieldManager::getLandmarkNameId(u8 *&bdat, int &textId) {
-  gmk::GmkLandmark *landmark = gmk::GmkLandmarkManager::get()->frontLandmark;
+  gmk::GmkLandmark *landmark = gmk::GmkLandmarkManager::get()->unknown20;
   if (landmark != nullptr) {
     bdat = GfDataBdat::getFP(BDAT_FLD_LANDMARK);
-    textId = landmark->createInfo.info->id;
+    textId = landmark->unknown20.unknown10->id;
     return true;
   }
   return false;

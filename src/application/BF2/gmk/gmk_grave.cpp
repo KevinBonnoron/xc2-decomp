@@ -19,51 +19,51 @@ class GmkRoutedEnemy;
 
 void GmkGrave::BdatInfo::create(u8 *bdat, int id, const AGmkBase &gmk) {
   dispose();
-  enemyPopId = Bdat::getValCheck(bdat, "en_popID", id, BDAT_TYPE_U16);
+  unknown00 = Bdat::getValCheck(bdat, "en_popID", id, BDAT_TYPE_U16);
   u8 *mapList = gf::GfDataBdat::getFP(gf::BDAT_FLD_MAPLIST);
   if (mapList != nullptr) {
     int map = gf::GfGameManager::getMapID();
     if (map >= Bdat::getIdTop(mapList) && Bdat::getIdTop(mapList) + Bdat::getIdCount(mapList) > map) {
       u8 displayRadius = Bdat::getValCheck(mapList, "ene_disp_r", map, BDAT_TYPE_U8);
       u8 displayHeight = Bdat::getValCheck(mapList, "ene_disp_h", map, BDAT_TYPE_U8);
-      popDist.set(displayRadius, displayHeight);
+      unknown04.set(displayRadius, displayHeight);
       u8 releaseRadius = Bdat::getValCheck(mapList, "ene_release_r", map, BDAT_TYPE_U8);
       u8 releaseHeight = Bdat::getValCheck(mapList, "ene_release_h", map, BDAT_TYPE_U8);
-      depopDist.set(displayRadius + releaseRadius, displayHeight + releaseHeight);
-      const GmkSet *set = gmk.baseInfo.list->getCreateInfo().set;
+      unknown0c.set(displayRadius + releaseRadius, displayHeight + releaseHeight);
+      const GmkSet *set = gmk.unknown08.unknown00->getCreateInfo().unknown08;
       u8 *enemyBdat;
-      if (set->lists[GMK_TYPE_ENEMY] == nullptr || (enemyBdat = set->lists[GMK_TYPE_ENEMY]->getBindedBdatFp()) == nullptr) {
-        if (set->lists[GMK_TYPE_ROUTED_ENEMY] == nullptr) {
+      if (set->unknown1b8[GMK_TYPE_ENEMY] == nullptr || (enemyBdat = set->unknown1b8[GMK_TYPE_ENEMY]->getBindedBdatFp()) == nullptr) {
+        if (set->unknown1b8[GMK_TYPE_ROUTED_ENEMY] == nullptr) {
           return;
         }
-        enemyBdat = set->lists[GMK_TYPE_ROUTED_ENEMY]->getBindedBdatFp();
+        enemyBdat = set->unknown1b8[GMK_TYPE_ROUTED_ENEMY]->getBindedBdatFp();
         if (enemyBdat == nullptr) {
           return;
         }
       }
-      enemyId = Bdat::getValCheck(enemyBdat, "ene1ID", enemyPopId, BDAT_TYPE_U16);
+      unknown02 = Bdat::getValCheck(enemyBdat, "ene1ID", unknown00, BDAT_TYPE_U16);
       return;
     }
   }
   dispose();
 }
 
-bool GmkGrave::BdatInfo::isPopCondMatched(const mm::Vec3 &position) const { return popDist.isMatch(position); }
+bool GmkGrave::BdatInfo::isPopCondMatched(const mm::Vec3 &position) const { return unknown04.isMatch(position); }
 
-bool GmkGrave::BdatInfo::isDepopCondMatched(const mm::Vec3 &position) const { return !depopDist.isMatch(position); }
+bool GmkGrave::BdatInfo::isDepopCondMatched(const mm::Vec3 &position) const { return !unknown0c.isMatch(position); }
 
 void GmkGrave::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
 
 void GmkGrave::disposeGobInst(bool isFadeOut) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (unknown50 == gf::INVALID_HANDLE) {
     return;
   }
   if (isFadeOut) {
-    gmk::disposeGobInst(handle, 1.0f);
+    gmk::disposeGobInst(unknown50, 1.0f);
   } else {
-    unbindToGameObj(handle);
-    gf::GfObjUtil::destroy(handle);
-    handle = gf::INVALID_HANDLE;
+    unbindToGameObj(unknown50);
+    gf::GfObjUtil::destroy(unknown50);
+    unknown50 = gf::INVALID_HANDLE;
   }
 }
 
@@ -75,7 +75,7 @@ void GmkGrave::update(f32 deltaTime) {
   if (!getBdatInfo()->isValid()) {
     return;
   }
-  isEnemyDefeated = getDefeatedNum(getBdatInfo()->enemyId) != 0;
+  unknown48 = getDefeatedNum(getBdatInfo()->unknown02) != 0;
   validateTargetable();
   if (!isInterestPosExist()) {
     return;
@@ -88,20 +88,20 @@ void GmkGrave::update(f32 deltaTime) {
 }
 
 bool GmkGrave::canPopGobInst() const {
-  if (handle != gf::INVALID_HANDLE || !isEnemyDefeated) {
+  if (unknown50 != gf::INVALID_HANDLE || !unknown48) {
     return false;
   }
-  return getBdatInfo()->isPopCondMatched(baseInfo.xform->position);
+  return getBdatInfo()->isPopCondMatched(unknown08.unknown08->unknown00);
 }
 
 bool GmkGrave::canDepopGobInst() const {
-  if (handle == gf::INVALID_HANDLE) {
+  if (unknown50 == gf::INVALID_HANDLE) {
     return false;
   }
-  if (!isEnemyDefeated) {
+  if (!unknown48) {
     return true;
   }
-  return getBdatInfo()->isDepopCondMatched(baseInfo.xform->position);
+  return getBdatInfo()->isDepopCondMatched(unknown08.unknown08->unknown00);
 }
 
 void GmkGrave::debugDraw() const {

@@ -31,13 +31,13 @@ static_assert(sizeof(GmkMob) == 0x118, "");
 
 class GmkMobList : public TGmkList<GmkMob, GmkMob::BdatInfo, 0x424f4d, 2, GmkMobGob> {
 public:
-  explicit GmkMobList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), updateRoundCount(0) {}
+  explicit GmkMobList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), unknown228(0) {}
 
 protected:
   void onResetUpdateGmkIndex() override;
 
 private:
-  u32 updateRoundCount;
+  u32 unknown228; // Inferred role: update round count; original member name unknown.
 };
 
 static_assert(sizeof(GmkMobList) == 0x230, "");

@@ -7,20 +7,20 @@
 namespace gmk {
 
 void GmkRoutedFootPrint::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  footEffect = reinterpret_cast<const char *>(bdat.getValCheck("FootEffect", id, BDAT_TYPE_STRING));
-  scenarioFlag = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
-  questFlag = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
-  condition = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
+  unknown00 = reinterpret_cast<const char *>(bdat.getValCheck("FootEffect", id, BDAT_TYPE_STRING));
+  unknown0a = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
+  unknown0e = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
+  unknown08 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
 }
 
 bool GmkRoutedFootPrint::BdatInfo::isPopCondMatched() const {
-  if (scenarioFlag.isEnable() && !scenarioFlag.isMatch()) {
+  if (unknown0a.isEnable() && !unknown0a.isMatch()) {
     return false;
   }
-  if (questFlag.isEnable() && !questFlag.isMatch()) {
+  if (unknown0e.isEnable() && !unknown0e.isMatch()) {
     return false;
   }
-  if (condition != 0 && !gf::GfGameCond::isGameCond(condition)) {
+  if (unknown08 != 0 && !gf::GfGameCond::isGameCond(unknown08)) {
     return false;
   }
   return true;

@@ -15,7 +15,7 @@ public:
 
   ~GmkFieldVolume() override { dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
-  bool isValid() const override { return baseInfo.list != nullptr && createInfo.data != nullptr; }
+  bool isValid() const override { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
   void create(const CreateInfo &info) override;
 };
 

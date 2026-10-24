@@ -18,7 +18,7 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 
-    u16 condition;
+    u16 unknown00; // Inferred role: condition; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_SALVAGE;

@@ -536,7 +536,7 @@ bool GfGameUtil::getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle)
   if (gmkInst != nullptr) {
     u32 type = gmkInst->getGmkType();
     if (type <= gmk::GMK_TYPE_ROUTED_ENEMY) {
-      return getGmkTargetPointPos(position, gmkInst->createInfo.info->id);
+      return getGmkTargetPointPos(position, gmkInst->unknown20.unknown10->id);
     }
   }
 

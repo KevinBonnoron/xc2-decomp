@@ -7,7 +7,7 @@ namespace gmk {
 
 void GmkAntiBladeArea::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   dispose();
-  mapRevId = bdat.getValCheck("BTL_MapRevId", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("BTL_MapRevId", id, BDAT_TYPE_U16);
 }
 
 } // namespace gmk

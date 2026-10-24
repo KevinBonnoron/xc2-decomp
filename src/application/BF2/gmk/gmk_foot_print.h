@@ -18,10 +18,10 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched() const;
 
-    const char *footEffect;
-    u16 condition;
-    ScenarioFlagCond scenarioFlag;
-    QuestFlagCond questFlag;
+    const char *unknown00;      // Inferred role: foot effect; original member name unknown.
+    u16 unknown08;              // Inferred role: condition; original member name unknown.
+    ScenarioFlagCond unknown0a; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond unknown0e;    // Inferred role: quest flag; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_FOOT_PRINT;

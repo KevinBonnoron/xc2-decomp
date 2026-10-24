@@ -19,11 +19,11 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 
-    u16 msgId;
-    u8 category;
-    u16 condition;
-    bool isNoTelop;
-    const char *name;
+    u16 unknown00;         // Inferred role: msg id; original member name unknown.
+    u8 unknown02;          // Inferred role: category; original member name unknown.
+    u16 unknown04;         // Inferred role: condition; original member name unknown.
+    bool unknown06;        // Inferred role: no telop; original member name unknown.
+    const char *unknown08; // Inferred role: name; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_LANDMARK;
@@ -46,9 +46,9 @@ typedef TGmkList<GmkLandmark, GmkLandmark::BdatInfo, 0x4b4d444c, 2, GmkLandmarkG
 class GmkLandmarkManager : public mm::mtl::PtrSingleton<GmkLandmarkManager> {
 public:
   u8 _08[0x20 - 0x08];
-  GmkLandmark *frontLandmark;
+  GmkLandmark *unknown20; // Inferred role: front landmark; original member name unknown.
 };
 
-static_assert(offsetof(GmkLandmarkManager, frontLandmark) == 0x20, "");
+static_assert(offsetof(GmkLandmarkManager, unknown20) == 0x20, "");
 
 } // namespace gmk

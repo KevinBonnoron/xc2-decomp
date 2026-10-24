@@ -26,11 +26,11 @@ public:
   };
 
   struct Data {
-    u32 firstPointIndex;
-    u32 endPointIndex;
-    f32 curveRadius;
-    u32 flags;
-    s8 widthSide;
+    u32 unknown00; // Inferred role: first point index; original member name unknown.
+    u32 unknown04; // Inferred role: end point index; original member name unknown.
+    f32 unknown08; // Inferred role: curve radius; original member name unknown.
+    u32 unknown0c; // Inferred role: flags; original member name unknown.
+    s8 unknown10;  // Inferred role: width side; original member name unknown.
   };
 
   static const u32 FLAG_CLOSED = 1 << 0;
@@ -57,12 +57,12 @@ public:
   void debugDraw(bool isSelected) const;
   void debugDrawRoute(const mm::Col4 &color) const;
 
-  const Data *getData() const { return static_cast<const Data *>(createInfo.data); }
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   u8 _48[0x50 - 0x48];
 };
 
-static_assert(offsetof(GmkRoute::Data, widthSide) == 0x10, "");
+static_assert(offsetof(GmkRoute::Data, unknown10) == 0x10, "");
 static_assert(sizeof(GmkRoute) == 0x50, "");
 
 typedef TGmkList<GmkRoute, GmkRoute::BdatInfo, 0x56525543, 5, GmkRouteGob> GmkRouteList;
@@ -72,11 +72,11 @@ public:
   struct BdatInfo {};
 
   struct Data {
-    mm::Vec3 position;
-    f32 sideX;
-    f32 sideY;
-    f32 sideZ;
-    u32 flags;
+    mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
+    f32 unknown10;      // Inferred role: side x; original member name unknown.
+    f32 unknown14;      // Inferred role: side y; original member name unknown.
+    f32 unknown18;      // Inferred role: side z; original member name unknown.
+    u32 unknown1c;      // Inferred role: flags; original member name unknown.
   };
 
   static const u32 FLAG_LINE = 1 << 0;
@@ -85,18 +85,18 @@ public:
 
   ~GmkRoutePoint() override { dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
-  bool isValid() const override { return baseInfo.list != nullptr && createInfo.data != nullptr; }
+  bool isValid() const override { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
   void create(const CreateInfo &info) override;
   void dispose() override;
   void debugDraw() const override;
   void debugUpdateMmf() override;
 
-  const Data *getData() const { return static_cast<const Data *>(createInfo.data); }
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   u8 _48[0x50 - 0x48];
 };
 
-static_assert(offsetof(GmkRoutePoint::Data, flags) == 0x1c, "");
+static_assert(offsetof(GmkRoutePoint::Data, unknown1c) == 0x1c, "");
 static_assert(sizeof(GmkRoutePoint::Data) == 0x20, "");
 static_assert(sizeof(GmkRoutePoint) == 0x50, "");
 

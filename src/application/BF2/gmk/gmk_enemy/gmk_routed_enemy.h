@@ -32,7 +32,7 @@ static_assert(sizeof(GmkRoutedEnemy) == 0x200, "");
 
 class GmkRoutedEnemyList : public TGmkList<GmkRoutedEnemy, GmkEnemy::BdatInfo, 0x4d4e4552, 8, GmkRoutedEnemyGobCustom> {
 public:
-  explicit GmkRoutedEnemyList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), triggerList(0xffffffff) {}
+  explicit GmkRoutedEnemyList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), unknown240(0xffffffff) {}
   ~GmkRoutedEnemyList() override;
 
   void setUpdateGmkNumPerFrame(u32 num) override;
@@ -47,8 +47,8 @@ protected:
   void createGmk(void *data) override;
 
 private:
-  GmkEnemyList::BdatInfo bdatInfo;
-  GmkTriggerList triggerList;
+  GmkEnemyList::BdatInfo unknown228; // Inferred role: bdat info; original member name unknown.
+  GmkTriggerList unknown240;         // Inferred role: trigger list; original member name unknown.
 };
 
 static_assert(sizeof(GmkRoutedEnemyList) == 0x470, "");

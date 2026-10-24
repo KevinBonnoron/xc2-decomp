@@ -108,35 +108,35 @@ static const char *const s_gmkFileNames[] = {
     "fieldVolume", "climbing", "blade", "dmgGimmick", "dmgGimmick", "dmgGimmick", "dmgGimmick", nullptr,  "enemy",  "footPrint", "footPrint", "antiBladeArea", "tutorial",
 };
 
-bool GmkBdat::isValid() const { return data != nullptr && fw::BdatManager::isEnableBdat(createInfo.bdatId); }
+bool GmkBdat::isValid() const { return unknown120 != nullptr && fw::BdatManager::isEnableBdat(unknown08.unknown108); }
 
 bool GmkBdat::create(const CreateInfo &info) {
   dispose();
-  createInfo = info;
-  resource = fw::CommonResource::request(info.memory, createInfo.path.c_str(), 9, false);
-  if (resource->getRefCount() != 1) {
+  unknown08 = info;
+  unknown118 = fw::CommonResource::request(info.unknown00, unknown08.unknown04.c_str(), 9, false);
+  if (unknown118->getRefCount() != 1) {
     return false;
   }
-  seq = &GmkBdat::seqWaitResourceLoaded;
+  unknown128 = &GmkBdat::seqWaitResourceLoaded;
   return true;
 }
 
 void GmkBdat::dispose() {
-  seq = nullptr;
-  if (createInfo.bdatId >= 0) {
-    fw::BdatManager::unregistBdat(createInfo.bdatId);
-    createInfo.bdatId = -1;
+  unknown128 = nullptr;
+  if (unknown08.unknown108 >= 0) {
+    fw::BdatManager::unregistBdat(unknown08.unknown108);
+    unknown08.unknown108 = -1;
   }
-  mm::mtl::safeRelease(resource);
-  data = nullptr;
-  createInfo = CreateInfo();
+  mm::mtl::safeRelease(unknown118);
+  unknown120 = nullptr;
+  unknown08 = CreateInfo();
 }
 
-bool GmkSet::isValid() const { return createInfo.memory.isValid() && createInfo.gmkSetId > 0 && (!mapBdat.createInfo.isValid() || mapBdat.isValid()); }
+bool GmkSet::isValid() const { return unknown10.unknown00.isValid() && unknown10.unknown04 > 0 && (!unknown40.unknown08.isValid() || unknown40.isValid()); }
 
 void GmkBdat::update(f32 deltaTime) {
-  if (seq) {
-    (this->*seq)(deltaTime);
+  if (unknown128) {
+    (this->*unknown128)(deltaTime);
   }
 }
 
@@ -145,7 +145,7 @@ const char *GmkManager::getFilenameByType(int gmkSetId, GmkType type) const {
   if (column == nullptr) {
     return nullptr;
   }
-  u8 *bdat = gmkSetListBdat;
+  u8 *bdat = unknown190;
   if (Bdat::getMember(bdat, column) == nullptr) {
     return nullptr;
   }
@@ -155,7 +155,7 @@ const char *GmkManager::getFilenameByType(int gmkSetId, GmkType type) const {
 const char *GmkManager::getSheetnameByType(int gmkSetId, GmkType type) const {
   mm::mtl::FixStr<256> column;
   column.format("%s_bdat", s_gmkFileNames[type]);
-  u8 *bdat = gmkSetListBdat;
+  u8 *bdat = unknown190;
   if (Bdat::getMember(bdat, column.c_str()) == nullptr) {
     return nullptr;
   }
@@ -163,7 +163,7 @@ const char *GmkManager::getSheetnameByType(int gmkSetId, GmkType type) const {
 }
 
 int GmkManager::getMapBdatId(int gmkSetId) const {
-  u8 *bdat = gmkSetListBdat;
+  u8 *bdat = unknown190;
   int count = Bdat::getIdCount(bdat);
   int top = Bdat::getIdTop(bdat);
   if (gmkSetId < top || gmkSetId >= top + count) {
@@ -173,7 +173,7 @@ int GmkManager::getMapBdatId(int gmkSetId) const {
 }
 
 const AGmkBase *GmkManager::findFirstGmkInstByBdatId(GmkType type, int bdatId) const {
-  for (GmkSet *const *it = sets.begin(); it != sets.end(); ++it) {
+  for (GmkSet *const *it = unknownf358.begin(); it != unknownf358.end(); ++it) {
     const GmkSet *set = *it;
     if (set == nullptr || !set->isValid()) {
       continue;
@@ -187,14 +187,14 @@ const AGmkBase *GmkManager::findFirstGmkInstByBdatId(GmkType type, int bdatId) c
 }
 
 const AGmkBase *GmkSet::findFirstGmkInstByBdatId(GmkType type, int bdatId) const {
-  IGmkList *list = lists[type];
+  IGmkList *list = unknown1b8[type];
   if (list == nullptr) {
     return nullptr;
   }
   u32 num = list->getInstNum();
   for (u32 i = 0; i < num; i++) {
     const AGmkBase *gmk = list->getInst(i);
-    if (gmk->isValid() && gmk->createInfo.bdatIndex == bdatId) {
+    if (gmk->isValid() && gmk->unknown20.unknown18 == bdatId) {
       return gmk;
     }
   }
@@ -210,9 +210,9 @@ const AGmkBase *GmkManager::findGmkInstByGmkInstIndex(int gmkSetId, GmkType type
 }
 
 GmkSet *GmkManager::findGmkSet(int gmkSetId) const {
-  for (GmkSet *const *it = sets.begin(); it != sets.end(); ++it) {
+  for (GmkSet *const *it = unknownf358.begin(); it != unknownf358.end(); ++it) {
     GmkSet *set = *it;
-    if (set != nullptr && set->createInfo.gmkSetId == gmkSetId) {
+    if (set != nullptr && set->unknown10.unknown04 == gmkSetId) {
       return set;
     }
   }
@@ -220,7 +220,7 @@ GmkSet *GmkManager::findGmkSet(int gmkSetId) const {
 }
 
 const AGmkBase *GmkSet::findGmkInstByGmkInstIndex(GmkType type, u32 index) const {
-  IGmkList *list = lists[type];
+  IGmkList *list = unknown1b8[type];
   if (list != nullptr && index < list->getInstNum()) {
     return list->getInst(index);
   }
@@ -231,142 +231,142 @@ int getCurrentMapBdatId() { return gf::GfGameManager::getMapID(); }
 
 void GmkSet::update(f32 deltaTime) {
   const GmkManager *manager = GmkManager::get();
-  if (!manager->resDefBdat.isValid() || manager->gmkSetListBdat == nullptr) {
+  if (!manager->unknown58.isValid() || manager->unknown190 == nullptr) {
     return;
   }
-  mapBdat.update(deltaTime);
-  npcManager.update(deltaTime);
-  if (seq) {
-    (this->*seq)(deltaTime);
+  unknown40.update(deltaTime);
+  unknown178.update(deltaTime);
+  if (unknown388) {
+    (this->*unknown388)(deltaTime);
   }
 }
 
 void GmkSet::create(const CreateInfo &info) {
   dispose();
-  createInfo = info;
-  npcManager.isCreateGameEntity = !info.isGameEntityDisabled;
-  seq = &GmkSet::seqWaitToValidate_GfGameManager_m_mapID;
+  unknown10 = info;
+  unknown178.unknown3c = !info.unknown24;
+  unknown388 = &GmkSet::seqWaitToValidate_GfGameManager_m_mapID;
 }
 
 void GmkSet::dispose() {
-  seq = nullptr;
+  unknown388 = nullptr;
   disposeGmkLists();
   disposeMapBdat();
-  createInfo = CreateInfo();
+  unknown10 = CreateInfo();
 }
 
 GmkSet::~GmkSet() { dispose(); }
 
-const IGmkList *GmkSet::getGmkList(GmkType type) const { return lists[type]; }
+const IGmkList *GmkSet::getGmkList(GmkType type) const { return unknown1b8[type]; }
 
-IGmkList *GmkSet::getGmkList(GmkType type) { return lists[type]; }
+IGmkList *GmkSet::getGmkList(GmkType type) { return unknown1b8[type]; }
 
 void GmkSet::seqWaitToValidate_GfGameManager_m_mapID(f32 deltaTime) {
   if (gf::GfGameManager::getMapID() != 0) {
-    seq = &GmkSet::seqCreateMapBdat;
+    unknown388 = &GmkSet::seqCreateMapBdat;
   }
 }
 
 void GmkSet::disposeGmkLists() {
   for (u32 type = 0; type < GMK_TYPE_NUM; type++) {
-    if (lists[type] != nullptr) {
-      delete lists[type];
-      lists[type] = nullptr;
+    if (unknown1b8[type] != nullptr) {
+      delete unknown1b8[type];
+      unknown1b8[type] = nullptr;
     }
   }
 }
 
-void GmkSet::disposeMapBdat() { mapBdat.dispose(); }
+void GmkSet::disposeMapBdat() { unknown40.dispose(); }
 
 void GmkSet::seqUpdate(f32 deltaTime) {
   for (u32 type = 0; type < GMK_TYPE_NUM; type++) {
-    if (lists[type] != nullptr) {
-      lists[type]->update(deltaTime);
+    if (unknown1b8[type] != nullptr) {
+      unknown1b8[type]->update(deltaTime);
     }
   }
 }
 
 bool GmkSet::createMapBdat(int map) {
-  mapBdat.dispose();
+  unknown40.dispose();
   GmkBdat::CreateInfo info;
-  const char *name = reinterpret_cast<const char *>(Bdat::getValCheck(GmkManager::get()->gmkSetListBdat, "bdat", map, BDAT_TYPE_STRING));
+  const char *name = reinterpret_cast<const char *>(Bdat::getValCheck(GmkManager::get()->unknown190, "bdat", map, BDAT_TYPE_STRING));
   if (name == nullptr || name[0] == '\0') {
     return false;
   }
-  info.memory = createInfo.memory;
-  info.path = "gmk/";
-  info.path += name;
-  info.path += ".bdat";
-  info.bdatId = 4;
-  return mapBdat.create(info);
+  info.unknown00 = unknown10.unknown00;
+  info.unknown04 = "gmk/";
+  info.unknown04 += name;
+  info.unknown04 += ".bdat";
+  info.unknown108 = 4;
+  return unknown40.create(info);
 }
 
 void GmkSet::createGmkLists(int gmkSetId) {
-  npcManager.setUpdateNpcNumPerFrame(32);
+  unknown178.setUpdateNpcNumPerFrame(32);
   for (int i = 0; i < GMK_TYPE_NUM; i++) {
-    delete lists[i];
-    lists[i] = nullptr;
+    delete unknown1b8[i];
+    unknown1b8[i] = nullptr;
   }
-  lists[GMK_TYPE_ENEMY] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkEnemyList(32);
-  lists[GMK_TYPE_ROUTED_ENEMY] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedEnemyList(8);
-  lists[GMK_TYPE_ROUTED_ENEMY_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedEnemyPointList(1);
-  lists[GMK_TYPE_NPC] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkNpcList(0);
-  lists[GMK_TYPE_ROUTED_NPC] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedNpcList(0);
-  lists[GMK_TYPE_NPC_ROUTE_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutePointList(1);
-  lists[GMK_TYPE_MAP_OBJ] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkMapObjList(8);
-  lists[GMK_TYPE_ROUTED_MAP_OBJ] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedMapObjList(4);
-  lists[GMK_TYPE_MAP_OBJ_ROUTE_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutePointList(1);
-  lists[GMK_TYPE_TBOX] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkTboxList(8);
-  lists[GMK_TYPE_EVENT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkEventList(8);
-  lists[GMK_TYPE_BATTLE_LOCK] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkBattleLockList(8);
-  lists[GMK_TYPE_FIELD_LOCK] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFieldLockList(8);
-  lists[GMK_TYPE_EFFECT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkEffectList(8);
-  lists[GMK_TYPE_EFFECT_LOCATOR] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkEffectLocatorList(1);
-  lists[GMK_TYPE_SE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSeList(8);
-  lists[GMK_TYPE_SE_LINE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSeLineList(4);
-  lists[GMK_TYPE_SE_LINE_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSeLinePointList(1);
-  lists[GMK_TYPE_MOB] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkMobList(8);
-  lists[GMK_TYPE_ROUTED_MOB] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedMobList(4);
-  lists[GMK_TYPE_MOB_ROUTE_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutePointList(1);
-  lists[GMK_TYPE_LANDMARK] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkLandmarkList(8);
-  lists[GMK_TYPE_ROUTE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRouteList(1);
-  lists[GMK_TYPE_ROUTE_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutePointList(1);
-  lists[GMK_TYPE_FORM_PC] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFormPcList(1);
-  lists[GMK_TYPE_FORM_PCNPC] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFormPcnpcList(1);
-  lists[GMK_TYPE_FORM_PC_EV] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFormPcEvList(1);
-  lists[GMK_TYPE_FORM_PCNPC_EV] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFormPcnpcEvList(1);
-  lists[GMK_TYPE_COLLECTION] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkCollectionList(1);
-  lists[GMK_TYPE_AREA_BGM] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkAreaBgmList(1);
-  lists[GMK_TYPE_AREA_WEATHER] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkAreaWeatherList(1);
-  lists[GMK_TYPE_SALVAGE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSalvageList(1);
-  lists[GMK_TYPE_SALVAGE_LOCATOR] = nullptr;
-  lists[GMK_TYPE_MAP_GIMMICK] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkMapGimmickList(1);
-  lists[GMK_TYPE_PRECIOUS] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkPreciousList(1);
-  lists[GMK_TYPE_GRAVE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkGraveList(1);
-  lists[GMK_TYPE_KIZUNA_TALK] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkKizunaTalkList(1);
-  lists[GMK_TYPE_JUMP] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkJumpList(1);
-  lists[GMK_TYPE_WARP] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkWarpList(1);
-  lists[GMK_TYPE_SQUAD_LEADER] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSquadLeaderList(1);
-  lists[GMK_TYPE_SQUAD_MEMBER] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSquadMemberList(1);
-  lists[GMK_TYPE_DOOR] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkDoorList(1);
-  lists[GMK_TYPE_ELEVATOR] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkElevatorList(1);
-  lists[GMK_TYPE_ELEVATOR_LOCATOR] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkElevatorLocatorList(1);
-  lists[GMK_TYPE_MAP_JUMP] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkMapJumpList(1);
-  lists[GMK_TYPE_FIELD_VOLUME] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFieldVolumeList(1);
-  lists[GMK_TYPE_CLIMBING] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkClimbingList(1);
-  lists[GMK_TYPE_BLADE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkBladeList(1);
-  lists[GMK_TYPE_DMG_GIMMICK] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkDmgGimmickList(1);
-  lists[GMK_TYPE_DMG_PHANTOM] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkDmgPhantomList(1);
-  lists[GMK_TYPE_DMG_EFFECT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkDmgEffectList(1);
-  lists[GMK_TYPE_DMG_SE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkDmgSeList(1);
-  lists[GMK_TYPE_TRIGGER] = nullptr;
-  lists[GMK_TYPE_TARGET_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkTargetPointList(1);
-  lists[GMK_TYPE_ROUTED_FOOT_PRINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedFootPrintList(1);
-  lists[GMK_TYPE_ROUTED_FOOT_PRINT_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedFootPrintPointList(1);
-  lists[GMK_TYPE_ANTI_BLADE_AREA] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkAntiBladeAreaList(1);
-  lists[GMK_TYPE_TUTORIAL] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkTutorialList(1);
+  unknown1b8[GMK_TYPE_ENEMY] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkEnemyList(32);
+  unknown1b8[GMK_TYPE_ROUTED_ENEMY] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedEnemyList(8);
+  unknown1b8[GMK_TYPE_ROUTED_ENEMY_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedEnemyPointList(1);
+  unknown1b8[GMK_TYPE_NPC] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkNpcList(0);
+  unknown1b8[GMK_TYPE_ROUTED_NPC] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedNpcList(0);
+  unknown1b8[GMK_TYPE_NPC_ROUTE_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutePointList(1);
+  unknown1b8[GMK_TYPE_MAP_OBJ] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkMapObjList(8);
+  unknown1b8[GMK_TYPE_ROUTED_MAP_OBJ] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedMapObjList(4);
+  unknown1b8[GMK_TYPE_MAP_OBJ_ROUTE_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutePointList(1);
+  unknown1b8[GMK_TYPE_TBOX] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkTboxList(8);
+  unknown1b8[GMK_TYPE_EVENT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkEventList(8);
+  unknown1b8[GMK_TYPE_BATTLE_LOCK] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkBattleLockList(8);
+  unknown1b8[GMK_TYPE_FIELD_LOCK] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFieldLockList(8);
+  unknown1b8[GMK_TYPE_EFFECT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkEffectList(8);
+  unknown1b8[GMK_TYPE_EFFECT_LOCATOR] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkEffectLocatorList(1);
+  unknown1b8[GMK_TYPE_SE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSeList(8);
+  unknown1b8[GMK_TYPE_SE_LINE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSeLineList(4);
+  unknown1b8[GMK_TYPE_SE_LINE_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSeLinePointList(1);
+  unknown1b8[GMK_TYPE_MOB] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkMobList(8);
+  unknown1b8[GMK_TYPE_ROUTED_MOB] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedMobList(4);
+  unknown1b8[GMK_TYPE_MOB_ROUTE_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutePointList(1);
+  unknown1b8[GMK_TYPE_LANDMARK] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkLandmarkList(8);
+  unknown1b8[GMK_TYPE_ROUTE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRouteList(1);
+  unknown1b8[GMK_TYPE_ROUTE_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutePointList(1);
+  unknown1b8[GMK_TYPE_FORM_PC] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFormPcList(1);
+  unknown1b8[GMK_TYPE_FORM_PCNPC] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFormPcnpcList(1);
+  unknown1b8[GMK_TYPE_FORM_PC_EV] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFormPcEvList(1);
+  unknown1b8[GMK_TYPE_FORM_PCNPC_EV] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFormPcnpcEvList(1);
+  unknown1b8[GMK_TYPE_COLLECTION] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkCollectionList(1);
+  unknown1b8[GMK_TYPE_AREA_BGM] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkAreaBgmList(1);
+  unknown1b8[GMK_TYPE_AREA_WEATHER] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkAreaWeatherList(1);
+  unknown1b8[GMK_TYPE_SALVAGE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSalvageList(1);
+  unknown1b8[GMK_TYPE_SALVAGE_LOCATOR] = nullptr;
+  unknown1b8[GMK_TYPE_MAP_GIMMICK] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkMapGimmickList(1);
+  unknown1b8[GMK_TYPE_PRECIOUS] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkPreciousList(1);
+  unknown1b8[GMK_TYPE_GRAVE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkGraveList(1);
+  unknown1b8[GMK_TYPE_KIZUNA_TALK] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkKizunaTalkList(1);
+  unknown1b8[GMK_TYPE_JUMP] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkJumpList(1);
+  unknown1b8[GMK_TYPE_WARP] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkWarpList(1);
+  unknown1b8[GMK_TYPE_SQUAD_LEADER] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSquadLeaderList(1);
+  unknown1b8[GMK_TYPE_SQUAD_MEMBER] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSquadMemberList(1);
+  unknown1b8[GMK_TYPE_DOOR] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkDoorList(1);
+  unknown1b8[GMK_TYPE_ELEVATOR] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkElevatorList(1);
+  unknown1b8[GMK_TYPE_ELEVATOR_LOCATOR] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkElevatorLocatorList(1);
+  unknown1b8[GMK_TYPE_MAP_JUMP] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkMapJumpList(1);
+  unknown1b8[GMK_TYPE_FIELD_VOLUME] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFieldVolumeList(1);
+  unknown1b8[GMK_TYPE_CLIMBING] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkClimbingList(1);
+  unknown1b8[GMK_TYPE_BLADE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkBladeList(1);
+  unknown1b8[GMK_TYPE_DMG_GIMMICK] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkDmgGimmickList(1);
+  unknown1b8[GMK_TYPE_DMG_PHANTOM] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkDmgPhantomList(1);
+  unknown1b8[GMK_TYPE_DMG_EFFECT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkDmgEffectList(1);
+  unknown1b8[GMK_TYPE_DMG_SE] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkDmgSeList(1);
+  unknown1b8[GMK_TYPE_TRIGGER] = nullptr;
+  unknown1b8[GMK_TYPE_TARGET_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkTargetPointList(1);
+  unknown1b8[GMK_TYPE_ROUTED_FOOT_PRINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedFootPrintList(1);
+  unknown1b8[GMK_TYPE_ROUTED_FOOT_PRINT_POINT] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkRoutedFootPrintPointList(1);
+  unknown1b8[GMK_TYPE_ANTI_BLADE_AREA] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkAntiBladeAreaList(1);
+  unknown1b8[GMK_TYPE_TUTORIAL] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkTutorialList(1);
   for (u32 type = 0; type < GMK_TYPE_NUM; type++) {
-    IGmkList *list = lists[type];
+    IGmkList *list = unknown1b8[type];
     if (list == nullptr) {
       continue;
     }
@@ -376,29 +376,29 @@ void GmkSet::createGmkLists(int gmkSetId) {
     }
     const char *bdatName = GmkManager::get()->getSheetnameByType(gmkSetId, static_cast<GmkType>(type));
     IGmkList::CreateInfo info;
-    info.memory = createInfo.memory;
-    info.set = this;
-    info.path = "gmk/";
-    info.path += fileName;
-    info.path += ".lvb";
+    info.unknown00 = unknown10.unknown00;
+    info.unknown08 = this;
+    info.unknown10 = "gmk/";
+    info.unknown10 += fileName;
+    info.unknown10 += ".lvb";
     if (bdatName != nullptr) {
-      info.bdatName = bdatName;
+      info.unknown114 = bdatName;
     }
-    info.position = createInfo.position;
-    info.rotation = createInfo.rotation;
+    info.unknown140 = unknown10.unknown10;
+    info.unknown150 = unknown10.unknown20;
     list->create(info);
   }
 }
 
 void GmkSet::seqCreateMapBdat(f32 deltaTime) {
-  createGmkLists(createInfo.gmkSetId);
-  seq = &GmkSet::seqUpdate;
+  createGmkLists(unknown10.unknown04);
+  unknown388 = &GmkSet::seqUpdate;
 }
 
 void GmkSet::seqCreateMapGmk(f32 deltaTime) {
-  if (mapBdat.isValid() || !mapBdat.createInfo.isValid()) {
-    createGmkLists(createInfo.gmkSetId);
-    seq = &GmkSet::seqUpdate;
+  if (unknown40.isValid() || !unknown40.unknown08.isValid()) {
+    createGmkLists(unknown10.unknown04);
+    unknown388 = &GmkSet::seqUpdate;
   }
 }
 
@@ -414,23 +414,23 @@ bool isInEvent() { return gf::GfGameManager::isEvent(false); }
 
 namespace gmk {
 
-GmkBdat::GmkBdat(const CreateInfo *info) : resource(nullptr), data(nullptr), seq(nullptr) {
+GmkBdat::GmkBdat(const CreateInfo *info) : unknown118(nullptr), unknown120(nullptr), unknown128(nullptr) {
   if (info != nullptr) {
     create(*info);
   }
 }
 
 void GmkBdat::seqWaitResourceLoaded(f32) {
-  if (!resource->valid()) {
+  if (!unknown118->valid()) {
     return;
   }
-  data = resource->getAssetData();
-  if (data == nullptr || fw::BdatManager::isExistBdat(createInfo.bdatId)) {
+  unknown120 = unknown118->getAssetData();
+  if (unknown120 == nullptr || fw::BdatManager::isExistBdat(unknown08.unknown108)) {
     dispose();
     return;
   }
-  fw::BdatManager::loadBdatFromMemory(createInfo.bdatId, data);
-  seq = nullptr;
+  fw::BdatManager::loadBdatFromMemory(unknown08.unknown108, unknown120);
+  unknown128 = nullptr;
 }
 
 static InterestType getInterestType() {
@@ -438,7 +438,7 @@ static InterestType getInterestType() {
   if (manager == nullptr) {
     return INTEREST_TYPE_CAMERA;
   }
-  return manager->interestType;
+  return manager->unknown198;
 }
 
 bool isInterestPosExist() {
@@ -567,7 +567,7 @@ void createMenuObj(gf::GF_OBJ_HANDLE *handle) {
   }
 }
 
-u32 GmkTbox::getProgress() const { return gf::GfGameFlag::getLocal(2, createInfo.bdatIndex + GAME_FLAG_PROGRESS); }
+u32 GmkTbox::getProgress() const { return gf::GfGameFlag::getLocal(2, unknown20.unknown18 + GAME_FLAG_PROGRESS); }
 
 bool isEnemyPopCondOfQuestMatched(u16 enemy) {
   int remain = gf::GfQuestUtil::getEnemyPopRemainNumber(enemy);
@@ -623,15 +623,15 @@ static bool s_isScriptStart = false;
 static bool s_isScriptEnd = false;
 static int s_scriptStartId = -1;
 
-GmkScript::GmkScript(const CreateInfo *info) : seq(nullptr) {
+GmkScript::GmkScript(const CreateInfo *info) : unknown30(nullptr) {
   if (info != nullptr) {
-    createInfo = *info;
+    unknown08 = *info;
   }
 }
 
 void GmkScript::create(const CreateInfo &info) {
   endScript();
-  createInfo = info;
+  unknown08 = info;
 }
 
 void GmkScript::vmSetStartId(int id) { s_scriptStartId = id; }
@@ -665,8 +665,8 @@ void GmkScript::vmEndScript() {
 void GmkScript::dispose() { endScript(); }
 
 void GmkScript::endScript() {
-  if (seq) {
-    seq = nullptr;
+  if (unknown30) {
+    unknown30 = nullptr;
     vmEndScript();
     vmSetStartId(-1);
   }
@@ -677,11 +677,11 @@ void GmkScript::beginScript() {
     return;
   }
   endScript();
-  fw::ScriptManager::get()->loadScript(gf::SCRIPT_SLOT_FIELD, createInfo.name.c_str(), GMK_SCRIPT_FILE_PRIO);
-  vmSetStartId(createInfo.startId);
+  fw::ScriptManager::get()->loadScript(gf::SCRIPT_SLOT_FIELD, unknown08.unknown00.c_str(), GMK_SCRIPT_FILE_PRIO);
+  vmSetStartId(unknown08.unknown24);
   fw::ScriptManager::get()->scripts[gf::SCRIPT_SLOT_FIELD].start();
   vmBeginScript();
-  seq = &GmkScript::seqWaitEndScript;
+  unknown30 = &GmkScript::seqWaitEndScript;
 }
 
 void GmkScript::seqWaitEndScript(f32) {
@@ -692,12 +692,12 @@ void GmkScript::seqWaitEndScript(f32) {
 }
 
 void GmkScript::update(f32 deltaTime) {
-  if (seq) {
-    (this->*seq)(deltaTime);
+  if (unknown30) {
+    (this->*unknown30)(deltaTime);
   }
 }
 
-GmkPhantom::GmkPhantom(const CreateInfo *info) : name(nullptr), phantom(nullptr), isHit(false), isEntered(false), isLeft(false), isInside(false) {
+GmkPhantom::GmkPhantom(const CreateInfo *info) : unknown70(nullptr), unknown78(nullptr), unknown80(false), unknown81(false), unknown82(false), unknown83(false) {
   if (info != nullptr) {
     create(*info);
   }
@@ -712,20 +712,20 @@ GmkPhantom::~GmkPhantom() {
 }
 
 void GmkPhantom::dispose() {
-  if (phantom != nullptr) {
-    phantom->setColiUserData(nullptr);
-    phantom->setListener(nullptr);
+  if (unknown78 != nullptr) {
+    unknown78->setColiUserData(nullptr);
+    unknown78->setListener(nullptr);
   }
-  isInside = false;
-  mm::mtl::safeRelease(phantom);
-  name = nullptr;
+  unknown83 = false;
+  mm::mtl::safeRelease(unknown78);
+  unknown70 = nullptr;
 }
 
-void GmkPhantomManager::addGmkPhantom(GmkPhantom *phantom) { phantoms.push_back(phantom); }
+void GmkPhantomManager::addGmkPhantom(GmkPhantom *phantom) { unknown08.push_back(phantom); }
 
 void GmkPhantomManager::removeGmkPhantom(GmkPhantom *phantom) {
   if (phantom != nullptr) {
-    phantoms.erase(phantom);
+    unknown08.erase(phantom);
   }
 }
 
@@ -737,8 +737,8 @@ ScenarioFlagCond::ScenarioFlagCond(const CBdatWrapper &bdat, int id, const AGmkB
   u16 scenarioFlagMin = bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16);
   u16 scenarioFlagMax = bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16);
   if (scenarioFlagMax >= scenarioFlagMin) {
-    min = scenarioFlagMin;
-    max = scenarioFlagMax;
+    unknown00 = scenarioFlagMin;
+    unknown02 = scenarioFlagMax;
   }
 }
 
@@ -756,14 +756,14 @@ ScenarioFlagCond::ScenarioFlagCond(const CBdatWrapper &bdat, int id, const char 
     scenarioFlagMax = bdat.getValCheck(name.c_str(), id, BDAT_TYPE_U16);
   }
   if (scenarioFlagMax >= scenarioFlagMin) {
-    min = scenarioFlagMin;
-    max = scenarioFlagMax;
+    unknown00 = scenarioFlagMin;
+    unknown02 = scenarioFlagMax;
   }
 }
 
 bool ScenarioFlagCond::isMatch() const {
   u16 scenarioFlag = gf::GfDataUtil::getScenarioFlag();
-  return min <= scenarioFlag && scenarioFlag <= max;
+  return unknown00 <= scenarioFlag && scenarioFlag <= unknown02;
 }
 
 QuestFlagCond::QuestFlagCond(const CBdatWrapper &bdat, int id, const AGmkBase &gmk) {
@@ -771,9 +771,9 @@ QuestFlagCond::QuestFlagCond(const CBdatWrapper &bdat, int id, const AGmkBase &g
   u8 questFlagMin = bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8);
   u8 questFlagMax = bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8);
   if (questFlagMax >= questFlagMin) {
-    quest = questFlag;
-    minState = questFlagMin;
-    maxState = questFlagMax;
+    unknown00 = questFlag;
+    unknown02 = questFlagMin;
+    unknown03 = questFlagMax;
   }
 }
 
@@ -795,15 +795,15 @@ QuestFlagCond::QuestFlagCond(const CBdatWrapper &bdat, int id, const char *prefi
     questFlagMax = bdat.getValCheck(name.c_str(), id, BDAT_TYPE_U8);
   }
   if (questFlagMax >= questFlagMin) {
-    quest = questFlag;
-    minState = questFlagMin;
-    maxState = questFlagMax;
+    unknown00 = questFlag;
+    unknown02 = questFlagMin;
+    unknown03 = questFlagMax;
   }
 }
 
 bool QuestFlagCond::isMatch() const {
-  u8 state = gf::GfQuestInfo::getState(gf::toQuestID(quest));
-  return (minState <= state) & (state <= maxState);
+  u8 state = gf::GfQuestInfo::getState(gf::toQuestID(unknown00));
+  return (unknown02 <= state) & (state <= unknown03);
 }
 
 bool DistHvCond::isMatch(const mm::Vec3 &position) const {
@@ -813,21 +813,21 @@ bool DistHvCond::isMatch(const mm::Vec3 &position) const {
   const mm::Vec3 &interestPos = getInterestPos();
   f32 y = interestPos.y - position.y;
   f32 verticalSq = y * y;
-  if (verticalDistSq < verticalSq) {
+  if (unknown04 < verticalSq) {
     return false;
   }
   f32 x = interestPos.x - position.x;
   f32 z = interestPos.z - position.z;
   f32 horizontalSq = x * x + z * z;
-  if (horizontalDistSq < horizontalSq) {
+  if (unknown00 < horizontalSq) {
     return false;
   }
   return true;
 }
 
 void DistHvCond::debugDraw(const mm::Vec3 &position, const mm::Col4 &color) const {
-  f32 horizontalDist = sqrtf(horizontalDistSq);
-  f32 verticalDist = sqrtf(verticalDistSq);
+  f32 horizontalDist = sqrtf(unknown00);
+  f32 verticalDist = sqrtf(unknown04);
   mm::Vec3 center = position;
   mm::Mat44 matrix;
   matrix.rows[0][0] = 1.0f;
@@ -868,7 +868,7 @@ void DistCond::debugDraw(const mm::Vec3 &position, const mm::Col4 &color) const 
   matrix.rows[3][1] = center.y;
   matrix.rows[3][2] = center.z;
   matrix.rows[3][3] = 1.0f;
-  fw::debug::drawSphere(matrix, sqrtf(distSq), color, 12);
+  fw::debug::drawSphere(matrix, sqrtf(unknown00), color, 12);
 }
 
 bool DistCond::isMatch(f32 distSq, const mm::Vec3 &position) {
@@ -888,66 +888,66 @@ bool DistCond::isMatch(f32 distSq, const mm::Vec3 &position) {
 bool TimeCond::isMatch() const {
   bool isMatched = false;
   if (gf::GfFieldTime::get() != nullptr) {
-    isMatched = (gf::GfFieldTime::get()->getTimeRangeBits() & timeRangeBits) != 0;
+    isMatched = (gf::GfFieldTime::get()->getTimeRangeBits() & unknown08) != 0;
   }
   return isMatched;
 }
 
-bool WeatherCond::isMatch() const { return (gf::GfFieldWeather::getCurrentMapWeatherBit(false) & weatherBits) != 0; }
+bool WeatherCond::isMatch() const { return (gf::GfFieldWeather::getCurrentMapWeatherBit(false) & unknown08) != 0; }
 
 bool CloudCond::isMatch() const {
   int cloudSea = gf::GfFieldWeather::getCurrentCloudSea();
-  if (type == TYPE_NO_CLOUD_SEA) {
+  if (unknown08 == TYPE_NO_CLOUD_SEA) {
     return cloudSea == 0;
   }
-  if (type == TYPE_CLOUD_SEA) {
+  if (unknown08 == TYPE_CLOUD_SEA) {
     return cloudSea == 1;
   }
   return false;
 }
 
 bool InOutDoorCond::isMatch() const {
-  if (isIndoor && isOutdoor) {
+  if (unknown08 && unknown09) {
     return true;
   }
   if (gf::GfGameManager::isRoom()) {
-    return isIndoor;
+    return unknown08;
   }
-  return isOutdoor;
+  return unknown09;
 }
 
 bool GameFlagCond::isMatch(u32 value) const {
-  switch (size) {
+  switch (unknown08) {
   case 1:
-    return gf::GfGameFlag::getLocal(1, index) == value;
+    return gf::GfGameFlag::getLocal(1, unknown0c) == value;
   case 2:
-    return gf::GfGameFlag::getLocal(2, index) == value;
+    return gf::GfGameFlag::getLocal(2, unknown0c) == value;
   case 3:
-    return gf::GfGameFlag::getLocal(4, index) == value;
+    return gf::GfGameFlag::getLocal(4, unknown0c) == value;
   case 4:
-    return gf::GfGameFlag::getLocal(8, index) == value;
+    return gf::GfGameFlag::getLocal(8, unknown0c) == value;
   case 5:
-    return gf::GfGameFlag::getLocal(16, index) == value;
+    return gf::GfGameFlag::getLocal(16, unknown0c) == value;
   case 6:
-    return gf::GfGameFlag::getLocal(32, index) == value;
+    return gf::GfGameFlag::getLocal(32, unknown0c) == value;
   }
   return false;
 }
 
-PopPosSafeCond::PopPosSafeCond(const CreateInfo *info) : isCreated(false) {
+PopPosSafeCond::PopPosSafeCond(const CreateInfo *info) : unknown20(false) {
   if (info != nullptr) {
     create(*info);
   }
 }
 
-BootedGmkCond::BootedGmkCond(u8 gimmickType, u16 gimmickId) : gimmickType(0), gimmickId(0) { createIfEnable(gimmickType, gimmickId); }
+BootedGmkCond::BootedGmkCond(u8 gimmickType, u16 gimmickId) : unknown00(0), unknown02(0) { createIfEnable(gimmickType, gimmickId); }
 
 void BootedGmkCond::create(u8 gimmickType, u16 gimmickId) {
-  this->gimmickType = gimmickType;
-  this->gimmickId = gimmickId;
+  this->unknown00 = gimmickType;
+  this->unknown02 = gimmickId;
 }
 
-BootedGmkCond::BootedGmkCond(const CBdatWrapper &bdat, int id, const char *prefix) : gimmickType(0), gimmickId(0) {
+BootedGmkCond::BootedGmkCond(const CBdatWrapper &bdat, int id, const char *prefix) : unknown00(0), unknown02(0) {
   mm::mtl::FixStr<32> name;
   if (prefix == nullptr) {
     name = "gimmickType";
@@ -964,7 +964,7 @@ BootedGmkCond::BootedGmkCond(const CBdatWrapper &bdat, int id, const char *prefi
   createIfEnable(type, gmkId);
 }
 
-void BootedGmkCond::dispose() { gimmickType = 0; }
+void BootedGmkCond::dispose() { unknown00 = 0; }
 
 } // namespace gmk
 

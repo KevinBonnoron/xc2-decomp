@@ -30,16 +30,16 @@ public:
     void debugDraw(const AGmkBase &gmk) const;
 
     void dispose() {
-      enemyPopId = 0;
-      enemyId = 0;
+      unknown00 = 0;
+      unknown02 = 0;
     }
 
-    bool isValid() const { return enemyPopId != 0 && enemyId != 0; }
+    bool isValid() const { return unknown00 != 0 && unknown02 != 0; }
 
-    u16 enemyPopId;
-    u16 enemyId;
-    DistHvCond popDist;
-    DistHvCond depopDist;
+    u16 unknown00;        // Inferred role: enemy pop id; original member name unknown.
+    u16 unknown02;        // Inferred role: enemy id; original member name unknown.
+    DistHvCond unknown04; // Inferred role: pop dist; original member name unknown.
+    DistHvCond unknown0c; // Inferred role: depop dist; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_GRAVE;
@@ -60,19 +60,19 @@ public:
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override {}
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(createInfo.info); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
-  bool isEnemyDefeated;
-  gf::GF_OBJ_HANDLE *handle;
-  GmkAcc enemy;
-  bool isEnemyPopped;
+  bool unknown48;               // Inferred role: enemy defeated; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown50; // Inferred role: handle; original member name unknown.
+  GmkAcc unknown58;             // Inferred role: enemy; original member name unknown.
+  bool unknown98;               // Inferred role: enemy popped; original member name unknown.
 };
 
 static_assert(sizeof(GmkGrave::BdatInfo) == 0x14, "");
-static_assert(offsetof(GmkGrave, isEnemyDefeated) == 0x48, "");
-static_assert(offsetof(GmkGrave, handle) == 0x50, "");
-static_assert(offsetof(GmkGrave, enemy) == 0x58, "");
-static_assert(offsetof(GmkGrave, isEnemyPopped) == 0x98, "");
+static_assert(offsetof(GmkGrave, unknown48) == 0x48, "");
+static_assert(offsetof(GmkGrave, unknown50) == 0x50, "");
+static_assert(offsetof(GmkGrave, unknown58) == 0x58, "");
+static_assert(offsetof(GmkGrave, unknown98) == 0x98, "");
 static_assert(sizeof(GmkGrave) == 0xa0, "");
 
 typedef TGmkList<GmkGrave, GmkGrave::BdatInfo, 0x56415247, 4, GmkGraveGob> GmkGraveList;

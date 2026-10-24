@@ -19,13 +19,13 @@ public:
     void dispose();
     bool isPopCondMatched() const;
 
-    u16 itemId;
-    u16 condition;
-    u16 questId;
-    ScenarioFlagCond scenarioFlag;
-    QuestFlagCond questFlag;
-    TimeCond timeCond;
-    WeatherCond weatherCond;
+    u16 unknown00;              // Inferred role: item id; original member name unknown.
+    u16 unknown02;              // Inferred role: condition; original member name unknown.
+    u16 unknown04;              // Inferred role: quest id; original member name unknown.
+    ScenarioFlagCond unknown06; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond unknown0a;    // Inferred role: quest flag; original member name unknown.
+    TimeCond unknown10;         // Inferred role: time cond; original member name unknown.
+    WeatherCond unknown20;      // Inferred role: weather cond; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_PRECIOUS;

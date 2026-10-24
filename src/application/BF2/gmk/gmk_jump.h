@@ -25,9 +25,9 @@ public:
     bool isPopCondMatched() const;
     void debugDraw(const AGmkBase &gmk) const;
 
-    u16 condition;
-    u8 jumpType;
-    u16 nameRadius;
+    u16 unknown00; // Inferred role: condition; original member name unknown.
+    u8 unknown02;  // Inferred role: jump type; original member name unknown.
+    u16 unknown04; // Inferred role: name radius; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_JUMP;
@@ -57,27 +57,27 @@ public:
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override {}
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(createInfo.info); }
-  const Data *getData() const { return static_cast<const Data *>(createInfo.data); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   u8 _48[0x50 - 0x48];
-  bool isCondMatched;
-  gf::GF_OBJ_HANDLE *handle;
-  DistHvCond popDist;
-  DistHvCond depopDist;
-  u32 iconHandle;
-  DistCond iconDist;
-  bool isIconDead;
-  bool isDisp;
+  bool unknown50;               // Inferred role: cond matched; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown58; // Inferred role: handle; original member name unknown.
+  DistHvCond unknown60;         // Inferred role: pop dist; original member name unknown.
+  DistHvCond unknown68;         // Inferred role: depop dist; original member name unknown.
+  u32 unknown70;                // Inferred role: icon handle; original member name unknown.
+  DistCond unknown74;           // Inferred role: icon dist; original member name unknown.
+  bool unknown78;               // Inferred role: icon dead; original member name unknown.
+  bool unknown79;               // Inferred role: disp; original member name unknown.
 };
 
-static_assert(offsetof(GmkJump, isCondMatched) == 0x50, "");
-static_assert(offsetof(GmkJump, handle) == 0x58, "");
-static_assert(offsetof(GmkJump, popDist) == 0x60, "");
-static_assert(offsetof(GmkJump, iconHandle) == 0x70, "");
-static_assert(offsetof(GmkJump, iconDist) == 0x74, "");
-static_assert(offsetof(GmkJump, isIconDead) == 0x78, "");
-static_assert(offsetof(GmkJump, isDisp) == 0x79, "");
+static_assert(offsetof(GmkJump, unknown50) == 0x50, "");
+static_assert(offsetof(GmkJump, unknown58) == 0x58, "");
+static_assert(offsetof(GmkJump, unknown60) == 0x60, "");
+static_assert(offsetof(GmkJump, unknown70) == 0x70, "");
+static_assert(offsetof(GmkJump, unknown74) == 0x74, "");
+static_assert(offsetof(GmkJump, unknown78) == 0x78, "");
+static_assert(offsetof(GmkJump, unknown79) == 0x79, "");
 
 static_assert(sizeof(GmkJump::BdatInfo) == 0x6, "");
 static_assert(sizeof(GmkJump) == 0x80, "");

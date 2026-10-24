@@ -14,24 +14,24 @@ namespace gmk {
 constexpr int WILDCARD_KIZUNA_TALK_POP_DIST_ROW = 30;
 
 void GmkKizunaTalk::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  condition = bdat.getValCheck("ConditionID", id, BDAT_TYPE_U16);
-  title = bdat.getValCheck("Title", id, BDAT_TYPE_U16);
-  eventCondition = bdat.getValCheck("EVCondition", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("ConditionID", id, BDAT_TYPE_U16);
+  unknown02 = bdat.getValCheck("Title", id, BDAT_TYPE_U16);
+  unknown04 = bdat.getValCheck("EVCondition", id, BDAT_TYPE_U16);
 }
 
 bool GmkKizunaTalk::BdatInfo::isCondMatched() const {
-  if (condition != 0 && !gf::GfGameCond::isGameCond(condition)) {
+  if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
     return false;
   }
   return true;
 }
 
-int GmkKizunaTalk::getGameFlagId() const { return createInfo.bdatIndex; }
+int GmkKizunaTalk::getGameFlagId() const { return unknown20.unknown18; }
 
 void GmkKizunaTalk::create(const CreateInfo &info) {
   AGmkBase::create(info);
   f32 popDist = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_KIZUNA_TALK_POP_DIST_ROW, BDAT_TYPE_F32).valueF32;
-  distCond.distSq = popDist * popDist;
+  unknown50.unknown00 = popDist * popDist;
 }
 
 void GmkKizunaTalk::dispose() {
@@ -40,10 +40,10 @@ void GmkKizunaTalk::dispose() {
 }
 
 void GmkKizunaTalk::disposeGfObjHandle() {
-  if (handle != gf::INVALID_HANDLE) {
-    unbindToGameObj(handle);
-    gf::GfObjUtil::destroy(handle);
-    handle = gf::INVALID_HANDLE;
+  if (unknown48 != gf::INVALID_HANDLE) {
+    unbindToGameObj(unknown48);
+    gf::GfObjUtil::destroy(unknown48);
+    unknown48 = gf::INVALID_HANDLE;
   }
 }
 
@@ -52,8 +52,8 @@ void GmkKizunaTalk::update(f32 deltaTime) {
   if (!isValid()) {
     return;
   }
-  if (getBdatInfo()->isCondMatched() && DistCond::isMatch(distCond.distSq, baseInfo.xform->position)) {
-    if (handle == gf::INVALID_HANDLE) {
+  if (getBdatInfo()->isCondMatched() && DistCond::isMatch(unknown50.unknown00, unknown08.unknown08->unknown00)) {
+    if (unknown48 == gf::INVALID_HANDLE) {
       createGfObjHandle();
     }
   } else {

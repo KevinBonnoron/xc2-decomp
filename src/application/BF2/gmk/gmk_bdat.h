@@ -29,13 +29,13 @@ inline f32 toBdatF32(unsigned long value) {
 class GmkBdat {
 public:
   struct CreateInfo {
-    CreateInfo() : bdatId(-1) {}
+    CreateInfo() : unknown108(-1) {}
 
-    bool isValid() const { return memory.isValid() && path.length() > 0 && bdatId >= 0; }
+    bool isValid() const { return unknown00.isValid() && unknown04.length() > 0 && unknown108 >= 0; }
 
-    mtl::ALLOC_HANDLE memory;
-    mm::mtl::FixStr<256> path;
-    int bdatId;
+    mtl::ALLOC_HANDLE unknown00;    // Inferred role: memory; original member name unknown.
+    mm::mtl::FixStr<256> unknown04; // Inferred role: path; original member name unknown.
+    int unknown108;                 // Inferred role: bdat id; original member name unknown.
   };
 
   virtual ~GmkBdat() { dispose(); }
@@ -47,16 +47,16 @@ public:
   GmkBdat(const CreateInfo *info);
   void seqWaitResourceLoaded(f32 deltaTime);
 
-  CreateInfo createInfo;
-  fw::CommonResource *resource;
-  void *data;
-  void (GmkBdat::*seq)(f32);
+  CreateInfo unknown08;             // Inferred role: create info; original member name unknown.
+  fw::CommonResource *unknown118;   // Inferred role: resource; original member name unknown.
+  void *unknown120;                 // Inferred role: data; original member name unknown.
+  void (GmkBdat::*unknown128)(f32); // Inferred role: seq; original member name unknown.
 };
 
 static_assert(sizeof(GmkBdat::CreateInfo) == 0x10c, "");
-static_assert(offsetof(GmkBdat, createInfo) == 0x8, "");
-static_assert(offsetof(GmkBdat, resource) == 0x118, "");
-static_assert(offsetof(GmkBdat, seq) == 0x128, "");
+static_assert(offsetof(GmkBdat, unknown08) == 0x8, "");
+static_assert(offsetof(GmkBdat, unknown118) == 0x118, "");
+static_assert(offsetof(GmkBdat, unknown128) == 0x128, "");
 static_assert(sizeof(GmkBdat) == 0x138, "");
 
 } // namespace gmk

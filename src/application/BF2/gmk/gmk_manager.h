@@ -109,17 +109,17 @@ public:
   GmkSet *findGmkSet(int gmkSetId) const;
 
   u8 _08[0x58 - 0x08];
-  GmkBdat resDefBdat;
-  u8 *gmkSetListBdat;
-  InterestType interestType;
+  GmkBdat unknown58;       // Inferred role: res def bdat; original member name unknown.
+  u8 *unknown190;          // Inferred role: gmk set list bdat; original member name unknown.
+  InterestType unknown198; // Inferred role: interest type; original member name unknown.
   u8 _19c[0xf358 - 0x19c];
-  mm::mtl::Vector<GmkSet *> sets;
+  mm::mtl::Vector<GmkSet *> unknownf358; // Inferred role: sets; original member name unknown.
 };
 
-static_assert(offsetof(GmkManager, resDefBdat) == 0x58, "");
-static_assert(offsetof(GmkManager, gmkSetListBdat) == 0x190, "");
-static_assert(offsetof(GmkManager, interestType) == 0x198, "");
-static_assert(offsetof(GmkManager, sets) == 0xf358, "");
+static_assert(offsetof(GmkManager, unknown58) == 0x58, "");
+static_assert(offsetof(GmkManager, unknown190) == 0x190, "");
+static_assert(offsetof(GmkManager, unknown198) == 0x198, "");
+static_assert(offsetof(GmkManager, unknownf358) == 0xf358, "");
 
 int getCurrentMapBdatId();
 bool isInEvent();

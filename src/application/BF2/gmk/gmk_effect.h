@@ -18,9 +18,9 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched() const;
 
-    u16 condition;
-    ScenarioFlagCond scenarioFlag;
-    QuestFlagCond questFlag;
+    u16 unknown00;              // Inferred role: condition; original member name unknown.
+    ScenarioFlagCond unknown02; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond unknown06;    // Inferred role: quest flag; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_EFFECT;

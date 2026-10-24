@@ -24,24 +24,24 @@ struct GF_OBJ_HANDLE;
 namespace gmk {
 
 void GmkTbox::BdatInfo::create(u8 *bdat, int id, const AGmkBase &gmk) {
-  condition = Bdat::getValCheck(bdat, "Condition", id, BDAT_TYPE_U16);
-  isDig = Bdat::getFlagVal(bdat, "flag", id, "Digflg") != 0;
-  msgVisible = Bdat::getValCheck(bdat, "msgVisible", id, BDAT_TYPE_U8);
-  msgDigVisible = Bdat::getValCheck(bdat, "msgdigVisible", id, BDAT_TYPE_U8);
+  unknown00 = Bdat::getValCheck(bdat, "Condition", id, BDAT_TYPE_U16);
+  unknown02 = Bdat::getFlagVal(bdat, "flag", id, "Digflg") != 0;
+  unknown03 = Bdat::getValCheck(bdat, "msgVisible", id, BDAT_TYPE_U8);
+  unknown04 = Bdat::getValCheck(bdat, "msgdigVisible", id, BDAT_TYPE_U8);
   u16 resourceId = Bdat::getValCheck(bdat, "RSC_ID", id, BDAT_TYPE_U16);
   u8 *tboxList = gf::GfDataBdat::getFP(gf::BDAT_RSC_TBOX_LIST);
   u16 visibleRadius = Bdat::getValCheck(tboxList, "visible_Radius", resourceId, BDAT_TYPE_U16);
-  popDist.distSq = static_cast<f32>(visibleRadius) * static_cast<f32>(visibleRadius);
+  unknown08.unknown00 = static_cast<f32>(visibleRadius) * static_cast<f32>(visibleRadius);
   u16 invisibleRadius = Bdat::getValCheck(tboxList, "invisible_Radius", resourceId, BDAT_TYPE_U16);
-  depopDist.distSq = static_cast<f32>(invisibleRadius) * static_cast<f32>(invisibleRadius);
+  unknown0c.unknown00 = static_cast<f32>(invisibleRadius) * static_cast<f32>(invisibleRadius);
   u16 categoryResourceId = Bdat::getValCheck(bdat, "RSC_ID", id, BDAT_TYPE_U16);
-  isTboxCategory = Bdat::getFlagVal(gf::GfDataBdat::getFP(gf::BDAT_RSC_TBOX_LIST), "flag", categoryResourceId, "TBOX_category") != 0;
+  unknown05 = Bdat::getFlagVal(gf::GfDataBdat::getFP(gf::BDAT_RSC_TBOX_LIST), "flag", categoryResourceId, "TBOX_category") != 0;
 }
 
 void GmkTbox::BdatInfo::dispose() {}
 
 bool GmkTbox::BdatInfo::isPopCondMatchedExceptDist() const {
-  if (condition != 0 && !gf::GfGameCond::isGameCond(condition)) {
+  if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
     return false;
   }
   return true;
@@ -51,14 +51,14 @@ bool GmkTbox::BdatInfo::isPopCondMatched(const mm::Vec3 &position) const {
   if (!isPopCondMatchedExceptDist()) {
     return false;
   }
-  return DistCond::isMatch(popDist.distSq, position);
+  return DistCond::isMatch(unknown08.unknown00, position);
 }
 
 bool GmkTbox::BdatInfo::isDepopCondMatched(const mm::Vec3 &position) const {
   if (!isPopCondMatchedExceptDist()) {
     return true;
   }
-  return !DistCond::isMatch(depopDist.distSq, position);
+  return !DistCond::isMatch(unknown0c.unknown00, position);
 }
 
 void GmkTbox::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
@@ -90,22 +90,22 @@ void setGobTargetable(gf::GF_OBJ_HANDLE *handle, bool isTargetable) {
 
 } // namespace
 
-GmkTbox::GmkTbox() : handle(gf::INVALID_HANDLE), isDisp(true), openedDisposeTime(0.0f), openedTimer(0.0f) {}
+GmkTbox::GmkTbox() : unknown48(gf::INVALID_HANDLE), unknown50(true), unknown54(0.0f), unknown58(0.0f) {}
 
-int GmkTbox::getGameFlagId() const { return createInfo.bdatIndex + GAME_FLAG_PROGRESS; }
+int GmkTbox::getGameFlagId() const { return unknown20.unknown18 + GAME_FLAG_PROGRESS; }
 
 void GmkTbox::successToAccess() {
   u32 progress;
-  if (getBdatInfo()->isDig && getProgress() == PROGRESS_CLOSED) {
+  if (getBdatInfo()->unknown02 && getProgress() == PROGRESS_CLOSED) {
     progress = PROGRESS_DUG;
   } else {
-    setGobTargetable(handle, false);
+    setGobTargetable(unknown48, false);
     progress = PROGRESS_OPENED;
   }
-  gf::GfGameFlag::setLocal(2, createInfo.bdatIndex + GAME_FLAG_PROGRESS, progress);
+  gf::GfGameFlag::setLocal(2, unknown20.unknown18 + GAME_FLAG_PROGRESS, progress);
 }
 
-void GmkTbox::setTargetable(bool isTargetable) const { setGobTargetable(handle, isTargetable); }
+void GmkTbox::setTargetable(bool isTargetable) const { setGobTargetable(unknown48, isTargetable); }
 
 void GmkTbox::create(const CreateInfo &info) { AGmkBase::create(info); }
 
@@ -115,15 +115,15 @@ void GmkTbox::dispose() {
 }
 
 void GmkTbox::disposeGobInst(bool isFadeOut) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (unknown48 == gf::INVALID_HANDLE) {
     return;
   }
   if (isFadeOut) {
-    gmk::disposeGobInst(handle, 1.0f);
+    gmk::disposeGobInst(unknown48, 1.0f);
   } else {
-    unbindToGameObj(handle);
-    gf::GfObjUtil::destroy(handle);
-    handle = gf::INVALID_HANDLE;
+    unbindToGameObj(unknown48);
+    gf::GfObjUtil::destroy(unknown48);
+    unknown48 = gf::INVALID_HANDLE;
   }
 }
 
@@ -132,7 +132,7 @@ void GmkTbox::update(f32 deltaTime) {
   if (!isValid()) {
     return;
   }
-  if (!(getBdatInfo()->popDist.distSq > 0.0f) || !(getBdatInfo()->depopDist.distSq > 0.0f)) {
+  if (!(getBdatInfo()->unknown08.unknown00 > 0.0f) || !(getBdatInfo()->unknown0c.unknown00 > 0.0f)) {
     return;
   }
   if (isInterestPosExist()) {
@@ -142,22 +142,22 @@ void GmkTbox::update(f32 deltaTime) {
       disposeGobInst(true);
     }
   }
-  if (getBdatInfo()->isTboxCategory && getProgress() == PROGRESS_OPENED && handle != gf::INVALID_HANDLE && openedTimer < openedDisposeTime) {
-    openedTimer += deltaTime;
-    if (openedDisposeTime <= openedTimer) {
-      gmk::disposeGobInst(handle, 1.0f);
+  if (getBdatInfo()->unknown05 && getProgress() == PROGRESS_OPENED && unknown48 != gf::INVALID_HANDLE && unknown58 < unknown54) {
+    unknown58 += deltaTime;
+    if (unknown54 <= unknown58) {
+      gmk::disposeGobInst(unknown48, 1.0f);
     }
   }
 }
 
 bool GmkTbox::canPopGobInst() const {
-  if (handle != gf::INVALID_HANDLE) {
+  if (unknown48 != gf::INVALID_HANDLE) {
     return false;
   }
-  if (getBdatInfo()->isTboxCategory && getProgress() == PROGRESS_OPENED) {
+  if (getBdatInfo()->unknown05 && getProgress() == PROGRESS_OPENED) {
     return false;
   }
-  return getBdatInfo()->isPopCondMatched(baseInfo.xform->position);
+  return getBdatInfo()->isPopCondMatched(unknown08.unknown08->unknown00);
 }
 
 void GmkTbox::createGobInst() {
@@ -166,25 +166,25 @@ void GmkTbox::createGobInst() {
   }
   disposeGobInst(false);
   CBdatWrapper bdat = {getBindedBdatFp()};
-  handle = gf::GfObjFactory::createGmkTbox(bdat, createInfo.bdatIndex);
-  bindToGameObj(handle);
+  unknown48 = gf::GfObjFactory::createGmkTbox(bdat, unknown20.unknown18);
+  bindToGameObj(unknown48);
   validateDisp();
   bool isOpened = getProgress() == PROGRESS_OPENED;
-  gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(handle);
+  gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(unknown48);
   setup->unknown70 = isOpened ? "S_open_02" : "S_open_00";
-  const Xform *xform = baseInfo.xform;
-  setup->unknown20 = xform->position;
-  setup->unknown30 = xform->rotation;
-  setup->setInitialScale(getData()->scale * 0.1f);
-  if (getBdatInfo()->isDig && getProgress() == PROGRESS_CLOSED) {
+  const Xform *xform = unknown08.unknown08;
+  setup->unknown20 = xform->unknown00;
+  setup->unknown30 = xform->unknown10;
+  setup->setInitialScale(getData()->unknown04 * 0.1f);
+  if (getBdatInfo()->unknown02 && getProgress() == PROGRESS_CLOSED) {
     setup->unknown50 = 0.0f;
   }
   setup->unknowna1 = !isOpened;
-  setGobTargetable(handle, !isOpened);
+  setGobTargetable(unknown48, !isOpened);
 }
 
 bool GmkTbox::canDepopGobInst() const {
-  if (handle != gf::INVALID_HANDLE && getBdatInfo()->isDepopCondMatched(baseInfo.xform->position)) {
+  if (unknown48 != gf::INVALID_HANDLE && getBdatInfo()->isDepopCondMatched(unknown08.unknown08->unknown00)) {
     return true;
   }
   return false;
@@ -196,10 +196,10 @@ void GmkTbox::debugDraw() const {
 }
 
 void GmkTbox::validateDisp() const {
-  if (handle == gf::INVALID_HANDLE) {
+  if (unknown48 == gf::INVALID_HANDLE) {
     return;
   }
-  setEventDisp(handle, isDisp && debugIsDispGmkType(getGmkType()));
+  setEventDisp(unknown48, unknown50 && debugIsDispGmkType(getGmkType()));
 }
 
 void GmkTbox::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {

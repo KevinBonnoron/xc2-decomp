@@ -19,36 +19,36 @@ namespace gmk {
 namespace {
 
 mm::Vec3 getSidePos(const GmkRoutePoint::Data &data, f32 width) {
-  mm::Vec3 offset(width * data.sideX, width * data.sideY, width * data.sideZ);
-  return offset + data.position;
+  mm::Vec3 offset(width * data.unknown10, width * data.unknown14, width * data.unknown18);
+  return offset + data.unknown00;
 }
 
 } // namespace
 
 GmkRouteNavi::CreateInfo::CreateInfo(const GmkRoute *route)
-    : gmkSetId(-1), type(GMK_TYPE_NUM), index(0), widthRatio(0.0f), arriveDist(1.0f), arriveHeight(2.0f), curveDivisionNum(16), initResult(nullptr) {
+    : unknown00(-1), unknown04(GMK_TYPE_NUM), unknown08(0), unknown0c(0.0f), unknown10(1.0f), unknown14(2.0f), unknown18(16), unknown20(nullptr) {
   if (route != nullptr) {
     validate(*route);
   }
 }
 
 void GmkRouteNavi::CreateInfo::validate(const GmkRoute &route) {
-  IGmkList *list = route.baseInfo.list;
-  gmkSetId = list->getCreateInfo().set->createInfo.gmkSetId;
-  type = route.getGmkType();
+  IGmkList *list = route.unknown08.unknown00;
+  unknown00 = list->getCreateInfo().unknown08->unknown10.unknown04;
+  unknown04 = route.getGmkType();
   u32 num = list->getInstNum();
   for (u32 i = 0; i < num; i++) {
     if (list->getInst(i) == &route) {
-      index = i;
+      unknown08 = i;
     }
   }
 }
 
 bool GmkRouteNavi::CreateInfo::isValid() const {
-  if (gmkSetId <= 0) {
+  if (unknown00 <= 0) {
     return false;
   }
-  switch (type) {
+  switch (unknown04) {
   case GMK_TYPE_ROUTED_ENEMY:
   case GMK_TYPE_ROUTED_NPC:
   case GMK_TYPE_ROUTED_MAP_OBJ:
@@ -58,54 +58,54 @@ bool GmkRouteNavi::CreateInfo::isValid() const {
   default:
     return false;
   }
-  return curveDivisionNum != 0;
+  return unknown18 != 0;
 }
 
 void GmkRouteNavi::create(const CreateInfo &info) {
   dispose();
-  createInfo = info;
-  arriveDist = info.arriveDist;
-  arriveHeight = info.arriveHeight;
-  pointIndex = 1;
-  curveStep = 0;
+  unknown00 = info;
+  unknown68 = info.unknown10;
+  unknown6c = info.unknown14;
+  unknowna0 = 1;
+  unknowna8 = 0;
   {
     GmkAcc::CreateInfo accInfo;
-    accInfo.gmkSetId = info.gmkSetId;
-    accInfo.type = info.type;
-    accInfo.index = info.index;
-    acc.create(accInfo);
+    accInfo.unknown00 = info.unknown00;
+    accInfo.unknown04 = info.unknown04;
+    accInfo.unknown08 = info.unknown08;
+    unknown28.create(accInfo);
   }
   if (isValid()) {
     initIsReverse();
   }
-  if (info.initResult != nullptr) {
-    initAtRandom(*info.initResult);
+  if (info.unknown20 != nullptr) {
+    initAtRandom(*info.unknown20);
     return;
   }
-  seq = &GmkRouteNavi::seqInit;
+  unknown70 = &GmkRouteNavi::seqInit;
 }
 
 void GmkRouteNavi::dispose() {
-  curveAngle = 0.0f;
-  isReverse = false;
-  pointIndex = 0;
-  hasTargetPos = false;
-  createInfo = CreateInfo(nullptr);
+  unknownac = 0.0f;
+  unknowna4 = false;
+  unknowna0 = 0;
+  unknown80 = false;
+  unknown00 = CreateInfo(nullptr);
 }
 
 void GmkRouteNavi::initIsReverse() {
-  u32 flags = getRoute()->getData()->flags;
+  u32 flags = getRoute()->getData()->unknown0c;
   if ((flags & (GmkRoute::FLAG_FORWARD | GmkRoute::FLAG_REVERSE)) == (GmkRoute::FLAG_FORWARD | GmkRoute::FLAG_REVERSE)) {
-    isReverse = ml::mtRandf1() > 0.5f;
+    unknowna4 = ml::mtRandf1() > 0.5f;
   } else if (flags & GmkRoute::FLAG_FORWARD) {
-    isReverse = false;
+    unknowna4 = false;
   } else if (flags & GmkRoute::FLAG_REVERSE) {
-    isReverse = true;
+    unknowna4 = true;
   }
 }
 
 int GmkRouteNavi::validatePointIndex(bool &isReverse, int index) const {
-  isReverse = this->isReverse;
+  isReverse = this->unknowna4;
   const GmkRoute *route = getRoute();
   bool isClosed = route->isClosed();
   int num = route->getRoutePointNum();
@@ -149,38 +149,38 @@ bool GmkRouteNavi::getPosDirOnLine(mm::Vec3 &position, mm::Vec3 &direction, u32 
   return true;
 }
 
-u32 GmkRoute::getRoutePointNum() const { return getData()->endPointIndex - getData()->firstPointIndex; }
+u32 GmkRoute::getRoutePointNum() const { return getData()->unknown04 - getData()->unknown00; }
 
-bool GmkRoute::isClosed() const { return (getData()->flags & FLAG_CLOSED) != 0; }
+bool GmkRoute::isClosed() const { return (getData()->unknown0c & FLAG_CLOSED) != 0; }
 
 void GmkRouteNavi::update(const UpdateInfo &info) {
-  if (isValid() && seq) {
-    (this->*seq)(info);
+  if (isValid() && unknown70) {
+    (this->*unknown70)(info);
   }
 }
 
 void GmkRouteNavi::updateNextPos() {
   UpdateInfo info;
-  info.position = targetPos;
+  info.position = unknown90;
   update(info);
 }
 
 bool GmkRouteNavi::isArrived(const mm::Vec3 &targetPosition, const mm::Vec3 &position) const {
   f32 height = targetPosition.y - position.y;
-  if (arriveHeight < height) {
+  if (unknown6c < height) {
     return false;
   }
   f32 x = targetPosition.x - position.x;
   f32 z = targetPosition.z - position.z;
   f32 distSq = x * x + z * z;
-  if (arriveDist * arriveDist < distSq) {
+  if (unknown68 * unknown68 < distSq) {
     return false;
   }
   return true;
 }
 
 void GmkRouteNavi::debugDraw() {
-  mm::Vec3 position = targetPos;
+  mm::Vec3 position = unknown90;
   mm::Mat44 matrix;
   matrix.rows[0][0] = 1.0f;
   matrix.rows[0][1] = 0.0f;
@@ -202,10 +202,10 @@ void GmkRouteNavi::debugDraw() {
 }
 
 void GmkRouteNavi::updateNextPointIndx() {
-  if (isReverse) {
-    pointIndex = validatePointIndex(isReverse, pointIndex - 1);
+  if (unknowna4) {
+    unknowna0 = validatePointIndex(unknowna4, unknowna0 - 1);
   } else {
-    pointIndex = validatePointIndex(isReverse, pointIndex + 1);
+    unknowna0 = validatePointIndex(unknowna4, unknowna0 + 1);
   }
 }
 
@@ -214,7 +214,7 @@ const GmkRoutePoint *GmkRoute::getRoutePoint(u32 index) const {
   if (list == nullptr) {
     return nullptr;
   }
-  u32 pointIndex = getData()->firstPointIndex + index;
+  u32 pointIndex = getData()->unknown00 + index;
   if (list->getInstNum() > pointIndex) {
     return static_cast<const GmkRoutePoint *>(list->getInst(pointIndex));
   }
@@ -227,19 +227,19 @@ f32 GmkRouteNavi::getWidthRatio() const {
     return 0.0f;
   }
   f32 width;
-  switch (route->getData()->widthSide) {
+  switch (route->getData()->unknown10) {
   case 0:
-    return createInfo.widthRatio;
+    return unknown00.unknown0c;
   case 1:
-    width = createInfo.widthRatio > 0.0f ? createInfo.widthRatio : -createInfo.widthRatio;
+    width = unknown00.unknown0c > 0.0f ? unknown00.unknown0c : -unknown00.unknown0c;
     break;
   case 2:
-    width = createInfo.widthRatio > 0.0f ? -createInfo.widthRatio : createInfo.widthRatio;
+    width = unknown00.unknown0c > 0.0f ? -unknown00.unknown0c : unknown00.unknown0c;
     break;
   default:
     return 0.0f;
   }
-  if (isReverse) {
+  if (unknowna4) {
     width = -width;
   }
   return width;
@@ -271,7 +271,7 @@ bool GmkRoute::getRoutePointPos(mm::Vec3 &position, u32 index) const {
   if (point == nullptr || !point->isValid()) {
     return false;
   }
-  position = point->getData()->position;
+  position = point->getData()->unknown00;
   return true;
 }
 
@@ -290,7 +290,7 @@ void GmkRoute::debugDraw(bool isSelected) const {
 
 void GmkRoute::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {}
 
-const IGmkList *GmkRoute::getBindedRoutePointList() const { return baseInfo.list->getCreateInfo().set->lists[GMK_TYPE_ROUTE_POINT]; }
+const IGmkList *GmkRoute::getBindedRoutePointList() const { return unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_ROUTE_POINT]; }
 
 void GmkRoute::debugDraw() const {
   AGmkBase::debugDraw();

@@ -17,27 +17,27 @@ public:
   struct BdatInfo {
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
 
-    u16 condition;
-    u16 callNameRadius;
-    u16 liftNameRadius;
-    u16 liftLod;
-    u16 shutterALod;
-    u16 shutterBLod;
-    u16 switchALod;
-    u16 switchBLod;
-    u16 switchSe;
-    u16 shutterSe;
-    u16 liftStartSe;
-    u16 liftLoopSe;
-    u16 liftStopSe;
-    u8 liftMinVolumeDist;
-    u8 liftMaxVolumeDist;
-    bool isLiftReverse;
-    f32 callLiftSpeed;
-    u16 missMsgId;
-    f32 nextWait;
-    u16 liftAMapJumpId;
-    u16 liftBMapJumpId;
+    u16 unknown00;  // Inferred role: condition; original member name unknown.
+    u16 unknown02;  // Inferred role: call name radius; original member name unknown.
+    u16 unknown04;  // Inferred role: lift name radius; original member name unknown.
+    u16 unknown06;  // Inferred role: lift lod; original member name unknown.
+    u16 unknown08;  // Inferred role: shutter a lod; original member name unknown.
+    u16 unknown0a;  // Inferred role: shutter b lod; original member name unknown.
+    u16 unknown0c;  // Inferred role: switch a lod; original member name unknown.
+    u16 unknown0e;  // Inferred role: switch b lod; original member name unknown.
+    u16 unknown10;  // Inferred role: switch se; original member name unknown.
+    u16 unknown12;  // Inferred role: shutter se; original member name unknown.
+    u16 unknown14;  // Inferred role: lift start se; original member name unknown.
+    u16 unknown16;  // Inferred role: lift loop se; original member name unknown.
+    u16 unknown18;  // Inferred role: lift stop se; original member name unknown.
+    u8 unknown1a;   // Inferred role: lift min volume dist; original member name unknown.
+    u8 unknown1b;   // Inferred role: lift max volume dist; original member name unknown.
+    bool unknown1c; // Inferred role: lift reverse; original member name unknown.
+    f32 unknown20;  // Inferred role: call lift speed; original member name unknown.
+    u16 unknown24;  // Inferred role: miss msg id; original member name unknown.
+    f32 unknown28;  // Inferred role: next wait; original member name unknown.
+    u16 unknown2c;  // Inferred role: lift a map jump id; original member name unknown.
+    u16 unknown2e;  // Inferred role: lift b map jump id; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_ELEVATOR;

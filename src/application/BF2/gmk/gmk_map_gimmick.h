@@ -20,13 +20,13 @@ public:
     bool isPopCondMatched() const;
     void debugDraw(const AGmkBase &gmk) const;
 
-    u16 condition;
-    u16 nameRadius;
-    u16 mapObjId;
-    bool isMsgRay;
-    TimeCond timeCond;
-    WeatherCond weatherCond;
-    BootedGmkCond bootedGmk;
+    u16 unknown00;           // Inferred role: condition; original member name unknown.
+    u16 unknown02;           // Inferred role: name radius; original member name unknown.
+    u16 unknown04;           // Inferred role: map object id; original member name unknown.
+    bool unknown06;          // Inferred role: msg ray; original member name unknown.
+    TimeCond unknown08;      // Inferred role: time cond; original member name unknown.
+    WeatherCond unknown18;   // Inferred role: weather cond; original member name unknown.
+    BootedGmkCond unknown28; // Inferred role: booted gmk; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_MAP_GIMMICK;
@@ -48,7 +48,7 @@ static_assert(sizeof(GmkMapGimmick) == 0xb0, "");
 
 class GmkMapGimmickList : public TGmkList<GmkMapGimmick, GmkMapGimmick::BdatInfo, 0x4750414d, 2, GmkMapGimmickGob> {
 public:
-  explicit GmkMapGimmickList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), triggerList(0xffffffff) {}
+  explicit GmkMapGimmickList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), unknown230(0xffffffff) {}
   ~GmkMapGimmickList() override;
 
   const AGmkBase *getInst(u32 index) const override;
@@ -63,7 +63,7 @@ protected:
   void createGmk(void *data) override;
 
 private:
-  GmkTriggerList triggerList;
+  GmkTriggerList unknown230; // Inferred role: trigger list; original member name unknown.
 };
 
 static_assert(sizeof(GmkMapGimmickList) == 0x460, "");

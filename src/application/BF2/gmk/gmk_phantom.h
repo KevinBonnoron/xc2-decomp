@@ -48,14 +48,14 @@ public:
   };
 
   struct CreateInfo {
-    CreateInfo() : shapeType(SHAPE_TYPE_NONE), position(0.0f, 0.0f, 0.0f), rotation(0.0f, 0.0f, 0.0f), listener(nullptr), isCheckParty(false) { size[0] = size[1] = size[2] = 0.0f; }
+    CreateInfo() : unknown00(SHAPE_TYPE_NONE), unknown10(0.0f, 0.0f, 0.0f), unknown20(0.0f, 0.0f, 0.0f), unknown40(nullptr), unknown48(false) { unknown30[0] = unknown30[1] = unknown30[2] = 0.0f; }
 
-    ShapeType shapeType;
-    mm::Vec3 position;
-    mm::Vec3 rotation;
-    f32 size[3];
-    IGmkPhantomEventListener *listener;
-    bool isCheckParty;
+    ShapeType unknown00;                 // Inferred role: shape type; original member name unknown.
+    mm::Vec3 unknown10;                  // Inferred role: position; original member name unknown.
+    mm::Vec3 unknown20;                  // Inferred role: rotation; original member name unknown.
+    f32 unknown30[3];                    // Inferred role: size; original member name unknown.
+    IGmkPhantomEventListener *unknown40; // Inferred role: listener; original member name unknown.
+    bool unknown48;                      // Inferred role: check party; original member name unknown.
   };
 
   static mm::mtl::RTTI m_rtti;
@@ -68,21 +68,21 @@ public:
   void update(const GmkPhantomCheckResults &results);
   const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
 
-  CreateInfo createInfo;
-  const char *name;
-  fw::ColiObject *phantom;
-  bool isHit;
-  bool isEntered;
-  bool isLeft;
-  bool isInside;
+  CreateInfo unknown20;      // Inferred role: create info; original member name unknown.
+  const char *unknown70;     // Inferred role: name; original member name unknown.
+  fw::ColiObject *unknown78; // Inferred role: phantom; original member name unknown.
+  bool unknown80;            // Inferred role: hit; original member name unknown.
+  bool unknown81;            // Inferred role: entered; original member name unknown.
+  bool unknown82;            // Inferred role: left; original member name unknown.
+  bool unknown83;            // Inferred role: inside; original member name unknown.
 };
 
 static_assert(sizeof(GmkPhantom::CreateInfo) == 0x50, "");
-static_assert(offsetof(GmkPhantom, createInfo) == 0x20, "");
-static_assert(offsetof(GmkPhantom, name) == 0x70, "");
-static_assert(offsetof(GmkPhantom, phantom) == 0x78, "");
-static_assert(offsetof(GmkPhantom, isHit) == 0x80, "");
-static_assert(offsetof(GmkPhantom, isInside) == 0x83, "");
+static_assert(offsetof(GmkPhantom, unknown20) == 0x20, "");
+static_assert(offsetof(GmkPhantom, unknown70) == 0x70, "");
+static_assert(offsetof(GmkPhantom, unknown78) == 0x78, "");
+static_assert(offsetof(GmkPhantom, unknown80) == 0x80, "");
+static_assert(offsetof(GmkPhantom, unknown83) == 0x83, "");
 static_assert(sizeof(GmkPhantom) == 0x90, "");
 
 class GmkPhantomManager : public mm::mtl::PtrSingleton<GmkPhantomManager> {
@@ -93,11 +93,11 @@ public:
   GmkPhantomManager();
   ~GmkPhantomManager() override;
 
-  mm::mtl::IntrusiveList<GmkPhantom> phantoms;
-  GmkPhantomCheckResults results;
+  mm::mtl::IntrusiveList<GmkPhantom> unknown08; // Inferred role: phantoms; original member name unknown.
+  GmkPhantomCheckResults unknown20;             // Inferred role: results; original member name unknown.
 };
 
-static_assert(offsetof(GmkPhantomManager, phantoms) == 0x08, "");
-static_assert(offsetof(GmkPhantomManager, results) == 0x20, "");
+static_assert(offsetof(GmkPhantomManager, unknown08) == 0x08, "");
+static_assert(offsetof(GmkPhantomManager, unknown20) == 0x20, "");
 
 } // namespace gmk

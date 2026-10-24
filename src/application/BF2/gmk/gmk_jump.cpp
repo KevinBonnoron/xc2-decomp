@@ -22,13 +22,13 @@ constexpr u32 ICON_FADE_OUT_FRAME = 5;
 const fw::EF_CATEGORY ICON_EFFECT_CATEGORY = static_cast<fw::EF_CATEGORY>(1);
 
 void GmkJump::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  condition = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
-  jumpType = bdat.getValCheck("jumpType", id, BDAT_TYPE_U8);
-  nameRadius = bdat.getValCheck("nameRadius", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
+  unknown02 = bdat.getValCheck("jumpType", id, BDAT_TYPE_U8);
+  unknown04 = bdat.getValCheck("nameRadius", id, BDAT_TYPE_U16);
 }
 
 bool GmkJump::BdatInfo::isPopCondMatched() const {
-  if (condition != 0 && !gf::GfGameCond::isGameCond(condition)) {
+  if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
     return false;
   }
   return true;
@@ -36,7 +36,7 @@ bool GmkJump::BdatInfo::isPopCondMatched() const {
 
 void GmkJump::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
 
-GmkJump::GmkJump() : _48(), isCondMatched(false), handle(gf::INVALID_HANDLE), popDist(), depopDist(), iconDist(), isIconDead(false), isDisp(true) {}
+GmkJump::GmkJump() : _48(), unknown50(false), unknown58(gf::INVALID_HANDLE), unknown60(), unknown68(), unknown74(), unknown78(false), unknown79(true) {}
 
 void GmkJump::create(const CreateInfo &info) {
   AGmkBase::create(info);
@@ -46,12 +46,12 @@ void GmkJump::create(const CreateInfo &info) {
     if (map >= Bdat::getIdTop(mapList) && Bdat::getIdTop(mapList) + Bdat::getIdCount(mapList) > map) {
       u8 displayRadius = Bdat::getValCheck(mapList, "ene_disp_r", map, BDAT_TYPE_U8);
       u8 displayHeight = Bdat::getValCheck(mapList, "ene_disp_h", map, BDAT_TYPE_U8);
-      popDist.set(displayRadius, displayHeight);
+      unknown60.set(displayRadius, displayHeight);
       u8 releaseRadius = Bdat::getValCheck(mapList, "ene_release_r", map, BDAT_TYPE_U8);
       u8 releaseHeight = Bdat::getValCheck(mapList, "ene_release_h", map, BDAT_TYPE_U8);
-      depopDist.set(displayRadius + releaseRadius, displayHeight + releaseHeight);
+      unknown68.set(displayRadius + releaseRadius, displayHeight + releaseHeight);
       f32 iconDistance = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_JUMP_ICON_DIST_ROW, BDAT_TYPE_F32).valueF32;
-      iconDist.distSq = iconDistance * iconDistance;
+      unknown74.unknown00 = iconDistance * iconDistance;
       return;
     }
   }
@@ -65,27 +65,27 @@ void GmkJump::dispose() {
 }
 
 void GmkJump::disposeIcon(bool isFadeOut) {
-  if (iconHandle == 0) {
+  if (unknown70 == 0) {
     return;
   }
   if (isFadeOut) {
-    fw::EffectManager::get()->fadeOutDead(iconHandle, ICON_FADE_OUT_FRAME);
+    fw::EffectManager::get()->fadeOutDead(unknown70, ICON_FADE_OUT_FRAME);
   } else {
-    fw::EffectManager::get()->remove(iconHandle);
+    fw::EffectManager::get()->remove(unknown70);
   }
-  iconHandle = 0;
+  unknown70 = 0;
 }
 
 void GmkJump::disposeGobInst(bool isFadeOut) {
-  if (handle == gf::INVALID_HANDLE) {
+  if (unknown58 == gf::INVALID_HANDLE) {
     return;
   }
   if (isFadeOut) {
-    gmk::disposeGobInst(handle, 1.0f);
+    gmk::disposeGobInst(unknown58, 1.0f);
   } else {
-    unbindToGameObj(handle);
-    gf::GfObjUtil::destroy(handle);
-    handle = gf::INVALID_HANDLE;
+    unbindToGameObj(unknown58);
+    gf::GfObjUtil::destroy(unknown58);
+    unknown58 = gf::INVALID_HANDLE;
   }
 }
 
@@ -94,7 +94,7 @@ void GmkJump::update(f32 deltaTime) {
   if (!isValid()) {
     return;
   }
-  isCondMatched = getBdatInfo()->isPopCondMatched();
+  unknown50 = getBdatInfo()->isPopCondMatched();
   if (!isInterestPosExist()) {
     return;
   }
@@ -103,11 +103,11 @@ void GmkJump::update(f32 deltaTime) {
   } else if (canDepopGobInst()) {
     disposeGobInst(true);
   }
-  if (isIconDead) {
+  if (unknown78) {
     return;
   }
-  if (isCondMatched && DistCond::isMatch(iconDist.distSq, getData()->position)) {
-    if (iconHandle == 0) {
+  if (unknown50 && DistCond::isMatch(unknown74.unknown00, getData()->position)) {
+    if (unknown70 == 0) {
       createIcon();
     }
   } else {
@@ -116,22 +116,22 @@ void GmkJump::update(f32 deltaTime) {
 }
 
 bool GmkJump::canPopGobInst() const {
-  if (handle != gf::INVALID_HANDLE || !isCondMatched) {
+  if (unknown58 != gf::INVALID_HANDLE || !unknown50) {
     return false;
   }
   const mm::Vec3 &position = getData()->position;
-  return popDist.isMatch(position);
+  return unknown60.isMatch(position);
 }
 
 bool GmkJump::canDepopGobInst() const {
-  if (handle == gf::INVALID_HANDLE) {
+  if (unknown58 == gf::INVALID_HANDLE) {
     return false;
   }
-  if (!isCondMatched) {
+  if (!unknown50) {
     return true;
   }
   const mm::Vec3 &position = getData()->position;
-  return !depopDist.isMatch(position);
+  return !unknown68.isMatch(position);
 }
 
 void GmkJump::createIcon() {
@@ -140,7 +140,7 @@ void GmkJump::createIcon() {
   }
   disposeIcon(false);
   const char *name;
-  switch (getBdatInfo()->jumpType) {
+  switch (getBdatInfo()->unknown02) {
   case 0:
     name = "cmn_100_103";
     break;
@@ -155,33 +155,33 @@ void GmkJump::createIcon() {
   if (data == nullptr) {
     return;
   }
-  iconHandle = fw::EffectManager::get()->create(data, true);
-  if (iconHandle == 0) {
+  unknown70 = fw::EffectManager::get()->create(data, true);
+  if (unknown70 == 0) {
     return;
   }
-  fw::EffectManager::get()->setCategory(iconHandle, ICON_EFFECT_CATEGORY);
+  fw::EffectManager::get()->setCategory(unknown70, ICON_EFFECT_CATEGORY);
   validateIconPos();
 }
 
 void GmkJump::debugUpdateMmf() {}
 
 void GmkJump::reqDeadIcon() {
-  if (isIconDead) {
+  if (unknown78) {
     return;
   }
-  isIconDead = true;
-  if (iconHandle != 0) {
-    fw::EffectManager::get()->dead(iconHandle);
-    iconHandle = 0;
+  unknown78 = true;
+  if (unknown70 != 0) {
+    fw::EffectManager::get()->dead(unknown70);
+    unknown70 = 0;
   }
 }
 
 void GmkJump::reqRecreateIcon() {
-  if (!isIconDead) {
+  if (!unknown78) {
     return;
   }
-  isIconDead = false;
-  if (iconHandle == 0) {
+  unknown78 = false;
+  if (unknown70 == 0) {
     createIcon();
   }
 }

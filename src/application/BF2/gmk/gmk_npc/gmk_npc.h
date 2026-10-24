@@ -52,14 +52,14 @@ public:
     bool isPopCommonCondMatched(const AGmkBase &gmk) const;
     void debugDraw(const AGmkBase &gmk) const;
 
-    u16 condition;
-    u16 group;
-    u16 battleReaction;
-    ScenarioFlagCond scenarioFlag;
-    QuestFlagCond questFlag;
-    TimeCond timeCond;
-    DistHvCond popDist;
-    DistHvCond depopDist;
+    u16 unknown00;              // Inferred role: condition; original member name unknown.
+    u16 unknown02;              // Inferred role: group; original member name unknown.
+    u16 unknown04;              // Inferred role: battle reaction; original member name unknown.
+    ScenarioFlagCond unknown06; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond unknown0a;    // Inferred role: quest flag; original member name unknown.
+    TimeCond unknown10;         // Inferred role: time cond; original member name unknown.
+    DistHvCond unknown20;       // Inferred role: pop dist; original member name unknown.
+    DistHvCond unknown28;       // Inferred role: depop dist; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_NPC;
@@ -73,7 +73,7 @@ public:
   bool isPopDistCondMatched() const override;
   bool isDepopDistCondMatched() const override;
   u8 *getBindedBdatFp() const override { return AGmkBase::getBindedBdatFp(); }
-  int getBindedBdatId() const override { return createInfo.bdatIndex; }
+  int getBindedBdatId() const override { return AGmkBase::unknown20.unknown18; }
   bool findPopPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const override;
   void bindToGameObj(gf::GF_OBJ_HANDLE *handle) const override;
   void unbindToGameObj(gf::GF_OBJ_HANDLE *handle) const override { AGmkBase::unbindToGameObj(handle); }
@@ -82,7 +82,7 @@ public:
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void debugUpdate(f32 deltaTime) override {}
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(createInfo.info); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(AGmkBase::unknown20.unknown10); }
 };
 
 static_assert(sizeof(GmkNpc::BdatInfo) == 0x30, "");

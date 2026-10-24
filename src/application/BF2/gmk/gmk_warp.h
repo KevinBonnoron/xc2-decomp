@@ -30,11 +30,11 @@ public:
     bool isDepopCondMatched(const mm::Vec3 &position) const;
     void debugDraw(const AGmkBase &gmk) const;
 
-    u16 condition;
-    u16 nameRadius;
-    BootedGmkCond bootedGmk;
-    DistHvCond popDist;
-    DistHvCond depopDist;
+    u16 unknown00;           // Inferred role: condition; original member name unknown.
+    u16 unknown02;           // Inferred role: name radius; original member name unknown.
+    BootedGmkCond unknown04; // Inferred role: booted gmk; original member name unknown.
+    DistHvCond unknown08;    // Inferred role: pop dist; original member name unknown.
+    DistHvCond unknown10;    // Inferred role: depop dist; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_WARP;
@@ -61,18 +61,18 @@ public:
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override {}
 
   u8 _48[0x50 - 0x48];
-  gf::GF_OBJ_HANDLE *handles[POINT_NUM];
-  u32 iconHandles[POINT_NUM];
-  DistCond iconDist;
-  bool isIconDead;
-  bool isDisp;
+  gf::GF_OBJ_HANDLE *unknown50[POINT_NUM]; // Inferred role: handles; original member name unknown.
+  u32 unknown60[POINT_NUM];                // Inferred role: icon handles; original member name unknown.
+  DistCond unknown68;                      // Inferred role: icon dist; original member name unknown.
+  bool unknown6c;                          // Inferred role: icon dead; original member name unknown.
+  bool unknown6d;                          // Inferred role: disp; original member name unknown.
 };
 
-static_assert(offsetof(GmkWarp, handles) == 0x50, "");
-static_assert(offsetof(GmkWarp, iconHandles) == 0x60, "");
-static_assert(offsetof(GmkWarp, iconDist) == 0x68, "");
-static_assert(offsetof(GmkWarp, isIconDead) == 0x6c, "");
-static_assert(offsetof(GmkWarp, isDisp) == 0x6d, "");
+static_assert(offsetof(GmkWarp, unknown50) == 0x50, "");
+static_assert(offsetof(GmkWarp, unknown60) == 0x60, "");
+static_assert(offsetof(GmkWarp, unknown68) == 0x68, "");
+static_assert(offsetof(GmkWarp, unknown6c) == 0x6c, "");
+static_assert(offsetof(GmkWarp, unknown6d) == 0x6d, "");
 
 static_assert(sizeof(GmkWarp::BdatInfo) == 0x18, "");
 static_assert(sizeof(GmkWarp) == 0x70, "");

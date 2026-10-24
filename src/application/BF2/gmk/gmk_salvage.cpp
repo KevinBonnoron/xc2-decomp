@@ -6,10 +6,10 @@
 
 namespace gmk {
 
-void GmkSalvage::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) { condition = bdat.getValCheck("Condition", id, BDAT_TYPE_U16); }
+void GmkSalvage::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) { unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16); }
 
 bool GmkSalvage::BdatInfo::isCondMatched() const {
-  if (condition != 0 && !gf::GfGameCond::isGameCond(condition)) {
+  if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
     return false;
   }
   return true;

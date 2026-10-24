@@ -8,10 +8,10 @@ namespace gmk {
 class GmkScript {
 public:
   struct CreateInfo {
-    CreateInfo() : startId(-1) {}
+    CreateInfo() : unknown24(-1) {}
 
-    mm::mtl::FixStr<32> name;
-    int startId;
+    mm::mtl::FixStr<32> unknown00; // Inferred role: name; original member name unknown.
+    int unknown24;                 // Inferred role: start id; original member name unknown.
   };
 
   GmkScript(const CreateInfo *info);
@@ -32,13 +32,13 @@ public:
 
   virtual ~GmkScript() { dispose(); }
 
-  CreateInfo createInfo;
-  void (GmkScript::*seq)(f32);
+  CreateInfo unknown08;              // Inferred role: create info; original member name unknown.
+  void (GmkScript::*unknown30)(f32); // Inferred role: seq; original member name unknown.
 };
 
 static_assert(sizeof(GmkScript::CreateInfo) == 0x28, "");
-static_assert(offsetof(GmkScript, createInfo) == 0x08, "");
-static_assert(offsetof(GmkScript, seq) == 0x30, "");
+static_assert(offsetof(GmkScript, unknown08) == 0x08, "");
+static_assert(offsetof(GmkScript, unknown30) == 0x30, "");
 static_assert(sizeof(GmkScript) == 0x40, "");
 
 } // namespace gmk

@@ -7,7 +7,7 @@ namespace gmk {
 
 void GmkAreaBgm::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   dispose();
-  bgmCondition = bdat.getValCheck("bgmCondition", id, BDAT_TYPE_U16);
+  unknown00 = bdat.getValCheck("bgmCondition", id, BDAT_TYPE_U16);
 }
 
 } // namespace gmk

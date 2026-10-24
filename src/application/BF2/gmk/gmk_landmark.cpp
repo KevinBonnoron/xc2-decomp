@@ -10,17 +10,17 @@
 namespace gmk {
 
 void GmkLandmark::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  msgId = bdat.getValCheck("MSGID", id, BDAT_TYPE_U16);
-  category = bdat.getValCheck("category", id, BDAT_TYPE_U8);
-  condition = bdat.getValCheck("cndID", id, BDAT_TYPE_U16);
-  isNoTelop = Bdat::getFlagVal(bdat.unknown00, "flag", id, "noTelop") != 0;
-  if (msgId != 0) {
-    name = Bdat::getMSText(gf::GfDataBdat::getFP(gf::BDAT_FLD_LANDMARK), msgId);
+  unknown00 = bdat.getValCheck("MSGID", id, BDAT_TYPE_U16);
+  unknown02 = bdat.getValCheck("category", id, BDAT_TYPE_U8);
+  unknown04 = bdat.getValCheck("cndID", id, BDAT_TYPE_U16);
+  unknown06 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "noTelop") != 0;
+  if (unknown00 != 0) {
+    unknown08 = Bdat::getMSText(gf::GfDataBdat::getFP(gf::BDAT_FLD_LANDMARK), unknown00);
   }
 }
 
 bool GmkLandmark::BdatInfo::isCondMatched() const {
-  if (condition != 0 && !gf::GfGameCond::isGameCond(condition)) {
+  if (unknown04 != 0 && !gf::GfGameCond::isGameCond(unknown04)) {
     return false;
   }
   return true;
