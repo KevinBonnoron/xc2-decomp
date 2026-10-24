@@ -14,11 +14,11 @@ GfComVisible::GfComVisible() : unknown10(nullptr) {}
 
 void GfComVisible::setup(const SetupInfo &info) {
   fw::VisibleObject::SetupInfo visibleInfo;
-  visibleInfo.layer = getLayer();
+  visibleInfo.unknown00 = getLayer();
   unknown10 = fw::VisibleObject::create(visibleInfo, getAllocator(ALLOCATOR_DEFAULT));
-  GfComTransform *transform = owner->getComponent<GfComTransform>();
+  GfComTransform *transform = unknown08->getComponent<GfComTransform>();
   if (transform != nullptr) {
-    unknown10->referenceFrame = transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18;
+    unknown10->unknown28 = transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18;
   }
 }
 

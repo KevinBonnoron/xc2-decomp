@@ -11,14 +11,14 @@ AssetCsvb *AssetCsvb::CreateFromMemory(mtl::ALLOC_HANDLE handle, const void *dat
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   AssetCsvb *csvb = new (AssetManager::getMemSYS()) AssetCsvb();
   if (csvb != nullptr) {
-    csvb->handle = handle;
+    csvb->unknown0c = handle;
     if (data != nullptr && size != 0) {
-      csvb->data = new (AssetManager::getMemSYS()) csvb::CCsvbData();
-      csvb->data->Load(handle, data, size);
+      csvb->unknown20 = new (AssetManager::getMemSYS()) csvb::CCsvbData();
+      csvb->unknown20->Load(handle, data, size);
     }
 
-    csvb->name = fileName.c_str();
-    csvb->hash = AssetManager::getHash(fileName.c_str());
+    csvb->unknown28 = fileName.c_str();
+    csvb->unknown18 = AssetManager::getHash(fileName.c_str());
     csvb->addRef();
   }
 
@@ -30,14 +30,14 @@ AssetCsvb *AssetCsvb::CreateFromMemory(mm::mtl::IAllocator *allocator, const voi
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   AssetCsvb *csvb = new (AssetManager::getMemSYS()) AssetCsvb();
   if (csvb != nullptr) {
-    csvb->allocator = allocator;
+    csvb->unknown10 = allocator;
     if (data != nullptr && size != 0) {
-      csvb->data = new (AssetManager::getMemSYS()) csvb::CCsvbData();
-      csvb->data->Load(allocator, data, size);
+      csvb->unknown20 = new (AssetManager::getMemSYS()) csvb::CCsvbData();
+      csvb->unknown20->Load(allocator, data, size);
     }
 
-    csvb->name = fileName.c_str();
-    csvb->hash = AssetManager::getHash(fileName.c_str());
+    csvb->unknown28 = fileName.c_str();
+    csvb->unknown18 = AssetManager::getHash(fileName.c_str());
     csvb->addRef();
   }
 
@@ -47,7 +47,7 @@ AssetCsvb *AssetCsvb::CreateFromMemory(mm::mtl::IAllocator *allocator, const voi
 AssetCsvb *AssetCsvb::CreateFromCache(mtl::ALLOC_HANDLE handle, const char *name) {
   AssetCsvb *source = nullptr;
   for (AssetCsvb *csvb = AssetManager::get()->searchCsvb(name, nullptr); csvb != nullptr; csvb = AssetManager::get()->searchCsvb(name, csvb)) {
-    if (csvb->handle == handle) {
+    if (csvb->unknown0c == handle) {
       csvb->addRef();
       return csvb;
     }
@@ -65,14 +65,14 @@ AssetCsvb *AssetCsvb::CreateFromCache(mtl::ALLOC_HANDLE handle, const char *name
 AssetCsvb *AssetCsvb::Clone(mtl::ALLOC_HANDLE handle) const {
   AssetCsvb *csvb = new (AssetManager::getMemSYS()) AssetCsvb();
   if (csvb != nullptr) {
-    if (data != nullptr) {
-      csvb->data = new (AssetManager::getMemSYS()) csvb::CCsvbData();
-      csvb->data->Copy(handle, data);
+    if (unknown20 != nullptr) {
+      csvb->unknown20 = new (AssetManager::getMemSYS()) csvb::CCsvbData();
+      csvb->unknown20->Copy(handle, unknown20);
     }
 
-    csvb->handle = handle;
-    csvb->name = name;
-    csvb->hash = hash;
+    csvb->unknown0c = handle;
+    csvb->unknown28 = unknown28;
+    csvb->unknown18 = unknown18;
     csvb->addRef();
   }
 
@@ -82,7 +82,7 @@ AssetCsvb *AssetCsvb::Clone(mtl::ALLOC_HANDLE handle) const {
 AssetCsvb *AssetCsvb::CreateFromCache(mm::mtl::IAllocator *allocator, const char *name) {
   AssetCsvb *source = nullptr;
   for (AssetCsvb *csvb = AssetManager::get()->searchCsvb(name, nullptr); csvb != nullptr; csvb = AssetManager::get()->searchCsvb(name, csvb)) {
-    if (csvb->allocator == allocator) {
+    if (csvb->unknown10 == allocator) {
       csvb->addRef();
       return csvb;
     }
@@ -100,14 +100,14 @@ AssetCsvb *AssetCsvb::CreateFromCache(mm::mtl::IAllocator *allocator, const char
 AssetCsvb *AssetCsvb::Clone(mm::mtl::IAllocator *allocator) const {
   AssetCsvb *csvb = new (AssetManager::getMemSYS()) AssetCsvb();
   if (csvb != nullptr) {
-    if (data != nullptr) {
-      csvb->data = new (AssetManager::getMemSYS()) csvb::CCsvbData();
-      csvb->data->Copy(allocator, data);
+    if (unknown20 != nullptr) {
+      csvb->unknown20 = new (AssetManager::getMemSYS()) csvb::CCsvbData();
+      csvb->unknown20->Copy(allocator, unknown20);
     }
 
-    csvb->allocator = allocator;
-    csvb->name = name;
-    csvb->hash = hash;
+    csvb->unknown10 = allocator;
+    csvb->unknown28 = unknown28;
+    csvb->unknown18 = unknown18;
     csvb->addRef();
   }
 
@@ -119,12 +119,12 @@ void *AssetCsvb::LoadFromPacdata(mtl::ALLOC_HANDLE handle, const char *name, int
   return nullptr;
 }
 
-AssetCsvb::AssetCsvb() : allocator(nullptr), hash(0), data(nullptr) { AssetManager::get()->addCsvb(this); }
+AssetCsvb::AssetCsvb() : unknown10(nullptr), unknown18(0), unknown20(nullptr) { AssetManager::get()->addCsvb(this); }
 
 AssetCsvb::~AssetCsvb() {
-  if (data != nullptr) {
-    delete data;
-    data = nullptr;
+  if (unknown20 != nullptr) {
+    delete unknown20;
+    unknown20 = nullptr;
   }
 
   AssetManager::get()->removeCsvb(this);

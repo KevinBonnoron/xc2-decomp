@@ -14,10 +14,10 @@ public:
   virtual bool finalize() { return true; }
   virtual void enterFinalizeApplet() {}
   virtual const char *getName() const { return "undefined"; }
-  virtual bool isInitialized() const { return flags & FLAG_INITIALIZED; }
-  virtual bool isFinalized() const { return flags & FLAG_FINALIZED; }
+  virtual bool isInitialized() const { return unknown08 & FLAG_INITIALIZED; }
+  virtual bool isFinalized() const { return unknown08 & FLAG_FINALIZED; }
 
-  u32 flags;
+  u32 unknown08; // Inferred role: flags; original member name unknown.
 };
 
 static_assert(sizeof(ManagerObject) == 0x10, "");

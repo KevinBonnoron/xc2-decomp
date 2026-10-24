@@ -4,7 +4,7 @@
 
 namespace fw {
 
-ManagerObject::ManagerObject() : flags(0) { ManagerRegister::get()->regist(this); }
+ManagerObject::ManagerObject() : unknown08(0) { ManagerRegister::get()->regist(this); }
 
 ManagerObject::~ManagerObject() { ManagerRegister::get()->remove(this); }
 

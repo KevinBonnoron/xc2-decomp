@@ -33,11 +33,11 @@ public:
   void bkgHomeMenu(bool isEnter) override;
 
   u8 _20[0x30 - 0x20];
-  ICMovie *movie;
-  bool isPlaying;
+  ICMovie *unknown30; // Inferred role: movie; original member name unknown.
+  bool unknown38;     // Inferred role: playing; original member name unknown.
 };
 
-static_assert(offsetof(MovieManager, movie) == 0x30, "");
-static_assert(offsetof(MovieManager, isPlaying) == 0x38, "");
+static_assert(offsetof(MovieManager, unknown30) == 0x30, "");
+static_assert(offsetof(MovieManager, unknown38) == 0x38, "");
 
 } // namespace fw

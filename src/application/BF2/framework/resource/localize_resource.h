@@ -38,12 +38,12 @@ public:
   void makeLocalizeFilePath(mm::mtl::FixStr<128> &filePath, const mm::mtl::FixStr<16> &folder);
   bool OnFileEvent(ml::EventFileTh *event) override;
 
-  mm::mtl::FixStr<128> localizedPath;
-  CheckState checkState;
+  mm::mtl::FixStr<128> unknownd0; // Inferred role: localized path; original member name unknown.
+  CheckState unknown154;          // Inferred role: check state; original member name unknown.
 };
 
-static_assert(offsetof(LocalizeResource, localizedPath) == 0xd0, "");
-static_assert(offsetof(LocalizeResource, checkState) == 0x154, "");
+static_assert(offsetof(LocalizeResource, unknownd0) == 0xd0, "");
+static_assert(offsetof(LocalizeResource, unknown154) == 0x154, "");
 static_assert(sizeof(LocalizeResource) == 0x158, "");
 
 } // namespace fw

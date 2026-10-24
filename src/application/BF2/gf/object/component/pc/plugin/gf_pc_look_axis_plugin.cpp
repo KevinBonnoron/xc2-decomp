@@ -12,8 +12,8 @@ constexpr u32 PC_PARAM_LOOK_AXIS = 4;
 LookAxisPlugin::LookAxisPlugin() : unknown10(nullptr), unknown18(0.0f), unknown1c(0.0f), unknown20(0.0f), unknown24(0.0f), unknown28(false), unknown30(nullptr) {}
 
 bool LookAxisPlugin::setup(GfComBehaviorPc &behavior) {
-  mm::mtl::IntrusivePtr<fw::ParamList> paramList = fw::ParamManager::get()->pcParamList;
-  unknown30 = paramList->count > PC_PARAM_LOOK_AXIS ? &paramList->entries[PC_PARAM_LOOK_AXIS] : nullptr;
+  mm::mtl::IntrusivePtr<fw::ParamList> paramList = fw::ParamManager::get()->unknown430;
+  unknown30 = paramList->unknown0c > PC_PARAM_LOOK_AXIS ? &paramList->unknown10[PC_PARAM_LOOK_AXIS] : nullptr;
   this->unknown10 = &behavior;
   return true;
 }
@@ -33,7 +33,7 @@ void LookAxisPlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &info) {
   }
 
   const LookAxisParam *param = getParam();
-  unknown24 += info.deltaTime;
+  unknown24 += info.unknown04;
   setYaw(calcYaw(param->unknown14));
   if (unknown24 >= param->unknown14) {
     unknown28 = false;

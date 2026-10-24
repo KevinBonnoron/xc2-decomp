@@ -13,9 +13,9 @@ public:
   void *searchEfb(const char *name) const;
 
   u8 _0c[0x58 - 0x0c];
-  mm::mtl::FixStr<128> name;
+  mm::mtl::FixStr<128> unknown58; // Inferred role: name; original member name unknown.
 };
 
-static_assert(offsetof(EffectPack, name) == 0x58, "");
+static_assert(offsetof(EffectPack, unknown58) == 0x58, "");
 
 } // namespace fw

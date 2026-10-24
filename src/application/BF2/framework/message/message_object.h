@@ -13,10 +13,10 @@ class RTTI;
 namespace fw {
 
 struct Message {
-  Message(u32 id, u32 componentMask) : id(id), componentMask(componentMask) {}
+  Message(u32 id, u32 componentMask) : unknown00(id), unknown04(componentMask) {}
 
-  u32 id;
-  u32 componentMask;
+  u32 unknown00; // Inferred role: id; original member name unknown.
+  u32 unknown04; // Inferred role: component mask; original member name unknown.
 };
 
 class MessageObject {
@@ -30,10 +30,10 @@ public:
 
   bool sendMessage(MessageObject *receiver, Message &message) { return receiver->recieveMessage(this, message); }
 
-  HandlePtr<MessageObject> selfHandle;
+  HandlePtr<MessageObject> unknown08; // Inferred role: self handle; original member name unknown.
 };
 
-static_assert(offsetof(MessageObject, selfHandle) == 0x08, "");
+static_assert(offsetof(MessageObject, unknown08) == 0x08, "");
 static_assert(sizeof(MessageObject) == 0x18, "");
 
 } // namespace fw

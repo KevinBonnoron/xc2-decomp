@@ -15,14 +15,14 @@ public:
   mtl::ALLOC_HANDLE getMemHandle() const;
   void *allocate(size_t size, size_t alignment) override;
   void deallocate(void *pointer) override;
-  const char *getName() const override { return name.c_str(); }
+  const char *getName() const override { return m_name.c_str(); }
 
-  mtl::ALLOC_HANDLE handle;
-  mm::mtl::FixStr<64> name;
+  mtl::ALLOC_HANDLE unknown08; // Inferred role: handle; original member name unknown.
+  mm::mtl::FixStr<64> m_name;
 };
 
-static_assert(offsetof(MemHandlebaseAllocator, handle) == 0x08, "");
-static_assert(offsetof(MemHandlebaseAllocator, name) == 0x0c, "");
+static_assert(offsetof(MemHandlebaseAllocator, unknown08) == 0x08, "");
+static_assert(offsetof(MemHandlebaseAllocator, m_name) == 0x0c, "");
 static_assert(sizeof(MemHandlebaseAllocator) == 0x50, "");
 
 class Allocator {

@@ -18,7 +18,7 @@ void GfGamePlayerUniqueScheduler::build(const GfSetupParam &) {
 
 void GfGamePlayerUniqueScheduler::setup() {
   GfEvent::addEventCallback(this);
-  unknown1d0 = fw::ParamManager::get()->uniqueMotionParamList;
+  unknown1d0 = fw::ParamManager::get()->unknown468;
 }
 
 void GfGamePlayerUniqueScheduler::destroy() {
@@ -46,7 +46,7 @@ void GfGamePlayerUniqueScheduler::executeRequest(const fw::UpdateInfo &info) {
       continue;
     }
 
-    unit.unknown14 -= info.deltaTime;
+    unit.unknown14 -= info.unknown04;
     if (unit.unknown14 < 0.0f) {
       MsgPcFieldSetUniqueMotion message(unit.unknown10 < UNIQUE_MOTION_NUM ? unit.unknown10 : 0);
       GfObj *obj = GfObjUtil::getObj(unit.unknown00);
@@ -65,11 +65,11 @@ GfGamePlayerUniqueScheduler::~GfGamePlayerUniqueScheduler() {}
 
 const UniqueMotionParam *GfGamePlayerUniqueScheduler::getParam() const {
   const fw::ParamList *list = unknown1d0.operator->();
-  if (list->count == 0 || list->entries == nullptr) {
+  if (list->unknown0c == 0 || list->unknown10 == nullptr) {
     return nullptr;
   }
 
-  return static_cast<const UniqueMotionParam *>(list->entries[0].param);
+  return static_cast<const UniqueMotionParam *>(list->unknown10[0].param);
 }
 
 void GfGamePlayerUniqueScheduler::gevBattleStart() {

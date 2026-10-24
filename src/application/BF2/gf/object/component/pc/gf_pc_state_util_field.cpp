@@ -13,7 +13,7 @@ namespace pc {
 
 bool StateUtilField::execAsmCmd(GfComAsm &comAsm, ASM_CMD_ID_FIELD id) { return comAsm.execCmd(getASMCmdNameField(id), ANIM_LAYER_BASE); }
 
-bool StateUtilField::testVechile(GfComBehaviorPc &behavior) { return GfGameRide::isVehicle(static_cast<GfObj *>(behavior.owner)->unknownf8); }
+bool StateUtilField::testVechile(GfComBehaviorPc &behavior) { return GfGameRide::isVehicle(static_cast<GfObj *>(behavior.unknown08)->unknownf8); }
 
 bool StateUtilField::isWalkMode(GfComPropertyPc &property) { return property.unknown310.unknown10_0; }
 

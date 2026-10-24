@@ -13,7 +13,7 @@ namespace gf {
 GfComWind::GfComWind() : unknown10(nullptr) {}
 
 void GfComWind::setup(const SetupInfo &info) {
-  GfComTransform *transform = owner->getComponent<GfComTransform>();
+  GfComTransform *transform = unknown08->getComponent<GfComTransform>();
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame = transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18;
   unknown10 = fw::WindFactory::createProbe(info.group, info.radius, frame, info.isFollowFrame);
 }

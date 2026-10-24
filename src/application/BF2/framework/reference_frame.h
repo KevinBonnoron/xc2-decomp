@@ -21,14 +21,14 @@ public:
 
   ReferenceFrame();
   ~ReferenceFrame() override;
-  void invalidateLocal() { flags = (flags & ~FLAG_ALL_SYNCED) | FLAG_WORLD_SYNCED; }
-  void invalidateWorld() { flags = (flags & ~FLAG_ALL_SYNCED) | FLAG_LOCAL_SYNCED; }
+  void invalidateLocal() { unknowna0 = (unknowna0 & ~FLAG_ALL_SYNCED) | FLAG_WORLD_SYNCED; }
+  void invalidateWorld() { unknowna0 = (unknowna0 & ~FLAG_ALL_SYNCED) | FLAG_LOCAL_SYNCED; }
   void addChild(ReferenceFrame &child);
   void removeChild(ReferenceFrame &child);
   void syncLocalTransform();
   const Transform &getSyncedWorldTransform() {
     syncWorldTransform();
-    return worldTransform;
+    return unknown40;
   }
 
   void syncWorldTransform();
@@ -36,32 +36,32 @@ public:
   static void unlinkChild(ReferenceFrame &frame);
   const mm::Mat44 &getSyncedWorldMatrix();
 
-  Transform localTransform;
-  Transform worldTransform;
-  mm::Mat44 worldMatrix;
-  u32 flags;
-  ReferenceFrame *parent;
-  mm::mtl::IntrusiveList<ReferenceFrame> children;
+  Transform unknown20;                              // Inferred role: local transform; original member name unknown.
+  Transform unknown40;                              // Inferred role: world transform; original member name unknown.
+  mm::Mat44 unknown60;                              // Inferred role: world matrix; original member name unknown.
+  u32 unknowna0;                                    // Inferred role: flags; original member name unknown.
+  ReferenceFrame *unknowna8;                        // Inferred role: parent; original member name unknown.
+  mm::mtl::IntrusiveList<ReferenceFrame> unknownb0; // Inferred role: children; original member name unknown.
   void *_c8;
   void *_d0;
 };
 
-static_assert(offsetof(ReferenceFrame, localTransform) == 0x20, "");
-static_assert(offsetof(ReferenceFrame, worldMatrix) == 0x60, "");
-static_assert(offsetof(ReferenceFrame, flags) == 0xa0, "");
-static_assert(offsetof(ReferenceFrame, children) == 0xb0, "");
+static_assert(offsetof(ReferenceFrame, unknown20) == 0x20, "");
+static_assert(offsetof(ReferenceFrame, unknown60) == 0x60, "");
+static_assert(offsetof(ReferenceFrame, unknowna0) == 0xa0, "");
+static_assert(offsetof(ReferenceFrame, unknownb0) == 0xb0, "");
 static_assert(sizeof(ReferenceFrame) == 0xe0, "");
 
 class TransformUpdater : public mm::mtl::IntrusiveListNode<TransformUpdater> {
 public:
   void resolveWorldTrasform();
 
-  mm::mtl::Vector<mm::mtl::IntrusivePtr<ReferenceFrame>> frames;
-  mm::mtl::Vector<mm::mtl::IntrusivePtr<ReferenceFrame>> afterFrames;
+  mm::mtl::Vector<mm::mtl::IntrusivePtr<ReferenceFrame>> unknown10; // Inferred role: frames; original member name unknown.
+  mm::mtl::Vector<mm::mtl::IntrusivePtr<ReferenceFrame>> unknown38; // Inferred role: after frames; original member name unknown.
 };
 
-static_assert(offsetof(TransformUpdater, frames) == 0x10, "");
-static_assert(offsetof(TransformUpdater, afterFrames) == 0x38, "");
+static_assert(offsetof(TransformUpdater, unknown10) == 0x10, "");
+static_assert(offsetof(TransformUpdater, unknown38) == 0x38, "");
 static_assert(sizeof(TransformUpdater) == 0x60, "");
 
 class TransformManager : public mm::mtl::PtrSingleton<TransformManager> {
@@ -69,12 +69,12 @@ public:
   static const u32 LAYER_MAX = 32;
 
   void update(u32 layerMask);
-  void addUpdater(u32 layer, TransformUpdater &updater) { groups[layer].push_back(&updater); }
-  void removeUpdater(u32 layer, TransformUpdater &updater) { groups[layer].erase(&updater); }
+  void addUpdater(u32 layer, TransformUpdater &updater) { unknown08[layer].push_back(&updater); }
+  void removeUpdater(u32 layer, TransformUpdater &updater) { unknown08[layer].erase(&updater); }
 
-  mm::mtl::IntrusiveList<TransformUpdater> groups[LAYER_MAX];
+  mm::mtl::IntrusiveList<TransformUpdater> unknown08[LAYER_MAX]; // Inferred role: groups; original member name unknown.
 };
 
-static_assert(offsetof(TransformManager, groups) == 0x08, "");
+static_assert(offsetof(TransformManager, unknown08) == 0x08, "");
 
 } // namespace fw

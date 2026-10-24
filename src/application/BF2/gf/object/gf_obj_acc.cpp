@@ -46,11 +46,11 @@ GfObjAcc::GfObjAcc(GF_OBJ_HANDLE *handle) {
 }
 
 bool GfObjAcc::isValidTransform() const {
-  if (m_obj == nullptr || m_obj->components[GfComTransform::COMPONENT_INDEX] == nullptr) {
+  if (m_obj == nullptr || m_obj->unknown38[GfComTransform::COMPONENT_INDEX] == nullptr) {
     return false;
   }
 
-  return m_obj->components[GfComTransform::COMPONENT_INDEX]->getRTTI()->isKindOf(&GfComTransform::m_rtti);
+  return m_obj->unknown38[GfComTransform::COMPONENT_INDEX]->getRTTI()->isKindOf(&GfComTransform::m_rtti);
 }
 
 f32 GfObjAcc::getAlpha(OBJ_ALPHA type) const {
@@ -322,24 +322,24 @@ void GfObjAcc::applyClipGpu() {
 }
 
 bool GfObjAcc::isValidProperty() const {
-  if (m_obj == nullptr || m_obj->components[GfComProperty::COMPONENT_INDEX] == nullptr) {
+  if (m_obj == nullptr || m_obj->unknown38[GfComProperty::COMPONENT_INDEX] == nullptr) {
     return false;
   }
 
-  return m_obj->components[GfComProperty::COMPONENT_INDEX]->getRTTI()->isKindOf(&GfComProperty::m_rtti);
+  return m_obj->unknown38[GfComProperty::COMPONENT_INDEX]->getRTTI()->isKindOf(&GfComProperty::m_rtti);
 }
 
 bool GfObjAcc::isValidModel() const {
-  if (m_obj == nullptr || m_obj->components[GfComModel::COMPONENT_INDEX] == nullptr) {
+  if (m_obj == nullptr || m_obj->unknown38[GfComModel::COMPONENT_INDEX] == nullptr) {
     return false;
   }
 
-  return m_obj->components[GfComModel::COMPONENT_INDEX]->getRTTI()->isKindOf(&GfComModel::m_rtti);
+  return m_obj->unknown38[GfComModel::COMPONENT_INDEX]->getRTTI()->isKindOf(&GfComModel::m_rtti);
 }
 
 bool GfObjAcc::isDestroy() const { return GfObjUtil::testFlag(unknown00, OBJ_FLAG_DESTROY); }
 
-u32 GfObjAcc::getType() const { return m_obj != nullptr ? m_obj->type : 0; }
+u32 GfObjAcc::getType() const { return m_obj != nullptr ? m_obj->unknown28 : 0; }
 
 void GfObjAcc::setCalcCameraAlpha() { GfObjUtil::setFlag(unknown00, OBJ_FLAG_CALC_CAMERA_ALPHA, true); }
 
@@ -381,7 +381,7 @@ u32 GfObjAcc::getBdatId() const {
     return 0;
   }
 
-  switch (m_obj->type) {
+  switch (m_obj->unknown28) {
   case OBJECT_TYPE_MAP:
     return mm::mtl::dynamicCast<GfObjSetupMap>(GfObjManager::getObjInfo(getHandle())->unknown30)->unknown6c;
   case OBJECT_TYPE_DRIVER:
@@ -424,7 +424,7 @@ bool GfObjAcc::isEnemyBlade() const {
 u32 GfObjAcc::getEnArrangeId() const { return getBdatId(); }
 
 u32 GfObjAcc::getEnRscId() const {
-  if (m_obj == nullptr || m_obj->type != OBJECT_TYPE_ENEMY) {
+  if (m_obj == nullptr || m_obj->unknown28 != OBJECT_TYPE_ENEMY) {
     return 0;
   }
 
@@ -432,7 +432,7 @@ u32 GfObjAcc::getEnRscId() const {
 }
 
 u32 GfObjAcc::getEnParamId() const {
-  if (m_obj == nullptr || m_obj->type != OBJECT_TYPE_ENEMY) {
+  if (m_obj == nullptr || m_obj->unknown28 != OBJECT_TYPE_ENEMY) {
     return 0;
   }
 
@@ -469,7 +469,7 @@ bool GfObjAcc::isLoadedWaitOK() const {
 
 u16 GfObjAcc::getView() const { return unknown00 != nullptr ? unknown00->unknown02 : 0; }
 
-u32 GfObjAcc::getLayer() const { return m_obj != nullptr ? m_obj->layer : 4; }
+u32 GfObjAcc::getLayer() const { return m_obj != nullptr ? m_obj->unknown2c : 4; }
 
 bool GfObjAcc::isLayerPause() const { return fw::Framework::isLayerPause(getLayer()); }
 

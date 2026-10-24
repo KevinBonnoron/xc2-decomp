@@ -12,18 +12,18 @@ namespace fw {
 class SensorUpdater : public mm::mtl::IntrusiveListNode<SensorUpdater> {
 public:
   u8 _10[0x30 - 0x10];
-  bool isRegistered;
+  bool unknown30; // Inferred role: registered; original member name unknown.
 };
 
-static_assert(offsetof(SensorUpdater, isRegistered) == 0x30, "");
+static_assert(offsetof(SensorUpdater, unknown30) == 0x30, "");
 
 class SensorManager : public ManagerObject, public mm::mtl::PtrSingleton<SensorManager> {
 public:
   static const u32 LAYER_MAX = 32;
 
   struct Group {
-    mm::mtl::IntrusiveList<SensorUpdater> beforeGameUpdaters;
-    mm::mtl::IntrusiveList<SensorUpdater> afterAnimationUpdaters;
+    mm::mtl::IntrusiveList<SensorUpdater> unknown00; // Inferred role: before game updaters; original member name unknown.
+    mm::mtl::IntrusiveList<SensorUpdater> unknown18; // Inferred role: after animation updaters; original member name unknown.
   };
 
   void addUpdaterBeforeGame(u32 layer, SensorUpdater &updater);
@@ -31,10 +31,10 @@ public:
   void addUpdaterAfterAnimation(u32 layer, SensorUpdater &updater);
   void removeUpdaterAfterAnimation(u32 layer, SensorUpdater &updater);
 
-  mm::mtl::FixedArray<Group, LAYER_MAX> groups;
+  mm::mtl::FixedArray<Group, LAYER_MAX> unknown18; // Inferred role: groups; original member name unknown.
 };
 
 static_assert(sizeof(SensorManager::Group) == 0x30, "");
-static_assert(offsetof(SensorManager, groups) == 0x18, "");
+static_assert(offsetof(SensorManager, unknown18) == 0x18, "");
 
 } // namespace fw

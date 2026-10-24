@@ -39,11 +39,11 @@ void GfComAsm::cleanup() {
 
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr) {
-    if (unknown38.asmControl != nullptr && unknown38.pose != nullptr) {
+    if (unknown38.unknown18 != nullptr && unknown38.unknown20 != nullptr) {
       manager->removePoseSampler(getLayer(), unknown38);
       unknown38.unbind();
     }
-    if (unknown18.asmControl != nullptr) {
+    if (unknown18.unknown18 != nullptr) {
       manager->removeControlUpdater(getLayer(), unknown18);
       unknown18.unbind();
     }
@@ -386,11 +386,11 @@ void GfComAsm::changeLayer(u32 oldLayer, u32 newLayer) {
     return;
   }
 
-  if (unknown38.asmControl != nullptr && unknown38.pose != nullptr) {
+  if (unknown38.unknown18 != nullptr && unknown38.unknown20 != nullptr) {
     manager->removePoseSampler(getLayer(), unknown38);
     manager->addPoseSampler(newLayer, unknown38);
   }
-  if (unknown18.asmControl != nullptr) {
+  if (unknown18.unknown18 != nullptr) {
     manager->removeControlUpdater(getLayer(), unknown18);
     manager->addControlUpdater(newLayer, unknown18);
   }

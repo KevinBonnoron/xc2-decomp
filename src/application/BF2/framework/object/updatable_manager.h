@@ -27,17 +27,17 @@ public:
 
   class Impl {
   public:
-    Impl(mm::mtl::IAllocator *allocator, size_t capacity) : allocator(allocator) {
+    Impl(mm::mtl::IAllocator *allocator, size_t capacity) : unknown00(allocator) {
       for (u32 i = 0; i < GROUP_MAX; i++) {
-        groups[i] = nullptr;
+        unknown08[i] = nullptr;
       }
-      pointerMap.reserve(allocator, capacity);
-      pointerMap.setRange(1, POINTER_ID_MAX, POINTER_ID_MAX);
+      unknown108.reserve(allocator, capacity);
+      unknown108.setRange(1, POINTER_ID_MAX, POINTER_ID_MAX);
     }
 
     ~Impl() {
       destroy();
-      pointerMap.destroy();
+      unknown108.destroy();
     }
 
     HandlePtr<void> registPointer(u32 group, const void *ptr);
@@ -51,9 +51,9 @@ public:
     UpdatableGroup *getGroup(u32 group);
     void registObject(u32 group, UpdatableObject *object);
 
-    mm::mtl::IAllocator *allocator;
-    UpdatableGroup *groups[GROUP_MAX];
-    PointerMap pointerMap;
+    mm::mtl::IAllocator *unknown00;       // Inferred role: allocator; original member name unknown.
+    UpdatableGroup *unknown08[GROUP_MAX]; // Inferred role: groups; original member name unknown.
+    PointerMap unknown108;                // Inferred role: pointer map; original member name unknown.
   };
 
   UpdatableObjectManager(mm::mtl::IAllocator *allocator, size_t capacity);
@@ -67,12 +67,12 @@ public:
   HandlePtr<void> registPointer(u32 group, const void *ptr);
   void registObject(u32 group, UpdatableObject *object);
 
-  mm::mtl::UniquePtr<Impl> impl;
+  mm::mtl::UniquePtr<Impl> unknown18; // Inferred role: impl; original member name unknown.
 };
 
-static_assert(offsetof(UpdatableObjectManager::Impl, allocator) == 0x00, "");
-static_assert(offsetof(UpdatableObjectManager::Impl, groups) == 0x08, "");
-static_assert(offsetof(UpdatableObjectManager::Impl, pointerMap) == 0x108, "");
-static_assert(offsetof(UpdatableObjectManager, impl) == 0x18, "");
+static_assert(offsetof(UpdatableObjectManager::Impl, unknown00) == 0x00, "");
+static_assert(offsetof(UpdatableObjectManager::Impl, unknown08) == 0x08, "");
+static_assert(offsetof(UpdatableObjectManager::Impl, unknown108) == 0x108, "");
+static_assert(offsetof(UpdatableObjectManager, unknown18) == 0x18, "");
 
 } // namespace fw

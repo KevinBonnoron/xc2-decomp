@@ -14,11 +14,11 @@ AssetData *AssetData::CreateFromMemory(mtl::ALLOC_HANDLE handle, const void *dat
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   AssetData *asset = new (AssetManager::getMemSYS()) AssetData();
   if (asset != nullptr) {
-    asset->handle = handle;
+    asset->unknown0c = handle;
     if (data != nullptr && size != 0) {
-      asset->data = mtl::MemManager::allocate(handle, size, 0x1000, false, "no name", 0);
-      memcpy(asset->data, data, size);
-      asset->size = size;
+      asset->unknown20 = mtl::MemManager::allocate(handle, size, 0x1000, false, "no name", 0);
+      memcpy(asset->unknown20, data, size);
+      asset->unknown1c = size;
     }
 
     asset->setName(fileName.c_str());
@@ -33,11 +33,11 @@ AssetData *AssetData::CreateFromMemory(mm::mtl::IAllocator *allocator, const voi
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   AssetData *asset = new (AssetManager::getMemSYS()) AssetData();
   if (asset != nullptr) {
-    asset->allocator = allocator;
+    asset->unknown10 = allocator;
     if (data != nullptr && size != 0) {
-      asset->data = allocator->allocate(size, 0x1000);
-      memcpy(asset->data, data, size);
-      asset->size = size;
+      asset->unknown20 = allocator->allocate(size, 0x1000);
+      memcpy(asset->unknown20, data, size);
+      asset->unknown1c = size;
     }
 
     asset->setName(fileName.c_str());
@@ -52,11 +52,11 @@ AssetData *AssetData::AssignFromMemory(mtl::ALLOC_HANDLE handle, const void *dat
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   AssetData *asset = new (AssetManager::getMemSYS()) AssetData();
   if (asset != nullptr) {
-    asset->handle = handle;
+    asset->unknown0c = handle;
     if (data != nullptr && size != 0) {
-      asset->data = const_cast<void *>(data);
-      asset->size = size;
-      asset->timeStamp = timeStamp;
+      asset->unknown20 = const_cast<void *>(data);
+      asset->unknown1c = size;
+      asset->unknown28 = timeStamp;
     }
 
     asset->setName(fileName.c_str());
@@ -71,11 +71,11 @@ AssetData *AssetData::AssignFromMemory(mm::mtl::IAllocator *allocator, const voi
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   AssetData *asset = new (AssetManager::getMemSYS()) AssetData();
   if (asset != nullptr) {
-    asset->allocator = allocator;
+    asset->unknown10 = allocator;
     if (data != nullptr && size != 0) {
-      asset->data = const_cast<void *>(data);
-      asset->size = size;
-      asset->timeStamp = timeStamp;
+      asset->unknown20 = const_cast<void *>(data);
+      asset->unknown1c = size;
+      asset->unknown28 = timeStamp;
     }
 
     asset->setName(fileName.c_str());
@@ -94,7 +94,7 @@ AssetData *AssetData::CreateFromCache(mtl::ALLOC_HANDLE handle, const char *name
   AssetData *asset = AssetManager::get()->searchAsset(name, nullptr);
   AssetData *source = nullptr;
   while (asset != nullptr) {
-    if (asset->handle == handle) {
+    if (asset->unknown0c == handle) {
       asset->addRef();
       return asset;
     }
@@ -116,16 +116,16 @@ AssetData *AssetData::CreateFromCache(mtl::ALLOC_HANDLE handle, const char *name
 AssetData *AssetData::Clone(mtl::ALLOC_HANDLE handle) const {
   AssetData *asset = new (AssetManager::getMemSYS()) AssetData();
   if (asset != nullptr) {
-    if (data != nullptr && size != 0) {
-      asset->data = mtl::MemManager::allocate(handle, size, 0x1000, false, "no name", 0);
-      memcpy(asset->data, data, size);
-      asset->size = size;
-      asset->timeStamp = timeStamp;
+    if (unknown20 != nullptr && unknown1c != 0) {
+      asset->unknown20 = mtl::MemManager::allocate(handle, unknown1c, 0x1000, false, "no name", 0);
+      memcpy(asset->unknown20, unknown20, unknown1c);
+      asset->unknown1c = unknown1c;
+      asset->unknown28 = unknown28;
     }
 
-    asset->handle = handle;
-    asset->copyName(name);
-    asset->hash = hash;
+    asset->unknown0c = handle;
+    asset->copyName(unknown30);
+    asset->unknown18 = unknown18;
     asset->addRef();
   }
 
@@ -135,7 +135,7 @@ AssetData *AssetData::Clone(mtl::ALLOC_HANDLE handle) const {
 AssetData *AssetData::CreateFromCache(mm::mtl::IAllocator *allocator, const char *name) {
   AssetData *source = nullptr;
   for (AssetData *asset = AssetManager::get()->searchAsset(name, nullptr); asset != nullptr; asset = AssetManager::get()->searchAsset(name, asset)) {
-    if (asset->allocator == allocator) {
+    if (asset->unknown10 == allocator) {
       asset->addRef();
       return asset;
     }
@@ -155,16 +155,16 @@ AssetData *AssetData::CreateFromCache(mm::mtl::IAllocator *allocator, const char
 AssetData *AssetData::Clone(mm::mtl::IAllocator *allocator) const {
   AssetData *asset = new (AssetManager::getMemSYS()) AssetData();
   if (asset != nullptr) {
-    if (data != nullptr && size != 0) {
-      asset->data = allocator->allocate(size, 0x1000);
-      memcpy(asset->data, data, size);
-      asset->size = size;
-      asset->timeStamp = timeStamp;
+    if (unknown20 != nullptr && unknown1c != 0) {
+      asset->unknown20 = allocator->allocate(unknown1c, 0x1000);
+      memcpy(asset->unknown20, unknown20, unknown1c);
+      asset->unknown1c = unknown1c;
+      asset->unknown28 = unknown28;
     }
 
-    asset->allocator = allocator;
-    asset->copyName(name);
-    asset->hash = hash;
+    asset->unknown10 = allocator;
+    asset->copyName(unknown30);
+    asset->unknown18 = unknown18;
     asset->addRef();
   }
 
@@ -176,17 +176,17 @@ void *AssetData::LoadFromPacdata(mtl::ALLOC_HANDLE handle, const char *name, int
   return nullptr;
 }
 
-AssetData::AssetData() : allocator(nullptr), hash(0), size(0), data(nullptr), timeStamp(0) { AssetManager::get()->addAsset(this); }
+AssetData::AssetData() : unknown10(nullptr), unknown18(0), unknown1c(0), unknown20(nullptr), unknown28(0) { AssetManager::get()->addAsset(this); }
 
 AssetData::~AssetData() {
-  if (data != nullptr) {
-    if (allocator != nullptr) {
-      allocator->deallocate(data);
+  if (unknown20 != nullptr) {
+    if (unknown10 != nullptr) {
+      unknown10->deallocate(unknown20);
     } else {
-      mtl::MemManager::deallocate(data, 0, false);
+      mtl::MemManager::deallocate(unknown20, 0, false);
     }
 
-    data = nullptr;
+    unknown20 = nullptr;
   }
 
   AssetManager::get()->removeAsset(this);

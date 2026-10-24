@@ -513,8 +513,8 @@ bool getGobPosRot(mm::Vec3 &position, mm::Quat &rotation, gf::GF_OBJ_HANDLE *han
     return false;
   }
   fw::Transform transform = acc.getWorldTransformNoSync();
-  position = transform.position;
-  rotation = transform.rotation;
+  position = transform.unknown00;
+  rotation = transform.unknown10;
   return true;
 }
 
@@ -644,12 +644,12 @@ bool GmkScript::isScriptEnd() { return s_isScriptEnd; }
 
 bool GmkScript::isScriptExecuting() {
   const fw::ScriptManager *manager = fw::ScriptManager::get();
-  return manager->scripts[gf::SCRIPT_SLOT_FIELD].isActive();
+  return manager->unknown20[gf::SCRIPT_SLOT_FIELD].isActive();
 }
 
 const char *GmkScript::getExecutingScriptName() {
   const fw::ScriptManager *manager = fw::ScriptManager::get();
-  return manager->scripts[gf::SCRIPT_SLOT_FIELD].name.c_str();
+  return manager->unknown20[gf::SCRIPT_SLOT_FIELD].unknown118.c_str();
 }
 
 void GmkScript::vmBeginScript() {
@@ -679,14 +679,14 @@ void GmkScript::beginScript() {
   endScript();
   fw::ScriptManager::get()->loadScript(gf::SCRIPT_SLOT_FIELD, unknown08.unknown00.c_str(), GMK_SCRIPT_FILE_PRIO);
   vmSetStartId(unknown08.unknown24);
-  fw::ScriptManager::get()->scripts[gf::SCRIPT_SLOT_FIELD].start();
+  fw::ScriptManager::get()->unknown20[gf::SCRIPT_SLOT_FIELD].start();
   vmBeginScript();
   unknown30 = &GmkScript::seqWaitEndScript;
 }
 
 void GmkScript::seqWaitEndScript(f32) {
   const fw::ScriptManager *manager = fw::ScriptManager::get();
-  if (!manager->scripts[gf::SCRIPT_SLOT_FIELD].isFinish()) {
+  if (!manager->unknown20[gf::SCRIPT_SLOT_FIELD].isFinish()) {
     endScript();
   }
 }

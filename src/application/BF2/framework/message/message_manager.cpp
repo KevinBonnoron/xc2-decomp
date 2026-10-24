@@ -8,22 +8,22 @@
 namespace fw {
 
 void MessageManager::Impl::destroy() {
-  messages.clear();
-  objectMap.destroy();
+  unknown50.clear();
+  unknown08.destroy();
 }
 
 void MessageManager::Impl::update(const UpdateInfo &info) {
-  for (mm::mtl::List<MessageInfo>::iterator it = messages.begin(); it != messages.end();) {
+  for (mm::mtl::List<MessageInfo>::iterator it = unknown50.begin(); it != unknown50.end();) {
     MessageInfo &message = *it;
-    message.delay -= info.deltaTime;
-    if (message.delay <= 0.0f) {
-      MessageObject *receiver = message.receiver.get();
-      MessageObject *sender = message.sender.get();
+    message.unknown08 -= info.unknown04;
+    if (message.unknown08 <= 0.0f) {
+      MessageObject *receiver = message.unknown20.get();
+      MessageObject *sender = message.unknown10.get();
       if (receiver != nullptr) {
-        receiver->recieveMessage(sender, *message.holder->message);
+        receiver->recieveMessage(sender, *message.unknown00->unknown10);
       }
 
-      it = messages.erase(it);
+      it = unknown50.erase(it);
     } else {
       ++it;
     }
@@ -31,12 +31,12 @@ void MessageManager::Impl::update(const UpdateInfo &info) {
 }
 
 void MessageManager::Impl::registObject(MessageObject *object) {
-  object->selfHandle.id = objectMap.regist(object);
-  object->selfHandle.map = &objectMap;
+  object->unknown08.id = unknown08.regist(object);
+  object->unknown08.map = &unknown08;
 }
 
 void MessageManager::Impl::removeObject(MessageObject *object) {
-  HandlePtr<MessageObject> &handle = object->selfHandle;
+  HandlePtr<MessageObject> &handle = object->unknown08;
   if (handle.id != 0 && handle.map != nullptr) {
     handle.map->remove(handle.id);
   }
@@ -46,33 +46,33 @@ u32 MessageManager::Impl::push(MessageObject *sender, MessageObject *receiver, M
   MessageInfo info;
   // __LINE__ of the game: it is the line argument of the operator new.
 #line 210
-  info.holder = new (Framework::getAllocator(), 8, __FILE__, __LINE__) MessageHolder(message);
-  if (++messageId > messageIdMax) {
-    messageId = messageIdMin;
-  } else if (messageId < messageIdMin) {
-    messageId = messageIdMin;
+  info.unknown00 = new (Framework::getAllocator(), 8, __FILE__, __LINE__) MessageHolder(message);
+  if (++unknown40 > unknown48) {
+    unknown40 = unknown44;
+  } else if (unknown40 < unknown44) {
+    unknown40 = unknown44;
   }
 
-  u32 id = messageId;
+  u32 id = unknown40;
 
   if (sender != nullptr) {
-    info.sender = sender->selfHandle;
+    info.unknown10 = sender->unknown08;
   }
 
   if (receiver != nullptr) {
-    info.receiver = receiver->selfHandle;
+    info.unknown20 = receiver->unknown08;
   }
 
-  info.delay = delay;
-  info.id = id;
-  messages.push_back(info);
+  info.unknown08 = delay;
+  info.unknown30 = id;
+  unknown50.push_back(info);
   return id;
 }
 
 MessageManager::MessageManager(mm::mtl::IAllocator *allocator)
 // __LINE__ of the game: it is the line argument of the operator new.
 #line 248
-    : impl(new (allocator, 8, __FILE__, __LINE__) Impl(allocator)) {
+    : unknown18(new (allocator, 8, __FILE__, __LINE__) Impl(allocator)) {
 }
 
 MessageManager::~MessageManager() {}
@@ -80,7 +80,7 @@ MessageManager::~MessageManager() {}
 bool MessageManager::initialize() { return true; }
 
 bool MessageManager::finalize() {
-  impl.reset();
+  unknown18.reset();
   return true;
 }
 
@@ -89,7 +89,7 @@ void MessageManager::update(const UpdateInfo &info) {
     return;
   }
 
-  impl->update(info);
+  unknown18->update(info);
 }
 
 void MessageManager::tail(const UpdateInfo &info) {
@@ -98,11 +98,11 @@ void MessageManager::tail(const UpdateInfo &info) {
   }
 }
 
-void MessageManager::registObject(MessageObject *object) { impl->registObject(object); }
+void MessageManager::registObject(MessageObject *object) { unknown18->registObject(object); }
 
-void MessageManager::removeObject(MessageObject *object) { impl->removeObject(object); }
+void MessageManager::removeObject(MessageObject *object) { unknown18->removeObject(object); }
 
-void MessageManager::push(MessageObject *sender, MessageObject *receiver, Message *message, f32 delay) { impl->push(sender, receiver, message, delay); }
+void MessageManager::push(MessageObject *sender, MessageObject *receiver, Message *message, f32 delay) { unknown18->push(sender, receiver, message, delay); }
 
 const char *MessageManager::getName() const { return "MessageManager"; }
 

@@ -13,7 +13,7 @@ namespace gf {
 namespace pc {
 
 void StateFieldTurn::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   if (next != nullptr && next->stateID != STATE_ID_FIELD_JUMP) {
     property->unknown80 = mm::Vec3::zero;
   }
@@ -21,7 +21,7 @@ void StateFieldTurn::leave(GfComBehaviorPc *behavior, ai::State *next) {
 }
 
 void StateFieldTurn::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   if (StateUtilField::isTurnEndRangeCacheInput(*property, unknown20)) {
     reqState(STATE_ID_FIELD_MOVE);
     return;

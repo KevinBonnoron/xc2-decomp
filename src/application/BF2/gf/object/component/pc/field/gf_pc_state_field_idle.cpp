@@ -15,21 +15,21 @@ namespace pc {
 
 void StateFieldIdle::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   StateUtil::setEnableDownIK(*behavior, true);
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   property->unknown80 = mm::Vec3::zero;
   property->unknown94 = 0.0f;
   StateUtilField::setIdleStatus(*property, true);
 }
 
 void StateFieldIdle::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  StateUtilField::setIdleStatus(*behavior->owner->getComponent<GfComPropertyPc>(), false);
+  StateUtilField::setIdleStatus(*behavior->unknown08->getComponent<GfComPropertyPc>(), false);
   StateUtil::setEnableDownIK(*behavior, false);
   StateUtil::setEnableLookIK(*behavior, true);
 }
 
 void StateFieldIdle::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
+  GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   const char *stateName = comAsm->getStateName(ANIM_LAYER_BASE);
   StateUtil::setEnableLookIK(*behavior, stateName != nullptr && __builtin_strcmp(stateName, "S_idle") == 0);
   if (property->existInputXY() && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_MOVE)) {

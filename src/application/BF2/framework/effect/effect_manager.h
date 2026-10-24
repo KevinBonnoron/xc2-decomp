@@ -48,12 +48,12 @@ public:
   static const u32 COMMON_EFFECT_MAX = 128;
 
   struct CasterGroup {
-    mm::mtl::IntrusiveList<EffectCasterSend> casters;
+    mm::mtl::IntrusiveList<EffectCasterSend> unknown00; // Inferred role: casters; original member name unknown.
   };
 
   struct CommonEffect {
-    RenderResource *resource;
-    EffectPack *pack;
+    RenderResource *unknown00; // Inferred role: resource; original member name unknown.
+    EffectPack *unknown08;     // Inferred role: pack; original member name unknown.
   };
 
   typedef std::unordered_map<std::string, EffectPack *, std::hash<std::string>, std::equal_to<std::string>, ml::StlCustomAllocator<std::pair<const std::string, EffectPack *>>> PackMap;
@@ -165,29 +165,29 @@ public:
   void finalRender(const ml::IDrDrawWorkInfo *info) override;
 
   u8 _28[0x2c - 0x28];
-  mtl::ALLOC_HANDLE sysHandle;
-  mtl::ALLOC_HANDLE resHandle;
+  mtl::ALLOC_HANDLE unknown2c; // Inferred role: sys handle; original member name unknown.
+  mtl::ALLOC_HANDLE unknown30; // Inferred role: res handle; original member name unknown.
   u8 _34[0x38 - 0x34];
-  mm::mtl::IAllocator *allocator;
-  ml::Scn *scn;
-  mm::mtl::FixedArray<CasterGroup, LAYER_MAX> casterGroups;
-  PackMap *packMap;
-  DataMap *dataMap;
+  mm::mtl::IAllocator *unknown38;                        // Inferred role: allocator; original member name unknown.
+  ml::Scn *unknown40;                                    // Inferred role: scn; original member name unknown.
+  mm::mtl::FixedArray<CasterGroup, LAYER_MAX> unknown48; // Inferred role: caster groups; original member name unknown.
+  PackMap *unknown348;                                   // Inferred role: pack map; original member name unknown.
+  DataMap *unknown350;                                   // Inferred role: data map; original member name unknown.
   u8 _358[0x1fb8 - 0x358];
-  mm::mtl::FixedVector<CommonEffect, COMMON_EFFECT_MAX> commonEffects;
+  mm::mtl::FixedVector<CommonEffect, COMMON_EFFECT_MAX> unknown1fb8; // Inferred role: common effects; original member name unknown.
   u8 _27c0[0x2fd5 - 0x27c0];
-  bool masterPause;
-  bool finalizing;
+  bool unknown2fd5; // Inferred role: master pause; original member name unknown.
+  bool unknown2fd6; // Inferred role: finalizing; original member name unknown.
 };
 
 static_assert(sizeof(EffectManager::CasterGroup) == 0x18, "");
-static_assert(offsetof(EffectManager, sysHandle) == 0x2c, "");
-static_assert(offsetof(EffectManager, allocator) == 0x38, "");
-static_assert(offsetof(EffectManager, casterGroups) == 0x48, "");
-static_assert(offsetof(EffectManager, packMap) == 0x348, "");
-static_assert(offsetof(EffectManager, dataMap) == 0x350, "");
-static_assert(offsetof(EffectManager, commonEffects) == 0x1fb8, "");
-static_assert(offsetof(EffectManager, masterPause) == 0x2fd5, "");
-static_assert(offsetof(EffectManager, finalizing) == 0x2fd6, "");
+static_assert(offsetof(EffectManager, unknown2c) == 0x2c, "");
+static_assert(offsetof(EffectManager, unknown38) == 0x38, "");
+static_assert(offsetof(EffectManager, unknown48) == 0x48, "");
+static_assert(offsetof(EffectManager, unknown348) == 0x348, "");
+static_assert(offsetof(EffectManager, unknown350) == 0x350, "");
+static_assert(offsetof(EffectManager, unknown1fb8) == 0x1fb8, "");
+static_assert(offsetof(EffectManager, unknown2fd5) == 0x2fd5, "");
+static_assert(offsetof(EffectManager, unknown2fd6) == 0x2fd6, "");
 
 } // namespace fw

@@ -12,9 +12,9 @@ namespace gf {
 namespace pc {
 
 void StateFieldDead::enter(GfComBehaviorPc *behavior, ai::State *previous) {
-  GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
+  GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   unknown18 = __builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_downpose") != 0;
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   property->unknown80 = mm::Vec3::zero;
   property->unknown90 = 0.0f;
   property->unknown94 = 0.0f;
@@ -24,7 +24,7 @@ void StateFieldDead::leave(GfComBehaviorPc *behavior, ai::State *next) {}
 
 void StateFieldDead::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   if (unknown18) {
-    GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
+    GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     if (comAsm->isEnd(ANIM_LAYER_BASE) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_DOWNPOSE)) {
       unknown18 = false;
     }

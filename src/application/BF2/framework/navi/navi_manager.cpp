@@ -7,55 +7,55 @@
 
 namespace fw {
 
-NaviManager::NaviManager() : naviMeshData(nullptr), manager(nullptr) {}
+NaviManager::NaviManager() : unknown18(nullptr), unknown20(nullptr) {}
 
 bool NaviManager::initialize() {
-  if (manager == nullptr) {
+  if (unknown20 == nullptr) {
     // __LINE__ of the game: it is the line argument of the operator new.
 #line 30
-    manager = new (Framework::getAllocator(), 16, __FILE__, __LINE__) navi::NvmshManager(Framework::get()->scn, FrameworkMemory::getMem(1));
+    unknown20 = new (Framework::getAllocator(), 16, __FILE__, __LINE__) navi::NvmshManager(Framework::get()->unknown58, FrameworkMemory::getMem(1));
   }
 
   return true;
 }
 
 bool NaviManager::finalize() {
-  if (manager != nullptr) {
-    delete manager;
-    manager = nullptr;
+  if (unknown20 != nullptr) {
+    delete unknown20;
+    unknown20 = nullptr;
   }
 
   return true;
 }
 
 bool NaviManager::createNaviMesh(void *data, const char *name) {
-  if (manager == nullptr) {
+  if (unknown20 == nullptr) {
     return false;
   }
 
-  naviMeshData = data;
-  manager->setupResource(data, name);
+  unknown18 = data;
+  unknown20->setupResource(data, name);
   return true;
 }
 
 void NaviManager::releaseNaviMesh() {
-  if (naviMeshData != nullptr && manager != nullptr) {
-    naviMeshData = nullptr;
-    manager->releaseResource();
+  if (unknown18 != nullptr && unknown20 != nullptr) {
+    unknown18 = nullptr;
+    unknown20->releaseResource();
   }
 }
 
 navi::NvmshAcObj *NaviManager::createObject() {
-  if (manager == nullptr) {
+  if (unknown20 == nullptr) {
     return nullptr;
   }
 
-  return manager->createObj();
+  return unknown20->createObj();
 }
 
 void NaviManager::releaseObject(navi::NvmshAcObj *object) {
-  if (object != nullptr && manager != nullptr) {
-    manager->releaseObj(object);
+  if (object != nullptr && unknown20 != nullptr) {
+    unknown20->releaseObj(object);
   }
 }
 
@@ -64,14 +64,14 @@ void NaviManager::tail() {
     return;
   }
 
-  if (manager != nullptr) {
-    manager->tail();
+  if (unknown20 != nullptr) {
+    unknown20->tail();
   }
 }
 
 void NaviManager::openDebugWindow() {
-  if (manager != nullptr) {
-    manager->openDebugWindow(Framework::get()->winProc);
+  if (unknown20 != nullptr) {
+    unknown20->openDebugWindow(Framework::get()->unknown50);
   }
 }
 

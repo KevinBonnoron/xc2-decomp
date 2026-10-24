@@ -13,18 +13,18 @@ namespace gf {
 namespace pc {
 
 void StateFieldWaterIdle::enter(GfComBehaviorPc *behavior, ai::State *previous) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   property->unknown80 = mm::Vec3::zero;
   property->unknown94 = 0.0f;
   StateUtilField::setIdleStatus(*property, true);
 }
 
-void StateFieldWaterIdle::leave(GfComBehaviorPc *behavior, ai::State *next) { StateUtilField::setIdleStatus(*behavior->owner->getComponent<GfComPropertyPc>(), false); }
+void StateFieldWaterIdle::leave(GfComBehaviorPc *behavior, ai::State *next) { StateUtilField::setIdleStatus(*behavior->unknown08->getComponent<GfComPropertyPc>(), false); }
 
 void StateFieldWaterIdle::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   if (property->existInputXY()) {
-    GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
+    GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     if (StateUtilField::isInputInverseDir(*property)) {
       reqState(STATE_ID_FIELD_WATER_IDLE_TURN);
     } else if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_SWIM_00)) {

@@ -70,7 +70,7 @@ void EffectMoveComponent::UpdateUp(f32, f32 frame, const mm::Vec3 &) {
 
 void EffectMoveComponent::Update(const fw::UpdateInfo &updateInfo, const mm::Vec3 &position) {
   if (unknowna5 != MOVE_TYPE_NONE) {
-    f32 deltaTime = updateInfo.deltaTime;
+    f32 deltaTime = updateInfo.unknown04;
     f32 frame = deltaTime * FRAME_RATE;
     unknown60 += deltaTime;
     (this->*m_apUpdateFuncList[unknowna5 - 1])(deltaTime, frame, position);

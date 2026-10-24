@@ -72,14 +72,14 @@ struct ColiShape {
     TYPE_CHARACTER = 3,
   };
 
-  Type type;
-  f32 radius;
-  f32 height;
+  Type unknown00; // Inferred role: type; original member name unknown.
+  f32 unknown04;  // Inferred role: radius; original member name unknown.
+  f32 unknown08;  // Inferred role: height; original member name unknown.
   u8 _0c[0x10 - 0x0c];
-  mm::Vec3 size;
+  mm::Vec3 unknown10; // Inferred role: size; original member name unknown.
 };
 
-static_assert(offsetof(ColiShape, size) == 0x10, "");
+static_assert(offsetof(ColiShape, unknown10) == 0x10, "");
 
 class ColiUserData {
 public:
@@ -93,10 +93,10 @@ class ColiObjUserData {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  ColiObjUserData() : handle(0) {}
+  ColiObjUserData() : unknown08(0) {}
   virtual const mm::mtl::RTTI *getRTTI() const { return &m_rtti; }
 
-  u32 handle;
+  u32 unknown08; // Inferred role: handle; original member name unknown.
 };
 
 class ColiObject : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<ColiObject> {
@@ -155,38 +155,38 @@ public:
   void leave(const IColiEventListener::LeaveInfo &info);
   void contact(const IColiEventListener::EnterInfo &info);
 
-  void setColiUserData(ColiUserData *data) { coliUserData = data; }
+  void setColiUserData(ColiUserData *data) { unknown58 = data; }
 
   void setListener(IColiEventListener *listener) {
-    eventFlags.clear();
-    this->listener = listener;
+    unknown48.clear();
+    this->unknown50 = listener;
   }
 
-  idcoli::IDColiObj *coliObject;
-  mm::mtl::IntrusivePtr<ReferenceFrame> referenceFrame;
-  ColiType type;
-  u16 flags;
-  HandlePtr<UpdatableObject> owner;
-  mm::mtl::BitFlag<32> eventFlags;
-  IColiEventListener *listener;
-  ColiUserData *coliUserData;
-  mm::Mat44 offsetMatrix;
-  mm::Mat44 matrix;
-  f32 scale;
-  ColiShape *shape;
-  ColiObjUserData userData;
+  idcoli::IDColiObj *m_coliObject;
+  mm::mtl::IntrusivePtr<ReferenceFrame> unknown28; // Inferred role: reference frame; original member name unknown.
+  ColiType unknown30;                              // Inferred role: type; original member name unknown.
+  u16 unknown34;                                   // Inferred role: flags; original member name unknown.
+  HandlePtr<UpdatableObject> unknown38;            // Inferred role: owner; original member name unknown.
+  mm::mtl::BitFlag<32> unknown48;                  // Inferred role: event flags; original member name unknown.
+  IColiEventListener *unknown50;                   // Inferred role: listener; original member name unknown.
+  ColiUserData *unknown58;                         // Inferred role: coli user data; original member name unknown.
+  mm::Mat44 unknown60;                             // Inferred role: offset matrix; original member name unknown.
+  mm::Mat44 m_matrix;
+  f32 unknowne0;             // Inferred role: scale; original member name unknown.
+  ColiShape *unknowne8;      // Inferred role: shape; original member name unknown.
+  ColiObjUserData unknownf0; // Inferred role: user data; original member name unknown.
 };
 
-static_assert(offsetof(ColiObject, coliObject) == 0x20, "");
-static_assert(offsetof(ColiObject, type) == 0x30, "");
-static_assert(offsetof(ColiObject, owner) == 0x38, "");
-static_assert(offsetof(ColiObject, listener) == 0x50, "");
-static_assert(offsetof(ColiObject, coliUserData) == 0x58, "");
-static_assert(offsetof(ColiObject, offsetMatrix) == 0x60, "");
-static_assert(offsetof(ColiObject, matrix) == 0xa0, "");
-static_assert(offsetof(ColiObject, scale) == 0xe0, "");
-static_assert(offsetof(ColiObject, shape) == 0xe8, "");
-static_assert(offsetof(ColiObject, userData) == 0xf0, "");
+static_assert(offsetof(ColiObject, m_coliObject) == 0x20, "");
+static_assert(offsetof(ColiObject, unknown30) == 0x30, "");
+static_assert(offsetof(ColiObject, unknown38) == 0x38, "");
+static_assert(offsetof(ColiObject, unknown50) == 0x50, "");
+static_assert(offsetof(ColiObject, unknown58) == 0x58, "");
+static_assert(offsetof(ColiObject, unknown60) == 0x60, "");
+static_assert(offsetof(ColiObject, m_matrix) == 0xa0, "");
+static_assert(offsetof(ColiObject, unknowne0) == 0xe0, "");
+static_assert(offsetof(ColiObject, unknowne8) == 0xe8, "");
+static_assert(offsetof(ColiObject, unknownf0) == 0xf0, "");
 static_assert(sizeof(ColiObject) == 0x100, "");
 
 class ColiMoveObject : public ColiObject {

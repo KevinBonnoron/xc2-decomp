@@ -17,46 +17,46 @@ void BdatManager::Impl::unregistBdat(const char *name) {
   }
 }
 
-bool BdatManager::Impl::isExistBdat(int id) const { return infos[id].loadingData != nullptr || infos[id].data != nullptr; }
+bool BdatManager::Impl::isExistBdat(int id) const { return unknown128[id].unknown158 != nullptr || unknown128[id].unknown148 != nullptr; }
 
 bool BdatManager::Impl::isEnableBdat(int id) const {
   if (!isExistBdat(id)) {
     return false;
   }
 
-  return infos[id].state == STATE_ENABLE;
+  return unknown128[id].unknown00 == STATE_ENABLE;
 }
 
 bool BdatManager::initialize() { return true; }
 
 bool BdatManager::finalize() {
-  if (impl != nullptr) {
-    delete impl;
-    impl = nullptr;
+  if (unknown18 != nullptr) {
+    delete unknown18;
+    unknown18 = nullptr;
   }
 
   return true;
 }
 
-void BdatManager::setBasePath(const char *path) { get()->impl->basePath = path; }
+void BdatManager::setBasePath(const char *path) { get()->unknown18->unknown08 = path; }
 
 const char *BdatManager::getLocale() { return LangUtil::getLangFolder().c_str(); }
 
-bool BdatManager::loadBdat(int id, mtl::ALLOC_HANDLE handle, const char *path) { return get()->impl->loadBdat(id, handle, path); }
+bool BdatManager::loadBdat(int id, mtl::ALLOC_HANDLE handle, const char *path) { return get()->unknown18->loadBdat(id, handle, path); }
 
-void BdatManager::reloadBdat(int id) { get()->impl->reloadBdat(id); }
+void BdatManager::reloadBdat(int id) { get()->unknown18->reloadBdat(id); }
 
-void BdatManager::loadBdatFromMemory(int id, mtl::ALLOC_HANDLE handle, void *data, size_t size, const char *name) { get()->impl->loadBdatFromMemory(id, handle, data, size, name); }
+void BdatManager::loadBdatFromMemory(int id, mtl::ALLOC_HANDLE handle, void *data, size_t size, const char *name) { get()->unknown18->loadBdatFromMemory(id, handle, data, size, name); }
 
-void BdatManager::loadBdatFromMemory(int id, void *data) { get()->impl->loadBdatFromMemory(id, data); }
+void BdatManager::loadBdatFromMemory(int id, void *data) { get()->unknown18->loadBdatFromMemory(id, data); }
 
-void BdatManager::unregistBdat(int id) { get()->impl->unregistBdat(id); }
+void BdatManager::unregistBdat(int id) { get()->unknown18->unregistBdat(id); }
 
-void BdatManager::unregistBdat(const char *name) { get()->impl->unregistBdat(name); }
+void BdatManager::unregistBdat(const char *name) { get()->unknown18->unregistBdat(name); }
 
-bool BdatManager::isExistBdat(int id) { return get()->impl->isExistBdat(id); }
+bool BdatManager::isExistBdat(int id) { return get()->unknown18->isExistBdat(id); }
 
-bool BdatManager::isEnableBdat(int id) { return get()->impl->isEnableBdat(id); }
+bool BdatManager::isEnableBdat(int id) { return get()->unknown18->isEnableBdat(id); }
 
 unsigned char *BdatManager::getFp(int table, int id) { return Bdat::getFP(table, id); }
 

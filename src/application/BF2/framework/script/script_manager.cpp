@@ -12,18 +12,18 @@ bool ScriptManager::initialize() {
   return true;
 }
 
-bool ScriptManager::isScriptCreated(int type) const { return scripts[type].vm != nullptr; }
+bool ScriptManager::isScriptCreated(int type) const { return unknown20[type].unknown08 != nullptr; }
 
-bool ScriptManager::isScriptLoaded(int type) const { return scripts[type].isLoaded(); }
+bool ScriptManager::isScriptLoaded(int type) const { return unknown20[type].isLoaded(); }
 
 bool ScriptManager::isScriptFree(int type) const {
-  if (!scripts[type].isEmpty()) {
+  if (!unknown20[type].isEmpty()) {
     return false;
   }
 
-  return scripts[type].isFinish();
+  return unknown20[type].isFinish();
 }
 
-u32 ScriptManager::getTypeMax() const { return scripts.size(); }
+u32 ScriptManager::getTypeMax() const { return unknown20.size(); }
 
 } // namespace fw

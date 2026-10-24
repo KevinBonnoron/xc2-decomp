@@ -43,11 +43,11 @@ public:
   static const u32 LAYER_MAX = 32;
 
   struct Group {
-    mm::mtl::IntrusiveList<AnimControlUpdaterInterface> controlUpdaters;
-    mm::mtl::IntrusiveList<AnimPoseSamplerInterface> poseSamplers;
-    mm::mtl::IntrusiveList<AnimPoseModifierInterface> poseModifiers;
-    mm::mtl::IntrusiveList<AnimAfterModifierInterface> afterModifiers;
-    mm::mtl::IntrusiveList<IkResolver> ikResolvers;
+    mm::mtl::IntrusiveList<AnimControlUpdaterInterface> unknown00; // Inferred role: control updaters; original member name unknown.
+    mm::mtl::IntrusiveList<AnimPoseSamplerInterface> unknown18;    // Inferred role: pose samplers; original member name unknown.
+    mm::mtl::IntrusiveList<AnimPoseModifierInterface> unknown30;   // Inferred role: pose modifiers; original member name unknown.
+    mm::mtl::IntrusiveList<AnimAfterModifierInterface> unknown48;  // Inferred role: after modifiers; original member name unknown.
+    mm::mtl::IntrusiveList<IkResolver> unknown60;                  // Inferred role: ik resolvers; original member name unknown.
   };
 
   void addControlUpdater(u32 layer, AnimControlUpdaterInterface &updater);
@@ -61,10 +61,10 @@ public:
   void addIkResolver(u32 layer, IkResolver &resolver);
   void removeIkResolver(u32 layer, IkResolver &resolver);
 
-  Group groups[LAYER_MAX];
+  Group unknown18[LAYER_MAX]; // Inferred role: groups; original member name unknown.
 };
 
 static_assert(sizeof(AnimationManager::Group) == 0x78, "");
-static_assert(offsetof(AnimationManager, groups) == 0x18, "");
+static_assert(offsetof(AnimationManager, unknown18) == 0x18, "");
 
 } // namespace fw

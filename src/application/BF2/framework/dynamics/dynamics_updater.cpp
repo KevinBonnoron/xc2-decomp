@@ -9,52 +9,52 @@
 
 namespace fw {
 
-DynamicsUpdater::DynamicsUpdater() : dynamics(nullptr), referenceFrame(), isEnable(true), isEnableMovement(true), isResetRequested(false), preUpdateCallback(), speed(1.0f), drawer(nullptr) {
-  cachedTransform.position = mm::Vec3::zero;
-  cachedTransform.rotation = mm::Quat::identity;
-  offsetTransform.position = mm::Vec3::zero;
-  offsetTransform.rotation = mm::Quat::identity;
+DynamicsUpdater::DynamicsUpdater() : unknown18(nullptr), unknown20(), unknown70(true), unknown71(true), unknown72(false), unknown78(), unknown98(1.0f), unknowna0(nullptr) {
+  unknown30.unknown00 = mm::Vec3::zero;
+  unknown30.unknown10 = mm::Quat::identity;
+  unknown50.unknown00 = mm::Vec3::zero;
+  unknown50.unknown10 = mm::Quat::identity;
 }
 
 DynamicsUpdater::~DynamicsUpdater() { unbind(); }
 
 void DynamicsUpdater::unbind() {
-  if (dynamics != nullptr) {
-    dynamics->release();
-    dynamics = nullptr;
+  if (unknown18 != nullptr) {
+    unknown18->release();
+    unknown18 = nullptr;
   }
 
-  referenceFrame = nullptr;
+  unknown20 = nullptr;
 }
 
 void DynamicsUpdater::bind(skd::Dynamics *dynamics, mm::mtl::IntrusivePtr<ReferenceFrame> frame) {
   unbind();
-  this->dynamics = dynamics;
+  this->unknown18 = dynamics;
   dynamics->addRef();
-  referenceFrame = frame;
+  unknown20 = frame;
   cacheTransform();
 }
 
 void DynamicsUpdater::cacheTransform() {
-  if (referenceFrame.get() != nullptr) {
-    cachedTransform = referenceFrame->getSyncedWorldTransform();
+  if (unknown20.get() != nullptr) {
+    unknown30 = unknown20->getSyncedWorldTransform();
   }
 }
 
 void DynamicsUpdater::setEnable(bool enable) {
-  isEnable = enable;
-  if (dynamics != nullptr) {
-    dynamics->resetDynamics();
+  unknown70 = enable;
+  if (unknown18 != nullptr) {
+    unknown18->resetDynamics();
   }
 
-  if (isEnableMovement) {
+  if (unknown71) {
     cacheTransform();
   }
 }
 
 void DynamicsUpdater::setEnableMovement(bool enable) {
-  if (enable != isEnableMovement) {
-    isEnableMovement = enable;
+  if (enable != unknown71) {
+    unknown71 = enable;
     if (enable) {
       cacheTransform();
     }
@@ -62,46 +62,46 @@ void DynamicsUpdater::setEnableMovement(bool enable) {
 }
 
 void DynamicsUpdater::update(const UpdateInfo &info) {
-  if (!isEnable) {
+  if (!unknown70) {
     return;
   }
 
-  if (preUpdateCallback.isValid()) {
-    preUpdateCallback();
+  if (unknown78.isValid()) {
+    unknown78();
   }
 
-  if (isResetRequested) {
-    dynamics->resetDynamics();
-    isResetRequested = false;
-  } else if (isEnableMovement) {
-    const Transform &world = referenceFrame->getSyncedWorldTransform();
-    dynamics->notifyMovement(world.position, world.rotation, cachedTransform.position + offsetTransform.position, mm::Quat::mul(cachedTransform.rotation, offsetTransform.rotation));
-    cachedTransform = world;
+  if (unknown72) {
+    unknown18->resetDynamics();
+    unknown72 = false;
+  } else if (unknown71) {
+    const Transform &world = unknown20->getSyncedWorldTransform();
+    unknown18->notifyMovement(world.unknown00, world.unknown10, unknown30.unknown00 + unknown50.unknown00, mm::Quat::mul(unknown30.unknown10, unknown50.unknown10));
+    unknown30 = world;
   }
 
-  dynamics->update(info.deltaTime * speed);
-  anm::Pose *pose = dynamics->pose;
+  unknown18->update(info.unknown04 * unknown98);
+  anm::Pose *pose = unknown18->pose;
   pose->syncLocalSpace();
   pose->syncModelSpace();
 }
 
-DynamicsColObjUpdater::DynamicsColObjUpdater() : collisionObject(nullptr) {}
+DynamicsColObjUpdater::DynamicsColObjUpdater() : unknown18(nullptr) {}
 
 DynamicsColObjUpdater::~DynamicsColObjUpdater() { unbind(); }
 
 void DynamicsColObjUpdater::unbind() {
-  if (collisionObject != nullptr) {
-    collisionObject->release();
-    collisionObject = nullptr;
+  if (unknown18 != nullptr) {
+    unknown18->release();
+    unknown18 = nullptr;
   }
 }
 
 void DynamicsColObjUpdater::bind(skd::CollisionObject *collisionObject) {
   unbind();
-  this->collisionObject = collisionObject;
+  this->unknown18 = collisionObject;
   collisionObject->addRef();
 }
 
-void DynamicsColObjUpdater::update() { collisionObject->update(); }
+void DynamicsColObjUpdater::update() { unknown18->update(); }
 
 } // namespace fw

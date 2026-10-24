@@ -29,10 +29,10 @@ public:
   skt::SERVER_OPTION getServerOption(const char *server) const;
 
   u8 _08[0xaec - 0x08];
-  skt::SERVER_OPTION serverOption;
+  skt::SERVER_OPTION m_serverOption;
 };
 
-static_assert(offsetof(DebugCommander, serverOption) == 0xaec, "");
+static_assert(offsetof(DebugCommander, m_serverOption) == 0xaec, "");
 
 } // namespace debug
 } // namespace fw

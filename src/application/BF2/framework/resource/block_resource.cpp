@@ -28,44 +28,44 @@ BlockResource *BlockResource::request(mtl::ALLOC_HANDLE handle, const char *path
   return resource;
 }
 
-BlockResource::BlockResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority) : ResourceObject(6, handle, priority, 0), loaded(false), resourceHandle(handle), resourcePriority(priority) {
-  resourceAllocator.setMemHandle(FrameworkMemory::getMem(5));
-  resources.setAllocator(&resourceAllocator);
-  resources.reserve(16);
+BlockResource::BlockResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority) : ResourceObject(6, handle, priority, 0), unknown128(false), unknown12c(handle), unknown130(priority) {
+  unknownd8.setMemHandle(FrameworkMemory::getMem(5));
+  unknownb0.setAllocator(&unknownd8);
+  unknownb0.reserve(16);
 }
 
 BlockResource::~BlockResource() {
-  for (CommonResource **it = resources.begin(); it != resources.end(); ++it) {
+  for (CommonResource **it = unknownb0.begin(); it != unknownb0.end(); ++it) {
     if (*it != nullptr) {
       (*it)->release();
     }
   }
 
-  resources.destroy();
+  unknownb0.destroy();
 }
 
 void BlockResource::update() {
-  if (loaded) {
+  if (unknown128) {
     return;
   }
 
   int count = 0;
-  for (CommonResource **it = resources.begin(); it != resources.end(); ++it) {
+  for (CommonResource **it = unknownb0.begin(); it != unknownb0.end(); ++it) {
     count += (*it)->valid();
   }
 
-  if (count == resources.size()) {
-    loaded = true;
+  if (count == unknownb0.size()) {
+    unknown128 = true;
   }
 }
 
-bool BlockResource::valid() const { return loaded; }
+bool BlockResource::valid() const { return unknown128; }
 
 CommonResource *BlockResource::findLoadedResource(const char *path) const {
-  if (loaded) {
-    for (CommonResource *const *it = resources.begin(); it != resources.end(); ++it) {
+  if (unknown128) {
+    for (CommonResource *const *it = unknownb0.begin(); it != unknownb0.end(); ++it) {
       CommonResource *resource = *it;
-      if (strcmp(resource->path.c_str(), path) == 0) {
+      if (strcmp(resource->unknown2c.c_str(), path) == 0) {
         return resource;
       }
     }
@@ -106,10 +106,10 @@ void BlockResource::addAssetFile(const char *path, bool isSafe) {
     return;
   }
 
-  CommonResource *resource = CommonResource::request(resourceHandle, path, resourcePriority, isSafe);
+  CommonResource *resource = CommonResource::request(unknown12c, path, unknown130, isSafe);
   if (resource != nullptr) {
-    resources.push_back(resource);
-    loaded = false;
+    unknownb0.push_back(resource);
+    unknown128 = false;
   }
 }
 

@@ -44,13 +44,13 @@ public:
   const char *getName() const override { return "AssetManager"; }
   virtual void update(const UpdateInfo &info) {}
 
-  mm::mtl::Vector<AssetData *> assets;
-  mm::mtl::Vector<AssetCsvb *> csvbs;
-  mm::mtl::Vector<AssetLoader *> loaders;
+  mm::mtl::Vector<AssetData *> unknown18;   // Inferred role: assets; original member name unknown.
+  mm::mtl::Vector<AssetCsvb *> unknown40;   // Inferred role: csvbs; original member name unknown.
+  mm::mtl::Vector<AssetLoader *> unknown68; // Inferred role: loaders; original member name unknown.
 };
 
-static_assert(offsetof(AssetManager, assets) == 0x18, "");
-static_assert(offsetof(AssetManager, csvbs) == 0x40, "");
-static_assert(offsetof(AssetManager, loaders) == 0x68, "");
+static_assert(offsetof(AssetManager, unknown18) == 0x18, "");
+static_assert(offsetof(AssetManager, unknown40) == 0x40, "");
+static_assert(offsetof(AssetManager, unknown68) == 0x68, "");
 
 } // namespace fw

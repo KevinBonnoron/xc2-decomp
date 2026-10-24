@@ -4,6 +4,6 @@
 
 namespace fw {
 
-u32 ComponentObject::getLayer() const { return owner->layer; }
+u32 ComponentObject::getLayer() const { return unknown08->unknown2c; }
 
 } // namespace fw

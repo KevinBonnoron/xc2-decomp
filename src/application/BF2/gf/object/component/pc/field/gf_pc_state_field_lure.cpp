@@ -10,7 +10,7 @@ namespace gf {
 namespace pc {
 
 void StateFieldLure::enter(GfComBehaviorPc *behavior, ai::State *previous) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   property->unknown80 = mm::Vec3::zero;
   property->unknown94 = 0.0f;
   unknown18 = StateUtilField::getLureTargetHandle(*behavior);

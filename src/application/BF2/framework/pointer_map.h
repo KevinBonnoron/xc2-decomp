@@ -25,17 +25,17 @@ struct PtrParam {
 
 class PtrMapIterator {
 public:
-  PtrMapIterator(const mm::mtl::Array<ptr_detail::PtrParam> *params, ptr_detail::PtrParam *current) : params(params), current(current) {}
+  PtrMapIterator(const mm::mtl::Array<ptr_detail::PtrParam> *params, ptr_detail::PtrParam *current) : unknown00(params), unknown08(current) {}
 
   PtrMapIterator operator++();
 
-  const mm::mtl::Array<ptr_detail::PtrParam> *params;
-  ptr_detail::PtrParam *current;
+  const mm::mtl::Array<ptr_detail::PtrParam> *unknown00; // Inferred role: params; original member name unknown.
+  ptr_detail::PtrParam *unknown08;                       // Inferred role: current; original member name unknown.
 };
 
 class PointerMap {
 public:
-  PointerMap() : capacity(0), count(0), currentId(0), rangeMin(1), rangeMax(0xffffffff), idMask(0xffffffff) {}
+  PointerMap() : unknown20(0), unknown24(0), unknown28(0), unknown2c(1), unknown30(0xffffffff), unknown34(0xffffffff) {}
   virtual ~PointerMap();
 
   void destroy();
@@ -52,18 +52,18 @@ public:
   u32 getHandle(const void *ptr) const;
   bool isValid(u32 id) const;
 
-  mm::mtl::Array<ptr_detail::PtrParam> params;
-  u32 capacity;
-  u32 count;
-  u32 currentId;
-  u32 rangeMin;
-  u32 rangeMax;
-  u32 idMask;
+  mm::mtl::Array<ptr_detail::PtrParam> unknown08; // Inferred role: params; original member name unknown.
+  u32 unknown20;                                  // Inferred role: capacity; original member name unknown.
+  u32 unknown24;                                  // Inferred role: count; original member name unknown.
+  u32 unknown28;                                  // Inferred role: current id; original member name unknown.
+  u32 unknown2c;                                  // Inferred role: range min; original member name unknown.
+  u32 unknown30;                                  // Inferred role: range max; original member name unknown.
+  u32 unknown34;                                  // Inferred role: id mask; original member name unknown.
 };
 
-static_assert(offsetof(PointerMap, params) == 0x08, "");
-static_assert(offsetof(PointerMap, capacity) == 0x20, "");
-static_assert(offsetof(PointerMap, idMask) == 0x34, "");
+static_assert(offsetof(PointerMap, unknown08) == 0x08, "");
+static_assert(offsetof(PointerMap, unknown20) == 0x20, "");
+static_assert(offsetof(PointerMap, unknown34) == 0x34, "");
 static_assert(sizeof(PointerMap) == 0x38, "");
 
 template <typename T> struct HandlePtr {

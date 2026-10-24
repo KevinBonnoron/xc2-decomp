@@ -28,8 +28,8 @@ public:
   static const u32 LAYER_MAX = 32;
 
   struct Group {
-    mm::mtl::IntrusiveList<DynamicsUpdaterInterface> updaters;
-    mm::mtl::IntrusiveList<DynamicsColObjUpdaterInterface> colUpdaters;
+    mm::mtl::IntrusiveList<DynamicsUpdaterInterface> unknown00;       // Inferred role: updaters; original member name unknown.
+    mm::mtl::IntrusiveList<DynamicsColObjUpdaterInterface> unknown18; // Inferred role: col updaters; original member name unknown.
   };
 
   void addColUpdater(u32 layer, DynamicsColObjUpdaterInterface &updater);
@@ -37,10 +37,10 @@ public:
   void addUpdater(u32 layer, DynamicsUpdaterInterface &updater);
   void removeUpdater(u32 layer, DynamicsUpdaterInterface &updater);
 
-  Group groups[LAYER_MAX];
+  Group unknown18[LAYER_MAX]; // Inferred role: groups; original member name unknown.
 };
 
 static_assert(sizeof(DyanmicsManager::Group) == 0x30, "");
-static_assert(offsetof(DyanmicsManager, groups) == 0x18, "");
+static_assert(offsetof(DyanmicsManager, unknown18) == 0x18, "");
 
 } // namespace fw

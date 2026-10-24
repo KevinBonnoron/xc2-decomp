@@ -23,9 +23,9 @@ FadePlugin::FadePlugin() : unknown0c(MODE_NONE), unknown18(nullptr) {}
 FadePlugin::~FadePlugin() {}
 
 bool FadePlugin::setup(GfComBehaviorPc &behavior) {
-  GfComPropertyPc *property = mm::mtl::dynamicCast<GfComPropertyPc>(behavior.owner->components[GfComProperty::COMPONENT_INDEX]);
+  GfComPropertyPc *property = mm::mtl::dynamicCast<GfComPropertyPc>(behavior.unknown08->unknown38[GfComProperty::COMPONENT_INDEX]);
   const fw::ParamList *paramList = property->unknown310.unknown08.operator->();
-  unknown18 = paramList->count > PC_PARAM_FADE ? &paramList->entries[PC_PARAM_FADE] : nullptr;
+  unknown18 = paramList->unknown0c > PC_PARAM_FADE ? &paramList->unknown10[PC_PARAM_FADE] : nullptr;
   return true;
 }
 
@@ -52,7 +52,7 @@ void FadePlugin::onDeactivate() { changeMode(MODE_NONE); }
 
 void FadePlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &info) {
   const FadeParam *param = getParam();
-  unknown10 += info.deltaTime;
+  unknown10 += info.unknown04;
   switch (unknown0c) {
   case MODE_FADE_OUT:
     if (unknown10 >= param->fadeOutTime) {

@@ -19,9 +19,9 @@ public:
 
   u32 getLayer() const;
 
-  UpdatableObject *owner;
+  UpdatableObject *unknown08; // Inferred role: owner; original member name unknown.
 };
 
-static_assert(offsetof(ComponentObject, owner) == 0x08, "");
+static_assert(offsetof(ComponentObject, unknown08) == 0x08, "");
 
 } // namespace fw

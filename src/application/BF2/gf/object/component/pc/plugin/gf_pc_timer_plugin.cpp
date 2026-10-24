@@ -23,7 +23,7 @@ void TimerPlugin::setActivateTimer(TYPE type, bool isActive) {
 void TimerPlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &info) {
   for (u32 i = 0; i < TYPE_MAX; i++) {
     if (unknown0c[i].unknown00) {
-      unknown0c[i].unknown04 += info.deltaTime;
+      unknown0c[i].unknown04 += info.unknown04;
     }
   }
 }

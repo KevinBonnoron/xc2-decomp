@@ -17,10 +17,10 @@ void StateFieldWaterSwimRise::enter(GfComBehaviorPc *behavior, ai::State *previo
 void StateFieldWaterSwimRise::leave(GfComBehaviorPc *behavior, ai::State *next) {}
 
 void StateFieldWaterSwimRise::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   MoveUtilField::updateMoveSwim(info, *property);
   MoveUtilField::updateMoveWaterRise(info, *property);
-  f32 distance = info.deltaTime * property->unknown90;
+  f32 distance = info.unknown04 * property->unknown90;
   if (StateUtilField::getChildFrameHeight(*behavior) + distance >= 0.0f) {
     reqState(STATE_ID_FIELD_WATER_SWIM);
   }

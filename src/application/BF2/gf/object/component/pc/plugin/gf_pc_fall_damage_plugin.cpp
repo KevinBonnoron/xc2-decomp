@@ -13,7 +13,7 @@ FallDamagePlugin::FallDamagePlugin() : unknown10(nullptr), unknown18(0.0f), unkn
 FallDamagePlugin::~FallDamagePlugin() {}
 
 bool FallDamagePlugin::setup(GfComBehaviorPc &behavior) {
-  unknown10 = behavior.owner->getComponent<GfComPropertyPc>();
+  unknown10 = behavior.unknown08->getComponent<GfComPropertyPc>();
   return true;
 }
 

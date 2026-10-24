@@ -18,9 +18,9 @@ public:
   void tail();
   void openDebugWindow();
 
-  layer::LayerManager *layerManager;
+  layer::LayerManager *unknown18; // Inferred role: layer manager; original member name unknown.
 };
 
-static_assert(offsetof(LayerSetManager, layerManager) == 0x18, "");
+static_assert(offsetof(LayerSetManager, unknown18) == 0x18, "");
 
 } // namespace fw

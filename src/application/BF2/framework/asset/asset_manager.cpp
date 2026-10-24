@@ -21,58 +21,58 @@ mtl::ALLOC_HANDLE AssetManager::getMemTMP() { return FrameworkMemory::getMem(3);
 
 u32 AssetManager::getHash(const char *name) { return mm::mtl::hashStrCrc(name); }
 
-AssetManager::AssetManager(mm::mtl::IAllocator *allocator, u32 capacity) : assets(allocator), csvbs(allocator), loaders(allocator) {
-  assets.reserve(capacity);
-  csvbs.reserve(capacity);
-  loaders.reserve(capacity);
+AssetManager::AssetManager(mm::mtl::IAllocator *allocator, u32 capacity) : unknown18(allocator), unknown40(allocator), unknown68(allocator) {
+  unknown18.reserve(capacity);
+  unknown40.reserve(capacity);
+  unknown68.reserve(capacity);
 }
 
 AssetManager::~AssetManager() {
-  while (assets.size() != 0) {
-    if (assets[assets.size() - 1] != nullptr) {
-      assets[assets.size() - 1]->release();
-      assets[assets.size() - 1] = nullptr;
+  while (unknown18.size() != 0) {
+    if (unknown18[unknown18.size() - 1] != nullptr) {
+      unknown18[unknown18.size() - 1]->release();
+      unknown18[unknown18.size() - 1] = nullptr;
     }
   }
-  assets.clear();
+  unknown18.clear();
 
-  while (csvbs.size() != 0) {
-    if (csvbs[csvbs.size() - 1] != nullptr) {
-      csvbs[csvbs.size() - 1]->release();
-      csvbs[csvbs.size() - 1] = nullptr;
+  while (unknown40.size() != 0) {
+    if (unknown40[unknown40.size() - 1] != nullptr) {
+      unknown40[unknown40.size() - 1]->release();
+      unknown40[unknown40.size() - 1] = nullptr;
     }
   }
-  csvbs.clear();
+  unknown40.clear();
 
-  while (loaders.size() != 0) {
-    if (loaders[loaders.size() - 1] != nullptr) {
-      loaders[loaders.size() - 1]->release();
-      loaders[loaders.size() - 1] = nullptr;
+  while (unknown68.size() != 0) {
+    if (unknown68[unknown68.size() - 1] != nullptr) {
+      unknown68[unknown68.size() - 1]->release();
+      unknown68[unknown68.size() - 1] = nullptr;
     }
   }
-  loaders.clear();
+  unknown68.clear();
 }
 
-void AssetManager::addAsset(AssetData *asset) { assets.push_back(asset); }
+void AssetManager::addAsset(AssetData *asset) { unknown18.push_back(asset); }
 
 void AssetManager::removeAsset(AssetData *asset) {
-  AssetData **it = mm::mtl::find(assets.begin(), assets.end(), asset);
-  if (it != assets.end()) {
-    assets.erase(it);
+  AssetData **it = mm::mtl::find(unknown18.begin(), unknown18.end(), asset);
+  if (it != unknown18.end()) {
+    unknown18.erase(it);
   }
 }
 
 AssetData *AssetManager::searchAsset(mtl::ALLOC_HANDLE handle, const char *name) {
-  if (assets.size() == 0) {
+  if (unknown18.size() == 0) {
     return nullptr;
   }
 
   mm::mtl::FixStr<256> fileName;
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   u32 hash = getHash(fileName.c_str());
-  for (u32 i = 0; i < assets.size(); i++) {
-    AssetData *item = assets[i];
-    if (item != nullptr && item->handle == handle && item->hash == hash && strcmp(item->name.c_str(), fileName.c_str()) == 0) {
+  for (u32 i = 0; i < unknown18.size(); i++) {
+    AssetData *item = unknown18[i];
+    if (item != nullptr && item->unknown0c == handle && item->unknown18 == hash && strcmp(item->unknown30.c_str(), fileName.c_str()) == 0) {
       return item;
     }
   }
@@ -81,16 +81,16 @@ AssetData *AssetManager::searchAsset(mtl::ALLOC_HANDLE handle, const char *name)
 }
 
 AssetData *AssetManager::searchAsset(mm::mtl::IAllocator *allocator, const char *name) {
-  if (assets.size() == 0) {
+  if (unknown18.size() == 0) {
     return nullptr;
   }
 
   mm::mtl::FixStr<256> fileName;
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   u32 hash = getHash(fileName.c_str());
-  for (u32 i = 0; i < assets.size(); i++) {
-    AssetData *item = assets[i];
-    if (item != nullptr && item->allocator == allocator && item->hash == hash && strcmp(item->name.c_str(), fileName.c_str()) == 0) {
+  for (u32 i = 0; i < unknown18.size(); i++) {
+    AssetData *item = unknown18[i];
+    if (item != nullptr && item->unknown10 == allocator && item->unknown18 == hash && strcmp(item->unknown30.c_str(), fileName.c_str()) == 0) {
       return item;
     }
   }
@@ -99,24 +99,24 @@ AssetData *AssetManager::searchAsset(mm::mtl::IAllocator *allocator, const char 
 }
 
 AssetData *AssetManager::searchAsset(const char *name, AssetData *previous) {
-  if (assets.size() == 0) {
+  if (unknown18.size() == 0) {
     return nullptr;
   }
 
   mm::mtl::FixStr<256> fileName;
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   u32 hash = getHash(fileName.c_str());
-  AssetData **it = assets.begin();
+  AssetData **it = unknown18.begin();
   if (previous != nullptr) {
-    it = mm::mtl::find(assets.begin(), assets.end(), previous);
-    if (it != assets.end()) {
+    it = mm::mtl::find(unknown18.begin(), unknown18.end(), previous);
+    if (it != unknown18.end()) {
       ++it;
     }
   }
 
-  for (; it != assets.end(); ++it) {
+  for (; it != unknown18.end(); ++it) {
     AssetData *item = *it;
-    if (item != nullptr && item->hash == hash && strcmp(item->name.c_str(), fileName.c_str()) == 0) {
+    if (item != nullptr && item->unknown18 == hash && strcmp(item->unknown30.c_str(), fileName.c_str()) == 0) {
       return item;
     }
   }
@@ -124,26 +124,26 @@ AssetData *AssetManager::searchAsset(const char *name, AssetData *previous) {
   return nullptr;
 }
 
-void AssetManager::addCsvb(AssetCsvb *csvb) { csvbs.push_back(csvb); }
+void AssetManager::addCsvb(AssetCsvb *csvb) { unknown40.push_back(csvb); }
 
 void AssetManager::removeCsvb(AssetCsvb *csvb) {
-  AssetCsvb **it = mm::mtl::find(csvbs.begin(), csvbs.end(), csvb);
-  if (it != csvbs.end()) {
-    csvbs.erase(it);
+  AssetCsvb **it = mm::mtl::find(unknown40.begin(), unknown40.end(), csvb);
+  if (it != unknown40.end()) {
+    unknown40.erase(it);
   }
 }
 
 AssetCsvb *AssetManager::searchCsvb(mtl::ALLOC_HANDLE handle, const char *name) {
-  if (csvbs.size() == 0) {
+  if (unknown40.size() == 0) {
     return nullptr;
   }
 
   mm::mtl::FixStr<256> fileName;
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   u32 hash = getHash(fileName.c_str());
-  for (u32 i = 0; i < assets.size(); i++) {
-    AssetCsvb *item = csvbs[i];
-    if (item != nullptr && item->handle == handle && item->hash == hash && strcmp(item->name.c_str(), fileName.c_str()) == 0) {
+  for (u32 i = 0; i < unknown18.size(); i++) {
+    AssetCsvb *item = unknown40[i];
+    if (item != nullptr && item->unknown0c == handle && item->unknown18 == hash && strcmp(item->unknown28.c_str(), fileName.c_str()) == 0) {
       return item;
     }
   }
@@ -152,16 +152,16 @@ AssetCsvb *AssetManager::searchCsvb(mtl::ALLOC_HANDLE handle, const char *name) 
 }
 
 AssetCsvb *AssetManager::searchCsvb(mm::mtl::IAllocator *allocator, const char *name) {
-  if (csvbs.size() == 0) {
+  if (unknown40.size() == 0) {
     return nullptr;
   }
 
   mm::mtl::FixStr<256> fileName;
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   u32 hash = getHash(fileName.c_str());
-  for (u32 i = 0; i < assets.size(); i++) {
-    AssetCsvb *item = csvbs[i];
-    if (item != nullptr && item->allocator == allocator && item->hash == hash && strcmp(item->name.c_str(), fileName.c_str()) == 0) {
+  for (u32 i = 0; i < unknown18.size(); i++) {
+    AssetCsvb *item = unknown40[i];
+    if (item != nullptr && item->unknown10 == allocator && item->unknown18 == hash && strcmp(item->unknown28.c_str(), fileName.c_str()) == 0) {
       return item;
     }
   }
@@ -170,24 +170,24 @@ AssetCsvb *AssetManager::searchCsvb(mm::mtl::IAllocator *allocator, const char *
 }
 
 AssetCsvb *AssetManager::searchCsvb(const char *name, AssetCsvb *previous) {
-  if (assets.size() == 0) {
+  if (unknown18.size() == 0) {
     return nullptr;
   }
 
   mm::mtl::FixStr<256> fileName;
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
   u32 hash = getHash(fileName.c_str());
-  AssetCsvb **it = csvbs.begin();
+  AssetCsvb **it = unknown40.begin();
   if (previous != nullptr) {
-    it = mm::mtl::find(csvbs.begin(), csvbs.end(), previous);
-    if (it != csvbs.end()) {
+    it = mm::mtl::find(unknown40.begin(), unknown40.end(), previous);
+    if (it != unknown40.end()) {
       ++it;
     }
   }
 
-  for (; it != csvbs.end(); ++it) {
+  for (; it != unknown40.end(); ++it) {
     AssetCsvb *item = *it;
-    if (item != nullptr && item->hash == hash && strcmp(item->name.c_str(), fileName.c_str()) == 0) {
+    if (item != nullptr && item->unknown18 == hash && strcmp(item->unknown28.c_str(), fileName.c_str()) == 0) {
       return item;
     }
   }
@@ -195,20 +195,20 @@ AssetCsvb *AssetManager::searchCsvb(const char *name, AssetCsvb *previous) {
   return nullptr;
 }
 
-void AssetManager::addLoader(AssetLoader *loader) { loaders.push_back(loader); }
+void AssetManager::addLoader(AssetLoader *loader) { unknown68.push_back(loader); }
 
 void AssetManager::removeLoader(AssetLoader *loader) {
-  AssetLoader **it = mm::mtl::find(loaders.begin(), loaders.end(), loader);
-  if (it != loaders.end()) {
-    loaders.erase(it);
+  AssetLoader **it = mm::mtl::find(unknown68.begin(), unknown68.end(), loader);
+  if (it != unknown68.end()) {
+    unknown68.erase(it);
   }
 }
 
 AssetLoader *AssetManager::searchLoader(mtl::ALLOC_HANDLE handle, const char *path) {
   u32 hash = getHash(path);
-  for (u32 i = 0; i < loaders.size(); i++) {
-    AssetLoader *item = loaders[i];
-    if (item != nullptr && item->handle == handle && item->hash == hash && strcmp(item->name.c_str(), path) == 0) {
+  for (u32 i = 0; i < unknown68.size(); i++) {
+    AssetLoader *item = unknown68[i];
+    if (item != nullptr && item->unknown100 == handle && item->unknown110 == hash && strcmp(item->name.c_str(), path) == 0) {
       return item;
     }
   }
@@ -218,9 +218,9 @@ AssetLoader *AssetManager::searchLoader(mtl::ALLOC_HANDLE handle, const char *pa
 
 AssetLoader *AssetManager::searchLoader(mm::mtl::IAllocator *allocator, const char *path) {
   u32 hash = getHash(path);
-  for (u32 i = 0; i < loaders.size(); i++) {
-    AssetLoader *item = loaders[i];
-    if (item != nullptr && item->allocator == allocator && item->hash == hash && strcmp(item->name.c_str(), path) == 0) {
+  for (u32 i = 0; i < unknown68.size(); i++) {
+    AssetLoader *item = unknown68[i];
+    if (item != nullptr && item->unknown108 == allocator && item->unknown110 == hash && strcmp(item->name.c_str(), path) == 0) {
       return item;
     }
   }

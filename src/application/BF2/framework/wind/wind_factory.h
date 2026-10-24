@@ -7,8 +7,8 @@
 namespace wnd {
 
 struct ResWind {
-  mm::Vec3 min;
-  mm::Vec3 max;
+  mm::Vec3 unknown00; // Inferred role: min; original member name unknown.
+  mm::Vec3 unknown10; // Inferred role: max; original member name unknown.
   u8 _20[0x30 - 0x20];
 };
 
@@ -26,7 +26,7 @@ public:
   DynamicWindResource();
   ~DynamicWindResource();
 
-  wnd::ResWind resWind;
+  wnd::ResWind unknown10; // Inferred role: res wind; original member name unknown.
 };
 
 static_assert(sizeof(DynamicWindResource) == 0x40, "");

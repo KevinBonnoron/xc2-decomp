@@ -24,11 +24,11 @@ public:
   void tail();
   void openDebugWindow();
 
-  void *naviMeshData;
-  navi::NvmshManager *manager;
+  void *unknown18;               // Inferred role: navi mesh data; original member name unknown.
+  navi::NvmshManager *unknown20; // Inferred role: manager; original member name unknown.
 };
 
-static_assert(offsetof(NaviManager, naviMeshData) == 0x18, "");
-static_assert(offsetof(NaviManager, manager) == 0x20, "");
+static_assert(offsetof(NaviManager, unknown18) == 0x18, "");
+static_assert(offsetof(NaviManager, unknown20) == 0x20, "");
 
 } // namespace fw

@@ -133,7 +133,7 @@ bool Misc::GetNodePosition(gf::GfObj *obj, const char *node, mm::Vec3 &position)
 
   fw::Transform transform;
   acc.getBoneTransform(transform, bone);
-  position = transform.position;
+  position = transform.unknown00;
   return true;
 }
 

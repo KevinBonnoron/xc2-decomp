@@ -19,7 +19,7 @@ const char *CharaFacialUtil::getFacialBdat(gf::GfObj *obj) {
   gf::GfObjAcc acc(obj->unknownf8);
   int id = acc.getBdatId();
   int asset;
-  switch (transferGroup(id, obj->type)) {
+  switch (transferGroup(id, obj->unknown28)) {
   case gf::OBJECT_TYPE_DRIVER:
     asset = static_cast<u16>(Bdat::getValCheck(Bdat::getFP("CHR_Dr"), "EventAsset", id, 2));
     break;
@@ -73,7 +73,7 @@ void CharaFacialUtil::getLensLimit(mm::Vec2 &translateMin, mm::Vec2 &translateMa
   int id = acc.getBdatId();
   unsigned char *bdat;
   int asset;
-  switch (transferGroup(id, obj->type)) {
+  switch (transferGroup(id, obj->unknown28)) {
   case gf::OBJECT_TYPE_DRIVER:
     asset = static_cast<u16>(Bdat::getValCheck(Bdat::getFP("CHR_Dr"), "EventAsset", id, 2));
     break;
@@ -154,7 +154,7 @@ bool CharaFacialUtil::checkBdatID(gf::GF_OBJ_HANDLE *handle, int id) {
   }
 
   gf::GfObjAcc acc(handle);
-  u32 type = obj->type;
+  u32 type = obj->unknown28;
   return transferGroup(acc.getBdatId(), type) == gf::OBJECT_TYPE_DRIVER && acc.getBdatId() == id;
 }
 

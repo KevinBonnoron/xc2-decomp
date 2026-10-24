@@ -107,14 +107,14 @@ void GfGameSalvage::createCameraDive(AnimationType animation, const mm::Vec3 &po
   fw::CameraManager *manager = fw::CameraManager::get();
   unknown88 = GimmickCamera::create(CAMERA_NAMES[animation], position, rotation);
   static_cast<GimmickCamera *>(unknown88.get())->setAuto(false);
-  manager->layers[0].push(unknown88, 0.0f);
+  manager->unknown20[0].push(unknown88, 0.0f);
 }
 
 void GfGameSalvage::createCameraClimb(AnimationType animation, const mm::Vec3 &position, f32 rotation) {
   fw::CameraManager *manager = fw::CameraManager::get();
   unknown90 = GimmickCamera::create(CAMERA_NAMES[animation], position, rotation);
   static_cast<GimmickCamera *>(unknown90.get())->setAuto(false);
-  manager->layers[0].push(unknown90, 0.0f);
+  manager->unknown20[0].push(unknown90, 0.0f);
 }
 
 void GfGameSalvage::createCameraCut01(const mm::Vec3 &position, f32 rotation) {
@@ -124,60 +124,60 @@ void GfGameSalvage::createCameraCut01(const mm::Vec3 &position, f32 rotation) {
 
 void GfGameSalvage::destroyCameraDiveStart() {
   fw::CameraManager *manager = fw::CameraManager::get();
-  if (unknown80.get() != nullptr && unknown80.get()->isActive) {
-    manager->layers[0].pop(unknown80, 0.0f);
+  if (unknown80.get() != nullptr && unknown80.get()->unknowna0) {
+    manager->unknown20[0].pop(unknown80, 0.0f);
   }
   unknown80 = nullptr;
 }
 
 void GfGameSalvage::destroyCameraDive() {
   fw::CameraManager *manager = fw::CameraManager::get();
-  if (unknown88.get() != nullptr && unknown88.get()->isActive) {
-    manager->layers[0].pop(unknown88, 0.0f);
+  if (unknown88.get() != nullptr && unknown88.get()->unknowna0) {
+    manager->unknown20[0].pop(unknown88, 0.0f);
   }
   unknown88 = nullptr;
 }
 
 void GfGameSalvage::destroyCameraClimb() {
   fw::CameraManager *manager = fw::CameraManager::get();
-  if (unknown90.get() != nullptr && unknown90.get()->isActive) {
-    manager->layers[0].pop(unknown90, 0.0f);
+  if (unknown90.get() != nullptr && unknown90.get()->unknowna0) {
+    manager->unknown20[0].pop(unknown90, 0.0f);
   }
   unknown90 = nullptr;
 }
 
 void GfGameSalvage::destroyCameraCut01() {
   fw::CameraManager *manager = fw::CameraManager::get();
-  if (unknown98.get() != nullptr && unknown98.get()->isActive) {
-    manager->layers[0].pop(unknown98, 1.0f);
+  if (unknown98.get() != nullptr && unknown98.get()->unknowna0) {
+    manager->unknown20[0].pop(unknown98, 1.0f);
   }
   unknown98 = nullptr;
 }
 
 void GfGameSalvage::playCameraDiveStart() {
   GimmickCamera *camera = static_cast<GimmickCamera *>(unknown80.get());
-  if (camera != nullptr && camera->isActive) {
+  if (camera != nullptr && camera->unknowna0) {
     camera->play();
   }
 }
 
 void GfGameSalvage::playCameraDive() {
   GimmickCamera *camera = static_cast<GimmickCamera *>(unknown88.get());
-  if (camera != nullptr && camera->isActive) {
+  if (camera != nullptr && camera->unknowna0) {
     camera->play();
   }
 }
 
 void GfGameSalvage::playCameraClimb() {
   GimmickCamera *camera = static_cast<GimmickCamera *>(unknown90.get());
-  if (camera != nullptr && camera->isActive) {
+  if (camera != nullptr && camera->unknowna0) {
     camera->play();
   }
 }
 
 void GfGameSalvage::playCameraCut01() {
-  if (unknown98.get() != nullptr && !unknown98.get()->isActive) {
-    fw::CameraManager::get()->layers[0].push(unknown98, 0.0f);
+  if (unknown98.get() != nullptr && !unknown98.get()->unknowna0) {
+    fw::CameraManager::get()->unknown20[0].push(unknown98, 0.0f);
     if (unknown98.get() != nullptr) {
       static_cast<GimmickCamera *>(unknown98.get())->play();
     }
@@ -186,7 +186,7 @@ void GfGameSalvage::playCameraCut01() {
 
 bool GfGameSalvage::isCameraDiveStartEnd() {
   GimmickCamera *camera = static_cast<GimmickCamera *>(unknown80.get());
-  if (camera != nullptr && camera->isActive) {
+  if (camera != nullptr && camera->unknowna0) {
     return camera->isPlayEnd();
   }
   return true;
@@ -194,7 +194,7 @@ bool GfGameSalvage::isCameraDiveStartEnd() {
 
 bool GfGameSalvage::isCameraDiveEnd() {
   GimmickCamera *camera = static_cast<GimmickCamera *>(unknown88.get());
-  if (camera != nullptr && camera->isActive) {
+  if (camera != nullptr && camera->unknowna0) {
     return camera->isPlayEnd();
   }
   return true;
@@ -202,7 +202,7 @@ bool GfGameSalvage::isCameraDiveEnd() {
 
 bool GfGameSalvage::isCameraClimbEnd() {
   GimmickCamera *camera = static_cast<GimmickCamera *>(unknown90.get());
-  if (camera != nullptr && camera->isActive) {
+  if (camera != nullptr && camera->unknowna0) {
     return camera->isPlayEnd();
   }
   return true;
@@ -210,7 +210,7 @@ bool GfGameSalvage::isCameraClimbEnd() {
 
 bool GfGameSalvage::isCameraCut01End() {
   GimmickCamera *camera = static_cast<GimmickCamera *>(unknown98.get());
-  if (camera != nullptr && camera->isActive) {
+  if (camera != nullptr && camera->unknowna0) {
     return camera->isPlayEnd();
   }
   return true;
@@ -218,7 +218,7 @@ bool GfGameSalvage::isCameraCut01End() {
 
 bool GfGameSalvage::isCameraDive() {
   GimmickCamera *camera = static_cast<GimmickCamera *>(unknown88.get());
-  if (camera != nullptr && camera->isActive) {
+  if (camera != nullptr && camera->unknowna0) {
     return camera->isLoaded();
   }
   return true;

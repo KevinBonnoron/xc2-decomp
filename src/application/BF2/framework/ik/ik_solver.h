@@ -31,12 +31,12 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual void solve(const UpdateInfo &info) = 0;
 
-  mm::mtl::IntrusivePtr<ReferenceFrame> referenceFrame;
-  anm::Pose *pose;
+  mm::mtl::IntrusivePtr<ReferenceFrame> unknown10; // Inferred role: reference frame; original member name unknown.
+  anm::Pose *unknown18;                            // Inferred role: pose; original member name unknown.
 };
 
-static_assert(offsetof(IkSolver, referenceFrame) == 0x10, "");
-static_assert(offsetof(IkSolver, pose) == 0x18, "");
+static_assert(offsetof(IkSolver, unknown10) == 0x10, "");
+static_assert(offsetof(IkSolver, unknown18) == 0x18, "");
 
 class IkFadeSolver : public IkSolver {
 public:
@@ -54,19 +54,19 @@ public:
   void fadeIn(f32 time);
   void fadeOut(f32 time);
   const mm::mtl::RTTI *getRTTI() const override;
-  virtual bool isEnable() const { return weight > 0.0f; }
+  virtual bool isEnable() const { return unknown20 > 0.0f; }
   virtual void onEnable() {}
   virtual void onDisable() {}
   virtual void calcIK(const UpdateInfo &info) = 0;
 
-  f32 weight;
-  FadeState fadeState;
-  f32 fadeTime;
-  f32 fadeElapsed;
-  f32 fadeStartWeight;
+  f32 unknown20;       // Inferred role: weight; original member name unknown.
+  FadeState unknown24; // Inferred role: fade state; original member name unknown.
+  f32 unknown28;       // Inferred role: fade time; original member name unknown.
+  f32 unknown2c;       // Inferred role: fade elapsed; original member name unknown.
+  f32 unknown30;       // Inferred role: fade start weight; original member name unknown.
 };
 
-static_assert(offsetof(IkFadeSolver, weight) == 0x20, "");
-static_assert(offsetof(IkFadeSolver, fadeStartWeight) == 0x30, "");
+static_assert(offsetof(IkFadeSolver, unknown20) == 0x20, "");
+static_assert(offsetof(IkFadeSolver, unknown30) == 0x30, "");
 
 } // namespace fw

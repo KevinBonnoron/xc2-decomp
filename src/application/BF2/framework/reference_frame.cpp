@@ -5,25 +5,25 @@
 
 namespace fw {
 
-ReferenceFrame::ReferenceFrame() : flags(0), parent(nullptr) {
-  localTransform.position = mm::Vec3::zero;
-  localTransform.rotation = mm::Quat::identity;
-  worldTransform.position = mm::Vec3::zero;
-  worldTransform.rotation = mm::Quat::identity;
-  worldMatrix = mm::Mat44::identity;
-  flags |= FLAG_LOCAL_SYNCED | FLAG_WORLD_SYNCED | FLAG_MATRIX_SYNCED;
+ReferenceFrame::ReferenceFrame() : unknowna0(0), unknowna8(nullptr) {
+  unknown20.unknown00 = mm::Vec3::zero;
+  unknown20.unknown10 = mm::Quat::identity;
+  unknown40.unknown00 = mm::Vec3::zero;
+  unknown40.unknown10 = mm::Quat::identity;
+  unknown60 = mm::Mat44::identity;
+  unknowna0 |= FLAG_LOCAL_SYNCED | FLAG_WORLD_SYNCED | FLAG_MATRIX_SYNCED;
   _c8 = nullptr;
   _d0 = nullptr;
 }
 
 void ReferenceFrame::addChild(ReferenceFrame &child) {
-  children.push_back(&child);
-  child.parent = this;
+  unknownb0.push_back(&child);
+  child.unknowna8 = this;
 }
 
 void ReferenceFrame::removeChild(ReferenceFrame &child) {
-  children.erase(&child);
-  child.parent = nullptr;
+  unknownb0.erase(&child);
+  child.unknowna8 = nullptr;
 }
 
 static void toLocalTransform(const Transform &parentWorld, const Transform &world, Transform *local) {
@@ -33,44 +33,44 @@ static void toLocalTransform(const Transform &parentWorld, const Transform &worl
 }
 
 void ReferenceFrame::syncLocalTransform() {
-  if ((flags & FLAG_LOCAL_SYNCED) == 0) {
-    if (parent != nullptr) {
-      toLocalTransform(parent->getSyncedWorldTransform(), worldTransform, &localTransform);
+  if ((unknowna0 & FLAG_LOCAL_SYNCED) == 0) {
+    if (unknowna8 != nullptr) {
+      toLocalTransform(unknowna8->getSyncedWorldTransform(), unknown40, &unknown20);
     } else {
-      localTransform = worldTransform;
+      unknown20 = unknown40;
     }
 
-    flags |= FLAG_LOCAL_SYNCED;
+    unknowna0 |= FLAG_LOCAL_SYNCED;
   }
 }
 
 void ReferenceFrame::syncWorldTransform() {
-  if ((flags & FLAG_WORLD_SYNCED) == 0) {
-    if (parent != nullptr) {
-      Transform::mul(parent->getSyncedWorldTransform(), localTransform, &worldTransform);
+  if ((unknowna0 & FLAG_WORLD_SYNCED) == 0) {
+    if (unknowna8 != nullptr) {
+      Transform::mul(unknowna8->getSyncedWorldTransform(), unknown20, &unknown40);
     } else {
-      worldTransform = localTransform;
+      unknown40 = unknown20;
     }
 
-    flags = (flags & ~(FLAG_WORLD_SYNCED | FLAG_MATRIX_SYNCED)) | FLAG_WORLD_SYNCED;
+    unknowna0 = (unknowna0 & ~(FLAG_WORLD_SYNCED | FLAG_MATRIX_SYNCED)) | FLAG_WORLD_SYNCED;
   }
 }
 
 void Transform::mul(const Transform &transform, const Transform &other, Transform *result) {
-  result->position = transform.position + transform.rotation.rotate(other.position);
-  result->rotation = mm::Quat::mul(other.rotation, transform.rotation);
+  result->unknown00 = transform.unknown00 + transform.unknown10.rotate(other.unknown00);
+  result->unknown10 = mm::Quat::mul(other.unknown10, transform.unknown10);
 }
 
 void ReferenceFrame::unlinkParent(ReferenceFrame &frame) {
-  if (frame.parent != nullptr) {
-    frame.parent->removeChild(frame);
+  if (frame.unknowna8 != nullptr) {
+    frame.unknowna8->removeChild(frame);
   }
 }
 
 void TransformManager::update(u32 layerMask) {
   for (u32 layer = 0; layer < LAYER_MAX; layer++) {
     if ((1 << layer & layerMask) != 0) {
-      for (mm::mtl::IntrusiveList<TransformUpdater>::iterator it = groups[layer].begin(); it != groups[layer].end(); ++it) {
+      for (mm::mtl::IntrusiveList<TransformUpdater>::iterator it = unknown08[layer].begin(); it != unknown08[layer].end(); ++it) {
         (*it).resolveWorldTrasform();
       }
     }

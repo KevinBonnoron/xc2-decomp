@@ -39,7 +39,7 @@ void GfObjUtil::removeGfObj(GF_OBJ_HANDLE *handle) {
 
 u32 GfObjUtil::getObjType(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
-  return obj != nullptr ? obj->type : 0;
+  return obj != nullptr ? obj->unknown28 : 0;
 }
 
 GfObj *GfObjUtil::getObj(GF_OBJ_HANDLE *handle) {
@@ -53,7 +53,7 @@ GfObj *GfObjUtil::getObj(GF_OBJ_HANDLE *handle) {
 
 u32 GfObjUtil::getObjLayer(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
-  return obj != nullptr ? obj->layer : 4;
+  return obj != nullptr ? obj->unknown2c : 4;
 }
 
 f32 GfObjUtil::getSetupScale(GF_OBJ_HANDLE *handle) {
@@ -76,7 +76,7 @@ void GfObjUtil::applyExecUpdate(GfObj *obj) { obj->unknown118 = isUpdateComponen
 GF_OBJ_HANDLE *GfObjUtil::getParentHandle(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
-    fw::UpdatableObject *parent = obj->parent.get();
+    fw::UpdatableObject *parent = obj->unknownd0.get();
     if (parent != nullptr) {
       GfObj *parentObj = mm::mtl::dynamicCast<GfObj>(parent);
       if (parentObj != nullptr) {
@@ -89,7 +89,7 @@ GF_OBJ_HANDLE *GfObjUtil::getParentHandle(GF_OBJ_HANDLE *handle) {
 }
 
 GfObj *GfObjUtil::getParentObj(GfObj *obj) {
-  fw::UpdatableObject *parent = obj->parent.get();
+  fw::UpdatableObject *parent = obj->unknownd0.get();
   if (parent == nullptr) {
     return nullptr;
   }
@@ -123,9 +123,9 @@ u32 GfObjUtil::getLayerSection(u32 layer) {
 }
 
 void GfObjUtil::changeLayer(GfObj *obj, u32 layer) {
-  u32 oldLayer = obj->layer;
+  u32 oldLayer = obj->unknown2c;
   for (u32 i = 0; i < fw::UpdatableObject::COMPONENT_MAX; i++) {
-    fw::ComponentObject *component = obj->components[i];
+    fw::ComponentObject *component = obj->unknown38[i];
     if (component != nullptr) {
       GfComponent *gfComponent = mm::mtl::dynamicCast<GfComponent>(component);
       if (gfComponent != nullptr) {
@@ -134,7 +134,7 @@ void GfObjUtil::changeLayer(GfObj *obj, u32 layer) {
     }
   }
 
-  obj->layer = layer;
+  obj->unknown2c = layer;
 }
 
 void GfObjUtil::changeLayer(GF_OBJ_HANDLE *handle, u32 layer) {

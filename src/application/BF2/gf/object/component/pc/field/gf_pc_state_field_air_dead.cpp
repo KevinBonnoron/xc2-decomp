@@ -10,9 +10,9 @@ namespace gf {
 namespace pc {
 
 void StateFieldAirDead::enter(GfComBehaviorPc *behavior, ai::State *previous) {
-  GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
+  GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   unknown18 = __builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_down_00") == 0;
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   property->unknown80 = mm::Vec3::zero;
   property->unknown90 = 4.3f;
   property->unknown94 = 0.0f;

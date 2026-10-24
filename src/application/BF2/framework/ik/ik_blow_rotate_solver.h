@@ -31,12 +31,12 @@ public:
   void calcIK(const UpdateInfo &info) override;
   const mm::mtl::RTTI *getRTTI() const override;
 
-  mm::Quat rotation;
-  u16 boneIndex;
+  mm::Quat unknown40; // Inferred role: rotation; original member name unknown.
+  u16 unknown50;      // Inferred role: bone index; original member name unknown.
 };
 
-static_assert(offsetof(BlowRotateIkSolver, rotation) == 0x40, "");
-static_assert(offsetof(BlowRotateIkSolver, boneIndex) == 0x50, "");
+static_assert(offsetof(BlowRotateIkSolver, unknown40) == 0x40, "");
+static_assert(offsetof(BlowRotateIkSolver, unknown50) == 0x50, "");
 static_assert(sizeof(BlowRotateIkSolver) == 0x60, "");
 
 } // namespace fw

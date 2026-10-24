@@ -63,7 +63,7 @@ public:
     if (ctrl == nullptr) {
       return false;
     }
-    ctrl->update(info.deltaTime);
+    ctrl->update(info.unknown04);
     return ctrl->isBusy();
   }
 

@@ -15,9 +15,9 @@ AssetLoader *AssetLoader::Create(mtl::ALLOC_HANDLE handle, const char *path, int
   loader = new (AssetManager::getMemSYS()) AssetLoader();
   if (loader != nullptr) {
     loader->load(handle, path, option, static_cast<ml::FILE_PRIO>(priority));
-    loader->handle = handle;
+    loader->unknown100 = handle;
     loader->SetName(path);
-    loader->hash = AssetManager::getHash(path);
+    loader->unknown110 = AssetManager::getHash(path);
   }
 
   return loader;
@@ -33,15 +33,15 @@ AssetLoader *AssetLoader::Create(mm::mtl::IAllocator *allocator, const char *pat
   loader = new (AssetManager::getMemSYS()) AssetLoader();
   if (loader != nullptr) {
     loader->load(allocator, path, option, static_cast<ml::FILE_PRIO>(priority));
-    loader->allocator = allocator;
+    loader->unknown108 = allocator;
     loader->SetName(path);
-    loader->hash = AssetManager::getHash(path);
+    loader->unknown110 = AssetManager::getHash(path);
   }
 
   return loader;
 }
 
-AssetLoader::AssetLoader() : allocator(nullptr), hash(0) { AssetManager::get()->addLoader(this); }
+AssetLoader::AssetLoader() : unknown108(nullptr), unknown110(0) { AssetManager::get()->addLoader(this); }
 
 AssetLoader::~AssetLoader() { AssetManager::get()->removeLoader(this); }
 

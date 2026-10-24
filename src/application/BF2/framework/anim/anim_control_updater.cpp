@@ -7,61 +7,61 @@
 
 namespace fw {
 
-AnimControlUpdater::AnimControlUpdater() : control(nullptr) {}
+AnimControlUpdater::AnimControlUpdater() : unknown18(nullptr) {}
 
 AnimControlUpdater::~AnimControlUpdater() { unbind(); }
 
 void AnimControlUpdater::unbind() {
-  if (control != nullptr) {
-    control->release();
-    control = nullptr;
+  if (unknown18 != nullptr) {
+    unknown18->release();
+    unknown18 = nullptr;
   }
 }
 
 void AnimControlUpdater::bind(anm::Control *control) {
   unbind();
-  this->control = control;
+  this->unknown18 = control;
   control->addRef();
 }
 
-void AnimControlUpdater::update(const UpdateInfo &info) { control->update(info.deltaTime); }
+void AnimControlUpdater::update(const UpdateInfo &info) { unknown18->update(info.unknown04); }
 
-AnimBlenderUpdater::AnimBlenderUpdater() : blender(nullptr) {}
+AnimBlenderUpdater::AnimBlenderUpdater() : unknown18(nullptr) {}
 
 AnimBlenderUpdater::~AnimBlenderUpdater() { unbind(); }
 
 void AnimBlenderUpdater::unbind() {
-  if (blender != nullptr) {
-    blender->release();
-    blender = nullptr;
+  if (unknown18 != nullptr) {
+    unknown18->release();
+    unknown18 = nullptr;
   }
 }
 
 void AnimBlenderUpdater::bind(anm::Blender *blender) {
   unbind();
-  this->blender = blender;
+  this->unknown18 = blender;
   blender->addRef();
 }
 
-void AnimBlenderUpdater::update(const UpdateInfo &info) { blender->update(info.deltaTime); }
+void AnimBlenderUpdater::update(const UpdateInfo &info) { unknown18->update(info.unknown04); }
 
-AnimAsmUpdater::AnimAsmUpdater() : asmControl(nullptr) {}
+AnimAsmUpdater::AnimAsmUpdater() : unknown18(nullptr) {}
 
 AnimAsmUpdater::~AnimAsmUpdater() { unbind(); }
 
 void AnimAsmUpdater::unbind() {
-  if (asmControl != nullptr) {
-    asmControl->release();
-    asmControl = nullptr;
+  if (unknown18 != nullptr) {
+    unknown18->release();
+    unknown18 = nullptr;
   }
 }
 
 void AnimAsmUpdater::bind(anm::ASMControl *asmControl) {
   unbind();
-  this->asmControl = asmControl;
+  this->unknown18 = asmControl;
   asmControl->addRef();
 }
 
-void AnimAsmUpdater::update(const UpdateInfo &info) { asmControl->updateFrame(info.deltaTime); }
+void AnimAsmUpdater::update(const UpdateInfo &info) { unknown18->updateFrame(info.unknown04); }
 
 } // namespace fw

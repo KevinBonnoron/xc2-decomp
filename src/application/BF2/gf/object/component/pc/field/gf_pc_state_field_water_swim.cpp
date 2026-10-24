@@ -8,7 +8,7 @@
 namespace gf {
 namespace pc {
 
-void StateFieldWaterSwim::enter(GfComBehaviorPc *behavior, ai::State *previous) { MoveUtilField::enterMoveSwim(*behavior->owner->getComponent<GfComPropertyPc>()); }
+void StateFieldWaterSwim::enter(GfComBehaviorPc *behavior, ai::State *previous) { MoveUtilField::enterMoveSwim(*behavior->unknown08->getComponent<GfComPropertyPc>()); }
 
 void StateFieldWaterSwim::leave(GfComBehaviorPc *behavior, ai::State *next) {}
 

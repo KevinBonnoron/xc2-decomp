@@ -44,7 +44,7 @@ public:
   void removeComponentLocal(u32 index);
 
   template <typename T> T *getComponent() const {
-    ComponentObject *component = components[T::COMPONENT_INDEX];
+    ComponentObject *component = unknown38[T::COMPONENT_INDEX];
     if (component == nullptr) {
       return nullptr;
     }
@@ -52,23 +52,23 @@ public:
     return mm::mtl::dynamicCast<T>(component);
   }
 
-  HandlePtr<UpdatableObject> selfHandle;
-  u32 type;
-  u32 layer;
-  u16 flags;
+  HandlePtr<UpdatableObject> unknown18; // Inferred role: self handle; original member name unknown.
+  u32 unknown28;                        // Inferred role: type; original member name unknown.
+  u32 unknown2c;                        // Inferred role: layer; original member name unknown.
+  u16 unknown30;                        // Inferred role: flags; original member name unknown.
   u8 _32[0x38 - 0x32];
-  ComponentObject *components[COMPONENT_SLOT_MAX];
-  mm::mtl::IntrusiveList<UpdatableObject> children;
-  HandlePtr<UpdatableObject> parent;
+  ComponentObject *unknown38[COMPONENT_SLOT_MAX];    // Inferred role: components; original member name unknown.
+  mm::mtl::IntrusiveList<UpdatableObject> unknownb8; // Inferred role: children; original member name unknown.
+  HandlePtr<UpdatableObject> unknownd0;              // Inferred role: parent; original member name unknown.
 };
 
-static_assert(offsetof(UpdatableObject, selfHandle) == 0x18, "");
-static_assert(offsetof(UpdatableObject, type) == 0x28, "");
-static_assert(offsetof(UpdatableObject, layer) == 0x2c, "");
-static_assert(offsetof(UpdatableObject, flags) == 0x30, "");
-static_assert(offsetof(UpdatableObject, components) == 0x38, "");
-static_assert(offsetof(UpdatableObject, children) == 0xb8, "");
-static_assert(offsetof(UpdatableObject, parent) == 0xd0, "");
+static_assert(offsetof(UpdatableObject, unknown18) == 0x18, "");
+static_assert(offsetof(UpdatableObject, unknown28) == 0x28, "");
+static_assert(offsetof(UpdatableObject, unknown2c) == 0x2c, "");
+static_assert(offsetof(UpdatableObject, unknown30) == 0x30, "");
+static_assert(offsetof(UpdatableObject, unknown38) == 0x38, "");
+static_assert(offsetof(UpdatableObject, unknownb8) == 0xb8, "");
+static_assert(offsetof(UpdatableObject, unknownd0) == 0xd0, "");
 static_assert(sizeof(UpdatableObject) == 0xe0, "");
 
 } // namespace fw

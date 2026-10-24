@@ -27,7 +27,7 @@ bool CommandManager::setServerOption(const char *server, skt::SERVER_OPTION opti
   return isSet;
 }
 
-void DebugCommander::setServerOption(const char *server, skt::SERVER_OPTION option) { serverOption = option; }
+void DebugCommander::setServerOption(const char *server, skt::SERVER_OPTION option) { m_serverOption = option; }
 
 skt::SERVER_OPTION CommandManager::getServerOption(const char *server) {
   DebugCommander *commander = DebugCommander::get();
@@ -38,7 +38,7 @@ skt::SERVER_OPTION CommandManager::getServerOption(const char *server) {
   return static_cast<skt::SERVER_OPTION>(0);
 }
 
-skt::SERVER_OPTION DebugCommander::getServerOption(const char *server) const { return serverOption; }
+skt::SERVER_OPTION DebugCommander::getServerOption(const char *server) const { return m_serverOption; }
 
 } // namespace debug
 } // namespace fw

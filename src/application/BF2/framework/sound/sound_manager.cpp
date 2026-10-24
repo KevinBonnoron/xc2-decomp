@@ -11,33 +11,33 @@ namespace fw {
 enum SoundCategory : int;
 
 void SoundManager::attachPoolMemory(void *memory, u32 size) {
-  if (get() != nullptr && driver != nullptr && soundEnable) {
-    driver->attachPoolMemory(memory, size);
+  if (get() != nullptr && unknown18 != nullptr && unknown98) {
+    unknown18->attachPoolMemory(memory, size);
   }
 }
 
 void SoundManager::addCategory(SoundCategory category, f32 volume, const char *name) {
-  if (driver != nullptr) {
+  if (unknown18 != nullptr) {
     mm::mtl::FixStr<128> categoryName;
     categoryName.format("%s(%d)", name, category);
-    driver->addCategory(category, volume, categoryName.c_str());
+    unknown18->addCategory(category, volume, categoryName.c_str());
   }
 }
 
 void SoundManager::pauseAll(bool isPause, f32 time) {
-  if (get() == nullptr || driver == nullptr || !soundEnable) {
+  if (get() == nullptr || unknown18 == nullptr || !unknown98) {
     return;
   }
 
   if (isPause) {
-    if (pauseCount == 0) {
-      driver->pauseAll(true, time);
+    if (unknown94 == 0) {
+      unknown18->pauseAll(true, time);
     }
-    pauseCount++;
-  } else if (pauseCount > 0) {
-    pauseCount--;
-    if (pauseCount == 0) {
-      driver->pauseAll(false, time);
+    unknown94++;
+  } else if (unknown94 > 0) {
+    unknown94--;
+    if (unknown94 == 0) {
+      unknown18->pauseAll(false, time);
     }
   }
 }
@@ -47,22 +47,22 @@ void SoundManager::update(const UpdateInfo &info) {
     return;
   }
 
-  if (driver == nullptr) {
+  if (unknown18 == nullptr) {
     return;
   }
 
   f32 previousVolume = getMasterVolume();
-  masterFade.update(info.deltaTime);
-  muteFade.update(info.deltaTime);
+  m_masterVolumeOrg.update(info.unknown04);
+  unknown80.update(info.unknown04);
   f32 volume = getMasterVolume();
   if (__builtin_fabsf(volume - previousVolume) > 0.000001f) {
-    driver->setMasterVolume(volume);
+    unknown18->setMasterVolume(volume);
   }
 
-  driver->update(info);
+  unknown18->update(info);
 }
 
-f32 SoundManager::getMasterVolume() const { return masterFade.volume * muteFade.volume; }
+f32 SoundManager::getMasterVolume() const { return m_masterVolumeOrg.unknown00 * unknown80.unknown00; }
 
 void SoundManager::tail(const UpdateInfo &info) {
   if (isFinalized()) {
@@ -73,65 +73,65 @@ void SoundManager::tail(const UpdateInfo &info) {
 mm::mtl::IAllocator *SoundManager::getProcAllocator() { return FrameworkMemory::getAllocator(7); }
 
 u32 SoundManager::getUniqueID(SoundCategory category) {
-  m_uniqueID.current++;
-  if (m_uniqueID.current > m_uniqueID.max) {
-    m_uniqueID.current = m_uniqueID.min;
-  } else if (m_uniqueID.current < m_uniqueID.min) {
-    m_uniqueID.current = m_uniqueID.min;
+  m_uniqueID.unknown00++;
+  if (m_uniqueID.unknown00 > m_uniqueID.unknown08) {
+    m_uniqueID.unknown00 = m_uniqueID.unknown04;
+  } else if (m_uniqueID.unknown00 < m_uniqueID.unknown04) {
+    m_uniqueID.unknown00 = m_uniqueID.unknown04;
   }
 
-  return m_uniqueID.current | category << 24;
+  return m_uniqueID.unknown00 | category << 24;
 }
 
 void SoundManager::setListeningPoint(const mm::Mat44 &matrix) {
-  if (driver != nullptr) {
-    driver->setListeningPoint(matrix);
+  if (unknown18 != nullptr) {
+    unknown18->setListeningPoint(matrix);
   }
 }
 
 const mm::Mat44 &SoundManager::getListeningPoint() const {
-  if (driver != nullptr) {
-    return driver->getListeningPoint();
+  if (unknown18 != nullptr) {
+    return unknown18->getListeningPoint();
   }
 
   return mm::Mat44::identity;
 }
 
 void SoundManager::setOutputMode(SoundOutputType type) {
-  if (driver != nullptr) {
-    driver->setOutputMode(type);
+  if (unknown18 != nullptr) {
+    unknown18->setOutputMode(type);
   }
 }
 
 void SoundManager::removeCategory(SoundCategory category) {
-  if (driver != nullptr) {
-    driver->removeCategory(category);
+  if (unknown18 != nullptr) {
+    unknown18->removeCategory(category);
   }
 }
 
 void SoundManager::setCategoryVolume(SoundCategory category, f32 volume, f32 time) {
-  if (driver != nullptr) {
-    driver->setCategoryVolume(category, volume, time);
+  if (unknown18 != nullptr) {
+    unknown18->setCategoryVolume(category, volume, time);
   }
 }
 
 f32 SoundManager::getCategoryVolume(SoundCategory category) const {
-  if (driver != nullptr) {
-    return driver->getCategoryVolume(category);
+  if (unknown18 != nullptr) {
+    return unknown18->getCategoryVolume(category);
   }
 
   return 0.0f;
 }
 
 void SoundManager::setCategoryMute(SoundCategory category, bool isMute, f32 time) {
-  if (driver != nullptr) {
-    driver->setCategoryMute(category, isMute, time);
+  if (unknown18 != nullptr) {
+    unknown18->setCategoryMute(category, isMute, time);
   }
 }
 
 void SoundManager::setCategoryPitch(SoundCategory category, f32 pitch, f32 time) {
-  if (driver != nullptr) {
-    driver->setCategoryPitch(category, pitch, time);
+  if (unknown18 != nullptr) {
+    unknown18->setCategoryPitch(category, pitch, time);
   }
 }
 
@@ -140,11 +140,11 @@ bool SoundManager::isSoundEbable() const {
     return false;
   }
 
-  if (driver == nullptr) {
+  if (unknown18 == nullptr) {
     return false;
   }
 
-  return soundEnable;
+  return unknown98;
 }
 
 u32 SoundManager::playBgm(const char *name, f32 volume, bool ignorePause, int loopCount, SoundCategory category) {
@@ -152,7 +152,7 @@ u32 SoundManager::playBgm(const char *name, f32 volume, bool ignorePause, int lo
     return 0;
   }
 
-  u32 handle = driver->playBgm(name, volume, ignorePause, loopCount, category);
+  u32 handle = unknown18->playBgm(name, volume, ignorePause, loopCount, category);
   if (handle != 0 && !ignorePause && isPauseAll()) {
     pause(handle, true, 0.0f);
   }
@@ -165,12 +165,12 @@ bool SoundManager::isPauseAll() const {
     return false;
   }
 
-  return pauseCount != 0;
+  return unknown94 != 0;
 }
 
 bool SoundManager::startBgm(u32 handle) {
   if (isSoundEbable() && handle != 0) {
-    return driver->startBgm(handle);
+    return unknown18->startBgm(handle);
   }
 
   return false;
@@ -178,7 +178,7 @@ bool SoundManager::startBgm(u32 handle) {
 
 void SoundManager::stopBgm(u32 handle, f32 time) {
   if (isSoundEbable() && handle != 0) {
-    driver->stopBgm(handle, time);
+    unknown18->stopBgm(handle, time);
   }
 }
 
@@ -187,7 +187,7 @@ u32 SoundManager::playVoice(const char *name, f32 volume, bool ignorePause, Soun
     return 0;
   }
 
-  u32 handle = driver->playVoice(name, volume, ignorePause, category);
+  u32 handle = unknown18->playVoice(name, volume, ignorePause, category);
   if (handle != 0 && !ignorePause && isPauseAll()) {
     pause(handle, true, 0.0f);
   }
@@ -197,7 +197,7 @@ u32 SoundManager::playVoice(const char *name, f32 volume, bool ignorePause, Soun
 
 bool SoundManager::startVoice(u32 handle) {
   if (isSoundEbable() && handle != 0) {
-    return driver->startVoice(handle);
+    return unknown18->startVoice(handle);
   }
 
   return false;
@@ -205,7 +205,7 @@ bool SoundManager::startVoice(u32 handle) {
 
 void SoundManager::stopVoice(u32 handle, f32 time) {
   if (isSoundEbable() && handle != 0) {
-    driver->stopVoice(handle, time);
+    unknown18->stopVoice(handle, time);
   }
 }
 
@@ -213,7 +213,7 @@ SoundPack *SoundManager::getCommonPack() { return findPack("common", nullptr); }
 
 void SoundManager::stopSe(u32 handle, f32 time) {
   if (isSoundEbable() && handle != 0) {
-    driver->stopSe(handle, time);
+    unknown18->stopSe(handle, time);
   }
 }
 
@@ -222,14 +222,14 @@ u32 SoundManager::findSe(const char *name) const {
     return 0;
   }
 
-  return driver->findSe(name);
+  return unknown18->findSe(name);
 }
 
 u32 SoundManager::getSoundType(u32 handle) const { return handle >> 24; }
 
 bool SoundManager::isValid(u32 handle) const {
   if (isSoundEbable() && handle != 0) {
-    return driver->isValid(handle);
+    return unknown18->isValid(handle);
   }
 
   return false;
@@ -240,12 +240,12 @@ bool SoundManager::isPlaying(u32 handle) const {
     return false;
   }
 
-  return driver->isPreparing(handle) || driver->isReady(handle) || driver->isPlaying(handle) || driver->isPause(handle);
+  return unknown18->isPreparing(handle) || unknown18->isReady(handle) || unknown18->isPlaying(handle) || unknown18->isPause(handle);
 }
 
 bool SoundManager::isPause(u32 handle) const {
   if (isSoundEbable() && handle != 0) {
-    return driver->isPause(handle);
+    return unknown18->isPause(handle);
   }
 
   return false;
@@ -253,7 +253,7 @@ bool SoundManager::isPause(u32 handle) const {
 
 bool SoundManager::isPreparing(u32 handle) const {
   if (isSoundEbable() && handle != 0) {
-    return driver->isPreparing(handle);
+    return unknown18->isPreparing(handle);
   }
 
   return false;
@@ -261,7 +261,7 @@ bool SoundManager::isPreparing(u32 handle) const {
 
 bool SoundManager::isPrepared(u32 handle) const {
   if (isSoundEbable() && handle != 0) {
-    return driver->isReady(handle);
+    return unknown18->isReady(handle);
   }
 
   return false;
@@ -269,19 +269,19 @@ bool SoundManager::isPrepared(u32 handle) const {
 
 void SoundManager::setCategory(u32 handle, SoundCategory category) {
   if (isSoundEbable() && handle != 0) {
-    driver->setCategory(handle, category);
+    unknown18->setCategory(handle, category);
   }
 }
 
 void SoundManager::setVolume(u32 handle, f32 volume, f32 time) {
   if (isSoundEbable() && handle != 0) {
-    driver->setVolume(handle, volume, time);
+    unknown18->setVolume(handle, volume, time);
   }
 }
 
 f32 SoundManager::getVolume(u32 handle, SoundVolumeType type) {
   if (isSoundEbable() && handle != 0) {
-    return driver->getVolume(handle, type);
+    return unknown18->getVolume(handle, type);
   }
 
   return 0.0f;
@@ -289,25 +289,25 @@ f32 SoundManager::getVolume(u32 handle, SoundVolumeType type) {
 
 void SoundManager::setPitch(u32 handle, f32 pitch, f32 time) {
   if (isSoundEbable() && handle != 0) {
-    driver->setPitch(handle, pitch, time);
+    unknown18->setPitch(handle, pitch, time);
   }
 }
 
 void SoundManager::setPan(u32 handle, f32 pan, f32 time) {
   if (isSoundEbable() && handle != 0) {
-    driver->setPan(handle, pan, time);
+    unknown18->setPan(handle, pan, time);
   }
 }
 
 void SoundManager::setPos(u32 handle, const mm::Vec3 &position) {
   if (isSoundEbable() && handle != 0) {
-    driver->setPos(handle, position);
+    unknown18->setPos(handle, position);
   }
 }
 
 bool SoundManager::setPlayTime(u32 handle, f32 time) {
   if (isSoundEbable() && handle != 0) {
-    return driver->setPlayTime(handle, time);
+    return unknown18->setPlayTime(handle, time);
   }
 
   return false;
@@ -315,7 +315,7 @@ bool SoundManager::setPlayTime(u32 handle, f32 time) {
 
 bool SoundManager::getPlayTime(u32 handle, f32 &time) {
   if (isSoundEbable() && handle != 0) {
-    return driver->getPlayTime(handle, time);
+    return unknown18->getPlayTime(handle, time);
   }
 
   return false;
@@ -323,7 +323,7 @@ bool SoundManager::getPlayTime(u32 handle, f32 &time) {
 
 bool SoundManager::getTotalTime(u32 handle, f32 &time) {
   if (isSoundEbable() && handle != 0) {
-    return driver->getTotalTime(handle, time);
+    return unknown18->getTotalTime(handle, time);
   }
 
   return false;
@@ -331,7 +331,7 @@ bool SoundManager::getTotalTime(u32 handle, f32 &time) {
 
 bool SoundManager::isLoop(u32 handle) {
   if (isSoundEbable() && handle != 0) {
-    return driver->isLoop(handle);
+    return unknown18->isLoop(handle);
   }
 
   return false;
@@ -346,12 +346,12 @@ bool SoundManager::isLoop(u32 id, SoundPack *pack) {
     pack = getCommonPack();
   }
 
-  return driver->isLoop(id, pack);
+  return unknown18->isLoop(id, pack);
 }
 
 bool SoundManager::setRemainLoopCount(u32 handle, int count) {
   if (isSoundEbable() && handle != 0) {
-    return driver->setRemainLoopCount(handle, count);
+    return unknown18->setRemainLoopCount(handle, count);
   }
 
   return false;
@@ -359,7 +359,7 @@ bool SoundManager::setRemainLoopCount(u32 handle, int count) {
 
 bool SoundManager::getRemainLoopCount(u32 handle, int &count) {
   if (isSoundEbable() && handle != 0) {
-    return driver->getRemainLoopCount(handle, count);
+    return unknown18->getRemainLoopCount(handle, count);
   }
 
   return false;
@@ -367,45 +367,45 @@ bool SoundManager::getRemainLoopCount(u32 handle, int &count) {
 
 void SoundManager::pause(u32 handle, bool isPause, f32 time) {
   if (isSoundEbable()) {
-    driver->pause(handle, isPause, time);
+    unknown18->pause(handle, isPause, time);
   }
 }
 
 void SoundManager::pauseCategory(SoundCategory category, bool isPause, f32 time) {
   if (isSoundEbable()) {
-    driver->pauseCategory(category, isPause, time);
+    unknown18->pauseCategory(category, isPause, time);
   }
 }
 
 void SoundManager::stopAll() {
   if (isSoundEbable()) {
-    driver->stopAll();
+    unknown18->stopAll();
   }
 }
 
 void SoundManager::stopVoiceAll() {
   if (isSoundEbable()) {
-    driver->stopVoiceAll();
+    unknown18->stopVoiceAll();
   }
 }
 
 void SoundManager::stopBgmAll() {
   if (isSoundEbable()) {
-    driver->stopBgmAll();
+    unknown18->stopBgmAll();
   }
 }
 
 void SoundManager::stopSeAll() {
   if (isSoundEbable()) {
-    driver->stopSeAll();
+    unknown18->stopSeAll();
   }
 }
 
-void SoundManager::registPack(SoundPack *pack) { packs.push_back(pack); }
+void SoundManager::registPack(SoundPack *pack) { unknowna0.push_back(pack); }
 
 bool SoundManager::isCommonLoaded() const {
-  if (commonResource != nullptr) {
-    return commonResource->valid();
+  if (unknowne0 != nullptr) {
+    return unknowne0->valid();
   }
 
   return true;
@@ -415,7 +415,7 @@ SoundPack *SoundManager::getBattlePack() { return findPack("se_btl_system", null
 
 bool SoundManager::isBattleLoaded() const {
   for (u32 i = 0; i < BATTLE_RESOURCE_MAX; i++) {
-    if (battleResources[i] != nullptr && !battleResources[i]->valid()) {
+    if (unknowne8[i] != nullptr && !unknowne8[i]->valid()) {
       return false;
     }
   }
@@ -425,30 +425,30 @@ bool SoundManager::isBattleLoaded() const {
 
 void SoundManager::detachPoolMemory(void *memory, u32 size) {
   if (isSoundEbable()) {
-    driver->detachPoolMemory(memory, size);
+    unknown18->detachPoolMemory(memory, size);
   }
 }
 
 void SoundManager::setMasterVolume(f32 volume, f32 time) {
-  if (driver == nullptr) {
+  if (unknown18 == nullptr) {
     return;
   }
 
-  masterFade.start(volume, time);
-  driver->setMasterVolume(getMasterVolume());
+  m_masterVolumeOrg.start(volume, time);
+  unknown18->setMasterVolume(getMasterVolume());
 }
 
-f32 SoundManager::getMasterVolumeOrg() const { return masterFade.volume; }
+f32 SoundManager::getMasterVolumeOrg() const { return m_masterVolumeOrg.unknown00; }
 
 void SoundManager::setMasterMute(bool isMute, f32 time) {
   if (isMute) {
-    muteFade.start(0.0f, time);
+    unknown80.start(0.0f, time);
   } else {
-    muteFade.start(1.0f, time);
+    unknown80.start(1.0f, time);
   }
 
-  if (driver != nullptr) {
-    driver->setMasterVolume(getMasterVolume());
+  if (unknown18 != nullptr) {
+    unknown18->setMasterVolume(getMasterVolume());
   }
 }
 

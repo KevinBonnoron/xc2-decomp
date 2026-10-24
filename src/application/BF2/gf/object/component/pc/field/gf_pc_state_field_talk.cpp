@@ -13,7 +13,7 @@ namespace pc {
 
 void StateFieldTalk::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   if (!GfGameManager::isPlayerPause()) {
-    GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
+    GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     const char *stateName = comAsm->getStateName(ANIM_LAYER_BASE);
     bool isIdle = __builtin_strcmp(stateName, "S_idle") == 0;
     bool isTalkEnd = __builtin_strcmp(stateName, "S_talkA_02") == 0;

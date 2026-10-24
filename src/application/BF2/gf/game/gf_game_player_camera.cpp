@@ -44,14 +44,14 @@ void GfGamePlayerCamera::cleanup() {
     unknown30 = nullptr;
     fw::CameraManager *manager = fw::CameraManager::get();
     if (manager != nullptr) {
-      manager->target = unknown30;
+      manager->unknown360 = unknown30;
     }
   }
 
   if (unknown28.get() != nullptr) {
     fw::CameraManager *manager = fw::CameraManager::get();
     if (manager != nullptr) {
-      manager->layers[0].pop(unknown28, 0.0f);
+      manager->unknown20[0].pop(unknown28, 0.0f);
     }
 
     unknown28 = nullptr;
@@ -70,12 +70,12 @@ void GfGamePlayerCamera::resetCameraForSceneJump() {
   }
 
   if (playerCamera->unknown28.get() != nullptr) {
-    manager->layers[0].pop(playerCamera->unknown28, 0.0f);
+    manager->unknown20[0].pop(playerCamera->unknown28, 0.0f);
     playerCamera->unknown28 = nullptr;
   }
 
   playerCamera->unknown28 = PlayerCamera::create();
-  manager->layers[0].push(playerCamera->unknown28, 0.0f);
+  manager->unknown20[0].push(playerCamera->unknown28, 0.0f);
 }
 
 void GfGamePlayerCamera::resetCamera() {
@@ -200,7 +200,7 @@ void GfGamePlayerCamera::gevPartyMemberOK(bool isOK) {
     unknown30 = PlayerCameraTarget::create();
     fw::CameraManager *manager = fw::CameraManager::get();
     if (manager != nullptr) {
-      manager->target = unknown30;
+      manager->unknown360 = unknown30;
     }
   }
 
@@ -208,13 +208,13 @@ void GfGamePlayerCamera::gevPartyMemberOK(bool isOK) {
     unknown28 = PlayerCamera::create();
     fw::CameraManager *manager = fw::CameraManager::get();
     if (manager != nullptr) {
-      manager->layers[0].push(unknown28, 0.0f);
+      manager->unknown20[0].push(unknown28, 0.0f);
     }
   }
 }
 
 bool GfGamePlayerCamera::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
-  if (message.id == MSG_PC_RESET_CAMERA) {
+  if (message.unknown00 == MSG_PC_RESET_CAMERA) {
     procMsgPcResetCamera(sender, static_cast<MsgPcResetCamera &>(message));
     return true;
   }

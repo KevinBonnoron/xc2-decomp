@@ -21,15 +21,15 @@ public:
   void setAddOffsetPos(const mm::Vec3 &offset);
 
   u8 _10[0x30 - 0x10];
-  ml::ScnObjModel *model;
+  ml::ScnObjModel *m_interface;
   u8 _38[0x3c - 0x38];
-  bool active;
+  bool m_active;
   u8 _3d[0x50 - 0x3d];
-  mm::Vec3 addOffsetPos;
+  mm::Vec3 unknown50; // Inferred role: add offset pos; original member name unknown.
 };
 
-static_assert(offsetof(ModelObject, model) == 0x30, "");
-static_assert(offsetof(ModelObject, active) == 0x3c, "");
-static_assert(offsetof(ModelObject, addOffsetPos) == 0x50, "");
+static_assert(offsetof(ModelObject, m_interface) == 0x30, "");
+static_assert(offsetof(ModelObject, m_active) == 0x3c, "");
+static_assert(offsetof(ModelObject, unknown50) == 0x50, "");
 
 } // namespace fw

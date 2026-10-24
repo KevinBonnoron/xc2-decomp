@@ -14,18 +14,18 @@ public:
     const void *param;
   };
 
-  u32 count;
-  Entry *entries;
+  u32 unknown0c;    // Inferred role: count; original member name unknown.
+  Entry *unknown10; // Inferred role: entries; original member name unknown.
 };
 
-static_assert(offsetof(ParamList, count) == 0x0c, "");
-static_assert(offsetof(ParamList, entries) == 0x10, "");
+static_assert(offsetof(ParamList, unknown0c) == 0x0c, "");
+static_assert(offsetof(ParamList, unknown10) == 0x10, "");
 
 class ParamAdapter {
 public:
-  template <typename T> const T *get() const { return entry != nullptr ? static_cast<const T *>(entry->param) : nullptr; }
+  template <typename T> const T *get() const { return unknown00 != nullptr ? static_cast<const T *>(unknown00->param) : nullptr; }
 
-  const ParamList::Entry *entry;
+  const ParamList::Entry *unknown00; // Inferred role: entry; original member name unknown.
 };
 
 static_assert(sizeof(ParamAdapter) == 0x08, "");
@@ -33,16 +33,16 @@ static_assert(sizeof(ParamAdapter) == 0x08, "");
 class ParamManager : public mm::mtl::PtrSingleton<ParamManager> {
 public:
   u8 _08[0x430 - 0x08];
-  mm::mtl::IntrusivePtr<ParamList> pcParamList;
-  mm::mtl::IntrusivePtr<ParamList> formationParamList;
-  mm::mtl::IntrusivePtr<ParamList> lureParamList;
+  mm::mtl::IntrusivePtr<ParamList> unknown430; // Inferred role: pc param list; original member name unknown.
+  mm::mtl::IntrusivePtr<ParamList> unknown438; // Inferred role: formation param list; original member name unknown.
+  mm::mtl::IntrusivePtr<ParamList> unknown440; // Inferred role: lure param list; original member name unknown.
   u8 _448[0x468 - 0x448];
-  mm::mtl::IntrusivePtr<ParamList> uniqueMotionParamList;
+  mm::mtl::IntrusivePtr<ParamList> unknown468; // Inferred role: unique motion param list; original member name unknown.
 };
 
-static_assert(offsetof(ParamManager, pcParamList) == 0x430, "");
-static_assert(offsetof(ParamManager, formationParamList) == 0x438, "");
-static_assert(offsetof(ParamManager, lureParamList) == 0x440, "");
-static_assert(offsetof(ParamManager, uniqueMotionParamList) == 0x468, "");
+static_assert(offsetof(ParamManager, unknown430) == 0x430, "");
+static_assert(offsetof(ParamManager, unknown438) == 0x438, "");
+static_assert(offsetof(ParamManager, unknown440) == 0x440, "");
+static_assert(offsetof(ParamManager, unknown468) == 0x468, "");
 
 } // namespace fw

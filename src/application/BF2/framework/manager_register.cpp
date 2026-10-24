@@ -14,11 +14,11 @@ void ManagerRegister::regist(ManagerObject *manager) {
     return;
   }
 
-  if (mm::mtl::find(managers.begin(), managers.end(), manager) != managers.end()) {
+  if (mm::mtl::find(unknown08.begin(), unknown08.end(), manager) != unknown08.end()) {
     return;
   }
 
-  managers.push_back(manager);
+  unknown08.push_back(manager);
 }
 
 void ManagerRegister::remove(ManagerObject *manager) {
@@ -26,19 +26,19 @@ void ManagerRegister::remove(ManagerObject *manager) {
     return;
   }
 
-  ManagerObject **found = mm::mtl::find(managers.begin(), managers.end(), manager);
-  if (found != managers.end()) {
-    managers.erase(found);
+  ManagerObject **found = mm::mtl::find(unknown08.begin(), unknown08.end(), manager);
+  if (found != unknown08.end()) {
+    unknown08.erase(found);
   }
 }
 
 bool ManagerRegister::initialize() {
   bool isInitialized = true;
-  for (ManagerObject **it = managers.begin(); it != managers.end(); it++) {
+  for (ManagerObject **it = unknown08.begin(); it != unknown08.end(); it++) {
     ManagerObject *manager = *it;
     if (!manager->isInitialized()) {
       if (manager->initialize()) {
-        manager->flags |= ManagerObject::FLAG_INITIALIZED;
+        manager->unknown08 |= ManagerObject::FLAG_INITIALIZED;
       }
       isInitialized = false;
     }
@@ -48,7 +48,7 @@ bool ManagerRegister::initialize() {
 }
 
 void ManagerRegister::enterFinalizeApplet() {
-  for (ManagerObject **it = managers.begin(); it != managers.end(); it++) {
+  for (ManagerObject **it = unknown08.begin(); it != unknown08.end(); it++) {
     (*it)->enterFinalizeApplet();
   }
 }

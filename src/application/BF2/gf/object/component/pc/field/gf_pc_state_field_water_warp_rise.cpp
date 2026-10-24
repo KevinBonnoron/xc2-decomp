@@ -14,8 +14,8 @@ namespace pc {
 void StateFieldWaterWarpRise::enter(GfComBehaviorPc *behavior, ai::State *previous) { StateUtilField::setSpecialActStatus(*behavior, true); }
 
 void StateFieldWaterWarpRise::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
-  GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
+  GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   property->setLocomotion(comAsm->getLocomotion());
   if (comAsm->isEnd(ANIM_LAYER_BASE) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_WATERIDLE)) {
     reqState(STATE_ID_FIELD_WATER_IDLE);

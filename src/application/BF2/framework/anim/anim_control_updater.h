@@ -19,10 +19,10 @@ public:
   void bind(anm::Control *control);
   void update(const UpdateInfo &info) override;
 
-  anm::Control *control;
+  anm::Control *unknown18; // Inferred role: control; original member name unknown.
 };
 
-static_assert(offsetof(AnimControlUpdater, control) == 0x18, "");
+static_assert(offsetof(AnimControlUpdater, unknown18) == 0x18, "");
 
 class AnimBlenderUpdater : public AnimControlUpdaterInterface {
 public:
@@ -32,10 +32,10 @@ public:
   void bind(anm::Blender *blender);
   void update(const UpdateInfo &info) override;
 
-  anm::Blender *blender;
+  anm::Blender *unknown18; // Inferred role: blender; original member name unknown.
 };
 
-static_assert(offsetof(AnimBlenderUpdater, blender) == 0x18, "");
+static_assert(offsetof(AnimBlenderUpdater, unknown18) == 0x18, "");
 
 class AnimAsmUpdater : public AnimControlUpdaterInterface {
 public:
@@ -45,9 +45,9 @@ public:
   void bind(anm::ASMControl *asmControl);
   void update(const UpdateInfo &info) override;
 
-  anm::ASMControl *asmControl;
+  anm::ASMControl *unknown18; // Inferred role: asm control; original member name unknown.
 };
 
-static_assert(offsetof(AnimAsmUpdater, asmControl) == 0x18, "");
+static_assert(offsetof(AnimAsmUpdater, unknown18) == 0x18, "");
 
 } // namespace fw

@@ -9,17 +9,17 @@ namespace fw {
 class ColiObject;
 
 struct ColiCheckConfig {
-  u32 flags;
-  u32 attributeMask;
-  f32 length;
-  f32 margin;
-  u32 resultMode;
-  bool flag14;
-  bool flag15;
+  u32 unknown00;  // Inferred role: flags; original member name unknown.
+  u32 unknown04;  // Inferred role: attribute mask; original member name unknown.
+  f32 unknown08;  // Inferred role: length; original member name unknown.
+  f32 unknown0c;  // Inferred role: margin; original member name unknown.
+  u32 unknown10;  // Inferred role: result mode; original member name unknown.
+  bool unknown14; // Inferred role: flag14; original member name unknown.
+  bool unknown15; // Inferred role: flag15; original member name unknown.
 };
 
-static_assert(offsetof(ColiCheckConfig, resultMode) == 0x10, "");
-static_assert(offsetof(ColiCheckConfig, flag15) == 0x15, "");
+static_assert(offsetof(ColiCheckConfig, unknown10) == 0x10, "");
+static_assert(offsetof(ColiCheckConfig, unknown15) == 0x15, "");
 
 template <u32 N> class TColiCheckResult {
 public:

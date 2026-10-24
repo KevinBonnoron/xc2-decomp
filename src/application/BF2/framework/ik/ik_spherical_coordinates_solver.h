@@ -42,20 +42,20 @@ public:
   virtual bool isEnable() const;
 
   u8 _20[0x40 - 0x20];
-  f32 limitUp;
-  f32 limitDown;
-  f32 limitLeft;
-  f32 limitRight;
+  f32 unknown40; // Inferred role: limit up; original member name unknown.
+  f32 unknown44; // Inferred role: limit down; original member name unknown.
+  f32 unknown48; // Inferred role: limit left; original member name unknown.
+  f32 unknown4c; // Inferred role: limit right; original member name unknown.
   u8 _50[0x70 - 0x50];
-  u16 boneIndex;
-  bool enabled;
-  ParamAdapter limitParam;
+  u16 unknown70; // Inferred role: bone index; original member name unknown.
+  bool m_enable;
+  ParamAdapter unknown78; // Inferred role: limit param; original member name unknown.
 };
 
-static_assert(offsetof(SphericalCoordinatesIkSolver, limitUp) == 0x40, "");
-static_assert(offsetof(SphericalCoordinatesIkSolver, boneIndex) == 0x70, "");
-static_assert(offsetof(SphericalCoordinatesIkSolver, enabled) == 0x72, "");
-static_assert(offsetof(SphericalCoordinatesIkSolver, limitParam) == 0x78, "");
+static_assert(offsetof(SphericalCoordinatesIkSolver, unknown40) == 0x40, "");
+static_assert(offsetof(SphericalCoordinatesIkSolver, unknown70) == 0x70, "");
+static_assert(offsetof(SphericalCoordinatesIkSolver, m_enable) == 0x72, "");
+static_assert(offsetof(SphericalCoordinatesIkSolver, unknown78) == 0x78, "");
 static_assert(sizeof(SphericalCoordinatesIkSolver) == 0x80, "");
 
 } // namespace fw

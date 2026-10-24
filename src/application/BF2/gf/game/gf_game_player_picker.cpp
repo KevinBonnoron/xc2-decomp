@@ -39,8 +39,8 @@ void GfGamePlayerPicker::update(const fw::UpdateInfo &info) {
 
 void GfGamePlayerPicker::updateImpl(const fw::UpdateInfo &) {
   const fw::PadData *padData = fw::PadManager::getControlPadData(0);
-  u32 hold = padData->hold;
-  u32 trigger = padData->trigger;
+  u32 hold = padData->unknown00;
+  u32 trigger = padData->unknown04;
   bool isToggle = (trigger & PICK_TOGGLE_BUTTON) != 0;
   bool isLocked = (hold & PICK_MODIFIER_BUTTON) == 0 && !unknown24;
   if (isToggle && !isLocked && isEnableChange()) {

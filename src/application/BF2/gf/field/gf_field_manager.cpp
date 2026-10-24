@@ -272,16 +272,16 @@ void GfFieldManager::update(const fw::UpdateInfo &info) {
     GfFieldCollect::update(info);
     GfFieldTbox::update(info);
     if (GfFieldMapGimmick::get() != nullptr) {
-      GfFieldMapGimmick::get()->update(info.deltaTime);
+      GfFieldMapGimmick::get()->update(info.unknown04);
     }
     if (GfFieldGrave::get() != nullptr) {
-      GfFieldGrave::get()->update(info.deltaTime);
+      GfFieldGrave::get()->update(info.unknown04);
     }
     if (GfFieldJump::get() != nullptr) {
-      GfFieldJump::get()->update(info.deltaTime);
+      GfFieldJump::get()->update(info.unknown04);
     }
     if (GfFieldWarp::get() != nullptr) {
-      GfFieldWarp::get()->update(info.deltaTime);
+      GfFieldWarp::get()->update(info.unknown04);
     }
     GfFieldLod::update(info);
   }

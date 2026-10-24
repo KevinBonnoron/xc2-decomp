@@ -3,23 +3,23 @@
 namespace fw {
 
 void SensorManager::addUpdaterBeforeGame(u32 layer, SensorUpdater &updater) {
-  groups[layer].beforeGameUpdaters.push_back(&updater);
-  updater.isRegistered = true;
+  unknown18[layer].unknown00.push_back(&updater);
+  updater.unknown30 = true;
 }
 
 void SensorManager::removeUpdaterBeforeGame(u32 layer, SensorUpdater &updater) {
-  groups[layer].beforeGameUpdaters.erase(&updater);
-  updater.isRegistered = false;
+  unknown18[layer].unknown00.erase(&updater);
+  updater.unknown30 = false;
 }
 
 void SensorManager::addUpdaterAfterAnimation(u32 layer, SensorUpdater &updater) {
-  groups[layer].afterAnimationUpdaters.push_back(&updater);
-  updater.isRegistered = true;
+  unknown18[layer].unknown18.push_back(&updater);
+  updater.unknown30 = true;
 }
 
 void SensorManager::removeUpdaterAfterAnimation(u32 layer, SensorUpdater &updater) {
-  groups[layer].afterAnimationUpdaters.erase(&updater);
-  updater.isRegistered = false;
+  unknown18[layer].unknown18.erase(&updater);
+  updater.unknown30 = false;
 }
 
 } // namespace fw

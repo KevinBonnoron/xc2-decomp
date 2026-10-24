@@ -5,11 +5,11 @@
 namespace fw {
 
 PtrMapIterator PtrMapIterator::operator++() {
-  ptr_detail::PtrParam *end = params->end();
-  if (current != end) {
-    current++;
-    while (current != end && (current->ptr == nullptr || current->id == 0)) {
-      current++;
+  ptr_detail::PtrParam *end = unknown00->end();
+  if (unknown08 != end) {
+    unknown08++;
+    while (unknown08 != end && (unknown08->ptr == nullptr || unknown08->id == 0)) {
+      unknown08++;
     }
   }
 
@@ -19,15 +19,15 @@ PtrMapIterator PtrMapIterator::operator++() {
 PointerMap::~PointerMap() { destroy(); }
 
 void PointerMap::destroy() {
-  params.destroy();
-  capacity = 0;
-  count = 0;
+  unknown08.destroy();
+  unknown20 = 0;
+  unknown24 = 0;
 }
 
 PtrMapIterator PointerMap::begin() const {
-  PtrMapIterator iterator(&params, params.begin());
-  while (iterator.current != params.end()) {
-    if (iterator.current->ptr != nullptr && iterator.current->id != 0) {
+  PtrMapIterator iterator(&unknown08, unknown08.begin());
+  while (iterator.unknown08 != unknown08.end()) {
+    if (iterator.unknown08->ptr != nullptr && iterator.unknown08->id != 0) {
       break;
     }
 
@@ -37,31 +37,31 @@ PtrMapIterator PointerMap::begin() const {
   return iterator;
 }
 
-PtrMapIterator PointerMap::end() const { return PtrMapIterator(&params, params.end()); }
+PtrMapIterator PointerMap::end() const { return PtrMapIterator(&unknown08, unknown08.end()); }
 
 void PointerMap::setRange(u32 min, u32 max, u32 mask) {
-  rangeMin = min;
-  rangeMax = max;
-  idMask = mask;
+  unknown2c = min;
+  unknown30 = max;
+  unknown34 = mask;
 }
 
 void PointerMap::reserve(mm::mtl::IAllocator *allocator, size_t capacity) {
-  params.setAllocator(allocator);
-  params.reserve(capacity);
-  this->capacity = capacity;
+  unknown08.setAllocator(allocator);
+  unknown08.reserve(capacity);
+  this->unknown20 = capacity;
 }
 
 void PointerMap::clear() {
-  params.fill(ptr_detail::PtrParam());
-  count = 0;
+  unknown08.fill(ptr_detail::PtrParam());
+  unknown24 = 0;
 }
 
 u32 PointerMap::nextID(u32 id) {
   u32 next = id + 1;
-  if (next > rangeMax) {
-    next = rangeMin;
-  } else if (next < rangeMin) {
-    next = rangeMin;
+  if (next > unknown30) {
+    next = unknown2c;
+  } else if (next < unknown2c) {
+    next = unknown2c;
   }
 
   return next;
@@ -69,14 +69,14 @@ u32 PointerMap::nextID(u32 id) {
 
 u32 PointerMap::regist(const void *ptr) {
   u32 tries = 0;
-  while (++tries < capacity) {
-    currentId = nextID(currentId);
-    u32 index = currentId % capacity;
-    if (params[index].ptr == nullptr) {
-      params[index].ptr = ptr;
-      params[index].id = currentId;
-      count++;
-      return currentId;
+  while (++tries < unknown20) {
+    unknown28 = nextID(unknown28);
+    u32 index = unknown28 % unknown20;
+    if (unknown08[index].ptr == nullptr) {
+      unknown08[index].ptr = ptr;
+      unknown08[index].id = unknown28;
+      unknown24++;
+      return unknown28;
     }
   }
 
@@ -84,55 +84,55 @@ u32 PointerMap::regist(const void *ptr) {
 }
 
 void PointerMap::remove(u32 id) {
-  if (capacity == 0) {
+  if (unknown20 == 0) {
     return;
   }
 
-  u32 maskedId = id & idMask;
-  u32 index = maskedId % capacity;
-  if (params[index].ptr == nullptr) {
+  u32 maskedId = id & unknown34;
+  u32 index = maskedId % unknown20;
+  if (unknown08[index].ptr == nullptr) {
     mm::MMStdBase::mmPrint("[fw] not exist handle:%x", maskedId);
     return;
   }
 
-  params[index] = ptr_detail::PtrParam();
-  count--;
+  unknown08[index] = ptr_detail::PtrParam();
+  unknown24--;
 }
 
 const void *PointerMap::replace(u32 id, const void *ptr) {
-  if (capacity == 0) {
+  if (unknown20 == 0) {
     return nullptr;
   }
 
-  u32 index = (id & idMask) % capacity;
-  if (params[index].ptr == nullptr) {
+  u32 index = (id & unknown34) % unknown20;
+  if (unknown08[index].ptr == nullptr) {
     return nullptr;
   }
 
-  const void *previous = params[index].ptr;
-  params[index].ptr = ptr;
+  const void *previous = unknown08[index].ptr;
+  unknown08[index].ptr = ptr;
   return previous;
 }
 
 void *PointerMap::getPtr(u32 id) const {
-  if (id == 0 || capacity == 0) {
+  if (id == 0 || unknown20 == 0) {
     return nullptr;
   }
 
-  u32 maskedId = id & idMask;
-  u32 index = maskedId % capacity;
-  if (params[index].id != maskedId) {
+  u32 maskedId = id & unknown34;
+  u32 index = maskedId % unknown20;
+  if (unknown08[index].id != maskedId) {
     return nullptr;
   }
 
-  return const_cast<void *>(params[index].ptr);
+  return const_cast<void *>(unknown08[index].ptr);
 }
 
 u32 PointerMap::getHandle(const void *ptr) const {
   if (ptr != nullptr) {
-    for (u32 i = 0; i < params.size(); i++) {
-      if (params[i].ptr == ptr) {
-        return params[i].id;
+    for (u32 i = 0; i < unknown08.size(); i++) {
+      if (unknown08[i].ptr == ptr) {
+        return unknown08[i].id;
       }
     }
   }
@@ -141,13 +141,13 @@ u32 PointerMap::getHandle(const void *ptr) const {
 }
 
 bool PointerMap::isValid(u32 id) const {
-  if (id == 0 || capacity == 0) {
+  if (id == 0 || unknown20 == 0) {
     return false;
   }
 
-  u32 maskedId = id & idMask;
-  u32 index = maskedId % capacity;
-  return params[index].id == maskedId;
+  u32 maskedId = id & unknown34;
+  u32 index = maskedId % unknown20;
+  return unknown08[index].id == maskedId;
 }
 
 } // namespace fw

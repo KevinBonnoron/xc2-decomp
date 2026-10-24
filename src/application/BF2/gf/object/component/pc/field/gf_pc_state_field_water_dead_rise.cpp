@@ -17,9 +17,9 @@ void StateFieldWaterDeadRise::enter(GfComBehaviorPc *behavior, ai::State *previo
 void StateFieldWaterDeadRise::leave(GfComBehaviorPc *behavior, ai::State *next) {}
 
 void StateFieldWaterDeadRise::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   MoveUtilField::updateMoveWaterRise(info, *property);
-  f32 distance = info.deltaTime * property->unknown90;
+  f32 distance = info.unknown04 * property->unknown90;
   if (StateUtilField::getChildFrameHeight(*behavior) + distance >= 0.0f) {
     reqState(STATE_ID_FIELD_WATER_DEAD_IDLE);
   }

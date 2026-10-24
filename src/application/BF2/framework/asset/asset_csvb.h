@@ -30,16 +30,16 @@ public:
   AssetCsvb();
   ~AssetCsvb() override;
 
-  mtl::ALLOC_HANDLE handle;
-  mm::mtl::IAllocator *allocator;
-  u32 hash;
-  csvb::CCsvbData *data;
-  mm::mtl::FixStr<128> name;
+  mtl::ALLOC_HANDLE unknown0c;    // Inferred role: handle; original member name unknown.
+  mm::mtl::IAllocator *unknown10; // Inferred role: allocator; original member name unknown.
+  u32 unknown18;                  // Inferred role: hash; original member name unknown.
+  csvb::CCsvbData *unknown20;     // Inferred role: data; original member name unknown.
+  mm::mtl::FixStr<128> unknown28; // Inferred role: name; original member name unknown.
 };
 
-static_assert(offsetof(AssetCsvb, hash) == 0x18, "");
-static_assert(offsetof(AssetCsvb, data) == 0x20, "");
-static_assert(offsetof(AssetCsvb, name) == 0x28, "");
+static_assert(offsetof(AssetCsvb, unknown18) == 0x18, "");
+static_assert(offsetof(AssetCsvb, unknown20) == 0x20, "");
+static_assert(offsetof(AssetCsvb, unknown28) == 0x28, "");
 static_assert(sizeof(AssetCsvb) == 0xb0, "");
 
 } // namespace fw

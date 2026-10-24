@@ -8,9 +8,9 @@
 namespace fw {
 enum LOAD_PRIO : int;
 
-LocalizeResource::LocalizeResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority) : CommonResource(handle, priority, 0, 0), checkState(CHECK_STATE_NONE) {}
+LocalizeResource::LocalizeResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority) : CommonResource(handle, priority, 0, 0), unknown154(CHECK_STATE_NONE) {}
 
-LocalizeResource::LocalizeResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority) : CommonResource(allocator, priority, 0, 0), checkState(CHECK_STATE_NONE) {}
+LocalizeResource::LocalizeResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority) : CommonResource(allocator, priority, 0, 0), unknown154(CHECK_STATE_NONE) {}
 
 LocalizeResource::~LocalizeResource() { ; }
 
@@ -23,7 +23,7 @@ LocalizeResource *LocalizeResource::request(mtl::ALLOC_HANDLE handle, const char
 
   resource = new (ResourceManager::getMemSYS()) LocalizeResource(handle, static_cast<LOAD_PRIO>(priority));
   if (resource != nullptr) {
-    resource->localizedPath = path;
+    resource->unknownd0 = path;
     resource->setPath(path);
     resource->addRef();
     resource->update();
@@ -41,7 +41,7 @@ LocalizeResource *LocalizeResource::request(mm::mtl::IAllocator *allocator, cons
 
   resource = new (ResourceManager::getMemSYS()) LocalizeResource(allocator, static_cast<LOAD_PRIO>(priority));
   if (resource != nullptr) {
-    resource->localizedPath = path;
+    resource->unknownd0 = path;
     resource->setPath(path);
     resource->addRef();
     resource->update();
@@ -50,35 +50,35 @@ LocalizeResource *LocalizeResource::request(mm::mtl::IAllocator *allocator, cons
   return resource;
 }
 
-const char *LocalizeResource::getAssetName() const { return localizedPath.empty() ? nullptr : localizedPath.c_str(); }
+const char *LocalizeResource::getAssetName() const { return unknownd0.empty() ? nullptr : unknownd0.c_str(); }
 
 void LocalizeResource::update() {
-  if (checkState == CHECK_STATE_DONE) {
+  if (unknown154 == CHECK_STATE_DONE) {
     bool wasValid = valid();
     CommonResource::update();
-    if (!localizedPath.empty() && wasValid != valid()) {
-      path = localizedPath;
+    if (!unknownd0.empty() && wasValid != valid()) {
+      unknown2c = unknownd0;
     }
 
     return;
   }
 
   if (LangUtil::getLangType() == 0) {
-    checkState = CHECK_STATE_DONE;
+    unknown154 = CHECK_STATE_DONE;
     return;
   }
 
   mm::mtl::FixStr<128> filePath;
-  switch (checkState) {
+  switch (unknown154) {
   case CHECK_STATE_NONE:
     makeLocalizeFilePath(filePath, LangUtil::getLangFolder());
     ml::DevFileTh::checkValidFile(filePath.c_str(), this);
-    checkState = CHECK_STATE_LANG;
+    unknown154 = CHECK_STATE_LANG;
     break;
   case CHECK_STATE_RETRY:
     makeLocalizeFilePath(filePath, mm::mtl::FixStr<16>("us"));
     ml::DevFileTh::checkValidFile(filePath.c_str(), this);
-    checkState = CHECK_STATE_DEFAULT;
+    unknown154 = CHECK_STATE_DEFAULT;
     break;
   default:
     break;
@@ -92,7 +92,7 @@ bool LocalizeResource::OnFileEvent(ml::EventFileTh *event) {
 
   if (event->type == ml::EventFileTh::TYPE_VALID) {
     mm::mtl::FixStr<128> filePath;
-    switch (checkState) {
+    switch (unknown154) {
     case CHECK_STATE_LANG:
       makeLocalizeFilePath(filePath, LangUtil::getLangFolder());
       break;
@@ -103,13 +103,13 @@ bool LocalizeResource::OnFileEvent(ml::EventFileTh *event) {
       break;
     }
 
-    path = filePath;
-  } else if (checkState == CHECK_STATE_LANG && LangUtil::getLangType() != 1 && LangUtil::getLangType() != 6 && LangUtil::getLangType() != 11) {
-    checkState = CHECK_STATE_RETRY;
+    unknown2c = filePath;
+  } else if (unknown154 == CHECK_STATE_LANG && LangUtil::getLangType() != 1 && LangUtil::getLangType() != 6 && LangUtil::getLangType() != 11) {
+    unknown154 = CHECK_STATE_RETRY;
     return true;
   }
 
-  checkState = CHECK_STATE_DONE;
+  unknown154 = CHECK_STATE_DONE;
   return true;
 }
 

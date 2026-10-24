@@ -24,13 +24,13 @@ void TerrainDamagePlugin::onDeactivate() {}
 void TerrainDamagePlugin::onEnterDamage(GfComBehaviorPc &behavior) {
   unknown10 = true;
   MsgObjectStopAutoHeal message(true);
-  GfObj *obj = static_cast<GfObj *>(behavior.owner);
+  GfObj *obj = static_cast<GfObj *>(behavior.unknown08);
   obj->sendMessage(obj, message);
 }
 
 void TerrainDamagePlugin::onLeaveDamage(GfComBehaviorPc &behavior) {
   MsgObjectStopAutoHeal message(false);
-  GfObj *obj = static_cast<GfObj *>(behavior.owner);
+  GfObj *obj = static_cast<GfObj *>(behavior.unknown08);
   obj->sendMessage(obj, message);
   reset();
 }

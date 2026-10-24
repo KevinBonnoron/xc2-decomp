@@ -9,7 +9,7 @@ namespace gf {
 namespace pc {
 
 void StateFieldWallIdle::enter(GfComBehaviorPc *behavior, ai::State *previous) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   property->unknown80 = mm::Vec3::zero;
 }
 

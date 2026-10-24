@@ -2,12 +2,12 @@
 
 namespace fw {
 
-void DyanmicsManager::addColUpdater(u32 layer, DynamicsColObjUpdaterInterface &updater) { groups[layer].colUpdaters.push_back(&updater); }
+void DyanmicsManager::addColUpdater(u32 layer, DynamicsColObjUpdaterInterface &updater) { unknown18[layer].unknown18.push_back(&updater); }
 
-void DyanmicsManager::removeColUpdater(u32 layer, DynamicsColObjUpdaterInterface &updater) { groups[layer].colUpdaters.erase(&updater); }
+void DyanmicsManager::removeColUpdater(u32 layer, DynamicsColObjUpdaterInterface &updater) { unknown18[layer].unknown18.erase(&updater); }
 
-void DyanmicsManager::addUpdater(u32 layer, DynamicsUpdaterInterface &updater) { groups[layer].updaters.push_back(&updater); }
+void DyanmicsManager::addUpdater(u32 layer, DynamicsUpdaterInterface &updater) { unknown18[layer].unknown00.push_back(&updater); }
 
-void DyanmicsManager::removeUpdater(u32 layer, DynamicsUpdaterInterface &updater) { groups[layer].updaters.erase(&updater); }
+void DyanmicsManager::removeUpdater(u32 layer, DynamicsUpdaterInterface &updater) { unknown18[layer].unknown00.erase(&updater); }
 
 } // namespace fw

@@ -155,8 +155,8 @@ bool drawSphere(const mm::Mat44 &matrix, f32 radius, const mm::Col4 &color, u32 
 
 bool drawSphere(const PrimSphere &sphere, const mm::Col4 &color, u32 division) {
   mm::Mat44 matrix;
-  makeTranslation(matrix, sphere.center);
-  return drawSphere(matrix, sphere.radius, color, division);
+  makeTranslation(matrix, sphere.unknown00);
+  return drawSphere(matrix, sphere.unknown10, color, division);
 }
 
 bool drawSphereLine(const mm::Mat44 &matrix, f32 radius, const mm::Col4 &color, u32 division) {
@@ -169,8 +169,8 @@ bool drawSphereLine(const mm::Mat44 &matrix, f32 radius, const mm::Col4 &color, 
 
 bool drawSphereLine(const PrimSphere &sphere, const mm::Col4 &color, u32 division) {
   mm::Mat44 matrix;
-  makeTranslation(matrix, sphere.center);
-  return drawSphereLine(matrix, sphere.radius, color, division);
+  makeTranslation(matrix, sphere.unknown00);
+  return drawSphereLine(matrix, sphere.unknown10, color, division);
 }
 
 bool drawPlaneSphere(const mm::Mat44 &matrix, f32 radius, const mm::Col4 &color, u32 division) {
@@ -270,7 +270,7 @@ bool drawCapsule(const mm::Mat44 &matrix, f32 radius, f32 height, const mm::Col4
 bool drawCapsule(const PrimCapsule &capsule, const mm::Col4 &color, u32 division) {
   mm::Mat44 matrix;
   capsule.getMat(matrix);
-  return drawCapsule(matrix, capsule.getHeight(), capsule.radius, color, division);
+  return drawCapsule(matrix, capsule.getHeight(), capsule.unknown30, color, division);
 }
 
 bool drawCapsuleLine(const mm::Mat44 &matrix, f32 radius, f32 height, const mm::Col4 &color, u32 division) {
@@ -284,7 +284,7 @@ bool drawCapsuleLine(const mm::Mat44 &matrix, f32 radius, f32 height, const mm::
 bool drawCapsuleLine(const PrimCapsule &capsule, const mm::Col4 &color, u32 division) {
   mm::Mat44 matrix;
   capsule.getMat(matrix);
-  return drawCapsuleLine(matrix, capsule.getHeight(), capsule.radius, color, division);
+  return drawCapsuleLine(matrix, capsule.getHeight(), capsule.unknown30, color, division);
 }
 
 bool drawSquare(const mm::Mat44 &matrix, f32 width, f32 height, const mm::Col4 &color) {

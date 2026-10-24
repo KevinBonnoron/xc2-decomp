@@ -28,41 +28,41 @@ enum SoundVolumeType : int;
 struct SoundVolumeFade {
   void start(f32 target, f32 fadeTime) {
     if (fadeTime > 0.0f) {
-      startVolume = volume;
+      unknown08 = unknown00;
     } else {
       fadeTime = 0.0f;
-      volume = target;
-      startVolume = target;
+      unknown00 = target;
+      unknown08 = target;
     }
 
-    targetVolume = target;
-    duration = fadeTime;
-    time = 0.0f;
+    unknown04 = target;
+    unknown0c = fadeTime;
+    unknown10 = 0.0f;
   }
 
   void update(f32 deltaTime) {
-    time += deltaTime;
-    if (time >= duration) {
-      time = duration;
-      volume = targetVolume;
+    unknown10 += deltaTime;
+    if (unknown10 >= unknown0c) {
+      unknown10 = unknown0c;
+      unknown00 = unknown04;
     } else {
-      volume = startVolume + (targetVolume - startVolume) * (time / duration);
+      unknown00 = unknown08 + (unknown04 - unknown08) * (unknown10 / unknown0c);
     }
   }
 
-  f32 volume;
-  f32 targetVolume;
-  f32 startVolume;
-  f32 duration;
-  f32 time;
+  f32 unknown00; // Inferred role: volume; original member name unknown.
+  f32 unknown04; // Inferred role: target volume; original member name unknown.
+  f32 unknown08; // Inferred role: start volume; original member name unknown.
+  f32 unknown0c; // Inferred role: duration; original member name unknown.
+  f32 unknown10; // Inferred role: time; original member name unknown.
 };
 
 class SoundManager : public ManagerObject, public mm::mtl::PtrSingleton<SoundManager> {
 public:
   struct UniqueID {
-    u32 current;
-    u32 min;
-    u32 max;
+    u32 unknown00; // Inferred role: current; original member name unknown.
+    u32 unknown04; // Inferred role: min; original member name unknown.
+    u32 unknown08; // Inferred role: max; original member name unknown.
   };
 
   static const u32 BATTLE_RESOURCE_MAX = 3;
@@ -137,24 +137,24 @@ public:
   f32 getMasterVolumeOrg() const;
   void setMasterMute(bool isMute, f32 time);
 
-  ISoundDriver *driver;
+  ISoundDriver *unknown18; // Inferred role: driver; original member name unknown.
   u8 _20[0x6c - 0x20];
-  SoundVolumeFade masterFade;
-  SoundVolumeFade muteFade;
-  int pauseCount;
-  bool soundEnable;
+  SoundVolumeFade m_masterVolumeOrg;
+  SoundVolumeFade unknown80; // Inferred role: mute fade; original member name unknown.
+  int unknown94;             // Inferred role: pause count; original member name unknown.
+  bool unknown98;            // Inferred role: sound enable; original member name unknown.
   u8 _99[0xa0 - 0x99];
-  mm::mtl::List<SoundPack *> packs;
-  ResourceObject *commonResource;
-  ResourceObject *battleResources[BATTLE_RESOURCE_MAX];
+  mm::mtl::List<SoundPack *> unknowna0;           // Inferred role: packs; original member name unknown.
+  ResourceObject *unknowne0;                      // Inferred role: common resource; original member name unknown.
+  ResourceObject *unknowne8[BATTLE_RESOURCE_MAX]; // Inferred role: battle resources; original member name unknown.
 };
 
-static_assert(offsetof(SoundManager, driver) == 0x18, "");
-static_assert(offsetof(SoundManager, masterFade) == 0x6c, "");
-static_assert(offsetof(SoundManager, muteFade) == 0x80, "");
-static_assert(offsetof(SoundManager, pauseCount) == 0x94, "");
-static_assert(offsetof(SoundManager, soundEnable) == 0x98, "");
-static_assert(offsetof(SoundManager, packs) == 0xa0, "");
-static_assert(offsetof(SoundManager, commonResource) == 0xe0, "");
+static_assert(offsetof(SoundManager, unknown18) == 0x18, "");
+static_assert(offsetof(SoundManager, m_masterVolumeOrg) == 0x6c, "");
+static_assert(offsetof(SoundManager, unknown80) == 0x80, "");
+static_assert(offsetof(SoundManager, unknown94) == 0x94, "");
+static_assert(offsetof(SoundManager, unknown98) == 0x98, "");
+static_assert(offsetof(SoundManager, unknowna0) == 0xa0, "");
+static_assert(offsetof(SoundManager, unknowne0) == 0xe0, "");
 
 } // namespace fw

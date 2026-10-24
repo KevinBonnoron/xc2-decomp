@@ -168,7 +168,7 @@ void GfGameSpeed::update(const fw::UpdateInfo &info) {
 void GfGameSpeed::updateFrameSpeed(const fw::UpdateInfo &info) {
   bool isInterval = false;
   if (unknown10 > 0.0f) {
-    unknown10 -= info.deltaTime;
+    unknown10 -= info.unknown04;
     if (unknown10 <= 0.0f) {
       unknown0c = unknown14[GF_SPEED_LAYER_4].unknown00;
       unknown10 = 0.0f;
@@ -493,7 +493,7 @@ void GfGameEnv::gevGameState(GF_STATE, GF_STATE state) {
 void GfGameEnv::update(const fw::UpdateInfo &info) {
   GfGameEnv *gameEnv = get();
   if (!gameEnv->unknown08 && gameEnv->unknown14 > 0.0f) {
-    gameEnv->unknown14 -= info.deltaTime;
+    gameEnv->unknown14 -= info.unknown04;
     if (gameEnv->unknown14 < 0.0f) {
       gameEnv->unknown14 = 0.0f;
     }
@@ -510,7 +510,7 @@ void GfGameEnv::update(const fw::UpdateInfo &info) {
 }
 
 void GfGameEnv::updateIsInRoom(const fw::UpdateInfo &) {
-  mm::Vec3 position = fw::CameraManager::get()->layers[0].getCameraPosition();
+  mm::Vec3 position = fw::CameraManager::get()->unknown20[0].getCameraPosition();
   if (isMapjumpBlackout()) {
     return;
   }
@@ -531,7 +531,7 @@ void GfGameEnv::updateIsInRoom(const fw::UpdateInfo &) {
 
 void GfGameEnv::updateGlobalIBLReferencePos(const fw::UpdateInfo &) {
   if (fw::CameraManager::get() != nullptr) {
-    GfMapManager::setGlobalIBLReferencePos(fw::CameraManager::get()->layers[0].getCameraPosition());
+    GfMapManager::setGlobalIBLReferencePos(fw::CameraManager::get()->unknown20[0].getCameraPosition());
   }
 }
 

@@ -9,7 +9,7 @@ namespace pc {
 AccessPlugin::AccessPlugin() : unknown10(INVALID_HANDLE), unknown20(nullptr), unknown28(-1) {}
 
 bool AccessPlugin::setup(GfComBehaviorPc &behavior) {
-  unknown18 = fw::ParamManager::get()->pcParamList;
+  unknown18 = fw::ParamManager::get()->unknown430;
   this->unknown20 = &behavior;
   return true;
 }
@@ -32,7 +32,7 @@ void AccessPlugin::onDeactivate() {
 
 const AccessParam *AccessPlugin::getParam(u32 index) const {
   const fw::ParamList *list = unknown18.operator->();
-  const fw::ParamList::Entry *entry = index < list->count ? &list->entries[index] : nullptr;
+  const fw::ParamList::Entry *entry = index < list->unknown0c ? &list->unknown10[index] : nullptr;
   return entry != nullptr ? static_cast<const AccessParam *>(entry->param) : nullptr;
 }
 

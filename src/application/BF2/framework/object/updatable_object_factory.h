@@ -15,14 +15,14 @@ class UpdatableObjectManager;
 
 class UpdatableObjectFactory : public mm::mtl::PtrSingleton<UpdatableObjectFactory> {
 public:
-  UpdatableObjectFactory(mm::mtl::IAllocator *allocator, UpdatableObjectManager *manager) : allocator(allocator), manager(manager) {}
+  UpdatableObjectFactory(mm::mtl::IAllocator *allocator, UpdatableObjectManager *manager) : unknown08(allocator), unknown10(manager) {}
 
-  mm::mtl::IAllocator *allocator;
-  UpdatableObjectManager *manager;
+  mm::mtl::IAllocator *unknown08;    // Inferred role: allocator; original member name unknown.
+  UpdatableObjectManager *unknown10; // Inferred role: manager; original member name unknown.
 };
 
-static_assert(offsetof(UpdatableObjectFactory, allocator) == 0x08, "");
-static_assert(offsetof(UpdatableObjectFactory, manager) == 0x10, "");
+static_assert(offsetof(UpdatableObjectFactory, unknown08) == 0x08, "");
+static_assert(offsetof(UpdatableObjectFactory, unknown10) == 0x10, "");
 static_assert(sizeof(UpdatableObjectFactory) == 0x18, "");
 
 } // namespace fw

@@ -60,23 +60,23 @@ public:
   bool isEmpty() const;
   bool isActive() const;
 
-  void *vm;
-  u32 size;
-  mm::mtl::FixStr<256> path;
-  mm::mtl::FixStr<256> name;
-  int type;
-  ml::FileHandleTh *fileHandle;
-  State state;
-  u32 flags;
+  void *unknown08;                 // Inferred role: vm; original member name unknown.
+  u32 unknown10;                   // Inferred role: size; original member name unknown.
+  mm::mtl::FixStr<256> unknown14;  // Inferred role: path; original member name unknown.
+  mm::mtl::FixStr<256> unknown118; // Inferred role: name; original member name unknown.
+  int unknown21c;                  // Inferred role: type; original member name unknown.
+  ml::FileHandleTh *unknown220;    // Inferred role: file handle; original member name unknown.
+  State unknown228;                // Inferred role: state; original member name unknown.
+  u32 unknown22c;                  // Inferred role: flags; original member name unknown.
   u8 _230[0x238 - 0x230];
-  ScriptManager *manager;
+  ScriptManager *unknown238; // Inferred role: manager; original member name unknown.
 };
 
-static_assert(offsetof(ScriptInfo, path) == 0x14, "");
-static_assert(offsetof(ScriptInfo, name) == 0x118, "");
-static_assert(offsetof(ScriptInfo, type) == 0x21c, "");
-static_assert(offsetof(ScriptInfo, state) == 0x228, "");
-static_assert(offsetof(ScriptInfo, manager) == 0x238, "");
+static_assert(offsetof(ScriptInfo, unknown14) == 0x14, "");
+static_assert(offsetof(ScriptInfo, unknown118) == 0x118, "");
+static_assert(offsetof(ScriptInfo, unknown21c) == 0x21c, "");
+static_assert(offsetof(ScriptInfo, unknown228) == 0x228, "");
+static_assert(offsetof(ScriptInfo, unknown238) == 0x238, "");
 
 class ScriptManager : public ManagerObject, public mm::mtl::PtrSingleton<ScriptManager> {
 public:
@@ -92,9 +92,9 @@ public:
   u32 getTypeMax() const;
 
   u8 _18[0x20 - 0x18];
-  mm::mtl::Array<ScriptInfo> scripts;
+  mm::mtl::Array<ScriptInfo> unknown20; // Inferred role: scripts; original member name unknown.
 };
 
-static_assert(offsetof(ScriptManager, scripts) == 0x20, "");
+static_assert(offsetof(ScriptManager, unknown20) == 0x20, "");
 
 } // namespace fw

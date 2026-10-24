@@ -64,7 +64,7 @@ void UIUtil::termObjectMap() {
   s_ObjPtrMax = 0;
 }
 
-u32 UIUtil::getObjectMapRegistNum() { return s_ObjPtrMax - s_ObjPtrMap.capacity + s_ObjPtrMap.count; }
+u32 UIUtil::getObjectMapRegistNum() { return s_ObjPtrMax - s_ObjPtrMap.unknown20 + s_ObjPtrMap.unknown24; }
 
 u32 UIUtil::getObjectMapRegistMax() { return s_ObjPtrMax; }
 
@@ -202,9 +202,9 @@ void UIUtil::setupAllocator(mtl::ALLOC_HANDLE parent) {
   mtl::ALLOC_HANDLE program = mtl::MemManager::create(parent, 0x500000, "MenuProgram", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10);
   mtl::ALLOC_HANDLE resource = mtl::MemManager::create(parent, 0x4b00000, "MenuResource", false, mtl::ALLOCATOR_TYPE_RESOURCE, 0x1000);
   ml::DevGraph::setMemPoolMemHandle(resource);
-  s_ProgAllocator.name = "MenuProgram";
+  s_ProgAllocator.m_name = "MenuProgram";
   s_ProgAllocator.setMemHandle(program);
-  s_ResAllocator.name = "MenuResource";
+  s_ResAllocator.m_name = "MenuResource";
   s_ResAllocator.setMemHandle(resource);
 }
 

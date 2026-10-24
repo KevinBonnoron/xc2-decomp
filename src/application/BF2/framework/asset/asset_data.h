@@ -30,26 +30,26 @@ public:
   ~AssetData() override;
 
   void setName(const char *name) {
-    this->name = name;
-    hash = AssetManager::getHash(name);
+    this->unknown30 = name;
+    unknown18 = AssetManager::getHash(name);
   }
 
-  void copyName(const mm::mtl::FixStr<128> &name) { this->name = name; }
+  void copyName(const mm::mtl::FixStr<128> &name) { this->unknown30 = name; }
 
-  mtl::ALLOC_HANDLE handle;
-  mm::mtl::IAllocator *allocator;
-  u32 hash;
-  u32 size;
-  void *data;
-  u64 timeStamp;
-  mm::mtl::FixStr<128> name;
+  mtl::ALLOC_HANDLE unknown0c;    // Inferred role: handle; original member name unknown.
+  mm::mtl::IAllocator *unknown10; // Inferred role: allocator; original member name unknown.
+  u32 unknown18;                  // Inferred role: hash; original member name unknown.
+  u32 unknown1c;                  // Inferred role: size; original member name unknown.
+  void *unknown20;                // Inferred role: data; original member name unknown.
+  u64 unknown28;                  // Inferred role: time stamp; original member name unknown.
+  mm::mtl::FixStr<128> unknown30; // Inferred role: name; original member name unknown.
 };
 
-static_assert(offsetof(AssetData, allocator) == 0x10, "");
-static_assert(offsetof(AssetData, hash) == 0x18, "");
-static_assert(offsetof(AssetData, size) == 0x1c, "");
-static_assert(offsetof(AssetData, timeStamp) == 0x28, "");
-static_assert(offsetof(AssetData, name) == 0x30, "");
+static_assert(offsetof(AssetData, unknown10) == 0x10, "");
+static_assert(offsetof(AssetData, unknown18) == 0x18, "");
+static_assert(offsetof(AssetData, unknown1c) == 0x1c, "");
+static_assert(offsetof(AssetData, unknown28) == 0x28, "");
+static_assert(offsetof(AssetData, unknown30) == 0x30, "");
 static_assert(sizeof(AssetData) == 0xb8, "");
 
 } // namespace fw

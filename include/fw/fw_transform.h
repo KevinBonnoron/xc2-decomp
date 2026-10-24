@@ -20,7 +20,7 @@ struct Transform {
   // Inferred affine matrix conversion in AttachActorBase::render and the
   // AttachActorCS/Gf bone getters; original helper name unknown.
   __attribute__((always_inline)) void unknown001(mm::Mat44 &matrix) const {
-    mm::quatToMatrix(matrix, rotation);
+    mm::quatToMatrix(matrix, unknown10);
     matrix.rows[0][3] = 0.0f;
     matrix.rows[1][3] = 0.0f;
     matrix.rows[2][3] = 0.0f;
@@ -29,12 +29,12 @@ struct Transform {
     matrix.rows[3][2] = 0.0f;
     matrix.rows[3][3] = 1.0f;
     mm::Vec3 translation;
-    memcpy(&translation, &position, sizeof(f32) * 3);
+    memcpy(&translation, &unknown00, sizeof(f32) * 3);
     matrix.setTrans(translation);
   }
 
-  mm::Vec3 position;
-  mm::Quat rotation;
+  mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
+  mm::Quat unknown10; // Inferred role: rotation; original member name unknown.
 };
 
 static_assert(sizeof(Transform) == 0x20, "");

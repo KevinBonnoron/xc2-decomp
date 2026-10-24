@@ -96,7 +96,7 @@ void HateRingManager::UpdateProc(const fw::UpdateInfo &updateInfo) {
 
   RING_DATA *ring = unknown10;
   for (int i = 0; i < CHARACTER_COUNT; i++, ring++) {
-    UpdateArrow(i, *ring, updateInfo.deltaTime);
+    UpdateArrow(i, *ring, updateInfo.unknown04);
   }
 }
 

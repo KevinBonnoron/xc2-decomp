@@ -18,7 +18,7 @@ GfComCollider::GfComCollider() : unknown18(getAllocator(ALLOCATOR_DEFAULT)) { un
 GfComCollider::~GfComCollider() {}
 
 void GfComCollider::cleanup() {
-  if (unknown50.modelObject != nullptr && unknown50.coliObject != nullptr) {
+  if (unknown50.unknown18 != nullptr && unknown50.unknown20 != nullptr) {
     fw::AnimationManager *manager = fw::AnimationManager::get();
     if (manager != nullptr) {
       manager->removeAfterModifier(getLayer(), unknown50);
@@ -29,9 +29,9 @@ void GfComCollider::cleanup() {
   for (u32 i = 0; i < unknown18.size(); i++) {
     fw::ColiObject *coli = unknown18[i];
     if (coli != nullptr) {
-      coli->eventFlags.clear();
-      coli->listener = nullptr;
-      coli->coliUserData = nullptr;
+      coli->unknown48.clear();
+      coli->unknown50 = nullptr;
+      coli->unknown58 = nullptr;
     }
     if (unknown18[i] != nullptr) {
       unknown18[i]->release();
@@ -55,41 +55,41 @@ void GfComCollider::createColiPhantom(u32 index, const fw::ColiPhantomInfo &info
 }
 
 void GfComCollider::enter(const EnterInfo &info) {
-  fw::ColiUserData *userData = info.other->coliUserData;
+  fw::ColiUserData *userData = info.other->unknown58;
   if (userData == nullptr || !userData->getRTTI()->isKindOf(&UserData::m_rtti)) {
     return;
   }
 
   MsgObjectColiEnter message;
-  message.unknown08 = static_cast<GfObj *>(static_cast<UserData *>(userData)->unknown08->owner)->unknownf8;
+  message.unknown08 = static_cast<GfObj *>(static_cast<UserData *>(userData)->unknown08->unknown08)->unknownf8;
   message.unknown10 = &info;
-  GfObj *obj = static_cast<GfObj *>(owner);
+  GfObj *obj = static_cast<GfObj *>(unknown08);
   obj->sendMessage(obj, message);
 }
 
 void GfComCollider::leave(const LeaveInfo &info) {
-  fw::ColiUserData *userData = info.other->coliUserData;
+  fw::ColiUserData *userData = info.other->unknown58;
   if (userData == nullptr || !userData->getRTTI()->isKindOf(&UserData::m_rtti)) {
     return;
   }
 
   MsgObjectColiLeave message;
-  message.unknown08 = static_cast<GfObj *>(static_cast<UserData *>(userData)->unknown08->owner)->unknownf8;
+  message.unknown08 = static_cast<GfObj *>(static_cast<UserData *>(userData)->unknown08->unknown08)->unknownf8;
   message.unknown10 = &info;
-  GfObj *obj = static_cast<GfObj *>(owner);
+  GfObj *obj = static_cast<GfObj *>(unknown08);
   obj->sendMessage(obj, message);
 }
 
 void GfComCollider::contact(const EnterInfo &info) {
-  fw::ColiUserData *userData = info.other->coliUserData;
+  fw::ColiUserData *userData = info.other->unknown58;
   if (userData == nullptr || !userData->getRTTI()->isKindOf(&UserData::m_rtti)) {
     return;
   }
 
   MsgObjectColiContact message;
-  message.unknown08 = static_cast<GfObj *>(static_cast<UserData *>(userData)->unknown08->owner)->unknownf8;
+  message.unknown08 = static_cast<GfObj *>(static_cast<UserData *>(userData)->unknown08->unknown08)->unknownf8;
   message.unknown10 = &info;
-  GfObj *obj = static_cast<GfObj *>(owner);
+  GfObj *obj = static_cast<GfObj *>(unknown08);
   obj->sendMessage(obj, message);
 }
 

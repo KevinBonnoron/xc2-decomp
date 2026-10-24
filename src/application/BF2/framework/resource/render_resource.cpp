@@ -50,9 +50,9 @@ RenderResource *RenderResource::request(mm::mtl::IAllocator *allocator, const ch
   return resource;
 }
 
-RenderResource::RenderResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority) : CommonResource(handle, priority, 1, 0x1000) { isSafe = true; }
+RenderResource::RenderResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority) : CommonResource(handle, priority, 1, 0x1000) { unknownb4 = true; }
 
-RenderResource::RenderResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority) : CommonResource(allocator, priority, 1, 0x1000) { isSafe = true; }
+RenderResource::RenderResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority) : CommonResource(allocator, priority, 1, 0x1000) { unknownb4 = true; }
 
 RenderResource::~RenderResource() {}
 

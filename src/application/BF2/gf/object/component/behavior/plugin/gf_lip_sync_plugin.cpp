@@ -28,7 +28,7 @@ void LipSyncPlugin::onActivate() {
 }
 
 void LipSyncPlugin::onDeactivate() {
-  GfComAsm *comAsm = unknown10->owner->getComponent<GfComAsm>();
+  GfComAsm *comAsm = unknown10->unknown08->getComponent<GfComAsm>();
   if (unknown20 && comAsm != nullptr) {
     comAsm->easeOut(LIP_TALK_STATE, 0.0f, ANIM_LAYER_LIP);
     unknown20 = false;
@@ -36,7 +36,7 @@ void LipSyncPlugin::onDeactivate() {
 }
 
 void LipSyncPlugin::update(GfComBehavior &, const fw::UpdateInfo &) {
-  GfComAsm *comAsm = unknown10->owner->getComponent<GfComAsm>();
+  GfComAsm *comAsm = unknown10->unknown08->getComponent<GfComAsm>();
   if (comAsm == nullptr) {
     return;
   }
@@ -55,7 +55,7 @@ void LipSyncPlugin::update(GfComBehavior &, const fw::UpdateInfo &) {
 }
 
 bool LipSyncPlugin::judgeTalk() {
-  GF_OBJ_HANDLE *handle = static_cast<GfObj *>(unknown10->owner)->unknownf8;
+  GF_OBJ_HANDLE *handle = static_cast<GfObj *>(unknown10->unknown08)->unknownf8;
   bool isVoice = GfGameUtil::isPlayVoice(handle);
   bool isObjTalking = GfObjUtil::isTalking(handle);
   return unknown21 || isVoice || isObjTalking;
@@ -63,7 +63,7 @@ bool LipSyncPlugin::judgeTalk() {
 
 void LipSyncPlugin::setSpeed(f32 speed) {
   this->unknown18 = speed;
-  GfComAsm *comAsm = unknown10->owner->getComponent<GfComAsm>();
+  GfComAsm *comAsm = unknown10->unknown08->getComponent<GfComAsm>();
   if (comAsm != nullptr && comAsm->isActiveAdditiveState(LIP_TALK_STATE, ANIM_LAYER_LIP)) {
     comAsm->setSpeedAdditiveState(LIP_TALK_STATE, this->unknown18, ANIM_LAYER_LIP);
   }
@@ -71,7 +71,7 @@ void LipSyncPlugin::setSpeed(f32 speed) {
 
 void LipSyncPlugin::setWeight(f32 weight) {
   this->unknown1c = weight;
-  GfComAsm *comAsm = unknown10->owner->getComponent<GfComAsm>();
+  GfComAsm *comAsm = unknown10->unknown08->getComponent<GfComAsm>();
   if (comAsm != nullptr && comAsm->isActiveAdditiveState(LIP_TALK_STATE, ANIM_LAYER_LIP)) {
     comAsm->setWeightAdditiveState(LIP_TALK_STATE, this->unknown1c, ANIM_LAYER_LIP);
   }

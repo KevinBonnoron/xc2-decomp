@@ -15,7 +15,7 @@ void StateFieldAlive::enter(GfComBehaviorPc *behavior, ai::State *previous) {}
 void StateFieldAlive::leave(GfComBehaviorPc *behavior, ai::State *next) {}
 
 void StateFieldAlive::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
+  GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (comAsm->isEnd(ANIM_LAYER_BASE) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_IDLE)) {
     reqState(STATE_ID_FIELD_IDLE);
   }

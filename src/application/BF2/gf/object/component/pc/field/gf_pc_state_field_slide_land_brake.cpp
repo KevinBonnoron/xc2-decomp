@@ -9,7 +9,7 @@ namespace gf {
 namespace pc {
 
 void StateFieldSlideLandBrake::enter(GfComBehaviorPc *behavior, ai::State *previous) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   StateUtilField::setAsmSpeedSlideBrake(*property);
   property->unknown90 = 0.0f;
 }

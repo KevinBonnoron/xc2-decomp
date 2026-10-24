@@ -14,13 +14,13 @@ public:
   EffectData(void *data, u32 size, const char *name, bool isExternal);
   ~EffectData() override;
 
-  void *handle;
-  mm::mtl::FixStr<128> name;
-  bool isExternal;
+  void *m_handle;
+  mm::mtl::FixStr<128> m_name;
+  bool unknown9c; // Inferred role: external; original member name unknown.
 };
 
-static_assert(offsetof(EffectData, handle) == 0x10, "");
-static_assert(offsetof(EffectData, isExternal) == 0x9c, "");
+static_assert(offsetof(EffectData, m_handle) == 0x10, "");
+static_assert(offsetof(EffectData, unknown9c) == 0x9c, "");
 static_assert(sizeof(EffectData) == 0xa0, "");
 
 } // namespace fw

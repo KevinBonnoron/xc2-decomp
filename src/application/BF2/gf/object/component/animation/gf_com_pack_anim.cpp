@@ -31,10 +31,10 @@ void GfComPackAnim::Mot::stop(u32 layer) {
   unknown68 = 0.0f;
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr) {
-    if (unknown30.control != nullptr && unknown30.pose != nullptr) {
+    if (unknown30.unknown18 != nullptr && unknown30.unknown20 != nullptr) {
       manager->removePoseSampler(layer, unknown30);
     }
-    if (unknown10.control != nullptr) {
+    if (unknown10.unknown18 != nullptr) {
       manager->removeControlUpdater(layer, unknown10);
     }
   }
@@ -68,14 +68,14 @@ void GfComPackAnim::Mot::play(u32 layer, void *motion, bool isLocalSpace) {
   }
 
   unknown10.bind(unknown08);
-  unknown30.isLocalSpace = isLocalSpace;
+  unknown30.unknown32 = isLocalSpace;
   unknown30.bind(unknown08, pose, extraTruckBuffer);
   fw::AnimationManager *manager = fw::AnimationManager::get();
   if (manager != nullptr) {
-    if (unknown10.control != nullptr) {
+    if (unknown10.unknown18 != nullptr) {
       manager->addControlUpdater(layer, unknown10);
     }
-    if (unknown30.control != nullptr && unknown30.pose != nullptr) {
+    if (unknown30.unknown18 != nullptr && unknown30.unknown20 != nullptr) {
       manager->addPoseSampler(layer, unknown30);
     }
   }
@@ -105,11 +105,11 @@ void GfComPackAnim::Mot::changeLayer(u32 oldLayer, u32 newLayer) {
     return;
   }
 
-  if (unknown30.control != nullptr && unknown30.pose != nullptr) {
+  if (unknown30.unknown18 != nullptr && unknown30.unknown20 != nullptr) {
     manager->removePoseSampler(oldLayer, unknown30);
     manager->addPoseSampler(newLayer, unknown30);
   }
-  if (unknown10.control != nullptr) {
+  if (unknown10.unknown18 != nullptr) {
     manager->removeControlUpdater(oldLayer, unknown10);
     manager->addControlUpdater(newLayer, unknown10);
   }
@@ -149,7 +149,7 @@ void GfComPackAnim::play(const char *name) {
     __builtin_unreachable();
   }
 
-  GfComModel *model = owner->getComponent<GfComModel>();
+  GfComModel *model = unknown08->getComponent<GfComModel>();
   if (model != nullptr) {
     unknown10.setup(model, getLayer());
   }
@@ -171,7 +171,7 @@ void GfComPackAnim::play(void *motion) {
     return;
   }
 
-  GfComModel *model = owner->getComponent<GfComModel>();
+  GfComModel *model = unknown08->getComponent<GfComModel>();
   if (model != nullptr) {
     unknown10.setup(model, getLayer());
   }

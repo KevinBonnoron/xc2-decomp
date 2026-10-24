@@ -23,10 +23,10 @@ public:
   bool isCollide(const PrimSphere &sphere) const;
   PrimCapsule &add(const mm::Vec3 &offset);
 
-  f32 radius;
+  f32 unknown30; // Inferred role: radius; original member name unknown.
 };
 
-static_assert(offsetof(PrimCapsule, radius) == 0x30, "");
+static_assert(offsetof(PrimCapsule, unknown30) == 0x30, "");
 
 class PrimSphere {
 public:
@@ -36,10 +36,10 @@ public:
   bool isCollide(const PrimCapsule &capsule) const;
   PrimSphere &add(const mm::Vec3 &offset);
 
-  mm::Vec3 center;
-  f32 radius;
+  mm::Vec3 unknown00; // Inferred role: center; original member name unknown.
+  f32 unknown10;      // Inferred role: radius; original member name unknown.
 };
 
-static_assert(offsetof(PrimSphere, radius) == 0x10, "");
+static_assert(offsetof(PrimSphere, unknown10) == 0x10, "");
 
 } // namespace fw

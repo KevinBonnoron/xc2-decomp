@@ -6,48 +6,48 @@
 
 namespace fw {
 
-IkSolver::IkSolver() : pose(nullptr) {}
+IkSolver::IkSolver() : unknown18(nullptr) {}
 
 void IkSolver::unbind() {
-  referenceFrame = nullptr;
-  if (pose != nullptr) {
-    pose->release();
-    pose = nullptr;
+  unknown10 = nullptr;
+  if (unknown18 != nullptr) {
+    unknown18->release();
+    unknown18 = nullptr;
   }
 }
 
 IkSolver::~IkSolver() { unbind(); }
 
 void IkSolver::bind(mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose) {
-  referenceFrame = frame;
-  this->pose = &pose;
+  unknown10 = frame;
+  this->unknown18 = &pose;
   pose.addRef();
 }
 
-IkFadeSolver::IkFadeSolver() : weight(0.0f), fadeState(FADE_STATE_NONE), fadeTime(0.0f), fadeElapsed(0.0f), fadeStartWeight(0.0f) {}
+IkFadeSolver::IkFadeSolver() : unknown20(0.0f), unknown24(FADE_STATE_NONE), unknown28(0.0f), unknown2c(0.0f), unknown30(0.0f) {}
 
 void IkFadeSolver::solve(const UpdateInfo &info) {
-  switch (fadeState) {
+  switch (unknown24) {
   case FADE_STATE_IN: {
-    fadeElapsed += info.deltaTime;
-    f32 rate = fadeElapsed / fadeTime;
+    unknown2c += info.unknown04;
+    f32 rate = unknown2c / unknown28;
     if (rate >= 1.0f) {
-      weight = 1.0f;
-      fadeState = FADE_STATE_NONE;
+      unknown20 = 1.0f;
+      unknown24 = FADE_STATE_NONE;
     } else {
-      weight = calcBezier(rate, fadeStartWeight, 1.0f);
+      unknown20 = calcBezier(rate, unknown30, 1.0f);
     }
     break;
   }
   case FADE_STATE_OUT: {
-    fadeElapsed += info.deltaTime;
-    f32 rate = fadeElapsed / fadeTime;
+    unknown2c += info.unknown04;
+    f32 rate = unknown2c / unknown28;
     if (rate >= 1.0f) {
-      weight = 0.0f;
-      fadeState = FADE_STATE_NONE;
+      unknown20 = 0.0f;
+      unknown24 = FADE_STATE_NONE;
       onDisable();
     } else {
-      weight = calcBezier(rate, fadeStartWeight, 0.0f);
+      unknown20 = calcBezier(rate, unknown30, 0.0f);
     }
     break;
   }
@@ -67,19 +67,19 @@ f32 IkFadeSolver::calcBezier(f32 t, f32 start, f32 end) {
 }
 
 void IkFadeSolver::fadeIn(f32 time) {
-  f32 prevWeight = weight;
+  f32 prevWeight = unknown20;
   if (time > 0.0f) {
-    fadeTime = time;
-    fadeStartWeight = weight;
-    fadeState = FADE_STATE_IN;
+    unknown28 = time;
+    unknown30 = unknown20;
+    unknown24 = FADE_STATE_IN;
   } else {
-    weight = 1.0f;
-    fadeStartWeight = 0.0f;
-    fadeTime = 0.0f;
-    fadeState = FADE_STATE_NONE;
+    unknown20 = 1.0f;
+    unknown30 = 0.0f;
+    unknown28 = 0.0f;
+    unknown24 = FADE_STATE_NONE;
   }
 
-  fadeElapsed = 0.0f;
+  unknown2c = 0.0f;
   if (prevWeight == 0.0f) {
     onEnable();
   }
@@ -87,18 +87,18 @@ void IkFadeSolver::fadeIn(f32 time) {
 
 void IkFadeSolver::fadeOut(f32 time) {
   if (time > 0.0f) {
-    fadeStartWeight = weight;
-    fadeTime = time;
-    fadeState = FADE_STATE_OUT;
+    unknown30 = unknown20;
+    unknown28 = time;
+    unknown24 = FADE_STATE_OUT;
   } else {
-    fadeTime = 0.0f;
-    fadeStartWeight = 0.0f;
-    weight = 0.0f;
-    fadeState = FADE_STATE_NONE;
+    unknown28 = 0.0f;
+    unknown30 = 0.0f;
+    unknown20 = 0.0f;
+    unknown24 = FADE_STATE_NONE;
     onDisable();
   }
 
-  fadeElapsed = 0.0f;
+  unknown2c = 0.0f;
 }
 
 const mm::mtl::RTTI *IkSolver::getRTTI() const { return &m_rtti; }

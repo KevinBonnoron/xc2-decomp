@@ -12,21 +12,21 @@ enum ColiState : int;
 
 namespace fw {
 
-void ColiObject::setColiObject(idcoli::IDColiObj *object) { coliObject = object; }
+void ColiObject::setColiObject(idcoli::IDColiObj *object) { m_coliObject = object; }
 
 void ColiObject::setHitMaterialFlag(u32 flag) {
-  if (coliObject == nullptr) {
+  if (m_coliObject == nullptr) {
     return;
   }
 
-  switch (coliObject->m_type) {
+  switch (m_coliObject->m_type) {
   case idcoli::OBJ_TYPE_CHARACTER: {
-    idcoli::IDColiParmsCharacter params(coliObject);
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     params.setOffMaterialBit(~flag);
     break;
   }
   case idcoli::OBJ_TYPE_PHANTOM: {
-    idcoli::IDColiParmsPhantom params(coliObject);
+    idcoli::IDColiParmsPhantom params(m_coliObject);
     params.setOffMaterialBit(~flag);
     break;
   }
@@ -36,32 +36,32 @@ void ColiObject::setHitMaterialFlag(u32 flag) {
 }
 
 void ColiObject::setColiType(ColiType type) {
-  this->type = type;
+  this->unknown30 = type;
   if (type == COLI_TYPE_STATIC) {
-    flags |= FLAG_MATRIX_DIRTY;
+    unknown34 |= FLAG_MATRIX_DIRTY;
   }
 }
 
 void ColiObject::setPriority(int priority) {
-  if (coliObject != nullptr && coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
-    idcoli::IDColiParmsCharacter params(coliObject);
+  if (m_coliObject != nullptr && m_coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     params.setPriority(priority);
   }
 }
 
 void ColiObject::setMaterialFlag(u32 flag) {
-  if (coliObject == nullptr) {
+  if (m_coliObject == nullptr) {
     return;
   }
 
-  switch (coliObject->m_type) {
+  switch (m_coliObject->m_type) {
   case idcoli::OBJ_TYPE_CHARACTER: {
-    idcoli::IDColiParmsCharacter params(coliObject);
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     params.setMaterialBit(flag);
     break;
   }
   case idcoli::OBJ_TYPE_PHANTOM: {
-    idcoli::IDColiParmsPhantom params(coliObject);
+    idcoli::IDColiParmsPhantom params(m_coliObject);
     params.setMaterialBit(flag);
     break;
   }
@@ -71,39 +71,39 @@ void ColiObject::setMaterialFlag(u32 flag) {
 }
 
 void ColiObject::setState(ColiState state) {
-  if (coliObject != nullptr && coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
-    idcoli::IDColiParmsCharacter params(coliObject);
+  if (m_coliObject != nullptr && m_coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     params.setState(static_cast<idcoli::ColiState>(state));
   }
 }
 
 void ColiObject::clearState(ColiState state) {
-  if (coliObject != nullptr && coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
-    idcoli::IDColiParmsCharacter params(coliObject);
+  if (m_coliObject != nullptr && m_coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     params.clearState(static_cast<idcoli::ColiState>(state));
   }
 }
 
-void ColiObject::bindReferenceFrame(const mm::mtl::IntrusivePtr<ReferenceFrame> &frame) { referenceFrame = frame; }
+void ColiObject::bindReferenceFrame(const mm::mtl::IntrusivePtr<ReferenceFrame> &frame) { unknown28 = frame; }
 
 void ColiObject::resetSphere(f32 radius) {
-  if (shape == nullptr || shape->type != ColiShape::TYPE_SPHERE) {
+  if (unknowne8 == nullptr || unknowne8->unknown00 != ColiShape::TYPE_SPHERE) {
     return;
   }
 
-  shape->radius = radius;
-  if (coliObject == nullptr) {
+  unknowne8->unknown04 = radius;
+  if (m_coliObject == nullptr) {
     return;
   }
 
-  switch (coliObject->m_type) {
+  switch (m_coliObject->m_type) {
   case idcoli::OBJ_TYPE_CHARACTER: {
-    idcoli::IDColiParmsCharacter params(coliObject);
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     params.createSphere(radius);
     break;
   }
   case idcoli::OBJ_TYPE_PHANTOM: {
-    idcoli::IDColiParmsPhantom params(coliObject);
+    idcoli::IDColiParmsPhantom params(m_coliObject);
     params.createSphere(radius);
     break;
   }
@@ -113,25 +113,25 @@ void ColiObject::resetSphere(f32 radius) {
 }
 
 void ColiObject::resetCapsule(f32 radius, f32 height, bool flag) {
-  ColiShape *coliShape = shape;
-  if (coliShape == nullptr || coliShape->type != ColiShape::TYPE_CAPSULE) {
+  ColiShape *coliShape = unknowne8;
+  if (coliShape == nullptr || coliShape->unknown00 != ColiShape::TYPE_CAPSULE) {
     return;
   }
 
-  coliShape->radius = radius;
-  coliShape->height = height;
-  if (coliObject == nullptr) {
+  coliShape->unknown04 = radius;
+  coliShape->unknown08 = height;
+  if (m_coliObject == nullptr) {
     return;
   }
 
-  switch (coliObject->m_type) {
+  switch (m_coliObject->m_type) {
   case idcoli::OBJ_TYPE_CHARACTER: {
-    idcoli::IDColiParmsCharacter params(coliObject);
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     params.createCapsule(radius, height, flag);
     break;
   }
   case idcoli::OBJ_TYPE_PHANTOM: {
-    idcoli::IDColiParmsPhantom params(coliObject);
+    idcoli::IDColiParmsPhantom params(m_coliObject);
     params.createCapsule(radius, height);
     break;
   }
@@ -141,23 +141,23 @@ void ColiObject::resetCapsule(f32 radius, f32 height, bool flag) {
 }
 
 void ColiObject::resetBox(const mm::Vec3 &size, bool flag) {
-  if (shape == nullptr || shape->type != ColiShape::TYPE_BOX) {
+  if (unknowne8 == nullptr || unknowne8->unknown00 != ColiShape::TYPE_BOX) {
     return;
   }
 
-  shape->size = size;
-  if (coliObject == nullptr) {
+  unknowne8->unknown10 = size;
+  if (m_coliObject == nullptr) {
     return;
   }
 
-  switch (coliObject->m_type) {
+  switch (m_coliObject->m_type) {
   case idcoli::OBJ_TYPE_CHARACTER: {
-    idcoli::IDColiParmsCharacter params(coliObject);
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     params.createBox(size, flag);
     break;
   }
   case idcoli::OBJ_TYPE_PHANTOM: {
-    idcoli::IDColiParmsPhantom params(coliObject);
+    idcoli::IDColiParmsPhantom params(m_coliObject);
     params.createBox(size);
     break;
   }
@@ -167,25 +167,25 @@ void ColiObject::resetBox(const mm::Vec3 &size, bool flag) {
 }
 
 void ColiObject::resetCharacter(f32 radius, f32 height) {
-  ColiShape *coliShape = shape;
-  if (coliShape == nullptr || coliShape->type != ColiShape::TYPE_CHARACTER) {
+  ColiShape *coliShape = unknowne8;
+  if (coliShape == nullptr || coliShape->unknown00 != ColiShape::TYPE_CHARACTER) {
     return;
   }
 
-  coliShape->radius = radius;
-  coliShape->height = height;
-  if (coliObject == nullptr) {
+  coliShape->unknown04 = radius;
+  coliShape->unknown08 = height;
+  if (m_coliObject == nullptr) {
     return;
   }
 
-  switch (coliObject->m_type) {
+  switch (m_coliObject->m_type) {
   case idcoli::OBJ_TYPE_CHARACTER: {
-    idcoli::IDColiParmsCharacter params(coliObject);
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     params.createCharacter(radius, height);
     break;
   }
   case idcoli::OBJ_TYPE_PHANTOM: {
-    idcoli::IDColiParmsPhantom params(coliObject);
+    idcoli::IDColiParmsPhantom params(m_coliObject);
     params.createCharacter(radius, height);
     break;
   }
@@ -194,51 +194,51 @@ void ColiObject::resetCharacter(f32 radius, f32 height) {
   }
 }
 
-ColiObject::ColiObject() : coliObject(nullptr), flags(0), listener(nullptr), coliUserData(nullptr), scale(1.0f), shape(nullptr) {
-  offsetMatrix = mm::Mat44::identity;
-  matrix = mm::Mat44::identity;
+ColiObject::ColiObject() : m_coliObject(nullptr), unknown34(0), unknown50(nullptr), unknown58(nullptr), unknowne0(1.0f), unknowne8(nullptr) {
+  unknown60 = mm::Mat44::identity;
+  m_matrix = mm::Mat44::identity;
 }
 
 ColiObject::~ColiObject() {
-  if (coliObject != nullptr) {
+  if (m_coliObject != nullptr) {
     ColiManager::get()->getInterface();
     ml::WorkCpu::getFrameCount();
-    coliObject->release();
-    coliObject = nullptr;
+    m_coliObject->release();
+    m_coliObject = nullptr;
   }
 
   ColiManager::get()->removeObject(this);
-  if (shape != nullptr) {
-    delete shape;
-    shape = nullptr;
+  if (unknowne8 != nullptr) {
+    delete unknowne8;
+    unknowne8 = nullptr;
   }
 }
 
 void ColiObject::setOwner(UpdatableObject *owner) {
   if (owner != nullptr) {
-    this->owner = owner->selfHandle;
+    this->unknown38 = owner->unknown18;
   } else {
-    this->owner = HandlePtr<UpdatableObject>();
+    this->unknown38 = HandlePtr<UpdatableObject>();
   }
 }
 
-UpdatableObject *ColiObject::getOwner() const { return owner.get(); }
+UpdatableObject *ColiObject::getOwner() const { return unknown38.get(); }
 
 void ColiObject::setHandle(u32 handle) {
-  userData.handle = handle;
-  if (coliObject == nullptr) {
+  unknownf0.unknown08 = handle;
+  if (m_coliObject == nullptr) {
     return;
   }
 
-  switch (coliObject->m_type) {
+  switch (m_coliObject->m_type) {
   case idcoli::OBJ_TYPE_CHARACTER: {
-    idcoli::IDColiParmsCharacter params(coliObject);
-    params.setUserData(&userData);
+    idcoli::IDColiParmsCharacter params(m_coliObject);
+    params.setUserData(&unknownf0);
     break;
   }
   case idcoli::OBJ_TYPE_PHANTOM: {
-    idcoli::IDColiParmsPhantom params(coliObject);
-    params.setUserData(&userData);
+    idcoli::IDColiParmsPhantom params(m_coliObject);
+    params.setUserData(&unknownf0);
     break;
   }
   default:
@@ -247,26 +247,26 @@ void ColiObject::setHandle(u32 handle) {
 }
 
 bool ColiObject::isChar() const {
-  if (coliObject == nullptr) {
+  if (m_coliObject == nullptr) {
     return false;
   }
 
-  return coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER;
+  return m_coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER;
 }
 
 bool ColiObject::isPhantom() const {
-  if (coliObject == nullptr) {
+  if (m_coliObject == nullptr) {
     return false;
   }
 
-  return coliObject->m_type == idcoli::OBJ_TYPE_PHANTOM;
+  return m_coliObject->m_type == idcoli::OBJ_TYPE_PHANTOM;
 }
 
-const mm::Mat44 &ColiObject::getMatrix() const { return matrix; }
+const mm::Mat44 &ColiObject::getMatrix() const { return m_matrix; }
 
 int ColiObject::getPriority() const {
-  if (coliObject != nullptr && coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
-    idcoli::IDColiParmsCharacter params(coliObject);
+  if (m_coliObject != nullptr && m_coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     return params.getPriority();
   }
 
@@ -274,16 +274,16 @@ int ColiObject::getPriority() const {
 }
 
 bool ColiObject::isGrand() const {
-  if (coliObject == nullptr) {
+  if (m_coliObject == nullptr) {
     return false;
   }
 
-  return coliObject->m_type == idcoli::OBJ_TYPE_GRAND;
+  return m_coliObject->m_type == idcoli::OBJ_TYPE_GRAND;
 }
 
 bool ColiObject::testAttribute(ColiAtrr attribute) const {
-  if (coliObject != nullptr && coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
-    idcoli::IDColiParmsCharacter params(coliObject);
+  if (m_coliObject != nullptr && m_coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     return params.isAttr(static_cast<idcoli::ColiAtrr>(attribute));
   }
 
@@ -291,8 +291,8 @@ bool ColiObject::testAttribute(ColiAtrr attribute) const {
 }
 
 bool ColiObject::testState(ColiState state) const {
-  if (coliObject != nullptr && coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
-    idcoli::IDColiParmsCharacter params(coliObject);
+  if (m_coliObject != nullptr && m_coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     return params.isState(static_cast<idcoli::ColiState>(state));
   }
 
@@ -310,17 +310,17 @@ void ColiObject::setActivate(bool isActivate) {
 bool ColiObject::isActivate() const { return !testState(COLI_STATE_INACTIVE); }
 
 u32 ColiObject::getHitMaterialFlag() const {
-  if (coliObject == nullptr) {
+  if (m_coliObject == nullptr) {
     return 0;
   }
 
-  switch (coliObject->m_type) {
+  switch (m_coliObject->m_type) {
   case idcoli::OBJ_TYPE_CHARACTER: {
-    idcoli::IDColiParmsCharacter params(coliObject);
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     return ~params.getOffMaterialBit();
   }
   case idcoli::OBJ_TYPE_PHANTOM: {
-    idcoli::IDColiParmsPhantom params(coliObject);
+    idcoli::IDColiParmsPhantom params(m_coliObject);
     return ~params.getOffMaterialBit();
   }
   default:
@@ -331,17 +331,17 @@ u32 ColiObject::getHitMaterialFlag() const {
 bool ColiObject::testHitMaterialFlag(u32 flag) const { return (getHitMaterialFlag() & flag) != 0; }
 
 u32 ColiObject::getMaterialFlag() const {
-  if (coliObject == nullptr) {
+  if (m_coliObject == nullptr) {
     return 0;
   }
 
-  switch (coliObject->m_type) {
+  switch (m_coliObject->m_type) {
   case idcoli::OBJ_TYPE_CHARACTER: {
-    idcoli::IDColiParmsCharacter params(coliObject);
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     return params.getMaterialBit();
   }
   case idcoli::OBJ_TYPE_PHANTOM: {
-    idcoli::IDColiParmsPhantom params(coliObject);
+    idcoli::IDColiParmsPhantom params(m_coliObject);
     return params.getMaterialBit();
   }
   default:
@@ -350,15 +350,15 @@ u32 ColiObject::getMaterialFlag() const {
 }
 
 void ColiObject::setAdsorption(f32 adsorption) {
-  if (coliObject != nullptr && coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
-    idcoli::IDColiParmsCharacter params(coliObject);
+  if (m_coliObject != nullptr && m_coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     params.setAdsorption(adsorption);
   }
 }
 
 f32 ColiObject::getAdsorption() const {
-  if (coliObject != nullptr && coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
-    idcoli::IDColiParmsCharacter params(coliObject);
+  if (m_coliObject != nullptr && m_coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     return params.getAdsorption();
   }
 
@@ -366,43 +366,43 @@ f32 ColiObject::getAdsorption() const {
 }
 
 bool ColiObject::isLanding() const {
-  if (coliObject != nullptr && coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
-    return coliObject->m_attr & idcoli::IDColiObj::FLAG_LANDING;
+  if (m_coliObject != nullptr && m_coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
+    return m_coliObject->m_attr & idcoli::IDColiObj::FLAG_LANDING;
   }
 
   return false;
 }
 
 bool ColiObject::isContactWall() const {
-  if (coliObject != nullptr && coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
-    return coliObject->m_attr & idcoli::IDColiObj::FLAG_CONTACT_WALL;
+  if (m_coliObject != nullptr && m_coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
+    return m_coliObject->m_attr & idcoli::IDColiObj::FLAG_CONTACT_WALL;
   }
 
   return false;
 }
 
 bool ColiObject::isOutRange() const {
-  if (coliObject != nullptr && coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
-    return coliObject->m_attr & idcoli::IDColiObj::FLAG_OUT_RANGE;
+  if (m_coliObject != nullptr && m_coliObject->m_type == idcoli::OBJ_TYPE_CHARACTER) {
+    return m_coliObject->m_attr & idcoli::IDColiObj::FLAG_OUT_RANGE;
   }
 
   return false;
 }
 
 bool ColiObject::getAABB(mm::Vec3 &min, mm::Vec3 &max) const {
-  if (coliObject == nullptr) {
+  if (m_coliObject == nullptr) {
     return false;
   }
 
-  switch (coliObject->m_type) {
+  switch (m_coliObject->m_type) {
   case idcoli::OBJ_TYPE_CHARACTER: {
-    idcoli::IDColiParmsCharacter params(coliObject);
+    idcoli::IDColiParmsCharacter params(m_coliObject);
     min = params.getMin();
     max = params.getMax();
     return true;
   }
   case idcoli::OBJ_TYPE_PHANTOM: {
-    idcoli::IDColiParmsPhantom params(coliObject);
+    idcoli::IDColiParmsPhantom params(m_coliObject);
     min = params.getMin();
     max = params.getMax();
     return true;
@@ -413,35 +413,35 @@ bool ColiObject::getAABB(mm::Vec3 &min, mm::Vec3 &max) const {
 }
 
 void ColiObject::enter(const IColiEventListener::EnterInfo &info) {
-  bool isEnable = eventFlags.test(EVENT_ENTER);
-  if (listener != nullptr && isEnable) {
-    listener->enter(info);
+  bool isEnable = unknown48.test(EVENT_ENTER);
+  if (unknown50 != nullptr && isEnable) {
+    unknown50->enter(info);
   }
 }
 
 void ColiObject::leave(const IColiEventListener::LeaveInfo &info) {
-  bool isEnable = eventFlags.test(EVENT_LEAVE);
-  if (listener != nullptr && isEnable) {
-    listener->leave(info);
+  bool isEnable = unknown48.test(EVENT_LEAVE);
+  if (unknown50 != nullptr && isEnable) {
+    unknown50->leave(info);
   }
 }
 
 void ColiObject::contact(const IColiEventListener::EnterInfo &info) {
-  if (listener != nullptr && eventFlags.test(EVENT_CONTACT)) {
-    listener->contact(info);
+  if (unknown50 != nullptr && unknown48.test(EVENT_CONTACT)) {
+    unknown50->contact(info);
   }
 }
 
 void ColiObject::update() {}
 
 void ColiObject::postUpdate() {
-  if (type == COLI_TYPE_STATIC && !(flags & FLAG_MATRIX_DIRTY)) {
+  if (unknown30 == COLI_TYPE_STATIC && !(unknown34 & FLAG_MATRIX_DIRTY)) {
     return;
   }
 
-  if (referenceFrame.get() != nullptr && coliObject != nullptr) {
-    flags &= ~FLAG_MATRIX_DIRTY;
-    setMatrix(referenceFrame->getSyncedWorldMatrix());
+  if (unknown28.get() != nullptr && m_coliObject != nullptr) {
+    unknown34 &= ~FLAG_MATRIX_DIRTY;
+    setMatrix(unknown28->getSyncedWorldMatrix());
   }
 }
 

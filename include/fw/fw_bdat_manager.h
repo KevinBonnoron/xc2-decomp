@@ -29,11 +29,11 @@ public:
     };
 
     struct BdatInfo {
-      State state;
+      State unknown00; // Inferred role: state; original member name unknown.
       u8 _004[0x148 - 0x004];
-      void *data;
+      void *unknown148; // Inferred role: data; original member name unknown.
       u8 _150[0x158 - 0x150];
-      void *loadingData;
+      void *unknown158; // Inferred role: loading data; original member name unknown.
       u8 _160[0x168 - 0x160];
     };
 
@@ -52,10 +52,10 @@ public:
     bool isExistBdat(int id) const;
     bool isEnableBdat(int id) const;
 
-    mm::mtl::IAllocator *allocator;
-    mm::mtl::FixStr<256> basePath;
+    mm::mtl::IAllocator *unknown00; // Inferred role: allocator; original member name unknown.
+    mm::mtl::FixStr<256> unknown08; // Inferred role: base path; original member name unknown.
     u8 _10c[0x128 - 0x10c];
-    BdatInfo infos[BDAT_MAX];
+    BdatInfo unknown128[BDAT_MAX]; // Inferred role: infos; original member name unknown.
   };
 
   bool initialize() override;
@@ -75,13 +75,13 @@ public:
   static unsigned char *getFp(const char *name);
   static unsigned char *getFp(int table, int id);
 
-  Impl *impl;
-  mm::mtl::IAllocator *allocator;
+  Impl *unknown18;                // Inferred role: impl; original member name unknown.
+  mm::mtl::IAllocator *unknown20; // Inferred role: allocator; original member name unknown.
 };
 
-static_assert(offsetof(BdatManager::Impl, basePath) == 0x08, "");
-static_assert(offsetof(BdatManager::Impl, infos) == 0x128, "");
+static_assert(offsetof(BdatManager::Impl, unknown08) == 0x08, "");
+static_assert(offsetof(BdatManager::Impl, unknown128) == 0x128, "");
 static_assert(sizeof(BdatManager::Impl::BdatInfo) == 0x168, "");
-static_assert(offsetof(BdatManager, impl) == 0x18, "");
+static_assert(offsetof(BdatManager, unknown18) == 0x18, "");
 
 } // namespace fw

@@ -13,7 +13,7 @@ void RenderParam::initialize() {}
 void RenderParam::finalize() {}
 
 void RenderParam::setPlayerPosition(const mm::Vec3 &position, CAMERA_TYPE type) {
-  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->scn->renderDrSys, type);
+  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->unknown58->renderDrSys, type);
   parmAcc.setPlayerPos(position);
 }
 
@@ -27,17 +27,17 @@ bool RenderParam::isRoom(const mm::Vec3 &position, CAMERA_TYPE type) {
 }
 
 void RenderParam::setMotionBlur(bool isEnable, CAMERA_TYPE type) {
-  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->scn->renderDrSys, type);
+  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->unknown58->renderDrSys, type);
   parmAcc.setMotBlurDefault(isEnable);
 }
 
 void RenderParam::setTime(u32 hour, u32 minute, CAMERA_TYPE type) {
-  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->scn->renderDrSys, type);
+  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->unknown58->renderDrSys, type);
   parmAcc.setTimeVal(static_cast<f32>(hour * 60 + minute) / 1440.0f);
 }
 
 void RenderParam::setWeather(u32 weather, CAMERA_TYPE type) {
-  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->scn->renderDrSys, type);
+  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->unknown58->renderDrSys, type);
   parmAcc.setWeather(weather);
 }
 
@@ -47,12 +47,12 @@ int RenderParam::getWindIndex(CAMERA_TYPE type) {
 }
 
 void RenderParam::setGlobalWindPower(const mm::Vec3 &power, CAMERA_TYPE type) {
-  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->scn->renderDrSys, type);
+  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->unknown58->renderDrSys, type);
   parmAcc.setGlobalWind(power);
 }
 
 void RenderParam::setColorFilter(int filter, int farFilter, f32 time, CAMERA_TYPE type) {
-  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->scn->renderDrSys, type);
+  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->unknown58->renderDrSys, type);
   parmAcc.setColorFilterOverride(true);
   parmAcc.setColorFilterNum(filter);
   parmAcc.setColorFilterFarNum(farFilter);
@@ -63,7 +63,7 @@ void RenderParam::resetColorFilter(f32 time, CAMERA_TYPE type) {}
 
 void RenderParam::setCloudSea(u32 num) {
   {
-    ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->scn->renderDrSys, 0);
+    ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->unknown58->renderDrSys, 0);
     parmAcc.setPlaneCloudNum(num);
   }
 
@@ -72,7 +72,7 @@ void RenderParam::setCloudSea(u32 num) {
 }
 
 void RenderParam::resetScene() {
-  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->scn->renderDrSys, 0);
+  ml::ScnRenderDrSysParmAcc parmAcc(Framework::get()->unknown58->renderDrSys, 0);
   parmAcc.resetScene();
 }
 

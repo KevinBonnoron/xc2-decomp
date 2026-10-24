@@ -77,7 +77,7 @@ void GfGamePad::clearUniqParams() { unknown11 = false; }
 u32 GfGamePad::getPlayerPadId() { return 0; }
 
 void GfGamePad::checkEmergencyEscape() {
-  if ((unknown50.hold & EMERGENCY_ESCAPE_BUTTONS) != EMERGENCY_ESCAPE_BUTTONS) {
+  if ((unknown50.unknown00 & EMERGENCY_ESCAPE_BUTTONS) != EMERGENCY_ESCAPE_BUTTONS) {
     unknown1a0 = 0;
     return;
   }

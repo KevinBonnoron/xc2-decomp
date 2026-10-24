@@ -24,9 +24,9 @@ RotateIkSolver *RotateIkSolver::create(const char *boneName, mm::mtl::IntrusiveP
 bool RotateIkSolver::setup(const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose) {
   bind(frame, pose);
   if (boneName != nullptr) {
-    u16 index = this->pose->skeleton->getBoneID(boneName);
+    u16 index = this->unknown18->skeleton->getBoneID(boneName);
     if (index != anm::Skeleton::INVALID_BONE) {
-      boneIndex = index;
+      unknown50 = index;
       return true;
     }
   }
@@ -34,7 +34,7 @@ bool RotateIkSolver::setup(const char *boneName, mm::mtl::IntrusivePtr<Reference
   return false;
 }
 
-RotateIkSolver::RotateIkSolver() : rotation(mm::Vec3::zero), boneIndex(0) {}
+RotateIkSolver::RotateIkSolver() : unknown40(mm::Vec3::zero), unknown50(0) {}
 
 RotateIkSolver::~RotateIkSolver() {}
 
@@ -53,9 +53,9 @@ RotateLocalIkSolver *RotateLocalIkSolver::create(const char *boneName, mm::mtl::
 bool RotateLocalIkSolver::setup(const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose) {
   bind(frame, pose);
   if (boneName != nullptr) {
-    u16 index = this->pose->skeleton->getBoneID(boneName);
+    u16 index = this->unknown18->skeleton->getBoneID(boneName);
     if (index != anm::Skeleton::INVALID_BONE) {
-      boneIndex = index;
+      unknown50 = index;
       return true;
     }
   }
@@ -63,7 +63,7 @@ bool RotateLocalIkSolver::setup(const char *boneName, mm::mtl::IntrusivePtr<Refe
   return false;
 }
 
-RotateLocalIkSolver::RotateLocalIkSolver() : rotation(mm::Vec3::zero), boneIndex(0) {}
+RotateLocalIkSolver::RotateLocalIkSolver() : unknown40(mm::Vec3::zero), unknown50(0) {}
 
 RotateLocalIkSolver::~RotateLocalIkSolver() {}
 

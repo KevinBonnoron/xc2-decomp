@@ -9,7 +9,7 @@ namespace gf {
 namespace pc {
 
 void StateFieldIdleTurn::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   property->unknown80 = mm::Vec3::zero;
   property->unknown94 = 0.0f;
 }

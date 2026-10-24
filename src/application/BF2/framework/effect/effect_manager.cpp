@@ -39,36 +39,36 @@ void EffectManager::efSystemEnd() {
   }
 }
 
-void EffectManager::addPack(EffectPack *pack) { (*packMap)[std::string(pack->name.c_str())] = pack; }
+void EffectManager::addPack(EffectPack *pack) { (*unknown348)[std::string(pack->unknown58.c_str())] = pack; }
 
 void EffectManager::removePack(EffectPack *pack) {
-  PackMap::iterator it = packMap->find(std::string(pack->name.c_str()));
-  if (it != packMap->end()) {
-    packMap->erase(it);
+  PackMap::iterator it = unknown348->find(std::string(pack->unknown58.c_str()));
+  if (it != unknown348->end()) {
+    unknown348->erase(it);
   }
 }
 
 EffectPack *EffectManager::findPack(const char *name) {
-  PackMap::iterator it = packMap->find(name);
-  return it != packMap->end() ? it->second : nullptr;
+  PackMap::iterator it = unknown348->find(name);
+  return it != unknown348->end() ? it->second : nullptr;
 }
 
-void EffectManager::addData(EffectData *data) { (*dataMap)[std::string(data->getName())] = data; }
+void EffectManager::addData(EffectData *data) { (*unknown350)[std::string(data->getName())] = data; }
 
 void EffectManager::removeData(EffectData *data) {
-  DataMap::iterator it = dataMap->find(std::string(data->getName()));
-  if (it != dataMap->end()) {
-    dataMap->erase(it);
+  DataMap::iterator it = unknown350->find(std::string(data->getName()));
+  if (it != unknown350->end()) {
+    unknown350->erase(it);
   }
 }
 
 EffectData *EffectManager::findData(const char *name) {
-  DataMap::iterator it = dataMap->find(name);
-  return it != dataMap->end() ? it->second : nullptr;
+  DataMap::iterator it = unknown350->find(name);
+  return it != unknown350->end() ? it->second : nullptr;
 }
 
 void EffectManager::setMasterPause(bool isPause) {
-  if (masterPause == isPause) {
+  if (unknown2fd5 == isPause) {
     return;
   }
 
@@ -76,17 +76,17 @@ void EffectManager::setMasterPause(bool isPause) {
     return;
   }
 
-  masterPause = isPause;
-  effect::SystemManager::getPtr()->es_pause(masterPause);
+  unknown2fd5 = isPause;
+  effect::SystemManager::getPtr()->es_pause(unknown2fd5);
 }
 
-bool EffectManager::isMasterPause() const { return masterPause; }
+bool EffectManager::isMasterPause() const { return unknown2fd5; }
 
 EffectCasterSend *EffectManager::getCaster(EffectCasterBase *caster) {
   for (u32 i = 0; i < LAYER_MAX; i++) {
-    mm::mtl::IntrusiveList<EffectCasterSend> &casters = casterGroups[i].casters;
+    mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[i].unknown00;
     for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
-      if (it.get()->caster == caster) {
+      if (it.get()->m_caster == caster) {
         return it.get();
       }
     }
@@ -98,12 +98,12 @@ EffectCasterSend *EffectManager::getCaster(EffectCasterBase *caster) {
 void EffectManager::remove(EffectCasterBase *caster) { effect::SystemManager::getPtr()->es_remove_cas(getCaster(caster)); }
 
 void EffectManager::changeLayerCaster(EffectCasterBase *caster, u32 layer, u32 newLayer) {
-  mm::mtl::IntrusiveList<EffectCasterSend> &casters = casterGroups[layer].casters;
+  mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[layer].unknown00;
   for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
-    if (it.get()->caster == caster) {
+    if (it.get()->m_caster == caster) {
       EffectCasterSend *send = it.get();
       casters.erase(it);
-      casterGroups[newLayer].casters.push_back(send);
+      unknown48[newLayer].unknown00.push_back(send);
       return;
     }
   }
@@ -111,9 +111,9 @@ void EffectManager::changeLayerCaster(EffectCasterBase *caster, u32 layer, u32 n
 
 void EffectManager::sendCaster(EffectCasterBase *caster, mm::Mat44 &matrix, const char *name, int index) {
   for (u32 i = 0; i < LAYER_MAX; i++) {
-    mm::mtl::IntrusiveList<EffectCasterSend> &casters = casterGroups[i].casters;
+    mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[i].unknown00;
     for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
-      if (it.get()->caster == caster) {
+      if (it.get()->m_caster == caster) {
         it.get()->sendData(matrix, name, index);
         return;
       }
@@ -123,12 +123,12 @@ void EffectManager::sendCaster(EffectCasterBase *caster, mm::Mat44 &matrix, cons
 
 void EffectManager::sendCaster(EffectCasterBase *caster, f32 scale) {
   for (u32 i = 0; i < LAYER_MAX; i++) {
-    mm::mtl::IntrusiveList<EffectCasterSend> &casters = casterGroups[i].casters;
+    mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[i].unknown00;
     for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
-      if (it.get()->caster == caster) {
+      if (it.get()->m_caster == caster) {
         EffectCasterSend *send = it.get();
-        if (send->caster != nullptr && effect::SystemManager::getPtr() != nullptr) {
-          send->scales[effect::SystemManager::getPtr()->writeBuffer != 0] = scale;
+        if (send->m_caster != nullptr && effect::SystemManager::getPtr() != nullptr) {
+          send->unknown88[effect::SystemManager::getPtr()->writeBuffer != 0] = scale;
         }
         return;
       }
@@ -138,12 +138,12 @@ void EffectManager::sendCaster(EffectCasterBase *caster, f32 scale) {
 
 void EffectManager::sendCasterFrame(EffectCasterBase *caster, f32 frame) {
   for (u32 i = 0; i < LAYER_MAX; i++) {
-    mm::mtl::IntrusiveList<EffectCasterSend> &casters = casterGroups[i].casters;
+    mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[i].unknown00;
     for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
-      if (it.get()->caster == caster) {
+      if (it.get()->m_caster == caster) {
         EffectCasterSend *send = it.get();
-        if (send->caster != nullptr && effect::SystemManager::getPtr() != nullptr) {
-          send->frames[effect::SystemManager::getPtr()->writeBuffer != 0] = frame;
+        if (send->m_caster != nullptr && effect::SystemManager::getPtr() != nullptr) {
+          send->unknown90[effect::SystemManager::getPtr()->writeBuffer != 0] = frame;
         }
         return;
       }
@@ -153,9 +153,9 @@ void EffectManager::sendCasterFrame(EffectCasterBase *caster, f32 frame) {
 
 void EffectManager::sendCasterStateName(EffectCasterBase *caster, const char *name) {
   for (u32 i = 0; i < LAYER_MAX; i++) {
-    mm::mtl::IntrusiveList<EffectCasterSend> &casters = casterGroups[i].casters;
+    mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[i].unknown00;
     for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
-      if (it.get()->caster == caster) {
+      if (it.get()->m_caster == caster) {
         it.get()->sendDataStateName(name);
         return;
       }
@@ -300,10 +300,10 @@ bool EffectManager::containsCamAxis(void *data) const { return effect::SystemMan
 bool EffectManager::containsCamAxis(const char *name, EffectPack *pack) const { return containsCamAxis(get()->search(name, pack)); }
 
 void *EffectManager::seachAssetEffectHandle(const char *name) {
-  CommonEffect *end = commonEffects.end();
-  for (CommonEffect *it = commonEffects.begin(); it != end; ++it) {
-    if (it->pack != nullptr) {
-      void *data = it->pack->searchEfb(name);
+  CommonEffect *end = unknown1fb8.end();
+  for (CommonEffect *it = unknown1fb8.begin(); it != end; ++it) {
+    if (it->unknown08 != nullptr) {
+      void *data = it->unknown08->searchEfb(name);
       if (data != nullptr) {
         return data;
       }
@@ -313,17 +313,17 @@ void *EffectManager::seachAssetEffectHandle(const char *name) {
   return nullptr;
 }
 
-void *EffectManager::effectAllocSys(void *user, u32 size, u32 alignment, const char *name, u32 line) { return mtl::MemManager::allocate(get()->sysHandle, size, alignment, false, "no name", 0); }
+void *EffectManager::effectAllocSys(void *user, u32 size, u32 alignment, const char *name, u32 line) { return mtl::MemManager::allocate(get()->unknown2c, size, alignment, false, "no name", 0); }
 
 void EffectManager::effectFreeSys(void *user, void *pointer) { mtl::MemManager::deallocate(pointer, 0, false); }
 
-void *EffectManager::effectAllocRes(void *user, u32 size, u32 alignment, const char *name, u32 line) { return mtl::MemManager::allocate(get()->resHandle, size, alignment, false, "no name", 0); }
+void *EffectManager::effectAllocRes(void *user, u32 size, u32 alignment, const char *name, u32 line) { return mtl::MemManager::allocate(get()->unknown30, size, alignment, false, "no name", 0); }
 
 void EffectManager::effectFreeRes(void *user, void *pointer) { mtl::MemManager::deallocate(pointer, 0, false); }
 
-mtl::ALLOC_HANDLE EffectManager::effectSysHandle() { return get()->sysHandle; }
+mtl::ALLOC_HANDLE EffectManager::effectSysHandle() { return get()->unknown2c; }
 
-mtl::ALLOC_HANDLE EffectManager::effectResHandle() { return get()->resHandle; }
+mtl::ALLOC_HANDLE EffectManager::effectResHandle() { return get()->unknown30; }
 
 void EffectManager::debugReadFileEnd(void *data) {
   if (data != nullptr) {
@@ -512,8 +512,8 @@ void EffectManager::setDebugShader(bool isDebugShader) {}
 bool EffectManager::isPerfMonitoring() { return false; }
 
 void EffectManager::memoryDump() {
-  mtl::MemManager::log(get()->sysHandle, true, nullptr);
-  mtl::MemManager::log(get()->resHandle, true, nullptr);
+  mtl::MemManager::log(get()->unknown2c, true, nullptr);
+  mtl::MemManager::log(get()->unknown30, true, nullptr);
   if (effect::SystemManager::getPtr() != nullptr) {
     effect::SystemManager::getPtr()->memoryDump();
   }
@@ -566,7 +566,7 @@ void EffectManager::end() {
 }
 
 void EffectManager::opacityRender(const ml::IDrDrawWorkInfo *info) {
-  if (isFinalized() || finalizing) {
+  if (isFinalized() || unknown2fd6) {
     return;
   }
 
@@ -576,7 +576,7 @@ void EffectManager::opacityRender(const ml::IDrDrawWorkInfo *info) {
 }
 
 void EffectManager::alphaRender(const ml::IDrDrawWorkInfo *info) {
-  if (isFinalized() || finalizing) {
+  if (isFinalized() || unknown2fd6) {
     return;
   }
 
@@ -586,7 +586,7 @@ void EffectManager::alphaRender(const ml::IDrDrawWorkInfo *info) {
 }
 
 void EffectManager::lastRender(const ml::IDrDrawWorkInfo *info) {
-  if (isFinalized() || finalizing) {
+  if (isFinalized() || unknown2fd6) {
     return;
   }
 
@@ -596,7 +596,7 @@ void EffectManager::lastRender(const ml::IDrDrawWorkInfo *info) {
 }
 
 void EffectManager::blurRender(const ml::IDrDrawWorkInfo *info) {
-  if (isFinalized() || finalizing) {
+  if (isFinalized() || unknown2fd6) {
     return;
   }
 
@@ -606,7 +606,7 @@ void EffectManager::blurRender(const ml::IDrDrawWorkInfo *info) {
 }
 
 void EffectManager::finalRender(const ml::IDrDrawWorkInfo *info) {
-  if (isFinalized() || finalizing) {
+  if (isFinalized() || unknown2fd6) {
     return;
   }
 

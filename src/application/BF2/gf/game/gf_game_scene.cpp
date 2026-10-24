@@ -1427,7 +1427,7 @@ void GfGameScene::updateHikariLv4Room(const fw::UpdateInfo &) {
   if (blade == BLADE_HIKARI && !GfGameManager::isRoom()) {
     GfObjAcc obj(GfGameParty::getHandleDriver(0));
     mm::Vec3 hit;
-    mm::Vec3 position = obj.getWorldTransform().position + mm::Vec3(0.0f, 1.0f, 0.0f);
+    mm::Vec3 position = obj.getWorldTransform().unknown00 + mm::Vec3(0.0f, 1.0f, 0.0f);
     if (!util::getUpperHitCollision(hit, position, HIKARI_ROOM_HEIGHT)) {
       unknown1ca = true;
     }
@@ -1545,7 +1545,7 @@ void GfGameScene::updateBladeChangeInField(const fw::UpdateInfo &info) {
   if (!GfGameObj::isValidGameObj(GfGameParty::getHandleBlade(GfGameParty::getPartyId(obj.getHandle()), -1), false, nullptr)) {
     return;
   }
-  unknown18 = time + info.deltaTime;
+  unknown18 = time + info.unknown04;
 }
 
 void GfGameScene::updateColiPrio(const fw::UpdateInfo &) {
@@ -1588,7 +1588,7 @@ void GfGameScene::updateAutoHeal(const fw::UpdateInfo &info) {
     u32 hp = paramAcc.getHp();
     u32 maxHp = paramAcc.getHpMax(false);
     if (hp != maxHp) {
-      character.unknown08 += info.deltaTime;
+      character.unknown08 += info.unknown04;
       if (!(character.unknown08 < AUTO_HEAL_INTERVAL)) {
         character.unknown08 = 0.0f;
         GfObj *obj = GfObjUtil::getObj(driver);
@@ -1622,7 +1622,7 @@ void GfGameScene::updateMaxHp(const fw::UpdateInfo &) {
 
 void GfGameScene::updateLog(const fw::UpdateInfo &info) {
   if (unknown118 > 0.0f) {
-    unknown118 -= info.deltaTime;
+    unknown118 -= info.unknown04;
     if (unknown118 <= 0.0f) {
       unknown118 = 0.0f;
     }
@@ -1646,7 +1646,7 @@ void GfGameScene::updateQuestTaskLog(const fw::UpdateInfo &) {
 
 void GfGameScene::updateForceBattle(const fw::UpdateInfo &info) {
   if (!GfPause::isPause(PAUSE_BIT_SYSTEM) && unknown12c > 0.0f) {
-    unknown12c -= info.deltaTime;
+    unknown12c -= info.unknown04;
     if (unknown12c < 0.0f) {
       unknown12c = 0.0f;
     }
@@ -1659,7 +1659,7 @@ void GfGameScene::updateMoveAchievement(const fw::UpdateInfo &) {
     return;
   }
   if (!GfPause::isPause(PAUSE_BIT_SYSTEM) && GfGameManager::isControlFree()) {
-    const mm::Vec3 &position = obj.getWorldTransform().position;
+    const mm::Vec3 &position = obj.getWorldTransform().unknown00;
     f32 x = position.x - unknown150.x;
     f32 y = position.y - unknown150.y;
     f32 z = position.z - unknown150.z;
@@ -1681,7 +1681,7 @@ void GfGameScene::updateMoveAchievement(const fw::UpdateInfo &) {
       }
     }
   }
-  unknown150 = obj.getWorldTransform().position;
+  unknown150 = obj.getWorldTransform().unknown00;
 }
 
 void GfGameScene::updateEventBgm(const fw::UpdateInfo &info) {
@@ -1692,7 +1692,7 @@ void GfGameScene::updateEventBgm(const fw::UpdateInfo &info) {
     m_forceEventBgm = 0.0f;
   }
   if (GfGameManager::isControlFree()) {
-    m_forceEventBgm -= info.deltaTime;
+    m_forceEventBgm -= info.unknown04;
     if (m_forceEventBgm < 0.0f) {
       m_forceEventBgm = 0.0f;
     }

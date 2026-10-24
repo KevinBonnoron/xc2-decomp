@@ -43,23 +43,23 @@ public:
   virtual void updateViewMatrix();
   void setLookAt(const mm::Vec3 &position, const mm::Vec3 &target, f32 roll);
 
-  CameraLayer *layer;
-  CAMERA_PRIO prio;
-  f32 fov;
-  f32 nearClip;
-  f32 farClip;
-  mm::Vec3 position;
-  mm::Vec3 target;
-  mm::Mat44 viewMatrix;
-  bool isActive;
-  f32 roll;
+  CameraLayer *unknown20; // Inferred role: layer; original member name unknown.
+  CAMERA_PRIO unknown28;  // Inferred role: prio; original member name unknown.
+  f32 m_fov;
+  f32 unknown30;       // Inferred role: near clip; original member name unknown.
+  f32 unknown34;       // Inferred role: far clip; original member name unknown.
+  mm::Vec3 unknown40;  // Inferred role: position; original member name unknown.
+  mm::Vec3 unknown50;  // Inferred role: target; original member name unknown.
+  mm::Mat44 unknown60; // Inferred role: view matrix; original member name unknown.
+  bool unknowna0;      // Inferred role: active; original member name unknown.
+  f32 unknowna4;       // Inferred role: roll; original member name unknown.
 };
 
-static_assert(offsetof(Camera, layer) == 0x20, "");
-static_assert(offsetof(Camera, position) == 0x40, "");
-static_assert(offsetof(Camera, viewMatrix) == 0x60, "");
-static_assert(offsetof(Camera, isActive) == 0xa0, "");
-static_assert(offsetof(Camera, roll) == 0xa4, "");
+static_assert(offsetof(Camera, unknown20) == 0x20, "");
+static_assert(offsetof(Camera, unknown40) == 0x40, "");
+static_assert(offsetof(Camera, unknown60) == 0x60, "");
+static_assert(offsetof(Camera, unknowna0) == 0xa0, "");
+static_assert(offsetof(Camera, unknowna4) == 0xa4, "");
 
 class CameraTarget : public mm::mtl::ReferenceObject {
 public:
@@ -82,18 +82,18 @@ public:
   void popPlugin(mm::mtl::IntrusivePtr<CameraPlugin> &plugin);
   mm::Vec3 getCameraPosition() const;
 
-  mm::mtl::IntrusiveList<Camera> cameras;
-  mm::mtl::IntrusiveList<CameraPlugin> plugins;
-  ml::ScnObjCam *scnCamera;
-  mm::Mat44 matrix;
-  mm::Mat44 previousMatrix;
-  f32 blendTime;
-  f32 blendRate;
-  bool isBlending;
+  mm::mtl::IntrusiveList<Camera> unknown08;       // Inferred role: cameras; original member name unknown.
+  mm::mtl::IntrusiveList<CameraPlugin> unknown20; // Inferred role: plugins; original member name unknown.
+  ml::ScnObjCam *unknown38;                       // Inferred role: scn camera; original member name unknown.
+  mm::Mat44 unknown40;                            // Inferred role: matrix; original member name unknown.
+  mm::Mat44 unknown80;                            // Inferred role: previous matrix; original member name unknown.
+  f32 unknownc0;                                  // Inferred role: blend time; original member name unknown.
+  f32 unknownc4;                                  // Inferred role: blend rate; original member name unknown.
+  bool unknownc8;                                 // Inferred role: blending; original member name unknown.
 };
 
-static_assert(offsetof(CameraLayer, scnCamera) == 0x38, "");
-static_assert(offsetof(CameraLayer, blendTime) == 0xc0, "");
+static_assert(offsetof(CameraLayer, unknown38) == 0x38, "");
+static_assert(offsetof(CameraLayer, unknownc0) == 0xc0, "");
 static_assert(sizeof(CameraLayer) == 0xd0, "");
 
 class CameraManager : public mm::mtl::PtrSingleton<CameraManager> {
@@ -101,11 +101,11 @@ public:
   static constexpr u32 LAYER_COUNT = 4;
 
   u8 _08[0x20 - 0x08];
-  CameraLayer layers[LAYER_COUNT];
-  mm::mtl::IntrusivePtr<CameraTarget> target;
+  CameraLayer unknown20[LAYER_COUNT];             // Inferred role: layers; original member name unknown.
+  mm::mtl::IntrusivePtr<CameraTarget> unknown360; // Inferred role: target; original member name unknown.
 };
 
-static_assert(offsetof(CameraManager, layers) == 0x20, "");
-static_assert(offsetof(CameraManager, target) == 0x360, "");
+static_assert(offsetof(CameraManager, unknown20) == 0x20, "");
+static_assert(offsetof(CameraManager, unknown360) == 0x360, "");
 
 } // namespace fw

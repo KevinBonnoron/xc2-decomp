@@ -78,7 +78,7 @@ bool GfPlayComWait::update(const fw::UpdateInfo &info, bool isCancel) {
   if (isCancel) {
     return true;
   }
-  unknown10 -= info.frameTime;
+  unknown10 -= info.unknown00;
   return unknown10 <= 0.0f;
 }
 
@@ -376,7 +376,7 @@ void GfPlayComMenuZone::start() {
 void GfPlayComMenuZone::end() {}
 
 bool GfPlayComMenuZone::update(const fw::UpdateInfo &info, bool) {
-  unknown14 -= info.deltaTime;
+  unknown14 -= info.unknown04;
   if (unknown14 <= 0.0f) {
     return true;
   }
@@ -527,7 +527,7 @@ bool GfPlayComWaitPlayerToStartGmkTuto::update(const fw::UpdateInfo &info, bool 
   if (isCancel) {
     return true;
   }
-  unknown10 += info.deltaTime;
+  unknown10 += info.unknown04;
   if (GfGameManager::isGmkTutorialMoverOK()) {
     return true;
   }
@@ -544,7 +544,7 @@ GfPlayComGimmickTaskComplete::GfPlayComGimmickTaskComplete(gmk::GmkType gmkType,
     : GfPlayCom(PCOMTYPE_QUEST_COMPLETE_UI, false), unknown10(gmkType), unknown14(gimmick), unknown18(time) {}
 
 bool GfPlayComGimmickTaskComplete::update(const fw::UpdateInfo &info, bool) {
-  unknown18 -= info.deltaTime;
+  unknown18 -= info.unknown04;
   if (unknown18 > 0.0f) {
     return false;
   }

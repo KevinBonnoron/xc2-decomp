@@ -11,7 +11,7 @@ namespace gf {
 namespace pc {
 
 void StateFieldMove::enter(GfComBehaviorPc *behavior, ai::State *previous) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   MoveUtilField::enterMoveRun(*property, false);
   StateUtilField::setAsmSpeedMove(*property);
   StateUtil::changePlacementDownDist(*behavior, 0.05f);

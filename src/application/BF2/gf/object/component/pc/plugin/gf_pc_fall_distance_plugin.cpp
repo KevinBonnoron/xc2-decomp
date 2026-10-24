@@ -13,7 +13,7 @@ FallDistancePlugin::FallDistancePlugin() : unknown10(nullptr), unknown18(0.0f) {
 FallDistancePlugin::~FallDistancePlugin() {}
 
 bool FallDistancePlugin::setup(GfComBehaviorPc &behavior) {
-  unknown10 = behavior.owner->getComponent<GfComPropertyPc>();
+  unknown10 = behavior.unknown08->getComponent<GfComPropertyPc>();
   return true;
 }
 

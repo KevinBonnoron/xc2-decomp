@@ -7,32 +7,32 @@
 
 namespace fw {
 
-CameraLayer::CameraLayer() : scnCamera(nullptr), blendTime(0.0f), blendRate(1.0f), isBlending(false) {
-  previousMatrix = mm::Mat44::identity;
-  matrix = mm::Mat44::identity;
+CameraLayer::CameraLayer() : unknown38(nullptr), unknownc0(0.0f), unknownc4(1.0f), unknownc8(false) {
+  unknown80 = mm::Mat44::identity;
+  unknown40 = mm::Mat44::identity;
 }
 
 CameraLayer::~CameraLayer() {}
 
-void CameraLayer::setup(ml::Scn *scn, u32 index) { scnCamera = scn->getCam(index); }
+void CameraLayer::setup(ml::Scn *scn, u32 index) { unknown38 = scn->getCam(index); }
 
 void CameraLayer::onPopCamera(Camera &camera) {
   camera.onPop();
-  camera.isActive = false;
+  camera.unknowna0 = false;
 }
 
 void CameraLayer::onPushCamera(Camera &camera) {
   camera.onPush();
-  camera.isActive = true;
+  camera.unknowna0 = true;
 }
 
 void CameraLayer::pushPlugin(mm::mtl::IntrusivePtr<CameraPlugin> &plugin) {
   plugin->addRef();
-  plugins.push_front(plugin.get());
+  unknown20.push_front(plugin.get());
 }
 
 void CameraLayer::popPlugin(mm::mtl::IntrusivePtr<CameraPlugin> &plugin) {
-  plugins.erase(plugin.get());
+  unknown20.erase(plugin.get());
   plugin->release();
 }
 

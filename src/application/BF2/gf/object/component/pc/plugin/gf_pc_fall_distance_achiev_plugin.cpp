@@ -20,7 +20,7 @@ FallDistanceAchievPlugin::FallDistanceAchievPlugin() : unknown10(nullptr), unkno
 FallDistanceAchievPlugin::~FallDistanceAchievPlugin() {}
 
 bool FallDistanceAchievPlugin::setup(GfComBehaviorPc &behavior) {
-  unknown10 = behavior.owner->getComponent<GfComPropertyPc>();
+  unknown10 = behavior.unknown08->getComponent<GfComPropertyPc>();
   return true;
 }
 

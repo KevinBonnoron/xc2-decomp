@@ -24,7 +24,7 @@ void GfMenuLocation::updateDataNum(u32 type) {
     if (!acc.isValid()) {
       return;
     }
-    position = acc.getWorldTransform().position;
+    position = acc.getWorldTransform().unknown00;
   }
   group.unknown30.clear();
   u32 dataNum = 0;

@@ -22,16 +22,16 @@ public:
   void bind(anm::Control *control, anm::Pose *pose, anm::ExtraTruckBuffer *extraTruckBuffer);
   void samplePose() override;
 
-  anm::Control *control;
-  anm::Pose *pose;
-  anm::ExtraTruckBuffer *extraTruckBuffer;
-  u16 extraTruckSlot;
-  bool isLocalSpace;
+  anm::Control *unknown18;          // Inferred role: control; original member name unknown.
+  anm::Pose *unknown20;             // Inferred role: pose; original member name unknown.
+  anm::ExtraTruckBuffer *unknown28; // Inferred role: extra truck buffer; original member name unknown.
+  u16 unknown30;                    // Inferred role: extra truck slot; original member name unknown.
+  bool unknown32;                   // Inferred role: local space; original member name unknown.
 };
 
-static_assert(offsetof(AnimSinglePoseSamper, control) == 0x18, "");
-static_assert(offsetof(AnimSinglePoseSamper, extraTruckSlot) == 0x30, "");
-static_assert(offsetof(AnimSinglePoseSamper, isLocalSpace) == 0x32, "");
+static_assert(offsetof(AnimSinglePoseSamper, unknown18) == 0x18, "");
+static_assert(offsetof(AnimSinglePoseSamper, unknown30) == 0x30, "");
+static_assert(offsetof(AnimSinglePoseSamper, unknown32) == 0x32, "");
 static_assert(sizeof(AnimSinglePoseSamper) == 0x38, "");
 
 class AnimPoseSamper : public AnimPoseSamplerInterface {
@@ -42,18 +42,18 @@ public:
   void bind(anm::Blender *blender, anm::Pose *pose, anm::ExtraTruckBuffer *extraTruckBuffer);
   void samplePose() override;
 
-  anm::Blender *blender;
-  anm::Pose *pose;
-  anm::ExtraTruckBuffer *extraTruckBuffer;
-  u16 extraTruckSlot;
-  bool isBind;
-  bool isLocalSpace;
+  anm::Blender *unknown18;          // Inferred role: blender; original member name unknown.
+  anm::Pose *unknown20;             // Inferred role: pose; original member name unknown.
+  anm::ExtraTruckBuffer *unknown28; // Inferred role: extra truck buffer; original member name unknown.
+  u16 unknown30;                    // Inferred role: extra truck slot; original member name unknown.
+  bool unknown32;                   // Inferred role: bind; original member name unknown.
+  bool unknown33;                   // Inferred role: local space; original member name unknown.
 };
 
-static_assert(offsetof(AnimPoseSamper, blender) == 0x18, "");
-static_assert(offsetof(AnimPoseSamper, extraTruckSlot) == 0x30, "");
-static_assert(offsetof(AnimPoseSamper, isBind) == 0x32, "");
-static_assert(offsetof(AnimPoseSamper, isLocalSpace) == 0x33, "");
+static_assert(offsetof(AnimPoseSamper, unknown18) == 0x18, "");
+static_assert(offsetof(AnimPoseSamper, unknown30) == 0x30, "");
+static_assert(offsetof(AnimPoseSamper, unknown32) == 0x32, "");
+static_assert(offsetof(AnimPoseSamper, unknown33) == 0x33, "");
 static_assert(sizeof(AnimPoseSamper) == 0x38, "");
 
 class AnimAsmPoseSampler : public AnimPoseSamplerInterface {
@@ -64,16 +64,16 @@ public:
   void bind(anm::ASMControl *asmControl, anm::Pose *pose, anm::ExtraTruckBuffer *extraTruckBuffer);
   void samplePose() override;
 
-  anm::ASMControl *asmControl;
-  anm::Pose *pose;
-  anm::ExtraTruckBuffer *extraTruckBuffer;
-  u16 extraTruckSlot;
-  bool isLocalSpace;
+  anm::ASMControl *unknown18;       // Inferred role: asm control; original member name unknown.
+  anm::Pose *unknown20;             // Inferred role: pose; original member name unknown.
+  anm::ExtraTruckBuffer *unknown28; // Inferred role: extra truck buffer; original member name unknown.
+  u16 unknown30;                    // Inferred role: extra truck slot; original member name unknown.
+  bool unknown32;                   // Inferred role: local space; original member name unknown.
 };
 
-static_assert(offsetof(AnimAsmPoseSampler, asmControl) == 0x18, "");
-static_assert(offsetof(AnimAsmPoseSampler, extraTruckSlot) == 0x30, "");
-static_assert(offsetof(AnimAsmPoseSampler, isLocalSpace) == 0x32, "");
+static_assert(offsetof(AnimAsmPoseSampler, unknown18) == 0x18, "");
+static_assert(offsetof(AnimAsmPoseSampler, unknown30) == 0x30, "");
+static_assert(offsetof(AnimAsmPoseSampler, unknown32) == 0x32, "");
 static_assert(sizeof(AnimAsmPoseSampler) == 0x38, "");
 
 class AnimEventMotPoseSamper : public AnimPoseSamper {
@@ -91,18 +91,18 @@ public:
   void bind(anm::ASMControl *asmControl, anm::Pose *pose, anm::ExtraTruckBuffer *extraTruckBuffer);
   void samplePose() override;
 
-  anm::ASMControl *asmControl;
-  anm::Pose *pose;
-  anm::ExtraTruckBuffer *extraTruckBuffer;
-  u16 extraTruckSlot;
-  bool isPause;
-  bool isLocalSpace;
+  anm::ASMControl *unknown18;       // Inferred role: asm control; original member name unknown.
+  anm::Pose *unknown20;             // Inferred role: pose; original member name unknown.
+  anm::ExtraTruckBuffer *unknown28; // Inferred role: extra truck buffer; original member name unknown.
+  u16 unknown30;                    // Inferred role: extra truck slot; original member name unknown.
+  bool unknown32;                   // Inferred role: pause; original member name unknown.
+  bool unknown33;                   // Inferred role: local space; original member name unknown.
 };
 
-static_assert(offsetof(AnimEventAsmPoseSampler, asmControl) == 0x18, "");
-static_assert(offsetof(AnimEventAsmPoseSampler, extraTruckSlot) == 0x30, "");
-static_assert(offsetof(AnimEventAsmPoseSampler, isPause) == 0x32, "");
-static_assert(offsetof(AnimEventAsmPoseSampler, isLocalSpace) == 0x33, "");
+static_assert(offsetof(AnimEventAsmPoseSampler, unknown18) == 0x18, "");
+static_assert(offsetof(AnimEventAsmPoseSampler, unknown30) == 0x30, "");
+static_assert(offsetof(AnimEventAsmPoseSampler, unknown32) == 0x32, "");
+static_assert(offsetof(AnimEventAsmPoseSampler, unknown33) == 0x33, "");
 static_assert(sizeof(AnimEventAsmPoseSampler) == 0x38, "");
 
 } // namespace fw

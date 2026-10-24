@@ -12,7 +12,7 @@ BlowRotateIkSolver *BlowRotateIkSolver::create(mm::mtl::IntrusivePtr<ReferenceFr
   BlowRotateIkSolver *solver = new (Allocator::getProcAllocator(), 16, __FILE__, __LINE__) BlowRotateIkSolver();
   solver->addRef();
   solver->setup(frame, pose);
-  solver->boneIndex = boneIndex;
+  solver->unknown50 = boneIndex;
   return solver;
 }
 
@@ -21,7 +21,7 @@ bool BlowRotateIkSolver::setup(mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm
   return true;
 }
 
-BlowRotateIkSolver::BlowRotateIkSolver() : rotation(mm::Quat::identity), boneIndex(1) {}
+BlowRotateIkSolver::BlowRotateIkSolver() : unknown40(mm::Quat::identity), unknown50(1) {}
 
 BlowRotateIkSolver::~BlowRotateIkSolver() {}
 

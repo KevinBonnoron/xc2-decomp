@@ -25,7 +25,7 @@ SoundResource *SoundResource::request(mm::mtl::IAllocator *allocator, const char
   resource = new (ResourceManager::getMemSYS()) SoundResource(allocator, priority);
   if (resource != nullptr) {
     resource->setPath(path);
-    resource->setupInfo = info;
+    resource->unknownd0 = info;
     resource->addRef();
     resource->update();
   }
@@ -34,74 +34,74 @@ SoundResource *SoundResource::request(mm::mtl::IAllocator *allocator, const char
 }
 
 SoundResource::SoundResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority)
-    : ResourceObject(5, allocator, priority, 0x1000), state(STATE_NONE), loader(nullptr), asset(nullptr), soundPack(nullptr) {}
+    : ResourceObject(5, allocator, priority, 0x1000), unknownb0(STATE_NONE), unknownb8(nullptr), unknownc0(nullptr), m_soundPack(nullptr) {}
 
 SoundResource::~SoundResource() {
-  if (loader != nullptr) {
-    loader->Release();
-    loader = nullptr;
+  if (unknownb8 != nullptr) {
+    unknownb8->Release();
+    unknownb8 = nullptr;
   }
 
-  mm::mtl::safeRelease(soundPack);
-  if (asset != nullptr) {
-    ResourceManager::get()->removeSafeObject(asset);
-    mm::mtl::safeRelease(asset);
+  mm::mtl::safeRelease(m_soundPack);
+  if (unknownc0 != nullptr) {
+    ResourceManager::get()->removeSafeObject(unknownc0);
+    mm::mtl::safeRelease(unknownc0);
   }
 }
 
 void SoundResource::update() {
-  while (state != STATE_LOADED) {
-    switch (state) {
+  while (unknownb0 != STATE_LOADED) {
+    switch (unknownb0) {
     case STATE_NONE: {
       mm::mtl::FixStr<256> fileName;
-      ml::DevFileTh::normalizeDvdFileName(fileName, path.c_str());
-      asset = AssetData::CreateFromCache(allocator, fileName.c_str());
-      if (asset != nullptr) {
+      ml::DevFileTh::normalizeDvdFileName(fileName, unknown2c.c_str());
+      unknownc0 = AssetData::CreateFromCache(unknown18, fileName.c_str());
+      if (unknownc0 != nullptr) {
         SoundPack::SetupInfo info;
-        info.name = asset->name.c_str();
-        info.category = setupInfo.category;
-        info.priority = setupInfo.priority;
-        info.maxSound = setupInfo.maxSound;
-        info.assetName = asset->name.c_str();
-        info.data = asset->data;
-        info.size = asset->size;
-        soundPack = SoundPack::createFromStream(allocator, info);
-        ResourceManager::get()->addSafeObject(asset, static_cast<eResourceType>(5));
-        state = STATE_LOADED;
+        info.unknown00 = unknownc0->unknown30.c_str();
+        info.unknown84 = unknownd0.unknown00;
+        info.unknown88 = unknownd0.unknown04;
+        info.unknowna4 = unknownd0.unknown08;
+        info.unknown90 = unknownc0->unknown30.c_str();
+        info.unknown98 = unknownc0->unknown20;
+        info.unknowna0 = unknownc0->unknown1c;
+        m_soundPack = SoundPack::createFromStream(unknown18, info);
+        ResourceManager::get()->addSafeObject(unknownc0, static_cast<eResourceType>(5));
+        unknownb0 = STATE_LOADED;
       } else {
-        loader = AssetLoader::Create(allocator, fileName.c_str(), priority, option);
-        state = static_cast<State>(state + 1);
+        unknownb8 = AssetLoader::Create(unknown18, fileName.c_str(), unknown28, unknown24);
+        unknownb0 = static_cast<State>(unknownb0 + 1);
       }
       break;
     }
     case STATE_LOADING:
-      if (loader == nullptr) {
-        state = STATE_LOADED;
+      if (unknownb8 == nullptr) {
+        unknownb0 = STATE_LOADED;
         break;
       }
 
-      if (loader->fileHandle != nullptr) {
+      if (unknownb8->fileHandle != nullptr) {
         return;
       }
 
-      if (loader->size != -2 && loader->isExist()) {
-        loader->isBufferOwner = false;
-        asset = AssetData::AssignFromMemory(allocator, loader->buffer, loader->size, loader->name.c_str(), 0);
+      if (unknownb8->size != -2 && unknownb8->isExist()) {
+        unknownb8->isBufferOwner = false;
+        unknownc0 = AssetData::AssignFromMemory(unknown18, unknownb8->buffer, unknownb8->size, unknownb8->name.c_str(), 0);
         SoundPack::SetupInfo info;
-        info.name = asset->name.c_str();
-        info.category = setupInfo.category;
-        info.priority = setupInfo.priority;
-        info.maxSound = setupInfo.maxSound;
-        info.assetName = asset->name.c_str();
-        info.data = asset->data;
-        info.size = asset->size;
-        soundPack = SoundPack::createFromStream(allocator, info);
-        ResourceManager::get()->addSafeObject(asset, static_cast<eResourceType>(5));
+        info.unknown00 = unknownc0->unknown30.c_str();
+        info.unknown84 = unknownd0.unknown00;
+        info.unknown88 = unknownd0.unknown04;
+        info.unknowna4 = unknownd0.unknown08;
+        info.unknown90 = unknownc0->unknown30.c_str();
+        info.unknown98 = unknownc0->unknown20;
+        info.unknowna0 = unknownc0->unknown1c;
+        m_soundPack = SoundPack::createFromStream(unknown18, info);
+        ResourceManager::get()->addSafeObject(unknownc0, static_cast<eResourceType>(5));
       }
 
-      if (loader != nullptr) {
-        loader->Release();
-        loader = nullptr;
+      if (unknownb8 != nullptr) {
+        unknownb8->Release();
+        unknownb8 = nullptr;
       }
       break;
     default:
@@ -111,33 +111,33 @@ void SoundResource::update() {
 }
 
 const char *SoundResource::getMemName() {
-  if (allocator != nullptr) {
-    return allocator->getName();
+  if (unknown18 != nullptr) {
+    return unknown18->getName();
   }
 
   return "undifine memory";
 }
 
-bool SoundResource::valid() const { return state == STATE_LOADED; }
+bool SoundResource::valid() const { return unknownb0 == STATE_LOADED; }
 
 void *SoundResource::getAssetData() {
-  if (asset != nullptr) {
-    return asset->data;
+  if (unknownc0 != nullptr) {
+    return unknownc0->unknown20;
   }
 
   return nullptr;
 }
 
 int SoundResource::getAssetSize() const {
-  if (asset != nullptr) {
-    return asset->size;
+  if (unknownc0 != nullptr) {
+    return unknownc0->unknown1c;
   }
 
   return 0;
 }
 
-const char *SoundResource::getAssetName() const { return asset != nullptr ? asset->name.c_str() : nullptr; }
+const char *SoundResource::getAssetName() const { return unknownc0 != nullptr ? unknownc0->unknown30.c_str() : nullptr; }
 
-SoundPack *SoundResource::getSoundPack() { return soundPack; }
+SoundPack *SoundResource::getSoundPack() { return m_soundPack; }
 
 } // namespace fw

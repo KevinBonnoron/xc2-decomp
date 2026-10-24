@@ -19,7 +19,7 @@ void StateFieldWaterDive::enter(GfComBehaviorPc *behavior, ai::State *previous) 
 }
 
 void StateFieldWaterDive::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   if (next == nullptr || next->stateID != STATE_ID_FIELD_WATER_DEAD_SINK) {
     StateUtilField::setWaterDiveMove(*property, false);
     property->unknown90 = 0.0f;

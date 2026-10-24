@@ -14,7 +14,7 @@ public:
   void setEnableAgentField(bool isEnable);
   void setEnableAgentBattle(bool isEnable);
 
-  GfComPropertyPc *getProperty() const { return mm::mtl::dynamicCast<GfComPropertyPc>(owner->components[GfComPropertyPc::COMPONENT_INDEX]); }
+  GfComPropertyPc *getProperty() const { return mm::mtl::dynamicCast<GfComPropertyPc>(unknown08->unknown38[GfComPropertyPc::COMPONENT_INDEX]); }
 };
 
 } // namespace gf

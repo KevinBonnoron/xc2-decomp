@@ -17,7 +17,7 @@ namespace fw {
 class VisibleObject : public mm::mtl::ReferenceObject {
 public:
   struct SetupInfo {
-    u32 layer;
+    u32 unknown00; // Inferred role: layer; original member name unknown.
   };
 
   static VisibleObject *create(const SetupInfo &info, mm::mtl::IAllocator *allocator);
@@ -25,9 +25,9 @@ public:
   bool isRender() const;
 
   u8 _10[0x28 - 0x10];
-  mm::mtl::IntrusivePtr<ReferenceFrame> referenceFrame;
+  mm::mtl::IntrusivePtr<ReferenceFrame> unknown28; // Inferred role: reference frame; original member name unknown.
 };
 
-static_assert(offsetof(VisibleObject, referenceFrame) == 0x28, "");
+static_assert(offsetof(VisibleObject, unknown28) == 0x28, "");
 
 } // namespace fw

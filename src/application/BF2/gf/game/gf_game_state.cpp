@@ -202,7 +202,7 @@ void GfGameState::destroy() {
 void GfGameState::update(const fw::UpdateInfo &info) {
   GfGameState *gameState = get();
   if (gameState != nullptr) {
-    gameState->unknown8c += info.deltaTime;
+    gameState->unknown8c += info.unknown04;
     gameState->unknown08.update(&info);
   }
 }

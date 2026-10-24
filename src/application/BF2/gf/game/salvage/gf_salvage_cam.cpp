@@ -26,7 +26,7 @@ void GfSalvageCam::onDeactivate() {}
 
 void GfSalvageCam::update(const fw::UpdateInfo &info) {
   GfObjAcc acc(unknowna8);
-  const mm::Vec3 &position = acc.getWorldTransform().position;
+  const mm::Vec3 &position = acc.getWorldTransform().unknown00;
   setLookAt(position + mm::Vec3(0.0f, 10.0f, 10.0f), position, 0.0f);
 }
 

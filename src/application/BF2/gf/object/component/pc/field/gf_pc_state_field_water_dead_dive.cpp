@@ -8,7 +8,7 @@
 namespace gf {
 namespace pc {
 
-void StateFieldWaterDeadDive::leave(GfComBehaviorPc *behavior, ai::State *next) { StateUtilField::setWaterDiveMove(*behavior->owner->getComponent<GfComPropertyPc>(), false); }
+void StateFieldWaterDeadDive::leave(GfComBehaviorPc *behavior, ai::State *next) { StateUtilField::setWaterDiveMove(*behavior->unknown08->getComponent<GfComPropertyPc>(), false); }
 
 void StateFieldWaterDeadDive::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {}
 

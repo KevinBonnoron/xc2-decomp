@@ -10,7 +10,7 @@ namespace gf {
 namespace pc {
 
 void StateFieldAccess::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
+  GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (__builtin_strcmp(comAsm->getStateName(ANIM_LAYER_BASE), "S_idle") == 0 && !GfGameManager::isPlayerPause()) {
     reqState(STATE_ID_FIELD_IDLE);
   }

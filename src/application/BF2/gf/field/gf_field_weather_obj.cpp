@@ -95,7 +95,7 @@ void WeatherSnd::update(const fw::UpdateInfo &info, f32 rate, bool isFadeout) {
   if (GfGameManager::isLeaveGameForDebug()) {
     speed = SE_VOLUME_SPEED_LEAVE;
   }
-  unknown18 += info.deltaTime * speed;
+  unknown18 += info.unknown04 * speed;
 
   f32 minVolume = GfGameManager::isRoom() ? SE_VOLUME_ROOM : 0.0f;
   if (isEraseSe()) {
@@ -192,7 +192,7 @@ void WeatherInfo::update(const fw::UpdateInfo &info, bool isFadeout) {
   unknown30->update(info, unknown20, isFadeout);
   unknown38->update(info, unknown20, isFadeout);
   if (!GfPause::isPause(PAUSE_BIT_FIELD_TIME) && unknown10 < unknown14) {
-    unknown10 += info.deltaTime;
+    unknown10 += info.unknown04;
     if (unknown10 > unknown14) {
       unknown10 = unknown14;
     }
@@ -200,7 +200,7 @@ void WeatherInfo::update(const fw::UpdateInfo &info, bool isFadeout) {
 }
 
 bool WeatherInfo::updateFadein(const fw::UpdateInfo &info) {
-  if (info.deltaTime > 0.0f && unknown24 == 0.0f) {
+  if (info.unknown04 > 0.0f && unknown24 == 0.0f) {
     unknown30->create(unknown08);
     unknown38->create(unknown08);
   }
@@ -209,7 +209,7 @@ bool WeatherInfo::updateFadein(const fw::UpdateInfo &info) {
     return true;
   }
 
-  unknown24 += info.deltaTime;
+  unknown24 += info.unknown04;
   if (unknown24 >= unknown28) {
     unknown24 = unknown28;
     unknown20 = 1.0f;
@@ -220,7 +220,7 @@ bool WeatherInfo::updateFadein(const fw::UpdateInfo &info) {
   unknown30->update(info, unknown20, false);
   unknown38->update(info, unknown20, false);
   if (!GfPause::isPause(PAUSE_BIT_FIELD_TIME) && unknown10 < unknown14) {
-    unknown10 += info.deltaTime;
+    unknown10 += info.unknown04;
     if (unknown10 > unknown14) {
       unknown10 = unknown14;
     }
@@ -239,7 +239,7 @@ bool WeatherInfo::updateFadeout(const fw::UpdateInfo &info) {
     return true;
   }
 
-  unknown24 -= info.deltaTime;
+  unknown24 -= info.unknown04;
   if (unknown24 <= 0.0f) {
     unknown20 = 0.0f;
     unknown24 = 0.0f;
@@ -250,7 +250,7 @@ bool WeatherInfo::updateFadeout(const fw::UpdateInfo &info) {
   unknown30->update(info, unknown20, true);
   unknown38->update(info, unknown20, true);
   if (!GfPause::isPause(PAUSE_BIT_FIELD_TIME) && unknown10 < unknown14) {
-    unknown10 += info.deltaTime;
+    unknown10 += info.unknown04;
     if (unknown10 > unknown14) {
       unknown10 = unknown14;
     }

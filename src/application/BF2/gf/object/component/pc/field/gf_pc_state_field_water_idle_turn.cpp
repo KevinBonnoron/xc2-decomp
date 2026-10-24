@@ -14,15 +14,15 @@ namespace gf {
 namespace pc {
 
 void StateFieldWaterIdleTurn::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   property->unknown80 = mm::Vec3::zero;
   property->unknown94 = 0.0f;
 }
 
 void StateFieldWaterIdleTurn::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();
+  GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   if (StateUtilField::isTurnEndRangeCacheInput(*property, unknown20)) {
-    GfComAsm *comAsm = behavior->owner->getComponent<GfComAsm>();
+    GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
     if (!property->existInputXY()) {
       reqState(STATE_ID_FIELD_WATER_IDLE);
       return;

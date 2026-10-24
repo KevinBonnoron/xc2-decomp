@@ -26,7 +26,7 @@ bool TransLocalIkSolver::setup(const char *boneName, mm::mtl::IntrusivePtr<Refer
   if (boneName != nullptr) {
     u16 index = pose.skeleton->getBoneID(boneName);
     if (index != anm::Skeleton::INVALID_BONE) {
-      boneIndex = index;
+      unknown50 = index;
       return true;
     }
   }
@@ -34,7 +34,7 @@ bool TransLocalIkSolver::setup(const char *boneName, mm::mtl::IntrusivePtr<Refer
   return false;
 }
 
-TransLocalIkSolver::TransLocalIkSolver() : translation(mm::Vec3::zero), boneIndex(anm::Skeleton::INVALID_BONE) {}
+TransLocalIkSolver::TransLocalIkSolver() : unknown40(mm::Vec3::zero), unknown50(anm::Skeleton::INVALID_BONE) {}
 
 TransLocalIkSolver::~TransLocalIkSolver() {}
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-#include "framework/coli/coli_object.h"
+#include "framework/coli/coli_object.h" // IWYU pragma: keep
 #include "framework/manager_object.h"
 #include "framework/pointer_map.h"
 #include "fw/fw_coli_check.h"
@@ -42,21 +42,21 @@ public:
     static const u32 CONTACT_FLAG_ENTERED = 1 << 4;
 
     struct ContactParam {
-      ContactParam() : flags(0) {}
+      ContactParam() : unknown38(0) {}
 
-      mm::Vec3 position;
-      u32 frame;
-      mm::Vec3 normal;
-      u32 handle;
-      u32 otherHandle;
-      u32 flags;
+      mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
+      u32 unknown10;      // Inferred role: frame; original member name unknown.
+      mm::Vec3 unknown20; // Inferred role: normal; original member name unknown.
+      u32 unknown30;      // Inferred role: handle; original member name unknown.
+      u32 unknown34;      // Inferred role: other handle; original member name unknown.
+      u32 unknown38;      // Inferred role: flags; original member name unknown.
     };
 
     struct ListParam {
-      ListParam(u32 handle, mm::mtl::List<ContactParam> *contacts) : handle(handle), contacts(contacts) {}
+      ListParam(u32 handle, mm::mtl::List<ContactParam> *contacts) : unknown00(handle), unknown08(contacts) {}
 
-      u32 handle;
-      mm::mtl::List<ContactParam> *contacts;
+      u32 unknown00;                          // Inferred role: handle; original member name unknown.
+      mm::mtl::List<ContactParam> *unknown08; // Inferred role: contacts; original member name unknown.
     };
 
     typedef mm::mtl::FixedList<ListParam, CONTACT_TABLE_MAX> ContactTable;
@@ -90,13 +90,13 @@ public:
     void setGblId(u32 id, bool isGlobal);
     void *getGblIdTbl();
 
-    mm::mtl::IntrusiveList<ColiObject> objects;
-    ColiObject *groundObject;
-    idcoli::IDColiManager *manager;
-    u32 frameCount;
-    mm::mtl::IAllocator *allocator;
-    PointerMap objectMap;
-    ContactTable contactTable;
+    mm::mtl::IntrusiveList<ColiObject> unknown00; // Inferred role: objects; original member name unknown.
+    ColiObject *unknown18;                        // Inferred role: ground object; original member name unknown.
+    idcoli::IDColiManager *unknown20;             // Inferred role: manager; original member name unknown.
+    u32 unknown28;                                // Inferred role: frame count; original member name unknown.
+    mm::mtl::IAllocator *unknown30;               // Inferred role: allocator; original member name unknown.
+    PointerMap unknown38;                         // Inferred role: object map; original member name unknown.
+    ContactTable unknown70;                       // Inferred role: contact table; original member name unknown.
   };
 
   ColiManager(mm::mtl::IAllocator *allocator, u32 capacity);
@@ -118,21 +118,21 @@ public:
   void setGblId(u32 id, bool isGlobal);
   void *getGblIdTbl();
 
-  mm::mtl::UniquePtr<Impl> impl;
+  mm::mtl::UniquePtr<Impl> unknown18; // Inferred role: impl; original member name unknown.
 };
 
-static_assert(offsetof(ColiManager::Impl::ContactParam, frame) == 0x10, "");
-static_assert(offsetof(ColiManager::Impl::ContactParam, normal) == 0x20, "");
-static_assert(offsetof(ColiManager::Impl::ContactParam, flags) == 0x38, "");
+static_assert(offsetof(ColiManager::Impl::ContactParam, unknown10) == 0x10, "");
+static_assert(offsetof(ColiManager::Impl::ContactParam, unknown20) == 0x20, "");
+static_assert(offsetof(ColiManager::Impl::ContactParam, unknown38) == 0x38, "");
 static_assert(sizeof(ColiManager::Impl::ContactParam) == 0x40, "");
 static_assert(sizeof(mm::mtl::List<ColiManager::Impl::ContactParam>) == 0x80, "");
-static_assert(offsetof(ColiManager::Impl, groundObject) == 0x18, "");
-static_assert(offsetof(ColiManager::Impl, manager) == 0x20, "");
-static_assert(offsetof(ColiManager::Impl, frameCount) == 0x28, "");
-static_assert(offsetof(ColiManager::Impl, allocator) == 0x30, "");
-static_assert(offsetof(ColiManager::Impl, objectMap) == 0x38, "");
-static_assert(offsetof(ColiManager::Impl, contactTable) == 0x70, "");
+static_assert(offsetof(ColiManager::Impl, unknown18) == 0x18, "");
+static_assert(offsetof(ColiManager::Impl, unknown20) == 0x20, "");
+static_assert(offsetof(ColiManager::Impl, unknown28) == 0x28, "");
+static_assert(offsetof(ColiManager::Impl, unknown30) == 0x30, "");
+static_assert(offsetof(ColiManager::Impl, unknown38) == 0x38, "");
+static_assert(offsetof(ColiManager::Impl, unknown70) == 0x70, "");
 static_assert(sizeof(ColiManager::Impl) == 0x3498, "");
-static_assert(offsetof(ColiManager, impl) == 0x18, "");
+static_assert(offsetof(ColiManager, unknown18) == 0x18, "");
 
 } // namespace fw

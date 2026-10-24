@@ -33,7 +33,7 @@ void UIEventManager::update(const fw::UpdateInfo &info) {
 
     if (!objectEvents.empty()) {
       for (EventInfo *event = objectEvents.begin(); event != objectEvents.end();) {
-        if (stepEventInfo(*event, info.deltaTime)) {
+        if (stepEventInfo(*event, info.unknown04)) {
           for (mm::mtl::IntrusiveList<ListenerInfo>::iterator it = listeners.begin(); it != listeners.end(); ++it) {
             u32 handle = event->handle;
             if (handle != it->handle) {
@@ -54,7 +54,7 @@ void UIEventManager::update(const fw::UpdateInfo &info) {
 
   if (gameListener != nullptr && !gameEvents.empty()) {
     for (EventInfo *event = gameEvents.begin(); event != gameEvents.end();) {
-      if (stepEventInfo(*event, info.deltaTime)) {
+      if (stepEventInfo(*event, info.unknown04)) {
         gameListener->reciveEvent(event->data, event->handle);
         event = gameEvents.erase(event);
       } else {

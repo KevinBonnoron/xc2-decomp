@@ -20,9 +20,9 @@ public:
   virtual void postUpdate(const UpdateInfo &info);
   virtual void tail(const UpdateInfo &info);
 
-  bool closed;
+  bool unknown08; // Inferred role: closed; original member name unknown.
 };
 
-static_assert(offsetof(Applet, closed) == 0x08, "");
+static_assert(offsetof(Applet, unknown08) == 0x08, "");
 
 } // namespace fw

@@ -22,14 +22,14 @@ static void notifyChangePlayerID(GfGamePlayerFormation *formation, u32 playerId)
 }
 
 const FormationParam *getFormationParam(u32 formation) {
-  const fw::ParamList *paramList = fw::ParamManager::get()->formationParamList.operator->();
-  const fw::ParamList::Entry *entry = formation < paramList->count ? &paramList->entries[formation] : nullptr;
+  const fw::ParamList *paramList = fw::ParamManager::get()->unknown438.operator->();
+  const fw::ParamList::Entry *entry = formation < paramList->unknown0c ? &paramList->unknown10[formation] : nullptr;
   return entry != nullptr ? static_cast<const FormationParam *>(entry->param) : nullptr;
 }
 
 const WarpForRandomTalkParam *getWarpForRandomTalkParam() {
-  const fw::ParamList *paramList = fw::ParamManager::get()->formationParamList.operator->();
-  return paramList->count > PARAM_WARP_FOR_RANDOM_TALK ? static_cast<const WarpForRandomTalkParam *>(paramList->entries[PARAM_WARP_FOR_RANDOM_TALK].param) : nullptr;
+  const fw::ParamList *paramList = fw::ParamManager::get()->unknown438.operator->();
+  return paramList->unknown0c > PARAM_WARP_FOR_RANDOM_TALK ? static_cast<const WarpForRandomTalkParam *>(paramList->unknown10[PARAM_WARP_FOR_RANDOM_TALK].param) : nullptr;
 }
 
 void GfGamePlayerFormation::build(const GfSetupParam &param) {
@@ -41,8 +41,8 @@ void GfGamePlayerFormation::setup(const GfSetupParam &) {
   for (u32 playerId = 0; playerId < PLAYER_NUM; playerId++) {
     unknown20[playerId] = mm::Vec3::zero;
     unknown80[playerId] = mm::Vec3::zero;
-    unknowne0[playerId].position = mm::Vec3::zero;
-    unknowne0[playerId].rotation = mm::Quat::identity;
+    unknowne0[playerId].unknown00 = mm::Vec3::zero;
+    unknowne0[playerId].unknown10 = mm::Quat::identity;
   }
 }
 

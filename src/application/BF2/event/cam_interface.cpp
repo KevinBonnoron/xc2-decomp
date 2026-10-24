@@ -18,13 +18,13 @@ void CamInterface::setEnable(bool isEnable) {
   if (isEnable) {
     if (!this->unknownac) {
       fw::CameraManager *manager = fw::CameraManager::get();
-      manager->layers[unknowna8].push(unknownb8, 0.0f);
+      manager->unknown20[unknowna8].push(unknownb8, 0.0f);
     }
     this->unknownac = true;
   } else {
     if (this->unknownac) {
       fw::CameraManager *manager = fw::CameraManager::get();
-      manager->layers[unknowna8].pop(unknownb8, 0.0f);
+      manager->unknown20[unknowna8].pop(unknownb8, 0.0f);
     }
     this->unknownac = false;
   }
@@ -37,14 +37,14 @@ void CamInterface::setTargetPos(const mm::Vec3 &position, const mm::Vec3 &target
 
 void CamInterface::setRoll(f32 roll) {
   unknownb0 = roll;
-  setLookAt(position, target, roll);
+  setLookAt(unknown40, unknown50, roll);
 }
 
-void CamInterface::setFov(f32 fov) { this->fov = fov; }
+void CamInterface::setFov(f32 fov) { this->m_fov = fov; }
 
 void CamInterface::setNearFar(f32 nearClip, f32 farClip) {
-  this->nearClip = nearClip;
-  this->farClip = farClip;
+  this->unknown30 = nearClip;
+  this->unknown34 = farClip;
 }
 
 } // namespace event

@@ -259,7 +259,7 @@ void GfMapManager::createWind() {
 
   fw::WindManager *windManager = fw::WindManager::get();
   if (windManager != nullptr) {
-    windManager->buildWorld(&unknown38->resWind);
+    windManager->buildWorld(&unknown38->unknown10);
     windManager->setGlobalWind(0);
   }
 }
@@ -292,8 +292,8 @@ bool GfMapManager::isColisionExist() {
 
 void GfMapManager::postUpdate(const fw::UpdateInfo &info) {
   fw::UpdateInfo mapInfo = info;
-  mapInfo.deltaTime = mapInfo.frameTime * GfGameManager::getFieldSpeed(info);
-  mapInfo.speed = GfGameManager::getFieldSpeed(info);
+  mapInfo.unknown04 = mapInfo.unknown00 * GfGameManager::getFieldSpeed(info);
+  mapInfo.unknown08 = GfGameManager::getFieldSpeed(info);
   unknown40.update(mapInfo);
 }
 

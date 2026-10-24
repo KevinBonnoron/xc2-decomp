@@ -13,10 +13,10 @@ void EffectCasterBase::setStateName(const char *name) { EffectManager::get()->se
 void EffectCasterBase::setEfpMat(mm::Mat44 &matrix, const char *name, int index) { EffectManager::get()->sendCaster(this, matrix, name, index); }
 
 void EffectCasterBase::changeLayer(u32 layer, u32 newLayer) {
-  if (this->layer != newLayer && point != nullptr) {
-    this->layer = newLayer;
+  if (this->unknown3c != newLayer && unknown10 != nullptr) {
+    this->unknown3c = newLayer;
     EffectManager::get()->changeLayerCaster(this, layer, newLayer);
-    point->layer = newLayer;
+    unknown10->unknown0c = newLayer;
   }
 }
 

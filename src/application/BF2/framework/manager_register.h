@@ -20,10 +20,10 @@ public:
   bool finalize();
   void enterFinalizeApplet();
 
-  mm::mtl::FixedVector<ManagerObject *, MANAGER_MAX> managers;
+  mm::mtl::FixedVector<ManagerObject *, MANAGER_MAX> unknown08; // Inferred role: managers; original member name unknown.
 };
 
-static_assert(offsetof(ManagerRegister, managers) == 0x08, "");
+static_assert(offsetof(ManagerRegister, unknown08) == 0x08, "");
 static_assert(sizeof(ManagerRegister) == 0x810, "");
 
 } // namespace fw

@@ -53,15 +53,15 @@ const char *GfObj::getTypeName(u32 type) { return TYPE_NAMES[type]; }
 
 bool GfObj::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
   for (u32 i = 0; i < COMPONENT_MAX; i++) {
-    if ((message.componentMask & (1 << i)) != 0 && components[i] != nullptr) {
-      GfComponent *component = mm::mtl::dynamicCast<GfComponent>(components[i]);
+    if ((message.unknown04 & (1 << i)) != 0 && unknown38[i] != nullptr) {
+      GfComponent *component = mm::mtl::dynamicCast<GfComponent>(unknown38[i]);
       if (component != nullptr) {
         return component->recieveMessage(sender, message);
       }
     }
   }
 
-  switch (message.id) {
+  switch (message.unknown00) {
   case MSG_DEBUG_ACTIVATE_OBJECT_WINDOW:
     procMsgActivateObjectDebugWindow(sender, static_cast<MsgDebugActivateObjectWindow &>(message));
     return true;

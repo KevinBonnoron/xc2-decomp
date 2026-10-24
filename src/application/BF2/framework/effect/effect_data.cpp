@@ -5,12 +5,12 @@
 
 namespace fw {
 
-void *EffectData::getHandle() const { return handle; }
+void *EffectData::getHandle() const { return m_handle; }
 
-const char *EffectData::getName() const { return name.c_str(); }
+const char *EffectData::getName() const { return m_name.c_str(); }
 
-EffectData::EffectData(void *data, u32 size, const char *name, bool isExternal) : handle(data), name(name), isExternal(isExternal) {
-  if (!this->isExternal) {
+EffectData::EffectData(void *data, u32 size, const char *name, bool isExternal) : m_handle(data), m_name(name), unknown9c(isExternal) {
+  if (!this->unknown9c) {
     EffectManager::get()->addData(this);
   }
 
@@ -18,11 +18,11 @@ EffectData::EffectData(void *data, u32 size, const char *name, bool isExternal) 
 }
 
 EffectData::~EffectData() {
-  if (!isExternal) {
+  if (!unknown9c) {
     EffectManager::get()->removeData(this);
-    if (effect::SystemManager::getPtr() != nullptr && handle != nullptr) {
-      effect::SystemManager::getPtr()->es_free(handle);
-      handle = nullptr;
+    if (effect::SystemManager::getPtr() != nullptr && m_handle != nullptr) {
+      effect::SystemManager::getPtr()->es_free(m_handle);
+      m_handle = nullptr;
     }
   }
 }

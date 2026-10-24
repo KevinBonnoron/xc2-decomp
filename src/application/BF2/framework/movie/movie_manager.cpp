@@ -5,72 +5,72 @@
 namespace fw {
 
 void MovieManager::stop() {
-  if (movie != nullptr) {
-    movie->stop();
-    isPlaying = false;
+  if (unknown30 != nullptr) {
+    unknown30->stop();
+    unknown38 = false;
   }
 }
 
 f32 MovieManager::get_length() {
-  if (movie == nullptr) {
+  if (unknown30 == nullptr) {
     return 0.0f;
   }
 
-  return movie->get_length();
+  return unknown30->get_length();
 }
 
 f32 MovieManager::pos() {
-  if (movie == nullptr) {
+  if (unknown30 == nullptr) {
     return 0.0f;
   }
 
-  return movie->pos();
+  return unknown30->pos();
 }
 
 void MovieManager::play() {
-  if (movie != nullptr) {
-    movie->play();
-    if (movie->isplaying()) {
-      isPlaying = true;
+  if (unknown30 != nullptr) {
+    unknown30->play();
+    if (unknown30->isplaying()) {
+      unknown38 = true;
     }
   }
 }
 
 void MovieManager::pause() {
-  if (movie != nullptr) {
-    movie->pause();
+  if (unknown30 != nullptr) {
+    unknown30->pause();
   }
 }
 
 bool MovieManager::isstandby() {
-  if (movie == nullptr) {
+  if (unknown30 == nullptr) {
     return false;
   }
 
-  return movie->isstandby();
+  return unknown30->isstandby();
 }
 
 bool MovieManager::ispause() {
-  if (movie == nullptr) {
+  if (unknown30 == nullptr) {
     return false;
   }
 
-  return movie->ispause();
+  return unknown30->ispause();
 }
 
 bool MovieManager::isplaying() {
-  if (movie == nullptr) {
+  if (unknown30 == nullptr) {
     return false;
   }
 
-  return movie->isplaying();
+  return unknown30->isplaying();
 }
 
 void MovieManager::bkgHomeMenu(bool isEnter) {
-  if (movie != nullptr) {
-    movie->doHomeMenu(true);
+  if (unknown30 != nullptr) {
+    unknown30->doHomeMenu(true);
     if (!isEnter) {
-      movie->doHomeMenu(false);
+      unknown30->doHomeMenu(false);
     }
   }
 }

@@ -136,10 +136,10 @@ void GfFieldGmkTutorial::create(const char *name, u32 tutorial) {
   unknown0c = name;
   this->unknown50 = tutorial;
   fw::ScriptManager::get()->loadScript(unknown08, name, GMK_TUTORIAL_FILE_PRIO);
-  fw::ScriptManager::get()->scripts[unknown08].start();
+  fw::ScriptManager::get()->unknown20[unknown08].start();
 }
 
-bool GfFieldGmkTutorial::isEnd() const { return fw::ScriptManager::get()->scripts[unknown08].isFinish(); }
+bool GfFieldGmkTutorial::isEnd() const { return fw::ScriptManager::get()->unknown20[unknown08].isFinish(); }
 
 void GfFieldGmkTutorial::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
   if (event == GEV_MAPJUMP_START) {

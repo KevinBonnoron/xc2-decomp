@@ -71,15 +71,15 @@ void GfScriptManager::loadScript(u32 slot, const char *filename) {
   scriptManager->loadScript(slot, filename, SCRIPT_FILE_PRIO);
 }
 
-bool GfScriptManager::isScriptLoadError(u32 slot) { return fw::ScriptManager::get()->scripts[static_cast<int>(slot)].isLoadErr(); }
+bool GfScriptManager::isScriptLoadError(u32 slot) { return fw::ScriptManager::get()->unknown20[static_cast<int>(slot)].isLoadErr(); }
 
-void GfScriptManager::startScript(u32 slot) { fw::ScriptManager::get()->scripts[static_cast<int>(slot)].start(); }
+void GfScriptManager::startScript(u32 slot) { fw::ScriptManager::get()->unknown20[static_cast<int>(slot)].start(); }
 
 void GfScriptManager::destroyScript(u32 slot) { fw::ScriptManager::get()->destroyScript(slot, false); }
 
 bool GfScriptManager::isScriptWaitStart(u32 slot) {
   fw::ScriptManager *scriptManager = fw::ScriptManager::get();
-  if (scriptManager->scripts[static_cast<int>(slot)].isActive()) {
+  if (scriptManager->unknown20[static_cast<int>(slot)].isActive()) {
     return false;
   }
 
@@ -88,8 +88,8 @@ bool GfScriptManager::isScriptWaitStart(u32 slot) {
 
 bool GfScriptManager::isScriptLoaded(u32 slot) { return fw::ScriptManager::get()->isScriptLoaded(slot); }
 
-bool GfScriptManager::isScriptActive(u32 slot) { return fw::ScriptManager::get()->scripts[static_cast<int>(slot)].isActive(); }
+bool GfScriptManager::isScriptActive(u32 slot) { return fw::ScriptManager::get()->unknown20[static_cast<int>(slot)].isActive(); }
 
-bool GfScriptManager::isScriptFinish(u32 slot) { return fw::ScriptManager::get()->scripts[static_cast<int>(slot)].isFinish(); }
+bool GfScriptManager::isScriptFinish(u32 slot) { return fw::ScriptManager::get()->unknown20[static_cast<int>(slot)].isFinish(); }
 
 } // namespace gf

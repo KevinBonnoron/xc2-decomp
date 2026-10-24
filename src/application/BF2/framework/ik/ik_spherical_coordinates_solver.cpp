@@ -26,10 +26,10 @@ SphericalCoordinatesIkSolver *SphericalCoordinatesIkSolver::create(const ParamAd
 bool SphericalCoordinatesIkSolver::setupLimit(const ParamAdapter &param, const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose) {
   bind(frame, pose);
   if (boneName != nullptr) {
-    u16 index = this->pose->skeleton->getBoneID(boneName);
+    u16 index = this->unknown18->skeleton->getBoneID(boneName);
     if (index != anm::Skeleton::INVALID_BONE) {
-      boneIndex = index;
-      limitParam = param;
+      unknown70 = index;
+      unknown78 = param;
       resetLimit();
       return true;
     }
@@ -38,20 +38,20 @@ bool SphericalCoordinatesIkSolver::setupLimit(const ParamAdapter &param, const c
   return false;
 }
 
-SphericalCoordinatesIkSolver::SphericalCoordinatesIkSolver() : enabled(false), limitParam() {}
+SphericalCoordinatesIkSolver::SphericalCoordinatesIkSolver() : m_enable(false), unknown78() {}
 
 SphericalCoordinatesIkSolver::~SphericalCoordinatesIkSolver() {}
 
 void SphericalCoordinatesIkSolver::resetLimitParam() {
-  const AngleLimit *limit = limitParam.get<AngleLimit>();
-  limitUp = limit->limitAngleUp * mm::DEG_TO_RAD;
-  limitDown = limit->limitAngleDown * mm::DEG_TO_RAD;
-  limitLeft = limit->limitAngleLeft * mm::DEG_TO_RAD;
-  limitRight = limit->limitAngleRight * mm::DEG_TO_RAD;
+  const AngleLimit *limit = unknown78.get<AngleLimit>();
+  unknown40 = limit->limitAngleUp * mm::DEG_TO_RAD;
+  unknown44 = limit->limitAngleDown * mm::DEG_TO_RAD;
+  unknown48 = limit->limitAngleLeft * mm::DEG_TO_RAD;
+  unknown4c = limit->limitAngleRight * mm::DEG_TO_RAD;
 }
 
 const mm::mtl::RTTI *SphericalCoordinatesIkSolver::getRTTI() const { return &m_rtti; }
 
-bool SphericalCoordinatesIkSolver::isEnable() const { return enabled; }
+bool SphericalCoordinatesIkSolver::isEnable() const { return m_enable; }
 
 } // namespace fw

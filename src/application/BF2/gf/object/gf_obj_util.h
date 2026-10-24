@@ -124,7 +124,7 @@ public:
       return nullptr;
     }
 
-    if (info->unknown30->unknown08 != info->unknown18->type || info->unknown18->type != T::OBJECT_TYPE) {
+    if (info->unknown30->unknown08 != info->unknown18->unknown28 || info->unknown18->unknown28 != T::OBJECT_TYPE) {
       return nullptr;
     }
 

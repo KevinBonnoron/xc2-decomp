@@ -32,9 +32,9 @@ void Scheduler::setup() {
   if (obj == nullptr) {
     return;
   }
-  if (obj->type == gf::OBJECT_TYPE_DRIVER) {
+  if (obj->unknown28 == gf::OBJECT_TYPE_DRIVER) {
     unknown0c |= USE_LOOK | USE_LOOK_RESET;
-  } else if (obj->type == gf::OBJECT_TYPE_NPC) {
+  } else if (obj->unknown28 == gf::OBJECT_TYPE_NPC) {
     switch (unknown1c) {
     case 0:
       unknown0c |= USE_TURN | USE_RETURN | USE_LOOK | USE_LOOK_RESET;
@@ -94,7 +94,7 @@ void Scheduler::func_fld2evt(gf::GfObj *obj) {
   if ((unknown0c & USE_FADE) != 0) {
     unknown28.fadeout();
   }
-  unknown50[ORDER_FLD2EVT] = obj->type == gf::OBJECT_TYPE_DRIVER ? nullptr : &Scheduler::func_motionEnd;
+  unknown50[ORDER_FLD2EVT] = obj->unknown28 == gf::OBJECT_TYPE_DRIVER ? nullptr : &Scheduler::func_motionEnd;
 }
 
 void Scheduler::func_evt2idle(gf::GfObj *obj) {
@@ -133,9 +133,9 @@ void Scheduler::func_look(gf::GfObj *obj) {
     return;
   }
   gf::GfObj *target = nullptr;
-  if (obj->type == gf::OBJECT_TYPE_DRIVER) {
+  if (obj->unknown28 == gf::OBJECT_TYPE_DRIVER) {
     target = gf::GfObjUtil::getObj(Manager::get()->getObjHandle());
-  } else if (obj->type == gf::OBJECT_TYPE_NPC) {
+  } else if (obj->unknown28 == gf::OBJECT_TYPE_NPC) {
     target = gf::GfGameParty::getLeaderTransformObj();
   }
   if (target == nullptr) {
