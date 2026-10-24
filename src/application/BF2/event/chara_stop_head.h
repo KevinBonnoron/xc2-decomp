@@ -13,7 +13,7 @@ public:
   virtual RESULT update(const Param &param);
 
 private:
-  gf::GF_OBJ_HANDLE *handle;
+  gf::GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
   u8 _10[0x18 - 0x10];
 };
 

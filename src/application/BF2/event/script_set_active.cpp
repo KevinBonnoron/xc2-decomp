@@ -10,12 +10,12 @@ namespace event {
 
 void ScriptSetActive::doit(const Param &param) {
   const char *path = param.val(0).getStr();
-  mPrevActive = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
+  unknown08 = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
   mm::mtl::Singleton<ObjectManager>::getPtr()->setActivePath(path);
 }
 
 void ScriptSetActive::undo(const Param &param) {
-  Object *prevActive = mPrevActive;
+  Object *prevActive = unknown08;
   mm::mtl::Singleton<ObjectManager>::getPtr()->getCurrent()->setActive(prevActive);
 }
 

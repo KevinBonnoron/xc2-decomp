@@ -54,32 +54,32 @@ public:
 private:
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
-      flags |= flag;
+      unknown10 |= flag;
     } else {
-      flags &= ~flag;
+      unknown10 &= ~flag;
     }
   }
 
   void setDispFlag(u32 flag, bool isSet) {
     if (isSet) {
-      dispFlags |= flag;
+      unknown14 |= flag;
     } else {
-      dispFlags &= ~flag;
+      unknown14 &= ~flag;
     }
   }
 
-  u32 flags;
-  u32 dispFlags;
-  mm::mtl::FixedVector<EffectRes *, RES_COUNT> mResList;
-  EffectRes *mCurrentRes;
-  u32 mOffscrID;
-  u32 mReplaceID;
+  u32 unknown10;                                          // Inferred role: flags; original member name unknown.
+  u32 unknown14;                                          // Inferred role: disp flags; original member name unknown.
+  mm::mtl::FixedVector<EffectRes *, RES_COUNT> unknown18; // Inferred role: res list; original member name unknown.
+  EffectRes *unknowna0;                                   // Inferred role: current res; original member name unknown.
+  u32 m_offscrID;
+  u32 unknownac; // Inferred role: replace id; original member name unknown.
 };
 
 static_assert(sizeof(EffectManager) == 0xb0, "");
 
 inline void EffectManager::replaceFile(mm::mtl::FixStr<128> &file) const {
-  if (!isReplaceMode() || mReplaceID == 0) {
+  if (!isReplaceMode() || unknownac == 0) {
     return;
   }
   char buffer[256];
@@ -87,7 +87,7 @@ inline void EffectManager::replaceFile(mm::mtl::FixStr<128> &file) const {
   __builtin_strcpy(buffer, file.c_str());
   char *found = __builtin_strstr(buffer, "dark");
   if (found != nullptr) {
-    __builtin_strcpy(found, EffectUtil::getAttrName(mReplaceID));
+    __builtin_strcpy(found, EffectUtil::getAttrName(unknownac));
     file = buffer;
   }
 }

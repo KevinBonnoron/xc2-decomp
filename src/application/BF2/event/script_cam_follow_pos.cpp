@@ -16,7 +16,7 @@ void ScriptCamFollowPos::doit(const Param &param) {
     return;
   }
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
-  prevFollow = camera->isFollowPos();
+  unknown08 = camera->isFollowPos();
   camera->followPos(param.val(0).getBool());
 }
 
@@ -25,7 +25,7 @@ void ScriptCamFollowPos::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
     return;
   }
-  static_cast<ObjectCamera *>(object)->followPos(prevFollow);
+  static_cast<ObjectCamera *>(object)->followPos(unknown08);
 }
 
 } // namespace event

@@ -39,16 +39,16 @@ public:
 
   CamObj(u32 screenID, bool isFocal, bool isStreamMode);
   virtual ~CamObj();
-  u32 getScreenID() const { return mScreenID; }
+  u32 getScreenID() const { return unknown64; }
   void changeActive(CamBase *cam);
-  CamHands *getHands() { return &mHands; }
+  CamHands *getHands() { return &unknownb0; }
   CamHands *activateHands() {
-    changeActive(&mHands);
-    return &mHands;
+    changeActive(&unknownb0);
+    return &unknownb0;
   }
   CamMotion *activateMotion() {
-    changeActive(&mMotion);
-    return &mMotion;
+    changeActive(&unknownbb0);
+    return &unknownbb0;
   }
   void start();
   void end();
@@ -57,18 +57,18 @@ public:
   virtual void tail();
 
 private:
-  SetEnable mSetEnable;
-  SetTargetPos mSetTargetPos;
-  SetFov mSetFov;
-  SetNearfar mSetNearfar;
+  SetEnable unknown40;    // Inferred role: set enable; original member name unknown.
+  SetTargetPos unknown48; // Inferred role: set target pos; original member name unknown.
+  SetFov unknown50;       // Inferred role: set fov; original member name unknown.
+  SetNearfar unknown58;   // Inferred role: set nearfar; original member name unknown.
   u8 _60[0x64 - 0x60];
-  u32 mScreenID;
+  u32 unknown64; // Inferred role: screen id; original member name unknown.
   u8 _68[0x70 - 0x68];
-  CamField mField;
-  CamHands mHands;
-  CamMotion mMotion;
-  CamBase *mActive;
-  CmdQueue<CMD_COUNT, 0> mCmdQueue;
+  CamField unknown70;                // Inferred role: field; original member name unknown.
+  CamHands unknownb0;                // Inferred role: hands; original member name unknown.
+  CamMotion unknownbb0;              // Inferred role: motion; original member name unknown.
+  CamBase *unknownc70;               // Inferred role: active; original member name unknown.
+  CmdQueue<CMD_COUNT, 0> unknownc78; // Inferred role: cmd queue; original member name unknown.
 };
 
 static_assert(sizeof(CamObj) == 0x15d0, "");

@@ -165,72 +165,72 @@ public:
   void updateDispJiji();
 
   const char *getName() const;
-  bool isReady() const { return (flags & FLAG_READY) != 0; }
-  gf::GF_OBJ_HANDLE *getHandle() const { return handle; }
-  IAttachActor *getAttachActor() const { return attachActor; }
-  const FrameInfo &getFrameInfo() const { return frameInfo; }
+  bool isReady() const { return (unknownca0 & FLAG_READY) != 0; }
+  gf::GF_OBJ_HANDLE *getHandle() const { return unknownd40; }
+  IAttachActor *getAttachActor() const { return unknownd58; }
+  const FrameInfo &getFrameInfo() const { return unknown3030; }
 
 private:
-  CharaSetPos cmdSetPos;
-  CharaSetRot cmdSetRot;
+  CharaSetPos unknown08; // Inferred role: cmd set pos; original member name unknown.
+  CharaSetRot unknown18; // Inferred role: cmd set rot; original member name unknown.
   u8 _28[0x30 - 0x28];
-  CharaWalkPos cmdWalkPos;
-  CharaLinerPos cmdLinerPos;
-  CharaTurnRot cmdTurnRot;
-  CharaLinerRot cmdLinerRot;
-  CharaSetTar cmdSetTar;
-  CharaSetIdle cmdSetIdle;
-  CharaPlayActionAuto cmdPlayActionAuto;
-  CharaPlayAction cmdPlayAction;
-  CharaStopAction cmdStopAction;
-  CharaPlayMotion cmdPlayMotion;
-  CharaPlayMotionABC cmdPlayMotionABC;
-  CharaPlayEva cmdPlayEva;
-  CharaPlayEvaEff cmdPlayEvaEff;
-  CharaHideWpn cmdHideWpn;
-  CharaPlayHead cmdPlayHead;
-  CharaStopHead cmdStopHead;
-  CharaPlayFacial cmdPlayFacial;
-  CharaPlayTalkAuto cmdPlayTalkAuto;
-  CharaPlayTalk cmdPlayTalk;
-  CharaPlayWink cmdPlayWink;
-  CharaMount cmdMount;
-  CharaFade cmdFade;
-  u32 flags;
-  u32 state;
-  mm::mtl::FixStr<64> name;
-  CHARA_TYPE type;
-  u32 id;
-  mm::mtl::FixStr<64> modelName;
-  u8 _D38[0xd3c - 0xd38];
-  u32 offscrId;
-  gf::GF_OBJ_HANDLE *handle;
-  gf::GfEvtModel *model;
-  ModelObj *modelObj;
-  IAttachActor *attachActor;
-  CharaIKUpdater ikUpdater;
-  CharaDysUpdater dysUpdater;
-  CharaTarPlayer tarPlayer;
-  CharaTarPlayerMot tarPlayerMot;
-  CharaLensPlayer lensPlayer;
-  CharaWeightPlayer weightPlayer;
-  CharaWinkPlayer winkPlayer;
-  CharaEffectPlayer effectPlayer;
-  CharaPartUpdater partUpdater;
-  f32 eyeOffset;
-  CmdQueue<QUEUE_COUNT, 0> queue;
-  CmdQueue<QUEUE_COUNT, 0> subQueue;
-  CmdQueue<SUB_QUEUE_COUNT, 0> fadeQueue;
-  mm::Vec3 pos;
-  mm::Vec3 posTo;
-  mm::Vec3 rot;
-  mm::Vec3 rotTo;
-  u8 _2FF0[0x3030 - 0x2ff0];
-  FrameInfo frameInfo;
-  f32 streamFrame;
-  f32 weaponScale;
-  u32 hideWeaponFlags[2];
-  int reuseFlag;
+  CharaWalkPos unknown30;         // Inferred role: cmd walk pos; original member name unknown.
+  CharaLinerPos unknown100;       // Inferred role: cmd liner pos; original member name unknown.
+  CharaTurnRot unknown310;        // Inferred role: cmd turn rot; original member name unknown.
+  CharaLinerRot unknown330;       // Inferred role: cmd liner rot; original member name unknown.
+  CharaSetTar unknown530;         // Inferred role: cmd set tar; original member name unknown.
+  CharaSetIdle unknown5e0;        // Inferred role: cmd set idle; original member name unknown.
+  CharaPlayActionAuto unknown608; // Inferred role: cmd play action auto; original member name unknown.
+  CharaPlayAction unknown630;     // Inferred role: cmd play action; original member name unknown.
+  CharaStopAction unknown670;     // Inferred role: cmd stop action; original member name unknown.
+  CharaPlayMotion unknown680;     // Inferred role: cmd play motion; original member name unknown.
+  CharaPlayMotionABC unknown6d0;  // Inferred role: cmd play motion abc; original member name unknown.
+  CharaPlayEva unknown750;        // Inferred role: cmd play eva; original member name unknown.
+  CharaPlayEvaEff unknown8e0;     // Inferred role: cmd play eva eff; original member name unknown.
+  CharaHideWpn unknown938;        // Inferred role: cmd hide wpn; original member name unknown.
+  CharaPlayHead unknown950;       // Inferred role: cmd play head; original member name unknown.
+  CharaStopHead unknown988;       // Inferred role: cmd stop head; original member name unknown.
+  CharaPlayFacial unknown9a0;     // Inferred role: cmd play facial; original member name unknown.
+  CharaPlayTalkAuto unknowna10;   // Inferred role: cmd play talk auto; original member name unknown.
+  CharaPlayTalk unknowna38;       // Inferred role: cmd play talk; original member name unknown.
+  CharaPlayWink unknownab0;       // Inferred role: cmd play wink; original member name unknown.
+  CharaMount unknownb40;          // Inferred role: cmd mount; original member name unknown.
+  CharaFade unknownb80;           // Inferred role: cmd fade; original member name unknown.
+  u32 unknownca0;                 // Inferred role: flags; original member name unknown.
+  u32 unknownca4;                 // Inferred role: state; original member name unknown.
+  mm::mtl::FixStr<64> m_name;
+  CHARA_TYPE unknowncec;          // Inferred role: type; original member name unknown.
+  u32 unknowncf0;                 // Inferred role: id; original member name unknown.
+  mm::mtl::FixStr<64> unknowncf4; // Inferred role: model name; original member name unknown.
+  u8 unknownd38[0xd3c - 0xd38];   // Inferred role: d38; original member name unknown.
+  u32 unknownd3c;                 // Inferred role: offscr id; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknownd40;  // Inferred role: handle; original member name unknown.
+  gf::GfEvtModel *unknownd48;     // Inferred role: model; original member name unknown.
+  ModelObj *unknownd50;           // Inferred role: model object; original member name unknown.
+  IAttachActor *unknownd58;       // Inferred role: attach actor; original member name unknown.
+  CharaIKUpdater unknownd60;      // Inferred role: ik updater; original member name unknown.
+  CharaDysUpdater unknownde0;     // Inferred role: dys updater; original member name unknown.
+  CharaTarPlayer unknowne10;      // Inferred role: tar player; original member name unknown.
+  CharaTarPlayerMot unknownfe0;   // Inferred role: tar player mot; original member name unknown.
+  CharaLensPlayer unknown1280;    // Inferred role: lens player; original member name unknown.
+  CharaWeightPlayer unknown12d0;  // Inferred role: weight player; original member name unknown.
+  CharaWinkPlayer unknown1350;    // Inferred role: wink player; original member name unknown.
+  CharaEffectPlayer unknown1390;  // Inferred role: effect player; original member name unknown.
+  CharaPartUpdater unknown1650;   // Inferred role: part updater; original member name unknown.
+  f32 m_eyeOffset;
+  CmdQueue<QUEUE_COUNT, 0> unknown1738;     // Inferred role: queue; original member name unknown.
+  CmdQueue<QUEUE_COUNT, 0> unknown2088;     // Inferred role: sub queue; original member name unknown.
+  CmdQueue<SUB_QUEUE_COUNT, 0> unknown29d8; // Inferred role: fade queue; original member name unknown.
+  mm::Vec3 unknown2fb0;                     // Inferred role: pos; original member name unknown.
+  mm::Vec3 unknown2fc0;                     // Inferred role: pos to; original member name unknown.
+  mm::Vec3 unknown2fd0;                     // Inferred role: rot; original member name unknown.
+  mm::Vec3 unknown2fe0;                     // Inferred role: rot to; original member name unknown.
+  u8 unknown2ff0[0x3030 - 0x2ff0];          // Inferred role: 2 ff0; original member name unknown.
+  FrameInfo unknown3030;                    // Inferred role: frame info; original member name unknown.
+  f32 unknown3044;                          // Inferred role: stream frame; original member name unknown.
+  f32 unknown3048;                          // Inferred role: weapon scale; original member name unknown.
+  u32 unknown304c[2];                       // Inferred role: hide weapon flags; original member name unknown.
+  int unknown3054;                          // Inferred role: reuse flag; original member name unknown.
 };
 
 static_assert(sizeof(CharaObj) == 0x3060, "");

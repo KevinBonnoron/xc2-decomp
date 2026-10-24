@@ -31,29 +31,29 @@ public:
   void changeVolume(f32 volume, f32 frame);
   void pan(f32 pan, f32 frame, CV_TYPE cv);
   void pause(bool isPause);
-  bool isPlay() const { return (flags & FLAG_PLAY) != 0; }
-  bool isEnd() const { return (flags & FLAG_END) != 0; }
+  bool isPlay() const { return (unknown08 & FLAG_PLAY) != 0; }
+  bool isEnd() const { return (unknown08 & FLAG_END) != 0; }
 
 private:
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
-      flags |= flag;
+      unknown08 |= flag;
     } else {
-      flags &= ~flag;
+      unknown08 &= ~flag;
     }
   }
 
-  u32 flags;
-  gf::SoundHandle handle;
-  mm::mtl::FixStr<64> name;
-  f32 playFrame;
-  f32 life;
-  f32 fadeIn;
-  f32 fadeOut;
-  f32 volume;
-  AnmF32 volumeAnm;
-  f32 panValue;
-  AnmF32 panAnm;
+  u32 unknown08;                 // Inferred role: flags; original member name unknown.
+  gf::SoundHandle unknown0c;     // Inferred role: handle; original member name unknown.
+  mm::mtl::FixStr<64> unknown14; // Inferred role: name; original member name unknown.
+  f32 unknown58;                 // Inferred role: play frame; original member name unknown.
+  f32 unknown5c;                 // Inferred role: life; original member name unknown.
+  f32 unknown60;                 // Inferred role: fade in; original member name unknown.
+  f32 unknown64;                 // Inferred role: fade out; original member name unknown.
+  f32 unknown68;                 // Inferred role: volume; original member name unknown.
+  AnmF32 unknown70;              // Inferred role: volume anm; original member name unknown.
+  f32 unknown180;                // Inferred role: pan value; original member name unknown.
+  AnmF32 unknown188;             // Inferred role: pan anm; original member name unknown.
 };
 
 static_assert(sizeof(SeObj) == 0x298, "");

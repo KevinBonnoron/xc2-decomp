@@ -18,7 +18,7 @@ void ScriptEffectTurn::doit(const Param &param) {
   }
   ObjectEffect *effect = static_cast<ObjectEffect *>(object);
   RotAxis axis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
-  prevAxis = effect->getRotAxis();
+  unknown10 = effect->getRotAxis();
   effect->linerRotAxis(axis, param.val(4).getF32(), static_cast<CV_TYPE>(param.val(5).getS32()));
 }
 
@@ -27,7 +27,7 @@ void ScriptEffectTurn::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
     return;
   }
-  static_cast<ObjectEffect *>(object)->setRotAxis(prevAxis);
+  static_cast<ObjectEffect *>(object)->setRotAxis(unknown10);
 }
 
 void ScriptEffectTurn::redo(const Param &param) {

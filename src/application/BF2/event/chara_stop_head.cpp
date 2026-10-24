@@ -5,7 +5,7 @@
 namespace event {
 
 ICmd::RESULT CharaStopHead::update(const Param &param) {
-  gf::GfObjUtil::getObj(handle);
+  gf::GfObjUtil::getObj(unknown08);
   return RESULT_END;
 }
 

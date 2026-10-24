@@ -27,13 +27,13 @@ public:
   bool isActive() const;
 
 private:
-  u32 flags;
-  u32 talkerType;
-  SelectWindow window;
+  u32 unknown10;          // Inferred role: flags; original member name unknown.
+  u32 unknown14;          // Inferred role: talker type; original member name unknown.
+  SelectWindow unknown18; // Inferred role: window; original member name unknown.
   u8 _30[0x38 - 0x30];
-  int selected;
-  int result;
-  s32 wait;
+  int unknown38; // Inferred role: selected; original member name unknown.
+  int m_result;
+  s32 unknown40; // Inferred role: wait; original member name unknown.
 };
 
 static_assert(sizeof(SelectManager) == 0x48, "");

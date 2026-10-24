@@ -36,16 +36,16 @@ public:
     Item();
     void addRef(IResEvent *event);
 
-    mm::mtl::FixStr<256> path;
-    IResEvent *mEvents[EVENT_COUNT];
-    bool mIsPackOnly;
-    u32 mCallbackIndex;
-    u32 mEventCount;
-    fw::RenderResource *mResource;
-    void *mAdr;
-    size_t mSize;
-    RES_RESULT_TYPE mResult;
-    bool mIsPackLoaded;
+    mm::mtl::FixStr<256> unknown00;     // Inferred role: path; original member name unknown.
+    IResEvent *unknown108[EVENT_COUNT]; // Inferred role: events; original member name unknown.
+    bool unknown408;                    // Inferred role: is pack only; original member name unknown.
+    u32 unknown40c;                     // Inferred role: callback index; original member name unknown.
+    u32 unknown410;                     // Inferred role: event count; original member name unknown.
+    fw::RenderResource *unknown418;     // Inferred role: resource; original member name unknown.
+    void *unknown420;                   // Inferred role: adr; original member name unknown.
+    size_t unknown428;                  // Inferred role: size; original member name unknown.
+    RES_RESULT_TYPE unknown430;         // Inferred role: result; original member name unknown.
+    bool unknown434;                    // Inferred role: is pack loaded; original member name unknown.
   };
 
   ResManager();
@@ -67,11 +67,11 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 flags;
-  mm::mtl::FixedVector<Item *, ITEM_COUNT> mItems;
-  ResPackManager mPackManager;
-  s32 mLoadingCount;
-  u32 mLoadedCount;
+  u32 unknown18;                                      // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedVector<Item *, ITEM_COUNT> unknown20; // Inferred role: items; original member name unknown.
+  ResPackManager unknown1028;                         // Inferred role: pack manager; original member name unknown.
+  s32 unknown10b8;                                    // Inferred role: loading count; original member name unknown.
+  u32 unknown10bc;                                    // Inferred role: loaded count; original member name unknown.
 };
 
 static_assert(sizeof(ResManager::Item) == 0x438, "");

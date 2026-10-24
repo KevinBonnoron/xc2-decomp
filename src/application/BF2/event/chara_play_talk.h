@@ -24,11 +24,11 @@ public:
   virtual void term();
   void render(const mm::Vec3 &position, f32 eyeOffset);
 
-  bool isManual() const { return (flags & FLAG_MANUAL) != 0; }
+  bool isManual() const { return (unknown08 & FLAG_MANUAL) != 0; }
 
 private:
-  u32 flags;
-  gf::GF_OBJ_HANDLE *handle;
+  u32 unknown08;                // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
   u8 _18[0x78 - 0x18];
 };
 

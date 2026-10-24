@@ -4,58 +4,58 @@
 
 namespace event {
 
-StmPackData::StmPackData() : flags(0), handle(nullptr) {}
+StmPackData::StmPackData() : unknown08(0), unknown90(nullptr) {}
 
 StmPackData::~StmPackData() { destroy(); }
 
 void StmPackData::destroy() {
   close();
-  path = "";
-  flags = 0;
+  unknown0c = "";
+  unknown08 = 0;
 }
 
 void StmPackData::create(const char *path) {
   destroy();
-  this->path = path;
+  this->unknown0c = path;
 }
 
 void StmPackData::close() {
-  if (handle != nullptr) {
-    ml::DevFileTh::rfIsBusy(handle);
-    ml::DevFileTh::rfClose(handle);
-    handle = nullptr;
+  if (unknown90 != nullptr) {
+    ml::DevFileTh::rfIsBusy(unknown90);
+    ml::DevFileTh::rfClose(unknown90);
+    unknown90 = nullptr;
   }
 }
 
 bool StmPackData::open() {
-  handle = nullptr;
+  unknown90 = nullptr;
   ml::DevFileParamTh param;
   param.event = this;
-  param.path = path.c_str();
-  handle = ml::DevFileTh::rfOpen(param);
-  return handle != nullptr;
+  param.path = unknown0c.c_str();
+  unknown90 = ml::DevFileTh::rfOpen(param);
+  return unknown90 != nullptr;
 }
 
 void StmPackData::read(void *buffer, size_t size, size_t offset) {
-  flags |= FLAG_BUSY;
+  unknown08 |= FLAG_BUSY;
   ml::DevFileParamTh param;
   param.buffer = buffer;
   param.offset = offset;
   param.readSize = size;
   param.size = size;
   param.priority = 1;
-  ml::DevFileTh::rfRead(handle, param);
+  ml::DevFileTh::rfRead(unknown90, param);
 }
 
-bool StmPackData::isBusy() const { return (flags & FLAG_BUSY) || ml::DevFileTh::rfIsBusy(handle); }
+bool StmPackData::isBusy() const { return (unknown08 & FLAG_BUSY) || ml::DevFileTh::rfIsBusy(unknown90); }
 
-bool StmPackData::isSuccess() const { return handle != nullptr && !isBusy(); }
+bool StmPackData::isSuccess() const { return unknown90 != nullptr && !isBusy(); }
 
-bool StmPackData::isFailure() const { return handle == nullptr; }
+bool StmPackData::isFailure() const { return unknown90 == nullptr; }
 
 bool StmPackData::OnFileEvent(ml::EventFileTh *event) {
   if (event->type == ml::EventFileTh::TYPE_COMPLETE) {
-    flags &= ~FLAG_BUSY;
+    unknown08 &= ~FLAG_BUSY;
     return true;
   }
   return false;

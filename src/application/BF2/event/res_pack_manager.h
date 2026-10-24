@@ -24,7 +24,7 @@ public:
   bool isLoading() const;
 
 private:
-  mm::mtl::FixedVector<ResPack *, PACK_COUNT> mPacks;
+  mm::mtl::FixedVector<ResPack *, PACK_COUNT> unknown08; // Inferred role: packs; original member name unknown.
 };
 
 static_assert(sizeof(ResPackManager) == 0x90, "");

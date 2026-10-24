@@ -17,7 +17,7 @@ void ScriptEffectScale::doit(const Param &param) {
     return;
   }
   ObjectEffect *effect = static_cast<ObjectEffect *>(object);
-  prevScale = effect->getScale();
+  unknown10 = effect->getScale();
   f32 scale = param.val(0).getF32();
   effect->setScale(mm::Vec3(scale, scale, scale));
 }
@@ -27,7 +27,7 @@ void ScriptEffectScale::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
     return;
   }
-  static_cast<ObjectEffect *>(object)->setScale(prevScale);
+  static_cast<ObjectEffect *>(object)->setScale(unknown10);
 }
 
 void ScriptEffectScale::redo(const Param &param) {

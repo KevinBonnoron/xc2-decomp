@@ -7,13 +7,13 @@
 
 namespace event {
 
-void CharaPlayFacial::init() { flags = 0; }
+void CharaPlayFacial::init() { unknown08 = 0; }
 
 ICmd::RESULT CharaPlayFacial::update(const Param &param) {
-  if (gf::GfObjUtil::getObj(handle) == nullptr) {
+  if (gf::GfObjUtil::getObj(unknown10) == nullptr) {
     return RESULT_END;
   }
-  f32 delta = static_cast<CharaObj *>(param.val(0).getUserdata())->getFrameInfo().delta;
+  f32 delta = static_cast<CharaObj *>(param.val(0).getUserdata())->getFrameInfo().unknown04;
   if (param.getFrame() <= 0) {
     play(param.val(1).getS32(),
          param.val(2).getF32(),
@@ -26,9 +26,9 @@ ICmd::RESULT CharaPlayFacial::update(const Param &param) {
          param.val(9).getF32(),
          param.val(10).getF32());
   }
-  if ((flags & FLAG_LOOP) == 0) {
-    life -= delta;
-    if (life < 0.0f) {
+  if ((unknown08 & FLAG_LOOP) == 0) {
+    unknown24 -= delta;
+    if (unknown24 < 0.0f) {
       idle();
       return RESULT_END;
     }

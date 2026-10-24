@@ -8,28 +8,28 @@ ParamVariable2::ParamVariable2() {}
 
 ParamVariable2::~ParamVariable2() {}
 
-void ParamVariable2::clear() { value = ""; }
+void ParamVariable2::clear() { m_str = ""; }
 
-void ParamVariable2::setS32(s32 value) { this->value.format("%d", value); }
+void ParamVariable2::setS32(s32 value) { this->m_str.format("%d", value); }
 
-s32 ParamVariable2::getS32() const { return atoi(value.c_str()); }
+s32 ParamVariable2::getS32() const { return atoi(m_str.c_str()); }
 
-void ParamVariable2::setF32(f32 value) { this->value.format("%f", value); }
+void ParamVariable2::setF32(f32 value) { this->m_str.format("%f", value); }
 
-f32 ParamVariable2::getF32() const { return atof(value.c_str()); }
+f32 ParamVariable2::getF32() const { return atof(m_str.c_str()); }
 
-void ParamVariable2::setBool(bool value) { this->value = value ? "true" : "false"; }
+void ParamVariable2::setBool(bool value) { this->m_str = value ? "true" : "false"; }
 
-bool ParamVariable2::getBool() const { return __builtin_strcmp(value.c_str(), "true") == 0; }
+bool ParamVariable2::getBool() const { return __builtin_strcmp(m_str.c_str(), "true") == 0; }
 
-void ParamVariable2::setStr(const char *value) { this->value = value; }
+void ParamVariable2::setStr(const char *value) { this->m_str = value; }
 
-const char *ParamVariable2::getStr() const { return value.c_str(); }
+const char *ParamVariable2::getStr() const { return m_str.c_str(); }
 
-void ParamVariable2::setUserdata(void *value) { this->value.format("%lld", value); }
+void ParamVariable2::setUserdata(void *value) { this->m_str.format("%lld", value); }
 
-void *ParamVariable2::getUserdata() const { return reinterpret_cast<void *>(static_cast<s64>(atoi(value.c_str()))); }
+void *ParamVariable2::getUserdata() const { return reinterpret_cast<void *>(static_cast<s64>(atoi(m_str.c_str()))); }
 
-void ParamVariable2::createString(mm::mtl::FixStr<256> &string) { string = value.c_str(); }
+void ParamVariable2::createString(mm::mtl::FixStr<256> &string) { string = m_str.c_str(); }
 
 } // namespace event

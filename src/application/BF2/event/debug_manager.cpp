@@ -13,45 +13,45 @@ namespace event {
 constexpr s32 MESSAGE_DISP_FRAMES = 90;
 constexpr s32 SIGHT_MARGIN = 30;
 
-DebugManager::DebugManager() : flags(0), mDispSight(SIGHT_NONE) {}
+DebugManager::DebugManager() : unknown10(0), m_dispSight(SIGHT_NONE) {}
 
 void DebugManager::update() {
-  if (flags & FLAG_MESSAGE) {
-    if (mMessageTimer-- <= 0) {
-      flags &= ~FLAG_MESSAGE;
+  if (unknown10 & FLAG_MESSAGE) {
+    if (unknown118-- <= 0) {
+      unknown10 &= ~FLAG_MESSAGE;
     }
   }
-  if (flags & FLAG_WARNING) {
-    if (mWarningTimer-- <= 0) {
-      flags &= ~FLAG_WARNING;
+  if (unknown10 & FLAG_WARNING) {
+    if (unknown220-- <= 0) {
+      unknown10 &= ~FLAG_WARNING;
     }
   }
 }
 
 void DebugManager::render() {
-  if (!(flags & FLAG_DISP)) {
+  if (!(unknown10 & FLAG_DISP)) {
     return;
   }
-  if (flags & FLAG_MESSAGE) {
+  if (unknown10 & FLAG_MESSAGE) {
     s32 x = ml::DevGraph::getRootWidth() - 320;
     s32 y = ml::DevGraph::getRootHeight() - 150;
     fw::debug::drawSquare2D(mm::Rect<s32>(x, y, 300, 25), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
     fw::debug::drawLineSquare2D(mm::Rect<s32>(x, y, 300, 25), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
     fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
-    fw::debug::drawFont(x + 5, y + 5, mMessage.c_str());
+    fw::debug::drawFont(x + 5, y + 5, unknown14.c_str());
   }
-  if (flags & FLAG_WARNING) {
+  if (unknown10 & FLAG_WARNING) {
     s32 x = ml::DevGraph::getRootWidth() - 520;
     s32 y = ml::DevGraph::getRootHeight() - 90;
     fw::debug::drawSquare2D(mm::Rect<s32>(x, y, 500, 25), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
     fw::debug::drawLineSquare2D(mm::Rect<s32>(x, y, 500, 25), mm::Col4(0.8f, 1.0f, 0.8f, 1.0f));
     fw::debug::drawFontColor(mm::Col4(0.8f, 1.0f, 0.8f, 1.0f));
-    fw::debug::drawFont(x + 5, y + 5, mWarning.c_str());
+    fw::debug::drawFont(x + 5, y + 5, unknown11c.c_str());
   }
-  if (mDispSight < SIGHT_CROSS) {
+  if (m_dispSight < SIGHT_CROSS) {
     return;
   }
-  switch (mDispSight) {
+  switch (m_dispSight) {
   case SIGHT_CROSS: {
     s32 startX = SIGHT_MARGIN;
     s32 startY = ml::DevGraph::getRootHeight() >> 1;
@@ -100,8 +100,8 @@ void DebugManager::render() {
 }
 
 void DebugManager::tail() {
-  if (flags & FLAG_SYNC_FREE_CAM_ONE_TIME) {
-    flags &= ~(FLAG_SYNC_FREE_CAM | FLAG_SYNC_FREE_CAM_ONE_TIME);
+  if (unknown10 & FLAG_SYNC_FREE_CAM_ONE_TIME) {
+    unknown10 &= ~(FLAG_SYNC_FREE_CAM | FLAG_SYNC_FREE_CAM_ONE_TIME);
   }
 }
 
@@ -111,9 +111,9 @@ void DebugManager::playMessage(const char *format, ...) {
   va_start(args, format);
   vsnprintf(buffer, sizeof(buffer), format, args);
   va_end(args);
-  mMessage = buffer;
-  mMessageTimer = MESSAGE_DISP_FRAMES;
-  flags |= FLAG_MESSAGE;
+  unknown14 = buffer;
+  unknown118 = MESSAGE_DISP_FRAMES;
+  unknown10 |= FLAG_MESSAGE;
 }
 
 void DebugManager::playWarning(const char *format, ...) {
@@ -122,48 +122,48 @@ void DebugManager::playWarning(const char *format, ...) {
   va_start(args, format);
   vsnprintf(buffer, sizeof(buffer), format, args);
   va_end(args);
-  mWarning = buffer;
-  mWarningTimer = MESSAGE_DISP_FRAMES;
-  flags |= FLAG_WARNING;
+  unknown11c = buffer;
+  unknown220 = MESSAGE_DISP_FRAMES;
+  unknown10 |= FLAG_WARNING;
 }
 
 void DebugManager::setPlayOnetime(bool isPlayOnetime) { setFlag(FLAG_PLAY_ONETIME, isPlayOnetime); }
 
-bool DebugManager::isPlayOnetime() const { return (flags & FLAG_PLAY_ONETIME) != 0; }
+bool DebugManager::isPlayOnetime() const { return (unknown10 & FLAG_PLAY_ONETIME) != 0; }
 
 void DebugManager::setPlayCancel(bool isPlayCancel) { setFlag(FLAG_PLAY_CANCEL, isPlayCancel); }
 
-bool DebugManager::isPlayCancel() const { return (flags & FLAG_PLAY_CANCEL) != 0; }
+bool DebugManager::isPlayCancel() const { return (unknown10 & FLAG_PLAY_CANCEL) != 0; }
 
 void DebugManager::setFastSkipDisable(bool isDisable) { setFlag(FLAG_FAST_SKIP_DISABLE, isDisable); }
 
-bool DebugManager::isFastSkipDisable() const { return (flags & FLAG_FAST_SKIP_DISABLE) != 0; }
+bool DebugManager::isFastSkipDisable() const { return (unknown10 & FLAG_FAST_SKIP_DISABLE) != 0; }
 
 void DebugManager::setFastSkipEnableOneTime(bool isEnable) { setFlag(FLAG_FAST_SKIP_ENABLE_ONE_TIME, isEnable); }
 
-bool DebugManager::isFastSkipEnableOneTime() const { return (flags & FLAG_FAST_SKIP_ENABLE_ONE_TIME) != 0; }
+bool DebugManager::isFastSkipEnableOneTime() const { return (unknown10 & FLAG_FAST_SKIP_ENABLE_ONE_TIME) != 0; }
 
 void DebugManager::setAgeingSkipEnable(bool isEnable) { setFlag(FLAG_AGEING_SKIP_ENABLE, isEnable); }
 
-bool DebugManager::isAgeingSkip() const { return (flags & FLAG_AGEING_SKIP_ENABLE) != 0; }
+bool DebugManager::isAgeingSkip() const { return (unknown10 & FLAG_AGEING_SKIP_ENABLE) != 0; }
 
-void DebugManager::failureSkip() { flags |= FLAG_FAILURE_SKIP; }
+void DebugManager::failureSkip() { unknown10 |= FLAG_FAILURE_SKIP; }
 
-bool DebugManager::isFailureSkip() const { return (flags & FLAG_FAILURE_SKIP) != 0; }
+bool DebugManager::isFailureSkip() const { return (unknown10 & FLAG_FAILURE_SKIP) != 0; }
 
 void DebugManager::setDisableBgm(bool isDisable) { setFlag(FLAG_DISABLE_BGM, isDisable); }
 
-bool DebugManager::isDisableBgm() const { return (flags & FLAG_DISABLE_BGM) != 0; }
+bool DebugManager::isDisableBgm() const { return (unknown10 & FLAG_DISABLE_BGM) != 0; }
 
 void DebugManager::setReplaceDefaultEquip(bool isReplace, u32 slot, u32 item) {
   if (slot > 0 && slot < EQUIP_SLOT_COUNT) {
-    mReplaceDefaultEquips[slot] = isReplace ? item : 0;
+    unknown228[slot] = isReplace ? item : 0;
   }
 }
 
 bool DebugManager::isReplaceDefaultEquip(u32 slot, u32 *item) {
   if (slot > 0 && slot < EQUIP_SLOT_COUNT) {
-    u32 replace = mReplaceDefaultEquips[slot];
+    u32 replace = unknown228[slot];
     if (replace != 0) {
       if (item != nullptr) {
         *item = replace;
@@ -176,43 +176,43 @@ bool DebugManager::isReplaceDefaultEquip(u32 slot, u32 *item) {
 
 void DebugManager::setReplaceMaximumEquip(bool isReplace) { setFlag(FLAG_REPLACE_MAXIMUM_EQUIP, isReplace); }
 
-bool DebugManager::isReplaceMaximumEquip() const { return (flags & FLAG_REPLACE_MAXIMUM_EQUIP) != 0; }
+bool DebugManager::isReplaceMaximumEquip() const { return (unknown10 & FLAG_REPLACE_MAXIMUM_EQUIP) != 0; }
 
 void DebugManager::setReplaceMaximumBlade(bool isReplace) { setFlag(FLAG_REPLACE_MAXIMUM_BLADE, isReplace); }
 
-bool DebugManager::isReplaceMaximumBlade() const { return (flags & FLAG_REPLACE_MAXIMUM_BLADE) != 0; }
+bool DebugManager::isReplaceMaximumBlade() const { return (unknown10 & FLAG_REPLACE_MAXIMUM_BLADE) != 0; }
 
 void DebugManager::setDisableNewGameWait(bool isDisable) { setFlag(FLAG_DISABLE_NEW_GAME_WAIT, isDisable); }
 
-bool DebugManager::isDisableNewGameWait() const { return (flags & FLAG_DISABLE_NEW_GAME_WAIT) != 0; }
+bool DebugManager::isDisableNewGameWait() const { return (unknown10 & FLAG_DISABLE_NEW_GAME_WAIT) != 0; }
 
 void DebugManager::setSyncFreeCam(bool isSync, bool isOneTime) {
   setFlag(FLAG_SYNC_FREE_CAM, isSync);
   setFlag(FLAG_SYNC_FREE_CAM_ONE_TIME, isOneTime);
 }
 
-bool DebugManager::isSyncFreeCam() const { return (flags & FLAG_SYNC_FREE_CAM) != 0; }
+bool DebugManager::isSyncFreeCam() const { return (unknown10 & FLAG_SYNC_FREE_CAM) != 0; }
 
 void DebugManager::setDisp(bool isDisp) { setFlag(FLAG_DISP, isDisp); }
 
-bool DebugManager::isDisp() const { return (flags & FLAG_DISP) != 0; }
+bool DebugManager::isDisp() const { return (unknown10 & FLAG_DISP) != 0; }
 
-void DebugManager::setDispSight(int sight) { mDispSight = sight; }
+void DebugManager::setDispSight(int sight) { m_dispSight = sight; }
 
-int DebugManager::getDispSight() const { return mDispSight; }
+int DebugManager::getDispSight() const { return m_dispSight; }
 
 void DebugManager::setDisableReuse(bool isDisable) { setFlag(FLAG_DISABLE_REUSE, isDisable); }
 
-bool DebugManager::isDisableReuse() const { return (flags & FLAG_DISABLE_REUSE) != 0; }
+bool DebugManager::isDisableReuse() const { return (unknown10 & FLAG_DISABLE_REUSE) != 0; }
 
 void DebugManager::setMovieDebug(bool isMovieDebug) { setFlag(FLAG_MOVIE_DEBUG, isMovieDebug); }
 
-bool DebugManager::isMovieDebug() const { return (flags & FLAG_MOVIE_DEBUG) != 0; }
+bool DebugManager::isMovieDebug() const { return (unknown10 & FLAG_MOVIE_DEBUG) != 0; }
 
 void DebugManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
   case MSG_TYPE_INIT:
-    flags &= ~(FLAG_PLAY_CANCEL | FLAG_FAST_SKIP_ENABLE_ONE_TIME | FLAG_FAILURE_SKIP);
+    unknown10 &= ~(FLAG_PLAY_CANCEL | FLAG_FAST_SKIP_ENABLE_ONE_TIME | FLAG_FAILURE_SKIP);
     break;
   case MSG_TYPE_UPDATE_POST:
     update();

@@ -51,27 +51,27 @@ public:
 private:
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
-      flags |= flag;
+      unknown10 |= flag;
     } else {
-      flags &= ~flag;
+      unknown10 &= ~flag;
     }
   }
 
   void setDispFlag(u32 flag, bool isSet) {
     if (isSet) {
-      dispFlags |= flag;
+      unknown14 |= flag;
     } else {
-      dispFlags &= ~flag;
+      unknown14 &= ~flag;
     }
   }
 
-  u32 flags;
-  u32 dispFlags;
-  mm::mtl::FixedVector<CamObj *, CAM_COUNT> mCams;
-  mm::mtl::FixedVector<CamInterface *, INTERFACE_COUNT> mInterfaces;
-  CamObj *mMainCam;
-  CamFree mFreeCam;
-  u32 mOffscrID;
+  u32 unknown10;                                                   // Inferred role: flags; original member name unknown.
+  u32 unknown14;                                                   // Inferred role: disp flags; original member name unknown.
+  mm::mtl::FixedVector<CamObj *, CAM_COUNT> unknown18;             // Inferred role: cams; original member name unknown.
+  mm::mtl::FixedVector<CamInterface *, INTERFACE_COUNT> unknown60; // Inferred role: interfaces; original member name unknown.
+  CamObj *unknown88;                                               // Inferred role: main cam; original member name unknown.
+  CamFree m_freeCam;
+  u32 m_offscrID;
 };
 
 static_assert(sizeof(CamManager) == 0x100, "");

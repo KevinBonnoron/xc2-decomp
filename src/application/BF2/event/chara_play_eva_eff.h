@@ -22,12 +22,12 @@ public:
   virtual void term();
 
 private:
-  u32 flags;
-  gf::GfEvtModel *model;
-  CharaEffectPlayer *effectPlayer;
-  void *data;
-  f32 life;
-  CharaEvaPlayerEff evaPlayer;
+  u32 unknown08;                // Inferred role: flags; original member name unknown.
+  gf::GfEvtModel *unknown10;    // Inferred role: model; original member name unknown.
+  CharaEffectPlayer *unknown18; // Inferred role: effect player; original member name unknown.
+  void *unknown20;              // Inferred role: data; original member name unknown.
+  f32 unknown28;                // Inferred role: life; original member name unknown.
+  CharaEvaPlayerEff unknown30;  // Inferred role: eva player; original member name unknown.
 };
 
 static_assert(sizeof(CharaPlayEvaEff) == 0x58, "");

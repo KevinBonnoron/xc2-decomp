@@ -47,31 +47,31 @@ public:
 
 private:
   void stopPreload() {
-    fw::SoundManager::get()->stopBgm(mPreloadHandle, 1.0f);
-    mPreloadHandle = 0;
-    mPreloadPath = "";
-    flags &= ~FLAG_PRELOAD;
+    fw::SoundManager::get()->stopBgm(unknown18, 1.0f);
+    unknown18 = 0;
+    unknown20 = "";
+    unknown10 &= ~FLAG_PRELOAD;
   }
 
   void stopPlay() {
-    fw::SoundManager::get()->stopBgm(mPlayHandle, 1.0f);
-    mPlayHandle = 0;
-    mPlayPath = "";
-    flags &= ~(FLAG_PLAY | FLAG_PAUSE | FLAG_STALL);
+    fw::SoundManager::get()->stopBgm(unknown1c, 1.0f);
+    unknown1c = 0;
+    unknown124 = "";
+    unknown10 &= ~(FLAG_PLAY | FLAG_PAUSE | FLAG_STALL);
   }
 
-  u32 flags;
-  u32 dispFlags;
-  u32 mPreloadHandle;
-  u32 mPlayHandle;
-  mm::mtl::FixStr<256> mPreloadPath;
-  mm::mtl::FixStr<256> mPlayPath;
-  f32 mPrevPlayTime;
-  int mStallCount;
-  int mRestartCount;
-  f32 mStartedTotalFrame;
-  u64 mUnused;
-  f32 mSyncFrameOffset;
+  u32 unknown10;                   // Inferred role: flags; original member name unknown.
+  u32 unknown14;                   // Inferred role: disp flags; original member name unknown.
+  u32 unknown18;                   // Inferred role: preload handle; original member name unknown.
+  u32 unknown1c;                   // Inferred role: play handle; original member name unknown.
+  mm::mtl::FixStr<256> unknown20;  // Inferred role: preload path; original member name unknown.
+  mm::mtl::FixStr<256> unknown124; // Inferred role: play path; original member name unknown.
+  f32 unknown228;                  // Inferred role: prev play time; original member name unknown.
+  int unknown22c;                  // Inferred role: stall count; original member name unknown.
+  int unknown230;                  // Inferred role: restart count; original member name unknown.
+  f32 m_startedTotalFrame;
+  u64 unknown238; // Inferred role: unused; original member name unknown.
+  f32 m_syncFrameOffset;
 };
 
 static_assert(sizeof(CsSndManager) == 0x248, "");

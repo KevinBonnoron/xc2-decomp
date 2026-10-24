@@ -43,10 +43,10 @@ public:
   void getFrustum(mm::Mat44 &matrix) const;
 
 private:
-  u32 flags;
-  u32 mButtonFlags;
-  CTRL_MODE mCtrlMode;
-  f32 mMoveSpeed;
+  u32 unknown48;       // Inferred role: flags; original member name unknown.
+  u32 unknown4c;       // Inferred role: button flags; original member name unknown.
+  CTRL_MODE unknown50; // Inferred role: ctrl mode; original member name unknown.
+  f32 unknown54;       // Inferred role: move speed; original member name unknown.
   u8 _58[0x60 - 0x58];
 };
 

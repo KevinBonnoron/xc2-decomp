@@ -38,13 +38,13 @@ public:
   void easeIn(gf::AnimLayer layer, const char *stat, f32 frame, f32 weight, f32 speed, CV_TYPE cv, WeightLayer weightLayer) {
     CharaWeightItem *item = searchItem(stat);
     if (item == nullptr) {
-      gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
+      gf::GfObj *obj = gf::GfObjUtil::getObj(unknown08);
       if (obj == nullptr) {
         return;
       }
       item = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) CharaWeightItem();
       item->create(obj, layer, stat, stat);
-      mItems.push_back(item);
+      unknown18.push_back(item);
     }
     item->easeIn(frame, weight, speed, cv, weightLayer);
   }
@@ -53,9 +53,9 @@ public:
   void setAddWeight(const char *stat, f32 weight, WeightLayer weightLayer);
 
 private:
-  gf::GF_OBJ_HANDLE *handle;
-  CharaObj *mChara;
-  mm::mtl::FixedVector<CharaWeightItem *, ITEM_COUNT> mItems;
+  gf::GF_OBJ_HANDLE *unknown08;                                  // Inferred role: handle; original member name unknown.
+  CharaObj *unknown10;                                           // Inferred role: chara; original member name unknown.
+  mm::mtl::FixedVector<CharaWeightItem *, ITEM_COUNT> unknown18; // Inferred role: items; original member name unknown.
 };
 
 static_assert(sizeof(CharaWeightPlayer) == 0x80, "");

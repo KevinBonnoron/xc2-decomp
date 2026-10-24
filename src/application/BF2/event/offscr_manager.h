@@ -21,7 +21,7 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  ml::ScnRenderDrViewCtrl *mScreens[SCREEN_COUNT];
+  ml::ScnRenderDrViewCtrl *unknown10[SCREEN_COUNT]; // Inferred role: screens; original member name unknown.
 };
 
 static_assert(sizeof(OffscrManager) == 0x30, "");

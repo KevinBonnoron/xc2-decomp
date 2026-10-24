@@ -27,10 +27,10 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 dispFlags;
-  Group mGroup;
-  mm::Mat44 mMatrix;
-  f32 mRadius;
+  u32 unknown10;        // Inferred role: disp flags; original member name unknown.
+  Group unknown20;      // Inferred role: group; original member name unknown.
+  mm::Mat44 unknown450; // Inferred role: matrix; original member name unknown.
+  f32 unknown490;       // Inferred role: radius; original member name unknown.
 };
 
 static_assert(sizeof(GroupManager) == 0x4a0, "");

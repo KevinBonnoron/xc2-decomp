@@ -18,13 +18,13 @@ public:
   struct OfsInfo {
     OfsInfo(const char *name);
 
-    mm::mtl::FixStr<64> name;
-    mm::Mat44 srcMatrix;
-    mm::Mat44 desMatrix;
-    mm::Mat44 offsetMatrix;
-    mm::Vec3 offsetVector;
-    mm::Mat44 keepMatrix;
-    mm::Vec3 keepVector;
+    mm::mtl::FixStr<64> unknown00; // Inferred role: name; original member name unknown.
+    mm::Mat44 unknown50;           // Inferred role: src matrix; original member name unknown.
+    mm::Mat44 unknown90;           // Inferred role: des matrix; original member name unknown.
+    mm::Mat44 unknownd0;           // Inferred role: offset matrix; original member name unknown.
+    mm::Vec3 unknown110;           // Inferred role: offset vector; original member name unknown.
+    mm::Mat44 unknown120;          // Inferred role: keep matrix; original member name unknown.
+    mm::Vec3 unknown160;           // Inferred role: keep vector; original member name unknown.
   };
 
   DataManager();
@@ -64,10 +64,10 @@ private:
     return transformPos(mat, 0.0f, 0.0f, -1.0f) + pos;
   }
 
-  mm::mtl::FixedVector<OfsInfo *, SCENE_COUNT> mScenes;
-  mm::mtl::FixStr<64> mSceneName;
-  mm::mtl::FixStr<64> mCurrentSceneName;
-  OfsInfo *mCurrent;
+  mm::mtl::FixedVector<OfsInfo *, SCENE_COUNT> unknown10; // Inferred role: scenes; original member name unknown.
+  mm::mtl::FixStr<64> unknown98;                          // Inferred role: scene name; original member name unknown.
+  mm::mtl::FixStr<64> unknowndc;                          // Inferred role: current scene name; original member name unknown.
+  OfsInfo *unknown120;                                    // Inferred role: current; original member name unknown.
 };
 
 static_assert(sizeof(DataManager::OfsInfo) == 0x170, "");

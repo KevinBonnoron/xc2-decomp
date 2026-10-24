@@ -2,27 +2,27 @@
 
 namespace event {
 
-EnvTransferEvent::EnvTransferEvent() : mFromEventID(0), mToEventID(0) {}
+EnvTransferEvent::EnvTransferEvent() : unknown18(0), unknown1c(0) {}
 
 void EnvTransferEvent::clear() {
   EnvTransfer::clear();
-  mFromEventID = 0;
-  mToEventID = 0;
+  unknown18 = 0;
+  unknown1c = 0;
 }
 
 void EnvTransferEvent::save(u32 fromEventID, u32 toEventID) {
   EnvTransfer::save();
-  mFromEventID = fromEventID;
-  mToEventID = toEventID;
+  unknown18 = fromEventID;
+  unknown1c = toEventID;
 }
 
-bool EnvTransferEvent::has(u32 eventID) const { return mToEventID == eventID; }
+bool EnvTransferEvent::has(u32 eventID) const { return unknown1c == eventID; }
 
 void EnvTransferEvent::load(u32 eventID) {
   if (has(eventID)) {
     EnvTransfer::load();
-    mFromEventID = 0;
-    mToEventID = 0;
+    unknown18 = 0;
+    unknown1c = 0;
   }
 }
 

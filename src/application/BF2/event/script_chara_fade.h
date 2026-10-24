@@ -13,7 +13,7 @@ public:
   virtual void redo(const Param &param);
 
 private:
-  bool isPrevFadeOut;
+  bool unknown08; // Inferred role: prev fade out; original member name unknown.
 };
 
 static_assert(sizeof(ScriptCharaFade) == 0x10, "");

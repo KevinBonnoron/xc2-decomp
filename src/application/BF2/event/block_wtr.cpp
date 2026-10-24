@@ -42,7 +42,7 @@ BlockWtr::BlockWtr() { setRules("WTR_ALL"); }
 
 void BlockWtr::setRules(const char *rules) {
   for (u32 i = 0; i < WTR_COUNT; i++) {
-    mIsBlock[i] = true;
+    unknown00[i] = true;
   }
   char buffer[512];
   size_t length = __builtin_strlen(rules);
@@ -59,14 +59,14 @@ void BlockWtr::setRules(const char *rules) {
     next = token + __builtin_strlen(token) + 1;
     if (__builtin_strcmp(token, "WTR_ALL") == 0) {
       for (u32 i = 0; i < WTR_COUNT; i++) {
-        mIsBlock[i] = false;
+        unknown00[i] = false;
       }
     } else {
       u32 index = 0;
       while (__builtin_strcmp(WTR_NAMES[index], token) != 0) {
         index++;
       }
-      mIsBlock[index] = false;
+      unknown00[index] = false;
     }
   } while (*next != '\0');
 }

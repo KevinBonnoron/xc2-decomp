@@ -20,7 +20,7 @@ void ScriptCamRotZ::doit(const Param &param) {
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
   f32 rotZ = param.val(0).getF32() * mm::DEG_TO_RAD;
   CV_TYPE cv = static_cast<CV_TYPE>(param.val(1).getS32());
-  prevRotZ = camera->getRotZ();
+  unknown08 = camera->getRotZ();
   camera->setRotZ(rotZ, cv);
 }
 
@@ -29,7 +29,7 @@ void ScriptCamRotZ::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
     return;
   }
-  static_cast<ObjectCamera *>(object)->setRotZ(prevRotZ, CV_TYPE_LINEAR);
+  static_cast<ObjectCamera *>(object)->setRotZ(unknown08, CV_TYPE_LINEAR);
 }
 
 } // namespace event

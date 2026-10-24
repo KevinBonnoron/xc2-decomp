@@ -21,19 +21,19 @@ public:
   DofManager();
   virtual ~DofManager() {}
   void play(int axis, f32 dist, f32 range, f32 pixel, f32 lens, f32 strength, f32 blend, int pixelLv, bool isHlv, const char *name) {
-    flags |= FLAG_ENABLE | FLAG_CHANGED;
-    mAxis = axis;
-    mDist = dist;
-    mCurrentDist = dist;
-    mRange = range;
-    mIsAutoFocus = false;
-    mPixel = pixel;
-    mLens = lens;
-    mStrength = strength;
-    mBlend = blend;
-    mPixelLv = pixelLv;
-    mIsHlv = isHlv;
-    mName = name;
+    unknown14 |= FLAG_ENABLE | FLAG_CHANGED;
+    m_axis = axis;
+    m_dist = dist;
+    unknown20 = dist;
+    unknown24 = range;
+    unknown28 = false;
+    unknown34 = pixel;
+    unknown38 = lens;
+    unknown3c = strength;
+    unknown40 = blend;
+    unknown44 = pixelLv;
+    unknown48 = isHlv;
+    unknown50 = name;
   }
   void stop();
   void clear();
@@ -67,9 +67,9 @@ public:
 private:
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
-      flags |= flag;
+      unknown14 |= flag;
     } else {
-      flags &= ~flag;
+      unknown14 &= ~flag;
     }
   }
 
@@ -78,22 +78,22 @@ private:
     setFlag(FLAG_CHANGED, isEnable());
   }
 
-  u32 dispFlags;
-  u32 flags;
-  int mAxis;
-  f32 mDist;
-  f32 mCurrentDist;
-  f32 mRange;
-  bool mIsAutoFocus;
-  int mFocusNum;
-  f32 mFocusMin;
-  f32 mPixel;
-  f32 mLens;
-  f32 mStrength;
-  f32 mBlend;
-  int mPixelLv;
-  bool mIsHlv;
-  const char *mName;
+  u32 unknown10; // Inferred role: disp flags; original member name unknown.
+  u32 unknown14; // Inferred role: flags; original member name unknown.
+  int m_axis;
+  f32 m_dist;
+  f32 unknown20;         // Inferred role: current dist; original member name unknown.
+  f32 unknown24;         // Inferred role: range; original member name unknown.
+  bool unknown28;        // Inferred role: is auto focus; original member name unknown.
+  int unknown2c;         // Inferred role: focus num; original member name unknown.
+  f32 unknown30;         // Inferred role: focus min; original member name unknown.
+  f32 unknown34;         // Inferred role: pixel; original member name unknown.
+  f32 unknown38;         // Inferred role: lens; original member name unknown.
+  f32 unknown3c;         // Inferred role: strength; original member name unknown.
+  f32 unknown40;         // Inferred role: blend; original member name unknown.
+  int unknown44;         // Inferred role: pixel lv; original member name unknown.
+  bool unknown48;        // Inferred role: is hlv; original member name unknown.
+  const char *unknown50; // Inferred role: name; original member name unknown.
 };
 
 static_assert(sizeof(DofManager) == 0x58, "");

@@ -12,25 +12,25 @@
 
 namespace event {
 
-RotAxis::RotAxis() : mAxis(1), mRot(mm::Vec3::zero) {}
+RotAxis::RotAxis() : unknown08(1), unknown10(mm::Vec3::zero) {}
 
-RotAxis::RotAxis(u32 axis, f32 x, f32 y, f32 z) : mAxis(axis), mRot(x, y, z) {}
+RotAxis::RotAxis(u32 axis, f32 x, f32 y, f32 z) : unknown08(axis), unknown10(x, y, z) {}
 
-RotAxis::RotAxis(u32 axis, const mm::Vec3 &rot) : mAxis(axis), mRot(rot) {}
+RotAxis::RotAxis(u32 axis, const mm::Vec3 &rot) : unknown08(axis), unknown10(rot) {}
 
 void RotAxis::set(u32 axis, f32 x, f32 y, f32 z) {
-  mAxis = axis;
-  mRot.x = x;
-  mRot.y = y;
-  mRot.z = z;
+  unknown08 = axis;
+  unknown10.x = x;
+  unknown10.y = y;
+  unknown10.z = z;
 }
 
 void RotAxis::set(u32 axis, const mm::Vec3 &rot) {
-  mAxis = axis;
-  mRot = rot;
+  unknown08 = axis;
+  unknown10 = rot;
 }
 
-mm::Vec3 RotAxis::calcRot(const mm::Vec3 &pos) const { return mm::mtl::Singleton<DataManager>::getPtr()->axis2rot(mAxis, mRot.x, mRot.y, mRot.z, pos); }
+mm::Vec3 RotAxis::calcRot(const mm::Vec3 &pos) const { return mm::mtl::Singleton<DataManager>::getPtr()->axis2rot(unknown08, unknown10.x, unknown10.y, unknown10.z, pos); }
 
 mm::Vec3 DataManager::axis2rot(u32 axis, f32 x, f32 y, f32 z, const mm::Vec3 &pos) {
   if (axis < RotAxis::AXIS_CHARA) {
@@ -42,20 +42,20 @@ mm::Vec3 DataManager::axis2rot(u32 axis, f32 x, f32 y, f32 z, const mm::Vec3 &po
   return mm::Vec3(x, y, z);
 }
 
-f32 RotAxis::calcOrigRot(const mm::Vec3 &pos) const { return mm::mtl::Singleton<DataManager>::getPtr()->getRotOfsY(mAxis, pos); }
+f32 RotAxis::calcOrigRot(const mm::Vec3 &pos) const { return mm::mtl::Singleton<DataManager>::getPtr()->getRotOfsY(unknown08, pos); }
 
 f32 DataManager::getRotOfsY(u32 axis, const mm::Vec3 &pos) {
   if (axis < RotAxis::AXIS_CHARA) {
     f32 rotY = 0.0f;
     switch (axis) {
     case RotAxis::AXIS_NONE:
-      rotY = mCurrent->offsetVector.y;
+      rotY = unknown120->unknown110.y;
       break;
     case RotAxis::AXIS_ANGLE:
-      rotY = mCurrent->offsetVector.y;
+      rotY = unknown120->unknown110.y;
       break;
     case RotAxis::AXIS_ANGLE_GLOBAL:
-      rotY = mCurrent->keepVector.y;
+      rotY = unknown120->unknown160.y;
       break;
     case RotAxis::AXIS_SAY:
       if (mm::mtl::Singleton<TextManager>::getPtr()->getTalker() != nullptr) {
@@ -79,7 +79,7 @@ f32 DataManager::getRotOfsY(u32 axis, const mm::Vec3 &pos) {
   return 0.0f;
 }
 
-const char *RotAxis::getOrigName() const { return mm::mtl::Singleton<DataManager>::getPtr()->getRotName(mAxis); }
+const char *RotAxis::getOrigName() const { return mm::mtl::Singleton<DataManager>::getPtr()->getRotName(unknown08); }
 
 inline const char *DataManager::getRotName(u32 axis) {
   if (axis < RotAxis::AXIS_CHARA) {

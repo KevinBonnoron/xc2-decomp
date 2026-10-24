@@ -20,12 +20,12 @@ public:
   CV_TYPE getCv(size_t index) const;
   f32 getValue(size_t index) const;
   void setValue(size_t index, f32 value);
-  f32 getValue() const { return value; }
+  f32 getValue() const { return unknown108; }
 
 private:
-  mm::mtl::FixedVector<f32, KEY_COUNT> values;
-  mm::mtl::FixedVector<CV_TYPE, KEY_COUNT> cvs;
-  f32 value;
+  mm::mtl::FixedVector<f32, KEY_COUNT> unknown78;     // Inferred role: values; original member name unknown.
+  mm::mtl::FixedVector<CV_TYPE, KEY_COUNT> unknownc0; // Inferred role: cvs; original member name unknown.
+  f32 unknown108;                                     // Inferred role: value; original member name unknown.
 };
 
 static_assert(sizeof(AnmF32) == 0x110, "");

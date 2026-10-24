@@ -51,24 +51,24 @@ public:
 private:
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
-      flags |= flag;
+      unknown10 |= flag;
     } else {
-      flags &= ~flag;
+      unknown10 &= ~flag;
     }
   }
 
   void setDispFlag(u32 flag, bool isSet) {
     if (isSet) {
-      dispFlags |= flag;
+      unknown14 |= flag;
     } else {
-      dispFlags &= ~flag;
+      unknown14 &= ~flag;
     }
   }
 
-  u32 flags;
-  u32 dispFlags;
-  u32 mOffscrID;
-  int mReuseFlag;
+  u32 unknown10; // Inferred role: flags; original member name unknown.
+  u32 unknown14; // Inferred role: disp flags; original member name unknown.
+  u32 m_offscrID;
+  int m_reuseFlag;
 };
 
 static_assert(sizeof(CharaManager) == 0x20, "");

@@ -23,9 +23,9 @@ public:
   virtual void OnResEvent(const PARAM &param);
 
 private:
-  u32 flags;
-  mm::mtl::FixStr<64> name;
-  fw::EffectPack *pack;
+  u32 unknown08; // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<64> m_name;
+  fw::EffectPack *m_resPack;
 };
 
 static_assert(sizeof(EffectRes) == 0x58, "");

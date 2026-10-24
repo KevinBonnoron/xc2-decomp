@@ -18,10 +18,10 @@ public:
   void setPosAxis(const PosAxis &axis);
   void setRotAxis(const RotAxis &axis);
 
-  LightObj *getLightObj() const { return mLightObj; }
+  LightObj *getLightObj() const { return unknown68; }
 
 private:
-  LightObj *mLightObj;
+  LightObj *unknown68; // Inferred role: light object; original member name unknown.
   u8 _70[0xb0 - 0x70];
 };
 

@@ -24,12 +24,12 @@ public:
   };
 
   struct Change {
-    EVT_change type;
-    int id;
-    int value0;
-    int value1;
-    int value2;
-    const char *string0;
+    EVT_change unknown00;  // Inferred role: type; original member name unknown.
+    int unknown04;         // Inferred role: id; original member name unknown.
+    int unknown08;         // Inferred role: value0; original member name unknown.
+    int unknown0c;         // Inferred role: value1; original member name unknown.
+    int unknown10;         // Inferred role: value2; original member name unknown.
+    const char *unknown18; // Inferred role: string0; original member name unknown.
   };
 
   u32 getHomuriFlag() const;
@@ -56,8 +56,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 flags;
-  mm::mtl::FixedVector<Change, CHANGE_COUNT> mChanges;
+  u32 unknown18;                                        // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedVector<Change, CHANGE_COUNT> unknown20; // Inferred role: changes; original member name unknown.
 };
 
 static_assert(sizeof(StatusManager) == 0x428, "");

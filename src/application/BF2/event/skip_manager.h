@@ -17,7 +17,7 @@ public:
   };
 
   bool isSkipFast() const {
-    if (flags & FLAG_SKIP_FAST_ENABLE) {
+    if (unknown10 & FLAG_SKIP_FAST_ENABLE) {
       if (mm::mtl::Singleton<DebugManager>::getPtr()->isFastSkipDisable() && !mm::mtl::Singleton<DebugManager>::getPtr()->isFastSkipEnableOneTime()) {
         return false;
       }
@@ -42,9 +42,9 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 flags;
-  u32 skipState;
-  f32 skipFrame;
+  u32 unknown10; // Inferred role: flags; original member name unknown.
+  u32 unknown14; // Inferred role: skip state; original member name unknown.
+  f32 unknown18; // Inferred role: skip frame; original member name unknown.
 };
 
 static_assert(sizeof(SkipManager) == 0x20, "");

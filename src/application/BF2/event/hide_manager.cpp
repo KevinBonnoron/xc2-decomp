@@ -13,135 +13,135 @@ namespace event {
 constexpr u32 PRIMARY_LIST_DISP_TYPE = 6;
 constexpr u32 SECONDARY_LIST_DISP_TYPE = 5;
 
-HideManager::Obj::Obj(OBJ_TYPE type, u32 id) : mType(type), mID(id), mIsHideOrg(false), mIsHide(false) {
+HideManager::Obj::Obj(OBJ_TYPE type, u32 id) : m_type(type), unknown04(id), unknown08(false), m_now(false) {
   switch (type) {
   case OBJ_TYPE_NPC:
-    mIsHideOrg = false;
+    unknown08 = false;
     break;
   case OBJ_TYPE_ROUTED_NPC:
-    mIsHideOrg = false;
+    unknown08 = false;
     break;
   case OBJ_TYPE_MAP_OBJ:
-    mIsHideOrg = false;
+    unknown08 = false;
     break;
   case OBJ_TYPE_EFFECT:
-    mIsHideOrg = false;
+    unknown08 = false;
     break;
   case OBJ_TYPE_SE:
-    mIsHideOrg = false;
+    unknown08 = false;
     break;
   case OBJ_TYPE_MAP_LOD:
-    mIsHideOrg = !gf::GfGameEvent::isMapLodDisp(id);
+    unknown08 = !gf::GfGameEvent::isMapLodDisp(id);
     break;
   default:
     break;
   }
-  mIsHide = mIsHideOrg;
+  m_now = unknown08;
 }
 
 void HideManager::Obj::clear() {
-  switch (mType) {
+  switch (m_type) {
   case OBJ_TYPE_NPC:
-    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_NPC, mID, !mIsHideOrg);
+    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_NPC, unknown04, !unknown08);
     break;
   case OBJ_TYPE_ROUTED_NPC:
-    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_ROUTED_NPC, mID, !mIsHideOrg);
+    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_ROUTED_NPC, unknown04, !unknown08);
     break;
   case OBJ_TYPE_MAP_OBJ:
-    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_MAP_OBJ, mID, !mIsHideOrg);
+    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_MAP_OBJ, unknown04, !unknown08);
     break;
   case OBJ_TYPE_EFFECT:
-    gf::GfGameEvent::setGmkIdDisp(gmk::GMK_TYPE_EFFECT, mID - 1, !mIsHideOrg);
+    gf::GfGameEvent::setGmkIdDisp(gmk::GMK_TYPE_EFFECT, unknown04 - 1, !unknown08);
     break;
   case OBJ_TYPE_SE:
-    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_SE, mID, !mIsHideOrg);
+    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_SE, unknown04, !unknown08);
     break;
   case OBJ_TYPE_MAP_LOD:
-    gf::GfGameEvent::setMapLodDisp(mID, !mIsHideOrg);
+    gf::GfGameEvent::setMapLodDisp(unknown04, !unknown08);
     break;
   default:
     break;
   }
-  mIsHide = mIsHideOrg;
+  m_now = unknown08;
 }
 
 void HideManager::Obj::exec(bool isHide) {
-  switch (mType) {
+  switch (m_type) {
   case OBJ_TYPE_NPC:
-    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_NPC, mID, !isHide);
+    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_NPC, unknown04, !isHide);
     break;
   case OBJ_TYPE_ROUTED_NPC:
-    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_ROUTED_NPC, mID, !isHide);
+    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_ROUTED_NPC, unknown04, !isHide);
     break;
   case OBJ_TYPE_MAP_OBJ:
-    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_MAP_OBJ, mID, !isHide);
+    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_MAP_OBJ, unknown04, !isHide);
     break;
   case OBJ_TYPE_EFFECT:
-    gf::GfGameEvent::setGmkIdDisp(gmk::GMK_TYPE_EFFECT, mID - 1, !isHide);
+    gf::GfGameEvent::setGmkIdDisp(gmk::GMK_TYPE_EFFECT, unknown04 - 1, !isHide);
     break;
   case OBJ_TYPE_SE:
-    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_SE, mID, !isHide);
+    gf::GfGameEvent::setGmkBdatDisp(gmk::GMK_TYPE_SE, unknown04, !isHide);
     break;
   case OBJ_TYPE_MAP_LOD:
-    gf::GfGameEvent::setMapLodDisp(mID, !isHide);
+    gf::GfGameEvent::setMapLodDisp(unknown04, !isHide);
     break;
   default:
     break;
   }
-  mIsHide = isHide;
+  m_now = isHide;
 }
 
-HideManager::OBJ_TYPE HideManager::Obj::getType() const { return mType; }
+HideManager::OBJ_TYPE HideManager::Obj::getType() const { return m_type; }
 
-bool HideManager::Obj::getNow() const { return mIsHide; }
+bool HideManager::Obj::getNow() const { return m_now; }
 
-HideManager::HideManager() : flags(0), mGroup(GRP_TYPE_NONE) {}
+HideManager::HideManager() : unknown10(0), m_group(GRP_TYPE_NONE) {}
 
 void HideManager::clear() {
   hideGroup(false);
   hideList(false);
   resetHideObj();
-  flags = 0;
-  mGroup = GRP_TYPE_NONE;
+  unknown10 = 0;
+  m_group = GRP_TYPE_NONE;
 }
 
 void HideManager::hideList(bool isHide) {
   if (isHide) {
-    if (!(flags & FLAG_HIDE_LIST)) {
-      gf::GfGameEvent::setDisp(PRIMARY_LIST_DISP_TYPE, mPrimaryList, false);
-      gf::GfGameEvent::setDisp(SECONDARY_LIST_DISP_TYPE, mSecondaryList, false);
-      flags |= FLAG_HIDE_LIST;
+    if (!(unknown10 & FLAG_HIDE_LIST)) {
+      gf::GfGameEvent::setDisp(PRIMARY_LIST_DISP_TYPE, unknown18, false);
+      gf::GfGameEvent::setDisp(SECONDARY_LIST_DISP_TYPE, unknown1020, false);
+      unknown10 |= FLAG_HIDE_LIST;
     }
-  } else if (flags & FLAG_HIDE_LIST) {
-    gf::GfGameEvent::setDisp(PRIMARY_LIST_DISP_TYPE, mPrimaryList, true);
-    gf::GfGameEvent::setDisp(SECONDARY_LIST_DISP_TYPE, mSecondaryList, true);
-    flags &= ~FLAG_HIDE_LIST;
+  } else if (unknown10 & FLAG_HIDE_LIST) {
+    gf::GfGameEvent::setDisp(PRIMARY_LIST_DISP_TYPE, unknown18, true);
+    gf::GfGameEvent::setDisp(SECONDARY_LIST_DISP_TYPE, unknown1020, true);
+    unknown10 &= ~FLAG_HIDE_LIST;
   }
 }
 
 void HideManager::resetHideObj() {
-  for (Obj **it = objs.begin(); it != objs.end(); it++) {
+  for (Obj **it = unknown2028.begin(); it != unknown2028.end(); it++) {
     Obj *obj = *it;
     obj->clear();
     delete obj;
   }
-  objs.clear();
+  unknown2028.clear();
 }
 
 void HideManager::update() {}
 
-void HideManager::defineGroup(GRP_TYPE group) { mGroup = group; }
+void HideManager::defineGroup(GRP_TYPE group) { m_group = group; }
 
-HideManager::GRP_TYPE HideManager::getGroup() const { return mGroup; }
+HideManager::GRP_TYPE HideManager::getGroup() const { return m_group; }
 
 void HideManager::defineList(mm::mtl::FixedVector<u32, DEFINE_LIST_COUNT> primaryList, mm::mtl::FixedVector<u32, DEFINE_LIST_COUNT> secondaryList) {
-  mPrimaryList.clear();
+  unknown18.clear();
   for (size_t i = 0; i < primaryList.size(); i++) {
-    mPrimaryList.push_back(primaryList[i]);
+    unknown18.push_back(primaryList[i]);
   }
-  mSecondaryList.clear();
+  unknown1020.clear();
   for (size_t i = 0; i < secondaryList.size(); i++) {
-    mSecondaryList.push_back(secondaryList[i]);
+    unknown1020.push_back(secondaryList[i]);
   }
 }
 
@@ -149,15 +149,15 @@ void HideManager::hideObj(OBJ_TYPE type, u32 id, bool isHide) {
   Obj *obj = searchObj(type, id);
   if (obj == nullptr) {
     obj = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) Obj(type, id);
-    objs.push_back(obj);
+    unknown2028.push_back(obj);
   }
   obj->exec(isHide);
 }
 
 HideManager::Obj *HideManager::searchObj(OBJ_TYPE type, u32 id) {
-  for (size_t i = 0; i < objs.size(); i++) {
-    if (objs[i]->getType() == type && objs[i]->getID() == id) {
-      return objs[i];
+  for (size_t i = 0; i < unknown2028.size(); i++) {
+    if (unknown2028[i]->getType() == type && unknown2028[i]->getID() == id) {
+      return unknown2028[i];
     }
   }
   return nullptr;

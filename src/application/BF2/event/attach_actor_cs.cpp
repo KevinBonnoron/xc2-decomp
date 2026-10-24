@@ -35,7 +35,7 @@ void AttachActorCS::setActor(gf::GF_OBJ_HANDLE *actor) {
   for (size_t i = 0; i < unknown4b0.size(); i++) {
     AttachUtil::setMount(false, unknowna0, unknown4b0[i]->unknown0, unknown4b0[i]->unknown8.c_str(), unknown4b0[i]->unknown30, unknown4b0[i]->unknown40, unknown4b0[i]->unknown44);
   }
-  unknown50 = actor;
+  m_actor = actor;
   unknowna0 = actor;
   for (size_t i = 0; i < unknowna8.size(); i++) {
     AttachUtil::setCaster(true, unknowna0, *unknowna8[i]);

@@ -82,16 +82,16 @@ public:
   void listupObject(mm::mtl::FixedVector<u32, 256> &list, u32 type, bool isAppend);
   void dump();
 
-  const char *getName() const { return mName.c_str(); }
-  Object *getActive() const { return mActive; }
-  void setActive(Object *object) { mActive = object; }
-  u32 getCharaCount() const { return mCharaCount; }
-  u32 getCameraCount() const { return mCameraCount; }
-  u32 getEffectCount() const { return mEffectCount; }
-  u32 getLightCount() const { return mLightCount; }
+  const char *getName() const { return unknown0c.c_str(); }
+  Object *getActive() const { return unknown78; }
+  void setActive(Object *object) { unknown78 = object; }
+  u32 getCharaCount() const { return unknown88; }
+  u32 getCameraCount() const { return unknown8c; }
+  u32 getEffectCount() const { return unknown90; }
+  u32 getLightCount() const { return unknown94; }
 
   Object *getCharaObject(u32 index) const {
-    Object *object = mCharaTree->getChild();
+    Object *object = unknown58->getChild();
     for (u32 i = 0; i < index; i++) {
       object = object->getNext();
     }
@@ -99,7 +99,7 @@ public:
   }
 
   Object *getEffect(u32 index) const {
-    Object *object = mEffectTree->getChild();
+    Object *object = unknown68->getChild();
     for (u32 i = 0; i < index; i++) {
       object = object->getNext();
     }
@@ -111,21 +111,21 @@ private:
   // relationship is unknown. The wrapper reads the same tree offsets.
   friend class ObjectManager;
 
-  bool isTree(const Object *object) const { return object == mRoot || object == mCharaTree || object == mCameraTree || object == mEffectTree || object == mLightTree; }
+  bool isTree(const Object *object) const { return object == unknown50 || object == unknown58 || object == unknown60 || object == unknown68 || object == unknown70; }
 
-  u32 flags;
-  mm::mtl::FixStr<64> mName;
-  ObjectTree *mRoot;
-  ObjectTree *mCharaTree;
-  ObjectTree *mCameraTree;
-  ObjectTree *mEffectTree;
-  ObjectTree *mLightTree;
-  Object *mActive;
-  ObjectChara *mFirstChara;
-  u32 mCharaCount;
-  u32 mCameraCount;
-  u32 mEffectCount;
-  u32 mLightCount;
+  u32 unknown08;                 // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<64> unknown0c; // Inferred role: name; original member name unknown.
+  ObjectTree *unknown50;         // Inferred role: root; original member name unknown.
+  ObjectTree *unknown58;         // Inferred role: chara tree; original member name unknown.
+  ObjectTree *unknown60;         // Inferred role: camera tree; original member name unknown.
+  ObjectTree *unknown68;         // Inferred role: effect tree; original member name unknown.
+  ObjectTree *unknown70;         // Inferred role: light tree; original member name unknown.
+  Object *unknown78;             // Inferred role: active; original member name unknown.
+  ObjectChara *unknown80;        // Inferred role: first chara; original member name unknown.
+  u32 unknown88;                 // Inferred role: chara count; original member name unknown.
+  u32 unknown8c;                 // Inferred role: camera count; original member name unknown.
+  u32 unknown90;                 // Inferred role: effect count; original member name unknown.
+  u32 unknown94;                 // Inferred role: light count; original member name unknown.
 };
 
 static_assert(sizeof(ObjectList) == 0x98, "");

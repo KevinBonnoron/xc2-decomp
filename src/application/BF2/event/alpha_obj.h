@@ -26,17 +26,17 @@ public:
   void setAlpha(ALPHA_ATTR attr, f32 alpha, f32 belongingAlpha);
   static void setEventAlpha(gf::GF_OBJ_HANDLE *handle, f32 alpha, f32 belongingAlpha);
 
-  bool isActive() const { return (flags & FLAG_ACTIVE) != 0; }
-  gf::GF_OBJ_HANDLE *getHandle() const { return handle; }
+  bool isActive() const { return (unknown08 & FLAG_ACTIVE) != 0; }
+  gf::GF_OBJ_HANDLE *getHandle() const { return unknown10; }
 
 private:
-  u32 flags;
-  gf::GF_OBJ_HANDLE *handle;
-  f32 alphas[ALPHA_ATTR_COUNT];
-  f32 belongingAlphas[ALPHA_ATTR_COUNT];
-  f32 alpha;
-  f32 belongingAlpha;
-  s32 opaqueFrames;
+  u32 unknown08;                   // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;    // Inferred role: handle; original member name unknown.
+  f32 unknown18[ALPHA_ATTR_COUNT]; // Inferred role: alphas; original member name unknown.
+  f32 unknown28[ALPHA_ATTR_COUNT]; // Inferred role: belonging alphas; original member name unknown.
+  f32 unknown38;                   // Inferred role: alpha; original member name unknown.
+  f32 unknown3c;                   // Inferred role: belonging alpha; original member name unknown.
+  s32 unknown40;                   // Inferred role: opaque frames; original member name unknown.
 };
 
 static_assert(sizeof(AlphaObj) == 0x48, "");

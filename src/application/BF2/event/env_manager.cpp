@@ -17,11 +17,11 @@
 namespace event {
 
 EnvManager::EnvManager()
-    : flags(0), dispFlags(0), mClockHour(-1), mClockMinute(-1), mCloudType(EVT_CLOUDTYPE_DEFAULT), mColorFilterState(COLORFILTER_TYPE_STOP), mColorFilter(-1), mColorSubFilter(-1),
-      mColorFilterFrame(0.0f), mColorFilterCount(0), mVignetteHandle(0) {}
+    : unknown10(0), unknown14(0), unknown18(-1), unknown1c(-1), unknown20(EVT_CLOUDTYPE_DEFAULT), unknown24(COLORFILTER_TYPE_STOP), unknown28(-1), unknown2c(-1), unknown30(0.0f), unknown34(0),
+      unknown38(0) {}
 
 void EnvManager::setCloudSea(EVT_cloudtype cloudType) {
-  if (mCloudType != cloudType) {
+  if (unknown20 != cloudType) {
     switch (cloudType) {
     case EVT_CLOUDTYPE_DEFAULT:
       gf::GfGameEvent::setCloudSea(false, false);
@@ -34,52 +34,52 @@ void EnvManager::setCloudSea(EVT_cloudtype cloudType) {
       break;
     }
   }
-  mCloudType = cloudType;
+  unknown20 = cloudType;
 }
 
 void EnvManager::setMotBlur(bool isEnable) {
-  if (isEnable == ((flags & FLAG_MOT_BLUR) != 0)) {
+  if (isEnable == ((unknown10 & FLAG_MOT_BLUR) != 0)) {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
     parmAcc.setMotBlurOverride(true);
     parmAcc.setMotBlur(isEnable);
-    flags = isEnable ? flags & ~FLAG_MOT_BLUR : flags | FLAG_MOT_BLUR;
+    unknown10 = isEnable ? unknown10 & ~FLAG_MOT_BLUR : unknown10 | FLAG_MOT_BLUR;
   }
 }
 
 void EnvManager::setToneMap(bool isEnable, f32 toneMap) {
-  if (isEnable != ((flags & FLAG_TONE_MAP) != 0)) {
+  if (isEnable != ((unknown10 & FLAG_TONE_MAP) != 0)) {
     if (isEnable) {
       ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
       parmAcc.setOverrideToneMap(toneMap);
-      flags |= FLAG_TONE_MAP;
+      unknown10 |= FLAG_TONE_MAP;
     } else {
-      flags &= ~FLAG_TONE_MAP;
+      unknown10 &= ~FLAG_TONE_MAP;
     }
-    mToneMap = toneMap;
+    unknown3c = toneMap;
   }
 }
 
 void EnvManager::login() {
-  mTransferField.clear();
-  mTransferField.save();
+  unknown60.clear();
+  unknown60.save();
 }
 
 void EnvManager::logout() {}
 
 void EnvManager::updateColorFilter() {
-  if (mColorFilterState != COLORFILTER_TYPE_FADE) {
+  if (unknown24 != COLORFILTER_TYPE_FADE) {
     return;
   }
-  if (static_cast<int>(mColorFilterFrame) <= mColorFilterCount++) {
+  if (static_cast<int>(unknown30) <= unknown34++) {
     gf::GfGameEvent::setColorFilter(false, -1, -1, 0.0f);
-    mColorFilterState = COLORFILTER_TYPE_STOP;
-    mColorFilterFrame = 0.0f;
+    unknown24 = COLORFILTER_TYPE_STOP;
+    unknown30 = 0.0f;
     stopVignette();
   }
 }
 
 void EnvManager::updateMotBlur() {
-  if ((flags & FLAG_MOT_BLUR) != 0) {
+  if ((unknown10 & FLAG_MOT_BLUR) != 0) {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
     parmAcc.setMotBlurOverride(true);
     parmAcc.setMotBlur(false);
@@ -87,14 +87,14 @@ void EnvManager::updateMotBlur() {
 }
 
 void EnvManager::updateToneMap() {
-  if ((flags & FLAG_TONE_MAP) != 0) {
+  if ((unknown10 & FLAG_TONE_MAP) != 0) {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
-    parmAcc.setOverrideToneMap(mToneMap);
+    parmAcc.setOverrideToneMap(unknown3c);
   }
 }
 
 void EnvManager::render() {
-  if (!(dispFlags & DISP_FLAG_DISP)) {
+  if (!(unknown14 & DISP_FLAG_DISP)) {
     return;
   }
   gf::GfFieldTime *fieldTime = gf::GfFieldTime::get();
@@ -124,16 +124,16 @@ void EnvManager::render() {
 }
 
 void EnvManager::setClockStop(bool isStop) {
-  if (((flags & FLAG_CLOCK_STOP) != 0) == isStop) {
+  if (((unknown10 & FLAG_CLOCK_STOP) != 0) == isStop) {
     return;
   }
   if (gf::GfFieldTime::get() != nullptr) {
     gf::GfFieldTime::get()->setTimeStop(isStop);
   }
   if (isStop) {
-    flags |= FLAG_CLOCK_STOP;
+    unknown10 |= FLAG_CLOCK_STOP;
   } else {
-    flags &= ~FLAG_CLOCK_STOP;
+    unknown10 &= ~FLAG_CLOCK_STOP;
   }
 }
 
@@ -151,12 +151,12 @@ void EnvManager::setClock(const char *clock) {
   while (minute > 59) {
     minute -= 60;
   }
-  if (mClockHour != hour || mClockMinute != minute) {
+  if (unknown18 != hour || unknown1c != minute) {
     if (gf::GfFieldTime::get() != nullptr) {
       gf::GfFieldTime::get()->setTime(hour, minute);
     }
-    mClockHour = hour;
-    mClockMinute = minute;
+    unknown18 = hour;
+    unknown1c = minute;
   }
 }
 
@@ -166,12 +166,12 @@ void EnvManager::setClock(f32 clock) {
   while (hour >= 24) {
     hour -= 24;
   }
-  if (mClockHour != hour || mClockMinute != minute) {
+  if (unknown18 != hour || unknown1c != minute) {
     if (gf::GfFieldTime::get() != nullptr) {
       gf::GfFieldTime::get()->setTime(hour, minute);
     }
-    mClockHour = hour;
-    mClockMinute = minute;
+    unknown18 = hour;
+    unknown1c = minute;
   }
 }
 
@@ -184,64 +184,64 @@ void EnvManager::setMapWeatherID(gf::WEATHERID weather, f32 frame) {
 
 void EnvManager::setWeatherType(gf::WEATYPE type) {
   gf::GfGameEvent::setWeaType(type);
-  flags |= FLAG_WEATHER_TYPE;
+  unknown10 |= FLAG_WEATHER_TYPE;
 }
 
 void EnvManager::setColorFilter(COLORFILTER_TYPE type, int filter, int subFilter, f32 frame) {
   switch (type) {
   case COLORFILTER_TYPE_STOP:
-    if (mColorFilterState != COLORFILTER_TYPE_STOP) {
+    if (unknown24 != COLORFILTER_TYPE_STOP) {
       gf::GfGameEvent::setColorFilter(false, -1, -1, frame / 30.0f);
-      mColorFilterState = COLORFILTER_TYPE_STOP;
-      mColorFilterFrame = frame;
+      unknown24 = COLORFILTER_TYPE_STOP;
+      unknown30 = frame;
       stopVignette();
     }
     break;
   case COLORFILTER_TYPE_PLAY:
-    if (mColorFilterState != COLORFILTER_TYPE_PLAY || mColorFilter != filter || mColorSubFilter != subFilter || mColorFilterFrame != frame) {
+    if (unknown24 != COLORFILTER_TYPE_PLAY || unknown28 != filter || unknown2c != subFilter || unknown30 != frame) {
       gf::GfGameEvent::setColorFilter(true, filter, subFilter, frame / 30.0f);
-      mColorFilterState = COLORFILTER_TYPE_PLAY;
-      mColorFilter = filter;
-      mColorSubFilter = subFilter;
-      mColorFilterFrame = frame;
+      unknown24 = COLORFILTER_TYPE_PLAY;
+      unknown28 = filter;
+      unknown2c = subFilter;
+      unknown30 = frame;
       playVignette(filter, subFilter);
     }
     break;
   case COLORFILTER_TYPE_FADE:
-    if (mColorFilterState == COLORFILTER_TYPE_PLAY) {
+    if (unknown24 == COLORFILTER_TYPE_PLAY) {
       gf::GfGameEvent::setColorFilter(true, -1, -1, frame / 30.0f);
-      mColorFilterState = COLORFILTER_TYPE_FADE;
-      mColorFilterFrame = frame;
-      mColorFilterCount = 0;
+      unknown24 = COLORFILTER_TYPE_FADE;
+      unknown30 = frame;
+      unknown34 = 0;
       stopVignette();
     }
-    mColorFilterFrame = frame;
+    unknown30 = frame;
     break;
   }
 }
 
 void EnvManager::stopVignette() {
-  if (mVignetteHandle != 0) {
-    fw::EffectManager::get()->dead(mVignetteHandle);
+  if (unknown38 != 0) {
+    fw::EffectManager::get()->dead(unknown38);
   }
-  mVignetteHandle = 0;
+  unknown38 = 0;
 }
 
-void EnvManager::saveTransferEnvironment(u32 fromEventID, u32 toEventID) { mTransferEvent.save(fromEventID, toEventID); }
+void EnvManager::saveTransferEnvironment(u32 fromEventID, u32 toEventID) { unknown40.save(fromEventID, toEventID); }
 
-bool EnvManager::hasTransferEnvironment(u32 eventID) const { return mTransferEvent.has(eventID); }
+bool EnvManager::hasTransferEnvironment(u32 eventID) const { return unknown40.has(eventID); }
 
-void EnvManager::loadTransferEnvironment(u32 eventID) { mTransferEvent.load(eventID); }
+void EnvManager::loadTransferEnvironment(u32 eventID) { unknown40.load(eventID); }
 
-void EnvManager::loadFieldEnvironment() { mTransferField.load(); }
+void EnvManager::loadFieldEnvironment() { unknown60.load(); }
 
 void EnvManager::setAutoResetSceneEnable(bool isEnable) {
   ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
   parmAcc.setAutoResetScene(isEnable);
   if (isEnable) {
-    flags |= FLAG_AUTO_RESET_SCENE;
+    unknown10 |= FLAG_AUTO_RESET_SCENE;
   } else {
-    flags &= ~FLAG_AUTO_RESET_SCENE;
+    unknown10 &= ~FLAG_AUTO_RESET_SCENE;
   }
 }
 
@@ -252,13 +252,13 @@ void EnvManager::resetScene() {
 
 void EnvManager::setDisp(bool isDisp) {
   if (isDisp) {
-    dispFlags |= DISP_FLAG_DISP;
+    unknown14 |= DISP_FLAG_DISP;
   } else {
-    dispFlags &= ~DISP_FLAG_DISP;
+    unknown14 &= ~DISP_FLAG_DISP;
   }
 }
 
-bool EnvManager::isDisp() const { return (dispFlags & DISP_FLAG_DISP) != 0; }
+bool EnvManager::isDisp() const { return (unknown14 & DISP_FLAG_DISP) != 0; }
 
 void EnvManager::OnEventProc(MSG_TYPE type) {
   switch (type) {

@@ -7,29 +7,29 @@
 namespace event {
 
 CharaPlayTalkAuto::~CharaPlayTalkAuto() {
-  gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
-  if (obj != nullptr && flags.test(FLAG_PLAY) && flags.test(FLAG_MESSAGE)) {
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown10);
+  if (obj != nullptr && unknown08.test(FLAG_PLAY) && unknown08.test(FLAG_MESSAGE)) {
     gf::MsgGameLipAction message(1);
     obj->sendMessage(obj, message);
   }
 }
 
 void CharaPlayTalkAuto::stanby(f32 life) {
-  this->life = life;
-  flags.set(FLAG_STANBY);
+  this->unknown20 = life;
+  unknown08.set(FLAG_STANBY);
 }
 
 void CharaPlayTalkAuto::idle() {
-  gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
-  if (obj != nullptr && flags.test(FLAG_PLAY)) {
-    if (flags.test(FLAG_MESSAGE)) {
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown10);
+  if (obj != nullptr && unknown08.test(FLAG_PLAY)) {
+    if (unknown08.test(FLAG_MESSAGE)) {
       gf::MsgGameLipAction message(1);
       obj->sendMessage(obj, message);
     }
-    life = -1.0f;
+    unknown20 = -1.0f;
   }
-  flags.set(FLAG_STANBY, false);
-  flags.set(FLAG_PLAY, false);
+  unknown08.set(FLAG_STANBY, false);
+  unknown08.set(FLAG_PLAY, false);
 }
 
 void CharaPlayTalkAuto::init() {}

@@ -27,7 +27,7 @@ public:
   const char *replaceString(const char *string, const char *from, const char *to);
 
 private:
-  mm::mtl::FixStr<256> path;
+  mm::mtl::FixStr<256> unknown08; // Inferred role: path; original member name unknown.
 };
 
 static_assert(sizeof(Extend) == 0x110, "");

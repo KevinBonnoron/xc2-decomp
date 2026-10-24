@@ -132,22 +132,22 @@ public:
   bool isDebugStop() const;
 
 private:
-  bool unknown08;       // Inferred role: m initialized; original member name unknown.
-  u32 unknown0c;        // Inferred role: m time stop bits; original member name unknown.
-  ElapseTime unknown10; // Inferred role: m base elapse time; original member name unknown.
+  bool unknown08;       // Inferred role: initialized; original member name unknown.
+  u32 unknown0c;        // Inferred role: time stop bits; original member name unknown.
+  ElapseTime unknown10; // Inferred role: base elapse time; original member name unknown.
   ElapseTime m_elapseTime;
-  RealTime unknown18; // Inferred role: m real time; original member name unknown.
-  RealTime unknown20; // Inferred role: m elapse start real time; original member name unknown.
-  u32 unknown28;      // Inferred role: m unused28; original member name unknown.
+  RealTime unknown18; // Inferred role: real time; original member name unknown.
+  RealTime unknown20; // Inferred role: elapse start real time; original member name unknown.
+  u32 unknown28;      // Inferred role: unused28; original member name unknown.
   GameTime m_gameTime;
-  f32 unknown30; // Inferred role: m time; original member name unknown.
-  f32 unknown34; // Inferred role: m prev time; original member name unknown.
-  f32 unknown38; // Inferred role: m time fraction; original member name unknown.
+  f32 unknown30; // Inferred role: time; original member name unknown.
+  f32 unknown34; // Inferred role: prev time; original member name unknown.
+  f32 unknown38; // Inferred role: time fraction; original member name unknown.
   f32 m_timeSpeed;
   u32 m_timeRange;
-  u32 unknown44; // Inferred role: m prev time range; original member name unknown.
-  u32 unknown48; // Inferred role: m time range dn; original member name unknown.
-  u32 unknown4c; // Inferred role: m unused4c; original member name unknown.
+  u32 unknown44; // Inferred role: prev time range; original member name unknown.
+  u32 unknown48; // Inferred role: time range dn; original member name unknown.
+  u32 unknown4c; // Inferred role: unused4c; original member name unknown.
   bool m_debugStop;
 };
 

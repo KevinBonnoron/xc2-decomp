@@ -24,20 +24,20 @@ public:
 
     Plan() { clear(); }
     void clear() {
-      flags = 0;
-      frame = 0;
-      wait = 0;
-      prio = FadeCtrl::PRIO_LOW;
-      color = mm::Col4::black;
-      waitTimer = 0.0f;
+      unknown00 = 0;
+      unknown04 = 0;
+      unknown08 = 0;
+      unknown0c = FadeCtrl::PRIO_LOW;
+      unknown10 = mm::Col4::black;
+      unknown20 = 0.0f;
     }
 
-    u32 flags;
-    u32 frame;
-    u32 wait;
-    FadeCtrl::PRIO prio;
-    mm::Col4 color;
-    f32 waitTimer;
+    u32 unknown00;            // Inferred role: flags; original member name unknown.
+    u32 unknown04;            // Inferred role: frame; original member name unknown.
+    u32 unknown08;            // Inferred role: wait; original member name unknown.
+    FadeCtrl::PRIO unknown0c; // Inferred role: prio; original member name unknown.
+    mm::Col4 unknown10;       // Inferred role: color; original member name unknown.
+    f32 unknown20;            // Inferred role: wait timer; original member name unknown.
   };
 
   FadePlanner();
@@ -49,8 +49,8 @@ public:
   void request(TYPE type);
 
 private:
-  u32 flags;
-  Plan mPlans[TYPE_COUNT];
+  u32 unknown08;              // Inferred role: flags; original member name unknown.
+  Plan unknown0c[TYPE_COUNT]; // Inferred role: plans; original member name unknown.
 };
 
 static_assert(sizeof(FadePlanner) == 0xa0, "");

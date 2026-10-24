@@ -17,7 +17,7 @@ void ScriptCharaSetIdle::doit(const Param &param) {
     return;
   }
   ObjectChara *chara = static_cast<ObjectChara *>(object);
-  mPrevId = chara->getCharaObj()->getIdle();
+  unknown08 = chara->getCharaObj()->getIdle();
   chara->getCharaObj()->setIdle(param.val(0).getS32());
 }
 
@@ -26,7 +26,7 @@ void ScriptCharaSetIdle::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
     return;
   }
-  static_cast<ObjectChara *>(object)->getCharaObj()->setIdle(mPrevId);
+  static_cast<ObjectChara *>(object)->getCharaObj()->setIdle(unknown08);
 }
 
 } // namespace event

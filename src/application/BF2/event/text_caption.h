@@ -17,16 +17,16 @@ public:
   void update();
   void render();
   void write(const char *text, u8 *bdat, int textId, int position);
-  bool isDisp() const { return (flags & FLAG_DISP) != 0; }
+  bool isDisp() const { return (unknown08 & FLAG_DISP) != 0; }
   void hide() {
     gf::GfMenuObjEventSubtitle::hideText();
-    text = "";
-    flags &= ~FLAG_DISP;
+    unknown0c = "";
+    unknown08 &= ~FLAG_DISP;
   }
 
 private:
-  u32 flags;
-  mm::mtl::FixStr<256> text;
+  u32 unknown08;                  // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<256> unknown0c; // Inferred role: text; original member name unknown.
 };
 
 static_assert(sizeof(TextCaption) == 0x110, "");

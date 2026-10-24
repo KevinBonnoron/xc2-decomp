@@ -38,10 +38,10 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 dispFlags;
-  u32 flags;
-  LightEvt *mOffScrLights[OFFSCR_LIGHT_COUNT];
-  LightEvt *mEvtLight;
+  u32 unknown10;                           // Inferred role: disp flags; original member name unknown.
+  u32 unknown14;                           // Inferred role: flags; original member name unknown.
+  LightEvt *unknown18[OFFSCR_LIGHT_COUNT]; // Inferred role: off scr lights; original member name unknown.
+  LightEvt *unknown38;                     // Inferred role: evt light; original member name unknown.
 };
 
 static_assert(sizeof(LightManager) == 0x40, "");

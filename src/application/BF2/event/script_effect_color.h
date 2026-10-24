@@ -14,7 +14,7 @@ public:
   virtual void redo(const Param &param);
 
 private:
-  mm::Col4 prevColor;
+  mm::Col4 unknown08; // Inferred role: prev color; original member name unknown.
 };
 
 static_assert(sizeof(ScriptEffectColor) == 0x18, "");

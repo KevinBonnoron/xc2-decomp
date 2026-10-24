@@ -41,53 +41,53 @@ public:
 
 private:
   void detach() {
-    if (mCaster != nullptr) {
-      for (size_t i = 0; i < mHandles.size(); i++) {
-        mCaster->setEffectCaster(false, mHandles[i]);
+    if (unknown1b0 != nullptr) {
+      for (size_t i = 0; i < unknown10.size(); i++) {
+        unknown1b0->setEffectCaster(false, unknown10[i]);
       }
     }
-    if (mMount != nullptr) {
-      for (size_t i = 0; i < mHandles.size(); i++) {
-        mMount->setEffectMount(false, mHandles[i], "", mm::Vec3::zero, false, static_cast<ATTACH_TYPE>(0));
+    if (unknown1c0 != nullptr) {
+      for (size_t i = 0; i < unknown10.size(); i++) {
+        unknown1c0->setEffectMount(false, unknown10[i], "", mm::Vec3::zero, false, static_cast<ATTACH_TYPE>(0));
       }
     }
   }
 
   void reset() {
-    handle = 0;
-    mPos = mm::Vec3(0.0f, 0.0f, 0.0f);
-    mRot = mm::Vec3(0.0f, 0.0f, 0.0f);
-    mScale = mm::Vec3(1.0f, 1.0f, 1.0f);
-    mColor = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
-    mSpeed = 0.0f;
-    mSkip = 0.0f;
-    mPrio = 0;
-    mCaster = nullptr;
-    mMount = nullptr;
-    mMountName = "";
-    mMountOffset = mm::Vec3::zero;
-    mIsMountRotate = false;
-    mAttachType = 0;
+    unknown08 = 0;
+    m_pos = mm::Vec3(0.0f, 0.0f, 0.0f);
+    m_rot = mm::Vec3(0.0f, 0.0f, 0.0f);
+    m_scale = mm::Vec3(1.0f, 1.0f, 1.0f);
+    m_color = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
+    m_speed = 0.0f;
+    m_skip = 0.0f;
+    m_prio = 0;
+    unknown1b0 = nullptr;
+    unknown1c0 = nullptr;
+    unknown1c8 = "";
+    unknown1f0 = mm::Vec3::zero;
+    unknown200 = false;
+    unknown204 = 0;
   }
 
-  u32 handle;
-  mm::mtl::FixedVector<u32, HANDLE_COUNT> mHandles;
-  mm::mtl::FixStr<64> mName;
-  u32 mAttribute;
-  mm::Vec3 mPos;
-  mm::Vec3 mRot;
-  mm::Vec3 mScale;
-  mm::Col4 mColor;
-  f32 mSpeed;
-  f32 mSkip;
-  int mPrio;
-  IAttachActor *mCaster;
+  u32 unknown08;                                     // Inferred role: handle; original member name unknown.
+  mm::mtl::FixedVector<u32, HANDLE_COUNT> unknown10; // Inferred role: handles; original member name unknown.
+  mm::mtl::FixStr<64> unknown118;                    // Inferred role: name; original member name unknown.
+  u32 unknown15c;                                    // Inferred role: attribute; original member name unknown.
+  mm::Vec3 m_pos;
+  mm::Vec3 m_rot;
+  mm::Vec3 m_scale;
+  mm::Col4 m_color;
+  f32 m_speed;
+  f32 m_skip;
+  int m_prio;
+  IAttachActor *unknown1b0; // Inferred role: caster; original member name unknown.
   u8 _1b8[0x1c0 - 0x1b8];
-  IAttachActor *mMount;
-  mm::mtl::FixStr<32> mMountName;
-  mm::Vec3 mMountOffset;
-  bool mIsMountRotate;
-  int mAttachType;
+  IAttachActor *unknown1c0;       // Inferred role: mount; original member name unknown.
+  mm::mtl::FixStr<32> unknown1c8; // Inferred role: mount name; original member name unknown.
+  mm::Vec3 unknown1f0;            // Inferred role: mount offset; original member name unknown.
+  bool unknown200;                // Inferred role: is mount rotate; original member name unknown.
+  int unknown204;                 // Inferred role: attach type; original member name unknown.
 };
 
 static_assert(sizeof(EffectCtrl) == 0x210, "");

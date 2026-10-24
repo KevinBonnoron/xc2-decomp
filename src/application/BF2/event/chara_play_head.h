@@ -27,7 +27,7 @@ public:
   };
 
   void render(const mm::Vec3 &position, f32 height) {
-    if ((flags & FLAG_PLAY) == 0) {
+    if ((unknown08 & FLAG_PLAY) == 0) {
       return;
     }
     ml::ScnObjCam *cam = Manager::get()->getScn()->getCam(-1);
@@ -48,15 +48,15 @@ public:
     fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
     fw::debug::drawFont(titleX, titleY, "HEAD");
     fw::debug::drawFont(x + 110, y - 65, "head:");
-    if ((flags & FLAG_LOOP) != 0) {
+    if ((unknown08 & FLAG_LOOP) != 0) {
       fw::debug::drawFont(x + 170, y - 65, "life(∞)");
     } else {
-      fw::debug::drawFont(x + 170, y - 65, "life(%.1f)", life);
+      fw::debug::drawFont(x + 170, y - 65, "life(%.1f)", unknown24);
     }
     fw::debug::drawFont(x + 110, y - 50, "head:");
-    fw::debug::drawFont(x + 170, y - 50, name);
+    fw::debug::drawFont(x + 170, y - 50, unknown28);
     fw::debug::drawFont(x + 110, y - 35, "blend:");
-    fw::debug::drawFont(x + 170, y - 35, "%d>LOOP>%d", static_cast<int>(blendIn), static_cast<int>(blendOut));
+    fw::debug::drawFont(x + 170, y - 35, "%d>LOOP>%d", static_cast<int>(unknown30), static_cast<int>(unknown34));
   }
   void play(int type, f32 life, bool isBlendIn, bool isBlendOut);
   void idle();
@@ -64,20 +64,20 @@ public:
   virtual RESULT update(const Param &param);
   virtual void term();
 
-  int getType() const { return type; }
+  int getType() const { return unknown20; }
 
 private:
   static const char *type2stat(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_headtype"), "stat", type, 7)); }
   static f32 type2blend(int type) { return static_cast<s16>(Bdat::getValCheck(Bdat::getFP("EVT_headtype"), "blend", type, 5)); }
 
-  u32 flags;
-  gf::GF_OBJ_HANDLE *handle;
-  CharaWeightPlayer *weight;
-  int type;
-  f32 life;
-  const char *name;
-  f32 blendIn;
-  f32 blendOut;
+  u32 unknown08;                // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
+  CharaWeightPlayer *unknown18; // Inferred role: weight; original member name unknown.
+  int unknown20;                // Inferred role: type; original member name unknown.
+  f32 unknown24;                // Inferred role: life; original member name unknown.
+  const char *unknown28;        // Inferred role: name; original member name unknown.
+  f32 unknown30;                // Inferred role: blend in; original member name unknown.
+  f32 unknown34;                // Inferred role: blend out; original member name unknown.
 };
 
 static_assert(sizeof(CharaPlayHead) == 0x38, "");

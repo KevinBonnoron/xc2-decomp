@@ -44,17 +44,17 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  bool isJpegMode() const { return static_cast<u32>(mMode - MODE_AFTEREFFECT) < 3; }
+  bool isJpegMode() const { return static_cast<u32>(unknown14 - MODE_AFTEREFFECT) < 3; }
 
-  u32 flags;
-  MODE mMode;
-  int mFilter;
-  mm::mtl::FixedVector<mm::mtl::FixStr<16>, CUT_COUNT> mCutNames;
-  mm::mtl::FixStr<128> mDirectory;
-  mm::mtl::FixStr<128> mFileName;
-  mm::mtl::FixStr<128> mRawMoviePath;
-  mm::mtl::FixStr<128> mMoviePath;
-  mm::mtl::FixStr<128> mHalfMoviePath;
+  u32 unknown10;                                                  // Inferred role: flags; original member name unknown.
+  MODE unknown14;                                                 // Inferred role: mode; original member name unknown.
+  int unknown18;                                                  // Inferred role: filter; original member name unknown.
+  mm::mtl::FixedVector<mm::mtl::FixStr<16>, CUT_COUNT> unknown20; // Inferred role: cut names; original member name unknown.
+  mm::mtl::FixStr<128> unknown2828;                               // Inferred role: directory; original member name unknown.
+  mm::mtl::FixStr<128> unknown28ac;                               // Inferred role: file name; original member name unknown.
+  mm::mtl::FixStr<128> unknown2930;                               // Inferred role: raw movie path; original member name unknown.
+  mm::mtl::FixStr<128> unknown29b4;                               // Inferred role: movie path; original member name unknown.
+  mm::mtl::FixStr<128> unknown2a38;                               // Inferred role: half movie path; original member name unknown.
 };
 
 static_assert(sizeof(CaptureManager) == 0x2ac0, "");

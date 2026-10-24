@@ -38,10 +38,10 @@ public:
   void setPause(bool isPause) override;
 
 private:
-  WEATYPE unknown08; // Inferred role: m type; original member name unknown.
-  bool unknown0c;    // Inferred role: m is erased; original member name unknown.
-  f32 unknown10;     // Inferred role: m alpha; original member name unknown.
-  u32 unknown14;     // Inferred role: m effect handle; original member name unknown.
+  WEATYPE unknown08; // Inferred role: type; original member name unknown.
+  bool unknown0c;    // Inferred role: is erased; original member name unknown.
+  f32 unknown10;     // Inferred role: alpha; original member name unknown.
+  u32 unknown14;     // Inferred role: effect handle; original member name unknown.
 };
 
 static_assert(sizeof(WeatherEff) == 0x18, "");
@@ -61,10 +61,10 @@ public:
   void setPause(bool isPause) override;
 
 private:
-  SoundHandle unknown08; // Inferred role: m sound handle; original member name unknown.
-  WEATYPE unknown10;     // Inferred role: m type; original member name unknown.
-  bool unknown14;        // Inferred role: m is skipped; original member name unknown.
-  f32 unknown18;         // Inferred role: m volume; original member name unknown.
+  SoundHandle unknown08; // Inferred role: sound handle; original member name unknown.
+  WEATYPE unknown10;     // Inferred role: type; original member name unknown.
+  bool unknown14;        // Inferred role: is skipped; original member name unknown.
+  f32 unknown18;         // Inferred role: volume; original member name unknown.
 };
 
 static_assert(sizeof(WeatherSnd) == 0x20, "");

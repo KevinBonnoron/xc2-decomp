@@ -21,8 +21,8 @@ public:
   bool play(int id);
 
 private:
-  u32 flags;
-  RandPlayer player;
+  u32 unknown10;        // Inferred role: flags; original member name unknown.
+  RandPlayer unknown18; // Inferred role: player; original member name unknown.
 };
 
 static_assert(sizeof(RandManager) == 0x998, "");

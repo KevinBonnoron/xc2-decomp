@@ -60,14 +60,14 @@ public:
   void mask(MASK_TYPE type, bool isMask);
 
 private:
-  bool isActive(u32 target) const { return (mTarget & target) != 0 && (mMask & target) == 0; }
+  bool isActive(u32 target) const { return (m_target & target) != 0 && (unknown10 & target) == 0; }
 
-  mm::mtl::BitFlag<32> flags;
-  u32 mTarget;
-  u32 mMask;
-  mm::mtl::FixedArray<f32, RESET_VOLUME_COUNT> mResetVolumes;
-  f32 mVolume;
-  f32 frame;
+  mm::mtl::BitFlag<32> unknown08; // Inferred role: flags; original member name unknown.
+  u32 m_target;
+  u32 unknown10;                                          // Inferred role: mask; original member name unknown.
+  mm::mtl::FixedArray<f32, RESET_VOLUME_COUNT> unknown14; // Inferred role: reset volumes; original member name unknown.
+  f32 unknown48;                                          // Inferred role: volume; original member name unknown.
+  f32 unknown4c;                                          // Inferred role: frame; original member name unknown.
 };
 
 static_assert(sizeof(VolumeSeamless) == 0x50, "");

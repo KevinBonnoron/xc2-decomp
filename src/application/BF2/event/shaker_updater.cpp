@@ -8,9 +8,9 @@ namespace event {
 
 ShakerUpdater::ShakerUpdater() {}
 
-void ShakerUpdater::clear() { queue.clear(); }
+void ShakerUpdater::clear() { unknown08.clear(); }
 
-void ShakerUpdater::update() { queue.update(); }
+void ShakerUpdater::update() { unknown08.update(); }
 
 void ShakerUpdater::reserve(const mm::Vec3 &pos, const mm::Vec3 &rot) {
   CmdParam param;
@@ -20,7 +20,7 @@ void ShakerUpdater::reserve(const mm::Vec3 &pos, const mm::Vec3 &rot) {
   param.val(3).setF32(rot.x);
   param.val(4).setF32(rot.y);
   param.val(5).setF32(rot.z);
-  queue.push_back(&cmd, param);
+  unknown08.push_back(&unknown00, param);
 }
 
 } // namespace event

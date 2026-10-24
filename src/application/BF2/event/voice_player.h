@@ -27,20 +27,20 @@ public:
   };
 
   struct Key {
-    Key(f32 frame, const char *path) : frame(frame), path(path) {}
+    Key(f32 frame, const char *path) : unknown00(frame), unknown04(path) {}
 
-    f32 frame;
-    mm::mtl::FixStr<64> path;
+    f32 unknown00;                 // Inferred role: frame; original member name unknown.
+    mm::mtl::FixStr<64> unknown04; // Inferred role: path; original member name unknown.
   };
 
   struct Play {
-    Play(u32 handle, const char *path) : handle(handle), path(path), playTime(-1.0f), stallCount(0), retakeCount(0) {}
+    Play(u32 handle, const char *path) : unknown00(handle), unknown04(path), unknown48(-1.0f), unknown4c(0), unknown50(0) {}
 
-    u32 handle;
-    mm::mtl::FixStr<64> path;
-    f32 playTime;
-    int stallCount;
-    int retakeCount;
+    u32 unknown00;                 // Inferred role: handle; original member name unknown.
+    mm::mtl::FixStr<64> unknown04; // Inferred role: path; original member name unknown.
+    f32 unknown48;                 // Inferred role: play time; original member name unknown.
+    int unknown4c;                 // Inferred role: stall count; original member name unknown.
+    int unknown50;                 // Inferred role: retake count; original member name unknown.
   };
 
   VoicePlayer();
@@ -63,15 +63,15 @@ public:
   const char *getPath() const;
 
 private:
-  u32 flags;
-  mm::mtl::FixedList<Key, KEY_COUNT> keys;
-  mm::mtl::FixedVector<Play, PLAY_COUNT> plays;
-  mm::mtl::FixStr<64> waitingPath;
-  u32 waitingHandle;
-  f32 delay;
-  mm::mtl::FixStr<64> path;
-  u32 handle;
-  IVoiceEvent *event;
+  u32 unknown08;                                     // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedList<Key, KEY_COUNT> unknown0c;      // Inferred role: keys; original member name unknown.
+  mm::mtl::FixedVector<Play, PLAY_COUNT> unknown2d0; // Inferred role: plays; original member name unknown.
+  mm::mtl::FixStr<64> unknown428;                    // Inferred role: waiting path; original member name unknown.
+  u32 unknown46c;                                    // Inferred role: waiting handle; original member name unknown.
+  f32 unknown470;                                    // Inferred role: delay; original member name unknown.
+  mm::mtl::FixStr<64> unknown474;                    // Inferred role: path; original member name unknown.
+  u32 unknown4b8;                                    // Inferred role: handle; original member name unknown.
+  IVoiceEvent *unknown4c0;                           // Inferred role: event; original member name unknown.
 };
 
 static_assert(sizeof(VoicePlayer) == 0x4c8, "");

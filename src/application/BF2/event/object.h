@@ -31,29 +31,29 @@ public:
   virtual void tail() {}
   virtual bool isLoading() const { return false; }
 
-  OBJTYPE getType() const { return mType; }
-  const char *getName() const { return mName.c_str(); }
-  Object *getChild() const { return mChild; }
-  Object *getNext() const { return mNext; }
-  void setChild(Object *child) { mChild = child; }
+  OBJTYPE getType() const { return unknown10; }
+  const char *getName() const { return unknown14.c_str(); }
+  Object *getChild() const { return unknown58; }
+  Object *getNext() const { return unknown60; }
+  void setChild(Object *child) { unknown58 = child; }
 
   void addChild(Object *child) {
-    if (mChild == nullptr) {
-      mChild = child;
+    if (unknown58 == nullptr) {
+      unknown58 = child;
     } else {
-      Object *last = mChild;
-      while (last->mNext != nullptr) {
-        last = last->mNext;
+      Object *last = unknown58;
+      while (last->unknown60 != nullptr) {
+        last = last->unknown60;
       }
-      last->mNext = child;
+      last->unknown60 = child;
     }
   }
 
 protected:
-  OBJTYPE mType;
-  mm::mtl::FixStr<64> mName;
-  Object *mChild;
-  Object *mNext;
+  OBJTYPE unknown10;             // Inferred role: type; original member name unknown.
+  mm::mtl::FixStr<64> unknown14; // Inferred role: name; original member name unknown.
+  Object *unknown58;             // Inferred role: child; original member name unknown.
+  Object *unknown60;             // Inferred role: next; original member name unknown.
 };
 
 static_assert(sizeof(Object) == 0x68, "");

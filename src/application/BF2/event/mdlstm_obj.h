@@ -43,10 +43,10 @@ public:
   virtual void OnResEvent(const PARAM &param);
 
 private:
-  u32 flags;
-  STATE state;
-  f32 frame;
-  mm::mtl::FixStr<128> path;
+  u32 unknown08;                  // Inferred role: flags; original member name unknown.
+  STATE unknown0c;                // Inferred role: state; original member name unknown.
+  f32 unknown10;                  // Inferred role: frame; original member name unknown.
+  mm::mtl::FixStr<128> unknown14; // Inferred role: path; original member name unknown.
   u32 _98;
   u32 _9c;
   u32 _a0;
@@ -58,9 +58,9 @@ private:
   void *_c0;
   void *_c8;
   void *_d0;
-  ModelObj *mReuseModel;
-  ModelObj *mModel;
-  u32 mDisposeDelay;
+  ModelObj *unknownd8; // Inferred role: reuse model; original member name unknown.
+  ModelObj *unknowne0; // Inferred role: model; original member name unknown.
+  u32 unknowne8;       // Inferred role: dispose delay; original member name unknown.
 };
 
 static_assert(sizeof(MdlstmObj) == 0xf0, "");

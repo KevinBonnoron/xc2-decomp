@@ -11,43 +11,43 @@
 
 namespace event {
 
-MstxtRes::MstxtRes(const char *path) : flags(0), path(path) {
-  mName = mm::mtl::Singleton<Extend>::getPtr()->filename(path);
-  mName += "_ms";
+MstxtRes::MstxtRes(const char *path) : unknown08(0), unknown0c(path) {
+  unknown30 = mm::mtl::Singleton<Extend>::getPtr()->filename(path);
+  unknown30 += "_ms";
   mm::mtl::FixStr<64> bdatPath;
-  bdatPath.format("bdat/%s/%s.bdat", fw::LangUtil::getLangFolder().c_str(), mName.c_str());
+  bdatPath.format("bdat/%s/%s.bdat", fw::LangUtil::getLangFolder().c_str(), unknown30.c_str());
   mm::mtl::Singleton<ResManager>::getPtr()->load(bdatPath.c_str(), this, false);
-  flags |= FLAG_LOADING;
+  unknown08 |= FLAG_LOADING;
 }
 
 MstxtRes::~MstxtRes() { unregisterBdat(); }
 
 void MstxtRes::unregisterBdat() {
-  if (flags & FLAG_REGISTERED) {
+  if (unknown08 & FLAG_REGISTERED) {
     gf::GfMenuObjEventSubtitle::endText();
     fw::BdatManager::unregistBdat(2);
-    flags &= ~FLAG_REGISTERED;
+    unknown08 &= ~FLAG_REGISTERED;
   }
 }
 
 void MstxtRes::OnResEvent(const PARAM &param) {
   if (param.result == RES_RESULT_TYPE_SUCCESS) {
-    flags |= FLAG_LOADED;
+    unknown08 |= FLAG_LOADED;
   } else if (param.result == RES_RESULT_TYPE_FAILURE) {
     mm::mtl::PtrSingleton<Manager>::get()->failureSkip();
   }
-  flags &= ~FLAG_LOADING;
+  unknown08 &= ~FLAG_LOADING;
 }
 
 void MstxtRes::registerBdat() {
-  if ((flags & (FLAG_LOADING | FLAG_LOADED | FLAG_REGISTERED)) != FLAG_LOADED) {
+  if ((unknown08 & (FLAG_LOADING | FLAG_LOADED | FLAG_REGISTERED)) != FLAG_LOADED) {
     return;
   }
-  fw::BdatManager::loadBdatFromMemory(2, mm::mtl::Singleton<ResManager>::getPtr()->adr(mName.c_str(), nullptr));
-  flags |= FLAG_REGISTERED;
+  fw::BdatManager::loadBdatFromMemory(2, mm::mtl::Singleton<ResManager>::getPtr()->adr(unknown30.c_str(), nullptr));
+  unknown08 |= FLAG_REGISTERED;
 }
 
-unsigned char *MstxtRes::getFp() { return fw::BdatManager::getFp(mName.c_str()); }
+unsigned char *MstxtRes::getFp() { return fw::BdatManager::getFp(unknown30.c_str()); }
 
 int MstxtRes::getSeatID(const char *label) {
   if (label == nullptr || *label == '\0') {
@@ -72,8 +72,8 @@ const char *MstxtRes::getText(const char *label) {
   return "";
 }
 
-int MstxtRes::getTop() const { return Bdat::getIdTop(fw::BdatManager::getFp(mName.c_str())); }
+int MstxtRes::getTop() const { return Bdat::getIdTop(fw::BdatManager::getFp(unknown30.c_str())); }
 
-int MstxtRes::getCount() const { return Bdat::getIdCount(fw::BdatManager::getFp(mName.c_str())); }
+int MstxtRes::getCount() const { return Bdat::getIdCount(fw::BdatManager::getFp(unknown30.c_str())); }
 
 } // namespace event

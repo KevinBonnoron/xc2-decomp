@@ -43,12 +43,12 @@ public:
   bool isPlaying() const;
 
 private:
-  Warp cmdWarp;
-  Wait cmdWait;
-  Reply cmdReply;
-  Reset cmdReset;
-  CmdQueue<QUEUE_COUNT, 0> queue;
-  u32 flags;
+  Warp unknown08;                     // Inferred role: cmd warp; original member name unknown.
+  Wait unknown10;                     // Inferred role: cmd wait; original member name unknown.
+  Reply unknown18;                    // Inferred role: cmd reply; original member name unknown.
+  Reset unknown20;                    // Inferred role: cmd reset; original member name unknown.
+  CmdQueue<QUEUE_COUNT, 0> unknown28; // Inferred role: queue; original member name unknown.
+  u32 unknown978;                     // Inferred role: flags; original member name unknown.
 };
 
 static_assert(sizeof(RandPlayer) == 0x980, "");

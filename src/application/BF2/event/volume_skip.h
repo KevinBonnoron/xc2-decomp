@@ -26,14 +26,14 @@ public:
   void start();
   void end();
   void setResetVolume(TYPE type, f32 volume);
-  bool isStart() const { return (flags & FLAG_START) != 0; }
+  bool isStart() const { return (unknown08 & FLAG_START) != 0; }
 
 private:
-  u32 flags;
-  mm::mtl::FixedArray<f32, TYPE_COUNT> mResetVolumes;
-  f32 mVolume;
-  f32 mInFrame;
-  f32 mOutFrame;
+  u32 unknown08;                                  // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedArray<f32, TYPE_COUNT> unknown0c; // Inferred role: reset volumes; original member name unknown.
+  f32 unknown44;                                  // Inferred role: volume; original member name unknown.
+  f32 unknown48;                                  // Inferred role: in frame; original member name unknown.
+  f32 unknown4c;                                  // Inferred role: out frame; original member name unknown.
 };
 
 static_assert(sizeof(VolumeSkip) == 0x50, "");

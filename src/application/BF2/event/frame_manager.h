@@ -17,11 +17,11 @@ enum ACC_TYPE {
 };
 
 struct FrameInfo {
-  f32 frame;
-  f32 delta;
-  f32 pauseDelta;
-  f32 streamDelta;
-  f32 accFrame;
+  f32 unknown00; // Inferred role: frame; original member name unknown.
+  f32 unknown04; // Inferred role: delta; original member name unknown.
+  f32 unknown08; // Inferred role: pause delta; original member name unknown.
+  f32 unknown0c; // Inferred role: stream delta; original member name unknown.
+  f32 unknown10; // Inferred role: acc frame; original member name unknown.
 };
 
 class FrameManager : public IManager, public mm::mtl::Singleton<FrameManager> {
@@ -74,8 +74,8 @@ public:
   static constexpr u32 PAUSE_PRESERVED_BITS = 1 << 14;
 
   struct KeyFrame {
-    f32 frame;
-    bool isCut;
+    f32 unknown00;  // Inferred role: frame; original member name unknown.
+    bool unknown04; // Inferred role: cut; original member name unknown.
   };
 
   f32 getFrame() const;
@@ -129,58 +129,58 @@ public:
 private:
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
-      flags |= flag;
+      unknown10 |= flag;
     } else {
-      flags &= ~flag;
+      unknown10 &= ~flag;
     }
   }
 
   void setDispFlag(u32 flag, bool isSet) {
     if (isSet) {
-      dispFlags |= flag;
+      unknown14 |= flag;
     } else {
-      dispFlags &= ~flag;
+      unknown14 &= ~flag;
     }
   }
 
   void clearPage() {
-    mMaxFrame = DEFAULT_MAX_FRAME;
-    mKomaCount = -1;
-    mPageName = "";
-    mPageID = 0;
-    frame = 0.0f;
-    mNextFrame = 0.0f;
-    mReachedFrame = 0.0f;
-    mSkipAbleFrame = 0.0f;
-    mKeyFrames.clear();
-    mAccFrame = 0.0f;
+    m_maxFrame = DEFAULT_MAX_FRAME;
+    unknown1188 = -1;
+    m_pageName = "";
+    m_pageID = 0;
+    m_frame = 0.0f;
+    unknown13c = 0.0f;
+    unknown144 = 0.0f;
+    unknown158 = 0.0f;
+    unknown168.clear();
+    unknown160 = 0.0f;
   }
 
-  u32 flags;
-  u32 dispFlags;
-  u32 mPauseBits;
-  gf::GF_PAUSE_HANDLE *mPauseHandles[PAUSE_TYPE_COUNT];
-  mm::mtl::FixStr<128> mPageName;
-  int mPageID;
-  f32 frame;
-  f32 mTotalFrame;
-  f32 mSkipStartFrame;
-  f32 mNextFrame;
-  f32 mBackupFrame;
-  f32 mReachedFrame;
-  f32 mMaxFrame;
-  f32 mLockFrame;
-  f32 mCaptureFrame;
-  f32 mRequestFrame;
-  f32 mSkipAbleFrame;
-  ACC_TYPE mAccType;
-  f32 mAccFrame;
+  u32 unknown10;                                    // Inferred role: flags; original member name unknown.
+  u32 unknown14;                                    // Inferred role: disp flags; original member name unknown.
+  u32 unknown18;                                    // Inferred role: pause bits; original member name unknown.
+  gf::GF_PAUSE_HANDLE *unknown20[PAUSE_TYPE_COUNT]; // Inferred role: pause handles; original member name unknown.
+  mm::mtl::FixStr<128> m_pageName;
+  int m_pageID;
+  f32 m_frame;
+  f32 m_totalFrame;
+  f32 unknown138; // Inferred role: skip start frame; original member name unknown.
+  f32 unknown13c; // Inferred role: next frame; original member name unknown.
+  f32 unknown140; // Inferred role: backup frame; original member name unknown.
+  f32 unknown144; // Inferred role: reached frame; original member name unknown.
+  f32 m_maxFrame;
+  f32 unknown14c; // Inferred role: lock frame; original member name unknown.
+  f32 unknown150; // Inferred role: capture frame; original member name unknown.
+  f32 unknown154; // Inferred role: request frame; original member name unknown.
+  f32 unknown158; // Inferred role: skip able frame; original member name unknown.
+  ACC_TYPE m_accType;
+  f32 unknown160; // Inferred role: acc frame; original member name unknown.
   u8 _164[0x168 - 0x164];
-  mm::mtl::FixedVector<KeyFrame, KEY_FRAME_COUNT> mKeyFrames;
-  FrameInfo mFrameInfo;
-  int mPageDispCount;
-  int mKomaCount;
-  PAUSE_TYPE mKomaType;
+  mm::mtl::FixedVector<KeyFrame, KEY_FRAME_COUNT> unknown168; // Inferred role: key frames; original member name unknown.
+  FrameInfo unknown1170;                                      // Inferred role: frame info; original member name unknown.
+  int unknown1184;                                            // Inferred role: page disp count; original member name unknown.
+  int unknown1188;                                            // Inferred role: koma count; original member name unknown.
+  PAUSE_TYPE unknown118c;                                     // Inferred role: koma type; original member name unknown.
 };
 
 static_assert(sizeof(FrameManager) == 0x1190, "");

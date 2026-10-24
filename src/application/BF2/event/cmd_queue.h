@@ -19,12 +19,12 @@ public:
   void push_back(ICmd *cmd, const CmdParam &param);
   void eraseAll() {
     while (mItems.size() != 0) {
-      erase(mItems.front().mCmd);
+      erase(mItems.front().unknown08);
     }
   }
   bool isExist(const ICmd *cmd) const {
     for (u32 i = 0; i < mItems.size(); i++) {
-      if (mItems.at(i)->mCmd == cmd) {
+      if (mItems.at(i)->unknown08 == cmd) {
         return true;
       }
     }
@@ -41,25 +41,25 @@ template <size_t N, int Type> void CmdQueue<N, Type>::update() {
   CmdItem *it = mItems.begin();
   while (true) {
     if (nextCount > index) {
-      if (it == mItems.end() || it->mWaitFrame > 0) {
+      if (it == mItems.end() || it->unknown124 > 0) {
         break;
       }
       ++it;
       ++index;
       continue;
     }
-    if (it == mItems.end() || it->mWaitFrame > 0) {
+    if (it == mItems.end() || it->unknown124 > 0) {
       break;
     }
-    ICmd::RESULT result = it->mCmd->update(ICmd::Param(it->mParam, it->frame));
-    if (it->frame != 0x7fffffff) {
-      it->frame++;
+    ICmd::RESULT result = it->unknown08->update(ICmd::Param(it->unknown10, it->unknown120));
+    if (it->unknown120 != 0x7fffffff) {
+      it->unknown120++;
     }
     switch (result) {
     case ICmd::RESULT_WAIT:
       goto end;
     case ICmd::RESULT_END:
-      it->mCmd->term();
+      it->unknown08->term();
       mItems.erase(it);
       it = mItems.begin();
       index = 0;
@@ -75,16 +75,16 @@ template <size_t N, int Type> void CmdQueue<N, Type>::update() {
   }
 end:
   for (u32 i = 0; i < mItems.size(); i++) {
-    if (mItems[i].mWaitFrame > 0) {
-      mItems[i].mWaitFrame--;
+    if (mItems[i].unknown124 > 0) {
+      mItems[i].unknown124--;
     }
   }
 }
 
 template <size_t N, int Type> void CmdQueue<N, Type>::erase(const ICmd *cmd) {
   for (CmdItem *it = mItems.begin(); it != mItems.end(); ++it) {
-    if (it->mCmd == cmd) {
-      it->mCmd->term();
+    if (it->unknown08 == cmd) {
+      it->unknown08->term();
       mItems.erase(it);
       return;
     }

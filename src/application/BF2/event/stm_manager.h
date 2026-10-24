@@ -36,9 +36,9 @@ public:
   bool isFailure() const;
 
 private:
-  u32 flags;
-  mm::mtl::FixStr<64> mName;
-  StmPackMemory *mMemory;
+  u32 unknown08;                 // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<64> unknown0c; // Inferred role: name; original member name unknown.
+  StmPackMemory *unknown50;      // Inferred role: memory; original member name unknown.
 };
 
 static_assert(sizeof(StmManager) == 0x58, "");

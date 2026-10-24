@@ -24,15 +24,15 @@ public:
   int getCount() const;
   virtual void OnResEvent(const PARAM &param);
 
-  bool isLoading() const { return (flags & FLAG_LOADING) != 0; }
-  bool isLoaded() const { return (flags & FLAG_LOADED) != 0; }
-  const char *getPath() const { return path.c_str(); }
-  const char *getName() const { return mName.c_str(); }
+  bool isLoading() const { return (unknown08 & FLAG_LOADING) != 0; }
+  bool isLoaded() const { return (unknown08 & FLAG_LOADED) != 0; }
+  const char *getPath() const { return unknown0c.c_str(); }
+  const char *getName() const { return unknown30.c_str(); }
 
 private:
-  u32 flags;
-  mm::mtl::FixStr<32> path;
-  mm::mtl::FixStr<32> mName;
+  u32 unknown08;                 // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<32> unknown0c; // Inferred role: path; original member name unknown.
+  mm::mtl::FixStr<32> unknown30; // Inferred role: name; original member name unknown.
 };
 
 static_assert(sizeof(MstxtRes) == 0x58, "");

@@ -2,6 +2,6 @@
 
 namespace event {
 
-CamEvaPlayerEff::CamEvaPlayerEff() : mRcha(nullptr) {}
+CamEvaPlayerEff::CamEvaPlayerEff() : unknown08(nullptr) {}
 
 } // namespace event

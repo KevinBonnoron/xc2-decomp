@@ -18,26 +18,26 @@ public:
   virtual void render(const mm::Col4 &color) {}
   virtual void tail() {}
   mm::Vec3 getRot() const;
-  bool isFocal() const { return mIsFocal; }
-  const mm::Vec3 &getPos() const { return mPos; }
-  const mm::Vec3 &getTarget() const { return mTarget; }
-  f32 getFov() const { return mFov; }
-  f32 getRoll() const { return mRoll; }
-  f32 getNear() const { return mNear; }
-  f32 getFar() const { return mFar; }
+  bool isFocal() const { return unknown08; }
+  const mm::Vec3 &getPos() const { return unknown10; }
+  const mm::Vec3 &getTarget() const { return unknown20; }
+  f32 getFov() const { return unknown30; }
+  f32 getRoll() const { return unknown34; }
+  f32 getNear() const { return unknown38; }
+  f32 getFar() const { return unknown3c; }
   void setNearFar(f32 nearClip, f32 farClip) {
-    mNear = nearClip;
-    mFar = farClip;
+    unknown38 = nearClip;
+    unknown3c = farClip;
   }
 
 protected:
-  bool mIsFocal;
-  mm::Vec3 mPos;
-  mm::Vec3 mTarget;
-  f32 mFov;
-  f32 mRoll;
-  f32 mNear;
-  f32 mFar;
+  bool unknown08;     // Inferred role: is focal; original member name unknown.
+  mm::Vec3 unknown10; // Inferred role: pos; original member name unknown.
+  mm::Vec3 unknown20; // Inferred role: target; original member name unknown.
+  f32 unknown30;      // Inferred role: fov; original member name unknown.
+  f32 unknown34;      // Inferred role: roll; original member name unknown.
+  f32 unknown38;      // Inferred role: near; original member name unknown.
+  f32 unknown3c;      // Inferred role: far; original member name unknown.
 };
 
 static_assert(sizeof(CamBase) == 0x40, "");

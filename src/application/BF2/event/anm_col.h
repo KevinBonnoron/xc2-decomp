@@ -18,12 +18,12 @@ public:
   void replay();
   void append(f32 frame, const mm::Col4 &value, CV_TYPE cv);
   size_t count() const;
-  const mm::Col4 &getValue() const { return value; }
+  const mm::Col4 &getValue() const { return unknown1c8; }
 
 private:
-  mm::mtl::FixedVector<mm::Col4, KEY_COUNT> values;
-  mm::mtl::FixedVector<CV_TYPE, KEY_COUNT> cvs;
-  mm::Col4 value;
+  mm::mtl::FixedVector<mm::Col4, KEY_COUNT> unknown78; // Inferred role: values; original member name unknown.
+  mm::mtl::FixedVector<CV_TYPE, KEY_COUNT> unknown180; // Inferred role: cvs; original member name unknown.
+  mm::Col4 unknown1c8;                                 // Inferred role: value; original member name unknown.
 };
 
 static_assert(sizeof(AnmCol) == 0x1d8, "");

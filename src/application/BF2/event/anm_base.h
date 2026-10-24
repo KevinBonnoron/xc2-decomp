@@ -25,18 +25,18 @@ public:
   size_t count() const;
   void append(f32 frame);
   void setCv(CV_TYPE cv);
-  bool isEnd() const { return endFrame <= frame; }
-  bool isPlay() const { return (state & STATE_PLAY) != 0; }
-  f32 getKeyFrame(size_t index) const { return frames[index]; }
+  bool isEnd() const { return unknown60 <= unknown5c; }
+  bool isPlay() const { return (unknown08 & STATE_PLAY) != 0; }
+  f32 getKeyFrame(size_t index) const { return unknown10[index]; }
 
 protected:
-  u32 state;
-  mm::mtl::FixedVector<f32, KEY_COUNT> frames;
-  CV_TYPE cv;
-  f32 frame;
-  f32 endFrame;
-  size_t index;
-  f32 alpha;
+  u32 unknown08;                                  // Inferred role: state; original member name unknown.
+  mm::mtl::FixedVector<f32, KEY_COUNT> unknown10; // Inferred role: frames; original member name unknown.
+  CV_TYPE m_cv;
+  f32 unknown5c;    // Inferred role: frame; original member name unknown.
+  f32 unknown60;    // Inferred role: end frame; original member name unknown.
+  size_t unknown68; // Inferred role: index; original member name unknown.
+  f32 unknown70;    // Inferred role: alpha; original member name unknown.
 };
 
 static_assert(sizeof(AnmBase) == 0x78, "");

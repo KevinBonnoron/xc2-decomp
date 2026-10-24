@@ -15,7 +15,7 @@ public:
   virtual void redo(const Param &param) { doit(param); }
 
 private:
-  Object *mPrevActive;
+  Object *unknown08; // Inferred role: prev active; original member name unknown.
 };
 
 static_assert(sizeof(ScriptSetActive) == 0x10, "");

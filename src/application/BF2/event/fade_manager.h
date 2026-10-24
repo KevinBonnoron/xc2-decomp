@@ -32,8 +32,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 flags;
-  FadePlanner mPlanner;
+  u32 unknown10;         // Inferred role: flags; original member name unknown.
+  FadePlanner unknown18; // Inferred role: planner; original member name unknown.
 };
 
 static_assert(sizeof(FadeManager) == 0xb8, "");

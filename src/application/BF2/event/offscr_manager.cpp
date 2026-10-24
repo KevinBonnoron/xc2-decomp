@@ -4,11 +4,11 @@ namespace event {
 
 OffscrManager::OffscrManager() {
   for (u32 i = 0; i < SCREEN_COUNT; i++) {
-    mScreens[i] = nullptr;
+    unknown10[i] = nullptr;
   }
 }
 
-bool OffscrManager::isScreenExist(u32 screenID) const { return mScreens[screenID] != nullptr; }
+bool OffscrManager::isScreenExist(u32 screenID) const { return unknown10[screenID] != nullptr; }
 
 void OffscrManager::OnEventProc(MSG_TYPE type) {
   if (type == MSG_TYPE_CLEAR) {

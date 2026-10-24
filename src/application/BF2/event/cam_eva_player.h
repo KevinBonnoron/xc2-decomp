@@ -20,11 +20,11 @@ public:
   void play(CamBase *cam, void *data, const mm::Vec3 &offset);
 
 private:
-  CamBase *mCam;
-  RchaCam *mRcha;
-  f32 frame;
-  mm::Vec3 mOffset;
-  EVT_nearfar mNearfar;
+  CamBase *unknown08;    // Inferred role: cam; original member name unknown.
+  RchaCam *unknown10;    // Inferred role: rcha; original member name unknown.
+  f32 unknown18;         // Inferred role: frame; original member name unknown.
+  mm::Vec3 unknown20;    // Inferred role: offset; original member name unknown.
+  EVT_nearfar unknown30; // Inferred role: nearfar; original member name unknown.
 };
 
 static_assert(sizeof(CamEvaPlayer) == 0x40, "");

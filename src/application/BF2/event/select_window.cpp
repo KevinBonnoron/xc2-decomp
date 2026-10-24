@@ -16,11 +16,11 @@ namespace event {
 
 static constexpr int MENU_OFFSET_SELECT = 1;
 
-SelectWindow::SelectWindow() : flags(), result(0), context(nullptr) {}
+SelectWindow::SelectWindow() : unknown08(), unknown0c(0), unknown10(nullptr) {}
 
 void SelectWindow::clear() {
   closeContext();
-  flags.clear();
+  unknown08.clear();
 }
 
 void SelectWindow::update() {
@@ -28,24 +28,24 @@ void SelectWindow::update() {
     return;
   }
   gf::GfMenuCallContext::GfMenuResult menuResult;
-  if (context->popResult(menuResult) && menuResult.unknown04 == 2) {
+  if (unknown10->popResult(menuResult) && menuResult.unknown04 == 2) {
     closeContext();
-    result = menuResult.unknown00 + 1;
-    flags.clear();
+    unknown0c = menuResult.unknown00 + 1;
+    unknown08.clear();
   }
 }
 
 void SelectWindow::close() {
   closeContext();
-  flags.clear();
+  unknown08.clear();
 }
 
 void SelectWindow::open(SELECT_TYPE type, int textId, const int *selectIds, size_t count, u8 *bdat, gf::GF_OBJ_HANDLE *handle) {
   if (textId <= 0) {
-    result = 1;
+    unknown0c = 1;
     return;
   }
-  context = gf::GfMenuCallContext::create();
+  unknown10 = gf::GfMenuCallContext::create();
   if (type == SELECT_TYPE_BALLOON) {
     gf::GfMenuObjBalloon::OpenSelectParam param;
     param.unknown00 = bdat;
@@ -73,7 +73,7 @@ void SelectWindow::open(SELECT_TYPE type, int textId, const int *selectIds, size
         break;
       }
     }
-    gf::GfMenuObjBalloon::openEventSelect(context, param);
+    gf::GfMenuObjBalloon::openEventSelect(unknown10, param);
   } else if (type == SELECT_TYPE_BOX) {
     gf::GfMenuObjBalloon::OpenSelectBoxParam param;
     param.unknown00 = bdat;
@@ -82,14 +82,14 @@ void SelectWindow::open(SELECT_TYPE type, int textId, const int *selectIds, size
     for (size_t i = 0; i < count && i < param.unknown18.capacity(); i++) {
       param.unknown18.push_back(selectIds[i]);
     }
-    gf::GfMenuObjBalloon::openEventSelectBox(context, param);
+    gf::GfMenuObjBalloon::openEventSelectBox(unknown10, param);
   }
-  flags.set(FLAG_OPEN);
+  unknown08.set(FLAG_OPEN);
 }
 
 int SelectWindow::getResult() {
   if (!isOpen()) {
-    return result;
+    return unknown0c;
   }
   return 0;
 }

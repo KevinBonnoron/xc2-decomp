@@ -18,7 +18,7 @@ void ScriptCharaLinerRot::doit(const Param &param) {
   }
   RotAxis axis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
   ObjectChara *chara = static_cast<ObjectChara *>(object);
-  prevAxis = chara->getRotAxis();
+  unknown10 = chara->getRotAxis();
   chara->linerRotAxis(axis, param.val(4).getF32(), static_cast<CV_TYPE>(param.val(5).getS32()));
 }
 
@@ -27,7 +27,7 @@ void ScriptCharaLinerRot::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
     return;
   }
-  static_cast<ObjectChara *>(object)->setRotAxis(prevAxis);
+  static_cast<ObjectChara *>(object)->setRotAxis(unknown10);
 }
 
 void ScriptCharaLinerRot::redo(const Param &param) {

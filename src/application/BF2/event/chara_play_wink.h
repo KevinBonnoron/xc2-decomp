@@ -19,8 +19,8 @@ public:
   void render(const mm::Vec3 &position, f32 eyeOffset);
 
 private:
-  u32 flags;
-  gf::GF_OBJ_HANDLE *handle;
+  u32 unknown08;                // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
   u8 _18[0x90 - 0x18];
 };
 

@@ -25,11 +25,11 @@ public:
   };
 
   struct Stream {
-    Stream(const char *name) : mName(name) {}
+    Stream(const char *name) : unknown00(name) {}
 
-    mm::mtl::FixStr<128> mName;
-    StmPackHeader mHeader;
-    StmPackData mData;
+    mm::mtl::FixStr<128> unknown00; // Inferred role: name; original member name unknown.
+    StmPackHeader unknown88;        // Inferred role: header; original member name unknown.
+    StmPackData unknown98;          // Inferred role: data; original member name unknown.
   };
 
   StmPackMemory(mtl::ALLOC_HANDLE handle);
@@ -51,25 +51,25 @@ public:
   virtual bool isFailure() const;
 
 private:
-  Stream *getLoadStream() { return mStreams[mLoadStream]; }
-  const Stream *getLoadStream() const { return mStreams[mLoadStream]; }
-  Stream *getCurrentStream() { return mStreams[mCurrentStream]; }
+  Stream *getLoadStream() { return unknown5860[unknown58e8]; }
+  const Stream *getLoadStream() const { return unknown5860[unknown58e8]; }
+  Stream *getCurrentStream() { return unknown5860[unknown58f0]; }
 
-  u32 flags;
-  mtl::ALLOC_HANDLE handle;
-  void *mBuffer;
-  size_t mPageCount;
-  size_t mFreePage;
-  size_t mLoadPage;
-  mm::mtl::FixedVector<StmPackRes, RES_COUNT> mResList;
-  size_t mFileIndex;
-  u32 mNextPrio;
-  size_t mDataSize;
-  size_t mReadSize;
-  u32 mCutCount;
-  mm::mtl::FixedVector<Stream *, STREAM_COUNT> mStreams;
-  size_t mLoadStream;
-  size_t mCurrentStream;
+  u32 unknown08;                                            // Inferred role: flags; original member name unknown.
+  mtl::ALLOC_HANDLE unknown0c;                              // Inferred role: handle; original member name unknown.
+  void *unknown10;                                          // Inferred role: buffer; original member name unknown.
+  size_t unknown18;                                         // Inferred role: page count; original member name unknown.
+  size_t unknown20;                                         // Inferred role: free page; original member name unknown.
+  size_t unknown28;                                         // Inferred role: load page; original member name unknown.
+  mm::mtl::FixedVector<StmPackRes, RES_COUNT> unknown30;    // Inferred role: res list; original member name unknown.
+  size_t unknown5838;                                       // Inferred role: file index; original member name unknown.
+  u32 unknown5840;                                          // Inferred role: next prio; original member name unknown.
+  size_t unknown5848;                                       // Inferred role: data size; original member name unknown.
+  size_t unknown5850;                                       // Inferred role: read size; original member name unknown.
+  u32 unknown5858;                                          // Inferred role: cut count; original member name unknown.
+  mm::mtl::FixedVector<Stream *, STREAM_COUNT> unknown5860; // Inferred role: streams; original member name unknown.
+  size_t unknown58e8;                                       // Inferred role: load stream; original member name unknown.
+  size_t unknown58f0;                                       // Inferred role: current stream; original member name unknown.
 };
 
 static_assert(sizeof(StmPackMemory::Stream) == 0x130, "");

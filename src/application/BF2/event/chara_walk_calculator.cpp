@@ -8,9 +8,10 @@ f32 CharaWalkCalculator::s_lengthAcc[2][LENGTH_COUNT];
 f32 CharaWalkCalculator::s_lengthDec[2][LENGTH_COUNT];
 
 CharaWalkCalculator::CharaWalkCalculator()
-    : flags(0), mFrom(0.0f, 0.0f, 0.0f), mTo(0.0f, 0.0f, 0.0f), mDistance(0.0f), mDir(0.0f, 0.0f, 0.0f), mDirXZ(0.0f, 0.0f, 0.0f), mBlend(30.0f), mTotalFrame(0.0f), frame(0.0f) {}
+    : unknown00(0), unknown10(0.0f, 0.0f, 0.0f), unknown20(0.0f, 0.0f, 0.0f), unknown30(0.0f), unknown40(0.0f, 0.0f, 0.0f), unknown50(0.0f, 0.0f, 0.0f), unknown60(30.0f), unknown64(0.0f),
+      unknown84(0.0f) {}
 
-void CharaWalkCalculator::clear() { flags = 0; }
+void CharaWalkCalculator::clear() { unknown00 = 0; }
 
 f32 CharaWalkCalculator::getBlend(bool isRun) { return isRun ? 20.0f : 10.0f; }
 

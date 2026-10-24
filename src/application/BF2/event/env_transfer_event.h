@@ -14,8 +14,8 @@ public:
   void load(u32 eventID);
 
 private:
-  u32 mFromEventID;
-  u32 mToEventID;
+  u32 unknown18; // Inferred role: from event id; original member name unknown.
+  u32 unknown1c; // Inferred role: to event id; original member name unknown.
 };
 
 static_assert(sizeof(EnvTransferEvent) == 0x20, "");

@@ -8,13 +8,13 @@ class ICmd;
 
 class CmdItem {
 public:
-  CmdItem(ICmd *cmd, const CmdParam &param) : mCmd(cmd), mParam(param), frame(0), mWaitFrame(0) {}
+  CmdItem(ICmd *cmd, const CmdParam &param) : unknown08(cmd), unknown10(param), unknown120(0), unknown124(0) {}
   virtual ~CmdItem() {}
 
-  ICmd *mCmd;
-  CmdParam mParam;
-  s32 frame;
-  s16 mWaitFrame;
+  ICmd *unknown08;    // Inferred role: cmd; original member name unknown.
+  CmdParam unknown10; // Inferred role: param; original member name unknown.
+  s32 unknown120;     // Inferred role: frame; original member name unknown.
+  s16 unknown124;     // Inferred role: wait frame; original member name unknown.
 };
 
 static_assert(sizeof(CmdItem) == 0x128, "");

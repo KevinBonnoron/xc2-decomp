@@ -23,9 +23,9 @@ public:
   void setPos(const mm::Vec3 &pos);
 
 private:
-  ml::ScnObjLight *mLight;
-  mm::mtl::FixStr<128> path;
-  u32 mScreenID;
+  ml::ScnObjLight *unknown08;     // Inferred role: light; original member name unknown.
+  mm::mtl::FixStr<128> unknown10; // Inferred role: path; original member name unknown.
+  u32 unknown94;                  // Inferred role: screen id; original member name unknown.
 };
 
 static_assert(sizeof(LightEvt) == 0x98, "");

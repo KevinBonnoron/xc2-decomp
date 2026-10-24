@@ -30,9 +30,9 @@ public:
   virtual bool OnFileEvent(ml::EventFileTh *event);
 
 private:
-  u32 flags;
-  mm::mtl::FixStr<128> path;
-  ml::FileHandleTh *handle;
+  u32 unknown08;                  // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<128> unknown0c; // Inferred role: path; original member name unknown.
+  ml::FileHandleTh *unknown90;    // Inferred role: handle; original member name unknown.
 };
 
 static_assert(sizeof(StmPackData) == 0x98, "");

@@ -100,26 +100,26 @@ public:
   void setDispNowLoading(bool isDisp);
 
 private:
-  u32 flags;
-  u32 dispFlags;
-  u32 state;
-  bool isFieldSkillSuccess;
-  gf::GfMenuCallContext *skipContext;
-  gf::GfMenuCallContext *shopContext;
-  gf::GfMenuCallContext *payoffContext;
-  u32 payoffResult;
-  gf::GfMenuCallContext *rewardContext;
-  gf::GfMenuCallContext *bladeNameContext;
-  gf::GfMenuCallContext *chapTelopContext;
-  s32 chapTelopWait;
-  gf::GfMenuCallContext *avanTitleContext;
-  gf::GfMenuCallContext *zoneTelopContext;
-  AnmF32 homuraAnm;
-  AnmF32 hikariAnm;
-  fw::UpdatableObject *minigame;
-  s32 commonWait;
-  s32 skipWait;
-  s32 padWait;
+  u32 unknown10;                    // Inferred role: flags; original member name unknown.
+  u32 unknown14;                    // Inferred role: disp flags; original member name unknown.
+  u32 unknown18;                    // Inferred role: state; original member name unknown.
+  bool unknown1c;                   // Inferred role: field skill success; original member name unknown.
+  gf::GfMenuCallContext *unknown20; // Inferred role: skip context; original member name unknown.
+  gf::GfMenuCallContext *unknown28; // Inferred role: shop context; original member name unknown.
+  gf::GfMenuCallContext *unknown30; // Inferred role: payoff context; original member name unknown.
+  u32 m_payoffUI;
+  gf::GfMenuCallContext *unknown40; // Inferred role: reward context; original member name unknown.
+  gf::GfMenuCallContext *unknown48; // Inferred role: blade name context; original member name unknown.
+  gf::GfMenuCallContext *unknown50; // Inferred role: chap telop context; original member name unknown.
+  s32 unknown58;                    // Inferred role: chap telop wait; original member name unknown.
+  gf::GfMenuCallContext *unknown60; // Inferred role: avan title context; original member name unknown.
+  gf::GfMenuCallContext *unknown68; // Inferred role: zone telop context; original member name unknown.
+  AnmF32 unknown70;                 // Inferred role: homura anm; original member name unknown.
+  AnmF32 unknown180;                // Inferred role: hikari anm; original member name unknown.
+  fw::UpdatableObject *unknown290;  // Inferred role: minigame; original member name unknown.
+  s32 unknown298;                   // Inferred role: common wait; original member name unknown.
+  s32 unknown29c;                   // Inferred role: skip wait; original member name unknown.
+  s32 unknown2a0;                   // Inferred role: pad wait; original member name unknown.
 };
 
 static_assert(sizeof(UIManager) == 0x2a8, "");

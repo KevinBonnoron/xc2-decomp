@@ -6,27 +6,27 @@
 
 namespace event {
 
-AlphaObj::AlphaObj(gf::GF_OBJ_HANDLE *handle) : handle(handle), alpha(1.0f), belongingAlpha(1.0f), opaqueFrames(0) {
-  flags = FLAG_ACTIVE;
+AlphaObj::AlphaObj(gf::GF_OBJ_HANDLE *handle) : unknown10(handle), unknown38(1.0f), unknown3c(1.0f), unknown40(0) {
+  unknown08 = FLAG_ACTIVE;
   for (u32 i = 0; i < ALPHA_ATTR_COUNT; i++) {
-    alphas[i] = 1.0f;
+    unknown18[i] = 1.0f;
   }
   for (u32 i = 0; i < ALPHA_ATTR_COUNT; i++) {
-    belongingAlphas[i] = 1.0f;
+    unknown28[i] = 1.0f;
   }
 }
 
 void AlphaObj::update() {
-  if (gf::GfObjUtil::getObj(handle) != nullptr) {
-    if (!(alpha >= 1.0f) || !(belongingAlpha >= 1.0f)) {
-      opaqueFrames = 0;
+  if (gf::GfObjUtil::getObj(unknown10) != nullptr) {
+    if (!(unknown38 >= 1.0f) || !(unknown3c >= 1.0f)) {
+      unknown40 = 0;
       return;
     }
-    if (opaqueFrames++ < 4) {
+    if (unknown40++ < 4) {
       return;
     }
   }
-  flags &= ~FLAG_ACTIVE;
+  unknown08 &= ~FLAG_ACTIVE;
 }
 
 void AlphaObj::setEventAlpha(gf::GF_OBJ_HANDLE *handle, f32 alpha, f32 belongingAlpha) {

@@ -58,17 +58,17 @@ public:
 private:
   void setDispFlag(u32 flag, bool isSet) {
     if (isSet) {
-      dispFlags |= flag;
+      unknown14 |= flag;
     } else {
-      dispFlags &= ~flag;
+      unknown14 &= ~flag;
     }
   }
 
-  u32 flags;
-  u32 dispFlags;
-  mm::mtl::FixedArray<f32, CATE_COUNT> mResetCategoryVolumes;
-  VolumeSeamless mSeamless;
-  VolumeSkip mSkip;
+  u32 unknown10;                                  // Inferred role: flags; original member name unknown.
+  u32 unknown14;                                  // Inferred role: disp flags; original member name unknown.
+  mm::mtl::FixedArray<f32, CATE_COUNT> unknown18; // Inferred role: reset category volumes; original member name unknown.
+  VolumeSeamless unknown50;                       // Inferred role: seamless; original member name unknown.
+  VolumeSkip unknowna0;                           // Inferred role: skip; original member name unknown.
 };
 
 static_assert(sizeof(VolumeManager) == 0xf0, "");

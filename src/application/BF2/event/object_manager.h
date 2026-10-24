@@ -82,19 +82,19 @@ public:
   ObjectChara *searchByID(u32 type, u32 id);
 
   Object *getActive() const {
-    if (mCurrent == nullptr) {
+    if (unknown128 == nullptr) {
       return nullptr;
     }
-    return mCurrent->getActive();
+    return unknown128->getActive();
   }
 
 private:
-  u32 mMode;
-  u32 flags;
-  mm::mtl::FixedVector<ObjectList *, SCENE_COUNT> mScenes;
-  mm::mtl::FixStr<64> mSceneName;
-  mm::mtl::FixStr<64> mNextSceneName;
-  ObjectList *mCurrent;
+  u32 unknown10;                                             // Inferred role: mode; original member name unknown.
+  u32 unknown14;                                             // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedVector<ObjectList *, SCENE_COUNT> unknown18; // Inferred role: scenes; original member name unknown.
+  mm::mtl::FixStr<64> unknowna0;                             // Inferred role: scene name; original member name unknown.
+  mm::mtl::FixStr<64> unknowne4;                             // Inferred role: next scene name; original member name unknown.
+  ObjectList *unknown128;                                    // Inferred role: current; original member name unknown.
 };
 
 static_assert(sizeof(ObjectManager) == 0x130, "");

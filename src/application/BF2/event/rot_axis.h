@@ -23,12 +23,12 @@ public:
   mm::Vec3 calcRot(const mm::Vec3 &pos) const;
   f32 calcOrigRot(const mm::Vec3 &pos) const;
   const char *getOrigName() const;
-  u32 getAxis() const { return mAxis; }
-  const mm::Vec3 &getRot() const { return mRot; }
+  u32 getAxis() const { return unknown08; }
+  const mm::Vec3 &getRot() const { return unknown10; }
 
 private:
-  u32 mAxis;
-  mm::Vec3 mRot;
+  u32 unknown08;      // Inferred role: axis; original member name unknown.
+  mm::Vec3 unknown10; // Inferred role: rot; original member name unknown.
 };
 
 static_assert(sizeof(RotAxis) == 0x20, "");

@@ -82,18 +82,18 @@ public:
 private:
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
-      flags |= flag;
+      unknown08 |= flag;
     } else {
-      flags &= ~flag;
+      unknown08 &= ~flag;
     }
   }
 
-  u32 flags;
-  gf::GfEvtModel *model;
-  void *data;
-  f32 speed;
-  mm::mtl::FixedVector<MOT, QUEUE_COUNT> queue;
-  MOT lastMot;
+  u32 unknown08;                                    // Inferred role: flags; original member name unknown.
+  gf::GfEvtModel *unknown10;                        // Inferred role: model; original member name unknown.
+  void *unknown18;                                  // Inferred role: data; original member name unknown.
+  f32 unknown20;                                    // Inferred role: speed; original member name unknown.
+  mm::mtl::FixedVector<MOT, QUEUE_COUNT> unknown28; // Inferred role: queue; original member name unknown.
+  MOT unknown50;                                    // Inferred role: last mot; original member name unknown.
 };
 
 static_assert(sizeof(CharaWpnAsm) == 0x58, "");

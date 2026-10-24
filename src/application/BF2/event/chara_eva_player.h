@@ -38,28 +38,28 @@ public:
   void stopTar();
   void stopAction();
 
-  void setPos(const mm::Vec3 &pos) { this->pos = pos; }
+  void setPos(const mm::Vec3 &pos) { this->unknown140 = pos; }
 
 private:
-  u32 flags;
-  CharaObj *chara;
-  gf::GfEvtModel *model;
-  CharaDysUpdater *dysUpdater;
-  void *weaponData;
-  CRchaEx *rcha;
-  f32 frame;
-  mm::Vec3 offset;
-  bool isTar;
-  mm::Vec3 tar;
-  int action;
-  int faceType;
-  int eyeType;
-  int dispWeapon;
-  int mountWeapon;
-  int battleWeapon;
-  CharaWpnAsm wpnAsmRight;
-  CharaWpnAsm wpnAsmLeft;
-  mm::Vec3 pos;
+  u32 unknown08;              // Inferred role: flags; original member name unknown.
+  CharaObj *unknown10;        // Inferred role: chara; original member name unknown.
+  gf::GfEvtModel *unknown18;  // Inferred role: model; original member name unknown.
+  CharaDysUpdater *unknown20; // Inferred role: dys updater; original member name unknown.
+  void *unknown28;            // Inferred role: weapon data; original member name unknown.
+  CRchaEx *unknown30;         // Inferred role: rcha; original member name unknown.
+  f32 unknown38;              // Inferred role: frame; original member name unknown.
+  mm::Vec3 unknown40;         // Inferred role: offset; original member name unknown.
+  bool unknown50;             // Inferred role: tar; original member name unknown.
+  mm::Vec3 unknown60;         // Inferred role: tar; original member name unknown.
+  int unknown70;              // Inferred role: action; original member name unknown.
+  int unknown74;              // Inferred role: face type; original member name unknown.
+  int unknown78;              // Inferred role: eye type; original member name unknown.
+  int unknown7c;              // Inferred role: disp weapon; original member name unknown.
+  int unknown80;              // Inferred role: mount weapon; original member name unknown.
+  int unknown84;              // Inferred role: battle weapon; original member name unknown.
+  CharaWpnAsm unknown88;      // Inferred role: wpn asm right; original member name unknown.
+  CharaWpnAsm unknowne0;      // Inferred role: wpn asm left; original member name unknown.
+  mm::Vec3 unknown140;        // Inferred role: pos; original member name unknown.
 };
 
 static_assert(sizeof(CharaEvaPlayer) == 0x150, "");

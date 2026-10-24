@@ -28,22 +28,22 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  bool isRunning() const { return (flags & (FLAG_START | FLAG_PAUSE | FLAG_PAUSE_HOME)) == FLAG_START; }
+  bool isRunning() const { return (unknown10 & (FLAG_START | FLAG_PAUSE | FLAG_PAUSE_HOME)) == FLAG_START; }
 
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
-      flags |= flag;
+      unknown10 |= flag;
     } else {
-      flags &= ~flag;
+      unknown10 &= ~flag;
     }
   }
 
-  u32 flags;
-  f32 frame;
-  f32 mStartFrame;
-  f32 mPauseFrame;
-  f32 mCpuFrame;
-  ml::TimeCount mTimeCount;
+  u32 unknown10; // Inferred role: flags; original member name unknown.
+  f32 m_frame;
+  f32 unknown18;           // Inferred role: start frame; original member name unknown.
+  f32 unknown1c;           // Inferred role: pause frame; original member name unknown.
+  f32 unknown20;           // Inferred role: cpu frame; original member name unknown.
+  ml::TimeCount unknown28; // Inferred role: time count; original member name unknown.
 };
 
 static_assert(sizeof(CpuManager) == 0x30, "");

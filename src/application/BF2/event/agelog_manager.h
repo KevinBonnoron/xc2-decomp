@@ -24,11 +24,11 @@ public:
   void stop();
   virtual void OnEventProc(MSG_TYPE type);
 
-  bool isReserved() const { return (flags & (FLAG_RESERVE | FLAG_ACTIVE)) == FLAG_RESERVE; }
+  bool isReserved() const { return (unknown10 & (FLAG_RESERVE | FLAG_ACTIVE)) == FLAG_RESERVE; }
 
 private:
-  u32 flags;
-  mm::mtl::FixStr<128> path;
+  u32 unknown10;                  // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<128> unknown14; // Inferred role: path; original member name unknown.
 };
 
 static_assert(sizeof(AgelogManager) == 0x98, "");

@@ -60,20 +60,20 @@ public:
   void func_item_loop(gf::GfObj *obj);
   void setUse(USE use, bool isUse);
   static f32 getRotY(gf::GfObj *obj);
-  bool chkUse(USE use) const { return (mUse & use) != 0; }
-  bool isPlay(ORDER order) const { return mFuncs[order]; }
-  gf::GF_OBJ_HANDLE *getHandle() const { return handle; }
+  bool chkUse(USE use) const { return (unknown0c & use) != 0; }
+  bool isPlay(ORDER order) const { return unknown50[order]; }
+  gf::GF_OBJ_HANDLE *getHandle() const { return unknown10; }
 
 private:
-  u32 flags;
-  u32 mUse;
-  gf::GF_OBJ_HANDLE *handle;
-  u32 mBdatId;
-  u32 mType;
-  u32 mAimType;
-  ScheduleItem mItem;
-  Func mFuncs[ORDER_COUNT];
-  s32 mWait;
+  u32 unknown08;                // Inferred role: flags; original member name unknown.
+  u32 unknown0c;                // Inferred role: use; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
+  u32 unknown18;                // Inferred role: bdat id; original member name unknown.
+  u32 unknown1c;                // Inferred role: type; original member name unknown.
+  u32 unknown20;                // Inferred role: aim type; original member name unknown.
+  ScheduleItem unknown28;       // Inferred role: item; original member name unknown.
+  Func unknown50[ORDER_COUNT];  // Inferred role: funcs; original member name unknown.
+  s32 unknown80;                // Inferred role: wait; original member name unknown.
 };
 
 static_assert(sizeof(Scheduler) == 0x88, "");

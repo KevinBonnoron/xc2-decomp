@@ -9,25 +9,25 @@
 
 namespace event {
 
-PosAxis::PosAxis() : mAxis(1), mPos(mm::Vec3::zero) {}
+PosAxis::PosAxis() : unknown08(1), unknown10(mm::Vec3::zero) {}
 
-PosAxis::PosAxis(u32 axis, f32 x, f32 y, f32 z) : mAxis(axis), mPos(x, y, z) {}
+PosAxis::PosAxis(u32 axis, f32 x, f32 y, f32 z) : unknown08(axis), unknown10(x, y, z) {}
 
-PosAxis::PosAxis(u32 axis, const mm::Vec3 &pos) : mAxis(axis), mPos(pos) {}
+PosAxis::PosAxis(u32 axis, const mm::Vec3 &pos) : unknown08(axis), unknown10(pos) {}
 
 void PosAxis::set(u32 axis, f32 x, f32 y, f32 z) {
-  mAxis = axis;
-  mPos.x = x;
-  mPos.y = y;
-  mPos.z = z;
+  unknown08 = axis;
+  unknown10.x = x;
+  unknown10.y = y;
+  unknown10.z = z;
 }
 
 void PosAxis::set(u32 axis, const mm::Vec3 &pos) {
-  mAxis = axis;
-  mPos = pos;
+  unknown08 = axis;
+  unknown10 = pos;
 }
 
-mm::Vec3 PosAxis::calcPos() const { return mm::mtl::Singleton<DataManager>::getPtr()->axis2pos(mAxis, mPos.x, mPos.y, mPos.z); }
+mm::Vec3 PosAxis::calcPos() const { return mm::mtl::Singleton<DataManager>::getPtr()->axis2pos(unknown08, unknown10.x, unknown10.y, unknown10.z); }
 
 mm::Vec3 DataManager::axis2pos(u32 axis, f32 x, f32 y, f32 z) {
   if (axis < PosAxis::AXIS_CHARA) {
@@ -39,20 +39,20 @@ mm::Vec3 DataManager::axis2pos(u32 axis, f32 x, f32 y, f32 z) {
   return mm::Vec3(x, y, z);
 }
 
-mm::Mat44 PosAxis::calcOrigMat() const { return mm::mtl::Singleton<DataManager>::getPtr()->getPosAxis(mAxis); }
+mm::Mat44 PosAxis::calcOrigMat() const { return mm::mtl::Singleton<DataManager>::getPtr()->getPosAxis(unknown08); }
 
 mm::Mat44 DataManager::getPosAxis(u32 axis) {
   if (axis < PosAxis::AXIS_CHARA) {
     mm::Mat44 mat = mm::Mat44::identity;
     switch (axis) {
     case PosAxis::AXIS_NONE:
-      mat = mCurrent->offsetMatrix;
+      mat = unknown120->unknownd0;
       break;
     case PosAxis::AXIS_POS:
-      mat = mCurrent->offsetMatrix;
+      mat = unknown120->unknownd0;
       break;
     case PosAxis::AXIS_POS_GLOBAL:
-      mat = mCurrent->keepMatrix;
+      mat = unknown120->unknown120;
       break;
     case PosAxis::AXIS_SAY:
       if (mm::mtl::Singleton<TextManager>::getPtr()->getTalker() != nullptr) {
@@ -76,7 +76,7 @@ mm::Mat44 DataManager::getPosAxis(u32 axis) {
   return mm::Mat44::identity;
 }
 
-const char *PosAxis::getOrigName() const { return mm::mtl::Singleton<DataManager>::getPtr()->getPosName(mAxis); }
+const char *PosAxis::getOrigName() const { return mm::mtl::Singleton<DataManager>::getPtr()->getPosName(unknown08); }
 
 inline const char *DataManager::getPosName(u32 axis) {
   if (axis < PosAxis::AXIS_CHARA) {

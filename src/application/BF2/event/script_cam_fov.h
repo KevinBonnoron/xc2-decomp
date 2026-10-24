@@ -14,7 +14,7 @@ public:
   virtual void redo(const Param &param) { doit(param); }
 
 private:
-  f32 prevFov;
+  f32 unknown08; // Inferred role: prev fov; original member name unknown.
 };
 
 static_assert(sizeof(ScriptCamFov) == 0x10, "");

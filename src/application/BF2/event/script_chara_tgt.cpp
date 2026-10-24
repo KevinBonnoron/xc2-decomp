@@ -25,8 +25,8 @@ void ScriptCharaTgt::doit(const Param &param) {
   ObjectChara *chara = static_cast<ObjectChara *>(object);
   TarAxis axis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
   f32 frame = param.val(4).getF32();
-  isPrevTar = chara->isTar();
-  prevAxis = chara->getTarAxis();
+  unknown08 = chara->isTar();
+  unknown10 = chara->getTarAxis();
   mm::mtl::Singleton<ScheManager>::getPtr()->setUse(Scheduler::USE_LOOK, false, chara->getCharaObj()->getHandle());
   chara->setTar(axis, frame, static_cast<EVT_tarcvtype>(param.val(5).getS32()), static_cast<EVT_aimtype>(param.val(6).getS32()), param.val(7).getF32(), param.val(8).getF32());
 }

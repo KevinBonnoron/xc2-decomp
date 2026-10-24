@@ -4,15 +4,15 @@
 
 namespace event {
 
-CharaWpnAsm::CharaWpnAsm() : flags(0), model(nullptr), data(nullptr), speed(0.0f), lastMot(MOT_NORMAL) {}
+CharaWpnAsm::CharaWpnAsm() : unknown08(0), unknown10(nullptr), unknown18(nullptr), unknown20(0.0f), unknown50(MOT_NORMAL) {}
 
 CharaWpnAsm::~CharaWpnAsm() {}
 
 void CharaWpnAsm::clear() {
-  queue.clear();
-  model = nullptr;
-  data = nullptr;
-  lastMot = MOT_NORMAL;
+  unknown28.clear();
+  unknown10 = nullptr;
+  unknown18 = nullptr;
+  unknown50 = MOT_NORMAL;
 }
 
 bool CharaWpnAsm::isPlayEnd(gf::GfEvtModel *model, bool isLeft) {
@@ -71,222 +71,222 @@ void CharaWpnAsm::setSpeed(gf::GfEvtModel *model, f32 speed, bool isLeft) {
 }
 
 void CharaWpnAsm::mount(gf::GfEvtModel *model, bool isMount, bool isLeft) {
-  queue.clear();
+  unknown28.clear();
   if (isMount) {
-    queue.push_back(MOT_NORMAL);
+    unknown28.push_back(MOT_NORMAL);
   } else {
-    queue.push_back(MOT_IDLE);
+    unknown28.push_back(MOT_IDLE);
   }
-  lastMot = queue[queue.size() - 1];
-  this->model = model;
-  flags &= ~FLAG_PLAY;
+  unknown50 = unknown28[unknown28.size() - 1];
+  this->unknown10 = model;
+  unknown08 &= ~FLAG_PLAY;
   setFlag(FLAG_MOUNT, isMount);
   setFlag(FLAG_LEFT, isLeft);
 }
 
 void CharaWpnAsm::execCmd(gf::GfEvtModel *model, CMD cmd, bool isLeft, void *data) {
   if (model->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
-    if ((flags & FLAG_MOUNT) == 0) {
+    if ((unknown08 & FLAG_MOUNT) == 0) {
       return;
     }
   } else if (model->unknown18 == gf::GF_EVT_MODEL_BLADE) {
-    if ((flags & FLAG_MOUNT) == 0) {
+    if ((unknown08 & FLAG_MOUNT) == 0) {
       return;
     }
   }
-  MOT mot = lastMot;
-  queue.clear();
+  MOT mot = unknown50;
+  unknown28.clear();
   switch (cmd) {
   case CMD_NORMAL:
-    queue.push_back(MOT_NORMAL);
+    unknown28.push_back(MOT_NORMAL);
     break;
   case CMD_BATTLE_START:
-    queue.push_back(MOT_BATTLE_START);
-    queue.push_back(MOT_BATTLE_IDLE);
+    unknown28.push_back(MOT_BATTLE_START);
+    unknown28.push_back(MOT_BATTLE_IDLE);
     break;
   case CMD_BATTLE_IDLE:
-    queue.push_back(MOT_BATTLE_IDLE);
+    unknown28.push_back(MOT_BATTLE_IDLE);
     break;
   case CMD_BATTLE_END:
-    queue.push_back(MOT_BATTLE_END);
-    queue.push_back(MOT_NORMAL);
+    unknown28.push_back(MOT_BATTLE_END);
+    unknown28.push_back(MOT_NORMAL);
     break;
   case CMD_BATTLE_MODE1_START:
     switch (mot) {
     case MOT_NORMAL:
     case MOT_BATTLE_IDLE:
     case MOT_BATTLE_MODE1:
-      queue.push_back(MOT_BATTLE_MODE_CHANGE);
+      unknown28.push_back(MOT_BATTLE_MODE_CHANGE);
       break;
     case MOT_BATTLE_MODE2:
-      queue.push_back(MOT_BATTLE_MODE2_END);
+      unknown28.push_back(MOT_BATTLE_MODE2_END);
       break;
     case MOT_BATTLE_MODE3:
-      queue.push_back(MOT_BATTLE_MODE3_END);
+      unknown28.push_back(MOT_BATTLE_MODE3_END);
       break;
     case MOT_BATTLE_MODE4:
-      queue.push_back(MOT_BATTLE_MODE4_END);
+      unknown28.push_back(MOT_BATTLE_MODE4_END);
       break;
     case MOT_BATTLE_MODE5:
-      queue.push_back(MOT_BATTLE_MODE5_END);
+      unknown28.push_back(MOT_BATTLE_MODE5_END);
       break;
     default:
       break;
     }
-    queue.push_back(MOT_BATTLE_MODE1_START);
-    queue.push_back(MOT_BATTLE_MODE1);
+    unknown28.push_back(MOT_BATTLE_MODE1_START);
+    unknown28.push_back(MOT_BATTLE_MODE1);
     break;
   case CMD_BATTLE_MODE1:
-    queue.push_back(MOT_BATTLE_MODE1);
+    unknown28.push_back(MOT_BATTLE_MODE1);
     break;
   case CMD_BATTLE_MODE1_END:
-    queue.push_back(MOT_BATTLE_MODE1_END);
-    queue.push_back(MOT_BATTLE_MODE_START);
-    queue.push_back(MOT_BATTLE_IDLE);
+    unknown28.push_back(MOT_BATTLE_MODE1_END);
+    unknown28.push_back(MOT_BATTLE_MODE_START);
+    unknown28.push_back(MOT_BATTLE_IDLE);
     break;
   case CMD_BATTLE_MODE2_START:
     switch (mot) {
     case MOT_NORMAL:
     case MOT_BATTLE_IDLE:
     case MOT_BATTLE_MODE2:
-      queue.push_back(MOT_BATTLE_MODE_CHANGE);
+      unknown28.push_back(MOT_BATTLE_MODE_CHANGE);
       break;
     case MOT_BATTLE_MODE1:
-      queue.push_back(MOT_BATTLE_MODE1_END);
+      unknown28.push_back(MOT_BATTLE_MODE1_END);
       break;
     case MOT_BATTLE_MODE3:
-      queue.push_back(MOT_BATTLE_MODE3_END);
+      unknown28.push_back(MOT_BATTLE_MODE3_END);
       break;
     case MOT_BATTLE_MODE4:
-      queue.push_back(MOT_BATTLE_MODE4_END);
+      unknown28.push_back(MOT_BATTLE_MODE4_END);
       break;
     case MOT_BATTLE_MODE5:
-      queue.push_back(MOT_BATTLE_MODE5_END);
+      unknown28.push_back(MOT_BATTLE_MODE5_END);
       break;
     default:
       break;
     }
-    queue.push_back(MOT_BATTLE_MODE2_START);
-    queue.push_back(MOT_BATTLE_MODE2);
+    unknown28.push_back(MOT_BATTLE_MODE2_START);
+    unknown28.push_back(MOT_BATTLE_MODE2);
     break;
   case CMD_BATTLE_MODE2:
-    queue.push_back(MOT_BATTLE_MODE2);
+    unknown28.push_back(MOT_BATTLE_MODE2);
     break;
   case CMD_BATTLE_MODE2_END:
-    queue.push_back(MOT_BATTLE_MODE2_END);
-    queue.push_back(MOT_BATTLE_MODE_START);
-    queue.push_back(MOT_BATTLE_IDLE);
+    unknown28.push_back(MOT_BATTLE_MODE2_END);
+    unknown28.push_back(MOT_BATTLE_MODE_START);
+    unknown28.push_back(MOT_BATTLE_IDLE);
     break;
   case CMD_BATTLE_MODE3_START:
     switch (mot) {
     case MOT_NORMAL:
     case MOT_BATTLE_IDLE:
     case MOT_BATTLE_MODE3:
-      queue.push_back(MOT_BATTLE_MODE_CHANGE);
+      unknown28.push_back(MOT_BATTLE_MODE_CHANGE);
       break;
     case MOT_BATTLE_MODE1:
-      queue.push_back(MOT_BATTLE_MODE1_END);
+      unknown28.push_back(MOT_BATTLE_MODE1_END);
       break;
     case MOT_BATTLE_MODE2:
-      queue.push_back(MOT_BATTLE_MODE2_END);
+      unknown28.push_back(MOT_BATTLE_MODE2_END);
       break;
     case MOT_BATTLE_MODE4:
-      queue.push_back(MOT_BATTLE_MODE4_END);
+      unknown28.push_back(MOT_BATTLE_MODE4_END);
       break;
     case MOT_BATTLE_MODE5:
-      queue.push_back(MOT_BATTLE_MODE5_END);
+      unknown28.push_back(MOT_BATTLE_MODE5_END);
       break;
     default:
       break;
     }
-    queue.push_back(MOT_BATTLE_MODE3_START);
-    queue.push_back(MOT_BATTLE_MODE3);
+    unknown28.push_back(MOT_BATTLE_MODE3_START);
+    unknown28.push_back(MOT_BATTLE_MODE3);
     break;
   case CMD_BATTLE_MODE3:
-    queue.push_back(MOT_BATTLE_MODE3);
+    unknown28.push_back(MOT_BATTLE_MODE3);
     break;
   case CMD_BATTLE_MODE3_END:
-    queue.push_back(MOT_BATTLE_MODE3_END);
-    queue.push_back(MOT_BATTLE_MODE_START);
-    queue.push_back(MOT_BATTLE_IDLE);
+    unknown28.push_back(MOT_BATTLE_MODE3_END);
+    unknown28.push_back(MOT_BATTLE_MODE_START);
+    unknown28.push_back(MOT_BATTLE_IDLE);
     break;
   case CMD_BATTLE_MODE4_START:
     switch (mot) {
     case MOT_NORMAL:
     case MOT_BATTLE_IDLE:
     case MOT_BATTLE_MODE4:
-      queue.push_back(MOT_BATTLE_MODE_CHANGE);
+      unknown28.push_back(MOT_BATTLE_MODE_CHANGE);
       break;
     case MOT_BATTLE_MODE1:
-      queue.push_back(MOT_BATTLE_MODE1_END);
+      unknown28.push_back(MOT_BATTLE_MODE1_END);
       break;
     case MOT_BATTLE_MODE2:
-      queue.push_back(MOT_BATTLE_MODE2_END);
+      unknown28.push_back(MOT_BATTLE_MODE2_END);
       break;
     case MOT_BATTLE_MODE3:
-      queue.push_back(MOT_BATTLE_MODE3_END);
+      unknown28.push_back(MOT_BATTLE_MODE3_END);
       break;
     case MOT_BATTLE_MODE5:
-      queue.push_back(MOT_BATTLE_MODE5_END);
+      unknown28.push_back(MOT_BATTLE_MODE5_END);
       break;
     default:
       break;
     }
-    queue.push_back(MOT_BATTLE_MODE4_START);
-    queue.push_back(MOT_BATTLE_MODE4);
+    unknown28.push_back(MOT_BATTLE_MODE4_START);
+    unknown28.push_back(MOT_BATTLE_MODE4);
     break;
   case CMD_BATTLE_MODE4:
-    queue.push_back(MOT_BATTLE_MODE4);
+    unknown28.push_back(MOT_BATTLE_MODE4);
     break;
   case CMD_BATTLE_MODE4_END:
-    queue.push_back(MOT_BATTLE_MODE4_END);
-    queue.push_back(MOT_BATTLE_MODE_START);
-    queue.push_back(MOT_BATTLE_IDLE);
+    unknown28.push_back(MOT_BATTLE_MODE4_END);
+    unknown28.push_back(MOT_BATTLE_MODE_START);
+    unknown28.push_back(MOT_BATTLE_IDLE);
     break;
   case CMD_BATTLE_MODE5_START:
     switch (mot) {
     case MOT_NORMAL:
     case MOT_BATTLE_IDLE:
     case MOT_BATTLE_MODE5:
-      queue.push_back(MOT_BATTLE_MODE_CHANGE);
+      unknown28.push_back(MOT_BATTLE_MODE_CHANGE);
       break;
     case MOT_BATTLE_MODE1:
-      queue.push_back(MOT_BATTLE_MODE1_END);
+      unknown28.push_back(MOT_BATTLE_MODE1_END);
       break;
     case MOT_BATTLE_MODE2:
-      queue.push_back(MOT_BATTLE_MODE2_END);
+      unknown28.push_back(MOT_BATTLE_MODE2_END);
       break;
     case MOT_BATTLE_MODE3:
-      queue.push_back(MOT_BATTLE_MODE3_END);
+      unknown28.push_back(MOT_BATTLE_MODE3_END);
       break;
     case MOT_BATTLE_MODE4:
-      queue.push_back(MOT_BATTLE_MODE4_END);
+      unknown28.push_back(MOT_BATTLE_MODE4_END);
       break;
     default:
       break;
     }
-    queue.push_back(MOT_BATTLE_MODE5_START);
-    queue.push_back(MOT_BATTLE_MODE5);
+    unknown28.push_back(MOT_BATTLE_MODE5_START);
+    unknown28.push_back(MOT_BATTLE_MODE5);
     break;
   case CMD_BATTLE_MODE5:
-    queue.push_back(MOT_BATTLE_MODE5);
+    unknown28.push_back(MOT_BATTLE_MODE5);
     break;
   case CMD_BATTLE_MODE5_END:
-    queue.push_back(MOT_BATTLE_MODE5_END);
-    queue.push_back(MOT_BATTLE_MODE_START);
-    queue.push_back(MOT_BATTLE_IDLE);
+    unknown28.push_back(MOT_BATTLE_MODE5_END);
+    unknown28.push_back(MOT_BATTLE_MODE_START);
+    unknown28.push_back(MOT_BATTLE_IDLE);
     break;
   case CMD_SPECIAL:
-    queue.push_back(MOT_SPECIAL);
+    unknown28.push_back(MOT_SPECIAL);
     break;
   default:
     break;
   }
-  lastMot = queue[queue.size() - 1];
-  speed = 0.0f;
-  this->model = model;
-  this->data = data;
-  flags &= ~FLAG_PLAY;
+  unknown50 = unknown28[unknown28.size() - 1];
+  unknown20 = 0.0f;
+  this->unknown10 = model;
+  this->unknown18 = data;
+  unknown08 &= ~FLAG_PLAY;
   setFlag(FLAG_LEFT, isLeft);
 }
 

@@ -9,33 +9,33 @@
 
 namespace event {
 
-TarAxis::TarAxis() : mAxis(1), mTar(mm::Vec3::zero) {}
+TarAxis::TarAxis() : unknown08(1), unknown10(mm::Vec3::zero) {}
 
-TarAxis::TarAxis(u32 axis, f32 x, f32 y, f32 z) : mAxis(axis), mTar(x, y, z) {}
+TarAxis::TarAxis(u32 axis, f32 x, f32 y, f32 z) : unknown08(axis), unknown10(x, y, z) {}
 
-TarAxis::TarAxis(u32 axis, const mm::Vec3 &tar) : mAxis(axis), mTar(tar) {}
+TarAxis::TarAxis(u32 axis, const mm::Vec3 &tar) : unknown08(axis), unknown10(tar) {}
 
 void TarAxis::set(u32 axis, f32 x, f32 y, f32 z) {
-  mAxis = axis;
-  mTar.x = x;
-  mTar.y = y;
-  mTar.z = z;
+  unknown08 = axis;
+  unknown10.x = x;
+  unknown10.y = y;
+  unknown10.z = z;
 }
 
 void TarAxis::set(u32 axis, const mm::Vec3 &tar) {
-  mAxis = axis;
-  mTar = tar;
+  unknown08 = axis;
+  unknown10 = tar;
 }
 
-mm::Vec3 TarAxis::calcTar(const mm::Vec3 &pos) const { return mm::mtl::Singleton<DataManager>::getPtr()->axis2tar(mAxis, mTar.x, mTar.y, mTar.z, pos); }
+mm::Vec3 TarAxis::calcTar(const mm::Vec3 &pos) const { return mm::mtl::Singleton<DataManager>::getPtr()->axis2tar(unknown08, unknown10.x, unknown10.y, unknown10.z, pos); }
 
 mm::Vec3 DataManager::axis2tar(u32 axis, f32 x, f32 y, f32 z, const mm::Vec3 &pos) {
   if (axis < TarAxis::AXIS_CHARA) {
     switch (axis) {
     case TarAxis::AXIS_ANGLE:
-      return angle2tar(x, mCurrent->offsetVector.y + y, pos);
+      return angle2tar(x, unknown120->unknown110.y + y, pos);
     case TarAxis::AXIS_ANGLE_GLOBAL:
-      return angle2tar(x, mCurrent->keepVector.y + y, pos);
+      return angle2tar(x, unknown120->unknown160.y + y, pos);
     default:
       return transformPos(getTarAxis(axis), x, y, z);
     }
@@ -46,7 +46,7 @@ mm::Vec3 DataManager::axis2tar(u32 axis, f32 x, f32 y, f32 z, const mm::Vec3 &po
   return mm::Vec3(x, y, z);
 }
 
-mm::Mat44 TarAxis::calcOrigMat() const { return mm::mtl::Singleton<DataManager>::getPtr()->getTarAxis(mAxis); }
+mm::Mat44 TarAxis::calcOrigMat() const { return mm::mtl::Singleton<DataManager>::getPtr()->getTarAxis(unknown08); }
 
 mm::Mat44 DataManager::getTarAxis(u32 axis) {
   if (axis < TarAxis::AXIS_CHARA) {
@@ -56,10 +56,10 @@ mm::Mat44 DataManager::getTarAxis(u32 axis) {
       mat = mm::Mat44::identity;
       break;
     case TarAxis::AXIS_POS:
-      mat = mCurrent->offsetMatrix;
+      mat = unknown120->unknownd0;
       break;
     case TarAxis::AXIS_POS_GLOBAL:
-      mat = mCurrent->keepMatrix;
+      mat = unknown120->unknown120;
       break;
     case TarAxis::AXIS_SAY:
       if (mm::mtl::Singleton<TextManager>::getPtr()->getTalker() != nullptr) {
@@ -71,10 +71,10 @@ mm::Mat44 DataManager::getTarAxis(u32 axis) {
       }
       break;
     case TarAxis::AXIS_ANGLE:
-      mat.setRotY(mCurrent->offsetVector.y);
+      mat.setRotY(unknown120->unknown110.y);
       break;
     case TarAxis::AXIS_ANGLE_GLOBAL:
-      mat.setRotY(mCurrent->keepVector.y);
+      mat.setRotY(unknown120->unknown160.y);
       break;
     }
     return mat;
@@ -89,7 +89,7 @@ mm::Mat44 DataManager::getTarAxis(u32 axis) {
   return mm::Mat44::identity;
 }
 
-const char *TarAxis::getOrigName() const { return mm::mtl::Singleton<DataManager>::getPtr()->getTarName(mAxis); }
+const char *TarAxis::getOrigName() const { return mm::mtl::Singleton<DataManager>::getPtr()->getTarName(unknown08); }
 
 inline const char *DataManager::getTarName(u32 axis) {
   if (axis < TarAxis::AXIS_CHARA) {

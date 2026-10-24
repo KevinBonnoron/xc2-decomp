@@ -33,10 +33,10 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 dispFlags;
-  u32 loadCount;
-  mm::mtl::FixedArray<SeObj, SE_COUNT> objs;
-  mm::mtl::FixedVector<SeObj *, SE_COUNT> playList;
+  u32 unknown10;                                       // Inferred role: disp flags; original member name unknown.
+  u32 unknown14;                                       // Inferred role: load count; original member name unknown.
+  mm::mtl::FixedArray<SeObj, SE_COUNT> unknown18;      // Inferred role: objs; original member name unknown.
+  mm::mtl::FixedVector<SeObj *, SE_COUNT> unknown5318; // Inferred role: play list; original member name unknown.
 };
 
 static_assert(sizeof(SeManager) == 0x5420, "");

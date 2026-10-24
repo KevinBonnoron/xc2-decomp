@@ -24,7 +24,7 @@ void ScriptCharaAction::doit(const Param &param) {
   f32 frame = param.val(1).getF32();
   bool isLoop = param.val(2).getBool();
   bool isBlend = param.val(3).getBool();
-  mPrevId = chara->getCharaObj()->getAction();
+  unknown08 = chara->getCharaObj()->getAction();
   mm::mtl::Singleton<ScheManager>::getPtr()->setUse(Scheduler::USE_TURN, false, chara->getCharaObj()->getHandle());
   chara->getCharaObj()->playAction(type, frame, isLoop, isBlend);
 }
@@ -35,8 +35,8 @@ void ScriptCharaAction::undo(const Param &param) {
     return;
   }
   ObjectChara *chara = static_cast<ObjectChara *>(object);
-  if (mPrevId > 0) {
-    chara->getCharaObj()->playAction(mPrevId, 30.0f, true, true);
+  if (unknown08 > 0) {
+    chara->getCharaObj()->playAction(unknown08, 30.0f, true, true);
   } else {
     chara->getCharaObj()->stopAction();
   }

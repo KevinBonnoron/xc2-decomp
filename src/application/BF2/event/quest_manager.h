@@ -23,7 +23,7 @@ public:
   bool isActive() const;
 
 private:
-  u32 flags;
+  u32 unknown10; // Inferred role: flags; original member name unknown.
 };
 
 static_assert(sizeof(QuestManager) == 0x18, "");

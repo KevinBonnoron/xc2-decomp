@@ -2,12 +2,13 @@
 
 namespace event {
 
-StmPackRes::StmPackRes() : mRefCount(0), flags(0), mDelay(2), mBuffer(nullptr), mSize(0), mDataOfs(0), mFirstFile(0), mLastFile(0), mFirstPage(0), mLastPage(0), mPrio(0), mStream(0) {}
+StmPackRes::StmPackRes()
+    : unknown00(0), unknown04(0), unknown08(2), unknown10(nullptr), unknown18(0), unknown20(0), unknown28(0), unknown30(0), unknown38(0), unknown40(0), unknown48(0), unknown50(0) {}
 
-bool StmPackRes::isLoading() const { return (flags & FLAG_LOADING) != 0; }
+bool StmPackRes::isLoading() const { return (unknown04 & FLAG_LOADING) != 0; }
 
-void StmPackRes::loadCompleate() { flags &= ~FLAG_LOADING; }
+void StmPackRes::loadCompleate() { unknown04 &= ~FLAG_LOADING; }
 
-void *StmPackRes::getFileAdr(size_t dataOfs) const { return reinterpret_cast<void *>((dataOfs - mDataOfs) + reinterpret_cast<size_t>(mBuffer)); }
+void *StmPackRes::getFileAdr(size_t dataOfs) const { return reinterpret_cast<void *>((dataOfs - unknown20) + reinterpret_cast<size_t>(unknown10)); }
 
 } // namespace event

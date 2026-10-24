@@ -15,11 +15,11 @@ public:
     Obj(u32 id);
     void clear();
     void exec(bool isReverse, bool isSkip);
-    u32 getID() const { return mID; }
+    u32 getID() const { return unknown00; }
 
   private:
-    u32 mID;
-    bool mIsReverse;
+    u32 unknown00;  // Inferred role: id; original member name unknown.
+    bool unknown04; // Inferred role: is reverse; original member name unknown.
   };
 
   LodManager();
@@ -32,7 +32,7 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  mm::mtl::FixedVector<Obj *, OBJ_COUNT> objs;
+  mm::mtl::FixedVector<Obj *, OBJ_COUNT> unknown10; // Inferred role: objs; original member name unknown.
 };
 
 static_assert(sizeof(LodManager::Obj) == 0x8, "");

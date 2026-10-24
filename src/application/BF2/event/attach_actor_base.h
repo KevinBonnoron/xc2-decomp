@@ -57,9 +57,9 @@ public:
 
 protected:
   // Inferred roles from access offsets; original member names are unknown.
-  mm::mtl::FixStr<64> unknown8; // Actor name.
-  gf::GF_OBJ_HANDLE *unknown50; // Actor handle.
-  mm::Mat44 unknown60;          // Attachment transform.
+  mm::mtl::FixStr<64> m_name; // Actor name.
+  gf::GF_OBJ_HANDLE *m_actor; // Actor handle.
+  mm::Mat44 unknown60;        // Attachment transform.
 };
 
 static_assert(sizeof(AttachActorBase) == 0xa0, "");

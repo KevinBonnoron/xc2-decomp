@@ -13,162 +13,162 @@ namespace event {
 static constexpr fw::SoundCategory SOUND_CATEGORY_EVENT_SE = static_cast<fw::SoundCategory>(12);
 static constexpr f32 SKIP_FRAME = 99999.0f;
 
-SeObj::SeObj() : flags(0) {}
+SeObj::SeObj() : unknown08(0) {}
 
 SeObj::~SeObj() { clear(); }
 
 void SeObj::clear() {
   stop();
-  panValue = 0.0f;
-  name = "";
-  flags = 0;
+  unknown180 = 0.0f;
+  unknown14 = "";
+  unknown08 = 0;
 }
 
 void SeObj::stop() {
-  if (handle.isValid()) {
-    gf::GfSound::get()->stopSe(handle, 0.0f);
-    handle.clear();
+  if (unknown0c.isValid()) {
+    gf::GfSound::get()->stopSe(unknown0c, 0.0f);
+    unknown0c.clear();
   }
 }
 
 void SeObj::exec(f32 delta) {
-  if ((flags & (FLAG_PLAY | FLAG_END)) != FLAG_PLAY) {
+  if ((unknown08 & (FLAG_PLAY | FLAG_END)) != FLAG_PLAY) {
     return;
   }
-  if (gf::GfSound::get()->isPlaying(handle) && !mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
-    playFrame += delta;
-    if ((flags & FLAG_VOLUME_ANM) != 0) {
+  if (gf::GfSound::get()->isPlaying(unknown0c) && !mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
+    unknown58 += delta;
+    if ((unknown08 & FLAG_VOLUME_ANM) != 0) {
       if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
-        volumeAnm.update(SKIP_FRAME);
-      } else if ((flags & FLAG_PAUSE) == 0) {
-        volumeAnm.update(1.0f);
+        unknown70.update(SKIP_FRAME);
+      } else if ((unknown08 & FLAG_PAUSE) == 0) {
+        unknown70.update(1.0f);
       } else {
-        volumeAnm.update(0.0f);
+        unknown70.update(0.0f);
       }
-      volume = volumeAnm.getValue();
-      mm::clampRef(volume, 0.0f, 1.0f);
-      gf::GfSound::get()->setVolume(handle, volume, 0.0f);
-      if (volumeAnm.isEnd()) {
-        flags &= ~FLAG_VOLUME_ANM;
+      unknown68 = unknown70.getValue();
+      mm::clampRef(unknown68, 0.0f, 1.0f);
+      gf::GfSound::get()->setVolume(unknown0c, unknown68, 0.0f);
+      if (unknown70.isEnd()) {
+        unknown08 &= ~FLAG_VOLUME_ANM;
       }
     }
-    if ((flags & FLAG_FADE_IN) != 0) {
-      f32 rate = __builtin_fminf(playFrame / fadeIn, 1.0f);
-      f32 fadeVolume = volume * rate;
+    if ((unknown08 & FLAG_FADE_IN) != 0) {
+      f32 rate = __builtin_fminf(unknown58 / unknown60, 1.0f);
+      f32 fadeVolume = unknown68 * rate;
       mm::clampRef(fadeVolume, 0.0f, 1.0f);
-      gf::GfSound::get()->setVolume(handle, fadeVolume, 0.0f);
-      setFlag(FLAG_FADE_IN, playFrame < fadeIn);
+      gf::GfSound::get()->setVolume(unknown0c, fadeVolume, 0.0f);
+      setFlag(FLAG_FADE_IN, unknown58 < unknown60);
     }
-    if ((flags & FLAG_FADE_OUT) != 0) {
-      f32 rate = __builtin_fmaxf(life / fadeOut, 0.0f);
+    if ((unknown08 & FLAG_FADE_OUT) != 0) {
+      f32 rate = __builtin_fmaxf(unknown5c / unknown64, 0.0f);
       if (rate < 1.0f) {
-        f32 fadeVolume = rate * volume;
+        f32 fadeVolume = rate * unknown68;
         mm::clampRef(fadeVolume, 0.0f, 1.0f);
-        gf::GfSound::get()->setVolume(handle, fadeVolume, 0.0f);
+        gf::GfSound::get()->setVolume(unknown0c, fadeVolume, 0.0f);
       }
     }
-    if ((flags & FLAG_PAN_ANM) != 0) {
+    if ((unknown08 & FLAG_PAN_ANM) != 0) {
       if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
-        panAnm.update(SKIP_FRAME);
-      } else if ((flags & FLAG_PAUSE) == 0) {
-        panAnm.update(1.0f);
+        unknown188.update(SKIP_FRAME);
+      } else if ((unknown08 & FLAG_PAUSE) == 0) {
+        unknown188.update(1.0f);
       } else {
-        panAnm.update(0.0f);
+        unknown188.update(0.0f);
       }
-      panValue = panAnm.getValue();
-      gf::GfSound::get()->setPan(handle, panValue, 0.0f);
-      if (panAnm.isEnd()) {
-        flags &= ~FLAG_PAN_ANM;
+      unknown180 = unknown188.getValue();
+      gf::GfSound::get()->setPan(unknown0c, unknown180, 0.0f);
+      if (unknown188.isEnd()) {
+        unknown08 &= ~FLAG_PAN_ANM;
       }
     }
-    if ((flags & FLAG_LIFE) == 0) {
+    if ((unknown08 & FLAG_LIFE) == 0) {
       return;
     }
-    life -= delta;
-    if (life < 0.0f) {
+    unknown5c -= delta;
+    if (unknown5c < 0.0f) {
       stop();
-      flags = (flags & ~(FLAG_LIFE | FLAG_END)) | FLAG_END;
+      unknown08 = (unknown08 & ~(FLAG_LIFE | FLAG_END)) | FLAG_END;
     }
     return;
   }
   stop();
-  flags |= FLAG_END;
+  unknown08 |= FLAG_END;
 }
 
 void SeObj::play(const char *name, f32 life, f32 fadeIn, f32 fadeOut, f32 volume) {
   mm::clampRef(volume, 0.0f, 1.0f);
-  if (!isPlay() || __builtin_strcmp(this->name.c_str(), name) != 0) {
+  if (!isPlay() || __builtin_strcmp(this->unknown14.c_str(), name) != 0) {
     clear();
-    handle = gf::GfSound::get()->playSe(name, SOUND_CATEGORY_EVENT_SE);
-    handle.isValid();
+    unknown0c = gf::GfSound::get()->playSe(name, SOUND_CATEGORY_EVENT_SE);
+    unknown0c.isValid();
   }
-  flags |= FLAG_PLAY;
+  unknown08 |= FLAG_PLAY;
   setFlag(FLAG_LIFE, life > 0.0f);
   setFlag(FLAG_FADE_IN, fadeIn > 0.0f);
   setFlag(FLAG_FADE_OUT, fadeOut > 0.0f && life > 0.0f);
-  this->name = name;
-  playFrame = 0.0f;
-  this->life = life;
-  this->fadeIn = fadeIn;
-  this->fadeOut = fadeOut;
-  this->volume = volume;
-  panValue = 0.0f;
-  gf::GfSound::get()->setVolume(handle, volume, 0.0f);
+  this->unknown14 = name;
+  unknown58 = 0.0f;
+  this->unknown5c = life;
+  this->unknown60 = fadeIn;
+  this->unknown64 = fadeOut;
+  this->unknown68 = volume;
+  unknown180 = 0.0f;
+  gf::GfSound::get()->setVolume(unknown0c, volume, 0.0f);
 }
 
 void SeObj::changeVolume(f32 volume, f32 frame) {
-  if (!handle.isValid()) {
+  if (!unknown0c.isValid()) {
     return;
   }
   f32 changeFrame = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() ? 0.0f : frame;
   mm::clampRef(volume, 0.0f, 1.0f);
   if (changeFrame <= 0.0f) {
-    this->volume = volume;
-    volumeAnm.clear();
-    flags &= ~FLAG_VOLUME_ANM;
-    gf::GfSound::get()->setVolume(handle, volume, 0.0f);
+    this->unknown68 = volume;
+    unknown70.clear();
+    unknown08 &= ~FLAG_VOLUME_ANM;
+    gf::GfSound::get()->setVolume(unknown0c, volume, 0.0f);
     return;
   }
-  volumeAnm.clear();
-  volumeAnm.append(0.0f, this->volume, CV_TYPE_STEP);
-  volumeAnm.append(changeFrame, volume, CV_TYPE_LINEAR);
-  flags |= FLAG_VOLUME_ANM;
+  unknown70.clear();
+  unknown70.append(0.0f, this->unknown68, CV_TYPE_STEP);
+  unknown70.append(changeFrame, volume, CV_TYPE_LINEAR);
+  unknown08 |= FLAG_VOLUME_ANM;
 }
 
 void SeObj::pan(f32 pan, f32 frame, CV_TYPE cv) {
-  if (!handle.isValid()) {
+  if (!unknown0c.isValid()) {
     return;
   }
   f32 changeFrame = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() ? 0.0f : frame;
   if (changeFrame <= 0.0f) {
-    panValue = pan;
-    panAnm.clear();
-    flags = (flags & ~FLAG_PAN_ANM) | FLAG_PAN;
-    gf::GfSound::get()->setPan(handle, pan, 0.0f);
+    unknown180 = pan;
+    unknown188.clear();
+    unknown08 = (unknown08 & ~FLAG_PAN_ANM) | FLAG_PAN;
+    gf::GfSound::get()->setPan(unknown0c, pan, 0.0f);
     return;
   }
-  panAnm.clear();
-  panAnm.append(0.0f, panValue, CV_TYPE_STEP);
-  panAnm.append(changeFrame, pan, cv);
-  flags |= FLAG_PAN_ANM | FLAG_PAN;
+  unknown188.clear();
+  unknown188.append(0.0f, unknown180, CV_TYPE_STEP);
+  unknown188.append(changeFrame, pan, cv);
+  unknown08 |= FLAG_PAN_ANM | FLAG_PAN;
 }
 
 void SeObj::pause(bool isPause) {
-  if (!handle.isValid()) {
+  if (!unknown0c.isValid()) {
     return;
   }
   if (isPause) {
-    if ((flags & FLAG_PAUSE) != 0) {
+    if ((unknown08 & FLAG_PAUSE) != 0) {
       return;
     }
-    gf::GfSound::get()->setPause(handle, true, 0.0f);
-    flags |= FLAG_PAUSE;
+    gf::GfSound::get()->setPause(unknown0c, true, 0.0f);
+    unknown08 |= FLAG_PAUSE;
   } else {
-    if ((flags & FLAG_PAUSE) == 0) {
+    if ((unknown08 & FLAG_PAUSE) == 0) {
       return;
     }
-    gf::GfSound::get()->setPause(handle, false, 0.0f);
-    flags &= ~FLAG_PAUSE;
+    gf::GfSound::get()->setPause(unknown0c, false, 0.0f);
+    unknown08 &= ~FLAG_PAUSE;
   }
 }
 

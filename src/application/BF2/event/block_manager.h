@@ -27,10 +27,10 @@ public:
   bool isTimeBlock(u32 id);
 
 private:
-  void *mWtrData;
-  void *mTimeData;
-  mm::mtl::FixedArray<BlockWtr, BLOCK_COUNT> mWtrs;
-  mm::mtl::FixedArray<BlockTime, BLOCK_COUNT> mTimes;
+  void *unknown18;                                        // Inferred role: wtr data; original member name unknown.
+  void *unknown20;                                        // Inferred role: time data; original member name unknown.
+  mm::mtl::FixedArray<BlockWtr, BLOCK_COUNT> unknown28;   // Inferred role: wtrs; original member name unknown.
+  mm::mtl::FixedArray<BlockTime, BLOCK_COUNT> unknown428; // Inferred role: times; original member name unknown.
 };
 
 static_assert(sizeof(BlockManager) == 0x528, "");

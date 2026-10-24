@@ -23,11 +23,11 @@ public:
   void fadein();
   void func_fadein(gf::GF_OBJ_HANDLE *handle);
   void func_fadewait(gf::GF_OBJ_HANDLE *handle);
-  bool isFading() const { return mFunc == &ScheduleItem::func_fadeout || mFunc == &ScheduleItem::func_fadein; }
+  bool isFading() const { return unknown10 == &ScheduleItem::func_fadeout || unknown10 == &ScheduleItem::func_fadein; }
 
-  gf::GF_OBJ_HANDLE *handle;
-  Func mFunc;
-  f32 alpha;
+  gf::GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+  Func unknown10;               // Inferred role: func; original member name unknown.
+  f32 unknown20;                // Inferred role: alpha; original member name unknown.
 };
 
 static_assert(sizeof(ScheduleItem) == 0x28, "");

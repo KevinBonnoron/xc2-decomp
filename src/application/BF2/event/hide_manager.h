@@ -38,13 +38,13 @@ public:
     void exec(bool isHide);
     OBJ_TYPE getType() const;
     bool getNow() const;
-    u32 getID() const { return mID; }
+    u32 getID() const { return unknown04; }
 
   private:
-    OBJ_TYPE mType;
-    u32 mID;
-    bool mIsHideOrg;
-    bool mIsHide;
+    OBJ_TYPE m_type;
+    u32 unknown04;  // Inferred role: id; original member name unknown.
+    bool unknown08; // Inferred role: is hide org; original member name unknown.
+    bool m_now;
   };
 
   HideManager();
@@ -62,11 +62,11 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 flags;
-  GRP_TYPE mGroup;
-  mm::mtl::FixedVector<u32, LIST_COUNT> mPrimaryList;
-  mm::mtl::FixedVector<u32, LIST_COUNT> mSecondaryList;
-  mm::mtl::FixedVector<Obj *, OBJ_COUNT> objs;
+  u32 unknown10; // Inferred role: flags; original member name unknown.
+  GRP_TYPE m_group;
+  mm::mtl::FixedVector<u32, LIST_COUNT> unknown18;    // Inferred role: primary list; original member name unknown.
+  mm::mtl::FixedVector<u32, LIST_COUNT> unknown1020;  // Inferred role: secondary list; original member name unknown.
+  mm::mtl::FixedVector<Obj *, OBJ_COUNT> unknown2028; // Inferred role: objs; original member name unknown.
 };
 
 static_assert(sizeof(HideManager::Obj) == 0xc, "");

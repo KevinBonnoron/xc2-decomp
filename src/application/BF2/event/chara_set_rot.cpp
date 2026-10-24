@@ -13,8 +13,8 @@
 namespace event {
 
 ICmd::RESULT CharaSetRot::update(const Param &param) {
-  if (handle != gf::INVALID_HANDLE) {
-    gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
+  if (unknown08 != gf::INVALID_HANDLE) {
+    gf::GfObj *obj = gf::GfObjUtil::getObj(unknown08);
     if (obj == nullptr) {
       return RESULT_WAIT;
     }

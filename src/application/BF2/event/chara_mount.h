@@ -18,11 +18,11 @@ public:
   virtual void term();
 
 private:
-  gf::GfEvtModel *model;
-  gf::GfEvtModel *parent;
-  CharaDysUpdater *dysUpdater;
-  mm::Vec3 position;
-  mm::Quat rotation;
+  gf::GfEvtModel *unknown08;  // Inferred role: model; original member name unknown.
+  gf::GfEvtModel *unknown10;  // Inferred role: parent; original member name unknown.
+  CharaDysUpdater *unknown18; // Inferred role: dys updater; original member name unknown.
+  mm::Vec3 unknown20;         // Inferred role: position; original member name unknown.
+  mm::Quat unknown30;         // Inferred role: rotation; original member name unknown.
 };
 
 static_assert(sizeof(CharaMount) == 0x40, "");

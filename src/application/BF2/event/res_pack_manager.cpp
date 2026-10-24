@@ -12,35 +12,35 @@ namespace event {
 ResPackManager::ResPackManager() {}
 
 void ResPackManager::clear() {
-  for (ResPack **it = mPacks.begin(); it != mPacks.end(); it++) {
+  for (ResPack **it = unknown08.begin(); it != unknown08.end(); it++) {
     ResPack *pack = *it;
     pack->clear();
     delete pack;
   }
-  mPacks.clear();
+  unknown08.clear();
 }
 
 void ResPackManager::update() {
-  for (size_t i = 0; i < mPacks.size(); i++) {
-    mPacks[i]->update();
+  for (size_t i = 0; i < unknown08.size(); i++) {
+    unknown08[i]->update();
   }
 }
 
 void ResPackManager::draw() {
-  for (size_t i = 0; i < mPacks.size(); i++) {
-    mPacks[i]->draw();
+  for (size_t i = 0; i < unknown08.size(); i++) {
+    unknown08[i]->draw();
   }
 }
 
 void ResPackManager::load(mtl::ALLOC_HANDLE handle, const char *path, IResPackEvent *event) {
   ResPack *pack = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle()) ResPack();
   pack->load(handle, path, event);
-  mPacks.push_back(pack);
+  unknown08.push_back(pack);
 }
 
 bool ResPackManager::isLoading() const {
-  for (size_t i = 0; i < mPacks.size(); i++) {
-    if (mPacks[i]->isLoading()) {
+  for (size_t i = 0; i < unknown08.size(); i++) {
+    if (unknown08[i]->isLoading()) {
       return true;
     }
   }

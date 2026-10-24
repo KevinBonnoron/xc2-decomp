@@ -2,19 +2,19 @@
 
 namespace event {
 
-SelectManager::SelectManager() : flags(0), talkerType(0), selected(0), result(0) {}
+SelectManager::SelectManager() : unknown10(0), unknown14(0), unknown38(0), m_result(0) {}
 
 void SelectManager::clear() {
-  window.clear();
-  selected = 0;
-  result = 0;
-  flags = 0;
-  talkerType = 0;
+  unknown18.clear();
+  unknown38 = 0;
+  m_result = 0;
+  unknown10 = 0;
+  unknown14 = 0;
 }
 
 void SelectManager::update() {
   if (isActive()) {
-    window.update();
+    unknown18.update();
   }
 }
 
@@ -34,8 +34,8 @@ void SelectManager::OnEventProc(MSG_TYPE type) {
   }
 }
 
-int SelectManager::getResult() const { return result; }
+int SelectManager::getResult() const { return m_result; }
 
-bool SelectManager::isActive() const { return (flags & FLAG_ACTIVE) != 0; }
+bool SelectManager::isActive() const { return (unknown10 & FLAG_ACTIVE) != 0; }
 
 } // namespace event

@@ -4,7 +4,7 @@
 
 namespace event {
 
-CopydataManager::CopydataManager() : flags(0), mTargetName("evtEditor"), _58() {}
+CopydataManager::CopydataManager() : unknown10(0), unknown14("evtEditor"), _58() {}
 
 void CopydataManager::clear() {}
 

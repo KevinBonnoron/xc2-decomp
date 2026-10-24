@@ -8,7 +8,7 @@ namespace event {
 
 const char *EvtxtManager::EVTXT_PATH = "C:/MonolithSoft/BF2/evtxt";
 
-EvtxtManager::EvtxtManager() : flags(0) {}
+EvtxtManager::EvtxtManager() : unknown10(0) {}
 
 void EvtxtManager::render() {
   if (!isReserve()) {
@@ -33,13 +33,13 @@ void EvtxtManager::write() {}
 
 void EvtxtManager::reserve(bool isReserve) {
   if (isReserve) {
-    flags |= FLAG_RESERVE;
+    unknown10 |= FLAG_RESERVE;
   } else {
-    flags &= ~FLAG_RESERVE;
+    unknown10 &= ~FLAG_RESERVE;
   }
 }
 
-bool EvtxtManager::isReserve() const { return (flags & FLAG_RESERVE) != 0; }
+bool EvtxtManager::isReserve() const { return (unknown10 & FLAG_RESERVE) != 0; }
 
 void EvtxtManager::OnEventProc(MSG_TYPE type) {
   if (type == MSG_TYPE_RENDER_POST) {

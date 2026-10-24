@@ -14,7 +14,7 @@ public:
   virtual void redo(const Param &param);
 
 private:
-  RotAxis prevAxis;
+  RotAxis unknown10; // Inferred role: prev axis; original member name unknown.
 };
 
 static_assert(sizeof(ScriptEffectTurn) == 0x30, "");

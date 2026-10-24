@@ -17,8 +17,8 @@ public:
   void send(const char *format, ...);
 
 private:
-  u32 flags;
-  mm::mtl::FixStr<64> mTargetName;
+  u32 unknown10;                 // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<64> unknown14; // Inferred role: target name; original member name unknown.
   u8 _58[0x80 - 0x58];
 };
 

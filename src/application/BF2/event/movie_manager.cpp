@@ -9,58 +9,58 @@ namespace event {
 
 constexpr int CLOSE_WAIT_FRAMES = 2;
 
-MovieManager::MovieManager() : flags(0), mIsPreloadFullSize(false), mUnused(-1) {}
+MovieManager::MovieManager() : unknown10(0), unknown118(false), unknown220(-1) {}
 
 void MovieManager::close() {
   stop();
-  if (flags & FLAG_OPEN) {
+  if (unknown10 & FLAG_OPEN) {
     gf::GfMovieManager::get()->stop();
     gf::GfMovieManager::get()->close();
-    flags &= ~(FLAG_OPEN | FLAG_CLOSE_WAIT);
+    unknown10 &= ~(FLAG_OPEN | FLAG_CLOSE_WAIT);
   }
 }
 
 void MovieManager::captureScreen(bool isCapture) {
   if (isCapture) {
-    if (!(flags & FLAG_CAPTURE)) {
+    if (!(unknown10 & FLAG_CAPTURE)) {
       ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
       parmAcc.setCaptureMode(true);
-      flags |= FLAG_CAPTURE;
+      unknown10 |= FLAG_CAPTURE;
     }
-  } else if (flags & FLAG_CAPTURE) {
+  } else if (unknown10 & FLAG_CAPTURE) {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->renderDrSys, 0);
     parmAcc.setCaptureMode(false);
-    flags &= ~FLAG_CAPTURE;
+    unknown10 &= ~FLAG_CAPTURE;
   }
 }
 
 void MovieManager::update() {
-  if ((flags & (FLAG_PLAY | FLAG_AUTO_STOP)) == (FLAG_PLAY | FLAG_AUTO_STOP) && !gf::GfMovieManager::get()->isplaying()) {
+  if ((unknown10 & (FLAG_PLAY | FLAG_AUTO_STOP)) == (FLAG_PLAY | FLAG_AUTO_STOP) && !gf::GfMovieManager::get()->isplaying()) {
     stop();
   }
-  if (flags & FLAG_DISP_WAIT) {
-    if (mDispTimer-- <= 0) {
-      flags &= ~FLAG_DISP_WAIT;
+  if (unknown10 & FLAG_DISP_WAIT) {
+    if (unknown228-- <= 0) {
+      unknown10 &= ~FLAG_DISP_WAIT;
     }
   }
-  if (flags & FLAG_CLOSE_WAIT) {
-    if (mCloseTimer-- <= 0) {
+  if (unknown10 & FLAG_CLOSE_WAIT) {
+    if (unknown22c-- <= 0) {
       close();
     }
   }
 }
 
 void MovieManager::stop() {
-  if (flags & (FLAG_LOADED | FLAG_PLAY)) {
-    if (flags & FLAG_DISP_REQUEST) {
-      flags &= ~(FLAG_DISP_REQUEST | FLAG_DISP_WAIT);
+  if (unknown10 & (FLAG_LOADED | FLAG_PLAY)) {
+    if (unknown10 & FLAG_DISP_REQUEST) {
+      unknown10 &= ~(FLAG_DISP_REQUEST | FLAG_DISP_WAIT);
     }
-    mCloseTimer = CLOSE_WAIT_FRAMES;
-    flags = (flags & ~(FLAG_LOADED | FLAG_PLAY | FLAG_DISP_WAIT | FLAG_CLOSE_WAIT)) | FLAG_CLOSE_WAIT;
+    unknown22c = CLOSE_WAIT_FRAMES;
+    unknown10 = (unknown10 & ~(FLAG_LOADED | FLAG_PLAY | FLAG_DISP_WAIT | FLAG_CLOSE_WAIT)) | FLAG_CLOSE_WAIT;
   }
 }
 
-void MovieManager::dispOff() { flags &= ~FLAG_DISP_WAIT; }
+void MovieManager::dispOff() { unknown10 &= ~FLAG_DISP_WAIT; }
 
 void MovieManager::preloadAuto(const char *name, bool isFullSize) {
   mm::mtl::FixStr<256> path;
@@ -85,7 +85,7 @@ bool MovieManager::isSame(const char *path, const char *otherPath) {
 }
 
 bool MovieManager::isLoading() const {
-  if ((flags & FLAG_LOADED) && !gf::GfMovieManager::get()->isstandby()) {
+  if ((unknown10 & FLAG_LOADED) && !gf::GfMovieManager::get()->isstandby()) {
     return true;
   }
   return false;
@@ -97,13 +97,13 @@ void MovieManager::playAuto(const char *name, bool isFullSize, bool isAutoStop) 
   play(path.c_str(), isFullSize, isAutoStop);
 }
 
-void MovieManager::dispOn() { flags &= ~FLAG_DISP_WAIT; }
+void MovieManager::dispOn() { unknown10 &= ~FLAG_DISP_WAIT; }
 
 void MovieManager::setScriptFlag(bool isScript) {
   if (isScript) {
-    flags |= FLAG_SCRIPT;
+    unknown10 |= FLAG_SCRIPT;
   } else {
-    flags &= ~FLAG_SCRIPT;
+    unknown10 &= ~FLAG_SCRIPT;
   }
 }
 
@@ -114,14 +114,14 @@ bool MovieManager::isLoadedAuto(const char *name, bool isFullSize) const {
 }
 
 bool MovieManager::isLoaded(const char *path, bool isFullSize) const {
-  if ((flags & FLAG_LOADED) && __builtin_strcmp(mPreloadPath.c_str(), path) == 0 && mIsPreloadFullSize == isFullSize) {
+  if ((unknown10 & FLAG_LOADED) && __builtin_strcmp(unknown14.c_str(), path) == 0 && unknown118 == isFullSize) {
     return gf::GfMovieManager::get()->isstandby();
   }
   return false;
 }
 
 void MovieManager::pause(bool isPause) {
-  if (flags & FLAG_PLAY) {
+  if (unknown10 & FLAG_PLAY) {
     bool isPaused = gf::GfMovieManager::get()->ispause();
     if (isPause) {
       if (!isPaused) {

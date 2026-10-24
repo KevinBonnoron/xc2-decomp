@@ -25,11 +25,11 @@ public:
     FLAG_MAX = 32,
   };
 
-  CharaWeightItem() : flags(), mStat(""), mWeight(0.0f) {
-    mAddWeights[WEIGHT_LAYER_PLAY] = 1.0f;
-    mAddWeights[WEIGHT_LAYER_WINK] = 1.0f;
-    mSpeeds[WEIGHT_LAYER_PLAY] = 1.0f;
-    mSpeeds[WEIGHT_LAYER_WINK] = 1.0f;
+  CharaWeightItem() : unknown08(), m_stat(""), unknown238(0.0f) {
+    unknown23c[WEIGHT_LAYER_PLAY] = 1.0f;
+    unknown23c[WEIGHT_LAYER_WINK] = 1.0f;
+    unknown244[WEIGHT_LAYER_PLAY] = 1.0f;
+    unknown244[WEIGHT_LAYER_WINK] = 1.0f;
   }
 
   virtual ~CharaWeightItem() {}
@@ -44,13 +44,13 @@ public:
   void setAddWeight(f32 weight, WeightLayer layer);
 
 private:
-  mm::mtl::BitFlag<FLAG_MAX> flags;
-  gf::AnimLayer mLayer;
-  const char *mStat;
-  AnmF32 mWeightAnms[WEIGHT_LAYER_MAX];
-  f32 mWeight;
-  f32 mAddWeights[WEIGHT_LAYER_MAX];
-  f32 mSpeeds[WEIGHT_LAYER_MAX];
+  mm::mtl::BitFlag<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
+  gf::AnimLayer unknown0c;              // Inferred role: layer; original member name unknown.
+  const char *m_stat;
+  AnmF32 unknown18[WEIGHT_LAYER_MAX]; // Inferred role: weight anms; original member name unknown.
+  f32 unknown238;                     // Inferred role: weight; original member name unknown.
+  f32 unknown23c[WEIGHT_LAYER_MAX];   // Inferred role: add weights; original member name unknown.
+  f32 unknown244[WEIGHT_LAYER_MAX];   // Inferred role: speeds; original member name unknown.
 };
 
 static_assert(sizeof(CharaWeightItem) == 0x250, "");

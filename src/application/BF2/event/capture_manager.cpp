@@ -12,16 +12,16 @@ const char *CaptureManager::JPG_PATH = "C:/MonolithSoft/BF2/jpeg";
 const char *CaptureManager::JPG_PATH_OFS = "../../jpeg";
 const char *CaptureManager::CONV_PATH = "C:/Monolithsoft/BF2/execute/bf2tools/event/bmp2avi/bmp2avi";
 
-CaptureManager::CaptureManager() : flags(0), mMode(MODE_MOVIE), mFilter(0) {}
+CaptureManager::CaptureManager() : unknown10(0), unknown14(MODE_MOVIE), unknown18(0) {}
 
 void CaptureManager::clear() {
-  if ((flags & FLAG_CAPTURE) != 0) {
+  if ((unknown10 & FLAG_CAPTURE) != 0) {
     stop();
   }
 }
 
 void CaptureManager::render() {
-  if ((flags & (FLAG_RESERVE | FLAG_CAPTURE)) != FLAG_RESERVE) {
+  if ((unknown10 & (FLAG_RESERVE | FLAG_CAPTURE)) != FLAG_RESERVE) {
     return;
   }
   s32 height = ml::DevGraph::getRootHeight();
@@ -34,27 +34,27 @@ void CaptureManager::render() {
   x = (ml::DevGraph::getRootWidth() >> 1) - 150;
   y = height - 75;
   mm::mtl::FixStr<64> filter = "";
-  if (mFilter != 0) {
-    filter.format("(+filter%d)", mFilter);
+  if (unknown18 != 0) {
+    filter.format("(+filter%d)", unknown18);
   }
-  switch (mMode) {
+  switch (unknown14) {
   case MODE_MOVIE:
     fw::debug::drawFontColor(mm::Col4::black);
-    fw::debug::drawFont(x + 1, y + 1, "      mode[movie mode] %s%s", filter.c_str(), (flags & FLAG_MULTI) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x + 1, y + 1, "      mode[movie mode] %s%s", filter.c_str(), (unknown10 & FLAG_MULTI) != 0 ? "(+multi)" : "");
     fw::debug::drawFontColor(mm::Col4::yellow);
-    fw::debug::drawFont(x, y, "      mode[movie mode] %s%s", filter.c_str(), (flags & FLAG_MULTI) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x, y, "      mode[movie mode] %s%s", filter.c_str(), (unknown10 & FLAG_MULTI) != 0 ? "(+multi)" : "");
     break;
   case MODE_DEVELOPER:
     fw::debug::drawFontColor(mm::Col4::black);
-    fw::debug::drawFont(x + 1, y + 1, "      mode[developer mode] %s%s", filter.c_str(), (flags & FLAG_MULTI) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x + 1, y + 1, "      mode[developer mode] %s%s", filter.c_str(), (unknown10 & FLAG_MULTI) != 0 ? "(+multi)" : "");
     fw::debug::drawFontColor(mm::Col4::yellow);
-    fw::debug::drawFont(x, y, "      mode[developer mode] %s%s", filter.c_str(), (flags & FLAG_MULTI) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x, y, "      mode[developer mode] %s%s", filter.c_str(), (unknown10 & FLAG_MULTI) != 0 ? "(+multi)" : "");
     break;
   case MODE_COMPOSER:
     fw::debug::drawFontColor(mm::Col4::black);
-    fw::debug::drawFont(x + 1, y + 1, "      mode[composer mode] %s%s", filter.c_str(), (flags & FLAG_MULTI) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x + 1, y + 1, "      mode[composer mode] %s%s", filter.c_str(), (unknown10 & FLAG_MULTI) != 0 ? "(+multi)" : "");
     fw::debug::drawFontColor(mm::Col4::yellow);
-    fw::debug::drawFont(x, y, "      mode[composer mode] %s%s", filter.c_str(), (flags & FLAG_MULTI) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x, y, "      mode[composer mode] %s%s", filter.c_str(), (unknown10 & FLAG_MULTI) != 0 ? "(+multi)" : "");
     break;
   case MODE_AFTEREFFECT:
     fw::debug::drawFontColor(mm::Col4::black);
@@ -64,9 +64,9 @@ void CaptureManager::render() {
     break;
   case MODE_SOUND:
     fw::debug::drawFontColor(mm::Col4::black);
-    fw::debug::drawFont(x + 1, y + 1, "      mode[sound mode] %s%s", filter.c_str(), (flags & FLAG_MULTI) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x + 1, y + 1, "      mode[sound mode] %s%s", filter.c_str(), (unknown10 & FLAG_MULTI) != 0 ? "(+multi)" : "");
     fw::debug::drawFontColor(mm::Col4::yellow);
-    fw::debug::drawFont(x, y, "      mode[sound mode] %s%s", filter.c_str(), (flags & FLAG_MULTI) != 0 ? "(+multi)" : "");
+    fw::debug::drawFont(x, y, "      mode[sound mode] %s%s", filter.c_str(), (unknown10 & FLAG_MULTI) != 0 ? "(+multi)" : "");
     break;
   case MODE_EFFECT:
     fw::debug::drawFontColor(mm::Col4::black);
@@ -91,34 +91,34 @@ void CaptureManager::render() {
 
 void CaptureManager::reserve(bool isReserve, MODE mode, bool isMulti) {
   if (isReserve) {
-    flags |= FLAG_RESERVE;
+    unknown10 |= FLAG_RESERVE;
     if (isMulti) {
-      flags |= FLAG_MULTI;
+      unknown10 |= FLAG_MULTI;
     } else {
-      flags &= ~FLAG_MULTI;
+      unknown10 &= ~FLAG_MULTI;
     }
-    mMode = mode;
+    unknown14 = mode;
   } else {
-    flags &= ~FLAG_RESERVE;
+    unknown10 &= ~FLAG_RESERVE;
   }
 }
 
-void CaptureManager::reserveFilter(int filter) { mFilter = filter; }
+void CaptureManager::reserveFilter(int filter) { unknown18 = filter; }
 
 void CaptureManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
   case MSG_TYPE_INIT:
-    if ((flags & FLAG_RESERVE) != 0) {
+    if ((unknown10 & FLAG_RESERVE) != 0) {
       ready();
     }
     break;
   case MSG_TYPE_START_PAGE:
-    if ((flags & (FLAG_RESERVE | FLAG_CAPTURE)) == FLAG_RESERVE) {
+    if ((unknown10 & (FLAG_RESERVE | FLAG_CAPTURE)) == FLAG_RESERVE) {
       start();
     }
     break;
   case MSG_TYPE_END_SCENE:
-    if ((flags & FLAG_CAPTURE) != 0) {
+    if ((unknown10 & FLAG_CAPTURE) != 0) {
       stop();
     }
     break;

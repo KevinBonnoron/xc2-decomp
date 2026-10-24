@@ -53,16 +53,16 @@ public:
   static bool checkField(gf::GfObj *obj);
 
 private:
-  mm::mtl::BitFlag<FLAG_MAX> flags;
-  mm::mtl::BitFlag<REQUEST_MAX> mRequests;
-  gf::GF_OBJ_HANDLE *handle;
-  f32 mTargetFrame;
-  mm::Vec3 mTargetPos;
-  alignas(16) mm::Vec2 mLensMove;
-  alignas(16) mm::Vec2 mLensTranslateMin;
-  alignas(16) mm::Vec2 mLensTranslateMax;
-  alignas(16) mm::Vec2 mLensRotateMin;
-  alignas(16) mm::Vec2 mLensRotateMax;
+  mm::mtl::BitFlag<FLAG_MAX> unknown08;    // Inferred role: flags; original member name unknown.
+  mm::mtl::BitFlag<REQUEST_MAX> unknown0c; // Inferred role: requests; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;            // Inferred role: handle; original member name unknown.
+  f32 unknown18;                           // Inferred role: target frame; original member name unknown.
+  mm::Vec3 unknown20;                      // Inferred role: target pos; original member name unknown.
+  alignas(16) mm::Vec2 unknown30;          // Inferred role: lens move; original member name unknown.
+  alignas(16) mm::Vec2 unknown40;          // Inferred role: lens translate min; original member name unknown.
+  alignas(16) mm::Vec2 unknown50;          // Inferred role: lens translate max; original member name unknown.
+  alignas(16) mm::Vec2 unknown60;          // Inferred role: lens rotate min; original member name unknown.
+  alignas(16) mm::Vec2 unknown70;          // Inferred role: lens rotate max; original member name unknown.
 };
 
 static_assert(sizeof(CharaIKUpdater) == 0x80, "");

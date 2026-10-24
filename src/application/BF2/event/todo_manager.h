@@ -40,11 +40,11 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 state;
-  u32 flags;
-  mm::mtl::FixedVector<TodoItem, ITEM_COUNT> mItems;
-  size_t mCurrent;
-  mm::mtl::FixedVector<mm::mtl::FixStr<256>, ITEM_COUNT> mLines;
+  u32 unknown10;                                                      // Inferred role: state; original member name unknown.
+  u32 unknown14;                                                      // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedVector<TodoItem, ITEM_COUNT> unknown18;               // Inferred role: items; original member name unknown.
+  size_t unknown8c20;                                                 // Inferred role: current; original member name unknown.
+  mm::mtl::FixedVector<mm::mtl::FixStr<256>, ITEM_COUNT> unknown8c28; // Inferred role: lines; original member name unknown.
 };
 
 static_assert(sizeof(TodoManager) == 0x10e30, "");

@@ -14,48 +14,48 @@ VolumePlayer::VolumePlayer() {}
 
 void VolumePlayer::clear() {
   update();
-  mKeys.clear();
+  unknown08.clear();
 }
 
 void VolumePlayer::update() {
-  for (u32 i = 0; i < mKeys.size(); i++) {
-    if (mKeys[i].isChange) {
-      gf::GfGameEvent::setCategoryVolume(static_cast<fw::SoundCategory>(mKeys[i].category), mKeys[i].volume, mKeys[i].frame * TO_SEC);
-      if (mKeys[i].category == 1) {
-        gf::GfGameEvent::setCategoryVolume(static_cast<fw::SoundCategory>(10), mKeys[i].volume, mKeys[i].frame * TO_SEC);
+  for (u32 i = 0; i < unknown08.size(); i++) {
+    if (unknown08[i].unknown00) {
+      gf::GfGameEvent::setCategoryVolume(static_cast<fw::SoundCategory>(unknown08[i].unknown04), unknown08[i].unknown08, unknown08[i].unknown0c * TO_SEC);
+      if (unknown08[i].unknown04 == 1) {
+        gf::GfGameEvent::setCategoryVolume(static_cast<fw::SoundCategory>(10), unknown08[i].unknown08, unknown08[i].unknown0c * TO_SEC);
       }
     } else {
-      gf::GfGameEvent::setCategoryVolume(static_cast<fw::SoundCategory>(mKeys[i].category), 1.0f, mKeys[i].frame * TO_SEC);
-      if (mKeys[i].category == 1) {
-        gf::GfGameEvent::setCategoryVolume(static_cast<fw::SoundCategory>(10), 1.0f, mKeys[i].frame * TO_SEC);
+      gf::GfGameEvent::setCategoryVolume(static_cast<fw::SoundCategory>(unknown08[i].unknown04), 1.0f, unknown08[i].unknown0c * TO_SEC);
+      if (unknown08[i].unknown04 == 1) {
+        gf::GfGameEvent::setCategoryVolume(static_cast<fw::SoundCategory>(10), 1.0f, unknown08[i].unknown0c * TO_SEC);
       }
     }
   }
-  mKeys.clear();
+  unknown08.clear();
 }
 
 void VolumePlayer::change(u32 category, f32 volume, f32 frame) {
-  if (mKeys.size() >= mKeys.capacity()) {
-    mKeys.erase(mKeys.begin());
+  if (unknown08.size() >= unknown08.capacity()) {
+    unknown08.erase(unknown08.begin());
   }
   Key key;
-  key.isChange = true;
-  key.category = category;
-  key.volume = volume;
-  key.frame = frame;
-  mKeys.push_back(key);
+  key.unknown00 = true;
+  key.unknown04 = category;
+  key.unknown08 = volume;
+  key.unknown0c = frame;
+  unknown08.push_back(key);
 }
 
 void VolumePlayer::reset(u32 category, f32 volume, f32 frame) {
-  if (mKeys.size() >= mKeys.capacity()) {
-    mKeys.erase(mKeys.begin());
+  if (unknown08.size() >= unknown08.capacity()) {
+    unknown08.erase(unknown08.begin());
   }
   Key key;
-  key.isChange = true;
-  key.category = category;
-  key.volume = volume;
-  key.frame = frame;
-  mKeys.push_back(key);
+  key.unknown00 = true;
+  key.unknown04 = category;
+  key.unknown08 = volume;
+  key.unknown0c = frame;
+  unknown08.push_back(key);
 }
 
 } // namespace event

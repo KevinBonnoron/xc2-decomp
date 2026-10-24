@@ -26,8 +26,8 @@ public:
   void reserve(const mm::Vec3 &pos, const mm::Vec3 &rot);
 
 private:
-  Update cmd;
-  CmdQueue<CMD_COUNT, 0> queue;
+  Update unknown00;                 // Inferred role: cmd; original member name unknown.
+  CmdQueue<CMD_COUNT, 0> unknown08; // Inferred role: queue; original member name unknown.
 };
 
 static_assert(sizeof(ShakerUpdater) == 0x958, "");

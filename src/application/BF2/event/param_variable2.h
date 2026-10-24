@@ -22,7 +22,7 @@ public:
   void createString(mm::mtl::FixStr<256> &string);
 
 private:
-  mm::mtl::FixStr<256> value;
+  mm::mtl::FixStr<256> m_str;
 };
 
 static_assert(sizeof(ParamVariable2) == 0x110, "");

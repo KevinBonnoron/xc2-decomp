@@ -14,8 +14,8 @@ public:
   virtual void redo(const Param &param) { doit(param); }
 
 private:
-  f32 prevNear;
-  f32 prevFar;
+  f32 unknown08; // Inferred role: prev near; original member name unknown.
+  f32 unknown0c; // Inferred role: prev far; original member name unknown.
 };
 
 static_assert(sizeof(ScriptCamNearfar) == 0x10, "");

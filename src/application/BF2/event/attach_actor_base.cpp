@@ -21,15 +21,15 @@
 
 namespace event {
 
-AttachActorBase::AttachActorBase(const char *name) : unknown8(name), unknown50(gf::INVALID_HANDLE), unknown60(mm::Mat44::identity) {}
+AttachActorBase::AttachActorBase(const char *name) : m_name(name), m_actor(gf::INVALID_HANDLE), unknown60(mm::Mat44::identity) {}
 
-AttachActorBase::AttachActorBase(const char *name, gf::GF_OBJ_HANDLE *actor) : unknown8(name), unknown50(actor), unknown60(mm::Mat44::identity) {}
+AttachActorBase::AttachActorBase(const char *name, gf::GF_OBJ_HANDLE *actor) : m_name(name), m_actor(actor), unknown60(mm::Mat44::identity) {}
 
-void AttachActorBase::setActor(gf::GF_OBJ_HANDLE *actor) { unknown50 = actor; }
+void AttachActorBase::setActor(gf::GF_OBJ_HANDLE *actor) { m_actor = actor; }
 
 void AttachActorBase::render() {
   ml::ScnObjCam *camera = Manager::get()->getScn()->getCam(-1);
-  gf::GfObj *actor = gf::GfObjUtil::getObj(unknown50);
+  gf::GfObj *actor = gf::GfObjUtil::getObj(m_actor);
   if (!actor) {
     return;
   }
@@ -59,7 +59,7 @@ void AttachActorBase::render() {
   }
 }
 
-const char *AttachActorBase::getName() const { return unknown8.c_str(); }
+const char *AttachActorBase::getName() const { return m_name.c_str(); }
 
 bool AttachActorBase::getMat(mm::Mat44 &mat) const {
   mat = unknown60;

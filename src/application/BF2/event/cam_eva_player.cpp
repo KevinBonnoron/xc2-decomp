@@ -4,11 +4,11 @@
 
 namespace event {
 
-CamEvaPlayer::CamEvaPlayer() : mCam(nullptr), mRcha(nullptr) {}
+CamEvaPlayer::CamEvaPlayer() : unknown08(nullptr), unknown10(nullptr) {}
 
 void CamEvaPlayer::setNearfar(EVT_nearfar nearfar) {
-  mCam->setNearFar(CamUtil::id2near(nearfar), CamUtil::id2far(nearfar));
-  mNearfar = nearfar;
+  unknown08->setNearFar(CamUtil::id2near(nearfar), CamUtil::id2far(nearfar));
+  unknown30 = nearfar;
 }
 
 } // namespace event

@@ -21,17 +21,17 @@ public:
   void create(CharaWeightPlayer *weight);
   void destroy();
   void update(f32 delta) {
-    if (mWeight == nullptr) {
+    if (unknown10 == nullptr) {
       return;
     }
 
-    State state = this->state;
+    State state = this->unknown18;
     while (state != nullptr) {
       (this->*state)();
-      if (state == this->state) {
+      if (state == this->unknown18) {
         break;
       }
-      state = this->state;
+      state = this->unknown18;
     }
   }
 
@@ -43,11 +43,11 @@ public:
   void idle_wink();
 
 private:
-  mm::mtl::BitFlag<FLAG_MAX> flags;
-  CharaWeightPlayer *mWeight;
-  State state;
-  int mCounter;
-  const char *mStatus;
+  mm::mtl::BitFlag<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
+  CharaWeightPlayer *unknown10;         // Inferred role: weight; original member name unknown.
+  State unknown18;                      // Inferred role: state; original member name unknown.
+  int unknown28;                        // Inferred role: counter; original member name unknown.
+  const char *unknown30;                // Inferred role: status; original member name unknown.
 };
 
 static_assert(sizeof(CharaWinkPlayer) == 0x38, "");

@@ -5,7 +5,7 @@ namespace event {
 
 class ScriptCharaFacial : public ITodo {
 public:
-  ScriptCharaFacial() : mPrevId(0) {}
+  ScriptCharaFacial() : unknown08(0) {}
   static ITodo *exec();
   virtual ~ScriptCharaFacial() {}
   virtual const char *cmdName() const { return "charafacial"; }
@@ -14,7 +14,7 @@ public:
   virtual void redo(const Param &param) { doit(param); }
 
 private:
-  int mPrevId;
+  int unknown08; // Inferred role: prev id; original member name unknown.
 };
 
 static_assert(sizeof(ScriptCharaFacial) == 0x10, "");

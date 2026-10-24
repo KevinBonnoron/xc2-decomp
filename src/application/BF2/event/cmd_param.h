@@ -15,7 +15,7 @@ public:
   const CmdVariable &val(size_t index) const;
 
 private:
-  CmdVariable mVariables[VARIABLE_COUNT];
+  CmdVariable unknown08[VARIABLE_COUNT]; // Inferred role: variables; original member name unknown.
 };
 
 static_assert(sizeof(CmdParam) == 0x110, "");

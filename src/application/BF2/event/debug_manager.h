@@ -80,19 +80,19 @@ public:
 private:
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
-      flags |= flag;
+      unknown10 |= flag;
     } else {
-      flags &= ~flag;
+      unknown10 &= ~flag;
     }
   }
 
-  u32 flags;
-  mm::mtl::FixStr<256> mMessage;
-  s32 mMessageTimer;
-  mm::mtl::FixStr<256> mWarning;
-  s32 mWarningTimer;
-  int mDispSight;
-  u32 mReplaceDefaultEquips[EQUIP_SLOT_COUNT];
+  u32 unknown10;                   // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<256> unknown14;  // Inferred role: message; original member name unknown.
+  s32 unknown118;                  // Inferred role: message timer; original member name unknown.
+  mm::mtl::FixStr<256> unknown11c; // Inferred role: warning; original member name unknown.
+  s32 unknown220;                  // Inferred role: warning timer; original member name unknown.
+  int m_dispSight;
+  u32 unknown228[EQUIP_SLOT_COUNT]; // Inferred role: replace default equips; original member name unknown.
 };
 
 static_assert(sizeof(DebugManager) == 0x268, "");

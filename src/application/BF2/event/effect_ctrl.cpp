@@ -12,105 +12,105 @@ enum EF_CATEGORY : int;
 namespace event {
 
 EffectCtrl::EffectCtrl() {
-  mAttribute = 0;
+  unknown15c = 0;
   reset();
 }
 
 void EffectCtrl::create(const char *name, u32 attribute) {
   destroy();
-  mName = name;
-  mAttribute = attribute;
+  unknown118 = name;
+  unknown15c = attribute;
   reset();
 }
 
 void EffectCtrl::destroy() {
-  if (mCaster != nullptr) {
-    for (size_t i = 0; i < mHandles.size(); i++) {
-      mCaster->setEffectCaster(false, mHandles[i]);
+  if (unknown1b0 != nullptr) {
+    for (size_t i = 0; i < unknown10.size(); i++) {
+      unknown1b0->setEffectCaster(false, unknown10[i]);
     }
   }
-  if (mMount != nullptr) {
-    for (size_t i = 0; i < mHandles.size(); i++) {
-      mMount->setEffectMount(false, mHandles[i], "", mm::Vec3::zero, false, static_cast<ATTACH_TYPE>(0));
+  if (unknown1c0 != nullptr) {
+    for (size_t i = 0; i < unknown10.size(); i++) {
+      unknown1c0->setEffectMount(false, unknown10[i], "", mm::Vec3::zero, false, static_cast<ATTACH_TYPE>(0));
     }
   }
-  mCaster = nullptr;
-  mMount = nullptr;
-  mHandles.clear();
+  unknown1b0 = nullptr;
+  unknown1c0 = nullptr;
+  unknown10.clear();
 }
 
 void EffectCtrl::genelate() {
-  handle = fw::EffectManager::get()->create(mName.c_str(), mm::mtl::Singleton<EffectManager>::getPtr()->getResPack(), true);
-  fw::EffectManager::get()->setCategory(handle, static_cast<fw::EF_CATEGORY>(3));
+  unknown08 = fw::EffectManager::get()->create(unknown118.c_str(), mm::mtl::Singleton<EffectManager>::getPtr()->getResPack(), true);
+  fw::EffectManager::get()->setCategory(unknown08, static_cast<fw::EF_CATEGORY>(3));
 }
 
 void EffectCtrl::dead() {
-  if (handle != 0) {
-    fw::EffectManager::get()->dead(handle);
+  if (unknown08 != 0) {
+    fw::EffectManager::get()->dead(unknown08);
   }
-  for (size_t i = 0; i < mHandles.size(); i++) {
-    fw::EffectManager::get()->dead(mHandles[i]);
+  for (size_t i = 0; i < unknown10.size(); i++) {
+    fw::EffectManager::get()->dead(unknown10[i]);
   }
 }
 
 void EffectCtrl::kill() {
   detach();
-  if (handle != 0) {
-    fw::EffectManager::get()->remove(handle);
+  if (unknown08 != 0) {
+    fw::EffectManager::get()->remove(unknown08);
   }
-  for (size_t i = 0; i < mHandles.size(); i++) {
-    fw::EffectManager::get()->remove(mHandles[i]);
+  for (size_t i = 0; i < unknown10.size(); i++) {
+    fw::EffectManager::get()->remove(unknown10[i]);
   }
 }
 
-void EffectCtrl::setSpeed(f32 speed) { mSpeed = speed; }
+void EffectCtrl::setSpeed(f32 speed) { m_speed = speed; }
 
-void EffectCtrl::setSkip(f32 skip) { mSkip = skip; }
+void EffectCtrl::setSkip(f32 skip) { m_skip = skip; }
 
-void EffectCtrl::setPrio(int prio) { mPrio = prio; }
+void EffectCtrl::setPrio(int prio) { m_prio = prio; }
 
-void EffectCtrl::setPos(const mm::Vec3 &pos) { mPos = pos; }
+void EffectCtrl::setPos(const mm::Vec3 &pos) { m_pos = pos; }
 
-const mm::Vec3 &EffectCtrl::getPos() const { return mPos; }
+const mm::Vec3 &EffectCtrl::getPos() const { return m_pos; }
 
-void EffectCtrl::setRot(const mm::Vec3 &rot) { mRot = rot; }
+void EffectCtrl::setRot(const mm::Vec3 &rot) { m_rot = rot; }
 
-const mm::Vec3 &EffectCtrl::getRot() const { return mRot; }
+const mm::Vec3 &EffectCtrl::getRot() const { return m_rot; }
 
-void EffectCtrl::setScale(const mm::Vec3 &scale) { mScale = scale; }
+void EffectCtrl::setScale(const mm::Vec3 &scale) { m_scale = scale; }
 
-const mm::Vec3 &EffectCtrl::getScale() const { return mScale; }
+const mm::Vec3 &EffectCtrl::getScale() const { return m_scale; }
 
-void EffectCtrl::setColor(const mm::Col4 &color) { mColor = color; }
+void EffectCtrl::setColor(const mm::Col4 &color) { m_color = color; }
 
-const mm::Col4 &EffectCtrl::getColor() const { return mColor; }
+const mm::Col4 &EffectCtrl::getColor() const { return m_color; }
 
 void EffectCtrl::setCaster(IAttachActor *caster) {
   detach();
-  mCaster = caster;
-  mMount = nullptr;
-  if (mCaster != nullptr) {
-    for (size_t i = 0; i < mHandles.size(); i++) {
-      mCaster->setEffectCaster(true, mHandles[i]);
+  unknown1b0 = caster;
+  unknown1c0 = nullptr;
+  if (unknown1b0 != nullptr) {
+    for (size_t i = 0; i < unknown10.size(); i++) {
+      unknown1b0->setEffectCaster(true, unknown10[i]);
     }
   }
 }
 
 void EffectCtrl::setMount(IAttachActor *mount, const char *bone, const mm::Vec3 &offset, bool isRotate, ATTACH_TYPE type) {
   detach();
-  mCaster = nullptr;
-  mMount = mount;
-  mMountName = bone;
-  mMountOffset = offset;
-  mIsMountRotate = isRotate;
-  mAttachType = type;
-  if (mMount != nullptr) {
-    for (size_t i = 0; i < mHandles.size(); i++) {
-      mMount->setEffectMount(true, mHandles[i], mMountName.c_str(), mMountOffset, mIsMountRotate, static_cast<ATTACH_TYPE>(mAttachType));
+  unknown1b0 = nullptr;
+  unknown1c0 = mount;
+  unknown1c8 = bone;
+  unknown1f0 = offset;
+  unknown200 = isRotate;
+  unknown204 = type;
+  if (unknown1c0 != nullptr) {
+    for (size_t i = 0; i < unknown10.size(); i++) {
+      unknown1c0->setEffectMount(true, unknown10[i], unknown1c8.c_str(), unknown1f0, unknown200, static_cast<ATTACH_TYPE>(unknown204));
     }
   }
 }
 
-size_t EffectCtrl::getEffCount() const { return mHandles.size(); }
+size_t EffectCtrl::getEffCount() const { return unknown10.size(); }
 
 } // namespace event

@@ -11,28 +11,28 @@
 
 namespace event {
 
-AlphaManager::AlphaManager() : flags(0), dispFlags(0) {}
+AlphaManager::AlphaManager() : unknown10(0), unknown14(0) {}
 
 void AlphaManager::clear() {
-  for (size_t i = 0; i < objs.size(); i++) {
-    delete objs[i];
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    delete unknown18[i];
   }
-  objs.clear();
-  flags = 0;
+  unknown18.clear();
+  unknown10 = 0;
 }
 
 void AlphaManager::render() {
-  if (!(dispFlags & DISP_FLAG_DISP) || !(flags & FLAG_ACTIVE)) {
+  if (!(unknown14 & DISP_FLAG_DISP) || !(unknown10 & FLAG_ACTIVE)) {
     return;
   }
-  int height = objs.size() * 20 + 50;
+  int height = unknown18.size() * 20 + 50;
   fw::debug::drawSquare2D(mm::Rect<int>(210, 140, 700, height), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
   fw::debug::drawLineSquare2D(mm::Rect<int>(210, 140, 700, height), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFont(215, 145, "ALPHA");
-  fw::debug::drawFont(560, 145, "TOTAL %d", objs.size());
-  for (size_t i = 0; i < objs.size(); i++) {
-    objs[i]->draw(230, 170 + i * 20);
+  fw::debug::drawFont(560, 145, "TOTAL %d", unknown18.size());
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    unknown18[i]->draw(230, 170 + i * 20);
     if (i > 40) {
       fw::debug::drawFont(580, 195 + i * 20, "and more..");
       return;
@@ -47,15 +47,15 @@ void AlphaManager::setAlpha(gf::GF_OBJ_HANDLE *handle, ALPHA_ATTR attr, f32 alph
   } else {
     obj = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle()) AlphaObj(handle);
     obj->setAlpha(attr, alpha, belongingAlpha);
-    objs.push_back(obj);
+    unknown18.push_back(obj);
   }
-  flags |= FLAG_ACTIVE;
+  unknown10 |= FLAG_ACTIVE;
 }
 
 AlphaObj *AlphaManager::search(gf::GF_OBJ_HANDLE *handle) const {
-  for (size_t i = 0; i < objs.size(); i++) {
-    if (objs[i]->getHandle() == handle) {
-      return objs[i];
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    if (unknown18[i]->getHandle() == handle) {
+      return unknown18[i];
     }
   }
   return nullptr;
@@ -63,12 +63,12 @@ AlphaObj *AlphaManager::search(gf::GF_OBJ_HANDLE *handle) const {
 
 void AlphaManager::setDisp(bool isDisp) {
   if (isDisp) {
-    dispFlags |= DISP_FLAG_DISP;
+    unknown14 |= DISP_FLAG_DISP;
   } else {
-    dispFlags &= ~DISP_FLAG_DISP;
+    unknown14 &= ~DISP_FLAG_DISP;
   }
 }
 
-bool AlphaManager::isDisp() const { return (dispFlags & DISP_FLAG_DISP) != 0; }
+bool AlphaManager::isDisp() const { return (unknown14 & DISP_FLAG_DISP) != 0; }
 
 } // namespace event

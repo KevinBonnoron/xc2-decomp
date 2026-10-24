@@ -10,51 +10,51 @@ static constexpr f32 IDLE_SHAKE_TIME = -1.0f;
 
 mm::mtl::FixStr<32> ShakeManager::s_names[TYPE_COUNT] = {"TYPE_SS", "TYPE_S", "TYPE_M", "TYPE_L"};
 
-ShakeManager::ShakeManager() : flags(0) {}
+ShakeManager::ShakeManager() : unknown10(0) {}
 
 void ShakeManager::create() {
-  shaker.create();
-  idleShakeId = shaker.registerShake("event/cam/cm_cam_noise_idle.eva");
-  shakeIds[TYPE_SS] = shaker.registerShake("event/cam/cm_cam_noise_ss.eva");
-  shakeIds[TYPE_S] = shaker.registerShake("event/cam/cm_cam_noise_s.eva");
-  shakeIds[TYPE_M] = shaker.registerShake("event/cam/cm_cam_noise_m.eva");
-  shakeIds[TYPE_L] = shaker.registerShake("event/cam/cm_cam_noise_l.eva");
+  unknown18.create();
+  unknowncb8 = unknown18.registerShake("event/cam/cm_cam_noise_idle.eva");
+  unknownca8[TYPE_SS] = unknown18.registerShake("event/cam/cm_cam_noise_ss.eva");
+  unknownca8[TYPE_S] = unknown18.registerShake("event/cam/cm_cam_noise_s.eva");
+  unknownca8[TYPE_M] = unknown18.registerShake("event/cam/cm_cam_noise_m.eva");
+  unknownca8[TYPE_L] = unknown18.registerShake("event/cam/cm_cam_noise_l.eva");
 }
 
 void ShakeManager::destroy() {
   clear();
-  shaker.destroy();
+  unknown18.destroy();
   for (u32 i = 0; i < TYPE_COUNT; i++) {
-    shakeIds[i] = 0;
+    unknownca8[i] = 0;
   }
-  idleShakeId = 0;
+  unknowncb8 = 0;
 }
 
 void ShakeManager::clear() {
-  shaker.stop();
-  flags = 0;
+  unknown18.stop();
+  unknown10 = 0;
 }
 
 void ShakeManager::update() {
-  if ((flags & FLAG_SHAKE) != 0 && !shaker.isPlay()) {
+  if ((unknown10 & FLAG_SHAKE) != 0 && !unknown18.isPlay()) {
     idle();
   }
   const FrameInfo &info = mm::mtl::Singleton<FrameManager>::getPtr()->frameInfo();
-  if (info.streamDelta > 0.0f) {
-    shaker.exec(info.delta, info.streamDelta);
+  if (info.unknown0c > 0.0f) {
+    unknown18.exec(info.unknown04, info.unknown0c);
   }
 }
 
 void ShakeManager::idle() {
-  if ((flags & FLAG_IDLE_SHAKE) != 0) {
-    shaker.play(idleShakeId, IDLE_SHAKE_TIME, IDLE_SHAKE_TIME, IDLE_SHAKE_TIME);
+  if ((unknown10 & FLAG_IDLE_SHAKE) != 0) {
+    unknown18.play(unknowncb8, IDLE_SHAKE_TIME, IDLE_SHAKE_TIME, IDLE_SHAKE_TIME);
   } else {
-    shaker.stop();
+    unknown18.stop();
   }
-  flags &= ~FLAG_SHAKE;
+  unknown10 &= ~FLAG_SHAKE;
 }
 
-void ShakeManager::tail() { shaker.tail(); }
+void ShakeManager::tail() { unknown18.tail(); }
 
 void ShakeManager::play(const char *name, f32 life, f32 fadeIn, f32 fadeOut) {
   int type = 0;
@@ -66,20 +66,20 @@ void ShakeManager::play(const char *name, f32 life, f32 fadeIn, f32 fadeOut) {
   if (type == TYPE_COUNT) {
     return;
   }
-  shaker.play(shakeIds[type], life, fadeIn, fadeOut);
-  flags |= FLAG_SHAKE;
+  unknown18.play(unknownca8[type], life, fadeIn, fadeOut);
+  unknown10 |= FLAG_SHAKE;
 }
 
 void ShakeManager::setIdleShake(bool isIdleShake) {
-  if (((flags & FLAG_IDLE_SHAKE) != 0) == isIdleShake) {
+  if (((unknown10 & FLAG_IDLE_SHAKE) != 0) == isIdleShake) {
     return;
   }
   if (isIdleShake) {
-    flags |= FLAG_IDLE_SHAKE;
+    unknown10 |= FLAG_IDLE_SHAKE;
   } else {
-    flags &= ~FLAG_IDLE_SHAKE;
+    unknown10 &= ~FLAG_IDLE_SHAKE;
   }
-  if ((flags & FLAG_SHAKE) == 0) {
+  if ((unknown10 & FLAG_SHAKE) == 0) {
     idle();
   }
 }

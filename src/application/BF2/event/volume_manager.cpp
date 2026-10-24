@@ -14,48 +14,48 @@ enum SoundCategory : int;
 
 namespace event {
 
-VolumeManager::VolumeManager() : flags(0), dispFlags(0) {}
+VolumeManager::VolumeManager() : unknown10(0), unknown14(0) {}
 
 void VolumeManager::clear() {
   for (u32 i = 0; i < CATE_COUNT; i++) {
-    mResetCategoryVolumes[i] = 1.0f;
+    unknown18[i] = 1.0f;
   }
   for (u32 i = 0; i < CATE_COUNT; i++) {
     resetCategoryVolume(static_cast<CATE>(i), 30.0f);
   }
-  mSeamless.clear();
-  mSkip.clear();
+  unknown50.clear();
+  unknowna0.clear();
   mm::mtl::Singleton<VolumePlayer>::get().clear();
 }
 
 void VolumeManager::setResetCategoryVolume(const mm::mtl::FixedArray<f32, CATE_COUNT> *volumes) {
   if (volumes != nullptr) {
     for (u32 i = 0; i < CATE_COUNT; i++) {
-      mResetCategoryVolumes[i] = (*volumes)[i];
+      unknown18[i] = (*volumes)[i];
     }
   } else {
     for (u32 i = 0; i < CATE_COUNT; i++) {
-      mResetCategoryVolumes[i] = 1.0f;
+      unknown18[i] = 1.0f;
     }
   }
 }
 
 void VolumeManager::init() {
   for (u32 i = 0; i < CATE_COUNT; i++) {
-    mResetCategoryVolumes[i] = 1.0f;
+    unknown18[i] = 1.0f;
   }
-  mSeamless.clear();
-  mSkip.clear();
+  unknown50.clear();
+  unknowna0.clear();
   mm::mtl::Singleton<VolumePlayer>::get().clear();
 }
 
 void VolumeManager::update() {
-  mSeamless.update();
+  unknown50.update();
   mm::mtl::Singleton<VolumePlayer>::get().update();
 }
 
 void VolumeManager::render() {
-  u32 dispFlags = this->dispFlags;
+  u32 dispFlags = this->unknown14;
   if ((dispFlags & DISP_FLAG_DISP) == 0) {
     return;
   }
@@ -136,42 +136,42 @@ void VolumeManager::render() {
     fw::debug::drawFont(posX + 20, height - 105, "NAREVO");
     fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(16)));
   }
-  mSeamless.draw();
+  unknown50.draw();
 }
 
 void VolumeManager::setSeamlessVolume(bool isEnable, f32 volume, u32 target, const mm::mtl::FixedArray<f32, VolumeSeamless::RESET_VOLUME_COUNT> *resetVolumes) {
-  mSeamless.set(isEnable, volume, target, resetVolumes);
+  unknown50.set(isEnable, volume, target, resetVolumes);
 }
 
 void VolumeManager::startSeamlessVolume(f32 frame) {
-  if (!mSkip.isStart()) {
-    mSeamless.start(frame);
+  if (!unknowna0.isStart()) {
+    unknown50.start(frame);
   }
 }
 
 void VolumeManager::endSeamlessVolume(f32 frame) {
-  if (!mSkip.isStart()) {
-    mSeamless.end(frame);
+  if (!unknowna0.isStart()) {
+    unknown50.end(frame);
   }
 }
 
-void VolumeManager::maskSeamlessVolume(VolumeSeamless::MASK_TYPE type, bool isMask) { mSeamless.mask(type, isMask); }
+void VolumeManager::maskSeamlessVolume(VolumeSeamless::MASK_TYPE type, bool isMask) { unknown50.mask(type, isMask); }
 
 void VolumeManager::setSkipVolume(bool isEnable, f32 volume, f32 inFrame, f32 outFrame, const mm::mtl::FixedArray<f32, CATE_COUNT> *resetVolumes) {
-  mSkip.set(isEnable, volume, inFrame, outFrame, resetVolumes);
+  unknowna0.set(isEnable, volume, inFrame, outFrame, resetVolumes);
 }
 
-void VolumeManager::startSkipVolume() { mSkip.start(); }
+void VolumeManager::startSkipVolume() { unknowna0.start(); }
 
-void VolumeManager::endSkipVolume() { mSkip.end(); }
+void VolumeManager::endSkipVolume() { unknowna0.end(); }
 
 void VolumeManager::setDisp(bool isDisp) { setDispFlag(DISP_FLAG_DISP, isDisp); }
 
-bool VolumeManager::isDisp() const { return (dispFlags & DISP_FLAG_DISP) != 0; }
+bool VolumeManager::isDisp() const { return (unknown14 & DISP_FLAG_DISP) != 0; }
 
 void VolumeManager::setDispDetail(bool isDisp) { setDispFlag(DISP_FLAG_DETAIL, isDisp); }
 
-bool VolumeManager::isDispDetail() const { return (dispFlags & DISP_FLAG_DETAIL) != 0; }
+bool VolumeManager::isDispDetail() const { return (unknown14 & DISP_FLAG_DETAIL) != 0; }
 
 void VolumeManager::OnEventProc(MSG_TYPE type) {
   switch (type) {

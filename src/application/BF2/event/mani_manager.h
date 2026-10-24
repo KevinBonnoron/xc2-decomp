@@ -40,7 +40,7 @@ public:
   };
 
   struct Item {
-    IManiCallback *callback;
+    IManiCallback *unknown00; // Inferred role: callback; original member name unknown.
     u8 _08[0x110 - 0x08];
   };
 
@@ -66,11 +66,11 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  mm::mtl::BitFlag<32> flags;
-  mm::mtl::BitFlag<32> mDebugFlags;
-  mm::mtl::FixedVector<Item, ITEM_COUNT> mItems;
+  mm::mtl::BitFlag<32> unknown18;                   // Inferred role: flags; original member name unknown.
+  mm::mtl::BitFlag<32> unknown1c;                   // Inferred role: debug flags; original member name unknown.
+  mm::mtl::FixedVector<Item, ITEM_COUNT> unknown20; // Inferred role: items; original member name unknown.
   u8 _22028[0x22030 - 0x22028];
-  MANI_TYPE mType;
+  MANI_TYPE unknown22030; // Inferred role: type; original member name unknown.
   u8 _22034[0x22180 - 0x22034];
 };
 

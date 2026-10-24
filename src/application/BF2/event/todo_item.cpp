@@ -7,12 +7,12 @@ namespace event {
 
 void TodoItem::createString(mm::mtl::FixStr<256> &string) {
   mm::mtl::FixStr<256> work;
-  work.format("%d", static_cast<int>(frame));
+  work.format("%d", static_cast<int>(unknown08));
   string += work.c_str();
   string += " ";
-  string += mTodo->cmdName();
+  string += unknown110->cmdName();
   string += " ";
-  mParam.createString(work);
+  unknown18.createString(work);
   string += work.c_str();
 }
 

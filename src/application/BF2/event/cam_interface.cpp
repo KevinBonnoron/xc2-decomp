@@ -10,33 +10,33 @@ namespace event {
 
 static constexpr fw::CAMERA_PRIO CAMERA_PRIO_EVENT = static_cast<fw::CAMERA_PRIO>(15);
 
-CamInterface::CamInterface(fw::CAMERA_TYPE type) : fw::Camera(CAMERA_PRIO_EVENT), type(type), isEnable(false), currentRoll(0.0f), self(this) {
+CamInterface::CamInterface(fw::CAMERA_TYPE type) : fw::Camera(CAMERA_PRIO_EVENT), unknowna8(type), unknownac(false), unknownb0(0.0f), unknownb8(this) {
   setLookAt(mm::Vec3(4.0f, 5.0f, 5.0f), mm::Vec3(0.0f, 1.0f, 0.0f), 0.0f);
 }
 
 void CamInterface::setEnable(bool isEnable) {
   if (isEnable) {
-    if (!this->isEnable) {
+    if (!this->unknownac) {
       fw::CameraManager *manager = fw::CameraManager::get();
-      manager->layers[type].push(self, 0.0f);
+      manager->layers[unknowna8].push(unknownb8, 0.0f);
     }
-    this->isEnable = true;
+    this->unknownac = true;
   } else {
-    if (this->isEnable) {
+    if (this->unknownac) {
       fw::CameraManager *manager = fw::CameraManager::get();
-      manager->layers[type].pop(self, 0.0f);
+      manager->layers[unknowna8].pop(unknownb8, 0.0f);
     }
-    this->isEnable = false;
+    this->unknownac = false;
   }
 }
 
 void CamInterface::setTargetPos(const mm::Vec3 &position, const mm::Vec3 &target, f32 roll) {
-  currentRoll = roll;
+  unknownb0 = roll;
   setLookAt(position, target, roll);
 }
 
 void CamInterface::setRoll(f32 roll) {
-  currentRoll = roll;
+  unknownb0 = roll;
   setLookAt(position, target, roll);
 }
 

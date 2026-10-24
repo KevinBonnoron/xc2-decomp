@@ -28,7 +28,7 @@ void ScriptCharaFacial::doit(const Param &param) {
   f32 lipWeight = param.val(7).getF32();
   f32 blendIn = param.val(8).getF32();
   f32 blendOut = param.val(9).getF32();
-  mPrevId = chara->getCharaObj()->getFacial();
+  unknown08 = chara->getCharaObj()->getFacial();
   chara->getCharaObj()->playFacial(type, life, browType, browWeight, eyeType, eyeWeight, lipType, lipWeight, blendIn, blendOut);
 }
 
@@ -37,7 +37,7 @@ void ScriptCharaFacial::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
     return;
   }
-  static_cast<ObjectChara *>(object)->getCharaObj()->playFacial(mPrevId, 30.0f, -1, -1.0f, -1, -1.0f, -1, -1.0f, -1.0f, -1.0f);
+  static_cast<ObjectChara *>(object)->getCharaObj()->playFacial(unknown08, 30.0f, -1, -1.0f, -1, -1.0f, -1, -1.0f, -1.0f, -1.0f);
 }
 
 } // namespace event

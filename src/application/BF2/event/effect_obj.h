@@ -32,89 +32,89 @@ public:
   void play(EffectCtrl *ctrl, void *data);
 
 private:
-  EffectCtrl *ctrl;
-  RchaEff *rcha;
-  f32 frame;
+  EffectCtrl *unknown08; // Inferred role: ctrl; original member name unknown.
+  RchaEff *unknown10;    // Inferred role: rcha; original member name unknown.
+  f32 unknown18;         // Inferred role: frame; original member name unknown.
 };
 
 static_assert(sizeof(EffectEvaPlayer) == 0x20, "");
 
 class EffectPlayEff : public ICmd {
 public:
-  EffectPlayEff() : obj(nullptr), ctrl(nullptr) {}
+  EffectPlayEff() : unknown08(nullptr), unknown10(nullptr) {}
   virtual RESULT update(const Param &param);
   virtual void term();
   void render(const mm::Vec3 &pos);
 
   void setup(EffectObj *obj, EffectCtrl *ctrl) {
-    this->ctrl = ctrl;
-    this->obj = obj;
+    this->unknown10 = ctrl;
+    this->unknown08 = obj;
   }
 
 private:
-  EffectObj *obj;
-  EffectCtrl *ctrl;
-  f32 life;
+  EffectObj *unknown08;  // Inferred role: object; original member name unknown.
+  EffectCtrl *unknown10; // Inferred role: ctrl; original member name unknown.
+  f32 unknown18;         // Inferred role: life; original member name unknown.
 };
 
 static_assert(sizeof(EffectPlayEff) == 0x20, "");
 
 class EffectPlayEva : public ICmd {
 public:
-  EffectPlayEva() : ctrl(nullptr), data(nullptr) {}
+  EffectPlayEva() : unknown08(nullptr), unknown10(nullptr) {}
   virtual RESULT update(const Param &param);
   void render(const mm::Vec3 &pos);
   virtual void term();
 
-  void setCtrl(EffectCtrl *ctrl) { this->ctrl = ctrl; }
+  void setCtrl(EffectCtrl *ctrl) { this->unknown08 = ctrl; }
 
 private:
-  EffectCtrl *ctrl;
-  void *data;
-  f32 life;
-  EffectEvaPlayer evaPlayer;
+  EffectCtrl *unknown08;     // Inferred role: ctrl; original member name unknown.
+  void *unknown10;           // Inferred role: data; original member name unknown.
+  f32 unknown18;             // Inferred role: life; original member name unknown.
+  EffectEvaPlayer unknown20; // Inferred role: eva player; original member name unknown.
 };
 
 static_assert(sizeof(EffectPlayEva) == 0x40, "");
 
 class EffectLinearPos : public ICmd {
 public:
-  EffectLinearPos() : ctrl(nullptr) {}
+  EffectLinearPos() : unknown08(nullptr) {}
   virtual RESULT update(const Param &param);
 
-  void setCtrl(EffectCtrl *ctrl) { this->ctrl = ctrl; }
+  void setCtrl(EffectCtrl *ctrl) { this->unknown08 = ctrl; }
 
 private:
-  EffectCtrl *ctrl;
-  AnmVec anm;
+  EffectCtrl *unknown08; // Inferred role: ctrl; original member name unknown.
+  AnmVec unknown10;      // Inferred role: anm; original member name unknown.
 };
 
 static_assert(sizeof(EffectLinearPos) == 0x200, "");
 
 class EffectLinearRot : public ICmd {
 public:
-  EffectLinearRot() : ctrl(nullptr) {}
+  EffectLinearRot() : unknown08(nullptr) {}
   virtual RESULT update(const Param &param);
 
-  void setCtrl(EffectCtrl *ctrl) { this->ctrl = ctrl; }
+  void setCtrl(EffectCtrl *ctrl) { this->unknown08 = ctrl; }
 
 private:
-  EffectCtrl *ctrl;
-  AnmVec anm;
+  EffectCtrl *unknown08; // Inferred role: ctrl; original member name unknown.
+  AnmVec unknown10;      // Inferred role: anm; original member name unknown.
 };
 
 static_assert(sizeof(EffectLinearRot) == 0x200, "");
 
 class EffectLinearCol : public ICmd {
 public:
-  EffectLinearCol() : ctrl(nullptr) {}
+  EffectLinearCol() : unknown08(nullptr) {}
   virtual RESULT update(const Param &param);
 
-  void setCtrl(EffectCtrl *ctrl) { this->ctrl = ctrl; }
+  void setCtrl(EffectCtrl *ctrl) { this->unknown08 = ctrl; }
 
 private:
-  EffectCtrl *ctrl;
-  AnmCol anm;
+  EffectCtrl *unknown08; // Inferred role: ctrl; original member name unknown.
+  AnmCol unknown10;      // Inferred role: anm; original member name unknown.
 };
 
 static_assert(sizeof(EffectLinearCol) == 0x1e8, "");
@@ -152,19 +152,19 @@ public:
   void setMount(IAttachActor *mount, const char *bone, const mm::Vec3 &offset, bool isRotate, ATTACH_TYPE type);
   size_t getEffCount() const;
 
-  const char *getName() const { return name.c_str(); }
-  const FrameInfo &getFrameInfo() const { return frameInfo; }
+  const char *getName() const { return unknown08.c_str(); }
+  const FrameInfo &getFrameInfo() const { return unknownfa8; }
 
 private:
-  mm::mtl::FixStr<64> name;
-  EffectCtrl ctrl;
-  CmdQueue<QUEUE_COUNT, 0> queue;
-  EffectPlayEff cmdPlayEff;
-  EffectPlayEva cmdPlayEva;
-  EffectLinearPos cmdLinearPos;
-  EffectLinearRot cmdLinearRot;
-  EffectLinearCol cmdLinearCol;
-  FrameInfo frameInfo;
+  mm::mtl::FixStr<64> unknown08;       // Inferred role: name; original member name unknown.
+  EffectCtrl unknown50;                // Inferred role: ctrl; original member name unknown.
+  CmdQueue<QUEUE_COUNT, 0> unknown260; // Inferred role: queue; original member name unknown.
+  EffectPlayEff unknown960;            // Inferred role: cmd play eff; original member name unknown.
+  EffectPlayEva unknown980;            // Inferred role: cmd play eva; original member name unknown.
+  EffectLinearPos unknown9c0;          // Inferred role: cmd linear pos; original member name unknown.
+  EffectLinearRot unknownbc0;          // Inferred role: cmd linear rot; original member name unknown.
+  EffectLinearCol unknowndc0;          // Inferred role: cmd linear col; original member name unknown.
+  FrameInfo unknownfa8;                // Inferred role: frame info; original member name unknown.
 };
 
 static_assert(sizeof(EffectObj) == 0xfc0, "");

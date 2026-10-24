@@ -14,8 +14,8 @@ public:
   virtual void redo(const Param &param);
 
 private:
-  bool isPrevTar;
-  TarAxis prevAxis;
+  bool unknown08;    // Inferred role: prev tar; original member name unknown.
+  TarAxis unknown10; // Inferred role: prev axis; original member name unknown.
 };
 
 static_assert(sizeof(ScriptCharaTgt) == 0x30, "");

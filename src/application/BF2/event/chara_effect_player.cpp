@@ -9,33 +9,33 @@
 
 namespace event {
 
-void CharaEffectPlayer::create(gf::GF_OBJ_HANDLE *handle) { this->handle = handle; }
+void CharaEffectPlayer::create(gf::GF_OBJ_HANDLE *handle) { this->unknown10 = handle; }
 
 void CharaEffectPlayer::destroy() {
-  if (handle == gf::INVALID_HANDLE) {
-    if (flags.test(FLAG_AFTER_IMAGE)) {
+  if (unknown10 == gf::INVALID_HANDLE) {
+    if (unknown08.test(FLAG_AFTER_IMAGE)) {
       stopAfterImage();
     }
-    if (flags.test(FLAG_RIM_BLOOM)) {
+    if (unknown08.test(FLAG_RIM_BLOOM)) {
       stopRimBloom();
     }
-    if (flags.test(FLAG_VOLUME_FADE_SUB)) {
+    if (unknown08.test(FLAG_VOLUME_FADE_SUB)) {
       stopVolumeFade(VF_TYPE_SUB);
     }
-    if (flags.test(FLAG_VOLUME_FADE_MAIN)) {
+    if (unknown08.test(FLAG_VOLUME_FADE_MAIN)) {
       stopVolumeFade(VF_TYPE_MAIN);
     }
   }
-  handle = gf::INVALID_HANDLE;
-  flags.clear();
+  unknown10 = gf::INVALID_HANDLE;
+  unknown08.clear();
 }
 
 void CharaEffectPlayer::stopAfterImage() {
-  if (handle == gf::INVALID_HANDLE || !flags.test(FLAG_AFTER_IMAGE)) {
+  if (unknown10 == gf::INVALID_HANDLE || !unknown08.test(FLAG_AFTER_IMAGE)) {
     return;
   }
 
-  gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown10);
   if (obj != nullptr) {
     gf::GfComModel *model = obj->getComponent<gf::GfComModel>();
     if (model != nullptr) {
@@ -43,17 +43,17 @@ void CharaEffectPlayer::stopAfterImage() {
       info.releaseAfterImage();
     }
   }
-  flags.set(FLAG_AFTER_IMAGE, false);
+  unknown08.set(FLAG_AFTER_IMAGE, false);
 }
 
 void CharaEffectPlayer::update(f32 delta) {
-  if (gf::GfObjUtil::getObj(handle) == nullptr) {
+  if (gf::GfObjUtil::getObj(unknown10) == nullptr) {
     return;
   }
-  if (flags.test(FLAG_VOLUME_FADE_ANIM_MAIN)) {
+  if (unknown08.test(FLAG_VOLUME_FADE_ANIM_MAIN)) {
     updateVolumeFadeAnim(VF_TYPE_MAIN, delta);
   }
-  if (flags.test(FLAG_VOLUME_FADE_ANIM_SUB)) {
+  if (unknown08.test(FLAG_VOLUME_FADE_ANIM_SUB)) {
     updateVolumeFadeAnim(VF_TYPE_SUB, delta);
   }
 }

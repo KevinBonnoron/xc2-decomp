@@ -72,44 +72,44 @@ public:
   void setTar(const TarAxis &axis, f32 frame, EVT_tarcvtype cv, EVT_aimtype aim, f32 weight, f32 speed);
   void resetTar();
 
-  CharaObj *getCharaObj() const { return mCharaObj; }
-  const PosAxis &getPosAxis() const { return posAxis; }
-  const RotAxis &getRotAxis() const { return rotAxis; }
-  const TarAxis &getTarAxis() const { return tarAxis; }
+  CharaObj *getCharaObj() const { return unknown70; }
+  const PosAxis &getPosAxis() const { return unknown80; }
+  const RotAxis &getRotAxis() const { return unknowna0; }
+  const TarAxis &getTarAxis() const { return unknownc0; }
 
 private:
-  u32 flags;
-  CharaObj *mCharaObj;
-  PosAxis posAxis;
-  RotAxis rotAxis;
-  TarAxis tarAxis;
+  u32 unknown68;       // Inferred role: flags; original member name unknown.
+  CharaObj *unknown70; // Inferred role: chara object; original member name unknown.
+  PosAxis unknown80;   // Inferred role: pos axis; original member name unknown.
+  RotAxis unknowna0;   // Inferred role: rot axis; original member name unknown.
+  TarAxis unknownc0;   // Inferred role: tar axis; original member name unknown.
 };
 
 static_assert(sizeof(ObjectChara) == 0xe0, "");
 
 inline mm::Vec3 ObjectChara::getEyePos() const {
-  const mm::Vec3 &pos = mCharaObj->getPos();
-  return mm::Vec3(pos.x, pos.y + mCharaObj->getEyeOffset(), pos.z);
+  const mm::Vec3 &pos = unknown70->getPos();
+  return mm::Vec3(pos.x, pos.y + unknown70->getEyeOffset(), pos.z);
 }
 
 inline void ObjectChara::setPosAxis(const PosAxis &axis) {
-  posAxis = axis;
-  mCharaObj->setPos(mm::mtl::Singleton<DataManager>::getPtr()->axis2pos(axis.getAxis(), axis.getPos().x, axis.getPos().y, axis.getPos().z));
-  mCharaObj->mount(nullptr, "", mm::Vec3::zero, mm::Vec3::zero);
+  unknown80 = axis;
+  unknown70->setPos(mm::mtl::Singleton<DataManager>::getPtr()->axis2pos(axis.getAxis(), axis.getPos().x, axis.getPos().y, axis.getPos().z));
+  unknown70->mount(nullptr, "", mm::Vec3::zero, mm::Vec3::zero);
 }
 
 inline void ObjectChara::setRotAxis(const RotAxis &axis) {
-  rotAxis = axis;
-  const mm::Vec3 &pos = mCharaObj->getPosTo();
-  mCharaObj->setRot(mm::mtl::Singleton<DataManager>::getPtr()->axis2rot(axis.getAxis(), axis.getRot().x, axis.getRot().y, axis.getRot().z, pos));
-  mCharaObj->mount(nullptr, "", mm::Vec3::zero, mm::Vec3::zero);
+  unknowna0 = axis;
+  const mm::Vec3 &pos = unknown70->getPosTo();
+  unknown70->setRot(mm::mtl::Singleton<DataManager>::getPtr()->axis2rot(axis.getAxis(), axis.getRot().x, axis.getRot().y, axis.getRot().z, pos));
+  unknown70->mount(nullptr, "", mm::Vec3::zero, mm::Vec3::zero);
 }
 
-inline mm::Vec3 ObjectChara::getRot() const { return mCharaObj->getRotTo(); }
+inline mm::Vec3 ObjectChara::getRot() const { return unknown70->getRotTo(); }
 
 inline void ObjectChara::setTar(const TarAxis &axis, f32 frame, EVT_tarcvtype cv, EVT_aimtype aim, f32 weight, f32 speed) {
-  tarAxis = axis;
-  mCharaObj->setTar(axis, frame, cv, aim, weight, speed);
+  unknownc0 = axis;
+  unknown70->setTar(axis, frame, cv, aim, weight, speed);
 }
 
 } // namespace event

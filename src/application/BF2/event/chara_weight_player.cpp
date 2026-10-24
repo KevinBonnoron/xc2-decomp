@@ -4,11 +4,11 @@
 
 namespace event {
 
-CharaWeightPlayer::CharaWeightPlayer() : handle(gf::INVALID_HANDLE), mChara(nullptr) {}
+CharaWeightPlayer::CharaWeightPlayer() : unknown08(gf::INVALID_HANDLE), unknown10(nullptr) {}
 
 void CharaWeightPlayer::create(gf::GF_OBJ_HANDLE *handle, CharaObj *chara) {
-  this->handle = handle;
-  mChara = chara;
+  this->unknown08 = handle;
+  unknown10 = chara;
 }
 
 void CharaWeightPlayer::easeOut(gf::AnimLayer layer, const char *stat, f32 frame, CV_TYPE cv, WeightLayer weightLayer) {
@@ -26,7 +26,7 @@ void CharaWeightPlayer::setAddWeight(const char *stat, f32 weight, WeightLayer w
 }
 
 CharaWeightItem *CharaWeightPlayer::searchItem(const char *stat) {
-  for (CharaWeightItem **it = mItems.begin(); it != mItems.end(); ++it) {
+  for (CharaWeightItem **it = unknown18.begin(); it != unknown18.end(); ++it) {
     if (__builtin_strcmp((*it)->getStat(), stat) == 0) {
       return *it;
     }

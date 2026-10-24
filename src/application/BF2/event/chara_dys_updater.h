@@ -29,11 +29,11 @@ public:
   void setDynamicsBlendWeight(f32 weight);
 
 private:
-  mm::mtl::BitFlag<FLAG_MAX> flags;
-  gf::GF_OBJ_HANDLE *handle;
-  int mResetDynamicsFrame;
-  int mResetMovementFrame;
-  f32 mBlendWeight;
+  mm::mtl::BitFlag<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;         // Inferred role: handle; original member name unknown.
+  int unknown18;                        // Inferred role: reset dynamics frame; original member name unknown.
+  int unknown1c;                        // Inferred role: reset movement frame; original member name unknown.
+  f32 unknown20;                        // Inferred role: blend weight; original member name unknown.
 };
 
 static_assert(sizeof(CharaDysUpdater) == 0x28, "");

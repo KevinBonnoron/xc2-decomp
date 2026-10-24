@@ -14,11 +14,11 @@
 namespace event {
 
 CharaPlayActionAuto::~CharaPlayActionAuto() {
-  gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
-  if (obj == nullptr || (flags & FLAG_PLAY) == 0) {
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown10);
+  if (obj == nullptr || (unknown08 & FLAG_PLAY) == 0) {
     return;
   }
-  if ((flags & FLAG_MESSAGE) != 0) {
+  if ((unknown08 & FLAG_MESSAGE) != 0) {
     gf::MsgGameTalkAction message(2, false);
     obj->sendMessage(obj, message);
   } else {
@@ -29,27 +29,27 @@ CharaPlayActionAuto::~CharaPlayActionAuto() {
 }
 
 void CharaPlayActionAuto::stanby(f32 life) {
-  this->life = life;
-  flags |= FLAG_STANBY;
+  this->unknown20 = life;
+  unknown08 |= FLAG_STANBY;
 }
 
 void CharaPlayActionAuto::init() {}
 
 ICmd::RESULT CharaPlayActionAuto::update(const Param &param) {
-  gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown10);
   if (obj == nullptr) {
     return RESULT_END;
   }
-  f32 delta = static_cast<CharaObj *>(param.val(0).getUserdata())->getFrameInfo().pauseDelta;
+  f32 delta = static_cast<CharaObj *>(param.val(0).getUserdata())->getFrameInfo().unknown08;
   if (param.getFrame() <= 0) {
     stanby(param.val(1).getF32());
   }
-  if ((flags & FLAG_PLAY) == 0 && !CharaUtil::isActionBusy(obj) && !mm::mtl::Singleton<ScheManager>::getPtr()->isPlay(Scheduler::ORDER_FLD2EVT, handle)) {
+  if ((unknown08 & FLAG_PLAY) == 0 && !CharaUtil::isActionBusy(obj) && !mm::mtl::Singleton<ScheManager>::getPtr()->isPlay(Scheduler::ORDER_FLD2EVT, unknown10)) {
     play(obj);
-    flags |= FLAG_PLAY;
+    unknown08 |= FLAG_PLAY;
   }
-  life -= delta;
-  if (life < 0.0f) {
+  unknown20 -= delta;
+  if (unknown20 < 0.0f) {
     idle();
     return RESULT_END;
   }

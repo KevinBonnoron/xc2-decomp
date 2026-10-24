@@ -27,16 +27,16 @@ public:
   virtual RESULT update(const Param &param);
   virtual void term();
 
-  void setPos(const mm::Vec3 &pos) { evaPlayer.setPos(pos); }
+  void setPos(const mm::Vec3 &pos) { unknown40.setPos(pos); }
 
 private:
-  u32 flags;
-  gf::GfEvtModel *model;
-  CharaDysUpdater *dysUpdater;
-  void *data;
-  void *weaponData;
-  f32 life;
-  CharaEvaPlayer evaPlayer;
+  u32 unknown08;              // Inferred role: flags; original member name unknown.
+  gf::GfEvtModel *unknown10;  // Inferred role: model; original member name unknown.
+  CharaDysUpdater *unknown18; // Inferred role: dys updater; original member name unknown.
+  void *unknown20;            // Inferred role: data; original member name unknown.
+  void *unknown28;            // Inferred role: weapon data; original member name unknown.
+  f32 unknown30;              // Inferred role: life; original member name unknown.
+  CharaEvaPlayer unknown40;   // Inferred role: eva player; original member name unknown.
 };
 
 static_assert(sizeof(CharaPlayEva) == 0x190, "");

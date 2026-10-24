@@ -23,8 +23,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 dispFlags;
-  u32 flags;
+  u32 unknown10; // Inferred role: disp flags; original member name unknown.
+  u32 unknown14; // Inferred role: flags; original member name unknown.
 };
 
 static_assert(sizeof(BlurManager) == 0x18, "");

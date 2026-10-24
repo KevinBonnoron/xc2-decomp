@@ -22,9 +22,9 @@ public:
   void pause(bool isPause);
 
 private:
-  u32 flags;
-  u8 _C[0x10 - 0xC];
-  mm::mtl::FixedVector<u32, HANDLE_COUNT> handles;
+  u32 unknown08;                                     // Inferred role: flags; original member name unknown.
+  u8 unknown0c[0x10 - 0xC];                          // Inferred role: c; original member name unknown.
+  mm::mtl::FixedVector<u32, HANDLE_COUNT> unknown10; // Inferred role: handles; original member name unknown.
 };
 
 static_assert(sizeof(VoiceOneShoter) == 0x28, "");

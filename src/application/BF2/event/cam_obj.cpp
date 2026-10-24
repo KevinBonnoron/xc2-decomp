@@ -5,19 +5,19 @@ namespace event {
 void CamObj::start() {}
 
 void CamObj::end() {
-  mCmdQueue.eraseAll();
-  mMotion.stop();
+  unknownc78.eraseAll();
+  unknownbb0.stop();
 }
 
 void CamObj::render(const mm::Col4 &color) {
-  if (mActive != nullptr) {
-    mActive->render(color);
+  if (unknownc70 != nullptr) {
+    unknownc70->render(color);
   }
 }
 
 void CamObj::tail() {
-  if (mActive != nullptr) {
-    mCmdQueue.update();
+  if (unknownc70 != nullptr) {
+    unknownc78.update();
   }
 }
 

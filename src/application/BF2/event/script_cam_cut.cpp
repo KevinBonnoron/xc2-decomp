@@ -17,14 +17,14 @@ void ScriptCamCut::doit(const Param &param) {
   }
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
   const char *name = param.val(0).getStr();
-  mPrevCutName = camera->getCutName();
+  unknown08 = camera->getCutName();
   camera->setCutName(name);
 }
 
 void ScriptCamCut::undo(const Param &param) {
   Object *object = mm::mtl::Singleton<ObjectManager>::getPtr()->getActive();
   if (ScriptUtil::getObjType(object) == OBJTYPE_CAMERA) {
-    static_cast<ObjectCamera *>(object)->setCutName(mPrevCutName.c_str());
+    static_cast<ObjectCamera *>(object)->setCutName(unknown08.c_str());
   }
 }
 

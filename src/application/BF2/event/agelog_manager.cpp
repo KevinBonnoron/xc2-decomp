@@ -8,9 +8,9 @@ namespace event {
 
 const char *AgelogManager::LOG_DIR = "C:/MonolithSoft/BF2/agelog";
 
-AgelogManager::AgelogManager() : flags(0) {}
+AgelogManager::AgelogManager() : unknown10(0) {}
 
-void AgelogManager::clear() { flags &= ~FLAG_ACTIVE; }
+void AgelogManager::clear() { unknown10 &= ~FLAG_ACTIVE; }
 
 void AgelogManager::render() {
   if (!isReserved()) {
@@ -33,12 +33,12 @@ void AgelogManager::render() {
 
 void AgelogManager::reserve(bool isReserve) {
   if (isReserve) {
-    flags |= FLAG_RESERVE;
+    unknown10 |= FLAG_RESERVE;
   } else {
-    flags &= ~FLAG_RESERVE;
+    unknown10 &= ~FLAG_RESERVE;
   }
 }
 
-void AgelogManager::stop() { flags &= ~FLAG_ACTIVE; }
+void AgelogManager::stop() { unknown10 &= ~FLAG_ACTIVE; }
 
 } // namespace event

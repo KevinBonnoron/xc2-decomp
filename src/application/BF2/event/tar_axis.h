@@ -26,12 +26,12 @@ public:
   mm::Vec3 calcTar(const mm::Vec3 &pos) const;
   mm::Mat44 calcOrigMat() const;
   const char *getOrigName() const;
-  u32 getAxis() const { return mAxis; }
-  const mm::Vec3 &getTar() const { return mTar; }
+  u32 getAxis() const { return unknown08; }
+  const mm::Vec3 &getTar() const { return unknown10; }
 
 private:
-  u32 mAxis;
-  mm::Vec3 mTar;
+  u32 unknown08;      // Inferred role: axis; original member name unknown.
+  mm::Vec3 unknown10; // Inferred role: tar; original member name unknown.
 };
 
 static_assert(sizeof(TarAxis) == 0x20, "");

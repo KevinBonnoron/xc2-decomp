@@ -13,8 +13,8 @@ public:
   virtual RESULT update(const Param &param);
 
 private:
-  gf::GF_OBJ_HANDLE *handle;
-  AnmF32 anm;
+  gf::GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+  AnmF32 unknown10;             // Inferred role: anm; original member name unknown.
 };
 
 static_assert(sizeof(CharaFade) == 0x120, "");

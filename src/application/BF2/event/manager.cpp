@@ -17,7 +17,7 @@ namespace event {
 void Manager::failureSkip() {
   mm::mtl::Singleton<DebugManager>::getPtr()->failureSkip();
   mm::mtl::Singleton<DebugManager>::getPtr()->setDisp(true);
-  mm::mtl::Singleton<DebugManager>::getPtr()->playMessage("failure skip!! [%s.sb]", mEventName.c_str());
+  mm::mtl::Singleton<DebugManager>::getPtr()->playMessage("failure skip!! [%s.sb]", unknown230.c_str());
 }
 
 void Manager::finishNewGameWait() { mm::mtl::Singleton<UIManager>::getPtr()->finishNewGameWait(); }
@@ -25,33 +25,33 @@ void Manager::finishNewGameWait() { mm::mtl::Singleton<UIManager>::getPtr()->fin
 bool Manager::isPlayCancel() const { return mm::mtl::Singleton<DebugManager>::getPtr()->isPlayCancel(); }
 
 void Manager::clearAlways() {
-  if (flags & FLAG_HIDE_INFO) {
-    flags &= ~FLAG_HIDE_INFO;
+  if (unknown18 & FLAG_HIDE_INFO) {
+    unknown18 &= ~FLAG_HIDE_INFO;
   }
-  flags &= ~FLAG_PLAY;
+  unknown18 &= ~FLAG_PLAY;
 }
 
 void Manager::clear() {
-  mObjHandle = reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1);
-  mPlayParams[0] = 0;
-  mPlayParams[1] = 0;
-  mPlayParams[2] = 0;
-  mPlayParams[3] = 0;
-  mLanguageMode = LANGUAGE_MODE_NONE;
-  flags &= ~FLAG_END_FADE_OUT;
-  state = 0;
+  unknown280 = reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1);
+  unknown288[0] = 0;
+  unknown288[1] = 0;
+  unknown288[2] = 0;
+  unknown288[3] = 0;
+  unknown298 = LANGUAGE_MODE_NONE;
+  unknown18 &= ~FLAG_END_FADE_OUT;
+  unknown1c = 0;
 }
 
 void Manager::execMessage(MSG_TYPE type) {
-  for (u32 i = 0; i < mManagers.size(); i++) {
-    mManagers[i]->OnEventProc(type);
+  for (u32 i = 0; i < unknown20.size(); i++) {
+    unknown20[i]->OnEventProc(type);
   }
 }
 
 void Manager::render() { ml::ProcDesktop::isDispInfo(); }
 
 void Manager::tail() {
-  if (state & STATE_INIT) {
+  if (unknown1c & STATE_INIT) {
     execMessage(MSG_TYPE_TAIL);
   }
   execMessage(MSG_TYPE_TAIL_POST);
@@ -59,10 +59,10 @@ void Manager::tail() {
 
 void Manager::post() {}
 
-void Manager::setLanguageMode(bool isEnable, LANGUAGE_MODE mode) { mLanguageMode = isEnable ? mode : LANGUAGE_MODE_NONE; }
+void Manager::setLanguageMode(bool isEnable, LANGUAGE_MODE mode) { unknown298 = isEnable ? mode : LANGUAGE_MODE_NONE; }
 
 bool Manager::checkLanguageMode() const {
-  switch (mLanguageMode) {
+  switch (unknown298) {
   case LANGUAGE_MODE_VOICE_TYPE_0:
     return fw::LangUtil::getVoiceType() == 0;
   case LANGUAGE_MODE_VOICE_TYPE_1:

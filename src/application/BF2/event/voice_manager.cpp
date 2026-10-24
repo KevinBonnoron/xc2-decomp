@@ -8,48 +8,48 @@
 
 namespace event {
 
-VoiceManager::VoiceManager() : flags(0), dispFlags(0) {}
+VoiceManager::VoiceManager() : unknown10(0), unknown14(0) {}
 
 void VoiceManager::clear() {
-  player.clear();
-  oneShoter.clear();
-  flags = 0;
+  unknown230.clear();
+  unknown6f8.clear();
+  unknown10 = 0;
 }
 
-void VoiceManager::startScene() { player.clearPreload(); }
+void VoiceManager::startScene() { unknown230.clearPreload(); }
 
 void VoiceManager::update() {
-  player.update();
-  oneShoter.update();
+  unknown230.update();
+  unknown6f8.update();
 }
 
 void VoiceManager::render() {
-  if ((dispFlags & DISP_FLAG_DISP) != 0) {
-    player.draw();
+  if ((unknown14 & DISP_FLAG_DISP) != 0) {
+    unknown230.draw();
   }
 }
 
 void VoiceManager::setAutoVoiceMode(bool isAutoVoiceMode, const char *directory, const char *name) {
-  maker.create(isAutoVoiceMode, directory, name);
+  unknown18.create(isAutoVoiceMode, directory, name);
   setFlag(FLAG_AUTO_VOICE_MODE, isAutoVoiceMode);
 }
 
-void VoiceManager::setMultipleMode(bool isMultipleMode) { player.setMultipleMode(isMultipleMode); }
+void VoiceManager::setMultipleMode(bool isMultipleMode) { unknown230.setMultipleMode(isMultipleMode); }
 
 void VoiceManager::preloadAuto(f32 frame, const char *name) {
-  if ((flags & FLAG_AUTO_VOICE_MODE) == 0) {
+  if ((unknown10 & FLAG_AUTO_VOICE_MODE) == 0) {
     return;
   }
-  const char *path = maker.makePath(name);
+  const char *path = unknown18.makePath(name);
   if (path == nullptr) {
     return;
   }
-  player.preload(frame, mm::mtl::Singleton<Extend>::getPtr()->wav(path));
+  unknown230.preload(frame, mm::mtl::Singleton<Extend>::getPtr()->wav(path));
 }
 
 void VoiceManager::preload(f32 frame, const char *name) {
   const char *path = mm::mtl::Singleton<Extend>::getPtr()->wav(name);
-  player.preload(frame, path);
+  unknown230.preload(frame, path);
 }
 
 bool VoiceManager::play(const char *name, f32 delay, IVoiceEvent *event) {
@@ -58,7 +58,7 @@ bool VoiceManager::play(const char *name, f32 delay, IVoiceEvent *event) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
     return isLipsync;
   }
-  return player.play(mm::mtl::Singleton<Extend>::getPtr()->wav(name), delay, event);
+  return unknown230.play(mm::mtl::Singleton<Extend>::getPtr()->wav(name), delay, event);
 }
 
 bool VoiceManager::playOneshot(const char *name, f32 volume) {
@@ -67,24 +67,24 @@ bool VoiceManager::playOneshot(const char *name, f32 volume) {
   if (fw::LangUtil::getVoiceType() != 0) {
     path = mm::mtl::Singleton<Extend>::getPtr()->replaceString(name, "jp", fw::LangUtil::getVoiceFolder().c_str());
   }
-  return oneShoter.play(mm::mtl::Singleton<Extend>::getPtr()->wav(path.c_str()), volume);
+  return unknown6f8.play(mm::mtl::Singleton<Extend>::getPtr()->wav(path.c_str()), volume);
 }
 
 void VoiceManager::pause(bool isPause) {
   setFlag(FLAG_PAUSE, isPause);
-  player.pause(isPause);
-  oneShoter.pause(isPause);
+  unknown230.pause(isPause);
+  unknown6f8.pause(isPause);
 }
 
 void VoiceManager::setDisp(bool isDisp) {
   if (isDisp) {
-    dispFlags |= DISP_FLAG_DISP;
+    unknown14 |= DISP_FLAG_DISP;
   } else {
-    dispFlags &= ~DISP_FLAG_DISP;
+    unknown14 &= ~DISP_FLAG_DISP;
   }
 }
 
-bool VoiceManager::isDisp() const { return (dispFlags & DISP_FLAG_DISP) != 0; }
+bool VoiceManager::isDisp() const { return (unknown14 & DISP_FLAG_DISP) != 0; }
 
 void VoiceManager::OnEventProc(MSG_TYPE type) {
   switch (type) {

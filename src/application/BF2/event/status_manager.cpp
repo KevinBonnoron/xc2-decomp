@@ -15,17 +15,17 @@ namespace event {
 
 u32 StatusManager::getHomuriFlag() const { return gf::GfGameFlag::getLocal(1, gf::FLAG_BLADE_HOMURI_NAME_HIKARI); }
 
-StatusManager::StatusManager() : flags(0) {}
+StatusManager::StatusManager() : unknown18(0) {}
 
 void StatusManager::init() {
-  mChanges.clear();
-  flags = 0;
+  unknown20.clear();
+  unknown18 = 0;
   gf::GfGameEvent::setCancelFlag(false);
 }
 
 void StatusManager::clear() {
-  mChanges.clear();
-  flags = 0;
+  unknown20.clear();
+  unknown18 = 0;
 }
 
 void StatusManager::log(const char *tag, const char *format, ...) {

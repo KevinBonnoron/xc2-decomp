@@ -9,10 +9,10 @@ public:
 
   BlockTime();
   void setRules(const char *rules);
-  bool isBlock(u32 index) const { return mIsBlock[index]; }
+  bool isBlock(u32 index) const { return unknown00[index]; }
 
 private:
-  bool mIsBlock[TIME_COUNT];
+  bool unknown00[TIME_COUNT]; // Inferred role: is block; original member name unknown.
 };
 
 static_assert(sizeof(BlockTime) == 0x8, "");

@@ -4,50 +4,50 @@
 
 namespace event {
 
-MemoryManager::MemoryManager() : flags(0), mTxtbufState(0), mIsLargeEvent(0), mStaticSize(0), mSysSize(0), mResSize(0), mMotstmSize(0), mHighestSysHeap(0), mHighestResHeap(0), mTxtbufTotalSize(0) {}
+MemoryManager::MemoryManager() : unknown10(0), unknown14(0), unknown18(0), unknown2c(0), m_sysMemSize(0), m_resMemSize(0), unknown38(0), unknown1048(0), unknown1050(0), unknown1058(0) {}
 
 void MemoryManager::clear() {
   clearHighestMemHeap();
-  while (!mTxtbufs.empty()) {
-    destroyTxtbuf(mTxtbufs.front());
+  while (!unknown40.empty()) {
+    destroyTxtbuf(unknown40.front());
   }
-  mTxtbufState = 0;
+  unknown14 = 0;
 }
 
 void MemoryManager::destroyTxtbuf(const char *txtbuf) {
   if (txtbuf == nullptr || *txtbuf == '\0') {
     return;
   }
-  for (char **it = mTxtbufs.begin(); it != mTxtbufs.end(); it++) {
+  for (char **it = unknown40.begin(); it != unknown40.end(); it++) {
     if (*it == txtbuf) {
       delete[] txtbuf;
-      mTxtbufs.erase(it);
+      unknown40.erase(it);
       return;
     }
   }
 }
 
 void MemoryManager::clearHighestMemHeap() {
-  mHighestSysHeap = 0;
-  mHighestResHeap = 0;
+  unknown1048 = 0;
+  unknown1050 = 0;
 }
 
 void MemoryManager::update() {}
 
 mtl::ALLOC_HANDLE MemoryManager::getFwProcMem() { return fw::Framework::getMemHandle(); }
 
-u32 MemoryManager::getSysMemSize() const { return mSysSize; }
+u32 MemoryManager::getSysMemSize() const { return m_sysMemSize; }
 
-u32 MemoryManager::getResMemSize() const { return mResSize; }
+u32 MemoryManager::getResMemSize() const { return m_resMemSize; }
 
 void MemoryManager::setDisp(bool isDisp) {
   if (isDisp) {
-    flags |= FLAG_DISP;
+    unknown10 |= FLAG_DISP;
   } else {
-    flags &= ~FLAG_DISP;
+    unknown10 &= ~FLAG_DISP;
   }
 }
 
-bool MemoryManager::isDisp() const { return (flags & FLAG_DISP) != 0; }
+bool MemoryManager::isDisp() const { return (unknown10 & FLAG_DISP) != 0; }
 
 } // namespace event

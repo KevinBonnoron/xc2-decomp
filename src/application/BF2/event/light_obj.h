@@ -25,14 +25,14 @@ public:
   void setRot(const mm::Vec3 &rot);
 
 private:
-  u32 flags;
-  ml::ScnObjLight *mLight;
-  int mScreenID;
-  mm::mtl::FixStr<128> path;
-  void *mData;
-  f32 mLife;
-  mm::Vec3 mPos;
-  mm::Vec3 mRot;
+  u32 unknown08;                  // Inferred role: flags; original member name unknown.
+  ml::ScnObjLight *unknown10;     // Inferred role: light; original member name unknown.
+  int unknown18;                  // Inferred role: screen id; original member name unknown.
+  mm::mtl::FixStr<128> unknown1c; // Inferred role: path; original member name unknown.
+  void *unknowna0;                // Inferred role: data; original member name unknown.
+  f32 unknowna8;                  // Inferred role: life; original member name unknown.
+  mm::Vec3 m_pos;
+  mm::Vec3 unknownc0; // Inferred role: rot; original member name unknown.
 };
 
 static_assert(sizeof(LightObj) == 0xd0, "");

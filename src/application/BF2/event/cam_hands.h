@@ -57,21 +57,21 @@ public:
 private:
   void setFollowTarAngle(u32 axis) {
     if (axis == TarAxis::AXIS_ANGLE || axis == TarAxis::AXIS_ANGLE_GLOBAL) {
-      flags |= FLAG_FOLLOW_TAR_ANGLE;
+      unknown40 |= FLAG_FOLLOW_TAR_ANGLE;
     } else {
-      flags &= ~FLAG_FOLLOW_TAR_ANGLE;
+      unknown40 &= ~FLAG_FOLLOW_TAR_ANGLE;
     }
   }
 
-  u32 flags;
-  AnmVec posAnm;
-  AnmVec tarAnm;
-  AnmF32 fovAnm;
-  AnmF32 rotZAnm;
-  mm::mtl::FixedVector<PosAxis, KEY_COUNT> posAxes;
-  mm::mtl::FixedVector<TarAxis, KEY_COUNT> tarAxes;
-  mm::mtl::FixedVector<f32, KEY_COUNT> fovs;
-  mm::mtl::FixedVector<f32, KEY_COUNT> rotZs;
+  u32 unknown40;                                       // Inferred role: flags; original member name unknown.
+  AnmVec unknown50;                                    // Inferred role: pos anm; original member name unknown.
+  AnmVec unknown240;                                   // Inferred role: tar anm; original member name unknown.
+  AnmF32 unknown430;                                   // Inferred role: fov anm; original member name unknown.
+  AnmF32 unknown540;                                   // Inferred role: rot z anm; original member name unknown.
+  mm::mtl::FixedVector<PosAxis, KEY_COUNT> unknown650; // Inferred role: pos axes; original member name unknown.
+  mm::mtl::FixedVector<TarAxis, KEY_COUNT> unknown860; // Inferred role: tar axes; original member name unknown.
+  mm::mtl::FixedVector<f32, KEY_COUNT> unknowna70;     // Inferred role: fovs; original member name unknown.
+  mm::mtl::FixedVector<f32, KEY_COUNT> unknownab8;     // Inferred role: rot zs; original member name unknown.
 };
 
 static_assert(sizeof(CamHands) == 0xb00, "");

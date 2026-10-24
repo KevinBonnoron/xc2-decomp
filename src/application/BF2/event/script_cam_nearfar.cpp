@@ -20,8 +20,8 @@ void ScriptCamNearfar::doit(const Param &param) {
   }
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
   EVT_nearfar nearfar = static_cast<EVT_nearfar>(param.val(0).getS32());
-  prevNear = camera->getCamObj()->getHands()->getNear();
-  prevFar = camera->getCamObj()->getHands()->getFar();
+  unknown08 = camera->getCamObj()->getHands()->getNear();
+  unknown0c = camera->getCamObj()->getHands()->getFar();
   camera->getCamObj()->getHands()->setNearfar(nearfar);
 }
 
@@ -30,7 +30,7 @@ void ScriptCamNearfar::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
     return;
   }
-  static_cast<ObjectCamera *>(object)->getCamObj()->getHands()->setNearfar(prevNear, prevFar);
+  static_cast<ObjectCamera *>(object)->getCamObj()->getHands()->setNearfar(unknown08, unknown0c);
 }
 
 } // namespace event

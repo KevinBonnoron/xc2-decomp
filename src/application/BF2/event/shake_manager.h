@@ -36,10 +36,10 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 flags;
-  Shaker shaker;
-  u32 shakeIds[TYPE_COUNT];
-  u32 idleShakeId;
+  u32 unknown10;              // Inferred role: flags; original member name unknown.
+  Shaker unknown18;           // Inferred role: shaker; original member name unknown.
+  u32 unknownca8[TYPE_COUNT]; // Inferred role: shake ids; original member name unknown.
+  u32 unknowncb8;             // Inferred role: idle shake id; original member name unknown.
 };
 
 static_assert(sizeof(ShakeManager) == 0xcc0, "");

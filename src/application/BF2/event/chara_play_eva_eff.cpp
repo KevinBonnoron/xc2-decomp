@@ -16,8 +16,8 @@
 namespace event {
 
 ICmd::RESULT CharaPlayEvaEff::update(const Param &param) {
-  if (model != nullptr && gf::GfObjUtil::getObj(model->unknown20) != nullptr) {
-    f32 delta = static_cast<CharaObj *>(param.val(0).getUserdata())->getFrameInfo().streamDelta;
+  if (unknown10 != nullptr && gf::GfObjUtil::getObj(unknown10->unknown20) != nullptr) {
+    f32 delta = static_cast<CharaObj *>(param.val(0).getUserdata())->getFrameInfo().unknown0c;
     if (param.getFrame() <= 0) {
       const char *name = mm::mtl::Singleton<Extend>::getPtr()->replaceString(param.val(1).getStr(), "event", "effect");
       void *data;
@@ -30,41 +30,41 @@ ICmd::RESULT CharaPlayEvaEff::update(const Param &param) {
       if (data == nullptr) {
         return RESULT_END;
       }
-      evaPlayer.play(model, effectPlayer, data);
+      unknown30.play(unknown10, unknown18, data);
       f32 life = param.val(2).getF32();
-      this->life = life;
-      this->data = data;
+      this->unknown28 = life;
+      this->unknown20 = data;
       if (life <= 0.0f) {
-        flags |= FLAG_PLAY | FLAG_LOOP;
+        unknown08 |= FLAG_PLAY | FLAG_LOOP;
       } else {
-        flags = (flags & ~FLAG_LOOP) | FLAG_PLAY;
+        unknown08 = (unknown08 & ~FLAG_LOOP) | FLAG_PLAY;
       }
     }
-    evaPlayer.update(delta * param.val(3).getF32());
-    if ((flags & FLAG_LOOP) != 0) {
+    unknown30.update(delta * param.val(3).getF32());
+    if ((unknown08 & FLAG_LOOP) != 0) {
       return RESULT_NEXT;
     }
-    life -= delta;
-    if (!(life < 0.0f)) {
+    unknown28 -= delta;
+    if (!(unknown28 < 0.0f)) {
       return RESULT_NEXT;
     }
-    evaPlayer.stop();
+    unknown30.stop();
   }
-  if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode() && data != nullptr) {
-    mm::mtl::Singleton<MotstmManager>::getPtr()->free(data);
+  if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode() && unknown20 != nullptr) {
+    mm::mtl::Singleton<MotstmManager>::getPtr()->free(unknown20);
   }
-  data = nullptr;
-  flags &= ~FLAG_PLAY;
+  unknown20 = nullptr;
+  unknown08 &= ~FLAG_PLAY;
   return RESULT_END;
 }
 
 void CharaPlayEvaEff::term() {
-  if ((flags & FLAG_PLAY) != 0) {
-    if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode() && data != nullptr) {
-      mm::mtl::Singleton<MotstmManager>::getPtr()->free(data);
+  if ((unknown08 & FLAG_PLAY) != 0) {
+    if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode() && unknown20 != nullptr) {
+      mm::mtl::Singleton<MotstmManager>::getPtr()->free(unknown20);
     }
-    data = nullptr;
-    flags &= ~FLAG_PLAY;
+    unknown20 = nullptr;
+    unknown08 &= ~FLAG_PLAY;
   }
 }
 

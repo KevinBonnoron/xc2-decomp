@@ -22,12 +22,12 @@ public:
   CV_TYPE getCv(size_t index) const;
   const mm::Vec3 &getValue(size_t index) const;
   void setValue(size_t index, const mm::Vec3 &value);
-  const mm::Vec3 &getValue() const { return value; }
+  const mm::Vec3 &getValue() const { return unknown1e0; }
 
 private:
-  mm::mtl::FixedVector<mm::Vec3, KEY_COUNT> values;
-  mm::mtl::FixedVector<CV_TYPE, KEY_COUNT> cvs;
-  mm::Vec3 value;
+  mm::mtl::FixedVector<mm::Vec3, KEY_COUNT> unknown80; // Inferred role: values; original member name unknown.
+  mm::mtl::FixedVector<CV_TYPE, KEY_COUNT> unknown190; // Inferred role: cvs; original member name unknown.
+  mm::Vec3 unknown1e0;                                 // Inferred role: value; original member name unknown.
 };
 
 static_assert(sizeof(AnmVec) == 0x1f0, "");

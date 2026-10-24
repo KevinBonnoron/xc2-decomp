@@ -12,7 +12,7 @@ public:
   virtual RESULT update(const Param &param);
 
 private:
-  gf::GF_OBJ_HANDLE *handle;
+  gf::GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
 };
 
 static_assert(sizeof(CharaSetPos) == 0x10, "");

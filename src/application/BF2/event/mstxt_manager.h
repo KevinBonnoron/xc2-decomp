@@ -28,8 +28,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  mm::mtl::FixedVector<MstxtRes *, RES_COUNT> mResList;
-  MstxtRes *mCurrentRes;
+  mm::mtl::FixedVector<MstxtRes *, RES_COUNT> unknown10; // Inferred role: res list; original member name unknown.
+  MstxtRes *unknown98;                                   // Inferred role: current res; original member name unknown.
 };
 
 static_assert(sizeof(MstxtManager) == 0xa0, "");

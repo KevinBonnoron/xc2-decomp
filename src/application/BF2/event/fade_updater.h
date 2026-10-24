@@ -13,12 +13,12 @@ public:
   bool isFading() const;
 
 private:
-  int mChannel;
-  bool mIsReserved;
-  bool mIsFadeOut;
-  int frame;
-  bool mHasColor;
-  mm::Col4 mColor;
+  int unknown00;      // Inferred role: channel; original member name unknown.
+  bool unknown04;     // Inferred role: is reserved; original member name unknown.
+  bool unknown05;     // Inferred role: is fade out; original member name unknown.
+  int unknown08;      // Inferred role: frame; original member name unknown.
+  bool unknown0c;     // Inferred role: has color; original member name unknown.
+  mm::Col4 unknown10; // Inferred role: color; original member name unknown.
 };
 
 static_assert(sizeof(FadeUpdater) == 0x20, "");

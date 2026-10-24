@@ -21,26 +21,26 @@ ICmd::RESULT SeqManager::play_start::update(const Param &param) {
   if (param.getFrame() <= 0) {
     gf::SCOM_SCRIPT::create(SCRIPT_SLOT_EVENT, param.val(1).getStr(), false);
     SeqManager *seq = static_cast<SeqManager *>(param.val(0).getUserdata());
-    seq->flags &= ~FLAG_NEXT;
-    seq->mStateName = "play start";
+    seq->unknown170 &= ~FLAG_NEXT;
+    seq->unknown178 = "play start";
   }
   if (gf::GfScriptManager::isScriptLoadError(SCRIPT_SLOT_EVENT)) {
     gf::GfScriptManager::destroyScript(SCRIPT_SLOT_EVENT);
-    static_cast<SeqManager *>(param.val(0).getUserdata())->flags |= FLAG_SCRIPT_ERROR;
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown170 |= FLAG_SCRIPT_ERROR;
   }
   return RESULT_WAIT;
 }
 
 ICmd::RESULT SeqManager::start::update(const Param &param) {
   if (param.getFrame() <= 0) {
-    static_cast<SeqManager *>(param.val(0).getUserdata())->mStateName = "start";
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "start";
   }
   return RESULT_END;
 }
 
 ICmd::RESULT SeqManager::start_notice::update(const Param &param) {
   if (param.getFrame() <= 0) {
-    static_cast<SeqManager *>(param.val(0).getUserdata())->mStateName = "start notice";
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "start notice";
   }
   int eventId = param.val(1).getS32();
   if (eventId != 0) {
@@ -51,7 +51,7 @@ ICmd::RESULT SeqManager::start_notice::update(const Param &param) {
 
 ICmd::RESULT SeqManager::start_change::update(const Param &param) {
   if (param.getFrame() <= 0) {
-    static_cast<SeqManager *>(param.val(0).getUserdata())->mStateName = "start change";
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "start change";
   }
   if (param.val(1).getS32() != 0 && !mm::mtl::Singleton<StatusManager>::getPtr()->changeFromBdat(param.val(1).getS32())) {
     return RESULT_WAIT;
@@ -63,21 +63,21 @@ ICmd::RESULT SeqManager::start_env_seam::update(const Param &param) {
   if (param.getFrame() <= 0) {
     int eventId = param.val(1).getS32();
     mm::mtl::Singleton<EnvManager>::getPtr()->loadTransferEnvironment(eventId);
-    static_cast<SeqManager *>(param.val(0).getUserdata())->mStateName = "start envseam";
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "start envseam";
   }
   return RESULT_END;
 }
 
 ICmd::RESULT SeqManager::start_capture_wait::update(const Param &param) {
   if (param.getFrame() <= 0) {
-    static_cast<SeqManager *>(param.val(0).getUserdata())->mStateName = "start capture wait";
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "start capture wait";
   }
   return param.getFrame() >= 30 ? RESULT_END : RESULT_WAIT;
 }
 
 ICmd::RESULT SeqManager::start_streaming1::update(const Param &param) {
   if (param.getFrame() <= 0) {
-    static_cast<SeqManager *>(param.val(0).getUserdata())->mStateName = "start stream1";
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "start stream1";
   }
   return RESULT_END;
 }
@@ -85,28 +85,28 @@ ICmd::RESULT SeqManager::start_streaming1::update(const Param &param) {
 ICmd::RESULT SeqManager::end_env_seam::update(const Param &param) {
   if (param.getFrame() <= 0) {
     mm::mtl::Singleton<EnvManager>::getPtr()->loadTransferEnvironment(1);
-    static_cast<SeqManager *>(param.val(0).getUserdata())->mStateName = "end envseam";
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "end envseam";
   }
   return RESULT_END;
 }
 
 ICmd::RESULT SeqManager::end_fadewait::update(const Param &param) {
   if (param.getFrame() <= 0) {
-    static_cast<SeqManager *>(param.val(0).getUserdata())->mStateName = "exec fadewait";
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "exec fadewait";
   }
   return static_cast<RESULT>(!mm::mtl::Singleton<FadeManager>::getPtr()->isFading());
 }
 
 ICmd::RESULT SeqManager::end_fadein::update(const Param &param) {
   if (param.getFrame() <= 0) {
-    static_cast<SeqManager *>(param.val(0).getUserdata())->mStateName = "end fadein";
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "end fadein";
   }
   return RESULT_END;
 }
 
 ICmd::RESULT SeqManager::end_notice::update(const Param &param) {
   if (param.getFrame() <= 0) {
-    static_cast<SeqManager *>(param.val(0).getUserdata())->mStateName = "end notice";
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "end notice";
   }
   int eventId = param.val(1).getS32();
   if (eventId != 0) {
@@ -118,22 +118,22 @@ ICmd::RESULT SeqManager::end_notice::update(const Param &param) {
 ICmd::RESULT SeqManager::end::update(const Param &param) {
   if (param.getFrame() <= 0) {
     SeqManager *seq = static_cast<SeqManager *>(param.val(0).getUserdata());
-    seq->flags |= FLAG_END;
-    seq->mStateName = "end";
+    seq->unknown170 |= FLAG_END;
+    seq->unknown178 = "end";
   }
   return RESULT_END;
 }
 
 void SeqManager::clear() {
-  flags = 0;
-  mStateName = "";
-  queue.clear();
+  unknown170 = 0;
+  unknown178 = "";
+  unknown200.clear();
 }
 
 void SeqManager::login() {
-  loginState = 1;
+  unknown2850 = 1;
   ml::DevSetting::setAutoSleepExtended(static_cast<ml::SleepExtendType>(1));
-  flags &= ~FLAG_LOGIN;
+  unknown170 &= ~FLAG_LOGIN;
 }
 
 void SeqManager::logout() {
@@ -144,35 +144,35 @@ void SeqManager::logout() {
   }
 }
 
-bool SeqManager::checkWait3D(const SeqInfo &info) { return (Manager::get()->getPlayParam(2) | info.mLinkID) == 0; }
+bool SeqManager::checkWait3D(const SeqInfo &info) { return (Manager::get()->getPlayParam(2) | info.unknowne8) == 0; }
 
 bool SeqManager::checkSyncBgm(const SeqInfo &info, bool isSync) {
-  if (Manager::get()->isEndFadeOut() || info.mNextID == 0) {
+  if (Manager::get()->isEndFadeOut() || info.unknowne4 == 0) {
     isSync = false;
   }
   return isSync;
 }
 
 bool SeqManager::checkCapture(const SeqInfo &info) {
-  if (info.mLinkID < 1) {
+  if (info.unknowne8 < 1) {
     return false;
   }
-  SeqInfo link(info.mLinkID);
-  return link.mCategory == CATEGORY_CAPTURE;
+  SeqInfo link(info.unknowne8);
+  return link.unknown54 == CATEGORY_CAPTURE;
 }
 
-void SeqManager::update() { queue.update(); }
+void SeqManager::update() { unknown200.update(); }
 
-void SeqManager::nextEvent(int next) { mNextEvent = next; }
+void SeqManager::nextEvent(int next) { unknown2840 = next; }
 
 void SeqManager::setDisp(bool isDisp) {
   if (isDisp) {
-    dispFlags |= DISP_FLAG_DISP;
+    unknown174 |= DISP_FLAG_DISP;
   } else {
-    dispFlags &= ~DISP_FLAG_DISP;
+    unknown174 &= ~DISP_FLAG_DISP;
   }
 }
 
-bool SeqManager::isDisp() const { return (dispFlags & DISP_FLAG_DISP) != 0; }
+bool SeqManager::isDisp() const { return (unknown174 & DISP_FLAG_DISP) != 0; }
 
 } // namespace event

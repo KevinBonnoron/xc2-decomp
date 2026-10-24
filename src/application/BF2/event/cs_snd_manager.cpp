@@ -10,56 +10,56 @@ enum SoundCategory : int;
 
 namespace event {
 
-CsSndManager::CsSndManager() : flags(0), dispFlags(0), mPreloadHandle(0), mPlayHandle(0), mUnused(0), mSyncFrameOffset(0.0f) {}
+CsSndManager::CsSndManager() : unknown10(0), unknown14(0), unknown18(0), unknown1c(0), unknown238(0), m_syncFrameOffset(0.0f) {}
 
 void CsSndManager::clear() {
   stop();
-  flags = 0;
+  unknown10 = 0;
 }
 
 void CsSndManager::stop() {
-  if ((flags & FLAG_PRELOAD) != 0) {
+  if ((unknown10 & FLAG_PRELOAD) != 0) {
     stopPreload();
   }
-  if ((flags & FLAG_PLAY) != 0) {
+  if ((unknown10 & FLAG_PLAY) != 0) {
     stopPlay();
   }
 }
 
 void CsSndManager::update() {
-  if ((flags & FLAG_PLAY) == 0) {
+  if ((unknown10 & FLAG_PLAY) == 0) {
     return;
   }
-  if (!fw::SoundManager::get()->isPlaying(mPlayHandle)) {
-    mPlayHandle = 0;
-    flags &= ~(FLAG_PLAY | FLAG_STALL);
+  if (!fw::SoundManager::get()->isPlaying(unknown1c)) {
+    unknown1c = 0;
+    unknown10 &= ~(FLAG_PLAY | FLAG_STALL);
   }
-  if ((flags & FLAG_PAUSE) != 0 || !fw::SoundManager::get()->isPlaying(mPlayHandle)) {
+  if ((unknown10 & FLAG_PAUSE) != 0 || !fw::SoundManager::get()->isPlaying(unknown1c)) {
     return;
   }
   f32 time = 0.0f;
-  if (!fw::SoundManager::get()->getPlayTime(mPlayHandle, time)) {
+  if (!fw::SoundManager::get()->getPlayTime(unknown1c, time)) {
     return;
   }
-  if (mPrevPlayTime != time) {
-    mStallCount = 0;
-    mPrevPlayTime = time;
+  if (unknown228 != time) {
+    unknown22c = 0;
+    unknown228 = time;
     return;
   }
-  int count = mStallCount++;
+  int count = unknown22c++;
   if (count == 18) {
-    fw::SoundManager::get()->pause(mPlayHandle, true, 0.0f);
+    fw::SoundManager::get()->pause(unknown1c, true, 0.0f);
   } else if (count == 19) {
-    mStallCount = 0;
-    mRestartCount++;
-    fw::SoundManager::get()->pause(mPlayHandle, false, 0.0f);
+    unknown22c = 0;
+    unknown230++;
+    fw::SoundManager::get()->pause(unknown1c, false, 0.0f);
   }
 }
 
 f32 CsSndManager::getPlayFrame() const {
   if (isPlay()) {
     f32 time;
-    if (fw::SoundManager::get()->getPlayTime(mPlayHandle, time)) {
+    if (fw::SoundManager::get()->getPlayTime(unknown1c, time)) {
       return time * 30.0f;
     }
   }
@@ -69,7 +69,7 @@ f32 CsSndManager::getPlayFrame() const {
 f32 CsSndManager::getTotalFrame() const {
   if (isPlay()) {
     f32 time;
-    if (fw::SoundManager::get()->getTotalTime(mPlayHandle, time)) {
+    if (fw::SoundManager::get()->getTotalTime(unknown1c, time)) {
       return time * 30.0f;
     }
   }
@@ -85,7 +85,7 @@ void CsSndManager::preloadAuto(const char *name) {
 void CsSndManager::preload(const char *path) {}
 
 bool CsSndManager::isLoading() const {
-  if ((flags & FLAG_PRELOAD) != 0 && fw::SoundManager::get()->isPreparing(mPreloadHandle)) {
+  if ((unknown10 & FLAG_PRELOAD) != 0 && fw::SoundManager::get()->isPreparing(unknown18)) {
     return true;
   }
   return false;
@@ -98,31 +98,31 @@ void CsSndManager::playAuto(const char *name) {
 }
 
 void CsSndManager::play(const char *path) {
-  if ((flags & FLAG_PRELOAD) == 0 && __builtin_strcmp(mPreloadPath.c_str(), path) != 0) {
-    if ((flags & FLAG_PLAY) != 0) {
+  if ((unknown10 & FLAG_PRELOAD) == 0 && __builtin_strcmp(unknown20.c_str(), path) != 0) {
+    if ((unknown10 & FLAG_PLAY) != 0) {
       stopPlay();
     }
     const char *file = mm::mtl::Singleton<Extend>::getPtr()->wav(path);
     u32 handle = fw::SoundManager::get()->playBgm(file, 1.0f, false, -1, static_cast<fw::SoundCategory>(9));
     fw::SoundManager::get()->pause(handle, false, 0.0f);
-    mPlayHandle = handle;
-    mSyncFrameOffset = 0.0f;
-    mStartedTotalFrame = mm::mtl::Singleton<FrameManager>::getPtr()->getTotalFrame();
-    if (mPlayHandle == 0) {
+    unknown1c = handle;
+    m_syncFrameOffset = 0.0f;
+    m_startedTotalFrame = mm::mtl::Singleton<FrameManager>::getPtr()->getTotalFrame();
+    if (unknown1c == 0) {
       return;
     }
   } else {
-    mPlayHandle = mPreloadHandle;
-    fw::SoundManager::get()->startBgm(mPreloadHandle);
-    mPreloadHandle = 0;
-    mPreloadPath = "";
-    flags &= ~FLAG_PRELOAD;
+    unknown1c = unknown18;
+    fw::SoundManager::get()->startBgm(unknown18);
+    unknown18 = 0;
+    unknown20 = "";
+    unknown10 &= ~FLAG_PRELOAD;
   }
-  mPlayPath = path;
-  mPrevPlayTime = -1.0f;
-  mStallCount = 0;
-  mRestartCount = 0;
-  flags |= FLAG_PLAY;
+  unknown124 = path;
+  unknown228 = -1.0f;
+  unknown22c = 0;
+  unknown230 = 0;
+  unknown10 |= FLAG_PLAY;
 }
 
 u32 CsSndManager::playBgm(const char *path, f32 volume, bool isPause) {
@@ -133,23 +133,23 @@ u32 CsSndManager::playBgm(const char *path, f32 volume, bool isPause) {
   return handle;
 }
 
-bool CsSndManager::isPlay() const { return (flags & FLAG_PLAY) != 0; }
+bool CsSndManager::isPlay() const { return (unknown10 & FLAG_PLAY) != 0; }
 
 void CsSndManager::setDisp(bool isDisp) {
   if (isDisp) {
-    dispFlags |= DISP_FLAG_DISP;
+    unknown14 |= DISP_FLAG_DISP;
   } else {
-    dispFlags &= ~DISP_FLAG_DISP;
+    unknown14 &= ~DISP_FLAG_DISP;
   }
 }
 
-bool CsSndManager::isDisp() const { return (dispFlags & DISP_FLAG_DISP) != 0; }
+bool CsSndManager::isDisp() const { return (unknown14 & DISP_FLAG_DISP) != 0; }
 
 f32 CsSndManager::getSyncFrame() const {
   f32 frame = 0.0f;
   f32 time;
-  if (isPlay() && fw::SoundManager::get()->getPlayTime(mPlayHandle, time)) {
-    frame = time * 30.0f - mSyncFrameOffset;
+  if (isPlay() && fw::SoundManager::get()->getPlayTime(unknown1c, time)) {
+    frame = time * 30.0f - m_syncFrameOffset;
     frame = frame > 0.0f ? frame : 0.0f;
   }
   return frame;
@@ -159,13 +159,13 @@ void CsSndManager::setSyncFrame(f32 frame) {
   if (!isPlay()) {
     return;
   }
-  f32 time = (frame + mSyncFrameOffset) / 30.0f;
-  fw::SoundManager::get()->setPlayTime(mPlayHandle, time);
+  f32 time = (frame + m_syncFrameOffset) / 30.0f;
+  fw::SoundManager::get()->setPlayTime(unknown1c, time);
 }
 
-f32 CsSndManager::getStartedTotalFrame() const { return mStartedTotalFrame; }
+f32 CsSndManager::getStartedTotalFrame() const { return m_startedTotalFrame; }
 
-void CsSndManager::setSyncFrameOffset(f32 offset) { mSyncFrameOffset = offset; }
+void CsSndManager::setSyncFrameOffset(f32 offset) { m_syncFrameOffset = offset; }
 
 void CsSndManager::OnEventProc(MSG_TYPE type) {
   switch (type) {

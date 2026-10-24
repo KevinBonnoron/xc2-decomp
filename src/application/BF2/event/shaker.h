@@ -26,19 +26,19 @@ public:
   u32 search(const char *name);
   bool play(u32 index, f32 life, f32 fadeIn, f32 fadeOut);
 
-  bool isPlay() const { return (flags & FLAG_PLAY) != 0; }
+  bool isPlay() const { return (unknown08 & FLAG_PLAY) != 0; }
 
 private:
-  u32 flags;
-  ShakerRes resList[RES_COUNT];
-  u32 resCount;
-  ShakerRes *current;
-  f32 frame;
-  f32 playFrame;
-  f32 life;
-  f32 fadeIn;
-  f32 fadeOut;
-  ShakerUpdater updater;
+  u32 unknown08;                  // Inferred role: flags; original member name unknown.
+  ShakerRes unknown10[RES_COUNT]; // Inferred role: res list; original member name unknown.
+  u32 unknown310;                 // Inferred role: res count; original member name unknown.
+  ShakerRes *unknown318;          // Inferred role: current; original member name unknown.
+  f32 unknown320;                 // Inferred role: frame; original member name unknown.
+  f32 unknown324;                 // Inferred role: play frame; original member name unknown.
+  f32 unknown328;                 // Inferred role: life; original member name unknown.
+  f32 unknown32c;                 // Inferred role: fade in; original member name unknown.
+  f32 unknown330;                 // Inferred role: fade out; original member name unknown.
+  ShakerUpdater unknown338;       // Inferred role: updater; original member name unknown.
 };
 
 static_assert(sizeof(Shaker) == 0xc90, "");

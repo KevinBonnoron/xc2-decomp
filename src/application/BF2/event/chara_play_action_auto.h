@@ -32,7 +32,7 @@ public:
   };
 
   void render(const mm::Vec3 &position, f32 height) {
-    if ((flags & FLAG_STANBY) == 0 || gf::GfObjUtil::getObj(handle) == nullptr) {
+    if ((unknown08 & FLAG_STANBY) == 0 || gf::GfObjUtil::getObj(unknown10) == nullptr) {
       return;
     }
     mm::Vec3 head;
@@ -52,7 +52,7 @@ public:
     s32 titleY = y - 55;
     fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
     fw::debug::drawFont(titleX, titleY, "[ACTION_AUTO]");
-    fw::debug::drawFont(x, y - 55, "life(%.1f)", life);
+    fw::debug::drawFont(x, y - 55, "life(%.1f)", unknown20);
     fw::debug::drawFont(x - 70, y - 40, "TALK");
   }
   virtual ~CharaPlayActionAuto();
@@ -64,10 +64,10 @@ public:
   virtual void term();
 
 private:
-  u32 flags;
-  gf::GF_OBJ_HANDLE *handle;
-  CharaDysUpdater *dys;
-  f32 life;
+  u32 unknown08;                // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
+  CharaDysUpdater *unknown18;   // Inferred role: dys; original member name unknown.
+  f32 unknown20;                // Inferred role: life; original member name unknown.
 };
 
 static_assert(sizeof(CharaPlayActionAuto) == 0x28, "");

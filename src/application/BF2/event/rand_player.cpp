@@ -50,22 +50,22 @@ ICmd::RESULT RandPlayer::Reset::update(const Param &param) {
   return RESULT_END;
 }
 
-RandPlayer::RandPlayer() : flags(0) {}
+RandPlayer::RandPlayer() : unknown978(0) {}
 
 void RandPlayer::clear() {
-  queue.clear();
-  flags = 0;
+  unknown28.clear();
+  unknown978 = 0;
 }
 
 void RandPlayer::update() {
-  if ((flags & FLAG_PLAY) != 0) {
-    queue.update();
-    if (queue.isEmpty()) {
-      flags &= ~FLAG_PLAY;
+  if ((unknown978 & FLAG_PLAY) != 0) {
+    unknown28.update();
+    if (unknown28.isEmpty()) {
+      unknown978 &= ~FLAG_PLAY;
     }
   }
 }
 
-bool RandPlayer::isPlaying() const { return (flags & FLAG_PLAY) != 0; }
+bool RandPlayer::isPlaying() const { return (unknown978 & FLAG_PLAY) != 0; }
 
 } // namespace event

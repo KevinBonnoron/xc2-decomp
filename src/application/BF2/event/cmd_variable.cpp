@@ -2,55 +2,55 @@
 
 namespace event {
 
-CmdVariable::CmdVariable() : mType(VARIABLE_TYPE_NONE) { value.integer = 0; }
+CmdVariable::CmdVariable() : unknown08(VARIABLE_TYPE_NONE) { unknown10.integer = 0; }
 
 CmdVariable::~CmdVariable() {}
 
-void CmdVariable::clear() { mType = VARIABLE_TYPE_NONE; }
+void CmdVariable::clear() { unknown08 = VARIABLE_TYPE_NONE; }
 
 void CmdVariable::setS32(s32 value) {
-  mType = VARIABLE_TYPE_S32;
-  this->value.integer = value;
+  unknown08 = VARIABLE_TYPE_S32;
+  this->unknown10.integer = value;
 }
 
 s32 CmdVariable::getS32() const {
-  if (mType == VARIABLE_TYPE_F32) {
-    return value.real;
+  if (unknown08 == VARIABLE_TYPE_F32) {
+    return unknown10.real;
   }
-  return value.integer;
+  return unknown10.integer;
 }
 
 void CmdVariable::setF32(f32 value) {
-  mType = VARIABLE_TYPE_F32;
-  this->value.real = value;
+  unknown08 = VARIABLE_TYPE_F32;
+  this->unknown10.real = value;
 }
 
 f32 CmdVariable::getF32() const {
-  if (mType == VARIABLE_TYPE_S32) {
-    return value.integer;
+  if (unknown08 == VARIABLE_TYPE_S32) {
+    return unknown10.integer;
   }
-  return value.real;
+  return unknown10.real;
 }
 
 void CmdVariable::setBool(bool value) {
-  mType = VARIABLE_TYPE_BOOL;
-  this->value.boolean = value;
+  unknown08 = VARIABLE_TYPE_BOOL;
+  this->unknown10.boolean = value;
 }
 
-bool CmdVariable::getBool() const { return value.boolean; }
+bool CmdVariable::getBool() const { return unknown10.boolean; }
 
 void CmdVariable::setStr(const char *value) {
-  mType = VARIABLE_TYPE_STR;
-  this->value.string = value;
+  unknown08 = VARIABLE_TYPE_STR;
+  this->unknown10.string = value;
 }
 
-const char *CmdVariable::getStr() const { return value.string; }
+const char *CmdVariable::getStr() const { return unknown10.string; }
 
 void CmdVariable::setUserdata(void *value) {
-  mType = VARIABLE_TYPE_USERDATA;
-  this->value.userdata = value;
+  unknown08 = VARIABLE_TYPE_USERDATA;
+  this->unknown10.userdata = value;
 }
 
-void *CmdVariable::getUserdata() const { return value.userdata; }
+void *CmdVariable::getUserdata() const { return unknown10.userdata; }
 
 } // namespace event

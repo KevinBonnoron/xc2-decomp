@@ -13,7 +13,7 @@ public:
 
   Group();
   virtual ~Group() {}
-  bool empty() const { return mCharas.empty(); }
+  bool empty() const { return unknown08.empty(); }
   void clear();
   void push(const CharaObj *chara);
   void pop(const CharaObj *chara);
@@ -22,10 +22,10 @@ public:
   void updateDir();
 
 private:
-  mm::mtl::FixedVector<const CharaObj *, CHARA_COUNT> mCharas;
-  mm::Vec3 mPos;
-  f32 mRadius;
-  f32 mDir;
+  mm::mtl::FixedVector<const CharaObj *, CHARA_COUNT> unknown08; // Inferred role: charas; original member name unknown.
+  mm::Vec3 unknown410;                                           // Inferred role: pos; original member name unknown.
+  f32 unknown420;                                                // Inferred role: radius; original member name unknown.
+  f32 unknown424;                                                // Inferred role: dir; original member name unknown.
 };
 
 static_assert(sizeof(Group) == 0x430, "");

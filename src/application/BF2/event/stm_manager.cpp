@@ -6,76 +6,76 @@
 
 namespace event {
 
-StmManager::StmManager(const char *name) : flags(0), mName(name), mMemory(nullptr) {}
+StmManager::StmManager(const char *name) : unknown08(0), unknown0c(name), unknown50(nullptr) {}
 
 StmManager::~StmManager() {
-  if (mMemory != nullptr) {
-    delete mMemory;
-    mMemory = nullptr;
+  if (unknown50 != nullptr) {
+    delete unknown50;
+    unknown50 = nullptr;
   }
 }
 
-void StmManager::create(mtl::ALLOC_HANDLE handle, mtl::ALLOC_HANDLE memoryHandle) { mMemory = new (handle) StmPackMemory(memoryHandle); }
+void StmManager::create(mtl::ALLOC_HANDLE handle, mtl::ALLOC_HANDLE memoryHandle) { unknown50 = new (handle) StmPackMemory(memoryHandle); }
 
 void StmManager::destroy() {
-  if (mMemory != nullptr) {
-    delete mMemory;
-    mMemory = nullptr;
+  if (unknown50 != nullptr) {
+    delete unknown50;
+    unknown50 = nullptr;
   }
-  flags = 0;
+  unknown08 = 0;
 }
 
-void StmManager::loadStream(const char *name, const char *headerPath, const char *dataPath) { mMemory->loadStream(name, headerPath, dataPath); }
+void StmManager::loadStream(const char *name, const char *headerPath, const char *dataPath) { unknown50->loadStream(name, headerPath, dataPath); }
 
-void StmManager::changeStream(const char *name) { mMemory->changeStream(name); }
+void StmManager::changeStream(const char *name) { unknown50->changeStream(name); }
 
 void StmManager::stopStream() {
-  if (mMemory != nullptr) {
-    mMemory->stopStream();
+  if (unknown50 != nullptr) {
+    unknown50->stopStream();
   }
 }
 
 bool StmManager::isBusy() {
-  if (mMemory != nullptr) {
-    return mMemory->isBusy();
+  if (unknown50 != nullptr) {
+    return unknown50->isBusy();
   }
   return false;
 }
 
 void StmManager::update() {
-  if (!(flags & FLAG_PAUSE) && mMemory != nullptr) {
-    mMemory->update();
+  if (!(unknown08 & FLAG_PAUSE) && unknown50 != nullptr) {
+    unknown50->update();
   }
 }
 
 void StmManager::render(int x, f32 frame) {}
 
 void StmManager::tail() {
-  if (!(flags & FLAG_PAUSE) && mMemory != nullptr) {
-    mMemory->tail();
+  if (!(unknown08 & FLAG_PAUSE) && unknown50 != nullptr) {
+    unknown50->tail();
   }
 }
 
 void StmManager::pause(bool isPause) {
   if (isPause) {
-    flags |= FLAG_PAUSE;
+    unknown08 |= FLAG_PAUSE;
   } else {
-    flags &= ~FLAG_PAUSE;
+    unknown08 &= ~FLAG_PAUSE;
   }
 }
 
-void *StmManager::adr(const char *path, size_t *size) { return mMemory != nullptr ? mMemory->adr(path, size) : nullptr; }
+void *StmManager::adr(const char *path, size_t *size) { return unknown50 != nullptr ? unknown50->adr(path, size) : nullptr; }
 
 void StmManager::free(void *adr, int frame) {
-  if (mMemory != nullptr) {
-    mMemory->free(adr, frame);
+  if (unknown50 != nullptr) {
+    unknown50->free(adr, frame);
   }
 }
 
-bool StmManager::isLoadingPrio(f32 prio) const { return mMemory != nullptr ? mMemory->isLoadingPrio(prio) : false; }
+bool StmManager::isLoadingPrio(f32 prio) const { return unknown50 != nullptr ? unknown50->isLoadingPrio(prio) : false; }
 
-bool StmManager::isLoadingAll() const { return mMemory != nullptr ? mMemory->isLoadingPrio(FLT_MAX) : false; }
+bool StmManager::isLoadingAll() const { return unknown50 != nullptr ? unknown50->isLoadingPrio(FLT_MAX) : false; }
 
-bool StmManager::isFailure() const { return mMemory != nullptr ? mMemory->isFailure() : false; }
+bool StmManager::isFailure() const { return unknown50 != nullptr ? unknown50->isFailure() : false; }
 
 } // namespace event

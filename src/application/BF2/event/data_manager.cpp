@@ -10,64 +10,64 @@
 
 namespace event {
 
-DataManager::OfsInfo::OfsInfo(const char *name) : name(name) {
-  srcMatrix = mm::Mat44::identity;
-  desMatrix = mm::Mat44::identity;
-  offsetMatrix = mm::Mat44::identity;
-  offsetVector = mm::Vec3::zero;
-  keepMatrix = mm::Mat44::identity;
-  keepVector = mm::Vec3::zero;
+DataManager::OfsInfo::OfsInfo(const char *name) : unknown00(name) {
+  unknown50 = mm::Mat44::identity;
+  unknown90 = mm::Mat44::identity;
+  unknownd0 = mm::Mat44::identity;
+  unknown110 = mm::Vec3::zero;
+  unknown120 = mm::Mat44::identity;
+  unknown160 = mm::Vec3::zero;
 }
 
-DataManager::DataManager() : mSceneName("default"), mCurrent(nullptr) {}
+DataManager::DataManager() : unknown98("default"), unknown120(nullptr) {}
 
 DataManager::~DataManager() { clear(); }
 
 void DataManager::clear() {
-  for (size_t i = 0; i < mScenes.size(); i++) {
-    if (mScenes[i]) {
-      delete mScenes[i];
-      mScenes[i] = nullptr;
+  for (size_t i = 0; i < unknown10.size(); i++) {
+    if (unknown10[i]) {
+      delete unknown10[i];
+      unknown10[i] = nullptr;
     }
   }
-  mScenes.clear();
-  mSceneName = "default";
-  mCurrentSceneName = "";
-  mCurrent = nullptr;
+  unknown10.clear();
+  unknown98 = "default";
+  unknowndc = "";
+  unknown120 = nullptr;
 }
 
 void DataManager::setupScene() {
-  mSceneName = Manager::get()->getSceneName();
+  unknown98 = Manager::get()->getSceneName();
   updateCurrent();
 }
 
 void DataManager::updateCurrent() {
-  if (__builtin_strcmp(mSceneName.c_str(), mCurrentSceneName.c_str()) == 0) {
+  if (__builtin_strcmp(unknown98.c_str(), unknowndc.c_str()) == 0) {
     return;
   }
-  mCurrent = searchScene(mSceneName.c_str());
-  if (!mCurrent) {
-    mCurrent = createScene(mSceneName.c_str());
+  unknown120 = searchScene(unknown98.c_str());
+  if (!unknown120) {
+    unknown120 = createScene(unknown98.c_str());
   }
-  if (mCurrent) {
-    mCurrentSceneName = mSceneName.c_str();
+  if (unknown120) {
+    unknowndc = unknown98.c_str();
   }
 }
 
 void DataManager::startScene() {
-  mSceneName = Manager::get()->getSceneName();
+  unknown98 = Manager::get()->getSceneName();
   updateCurrent();
 }
 
 DataManager::OfsInfo *DataManager::getCurrent() {
   updateCurrent();
-  return mCurrent;
+  return unknown120;
 }
 
 DataManager::OfsInfo *DataManager::searchScene(const char *name) const {
-  for (size_t i = 0; i < mScenes.size(); i++) {
-    if (__builtin_strcmp(mScenes[i]->name.c_str(), name) == 0) {
-      return mScenes[i];
+  for (size_t i = 0; i < unknown10.size(); i++) {
+    if (__builtin_strcmp(unknown10[i]->unknown00.c_str(), name) == 0) {
+      return unknown10[i];
     }
   }
   return nullptr;
@@ -75,7 +75,7 @@ DataManager::OfsInfo *DataManager::searchScene(const char *name) const {
 
 DataManager::OfsInfo *DataManager::createScene(const char *name) {
   OfsInfo *info = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) OfsInfo(name);
-  mScenes.push_back(info);
+  unknown10.push_back(info);
   return info;
 }
 

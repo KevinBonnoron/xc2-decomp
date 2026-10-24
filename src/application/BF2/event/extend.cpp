@@ -3,103 +3,103 @@
 namespace event {
 
 const char *Extend::mdo(const char *name) {
-  path = name;
-  path += ".wimdo";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".wimdo";
+  return unknown08.c_str();
 }
 
 const char *Extend::arc(const char *name) {
-  path = name;
-  path += ".arc";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".arc";
+  return unknown08.c_str();
 }
 
 const char *Extend::anm(const char *name) {
-  path = name;
-  path += ".anm";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".anm";
+  return unknown08.c_str();
 }
 
 const char *Extend::anm2eva(const char *name) {
-  path = name;
-  const char *found = __builtin_strstr(path.c_str(), ".anm");
+  unknown08 = name;
+  const char *found = __builtin_strstr(unknown08.c_str(), ".anm");
   if (found != nullptr) {
-    path.erase(found - path.c_str(), 4);
+    unknown08.erase(found - unknown08.c_str(), 4);
   }
-  path += ".eva";
-  return path.c_str();
+  unknown08 += ".eva";
+  return unknown08.c_str();
 }
 
 const char *Extend::eva(const char *name) {
-  path = name;
-  path += ".eva";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".eva";
+  return unknown08.c_str();
 }
 
 const char *Extend::effeva(const char *name) {
-  path = name;
-  path += "_eff.eva";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += "_eff.eva";
+  return unknown08.c_str();
 }
 
 const char *Extend::efb(const char *name) {
-  path = name;
-  path += ".wiefb";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".wiefb";
+  return unknown08.c_str();
 }
 
 const char *Extend::lgt(const char *name) {
-  path = name;
-  path += ".wilgt";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".wilgt";
+  return unknown08.c_str();
 }
 
 const char *Extend::wav(const char *name) {
-  path = name;
-  path += ".nop";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".nop";
+  return unknown08.c_str();
 }
 
 const char *Extend::acb(const char *name) {
-  path = name;
-  path += ".acb";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".acb";
+  return unknown08.c_str();
 }
 
 const char *Extend::lip(const char *name) {
-  path = name;
-  path += ".lip";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".lip";
+  return unknown08.c_str();
 }
 
 const char *Extend::xxlip(const char *name) {
-  path = name;
-  path += ".wilip";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".wilip";
+  return unknown08.c_str();
 }
 
 const char *Extend::evpa(const char *name) {
-  path = name;
-  path += ".evpa";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".evpa";
+  return unknown08.c_str();
 }
 
 const char *Extend::pack_efb(const char *name) {
-  path = name;
-  path += "_pack.wiefb";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += "_pack.wiefb";
+  return unknown08.c_str();
 }
 
 const char *Extend::sar(const char *name) {
-  path = name;
-  path += ".sar";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".sar";
+  return unknown08.c_str();
 }
 
 const char *Extend::webm(const char *name) {
-  path = name;
-  path += ".webm";
-  return path.c_str();
+  unknown08 = name;
+  unknown08 += ".webm";
+  return unknown08.c_str();
 }
 
 const char *Extend::dirname(const char *path) {

@@ -14,7 +14,7 @@ public:
   virtual void redo(const Param &param);
 
 private:
-  mm::Vec3 prevScale;
+  mm::Vec3 unknown10; // Inferred role: prev scale; original member name unknown.
 };
 
 static_assert(sizeof(ScriptEffectScale) == 0x20, "");

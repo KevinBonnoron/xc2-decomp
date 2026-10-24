@@ -23,44 +23,44 @@ struct GF_OBJ_HANDLE;
 
 namespace event {
 
-TextWindow::TextWindow() : flags(0), handle(gf::INVALID_HANDLE), context(nullptr) {}
+TextWindow::TextWindow() : unknown08(0), unknown218(gf::INVALID_HANDLE), unknown220(nullptr) {}
 
 void TextWindow::clear() {
-  if (context != nullptr) {
-    gf::GfMenuObjBalloon::close(context, true);
-    mm::mtl::safeRelease(context);
+  if (unknown220 != nullptr) {
+    gf::GfMenuObjBalloon::close(unknown220, true);
+    mm::mtl::safeRelease(unknown220);
   }
-  text = "";
-  name = "";
-  handle = gf::INVALID_HANDLE;
-  flags = 0;
+  unknown110 = "";
+  unknown0c = "";
+  unknown218 = gf::INVALID_HANDLE;
+  unknown08 = 0;
 }
 
 void TextWindow::update() {
   if (!isDisp()) {
     return;
   }
-  if ((flags & FLAG_CLOSE) == 0) {
+  if ((unknown08 & FLAG_CLOSE) == 0) {
     gf::GfMenuCallContext::GfMenuResult result = {};
-    if (context->popResult(result) && result.unknown04 == 1) {
-      flags |= FLAG_CLOSE;
-      closeWait = 4;
+    if (unknown220->popResult(result) && result.unknown04 == 1) {
+      unknown08 |= FLAG_CLOSE;
+      unknown228 = 4;
     }
   }
-  if ((flags & FLAG_CLOSE) != 0) {
-    if (closeWait-- > 0 && !TextManager::get().isCutChangeFrame()) {
+  if ((unknown08 & FLAG_CLOSE) != 0) {
+    if (unknown228-- > 0 && !TextManager::get().isCutChangeFrame()) {
       return;
     }
     erase();
-    flags &= ~FLAG_WRITE;
+    unknown08 &= ~FLAG_WRITE;
   }
 }
 
 void TextWindow::erase() {
-  if (context != nullptr) {
+  if (unknown220 != nullptr) {
     bool isImmediate = !TextManager::get().isCutChangeFrame();
-    gf::GfMenuObjBalloon::close(context, isImmediate);
-    mm::mtl::safeRelease(context);
+    gf::GfMenuObjBalloon::close(unknown220, isImmediate);
+    mm::mtl::safeRelease(unknown220);
   }
 }
 
@@ -75,8 +75,8 @@ void TextWindow::render() {
   fw::debug::drawLineSquare2D(mm::Rect<s32>(250, y, width, 60), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFont(260, height - 190, "TEXTWIN");
-  fw::debug::drawFont(335, height - 190, "[%s]", name.c_str());
-  fw::debug::drawFont(265, height - 175, text.c_str());
+  fw::debug::drawFont(335, height - 190, "[%s]", unknown0c.c_str());
+  fw::debug::drawFont(265, height - 175, unknown110.c_str());
 }
 
 void TextWindow::write(const char *text, const char *name, u8 *bdat, u32 textId, gf::GF_OBJ_HANDLE *handle) {
@@ -84,9 +84,9 @@ void TextWindow::write(const char *text, const char *name, u8 *bdat, u32 textId,
     hide();
     return;
   }
-  if (context == nullptr || this->handle != handle) {
+  if (unknown220 == nullptr || this->unknown218 != handle) {
     erase();
-    context = gf::GfMenuCallContext::create();
+    unknown220 = gf::GfMenuCallContext::create();
     gf::GfMenuObjBalloon::OpenParam param;
     param.unknown00 = bdat;
     param.unknown08 = textId;
@@ -110,19 +110,19 @@ void TextWindow::write(const char *text, const char *name, u8 *bdat, u32 textId,
     }
     gf::DataParamAcc paramAcc(handle);
     gf::GfMenuBdat::getMenuOffset(paramAcc.getMenuOffset(), param.unknown30);
-    gf::GfMenuObjBalloon::openEvent(context, param);
+    gf::GfMenuObjBalloon::openEvent(unknown220, param);
   } else {
     gf::GfMenuObjBalloon::NextParam param;
     param.unknown00 = bdat;
     param.unknown08 = textId;
-    gf::GfMenuObjBalloon::nextEvent(context, param);
+    gf::GfMenuObjBalloon::nextEvent(unknown220, param);
   }
-  this->text = text;
-  this->name = name;
-  this->handle = handle;
-  flags = (flags & ~(FLAG_WRITE | FLAG_CLOSE)) | FLAG_WRITE;
+  this->unknown110 = text;
+  this->unknown0c = name;
+  this->unknown218 = handle;
+  unknown08 = (unknown08 & ~(FLAG_WRITE | FLAG_CLOSE)) | FLAG_WRITE;
 }
 
-bool TextWindow::isWriting() const { return (flags & (FLAG_WRITE | FLAG_CLOSE)) == FLAG_WRITE; }
+bool TextWindow::isWriting() const { return (unknown08 & (FLAG_WRITE | FLAG_CLOSE)) == FLAG_WRITE; }
 
 } // namespace event

@@ -15,10 +15,10 @@ public:
   virtual void term();
 
 private:
-  gf::GF_OBJ_HANDLE *handle;
+  gf::GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
   u8 _10[0x30 - 0x10];
-  CharaWalkCalculator calculator;
-  u8 _C0[0xd0 - 0xc0];
+  CharaWalkCalculator unknown30; // Inferred role: calculator; original member name unknown.
+  u8 unknownc0[0xd0 - 0xc0];     // Inferred role: c0; original member name unknown.
 };
 
 static_assert(sizeof(CharaWalkPos) == 0xd0, "");

@@ -2,76 +2,76 @@
 
 namespace event {
 
-CpuManager::CpuManager() : flags(0), frame(0.0f), mStartFrame(0.0f), mPauseFrame(0.0f), mCpuFrame(0.0f) { mTimeCount.start(); }
+CpuManager::CpuManager() : unknown10(0), m_frame(0.0f), unknown18(0.0f), unknown1c(0.0f), unknown20(0.0f) { unknown28.start(); }
 
 void CpuManager::init() {
-  flags = 0;
-  frame = 0.0f;
-  mCpuFrame = 0.0f;
+  unknown10 = 0;
+  m_frame = 0.0f;
+  unknown20 = 0.0f;
 }
 
 void CpuManager::end() {
-  flags = 0;
-  frame = 0.0f;
-  mCpuFrame = 0.0f;
+  unknown10 = 0;
+  m_frame = 0.0f;
+  unknown20 = 0.0f;
 }
 
 void CpuManager::update() {
   if (isRunning()) {
-    f32 frame = calcCpuFrame() - mStartFrame;
-    mCpuFrame = __builtin_fmaxf(frame, 0.0f);
+    f32 frame = calcCpuFrame() - unknown18;
+    unknown20 = __builtin_fmaxf(frame, 0.0f);
   }
 }
 
-f32 CpuManager::calcCpuFrame() const { return static_cast<int>(mTimeCount.getSecLap() * 30.0f); }
+f32 CpuManager::calcCpuFrame() const { return static_cast<int>(unknown28.getSecLap() * 30.0f); }
 
 void CpuManager::tailAlways() {
   if (isRunning()) {
-    frame = mCpuFrame;
+    m_frame = unknown20;
   }
 }
 
 void CpuManager::start() {
-  frame = 0.0f;
-  mCpuFrame = 0.0f;
-  mStartFrame = calcCpuFrame();
-  flags |= FLAG_START;
+  m_frame = 0.0f;
+  unknown20 = 0.0f;
+  unknown18 = calcCpuFrame();
+  unknown10 |= FLAG_START;
 }
 
-f32 CpuManager::getFrame() const { return frame; }
+f32 CpuManager::getFrame() const { return m_frame; }
 
 void CpuManager::pause(bool isPause) {
-  if ((flags & FLAG_START) == 0) {
+  if ((unknown10 & FLAG_START) == 0) {
     return;
   }
-  bool wasPaused = (flags & (FLAG_PAUSE | FLAG_PAUSE_HOME)) != 0;
+  bool wasPaused = (unknown10 & (FLAG_PAUSE | FLAG_PAUSE_HOME)) != 0;
   setFlag(FLAG_PAUSE, isPause);
-  bool isPaused = (flags & (FLAG_PAUSE | FLAG_PAUSE_HOME)) != 0;
+  bool isPaused = (unknown10 & (FLAG_PAUSE | FLAG_PAUSE_HOME)) != 0;
   if (wasPaused != isPaused) {
     f32 frame = calcCpuFrame();
     if (isPaused) {
-      mPauseFrame = frame;
+      unknown1c = frame;
     } else {
-      f32 startFrame = mStartFrame + (frame - mPauseFrame);
-      mStartFrame = __builtin_fmaxf(startFrame, 0.0f);
+      f32 startFrame = unknown18 + (frame - unknown1c);
+      unknown18 = __builtin_fmaxf(startFrame, 0.0f);
     }
   }
 }
 
 void CpuManager::pauseHome(bool isPause) {
-  if ((flags & FLAG_START) == 0) {
+  if ((unknown10 & FLAG_START) == 0) {
     return;
   }
-  bool wasPaused = (flags & (FLAG_PAUSE | FLAG_PAUSE_HOME)) != 0;
+  bool wasPaused = (unknown10 & (FLAG_PAUSE | FLAG_PAUSE_HOME)) != 0;
   setFlag(FLAG_PAUSE_HOME, isPause);
-  bool isPaused = (flags & (FLAG_PAUSE | FLAG_PAUSE_HOME)) != 0;
+  bool isPaused = (unknown10 & (FLAG_PAUSE | FLAG_PAUSE_HOME)) != 0;
   if (wasPaused != isPaused) {
     f32 frame = calcCpuFrame();
     if (isPaused) {
-      mPauseFrame = frame;
+      unknown1c = frame;
     } else {
-      f32 startFrame = mStartFrame + (frame - this->frame);
-      mStartFrame = __builtin_fmaxf(startFrame, 0.0f);
+      f32 startFrame = unknown18 + (frame - this->m_frame);
+      unknown18 = __builtin_fmaxf(startFrame, 0.0f);
     }
   }
 }

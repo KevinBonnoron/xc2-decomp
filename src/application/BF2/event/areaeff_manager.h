@@ -30,21 +30,21 @@ public:
 
 private:
   struct Flags {
-    bool isOn(u32 flag) const { return (bits & flag) != 0; }
+    bool isOn(u32 flag) const { return (unknown00 & flag) != 0; }
 
     void set(u32 flag, bool isSet) {
       if (isSet) {
-        bits |= flag;
+        unknown00 |= flag;
       } else {
-        bits &= ~flag;
+        unknown00 &= ~flag;
       }
     }
 
-    u32 bits;
+    u32 unknown00; // Inferred role: bits; original member name unknown.
   };
 
-  Flags flags;
-  f32 mSleepTime;
+  Flags unknown10; // Inferred role: flags; original member name unknown.
+  f32 unknown14;   // Inferred role: sleep time; original member name unknown.
 };
 
 static_assert(sizeof(AreaeffManager) == 0x18, "");

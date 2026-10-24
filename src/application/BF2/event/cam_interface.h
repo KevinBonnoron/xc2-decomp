@@ -24,10 +24,10 @@ public:
   void setNearFar(f32 nearClip, f32 farClip);
 
 private:
-  u32 type;
-  bool isEnable;
-  f32 currentRoll;
-  mm::mtl::IntrusivePtr<fw::Camera> self;
+  u32 unknowna8;                               // Inferred role: type; original member name unknown.
+  bool unknownac;                              // Inferred role: enable; original member name unknown.
+  f32 unknownb0;                               // Inferred role: current roll; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::Camera> unknownb8; // Inferred role: self; original member name unknown.
 };
 
 static_assert(sizeof(CamInterface) == 0xc0, "");

@@ -26,9 +26,9 @@ public:
   bool isFailure() const;
 
 private:
-  const PackHeader *getHeader() const { return static_cast<const PackHeader *>(mResource->getAssetData()); }
+  const PackHeader *getHeader() const { return static_cast<const PackHeader *>(unknown08->getAssetData()); }
 
-  fw::RenderResource *mResource;
+  fw::RenderResource *unknown08; // Inferred role: resource; original member name unknown.
 };
 
 static_assert(sizeof(StmPackHeader) == 0x10, "");

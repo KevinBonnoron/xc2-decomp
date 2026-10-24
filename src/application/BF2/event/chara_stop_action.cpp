@@ -10,7 +10,7 @@ class GfObj;
 namespace event {
 
 ICmd::RESULT CharaStopAction::update(const Param &param) {
-  gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown08);
   if (obj != nullptr) {
     CharaUtil::execCmd(obj, "C_idle", "S_idle", "S_idle");
   }

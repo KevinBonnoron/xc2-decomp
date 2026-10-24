@@ -9,10 +9,10 @@ public:
 
   BlockWtr();
   void setRules(const char *rules);
-  bool isBlock(u32 index) const { return mIsBlock[index]; }
+  bool isBlock(u32 index) const { return unknown00[index]; }
 
 private:
-  bool mIsBlock[WTR_COUNT];
+  bool unknown00[WTR_COUNT]; // Inferred role: is block; original member name unknown.
 };
 
 static_assert(sizeof(BlockWtr) == 0x20, "");

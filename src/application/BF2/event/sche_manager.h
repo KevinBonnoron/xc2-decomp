@@ -36,8 +36,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 flags;
-  mm::mtl::FixedVector<Scheduler *, SCHEDULER_COUNT> mSchedulers;
+  u32 unknown10;                                                // Inferred role: flags; original member name unknown.
+  mm::mtl::FixedVector<Scheduler *, SCHEDULER_COUNT> unknown18; // Inferred role: schedulers; original member name unknown.
 };
 
 static_assert(sizeof(ScheManager) == 0xa0, "");

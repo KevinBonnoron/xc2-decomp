@@ -45,13 +45,13 @@ public:
 
   Manager(ml::Scn *scn);
   virtual ~Manager();
-  int getStartPageID() const { return mStartPageID; }
-  gf::GF_OBJ_HANDLE *getObjHandle() const { return mObjHandle; }
-  ml::Scn *getScn() const { return mScn; }
-  const char *getSceneName() const { return mSceneName.c_str(); }
-  bool isEndFadeOut() const { return (flags & FLAG_END_FADE_OUT) != 0; }
-  bool isPlay() const { return (flags & FLAG_PLAY) != 0; }
-  u32 getPlayParam(u32 index) const { return mPlayParams[index]; }
+  int getStartPageID() const { return unknown278; }
+  gf::GF_OBJ_HANDLE *getObjHandle() const { return unknown280; }
+  ml::Scn *getScn() const { return unknown228; }
+  const char *getSceneName() const { return unknown254.c_str(); }
+  bool isEndFadeOut() const { return (unknown18 & FLAG_END_FADE_OUT) != 0; }
+  bool isPlay() const { return (unknown18 & FLAG_PLAY) != 0; }
+  u32 getPlayParam(u32 index) const { return unknown288[index]; }
   void failureSkip();
   void nextEvent(int next);
   bool isPlayCancel() const;
@@ -93,16 +93,16 @@ public:
   virtual void bkgHomeMenu(bool isOpen);
 
 private:
-  u32 flags;
-  u32 state;
-  mm::mtl::FixedVector<IManager *, MANAGER_COUNT> mManagers;
-  ml::Scn *mScn;
-  mm::mtl::FixStr<32> mEventName;
-  mm::mtl::FixStr<32> mSceneName;
-  int mStartPageID;
-  gf::GF_OBJ_HANDLE *mObjHandle;
-  u32 mPlayParams[4];
-  LANGUAGE_MODE mLanguageMode;
+  u32 unknown18;                                             // Inferred role: flags; original member name unknown.
+  u32 unknown1c;                                             // Inferred role: state; original member name unknown.
+  mm::mtl::FixedVector<IManager *, MANAGER_COUNT> unknown20; // Inferred role: managers; original member name unknown.
+  ml::Scn *unknown228;                                       // Inferred role: scn; original member name unknown.
+  mm::mtl::FixStr<32> unknown230;                            // Inferred role: event name; original member name unknown.
+  mm::mtl::FixStr<32> unknown254;                            // Inferred role: scene name; original member name unknown.
+  int unknown278;                                            // Inferred role: start page id; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown280;                             // Inferred role: object handle; original member name unknown.
+  u32 unknown288[4];                                         // Inferred role: play params; original member name unknown.
+  LANGUAGE_MODE unknown298;                                  // Inferred role: language mode; original member name unknown.
 };
 
 static_assert(sizeof(Manager) == 0x2a0, "");

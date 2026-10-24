@@ -38,7 +38,7 @@ public:
   };
 
   void render(const mm::Vec3 &position, f32 height) {
-    if ((flags & FLAG_STANBY) == 0 || gf::GfObjUtil::getObj(handle) == nullptr) {
+    if ((unknown08 & FLAG_STANBY) == 0 || gf::GfObjUtil::getObj(unknown10) == nullptr) {
       return;
     }
     mm::Vec3 head;
@@ -58,12 +58,12 @@ public:
     s32 titleY = y - 55;
     fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
     fw::debug::drawFont(titleX, titleY, "[ACTION]");
-    if ((flags & FLAG_LOOP) != 0) {
+    if ((unknown08 & FLAG_LOOP) != 0) {
       fw::debug::drawFont(x - 5, titleY, "life(∞)");
     } else {
-      fw::debug::drawFont(x - 5, titleY, "life(%.1f)", life);
+      fw::debug::drawFont(x - 5, titleY, "life(%.1f)", unknown34);
     }
-    fw::debug::drawFont(x - 70, y - 40, name);
+    fw::debug::drawFont(x - 70, y - 40, unknown38);
   }
   static const char *type2stat(int type, u32 index);
   static const char *type2cmd(int type, u32 index);
@@ -77,19 +77,19 @@ public:
   virtual RESULT update(const Param &param);
   virtual void term();
 
-  void keep() { flags |= FLAG_KEEP; }
-  int getType() const { return type; }
-  f32 getLastFrame() const { return (flags & FLAG_STANBY) != 0 ? life : 9999.0f; }
+  void keep() { unknown08 |= FLAG_KEEP; }
+  int getType() const { return unknown30; }
+  f32 getLastFrame() const { return (unknown08 & FLAG_STANBY) != 0 ? unknown34 : 9999.0f; }
 
 private:
-  u32 flags;
-  gf::GF_OBJ_HANDLE *handle;
-  gf::GfEvtModel *model;
-  CharaDysUpdater *dys;
+  u32 unknown08;                // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
+  gf::GfEvtModel *unknown18;    // Inferred role: model; original member name unknown.
+  CharaDysUpdater *unknown20;   // Inferred role: dys; original member name unknown.
   u8 _28[0x30 - 0x28];
-  int type;
-  f32 life;
-  const char *name;
+  int unknown30;         // Inferred role: type; original member name unknown.
+  f32 unknown34;         // Inferred role: life; original member name unknown.
+  const char *unknown38; // Inferred role: name; original member name unknown.
 };
 
 static_assert(sizeof(CharaPlayAction) == 0x40, "");

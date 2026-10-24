@@ -2,7 +2,7 @@
 
 namespace event {
 
-BlurManager::BlurManager() : dispFlags(0), flags(0) {}
+BlurManager::BlurManager() : unknown10(0), unknown14(0) {}
 
 void BlurManager::clear() {}
 
@@ -16,13 +16,13 @@ void BlurManager::play() {}
 
 void BlurManager::setDisp(bool isDisp) {
   if (isDisp) {
-    dispFlags |= DISP_FLAG_DISP;
+    unknown10 |= DISP_FLAG_DISP;
   } else {
-    dispFlags &= ~DISP_FLAG_DISP;
+    unknown10 &= ~DISP_FLAG_DISP;
   }
 }
 
-bool BlurManager::isDisp() const { return (dispFlags & DISP_FLAG_DISP) != 0; }
+bool BlurManager::isDisp() const { return (unknown10 & DISP_FLAG_DISP) != 0; }
 
 void BlurManager::OnEventProc(MSG_TYPE type) {}
 

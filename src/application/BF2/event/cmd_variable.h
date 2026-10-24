@@ -29,14 +29,14 @@ public:
   void *getUserdata() const;
 
 private:
-  VARIABLE_TYPE mType;
+  VARIABLE_TYPE unknown08; // Inferred role: type; original member name unknown.
   union {
     s32 integer;
     f32 real;
     bool boolean;
     const char *string;
     void *userdata;
-  } value;
+  } unknown10; // Inferred role: value; original member name unknown.
 };
 
 static_assert(sizeof(CmdVariable) == 0x18, "");

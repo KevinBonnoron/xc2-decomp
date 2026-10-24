@@ -44,13 +44,13 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 flags;
-  mm::mtl::FixStr<256> mPreloadPath;
-  bool mIsPreloadFullSize;
-  mm::mtl::FixStr<256> mPlayPath;
-  s64 mUnused;
-  int mDispTimer;
-  int mCloseTimer;
+  u32 unknown10;                   // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<256> unknown14;  // Inferred role: preload path; original member name unknown.
+  bool unknown118;                 // Inferred role: is preload full size; original member name unknown.
+  mm::mtl::FixStr<256> unknown11c; // Inferred role: play path; original member name unknown.
+  s64 unknown220;                  // Inferred role: unused; original member name unknown.
+  int unknown228;                  // Inferred role: disp timer; original member name unknown.
+  int unknown22c;                  // Inferred role: close timer; original member name unknown.
 };
 
 static_assert(sizeof(MovieManager) == 0x230, "");

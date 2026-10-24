@@ -4,66 +4,66 @@
 
 namespace event {
 
-CharaPartUpdater::CharaPartUpdater() : handle(gf::INVALID_HANDLE), mModel(nullptr) {}
+CharaPartUpdater::CharaPartUpdater() : unknown08(gf::INVALID_HANDLE), unknown10(nullptr) {}
 
 void CharaPartUpdater::create(gf::GF_OBJ_HANDLE *handle, gf::GfEvtModel *model) {
-  this->handle = handle;
-  mModel = model;
+  this->unknown08 = handle;
+  unknown10 = model;
 }
 
 void CharaPartUpdater::destroy() {
-  handle = gf::INVALID_HANDLE;
-  mModel = nullptr;
-  mRequests.clear();
+  unknown08 = gf::INVALID_HANDLE;
+  unknown10 = nullptr;
+  unknown18.clear();
 }
 
 void CharaPartUpdater::update(f32 delta) { updateRequest(); }
 
 void CharaPartUpdater::eraseRequest(TYPE type, const char *name) {
-  for (Request *it = mRequests.begin(); it != mRequests.end(); ++it) {
-    if (it->type == type && __builtin_strcmp(it->name, name) == 0) {
-      mRequests.erase(it);
+  for (Request *it = unknown18.begin(); it != unknown18.end(); ++it) {
+    if (it->unknown00 == type && __builtin_strcmp(it->unknown08, name) == 0) {
+      unknown18.erase(it);
       return;
     }
   }
 }
 
 void CharaPartUpdater::setExtDisp(const char *name, bool isDisp) {
-  if (mRequests.size() >= REQUEST_COUNT) {
-    mRequests.erase(mRequests.begin());
+  if (unknown18.size() >= REQUEST_COUNT) {
+    unknown18.erase(unknown18.begin());
   }
   eraseRequest(TYPE_EXT_DISP, name);
   Request request;
-  request.type = TYPE_EXT_DISP;
-  request.name = name;
-  request.value = isDisp ? 1.0f : 0.0f;
-  mRequests.push_back(request);
+  request.unknown00 = TYPE_EXT_DISP;
+  request.unknown08 = name;
+  request.unknown10 = isDisp ? 1.0f : 0.0f;
+  unknown18.push_back(request);
   updateRequest();
 }
 
 void CharaPartUpdater::setExtDispWeapon(const char *name, bool isDisp) {
-  if (mRequests.size() >= REQUEST_COUNT) {
-    mRequests.erase(mRequests.begin());
+  if (unknown18.size() >= REQUEST_COUNT) {
+    unknown18.erase(unknown18.begin());
   }
   eraseRequest(TYPE_EXT_DISP, name);
   Request request;
-  request.type = TYPE_EXT_DISP_WEAPON;
-  request.name = name;
-  request.value = isDisp ? 1.0f : 0.0f;
-  mRequests.push_back(request);
+  request.unknown00 = TYPE_EXT_DISP_WEAPON;
+  request.unknown08 = name;
+  request.unknown10 = isDisp ? 1.0f : 0.0f;
+  unknown18.push_back(request);
   updateRequest();
 }
 
 void CharaPartUpdater::setExtParam(const char *name, f32 value) {
-  if (mRequests.size() >= REQUEST_COUNT) {
-    mRequests.erase(mRequests.begin());
+  if (unknown18.size() >= REQUEST_COUNT) {
+    unknown18.erase(unknown18.begin());
   }
   eraseRequest(TYPE_EXT_PARAM, name);
   Request request;
-  request.type = TYPE_EXT_PARAM;
-  request.name = name;
-  request.value = value;
-  mRequests.push_back(request);
+  request.unknown00 = TYPE_EXT_PARAM;
+  request.unknown08 = name;
+  request.unknown10 = value;
+  unknown18.push_back(request);
   updateRequest();
 }
 

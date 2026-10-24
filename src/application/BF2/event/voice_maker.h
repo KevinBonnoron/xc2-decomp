@@ -16,9 +16,9 @@ public:
   const char *makePath(const char *file);
 
 private:
-  u32 flags;
-  mm::mtl::FixStr<256> mFolder;
-  mm::mtl::FixStr<256> path;
+  u32 unknown08;                   // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<256> unknown0c;  // Inferred role: folder; original member name unknown.
+  mm::mtl::FixStr<256> unknown110; // Inferred role: path; original member name unknown.
 };
 
 static_assert(sizeof(VoiceMaker) == 0x218, "");

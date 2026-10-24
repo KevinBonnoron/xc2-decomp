@@ -12,40 +12,40 @@ namespace event {
 
 constexpr f32 RADIAN_TO_DEGREE = 57.29578f;
 
-LightObj::LightObj(int screenID) : flags(0), mLight(nullptr), mScreenID(screenID), mData(nullptr), mPos(mm::Vec3::zero), mRot(mm::Vec3::zero) {}
+LightObj::LightObj(int screenID) : unknown08(0), unknown10(nullptr), unknown18(screenID), unknowna0(nullptr), m_pos(mm::Vec3::zero), unknownc0(mm::Vec3::zero) {}
 
 LightObj::~LightObj() { clear(); }
 
 void LightObj::update(const FrameInfo &info) {
-  if (mLight == nullptr)
+  if (unknown10 == nullptr)
     return;
-  mLight->setPos(mPos);
-  mLight->setRot(mRot);
-  mLife -= info.delta;
-  if (mLife < 0.0f)
+  unknown10->setPos(m_pos);
+  unknown10->setRot(unknownc0);
+  unknowna8 -= info.unknown04;
+  if (unknowna8 < 0.0f)
     clear();
 }
 
 void LightObj::render(int x, int y) {
-  if (mLight == nullptr) {
+  if (unknown10 == nullptr) {
     return;
   }
   fw::debug::drawSquare2D(mm::Rect<int>(x, y, 230, 75), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
   fw::debug::drawLineSquare2D(mm::Rect<int>(x, y, 230, 75), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFont(x + 5, y + 5, "[LIGHT]");
-  fw::debug::drawFont(x + 100, y + 5, "life(%.2f)", mLife);
-  fw::debug::drawFont(x + 10, y + 22, "file:    %s", mm::mtl::Singleton<Extend>::getPtr()->filename(path.c_str()));
-  fw::debug::drawFont(x + 10, y + 37, "pos:     %.1f %.1f %.1f", mPos.x, mPos.y, mPos.z);
-  fw::debug::drawFont(x + 10, y + 52, "rot:     %.1f %.1f %.1f", mRot.x * RADIAN_TO_DEGREE, mRot.y * RADIAN_TO_DEGREE, mRot.z * RADIAN_TO_DEGREE);
+  fw::debug::drawFont(x + 100, y + 5, "life(%.2f)", unknowna8);
+  fw::debug::drawFont(x + 10, y + 22, "file:    %s", mm::mtl::Singleton<Extend>::getPtr()->filename(unknown1c.c_str()));
+  fw::debug::drawFont(x + 10, y + 37, "pos:     %.1f %.1f %.1f", m_pos.x, m_pos.y, m_pos.z);
+  fw::debug::drawFont(x + 10, y + 52, "rot:     %.1f %.1f %.1f", unknownc0.x * RADIAN_TO_DEGREE, unknownc0.y * RADIAN_TO_DEGREE, unknownc0.z * RADIAN_TO_DEGREE);
 }
 
-bool LightObj::isPlaying() const { return mLight != nullptr; }
+bool LightObj::isPlaying() const { return unknown10 != nullptr; }
 
-void LightObj::setPos(const mm::Vec3 &pos) { mPos = pos; }
+void LightObj::setPos(const mm::Vec3 &pos) { m_pos = pos; }
 
-const mm::Vec3 &LightObj::getPos() const { return mPos; }
+const mm::Vec3 &LightObj::getPos() const { return m_pos; }
 
-void LightObj::setRot(const mm::Vec3 &rot) { mRot = rot; }
+void LightObj::setRot(const mm::Vec3 &rot) { unknownc0 = rot; }
 
 } // namespace event

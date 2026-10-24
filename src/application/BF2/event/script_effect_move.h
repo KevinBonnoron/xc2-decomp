@@ -14,7 +14,7 @@ public:
   virtual void redo(const Param &param);
 
 private:
-  PosAxis prevAxis;
+  PosAxis unknown10; // Inferred role: prev axis; original member name unknown.
 };
 
 static_assert(sizeof(ScriptEffectMove) == 0x30, "");

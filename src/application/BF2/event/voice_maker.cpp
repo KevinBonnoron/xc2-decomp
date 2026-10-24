@@ -5,7 +5,7 @@
 
 namespace event {
 
-VoiceMaker::VoiceMaker() : flags(0) {}
+VoiceMaker::VoiceMaker() : unknown08(0) {}
 
 namespace {
 
@@ -17,25 +17,25 @@ bool isVoiceGroup(const char *name, size_t length, const char *prefix) {
 } // namespace
 
 void VoiceMaker::create(bool isEnable, const char *directory, const char *name) {
-  flags = 0;
-  mFolder.clear();
+  unknown08 = 0;
+  unknown0c.clear();
   if (!isEnable) {
     return;
   }
   size_t length = __builtin_strlen(name);
   if (isVoiceGroup(name, length, "bf") || isVoiceGroup(name, length, "qst") || isVoiceGroup(name, length, "fev") || isVoiceGroup(name, length, "deb") || isVoiceGroup(name, length, "kizuna")) {
-    mFolder.format("/stream/%s/%s/%s/", directory, fw::LangUtil::getVoiceFolder().c_str(), name);
-    flags |= FLAG_ENABLE;
+    unknown0c.format("/stream/%s/%s/%s/", directory, fw::LangUtil::getVoiceFolder().c_str(), name);
+    unknown08 |= FLAG_ENABLE;
   }
 }
 
 const char *VoiceMaker::makePath(const char *file) {
-  if ((flags & FLAG_ENABLE) == 0) {
+  if ((unknown08 & FLAG_ENABLE) == 0) {
     return nullptr;
   }
-  path = mFolder.c_str();
-  path += file;
-  return path.c_str();
+  unknown110 = unknown0c.c_str();
+  unknown110 += file;
+  return unknown110.c_str();
 }
 
 } // namespace event

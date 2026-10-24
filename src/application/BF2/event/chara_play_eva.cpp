@@ -7,16 +7,16 @@
 namespace event {
 
 void CharaPlayEva::term() {
-  if ((flags & FLAG_PLAY) != 0) {
-    if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode() && data != nullptr) {
-      mm::mtl::Singleton<MotstmManager>::getPtr()->free(data);
+  if ((unknown08 & FLAG_PLAY) != 0) {
+    if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode() && unknown20 != nullptr) {
+      mm::mtl::Singleton<MotstmManager>::getPtr()->free(unknown20);
     }
-    data = nullptr;
-    if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode() && weaponData != nullptr) {
-      mm::mtl::Singleton<MotstmManager>::getPtr()->free(weaponData);
+    unknown20 = nullptr;
+    if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode() && unknown28 != nullptr) {
+      mm::mtl::Singleton<MotstmManager>::getPtr()->free(unknown28);
     }
-    weaponData = nullptr;
-    flags &= ~FLAG_PLAY;
+    unknown28 = nullptr;
+    unknown08 &= ~FLAG_PLAY;
   }
 }
 

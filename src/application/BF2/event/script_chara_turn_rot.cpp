@@ -22,7 +22,7 @@ void ScriptCharaTurnRot::doit(const Param &param) {
   }
   ObjectChara *chara = static_cast<ObjectChara *>(object);
   RotAxis axis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
-  prevAxis = chara->getRotAxis();
+  unknown10 = chara->getRotAxis();
   mm::mtl::Singleton<ScheManager>::getPtr()->setUse(Scheduler::USE_TURN, false, chara->getCharaObj()->getHandle());
   chara->turnRotAxis(axis, static_cast<EVT_rotcvtype>(param.val(4).getS32()), param.val(5).getF32());
 }
@@ -32,7 +32,7 @@ void ScriptCharaTurnRot::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
     return;
   }
-  RotAxis axis = prevAxis;
+  RotAxis axis = unknown10;
   static_cast<ObjectChara *>(object)->setRotAxis(axis);
 }
 

@@ -19,8 +19,8 @@ public:
   virtual void OnResEvent(const PARAM &param);
 
 private:
-  u32 flags;
-  mm::mtl::FixStr<64> name;
+  u32 unknown08; // Inferred role: flags; original member name unknown.
+  mm::mtl::FixStr<64> m_name;
   u8 _50[0x68 - 0x50];
 };
 

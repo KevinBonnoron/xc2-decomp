@@ -19,7 +19,7 @@ void ScriptCharaWalkPos::doit(const Param &param) {
   }
   PosAxis axis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
   ObjectChara *chara = static_cast<ObjectChara *>(object);
-  prevAxis = chara->getPosAxis();
+  unknown10 = chara->getPosAxis();
   chara->walkPosAxis(axis, static_cast<EVT_poscvtype>(param.val(4).getS32()), param.val(5).getBool());
 }
 
@@ -28,7 +28,7 @@ void ScriptCharaWalkPos::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
     return;
   }
-  PosAxis axis = prevAxis;
+  PosAxis axis = unknown10;
   static_cast<ObjectChara *>(object)->setPosAxis(axis);
 }
 

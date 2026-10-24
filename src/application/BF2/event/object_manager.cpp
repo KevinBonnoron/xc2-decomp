@@ -14,140 +14,140 @@ namespace event {
 class ObjectChara;
 
 u32 ObjectManager::getCharaCount() const {
-  if (mCurrent == nullptr) {
+  if (unknown128 == nullptr) {
     return 0;
   }
-  return mCurrent->getCharaCount();
+  return unknown128->getCharaCount();
 }
 
 ObjectChara *ObjectManager::getChara(u32 index) { return getCurrent()->getChara(index); }
 
 u32 ObjectManager::getCameraCount() const {
-  if (mCurrent == nullptr) {
+  if (unknown128 == nullptr) {
     return 0;
   }
-  return mCurrent->getCameraCount();
+  return unknown128->getCameraCount();
 }
 
 ObjectCamera *ObjectManager::getCamera(u32 index) { return getCurrent()->getCamera(index); }
 
 ObjectChara *ObjectManager::searchByHandle(gf::GF_OBJ_HANDLE *handle) {
-  if (mCurrent == nullptr)
+  if (unknown128 == nullptr)
     return nullptr;
-  return mCurrent->searchByHandle(handle);
+  return unknown128->searchByHandle(handle);
 }
 
 ObjectChara *ObjectManager::searchByID(u32 type, u32 id) {
-  if (mCurrent == nullptr)
+  if (unknown128 == nullptr)
     return nullptr;
-  return mCurrent->searchByID(type, id);
+  return unknown128->searchByID(type, id);
 }
 
 Object *ObjectManager::searchByName(const char *name) {
-  ObjectList *current = mCurrent;
+  ObjectList *current = unknown128;
   if (current == nullptr)
     return nullptr;
-  Object *root = current->mRoot;
+  Object *root = current->unknown50;
   if (root == nullptr)
     return nullptr;
   Object *found = ObjectList::searchByNameSub(root, name);
-  if (found == nullptr || found == root || found == current->mCharaTree || found == current->mCameraTree || found == current->mEffectTree || found == current->mLightTree)
+  if (found == nullptr || found == root || found == current->unknown58 || found == current->unknown60 || found == current->unknown68 || found == current->unknown70)
     return nullptr;
   return found;
 }
 
-bool ObjectManager::isDisp() const { return (flags & FLAG_DISP) != 0; }
+bool ObjectManager::isDisp() const { return (unknown14 & FLAG_DISP) != 0; }
 
-ObjectManager::ObjectManager() : mMode(0), flags(0), mSceneName("default") {}
+ObjectManager::ObjectManager() : unknown10(0), unknown14(0), unknowna0("default") {}
 
 void ObjectManager::stopEffect() {
-  for (size_t i = 0; i < mScenes.size(); i++) {
-    mScenes[i]->stopEffect();
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    unknown18[i]->stopEffect();
   }
 }
 
 void ObjectManager::clear() {
-  for (size_t i = 0; i < mScenes.size(); i++) {
-    if (mScenes[i] != nullptr) {
-      delete mScenes[i];
-      mScenes[i] = nullptr;
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    if (unknown18[i] != nullptr) {
+      delete unknown18[i];
+      unknown18[i] = nullptr;
     }
   }
-  mScenes.clear();
-  mMode = 0;
-  mSceneName = "default";
-  mNextSceneName = "";
-  mCurrent = nullptr;
+  unknown18.clear();
+  unknown10 = 0;
+  unknowna0 = "default";
+  unknowne4 = "";
+  unknown128 = nullptr;
 }
 
 void ObjectManager::init() {
-  mMode = 0;
-  mNextSceneName = "";
-  mCurrent = nullptr;
-  mSceneName = "default";
+  unknown10 = 0;
+  unknowne4 = "";
+  unknown128 = nullptr;
+  unknowna0 = "default";
   mm::mtl::Singleton<ObjectPartyList>::getPtr()->init();
 }
 
 void ObjectManager::setupScene() {
-  mSceneName = Manager::get()->getSceneName();
+  unknowna0 = Manager::get()->getSceneName();
   updateCurrent();
 }
 
 void ObjectManager::updateCurrent() {
-  if (__builtin_strcmp(mSceneName.c_str(), mNextSceneName.c_str()) == 0) {
+  if (__builtin_strcmp(unknowna0.c_str(), unknowne4.c_str()) == 0) {
     return;
   }
-  mCurrent = searchScene(mSceneName.c_str());
-  if (mCurrent == nullptr) {
-    mCurrent = createScene(mSceneName.c_str());
+  unknown128 = searchScene(unknowna0.c_str());
+  if (unknown128 == nullptr) {
+    unknown128 = createScene(unknowna0.c_str());
   }
-  if (mCurrent != nullptr) {
-    mNextSceneName = mSceneName;
+  if (unknown128 != nullptr) {
+    unknowne4 = unknowna0;
   }
 }
 
 void ObjectManager::startScene() {
-  mSceneName = Manager::get()->getSceneName();
+  unknowna0 = Manager::get()->getSceneName();
   updateCurrent();
-  if (mCurrent != nullptr) {
-    mCurrent->startScene();
+  if (unknown128 != nullptr) {
+    unknown128->startScene();
   }
 }
 
 void ObjectManager::startPage() {
-  if (mCurrent != nullptr) {
-    mCurrent->startPage();
+  if (unknown128 != nullptr) {
+    unknown128->startPage();
   }
 }
 
 void ObjectManager::endScene() {
-  if (mCurrent != nullptr) {
-    mCurrent->endScene();
+  if (unknown128 != nullptr) {
+    unknown128->endScene();
   }
 }
 
 void ObjectManager::update() {
-  if (mCurrent != nullptr) {
-    mCurrent->update();
+  if (unknown128 != nullptr) {
+    unknown128->update();
   }
 }
 
 void ObjectManager::tail() {
-  if (mCurrent != nullptr) {
-    mCurrent->tail();
+  if (unknown128 != nullptr) {
+    unknown128->tail();
   }
 }
 
 bool ObjectManager::isLoading() const {
-  if (mCurrent != nullptr) {
-    return mCurrent->isLoading();
+  if (unknown128 != nullptr) {
+    return unknown128->isLoading();
   }
   return false;
 }
 
 ObjectList *ObjectManager::getCurrent() {
   updateCurrent();
-  return mCurrent;
+  return unknown128;
 }
 
 ObjectChara *ObjectManager::createGfObjPcByWalkID(const char *name, u32 walkID, u32 param2) {
@@ -222,71 +222,71 @@ ObjectLight *ObjectManager::createLight(const char *name, u32 id) { return getCu
 ObjectLight *ObjectManager::getLight(u32 index) { return getCurrent()->getLight(index); }
 
 u32 ObjectManager::getLightCount() const {
-  if (mCurrent == nullptr) {
+  if (unknown128 == nullptr) {
     return 0;
   }
-  return mCurrent->getLightCount();
+  return unknown128->getLightCount();
 }
 
 bool ObjectManager::isUsingEffect() {
-  if (mCurrent == nullptr) {
+  if (unknown128 == nullptr) {
     return false;
   }
-  return mCurrent->isUsingEffect();
+  return unknown128->isUsingEffect();
 }
 
 void ObjectManager::setActivePath(const char *path) { getCurrent()->setActivePath(path); }
 
 Object *ObjectManager::searchByPath(const char *path) {
-  if (mCurrent == nullptr) {
+  if (unknown128 == nullptr) {
     return nullptr;
   }
-  return mCurrent->searchByPath(path);
+  return unknown128->searchByPath(path);
 }
 
 bool ObjectManager::getPathByObj(mm::mtl::FixStr<256> &path, const Object *object) {
-  if (mCurrent == nullptr) {
+  if (unknown128 == nullptr) {
     return false;
   }
-  return mCurrent->getPathByObj(path, object);
+  return unknown128->getPathByObj(path, object);
 }
 
 void ObjectManager::listupObject(mm::mtl::FixedVector<u32, 256> &list, u32 type, bool isAppend) {
-  if (mCurrent != nullptr) {
-    mCurrent->listupObject(list, type, isAppend);
+  if (unknown128 != nullptr) {
+    unknown128->listupObject(list, type, isAppend);
   }
 }
 
 void ObjectManager::setCloneMode(bool isCloneMode) {
   if (isCloneMode) {
-    mMode |= MODE_CLONE;
+    unknown10 |= MODE_CLONE;
   } else {
-    mMode &= ~MODE_CLONE;
+    unknown10 &= ~MODE_CLONE;
   }
 }
 
 void ObjectManager::setDisp(bool isDisp) {
   if (isDisp) {
-    flags |= FLAG_DISP;
+    unknown14 |= FLAG_DISP;
   } else {
-    flags &= ~FLAG_DISP;
+    unknown14 &= ~FLAG_DISP;
   }
 }
 
 void ObjectManager::dump() { getCurrent()->dump(); }
 
 ObjectList *ObjectManager::searchScene(const char *name) const {
-  for (size_t i = 0; i < mScenes.size(); i++) {
-    if (__builtin_strcmp(name, mScenes[i]->getName()) == 0) {
-      return mScenes[i];
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    if (__builtin_strcmp(name, unknown18[i]->getName()) == 0) {
+      return unknown18[i];
     }
   }
   return nullptr;
 }
 
 ObjectList *ObjectManager::createScene(const char *name) {
-  ObjectList *scene = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectList(name, (mMode & MODE_CLONE) != 0);
-  mScenes.push_back(scene);
+  ObjectList *scene = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectList(name, (unknown10 & MODE_CLONE) != 0);
+  unknown18.push_back(scene);
   return scene;
 }
 

@@ -43,9 +43,9 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 flags;
-  u32 dispFlags;
-  StmManager mStm;
+  u32 unknown10;        // Inferred role: flags; original member name unknown.
+  u32 unknown14;        // Inferred role: disp flags; original member name unknown.
+  StmManager unknown18; // Inferred role: stm; original member name unknown.
 };
 
 static_assert(sizeof(MotstmManager) == 0x70, "");

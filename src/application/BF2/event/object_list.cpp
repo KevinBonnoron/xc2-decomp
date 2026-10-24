@@ -28,82 +28,82 @@ const char ObjectList::EFF_TREE[64] = "\x83\x47\x83\x74\x83\x46\x83\x4e\x83\x67\
 const char ObjectList::LGT_TREE[64] = "\x83\x89\x83\x43\x83\x67\x83\x63\x83\x8a\x81\x5b";
 
 ObjectList::ObjectList(const char *name, bool isCloneMode)
-    : flags(0), mName(name), mRoot(nullptr), mCharaTree(nullptr), mCameraTree(nullptr), mEffectTree(nullptr), mLightTree(nullptr), mActive(nullptr), mFirstChara(nullptr), mCharaCount(0),
-      mCameraCount(0), mEffectCount(0), mLightCount(0) {
+    : unknown08(0), unknown0c(name), unknown50(nullptr), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), unknown78(nullptr), unknown80(nullptr), unknown88(0),
+      unknown8c(0), unknown90(0), unknown94(0) {
   if (isCloneMode) {
-    flags |= FLAG_CLONE_MODE;
+    unknown08 |= FLAG_CLONE_MODE;
   } else {
-    flags &= ~FLAG_CLONE_MODE;
+    unknown08 &= ~FLAG_CLONE_MODE;
   }
-  mRoot = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectTree(ROOT);
-  mCharaTree = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectTree(CHR_TREE);
-  mRoot->addChild(mCharaTree);
-  mCharaCount = 0;
-  mCameraTree = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectTree(CAM_TREE);
-  mRoot->addChild(mCameraTree);
-  mCameraCount = 0;
-  mEffectTree = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectTree(EFF_TREE);
-  mRoot->addChild(mEffectTree);
-  mEffectCount = 0;
-  mLightTree = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectTree(LGT_TREE);
-  mRoot->addChild(mLightTree);
-  mLightCount = 0;
-  mActive = nullptr;
-  mFirstChara = nullptr;
+  unknown50 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectTree(ROOT);
+  unknown58 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectTree(CHR_TREE);
+  unknown50->addChild(unknown58);
+  unknown88 = 0;
+  unknown60 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectTree(CAM_TREE);
+  unknown50->addChild(unknown60);
+  unknown8c = 0;
+  unknown68 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectTree(EFF_TREE);
+  unknown50->addChild(unknown68);
+  unknown90 = 0;
+  unknown70 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectTree(LGT_TREE);
+  unknown50->addChild(unknown70);
+  unknown94 = 0;
+  unknown78 = nullptr;
+  unknown80 = nullptr;
 }
 
 ObjectList::~ObjectList() {
-  for (Object *object = mCharaTree->getChild(); object != nullptr; object = object->getNext()) {
+  for (Object *object = unknown58->getChild(); object != nullptr; object = object->getNext()) {
   }
-  for (Object *object = mCameraTree->getChild(); object != nullptr; object = object->getNext()) {
+  for (Object *object = unknown60->getChild(); object != nullptr; object = object->getNext()) {
   }
-  for (Object *object = mEffectTree->getChild(); object != nullptr; object = object->getNext()) {
+  for (Object *object = unknown68->getChild(); object != nullptr; object = object->getNext()) {
   }
-  if (mRoot != nullptr) {
-    clearSub(mRoot);
+  if (unknown50 != nullptr) {
+    clearSub(unknown50);
   }
-  if (mEffectTree != nullptr) {
-    clrChilds(mEffectTree);
+  if (unknown68 != nullptr) {
+    clrChilds(unknown68);
   }
-  mEffectCount = 0;
-  if (mCharaTree != nullptr) {
-    clrChilds(mCharaTree);
+  unknown90 = 0;
+  if (unknown58 != nullptr) {
+    clrChilds(unknown58);
   }
-  mCharaCount = 0;
-  if (mCameraTree != nullptr) {
-    clrChilds(mCameraTree);
+  unknown88 = 0;
+  if (unknown60 != nullptr) {
+    clrChilds(unknown60);
   }
-  mCameraCount = 0;
-  if (mLightTree != nullptr) {
-    clrChilds(mLightTree);
+  unknown8c = 0;
+  if (unknown70 != nullptr) {
+    clrChilds(unknown70);
   }
-  mLightCount = 0;
-  if (mRoot != nullptr) {
-    mRoot->setChild(nullptr);
+  unknown94 = 0;
+  if (unknown50 != nullptr) {
+    unknown50->setChild(nullptr);
   }
-  if (mLightTree != nullptr) {
-    delete mLightTree;
-    mLightTree = nullptr;
+  if (unknown70 != nullptr) {
+    delete unknown70;
+    unknown70 = nullptr;
   }
-  if (mEffectTree != nullptr) {
-    delete mEffectTree;
-    mEffectTree = nullptr;
+  if (unknown68 != nullptr) {
+    delete unknown68;
+    unknown68 = nullptr;
   }
-  if (mCameraTree != nullptr) {
-    delete mCameraTree;
-    mCameraTree = nullptr;
+  if (unknown60 != nullptr) {
+    delete unknown60;
+    unknown60 = nullptr;
   }
-  if (mCharaTree != nullptr) {
-    delete mCharaTree;
-    mCharaTree = nullptr;
+  if (unknown58 != nullptr) {
+    delete unknown58;
+    unknown58 = nullptr;
   }
-  if (mRoot != nullptr) {
-    delete mRoot;
-    mRoot = nullptr;
+  if (unknown50 != nullptr) {
+    delete unknown50;
+    unknown50 = nullptr;
   }
-  flags = 0;
-  mActive = nullptr;
-  mFirstChara = nullptr;
+  unknown08 = 0;
+  unknown78 = nullptr;
+  unknown80 = nullptr;
 }
 
 void ObjectList::clearSub(Object *object) {
@@ -124,8 +124,8 @@ void ObjectList::clrChilds(Object *object) {
 }
 
 void ObjectList::startScene() {
-  if (mRoot != nullptr) {
-    startSceneSub(mRoot);
+  if (unknown50 != nullptr) {
+    startSceneSub(unknown50);
   }
 }
 
@@ -137,22 +137,22 @@ void ObjectList::startSceneSub(Object *object) {
 }
 
 void ObjectList::startPage() {
-  for (Object *object = mEffectTree->getChild(); object != nullptr; object = object->getNext()) {
+  for (Object *object = unknown68->getChild(); object != nullptr; object = object->getNext()) {
     mm::mtl::Singleton<BouManager>::getPtr()->pop(static_cast<ObjectEffect *>(object));
   }
-  ObjectTree *tree = mEffectTree;
+  ObjectTree *tree = unknown68;
   for (Object *object = tree->getChild(); object != nullptr; object = object->getNext()) {
   }
   if (tree != nullptr) {
     clrChilds(tree);
   }
-  mEffectCount = 0;
-  mActive = nullptr;
+  unknown90 = 0;
+  unknown78 = nullptr;
 }
 
 void ObjectList::endScene() {
-  if (mRoot != nullptr) {
-    endSceneSub(mRoot);
+  if (unknown50 != nullptr) {
+    endSceneSub(unknown50);
   }
 }
 
@@ -164,8 +164,8 @@ void ObjectList::endSceneSub(Object *object) {
 }
 
 void ObjectList::update() {
-  if (mRoot != nullptr) {
-    updateSub(mRoot);
+  if (unknown50 != nullptr) {
+    updateSub(unknown50);
   }
 }
 
@@ -177,8 +177,8 @@ void ObjectList::updateSub(Object *object) {
 }
 
 void ObjectList::render() {
-  if (mRoot != nullptr) {
-    renderSub(mRoot);
+  if (unknown50 != nullptr) {
+    renderSub(unknown50);
   }
 }
 
@@ -194,8 +194,8 @@ void ObjectList::renderSub(Object *object) {
 }
 
 void ObjectList::tail() {
-  if (mRoot != nullptr) {
-    tailSub(mRoot);
+  if (unknown50 != nullptr) {
+    tailSub(unknown50);
   }
 }
 
@@ -207,8 +207,8 @@ void ObjectList::tailSub(Object *object) {
 }
 
 bool ObjectList::isLoading() const {
-  if (mRoot != nullptr) {
-    return isLoadingSub(mRoot);
+  if (unknown50 != nullptr) {
+    return isLoadingSub(unknown50);
   }
   return false;
 }
@@ -228,18 +228,18 @@ bool ObjectList::isLoadingSub(Object *object) const {
 ObjectChara *ObjectList::createGfObj(const char *name, gf::GF_OBJ_HANDLE *handle) {
   ObjectChara *chara = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectChara(name);
   chara->createGfObj(handle);
-  mCharaTree->addChild(chara);
-  mCharaCount++;
+  unknown58->addChild(chara);
+  unknown88++;
   mm::mtl::Singleton<BouManager>::getPtr()->push(chara);
-  mActive = chara;
-  if (mFirstChara == nullptr) {
-    mFirstChara = chara;
+  unknown78 = chara;
+  if (unknown80 == nullptr) {
+    unknown80 = chara;
   }
   return chara;
 }
 
 ObjectChara *ObjectList::createGfObjPcByBladeID(const char *name, u32 bladeID, u32 param2) {
-  if ((flags & FLAG_CLONE_MODE) == 0) {
+  if ((unknown08 & FLAG_CLONE_MODE) == 0) {
     return createGfObj(name, getDriverByBlade(bladeID));
   }
   return createGfObj(name, CHARA_TYPE_DRIVER, getDriverIdByBlade(bladeID), param2, 0);
@@ -262,7 +262,7 @@ u32 ObjectList::getDriverIdByBlade(u32 bladeID) const {
 }
 
 ObjectChara *ObjectList::createGfObjBladeByPcID(const char *name, u32 pcID, u32 param2) {
-  if ((flags & FLAG_CLONE_MODE) == 0) {
+  if ((unknown08 & FLAG_CLONE_MODE) == 0) {
     return createGfObj(name, getBladeByDriver(pcID));
   }
   return createGfObj(name, CHARA_TYPE_BLADE, getBladeIdByDriver(pcID), param2, 0);
@@ -285,14 +285,14 @@ u32 ObjectList::getBladeIdByDriver(u32 driverID) const {
 }
 
 ObjectCamera *ObjectList::createCamera(const char *name, u32 id) {
-  if (id < mCameraCount) {
-    return static_cast<ObjectCamera *>(getChild(mCameraTree, id));
+  if (id < unknown8c) {
+    return static_cast<ObjectCamera *>(getChild(unknown60, id));
   }
   ObjectCamera *camera = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectCamera(name, id);
-  mCameraTree->addChild(camera);
-  mCameraCount++;
+  unknown60->addChild(camera);
+  unknown8c++;
   mm::mtl::Singleton<BouManager>::getPtr()->push(camera);
-  mActive = camera;
+  unknown78 = camera;
   return camera;
 }
 
@@ -307,47 +307,47 @@ Object *ObjectList::getChild(Object *parent, u32 index) {
 
 ObjectEffect *ObjectList::createEffect(const char *name) {
   ObjectEffect *effect = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectEffect(name);
-  mEffectTree->addChild(effect);
-  mEffectCount++;
+  unknown68->addChild(effect);
+  unknown90++;
   mm::mtl::Singleton<BouManager>::getPtr()->push(effect);
-  mActive = effect;
+  unknown78 = effect;
   return effect;
 }
 
 ObjectLight *ObjectList::createLight(const char *name, u32 id) {
-  if (id < mLightCount) {
-    return static_cast<ObjectLight *>(getChild(mLightTree, id));
+  if (id < unknown94) {
+    return static_cast<ObjectLight *>(getChild(unknown70, id));
   }
   ObjectLight *light = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectLight(name, id);
-  mLightTree->addChild(light);
-  mLightCount++;
-  mActive = light;
+  unknown70->addChild(light);
+  unknown94++;
+  unknown78 = light;
   return light;
 }
 
 ObjectChara *ObjectList::getChara(u32 index) {
-  if (mCharaTree == nullptr) {
+  if (unknown58 == nullptr) {
     return nullptr;
   }
-  return static_cast<ObjectChara *>(getChild(mCharaTree, index));
+  return static_cast<ObjectChara *>(getChild(unknown58, index));
 }
 
 ObjectCamera *ObjectList::getCamera(u32 index) {
-  if (mCameraTree == nullptr) {
+  if (unknown60 == nullptr) {
     return nullptr;
   }
-  return static_cast<ObjectCamera *>(getChild(mCameraTree, index));
+  return static_cast<ObjectCamera *>(getChild(unknown60, index));
 }
 
 ObjectLight *ObjectList::getLight(u32 index) {
-  if (mLightTree == nullptr) {
+  if (unknown70 == nullptr) {
     return nullptr;
   }
-  return static_cast<ObjectLight *>(getChild(mLightTree, index));
+  return static_cast<ObjectLight *>(getChild(unknown70, index));
 }
 
 bool ObjectList::isUsingEffect() {
-  for (u32 i = 0; i < mEffectCount; i++) {
+  for (u32 i = 0; i < unknown90; i++) {
     if (static_cast<ObjectEffect *>(getEffect(i))->getEffCount() != 0) {
       return true;
     }
@@ -356,7 +356,7 @@ bool ObjectList::isUsingEffect() {
 }
 
 void ObjectList::stopEffect() {
-  for (u32 i = 0; i < mEffectCount; i++) {
+  for (u32 i = 0; i < unknown90; i++) {
     static_cast<ObjectEffect *>(getEffect(i))->stop();
   }
 }
@@ -388,20 +388,20 @@ Object *ObjectList::searchByNameSub(Object *object, const char *name) {
 }
 
 Object *ObjectList::searchByName(const char *name) const {
-  Object *root = mRoot;
+  Object *root = unknown50;
   if (root == nullptr)
     return nullptr;
   Object *found = searchByNameSub(root, name);
-  if (found == nullptr || found == root || found == mCharaTree || found == mCameraTree || found == mEffectTree || found == mLightTree)
+  if (found == nullptr || found == root || found == unknown58 || found == unknown60 || found == unknown68 || found == unknown70)
     return nullptr;
   return found;
 }
 
 ObjectChara *ObjectList::searchByHandle(gf::GF_OBJ_HANDLE *handle) const {
-  if (mCharaTree == nullptr) {
+  if (unknown58 == nullptr) {
     return nullptr;
   }
-  for (Object *object = mCharaTree->getChild(); object != nullptr; object = object->getNext()) {
+  for (Object *object = unknown58->getChild(); object != nullptr; object = object->getNext()) {
     if (object->getType() == OBJTYPE_CHARA && static_cast<ObjectChara *>(object)->getCharaObj()->getHandle() == handle) {
       return static_cast<ObjectChara *>(object);
     }
@@ -410,8 +410,8 @@ ObjectChara *ObjectList::searchByHandle(gf::GF_OBJ_HANDLE *handle) const {
 }
 
 ObjectChara *ObjectList::searchByID(u32 type, u32 id) const {
-  if (mCharaTree != nullptr) {
-    for (Object *object = mCharaTree->getChild(); object != nullptr; object = object->getNext()) {
+  if (unknown58 != nullptr) {
+    for (Object *object = unknown58->getChild(); object != nullptr; object = object->getNext()) {
       if (object->getType() == OBJTYPE_CHARA) {
         gf::GfObjAcc acc(static_cast<ObjectChara *>(object)->getCharaObj()->getHandle());
         if (acc.getType() == type && acc.getBdatId() == id) {
@@ -424,10 +424,10 @@ ObjectChara *ObjectList::searchByID(u32 type, u32 id) const {
 }
 
 bool ObjectList::getPathByObj(mm::mtl::FixStr<256> &path, const Object *object) const {
-  if (mRoot == nullptr) {
+  if (unknown50 == nullptr) {
     return false;
   }
-  for (Object *child = mRoot->getChild(); child != nullptr; child = child->getNext()) {
+  for (Object *child = unknown50->getChild(); child != nullptr; child = child->getNext()) {
     if (getPathByObjSub(path, "", child, object)) {
       return true;
     }
@@ -458,10 +458,10 @@ void ObjectList::listupObject(mm::mtl::FixedVector<u32, 256> &list, u32 type, bo
   if (!isAppend) {
     list.clear();
   }
-  if (mCharaTree == nullptr) {
+  if (unknown58 == nullptr) {
     return;
   }
-  for (Object *object = mCharaTree->getChild(); object != nullptr && list.size() < list.capacity(); object = object->getNext()) {
+  for (Object *object = unknown58->getChild(); object != nullptr && list.size() < list.capacity(); object = object->getNext()) {
     if (object->getType() != OBJTYPE_CHARA) {
       continue;
     }
@@ -477,10 +477,10 @@ void ObjectList::listupObject(mm::mtl::FixedVector<u32, 256> &list, u32 type, bo
 }
 
 void ObjectList::dump() {
-  if (mCharaTree == nullptr) {
+  if (unknown58 == nullptr) {
     return;
   }
-  for (Object *object = mCharaTree->getChild(); object != nullptr; object = object->getNext()) {
+  for (Object *object = unknown58->getChild(); object != nullptr; object = object->getNext()) {
     if (object->getType() == OBJTYPE_CHARA) {
       gf::GfObjAcc acc(static_cast<ObjectChara *>(object)->getCharaObj()->getHandle());
     }

@@ -20,7 +20,7 @@ void ScriptCharaFade::doit(const Param &param) {
   ObjectChara *chara = static_cast<ObjectChara *>(object);
   bool isOut = param.val(0).getBool();
   f32 frame = param.val(1).getF32();
-  isPrevFadeOut = chara->getCharaObj()->isFadeOut();
+  unknown08 = chara->getCharaObj()->isFadeOut();
   chara->getCharaObj()->playFade(isOut, frame);
 }
 
@@ -29,7 +29,7 @@ void ScriptCharaFade::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
     return;
   }
-  static_cast<ObjectChara *>(object)->getCharaObj()->playFade(isPrevFadeOut, 0.0f);
+  static_cast<ObjectChara *>(object)->getCharaObj()->playFade(unknown08, 0.0f);
 }
 
 void ScriptCharaFade::redo(const Param &param) {

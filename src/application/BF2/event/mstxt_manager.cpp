@@ -9,72 +9,72 @@
 
 namespace event {
 
-MstxtManager::MstxtManager() : mCurrentRes(nullptr) {}
+MstxtManager::MstxtManager() : unknown98(nullptr) {}
 
 void MstxtManager::clear() {
-  if (mCurrentRes != nullptr) {
-    mCurrentRes->unregisterBdat();
-    mCurrentRes = nullptr;
+  if (unknown98 != nullptr) {
+    unknown98->unregisterBdat();
+    unknown98 = nullptr;
   }
-  for (size_t i = 0; i < mResList.size(); i++) {
-    if (mResList[i] != nullptr) {
-      delete mResList[i];
-      mResList[i] = nullptr;
+  for (size_t i = 0; i < unknown10.size(); i++) {
+    if (unknown10[i] != nullptr) {
+      delete unknown10[i];
+      unknown10[i] = nullptr;
     }
   }
-  mResList.clear();
+  unknown10.clear();
 }
 
 void MstxtManager::registerBdat(const char *path) {
-  if (mCurrentRes != nullptr) {
-    mCurrentRes->unregisterBdat();
-    mCurrentRes = nullptr;
+  if (unknown98 != nullptr) {
+    unknown98->unregisterBdat();
+    unknown98 = nullptr;
   }
-  mCurrentRes = search(path);
-  mCurrentRes->registerBdat();
+  unknown98 = search(path);
+  unknown98->registerBdat();
 }
 
 void MstxtManager::load(const char *path) {
   if (search(path) != nullptr) {
     return;
   }
-  mResList.push_back(new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle()) MstxtRes(path));
+  unknown10.push_back(new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle()) MstxtRes(path));
 }
 
 MstxtRes *MstxtManager::search(const char *path) {
-  for (size_t i = 0; i < mResList.size(); i++) {
-    if (__builtin_strcmp(path, mResList[i]->getPath()) == 0) {
-      return mResList[i];
+  for (size_t i = 0; i < unknown10.size(); i++) {
+    if (__builtin_strcmp(path, unknown10[i]->getPath()) == 0) {
+      return unknown10[i];
     }
   }
   return nullptr;
 }
 
 bool MstxtManager::isLoading() const {
-  for (size_t i = 0; i < mResList.size(); i++) {
-    if (mResList[i]->isLoading()) {
+  for (size_t i = 0; i < unknown10.size(); i++) {
+    if (unknown10[i]->isLoading()) {
       return true;
     }
   }
   return false;
 }
 
-bool MstxtManager::isLoaded() const { return mCurrentRes != nullptr ? mCurrentRes->isLoaded() : false; }
+bool MstxtManager::isLoaded() const { return unknown98 != nullptr ? unknown98->isLoaded() : false; }
 
-unsigned char *MstxtManager::getFp() const { return mCurrentRes != nullptr ? mCurrentRes->getFp() : nullptr; }
+unsigned char *MstxtManager::getFp() const { return unknown98 != nullptr ? unknown98->getFp() : nullptr; }
 
 int MstxtManager::getSeatID(const char *label) const {
-  if (mCurrentRes == nullptr) {
+  if (unknown98 == nullptr) {
     return -1;
   }
-  return mCurrentRes->getSeatID(label);
+  return unknown98->getSeatID(label);
 }
 
-const char *MstxtManager::getText(const char *label) const { return mCurrentRes != nullptr ? mCurrentRes->getText(label) : ""; }
+const char *MstxtManager::getText(const char *label) const { return unknown98 != nullptr ? unknown98->getText(label) : ""; }
 
-int MstxtManager::getTop() const { return mCurrentRes != nullptr ? mCurrentRes->getTop() : 0; }
+int MstxtManager::getTop() const { return unknown98 != nullptr ? unknown98->getTop() : 0; }
 
-int MstxtManager::getCount() const { return mCurrentRes != nullptr ? mCurrentRes->getCount() : 0; }
+int MstxtManager::getCount() const { return unknown98 != nullptr ? unknown98->getCount() : 0; }
 
 void MstxtManager::OnEventProc(MSG_TYPE type) {
   if (type == MSG_TYPE_CLEAR) {

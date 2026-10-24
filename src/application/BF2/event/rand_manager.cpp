@@ -6,16 +6,16 @@
 
 namespace event {
 
-RandManager::RandManager() : flags(0) {}
+RandManager::RandManager() : unknown10(0) {}
 
 void RandManager::clear() {
-  player.clear();
-  flags = 0;
+  unknown18.clear();
+  unknown10 = 0;
 }
 
 void RandManager::update() {
-  if ((flags & FLAG_PLAY) != 0) {
-    player.update();
+  if ((unknown10 & FLAG_PLAY) != 0) {
+    unknown18.update();
   }
 }
 
@@ -37,15 +37,15 @@ void RandManager::OnEventProc(MSG_TYPE type) {
 
 bool RandManager::play(int id) {
   if (!mm::mtl::Singleton<DebugManager>::getPtr()->isFailureSkip()) {
-    if ((flags & FLAG_PLAY) == 0) {
+    if ((unknown10 & FLAG_PLAY) == 0) {
       int talk = RandCalc::calc(id);
       if (talk < 1) {
         return true;
       }
-      player.play(talk, (flags & FLAG_WARP) != 0);
-      flags |= FLAG_PLAY;
+      unknown18.play(talk, (unknown10 & FLAG_WARP) != 0);
+      unknown10 |= FLAG_PLAY;
     }
-    bool isPlaying = player.isPlaying();
+    bool isPlaying = unknown18.isPlaying();
     FrameManager *frameManager = mm::mtl::Singleton<FrameManager>::getPtr();
     if (isPlaying) {
       frameManager->pause(FrameManager::PAUSE_TYPE_RAND, true);

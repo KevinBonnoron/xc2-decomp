@@ -52,34 +52,34 @@ public:
   void setMount(IAttachActor *mount, const char *bone, const mm::Vec3 &offset, bool isRotate, ATTACH_TYPE type);
   size_t getEffCount() const;
 
-  EffectObj *getEffectObj() const { return mEffectObj; }
-  const PosAxis &getPosAxis() const { return posAxis; }
-  const RotAxis &getRotAxis() const { return rotAxis; }
+  EffectObj *getEffectObj() const { return unknown68; }
+  const PosAxis &getPosAxis() const { return unknown70; }
+  const RotAxis &getRotAxis() const { return unknown90; }
 
 private:
   void resetAttach() {
-    caster = nullptr;
-    mount = nullptr;
-    mountBone = "";
-    mountOffset = mm::Vec3::zero;
-    isMountRotate = false;
-    attachType = static_cast<ATTACH_TYPE>(0);
-    attachMat = mm::Mat44::identity;
-    attachName.clear();
+    unknownb0 = nullptr;
+    unknownc0 = nullptr;
+    unknownc8 = "";
+    unknownf0 = mm::Vec3::zero;
+    unknown100 = false;
+    unknown104 = static_cast<ATTACH_TYPE>(0);
+    unknown110 = mm::Mat44::identity;
+    unknown150.clear();
   }
 
-  EffectObj *mEffectObj;
-  PosAxis posAxis;
-  RotAxis rotAxis;
-  IAttachActor *caster;
+  EffectObj *unknown68;    // Inferred role: effect object; original member name unknown.
+  PosAxis unknown70;       // Inferred role: pos axis; original member name unknown.
+  RotAxis unknown90;       // Inferred role: rot axis; original member name unknown.
+  IAttachActor *unknownb0; // Inferred role: caster; original member name unknown.
   u8 _b8[0xc0 - 0xb8];
-  IAttachActor *mount;
-  mm::mtl::FixStr<32> mountBone;
-  mm::Vec3 mountOffset;
-  bool isMountRotate;
-  ATTACH_TYPE attachType;
-  mm::Mat44 attachMat;
-  mm::mtl::FixStr<64> attachName;
+  IAttachActor *unknownc0;        // Inferred role: mount; original member name unknown.
+  mm::mtl::FixStr<32> unknownc8;  // Inferred role: mount bone; original member name unknown.
+  mm::Vec3 unknownf0;             // Inferred role: mount offset; original member name unknown.
+  bool unknown100;                // Inferred role: mount rotate; original member name unknown.
+  ATTACH_TYPE unknown104;         // Inferred role: attach type; original member name unknown.
+  mm::Mat44 unknown110;           // Inferred role: attach mat; original member name unknown.
+  mm::mtl::FixStr<64> unknown150; // Inferred role: attach name; original member name unknown.
 };
 
 static_assert(sizeof(ObjectEffect) == 0x1a0, "");

@@ -17,13 +17,13 @@ public:
   virtual void init();
   virtual RESULT update(const Param &param);
 
-  int getType() const { return mType; }
+  int getType() const { return unknown20; }
 
 private:
-  u32 mStep;
-  gf::GF_OBJ_HANDLE *handle;
-  CharaDysUpdater *mDys;
-  int mType;
+  u32 unknown08;                // Inferred role: step; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
+  CharaDysUpdater *unknown18;   // Inferred role: dys; original member name unknown.
+  int unknown20;                // Inferred role: type; original member name unknown.
 };
 
 static_assert(sizeof(CharaSetIdle) == 0x28, "");

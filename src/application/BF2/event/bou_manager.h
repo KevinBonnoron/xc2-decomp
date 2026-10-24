@@ -54,14 +54,14 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  bool isEnable() const { return flags.test(FLAG_ENABLE); }
-  bool isDebugEnable() const { return mDebugFlags.test(DEBUG_FLAG_ENABLE); }
+  bool isEnable() const { return unknown18.test(FLAG_ENABLE); }
+  bool isDebugEnable() const { return unknown1c.test(DEBUG_FLAG_ENABLE); }
 
-  mm::mtl::BitFlag<32> flags;
-  mm::mtl::BitFlag<32> mDebugFlags;
-  BouRect mRect;
-  mm::mtl::FixedVector<IBouCallback *, CALLBACK_COUNT> mCallbacks;
-  mm::mtl::FixedVector<IBouCallback *, CALLBACK_COUNT> mSelected;
+  mm::mtl::BitFlag<32> unknown18;                                   // Inferred role: flags; original member name unknown.
+  mm::mtl::BitFlag<32> unknown1c;                                   // Inferred role: debug flags; original member name unknown.
+  BouRect unknown20;                                                // Inferred role: rect; original member name unknown.
+  mm::mtl::FixedVector<IBouCallback *, CALLBACK_COUNT> unknown38;   // Inferred role: callbacks; original member name unknown.
+  mm::mtl::FixedVector<IBouCallback *, CALLBACK_COUNT> unknown2040; // Inferred role: selected; original member name unknown.
 };
 
 static_assert(sizeof(BouManager) == 0x4048, "");

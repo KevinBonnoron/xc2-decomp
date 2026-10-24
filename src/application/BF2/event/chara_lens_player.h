@@ -32,14 +32,14 @@ public:
   const mm::Vec2 &getTarget() const;
 
 private:
-  mm::mtl::BitFlag<FLAG_MAX> flags;
-  alignas(16) mm::Vec2 mTarget;
+  mm::mtl::BitFlag<FLAG_MAX> unknown08; // Inferred role: flags; original member name unknown.
+  alignas(16) mm::Vec2 m_target;
   u8 _18[0x20 - 0x18];
-  mm::Vec2 mManualTarget;
+  mm::Vec2 unknown20; // Inferred role: manual target; original member name unknown.
   u8 _28[0x30 - 0x28];
-  mm::Vec2 mAutoTarget;
+  mm::Vec2 unknown30; // Inferred role: auto target; original member name unknown.
   u8 _38[0x40 - 0x38];
-  CharaIKUpdater *mIK;
+  CharaIKUpdater *unknown40; // Inferred role: ik; original member name unknown.
 };
 
 static_assert(sizeof(CharaLensPlayer) == 0x50, "");

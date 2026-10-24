@@ -78,16 +78,16 @@ public:
   static void update(const fw::UpdateInfo &info);
 
 private:
-  bool unknown08; // Inferred role: m initialized; original member name unknown.
-  bool unknown09; // Inferred role: m is infinite time; original member name unknown.
+  bool unknown08; // Inferred role: initialized; original member name unknown.
+  bool unknown09; // Inferred role: is infinite time; original member name unknown.
   u8 _0a[0x10 - 0x0a];
-  mm::mtl::FixedQueue<GEV, 16> unknown10; // Inferred role: m events; original member name unknown.
-  MapjumpCallbackInfo unknown60;          // Inferred role: m mapjump info; original member name unknown.
+  mm::mtl::FixedQueue<GEV, 16> unknown10; // Inferred role: events; original member name unknown.
+  MapjumpCallbackInfo unknown60;          // Inferred role: mapjump info; original member name unknown.
   u8 _74[0x78 - 0x74];
-  CLOUD_SEA_HANDLE unknown78;  // Inferred role: m cloud sea default; original member name unknown.
-  CLOUD_SEA_REQUEST unknown7c; // Inferred role: m cloud sea request; original member name unknown.
-  CLOUD_SEA_HANDLE unknown80;  // Inferred role: m cloud sea condition; original member name unknown.
-  bool unknown84;              // Inferred role: m is disp weather; original member name unknown.
+  CLOUD_SEA_HANDLE unknown78;  // Inferred role: cloud sea default; original member name unknown.
+  CLOUD_SEA_REQUEST unknown7c; // Inferred role: cloud sea request; original member name unknown.
+  CLOUD_SEA_HANDLE unknown80;  // Inferred role: cloud sea condition; original member name unknown.
+  bool unknown84;              // Inferred role: is disp weather; original member name unknown.
 };
 
 static_assert(sizeof(GfFieldWeather) == 0x88, "");

@@ -46,17 +46,17 @@ public:
   static void test();
 
 private:
-  u32 flags;
-  mm::Vec3 mFrom;
-  mm::Vec3 mTo;
-  f32 mDistance;
-  mm::Vec3 mDir;
-  mm::Vec3 mDirXZ;
-  f32 mBlend;
-  f32 mTotalFrame;
-  mm::Vec3 mPos;
-  f32 mSpeed;
-  f32 frame;
+  u32 unknown00;      // Inferred role: flags; original member name unknown.
+  mm::Vec3 unknown10; // Inferred role: from; original member name unknown.
+  mm::Vec3 unknown20; // Inferred role: to; original member name unknown.
+  f32 unknown30;      // Inferred role: distance; original member name unknown.
+  mm::Vec3 unknown40; // Inferred role: dir; original member name unknown.
+  mm::Vec3 unknown50; // Inferred role: dir xz; original member name unknown.
+  f32 unknown60;      // Inferred role: blend; original member name unknown.
+  f32 unknown64;      // Inferred role: total frame; original member name unknown.
+  mm::Vec3 unknown70; // Inferred role: pos; original member name unknown.
+  f32 unknown80;      // Inferred role: speed; original member name unknown.
+  f32 unknown84;      // Inferred role: frame; original member name unknown.
 };
 
 static_assert(sizeof(CharaWalkCalculator) == 0x90, "");

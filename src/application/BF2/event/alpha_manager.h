@@ -35,9 +35,9 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 flags;
-  u32 dispFlags;
-  mm::mtl::FixedVector<AlphaObj *, OBJ_COUNT> objs;
+  u32 unknown10;                                         // Inferred role: flags; original member name unknown.
+  u32 unknown14;                                         // Inferred role: disp flags; original member name unknown.
+  mm::mtl::FixedVector<AlphaObj *, OBJ_COUNT> unknown18; // Inferred role: objs; original member name unknown.
 };
 
 static_assert(sizeof(AlphaManager) == 0x820, "");

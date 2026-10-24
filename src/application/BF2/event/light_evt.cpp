@@ -11,29 +11,29 @@
 
 namespace event {
 
-LightEvt::LightEvt() : mLight(nullptr), mScreenID(0) {}
+LightEvt::LightEvt() : unknown08(nullptr), unknown94(0) {}
 
 LightEvt::~LightEvt() { clear(); }
 
 void LightEvt::clear() {
-  if (mLight != nullptr) {
-    Manager::get()->getScn()->releaseItem(mLight);
-    mLight = nullptr;
+  if (unknown08 != nullptr) {
+    Manager::get()->getScn()->releaseItem(unknown08);
+    unknown08 = nullptr;
   }
-  path.clear();
-  mScreenID = 0;
+  unknown10.clear();
+  unknown94 = 0;
 }
 
 void LightEvt::play(void *data, const char *name, u32 screenID) {
-  if (mLight != nullptr) {
-    Manager::get()->getScn()->releaseItem(mLight);
-    mLight = nullptr;
+  if (unknown08 != nullptr) {
+    Manager::get()->getScn()->releaseItem(unknown08);
+    unknown08 = nullptr;
   }
-  path = "";
-  mScreenID = 0;
-  path = name;
-  mLight = static_cast<ml::ScnObjLight *>(Manager::get()->getScn()->createLgt(data, screenID));
-  mScreenID = screenID;
+  unknown10 = "";
+  unknown94 = 0;
+  unknown10 = name;
+  unknown08 = static_cast<ml::ScnObjLight *>(Manager::get()->getScn()->createLgt(data, screenID));
+  unknown94 = screenID;
 }
 
 void LightEvt::render(int x, int y) {
@@ -41,16 +41,16 @@ void LightEvt::render(int x, int y) {
   fw::debug::drawLineSquare2D(mm::Rect<int>(x, y, 230, 45), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFont(x + 5, y + 5, "[EVT_LIGHT]");
-  fw::debug::drawFont(x + 150, y + 5, "scrID:%d", mScreenID);
-  fw::debug::drawFont(x + 10, y + 22, "file:    %s", mm::mtl::Singleton<Extend>::getPtr()->filename(path.c_str()));
+  fw::debug::drawFont(x + 150, y + 5, "scrID:%d", unknown94);
+  fw::debug::drawFont(x + 10, y + 22, "file:    %s", mm::mtl::Singleton<Extend>::getPtr()->filename(unknown10.c_str()));
 }
 
-bool LightEvt::isPlaying() const { return mLight != nullptr; }
+bool LightEvt::isPlaying() const { return unknown08 != nullptr; }
 
 void LightEvt::setPos(const mm::Vec3 &pos) {
   // The call at 0x71000e2cf8 dispatches through vtable offset 0x80.
-  if (mLight != nullptr)
-    mLight->setOffsetPos(pos);
+  if (unknown08 != nullptr)
+    unknown08->setOffsetPos(pos);
 }
 
 } // namespace event

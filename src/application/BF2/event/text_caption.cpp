@@ -8,14 +8,14 @@
 
 namespace event {
 
-TextCaption::TextCaption() : flags(0) {}
+TextCaption::TextCaption() : unknown08(0) {}
 
 void TextCaption::clear() {
   if (isDisp()) {
     gf::GfMenuObjEventSubtitle::hideText();
   }
-  text = "";
-  flags = 0;
+  unknown0c = "";
+  unknown08 = 0;
 }
 
 void TextCaption::update() {}
@@ -31,7 +31,7 @@ void TextCaption::render() {
   fw::debug::drawLineSquare2D(mm::Rect<s32>(250, y, width, 60), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFont(260, height - 190, "CAPTION");
-  fw::debug::drawFont(265, height - 175, text.c_str());
+  fw::debug::drawFont(265, height - 175, unknown0c.c_str());
 }
 
 void TextCaption::write(const char *text, u8 *bdat, int textId, int position) {
@@ -40,8 +40,8 @@ void TextCaption::write(const char *text, u8 *bdat, int textId, int position) {
     return;
   }
   gf::GfMenuObjEventSubtitle::dispText(bdat, textId, position);
-  this->text = text;
-  flags |= FLAG_DISP;
+  this->unknown0c = text;
+  unknown08 |= FLAG_DISP;
 }
 
 } // namespace event

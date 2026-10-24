@@ -2,27 +2,27 @@
 
 namespace event {
 
-GroupManager::GroupManager() : dispFlags(0), mMatrix(mm::Mat44::identity), mRadius(0.0f) {}
+GroupManager::GroupManager() : unknown10(0), unknown450(mm::Mat44::identity), unknown490(0.0f) {}
 
-void GroupManager::push(const CharaObj *chara) { mGroup.push(chara); }
+void GroupManager::push(const CharaObj *chara) { unknown20.push(chara); }
 
-void GroupManager::pop(const CharaObj *chara) { mGroup.pop(chara); }
+void GroupManager::pop(const CharaObj *chara) { unknown20.pop(chara); }
 
 void GroupManager::clear() {
-  mMatrix = mm::Mat44::identity;
-  mRadius = 0.0f;
-  mGroup.clear();
+  unknown450 = mm::Mat44::identity;
+  unknown490 = 0.0f;
+  unknown20.clear();
 }
 
 void GroupManager::setDisp(bool isDisp) {
   if (isDisp) {
-    dispFlags |= DISP_FLAG_DISP;
+    unknown10 |= DISP_FLAG_DISP;
   } else {
-    dispFlags &= ~DISP_FLAG_DISP;
+    unknown10 &= ~DISP_FLAG_DISP;
   }
 }
 
-bool GroupManager::isDisp() const { return (dispFlags & DISP_FLAG_DISP) != 0; }
+bool GroupManager::isDisp() const { return (unknown10 & DISP_FLAG_DISP) != 0; }
 
 void GroupManager::OnEventProc(MSG_TYPE type) {
   switch (type) {

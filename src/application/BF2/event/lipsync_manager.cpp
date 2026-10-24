@@ -10,55 +10,55 @@
 
 namespace event {
 
-bool LipsyncManager::isActive() const { return (flags & FLAG_ACTIVE) != 0; }
+bool LipsyncManager::isActive() const { return (unknown10 & FLAG_ACTIVE) != 0; }
 
 f32 LipsyncManager::getVolume(f32 frame) const {
-  if (!(flags & FLAG_ACTIVE))
+  if (!(unknown10 & FLAG_ACTIVE))
     return 0.0f;
   int row = frame;
-  if (mCsv->GetRowCount() <= row)
-    row = mCsv->GetRowCount() - 1;
-  return mCsv->GetFloat(row, 1);
+  if (unknownf0->GetRowCount() <= row)
+    row = unknownf0->GetRowCount() - 1;
+  return unknownf0->GetFloat(row, 1);
 }
 
-LipsyncManager::LipsyncManager() : flags(0), mCurrentRes(nullptr), mCsv(nullptr) {}
+LipsyncManager::LipsyncManager() : unknown10(0), unknown60(nullptr), unknownf0(nullptr) {}
 
 void LipsyncManager::clear() {
-  for (size_t i = 0; i < mResList.size(); i++) {
-    if (mResList[i] != nullptr) {
-      delete mResList[i];
-      mResList[i] = nullptr;
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    if (unknown18[i] != nullptr) {
+      delete unknown18[i];
+      unknown18[i] = nullptr;
     }
   }
-  mResList.clear();
-  mCurrentRes = nullptr;
-  if (mCsv != nullptr) {
-    delete mCsv;
-    mCsv = nullptr;
+  unknown18.clear();
+  unknown60 = nullptr;
+  if (unknownf0 != nullptr) {
+    delete unknownf0;
+    unknownf0 = nullptr;
   }
-  mTarget = "";
-  flags = 0;
+  unknown68 = "";
+  unknown10 = 0;
 }
 
 void LipsyncManager::load(const char *name) {
   if (searchRes(name) != nullptr) {
     return;
   }
-  mResList.push_back(new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) LipsyncRes(name));
+  unknown18.push_back(new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) LipsyncRes(name));
 }
 
 LipsyncRes *LipsyncManager::searchRes(const char *name) {
-  for (size_t i = 0; i < mResList.size(); i++) {
-    if (__builtin_strcmp(name, mResList[i]->getName()) == 0) {
-      return mResList[i];
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    if (__builtin_strcmp(name, unknown18[i]->getName()) == 0) {
+      return unknown18[i];
     }
   }
   return nullptr;
 }
 
 bool LipsyncManager::isLoading() const {
-  for (size_t i = 0; i < mResList.size(); i++) {
-    if (mResList[i]->isLoading()) {
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    if (unknown18[i]->isLoading()) {
       return true;
     }
   }
@@ -66,10 +66,10 @@ bool LipsyncManager::isLoading() const {
 }
 
 f32 LipsyncManager::getFrameMax() const {
-  if (!(flags & FLAG_ACTIVE)) {
+  if (!(unknown10 & FLAG_ACTIVE)) {
     return 0.0f;
   }
-  return mCsv->GetRowCount() - 1;
+  return unknownf0->GetRowCount() - 1;
 }
 
 void LipsyncManager::OnEventProc(MSG_TYPE type) {

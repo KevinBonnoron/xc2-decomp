@@ -12,75 +12,75 @@ const f32 VolumeSkip::DEF_OUT_FR = 15.0f;
 VolumeSkip::VolumeSkip() { clear(); }
 
 void VolumeSkip::clear() {
-  flags = 0;
+  unknown08 = 0;
   for (u32 i = 0; i < TYPE_COUNT; i++) {
-    mResetVolumes[i] = 1.0f;
+    unknown0c[i] = 1.0f;
   }
-  mVolume = DEF_VOL;
+  unknown44 = DEF_VOL;
 }
 
 void VolumeSkip::set(bool isEnable, f32 volume, f32 inFrame, f32 outFrame, const mm::mtl::FixedArray<f32, TYPE_COUNT> *resetVolumes) {
   if (isEnable) {
-    flags |= FLAG_ENABLE;
+    unknown08 |= FLAG_ENABLE;
   } else {
-    flags &= ~FLAG_ENABLE;
+    unknown08 &= ~FLAG_ENABLE;
   }
-  mVolume = volume;
-  mInFrame = inFrame;
-  mOutFrame = outFrame;
+  unknown44 = volume;
+  unknown48 = inFrame;
+  unknown4c = outFrame;
   if (resetVolumes != nullptr) {
     for (u32 i = 0; i < TYPE_COUNT; i++) {
-      mResetVolumes[i] = (*resetVolumes)[i];
+      unknown0c[i] = (*resetVolumes)[i];
     }
   } else {
     for (u32 i = 0; i < TYPE_COUNT; i++) {
-      mResetVolumes[i] = 1.0f;
+      unknown0c[i] = 1.0f;
     }
   }
 }
 
 void VolumeSkip::start() {
-  if ((flags & (FLAG_ENABLE | FLAG_START)) != FLAG_ENABLE) {
+  if ((unknown08 & (FLAG_ENABLE | FLAG_START)) != FLAG_ENABLE) {
     return;
   }
-  mm::mtl::Singleton<VolumePlayer>::get().change(1, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(2, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(4, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(5, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(6, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(7, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(8, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(9, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(11, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(12, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(13, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(14, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(15, mVolume, mInFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().change(16, mVolume, mInFrame);
-  flags |= FLAG_START;
+  mm::mtl::Singleton<VolumePlayer>::get().change(1, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(2, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(4, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(5, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(6, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(7, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(8, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(9, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(11, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(12, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(13, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(14, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(15, unknown44, unknown48);
+  mm::mtl::Singleton<VolumePlayer>::get().change(16, unknown44, unknown48);
+  unknown08 |= FLAG_START;
 }
 
 void VolumeSkip::end() {
-  if ((flags & FLAG_START) == 0) {
+  if ((unknown08 & FLAG_START) == 0) {
     return;
   }
-  mm::mtl::Singleton<VolumePlayer>::get().reset(1, mResetVolumes[0], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(2, mResetVolumes[1], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(4, mResetVolumes[2], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(5, mResetVolumes[3], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(6, mResetVolumes[4], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(7, mResetVolumes[5], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(8, mResetVolumes[6], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(9, mResetVolumes[7], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(11, mResetVolumes[8], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(12, mResetVolumes[9], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(13, mResetVolumes[10], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(14, mResetVolumes[11], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(15, mResetVolumes[12], mOutFrame);
-  mm::mtl::Singleton<VolumePlayer>::get().reset(16, mResetVolumes[13], mOutFrame);
-  flags &= ~FLAG_START;
+  mm::mtl::Singleton<VolumePlayer>::get().reset(1, unknown0c[0], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(2, unknown0c[1], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(4, unknown0c[2], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(5, unknown0c[3], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(6, unknown0c[4], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(7, unknown0c[5], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(8, unknown0c[6], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(9, unknown0c[7], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(11, unknown0c[8], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(12, unknown0c[9], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(13, unknown0c[10], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(14, unknown0c[11], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(15, unknown0c[12], unknown4c);
+  mm::mtl::Singleton<VolumePlayer>::get().reset(16, unknown0c[13], unknown4c);
+  unknown08 &= ~FLAG_START;
 }
 
-void VolumeSkip::setResetVolume(TYPE type, f32 volume) { mResetVolumes[type] = volume; }
+void VolumeSkip::setResetVolume(TYPE type, f32 volume) { unknown0c[type] = volume; }
 
 } // namespace event

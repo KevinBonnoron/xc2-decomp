@@ -19,7 +19,7 @@ void ScriptCamFov::doit(const Param &param) {
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
   f32 fov = param.val(0).getF32();
   CV_TYPE cv = static_cast<CV_TYPE>(param.val(1).getS32());
-  prevFov = camera->getFov();
+  unknown08 = camera->getFov();
   camera->setFov(fov, cv);
 }
 
@@ -28,7 +28,7 @@ void ScriptCamFov::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
     return;
   }
-  static_cast<ObjectCamera *>(object)->setFov(prevFov, CV_TYPE_LINEAR);
+  static_cast<ObjectCamera *>(object)->setFov(unknown08, CV_TYPE_LINEAR);
 }
 
 } // namespace event

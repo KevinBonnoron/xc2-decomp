@@ -10,12 +10,12 @@ namespace event {
 void CharaMount::init() {}
 
 void CharaMount::term() {
-  if (model != nullptr && parent != nullptr) {
-    gf::GfComTransform *transform = gf::GfObjUtil::getObj(model->unknown20)->getComponent<gf::GfComTransform>();
-    model->resetMount(parent);
-    transform->setPosition(position);
-    transform->setRotation(rotation);
-    parent = nullptr;
+  if (unknown08 != nullptr && unknown10 != nullptr) {
+    gf::GfComTransform *transform = gf::GfObjUtil::getObj(unknown08->unknown20)->getComponent<gf::GfComTransform>();
+    unknown08->resetMount(unknown10);
+    transform->setPosition(unknown20);
+    transform->setRotation(unknown30);
+    unknown10 = nullptr;
   }
 }
 

@@ -8,19 +8,19 @@
 
 namespace event {
 
-EnvTransfer::EnvTransfer() : mHour(0), mMinute(0), mWeather(gf::WEATHER_A) {}
+EnvTransfer::EnvTransfer() : unknown08(0), unknown0c(0), unknown10(gf::WEATHER_A) {}
 
 void EnvTransfer::clear() {
-  mWeather = gf::WEATHER_A;
-  mHour = 0;
-  mMinute = 0;
+  unknown10 = gf::WEATHER_A;
+  unknown08 = 0;
+  unknown0c = 0;
 }
 
 void EnvTransfer::save() {
   if (gf::GfFieldTime::get() != nullptr) {
-    gf::GfFieldTime::get()->getTime(mHour, mMinute);
-    mWeather = gf::GfFieldWeather::getCurrentMapWeatherID(false);
-    mCloudSea = gf::GfFieldWeather::getCurrentCloudSea();
+    gf::GfFieldTime::get()->getTime(unknown08, unknown0c);
+    unknown10 = gf::GfFieldWeather::getCurrentMapWeatherID(false);
+    unknown14 = gf::GfFieldWeather::getCurrentCloudSea();
   }
 }
 
@@ -28,9 +28,9 @@ void EnvTransfer::load() {
   if (gf::GfFieldTime::get() == nullptr) {
     return;
   }
-  gf::GfFieldTime::get()->setTime(mHour, mMinute);
-  gf::GfGameEvent::setMapWeather(mWeather);
-  switch (static_cast<int>(mCloudSea)) {
+  gf::GfFieldTime::get()->setTime(unknown08, unknown0c);
+  gf::GfGameEvent::setMapWeather(unknown10);
+  switch (static_cast<int>(unknown14)) {
   case 0:
     mm::mtl::Singleton<EnvManager>::getPtr()->setCloudSea(EVT_CLOUDTYPE_LOW);
     break;

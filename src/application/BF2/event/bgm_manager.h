@@ -45,26 +45,26 @@ public:
 private:
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
-      flags |= flag;
+      unknown10 |= flag;
     } else {
-      flags &= ~flag;
+      unknown10 &= ~flag;
     }
   }
 
-  u32 flags;
-  u32 dispFlags;
-  mm::mtl::FixStr<64> mName;
-  f32 mVolume;
-  f32 mVolumeFrame;
-  f32 mFadeFrame;
-  f32 mStartFrame;
-  f32 mDelayFrame;
-  f32 mFadeOutFrame;
-  f32 mOverTimeFrame;
-  f32 mStartedTotalFrame;
-  f32 mPlayFrame;
-  f32 mSyncFrame;
-  s32 mSyncWait;
+  u32 unknown10;                 // Inferred role: flags; original member name unknown.
+  u32 unknown14;                 // Inferred role: disp flags; original member name unknown.
+  mm::mtl::FixStr<64> unknown18; // Inferred role: name; original member name unknown.
+  f32 unknown5c;                 // Inferred role: volume; original member name unknown.
+  f32 unknown60;                 // Inferred role: volume frame; original member name unknown.
+  f32 unknown64;                 // Inferred role: fade frame; original member name unknown.
+  f32 unknown68;                 // Inferred role: start frame; original member name unknown.
+  f32 unknown6c;                 // Inferred role: delay frame; original member name unknown.
+  f32 unknown70;                 // Inferred role: fade out frame; original member name unknown.
+  f32 unknown74;                 // Inferred role: over time frame; original member name unknown.
+  f32 m_startedTotalFrame;
+  f32 unknown7c; // Inferred role: play frame; original member name unknown.
+  f32 unknown80; // Inferred role: sync frame; original member name unknown.
+  s32 unknown84; // Inferred role: sync wait; original member name unknown.
 };
 
 static_assert(sizeof(BgmManager) == 0x88, "");

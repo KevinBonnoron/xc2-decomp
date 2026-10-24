@@ -154,7 +154,7 @@ public:
   void setCollisionGround(bool isCollisionGround);
 
 private:
-  GFOBJ_INFO *unknown00; // Inferred role: m info; original member name unknown.
+  GFOBJ_INFO *unknown00; // Inferred role: info; original member name unknown.
   GfObj *m_obj;
 };
 

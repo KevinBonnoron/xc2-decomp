@@ -24,12 +24,12 @@ public:
   mm::Vec3 calcPos() const;
   mm::Mat44 calcOrigMat() const;
   const char *getOrigName() const;
-  u32 getAxis() const { return mAxis; }
-  const mm::Vec3 &getPos() const { return mPos; }
+  u32 getAxis() const { return unknown08; }
+  const mm::Vec3 &getPos() const { return unknown10; }
 
 private:
-  u32 mAxis;
-  mm::Vec3 mPos;
+  u32 unknown08;      // Inferred role: axis; original member name unknown.
+  mm::Vec3 unknown10; // Inferred role: pos; original member name unknown.
 };
 
 static_assert(sizeof(PosAxis) == 0x20, "");

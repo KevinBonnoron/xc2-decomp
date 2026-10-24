@@ -13,7 +13,7 @@ public:
   virtual void redo(const Param &param) { doit(param); }
 
 private:
-  bool prevFollow;
+  bool unknown08; // Inferred role: prev follow; original member name unknown.
 };
 
 static_assert(sizeof(ScriptCamFollowTar) == 0x10, "");

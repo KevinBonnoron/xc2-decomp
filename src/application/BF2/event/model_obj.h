@@ -31,19 +31,19 @@ public:
   bool isReserve(int index);
   bool isSame(const char *path, bool isPriority, u32 id);
   bool isSame();
-  gf::GF_OBJ_HANDLE *getHandle() const { return handle; }
+  gf::GF_OBJ_HANDLE *getHandle() const { return unknown120; }
   virtual void OnResEvent(const PARAM &param);
 
 private:
-  u32 flags;
-  MODEL_TYPE mType;
+  u32 unknown08;        // Inferred role: flags; original member name unknown.
+  MODEL_TYPE unknown0c; // Inferred role: type; original member name unknown.
   u8 _10[0x18 - 0x10];
-  mm::mtl::FixStr<64> path;
-  u32 mId;
+  mm::mtl::FixStr<64> unknown18; // Inferred role: path; original member name unknown.
+  u32 unknown5c;                 // Inferred role: id; original member name unknown.
   u8 _60[0x120 - 0x60];
-  gf::GF_OBJ_HANDLE *handle;
+  gf::GF_OBJ_HANDLE *unknown120; // Inferred role: handle; original member name unknown.
   u8 _128[0x134 - 0x128];
-  u32 mReserve;
+  u32 unknown134; // Inferred role: reserve; original member name unknown.
 };
 
 static_assert(sizeof(ModelObj) == 0x138, "");

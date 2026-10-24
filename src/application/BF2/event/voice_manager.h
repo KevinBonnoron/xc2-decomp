@@ -21,10 +21,10 @@ public:
   };
 
   bool playAuto(const char *name, f32 delay, IVoiceEvent *event) {
-    if ((flags & FLAG_AUTO_VOICE_MODE) == 0) {
+    if ((unknown10 & FLAG_AUTO_VOICE_MODE) == 0) {
       return false;
     }
-    const char *path = maker.makePath(name);
+    const char *path = unknown18.makePath(name);
     if (path == nullptr) {
       return false;
     }
@@ -51,17 +51,17 @@ public:
 private:
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
-      flags |= flag;
+      unknown10 |= flag;
     } else {
-      flags &= ~flag;
+      unknown10 &= ~flag;
     }
   }
 
-  u32 flags;
-  u32 dispFlags;
-  VoiceMaker maker;
-  VoicePlayer player;
-  VoiceOneShoter oneShoter;
+  u32 unknown10;             // Inferred role: flags; original member name unknown.
+  u32 unknown14;             // Inferred role: disp flags; original member name unknown.
+  VoiceMaker unknown18;      // Inferred role: maker; original member name unknown.
+  VoicePlayer unknown230;    // Inferred role: player; original member name unknown.
+  VoiceOneShoter unknown6f8; // Inferred role: one shoter; original member name unknown.
 };
 
 static_assert(sizeof(VoiceManager) == 0x720, "");

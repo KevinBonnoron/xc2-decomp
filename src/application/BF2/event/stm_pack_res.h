@@ -17,19 +17,19 @@ public:
   void loadCompleate();
   void *getFileAdr(size_t dataOfs) const;
 
-  s32 mRefCount;
-  u32 flags;
-  s32 mDelay;
-  void *mBuffer;
-  size_t mSize;
-  size_t mDataOfs;
-  size_t mFirstFile;
-  size_t mLastFile;
-  size_t mFirstPage;
-  size_t mLastPage;
-  int mPrio;
-  int mCut;
-  size_t mStream;
+  s32 unknown00;    // Inferred role: ref count; original member name unknown.
+  u32 unknown04;    // Inferred role: flags; original member name unknown.
+  s32 unknown08;    // Inferred role: delay; original member name unknown.
+  void *unknown10;  // Inferred role: buffer; original member name unknown.
+  size_t unknown18; // Inferred role: size; original member name unknown.
+  size_t unknown20; // Inferred role: data ofs; original member name unknown.
+  size_t unknown28; // Inferred role: first file; original member name unknown.
+  size_t unknown30; // Inferred role: last file; original member name unknown.
+  size_t unknown38; // Inferred role: first page; original member name unknown.
+  size_t unknown40; // Inferred role: last page; original member name unknown.
+  int unknown48;    // Inferred role: prio; original member name unknown.
+  int unknown4c;    // Inferred role: cut; original member name unknown.
+  size_t unknown50; // Inferred role: stream; original member name unknown.
 };
 
 static_assert(sizeof(StmPackRes) == 0x58, "");

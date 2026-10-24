@@ -17,39 +17,39 @@ namespace event {
 const f32 VoicePlayer::TO_SEC = 1.0f / 30.0f;
 const f32 VoicePlayer::TO_FR = 30.0f;
 
-VoicePlayer::VoicePlayer() : flags(0), waitingHandle(0), delay(0.0f), handle(0), event(nullptr) {}
+VoicePlayer::VoicePlayer() : unknown08(0), unknown46c(0), unknown470(0.0f), unknown4b8(0), unknown4c0(nullptr) {}
 
 void VoicePlayer::clear() {
   stop(10.0f);
   clearPreload();
-  flags = 0;
+  unknown08 = 0;
 }
 
 void VoicePlayer::stop(f32 frame) {
-  handle = 0;
-  for (size_t i = 0; i < plays.size(); i++) {
-    fw::SoundManager::get()->pause(plays[i].handle, false, 0.0f);
-    fw::SoundManager::get()->stopVoice(plays[i].handle, frame * TO_SEC);
+  unknown4b8 = 0;
+  for (size_t i = 0; i < unknown2d0.size(); i++) {
+    fw::SoundManager::get()->pause(unknown2d0[i].unknown00, false, 0.0f);
+    fw::SoundManager::get()->stopVoice(unknown2d0[i].unknown00, frame * TO_SEC);
   }
-  plays.clear();
+  unknown2d0.clear();
   clr();
 }
 
 void VoicePlayer::clearPreload() {
   stopWaiting();
-  keys.clear();
+  unknown0c.clear();
 }
 
 void VoicePlayer::stopWaiting() {
-  if (waitingHandle != 0) {
-    fw::SoundManager::get()->stopVoice(waitingHandle, 0.0f);
-    waitingHandle = 0;
+  if (unknown46c != 0) {
+    fw::SoundManager::get()->stopVoice(unknown46c, 0.0f);
+    unknown46c = 0;
   }
-  waitingPath = "";
+  unknown428 = "";
 }
 
 void VoicePlayer::draw() {
-  if (handle == 0 && waitingHandle == 0) {
+  if (unknown4b8 == 0 && unknown46c == 0) {
     return;
   }
   int width = ml::DevGraph::getRootWidth();
@@ -58,33 +58,33 @@ void VoicePlayer::draw() {
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFont(width - 325, 165, "VOICE");
   int x = width - 320;
-  if (handle != 0) {
+  if (unknown4b8 != 0) {
     fw::debug::drawFontColor(mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
     fw::debug::drawFont(x, 180, "now");
-    fw::debug::drawFont(x + 45, 180, mm::mtl::Singleton<Extend>::getPtr()->filename(path.c_str()));
-    if ((flags & FLAG_DELAY) != 0) {
+    fw::debug::drawFont(x + 45, 180, mm::mtl::Singleton<Extend>::getPtr()->filename(unknown474.c_str()));
+    if ((unknown08 & FLAG_DELAY) != 0) {
       fw::debug::drawFont(x + 230, 180, "delay");
     }
-    if (fw::SoundManager::get()->isPreparing(handle)) {
+    if (fw::SoundManager::get()->isPreparing(unknown4b8)) {
       fw::debug::drawFont(x + 230, 180, "preparing");
     } else {
       fw::debug::drawFont(x + 230, 180, "%d / %d", static_cast<int>(getPlayFrame()), static_cast<int>(getTotalFrame()));
     }
   }
-  if (waitingHandle != 0) {
+  if (unknown46c != 0) {
     fw::debug::drawFontColor(mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
     fw::debug::drawFont(x, 195, "next");
-    fw::debug::drawFont(x + 45, 195, mm::mtl::Singleton<Extend>::getPtr()->filename(waitingPath.c_str()));
-    if (fw::SoundManager::get()->isPreparing(waitingHandle)) {
+    fw::debug::drawFont(x + 45, 195, mm::mtl::Singleton<Extend>::getPtr()->filename(unknown428.c_str()));
+    if (fw::SoundManager::get()->isPreparing(unknown46c)) {
       fw::debug::drawFont(x + 230, 195, "preparing");
     }
   }
   int y = 230;
-  for (u32 i = 0; i < plays.size(); i++) {
+  for (u32 i = 0; i < unknown2d0.size(); i++) {
     f32 time = 0.0f;
-    bool isTime = fw::SoundManager::get()->getPlayTime(plays[i].handle, time);
-    u32 playHandle = plays[i].handle;
-    const char *name = mm::mtl::Singleton<Extend>::getPtr()->filename(plays[i].path.c_str());
+    bool isTime = fw::SoundManager::get()->getPlayTime(unknown2d0[i].unknown00, time);
+    u32 playHandle = unknown2d0[i].unknown00;
+    const char *name = mm::mtl::Singleton<Extend>::getPtr()->filename(unknown2d0[i].unknown04.c_str());
     fw::debug::drawFont(x - 370,
                         y,
                         "%d %s time=%.2f(%d) valid=%d pause=%d preparing=%d prepared=%d %s",
@@ -92,19 +92,19 @@ void VoicePlayer::draw() {
                         name,
                         time,
                         isTime,
-                        fw::SoundManager::get()->isValid(plays[i].handle),
-                        fw::SoundManager::get()->isPause(plays[i].handle),
-                        fw::SoundManager::get()->isPreparing(plays[i].handle),
-                        fw::SoundManager::get()->isPrepared(plays[i].handle),
-                        plays[i].retakeCount != 0 ? "RETAKE" : "");
+                        fw::SoundManager::get()->isValid(unknown2d0[i].unknown00),
+                        fw::SoundManager::get()->isPause(unknown2d0[i].unknown00),
+                        fw::SoundManager::get()->isPreparing(unknown2d0[i].unknown00),
+                        fw::SoundManager::get()->isPrepared(unknown2d0[i].unknown00),
+                        unknown2d0[i].unknown50 != 0 ? "RETAKE" : "");
     y += 20;
   }
 }
 
 f32 VoicePlayer::getPlayFrame() const {
-  if (handle != 0) {
+  if (unknown4b8 != 0) {
     f32 time;
-    if (fw::SoundManager::get()->getPlayTime(handle, time)) {
+    if (fw::SoundManager::get()->getPlayTime(unknown4b8, time)) {
       return time * TO_FR;
     }
   }
@@ -112,9 +112,9 @@ f32 VoicePlayer::getPlayFrame() const {
 }
 
 f32 VoicePlayer::getTotalFrame() const {
-  if (handle != 0) {
+  if (unknown4b8 != 0) {
     f32 time;
-    if (fw::SoundManager::get()->getTotalTime(handle, time)) {
+    if (fw::SoundManager::get()->getTotalTime(unknown4b8, time)) {
       return time * TO_FR;
     }
   }
@@ -123,98 +123,98 @@ f32 VoicePlayer::getTotalFrame() const {
 
 void VoicePlayer::setMultipleMode(bool isMultipleMode) {
   if (isMultipleMode) {
-    flags |= FLAG_MULTIPLE_MODE;
+    unknown08 |= FLAG_MULTIPLE_MODE;
   } else {
-    flags &= ~FLAG_MULTIPLE_MODE;
+    unknown08 &= ~FLAG_MULTIPLE_MODE;
   }
 }
 
 void VoicePlayer::preload(f32 frame, const char *path) {
-  while (keys.size() >= static_cast<int>(KEY_COUNT)) {
-    keys.erase(keys.begin());
+  while (unknown0c.size() >= static_cast<int>(KEY_COUNT)) {
+    unknown0c.erase(unknown0c.begin());
   }
-  keys.push_back(Key(frame, path));
+  unknown0c.push_back(Key(frame, path));
 }
 
 bool VoicePlayer::play(const char *path, f32 delay, IVoiceEvent *event) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
     return false;
   }
-  bool isPause = (flags & FLAG_PAUSE) != 0;
-  if ((flags & FLAG_MULTIPLE_MODE) == 0) {
+  bool isPause = (unknown08 & FLAG_PAUSE) != 0;
+  if ((unknown08 & FLAG_MULTIPLE_MODE) == 0) {
     stop(10.0f);
   } else {
     clr();
   }
-  if (__builtin_strcmp(waitingPath.c_str(), path) == 0) {
-    if (waitingHandle != 0) {
-      fw::SoundManager::get()->isPreparing(waitingHandle);
-      handle = waitingHandle;
-      this->path = waitingPath;
+  if (__builtin_strcmp(unknown428.c_str(), path) == 0) {
+    if (unknown46c != 0) {
+      fw::SoundManager::get()->isPreparing(unknown46c);
+      unknown4b8 = unknown46c;
+      this->unknown474 = unknown428;
       if (delay <= 0.0f) {
-        fw::SoundManager::get()->startVoice(handle);
-        flags &= ~FLAG_DELAY;
+        fw::SoundManager::get()->startVoice(unknown4b8);
+        unknown08 &= ~FLAG_DELAY;
       } else {
-        flags |= FLAG_DELAY;
-        this->delay = delay;
+        unknown08 |= FLAG_DELAY;
+        this->unknown470 = delay;
       }
     }
-    waitingPath = "";
-    waitingHandle = 0;
+    unknown428 = "";
+    unknown46c = 0;
   } else {
     if (delay <= 0.0f) {
-      handle = VoiceUtil::playVoice(path, 1.0f, false);
-      this->path = path;
-      flags &= ~FLAG_DELAY;
+      unknown4b8 = VoiceUtil::playVoice(path, 1.0f, false);
+      this->unknown474 = path;
+      unknown08 &= ~FLAG_DELAY;
     } else {
-      handle = 0;
-      this->path = path;
-      flags |= FLAG_DELAY;
-      this->delay = delay;
+      unknown4b8 = 0;
+      this->unknown474 = path;
+      unknown08 |= FLAG_DELAY;
+      this->unknown470 = delay;
     }
     stopWaiting();
   }
-  while (plays.size() >= plays.capacity()) {
-    fw::SoundManager::get()->stopVoice(plays.front().handle, 10.0f * TO_SEC);
-    plays.erase(plays.begin());
+  while (unknown2d0.size() >= unknown2d0.capacity()) {
+    fw::SoundManager::get()->stopVoice(unknown2d0.front().unknown00, 10.0f * TO_SEC);
+    unknown2d0.erase(unknown2d0.begin());
   }
-  if (handle != 0) {
-    plays.push_back(Play(handle, path));
+  if (unknown4b8 != 0) {
+    unknown2d0.push_back(Play(unknown4b8, path));
   }
   if (isPause) {
-    fw::SoundManager::get()->pause(handle, true, 0.0f);
+    fw::SoundManager::get()->pause(unknown4b8, true, 0.0f);
   }
-  this->event = event;
-  return handle != 0;
+  this->unknown4c0 = event;
+  return unknown4b8 != 0;
 }
 
 void VoicePlayer::clr() {
-  path = "";
-  event = nullptr;
-  delay = 0.0f;
-  flags &= ~(FLAG_DELAY | FLAG_STARTED | FLAG_START_FAILED);
+  unknown474 = "";
+  unknown4c0 = nullptr;
+  unknown470 = 0.0f;
+  unknown08 &= ~(FLAG_DELAY | FLAG_STARTED | FLAG_START_FAILED);
 }
 
 void VoicePlayer::pause(bool isPause) {
-  if (isPause == ((flags & FLAG_PAUSE) != 0)) {
+  if (isPause == ((unknown08 & FLAG_PAUSE) != 0)) {
     return;
   }
-  for (size_t i = 0; i < plays.size(); i++) {
+  for (size_t i = 0; i < unknown2d0.size(); i++) {
     f32 time = 0.0f;
     f32 totalTime = 0.0f;
-    bool isPlayTime = fw::SoundManager::get()->getPlayTime(plays[i].handle, time);
-    bool isTotalTime = fw::SoundManager::get()->getTotalTime(handle, totalTime);
+    bool isPlayTime = fw::SoundManager::get()->getPlayTime(unknown2d0[i].unknown00, time);
+    bool isTotalTime = fw::SoundManager::get()->getTotalTime(unknown4b8, totalTime);
     if (isPlayTime && isTotalTime && totalTime > 0.0f && time > 0.0f && totalTime - 0.5f <= time) {
-      fw::SoundManager::get()->pause(plays[i].handle, false, 0.0f);
-      fw::SoundManager::get()->stopVoice(plays[i].handle, 0.0f);
+      fw::SoundManager::get()->pause(unknown2d0[i].unknown00, false, 0.0f);
+      fw::SoundManager::get()->stopVoice(unknown2d0[i].unknown00, 0.0f);
     } else {
-      fw::SoundManager::get()->pause(plays[i].handle, isPause, 0.0f);
+      fw::SoundManager::get()->pause(unknown2d0[i].unknown00, isPause, 0.0f);
     }
   }
   if (isPause) {
-    flags |= FLAG_PAUSE;
+    unknown08 |= FLAG_PAUSE;
   } else {
-    flags &= ~FLAG_PAUSE;
+    unknown08 &= ~FLAG_PAUSE;
   }
 }
 
@@ -222,16 +222,16 @@ void VoicePlayer::startWaiting(const char *path) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
     return;
   }
-  if (__builtin_strcmp(waitingPath.c_str(), path) == 0) {
+  if (__builtin_strcmp(unknown428.c_str(), path) == 0) {
     return;
   }
   stopWaiting();
-  waitingPath = path;
-  waitingHandle = VoiceUtil::playVoice(path, 1.0f, true);
+  unknown428 = path;
+  unknown46c = VoiceUtil::playVoice(path, 1.0f, true);
 }
 
-bool VoicePlayer::isPlay() const { return handle != 0; }
+bool VoicePlayer::isPlay() const { return unknown4b8 != 0; }
 
-const char *VoicePlayer::getPath() const { return handle != 0 ? path.c_str() : ""; }
+const char *VoicePlayer::getPath() const { return unknown4b8 != 0 ? unknown474.c_str() : ""; }
 
 } // namespace event

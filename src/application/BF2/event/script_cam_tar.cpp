@@ -21,10 +21,10 @@ void ScriptCamTar::doit(const Param &param) {
   ObjectCamera *camera = static_cast<ObjectCamera *>(object);
   TarAxis axis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
   CV_TYPE cv = static_cast<CV_TYPE>(param.val(4).getS32());
-  prevAxis = camera->getTarAxis();
+  unknown10 = camera->getTarAxis();
   camera->setTarAxis(axis, cv);
-  if (prevAxis.getAxis() != axis.getAxis() || !(__builtin_fabsf(axis.getTar().x - prevAxis.getTar().x) <= 1e-6f) || !(__builtin_fabsf(axis.getTar().y - prevAxis.getTar().y) <= 1e-6f) ||
-      !(__builtin_fabsf(axis.getTar().z - prevAxis.getTar().z) <= 1e-6f)) {
+  if (unknown10.getAxis() != axis.getAxis() || !(__builtin_fabsf(axis.getTar().x - unknown10.getTar().x) <= 1e-6f) || !(__builtin_fabsf(axis.getTar().y - unknown10.getTar().y) <= 1e-6f) ||
+      !(__builtin_fabsf(axis.getTar().z - unknown10.getTar().z) <= 1e-6f)) {
     mm::mtl::Singleton<TextManager>::getPtr()->setCutChangeFrame();
   }
 }
@@ -34,7 +34,7 @@ void ScriptCamTar::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_CAMERA) {
     return;
   }
-  TarAxis axis = prevAxis;
+  TarAxis axis = unknown10;
   static_cast<ObjectCamera *>(object)->setTarAxis(axis, CV_TYPE_LINEAR);
 }
 

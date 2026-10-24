@@ -17,34 +17,34 @@ class GfObj;
 namespace event {
 
 CharaEvaPlayer::CharaEvaPlayer()
-    : flags(0), chara(nullptr), model(nullptr), dysUpdater(nullptr), weaponData(nullptr), rcha(nullptr), frame(0.0f), offset(0.0f, 0.0f, 0.0f), isTar(false), tar(0.0f, 0.0f, 0.0f), action(0),
-      faceType(0), eyeType(0), dispWeapon(1), mountWeapon(1), battleWeapon(1) {}
+    : unknown08(0), unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(0.0f), unknown40(0.0f, 0.0f, 0.0f), unknown50(false),
+      unknown60(0.0f, 0.0f, 0.0f), unknown70(0), unknown74(0), unknown78(0), unknown7c(1), unknown80(1), unknown84(1) {}
 
 void CharaEvaPlayer::setScaleWeapon(f32 scale) {
-  if (model->unknown18 == gf::GF_EVT_MODEL_WEAPON) {
-    chara->setScaleWeapon(scale);
+  if (unknown18->unknown18 == gf::GF_EVT_MODEL_WEAPON) {
+    unknown10->setScaleWeapon(scale);
   }
 }
 
 void CharaEvaPlayer::playTar(bool isPlay, const mm::Vec3 &tar) {
-  if ((flags & FLAG_CHARA) == 0) {
+  if ((unknown08 & FLAG_CHARA) == 0) {
     return;
   }
   if (isPlay) {
-    chara->setTar(TarAxis(TarAxis::AXIS_POS, tar), -1.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
+    unknown10->setTar(TarAxis(TarAxis::AXIS_POS, tar), -1.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
   } else {
-    chara->setTar(TarAxis(TarAxis::AXIS_POS, tar), 0.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
+    unknown10->setTar(TarAxis(TarAxis::AXIS_POS, tar), 0.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
   }
-  isTar = isPlay;
-  this->tar = tar;
+  unknown50 = isPlay;
+  this->unknown60 = tar;
 }
 
 void CharaEvaPlayer::playAction(int type) {
-  if (model == nullptr) {
+  if (unknown18 == nullptr) {
     return;
   }
-  gf::GfObj *obj = gf::GfObjUtil::getObj(model->unknown20);
-  if (obj == nullptr || (flags & FLAG_CHARA) == 0) {
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown18->unknown20);
+  if (obj == nullptr || (unknown08 & FLAG_CHARA) == 0) {
     return;
   }
   stopAction();
@@ -56,57 +56,57 @@ void CharaEvaPlayer::playAction(int type) {
     CharaUtil::setStat(obj, CharaPlayAction::type2stat(type, 1));
   } else if (type <= 22) {
     CharaUtil::setStat(obj, CharaPlayAction::type2stat(type, 1));
-    CharaUtil::combat(model, true, true);
+    CharaUtil::combat(unknown18, true, true);
   }
-  action = type;
+  unknown70 = type;
 }
 
 void CharaEvaPlayer::setDispWeapon(int type) {
-  if (model->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
-    chara->setHideWeapon(WPNHIDEID_EVA, type > 1, false);
-    chara->setHideWeapon(WPNHIDEID_EVA, type > 1, true);
-  } else if (model->unknown18 == gf::GF_EVT_MODEL_BLADE) {
-    chara->setHideWeapon(WPNHIDEID_EVA, type > 1, false);
-    chara->setHideWeapon(WPNHIDEID_EVA, type > 1, true);
+  if (unknown18->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
+    unknown10->setHideWeapon(WPNHIDEID_EVA, type > 1, false);
+    unknown10->setHideWeapon(WPNHIDEID_EVA, type > 1, true);
+  } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_BLADE) {
+    unknown10->setHideWeapon(WPNHIDEID_EVA, type > 1, false);
+    unknown10->setHideWeapon(WPNHIDEID_EVA, type > 1, true);
   }
-  dispWeapon = type;
+  unknown7c = type;
 }
 
 void CharaEvaPlayer::setMountWeapon(int type) {
-  if (model->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
-    wpnAsmRight.mount(model, type > 1, false);
-    wpnAsmLeft.mount(model, type > 1, true);
-  } else if (model->unknown18 == gf::GF_EVT_MODEL_BLADE) {
-    wpnAsmRight.mount(model, type > 1, false);
-    wpnAsmLeft.mount(model, type > 1, true);
+  if (unknown18->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
+    unknown88.mount(unknown18, type > 1, false);
+    unknowne0.mount(unknown18, type > 1, true);
+  } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_BLADE) {
+    unknown88.mount(unknown18, type > 1, false);
+    unknowne0.mount(unknown18, type > 1, true);
   }
-  mountWeapon = type;
+  unknown80 = type;
 }
 
 void CharaEvaPlayer::stopTar() {
-  if (isTar) {
-    isTar = false;
-    tar = mm::Vec3::zero;
+  if (unknown50) {
+    unknown50 = false;
+    unknown60 = mm::Vec3::zero;
   }
 }
 
 void CharaEvaPlayer::stopAction() {
-  if (model == nullptr) {
+  if (unknown18 == nullptr) {
     return;
   }
-  gf::GfObj *obj = gf::GfObjUtil::getObj(model->unknown20);
-  if (obj == nullptr || action <= 0) {
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown18->unknown20);
+  if (obj == nullptr || unknown70 <= 0) {
     return;
   }
-  if (action == 1) {
+  if (unknown70 == 1) {
     CharaUtil::setStat(obj, "S_idle");
-  } else if (action <= 16) {
+  } else if (unknown70 <= 16) {
     CharaUtil::setStat(obj, "S_idle");
-  } else if (action <= 22) {
+  } else if (unknown70 <= 22) {
     CharaUtil::setStat(obj, "S_idle");
-    CharaUtil::combat(model, false, true);
+    CharaUtil::combat(unknown18, false, true);
   }
-  action = 0;
+  unknown70 = 0;
 }
 
 } // namespace event

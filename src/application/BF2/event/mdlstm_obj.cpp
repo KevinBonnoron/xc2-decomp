@@ -6,49 +6,49 @@
 namespace event {
 
 MdlstmObj::MdlstmObj()
-    : flags(0), state(STATE_NONE), frame(0.0f), _98(0), _9c(0), _a0(0), _a4(false), _a5(false), _a8(0), _b0(nullptr), _b8(nullptr), _c0(nullptr), _c8(nullptr), _d0(nullptr), mReuseModel(nullptr),
-      mModel(nullptr) {}
+    : unknown08(0), unknown0c(STATE_NONE), unknown10(0.0f), _98(0), _9c(0), _a0(0), _a4(false), _a5(false), _a8(0), _b0(nullptr), _b8(nullptr), _c0(nullptr), _c8(nullptr), _d0(nullptr),
+      unknownd8(nullptr), unknowne0(nullptr) {}
 
-void MdlstmObj::finishLoaded() { state = STATE_LOADED; }
+void MdlstmObj::finishLoaded() { unknown0c = STATE_LOADED; }
 
-void MdlstmObj::finishDelay() { state = STATE_DELAY; }
+void MdlstmObj::finishDelay() { unknown0c = STATE_DELAY; }
 
 void MdlstmObj::finishBusy() {
-  ModelUtil::setupRenderState(mModel->getHandle());
-  state = STATE_BUSY;
+  ModelUtil::setupRenderState(unknowne0->getHandle());
+  unknown0c = STATE_BUSY;
 }
 
-void MdlstmObj::load() { state = STATE_LOAD; }
+void MdlstmObj::load() { unknown0c = STATE_LOAD; }
 
 void MdlstmObj::dispose() {
-  state = STATE_DISPOSE;
-  mDisposeDelay = 1;
+  unknown0c = STATE_DISPOSE;
+  unknowne8 = 1;
 }
 
-bool MdlstmObj::isLoaded() const { return state > STATE_LOADING; }
+bool MdlstmObj::isLoaded() const { return unknown0c > STATE_LOADING; }
 
-bool MdlstmObj::isDisposeable(ModelObj *model) const { return state == STATE_ACTIVE && mModel == model; }
+bool MdlstmObj::isDisposeable(ModelObj *model) const { return unknown0c == STATE_ACTIVE && unknowne0 == model; }
 
-bool MdlstmObj::isActive() const { return state != STATE_NONE; }
+bool MdlstmObj::isActive() const { return unknown0c != STATE_NONE; }
 
 bool MdlstmObj::isLoading(f32 threshold) const {
-  if (frame <= threshold && static_cast<u32>(state - STATE_INIT) < 6) {
+  if (unknown10 <= threshold && static_cast<u32>(unknown0c - STATE_INIT) < 6) {
     return true;
   }
   return false;
 }
 
 bool MdlstmObj::isBuildable(const char *name, u32 value) const {
-  if (state != STATE_BUSY || !(flags & 1) || _a8 != value)
+  if (unknown0c != STATE_BUSY || !(unknown08 & 1) || _a8 != value)
     return false;
-  return __builtin_strcmp(path.c_str(), name) == 0;
+  return __builtin_strcmp(unknown14.c_str(), name) == 0;
 }
 
 bool MdlstmObj::checkByHandle(gf::GF_OBJ_HANDLE *handle) const {
-  if (mReuseModel != nullptr && mReuseModel->getHandle() == handle) {
+  if (unknownd8 != nullptr && unknownd8->getHandle() == handle) {
     return true;
   }
-  if (mModel != nullptr && mModel->getHandle() == handle) {
+  if (unknowne0 != nullptr && unknowne0->getHandle() == handle) {
     return true;
   }
   return false;

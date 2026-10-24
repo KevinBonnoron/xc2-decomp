@@ -10,28 +10,28 @@
 
 namespace event {
 
-ResPack::ResPack() : mEvent(nullptr), mFunc(nullptr), mResource(nullptr) {}
+ResPack::ResPack() : unknown90(nullptr), unknown98(nullptr), unknowna8(nullptr) {}
 
 ResPack::~ResPack() { clear(); }
 
 void ResPack::clear() {
-  if (mResource != nullptr) {
-    mResource->release();
-    mResource = nullptr;
+  if (unknowna8 != nullptr) {
+    unknowna8->release();
+    unknowna8 = nullptr;
   }
-  handle = mtl::ALLOC_HANDLE();
-  mFunc = nullptr;
-  mEvent = nullptr;
+  unknown08 = mtl::ALLOC_HANDLE();
+  unknown98 = nullptr;
+  unknown90 = nullptr;
 }
 
 void ResPack::update() {
-  if (!mFunc) {
+  if (!unknown98) {
     return;
   }
-  while (mFunc) {
-    void (ResPack::*func)() = mFunc;
+  while (unknown98) {
+    void (ResPack::*func)() = unknown98;
     (this->*func)();
-    if (func != mFunc) {
+    if (func != unknown98) {
       continue;
     }
     break;
@@ -43,10 +43,10 @@ void ResPack::draw() {
   fw::debug::drawLineSquare2D(mm::Rect<int>(330, 180, 190, 45), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFont(335, 185, "PACK");
-  if (mResource == nullptr) {
+  if (unknowna8 == nullptr) {
     return;
   }
-  const Data *data = static_cast<const Data *>(mResource->getAssetData());
+  const Data *data = static_cast<const Data *>(unknowna8->getAssetData());
   if (data != nullptr) {
     fw::debug::drawFont(390, 185, "       %d", data->count);
   }
@@ -60,11 +60,11 @@ void ResPack::draw() {
 }
 
 void ResPack::load(mtl::ALLOC_HANDLE handle, const char *path, IResPackEvent *event) {
-  this->handle = handle;
-  this->path = path;
-  mEvent = event;
-  mResource = fw::RenderResource::request(mm::mtl::Singleton<MemoryManager>::getPtr()->getResHandle(), mm::mtl::Singleton<Extend>::getPtr()->evpa(this->path.c_str()), 0);
-  mFunc = &ResPack::func_loading;
+  this->unknown08 = handle;
+  this->unknown0c = path;
+  unknown90 = event;
+  unknowna8 = fw::RenderResource::request(mm::mtl::Singleton<MemoryManager>::getPtr()->getResHandle(), mm::mtl::Singleton<Extend>::getPtr()->evpa(this->unknown0c.c_str()), 0);
+  unknown98 = &ResPack::func_loading;
 }
 
 } // namespace event

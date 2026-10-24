@@ -39,14 +39,14 @@ public:
   bool searchByHandle(gf::GF_OBJ_HANDLE *handle) const;
 
 private:
-  u32 flags;
-  u32 mReuseFlags;
-  MdlstmObj objs[OBJ_COUNT];
-  u32 mObjCount;
-  mm::mtl::FixedVector<MdlstmObj *, OBJ_COUNT> mActiveObjs;
+  u32 unknown10;                                             // Inferred role: flags; original member name unknown.
+  u32 unknown14;                                             // Inferred role: reuse flags; original member name unknown.
+  MdlstmObj unknown18[OBJ_COUNT];                            // Inferred role: objs; original member name unknown.
+  u32 unknown3c018;                                          // Inferred role: object count; original member name unknown.
+  mm::mtl::FixedVector<MdlstmObj *, OBJ_COUNT> unknown3c020; // Inferred role: active objs; original member name unknown.
   u32 _3e028;
   u32 _3e02c;
-  int mReuseFlag;
+  int unknown3e030; // Inferred role: reuse flag; original member name unknown.
 };
 
 static_assert(sizeof(MdlstmManager) == 0x3e038, "");

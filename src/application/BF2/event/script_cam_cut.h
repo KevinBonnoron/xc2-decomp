@@ -14,7 +14,7 @@ public:
   virtual void redo(const Param &param) { doit(param); }
 
 private:
-  mm::mtl::FixStr<64> mPrevCutName;
+  mm::mtl::FixStr<64> unknown08; // Inferred role: prev cut name; original member name unknown.
 };
 
 static_assert(sizeof(ScriptCamCut) == 0x50, "");

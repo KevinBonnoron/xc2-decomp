@@ -26,21 +26,21 @@ public:
 
   struct FirstKey {
     FirstKey(const char *name, const PosAxis &axis, const mm::Vec3 &pos) {
-      this->name = name;
-      this->axis = axis;
-      this->pos = pos;
+      this->unknown00 = name;
+      this->unknown20 = axis;
+      this->unknown40 = pos;
     }
 
-    mm::mtl::FixStr<16> name;
-    PosAxis axis;
-    mm::Vec3 pos;
+    mm::mtl::FixStr<16> unknown00; // Inferred role: name; original member name unknown.
+    PosAxis unknown20;             // Inferred role: axis; original member name unknown.
+    mm::Vec3 unknown40;            // Inferred role: pos; original member name unknown.
   };
 
   struct SeamPoint {
-    SeamPoint(f32 frame, const mm::Vec3 &pos) : frame(frame), pos(pos) {}
+    SeamPoint(f32 frame, const mm::Vec3 &pos) : unknown00(frame), unknown10(pos) {}
 
-    f32 frame;
-    mm::Vec3 pos;
+    f32 unknown00;      // Inferred role: frame; original member name unknown.
+    mm::Vec3 unknown10; // Inferred role: pos; original member name unknown.
   };
 
   SeamlessManager();
@@ -58,12 +58,12 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 flags;
-  u32 dispFlags;
-  mm::mtl::FixedVector<FirstKey, FIRST_KEY_COUNT> firstKeys;
-  mm::Vec3 readPos;
-  mm::mtl::FixedVector<SeamPoint, SEAM_POINT_COUNT> seamPoints;
-  mm::Vec3 currentPos;
+  u32 unknown10;                                                // Inferred role: flags; original member name unknown.
+  u32 unknown14;                                                // Inferred role: disp flags; original member name unknown.
+  mm::mtl::FixedVector<FirstKey, FIRST_KEY_COUNT> unknown20;    // Inferred role: first keys; original member name unknown.
+  mm::Vec3 unknown530;                                          // Inferred role: read pos; original member name unknown.
+  mm::mtl::FixedVector<SeamPoint, SEAM_POINT_COUNT> unknown540; // Inferred role: seam points; original member name unknown.
+  mm::Vec3 unknown2550;                                         // Inferred role: current pos; original member name unknown.
 };
 
 static_assert(sizeof(SeamlessManager::FirstKey) == 0x50, "");

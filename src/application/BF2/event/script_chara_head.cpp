@@ -22,7 +22,7 @@ void ScriptCharaHead::doit(const Param &param) {
   f32 life = param.val(1).getF32();
   bool isBlendIn = param.val(2).getBool();
   bool isBlendOut = param.val(3).getBool();
-  mPrevId = chara->getCharaObj()->getHead();
+  unknown08 = chara->getCharaObj()->getHead();
   chara->getCharaObj()->playHead(type, life, isBlendIn, isBlendOut);
 }
 
@@ -32,8 +32,8 @@ void ScriptCharaHead::undo(const Param &param) {
     return;
   }
   ObjectChara *chara = static_cast<ObjectChara *>(object);
-  if (mPrevId > 0) {
-    chara->getCharaObj()->playHead(mPrevId, 30.0f, true, true);
+  if (unknown08 > 0) {
+    chara->getCharaObj()->playHead(unknown08, 30.0f, true, true);
   } else {
     chara->getCharaObj()->stopHead();
   }
