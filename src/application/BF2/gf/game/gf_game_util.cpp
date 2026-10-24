@@ -627,11 +627,11 @@ bool GfGameUtil::isSceneRide() {
 
 const char *GfGameUtil::getBladeModel(u32 blade, bool isDefault) {
   SDataBlade *dataBlade = GfDataBlade::getSDataBlade(blade);
-  if (!dataBlade->resourceNameModel2.empty() && !isDefault && isCondBladeModel(blade)) {
-    return dataBlade->resourceNameModel2.c_str();
+  if (!dataBlade->unknown720.empty() && !isDefault && isCondBladeModel(blade)) {
+    return dataBlade->unknown720.c_str();
   }
 
-  return dataBlade->resourceNameModel.c_str();
+  return dataBlade->unknown70c.c_str();
 }
 
 bool GfGameUtil::isCondBladeModel(u32 blade) {
@@ -648,16 +648,16 @@ bool GfGameUtil::isCondBladeModel(u32 blade) {
     return false;
   }
 
-  return GfGameCond::isGameCond(GfDataBlade::getSDataBlade(blade)->condition);
+  return GfGameCond::isGameCond(GfDataBlade::getSDataBlade(blade)->unknown82a);
 }
 
 const char *GfGameUtil::getBladeMotion(u32 blade, bool isDefault) {
   SDataBlade *dataBlade = GfDataBlade::getSDataBlade(blade);
-  if (!dataBlade->resourceNameMotion2.empty() && !isDefault && isCondBladeModel(blade)) {
-    return dataBlade->resourceNameMotion2.c_str();
+  if (!dataBlade->unknown748.empty() && !isDefault && isCondBladeModel(blade)) {
+    return dataBlade->unknown748.c_str();
   }
 
-  return dataBlade->resourceNameMotion.c_str();
+  return dataBlade->unknown734.c_str();
 }
 
 const char *GfGameUtil::getDriverModel(u32 driver) {
@@ -729,8 +729,8 @@ bool GfGameUtil::getMaxHpForUi(GF_OBJ_HANDLE *handle, u32 *maxHp) {
 void GfGameUtil::incGameClearCount() {
   GfGameFlag::setLocal(1, FLAG_GAME_CLEAR, 1);
   SDataGame *dataGame = GfDataManager::getDataGame();
-  if (dataGame->gameClearCount < GAME_CLEAR_COUNT_MAX) {
-    dataGame->gameClearCount++;
+  if (dataGame->unknown109b2c < GAME_CLEAR_COUNT_MAX) {
+    dataGame->unknown109b2c++;
   }
 }
 
@@ -1078,8 +1078,8 @@ u32 GfGameUtil::execAddRareBlade(const SDataBlade &dataBlade) {
       GfDataBlade::setCreator(BLADE_REAL_ALIAS, GfDataBlade::getCreator(BLADE_REAL_ALIAS_TARGET));
     }
 
-    if (addedBlade->createEvent != 0) {
-      setWatchedEvent(addedBlade->createEvent);
+    if (addedBlade->unknown850 != 0) {
+      setWatchedEvent(addedBlade->unknown850);
     }
 
     GfEvent::callBladeActivate(blade, activateType, ACTIVATE_TYPE_RESERVER);
@@ -1092,8 +1092,8 @@ u32 GfGameUtil::execAddCommonBlade(const SDataBlade &dataBlade) {
   u32 blade = GfDataBlade::addCommonBlade(dataBlade);
   if (blade != 0) {
     SDataBlade *addedBlade = GfDataBlade::getSDataBlade(blade);
-    if (addedBlade->createEvent != 0) {
-      setWatchedEvent(addedBlade->createEvent);
+    if (addedBlade->unknown850 != 0) {
+      setWatchedEvent(addedBlade->unknown850);
     }
 
     GfEvent::callBladeActivate(blade, ACTIVATE_TYPE_UNUSE, ACTIVATE_TYPE_RESERVER);
@@ -1298,7 +1298,7 @@ void GfGameUtil::setKosmosArts3EnableBothWeapon(GF_OBJ_HANDLE *handle, bool isEn
   weapon->isAlternate = isAlternate;
 }
 
-bool GfGameUtil::isHomuraHoodStyle() { return GfGameCond::isGameCond(GfDataBlade::getSDataBlade(BLADE_HOMURA)->condition); }
+bool GfGameUtil::isHomuraHoodStyle() { return GfGameCond::isGameCond(GfDataBlade::getSDataBlade(BLADE_HOMURA)->unknown82a); }
 
 bool GfGameUtil::isTrueRex() { return GfGameCond::isGameCond(GfBdatChrDr::get()->getChrDrCondition(DRIVER_REX)); }
 
@@ -1407,7 +1407,7 @@ void GfGameUtil::execEquipDriverDefaultAcce(u32 driver) {
     return;
   }
 
-  GfDataDriver::getSDataDriver(driver)->equipDefaultAcce = true;
+  GfDataDriver::getSDataDriver(driver)->unknown572 = true;
   u32 accessory = GfBdatChrDr::get()->getChrDrDefAcce(driver);
   if (accessory == 0) {
     return;
@@ -1478,11 +1478,11 @@ bool GfGameUtil::setupSaveAchievementPopup(u32 blade, u32 achievement, u32 level
   }
 
   SDataGame *dataGame = GfDataManager::getDataGame();
-  if (dataGame->achievementPopupNum < ACHIEVEMENT_POPUP_MAX) {
-    SDataAchievementPopup &popup = dataGame->achievementPopups[dataGame->achievementPopupNum++];
-    popup.blade = blade;
-    popup.achievement = achievement;
-    popup.level = level;
+  if (dataGame->unknown117688 < ACHIEVEMENT_POPUP_MAX) {
+    SDataAchievementPopup &popup = dataGame->unknown1171d8[dataGame->unknown117688++];
+    popup.unknown00 = blade;
+    popup.unknown02 = achievement;
+    popup.unknown03 = level;
   }
 
   return true;
@@ -1490,21 +1490,21 @@ bool GfGameUtil::setupSaveAchievementPopup(u32 blade, u32 achievement, u32 level
 
 void GfGameUtil::execSaveAchievementPopup(u32 blade) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  u32 &popupNum = dataGame->achievementPopupNum;
+  u32 &popupNum = dataGame->unknown117688;
   for (u32 index = 0; index < popupNum;) {
-    SDataAchievementPopup &popup = dataGame->achievementPopups[index];
-    if (popup.blade != blade) {
+    SDataAchievementPopup &popup = dataGame->unknown1171d8[index];
+    if (popup.unknown00 != blade) {
       index++;
       continue;
     }
 
-    SCOM_POPUP::createAchievement(blade, popup.achievement, popup.level);
+    SCOM_POPUP::createAchievement(blade, popup.unknown02, popup.unknown03);
     if (index >= popupNum) {
       popupNum--;
       break;
     }
 
-    popup = dataGame->achievementPopups[popupNum - 1];
+    popup = dataGame->unknown1171d8[popupNum - 1];
     popupNum--;
   }
 }

@@ -305,7 +305,7 @@ def write(cls, ns, stem, statics, entries, methods, tables, code, direct, namesp
             _, name, column, stores, _, members = entry
             w(f"void {name}(const CBdatWrapper &wrapper) {{")
             for static, member in zip(stores, members):
-                w(f'  {static_name(statics, static)} = Bdat::getMember(wrapper.data, "{member}");')
+                w(f'  {static_name(statics, static)} = Bdat::getMember(wrapper.unknown00, "{member}");')
             w("}")
             w("")
             continue
@@ -314,8 +314,8 @@ def write(cls, ns, stem, statics, entries, methods, tables, code, direct, namesp
         if info["kind"] == "flag":
             member, flag = (static_name(statics, a) for a in info["statics"])
             w(f"bool {name}(const CBdatWrapper &wrapper, u32 id) {{")
-            w(f"  if ({member} == nullptr || {flag} == nullptr || id < Bdat::getIdTop(wrapper.data) ||")
-            w("      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {")
+            w(f"  if ({member} == nullptr || {flag} == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||")
+            w("      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {")
             w("    return false;")
             w("  }")
             w("")
@@ -343,13 +343,13 @@ def write(cls, ns, stem, statics, entries, methods, tables, code, direct, namesp
             value = f"wrapper.getValCheck({member}, id, {info['code']}).{field}"
         if info["kind"] == "float":
             w("  f32 value = 0.0f;")
-            w(f"  if ({member} != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {{")
+            w(f"  if ({member} != nullptr && id >= Bdat::getIdTop(wrapper.unknown00) && id < Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {{")
             w(f"    value = {value};")
             w("  }")
             w("")
             w("  return value;")
         else:
-            w(f"  if ({member} == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {{")
+            w(f"  if ({member} == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {{")
             w(f"    return {zero};")
             w("  }")
             w("")
@@ -373,12 +373,12 @@ def write(cls, ns, stem, statics, entries, methods, tables, code, direct, namesp
         if name.endswith("Start") and args == "Ev" and mangled in tables:
             table = member_names[tables[mangled]]
             declarations.append(f"  u32 {name}() const;")
-            w(f"u32 {cls}::{name}() const {{ return Bdat::getIdTop({table}->data); }}")
+            w(f"u32 {cls}::{name}() const {{ return Bdat::getIdTop({table}->unknown00); }}")
             w("")
         elif name.endswith("End") and args == "Ev" and mangled in tables:
             table = member_names[tables[mangled]]
             declarations.append(f"  u32 {name}() const;")
-            w(f"u32 {cls}::{name}() const {{ return Bdat::getIdTop({table}->data) + Bdat::getIdCount({table}->data); }}")
+            w(f"u32 {cls}::{name}() const {{ return Bdat::getIdTop({table}->unknown00) + Bdat::getIdCount({table}->unknown00); }}")
             w("")
         elif args == "Ej" and name in getters and mangled in tables:
             info = getters[name]

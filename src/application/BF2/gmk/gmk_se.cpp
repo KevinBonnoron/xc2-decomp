@@ -9,8 +9,8 @@
 namespace gmk {
 
 void GmkSe::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  isMapPack = Bdat::getFlagVal(bdat.data, "flag", id, "se_type") != 0;
-  isPlayOnce = Bdat::getFlagVal(bdat.data, "flag", id, "play_once") != 0;
+  isMapPack = Bdat::getFlagVal(bdat.unknown00, "flag", id, "se_type") != 0;
+  isPlayOnce = Bdat::getFlagVal(bdat.unknown00, "flag", id, "play_once") != 0;
   seName = bdat.getValCheck("seName", id, BDAT_TYPE_U16);
   volumeMax = bdat.getValCheck("volumeMAX", id, BDAT_TYPE_U8);
   volumeMin = bdat.getValCheck("volumeMIN", id, BDAT_TYPE_U8);

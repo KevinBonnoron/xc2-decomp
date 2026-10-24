@@ -625,12 +625,12 @@ void GfGameCond::applyAchievement(u32 condition, u32 blade) {
   u32 task = questListAcc->getFLD_AchievementListTask(achievement);
   for (u32 line = 0; line < ACHIEVEMENT_LINE_COUNT; line++) {
     SDataBladeAchievement *achievInfo = GfDataBlade::getAchievInfo(blade, line);
-    if (achievInfo->achievement != achievementSet) {
+    if (achievInfo->unknown00 != achievementSet) {
       continue;
     }
 
     for (u32 level = 0; level < ACHIEVEMENT_LEVEL_COUNT; level++) {
-      AchievQuest &achievQuest = achievInfo->quests[level];
+      AchievQuest &achievQuest = achievInfo->unknown04[level];
       if (achievQuest.quest.id == task && (achievQuest.flags & 1) == 0) {
         achievQuest.setCountComplete();
         achievQuest.setTaskComplete(false, true);

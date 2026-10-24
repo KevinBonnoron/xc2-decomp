@@ -33,14 +33,14 @@ bool GfDataDriverArts::getEnableArts(mm::mtl::FixedArray<u32, 4> &enableArts, u3
   return count != 0;
 }
 
-void GfDataDriverArts::getSlotArts(mm::mtl::FixedArray<u32, 3> &slotArts, u32 driver, u32 weaponType) { slotArts = GfDataDriver::getSDataDriver(driver)->weapons[weaponType].slotArts; }
+void GfDataDriverArts::getSlotArts(mm::mtl::FixedArray<u32, 3> &slotArts, u32 driver, u32 weaponType) { slotArts = GfDataDriver::getSDataDriver(driver)->unknownc0[weaponType].unknown00; }
 
-void GfDataDriverArts::setSlotArts(u32 driver, u32 weaponType, const mm::mtl::FixedArray<u32, 3> &slotArts) { GfDataDriver::getSDataDriver(driver)->weapons[weaponType].slotArts = slotArts; }
+void GfDataDriverArts::setSlotArts(u32 driver, u32 weaponType, const mm::mtl::FixedArray<u32, 3> &slotArts) { GfDataDriver::getSDataDriver(driver)->unknownc0[weaponType].unknown00 = slotArts; }
 
-u32 GfDataDriverArts::getArtsLevel(u32 driver, u32 arts) { return GfDataDriver::getSDataDriver(driver)->artsLevel[arts]; }
+u32 GfDataDriverArts::getArtsLevel(u32 driver, u32 arts) { return GfDataDriver::getSDataDriver(driver)->unknown2f0[arts]; }
 
 u32 GfDataDriverArts::getNeedLevelupWp(u32 driver, u32 arts) {
-  u32 level = GfDataDriver::getSDataDriver(driver)->artsLevel[arts];
+  u32 level = GfDataDriver::getSDataDriver(driver)->unknown2f0[arts];
   if (level >= ARTS_LEVEL_MAX) {
     return 0;
   }
@@ -50,20 +50,20 @@ u32 GfDataDriverArts::getNeedLevelupWp(u32 driver, u32 arts) {
 
 u32 GfDataDriverArts::getLevelCap(u32 arts, u32 level) { return GfBdatBtl::get()->getArtsDrReleaseLv(arts, level); }
 
-u32 GfDataDriverArts::getWp(u32 driver, u32 weaponType) { return GfDataDriver::getSDataDriver(driver)->weapons[weaponType].wp; }
+u32 GfDataDriverArts::getWp(u32 driver, u32 weaponType) { return GfDataDriver::getSDataDriver(driver)->unknownc0[weaponType].unknown0c; }
 
 void GfDataDriverArts::addWp(u32 driver, u32 weaponType, int wp) {
   SDataDriver *dataDriver = GfDataDriver::getSDataDriver(driver);
-  dataDriver->weapons[weaponType].wp += wp;
+  dataDriver->unknownc0[weaponType].unknown0c += wp;
   if (wp > 0) {
-    dataDriver->weapons[weaponType].totalWp += wp;
+    dataDriver->unknownc0[weaponType].unknown10 += wp;
   }
 }
 
 void GfDataDriverArts::initializeWp(u32 driver, u32 weaponType) {
-  SDataDriverWeapon &weapon = GfDataDriver::getSDataDriver(driver)->weapons[weaponType];
-  weapon.wp = 0;
-  weapon.totalWp = 0;
+  SDataDriverWeapon &weapon = GfDataDriver::getSDataDriver(driver)->unknownc0[weaponType];
+  weapon.unknown0c = 0;
+  weapon.unknown10 = 0;
 }
 
 u8 *GfDataDriverArts::getNameFP() { return GfDataBdat::getFP(BDAT_BTL_ARTS_DR_MS); }

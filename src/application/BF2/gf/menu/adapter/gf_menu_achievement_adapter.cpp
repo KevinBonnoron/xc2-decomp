@@ -299,7 +299,7 @@ bool GfMenuAchievementAdapter::update_QuestNum() {
   SDataBladeAchievement *info = GfDataBlade::getAchievInfo(blade, line);
   u32 count;
   u32 limit;
-  if (!GfQuestUtil::getDispCount(count, limit, info->quests[level - 1])) {
+  if (!GfQuestUtil::getDispCount(count, limit, info->unknown04[level - 1])) {
     return false;
   }
   setNumber(count);
@@ -310,7 +310,7 @@ bool GfMenuAchievementAdapter::update_QuestMax() {
   SDataBladeAchievement *info = GfDataBlade::getAchievInfo(blade, line);
   u32 count;
   u32 limit;
-  if (!GfQuestUtil::getDispCount(count, limit, info->quests[level - 1])) {
+  if (!GfQuestUtil::getDispCount(count, limit, info->unknown04[level - 1])) {
     return false;
   }
   setNumber(limit);

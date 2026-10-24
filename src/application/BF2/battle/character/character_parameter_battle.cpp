@@ -730,7 +730,7 @@ int EnemyParameter::GetBGMID() const {
     return 0;
   }
 
-  return gf::GfBdatChrEnArrange::get()->getChrEnArrangeBGMID(data->arrange);
+  return gf::GfBdatChrEnArrange::get()->getChrEnArrangeBGMID(data->unknown00);
 }
 
 void EnemyParameter::SetupBGM() {
@@ -758,17 +758,17 @@ int EnemyParameter::GetWeaponID(int) const {
 
 bool EnemyParameter::IsBoss() const {
   const gf::SDataEnemy *data = GetEnemyData();
-  return data != nullptr && data->boss;
+  return data != nullptr && data->unknown04_1;
 }
 
 bool EnemyParameter::IsNamed() const {
   const gf::SDataEnemy *data = GetEnemyData();
-  return data != nullptr && data->named;
+  return data != nullptr && data->unknown04_0;
 }
 
 bool EnemyParameter::IsBossOrNamed() const {
   const gf::SDataEnemy *data = GetEnemyData();
-  return data != nullptr && (data->named | data->boss);
+  return data != nullptr && (data->unknown04_0 | data->unknown04_1);
 }
 
 bool EnemyParameter::IsEatTarget() const { return m_eatTarget; }

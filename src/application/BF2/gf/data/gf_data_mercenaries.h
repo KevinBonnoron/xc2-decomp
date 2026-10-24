@@ -10,10 +10,10 @@
 namespace gf {
 
 struct GfRequestBladeData {
-  u32 type;
-  u32 target;
-  u32 level;
-  u32 number;
+  u32 unknown00; // Inferred role: type; original member name unknown.
+  u32 unknown04; // Inferred role: target; original member name unknown.
+  u32 unknown08; // Inferred role: level; original member name unknown.
+  u32 unknown0c; // Inferred role: number; original member name unknown.
 };
 
 static_assert(sizeof(GfRequestBladeData) == 0x10, "");
@@ -21,20 +21,20 @@ static_assert(sizeof(GfRequestBladeData) == 0x10, "");
 constexpr u32 MERCENARIES_LEVEL_MAX = 5;
 
 struct SDataMercenariesTeam {
-  u16 members[6];
+  u16 unknown00[6]; // Inferred role: members; original member name unknown.
   u8 _0c[0x10 - 0x0c];
-  u32 teamID;
-  u32 mission;
-  f32 missionElapsedTime;
-  ElapseTime missionTime;
-  ElapseTime missionTimeOriginal;
+  u32 unknown10;        // Inferred role: team id; original member name unknown.
+  u32 unknown14;        // Inferred role: mission; original member name unknown.
+  f32 unknown18;        // Inferred role: mission elapsed time; original member name unknown.
+  ElapseTime unknown1c; // Inferred role: mission time; original member name unknown.
+  ElapseTime unknown20; // Inferred role: mission time original; original member name unknown.
   bool _24;
 };
 
-static_assert(offsetof(SDataMercenariesTeam, teamID) == 0x10, "");
-static_assert(offsetof(SDataMercenariesTeam, mission) == 0x14, "");
-static_assert(offsetof(SDataMercenariesTeam, missionTime) == 0x1c, "");
-static_assert(offsetof(SDataMercenariesTeam, missionTimeOriginal) == 0x20, "");
+static_assert(offsetof(SDataMercenariesTeam, unknown10) == 0x10, "");
+static_assert(offsetof(SDataMercenariesTeam, unknown14) == 0x14, "");
+static_assert(offsetof(SDataMercenariesTeam, unknown1c) == 0x1c, "");
+static_assert(offsetof(SDataMercenariesTeam, unknown20) == 0x20, "");
 static_assert(sizeof(SDataMercenariesTeam) == 0x28, "");
 
 struct SDataMercenariesPreset {
@@ -44,11 +44,11 @@ struct SDataMercenariesPreset {
 static_assert(sizeof(SDataMercenariesPreset) == 0x0c, "");
 
 struct SDataMercenaries {
-  mm::mtl::FixedVector<SDataMercenariesTeam, 3> teams;
-  SDataMercenariesPreset presets[40];
+  mm::mtl::FixedVector<SDataMercenariesTeam, 3> unknown00; // Inferred role: teams; original member name unknown.
+  SDataMercenariesPreset unknown80[40];                    // Inferred role: presets; original member name unknown.
 };
 
-static_assert(offsetof(SDataMercenaries, presets) == 0x080, "");
+static_assert(offsetof(SDataMercenaries, unknown80) == 0x080, "");
 static_assert(sizeof(SDataMercenaries) == 0x260, "");
 
 class GfDataMercenaries {

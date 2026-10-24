@@ -126,19 +126,19 @@ void GfSound::setupGame() { masterVolume.setupGame(); }
 
 void GfMasterVolume::setupGame() {
   const SDataOption *option = GfDataManager::getDataOption();
-  setEventVoiceVolume(getFloatVolume(option->eventVoiceVolume));
-  setEventCsVolume(getFloatVolume(option->eventCsVolume));
-  setEventBgmVolume(getFloatVolume(option->eventBgmVolume));
-  setEventSeVolume(getFloatVolume(option->eventSeVolume));
-  setGameBgmVolume(getFloatVolume(option->gameBgmVolume));
-  setGameEnvVolume(getFloatVolume(option->gameEnvVolume));
-  setGameWeatherVolume(getFloatVolume(option->gameWeatherVolume));
-  setGameSeVolume(getFloatVolume(option->gameSeVolume));
-  setPlayerVoiceVolume(getFloatVolume(option->playerVoiceVolume));
-  setEnemyVoiceVolume(getFloatVolume(option->enemyVoiceVolume));
-  setNareVoiceVolume(getFloatVolume(option->nareVoiceVolume));
-  setSystemVolume(getFloatVolume(option->systemVolume));
-  setMenuBgmVolume(getFloatVolume(option->menuBgmVolume));
+  setEventVoiceVolume(getFloatVolume(option->unknown4c));
+  setEventCsVolume(getFloatVolume(option->unknown4e));
+  setEventBgmVolume(getFloatVolume(option->unknown50));
+  setEventSeVolume(getFloatVolume(option->unknown52));
+  setGameBgmVolume(getFloatVolume(option->unknown54));
+  setGameEnvVolume(getFloatVolume(option->unknown56));
+  setGameWeatherVolume(getFloatVolume(option->unknown58));
+  setGameSeVolume(getFloatVolume(option->unknown5a));
+  setPlayerVoiceVolume(getFloatVolume(option->unknown5c));
+  setEnemyVoiceVolume(getFloatVolume(option->unknown5e));
+  setNareVoiceVolume(getFloatVolume(option->unknown60));
+  setSystemVolume(getFloatVolume(option->unknown62));
+  setMenuBgmVolume(getFloatVolume(option->unknown64));
 }
 
 void GfSound::setCategoryVolume(GF_SE_CATEGORY_HANDLE *handle, fw::SoundCategory category, f32 volume, f32 fadeTime) {

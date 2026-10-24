@@ -31,7 +31,7 @@ void GfDataUtil::setupEventDriverAndBlade() {
   GfDataBlade::setActivateDriver(bdatDriver->getChrDrDefBlade1(DRIVER_METSU), -1, DRIVER_METSU, 0);
 }
 
-u32 GfDataUtil::getMoney() { return GfDataManager::getDataGame()->money; }
+u32 GfDataUtil::getMoney() { return GfDataManager::getDataGame()->unknown00; }
 
 void GfDataUtil::setMoney(u32 money) {
   SDataGame *dataGame = GfDataManager::getDataGame();
@@ -39,10 +39,10 @@ void GfDataUtil::setMoney(u32 money) {
     money = MONEY_MAX;
   }
 
-  dataGame->money = money;
+  dataGame->unknown00 = money;
 }
 
-u32 GfDataUtil::getCoin() { return GfDataManager::getDataGame()->coin; }
+u32 GfDataUtil::getCoin() { return GfDataManager::getDataGame()->unknown10ad54; }
 
 void GfDataUtil::setCoin(u32 coin) {
   SDataGame *dataGame = GfDataManager::getDataGame();
@@ -50,19 +50,19 @@ void GfDataUtil::setCoin(u32 coin) {
     coin = COIN_MAX;
   }
 
-  dataGame->coin = coin;
+  dataGame->unknown10ad54 = coin;
 }
 
 void GfDataUtil::setChapterSave(u32 eventChapterSave, u16 startChapterSave) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->startChapterSave = startChapterSave;
-  dataGame->eventChapterSave = eventChapterSave;
+  dataGame->unknown26 = startChapterSave;
+  dataGame->unknown28 = eventChapterSave;
 }
 
 bool GfDataUtil::isStartChapterSave() {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  if (dataGame->startChapterSave == getScenarioFlag()) {
-    return dataGame->eventChapterSave != 0;
+  if (dataGame->unknown26 == getScenarioFlag()) {
+    return dataGame->unknown28 != 0;
   }
 
   return false;
@@ -70,46 +70,46 @@ bool GfDataUtil::isStartChapterSave() {
 
 u16 GfDataUtil::getScenarioFlag() { return GfGameFlag::getLocal(16, FLAG_SCENARIO_FLAG); }
 
-u32 GfDataUtil::getEventChapterSave() { return GfDataManager::getDataGame()->eventChapterSave; }
+u32 GfDataUtil::getEventChapterSave() { return GfDataManager::getDataGame()->unknown28; }
 
-u16 GfDataUtil::getAutoEventAfterLoad() { return GfDataManager::getDataGame()->autoEventAfterLoad; }
+u16 GfDataUtil::getAutoEventAfterLoad() { return GfDataManager::getDataGame()->unknown10ae7e; }
 
-u32 GfDataUtil::getSkipTravelID() { return GfDataManager::getDataGame()->map.skipTravelID; }
+u32 GfDataUtil::getSkipTravelID() { return GfDataManager::getDataGame()->unknown1097f0.unknownc0; }
 
 void GfDataUtil::setPlayerCameraDistance(f32 playerCameraDistance) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->playerCameraDistance = playerCameraDistance;
+  dataGame->unknown109b28 = playerCameraDistance;
 }
 
-f32 GfDataUtil::getPlayerCameraDistance() { return GfDataManager::getDataGame()->playerCameraDistance; }
+f32 GfDataUtil::getPlayerCameraDistance() { return GfDataManager::getDataGame()->unknown109b28; }
 
-void GfDataUtil::setCameraHeight(f32 cameraHeight) { GfDataManager::getDataGame()->cameraHeight = cameraHeight; }
+void GfDataUtil::setCameraHeight(f32 cameraHeight) { GfDataManager::getDataGame()->unknown10ad70 = cameraHeight; }
 
-f32 GfDataUtil::getCameraHeight() { return GfDataManager::getDataGame()->cameraHeight; }
+f32 GfDataUtil::getCameraHeight() { return GfDataManager::getDataGame()->unknown10ad70; }
 
-void GfDataUtil::setCameraYaw(f32 cameraYaw) { GfDataManager::getDataGame()->cameraYaw = cameraYaw; }
+void GfDataUtil::setCameraYaw(f32 cameraYaw) { GfDataManager::getDataGame()->unknown10ae74 = cameraYaw; }
 
-f32 GfDataUtil::getCameraYaw() { return GfDataManager::getDataGame()->cameraYaw; }
+f32 GfDataUtil::getCameraYaw() { return GfDataManager::getDataGame()->unknown10ae74; }
 
-void GfDataUtil::setCameraPitch(f32 cameraPitch) { GfDataManager::getDataGame()->cameraPitch = cameraPitch; }
+void GfDataUtil::setCameraPitch(f32 cameraPitch) { GfDataManager::getDataGame()->unknown10ae78 = cameraPitch; }
 
-f32 GfDataUtil::getCameraPitch() { return GfDataManager::getDataGame()->cameraPitch; }
+f32 GfDataUtil::getCameraPitch() { return GfDataManager::getDataGame()->unknown10ae78; }
 
 void GfDataUtil::setCameraFreeMode(bool cameraFreeMode) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->cameraFreeMode = cameraFreeMode;
+  dataGame->unknown10ae7c = cameraFreeMode;
 }
 
-bool GfDataUtil::isCameraFreeMode() { return GfDataManager::getDataGame()->cameraFreeMode; }
+bool GfDataUtil::isCameraFreeMode() { return GfDataManager::getDataGame()->unknown10ae7c; }
 
-u8 GfDataUtil::getCameraSide() { return GfDataManager::getDataGame()->cameraSide; }
+u8 GfDataUtil::getCameraSide() { return GfDataManager::getDataGame()->unknown10ae82; }
 
 void GfDataUtil::setCameraSide(u8 cameraSide) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->cameraSide = cameraSide;
+  dataGame->unknown10ae82 = cameraSide;
 }
 
-u32 GfDataUtil::getGameClearCount() { return GfDataManager::getDataGame()->gameClearCount; }
+u32 GfDataUtil::getGameClearCount() { return GfDataManager::getDataGame()->unknown109b2c; }
 
 const char *GfDataUtil::getAttributeFileName(u32 attribute) {
   static const char *const attributeFileNames[] = {
@@ -146,9 +146,9 @@ f32 GfDataUtil::getMoveDistance(AMOVE amove) {
 
   switch (amove) {
   case AMOVE_WALK:
-    return dataGame->achievementWalkMove;
+    return dataGame->unknown10ad40;
   default:
-    return dataGame->achievementSwimMove;
+    return dataGame->unknown10ad44;
   }
 }
 
@@ -156,11 +156,11 @@ void GfDataUtil::setMoveDistance(AMOVE amove, f32 moveDistance) {
   SDataGame *dataGame = GfDataManager::getDataGame();
   switch (amove) {
   case AMOVE_WALK:
-    dataGame->achievementWalkMove = moveDistance;
+    dataGame->unknown10ad40 = moveDistance;
     break;
 
   case AMOVE_SWIM:
-    dataGame->achievementSwimMove = moveDistance;
+    dataGame->unknown10ad44 = moveDistance;
     break;
   }
 }
@@ -169,9 +169,9 @@ void GfDataUtil::setRandomInn() { GfGameFlag::setLocal(4, FLAG_RANDOM_INN, ml::m
 
 void GfDataUtil::setSalvagerPoint(u32 salvagerPoint) { GfGameFlag::setLocal(8, FLAG_SALVAGER_POINT, salvagerPoint); }
 
-u64 *GfDataUtil::getSaveRealTime() { return &GfDataManager::getDataGame()->saveRealTime; }
+u64 *GfDataUtil::getSaveRealTime() { return &GfDataManager::getDataGame()->unknown10ad68; }
 
-bool GfDataUtil::isCollectFlagNewVersion() { return GfDataManager::getDataGame()->collectFlagNewVersion; }
+bool GfDataUtil::isCollectFlagNewVersion() { return GfDataManager::getDataGame()->unknown10ae80; }
 
 void GfDataUtil::convertNewCollectFlagPatch() {}
 

@@ -322,18 +322,18 @@ const char *GfDataQuest::getTaskLog(QuestID quest, u32 line) {
 
 void GfDataQuest::setScenario(QuestID scenario) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->scenario.id = scenario.id;
-  dataGame->scenario.variant = scenario.variant;
+  dataGame->unknown1097e4.id = scenario.id;
+  dataGame->unknown1097e4.variant = scenario.variant;
 }
 
-QuestID GfDataQuest::getScenario() { return GfDataManager::getDataGame()->scenario; }
+QuestID GfDataQuest::getScenario() { return GfDataManager::getDataGame()->unknown1097e4; }
 
 void GfDataQuest::setSelect(QuestID select) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->select.id = select.id;
-  dataGame->select.variant = select.variant;
+  dataGame->unknown1097e8.id = select.id;
+  dataGame->unknown1097e8.variant = select.variant;
 }
 
-QuestID GfDataQuest::getSelect() { return GfDataManager::getDataGame()->select; }
+QuestID GfDataQuest::getSelect() { return GfDataManager::getDataGame()->unknown1097e8; }
 
 } // namespace gf

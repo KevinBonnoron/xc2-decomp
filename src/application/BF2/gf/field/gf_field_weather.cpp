@@ -290,28 +290,28 @@ const char *GfFieldWeather::getWeatherName() { return GfDataMap::getWeatherName(
 
 void GfFieldWeather::setupGame() {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  if (dataGame->mapInfos[0].weatherParam.resource[0] != '\0') {
+  if (dataGame->unknown10a53c[0].unknown00.unknown00[0] != '\0') {
     return;
   }
 
   GfBdatMaplist *bdatMaplist = GfBdatMaplist::get();
   for (u32 map = bdatMaplist->getMaplistStart(); map < bdatMaplist->getMaplistEnd(); map++) {
     const char *resource = bdatMaplist->getMaplistresource(map);
-    for (SDataMapInfo &info : dataGame->mapInfos) {
-      WeatherParam &param = info.weatherParam;
-      if (__builtin_strcmp(param.resource, resource) == 0) {
+    for (SDataMapInfo &info : dataGame->unknown10a53c) {
+      WeatherParam &param = info.unknown00;
+      if (__builtin_strcmp(param.unknown00, resource) == 0) {
         break;
       }
-      if (param.resource[0] == '\0') {
-        __builtin_strcpy(param.resource, resource);
-        param.map = map;
+      if (param.unknown00[0] == '\0') {
+        __builtin_strcpy(param.unknown00, resource);
+        param.unknown18 = map;
         break;
       }
     }
   }
 
-  u32 map = GfDataMap::getMapID(GfDataManager::getDataGame()->map.skipTravelID);
-  setCloudSeaForDebug(map, static_cast<CLOUD_SEA>(dataGame->mapInfos[map].cloudType));
+  u32 map = GfDataMap::getMapID(GfDataManager::getDataGame()->unknown1097f0.unknownc0);
+  setCloudSeaForDebug(map, static_cast<CLOUD_SEA>(dataGame->unknown10a53c[map].unknown1c));
 }
 
 void GfFieldWeather::updateCloudSea(const fw::UpdateInfo &) {
@@ -365,7 +365,7 @@ CLOUD_SEA GfFieldWeather::getCloudSeaCondition() { return GfGameEnv::getCloudTyp
 
 CLOUD_SEA GfFieldWeather::getCloudSea(u32 map) {
   if (map != 0) {
-    return static_cast<CLOUD_SEA>(GfDataManager::getDataGame()->mapInfos[map].cloudType != 0);
+    return static_cast<CLOUD_SEA>(GfDataManager::getDataGame()->unknown10a53c[map].unknown1c != 0);
   }
 
   return GfGameEnv::getCurrentCloudSea();

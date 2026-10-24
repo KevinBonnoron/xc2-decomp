@@ -227,26 +227,26 @@ void GfQuestUtil::addOrderParentQuest(QuestID quest) {
   SDataGame *dataGame = GfDataManager::getDataGame();
   QuestData orderQuest(quest);
   removeOrderParentQuest(quest);
-  if (dataGame->orderParentQuestCount < ORDER_PARENT_QUEST_MAX) {
-    dataGame->orderParentQuests[dataGame->orderParentQuestCount++] = orderQuest;
+  if (dataGame->unknown10a538 < ORDER_PARENT_QUEST_MAX) {
+    dataGame->unknown10a138[dataGame->unknown10a538++] = orderQuest;
   }
 }
 
 void GfQuestUtil::removeOrderParentQuest(QuestID quest) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  for (u32 index = 0; index < dataGame->orderParentQuestCount; index++) {
-    if (dataGame->orderParentQuests[index] == QuestData(quest)) {
-      for (; index < dataGame->orderParentQuestCount - 1; index++) {
-        dataGame->orderParentQuests[index] = dataGame->orderParentQuests[index + 1];
+  for (u32 index = 0; index < dataGame->unknown10a538; index++) {
+    if (dataGame->unknown10a138[index] == QuestData(quest)) {
+      for (; index < dataGame->unknown10a538 - 1; index++) {
+        dataGame->unknown10a138[index] = dataGame->unknown10a138[index + 1];
       }
 
-      dataGame->orderParentQuestCount--;
+      dataGame->unknown10a538--;
       return;
     }
   }
 }
 
-void GfQuestUtil::clearOrderParentQuest() { GfDataManager::getDataGame()->orderParentQuestCount = 0; }
+void GfQuestUtil::clearOrderParentQuest() { GfDataManager::getDataGame()->unknown10a538 = 0; }
 
 void GfQuestUtil::addTaskHanyouCount(u32 purpose, u32 taskIndex, u32 add) {
   if (purpose == 0) {
@@ -455,12 +455,12 @@ void GfQuestUtil::incFieldSkillTask(u32 blade, u32 fieldSkill) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   for (u32 line = 0; line < ACHIEVEMENT_LINE_COUNT; line++) {
     AchievInfo *achievInfo = GfDataBlade::getAchievInfo(blade, line);
-    if (achievInfo->achievement == 0) {
+    if (achievInfo->unknown00 == 0) {
       continue;
     }
 
     for (u32 level = 1; level <= ACHIEVEMENT_LEVEL_COUNT; level++) {
-      AchievQuest &achievQuest = achievInfo->quests[level - 1];
+      AchievQuest &achievQuest = achievInfo->unknown04[level - 1];
       if (achievQuest.taskType != TASK_TYPE_FIELD_SKILL_COUNT || !GfQuestInfo::isQuestOrder(achievQuest.quest) || achievQuest.isCountComplete()) {
         continue;
       }

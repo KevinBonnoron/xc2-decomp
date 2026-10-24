@@ -22,7 +22,7 @@ void GfDataBdat::destroy() {
 }
 
 void GfDataBdat::finalize() {
-  for (IDataBdat **listener = mListeners.begin(); listener != mListeners.end(); ++listener) {
+  for (IDataBdat **listener = unknownd00.begin(); listener != unknownd00.end(); ++listener) {
     if (*listener != nullptr) {
       delete *listener;
       *listener = nullptr;
@@ -32,10 +32,10 @@ void GfDataBdat::finalize() {
   releaseBdatInfo();
   destroyBdat(BDAT_LOOKAT);
   GfEvent::removeEventCallback(this);
-  mInitialized = false;
+  unknowncfc = false;
 }
 
-bool GfDataBdat::isInitialized() { return get() != nullptr && get()->mInitialized; }
+bool GfDataBdat::isInitialized() { return get() != nullptr && get()->unknowncfc; }
 
 bool GfDataBdat::loadBdat(const char *name, u32 bdat) {
   mm::mtl::FixStr<64> path;
@@ -49,31 +49,31 @@ void GfDataBdat::setupBdatInfo() {
   GfDataBdat *dataBdat = get();
   releaseBdatInfo();
   for (u32 bdat = 0; bdat < BDAT_COUNT; bdat++) {
-    dataBdat->mFps[bdat] = fw::BdatManager::getFp(_gfbdat::s_aszGfBdatName[bdat]);
+    dataBdat->unknown10[bdat] = fw::BdatManager::getFp(_gfbdat::s_aszGfBdatName[bdat]);
   }
 
-  dataBdat->mReloadCount++;
+  dataBdat->unknowncf8++;
 }
 
 void GfDataBdat::releaseBdatInfo() {
   GfDataBdat *dataBdat = get();
   for (u32 bdat = 0; bdat < BDAT_COUNT; bdat++) {
-    dataBdat->mFps[bdat] = nullptr;
+    dataBdat->unknown10[bdat] = nullptr;
   }
 }
 
 void GfDataBdat::destroyBdat(u32 bdat) { fw::BdatManager::unregistBdat(bdat); }
 
-u8 *GfDataBdat::getFP(u32 bdat) { return bdat < BDAT_COUNT ? get()->mFps[bdat] : nullptr; }
+u8 *GfDataBdat::getFP(u32 bdat) { return bdat < BDAT_COUNT ? get()->unknown10[bdat] : nullptr; }
 
 void GfDataBdat::gevReloadBdat(RELOAD_BDAT reload, u32 value) {
   if (reload == RELOAD_BDAT_ALL) {
-    for (IDataBdat **listener = mListeners.begin(); listener != mListeners.end(); ++listener) {
+    for (IDataBdat **listener = unknownd00.begin(); listener != unknownd00.end(); ++listener) {
       (*listener)->reloadBdat();
     }
   }
 }
 
-u32 GfDataBdat::getReloadCount() { return get()->mReloadCount; }
+u32 GfDataBdat::getReloadCount() { return get()->unknowncf8; }
 
 } // namespace gf

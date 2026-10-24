@@ -73,7 +73,7 @@ u32 GfDataNpc::getRace(u32 npc) {
   }
 
   if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->race;
+    return GfDataBlade::getSDataBlade(npc)->unknown708;
   }
 
   return GfBdatRsc::get()->getRscNpcListRace(npc);
@@ -85,7 +85,7 @@ u32 GfDataNpc::getGender(u32 npc) {
   }
 
   if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->gender;
+    return GfDataBlade::getSDataBlade(npc)->unknown709;
   }
 
   return GfBdatRsc::get()->getRscNpcListGender(npc);
@@ -97,7 +97,7 @@ const char *GfDataNpc::getModelName(u32 npc) {
   }
 
   if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->resourceNameModel.c_str();
+    return GfDataBlade::getSDataBlade(npc)->unknown70c.c_str();
   }
 
   return GfBdatRsc::get()->getRscNpcListModel(npc);
@@ -109,7 +109,7 @@ const char *GfDataNpc::getMotionName(u32 npc) {
   }
 
   if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->resourceNameMotion.c_str();
+    return GfDataBlade::getSDataBlade(npc)->unknown734.c_str();
   }
 
   return GfBdatRsc::get()->getRscNpcListMotion(npc);
@@ -143,7 +143,7 @@ f32 GfDataNpc::getScale(u32 npc) {
   }
 
   if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->scale * 0.01f;
+    return GfDataBlade::getSDataBlade(npc)->unknown836 * 0.01f;
   }
 
   return GfBdatRsc::get()->getRscNpcListScale(npc) / NPC_SCALE_PERCENT;
@@ -155,7 +155,7 @@ u32 GfDataNpc::getCollisionId(u32 npc) {
   }
 
   if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->collisionId;
+    return GfDataBlade::getSDataBlade(npc)->unknown83c;
   }
 
   return GfBdatRsc::get()->getRscNpcListCollisionId(npc);
@@ -167,7 +167,7 @@ u32 GfDataNpc::getOffsetID(u32 npc) {
   }
 
   if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->offsetID;
+    return GfDataBlade::getSDataBlade(npc)->unknown83a;
   }
 
   return GfBdatRsc::get()->getRscNpcListOffsetID(npc);
@@ -201,7 +201,7 @@ bool GfDataNpc::getExtraParts(u32 npc, u32 part) {
 
   if (npc < NPC_BLADE_END) {
     SDataBlade *dataBlade = GfDataBlade::getSDataBlade(npc);
-    return dataBlade->extraParts[part] != 0;
+    return dataBlade->unknownc0[part] != 0;
   }
 
   return GfBdatRsc::get()->getRscNpcListExtraParts(npc, part) != 0;
@@ -222,7 +222,7 @@ u32 GfDataNpc::getFootStep(u32 npc) {
   }
 
   if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->footStep;
+    return GfDataBlade::getSDataBlade(npc)->unknown848;
   }
 
   return GfBdatRsc::get()->getRscNpcListFootStep(npc);
@@ -234,7 +234,7 @@ u32 GfDataNpc::getFootStepEffect(u32 npc) {
   }
 
   if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->footStepEffect;
+    return GfDataBlade::getSDataBlade(npc)->unknown849;
   }
 
   return GfBdatRsc::get()->getRscNpcListFootStepEffect(npc);
@@ -250,7 +250,7 @@ u32 GfDataNpc::getEyeRotControl(u32 npc) {
   }
 
   if (npc < NPC_BLADE_END) {
-    return GfDataBlade::getSDataBlade(npc)->eyeRotControl;
+    return GfDataBlade::getSDataBlade(npc)->unknown826;
   }
 
   return GfBdatRsc::get()->getRscNpcListEyeRot(npc);

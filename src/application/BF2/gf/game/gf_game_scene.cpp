@@ -126,7 +126,7 @@ void unknown001(const DataParamAcc &paramAcc, bool isDead, bool isSwim) { // Inf
   if (!paramAcc.isValid()) {
     return;
   }
-  GfObj *obj = GfObjUtil::getObj(paramAcc.handle);
+  GfObj *obj = GfObjUtil::getObj(paramAcc.unknown10);
   if (obj == nullptr) {
     return;
   }
@@ -856,7 +856,7 @@ void GfGameScene::gevBladeActivate(u32 blade, ActivateType activateType, Activat
       GfEquipUtil::equipBladeOrb(BLADE_SUZAKU, 0, slot, GfItemHandle(0));
     }
     SDataBlade *dataBlade = GfDataBlade::getSDataBlade(BLADE_SUZAKU);
-    dataBlade->weapon = GfBdatChrBl::get()->getChrBlDefWeapon(BLADE_SUZAKU);
+    dataBlade->unknown82c = GfBdatChrBl::get()->getChrBlDefWeapon(BLADE_SUZAKU);
   }
   if (activateType == 0 && oldActivateType != 0 && !GfDataBlade::isUnselect(blade)) {
     GfGameUtil::execSaveAchievementPopup(blade);
@@ -987,7 +987,7 @@ void GfGameScene::gevBattleEnd() {
     for (u32 partyId = 0; partyId < 3; partyId++) {
       DataParamAcc paramAcc(GfGameParty::getHandleDriver(partyId));
       if (paramAcc.isValid() && paramAcc.getHp() == 0) {
-        GfObj *obj = GfObjUtil::getObj(paramAcc.handle);
+        GfObj *obj = GfObjUtil::getObj(paramAcc.unknown10);
         if (obj != nullptr) {
           MsgObjectHealHp message(1, HEAL_TYPE_NORMAL);
           obj->sendMessage(obj, message);

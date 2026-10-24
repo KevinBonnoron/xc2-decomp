@@ -408,7 +408,7 @@ void GfQuestManager::updateQuestTask(const QuestData &data) {
 QuestID GfQuestManager::getCurrentQuestSelect() { return GfDataQuest::getSelect(); }
 
 void GfQuestManager::setCurrentQuestSelect(QuestID quest) {
-  QuestListAcc *questListAcc = s_bdat->mQuestListAcc;
+  QuestListAcc *questListAcc = s_bdat->unknown130;
   QuestID oldQuest = getCurrentQuest(QTYPE_NONE);
   GfDataQuest::setSelect(quest);
   if (quest.empty()) {

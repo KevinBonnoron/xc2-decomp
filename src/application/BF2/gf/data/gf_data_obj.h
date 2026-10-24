@@ -156,7 +156,7 @@ public:
   void setup(u32 id);
   DataObjDriver(GF_OBJ_HANDLE *handle);
   virtual ~DataObjDriver();
-  SDataDriver *get(bool isVirtual) const { return isVirtual ? data : GfDataDriver::getSDataDriver(getBdatId()); }
+  SDataDriver *get(bool isVirtual) const { return isVirtual ? unknown10 : GfDataDriver::getSDataDriver(getBdatId()); }
   void setupVirtualParam();
   virtual void setVirtualLevel(u32 level);
   virtual void setVirtualEquipWpn(u32 weapon, int slot);
@@ -167,7 +167,7 @@ public:
   virtual const char *getCenterBone() const;
   virtual const char *getCamBone() const;
   virtual u32 getEyeRotControl() const;
-  virtual void setMenuParam() { menuParam = true; }
+  virtual void setMenuParam() { unknown3c = true; }
   virtual bool isValid() const;
   virtual const char *getModelResourceName() const;
   virtual const char *getMotionResourceName() const;
@@ -245,20 +245,20 @@ public:
   virtual u32 getFavoriteCategory(FAVORITE favorite) const;
   virtual u32 getFavoriteItem(FAVORITE favorite) const;
 
-  u32 id;
-  SDataDriver *data;
-  GF_OBJ_HANDLE *handle;
-  SDataDriver *virtualData;
-  u32 virtualEquipWeapons[5];
-  bool menuParam;
+  u32 m_bdatId;
+  SDataDriver *unknown10;   // Inferred role: data; original member name unknown.
+  GF_OBJ_HANDLE *unknown18; // Inferred role: handle; original member name unknown.
+  SDataDriver *unknown20;   // Inferred role: virtual data; original member name unknown.
+  u32 unknown28[5];         // Inferred role: virtual equip weapons; original member name unknown.
+  bool unknown3c;           // Inferred role: menu param; original member name unknown.
 };
 
-static_assert(offsetof(DataObjDriver, id) == 0x08, "");
-static_assert(offsetof(DataObjDriver, data) == 0x10, "");
-static_assert(offsetof(DataObjDriver, handle) == 0x18, "");
-static_assert(offsetof(DataObjDriver, virtualData) == 0x20, "");
-static_assert(offsetof(DataObjDriver, virtualEquipWeapons) == 0x28, "");
-static_assert(offsetof(DataObjDriver, menuParam) == 0x3c, "");
+static_assert(offsetof(DataObjDriver, m_bdatId) == 0x08, "");
+static_assert(offsetof(DataObjDriver, unknown10) == 0x10, "");
+static_assert(offsetof(DataObjDriver, unknown18) == 0x18, "");
+static_assert(offsetof(DataObjDriver, unknown20) == 0x20, "");
+static_assert(offsetof(DataObjDriver, unknown28) == 0x28, "");
+static_assert(offsetof(DataObjDriver, unknown3c) == 0x3c, "");
 static_assert(sizeof(DataObjDriver) == 0x40, "");
 
 class DataObjBlade : public IDataObj {
@@ -267,7 +267,7 @@ public:
   void setup(u32 id);
   DataObjBlade(GF_OBJ_HANDLE *handle);
   virtual ~DataObjBlade();
-  SDataBlade *get(bool isVirtual) const { return isVirtual ? data : GfDataBlade::getSDataBlade(getBdatId()); }
+  SDataBlade *get(bool isVirtual) const { return isVirtual ? unknown08 : GfDataBlade::getSDataBlade(getBdatId()); }
   void setupVirtualParam();
   virtual bool isValid() const;
   virtual void setVirtualEquipWpn(u32 weapon, int slot);
@@ -295,7 +295,7 @@ public:
   virtual bool getName(u8 *&bdat, u32 &textId) const;
   virtual u32 getBdatId() const;
   virtual u32 getObjType() const { return OBJECT_TYPE_BLADE; }
-  virtual void setMenuParam() { menuParam = true; }
+  virtual void setMenuParam() { unknown24 = true; }
   virtual u32 getDataType() const;
   virtual SDataIdea *getIdea() const;
   virtual u32 getHpMax(bool isVirtual) const;
@@ -352,18 +352,18 @@ public:
   virtual const char *getCamBone() const;
   virtual u32 getEyeRotControl() const;
 
-  SDataBlade *data;
-  GF_OBJ_HANDLE *handle;
-  SDataBlade *virtualData;
-  u32 id;
-  bool menuParam;
+  SDataBlade *unknown08;    // Inferred role: data; original member name unknown.
+  GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
+  SDataBlade *unknown18;    // Inferred role: virtual data; original member name unknown.
+  u32 m_bdatId;
+  bool unknown24; // Inferred role: menu param; original member name unknown.
 };
 
-static_assert(offsetof(DataObjBlade, data) == 0x08, "");
-static_assert(offsetof(DataObjBlade, handle) == 0x10, "");
-static_assert(offsetof(DataObjBlade, virtualData) == 0x18, "");
-static_assert(offsetof(DataObjBlade, id) == 0x20, "");
-static_assert(offsetof(DataObjBlade, menuParam) == 0x24, "");
+static_assert(offsetof(DataObjBlade, unknown08) == 0x08, "");
+static_assert(offsetof(DataObjBlade, unknown10) == 0x10, "");
+static_assert(offsetof(DataObjBlade, unknown18) == 0x18, "");
+static_assert(offsetof(DataObjBlade, m_bdatId) == 0x20, "");
+static_assert(offsetof(DataObjBlade, unknown24) == 0x24, "");
 static_assert(sizeof(DataObjBlade) == 0x28, "");
 
 class DataObjPcWpn : public IDataObj {
@@ -384,12 +384,12 @@ public:
   virtual u32 getWeaponStability(bool isVirtual) const;
   virtual bool isEnbaleTarget() const { return false; }
 
-  GF_OBJ_HANDLE *handle;
-  u32 id;
+  GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+  u32 m_bdatId;
 };
 
-static_assert(offsetof(DataObjPcWpn, handle) == 0x08, "");
-static_assert(offsetof(DataObjPcWpn, id) == 0x10, "");
+static_assert(offsetof(DataObjPcWpn, unknown08) == 0x08, "");
+static_assert(offsetof(DataObjPcWpn, m_bdatId) == 0x10, "");
 static_assert(sizeof(DataObjPcWpn) == 0x18, "");
 
 class DataObjEnemy : public IDataObj {
@@ -457,14 +457,14 @@ public:
   virtual u32 getEyeRotControl() const;
   virtual const char *getRotateBone() const;
 
-  GF_OBJ_HANDLE *handle;
-  SDataEnemy *data;
-  SDataEnemy enemy;
+  GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+  SDataEnemy *m_SDataEnemy;
+  SDataEnemy unknown18; // Inferred role: enemy; original member name unknown.
 };
 
-static_assert(offsetof(DataObjEnemy, handle) == 0x08, "");
-static_assert(offsetof(DataObjEnemy, data) == 0x10, "");
-static_assert(offsetof(DataObjEnemy, enemy) == 0x18, "");
+static_assert(offsetof(DataObjEnemy, unknown08) == 0x08, "");
+static_assert(offsetof(DataObjEnemy, m_SDataEnemy) == 0x10, "");
+static_assert(offsetof(DataObjEnemy, unknown18) == 0x18, "");
 static_assert(sizeof(DataObjEnemy) == 0xd8, "");
 
 class DataObjEnemyBlade : public DataObjEnemy {
@@ -508,12 +508,12 @@ public:
   virtual u32 getCoolTime() const;
   virtual bool isEnbaleTarget() const { return false; }
 
-  GfObjSetupEnemy *setupEnemy;
-  SDataBlade *dataBlade;
+  GfObjSetupEnemy *unknownd8; // Inferred role: setup enemy; original member name unknown.
+  SDataBlade *unknowne0;      // Inferred role: data blade; original member name unknown.
 };
 
-static_assert(offsetof(DataObjEnemyBlade, setupEnemy) == 0xd8, "");
-static_assert(offsetof(DataObjEnemyBlade, dataBlade) == 0xe0, "");
+static_assert(offsetof(DataObjEnemyBlade, unknownd8) == 0xd8, "");
+static_assert(offsetof(DataObjEnemyBlade, unknowne0) == 0xe0, "");
 static_assert(sizeof(DataObjEnemyBlade) == 0xe8, "");
 
 class DataObjNpc : public IDataObj {
@@ -533,12 +533,12 @@ public:
   virtual u32 getFootStepEffect() const;
   virtual u32 getEyeRotControl() const;
 
-  GF_OBJ_HANDLE *handle;
-  u32 id;
+  GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+  u32 m_bdatId;
 };
 
-static_assert(offsetof(DataObjNpc, handle) == 0x08, "");
-static_assert(offsetof(DataObjNpc, id) == 0x10, "");
+static_assert(offsetof(DataObjNpc, unknown08) == 0x08, "");
+static_assert(offsetof(DataObjNpc, m_bdatId) == 0x10, "");
 static_assert(sizeof(DataObjNpc) == 0x18, "");
 
 class DataObjMap : public IDataObj {
@@ -550,12 +550,12 @@ public:
   virtual u32 getBdatId() const;
   virtual u32 getObjType() const { return OBJECT_TYPE_MAP; }
 
-  GF_OBJ_HANDLE *handle;
-  u32 id;
+  GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+  u32 m_bdatId;
 };
 
-static_assert(offsetof(DataObjMap, handle) == 0x08, "");
-static_assert(offsetof(DataObjMap, id) == 0x10, "");
+static_assert(offsetof(DataObjMap, unknown08) == 0x08, "");
+static_assert(offsetof(DataObjMap, m_bdatId) == 0x10, "");
 static_assert(sizeof(DataObjMap) == 0x18, "");
 
 class DataObjMob : public IDataObj {
@@ -574,12 +574,12 @@ public:
   virtual u32 getFootStep() const;
   virtual u32 getFootStepEffect() const;
 
-  GF_OBJ_HANDLE *handle;
-  u32 id;
+  GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+  u32 m_bdatId;
 };
 
-static_assert(offsetof(DataObjMob, handle) == 0x08, "");
-static_assert(offsetof(DataObjMob, id) == 0x10, "");
+static_assert(offsetof(DataObjMob, unknown08) == 0x08, "");
+static_assert(offsetof(DataObjMob, m_bdatId) == 0x10, "");
 static_assert(sizeof(DataObjMob) == 0x18, "");
 
 class DataObjUiObj : public IDataObj {
@@ -595,12 +595,12 @@ public:
   virtual u32 getObjType() const { return OBJECT_TYPE_MOB; }
   virtual bool isDispInitExtraParts(u32 part) const;
 
-  GF_OBJ_HANDLE *handle;
-  u32 id;
+  GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+  u32 m_bdatId;
 };
 
-static_assert(offsetof(DataObjUiObj, handle) == 0x08, "");
-static_assert(offsetof(DataObjUiObj, id) == 0x10, "");
+static_assert(offsetof(DataObjUiObj, unknown08) == 0x08, "");
+static_assert(offsetof(DataObjUiObj, m_bdatId) == 0x10, "");
 static_assert(sizeof(DataObjUiObj) == 0x18, "");
 
 class DataObjGmk : public IDataObj {
@@ -615,16 +615,16 @@ public:
   virtual u32 getBdatId() const;
   virtual u32 getObjType() const { return OBJECT_TYPE_GIMMICK; }
   virtual bool isDispInitExtraParts(u32 part) const;
-  virtual GimmickType getGimmickType() const { return gimmickType; }
+  virtual GimmickType getGimmickType() const { return m_gimmickType; }
 
-  GF_OBJ_HANDLE *handle;
-  u32 id;
-  GimmickType gimmickType;
+  GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+  u32 m_bdatId;
+  GimmickType m_gimmickType;
 };
 
-static_assert(offsetof(DataObjGmk, handle) == 0x08, "");
-static_assert(offsetof(DataObjGmk, id) == 0x10, "");
-static_assert(offsetof(DataObjGmk, gimmickType) == 0x14, "");
+static_assert(offsetof(DataObjGmk, unknown08) == 0x08, "");
+static_assert(offsetof(DataObjGmk, m_bdatId) == 0x10, "");
+static_assert(offsetof(DataObjGmk, m_gimmickType) == 0x14, "");
 static_assert(sizeof(DataObjGmk) == 0x18, "");
 
 class DataObjBelonging : public IDataObj {
@@ -638,10 +638,10 @@ public:
   virtual u32 getBdatId() const;
   virtual u32 getObjType() const { return OBJECT_TYPE_BELONGING; }
 
-  GF_OBJ_HANDLE *handle;
+  GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
 };
 
-static_assert(offsetof(DataObjBelonging, handle) == 0x08, "");
+static_assert(offsetof(DataObjBelonging, unknown08) == 0x08, "");
 static_assert(sizeof(DataObjBelonging) == 0x10, "");
 
 } // namespace gf

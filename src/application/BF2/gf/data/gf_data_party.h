@@ -11,27 +11,27 @@ struct Vec3;
 namespace gf {
 
 struct SDataPartyMember {
-  u16 driver;
-  u16 hierarchyDriver;
-  u16 hierarchyBlade;
+  u16 unknown00; // Inferred role: driver; original member name unknown.
+  u16 unknown02; // Inferred role: hierarchy driver; original member name unknown.
+  u16 unknown04; // Inferred role: hierarchy blade; original member name unknown.
 };
 
 struct SDataParty {
-  SDataPartyMember members[10];
-  u32 leaderObjectType;
-  u32 leader;
-  u32 savedLeaderObjectType;
-  u32 savedLeader;
-  u16 partyGauge;
-  u16 clearRexBlades[2];
+  SDataPartyMember unknown00[10]; // Inferred role: members; original member name unknown.
+  u32 unknown3c;                  // Inferred role: leader object type; original member name unknown.
+  u32 unknown40;                  // Inferred role: leader; original member name unknown.
+  u32 unknown44;                  // Inferred role: saved leader object type; original member name unknown.
+  u32 unknown48;                  // Inferred role: saved leader; original member name unknown.
+  u16 unknown4c;                  // Inferred role: party gauge; original member name unknown.
+  u16 unknown4e[2];               // Inferred role: clear rex blades; original member name unknown.
   u8 _052[0x054 - 0x052];
 };
 
 static_assert(sizeof(SDataPartyMember) == 0x06, "");
-static_assert(offsetof(SDataParty, leaderObjectType) == 0x03c, "");
-static_assert(offsetof(SDataParty, leader) == 0x040, "");
-static_assert(offsetof(SDataParty, partyGauge) == 0x04c, "");
-static_assert(offsetof(SDataParty, clearRexBlades) == 0x04e, "");
+static_assert(offsetof(SDataParty, unknown3c) == 0x03c, "");
+static_assert(offsetof(SDataParty, unknown40) == 0x040, "");
+static_assert(offsetof(SDataParty, unknown4c) == 0x04c, "");
+static_assert(offsetof(SDataParty, unknown4e) == 0x04e, "");
 static_assert(sizeof(SDataParty) == 0x054, "");
 
 class GfDataParty {

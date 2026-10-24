@@ -6,7 +6,7 @@ namespace gf {
 struct SDataGame;
 
 struct SDataSavedEvent {
-  u16 event;
+  u16 unknown00; // Inferred role: event; original member name unknown.
   u8 _02[0x64 - 0x02];
 };
 

@@ -65,8 +65,8 @@ u32 GfDataIdea::getNeedPoint(int level) {
 }
 
 void SDataIdea::setPoint(u32 idea, u32 point) {
-  ideas[idea].point = point;
-  ideas[idea].level = GfDataIdea::calcLevel(point);
+  unknown00[idea].unknown00 = point;
+  unknown00[idea].unknown04 = GfDataIdea::calcLevel(point);
 }
 
 } // namespace gf

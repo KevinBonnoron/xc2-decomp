@@ -59,44 +59,44 @@ enum ITEM_BOX_INDEX {
 };
 
 struct SDataItemInfo {
-  u32 index : 13;
-  u32 type : 6;
-  u32 count : 10;
+  u32 unknown00_0 : 13; // Inferred role: index; original member name unknown.
+  u32 m_type : 6;
+  u32 unknown02_3 : 10; // Inferred role: count; original member name unknown.
   u32 _00_29 : 1;
-  u32 isEquip : 1;
+  u32 unknown03_6 : 1; // Inferred role: is equip; original member name unknown.
   u32 _00_31 : 1;
-  u32 time;
-  u32 serial : 26;
+  u32 unknown04;        // Inferred role: time; original member name unknown.
+  u32 unknown08_0 : 26; // Inferred role: serial; original member name unknown.
   u32 _08_26 : 6;
 };
 
 static_assert(sizeof(SDataItemInfo) == 0x0c, "");
 
 struct ItemBox {
-  SDataItemInfo pcWpnChips[200];
-  SDataItemInfo pcEquips[900];
-  SDataItemInfo equipOrbs[500];
-  SDataItemInfo salvages[200];
-  SDataItemInfo preciouses[500];
-  SDataItemInfo infos[200];
-  SDataItemInfo events[100];
-  SDataItemInfo collectionLists[500];
-  SDataItemInfo tresures[200];
-  SDataItemInfo emptyOrbs[500];
-  SDataItemInfo favorites[500];
-  SDataItemInfo crystalLists[200];
-  SDataItemInfo boosters[200];
-  SDataItemInfo hanaRoles[200];
-  SDataItemInfo hanaAtrs[200];
-  SDataItemInfo hanaArtsEnhs[200];
-  SDataItemInfo hanaNArtsSets[200];
-  SDataItemInfo hanaAssists[700];
-  u32 serials[ITEM_BOX_INDEX_NUM];
+  SDataItemInfo unknown00[200];         // Inferred role: pc wpn chips; original member name unknown.
+  SDataItemInfo unknown960[900];        // Inferred role: pc equips; original member name unknown.
+  SDataItemInfo unknown3390[500];       // Inferred role: equip orbs; original member name unknown.
+  SDataItemInfo unknown4b00[200];       // Inferred role: salvages; original member name unknown.
+  SDataItemInfo unknown5460[500];       // Inferred role: preciouses; original member name unknown.
+  SDataItemInfo unknown6bd0[200];       // Inferred role: infos; original member name unknown.
+  SDataItemInfo unknown7530[100];       // Inferred role: events; original member name unknown.
+  SDataItemInfo unknown79e0[500];       // Inferred role: collection lists; original member name unknown.
+  SDataItemInfo unknown9150[200];       // Inferred role: tresures; original member name unknown.
+  SDataItemInfo unknown9ab0[500];       // Inferred role: empty orbs; original member name unknown.
+  SDataItemInfo unknownb220[500];       // Inferred role: favorites; original member name unknown.
+  SDataItemInfo unknownc990[200];       // Inferred role: crystal lists; original member name unknown.
+  SDataItemInfo unknownd2f0[200];       // Inferred role: boosters; original member name unknown.
+  SDataItemInfo unknowndc50[200];       // Inferred role: hana roles; original member name unknown.
+  SDataItemInfo unknowne5b0[200];       // Inferred role: hana atrs; original member name unknown.
+  SDataItemInfo unknownef10[200];       // Inferred role: hana arts enhs; original member name unknown.
+  SDataItemInfo unknownf870[200];       // Inferred role: hana n arts sets; original member name unknown.
+  SDataItemInfo unknown101d0[700];      // Inferred role: hana assists; original member name unknown.
+  u32 unknown122a0[ITEM_BOX_INDEX_NUM]; // Inferred role: serials; original member name unknown.
 };
 
-static_assert(offsetof(ItemBox, pcEquips) == 0x960, "");
-static_assert(offsetof(ItemBox, hanaAssists) == 0x101d0, "");
-static_assert(offsetof(ItemBox, serials) == 0x122a0, "");
+static_assert(offsetof(ItemBox, unknown960) == 0x960, "");
+static_assert(offsetof(ItemBox, unknown101d0) == 0x101d0, "");
+static_assert(offsetof(ItemBox, unknown122a0) == 0x122a0, "");
 static_assert(sizeof(ItemBox) == 0x122ec, "");
 
 class GfDataItem {

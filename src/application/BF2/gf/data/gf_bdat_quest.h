@@ -26,14 +26,14 @@ constexpr u32 QUEST_ID_COUNT = 16000;
 constexpr u32 QUEST_TASK_COUNT = 4;
 
 struct QIDXINFO {
-  QIDXINFO(QuestID quest) : purpose(0), quest(quest) {}
-  QIDXINFO(u32 purpose) : purpose(purpose), quest() {}
+  QIDXINFO(QuestID quest) : unknown0c(0), unknown10(quest) {}
+  QIDXINFO(u32 purpose) : unknown0c(purpose), unknown10() {}
 
-  u32 index;
-  u32 categoryBegin;
-  QTYPE category;
-  u32 purpose;
-  QuestID quest;
+  u32 unknown00;     // Inferred role: index; original member name unknown.
+  u32 unknown04;     // Inferred role: category begin; original member name unknown.
+  QTYPE unknown08;   // Inferred role: category; original member name unknown.
+  u32 unknown0c;     // Inferred role: purpose; original member name unknown.
+  QuestID unknown10; // Inferred role: quest; original member name unknown.
 };
 
 static_assert(sizeof(QIDXINFO) == 0x14, "");
@@ -65,8 +65,8 @@ static_assert(sizeof(QuestListCategory) == 0x3f60, "");
 static_assert(sizeof(QuestTaskCategory) == 0x2020, "");
 
 struct QuestIndexTable {
-  u32 indices[QUEST_ID_COUNT];
-  u32 count;
+  u32 unknown00[QUEST_ID_COUNT]; // Inferred role: indices; original member name unknown.
+  u32 unknownfa00;               // Inferred role: count; original member name unknown.
 };
 
 class qlist_iterator {
@@ -75,12 +75,12 @@ public:
 
   QuestID getQuestID() const;
   qlist_iterator operator++();
-  bool operator!=(const qlist_iterator &other) const { return index != other.index; }
+  bool operator!=(const qlist_iterator &other) const { return unknown0c != other.unknown0c; }
 
-  QuestListAcc *questListAcc;
-  QTYPE type;
-  s32 index;
-  const QuestListCategory *category;
+  QuestListAcc *unknown00;            // Inferred role: quest list acc; original member name unknown.
+  QTYPE unknown08;                    // Inferred role: type; original member name unknown.
+  s32 unknown0c;                      // Inferred role: index; original member name unknown.
+  const QuestListCategory *unknown10; // Inferred role: category; original member name unknown.
 };
 
 class tlist_iterator {
@@ -89,12 +89,12 @@ public:
 
   tlist_iterator operator++();
   u16 getPurposeID() const;
-  bool operator!=(const tlist_iterator &other) const { return index != other.index; }
+  bool operator!=(const tlist_iterator &other) const { return unknown0c != other.unknown0c; }
 
-  QuestListAcc *questListAcc;
-  QTYPE type;
-  s32 index;
-  const QuestTaskCategory *category;
+  QuestListAcc *unknown00;            // Inferred role: quest list acc; original member name unknown.
+  QTYPE unknown08;                    // Inferred role: type; original member name unknown.
+  s32 unknown0c;                      // Inferred role: index; original member name unknown.
+  const QuestTaskCategory *unknown10; // Inferred role: category; original member name unknown.
 };
 
 class QuestListAcc {
@@ -396,22 +396,22 @@ public:
   u32 getTaskFlag(u32 purpose, u32 taskIndex) const;
 
 private:
-  QuestListCategory mListCategories[QTYPE_COUNT];
-  QuestIndexTable mListIndices;
-  QuestTaskCategory mTaskCategories[QTYPE_COUNT];
-  QuestIndexTable mTaskIndices;
-  u16 mCollectFlagIndices[QUEST_ID_COUNT * QUEST_TASK_COUNT];
-  mm::mtl::FixedVector<u16, 0x400> mCollectFlags;
+  QuestListCategory unknown00[QTYPE_COUNT];            // Inferred role: list categories; original member name unknown.
+  QuestIndexTable unknown17c40;                        // Inferred role: list indices; original member name unknown.
+  QuestTaskCategory unknown27648[QTYPE_COUNT];         // Inferred role: task categories; original member name unknown.
+  QuestIndexTable unknown33708;                        // Inferred role: task indices; original member name unknown.
+  u16 unknown4310c[QUEST_ID_COUNT * QUEST_TASK_COUNT]; // Inferred role: collect flag indices; original member name unknown.
+  mm::mtl::FixedVector<u16, 0x400> unknown62510;       // Inferred role: collect flags; original member name unknown.
 
   friend struct QuestListAccLayout;
 };
 
 struct QuestListAccLayout {
-  static_assert(offsetof(QuestListAcc, mListIndices) == 0x17c40, "");
-  static_assert(offsetof(QuestListAcc, mTaskCategories) == 0x27648, "");
-  static_assert(offsetof(QuestListAcc, mTaskIndices) == 0x33708, "");
-  static_assert(offsetof(QuestListAcc, mCollectFlagIndices) == 0x4310c, "");
-  static_assert(offsetof(QuestListAcc, mCollectFlags) == 0x62510, "");
+  static_assert(offsetof(QuestListAcc, unknown17c40) == 0x17c40, "");
+  static_assert(offsetof(QuestListAcc, unknown27648) == 0x27648, "");
+  static_assert(offsetof(QuestListAcc, unknown33708) == 0x33708, "");
+  static_assert(offsetof(QuestListAcc, unknown4310c) == 0x4310c, "");
+  static_assert(offsetof(QuestListAcc, unknown62510) == 0x62510, "");
   static_assert(sizeof(QuestListAcc) == 0x62d18, "");
 };
 
@@ -424,43 +424,43 @@ public:
   void bdatRefresh() override;
 
 private:
-  CBdatWrapper *m_FLD_QuestList;
-  CBdatWrapper *m_FLD_QuestListNormal;
-  CBdatWrapper *m_FLD_QuestListMini;
-  CBdatWrapper *m_FLD_QuestListMercenaries;
-  CBdatWrapper *m_FLD_QuestListAchievement;
-  CBdatWrapper *m_FLD_QuestListBlade;
-  CBdatWrapper *m_FLD_QuestCollect;
-  CBdatWrapper *m_FLD_QuestTask;
-  CBdatWrapper *m_FLD_QuestTaskNormal;
-  CBdatWrapper *m_FLD_QuestTaskMini;
-  CBdatWrapper *m_FLD_QuestTaskMercenaries;
-  CBdatWrapper *m_FLD_QuestTaskAchievement;
-  CBdatWrapper *m_FLD_QuestTaskBlade;
-  CBdatWrapper *m_FLD_QuestBattle;
-  CBdatWrapper *m_FLD_RequestItemSet;
-  CBdatWrapper *m_FLD_QuestUse;
-  CBdatWrapper *m_FLD_QuestReach;
-  CBdatWrapper *m_FLD_QuestTalk;
-  CBdatWrapper *m_FLD_QuestTalkDummyGroup;
-  CBdatWrapper *m_FLD_QuestGimmick;
-  CBdatWrapper *m_FLD_QuestFieldSkillCount;
-  CBdatWrapper *m_FLD_RequestBlade;
-  CBdatWrapper *m_FLD_QuestCondition;
-  CBdatWrapper *m_FLD_QuestHints;
-  CBdatWrapper *m_FLD_QuestEvent;
-  CBdatWrapper *m_FLD_QuestReward;
-  CBdatWrapper *m_FLD_QuestRewardRandom;
-  CBdatWrapper *m_FLD_Achievement;
-  CBdatWrapper *m_FLD_AchievementSet;
-  CBdatWrapper *m_FLD_AchievementList;
-  CBdatWrapper *m_FLD_MercenariesConfig;
-  CBdatWrapper *m_FLD_MercenariesMission;
-  CBdatWrapper *m_FLD_FieldSkillList;
-  CBdatWrapper *m_FLD_FieldSkillSetting;
-  CBdatWrapper *m_FLD_FieldSkillRandom;
-  CBdatWrapper *m_FLD_DevelopmentLevel;
-  QuestListAcc *mQuestListAcc;
+  CBdatWrapper *unknown10;  // Inferred role: fld quest list; original member name unknown.
+  CBdatWrapper *unknown18;  // Inferred role: fld quest list normal; original member name unknown.
+  CBdatWrapper *unknown20;  // Inferred role: fld quest list mini; original member name unknown.
+  CBdatWrapper *unknown28;  // Inferred role: fld quest list mercenaries; original member name unknown.
+  CBdatWrapper *unknown30;  // Inferred role: fld quest list achievement; original member name unknown.
+  CBdatWrapper *unknown38;  // Inferred role: fld quest list blade; original member name unknown.
+  CBdatWrapper *unknown40;  // Inferred role: fld quest collect; original member name unknown.
+  CBdatWrapper *unknown48;  // Inferred role: fld quest task; original member name unknown.
+  CBdatWrapper *unknown50;  // Inferred role: fld quest task normal; original member name unknown.
+  CBdatWrapper *unknown58;  // Inferred role: fld quest task mini; original member name unknown.
+  CBdatWrapper *unknown60;  // Inferred role: fld quest task mercenaries; original member name unknown.
+  CBdatWrapper *unknown68;  // Inferred role: fld quest task achievement; original member name unknown.
+  CBdatWrapper *unknown70;  // Inferred role: fld quest task blade; original member name unknown.
+  CBdatWrapper *unknown78;  // Inferred role: fld quest battle; original member name unknown.
+  CBdatWrapper *unknown80;  // Inferred role: fld request item set; original member name unknown.
+  CBdatWrapper *unknown88;  // Inferred role: fld quest use; original member name unknown.
+  CBdatWrapper *unknown90;  // Inferred role: fld quest reach; original member name unknown.
+  CBdatWrapper *unknown98;  // Inferred role: fld quest talk; original member name unknown.
+  CBdatWrapper *unknowna0;  // Inferred role: fld quest talk dummy group; original member name unknown.
+  CBdatWrapper *unknowna8;  // Inferred role: fld quest gimmick; original member name unknown.
+  CBdatWrapper *unknownb0;  // Inferred role: fld quest field skill count; original member name unknown.
+  CBdatWrapper *unknownb8;  // Inferred role: fld request blade; original member name unknown.
+  CBdatWrapper *unknownc0;  // Inferred role: fld quest condition; original member name unknown.
+  CBdatWrapper *unknownc8;  // Inferred role: fld quest hints; original member name unknown.
+  CBdatWrapper *unknownd0;  // Inferred role: fld quest event; original member name unknown.
+  CBdatWrapper *unknownd8;  // Inferred role: fld quest reward; original member name unknown.
+  CBdatWrapper *unknowne0;  // Inferred role: fld quest reward random; original member name unknown.
+  CBdatWrapper *unknowne8;  // Inferred role: fld achievement; original member name unknown.
+  CBdatWrapper *unknownf0;  // Inferred role: fld achievement set; original member name unknown.
+  CBdatWrapper *unknownf8;  // Inferred role: fld achievement list; original member name unknown.
+  CBdatWrapper *unknown100; // Inferred role: fld mercenaries config; original member name unknown.
+  CBdatWrapper *unknown108; // Inferred role: fld mercenaries mission; original member name unknown.
+  CBdatWrapper *unknown110; // Inferred role: fld field skill list; original member name unknown.
+  CBdatWrapper *unknown118; // Inferred role: fld field skill setting; original member name unknown.
+  CBdatWrapper *unknown120; // Inferred role: fld field skill random; original member name unknown.
+  CBdatWrapper *unknown128; // Inferred role: fld development level; original member name unknown.
+  QuestListAcc *unknown130; // Inferred role: quest list acc; original member name unknown.
 
   friend class GfQuestManager;
   friend class QuestListAcc;
@@ -468,10 +468,10 @@ private:
 };
 
 struct GfBdatQuestLayout {
-  static_assert(offsetof(GfBdatQuest, m_FLD_QuestList) == 0x10, "");
-  static_assert(offsetof(GfBdatQuest, m_FLD_QuestBattle) == 0x78, "");
-  static_assert(offsetof(GfBdatQuest, m_FLD_QuestEvent) == 0xd0, "");
-  static_assert(offsetof(GfBdatQuest, mQuestListAcc) == 0x130, "");
+  static_assert(offsetof(GfBdatQuest, unknown10) == 0x10, "");
+  static_assert(offsetof(GfBdatQuest, unknown78) == 0x78, "");
+  static_assert(offsetof(GfBdatQuest, unknownd0) == 0xd0, "");
+  static_assert(offsetof(GfBdatQuest, unknown130) == 0x130, "");
 };
 
 } // namespace gf

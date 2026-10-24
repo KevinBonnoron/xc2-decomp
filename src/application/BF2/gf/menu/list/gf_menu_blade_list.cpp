@@ -101,8 +101,8 @@ bool GfMenuBladeList::sortRarityDescending(const MenuBladeInfo &info, const Menu
 }
 
 bool GfMenuBladeList::sortWeaponAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 weaponType = GfDataBlade::getSDataBlade(info.blade)->weaponType;
-  u8 otherWeaponType = GfDataBlade::getSDataBlade(other.blade)->weaponType;
+  u8 weaponType = GfDataBlade::getSDataBlade(info.blade)->unknown821;
+  u8 otherWeaponType = GfDataBlade::getSDataBlade(other.blade)->unknown821;
   if (weaponType == otherWeaponType) {
     return info.blade < other.blade;
   }
@@ -110,8 +110,8 @@ bool GfMenuBladeList::sortWeaponAscending(const MenuBladeInfo &info, const MenuB
 }
 
 bool GfMenuBladeList::sortWeaponDescending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 weaponType = GfDataBlade::getSDataBlade(info.blade)->weaponType;
-  u8 otherWeaponType = GfDataBlade::getSDataBlade(other.blade)->weaponType;
+  u8 weaponType = GfDataBlade::getSDataBlade(info.blade)->unknown821;
+  u8 otherWeaponType = GfDataBlade::getSDataBlade(other.blade)->unknown821;
   if (weaponType == otherWeaponType) {
     return info.blade < other.blade;
   }
@@ -151,8 +151,8 @@ bool GfMenuBladeList::sortCreatorDescending(const MenuBladeInfo &info, const Men
 }
 
 bool GfMenuBladeList::sortGenderDescending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 gender = GfDataBlade::getSDataBlade(info.blade)->gender;
-  u8 otherGender = GfDataBlade::getSDataBlade(other.blade)->gender;
+  u8 gender = GfDataBlade::getSDataBlade(info.blade)->unknown709;
+  u8 otherGender = GfDataBlade::getSDataBlade(other.blade)->unknown709;
   if (gender == otherGender) {
     return info.blade < other.blade;
   }
@@ -160,8 +160,8 @@ bool GfMenuBladeList::sortGenderDescending(const MenuBladeInfo &info, const Menu
 }
 
 bool GfMenuBladeList::sortGenderAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 gender = GfDataBlade::getSDataBlade(info.blade)->gender;
-  u8 otherGender = GfDataBlade::getSDataBlade(other.blade)->gender;
+  u8 gender = GfDataBlade::getSDataBlade(info.blade)->unknown709;
+  u8 otherGender = GfDataBlade::getSDataBlade(other.blade)->unknown709;
   if (gender == otherGender) {
     return info.blade < other.blade;
   }

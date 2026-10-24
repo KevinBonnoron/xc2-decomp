@@ -9,38 +9,38 @@ namespace gf {
 struct SDataBlade;
 
 struct EquipHanaArts {
-  u16 enhance;
+  u16 unknown00; // Inferred role: enhance; original member name unknown.
   u8 _02[0x04 - 0x02];
-  u16 parts;
+  u16 unknown04; // Inferred role: parts; original member name unknown.
   u8 _06[0x0a - 0x06];
-  u16 handle;
+  u16 unknown0a; // Inferred role: handle; original member name unknown.
 };
 
-static_assert(offsetof(EquipHanaArts, parts) == 0x04, "");
-static_assert(offsetof(EquipHanaArts, handle) == 0x0a, "");
+static_assert(offsetof(EquipHanaArts, unknown04) == 0x04, "");
+static_assert(offsetof(EquipHanaArts, unknown0a) == 0x0a, "");
 static_assert(sizeof(EquipHanaArts) == 0x0c, "");
 
 struct EquipHana {
-  u16 role;
-  u16 attribute;
-  mm::mtl::FixedArray<EquipHanaArts, 3> arts;
-  mm::mtl::FixedArray<EquipHanaArts, 3> nArts;
-  mm::mtl::FixedArray<u16, 3> condenser;
-  mm::mtl::FixedArray<u16, 3> extendCondenser;
-  GfItemHandle roleHandle;
-  GfItemHandle attributeHandle;
-  GfItemHandle condenserHandles[3];
-  GfItemHandle extendCondenserHandles[3];
+  u16 unknown00;                                   // Inferred role: role; original member name unknown.
+  u16 unknown02;                                   // Inferred role: attribute; original member name unknown.
+  mm::mtl::FixedArray<EquipHanaArts, 3> unknown04; // Inferred role: arts; original member name unknown.
+  mm::mtl::FixedArray<EquipHanaArts, 3> unknown28; // Inferred role: n arts; original member name unknown.
+  mm::mtl::FixedArray<u16, 3> unknown4c;           // Inferred role: condenser; original member name unknown.
+  mm::mtl::FixedArray<u16, 3> unknown52;           // Inferred role: extend condenser; original member name unknown.
+  GfItemHandle unknown58;                          // Inferred role: role handle; original member name unknown.
+  GfItemHandle unknown5c;                          // Inferred role: attribute handle; original member name unknown.
+  GfItemHandle unknown60[3];                       // Inferred role: condenser handles; original member name unknown.
+  GfItemHandle unknown6c[3];                       // Inferred role: extend condenser handles; original member name unknown.
 };
 
-static_assert(offsetof(EquipHana, arts) == 0x04, "");
-static_assert(offsetof(EquipHana, nArts) == 0x28, "");
-static_assert(offsetof(EquipHana, condenser) == 0x4c, "");
-static_assert(offsetof(EquipHana, extendCondenser) == 0x52, "");
-static_assert(offsetof(EquipHana, roleHandle) == 0x58, "");
-static_assert(offsetof(EquipHana, attributeHandle) == 0x5c, "");
-static_assert(offsetof(EquipHana, condenserHandles) == 0x60, "");
-static_assert(offsetof(EquipHana, extendCondenserHandles) == 0x6c, "");
+static_assert(offsetof(EquipHana, unknown04) == 0x04, "");
+static_assert(offsetof(EquipHana, unknown28) == 0x28, "");
+static_assert(offsetof(EquipHana, unknown4c) == 0x4c, "");
+static_assert(offsetof(EquipHana, unknown52) == 0x52, "");
+static_assert(offsetof(EquipHana, unknown58) == 0x58, "");
+static_assert(offsetof(EquipHana, unknown5c) == 0x5c, "");
+static_assert(offsetof(EquipHana, unknown60) == 0x60, "");
+static_assert(offsetof(EquipHana, unknown6c) == 0x6c, "");
 static_assert(sizeof(EquipHana) == 0x78, "");
 
 class GfDataHana {

@@ -346,373 +346,373 @@ enum {
 
 static u8 *s_members[MEMBER_COUNT];
 
-void initRscEnDebugName(const CBdatWrapper &wrapper) { s_members[RscEnDebugName] = Bdat::getMember(wrapper.data, "DebugName"); }
+void initRscEnDebugName(const CBdatWrapper &wrapper) { s_members[RscEnDebugName] = Bdat::getMember(wrapper.unknown00, "DebugName"); }
 
 const char *getRscEnDebugName(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnDebugName] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnDebugName] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnDebugName], id, 7).valueString;
 }
 
-void initRscEnTypeFamily(const CBdatWrapper &wrapper) { s_members[RscEnTypeFamily] = Bdat::getMember(wrapper.data, "TypeFamily"); }
+void initRscEnTypeFamily(const CBdatWrapper &wrapper) { s_members[RscEnTypeFamily] = Bdat::getMember(wrapper.unknown00, "TypeFamily"); }
 
 u32 getRscEnTypeFamily(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnTypeFamily] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnTypeFamily] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnTypeFamily], id, 1).valueU8;
 }
 
-void initRscEnTypeGenus(const CBdatWrapper &wrapper) { s_members[RscEnTypeGenus] = Bdat::getMember(wrapper.data, "TypeGenus"); }
+void initRscEnTypeGenus(const CBdatWrapper &wrapper) { s_members[RscEnTypeGenus] = Bdat::getMember(wrapper.unknown00, "TypeGenus"); }
 
 u32 getRscEnTypeGenus(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnTypeGenus] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnTypeGenus] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnTypeGenus], id, 1).valueU8;
 }
 
-void initRscEnActType(const CBdatWrapper &wrapper) { s_members[RscEnActType] = Bdat::getMember(wrapper.data, "ActType"); }
+void initRscEnActType(const CBdatWrapper &wrapper) { s_members[RscEnActType] = Bdat::getMember(wrapper.unknown00, "ActType"); }
 
 u32 getRscEnActType(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnActType] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnActType] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnActType], id, 1).valueU8;
 }
 
-void initRscEnFlyHeight(const CBdatWrapper &wrapper) { s_members[RscEnFlyHeight] = Bdat::getMember(wrapper.data, "FlyHeight"); }
+void initRscEnFlyHeight(const CBdatWrapper &wrapper) { s_members[RscEnFlyHeight] = Bdat::getMember(wrapper.unknown00, "FlyHeight"); }
 
 s32 getRscEnFlyHeight(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFlyHeight] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFlyHeight] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnFlyHeight], id, 5).valueS16;
 }
 
-void initRscEnFldMoveType(const CBdatWrapper &wrapper) { s_members[RscEnFldMoveType] = Bdat::getMember(wrapper.data, "FldMoveType"); }
+void initRscEnFldMoveType(const CBdatWrapper &wrapper) { s_members[RscEnFldMoveType] = Bdat::getMember(wrapper.unknown00, "FldMoveType"); }
 
 u32 getRscEnFldMoveType(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFldMoveType] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFldMoveType] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnFldMoveType], id, 1).valueU8;
 }
 
-void initRscEnMaterial(const CBdatWrapper &wrapper) { s_members[RscEnMaterial] = Bdat::getMember(wrapper.data, "Material"); }
+void initRscEnMaterial(const CBdatWrapper &wrapper) { s_members[RscEnMaterial] = Bdat::getMember(wrapper.unknown00, "Material"); }
 
 u32 getRscEnMaterial(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnMaterial] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnMaterial] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnMaterial], id, 1).valueU8;
 }
 
-void initRscEnProxyID(const CBdatWrapper &wrapper) { s_members[RscEnProxyID] = Bdat::getMember(wrapper.data, "ProxyID"); }
+void initRscEnProxyID(const CBdatWrapper &wrapper) { s_members[RscEnProxyID] = Bdat::getMember(wrapper.unknown00, "ProxyID"); }
 
 u32 getRscEnProxyID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnProxyID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnProxyID] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnProxyID], id, 1).valueU8;
 }
 
-void initRscEnEnRadius(const CBdatWrapper &wrapper) { s_members[RscEnEnRadius] = Bdat::getMember(wrapper.data, "EnRadius"); }
+void initRscEnEnRadius(const CBdatWrapper &wrapper) { s_members[RscEnEnRadius] = Bdat::getMember(wrapper.unknown00, "EnRadius"); }
 
 u32 getRscEnEnRadius(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnEnRadius] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnEnRadius] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnEnRadius], id, 1).valueU8;
 }
 
-void initRscEnEnRadius2(const CBdatWrapper &wrapper) { s_members[RscEnEnRadius2] = Bdat::getMember(wrapper.data, "EnRadius2"); }
+void initRscEnEnRadius2(const CBdatWrapper &wrapper) { s_members[RscEnEnRadius2] = Bdat::getMember(wrapper.unknown00, "EnRadius2"); }
 
 u32 getRscEnEnRadius2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnEnRadius2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnEnRadius2] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnEnRadius2], id, 1).valueU8;
 }
 
-void initRscEnChestHeight(const CBdatWrapper &wrapper) { s_members[RscEnChestHeight] = Bdat::getMember(wrapper.data, "ChestHeight"); }
+void initRscEnChestHeight(const CBdatWrapper &wrapper) { s_members[RscEnChestHeight] = Bdat::getMember(wrapper.unknown00, "ChestHeight"); }
 
 u32 getRscEnChestHeight(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnChestHeight] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnChestHeight] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnChestHeight], id, 2).valueU16;
 }
 
-void initRscEnChestHeight2(const CBdatWrapper &wrapper) { s_members[RscEnChestHeight2] = Bdat::getMember(wrapper.data, "ChestHeight2"); }
+void initRscEnChestHeight2(const CBdatWrapper &wrapper) { s_members[RscEnChestHeight2] = Bdat::getMember(wrapper.unknown00, "ChestHeight2"); }
 
 u32 getRscEnChestHeight2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnChestHeight2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnChestHeight2] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnChestHeight2], id, 2).valueU16;
 }
 
-void initRscEnBallRadius(const CBdatWrapper &wrapper) { s_members[RscEnBallRadius] = Bdat::getMember(wrapper.data, "BallRadius"); }
+void initRscEnBallRadius(const CBdatWrapper &wrapper) { s_members[RscEnBallRadius] = Bdat::getMember(wrapper.unknown00, "BallRadius"); }
 
 f32 getRscEnBallRadius(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[RscEnBallRadius] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnBallRadius] != nullptr && id >= Bdat::getIdTop(wrapper.unknown00) && id < Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     value = wrapper.getValCheck(s_members[RscEnBallRadius], id, 8).valueF32;
   }
 
   return value;
 }
 
-void initRscEnBallHeight(const CBdatWrapper &wrapper) { s_members[RscEnBallHeight] = Bdat::getMember(wrapper.data, "BallHeight"); }
+void initRscEnBallHeight(const CBdatWrapper &wrapper) { s_members[RscEnBallHeight] = Bdat::getMember(wrapper.unknown00, "BallHeight"); }
 
 f32 getRscEnBallHeight(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[RscEnBallHeight] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnBallHeight] != nullptr && id >= Bdat::getIdTop(wrapper.unknown00) && id < Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     value = wrapper.getValCheck(s_members[RscEnBallHeight], id, 8).valueF32;
   }
 
   return value;
 }
 
-void initRscEnCharColli(const CBdatWrapper &wrapper) { s_members[RscEnCharColli] = Bdat::getMember(wrapper.data, "CharColli"); }
+void initRscEnCharColli(const CBdatWrapper &wrapper) { s_members[RscEnCharColli] = Bdat::getMember(wrapper.unknown00, "CharColli"); }
 
 f32 getRscEnCharColli(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[RscEnCharColli] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnCharColli] != nullptr && id >= Bdat::getIdTop(wrapper.unknown00) && id < Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     value = wrapper.getValCheck(s_members[RscEnCharColli], id, 8).valueF32;
   }
 
   return value;
 }
 
-void initRscEnoffsetID(const CBdatWrapper &wrapper) { s_members[RscEnoffsetID] = Bdat::getMember(wrapper.data, "offsetID"); }
+void initRscEnoffsetID(const CBdatWrapper &wrapper) { s_members[RscEnoffsetID] = Bdat::getMember(wrapper.unknown00, "offsetID"); }
 
 u32 getRscEnoffsetID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnoffsetID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnoffsetID] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnoffsetID], id, 2).valueU16;
 }
 
-void initRscEnEyeRot(const CBdatWrapper &wrapper) { s_members[RscEnEyeRot] = Bdat::getMember(wrapper.data, "EyeRot"); }
+void initRscEnEyeRot(const CBdatWrapper &wrapper) { s_members[RscEnEyeRot] = Bdat::getMember(wrapper.unknown00, "EyeRot"); }
 
 u32 getRscEnEyeRot(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnEyeRot] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnEyeRot] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnEyeRot], id, 1).valueU8;
 }
 
-void initRscEnSearchBaseBone(const CBdatWrapper &wrapper) { s_members[RscEnSearchBaseBone] = Bdat::getMember(wrapper.data, "SearchBaseBone"); }
+void initRscEnSearchBaseBone(const CBdatWrapper &wrapper) { s_members[RscEnSearchBaseBone] = Bdat::getMember(wrapper.unknown00, "SearchBaseBone"); }
 
 const char *getRscEnSearchBaseBone(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnSearchBaseBone] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnSearchBaseBone] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnSearchBaseBone], id, 7).valueString;
 }
 
-void initRscEnCenterBone(const CBdatWrapper &wrapper) { s_members[RscEnCenterBone] = Bdat::getMember(wrapper.data, "CenterBone"); }
+void initRscEnCenterBone(const CBdatWrapper &wrapper) { s_members[RscEnCenterBone] = Bdat::getMember(wrapper.unknown00, "CenterBone"); }
 
 const char *getRscEnCenterBone(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnCenterBone] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnCenterBone] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnCenterBone], id, 7).valueString;
 }
 
-void initRscEnCamBone(const CBdatWrapper &wrapper) { s_members[RscEnCamBone] = Bdat::getMember(wrapper.data, "CamBone"); }
+void initRscEnCamBone(const CBdatWrapper &wrapper) { s_members[RscEnCamBone] = Bdat::getMember(wrapper.unknown00, "CamBone"); }
 
 const char *getRscEnCamBone(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnCamBone] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnCamBone] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnCamBone], id, 7).valueString;
 }
 
-void initRscEnFrontAngle(const CBdatWrapper &wrapper) { s_members[RscEnFrontAngle] = Bdat::getMember(wrapper.data, "FrontAngle"); }
+void initRscEnFrontAngle(const CBdatWrapper &wrapper) { s_members[RscEnFrontAngle] = Bdat::getMember(wrapper.unknown00, "FrontAngle"); }
 
 u32 getRscEnFrontAngle(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFrontAngle] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFrontAngle] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnFrontAngle], id, 1).valueU8;
 }
 
-void initRscEnTurnAngleSmall(const CBdatWrapper &wrapper) { s_members[RscEnTurnAngleSmall] = Bdat::getMember(wrapper.data, "TurnAngleSmall"); }
+void initRscEnTurnAngleSmall(const CBdatWrapper &wrapper) { s_members[RscEnTurnAngleSmall] = Bdat::getMember(wrapper.unknown00, "TurnAngleSmall"); }
 
 u32 getRscEnTurnAngleSmall(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnTurnAngleSmall] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnTurnAngleSmall] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnTurnAngleSmall], id, 1).valueU8;
 }
 
-void initRscEnTurnAngleBig(const CBdatWrapper &wrapper) { s_members[RscEnTurnAngleBig] = Bdat::getMember(wrapper.data, "TurnAngleBig"); }
+void initRscEnTurnAngleBig(const CBdatWrapper &wrapper) { s_members[RscEnTurnAngleBig] = Bdat::getMember(wrapper.unknown00, "TurnAngleBig"); }
 
 u32 getRscEnTurnAngleBig(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnTurnAngleBig] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnTurnAngleBig] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnTurnAngleBig], id, 1).valueU8;
 }
 
-void initRscEnUnduration(const CBdatWrapper &wrapper) { s_members[RscEnUnduration] = Bdat::getMember(wrapper.data, "Unduration"); }
+void initRscEnUnduration(const CBdatWrapper &wrapper) { s_members[RscEnUnduration] = Bdat::getMember(wrapper.unknown00, "Unduration"); }
 
 u32 getRscEnUnduration(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnUnduration] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnUnduration] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnUnduration], id, 1).valueU8;
 }
 
-void initRscEnModel(const CBdatWrapper &wrapper) { s_members[RscEnModel] = Bdat::getMember(wrapper.data, "Model"); }
+void initRscEnModel(const CBdatWrapper &wrapper) { s_members[RscEnModel] = Bdat::getMember(wrapper.unknown00, "Model"); }
 
 const char *getRscEnModel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnModel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnModel] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnModel], id, 7).valueString;
 }
 
-void initRscEnChrFile(const CBdatWrapper &wrapper) { s_members[RscEnChrFile] = Bdat::getMember(wrapper.data, "ChrFile"); }
+void initRscEnChrFile(const CBdatWrapper &wrapper) { s_members[RscEnChrFile] = Bdat::getMember(wrapper.unknown00, "ChrFile"); }
 
 const char *getRscEnChrFile(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnChrFile] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnChrFile] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnChrFile], id, 7).valueString;
 }
 
-void initRscEnMotion(const CBdatWrapper &wrapper) { s_members[RscEnMotion] = Bdat::getMember(wrapper.data, "Motion"); }
+void initRscEnMotion(const CBdatWrapper &wrapper) { s_members[RscEnMotion] = Bdat::getMember(wrapper.unknown00, "Motion"); }
 
 const char *getRscEnMotion(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnMotion] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnMotion] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnMotion], id, 7).valueString;
 }
 
-void initRscEnRefMotion(const CBdatWrapper &wrapper) { s_members[RscEnRefMotion] = Bdat::getMember(wrapper.data, "RefMotion"); }
+void initRscEnRefMotion(const CBdatWrapper &wrapper) { s_members[RscEnRefMotion] = Bdat::getMember(wrapper.unknown00, "RefMotion"); }
 
 const char *getRscEnRefMotion(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnRefMotion] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnRefMotion] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnRefMotion], id, 7).valueString;
 }
 
-void initRscEnEffectPack(const CBdatWrapper &wrapper) { s_members[RscEnEffectPack] = Bdat::getMember(wrapper.data, "EffectPack"); }
+void initRscEnEffectPack(const CBdatWrapper &wrapper) { s_members[RscEnEffectPack] = Bdat::getMember(wrapper.unknown00, "EffectPack"); }
 
 const char *getRscEnEffectPack(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnEffectPack] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnEffectPack] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnEffectPack], id, 7).valueString;
 }
 
-void initRscEnLoopEffect(const CBdatWrapper &wrapper) { s_members[RscEnLoopEffect] = Bdat::getMember(wrapper.data, "LoopEffect"); }
+void initRscEnLoopEffect(const CBdatWrapper &wrapper) { s_members[RscEnLoopEffect] = Bdat::getMember(wrapper.unknown00, "LoopEffect"); }
 
 const char *getRscEnLoopEffect(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnLoopEffect] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnLoopEffect] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnLoopEffect], id, 7).valueString;
 }
 
-void initRscEnSePack(const CBdatWrapper &wrapper) { s_members[RscEnSePack] = Bdat::getMember(wrapper.data, "SePack"); }
+void initRscEnSePack(const CBdatWrapper &wrapper) { s_members[RscEnSePack] = Bdat::getMember(wrapper.unknown00, "SePack"); }
 
 const char *getRscEnSePack(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnSePack] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnSePack] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnSePack], id, 7).valueString;
 }
 
-void initRscEnVoice(const CBdatWrapper &wrapper) { s_members[RscEnVoice] = Bdat::getMember(wrapper.data, "Voice"); }
+void initRscEnVoice(const CBdatWrapper &wrapper) { s_members[RscEnVoice] = Bdat::getMember(wrapper.unknown00, "Voice"); }
 
 const char *getRscEnVoice(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnVoice] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnVoice] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnVoice], id, 7).valueString;
 }
 
-void initRscEnVoiceEx(const CBdatWrapper &wrapper) { s_members[RscEnVoiceEx] = Bdat::getMember(wrapper.data, "VoiceEx"); }
+void initRscEnVoiceEx(const CBdatWrapper &wrapper) { s_members[RscEnVoiceEx] = Bdat::getMember(wrapper.unknown00, "VoiceEx"); }
 
 u32 getRscEnVoiceEx(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnVoiceEx] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnVoiceEx] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnVoiceEx], id, 1).valueU8;
 }
 
-void initRscEnClipEvent(const CBdatWrapper &wrapper) { s_members[RscEnClipEvent] = Bdat::getMember(wrapper.data, "ClipEvent"); }
+void initRscEnClipEvent(const CBdatWrapper &wrapper) { s_members[RscEnClipEvent] = Bdat::getMember(wrapper.unknown00, "ClipEvent"); }
 
 const char *getRscEnClipEvent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnClipEvent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnClipEvent] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnClipEvent], id, 7).valueString;
 }
 
-void initRscEnComp_Eff(const CBdatWrapper &wrapper) { s_members[RscEnComp_Eff] = Bdat::getMember(wrapper.data, "Comp_Eff"); }
+void initRscEnComp_Eff(const CBdatWrapper &wrapper) { s_members[RscEnComp_Eff] = Bdat::getMember(wrapper.unknown00, "Comp_Eff"); }
 
 const char *getRscEnComp_Eff(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnComp_Eff] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnComp_Eff] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnComp_Eff], id, 7).valueString;
 }
 
-void initRscEnComp_Se(const CBdatWrapper &wrapper) { s_members[RscEnComp_Se] = Bdat::getMember(wrapper.data, "Comp_Se"); }
+void initRscEnComp_Se(const CBdatWrapper &wrapper) { s_members[RscEnComp_Se] = Bdat::getMember(wrapper.unknown00, "Comp_Se"); }
 
 const char *getRscEnComp_Se(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnComp_Se] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnComp_Se] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnComp_Se], id, 7).valueString;
 }
 
-void initRscEnComp_Vo(const CBdatWrapper &wrapper) { s_members[RscEnComp_Vo] = Bdat::getMember(wrapper.data, "Comp_Vo"); }
+void initRscEnComp_Vo(const CBdatWrapper &wrapper) { s_members[RscEnComp_Vo] = Bdat::getMember(wrapper.unknown00, "Comp_Vo"); }
 
 const char *getRscEnComp_Vo(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnComp_Vo] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnComp_Vo] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
@@ -720,13 +720,13 @@ const char *getRscEnComp_Vo(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnFlagNoEcSkip(const CBdatWrapper &wrapper) {
-  s_members[RscEnFlagNoEcSkip] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnFlagNoEcSkipFlag] = Bdat::getMember(wrapper.data, "NoEcSkip");
+  s_members[RscEnFlagNoEcSkip] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnFlagNoEcSkipFlag] = Bdat::getMember(wrapper.unknown00, "NoEcSkip");
 }
 
 bool isRscEnFlagNoEcSkip(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFlagNoEcSkip] == nullptr || s_members[RscEnFlagNoEcSkipFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFlagNoEcSkip] == nullptr || s_members[RscEnFlagNoEcSkipFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
@@ -734,12 +734,13 @@ bool isRscEnFlagNoEcSkip(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnFlagMap(const CBdatWrapper &wrapper) {
-  s_members[RscEnFlagMap] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnFlagMapFlag] = Bdat::getMember(wrapper.data, "Map");
+  s_members[RscEnFlagMap] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnFlagMapFlag] = Bdat::getMember(wrapper.unknown00, "Map");
 }
 
 bool isRscEnFlagMap(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFlagMap] == nullptr || s_members[RscEnFlagMapFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFlagMap] == nullptr || s_members[RscEnFlagMapFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
@@ -747,12 +748,13 @@ bool isRscEnFlagMap(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnFlagEvt(const CBdatWrapper &wrapper) {
-  s_members[RscEnFlagEvt] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnFlagEvtFlag] = Bdat::getMember(wrapper.data, "Evt");
+  s_members[RscEnFlagEvt] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnFlagEvtFlag] = Bdat::getMember(wrapper.unknown00, "Evt");
 }
 
 bool isRscEnFlagEvt(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFlagEvt] == nullptr || s_members[RscEnFlagEvtFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFlagEvt] == nullptr || s_members[RscEnFlagEvtFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
@@ -760,13 +762,13 @@ bool isRscEnFlagEvt(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnFlagNoWinVo(const CBdatWrapper &wrapper) {
-  s_members[RscEnFlagNoWinVo] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnFlagNoWinVoFlag] = Bdat::getMember(wrapper.data, "NoWinVo");
+  s_members[RscEnFlagNoWinVo] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnFlagNoWinVoFlag] = Bdat::getMember(wrapper.unknown00, "NoWinVo");
 }
 
 bool isRscEnFlagNoWinVo(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFlagNoWinVo] == nullptr || s_members[RscEnFlagNoWinVoFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFlagNoWinVo] == nullptr || s_members[RscEnFlagNoWinVoFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
@@ -774,12 +776,13 @@ bool isRscEnFlagNoWinVo(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnFlagBait(const CBdatWrapper &wrapper) {
-  s_members[RscEnFlagBait] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnFlagBaitFlag] = Bdat::getMember(wrapper.data, "Bait");
+  s_members[RscEnFlagBait] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnFlagBaitFlag] = Bdat::getMember(wrapper.unknown00, "Bait");
 }
 
 bool isRscEnFlagBait(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFlagBait] == nullptr || s_members[RscEnFlagBaitFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFlagBait] == nullptr || s_members[RscEnFlagBaitFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
@@ -787,13 +790,13 @@ bool isRscEnFlagBait(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnFlagUseSearchBone(const CBdatWrapper &wrapper) {
-  s_members[RscEnFlagUseSearchBone] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnFlagUseSearchBoneFlag] = Bdat::getMember(wrapper.data, "UseSearchBone");
+  s_members[RscEnFlagUseSearchBone] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnFlagUseSearchBoneFlag] = Bdat::getMember(wrapper.unknown00, "UseSearchBone");
 }
 
 bool isRscEnFlagUseSearchBone(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFlagUseSearchBone] == nullptr || s_members[RscEnFlagUseSearchBoneFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFlagUseSearchBone] == nullptr || s_members[RscEnFlagUseSearchBoneFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
@@ -801,13 +804,13 @@ bool isRscEnFlagUseSearchBone(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnFlagNoVanish(const CBdatWrapper &wrapper) {
-  s_members[RscEnFlagNoVanish] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnFlagNoVanishFlag] = Bdat::getMember(wrapper.data, "NoVanish");
+  s_members[RscEnFlagNoVanish] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnFlagNoVanishFlag] = Bdat::getMember(wrapper.unknown00, "NoVanish");
 }
 
 bool isRscEnFlagNoVanish(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFlagNoVanish] == nullptr || s_members[RscEnFlagNoVanishFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFlagNoVanish] == nullptr || s_members[RscEnFlagNoVanishFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
@@ -815,13 +818,13 @@ bool isRscEnFlagNoVanish(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnFlagNoCamera(const CBdatWrapper &wrapper) {
-  s_members[RscEnFlagNoCamera] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnFlagNoCameraFlag] = Bdat::getMember(wrapper.data, "NoCamera");
+  s_members[RscEnFlagNoCamera] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnFlagNoCameraFlag] = Bdat::getMember(wrapper.unknown00, "NoCamera");
 }
 
 bool isRscEnFlagNoCamera(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFlagNoCamera] == nullptr || s_members[RscEnFlagNoCameraFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFlagNoCamera] == nullptr || s_members[RscEnFlagNoCameraFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
@@ -829,13 +832,13 @@ bool isRscEnFlagNoCamera(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnFlagWeaponDrawDisp(const CBdatWrapper &wrapper) {
-  s_members[RscEnFlagWeaponDrawDisp] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnFlagWeaponDrawDispFlag] = Bdat::getMember(wrapper.data, "WeaponDrawDisp");
+  s_members[RscEnFlagWeaponDrawDisp] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnFlagWeaponDrawDispFlag] = Bdat::getMember(wrapper.unknown00, "WeaponDrawDisp");
 }
 
 bool isRscEnFlagWeaponDrawDisp(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFlagWeaponDrawDisp] == nullptr || s_members[RscEnFlagWeaponDrawDispFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFlagWeaponDrawDisp] == nullptr || s_members[RscEnFlagWeaponDrawDispFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
@@ -843,13 +846,13 @@ bool isRscEnFlagWeaponDrawDisp(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnFlagJoinAll(const CBdatWrapper &wrapper) {
-  s_members[RscEnFlagJoinAll] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnFlagJoinAllFlag] = Bdat::getMember(wrapper.data, "JoinAll");
+  s_members[RscEnFlagJoinAll] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnFlagJoinAllFlag] = Bdat::getMember(wrapper.unknown00, "JoinAll");
 }
 
 bool isRscEnFlagJoinAll(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFlagJoinAll] == nullptr || s_members[RscEnFlagJoinAllFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFlagJoinAll] == nullptr || s_members[RscEnFlagJoinAllFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
@@ -857,253 +860,253 @@ bool isRscEnFlagJoinAll(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnFlagDeathMotion(const CBdatWrapper &wrapper) {
-  s_members[RscEnFlagDeathMotion] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnFlagDeathMotionFlag] = Bdat::getMember(wrapper.data, "DeathMotion");
+  s_members[RscEnFlagDeathMotion] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnFlagDeathMotionFlag] = Bdat::getMember(wrapper.unknown00, "DeathMotion");
 }
 
 bool isRscEnFlagDeathMotion(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFlagDeathMotion] == nullptr || s_members[RscEnFlagDeathMotionFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFlagDeathMotion] == nullptr || s_members[RscEnFlagDeathMotionFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
   return wrapper.getFlagVal(s_members[RscEnFlagDeathMotion], id, s_members[RscEnFlagDeathMotionFlag]) != 0;
 }
 
-void initRscEnWeaponNum1(const CBdatWrapper &wrapper) { s_members[RscEnWeaponNum1] = Bdat::getMember(wrapper.data, "WeaponNum1"); }
+void initRscEnWeaponNum1(const CBdatWrapper &wrapper) { s_members[RscEnWeaponNum1] = Bdat::getMember(wrapper.unknown00, "WeaponNum1"); }
 
 u32 getRscEnWeaponNum1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnWeaponNum1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnWeaponNum1] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnWeaponNum1], id, 2).valueU16;
 }
 
-void initRscEnWeaponNum2(const CBdatWrapper &wrapper) { s_members[RscEnWeaponNum2] = Bdat::getMember(wrapper.data, "WeaponNum2"); }
+void initRscEnWeaponNum2(const CBdatWrapper &wrapper) { s_members[RscEnWeaponNum2] = Bdat::getMember(wrapper.unknown00, "WeaponNum2"); }
 
 u32 getRscEnWeaponNum2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnWeaponNum2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnWeaponNum2] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnWeaponNum2], id, 2).valueU16;
 }
 
-void initRscEnWeaponNum3(const CBdatWrapper &wrapper) { s_members[RscEnWeaponNum3] = Bdat::getMember(wrapper.data, "WeaponNum3"); }
+void initRscEnWeaponNum3(const CBdatWrapper &wrapper) { s_members[RscEnWeaponNum3] = Bdat::getMember(wrapper.unknown00, "WeaponNum3"); }
 
 u32 getRscEnWeaponNum3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnWeaponNum3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnWeaponNum3] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnWeaponNum3], id, 2).valueU16;
 }
 
-void initRscEnWeaponNum4(const CBdatWrapper &wrapper) { s_members[RscEnWeaponNum4] = Bdat::getMember(wrapper.data, "WeaponNum4"); }
+void initRscEnWeaponNum4(const CBdatWrapper &wrapper) { s_members[RscEnWeaponNum4] = Bdat::getMember(wrapper.unknown00, "WeaponNum4"); }
 
 u32 getRscEnWeaponNum4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnWeaponNum4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnWeaponNum4] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnWeaponNum4], id, 2).valueU16;
 }
 
-void initRscEnWeaponNum5(const CBdatWrapper &wrapper) { s_members[RscEnWeaponNum5] = Bdat::getMember(wrapper.data, "WeaponNum5"); }
+void initRscEnWeaponNum5(const CBdatWrapper &wrapper) { s_members[RscEnWeaponNum5] = Bdat::getMember(wrapper.unknown00, "WeaponNum5"); }
 
 u32 getRscEnWeaponNum5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnWeaponNum5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnWeaponNum5] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnWeaponNum5], id, 2).valueU16;
 }
 
-void initRscEnMemorySlot(const CBdatWrapper &wrapper) { s_members[RscEnMemorySlot] = Bdat::getMember(wrapper.data, "MemorySlot"); }
+void initRscEnMemorySlot(const CBdatWrapper &wrapper) { s_members[RscEnMemorySlot] = Bdat::getMember(wrapper.unknown00, "MemorySlot"); }
 
 u32 getRscEnMemorySlot(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnMemorySlot] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnMemorySlot] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnMemorySlot], id, 1).valueU8;
 }
 
-void initRscEnRace(const CBdatWrapper &wrapper) { s_members[RscEnRace] = Bdat::getMember(wrapper.data, "Race"); }
+void initRscEnRace(const CBdatWrapper &wrapper) { s_members[RscEnRace] = Bdat::getMember(wrapper.unknown00, "Race"); }
 
 u32 getRscEnRace(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnRace] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnRace] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnRace], id, 1).valueU8;
 }
 
-void initRscEnDrType(const CBdatWrapper &wrapper) { s_members[RscEnDrType] = Bdat::getMember(wrapper.data, "DrType"); }
+void initRscEnDrType(const CBdatWrapper &wrapper) { s_members[RscEnDrType] = Bdat::getMember(wrapper.unknown00, "DrType"); }
 
 u32 getRscEnDrType(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnDrType] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnDrType] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnDrType], id, 1).valueU8;
 }
 
-void initRscEnGoldDivideRev(const CBdatWrapper &wrapper) { s_members[RscEnGoldDivideRev] = Bdat::getMember(wrapper.data, "GoldDivideRev"); }
+void initRscEnGoldDivideRev(const CBdatWrapper &wrapper) { s_members[RscEnGoldDivideRev] = Bdat::getMember(wrapper.unknown00, "GoldDivideRev"); }
 
 s32 getRscEnGoldDivideRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnGoldDivideRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnGoldDivideRev] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnGoldDivideRev], id, 4).valueS8;
 }
 
-void initRscEnFootStep(const CBdatWrapper &wrapper) { s_members[RscEnFootStep] = Bdat::getMember(wrapper.data, "FootStep"); }
+void initRscEnFootStep(const CBdatWrapper &wrapper) { s_members[RscEnFootStep] = Bdat::getMember(wrapper.unknown00, "FootStep"); }
 
 u32 getRscEnFootStep(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFootStep] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFootStep] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnFootStep], id, 1).valueU8;
 }
 
-void initRscEnFootStepEffect(const CBdatWrapper &wrapper) { s_members[RscEnFootStepEffect] = Bdat::getMember(wrapper.data, "FootStepEffect"); }
+void initRscEnFootStepEffect(const CBdatWrapper &wrapper) { s_members[RscEnFootStepEffect] = Bdat::getMember(wrapper.unknown00, "FootStepEffect"); }
 
 u32 getRscEnFootStepEffect(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnFootStepEffect] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnFootStepEffect] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnFootStepEffect], id, 1).valueU8;
 }
 
-void initRscEnRotateX(const CBdatWrapper &wrapper) { s_members[RscEnRotateX] = Bdat::getMember(wrapper.data, "RotateX"); }
+void initRscEnRotateX(const CBdatWrapper &wrapper) { s_members[RscEnRotateX] = Bdat::getMember(wrapper.unknown00, "RotateX"); }
 
 s32 getRscEnRotateX(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnRotateX] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnRotateX] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnRotateX], id, 4).valueS8;
 }
 
-void initRscEnRotateY(const CBdatWrapper &wrapper) { s_members[RscEnRotateY] = Bdat::getMember(wrapper.data, "RotateY"); }
+void initRscEnRotateY(const CBdatWrapper &wrapper) { s_members[RscEnRotateY] = Bdat::getMember(wrapper.unknown00, "RotateY"); }
 
 s32 getRscEnRotateY(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnRotateY] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnRotateY] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnRotateY], id, 4).valueS8;
 }
 
-void initRscEnRotateZ(const CBdatWrapper &wrapper) { s_members[RscEnRotateZ] = Bdat::getMember(wrapper.data, "RotateZ"); }
+void initRscEnRotateZ(const CBdatWrapper &wrapper) { s_members[RscEnRotateZ] = Bdat::getMember(wrapper.unknown00, "RotateZ"); }
 
 s32 getRscEnRotateZ(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnRotateZ] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnRotateZ] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnRotateZ], id, 4).valueS8;
 }
 
-void initRscEnRotateDeg(const CBdatWrapper &wrapper) { s_members[RscEnRotateDeg] = Bdat::getMember(wrapper.data, "RotateDeg"); }
+void initRscEnRotateDeg(const CBdatWrapper &wrapper) { s_members[RscEnRotateDeg] = Bdat::getMember(wrapper.unknown00, "RotateDeg"); }
 
 s32 getRscEnRotateDeg(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnRotateDeg] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnRotateDeg] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnRotateDeg], id, 4).valueS8;
 }
 
-void initRscEnRotEffScale(const CBdatWrapper &wrapper) { s_members[RscEnRotEffScale] = Bdat::getMember(wrapper.data, "RotEffScale"); }
+void initRscEnRotEffScale(const CBdatWrapper &wrapper) { s_members[RscEnRotEffScale] = Bdat::getMember(wrapper.unknown00, "RotEffScale"); }
 
 u32 getRscEnRotEffScale(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnRotEffScale] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnRotEffScale] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnRotEffScale], id, 2).valueU16;
 }
 
-void initRscEnExtraParts1(const CBdatWrapper &wrapper) { s_members[RscEnExtraParts1] = Bdat::getMember(wrapper.data, "ExtraParts1"); }
+void initRscEnExtraParts1(const CBdatWrapper &wrapper) { s_members[RscEnExtraParts1] = Bdat::getMember(wrapper.unknown00, "ExtraParts1"); }
 
 u32 getRscEnExtraParts1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnExtraParts1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnExtraParts1] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnExtraParts1], id, 1).valueU8;
 }
 
-void initRscEnExtraParts2(const CBdatWrapper &wrapper) { s_members[RscEnExtraParts2] = Bdat::getMember(wrapper.data, "ExtraParts2"); }
+void initRscEnExtraParts2(const CBdatWrapper &wrapper) { s_members[RscEnExtraParts2] = Bdat::getMember(wrapper.unknown00, "ExtraParts2"); }
 
 u32 getRscEnExtraParts2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnExtraParts2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnExtraParts2] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnExtraParts2], id, 1).valueU8;
 }
 
-void initRscEnExtraParts3(const CBdatWrapper &wrapper) { s_members[RscEnExtraParts3] = Bdat::getMember(wrapper.data, "ExtraParts3"); }
+void initRscEnExtraParts3(const CBdatWrapper &wrapper) { s_members[RscEnExtraParts3] = Bdat::getMember(wrapper.unknown00, "ExtraParts3"); }
 
 u32 getRscEnExtraParts3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnExtraParts3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnExtraParts3] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnExtraParts3], id, 1).valueU8;
 }
 
-void initRscEnExtraParts4(const CBdatWrapper &wrapper) { s_members[RscEnExtraParts4] = Bdat::getMember(wrapper.data, "ExtraParts4"); }
+void initRscEnExtraParts4(const CBdatWrapper &wrapper) { s_members[RscEnExtraParts4] = Bdat::getMember(wrapper.unknown00, "ExtraParts4"); }
 
 u32 getRscEnExtraParts4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnExtraParts4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnExtraParts4] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnExtraParts4], id, 1).valueU8;
 }
 
-void initRscEnDeadSeNum(const CBdatWrapper &wrapper) { s_members[RscEnDeadSeNum] = Bdat::getMember(wrapper.data, "DeadSeNum"); }
+void initRscEnDeadSeNum(const CBdatWrapper &wrapper) { s_members[RscEnDeadSeNum] = Bdat::getMember(wrapper.unknown00, "DeadSeNum"); }
 
 u32 getRscEnDeadSeNum(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnDeadSeNum] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnDeadSeNum] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnDeadSeNum], id, 1).valueU8;
 }
 
-void initRscEnRotateBone(const CBdatWrapper &wrapper) { s_members[RscEnRotateBone] = Bdat::getMember(wrapper.data, "RotateBone"); }
+void initRscEnRotateBone(const CBdatWrapper &wrapper) { s_members[RscEnRotateBone] = Bdat::getMember(wrapper.unknown00, "RotateBone"); }
 
 const char *getRscEnRotateBone(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnRotateBone] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnRotateBone] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnRotateBone], id, 7).valueString;
 }
 
-void initRscEnGenusNAME(const CBdatWrapper &wrapper) { s_members[RscEnGenusNAME] = Bdat::getMember(wrapper.data, "NAME"); }
+void initRscEnGenusNAME(const CBdatWrapper &wrapper) { s_members[RscEnGenusNAME] = Bdat::getMember(wrapper.unknown00, "NAME"); }
 
 u32 getRscEnGenusNAME(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnGenusNAME] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnGenusNAME] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnGenusNAME], id, 1).valueU8;
 }
 
-void initRscEnGenusCAPTION(const CBdatWrapper &wrapper) { s_members[RscEnGenusCAPTION] = Bdat::getMember(wrapper.data, "CAPTION"); }
+void initRscEnGenusCAPTION(const CBdatWrapper &wrapper) { s_members[RscEnGenusCAPTION] = Bdat::getMember(wrapper.unknown00, "CAPTION"); }
 
 u32 getRscEnGenusCAPTION(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnGenusCAPTION] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnGenusCAPTION] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
@@ -1111,13 +1114,13 @@ u32 getRscEnGenusCAPTION(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnGenusFlaggimmicktype(const CBdatWrapper &wrapper) {
-  s_members[RscEnGenusFlaggimmicktype] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnGenusFlaggimmicktypeFlag] = Bdat::getMember(wrapper.data, "gimmicktype");
+  s_members[RscEnGenusFlaggimmicktype] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnGenusFlaggimmicktypeFlag] = Bdat::getMember(wrapper.unknown00, "gimmicktype");
 }
 
 bool isRscEnGenusFlaggimmicktype(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnGenusFlaggimmicktype] == nullptr || s_members[RscEnGenusFlaggimmicktypeFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnGenusFlaggimmicktype] == nullptr || s_members[RscEnGenusFlaggimmicktypeFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
@@ -1125,13 +1128,13 @@ bool isRscEnGenusFlaggimmicktype(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnUndFlagUndX(const CBdatWrapper &wrapper) {
-  s_members[RscEnUndFlagUndX] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnUndFlagUndXFlag] = Bdat::getMember(wrapper.data, "UndX");
+  s_members[RscEnUndFlagUndX] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnUndFlagUndXFlag] = Bdat::getMember(wrapper.unknown00, "UndX");
 }
 
 bool isRscEnUndFlagUndX(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnUndFlagUndX] == nullptr || s_members[RscEnUndFlagUndXFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnUndFlagUndX] == nullptr || s_members[RscEnUndFlagUndXFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
@@ -1139,513 +1142,513 @@ bool isRscEnUndFlagUndX(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRscEnUndFlagUndZ(const CBdatWrapper &wrapper) {
-  s_members[RscEnUndFlagUndZ] = Bdat::getMember(wrapper.data, "Flag");
-  s_members[RscEnUndFlagUndZFlag] = Bdat::getMember(wrapper.data, "UndZ");
+  s_members[RscEnUndFlagUndZ] = Bdat::getMember(wrapper.unknown00, "Flag");
+  s_members[RscEnUndFlagUndZFlag] = Bdat::getMember(wrapper.unknown00, "UndZ");
 }
 
 bool isRscEnUndFlagUndZ(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnUndFlagUndZ] == nullptr || s_members[RscEnUndFlagUndZFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnUndFlagUndZ] == nullptr || s_members[RscEnUndFlagUndZFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
   return wrapper.getFlagVal(s_members[RscEnUndFlagUndZ], id, s_members[RscEnUndFlagUndZFlag]) != 0;
 }
 
-void initRscEnUndUndMinX(const CBdatWrapper &wrapper) { s_members[RscEnUndUndMinX] = Bdat::getMember(wrapper.data, "UndMinX"); }
+void initRscEnUndUndMinX(const CBdatWrapper &wrapper) { s_members[RscEnUndUndMinX] = Bdat::getMember(wrapper.unknown00, "UndMinX"); }
 
 s32 getRscEnUndUndMinX(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnUndUndMinX] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnUndUndMinX] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnUndUndMinX], id, 4).valueS8;
 }
 
-void initRscEnUndUndMaxX(const CBdatWrapper &wrapper) { s_members[RscEnUndUndMaxX] = Bdat::getMember(wrapper.data, "UndMaxX"); }
+void initRscEnUndUndMaxX(const CBdatWrapper &wrapper) { s_members[RscEnUndUndMaxX] = Bdat::getMember(wrapper.unknown00, "UndMaxX"); }
 
 s32 getRscEnUndUndMaxX(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnUndUndMaxX] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnUndUndMaxX] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnUndUndMaxX], id, 4).valueS8;
 }
 
-void initRscEnUndUndMinZ(const CBdatWrapper &wrapper) { s_members[RscEnUndUndMinZ] = Bdat::getMember(wrapper.data, "UndMinZ"); }
+void initRscEnUndUndMinZ(const CBdatWrapper &wrapper) { s_members[RscEnUndUndMinZ] = Bdat::getMember(wrapper.unknown00, "UndMinZ"); }
 
 s32 getRscEnUndUndMinZ(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnUndUndMinZ] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnUndUndMinZ] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnUndUndMinZ], id, 4).valueS8;
 }
 
-void initRscEnUndUndMaxZ(const CBdatWrapper &wrapper) { s_members[RscEnUndUndMaxZ] = Bdat::getMember(wrapper.data, "UndMaxZ"); }
+void initRscEnUndUndMaxZ(const CBdatWrapper &wrapper) { s_members[RscEnUndUndMaxZ] = Bdat::getMember(wrapper.unknown00, "UndMaxZ"); }
 
 s32 getRscEnUndUndMaxZ(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnUndUndMaxZ] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnUndUndMaxZ] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnUndUndMaxZ], id, 4).valueS8;
 }
 
-void initRscEnUndUndDeg(const CBdatWrapper &wrapper) { s_members[RscEnUndUndDeg] = Bdat::getMember(wrapper.data, "UndDeg"); }
+void initRscEnUndUndDeg(const CBdatWrapper &wrapper) { s_members[RscEnUndUndDeg] = Bdat::getMember(wrapper.unknown00, "UndDeg"); }
 
 u32 getRscEnUndUndDeg(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnUndUndDeg] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnUndUndDeg] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnUndUndDeg], id, 1).valueU8;
 }
 
-void initRscNpcListModel(const CBdatWrapper &wrapper) { s_members[RscNpcListModel] = Bdat::getMember(wrapper.data, "Model"); }
+void initRscNpcListModel(const CBdatWrapper &wrapper) { s_members[RscNpcListModel] = Bdat::getMember(wrapper.unknown00, "Model"); }
 
 const char *getRscNpcListModel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListModel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListModel] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListModel], id, 7).valueString;
 }
 
-void initRscNpcListMotion(const CBdatWrapper &wrapper) { s_members[RscNpcListMotion] = Bdat::getMember(wrapper.data, "Motion"); }
+void initRscNpcListMotion(const CBdatWrapper &wrapper) { s_members[RscNpcListMotion] = Bdat::getMember(wrapper.unknown00, "Motion"); }
 
 const char *getRscNpcListMotion(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListMotion] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListMotion] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListMotion], id, 7).valueString;
 }
 
-void initRscNpcListAddMotion(const CBdatWrapper &wrapper) { s_members[RscNpcListAddMotion] = Bdat::getMember(wrapper.data, "AddMotion"); }
+void initRscNpcListAddMotion(const CBdatWrapper &wrapper) { s_members[RscNpcListAddMotion] = Bdat::getMember(wrapper.unknown00, "AddMotion"); }
 
 const char *getRscNpcListAddMotion(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListAddMotion] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListAddMotion] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListAddMotion], id, 7).valueString;
 }
 
-void initRscNpcListComp_Eff(const CBdatWrapper &wrapper) { s_members[RscNpcListComp_Eff] = Bdat::getMember(wrapper.data, "Comp_Eff"); }
+void initRscNpcListComp_Eff(const CBdatWrapper &wrapper) { s_members[RscNpcListComp_Eff] = Bdat::getMember(wrapper.unknown00, "Comp_Eff"); }
 
 const char *getRscNpcListComp_Eff(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListComp_Eff] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListComp_Eff] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListComp_Eff], id, 7).valueString;
 }
 
-void initRscNpcListCollisionId(const CBdatWrapper &wrapper) { s_members[RscNpcListCollisionId] = Bdat::getMember(wrapper.data, "CollisionId"); }
+void initRscNpcListCollisionId(const CBdatWrapper &wrapper) { s_members[RscNpcListCollisionId] = Bdat::getMember(wrapper.unknown00, "CollisionId"); }
 
 u32 getRscNpcListCollisionId(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListCollisionId] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListCollisionId] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListCollisionId], id, 2).valueU16;
 }
 
-void initRscNpcListSE(const CBdatWrapper &wrapper) { s_members[RscNpcListSE] = Bdat::getMember(wrapper.data, "SE"); }
+void initRscNpcListSE(const CBdatWrapper &wrapper) { s_members[RscNpcListSE] = Bdat::getMember(wrapper.unknown00, "SE"); }
 
 const char *getRscNpcListSE(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListSE] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListSE] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListSE], id, 7).valueString;
 }
 
-void initRscNpcListSeEnv(const CBdatWrapper &wrapper) { s_members[RscNpcListSeEnv] = Bdat::getMember(wrapper.data, "SeEnv"); }
+void initRscNpcListSeEnv(const CBdatWrapper &wrapper) { s_members[RscNpcListSeEnv] = Bdat::getMember(wrapper.unknown00, "SeEnv"); }
 
 u32 getRscNpcListSeEnv(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListSeEnv] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListSeEnv] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListSeEnv], id, 2).valueU16;
 }
 
-void initRscNpcListRace(const CBdatWrapper &wrapper) { s_members[RscNpcListRace] = Bdat::getMember(wrapper.data, "Race"); }
+void initRscNpcListRace(const CBdatWrapper &wrapper) { s_members[RscNpcListRace] = Bdat::getMember(wrapper.unknown00, "Race"); }
 
 u32 getRscNpcListRace(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListRace] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListRace] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListRace], id, 1).valueU8;
 }
 
-void initRscNpcListFootStep(const CBdatWrapper &wrapper) { s_members[RscNpcListFootStep] = Bdat::getMember(wrapper.data, "FootStep"); }
+void initRscNpcListFootStep(const CBdatWrapper &wrapper) { s_members[RscNpcListFootStep] = Bdat::getMember(wrapper.unknown00, "FootStep"); }
 
 u32 getRscNpcListFootStep(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListFootStep] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListFootStep] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListFootStep], id, 2).valueU16;
 }
 
-void initRscNpcListFootStepEffect(const CBdatWrapper &wrapper) { s_members[RscNpcListFootStepEffect] = Bdat::getMember(wrapper.data, "FootStepEffect"); }
+void initRscNpcListFootStepEffect(const CBdatWrapper &wrapper) { s_members[RscNpcListFootStepEffect] = Bdat::getMember(wrapper.unknown00, "FootStepEffect"); }
 
 u32 getRscNpcListFootStepEffect(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListFootStepEffect] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListFootStepEffect] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListFootStepEffect], id, 1).valueU8;
 }
 
-void initRscNpcListRoots(const CBdatWrapper &wrapper) { s_members[RscNpcListRoots] = Bdat::getMember(wrapper.data, "Roots"); }
+void initRscNpcListRoots(const CBdatWrapper &wrapper) { s_members[RscNpcListRoots] = Bdat::getMember(wrapper.unknown00, "Roots"); }
 
 u32 getRscNpcListRoots(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListRoots] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListRoots] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListRoots], id, 1).valueU8;
 }
 
-void initRscNpcListGender(const CBdatWrapper &wrapper) { s_members[RscNpcListGender] = Bdat::getMember(wrapper.data, "Gender"); }
+void initRscNpcListGender(const CBdatWrapper &wrapper) { s_members[RscNpcListGender] = Bdat::getMember(wrapper.unknown00, "Gender"); }
 
 u32 getRscNpcListGender(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListGender] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListGender] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListGender], id, 1).valueU8;
 }
 
-void initRscNpcListName(const CBdatWrapper &wrapper) { s_members[RscNpcListName] = Bdat::getMember(wrapper.data, "Name"); }
+void initRscNpcListName(const CBdatWrapper &wrapper) { s_members[RscNpcListName] = Bdat::getMember(wrapper.unknown00, "Name"); }
 
 u32 getRscNpcListName(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListName] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListName] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListName], id, 2).valueU16;
 }
 
-void initRscNpcListOffsetID(const CBdatWrapper &wrapper) { s_members[RscNpcListOffsetID] = Bdat::getMember(wrapper.data, "OffsetID"); }
+void initRscNpcListOffsetID(const CBdatWrapper &wrapper) { s_members[RscNpcListOffsetID] = Bdat::getMember(wrapper.unknown00, "OffsetID"); }
 
 u32 getRscNpcListOffsetID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListOffsetID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListOffsetID] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListOffsetID], id, 2).valueU16;
 }
 
-void initRscNpcListEyeRot(const CBdatWrapper &wrapper) { s_members[RscNpcListEyeRot] = Bdat::getMember(wrapper.data, "EyeRot"); }
+void initRscNpcListEyeRot(const CBdatWrapper &wrapper) { s_members[RscNpcListEyeRot] = Bdat::getMember(wrapper.unknown00, "EyeRot"); }
 
 u32 getRscNpcListEyeRot(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListEyeRot] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListEyeRot] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListEyeRot], id, 1).valueU8;
 }
 
-void initRscNpcListExtraParts1(const CBdatWrapper &wrapper) { s_members[RscNpcListExtraParts1] = Bdat::getMember(wrapper.data, "ExtraParts1"); }
+void initRscNpcListExtraParts1(const CBdatWrapper &wrapper) { s_members[RscNpcListExtraParts1] = Bdat::getMember(wrapper.unknown00, "ExtraParts1"); }
 
 u32 getRscNpcListExtraParts1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListExtraParts1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListExtraParts1] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListExtraParts1], id, 1).valueU8;
 }
 
-void initRscNpcListExtraParts2(const CBdatWrapper &wrapper) { s_members[RscNpcListExtraParts2] = Bdat::getMember(wrapper.data, "ExtraParts2"); }
+void initRscNpcListExtraParts2(const CBdatWrapper &wrapper) { s_members[RscNpcListExtraParts2] = Bdat::getMember(wrapper.unknown00, "ExtraParts2"); }
 
 u32 getRscNpcListExtraParts2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListExtraParts2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListExtraParts2] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListExtraParts2], id, 1).valueU8;
 }
 
-void initRscNpcListExtraParts3(const CBdatWrapper &wrapper) { s_members[RscNpcListExtraParts3] = Bdat::getMember(wrapper.data, "ExtraParts3"); }
+void initRscNpcListExtraParts3(const CBdatWrapper &wrapper) { s_members[RscNpcListExtraParts3] = Bdat::getMember(wrapper.unknown00, "ExtraParts3"); }
 
 u32 getRscNpcListExtraParts3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListExtraParts3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListExtraParts3] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListExtraParts3], id, 1).valueU8;
 }
 
-void initRscNpcListExtraParts4(const CBdatWrapper &wrapper) { s_members[RscNpcListExtraParts4] = Bdat::getMember(wrapper.data, "ExtraParts4"); }
+void initRscNpcListExtraParts4(const CBdatWrapper &wrapper) { s_members[RscNpcListExtraParts4] = Bdat::getMember(wrapper.unknown00, "ExtraParts4"); }
 
 u32 getRscNpcListExtraParts4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListExtraParts4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListExtraParts4] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListExtraParts4], id, 1).valueU8;
 }
 
-void initRscNpcListExtraParts5(const CBdatWrapper &wrapper) { s_members[RscNpcListExtraParts5] = Bdat::getMember(wrapper.data, "ExtraParts5"); }
+void initRscNpcListExtraParts5(const CBdatWrapper &wrapper) { s_members[RscNpcListExtraParts5] = Bdat::getMember(wrapper.unknown00, "ExtraParts5"); }
 
 u32 getRscNpcListExtraParts5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListExtraParts5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListExtraParts5] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListExtraParts5], id, 1).valueU8;
 }
 
-void initRscNpcListExtraParts6(const CBdatWrapper &wrapper) { s_members[RscNpcListExtraParts6] = Bdat::getMember(wrapper.data, "ExtraParts6"); }
+void initRscNpcListExtraParts6(const CBdatWrapper &wrapper) { s_members[RscNpcListExtraParts6] = Bdat::getMember(wrapper.unknown00, "ExtraParts6"); }
 
 u32 getRscNpcListExtraParts6(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListExtraParts6] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListExtraParts6] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListExtraParts6], id, 1).valueU8;
 }
 
-void initRscNpcListScale(const CBdatWrapper &wrapper) { s_members[RscNpcListScale] = Bdat::getMember(wrapper.data, "Scale"); }
+void initRscNpcListScale(const CBdatWrapper &wrapper) { s_members[RscNpcListScale] = Bdat::getMember(wrapper.unknown00, "Scale"); }
 
 u32 getRscNpcListScale(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListScale] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListScale] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListScale], id, 2).valueU16;
 }
 
-void initRscNpcListEventAsset(const CBdatWrapper &wrapper) { s_members[RscNpcListEventAsset] = Bdat::getMember(wrapper.data, "EventAsset"); }
+void initRscNpcListEventAsset(const CBdatWrapper &wrapper) { s_members[RscNpcListEventAsset] = Bdat::getMember(wrapper.unknown00, "EventAsset"); }
 
 u32 getRscNpcListEventAsset(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcListEventAsset] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcListEventAsset] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscNpcListEventAsset], id, 2).valueU16;
 }
 
-void initRscMobListModel(const CBdatWrapper &wrapper) { s_members[RscMobListModel] = Bdat::getMember(wrapper.data, "Model"); }
+void initRscMobListModel(const CBdatWrapper &wrapper) { s_members[RscMobListModel] = Bdat::getMember(wrapper.unknown00, "Model"); }
 
 const char *getRscMobListModel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListModel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListModel] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscMobListModel], id, 7).valueString;
 }
 
-void initRscMobListMotion(const CBdatWrapper &wrapper) { s_members[RscMobListMotion] = Bdat::getMember(wrapper.data, "Motion"); }
+void initRscMobListMotion(const CBdatWrapper &wrapper) { s_members[RscMobListMotion] = Bdat::getMember(wrapper.unknown00, "Motion"); }
 
 const char *getRscMobListMotion(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListMotion] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListMotion] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscMobListMotion], id, 7).valueString;
 }
 
-void initRscMobListAddMotion(const CBdatWrapper &wrapper) { s_members[RscMobListAddMotion] = Bdat::getMember(wrapper.data, "AddMotion"); }
+void initRscMobListAddMotion(const CBdatWrapper &wrapper) { s_members[RscMobListAddMotion] = Bdat::getMember(wrapper.unknown00, "AddMotion"); }
 
 const char *getRscMobListAddMotion(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListAddMotion] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListAddMotion] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscMobListAddMotion], id, 7).valueString;
 }
 
-void initRscMobListComp_Eff(const CBdatWrapper &wrapper) { s_members[RscMobListComp_Eff] = Bdat::getMember(wrapper.data, "Comp_Eff"); }
+void initRscMobListComp_Eff(const CBdatWrapper &wrapper) { s_members[RscMobListComp_Eff] = Bdat::getMember(wrapper.unknown00, "Comp_Eff"); }
 
 const char *getRscMobListComp_Eff(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListComp_Eff] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListComp_Eff] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscMobListComp_Eff], id, 7).valueString;
 }
 
-void initRscMobListCollisionId(const CBdatWrapper &wrapper) { s_members[RscMobListCollisionId] = Bdat::getMember(wrapper.data, "CollisionId"); }
+void initRscMobListCollisionId(const CBdatWrapper &wrapper) { s_members[RscMobListCollisionId] = Bdat::getMember(wrapper.unknown00, "CollisionId"); }
 
 u32 getRscMobListCollisionId(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListCollisionId] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListCollisionId] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscMobListCollisionId], id, 2).valueU16;
 }
 
-void initRscMobListSE(const CBdatWrapper &wrapper) { s_members[RscMobListSE] = Bdat::getMember(wrapper.data, "SE"); }
+void initRscMobListSE(const CBdatWrapper &wrapper) { s_members[RscMobListSE] = Bdat::getMember(wrapper.unknown00, "SE"); }
 
 const char *getRscMobListSE(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListSE] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListSE] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscMobListSE], id, 7).valueString;
 }
 
-void initRscMobListSeEnv(const CBdatWrapper &wrapper) { s_members[RscMobListSeEnv] = Bdat::getMember(wrapper.data, "SeEnv"); }
+void initRscMobListSeEnv(const CBdatWrapper &wrapper) { s_members[RscMobListSeEnv] = Bdat::getMember(wrapper.unknown00, "SeEnv"); }
 
 u32 getRscMobListSeEnv(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListSeEnv] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListSeEnv] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscMobListSeEnv], id, 2).valueU16;
 }
 
-void initRscMobListRace(const CBdatWrapper &wrapper) { s_members[RscMobListRace] = Bdat::getMember(wrapper.data, "Race"); }
+void initRscMobListRace(const CBdatWrapper &wrapper) { s_members[RscMobListRace] = Bdat::getMember(wrapper.unknown00, "Race"); }
 
 u32 getRscMobListRace(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListRace] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListRace] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscMobListRace], id, 1).valueU8;
 }
 
-void initRscMobListFootStep(const CBdatWrapper &wrapper) { s_members[RscMobListFootStep] = Bdat::getMember(wrapper.data, "FootStep"); }
+void initRscMobListFootStep(const CBdatWrapper &wrapper) { s_members[RscMobListFootStep] = Bdat::getMember(wrapper.unknown00, "FootStep"); }
 
 u32 getRscMobListFootStep(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListFootStep] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListFootStep] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscMobListFootStep], id, 2).valueU16;
 }
 
-void initRscMobListFootStepEffect(const CBdatWrapper &wrapper) { s_members[RscMobListFootStepEffect] = Bdat::getMember(wrapper.data, "FootStepEffect"); }
+void initRscMobListFootStepEffect(const CBdatWrapper &wrapper) { s_members[RscMobListFootStepEffect] = Bdat::getMember(wrapper.unknown00, "FootStepEffect"); }
 
 u32 getRscMobListFootStepEffect(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListFootStepEffect] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListFootStepEffect] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscMobListFootStepEffect], id, 1).valueU8;
 }
 
-void initRscMobListOffsetID(const CBdatWrapper &wrapper) { s_members[RscMobListOffsetID] = Bdat::getMember(wrapper.data, "OffsetID"); }
+void initRscMobListOffsetID(const CBdatWrapper &wrapper) { s_members[RscMobListOffsetID] = Bdat::getMember(wrapper.unknown00, "OffsetID"); }
 
 u32 getRscMobListOffsetID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListOffsetID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListOffsetID] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscMobListOffsetID], id, 2).valueU16;
 }
 
-void initRscMobListExtraParts1(const CBdatWrapper &wrapper) { s_members[RscMobListExtraParts1] = Bdat::getMember(wrapper.data, "ExtraParts1"); }
+void initRscMobListExtraParts1(const CBdatWrapper &wrapper) { s_members[RscMobListExtraParts1] = Bdat::getMember(wrapper.unknown00, "ExtraParts1"); }
 
 u32 getRscMobListExtraParts1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListExtraParts1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListExtraParts1] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscMobListExtraParts1], id, 1).valueU8;
 }
 
-void initRscMobListExtraParts2(const CBdatWrapper &wrapper) { s_members[RscMobListExtraParts2] = Bdat::getMember(wrapper.data, "ExtraParts2"); }
+void initRscMobListExtraParts2(const CBdatWrapper &wrapper) { s_members[RscMobListExtraParts2] = Bdat::getMember(wrapper.unknown00, "ExtraParts2"); }
 
 u32 getRscMobListExtraParts2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListExtraParts2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListExtraParts2] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscMobListExtraParts2], id, 1).valueU8;
 }
 
-void initRscMobListExtraParts3(const CBdatWrapper &wrapper) { s_members[RscMobListExtraParts3] = Bdat::getMember(wrapper.data, "ExtraParts3"); }
+void initRscMobListExtraParts3(const CBdatWrapper &wrapper) { s_members[RscMobListExtraParts3] = Bdat::getMember(wrapper.unknown00, "ExtraParts3"); }
 
 u32 getRscMobListExtraParts3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListExtraParts3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListExtraParts3] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscMobListExtraParts3], id, 1).valueU8;
 }
 
-void initRscMobListExtraParts4(const CBdatWrapper &wrapper) { s_members[RscMobListExtraParts4] = Bdat::getMember(wrapper.data, "ExtraParts4"); }
+void initRscMobListExtraParts4(const CBdatWrapper &wrapper) { s_members[RscMobListExtraParts4] = Bdat::getMember(wrapper.unknown00, "ExtraParts4"); }
 
 u32 getRscMobListExtraParts4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListExtraParts4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListExtraParts4] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscMobListExtraParts4], id, 1).valueU8;
 }
 
-void initRscMobListExtraParts5(const CBdatWrapper &wrapper) { s_members[RscMobListExtraParts5] = Bdat::getMember(wrapper.data, "ExtraParts5"); }
+void initRscMobListExtraParts5(const CBdatWrapper &wrapper) { s_members[RscMobListExtraParts5] = Bdat::getMember(wrapper.unknown00, "ExtraParts5"); }
 
 u32 getRscMobListExtraParts5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListExtraParts5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListExtraParts5] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscMobListExtraParts5], id, 1).valueU8;
 }
 
-void initRscMobListExtraParts6(const CBdatWrapper &wrapper) { s_members[RscMobListExtraParts6] = Bdat::getMember(wrapper.data, "ExtraParts6"); }
+void initRscMobListExtraParts6(const CBdatWrapper &wrapper) { s_members[RscMobListExtraParts6] = Bdat::getMember(wrapper.unknown00, "ExtraParts6"); }
 
 u32 getRscMobListExtraParts6(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscMobListExtraParts6] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscMobListExtraParts6] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscMobListExtraParts6], id, 1).valueU8;
 }
 
-void initRSC_MapObjListModel(const CBdatWrapper &wrapper) { s_members[RSC_MapObjListModel] = Bdat::getMember(wrapper.data, "Model"); }
+void initRSC_MapObjListModel(const CBdatWrapper &wrapper) { s_members[RSC_MapObjListModel] = Bdat::getMember(wrapper.unknown00, "Model"); }
 
 const char *getRSC_MapObjListModel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_MapObjListModel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_MapObjListModel] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_MapObjListModel], id, 7).valueString;
 }
 
-void initRSC_MapObjListMotion(const CBdatWrapper &wrapper) { s_members[RSC_MapObjListMotion] = Bdat::getMember(wrapper.data, "Motion"); }
+void initRSC_MapObjListMotion(const CBdatWrapper &wrapper) { s_members[RSC_MapObjListMotion] = Bdat::getMember(wrapper.unknown00, "Motion"); }
 
 const char *getRSC_MapObjListMotion(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_MapObjListMotion] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_MapObjListMotion] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_MapObjListMotion], id, 7).valueString;
 }
 
-void initRSC_MapObjListComp_Eff(const CBdatWrapper &wrapper) { s_members[RSC_MapObjListComp_Eff] = Bdat::getMember(wrapper.data, "Comp_Eff"); }
+void initRSC_MapObjListComp_Eff(const CBdatWrapper &wrapper) { s_members[RSC_MapObjListComp_Eff] = Bdat::getMember(wrapper.unknown00, "Comp_Eff"); }
 
 const char *getRSC_MapObjListComp_Eff(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_MapObjListComp_Eff] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_MapObjListComp_Eff] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_MapObjListComp_Eff], id, 7).valueString;
 }
 
-void initRSC_MapObjListSE(const CBdatWrapper &wrapper) { s_members[RSC_MapObjListSE] = Bdat::getMember(wrapper.data, "SE"); }
+void initRSC_MapObjListSE(const CBdatWrapper &wrapper) { s_members[RSC_MapObjListSE] = Bdat::getMember(wrapper.unknown00, "SE"); }
 
 const char *getRSC_MapObjListSE(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_MapObjListSE] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_MapObjListSE] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_MapObjListSE], id, 7).valueString;
 }
 
-void initRSC_MapObjListSeEnv(const CBdatWrapper &wrapper) { s_members[RSC_MapObjListSeEnv] = Bdat::getMember(wrapper.data, "SeEnv"); }
+void initRSC_MapObjListSeEnv(const CBdatWrapper &wrapper) { s_members[RSC_MapObjListSeEnv] = Bdat::getMember(wrapper.unknown00, "SeEnv"); }
 
 u32 getRSC_MapObjListSeEnv(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_MapObjListSeEnv] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_MapObjListSeEnv] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
@@ -1653,1938 +1656,1938 @@ u32 getRSC_MapObjListSeEnv(const CBdatWrapper &wrapper, u32 id) {
 }
 
 void initRSC_MapObjListflagBigObj(const CBdatWrapper &wrapper) {
-  s_members[RSC_MapObjListflagBigObj] = Bdat::getMember(wrapper.data, "flag");
-  s_members[RSC_MapObjListflagBigObjFlag] = Bdat::getMember(wrapper.data, "BigObj");
+  s_members[RSC_MapObjListflagBigObj] = Bdat::getMember(wrapper.unknown00, "flag");
+  s_members[RSC_MapObjListflagBigObjFlag] = Bdat::getMember(wrapper.unknown00, "BigObj");
 }
 
 bool isRSC_MapObjListflagBigObj(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_MapObjListflagBigObj] == nullptr || s_members[RSC_MapObjListflagBigObjFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_MapObjListflagBigObj] == nullptr || s_members[RSC_MapObjListflagBigObjFlag] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) ||
+      id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return false;
   }
 
   return wrapper.getFlagVal(s_members[RSC_MapObjListflagBigObj], id, s_members[RSC_MapObjListflagBigObjFlag]) != 0;
 }
 
-void initRSC_MapObjListExtraParts1(const CBdatWrapper &wrapper) { s_members[RSC_MapObjListExtraParts1] = Bdat::getMember(wrapper.data, "ExtraParts1"); }
+void initRSC_MapObjListExtraParts1(const CBdatWrapper &wrapper) { s_members[RSC_MapObjListExtraParts1] = Bdat::getMember(wrapper.unknown00, "ExtraParts1"); }
 
 u32 getRSC_MapObjListExtraParts1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_MapObjListExtraParts1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_MapObjListExtraParts1] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RSC_MapObjListExtraParts1], id, 1).valueU8;
 }
 
-void initRSC_TboxListModel(const CBdatWrapper &wrapper) { s_members[RSC_TboxListModel] = Bdat::getMember(wrapper.data, "Model"); }
+void initRSC_TboxListModel(const CBdatWrapper &wrapper) { s_members[RSC_TboxListModel] = Bdat::getMember(wrapper.unknown00, "Model"); }
 
 const char *getRSC_TboxListModel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_TboxListModel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_TboxListModel] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_TboxListModel], id, 7).valueString;
 }
 
-void initRSC_TboxListMotion(const CBdatWrapper &wrapper) { s_members[RSC_TboxListMotion] = Bdat::getMember(wrapper.data, "Motion"); }
+void initRSC_TboxListMotion(const CBdatWrapper &wrapper) { s_members[RSC_TboxListMotion] = Bdat::getMember(wrapper.unknown00, "Motion"); }
 
 const char *getRSC_TboxListMotion(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_TboxListMotion] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_TboxListMotion] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_TboxListMotion], id, 7).valueString;
 }
 
-void initRSC_PcWpnModel(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnModel] = Bdat::getMember(wrapper.data, "Model"); }
+void initRSC_PcWpnModel(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnModel] = Bdat::getMember(wrapper.unknown00, "Model"); }
 
 const char *getRSC_PcWpnModel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnModel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnModel] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnModel], id, 7).valueString;
 }
 
-void initRSC_PcWpnMotion(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMotion] = Bdat::getMember(wrapper.data, "Motion"); }
+void initRSC_PcWpnMotion(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMotion] = Bdat::getMember(wrapper.unknown00, "Motion"); }
 
 const char *getRSC_PcWpnMotion(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMotion] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMotion] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMotion], id, 7).valueString;
 }
 
-void initRSC_PcWpnMenuImageID(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMenuImageID] = Bdat::getMember(wrapper.data, "MenuImageID"); }
+void initRSC_PcWpnMenuImageID(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMenuImageID] = Bdat::getMember(wrapper.unknown00, "MenuImageID"); }
 
 u32 getRSC_PcWpnMenuImageID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMenuImageID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMenuImageID] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMenuImageID], id, 2).valueU16;
 }
 
-void initRSC_PcWpnMountWpn01rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn01rIn] = Bdat::getMember(wrapper.data, "Wpn01rIn"); }
+void initRSC_PcWpnMountWpn01rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn01rIn] = Bdat::getMember(wrapper.unknown00, "Wpn01rIn"); }
 
 const char *getRSC_PcWpnMountWpn01rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn01rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn01rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn01rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn01rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn01rOut] = Bdat::getMember(wrapper.data, "Wpn01rOut"); }
+void initRSC_PcWpnMountWpn01rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn01rOut] = Bdat::getMember(wrapper.unknown00, "Wpn01rOut"); }
 
 const char *getRSC_PcWpnMountWpn01rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn01rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn01rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn01rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn02rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn02rIn] = Bdat::getMember(wrapper.data, "Wpn02rIn"); }
+void initRSC_PcWpnMountWpn02rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn02rIn] = Bdat::getMember(wrapper.unknown00, "Wpn02rIn"); }
 
 const char *getRSC_PcWpnMountWpn02rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn02rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn02rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn02rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn02rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn02rOut] = Bdat::getMember(wrapper.data, "Wpn02rOut"); }
+void initRSC_PcWpnMountWpn02rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn02rOut] = Bdat::getMember(wrapper.unknown00, "Wpn02rOut"); }
 
 const char *getRSC_PcWpnMountWpn02rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn02rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn02rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn02rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn03rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn03rIn] = Bdat::getMember(wrapper.data, "Wpn03rIn"); }
+void initRSC_PcWpnMountWpn03rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn03rIn] = Bdat::getMember(wrapper.unknown00, "Wpn03rIn"); }
 
 const char *getRSC_PcWpnMountWpn03rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn03rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn03rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn03rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn03rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn03rOut] = Bdat::getMember(wrapper.data, "Wpn03rOut"); }
+void initRSC_PcWpnMountWpn03rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn03rOut] = Bdat::getMember(wrapper.unknown00, "Wpn03rOut"); }
 
 const char *getRSC_PcWpnMountWpn03rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn03rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn03rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn03rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn03lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn03lIn] = Bdat::getMember(wrapper.data, "Wpn03lIn"); }
+void initRSC_PcWpnMountWpn03lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn03lIn] = Bdat::getMember(wrapper.unknown00, "Wpn03lIn"); }
 
 const char *getRSC_PcWpnMountWpn03lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn03lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn03lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn03lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn03lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn03lOut] = Bdat::getMember(wrapper.data, "Wpn03lOut"); }
+void initRSC_PcWpnMountWpn03lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn03lOut] = Bdat::getMember(wrapper.unknown00, "Wpn03lOut"); }
 
 const char *getRSC_PcWpnMountWpn03lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn03lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn03lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn03lOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn04rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn04rIn] = Bdat::getMember(wrapper.data, "Wpn04rIn"); }
+void initRSC_PcWpnMountWpn04rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn04rIn] = Bdat::getMember(wrapper.unknown00, "Wpn04rIn"); }
 
 const char *getRSC_PcWpnMountWpn04rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn04rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn04rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn04rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn04rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn04rOut] = Bdat::getMember(wrapper.data, "Wpn04rOut"); }
+void initRSC_PcWpnMountWpn04rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn04rOut] = Bdat::getMember(wrapper.unknown00, "Wpn04rOut"); }
 
 const char *getRSC_PcWpnMountWpn04rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn04rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn04rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn04rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn05rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn05rIn] = Bdat::getMember(wrapper.data, "Wpn05rIn"); }
+void initRSC_PcWpnMountWpn05rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn05rIn] = Bdat::getMember(wrapper.unknown00, "Wpn05rIn"); }
 
 const char *getRSC_PcWpnMountWpn05rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn05rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn05rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn05rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn05rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn05rOut] = Bdat::getMember(wrapper.data, "Wpn05rOut"); }
+void initRSC_PcWpnMountWpn05rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn05rOut] = Bdat::getMember(wrapper.unknown00, "Wpn05rOut"); }
 
 const char *getRSC_PcWpnMountWpn05rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn05rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn05rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn05rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn05lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn05lIn] = Bdat::getMember(wrapper.data, "Wpn05lIn"); }
+void initRSC_PcWpnMountWpn05lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn05lIn] = Bdat::getMember(wrapper.unknown00, "Wpn05lIn"); }
 
 const char *getRSC_PcWpnMountWpn05lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn05lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn05lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn05lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn05lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn05lOut] = Bdat::getMember(wrapper.data, "Wpn05lOut"); }
+void initRSC_PcWpnMountWpn05lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn05lOut] = Bdat::getMember(wrapper.unknown00, "Wpn05lOut"); }
 
 const char *getRSC_PcWpnMountWpn05lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn05lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn05lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn05lOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn06rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn06rIn] = Bdat::getMember(wrapper.data, "Wpn06rIn"); }
+void initRSC_PcWpnMountWpn06rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn06rIn] = Bdat::getMember(wrapper.unknown00, "Wpn06rIn"); }
 
 const char *getRSC_PcWpnMountWpn06rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn06rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn06rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn06rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn06rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn06rOut] = Bdat::getMember(wrapper.data, "Wpn06rOut"); }
+void initRSC_PcWpnMountWpn06rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn06rOut] = Bdat::getMember(wrapper.unknown00, "Wpn06rOut"); }
 
 const char *getRSC_PcWpnMountWpn06rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn06rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn06rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn06rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn07rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn07rIn] = Bdat::getMember(wrapper.data, "Wpn07rIn"); }
+void initRSC_PcWpnMountWpn07rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn07rIn] = Bdat::getMember(wrapper.unknown00, "Wpn07rIn"); }
 
 const char *getRSC_PcWpnMountWpn07rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn07rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn07rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn07rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn07rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn07rOut] = Bdat::getMember(wrapper.data, "Wpn07rOut"); }
+void initRSC_PcWpnMountWpn07rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn07rOut] = Bdat::getMember(wrapper.unknown00, "Wpn07rOut"); }
 
 const char *getRSC_PcWpnMountWpn07rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn07rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn07rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn07rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn07lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn07lIn] = Bdat::getMember(wrapper.data, "Wpn07lIn"); }
+void initRSC_PcWpnMountWpn07lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn07lIn] = Bdat::getMember(wrapper.unknown00, "Wpn07lIn"); }
 
 const char *getRSC_PcWpnMountWpn07lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn07lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn07lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn07lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn07lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn07lOut] = Bdat::getMember(wrapper.data, "Wpn07lOut"); }
+void initRSC_PcWpnMountWpn07lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn07lOut] = Bdat::getMember(wrapper.unknown00, "Wpn07lOut"); }
 
 const char *getRSC_PcWpnMountWpn07lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn07lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn07lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn07lOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn08rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn08rIn] = Bdat::getMember(wrapper.data, "Wpn08rIn"); }
+void initRSC_PcWpnMountWpn08rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn08rIn] = Bdat::getMember(wrapper.unknown00, "Wpn08rIn"); }
 
 const char *getRSC_PcWpnMountWpn08rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn08rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn08rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn08rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn08rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn08rOut] = Bdat::getMember(wrapper.data, "Wpn08rOut"); }
+void initRSC_PcWpnMountWpn08rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn08rOut] = Bdat::getMember(wrapper.unknown00, "Wpn08rOut"); }
 
 const char *getRSC_PcWpnMountWpn08rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn08rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn08rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn08rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn09rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn09rIn] = Bdat::getMember(wrapper.data, "Wpn09rIn"); }
+void initRSC_PcWpnMountWpn09rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn09rIn] = Bdat::getMember(wrapper.unknown00, "Wpn09rIn"); }
 
 const char *getRSC_PcWpnMountWpn09rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn09rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn09rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn09rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn09rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn09rOut] = Bdat::getMember(wrapper.data, "Wpn09rOut"); }
+void initRSC_PcWpnMountWpn09rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn09rOut] = Bdat::getMember(wrapper.unknown00, "Wpn09rOut"); }
 
 const char *getRSC_PcWpnMountWpn09rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn09rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn09rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn09rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn09lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn09lIn] = Bdat::getMember(wrapper.data, "Wpn09lIn"); }
+void initRSC_PcWpnMountWpn09lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn09lIn] = Bdat::getMember(wrapper.unknown00, "Wpn09lIn"); }
 
 const char *getRSC_PcWpnMountWpn09lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn09lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn09lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn09lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn09lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn09lOut] = Bdat::getMember(wrapper.data, "Wpn09lOut"); }
+void initRSC_PcWpnMountWpn09lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn09lOut] = Bdat::getMember(wrapper.unknown00, "Wpn09lOut"); }
 
 const char *getRSC_PcWpnMountWpn09lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn09lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn09lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn09lOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn10rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn10rIn] = Bdat::getMember(wrapper.data, "Wpn10rIn"); }
+void initRSC_PcWpnMountWpn10rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn10rIn] = Bdat::getMember(wrapper.unknown00, "Wpn10rIn"); }
 
 const char *getRSC_PcWpnMountWpn10rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn10rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn10rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn10rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn10rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn10rOut] = Bdat::getMember(wrapper.data, "Wpn10rOut"); }
+void initRSC_PcWpnMountWpn10rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn10rOut] = Bdat::getMember(wrapper.unknown00, "Wpn10rOut"); }
 
 const char *getRSC_PcWpnMountWpn10rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn10rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn10rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn10rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn10lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn10lIn] = Bdat::getMember(wrapper.data, "Wpn10lIn"); }
+void initRSC_PcWpnMountWpn10lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn10lIn] = Bdat::getMember(wrapper.unknown00, "Wpn10lIn"); }
 
 const char *getRSC_PcWpnMountWpn10lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn10lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn10lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn10lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn10lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn10lOut] = Bdat::getMember(wrapper.data, "Wpn10lOut"); }
+void initRSC_PcWpnMountWpn10lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn10lOut] = Bdat::getMember(wrapper.unknown00, "Wpn10lOut"); }
 
 const char *getRSC_PcWpnMountWpn10lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn10lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn10lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn10lOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn11rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn11rIn] = Bdat::getMember(wrapper.data, "Wpn11rIn"); }
+void initRSC_PcWpnMountWpn11rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn11rIn] = Bdat::getMember(wrapper.unknown00, "Wpn11rIn"); }
 
 const char *getRSC_PcWpnMountWpn11rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn11rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn11rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn11rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn11rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn11rOut] = Bdat::getMember(wrapper.data, "Wpn11rOut"); }
+void initRSC_PcWpnMountWpn11rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn11rOut] = Bdat::getMember(wrapper.unknown00, "Wpn11rOut"); }
 
 const char *getRSC_PcWpnMountWpn11rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn11rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn11rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn11rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn12rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn12rIn] = Bdat::getMember(wrapper.data, "Wpn12rIn"); }
+void initRSC_PcWpnMountWpn12rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn12rIn] = Bdat::getMember(wrapper.unknown00, "Wpn12rIn"); }
 
 const char *getRSC_PcWpnMountWpn12rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn12rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn12rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn12rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn12rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn12rOut] = Bdat::getMember(wrapper.data, "Wpn12rOut"); }
+void initRSC_PcWpnMountWpn12rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn12rOut] = Bdat::getMember(wrapper.unknown00, "Wpn12rOut"); }
 
 const char *getRSC_PcWpnMountWpn12rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn12rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn12rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn12rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn12lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn12lIn] = Bdat::getMember(wrapper.data, "Wpn12lIn"); }
+void initRSC_PcWpnMountWpn12lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn12lIn] = Bdat::getMember(wrapper.unknown00, "Wpn12lIn"); }
 
 const char *getRSC_PcWpnMountWpn12lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn12lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn12lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn12lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn12lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn12lOut] = Bdat::getMember(wrapper.data, "Wpn12lOut"); }
+void initRSC_PcWpnMountWpn12lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn12lOut] = Bdat::getMember(wrapper.unknown00, "Wpn12lOut"); }
 
 const char *getRSC_PcWpnMountWpn12lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn12lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn12lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn12lOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn13rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn13rIn] = Bdat::getMember(wrapper.data, "Wpn13rIn"); }
+void initRSC_PcWpnMountWpn13rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn13rIn] = Bdat::getMember(wrapper.unknown00, "Wpn13rIn"); }
 
 const char *getRSC_PcWpnMountWpn13rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn13rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn13rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn13rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn13rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn13rOut] = Bdat::getMember(wrapper.data, "Wpn13rOut"); }
+void initRSC_PcWpnMountWpn13rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn13rOut] = Bdat::getMember(wrapper.unknown00, "Wpn13rOut"); }
 
 const char *getRSC_PcWpnMountWpn13rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn13rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn13rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn13rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn14rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn14rIn] = Bdat::getMember(wrapper.data, "Wpn14rIn"); }
+void initRSC_PcWpnMountWpn14rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn14rIn] = Bdat::getMember(wrapper.unknown00, "Wpn14rIn"); }
 
 const char *getRSC_PcWpnMountWpn14rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn14rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn14rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn14rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn14rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn14rOut] = Bdat::getMember(wrapper.data, "Wpn14rOut"); }
+void initRSC_PcWpnMountWpn14rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn14rOut] = Bdat::getMember(wrapper.unknown00, "Wpn14rOut"); }
 
 const char *getRSC_PcWpnMountWpn14rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn14rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn14rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn14rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn15rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn15rIn] = Bdat::getMember(wrapper.data, "Wpn15rIn"); }
+void initRSC_PcWpnMountWpn15rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn15rIn] = Bdat::getMember(wrapper.unknown00, "Wpn15rIn"); }
 
 const char *getRSC_PcWpnMountWpn15rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn15rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn15rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn15rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn15rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn15rOut] = Bdat::getMember(wrapper.data, "Wpn15rOut"); }
+void initRSC_PcWpnMountWpn15rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn15rOut] = Bdat::getMember(wrapper.unknown00, "Wpn15rOut"); }
 
 const char *getRSC_PcWpnMountWpn15rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn15rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn15rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn15rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn16rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn16rIn] = Bdat::getMember(wrapper.data, "Wpn16rIn"); }
+void initRSC_PcWpnMountWpn16rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn16rIn] = Bdat::getMember(wrapper.unknown00, "Wpn16rIn"); }
 
 const char *getRSC_PcWpnMountWpn16rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn16rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn16rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn16rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn16rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn16rOut] = Bdat::getMember(wrapper.data, "Wpn16rOut"); }
+void initRSC_PcWpnMountWpn16rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn16rOut] = Bdat::getMember(wrapper.unknown00, "Wpn16rOut"); }
 
 const char *getRSC_PcWpnMountWpn16rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn16rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn16rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn16rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn16lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn16lIn] = Bdat::getMember(wrapper.data, "Wpn16lIn"); }
+void initRSC_PcWpnMountWpn16lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn16lIn] = Bdat::getMember(wrapper.unknown00, "Wpn16lIn"); }
 
 const char *getRSC_PcWpnMountWpn16lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn16lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn16lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn16lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn16lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn16lOut] = Bdat::getMember(wrapper.data, "Wpn16lOut"); }
+void initRSC_PcWpnMountWpn16lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn16lOut] = Bdat::getMember(wrapper.unknown00, "Wpn16lOut"); }
 
 const char *getRSC_PcWpnMountWpn16lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn16lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn16lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn16lOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn17rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn17rIn] = Bdat::getMember(wrapper.data, "Wpn17rIn"); }
+void initRSC_PcWpnMountWpn17rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn17rIn] = Bdat::getMember(wrapper.unknown00, "Wpn17rIn"); }
 
 const char *getRSC_PcWpnMountWpn17rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn17rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn17rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn17rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn17rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn17rOut] = Bdat::getMember(wrapper.data, "Wpn17rOut"); }
+void initRSC_PcWpnMountWpn17rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn17rOut] = Bdat::getMember(wrapper.unknown00, "Wpn17rOut"); }
 
 const char *getRSC_PcWpnMountWpn17rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn17rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn17rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn17rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn18rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn18rIn] = Bdat::getMember(wrapper.data, "Wpn18rIn"); }
+void initRSC_PcWpnMountWpn18rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn18rIn] = Bdat::getMember(wrapper.unknown00, "Wpn18rIn"); }
 
 const char *getRSC_PcWpnMountWpn18rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn18rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn18rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn18rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn18rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn18rOut] = Bdat::getMember(wrapper.data, "Wpn18rOut"); }
+void initRSC_PcWpnMountWpn18rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn18rOut] = Bdat::getMember(wrapper.unknown00, "Wpn18rOut"); }
 
 const char *getRSC_PcWpnMountWpn18rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn18rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn18rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn18rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn19rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn19rIn] = Bdat::getMember(wrapper.data, "Wpn19rIn"); }
+void initRSC_PcWpnMountWpn19rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn19rIn] = Bdat::getMember(wrapper.unknown00, "Wpn19rIn"); }
 
 const char *getRSC_PcWpnMountWpn19rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn19rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn19rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn19rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn19rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn19rOut] = Bdat::getMember(wrapper.data, "Wpn19rOut"); }
+void initRSC_PcWpnMountWpn19rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn19rOut] = Bdat::getMember(wrapper.unknown00, "Wpn19rOut"); }
 
 const char *getRSC_PcWpnMountWpn19rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn19rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn19rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn19rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn20rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn20rIn] = Bdat::getMember(wrapper.data, "Wpn20rIn"); }
+void initRSC_PcWpnMountWpn20rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn20rIn] = Bdat::getMember(wrapper.unknown00, "Wpn20rIn"); }
 
 const char *getRSC_PcWpnMountWpn20rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn20rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn20rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn20rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn20rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn20rOut] = Bdat::getMember(wrapper.data, "Wpn20rOut"); }
+void initRSC_PcWpnMountWpn20rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn20rOut] = Bdat::getMember(wrapper.unknown00, "Wpn20rOut"); }
 
 const char *getRSC_PcWpnMountWpn20rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn20rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn20rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn20rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn20lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn20lIn] = Bdat::getMember(wrapper.data, "Wpn20lIn"); }
+void initRSC_PcWpnMountWpn20lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn20lIn] = Bdat::getMember(wrapper.unknown00, "Wpn20lIn"); }
 
 const char *getRSC_PcWpnMountWpn20lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn20lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn20lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn20lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn20lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn20lOut] = Bdat::getMember(wrapper.data, "Wpn20lOut"); }
+void initRSC_PcWpnMountWpn20lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn20lOut] = Bdat::getMember(wrapper.unknown00, "Wpn20lOut"); }
 
 const char *getRSC_PcWpnMountWpn20lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn20lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn20lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn20lOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn21rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn21rIn] = Bdat::getMember(wrapper.data, "Wpn21rIn"); }
+void initRSC_PcWpnMountWpn21rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn21rIn] = Bdat::getMember(wrapper.unknown00, "Wpn21rIn"); }
 
 const char *getRSC_PcWpnMountWpn21rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn21rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn21rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn21rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn21rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn21rOut] = Bdat::getMember(wrapper.data, "Wpn21rOut"); }
+void initRSC_PcWpnMountWpn21rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn21rOut] = Bdat::getMember(wrapper.unknown00, "Wpn21rOut"); }
 
 const char *getRSC_PcWpnMountWpn21rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn21rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn21rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn21rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn22rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn22rIn] = Bdat::getMember(wrapper.data, "Wpn22rIn"); }
+void initRSC_PcWpnMountWpn22rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn22rIn] = Bdat::getMember(wrapper.unknown00, "Wpn22rIn"); }
 
 const char *getRSC_PcWpnMountWpn22rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn22rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn22rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn22rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn22rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn22rOut] = Bdat::getMember(wrapper.data, "Wpn22rOut"); }
+void initRSC_PcWpnMountWpn22rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn22rOut] = Bdat::getMember(wrapper.unknown00, "Wpn22rOut"); }
 
 const char *getRSC_PcWpnMountWpn22rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn22rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn22rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn22rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn22lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn22lIn] = Bdat::getMember(wrapper.data, "Wpn22lIn"); }
+void initRSC_PcWpnMountWpn22lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn22lIn] = Bdat::getMember(wrapper.unknown00, "Wpn22lIn"); }
 
 const char *getRSC_PcWpnMountWpn22lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn22lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn22lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn22lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn22lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn22lOut] = Bdat::getMember(wrapper.data, "Wpn22lOut"); }
+void initRSC_PcWpnMountWpn22lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn22lOut] = Bdat::getMember(wrapper.unknown00, "Wpn22lOut"); }
 
 const char *getRSC_PcWpnMountWpn22lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn22lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn22lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn22lOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn23rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn23rIn] = Bdat::getMember(wrapper.data, "Wpn23rIn"); }
+void initRSC_PcWpnMountWpn23rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn23rIn] = Bdat::getMember(wrapper.unknown00, "Wpn23rIn"); }
 
 const char *getRSC_PcWpnMountWpn23rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn23rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn23rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn23rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn23rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn23rOut] = Bdat::getMember(wrapper.data, "Wpn23rOut"); }
+void initRSC_PcWpnMountWpn23rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn23rOut] = Bdat::getMember(wrapper.unknown00, "Wpn23rOut"); }
 
 const char *getRSC_PcWpnMountWpn23rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn23rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn23rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn23rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn23lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn23lIn] = Bdat::getMember(wrapper.data, "Wpn23lIn"); }
+void initRSC_PcWpnMountWpn23lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn23lIn] = Bdat::getMember(wrapper.unknown00, "Wpn23lIn"); }
 
 const char *getRSC_PcWpnMountWpn23lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn23lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn23lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn23lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn23lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn23lOut] = Bdat::getMember(wrapper.data, "Wpn23lOut"); }
+void initRSC_PcWpnMountWpn23lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn23lOut] = Bdat::getMember(wrapper.unknown00, "Wpn23lOut"); }
 
 const char *getRSC_PcWpnMountWpn23lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn23lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn23lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn23lOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn24rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn24rIn] = Bdat::getMember(wrapper.data, "Wpn24rIn"); }
+void initRSC_PcWpnMountWpn24rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn24rIn] = Bdat::getMember(wrapper.unknown00, "Wpn24rIn"); }
 
 const char *getRSC_PcWpnMountWpn24rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn24rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn24rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn24rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn24rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn24rOut] = Bdat::getMember(wrapper.data, "Wpn24rOut"); }
+void initRSC_PcWpnMountWpn24rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn24rOut] = Bdat::getMember(wrapper.unknown00, "Wpn24rOut"); }
 
 const char *getRSC_PcWpnMountWpn24rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn24rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn24rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn24rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn24lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn24lIn] = Bdat::getMember(wrapper.data, "Wpn24lIn"); }
+void initRSC_PcWpnMountWpn24lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn24lIn] = Bdat::getMember(wrapper.unknown00, "Wpn24lIn"); }
 
 const char *getRSC_PcWpnMountWpn24lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn24lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn24lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn24lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn24lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn24lOut] = Bdat::getMember(wrapper.data, "Wpn24lOut"); }
+void initRSC_PcWpnMountWpn24lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn24lOut] = Bdat::getMember(wrapper.unknown00, "Wpn24lOut"); }
 
 const char *getRSC_PcWpnMountWpn24lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn24lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn24lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn24lOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn25rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn25rIn] = Bdat::getMember(wrapper.data, "Wpn25rIn"); }
+void initRSC_PcWpnMountWpn25rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn25rIn] = Bdat::getMember(wrapper.unknown00, "Wpn25rIn"); }
 
 const char *getRSC_PcWpnMountWpn25rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn25rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn25rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn25rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn25rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn25rOut] = Bdat::getMember(wrapper.data, "Wpn25rOut"); }
+void initRSC_PcWpnMountWpn25rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn25rOut] = Bdat::getMember(wrapper.unknown00, "Wpn25rOut"); }
 
 const char *getRSC_PcWpnMountWpn25rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn25rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn25rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn25rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn25lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn25lIn] = Bdat::getMember(wrapper.data, "Wpn25lIn"); }
+void initRSC_PcWpnMountWpn25lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn25lIn] = Bdat::getMember(wrapper.unknown00, "Wpn25lIn"); }
 
 const char *getRSC_PcWpnMountWpn25lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn25lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn25lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn25lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn25lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn25lOut] = Bdat::getMember(wrapper.data, "Wpn25lOut"); }
+void initRSC_PcWpnMountWpn25lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn25lOut] = Bdat::getMember(wrapper.unknown00, "Wpn25lOut"); }
 
 const char *getRSC_PcWpnMountWpn25lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn25lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn25lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn25lOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn26rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn26rIn] = Bdat::getMember(wrapper.data, "Wpn26rIn"); }
+void initRSC_PcWpnMountWpn26rIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn26rIn] = Bdat::getMember(wrapper.unknown00, "Wpn26rIn"); }
 
 const char *getRSC_PcWpnMountWpn26rIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn26rIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn26rIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn26rIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn26rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn26rOut] = Bdat::getMember(wrapper.data, "Wpn26rOut"); }
+void initRSC_PcWpnMountWpn26rOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn26rOut] = Bdat::getMember(wrapper.unknown00, "Wpn26rOut"); }
 
 const char *getRSC_PcWpnMountWpn26rOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn26rOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn26rOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn26rOut], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn26lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn26lIn] = Bdat::getMember(wrapper.data, "Wpn26lIn"); }
+void initRSC_PcWpnMountWpn26lIn(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn26lIn] = Bdat::getMember(wrapper.unknown00, "Wpn26lIn"); }
 
 const char *getRSC_PcWpnMountWpn26lIn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn26lIn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn26lIn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn26lIn], id, 7).valueString;
 }
 
-void initRSC_PcWpnMountWpn26lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn26lOut] = Bdat::getMember(wrapper.data, "Wpn26lOut"); }
+void initRSC_PcWpnMountWpn26lOut(const CBdatWrapper &wrapper) { s_members[RSC_PcWpnMountWpn26lOut] = Bdat::getMember(wrapper.unknown00, "Wpn26lOut"); }
 
 const char *getRSC_PcWpnMountWpn26lOut(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RSC_PcWpnMountWpn26lOut] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RSC_PcWpnMountWpn26lOut] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RSC_PcWpnMountWpn26lOut], id, 7).valueString;
 }
 
-void initRscEnWpnModel(const CBdatWrapper &wrapper) { s_members[RscEnWpnModel] = Bdat::getMember(wrapper.data, "Model"); }
+void initRscEnWpnModel(const CBdatWrapper &wrapper) { s_members[RscEnWpnModel] = Bdat::getMember(wrapper.unknown00, "Model"); }
 
 const char *getRscEnWpnModel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnWpnModel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnWpnModel] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnWpnModel], id, 7).valueString;
 }
 
-void initRscEnWpnScale(const CBdatWrapper &wrapper) { s_members[RscEnWpnScale] = Bdat::getMember(wrapper.data, "Scale"); }
+void initRscEnWpnScale(const CBdatWrapper &wrapper) { s_members[RscEnWpnScale] = Bdat::getMember(wrapper.unknown00, "Scale"); }
 
 u32 getRscEnWpnScale(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnWpnScale] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnWpnScale] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RscEnWpnScale], id, 2).valueU16;
 }
 
-void initRscEnWpnMotion(const CBdatWrapper &wrapper) { s_members[RscEnWpnMotion] = Bdat::getMember(wrapper.data, "Motion"); }
+void initRscEnWpnMotion(const CBdatWrapper &wrapper) { s_members[RscEnWpnMotion] = Bdat::getMember(wrapper.unknown00, "Motion"); }
 
 const char *getRscEnWpnMotion(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnWpnMotion] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnWpnMotion] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnWpnMotion], id, 7).valueString;
 }
 
-void initRscEnWpnMtpInChara(const CBdatWrapper &wrapper) { s_members[RscEnWpnMtpInChara] = Bdat::getMember(wrapper.data, "MtpInChara"); }
+void initRscEnWpnMtpInChara(const CBdatWrapper &wrapper) { s_members[RscEnWpnMtpInChara] = Bdat::getMember(wrapper.unknown00, "MtpInChara"); }
 
 const char *getRscEnWpnMtpInChara(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnWpnMtpInChara] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnWpnMtpInChara] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnWpnMtpInChara], id, 7).valueString;
 }
 
-void initRscEnWpnMtpInWpn(const CBdatWrapper &wrapper) { s_members[RscEnWpnMtpInWpn] = Bdat::getMember(wrapper.data, "MtpInWpn"); }
+void initRscEnWpnMtpInWpn(const CBdatWrapper &wrapper) { s_members[RscEnWpnMtpInWpn] = Bdat::getMember(wrapper.unknown00, "MtpInWpn"); }
 
 const char *getRscEnWpnMtpInWpn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnWpnMtpInWpn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnWpnMtpInWpn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnWpnMtpInWpn], id, 7).valueString;
 }
 
-void initRscEnWpnMtpOutChara(const CBdatWrapper &wrapper) { s_members[RscEnWpnMtpOutChara] = Bdat::getMember(wrapper.data, "MtpOutChara"); }
+void initRscEnWpnMtpOutChara(const CBdatWrapper &wrapper) { s_members[RscEnWpnMtpOutChara] = Bdat::getMember(wrapper.unknown00, "MtpOutChara"); }
 
 const char *getRscEnWpnMtpOutChara(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnWpnMtpOutChara] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnWpnMtpOutChara] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnWpnMtpOutChara], id, 7).valueString;
 }
 
-void initRscEnWpnMtpOutWpn(const CBdatWrapper &wrapper) { s_members[RscEnWpnMtpOutWpn] = Bdat::getMember(wrapper.data, "MtpOutWpn"); }
+void initRscEnWpnMtpOutWpn(const CBdatWrapper &wrapper) { s_members[RscEnWpnMtpOutWpn] = Bdat::getMember(wrapper.unknown00, "MtpOutWpn"); }
 
 const char *getRscEnWpnMtpOutWpn(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscEnWpnMtpOutWpn] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscEnWpnMtpOutWpn] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscEnWpnMtpOutWpn], id, 7).valueString;
 }
 
-void initRscNpcWpnModel(const CBdatWrapper &wrapper) { s_members[RscNpcWpnModel] = Bdat::getMember(wrapper.data, "Model"); }
+void initRscNpcWpnModel(const CBdatWrapper &wrapper) { s_members[RscNpcWpnModel] = Bdat::getMember(wrapper.unknown00, "Model"); }
 
 const char *getRscNpcWpnModel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcWpnModel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcWpnModel] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscNpcWpnModel], id, 7).valueString;
 }
 
-void initRscNpcWpnMotion(const CBdatWrapper &wrapper) { s_members[RscNpcWpnMotion] = Bdat::getMember(wrapper.data, "Motion"); }
+void initRscNpcWpnMotion(const CBdatWrapper &wrapper) { s_members[RscNpcWpnMotion] = Bdat::getMember(wrapper.unknown00, "Motion"); }
 
 const char *getRscNpcWpnMotion(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RscNpcWpnMotion] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RscNpcWpnMotion] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[RscNpcWpnMotion], id, 7).valueString;
 }
 
-void initDriverParamExtMountNpc(const CBdatWrapper &wrapper) { s_members[DriverParamExtMountNpc] = Bdat::getMember(wrapper.data, "ExtMountNpc"); }
+void initDriverParamExtMountNpc(const CBdatWrapper &wrapper) { s_members[DriverParamExtMountNpc] = Bdat::getMember(wrapper.unknown00, "ExtMountNpc"); }
 
 u32 getDriverParamExtMountNpc(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[DriverParamExtMountNpc] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[DriverParamExtMountNpc] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[DriverParamExtMountNpc], id, 2).valueU16;
 }
 
-void initDriverParamExtMountBone(const CBdatWrapper &wrapper) { s_members[DriverParamExtMountBone] = Bdat::getMember(wrapper.data, "ExtMountBone"); }
+void initDriverParamExtMountBone(const CBdatWrapper &wrapper) { s_members[DriverParamExtMountBone] = Bdat::getMember(wrapper.unknown00, "ExtMountBone"); }
 
 const char *getDriverParamExtMountBone(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[DriverParamExtMountBone] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[DriverParamExtMountBone] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[DriverParamExtMountBone], id, 7).valueString;
 }
 
-void initDriverParamExtMountCond(const CBdatWrapper &wrapper) { s_members[DriverParamExtMountCond] = Bdat::getMember(wrapper.data, "ExtMountCond"); }
+void initDriverParamExtMountCond(const CBdatWrapper &wrapper) { s_members[DriverParamExtMountCond] = Bdat::getMember(wrapper.unknown00, "ExtMountCond"); }
 
 u32 getDriverParamExtMountCond(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[DriverParamExtMountCond] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[DriverParamExtMountCond] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[DriverParamExtMountCond], id, 2).valueU16;
 }
 
-void initVoiceTableDriver1(const CBdatWrapper &wrapper) { s_members[VoiceTableDriver1] = Bdat::getMember(wrapper.data, "Driver1"); }
+void initVoiceTableDriver1(const CBdatWrapper &wrapper) { s_members[VoiceTableDriver1] = Bdat::getMember(wrapper.unknown00, "Driver1"); }
 
 const char *getVoiceTableDriver1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableDriver1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableDriver1] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableDriver1], id, 7).valueString;
 }
 
-void initVoiceTableDriver2(const CBdatWrapper &wrapper) { s_members[VoiceTableDriver2] = Bdat::getMember(wrapper.data, "Driver2"); }
+void initVoiceTableDriver2(const CBdatWrapper &wrapper) { s_members[VoiceTableDriver2] = Bdat::getMember(wrapper.unknown00, "Driver2"); }
 
 const char *getVoiceTableDriver2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableDriver2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableDriver2] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableDriver2], id, 7).valueString;
 }
 
-void initVoiceTableDriver3(const CBdatWrapper &wrapper) { s_members[VoiceTableDriver3] = Bdat::getMember(wrapper.data, "Driver3"); }
+void initVoiceTableDriver3(const CBdatWrapper &wrapper) { s_members[VoiceTableDriver3] = Bdat::getMember(wrapper.unknown00, "Driver3"); }
 
 const char *getVoiceTableDriver3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableDriver3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableDriver3] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableDriver3], id, 7).valueString;
 }
 
-void initVoiceTableDriver4(const CBdatWrapper &wrapper) { s_members[VoiceTableDriver4] = Bdat::getMember(wrapper.data, "Driver4"); }
+void initVoiceTableDriver4(const CBdatWrapper &wrapper) { s_members[VoiceTableDriver4] = Bdat::getMember(wrapper.unknown00, "Driver4"); }
 
 const char *getVoiceTableDriver4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableDriver4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableDriver4] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableDriver4], id, 7).valueString;
 }
 
-void initVoiceTableDriver5(const CBdatWrapper &wrapper) { s_members[VoiceTableDriver5] = Bdat::getMember(wrapper.data, "Driver5"); }
+void initVoiceTableDriver5(const CBdatWrapper &wrapper) { s_members[VoiceTableDriver5] = Bdat::getMember(wrapper.unknown00, "Driver5"); }
 
 const char *getVoiceTableDriver5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableDriver5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableDriver5] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableDriver5], id, 7).valueString;
 }
 
-void initVoiceTableDriver6(const CBdatWrapper &wrapper) { s_members[VoiceTableDriver6] = Bdat::getMember(wrapper.data, "Driver6"); }
+void initVoiceTableDriver6(const CBdatWrapper &wrapper) { s_members[VoiceTableDriver6] = Bdat::getMember(wrapper.unknown00, "Driver6"); }
 
 const char *getVoiceTableDriver6(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableDriver6] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableDriver6] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableDriver6], id, 7).valueString;
 }
 
-void initVoiceTableBladeBlade1(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade1] = Bdat::getMember(wrapper.data, "Blade1"); }
+void initVoiceTableBladeBlade1(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade1] = Bdat::getMember(wrapper.unknown00, "Blade1"); }
 
 const char *getVoiceTableBladeBlade1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableBladeBlade1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableBladeBlade1] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableBladeBlade1], id, 7).valueString;
 }
 
-void initVoiceTableBladeBlade2(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade2] = Bdat::getMember(wrapper.data, "Blade2"); }
+void initVoiceTableBladeBlade2(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade2] = Bdat::getMember(wrapper.unknown00, "Blade2"); }
 
 const char *getVoiceTableBladeBlade2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableBladeBlade2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableBladeBlade2] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableBladeBlade2], id, 7).valueString;
 }
 
-void initVoiceTableBladeBlade3(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade3] = Bdat::getMember(wrapper.data, "Blade3"); }
+void initVoiceTableBladeBlade3(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade3] = Bdat::getMember(wrapper.unknown00, "Blade3"); }
 
 const char *getVoiceTableBladeBlade3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableBladeBlade3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableBladeBlade3] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableBladeBlade3], id, 7).valueString;
 }
 
-void initVoiceTableBladeBlade4(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade4] = Bdat::getMember(wrapper.data, "Blade4"); }
+void initVoiceTableBladeBlade4(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade4] = Bdat::getMember(wrapper.unknown00, "Blade4"); }
 
 const char *getVoiceTableBladeBlade4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableBladeBlade4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableBladeBlade4] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableBladeBlade4], id, 7).valueString;
 }
 
-void initVoiceTableBladeBlade5(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade5] = Bdat::getMember(wrapper.data, "Blade5"); }
+void initVoiceTableBladeBlade5(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade5] = Bdat::getMember(wrapper.unknown00, "Blade5"); }
 
 const char *getVoiceTableBladeBlade5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableBladeBlade5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableBladeBlade5] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableBladeBlade5], id, 7).valueString;
 }
 
-void initVoiceTableBladeBlade6(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade6] = Bdat::getMember(wrapper.data, "Blade6"); }
+void initVoiceTableBladeBlade6(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade6] = Bdat::getMember(wrapper.unknown00, "Blade6"); }
 
 const char *getVoiceTableBladeBlade6(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableBladeBlade6] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableBladeBlade6] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableBladeBlade6], id, 7).valueString;
 }
 
-void initVoiceTableBladeBlade7(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade7] = Bdat::getMember(wrapper.data, "Blade7"); }
+void initVoiceTableBladeBlade7(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade7] = Bdat::getMember(wrapper.unknown00, "Blade7"); }
 
 const char *getVoiceTableBladeBlade7(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableBladeBlade7] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableBladeBlade7] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableBladeBlade7], id, 7).valueString;
 }
 
-void initVoiceTableBladeBlade8(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade8] = Bdat::getMember(wrapper.data, "Blade8"); }
+void initVoiceTableBladeBlade8(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade8] = Bdat::getMember(wrapper.unknown00, "Blade8"); }
 
 const char *getVoiceTableBladeBlade8(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableBladeBlade8] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableBladeBlade8] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableBladeBlade8], id, 7).valueString;
 }
 
-void initVoiceTableBladeBlade9(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade9] = Bdat::getMember(wrapper.data, "Blade9"); }
+void initVoiceTableBladeBlade9(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade9] = Bdat::getMember(wrapper.unknown00, "Blade9"); }
 
 const char *getVoiceTableBladeBlade9(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableBladeBlade9] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableBladeBlade9] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableBladeBlade9], id, 7).valueString;
 }
 
-void initVoiceTableBladeBlade10(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade10] = Bdat::getMember(wrapper.data, "Blade10"); }
+void initVoiceTableBladeBlade10(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade10] = Bdat::getMember(wrapper.unknown00, "Blade10"); }
 
 const char *getVoiceTableBladeBlade10(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableBladeBlade10] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableBladeBlade10] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableBladeBlade10], id, 7).valueString;
 }
 
-void initVoiceTableBladeBlade11(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade11] = Bdat::getMember(wrapper.data, "Blade11"); }
+void initVoiceTableBladeBlade11(const CBdatWrapper &wrapper) { s_members[VoiceTableBladeBlade11] = Bdat::getMember(wrapper.unknown00, "Blade11"); }
 
 const char *getVoiceTableBladeBlade11(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableBladeBlade11] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableBladeBlade11] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableBladeBlade11], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade1(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade1] = Bdat::getMember(wrapper.data, "RareBlade1"); }
+void initVoiceTableRareRareBlade1(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade1] = Bdat::getMember(wrapper.unknown00, "RareBlade1"); }
 
 const char *getVoiceTableRareRareBlade1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade1] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade1], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade2(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade2] = Bdat::getMember(wrapper.data, "RareBlade2"); }
+void initVoiceTableRareRareBlade2(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade2] = Bdat::getMember(wrapper.unknown00, "RareBlade2"); }
 
 const char *getVoiceTableRareRareBlade2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade2] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade2], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade3(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade3] = Bdat::getMember(wrapper.data, "RareBlade3"); }
+void initVoiceTableRareRareBlade3(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade3] = Bdat::getMember(wrapper.unknown00, "RareBlade3"); }
 
 const char *getVoiceTableRareRareBlade3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade3] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade3], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade4(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade4] = Bdat::getMember(wrapper.data, "RareBlade4"); }
+void initVoiceTableRareRareBlade4(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade4] = Bdat::getMember(wrapper.unknown00, "RareBlade4"); }
 
 const char *getVoiceTableRareRareBlade4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade4] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade4], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade5(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade5] = Bdat::getMember(wrapper.data, "RareBlade5"); }
+void initVoiceTableRareRareBlade5(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade5] = Bdat::getMember(wrapper.unknown00, "RareBlade5"); }
 
 const char *getVoiceTableRareRareBlade5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade5] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade5], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade6(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade6] = Bdat::getMember(wrapper.data, "RareBlade6"); }
+void initVoiceTableRareRareBlade6(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade6] = Bdat::getMember(wrapper.unknown00, "RareBlade6"); }
 
 const char *getVoiceTableRareRareBlade6(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade6] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade6] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade6], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade7(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade7] = Bdat::getMember(wrapper.data, "RareBlade7"); }
+void initVoiceTableRareRareBlade7(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade7] = Bdat::getMember(wrapper.unknown00, "RareBlade7"); }
 
 const char *getVoiceTableRareRareBlade7(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade7] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade7] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade7], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade8(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade8] = Bdat::getMember(wrapper.data, "RareBlade8"); }
+void initVoiceTableRareRareBlade8(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade8] = Bdat::getMember(wrapper.unknown00, "RareBlade8"); }
 
 const char *getVoiceTableRareRareBlade8(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade8] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade8] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade8], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade9(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade9] = Bdat::getMember(wrapper.data, "RareBlade9"); }
+void initVoiceTableRareRareBlade9(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade9] = Bdat::getMember(wrapper.unknown00, "RareBlade9"); }
 
 const char *getVoiceTableRareRareBlade9(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade9] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade9] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade9], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade10(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade10] = Bdat::getMember(wrapper.data, "RareBlade10"); }
+void initVoiceTableRareRareBlade10(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade10] = Bdat::getMember(wrapper.unknown00, "RareBlade10"); }
 
 const char *getVoiceTableRareRareBlade10(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade10] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade10] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade10], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade11(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade11] = Bdat::getMember(wrapper.data, "RareBlade11"); }
+void initVoiceTableRareRareBlade11(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade11] = Bdat::getMember(wrapper.unknown00, "RareBlade11"); }
 
 const char *getVoiceTableRareRareBlade11(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade11] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade11] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade11], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade12(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade12] = Bdat::getMember(wrapper.data, "RareBlade12"); }
+void initVoiceTableRareRareBlade12(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade12] = Bdat::getMember(wrapper.unknown00, "RareBlade12"); }
 
 const char *getVoiceTableRareRareBlade12(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade12] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade12] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade12], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade13(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade13] = Bdat::getMember(wrapper.data, "RareBlade13"); }
+void initVoiceTableRareRareBlade13(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade13] = Bdat::getMember(wrapper.unknown00, "RareBlade13"); }
 
 const char *getVoiceTableRareRareBlade13(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade13] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade13] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade13], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade14(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade14] = Bdat::getMember(wrapper.data, "RareBlade14"); }
+void initVoiceTableRareRareBlade14(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade14] = Bdat::getMember(wrapper.unknown00, "RareBlade14"); }
 
 const char *getVoiceTableRareRareBlade14(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade14] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade14] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade14], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade15(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade15] = Bdat::getMember(wrapper.data, "RareBlade15"); }
+void initVoiceTableRareRareBlade15(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade15] = Bdat::getMember(wrapper.unknown00, "RareBlade15"); }
 
 const char *getVoiceTableRareRareBlade15(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade15] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade15] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade15], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade16(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade16] = Bdat::getMember(wrapper.data, "RareBlade16"); }
+void initVoiceTableRareRareBlade16(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade16] = Bdat::getMember(wrapper.unknown00, "RareBlade16"); }
 
 const char *getVoiceTableRareRareBlade16(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade16] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade16] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade16], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade17(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade17] = Bdat::getMember(wrapper.data, "RareBlade17"); }
+void initVoiceTableRareRareBlade17(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade17] = Bdat::getMember(wrapper.unknown00, "RareBlade17"); }
 
 const char *getVoiceTableRareRareBlade17(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade17] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade17] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade17], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade18(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade18] = Bdat::getMember(wrapper.data, "RareBlade18"); }
+void initVoiceTableRareRareBlade18(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade18] = Bdat::getMember(wrapper.unknown00, "RareBlade18"); }
 
 const char *getVoiceTableRareRareBlade18(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade18] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade18] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade18], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade19(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade19] = Bdat::getMember(wrapper.data, "RareBlade19"); }
+void initVoiceTableRareRareBlade19(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade19] = Bdat::getMember(wrapper.unknown00, "RareBlade19"); }
 
 const char *getVoiceTableRareRareBlade19(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade19] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade19] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade19], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade20(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade20] = Bdat::getMember(wrapper.data, "RareBlade20"); }
+void initVoiceTableRareRareBlade20(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade20] = Bdat::getMember(wrapper.unknown00, "RareBlade20"); }
 
 const char *getVoiceTableRareRareBlade20(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade20] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade20] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade20], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade21(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade21] = Bdat::getMember(wrapper.data, "RareBlade21"); }
+void initVoiceTableRareRareBlade21(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade21] = Bdat::getMember(wrapper.unknown00, "RareBlade21"); }
 
 const char *getVoiceTableRareRareBlade21(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade21] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade21] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade21], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade22(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade22] = Bdat::getMember(wrapper.data, "RareBlade22"); }
+void initVoiceTableRareRareBlade22(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade22] = Bdat::getMember(wrapper.unknown00, "RareBlade22"); }
 
 const char *getVoiceTableRareRareBlade22(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade22] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade22] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade22], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade23(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade23] = Bdat::getMember(wrapper.data, "RareBlade23"); }
+void initVoiceTableRareRareBlade23(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade23] = Bdat::getMember(wrapper.unknown00, "RareBlade23"); }
 
 const char *getVoiceTableRareRareBlade23(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade23] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade23] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade23], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade24(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade24] = Bdat::getMember(wrapper.data, "RareBlade24"); }
+void initVoiceTableRareRareBlade24(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade24] = Bdat::getMember(wrapper.unknown00, "RareBlade24"); }
 
 const char *getVoiceTableRareRareBlade24(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade24] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade24] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade24], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade25(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade25] = Bdat::getMember(wrapper.data, "RareBlade25"); }
+void initVoiceTableRareRareBlade25(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade25] = Bdat::getMember(wrapper.unknown00, "RareBlade25"); }
 
 const char *getVoiceTableRareRareBlade25(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade25] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade25] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade25], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade26(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade26] = Bdat::getMember(wrapper.data, "RareBlade26"); }
+void initVoiceTableRareRareBlade26(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade26] = Bdat::getMember(wrapper.unknown00, "RareBlade26"); }
 
 const char *getVoiceTableRareRareBlade26(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade26] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade26] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade26], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade27(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade27] = Bdat::getMember(wrapper.data, "RareBlade27"); }
+void initVoiceTableRareRareBlade27(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade27] = Bdat::getMember(wrapper.unknown00, "RareBlade27"); }
 
 const char *getVoiceTableRareRareBlade27(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade27] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade27] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade27], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade28(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade28] = Bdat::getMember(wrapper.data, "RareBlade28"); }
+void initVoiceTableRareRareBlade28(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade28] = Bdat::getMember(wrapper.unknown00, "RareBlade28"); }
 
 const char *getVoiceTableRareRareBlade28(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade28] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade28] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade28], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade29(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade29] = Bdat::getMember(wrapper.data, "RareBlade29"); }
+void initVoiceTableRareRareBlade29(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade29] = Bdat::getMember(wrapper.unknown00, "RareBlade29"); }
 
 const char *getVoiceTableRareRareBlade29(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade29] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade29] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade29], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade30(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade30] = Bdat::getMember(wrapper.data, "RareBlade30"); }
+void initVoiceTableRareRareBlade30(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade30] = Bdat::getMember(wrapper.unknown00, "RareBlade30"); }
 
 const char *getVoiceTableRareRareBlade30(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade30] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade30] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade30], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade31(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade31] = Bdat::getMember(wrapper.data, "RareBlade31"); }
+void initVoiceTableRareRareBlade31(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade31] = Bdat::getMember(wrapper.unknown00, "RareBlade31"); }
 
 const char *getVoiceTableRareRareBlade31(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade31] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade31] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade31], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade32(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade32] = Bdat::getMember(wrapper.data, "RareBlade32"); }
+void initVoiceTableRareRareBlade32(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade32] = Bdat::getMember(wrapper.unknown00, "RareBlade32"); }
 
 const char *getVoiceTableRareRareBlade32(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade32] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade32] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade32], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade33(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade33] = Bdat::getMember(wrapper.data, "RareBlade33"); }
+void initVoiceTableRareRareBlade33(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade33] = Bdat::getMember(wrapper.unknown00, "RareBlade33"); }
 
 const char *getVoiceTableRareRareBlade33(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade33] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade33] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade33], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade34(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade34] = Bdat::getMember(wrapper.data, "RareBlade34"); }
+void initVoiceTableRareRareBlade34(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade34] = Bdat::getMember(wrapper.unknown00, "RareBlade34"); }
 
 const char *getVoiceTableRareRareBlade34(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade34] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade34] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade34], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade35(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade35] = Bdat::getMember(wrapper.data, "RareBlade35"); }
+void initVoiceTableRareRareBlade35(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade35] = Bdat::getMember(wrapper.unknown00, "RareBlade35"); }
 
 const char *getVoiceTableRareRareBlade35(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade35] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade35] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade35], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade36(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade36] = Bdat::getMember(wrapper.data, "RareBlade36"); }
+void initVoiceTableRareRareBlade36(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade36] = Bdat::getMember(wrapper.unknown00, "RareBlade36"); }
 
 const char *getVoiceTableRareRareBlade36(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade36] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade36] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade36], id, 7).valueString;
 }
 
-void initVoiceTableRareRareBlade37(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade37] = Bdat::getMember(wrapper.data, "RareBlade37"); }
+void initVoiceTableRareRareBlade37(const CBdatWrapper &wrapper) { s_members[VoiceTableRareRareBlade37] = Bdat::getMember(wrapper.unknown00, "RareBlade37"); }
 
 const char *getVoiceTableRareRareBlade37(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableRareRareBlade37] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableRareRareBlade37] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableRareRareBlade37], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade1(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade1] = Bdat::getMember(wrapper.data, "CommonBlade1"); }
+void initVoiceTableCommonCommonBlade1(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade1] = Bdat::getMember(wrapper.unknown00, "CommonBlade1"); }
 
 const char *getVoiceTableCommonCommonBlade1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade1] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade1], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade2(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade2] = Bdat::getMember(wrapper.data, "CommonBlade2"); }
+void initVoiceTableCommonCommonBlade2(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade2] = Bdat::getMember(wrapper.unknown00, "CommonBlade2"); }
 
 const char *getVoiceTableCommonCommonBlade2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade2] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade2], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade3(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade3] = Bdat::getMember(wrapper.data, "CommonBlade3"); }
+void initVoiceTableCommonCommonBlade3(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade3] = Bdat::getMember(wrapper.unknown00, "CommonBlade3"); }
 
 const char *getVoiceTableCommonCommonBlade3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade3] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade3], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade4(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade4] = Bdat::getMember(wrapper.data, "CommonBlade4"); }
+void initVoiceTableCommonCommonBlade4(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade4] = Bdat::getMember(wrapper.unknown00, "CommonBlade4"); }
 
 const char *getVoiceTableCommonCommonBlade4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade4] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade4], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade5(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade5] = Bdat::getMember(wrapper.data, "CommonBlade5"); }
+void initVoiceTableCommonCommonBlade5(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade5] = Bdat::getMember(wrapper.unknown00, "CommonBlade5"); }
 
 const char *getVoiceTableCommonCommonBlade5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade5] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade5], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade6(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade6] = Bdat::getMember(wrapper.data, "CommonBlade6"); }
+void initVoiceTableCommonCommonBlade6(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade6] = Bdat::getMember(wrapper.unknown00, "CommonBlade6"); }
 
 const char *getVoiceTableCommonCommonBlade6(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade6] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade6] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade6], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade7(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade7] = Bdat::getMember(wrapper.data, "CommonBlade7"); }
+void initVoiceTableCommonCommonBlade7(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade7] = Bdat::getMember(wrapper.unknown00, "CommonBlade7"); }
 
 const char *getVoiceTableCommonCommonBlade7(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade7] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade7] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade7], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade8(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade8] = Bdat::getMember(wrapper.data, "CommonBlade8"); }
+void initVoiceTableCommonCommonBlade8(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade8] = Bdat::getMember(wrapper.unknown00, "CommonBlade8"); }
 
 const char *getVoiceTableCommonCommonBlade8(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade8] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade8] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade8], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade9(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade9] = Bdat::getMember(wrapper.data, "CommonBlade9"); }
+void initVoiceTableCommonCommonBlade9(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade9] = Bdat::getMember(wrapper.unknown00, "CommonBlade9"); }
 
 const char *getVoiceTableCommonCommonBlade9(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade9] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade9] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade9], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade10(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade10] = Bdat::getMember(wrapper.data, "CommonBlade10"); }
+void initVoiceTableCommonCommonBlade10(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade10] = Bdat::getMember(wrapper.unknown00, "CommonBlade10"); }
 
 const char *getVoiceTableCommonCommonBlade10(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade10] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade10] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade10], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade11(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade11] = Bdat::getMember(wrapper.data, "CommonBlade11"); }
+void initVoiceTableCommonCommonBlade11(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade11] = Bdat::getMember(wrapper.unknown00, "CommonBlade11"); }
 
 const char *getVoiceTableCommonCommonBlade11(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade11] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade11] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade11], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade12(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade12] = Bdat::getMember(wrapper.data, "CommonBlade12"); }
+void initVoiceTableCommonCommonBlade12(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade12] = Bdat::getMember(wrapper.unknown00, "CommonBlade12"); }
 
 const char *getVoiceTableCommonCommonBlade12(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade12] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade12] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade12], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade13(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade13] = Bdat::getMember(wrapper.data, "CommonBlade13"); }
+void initVoiceTableCommonCommonBlade13(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade13] = Bdat::getMember(wrapper.unknown00, "CommonBlade13"); }
 
 const char *getVoiceTableCommonCommonBlade13(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade13] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade13] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade13], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade14(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade14] = Bdat::getMember(wrapper.data, "CommonBlade14"); }
+void initVoiceTableCommonCommonBlade14(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade14] = Bdat::getMember(wrapper.unknown00, "CommonBlade14"); }
 
 const char *getVoiceTableCommonCommonBlade14(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade14] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade14] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade14], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade15(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade15] = Bdat::getMember(wrapper.data, "CommonBlade15"); }
+void initVoiceTableCommonCommonBlade15(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade15] = Bdat::getMember(wrapper.unknown00, "CommonBlade15"); }
 
 const char *getVoiceTableCommonCommonBlade15(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade15] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade15] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade15], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade16(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade16] = Bdat::getMember(wrapper.data, "CommonBlade16"); }
+void initVoiceTableCommonCommonBlade16(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade16] = Bdat::getMember(wrapper.unknown00, "CommonBlade16"); }
 
 const char *getVoiceTableCommonCommonBlade16(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade16] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade16] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade16], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade17(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade17] = Bdat::getMember(wrapper.data, "CommonBlade17"); }
+void initVoiceTableCommonCommonBlade17(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade17] = Bdat::getMember(wrapper.unknown00, "CommonBlade17"); }
 
 const char *getVoiceTableCommonCommonBlade17(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade17] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade17] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade17], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade18(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade18] = Bdat::getMember(wrapper.data, "CommonBlade18"); }
+void initVoiceTableCommonCommonBlade18(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade18] = Bdat::getMember(wrapper.unknown00, "CommonBlade18"); }
 
 const char *getVoiceTableCommonCommonBlade18(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade18] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade18] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade18], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade19(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade19] = Bdat::getMember(wrapper.data, "CommonBlade19"); }
+void initVoiceTableCommonCommonBlade19(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade19] = Bdat::getMember(wrapper.unknown00, "CommonBlade19"); }
 
 const char *getVoiceTableCommonCommonBlade19(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade19] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade19] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade19], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade20(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade20] = Bdat::getMember(wrapper.data, "CommonBlade20"); }
+void initVoiceTableCommonCommonBlade20(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade20] = Bdat::getMember(wrapper.unknown00, "CommonBlade20"); }
 
 const char *getVoiceTableCommonCommonBlade20(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade20] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade20] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade20], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade21(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade21] = Bdat::getMember(wrapper.data, "CommonBlade21"); }
+void initVoiceTableCommonCommonBlade21(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade21] = Bdat::getMember(wrapper.unknown00, "CommonBlade21"); }
 
 const char *getVoiceTableCommonCommonBlade21(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade21] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade21] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade21], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade22(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade22] = Bdat::getMember(wrapper.data, "CommonBlade22"); }
+void initVoiceTableCommonCommonBlade22(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade22] = Bdat::getMember(wrapper.unknown00, "CommonBlade22"); }
 
 const char *getVoiceTableCommonCommonBlade22(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade22] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade22] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade22], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade23(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade23] = Bdat::getMember(wrapper.data, "CommonBlade23"); }
+void initVoiceTableCommonCommonBlade23(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade23] = Bdat::getMember(wrapper.unknown00, "CommonBlade23"); }
 
 const char *getVoiceTableCommonCommonBlade23(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade23] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade23] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade23], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade24(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade24] = Bdat::getMember(wrapper.data, "CommonBlade24"); }
+void initVoiceTableCommonCommonBlade24(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade24] = Bdat::getMember(wrapper.unknown00, "CommonBlade24"); }
 
 const char *getVoiceTableCommonCommonBlade24(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade24] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade24] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade24], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade25(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade25] = Bdat::getMember(wrapper.data, "CommonBlade25"); }
+void initVoiceTableCommonCommonBlade25(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade25] = Bdat::getMember(wrapper.unknown00, "CommonBlade25"); }
 
 const char *getVoiceTableCommonCommonBlade25(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade25] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade25] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade25], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade26(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade26] = Bdat::getMember(wrapper.data, "CommonBlade26"); }
+void initVoiceTableCommonCommonBlade26(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade26] = Bdat::getMember(wrapper.unknown00, "CommonBlade26"); }
 
 const char *getVoiceTableCommonCommonBlade26(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade26] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade26] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade26], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade27(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade27] = Bdat::getMember(wrapper.data, "CommonBlade27"); }
+void initVoiceTableCommonCommonBlade27(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade27] = Bdat::getMember(wrapper.unknown00, "CommonBlade27"); }
 
 const char *getVoiceTableCommonCommonBlade27(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade27] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade27] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade27], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade28(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade28] = Bdat::getMember(wrapper.data, "CommonBlade28"); }
+void initVoiceTableCommonCommonBlade28(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade28] = Bdat::getMember(wrapper.unknown00, "CommonBlade28"); }
 
 const char *getVoiceTableCommonCommonBlade28(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade28] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade28] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade28], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade29(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade29] = Bdat::getMember(wrapper.data, "CommonBlade29"); }
+void initVoiceTableCommonCommonBlade29(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade29] = Bdat::getMember(wrapper.unknown00, "CommonBlade29"); }
 
 const char *getVoiceTableCommonCommonBlade29(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade29] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade29] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade29], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade30(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade30] = Bdat::getMember(wrapper.data, "CommonBlade30"); }
+void initVoiceTableCommonCommonBlade30(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade30] = Bdat::getMember(wrapper.unknown00, "CommonBlade30"); }
 
 const char *getVoiceTableCommonCommonBlade30(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade30] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade30] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade30], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade31(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade31] = Bdat::getMember(wrapper.data, "CommonBlade31"); }
+void initVoiceTableCommonCommonBlade31(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade31] = Bdat::getMember(wrapper.unknown00, "CommonBlade31"); }
 
 const char *getVoiceTableCommonCommonBlade31(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade31] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade31] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade31], id, 7).valueString;
 }
 
-void initVoiceTableCommonCommonBlade32(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade32] = Bdat::getMember(wrapper.data, "CommonBlade32"); }
+void initVoiceTableCommonCommonBlade32(const CBdatWrapper &wrapper) { s_members[VoiceTableCommonCommonBlade32] = Bdat::getMember(wrapper.unknown00, "CommonBlade32"); }
 
 const char *getVoiceTableCommonCommonBlade32(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[VoiceTableCommonCommonBlade32] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[VoiceTableCommonCommonBlade32] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[VoiceTableCommonCommonBlade32], id, 7).valueString;
 }
 
-void initFLD_actorSELOD(const CBdatWrapper &wrapper) { s_members[FLD_actorSELOD] = Bdat::getMember(wrapper.data, "LOD"); }
+void initFLD_actorSELOD(const CBdatWrapper &wrapper) { s_members[FLD_actorSELOD] = Bdat::getMember(wrapper.unknown00, "LOD"); }
 
 const char *getFLD_actorSELOD(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_actorSELOD] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_actorSELOD] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return nullptr;
   }
 
   return wrapper.getValCheck(s_members[FLD_actorSELOD], id, 7).valueString;
 }
 
-void initFLD_actorSEse_type(const CBdatWrapper &wrapper) { s_members[FLD_actorSEse_type] = Bdat::getMember(wrapper.data, "se_type"); }
+void initFLD_actorSEse_type(const CBdatWrapper &wrapper) { s_members[FLD_actorSEse_type] = Bdat::getMember(wrapper.unknown00, "se_type"); }
 
 u32 getFLD_actorSEse_type(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_actorSEse_type] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_actorSEse_type] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_actorSEse_type], id, 1).valueU8;
 }
 
-void initFLD_actorSEseName(const CBdatWrapper &wrapper) { s_members[FLD_actorSEseName] = Bdat::getMember(wrapper.data, "seName"); }
+void initFLD_actorSEseName(const CBdatWrapper &wrapper) { s_members[FLD_actorSEseName] = Bdat::getMember(wrapper.unknown00, "seName"); }
 
 u32 getFLD_actorSEseName(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_actorSEseName] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_actorSEseName] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_actorSEseName], id, 2).valueU16;
 }
 
-void initFLD_actorSEmax_volume_Dist(const CBdatWrapper &wrapper) { s_members[FLD_actorSEmax_volume_Dist] = Bdat::getMember(wrapper.data, "max_volume_Dist"); }
+void initFLD_actorSEmax_volume_Dist(const CBdatWrapper &wrapper) { s_members[FLD_actorSEmax_volume_Dist] = Bdat::getMember(wrapper.unknown00, "max_volume_Dist"); }
 
 f32 getFLD_actorSEmax_volume_Dist(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[FLD_actorSEmax_volume_Dist] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_actorSEmax_volume_Dist] != nullptr && id >= Bdat::getIdTop(wrapper.unknown00) && id < Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     value = wrapper.getValCheck(s_members[FLD_actorSEmax_volume_Dist], id, 8).valueF32;
   }
 
   return value;
 }
 
-void initFLD_actorSEmin_volume_Dist(const CBdatWrapper &wrapper) { s_members[FLD_actorSEmin_volume_Dist] = Bdat::getMember(wrapper.data, "min_volume_Dist"); }
+void initFLD_actorSEmin_volume_Dist(const CBdatWrapper &wrapper) { s_members[FLD_actorSEmin_volume_Dist] = Bdat::getMember(wrapper.unknown00, "min_volume_Dist"); }
 
 f32 getFLD_actorSEmin_volume_Dist(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[FLD_actorSEmin_volume_Dist] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_actorSEmin_volume_Dist] != nullptr && id >= Bdat::getIdTop(wrapper.unknown00) && id < Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     value = wrapper.getValCheck(s_members[FLD_actorSEmin_volume_Dist], id, 8).valueF32;
   }
 
   return value;
 }
 
-void initFLD_actorSEvolumeMAX(const CBdatWrapper &wrapper) { s_members[FLD_actorSEvolumeMAX] = Bdat::getMember(wrapper.data, "volumeMAX"); }
+void initFLD_actorSEvolumeMAX(const CBdatWrapper &wrapper) { s_members[FLD_actorSEvolumeMAX] = Bdat::getMember(wrapper.unknown00, "volumeMAX"); }
 
 u32 getFLD_actorSEvolumeMAX(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_actorSEvolumeMAX] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_actorSEvolumeMAX] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_actorSEvolumeMAX], id, 1).valueU8;
 }
 
-void initFLD_actorSEvolumeMIN(const CBdatWrapper &wrapper) { s_members[FLD_actorSEvolumeMIN] = Bdat::getMember(wrapper.data, "volumeMIN"); }
+void initFLD_actorSEvolumeMIN(const CBdatWrapper &wrapper) { s_members[FLD_actorSEvolumeMIN] = Bdat::getMember(wrapper.unknown00, "volumeMIN"); }
 
 u32 getFLD_actorSEvolumeMIN(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_actorSEvolumeMIN] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_actorSEvolumeMIN] == nullptr || id < Bdat::getIdTop(wrapper.unknown00) || id >= Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_actorSEvolumeMIN], id, 1).valueU8;
 }
 
-void initFLD_actorSEoffsetX(const CBdatWrapper &wrapper) { s_members[FLD_actorSEoffsetX] = Bdat::getMember(wrapper.data, "offsetX"); }
+void initFLD_actorSEoffsetX(const CBdatWrapper &wrapper) { s_members[FLD_actorSEoffsetX] = Bdat::getMember(wrapper.unknown00, "offsetX"); }
 
 f32 getFLD_actorSEoffsetX(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[FLD_actorSEoffsetX] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_actorSEoffsetX] != nullptr && id >= Bdat::getIdTop(wrapper.unknown00) && id < Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     value = wrapper.getValCheck(s_members[FLD_actorSEoffsetX], id, 8).valueF32;
   }
 
   return value;
 }
 
-void initFLD_actorSEoffsetY(const CBdatWrapper &wrapper) { s_members[FLD_actorSEoffsetY] = Bdat::getMember(wrapper.data, "offsetY"); }
+void initFLD_actorSEoffsetY(const CBdatWrapper &wrapper) { s_members[FLD_actorSEoffsetY] = Bdat::getMember(wrapper.unknown00, "offsetY"); }
 
 f32 getFLD_actorSEoffsetY(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[FLD_actorSEoffsetY] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_actorSEoffsetY] != nullptr && id >= Bdat::getIdTop(wrapper.unknown00) && id < Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     value = wrapper.getValCheck(s_members[FLD_actorSEoffsetY], id, 8).valueF32;
   }
 
   return value;
 }
 
-void initFLD_actorSEoffsetZ(const CBdatWrapper &wrapper) { s_members[FLD_actorSEoffsetZ] = Bdat::getMember(wrapper.data, "offsetZ"); }
+void initFLD_actorSEoffsetZ(const CBdatWrapper &wrapper) { s_members[FLD_actorSEoffsetZ] = Bdat::getMember(wrapper.unknown00, "offsetZ"); }
 
 f32 getFLD_actorSEoffsetZ(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[FLD_actorSEoffsetZ] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_actorSEoffsetZ] != nullptr && id >= Bdat::getIdTop(wrapper.unknown00) && id < Bdat::getIdTop(wrapper.unknown00) + Bdat::getIdCount(wrapper.unknown00)) {
     value = wrapper.getValCheck(s_members[FLD_actorSEoffsetZ], id, 8).valueF32;
   }
 
@@ -4032,9 +4035,9 @@ void GfBdatRsc::bdatRefresh() {
   _gfbrs::initFLD_actorSEoffsetZ(*m_FLD_actorSE);
 }
 
-u32 GfBdatRsc::getRscEnStart() const { return Bdat::getIdTop(m_rscEn->data); }
+u32 GfBdatRsc::getRscEnStart() const { return Bdat::getIdTop(m_rscEn->unknown00); }
 
-u32 GfBdatRsc::getRscEnEnd() const { return Bdat::getIdTop(m_rscEn->data) + Bdat::getIdCount(m_rscEn->data); }
+u32 GfBdatRsc::getRscEnEnd() const { return Bdat::getIdTop(m_rscEn->unknown00) + Bdat::getIdCount(m_rscEn->unknown00); }
 
 const char *GfBdatRsc::getRscEnDebugName(u32 id) const { return _gfbrs::getRscEnDebugName(*m_rscEn, id); }
 
@@ -4187,9 +4190,9 @@ u32 GfBdatRsc::getRscEnExtraParts(u32 resource, u32 part) const {
 
 const char *GfBdatRsc::getRscEnRotateBone(u32 id) const { return _gfbrs::getRscEnRotateBone(*m_rscEn, id); }
 
-u32 GfBdatRsc::getRscEnGenusStart() const { return Bdat::getIdTop(m_rscEnGenus->data); }
+u32 GfBdatRsc::getRscEnGenusStart() const { return Bdat::getIdTop(m_rscEnGenus->unknown00); }
 
-u32 GfBdatRsc::getRscEnGenusEnd() const { return Bdat::getIdTop(m_rscEnGenus->data) + Bdat::getIdCount(m_rscEnGenus->data); }
+u32 GfBdatRsc::getRscEnGenusEnd() const { return Bdat::getIdTop(m_rscEnGenus->unknown00) + Bdat::getIdCount(m_rscEnGenus->unknown00); }
 
 u32 GfBdatRsc::getRscEnGenusNAME(u32 id) const { return _gfbrs::getRscEnGenusNAME(*m_rscEnGenus, id); }
 
@@ -4197,9 +4200,9 @@ u32 GfBdatRsc::getRscEnGenusCAPTION(u32 id) const { return _gfbrs::getRscEnGenus
 
 bool GfBdatRsc::isRscEnGenusFlaggimmicktype(u32 id) const { return _gfbrs::isRscEnGenusFlaggimmicktype(*m_rscEnGenus, id); }
 
-u32 GfBdatRsc::getRscEnUndStart() const { return Bdat::getIdTop(m_rscEnUnd->data); }
+u32 GfBdatRsc::getRscEnUndStart() const { return Bdat::getIdTop(m_rscEnUnd->unknown00); }
 
-u32 GfBdatRsc::getRscEnUndEnd() const { return Bdat::getIdTop(m_rscEnUnd->data) + Bdat::getIdCount(m_rscEnUnd->data); }
+u32 GfBdatRsc::getRscEnUndEnd() const { return Bdat::getIdTop(m_rscEnUnd->unknown00) + Bdat::getIdCount(m_rscEnUnd->unknown00); }
 
 bool GfBdatRsc::isRscEnUndFlagUndX(u32 id) const { return _gfbrs::isRscEnUndFlagUndX(*m_rscEnUnd, id); }
 
@@ -4215,9 +4218,9 @@ s32 GfBdatRsc::getRscEnUndUndMaxZ(u32 id) const { return _gfbrs::getRscEnUndUndM
 
 u32 GfBdatRsc::getRscEnUndUndDeg(u32 id) const { return _gfbrs::getRscEnUndUndDeg(*m_rscEnUnd, id); }
 
-u32 GfBdatRsc::getRscNpcListStart() const { return Bdat::getIdTop(m_rscNpcList->data); }
+u32 GfBdatRsc::getRscNpcListStart() const { return Bdat::getIdTop(m_rscNpcList->unknown00); }
 
-u32 GfBdatRsc::getRscNpcListEnd() const { return Bdat::getIdTop(m_rscNpcList->data) + Bdat::getIdCount(m_rscNpcList->data); }
+u32 GfBdatRsc::getRscNpcListEnd() const { return Bdat::getIdTop(m_rscNpcList->unknown00) + Bdat::getIdCount(m_rscNpcList->unknown00); }
 
 const char *GfBdatRsc::getRscNpcListModel(u32 id) const { return _gfbrs::getRscNpcListModel(*m_rscNpcList, id); }
 
@@ -4275,9 +4278,9 @@ u32 GfBdatRsc::getRscNpcListExtraParts(u32 npc, u32 part) const {
   return getters[part](*m_rscNpcList, npc);
 }
 
-u32 GfBdatRsc::getRscMobListStart() const { return Bdat::getIdTop(m_rscMobList->data); }
+u32 GfBdatRsc::getRscMobListStart() const { return Bdat::getIdTop(m_rscMobList->unknown00); }
 
-u32 GfBdatRsc::getRscMobListEnd() const { return Bdat::getIdTop(m_rscMobList->data) + Bdat::getIdCount(m_rscMobList->data); }
+u32 GfBdatRsc::getRscMobListEnd() const { return Bdat::getIdTop(m_rscMobList->unknown00) + Bdat::getIdCount(m_rscMobList->unknown00); }
 
 const char *GfBdatRsc::getRscMobListModel(u32 id) const { return _gfbrs::getRscMobListModel(*m_rscMobList, id); }
 
@@ -4323,9 +4326,9 @@ u32 GfBdatRsc::getRscMobListExtraParts(u32 id, u32 part) const {
   return getters[part](*m_rscMobList, id);
 }
 
-u32 GfBdatRsc::getRSC_MapObjListStart() const { return Bdat::getIdTop(m_RSC_MapObjList->data); }
+u32 GfBdatRsc::getRSC_MapObjListStart() const { return Bdat::getIdTop(m_RSC_MapObjList->unknown00); }
 
-u32 GfBdatRsc::getRSC_MapObjListEnd() const { return Bdat::getIdTop(m_RSC_MapObjList->data) + Bdat::getIdCount(m_RSC_MapObjList->data); }
+u32 GfBdatRsc::getRSC_MapObjListEnd() const { return Bdat::getIdTop(m_RSC_MapObjList->unknown00) + Bdat::getIdCount(m_RSC_MapObjList->unknown00); }
 
 const char *GfBdatRsc::getRSC_MapObjListModel(u32 id) const { return _gfbrs::getRSC_MapObjListModel(*m_RSC_MapObjList, id); }
 
@@ -4341,17 +4344,17 @@ bool GfBdatRsc::isRSC_MapObjListflagBigObj(u32 id) const { return _gfbrs::isRSC_
 
 u32 GfBdatRsc::getRSC_MapObjListExtraParts1(u32 id) const { return _gfbrs::getRSC_MapObjListExtraParts1(*m_RSC_MapObjList, id); }
 
-u32 GfBdatRsc::getRSC_TboxListStart() const { return Bdat::getIdTop(m_RSC_TboxList->data); }
+u32 GfBdatRsc::getRSC_TboxListStart() const { return Bdat::getIdTop(m_RSC_TboxList->unknown00); }
 
-u32 GfBdatRsc::getRSC_TboxListEnd() const { return Bdat::getIdTop(m_RSC_TboxList->data) + Bdat::getIdCount(m_RSC_TboxList->data); }
+u32 GfBdatRsc::getRSC_TboxListEnd() const { return Bdat::getIdTop(m_RSC_TboxList->unknown00) + Bdat::getIdCount(m_RSC_TboxList->unknown00); }
 
 const char *GfBdatRsc::getRSC_TboxListModel(u32 id) const { return _gfbrs::getRSC_TboxListModel(*m_RSC_TboxList, id); }
 
 const char *GfBdatRsc::getRSC_TboxListMotion(u32 id) const { return _gfbrs::getRSC_TboxListMotion(*m_RSC_TboxList, id); }
 
-u32 GfBdatRsc::getRSC_PcWpnStart() const { return Bdat::getIdTop(m_RSC_PcWpn->data); }
+u32 GfBdatRsc::getRSC_PcWpnStart() const { return Bdat::getIdTop(m_RSC_PcWpn->unknown00); }
 
-u32 GfBdatRsc::getRSC_PcWpnEnd() const { return Bdat::getIdTop(m_RSC_PcWpn->data) + Bdat::getIdCount(m_RSC_PcWpn->data); }
+u32 GfBdatRsc::getRSC_PcWpnEnd() const { return Bdat::getIdTop(m_RSC_PcWpn->unknown00) + Bdat::getIdCount(m_RSC_PcWpn->unknown00); }
 
 const char *GfBdatRsc::getRSC_PcWpnModel(u32 id) const { return _gfbrs::getRSC_PcWpnModel(*m_RSC_PcWpn, id); }
 
@@ -4359,9 +4362,9 @@ const char *GfBdatRsc::getRSC_PcWpnMotion(u32 id) const { return _gfbrs::getRSC_
 
 u32 GfBdatRsc::getRSC_PcWpnMenuImageID(u32 id) const { return _gfbrs::getRSC_PcWpnMenuImageID(*m_RSC_PcWpn, id); }
 
-u32 GfBdatRsc::getRSC_PcWpnMountStart() const { return Bdat::getIdTop(m_RSC_PcWpnMount->data); }
+u32 GfBdatRsc::getRSC_PcWpnMountStart() const { return Bdat::getIdTop(m_RSC_PcWpnMount->unknown00); }
 
-u32 GfBdatRsc::getRSC_PcWpnMountEnd() const { return Bdat::getIdTop(m_RSC_PcWpnMount->data) + Bdat::getIdCount(m_RSC_PcWpnMount->data); }
+u32 GfBdatRsc::getRSC_PcWpnMountEnd() const { return Bdat::getIdTop(m_RSC_PcWpnMount->unknown00) + Bdat::getIdCount(m_RSC_PcWpnMount->unknown00); }
 
 const char *GfBdatRsc::getRSC_PcWpnMountWpn01rIn(u32 id) const { return _gfbrs::getRSC_PcWpnMountWpn01rIn(*m_RSC_PcWpnMount, id); }
 
@@ -4519,9 +4522,9 @@ const char *GfBdatRsc::getRSC_PcWpnMountWpn26lIn(u32 id) const { return _gfbrs::
 
 const char *GfBdatRsc::getRSC_PcWpnMountWpn26lOut(u32 id) const { return _gfbrs::getRSC_PcWpnMountWpn26lOut(*m_RSC_PcWpnMount, id); }
 
-u32 GfBdatRsc::getRscEnWpnStart() const { return Bdat::getIdTop(m_rscEnWpn->data); }
+u32 GfBdatRsc::getRscEnWpnStart() const { return Bdat::getIdTop(m_rscEnWpn->unknown00); }
 
-u32 GfBdatRsc::getRscEnWpnEnd() const { return Bdat::getIdTop(m_rscEnWpn->data) + Bdat::getIdCount(m_rscEnWpn->data); }
+u32 GfBdatRsc::getRscEnWpnEnd() const { return Bdat::getIdTop(m_rscEnWpn->unknown00) + Bdat::getIdCount(m_rscEnWpn->unknown00); }
 
 const char *GfBdatRsc::getRscEnWpnModel(u32 id) const { return _gfbrs::getRscEnWpnModel(*m_rscEnWpn, id); }
 
@@ -4537,17 +4540,17 @@ const char *GfBdatRsc::getRscEnWpnMtpOutChara(u32 id) const { return _gfbrs::get
 
 const char *GfBdatRsc::getRscEnWpnMtpOutWpn(u32 id) const { return _gfbrs::getRscEnWpnMtpOutWpn(*m_rscEnWpn, id); }
 
-u32 GfBdatRsc::getRscNpcWpnStart() const { return Bdat::getIdTop(m_rscNpcWpn->data); }
+u32 GfBdatRsc::getRscNpcWpnStart() const { return Bdat::getIdTop(m_rscNpcWpn->unknown00); }
 
-u32 GfBdatRsc::getRscNpcWpnEnd() const { return Bdat::getIdTop(m_rscNpcWpn->data) + Bdat::getIdCount(m_rscNpcWpn->data); }
+u32 GfBdatRsc::getRscNpcWpnEnd() const { return Bdat::getIdTop(m_rscNpcWpn->unknown00) + Bdat::getIdCount(m_rscNpcWpn->unknown00); }
 
 const char *GfBdatRsc::getRscNpcWpnModel(u32 id) const { return _gfbrs::getRscNpcWpnModel(*m_rscNpcWpn, id); }
 
 const char *GfBdatRsc::getRscNpcWpnMotion(u32 id) const { return _gfbrs::getRscNpcWpnMotion(*m_rscNpcWpn, id); }
 
-u32 GfBdatRsc::getDriverParamStart() const { return Bdat::getIdTop(m_driverParam->data); }
+u32 GfBdatRsc::getDriverParamStart() const { return Bdat::getIdTop(m_driverParam->unknown00); }
 
-u32 GfBdatRsc::getDriverParamEnd() const { return Bdat::getIdTop(m_driverParam->data) + Bdat::getIdCount(m_driverParam->data); }
+u32 GfBdatRsc::getDriverParamEnd() const { return Bdat::getIdTop(m_driverParam->unknown00) + Bdat::getIdCount(m_driverParam->unknown00); }
 
 u32 GfBdatRsc::getDriverParamExtMountNpc(u32 id) const { return _gfbrs::getDriverParamExtMountNpc(*m_driverParam, id); }
 
@@ -4555,9 +4558,9 @@ const char *GfBdatRsc::getDriverParamExtMountBone(u32 id) const { return _gfbrs:
 
 u32 GfBdatRsc::getDriverParamExtMountCond(u32 id) const { return _gfbrs::getDriverParamExtMountCond(*m_driverParam, id); }
 
-u32 GfBdatRsc::getVoiceTableStart() const { return Bdat::getIdTop(m_voiceTable->data); }
+u32 GfBdatRsc::getVoiceTableStart() const { return Bdat::getIdTop(m_voiceTable->unknown00); }
 
-u32 GfBdatRsc::getVoiceTableEnd() const { return Bdat::getIdTop(m_voiceTable->data) + Bdat::getIdCount(m_voiceTable->data); }
+u32 GfBdatRsc::getVoiceTableEnd() const { return Bdat::getIdTop(m_voiceTable->unknown00) + Bdat::getIdCount(m_voiceTable->unknown00); }
 
 const char *GfBdatRsc::getVoiceTableDriver1(u32 id) const { return _gfbrs::getVoiceTableDriver1(*m_voiceTable, id); }
 
@@ -4571,9 +4574,9 @@ const char *GfBdatRsc::getVoiceTableDriver5(u32 id) const { return _gfbrs::getVo
 
 const char *GfBdatRsc::getVoiceTableDriver6(u32 id) const { return _gfbrs::getVoiceTableDriver6(*m_voiceTable, id); }
 
-u32 GfBdatRsc::getVoiceTableBladeStart() const { return Bdat::getIdTop(m_voiceTableBlade->data); }
+u32 GfBdatRsc::getVoiceTableBladeStart() const { return Bdat::getIdTop(m_voiceTableBlade->unknown00); }
 
-u32 GfBdatRsc::getVoiceTableBladeEnd() const { return Bdat::getIdTop(m_voiceTableBlade->data) + Bdat::getIdCount(m_voiceTableBlade->data); }
+u32 GfBdatRsc::getVoiceTableBladeEnd() const { return Bdat::getIdTop(m_voiceTableBlade->unknown00) + Bdat::getIdCount(m_voiceTableBlade->unknown00); }
 
 const char *GfBdatRsc::getVoiceTableBladeBlade1(u32 id) const { return _gfbrs::getVoiceTableBladeBlade1(*m_voiceTableBlade, id); }
 
@@ -4597,9 +4600,9 @@ const char *GfBdatRsc::getVoiceTableBladeBlade10(u32 id) const { return _gfbrs::
 
 const char *GfBdatRsc::getVoiceTableBladeBlade11(u32 id) const { return _gfbrs::getVoiceTableBladeBlade11(*m_voiceTableBlade, id); }
 
-u32 GfBdatRsc::getVoiceTableRareStart() const { return Bdat::getIdTop(m_voiceTableRare->data); }
+u32 GfBdatRsc::getVoiceTableRareStart() const { return Bdat::getIdTop(m_voiceTableRare->unknown00); }
 
-u32 GfBdatRsc::getVoiceTableRareEnd() const { return Bdat::getIdTop(m_voiceTableRare->data) + Bdat::getIdCount(m_voiceTableRare->data); }
+u32 GfBdatRsc::getVoiceTableRareEnd() const { return Bdat::getIdTop(m_voiceTableRare->unknown00) + Bdat::getIdCount(m_voiceTableRare->unknown00); }
 
 const char *GfBdatRsc::getVoiceTableRareRareBlade1(u32 id) const { return _gfbrs::getVoiceTableRareRareBlade1(*m_voiceTableRare, id); }
 
@@ -4675,9 +4678,9 @@ const char *GfBdatRsc::getVoiceTableRareRareBlade36(u32 id) const { return _gfbr
 
 const char *GfBdatRsc::getVoiceTableRareRareBlade37(u32 id) const { return _gfbrs::getVoiceTableRareRareBlade37(*m_voiceTableRare, id); }
 
-u32 GfBdatRsc::getVoiceTableCommonStart() const { return Bdat::getIdTop(m_voiceTableCommon->data); }
+u32 GfBdatRsc::getVoiceTableCommonStart() const { return Bdat::getIdTop(m_voiceTableCommon->unknown00); }
 
-u32 GfBdatRsc::getVoiceTableCommonEnd() const { return Bdat::getIdTop(m_voiceTableCommon->data) + Bdat::getIdCount(m_voiceTableCommon->data); }
+u32 GfBdatRsc::getVoiceTableCommonEnd() const { return Bdat::getIdTop(m_voiceTableCommon->unknown00) + Bdat::getIdCount(m_voiceTableCommon->unknown00); }
 
 const char *GfBdatRsc::getVoiceTableCommonCommonBlade1(u32 id) const { return _gfbrs::getVoiceTableCommonCommonBlade1(*m_voiceTableCommon, id); }
 
@@ -4743,9 +4746,9 @@ const char *GfBdatRsc::getVoiceTableCommonCommonBlade31(u32 id) const { return _
 
 const char *GfBdatRsc::getVoiceTableCommonCommonBlade32(u32 id) const { return _gfbrs::getVoiceTableCommonCommonBlade32(*m_voiceTableCommon, id); }
 
-u32 GfBdatRsc::getFLD_actorSEStart() const { return Bdat::getIdTop(m_FLD_actorSE->data); }
+u32 GfBdatRsc::getFLD_actorSEStart() const { return Bdat::getIdTop(m_FLD_actorSE->unknown00); }
 
-u32 GfBdatRsc::getFLD_actorSEEnd() const { return Bdat::getIdTop(m_FLD_actorSE->data) + Bdat::getIdCount(m_FLD_actorSE->data); }
+u32 GfBdatRsc::getFLD_actorSEEnd() const { return Bdat::getIdTop(m_FLD_actorSE->unknown00) + Bdat::getIdCount(m_FLD_actorSE->unknown00); }
 
 const char *GfBdatRsc::getFLD_actorSELOD(u32 id) const { return _gfbrs::getFLD_actorSELOD(*m_FLD_actorSE, id); }
 

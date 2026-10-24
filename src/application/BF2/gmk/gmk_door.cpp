@@ -54,14 +54,14 @@ void GmkDoor::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   nameRadius = bdat.getValCheck("nameRadius", id, BDAT_TYPE_U16);
   lodModel = bdat.getValCheck("LODmodel", id, BDAT_TYPE_U16);
   missMsgId = bdat.getValCheck("missMSG_ID", id, BDAT_TYPE_U16);
-  isOpenLodAnime = Bdat::getFlagVal(bdat.data, "flag", id, "open_LODanime") != 0;
-  isOpenSeMapPack = Bdat::getFlagVal(bdat.data, "flag", id, "open_SE_type") != 0;
+  isOpenLodAnime = Bdat::getFlagVal(bdat.unknown00, "flag", id, "open_LODanime") != 0;
+  isOpenSeMapPack = Bdat::getFlagVal(bdat.unknown00, "flag", id, "open_SE_type") != 0;
   openSe = bdat.getValCheck("open_SE", id, BDAT_TYPE_U16);
   openSeSize = bdat.getValCheck("open_SE_size", id, BDAT_TYPE_U8);
   openCameraGimmickId = reinterpret_cast<const char *>(bdat.getValCheck("open_camGim_ID", id, BDAT_TYPE_STRING));
   openCameraGimmickAttribute = bdat.getValCheck("open_camGim_ATR", id, BDAT_TYPE_U8);
-  isCloseLodAnime = Bdat::getFlagVal(bdat.data, "flag", id, "close_LODanime") != 0;
-  isCloseSeMapPack = Bdat::getFlagVal(bdat.data, "flag", id, "close_SE_type") != 0;
+  isCloseLodAnime = Bdat::getFlagVal(bdat.unknown00, "flag", id, "close_LODanime") != 0;
+  isCloseSeMapPack = Bdat::getFlagVal(bdat.unknown00, "flag", id, "close_SE_type") != 0;
   closeSe = bdat.getValCheck("close_SE", id, BDAT_TYPE_U16);
   closeSeSize = bdat.getValCheck("close_SE_size", id, BDAT_TYPE_U8);
   closeCameraGimmickId = reinterpret_cast<const char *>(bdat.getValCheck("close_camGim_ID", id, BDAT_TYPE_STRING));
@@ -70,7 +70,7 @@ void GmkDoor::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   specialCloseCameraGimmickId = reinterpret_cast<const char *>(bdat.getValCheck("sp_close_camGim_ID", id, BDAT_TYPE_STRING));
   specialCloseCameraGimmickAttribute = bdat.getValCheck("sp_close_camGim_ATR", id, BDAT_TYPE_U8);
   specialPopBootedGmk = BootedGmkCond(bdat, id, "SPOP_");
-  isGmkCameraPos = Bdat::getFlagVal(bdat.data, "flag", id, "gmkCamPos") != 0;
+  isGmkCameraPos = Bdat::getFlagVal(bdat.unknown00, "flag", id, "gmkCamPos") != 0;
 }
 
 } // namespace gmk

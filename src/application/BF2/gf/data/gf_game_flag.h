@@ -14,19 +14,19 @@ enum {
 };
 
 struct GameFlag {
-  mm::mtl::BitFlag<0x10000> oneBitFlags;
-  u32 twoBitFlags[0x1000];
-  u32 fourBitFlags[0x400];
-  u8 byteFlags[0x2000];
-  u16 shortFlags[0xc00];
-  u32 wordFlags[0xd08];
+  mm::mtl::BitFlag<0x10000> unknown00; // Inferred role: one bit flags; original member name unknown.
+  u32 unknown2000[0x1000];             // Inferred role: two bit flags; original member name unknown.
+  u32 unknown6000[0x400];              // Inferred role: four bit flags; original member name unknown.
+  u8 unknown7000[0x2000];              // Inferred role: byte flags; original member name unknown.
+  u16 unknown9000[0xc00];              // Inferred role: short flags; original member name unknown.
+  u32 unknowna800[0xd08];              // Inferred role: word flags; original member name unknown.
 };
 
-static_assert(offsetof(GameFlag, twoBitFlags) == 0x2000, "");
-static_assert(offsetof(GameFlag, fourBitFlags) == 0x6000, "");
-static_assert(offsetof(GameFlag, byteFlags) == 0x7000, "");
-static_assert(offsetof(GameFlag, shortFlags) == 0x9000, "");
-static_assert(offsetof(GameFlag, wordFlags) == 0xa800, "");
+static_assert(offsetof(GameFlag, unknown2000) == 0x2000, "");
+static_assert(offsetof(GameFlag, unknown6000) == 0x6000, "");
+static_assert(offsetof(GameFlag, unknown7000) == 0x7000, "");
+static_assert(offsetof(GameFlag, unknown9000) == 0x9000, "");
+static_assert(offsetof(GameFlag, unknowna800) == 0xa800, "");
 static_assert(sizeof(GameFlag) == 0xdc20, "");
 
 class GfGameFlag : public mm::mtl::PtrSingleton<GfGameFlag> {

@@ -20,56 +20,56 @@ constexpr int FLAG_BLADE_HOMURI_NAME_HIKARI = 0x89fb;
 enum GfIdea {};
 
 struct SDataBladeArts {
-  u16 id;
-  u16 artsH;
+  u16 unknown00; // Inferred role: id; original member name unknown.
+  u16 unknown02; // Inferred role: arts h; original member name unknown.
   u8 _04[0x06 - 0x04];
-  u8 achievReleaseLevel;
-  u8 level;
-  u8 levelMax;
+  u8 unknown06; // Inferred role: achiev release level; original member name unknown.
+  u8 unknown07; // Inferred role: level; original member name unknown.
+  u8 unknown08; // Inferred role: level max; original member name unknown.
   u8 _09[0x0c - 0x09];
 };
 
-static_assert(offsetof(SDataBladeArts, artsH) == 0x02, "");
-static_assert(offsetof(SDataBladeArts, achievReleaseLevel) == 0x06, "");
-static_assert(offsetof(SDataBladeArts, level) == 0x07, "");
-static_assert(offsetof(SDataBladeArts, levelMax) == 0x08, "");
+static_assert(offsetof(SDataBladeArts, unknown02) == 0x02, "");
+static_assert(offsetof(SDataBladeArts, unknown06) == 0x06, "");
+static_assert(offsetof(SDataBladeArts, unknown07) == 0x07, "");
+static_assert(offsetof(SDataBladeArts, unknown08) == 0x08, "");
 static_assert(sizeof(SDataBladeArts) == 0x0c, "");
 
 struct SDataBladeSkill {
-  u16 id;
-  u8 achievReleaseLevel;
-  u8 level;
-  u8 levelMax;
+  u16 unknown00; // Inferred role: id; original member name unknown.
+  u8 unknown02;  // Inferred role: achiev release level; original member name unknown.
+  u8 unknown03;  // Inferred role: level; original member name unknown.
+  u8 unknown04;  // Inferred role: level max; original member name unknown.
   u8 _05[0x06 - 0x05];
 };
 
-static_assert(offsetof(SDataBladeSkill, achievReleaseLevel) == 0x02, "");
-static_assert(offsetof(SDataBladeSkill, level) == 0x03, "");
-static_assert(offsetof(SDataBladeSkill, levelMax) == 0x04, "");
+static_assert(offsetof(SDataBladeSkill, unknown02) == 0x02, "");
+static_assert(offsetof(SDataBladeSkill, unknown03) == 0x03, "");
+static_assert(offsetof(SDataBladeSkill, unknown04) == 0x04, "");
 static_assert(sizeof(SDataBladeSkill) == 0x06, "");
 
 struct AchievInfo {
-  u16 achievement;
+  u16 unknown00; // Inferred role: achievement; original member name unknown.
   u8 _002[0x004 - 0x002];
-  AchievQuest quests[5];
+  AchievQuest unknown04[5]; // Inferred role: quests; original member name unknown.
 };
 
-static_assert(offsetof(AchievInfo, quests) == 0x004, "");
+static_assert(offsetof(AchievInfo, unknown04) == 0x004, "");
 
 static_assert(sizeof(AchievInfo) == 0x090, "");
 
 typedef AchievInfo SDataBladeAchievement;
 
 struct SDataBladeFavorite {
-  u16 category;
-  u16 item;
-  u16 usedCategory;
-  u16 usedItem;
+  u16 unknown00; // Inferred role: category; original member name unknown.
+  u16 unknown02; // Inferred role: item; original member name unknown.
+  u16 unknown04; // Inferred role: used category; original member name unknown.
+  u16 unknown06; // Inferred role: used item; original member name unknown.
 };
 
-static_assert(offsetof(SDataBladeFavorite, item) == 0x02, "");
-static_assert(offsetof(SDataBladeFavorite, usedCategory) == 0x04, "");
-static_assert(offsetof(SDataBladeFavorite, usedItem) == 0x06, "");
+static_assert(offsetof(SDataBladeFavorite, unknown02) == 0x02, "");
+static_assert(offsetof(SDataBladeFavorite, unknown04) == 0x04, "");
+static_assert(offsetof(SDataBladeFavorite, unknown06) == 0x06, "");
 static_assert(sizeof(SDataBladeFavorite) == 0x08, "");
 
 enum ActivateType {
@@ -98,172 +98,172 @@ enum {
 constexpr u32 PERSONALITY_VOICE_FIRST = 61;
 
 struct SDataBlade {
-  u16 activate;
-  u16 creator;
-  u16 setDriver;
-  u16 id;
-  u32 bornTime;
+  u16 unknown00; // Inferred role: activate; original member name unknown.
+  u16 unknown02; // Inferred role: creator; original member name unknown.
+  u16 unknown04; // Inferred role: set driver; original member name unknown.
+  u16 unknown06; // Inferred role: id; original member name unknown.
+  u32 unknown08; // Inferred role: born time; original member name unknown.
   u8 _00c[0x034 - 0x00c];
-  u32 trustPoint;
-  GfIdea trustRank;
-  mm::mtl::FixedArray<SDataBladeArts, 3> arts;
-  mm::mtl::FixedArray<SDataBladeArts, 3> nArts;
-  u16 artsEx;
-  u16 artsExH;
+  u32 unknown34;                                    // Inferred role: trust point; original member name unknown.
+  GfIdea unknown38;                                 // Inferred role: trust rank; original member name unknown.
+  mm::mtl::FixedArray<SDataBladeArts, 3> unknown3c; // Inferred role: arts; original member name unknown.
+  mm::mtl::FixedArray<SDataBladeArts, 3> unknown60; // Inferred role: n arts; original member name unknown.
+  u16 unknown84;                                    // Inferred role: arts ex; original member name unknown.
+  u16 unknown86;                                    // Inferred role: arts ex h; original member name unknown.
   u8 _088[0x090 - 0x088];
-  u16 artsEx2;
-  u16 artsEx2H;
+  u16 unknown90; // Inferred role: arts ex2; original member name unknown.
+  u16 unknown92; // Inferred role: arts ex2 h; original member name unknown.
   u8 _094[0x09c - 0x094];
-  mm::mtl::FixedArray<SDataBladeSkill, 3> skills;
-  mm::mtl::FixedArray<SDataBladeSkill, 3> fieldSkills;
-  mm::mtl::FixedArray<u8, 4> extraParts;
-  mm::mtl::FixedArray<SDataBladeAchievement, 3> artsAchievements;
-  mm::mtl::FixedArray<SDataBladeAchievement, 3> skillAchievements;
-  mm::mtl::FixedArray<SDataBladeAchievement, 3> fieldSkillAchievements;
-  SDataBladeAchievement keyAchievement;
-  u16 keyReleaseLevel;
-  mm::mtl::FixedArray<SDataBladeFavorite, 2> favorites;
+  mm::mtl::FixedArray<SDataBladeSkill, 3> unknown9c;        // Inferred role: skills; original member name unknown.
+  mm::mtl::FixedArray<SDataBladeSkill, 3> unknownae;        // Inferred role: field skills; original member name unknown.
+  mm::mtl::FixedArray<u8, 4> unknownc0;                     // Inferred role: extra parts; original member name unknown.
+  mm::mtl::FixedArray<SDataBladeAchievement, 3> unknownc4;  // Inferred role: arts achievements; original member name unknown.
+  mm::mtl::FixedArray<SDataBladeAchievement, 3> unknown274; // Inferred role: skill achievements; original member name unknown.
+  mm::mtl::FixedArray<SDataBladeAchievement, 3> unknown424; // Inferred role: field skill achievements; original member name unknown.
+  SDataBladeAchievement unknown5d4;                         // Inferred role: key achievement; original member name unknown.
+  u16 unknown664;                                           // Inferred role: key release level; original member name unknown.
+  mm::mtl::FixedArray<SDataBladeFavorite, 2> unknown666;    // Inferred role: favorites; original member name unknown.
   u8 _676[0x678 - 0x676];
-  mm::mtl::FixedArray<u16, 3> equipOrbs;
-  mm::mtl::FixedArray<u32, 3> equipOrbHandles;
-  EquipHana equipHana;
-  u16 equipPowerRank;
-  u16 openCircuit;
-  u8 race;
-  u8 gender;
-  u16 iconData;
-  mm::mtl::FixStr<16> resourceNameModel;
-  mm::mtl::FixStr<16> resourceNameModel2;
-  mm::mtl::FixStr<16> resourceNameMotion;
-  mm::mtl::FixStr<16> resourceNameMotion2;
-  mm::mtl::FixStr<16> resourceNameAddMotion;
-  char voiceStr[0x7ac - 0x770];
-  char resourceNameEffect[0x28];
-  char centerBone[0x14];
-  char camBone[0x14];
-  char sePack[0x820 - 0x7fc];
-  u8 size;
-  u8 weaponType;
-  u8 equipOrbMax;
-  u8 attribute;
-  u8 personality;
+  mm::mtl::FixedArray<u16, 3> unknown678; // Inferred role: equip orbs; original member name unknown.
+  mm::mtl::FixedArray<u32, 3> unknown680; // Inferred role: equip orb handles; original member name unknown.
+  EquipHana unknown68c;                   // Inferred role: equip hana; original member name unknown.
+  u16 unknown704;                         // Inferred role: equip power rank; original member name unknown.
+  u16 unknown706;                         // Inferred role: open circuit; original member name unknown.
+  u8 unknown708;                          // Inferred role: race; original member name unknown.
+  u8 unknown709;                          // Inferred role: gender; original member name unknown.
+  u16 unknown70a;                         // Inferred role: icon data; original member name unknown.
+  mm::mtl::FixStr<16> unknown70c;         // Inferred role: resource name model; original member name unknown.
+  mm::mtl::FixStr<16> unknown720;         // Inferred role: resource name model2; original member name unknown.
+  mm::mtl::FixStr<16> unknown734;         // Inferred role: resource name motion; original member name unknown.
+  mm::mtl::FixStr<16> unknown748;         // Inferred role: resource name motion2; original member name unknown.
+  mm::mtl::FixStr<16> unknown75c;         // Inferred role: resource name add motion; original member name unknown.
+  char unknown770[0x7ac - 0x770];         // Inferred role: voice str; original member name unknown.
+  char unknown7ac[0x28];                  // Inferred role: resource name effect; original member name unknown.
+  char unknown7d4[0x14];                  // Inferred role: center bone; original member name unknown.
+  char unknown7e8[0x14];                  // Inferred role: cam bone; original member name unknown.
+  char unknown7fc[0x820 - 0x7fc];         // Inferred role: se pack; original member name unknown.
+  u8 unknown820;                          // Inferred role: size; original member name unknown.
+  u8 unknown821;                          // Inferred role: weapon type; original member name unknown.
+  u8 unknown822;                          // Inferred role: equip orb max; original member name unknown.
+  u8 unknown823;                          // Inferred role: attribute; original member name unknown.
+  u8 unknown824;                          // Inferred role: personality; original member name unknown.
   u8 _825[0x826 - 0x825];
-  u8 eyeRotControl;
+  u8 unknown826; // Inferred role: eye rot control; original member name unknown.
   u8 _827[0x828 - 0x827];
-  u16 coolTime;
-  u16 condition;
-  u16 weapon;
-  u16 chestHeight;
-  u16 landingHeight;
-  u16 name;
-  u16 nameListCategory;
-  u16 scale;
-  u16 wpnScale;
-  u16 offsetID;
-  u16 collisionId;
-  u8 pArmor;
-  u8 eArmor;
-  u8 hpMaxRev;
-  u8 strengthRev;
-  u8 powerEtherRev;
-  u8 dexRev;
-  u8 agilityRev;
-  u8 luckRev;
-  u8 questRace;
-  u8 releaseLock;
-  u8 footStep;
-  u8 footStepEffect;
-  u16 kizunaLinkSet;
-  u16 normalTalk;
+  u16 unknown828; // Inferred role: cool time; original member name unknown.
+  u16 unknown82a; // Inferred role: condition; original member name unknown.
+  u16 unknown82c; // Inferred role: weapon; original member name unknown.
+  u16 unknown82e; // Inferred role: chest height; original member name unknown.
+  u16 unknown830; // Inferred role: landing height; original member name unknown.
+  u16 unknown832; // Inferred role: name; original member name unknown.
+  u16 unknown834; // Inferred role: name list category; original member name unknown.
+  u16 unknown836; // Inferred role: scale; original member name unknown.
+  u16 unknown838; // Inferred role: wpn scale; original member name unknown.
+  u16 unknown83a; // Inferred role: offset id; original member name unknown.
+  u16 unknown83c; // Inferred role: collision id; original member name unknown.
+  u8 unknown83e;  // Inferred role: p armor; original member name unknown.
+  u8 unknown83f;  // Inferred role: e armor; original member name unknown.
+  u8 unknown840;  // Inferred role: hp max rev; original member name unknown.
+  u8 unknown841;  // Inferred role: strength rev; original member name unknown.
+  u8 unknown842;  // Inferred role: power ether rev; original member name unknown.
+  u8 unknown843;  // Inferred role: dex rev; original member name unknown.
+  u8 unknown844;  // Inferred role: agility rev; original member name unknown.
+  u8 unknown845;  // Inferred role: luck rev; original member name unknown.
+  u8 unknown846;  // Inferred role: quest race; original member name unknown.
+  u8 unknown847;  // Inferred role: release lock; original member name unknown.
+  u8 unknown848;  // Inferred role: foot step; original member name unknown.
+  u8 unknown849;  // Inferred role: foot step effect; original member name unknown.
+  u16 unknown84a; // Inferred role: kizuna link set; original member name unknown.
+  u16 unknown84c; // Inferred role: normal talk; original member name unknown.
   u8 _84e[0x850 - 0x84e];
-  u32 createEvent;
-  u16 mountPoint;
-  u16 mountObject;
-  char customName[0x40];
-  u32 customNameLength;
+  u32 unknown850;        // Inferred role: create event; original member name unknown.
+  u16 unknown854;        // Inferred role: mount point; original member name unknown.
+  u16 unknown856;        // Inferred role: mount object; original member name unknown.
+  char unknown858[0x40]; // Inferred role: custom name; original member name unknown.
+  u32 unknown898;        // Inferred role: custom name length; original member name unknown.
   u8 _89c[0x89e - 0x89c];
-  u8 enableEngageRex;
-  u8 attachedParty;
-  u8 unselect;
-  u8 kizunaringComplete;
+  u8 unknown89e; // Inferred role: enable engage rex; original member name unknown.
+  u8 unknown89f; // Inferred role: attached party; original member name unknown.
+  u8 unknown8a0; // Inferred role: unselect; original member name unknown.
+  u8 unknown8a1; // Inferred role: kizunaring complete; original member name unknown.
   u8 _8a2[0x8a4 - 0x8a2];
 
   SDataBlade();
   SDataBlade &operator=(const SDataBlade &other);
 };
 
-static_assert(offsetof(SDataBlade, activate) == 0x000, "");
-static_assert(offsetof(SDataBlade, creator) == 0x002, "");
-static_assert(offsetof(SDataBlade, setDriver) == 0x004, "");
-static_assert(offsetof(SDataBlade, id) == 0x006, "");
-static_assert(offsetof(SDataBlade, bornTime) == 0x008, "");
-static_assert(offsetof(SDataBlade, trustPoint) == 0x034, "");
-static_assert(offsetof(SDataBlade, trustRank) == 0x038, "");
-static_assert(offsetof(SDataBlade, arts) == 0x03c, "");
-static_assert(offsetof(SDataBlade, nArts) == 0x060, "");
-static_assert(offsetof(SDataBlade, artsEx) == 0x084, "");
-static_assert(offsetof(SDataBlade, artsEx2) == 0x090, "");
-static_assert(offsetof(SDataBlade, skills) == 0x09c, "");
-static_assert(offsetof(SDataBlade, fieldSkills) == 0x0ae, "");
-static_assert(offsetof(SDataBlade, extraParts) == 0x0c0, "");
-static_assert(offsetof(SDataBlade, artsAchievements) == 0x0c4, "");
-static_assert(offsetof(SDataBlade, skillAchievements) == 0x274, "");
-static_assert(offsetof(SDataBlade, fieldSkillAchievements) == 0x424, "");
-static_assert(offsetof(SDataBlade, keyAchievement) == 0x5d4, "");
-static_assert(offsetof(SDataBlade, keyReleaseLevel) == 0x664, "");
-static_assert(offsetof(SDataBlade, favorites) == 0x666, "");
-static_assert(offsetof(SDataBlade, equipOrbs) == 0x678, "");
-static_assert(offsetof(SDataBlade, equipOrbHandles) == 0x680, "");
-static_assert(offsetof(SDataBlade, equipHana) == 0x68c, "");
-static_assert(offsetof(SDataBlade, equipPowerRank) == 0x704, "");
-static_assert(offsetof(SDataBlade, openCircuit) == 0x706, "");
-static_assert(offsetof(SDataBlade, race) == 0x708, "");
-static_assert(offsetof(SDataBlade, gender) == 0x709, "");
-static_assert(offsetof(SDataBlade, iconData) == 0x70a, "");
-static_assert(offsetof(SDataBlade, resourceNameModel) == 0x70c, "");
-static_assert(offsetof(SDataBlade, resourceNameModel2) == 0x720, "");
-static_assert(offsetof(SDataBlade, resourceNameMotion) == 0x734, "");
-static_assert(offsetof(SDataBlade, resourceNameMotion2) == 0x748, "");
-static_assert(offsetof(SDataBlade, resourceNameAddMotion) == 0x75c, "");
-static_assert(offsetof(SDataBlade, voiceStr) == 0x770, "");
-static_assert(offsetof(SDataBlade, resourceNameEffect) == 0x7ac, "");
-static_assert(offsetof(SDataBlade, centerBone) == 0x7d4, "");
-static_assert(offsetof(SDataBlade, camBone) == 0x7e8, "");
-static_assert(offsetof(SDataBlade, sePack) == 0x7fc, "");
-static_assert(offsetof(SDataBlade, size) == 0x820, "");
-static_assert(offsetof(SDataBlade, weaponType) == 0x821, "");
-static_assert(offsetof(SDataBlade, equipOrbMax) == 0x822, "");
-static_assert(offsetof(SDataBlade, attribute) == 0x823, "");
-static_assert(offsetof(SDataBlade, personality) == 0x824, "");
-static_assert(offsetof(SDataBlade, eyeRotControl) == 0x826, "");
-static_assert(offsetof(SDataBlade, coolTime) == 0x828, "");
-static_assert(offsetof(SDataBlade, condition) == 0x82a, "");
-static_assert(offsetof(SDataBlade, weapon) == 0x82c, "");
-static_assert(offsetof(SDataBlade, chestHeight) == 0x82e, "");
-static_assert(offsetof(SDataBlade, landingHeight) == 0x830, "");
-static_assert(offsetof(SDataBlade, name) == 0x832, "");
-static_assert(offsetof(SDataBlade, nameListCategory) == 0x834, "");
-static_assert(offsetof(SDataBlade, scale) == 0x836, "");
-static_assert(offsetof(SDataBlade, wpnScale) == 0x838, "");
-static_assert(offsetof(SDataBlade, offsetID) == 0x83a, "");
-static_assert(offsetof(SDataBlade, collisionId) == 0x83c, "");
-static_assert(offsetof(SDataBlade, pArmor) == 0x83e, "");
-static_assert(offsetof(SDataBlade, luckRev) == 0x845, "");
-static_assert(offsetof(SDataBlade, questRace) == 0x846, "");
-static_assert(offsetof(SDataBlade, releaseLock) == 0x847, "");
-static_assert(offsetof(SDataBlade, footStep) == 0x848, "");
-static_assert(offsetof(SDataBlade, footStepEffect) == 0x849, "");
-static_assert(offsetof(SDataBlade, kizunaLinkSet) == 0x84a, "");
-static_assert(offsetof(SDataBlade, normalTalk) == 0x84c, "");
-static_assert(offsetof(SDataBlade, createEvent) == 0x850, "");
-static_assert(offsetof(SDataBlade, mountPoint) == 0x854, "");
-static_assert(offsetof(SDataBlade, mountObject) == 0x856, "");
-static_assert(offsetof(SDataBlade, customName) == 0x858, "");
-static_assert(offsetof(SDataBlade, customNameLength) == 0x898, "");
-static_assert(offsetof(SDataBlade, enableEngageRex) == 0x89e, "");
-static_assert(offsetof(SDataBlade, attachedParty) == 0x89f, "");
-static_assert(offsetof(SDataBlade, unselect) == 0x8a0, "");
-static_assert(offsetof(SDataBlade, kizunaringComplete) == 0x8a1, "");
+static_assert(offsetof(SDataBlade, unknown00) == 0x000, "");
+static_assert(offsetof(SDataBlade, unknown02) == 0x002, "");
+static_assert(offsetof(SDataBlade, unknown04) == 0x004, "");
+static_assert(offsetof(SDataBlade, unknown06) == 0x006, "");
+static_assert(offsetof(SDataBlade, unknown08) == 0x008, "");
+static_assert(offsetof(SDataBlade, unknown34) == 0x034, "");
+static_assert(offsetof(SDataBlade, unknown38) == 0x038, "");
+static_assert(offsetof(SDataBlade, unknown3c) == 0x03c, "");
+static_assert(offsetof(SDataBlade, unknown60) == 0x060, "");
+static_assert(offsetof(SDataBlade, unknown84) == 0x084, "");
+static_assert(offsetof(SDataBlade, unknown90) == 0x090, "");
+static_assert(offsetof(SDataBlade, unknown9c) == 0x09c, "");
+static_assert(offsetof(SDataBlade, unknownae) == 0x0ae, "");
+static_assert(offsetof(SDataBlade, unknownc0) == 0x0c0, "");
+static_assert(offsetof(SDataBlade, unknownc4) == 0x0c4, "");
+static_assert(offsetof(SDataBlade, unknown274) == 0x274, "");
+static_assert(offsetof(SDataBlade, unknown424) == 0x424, "");
+static_assert(offsetof(SDataBlade, unknown5d4) == 0x5d4, "");
+static_assert(offsetof(SDataBlade, unknown664) == 0x664, "");
+static_assert(offsetof(SDataBlade, unknown666) == 0x666, "");
+static_assert(offsetof(SDataBlade, unknown678) == 0x678, "");
+static_assert(offsetof(SDataBlade, unknown680) == 0x680, "");
+static_assert(offsetof(SDataBlade, unknown68c) == 0x68c, "");
+static_assert(offsetof(SDataBlade, unknown704) == 0x704, "");
+static_assert(offsetof(SDataBlade, unknown706) == 0x706, "");
+static_assert(offsetof(SDataBlade, unknown708) == 0x708, "");
+static_assert(offsetof(SDataBlade, unknown709) == 0x709, "");
+static_assert(offsetof(SDataBlade, unknown70a) == 0x70a, "");
+static_assert(offsetof(SDataBlade, unknown70c) == 0x70c, "");
+static_assert(offsetof(SDataBlade, unknown720) == 0x720, "");
+static_assert(offsetof(SDataBlade, unknown734) == 0x734, "");
+static_assert(offsetof(SDataBlade, unknown748) == 0x748, "");
+static_assert(offsetof(SDataBlade, unknown75c) == 0x75c, "");
+static_assert(offsetof(SDataBlade, unknown770) == 0x770, "");
+static_assert(offsetof(SDataBlade, unknown7ac) == 0x7ac, "");
+static_assert(offsetof(SDataBlade, unknown7d4) == 0x7d4, "");
+static_assert(offsetof(SDataBlade, unknown7e8) == 0x7e8, "");
+static_assert(offsetof(SDataBlade, unknown7fc) == 0x7fc, "");
+static_assert(offsetof(SDataBlade, unknown820) == 0x820, "");
+static_assert(offsetof(SDataBlade, unknown821) == 0x821, "");
+static_assert(offsetof(SDataBlade, unknown822) == 0x822, "");
+static_assert(offsetof(SDataBlade, unknown823) == 0x823, "");
+static_assert(offsetof(SDataBlade, unknown824) == 0x824, "");
+static_assert(offsetof(SDataBlade, unknown826) == 0x826, "");
+static_assert(offsetof(SDataBlade, unknown828) == 0x828, "");
+static_assert(offsetof(SDataBlade, unknown82a) == 0x82a, "");
+static_assert(offsetof(SDataBlade, unknown82c) == 0x82c, "");
+static_assert(offsetof(SDataBlade, unknown82e) == 0x82e, "");
+static_assert(offsetof(SDataBlade, unknown830) == 0x830, "");
+static_assert(offsetof(SDataBlade, unknown832) == 0x832, "");
+static_assert(offsetof(SDataBlade, unknown834) == 0x834, "");
+static_assert(offsetof(SDataBlade, unknown836) == 0x836, "");
+static_assert(offsetof(SDataBlade, unknown838) == 0x838, "");
+static_assert(offsetof(SDataBlade, unknown83a) == 0x83a, "");
+static_assert(offsetof(SDataBlade, unknown83c) == 0x83c, "");
+static_assert(offsetof(SDataBlade, unknown83e) == 0x83e, "");
+static_assert(offsetof(SDataBlade, unknown845) == 0x845, "");
+static_assert(offsetof(SDataBlade, unknown846) == 0x846, "");
+static_assert(offsetof(SDataBlade, unknown847) == 0x847, "");
+static_assert(offsetof(SDataBlade, unknown848) == 0x848, "");
+static_assert(offsetof(SDataBlade, unknown849) == 0x849, "");
+static_assert(offsetof(SDataBlade, unknown84a) == 0x84a, "");
+static_assert(offsetof(SDataBlade, unknown84c) == 0x84c, "");
+static_assert(offsetof(SDataBlade, unknown850) == 0x850, "");
+static_assert(offsetof(SDataBlade, unknown854) == 0x854, "");
+static_assert(offsetof(SDataBlade, unknown856) == 0x856, "");
+static_assert(offsetof(SDataBlade, unknown858) == 0x858, "");
+static_assert(offsetof(SDataBlade, unknown898) == 0x898, "");
+static_assert(offsetof(SDataBlade, unknown89e) == 0x89e, "");
+static_assert(offsetof(SDataBlade, unknown89f) == 0x89f, "");
+static_assert(offsetof(SDataBlade, unknown8a0) == 0x8a0, "");
+static_assert(offsetof(SDataBlade, unknown8a1) == 0x8a1, "");
 static_assert(sizeof(SDataBlade) == 0x8a4, "");
 
 class GfDataBlade {

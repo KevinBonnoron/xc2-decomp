@@ -401,7 +401,7 @@ void GfQuestInfo::setDummuTalkGroupFlag(u32 group, u32 npcIndex) {
 
 bool GfQuestInfo::isEnableSetupCount(const AchievInfo &info, u32 level) {
   for (u32 index = 2; index < level; index++) {
-    if (isQuestOrder(info.quests[index - 1].quest)) {
+    if (isQuestOrder(info.unknown04[index - 1].quest)) {
       return false;
     }
   }

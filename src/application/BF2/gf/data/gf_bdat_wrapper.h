@@ -3,12 +3,12 @@
 #include "types.h"
 
 struct CBdatWrapper {
-  unsigned long getValCheck(const char *name, int id, int type) const { return Bdat::getValCheck(data, name, id, type); }
-  Bdat::Value getValCheck(u8 *member, u32 id, int type) const { return Bdat::getValCheck(data, member, id, type); }
-  Bdat::Value getArrayValCheck(u8 *member, u32 id, u32 index, int type) const { return Bdat::getArrayValCheck(data, member, id, index, type); }
-  int getFlagVal(u8 *member, u32 id, u8 *flag) const { return Bdat::getFlagVal(data, member, id, flag); }
+  unsigned long getValCheck(const char *name, int id, int type) const { return Bdat::getValCheck(unknown00, name, id, type); }
+  Bdat::Value getValCheck(u8 *member, u32 id, int type) const { return Bdat::getValCheck(unknown00, member, id, type); }
+  Bdat::Value getArrayValCheck(u8 *member, u32 id, u32 index, int type) const { return Bdat::getArrayValCheck(unknown00, member, id, index, type); }
+  int getFlagVal(u8 *member, u32 id, u8 *flag) const { return Bdat::getFlagVal(unknown00, member, id, flag); }
 
-  u8 *data;
+  u8 *unknown00; // Inferred role: raw bdat data; original member name unknown.
 };
 
 namespace gf {

@@ -6,8 +6,8 @@ namespace gf {
 class GfItemHandle {
 public:
   struct Bits {
-    u32 type : 6;
-    u32 serial : 26;
+    u32 unknown00_0 : 6;  // Inferred role: type; original member name unknown.
+    u32 unknown00_6 : 26; // Inferred role: serial; original member name unknown.
   };
 
   GfItemHandle() {}

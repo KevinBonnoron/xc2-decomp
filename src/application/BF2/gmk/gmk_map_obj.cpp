@@ -22,7 +22,7 @@ void GmkMapObj::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk)
   u16 invisibleXZ = DistHvCond::clampDepopDist(bdat.getValCheck("Invisible_XZ", id, BDAT_TYPE_U16), visibleXZ);
   u16 invisibleY = DistHvCond::clampDepopDist(bdat.getValCheck("Invisible_Y", id, BDAT_TYPE_U16), visibleY);
   depopDist.set(invisibleXZ, invisibleY);
-  if (Bdat::getMember(bdat.data, "Priority") != nullptr) {
+  if (Bdat::getMember(bdat.unknown00, "Priority") != nullptr) {
     priority = bdat.getValCheck("Priority", id, BDAT_TYPE_U8);
   }
 }

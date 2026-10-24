@@ -15,64 +15,64 @@ constexpr u32 DRIVER_ARTS_LEVEL_MAX = 5;
 constexpr u32 SET_BLADE_NUM_MAX = 5;
 
 struct SDataDriverWeapon {
-  mm::mtl::FixedArray<u32, 3> slotArts;
-  u32 wp;
-  u32 totalWp;
+  mm::mtl::FixedArray<u32, 3> unknown00; // Inferred role: slot arts; original member name unknown.
+  u32 unknown0c;                         // Inferred role: wp; original member name unknown.
+  u32 unknown10;                         // Inferred role: total wp; original member name unknown.
 };
 
 struct SDataDriverAccessory {
-  GfItemHandle handle;
-  u16 item;
+  GfItemHandle unknown00; // Inferred role: handle; original member name unknown.
+  u16 unknown04;          // Inferred role: item; original member name unknown.
   u8 _06[0x08 - 0x06];
 };
 
 struct SDataPouch {
-  f32 time;
-  u16 item;
+  f32 unknown00; // Inferred role: time; original member name unknown.
+  u16 unknown04; // Inferred role: item; original member name unknown.
   u8 _06;
 };
 
 struct SDataDriverSkillRow {
-  u16 skills[3];
+  u16 unknown00[3]; // Inferred role: skills; original member name unknown.
   u8 _06[0x08 - 0x06];
-  u16 level;
+  u16 unknown08; // Inferred role: level; original member name unknown.
 };
 
-static_assert(offsetof(SDataDriverSkillRow, level) == 0x08, "");
+static_assert(offsetof(SDataDriverSkillRow, unknown08) == 0x08, "");
 static_assert(sizeof(SDataDriverSkillRow) == 0x0a, "");
 
 struct SDataDriver {
   u8 _000[0x020 - 0x000];
-  u16 activate;
-  u16 id;
-  s16 bladeSet;
-  u16 blades[5];
-  SDataDriverSkillRow skillRows[5];
-  SDataDriverSkillRow hiddenSkillRows[5];
-  u16 level;
-  u16 hpMax;
-  u16 strength;
-  u16 powerEther;
-  u16 dex;
-  u16 agility;
-  u16 luck;
-  u16 pArmor;
-  u16 eArmor;
-  u8 criticalRate;
-  u8 guardRate;
+  u16 unknown20;                    // Inferred role: activate; original member name unknown.
+  u16 unknown22;                    // Inferred role: id; original member name unknown.
+  s16 unknown24;                    // Inferred role: blade set; original member name unknown.
+  u16 unknown26[5];                 // Inferred role: blades; original member name unknown.
+  SDataDriverSkillRow unknown30[5]; // Inferred role: skill rows; original member name unknown.
+  SDataDriverSkillRow unknown62[5]; // Inferred role: hidden skill rows; original member name unknown.
+  u16 unknown94;                    // Inferred role: level; original member name unknown.
+  u16 unknown96;                    // Inferred role: hp max; original member name unknown.
+  u16 unknown98;                    // Inferred role: strength; original member name unknown.
+  u16 unknown9a;                    // Inferred role: power ether; original member name unknown.
+  u16 unknown9c;                    // Inferred role: dex; original member name unknown.
+  u16 unknown9e;                    // Inferred role: agility; original member name unknown.
+  u16 unknowna0;                    // Inferred role: luck; original member name unknown.
+  u16 unknowna2;                    // Inferred role: p armor; original member name unknown.
+  u16 unknowna4;                    // Inferred role: e armor; original member name unknown.
+  u8 unknowna6;                     // Inferred role: critical rate; original member name unknown.
+  u8 unknowna7;                     // Inferred role: guard rate; original member name unknown.
   u8 _0a8[0x0b0 - 0x0a8];
-  u32 exp;
-  u32 battleExp;
-  u32 skillPoint;
-  u32 totalSkillPoint;
-  SDataDriverWeapon weapons[28];
-  u8 artsLevel[0x570 - 0x2f0];
-  u8 scenarioMask;
-  u8 attachedParty;
-  u8 equipDefaultAcce;
-  SDataDriverAccessory accessories[2];
-  SDataPouch pouches[3];
-  mm::mtl::BitFlag<28> activateWeaponTypes;
+  u32 unknownb0;                      // Inferred role: exp; original member name unknown.
+  u32 unknownb4;                      // Inferred role: battle exp; original member name unknown.
+  u32 unknownb8;                      // Inferred role: skill point; original member name unknown.
+  u32 unknownbc;                      // Inferred role: total skill point; original member name unknown.
+  SDataDriverWeapon unknownc0[28];    // Inferred role: weapons; original member name unknown.
+  u8 unknown2f0[0x570 - 0x2f0];       // Inferred role: arts level; original member name unknown.
+  u8 unknown570;                      // Inferred role: scenario mask; original member name unknown.
+  u8 unknown571;                      // Inferred role: attached party; original member name unknown.
+  u8 unknown572;                      // Inferred role: equip default acce; original member name unknown.
+  SDataDriverAccessory unknown574[2]; // Inferred role: accessories; original member name unknown.
+  SDataPouch unknown584[3];           // Inferred role: pouches; original member name unknown.
+  mm::mtl::BitFlag<28> unknown59c;    // Inferred role: activate weapon types; original member name unknown.
 };
 
 enum DBSLOT {};
@@ -85,31 +85,31 @@ enum FAVORITE {
 
 static_assert(sizeof(SDataDriverWeapon) == 0x14, "");
 static_assert(sizeof(SDataDriverAccessory) == 0x08, "");
-static_assert(offsetof(SDataDriver, activate) == 0x020, "");
-static_assert(offsetof(SDataDriver, id) == 0x022, "");
-static_assert(offsetof(SDataDriver, bladeSet) == 0x024, "");
-static_assert(offsetof(SDataDriver, blades) == 0x026, "");
-static_assert(offsetof(SDataDriver, skillRows) == 0x030, "");
-static_assert(offsetof(SDataDriver, hiddenSkillRows) == 0x062, "");
-static_assert(offsetof(SDataDriver, level) == 0x094, "");
-static_assert(offsetof(SDataDriver, hpMax) == 0x096, "");
-static_assert(offsetof(SDataDriver, luck) == 0x0a0, "");
-static_assert(offsetof(SDataDriver, pArmor) == 0x0a2, "");
-static_assert(offsetof(SDataDriver, eArmor) == 0x0a4, "");
-static_assert(offsetof(SDataDriver, criticalRate) == 0x0a6, "");
-static_assert(offsetof(SDataDriver, guardRate) == 0x0a7, "");
-static_assert(offsetof(SDataDriver, exp) == 0x0b0, "");
-static_assert(offsetof(SDataDriver, battleExp) == 0x0b4, "");
-static_assert(offsetof(SDataDriver, skillPoint) == 0x0b8, "");
-static_assert(offsetof(SDataDriver, totalSkillPoint) == 0x0bc, "");
-static_assert(offsetof(SDataDriver, weapons) == 0x0c0, "");
-static_assert(offsetof(SDataDriver, artsLevel) == 0x2f0, "");
-static_assert(offsetof(SDataDriver, scenarioMask) == 0x570, "");
-static_assert(offsetof(SDataDriver, attachedParty) == 0x571, "");
-static_assert(offsetof(SDataDriver, equipDefaultAcce) == 0x572, "");
-static_assert(offsetof(SDataDriver, accessories) == 0x574, "");
-static_assert(offsetof(SDataDriver, pouches) == 0x584, "");
-static_assert(offsetof(SDataDriver, activateWeaponTypes) == 0x59c, "");
+static_assert(offsetof(SDataDriver, unknown20) == 0x020, "");
+static_assert(offsetof(SDataDriver, unknown22) == 0x022, "");
+static_assert(offsetof(SDataDriver, unknown24) == 0x024, "");
+static_assert(offsetof(SDataDriver, unknown26) == 0x026, "");
+static_assert(offsetof(SDataDriver, unknown30) == 0x030, "");
+static_assert(offsetof(SDataDriver, unknown62) == 0x062, "");
+static_assert(offsetof(SDataDriver, unknown94) == 0x094, "");
+static_assert(offsetof(SDataDriver, unknown96) == 0x096, "");
+static_assert(offsetof(SDataDriver, unknowna0) == 0x0a0, "");
+static_assert(offsetof(SDataDriver, unknowna2) == 0x0a2, "");
+static_assert(offsetof(SDataDriver, unknowna4) == 0x0a4, "");
+static_assert(offsetof(SDataDriver, unknowna6) == 0x0a6, "");
+static_assert(offsetof(SDataDriver, unknowna7) == 0x0a7, "");
+static_assert(offsetof(SDataDriver, unknownb0) == 0x0b0, "");
+static_assert(offsetof(SDataDriver, unknownb4) == 0x0b4, "");
+static_assert(offsetof(SDataDriver, unknownb8) == 0x0b8, "");
+static_assert(offsetof(SDataDriver, unknownbc) == 0x0bc, "");
+static_assert(offsetof(SDataDriver, unknownc0) == 0x0c0, "");
+static_assert(offsetof(SDataDriver, unknown2f0) == 0x2f0, "");
+static_assert(offsetof(SDataDriver, unknown570) == 0x570, "");
+static_assert(offsetof(SDataDriver, unknown571) == 0x571, "");
+static_assert(offsetof(SDataDriver, unknown572) == 0x572, "");
+static_assert(offsetof(SDataDriver, unknown574) == 0x574, "");
+static_assert(offsetof(SDataDriver, unknown584) == 0x584, "");
+static_assert(offsetof(SDataDriver, unknown59c) == 0x59c, "");
 static_assert(sizeof(SDataPouch) == 0x08, "");
 static_assert(sizeof(SDataDriver) == 0x5a0, "");
 

@@ -353,8 +353,8 @@ void GfGameManager::gevBladeEnable(u32 blade) {
   GfFieldTime *fieldTime = GfFieldTime::get();
   if (fieldTime != nullptr) {
     SDataBlade *dataBlade = GfDataBlade::getSDataBlade(blade);
-    if (dataBlade->bornTime == 0) {
-      dataBlade->bornTime = reinterpret_cast<const u32 &>(fieldTime->getElapseTime());
+    if (dataBlade->unknown08 == 0) {
+      dataBlade->unknown08 = reinterpret_cast<const u32 &>(fieldTime->getElapseTime());
     }
   }
 }
@@ -624,7 +624,7 @@ bool GfGameManager::isEnableBattouWithHoodHomura(bool isCheckCondition) {
     return false;
   }
 
-  if (isCheckCondition && !GfGameCond::isGameCond(GfDataBlade::getSDataBlade(bladeAcc.getBladeId())->condition)) {
+  if (isCheckCondition && !GfGameCond::isGameCond(GfDataBlade::getSDataBlade(bladeAcc.getBladeId())->unknown82a)) {
     return false;
   }
 
@@ -725,7 +725,7 @@ bool GfGameManager::isEnableFieldAccess() {
         return false;
       }
 
-      if (GfDataDriver::getBlade(driverAcc.getValidDriverId(), -1) == BLADE_BYAKKO && GfObjUtil::getParentHandle(driverAcc.handle) != GfGameParty::getHandleBlade(PARTY_ID_LEADER, -1)) {
+      if (GfDataDriver::getBlade(driverAcc.getValidDriverId(), -1) == BLADE_BYAKKO && GfObjUtil::getParentHandle(driverAcc.unknown10) != GfGameParty::getHandleBlade(PARTY_ID_LEADER, -1)) {
         return false;
       }
     }
@@ -1200,7 +1200,7 @@ bool GfGameManager::isHoodHomura(GF_OBJ_HANDLE *handle) {
     return false;
   }
 
-  if (!GfGameCond::isGameCond(GfDataBlade::getSDataBlade(objAcc.getBladeId())->condition)) {
+  if (!GfGameCond::isGameCond(GfDataBlade::getSDataBlade(objAcc.getBladeId())->unknown82a)) {
     return false;
   }
 

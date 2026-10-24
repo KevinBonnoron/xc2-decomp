@@ -10,54 +10,54 @@ namespace gf {
 constexpr u32 EXTRA_PARTS_COUNT = 4;
 
 struct SDataEnemy {
-  u16 arrange;
+  u16 unknown00; // Inferred role: arrange; original member name unknown.
   u8 _002[0x004 - 0x002];
-  u8 named : 1;
-  u8 boss : 1;
+  u8 unknown04_0 : 1; // Inferred role: named; original member name unknown.
+  u8 unknown04_1 : 1; // Inferred role: boss; original member name unknown.
   u8 : 2;
-  u8 linkGenus : 1;
-  u8 guardFront : 1;
-  u8 guardLeft : 1;
-  u8 guardRight : 1;
-  u8 guardBack : 1;
-  u8 fieldDamage : 1;
+  u8 unknown04_4 : 1; // Inferred role: link genus; original member name unknown.
+  u8 unknown04_5 : 1; // Inferred role: guard front; original member name unknown.
+  u8 unknown04_6 : 1; // Inferred role: guard left; original member name unknown.
+  u8 unknown04_7 : 1; // Inferred role: guard right; original member name unknown.
+  u8 unknown05_0 : 1; // Inferred role: guard back; original member name unknown.
+  u8 unknown05_1 : 1; // Inferred role: field damage; original member name unknown.
   u8 : 1;
-  u8 noCameraFade : 1;
-  u8 weaponDrawDisp : 1;
+  u8 unknown05_3 : 1; // Inferred role: no camera fade; original member name unknown.
+  u8 unknown05_4 : 1; // Inferred role: weapon draw disp; original member name unknown.
   u8 : 3;
   u8 _006[0x012 - 0x006];
-  u16 goldRev;
+  u16 unknown12; // Inferred role: gold rev; original member name unknown.
   u8 _014[0x01f - 0x014];
-  u8 linkRadius;
+  u8 unknown1f; // Inferred role: link radius; original member name unknown.
   u8 _020[0x034 - 0x020];
-  u16 param;
+  u16 unknown34; // Inferred role: param; original member name unknown.
   u8 _036[0x042 - 0x036];
-  u8 extraParts;
+  u8 unknown42; // Inferred role: extra parts; original member name unknown.
   u8 _043[0x044 - 0x043];
-  u16 resource;
+  u16 unknown44; // Inferred role: resource; original member name unknown.
   u8 _046[0x05c - 0x046];
-  u16 pArmor;
-  u16 eArmor;
-  u8 resistancePower;
-  u8 resistanceEther;
-  u8 bladeAttribute;
-  u8 criticalRate;
-  u8 guardRate;
+  u16 unknown5c; // Inferred role: p armor; original member name unknown.
+  u16 unknown5e; // Inferred role: e armor; original member name unknown.
+  u8 unknown60;  // Inferred role: resistance power; original member name unknown.
+  u8 unknown61;  // Inferred role: resistance ether; original member name unknown.
+  u8 unknown62;  // Inferred role: blade attribute; original member name unknown.
+  u8 unknown63;  // Inferred role: critical rate; original member name unknown.
+  u8 unknown64;  // Inferred role: guard rate; original member name unknown.
   u8 _065[0x066 - 0x065];
-  u16 resistanceCombo;
-  u16 invincibleCombo;
+  u16 unknown66; // Inferred role: resistance combo; original member name unknown.
+  u16 unknown68; // Inferred role: invincible combo; original member name unknown.
   u8 _06a[0x099 - 0x06a];
-  u8 genus;
+  u8 unknown99; // Inferred role: genus; original member name unknown.
   u8 _09a[0x09e - 0x09a];
-  u16 equipWeapons[5];
-  u16 level;
+  u16 unknown9e[5]; // Inferred role: equip weapons; original member name unknown.
+  u16 unknowna8;    // Inferred role: level; original member name unknown.
   u8 _0aa[0x0ac - 0x0aa];
-  u32 hpMax;
-  u16 strength;
-  u16 powerEther;
-  u16 dex;
-  u16 agility;
-  u16 luck;
+  u32 unknownac; // Inferred role: hp max; original member name unknown.
+  u16 unknownb0; // Inferred role: strength; original member name unknown.
+  u16 unknownb2; // Inferred role: power ether; original member name unknown.
+  u16 unknownb4; // Inferred role: dex; original member name unknown.
+  u16 unknownb6; // Inferred role: agility; original member name unknown.
+  u16 unknownb8; // Inferred role: luck; original member name unknown.
   u8 _0ba[0x0bc - 0x0ba];
 
   SDataEnemy();
@@ -65,23 +65,23 @@ struct SDataEnemy {
   void clear();
 };
 
-static_assert(offsetof(SDataEnemy, goldRev) == 0x012, "");
-static_assert(offsetof(SDataEnemy, linkRadius) == 0x01f, "");
-static_assert(offsetof(SDataEnemy, param) == 0x034, "");
-static_assert(offsetof(SDataEnemy, extraParts) == 0x042, "");
-static_assert(offsetof(SDataEnemy, resource) == 0x044, "");
-static_assert(offsetof(SDataEnemy, pArmor) == 0x05c, "");
-static_assert(offsetof(SDataEnemy, resistancePower) == 0x060, "");
-static_assert(offsetof(SDataEnemy, bladeAttribute) == 0x062, "");
-static_assert(offsetof(SDataEnemy, guardRate) == 0x064, "");
-static_assert(offsetof(SDataEnemy, resistanceCombo) == 0x066, "");
-static_assert(offsetof(SDataEnemy, invincibleCombo) == 0x068, "");
-static_assert(offsetof(SDataEnemy, genus) == 0x099, "");
-static_assert(offsetof(SDataEnemy, equipWeapons) == 0x09e, "");
-static_assert(offsetof(SDataEnemy, level) == 0x0a8, "");
-static_assert(offsetof(SDataEnemy, hpMax) == 0x0ac, "");
-static_assert(offsetof(SDataEnemy, strength) == 0x0b0, "");
-static_assert(offsetof(SDataEnemy, luck) == 0x0b8, "");
+static_assert(offsetof(SDataEnemy, unknown12) == 0x012, "");
+static_assert(offsetof(SDataEnemy, unknown1f) == 0x01f, "");
+static_assert(offsetof(SDataEnemy, unknown34) == 0x034, "");
+static_assert(offsetof(SDataEnemy, unknown42) == 0x042, "");
+static_assert(offsetof(SDataEnemy, unknown44) == 0x044, "");
+static_assert(offsetof(SDataEnemy, unknown5c) == 0x05c, "");
+static_assert(offsetof(SDataEnemy, unknown60) == 0x060, "");
+static_assert(offsetof(SDataEnemy, unknown62) == 0x062, "");
+static_assert(offsetof(SDataEnemy, unknown64) == 0x064, "");
+static_assert(offsetof(SDataEnemy, unknown66) == 0x066, "");
+static_assert(offsetof(SDataEnemy, unknown68) == 0x068, "");
+static_assert(offsetof(SDataEnemy, unknown99) == 0x099, "");
+static_assert(offsetof(SDataEnemy, unknown9e) == 0x09e, "");
+static_assert(offsetof(SDataEnemy, unknowna8) == 0x0a8, "");
+static_assert(offsetof(SDataEnemy, unknownac) == 0x0ac, "");
+static_assert(offsetof(SDataEnemy, unknownb0) == 0x0b0, "");
+static_assert(offsetof(SDataEnemy, unknownb8) == 0x0b8, "");
 static_assert(sizeof(SDataEnemy) == 0x0bc, "");
 
 class GfDataEnemy {

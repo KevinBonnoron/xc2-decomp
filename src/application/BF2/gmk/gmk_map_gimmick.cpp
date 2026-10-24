@@ -15,7 +15,7 @@ void GmkMapGimmick::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &
   condition = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
   nameRadius = bdat.getValCheck("nameRadius", id, BDAT_TYPE_U16);
   mapObjId = bdat.getValCheck("mapobjID", id, BDAT_TYPE_U16);
-  isMsgRay = Bdat::getFlagVal(bdat.data, "flag", id, "MSG_ray") != 0;
+  isMsgRay = Bdat::getFlagVal(bdat.unknown00, "flag", id, "MSG_ray") != 0;
 }
 
 bool GmkMapGimmick::BdatInfo::isPopCondMatched() const {

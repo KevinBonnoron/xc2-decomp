@@ -10,7 +10,7 @@
 namespace gmk {
 
 static u32 getU8OrU16(const CBdatWrapper &bdat, const char *name, int id) {
-  if (Bdat::getVarType(bdat.data, name) == BDAT_TYPE_U16) {
+  if (Bdat::getVarType(bdat.unknown00, name) == BDAT_TYPE_U16) {
     return static_cast<u16>(bdat.getValCheck(name, id, BDAT_TYPE_U16));
   }
   return static_cast<u8>(bdat.getValCheck(name, id, BDAT_TYPE_U8));
@@ -18,7 +18,7 @@ static u32 getU8OrU16(const CBdatWrapper &bdat, const char *name, int id) {
 
 void GmkEnemy::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   targetPointName = bdat.getValCheck("tagetpoint_name", id, BDAT_TYPE_U16);
-  isPopSummon = Bdat::getFlagVal(bdat.data, "flag", id, "pop_smn") != 0;
+  isPopSummon = Bdat::getFlagVal(bdat.unknown00, "flag", id, "pop_smn") != 0;
   displayRadius = getU8OrU16(bdat, "ene_disp_r", id);
   displayHeight = getU8OrU16(bdat, "ene_disp_h", id);
 }

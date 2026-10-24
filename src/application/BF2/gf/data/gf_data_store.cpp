@@ -53,7 +53,7 @@ void GfDataStore::clear() {
   initOptionData();
 }
 
-void GfDataStore::initSystemData() { get()->mDataSystem.flags = 0; }
+void GfDataStore::initSystemData() { get()->mDataSystem.unknown08 = 0; }
 
 void GfDataStore::initGameData() {
   new (&get()->mDataGame) SDataGame();
@@ -67,7 +67,7 @@ void GfDataStore::initGameData() {
   SDataGame *dataGame = GfDataManager::getDataGame();
   GfBdatMaplist *bdatMaplist = GfBdatMaplist::get();
   for (u32 map = bdatMaplist->getMaplistStart(); map < bdatMaplist->getMaplistEnd(); map++) {
-    dataGame->mapInfos[map].cloudType = map == MAP_SUPERBIA;
+    dataGame->unknown10a53c[map].unknown1c = map == MAP_SUPERBIA;
   }
 }
 
@@ -104,12 +104,12 @@ void GfDataStore::setGameData(const SDataSystem *dataSystem, const SDataGame *da
       GfDataBlade::setHikariCurrent(true);
     }
 
-    GfDataManager::getDataGame()->clearSaveData = 0;
+    GfDataManager::getDataGame()->unknown10ae81 = 0;
   }
 
   if (dataSystem != nullptr) {
-    dataStore->mDataSystem.version = dataSystem->version;
-    dataStore->mDataSystem.flags = dataSystem->flags;
+    dataStore->mDataSystem.unknown00 = dataSystem->unknown00;
+    dataStore->mDataSystem.unknown08 = dataSystem->unknown08;
   }
 
   if (dataOption != nullptr) {

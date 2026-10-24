@@ -71,8 +71,8 @@ void GfMenuPouchAdapter::update(const fw::UpdateInfo &info) {
     }
   }
   SDataPouch *pouch = GfPouchUtil::getPouch(driver, pouchIndex);
-  if (time != pouch->time) {
-    time = pouch->time;
+  if (time != pouch->unknown00) {
+    time = pouch->unknown00;
     setChange();
   }
 

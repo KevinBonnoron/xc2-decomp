@@ -131,6 +131,6 @@ u32 GfGameFlag::getMaxFlag(int size) {
   }
 }
 
-void GfGameFlag::clear() { __builtin_memset(&GfDataManager::getDataGame()->gameFlag, 0, sizeof(GameFlag)); }
+void GfGameFlag::clear() { __builtin_memset(&GfDataManager::getDataGame()->unknownfbbc4, 0, sizeof(GameFlag)); }
 
 } // namespace gf

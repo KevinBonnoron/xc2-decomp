@@ -398,240 +398,240 @@ void GfBdatMsg::bdatRefresh() {
 }
 
 const char *GfBdatMsg::getNameEnemy(u32 id) {
-  if (id < Bdat::getIdTop(m_fpFldEnemyName->data) || id >= Bdat::getIdTop(m_fpFldEnemyName->data) + Bdat::getIdCount(m_fpFldEnemyName->data)) {
+  if (id < Bdat::getIdTop(m_fpFldEnemyName->unknown00) || id >= Bdat::getIdTop(m_fpFldEnemyName->unknown00) + Bdat::getIdCount(m_fpFldEnemyName->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpFldEnemyName->data, id);
+  return Bdat::getMSText(m_fpFldEnemyName->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpEnemy() { return m_fpFldEnemyName->data; }
+u8 *GfBdatMsg::getFpEnemy() { return m_fpFldEnemyName->unknown00; }
 
 const char *GfBdatMsg::getNameNpc(u32 id) {
-  if (id < Bdat::getIdTop(m_fpFldNpcName->data) || id >= Bdat::getIdTop(m_fpFldNpcName->data) + Bdat::getIdCount(m_fpFldNpcName->data)) {
+  if (id < Bdat::getIdTop(m_fpFldNpcName->unknown00) || id >= Bdat::getIdTop(m_fpFldNpcName->unknown00) + Bdat::getIdCount(m_fpFldNpcName->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpFldNpcName->data, id);
+  return Bdat::getMSText(m_fpFldNpcName->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpNpc() { return m_fpFldNpcName->data; }
+u8 *GfBdatMsg::getFpNpc() { return m_fpFldNpcName->unknown00; }
 
 const char *GfBdatMsg::getNameQuest(QuestID quest, u32 line) { return Bdat::getMSText(getFpQuest(quest), line); }
 
 u8 *GfBdatMsg::getFpQuest(QuestID quest) {
   switch (GfDataQuest::getListQuestCategory(quest)) {
   case QTYPE_MAIN:
-    return m_fpFldQuest->data;
+    return m_fpFldQuest->unknown00;
   case QTYPE_BLADE:
-    return m_fpFldQuestBlade->data;
+    return m_fpFldQuestBlade->unknown00;
   case QTYPE_NORMAL:
     if (quest.id < 2000) {
-      return m_fpFldQuestMini->data;
+      return m_fpFldQuestMini->unknown00;
     }
 
-    return m_fpFldQuestNormal->data;
+    return m_fpFldQuestNormal->unknown00;
   case QTYPE_MERCENARIES:
-    return m_fpFldQuestMercenaries->data;
+    return m_fpFldQuestMercenaries->unknown00;
   case QTYPE_ACHIEVEMENT:
-    return m_fpFldQuestAchievement->data;
+    return m_fpFldQuestAchievement->unknown00;
   }
 
-  return m_fpFldQuest->data;
+  return m_fpFldQuest->unknown00;
 }
 
 u8 *GfBdatMsg::getFpQuest(u32 quest) {
   if (quest < 1000) {
-    return m_fpFldQuest->data;
+    return m_fpFldQuest->unknown00;
   }
 
   if (quest < 2000) {
-    return m_fpFldQuestMini->data;
+    return m_fpFldQuestMini->unknown00;
   }
 
   if (quest < 4000) {
-    return m_fpFldQuestNormal->data;
+    return m_fpFldQuestNormal->unknown00;
   }
 
   if (quest < 6000) {
-    return m_fpFldQuestBlade->data;
+    return m_fpFldQuestBlade->unknown00;
   }
 
   if (quest < 7000) {
-    return m_fpFldQuestMercenaries->data;
+    return m_fpFldQuestMercenaries->unknown00;
   }
 
-  return m_fpFldQuest->data;
+  return m_fpFldQuest->unknown00;
 }
 
 const char *GfBdatMsg::getNameMapInfo(u32 id) {
-  if (id < Bdat::getIdTop(m_fpFldMapInfo->data) || id >= Bdat::getIdTop(m_fpFldMapInfo->data) + Bdat::getIdCount(m_fpFldMapInfo->data)) {
+  if (id < Bdat::getIdTop(m_fpFldMapInfo->unknown00) || id >= Bdat::getIdTop(m_fpFldMapInfo->unknown00) + Bdat::getIdCount(m_fpFldMapInfo->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpFldMapInfo->data, id);
+  return Bdat::getMSText(m_fpFldMapInfo->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpMapInfo() { return m_fpFldMapInfo->data; }
+u8 *GfBdatMsg::getFpMapInfo() { return m_fpFldMapInfo->unknown00; }
 
 const char *GfBdatMsg::getNameLandmark(u32 id) {
-  if (id < Bdat::getIdTop(m_fpFldLandmark->data) || id >= Bdat::getIdTop(m_fpFldLandmark->data) + Bdat::getIdCount(m_fpFldLandmark->data)) {
+  if (id < Bdat::getIdTop(m_fpFldLandmark->unknown00) || id >= Bdat::getIdTop(m_fpFldLandmark->unknown00) + Bdat::getIdCount(m_fpFldLandmark->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpFldLandmark->data, id);
+  return Bdat::getMSText(m_fpFldLandmark->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpLandmark() { return m_fpFldLandmark->data; }
+u8 *GfBdatMsg::getFpLandmark() { return m_fpFldLandmark->unknown00; }
 
 const char *GfBdatMsg::getNameCollection(u32 id) {
-  if (id < Bdat::getIdTop(m_fpItmCollection->data) || id >= Bdat::getIdTop(m_fpItmCollection->data) + Bdat::getIdCount(m_fpItmCollection->data)) {
+  if (id < Bdat::getIdTop(m_fpItmCollection->unknown00) || id >= Bdat::getIdTop(m_fpItmCollection->unknown00) + Bdat::getIdCount(m_fpItmCollection->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpItmCollection->data, id);
+  return Bdat::getMSText(m_fpItmCollection->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpCollection() { return m_fpItmCollection->data; }
+u8 *GfBdatMsg::getFpCollection() { return m_fpItmCollection->unknown00; }
 
 const char *GfBdatMsg::getNameCrystal(u32 id) {
-  if (id < Bdat::getIdTop(m_fpItmCrystal->data) || id >= Bdat::getIdTop(m_fpItmCrystal->data) + Bdat::getIdCount(m_fpItmCrystal->data)) {
+  if (id < Bdat::getIdTop(m_fpItmCrystal->unknown00) || id >= Bdat::getIdTop(m_fpItmCrystal->unknown00) + Bdat::getIdCount(m_fpItmCrystal->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpItmCrystal->data, id);
+  return Bdat::getMSText(m_fpItmCrystal->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpCrystal() { return m_fpItmCrystal->data; }
+u8 *GfBdatMsg::getFpCrystal() { return m_fpItmCrystal->unknown00; }
 
 const char *GfBdatMsg::getNamePrecious(u32 id) {
-  if (id < Bdat::getIdTop(m_fpItmPrecious->data) || id >= Bdat::getIdTop(m_fpItmPrecious->data) + Bdat::getIdCount(m_fpItmPrecious->data)) {
+  if (id < Bdat::getIdTop(m_fpItmPrecious->unknown00) || id >= Bdat::getIdTop(m_fpItmPrecious->unknown00) + Bdat::getIdCount(m_fpItmPrecious->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpItmPrecious->data, id);
+  return Bdat::getMSText(m_fpItmPrecious->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpPrecious() { return m_fpItmPrecious->data; }
+u8 *GfBdatMsg::getFpPrecious() { return m_fpItmPrecious->unknown00; }
 
 const char *GfBdatMsg::getNameInfo(u32 id) {
-  if (id < Bdat::getIdTop(m_fpItmInfo->data) || id >= Bdat::getIdTop(m_fpItmInfo->data) + Bdat::getIdCount(m_fpItmInfo->data)) {
+  if (id < Bdat::getIdTop(m_fpItmInfo->unknown00) || id >= Bdat::getIdTop(m_fpItmInfo->unknown00) + Bdat::getIdCount(m_fpItmInfo->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpItmInfo->data, id);
+  return Bdat::getMSText(m_fpItmInfo->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpInfo() { return m_fpItmInfo->data; }
+u8 *GfBdatMsg::getFpInfo() { return m_fpItmInfo->unknown00; }
 
 const char *GfBdatMsg::getNameEvent(u32 id) {
-  if (id < Bdat::getIdTop(m_fpItmEvent->data) || id >= Bdat::getIdTop(m_fpItmEvent->data) + Bdat::getIdCount(m_fpItmEvent->data)) {
+  if (id < Bdat::getIdTop(m_fpItmEvent->unknown00) || id >= Bdat::getIdTop(m_fpItmEvent->unknown00) + Bdat::getIdCount(m_fpItmEvent->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpItmEvent->data, id);
+  return Bdat::getMSText(m_fpItmEvent->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpEvent() { return m_fpItmEvent->data; }
+u8 *GfBdatMsg::getFpEvent() { return m_fpItmEvent->unknown00; }
 
-u8 *GfBdatMsg::getFpPcWpn() { return m_fpItmPcWpn->data; }
+u8 *GfBdatMsg::getFpPcWpn() { return m_fpItmPcWpn->unknown00; }
 
-u8 *GfBdatMsg::getFpPcWpnChip() { return m_fpItmPcWpnChip->data; }
+u8 *GfBdatMsg::getFpPcWpnChip() { return m_fpItmPcWpnChip->unknown00; }
 
-u8 *GfBdatMsg::getFpPcWpnType() { return m_fpItmPcWpnType->data; }
+u8 *GfBdatMsg::getFpPcWpnType() { return m_fpItmPcWpnType->unknown00; }
 
-u8 *GfBdatMsg::getFpSalvage() { return m_fpItmSalvage->data; }
+u8 *GfBdatMsg::getFpSalvage() { return m_fpItmSalvage->unknown00; }
 
-u8 *GfBdatMsg::getFpTresure() { return m_fpItmTresure->data; }
+u8 *GfBdatMsg::getFpTresure() { return m_fpItmTresure->unknown00; }
 
-u8 *GfBdatMsg::getFpBooster() { return m_fpItmBooster->data; }
+u8 *GfBdatMsg::getFpBooster() { return m_fpItmBooster->unknown00; }
 
-u8 *GfBdatMsg::getFpFavorite() { return m_fpItmFavorite->data; }
+u8 *GfBdatMsg::getFpFavorite() { return m_fpItmFavorite->unknown00; }
 
-u8 *GfBdatMsg::getFpOrb() { return m_fpItmOrb->data; }
+u8 *GfBdatMsg::getFpOrb() { return m_fpItmOrb->unknown00; }
 
-u8 *GfBdatMsg::getFpPcEquip() { return m_fpItmPcEquip->data; }
+u8 *GfBdatMsg::getFpPcEquip() { return m_fpItmPcEquip->unknown00; }
 
 const char *GfBdatMsg::getNameBladeName(u32 id) {
-  if (id < Bdat::getIdTop(m_fpBldBladeName->data) || id >= Bdat::getIdTop(m_fpBldBladeName->data) + Bdat::getIdCount(m_fpBldBladeName->data)) {
+  if (id < Bdat::getIdTop(m_fpBldBladeName->unknown00) || id >= Bdat::getIdTop(m_fpBldBladeName->unknown00) + Bdat::getIdCount(m_fpBldBladeName->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpBldBladeName->data, id);
+  return Bdat::getMSText(m_fpBldBladeName->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpCommonBladeName() { return m_fpBldBladeName->data; }
+u8 *GfBdatMsg::getFpCommonBladeName() { return m_fpBldBladeName->unknown00; }
 
-u8 *GfBdatMsg::getFpMerceName() { return m_fpBldMerceName->data; }
+u8 *GfBdatMsg::getFpMerceName() { return m_fpBldMerceName->unknown00; }
 
 const char *GfBdatMsg::getNameFieldSkill(u32 id) {
-  if (id < Bdat::getIdTop(m_fpFldFieldSkill->data) || id >= Bdat::getIdTop(m_fpFldFieldSkill->data) + Bdat::getIdCount(m_fpFldFieldSkill->data)) {
+  if (id < Bdat::getIdTop(m_fpFldFieldSkill->unknown00) || id >= Bdat::getIdTop(m_fpFldFieldSkill->unknown00) + Bdat::getIdCount(m_fpFldFieldSkill->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpFldFieldSkill->data, id);
+  return Bdat::getMSText(m_fpFldFieldSkill->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpFieldSkill() { return m_fpFldFieldSkill->data; }
+u8 *GfBdatMsg::getFpFieldSkill() { return m_fpFldFieldSkill->unknown00; }
 
-u8 *GfBdatMsg::getFpAchievement() { return m_fpFldAchievement->data; }
+u8 *GfBdatMsg::getFpAchievement() { return m_fpFldAchievement->unknown00; }
 
 const char *GfBdatMsg::getNameChrDr(u32 id) {
-  if (id < Bdat::getIdTop(m_fpChrDr->data) || id >= Bdat::getIdTop(m_fpChrDr->data) + Bdat::getIdCount(m_fpChrDr->data)) {
+  if (id < Bdat::getIdTop(m_fpChrDr->unknown00) || id >= Bdat::getIdTop(m_fpChrDr->unknown00) + Bdat::getIdCount(m_fpChrDr->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpChrDr->data, id);
+  return Bdat::getMSText(m_fpChrDr->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpChrDr() { return m_fpChrDr->data; }
+u8 *GfBdatMsg::getFpChrDr() { return m_fpChrDr->unknown00; }
 
 const char *GfBdatMsg::getNameChrBl(u32 id) {
-  if (id < Bdat::getIdTop(m_fpChrBl->data) || id >= Bdat::getIdTop(m_fpChrBl->data) + Bdat::getIdCount(m_fpChrBl->data)) {
+  if (id < Bdat::getIdTop(m_fpChrBl->unknown00) || id >= Bdat::getIdTop(m_fpChrBl->unknown00) + Bdat::getIdCount(m_fpChrBl->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpChrBl->data, id);
+  return Bdat::getMSText(m_fpChrBl->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpChrBl() { return m_fpChrBl->data; }
+u8 *GfBdatMsg::getFpChrBl() { return m_fpChrBl->unknown00; }
 
 const char *GfBdatMsg::getNameEnGenus(u32 id) {
-  if (id < Bdat::getIdTop(m_fpBtlEnGenus->data) || id >= Bdat::getIdTop(m_fpBtlEnGenus->data) + Bdat::getIdCount(m_fpBtlEnGenus->data)) {
+  if (id < Bdat::getIdTop(m_fpBtlEnGenus->unknown00) || id >= Bdat::getIdTop(m_fpBtlEnGenus->unknown00) + Bdat::getIdCount(m_fpBtlEnGenus->unknown00)) {
     return _gfbms::szEmpty;
   }
 
-  return Bdat::getMSText(m_fpChrBl->data, id);
+  return Bdat::getMSText(m_fpChrBl->unknown00, id);
 }
 
-u8 *GfBdatMsg::getFpBtlClass() { return m_fpBtlClass->data; }
+u8 *GfBdatMsg::getFpBtlClass() { return m_fpBtlClass->unknown00; }
 
-u8 *GfBdatMsg::getFpBlArtsMs() { return m_fpBlArtsMs->data; }
+u8 *GfBdatMsg::getFpBlArtsMs() { return m_fpBlArtsMs->unknown00; }
 
-u8 *GfBdatMsg::getFpBlSpArtsMs() { return m_fpBlSpArtsMs->data; }
+u8 *GfBdatMsg::getFpBlSpArtsMs() { return m_fpBlSpArtsMs->unknown00; }
 
-u8 *GfBdatMsg::getFpBlSkill() { return m_fpBlSkill->data; }
+u8 *GfBdatMsg::getFpBlSkill() { return m_fpBlSkill->unknown00; }
 
-u8 *GfBdatMsg::getFpDrArtsMs() { return m_fpDrArtsMs->data; }
+u8 *GfBdatMsg::getFpDrArtsMs() { return m_fpDrArtsMs->unknown00; }
 
-u8 *GfBdatMsg::getFpBtlEnhanceCap() { return m_fpBtlEnhanceCap->data; }
+u8 *GfBdatMsg::getFpBtlEnhanceCap() { return m_fpBtlEnhanceCap->unknown00; }
 
-u8 *GfBdatMsg::getFpBlBuffMs() { return m_fpBtlBuffMs->data; }
+u8 *GfBdatMsg::getFpBlBuffMs() { return m_fpBtlBuffMs->unknown00; }
 
-u8 *GfBdatMsg::getFpBlBuffCap() { return m_fpBtlBuffCap->data; }
+u8 *GfBdatMsg::getFpBlBuffCap() { return m_fpBtlBuffCap->unknown00; }
 
-u8 *GfBdatMsg::getFpBtlHanaRole() { return m_fpBtlHanaRole->data; }
+u8 *GfBdatMsg::getFpBtlHanaRole() { return m_fpBtlHanaRole->unknown00; }
 
-u8 *GfBdatMsg::getFpBtlHanaNArts() { return m_fpBtlHanaNArts->data; }
+u8 *GfBdatMsg::getFpBtlHanaNArts() { return m_fpBtlHanaNArts->unknown00; }
 
-u8 *GfBdatMsg::getFpBtlHanaArts() { return m_fpBtlHanaArts->data; }
+u8 *GfBdatMsg::getFpBtlHanaArts() { return m_fpBtlHanaArts->unknown00; }
 
-u8 *GfBdatMsg::getFpBtlHanaAtr() { return m_fpBtlHanaAtr->data; }
+u8 *GfBdatMsg::getFpBtlHanaAtr() { return m_fpBtlHanaAtr->unknown00; }
 
-u8 *GfBdatMsg::getFpBtlHanaAssist() { return m_fpBtlHanaAssist->data; }
+u8 *GfBdatMsg::getFpBtlHanaAssist() { return m_fpBtlHanaAssist->unknown00; }
 
-u8 *GfBdatMsg::getFpBtlSkillDr() { return m_fpBtlSkillDr->data; }
+u8 *GfBdatMsg::getFpBtlSkillDr() { return m_fpBtlSkillDr->unknown00; }
 
-u8 *GfBdatMsg::getFpRscEnGenus() { return m_fpBtlEnGenus->data; }
+u8 *GfBdatMsg::getFpRscEnGenus() { return m_fpBtlEnGenus->unknown00; }
 
 } // namespace gf

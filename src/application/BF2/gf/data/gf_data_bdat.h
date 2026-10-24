@@ -37,19 +37,19 @@ public:
 private:
   static const u32 BDAT_COUNT = 0x19d;
 
-  u8 *mFps[BDAT_COUNT];
-  u32 mReloadCount;
-  bool mInitialized;
-  mm::mtl::FixedVector<IDataBdat *, 128> mListeners;
+  u8 *unknown10[BDAT_COUNT];                         // Inferred role: fps; original member name unknown.
+  u32 unknowncf8;                                    // Inferred role: reload count; original member name unknown.
+  bool unknowncfc;                                   // Inferred role: initialized; original member name unknown.
+  mm::mtl::FixedVector<IDataBdat *, 128> unknownd00; // Inferred role: listeners; original member name unknown.
 
   friend struct GfDataBdatLayout;
 };
 
 struct GfDataBdatLayout {
-  static_assert(offsetof(GfDataBdat, mFps) == 0x10, "");
-  static_assert(offsetof(GfDataBdat, mReloadCount) == 0xcf8, "");
-  static_assert(offsetof(GfDataBdat, mInitialized) == 0xcfc, "");
-  static_assert(offsetof(GfDataBdat, mListeners) == 0xd00, "");
+  static_assert(offsetof(GfDataBdat, unknown10) == 0x10, "");
+  static_assert(offsetof(GfDataBdat, unknowncf8) == 0xcf8, "");
+  static_assert(offsetof(GfDataBdat, unknowncfc) == 0xcfc, "");
+  static_assert(offsetof(GfDataBdat, unknownd00) == 0xd00, "");
   static_assert(sizeof(GfDataBdat) == 0x1108, "");
 };
 

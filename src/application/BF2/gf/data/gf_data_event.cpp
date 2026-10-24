@@ -139,8 +139,8 @@ bool GfDataEvent::isSaveEvent(u32 event) {
 }
 
 bool GfDataEvent::isSavedEvent(u32 event, const SDataGame &dataGame) {
-  for (u32 index = 0; index < dataGame.savedEventNum; index++) {
-    if (dataGame.savedEvents[index].event == event) {
+  for (u32 index = 0; index < dataGame.unknown1171d4; index++) {
+    if (dataGame.unknown10ae84[index].unknown00 == event) {
       return true;
     }
   }
@@ -159,7 +159,7 @@ u32 GfDataEvent::getBladeQuestDriver(u32 event) {
         return blade;
       }
 
-      return GfDataBlade::getSDataBlade(blade)->creator;
+      return GfDataBlade::getSDataBlade(blade)->unknown02;
     }
   }
 

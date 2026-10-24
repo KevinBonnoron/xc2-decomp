@@ -277,7 +277,7 @@ f32 GfDataItem::getFavoriteItemTime(u32 item) { return GfBdatItem::get()->getFav
 
 u32 GfDataItem::getFavoriteItemType(u32 item) { return GfBdatItem::get()->getFavoriteType(item); }
 
-ItemBox *GfDataItem::getItemBox() { return &GfDataManager::getDataGame()->itemBox; }
+ItemBox *GfDataItem::getItemBox() { return &GfDataManager::getDataGame()->unknowne98d8; }
 
 bool GfDataItem::getItemType(ItemType::Type &type, u32 &index, u32 item) {
   if (item == 0) {

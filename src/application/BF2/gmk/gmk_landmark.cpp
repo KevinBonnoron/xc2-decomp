@@ -13,7 +13,7 @@ void GmkLandmark::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gm
   msgId = bdat.getValCheck("MSGID", id, BDAT_TYPE_U16);
   category = bdat.getValCheck("category", id, BDAT_TYPE_U8);
   condition = bdat.getValCheck("cndID", id, BDAT_TYPE_U16);
-  isNoTelop = Bdat::getFlagVal(bdat.data, "flag", id, "noTelop") != 0;
+  isNoTelop = Bdat::getFlagVal(bdat.unknown00, "flag", id, "noTelop") != 0;
   if (msgId != 0) {
     name = Bdat::getMSText(gf::GfDataBdat::getFP(gf::BDAT_FLD_LANDMARK), msgId);
   }

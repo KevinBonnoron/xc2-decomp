@@ -134,7 +134,7 @@ bool GfDataMap::isZoneCompleteFlag(u32 zone) {
   return false;
 }
 
-SDataMap *GfDataMap::getSDataMap() { return &GfDataManager::getDataGame()->map; }
+SDataMap *GfDataMap::getSDataMap() { return &GfDataManager::getDataGame()->unknown1097f0; }
 
 const char *GfDataMap::getMapResourceName(u32 mapJump) {
   u32 map = getMapID(mapJump);
@@ -309,11 +309,11 @@ WEATHERID GfDataMap::getWeatherIdByWeaType(u32 map, WEATYPE weatherType) {
   return WEATHER_F;
 }
 
-CLOUD_SEA GfDataMap::getCloudType(u32 map) { return static_cast<CLOUD_SEA>(GfDataManager::getDataGame()->mapInfos[map].cloudType != 0); }
+CLOUD_SEA GfDataMap::getCloudType(u32 map) { return static_cast<CLOUD_SEA>(GfDataManager::getDataGame()->unknown10a53c[map].unknown1c != 0); }
 
 void GfDataMap::setCloudType(u32 map, CLOUD_SEA cloudType) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->mapInfos[map].cloudType = cloudType != 0;
+  dataGame->unknown10a53c[map].unknown1c = cloudType != 0;
 }
 
 bool GfDataMap::isArcadiaDestroy() { return GfDataUtil::getScenarioFlag() >= SCENARIO_FLAG_ARCADIA_DESTROY; }

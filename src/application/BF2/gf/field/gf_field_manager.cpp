@@ -174,27 +174,27 @@ bool GfFieldManager::getLandmarkNameId(u8 *&bdat, int &textId) {
 
 void GfFieldManager::setLandmarkPoint(u32 landmark, const mm::Vec3 &position, f32 rotationY) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->landmarkPoint = landmark;
-  dataGame->landmarkPos = position;
-  dataGame->landmarkRotY = rotationY;
+  dataGame->unknown04 = landmark;
+  dataGame->unknown10 = position;
+  dataGame->unknown20 = rotationY;
 }
 
 u32 GfFieldManager::getLandmarkPoint() {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  if (dataGame->landmarkPoint != 0) {
-    return dataGame->landmarkPoint;
+  if (dataGame->unknown04 != 0) {
+    return dataGame->unknown04;
   }
   return GfGameManager::getMapJumpID();
 }
 
 const mm::Vec3 &GfFieldManager::getLandmarkPos() {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  return dataGame->landmarkPoint == 0 ? mm::Vec3::zero : dataGame->landmarkPos;
+  return dataGame->unknown04 == 0 ? mm::Vec3::zero : dataGame->unknown10;
 }
 
 f32 GfFieldManager::getLandmarkRotY() {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  return dataGame->landmarkPoint != 0 ? dataGame->landmarkRotY : 0.0f;
+  return dataGame->unknown04 != 0 ? dataGame->unknown20 : 0.0f;
 }
 
 void GfFieldManager::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {

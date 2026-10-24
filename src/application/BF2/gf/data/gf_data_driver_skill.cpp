@@ -194,12 +194,12 @@ bool GfDataDriverSkill::isSkillUnlock(u32 driver, u32 row, u32 column, bool isHi
 }
 
 u16 GfDataDriverSkill::getSkill(const SDataDriver &dataDriver, u32 row, u32 column, bool isHidden) {
-  if (column - 1 >= SKILL_COLUMN_COUNT || dataDriver.id >= SKILL_DRIVER_END) {
+  if (column - 1 >= SKILL_COLUMN_COUNT || dataDriver.unknown22 >= SKILL_DRIVER_END) {
     return 0;
   }
 
-  const SDataDriverSkillRow *rows = isHidden ? dataDriver.hiddenSkillRows : dataDriver.skillRows;
-  return rows[row].skills[column - 1];
+  const SDataDriverSkillRow *rows = isHidden ? dataDriver.unknown62 : dataDriver.unknown30;
+  return rows[row].unknown00[column - 1];
 }
 
 u32 GfDataDriverSkill::getNextSkillPoint(u32 driver, u32 row, bool isHidden) {
@@ -222,12 +222,12 @@ u32 GfDataDriverSkill::getNextSkillPoint(u32 driver, u32 row, bool isHidden) {
 u32 GfDataDriverSkill::getSkillLevel(u32 driver, u32 row, bool isHidden) { return getSkillLevel(*GfDataDriver::getSDataDriver(driver), row, isHidden); }
 
 u16 GfDataDriverSkill::getSkillLevel(const SDataDriver &dataDriver, u32 row, bool isHidden) {
-  if (dataDriver.id >= SKILL_DRIVER_END) {
+  if (dataDriver.unknown22 >= SKILL_DRIVER_END) {
     return 0;
   }
 
-  const SDataDriverSkillRow *rows = isHidden ? dataDriver.hiddenSkillRows : dataDriver.skillRows;
-  return rows[row].level;
+  const SDataDriverSkillRow *rows = isHidden ? dataDriver.unknown62 : dataDriver.unknown30;
+  return rows[row].unknown08;
 }
 
 void GfDataDriverSkill::setSkillLevel(u32 driver, u32 row, u32 level, bool isHidden) {
@@ -236,10 +236,10 @@ void GfDataDriverSkill::setSkillLevel(u32 driver, u32 row, u32 level, bool isHid
   }
 
   SDataDriver *dataDriver = GfDataDriver::getSDataDriver(driver);
-  SDataDriverSkillRow *rows = isHidden ? dataDriver->hiddenSkillRows : dataDriver->skillRows;
-  rows[row].level = static_cast<u8>(level);
+  SDataDriverSkillRow *rows = isHidden ? dataDriver->unknown62 : dataDriver->unknown30;
+  rows[row].unknown08 = static_cast<u8>(level);
   for (u32 column = 1; column <= level; column++) {
-    rows[row].skills[column - 1] = getSkillFromBdat(driver, row, column, isHidden);
+    rows[row].unknown00[column - 1] = getSkillFromBdat(driver, row, column, isHidden);
   }
 }
 

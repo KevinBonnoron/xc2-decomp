@@ -33,36 +33,36 @@ enum {
 };
 
 struct SDataMap {
-  mm::Vec3 driverSavePos[3];
-  mm::Vec3 bladeSavePos[3];
-  mm::Vec3 driverSaveRot[3];
-  mm::Vec3 bladeSaveRot[3];
-  u32 skipTravelID;
+  mm::Vec3 unknown00[3]; // Inferred role: driver save pos; original member name unknown.
+  mm::Vec3 unknown30[3]; // Inferred role: blade save pos; original member name unknown.
+  mm::Vec3 unknown60[3]; // Inferred role: driver save rot; original member name unknown.
+  mm::Vec3 unknown90[3]; // Inferred role: blade save rot; original member name unknown.
+  u32 unknownc0;         // Inferred role: skip travel id; original member name unknown.
 };
 
-static_assert(offsetof(SDataMap, bladeSavePos) == 0x030, "");
-static_assert(offsetof(SDataMap, driverSaveRot) == 0x060, "");
-static_assert(offsetof(SDataMap, bladeSaveRot) == 0x090, "");
-static_assert(offsetof(SDataMap, skipTravelID) == 0x0c0, "");
+static_assert(offsetof(SDataMap, unknown30) == 0x030, "");
+static_assert(offsetof(SDataMap, unknown60) == 0x060, "");
+static_assert(offsetof(SDataMap, unknown90) == 0x090, "");
+static_assert(offsetof(SDataMap, unknownc0) == 0x0c0, "");
 static_assert(sizeof(SDataMap) == 0x0d0, "");
 
 struct WeatherParam {
-  char resource[8];
-  WEATYPE type;
-  WEATHERID weather;
-  f32 pastSec;
-  f32 existSec;
-  u32 map;
+  char unknown00[8];   // Inferred role: resource; original member name unknown.
+  WEATYPE unknown08;   // Inferred role: type; original member name unknown.
+  WEATHERID unknown0c; // Inferred role: weather; original member name unknown.
+  f32 unknown10;       // Inferred role: past sec; original member name unknown.
+  f32 unknown14;       // Inferred role: exist sec; original member name unknown.
+  u32 unknown18;       // Inferred role: map; original member name unknown.
 };
 
 static_assert(sizeof(WeatherParam) == 0x1c, "");
 
 struct SDataMapInfo {
-  WeatherParam weatherParam;
-  u32 cloudType;
+  WeatherParam unknown00; // Inferred role: weather param; original member name unknown.
+  u32 unknown1c;          // Inferred role: cloud type; original member name unknown.
 };
 
-static_assert(offsetof(SDataMapInfo, cloudType) == 0x1c, "");
+static_assert(offsetof(SDataMapInfo, unknown1c) == 0x1c, "");
 static_assert(sizeof(SDataMapInfo) == 0x20, "");
 
 class GfDataMap {

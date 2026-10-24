@@ -151,7 +151,7 @@ u32 GfGameParty::getPartyId(GF_OBJ_HANDLE *handle) {
         return partyId;
       }
 
-      int setBladeNum = GfDataDriver::getMaxSetBladeNum(GfDataParty::getPartyMember(partyId)->driver);
+      int setBladeNum = GfDataDriver::getMaxSetBladeNum(GfDataParty::getPartyMember(partyId)->unknown00);
       for (int slot = 0; slot < setBladeNum; slot++) {
         if (member->blades[slot] == handle) {
           return partyId;
@@ -177,13 +177,13 @@ u32 GfGameParty::getDriverBdatId(u32 partyId) {
     return 0;
   }
 
-  return GfDataParty::getPartyMember(partyId)->driver;
+  return GfDataParty::getPartyMember(partyId)->unknown00;
 }
 
 u32 GfGameParty::getPartyId(u32 objectType, u32 id) {
   GfMemberInfo *member = &get()->mMembers[0];
   for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++, member++) {
-    int setBladeNum = GfDataDriver::getMaxSetBladeNum(GfDataParty::getPartyMember(partyId)->driver);
+    int setBladeNum = GfDataDriver::getMaxSetBladeNum(GfDataParty::getPartyMember(partyId)->unknown00);
     if (objectType == OBJECT_TYPE_DRIVER) {
       DataParamAcc paramAcc(member->driver);
       if (paramAcc.isValid() && paramAcc.getValidDriverId() == id) {
@@ -221,7 +221,7 @@ u32 GfGameParty::getPartyId(GF_MOUNT_HANDLE *mountHandle) {
       return partyId;
     }
 
-    int setBladeNum = GfDataDriver::getMaxSetBladeNum(GfDataParty::getPartyMember(partyId)->driver);
+    int setBladeNum = GfDataDriver::getMaxSetBladeNum(GfDataParty::getPartyMember(partyId)->unknown00);
     for (int slot = 0; slot < setBladeNum; slot++) {
       if (GfObjUtil::getMountHandle(member->blades[slot], GFATTACH_WEAPON) == mountHandle) {
         return partyId;
@@ -248,11 +248,11 @@ GF_OBJ_HANDLE *GfGameParty::getHandleByHierarchy(u32 hierarchy) {
 
   for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
     SDataPartyMember *partyMember = GfDataParty::getPartyMember(partyId);
-    if (partyMember->hierarchyDriver == hierarchy) {
+    if (partyMember->unknown02 == hierarchy) {
       return getHandleDriver(partyId);
     }
 
-    if (partyMember->hierarchyBlade == hierarchy) {
+    if (partyMember->unknown04 == hierarchy) {
       return getHandleBlade(partyId, -1);
     }
   }
@@ -279,7 +279,7 @@ GF_OBJ_HANDLE *GfGameParty::getHandleDriver(u32 partyId) {
 
 GF_OBJ_HANDLE *GfGameParty::getHandleDriverByBdatID(u32 driver) {
   for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
-    if (GfDataParty::getPartyMember(partyId)->driver == driver) {
+    if (GfDataParty::getPartyMember(partyId)->unknown00 == driver) {
       return getHandleDriver(partyId);
     }
   }
@@ -294,7 +294,7 @@ GF_OBJ_HANDLE *GfGameParty::getHandleBlade(u32 partyId, int slot) {
   }
 
   if (slot < 0) {
-    slot = GfDataDriver::getBladeSet(GfDataParty::getPartyMember(partyId)->driver);
+    slot = GfDataDriver::getBladeSet(GfDataParty::getPartyMember(partyId)->unknown00);
     if (slot < 0) {
       return INVALID_HANDLE;
     }
@@ -312,9 +312,9 @@ GF_OBJ_HANDLE *GfGameParty::getHandleDriverByHierarchy(u32 hierarchy) {
   return getHandleDriver(getPartyId(handle));
 }
 
-u32 GfGameParty::getHierarchyDriver(u32 partyId) { return GfDataParty::getPartyMember(partyId)->hierarchyDriver; }
+u32 GfGameParty::getHierarchyDriver(u32 partyId) { return GfDataParty::getPartyMember(partyId)->unknown02; }
 
-u32 GfGameParty::getHierarchyBlade(u32 partyId) { return GfDataParty::getPartyMember(partyId)->hierarchyBlade; }
+u32 GfGameParty::getHierarchyBlade(u32 partyId) { return GfDataParty::getPartyMember(partyId)->unknown04; }
 
 u32 GfGameParty::getPartyMemberNum() {
   GfDataManager::getDataGame();
@@ -354,12 +354,12 @@ u32 GfGameParty::getHierarchyMax() {
   u32 hierarchyMax = 0;
   for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
     SDataPartyMember *partyMember = GfDataParty::getPartyMember(partyId);
-    if (hierarchyMax < partyMember->hierarchyDriver) {
-      hierarchyMax = partyMember->hierarchyDriver;
+    if (hierarchyMax < partyMember->unknown02) {
+      hierarchyMax = partyMember->unknown02;
     }
 
-    if (hierarchyMax < partyMember->hierarchyBlade) {
-      hierarchyMax = partyMember->hierarchyBlade;
+    if (hierarchyMax < partyMember->unknown04) {
+      hierarchyMax = partyMember->unknown04;
     }
   }
 
@@ -413,7 +413,7 @@ bool GfGameParty::isExistObj() {
       }
     }
 
-    int bladeSet = GfDataDriver::getBladeSet(GfDataParty::getPartyMember(partyId)->driver);
+    int bladeSet = GfDataDriver::getBladeSet(GfDataParty::getPartyMember(partyId)->unknown00);
     if (bladeSet >= 0) {
       GF_OBJ_HANDLE *blade = party->mMembers[partyId].blades[bladeSet];
       if (blade != INVALID_HANDLE) {
@@ -445,7 +445,7 @@ bool GfGameParty::isReadyObj() {
       return false;
     }
 
-    int setBladeNum = GfDataDriver::getMaxSetBladeNum(GfDataParty::getPartyMember(partyId)->driver);
+    int setBladeNum = GfDataDriver::getMaxSetBladeNum(GfDataParty::getPartyMember(partyId)->unknown00);
     for (int slot = 0; slot < setBladeNum; slot++) {
       if (member->blades[slot] == INVALID_HANDLE) {
         continue;
@@ -889,8 +889,8 @@ u32 GfGameParty::getPartySetBlade(u32 index) {
 void GfGameParty::getCurrentPartyInfo(RQ_SETUP_PARTY &info) {
   for (u32 partyId = 0; partyId < PARTY_MEMBER_MAX; partyId++) {
     RQ_SETUP_PARTY::Member &member = info.members[partyId];
-    member.driver = GfDataParty::getPartyMember(partyId)->driver;
-    member.bladeSet = GfDataDriver::getBladeSet(GfDataParty::getPartyMember(partyId)->driver);
+    member.driver = GfDataParty::getPartyMember(partyId)->unknown00;
+    member.bladeSet = GfDataDriver::getBladeSet(GfDataParty::getPartyMember(partyId)->unknown00);
     int setBladeNum = GfDataDriver::getMaxSetBladeNum(member.driver);
     for (int slot = 0; slot < setBladeNum; slot++) {
       member.blades[slot] = getBladeBdatId(partyId, slot);
@@ -898,23 +898,23 @@ void GfGameParty::getCurrentPartyInfo(RQ_SETUP_PARTY &info) {
   }
 
   SDataParty *dataParty = GfDataParty::getSDataParty();
-  info.leaderObjectType = dataParty->leaderObjectType;
-  info.savedLeaderObjectType = dataParty->savedLeaderObjectType;
-  info.leader = dataParty->leader;
-  info.savedLeader = dataParty->savedLeader;
+  info.leaderObjectType = dataParty->unknown3c;
+  info.savedLeaderObjectType = dataParty->unknown44;
+  info.leader = dataParty->unknown40;
+  info.savedLeader = dataParty->unknown48;
 }
 
 void GfGameParty::getCurrentPartyInfo(RQ_SETUP_PARTY_DRIVER &info) {
   for (u32 partyId = 0; partyId < PARTY_MEMBER_MAX; partyId++) {
-    info.drivers[partyId] = GfDataParty::getPartyMember(partyId)->driver;
+    info.drivers[partyId] = GfDataParty::getPartyMember(partyId)->unknown00;
   }
 
-  info.leader = GfDataParty::getSDataParty()->leader;
+  info.leader = GfDataParty::getSDataParty()->unknown40;
 }
 
-u16 GfGameParty::getPartyGauge() { return GfDataParty::getSDataParty()->partyGauge; }
+u16 GfGameParty::getPartyGauge() { return GfDataParty::getSDataParty()->unknown4c; }
 
-void GfGameParty::setPartyGauge(u16 partyGauge) { GfDataParty::getSDataParty()->partyGauge = partyGauge; }
+void GfGameParty::setPartyGauge(u16 partyGauge) { GfDataParty::getSDataParty()->unknown4c = partyGauge; }
 
 void GfGameParty::gevChangeBlade(GF_OBJ_HANDLE *handle, int, int) {
   u32 partyId = getPartyId(handle);
@@ -940,8 +940,8 @@ void GfGameParty::setPartyLeader(GF_OBJ_HANDLE *handle) {
     GF_OBJ_HANDLE *blade = getHandleBlade(partyId, -1);
     if (driver == handle || blade == handle) {
       DataParamAcc paramAcc(handle);
-      dataParty->leader = paramAcc.getObjType() == OBJECT_TYPE_DRIVER ? paramAcc.getValidDriverId() : paramAcc.getValidBdatId();
-      dataParty->leaderObjectType = paramAcc.getObjType();
+      dataParty->unknown40 = paramAcc.getObjType() == OBJECT_TYPE_DRIVER ? paramAcc.getValidDriverId() : paramAcc.getValidBdatId();
+      dataParty->unknown3c = paramAcc.getObjType();
       recalcHierarchy();
       GfEvent::callPartyChange();
       return;
@@ -953,17 +953,17 @@ void GfGameParty::recalcHierarchy() {
   SDataParty *dataParty = GfDataParty::getSDataParty();
   for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
     SDataPartyMember *partyMember = GfDataParty::getPartyMember(partyId);
-    partyMember->hierarchyDriver = 0;
-    partyMember->hierarchyBlade = 0;
+    partyMember->unknown02 = 0;
+    partyMember->unknown04 = 0;
   }
 
   u32 leaderPartyId = 0;
-  switch (dataParty->leaderObjectType) {
+  switch (dataParty->unknown3c) {
   case OBJECT_TYPE_DRIVER:
     for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
       SDataPartyMember *partyMember = GfDataParty::getPartyMember(partyId);
-      if (getDriverBdatId(partyId) == dataParty->leader) {
-        partyMember->hierarchyDriver = 1;
+      if (getDriverBdatId(partyId) == dataParty->unknown40) {
+        partyMember->unknown02 = 1;
         leaderPartyId = partyId;
         break;
       }
@@ -972,8 +972,8 @@ void GfGameParty::recalcHierarchy() {
   case OBJECT_TYPE_BLADE:
     for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
       SDataPartyMember *partyMember = GfDataParty::getPartyMember(partyId);
-      if (getBladeSetId(partyId, -1) >= 0 && getBladeBdatId(partyId, -1) == dataParty->leader) {
-        partyMember->hierarchyBlade = 1;
+      if (getBladeSetId(partyId, -1) >= 0 && getBladeBdatId(partyId, -1) == dataParty->unknown40) {
+        partyMember->unknown04 = 1;
         leaderPartyId = partyId;
         break;
       }
@@ -982,12 +982,12 @@ void GfGameParty::recalcHierarchy() {
   default:
     for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
       if (getDriverBdatId(partyId) != 0) {
-        dataParty->leaderObjectType = OBJECT_TYPE_DRIVER;
-        dataParty->leader = getDriverBdatId(partyId);
+        dataParty->unknown3c = OBJECT_TYPE_DRIVER;
+        dataParty->unknown40 = getDriverBdatId(partyId);
         for (u32 hierarchyPartyId = 0; hierarchyPartyId < PARTY_MEMBER_NUM; hierarchyPartyId++) {
           SDataPartyMember *partyMember = GfDataParty::getPartyMember(hierarchyPartyId);
-          if (partyMember->hierarchyDriver == 0) {
-            partyMember->hierarchyDriver = 1;
+          if (partyMember->unknown02 == 0) {
+            partyMember->unknown02 = 1;
             leaderPartyId = hierarchyPartyId;
             break;
           }
@@ -1000,50 +1000,50 @@ void GfGameParty::recalcHierarchy() {
 
   u32 hierarchy = 1;
   SDataPartyMember *leaderMember = GfDataParty::getPartyMember(leaderPartyId);
-  if (leaderMember->driver != 0) {
-    if (leaderMember->hierarchyDriver == 0) {
-      if (leaderMember->hierarchyBlade == 0) {
-        DataParamAcc paramAcc(OBJECT_TYPE_DRIVER, leaderMember->driver, GIMMICK_TYPE_NONE);
+  if (leaderMember->unknown00 != 0) {
+    if (leaderMember->unknown02 == 0) {
+      if (leaderMember->unknown04 == 0) {
+        DataParamAcc paramAcc(OBJECT_TYPE_DRIVER, leaderMember->unknown00, GIMMICK_TYPE_NONE);
         if (paramAcc.isScenarioMask()) {
-          leaderMember->hierarchyBlade = 2;
-          leaderMember->hierarchyDriver = 3;
+          leaderMember->unknown04 = 2;
+          leaderMember->unknown02 = 3;
         } else {
-          leaderMember->hierarchyDriver = 2;
-          leaderMember->hierarchyBlade = 3;
+          leaderMember->unknown02 = 2;
+          leaderMember->unknown04 = 3;
         }
         hierarchy = 3;
       } else {
         hierarchy = 2;
-        leaderMember->hierarchyDriver = hierarchy;
+        leaderMember->unknown02 = hierarchy;
       }
-    } else if (leaderMember->hierarchyBlade == 0) {
+    } else if (leaderMember->unknown04 == 0) {
       hierarchy = 2;
-      leaderMember->hierarchyBlade = hierarchy;
+      leaderMember->unknown04 = hierarchy;
     }
   }
 
   for (u32 partyId = 0; partyId < PARTY_MEMBER_NUM; partyId++) {
     SDataPartyMember *partyMember = GfDataParty::getPartyMember(partyId);
-    if (partyMember->driver == 0) {
+    if (partyMember->unknown00 == 0) {
       continue;
     }
 
-    if (partyMember->hierarchyDriver == 0) {
-      if (partyMember->hierarchyBlade == 0) {
-        DataParamAcc paramAcc(OBJECT_TYPE_DRIVER, partyMember->driver, GIMMICK_TYPE_NONE);
+    if (partyMember->unknown02 == 0) {
+      if (partyMember->unknown04 == 0) {
+        DataParamAcc paramAcc(OBJECT_TYPE_DRIVER, partyMember->unknown00, GIMMICK_TYPE_NONE);
         if (paramAcc.isScenarioMask()) {
-          partyMember->hierarchyBlade = hierarchy + 1;
-          partyMember->hierarchyDriver = hierarchy + 2;
+          partyMember->unknown04 = hierarchy + 1;
+          partyMember->unknown02 = hierarchy + 2;
         } else {
-          partyMember->hierarchyDriver = hierarchy + 1;
-          partyMember->hierarchyBlade = hierarchy + 2;
+          partyMember->unknown02 = hierarchy + 1;
+          partyMember->unknown04 = hierarchy + 2;
         }
         hierarchy += 2;
       } else {
-        partyMember->hierarchyDriver = ++hierarchy;
+        partyMember->unknown02 = ++hierarchy;
       }
-    } else if (partyMember->hierarchyBlade == 0) {
-      partyMember->hierarchyBlade = ++hierarchy;
+    } else if (partyMember->unknown04 == 0) {
+      partyMember->unknown04 = ++hierarchy;
     }
   }
 }
@@ -1091,7 +1091,7 @@ bool GfGameParty::isExistMismatchScenarioMask(u32 partyId) {
       continue;
     }
 
-    if (GfGameObj::isValidGameObj(driver, true, nullptr) == GfDataDriver::isScenarioMask(GfDataParty::getPartyMember(memberPartyId)->driver)) {
+    if (GfGameObj::isValidGameObj(driver, true, nullptr) == GfDataDriver::isScenarioMask(GfDataParty::getPartyMember(memberPartyId)->unknown00)) {
       return true;
     }
   }
@@ -1102,17 +1102,17 @@ bool GfGameParty::isExistMismatchScenarioMask(u32 partyId) {
 u32 GfGameParty::getLeaderLevel() {
   SDataParty *dataParty = GfDataParty::getSDataParty();
   u32 driver = 0;
-  if (dataParty->leaderObjectType == OBJECT_TYPE_DRIVER) {
-    driver = dataParty->leader;
-  } else if (dataParty->leaderObjectType == OBJECT_TYPE_BLADE) {
-    driver = getDriverBdatId(getPartyId(OBJECT_TYPE_BLADE, dataParty->leader));
+  if (dataParty->unknown3c == OBJECT_TYPE_DRIVER) {
+    driver = dataParty->unknown40;
+  } else if (dataParty->unknown3c == OBJECT_TYPE_BLADE) {
+    driver = getDriverBdatId(getPartyId(OBJECT_TYPE_BLADE, dataParty->unknown40));
   }
 
   DataParamAcc paramAcc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
   return paramAcc.getLevel(false);
 }
 
-u32 GfGameParty::getLeaderBdatID() { return GfDataParty::getSDataParty()->leader; }
+u32 GfGameParty::getLeaderBdatID() { return GfDataParty::getSDataParty()->unknown40; }
 
 GF_OBJ_HANDLE *GfGameParty::getLeader() { return getHandleByHierarchy(1); }
 
@@ -1273,7 +1273,7 @@ bool GfSelectBlade::isNeedFieldBladeChange(u32 partyId) {
     return false;
   }
 
-  u32 driver = GfDataParty::getPartyMember(partyId)->driver;
+  u32 driver = GfDataParty::getPartyMember(partyId)->unknown00;
   if (driver == 0) {
     return false;
   }
