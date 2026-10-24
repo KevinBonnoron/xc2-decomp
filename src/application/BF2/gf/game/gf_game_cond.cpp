@@ -91,8 +91,8 @@ bool GfGameCond::isQuest(u32 condition) {
     u32 notQuestFlag;
     QuestID notQuest;
     notQuestFlag = s_bdatCond->getConditionQuestNotQuestFlag(condition, 0);
-    notQuest.id = notQuestFlag;
-    notQuest.variant = notQuestFlag >> 16;
+    notQuest.unknown00 = notQuestFlag;
+    notQuest.unknown02 = notQuestFlag >> 16;
     if (notQuest.empty()) {
       emptyCount++;
     } else {
@@ -104,8 +104,8 @@ bool GfGameCond::isQuest(u32 condition) {
       }
     }
     notQuestFlag = s_bdatCond->getConditionQuestNotQuestFlag(condition, 1);
-    notQuest.id = notQuestFlag;
-    notQuest.variant = notQuestFlag >> 16;
+    notQuest.unknown00 = notQuestFlag;
+    notQuest.unknown02 = notQuestFlag >> 16;
     if (notQuest.empty()) {
       emptyCount++;
     } else {
@@ -121,8 +121,8 @@ bool GfGameCond::isQuest(u32 condition) {
     u32 questFlag;
     QuestID quest;
     questFlag = s_bdatCond->getConditionQuestQuestFlag(condition, 0);
-    quest.id = questFlag;
-    quest.variant = questFlag >> 16;
+    quest.unknown00 = questFlag;
+    quest.unknown02 = questFlag >> 16;
     if (quest.empty()) {
       emptyCount++;
     } else {
@@ -134,8 +134,8 @@ bool GfGameCond::isQuest(u32 condition) {
       }
     }
     questFlag = s_bdatCond->getConditionQuestQuestFlag(condition, 1);
-    quest.id = questFlag;
-    quest.variant = questFlag >> 16;
+    quest.unknown00 = questFlag;
+    quest.unknown02 = questFlag >> 16;
     if (quest.empty()) {
       emptyCount++;
     } else {
@@ -631,13 +631,13 @@ void GfGameCond::applyAchievement(u32 condition, u32 blade) {
 
     for (u32 level = 0; level < ACHIEVEMENT_LEVEL_COUNT; level++) {
       AchievQuest &achievQuest = achievInfo->unknown04[level];
-      if (achievQuest.quest.id == task && (achievQuest.flags & 1) == 0) {
+      if (achievQuest.unknown00.unknown00 == task && (achievQuest.unknown0c & 1) == 0) {
         achievQuest.setCountComplete();
         achievQuest.setTaskComplete(false, true);
         achievQuest.setTaskComplete(true, true);
-        achievQuest.flags |= 1;
+        achievQuest.unknown0c |= 1;
         GfDataBlade::setAchievReleaseLevel(blade, line, level + 1);
-        GfQuestInfo::setState(achievQuest.quest, QSTATE_FIN_A);
+        GfQuestInfo::setState(achievQuest.unknown00, QSTATE_FIN_A);
         return;
       }
     }

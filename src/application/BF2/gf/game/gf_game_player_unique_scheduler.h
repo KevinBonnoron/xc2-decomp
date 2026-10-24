@@ -38,13 +38,13 @@ public:
   };
 
   struct Unit {
-    Unit() : handle(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), bdatId(0), state(UNIT_STATE_NONE), motion(0), timer(0.0f) {}
+    Unit() : unknown00(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown08(0), unknown0c(UNIT_STATE_NONE), unknown10(0), unknown14(0.0f) {}
 
-    GF_OBJ_HANDLE *handle;
-    u16 bdatId;
-    UNIT_STATE state;
-    u16 motion;
-    f32 timer;
+    GF_OBJ_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
+    u16 unknown08;            // Inferred role: bdat id; original member name unknown.
+    UNIT_STATE unknown0c;     // Inferred role: state; original member name unknown.
+    u16 unknown10;            // Inferred role: motion; original member name unknown.
+    f32 unknown14;            // Inferred role: timer; original member name unknown.
   };
 
   static void build(const GfSetupParam &param);
@@ -62,16 +62,16 @@ public:
   void gevPartyMemberOK(bool isOK) override;
   void gevBattleStart() override;
 
-  f32 elapsedTime;
-  Unit units[UNIT_NUM];
-  mm::mtl::FixedQueue<const GfBdatUniqueMotion::PresetInfo *, 32> presets;
-  mm::mtl::IntrusivePtr<fw::ParamList> paramList;
+  f32 unknown28;                                                             // Inferred role: elapsed time; original member name unknown.
+  Unit unknown30[UNIT_NUM];                                                  // Inferred role: units; original member name unknown.
+  mm::mtl::FixedQueue<const GfBdatUniqueMotion::PresetInfo *, 32> unknownc0; // Inferred role: presets; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::ParamList> unknown1d0;                           // Inferred role: param list; original member name unknown.
 };
 
-static_assert(offsetof(GfGamePlayerUniqueScheduler, elapsedTime) == 0x28, "");
-static_assert(offsetof(GfGamePlayerUniqueScheduler, units) == 0x30, "");
-static_assert(offsetof(GfGamePlayerUniqueScheduler, presets) == 0xc0, "");
-static_assert(offsetof(GfGamePlayerUniqueScheduler, paramList) == 0x1d0, "");
+static_assert(offsetof(GfGamePlayerUniqueScheduler, unknown28) == 0x28, "");
+static_assert(offsetof(GfGamePlayerUniqueScheduler, unknown30) == 0x30, "");
+static_assert(offsetof(GfGamePlayerUniqueScheduler, unknownc0) == 0xc0, "");
+static_assert(offsetof(GfGamePlayerUniqueScheduler, unknown1d0) == 0x1d0, "");
 static_assert(sizeof(GfGamePlayerUniqueScheduler) == 0x1d8, "");
 
 } // namespace gf

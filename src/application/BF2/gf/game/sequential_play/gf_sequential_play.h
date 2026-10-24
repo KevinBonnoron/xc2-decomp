@@ -106,20 +106,20 @@ public:
   bool isExistEvent(u32 event) const;
   static const char *getFuncName();
 
-  mm::mtl::FixedList<GfPlayCom *, 256> commands;
-  bool isCanceled;
-  mm::mtl::FixedQueue<GF_PAUSE_HANDLE *, 128> pauseHandles;
-  mm::mtl::FixedQueue<GF_STATE, 128> states;
-  mm::mtl::FixedList<GfPlayCom *, 128> playingCommands;
-  TYPE commandType;
-  bool initialized;
+  mm::mtl::FixedList<GfPlayCom *, 256> unknown08;          // Inferred role: commands; original member name unknown.
+  bool unknown1228;                                        // Inferred role: canceled; original member name unknown.
+  mm::mtl::FixedQueue<GF_PAUSE_HANDLE *, 128> unknown1230; // Inferred role: pause handles; original member name unknown.
+  mm::mtl::FixedQueue<GF_STATE, 128> unknown1640;          // Inferred role: states; original member name unknown.
+  mm::mtl::FixedList<GfPlayCom *, 128> unknown1850;        // Inferred role: playing commands; original member name unknown.
+  TYPE unknown20f0;                                        // Inferred role: command type; original member name unknown.
+  bool unknown20f4;                                        // Inferred role: initialized; original member name unknown.
 };
 
-static_assert(offsetof(GfSequentialPlay, commands) == 0x08, "");
-static_assert(offsetof(GfSequentialPlay, isCanceled) == 0x1228, "");
-static_assert(offsetof(GfSequentialPlay, states) == 0x1640, "");
-static_assert(offsetof(GfSequentialPlay, playingCommands) == 0x1850, "");
-static_assert(offsetof(GfSequentialPlay, commandType) == 0x20f0, "");
+static_assert(offsetof(GfSequentialPlay, unknown08) == 0x08, "");
+static_assert(offsetof(GfSequentialPlay, unknown1228) == 0x1228, "");
+static_assert(offsetof(GfSequentialPlay, unknown1640) == 0x1640, "");
+static_assert(offsetof(GfSequentialPlay, unknown1850) == 0x1850, "");
+static_assert(offsetof(GfSequentialPlay, unknown20f0) == 0x20f0, "");
 static_assert(sizeof(GfSequentialPlay) == 0x20f8, "");
 
 } // namespace gf

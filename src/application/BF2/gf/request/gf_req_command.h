@@ -16,17 +16,17 @@ struct RQ_SETUP_PARTY {
     Member() { clear(); }
 
     void clear() {
-      driver = 0;
-      bladeSet = -1;
+      unknown00 = 0;
+      unknown04 = -1;
       for (u32 slot = 0; slot < 5; slot++) {
-        blades[slot] = 0;
+        unknown08[slot] = 0;
       }
       _12[0] = 0;
     }
 
-    u32 driver;
-    int bladeSet;
-    u16 blades[5];
+    u32 unknown00;    // Inferred role: driver; original member name unknown.
+    int unknown04;    // Inferred role: blade set; original member name unknown.
+    u16 unknown08[5]; // Inferred role: blades; original member name unknown.
     u8 _12[0x13 - 0x12];
   };
 

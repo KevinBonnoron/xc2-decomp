@@ -22,10 +22,10 @@ public:
   static f32 getRandomF1();
   static bool isBindRareBladeCrystal(u32 item);
 
-  bool initialized;
+  bool unknown08; // Inferred role: initialized; original member name unknown.
 };
 
-static_assert(offsetof(GfBladeManager, initialized) == 0x08, "");
+static_assert(offsetof(GfBladeManager, unknown08) == 0x08, "");
 static_assert(sizeof(GfBladeManager) == 0x10, "");
 
 } // namespace gf

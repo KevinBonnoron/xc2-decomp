@@ -9,7 +9,7 @@ namespace gf {
 
 GfGameTalk::GfGameTalk(const GfSetupParam &param) { initialize(param); }
 
-void GfGameTalk::initialize(const GfSetupParam &) { initialized = true; }
+void GfGameTalk::initialize(const GfSetupParam &) { unknown08 = true; }
 
 GfGameTalk::~GfGameTalk() {}
 
@@ -25,9 +25,9 @@ void GfGameTalk::destroy() {
   delete gameTalk;
 }
 
-void GfGameTalk::finalize() { initialized = false; }
+void GfGameTalk::finalize() { unknown08 = false; }
 
-bool GfGameTalk::isInitialized() { return get() != nullptr && get()->initialized; }
+bool GfGameTalk::isInitialized() { return get() != nullptr && get()->unknown08; }
 
 void GfGameTalk::update(const fw::UpdateInfo &) {}
 
@@ -39,16 +39,16 @@ void GfGameTalk::play(const GfSetupPfTalk &talk) {
     u8 *bdat = Bdat::getFP(Bdat::getVal(list, "listSeat", i).valueString);
     int top = Bdat::getIdTop(bdat);
     int count = Bdat::getIdCount(bdat);
-    if (talk.event >= top && top + count > talk.event) {
-      mm::mtl::FixStr<64> name = Bdat::getVal(bdat, "evtName", talk.event).valueString;
+    if (talk.unknown00 >= top && top + count > talk.unknown00) {
+      mm::mtl::FixStr<64> name = Bdat::getVal(bdat, "evtName", talk.unknown00).valueString;
       if (name.c_str()[0] == '\0') {
         return;
       }
-      if (!event::Manager::get()->isDebugPlayOnetime() && Bdat::getVal(bdat, "linkID", talk.event).valueU16 != 0) {
+      if (!event::Manager::get()->isDebugPlayOnetime() && Bdat::getVal(bdat, "linkID", talk.unknown00).valueU16 != 0) {
         name += "_link";
       }
-      Bdat::getVal(bdat, "category", talk.event);
-      event::Manager::get()->play(name.c_str(), talk.handle, talk.param0, talk.param1, 0, 0, false);
+      Bdat::getVal(bdat, "category", talk.unknown00);
+      event::Manager::get()->play(name.c_str(), talk.unknown08, talk.unknown10, talk.unknown14, 0, 0, false);
       return;
     }
   }

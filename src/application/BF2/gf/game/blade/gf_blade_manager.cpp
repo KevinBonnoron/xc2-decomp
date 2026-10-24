@@ -22,7 +22,7 @@ GfBladeManager::GfBladeManager(const GfSetupParam &param) {
   initialize(param);
 }
 
-void GfBladeManager::initialize(const GfSetupParam &) { initialized = true; }
+void GfBladeManager::initialize(const GfSetupParam &) { unknown08 = true; }
 
 GfBladeManager::~GfBladeManager() {}
 
@@ -38,11 +38,11 @@ void GfBladeManager::destroy() {
   delete bladeManager;
 }
 
-void GfBladeManager::finalize() { initialized = false; }
+void GfBladeManager::finalize() { unknown08 = false; }
 
 bool GfBladeManager::isInitialized() {
   GfBladeManager *bladeManager = get();
-  return bladeManager != nullptr ? bladeManager->initialized : false;
+  return bladeManager != nullptr ? bladeManager->unknown08 : false;
 }
 
 void GfBladeManager::setupGame() {

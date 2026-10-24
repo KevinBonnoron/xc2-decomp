@@ -12,7 +12,7 @@ namespace gf {
 
 static constexpr fw::CAMERA_PRIO CAMERA_PRIO_SALVAGE = static_cast<fw::CAMERA_PRIO>(55);
 
-GfSalvageCam::GfSalvageCam(GF_OBJ_HANDLE *target) : fw::Camera(CAMERA_PRIO_SALVAGE), target(target) {}
+GfSalvageCam::GfSalvageCam(GF_OBJ_HANDLE *target) : fw::Camera(CAMERA_PRIO_SALVAGE), unknowna8(target) {}
 
 GfSalvageCam::~GfSalvageCam() {}
 
@@ -25,7 +25,7 @@ void GfSalvageCam::onActivate() {}
 void GfSalvageCam::onDeactivate() {}
 
 void GfSalvageCam::update(const fw::UpdateInfo &info) {
-  GfObjAcc acc(target);
+  GfObjAcc acc(unknowna8);
   const mm::Vec3 &position = acc.getWorldTransform().position;
   setLookAt(position + mm::Vec3(0.0f, 10.0f, 10.0f), position, 0.0f);
 }

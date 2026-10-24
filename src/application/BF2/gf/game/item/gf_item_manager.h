@@ -17,7 +17,7 @@ public:
   static bool isInitialized();
   static void clear();
 
-  bool mInitialized;
+  bool unknown08; // Inferred role: initialized; original member name unknown.
 };
 
 static_assert(sizeof(GfItemManager) == 0x10, "");

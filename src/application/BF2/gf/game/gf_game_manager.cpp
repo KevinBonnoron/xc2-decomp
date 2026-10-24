@@ -101,7 +101,7 @@ static bool isEventCharacter(u32 characterType) {
   }
 }
 
-GfGameManager::GfGameManager(const GfSetupParam &param) : mInitialized(false), mIsLeaveGame(false) { initialize(param); }
+GfGameManager::GfGameManager(const GfSetupParam &param) : unknown18(false), unknown19(false) { initialize(param); }
 
 void GfGameManager::initialize(const GfSetupParam &param) {
   GfEvent::addEventCallback(this);
@@ -140,7 +140,7 @@ void GfGameManager::initialize(const GfSetupParam &param) {
   GfGameInsideBattleLock::build(param);
   GfQuestManager::addEvent(this);
   GfMenuManager::initOptionData(*GfDataManager::getDataOption());
-  mInitialized = true;
+  unknown18 = true;
 }
 
 // The empty statement makes the body non-trivial, which keeps the vtable pointer stores of the original.
@@ -204,7 +204,7 @@ void GfGameManager::finalize() {
   GfLayerPause::destroy();
   GfGameState::destroy();
   GfEvent::removeEventCallback(this);
-  mInitialized = false;
+  unknown18 = false;
 }
 
 bool GfGameManager::isGameObjEmpty() { return GfGameObj::isEmpty(); }
@@ -217,7 +217,7 @@ void GfGameManager::clear() {
   GfGameManager *manager = get();
   SCOM_ACCESS_TARGET::create(INVALID_HANDLE);
   SCOM_TARGET_UI::create(INVALID_HANDLE);
-  manager->mIsLeaveGame = false;
+  manager->unknown19 = false;
   GfGameCamera::clear();
   GfGameState::clear();
   GfGameEnv::clear();
@@ -229,7 +229,7 @@ void GfGameManager::clear() {
   GfGameSpeed::clear();
 }
 
-bool GfGameManager::isInitialized() { return get() != nullptr && get()->mInitialized; }
+bool GfGameManager::isInitialized() { return get() != nullptr && get()->unknown18; }
 
 void GfGameManager::gevExecBuy(u32 item, u32 count, u32 shop) {
   if (GfGameScene::get() != nullptr) {
@@ -463,7 +463,7 @@ void GfGameManager::qevCompleteQuest(const QuestCompleteParam &param) {
 void GfGameManager::qevOrderQuest(const QuestOrderParam &param) { GfGameMercenaries::qevOrderQuest(param); }
 
 void GfGameManager::qevCompleteChildQuest(const QuestCompleteChildParam &param) {
-  if (param.quest.id == CHILD_QUEST_FORCE_BOSS_BATTLE_BGM && GfDataUtil::getScenarioFlag() == SCENARIO_FLAG_FORCE_BOSS_BATTLE_BGM) {
+  if (param.unknown04.unknown00 == CHILD_QUEST_FORCE_BOSS_BATTLE_BGM && GfDataUtil::getScenarioFlag() == SCENARIO_FLAG_FORCE_BOSS_BATTLE_BGM) {
     GfGameScene *scene = GfGameScene::get();
     if (scene != nullptr && !scene->isForceBossBattleBgm()) {
       scene->setForceBossBattleBgm(true);
@@ -495,8 +495,8 @@ GF_OBJ_HANDLE *GfGameManager::getPartyLeaderDriver() {
 
 GF_OBJ_HANDLE *GfGameManager::getControlMover() {
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
-  if (formation != nullptr && formation->players[0].handle != INVALID_HANDLE) {
-    return formation->players[0].handle;
+  if (formation != nullptr && formation->unknown1a0[0].unknown08 != INVALID_HANDLE) {
+    return formation->unknown1a0[0].unknown08;
   }
 
   return getPartyLeader();
@@ -694,15 +694,15 @@ void GfGameManager::setGmkTutorialSequenceOK(bool isOK) {
   }
 }
 
-bool GfGameManager::isValidCollisionVelocity() { return GfGameScene::get() != nullptr && GfGameScene::get()->isValidCollisionVelocity; }
+bool GfGameManager::isValidCollisionVelocity() { return GfGameScene::get() != nullptr && GfGameScene::get()->unknown270; }
 
 void GfGameManager::setValidCollisionVelocity(bool isValid) {
   if (GfGameScene::get() != nullptr) {
-    GfGameScene::get()->isValidCollisionVelocity = isValid;
+    GfGameScene::get()->unknown270 = isValid;
   }
 }
 
-bool GfGameManager::isLeaveGameForDebug() { return get() != nullptr && (get()->mIsLeaveGame || GfManager::isDestroyNow()); }
+bool GfGameManager::isLeaveGameForDebug() { return get() != nullptr && (get()->unknown19 || GfManager::isDestroyNow()); }
 
 bool GfGameManager::isGameOver() { return GfDataUtil::getScenarioFlag() > SCENARIO_FLAG_GAME_END; }
 
@@ -927,7 +927,7 @@ u32 GfGameManager::getDeadType() { return GfGameScene::get() != nullptr ? GfGame
 void GfGameManager::leaveGameForDebug() {
   GfGameManager *manager = get();
   if (manager != nullptr) {
-    manager->mIsLeaveGame = true;
+    manager->unknown19 = true;
     GfGameEvent::finishNewGameWait();
     GfGameEvent::stop();
     if (GfGameScene::get() != nullptr) {
@@ -984,7 +984,7 @@ bool GfGameManager::isPlayerFinishBattleState() {
 }
 
 bool GfGameManager::isEnableOpenMainMenuSequence() {
-  if (GfGameScene::get() == nullptr || GfGameScene::get()->isStartGame) {
+  if (GfGameScene::get() == nullptr || GfGameScene::get()->unknown1c9) {
     return false;
   }
 
@@ -1029,9 +1029,9 @@ bool GfGameManager::isEnableOpenMainMenuSequence() {
   return true;
 }
 
-bool GfGameManager::isStartGame() { return GfGameScene::get() == nullptr || GfGameScene::get()->isStartGame; }
+bool GfGameManager::isStartGame() { return GfGameScene::get() == nullptr || GfGameScene::get()->unknown1c9; }
 
-bool GfGameManager::isStopMainMenuOpenForGimmick() { return GfGameScene::get() != nullptr && GfGameScene::get()->isStopMainMenuOpenForGimmick; }
+bool GfGameManager::isStopMainMenuOpenForGimmick() { return GfGameScene::get() != nullptr && GfGameScene::get()->unknown1d0; }
 
 bool GfGameManager::isEnableHoodHomuraScenes() { return !isInnerState(GF_STATE_RESET_BLADE) && !isInnerState(GF_STATE_PLAYER_DEAD); }
 
@@ -1149,11 +1149,11 @@ bool GfGameManager::isRexAwakening() { return GfGameUtil::isCondDriverModel(DRIV
 
 void GfGameManager::setStartGame() {
   if (GfGameScene::get() != nullptr) {
-    GfGameScene::get()->isStartGame = true;
+    GfGameScene::get()->unknown1c9 = true;
   }
 }
 
-bool GfGameManager::isEnableRoomForHikariLv4() { return GfGameScene::get() != nullptr && GfGameScene::get()->isEnableRoomForHikariLv4; }
+bool GfGameManager::isEnableRoomForHikariLv4() { return GfGameScene::get() != nullptr && GfGameScene::get()->unknown1ca; }
 
 void GfGameManager::setHomuriWeaponExtraMesh(bool isVisible, f32 alpha) {
   if (GfGameScene::get() != nullptr) {
@@ -1163,7 +1163,7 @@ void GfGameManager::setHomuriWeaponExtraMesh(bool isVisible, f32 alpha) {
 
 bool GfGameManager::isOpenPreciousMenu() { return GfPlayComMenuPrecious::s_activate > 0; }
 
-bool GfGameManager::isStopEnemyAttack() { return GfGameScene::get() != nullptr && GfGameScene::get()->stopEnemyAttackCount > 0; }
+bool GfGameManager::isStopEnemyAttack() { return GfGameScene::get() != nullptr && GfGameScene::get()->unknown620 > 0; }
 
 bool GfGameManager::isPlayEnemyVoice() { return GfGameVoice::get() != nullptr && GfGameVoice::get()->isPlayEnemyVoice(); }
 
@@ -1186,7 +1186,7 @@ bool GfGameManager::isPartyMemberPlayVoice() {
 
 void GfGameManager::setStopMainMenuOpenForGimmick(bool isStop) {
   if (GfGameScene::get() != nullptr) {
-    GfGameScene::get()->isStopMainMenuOpenForGimmick = isStop;
+    GfGameScene::get()->unknown1d0 = isStop;
   }
 }
 

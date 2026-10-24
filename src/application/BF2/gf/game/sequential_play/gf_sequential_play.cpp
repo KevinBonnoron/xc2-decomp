@@ -17,43 +17,43 @@ constexpr f32 BATTLE_START_END_RIDE_WAIT_TIME = 0.6f;
 
 } // namespace
 
-bool GfSequentialPlay::isPlay() { return !get()->commands.empty() || !get()->playingCommands.empty(); }
+bool GfSequentialPlay::isPlay() { return !get()->unknown08.empty() || !get()->unknown1850.empty(); }
 
 bool GfSequentialPlay::isInitialized() {
   if (get() != nullptr) {
-    return get()->initialized;
+    return get()->unknown20f4;
   }
   return false;
 }
 
 bool GfSequentialPlay::play() {
-  get()->commandType = TYPE_NORMAL;
+  get()->unknown20f0 = TYPE_NORMAL;
   return true;
 }
 
-bool GfSequentialPlay::isCancel() { return get()->isCanceled; }
+bool GfSequentialPlay::isCancel() { return get()->unknown1228; }
 
-void GfSequentialPlay::beginCommand(TYPE type) { get()->commandType = type; }
+void GfSequentialPlay::beginCommand(TYPE type) { get()->unknown20f0 = type; }
 
 void GfSequentialPlay::pauseOn(u32 pauseBits) {
   GfSequentialPlay *sequentialPlay = get();
-  sequentialPlay->pauseHandles.push(GfPause::reqPause(pauseBits));
+  sequentialPlay->unknown1230.push(GfPause::reqPause(pauseBits));
 }
 
-void GfSequentialPlay::pauseOff() { GfPause::destroyHandle(get()->pauseHandles.pop_back()); }
+void GfSequentialPlay::pauseOff() { GfPause::destroyHandle(get()->unknown1230.pop_back()); }
 
 GF_STATE GfSequentialPlay::execPushState(GF_STATE state) {
   GfSequentialPlay *sequentialPlay = get();
   GF_STATE previousState = GfGameManager::getState();
-  sequentialPlay->states.push(state);
+  sequentialPlay->unknown1640.push(state);
   GfGameManager::setState(state, false);
   return previousState;
 }
 
 GF_STATE GfSequentialPlay::execPopState() {
   GfSequentialPlay *sequentialPlay = get();
-  GF_STATE state = sequentialPlay->states.pop_back();
-  GfGameManager::setState(sequentialPlay->states.empty() ? GF_STATE_CONTROL : sequentialPlay->states.back(), true);
+  GF_STATE state = sequentialPlay->unknown1640.pop_back();
+  GfGameManager::setState(sequentialPlay->unknown1640.empty() ? GF_STATE_CONTROL : sequentialPlay->unknown1640.back(), true);
   return state;
 }
 
@@ -75,7 +75,7 @@ void GfSequentialPlay::pushPause(u32 pauseBits) { addCommand(GfPlayComPause::cre
 
 void GfSequentialPlay::popPause() { addCommand(GfPlayComPause::create(0)); }
 
-void GfSequentialPlay::pushState(GF_STATE state) { addCommand(GfPlayComState::create(state, get()->commandType != TYPE_NORMAL)); }
+void GfSequentialPlay::pushState(GF_STATE state) { addCommand(GfPlayComState::create(state, get()->unknown20f0 != TYPE_NORMAL)); }
 
 void GfSequentialPlay::popState() { addCommand(GfPlayComState::create(GF_STATE(0), false)); }
 
@@ -94,13 +94,13 @@ void GfSequentialPlay::addMenuPrecious(u32 item) { addCommand(GfPlayComMenuPreci
 int GfSequentialPlay::addMenuCommon(u32 window) {
   GfPlayComMenuCommon *command = GfPlayComMenuCommon::create(window);
   addCommand(command);
-  return command->id;
+  return command->unknown14;
 }
 
 int GfSequentialPlay::addMenuCommon(const MenuCommonWindowParam &param) {
   GfPlayComMenuCommonFromParam *command = GfPlayComMenuCommonFromParam::create(param);
   addCommand(command);
-  return command->id;
+  return command->unknown60;
 }
 
 void GfSequentialPlay::addMenuChapterSave(u32 chapter) { addCommand(GfPlayComMenuChapterSave::create(chapter)); }
@@ -184,16 +184,16 @@ void GfSequentialPlay::endSignal(GfSequentialPlaySignal *signal) { addCommand(Gf
 
 bool GfSequentialPlay::isInnerPause(u32 pauseBits) {
   GfSequentialPlay *sequentialPlay = get();
-  for (GfPlayCom *command : sequentialPlay->commands) {
-    if (command->type == PCOMTYPE_PAUSE) {
-      if (command->getRTTI()->isKindOf(&GfPlayComPause::m_rtti) && (static_cast<GfPlayComPause *>(command)->pauseBits & pauseBits) == pauseBits) {
+  for (GfPlayCom *command : sequentialPlay->unknown08) {
+    if (command->unknown0c == PCOMTYPE_PAUSE) {
+      if (command->getRTTI()->isKindOf(&GfPlayComPause::m_rtti) && (static_cast<GfPlayComPause *>(command)->unknown10 & pauseBits) == pauseBits) {
         return true;
       }
     }
   }
-  for (GfPlayCom *command : sequentialPlay->playingCommands) {
-    if (command->type == PCOMTYPE_PAUSE) {
-      if (command->getRTTI()->isKindOf(&GfPlayComPause::m_rtti) && (static_cast<GfPlayComPause *>(command)->pauseBits & pauseBits) == pauseBits) {
+  for (GfPlayCom *command : sequentialPlay->unknown1850) {
+    if (command->unknown0c == PCOMTYPE_PAUSE) {
+      if (command->getRTTI()->isKindOf(&GfPlayComPause::m_rtti) && (static_cast<GfPlayComPause *>(command)->unknown10 & pauseBits) == pauseBits) {
         return true;
       }
     }
@@ -203,8 +203,8 @@ bool GfSequentialPlay::isInnerPause(u32 pauseBits) {
 
 const char *GfSequentialPlay::getFuncName() {
   GfSequentialPlay *sequentialPlay = get();
-  if (sequentialPlay != nullptr && !sequentialPlay->commands.empty()) {
-    return sequentialPlay->commands.front()->getFuncName();
+  if (sequentialPlay != nullptr && !sequentialPlay->unknown08.empty()) {
+    return sequentialPlay->unknown08.front()->getFuncName();
   }
   return "";
 }

@@ -30,8 +30,8 @@ class GfMenuCallContext;
 class IFieldSeq;
 
 struct ParamReturnTitle {
-  bool isWaitVoice;
-  bool isGameClear;
+  bool unknown00; // Inferred role: wait voice; original member name unknown.
+  bool unknown01; // Inferred role: game clear; original member name unknown.
 };
 
 struct GfSequentialPlaySignal {
@@ -84,7 +84,7 @@ enum PCOMTYPE {
 
 class GfPlayCom {
 public:
-  GfPlayCom(PCOMTYPE type, bool isContinue) : isStartRequest(true), isContinue(isContinue), type(type) {}
+  GfPlayCom(PCOMTYPE type, bool isContinue) : unknown08(true), unknown09(isContinue), unknown0c(type) {}
   virtual const mm::mtl::RTTI *getRTTI() const { return &m_rtti; }
   virtual ~GfPlayCom() {}
   virtual const char *getFuncName() const = 0;
@@ -94,9 +94,9 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
-  bool isStartRequest;
-  bool isContinue;
-  PCOMTYPE type;
+  bool unknown08;     // Inferred role: start request; original member name unknown.
+  bool unknown09;     // Inferred role: continue; original member name unknown.
+  PCOMTYPE unknown0c; // Inferred role: type; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayCom) == 0x10, "");
@@ -119,13 +119,13 @@ class GfPlayComPause : public GfPlayCom {
   GF_PLAY_COM("PlayComPause")
 
 public:
-  GfPlayComPause(u32 pauseBits) : GfPlayCom(PCOMTYPE_PAUSE, true), pauseBits(pauseBits) {}
+  GfPlayComPause(u32 pauseBits) : GfPlayCom(PCOMTYPE_PAUSE, true), unknown10(pauseBits) {}
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComPause *create(u32 pauseBits);
 
-  u32 pauseBits;
+  u32 unknown10; // Inferred role: pause bits; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComPause) == 0x18, "");
@@ -134,14 +134,14 @@ class GfPlayComState : public GfPlayCom {
   GF_PLAY_COM("PlayComState")
 
 public:
-  GfPlayComState(GF_STATE state, bool isSequence) : GfPlayCom(PCOMTYPE_STATE, true), state(state), isSequence(isSequence) {}
+  GfPlayComState(GF_STATE state, bool isSequence) : GfPlayCom(PCOMTYPE_STATE, true), unknown10(state), unknown14(isSequence) {}
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComState *create(GF_STATE state, bool isSequence);
 
-  GF_STATE state;
-  bool isSequence;
+  GF_STATE unknown10; // Inferred role: state; original member name unknown.
+  bool unknown14;     // Inferred role: sequence; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComState) == 0x18, "");
@@ -150,13 +150,13 @@ class GfPlayComWait : public GfPlayCom {
   GF_PLAY_COM("PlayComWait")
 
 public:
-  GfPlayComWait(f32 time) : GfPlayCom(PCOMTYPE_WAIT, false), time(time) {}
+  GfPlayComWait(f32 time) : GfPlayCom(PCOMTYPE_WAIT, false), unknown10(time) {}
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComWait *create(f32 time);
 
-  f32 time;
+  f32 unknown10; // Inferred role: time; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComWait) == 0x18, "");
@@ -188,7 +188,7 @@ public:
   bool update(const fw::UpdateInfo &, bool) override { return true; }
   static GfPlayComEventPlayerStop *create(bool isStop);
 
-  bool isStop;
+  bool unknown10; // Inferred role: stop; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComEventPlayerStop) == 0x18, "");
@@ -203,7 +203,7 @@ public:
   bool update(const fw::UpdateInfo &, bool) override { return true; }
   static GfPlayComResetBladePlayerStop *create(bool isStop);
 
-  bool isStop;
+  bool unknown10; // Inferred role: stop; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComResetBladePlayerStop) == 0x18, "");
@@ -219,9 +219,9 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComAfterEventScript *create(u32 event);
 
-  int state;
-  u32 event;
-  GF_SCOM_HANDLE *handle;
+  int unknown10;             // Inferred role: state; original member name unknown.
+  u32 unknown14;             // Inferred role: event; original member name unknown.
+  GF_SCOM_HANDLE *unknown18; // Inferred role: handle; original member name unknown.
 
   static int s_activate;
 };
@@ -238,14 +238,14 @@ class GfPlayComCallbackEventSequence : public GfPlayCom {
   GF_PLAY_COM("PlayComCallbackEventSequence")
 
 public:
-  GfPlayComCallbackEventSequence(int sequence, bool isStart) : GfPlayCom(PCOMTYPE_CALLBACK_EVENT_SEQUENCE, false), sequence(sequence), isStart(isStart) {}
+  GfPlayComCallbackEventSequence(int sequence, bool isStart) : GfPlayCom(PCOMTYPE_CALLBACK_EVENT_SEQUENCE, false), unknown10(sequence), unknown14(isStart) {}
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComCallbackEventSequence *create(int sequence, bool isStart);
 
-  int sequence;
-  bool isStart;
+  int unknown10;  // Inferred role: sequence; original member name unknown.
+  bool unknown14; // Inferred role: start; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComCallbackEventSequence) == 0x18, "");
@@ -261,7 +261,7 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComOpenMenu *create(u32 menu);
 
-  u32 menu;
+  u32 unknown10; // Inferred role: menu; original member name unknown.
 
   static int s_active;
 };
@@ -272,19 +272,19 @@ class GfPlayComOpenMenu2 : public GfPlayCom {
   GF_PLAY_COM("GfPlayComOpenMenu")
 
 public:
-  GfPlayComOpenMenu2(u32 type, MAINMENU menu) : GfPlayCom(PCOMTYPE_OPEN_MENU2, false), state(0), waitCount(0) {
-    this->type = type;
-    this->menu = menu;
+  GfPlayComOpenMenu2(u32 type, MAINMENU menu) : GfPlayCom(PCOMTYPE_OPEN_MENU2, false), unknown18(0), unknown1c(0) {
+    this->unknown10 = type;
+    this->unknown14 = menu;
   }
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComOpenMenu2 *create(u32 type, MAINMENU menu);
 
-  u32 type;
-  MAINMENU menu;
-  int state;
-  int waitCount;
+  u32 unknown10;      // Inferred role: type; original member name unknown.
+  MAINMENU unknown14; // Inferred role: menu; original member name unknown.
+  int unknown18;      // Inferred role: state; original member name unknown.
+  int unknown1c;      // Inferred role: wait count; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComOpenMenu2) == 0x20, "");
@@ -293,13 +293,13 @@ class GfPlayComStartTutorial : public GfPlayCom {
   GF_PLAY_COM("GfPlayComStartTutorial")
 
 public:
-  GfPlayComStartTutorial(u32 tutorial) : GfPlayCom(PCOMTYPE_OPEN_MENU2, false), tutorial(tutorial) {}
+  GfPlayComStartTutorial(u32 tutorial) : GfPlayCom(PCOMTYPE_OPEN_MENU2, false), unknown10(tutorial) {}
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComStartTutorial *create(u32 tutorial);
 
-  u32 tutorial;
+  u32 unknown10; // Inferred role: tutorial; original member name unknown.
 
   static int s_activateCount;
 };
@@ -323,15 +323,15 @@ class GfPlayComMenuChapterSave : public GfPlayCom {
   GF_PLAY_COM("PlayComMenuChapterSave")
 
 public:
-  GfPlayComMenuChapterSave(u32 chapter) : GfPlayCom(PCOMTYPE_MENU_CHAPTER_SAVE, false), chapter(chapter) {}
+  GfPlayComMenuChapterSave(u32 chapter) : GfPlayCom(PCOMTYPE_MENU_CHAPTER_SAVE, false), unknown10(chapter) {}
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static bool isDisp();
   static GfPlayComMenuChapterSave *create(u32 chapter);
 
-  u32 chapter;
-  bool isOpen;
+  u32 unknown10;  // Inferred role: chapter; original member name unknown.
+  bool unknown14; // Inferred role: open; original member name unknown.
 
   static bool s_bExist;
 };
@@ -344,8 +344,8 @@ public:
   static u32 getResult(u32 window);
   static GfPlayComMenuCommon *create(u32 window);
 
-  u32 window;
-  int id;
+  u32 unknown10; // Inferred role: window; original member name unknown.
+  int unknown14; // Inferred role: id; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComMenuCommon) == 0x18, "");
@@ -355,7 +355,7 @@ public:
   static GfPlayComMenuCommonFromParam *create(const MenuCommonWindowParam &param);
 
   u8 _10[0x60 - 0x10];
-  int id;
+  int unknown60; // Inferred role: id; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComMenuCommonFromParam) == 0x68, "");
@@ -371,7 +371,7 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComMenuChapter *create(u32 chapter);
 
-  u32 chapter;
+  u32 unknown10; // Inferred role: chapter; original member name unknown.
 
   static int s_activate;
 };
@@ -389,7 +389,7 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComMenuChapterEnd *create(u32 chapter);
 
-  u32 chapter;
+  u32 unknown10; // Inferred role: chapter; original member name unknown.
 
   static int s_activate;
 };
@@ -407,8 +407,8 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComMenuZone *create(u32 zone);
 
-  u32 zone;
-  f32 time;
+  u32 unknown10; // Inferred role: zone; original member name unknown.
+  f32 unknown14; // Inferred role: time; original member name unknown.
 
   static int s_activate;
 };
@@ -426,7 +426,7 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComMenuDummyTutorial *create(u32 tutorial);
 
-  u32 tutorial;
+  u32 unknown10; // Inferred role: tutorial; original member name unknown.
 
   static int s_activate;
 };
@@ -450,13 +450,13 @@ class GfPlayComMenuKizunaring : public GfPlayCom {
   GF_PLAY_COM("PlayComMenuKizunaring")
 
 public:
-  GfPlayComMenuKizunaring(u32 blade) : GfPlayCom(PCOMTYPE_MENU_KIZUNARING, false), blade(blade) {}
+  GfPlayComMenuKizunaring(u32 blade) : GfPlayCom(PCOMTYPE_MENU_KIZUNARING, false), unknown10(blade) {}
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComMenuKizunaring *create(u32 blade);
 
-  u32 blade;
+  u32 unknown10; // Inferred role: blade; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComMenuKizunaring) == 0x18, "");
@@ -472,7 +472,7 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComMenuPrecious *create(u32 item);
 
-  u32 item;
+  u32 unknown10; // Inferred role: item; original member name unknown.
 
   static int s_activate;
 };
@@ -496,10 +496,10 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComSalvage *create(GF_OBJ_HANDLE *handle);
 
-  u32 pause;
-  GF_OBJ_HANDLE *handle;
-  int waitFrame;
-  STATE state;
+  u32 unknown10;            // Inferred role: pause; original member name unknown.
+  GF_OBJ_HANDLE *unknown18; // Inferred role: handle; original member name unknown.
+  int unknown20;            // Inferred role: wait frame; original member name unknown.
+  STATE unknown24;          // Inferred role: state; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComSalvage) == 0x28, "");
@@ -524,12 +524,12 @@ class GfPlayComWaitPlayerToStartGmkTuto : public GfPlayCom {
 
 public:
   GfPlayComWaitPlayerToStartGmkTuto() : GfPlayCom(PCOMTYPE_WAIT_PLAYER_TO_START_GMK_TUTO, true) {}
-  void start() override { time = 0.0f; }
+  void start() override { unknown10 = 0.0f; }
   void end() override {}
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComWaitPlayerToStartGmkTuto *create();
 
-  f32 time;
+  f32 unknown10; // Inferred role: time; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComWaitPlayerToStartGmkTuto) == 0x18, "");
@@ -575,9 +575,9 @@ public:
   bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComGimmickTaskComplete *create(gmk::GmkType gmkType, u32 gimmick, f32 time);
 
-  gmk::GmkType gmkType;
-  u32 gimmick;
-  f32 time;
+  gmk::GmkType unknown10; // Inferred role: gmk type; original member name unknown.
+  u32 unknown14;          // Inferred role: gimmick; original member name unknown.
+  f32 unknown18;          // Inferred role: time; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComGimmickTaskComplete) == 0x20, "");
@@ -600,8 +600,8 @@ public:
   void start() override;
   static GfPlayComExecuteSignal *create(bool isStart, GfSequentialPlaySignal *signal);
 
-  bool isStart;
-  GfSequentialPlaySignal *signal;
+  bool unknown10;                    // Inferred role: start; original member name unknown.
+  GfSequentialPlaySignal *unknown18; // Inferred role: signal; original member name unknown.
 };
 
 static_assert(sizeof(GfPlayComExecuteSignal) == 0x20, "");
@@ -645,8 +645,8 @@ public:
   ~GfPlayComMenuObjCommonText() override;
   static GfPlayComMenuObjCommonText *create(GfMenuObjCommonText::OpenKizunaParam &param);
 
-  GfMenuObjCommonText::OpenKizunaParam param;
-  GfMenuCallContext *context;
+  GfMenuObjCommonText::OpenKizunaParam unknown10; // Inferred role: param; original member name unknown.
+  GfMenuCallContext *unknown20;                   // Inferred role: context; original member name unknown.
 
   static int s_activate;
 };

@@ -44,7 +44,7 @@ public:
   void qevCompleteQuest(const QuestCompleteParam &param);
 
 private:
-  bool initialized;
+  bool unknown08; // Inferred role: initialized; original member name unknown.
 };
 
 static_assert(sizeof(GfKizunaringManager) == 0x10, "");

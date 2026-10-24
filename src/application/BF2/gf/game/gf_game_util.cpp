@@ -339,7 +339,7 @@ void GfGameUtil::addSP(u32 driver, int skillPoint) {
 }
 
 void GfGameUtil::addIdeaPoint(u32 driver, u32 idea, int point) {
-  int total = GfGameManager::getOwnerBonus()->values[OWNER_BONUS_IDEA_POINT] + point;
+  int total = GfGameManager::getOwnerBonus()->unknown00[OWNER_BONUS_IDEA_POINT] + point;
   if (driver == 0) {
     mm::mtl::FixedVector<u16, 16> drivers;
     GfPartySelect::getDriverList(drivers, GfPartySelect::LIST_TYPE_PARTY_AND_RESERVER, 0);
@@ -372,7 +372,7 @@ void GfGameUtil::addDevelopPoint(u32 nation, u32 point) {
     nation = NATION_IYASAKI;
   }
 
-  u32 addPoint = GfGameManager::getOwnerBonus()->values[OWNER_BONUS_DEVELOP_POINT] + point;
+  u32 addPoint = GfGameManager::getOwnerBonus()->unknown00[OWNER_BONUS_DEVELOP_POINT] + point;
   if (nation == 0) {
     nation = NATION_FIRST;
   }
@@ -1286,8 +1286,8 @@ void GfGameUtil::setKosmosArts3EnableBothWeapon(GF_OBJ_HANDLE *handle, bool isEn
     return;
   }
 
-  bool isAlternate = weapon->isAlternate;
-  weapon->isAlternate = false;
+  bool isAlternate = weapon->unknowna8;
+  weapon->unknowna8 = false;
   GfObjAcc weaponAcc(weapon->getCurrentHandles()[1]);
   weaponAcc.setDisp(OBJDISP_KOSMOS_ARTS_3, isEnable);
   GfObj *obj = weaponAcc.getObj();
@@ -1295,7 +1295,7 @@ void GfGameUtil::setKosmosArts3EnableBothWeapon(GF_OBJ_HANDLE *handle, bool isEn
     obj->setUpdateComponent(isEnable);
   }
 
-  weapon->isAlternate = isAlternate;
+  weapon->unknowna8 = isAlternate;
 }
 
 bool GfGameUtil::isHomuraHoodStyle() { return GfGameCond::isGameCond(GfDataBlade::getSDataBlade(BLADE_HOMURA)->unknown82a); }

@@ -33,18 +33,18 @@ constexpr u32 WEAPON_HANDLE_NUM = 10;
 
 struct GfPartyPosInfo {
   struct Position {
-    Position() : position(mm::Vec3::zero), rotation(0.0f), isValid(false) {}
+    Position() : unknown00(mm::Vec3::zero), unknown10(0.0f), unknown14(false) {}
 
-    mm::Vec3 position;
-    f32 rotation;
-    bool isValid;
+    mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
+    f32 unknown10;      // Inferred role: rotation; original member name unknown.
+    bool unknown14;     // Inferred role: valid; original member name unknown.
   };
 
-  Position positions[6];
+  Position unknown00[6]; // Inferred role: positions; original member name unknown.
 };
 
-static_assert(offsetof(GfPartyPosInfo::Position, rotation) == 0x10, "");
-static_assert(offsetof(GfPartyPosInfo::Position, isValid) == 0x14, "");
+static_assert(offsetof(GfPartyPosInfo::Position, unknown10) == 0x10, "");
+static_assert(offsetof(GfPartyPosInfo::Position, unknown14) == 0x14, "");
 static_assert(sizeof(GfPartyPosInfo) == 0xc0, "");
 
 class GfMemberInfo {
@@ -53,23 +53,23 @@ public:
   void clear();
   ~GfMemberInfo();
 
-  GF_OBJ_HANDLE *driver;
-  GF_OBJ_HANDLE *blades[5];
-  GF_OBJ_HANDLE *trinityBlade;
-  mm::mtl::IntrusivePtr<GfStatusProperty> statusProperty;
+  GF_OBJ_HANDLE *unknown00;                          // Inferred role: driver; original member name unknown.
+  GF_OBJ_HANDLE *unknown08[5];                       // Inferred role: blades; original member name unknown.
+  GF_OBJ_HANDLE *unknown30;                          // Inferred role: trinity blade; original member name unknown.
+  mm::mtl::IntrusivePtr<GfStatusProperty> unknown38; // Inferred role: status property; original member name unknown.
 };
 
-static_assert(offsetof(GfMemberInfo, blades) == 0x08, "");
-static_assert(offsetof(GfMemberInfo, trinityBlade) == 0x30, "");
-static_assert(offsetof(GfMemberInfo, statusProperty) == 0x38, "");
+static_assert(offsetof(GfMemberInfo, unknown08) == 0x08, "");
+static_assert(offsetof(GfMemberInfo, unknown30) == 0x30, "");
+static_assert(offsetof(GfMemberInfo, unknown38) == 0x38, "");
 static_assert(sizeof(GfMemberInfo) == 0x40, "");
 
 class GfSelectBlade {
 public:
   struct Member {
-    u8 currentIndex;
-    u8 changeIndices[2];
-    u8 defaultIndices[3];
+    u8 unknown00;    // Inferred role: current index; original member name unknown.
+    u8 unknown01[2]; // Inferred role: change indices; original member name unknown.
+    u8 unknown03[3]; // Inferred role: default indices; original member name unknown.
   };
 
   static void setupBattleStart(u32 partyId);
@@ -90,11 +90,11 @@ public:
 
   static GfSelectBlade *s_pThis;
 
-  Member members[3];
-  int startBattleSetIds[3];
+  Member unknown00[3]; // Inferred role: members; original member name unknown.
+  int unknown14[3];    // Inferred role: start battle set ids; original member name unknown.
 };
 
-static_assert(offsetof(GfSelectBlade, startBattleSetIds) == 0x14, "");
+static_assert(offsetof(GfSelectBlade, unknown14) == 0x14, "");
 static_assert(sizeof(GfSelectBlade) == 0x20, "");
 
 class GfGameParty : public mm::mtl::PtrSingleton<GfGameParty>, public IGfObjListener {
@@ -197,13 +197,13 @@ public:
   static void refreshPartyMemberPosition();
 
 private:
-  mm::mtl::FixedArray<GfMemberInfo, 3> mMembers;
-  bool mInitialized;
-  GfSelectBlade mSelectBlade;
-  u32 mReadyFrame;
-  bool mIsReadyLost;
-  GF_OBJ_HANDLE *mLeader;
-  PARTYOBJ_STATE mPartyObjStates[3];
+  mm::mtl::FixedArray<GfMemberInfo, 3> unknown10; // Inferred role: members; original member name unknown.
+  bool unknownd0;                                 // Inferred role: initialized; original member name unknown.
+  GfSelectBlade unknownd4;                        // Inferred role: select blade; original member name unknown.
+  u32 unknownf4;                                  // Inferred role: ready frame; original member name unknown.
+  bool unknownf8;                                 // Inferred role: ready lost; original member name unknown.
+  GF_OBJ_HANDLE *unknown100;                      // Inferred role: leader; original member name unknown.
+  PARTYOBJ_STATE unknown108[3];                   // Inferred role: party object states; original member name unknown.
 };
 
 static_assert(sizeof(GfGameParty) == 0x118, "");

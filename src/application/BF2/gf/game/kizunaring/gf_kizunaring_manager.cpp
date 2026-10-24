@@ -6,7 +6,7 @@ namespace gf {
 
 GfKizunaringManager::GfKizunaringManager(const GfSetupParam &param) { initialize(param); }
 
-void GfKizunaringManager::initialize(const GfSetupParam &) { initialized = true; }
+void GfKizunaringManager::initialize(const GfSetupParam &) { unknown08 = true; }
 
 GfKizunaringManager::~GfKizunaringManager() {}
 
@@ -22,9 +22,9 @@ void GfKizunaringManager::destroy() {
   delete kizunaringManager;
 }
 
-void GfKizunaringManager::finalize() { initialized = false; }
+void GfKizunaringManager::finalize() { unknown08 = false; }
 
-bool GfKizunaringManager::isInitialized() { return get() != nullptr && get()->initialized; }
+bool GfKizunaringManager::isInitialized() { return get() != nullptr && get()->unknown08; }
 
 void GfKizunaringManager::orderAchievement(u32 blade) { GfKizunaringBlade::orderAchievement(blade); }
 

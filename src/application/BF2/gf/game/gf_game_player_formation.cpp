@@ -15,7 +15,7 @@ constexpr u32 PARAM_WARP_FOR_RANDOM_TALK = 2;
 
 static void notifyChangePlayerID(GfGamePlayerFormation *formation, u32 playerId) {
   MsgPcFieldNotifyChangePlayerID message(playerId);
-  GfObj *obj = GfObjUtil::getObj(formation->players[playerId].handle);
+  GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[playerId].unknown08);
   if (obj != nullptr) {
     formation->sendMessage(obj, message);
   }
@@ -39,10 +39,10 @@ void GfGamePlayerFormation::build(const GfSetupParam &param) {
 
 void GfGamePlayerFormation::setup(const GfSetupParam &) {
   for (u32 playerId = 0; playerId < PLAYER_NUM; playerId++) {
-    targetPositions[playerId] = mm::Vec3::zero;
-    formationPositions[playerId] = mm::Vec3::zero;
-    transforms[playerId].position = mm::Vec3::zero;
-    transforms[playerId].rotation = mm::Quat::identity;
+    unknown20[playerId] = mm::Vec3::zero;
+    unknown80[playerId] = mm::Vec3::zero;
+    unknowne0[playerId].position = mm::Vec3::zero;
+    unknowne0[playerId].rotation = mm::Quat::identity;
   }
 }
 
@@ -56,24 +56,24 @@ void GfGamePlayerFormation::cleanup() {}
 
 void GfGamePlayerFormation::update(const fw::UpdateInfo &info) { get()->updateImpl(info); }
 
-GfGamePlayerFormation::GfGamePlayerFormation() : formation(0), isMirror(false) {}
+GfGamePlayerFormation::GfGamePlayerFormation() : unknown230(0), unknown234(false) {}
 
 GfGamePlayerFormation::~GfGamePlayerFormation() {}
 
 const fw::Transform &GfGamePlayerFormation::getFollowTransform(u32 playerId) const {
-  u32 followIndex = players[playerId].followIndex;
+  u32 followIndex = unknown1a0[playerId].unknown00;
   if (followIndex != PLAYER_ID_NONE) {
     playerId = followIndex;
   }
 
-  return transforms[playerId];
+  return unknowne0[playerId];
 }
 
 void GfGamePlayerFormation::swapFormation(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *otherHandle) { swapFormation(findPlayer(handle), findPlayer(otherHandle)); }
 
 u32 GfGamePlayerFormation::findPlayer(GF_OBJ_HANDLE *handle) {
   for (u32 playerId = 0; playerId < PLAYER_NUM; playerId++) {
-    if (players[playerId].handle == handle) {
+    if (unknown1a0[playerId].unknown08 == handle) {
       return playerId;
     }
   }
@@ -86,9 +86,9 @@ void GfGamePlayerFormation::swapFormation(u32 playerId, u32 otherPlayerId) {
     return;
   }
 
-  GF_OBJ_HANDLE *handle = players[playerId].handle;
-  players[playerId].handle = players[otherPlayerId].handle;
-  players[otherPlayerId].handle = handle;
+  GF_OBJ_HANDLE *handle = unknown1a0[playerId].unknown08;
+  unknown1a0[playerId].unknown08 = unknown1a0[otherPlayerId].unknown08;
+  unknown1a0[otherPlayerId].unknown08 = handle;
 
   notifyChangePlayerID(this, playerId);
   notifyChangePlayerID(this, otherPlayerId);
@@ -98,7 +98,7 @@ void GfGamePlayerFormation::swapFormation(u32 playerId, u32 otherPlayerId) {
 
 void GfGamePlayerFormation::changeFormation(u32 formation) {
   if (formation < FORMATION_NUM) {
-    this->formation = formation;
+    this->unknown230 = formation;
   }
 }
 

@@ -19,9 +19,9 @@ public:
   static void update(const fw::UpdateInfo &info);
 
   u8 _08[0x20 - 0x08];
-  bool isPlayerInside;
+  bool unknown20; // Inferred role: player inside; original member name unknown.
 };
 
-static_assert(offsetof(GfGameInsideBattleLock, isPlayerInside) == 0x20, "");
+static_assert(offsetof(GfGameInsideBattleLock, unknown20) == 0x20, "");
 
 } // namespace gf

@@ -10,7 +10,7 @@
 
 namespace gf {
 
-GfQuestEvent::GfQuestEvent() : isEntryOpen(false), isResultOpen(false) {}
+GfQuestEvent::GfQuestEvent() : unknown08(false), unknown09(false) {}
 
 GfQuestEvent::~GfQuestEvent() {}
 
@@ -20,7 +20,7 @@ bool GfQuestEvent::setQuestEntry(u32 quest) {
   if (quest != 1 && event != nullptr) {
     isEntry = true;
     if (GfQuestManager::openOrder(toQuestID(quest), true)) {
-      event->isEntryOpen = GfDataQuest::getListVisible(toQuestID(quest));
+      event->unknown08 = GfDataQuest::getListVisible(toQuestID(quest));
     }
   }
 
@@ -45,28 +45,28 @@ bool GfQuestEvent::isActive() {
     return false;
   }
 
-  return event->isEntryOpen || event->isResultOpen;
+  return event->unknown08 || event->unknown09;
 }
 
 void GfQuestEvent::openEntry(u32 quest) {
   GfQuestEvent *event = get();
   if (event != nullptr) {
-    event->isEntryOpen = GfPlayFactory::createQuestUIOrder(toQuestID(quest), true, false);
+    event->unknown08 = GfPlayFactory::createQuestUIOrder(toQuestID(quest), true, false);
   }
 }
 
 void GfQuestEvent::openResult(u32 quest) {
   GfQuestEvent *event = get();
   if (event != nullptr) {
-    event->isResultOpen = GfPlayFactory::createQuestUIComplete(toQuestID(quest));
+    event->unknown09 = GfPlayFactory::createQuestUIComplete(toQuestID(quest));
   }
 }
 
 void GfQuestEvent::clearDispUI() {
   GfQuestEvent *event = get();
   if (event != nullptr) {
-    event->isEntryOpen = false;
-    event->isResultOpen = false;
+    event->unknown08 = false;
+    event->unknown09 = false;
   }
 }
 

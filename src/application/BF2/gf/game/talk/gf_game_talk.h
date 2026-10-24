@@ -12,10 +12,10 @@ struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 
 struct GfSetupPfTalk {
-  int event;
-  GF_OBJ_HANDLE *handle;
-  u32 param0;
-  u32 param1;
+  int unknown00;            // Inferred role: event; original member name unknown.
+  GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+  u32 unknown10;            // Inferred role: param 0; original member name unknown.
+  u32 unknown14;            // Inferred role: param 1; original member name unknown.
 };
 
 static_assert(sizeof(GfSetupPfTalk) == 0x18, "");
@@ -34,7 +34,7 @@ public:
   static void end();
 
 private:
-  bool initialized;
+  bool unknown08; // Inferred role: initialized; original member name unknown.
 };
 
 static_assert(sizeof(GfGameTalk) == 0x10, "");

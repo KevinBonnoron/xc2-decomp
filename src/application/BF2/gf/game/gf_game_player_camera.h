@@ -47,12 +47,12 @@ public:
   bool recieveMessage(fw::MessageObject *sender, fw::Message &message) override;
   static void procMsgPcResetCamera(fw::MessageObject *sender, MsgPcResetCamera &message);
 
-  mm::mtl::IntrusivePtr<fw::Camera> camera;
-  mm::mtl::IntrusivePtr<fw::CameraTarget> target;
+  mm::mtl::IntrusivePtr<fw::Camera> unknown28;       // Inferred role: camera; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::CameraTarget> unknown30; // Inferred role: target; original member name unknown.
 };
 
-static_assert(offsetof(GfGamePlayerCamera, camera) == 0x28, "");
-static_assert(offsetof(GfGamePlayerCamera, target) == 0x30, "");
+static_assert(offsetof(GfGamePlayerCamera, unknown28) == 0x28, "");
+static_assert(offsetof(GfGamePlayerCamera, unknown30) == 0x30, "");
 static_assert(sizeof(GfGamePlayerCamera) == 0x38, "");
 
 } // namespace gf

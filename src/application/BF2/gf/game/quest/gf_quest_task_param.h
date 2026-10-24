@@ -33,31 +33,31 @@ enum QUEST_PARAM {
 };
 
 struct QuestParam {
-  QuestParam(QUEST_PARAM type) : type(type) {}
+  QuestParam(QUEST_PARAM type) : unknown00(type) {}
 
-  QUEST_PARAM type;
+  QUEST_PARAM unknown00; // Inferred role: type; original member name unknown.
 };
 
 struct QuestTaskParam : QuestParam {
   QuestTaskParam(QuestID quest, u32 taskIndex, TASK_STATE state);
   QuestTaskParam(QuestID quest, u32 taskIndex, u32 purpose, TASK_STATE state);
 
-  QuestID quest;
-  u32 purpose;
-  u32 taskIndex;
-  u32 taskType;
-  u32 taskId;
-  TASK_STATE state;
-  bool isDisp;
+  QuestID unknown04;    // Inferred role: quest; original member name unknown.
+  u32 unknown08;        // Inferred role: purpose; original member name unknown.
+  u32 unknown0c;        // Inferred role: task index; original member name unknown.
+  u32 unknown10;        // Inferred role: task type; original member name unknown.
+  u32 unknown14;        // Inferred role: task id; original member name unknown.
+  TASK_STATE unknown18; // Inferred role: state; original member name unknown.
+  bool unknown1c;       // Inferred role: display; original member name unknown.
 };
 
-static_assert(offsetof(QuestTaskParam, quest) == 0x04, "");
-static_assert(offsetof(QuestTaskParam, purpose) == 0x08, "");
-static_assert(offsetof(QuestTaskParam, taskIndex) == 0x0c, "");
-static_assert(offsetof(QuestTaskParam, taskType) == 0x10, "");
-static_assert(offsetof(QuestTaskParam, taskId) == 0x14, "");
-static_assert(offsetof(QuestTaskParam, state) == 0x18, "");
-static_assert(offsetof(QuestTaskParam, isDisp) == 0x1c, "");
+static_assert(offsetof(QuestTaskParam, unknown04) == 0x04, "");
+static_assert(offsetof(QuestTaskParam, unknown08) == 0x08, "");
+static_assert(offsetof(QuestTaskParam, unknown0c) == 0x0c, "");
+static_assert(offsetof(QuestTaskParam, unknown10) == 0x10, "");
+static_assert(offsetof(QuestTaskParam, unknown14) == 0x14, "");
+static_assert(offsetof(QuestTaskParam, unknown18) == 0x18, "");
+static_assert(offsetof(QuestTaskParam, unknown1c) == 0x1c, "");
 static_assert(sizeof(QuestTaskParam) == 0x20, "");
 
 } // namespace gf

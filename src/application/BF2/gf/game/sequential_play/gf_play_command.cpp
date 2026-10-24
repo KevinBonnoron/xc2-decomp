@@ -31,8 +31,8 @@
 namespace gf {
 
 void GfPlayComPause::start() {
-  if (pauseBits != 0) {
-    GfSequentialPlay::pauseOn(pauseBits);
+  if (unknown10 != 0) {
+    GfSequentialPlay::pauseOn(unknown10);
   } else {
     GfSequentialPlay::pauseOff();
   }
@@ -49,8 +49,8 @@ GfPlayComPause *GfPlayComPause::create(u32 pauseBits) {
 }
 
 void GfPlayComState::start() {
-  if (state != 0) {
-    GfSequentialPlay::execPushState(state);
+  if (unknown10 != 0) {
+    GfSequentialPlay::execPushState(unknown10);
   } else {
     GfSequentialPlay::execPopState();
   }
@@ -78,8 +78,8 @@ bool GfPlayComWait::update(const fw::UpdateInfo &info, bool isCancel) {
   if (isCancel) {
     return true;
   }
-  time -= info.frameTime;
-  return time <= 0.0f;
+  unknown10 -= info.frameTime;
+  return unknown10 <= 0.0f;
 }
 
 GfPlayComWait *GfPlayComWait::create(f32 time) {
@@ -88,14 +88,14 @@ GfPlayComWait *GfPlayComWait::create(f32 time) {
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComWait(time);
 }
 
-GfPlayComEventPlayerStop::GfPlayComEventPlayerStop(bool isStop) : GfPlayCom(PCOMTYPE_PLAYER_STOP, true), isStop(isStop) {
-  if (isStop && GfGameScene::get() != nullptr) {
+GfPlayComEventPlayerStop::GfPlayComEventPlayerStop(bool isStop) : GfPlayCom(PCOMTYPE_PLAYER_STOP, true), unknown10(isStop) {
+  if (unknown10 && GfGameScene::get() != nullptr) {
     GfGameScene::get()->setEventPlayerStop(true);
   }
 }
 
 void GfPlayComEventPlayerStop::start() {
-  if (!isStop && GfGameScene::get() != nullptr) {
+  if (!unknown10 && GfGameScene::get() != nullptr) {
     GfGameScene::get()->setEventPlayerStop(false);
   }
 }
@@ -106,14 +106,14 @@ GfPlayComEventPlayerStop *GfPlayComEventPlayerStop::create(bool isStop) {
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComEventPlayerStop(isStop);
 }
 
-GfPlayComResetBladePlayerStop::GfPlayComResetBladePlayerStop(bool isStop) : GfPlayCom(PCOMTYPE_PLAYER_STOP, true), isStop(isStop) {
-  if (isStop && GfGameScene::get() != nullptr) {
+GfPlayComResetBladePlayerStop::GfPlayComResetBladePlayerStop(bool isStop) : GfPlayCom(PCOMTYPE_PLAYER_STOP, true), unknown10(isStop) {
+  if (unknown10 && GfGameScene::get() != nullptr) {
     GfGameScene::get()->setResetBladePlayerStop(true);
   }
 }
 
 void GfPlayComResetBladePlayerStop::start() {
-  if (!isStop && GfGameScene::get() != nullptr) {
+  if (!unknown10 && GfGameScene::get() != nullptr) {
     GfGameScene::get()->setResetBladePlayerStop(false);
   }
 }
@@ -126,18 +126,18 @@ GfPlayComResetBladePlayerStop *GfPlayComResetBladePlayerStop::create(bool isStop
 
 int GfPlayComAfterEventScript::s_activate;
 
-GfPlayComAfterEventScript::GfPlayComAfterEventScript(u32 event) : GfPlayCom(PCOMTYPE_AFTER_EVENT_SCRIPT, false), state(0), event(event), handle(reinterpret_cast<GF_SCOM_HANDLE *>(-1)) {
+GfPlayComAfterEventScript::GfPlayComAfterEventScript(u32 event) : GfPlayCom(PCOMTYPE_AFTER_EVENT_SCRIPT, false), unknown10(0), unknown14(event), unknown18(reinterpret_cast<GF_SCOM_HANDLE *>(-1)) {
   s_activate++;
 }
 
 GfPlayComAfterEventScript::~GfPlayComAfterEventScript() { s_activate--; }
 
 void GfPlayComAfterEventScript::start() {
-  int startID = GfDataEvent::getEventAfterScriptStartID(event);
-  const char *name = GfDataEvent::getEventAfterScriptName(event);
+  int startID = GfDataEvent::getEventAfterScriptStartID(unknown14);
+  const char *name = GfDataEvent::getEventAfterScriptName(unknown14);
   if (name != nullptr && name[0] != '\0') {
     GfGameEvent::setAfterEventStartID(startID);
-    handle = SCOM_SCRIPT::create(SCRIPT_SLOT_AFTER_EVENT, name, true);
+    unknown18 = SCOM_SCRIPT::create(SCRIPT_SLOT_AFTER_EVENT, name, true);
   }
 }
 
@@ -148,7 +148,7 @@ bool GfPlayComAfterEventScript::update(const fw::UpdateInfo &, bool isCancel) {
     SCOM_SCRIPT::create(SCRIPT_SLOT_AFTER_EVENT, nullptr, false);
     return true;
   }
-  return !GfReqSmallCom::get()->isValid(handle);
+  return !GfReqSmallCom::get()->isValid(unknown18);
 }
 
 GfPlayComAfterEventScript *GfPlayComAfterEventScript::create(u32 event) {
@@ -160,7 +160,7 @@ GfPlayComAfterEventScript *GfPlayComAfterEventScript::create(u32 event) {
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComAfterEventScript(event);
 }
 
-void GfPlayComCallbackEventSequence::start() { GfEvent::callEventPlay(isStart ? GEV_EVENT_SEQUENCE_START : GEV_EVENT_SEQUENCE_END, sequence); }
+void GfPlayComCallbackEventSequence::start() { GfEvent::callEventPlay(unknown14 ? GEV_EVENT_SEQUENCE_START : GEV_EVENT_SEQUENCE_END, unknown10); }
 
 void GfPlayComCallbackEventSequence::end() {}
 
@@ -178,7 +178,7 @@ GfPlayComOpenMenu::GfPlayComOpenMenu() : GfPlayCom(PCOMTYPE_OPEN_MENU, false) { 
 
 GfPlayComOpenMenu::~GfPlayComOpenMenu() { s_active--; }
 
-void GfPlayComOpenMenu::start() { GfMenuManager::openMenu(menu); }
+void GfPlayComOpenMenu::start() { GfMenuManager::openMenu(unknown10); }
 
 void GfPlayComOpenMenu::end() {}
 
@@ -198,11 +198,11 @@ GfPlayComOpenMenu *GfPlayComOpenMenu::create(u32 menu) {
   // __LINE__ must be 845 as in the original file: its value changes the instruction order.
 #line 845
   GfPlayComOpenMenu *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComOpenMenu();
-  command->menu = menu;
+  command->unknown10 = menu;
   return command;
 }
 
-void GfPlayComOpenMenu2::start() { waitCount = 3; }
+void GfPlayComOpenMenu2::start() { unknown1c = 3; }
 
 void GfPlayComOpenMenu2::end() {
   if (gmk::GmkManager::get() != nullptr) {
@@ -211,13 +211,13 @@ void GfPlayComOpenMenu2::end() {
 }
 
 bool GfPlayComOpenMenu2::update(const fw::UpdateInfo &, bool isCancel) {
-  switch (state) {
+  switch (unknown18) {
   case 0:
-    if (--waitCount <= 0) {
+    if (--unknown1c <= 0) {
       if (GfSequentialPlay::isSequenceSpecialAction()) {
         return true;
       }
-      switch (menu) {
+      switch (unknown14) {
       case MAINMENU_SYSTEM:
         GfMenuManager::setMainmenuOpenSystem();
         break;
@@ -228,7 +228,7 @@ bool GfPlayComOpenMenu2::update(const fw::UpdateInfo &, bool isCancel) {
         break;
       }
       GfMenuManager::openFullScreen(1, true, true);
-      state = 1;
+      unknown18 = 1;
       return false;
     }
     break;
@@ -256,8 +256,8 @@ int GfPlayComStartTutorial::s_activateCount;
 
 void GfPlayComStartTutorial::start() {
   u8 *bdat = GfDataBdat::getFP(BDAT_MNU_TUTORIAL);
-  if (bdat != nullptr && static_cast<int>(tutorial) >= Bdat::getIdTop(bdat) && static_cast<int>(tutorial) - Bdat::getIdTop(bdat) < Bdat::getIdCount(bdat)) {
-    GfScriptManager::loadScript(SCRIPT_SLOT_TUTORIAL, Bdat::getVal(bdat, "script_file", tutorial).valueString);
+  if (bdat != nullptr && static_cast<int>(unknown10) >= Bdat::getIdTop(bdat) && static_cast<int>(unknown10) - Bdat::getIdTop(bdat) < Bdat::getIdCount(bdat)) {
+    GfScriptManager::loadScript(SCRIPT_SLOT_TUTORIAL, Bdat::getVal(bdat, "script_file", unknown10).valueString);
     GfScriptManager::startScript(SCRIPT_SLOT_TUTORIAL);
     s_activateCount++;
   }
@@ -298,19 +298,19 @@ GfPlayComMiniGame *GfPlayComMiniGame::create() {
 bool GfPlayComMenuChapterSave::s_bExist;
 
 void GfPlayComMenuChapterSave::start() {
-  GfDataUtil::setChapterSave(chapter, GfDataUtil::getScenarioFlag());
-  isOpen = false;
+  GfDataUtil::setChapterSave(unknown10, GfDataUtil::getScenarioFlag());
+  unknown14 = false;
 }
 
 void GfPlayComMenuChapterSave::end() {
-  GfPlayFactory::createOneEvent(chapter);
+  GfPlayFactory::createOneEvent(unknown10);
   s_bExist = false;
 }
 
 bool GfPlayComMenuChapterSave::update(const fw::UpdateInfo &, bool) {
-  if (!isOpen) {
+  if (!unknown14) {
     GfMenuManager::openSave();
-    isOpen = true;
+    unknown14 = true;
     return false;
   }
   return !GfMenuManager::isOpenFullScreen();
@@ -328,11 +328,11 @@ GfPlayComMenuChapterSave *GfPlayComMenuChapterSave::create(u32 chapter) {
 
 int GfPlayComMenuChapter::s_activate;
 
-GfPlayComMenuChapter::GfPlayComMenuChapter(u32 chapter) : GfPlayCom(PCOMTYPE_MENU_CHAPTER, false), chapter(chapter) { s_activate++; }
+GfPlayComMenuChapter::GfPlayComMenuChapter(u32 chapter) : GfPlayCom(PCOMTYPE_MENU_CHAPTER, false), unknown10(chapter) { s_activate++; }
 
 GfPlayComMenuChapter::~GfPlayComMenuChapter() { s_activate--; }
 
-void GfPlayComMenuChapter::start() { GfMenuManager::openChapterTelop(chapter); }
+void GfPlayComMenuChapter::start() { GfMenuManager::openChapterTelop(unknown10); }
 
 void GfPlayComMenuChapter::end() {}
 
@@ -346,11 +346,11 @@ GfPlayComMenuChapter *GfPlayComMenuChapter::create(u32 chapter) {
 
 int GfPlayComMenuChapterEnd::s_activate;
 
-GfPlayComMenuChapterEnd::GfPlayComMenuChapterEnd(u32 chapter) : GfPlayCom(PCOMTYPE_MENU_CHAPTER_END, false), chapter(chapter) { s_activate++; }
+GfPlayComMenuChapterEnd::GfPlayComMenuChapterEnd(u32 chapter) : GfPlayCom(PCOMTYPE_MENU_CHAPTER_END, false), unknown10(chapter) { s_activate++; }
 
 GfPlayComMenuChapterEnd::~GfPlayComMenuChapterEnd() { s_activate--; }
 
-void GfPlayComMenuChapterEnd::start() { GfMenuManager::openChapterEndTelop(chapter); }
+void GfPlayComMenuChapterEnd::start() { GfMenuManager::openChapterEndTelop(unknown10); }
 
 void GfPlayComMenuChapterEnd::end() {}
 
@@ -364,20 +364,20 @@ GfPlayComMenuChapterEnd *GfPlayComMenuChapterEnd::create(u32 chapter) {
 
 int GfPlayComMenuZone::s_activate;
 
-GfPlayComMenuZone::GfPlayComMenuZone(u32 zone) : GfPlayCom(PCOMTYPE_MENU_ZONE, false), zone(zone) { s_activate++; }
+GfPlayComMenuZone::GfPlayComMenuZone(u32 zone) : GfPlayCom(PCOMTYPE_MENU_ZONE, false), unknown10(zone) { s_activate++; }
 
 GfPlayComMenuZone::~GfPlayComMenuZone() { s_activate--; }
 
 void GfPlayComMenuZone::start() {
-  GfMenuManager::openZoneTelop(zone);
-  time = 10.0f;
+  GfMenuManager::openZoneTelop(unknown10);
+  unknown14 = 10.0f;
 }
 
 void GfPlayComMenuZone::end() {}
 
 bool GfPlayComMenuZone::update(const fw::UpdateInfo &info, bool) {
-  time -= info.deltaTime;
-  if (time <= 0.0f) {
+  unknown14 -= info.deltaTime;
+  if (unknown14 <= 0.0f) {
     return true;
   }
   return !GfMenuManager::isOpenZoneTelop();
@@ -391,11 +391,11 @@ GfPlayComMenuZone *GfPlayComMenuZone::create(u32 zone) {
 
 int GfPlayComMenuDummyTutorial::s_activate;
 
-GfPlayComMenuDummyTutorial::GfPlayComMenuDummyTutorial(u32 tutorial) : GfPlayCom(PCOMTYPE_MENU_DUMMY_TUTORIAL, false), tutorial(tutorial) { s_activate++; }
+GfPlayComMenuDummyTutorial::GfPlayComMenuDummyTutorial(u32 tutorial) : GfPlayCom(PCOMTYPE_MENU_DUMMY_TUTORIAL, false), unknown10(tutorial) { s_activate++; }
 
 GfPlayComMenuDummyTutorial::~GfPlayComMenuDummyTutorial() { s_activate--; }
 
-void GfPlayComMenuDummyTutorial::start() { GfMenuManager::openDummyTutorial(tutorial); }
+void GfPlayComMenuDummyTutorial::start() { GfMenuManager::openDummyTutorial(unknown10); }
 
 void GfPlayComMenuDummyTutorial::end() {}
 
@@ -429,7 +429,7 @@ GfPlayComMenuQuestList *GfPlayComMenuQuestList::create() {
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuQuestList();
 }
 
-void GfPlayComMenuKizunaring::start() { GfMenuKizunaring::openMenu(blade); }
+void GfPlayComMenuKizunaring::start() { GfMenuKizunaring::openMenu(unknown10); }
 
 void GfPlayComMenuKizunaring::end() {}
 
@@ -453,11 +453,11 @@ GfPlayComMenuKizunaring *GfPlayComMenuKizunaring::create(u32 blade) {
 
 int GfPlayComMenuPrecious::s_activate;
 
-GfPlayComMenuPrecious::GfPlayComMenuPrecious(u32 item) : GfPlayCom(PCOMTYPE_MENU_PRECIOUS, false), item(item) { s_activate++; }
+GfPlayComMenuPrecious::GfPlayComMenuPrecious(u32 item) : GfPlayCom(PCOMTYPE_MENU_PRECIOUS, false), unknown10(item) { s_activate++; }
 
 GfPlayComMenuPrecious::~GfPlayComMenuPrecious() { s_activate--; }
 
-void GfPlayComMenuPrecious::start() { GfMenuManager::openPreciousWindow(item); }
+void GfPlayComMenuPrecious::start() { GfMenuManager::openPreciousWindow(unknown10); }
 
 void GfPlayComMenuPrecious::end() {}
 
@@ -469,9 +469,9 @@ GfPlayComMenuPrecious *GfPlayComMenuPrecious::create(u32 item) {
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuPrecious(item);
 }
 
-GfPlayComSalvage::GfPlayComSalvage(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_SALVAGE, false), handle(handle), waitFrame(3), state(STATE_WAIT) {
+GfPlayComSalvage::GfPlayComSalvage(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_SALVAGE, false), unknown18(handle), unknown20(3), unknown24(STATE_WAIT) {
   if (GfGameScene::get() != nullptr) {
-    pause = GfGameScene::get()->createPlayerPause();
+    unknown10 = GfGameScene::get()->createPlayerPause();
   }
 }
 
@@ -479,20 +479,20 @@ void GfPlayComSalvage::start() {}
 
 void GfPlayComSalvage::end() {
   if (GfGameScene::get() != nullptr) {
-    GfGameScene::get()->destroyPlayerPause(pause);
+    GfGameScene::get()->destroyPlayerPause(unknown10);
   }
 }
 
 bool GfPlayComSalvage::updateForWait(const fw::UpdateInfo &info) {
-  if (--waitFrame <= 0) {
+  if (--unknown20 <= 0) {
     if (GfSequentialPlay::isSequenceSpecialAction()) {
       return true;
     }
     if (GfPause::isPause(PAUSE_BIT_MAIN_MENU)) {
       return true;
     }
-    state = STATE_SALVAGE;
-    GfGameSalvage::startSalvage(handle);
+    unknown24 = STATE_SALVAGE;
+    GfGameSalvage::startSalvage(unknown18);
   }
   return false;
 }
@@ -508,7 +508,7 @@ bool GfPlayComSalvage::updateForSalvage(const fw::UpdateInfo &info, bool isCance
 }
 
 bool GfPlayComSalvage::update(const fw::UpdateInfo &info, bool isCancel) {
-  switch (state) {
+  switch (unknown24) {
   case STATE_WAIT:
     return updateForWait(info);
   case STATE_SALVAGE:
@@ -527,11 +527,11 @@ bool GfPlayComWaitPlayerToStartGmkTuto::update(const fw::UpdateInfo &info, bool 
   if (isCancel) {
     return true;
   }
-  time += info.deltaTime;
+  unknown10 += info.deltaTime;
   if (GfGameManager::isGmkTutorialMoverOK()) {
     return true;
   }
-  return time > 10.0f;
+  return unknown10 > 10.0f;
 }
 
 GfPlayComWaitPlayerToStartGmkTuto *GfPlayComWaitPlayerToStartGmkTuto::create() {
@@ -541,14 +541,14 @@ GfPlayComWaitPlayerToStartGmkTuto *GfPlayComWaitPlayerToStartGmkTuto::create() {
 }
 
 GfPlayComGimmickTaskComplete::GfPlayComGimmickTaskComplete(gmk::GmkType gmkType, u32 gimmick, f32 time)
-    : GfPlayCom(PCOMTYPE_QUEST_COMPLETE_UI, false), gmkType(gmkType), gimmick(gimmick), time(time) {}
+    : GfPlayCom(PCOMTYPE_QUEST_COMPLETE_UI, false), unknown10(gmkType), unknown14(gimmick), unknown18(time) {}
 
 bool GfPlayComGimmickTaskComplete::update(const fw::UpdateInfo &info, bool) {
-  time -= info.deltaTime;
-  if (time > 0.0f) {
+  unknown18 -= info.deltaTime;
+  if (unknown18 > 0.0f) {
     return false;
   }
-  GfQuestTask::completeGimmickTask(gmkType, gimmick);
+  GfQuestTask::completeGimmickTask(unknown10, unknown14);
   return true;
 }
 
@@ -558,15 +558,15 @@ GfPlayComGimmickTaskComplete *GfPlayComGimmickTaskComplete::create(gmk::GmkType 
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComGimmickTaskComplete(gmkType, gimmick, time);
 }
 
-GfPlayComExecuteSignal::GfPlayComExecuteSignal(bool isStart, GfSequentialPlaySignal *signal) : GfPlayCom(PCOMTYPE_EXECUTE_SIGNAL, true), isStart(isStart), signal(signal) {
-  if (isStart) {
-    signal->isActive = true;
+GfPlayComExecuteSignal::GfPlayComExecuteSignal(bool isStart, GfSequentialPlaySignal *signal) : GfPlayCom(PCOMTYPE_EXECUTE_SIGNAL, true), unknown10(isStart), unknown18(signal) {
+  if (unknown10) {
+    unknown18->isActive = true;
   }
 }
 
 void GfPlayComExecuteSignal::start() {
-  if (!isStart) {
-    signal->isActive = false;
+  if (!unknown10) {
+    unknown18->isActive = false;
   }
 }
 
@@ -580,14 +580,14 @@ GfPlayComExecuteSignal *GfPlayComExecuteSignal::create(bool isStart, GfSequentia
 }
 
 void GfPlayComMenuObjCommonText::start() {
-  context = GfMenuCallContext::create();
-  GfMenuObjCommonText::openKizunaDialog(context, param);
+  unknown20 = GfMenuCallContext::create();
+  GfMenuObjCommonText::openKizunaDialog(unknown20, unknown10);
 }
 
 void GfPlayComMenuObjCommonText::end() {
-  if (context != nullptr) {
+  if (unknown20 != nullptr) {
     GfMenuObjCommonText::close();
-    mm::mtl::safeRelease(context);
+    mm::mtl::safeRelease(unknown20);
   }
 }
 
@@ -595,13 +595,13 @@ bool GfPlayComMenuObjCommonText::update(const fw::UpdateInfo &, bool isCancel) {
   if (isCancel) {
     return true;
   }
-  return context->isTerm();
+  return unknown20->isTerm();
 }
 
 int GfPlayComMenuObjCommonText::s_activate;
 
-GfPlayComMenuObjCommonText::GfPlayComMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param) : GfPlayCom(PCOMTYPE_MENU_COMMON, false), context(nullptr) {
-  this->param = param;
+GfPlayComMenuObjCommonText::GfPlayComMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param) : GfPlayCom(PCOMTYPE_MENU_COMMON, false), unknown20(nullptr) {
+  this->unknown10 = param;
   s_activate++;
 }
 

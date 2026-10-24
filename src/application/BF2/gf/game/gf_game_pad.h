@@ -45,12 +45,12 @@ public:
   void eventInGameOpenQuestListMenu();
 
 private:
-  bool mInitialized;
-  bool mIsEventPause;
-  fw::PadRelay mPadRelay;
-  fw::PadData mPadData;
-  mm::mtl::FixedVector<DWPAD, INTERRUPT_PAD_MAX> mInterruptPads;
-  u8 mEmergencyEscapeFrame;
+  bool unknown10;                                           // Inferred role: initialized; original member name unknown.
+  bool unknown11;                                           // Inferred role: event pause; original member name unknown.
+  fw::PadRelay unknown18;                                   // Inferred role: pad relay; original member name unknown.
+  fw::PadData unknown50;                                    // Inferred role: pad data; original member name unknown.
+  mm::mtl::FixedVector<DWPAD, INTERRUPT_PAD_MAX> unknown98; // Inferred role: interrupt pads; original member name unknown.
+  u8 unknown1a0;                                            // Inferred role: emergency escape frame; original member name unknown.
 };
 
 static_assert(sizeof(GfGamePad) == 0x1a8, "");

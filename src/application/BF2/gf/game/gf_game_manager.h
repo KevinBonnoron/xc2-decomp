@@ -31,7 +31,7 @@ enum {
 };
 
 struct OwnerBonus {
-  s16 values[14];
+  s16 unknown00[14]; // Inferred role: values; original member name unknown.
 };
 
 static_assert(sizeof(OwnerBonus) == 0x1c, "");
@@ -208,15 +208,15 @@ public:
   void update(const fw::UpdateInfo &info);
 
 private:
-  bool mInitialized;
-  bool mIsLeaveGame;
+  bool unknown18; // Inferred role: initialized; original member name unknown.
+  bool unknown19; // Inferred role: leave game; original member name unknown.
 
   friend struct GfGameManagerLayout;
 };
 
 struct GfGameManagerLayout {
-  static_assert(offsetof(GfGameManager, mInitialized) == 0x18, "");
-  static_assert(offsetof(GfGameManager, mIsLeaveGame) == 0x19, "");
+  static_assert(offsetof(GfGameManager, unknown18) == 0x18, "");
+  static_assert(offsetof(GfGameManager, unknown19) == 0x19, "");
   static_assert(sizeof(GfGameManager) == 0x20, "");
 };
 

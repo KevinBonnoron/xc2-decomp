@@ -32,37 +32,37 @@ static const char *CAMERA_NAMES[] = {
 };
 
 GfGameSalvage::GfGameSalvage(const GfSetupParam &param)
-    : fsm(getAllocator(ALLOCATOR_DEFAULT)), initialized(false), buttonChallengePoint(0), skillPoint(0), model(nullptr), voice(nullptr), climbAnimation(ANIMATION_RESULT_00), climbVoice(0),
-      diveVibration(0) {
+    : unknown08(getAllocator(ALLOCATOR_DEFAULT)), unknowna0(false), unknownb0(0), unknownb4(0), unknownc0(nullptr), unknownc8(nullptr), m_climbAnimationType(ANIMATION_RESULT_00), unknownd4(0),
+      unknownd8(0) {
   initialize(param);
 }
 
 void GfGameSalvage::initialize(const GfSetupParam &) {
-  fsm.beginSetup(this, STATE_MAX);
-  fsm.registerState<StateSalvageWait>(STATE_WAIT);
-  fsm.registerState<StateSalvageTBoxCheck>(STATE_TBOX_CHECK);
-  fsm.registerState<StateSalvageErrorMessage>(STATE_ERROR_MESSAGE);
-  fsm.registerState<StateSalvageItemSelect>(STATE_ITEM_SELECT);
-  fsm.registerState<StateSalvageSetupFadeOut>(STATE_SETUP_FADE_OUT);
-  fsm.registerState<StateSalvageLoad>(STATE_LOAD);
-  fsm.registerState<StateSalvageSetupFadeIn>(STATE_SETUP_FADE_IN);
-  fsm.registerState<StateSalvageSkillCheck>(STATE_SKILL_CHECK);
-  fsm.registerState<StateSalvageStartVoice>(STATE_START_VOICE);
-  fsm.registerState<StateSalvageDiveStart>(STATE_DIVE_START);
-  fsm.registerState<StateSalvageDiveWait>(STATE_DIVE_WAIT);
-  fsm.registerState<StateSalvageDiveEnd>(STATE_DIVE_END);
-  fsm.registerState<StateSalvageDiveFadeOut>(STATE_DIVE_FADE_OUT);
-  fsm.registerState<StateSalvageDiveFadeWait>(STATE_DIVE_FADE_WAIT);
-  fsm.registerState<StateSalvageDiveFadeIn>(STATE_DIVE_FADE_IN);
-  fsm.registerState<StateSalvageClimbStart>(STATE_CLIMB_START);
-  fsm.registerState<StateSalvageResult>(STATE_RESULT);
-  fsm.registerState<StateSalvageResultUi>(STATE_RESULT_UI);
-  fsm.registerState<StateSalvagePartyFormDelay>(STATE_PARTY_FORM_DELAY);
-  fsm.registerState<StateSalvageCamWait>(STATE_CAM_WAIT);
-  fsm.registerState<StateSalvageFinish>(STATE_FINISH);
-  fsm.endSetup();
-  fsm.setState(STATE_WAIT);
-  initialized = true;
+  unknown08.beginSetup(this, STATE_MAX);
+  unknown08.registerState<StateSalvageWait>(STATE_WAIT);
+  unknown08.registerState<StateSalvageTBoxCheck>(STATE_TBOX_CHECK);
+  unknown08.registerState<StateSalvageErrorMessage>(STATE_ERROR_MESSAGE);
+  unknown08.registerState<StateSalvageItemSelect>(STATE_ITEM_SELECT);
+  unknown08.registerState<StateSalvageSetupFadeOut>(STATE_SETUP_FADE_OUT);
+  unknown08.registerState<StateSalvageLoad>(STATE_LOAD);
+  unknown08.registerState<StateSalvageSetupFadeIn>(STATE_SETUP_FADE_IN);
+  unknown08.registerState<StateSalvageSkillCheck>(STATE_SKILL_CHECK);
+  unknown08.registerState<StateSalvageStartVoice>(STATE_START_VOICE);
+  unknown08.registerState<StateSalvageDiveStart>(STATE_DIVE_START);
+  unknown08.registerState<StateSalvageDiveWait>(STATE_DIVE_WAIT);
+  unknown08.registerState<StateSalvageDiveEnd>(STATE_DIVE_END);
+  unknown08.registerState<StateSalvageDiveFadeOut>(STATE_DIVE_FADE_OUT);
+  unknown08.registerState<StateSalvageDiveFadeWait>(STATE_DIVE_FADE_WAIT);
+  unknown08.registerState<StateSalvageDiveFadeIn>(STATE_DIVE_FADE_IN);
+  unknown08.registerState<StateSalvageClimbStart>(STATE_CLIMB_START);
+  unknown08.registerState<StateSalvageResult>(STATE_RESULT);
+  unknown08.registerState<StateSalvageResultUi>(STATE_RESULT_UI);
+  unknown08.registerState<StateSalvagePartyFormDelay>(STATE_PARTY_FORM_DELAY);
+  unknown08.registerState<StateSalvageCamWait>(STATE_CAM_WAIT);
+  unknown08.registerState<StateSalvageFinish>(STATE_FINISH);
+  unknown08.endSetup();
+  unknown08.setState(STATE_WAIT);
+  unknowna0 = true;
 }
 
 GfGameSalvage::~GfGameSalvage() {}
@@ -80,112 +80,112 @@ void GfGameSalvage::destroy() {
 }
 
 void GfGameSalvage::finalize() {
-  fsm.cleanup();
-  initialized = false;
+  unknown08.cleanup();
+  unknowna0 = false;
 }
 
-bool GfGameSalvage::isInitialized() { return get() != nullptr && get()->initialized; }
+bool GfGameSalvage::isInitialized() { return get() != nullptr && get()->unknowna0; }
 
 void GfGameSalvage::update(const fw::UpdateInfo &info) {
   if (get() != nullptr) {
-    get()->fsm.update(&info);
+    get()->unknown08.update(&info);
   }
 }
 
 void GfGameSalvage::startSalvage(GF_OBJ_HANDLE *handle) {
-  get()->handle = handle;
-  if (GfGameManager::getState() == GF_STATE_SALVAGE && !GfGameManager::isBattle() && get()->fsm.getState()->stateID == STATE_WAIT) {
-    get()->fsm.setState(STATE_TBOX_CHECK);
+  get()->unknowna8 = handle;
+  if (GfGameManager::getState() == GF_STATE_SALVAGE && !GfGameManager::isBattle() && get()->unknown08.getState()->stateID == STATE_WAIT) {
+    get()->unknown08.setState(STATE_TBOX_CHECK);
   }
 }
 
-bool GfGameSalvage::isStateWait() { return get()->fsm.getState()->stateID == STATE_WAIT; }
+bool GfGameSalvage::isStateWait() { return get()->unknown08.getState()->stateID == STATE_WAIT; }
 
 void GfGameSalvage::cancelSalvage() {}
 
 void GfGameSalvage::createCameraDive(AnimationType animation, const mm::Vec3 &position, f32 rotation) {
   fw::CameraManager *manager = fw::CameraManager::get();
-  cameraDive = GimmickCamera::create(CAMERA_NAMES[animation], position, rotation);
-  static_cast<GimmickCamera *>(cameraDive.get())->setAuto(false);
-  manager->layers[0].push(cameraDive, 0.0f);
+  unknown88 = GimmickCamera::create(CAMERA_NAMES[animation], position, rotation);
+  static_cast<GimmickCamera *>(unknown88.get())->setAuto(false);
+  manager->layers[0].push(unknown88, 0.0f);
 }
 
 void GfGameSalvage::createCameraClimb(AnimationType animation, const mm::Vec3 &position, f32 rotation) {
   fw::CameraManager *manager = fw::CameraManager::get();
-  cameraClimb = GimmickCamera::create(CAMERA_NAMES[animation], position, rotation);
-  static_cast<GimmickCamera *>(cameraClimb.get())->setAuto(false);
-  manager->layers[0].push(cameraClimb, 0.0f);
+  unknown90 = GimmickCamera::create(CAMERA_NAMES[animation], position, rotation);
+  static_cast<GimmickCamera *>(unknown90.get())->setAuto(false);
+  manager->layers[0].push(unknown90, 0.0f);
 }
 
 void GfGameSalvage::createCameraCut01(const mm::Vec3 &position, f32 rotation) {
-  cameraCut01 = GimmickCamera::create("salvage_cut01", position, rotation);
-  static_cast<GimmickCamera *>(cameraCut01.get())->setAuto(false);
+  unknown98 = GimmickCamera::create("salvage_cut01", position, rotation);
+  static_cast<GimmickCamera *>(unknown98.get())->setAuto(false);
 }
 
 void GfGameSalvage::destroyCameraDiveStart() {
   fw::CameraManager *manager = fw::CameraManager::get();
-  if (cameraDiveStart.get() != nullptr && cameraDiveStart.get()->isActive) {
-    manager->layers[0].pop(cameraDiveStart, 0.0f);
+  if (unknown80.get() != nullptr && unknown80.get()->isActive) {
+    manager->layers[0].pop(unknown80, 0.0f);
   }
-  cameraDiveStart = nullptr;
+  unknown80 = nullptr;
 }
 
 void GfGameSalvage::destroyCameraDive() {
   fw::CameraManager *manager = fw::CameraManager::get();
-  if (cameraDive.get() != nullptr && cameraDive.get()->isActive) {
-    manager->layers[0].pop(cameraDive, 0.0f);
+  if (unknown88.get() != nullptr && unknown88.get()->isActive) {
+    manager->layers[0].pop(unknown88, 0.0f);
   }
-  cameraDive = nullptr;
+  unknown88 = nullptr;
 }
 
 void GfGameSalvage::destroyCameraClimb() {
   fw::CameraManager *manager = fw::CameraManager::get();
-  if (cameraClimb.get() != nullptr && cameraClimb.get()->isActive) {
-    manager->layers[0].pop(cameraClimb, 0.0f);
+  if (unknown90.get() != nullptr && unknown90.get()->isActive) {
+    manager->layers[0].pop(unknown90, 0.0f);
   }
-  cameraClimb = nullptr;
+  unknown90 = nullptr;
 }
 
 void GfGameSalvage::destroyCameraCut01() {
   fw::CameraManager *manager = fw::CameraManager::get();
-  if (cameraCut01.get() != nullptr && cameraCut01.get()->isActive) {
-    manager->layers[0].pop(cameraCut01, 1.0f);
+  if (unknown98.get() != nullptr && unknown98.get()->isActive) {
+    manager->layers[0].pop(unknown98, 1.0f);
   }
-  cameraCut01 = nullptr;
+  unknown98 = nullptr;
 }
 
 void GfGameSalvage::playCameraDiveStart() {
-  GimmickCamera *camera = static_cast<GimmickCamera *>(cameraDiveStart.get());
+  GimmickCamera *camera = static_cast<GimmickCamera *>(unknown80.get());
   if (camera != nullptr && camera->isActive) {
     camera->play();
   }
 }
 
 void GfGameSalvage::playCameraDive() {
-  GimmickCamera *camera = static_cast<GimmickCamera *>(cameraDive.get());
+  GimmickCamera *camera = static_cast<GimmickCamera *>(unknown88.get());
   if (camera != nullptr && camera->isActive) {
     camera->play();
   }
 }
 
 void GfGameSalvage::playCameraClimb() {
-  GimmickCamera *camera = static_cast<GimmickCamera *>(cameraClimb.get());
+  GimmickCamera *camera = static_cast<GimmickCamera *>(unknown90.get());
   if (camera != nullptr && camera->isActive) {
     camera->play();
   }
 }
 
 void GfGameSalvage::playCameraCut01() {
-  if (cameraCut01.get() != nullptr && !cameraCut01.get()->isActive) {
-    fw::CameraManager::get()->layers[0].push(cameraCut01, 0.0f);
-    if (cameraCut01.get() != nullptr) {
-      static_cast<GimmickCamera *>(cameraCut01.get())->play();
+  if (unknown98.get() != nullptr && !unknown98.get()->isActive) {
+    fw::CameraManager::get()->layers[0].push(unknown98, 0.0f);
+    if (unknown98.get() != nullptr) {
+      static_cast<GimmickCamera *>(unknown98.get())->play();
     }
   }
 }
 
 bool GfGameSalvage::isCameraDiveStartEnd() {
-  GimmickCamera *camera = static_cast<GimmickCamera *>(cameraDiveStart.get());
+  GimmickCamera *camera = static_cast<GimmickCamera *>(unknown80.get());
   if (camera != nullptr && camera->isActive) {
     return camera->isPlayEnd();
   }
@@ -193,7 +193,7 @@ bool GfGameSalvage::isCameraDiveStartEnd() {
 }
 
 bool GfGameSalvage::isCameraDiveEnd() {
-  GimmickCamera *camera = static_cast<GimmickCamera *>(cameraDive.get());
+  GimmickCamera *camera = static_cast<GimmickCamera *>(unknown88.get());
   if (camera != nullptr && camera->isActive) {
     return camera->isPlayEnd();
   }
@@ -201,7 +201,7 @@ bool GfGameSalvage::isCameraDiveEnd() {
 }
 
 bool GfGameSalvage::isCameraClimbEnd() {
-  GimmickCamera *camera = static_cast<GimmickCamera *>(cameraClimb.get());
+  GimmickCamera *camera = static_cast<GimmickCamera *>(unknown90.get());
   if (camera != nullptr && camera->isActive) {
     return camera->isPlayEnd();
   }
@@ -209,7 +209,7 @@ bool GfGameSalvage::isCameraClimbEnd() {
 }
 
 bool GfGameSalvage::isCameraCut01End() {
-  GimmickCamera *camera = static_cast<GimmickCamera *>(cameraCut01.get());
+  GimmickCamera *camera = static_cast<GimmickCamera *>(unknown98.get());
   if (camera != nullptr && camera->isActive) {
     return camera->isPlayEnd();
   }
@@ -217,7 +217,7 @@ bool GfGameSalvage::isCameraCut01End() {
 }
 
 bool GfGameSalvage::isCameraDive() {
-  GimmickCamera *camera = static_cast<GimmickCamera *>(cameraDive.get());
+  GimmickCamera *camera = static_cast<GimmickCamera *>(unknown88.get());
   if (camera != nullptr && camera->isActive) {
     return camera->isLoaded();
   }
@@ -225,36 +225,36 @@ bool GfGameSalvage::isCameraDive() {
 }
 
 void GfGameSalvage::createModel() {
-  if (model == nullptr) {
-    model = GfGameEvent::createSalvage();
+  if (unknownc0 == nullptr) {
+    unknownc0 = GfGameEvent::createSalvage();
   }
 }
 
 bool GfGameSalvage::isValidModel() {
-  if (model != nullptr) {
-    return model->isValid();
+  if (unknownc0 != nullptr) {
+    return unknownc0->isValid();
   }
   return false;
 }
 
 void GfGameSalvage::setModelTransform(const mm::Vec3 &position, f32 rotation) {
-  if (model != nullptr) {
-    model->setTransform(position, rotation);
+  if (unknownc0 != nullptr) {
+    unknownc0->setTransform(position, rotation);
   }
 }
 
 bool GfGameSalvage::isVoiceEnd() {
-  if (voice != nullptr) {
-    return SCOM_SALVAGE_VOICE::isPlayEnd(voice);
+  if (unknownc8 != nullptr) {
+    return SCOM_SALVAGE_VOICE::isPlayEnd(unknownc8);
   }
   return true;
 }
 
-GfGameSalvage::AnimationType GfGameSalvage::getClimbAnimationType() const { return climbAnimation; }
+GfGameSalvage::AnimationType GfGameSalvage::getClimbAnimationType() const { return m_climbAnimationType; }
 
 void GfGameSalvage::playWireStart(f32 time, f32 speed, f32 length) {
-  if (model != nullptr) {
-    GfGameUtil::startWireWithClose(model->handle, handle, time, speed, length);
+  if (unknownc0 != nullptr) {
+    GfGameUtil::startWireWithClose(unknownc0->handle, unknowna8, time, speed, length);
   }
 }
 

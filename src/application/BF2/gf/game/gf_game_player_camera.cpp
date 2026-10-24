@@ -15,7 +15,7 @@ static PlayerCamera *getPlayerCamera() {
     return nullptr;
   }
 
-  fw::Camera *camera = playerCamera->camera.get();
+  fw::Camera *camera = playerCamera->unknown28.get();
   if (camera == nullptr) {
     return nullptr;
   }
@@ -40,21 +40,21 @@ void GfGamePlayerCamera::destroy() {
 
 void GfGamePlayerCamera::cleanup() {
   GfEvent::removeEventCallback(this);
-  if (target.get() != nullptr) {
-    target = nullptr;
+  if (unknown30.get() != nullptr) {
+    unknown30 = nullptr;
     fw::CameraManager *manager = fw::CameraManager::get();
     if (manager != nullptr) {
-      manager->target = target;
+      manager->target = unknown30;
     }
   }
 
-  if (camera.get() != nullptr) {
+  if (unknown28.get() != nullptr) {
     fw::CameraManager *manager = fw::CameraManager::get();
     if (manager != nullptr) {
-      manager->layers[0].pop(camera, 0.0f);
+      manager->layers[0].pop(unknown28, 0.0f);
     }
 
-    camera = nullptr;
+    unknown28 = nullptr;
   }
 }
 
@@ -69,13 +69,13 @@ void GfGamePlayerCamera::resetCameraForSceneJump() {
     return;
   }
 
-  if (playerCamera->camera.get() != nullptr) {
-    manager->layers[0].pop(playerCamera->camera, 0.0f);
-    playerCamera->camera = nullptr;
+  if (playerCamera->unknown28.get() != nullptr) {
+    manager->layers[0].pop(playerCamera->unknown28, 0.0f);
+    playerCamera->unknown28 = nullptr;
   }
 
-  playerCamera->camera = PlayerCamera::create();
-  manager->layers[0].push(playerCamera->camera, 0.0f);
+  playerCamera->unknown28 = PlayerCamera::create();
+  manager->layers[0].push(playerCamera->unknown28, 0.0f);
 }
 
 void GfGamePlayerCamera::resetCamera() {
@@ -91,7 +91,7 @@ void GfGamePlayerCamera::requestResetCamera() {
     return;
   }
 
-  fw::CameraTarget *target = playerCamera->target.get();
+  fw::CameraTarget *target = playerCamera->unknown30.get();
   if (target != nullptr) {
     target->requestResetCamera();
   }
@@ -131,7 +131,7 @@ void GfGamePlayerCamera::setTargetPlayer(GF_OBJ_HANDLE *handle) {
     return;
   }
 
-  fw::CameraTarget *target = playerCamera->target.get();
+  fw::CameraTarget *target = playerCamera->unknown30.get();
   if (target == nullptr) {
     return;
   }
@@ -196,19 +196,19 @@ void GfGamePlayerCamera::gevPartyMemberOK(bool isOK) {
     return;
   }
 
-  if (target.get() == nullptr) {
-    target = PlayerCameraTarget::create();
+  if (unknown30.get() == nullptr) {
+    unknown30 = PlayerCameraTarget::create();
     fw::CameraManager *manager = fw::CameraManager::get();
     if (manager != nullptr) {
-      manager->target = target;
+      manager->target = unknown30;
     }
   }
 
-  if (camera.get() == nullptr) {
-    camera = PlayerCamera::create();
+  if (unknown28.get() == nullptr) {
+    unknown28 = PlayerCamera::create();
     fw::CameraManager *manager = fw::CameraManager::get();
     if (manager != nullptr) {
-      manager->layers[0].push(camera, 0.0f);
+      manager->layers[0].push(unknown28, 0.0f);
     }
   }
 }

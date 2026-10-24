@@ -5,18 +5,18 @@
 namespace gf {
 
 void GfRelSmnEnemy::removeEnemy(GF_OBJ_HANDLE *handle) {
-  if (!popEnemies.empty()) {
-    for (std::pair<PopInfo *, GF_OBJ_HANDLE *> *enemy = popEnemies.begin(), *end = popEnemies.end(); enemy != end; ++enemy) {
+  if (!unknown78.empty()) {
+    for (std::pair<PopInfo *, GF_OBJ_HANDLE *> *enemy = unknown78.begin(), *end = unknown78.end(); enemy != end; ++enemy) {
       if (enemy->second == handle) {
-        popEnemies.erase(enemy);
+        unknown78.erase(enemy);
         return;
       }
     }
   }
-  if (!waitEnemies.empty()) {
-    GF_OBJ_HANDLE **enemy = std::find(waitEnemies.begin(), waitEnemies.end(), handle);
-    if (enemy != waitEnemies.end()) {
-      waitEnemies.erase(enemy);
+  if (!unknowna0.empty()) {
+    GF_OBJ_HANDLE **enemy = std::find(unknowna0.begin(), unknowna0.end(), handle);
+    if (enemy != unknowna0.end()) {
+      unknowna0.erase(enemy);
     }
   }
 }

@@ -22,17 +22,17 @@ struct GfQuestReward {
 
     u32 getDevelopZone() const;
 
-    mm::mtl::FixStr<64> name;
+    mm::mtl::FixStr<64> unknown00; // Inferred role: name; original member name unknown.
     u8 _44[0x48 - 0x44];
   };
 
-  Param params[12];
-  u16 blade;
+  Param unknown00[12]; // Inferred role: params; original member name unknown.
+  u16 unknown360;      // Inferred role: blade; original member name unknown.
   u8 _362[0x368 - 0x362];
 };
 
 static_assert(sizeof(GfQuestReward::Param) == 0x48, "");
-static_assert(offsetof(GfQuestReward, blade) == 0x360, "");
+static_assert(offsetof(GfQuestReward, unknown360) == 0x360, "");
 static_assert(sizeof(GfQuestReward) == 0x368, "");
 
 class GfQuestUtil {

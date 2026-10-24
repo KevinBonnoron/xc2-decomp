@@ -25,41 +25,42 @@ class GfItemBoxBase;
 
 class item_iterator {
 public:
-  item_iterator(GfItemBoxBase *box, GfItemInfo *current, u32 itemSize, bool isMulti, ItemType::Type type) : box(box), current(current), itemSize(itemSize), isMulti(isMulti), type(type) {}
+  item_iterator(GfItemBoxBase *box, GfItemInfo *current, u32 itemSize, bool isMulti, ItemType::Type type)
+      : unknown00(box), unknown08(current), unknown10(itemSize), unknown14(isMulti), unknown18(type) {}
 
   item_iterator operator++();
-  GfItemInfo &operator*() const { return *current; }
-  GfItemInfo *operator->() const { return current; }
-  bool operator!=(const item_iterator &other) const { return current != other.current; }
+  GfItemInfo &operator*() const { return *unknown08; }
+  GfItemInfo *operator->() const { return unknown08; }
+  bool operator!=(const item_iterator &other) const { return unknown08 != other.unknown08; }
 
-  GfItemBoxBase *box;
-  GfItemInfo *current;
-  u32 itemSize;
-  bool isMulti;
-  ItemType::Type type;
+  GfItemBoxBase *unknown00; // Inferred role: box; original member name unknown.
+  GfItemInfo *unknown08;    // Inferred role: current; original member name unknown.
+  u32 unknown10;            // Inferred role: item size; original member name unknown.
+  bool unknown14;           // Inferred role: multi; original member name unknown.
+  ItemType::Type unknown18; // Inferred role: type; original member name unknown.
 };
 
-static_assert(offsetof(item_iterator, itemSize) == 0x10, "");
-static_assert(offsetof(item_iterator, isMulti) == 0x14, "");
-static_assert(offsetof(item_iterator, type) == 0x18, "");
+static_assert(offsetof(item_iterator, unknown10) == 0x10, "");
+static_assert(offsetof(item_iterator, unknown14) == 0x14, "");
+static_assert(offsetof(item_iterator, unknown18) == 0x18, "");
 static_assert(sizeof(item_iterator) == 0x20, "");
 
 struct ItemTypeInfo {
-  ItemTypeInfo() : first(nullptr), last(nullptr), isMulti(false), serial(nullptr), capacity(0), itemSize(0), maxStock(0) {}
+  ItemTypeInfo() : unknown00(nullptr), unknown08(nullptr), unknown10(false), unknown18(nullptr), unknown20(0), unknown22(0), unknown24(0) {}
 
-  GfItemInfo *first;
-  GfItemInfo *last;
-  bool isMulti;
-  u32 *serial;
-  u16 capacity;
-  u16 itemSize;
-  u16 maxStock;
+  GfItemInfo *unknown00; // Inferred role: first; original member name unknown.
+  GfItemInfo *unknown08; // Inferred role: last; original member name unknown.
+  bool unknown10;        // Inferred role: multi; original member name unknown.
+  u32 *unknown18;        // Inferred role: serial; original member name unknown.
+  u16 unknown20;         // Inferred role: capacity; original member name unknown.
+  u16 unknown22;         // Inferred role: item size; original member name unknown.
+  u16 unknown24;         // Inferred role: max stock; original member name unknown.
 };
 
-static_assert(offsetof(ItemTypeInfo, isMulti) == 0x10, "");
-static_assert(offsetof(ItemTypeInfo, serial) == 0x18, "");
-static_assert(offsetof(ItemTypeInfo, capacity) == 0x20, "");
-static_assert(offsetof(ItemTypeInfo, maxStock) == 0x24, "");
+static_assert(offsetof(ItemTypeInfo, unknown10) == 0x10, "");
+static_assert(offsetof(ItemTypeInfo, unknown18) == 0x18, "");
+static_assert(offsetof(ItemTypeInfo, unknown20) == 0x20, "");
+static_assert(offsetof(ItemTypeInfo, unknown24) == 0x24, "");
 static_assert(sizeof(ItemTypeInfo) == 0x28, "");
 
 class GfItemBoxBase {
@@ -101,12 +102,12 @@ public:
   u32 getFreeStackCount(u32 item);
   virtual ~GfItemBoxBase() {}
 
-  ItemTypeInfo mItemTypeInfos[ITEM_BOX_INDEX_NUM];
-  ItemBox *mItemBox;
+  ItemTypeInfo unknown08[ITEM_BOX_INDEX_NUM]; // Inferred role: item type infos; original member name unknown.
+  ItemBox *unknown300;                        // Inferred role: item box; original member name unknown.
 };
 
-static_assert(offsetof(GfItemBoxBase, mItemTypeInfos) == 0x008, "");
-static_assert(offsetof(GfItemBoxBase, mItemBox) == 0x300, "");
+static_assert(offsetof(GfItemBoxBase, unknown08) == 0x008, "");
+static_assert(offsetof(GfItemBoxBase, unknown300) == 0x300, "");
 static_assert(sizeof(GfItemBoxBase) == 0x308, "");
 
 class GfItemBox : public mm::mtl::PtrSingleton<GfItemBox>, public GfItemBoxBase {
@@ -121,14 +122,14 @@ static_assert(sizeof(GfItemBox) == 0x310, "");
 
 class GfPoolItemBox : public mm::mtl::PtrSingleton<GfPoolItemBox>, public GfItemBoxBase {
 public:
-  GfPoolItemBox() : mPoolItemBox() {}
+  GfPoolItemBox() : unknown310() {}
 
   static void initialize(ItemBox *itemBox);
 
-  ItemBox mPoolItemBox;
+  ItemBox unknown310; // Inferred role: pool item box; original member name unknown.
 };
 
-static_assert(offsetof(GfPoolItemBox, mPoolItemBox) == 0x310, "");
+static_assert(offsetof(GfPoolItemBox, unknown310) == 0x310, "");
 static_assert(sizeof(GfPoolItemBox) == 0x12600, "");
 
 namespace _gfit {

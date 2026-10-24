@@ -31,30 +31,30 @@ private:
   u32 *getPauseBits(u32 section) {
     switch (section) {
     case 0:
-      return &section0PauseBits;
+      return &unknown1c;
     case 1:
-      return &section1PauseBits;
+      return &unknown10;
     case 4:
-      return &section4PauseBits;
+      return &unknown0c;
     case 7:
-      return &section7PauseBits;
+      return &unknown14;
     case 10:
-      return &section10PauseBits;
+      return &unknown18;
     }
     return nullptr;
   }
 
-  bool initialized;
-  u32 section4PauseBits;
-  u32 section1PauseBits;
-  u32 section7PauseBits;
-  u32 section10PauseBits;
-  u32 section0PauseBits;
-  GF_LP_HANDLE *section4Handle;
-  GF_LP_HANDLE *section0Handle;
-  GF_LP_HANDLE *section1Handle;
-  GF_LP_HANDLE *section7Handle;
-  GF_LP_HANDLE *section10Handle;
+  bool unknown08;          // Inferred role: initialized; original member name unknown.
+  u32 unknown0c;           // Inferred role: section 4 pause bits; original member name unknown.
+  u32 unknown10;           // Inferred role: section 1 pause bits; original member name unknown.
+  u32 unknown14;           // Inferred role: section 7 pause bits; original member name unknown.
+  u32 unknown18;           // Inferred role: section 10 pause bits; original member name unknown.
+  u32 unknown1c;           // Inferred role: section 0 pause bits; original member name unknown.
+  GF_LP_HANDLE *unknown20; // Inferred role: section 4 handle; original member name unknown.
+  GF_LP_HANDLE *unknown28; // Inferred role: section 0 handle; original member name unknown.
+  GF_LP_HANDLE *unknown30; // Inferred role: section 1 handle; original member name unknown.
+  GF_LP_HANDLE *unknown38; // Inferred role: section 7 handle; original member name unknown.
+  GF_LP_HANDLE *unknown40; // Inferred role: section 10 handle; original member name unknown.
 };
 
 static_assert(sizeof(GfLayerPause) == 0x48, "");

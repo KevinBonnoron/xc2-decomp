@@ -35,13 +35,12 @@ static void applyLayerPause(u32 layer, bool isPause) {
 }
 
 GfLayerPause::GfLayerPause(const GfSetupParam &param)
-    : section4PauseBits(0), section1PauseBits(0), section7PauseBits(0), section10PauseBits(0), section0PauseBits(0), section4Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)),
-      section0Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)), section1Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)), section7Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)),
-      section10Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)) {
+    : unknown0c(0), unknown10(0), unknown14(0), unknown18(0), unknown1c(0), unknown20(reinterpret_cast<GF_LP_HANDLE *>(-1)), unknown28(reinterpret_cast<GF_LP_HANDLE *>(-1)),
+      unknown30(reinterpret_cast<GF_LP_HANDLE *>(-1)), unknown38(reinterpret_cast<GF_LP_HANDLE *>(-1)), unknown40(reinterpret_cast<GF_LP_HANDLE *>(-1)) {
   initialize(param);
 }
 
-void GfLayerPause::initialize(const GfSetupParam &) { initialized = true; }
+void GfLayerPause::initialize(const GfSetupParam &) { unknown08 = true; }
 
 GfLayerPause::~GfLayerPause() {}
 
@@ -57,29 +56,29 @@ void GfLayerPause::destroy() {
   delete layerPause;
 }
 
-void GfLayerPause::finalize() { initialized = false; }
+void GfLayerPause::finalize() { unknown08 = false; }
 
-bool GfLayerPause::isInitialized() { return get() != nullptr && get()->initialized; }
+bool GfLayerPause::isInitialized() { return get() != nullptr && get()->unknown08; }
 
 void GfLayerPause::update(const fw::UpdateInfo &) {}
 
 void GfLayerPause::gevPause(u32 resumeBits, u32 pauseBits) {
   GfLayerPause *layerPause = get();
   if ((resumeBits & PAUSE_BIT_SYSTEM) != 0) {
-    destroyLayerPause(layerPause->section4Handle);
-    destroyLayerPause(layerPause->section0Handle);
-    destroyLayerPause(layerPause->section1Handle);
-    destroyLayerPause(layerPause->section7Handle);
+    destroyLayerPause(layerPause->unknown20);
+    destroyLayerPause(layerPause->unknown28);
+    destroyLayerPause(layerPause->unknown30);
+    destroyLayerPause(layerPause->unknown38);
   } else if ((pauseBits & PAUSE_BIT_SYSTEM) != 0) {
-    layerPause->section4Handle = setLayerPause(4);
-    layerPause->section0Handle = setLayerPause(0);
-    layerPause->section1Handle = setLayerPause(1);
-    layerPause->section7Handle = setLayerPause(7);
+    layerPause->unknown20 = setLayerPause(4);
+    layerPause->unknown28 = setLayerPause(0);
+    layerPause->unknown30 = setLayerPause(1);
+    layerPause->unknown38 = setLayerPause(7);
   }
   if ((resumeBits & PAUSE_BIT_EVENT_SKIP) != 0) {
-    destroyLayerPause(layerPause->section10Handle);
+    destroyLayerPause(layerPause->unknown40);
   } else if ((pauseBits & PAUSE_BIT_EVENT_SKIP) != 0) {
-    layerPause->section10Handle = setLayerPause(10);
+    layerPause->unknown40 = setLayerPause(10);
   }
 }
 
@@ -126,18 +125,18 @@ GF_LP_HANDLE *GfLayerPause::setLayerPause(u32 layer) {
 
 void GfLayerPause::destroyLayerPause() {
   GfLayerPause *layerPause = get();
-  destroyLayerPause(layerPause->section4Handle);
-  destroyLayerPause(layerPause->section0Handle);
-  destroyLayerPause(layerPause->section1Handle);
-  destroyLayerPause(layerPause->section7Handle);
-  destroyLayerPause(layerPause->section10Handle);
+  destroyLayerPause(layerPause->unknown20);
+  destroyLayerPause(layerPause->unknown28);
+  destroyLayerPause(layerPause->unknown30);
+  destroyLayerPause(layerPause->unknown38);
+  destroyLayerPause(layerPause->unknown40);
 }
 
 bool GfLayerPause::isLayerPause(u32 layer) { return fw::Framework::isLayerPause(layer); }
 
-GfGameSpeed::GfGameSpeed(const GfSetupParam &param) : intervalSpeed(1.0f), intervalTime(0.0f) { initialize(param); }
+GfGameSpeed::GfGameSpeed(const GfSetupParam &param) : unknown0c(1.0f), unknown10(0.0f) { initialize(param); }
 
-void GfGameSpeed::initialize(const GfSetupParam &) { initialized = true; }
+void GfGameSpeed::initialize(const GfSetupParam &) { unknown08 = true; }
 
 GfGameSpeed::~GfGameSpeed() {}
 
@@ -156,9 +155,9 @@ void GfGameSpeed::destroy() {
   delete gameSpeed;
 }
 
-void GfGameSpeed::finalize() { initialized = false; }
+void GfGameSpeed::finalize() { unknown08 = false; }
 
-bool GfGameSpeed::isInitialized() { return get() != nullptr && get()->initialized; }
+bool GfGameSpeed::isInitialized() { return get() != nullptr && get()->unknown08; }
 
 void GfGameSpeed::update(const fw::UpdateInfo &info) {
   if (get() != nullptr) {
@@ -168,72 +167,72 @@ void GfGameSpeed::update(const fw::UpdateInfo &info) {
 
 void GfGameSpeed::updateFrameSpeed(const fw::UpdateInfo &info) {
   bool isInterval = false;
-  if (intervalTime > 0.0f) {
-    intervalTime -= info.deltaTime;
-    if (intervalTime <= 0.0f) {
-      intervalSpeed = speeds[GF_SPEED_LAYER_4].original;
-      intervalTime = 0.0f;
+  if (unknown10 > 0.0f) {
+    unknown10 -= info.deltaTime;
+    if (unknown10 <= 0.0f) {
+      unknown0c = unknown14[GF_SPEED_LAYER_4].unknown00;
+      unknown10 = 0.0f;
     }
     isInterval = true;
   }
-  if (speeds[GF_SPEED_LAYER_1].apply || speeds[GF_SPEED_LAYER_4].apply || speeds[GF_SPEED_PLAY].apply || isInterval) {
-    speeds[GF_SPEED_LAYER_1].apply = false;
-    speeds[GF_SPEED_LAYER_4].apply = false;
-    speeds[GF_SPEED_PLAY].apply = false;
-    speeds[GF_SPEED_PLAY].current = speeds[GF_SPEED_PLAY].original;
-    const f32 &speed4 = isInterval ? intervalSpeed : speeds[GF_SPEED_LAYER_4].original;
-    f32 speed = speed4 * salvageSpeeds[GF_SPEED_LAYER_4].original * speeds[GF_SPEED_PLAY].original;
+  if (unknown14[GF_SPEED_LAYER_1].unknown08 || unknown14[GF_SPEED_LAYER_4].unknown08 || unknown14[GF_SPEED_PLAY].unknown08 || isInterval) {
+    unknown14[GF_SPEED_LAYER_1].unknown08 = false;
+    unknown14[GF_SPEED_LAYER_4].unknown08 = false;
+    unknown14[GF_SPEED_PLAY].unknown08 = false;
+    unknown14[GF_SPEED_PLAY].unknown04 = unknown14[GF_SPEED_PLAY].unknown00;
+    const f32 &speed4 = isInterval ? unknown0c : unknown14[GF_SPEED_LAYER_4].unknown00;
+    f32 speed = speed4 * unknown68[GF_SPEED_LAYER_4].unknown00 * unknown14[GF_SPEED_PLAY].unknown00;
     if (speed <= 0.0f) {
       speed = MIN_LAYER_SPEED;
     }
-    const f32 &speed1 = isInterval ? intervalSpeed : speeds[GF_SPEED_LAYER_1].original;
-    f32 speedLayer1 = speed1 * salvageSpeeds[GF_SPEED_LAYER_1].original * salvageSpeeds[GF_SPEED_PLAY].original;
+    const f32 &speed1 = isInterval ? unknown0c : unknown14[GF_SPEED_LAYER_1].unknown00;
+    f32 speedLayer1 = speed1 * unknown68[GF_SPEED_LAYER_1].unknown00 * unknown68[GF_SPEED_PLAY].unknown00;
     if (speedLayer1 <= 0.0f) {
       speedLayer1 = MIN_LAYER_SPEED;
     }
     fw::Framework::setLayerUpdateSpeed(0, speed);
-    speeds[GF_SPEED_LAYER_0].current = speed;
+    unknown14[GF_SPEED_LAYER_0].unknown04 = speed;
     fw::Framework::setLayerUpdateSpeed(4, speed);
-    speeds[GF_SPEED_LAYER_4].current = speed;
+    unknown14[GF_SPEED_LAYER_4].unknown04 = speed;
     fw::Framework::setLayerUpdateSpeed(5, speed);
     fw::Framework::setLayerUpdateSpeed(6, speed);
     fw::Framework::setLayerUpdateSpeed(1, speedLayer1);
-    speeds[GF_SPEED_LAYER_1].current = speed;
+    unknown14[GF_SPEED_LAYER_1].unknown04 = speed;
     fw::Framework::setLayerUpdateSpeed(2, speedLayer1);
     fw::Framework::setLayerUpdateSpeed(3, speedLayer1);
   }
-  if (speeds[GF_SPEED_LAYER_7].apply) {
-    f32 speed = speeds[GF_SPEED_LAYER_7].original * salvageSpeeds[GF_SPEED_LAYER_7].original;
-    speeds[GF_SPEED_LAYER_7].apply = false;
+  if (unknown14[GF_SPEED_LAYER_7].unknown08) {
+    f32 speed = unknown14[GF_SPEED_LAYER_7].unknown00 * unknown68[GF_SPEED_LAYER_7].unknown00;
+    unknown14[GF_SPEED_LAYER_7].unknown08 = false;
     fw::Framework::setLayerUpdateSpeed(7, speed);
-    speeds[GF_SPEED_LAYER_7].current = speed;
+    unknown14[GF_SPEED_LAYER_7].unknown04 = speed;
     fw::Framework::setLayerUpdateSpeed(8, speed);
     fw::Framework::setLayerUpdateSpeed(9, speed);
   }
-  if (speeds[GF_SPEED_LAYER_10].apply) {
-    f32 speed = speeds[GF_SPEED_LAYER_10].original * salvageSpeeds[GF_SPEED_LAYER_10].original;
+  if (unknown14[GF_SPEED_LAYER_10].unknown08) {
+    f32 speed = unknown14[GF_SPEED_LAYER_10].unknown00 * unknown68[GF_SPEED_LAYER_10].unknown00;
     if (speed <= 0.0f) {
       speed = MIN_LAYER_SPEED;
     }
-    speeds[GF_SPEED_LAYER_10].apply = false;
+    unknown14[GF_SPEED_LAYER_10].unknown08 = false;
     fw::Framework::setLayerUpdateSpeed(10, speed);
-    speeds[GF_SPEED_LAYER_10].current = speed;
+    unknown14[GF_SPEED_LAYER_10].unknown04 = speed;
     fw::Framework::setLayerUpdateSpeed(11, speed);
     fw::Framework::setLayerUpdateSpeed(12, speed);
   }
-  if (speeds[GF_SPEED_LAYER_0].apply) {
-    f32 speed = speeds[GF_SPEED_LAYER_0].original * salvageSpeeds[GF_SPEED_LAYER_0].original * speeds[GF_SPEED_PLAY].original;
+  if (unknown14[GF_SPEED_LAYER_0].unknown08) {
+    f32 speed = unknown14[GF_SPEED_LAYER_0].unknown00 * unknown68[GF_SPEED_LAYER_0].unknown00 * unknown14[GF_SPEED_PLAY].unknown00;
     if (speed <= 0.0f) {
       speed = MIN_LAYER_SPEED;
     }
-    speeds[GF_SPEED_LAYER_0].apply = false;
+    unknown14[GF_SPEED_LAYER_0].unknown08 = false;
     fw::Framework::setLayerUpdateSpeed(0, speed);
-    speeds[GF_SPEED_LAYER_0].current = speed;
+    unknown14[GF_SPEED_LAYER_0].unknown04 = speed;
   }
-  if (speeds[GF_SPEED_GLOBAL].apply) {
-    speeds[GF_SPEED_GLOBAL].current = speeds[GF_SPEED_GLOBAL].original;
-    speeds[GF_SPEED_GLOBAL].apply = false;
-    f32 speed = speeds[GF_SPEED_GLOBAL].current;
+  if (unknown14[GF_SPEED_GLOBAL].unknown08) {
+    unknown14[GF_SPEED_GLOBAL].unknown04 = unknown14[GF_SPEED_GLOBAL].unknown00;
+    unknown14[GF_SPEED_GLOBAL].unknown08 = false;
+    f32 speed = unknown14[GF_SPEED_GLOBAL].unknown04;
     if (speed <= 0.0f) {
       speed = MIN_LAYER_SPEED;
     }
@@ -243,22 +242,22 @@ void GfGameSpeed::updateFrameSpeed(const fw::UpdateInfo &info) {
 
 void GfGameSpeed::clear() {
   if (get() != nullptr) {
-    get()->intervalSpeed = 1.0f;
-    get()->intervalTime = 0.0f;
+    get()->unknown0c = 1.0f;
+    get()->unknown10 = 0.0f;
   }
 }
 
 void GfGameSpeed::setIntervalSpeed(f32 speed, f32 time) {
   GfGameSpeed *gameSpeed = get();
-  gameSpeed->intervalSpeed = speed;
-  gameSpeed->intervalTime = time;
+  gameSpeed->unknown0c = speed;
+  gameSpeed->unknown10 = time;
 }
 
 void GfGameSpeed::setSpeed(GF_SPEED type, f32 speed) {
   f32 value = speed < 0.0f ? 1.0f : speed;
-  if (speeds[type].original != value) {
-    speeds[type].original = value;
-    speeds[type].apply = true;
+  if (unknown14[type].unknown00 != value) {
+    unknown14[type].unknown00 = value;
+    unknown14[type].unknown08 = true;
   }
 }
 
@@ -279,7 +278,7 @@ f32 GfGameSpeed::getLayerSpeed(u32 layer) {
   return 1.0f;
 }
 
-f32 GfGameSpeed::getSpeed(GF_SPEED type) { return speeds[type].current; }
+f32 GfGameSpeed::getSpeed(GF_SPEED type) { return unknown14[type].unknown04; }
 
 f32 GfGameSpeed::getOriginalLayerSpeed(u32 layer) {
   GfGameSpeed *gameSpeed = get();
@@ -298,7 +297,7 @@ f32 GfGameSpeed::getOriginalLayerSpeed(u32 layer) {
   return 1.0f;
 }
 
-f32 GfGameSpeed::getOriginalSpeed(GF_SPEED type) { return speeds[type].original; }
+f32 GfGameSpeed::getOriginalSpeed(GF_SPEED type) { return unknown14[type].unknown00; }
 
 f32 GfGameSpeed::getGlobalSpeed() {
   if (get() != nullptr) {
@@ -316,37 +315,37 @@ f32 GfGameSpeed::getPlaySpeed() {
   return 0.0f;
 }
 
-bool GfGameSpeed::isApplySpeed(GF_SPEED type) { return speeds[type].apply; }
+bool GfGameSpeed::isApplySpeed(GF_SPEED type) { return unknown14[type].unknown08; }
 
-f32 GfGameSpeed::getSpeedSalvage(GF_SPEED type) { return salvageSpeeds[type].original; }
+f32 GfGameSpeed::getSpeedSalvage(GF_SPEED type) { return unknown68[type].unknown00; }
 
 void GfGameSpeed::setSalvageSpeed(f32 speed) {
   GfGameSpeed *gameSpeed = get();
-  gameSpeed->salvageSpeeds[GF_SPEED_LAYER_4].original = speed;
-  gameSpeed->speeds[GF_SPEED_LAYER_4].apply = true;
-  gameSpeed->salvageSpeeds[GF_SPEED_LAYER_7].original = speed;
-  gameSpeed->speeds[GF_SPEED_LAYER_7].apply = true;
+  gameSpeed->unknown68[GF_SPEED_LAYER_4].unknown00 = speed;
+  gameSpeed->unknown14[GF_SPEED_LAYER_4].unknown08 = true;
+  gameSpeed->unknown68[GF_SPEED_LAYER_7].unknown00 = speed;
+  gameSpeed->unknown14[GF_SPEED_LAYER_7].unknown08 = true;
 }
 
 void GfGameSpeed::setSalvageCharacterSpeed(f32 speed) {
   GfGameSpeed *gameSpeed = get();
-  gameSpeed->salvageSpeeds[GF_SPEED_LAYER_7].original = speed;
-  gameSpeed->speeds[GF_SPEED_LAYER_7].apply = true;
+  gameSpeed->unknown68[GF_SPEED_LAYER_7].unknown00 = speed;
+  gameSpeed->unknown14[GF_SPEED_LAYER_7].unknown08 = true;
 }
 
 void GfGameEnv::clear() {
   GfGameEnv *gameEnv = get();
-  gameEnv->mapjump = false;
-  gameEnv->mapjumpBlackout = false;
-  gameEnv->mapjumpWithSaveData = false;
-  gameEnv->mapID = 0;
-  gameEnv->mapJumpID = 0;
-  gameEnv->stopEnemySearchTime = 0.0f;
-  gameEnv->colorFilterSerial = 1;
-  gameEnv->cloudSeaSerial = 1;
-  gameEnv->tempWeatherSerial = 1;
-  gameEnv->roomCount = 0;
-  gameEnv->screenShotDisableTimer = 0;
+  gameEnv->unknown08 = false;
+  gameEnv->unknown09 = false;
+  gameEnv->unknown0a = false;
+  gameEnv->unknown0c = 0;
+  gameEnv->unknown10 = 0;
+  gameEnv->unknown14 = 0.0f;
+  gameEnv->unknown168 = 1;
+  gameEnv->unknown240 = 1;
+  gameEnv->unknown318 = 1;
+  gameEnv->unknown320 = 0;
+  gameEnv->unknown324 = 0;
 }
 
 void GfGameEnv::build(const GfSetupParam &param) {
@@ -361,39 +360,39 @@ GfGameEnv::GfGameEnv(const GfSetupParam &) { clear(); }
 
 GfGameEnv::~GfGameEnv() {}
 
-bool GfGameEnv::isStopEnemySearch() { return get()->stopEnemySearchTime > 0.0f; }
+bool GfGameEnv::isStopEnemySearch() { return get()->unknown14 > 0.0f; }
 
-bool GfGameEnv::isMapjumpBlackout() { return get()->mapjumpBlackout; }
+bool GfGameEnv::isMapjumpBlackout() { return get()->unknown09; }
 
-bool GfGameEnv::isMapjump() { return get()->mapjump; }
+bool GfGameEnv::isMapjump() { return get()->unknown08; }
 
-bool GfGameEnv::isMapjumpWithSaveData() { return get() != nullptr && get()->mapjumpWithSaveData; }
+bool GfGameEnv::isMapjumpWithSaveData() { return get() != nullptr && get()->unknown0a; }
 
-u32 GfGameEnv::getMapJumpID() { return get()->mapJumpID; }
+u32 GfGameEnv::getMapJumpID() { return get()->unknown10; }
 
-u32 GfGameEnv::getMapID() { return get()->mapID; }
+u32 GfGameEnv::getMapID() { return get()->unknown0c; }
 
 void GfGameEnv::setMapID(u32 mapJump, u32 map) {
   GfGameEnv *gameEnv = get();
-  gameEnv->mapID = map;
-  gameEnv->mapJumpID = mapJump;
+  gameEnv->unknown0c = map;
+  gameEnv->unknown10 = mapJump;
 }
 
 void GfGameEnv::destroyColorFilter(CFILTER_HANDLE handle) {
   GfGameEnv *gameEnv = get();
   mm::mtl::FixedQueue<ColorFilter, FILTER_MAX>::iterator it =
-      mm::mtl::find_if(gameEnv->colorFilters.begin(), gameEnv->colorFilters.end(), [handle](const ColorFilter &colorFilter) { return colorFilter.handle == handle; });
-  if (it == gameEnv->colorFilters.end()) {
+      mm::mtl::find_if(gameEnv->unknown18.begin(), gameEnv->unknown18.end(), [handle](const ColorFilter &colorFilter) { return colorFilter.unknown0c == handle; });
+  if (it == gameEnv->unknown18.end()) {
     return;
   }
-  if ((*it).handle != gameEnv->colorFilters.front().handle) {
-    gameEnv->colorFilters.erase(it);
+  if ((*it).unknown0c != gameEnv->unknown18.front().unknown0c) {
+    gameEnv->unknown18.erase(it);
     return;
   }
-  gameEnv->colorFilters.pop_front();
-  if (!gameEnv->colorFilters.empty()) {
-    const ColorFilter &current = gameEnv->colorFilters.front();
-    fw::RenderParam::setColorFilter(current.filter, current.farFilter, current.time, fw::CAMERA_TYPE_MAIN);
+  gameEnv->unknown18.pop_front();
+  if (!gameEnv->unknown18.empty()) {
+    const ColorFilter &current = gameEnv->unknown18.front();
+    fw::RenderParam::setColorFilter(current.unknown00, current.unknown04, current.unknown08, fw::CAMERA_TYPE_MAIN);
   } else {
     fw::RenderParam::resetColorFilter(1.0f, fw::CAMERA_TYPE_MAIN);
   }
@@ -402,55 +401,56 @@ void GfGameEnv::destroyColorFilter(CFILTER_HANDLE handle) {
 void GfGameEnv::setColorFilter(CFILTER_HANDLE handle, const ColorFilter &filter) {
   GfGameEnv *gameEnv = get();
   mm::mtl::FixedQueue<ColorFilter, FILTER_MAX>::iterator it =
-      mm::mtl::find_if(gameEnv->colorFilters.begin(), gameEnv->colorFilters.end(), [handle](const ColorFilter &colorFilter) { return colorFilter.handle == handle; });
-  if (it == gameEnv->colorFilters.end()) {
+      mm::mtl::find_if(gameEnv->unknown18.begin(), gameEnv->unknown18.end(), [handle](const ColorFilter &colorFilter) { return colorFilter.unknown0c == handle; });
+  if (it == gameEnv->unknown18.end()) {
     return;
   }
-  (*it).time = filter.time;
-  (*it).farFilter = filter.farFilter;
-  (*it).filter = filter.filter;
-  fw::RenderParam::setColorFilter(gameEnv->colorFilters.back().filter, gameEnv->colorFilters.back().farFilter, gameEnv->colorFilters.back().time, fw::CAMERA_TYPE_MAIN);
+  (*it).unknown08 = filter.unknown08;
+  (*it).unknown04 = filter.unknown04;
+  (*it).unknown00 = filter.unknown00;
+  fw::RenderParam::setColorFilter(gameEnv->unknown18.back().unknown00, gameEnv->unknown18.back().unknown04, gameEnv->unknown18.back().unknown08, fw::CAMERA_TYPE_MAIN);
 }
 
 void GfGameEnv::destroyCloudSea(CLOUD_SEA_HANDLE handle) {
   GfGameEnv *gameEnv = get();
   mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it =
-      mm::mtl::find_if(gameEnv->cloudSeas.begin(), gameEnv->cloudSeas.end(), [handle](const CloudSea &cloudSea) { return cloudSea.handle == handle; });
-  if (it == gameEnv->cloudSeas.end()) {
+      mm::mtl::find_if(gameEnv->unknown170.begin(), gameEnv->unknown170.end(), [handle](const CloudSea &cloudSea) { return cloudSea.unknown08 == handle; });
+  if (it == gameEnv->unknown170.end()) {
     return;
   }
-  if ((*it).handle != gameEnv->cloudSeas.front().handle) {
-    gameEnv->cloudSeas.erase(it);
+  if ((*it).unknown08 != gameEnv->unknown170.front().unknown08) {
+    gameEnv->unknown170.erase(it);
     return;
   }
-  gameEnv->cloudSeas.pop_front();
-  fw::RenderParam::setCloudSea(gameEnv->cloudSeas.empty() ? 0 : gameEnv->cloudSeas.front().cloudSea);
+  gameEnv->unknown170.pop_front();
+  fw::RenderParam::setCloudSea(gameEnv->unknown170.empty() ? 0 : gameEnv->unknown170.front().unknown00);
 }
 
 void GfGameEnv::setCloudSea(CLOUD_SEA_HANDLE handle, CLOUD_SEA cloudSea) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it = mm::mtl::find_if(gameEnv->cloudSeas.begin(), gameEnv->cloudSeas.end(), [handle](const CloudSea &other) { return other.handle == handle; });
-  if (it == gameEnv->cloudSeas.end()) {
+  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it =
+      mm::mtl::find_if(gameEnv->unknown170.begin(), gameEnv->unknown170.end(), [handle](const CloudSea &other) { return other.unknown08 == handle; });
+  if (it == gameEnv->unknown170.end()) {
     return;
   }
-  (*it).cloudSea = cloudSea;
-  fw::RenderParam::setCloudSea(gameEnv->cloudSeas.front().cloudSea);
+  (*it).unknown00 = cloudSea;
+  fw::RenderParam::setCloudSea(gameEnv->unknown170.front().unknown00);
 }
 
 CLOUD_SEA GfGameEnv::getCloudType(CLOUD_SEA_HANDLE handle) {
   GfGameEnv *gameEnv = get();
   mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it =
-      mm::mtl::find_if(gameEnv->cloudSeas.begin(), gameEnv->cloudSeas.end(), [handle](const CloudSea &cloudSea) { return cloudSea.handle == handle; });
-  if (it != gameEnv->cloudSeas.end()) {
-    return (*it).cloudSea;
+      mm::mtl::find_if(gameEnv->unknown170.begin(), gameEnv->unknown170.end(), [handle](const CloudSea &cloudSea) { return cloudSea.unknown08 == handle; });
+  if (it != gameEnv->unknown170.end()) {
+    return (*it).unknown00;
   }
   return CLOUD_SEA(0);
 }
 
 CLOUD_SEA GfGameEnv::getCurrentCloudSea() {
   GfGameEnv *gameEnv = get();
-  if (!gameEnv->cloudSeas.empty()) {
-    return gameEnv->cloudSeas.front().cloudSea;
+  if (!gameEnv->unknown170.empty()) {
+    return gameEnv->unknown170.front().unknown00;
   }
   return CLOUD_SEA(0);
 }
@@ -459,22 +459,22 @@ void GfGameEnv::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
   GfGameEnv *gameEnv = get();
   switch (event) {
   case GEV_MAPJUMP_START:
-    gameEnv->mapjump = true;
-    gameEnv->mapjumpWithSaveData = info.isWithSaveData;
+    gameEnv->unknown08 = true;
+    gameEnv->unknown0a = info.isWithSaveData;
     break;
   case GEV_MAPJUMP_DESTROY_FIELD:
-    gameEnv->mapjumpBlackout = true;
+    gameEnv->unknown09 = true;
     break;
   case GEV_MAPJUMP_CREATE_FIELD:
-    gameEnv->stopEnemySearchTime = info.jumpType == MAPJUMP_TYPE_SAVE_DATA ? 0.0f : STOP_ENEMY_SEARCH_SEC;
+    gameEnv->unknown14 = info.jumpType == MAPJUMP_TYPE_SAVE_DATA ? 0.0f : STOP_ENEMY_SEARCH_SEC;
     break;
   case GEV_MAPJUMP_FADEIN:
-    gameEnv->mapjump = false;
-    gameEnv->mapjumpBlackout = false;
-    gameEnv->mapjumpWithSaveData = false;
+    gameEnv->unknown08 = false;
+    gameEnv->unknown09 = false;
+    gameEnv->unknown0a = false;
     if (!GfGameManager::isEvent(false)) {
       nn::oe::DisableScreenShot();
-      gameEnv->screenShotDisableTimer = SCREEN_SHOT_DISABLE_FRAMES;
+      gameEnv->unknown324 = SCREEN_SHOT_DISABLE_FRAMES;
     }
     break;
   }
@@ -492,19 +492,19 @@ void GfGameEnv::gevGameState(GF_STATE, GF_STATE state) {
 
 void GfGameEnv::update(const fw::UpdateInfo &info) {
   GfGameEnv *gameEnv = get();
-  if (!gameEnv->mapjump && gameEnv->stopEnemySearchTime > 0.0f) {
-    gameEnv->stopEnemySearchTime -= info.deltaTime;
-    if (gameEnv->stopEnemySearchTime < 0.0f) {
-      gameEnv->stopEnemySearchTime = 0.0f;
+  if (!gameEnv->unknown08 && gameEnv->unknown14 > 0.0f) {
+    gameEnv->unknown14 -= info.deltaTime;
+    if (gameEnv->unknown14 < 0.0f) {
+      gameEnv->unknown14 = 0.0f;
     }
   }
   gameEnv->updateIsInRoom(info);
   updateGlobalIBLReferencePos(info);
-  if (!gameEnv->colorFilters.empty()) {
-    const ColorFilter &filter = gameEnv->colorFilters.back();
-    fw::RenderParam::setColorFilter(filter.filter, filter.farFilter, filter.time, fw::CAMERA_TYPE_MAIN);
+  if (!gameEnv->unknown18.empty()) {
+    const ColorFilter &filter = gameEnv->unknown18.back();
+    fw::RenderParam::setColorFilter(filter.unknown00, filter.unknown04, filter.unknown08, fw::CAMERA_TYPE_MAIN);
   }
-  if (gameEnv->screenShotDisableTimer != 0 && --gameEnv->screenShotDisableTimer == 0) {
+  if (gameEnv->unknown324 != 0 && --gameEnv->unknown324 == 0) {
     nn::oe::EnableScreenShot();
   }
 }
@@ -515,16 +515,16 @@ void GfGameEnv::updateIsInRoom(const fw::UpdateInfo &) {
     return;
   }
   if (fw::RenderParam::isRoom(position, fw::CAMERA_TYPE_MAIN)) {
-    if (roomCount <= 0) {
-      roomCount = 1;
-    } else if (roomCount < ROOM_COUNT_MAX) {
-      roomCount++;
+    if (unknown320 <= 0) {
+      unknown320 = 1;
+    } else if (unknown320 < ROOM_COUNT_MAX) {
+      unknown320++;
     }
   } else {
-    if (roomCount >= 0) {
-      roomCount = -1;
-    } else if (roomCount > -ROOM_COUNT_MAX) {
-      roomCount--;
+    if (unknown320 >= 0) {
+      unknown320 = -1;
+    } else if (unknown320 > -ROOM_COUNT_MAX) {
+      unknown320--;
     }
   }
 }
@@ -535,7 +535,7 @@ void GfGameEnv::updateGlobalIBLReferencePos(const fw::UpdateInfo &) {
   }
 }
 
-bool GfGameEnv::isRoom() { return get()->roomCount > -3; }
+bool GfGameEnv::isRoom() { return get()->unknown320 > -3; }
 
 void GfGameEnv::sendPlayerPositionToRender(const mm::Vec3 &position) { fw::RenderParam::setPlayerPosition(position, fw::CAMERA_TYPE_MAIN); }
 
@@ -544,16 +544,16 @@ void GfGameEnv::setWeather(WEATHERID weather) { GfFieldWeather::setMapWeatherID(
 void GfGameEnv::destroyTempWeather(WEATHER_HANDLE handle) {
   GfGameEnv *gameEnv = get();
   mm::mtl::FixedQueue<WeatherSet, FILTER_MAX>::iterator it =
-      mm::mtl::find_if(gameEnv->tempWeathers.begin(), gameEnv->tempWeathers.end(), [handle](const WeatherSet &weatherSet) { return weatherSet.handle == handle; });
-  if (it != gameEnv->tempWeathers.end()) {
-    gameEnv->tempWeathers.erase(it);
+      mm::mtl::find_if(gameEnv->unknown248.begin(), gameEnv->unknown248.end(), [handle](const WeatherSet &weatherSet) { return weatherSet.unknown08 == handle; });
+  if (it != gameEnv->unknown248.end()) {
+    gameEnv->unknown248.erase(it);
   }
 }
 
 WEATHERID GfGameEnv::getTempWeather() {
   GfGameEnv *gameEnv = get();
-  if (!gameEnv->tempWeathers.empty()) {
-    return gameEnv->tempWeathers.front().weather;
+  if (!gameEnv->unknown248.empty()) {
+    return gameEnv->unknown248.front().unknown00;
   }
   return WEATHER_NULL;
 }

@@ -41,11 +41,11 @@ public:
   static const u32 PLAYER_NUM = 6;
 
   struct Player {
-    Player() : followIndex(0xffffffff), handle(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), isMainPc(true) {}
+    Player() : unknown00(0xffffffff), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(true) {}
 
-    u32 followIndex;
-    GF_OBJ_HANDLE *handle;
-    bool isMainPc;
+    u32 unknown00;            // Inferred role: follow index; original member name unknown.
+    GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
+    bool unknown10;           // Inferred role: main pc; original member name unknown.
   };
 
   static void build(const GfSetupParam &param);
@@ -67,20 +67,20 @@ public:
   void changeFormation(u32 formation);
   bool isFarRandomTalk(GF_OBJ_HANDLE *handle);
 
-  mm::Vec3 targetPositions[PLAYER_NUM];
-  mm::Vec3 formationPositions[PLAYER_NUM];
-  fw::Transform transforms[PLAYER_NUM];
-  Player players[PLAYER_NUM];
-  u32 formation;
-  bool isMirror;
+  mm::Vec3 unknown20[PLAYER_NUM];      // Inferred role: target positions; original member name unknown.
+  mm::Vec3 unknown80[PLAYER_NUM];      // Inferred role: formation positions; original member name unknown.
+  fw::Transform unknowne0[PLAYER_NUM]; // Inferred role: transforms; original member name unknown.
+  Player unknown1a0[PLAYER_NUM];       // Inferred role: players; original member name unknown.
+  u32 unknown230;                      // Inferred role: formation; original member name unknown.
+  bool unknown234;                     // Inferred role: mirror; original member name unknown.
 };
 
-static_assert(offsetof(GfGamePlayerFormation, targetPositions) == 0x20, "");
-static_assert(offsetof(GfGamePlayerFormation, formationPositions) == 0x80, "");
-static_assert(offsetof(GfGamePlayerFormation, transforms) == 0xe0, "");
-static_assert(offsetof(GfGamePlayerFormation, players) == 0x1a0, "");
-static_assert(offsetof(GfGamePlayerFormation, formation) == 0x230, "");
-static_assert(offsetof(GfGamePlayerFormation, isMirror) == 0x234, "");
+static_assert(offsetof(GfGamePlayerFormation, unknown20) == 0x20, "");
+static_assert(offsetof(GfGamePlayerFormation, unknown80) == 0x80, "");
+static_assert(offsetof(GfGamePlayerFormation, unknowne0) == 0xe0, "");
+static_assert(offsetof(GfGamePlayerFormation, unknown1a0) == 0x1a0, "");
+static_assert(offsetof(GfGamePlayerFormation, unknown230) == 0x230, "");
+static_assert(offsetof(GfGamePlayerFormation, unknown234) == 0x234, "");
 static_assert(sizeof(GfGamePlayerFormation) == 0x240, "");
 
 } // namespace gf

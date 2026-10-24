@@ -27,9 +27,9 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual const char *getName() const;
 
-  GF_OBJ_HANDLE *target;
+  GF_OBJ_HANDLE *unknowna8; // Inferred role: target; original member name unknown.
 };
 
-static_assert(offsetof(GfSalvageCam, target) == 0xa8, "");
+static_assert(offsetof(GfSalvageCam, unknowna8) == 0xa8, "");
 
 } // namespace gf

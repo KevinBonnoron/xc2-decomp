@@ -10,12 +10,12 @@ enum UIEvent {
 };
 
 struct Param {
-  Param() : data() {}
+  Param() : unknown00() {}
 
-  template <typename T> void set(const T &value) { *reinterpret_cast<T *>(data) = value; }
-  template <typename T> const T &get() const { return *reinterpret_cast<const T *>(data); }
+  template <typename T> void set(const T &value) { *reinterpret_cast<T *>(unknown00) = value; }
+  template <typename T> const T &get() const { return *reinterpret_cast<const T *>(unknown00); }
 
-  u64 data[2];
+  u64 unknown00[2]; // Inferred role: data; original member name unknown.
   u8 _10[0x20 - 0x10];
 };
 

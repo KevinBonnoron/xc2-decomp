@@ -42,10 +42,10 @@ void GfGamePlayerPicker::updateImpl(const fw::UpdateInfo &) {
   u32 hold = padData->hold;
   u32 trigger = padData->trigger;
   bool isToggle = (trigger & PICK_TOGGLE_BUTTON) != 0;
-  bool isLocked = (hold & PICK_MODIFIER_BUTTON) == 0 && !mIsPick;
+  bool isLocked = (hold & PICK_MODIFIER_BUTTON) == 0 && !unknown24;
   if (isToggle && !isLocked && isEnableChange()) {
-    mIsPick = !mIsPick;
-    if (mIsPick) {
+    unknown24 = !unknown24;
+    if (unknown24) {
       onActive();
     } else {
       onDeactive();
@@ -54,20 +54,20 @@ void GfGamePlayerPicker::updateImpl(const fw::UpdateInfo &) {
     return;
   }
 
-  if (!mIsPick) {
+  if (!unknown24) {
     return;
   }
 
   if ((hold & PICK_MODIFIER_BUTTON) == 0) {
-    mIsModifierReleased = true;
+    unknown25 = true;
   }
 
   if ((trigger & SPEED_UP_BUTTONS) != 0) {
-    if (mSpeedLevel != SPEED_LEVEL_MAX) {
-      mSpeedLevel++;
+    if (unknown20 != SPEED_LEVEL_MAX) {
+      unknown20++;
     }
-  } else if ((trigger & SPEED_DOWN_BUTTONS) != 0 && mSpeedLevel != 0) {
-    mSpeedLevel--;
+  } else if ((trigger & SPEED_DOWN_BUTTONS) != 0 && unknown20 != 0) {
+    unknown20--;
   }
 
   GfObj *obj = GfObjUtil::getObj(getPlayerHandle());
@@ -89,15 +89,15 @@ bool GfGamePlayerPicker::isPick() {
     return false;
   }
 
-  return picker->mIsPick;
+  return picker->unknown24;
 }
 
-GfGamePlayerPicker::GfGamePlayerPicker() : mSpeedLevel(1), mIsPick(false), mIsModifierReleased(false), mUpDir(mm::Vec3::unitY), mFrontDir(mm::Vec3::unitZ), mRightDir(mm::Vec3::unitX) {}
+GfGamePlayerPicker::GfGamePlayerPicker() : unknown20(1), unknown24(false), unknown25(false), unknown30(mm::Vec3::unitY), unknown40(mm::Vec3::unitZ), unknown50(mm::Vec3::unitX) {}
 
 GfGamePlayerPicker::~GfGamePlayerPicker() {}
 
 bool GfGamePlayerPicker::isEnableChange() const {
-  if (mIsPick) {
+  if (unknown24) {
     return true;
   }
 
@@ -112,7 +112,7 @@ void GfGamePlayerPicker::onActive() {
     sendMessage(obj, message);
   }
 
-  mIsModifierReleased = false;
+  unknown25 = false;
 }
 
 void GfGamePlayerPicker::onDeactive() {
@@ -123,6 +123,6 @@ void GfGamePlayerPicker::onDeactive() {
   }
 }
 
-GF_OBJ_HANDLE *GfGamePlayerPicker::getPlayerHandle() const { return GfGamePlayerFormation::get()->players[0].handle; }
+GF_OBJ_HANDLE *GfGamePlayerPicker::getPlayerHandle() const { return GfGamePlayerFormation::get()->unknown1a0[0].unknown08; }
 
 } // namespace gf

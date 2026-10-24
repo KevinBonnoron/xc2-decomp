@@ -19,9 +19,9 @@ class GfWeapon {
 public:
   virtual ~GfWeapon();
 
-  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> &getCurrentHandles() { return isAlternate ? alternateHandles : handles; }
+  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> &getCurrentHandles() { return unknowna8 ? unknown58 : unknown08; }
 
-  GF_OBJ_HANDLE *getHandle(bool isAlternateSet, u16 index) const { return isAlternateSet ? alternateHandles[index] : handles[index]; }
+  GF_OBJ_HANDLE *getHandle(bool isAlternateSet, u16 index) const { return isAlternateSet ? unknown58[index] : unknown08[index]; }
 
   bool isExistHandle(GF_OBJ_HANDLE *handle) {
     for (u32 index = 0; index < 10; index++) {
@@ -36,14 +36,14 @@ public:
   u16 getRscRight() const;
   u16 getRscLeft() const;
 
-  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> handles;
-  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> alternateHandles;
-  bool isAlternate;
+  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> unknown08; // Inferred role: handles; original member name unknown.
+  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> unknown58; // Inferred role: alternate handles; original member name unknown.
+  bool unknowna8;                                     // Inferred role: alternate; original member name unknown.
 };
 
-static_assert(offsetof(GfWeapon, handles) == 0x08, "");
-static_assert(offsetof(GfWeapon, alternateHandles) == 0x58, "");
-static_assert(offsetof(GfWeapon, isAlternate) == 0xa8, "");
+static_assert(offsetof(GfWeapon, unknown08) == 0x08, "");
+static_assert(offsetof(GfWeapon, unknown58) == 0x58, "");
+static_assert(offsetof(GfWeapon, unknowna8) == 0xa8, "");
 
 class GfMountManager {
 public:

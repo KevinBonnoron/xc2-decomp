@@ -42,29 +42,29 @@ constexpr size_t EVENT_MEM_SIZE = 0x2300000;
 } // namespace
 
 GfGameEvent::GfGameEvent(const GfSetupParam &param)
-    : flags(0), initialized(false), afterEventStartID(0), playerOffState(0), layerPause(reinterpret_cast<GF_LP_HANDLE *>(-1)), colorFilter(), cloudSea(), tempWeather(), tempWeatherMapId(0),
-      weaType(WEATYPE_DEFAULT), weaTypeWeather(WEATHER_F), lastPlayEventId(0), playEventId(0), playBladeId(0), playState(PLAY_STATE_NONE), categoryHandle(INVALID_CATEGORY_HANDLE),
-      csCategoryHandle(INVALID_CATEGORY_HANDLE), isCsMute(false), isStopped(false), fadeInWaitSec(0.0f), fadeInSec(0.0f) {
+    : unknown08(0), unknown0c(false), unknown18(0), unknown1c(0), unknown20(reinterpret_cast<GF_LP_HANDLE *>(-1)), unknown18f0(), unknown18f4(), unknown18f8(), unknown18fc(0),
+      unknown1900(WEATYPE_DEFAULT), unknown1904(WEATHER_F), unknown1908(0), unknown190c(0), unknown1910(0), unknown1914(PLAY_STATE_NONE), unknown1918(INVALID_CATEGORY_HANDLE),
+      unknown1920(INVALID_CATEGORY_HANDLE), unknown1928(false), unknown1929(false), unknown1b00(0.0f), unknown1b04(0.0f) {
   initialize(param);
 }
 
 void GfGameEvent::initialize(const GfSetupParam &param) {
-  eventMem = mtl::MemManager::create(ml::MlMem::getProductMem(), EVENT_MEM_SIZE, "GfTalk", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10);
+  unknown10 = mtl::MemManager::create(ml::MlMem::getProductMem(), EVENT_MEM_SIZE, "GfTalk", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10);
   if (event::Manager::get() == nullptr) {
     event::Manager::create(param.scn);
   }
   for (u32 i = 0; i < EVTDISP_NUM; i++) {
-    disps[i] = true;
+    unknown28[i] = true;
   }
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
-    categoryHandle = sound->createCategoryHandle();
-    csCategoryHandle = sound->createCategoryHandle();
+    unknown1918 = sound->createCategoryHandle();
+    unknown1920 = sound->createCategoryHandle();
   }
   GfEvtBgm::build(param);
-  fadeInSec = 0.5f;
-  fadeInWaitSec = 0.0f;
-  initialized = true;
+  unknown1b04 = 0.5f;
+  unknown1b00 = 0.0f;
+  unknown0c = true;
 }
 
 GfGameEvent::~GfGameEvent() {}
@@ -84,43 +84,43 @@ void GfGameEvent::destroy() {
 }
 
 void GfGameEvent::finalize() {
-  evtSe.cleanup();
+  unknown1930.cleanup();
   GfEvtBgm::destroy();
   GfSound *sound = GfSound::get();
   if (sound != nullptr) {
-    sound->releaseCategoryHandle(categoryHandle);
-    sound->releaseCategoryHandle(csCategoryHandle);
+    sound->releaseCategoryHandle(unknown1918);
+    sound->releaseCategoryHandle(unknown1920);
   }
   clearColorFilter();
   if (event::Manager::get() != nullptr) {
     event::Manager::destroy();
   }
-  if (eventMem.isValid()) {
-    mtl::MemManager::erase(eventMem);
-    eventMem = mtl::ALLOC_HANDLE();
+  if (unknown10.isValid()) {
+    mtl::MemManager::erase(unknown10);
+    unknown10 = mtl::ALLOC_HANDLE();
   }
-  if (eventDebugMem.isValid()) {
-    mtl::MemManager::erase(eventDebugMem);
-    eventDebugMem = mtl::ALLOC_HANDLE();
+  if (unknown14.isValid()) {
+    mtl::MemManager::erase(unknown14);
+    unknown14 = mtl::ALLOC_HANDLE();
   }
-  initialized = false;
+  unknown0c = false;
 }
 
 void GfGameEvent::resetFadeInTime() {
-  fadeInWaitSec = 0.0f;
-  fadeInSec = 0.5f;
+  unknown1b00 = 0.0f;
+  unknown1b04 = 0.5f;
 }
 
 void GfGameEvent::clearColorFilter() {
-  if (colorFilter != 0) {
-    GfGameEnv::destroyColorFilter(colorFilter);
-    colorFilter = CFILTER_HANDLE();
+  if (unknown18f0 != 0) {
+    GfGameEnv::destroyColorFilter(unknown18f0);
+    unknown18f0 = CFILTER_HANDLE();
   }
 }
 
 bool GfGameEvent::isInitialized() {
   if (get() != nullptr) {
-    return get()->initialized;
+    return get()->unknown0c;
   }
   return false;
 }
@@ -130,20 +130,20 @@ void GfGameEvent::clear() {
   if (gameEvent == nullptr) {
     return;
   }
-  gameEvent->afterEventStartID = 0;
-  gameEvent->playerOffState = 0;
-  GfLayerPause::destroyLayerPause(gameEvent->layerPause);
+  gameEvent->unknown18 = 0;
+  gameEvent->unknown1c = 0;
+  GfLayerPause::destroyLayerPause(gameEvent->unknown20);
   for (u32 i = 0; i < EVTDISP_NUM; i++) {
-    gameEvent->disps[i] = true;
+    gameEvent->unknown28[i] = true;
   }
-  gameEvent->dispIds.clear();
+  gameEvent->unknown48.clear();
   if (GfEvtBgm::get() != nullptr) {
     GfEvtBgm::get()->clear();
   }
 }
 
 void GfGameEvent::update(const fw::UpdateInfo &info) {
-  if (get() == nullptr || !get()->initialized) {
+  if (get() == nullptr || !get()->unknown0c) {
     return;
   }
   event::Manager *manager = event::Manager::get();
@@ -163,27 +163,27 @@ void GfGameEvent::update(const fw::UpdateInfo &info) {
 
 void GfGameEvent::updateEventObj(const fw::UpdateInfo &info) {
   GfGameEvent *gameEvent = get();
-  for (auto it = gameEvent->evtModels.begin(); it != gameEvent->evtModels.end(); ++it) {
+  for (auto it = gameEvent->unknown1050.begin(); it != gameEvent->unknown1050.end(); ++it) {
     (*it)->update(info);
   }
 }
 
 void GfGameEvent::postUpdate(const fw::UpdateInfo &) {
-  if (get() != nullptr && get()->initialized && event::Manager::get() != nullptr) {
+  if (get() != nullptr && get()->unknown0c && event::Manager::get() != nullptr) {
     event::Manager::get()->post();
   }
 }
 
 mtl::ALLOC_HANDLE GfGameEvent::getEventMem() {
   if (get() != nullptr) {
-    return get()->eventMem;
+    return get()->unknown10;
   }
   return mtl::ALLOC_HANDLE();
 }
 
 mtl::ALLOC_HANDLE GfGameEvent::getEventDebugMem() {
   if (get() != nullptr) {
-    return get()->eventDebugMem;
+    return get()->unknown14;
   }
   return mtl::ALLOC_HANDLE();
 }
@@ -193,7 +193,7 @@ void GfGameEvent::stop() {
     event::Manager::get()->stop();
   }
   if (get() != nullptr) {
-    get()->isStopped = true;
+    get()->unknown1929 = true;
   }
 }
 
@@ -206,7 +206,7 @@ bool GfGameEvent::isPlaying() {
 
 bool GfGameEvent::isStop() {
   if (get() != nullptr) {
-    return get()->isStopped;
+    return get()->unknown1929;
   }
   return false;
 }
@@ -221,14 +221,14 @@ bool GfGameEvent::isPlayEvent(u32 eventId) {
 
 u32 GfGameEvent::getPlayEventId() {
   if (get() != nullptr) {
-    return get()->playEventId;
+    return get()->unknown190c;
   }
   return 0;
 }
 
 u32 GfGameEvent::getPlayBladeId() {
   if (get() != nullptr) {
-    return get()->playBladeId;
+    return get()->unknown1910;
   }
   return 0;
 }
@@ -236,35 +236,35 @@ u32 GfGameEvent::getPlayBladeId() {
 void GfGameEvent::setFadeInSec(f32 waitSec, f32 sec) {
   GfGameEvent *gameEvent = get();
   if (gameEvent != nullptr) {
-    gameEvent->fadeInWaitSec = waitSec;
-    gameEvent->fadeInSec = sec;
+    gameEvent->unknown1b00 = waitSec;
+    gameEvent->unknown1b04 = sec;
   }
 }
 
 f32 GfGameEvent::getFadeInWaitSec() {
   if (get() != nullptr) {
-    return get()->fadeInWaitSec;
+    return get()->unknown1b00;
   }
   return 0.0f;
 }
 
 f32 GfGameEvent::getFadeInSec() {
   if (get() != nullptr) {
-    return get()->fadeInSec;
+    return get()->unknown1b04;
   }
   return 0.0f;
 }
 
 int GfGameEvent::getAfterEventStartID() {
   if (get() != nullptr) {
-    return get()->afterEventStartID;
+    return get()->unknown18;
   }
   return 0;
 }
 
 void GfGameEvent::setAfterEventStartID(int startID) {
   if (get() != nullptr) {
-    get()->afterEventStartID = startID;
+    get()->unknown18 = startID;
   }
 }
 
@@ -278,10 +278,10 @@ void GfGameEvent::applySetDispObject(GF_OBJ_HANDLE *handle) {
     return;
   }
   GfObjAcc acc(handle);
-  bool isDisp = gameEvent->disps[acc.getType()];
+  bool isDisp = gameEvent->unknown28[acc.getType()];
   if (isDisp) {
     u32 id = acc.getType() << 16 | acc.getBdatId();
-    isDisp = mm::mtl::find(gameEvent->dispIds.begin(), gameEvent->dispIds.end(), id) == gameEvent->dispIds.end();
+    isDisp = mm::mtl::find(gameEvent->unknown48.begin(), gameEvent->unknown48.end(), id) == gameEvent->unknown48.end();
   }
   if (acc.isDisp(OBJDISP_EVENT) != isDisp) {
     acc.setDisp(OBJDISP_EVENT, isDisp);
@@ -298,7 +298,7 @@ void GfGameEvent::applySetDispObject(GF_OBJ_HANDLE *handle) {
 
 void GfGameEvent::setDisp(EVTDISP type, bool isDisp) {
   if (get() != nullptr) {
-    get()->disps[type] = isDisp;
+    get()->unknown28[type] = isDisp;
     applySetDisp(type);
   }
 }
@@ -336,7 +336,7 @@ bool GfGameEvent::isMapLodAnimReverse(u32 id) {
 
 bool GfGameEvent::isDisp(EVTDISP type) {
   if (get() != nullptr) {
-    return get()->disps[type];
+    return get()->unknown28[type];
   }
   return true;
 }
@@ -360,17 +360,17 @@ void GfGameEvent::applyChangeLayer(EVTDISP) {}
 
 void GfGameEvent::eventPlayerOff(u32 eventId, bool isOff) {
   int category = GfDataEvent::getEventType(eventId);
-  int state = playerOffState;
+  int state = unknown1c;
   if (isOff) {
     if (category != EVENT_CATEGORY_KEEP_PLAYER && state == 0) {
       GfGameObj::changeStopLayerIgnoreEventObj(3, true);
       GfGameObj::changeStopLayerIgnoreEventObj(4, true);
       GfGameObj::changeStopLayerIgnoreEventObj(10, true);
       GfGameSpeed::setLayerSpeed(EVENT_SPEED_LAYER, 0.0f);
-      playerOffState = 1;
+      unknown1c = 1;
     }
   } else if (state == 1) {
-    playerOffState = 0;
+    unknown1c = 0;
     GfGameSpeed::setLayerSpeed(EVENT_SPEED_LAYER, 1.0f);
     GfGameObj::changeStopLayerIgnoreEventObj(3, false);
     GfGameObj::changeStopLayerIgnoreEventObj(4, false);
@@ -380,7 +380,7 @@ void GfGameEvent::eventPlayerOff(u32 eventId, bool isOff) {
 
 bool GfGameEvent::isCancelFlag() {
   if (get() != nullptr) {
-    return get()->flags & FLAG_CANCEL;
+    return get()->unknown08 & FLAG_CANCEL;
   }
   return false;
 }
@@ -389,9 +389,9 @@ void GfGameEvent::setCancelFlag(bool isCancel) {
   GfGameEvent *gameEvent = get();
   if (gameEvent != nullptr) {
     if (isCancel) {
-      gameEvent->flags |= FLAG_CANCEL;
+      gameEvent->unknown08 |= FLAG_CANCEL;
     } else {
-      gameEvent->flags &= ~FLAG_CANCEL;
+      gameEvent->unknown08 &= ~FLAG_CANCEL;
     }
   }
 }
@@ -408,10 +408,10 @@ void GfGameEvent::gevPlayEvent(GEV event, u32 eventId) {
     clearWeather();
     break;
   case GEV_EVENT_END: {
-    playState = PLAY_STATE_PLAY;
+    unknown1914 = PLAY_STATE_PLAY;
     eventPlayerOff(eventId, true);
-    playEventId = eventId;
-    lastPlayEventId = eventId;
+    unknown190c = eventId;
+    unknown1908 = eventId;
     break;
   }
   case GEV_EVENT_PLAY_END: {
@@ -424,10 +424,10 @@ void GfGameEvent::gevPlayEvent(GEV event, u32 eventId) {
     break;
   }
   case GEV_EVENT_SEQUENCE_START:
-    playState = PLAY_STATE_SEQUENCE;
+    unknown1914 = PLAY_STATE_SEQUENCE;
     break;
   case GEV_EVENT_SEQUENCE_END:
-    playState = PLAY_STATE_NONE;
+    unknown1914 = PLAY_STATE_NONE;
     resetFadeInTime();
     clearWeather();
     break;
@@ -437,12 +437,12 @@ void GfGameEvent::gevPlayEvent(GEV event, u32 eventId) {
 }
 
 void GfGameEvent::clearWeather() {
-  if (tempWeather != 0) {
+  if (unknown18f8 != 0) {
     WEATHERID weather = GfGameEnv::getTempWeather();
-    u32 mapId = tempWeatherMapId;
-    GfGameEnv::destroyTempWeather(tempWeather);
-    tempWeather = WEATHER_HANDLE();
-    tempWeatherMapId = 0;
+    u32 mapId = unknown18fc;
+    GfGameEnv::destroyTempWeather(unknown18f8);
+    unknown18f8 = WEATHER_HANDLE();
+    unknown18fc = 0;
     if (mapId == GfGameManager::getMapID()) {
       GfFieldWeather::setMapWeatherID(weather);
     }
@@ -455,14 +455,14 @@ void GfGameEvent::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
     GfGameObj::changeStopLayerIgnoreEventObj(4, true);
     GfGameObj::changeStopLayerIgnoreEventObj(10, true);
     GfGameSpeed::setLayerSpeed(EVENT_SPEED_LAYER, 0.0f);
-    get()->playerOffState = 1;
+    get()->unknown1c = 1;
   }
 }
 
 void GfGameEvent::playBgm(const EventBgmSetup &setup) {
   EventBgmSetup playSetup = setup;
   if (GfPause::isPause(PAUSE_BIT_MAIN_MENU)) {
-    playSetup.isKeep = false;
+    playSetup.unknown60 = false;
   }
   if (GfEvtBgm::get() != nullptr) {
     GfEvtBgm::get()->playBgm(playSetup);
@@ -497,7 +497,7 @@ bool GfGameEvent::isPlayBgm() {
 f32 GfGameEvent::getPlayBgmVolume() {
   GfEvtBgm *bgm = GfEvtBgm::get();
   if (bgm != nullptr && bgm->isPlayBgm()) {
-    return bgm->playBgmVolume;
+    return bgm->m_playBgmVolume;
   }
   return 0.0f;
 }
@@ -520,37 +520,37 @@ f32 GfGameEvent::getPlayBgmTotalTime() {
 
 void GfGameEvent::setCategoryVolume(fw::SoundCategory category, f32 volume, f32 time) {
   if (get() != nullptr && GfSound::get() != nullptr) {
-    GfSound::get()->setCategoryVolume(get()->categoryHandle, category, volume, time);
+    GfSound::get()->setCategoryVolume(get()->unknown1918, category, volume, time);
   }
 }
 
 f32 GfGameEvent::getCategoryVolume(fw::SoundCategory category) {
   if (get() != nullptr && GfSound::get() != nullptr) {
-    return GfSound::get()->getCategoryVolume(get()->categoryHandle, category);
+    return GfSound::get()->getCategoryVolume(get()->unknown1918, category);
   }
   return 1.0f;
 }
 
 void GfGameEvent::createSe(const char *name) {
   if (get() != nullptr) {
-    get()->evtSe.createSe(name);
+    get()->unknown1930.createSe(name);
   }
 }
 
 void GfGameEvent::destroySe() {
   if (get() != nullptr) {
-    get()->evtSe.destroySe();
+    get()->unknown1930.destroySe();
   }
 }
 
 bool GfGameEvent::isLoadedSe() {
   if (get() != nullptr) {
-    return get()->evtSe.isLoadedSe();
+    return get()->unknown1930.isLoadedSe();
   }
   return true;
 }
 
-void GfGameEvent::addEventObjUpdater(GfEvtModel *model) { get()->evtModels.push_back(model); }
+void GfGameEvent::addEventObjUpdater(GfEvtModel *model) { get()->unknown1050.push_back(model); }
 
 GfEvtModelWeapon *GfGameEvent::createWeapon(GfInitParamWeapon &param) { return GfEvtModelWeapon::create(param); }
 
@@ -564,7 +564,7 @@ GfEvtModelEvent *GfGameEvent::createEventObj(GfInitParamEventObj &param) {
 void GfGameEvent::destroyEvtModel(GfEvtModel *model) { removeEventObjUpdater(model); }
 
 void GfGameEvent::removeEventObjUpdater(GfEvtModel *model) {
-  mm::mtl::FixedList<GfEvtModel *, 128> &models = get()->evtModels;
+  mm::mtl::FixedList<GfEvtModel *, 128> &models = get()->unknown1050;
   mm::mtl::FixedList<GfEvtModel *, 128>::iterator it = mm::mtl::find(models.begin(), models.end(), model);
   if (it != models.end()) {
     models.erase(it);
@@ -576,7 +576,7 @@ bool GfGameEvent::isOriginalHomuraModel(u32 bladeId) {
     return false;
   }
   if (get() != nullptr) {
-    u32 eventId = get()->playEventId;
+    u32 eventId = get()->unknown190c;
     return eventId >= HOMURA_ORIGINAL_EVENT_FIRST && eventId <= HOMURA_ORIGINAL_EVENT_LAST;
   }
   return false;
@@ -585,8 +585,8 @@ bool GfGameEvent::isOriginalHomuraModel(u32 bladeId) {
 void GfGameEvent::setListeningPoint(const mm::Vec3 &point) {
   GfGameScene *scene = GfGameScene::get();
   if (scene != nullptr) {
-    scene->isRequestListeningPoint = true;
-    scene->requestListeningPoint = point;
+    scene->unknown2a0 = true;
+    scene->unknown290 = point;
   }
 }
 
@@ -595,12 +595,12 @@ void GfGameEvent::setColorFilter(bool isEnable, int filter, int subFilter, f32 f
   gameEvent->clearColorFilter();
   if (isEnable) {
     ColorFilter colorFilter;
-    colorFilter.handle = CFILTER_HANDLE();
-    colorFilter.filter = filter;
-    colorFilter.farFilter = subFilter;
-    colorFilter.time = fadeSec;
-    colorFilter.prio = 2;
-    gameEvent->colorFilter = GfGameEnv::createColorFilter(colorFilter);
+    colorFilter.unknown0c = CFILTER_HANDLE();
+    colorFilter.unknown00 = filter;
+    colorFilter.unknown04 = subFilter;
+    colorFilter.unknown08 = fadeSec;
+    colorFilter.unknown10 = 2;
+    gameEvent->unknown18f0 = GfGameEnv::createColorFilter(colorFilter);
   }
 }
 
@@ -608,31 +608,31 @@ void GfGameEvent::setCloudSea(bool isEnable, bool isHigh) {
   GfGameEvent *gameEvent = get();
   gameEvent->clearCloudSea();
   if (isEnable) {
-    gameEvent->cloudSea = GfGameEnv::createCloudSea(static_cast<CLOUD_SEA>(isHigh), static_cast<CLOUD_SEA_PRIO>(2));
+    gameEvent->unknown18f4 = GfGameEnv::createCloudSea(static_cast<CLOUD_SEA>(isHigh), static_cast<CLOUD_SEA_PRIO>(2));
   }
 }
 
 void GfGameEvent::clearCloudSea() {
-  if (cloudSea != 0) {
-    GfGameEnv::destroyCloudSea(cloudSea);
-    cloudSea = CLOUD_SEA_HANDLE();
+  if (unknown18f4 != 0) {
+    GfGameEnv::destroyCloudSea(unknown18f4);
+    unknown18f4 = CLOUD_SEA_HANDLE();
   }
 }
 
 void GfGameEvent::setMapWeather(WEATHERID weather) {
   GfGameEvent *gameEvent = get();
   gameEvent->clearWeather();
-  gameEvent->tempWeather = GfGameEnv::createTempWeather(weather, static_cast<WEATHER_PRIO>(1));
-  gameEvent->tempWeatherMapId = GfGameManager::getMapID();
+  gameEvent->unknown18f8 = GfGameEnv::createTempWeather(weather, static_cast<WEATHER_PRIO>(1));
+  gameEvent->unknown18fc = GfGameManager::getMapID();
 }
 
-bool GfGameEvent::isMapWeatherEnable() { return get()->tempWeather != 0; }
+bool GfGameEvent::isMapWeatherEnable() { return get()->unknown18f8 != 0; }
 
 void GfGameEvent::setWeaType(WEATYPE type) {
   GfGameEvent *gameEvent = get();
   if (gameEvent != nullptr) {
-    gameEvent->weaType = type;
-    gameEvent->weaTypeWeather = GfFieldWeather::getCurrentMapWeatherID(false);
+    gameEvent->unknown1900 = type;
+    gameEvent->unknown1904 = GfFieldWeather::getCurrentMapWeatherID(false);
     if (type != WEATYPE_DEFAULT) {
       GfFieldWeather::setWeatherForEvent(type, nullptr);
     }
@@ -641,15 +641,15 @@ void GfGameEvent::setWeaType(WEATYPE type) {
 
 void GfGameEvent::resetWeaType() {
   GfGameEvent *gameEvent = get();
-  if (gameEvent != nullptr && gameEvent->weaType != WEATYPE_DEFAULT) {
-    gameEvent->weaType = WEATYPE_DEFAULT;
-    GfFieldWeather::setMapWeatherID(gameEvent->weaTypeWeather);
+  if (gameEvent != nullptr && gameEvent->unknown1900 != WEATYPE_DEFAULT) {
+    gameEvent->unknown1900 = WEATYPE_DEFAULT;
+    GfFieldWeather::setMapWeatherID(gameEvent->unknown1904);
   }
 }
 
 WEATYPE GfGameEvent::getWeaType() {
   if (get() != nullptr) {
-    return get()->weaType;
+    return get()->unknown1900;
   }
   return WEATYPE_DEFAULT;
 }

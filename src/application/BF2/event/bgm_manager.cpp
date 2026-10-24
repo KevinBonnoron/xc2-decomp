@@ -16,8 +16,8 @@ void BgmManager::changeVolume(f32 volume, f32 frame) {
   mm::clampRef(volume, 0.0f, 1.0f);
   mVolume = volume;
   gf::EventBgmSetup setup;
-  setup.volumeSec = frame * TO_SEC;
-  setup.volume = volume;
+  setup.unknown48 = frame * TO_SEC;
+  setup.unknown44 = volume;
   gf::GfGameEvent::changeVolume(setup);
 }
 

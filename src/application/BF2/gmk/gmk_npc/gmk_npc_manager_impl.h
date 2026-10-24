@@ -10,8 +10,8 @@ namespace gmk {
 GmkNpcIdInfo::BdatInfo::BdatInfo() { dispose(); }
 
 void GmkNpcIdInfo::BdatInfo::create(CBdatWrapper bdat, int id) {
-  quest.id = bdat.getValCheck("QuestID", id, BDAT_TYPE_U16);
-  quest.variant = 0;
+  quest.unknown00 = bdat.getValCheck("QuestID", id, BDAT_TYPE_U16);
+  quest.unknown02 = 0;
   shopId = bdat.getValCheck("ShopID", id, BDAT_TYPE_U16);
   mountPoint = bdat.getValCheck("MountPoint", id, BDAT_TYPE_U16);
   mountObject = bdat.getValCheck("MountObject", id, BDAT_TYPE_U16);
@@ -20,8 +20,8 @@ void GmkNpcIdInfo::BdatInfo::create(CBdatWrapper bdat, int id) {
 }
 
 void GmkNpcIdInfo::BdatInfo::dispose() {
-  quest.id = 0;
-  quest.variant = 0;
+  quest.unknown00 = 0;
+  quest.unknown02 = 0;
   shopId = 0;
   mountPoint = 0;
   mountObject = 0;

@@ -2249,7 +2249,7 @@ u32 QuestListAcc::getListQuestTitle(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListQuestTitle(*fp, quest.id);
+  return _gfbqa::getListQuestTitle(*fp, quest.unknown00);
 }
 
 CBdatWrapper *QuestListAcc::getFp(QuestID &quest) const {
@@ -2263,7 +2263,7 @@ CBdatWrapper *QuestListAcc::getFp(QuestID &quest) const {
     return unknown00[QTYPE_BLADE - 1].fp;
   }
 
-  quest.id = info.unknown10.id;
+  quest.unknown00 = info.unknown10.unknown00;
   return unknown00[info.unknown08 - 1].getFp(info.unknown00);
 }
 
@@ -2273,7 +2273,7 @@ u32 QuestListAcc::getListQuestCategory(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListQuestCategory(*fp, quest.id);
+  return _gfbqa::getListQuestCategory(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListVisible(QuestID quest) const {
@@ -2282,7 +2282,7 @@ u32 QuestListAcc::getListVisible(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListVisible(*fp, quest.id);
+  return _gfbqa::getListVisible(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListTalker(QuestID quest) const {
@@ -2291,7 +2291,7 @@ u32 QuestListAcc::getListTalker(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListTalker(*fp, quest.id);
+  return _gfbqa::getListTalker(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListSummary(QuestID quest) const {
@@ -2300,7 +2300,7 @@ u32 QuestListAcc::getListSummary(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListSummary(*fp, quest.id);
+  return _gfbqa::getListSummary(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListResultA(QuestID quest) const {
@@ -2309,7 +2309,7 @@ u32 QuestListAcc::getListResultA(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListResultA(*fp, quest.id);
+  return _gfbqa::getListResultA(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListResultB(QuestID quest) const {
@@ -2318,7 +2318,7 @@ u32 QuestListAcc::getListResultB(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListResultB(*fp, quest.id);
+  return _gfbqa::getListResultB(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListSortNo(QuestID quest) const {
@@ -2327,7 +2327,7 @@ u32 QuestListAcc::getListSortNo(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListSortNo(*fp, quest.id);
+  return _gfbqa::getListSortNo(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListRewardDisp(QuestID quest) const {
@@ -2336,7 +2336,7 @@ u32 QuestListAcc::getListRewardDisp(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListRewardDisp(*fp, quest.id);
+  return _gfbqa::getListRewardDisp(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListRewardSetA(QuestID quest) const {
@@ -2345,7 +2345,7 @@ u32 QuestListAcc::getListRewardSetA(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListRewardSetA(*fp, quest.id);
+  return _gfbqa::getListRewardSetA(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListRewardSetB(QuestID quest) const {
@@ -2354,7 +2354,7 @@ u32 QuestListAcc::getListRewardSetB(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListRewardSetB(*fp, quest.id);
+  return _gfbqa::getListRewardSetB(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListPRTQuestID(QuestID quest) const {
@@ -2363,7 +2363,7 @@ u32 QuestListAcc::getListPRTQuestID(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListPRTQuestID(*fp, quest.id);
+  return _gfbqa::getListPRTQuestID(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListFlagPRT(QuestID quest) const {
@@ -2372,7 +2372,7 @@ u32 QuestListAcc::getListFlagPRT(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListFlagPRT(*fp, quest.id);
+  return _gfbqa::getListFlagPRT(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListFlagCLD(QuestID quest) const {
@@ -2381,7 +2381,7 @@ u32 QuestListAcc::getListFlagCLD(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListFlagCLD(*fp, quest.id);
+  return _gfbqa::getListFlagCLD(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListPurposeID(QuestID quest) const {
@@ -2390,7 +2390,7 @@ u32 QuestListAcc::getListPurposeID(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListPurposeID(*fp, quest.id);
+  return _gfbqa::getListPurposeID(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListCountCancel(QuestID quest) const {
@@ -2399,7 +2399,7 @@ u32 QuestListAcc::getListCountCancel(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListCountCancel(*fp, quest.id);
+  return _gfbqa::getListCountCancel(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListNextQuestA(QuestID quest) const {
@@ -2408,7 +2408,7 @@ u32 QuestListAcc::getListNextQuestA(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListNextQuestA(*fp, quest.id);
+  return _gfbqa::getListNextQuestA(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListCallEventA(QuestID quest) const {
@@ -2417,7 +2417,7 @@ u32 QuestListAcc::getListCallEventA(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListCallEventA(*fp, quest.id);
+  return _gfbqa::getListCallEventA(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListNextQuestB(QuestID quest) const {
@@ -2426,7 +2426,7 @@ u32 QuestListAcc::getListNextQuestB(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListNextQuestB(*fp, quest.id);
+  return _gfbqa::getListNextQuestB(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListCallEventB(QuestID quest) const {
@@ -2435,7 +2435,7 @@ u32 QuestListAcc::getListCallEventB(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListCallEventB(*fp, quest.id);
+  return _gfbqa::getListCallEventB(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListHintsID(QuestID quest) const {
@@ -2444,7 +2444,7 @@ u32 QuestListAcc::getListHintsID(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListHintsID(*fp, quest.id);
+  return _gfbqa::getListHintsID(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListClearVoice(QuestID quest) const {
@@ -2453,7 +2453,7 @@ u32 QuestListAcc::getListClearVoice(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListClearVoice(*fp, quest.id);
+  return _gfbqa::getListClearVoice(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListAutoStart(QuestID quest) const {
@@ -2462,7 +2462,7 @@ u32 QuestListAcc::getListAutoStart(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListAutoStart(*fp, quest.id);
+  return _gfbqa::getListAutoStart(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListItemLost(QuestID quest) const {
@@ -2471,7 +2471,7 @@ u32 QuestListAcc::getListItemLost(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListItemLost(*fp, quest.id);
+  return _gfbqa::getListItemLost(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListCancelCondition(QuestID quest) const {
@@ -2480,7 +2480,7 @@ u32 QuestListAcc::getListCancelCondition(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListCancelCondition(*fp, quest.id);
+  return _gfbqa::getListCancelCondition(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListQuestIcon(QuestID quest) const {
@@ -2489,7 +2489,7 @@ u32 QuestListAcc::getListQuestIcon(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListQuestIcon(*fp, quest.id);
+  return _gfbqa::getListQuestIcon(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getListLinkedQuestID(QuestID quest) const {
@@ -2498,7 +2498,7 @@ u32 QuestListAcc::getListLinkedQuestID(QuestID quest) const {
     return 0;
   }
 
-  return _gfbqa::getListLinkedQuestID(*fp, quest.id);
+  return _gfbqa::getListLinkedQuestID(*fp, quest.unknown00);
 }
 
 u32 QuestListAcc::getTaskPreCondition(u32 purpose) const {
@@ -3288,7 +3288,7 @@ QuestListAcc *QuestListAcc::get() { return GfBdatQuest::get()->unknown130; }
 QuestID QuestListAcc::getQuestID(u32 index) const {
   CBdatWrapper *fp;
   QuestID quest = {};
-  getQuestListByIndex(fp, quest.id, index);
+  getQuestListByIndex(fp, quest.unknown00, index);
   return quest;
 }
 
@@ -3332,7 +3332,7 @@ void QuestListAcc::getQuestInfo(QIDXINFO &info) const {
       return;
     }
 
-    u32 entry = unknown17c40.unknown00[info.unknown10.id];
+    u32 entry = unknown17c40.unknown00[info.unknown10.unknown00];
     info.unknown08 = static_cast<QTYPE>(entry >> 24);
     info.unknown00 = entry & 0xffffff;
     info.unknown04 = unknown00[info.unknown08 - 1].begin;
@@ -3424,18 +3424,18 @@ u32 QuestListAcc::getCollectUseFlagIndex(const QuestTaskParam &param) const {
 }
 
 u32 QuestListAcc::getCollectUseFlagIndexNewVersion(const QuestTaskParam &param) const {
-  switch (param.taskType) {
+  switch (param.unknown10) {
   case TASK_TYPE_COLLECT:
-    return param.taskId;
+    return param.unknown14;
   case TASK_TYPE_USE:
-    return param.taskId + COLLECT_FLAG_USE_OFFSET;
+    return param.unknown14 + COLLECT_FLAG_USE_OFFSET;
   }
 
   return 0;
 }
 
 u32 QuestListAcc::getCollectUseFlagIndexOldVersion(const QuestTaskParam &param) const {
-  u16 index = unknown4310c[param.quest.id * QUEST_TASK_COUNT + param.taskIndex];
+  u16 index = unknown4310c[param.unknown04.unknown00 * QUEST_TASK_COUNT + param.unknown0c];
   if (index == 0) {
     return 0;
   }

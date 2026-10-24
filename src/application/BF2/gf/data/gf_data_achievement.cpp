@@ -118,13 +118,13 @@ int GfDataAchievement::getAchievementTotalFlgIndex(u16 stats) {
 
 bool GfDataAchievement::isAddAchievementBonusCount(const AchievQuest &achievQuest) {
   for (size_t index = 0; index < sizeof(bonusCountStats) / sizeof(bonusCountStats[0]); index++) {
-    if (bonusCountStats[index] == achievQuest.stats) {
+    if (bonusCountStats[index] == achievQuest.unknown0e) {
       return true;
     }
   }
 
-  QuestTaskParam taskParam(GfDataQuest::getListNextQuestA(achievQuest.quest), 0, TASK_STATE_NONE);
-  switch (taskParam.taskType) {
+  QuestTaskParam taskParam(GfDataQuest::getListNextQuestA(achievQuest.unknown00), 0, TASK_STATE_NONE);
+  switch (taskParam.unknown10) {
   case TASK_TYPE_BATTLE:
   case TASK_TYPE_USE:
   case TASK_TYPE_TALK:
@@ -171,15 +171,15 @@ bool GfDataAchievement::isWaitControllFreeStats(u32 stats) {
 }
 
 void GfDataAchievement::setupTotalCount(AchievQuest &achievQuest) {
-  if (achievQuest.stats == 0 || getAchievementTotalFlgIndex(achievQuest.stats) < 0) {
+  if (achievQuest.unknown0e == 0 || getAchievementTotalFlgIndex(achievQuest.unknown0e) < 0) {
     return;
   }
 
-  if (getTotalCount(achievQuest.stats) == 0 || achievQuest.getCount() != 0) {
+  if (getTotalCount(achievQuest.unknown0e) == 0 || achievQuest.getCount() != 0) {
     return;
   }
 
-  achievQuest.setCount(getTotalCount(achievQuest.stats));
+  achievQuest.setCount(getTotalCount(achievQuest.unknown0e));
 }
 
 void GfDataAchievement::clearTotalCount(u32 stats) {

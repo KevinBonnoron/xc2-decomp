@@ -30,8 +30,8 @@ QuestID GfDataQuest::getListNextQuestA(QuestID quest) {
 
   u16 nextId = QuestListAcc::get()->getListNextQuestA(quest);
   if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
-    next.id = nextId;
-    next.variant = quest.variant;
+    next.unknown00 = nextId;
+    next.unknown02 = quest.unknown02;
   }
 
   return next;
@@ -56,12 +56,12 @@ void GfDataQuest::setOrderTimming(QuestID quest) {
 
   for (u32 flag = FLAG_ORDER_TIMMING_FIRST; flag < FLAG_ORDER_TIMMING_END; flag++) {
     u32 orderQuest = GfGameFlag::getLocal(16, flag);
-    if (orderQuest == quest.id) {
+    if (orderQuest == quest.unknown00) {
       return;
     }
 
     if (orderQuest == 0) {
-      GfGameFlag::setLocal(16, flag, quest.id);
+      GfGameFlag::setLocal(16, flag, quest.unknown00);
       return;
     }
   }
@@ -148,23 +148,23 @@ bool GfDataQuest::getListVisible(QuestID quest) {
 }
 
 u32 GfDataQuest::getListQuestCategory(QuestID quest) {
-  if (quest.id == 0) {
+  if (quest.unknown00 == 0) {
     return 0;
   }
 
-  if (quest.id < 1000) {
+  if (quest.unknown00 < 1000) {
     return 1;
   }
 
-  if (quest.id < 5000) {
+  if (quest.unknown00 < 5000) {
     return 3;
   }
 
-  if (quest.id < 6000) {
+  if (quest.unknown00 < 6000) {
     return 2;
   }
 
-  if (quest.id < 7000) {
+  if (quest.unknown00 < 7000) {
     return 5;
   }
 
@@ -191,10 +191,10 @@ QuestID GfDataQuest::getListPRTQuestID(QuestID quest) {
   }
 
   u32 parentQuest = QuestListAcc::get()->getListPRTQuestID(quest);
-  parent.id = parentQuest;
-  parent.variant = quest.variant;
-  if (parent.variant == 0) {
-    parent.variant = parentQuest >> 16;
+  parent.unknown00 = parentQuest;
+  parent.unknown02 = quest.unknown02;
+  if (parent.unknown02 == 0) {
+    parent.unknown02 = parentQuest >> 16;
   }
 
   return parent;
@@ -224,8 +224,8 @@ QuestID GfDataQuest::getListNextQuestB(QuestID quest) {
 
   u16 nextId = QuestListAcc::get()->getListNextQuestB(quest);
   if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
-    next.id = nextId;
-    next.variant = quest.variant;
+    next.unknown00 = nextId;
+    next.unknown02 = quest.unknown02;
   }
 
   return next;
@@ -322,16 +322,16 @@ const char *GfDataQuest::getTaskLog(QuestID quest, u32 line) {
 
 void GfDataQuest::setScenario(QuestID scenario) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->unknown1097e4.id = scenario.id;
-  dataGame->unknown1097e4.variant = scenario.variant;
+  dataGame->unknown1097e4.unknown00 = scenario.unknown00;
+  dataGame->unknown1097e4.unknown02 = scenario.unknown02;
 }
 
 QuestID GfDataQuest::getScenario() { return GfDataManager::getDataGame()->unknown1097e4; }
 
 void GfDataQuest::setSelect(QuestID select) {
   SDataGame *dataGame = GfDataManager::getDataGame();
-  dataGame->unknown1097e8.id = select.id;
-  dataGame->unknown1097e8.variant = select.variant;
+  dataGame->unknown1097e8.unknown00 = select.unknown00;
+  dataGame->unknown1097e8.unknown02 = select.unknown02;
 }
 
 QuestID GfDataQuest::getSelect() { return GfDataManager::getDataGame()->unknown1097e8; }

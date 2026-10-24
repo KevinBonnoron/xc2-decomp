@@ -426,7 +426,7 @@ u8 *GfBdatMsg::getFpQuest(QuestID quest) {
   case QTYPE_BLADE:
     return m_fpFldQuestBlade->unknown00;
   case QTYPE_NORMAL:
-    if (quest.id < 2000) {
+    if (quest.unknown00 < 2000) {
       return m_fpFldQuestMini->unknown00;
     }
 

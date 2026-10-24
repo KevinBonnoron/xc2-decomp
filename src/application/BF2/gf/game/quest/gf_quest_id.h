@@ -7,10 +7,10 @@ constexpr u32 QUEST_ID_END = 30000;
 
 struct QuestID {
   bool empty() const;
-  bool operator==(const QuestID &other) const { return id == other.id && variant == other.variant; }
+  bool operator==(const QuestID &other) const { return unknown00 == other.unknown00 && unknown02 == other.unknown02; }
 
-  u16 id;
-  u16 variant;
+  u16 unknown00; // Inferred role: id; original member name unknown.
+  u16 unknown02; // Inferred role: variant; original member name unknown.
 };
 
 static_assert(sizeof(QuestID) == 4, "");

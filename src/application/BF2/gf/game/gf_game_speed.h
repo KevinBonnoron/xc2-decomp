@@ -24,11 +24,11 @@ enum GF_SPEED {
 class GfGameSpeed : public mm::mtl::PtrSingleton<GfGameSpeed> {
 public:
   struct Speed {
-    Speed() : original(1.0f), current(1.0f), apply(true) {}
+    Speed() : unknown00(1.0f), unknown04(1.0f), unknown08(true) {}
 
-    f32 original;
-    f32 current;
-    bool apply;
+    f32 unknown00;  // Inferred role: original; original member name unknown.
+    f32 unknown04;  // Inferred role: current; original member name unknown.
+    bool unknown08; // Inferred role: apply; original member name unknown.
   };
 
   GfGameSpeed(const GfSetupParam &param);
@@ -58,11 +58,11 @@ public:
   static void setSalvageCharacterSpeed(f32 speed);
 
 private:
-  bool initialized;
-  f32 intervalSpeed;
-  f32 intervalTime;
-  Speed speeds[GF_SPEED_MAX];
-  Speed salvageSpeeds[GF_SPEED_MAX];
+  bool unknown08;                // Inferred role: initialized; original member name unknown.
+  f32 unknown0c;                 // Inferred role: interval speed; original member name unknown.
+  f32 unknown10;                 // Inferred role: interval time; original member name unknown.
+  Speed unknown14[GF_SPEED_MAX]; // Inferred role: speeds; original member name unknown.
+  Speed unknown68[GF_SPEED_MAX]; // Inferred role: salvage speeds; original member name unknown.
 };
 
 static_assert(sizeof(GfGameSpeed) == 0xc0, "");

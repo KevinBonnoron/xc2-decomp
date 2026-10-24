@@ -24,27 +24,27 @@ enum WEATHER_PRIO {};
 enum WEATHER_HANDLE {};
 
 struct ColorFilter {
-  int filter;
-  int farFilter;
-  f32 time;
-  CFILTER_HANDLE handle;
-  int prio;
+  int unknown00;            // Inferred role: filter; original member name unknown.
+  int unknown04;            // Inferred role: far filter; original member name unknown.
+  f32 unknown08;            // Inferred role: time; original member name unknown.
+  CFILTER_HANDLE unknown0c; // Inferred role: handle; original member name unknown.
+  int unknown10;            // Inferred role: priority; original member name unknown.
 };
 
 static_assert(sizeof(ColorFilter) == 0x14, "");
 
 struct CloudSea {
-  CLOUD_SEA cloudSea;
-  CLOUD_SEA_PRIO prio;
-  CLOUD_SEA_HANDLE handle;
+  CLOUD_SEA unknown00;        // Inferred role: cloud sea; original member name unknown.
+  CLOUD_SEA_PRIO unknown04;   // Inferred role: priority; original member name unknown.
+  CLOUD_SEA_HANDLE unknown08; // Inferred role: handle; original member name unknown.
 };
 
 static_assert(sizeof(CloudSea) == 0xc, "");
 
 struct WeatherSet {
-  WEATHERID weather;
-  WEATHER_PRIO prio;
-  WEATHER_HANDLE handle;
+  WEATHERID unknown00;      // Inferred role: weather; original member name unknown.
+  WEATHER_PRIO unknown04;   // Inferred role: priority; original member name unknown.
+  WEATHER_HANDLE unknown08; // Inferred role: handle; original member name unknown.
 };
 
 static_assert(sizeof(WeatherSet) == 0xc, "");
@@ -87,20 +87,20 @@ public:
   static WEATHERID getTempWeather();
 
 private:
-  bool mapjump;
-  bool mapjumpBlackout;
-  bool mapjumpWithSaveData;
-  u32 mapID;
-  u32 mapJumpID;
-  f32 stopEnemySearchTime;
-  mm::mtl::FixedQueue<ColorFilter, FILTER_MAX> colorFilters;
-  u64 colorFilterSerial;
-  mm::mtl::FixedQueue<CloudSea, FILTER_MAX> cloudSeas;
-  u64 cloudSeaSerial;
-  mm::mtl::FixedQueue<WeatherSet, FILTER_MAX> tempWeathers;
-  u64 tempWeatherSerial;
-  int roomCount;
-  u8 screenShotDisableTimer;
+  bool unknown08;                                         // Inferred role: map jump; original member name unknown.
+  bool unknown09;                                         // Inferred role: map jump blackout; original member name unknown.
+  bool unknown0a;                                         // Inferred role: map jump with save data; original member name unknown.
+  u32 unknown0c;                                          // Inferred role: map id; original member name unknown.
+  u32 unknown10;                                          // Inferred role: map jump id; original member name unknown.
+  f32 unknown14;                                          // Inferred role: stop enemy search time; original member name unknown.
+  mm::mtl::FixedQueue<ColorFilter, FILTER_MAX> unknown18; // Inferred role: color filters; original member name unknown.
+  u64 unknown168;                                         // Inferred role: color filter serial; original member name unknown.
+  mm::mtl::FixedQueue<CloudSea, FILTER_MAX> unknown170;   // Inferred role: cloud seas; original member name unknown.
+  u64 unknown240;                                         // Inferred role: cloud sea serial; original member name unknown.
+  mm::mtl::FixedQueue<WeatherSet, FILTER_MAX> unknown248; // Inferred role: temporary weathers; original member name unknown.
+  u64 unknown318;                                         // Inferred role: temporary weather serial; original member name unknown.
+  int unknown320;                                         // Inferred role: room count; original member name unknown.
+  u8 unknown324;                                          // Inferred role: screenshot disable timer; original member name unknown.
 };
 
 static_assert(sizeof(GfGameEnv) == 0x328, "");

@@ -38,12 +38,12 @@ public:
   void dispStatus(GfComTransform *transform);
 
 private:
-  u32 mSpeedLevel;
-  bool mIsPick;
-  bool mIsModifierReleased;
-  mm::Vec3 mUpDir;
-  mm::Vec3 mFrontDir;
-  mm::Vec3 mRightDir;
+  u32 unknown20;      // Inferred role: speed level; original member name unknown.
+  bool unknown24;     // Inferred role: pick; original member name unknown.
+  bool unknown25;     // Inferred role: modifier released; original member name unknown.
+  mm::Vec3 unknown30; // Inferred role: up direction; original member name unknown.
+  mm::Vec3 unknown40; // Inferred role: front direction; original member name unknown.
+  mm::Vec3 unknown50; // Inferred role: right direction; original member name unknown.
 };
 
 static_assert(sizeof(GfGamePlayerPicker) == 0x60, "");

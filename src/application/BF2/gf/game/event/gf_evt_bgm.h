@@ -33,11 +33,11 @@ public:
   void update(const fw::UpdateInfo &info);
 
   u8 _08[0x50 - 0x08];
-  f32 playBgmVolume;
+  f32 m_playBgmVolume;
   u8 _54[0x490 - 0x54];
 };
 
-static_assert(offsetof(GfEvtBgm, playBgmVolume) == 0x50, "");
+static_assert(offsetof(GfEvtBgm, m_playBgmVolume) == 0x50, "");
 static_assert(sizeof(GfEvtBgm) == 0x490, "");
 
 } // namespace gf

@@ -5,13 +5,13 @@
 
 namespace gf {
 
-GfItemManager::GfItemManager(const GfSetupParam &param) : mInitialized(false) { initialize(param); }
+GfItemManager::GfItemManager(const GfSetupParam &param) : unknown08(false) { initialize(param); }
 
 void GfItemManager::initialize(const GfSetupParam &) {
   _gfit::s_pItemBox = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfItemBox;
   _gfit::s_pItemBoxP = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfPoolItemBox;
   clear();
-  mInitialized = true;
+  unknown08 = true;
 }
 
 GfItemManager::~GfItemManager() {}
@@ -33,7 +33,7 @@ void GfItemManager::finalize() {
     delete _gfit::s_pItemBoxP;
     _gfit::s_pItemBoxP = nullptr;
   }
-  mInitialized = false;
+  unknown08 = false;
 }
 
 bool GfItemManager::isInitialized() {
@@ -41,7 +41,7 @@ bool GfItemManager::isInitialized() {
   if (itemManager == nullptr) {
     return false;
   }
-  return itemManager->mInitialized;
+  return itemManager->unknown08;
 }
 
 void GfItemManager::clear() {

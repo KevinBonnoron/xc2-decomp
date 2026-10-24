@@ -318,21 +318,21 @@ public:
   static void setLogButtonChallengeResult(int result);
   static void setLogLapsedTime(int time);
 
-  ai::Fsm fsm;
-  mm::mtl::IntrusivePtr<fw::Camera> cameraDiveStart;
-  mm::mtl::IntrusivePtr<fw::Camera> cameraDive;
-  mm::mtl::IntrusivePtr<fw::Camera> cameraClimb;
-  mm::mtl::IntrusivePtr<fw::Camera> cameraCut01;
-  bool initialized;
-  GF_OBJ_HANDLE *handle;
-  int buttonChallengePoint;
-  int skillPoint;
-  u32 cylinderItem;
-  GfEvtModelSalvage *model;
-  GAME_VOICE_HANDLE *voice;
-  AnimationType climbAnimation;
-  u32 climbVoice;
-  u32 diveVibration;
+  ai::Fsm unknown08;                           // Inferred role: fsm; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::Camera> unknown80; // Inferred role: camera dive start; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::Camera> unknown88; // Inferred role: camera dive; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::Camera> unknown90; // Inferred role: camera climb; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::Camera> unknown98; // Inferred role: camera cut 01; original member name unknown.
+  bool unknowna0;                              // Inferred role: initialized; original member name unknown.
+  GF_OBJ_HANDLE *unknowna8;                    // Inferred role: handle; original member name unknown.
+  int unknownb0;                               // Inferred role: button challenge point; original member name unknown.
+  int unknownb4;                               // Inferred role: skill point; original member name unknown.
+  u32 unknownb8;                               // Inferred role: cylinder item; original member name unknown.
+  GfEvtModelSalvage *unknownc0;                // Inferred role: model; original member name unknown.
+  GAME_VOICE_HANDLE *unknownc8;                // Inferred role: voice; original member name unknown.
+  AnimationType m_climbAnimationType;
+  u32 unknownd4; // Inferred role: climb voice; original member name unknown.
+  u32 unknownd8; // Inferred role: dive vibration; original member name unknown.
 };
 
 static_assert(sizeof(GfGameSalvage) == 0xe0, "");

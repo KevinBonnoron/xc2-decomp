@@ -357,8 +357,8 @@ void GfManager::startEventTheater(const mm::mtl::FixedVector<u16, 8> &events) {
     GfPlayFactory::createTheaterEvent(events[i]);
   }
   ParamReturnTitle param;
-  param.isWaitVoice = false;
-  param.isGameClear = false;
+  param.unknown00 = false;
+  param.unknown01 = false;
   GfPlayFactory::createReturnTitle(param);
 }
 

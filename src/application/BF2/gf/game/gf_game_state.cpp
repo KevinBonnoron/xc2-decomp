@@ -13,7 +13,7 @@ namespace gf {
 
 void StateGfInitialize::enter(GfGameManager *, ai::State *) { GfGameState::setStateFlg(0); }
 
-void GfGameState::setStateFlg(u32 flags) { get()->stateFlg = flags; }
+void GfGameState::setStateFlg(u32 flags) { get()->unknown80 = flags; }
 
 void StateGfInitialize::leave(GfGameManager *, ai::State *) {}
 
@@ -157,7 +157,7 @@ void StateResetBlade::leave(GfGameManager *, ai::State *) {}
 
 void StateResetBlade::update(GfGameManager *, const fw::UpdateInfo &) {}
 
-GfGameState::GfGameState() : fsm(getAllocator(ALLOCATOR_DEFAULT)), stateFlg(0), stateReserve(GF_STATE_CONTROL), countStateReserve(0), stateTime(0.0f) {}
+GfGameState::GfGameState() : unknown08(getAllocator(ALLOCATOR_DEFAULT)), unknown80(0), unknown84(GF_STATE_CONTROL), unknown88(0), unknown8c(0.0f) {}
 
 GfGameState::~GfGameState() {}
 
@@ -165,85 +165,85 @@ void GfGameState::build(const GfSetupParam &) {
   // __LINE__ must be 434 as in the original file: its value changes the instruction order.
 #line 434
   GfGameState *gameState = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameState();
-  gameState->fsm.beginSetup(gameState, GF_STATE_MAX);
-  gameState->fsm.registerState<StateGfInitialize>(GF_STATE_INITIALIZE);
-  gameState->fsm.registerState<StateGfDestroy>(GF_STATE_DESTROY);
-  gameState->fsm.registerState<StateControl>(GF_STATE_CONTROL);
-  gameState->fsm.registerState<StateMapjump>(GF_STATE_MAPJUMP);
-  gameState->fsm.registerState<StateMapjump>(GF_STATE_MAPJUMP_SKIP_TRAVEL);
-  gameState->fsm.registerState<StatePlayerDead>(GF_STATE_PLAYER_DEAD);
-  gameState->fsm.registerState<StateMenu>(GF_STATE_MENU);
-  gameState->fsm.registerState<StateWaitEvent>(GF_STATE_WAIT_EVENT);
-  gameState->fsm.registerState<StateSalvage>(GF_STATE_SALVAGE);
-  gameState->fsm.registerState<StateCollect>(GF_STATE_COLLECT);
-  gameState->fsm.registerState<StateFieldTbox>(GF_STATE_FIELD_TBOX);
-  gameState->fsm.registerState<StateMapGimmick>(GF_STATE_MAP_GIMMICK);
-  gameState->fsm.registerState<StateGrave>(GF_STATE_GRAVE);
-  gameState->fsm.registerState<StateJump>(GF_STATE_JUMP);
-  gameState->fsm.registerState<StateWarp>(GF_STATE_WARP);
-  gameState->fsm.registerState<StateGmkTutorial>(GF_STATE_GMK_TUTORIAL);
-  gameState->fsm.registerState<StateGmkCamera>(GF_STATE_GMK_CAMERA);
-  gameState->fsm.registerState<StateEvent>(GF_STATE_EVENT);
-  gameState->fsm.registerState<StateTalk>(GF_STATE_TALK);
-  gameState->fsm.registerState<StateGimmickTask>(GF_STATE_GIMMICK_TASK);
-  gameState->fsm.registerState<StateChainAttack>(GF_STATE_CHAIN_ATTACK);
-  gameState->fsm.registerState<StateArtsMovie>(GF_STATE_ARTS_MOVIE);
-  gameState->fsm.registerState<StateResetBlade>(GF_STATE_RESET_BLADE);
-  gameState->fsm.endSetup();
-  gameState->fsm.setState(GF_STATE_INITIALIZE);
+  gameState->unknown08.beginSetup(gameState, GF_STATE_MAX);
+  gameState->unknown08.registerState<StateGfInitialize>(GF_STATE_INITIALIZE);
+  gameState->unknown08.registerState<StateGfDestroy>(GF_STATE_DESTROY);
+  gameState->unknown08.registerState<StateControl>(GF_STATE_CONTROL);
+  gameState->unknown08.registerState<StateMapjump>(GF_STATE_MAPJUMP);
+  gameState->unknown08.registerState<StateMapjump>(GF_STATE_MAPJUMP_SKIP_TRAVEL);
+  gameState->unknown08.registerState<StatePlayerDead>(GF_STATE_PLAYER_DEAD);
+  gameState->unknown08.registerState<StateMenu>(GF_STATE_MENU);
+  gameState->unknown08.registerState<StateWaitEvent>(GF_STATE_WAIT_EVENT);
+  gameState->unknown08.registerState<StateSalvage>(GF_STATE_SALVAGE);
+  gameState->unknown08.registerState<StateCollect>(GF_STATE_COLLECT);
+  gameState->unknown08.registerState<StateFieldTbox>(GF_STATE_FIELD_TBOX);
+  gameState->unknown08.registerState<StateMapGimmick>(GF_STATE_MAP_GIMMICK);
+  gameState->unknown08.registerState<StateGrave>(GF_STATE_GRAVE);
+  gameState->unknown08.registerState<StateJump>(GF_STATE_JUMP);
+  gameState->unknown08.registerState<StateWarp>(GF_STATE_WARP);
+  gameState->unknown08.registerState<StateGmkTutorial>(GF_STATE_GMK_TUTORIAL);
+  gameState->unknown08.registerState<StateGmkCamera>(GF_STATE_GMK_CAMERA);
+  gameState->unknown08.registerState<StateEvent>(GF_STATE_EVENT);
+  gameState->unknown08.registerState<StateTalk>(GF_STATE_TALK);
+  gameState->unknown08.registerState<StateGimmickTask>(GF_STATE_GIMMICK_TASK);
+  gameState->unknown08.registerState<StateChainAttack>(GF_STATE_CHAIN_ATTACK);
+  gameState->unknown08.registerState<StateArtsMovie>(GF_STATE_ARTS_MOVIE);
+  gameState->unknown08.registerState<StateResetBlade>(GF_STATE_RESET_BLADE);
+  gameState->unknown08.endSetup();
+  gameState->unknown08.setState(GF_STATE_INITIALIZE);
 }
 
 void GfGameState::destroy() {
   GfGameState *gameState = get();
-  gameState->fsm.cleanup();
+  gameState->unknown08.cleanup();
   delete gameState;
 }
 
 void GfGameState::update(const fw::UpdateInfo &info) {
   GfGameState *gameState = get();
   if (gameState != nullptr) {
-    gameState->stateTime += info.deltaTime;
-    gameState->fsm.update(&info);
+    gameState->unknown8c += info.deltaTime;
+    gameState->unknown08.update(&info);
   }
 }
 
 void GfGameState::clear() {
   if (get() != nullptr) {
-    get()->stateTime = 0.0f;
+    get()->unknown8c = 0.0f;
   }
 }
 
-bool GfGameState::test(u32 flags) { return (get()->stateFlg & flags) != 0; }
+bool GfGameState::test(u32 flags) { return (get()->unknown80 & flags) != 0; }
 
-GF_STATE GfGameState::getState() { return GF_STATE(get()->fsm.getState()->stateID); }
+GF_STATE GfGameState::getState() { return GF_STATE(get()->unknown08.getState()->stateID); }
 
 const char *GfGameState::getStateName() {
   if (get() != nullptr) {
-    return get()->fsm.getState()->getName();
+    return get()->unknown08.getState()->getName();
   }
   return "";
 }
 
-GF_STATE GfGameState::getStateReserve() { return get()->stateReserve; }
+GF_STATE GfGameState::getStateReserve() { return get()->unknown84; }
 
-u32 GfGameState::getCountStateReserve() { return get()->countStateReserve; }
+u32 GfGameState::getCountStateReserve() { return get()->unknown88; }
 
 void GfGameState::setStateReserve(GF_STATE state) {
   if (state != 0) {
     GfGameState *gameState = get();
-    gameState->stateReserve = state;
-    gameState->countStateReserve = GfInfo::getFrameCount32();
+    gameState->unknown84 = state;
+    gameState->unknown88 = GfInfo::getFrameCount32();
   }
 }
 
 void GfGameState::setState(GF_STATE state, bool isForce) {
   GfGameState *gameState = get();
   if (!isForce) {
-    gameState->stateReserve = GF_STATE_CONTROL;
-    gameState->countStateReserve = GfInfo::getFrameCount32();
+    gameState->unknown84 = GF_STATE_CONTROL;
+    gameState->unknown88 = GfInfo::getFrameCount32();
   }
-  gameState->fsm.setState(state);
-  gameState->stateTime = 0.0f;
+  gameState->unknown08.setState(state);
+  gameState->unknown8c = 0.0f;
 }
 
 } // namespace gf

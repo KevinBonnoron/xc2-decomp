@@ -115,7 +115,7 @@ void StateSalvageSetupFadeIn::update(GfGameSalvage *, const fw::UpdateInfo &) {
 
 void StateSalvageStartVoice::enter(GfGameSalvage *salvage, ai::State *) {
   ml::DevClock::getClockNow(startClock);
-  if (salvage->skillPoint != 0) {
+  if (salvage->unknownb4 != 0) {
     salvage->playVoice(GfGameSalvage::VOICE_START_SKILL);
   } else {
     salvage->playVoice(GfGameSalvage::VOICE_START);

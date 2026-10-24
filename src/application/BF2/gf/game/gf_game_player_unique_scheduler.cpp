@@ -18,7 +18,7 @@ void GfGamePlayerUniqueScheduler::build(const GfSetupParam &) {
 
 void GfGamePlayerUniqueScheduler::setup() {
   GfEvent::addEventCallback(this);
-  paramList = fw::ParamManager::get()->uniqueMotionParamList;
+  unknown1d0 = fw::ParamManager::get()->uniqueMotionParamList;
 }
 
 void GfGamePlayerUniqueScheduler::destroy() {
@@ -41,30 +41,30 @@ void GfGamePlayerUniqueScheduler::update(const fw::UpdateInfo &info) {
 
 void GfGamePlayerUniqueScheduler::executeRequest(const fw::UpdateInfo &info) {
   for (u32 index = 0; index < UNIT_NUM; index++) {
-    Unit &unit = units[index];
-    if (unit.state != UNIT_STATE_REQUEST) {
+    Unit &unit = unknown30[index];
+    if (unit.unknown0c != UNIT_STATE_REQUEST) {
       continue;
     }
 
-    unit.timer -= info.deltaTime;
-    if (unit.timer < 0.0f) {
-      MsgPcFieldSetUniqueMotion message(unit.motion < UNIQUE_MOTION_NUM ? unit.motion : 0);
-      GfObj *obj = GfObjUtil::getObj(unit.handle);
+    unit.unknown14 -= info.deltaTime;
+    if (unit.unknown14 < 0.0f) {
+      MsgPcFieldSetUniqueMotion message(unit.unknown10 < UNIQUE_MOTION_NUM ? unit.unknown10 : 0);
+      GfObj *obj = GfObjUtil::getObj(unit.unknown00);
       if (obj != nullptr) {
         sendMessage(obj, message);
       }
 
-      unit.state = UNIT_STATE_READY;
+      unit.unknown0c = UNIT_STATE_READY;
     }
   }
 }
 
-GfGamePlayerUniqueScheduler::GfGamePlayerUniqueScheduler() : elapsedTime(0.0f) {}
+GfGamePlayerUniqueScheduler::GfGamePlayerUniqueScheduler() : unknown28(0.0f) {}
 
 GfGamePlayerUniqueScheduler::~GfGamePlayerUniqueScheduler() {}
 
 const UniqueMotionParam *GfGamePlayerUniqueScheduler::getParam() const {
-  const fw::ParamList *list = paramList.operator->();
+  const fw::ParamList *list = unknown1d0.operator->();
   if (list->count == 0 || list->entries == nullptr) {
     return nullptr;
   }
@@ -73,9 +73,9 @@ const UniqueMotionParam *GfGamePlayerUniqueScheduler::getParam() const {
 }
 
 void GfGamePlayerUniqueScheduler::gevBattleStart() {
-  elapsedTime = 0.0f;
+  unknown28 = 0.0f;
   for (u32 index = 0; index < UNIT_NUM; index++) {
-    units[index].state = UNIT_STATE_READY;
+    unknown30[index].unknown0c = UNIT_STATE_READY;
   }
 }
 

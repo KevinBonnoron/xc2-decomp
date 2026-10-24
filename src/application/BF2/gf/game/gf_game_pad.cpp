@@ -25,7 +25,7 @@ constexpr u32 OPEN_MENU_TYPE = 1;
 
 void GfGamePad::initialize(const GfSetupParam &) {
   GfEvent::addEventCallback(this);
-  mInitialized = true;
+  unknown10 = true;
   changePadInputMode();
 }
 
@@ -40,25 +40,25 @@ void GfGamePad::destroy() {
 }
 
 void GfGamePad::finalize() {
-  mPadRelay.unbind();
+  unknown18.unbind();
   GfEvent::removeEventCallback(this);
-  mInitialized = false;
+  unknown10 = false;
 }
 
 void GfGamePad::changePadInputMode() {
-  mPadRelay.unbind();
-  mPadRelay.bind(0, 4, getAllocator(ALLOCATOR_DEFAULT));
+  unknown18.unbind();
+  unknown18.bind(0, 4, getAllocator(ALLOCATOR_DEFAULT));
   if (GfManager::isExecModeDebug() || GfManager::isExecModeScenarioGame()) {
     if (GfGameManager::isEvent(false) || GfGameManager::isTalking()) {
-      mPadRelay.bindAction("pause_event", this, &GfGamePad::eventInGameEventPause);
+      unknown18.bindAction("pause_event", this, &GfGamePad::eventInGameEventPause);
     } else if (GfGameManager::isEnableOpenMainMenuSequence()) {
-      mPadRelay.bindAction("boot_mainmenu", this, &GfGamePad::eventInGameOpenMainMenu);
-      mPadRelay.bindAction("call_system", this, &GfGamePad::eventInGameOpenSystemMenu);
-      mPadRelay.bindAction("call_skiptravel", this, &GfGamePad::eventInGameOpenSkipTravelMenu);
+      unknown18.bindAction("boot_mainmenu", this, &GfGamePad::eventInGameOpenMainMenu);
+      unknown18.bindAction("call_system", this, &GfGamePad::eventInGameOpenSystemMenu);
+      unknown18.bindAction("call_skiptravel", this, &GfGamePad::eventInGameOpenSkipTravelMenu);
     }
   } else if (GfManager::isExecModeThater()) {
     if (GfGameManager::isEvent(false) || GfGameManager::isTalking()) {
-      mPadRelay.bindAction("pause_event", this, &GfGamePad::eventInGameEventPause);
+      unknown18.bindAction("pause_event", this, &GfGamePad::eventInGameEventPause);
     }
   }
 }
@@ -69,21 +69,21 @@ bool GfGamePad::isInitialized() {
     return false;
   }
 
-  return pad->mInitialized;
+  return pad->unknown10;
 }
 
-void GfGamePad::clearUniqParams() { mIsEventPause = false; }
+void GfGamePad::clearUniqParams() { unknown11 = false; }
 
 u32 GfGamePad::getPlayerPadId() { return 0; }
 
 void GfGamePad::checkEmergencyEscape() {
-  if ((mPadData.hold & EMERGENCY_ESCAPE_BUTTONS) != EMERGENCY_ESCAPE_BUTTONS) {
-    mEmergencyEscapeFrame = 0;
+  if ((unknown50.hold & EMERGENCY_ESCAPE_BUTTONS) != EMERGENCY_ESCAPE_BUTTONS) {
+    unknown1a0 = 0;
     return;
   }
 
-  if (++mEmergencyEscapeFrame > EMERGENCY_ESCAPE_FRAME) {
-    mEmergencyEscapeFrame = 0;
+  if (++unknown1a0 > EMERGENCY_ESCAPE_FRAME) {
+    unknown1a0 = 0;
     if (!GfGameCond::isGameCond(COND_DISABLE_EMERGENCY_ESCAPE)) {
       GfObj *obj = GfObjUtil::getObj(GfGameManager::getPartyLeader());
       MsgObjectDead message(DEAD_TYPE_EMERGENCY_ESCAPE);
@@ -95,7 +95,7 @@ void GfGamePad::checkEmergencyEscape() {
 const fw::PadData *GfGamePad::getPadPlayer() {
   GfGamePad *pad = get();
   if (pad != nullptr) {
-    return &pad->mPadData;
+    return &pad->unknown50;
   }
 
   return fw::PadManager::getControlPadData(0);
@@ -107,7 +107,7 @@ bool GfGamePad::isEventPause() {
     return false;
   }
 
-  return pad->mIsEventPause;
+  return pad->unknown11;
 }
 
 void GfGamePad::setInterruptPadOnForDebug(DWPAD dwpad) {
@@ -116,12 +116,12 @@ void GfGamePad::setInterruptPadOnForDebug(DWPAD dwpad) {
     return;
   }
 
-  if (pad->mInterruptPads.size() != pad->mInterruptPads.capacity()) {
-    pad->mInterruptPads.push_back(dwpad);
+  if (pad->unknown98.size() != pad->unknown98.capacity()) {
+    pad->unknown98.push_back(dwpad);
   }
 }
 
-void GfGamePad::eventInGameEventPause() { mIsEventPause = true; }
+void GfGamePad::eventInGameEventPause() { unknown11 = true; }
 
 void GfGamePad::eventInGameOpenMainMenu() {
   if (GfGameManager::isEnableOpenMainMenu() && GfGameManager::isEnableOpenMainMenuSequence()) {

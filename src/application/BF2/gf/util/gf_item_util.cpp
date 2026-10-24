@@ -132,7 +132,7 @@ u32 GfItemUtil::getEnableStock(u32 item) {
     break;
   case ItemType::FAVORITE: {
     OwnerBonus *ownerBonus = GfGameManager::getOwnerBonus();
-    stock = bdatItem->getFavoriteValueMax(item) + ownerBonus->values[OWNER_BONUS_FAVORITE_VALUE_MAX];
+    stock = bdatItem->getFavoriteValueMax(item) + ownerBonus->unknown00[OWNER_BONUS_FAVORITE_VALUE_MAX];
     break;
   }
   case ItemType::CRYSTAL_LIST:
@@ -141,7 +141,7 @@ u32 GfItemUtil::getEnableStock(u32 item) {
   case ItemType::BOOSTER: {
     OwnerBonus *ownerBonus = GfGameManager::getOwnerBonus();
     int valueMax = bdatItem->getBoosterValueMax(item);
-    stock = (valueMax == 0 ? BOOSTER_VALUE_MAX_DEFAULT : valueMax) + ownerBonus->values[OWNER_BONUS_BOOSTER_VALUE_MAX];
+    stock = (valueMax == 0 ? BOOSTER_VALUE_MAX_DEFAULT : valueMax) + ownerBonus->unknown00[OWNER_BONUS_BOOSTER_VALUE_MAX];
     break;
   }
   default:

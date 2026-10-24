@@ -308,8 +308,8 @@ bool GfPlayFactory::createGameOver() {
     scene->setDeadType(PLAYER_DEAD_GAME_OVER);
   }
   ParamReturnTitle param;
-  param.isWaitVoice = true;
-  param.isGameClear = false;
+  param.unknown00 = true;
+  param.unknown01 = false;
   return createReturnTitle(param);
 }
 
@@ -318,7 +318,7 @@ bool GfPlayFactory::createTalk(const GfSetupPfTalk &talk) {
     return false;
   }
   GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
-  GfSequentialPlay::addCallbackEventSequence(talk.event, true);
+  GfSequentialPlay::addCallbackEventSequence(talk.unknown00, true);
   GfSequentialPlay::pushState(GF_STATE_TALK);
   GfSequentialPlay::addWaitBattleEnd(0);
   GfSequentialPlay::addEventPlayerStop(true);
@@ -328,7 +328,7 @@ bool GfPlayFactory::createTalk(const GfSetupPfTalk &talk) {
   GfSequentialPlay::popState();
   GfSequentialPlay::addEventFade();
   GfSequentialPlay::addWait(EVENT_END_WAIT_TIME);
-  GfSequentialPlay::addCallbackEventSequence(talk.event, false);
+  GfSequentialPlay::addCallbackEventSequence(talk.unknown00, false);
   GfSequentialPlay::play();
   GfSequentialPlay::addEventPlayerStop(false);
   return true;

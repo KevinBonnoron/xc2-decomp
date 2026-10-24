@@ -57,23 +57,23 @@ enum EVTDISP {
 
 struct EventBgmSetup {
   EventBgmSetup()
-      : volume(1.0f), volumeSec(0.0f), fadeSec(0.0f), startSec(0.0f), delaySec(0.0f), fadeOutSec(0.0f), overTimeSec(0.0f), isKeep(false), isHandOver(false), isEvent(false), isRestart(false),
-        isAudible(false), isSilent(false) {}
+      : unknown44(1.0f), unknown48(0.0f), unknown4c(0.0f), unknown50(0.0f), unknown54(0.0f), unknown58(0.0f), unknown5c(0.0f), unknown60(false), unknown61(false), unknown62(false), unknown63(false),
+        unknown64(false), unknown65(false) {}
 
-  mm::mtl::FixStr<64> name;
-  f32 volume;
-  f32 volumeSec;
-  f32 fadeSec;
-  f32 startSec;
-  f32 delaySec;
-  f32 fadeOutSec;
-  f32 overTimeSec;
-  bool isKeep;
-  bool isHandOver;
-  bool isEvent;
-  bool isRestart;
-  bool isAudible;
-  bool isSilent;
+  mm::mtl::FixStr<64> unknown00; // Inferred role: name; original member name unknown.
+  f32 unknown44;                 // Inferred role: volume; original member name unknown.
+  f32 unknown48;                 // Inferred role: volume seconds; original member name unknown.
+  f32 unknown4c;                 // Inferred role: fade seconds; original member name unknown.
+  f32 unknown50;                 // Inferred role: start seconds; original member name unknown.
+  f32 unknown54;                 // Inferred role: delay seconds; original member name unknown.
+  f32 unknown58;                 // Inferred role: fade out seconds; original member name unknown.
+  f32 unknown5c;                 // Inferred role: over time seconds; original member name unknown.
+  bool unknown60;                // Inferred role: keep flag; original member name unknown.
+  bool unknown61;                // Inferred role: hand over flag; original member name unknown.
+  bool unknown62;                // Inferred role: event flag; original member name unknown.
+  bool unknown63;                // Inferred role: restart flag; original member name unknown.
+  bool unknown64;                // Inferred role: audible flag; original member name unknown.
+  bool unknown65;                // Inferred role: silent flag; original member name unknown.
 };
 
 static_assert(sizeof(EventBgmSetup) == 0x68, "");
@@ -174,50 +174,50 @@ public:
   static WEATYPE getWeaType();
   static bool isLeaderCharaNG(u32 chara);
 
-  u32 flags;
-  bool initialized;
-  mtl::ALLOC_HANDLE eventMem;
-  mtl::ALLOC_HANDLE eventDebugMem;
-  int afterEventStartID;
-  int playerOffState;
-  GF_LP_HANDLE *layerPause;
-  bool disps[EVTDISP_NUM];
-  mm::mtl::FixedVector<u32, 1024> dispIds;
-  mm::mtl::FixedList<GfEvtModel *, 128> evtModels;
-  CFILTER_HANDLE colorFilter;
-  CLOUD_SEA_HANDLE cloudSea;
-  WEATHER_HANDLE tempWeather;
-  u32 tempWeatherMapId;
-  WEATYPE weaType;
-  WEATHERID weaTypeWeather;
-  u32 lastPlayEventId;
-  u32 playEventId;
-  u32 playBladeId;
-  PLAY_STATE playState;
-  GF_SE_CATEGORY_HANDLE *categoryHandle;
-  GF_SE_CATEGORY_HANDLE *csCategoryHandle;
-  bool isCsMute;
-  bool isStopped;
-  GfEvtSe evtSe;
-  f32 fadeInWaitSec;
-  f32 fadeInSec;
+  u32 unknown08;                                     // Inferred role: flags; original member name unknown.
+  bool unknown0c;                                    // Inferred role: initialized; original member name unknown.
+  mtl::ALLOC_HANDLE unknown10;                       // Inferred role: event memory; original member name unknown.
+  mtl::ALLOC_HANDLE unknown14;                       // Inferred role: event debug memory; original member name unknown.
+  int unknown18;                                     // Inferred role: after event start id; original member name unknown.
+  int unknown1c;                                     // Inferred role: player off state; original member name unknown.
+  GF_LP_HANDLE *unknown20;                           // Inferred role: layer pause; original member name unknown.
+  bool unknown28[EVTDISP_NUM];                       // Inferred role: display flags; original member name unknown.
+  mm::mtl::FixedVector<u32, 1024> unknown48;         // Inferred role: display ids; original member name unknown.
+  mm::mtl::FixedList<GfEvtModel *, 128> unknown1050; // Inferred role: event models; original member name unknown.
+  CFILTER_HANDLE unknown18f0;                        // Inferred role: color filter; original member name unknown.
+  CLOUD_SEA_HANDLE unknown18f4;                      // Inferred role: cloud sea; original member name unknown.
+  WEATHER_HANDLE unknown18f8;                        // Inferred role: temporary weather; original member name unknown.
+  u32 unknown18fc;                                   // Inferred role: temporary weather map id; original member name unknown.
+  WEATYPE unknown1900;                               // Inferred role: weather type; original member name unknown.
+  WEATHERID unknown1904;                             // Inferred role: weather type weather; original member name unknown.
+  u32 unknown1908;                                   // Inferred role: last play event id; original member name unknown.
+  u32 unknown190c;                                   // Inferred role: play event id; original member name unknown.
+  u32 unknown1910;                                   // Inferred role: play blade id; original member name unknown.
+  PLAY_STATE unknown1914;                            // Inferred role: play state; original member name unknown.
+  GF_SE_CATEGORY_HANDLE *unknown1918;                // Inferred role: category handle; original member name unknown.
+  GF_SE_CATEGORY_HANDLE *unknown1920;                // Inferred role: cutscene category handle; original member name unknown.
+  bool unknown1928;                                  // Inferred role: cutscene mute; original member name unknown.
+  bool unknown1929;                                  // Inferred role: stopped; original member name unknown.
+  GfEvtSe unknown1930;                               // Inferred role: event se; original member name unknown.
+  f32 unknown1b00;                                   // Inferred role: fade in wait seconds; original member name unknown.
+  f32 unknown1b04;                                   // Inferred role: fade in seconds; original member name unknown.
 };
 
-static_assert(offsetof(GfGameEvent, flags) == 0x8, "");
-static_assert(offsetof(GfGameEvent, eventMem) == 0x10, "");
-static_assert(offsetof(GfGameEvent, afterEventStartID) == 0x18, "");
-static_assert(offsetof(GfGameEvent, layerPause) == 0x20, "");
-static_assert(offsetof(GfGameEvent, disps) == 0x28, "");
-static_assert(offsetof(GfGameEvent, dispIds) == 0x48, "");
-static_assert(offsetof(GfGameEvent, evtModels) == 0x1050, "");
-static_assert(offsetof(GfGameEvent, colorFilter) == 0x18f0, "");
-static_assert(offsetof(GfGameEvent, weaType) == 0x1900, "");
-static_assert(offsetof(GfGameEvent, playEventId) == 0x190c, "");
-static_assert(offsetof(GfGameEvent, playState) == 0x1914, "");
-static_assert(offsetof(GfGameEvent, categoryHandle) == 0x1918, "");
-static_assert(offsetof(GfGameEvent, isCsMute) == 0x1928, "");
-static_assert(offsetof(GfGameEvent, evtSe) == 0x1930, "");
-static_assert(offsetof(GfGameEvent, fadeInWaitSec) == 0x1b00, "");
+static_assert(offsetof(GfGameEvent, unknown08) == 0x8, "");
+static_assert(offsetof(GfGameEvent, unknown10) == 0x10, "");
+static_assert(offsetof(GfGameEvent, unknown18) == 0x18, "");
+static_assert(offsetof(GfGameEvent, unknown20) == 0x20, "");
+static_assert(offsetof(GfGameEvent, unknown28) == 0x28, "");
+static_assert(offsetof(GfGameEvent, unknown48) == 0x48, "");
+static_assert(offsetof(GfGameEvent, unknown1050) == 0x1050, "");
+static_assert(offsetof(GfGameEvent, unknown18f0) == 0x18f0, "");
+static_assert(offsetof(GfGameEvent, unknown1900) == 0x1900, "");
+static_assert(offsetof(GfGameEvent, unknown190c) == 0x190c, "");
+static_assert(offsetof(GfGameEvent, unknown1914) == 0x1914, "");
+static_assert(offsetof(GfGameEvent, unknown1918) == 0x1918, "");
+static_assert(offsetof(GfGameEvent, unknown1928) == 0x1928, "");
+static_assert(offsetof(GfGameEvent, unknown1930) == 0x1930, "");
+static_assert(offsetof(GfGameEvent, unknown1b00) == 0x1b00, "");
 static_assert(sizeof(GfGameEvent) == 0x1b08, "");
 
 } // namespace gf

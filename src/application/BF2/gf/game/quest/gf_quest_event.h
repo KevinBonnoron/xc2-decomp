@@ -18,12 +18,12 @@ public:
   static void openResult(u32 quest);
   static void clearDispUI();
 
-  bool isEntryOpen;
-  bool isResultOpen;
+  bool unknown08; // Inferred role: entry open; original member name unknown.
+  bool unknown09; // Inferred role: result open; original member name unknown.
 };
 
-static_assert(offsetof(GfQuestEvent, isEntryOpen) == 0x08, "");
-static_assert(offsetof(GfQuestEvent, isResultOpen) == 0x09, "");
+static_assert(offsetof(GfQuestEvent, unknown08) == 0x08, "");
+static_assert(offsetof(GfQuestEvent, unknown09) == 0x09, "");
 static_assert(sizeof(GfQuestEvent) == 0x10, "");
 
 } // namespace gf
