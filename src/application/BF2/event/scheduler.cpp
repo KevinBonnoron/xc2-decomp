@@ -17,8 +17,7 @@
 
 namespace event {
 
-Scheduler::Scheduler(gf::GF_OBJ_HANDLE *handle, u32 type)
-    : flags(0), mUse(0), handle(handle), mBdatId(gf::GfObjAcc(handle).getBdatId()), mType(type), mAimType(0), mItem(handle) {
+Scheduler::Scheduler(gf::GF_OBJ_HANDLE *handle, u32 type) : flags(0), mUse(0), handle(handle), mBdatId(gf::GfObjAcc(handle).getBdatId()), mType(type), mAimType(0), mItem(handle) {
   mFuncs[ORDER_FLD2EVT] = &Scheduler::func_stanby;
   mFuncs[ORDER_EVT2IDLE] = &Scheduler::func_stanby;
   mFuncs[ORDER_EVT2FLD] = &Scheduler::func_stanby;

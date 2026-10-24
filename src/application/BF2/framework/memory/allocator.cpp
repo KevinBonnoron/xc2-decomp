@@ -12,9 +12,7 @@ void MemHandlebaseAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { this->hand
 
 mtl::ALLOC_HANDLE MemHandlebaseAllocator::getMemHandle() const { return handle; }
 
-void *MemHandlebaseAllocator::allocate(size_t size, size_t alignment) {
-  return mtl::MemManager::allocate(handle, size, alignment, false, "no name", 0);
-}
+void *MemHandlebaseAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(handle, size, alignment, false, "no name", 0); }
 
 void MemHandlebaseAllocator::deallocate(void *pointer) {
   if (pointer != nullptr) {

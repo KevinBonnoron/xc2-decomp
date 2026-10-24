@@ -14,9 +14,7 @@ void GmkTutorial::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gm
   if (minScenarioFlag.min != 0) {
     scenarioFlag = minScenarioFlag;
   }
-  questFlag = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16),
-                            bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8),
-                            bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
+  questFlag = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
   sysMultiFlag = bdat.getValCheck("SysMultiFlag", id, BDAT_TYPE_U8);
 }
 

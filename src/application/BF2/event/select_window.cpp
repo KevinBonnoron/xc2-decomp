@@ -60,8 +60,7 @@ void SelectWindow::open(SELECT_TYPE type, int textId, const int *selectIds, size
       gf::DataParamAcc paramAcc(handle);
       switch (paramAcc.getObjType()) {
       case gf::OBJECT_TYPE_DRIVER:
-        gf::GfDataDriver::getName(
-            param.nameBdat, param.nameId, paramAcc.isValid() && paramAcc.getObjType() == gf::OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0);
+        gf::GfDataDriver::getName(param.nameBdat, param.nameId, paramAcc.isValid() && paramAcc.getObjType() == gf::OBJECT_TYPE_DRIVER ? paramAcc.getBdatId() : 0);
         break;
       case gf::OBJECT_TYPE_BLADE:
         gf::GfDataBlade::getName(param.nameBdat, param.nameId, paramAcc.isValid() ? paramAcc.getBdatId() : 0);

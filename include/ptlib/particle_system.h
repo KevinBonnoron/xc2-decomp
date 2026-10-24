@@ -95,16 +95,13 @@ public:
   static bool isValid();
   static ParticleManager *&getPtr();
   static ParticleManager *get();
-  static void setUserAllocFunc(AllocFunc allocSys, FreeFunc freeSys, AllocFunc allocRes, FreeFunc freeRes, GetHandleFunc getSysHandle,
-                               GetHandleFunc getResHandle);
+  static void setUserAllocFunc(AllocFunc allocSys, FreeFunc freeSys, AllocFunc allocRes, FreeFunc freeRes, GetHandleFunc getSysHandle, GetHandleFunc getResHandle);
   static void setUserFileFunc(ReadFunc read, ReadEndFunc readEnd);
   static void setUserOutputString(OutputStringFunc outputDebug, OutputStringFunc outputWarn);
-  static void setUserDrFunc(void *(*createMdl)(const void *, const char *, int, const void *, int), void (*deleteMdl)(void *),
-                            void *(*createLgt)(u32, int), void (*deleteLgt)(u32, void *), void (*setMdlPos)(void *, void *),
-                            void (*setMdlMatrix)(void *, void *), void (*setMdlColor)(void *, void *), void (*setMdlAlpha)(void *, f32),
-                            void (*setMdlSpd)(void *, void *), void (*setLgtPos)(u32, void *, void *), void (*setLgtMatrix)(u32, void *, void *),
-                            void (*setLgtParam)(u32, void *, void *), void (*debugRenderer)(void *), void *(*createGrp)(int, int),
-                            void (*destroyGrp)(void *));
+  static void setUserDrFunc(void *(*createMdl)(const void *, const char *, int, const void *, int), void (*deleteMdl)(void *), void *(*createLgt)(u32, int), void (*deleteLgt)(u32, void *),
+                            void (*setMdlPos)(void *, void *), void (*setMdlMatrix)(void *, void *), void (*setMdlColor)(void *, void *), void (*setMdlAlpha)(void *, f32),
+                            void (*setMdlSpd)(void *, void *), void (*setLgtPos)(u32, void *, void *), void (*setLgtMatrix)(u32, void *, void *), void (*setLgtParam)(u32, void *, void *),
+                            void (*debugRenderer)(void *), void *(*createGrp)(int, int), void (*destroyGrp)(void *));
   static void init(const DrDrawWorkInfoEF *info);
   static void *sysAlloc(u32 size, u32 alignment, const char *file, u32 line);
   void clear();

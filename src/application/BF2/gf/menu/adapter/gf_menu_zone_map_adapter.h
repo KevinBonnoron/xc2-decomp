@@ -30,9 +30,7 @@ public:
 
   class ListConverter : public IConverter {
   public:
-    ListConverter(GfMenuZoneMapList *list, u32 listIndex, bool isPageIndex) : list(list), listIndex(listIndex), isPageIndex(isPageIndex) {
-      list->addRef();
-    }
+    ListConverter(GfMenuZoneMapList *list, u32 listIndex, bool isPageIndex) : list(list), listIndex(listIndex), isPageIndex(isPageIndex) { list->addRef(); }
     ~ListConverter() override { mm::mtl::safeRelease(list); }
     u32 getMapId() override;
     u32 getParam() override;

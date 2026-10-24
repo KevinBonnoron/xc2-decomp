@@ -221,9 +221,7 @@ void GfItemUtil::getPropertyOrbEquip(ItemProperty &property) {
   property.enhanceCategory = bdatItem->getEquipOrbEnhanceCategory(property.id);
 }
 
-void GfItemUtil::getPropertySalvage(ItemProperty &property) {
-  property.flags.set(ItemProperty::FLAG_QUEST, GfBdatItem::get()->getSalvageQuest(property.id) != 0);
-}
+void GfItemUtil::getPropertySalvage(ItemProperty &property) { property.flags.set(ItemProperty::FLAG_QUEST, GfBdatItem::get()->getSalvageQuest(property.id) != 0); }
 
 void GfItemUtil::getPropertyPrecious(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();

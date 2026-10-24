@@ -68,8 +68,7 @@ GfMenuZoneMapAdapter *GfMenuZoneMapAdapter::createFromCoverter(u32 handle, u32 t
   return adapter;
 }
 
-GfMenuZoneMapAdapter *GfMenuZoneMapAdapter::createFromList(u32 handle, u32 type, GfMenuZoneMapList *list, u32 listIndex, bool isPageIndex,
-                                                           bool isUpdateAlways) {
+GfMenuZoneMapAdapter *GfMenuZoneMapAdapter::createFromList(u32 handle, u32 type, GfMenuZoneMapList *list, u32 listIndex, bool isPageIndex, bool isUpdateAlways) {
   if (handle == 0) {
     return nullptr;
   }

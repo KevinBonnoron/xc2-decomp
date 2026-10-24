@@ -58,9 +58,7 @@ int CGLibDblUniformBlock::setupArray(int size, CGLibMemType &memType, u32 offset
 
 void CGLibDblUniformBlock::updateData() { nn::os::FlushDataCache(m_mappings[CGLibManager::s_nDblNowIdx], m_size); }
 
-void CGLibDblUniformBlock::updateData(u32 offset, u32 size) {
-  nn::os::FlushDataCache(static_cast<u8 *>(m_mappings[CGLibManager::s_nDblNowIdx]) + offset, size);
-}
+void CGLibDblUniformBlock::updateData(u32 offset, u32 size) { nn::os::FlushDataCache(static_cast<u8 *>(m_mappings[CGLibManager::s_nDblNowIdx]) + offset, size); }
 
 void *CGLibDblUniformBlock::getBuff() { return m_mappings[CGLibManager::s_nDblNowIdx]; }
 
@@ -171,9 +169,7 @@ int CGLibTriUniformBlock::setupArray(int size, CGLibMemType &memType, u32 offset
 
 void CGLibTriUniformBlock::updateData() { nn::os::FlushDataCache(m_mappings[CGLibManager::s_nTriNowIdx], m_size); }
 
-void CGLibTriUniformBlock::updateData(u32 offset, u32 size) {
-  nn::os::FlushDataCache(static_cast<u8 *>(m_mappings[CGLibManager::s_nTriNowIdx]) + offset, size);
-}
+void CGLibTriUniformBlock::updateData(u32 offset, u32 size) { nn::os::FlushDataCache(static_cast<u8 *>(m_mappings[CGLibManager::s_nTriNowIdx]) + offset, size); }
 
 void CGLibTriUniformBlock::updateOldData() {
   int index = CGLibManager::s_nTriNowIdx;

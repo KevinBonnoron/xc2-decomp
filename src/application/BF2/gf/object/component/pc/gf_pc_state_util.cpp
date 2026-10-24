@@ -38,9 +38,7 @@ void StateUtil::setEnableGravity(GfComBehaviorPc &behavior, bool isEnable) {
 
 bool StateUtil::testEnableGravity(GfComBehaviorPc &behavior) { return behavior.getProperty()->isEnableGravity; }
 
-void StateUtil::setEnvSensor(GfComBehaviorPc &behavior, u32 flags, bool isEnable) {
-  behavior.owner->getComponent<GfComPropertyPc>()->setEnvSensorCheckFlags(flags, isEnable);
-}
+void StateUtil::setEnvSensor(GfComBehaviorPc &behavior, u32 flags, bool isEnable) { behavior.owner->getComponent<GfComPropertyPc>()->setEnvSensorCheckFlags(flags, isEnable); }
 
 } // namespace pc
 } // namespace gf

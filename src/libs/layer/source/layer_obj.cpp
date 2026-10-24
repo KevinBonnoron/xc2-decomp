@@ -306,9 +306,7 @@ void LayerActBase::checkActionEnd(const LyrActionData *action, bool isCmdEnd) {
   m_actWork->actionIdx = actions[index].nextIdx;
 }
 
-u32 LayerActBase::calcActionWorkSize(const u8 *data) {
-  return sizeof(LayerActWork) + reinterpret_cast<const LyrActionHeader *>(data)->actionNum * sizeof(u32);
-}
+u32 LayerActBase::calcActionWorkSize(const u8 *data) { return sizeof(LayerActWork) + reinterpret_cast<const LyrActionHeader *>(data)->actionNum * sizeof(u32); }
 
 void LayerActBase::actionIdx(u32 index) {
   onStateFlags(0x10000);

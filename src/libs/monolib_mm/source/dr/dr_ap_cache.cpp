@@ -58,13 +58,7 @@ void DrAPCache::beginThicknessRenderFirst() {
   grlib::CGLibDepthCtl::setDepthControl(true, false, GRL_COMPARE_LESS);
   grlib::CGLibPolygon::setCullingOff();
   grlib::CGLibColorCtl::setColorChannelMask(true, false, false, false);
-  grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_ONE,
-                                        GRL_BLEND_FUNC_ONE,
-                                        GRL_BLEND_COMBINE_MIN,
-                                        GRL_BLEND_FUNC_ONE,
-                                        GRL_BLEND_FUNC_ONE,
-                                        GRL_BLEND_COMBINE_ADD,
-                                        GRL_LOGIC_TYPE_COPY);
+  grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_MIN, GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_ADD, GRL_LOGIC_TYPE_COPY);
 }
 
 void DrAPCache::endThicknessRenderFirst() { grlib::CGLibColorCtl::setColorBufferOn(); }
@@ -207,12 +201,8 @@ void DrAPCache::setupShader(grlib::CGLibDecShader *shader, DrResFetch *fetch) { 
 
 void DrAPCache::setupShader(grlib::CGLibDecShdExtTbl *shader, DrResFetch *fetch) { grlib::CGLibCtlShader::setShader(*shader, *fetch); }
 
-void DrAPCache::setTexture(const grlib::CGLibTextureBuffer &texture, u32 location) {
-  grlib::CGLibCtlTexture::setTexture(texture, m_samplers[getSamplerID()], location);
-}
+void DrAPCache::setTexture(const grlib::CGLibTextureBuffer &texture, u32 location) { grlib::CGLibCtlTexture::setTexture(texture, m_samplers[getSamplerID()], location); }
 
-void DrAPCache::setTexture(const grlib::CGLibTextureBuffer &texture, const grlib::CGLibSampler &sampler, u32 location) {
-  grlib::CGLibCtlTexture::setTexture(texture, sampler, location);
-}
+void DrAPCache::setTexture(const grlib::CGLibTextureBuffer &texture, const grlib::CGLibSampler &sampler, u32 location) { grlib::CGLibCtlTexture::setTexture(texture, sampler, location); }
 
 } // namespace ml

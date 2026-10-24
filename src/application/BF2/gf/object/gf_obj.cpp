@@ -30,8 +30,7 @@ static const char *const TYPE_NAMES[] = {
 };
 
 GfObj::GfObj(u32 type, const fw::HandlePtr<fw::UpdatableObject> &handle, u32 layer)
-    : fw::UpdatableObject(type, handle, layer), handle(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), info(nullptr), _108(), attribute(0),
-      isExecUpdate(false) {}
+    : fw::UpdatableObject(type, handle, layer), handle(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), info(nullptr), _108(), attribute(0), isExecUpdate(false) {}
 
 GfObj::~GfObj() {}
 

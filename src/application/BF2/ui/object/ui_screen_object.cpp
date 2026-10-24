@@ -25,8 +25,7 @@ UIScreenObject::~UIScreenObject() {
   }
 }
 
-UIScreenObject *UIScreenObject::create(UILayoutObject *parent, ml::ScnRenderDrViewCtrl *viewCtrl, fw::ModelObject *model,
-                                       const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
+UIScreenObject *UIScreenObject::create(UILayoutObject *parent, ml::ScnRenderDrViewCtrl *viewCtrl, fw::ModelObject *model, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
   layer::LayerAccLayoutObj layoutAcc(parent->layer);
   layer::LayerBase *layer = layoutAcc.createTexObj(*viewCtrl->texture);
   if (layer == nullptr) {
@@ -47,8 +46,7 @@ UIScreenObject *UIScreenObject::create(UILayoutObject *parent, ml::ScnRenderDrVi
   return screen;
 }
 
-UIScreenObject *UIScreenObject::createOnMemory(UILayoutObject *parent, u32 width, u32 height, const mm::mtl::FixStr<32> &name,
-                                               mm::mtl::IAllocator *allocator, const OnMemoryInfo &info) {
+UIScreenObject *UIScreenObject::createOnMemory(UILayoutObject *parent, u32 width, u32 height, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator, const OnMemoryInfo &info) {
   layer::LayerAccLayoutObj layoutAcc(parent->layer);
   layer::LayerBase *layer = layoutAcc.createMemObj(width, height, static_cast<layer::LayerMemType>(info.memType));
   if (layer == nullptr) {

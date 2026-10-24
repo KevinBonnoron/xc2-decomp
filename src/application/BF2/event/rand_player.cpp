@@ -23,8 +23,7 @@ ICmd::RESULT RandPlayer::Warp::update(const Param &param) {
 
 ICmd::RESULT RandPlayer::Wait::update(const Param &param) {
   Object *object = RandUtil::searchByID(param.val(0).getS32());
-  if (param.getFrame() < 60 && object->getType() == OBJTYPE_CHARA &&
-      !gf::GfObjUtil::isStanbyTalkingPlayer(static_cast<ObjectChara *>(object)->getCharaObj()->getHandle())) {
+  if (param.getFrame() < 60 && object->getType() == OBJTYPE_CHARA && !gf::GfObjUtil::isStanbyTalkingPlayer(static_cast<ObjectChara *>(object)->getCharaObj()->getHandle())) {
     return RESULT_WAIT;
   }
   return RESULT_END;

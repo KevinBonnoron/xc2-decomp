@@ -17,8 +17,8 @@ class GfObj;
 namespace event {
 
 CharaEvaPlayer::CharaEvaPlayer()
-    : flags(0), chara(nullptr), model(nullptr), dysUpdater(nullptr), weaponData(nullptr), rcha(nullptr), frame(0.0f), offset(0.0f, 0.0f, 0.0f),
-      isTar(false), tar(0.0f, 0.0f, 0.0f), action(0), faceType(0), eyeType(0), dispWeapon(1), mountWeapon(1), battleWeapon(1) {}
+    : flags(0), chara(nullptr), model(nullptr), dysUpdater(nullptr), weaponData(nullptr), rcha(nullptr), frame(0.0f), offset(0.0f, 0.0f, 0.0f), isTar(false), tar(0.0f, 0.0f, 0.0f), action(0),
+      faceType(0), eyeType(0), dispWeapon(1), mountWeapon(1), battleWeapon(1) {}
 
 void CharaEvaPlayer::setScaleWeapon(f32 scale) {
   if (model->type == gf::GF_EVT_MODEL_WEAPON) {

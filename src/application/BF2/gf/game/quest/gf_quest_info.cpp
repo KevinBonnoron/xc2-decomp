@@ -392,9 +392,7 @@ bool GfQuestInfo::getTaskCount(u32 &count, u32 &limit, u32 &item, u32 &itemCateg
   return GfQuestTask::getTaskCount(param, limit, count, item, itemCategory);
 }
 
-bool GfQuestInfo::isDummuTalkGroupFlag(u32 group, u32 npcIndex) {
-  return (GfGameFlag::getLocal(8, group + DUMMY_TALK_GROUP_FLAG_OFFSET) & 1 << npcIndex) != 0;
-}
+bool GfQuestInfo::isDummuTalkGroupFlag(u32 group, u32 npcIndex) { return (GfGameFlag::getLocal(8, group + DUMMY_TALK_GROUP_FLAG_OFFSET) & 1 << npcIndex) != 0; }
 
 void GfQuestInfo::setDummuTalkGroupFlag(u32 group, u32 npcIndex) {
   u8 flags = GfGameFlag::getLocal(8, group + DUMMY_TALK_GROUP_FLAG_OFFSET);

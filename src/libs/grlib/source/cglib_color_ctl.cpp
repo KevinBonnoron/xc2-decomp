@@ -8,9 +8,7 @@
 
 namespace grlib {
 
-void CGLibColorCtl::setBlendColor(const mm::Col4 &color) {
-  nvnCommandBufferSetBlendColor(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, &color.r);
-}
+void CGLibColorCtl::setBlendColor(const mm::Col4 &color) { nvnCommandBufferSetBlendColor(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, &color.r); }
 
 void CGLibColorCtl::setColorBufferOn() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();

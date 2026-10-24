@@ -153,9 +153,7 @@ size_t GfSlotAll::getBlockSize(GfAssetType type) const {
   return slots[type - ASSET_TYPE_MAP][0]->getBlockSize();
 }
 
-GF_SLOT_HANDLE *GfSlotAll::setupSlotByte(GfAssetType type, size_t size, u32 index) {
-  return setupSlotNum(type, getSlotNumByByteSize(type, size), index);
-}
+GF_SLOT_HANDLE *GfSlotAll::setupSlotByte(GfAssetType type, size_t size, u32 index) { return setupSlotNum(type, getSlotNumByByteSize(type, size), index); }
 
 u32 GfSlotAll::getSlotNumByByteSize(GfAssetType type, size_t size) const {
   const SlotList &list = slots[type - ASSET_TYPE_MAP];
@@ -274,8 +272,7 @@ size_t GfSlotAll::getByteSizeBySlotNum(GfAssetType type, u32 num) const { return
 
 bool GfSlotAll::isEnableDelete(const SlotList &list, u32 start, u32 num, u32 index) {
   for (u32 i = start; i < start + num; i++) {
-    if (list[i]->getSlotHandle() != INVALID_SLOT_HANDLE &&
-        (list[i]->index >= index || !GfAssetUtil::isEnableDeleteObject(list[i]->getSlotHandle()))) {
+    if (list[i]->getSlotHandle() != INVALID_SLOT_HANDLE && (list[i]->index >= index || !GfAssetUtil::isEnableDeleteObject(list[i]->getSlotHandle()))) {
       return false;
     }
   }

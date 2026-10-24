@@ -30,9 +30,7 @@ void RotAxis::set(u32 axis, const mm::Vec3 &rot) {
   mRot = rot;
 }
 
-mm::Vec3 RotAxis::calcRot(const mm::Vec3 &pos) const {
-  return mm::mtl::Singleton<DataManager>::getPtr()->axis2rot(mAxis, mRot.x, mRot.y, mRot.z, pos);
-}
+mm::Vec3 RotAxis::calcRot(const mm::Vec3 &pos) const { return mm::mtl::Singleton<DataManager>::getPtr()->axis2rot(mAxis, mRot.x, mRot.y, mRot.z, pos); }
 
 mm::Vec3 DataManager::axis2rot(u32 axis, f32 x, f32 y, f32 z, const mm::Vec3 &pos) {
   if (axis < RotAxis::AXIS_CHARA) {
@@ -61,8 +59,7 @@ f32 DataManager::getRotOfsY(u32 axis, const mm::Vec3 &pos) {
       break;
     case RotAxis::AXIS_SAY:
       if (mm::mtl::Singleton<TextManager>::getPtr()->getTalker() != nullptr) {
-        ObjectChara *chara =
-            mm::mtl::Singleton<ObjectManager>::getPtr()->searchByHandle(mm::mtl::Singleton<TextManager>::getPtr()->getTalker()->getHandle());
+        ObjectChara *chara = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByHandle(mm::mtl::Singleton<TextManager>::getPtr()->getTalker()->getHandle());
         if (chara != nullptr) {
           rotY = chara->getRot().y;
         }

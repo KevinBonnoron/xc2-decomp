@@ -86,8 +86,8 @@ AssetData *AssetData::AssignFromMemory(mm::mtl::IAllocator *allocator, const voi
 }
 
 static bool unknown001(const char *name) { // Inferred role: isNotClonable; original function name unknown.
-  return strstr(name, ".arc") != nullptr || strstr(name, ".mot") != nullptr || strstr(name, ".pcefb") != nullptr ||
-         strstr(name, ".wiefb") != nullptr || strstr(name, ".stp") != nullptr || strstr(name, ".ssp") != nullptr || strstr(name, "effect") != nullptr;
+  return strstr(name, ".arc") != nullptr || strstr(name, ".mot") != nullptr || strstr(name, ".pcefb") != nullptr || strstr(name, ".wiefb") != nullptr || strstr(name, ".stp") != nullptr ||
+         strstr(name, ".ssp") != nullptr || strstr(name, "effect") != nullptr;
 }
 
 AssetData *AssetData::CreateFromCache(mtl::ALLOC_HANDLE handle, const char *name) {

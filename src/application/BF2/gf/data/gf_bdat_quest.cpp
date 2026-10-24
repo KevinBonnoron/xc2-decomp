@@ -7,15 +7,13 @@
 namespace gf {
 
 GfBdatQuest::GfBdatQuest()
-    : m_FLD_QuestList(nullptr), m_FLD_QuestListNormal(nullptr), m_FLD_QuestListMini(nullptr), m_FLD_QuestListMercenaries(nullptr),
-      m_FLD_QuestListAchievement(nullptr), m_FLD_QuestListBlade(nullptr), m_FLD_QuestCollect(nullptr), m_FLD_QuestTask(nullptr),
-      m_FLD_QuestTaskNormal(nullptr), m_FLD_QuestTaskMini(nullptr), m_FLD_QuestTaskMercenaries(nullptr), m_FLD_QuestTaskAchievement(nullptr),
-      m_FLD_QuestTaskBlade(nullptr), m_FLD_QuestBattle(nullptr), m_FLD_RequestItemSet(nullptr), m_FLD_QuestUse(nullptr), m_FLD_QuestReach(nullptr),
-      m_FLD_QuestTalk(nullptr), m_FLD_QuestTalkDummyGroup(nullptr), m_FLD_QuestGimmick(nullptr), m_FLD_QuestFieldSkillCount(nullptr),
-      m_FLD_RequestBlade(nullptr), m_FLD_QuestCondition(nullptr), m_FLD_QuestHints(nullptr), m_FLD_QuestEvent(nullptr), m_FLD_QuestReward(nullptr),
-      m_FLD_QuestRewardRandom(nullptr), m_FLD_Achievement(nullptr), m_FLD_AchievementSet(nullptr), m_FLD_AchievementList(nullptr),
-      m_FLD_MercenariesConfig(nullptr), m_FLD_MercenariesMission(nullptr), m_FLD_FieldSkillList(nullptr), m_FLD_FieldSkillSetting(nullptr),
-      m_FLD_FieldSkillRandom(nullptr), m_FLD_DevelopmentLevel(nullptr) {
+    : m_FLD_QuestList(nullptr), m_FLD_QuestListNormal(nullptr), m_FLD_QuestListMini(nullptr), m_FLD_QuestListMercenaries(nullptr), m_FLD_QuestListAchievement(nullptr), m_FLD_QuestListBlade(nullptr),
+      m_FLD_QuestCollect(nullptr), m_FLD_QuestTask(nullptr), m_FLD_QuestTaskNormal(nullptr), m_FLD_QuestTaskMini(nullptr), m_FLD_QuestTaskMercenaries(nullptr), m_FLD_QuestTaskAchievement(nullptr),
+      m_FLD_QuestTaskBlade(nullptr), m_FLD_QuestBattle(nullptr), m_FLD_RequestItemSet(nullptr), m_FLD_QuestUse(nullptr), m_FLD_QuestReach(nullptr), m_FLD_QuestTalk(nullptr),
+      m_FLD_QuestTalkDummyGroup(nullptr), m_FLD_QuestGimmick(nullptr), m_FLD_QuestFieldSkillCount(nullptr), m_FLD_RequestBlade(nullptr), m_FLD_QuestCondition(nullptr), m_FLD_QuestHints(nullptr),
+      m_FLD_QuestEvent(nullptr), m_FLD_QuestReward(nullptr), m_FLD_QuestRewardRandom(nullptr), m_FLD_Achievement(nullptr), m_FLD_AchievementSet(nullptr), m_FLD_AchievementList(nullptr),
+      m_FLD_MercenariesConfig(nullptr), m_FLD_MercenariesMission(nullptr), m_FLD_FieldSkillList(nullptr), m_FLD_FieldSkillSetting(nullptr), m_FLD_FieldSkillRandom(nullptr),
+      m_FLD_DevelopmentLevel(nullptr) {
   mQuestListAcc = new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) QuestListAcc();
   bdatRefresh();
 }
@@ -211,7 +209,7 @@ void GfBdatQuest::destroyFP() {
   }
 }
 
-#define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
+#define NEW_BDAT_WRAPPER(bdat)                                                                                                                                                                         \
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 void GfBdatQuest::createFP() {

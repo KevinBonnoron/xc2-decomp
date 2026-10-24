@@ -44,8 +44,6 @@ void UIObjectPatternPlugin::execute(UIObjectAcc &acc) {
 
 const mm::mtl::RTTI *UIObjectPatternPlugin::getRTTI() const { return &m_rtti; }
 
-bool UIObjectPatternPlugin::isNeedUpdate(UIObjectAcc &acc) {
-  return (needUpdate & 1) || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0;
-}
+bool UIObjectPatternPlugin::isNeedUpdate(UIObjectAcc &acc) { return (needUpdate & 1) || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0; }
 
 } // namespace ui

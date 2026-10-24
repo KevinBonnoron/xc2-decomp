@@ -12,9 +12,7 @@ bool StateBattleRepelled::Enter(GfComBehaviorPc *behavior, ai::State *previous) 
 
 void StateBattleRepelled::Leave(GfComBehaviorPc *behavior, ai::State *next) {}
 
-void StateBattleRepelled::Update(btl::BattleCharacter *character, GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  StateBattleActionBase::Update(character, behavior, info);
-}
+void StateBattleRepelled::Update(btl::BattleCharacter *character, GfComBehaviorPc *behavior, const fw::UpdateInfo &info) { StateBattleActionBase::Update(character, behavior, info); }
 
 } // namespace pc
 } // namespace gf

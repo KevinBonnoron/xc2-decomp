@@ -18,9 +18,7 @@ void LayerMemHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { m_handle 
 
 mtl::ALLOC_HANDLE LayerMemHandleAllocator::getMemHandle() const { return m_handle; }
 
-void *LayerMemHandleAllocator::allocate(size_t size, size_t alignment) {
-  return mtl::MemManager::allocate(m_handle, size, alignment, false, "no name", 0);
-}
+void *LayerMemHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(m_handle, size, alignment, false, "no name", 0); }
 
 void LayerMemHandleAllocator::deallocate(void *pointer) {
   if (pointer != nullptr) {

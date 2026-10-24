@@ -35,15 +35,11 @@ mm::mtl::FixStr<128> s_revision;
 
 } // namespace _dsk
 
-void ProcDesktop::setSimpleCost(bool isSimpleCost) {
-  _dsk::s_flg = !isSimpleCost ? _dsk::s_flg & ~_dsk::FLAG_SIMPLE_COST : _dsk::s_flg | _dsk::FLAG_SIMPLE_COST;
-}
+void ProcDesktop::setSimpleCost(bool isSimpleCost) { _dsk::s_flg = !isSimpleCost ? _dsk::s_flg & ~_dsk::FLAG_SIMPLE_COST : _dsk::s_flg | _dsk::FLAG_SIMPLE_COST; }
 
 bool ProcDesktop::isSimpleCost() { return _dsk::s_flg & _dsk::FLAG_SIMPLE_COST; }
 
-void ProcDesktop::setScreenLog(bool isScreenLog) {
-  _dsk::s_flg = !isScreenLog ? _dsk::s_flg & ~_dsk::FLAG_SCREEN_LOG : _dsk::s_flg | _dsk::FLAG_SCREEN_LOG;
-}
+void ProcDesktop::setScreenLog(bool isScreenLog) { _dsk::s_flg = !isScreenLog ? _dsk::s_flg & ~_dsk::FLAG_SCREEN_LOG : _dsk::s_flg | _dsk::FLAG_SCREEN_LOG; }
 
 bool ProcDesktop::isDispScreenLog() { return _dsk::s_flg & _dsk::FLAG_SCREEN_LOG; }
 
@@ -114,9 +110,7 @@ void ProcDesktop::autorun(const char *name) { _dsk::s_pszAutorun = name; }
 
 void ProcDesktop::dispInfo(bool isDisp) { _dsk::s_flg = !isDisp ? _dsk::s_flg & ~_dsk::FLAG_DISP_INFO : _dsk::s_flg | _dsk::FLAG_DISP_INFO; }
 
-void ProcDesktop::setSimpleInfo(bool isSimple) {
-  _dsk::s_flg = !isSimple ? _dsk::s_flg & ~_dsk::FLAG_SIMPLE_INFO : _dsk::s_flg | _dsk::FLAG_SIMPLE_INFO;
-}
+void ProcDesktop::setSimpleInfo(bool isSimple) { _dsk::s_flg = !isSimple ? _dsk::s_flg & ~_dsk::FLAG_SIMPLE_INFO : _dsk::s_flg | _dsk::FLAG_SIMPLE_INFO; }
 
 bool ProcDesktop::isDispInfo() { return _dsk::s_flg & _dsk::FLAG_DISP_INFO; }
 

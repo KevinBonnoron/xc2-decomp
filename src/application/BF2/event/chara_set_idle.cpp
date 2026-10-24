@@ -12,13 +12,9 @@ class GfObj;
 
 namespace event {
 
-const char *CharaSetIdle::type2stat(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_idletype"), "stat", type, 7));
-}
+const char *CharaSetIdle::type2stat(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_idletype"), "stat", type, 7)); }
 
-const char *CharaSetIdle::type2name(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_idletype"), "name", type, 7));
-}
+const char *CharaSetIdle::type2name(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_idletype"), "name", type, 7)); }
 
 void CharaSetIdle::init() { mStep = 0; }
 

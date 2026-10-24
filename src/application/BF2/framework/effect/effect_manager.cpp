@@ -205,9 +205,7 @@ u32 EffectManager::create(void *data, bool isLoop) {
   return effect::SystemManager::getPtr()->es_create(data, isLoop);
 }
 
-u32 EffectManager::create(void *data, const effect::SendParam *param, bool isLoop) {
-  return effect::SystemManager::getPtr()->es_create(data, param, isLoop);
-}
+u32 EffectManager::create(void *data, const effect::SendParam *param, bool isLoop) { return effect::SystemManager::getPtr()->es_create(data, param, isLoop); }
 
 void EffectManager::kill(u32 handle) {
   if (handle != 0) {
@@ -315,15 +313,11 @@ void *EffectManager::seachAssetEffectHandle(const char *name) {
   return nullptr;
 }
 
-void *EffectManager::effectAllocSys(void *user, u32 size, u32 alignment, const char *name, u32 line) {
-  return mtl::MemManager::allocate(get()->sysHandle, size, alignment, false, "no name", 0);
-}
+void *EffectManager::effectAllocSys(void *user, u32 size, u32 alignment, const char *name, u32 line) { return mtl::MemManager::allocate(get()->sysHandle, size, alignment, false, "no name", 0); }
 
 void EffectManager::effectFreeSys(void *user, void *pointer) { mtl::MemManager::deallocate(pointer, 0, false); }
 
-void *EffectManager::effectAllocRes(void *user, u32 size, u32 alignment, const char *name, u32 line) {
-  return mtl::MemManager::allocate(get()->resHandle, size, alignment, false, "no name", 0);
-}
+void *EffectManager::effectAllocRes(void *user, u32 size, u32 alignment, const char *name, u32 line) { return mtl::MemManager::allocate(get()->resHandle, size, alignment, false, "no name", 0); }
 
 void EffectManager::effectFreeRes(void *user, void *pointer) { mtl::MemManager::deallocate(pointer, 0, false); }
 

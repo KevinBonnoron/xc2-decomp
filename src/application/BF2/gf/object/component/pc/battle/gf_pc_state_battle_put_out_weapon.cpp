@@ -12,9 +12,7 @@ bool StateBattlePutOutWeapon::Enter(GfComBehaviorPc *behavior, ai::State *previo
 
 void StateBattlePutOutWeapon::Leave(GfComBehaviorPc *behavior, ai::State *next) {}
 
-void StateBattlePutOutWeapon::Update(btl::BattleCharacter *character, GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  StateBattleActionBase::Update(character, behavior, info);
-}
+void StateBattlePutOutWeapon::Update(btl::BattleCharacter *character, GfComBehaviorPc *behavior, const fw::UpdateInfo &info) { StateBattleActionBase::Update(character, behavior, info); }
 
 } // namespace pc
 } // namespace gf

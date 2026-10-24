@@ -48,9 +48,7 @@ public:
   };
 
   struct CreateInfo {
-    CreateInfo() : shapeType(SHAPE_TYPE_NONE), position(0.0f, 0.0f, 0.0f), rotation(0.0f, 0.0f, 0.0f), listener(nullptr), isCheckParty(false) {
-      size[0] = size[1] = size[2] = 0.0f;
-    }
+    CreateInfo() : shapeType(SHAPE_TYPE_NONE), position(0.0f, 0.0f, 0.0f), rotation(0.0f, 0.0f, 0.0f), listener(nullptr), isCheckParty(false) { size[0] = size[1] = size[2] = 0.0f; }
 
     ShapeType shapeType;
     mm::Vec3 position;

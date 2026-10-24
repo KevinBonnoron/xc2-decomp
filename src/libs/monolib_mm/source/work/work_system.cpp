@@ -20,8 +20,7 @@ void (*s_exitFunc)();
 
 } // namespace
 
-WorkSystem::WorkSystem(const char *name, WorkObj *parent)
-    : WorkObj(name, parent, 32), m_isPowerOff(false), m_isReset(false), m_isSaveLoadInvalidReset(false) {}
+WorkSystem::WorkSystem(const char *name, WorkObj *parent) : WorkObj(name, parent, 32), m_isPowerOff(false), m_isReset(false), m_isSaveLoadInvalidReset(false) {}
 
 WorkSystem::~WorkSystem() {}
 

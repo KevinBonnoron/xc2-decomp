@@ -473,9 +473,7 @@ void GfMenuObject::clearLayerStatck(u32 handle, u16 group) {
   ui::UIManager::get()->requestGameEvent(handle, event);
 }
 
-void GfMenuObject::registTimer(u32 handle, u16 id, f32 time, bool repeat) {
-  ui::UIManager::get()->registObjectTimer(handle, id, ui::UIUtil::timeSecToUITime(time), repeat);
-}
+void GfMenuObject::registTimer(u32 handle, u16 id, f32 time, bool repeat) { ui::UIManager::get()->registObjectTimer(handle, id, ui::UIUtil::timeSecToUITime(time), repeat); }
 
 void GfMenuObject::releaseTimer(u32 handle) { ui::UIManager::get()->releaseObjectTimer(handle); }
 

@@ -43,20 +43,12 @@ void CGLibPolygon::setTraiangle() {
 
 void CGLibPolygon::setLineWidth(f32 width) { nvnCommandBufferSetLineWidth(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, width); }
 
-void CGLibPolygon::setRasterizer(u8 isDiscard) {
-  nvnCommandBufferSetRasterizerDiscard(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, isDiscard);
-}
+void CGLibPolygon::setRasterizer(u8 isDiscard) { nvnCommandBufferSetRasterizerDiscard(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, isDiscard); }
 
-void CGLibPolygon::setConservativeRaster(u8 isEnable) {
-  nvnCommandBufferSetConservativeRasterEnable(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, isEnable);
-}
+void CGLibPolygon::setConservativeRaster(u8 isEnable) { nvnCommandBufferSetConservativeRasterEnable(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, isEnable); }
 
-void CGLibPolygon::setConservativeDilate(f32 dilate) {
-  nvnCommandBufferSetConservativeRasterDilate(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, dilate);
-}
+void CGLibPolygon::setConservativeDilate(f32 dilate) { nvnCommandBufferSetConservativeRasterDilate(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, dilate); }
 
-void CGLibPolygon::setConservativeSubpixelBias(int xBits, int yBits) {
-  nvnCommandBufferSetSubpixelPrecisionBias(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, xBits, yBits);
-}
+void CGLibPolygon::setConservativeSubpixelBias(int xBits, int yBits) { nvnCommandBufferSetSubpixelPrecisionBias(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, xBits, yBits); }
 
 } // namespace grlib

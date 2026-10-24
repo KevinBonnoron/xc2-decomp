@@ -12,8 +12,7 @@ namespace anm {
 
 struct alignas(16) QsTransform {
   QsTransform() {}
-  QsTransform(const mm::Vec3 &translation, const mm::Quat &rotation, const mm::Vec3 &scale)
-      : translation(translation, 1.0f), rotation(rotation), scale(scale, 1.0f) {}
+  QsTransform(const mm::Vec3 &translation, const mm::Quat &rotation, const mm::Vec3 &scale) : translation(translation, 1.0f), rotation(rotation), scale(scale, 1.0f) {}
 
   mm::Vec4 translation;
   mm::Quat rotation;

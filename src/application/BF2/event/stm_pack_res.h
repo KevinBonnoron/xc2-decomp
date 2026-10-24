@@ -12,8 +12,7 @@ public:
   };
 
   StmPackRes();
-  StmPackRes(void *buffer, size_t size, size_t dataOfs, size_t firstFile, size_t lastFile, size_t firstPage, size_t lastPage, int prio, int cut,
-             size_t stream);
+  StmPackRes(void *buffer, size_t size, size_t dataOfs, size_t firstFile, size_t lastFile, size_t firstPage, size_t lastPage, int prio, int cut, size_t stream);
   bool isLoading() const;
   void loadCompleate();
   void *getFileAdr(size_t dataOfs) const;

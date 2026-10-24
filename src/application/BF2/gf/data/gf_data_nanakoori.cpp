@@ -115,15 +115,7 @@ u32 GfDataNanakoori::getNanakooriMissionClearFlg1Offset(u32 mission) {
 }
 
 u32 GfDataNanakoori::getLevelForNanakoori(u32 stampCount) {
-  return stampCount == 0     ? 1
-         : stampCount < 3    ? 2
-         : stampCount < 9    ? 3
-         : stampCount < 0x11 ? 4
-         : stampCount < 0x1e ? 5
-         : stampCount < 0x32 ? 6
-         : stampCount < 0x4b ? 7
-         : stampCount < 0x63 ? 8
-                             : 9;
+  return stampCount == 0 ? 1 : stampCount < 3 ? 2 : stampCount < 9 ? 3 : stampCount < 0x11 ? 4 : stampCount < 0x1e ? 5 : stampCount < 0x32 ? 6 : stampCount < 0x4b ? 7 : stampCount < 0x63 ? 8 : 9;
 }
 
 u64 GfDataNanakoori::getItemForVocalLevelUp() { return ITEM_VOCALS_STAMP; }

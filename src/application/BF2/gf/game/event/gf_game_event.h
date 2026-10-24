@@ -57,8 +57,8 @@ enum EVTDISP {
 
 struct EventBgmSetup {
   EventBgmSetup()
-      : volume(1.0f), volumeSec(0.0f), fadeSec(0.0f), startSec(0.0f), delaySec(0.0f), fadeOutSec(0.0f), overTimeSec(0.0f), isKeep(false),
-        isHandOver(false), isEvent(false), isRestart(false), isAudible(false), isSilent(false) {}
+      : volume(1.0f), volumeSec(0.0f), fadeSec(0.0f), startSec(0.0f), delaySec(0.0f), fadeOutSec(0.0f), overTimeSec(0.0f), isKeep(false), isHandOver(false), isEvent(false), isRestart(false),
+        isAudible(false), isSilent(false) {}
 
   mm::mtl::FixStr<64> name;
   f32 volume;

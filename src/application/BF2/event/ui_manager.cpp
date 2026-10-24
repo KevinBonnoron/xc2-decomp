@@ -47,9 +47,8 @@ void UIManager::setPadDisable(bool isDisable) {
 }
 
 UIManager::UIManager()
-    : flags(0), dispFlags(0), state(0), isFieldSkillSuccess(true), skipContext(nullptr), shopContext(nullptr), payoffContext(nullptr),
-      payoffResult(0), rewardContext(nullptr), bladeNameContext(nullptr), chapTelopContext(nullptr), chapTelopWait(0), avanTitleContext(nullptr),
-      zoneTelopContext(nullptr), minigame(nullptr) {}
+    : flags(0), dispFlags(0), state(0), isFieldSkillSuccess(true), skipContext(nullptr), shopContext(nullptr), payoffContext(nullptr), payoffResult(0), rewardContext(nullptr),
+      bladeNameContext(nullptr), chapTelopContext(nullptr), chapTelopWait(0), avanTitleContext(nullptr), zoneTelopContext(nullptr), minigame(nullptr) {}
 
 void UIManager::logout() {
   if ((dispFlags & DISP_FLAG_NOW_LOADING) != 0) {
@@ -252,8 +251,7 @@ bool UIManager::openShopUI(u32 shop, bool &isBought) {
 
 bool UIManager::isOpenShopUI() const { return (flags & FLAG_SHOP) != 0; }
 
-bool UIManager::openPayoffUI(const char *title, const mm::mtl::FixedVector<u32, 16> &values, const mm::mtl::FixedVector<const char *, 16> &names,
-                             const char *message) {
+bool UIManager::openPayoffUI(const char *title, const mm::mtl::FixedVector<u32, 16> &values, const mm::mtl::FixedVector<const char *, 16> &names, const char *message) {
   if (!mm::mtl::Singleton<MstxtManager>::getPtr()->isLoaded()) {
     return true;
   }

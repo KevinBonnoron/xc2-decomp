@@ -330,9 +330,7 @@ u32 GfDataBlade::getFavorite(u32 blade, FAVORITE favorite) {
   return 0;
 }
 
-u32 GfDataBlade::getAchievementQuestPrefix(u32 blade, u32 line, u32 level) {
-  return getBladeRelativeID(blade) * ACHIEVEMENT_PER_BLADE + line * ACHIEVEMENT_LEVEL_COUNT + level;
-}
+u32 GfDataBlade::getAchievementQuestPrefix(u32 blade, u32 line, u32 level) { return getBladeRelativeID(blade) * ACHIEVEMENT_PER_BLADE + line * ACHIEVEMENT_LEVEL_COUNT + level; }
 
 void SDataIdea::setLevel(u32 idea, int level) {
   ideas[idea].level = level;
@@ -351,9 +349,7 @@ u32 GfDataBlade::getSetDriver(u32 blade) {
   return getSDataBlade(blade)->setDriver;
 }
 
-bool GfDataBlade::isDummyBlade(u32 blade) {
-  return (blade == BLADE_DUMMY_REGULAR_FIRST || blade == BLADE_DUMMY_REGULAR_SECOND) || blade == BLADE_DUMMY_RARE;
-}
+bool GfDataBlade::isDummyBlade(u32 blade) { return (blade == BLADE_DUMMY_REGULAR_FIRST || blade == BLADE_DUMMY_REGULAR_SECOND) || blade == BLADE_DUMMY_RARE; }
 
 bool GfDataBlade::isUnselect(u32 blade) { return getSDataBlade(blade)->unselect != 0; }
 
@@ -794,13 +790,9 @@ u32 GfDataBlade::getCreateEvent(u32 blade) { return getSDataBlade(blade)->create
 
 u16 GfDataBlade::getNormalTalk(u32 blade) { return getSDataBlade(blade)->normalTalk; }
 
-u32 GfDataBlade::getActBlade2CommonBlade(u32 blade) {
-  return blade - BLADE_ACT_FIRST >= BLADE_ACT_COUNT ? blade : blade + (BLADE_ACT_COMMON_FIRST - BLADE_ACT_FIRST);
-}
+u32 GfDataBlade::getActBlade2CommonBlade(u32 blade) { return blade - BLADE_ACT_FIRST >= BLADE_ACT_COUNT ? blade : blade + (BLADE_ACT_COMMON_FIRST - BLADE_ACT_FIRST); }
 
-bool GfDataBlade::isNeedAttributeResource(u32 blade) {
-  return isCommonBlade(blade) || blade - BLADE_ACT_FIRST < BLADE_ACT_COUNT || blade - BLADE_HANA_JS < BLADE_HANA_COUNT;
-}
+bool GfDataBlade::isNeedAttributeResource(u32 blade) { return isCommonBlade(blade) || blade - BLADE_ACT_FIRST < BLADE_ACT_COUNT || blade - BLADE_HANA_JS < BLADE_HANA_COUNT; }
 
 u32 GfDataBlade::getTrustPoint(u32 blade) { return getSDataBlade(blade)->trustPoint; }
 
@@ -1017,8 +1009,6 @@ u32 GfDataBlade::getBladeNumForWeapon(u32 weaponType) {
   return count;
 }
 
-bool GfDataBlade::isNeedChangeWeapon(u32 blade) {
-  return blade - BLADE_CHANGE_WEAPON_RANGE_FIRST < BLADE_CHANGE_WEAPON_RANGE_COUNT || blade == BLADE_CHANGE_WEAPON;
-}
+bool GfDataBlade::isNeedChangeWeapon(u32 blade) { return blade - BLADE_CHANGE_WEAPON_RANGE_FIRST < BLADE_CHANGE_WEAPON_RANGE_COUNT || blade == BLADE_CHANGE_WEAPON; }
 
 } // namespace gf

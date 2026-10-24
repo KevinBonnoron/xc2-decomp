@@ -8,8 +8,7 @@
 
 namespace ui {
 
-UITagParser::UITagParser(mm::mtl::IAllocator *allocator)
-    : allocator(allocator), stockBuffer(nullptr), option(0), mode(PARSE_MODE_CONVERT), tag(nullptr), param(nullptr) {
+UITagParser::UITagParser(mm::mtl::IAllocator *allocator) : allocator(allocator), stockBuffer(nullptr), option(0), mode(PARSE_MODE_CONVERT), tag(nullptr), param(nullptr) {
   stockBuffer = static_cast<char *>(allocator->allocate(0x400, 4));
   setStockTbl(stockBuffer, 0x400);
 }

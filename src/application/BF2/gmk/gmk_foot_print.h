@@ -57,8 +57,7 @@ public:
 
 static_assert(sizeof(GmkRoutedFootPrintPoint) == 0x58, "");
 
-class GmkRoutedFootPrintPointList
-    : public TGmkList<GmkRoutedFootPrintPoint, GmkRoutedFootPrintPoint::BdatInfo, 0x50504652, 1, GmkRoutedFootPrintPointGobCustom> {
+class GmkRoutedFootPrintPointList : public TGmkList<GmkRoutedFootPrintPoint, GmkRoutedFootPrintPoint::BdatInfo, 0x50504652, 1, GmkRoutedFootPrintPointGobCustom> {
 public:
   explicit GmkRoutedFootPrintPointList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame) {}
 };

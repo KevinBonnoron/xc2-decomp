@@ -181,13 +181,9 @@ void ShdU32SetUVec4(u32 *destination, const u32 *source) {
 
 static const CGLibShader *getCurrentShader(const CGLibDecShader *decShader) { return decShader->m_shaders + decShader->m_shaderIdx; }
 
-static const CGLibShaderBlockInfo *getUniformBlocks(const CGLibShader *shader) {
-  return reinterpret_cast<const CGLibShaderBlockInfo *>(shader->m_data + shader->m_info->uniformBlockOfs);
-}
+static const CGLibShaderBlockInfo *getUniformBlocks(const CGLibShader *shader) { return reinterpret_cast<const CGLibShaderBlockInfo *>(shader->m_data + shader->m_info->uniformBlockOfs); }
 
-static const CGLibShaderBlockInfo *getStorageBuffers(const CGLibShader *shader) {
-  return reinterpret_cast<const CGLibShaderBlockInfo *>(shader->m_data + shader->m_info->storageBufferOfs);
-}
+static const CGLibShaderBlockInfo *getStorageBuffers(const CGLibShader *shader) { return reinterpret_cast<const CGLibShaderBlockInfo *>(shader->m_data + shader->m_info->storageBufferOfs); }
 
 static u32 findUniformBlockIndex(const CGLibShader *shader, const char *name) {
   u32 index = -1;
@@ -241,8 +237,7 @@ static u32 getStorageBufferSize(const CGLibShader *shader, u32 index) {
   return 0;
 }
 
-CGLibUniBaseUtility::CGLibUniBaseUtility(const CGLibDecShader *decShader)
-    : m_decShader(decShader), m_index(-1), m_size(0), m_isStorageBuffer(false) {}
+CGLibUniBaseUtility::CGLibUniBaseUtility(const CGLibDecShader *decShader) : m_decShader(decShader), m_index(-1), m_size(0), m_isStorageBuffer(false) {}
 
 void CGLibUniBaseUtility::setF32SetMat44(u32 offset, const f32 *source) {
   if (offset != 0xffffffff) {

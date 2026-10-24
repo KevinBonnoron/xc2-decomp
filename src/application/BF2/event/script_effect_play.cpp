@@ -15,8 +15,7 @@ void ScriptEffectPlay::doit(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
     return;
   }
-  static_cast<ObjectEffect *>(object)->play(
-      param.val(0).getStr(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32(), param.val(4).getS32(), param.val(5).getS32());
+  static_cast<ObjectEffect *>(object)->play(param.val(0).getStr(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32(), param.val(4).getS32(), param.val(5).getS32());
 }
 
 void ScriptEffectPlay::undo(const Param &param) {
@@ -32,8 +31,7 @@ void ScriptEffectPlay::redo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
     return;
   }
-  static_cast<ObjectEffect *>(object)->play(
-      param.val(0).getStr(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32(), param.val(4).getS32(), 0);
+  static_cast<ObjectEffect *>(object)->play(param.val(0).getStr(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32(), param.val(4).getS32(), 0);
 }
 
 } // namespace event

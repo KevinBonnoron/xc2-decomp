@@ -3,12 +3,12 @@
 #include "mm/mm_std_base.h"
 #include <string.h>
 
-#define HEAP_INSIST(x)                                                                                                                               \
-  {                                                                                                                                                  \
-    MM_ASSERT(x);                                                                                                                                    \
-    if (!(x)) {                                                                                                                                      \
-      status--;                                                                                                                                      \
-    }                                                                                                                                                \
+#define HEAP_INSIST(x)                                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    MM_ASSERT(x);                                                                                                                                                                                      \
+    if (!(x)) {                                                                                                                                                                                        \
+      status--;                                                                                                                                                                                        \
+    }                                                                                                                                                                                                  \
   }
 
 namespace mm {
@@ -99,13 +99,9 @@ HeapAllocUtil::block_header_t *HeapAllocUtil::block_from_ptr(const void *ptr) {
   return reinterpret_cast<block_header_t *>(const_cast<unsigned char *>(static_cast<const unsigned char *>(ptr)) - block_start_offset);
 }
 
-void *HeapAllocUtil::block_to_ptr(const block_header_t *block) {
-  return const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(block)) + block_start_offset;
-}
+void *HeapAllocUtil::block_to_ptr(const block_header_t *block) { return const_cast<unsigned char *>(reinterpret_cast<const unsigned char *>(block)) + block_start_offset; }
 
-HeapAllocUtil::block_header_t *HeapAllocUtil::offset_to_block(const void *ptr, ptrdiff_t size) {
-  return reinterpret_cast<block_header_t *>(reinterpret_cast<ptrdiff_t>(ptr) + size);
-}
+HeapAllocUtil::block_header_t *HeapAllocUtil::offset_to_block(const void *ptr, ptrdiff_t size) { return reinterpret_cast<block_header_t *>(reinterpret_cast<ptrdiff_t>(ptr) + size); }
 
 HeapAllocUtil::block_header_t *HeapAllocUtil::block_prev(const block_header_t *block) { return block->prev_phys_block; }
 
@@ -629,8 +625,7 @@ void *HeapAllocUtil::heap_realloc(void *heap, void *ptr, size_t size) {
 }
 
 bool HeapAllocUtil::valid_ptr(void *pool, const void *ptr) {
-  for (block_header_t *block = offset_to_block(pool, -static_cast<int>(block_header_overhead)); block && !block_is_last(block);
-       block = block_next(block)) {
+  for (block_header_t *block = offset_to_block(pool, -static_cast<int>(block_header_overhead)); block && !block_is_last(block); block = block_next(block)) {
     if (block_to_ptr(block) == ptr) {
       return !block_is_free(block);
     }

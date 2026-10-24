@@ -57,15 +57,13 @@ void ObjectEffect::stop() { mEffectObj->stop(); }
 
 void ObjectEffect::linerPosAxis(const PosAxis &axis, f32 frame, CV_TYPE cv) {
   posAxis = axis;
-  mEffectObj->moveTo(
-      mm::mtl::Singleton<DataManager>::getPtr()->axis2pos(axis.getAxis(), axis.getPos().x, axis.getPos().y, axis.getPos().z), frame, cv);
+  mEffectObj->moveTo(mm::mtl::Singleton<DataManager>::getPtr()->axis2pos(axis.getAxis(), axis.getPos().x, axis.getPos().y, axis.getPos().z), frame, cv);
 }
 
 void ObjectEffect::linerRotAxis(const RotAxis &axis, f32 frame, CV_TYPE cv) {
   rotAxis = axis;
   const mm::Vec3 &pos = mEffectObj->getPos();
-  mEffectObj->turnTo(
-      mm::mtl::Singleton<DataManager>::getPtr()->axis2rot(axis.getAxis(), axis.getRot().x, axis.getRot().y, axis.getRot().z, pos), frame, cv);
+  mEffectObj->turnTo(mm::mtl::Singleton<DataManager>::getPtr()->axis2rot(axis.getAxis(), axis.getRot().x, axis.getRot().y, axis.getRot().z, pos), frame, cv);
 }
 
 void ObjectEffect::setScale(const mm::Vec3 &scale) { mEffectObj->setScale(scale); }

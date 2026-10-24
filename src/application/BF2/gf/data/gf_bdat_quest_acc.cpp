@@ -234,8 +234,7 @@ u32 getBattleRefer(const CBdatWrapper &wrapper, u32 id) {
 void initBattleEnemyID(const CBdatWrapper &wrapper) { s_members[BattleEnemyID] = Bdat::getMember(wrapper.data, "EnemyID"); }
 
 u32 getBattleEnemyID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BattleEnemyID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BattleEnemyID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -245,8 +244,7 @@ u32 getBattleEnemyID(const CBdatWrapper &wrapper, u32 id) {
 void initBattleEnemyGroupID(const CBdatWrapper &wrapper) { s_members[BattleEnemyGroupID] = Bdat::getMember(wrapper.data, "EnemyGroupID"); }
 
 u32 getBattleEnemyGroupID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BattleEnemyGroupID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BattleEnemyGroupID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -256,8 +254,7 @@ u32 getBattleEnemyGroupID(const CBdatWrapper &wrapper, u32 id) {
 void initBattleEnemySpeciesID(const CBdatWrapper &wrapper) { s_members[BattleEnemySpeciesID] = Bdat::getMember(wrapper.data, "EnemySpeciesID"); }
 
 u32 getBattleEnemySpeciesID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BattleEnemySpeciesID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BattleEnemySpeciesID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -277,8 +274,7 @@ u32 getBattleCount(const CBdatWrapper &wrapper, u32 id) {
 void initBattleCountFlag(const CBdatWrapper &wrapper) { s_members[BattleCountFlag] = Bdat::getMember(wrapper.data, "CountFlag"); }
 
 u32 getBattleCountFlag(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BattleCountFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BattleCountFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -288,8 +284,7 @@ u32 getBattleCountFlag(const CBdatWrapper &wrapper, u32 id) {
 void initBattleDeadAll(const CBdatWrapper &wrapper) { s_members[BattleDeadAll] = Bdat::getMember(wrapper.data, "DeadAll"); }
 
 u32 getBattleDeadAll(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BattleDeadAll] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BattleDeadAll] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -299,8 +294,7 @@ u32 getBattleDeadAll(const CBdatWrapper &wrapper, u32 id) {
 void initBattleTimeCount(const CBdatWrapper &wrapper) { s_members[BattleTimeCount] = Bdat::getMember(wrapper.data, "TimeCount"); }
 
 u32 getBattleTimeCount(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BattleTimeCount] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BattleTimeCount] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -310,8 +304,7 @@ u32 getBattleTimeCount(const CBdatWrapper &wrapper, u32 id) {
 void initBattleTimeCountFlag(const CBdatWrapper &wrapper) { s_members[BattleTimeCountFlag] = Bdat::getMember(wrapper.data, "TimeCountFlag"); }
 
 u32 getBattleTimeCountFlag(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BattleTimeCountFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BattleTimeCountFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -321,8 +314,7 @@ u32 getBattleTimeCountFlag(const CBdatWrapper &wrapper, u32 id) {
 void initBattleReduceEnemyHP(const CBdatWrapper &wrapper) { s_members[BattleReduceEnemyHP] = Bdat::getMember(wrapper.data, "ReduceEnemyHP"); }
 
 u32 getBattleReduceEnemyHP(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BattleReduceEnemyHP] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BattleReduceEnemyHP] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -332,8 +324,7 @@ u32 getBattleReduceEnemyHP(const CBdatWrapper &wrapper, u32 id) {
 void initBattleReducePCHP(const CBdatWrapper &wrapper) { s_members[BattleReducePCHP] = Bdat::getMember(wrapper.data, "ReducePCHP"); }
 
 u32 getBattleReducePCHP(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BattleReducePCHP] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BattleReducePCHP] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -343,8 +334,7 @@ u32 getBattleReducePCHP(const CBdatWrapper &wrapper, u32 id) {
 void initRequestItemSetItemID1(const CBdatWrapper &wrapper) { s_members[RequestItemSetItemID1] = Bdat::getMember(wrapper.data, "ItemID1"); }
 
 u32 getRequestItemSetItemID1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestItemSetItemID1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestItemSetItemID1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -354,8 +344,7 @@ u32 getRequestItemSetItemID1(const CBdatWrapper &wrapper, u32 id) {
 void initRequestItemSetItemID2(const CBdatWrapper &wrapper) { s_members[RequestItemSetItemID2] = Bdat::getMember(wrapper.data, "ItemID2"); }
 
 u32 getRequestItemSetItemID2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestItemSetItemID2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestItemSetItemID2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -365,8 +354,7 @@ u32 getRequestItemSetItemID2(const CBdatWrapper &wrapper, u32 id) {
 void initRequestItemSetItemID3(const CBdatWrapper &wrapper) { s_members[RequestItemSetItemID3] = Bdat::getMember(wrapper.data, "ItemID3"); }
 
 u32 getRequestItemSetItemID3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestItemSetItemID3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestItemSetItemID3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -376,8 +364,7 @@ u32 getRequestItemSetItemID3(const CBdatWrapper &wrapper, u32 id) {
 void initRequestItemSetItemID4(const CBdatWrapper &wrapper) { s_members[RequestItemSetItemID4] = Bdat::getMember(wrapper.data, "ItemID4"); }
 
 u32 getRequestItemSetItemID4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestItemSetItemID4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestItemSetItemID4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -387,8 +374,7 @@ u32 getRequestItemSetItemID4(const CBdatWrapper &wrapper, u32 id) {
 void initRequestItemSetItemID5(const CBdatWrapper &wrapper) { s_members[RequestItemSetItemID5] = Bdat::getMember(wrapper.data, "ItemID5"); }
 
 u32 getRequestItemSetItemID5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestItemSetItemID5] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestItemSetItemID5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -398,8 +384,7 @@ u32 getRequestItemSetItemID5(const CBdatWrapper &wrapper, u32 id) {
 void initRequestItemSetCount1(const CBdatWrapper &wrapper) { s_members[RequestItemSetCount1] = Bdat::getMember(wrapper.data, "Count1"); }
 
 u32 getRequestItemSetCount1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestItemSetCount1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestItemSetCount1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -409,8 +394,7 @@ u32 getRequestItemSetCount1(const CBdatWrapper &wrapper, u32 id) {
 void initRequestItemSetCount2(const CBdatWrapper &wrapper) { s_members[RequestItemSetCount2] = Bdat::getMember(wrapper.data, "Count2"); }
 
 u32 getRequestItemSetCount2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestItemSetCount2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestItemSetCount2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -420,8 +404,7 @@ u32 getRequestItemSetCount2(const CBdatWrapper &wrapper, u32 id) {
 void initRequestItemSetCount3(const CBdatWrapper &wrapper) { s_members[RequestItemSetCount3] = Bdat::getMember(wrapper.data, "Count3"); }
 
 u32 getRequestItemSetCount3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestItemSetCount3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestItemSetCount3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -431,8 +414,7 @@ u32 getRequestItemSetCount3(const CBdatWrapper &wrapper, u32 id) {
 void initRequestItemSetCount4(const CBdatWrapper &wrapper) { s_members[RequestItemSetCount4] = Bdat::getMember(wrapper.data, "Count4"); }
 
 u32 getRequestItemSetCount4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestItemSetCount4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestItemSetCount4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -442,8 +424,7 @@ u32 getRequestItemSetCount4(const CBdatWrapper &wrapper, u32 id) {
 void initRequestItemSetCount5(const CBdatWrapper &wrapper) { s_members[RequestItemSetCount5] = Bdat::getMember(wrapper.data, "Count5"); }
 
 u32 getRequestItemSetCount5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestItemSetCount5] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestItemSetCount5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -453,8 +434,7 @@ u32 getRequestItemSetCount5(const CBdatWrapper &wrapper, u32 id) {
 void initRequestItemSetMapID(const CBdatWrapper &wrapper) { s_members[RequestItemSetMapID] = Bdat::getMember(wrapper.data, "MapID"); }
 
 u32 getRequestItemSetMapID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestItemSetMapID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestItemSetMapID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -464,8 +444,7 @@ u32 getRequestItemSetMapID(const CBdatWrapper &wrapper, u32 id) {
 void initRequestItemSetNpcID(const CBdatWrapper &wrapper) { s_members[RequestItemSetNpcID] = Bdat::getMember(wrapper.data, "NpcID"); }
 
 u32 getRequestItemSetNpcID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestItemSetNpcID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestItemSetNpcID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -475,8 +454,7 @@ u32 getRequestItemSetNpcID(const CBdatWrapper &wrapper, u32 id) {
 void initCollectItemID(const CBdatWrapper &wrapper) { s_members[CollectItemID] = Bdat::getMember(wrapper.data, "ItemID"); }
 
 u32 getCollectItemID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CollectItemID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CollectItemID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -486,8 +464,7 @@ u32 getCollectItemID(const CBdatWrapper &wrapper, u32 id) {
 void initCollectCategory(const CBdatWrapper &wrapper) { s_members[CollectCategory] = Bdat::getMember(wrapper.data, "Category"); }
 
 u32 getCollectCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CollectCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CollectCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -497,8 +474,7 @@ u32 getCollectCategory(const CBdatWrapper &wrapper, u32 id) {
 void initCollectCount(const CBdatWrapper &wrapper) { s_members[CollectCount] = Bdat::getMember(wrapper.data, "Count"); }
 
 u32 getCollectCount(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CollectCount] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CollectCount] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -508,8 +484,7 @@ u32 getCollectCount(const CBdatWrapper &wrapper, u32 id) {
 void initCollectDeduct(const CBdatWrapper &wrapper) { s_members[CollectDeduct] = Bdat::getMember(wrapper.data, "Deduct"); }
 
 u32 getCollectDeduct(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CollectDeduct] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CollectDeduct] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -519,8 +494,7 @@ u32 getCollectDeduct(const CBdatWrapper &wrapper, u32 id) {
 void initCollectTresureID(const CBdatWrapper &wrapper) { s_members[CollectTresureID] = Bdat::getMember(wrapper.data, "TresureID"); }
 
 u32 getCollectTresureID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CollectTresureID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CollectTresureID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -530,8 +504,7 @@ u32 getCollectTresureID(const CBdatWrapper &wrapper, u32 id) {
 void initCollectEnemyID(const CBdatWrapper &wrapper) { s_members[CollectEnemyID] = Bdat::getMember(wrapper.data, "EnemyID"); }
 
 u32 getCollectEnemyID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CollectEnemyID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CollectEnemyID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -541,8 +514,7 @@ u32 getCollectEnemyID(const CBdatWrapper &wrapper, u32 id) {
 void initCollectMapID(const CBdatWrapper &wrapper) { s_members[CollectMapID] = Bdat::getMember(wrapper.data, "MapID"); }
 
 u32 getCollectMapID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CollectMapID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CollectMapID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -552,8 +524,7 @@ u32 getCollectMapID(const CBdatWrapper &wrapper, u32 id) {
 void initCollectNpcID(const CBdatWrapper &wrapper) { s_members[CollectNpcID] = Bdat::getMember(wrapper.data, "NpcID"); }
 
 u32 getCollectNpcID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CollectNpcID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CollectNpcID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -583,8 +554,7 @@ u32 getUseCategory(const CBdatWrapper &wrapper, u32 id) {
 void initUseItemNumber(const CBdatWrapper &wrapper) { s_members[UseItemNumber] = Bdat::getMember(wrapper.data, "ItemNumber"); }
 
 u32 getUseItemNumber(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[UseItemNumber] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[UseItemNumber] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -594,8 +564,7 @@ u32 getUseItemNumber(const CBdatWrapper &wrapper, u32 id) {
 void initUsePartyInPC(const CBdatWrapper &wrapper) { s_members[UsePartyInPC] = Bdat::getMember(wrapper.data, "PartyInPC"); }
 
 u32 getUsePartyInPC(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[UsePartyInPC] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[UsePartyInPC] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -615,8 +584,7 @@ u32 getUsebladeID(const CBdatWrapper &wrapper, u32 id) {
 void initReachCategory(const CBdatWrapper &wrapper) { s_members[ReachCategory] = Bdat::getMember(wrapper.data, "Category"); }
 
 u32 getReachCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ReachCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ReachCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -636,8 +604,7 @@ u32 getReachMapID(const CBdatWrapper &wrapper, u32 id) {
 void initReachPlaceID(const CBdatWrapper &wrapper) { s_members[ReachPlaceID] = Bdat::getMember(wrapper.data, "PlaceID"); }
 
 u32 getReachPlaceID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ReachPlaceID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ReachPlaceID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -667,8 +634,7 @@ u32 getTalkNpcID(const CBdatWrapper &wrapper, u32 id) {
 void initTalkDummyGroup(const CBdatWrapper &wrapper) { s_members[TalkDummyGroup] = Bdat::getMember(wrapper.data, "DummyGroup"); }
 
 u32 getTalkDummyGroup(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TalkDummyGroup] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TalkDummyGroup] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -678,8 +644,7 @@ u32 getTalkDummyGroup(const CBdatWrapper &wrapper, u32 id) {
 void initDummyGroupNpcID1(const CBdatWrapper &wrapper) { s_members[DummyGroupNpcID1] = Bdat::getMember(wrapper.data, "NpcID1"); }
 
 u32 getDummyGroupNpcID1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[DummyGroupNpcID1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[DummyGroupNpcID1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -689,8 +654,7 @@ u32 getDummyGroupNpcID1(const CBdatWrapper &wrapper, u32 id) {
 void initDummyGroupNpcID2(const CBdatWrapper &wrapper) { s_members[DummyGroupNpcID2] = Bdat::getMember(wrapper.data, "NpcID2"); }
 
 u32 getDummyGroupNpcID2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[DummyGroupNpcID2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[DummyGroupNpcID2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -700,8 +664,7 @@ u32 getDummyGroupNpcID2(const CBdatWrapper &wrapper, u32 id) {
 void initDummyGroupNpcID3(const CBdatWrapper &wrapper) { s_members[DummyGroupNpcID3] = Bdat::getMember(wrapper.data, "NpcID3"); }
 
 u32 getDummyGroupNpcID3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[DummyGroupNpcID3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[DummyGroupNpcID3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -711,8 +674,7 @@ u32 getDummyGroupNpcID3(const CBdatWrapper &wrapper, u32 id) {
 void initDummyGroupNpcID4(const CBdatWrapper &wrapper) { s_members[DummyGroupNpcID4] = Bdat::getMember(wrapper.data, "NpcID4"); }
 
 u32 getDummyGroupNpcID4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[DummyGroupNpcID4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[DummyGroupNpcID4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -722,8 +684,7 @@ u32 getDummyGroupNpcID4(const CBdatWrapper &wrapper, u32 id) {
 void initDummyGroupNpcID5(const CBdatWrapper &wrapper) { s_members[DummyGroupNpcID5] = Bdat::getMember(wrapper.data, "NpcID5"); }
 
 u32 getDummyGroupNpcID5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[DummyGroupNpcID5] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[DummyGroupNpcID5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -733,8 +694,7 @@ u32 getDummyGroupNpcID5(const CBdatWrapper &wrapper, u32 id) {
 void initDummyGroupNpcID6(const CBdatWrapper &wrapper) { s_members[DummyGroupNpcID6] = Bdat::getMember(wrapper.data, "NpcID6"); }
 
 u32 getDummyGroupNpcID6(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[DummyGroupNpcID6] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[DummyGroupNpcID6] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -744,8 +704,7 @@ u32 getDummyGroupNpcID6(const CBdatWrapper &wrapper, u32 id) {
 void initDummyGroupNpcID7(const CBdatWrapper &wrapper) { s_members[DummyGroupNpcID7] = Bdat::getMember(wrapper.data, "NpcID7"); }
 
 u32 getDummyGroupNpcID7(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[DummyGroupNpcID7] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[DummyGroupNpcID7] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -755,8 +714,7 @@ u32 getDummyGroupNpcID7(const CBdatWrapper &wrapper, u32 id) {
 void initDummyGroupNpcID8(const CBdatWrapper &wrapper) { s_members[DummyGroupNpcID8] = Bdat::getMember(wrapper.data, "NpcID8"); }
 
 u32 getDummyGroupNpcID8(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[DummyGroupNpcID8] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[DummyGroupNpcID8] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -766,8 +724,7 @@ u32 getDummyGroupNpcID8(const CBdatWrapper &wrapper, u32 id) {
 void initGimmickMapID(const CBdatWrapper &wrapper) { s_members[GimmickMapID] = Bdat::getMember(wrapper.data, "MapID"); }
 
 u32 getGimmickMapID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[GimmickMapID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[GimmickMapID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -777,21 +734,17 @@ u32 getGimmickMapID(const CBdatWrapper &wrapper, u32 id) {
 void initGimmickDoorGimmickID(const CBdatWrapper &wrapper) { s_members[GimmickDoorGimmickID] = Bdat::getMember(wrapper.data, "DoorGimmickID"); }
 
 u32 getGimmickDoorGimmickID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[GimmickDoorGimmickID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[GimmickDoorGimmickID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[GimmickDoorGimmickID], id, 2).valueU16;
 }
 
-void initGimmickElevatorGimmickID(const CBdatWrapper &wrapper) {
-  s_members[GimmickElevatorGimmickID] = Bdat::getMember(wrapper.data, "ElevatorGimmickID");
-}
+void initGimmickElevatorGimmickID(const CBdatWrapper &wrapper) { s_members[GimmickElevatorGimmickID] = Bdat::getMember(wrapper.data, "ElevatorGimmickID"); }
 
 u32 getGimmickElevatorGimmickID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[GimmickElevatorGimmickID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[GimmickElevatorGimmickID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -801,8 +754,7 @@ u32 getGimmickElevatorGimmickID(const CBdatWrapper &wrapper, u32 id) {
 void initGimmickJumpGimmickID(const CBdatWrapper &wrapper) { s_members[GimmickJumpGimmickID] = Bdat::getMember(wrapper.data, "JumpGimmickID"); }
 
 u32 getGimmickJumpGimmickID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[GimmickJumpGimmickID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[GimmickJumpGimmickID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -812,8 +764,7 @@ u32 getGimmickJumpGimmickID(const CBdatWrapper &wrapper, u32 id) {
 void initGimmickMapGimmickID(const CBdatWrapper &wrapper) { s_members[GimmickMapGimmickID] = Bdat::getMember(wrapper.data, "MapGimmickID"); }
 
 u32 getGimmickMapGimmickID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[GimmickMapGimmickID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[GimmickMapGimmickID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -823,8 +774,7 @@ u32 getGimmickMapGimmickID(const CBdatWrapper &wrapper, u32 id) {
 void initGimmickMapGmkIconOff(const CBdatWrapper &wrapper) { s_members[GimmickMapGmkIconOff] = Bdat::getMember(wrapper.data, "MapGmkIconOff"); }
 
 u32 getGimmickMapGmkIconOff(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[GimmickMapGmkIconOff] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[GimmickMapGmkIconOff] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -834,8 +784,7 @@ u32 getGimmickMapGmkIconOff(const CBdatWrapper &wrapper, u32 id) {
 void initGimmickWarpGimmickID(const CBdatWrapper &wrapper) { s_members[GimmickWarpGimmickID] = Bdat::getMember(wrapper.data, "WarpGimmickID"); }
 
 u32 getGimmickWarpGimmickID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[GimmickWarpGimmickID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[GimmickWarpGimmickID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -845,8 +794,7 @@ u32 getGimmickWarpGimmickID(const CBdatWrapper &wrapper, u32 id) {
 void initGimmickSalvagePointID(const CBdatWrapper &wrapper) { s_members[GimmickSalvagePointID] = Bdat::getMember(wrapper.data, "SalvagePointID"); }
 
 u32 getGimmickSalvagePointID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[GimmickSalvagePointID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[GimmickSalvagePointID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -856,8 +804,7 @@ u32 getGimmickSalvagePointID(const CBdatWrapper &wrapper, u32 id) {
 void initGimmickTboxPopID(const CBdatWrapper &wrapper) { s_members[GimmickTboxPopID] = Bdat::getMember(wrapper.data, "TboxPopID"); }
 
 u32 getGimmickTboxPopID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[GimmickTboxPopID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[GimmickTboxPopID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -867,21 +814,17 @@ u32 getGimmickTboxPopID(const CBdatWrapper &wrapper, u32 id) {
 void initGimmickEndCheck(const CBdatWrapper &wrapper) { s_members[GimmickEndCheck] = Bdat::getMember(wrapper.data, "EndCheck"); }
 
 u32 getGimmickEndCheck(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[GimmickEndCheck] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[GimmickEndCheck] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[GimmickEndCheck], id, 1).valueU8;
 }
 
-void initFieldSkillCountFieldSkillID(const CBdatWrapper &wrapper) {
-  s_members[FieldSkillCountFieldSkillID] = Bdat::getMember(wrapper.data, "FieldSkillID");
-}
+void initFieldSkillCountFieldSkillID(const CBdatWrapper &wrapper) { s_members[FieldSkillCountFieldSkillID] = Bdat::getMember(wrapper.data, "FieldSkillID"); }
 
 u32 getFieldSkillCountFieldSkillID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FieldSkillCountFieldSkillID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FieldSkillCountFieldSkillID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -891,21 +834,17 @@ u32 getFieldSkillCountFieldSkillID(const CBdatWrapper &wrapper, u32 id) {
 void initFieldSkillCountCount(const CBdatWrapper &wrapper) { s_members[FieldSkillCountCount] = Bdat::getMember(wrapper.data, "Count"); }
 
 u32 getFieldSkillCountCount(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FieldSkillCountCount] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FieldSkillCountCount] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FieldSkillCountCount], id, 2).valueU16;
 }
 
-void initRequestBladeRequestCategory(const CBdatWrapper &wrapper) {
-  s_members[RequestBladeRequestCategory] = Bdat::getMember(wrapper.data, "RequestCategory");
-}
+void initRequestBladeRequestCategory(const CBdatWrapper &wrapper) { s_members[RequestBladeRequestCategory] = Bdat::getMember(wrapper.data, "RequestCategory"); }
 
 u32 getRequestBladeRequestCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestBladeRequestCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestBladeRequestCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -915,21 +854,17 @@ u32 getRequestBladeRequestCategory(const CBdatWrapper &wrapper, u32 id) {
 void initRequestBladeRequestAtr(const CBdatWrapper &wrapper) { s_members[RequestBladeRequestAtr] = Bdat::getMember(wrapper.data, "RequestAtr"); }
 
 u32 getRequestBladeRequestAtr(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestBladeRequestAtr] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestBladeRequestAtr] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RequestBladeRequestAtr], id, 1).valueU8;
 }
 
-void initRequestBladeRequestPerformance(const CBdatWrapper &wrapper) {
-  s_members[RequestBladeRequestPerformance] = Bdat::getMember(wrapper.data, "RequestPerformance");
-}
+void initRequestBladeRequestPerformance(const CBdatWrapper &wrapper) { s_members[RequestBladeRequestPerformance] = Bdat::getMember(wrapper.data, "RequestPerformance"); }
 
 u32 getRequestBladeRequestPerformance(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestBladeRequestPerformance] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestBladeRequestPerformance] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -939,21 +874,17 @@ u32 getRequestBladeRequestPerformance(const CBdatWrapper &wrapper, u32 id) {
 void initRequestBladeRequestRace(const CBdatWrapper &wrapper) { s_members[RequestBladeRequestRace] = Bdat::getMember(wrapper.data, "RequestRace"); }
 
 u32 getRequestBladeRequestRace(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestBladeRequestRace] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestBladeRequestRace] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RequestBladeRequestRace], id, 2).valueU16;
 }
 
-void initRequestBladeRequestGender(const CBdatWrapper &wrapper) {
-  s_members[RequestBladeRequestGender] = Bdat::getMember(wrapper.data, "RequestGender");
-}
+void initRequestBladeRequestGender(const CBdatWrapper &wrapper) { s_members[RequestBladeRequestGender] = Bdat::getMember(wrapper.data, "RequestGender"); }
 
 u32 getRequestBladeRequestGender(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestBladeRequestGender] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestBladeRequestGender] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -963,60 +894,47 @@ u32 getRequestBladeRequestGender(const CBdatWrapper &wrapper, u32 id) {
 void initRequestBladeRequestArts(const CBdatWrapper &wrapper) { s_members[RequestBladeRequestArts] = Bdat::getMember(wrapper.data, "RequestArts"); }
 
 u32 getRequestBladeRequestArts(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestBladeRequestArts] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestBladeRequestArts] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RequestBladeRequestArts], id, 2).valueU16;
 }
 
-void initRequestBladeRequestArtsLevel(const CBdatWrapper &wrapper) {
-  s_members[RequestBladeRequestArtsLevel] = Bdat::getMember(wrapper.data, "RequestArtsLevel");
-}
+void initRequestBladeRequestArtsLevel(const CBdatWrapper &wrapper) { s_members[RequestBladeRequestArtsLevel] = Bdat::getMember(wrapper.data, "RequestArtsLevel"); }
 
 u32 getRequestBladeRequestArtsLevel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestBladeRequestArtsLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestBladeRequestArtsLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RequestBladeRequestArtsLevel], id, 1).valueU8;
 }
 
-void initRequestBladeRequestFSkill(const CBdatWrapper &wrapper) {
-  s_members[RequestBladeRequestFSkill] = Bdat::getMember(wrapper.data, "RequestFSkill");
-}
+void initRequestBladeRequestFSkill(const CBdatWrapper &wrapper) { s_members[RequestBladeRequestFSkill] = Bdat::getMember(wrapper.data, "RequestFSkill"); }
 
 u32 getRequestBladeRequestFSkill(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestBladeRequestFSkill] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestBladeRequestFSkill] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RequestBladeRequestFSkill], id, 2).valueU16;
 }
 
-void initRequestBladeRequestFSLevel(const CBdatWrapper &wrapper) {
-  s_members[RequestBladeRequestFSLevel] = Bdat::getMember(wrapper.data, "RequestFSLevel");
-}
+void initRequestBladeRequestFSLevel(const CBdatWrapper &wrapper) { s_members[RequestBladeRequestFSLevel] = Bdat::getMember(wrapper.data, "RequestFSLevel"); }
 
 u32 getRequestBladeRequestFSLevel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestBladeRequestFSLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestBladeRequestFSLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RequestBladeRequestFSLevel], id, 1).valueU8;
 }
 
-void initRequestBladeRequestNumber(const CBdatWrapper &wrapper) {
-  s_members[RequestBladeRequestNumber] = Bdat::getMember(wrapper.data, "RequestNumber");
-}
+void initRequestBladeRequestNumber(const CBdatWrapper &wrapper) { s_members[RequestBladeRequestNumber] = Bdat::getMember(wrapper.data, "RequestNumber"); }
 
 u32 getRequestBladeRequestNumber(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RequestBladeRequestNumber] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RequestBladeRequestNumber] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1026,8 +944,7 @@ u32 getRequestBladeRequestNumber(const CBdatWrapper &wrapper, u32 id) {
 void initConditionConditionID(const CBdatWrapper &wrapper) { s_members[ConditionConditionID] = Bdat::getMember(wrapper.data, "ConditionID"); }
 
 u32 getConditionConditionID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionConditionID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionConditionID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1037,8 +954,7 @@ u32 getConditionConditionID(const CBdatWrapper &wrapper, u32 id) {
 void initConditionMapID(const CBdatWrapper &wrapper) { s_members[ConditionMapID] = Bdat::getMember(wrapper.data, "MapID"); }
 
 u32 getConditionMapID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionMapID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionMapID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1048,8 +964,7 @@ u32 getConditionMapID(const CBdatWrapper &wrapper, u32 id) {
 void initConditionNpcID(const CBdatWrapper &wrapper) { s_members[ConditionNpcID] = Bdat::getMember(wrapper.data, "NpcID"); }
 
 u32 getConditionNpcID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionNpcID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionNpcID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1059,8 +974,7 @@ u32 getConditionNpcID(const CBdatWrapper &wrapper, u32 id) {
 void initAchievementStatsID(const CBdatWrapper &wrapper) { s_members[AchievementStatsID] = Bdat::getMember(wrapper.data, "StatsID"); }
 
 u32 getAchievementStatsID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[AchievementStatsID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[AchievementStatsID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1070,8 +984,7 @@ u32 getAchievementStatsID(const CBdatWrapper &wrapper, u32 id) {
 void initAchievementCount(const CBdatWrapper &wrapper) { s_members[AchievementCount] = Bdat::getMember(wrapper.data, "Count"); }
 
 u32 getAchievementCount(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[AchievementCount] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[AchievementCount] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1081,8 +994,7 @@ u32 getAchievementCount(const CBdatWrapper &wrapper, u32 id) {
 void initAchievementDebugName(const CBdatWrapper &wrapper) { s_members[AchievementDebugName] = Bdat::getMember(wrapper.data, "DebugName"); }
 
 const char *getAchievementDebugName(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[AchievementDebugName] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[AchievementDebugName] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return nullptr;
   }
 
@@ -1092,8 +1004,7 @@ const char *getAchievementDebugName(const CBdatWrapper &wrapper, u32 id) {
 void initHintsMainChar1(const CBdatWrapper &wrapper) { s_members[HintsMainChar1] = Bdat::getMember(wrapper.data, "MainChar1"); }
 
 u32 getHintsMainChar1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[HintsMainChar1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[HintsMainChar1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1103,8 +1014,7 @@ u32 getHintsMainChar1(const CBdatWrapper &wrapper, u32 id) {
 void initHintsMainChar2(const CBdatWrapper &wrapper) { s_members[HintsMainChar2] = Bdat::getMember(wrapper.data, "MainChar2"); }
 
 u32 getHintsMainChar2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[HintsMainChar2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[HintsMainChar2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1114,8 +1024,7 @@ u32 getHintsMainChar2(const CBdatWrapper &wrapper, u32 id) {
 void initHintsMainChar3(const CBdatWrapper &wrapper) { s_members[HintsMainChar3] = Bdat::getMember(wrapper.data, "MainChar3"); }
 
 u32 getHintsMainChar3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[HintsMainChar3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[HintsMainChar3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1125,8 +1034,7 @@ u32 getHintsMainChar3(const CBdatWrapper &wrapper, u32 id) {
 void initHintsMainChar4(const CBdatWrapper &wrapper) { s_members[HintsMainChar4] = Bdat::getMember(wrapper.data, "MainChar4"); }
 
 u32 getHintsMainChar4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[HintsMainChar4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[HintsMainChar4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1136,8 +1044,7 @@ u32 getHintsMainChar4(const CBdatWrapper &wrapper, u32 id) {
 void initHintsFSkillID1(const CBdatWrapper &wrapper) { s_members[HintsFSkillID1] = Bdat::getMember(wrapper.data, "FSkillID1"); }
 
 u32 getHintsFSkillID1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[HintsFSkillID1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[HintsFSkillID1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1147,8 +1054,7 @@ u32 getHintsFSkillID1(const CBdatWrapper &wrapper, u32 id) {
 void initHintsFSkillID2(const CBdatWrapper &wrapper) { s_members[HintsFSkillID2] = Bdat::getMember(wrapper.data, "FSkillID2"); }
 
 u32 getHintsFSkillID2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[HintsFSkillID2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[HintsFSkillID2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1158,8 +1064,7 @@ u32 getHintsFSkillID2(const CBdatWrapper &wrapper, u32 id) {
 void initHintsFSkillID3(const CBdatWrapper &wrapper) { s_members[HintsFSkillID3] = Bdat::getMember(wrapper.data, "FSkillID3"); }
 
 u32 getHintsFSkillID3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[HintsFSkillID3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[HintsFSkillID3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1169,8 +1074,7 @@ u32 getHintsFSkillID3(const CBdatWrapper &wrapper, u32 id) {
 void initHintsClientNpc(const CBdatWrapper &wrapper) { s_members[HintsClientNpc] = Bdat::getMember(wrapper.data, "ClientNpc"); }
 
 u32 getHintsClientNpc(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[HintsClientNpc] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[HintsClientNpc] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1190,8 +1094,7 @@ u32 getHintsZoneID(const CBdatWrapper &wrapper, u32 id) {
 void initEventEventID(const CBdatWrapper &wrapper) { s_members[EventEventID] = Bdat::getMember(wrapper.data, "EventID"); }
 
 u32 getEventEventID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[EventEventID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[EventEventID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1241,8 +1144,7 @@ u32 getRewardCoin(const CBdatWrapper &wrapper, u32 id) {
 void initRewardDevelopZone(const CBdatWrapper &wrapper) { s_members[RewardDevelopZone] = Bdat::getMember(wrapper.data, "DevelopZone"); }
 
 u32 getRewardDevelopZone(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardDevelopZone] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardDevelopZone] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1252,8 +1154,7 @@ u32 getRewardDevelopZone(const CBdatWrapper &wrapper, u32 id) {
 void initRewardDevelopPoint(const CBdatWrapper &wrapper) { s_members[RewardDevelopPoint] = Bdat::getMember(wrapper.data, "DevelopPoint"); }
 
 u32 getRewardDevelopPoint(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardDevelopPoint] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardDevelopPoint] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1263,21 +1164,17 @@ u32 getRewardDevelopPoint(const CBdatWrapper &wrapper, u32 id) {
 void initRewardTrustPoint(const CBdatWrapper &wrapper) { s_members[RewardTrustPoint] = Bdat::getMember(wrapper.data, "TrustPoint"); }
 
 u32 getRewardTrustPoint(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardTrustPoint] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardTrustPoint] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RewardTrustPoint], id, 2).valueU16;
 }
 
-void initRewardMercenariesPoint(const CBdatWrapper &wrapper) {
-  s_members[RewardMercenariesPoint] = Bdat::getMember(wrapper.data, "MercenariesPoint");
-}
+void initRewardMercenariesPoint(const CBdatWrapper &wrapper) { s_members[RewardMercenariesPoint] = Bdat::getMember(wrapper.data, "MercenariesPoint"); }
 
 u32 getRewardMercenariesPoint(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardMercenariesPoint] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardMercenariesPoint] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1287,8 +1184,7 @@ u32 getRewardMercenariesPoint(const CBdatWrapper &wrapper, u32 id) {
 void initRewardIdeaCategory(const CBdatWrapper &wrapper) { s_members[RewardIdeaCategory] = Bdat::getMember(wrapper.data, "IdeaCategory"); }
 
 u32 getRewardIdeaCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardIdeaCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardIdeaCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1298,8 +1194,7 @@ u32 getRewardIdeaCategory(const CBdatWrapper &wrapper, u32 id) {
 void initRewardIdeaValue(const CBdatWrapper &wrapper) { s_members[RewardIdeaValue] = Bdat::getMember(wrapper.data, "IdeaValue"); }
 
 u32 getRewardIdeaValue(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardIdeaValue] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardIdeaValue] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1309,8 +1204,7 @@ u32 getRewardIdeaValue(const CBdatWrapper &wrapper, u32 id) {
 void initRewardItemID1(const CBdatWrapper &wrapper) { s_members[RewardItemID1] = Bdat::getMember(wrapper.data, "ItemID1"); }
 
 u32 getRewardItemID1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardItemID1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardItemID1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1320,8 +1214,7 @@ u32 getRewardItemID1(const CBdatWrapper &wrapper, u32 id) {
 void initRewardItemNumber1(const CBdatWrapper &wrapper) { s_members[RewardItemNumber1] = Bdat::getMember(wrapper.data, "ItemNumber1"); }
 
 u32 getRewardItemNumber1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardItemNumber1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardItemNumber1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1331,8 +1224,7 @@ u32 getRewardItemNumber1(const CBdatWrapper &wrapper, u32 id) {
 void initRewardItemID2(const CBdatWrapper &wrapper) { s_members[RewardItemID2] = Bdat::getMember(wrapper.data, "ItemID2"); }
 
 u32 getRewardItemID2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardItemID2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardItemID2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1342,8 +1234,7 @@ u32 getRewardItemID2(const CBdatWrapper &wrapper, u32 id) {
 void initRewardItemNumber2(const CBdatWrapper &wrapper) { s_members[RewardItemNumber2] = Bdat::getMember(wrapper.data, "ItemNumber2"); }
 
 u32 getRewardItemNumber2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardItemNumber2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardItemNumber2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1353,8 +1244,7 @@ u32 getRewardItemNumber2(const CBdatWrapper &wrapper, u32 id) {
 void initRewardItemID3(const CBdatWrapper &wrapper) { s_members[RewardItemID3] = Bdat::getMember(wrapper.data, "ItemID3"); }
 
 u32 getRewardItemID3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardItemID3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardItemID3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1364,8 +1254,7 @@ u32 getRewardItemID3(const CBdatWrapper &wrapper, u32 id) {
 void initRewardItemNumber3(const CBdatWrapper &wrapper) { s_members[RewardItemNumber3] = Bdat::getMember(wrapper.data, "ItemNumber3"); }
 
 u32 getRewardItemNumber3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardItemNumber3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardItemNumber3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1375,8 +1264,7 @@ u32 getRewardItemNumber3(const CBdatWrapper &wrapper, u32 id) {
 void initRewardItemID4(const CBdatWrapper &wrapper) { s_members[RewardItemID4] = Bdat::getMember(wrapper.data, "ItemID4"); }
 
 u32 getRewardItemID4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardItemID4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardItemID4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1386,99 +1274,77 @@ u32 getRewardItemID4(const CBdatWrapper &wrapper, u32 id) {
 void initRewardItemNumber4(const CBdatWrapper &wrapper) { s_members[RewardItemNumber4] = Bdat::getMember(wrapper.data, "ItemNumber4"); }
 
 u32 getRewardItemNumber4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[RewardItemNumber4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[RewardItemNumber4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[RewardItemNumber4], id, 1).valueU8;
 }
 
-void initFLD_AchievementSetCategory(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementSetCategory] = Bdat::getMember(wrapper.data, "Category");
-}
+void initFLD_AchievementSetCategory(const CBdatWrapper &wrapper) { s_members[FLD_AchievementSetCategory] = Bdat::getMember(wrapper.data, "Category"); }
 
 u32 getFLD_AchievementSetCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementSetCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementSetCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_AchievementSetCategory], id, 1).valueU8;
 }
 
-void initFLD_AchievementSetAbilityLevel(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementSetAbilityLevel] = Bdat::getMember(wrapper.data, "AbilityLevel");
-}
+void initFLD_AchievementSetAbilityLevel(const CBdatWrapper &wrapper) { s_members[FLD_AchievementSetAbilityLevel] = Bdat::getMember(wrapper.data, "AbilityLevel"); }
 
 u32 getFLD_AchievementSetAbilityLevel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementSetAbilityLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementSetAbilityLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_AchievementSetAbilityLevel], id, 1).valueU8;
 }
 
-void initFLD_AchievementSetAchievementID1(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementSetAchievementID1] = Bdat::getMember(wrapper.data, "AchievementID1");
-}
+void initFLD_AchievementSetAchievementID1(const CBdatWrapper &wrapper) { s_members[FLD_AchievementSetAchievementID1] = Bdat::getMember(wrapper.data, "AchievementID1"); }
 
 u32 getFLD_AchievementSetAchievementID1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementSetAchievementID1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementSetAchievementID1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_AchievementSetAchievementID1], id, 2).valueU16;
 }
 
-void initFLD_AchievementSetAchievementID2(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementSetAchievementID2] = Bdat::getMember(wrapper.data, "AchievementID2");
-}
+void initFLD_AchievementSetAchievementID2(const CBdatWrapper &wrapper) { s_members[FLD_AchievementSetAchievementID2] = Bdat::getMember(wrapper.data, "AchievementID2"); }
 
 u32 getFLD_AchievementSetAchievementID2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementSetAchievementID2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementSetAchievementID2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_AchievementSetAchievementID2], id, 2).valueU16;
 }
 
-void initFLD_AchievementSetAchievementID3(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementSetAchievementID3] = Bdat::getMember(wrapper.data, "AchievementID3");
-}
+void initFLD_AchievementSetAchievementID3(const CBdatWrapper &wrapper) { s_members[FLD_AchievementSetAchievementID3] = Bdat::getMember(wrapper.data, "AchievementID3"); }
 
 u32 getFLD_AchievementSetAchievementID3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementSetAchievementID3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementSetAchievementID3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_AchievementSetAchievementID3], id, 2).valueU16;
 }
 
-void initFLD_AchievementSetAchievementID4(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementSetAchievementID4] = Bdat::getMember(wrapper.data, "AchievementID4");
-}
+void initFLD_AchievementSetAchievementID4(const CBdatWrapper &wrapper) { s_members[FLD_AchievementSetAchievementID4] = Bdat::getMember(wrapper.data, "AchievementID4"); }
 
 u32 getFLD_AchievementSetAchievementID4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementSetAchievementID4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementSetAchievementID4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_AchievementSetAchievementID4], id, 2).valueU16;
 }
 
-void initFLD_AchievementSetAchievementID5(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementSetAchievementID5] = Bdat::getMember(wrapper.data, "AchievementID5");
-}
+void initFLD_AchievementSetAchievementID5(const CBdatWrapper &wrapper) { s_members[FLD_AchievementSetAchievementID5] = Bdat::getMember(wrapper.data, "AchievementID5"); }
 
 u32 getFLD_AchievementSetAchievementID5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementSetAchievementID5] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementSetAchievementID5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1488,21 +1354,17 @@ u32 getFLD_AchievementSetAchievementID5(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_AchievementListTitle(const CBdatWrapper &wrapper) { s_members[FLD_AchievementListTitle] = Bdat::getMember(wrapper.data, "Title"); }
 
 u32 getFLD_AchievementListTitle(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementListTitle] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementListTitle] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_AchievementListTitle], id, 2).valueU16;
 }
 
-void initFLD_AchievementListCategory(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementListCategory] = Bdat::getMember(wrapper.data, "Category");
-}
+void initFLD_AchievementListCategory(const CBdatWrapper &wrapper) { s_members[FLD_AchievementListCategory] = Bdat::getMember(wrapper.data, "Category"); }
 
 u32 getFLD_AchievementListCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementListCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementListCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1512,8 +1374,7 @@ u32 getFLD_AchievementListCategory(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_AchievementListIcon(const CBdatWrapper &wrapper) { s_members[FLD_AchievementListIcon] = Bdat::getMember(wrapper.data, "Icon"); }
 
 u32 getFLD_AchievementListIcon(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementListIcon] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementListIcon] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1523,73 +1384,57 @@ u32 getFLD_AchievementListIcon(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_AchievementListTask(const CBdatWrapper &wrapper) { s_members[FLD_AchievementListTask] = Bdat::getMember(wrapper.data, "Task"); }
 
 u32 getFLD_AchievementListTask(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementListTask] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementListTask] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_AchievementListTask], id, 2).valueU16;
 }
 
-void initFLD_AchievementListVoiceCategory(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementListVoiceCategory] = Bdat::getMember(wrapper.data, "VoiceCategory");
-}
+void initFLD_AchievementListVoiceCategory(const CBdatWrapper &wrapper) { s_members[FLD_AchievementListVoiceCategory] = Bdat::getMember(wrapper.data, "VoiceCategory"); }
 
 u32 getFLD_AchievementListVoiceCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementListVoiceCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementListVoiceCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_AchievementListVoiceCategory], id, 2).valueU16;
 }
 
-void initFLD_AchievementListAfterVoice(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementListAfterVoice] = Bdat::getMember(wrapper.data, "AfterVoice");
-}
+void initFLD_AchievementListAfterVoice(const CBdatWrapper &wrapper) { s_members[FLD_AchievementListAfterVoice] = Bdat::getMember(wrapper.data, "AfterVoice"); }
 
 u32 getFLD_AchievementListAfterVoice(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementListAfterVoice] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementListAfterVoice] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_AchievementListAfterVoice], id, 2).valueU16;
 }
 
-void initFLD_AchievementListDifficulty(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementListDifficulty] = Bdat::getMember(wrapper.data, "Difficulty");
-}
+void initFLD_AchievementListDifficulty(const CBdatWrapper &wrapper) { s_members[FLD_AchievementListDifficulty] = Bdat::getMember(wrapper.data, "Difficulty"); }
 
 u32 getFLD_AchievementListDifficulty(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementListDifficulty] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementListDifficulty] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_AchievementListDifficulty], id, 1).valueU8;
 }
 
-void initFLD_AchievementListIdeaCategory(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementListIdeaCategory] = Bdat::getMember(wrapper.data, "IdeaCategory");
-}
+void initFLD_AchievementListIdeaCategory(const CBdatWrapper &wrapper) { s_members[FLD_AchievementListIdeaCategory] = Bdat::getMember(wrapper.data, "IdeaCategory"); }
 
 u32 getFLD_AchievementListIdeaCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementListIdeaCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementListIdeaCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_AchievementListIdeaCategory], id, 1).valueU8;
 }
 
-void initFLD_AchievementListIdeaValue(const CBdatWrapper &wrapper) {
-  s_members[FLD_AchievementListIdeaValue] = Bdat::getMember(wrapper.data, "IdeaValue");
-}
+void initFLD_AchievementListIdeaValue(const CBdatWrapper &wrapper) { s_members[FLD_AchievementListIdeaValue] = Bdat::getMember(wrapper.data, "IdeaValue"); }
 
 u32 getFLD_AchievementListIdeaValue(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_AchievementListIdeaValue] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_AchievementListIdeaValue] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1599,73 +1444,57 @@ u32 getFLD_AchievementListIdeaValue(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_MercenariesConfigValue(const CBdatWrapper &wrapper) { s_members[FLD_MercenariesConfigValue] = Bdat::getMember(wrapper.data, "Value"); }
 
 u32 getFLD_MercenariesConfigValue(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_MercenariesConfigValue] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_MercenariesConfigValue] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_MercenariesConfigValue], id, 3).valueU32;
 }
 
-void initFLD_MercenariesMissionQuestID(const CBdatWrapper &wrapper) {
-  s_members[FLD_MercenariesMissionQuestID] = Bdat::getMember(wrapper.data, "QuestID");
-}
+void initFLD_MercenariesMissionQuestID(const CBdatWrapper &wrapper) { s_members[FLD_MercenariesMissionQuestID] = Bdat::getMember(wrapper.data, "QuestID"); }
 
 u32 getFLD_MercenariesMissionQuestID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_MercenariesMissionQuestID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_MercenariesMissionQuestID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_MercenariesMissionQuestID], id, 2).valueU16;
 }
 
-void initFLD_MercenariesMissionCategory(const CBdatWrapper &wrapper) {
-  s_members[FLD_MercenariesMissionCategory] = Bdat::getMember(wrapper.data, "Category");
-}
+void initFLD_MercenariesMissionCategory(const CBdatWrapper &wrapper) { s_members[FLD_MercenariesMissionCategory] = Bdat::getMember(wrapper.data, "Category"); }
 
 u32 getFLD_MercenariesMissionCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_MercenariesMissionCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_MercenariesMissionCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_MercenariesMissionCategory], id, 1).valueU8;
 }
 
-void initFLD_MercenariesMissionRequestPerformance(const CBdatWrapper &wrapper) {
-  s_members[FLD_MercenariesMissionRequestPerformance] = Bdat::getMember(wrapper.data, "RequestPerformance");
-}
+void initFLD_MercenariesMissionRequestPerformance(const CBdatWrapper &wrapper) { s_members[FLD_MercenariesMissionRequestPerformance] = Bdat::getMember(wrapper.data, "RequestPerformance"); }
 
 u32 getFLD_MercenariesMissionRequestPerformance(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_MercenariesMissionRequestPerformance] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_MercenariesMissionRequestPerformance] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_MercenariesMissionRequestPerformance], id, 2).valueU16;
 }
 
-void initFLD_MercenariesMissionRepeatable(const CBdatWrapper &wrapper) {
-  s_members[FLD_MercenariesMissionRepeatable] = Bdat::getMember(wrapper.data, "Repeatable");
-}
+void initFLD_MercenariesMissionRepeatable(const CBdatWrapper &wrapper) { s_members[FLD_MercenariesMissionRepeatable] = Bdat::getMember(wrapper.data, "Repeatable"); }
 
 u32 getFLD_MercenariesMissionRepeatable(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_MercenariesMissionRepeatable] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_MercenariesMissionRepeatable] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_MercenariesMissionRepeatable], id, 1).valueU8;
 }
 
-void initFLD_MercenariesMissionAutoStart(const CBdatWrapper &wrapper) {
-  s_members[FLD_MercenariesMissionAutoStart] = Bdat::getMember(wrapper.data, "AutoStart");
-}
+void initFLD_MercenariesMissionAutoStart(const CBdatWrapper &wrapper) { s_members[FLD_MercenariesMissionAutoStart] = Bdat::getMember(wrapper.data, "AutoStart"); }
 
 u32 getFLD_MercenariesMissionAutoStart(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_MercenariesMissionAutoStart] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_MercenariesMissionAutoStart] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1675,8 +1504,7 @@ u32 getFLD_MercenariesMissionAutoStart(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_FieldSkillListName(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillListName] = Bdat::getMember(wrapper.data, "Name"); }
 
 u32 getFLD_FieldSkillListName(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillListName] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillListName] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1686,8 +1514,7 @@ u32 getFLD_FieldSkillListName(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_FieldSkillListCaption(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillListCaption] = Bdat::getMember(wrapper.data, "Caption"); }
 
 u32 getFLD_FieldSkillListCaption(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillListCaption] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillListCaption] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1697,60 +1524,47 @@ u32 getFLD_FieldSkillListCaption(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_FieldSkillListType(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillListType] = Bdat::getMember(wrapper.data, "Type"); }
 
 u32 getFLD_FieldSkillListType(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillListType] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillListType] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillListType], id, 1).valueU8;
 }
 
-void initFLD_FieldSkillListRandomID(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillListRandomID] = Bdat::getMember(wrapper.data, "RandomID");
-}
+void initFLD_FieldSkillListRandomID(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillListRandomID] = Bdat::getMember(wrapper.data, "RandomID"); }
 
 u32 getFLD_FieldSkillListRandomID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillListRandomID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillListRandomID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillListRandomID], id, 2).valueU16;
 }
 
-void initFLD_FieldSkillListMinLevel(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillListMinLevel] = Bdat::getMember(wrapper.data, "MinLevel");
-}
+void initFLD_FieldSkillListMinLevel(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillListMinLevel] = Bdat::getMember(wrapper.data, "MinLevel"); }
 
 u32 getFLD_FieldSkillListMinLevel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillListMinLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillListMinLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillListMinLevel], id, 1).valueU8;
 }
 
-void initFLD_FieldSkillListMaxLevel(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillListMaxLevel] = Bdat::getMember(wrapper.data, "MaxLevel");
-}
+void initFLD_FieldSkillListMaxLevel(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillListMaxLevel] = Bdat::getMember(wrapper.data, "MaxLevel"); }
 
 u32 getFLD_FieldSkillListMaxLevel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillListMaxLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillListMaxLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillListMaxLevel], id, 1).valueU8;
 }
 
-void initFLD_FieldSkillListCategory(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillListCategory] = Bdat::getMember(wrapper.data, "Category");
-}
+void initFLD_FieldSkillListCategory(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillListCategory] = Bdat::getMember(wrapper.data, "Category"); }
 
 u32 getFLD_FieldSkillListCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillListCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillListCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1760,8 +1574,7 @@ u32 getFLD_FieldSkillListCategory(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_FieldSkillListRarity(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillListRarity] = Bdat::getMember(wrapper.data, "Rarity"); }
 
 u32 getFLD_FieldSkillListRarity(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillListRarity] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillListRarity] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1771,34 +1584,27 @@ u32 getFLD_FieldSkillListRarity(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_FieldSkillListIcon(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillListIcon] = Bdat::getMember(wrapper.data, "Icon"); }
 
 u32 getFLD_FieldSkillListIcon(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillListIcon] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillListIcon] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillListIcon], id, 2).valueU16;
 }
 
-void initFLD_FieldSkillListVoiceCategory(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillListVoiceCategory] = Bdat::getMember(wrapper.data, "VoiceCategory");
-}
+void initFLD_FieldSkillListVoiceCategory(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillListVoiceCategory] = Bdat::getMember(wrapper.data, "VoiceCategory"); }
 
 u32 getFLD_FieldSkillListVoiceCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillListVoiceCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillListVoiceCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillListVoiceCategory], id, 2).valueU16;
 }
 
-void initFLD_FieldSkillListAttirbute(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillListAttirbute] = Bdat::getMember(wrapper.data, "Attirbute");
-}
+void initFLD_FieldSkillListAttirbute(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillListAttirbute] = Bdat::getMember(wrapper.data, "Attirbute"); }
 
 u32 getFLD_FieldSkillListAttirbute(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillListAttirbute] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillListAttirbute] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1808,125 +1614,97 @@ u32 getFLD_FieldSkillListAttirbute(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_FieldSkillSettingName(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillSettingName] = Bdat::getMember(wrapper.data, "Name"); }
 
 u32 getFLD_FieldSkillSettingName(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillSettingName] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillSettingName] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillSettingName], id, 2).valueU16;
 }
 
-void initFLD_FieldSkillSettingFieldSkillID1(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillSettingFieldSkillID1] = Bdat::getMember(wrapper.data, "FieldSkillID1");
-}
+void initFLD_FieldSkillSettingFieldSkillID1(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillSettingFieldSkillID1] = Bdat::getMember(wrapper.data, "FieldSkillID1"); }
 
 u32 getFLD_FieldSkillSettingFieldSkillID1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillSettingFieldSkillID1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillSettingFieldSkillID1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillSettingFieldSkillID1], id, 2).valueU16;
 }
 
-void initFLD_FieldSkillSettingFieldSkillLevel1(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillSettingFieldSkillLevel1] = Bdat::getMember(wrapper.data, "FieldSkillLevel1");
-}
+void initFLD_FieldSkillSettingFieldSkillLevel1(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillSettingFieldSkillLevel1] = Bdat::getMember(wrapper.data, "FieldSkillLevel1"); }
 
 u32 getFLD_FieldSkillSettingFieldSkillLevel1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillSettingFieldSkillLevel1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillSettingFieldSkillLevel1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillSettingFieldSkillLevel1], id, 1).valueU8;
 }
 
-void initFLD_FieldSkillSettingFieldSkillID2(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillSettingFieldSkillID2] = Bdat::getMember(wrapper.data, "FieldSkillID2");
-}
+void initFLD_FieldSkillSettingFieldSkillID2(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillSettingFieldSkillID2] = Bdat::getMember(wrapper.data, "FieldSkillID2"); }
 
 u32 getFLD_FieldSkillSettingFieldSkillID2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillSettingFieldSkillID2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillSettingFieldSkillID2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillSettingFieldSkillID2], id, 2).valueU16;
 }
 
-void initFLD_FieldSkillSettingFieldSkillLevel2(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillSettingFieldSkillLevel2] = Bdat::getMember(wrapper.data, "FieldSkillLevel2");
-}
+void initFLD_FieldSkillSettingFieldSkillLevel2(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillSettingFieldSkillLevel2] = Bdat::getMember(wrapper.data, "FieldSkillLevel2"); }
 
 u32 getFLD_FieldSkillSettingFieldSkillLevel2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillSettingFieldSkillLevel2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillSettingFieldSkillLevel2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillSettingFieldSkillLevel2], id, 1).valueU8;
 }
 
-void initFLD_FieldSkillSettingSuccessVoiceCategory(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillSettingSuccessVoiceCategory] = Bdat::getMember(wrapper.data, "SuccessVoiceCategory");
-}
+void initFLD_FieldSkillSettingSuccessVoiceCategory(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillSettingSuccessVoiceCategory] = Bdat::getMember(wrapper.data, "SuccessVoiceCategory"); }
 
 u32 getFLD_FieldSkillSettingSuccessVoiceCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillSettingSuccessVoiceCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillSettingSuccessVoiceCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillSettingSuccessVoiceCategory], id, 2).valueU16;
 }
 
-void initFLD_FieldSkillSettingMissVoiceCategory(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillSettingMissVoiceCategory] = Bdat::getMember(wrapper.data, "MissVoiceCategory");
-}
+void initFLD_FieldSkillSettingMissVoiceCategory(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillSettingMissVoiceCategory] = Bdat::getMember(wrapper.data, "MissVoiceCategory"); }
 
 u32 getFLD_FieldSkillSettingMissVoiceCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillSettingMissVoiceCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillSettingMissVoiceCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillSettingMissVoiceCategory], id, 2).valueU16;
 }
 
-void initFLD_FieldSkillRandomLevel1Chance(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillRandomLevel1Chance] = Bdat::getMember(wrapper.data, "Level1Chance");
-}
+void initFLD_FieldSkillRandomLevel1Chance(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillRandomLevel1Chance] = Bdat::getMember(wrapper.data, "Level1Chance"); }
 
 u32 getFLD_FieldSkillRandomLevel1Chance(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillRandomLevel1Chance] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillRandomLevel1Chance] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillRandomLevel1Chance], id, 1).valueU8;
 }
 
-void initFLD_FieldSkillRandomLevel2Chance(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillRandomLevel2Chance] = Bdat::getMember(wrapper.data, "Level2Chance");
-}
+void initFLD_FieldSkillRandomLevel2Chance(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillRandomLevel2Chance] = Bdat::getMember(wrapper.data, "Level2Chance"); }
 
 u32 getFLD_FieldSkillRandomLevel2Chance(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillRandomLevel2Chance] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillRandomLevel2Chance] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_FieldSkillRandomLevel2Chance], id, 1).valueU8;
 }
 
-void initFLD_FieldSkillRandomLevel3Chance(const CBdatWrapper &wrapper) {
-  s_members[FLD_FieldSkillRandomLevel3Chance] = Bdat::getMember(wrapper.data, "Level3Chance");
-}
+void initFLD_FieldSkillRandomLevel3Chance(const CBdatWrapper &wrapper) { s_members[FLD_FieldSkillRandomLevel3Chance] = Bdat::getMember(wrapper.data, "Level3Chance"); }
 
 u32 getFLD_FieldSkillRandomLevel3Chance(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_FieldSkillRandomLevel3Chance] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_FieldSkillRandomLevel3Chance] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1936,8 +1714,7 @@ u32 getFLD_FieldSkillRandomLevel3Chance(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_DevelopmentLevelValue(const CBdatWrapper &wrapper) { s_members[FLD_DevelopmentLevelValue] = Bdat::getMember(wrapper.data, "Value"); }
 
 u32 getFLD_DevelopmentLevelValue(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_DevelopmentLevelValue] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_DevelopmentLevelValue] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1947,8 +1724,7 @@ u32 getFLD_DevelopmentLevelValue(const CBdatWrapper &wrapper, u32 id) {
 void initListQuestTitle(const CBdatWrapper &wrapper) { s_members[ListQuestTitle] = Bdat::getMember(wrapper.data, "QuestTitle"); }
 
 u32 getListQuestTitle(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListQuestTitle] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListQuestTitle] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1958,8 +1734,7 @@ u32 getListQuestTitle(const CBdatWrapper &wrapper, u32 id) {
 void initListQuestCategory(const CBdatWrapper &wrapper) { s_members[ListQuestCategory] = Bdat::getMember(wrapper.data, "QuestCategory"); }
 
 u32 getListQuestCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListQuestCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListQuestCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2029,8 +1804,7 @@ u32 getListSortNo(const CBdatWrapper &wrapper, u32 id) {
 void initListRewardDisp(const CBdatWrapper &wrapper) { s_members[ListRewardDisp] = Bdat::getMember(wrapper.data, "RewardDisp"); }
 
 u32 getListRewardDisp(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListRewardDisp] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListRewardDisp] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2040,8 +1814,7 @@ u32 getListRewardDisp(const CBdatWrapper &wrapper, u32 id) {
 void initListRewardSetA(const CBdatWrapper &wrapper) { s_members[ListRewardSetA] = Bdat::getMember(wrapper.data, "RewardSetA"); }
 
 u32 getListRewardSetA(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListRewardSetA] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListRewardSetA] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2051,8 +1824,7 @@ u32 getListRewardSetA(const CBdatWrapper &wrapper, u32 id) {
 void initListRewardSetB(const CBdatWrapper &wrapper) { s_members[ListRewardSetB] = Bdat::getMember(wrapper.data, "RewardSetB"); }
 
 u32 getListRewardSetB(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListRewardSetB] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListRewardSetB] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2062,8 +1834,7 @@ u32 getListRewardSetB(const CBdatWrapper &wrapper, u32 id) {
 void initListPRTQuestID(const CBdatWrapper &wrapper) { s_members[ListPRTQuestID] = Bdat::getMember(wrapper.data, "PRTQuestID"); }
 
 u32 getListPRTQuestID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListPRTQuestID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListPRTQuestID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2093,8 +1864,7 @@ u32 getListFlagCLD(const CBdatWrapper &wrapper, u32 id) {
 void initListPurposeID(const CBdatWrapper &wrapper) { s_members[ListPurposeID] = Bdat::getMember(wrapper.data, "PurposeID"); }
 
 u32 getListPurposeID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListPurposeID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListPurposeID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2104,8 +1874,7 @@ u32 getListPurposeID(const CBdatWrapper &wrapper, u32 id) {
 void initListCountCancel(const CBdatWrapper &wrapper) { s_members[ListCountCancel] = Bdat::getMember(wrapper.data, "CountCancel"); }
 
 u32 getListCountCancel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListCountCancel] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListCountCancel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2115,8 +1884,7 @@ u32 getListCountCancel(const CBdatWrapper &wrapper, u32 id) {
 void initListNextQuestA(const CBdatWrapper &wrapper) { s_members[ListNextQuestA] = Bdat::getMember(wrapper.data, "NextQuestA"); }
 
 u32 getListNextQuestA(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListNextQuestA] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListNextQuestA] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2126,8 +1894,7 @@ u32 getListNextQuestA(const CBdatWrapper &wrapper, u32 id) {
 void initListCallEventA(const CBdatWrapper &wrapper) { s_members[ListCallEventA] = Bdat::getMember(wrapper.data, "CallEventA"); }
 
 u32 getListCallEventA(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListCallEventA] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListCallEventA] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2137,8 +1904,7 @@ u32 getListCallEventA(const CBdatWrapper &wrapper, u32 id) {
 void initListNextQuestB(const CBdatWrapper &wrapper) { s_members[ListNextQuestB] = Bdat::getMember(wrapper.data, "NextQuestB"); }
 
 u32 getListNextQuestB(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListNextQuestB] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListNextQuestB] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2148,8 +1914,7 @@ u32 getListNextQuestB(const CBdatWrapper &wrapper, u32 id) {
 void initListCallEventB(const CBdatWrapper &wrapper) { s_members[ListCallEventB] = Bdat::getMember(wrapper.data, "CallEventB"); }
 
 u32 getListCallEventB(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListCallEventB] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListCallEventB] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2169,8 +1934,7 @@ u32 getListHintsID(const CBdatWrapper &wrapper, u32 id) {
 void initListClearVoice(const CBdatWrapper &wrapper) { s_members[ListClearVoice] = Bdat::getMember(wrapper.data, "ClearVoice"); }
 
 u32 getListClearVoice(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListClearVoice] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListClearVoice] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2180,8 +1944,7 @@ u32 getListClearVoice(const CBdatWrapper &wrapper, u32 id) {
 void initListAutoStart(const CBdatWrapper &wrapper) { s_members[ListAutoStart] = Bdat::getMember(wrapper.data, "AutoStart"); }
 
 u32 getListAutoStart(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListAutoStart] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListAutoStart] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2191,8 +1954,7 @@ u32 getListAutoStart(const CBdatWrapper &wrapper, u32 id) {
 void initListItemLost(const CBdatWrapper &wrapper) { s_members[ListItemLost] = Bdat::getMember(wrapper.data, "ItemLost"); }
 
 u32 getListItemLost(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListItemLost] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListItemLost] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2202,8 +1964,7 @@ u32 getListItemLost(const CBdatWrapper &wrapper, u32 id) {
 void initListCancelCondition(const CBdatWrapper &wrapper) { s_members[ListCancelCondition] = Bdat::getMember(wrapper.data, "CancelCondition"); }
 
 u32 getListCancelCondition(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListCancelCondition] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListCancelCondition] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2213,8 +1974,7 @@ u32 getListCancelCondition(const CBdatWrapper &wrapper, u32 id) {
 void initListQuestIcon(const CBdatWrapper &wrapper) { s_members[ListQuestIcon] = Bdat::getMember(wrapper.data, "QuestIcon"); }
 
 u32 getListQuestIcon(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListQuestIcon] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListQuestIcon] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2224,8 +1984,7 @@ u32 getListQuestIcon(const CBdatWrapper &wrapper, u32 id) {
 void initListLinkedQuestID(const CBdatWrapper &wrapper) { s_members[ListLinkedQuestID] = Bdat::getMember(wrapper.data, "LinkedQuestID"); }
 
 u32 getListLinkedQuestID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ListLinkedQuestID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ListLinkedQuestID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2235,8 +1994,7 @@ u32 getListLinkedQuestID(const CBdatWrapper &wrapper, u32 id) {
 void initTaskPreCondition(const CBdatWrapper &wrapper) { s_members[TaskPreCondition] = Bdat::getMember(wrapper.data, "PreCondition"); }
 
 u32 getTaskPreCondition(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskPreCondition] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskPreCondition] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2246,8 +2004,7 @@ u32 getTaskPreCondition(const CBdatWrapper &wrapper, u32 id) {
 void initTaskTaskType1(const CBdatWrapper &wrapper) { s_members[TaskTaskType1] = Bdat::getMember(wrapper.data, "TaskType1"); }
 
 u32 getTaskTaskType1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskTaskType1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskTaskType1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2257,8 +2014,7 @@ u32 getTaskTaskType1(const CBdatWrapper &wrapper, u32 id) {
 void initTaskTaskType2(const CBdatWrapper &wrapper) { s_members[TaskTaskType2] = Bdat::getMember(wrapper.data, "TaskType2"); }
 
 u32 getTaskTaskType2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskTaskType2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskTaskType2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2268,8 +2024,7 @@ u32 getTaskTaskType2(const CBdatWrapper &wrapper, u32 id) {
 void initTaskTaskType3(const CBdatWrapper &wrapper) { s_members[TaskTaskType3] = Bdat::getMember(wrapper.data, "TaskType3"); }
 
 u32 getTaskTaskType3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskTaskType3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskTaskType3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2279,8 +2034,7 @@ u32 getTaskTaskType3(const CBdatWrapper &wrapper, u32 id) {
 void initTaskTaskType4(const CBdatWrapper &wrapper) { s_members[TaskTaskType4] = Bdat::getMember(wrapper.data, "TaskType4"); }
 
 u32 getTaskTaskType4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskTaskType4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskTaskType4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2370,8 +2124,7 @@ u32 getTaskBranch4(const CBdatWrapper &wrapper, u32 id) {
 void initTaskTaskLog1(const CBdatWrapper &wrapper) { s_members[TaskTaskLog1] = Bdat::getMember(wrapper.data, "TaskLog1"); }
 
 u32 getTaskTaskLog1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskTaskLog1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskTaskLog1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2381,8 +2134,7 @@ u32 getTaskTaskLog1(const CBdatWrapper &wrapper, u32 id) {
 void initTaskTaskLog2(const CBdatWrapper &wrapper) { s_members[TaskTaskLog2] = Bdat::getMember(wrapper.data, "TaskLog2"); }
 
 u32 getTaskTaskLog2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskTaskLog2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskTaskLog2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2392,8 +2144,7 @@ u32 getTaskTaskLog2(const CBdatWrapper &wrapper, u32 id) {
 void initTaskTaskLog3(const CBdatWrapper &wrapper) { s_members[TaskTaskLog3] = Bdat::getMember(wrapper.data, "TaskLog3"); }
 
 u32 getTaskTaskLog3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskTaskLog3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskTaskLog3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2403,8 +2154,7 @@ u32 getTaskTaskLog3(const CBdatWrapper &wrapper, u32 id) {
 void initTaskTaskLog4(const CBdatWrapper &wrapper) { s_members[TaskTaskLog4] = Bdat::getMember(wrapper.data, "TaskLog4"); }
 
 u32 getTaskTaskLog4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskTaskLog4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskTaskLog4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2454,8 +2204,7 @@ u32 getTaskTaskUI4(const CBdatWrapper &wrapper, u32 id) {
 void initTaskTaskCondition1(const CBdatWrapper &wrapper) { s_members[TaskTaskCondition1] = Bdat::getMember(wrapper.data, "TaskCondition1"); }
 
 u32 getTaskTaskCondition1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskTaskCondition1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskTaskCondition1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2465,8 +2214,7 @@ u32 getTaskTaskCondition1(const CBdatWrapper &wrapper, u32 id) {
 void initTaskTaskCondition2(const CBdatWrapper &wrapper) { s_members[TaskTaskCondition2] = Bdat::getMember(wrapper.data, "TaskCondition2"); }
 
 u32 getTaskTaskCondition2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskTaskCondition2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskTaskCondition2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2476,8 +2224,7 @@ u32 getTaskTaskCondition2(const CBdatWrapper &wrapper, u32 id) {
 void initTaskTaskCondition3(const CBdatWrapper &wrapper) { s_members[TaskTaskCondition3] = Bdat::getMember(wrapper.data, "TaskCondition3"); }
 
 u32 getTaskTaskCondition3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskTaskCondition3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskTaskCondition3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2487,8 +2234,7 @@ u32 getTaskTaskCondition3(const CBdatWrapper &wrapper, u32 id) {
 void initTaskTaskCondition4(const CBdatWrapper &wrapper) { s_members[TaskTaskCondition4] = Bdat::getMember(wrapper.data, "TaskCondition4"); }
 
 u32 getTaskTaskCondition4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[TaskTaskCondition4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[TaskTaskCondition4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2991,8 +2737,7 @@ u32 QuestListAcc::getTaskTaskCondition4(u32 purpose) const {
 }
 
 u32 QuestListAcc::getTaskTaskID(u32 purpose, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &,
-                                u32) = {_gfbqa::getTaskTaskID1, _gfbqa::getTaskTaskID2, _gfbqa::getTaskTaskID3, _gfbqa::getTaskTaskID4};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getTaskTaskID1, _gfbqa::getTaskTaskID2, _gfbqa::getTaskTaskID3, _gfbqa::getTaskTaskID4};
   CBdatWrapper *fp = getTaskFp(purpose);
   if (fp == nullptr) {
     return 0;
@@ -3002,8 +2747,7 @@ u32 QuestListAcc::getTaskTaskID(u32 purpose, u32 index) const {
 }
 
 u32 QuestListAcc::getTaskTaskUI(u32 purpose, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &,
-                                u32) = {_gfbqa::getTaskTaskUI1, _gfbqa::getTaskTaskUI2, _gfbqa::getTaskTaskUI3, _gfbqa::getTaskTaskUI4};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getTaskTaskUI1, _gfbqa::getTaskTaskUI2, _gfbqa::getTaskTaskUI3, _gfbqa::getTaskTaskUI4};
   CBdatWrapper *fp = getTaskFp(purpose);
   if (fp == nullptr) {
     return 0;
@@ -3013,8 +2757,7 @@ u32 QuestListAcc::getTaskTaskUI(u32 purpose, u32 index) const {
 }
 
 u32 QuestListAcc::getTaskTaskType(u32 purpose, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &,
-                                u32) = {_gfbqa::getTaskTaskType1, _gfbqa::getTaskTaskType2, _gfbqa::getTaskTaskType3, _gfbqa::getTaskTaskType4};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getTaskTaskType1, _gfbqa::getTaskTaskType2, _gfbqa::getTaskTaskType3, _gfbqa::getTaskTaskType4};
   CBdatWrapper *fp = getTaskFp(purpose);
   if (fp == nullptr) {
     return 0;
@@ -3024,8 +2767,7 @@ u32 QuestListAcc::getTaskTaskType(u32 purpose, u32 index) const {
 }
 
 u32 QuestListAcc::getTaskTaskBranch(u32 purpose, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &,
-                                u32) = {_gfbqa::getTaskBranch1, _gfbqa::getTaskBranch2, _gfbqa::getTaskBranch3, _gfbqa::getTaskBranch4};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getTaskBranch1, _gfbqa::getTaskBranch2, _gfbqa::getTaskBranch3, _gfbqa::getTaskBranch4};
   CBdatWrapper *fp = getTaskFp(purpose);
   if (fp == nullptr) {
     return 0;
@@ -3035,8 +2777,7 @@ u32 QuestListAcc::getTaskTaskBranch(u32 purpose, u32 index) const {
 }
 
 u32 QuestListAcc::getTaskTaskLog(u32 purpose, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &,
-                                u32) = {_gfbqa::getTaskTaskLog1, _gfbqa::getTaskTaskLog2, _gfbqa::getTaskTaskLog3, _gfbqa::getTaskTaskLog4};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getTaskTaskLog1, _gfbqa::getTaskTaskLog2, _gfbqa::getTaskTaskLog3, _gfbqa::getTaskTaskLog4};
   CBdatWrapper *fp = getTaskFp(purpose);
   if (fp == nullptr) {
     return 0;
@@ -3046,8 +2787,7 @@ u32 QuestListAcc::getTaskTaskLog(u32 purpose, u32 index) const {
 }
 
 u32 QuestListAcc::getTaskTaskCondition(u32 purpose, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
-      _gfbqa::getTaskTaskCondition1, _gfbqa::getTaskTaskCondition2, _gfbqa::getTaskTaskCondition3, _gfbqa::getTaskTaskCondition4};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getTaskTaskCondition1, _gfbqa::getTaskTaskCondition2, _gfbqa::getTaskTaskCondition3, _gfbqa::getTaskTaskCondition4};
   CBdatWrapper *fp = getTaskFp(purpose);
   if (fp == nullptr) {
     return 0;
@@ -3058,9 +2798,7 @@ u32 QuestListAcc::getTaskTaskCondition(u32 purpose, u32 index) const {
 
 u32 QuestListAcc::getBattleStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestBattle->data); }
 
-u32 QuestListAcc::getBattleEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestBattle->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestBattle->data);
-}
+u32 QuestListAcc::getBattleEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestBattle->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestBattle->data); }
 
 u32 QuestListAcc::getBattleRefer(u32 id) const { return _gfbqa::getBattleRefer(*GfBdatQuest::get()->m_FLD_QuestBattle, id); }
 
@@ -3086,9 +2824,7 @@ u32 QuestListAcc::getBattleReducePCHP(u32 id) const { return _gfbqa::getBattleRe
 
 u32 QuestListAcc::getRequestItemSetStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_RequestItemSet->data); }
 
-u32 QuestListAcc::getRequestItemSetEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_RequestItemSet->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_RequestItemSet->data);
-}
+u32 QuestListAcc::getRequestItemSetEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_RequestItemSet->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_RequestItemSet->data); }
 
 u32 QuestListAcc::getRequestItemSetItemID1(u32 id) const { return _gfbqa::getRequestItemSetItemID1(*GfBdatQuest::get()->m_FLD_RequestItemSet, id); }
 
@@ -3115,30 +2851,22 @@ u32 QuestListAcc::getRequestItemSetMapID(u32 id) const { return _gfbqa::getReque
 u32 QuestListAcc::getRequestItemSetNpcID(u32 id) const { return _gfbqa::getRequestItemSetNpcID(*GfBdatQuest::get()->m_FLD_RequestItemSet, id); }
 
 u32 QuestListAcc::getRequestItemSetItemID(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getRequestItemSetItemID1,
-                                                              _gfbqa::getRequestItemSetItemID2,
-                                                              _gfbqa::getRequestItemSetItemID3,
-                                                              _gfbqa::getRequestItemSetItemID4,
-                                                              _gfbqa::getRequestItemSetItemID5};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbqa::getRequestItemSetItemID1, _gfbqa::getRequestItemSetItemID2, _gfbqa::getRequestItemSetItemID3, _gfbqa::getRequestItemSetItemID4, _gfbqa::getRequestItemSetItemID5};
   CBdatWrapper *fp = GfBdatQuest::get()->m_FLD_RequestItemSet;
   return getters[index](*fp, id);
 }
 
 u32 QuestListAcc::getRequestItemSetCount(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getRequestItemSetCount1,
-                                                              _gfbqa::getRequestItemSetCount2,
-                                                              _gfbqa::getRequestItemSetCount3,
-                                                              _gfbqa::getRequestItemSetCount4,
-                                                              _gfbqa::getRequestItemSetCount5};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbqa::getRequestItemSetCount1, _gfbqa::getRequestItemSetCount2, _gfbqa::getRequestItemSetCount3, _gfbqa::getRequestItemSetCount4, _gfbqa::getRequestItemSetCount5};
   CBdatWrapper *fp = GfBdatQuest::get()->m_FLD_RequestItemSet;
   return getters[index](*fp, id);
 }
 
 u32 QuestListAcc::getCollectStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestCollect->data); }
 
-u32 QuestListAcc::getCollectEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestCollect->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestCollect->data);
-}
+u32 QuestListAcc::getCollectEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestCollect->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestCollect->data); }
 
 u32 QuestListAcc::getCollectItemID(u32 id) const { return _gfbqa::getCollectItemID(*GfBdatQuest::get()->m_FLD_QuestCollect, id); }
 
@@ -3158,9 +2886,7 @@ u32 QuestListAcc::getCollectNpcID(u32 id) const { return _gfbqa::getCollectNpcID
 
 u32 QuestListAcc::getUseStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestUse->data); }
 
-u32 QuestListAcc::getUseEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestUse->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestUse->data);
-}
+u32 QuestListAcc::getUseEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestUse->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestUse->data); }
 
 u32 QuestListAcc::getUseItemID(u32 id) const { return _gfbqa::getUseItemID(*GfBdatQuest::get()->m_FLD_QuestUse, id); }
 
@@ -3174,9 +2900,7 @@ u32 QuestListAcc::getUsebladeID(u32 id) const { return _gfbqa::getUsebladeID(*Gf
 
 u32 QuestListAcc::getReachStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestReach->data); }
 
-u32 QuestListAcc::getReachEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestReach->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestReach->data);
-}
+u32 QuestListAcc::getReachEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestReach->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestReach->data); }
 
 u32 QuestListAcc::getReachCategory(u32 id) const { return _gfbqa::getReachCategory(*GfBdatQuest::get()->m_FLD_QuestReach, id); }
 
@@ -3186,9 +2910,7 @@ u32 QuestListAcc::getReachPlaceID(u32 id) const { return _gfbqa::getReachPlaceID
 
 u32 QuestListAcc::getTalkStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestTalk->data); }
 
-u32 QuestListAcc::getTalkEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestTalk->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestTalk->data);
-}
+u32 QuestListAcc::getTalkEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestTalk->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestTalk->data); }
 
 u32 QuestListAcc::getTalkMapID(u32 id) const { return _gfbqa::getTalkMapID(*GfBdatQuest::get()->m_FLD_QuestTalk, id); }
 
@@ -3198,9 +2920,7 @@ u32 QuestListAcc::getTalkDummyGroup(u32 id) const { return _gfbqa::getTalkDummyG
 
 u32 QuestListAcc::getDummyGroupStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestTalkDummyGroup->data); }
 
-u32 QuestListAcc::getDummyGroupEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestTalkDummyGroup->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestTalkDummyGroup->data);
-}
+u32 QuestListAcc::getDummyGroupEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestTalkDummyGroup->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestTalkDummyGroup->data); }
 
 u32 QuestListAcc::getDummyGroupNpcID1(u32 id) const { return _gfbqa::getDummyGroupNpcID1(*GfBdatQuest::get()->m_FLD_QuestTalkDummyGroup, id); }
 
@@ -3233,17 +2953,13 @@ u32 QuestListAcc::getDummyGroupNpcID(u32 id, u32 index) const {
 
 u32 QuestListAcc::getGimmickStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestGimmick->data); }
 
-u32 QuestListAcc::getGimmickEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestGimmick->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestGimmick->data);
-}
+u32 QuestListAcc::getGimmickEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestGimmick->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestGimmick->data); }
 
 u32 QuestListAcc::getGimmickMapID(u32 id) const { return _gfbqa::getGimmickMapID(*GfBdatQuest::get()->m_FLD_QuestGimmick, id); }
 
 u32 QuestListAcc::getGimmickDoorGimmickID(u32 id) const { return _gfbqa::getGimmickDoorGimmickID(*GfBdatQuest::get()->m_FLD_QuestGimmick, id); }
 
-u32 QuestListAcc::getGimmickElevatorGimmickID(u32 id) const {
-  return _gfbqa::getGimmickElevatorGimmickID(*GfBdatQuest::get()->m_FLD_QuestGimmick, id);
-}
+u32 QuestListAcc::getGimmickElevatorGimmickID(u32 id) const { return _gfbqa::getGimmickElevatorGimmickID(*GfBdatQuest::get()->m_FLD_QuestGimmick, id); }
 
 u32 QuestListAcc::getGimmickJumpGimmickID(u32 id) const { return _gfbqa::getGimmickJumpGimmickID(*GfBdatQuest::get()->m_FLD_QuestGimmick, id); }
 
@@ -3262,63 +2978,40 @@ u32 QuestListAcc::getGimmickEndCheck(u32 id) const { return _gfbqa::getGimmickEn
 u32 QuestListAcc::getFieldSkillCountStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestFieldSkillCount->data); }
 
 u32 QuestListAcc::getFieldSkillCountEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestFieldSkillCount->data) +
-         Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestFieldSkillCount->data);
+  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestFieldSkillCount->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestFieldSkillCount->data);
 }
 
-u32 QuestListAcc::getFieldSkillCountFieldSkillID(u32 id) const {
-  return _gfbqa::getFieldSkillCountFieldSkillID(*GfBdatQuest::get()->m_FLD_QuestFieldSkillCount, id);
-}
+u32 QuestListAcc::getFieldSkillCountFieldSkillID(u32 id) const { return _gfbqa::getFieldSkillCountFieldSkillID(*GfBdatQuest::get()->m_FLD_QuestFieldSkillCount, id); }
 
-u32 QuestListAcc::getFieldSkillCountCount(u32 id) const {
-  return _gfbqa::getFieldSkillCountCount(*GfBdatQuest::get()->m_FLD_QuestFieldSkillCount, id);
-}
+u32 QuestListAcc::getFieldSkillCountCount(u32 id) const { return _gfbqa::getFieldSkillCountCount(*GfBdatQuest::get()->m_FLD_QuestFieldSkillCount, id); }
 
 u32 QuestListAcc::getRequestBladeStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_RequestBlade->data); }
 
-u32 QuestListAcc::getRequestBladeEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_RequestBlade->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_RequestBlade->data);
-}
+u32 QuestListAcc::getRequestBladeEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_RequestBlade->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_RequestBlade->data); }
 
-u32 QuestListAcc::getRequestBladeRequestCategory(u32 id) const {
-  return _gfbqa::getRequestBladeRequestCategory(*GfBdatQuest::get()->m_FLD_RequestBlade, id);
-}
+u32 QuestListAcc::getRequestBladeRequestCategory(u32 id) const { return _gfbqa::getRequestBladeRequestCategory(*GfBdatQuest::get()->m_FLD_RequestBlade, id); }
 
 u32 QuestListAcc::getRequestBladeRequestAtr(u32 id) const { return _gfbqa::getRequestBladeRequestAtr(*GfBdatQuest::get()->m_FLD_RequestBlade, id); }
 
-u32 QuestListAcc::getRequestBladeRequestPerformance(u32 id) const {
-  return _gfbqa::getRequestBladeRequestPerformance(*GfBdatQuest::get()->m_FLD_RequestBlade, id);
-}
+u32 QuestListAcc::getRequestBladeRequestPerformance(u32 id) const { return _gfbqa::getRequestBladeRequestPerformance(*GfBdatQuest::get()->m_FLD_RequestBlade, id); }
 
 u32 QuestListAcc::getRequestBladeRequestRace(u32 id) const { return _gfbqa::getRequestBladeRequestRace(*GfBdatQuest::get()->m_FLD_RequestBlade, id); }
 
-u32 QuestListAcc::getRequestBladeRequestGender(u32 id) const {
-  return _gfbqa::getRequestBladeRequestGender(*GfBdatQuest::get()->m_FLD_RequestBlade, id);
-}
+u32 QuestListAcc::getRequestBladeRequestGender(u32 id) const { return _gfbqa::getRequestBladeRequestGender(*GfBdatQuest::get()->m_FLD_RequestBlade, id); }
 
 u32 QuestListAcc::getRequestBladeRequestArts(u32 id) const { return _gfbqa::getRequestBladeRequestArts(*GfBdatQuest::get()->m_FLD_RequestBlade, id); }
 
-u32 QuestListAcc::getRequestBladeRequestArtsLevel(u32 id) const {
-  return _gfbqa::getRequestBladeRequestArtsLevel(*GfBdatQuest::get()->m_FLD_RequestBlade, id);
-}
+u32 QuestListAcc::getRequestBladeRequestArtsLevel(u32 id) const { return _gfbqa::getRequestBladeRequestArtsLevel(*GfBdatQuest::get()->m_FLD_RequestBlade, id); }
 
-u32 QuestListAcc::getRequestBladeRequestFSkill(u32 id) const {
-  return _gfbqa::getRequestBladeRequestFSkill(*GfBdatQuest::get()->m_FLD_RequestBlade, id);
-}
+u32 QuestListAcc::getRequestBladeRequestFSkill(u32 id) const { return _gfbqa::getRequestBladeRequestFSkill(*GfBdatQuest::get()->m_FLD_RequestBlade, id); }
 
-u32 QuestListAcc::getRequestBladeRequestFSLevel(u32 id) const {
-  return _gfbqa::getRequestBladeRequestFSLevel(*GfBdatQuest::get()->m_FLD_RequestBlade, id);
-}
+u32 QuestListAcc::getRequestBladeRequestFSLevel(u32 id) const { return _gfbqa::getRequestBladeRequestFSLevel(*GfBdatQuest::get()->m_FLD_RequestBlade, id); }
 
-u32 QuestListAcc::getRequestBladeRequestNumber(u32 id) const {
-  return _gfbqa::getRequestBladeRequestNumber(*GfBdatQuest::get()->m_FLD_RequestBlade, id);
-}
+u32 QuestListAcc::getRequestBladeRequestNumber(u32 id) const { return _gfbqa::getRequestBladeRequestNumber(*GfBdatQuest::get()->m_FLD_RequestBlade, id); }
 
 u32 QuestListAcc::getConditionStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestCondition->data); }
 
-u32 QuestListAcc::getConditionEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestCondition->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestCondition->data);
-}
+u32 QuestListAcc::getConditionEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestCondition->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestCondition->data); }
 
 u32 QuestListAcc::getConditionConditionID(u32 id) const { return _gfbqa::getConditionConditionID(*GfBdatQuest::get()->m_FLD_QuestCondition, id); }
 
@@ -3328,23 +3021,17 @@ u32 QuestListAcc::getConditionNpcID(u32 id) const { return _gfbqa::getConditionN
 
 u32 QuestListAcc::getAchievementStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_Achievement->data); }
 
-u32 QuestListAcc::getAchievementEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_Achievement->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_Achievement->data);
-}
+u32 QuestListAcc::getAchievementEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_Achievement->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_Achievement->data); }
 
 u32 QuestListAcc::getAchievementStatsID(u32 id) const { return _gfbqa::getAchievementStatsID(*GfBdatQuest::get()->m_FLD_Achievement, id); }
 
 u32 QuestListAcc::getAchievementCount(u32 id) const { return _gfbqa::getAchievementCount(*GfBdatQuest::get()->m_FLD_Achievement, id); }
 
-const char *QuestListAcc::getAchievementDebugName(u32 id) const {
-  return _gfbqa::getAchievementDebugName(*GfBdatQuest::get()->m_FLD_Achievement, id);
-}
+const char *QuestListAcc::getAchievementDebugName(u32 id) const { return _gfbqa::getAchievementDebugName(*GfBdatQuest::get()->m_FLD_Achievement, id); }
 
 u32 QuestListAcc::getHintsStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestHints->data); }
 
-u32 QuestListAcc::getHintsEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestHints->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestHints->data);
-}
+u32 QuestListAcc::getHintsEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestHints->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestHints->data); }
 
 u32 QuestListAcc::getHintsMainChar1(u32 id) const { return _gfbqa::getHintsMainChar1(*GfBdatQuest::get()->m_FLD_QuestHints, id); }
 
@@ -3365,8 +3052,7 @@ u32 QuestListAcc::getHintsClientNpc(u32 id) const { return _gfbqa::getHintsClien
 u32 QuestListAcc::getHintsZoneID(u32 id) const { return _gfbqa::getHintsZoneID(*GfBdatQuest::get()->m_FLD_QuestHints, id); }
 
 u32 QuestListAcc::getHintsMainChar(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &,
-                                u32) = {_gfbqa::getHintsMainChar1, _gfbqa::getHintsMainChar2, _gfbqa::getHintsMainChar3, _gfbqa::getHintsMainChar4};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getHintsMainChar1, _gfbqa::getHintsMainChar2, _gfbqa::getHintsMainChar3, _gfbqa::getHintsMainChar4};
   CBdatWrapper *fp = GfBdatQuest::get()->m_FLD_QuestHints;
   return getters[index](*fp, id);
 }
@@ -3379,17 +3065,13 @@ u32 QuestListAcc::getHintsFSkillID(u32 id, u32 index) const {
 
 u32 QuestListAcc::getEventStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestEvent->data); }
 
-u32 QuestListAcc::getEventEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestEvent->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestEvent->data);
-}
+u32 QuestListAcc::getEventEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestEvent->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestEvent->data); }
 
 u32 QuestListAcc::getEventEventID(u32 id) const { return _gfbqa::getEventEventID(*GfBdatQuest::get()->m_FLD_QuestEvent, id); }
 
 u32 QuestListAcc::getRewardStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestReward->data); }
 
-u32 QuestListAcc::getRewardEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestReward->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestReward->data);
-}
+u32 QuestListAcc::getRewardEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_QuestReward->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_QuestReward->data); }
 
 u32 QuestListAcc::getRewardGold(u32 id) const { return _gfbqa::getRewardGold(*GfBdatQuest::get()->m_FLD_QuestReward, id); }
 
@@ -3428,52 +3110,34 @@ u32 QuestListAcc::getRewardItemID4(u32 id) const { return _gfbqa::getRewardItemI
 u32 QuestListAcc::getRewardItemNumber4(u32 id) const { return _gfbqa::getRewardItemNumber4(*GfBdatQuest::get()->m_FLD_QuestReward, id); }
 
 u32 QuestListAcc::getRewardItemID(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &,
-                                u32) = {_gfbqa::getRewardItemID1, _gfbqa::getRewardItemID2, _gfbqa::getRewardItemID3, _gfbqa::getRewardItemID4};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getRewardItemID1, _gfbqa::getRewardItemID2, _gfbqa::getRewardItemID3, _gfbqa::getRewardItemID4};
   CBdatWrapper *fp = GfBdatQuest::get()->m_FLD_QuestReward;
   return getters[index](*fp, id);
 }
 
 u32 QuestListAcc::getRewardItemNumber(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
-      _gfbqa::getRewardItemNumber1, _gfbqa::getRewardItemNumber2, _gfbqa::getRewardItemNumber3, _gfbqa::getRewardItemNumber4};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getRewardItemNumber1, _gfbqa::getRewardItemNumber2, _gfbqa::getRewardItemNumber3, _gfbqa::getRewardItemNumber4};
   CBdatWrapper *fp = GfBdatQuest::get()->m_FLD_QuestReward;
   return getters[index](*fp, id);
 }
 
 u32 QuestListAcc::getFLD_AchievementSetStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_AchievementSet->data); }
 
-u32 QuestListAcc::getFLD_AchievementSetEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_AchievementSet->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_AchievementSet->data);
-}
+u32 QuestListAcc::getFLD_AchievementSetEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_AchievementSet->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_AchievementSet->data); }
 
-u32 QuestListAcc::getFLD_AchievementSetCategory(u32 id) const {
-  return _gfbqa::getFLD_AchievementSetCategory(*GfBdatQuest::get()->m_FLD_AchievementSet, id);
-}
+u32 QuestListAcc::getFLD_AchievementSetCategory(u32 id) const { return _gfbqa::getFLD_AchievementSetCategory(*GfBdatQuest::get()->m_FLD_AchievementSet, id); }
 
-u32 QuestListAcc::getFLD_AchievementSetAbilityLevel(u32 id) const {
-  return _gfbqa::getFLD_AchievementSetAbilityLevel(*GfBdatQuest::get()->m_FLD_AchievementSet, id);
-}
+u32 QuestListAcc::getFLD_AchievementSetAbilityLevel(u32 id) const { return _gfbqa::getFLD_AchievementSetAbilityLevel(*GfBdatQuest::get()->m_FLD_AchievementSet, id); }
 
-u32 QuestListAcc::getFLD_AchievementSetAchievementID1(u32 id) const {
-  return _gfbqa::getFLD_AchievementSetAchievementID1(*GfBdatQuest::get()->m_FLD_AchievementSet, id);
-}
+u32 QuestListAcc::getFLD_AchievementSetAchievementID1(u32 id) const { return _gfbqa::getFLD_AchievementSetAchievementID1(*GfBdatQuest::get()->m_FLD_AchievementSet, id); }
 
-u32 QuestListAcc::getFLD_AchievementSetAchievementID2(u32 id) const {
-  return _gfbqa::getFLD_AchievementSetAchievementID2(*GfBdatQuest::get()->m_FLD_AchievementSet, id);
-}
+u32 QuestListAcc::getFLD_AchievementSetAchievementID2(u32 id) const { return _gfbqa::getFLD_AchievementSetAchievementID2(*GfBdatQuest::get()->m_FLD_AchievementSet, id); }
 
-u32 QuestListAcc::getFLD_AchievementSetAchievementID3(u32 id) const {
-  return _gfbqa::getFLD_AchievementSetAchievementID3(*GfBdatQuest::get()->m_FLD_AchievementSet, id);
-}
+u32 QuestListAcc::getFLD_AchievementSetAchievementID3(u32 id) const { return _gfbqa::getFLD_AchievementSetAchievementID3(*GfBdatQuest::get()->m_FLD_AchievementSet, id); }
 
-u32 QuestListAcc::getFLD_AchievementSetAchievementID4(u32 id) const {
-  return _gfbqa::getFLD_AchievementSetAchievementID4(*GfBdatQuest::get()->m_FLD_AchievementSet, id);
-}
+u32 QuestListAcc::getFLD_AchievementSetAchievementID4(u32 id) const { return _gfbqa::getFLD_AchievementSetAchievementID4(*GfBdatQuest::get()->m_FLD_AchievementSet, id); }
 
-u32 QuestListAcc::getFLD_AchievementSetAchievementID5(u32 id) const {
-  return _gfbqa::getFLD_AchievementSetAchievementID5(*GfBdatQuest::get()->m_FLD_AchievementSet, id);
-}
+u32 QuestListAcc::getFLD_AchievementSetAchievementID5(u32 id) const { return _gfbqa::getFLD_AchievementSetAchievementID5(*GfBdatQuest::get()->m_FLD_AchievementSet, id); }
 
 u32 QuestListAcc::getFLD_AchievementSetAchievementID(u32 id, u32 index) const {
   static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getFLD_AchievementSetAchievementID1,
@@ -3487,45 +3151,25 @@ u32 QuestListAcc::getFLD_AchievementSetAchievementID(u32 id, u32 index) const {
 
 u32 QuestListAcc::getFLD_AchievementListStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_AchievementList->data); }
 
-u32 QuestListAcc::getFLD_AchievementListEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_AchievementList->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_AchievementList->data);
-}
+u32 QuestListAcc::getFLD_AchievementListEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_AchievementList->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_AchievementList->data); }
 
-u32 QuestListAcc::getFLD_AchievementListTitle(u32 id) const {
-  return _gfbqa::getFLD_AchievementListTitle(*GfBdatQuest::get()->m_FLD_AchievementList, id);
-}
+u32 QuestListAcc::getFLD_AchievementListTitle(u32 id) const { return _gfbqa::getFLD_AchievementListTitle(*GfBdatQuest::get()->m_FLD_AchievementList, id); }
 
-u32 QuestListAcc::getFLD_AchievementListCategory(u32 id) const {
-  return _gfbqa::getFLD_AchievementListCategory(*GfBdatQuest::get()->m_FLD_AchievementList, id);
-}
+u32 QuestListAcc::getFLD_AchievementListCategory(u32 id) const { return _gfbqa::getFLD_AchievementListCategory(*GfBdatQuest::get()->m_FLD_AchievementList, id); }
 
-u32 QuestListAcc::getFLD_AchievementListIcon(u32 id) const {
-  return _gfbqa::getFLD_AchievementListIcon(*GfBdatQuest::get()->m_FLD_AchievementList, id);
-}
+u32 QuestListAcc::getFLD_AchievementListIcon(u32 id) const { return _gfbqa::getFLD_AchievementListIcon(*GfBdatQuest::get()->m_FLD_AchievementList, id); }
 
-u32 QuestListAcc::getFLD_AchievementListTask(u32 id) const {
-  return _gfbqa::getFLD_AchievementListTask(*GfBdatQuest::get()->m_FLD_AchievementList, id);
-}
+u32 QuestListAcc::getFLD_AchievementListTask(u32 id) const { return _gfbqa::getFLD_AchievementListTask(*GfBdatQuest::get()->m_FLD_AchievementList, id); }
 
-u32 QuestListAcc::getFLD_AchievementListVoiceCategory(u32 id) const {
-  return _gfbqa::getFLD_AchievementListVoiceCategory(*GfBdatQuest::get()->m_FLD_AchievementList, id);
-}
+u32 QuestListAcc::getFLD_AchievementListVoiceCategory(u32 id) const { return _gfbqa::getFLD_AchievementListVoiceCategory(*GfBdatQuest::get()->m_FLD_AchievementList, id); }
 
-u32 QuestListAcc::getFLD_AchievementListAfterVoice(u32 id) const {
-  return _gfbqa::getFLD_AchievementListAfterVoice(*GfBdatQuest::get()->m_FLD_AchievementList, id);
-}
+u32 QuestListAcc::getFLD_AchievementListAfterVoice(u32 id) const { return _gfbqa::getFLD_AchievementListAfterVoice(*GfBdatQuest::get()->m_FLD_AchievementList, id); }
 
-u32 QuestListAcc::getFLD_AchievementListDifficulty(u32 id) const {
-  return _gfbqa::getFLD_AchievementListDifficulty(*GfBdatQuest::get()->m_FLD_AchievementList, id);
-}
+u32 QuestListAcc::getFLD_AchievementListDifficulty(u32 id) const { return _gfbqa::getFLD_AchievementListDifficulty(*GfBdatQuest::get()->m_FLD_AchievementList, id); }
 
-u32 QuestListAcc::getFLD_AchievementListIdeaCategory(u32 id) const {
-  return _gfbqa::getFLD_AchievementListIdeaCategory(*GfBdatQuest::get()->m_FLD_AchievementList, id);
-}
+u32 QuestListAcc::getFLD_AchievementListIdeaCategory(u32 id) const { return _gfbqa::getFLD_AchievementListIdeaCategory(*GfBdatQuest::get()->m_FLD_AchievementList, id); }
 
-u32 QuestListAcc::getFLD_AchievementListIdeaValue(u32 id) const {
-  return _gfbqa::getFLD_AchievementListIdeaValue(*GfBdatQuest::get()->m_FLD_AchievementList, id);
-}
+u32 QuestListAcc::getFLD_AchievementListIdeaValue(u32 id) const { return _gfbqa::getFLD_AchievementListIdeaValue(*GfBdatQuest::get()->m_FLD_AchievementList, id); }
 
 u32 QuestListAcc::getFLD_MercenariesConfigStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_MercenariesConfig->data); }
 
@@ -3533,9 +3177,7 @@ u32 QuestListAcc::getFLD_MercenariesConfigEnd() const {
   return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_MercenariesConfig->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_MercenariesConfig->data);
 }
 
-u32 QuestListAcc::getFLD_MercenariesConfigValue(u32 id) const {
-  return _gfbqa::getFLD_MercenariesConfigValue(*GfBdatQuest::get()->m_FLD_MercenariesConfig, id);
-}
+u32 QuestListAcc::getFLD_MercenariesConfigValue(u32 id) const { return _gfbqa::getFLD_MercenariesConfigValue(*GfBdatQuest::get()->m_FLD_MercenariesConfig, id); }
 
 u32 QuestListAcc::getFLD_MercenariesMissionStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_MercenariesMission->data); }
 
@@ -3543,69 +3185,41 @@ u32 QuestListAcc::getFLD_MercenariesMissionEnd() const {
   return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_MercenariesMission->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_MercenariesMission->data);
 }
 
-u32 QuestListAcc::getFLD_MercenariesMissionQuestID(u32 id) const {
-  return _gfbqa::getFLD_MercenariesMissionQuestID(*GfBdatQuest::get()->m_FLD_MercenariesMission, id);
-}
+u32 QuestListAcc::getFLD_MercenariesMissionQuestID(u32 id) const { return _gfbqa::getFLD_MercenariesMissionQuestID(*GfBdatQuest::get()->m_FLD_MercenariesMission, id); }
 
-u32 QuestListAcc::getFLD_MercenariesMissionCategory(u32 id) const {
-  return _gfbqa::getFLD_MercenariesMissionCategory(*GfBdatQuest::get()->m_FLD_MercenariesMission, id);
-}
+u32 QuestListAcc::getFLD_MercenariesMissionCategory(u32 id) const { return _gfbqa::getFLD_MercenariesMissionCategory(*GfBdatQuest::get()->m_FLD_MercenariesMission, id); }
 
-u32 QuestListAcc::getFLD_MercenariesMissionRequestPerformance(u32 id) const {
-  return _gfbqa::getFLD_MercenariesMissionRequestPerformance(*GfBdatQuest::get()->m_FLD_MercenariesMission, id);
-}
+u32 QuestListAcc::getFLD_MercenariesMissionRequestPerformance(u32 id) const { return _gfbqa::getFLD_MercenariesMissionRequestPerformance(*GfBdatQuest::get()->m_FLD_MercenariesMission, id); }
 
-u32 QuestListAcc::getFLD_MercenariesMissionRepeatable(u32 id) const {
-  return _gfbqa::getFLD_MercenariesMissionRepeatable(*GfBdatQuest::get()->m_FLD_MercenariesMission, id);
-}
+u32 QuestListAcc::getFLD_MercenariesMissionRepeatable(u32 id) const { return _gfbqa::getFLD_MercenariesMissionRepeatable(*GfBdatQuest::get()->m_FLD_MercenariesMission, id); }
 
-u32 QuestListAcc::getFLD_MercenariesMissionAutoStart(u32 id) const {
-  return _gfbqa::getFLD_MercenariesMissionAutoStart(*GfBdatQuest::get()->m_FLD_MercenariesMission, id);
-}
+u32 QuestListAcc::getFLD_MercenariesMissionAutoStart(u32 id) const { return _gfbqa::getFLD_MercenariesMissionAutoStart(*GfBdatQuest::get()->m_FLD_MercenariesMission, id); }
 
 u32 QuestListAcc::getFLD_FieldSkillListStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_FieldSkillList->data); }
 
-u32 QuestListAcc::getFLD_FieldSkillListEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_FieldSkillList->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_FieldSkillList->data);
-}
+u32 QuestListAcc::getFLD_FieldSkillListEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_FieldSkillList->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_FieldSkillList->data); }
 
 u32 QuestListAcc::getFLD_FieldSkillListName(u32 id) const { return _gfbqa::getFLD_FieldSkillListName(*GfBdatQuest::get()->m_FLD_FieldSkillList, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListCaption(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListCaption(*GfBdatQuest::get()->m_FLD_FieldSkillList, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListCaption(u32 id) const { return _gfbqa::getFLD_FieldSkillListCaption(*GfBdatQuest::get()->m_FLD_FieldSkillList, id); }
 
 u32 QuestListAcc::getFLD_FieldSkillListType(u32 id) const { return _gfbqa::getFLD_FieldSkillListType(*GfBdatQuest::get()->m_FLD_FieldSkillList, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListRandomID(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListRandomID(*GfBdatQuest::get()->m_FLD_FieldSkillList, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListRandomID(u32 id) const { return _gfbqa::getFLD_FieldSkillListRandomID(*GfBdatQuest::get()->m_FLD_FieldSkillList, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListMinLevel(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListMinLevel(*GfBdatQuest::get()->m_FLD_FieldSkillList, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListMinLevel(u32 id) const { return _gfbqa::getFLD_FieldSkillListMinLevel(*GfBdatQuest::get()->m_FLD_FieldSkillList, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListMaxLevel(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListMaxLevel(*GfBdatQuest::get()->m_FLD_FieldSkillList, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListMaxLevel(u32 id) const { return _gfbqa::getFLD_FieldSkillListMaxLevel(*GfBdatQuest::get()->m_FLD_FieldSkillList, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListCategory(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListCategory(*GfBdatQuest::get()->m_FLD_FieldSkillList, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListCategory(u32 id) const { return _gfbqa::getFLD_FieldSkillListCategory(*GfBdatQuest::get()->m_FLD_FieldSkillList, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListRarity(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListRarity(*GfBdatQuest::get()->m_FLD_FieldSkillList, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListRarity(u32 id) const { return _gfbqa::getFLD_FieldSkillListRarity(*GfBdatQuest::get()->m_FLD_FieldSkillList, id); }
 
 u32 QuestListAcc::getFLD_FieldSkillListIcon(u32 id) const { return _gfbqa::getFLD_FieldSkillListIcon(*GfBdatQuest::get()->m_FLD_FieldSkillList, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListVoiceCategory(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListVoiceCategory(*GfBdatQuest::get()->m_FLD_FieldSkillList, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListVoiceCategory(u32 id) const { return _gfbqa::getFLD_FieldSkillListVoiceCategory(*GfBdatQuest::get()->m_FLD_FieldSkillList, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillListAttirbute(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillListAttirbute(*GfBdatQuest::get()->m_FLD_FieldSkillList, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillListAttirbute(u32 id) const { return _gfbqa::getFLD_FieldSkillListAttirbute(*GfBdatQuest::get()->m_FLD_FieldSkillList, id); }
 
 u32 QuestListAcc::getFLD_FieldSkillSettingStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_FieldSkillSetting->data); }
 
@@ -3613,82 +3227,53 @@ u32 QuestListAcc::getFLD_FieldSkillSettingEnd() const {
   return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_FieldSkillSetting->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_FieldSkillSetting->data);
 }
 
-u32 QuestListAcc::getFLD_FieldSkillSettingName(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillSettingName(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillSettingName(u32 id) const { return _gfbqa::getFLD_FieldSkillSettingName(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillID1(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillSettingFieldSkillID1(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillID1(u32 id) const { return _gfbqa::getFLD_FieldSkillSettingFieldSkillID1(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillLevel1(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillSettingFieldSkillLevel1(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillLevel1(u32 id) const { return _gfbqa::getFLD_FieldSkillSettingFieldSkillLevel1(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillID2(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillSettingFieldSkillID2(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillID2(u32 id) const { return _gfbqa::getFLD_FieldSkillSettingFieldSkillID2(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillLevel2(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillSettingFieldSkillLevel2(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillLevel2(u32 id) const { return _gfbqa::getFLD_FieldSkillSettingFieldSkillLevel2(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillSettingSuccessVoiceCategory(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillSettingSuccessVoiceCategory(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillSettingSuccessVoiceCategory(u32 id) const { return _gfbqa::getFLD_FieldSkillSettingSuccessVoiceCategory(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillSettingMissVoiceCategory(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillSettingMissVoiceCategory(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillSettingMissVoiceCategory(u32 id) const { return _gfbqa::getFLD_FieldSkillSettingMissVoiceCategory(*GfBdatQuest::get()->m_FLD_FieldSkillSetting, id); }
 
 u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillID(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getFLD_FieldSkillSettingFieldSkillID1,
-                                                              _gfbqa::getFLD_FieldSkillSettingFieldSkillID2};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getFLD_FieldSkillSettingFieldSkillID1, _gfbqa::getFLD_FieldSkillSettingFieldSkillID2};
   CBdatWrapper *fp = GfBdatQuest::get()->m_FLD_FieldSkillSetting;
   return getters[index](*fp, id);
 }
 
 u32 QuestListAcc::getFLD_FieldSkillSettingFieldSkillLevel(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getFLD_FieldSkillSettingFieldSkillLevel1,
-                                                              _gfbqa::getFLD_FieldSkillSettingFieldSkillLevel2};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getFLD_FieldSkillSettingFieldSkillLevel1, _gfbqa::getFLD_FieldSkillSettingFieldSkillLevel2};
   CBdatWrapper *fp = GfBdatQuest::get()->m_FLD_FieldSkillSetting;
   return getters[index](*fp, id);
 }
 
 u32 QuestListAcc::getFLD_FieldSkillRandomStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_FieldSkillRandom->data); }
 
-u32 QuestListAcc::getFLD_FieldSkillRandomEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_FieldSkillRandom->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_FieldSkillRandom->data);
-}
+u32 QuestListAcc::getFLD_FieldSkillRandomEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_FieldSkillRandom->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_FieldSkillRandom->data); }
 
-u32 QuestListAcc::getFLD_FieldSkillRandomLevel1Chance(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillRandomLevel1Chance(*GfBdatQuest::get()->m_FLD_FieldSkillRandom, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillRandomLevel1Chance(u32 id) const { return _gfbqa::getFLD_FieldSkillRandomLevel1Chance(*GfBdatQuest::get()->m_FLD_FieldSkillRandom, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillRandomLevel2Chance(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillRandomLevel2Chance(*GfBdatQuest::get()->m_FLD_FieldSkillRandom, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillRandomLevel2Chance(u32 id) const { return _gfbqa::getFLD_FieldSkillRandomLevel2Chance(*GfBdatQuest::get()->m_FLD_FieldSkillRandom, id); }
 
-u32 QuestListAcc::getFLD_FieldSkillRandomLevel3Chance(u32 id) const {
-  return _gfbqa::getFLD_FieldSkillRandomLevel3Chance(*GfBdatQuest::get()->m_FLD_FieldSkillRandom, id);
-}
+u32 QuestListAcc::getFLD_FieldSkillRandomLevel3Chance(u32 id) const { return _gfbqa::getFLD_FieldSkillRandomLevel3Chance(*GfBdatQuest::get()->m_FLD_FieldSkillRandom, id); }
 
 u32 QuestListAcc::getFLD_FieldSkillRandomLevelChance(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
-      _gfbqa::getFLD_FieldSkillRandomLevel1Chance, _gfbqa::getFLD_FieldSkillRandomLevel2Chance, _gfbqa::getFLD_FieldSkillRandomLevel3Chance};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbqa::getFLD_FieldSkillRandomLevel1Chance, _gfbqa::getFLD_FieldSkillRandomLevel2Chance, _gfbqa::getFLD_FieldSkillRandomLevel3Chance};
   CBdatWrapper *fp = GfBdatQuest::get()->m_FLD_FieldSkillRandom;
   return getters[index](*fp, id);
 }
 
 u32 QuestListAcc::getFLD_DevelopmentLevelStart() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_DevelopmentLevel->data); }
 
-u32 QuestListAcc::getFLD_DevelopmentLevelEnd() const {
-  return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_DevelopmentLevel->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_DevelopmentLevel->data);
-}
+u32 QuestListAcc::getFLD_DevelopmentLevelEnd() const { return Bdat::getIdTop(GfBdatQuest::get()->m_FLD_DevelopmentLevel->data) + Bdat::getIdCount(GfBdatQuest::get()->m_FLD_DevelopmentLevel->data); }
 
-u32 QuestListAcc::getFLD_DevelopmentLevelValue(u32 level) const {
-  return _gfbqa::getFLD_DevelopmentLevelValue(*GfBdatQuest::get()->m_FLD_DevelopmentLevel, level);
-}
+u32 QuestListAcc::getFLD_DevelopmentLevelValue(u32 level) const { return _gfbqa::getFLD_DevelopmentLevelValue(*GfBdatQuest::get()->m_FLD_DevelopmentLevel, level); }
 
 QuestListAcc::QuestListAcc() { clear(); }
 

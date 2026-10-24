@@ -70,107 +70,76 @@ void VolumeManager::render() {
   fw::debug::drawFont(x - 5, height - 120, mm::Col4::white, "CATE");
   s32 posX = x + 25;
   s32 barY = height - 85;
-  fw::debug::drawSquare2D(
-      mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(1)) * -30.0f)),
-      mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(1)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
   fw::debug::drawFont(posX + 20, height - 115, "BGM");
   fw::debug::drawFont(posX + 20, height - 100, "EVTBGM");
   fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(1)));
   posX += 60;
   if ((dispFlags & DISP_FLAG_DETAIL) != 0) {
-    fw::debug::drawSquare2D(
-        mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(2)) * -30.0f)),
-        mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+    fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(2)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
     fw::debug::drawFont(posX + 20, height - 105, "VOI");
     fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(2)));
     posX += 40;
-    fw::debug::drawSquare2D(
-        mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(3)) * -30.0f)),
-        mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+    fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(3)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
     fw::debug::drawFont(posX + 20, height - 105, "SYS");
     fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(3)));
     posX += 40;
-    fw::debug::drawSquare2D(
-        mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(4)) * -30.0f)),
-        mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+    fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(4)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
     fw::debug::drawFont(posX + 20, height - 105, "BTL");
     fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(4)));
     posX += 40;
   }
-  fw::debug::drawSquare2D(
-      mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(5)) * -30.0f)),
-      mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(5)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
   fw::debug::drawFont(posX + 20, height - 105, "FLD");
   fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(5)));
   posX += 40;
-  fw::debug::drawSquare2D(
-      mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(6)) * -30.0f)),
-      mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(6)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
   fw::debug::drawFont(posX + 20, height - 105, "GMK");
   fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(6)));
   posX += 40;
-  fw::debug::drawSquare2D(
-      mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(7)) * -30.0f)),
-      mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(7)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
   fw::debug::drawFont(posX + 20, height - 105, "ENV");
   fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(7)));
   posX += 40;
-  fw::debug::drawSquare2D(
-      mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(8)) * -30.0f)),
-      mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(8)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
   fw::debug::drawFont(posX + 20, height - 105, "WEA");
   fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(8)));
   posX += 40;
-  fw::debug::drawSquare2D(
-      mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(9)) * -30.0f)),
-      mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(9)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
   fw::debug::drawFont(posX + 20, height - 105, "EVTCS");
   fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(9)));
   posX += 60;
   if ((dispFlags & DISP_FLAG_DETAIL) != 0) {
-    fw::debug::drawSquare2D(
-        mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(11)) * -30.0f)),
-        mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+    fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(11)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
     fw::debug::drawFont(posX + 20, height - 105, "EVTVO");
     fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(11)));
     posX += 60;
   }
-  fw::debug::drawSquare2D(
-      mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(12)) * -30.0f)),
-      mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(12)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
   fw::debug::drawFont(posX + 20, height - 105, "EVTSE");
   fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(12)));
   if ((dispFlags & DISP_FLAG_DETAIL) != 0) {
     posX += 60;
-    fw::debug::drawSquare2D(
-        mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(13)) * -30.0f)),
-        mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+    fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(13)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
     fw::debug::drawFont(posX + 20, height - 105, "CHRSE");
     fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(13)));
     posX += 60;
-    fw::debug::drawSquare2D(
-        mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(14)) * -30.0f)),
-        mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+    fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(14)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
     fw::debug::drawFont(posX + 20, height - 105, "(NOSLOW)");
     fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(14)));
     posX += 80;
-    fw::debug::drawSquare2D(
-        mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(15)) * -30.0f)),
-        mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+    fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(15)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
     fw::debug::drawFont(posX + 20, height - 105, "ENEVO");
     fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(15)));
     posX += 60;
-    fw::debug::drawSquare2D(
-        mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(16)) * -30.0f)),
-        mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+    fw::debug::drawSquare2D(mm::Rect<s32>(posX + 10, barY, 6, static_cast<s32>(gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(16)) * -30.0f)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
     fw::debug::drawFont(posX + 20, height - 105, "NAREVO");
     fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(16)));
   }
   mSeamless.draw();
 }
 
-void VolumeManager::setSeamlessVolume(bool isEnable, f32 volume, u32 target,
-                                      const mm::mtl::FixedArray<f32, VolumeSeamless::RESET_VOLUME_COUNT> *resetVolumes) {
+void VolumeManager::setSeamlessVolume(bool isEnable, f32 volume, u32 target, const mm::mtl::FixedArray<f32, VolumeSeamless::RESET_VOLUME_COUNT> *resetVolumes) {
   mSeamless.set(isEnable, volume, target, resetVolumes);
 }
 

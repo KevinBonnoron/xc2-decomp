@@ -35,10 +35,8 @@ public:
   virtual u32 duplicateImpl(u32 parent);
   virtual void changeBin(const void *data);
 
-  static UIImageObject *create(UILayoutObject *parent, const void *data, u32 streamId, const mm::mtl::FixStr<32> &name,
-                               mm::mtl::IAllocator *allocator, bool mask);
-  static UIImageObject *create(UILayoutObject *parent, ml::ScnRenderDrCapture *capture, const mm::mtl::FixStr<32> &name,
-                               mm::mtl::IAllocator *allocator);
+  static UIImageObject *create(UILayoutObject *parent, const void *data, u32 streamId, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator, bool mask);
+  static UIImageObject *create(UILayoutObject *parent, ml::ScnRenderDrCapture *capture, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator);
   void setMaskObject(UIImageObject *mask);
   void setImageIndex(u16 index);
   u16 getImageMax();

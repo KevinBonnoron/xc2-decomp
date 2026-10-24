@@ -38,9 +38,9 @@ public:
 
   struct PROC_DATA {
     PROC_DATA()
-        : unknown00(gf::INVALID_HANDLE), unknown08(gf::INVALID_HANDLE), unknown10(gf::INVALID_HANDLE), unknown40(0), unknown44(0.0f), unknown48(-1),
-          unknown4c(0), unknown50(0), unknown54(0), unknown58(0.0f), unknown5c(CHANGE_TYPE_NORMAL), unknown5d(RECEIVE_TYPE_BLADE_CHANGE),
-          unknown5e(true), unknown5f(false), unknown60(false), unknown61(false), unknown62(false), unknown63(CANCEL_STATE_ENABLE) {}
+        : unknown00(gf::INVALID_HANDLE), unknown08(gf::INVALID_HANDLE), unknown10(gf::INVALID_HANDLE), unknown40(0), unknown44(0.0f), unknown48(-1), unknown4c(0), unknown50(0), unknown54(0),
+          unknown58(0.0f), unknown5c(CHANGE_TYPE_NORMAL), unknown5d(RECEIVE_TYPE_BLADE_CHANGE), unknown5e(true), unknown5f(false), unknown60(false), unknown61(false), unknown62(false),
+          unknown63(CANCEL_STATE_ENABLE) {}
 
     gf::GF_OBJ_HANDLE *unknown00; // Inferred role: driver handle; original member name unknown.
     gf::GF_OBJ_HANDLE *unknown08; // Inferred role: blade handle; original member name unknown.

@@ -352,9 +352,7 @@ int GfDataDriver::getWeaponSwtFileIdx(u32 driver, int slot) {
   return slot < 0 ? -1 : slot + FILE_INDEX_WEAPON_SWT;
 }
 
-bool GfDataDriver::getEquipAcceEnahnce(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver) {
-  return getEquipAcceEnhance(enhances, *getSDataDriver(driver));
-}
+bool GfDataDriver::getEquipAcceEnahnce(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver) { return getEquipAcceEnhance(enhances, *getSDataDriver(driver)); }
 
 u32 GfDataDriver::getEquipAcceEnahnce(u32 driver, u32 slot) { return getEquipAcceEnhance(*getSDataDriver(driver), slot); }
 
@@ -392,9 +390,7 @@ void GfDataDriver::setEquipAcceHandle(u32 driver, u32 slot, GfItemHandle handle)
   setEquipAcceHandle(*getSDataDriver(driver), slot, handle);
 }
 
-void GfDataDriver::setEquipAcceHandle(SDataDriver &dataDriver, u32 slot, GfItemHandle handle) {
-  dataDriver.accessories[slot].handle.value = handle.value;
-}
+void GfDataDriver::setEquipAcceHandle(SDataDriver &dataDriver, u32 slot, GfItemHandle handle) { dataDriver.accessories[slot].handle.value = handle.value; }
 
 void GfDataDriver::getEquipWpnType(mm::mtl::FixedVector<u32, 27> &weaponTypes, u32 driver) { getEquipWpnType(weaponTypes, *getSDataDriver(driver)); }
 
@@ -432,17 +428,13 @@ const char *GfDataDriver::getExtraMountBone(u32 driver) { return GfBdatRsc::get(
 
 u32 GfDataDriver::getExtraMountCondition(u32 driver) { return GfBdatRsc::get()->getDriverParamExtMountCond(driver); }
 
-int GfDataDriver::getDeathBlowEfbFileIdx(DBSLOT slot, int index) {
-  return (index < 0 ? slot + 1 : slot * DEATH_BLOW_PER_SLOT + index) + FILE_INDEX_DEATH_BLOW_EFB;
-}
+int GfDataDriver::getDeathBlowEfbFileIdx(DBSLOT slot, int index) { return (index < 0 ? slot + 1 : slot * DEATH_BLOW_PER_SLOT + index) + FILE_INDEX_DEATH_BLOW_EFB; }
 
 int GfDataDriver::getDebugAppendDeathBlowEfbFileIdx(u32 index) { return index + FILE_INDEX_DEBUG_APPEND_DEATH_BLOW_EFB; }
 
 int GfDataDriver::getWeaponEabFileIdx(int slot) { return (slot < 0 ? 0 : slot) + FILE_INDEX_WEAPON_EAB; }
 
-int GfDataDriver::getDeathBlowEabFileIdx(DBSLOT slot, int index) {
-  return (index < 0 ? slot + 1 : slot * DEATH_BLOW_PER_SLOT + index) + FILE_INDEX_DEATH_BLOW_EAB;
-}
+int GfDataDriver::getDeathBlowEabFileIdx(DBSLOT slot, int index) { return (index < 0 ? slot + 1 : slot * DEATH_BLOW_PER_SLOT + index) + FILE_INDEX_DEATH_BLOW_EAB; }
 
 int GfDataDriver::getDebugAppendDeathBlowEabFileIdx(u32 index) { return index + FILE_INDEX_DEBUG_APPEND_DEATH_BLOW_EAB; }
 
@@ -471,9 +463,7 @@ u32 GfDataDriver::getPouchItemNum(u32 driver, u32 item) {
   return itemNum;
 }
 
-bool GfDataDriver::isUsedFavorite(u32 driver, FAVORITE favorite) {
-  return (GfGameFlag::getLocal(8, FLAG_USED_FAVORITE + driver) & 1 << favorite) != 0;
-}
+bool GfDataDriver::isUsedFavorite(u32 driver, FAVORITE favorite) { return (GfGameFlag::getLocal(8, FLAG_USED_FAVORITE + driver) & 1 << favorite) != 0; }
 
 u32 GfDataDriver::getFootStep(u32 driver) { return GfBdatChrDr::get()->getChrDrFootStep(driver); }
 

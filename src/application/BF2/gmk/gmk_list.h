@@ -65,8 +65,8 @@ public:
 template <typename T, typename BDAT_INFO, u32 MAGIC, u32 VERSION, typename GOB> class TGmkList : public IGmkList {
 public:
   explicit TGmkList(u32 updateGmkNumPerFrame)
-      : resource(nullptr), data(nullptr), xformChunk(nullptr), xforms(nullptr), gobInfoChunk(nullptr), gobInfos(nullptr), gmkChunk(nullptr),
-        gmkData(nullptr), strings(nullptr), bdatFp(nullptr), seq(nullptr), updateGmkNumPerFrame(updateGmkNumPerFrame), updateGmkIndex(0) {
+      : resource(nullptr), data(nullptr), xformChunk(nullptr), xforms(nullptr), gobInfoChunk(nullptr), gobInfos(nullptr), gmkChunk(nullptr), gmkData(nullptr), strings(nullptr), bdatFp(nullptr),
+        seq(nullptr), updateGmkNumPerFrame(updateGmkNumPerFrame), updateGmkIndex(0) {
     GmkGobEventListener::createInstance();
   }
 

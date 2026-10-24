@@ -29,9 +29,6 @@ void GmkNpcIdInfo::BdatInfo::dispose() {
   mountObject2 = 0;
 }
 
-GmkNpcManager::GmkNpcManager(u32 updateNpcNumPerFrame)
-    : _30(), updateNpcNumPerFrame(updateNpcNumPerFrame), updateNpcIndex(0), isCreateGameEntity(true) {
-  create();
-}
+GmkNpcManager::GmkNpcManager(u32 updateNpcNumPerFrame) : _30(), updateNpcNumPerFrame(updateNpcNumPerFrame), updateNpcIndex(0), isCreateGameEntity(true) { create(); }
 
 } // namespace gmk

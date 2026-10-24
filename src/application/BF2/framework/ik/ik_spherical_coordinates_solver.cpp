@@ -10,8 +10,7 @@
 
 namespace fw {
 
-SphericalCoordinatesIkSolver *SphericalCoordinatesIkSolver::create(const ParamAdapter &param, const char *boneName,
-                                                                   mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose) {
+SphericalCoordinatesIkSolver *SphericalCoordinatesIkSolver::create(const ParamAdapter &param, const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose) {
   // __LINE__ of the game: it is the line argument of operator new.
 #line 37
   SphericalCoordinatesIkSolver *solver = new (Allocator::getProcAllocator(), 16, __FILE__, __LINE__) SphericalCoordinatesIkSolver();
@@ -24,8 +23,7 @@ SphericalCoordinatesIkSolver *SphericalCoordinatesIkSolver::create(const ParamAd
   return solver;
 }
 
-bool SphericalCoordinatesIkSolver::setupLimit(const ParamAdapter &param, const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame,
-                                              anm::Pose &pose) {
+bool SphericalCoordinatesIkSolver::setupLimit(const ParamAdapter &param, const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose) {
   bind(frame, pose);
   if (boneName != nullptr) {
     u16 index = this->pose->skeleton->getBoneID(boneName);

@@ -28,8 +28,7 @@ void StateUtilField::setIdleStatus(GfComPropertyPc &property, bool isIdle) {
 }
 
 bool StateUtilField::isWallUpMove(GfPropertyField::WALL_MOVE_MODE mode) {
-  return (mode == GfPropertyField::WALL_MOVE_MODE_UP || mode == GfPropertyField::WALL_MOVE_MODE_UP_RIGHT) |
-         (mode == GfPropertyField::WALL_MOVE_MODE_UP_LEFT);
+  return (mode == GfPropertyField::WALL_MOVE_MODE_UP || mode == GfPropertyField::WALL_MOVE_MODE_UP_RIGHT) | (mode == GfPropertyField::WALL_MOVE_MODE_UP_LEFT);
 }
 
 ASM_CMD_ID_FIELD StateUtilField::getAsmID(GfPropertyField::WALL_MOVE_MODE mode) {
@@ -55,8 +54,7 @@ void StateUtilField::resetCameraForWall(GfComBehaviorPc &behavior, Timing timing
   if (!behavior.getProperty()->isPadControl) {
     return;
   }
-  static const ResetCameraWallTiming CAMERA_TIMINGS[] = {
-      RESET_CAMERA_WALL_TIMING_UNDER_GROUND, RESET_CAMERA_WALL_TIMING_GROUND, RESET_CAMERA_WALL_TIMING_AIR};
+  static const ResetCameraWallTiming CAMERA_TIMINGS[] = {RESET_CAMERA_WALL_TIMING_UNDER_GROUND, RESET_CAMERA_WALL_TIMING_GROUND, RESET_CAMERA_WALL_TIMING_AIR};
   GfGamePlayerCamera::resetCameraClimb(CAMERA_TIMINGS[timing]);
 }
 

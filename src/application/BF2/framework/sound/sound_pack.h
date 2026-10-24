@@ -19,9 +19,7 @@ enum SoundPriority : int;
 class SoundPack : public mm::mtl::ReferenceObject {
 public:
   struct SetupInfo {
-    SetupInfo()
-        : category(static_cast<SoundCategory>(3)), priority(static_cast<SoundPriority>(0)), assetName(nullptr), data(nullptr), size(0),
-          maxSound(128) {}
+    SetupInfo() : category(static_cast<SoundCategory>(3)), priority(static_cast<SoundPriority>(0)), assetName(nullptr), data(nullptr), size(0), maxSound(128) {}
 
     mm::mtl::FixStr<128> name;
     SoundCategory category;

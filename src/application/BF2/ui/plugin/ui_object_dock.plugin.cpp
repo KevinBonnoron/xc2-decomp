@@ -8,9 +8,7 @@
 
 namespace ui {
 
-UIObjectDockPlugin::UIObjectDockPlugin(u32 target) : target(target), offset(0, 0), dockType(0), alignType(0), reverse(0), area(0, 0, 0, 0) {
-  UIUtil::isValid(target);
-}
+UIObjectDockPlugin::UIObjectDockPlugin(u32 target) : target(target), offset(0, 0), dockType(0), alignType(0), reverse(0), area(0, 0, 0, 0) { UIUtil::isValid(target); }
 
 UIObjectDockPlugin::~UIObjectDockPlugin() { ; }
 

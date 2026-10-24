@@ -82,9 +82,7 @@ public:
   static void importDisplaySize(UIDisplayInfo &displayInfo, layer::LayerBase *layer);
   static void importDisplayInfo(UIDisplayInfo &displayInfo, layer::LayerBase *layer);
 
-  bool isImageType() const {
-    return objectType == UI_OBJECT_TYPE_IMAGE || objectType == UI_OBJECT_TYPE_SCREEN || objectType == UI_OBJECT_TYPE_POLYGON;
-  }
+  bool isImageType() const { return objectType == UI_OBJECT_TYPE_IMAGE || objectType == UI_OBJECT_TYPE_SCREEN || objectType == UI_OBJECT_TYPE_POLYGON; }
 
   layer::LayerBase *layer;
   layer::LayerAccObjBase layerAcc;

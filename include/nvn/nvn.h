@@ -100,18 +100,15 @@ enum NVNindexType {};
 
 typedef u64 NVNbufferAddress;
 
-typedef void (*PFNNVNCOMMANDBUFFERDRAWELEMENTSPROC)(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count,
-                                                    NVNbufferAddress indexBuffer);
-typedef void (*PFNNVNCOMMANDBUFFERDRAWELEMENTSINSTANCEDPROC)(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count,
-                                                             NVNbufferAddress indexBuffer, int baseVertex, int baseInstance, int instanceCount);
-typedef void (*PFNNVNCOMMANDBUFFERDRAWELEMENTSINDIRECTPROC)(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type,
-                                                            NVNbufferAddress indexBuffer, NVNbufferAddress indirectBuffer);
+typedef void (*PFNNVNCOMMANDBUFFERDRAWELEMENTSPROC)(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count, NVNbufferAddress indexBuffer);
+typedef void (*PFNNVNCOMMANDBUFFERDRAWELEMENTSINSTANCEDPROC)(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count, NVNbufferAddress indexBuffer, int baseVertex,
+                                                             int baseInstance, int instanceCount);
+typedef void (*PFNNVNCOMMANDBUFFERDRAWELEMENTSINDIRECTPROC)(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, NVNbufferAddress indexBuffer, NVNbufferAddress indirectBuffer);
 typedef void (*PFNNVNCOMMANDBUFFERSETBLENDCOLORPROC)(NVNcommandBuffer *cmdBuf, const float *blendColor);
 typedef void (*PFNNVNCOMMANDBUFFERBINDCHANNELMASKSTATEPROC)(NVNcommandBuffer *cmdBuf, const NVNchannelMaskState *channelMask);
 typedef void (*PFNNVNCOMMANDBUFFERBINDPOLYGONSTATEPROC)(NVNcommandBuffer *cmdBuf, const NVNpolygonState *polygon);
-typedef void (*PFNNVNCOMMANDBUFFERSETRENDERTARGETSPROC)(NVNcommandBuffer *cmdBuf, int numColors, const NVNtexture *const *colors,
-                                                        const NVNtextureView *const *colorViews, const NVNtexture *depthStencil,
-                                                        const NVNtextureView *depthStencilView);
+typedef void (*PFNNVNCOMMANDBUFFERSETRENDERTARGETSPROC)(NVNcommandBuffer *cmdBuf, int numColors, const NVNtexture *const *colors, const NVNtextureView *const *colorViews,
+                                                        const NVNtexture *depthStencil, const NVNtextureView *depthStencilView);
 typedef void (*PFNNVNCOMMANDBUFFERSETVIEWPORTPROC)(NVNcommandBuffer *cmdBuf, int x, int y, int w, int h);
 typedef void (*PFNNVNCOMMANDBUFFERSETSCISSORPROC)(NVNcommandBuffer *cmdBuf, int x, int y, int w, int h);
 typedef void (*PFNNVNCOMMANDBUFFERSETLINEWIDTHPROC)(NVNcommandBuffer *cmdBuf, float width);
@@ -127,8 +124,7 @@ typedef void (*PFNNVNMEMORYPOOLFINALIZEPROC)(NVNmemoryPool *pool);
 typedef void (*PFNNVNCOMMANDBUFFERBINDVERTEXSTREAMSTATEPROC)(NVNcommandBuffer *cmdBuf, int numStreams, const NVNvertexStreamState *streams);
 typedef void (*PFNNVNBLENDSTATESETDEFAULTSPROC)(NVNblendState *blend);
 typedef void (*PFNNVNCHANNELMASKSTATESETDEFAULTSPROC)(NVNchannelMaskState *channelMask);
-typedef void (*PFNNVNCHANNELMASKSTATESETCHANNELMASKPROC)(NVNchannelMaskState *channelMask, int index, NVNboolean r, NVNboolean g, NVNboolean b,
-                                                         NVNboolean a);
+typedef void (*PFNNVNCHANNELMASKSTATESETCHANNELMASKPROC)(NVNchannelMaskState *channelMask, int index, NVNboolean r, NVNboolean g, NVNboolean b, NVNboolean a);
 typedef void (*PFNNVNCOLORSTATESETDEFAULTSPROC)(NVNcolorState *color);
 typedef void (*PFNNVNCOLORSTATESETBLENDENABLEPROC)(NVNcolorState *color, int index, NVNboolean enable);
 typedef void (*PFNNVNDEPTHSTENCILSTATESETDEFAULTSPROC)(NVNdepthStencilState *depthStencil);
@@ -208,76 +204,51 @@ extern PFNNVNTEXTUREBUILDERGETSTORAGEALIGNMENTPROC pfnc_nvnTextureBuilderGetStor
 extern PFNNVNTEXTUREFINALIZEPROC pfnc_nvnTextureFinalize;
 }
 
-inline void nvnCommandBufferSetBlendColor(NVNcommandBuffer *cmdBuf, const float *blendColor) {
-  pfnc_nvnCommandBufferSetBlendColor(cmdBuf, blendColor);
-}
+inline void nvnCommandBufferSetBlendColor(NVNcommandBuffer *cmdBuf, const float *blendColor) { pfnc_nvnCommandBufferSetBlendColor(cmdBuf, blendColor); }
 
-inline void nvnCommandBufferBindChannelMaskState(NVNcommandBuffer *cmdBuf, const NVNchannelMaskState *channelMask) {
-  pfnc_nvnCommandBufferBindChannelMaskState(cmdBuf, channelMask);
-}
+inline void nvnCommandBufferBindChannelMaskState(NVNcommandBuffer *cmdBuf, const NVNchannelMaskState *channelMask) { pfnc_nvnCommandBufferBindChannelMaskState(cmdBuf, channelMask); }
 
-inline void nvnCommandBufferBindPolygonState(NVNcommandBuffer *cmdBuf, const NVNpolygonState *polygon) {
-  pfnc_nvnCommandBufferBindPolygonState(cmdBuf, polygon);
-}
+inline void nvnCommandBufferBindPolygonState(NVNcommandBuffer *cmdBuf, const NVNpolygonState *polygon) { pfnc_nvnCommandBufferBindPolygonState(cmdBuf, polygon); }
 
-inline void nvnCommandBufferSetRenderTargets(NVNcommandBuffer *cmdBuf, int numColors, const NVNtexture *const *colors,
-                                             const NVNtextureView *const *colorViews, const NVNtexture *depthStencil,
+inline void nvnCommandBufferSetRenderTargets(NVNcommandBuffer *cmdBuf, int numColors, const NVNtexture *const *colors, const NVNtextureView *const *colorViews, const NVNtexture *depthStencil,
                                              const NVNtextureView *depthStencilView) {
   pfnc_nvnCommandBufferSetRenderTargets(cmdBuf, numColors, colors, colorViews, depthStencil, depthStencilView);
 }
 
-inline void nvnCommandBufferDrawElements(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count,
-                                         NVNbufferAddress indexBuffer) {
+inline void nvnCommandBufferDrawElements(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count, NVNbufferAddress indexBuffer) {
   pfnc_nvnCommandBufferDrawElements(cmdBuf, mode, type, count, indexBuffer);
 }
 
-inline void nvnCommandBufferDrawElementsInstanced(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count,
-                                                  NVNbufferAddress indexBuffer, int baseVertex, int baseInstance, int instanceCount) {
+inline void nvnCommandBufferDrawElementsInstanced(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count, NVNbufferAddress indexBuffer, int baseVertex, int baseInstance,
+                                                  int instanceCount) {
   pfnc_nvnCommandBufferDrawElementsInstanced(cmdBuf, mode, type, count, indexBuffer, baseVertex, baseInstance, instanceCount);
 }
 
-inline void nvnCommandBufferDrawElementsIndirect(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, NVNbufferAddress indexBuffer,
-                                                 NVNbufferAddress indirectBuffer) {
+inline void nvnCommandBufferDrawElementsIndirect(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, NVNbufferAddress indexBuffer, NVNbufferAddress indirectBuffer) {
   pfnc_nvnCommandBufferDrawElementsIndirect(cmdBuf, mode, type, indexBuffer, indirectBuffer);
 }
 
-inline void nvnCommandBufferSetViewport(NVNcommandBuffer *cmdBuf, int x, int y, int w, int h) {
-  pfnc_nvnCommandBufferSetViewport(cmdBuf, x, y, w, h);
-}
+inline void nvnCommandBufferSetViewport(NVNcommandBuffer *cmdBuf, int x, int y, int w, int h) { pfnc_nvnCommandBufferSetViewport(cmdBuf, x, y, w, h); }
 
 inline void nvnCommandBufferSetScissor(NVNcommandBuffer *cmdBuf, int x, int y, int w, int h) { pfnc_nvnCommandBufferSetScissor(cmdBuf, x, y, w, h); }
 
 inline void nvnCommandBufferSetLineWidth(NVNcommandBuffer *cmdBuf, float width) { pfnc_nvnCommandBufferSetLineWidth(cmdBuf, width); }
 
-inline void nvnCommandBufferSetRasterizerDiscard(NVNcommandBuffer *cmdBuf, NVNboolean discard) {
-  pfnc_nvnCommandBufferSetRasterizerDiscard(cmdBuf, discard);
-}
+inline void nvnCommandBufferSetRasterizerDiscard(NVNcommandBuffer *cmdBuf, NVNboolean discard) { pfnc_nvnCommandBufferSetRasterizerDiscard(cmdBuf, discard); }
 
-inline void nvnCommandBufferSetConservativeRasterEnable(NVNcommandBuffer *cmdBuf, NVNboolean enable) {
-  pfnc_nvnCommandBufferSetConservativeRasterEnable(cmdBuf, enable);
-}
+inline void nvnCommandBufferSetConservativeRasterEnable(NVNcommandBuffer *cmdBuf, NVNboolean enable) { pfnc_nvnCommandBufferSetConservativeRasterEnable(cmdBuf, enable); }
 
-inline void nvnCommandBufferSetConservativeRasterDilate(NVNcommandBuffer *cmdBuf, float dilate) {
-  pfnc_nvnCommandBufferSetConservativeRasterDilate(cmdBuf, dilate);
-}
+inline void nvnCommandBufferSetConservativeRasterDilate(NVNcommandBuffer *cmdBuf, float dilate) { pfnc_nvnCommandBufferSetConservativeRasterDilate(cmdBuf, dilate); }
 
-inline void nvnCommandBufferSetSubpixelPrecisionBias(NVNcommandBuffer *cmdBuf, int xBits, int yBits) {
-  pfnc_nvnCommandBufferSetSubpixelPrecisionBias(cmdBuf, xBits, yBits);
-}
+inline void nvnCommandBufferSetSubpixelPrecisionBias(NVNcommandBuffer *cmdBuf, int xBits, int yBits) { pfnc_nvnCommandBufferSetSubpixelPrecisionBias(cmdBuf, xBits, yBits); }
 
-inline void nvnCommandBufferDispatchCompute(NVNcommandBuffer *cmdBuf, int groupsX, int groupsY, int groupsZ) {
-  pfnc_nvnCommandBufferDispatchCompute(cmdBuf, groupsX, groupsY, groupsZ);
-}
+inline void nvnCommandBufferDispatchCompute(NVNcommandBuffer *cmdBuf, int groupsX, int groupsY, int groupsZ) { pfnc_nvnCommandBufferDispatchCompute(cmdBuf, groupsX, groupsY, groupsZ); }
 
 inline void nvnCommandBufferBarrier(NVNcommandBuffer *cmdBuf, int barrier) { pfnc_nvnCommandBufferBarrier(cmdBuf, barrier); }
 
-inline void nvnCommandBufferSetTiledCacheTileSize(NVNcommandBuffer *cmdBuf, int tileWidth, int tileHeight) {
-  pfnc_nvnCommandBufferSetTiledCacheTileSize(cmdBuf, tileWidth, tileHeight);
-}
+inline void nvnCommandBufferSetTiledCacheTileSize(NVNcommandBuffer *cmdBuf, int tileWidth, int tileHeight) { pfnc_nvnCommandBufferSetTiledCacheTileSize(cmdBuf, tileWidth, tileHeight); }
 
-inline void nvnCommandBufferSetTiledCacheAction(NVNcommandBuffer *cmdBuf, NVNtiledCacheAction action) {
-  pfnc_nvnCommandBufferSetTiledCacheAction(cmdBuf, action);
-}
+inline void nvnCommandBufferSetTiledCacheAction(NVNcommandBuffer *cmdBuf, NVNtiledCacheAction action) { pfnc_nvnCommandBufferSetTiledCacheAction(cmdBuf, action); }
 
 inline void nvnMemoryPoolFinalize(NVNmemoryPool *pool) { pfnc_nvnMemoryPoolFinalize(pool); }
 
@@ -295,9 +266,7 @@ inline void nvnChannelMaskStateSetChannelMask(NVNchannelMaskState *channelMask, 
 
 inline void nvnColorStateSetDefaults(NVNcolorState *color) { pfnc_nvnColorStateSetDefaults(color); }
 
-inline void nvnColorStateSetBlendEnable(NVNcolorState *color, int index, NVNboolean enable) {
-  pfnc_nvnColorStateSetBlendEnable(color, index, enable);
-}
+inline void nvnColorStateSetBlendEnable(NVNcolorState *color, int index, NVNboolean enable) { pfnc_nvnColorStateSetBlendEnable(color, index, enable); }
 
 inline void nvnDepthStencilStateSetDefaults(NVNdepthStencilState *depthStencil) { pfnc_nvnDepthStencilStateSetDefaults(depthStencil); }
 
@@ -307,9 +276,7 @@ inline void nvnPolygonStateSetCullFace(NVNpolygonState *polygon, NVNface face) {
 
 inline void nvnPolygonStateSetFrontFace(NVNpolygonState *polygon, NVNfrontFace face) { pfnc_nvnPolygonStateSetFrontFace(polygon, face); }
 
-inline void nvnPolygonStateSetPolygonMode(NVNpolygonState *polygon, NVNpolygonMode polygonMode) {
-  pfnc_nvnPolygonStateSetPolygonMode(polygon, polygonMode);
-}
+inline void nvnPolygonStateSetPolygonMode(NVNpolygonState *polygon, NVNpolygonMode polygonMode) { pfnc_nvnPolygonStateSetPolygonMode(polygon, polygonMode); }
 
 inline void nvnVertexStreamStateSetDefaults(NVNvertexStreamState *stream) { pfnc_nvnVertexStreamStateSetDefaults(stream); }
 
@@ -317,9 +284,7 @@ inline void nvnBufferBuilderSetDevice(NVNbufferBuilder *builder, NVNdevice *devi
 
 inline void nvnBufferBuilderSetDefaults(NVNbufferBuilder *builder) { pfnc_nvnBufferBuilderSetDefaults(builder); }
 
-inline void nvnBufferBuilderSetStorage(NVNbufferBuilder *builder, NVNmemoryPool *pool, ptrdiff_t offset, size_t size) {
-  pfnc_nvnBufferBuilderSetStorage(builder, pool, offset, size);
-}
+inline void nvnBufferBuilderSetStorage(NVNbufferBuilder *builder, NVNmemoryPool *pool, ptrdiff_t offset, size_t size) { pfnc_nvnBufferBuilderSetStorage(builder, pool, offset, size); }
 
 inline NVNboolean nvnBufferInitialize(NVNbuffer *buffer, const NVNbufferBuilder *builder) { return pfnc_nvnBufferInitialize(buffer, builder); }
 
@@ -337,9 +302,7 @@ inline void nvnTextureBuilderSetSize1D(NVNtextureBuilder *builder, int width) { 
 
 inline void nvnTextureBuilderSetSize2D(NVNtextureBuilder *builder, int width, int height) { pfnc_nvnTextureBuilderSetSize2D(builder, width, height); }
 
-inline void nvnTextureBuilderSetSize3D(NVNtextureBuilder *builder, int width, int height, int depth) {
-  pfnc_nvnTextureBuilderSetSize3D(builder, width, height, depth);
-}
+inline void nvnTextureBuilderSetSize3D(NVNtextureBuilder *builder, int width, int height, int depth) { pfnc_nvnTextureBuilderSetSize3D(builder, width, height, depth); }
 
 inline void nvnTextureBuilderSetLevels(NVNtextureBuilder *builder, int numLevels) { pfnc_nvnTextureBuilderSetLevels(builder, numLevels); }
 

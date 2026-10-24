@@ -9,9 +9,7 @@
 
 namespace fw {
 
-DynamicsUpdater::DynamicsUpdater()
-    : dynamics(nullptr), referenceFrame(), isEnable(true), isEnableMovement(true), isResetRequested(false), preUpdateCallback(), speed(1.0f),
-      drawer(nullptr) {
+DynamicsUpdater::DynamicsUpdater() : dynamics(nullptr), referenceFrame(), isEnable(true), isEnableMovement(true), isResetRequested(false), preUpdateCallback(), speed(1.0f), drawer(nullptr) {
   cachedTransform.position = mm::Vec3::zero;
   cachedTransform.rotation = mm::Quat::identity;
   offsetTransform.position = mm::Vec3::zero;
@@ -77,10 +75,7 @@ void DynamicsUpdater::update(const UpdateInfo &info) {
     isResetRequested = false;
   } else if (isEnableMovement) {
     const Transform &world = referenceFrame->getSyncedWorldTransform();
-    dynamics->notifyMovement(world.position,
-                             world.rotation,
-                             cachedTransform.position + offsetTransform.position,
-                             mm::Quat::mul(cachedTransform.rotation, offsetTransform.rotation));
+    dynamics->notifyMovement(world.position, world.rotation, cachedTransform.position + offsetTransform.position, mm::Quat::mul(cachedTransform.rotation, offsetTransform.rotation));
     cachedTransform = world;
   }
 

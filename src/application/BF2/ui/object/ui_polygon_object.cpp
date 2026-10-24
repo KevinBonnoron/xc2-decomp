@@ -20,8 +20,7 @@
 
 namespace ui {
 
-UIPolygonObject::UIPolygonObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name)
-    : UIObject(layer, name, UI_OBJECT_TYPE_POLYGON), shape(nullptr), streamId(0), _134(), capture(nullptr) {}
+UIPolygonObject::UIPolygonObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name) : UIObject(layer, name, UI_OBJECT_TYPE_POLYGON), shape(nullptr), streamId(0), _134(), capture(nullptr) {}
 
 UIPolygonObject::~UIPolygonObject() {
   if (shape != nullptr) {
@@ -30,8 +29,7 @@ UIPolygonObject::~UIPolygonObject() {
   }
 }
 
-UIPolygonObject *UIPolygonObject::create(UILayoutObject *parent, const PolygonInfo &info, const void *data, u32 streamId,
-                                         const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
+UIPolygonObject *UIPolygonObject::create(UILayoutObject *parent, const PolygonInfo &info, const void *data, u32 streamId, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
   if (data != nullptr) {
     layer::LayerAccFormat format(data);
     if (format.mask) {
@@ -56,8 +54,7 @@ UIPolygonObject *UIPolygonObject::create(UILayoutObject *parent, const PolygonIn
   return polygon;
 }
 
-UIPolygonObject *UIPolygonObject::createObject(UILayoutObject *parent, const PolygonInfo &info, const mm::mtl::FixStr<32> &name,
-                                               mm::mtl::IAllocator *allocator) {
+UIPolygonObject *UIPolygonObject::createObject(UILayoutObject *parent, const PolygonInfo &info, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
   UIShape *shape = createShape(info, allocator);
   if (shape == nullptr) {
     return nullptr;
@@ -66,8 +63,7 @@ UIPolygonObject *UIPolygonObject::createObject(UILayoutObject *parent, const Pol
   layer::LayerBase *layer;
   if (parent != nullptr) {
     layer::LayerAccLayoutObj layoutAcc(parent->layer);
-    layer =
-        layoutAcc.createPolyObj(info.width, info.height, shape->vertices.size(), shape->indices.size(), static_cast<layer::LayerPrimitiveType>(0));
+    layer = layoutAcc.createPolyObj(info.width, info.height, shape->vertices.size(), shape->indices.size(), static_cast<layer::LayerPrimitiveType>(0));
   } else {
     layer::LayerAccManager manager;
     layer = manager.createPolyObj(info.width, info.height, shape->vertices.size(), shape->indices.size(), static_cast<layer::LayerPrimitiveType>(0));
@@ -87,8 +83,7 @@ UIPolygonObject *UIPolygonObject::createObject(UILayoutObject *parent, const Pol
   return polygon;
 }
 
-UIPolygonObject *UIPolygonObject::create(UILayoutObject *parent, const PolygonInfo &info, ml::ScnRenderDrCapture *capture,
-                                         const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
+UIPolygonObject *UIPolygonObject::create(UILayoutObject *parent, const PolygonInfo &info, ml::ScnRenderDrCapture *capture, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
   UIPolygonObject *polygon = createObject(parent, info, name, allocator);
   if (polygon == nullptr) {
     return nullptr;

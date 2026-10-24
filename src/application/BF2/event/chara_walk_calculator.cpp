@@ -8,8 +8,7 @@ f32 CharaWalkCalculator::s_lengthAcc[2][LENGTH_COUNT];
 f32 CharaWalkCalculator::s_lengthDec[2][LENGTH_COUNT];
 
 CharaWalkCalculator::CharaWalkCalculator()
-    : flags(0), mFrom(0.0f, 0.0f, 0.0f), mTo(0.0f, 0.0f, 0.0f), mDistance(0.0f), mDir(0.0f, 0.0f, 0.0f), mDirXZ(0.0f, 0.0f, 0.0f), mBlend(30.0f),
-      mTotalFrame(0.0f), frame(0.0f) {}
+    : flags(0), mFrom(0.0f, 0.0f, 0.0f), mTo(0.0f, 0.0f, 0.0f), mDistance(0.0f), mDir(0.0f, 0.0f, 0.0f), mDirXZ(0.0f, 0.0f, 0.0f), mBlend(30.0f), mTotalFrame(0.0f), frame(0.0f) {}
 
 void CharaWalkCalculator::clear() { flags = 0; }
 

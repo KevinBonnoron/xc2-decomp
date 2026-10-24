@@ -42,10 +42,9 @@ constexpr size_t EVENT_MEM_SIZE = 0x2300000;
 } // namespace
 
 GfGameEvent::GfGameEvent(const GfSetupParam &param)
-    : flags(0), initialized(false), afterEventStartID(0), playerOffState(0), layerPause(reinterpret_cast<GF_LP_HANDLE *>(-1)), colorFilter(),
-      cloudSea(), tempWeather(), tempWeatherMapId(0), weaType(WEATYPE_DEFAULT), weaTypeWeather(WEATHER_F), lastPlayEventId(0), playEventId(0),
-      playBladeId(0), playState(PLAY_STATE_NONE), categoryHandle(INVALID_CATEGORY_HANDLE), csCategoryHandle(INVALID_CATEGORY_HANDLE), isCsMute(false),
-      isStopped(false), fadeInWaitSec(0.0f), fadeInSec(0.0f) {
+    : flags(0), initialized(false), afterEventStartID(0), playerOffState(0), layerPause(reinterpret_cast<GF_LP_HANDLE *>(-1)), colorFilter(), cloudSea(), tempWeather(), tempWeatherMapId(0),
+      weaType(WEATYPE_DEFAULT), weaTypeWeather(WEATHER_F), lastPlayEventId(0), playEventId(0), playBladeId(0), playState(PLAY_STATE_NONE), categoryHandle(INVALID_CATEGORY_HANDLE),
+      csCategoryHandle(INVALID_CATEGORY_HANDLE), isCsMute(false), isStopped(false), fadeInWaitSec(0.0f), fadeInSec(0.0f) {
   initialize(param);
 }
 

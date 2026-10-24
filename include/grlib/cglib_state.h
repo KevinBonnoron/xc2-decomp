@@ -9,8 +9,7 @@ class CGLibDepthTarget;
 class CGLibRenderTarget;
 
 struct LibMainStateViewPort {
-  LibMainStateViewPort(f32 x, f32 y, f32 width, f32 height, f32 minDepth, f32 maxDepth)
-      : x(x), y(y), width(width), height(height), minDepth(minDepth), maxDepth(maxDepth) {}
+  LibMainStateViewPort(f32 x, f32 y, f32 width, f32 height, f32 minDepth, f32 maxDepth) : x(x), y(y), width(width), height(height), minDepth(minDepth), maxDepth(maxDepth) {}
 
   f32 x;
   f32 y;

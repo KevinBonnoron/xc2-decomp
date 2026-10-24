@@ -157,8 +157,7 @@ void StateResetBlade::leave(GfGameManager *, ai::State *) {}
 
 void StateResetBlade::update(GfGameManager *, const fw::UpdateInfo &) {}
 
-GfGameState::GfGameState()
-    : fsm(getAllocator(ALLOCATOR_DEFAULT)), stateFlg(0), stateReserve(GF_STATE_CONTROL), countStateReserve(0), stateTime(0.0f) {}
+GfGameState::GfGameState() : fsm(getAllocator(ALLOCATOR_DEFAULT)), stateFlg(0), stateReserve(GF_STATE_CONTROL), countStateReserve(0), stateTime(0.0f) {}
 
 GfGameState::~GfGameState() {}
 

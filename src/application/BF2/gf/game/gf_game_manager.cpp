@@ -476,8 +476,7 @@ bool GfGameManager::isInnerState(GF_STATE state) { return GfSequentialPlay::isIn
 GF_OBJ_HANDLE *GfGameManager::getPartyLeader() {
   GF_OBJ_HANDLE *leader = GfGameParty::getLeader();
   GfObjAcc objAcc(leader);
-  if (objAcc.isValid() && (GfGameObj::isValidGameObj(leader, true, nullptr) || GfGameObj::isEnterGameObj(leader) ||
-                           (fw::Framework::isLayerPause(objAcc.getLayer()) && GfObjUtil::isUpdate(leader)))) {
+  if (objAcc.isValid() && (GfGameObj::isValidGameObj(leader, true, nullptr) || GfGameObj::isEnterGameObj(leader) || (fw::Framework::isLayerPause(objAcc.getLayer()) && GfObjUtil::isUpdate(leader)))) {
     return leader;
   }
 
@@ -487,8 +486,7 @@ GF_OBJ_HANDLE *GfGameManager::getPartyLeader() {
 GF_OBJ_HANDLE *GfGameManager::getPartyLeaderDriver() {
   GF_OBJ_HANDLE *driver = GfGameParty::getLeaderDriver();
   GfObjAcc objAcc(driver);
-  if (GfGameObj::isValidGameObj(driver, true, nullptr) || GfGameObj::isEnterGameObj(driver) ||
-      (fw::Framework::isLayerPause(objAcc.getLayer()) && GfObjUtil::isUpdate(driver))) {
+  if (GfGameObj::isValidGameObj(driver, true, nullptr) || GfGameObj::isEnterGameObj(driver) || (fw::Framework::isLayerPause(objAcc.getLayer()) && GfObjUtil::isUpdate(driver))) {
     return driver;
   }
 
@@ -673,9 +671,7 @@ bool GfGameManager::isMapjumpOK() {
 
 bool GfGameManager::isExecTutorial() { return GfMenuObjTutorial::isWaiting(); }
 
-bool GfGameManager::isGmkTutorialMoverOK() {
-  return GfGameScene::get() != nullptr && GfGameScene::get()->isPlayerStopFlag(PLSTOP_GMK_TUTORIAL_MOVER);
-}
+bool GfGameManager::isGmkTutorialMoverOK() { return GfGameScene::get() != nullptr && GfGameScene::get()->isPlayerStopFlag(PLSTOP_GMK_TUTORIAL_MOVER); }
 
 void GfGameManager::setGmkTutorialMoverOK(bool isOK) {
   if (GfGameScene::get() != nullptr) {
@@ -689,8 +685,7 @@ bool GfGameManager::isGmkTutorialSequenceOK() {
     return false;
   }
 
-  return scene->isPlayerStopFlag(PLSTOP_GMK_TUTORIAL_SEQUENCE) || scene->isPlayerStopFlag(PLSTOP_EVENT) ||
-         scene->isPlayerStopFlag(PLSTOP_RESET_BLADE);
+  return scene->isPlayerStopFlag(PLSTOP_GMK_TUTORIAL_SEQUENCE) || scene->isPlayerStopFlag(PLSTOP_EVENT) || scene->isPlayerStopFlag(PLSTOP_RESET_BLADE);
 }
 
 void GfGameManager::setGmkTutorialSequenceOK(bool isOK) {
@@ -730,8 +725,7 @@ bool GfGameManager::isEnableFieldAccess() {
         return false;
       }
 
-      if (GfDataDriver::getBlade(driverAcc.getValidDriverId(), -1) == BLADE_BYAKKO &&
-          GfObjUtil::getParentHandle(driverAcc.handle) != GfGameParty::getHandleBlade(PARTY_ID_LEADER, -1)) {
+      if (GfDataDriver::getBlade(driverAcc.getValidDriverId(), -1) == BLADE_BYAKKO && GfObjUtil::getParentHandle(driverAcc.handle) != GfGameParty::getHandleBlade(PARTY_ID_LEADER, -1)) {
         return false;
       }
     }
@@ -1103,8 +1097,7 @@ bool GfGameManager::isExistBossEnemyWithHp() {
     }
 
     DataParamAcc dataParamAcc(handle);
-    if (GfDataEnemy::isBoss(dataParamAcc.isValid() ? dataParamAcc.getBdatId() : 0) && dataParamAcc.getHp() != 0 &&
-        dataParamAcc.getHp() < dataParamAcc.getHpMax(false)) {
+    if (GfDataEnemy::isBoss(dataParamAcc.isValid() ? dataParamAcc.getBdatId() : 0) && dataParamAcc.getHp() != 0 && dataParamAcc.getHp() < dataParamAcc.getHpMax(false)) {
       return true;
     }
   }
@@ -1112,9 +1105,7 @@ bool GfGameManager::isExistBossEnemyWithHp() {
   return false;
 }
 
-bool GfGameManager::isNeedResetBlade() {
-  return GfSelectBlade::isNeedFieldBladeChange(0) || GfSelectBlade::isNeedFieldBladeChange(1) || GfSelectBlade::isNeedFieldBladeChange(2);
-}
+bool GfGameManager::isNeedResetBlade() { return GfSelectBlade::isNeedFieldBladeChange(0) || GfSelectBlade::isNeedFieldBladeChange(1) || GfSelectBlade::isNeedFieldBladeChange(2); }
 
 bool GfGameManager::isStopEnemySearch() { return GfGameEnv::isStopEnemySearch(); }
 

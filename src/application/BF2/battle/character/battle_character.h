@@ -101,8 +101,7 @@ public:
   };
 
   struct AI_MOVE_PARAM {
-    AI_MOVE_PARAM()
-        : unknown00(0.0f), unknown04(0.0f), unknown08(MOVE_TYPE_TARGET), unknown10(nullptr), unknown18(reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1)) {}
+    AI_MOVE_PARAM() : unknown00(0.0f), unknown04(0.0f), unknown08(MOVE_TYPE_TARGET), unknown10(nullptr), unknown18(reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1)) {}
 
     f32 unknown00;                // Inferred role: distance; original member name unknown.
     f32 unknown04;                // Inferred role: time; original member name unknown.

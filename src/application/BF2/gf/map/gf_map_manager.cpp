@@ -29,8 +29,7 @@ namespace gf {
 
 static bool isSeamlessMap(GF_OBJ_HANDLE *handle) { return mm::mtl::dynamicCast<GfObjSetupMap>(GfObjManager::getObjInfo(handle)->setup)->isSeamless; }
 
-GfMapManager::GfMapManager(const GfSetupParam &param)
-    : initialized(false), mapHandle(INVALID_HANDLE), mapJumpId(0), mapId(0), assetHandle(INVALID_ASSET_HANDLE) {
+GfMapManager::GfMapManager(const GfSetupParam &param) : initialized(false), mapHandle(INVALID_HANDLE), mapJumpId(0), mapId(0), assetHandle(INVALID_ASSET_HANDLE) {
   initialize(param);
   GfObjManager::addListener(this, OBJEVT_ALL);
 }
@@ -277,18 +276,14 @@ void GfMapManager::updateMapSpeed(const fw::UpdateInfo &info) {
   GfObjAcc(mapHandle).setFrameSpeed(speed);
 }
 
-GfAssetResource *GfMapManager::getModelResource() {
-  return GfAssetManager::getResource(GfObjUtil::getAssetHandle(get()->mapHandle), FILE_IDX_MODEL, ASSET_TYPE_BASE);
-}
+GfAssetResource *GfMapManager::getModelResource() { return GfAssetManager::getResource(GfObjUtil::getAssetHandle(get()->mapHandle), FILE_IDX_MODEL, ASSET_TYPE_BASE); }
 
 fw::ColiObject *GfMapManager::getColiObject() {
   GfMapManager *mapManager = get();
   return mapManager != nullptr ? mapManager->coli.coliObject : nullptr;
 }
 
-GfAssetResource *GfMapManager::getColiResource() {
-  return GfAssetManager::getResource(GfObjUtil::getAssetHandle(get()->mapHandle), MAP_FILE_IDX_COLLISION, ASSET_TYPE_BASE);
-}
+GfAssetResource *GfMapManager::getColiResource() { return GfAssetManager::getResource(GfObjUtil::getAssetHandle(get()->mapHandle), MAP_FILE_IDX_COLLISION, ASSET_TYPE_BASE); }
 
 bool GfMapManager::isColisionExist() {
   GfMapManager *mapManager = get();

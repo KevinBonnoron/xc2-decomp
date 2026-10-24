@@ -51,8 +51,7 @@ public:
       u32 id;
     };
 
-    explicit Impl(mm::mtl::IAllocator *allocator)
-        : allocator(allocator), messageId(0), messageIdMin(MESSAGE_ID_MIN), messageIdMax(MESSAGE_ID_MAX), messages(allocator) {
+    explicit Impl(mm::mtl::IAllocator *allocator) : allocator(allocator), messageId(0), messageIdMin(MESSAGE_ID_MIN), messageIdMax(MESSAGE_ID_MAX), messages(allocator) {
       objectMap.reserve(allocator, OBJECT_CAPACITY);
       messages.reserve(MESSAGE_RESERVE);
     }

@@ -81,13 +81,9 @@ void GfSequentialPlay::popState() { addCommand(GfPlayComState::create(GF_STATE(0
 
 void GfSequentialPlay::addEventFade() { addCommand(GfPlayComEventFade::create()); }
 
-void GfSequentialPlay::addEvent(int event, u32 param0, u32 param1, bool isEndFadeOut) {
-  addCommand(GfPlayComEvent::create(event, param0, param1, isEndFadeOut));
-}
+void GfSequentialPlay::addEvent(int event, u32 param0, u32 param1, bool isEndFadeOut) { addCommand(GfPlayComEvent::create(event, param0, param1, isEndFadeOut)); }
 
-void GfSequentialPlay::addEvent(const char *name, u32 param0, u32 param1, bool isEndFadeOut) {
-  addCommand(GfPlayComEvent::create(name, param0, param1, isEndFadeOut));
-}
+void GfSequentialPlay::addEvent(const char *name, u32 param0, u32 param1, bool isEndFadeOut) { addCommand(GfPlayComEvent::create(name, param0, param1, isEndFadeOut)); }
 
 void GfSequentialPlay::addCallbackEventSequence(int sequence, bool isStart) { addCommand(GfPlayComCallbackEventSequence::create(sequence, isStart)); }
 
@@ -168,13 +164,9 @@ void GfSequentialPlay::addTalk(const GfSetupPfTalk &talk) { addCommand(GfPlayCom
 
 void GfSequentialPlay::addQuestUIOrder(QuestID quest, bool isForce) { addCommand(GfPlayComQuestOrderUI::create(quest, isForce)); }
 
-void GfSequentialPlay::addQuestUIComplete(QuestID quest, QuestID child, QSTATE state) {
-  addCommand(GfPlayComQuestCompleteUI::create(quest, child, state));
-}
+void GfSequentialPlay::addQuestUIComplete(QuestID quest, QuestID child, QSTATE state) { addCommand(GfPlayComQuestCompleteUI::create(quest, child, state)); }
 
-void GfSequentialPlay::addGimmickTaskComplete(gmk::GmkType type, u32 task, f32 time) {
-  addCommand(GfPlayComGimmickTaskComplete::create(type, task, time));
-}
+void GfSequentialPlay::addGimmickTaskComplete(gmk::GmkType type, u32 task, f32 time) { addCommand(GfPlayComGimmickTaskComplete::create(type, task, time)); }
 
 void GfSequentialPlay::addChainAttack() { addCommand(GfPlayComChainAttack::create()); }
 

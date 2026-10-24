@@ -7,9 +7,7 @@
 
 namespace grlib {
 
-void CGLibCtlShader::setDispatchCompute(u32 groupsX, u32 groupsY, u32 groupsZ) {
-  nvnCommandBufferDispatchCompute(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, groupsX, groupsY, groupsZ);
-}
+void CGLibCtlShader::setDispatchCompute(u32 groupsX, u32 groupsY, u32 groupsZ) { nvnCommandBufferDispatchCompute(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, groupsX, groupsY, groupsZ); }
 
 void CGLibCtlShader::setMemoryBarrier() { nvnCommandBufferBarrier(context::CGLibSystemContext::get()->m_pipeline.m_cmdBuf, 9); }
 

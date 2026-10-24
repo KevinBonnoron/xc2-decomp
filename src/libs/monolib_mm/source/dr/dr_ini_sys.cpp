@@ -14,9 +14,7 @@ f32 DrIniSys::getFloatWork(const char *value) { return atof(value); }
 
 int DrIniSys::getIntWork(const char *value) { return atoi(value); }
 
-void DrIniSys::setDefTexture(int index, void *data, int size) {
-  grlib::CGLibTexture::createTextureImagePtrs(m_textures[index], data, size, false, nullptr, true);
-}
+void DrIniSys::setDefTexture(int index, void *data, int size) { grlib::CGLibTexture::createTextureImagePtrs(m_textures[index], data, size, false, nullptr, true); }
 
 void DrIniSys::loadToonRimTexture() {
   if (m_toonRimRes != nullptr) {
@@ -73,13 +71,9 @@ void DrIniSys::setStrWork(char *dst, const char *src) {
   *dst = '\0';
 }
 
-void DrIniSys::setLutTexture(int index, void *data, int size) {
-  grlib::CGLibTexture::createTextureImagePtrs(m_textures[index], data, size, false, nullptr, true);
-}
+void DrIniSys::setLutTexture(int index, void *data, int size) { grlib::CGLibTexture::createTextureImagePtrs(m_textures[index], data, size, false, nullptr, true); }
 
-void DrIniSys::setCubeTexture(int index, void *data, int size) {
-  grlib::CGLibTexture::createTextureImagePtrs(m_textures[index], data, size, false, nullptr, true);
-}
+void DrIniSys::setCubeTexture(int index, void *data, int size) { grlib::CGLibTexture::createTextureImagePtrs(m_textures[index], data, size, false, nullptr, true); }
 
 void DrIniSys::reloadMirrorBallModel() { loadMirrorBallModel(); }
 

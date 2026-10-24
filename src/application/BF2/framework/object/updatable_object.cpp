@@ -2,8 +2,7 @@
 
 namespace fw {
 
-UpdatableObject::UpdatableObject(u32 type, const HandlePtr<UpdatableObject> &handle, u32 layer)
-    : selfHandle(handle), type(type), layer(layer), flags(0), parent() {
+UpdatableObject::UpdatableObject(u32 type, const HandlePtr<UpdatableObject> &handle, u32 layer) : selfHandle(handle), type(type), layer(layer), flags(0), parent() {
   for (u32 i = 0; i < COMPONENT_SLOT_MAX; i++) {
     components[i] = nullptr;
   }

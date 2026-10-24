@@ -12,9 +12,7 @@ class IAllocator;
 
 namespace anm {
 
-SimplexState::SimplexState(const ResStateData *pResStateData, mm::mtl::IAllocator &allocator) : AsmState(pResStateData, allocator) {
-  m_clip.createControl(pResStateData->m_clips[0], allocator);
-}
+SimplexState::SimplexState(const ResStateData *pResStateData, mm::mtl::IAllocator &allocator) : AsmState(pResStateData, allocator) { m_clip.createControl(pResStateData->m_clips[0], allocator); }
 
 SimplexState::~SimplexState() { m_clip.destroyControl(); }
 

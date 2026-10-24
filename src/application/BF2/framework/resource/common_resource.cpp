@@ -13,13 +13,9 @@
 namespace fw {
 enum eResourceType : int;
 
-CommonResource *CommonResource::search(mtl::ALLOC_HANDLE handle, const char *path) {
-  return static_cast<CommonResource *>(ResourceManager::get()->searchResource(0, handle, path));
-}
+CommonResource *CommonResource::search(mtl::ALLOC_HANDLE handle, const char *path) { return static_cast<CommonResource *>(ResourceManager::get()->searchResource(0, handle, path)); }
 
-CommonResource *CommonResource::search(mm::mtl::IAllocator *allocator, const char *path) {
-  return static_cast<CommonResource *>(ResourceManager::get()->searchResource(0, allocator, path));
-}
+CommonResource *CommonResource::search(mm::mtl::IAllocator *allocator, const char *path) { return static_cast<CommonResource *>(ResourceManager::get()->searchResource(0, allocator, path)); }
 
 CommonResource *CommonResource::request_detail(mtl::ALLOC_HANDLE handle, const char *path, int priority, bool isSafe, bool isBlock) {
   CommonResource *resource = search(handle, path);
@@ -83,21 +79,13 @@ CommonResource *CommonResource::request_detail(mm::mtl::IAllocator *allocator, c
   return resource;
 }
 
-CommonResource *CommonResource::request(mtl::ALLOC_HANDLE handle, const char *path, int priority, bool isSafe) {
-  return request_detail(handle, path, priority, isSafe, false);
-}
+CommonResource *CommonResource::request(mtl::ALLOC_HANDLE handle, const char *path, int priority, bool isSafe) { return request_detail(handle, path, priority, isSafe, false); }
 
-CommonResource *CommonResource::request(mm::mtl::IAllocator *allocator, const char *path, int priority, bool isSafe) {
-  return request_detail(allocator, path, priority, isSafe, false);
-}
+CommonResource *CommonResource::request(mm::mtl::IAllocator *allocator, const char *path, int priority, bool isSafe) { return request_detail(allocator, path, priority, isSafe, false); }
 
-CommonResource *CommonResource::blockRequest(mtl::ALLOC_HANDLE handle, const char *path, bool isSafe) {
-  return request_detail(handle, path, 10, isSafe, true);
-}
+CommonResource *CommonResource::blockRequest(mtl::ALLOC_HANDLE handle, const char *path, bool isSafe) { return request_detail(handle, path, 10, isSafe, true); }
 
-CommonResource *CommonResource::blockRequest(mm::mtl::IAllocator *allocator, const char *path, bool isSafe) {
-  return request_detail(allocator, path, 10, isSafe, true);
-}
+CommonResource *CommonResource::blockRequest(mm::mtl::IAllocator *allocator, const char *path, bool isSafe) { return request_detail(allocator, path, 10, isSafe, true); }
 
 CommonResource::CommonResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority, u32 type, int option)
     : ResourceObject(type, handle, priority, option), state(STATE_NONE), isSafe(false), loader(nullptr), asset(nullptr) {}

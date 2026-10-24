@@ -22,8 +22,7 @@ struct ResSolver;
 class Factory {
 public:
   static CollisionObject *createColObject(const ResCollisionArray *collisions, anm::Pose &pose, mm::mtl::IAllocator *allocator);
-  static Dynamics *createDynamics(CollisionObject *collisionObject, const anm::Array<ResSolver> &solvers, anm::Pose &pose, ForceInterface *force,
-                                  mm::mtl::IAllocator *allocator);
+  static Dynamics *createDynamics(CollisionObject *collisionObject, const anm::Array<ResSolver> &solvers, anm::Pose &pose, ForceInterface *force, mm::mtl::IAllocator *allocator);
 };
 
 } // namespace skd

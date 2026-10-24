@@ -82,13 +82,9 @@ void Manager::setDebugAgeingSkipEnable(bool isEnable) { mm::mtl::Singleton<Debug
 
 void Manager::setDebugDisableBgm(bool isDisable) { mm::mtl::Singleton<DebugManager>::getPtr()->setDisableBgm(isDisable); }
 
-void Manager::setDebugReplaceDefaultEquip(bool isReplace, u32 slot, u32 item) {
-  mm::mtl::Singleton<DebugManager>::getPtr()->setReplaceDefaultEquip(isReplace, slot, item);
-}
+void Manager::setDebugReplaceDefaultEquip(bool isReplace, u32 slot, u32 item) { mm::mtl::Singleton<DebugManager>::getPtr()->setReplaceDefaultEquip(isReplace, slot, item); }
 
-bool Manager::isReplaceDefaultEquip(u32 slot, u32 *item) const {
-  return mm::mtl::Singleton<DebugManager>::getPtr()->isReplaceDefaultEquip(slot, item);
-}
+bool Manager::isReplaceDefaultEquip(u32 slot, u32 *item) const { return mm::mtl::Singleton<DebugManager>::getPtr()->isReplaceDefaultEquip(slot, item); }
 
 void Manager::setDebugReplaceMaximumEquip(bool isReplace) { mm::mtl::Singleton<DebugManager>::getPtr()->setReplaceMaximumEquip(isReplace); }
 

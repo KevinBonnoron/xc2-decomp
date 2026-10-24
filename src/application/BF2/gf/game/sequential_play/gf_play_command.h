@@ -101,13 +101,13 @@ public:
 
 static_assert(sizeof(GfPlayCom) == 0x10, "");
 
-#define GF_PLAY_COM(funcName)                                                                                                                        \
-public:                                                                                                                                              \
-  static mm::mtl::RTTI m_rtti;                                                                                                                       \
-  const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }                                                                                  \
-  const char *getFuncName() const override {                                                                                                         \
-    static const char *func = funcName;                                                                                                              \
-    return func;                                                                                                                                     \
+#define GF_PLAY_COM(funcName)                                                                                                                                                                          \
+public:                                                                                                                                                                                                \
+  static mm::mtl::RTTI m_rtti;                                                                                                                                                                         \
+  const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }                                                                                                                                    \
+  const char *getFuncName() const override {                                                                                                                                                           \
+    static const char *func = funcName;                                                                                                                                                                \
+    return func;                                                                                                                                                                                       \
   }
 
 class GfPlayComEventFade : public GfPlayCom {
@@ -238,8 +238,7 @@ class GfPlayComCallbackEventSequence : public GfPlayCom {
   GF_PLAY_COM("PlayComCallbackEventSequence")
 
 public:
-  GfPlayComCallbackEventSequence(int sequence, bool isStart)
-      : GfPlayCom(PCOMTYPE_CALLBACK_EVENT_SEQUENCE, false), sequence(sequence), isStart(isStart) {}
+  GfPlayComCallbackEventSequence(int sequence, bool isStart) : GfPlayCom(PCOMTYPE_CALLBACK_EVENT_SEQUENCE, false), sequence(sequence), isStart(isStart) {}
   void start() override;
   void end() override;
   bool update(const fw::UpdateInfo &info, bool isCancel) override;

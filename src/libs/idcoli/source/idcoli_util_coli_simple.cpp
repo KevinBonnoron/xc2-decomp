@@ -4,51 +4,33 @@ namespace idcoli {
 class IDColiResult;
 struct CLBoxWork;
 
-bool IDColiUtilColiSimple::isSphereBox(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isSphereBox(result, &input.sphere, static_cast<const CLBoxWork *>(data));
-}
+bool IDColiUtilColiSimple::isSphereBox(IDColiResult &result, const IDColiInput &input, const void *data) { return isSphereBox(result, &input.sphere, static_cast<const CLBoxWork *>(data)); }
 
 bool IDColiUtilColiSimple::isSpherePoli(IDColiResult &result, const IDColiInput &input, const void *data) { return false; }
 
-bool IDColiUtilColiSimple::isCapsuleBox(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isCapsuleBox(result, &input.capsule, static_cast<const CLBoxWork *>(data));
-}
+bool IDColiUtilColiSimple::isCapsuleBox(IDColiResult &result, const IDColiInput &input, const void *data) { return isCapsuleBox(result, &input.capsule, static_cast<const CLBoxWork *>(data)); }
 
-bool IDColiUtilColiSimple::isCapsuleInBox(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isCapsuleInBox(result, &input.capsule, static_cast<const CLBoxWork *>(data));
-}
+bool IDColiUtilColiSimple::isCapsuleInBox(IDColiResult &result, const IDColiInput &input, const void *data) { return isCapsuleInBox(result, &input.capsule, static_cast<const CLBoxWork *>(data)); }
 
 bool IDColiUtilColiSimple::isCapsulePoli(IDColiResult &result, const IDColiInput &input, const void *data) { return false; }
 
-bool IDColiUtilColiSimple::isBoxSphere(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isSphereBox(result, static_cast<const CLSphereWork *>(data), input.getBox());
-}
+bool IDColiUtilColiSimple::isBoxSphere(IDColiResult &result, const IDColiInput &input, const void *data) { return isSphereBox(result, static_cast<const CLSphereWork *>(data), input.getBox()); }
 
 bool IDColiUtilColiSimple::isBoxBox(IDColiResult &result, const IDColiInput &input, const void *data) { return false; }
 
-bool IDColiUtilColiSimple::isBoxCapsule(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isCapsuleBox(result, static_cast<const CLCapsuleWork *>(data), input.getBox());
-}
+bool IDColiUtilColiSimple::isBoxCapsule(IDColiResult &result, const IDColiInput &input, const void *data) { return isCapsuleBox(result, static_cast<const CLCapsuleWork *>(data), input.getBox()); }
 
 bool IDColiUtilColiSimple::isBoxPoli(IDColiResult &result, const IDColiInput &input, const void *data) { return false; }
 
-bool IDColiUtilColiSimple::isLineBox(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isPartsLineBox(result, &input.line, data, false);
-}
+bool IDColiUtilColiSimple::isLineBox(IDColiResult &result, const IDColiInput &input, const void *data) { return isPartsLineBox(result, &input.line, data, false); }
 
-bool IDColiUtilColiSimple::isLineCapsule(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isPartsLineCapsule(result, &input.line, data, false);
-}
+bool IDColiUtilColiSimple::isLineCapsule(IDColiResult &result, const IDColiInput &input, const void *data) { return isPartsLineCapsule(result, &input.line, data, false); }
 
 bool IDColiUtilColiSimple::isLinePoli(IDColiResult &result, const IDColiInput &input, const void *data) { return false; }
 
-bool IDColiUtilColiSimple::isLineInBox(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isPartsLineBox(result, &input.line, data, true);
-}
+bool IDColiUtilColiSimple::isLineInBox(IDColiResult &result, const IDColiInput &input, const void *data) { return isPartsLineBox(result, &input.line, data, true); }
 
-bool IDColiUtilColiSimple::isLineInCapsule(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isPartsLineCapsule(result, &input.line, data, false);
-}
+bool IDColiUtilColiSimple::isLineInCapsule(IDColiResult &result, const IDColiInput &input, const void *data) { return isPartsLineCapsule(result, &input.line, data, false); }
 
 bool IDColiUtilColiSimple::isRayBox(IDColiResult &result, const IDColiInput &input, const void *data) {
   if (isPartsLineBox(result, &input.ray.lines[0], data, false)) {

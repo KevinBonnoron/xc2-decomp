@@ -155,8 +155,8 @@ void GfGamePad::gevExecState(EXEC_STATE) {}
 void GfGamePad::gevGameState(GF_STATE, GF_STATE) {}
 
 void GfGamePad::eventInGameOpenQuestListMenu() {
-  if (GfGameManager::isControlFree() && !GfGameManager::isBattle() && !GfGameManager::isControlMoverBattle() &&
-      !GfGameManager::isStopMainMenuOpenForGimmick() && GfQuestInfo::isDispUI(GfQuestManager::getCurrentQuest(QTYPE_NONE))) {
+  if (GfGameManager::isControlFree() && !GfGameManager::isBattle() && !GfGameManager::isControlMoverBattle() && !GfGameManager::isStopMainMenuOpenForGimmick() &&
+      GfQuestInfo::isDispUI(GfQuestManager::getCurrentQuest(QTYPE_NONE))) {
     GfPlayFactory::createMenuQuestList();
   }
 }

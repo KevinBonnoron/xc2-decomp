@@ -60,10 +60,8 @@ static ITEM_BOX_INDEX getItemBoxIndex(ItemType::Type type) {
   }
 }
 
-template <u32 N>
-static void setItems(GfItemBoxBase *itemBoxBase, ItemBox *itemBox, u32 index, SDataItemInfo (&items)[N], u32 maxStock, bool isMulti) {
-  itemBoxBase->setItemTypeInfo(
-      itemBox, index, static_cast<GfItemInfo *>(items), static_cast<GfItemInfo *>(items + N), N, sizeof(GfItemInfo), maxStock, isMulti);
+template <u32 N> static void setItems(GfItemBoxBase *itemBoxBase, ItemBox *itemBox, u32 index, SDataItemInfo (&items)[N], u32 maxStock, bool isMulti) {
+  itemBoxBase->setItemTypeInfo(itemBox, index, static_cast<GfItemInfo *>(items), static_cast<GfItemInfo *>(items + N), N, sizeof(GfItemInfo), maxStock, isMulti);
 }
 
 item_iterator item_iterator::operator++() {
@@ -114,8 +112,7 @@ void GfItemBoxBase::setItemBox(ItemBox *itemBox, bool isClear) {
   setItems(this, itemBox, ITEM_BOX_INDEX_HANA_ASSIST, itemBox->hanaAssists, 1, false);
 }
 
-void GfItemBoxBase::setItemTypeInfo(ItemBox *itemBox, u32 index, GfItemInfo *first, GfItemInfo *last, u32 capacity, u32 itemSize, u32 maxStock,
-                                    bool isMulti) {
+void GfItemBoxBase::setItemTypeInfo(ItemBox *itemBox, u32 index, GfItemInfo *first, GfItemInfo *last, u32 capacity, u32 itemSize, u32 maxStock, bool isMulti) {
   ItemTypeInfo &info = mItemTypeInfos[index];
   info.first = first;
   info.last = last;

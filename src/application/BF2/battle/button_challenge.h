@@ -23,9 +23,7 @@ public:
   };
 
   struct BUTTON_CHALLENGE_PARAM {
-    BUTTON_CHALLENGE_PARAM()
-        : unknown00_0(0), unknown01_6(0), unknown03_4(TYPE_NONE), unknown04_0(0), unknown06_0(0), unknown08(0), unknown0c(CHARACTER_COUNT),
-          unknown0d(0) {}
+    BUTTON_CHALLENGE_PARAM() : unknown00_0(0), unknown01_6(0), unknown03_4(TYPE_NONE), unknown04_0(0), unknown06_0(0), unknown08(0), unknown0c(CHARACTER_COUNT), unknown0d(0) {}
 
     u32 unknown00_0 : 14; // Inferred role: id; original member name unknown.
     u32 unknown01_6 : 14; // Inferred role: challenge; original member name unknown.

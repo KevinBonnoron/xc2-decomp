@@ -183,8 +183,7 @@ inline void DrResMdoVertex::changeMemVertex(const u8 *resource) {
   for (int i = 0; i < m_vertexNum; i++) {
     m_vertices[i].resetVertexBuff(m_memPool, vertexInfos[i].offset);
   }
-  const MdsEtcVertexBuffInfo *etcVertexInfos =
-      reinterpret_cast<const MdsEtcVertexBuffInfo *>(reinterpret_cast<const u8 *>(m_header) + header->etcVertexOffset);
+  const MdsEtcVertexBuffInfo *etcVertexInfos = reinterpret_cast<const MdsEtcVertexBuffInfo *>(reinterpret_cast<const u8 *>(m_header) + header->etcVertexOffset);
   for (int i = 0; i < m_etcVertexNum; i++) {
     m_etcVertices[i].resetVertexBuff(m_memPool, etcVertexInfos[i].offset);
   }
@@ -193,8 +192,7 @@ inline void DrResMdoVertex::changeMemVertex(const u8 *resource) {
     m_indices[i].resetIndexBuff(m_memPool, indexInfos[i].offset);
   }
   if (header->uniformVertexOffset != 0) {
-    const MdsUniformVertexInfo *uniformInfo =
-        reinterpret_cast<const MdsUniformVertexInfo *>(reinterpret_cast<const u8 *>(m_header) + header->uniformVertexOffset);
+    const MdsUniformVertexInfo *uniformInfo = reinterpret_cast<const MdsUniformVertexInfo *>(reinterpret_cast<const u8 *>(m_header) + header->uniformVertexOffset);
     m_uniformVertex->vertex->resetVertexBuff(m_memPool, uniformInfo->vertexOffset);
     m_uniformVertex->uniformBlock->setup(m_memPool, uniformInfo->uniformSize, uniformInfo->uniformOffset);
     m_uniformVertex->uniformBlock->updateData();
@@ -206,8 +204,7 @@ inline void DrResMdoVertex::changeMemVertex(const u8 *resource) {
   }
   if (header->mofBlendOffset != 0) {
     const u8 *base = reinterpret_cast<const u8 *>(m_header);
-    m_mofBlendInfos =
-        reinterpret_cast<const MdsMofBlendInfo *>(base + reinterpret_cast<const MdsMofBlendHeader *>(base + header->mofBlendOffset)->infoOffset);
+    m_mofBlendInfos = reinterpret_cast<const MdsMofBlendInfo *>(base + reinterpret_cast<const MdsMofBlendHeader *>(base + header->mofBlendOffset)->infoOffset);
   } else {
     m_mofBlendInfos = nullptr;
   }

@@ -198,21 +198,17 @@ GfMenuSkillAdapter *GfMenuSkillAdapter::createFromCoverter(u32 handle, u32 type,
   return adapter;
 }
 
-GfMenuSkillAdapter *GfMenuSkillAdapter::createFromReferenceDriver(u32 handle, u32 type, u32 driverIndex, u16 line, u16 level, u16 roundIndex,
-                                                                  bool isUpdateAlways) {
+GfMenuSkillAdapter *GfMenuSkillAdapter::createFromReferenceDriver(u32 handle, u32 type, u32 driverIndex, u16 line, u16 level, u16 roundIndex, bool isUpdateAlways) {
   // __LINE__ must be 225 as in the original source: it is the line argument of operator new.
 #line 225
-  ReferenceDriverConverter *converter =
-      new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverConverter(driverIndex, line, level, roundIndex);
+  ReferenceDriverConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverConverter(driverIndex, line, level, roundIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
-GfMenuSkillAdapter *GfMenuSkillAdapter::createFromReferenceDriverLineLevel(u32 handle, u32 type, u32 driverIndex, u16 lineIndex, u16 levelIndex,
-                                                                           u16 roundIndex, bool isUpdateAlways) {
+GfMenuSkillAdapter *GfMenuSkillAdapter::createFromReferenceDriverLineLevel(u32 handle, u32 type, u32 driverIndex, u16 lineIndex, u16 levelIndex, u16 roundIndex, bool isUpdateAlways) {
   // __LINE__ must be 233 as in the original source: it is the line argument of operator new.
 #line 233
-  ReferenceDriverLineLevelConverter *converter =
-      new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverLineLevelConverter(driverIndex, lineIndex, levelIndex, roundIndex);
+  ReferenceDriverLineLevelConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverLineLevelConverter(driverIndex, lineIndex, levelIndex, roundIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 

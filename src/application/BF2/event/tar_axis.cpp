@@ -27,9 +27,7 @@ void TarAxis::set(u32 axis, const mm::Vec3 &tar) {
   mTar = tar;
 }
 
-mm::Vec3 TarAxis::calcTar(const mm::Vec3 &pos) const {
-  return mm::mtl::Singleton<DataManager>::getPtr()->axis2tar(mAxis, mTar.x, mTar.y, mTar.z, pos);
-}
+mm::Vec3 TarAxis::calcTar(const mm::Vec3 &pos) const { return mm::mtl::Singleton<DataManager>::getPtr()->axis2tar(mAxis, mTar.x, mTar.y, mTar.z, pos); }
 
 mm::Vec3 DataManager::axis2tar(u32 axis, f32 x, f32 y, f32 z, const mm::Vec3 &pos) {
   if (axis < TarAxis::AXIS_CHARA) {
@@ -65,8 +63,7 @@ mm::Mat44 DataManager::getTarAxis(u32 axis) {
       break;
     case TarAxis::AXIS_SAY:
       if (mm::mtl::Singleton<TextManager>::getPtr()->getTalker() != nullptr) {
-        ObjectChara *chara =
-            mm::mtl::Singleton<ObjectManager>::getPtr()->searchByHandle(mm::mtl::Singleton<TextManager>::getPtr()->getTalker()->getHandle());
+        ObjectChara *chara = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByHandle(mm::mtl::Singleton<TextManager>::getPtr()->getTalker()->getHandle());
         if (chara != nullptr) {
           mat.setRotXYZ(chara->getRot());
           mat.setTrans(chara->getPos());

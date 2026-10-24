@@ -102,13 +102,10 @@ constexpr u16 SCENARIO_FLAG_KEEP_BATTLE_LOCK_IN_BATTLE = 7039;
 const ml::FILE_PRIO GMK_SCRIPT_FILE_PRIO = static_cast<ml::FILE_PRIO>(7);
 
 static const char *const s_gmkFileNames[] = {
-    "enemy",       "enemy",      "enemy",         "npc",         "npc",        "npc",        "mapObj",     "mapObj",   "mapObj",
-    "tbox",        "event",      "enemy",         "fieldLock",   "effect",     "effect",     "se",         "se",       "se",
-    "mob",         "mob",        "mob",           "landmark",    nullptr,      nullptr,      "formPc",     "formPc",   "formPcEv",
-    "formPcEv",    "collection", "areaBgm",       "areaWeather", "salvage",    nullptr,      "mapGimmick", "precious", "grave",
-    "kizunaTalk",  "jump",       "warp",          "squad",       "squad",      "door",       "elevator",   "elevator", "mapJump",
-    "fieldVolume", "climbing",   "blade",         "dmgGimmick",  "dmgGimmick", "dmgGimmick", "dmgGimmick", nullptr,    "enemy",
-    "footPrint",   "footPrint",  "antiBladeArea", "tutorial",
+    "enemy",       "enemy",    "enemy", "npc",        "npc",        "npc",        "mapObj",     "mapObj", "mapObj", "tbox",      "event",     "enemy",         "fieldLock", "effect",     "effect",
+    "se",          "se",       "se",    "mob",        "mob",        "mob",        "landmark",   nullptr,  nullptr,  "formPc",    "formPc",    "formPcEv",      "formPcEv",  "collection", "areaBgm",
+    "areaWeather", "salvage",  nullptr, "mapGimmick", "precious",   "grave",      "kizunaTalk", "jump",   "warp",   "squad",     "squad",     "door",          "elevator",  "elevator",   "mapJump",
+    "fieldVolume", "climbing", "blade", "dmgGimmick", "dmgGimmick", "dmgGimmick", "dmgGimmick", nullptr,  "enemy",  "footPrint", "footPrint", "antiBladeArea", "tutorial",
 };
 
 bool GmkBdat::isValid() const { return data != nullptr && fw::BdatManager::isEnableBdat(createInfo.bdatId); }
@@ -135,9 +132,7 @@ void GmkBdat::dispose() {
   createInfo = CreateInfo();
 }
 
-bool GmkSet::isValid() const {
-  return createInfo.memory.isValid() && createInfo.gmkSetId > 0 && (!mapBdat.createInfo.isValid() || mapBdat.isValid());
-}
+bool GmkSet::isValid() const { return createInfo.memory.isValid() && createInfo.gmkSetId > 0 && (!mapBdat.createInfo.isValid() || mapBdat.isValid()); }
 
 void GmkBdat::update(f32 deltaTime) {
   if (seq) {
@@ -470,9 +465,7 @@ const mm::Vec3 &getInterestPos() {
   return mm::Vec3::zero;
 }
 
-const mm::Vec3 &getPlayerPos() {
-  return gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
-}
+const mm::Vec3 &getPlayerPos() { return gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition(); }
 
 const mm::Vec3 &getCameraPos() { return ml::Scn::sys()->getCam(-1)->renderInfo->position; }
 

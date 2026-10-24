@@ -76,8 +76,7 @@ void GfComDynamics::setup(const SetupInfo &info) {
     }
   }
 
-  skd::Dynamics *dynamics =
-      skd::Factory::createDynamics(collisionObject, *info.resDynamics->solvers, *pose, forceCalculator.get(), getAllocator(ALLOCATOR_DEFAULT));
+  skd::Dynamics *dynamics = skd::Factory::createDynamics(collisionObject, *info.resDynamics->solvers, *pose, forceCalculator.get(), getAllocator(ALLOCATOR_DEFAULT));
   dynamics->iterationCount = info.iterationCount;
   fw::DyanmicsManager *manager = fw::DyanmicsManager::get();
   if (manager != nullptr) {

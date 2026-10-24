@@ -16,8 +16,7 @@ static GfMenuExcTaskAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuExcTaskAdapter::update_Name, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
 };
 
-GfMenuExcTaskAdapter::GfMenuExcTaskAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), taskId(0), converter(nullptr) {}
+GfMenuExcTaskAdapter::GfMenuExcTaskAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), taskId(0), converter(nullptr) {}
 
 GfMenuExcTaskAdapter::~GfMenuExcTaskAdapter() {
   if (converter != nullptr) {

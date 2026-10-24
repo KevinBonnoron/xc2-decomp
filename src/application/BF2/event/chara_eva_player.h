@@ -34,8 +34,7 @@ public:
   void setMountWeapon(int type);
   void setBattleWeapon(int type);
   void playFoot(bool isRight);
-  void play(CharaObj *chara, gf::GfEvtModel *model, CharaDysUpdater *dysUpdater, void *data, void *weaponData, bool isChara, bool isWeapon,
-            const char *name, const mm::Vec3 &offset);
+  void play(CharaObj *chara, gf::GfEvtModel *model, CharaDysUpdater *dysUpdater, void *data, void *weaponData, bool isChara, bool isWeapon, const char *name, const mm::Vec3 &offset);
   void stopTar();
   void stopAction();
 

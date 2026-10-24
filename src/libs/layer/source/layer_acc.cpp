@@ -55,13 +55,9 @@ LayerBase *LayerAccManager::createFontObj() { return LayerManager::get()->m_objM
 
 LayerBase *LayerAccManager::createLayoutObj() { return LayerManager::get()->m_objManager->createLayoutObj(); }
 
-LayerBase *LayerAccManager::createTexObj(const grlib::CGLibTextureBuffer &texture) {
-  return LayerManager::get()->m_objManager->createTexObj(texture);
-}
+LayerBase *LayerAccManager::createTexObj(const grlib::CGLibTextureBuffer &texture) { return LayerManager::get()->m_objManager->createTexObj(texture); }
 
-LayerBase *LayerAccManager::createMemObj(u32 width, u32 height, LayerMemType type) {
-  return LayerManager::get()->m_objManager->createMemObj(width, height, type);
-}
+LayerBase *LayerAccManager::createMemObj(u32 width, u32 height, LayerMemType type) { return LayerManager::get()->m_objManager->createMemObj(width, height, type); }
 
 LayerBase *LayerAccManager::createPolyObj(u32 vertexNum, u32 indexNum, u16 width, u16 height, LayerPrimitiveType type) {
   return LayerManager::get()->m_objManager->createPolyObj(vertexNum, indexNum, width, height, type);
@@ -604,19 +600,13 @@ void LayerAccFontObj::setBorderWeight(f32 weight) { static_cast<LayerObjFont *>(
 
 void LayerAccFontObj::setSlopeRot(f32 rot) { static_cast<LayerObjFont *>(m_layer)->setSlopeRot(rot); }
 
-LayerFontHorizontal LayerAccFontObj::getHorizontal() const {
-  return static_cast<LayerFontHorizontal>(static_cast<LayerObjFont *>(m_layer)->m_horizontal);
-}
+LayerFontHorizontal LayerAccFontObj::getHorizontal() const { return static_cast<LayerFontHorizontal>(static_cast<LayerObjFont *>(m_layer)->m_horizontal); }
 
 LayerFontVertical LayerAccFontObj::getVertical() const { return static_cast<LayerFontVertical>(static_cast<LayerObjFont *>(m_layer)->m_vertical); }
 
-LayerFontDisplayArea LayerAccFontObj::getDisplayArea() const {
-  return static_cast<LayerFontDisplayArea>(static_cast<LayerObjFont *>(m_layer)->m_displayArea);
-}
+LayerFontDisplayArea LayerAccFontObj::getDisplayArea() const { return static_cast<LayerFontDisplayArea>(static_cast<LayerObjFont *>(m_layer)->m_displayArea); }
 
-LayerFontSetting LayerAccFontObj::getDispSetting() const {
-  return static_cast<LayerFontSetting>(static_cast<LayerObjFont *>(m_layer)->m_dispSetting);
-}
+LayerFontSetting LayerAccFontObj::getDispSetting() const { return static_cast<LayerFontSetting>(static_cast<LayerObjFont *>(m_layer)->m_dispSetting); }
 
 f32 LayerAccFontObj::getBorderWeight() const { return static_cast<LayerObjFont *>(m_layer)->getBorderWeight(); }
 
@@ -639,31 +629,22 @@ void LayerAccFontObj::setMsg(const char *text, const LayerBase *res, const Layer
 }
 
 void LayerAccFontObj::setMsg(const wchar_t *text, const LayerBase *res, const LayerBase *style, u32 flags) {
-  static_cast<LayerObjFont *>(m_layer)->setMsg(text,
-                                               reinterpret_cast<const LayerFontResObj *>(res),
-                                               reinterpret_cast<const LayerFontStyleObj *>(style),
-                                               LayerManager::get()->m_fontManager->m_defaultIconObj,
-                                               flags);
+  static_cast<LayerObjFont *>(m_layer)->setMsg(
+      text, reinterpret_cast<const LayerFontResObj *>(res), reinterpret_cast<const LayerFontStyleObj *>(style), LayerManager::get()->m_fontManager->m_defaultIconObj, flags);
 }
 
 void LayerAccFontObj::setMsg(const char *text, const LayerBase *res, u32 flags) {
   LayerFontManager *fontManager = LayerManager::get()->m_fontManager;
-  static_cast<LayerObjFont *>(m_layer)->setMsg(reinterpret_cast<const u8 *>(text),
-                                               reinterpret_cast<const LayerFontResObj *>(res),
-                                               fontManager->m_defaultStyleObj,
-                                               fontManager->m_defaultIconObj,
-                                               flags);
+  static_cast<LayerObjFont *>(m_layer)->setMsg(
+      reinterpret_cast<const u8 *>(text), reinterpret_cast<const LayerFontResObj *>(res), fontManager->m_defaultStyleObj, fontManager->m_defaultIconObj, flags);
 }
 
 void LayerAccFontObj::setMsg(const wchar_t *text, const LayerBase *res, u32 flags) {
   LayerFontManager *fontManager = LayerManager::get()->m_fontManager;
-  static_cast<LayerObjFont *>(m_layer)->setMsg(
-      text, reinterpret_cast<const LayerFontResObj *>(res), fontManager->m_defaultStyleObj, fontManager->m_defaultIconObj, flags);
+  static_cast<LayerObjFont *>(m_layer)->setMsg(text, reinterpret_cast<const LayerFontResObj *>(res), fontManager->m_defaultStyleObj, fontManager->m_defaultIconObj, flags);
 }
 
-void LayerAccFontObj::setColorMap(const LayerBase *colorMap, u32 index) {
-  static_cast<LayerObjFont *>(m_layer)->setColorMap(reinterpret_cast<const LayerFontIconObj *>(colorMap), index);
-}
+void LayerAccFontObj::setColorMap(const LayerBase *colorMap, u32 index) { static_cast<LayerObjFont *>(m_layer)->setColorMap(reinterpret_cast<const LayerFontIconObj *>(colorMap), index); }
 
 LayerAccLayoutObj::LayerAccLayoutObj(LayerBase *layer) : LayerAccObjBase(layer) {}
 
@@ -683,9 +664,7 @@ void LayerAccLayoutObj::setViewPort(f32 x, f32 y, f32 width, f32 height) {
   layout->m_viewPortHeight = height;
 }
 
-void LayerAccLayoutObj::createRenderTarget(f32 x, f32 y, f32 width, f32 height, mm::Col4 clearColor) {
-  static_cast<LayerObjLayout *>(m_layer)->createRenderTarget(x, y, width, height, clearColor);
-}
+void LayerAccLayoutObj::createRenderTarget(f32 x, f32 y, f32 width, f32 height, mm::Col4 clearColor) { static_cast<LayerObjLayout *>(m_layer)->createRenderTarget(x, y, width, height, clearColor); }
 
 void LayerAccLayoutObj::releaseRenderTarget() { static_cast<LayerObjLayout *>(m_layer)->releaseRenderTarget(); }
 
@@ -711,9 +690,7 @@ u16 LayerAccLayoutObj::getPriorityTbl() const {
 
 void LayerAccLayoutObj::setAutoAnchorMode(LAYER_ANCHOR mode) { static_cast<LayerObjLayout *>(m_layer)->m_autoAnchorMode = mode; }
 
-LAYER_ANCHOR LayerAccLayoutObj::getAutoAnchorMode() const {
-  return static_cast<LAYER_ANCHOR>(static_cast<LayerObjLayout *>(m_layer)->m_autoAnchorMode);
-}
+LAYER_ANCHOR LayerAccLayoutObj::getAutoAnchorMode() const { return static_cast<LAYER_ANCHOR>(static_cast<LayerObjLayout *>(m_layer)->m_autoAnchorMode); }
 
 grlib::CGLibTextureBuffer *LayerAccLayoutObj::getTexture() { return static_cast<LayerObjLayout *>(m_layer)->getTexture(); }
 
@@ -725,20 +702,14 @@ LayerAccFilterObj::LayerAccFilterObj(LayerBase *layer) : LayerAccObjBase(layer) 
 
 u32 LayerAccFilterObj::getFilterType() const { return static_cast<LayerObjTopFilter *>(m_layer)->getFilterType(); }
 
-void LayerAccFilterObj::selectFilterOfGaussianBlur(u32 width, u32 height) {
-  static_cast<LayerObjTopFilter *>(m_layer)->createGaussianBlur(width, height);
-}
+void LayerAccFilterObj::selectFilterOfGaussianBlur(u32 width, u32 height) { static_cast<LayerObjTopFilter *>(m_layer)->createGaussianBlur(width, height); }
 
 void LayerAccFilterObj::setGaussianBlurParameter(f32 strength, f32 scale, u32 sampleNum, bool isHalf, u32 passNum) {
   static_cast<LayerObjTopFilter *>(m_layer)->setGaussianBlurParameter(strength, scale, sampleNum, isHalf, passNum);
 }
 
-void LayerAccFilterObj::selectFilterOfFlowMap(u32 width, u32 height, const void *data) {
-  static_cast<LayerObjTopFilter *>(m_layer)->createFlowMap(width, height, data);
-}
+void LayerAccFilterObj::selectFilterOfFlowMap(u32 width, u32 height, const void *data) { static_cast<LayerObjTopFilter *>(m_layer)->createFlowMap(width, height, data); }
 
-void LayerAccFilterObj::setFlowMapParameter(f32 speed, f32 strength) {
-  static_cast<LayerObjTopFilter *>(m_layer)->setFlowMapParameter(speed, strength);
-}
+void LayerAccFilterObj::setFlowMapParameter(f32 speed, f32 strength) { static_cast<LayerObjTopFilter *>(m_layer)->setFlowMapParameter(speed, strength); }
 
 } // namespace layer

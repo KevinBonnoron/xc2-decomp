@@ -7,25 +7,15 @@ bool IDColiUtilColiResult::isSpherePoli(IDColiResult &result, const IDColiInput 
 
 bool IDColiUtilColiResult::isCapsulePoli(IDColiResult &result, const IDColiInput &input, const void *data) { return false; }
 
-bool IDColiUtilColiResult::isLineSphere(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isPartsLineSphere(result, &input.line, data, false);
-}
+bool IDColiUtilColiResult::isLineSphere(IDColiResult &result, const IDColiInput &input, const void *data) { return isPartsLineSphere(result, &input.line, data, false); }
 
-bool IDColiUtilColiResult::isLineBox(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isPartsLineBox(result, &input.line, data, false, false);
-}
+bool IDColiUtilColiResult::isLineBox(IDColiResult &result, const IDColiInput &input, const void *data) { return isPartsLineBox(result, &input.line, data, false, false); }
 
-bool IDColiUtilColiResult::isLineInBox(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isPartsLineBox(result, &input.line, data, false, true);
-}
+bool IDColiUtilColiResult::isLineInBox(IDColiResult &result, const IDColiInput &input, const void *data) { return isPartsLineBox(result, &input.line, data, false, true); }
 
-bool IDColiUtilColiResult::isLineCapsule(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isPartsLineCapsule(result, &input.line, data, false, false);
-}
+bool IDColiUtilColiResult::isLineCapsule(IDColiResult &result, const IDColiInput &input, const void *data) { return isPartsLineCapsule(result, &input.line, data, false, false); }
 
-bool IDColiUtilColiResult::isLineInCapsule(IDColiResult &result, const IDColiInput &input, const void *data) {
-  return isPartsLineCapsule(result, &input.line, data, false, true);
-}
+bool IDColiUtilColiResult::isLineInCapsule(IDColiResult &result, const IDColiInput &input, const void *data) { return isPartsLineCapsule(result, &input.line, data, false, true); }
 
 bool IDColiUtilColiResult::isLinePoli(IDColiResult &result, const IDColiInput &input, const void *data) { return false; }
 

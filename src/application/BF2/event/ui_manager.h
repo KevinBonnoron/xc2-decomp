@@ -70,8 +70,7 @@ public:
   bool isFieldSkill() const;
   bool openShopUI(u32 shop, bool &isBought);
   bool isOpenShopUI() const;
-  bool openPayoffUI(const char *title, const mm::mtl::FixedVector<u32, 16> &values, const mm::mtl::FixedVector<const char *, 16> &names,
-                    const char *message);
+  bool openPayoffUI(const char *title, const mm::mtl::FixedVector<u32, 16> &values, const mm::mtl::FixedVector<const char *, 16> &names, const char *message);
   u32 getPayoffUI() const;
   bool isOpenPayoffUI() const;
   bool openRewardUI(u32 item);

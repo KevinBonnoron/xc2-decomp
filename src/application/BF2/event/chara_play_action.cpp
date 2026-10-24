@@ -38,13 +38,9 @@ const char *CharaPlayAction::type2cmd(int type, u32 index) {
   }
 }
 
-const char *CharaPlayAction::type2idle(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_acttype"), "statI", type, 7));
-}
+const char *CharaPlayAction::type2idle(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_acttype"), "statI", type, 7)); }
 
-const char *CharaPlayAction::type2name(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_acttype"), "name", type, 7));
-}
+const char *CharaPlayAction::type2name(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_acttype"), "name", type, 7)); }
 
 void CharaPlayAction::stanby(int type, f32 life, bool isBlendIn, bool isBlendOut) {
   bool isBlend = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() ? false : isBlendIn;

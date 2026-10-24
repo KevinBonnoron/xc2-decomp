@@ -24,8 +24,7 @@ struct ResSpeedLerpTree {
 
 class SpeedLerpBlendTree : public AsmState {
 public:
-  SpeedLerpBlendTree(const ResStateData *pResStateData, const ResSpeedLerpTree *pResTree, mm::mtl::Vector<Variable> &variables,
-                     mm::mtl::IAllocator &allocator);
+  SpeedLerpBlendTree(const ResStateData *pResStateData, const ResSpeedLerpTree *pResTree, mm::mtl::Vector<Variable> &variables, mm::mtl::IAllocator &allocator);
   ~SpeedLerpBlendTree() override;
   void attach(AsmBlender *blender) override;
   void dettach(AsmBlender *blender) override;

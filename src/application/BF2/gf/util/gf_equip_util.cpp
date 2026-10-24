@@ -55,9 +55,7 @@ bool GfEquipUtil::equipDriverAcce(u32 driver, u32 slot, u32 accessory, GfItemHan
   return true;
 }
 
-u32 GfEquipUtil::getEquipAcceResult(u32 driver, u32 slot, u32 accessory) {
-  return getEquipAcceResult(*GfDataDriver::getSDataDriver(driver), slot, accessory);
-}
+u32 GfEquipUtil::getEquipAcceResult(u32 driver, u32 slot, u32 accessory) { return getEquipAcceResult(*GfDataDriver::getSDataDriver(driver), slot, accessory); }
 
 u32 GfEquipUtil::getEquipOrbMax(u32 blade) { return GfDataBlade::getEquipOrbMax(blade); }
 

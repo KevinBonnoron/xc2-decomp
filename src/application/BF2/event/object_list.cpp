@@ -28,8 +28,8 @@ const char ObjectList::EFF_TREE[64] = "\x83\x47\x83\x74\x83\x46\x83\x4e\x83\x67\
 const char ObjectList::LGT_TREE[64] = "\x83\x89\x83\x43\x83\x67\x83\x63\x83\x8a\x81\x5b";
 
 ObjectList::ObjectList(const char *name, bool isCloneMode)
-    : flags(0), mName(name), mRoot(nullptr), mCharaTree(nullptr), mCameraTree(nullptr), mEffectTree(nullptr), mLightTree(nullptr), mActive(nullptr),
-      mFirstChara(nullptr), mCharaCount(0), mCameraCount(0), mEffectCount(0), mLightCount(0) {
+    : flags(0), mName(name), mRoot(nullptr), mCharaTree(nullptr), mCameraTree(nullptr), mEffectTree(nullptr), mLightTree(nullptr), mActive(nullptr), mFirstChara(nullptr), mCharaCount(0),
+      mCameraCount(0), mEffectCount(0), mLightCount(0) {
   if (isCloneMode) {
     flags |= FLAG_CLONE_MODE;
   } else {

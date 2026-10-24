@@ -51,8 +51,7 @@ Object *ObjectManager::searchByName(const char *name) {
   if (root == nullptr)
     return nullptr;
   Object *found = ObjectList::searchByNameSub(root, name);
-  if (found == nullptr || found == root || found == current->mCharaTree || found == current->mCameraTree || found == current->mEffectTree ||
-      found == current->mLightTree)
+  if (found == nullptr || found == root || found == current->mCharaTree || found == current->mCameraTree || found == current->mEffectTree || found == current->mLightTree)
     return nullptr;
   return found;
 }
@@ -286,8 +285,7 @@ ObjectList *ObjectManager::searchScene(const char *name) const {
 }
 
 ObjectList *ObjectManager::createScene(const char *name) {
-  ObjectList *scene =
-      new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectList(name, (mMode & MODE_CLONE) != 0);
+  ObjectList *scene = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ObjectList(name, (mMode & MODE_CLONE) != 0);
   mScenes.push_back(scene);
   return scene;
 }

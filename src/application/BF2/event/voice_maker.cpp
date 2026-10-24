@@ -23,8 +23,7 @@ void VoiceMaker::create(bool isEnable, const char *directory, const char *name) 
     return;
   }
   size_t length = __builtin_strlen(name);
-  if (isVoiceGroup(name, length, "bf") || isVoiceGroup(name, length, "qst") || isVoiceGroup(name, length, "fev") ||
-      isVoiceGroup(name, length, "deb") || isVoiceGroup(name, length, "kizuna")) {
+  if (isVoiceGroup(name, length, "bf") || isVoiceGroup(name, length, "qst") || isVoiceGroup(name, length, "fev") || isVoiceGroup(name, length, "deb") || isVoiceGroup(name, length, "kizuna")) {
     mFolder.format("/stream/%s/%s/%s/", directory, fw::LangUtil::getVoiceFolder().c_str(), name);
     flags |= FLAG_ENABLE;
   }

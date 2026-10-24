@@ -22,8 +22,7 @@ static bool isDblPixlObj(int type) { return (0x27200ULL >> type) & 1; }
 void DrPixlMan::endDeferredRenderTarget() { m_res->pixlObjs[5][0]->setColorInvalidate(); }
 
 void DrPixlMan::setMainViewPort() {
-  grlib::LibMainStateViewPort viewPort(
-      0.0f, 0.0f, static_cast<f32>(m_drMan->screenInfo->width), static_cast<f32>(m_drMan->screenInfo->height), 0.0f, 1.0f);
+  grlib::LibMainStateViewPort viewPort(0.0f, 0.0f, static_cast<f32>(m_drMan->screenInfo->width), static_cast<f32>(m_drMan->screenInfo->height), 0.0f, 1.0f);
   grlib::CGLibState::setViewport(viewPort);
 }
 
@@ -281,8 +280,7 @@ void DrPixlMan::fastRender() {
 void DrPixlMan::lastCapRender() { m_res->postMan->capRender(); }
 
 void DrPixlMan::setFinalViewPort() {
-  grlib::LibMainStateViewPort viewPort(
-      0.0f, 0.0f, static_cast<f32>(m_drMan->screenInfo->renderWidth), static_cast<f32>(m_drMan->screenInfo->renderHeight), 0.0f, 1.0f);
+  grlib::LibMainStateViewPort viewPort(0.0f, 0.0f, static_cast<f32>(m_drMan->screenInfo->renderWidth), static_cast<f32>(m_drMan->screenInfo->renderHeight), 0.0f, 1.0f);
   grlib::CGLibState::setViewport(viewPort);
 }
 

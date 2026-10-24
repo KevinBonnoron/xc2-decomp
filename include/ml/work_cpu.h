@@ -64,8 +64,7 @@ public:
   static void setThread(DO_THREAD thread);
   static DO_THREAD getThread();
   static u32 getEven();
-  static void runThread(CPUID cpu, unsigned int (*function)(void *, void *), void *argument, void *userData, const mm::Col3 *color, bool isDebug,
-                        WKCPU_SYNC sync);
+  static void runThread(CPUID cpu, unsigned int (*function)(void *, void *), void *argument, void *userData, const mm::Col3 *color, bool isDebug, WKCPU_SYNC sync);
   static bool isShutdown();
   static void entrySwap(IThreadValue *value);
   static void removeSwap(IThreadValue *value);

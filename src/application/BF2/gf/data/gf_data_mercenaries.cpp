@@ -95,9 +95,7 @@ static f32 getBladeFieldSkillLevel(u32 blade, u32 fieldSkill) {
   return level;
 }
 
-u32 GfDataMercenaries::getReserverMax() {
-  return getLevel() * RESERVER_PER_LEVEL + RESERVER_PER_LEVEL + (GfDataManager::getDataGame()->gameClearCount != 0 ? RESERVER_GAME_CLEAR_BONUS : 0);
-}
+u32 GfDataMercenaries::getReserverMax() { return getLevel() * RESERVER_PER_LEVEL + RESERVER_PER_LEVEL + (GfDataManager::getDataGame()->gameClearCount != 0 ? RESERVER_GAME_CLEAR_BONUS : 0); }
 
 SDataMercenaries *GfDataMercenaries::getSDataMercenaries() { return &GfDataManager::getDataGame()->mercenaries; }
 
@@ -376,9 +374,7 @@ u32 GfDataMercenaries::getFieldSkill(u32 mission, u32 index) {
   }
 }
 
-f32 GfDataMercenaries::getMissionPerformanceRatio() {
-  return QuestListAcc::get()->getFLD_MercenariesConfigValue(MERCENARIES_CONFIG_MISSION_PERFORMANCE_RATIO) * 0.01f + 0.001f;
-}
+f32 GfDataMercenaries::getMissionPerformanceRatio() { return QuestListAcc::get()->getFLD_MercenariesConfigValue(MERCENARIES_CONFIG_MISSION_PERFORMANCE_RATIO) * 0.01f + 0.001f; }
 
 u32 GfDataMercenaries::getStartMissionID() { return QuestListAcc::get()->getFLD_MercenariesMissionStart(); }
 

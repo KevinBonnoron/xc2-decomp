@@ -17,8 +17,8 @@
 namespace event {
 
 EnvManager::EnvManager()
-    : flags(0), dispFlags(0), mClockHour(-1), mClockMinute(-1), mCloudType(EVT_CLOUDTYPE_DEFAULT), mColorFilterState(COLORFILTER_TYPE_STOP),
-      mColorFilter(-1), mColorSubFilter(-1), mColorFilterFrame(0.0f), mColorFilterCount(0), mVignetteHandle(0) {}
+    : flags(0), dispFlags(0), mClockHour(-1), mClockMinute(-1), mCloudType(EVT_CLOUDTYPE_DEFAULT), mColorFilterState(COLORFILTER_TYPE_STOP), mColorFilter(-1), mColorSubFilter(-1),
+      mColorFilterFrame(0.0f), mColorFilterCount(0), mVignetteHandle(0) {}
 
 void EnvManager::setCloudSea(EVT_cloudtype cloudType) {
   if (mCloudType != cloudType) {

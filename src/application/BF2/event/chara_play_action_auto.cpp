@@ -44,8 +44,7 @@ ICmd::RESULT CharaPlayActionAuto::update(const Param &param) {
   if (param.getFrame() <= 0) {
     stanby(param.val(1).getF32());
   }
-  if ((flags & FLAG_PLAY) == 0 && !CharaUtil::isActionBusy(obj) &&
-      !mm::mtl::Singleton<ScheManager>::getPtr()->isPlay(Scheduler::ORDER_FLD2EVT, handle)) {
+  if ((flags & FLAG_PLAY) == 0 && !CharaUtil::isActionBusy(obj) && !mm::mtl::Singleton<ScheManager>::getPtr()->isPlay(Scheduler::ORDER_FLD2EVT, handle)) {
     play(obj);
     flags |= FLAG_PLAY;
   }

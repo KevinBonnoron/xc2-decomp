@@ -141,8 +141,7 @@ public:
   void playHead(int type, f32 life, bool isBlendIn, bool isBlendOut);
   void stopHead();
   int getHead() const;
-  void playFacial(int type, f32 life, int browType, f32 browWeight, int eyeType, f32 eyeWeight, int lipType, f32 lipWeight, f32 blendIn,
-                  f32 blendOut);
+  void playFacial(int type, f32 life, int browType, f32 browWeight, int eyeType, f32 eyeWeight, int lipType, f32 lipWeight, f32 blendIn, f32 blendOut);
   int getFacial() const;
   void playAutoTalk(f32 frame);
   void playTalk(bool isManual, f32 frame, bool isBlend, bool isAuto, f32 openMin, f32 openMax, f32 closeMin, f32 closeMax);
@@ -150,8 +149,7 @@ public:
   void resetDynamics(int frame);
   void playFade(bool isOut, f32 frame);
   bool isFadeOut() const;
-  void playVolumeFade(CharaEffectPlayer::VF_TYPE type, int id, const mm::Vec3 &position, const mm::Vec3 &scale, f32 frame, f32 rate, int mode,
-                      f32 speed);
+  void playVolumeFade(CharaEffectPlayer::VF_TYPE type, int id, const mm::Vec3 &position, const mm::Vec3 &scale, f32 frame, f32 rate, int mode, f32 speed);
   void playVolumeFadeAnim(CharaEffectPlayer::VF_TYPE type, f32 rate, f32 frame);
   void stopVolumeFade(CharaEffectPlayer::VF_TYPE type);
   void playRimBloom(int id);

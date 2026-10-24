@@ -19,8 +19,7 @@ int NaviUtil::testNaviStraightLine(mm::Vec3 &position, const mm::Vec3 &start, co
   return util.testNaviStraightLine(position, start, end, radius, height);
 }
 
-int NaviUtil::testNaviFindPos(const mm::Vec3 &position, float radius, float height, float range, const mm::Vec3 &target, float targetRadius,
-                              float targetHeight, float targetRange, int count) {
+int NaviUtil::testNaviFindPos(const mm::Vec3 &position, float radius, float height, float range, const mm::Vec3 &target, float targetRadius, float targetHeight, float targetRange, int count) {
   navi::NvmshAccUtil util;
   return util.checkNaviFindPos(position, radius, height, range, 0.0f, target, targetRadius, targetHeight, targetRange, 0.0f);
 }

@@ -109,25 +109,14 @@ void ScnObjAccResMdlInfo::releaseExtraShader() { m_drMdl->releaseExtraShader(); 
 
 void ScnObjAccResMdlInfo::setSimpleShadow(bool isEnable) { m_drMdl->setSimpleShadow(isEnable); }
 
-void ScnObjAccResMdlInfo::getTextureStreamInfo(u32 &size, u32 &count, const void *data, bool isMiddle) {
-  DrMdlMan::getTextureStreamInfo(size, count, data, isMiddle);
-}
+void ScnObjAccResMdlInfo::getTextureStreamInfo(u32 &size, u32 &count, const void *data, bool isMiddle) { DrMdlMan::getTextureStreamInfo(size, count, data, isMiddle); }
 
 void ScnObjAccResMdlInfo::setClone(const ScnObjModel *model) { m_drMdl->cloneMdlObj(static_cast<const ScnObjModelDrSys *>(model)->m_drMdl); }
 
 void ScnObjAccResMdlInfo::createAfterImage(const DrMdlAfterImageParams &params) {
   if (m_drMdl->m_type == DR_MDL_TYPE_NORMAL) {
-    static_cast<DrMdoCtlNom *>(m_drMdl)->createAfterImage(params.count,
-                                                          params.span,
-                                                          params.fade,
-                                                          params.headColor,
-                                                          params.headAlpha,
-                                                          params.headEmissive,
-                                                          params.headScale,
-                                                          params.tailColor,
-                                                          params.tailAlpha,
-                                                          params.tailEmissive,
-                                                          params.tailScale);
+    static_cast<DrMdoCtlNom *>(m_drMdl)->createAfterImage(
+        params.count, params.span, params.fade, params.headColor, params.headAlpha, params.headEmissive, params.headScale, params.tailColor, params.tailAlpha, params.tailEmissive, params.tailScale);
   }
 }
 
@@ -408,13 +397,9 @@ bool ScnObjAccResAvatar::isAvatarEyeTex() const {
 
 bool ScnObjAccResAvatar::isAvatarMapMode() const { return m_drMdl->m_avatarMapColors != nullptr; }
 
-void ScnObjAccResAvatar::setAvatarCharColor(int index, const mm::Col4 &color) {
-  *reinterpret_cast<mm::Col4 *>(static_cast<f32 *>(m_avatar->charColors->m_mapping) + index * 4) = color;
-}
+void ScnObjAccResAvatar::setAvatarCharColor(int index, const mm::Col4 &color) { *reinterpret_cast<mm::Col4 *>(static_cast<f32 *>(m_avatar->charColors->m_mapping) + index * 4) = color; }
 
-void ScnObjAccResAvatar::setAvatarDollColor(int index, const mm::Col4 &color) {
-  *reinterpret_cast<mm::Col4 *>(static_cast<f32 *>(m_avatar->dollColors->m_mapping) + index * 4) = color;
-}
+void ScnObjAccResAvatar::setAvatarDollColor(int index, const mm::Col4 &color) { *reinterpret_cast<mm::Col4 *>(static_cast<f32 *>(m_avatar->dollColors->m_mapping) + index * 4) = color; }
 
 void ScnObjAccResAvatar::setAvatarDollMat(bool isEnable) { m_avatar->dollMat = isEnable; }
 

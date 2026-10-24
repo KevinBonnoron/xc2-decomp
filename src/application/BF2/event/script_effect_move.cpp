@@ -35,8 +35,7 @@ void ScriptEffectMove::redo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_EFFECT) {
     return;
   }
-  static_cast<ObjectEffect *>(object)->setPosAxis(
-      PosAxis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32()));
+  static_cast<ObjectEffect *>(object)->setPosAxis(PosAxis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32()));
 }
 
 } // namespace event

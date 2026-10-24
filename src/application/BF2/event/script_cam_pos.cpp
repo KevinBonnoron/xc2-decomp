@@ -23,8 +23,8 @@ void ScriptCamPos::doit(const Param &param) {
   CV_TYPE cv = static_cast<CV_TYPE>(param.val(4).getS32());
   prevAxis = camera->getPosAxis();
   camera->setPosAxis(axis, cv);
-  if (prevAxis.getAxis() != axis.getAxis() || !(__builtin_fabsf(axis.getPos().x - prevAxis.getPos().x) <= 1e-6f) ||
-      !(__builtin_fabsf(axis.getPos().y - prevAxis.getPos().y) <= 1e-6f) || !(__builtin_fabsf(axis.getPos().z - prevAxis.getPos().z) <= 1e-6f)) {
+  if (prevAxis.getAxis() != axis.getAxis() || !(__builtin_fabsf(axis.getPos().x - prevAxis.getPos().x) <= 1e-6f) || !(__builtin_fabsf(axis.getPos().y - prevAxis.getPos().y) <= 1e-6f) ||
+      !(__builtin_fabsf(axis.getPos().z - prevAxis.getPos().z) <= 1e-6f)) {
     mm::mtl::Singleton<TextManager>::getPtr()->setCutChangeFrame();
   }
 }

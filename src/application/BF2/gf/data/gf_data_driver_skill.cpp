@@ -219,9 +219,7 @@ u32 GfDataDriverSkill::getNextSkillPoint(u32 driver, u32 row, bool isHidden) {
   return getSkillPointFromBdat(driver, row, level + 1, isHidden);
 }
 
-u32 GfDataDriverSkill::getSkillLevel(u32 driver, u32 row, bool isHidden) {
-  return getSkillLevel(*GfDataDriver::getSDataDriver(driver), row, isHidden);
-}
+u32 GfDataDriverSkill::getSkillLevel(u32 driver, u32 row, bool isHidden) { return getSkillLevel(*GfDataDriver::getSDataDriver(driver), row, isHidden); }
 
 u16 GfDataDriverSkill::getSkillLevel(const SDataDriver &dataDriver, u32 row, bool isHidden) {
   if (dataDriver.id >= SKILL_DRIVER_END) {

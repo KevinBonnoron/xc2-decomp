@@ -52,8 +52,7 @@ void CGLibState::setRegisterDepthTarget(CGLibDepthBuffer &depthBuffer) {
 
 void CGLibState::endRegisterRenderTarget() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  nvnCommandBufferSetRenderTargets(
-      context->m_pipeline.m_cmdBuf, context->m_registerNum, context->m_registerTextures, context->m_registerViews, context->m_registerDepth, nullptr);
+  nvnCommandBufferSetRenderTargets(context->m_pipeline.m_cmdBuf, context->m_registerNum, context->m_registerTextures, context->m_registerViews, context->m_registerDepth, nullptr);
 }
 
 CGLibRenderTarget *CGLibState::getMainRenderTarget() {

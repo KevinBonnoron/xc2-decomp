@@ -111,9 +111,7 @@ private:
   // relationship is unknown. The wrapper reads the same tree offsets.
   friend class ObjectManager;
 
-  bool isTree(const Object *object) const {
-    return object == mRoot || object == mCharaTree || object == mCameraTree || object == mEffectTree || object == mLightTree;
-  }
+  bool isTree(const Object *object) const { return object == mRoot || object == mCharaTree || object == mCameraTree || object == mEffectTree || object == mLightTree; }
 
   u32 flags;
   mm::mtl::FixStr<64> mName;

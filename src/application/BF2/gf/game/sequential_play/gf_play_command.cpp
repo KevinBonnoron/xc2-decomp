@@ -126,8 +126,7 @@ GfPlayComResetBladePlayerStop *GfPlayComResetBladePlayerStop::create(bool isStop
 
 int GfPlayComAfterEventScript::s_activate;
 
-GfPlayComAfterEventScript::GfPlayComAfterEventScript(u32 event)
-    : GfPlayCom(PCOMTYPE_AFTER_EVENT_SCRIPT, false), state(0), event(event), handle(reinterpret_cast<GF_SCOM_HANDLE *>(-1)) {
+GfPlayComAfterEventScript::GfPlayComAfterEventScript(u32 event) : GfPlayCom(PCOMTYPE_AFTER_EVENT_SCRIPT, false), state(0), event(event), handle(reinterpret_cast<GF_SCOM_HANDLE *>(-1)) {
   s_activate++;
 }
 
@@ -257,8 +256,7 @@ int GfPlayComStartTutorial::s_activateCount;
 
 void GfPlayComStartTutorial::start() {
   u8 *bdat = GfDataBdat::getFP(BDAT_MNU_TUTORIAL);
-  if (bdat != nullptr && static_cast<int>(tutorial) >= Bdat::getIdTop(bdat) &&
-      static_cast<int>(tutorial) - Bdat::getIdTop(bdat) < Bdat::getIdCount(bdat)) {
+  if (bdat != nullptr && static_cast<int>(tutorial) >= Bdat::getIdTop(bdat) && static_cast<int>(tutorial) - Bdat::getIdTop(bdat) < Bdat::getIdCount(bdat)) {
     GfScriptManager::loadScript(SCRIPT_SLOT_TUTORIAL, Bdat::getVal(bdat, "script_file", tutorial).valueString);
     GfScriptManager::startScript(SCRIPT_SLOT_TUTORIAL);
     s_activateCount++;
@@ -393,9 +391,7 @@ GfPlayComMenuZone *GfPlayComMenuZone::create(u32 zone) {
 
 int GfPlayComMenuDummyTutorial::s_activate;
 
-GfPlayComMenuDummyTutorial::GfPlayComMenuDummyTutorial(u32 tutorial) : GfPlayCom(PCOMTYPE_MENU_DUMMY_TUTORIAL, false), tutorial(tutorial) {
-  s_activate++;
-}
+GfPlayComMenuDummyTutorial::GfPlayComMenuDummyTutorial(u32 tutorial) : GfPlayCom(PCOMTYPE_MENU_DUMMY_TUTORIAL, false), tutorial(tutorial) { s_activate++; }
 
 GfPlayComMenuDummyTutorial::~GfPlayComMenuDummyTutorial() { s_activate--; }
 
@@ -562,8 +558,7 @@ GfPlayComGimmickTaskComplete *GfPlayComGimmickTaskComplete::create(gmk::GmkType 
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComGimmickTaskComplete(gmkType, gimmick, time);
 }
 
-GfPlayComExecuteSignal::GfPlayComExecuteSignal(bool isStart, GfSequentialPlaySignal *signal)
-    : GfPlayCom(PCOMTYPE_EXECUTE_SIGNAL, true), isStart(isStart), signal(signal) {
+GfPlayComExecuteSignal::GfPlayComExecuteSignal(bool isStart, GfSequentialPlaySignal *signal) : GfPlayCom(PCOMTYPE_EXECUTE_SIGNAL, true), isStart(isStart), signal(signal) {
   if (isStart) {
     signal->isActive = true;
   }
@@ -605,8 +600,7 @@ bool GfPlayComMenuObjCommonText::update(const fw::UpdateInfo &, bool isCancel) {
 
 int GfPlayComMenuObjCommonText::s_activate;
 
-GfPlayComMenuObjCommonText::GfPlayComMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param)
-    : GfPlayCom(PCOMTYPE_MENU_COMMON, false), context(nullptr) {
+GfPlayComMenuObjCommonText::GfPlayComMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param) : GfPlayCom(PCOMTYPE_MENU_COMMON, false), context(nullptr) {
   this->param = param;
   s_activate++;
 }

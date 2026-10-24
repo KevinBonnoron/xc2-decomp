@@ -7,8 +7,7 @@
 namespace ml {
 
 WorkObj::WorkObj(const char *name, WorkObj *parent, int childNum)
-    : m_state(WKSTATE_NONE), m_wid(-1), m_parent(parent), m_flags(0), m_exceptionWid(-1), m_clock(0), m_priority(10), m_isRequestShutdown(false),
-      m_isEntryAfter(nullptr) {
+    : m_state(WKSTATE_NONE), m_wid(-1), m_parent(parent), m_flags(0), m_exceptionWid(-1), m_clock(0), m_priority(10), m_isRequestShutdown(false), m_isEntryAfter(nullptr) {
   m_mem = WorkUtil::getWorkMem();
   m_name = name;
   m_wid = WorkRootState::allocWID(this);

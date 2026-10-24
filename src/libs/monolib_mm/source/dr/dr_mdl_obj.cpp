@@ -181,21 +181,15 @@ void DrMdlObj::setWriteStencil(bool isEnable) {
   }
 }
 
-void DrMdlObj::setAlwaysMiddleTexStm(bool isEnable) {
-  m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_ALWAYS_MIDDLE_TEX_STM : m_drawFlags | DRAW_FLAG_ALWAYS_MIDDLE_TEX_STM;
-}
+void DrMdlObj::setAlwaysMiddleTexStm(bool isEnable) { m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_ALWAYS_MIDDLE_TEX_STM : m_drawFlags | DRAW_FLAG_ALWAYS_MIDDLE_TEX_STM; }
 
 void DrMdlObj::setSpBlurOff(bool isEnable) { m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_SP_BLUR_OFF : m_drawFlags | DRAW_FLAG_SP_BLUR_OFF; }
 
 void DrMdlObj::setGpuClip(bool isEnable) { m_drawFlags = !isEnable ? m_drawFlags | DRAW_FLAG_GPU_CLIP_OFF : m_drawFlags & ~DRAW_FLAG_GPU_CLIP_OFF; }
 
-void DrMdlObj::setOcclusionQuery(bool isEnable) {
-  m_drawFlags = !isEnable ? m_drawFlags | DRAW_FLAG_OCCLUSION_QUERY_OFF : m_drawFlags & ~DRAW_FLAG_OCCLUSION_QUERY_OFF;
-}
+void DrMdlObj::setOcclusionQuery(bool isEnable) { m_drawFlags = !isEnable ? m_drawFlags | DRAW_FLAG_OCCLUSION_QUERY_OFF : m_drawFlags & ~DRAW_FLAG_OCCLUSION_QUERY_OFF; }
 
-void DrMdlObj::setAlwaysTexStm(bool isEnable) {
-  m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_ALWAYS_TEX_STM : m_drawFlags | DRAW_FLAG_ALWAYS_TEX_STM;
-}
+void DrMdlObj::setAlwaysTexStm(bool isEnable) { m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_ALWAYS_TEX_STM : m_drawFlags | DRAW_FLAG_ALWAYS_TEX_STM; }
 
 bool DrMdlObj::isMdlTexStm() const { return true; }
 
@@ -205,9 +199,7 @@ bool DrMdlObj::isMemMiddleTexStm() const { return (m_drawFlags & (0x20 | 0x2)) !
 
 void DrMdlObj::setCreateDisplayList() { m_updateFlags &= ~0x60; }
 
-void DrMdlObj::setExpressDrawMode(bool isEnable) {
-  m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_EXPRESS_DRAW_MODE : m_drawFlags | DRAW_FLAG_EXPRESS_DRAW_MODE;
-}
+void DrMdlObj::setExpressDrawMode(bool isEnable) { m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_EXPRESS_DRAW_MODE : m_drawFlags | DRAW_FLAG_EXPRESS_DRAW_MODE; }
 
 const mm::Vec3 &DrMdlObj::getAABBMax() const { return m_aabbMax; }
 
@@ -235,19 +227,13 @@ void DrMdlObj::getInitialVertexAABBMin(mm::Vec3 &min, bool isScaled) const {
   }
 }
 
-void DrMdlObj::setSimpleShadow(bool isEnable) {
-  m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_SIMPLE_SHADOW : m_drawFlags | DRAW_FLAG_SIMPLE_SHADOW;
-}
+void DrMdlObj::setSimpleShadow(bool isEnable) { m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_SIMPLE_SHADOW : m_drawFlags | DRAW_FLAG_SIMPLE_SHADOW; }
 
 bool DrMdlObj::isGpuRender() const { return m_isGpuRender; }
 
-void DrMdlObj::setSpAlphaMode(bool isEnable) {
-  m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_SP_ALPHA_MODE : m_drawFlags | DRAW_FLAG_SP_ALPHA_MODE;
-}
+void DrMdlObj::setSpAlphaMode(bool isEnable) { m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_SP_ALPHA_MODE : m_drawFlags | DRAW_FLAG_SP_ALPHA_MODE; }
 
-void DrMdlObj::setCamCheckMode(bool isEnable) {
-  m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_CAM_CHECK_MODE : m_drawFlags | DRAW_FLAG_CAM_CHECK_MODE;
-}
+void DrMdlObj::setCamCheckMode(bool isEnable) { m_drawFlags = !isEnable ? m_drawFlags & ~DRAW_FLAG_CAM_CHECK_MODE : m_drawFlags | DRAW_FLAG_CAM_CHECK_MODE; }
 
 bool DrMdlObj::isCamCheckResl() const { return (m_drawFlags & DRAW_FLAG_CAM_CHECK_RESL) != 0; }
 
@@ -280,9 +266,7 @@ f32 DrMdlObj::getAceVal(int index) const {
   return 0.0f;
 }
 
-void DrMdlObj::setDebugWindow(bool isEnable) {
-  m_drawFlags = !isEnable ? m_drawFlags & ~(DRAW_FLAG_DEBUG_WINDOW | DRAW_FLAG_DEBUG_DELETE) : m_drawFlags | DRAW_FLAG_DEBUG_WINDOW;
-}
+void DrMdlObj::setDebugWindow(bool isEnable) { m_drawFlags = !isEnable ? m_drawFlags & ~(DRAW_FLAG_DEBUG_WINDOW | DRAW_FLAG_DEBUG_DELETE) : m_drawFlags | DRAW_FLAG_DEBUG_WINDOW; }
 
 u32 DrMdlObj::isDebugWindow() { return m_drawFlags & DRAW_FLAG_DEBUG_WINDOW; }
 

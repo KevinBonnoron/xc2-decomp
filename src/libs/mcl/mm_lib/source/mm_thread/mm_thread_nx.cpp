@@ -81,8 +81,7 @@ bool ThreadNx::waitSignalEvent() { return event.waitSignal(0); }
 
 bool ThreadNx::isWaitingEvent() const { return !event.isSignal(); }
 
-Thread *ThreadNx::create(mtl::IAllocator *pAllocator, const char *name, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId,
-                         s32 threadPriority) {
+Thread *ThreadNx::create(mtl::IAllocator *pAllocator, const char *name, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, s32 threadPriority) {
   MM_ASSERT(pAllocator != 0);
   Thread *thread = static_cast<Thread *>(pAllocator->allocate(sizeof(ThreadNx), 8));
   if (thread != nullptr) {

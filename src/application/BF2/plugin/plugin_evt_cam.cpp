@@ -40,12 +40,8 @@ ITodo *ScriptCamNearfar::exec() { return new (mm::mtl::Singleton<MemoryManager>:
 
 ITodo *ScriptCamCut::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCamCut; }
 
-ITodo *ScriptCamFollowPos::exec() {
-  return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCamFollowPos;
-}
+ITodo *ScriptCamFollowPos::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCamFollowPos; }
 
-ITodo *ScriptCamFollowTar::exec() {
-  return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCamFollowTar;
-}
+ITodo *ScriptCamFollowTar::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCamFollowTar; }
 
 } // namespace event

@@ -9,9 +9,7 @@ u32 GfDataBladeCreate::getRareBladeAppearType() {
   return dataGame->rareBladeAppearType;
 }
 
-void GfDataBladeCreate::setRareBladeAppearType(u32 rareBladeAppearType) {
-  GfDataManager::getDataGame()->rareBladeAppearType = (u8)rareBladeAppearType;
-}
+void GfDataBladeCreate::setRareBladeAppearType(u32 rareBladeAppearType) { GfDataManager::getDataGame()->rareBladeAppearType = (u8)rareBladeAppearType; }
 
 void GfDataBladeCreate::addAssurePoint(u32 amount) {
   u32 assurePoint = GfDataManager::getDataGame()->assurePoint + amount;

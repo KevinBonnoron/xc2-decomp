@@ -140,8 +140,7 @@ bool BladeChangeManager::IsProcDisableCancel() const {
 
 bool BladeChangeManager::IsProcHomuriEnd() const {
   for (int i = 0; i < unknown470; i++) {
-    if (unknown10[i].unknown5c >= CHANGE_TYPE_HOMURI_FIRST && unknown10[i].unknown5c <= CHANGE_TYPE_HOMURI_LAST &&
-        unknown10[i].unknown63 == CANCEL_STATE_DISABLE) {
+    if (unknown10[i].unknown5c >= CHANGE_TYPE_HOMURI_FIRST && unknown10[i].unknown5c <= CHANGE_TYPE_HOMURI_LAST && unknown10[i].unknown63 == CANCEL_STATE_DISABLE) {
       return true;
     }
   }

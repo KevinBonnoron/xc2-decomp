@@ -442,8 +442,7 @@ bool GfQuestUtil::getTalkNpcInfo(u32 &taskIndex, u32 npc, QuestID quest) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   for (u32 index = 0; index < QUEST_TASK_COUNT; index++) {
     QuestTaskParam param(quest, index, TASK_STATE_NONE);
-    if (param.taskType == TASK_TYPE_TALK && questListAcc->getTalkNpcID(param.taskId) == npc &&
-        questListAcc->getTalkMapID(param.taskId) == GfGameManager::getMapID()) {
+    if (param.taskType == TASK_TYPE_TALK && questListAcc->getTalkNpcID(param.taskId) == npc && questListAcc->getTalkMapID(param.taskId) == GfGameManager::getMapID()) {
       taskIndex = index;
       return true;
     }

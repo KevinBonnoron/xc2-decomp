@@ -24,8 +24,7 @@ void Thread::join(s32 milliSeconds) {
   }
 }
 
-Thread *Thread::create(mtl::IAllocator *pAllocator, const char *name, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId,
-                       s32 threadPriority) {
+Thread *Thread::create(mtl::IAllocator *pAllocator, const char *name, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, s32 threadPriority) {
   return ThreadNx::create(pAllocator, name, func, argument, stackSize, cpuId, threadPriority);
 }
 

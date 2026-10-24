@@ -57,8 +57,7 @@ public:
   void SetOneShotHitData(f32 time, bool isHitOnEnd);
   void SetArtsData(int artsSlot, int hit, bool isArts, u32 attackId);
   void SetBulletData(int bulletId, int bulletEffectId);
-  void SetIntervalHitData(f32 radius, f32 damage, bool isDamageRate, f32 interval, f32 lifespan, bool isSpecialTarget, bool isTargetFriend,
-                          bool isTargetEnemy);
+  void SetIntervalHitData(f32 radius, f32 damage, bool isDamageRate, f32 interval, f32 lifespan, bool isSpecialTarget, bool isTargetFriend, bool isTargetEnemy);
   void SetMoveParam(const EffectMoveComponent::MOVE_PARAM &param);
   void SetEndEffect(const char *name);
   bool IsEnd() const;

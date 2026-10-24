@@ -33,13 +33,9 @@ bool GfDataDriverArts::getEnableArts(mm::mtl::FixedArray<u32, 4> &enableArts, u3
   return count != 0;
 }
 
-void GfDataDriverArts::getSlotArts(mm::mtl::FixedArray<u32, 3> &slotArts, u32 driver, u32 weaponType) {
-  slotArts = GfDataDriver::getSDataDriver(driver)->weapons[weaponType].slotArts;
-}
+void GfDataDriverArts::getSlotArts(mm::mtl::FixedArray<u32, 3> &slotArts, u32 driver, u32 weaponType) { slotArts = GfDataDriver::getSDataDriver(driver)->weapons[weaponType].slotArts; }
 
-void GfDataDriverArts::setSlotArts(u32 driver, u32 weaponType, const mm::mtl::FixedArray<u32, 3> &slotArts) {
-  GfDataDriver::getSDataDriver(driver)->weapons[weaponType].slotArts = slotArts;
-}
+void GfDataDriverArts::setSlotArts(u32 driver, u32 weaponType, const mm::mtl::FixedArray<u32, 3> &slotArts) { GfDataDriver::getSDataDriver(driver)->weapons[weaponType].slotArts = slotArts; }
 
 u32 GfDataDriverArts::getArtsLevel(u32 driver, u32 arts) { return GfDataDriver::getSDataDriver(driver)->artsLevel[arts]; }
 

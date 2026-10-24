@@ -40,13 +40,7 @@ void DrAPGxType::setupScreenQuads(bool isBlend) {
 }
 
 void DrAPGxType::setupScreenQuadsWithAlpha() {
-  grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_ONE,
-                                        GRL_BLEND_FUNC_ZERO,
-                                        GRL_BLEND_COMBINE_ADD,
-                                        GRL_BLEND_FUNC_ONE,
-                                        GRL_BLEND_FUNC_ZERO,
-                                        GRL_BLEND_COMBINE_ADD,
-                                        GRL_LOGIC_TYPE_COPY);
+  grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_ZERO, GRL_BLEND_COMBINE_ADD, GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_ZERO, GRL_BLEND_COMBINE_ADD, GRL_LOGIC_TYPE_COPY);
   grlib::CGLibDepthCtl::setDepthControl(false, false, GRL_COMPARE_ALWAYS);
   grlib::CGLibPolygon::setCullingOff();
 }
@@ -72,13 +66,7 @@ void DrAPGxType::beginOccQuery() {
 void DrAPGxType::endOccQuery() { grlib::CGLibColorCtl::setColorBufferOn(); }
 
 void DrAPGxType::beginMaxBlend() {
-  grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_ONE,
-                                        GRL_BLEND_FUNC_ONE,
-                                        GRL_BLEND_COMBINE_MAX,
-                                        GRL_BLEND_FUNC_ONE,
-                                        GRL_BLEND_FUNC_ONE,
-                                        GRL_BLEND_COMBINE_MAX,
-                                        GRL_LOGIC_TYPE_COPY);
+  grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_MAX, GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_MAX, GRL_LOGIC_TYPE_COPY);
 }
 
 void DrAPGxType::endMaxBlend() { grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY); }
@@ -121,34 +109,13 @@ void DrAPGxType::setupCullingBack() { grlib::CGLibPolygon::setCullingBack(); }
 
 void DrAPGxType::setupStencilPrePassReset() { grlib::CGLibDepthCtl::setDepthControl(true, true, GRL_COMPARE_LESS); }
 
-void DrAPGxType::setupStencilTest(u8 isTest, u8 isWrite, int compare, u8 isStencil, u32 ref, u32 mask, int stencilCompare, int fail, int depthFail,
-                                  int pass) {
-  grlib::CGLibDepthCtl::setDepthStencilControl(isTest,
-                                               isWrite,
-                                               s_compares[compare],
-                                               isStencil,
-                                               s_compares[stencilCompare],
-                                               ref,
-                                               mask,
-                                               mask,
-                                               s_stencils[fail],
-                                               s_stencils[depthFail],
-                                               s_stencils[pass]);
+void DrAPGxType::setupStencilTest(u8 isTest, u8 isWrite, int compare, u8 isStencil, u32 ref, u32 mask, int stencilCompare, int fail, int depthFail, int pass) {
+  grlib::CGLibDepthCtl::setDepthStencilControl(isTest, isWrite, s_compares[compare], isStencil, s_compares[stencilCompare], ref, mask, mask, s_stencils[fail], s_stencils[depthFail], s_stencils[pass]);
 }
 
-void DrAPGxType::setupStencilTestWriteMask(u8 isTest, u8 isWrite, int compare, u8 isStencil, u32 ref, u32 mask, u32 writeMask, int stencilCompare,
-                                           int fail, int depthFail, int pass) {
-  grlib::CGLibDepthCtl::setDepthStencilControl(isTest,
-                                               isWrite,
-                                               s_compares[compare],
-                                               isStencil,
-                                               s_compares[stencilCompare],
-                                               ref,
-                                               mask,
-                                               writeMask,
-                                               s_stencils[fail],
-                                               s_stencils[depthFail],
-                                               s_stencils[pass]);
+void DrAPGxType::setupStencilTestWriteMask(u8 isTest, u8 isWrite, int compare, u8 isStencil, u32 ref, u32 mask, u32 writeMask, int stencilCompare, int fail, int depthFail, int pass) {
+  grlib::CGLibDepthCtl::setDepthStencilControl(
+      isTest, isWrite, s_compares[compare], isStencil, s_compares[stencilCompare], ref, mask, writeMask, s_stencils[fail], s_stencils[depthFail], s_stencils[pass]);
 }
 
 void DrAPGxType::setupDepthContl(u8 isTest, u8 isWrite, int compare) { grlib::CGLibDepthCtl::setDepthControl(isTest, isWrite, s_compares[compare]); }

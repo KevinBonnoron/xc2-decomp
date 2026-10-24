@@ -9,8 +9,7 @@
 namespace gf {
 
 GfMenuPosAdapter::GfMenuPosAdapter(ui::UIObjectPlugin *plugin)
-    : GfMenuAdapter(plugin, false, true), objHandle(INVALID_HANDLE), isWorld(false), isFixedPoint(false), isDiffOffset(false), screenOffset(0, 0),
-      converter(nullptr) {}
+    : GfMenuAdapter(plugin, false, true), objHandle(INVALID_HANDLE), isWorld(false), isFixedPoint(false), isDiffOffset(false), screenOffset(0, 0), converter(nullptr) {}
 
 GfMenuPosAdapter::~GfMenuPosAdapter() {
   if (converter != nullptr) {

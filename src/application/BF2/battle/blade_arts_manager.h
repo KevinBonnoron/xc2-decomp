@@ -24,9 +24,7 @@ public:
   };
 
   struct PROC_DATA {
-    PROC_DATA()
-        : unknown00(gf::INVALID_HANDLE), unknown08(gf::INVALID_HANDLE), unknown10(gf::INVALID_HANDLE), unknown18(-1), unknown1c(STATE_NONE),
-          unknown20(0.0f), unknown24(false) {}
+    PROC_DATA() : unknown00(gf::INVALID_HANDLE), unknown08(gf::INVALID_HANDLE), unknown10(gf::INVALID_HANDLE), unknown18(-1), unknown1c(STATE_NONE), unknown20(0.0f), unknown24(false) {}
 
     gf::GF_OBJ_HANDLE *unknown00; // Inferred role: driver handle; original member name unknown.
     gf::GF_OBJ_HANDLE *unknown08; // Inferred role: blade handle; original member name unknown.

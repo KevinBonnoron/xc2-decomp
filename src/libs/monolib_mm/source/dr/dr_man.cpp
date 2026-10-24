@@ -60,8 +60,7 @@ void DrMan::releaseCallBack(IDrDrawCallback *callback) {
 }
 
 void DrMan::setCacherClearMode(bool cacherClearMode) {
-  texStreamMan->m_flags = !cacherClearMode ? texStreamMan->m_flags & ~DrCalcTexStreamMan::FLAG_CACHER_CLEAR_MODE
-                                           : texStreamMan->m_flags | DrCalcTexStreamMan::FLAG_CACHER_CLEAR_MODE;
+  texStreamMan->m_flags = !cacherClearMode ? texStreamMan->m_flags & ~DrCalcTexStreamMan::FLAG_CACHER_CLEAR_MODE : texStreamMan->m_flags | DrCalcTexStreamMan::FLAG_CACHER_CLEAR_MODE;
 }
 
 void DrMan::openPixelDebugWindow(WinProc *window) {}

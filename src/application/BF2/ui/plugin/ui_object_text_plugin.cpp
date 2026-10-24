@@ -43,8 +43,6 @@ void UIObjectTextPlugin::execute(UIObjectAcc &acc) {
 
 const mm::mtl::RTTI *UIObjectTextPlugin::getRTTI() const { return &m_rtti; }
 
-bool UIObjectTextPlugin::isNeedUpdate(UIObjectAcc &acc) {
-  return (needUpdate & 1) || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0;
-}
+bool UIObjectTextPlugin::isNeedUpdate(UIObjectAcc &acc) { return (needUpdate & 1) || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0; }
 
 } // namespace ui

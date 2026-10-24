@@ -19,9 +19,7 @@ void StateFieldWaterIdle::enter(GfComBehaviorPc *behavior, ai::State *previous) 
   StateUtilField::setIdleStatus(*property, true);
 }
 
-void StateFieldWaterIdle::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  StateUtilField::setIdleStatus(*behavior->owner->getComponent<GfComPropertyPc>(), false);
-}
+void StateFieldWaterIdle::leave(GfComBehaviorPc *behavior, ai::State *next) { StateUtilField::setIdleStatus(*behavior->owner->getComponent<GfComPropertyPc>(), false); }
 
 void StateFieldWaterIdle::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComPropertyPc *property = behavior->owner->getComponent<GfComPropertyPc>();

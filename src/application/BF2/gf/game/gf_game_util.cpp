@@ -473,8 +473,7 @@ void GfGameUtil::addTrustPoint(u32 blade, u32 trustPoint) {
   GfEvent::callDebugChangeIdea(DEBUG_CHANGE_IDEA_TRUST, blade, 0, 0);
   int oldTrustRank = GfDataBlade::getTrustRank(blade);
   if (GfDataBlade::isCompleteAchievement(blade)) {
-    for (u32 trustRank = GfDataBlade::getTrustRank(blade);
-         trustRank >= TRUST_RANK_MAX && trustRank < TRUST_RANK_LIMIT && GfBdatBlade::get()->getFLD_IdeaTableTrustPoint(trustRank) <= total;
+    for (u32 trustRank = GfDataBlade::getTrustRank(blade); trustRank >= TRUST_RANK_MAX && trustRank < TRUST_RANK_LIMIT && GfBdatBlade::get()->getFLD_IdeaTableTrustPoint(trustRank) <= total;
          trustRank = GfDataBlade::getTrustRank(blade)) {
       GfDataBlade::setTrustRank(blade, static_cast<GfIdea>(trustRank + 1));
     }
@@ -788,8 +787,7 @@ void GfGameUtil::makeStateIdle(mm::mtl::FixStr<32> &state, GF_OBJ_HANDLE *handle
 
   if (GfGameManager::isEvent(false)) {
     u32 weaponType = GfDataBlade::getBladeWpnType(blade);
-    if (dataParamAcc.getObjType() == OBJECT_TYPE_DRIVER &&
-        (weaponType == WEAPON_TYPE_EVENT_BATTLE_IDLE_FIRST || weaponType == WEAPON_TYPE_EVENT_BATTLE_IDLE_SECOND)) {
+    if (dataParamAcc.getObjType() == OBJECT_TYPE_DRIVER && (weaponType == WEAPON_TYPE_EVENT_BATTLE_IDLE_FIRST || weaponType == WEAPON_TYPE_EVENT_BATTLE_IDLE_SECOND)) {
       state = "S_btidle";
       return;
     }

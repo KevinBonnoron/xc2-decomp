@@ -9,8 +9,7 @@ namespace ml {
 int DrResMdoSeamTexList::SEAMRES_TEXLIST_CNTMAX = 60;
 
 DrResMdoSeamTexList::DrResMdoSeamTexList(int index)
-    : m_next(nullptr), _10(), m_memObj(nullptr), m_textures(nullptr), m_header(nullptr), m_buffer(nullptr), m_index(index), m_cnt(0),
-      m_isChangeMem(false), m_errIdx(0), m_texNum(0) {}
+    : m_next(nullptr), _10(), m_memObj(nullptr), m_textures(nullptr), m_header(nullptr), m_buffer(nullptr), m_index(index), m_cnt(0), m_isChangeMem(false), m_errIdx(0), m_texNum(0) {}
 
 DrResMdoSeamTexList::~DrResMdoSeamTexList() {
   release();
@@ -38,8 +37,7 @@ int DrResMdoSeamTexture::SEAMRES_HEIGHT_CNTMAX = 60;
 int DrResMdoSeamVertex::SEAMRES_CNTMAX = 60;
 
 DrResMdoSeamTexture::DrResMdoSeamTexture(int index)
-    : m_next(nullptr), _10(), m_memObj(nullptr), m_heightMemObj(nullptr), m_heightOffset(0), m_index(index), m_seamIdx(0), m_nomCnt(0),
-      m_isChangeMem(false), m_heightCnt(0), m_heightState(0) {}
+    : m_next(nullptr), _10(), m_memObj(nullptr), m_heightMemObj(nullptr), m_heightOffset(0), m_index(index), m_seamIdx(0), m_nomCnt(0), m_isChangeMem(false), m_heightCnt(0), m_heightState(0) {}
 
 DrResMdoSeamTexture::~DrResMdoSeamTexture() {
   m_texture.release();
@@ -86,9 +84,7 @@ void DrResMdoSeamTexture::createHeightMoveTexture(int offset, u32 size) {
   m_heightOffset = offset;
 }
 
-void DrResMdoSeamTexture::createHeightTexture(int size, int heightSize) {
-  grlib::CGLibTexture::createMixTextureImagePtrs(m_texture, m_memObj->m_buffer, size, heightSize, false, nullptr, false);
-}
+void DrResMdoSeamTexture::createHeightTexture(int size, int heightSize) { grlib::CGLibTexture::createMixTextureImagePtrs(m_texture, m_memObj->m_buffer, size, heightSize, false, nullptr, false); }
 
 void DrResMdoSeamTexture::resetTexture(int size) {
   m_heightState = 0;
@@ -98,12 +94,9 @@ void DrResMdoSeamTexture::resetTexture(int size) {
 
 void DrResMdoSeamTexture::changeMemTexture(int size) { grlib::CGLibTexture::changeTextureImagePtrs(m_texture, m_memObj->m_buffer, size); }
 
-void DrResMdoSeamTexture::changeMemTexture(int size, int heightSize) {
-  grlib::CGLibTexture::changeMixTextureImagePtrs(m_texture, m_memObj->m_buffer, size, heightSize);
-}
+void DrResMdoSeamTexture::changeMemTexture(int size, int heightSize) { grlib::CGLibTexture::changeMixTextureImagePtrs(m_texture, m_memObj->m_buffer, size, heightSize); }
 
-DrResMdoSeamVertex::DrResMdoSeamVertex(int index)
-    : m_next(nullptr), _10(), m_memObj(nullptr), m_vertex(nullptr), m_index(index), m_cnt(0), _2c(), m_isChangeMem(false) {}
+DrResMdoSeamVertex::DrResMdoSeamVertex(int index) : m_next(nullptr), _10(), m_memObj(nullptr), m_vertex(nullptr), m_index(index), m_cnt(0), _2c(), m_isChangeMem(false) {}
 
 bool DrResMdoSeamVertex::update() {
   m_isChangeMem = false;

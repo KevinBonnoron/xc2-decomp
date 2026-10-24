@@ -9,29 +9,29 @@
 namespace ml {
 
 DrResMdoTexList::DrResMdoTexList(const u8 *texData)
-    : m_prev(nullptr), m_next(nullptr), m_resourceKey(texData), m_refCount(1), m_textures(nullptr), m_stmList(nullptr), m_buffer(nullptr),
-      m_texMax(0), m_flags(0), _70(), m_texHeader(texData), m_texData(texData), _90(), _98() {
+    : m_prev(nullptr), m_next(nullptr), m_resourceKey(texData), m_refCount(1), m_textures(nullptr), m_stmList(nullptr), m_buffer(nullptr), m_texMax(0), m_flags(0), _70(), m_texHeader(texData),
+      m_texData(texData), _90(), _98() {
   createTexInfoList();
   createTexList(m_texHeader, m_texData);
 }
 
 DrResMdoTexList::DrResMdoTexList(const u8 *texHeader, DrCalcStmListObj *stmList, const u8 *texData, const MdsTexHeader *stmHeader)
-    : m_prev(nullptr), m_next(nullptr), m_resourceKey(texHeader), m_refCount(1), m_textures(nullptr), m_stmList(stmList), m_buffer(nullptr),
-      m_texMax(0), m_flags(0), _70(), m_texHeader(texHeader), m_texData(texData), _90(), _98() {
+    : m_prev(nullptr), m_next(nullptr), m_resourceKey(texHeader), m_refCount(1), m_textures(nullptr), m_stmList(stmList), m_buffer(nullptr), m_texMax(0), m_flags(0), _70(), m_texHeader(texHeader),
+      m_texData(texData), _90(), _98() {
   createStmTexInfoList(stmList, reinterpret_cast<const u8 *>(stmHeader), true);
   createTexList(m_texHeader, m_texData);
 }
 
 DrResMdoTexList::DrResMdoTexList(const u8 *texHeader, DrCalcStmListObj *stmList, const u8 *texData, const u16 *stmTexIdx)
-    : m_prev(nullptr), m_next(nullptr), m_resourceKey(texHeader), m_refCount(1), m_textures(nullptr), m_stmList(stmList), m_buffer(nullptr),
-      m_texMax(0), m_flags(0), _70(), m_texHeader(texHeader), m_texData(texData), _90(), _98() {
+    : m_prev(nullptr), m_next(nullptr), m_resourceKey(texHeader), m_refCount(1), m_textures(nullptr), m_stmList(stmList), m_buffer(nullptr), m_texMax(0), m_flags(0), _70(), m_texHeader(texHeader),
+      m_texData(texData), _90(), _98() {
   createStmTexInfoList(stmList, reinterpret_cast<const u8 *>(stmTexIdx), false);
   createTexList(m_texHeader, m_texData);
 }
 
 DrResMdoTexList::DrResMdoTexList(const u8 *texHeader, const u8 *texData)
-    : m_prev(nullptr), m_next(nullptr), m_resourceKey(texHeader), m_refCount(1), m_textures(nullptr), m_stmList(nullptr), m_buffer(nullptr),
-      m_texMax(0), m_flags(0), _70(), m_texHeader(texHeader), m_texData(texData), _90(), _98() {
+    : m_prev(nullptr), m_next(nullptr), m_resourceKey(texHeader), m_refCount(1), m_textures(nullptr), m_stmList(nullptr), m_buffer(nullptr), m_texMax(0), m_flags(0), _70(), m_texHeader(texHeader),
+      m_texData(texData), _90(), _98() {
   createTexInfoList();
   createTexList(m_texHeader, m_texData);
 }
@@ -93,8 +93,7 @@ bool DrResMdoTexList::isTexMiddelStmCheck() const {
 
 int DrResMdoTexList::calcTextureMax(const u8 *texHeader) { return reinterpret_cast<const MdsTexHeader *>(texHeader)->texNum; }
 
-DrResMdoTexSimple::DrResMdoTexSimple(const void *texData, int size, bool isMiddle)
-    : m_prev(nullptr), m_next(nullptr), m_texData(texData), m_size(size), m_flags(isMiddle ? 2 : 0) {}
+DrResMdoTexSimple::DrResMdoTexSimple(const void *texData, int size, bool isMiddle) : m_prev(nullptr), m_next(nullptr), m_texData(texData), m_size(size), m_flags(isMiddle ? 2 : 0) {}
 
 DrResMdoTexSimple::~DrResMdoTexSimple() { releaseTex(); }
 

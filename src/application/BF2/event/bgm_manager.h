@@ -33,8 +33,7 @@ public:
   void render();
   void setHandOver(bool isHandOver);
   void playDefaultBgm(f32 fadeFrame);
-  void play(const char *name, f32 playFrame, f32 volume, f32 volumeFrame, f32 fadeFrame, f32 delayFrame, f32 fadeOutFrame, f32 startFrame,
-            bool isKeep, f32 overTimeFrame);
+  void play(const char *name, f32 playFrame, f32 volume, f32 volumeFrame, f32 fadeFrame, f32 delayFrame, f32 fadeOutFrame, f32 startFrame, bool isKeep, f32 overTimeFrame);
   void changeVolume(f32 volume, f32 frame);
   void setSyncFrame(f32 frame);
   f32 getStartedTotalFrame() const;

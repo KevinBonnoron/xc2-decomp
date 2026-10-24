@@ -2,9 +2,7 @@
 
 namespace ml {
 
-const DrShdLgtClustered::ClusterSetting *DrShdLgtClustered::getClusterSetting(u32 cate) const {
-  return &c_ClusterSettings[(m_isLowResolution << 1) | (cate != 0)];
-}
+const DrShdLgtClustered::ClusterSetting *DrShdLgtClustered::getClusterSetting(u32 cate) const { return &c_ClusterSettings[(m_isLowResolution << 1) | (cate != 0)]; }
 
 void DrShdLgtClustered::update() {}
 

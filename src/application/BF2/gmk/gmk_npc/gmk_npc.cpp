@@ -10,9 +10,7 @@ void GmkNpc::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   battleReaction = bdat.getValCheck("BattleReaction", id, BDAT_TYPE_U16);
   if (group == 0) {
     scenarioFlag = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
-    questFlag = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16),
-                              bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8),
-                              bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
+    questFlag = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
     u16 timeRange = bdat.getValCheck("TimeRange", id, BDAT_TYPE_U16);
     timeCond.timeRangeBits = timeRange;
     condition = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);

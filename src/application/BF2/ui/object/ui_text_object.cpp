@@ -17,8 +17,7 @@
 
 namespace ui {
 
-UITextObject::UITextObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name)
-    : UIObject(layer, name, UI_OBJECT_TYPE_TEXT), style(0xffff), facePatternIndex(0xffffffff) {}
+UITextObject::UITextObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name) : UIObject(layer, name, UI_OBJECT_TYPE_TEXT), style(0xffff), facePatternIndex(0xffffffff) {}
 
 UITextObject::~UITextObject() { ; }
 

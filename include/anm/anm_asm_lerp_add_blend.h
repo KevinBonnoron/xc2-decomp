@@ -24,8 +24,7 @@ struct ResLerpAddTree {
 
 class LerpAddBlendTree : public AsmState {
 public:
-  LerpAddBlendTree(const ResStateData *pResStateData, const ResLerpAddTree *pResTree, mm::mtl::Vector<Variable> &variables,
-                   mm::mtl::IAllocator &allocator);
+  LerpAddBlendTree(const ResStateData *pResStateData, const ResLerpAddTree *pResTree, mm::mtl::Vector<Variable> &variables, mm::mtl::IAllocator &allocator);
   ~LerpAddBlendTree() override;
   void attach(AsmBlender *blender) override;
   void dettach(AsmBlender *blender) override;

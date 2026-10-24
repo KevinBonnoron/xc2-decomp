@@ -9,9 +9,7 @@
 namespace ml {
 class EventView;
 
-ScnDebug::ScnDebug(Scn *scn, mtl::ALLOC_HANDLE mem) : m_scn(scn), m_manipu(nullptr), _20(-1), _28(nullptr), _30(true) {
-  m_manipu = new (mem) ScnDebugManipu(scn);
-}
+ScnDebug::ScnDebug(Scn *scn, mtl::ALLOC_HANDLE mem) : m_scn(scn), m_manipu(nullptr), _20(-1), _28(nullptr), _30(true) { m_manipu = new (mem) ScnDebugManipu(scn); }
 
 ScnDebug::~ScnDebug() {
   if (m_manipu != nullptr) {

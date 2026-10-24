@@ -18,10 +18,7 @@ namespace ml {
 static const GrlPrimitiveType s_primitiveTbl[] = {GRL_PRIMITIVE_TRIANGLES, GRL_PRIMITIVE_QUADS, GRL_PRIMITIVE_TRIANGLE_STRIP};
 static const GrlIndexFormat s_indexFormatTbl[] = {GRL_INDEX_FORMAT_U16, GRL_INDEX_FORMAT_U32};
 
-DrResMdoVertex::DrResMdoVertex(const u8 *resource)
-    : m_prev(nullptr), m_next(nullptr), m_resourceKey(resource), m_refCount(1), m_buffer(nullptr), m_stmList(nullptr) {
-  setupVertex(resource);
-}
+DrResMdoVertex::DrResMdoVertex(const u8 *resource) : m_prev(nullptr), m_next(nullptr), m_resourceKey(resource), m_refCount(1), m_buffer(nullptr), m_stmList(nullptr) { setupVertex(resource); }
 
 void DrResMdoVertex::setupVertex(const u8 *resource) {
   vertexRelease();
@@ -46,16 +43,15 @@ void DrResMdoVertex::setupVertex(const u8 *resource) {
   }
 
   u32 uniformVertexOffset = header->uniformVertexOffset;
-  m_buffer = static_cast<u8 *>(mtl::MemManager::allocate(
-      DrMan::getIns()->memClass,
-      (m_vertexNum + m_etcVertexNum + m_indexNum) * sizeof(grlib::CGLibVtxVertex) +
-          (uniformVertexOffset != 0
-               ? sizeof(grlib::CGLibVtlMemPool) + sizeof(DrResUniformVertex) + sizeof(grlib::CGLibVtxVertex) + sizeof(grlib::CGLibOneUniformBlock)
-               : sizeof(grlib::CGLibVtlMemPool)),
-      0x10,
-      false,
-      "no name",
-      0));
+  m_buffer = static_cast<u8 *>(
+      mtl::MemManager::allocate(DrMan::getIns()->memClass,
+                                (m_vertexNum + m_etcVertexNum + m_indexNum) * sizeof(grlib::CGLibVtxVertex) +
+                                    (uniformVertexOffset != 0 ? sizeof(grlib::CGLibVtlMemPool) + sizeof(DrResUniformVertex) + sizeof(grlib::CGLibVtxVertex) + sizeof(grlib::CGLibOneUniformBlock)
+                                                              : sizeof(grlib::CGLibVtlMemPool)),
+                                0x10,
+                                false,
+                                "no name",
+                                0));
   m_vertices = reinterpret_cast<grlib::CGLibVtxVertex *>(m_buffer);
   for (int i = 0; i < m_vertexNum; i++) {
     new (&m_vertices[i]) grlib::CGLibVtxVertex;
@@ -72,8 +68,7 @@ void DrResMdoVertex::setupVertex(const u8 *resource) {
     m_uniformVertex = reinterpret_cast<DrResUniformVertex *>(m_buffer + offset);
     m_uniformVertex->vertex = reinterpret_cast<grlib::CGLibVtxVertex *>(m_buffer + offset + sizeof(DrResUniformVertex));
     new (m_uniformVertex->vertex) grlib::CGLibVtxVertex;
-    m_uniformVertex->uniformBlock =
-        reinterpret_cast<grlib::CGLibOneUniformBlock *>(m_buffer + offset + sizeof(DrResUniformVertex) + sizeof(grlib::CGLibVtxVertex));
+    m_uniformVertex->uniformBlock = reinterpret_cast<grlib::CGLibOneUniformBlock *>(m_buffer + offset + sizeof(DrResUniformVertex) + sizeof(grlib::CGLibVtxVertex));
     new (m_uniformVertex->uniformBlock) grlib::CGLibOneUniformBlock;
     offset += sizeof(DrResUniformVertex) + sizeof(grlib::CGLibVtxVertex) + sizeof(grlib::CGLibOneUniformBlock);
   } else {
@@ -94,13 +89,11 @@ void DrResMdoVertex::setupVertex(const u8 *resource) {
   }
   const MdsEtcVertexBuffInfo *etcVertexInfos = reinterpret_cast<const MdsEtcVertexBuffInfo *>(resource + etcVertexOffset);
   for (int i = 0; i < m_etcVertexNum; i++) {
-    m_etcVertices[i].createMemVertexBuff(
-        m_memPool, etcVertexInfos[i].offset, etcVertexInfos[i].stride * etcVertexInfos[i].count, etcVertexInfos[i].stride);
+    m_etcVertices[i].createMemVertexBuff(m_memPool, etcVertexInfos[i].offset, etcVertexInfos[i].stride * etcVertexInfos[i].count, etcVertexInfos[i].stride);
   }
   const MdsIndexBuffInfo *indexInfos = reinterpret_cast<const MdsIndexBuffInfo *>(resource + indexOffset);
   for (int i = 0; i < m_indexNum; i++) {
-    m_indices[i].createMemIndexBuff(
-        m_memPool, indexInfos[i].offset, indexInfos[i].count, s_primitiveTbl[indexInfos[i].primitive], s_indexFormatTbl[indexInfos[i].format]);
+    m_indices[i].createMemIndexBuff(m_memPool, indexInfos[i].offset, indexInfos[i].count, s_primitiveTbl[indexInfos[i].primitive], s_indexFormatTbl[indexInfos[i].format]);
   }
   if (header->weightOffset != 0) {
     m_weightInfo = reinterpret_cast<const MdsWeightInfo *>(reinterpret_cast<const u8 *>(m_header) + header->weightOffset);
@@ -108,8 +101,7 @@ void DrResMdoVertex::setupVertex(const u8 *resource) {
     m_weightInfo = nullptr;
   }
   if (header->uniformVertexOffset != 0) {
-    const MdsUniformVertexInfo *uniformInfo =
-        reinterpret_cast<const MdsUniformVertexInfo *>(reinterpret_cast<const u8 *>(m_header) + header->uniformVertexOffset);
+    const MdsUniformVertexInfo *uniformInfo = reinterpret_cast<const MdsUniformVertexInfo *>(reinterpret_cast<const u8 *>(m_header) + header->uniformVertexOffset);
     m_uniformVertex->vertex->createMemVertexBuff(m_memPool, uniformInfo->vertexOffset, uniformInfo->vertexSize, uniformInfo->vertexStride);
     m_uniformVertex->uniformBlock->setup(m_memPool, uniformInfo->uniformSize, uniformInfo->uniformOffset);
     m_uniformVertex->uniformBlock->updateData();

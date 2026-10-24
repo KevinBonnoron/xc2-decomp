@@ -31,8 +31,7 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
-  static SphericalCoordinatesIkSolver *create(const ParamAdapter &param, const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame,
-                                              anm::Pose &pose);
+  static SphericalCoordinatesIkSolver *create(const ParamAdapter &param, const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose);
   bool setupLimit(const ParamAdapter &param, const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose);
   SphericalCoordinatesIkSolver();
   ~SphericalCoordinatesIkSolver() override;

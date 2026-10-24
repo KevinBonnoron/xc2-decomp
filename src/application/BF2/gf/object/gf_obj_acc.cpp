@@ -541,9 +541,7 @@ bool GfObjAcc::isBattle() const {
   return false;
 }
 
-GF_MOUNT_HANDLE *GfObjAcc::getMountHandle(GFATTACH attach) const {
-  return mInfo != nullptr ? mInfo->mounts[attach].handle : reinterpret_cast<GF_MOUNT_HANDLE *>(-1);
-}
+GF_MOUNT_HANDLE *GfObjAcc::getMountHandle(GFATTACH attach) const { return mInfo != nullptr ? mInfo->mounts[attach].handle : reinterpret_cast<GF_MOUNT_HANDLE *>(-1); }
 
 void GfObjAcc::setupExtraParts() {
   ml::ScnObjModel *model = getScnModel();

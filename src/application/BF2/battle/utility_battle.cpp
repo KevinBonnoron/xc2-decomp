@@ -372,9 +372,7 @@ int Utility::AI_ConversionID_BtltoAI(int id) {
 
 bool Utility::AI_IsValidID(int aiId) { return AI_GetCharacterHandle(aiId) != gf::INVALID_HANDLE; }
 
-void Utility::AI_GetObjectPosition(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position) {
-  Misc::GetObjectTransform(handle, position, Misc::TRANS_TYPE_POSITION);
-}
+void Utility::AI_GetObjectPosition(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position) { Misc::GetObjectTransform(handle, position, Misc::TRANS_TYPE_POSITION); }
 
 int Utility::AI_GetTargetCharacterID(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
@@ -412,8 +410,7 @@ f32 Utility::AI_GetVertDiff(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *target
   mm::Vec3 position;
   mm::Vec3 targetPosition;
   f32 diff = FLT_MAX;
-  if (Misc::GetObjectTransform(handle, position, Misc::TRANS_TYPE_POSITION) &&
-      Misc::GetObjectTransform(target, targetPosition, Misc::TRANS_TYPE_POSITION)) {
+  if (Misc::GetObjectTransform(handle, position, Misc::TRANS_TYPE_POSITION) && Misc::GetObjectTransform(target, targetPosition, Misc::TRANS_TYPE_POSITION)) {
     diff = targetPosition.y - position.y;
   }
 
@@ -427,8 +424,7 @@ int Utility::AI_GetEatTargetCharacterID(gf::GF_OBJ_HANDLE *handle, f32 range) {
   }
 
   mm::mtl::FixedVector<u8, 90> list;
-  if (GetCharacterList(list, handle, CHECK_CHR_NUM_MODE_FRIEND, CHARACTER_LIST_ALIVE | CHARACTER_LIST_EXCLUDE_BLADE | CHARACTER_LIST_EXCLUDE_SELF) <
-      1) {
+  if (GetCharacterList(list, handle, CHECK_CHR_NUM_MODE_FRIEND, CHARACTER_LIST_ALIVE | CHARACTER_LIST_EXCLUDE_BLADE | CHARACTER_LIST_EXCLUDE_SELF) < 1) {
     return -1;
   }
 
@@ -868,10 +864,7 @@ bool Utility::AI_StartMoveFriendBack(gf::GF_OBJ_HANDLE *handle, f32 distance, f3
   }
 
   mm::mtl::FixedVector<u8, 90> list;
-  if (GetCharacterList(list,
-                       handle,
-                       CHECK_CHR_NUM_MODE_FRIEND,
-                       CHARACTER_LIST_BATTLE | CHARACTER_LIST_ALIVE | CHARACTER_LIST_EXCLUDE_BLADE | CHARACTER_LIST_EXCLUDE_SELF) < 1) {
+  if (GetCharacterList(list, handle, CHECK_CHR_NUM_MODE_FRIEND, CHARACTER_LIST_BATTLE | CHARACTER_LIST_ALIVE | CHARACTER_LIST_EXCLUDE_BLADE | CHARACTER_LIST_EXCLUDE_SELF) < 1) {
     return false;
   }
 
@@ -992,8 +985,7 @@ int Utility::AI_GetTargetDirection(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE 
 
 int Utility::AI_CheckCharacterNum(gf::GF_OBJ_HANDLE *handle, int direction, CHECK_CHR_NUM_MODE mode) {
   mm::mtl::FixedVector<u8, 90> list;
-  if (GetCharacterList(
-          list, handle, mode, CHARACTER_LIST_BATTLE | CHARACTER_LIST_ALIVE | CHARACTER_LIST_EXCLUDE_BLADE | CHARACTER_LIST_EXCLUDE_SELF) < 1) {
+  if (GetCharacterList(list, handle, mode, CHARACTER_LIST_BATTLE | CHARACTER_LIST_ALIVE | CHARACTER_LIST_EXCLUDE_BLADE | CHARACTER_LIST_EXCLUDE_SELF) < 1) {
     return 0;
   }
 
@@ -1032,8 +1024,7 @@ int Utility::AI_CheckHpRateCharacterNum(gf::GF_OBJ_HANDLE *handle, int percent, 
 
 int Utility::AI_GetDeadCharacterNum(gf::GF_OBJ_HANDLE *handle, CHECK_CHR_NUM_MODE mode) {
   mm::mtl::FixedVector<u8, 90> list;
-  return GetCharacterList(
-      list, handle, mode, CHARACTER_LIST_BATTLE | CHARACTER_LIST_DEAD | CHARACTER_LIST_EXCLUDE_BLADE | CHARACTER_LIST_EXCLUDE_SELF);
+  return GetCharacterList(list, handle, mode, CHARACTER_LIST_BATTLE | CHARACTER_LIST_DEAD | CHARACTER_LIST_EXCLUDE_BLADE | CHARACTER_LIST_EXCLUDE_SELF);
 }
 
 void Utility::AI_AddKizuna(gf::GF_OBJ_HANDLE *handle, int kizuna) {
@@ -1212,9 +1203,7 @@ int Utility::AI_GetBdatID(gf::GF_OBJ_HANDLE *handle) {
   return character->unknowncc8;
 }
 
-bool Utility::AI_GetCharacterGimmickPoint(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position) {
-  return gf::GfGameUtil::getGmkTargetPointPos(position, handle);
-}
+bool Utility::AI_GetCharacterGimmickPoint(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position) { return gf::GfGameUtil::getGmkTargetPointPos(position, handle); }
 
 bool Utility::AI_GetGimmickPoint(mm::Vec3 &position, u32 gimmick) { return gf::GfGameUtil::getGmkTargetPointPos(position, gimmick); }
 

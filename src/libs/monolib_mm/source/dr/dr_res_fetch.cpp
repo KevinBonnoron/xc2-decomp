@@ -2225,14 +2225,11 @@ void DrResFetch::vert_set_SHORT2(int offset, u32 location, grlib::CGLibVtxAttr &
 }
 
 void (*DrResFetch::s_callSetVert[52])(int, u32, grlib::CGLibVtxAttr &) = {
-    vert_set_VEC3,       vert_set_VEC3,   vert_set_BYTE,    vert_set_USHORT2, vert_set_USHORT2, vert_set_VEC2,      vert_set_VEC2,
-    vert_set_VEC2,       vert_set_VEC2,   vert_set_VEC2,    vert_set_VEC2,    vert_set_VEC2,    vert_set_VEC2,      vert_set_VEC2,
-    vert_set_U32,        vert_set_VEC3,   vert_set_SHORT4,  vert_set_U32,     vert_set_VEC3,    vert_set_SHORT4,    vert_set_SHORT4,
-    vert_set_GmPos4,     vert_set_GmScl2, vert_set_GmCol4,  vert_set_GmCal1,  vert_set_GmCal2,  vert_set_GmCal3,    vert_set_GmInt,
-    vert_set_S32,        vert_set_S32,    vert_set_GmFloat, vert_set_BYTE,    vert_set_S32,     vert_set_S32,       vert_set_OutLineNom,
-    vert_set_OutLineCol, vert_set_MofPos, vert_set_MofNom,  vert_set_MofTan,  vert_set_MofPos,  vert_set_MofNewTan, vert_set_SHORT2,
-    vert_set_SHORT2,     vert_set_SHORT2, vert_set_SHORT2,  vert_set_SHORT2,  vert_set_SHORT2,  vert_set_SHORT2,    vert_set_SHORT2,
-    vert_set_SHORT2,
+    vert_set_VEC3,      vert_set_VEC3,   vert_set_BYTE,   vert_set_USHORT2, vert_set_USHORT2,    vert_set_VEC2,       vert_set_VEC2,   vert_set_VEC2,   vert_set_VEC2,   vert_set_VEC2,
+    vert_set_VEC2,      vert_set_VEC2,   vert_set_VEC2,   vert_set_VEC2,    vert_set_U32,        vert_set_VEC3,       vert_set_SHORT4, vert_set_U32,    vert_set_VEC3,   vert_set_SHORT4,
+    vert_set_SHORT4,    vert_set_GmPos4, vert_set_GmScl2, vert_set_GmCol4,  vert_set_GmCal1,     vert_set_GmCal2,     vert_set_GmCal3, vert_set_GmInt,  vert_set_S32,    vert_set_S32,
+    vert_set_GmFloat,   vert_set_BYTE,   vert_set_S32,    vert_set_S32,     vert_set_OutLineNom, vert_set_OutLineCol, vert_set_MofPos, vert_set_MofNom, vert_set_MofTan, vert_set_MofPos,
+    vert_set_MofNewTan, vert_set_SHORT2, vert_set_SHORT2, vert_set_SHORT2,  vert_set_SHORT2,     vert_set_SHORT2,     vert_set_SHORT2, vert_set_SHORT2, vert_set_SHORT2, vert_set_SHORT2,
 };
 
 void (DrResFetch::*DrResFetch::s_callDefVertex[91])() = {

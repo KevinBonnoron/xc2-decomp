@@ -785,8 +785,7 @@ u32 GfAssetSetupEnemy::getEnemyAttribute(const GfInitParamEnemy &param) {
     return attribute;
   }
 
-  if (GfDataBlade::getCommonBladeName(getMdlFile(getAssetType())) ||
-      GfBdatChrEnArrange::get()->getChrEnArrangeDriverLev(param.getEnArrangeID()) != 0) {
+  if (GfDataBlade::getCommonBladeName(getMdlFile(getAssetType())) || GfBdatChrEnArrange::get()->getChrEnArrangeDriverLev(param.getEnArrangeID()) != 0) {
     attribute = GfDataBlade::getAttribute(blade);
     if (attribute != 0) {
       return attribute;
@@ -828,15 +827,9 @@ void GfAssetSetupEnemy::getEnemyEabFileName(mm::mtl::FixStr<128> &name, const Gf
 void GfAssetSetupEnemy::getEnemyEfbFileName(mm::mtl::FixStr<128> &name, const GfInitParamEnemy &param, GfAssetType type, u32 attribute) {
   u32 blade = param.getBladeID();
   const char *efb = getEfbFile(type);
-  if ((efb == nullptr || strstr(efb, "en/") == nullptr) &&
-      (!GfDataBlade::isRegularBlade(blade) || param.characterType != CHARACTER_TYPE_ENEMY_BLADE || GfDataHana::isValid(blade))) {
+  if ((efb == nullptr || strstr(efb, "en/") == nullptr) && (!GfDataBlade::isRegularBlade(blade) || param.characterType != CHARACTER_TYPE_ENEMY_BLADE || GfDataHana::isValid(blade))) {
     u32 baseAttribute = blade == BLADE_SAIKA ? 0 : attribute;
-    name.format("%s%s%s%s%s",
-                getEffPath(),
-                efb,
-                GfDataBlade::getBaseEfbWeaponName(blade),
-                GfDataBlade::getBaseEfbAttributeName(blade, baseAttribute),
-                ".wiefb");
+    name.format("%s%s%s%s%s", getEffPath(), efb, GfDataBlade::getBaseEfbWeaponName(blade), GfDataBlade::getBaseEfbAttributeName(blade, baseAttribute), ".wiefb");
     return;
   }
 

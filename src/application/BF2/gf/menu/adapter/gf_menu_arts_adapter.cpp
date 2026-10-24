@@ -66,25 +66,21 @@ GfMenuArtsAdapter *GfMenuArtsAdapter::createFromCoverter(u32 handle, u32 type, I
   return nullptr;
 }
 
-GfMenuArtsAdapter *GfMenuArtsAdapter::createFromListReferenceDriver(u32 handle, u32 type, GfMenuArtsList *list, int listIndex, u32 driverIndex,
-                                                                    bool isUpdateAlways) {
+GfMenuArtsAdapter *GfMenuArtsAdapter::createFromListReferenceDriver(u32 handle, u32 type, GfMenuArtsList *list, int listIndex, u32 driverIndex, bool isUpdateAlways) {
   // __LINE__ must be 296 as in the original source: it is the line argument of operator new.
 #line 296
-  ListReferenceDriverConverter *converter =
-      new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ListReferenceDriverConverter(list, listIndex, driverIndex);
+  ListReferenceDriverConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ListReferenceDriverConverter(list, listIndex, driverIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
 GfMenuArtsAdapter *GfMenuArtsAdapter::createFromReferenceDriverSlot(u32 handle, u32 type, u32 driverIndex, u32 slot, bool isUpdateAlways) {
   // __LINE__ must be 314 as in the original source: it is the line argument of operator new.
 #line 314
-  ReferenceDriverSlotConverter *converter =
-      new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverSlotConverter(driverIndex, slot);
+  ReferenceDriverSlotConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverSlotConverter(driverIndex, slot);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
-GfMenuArtsAdapter::GfMenuArtsAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), arts(0), level(0) {}
+GfMenuArtsAdapter::GfMenuArtsAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), arts(0), level(0) {}
 
 GfMenuArtsAdapter::~GfMenuArtsAdapter() {
   if (converter != nullptr) {

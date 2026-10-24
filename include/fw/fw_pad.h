@@ -21,9 +21,7 @@ struct PadVibrationInfo;
 namespace fw {
 
 struct PadData {
-  PadData()
-      : hold(0), trigger(0), release(0), repeat(0), _10(), _28(), arxThreshold(0.2f), aryThreshold(0.2f), alxThreshold(0.2f), alyThreshold(0.2f),
-        padNo(-1), isConnected(), style() {}
+  PadData() : hold(0), trigger(0), release(0), repeat(0), _10(), _28(), arxThreshold(0.2f), aryThreshold(0.2f), alxThreshold(0.2f), alyThreshold(0.2f), padNo(-1), isConnected(), style() {}
 
   u32 hold;
   u32 trigger;

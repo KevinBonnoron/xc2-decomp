@@ -9,8 +9,7 @@
 namespace event {
 
 ResManager::Item::Item(const char *path, IResEvent *event, bool isPackOnly, RES_RESULT_TYPE result, void *adr, size_t size, bool isPackLoaded)
-    : path(path), mIsPackOnly(isPackOnly), mCallbackIndex(0), mEventCount(1), mResource(nullptr), mAdr(adr), mSize(size), mResult(result),
-      mIsPackLoaded(isPackLoaded) {
+    : path(path), mIsPackOnly(isPackOnly), mCallbackIndex(0), mEventCount(1), mResource(nullptr), mAdr(adr), mSize(size), mResult(result), mIsPackLoaded(isPackLoaded) {
   mEvents[0] = event;
   for (u32 i = 1; i < EVENT_COUNT; i++) {
     mEvents[i] = nullptr;

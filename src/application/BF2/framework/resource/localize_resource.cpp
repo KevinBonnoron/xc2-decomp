@@ -8,11 +8,9 @@
 namespace fw {
 enum LOAD_PRIO : int;
 
-LocalizeResource::LocalizeResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority)
-    : CommonResource(handle, priority, 0, 0), checkState(CHECK_STATE_NONE) {}
+LocalizeResource::LocalizeResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority) : CommonResource(handle, priority, 0, 0), checkState(CHECK_STATE_NONE) {}
 
-LocalizeResource::LocalizeResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority)
-    : CommonResource(allocator, priority, 0, 0), checkState(CHECK_STATE_NONE) {}
+LocalizeResource::LocalizeResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority) : CommonResource(allocator, priority, 0, 0), checkState(CHECK_STATE_NONE) {}
 
 LocalizeResource::~LocalizeResource() { ; }
 

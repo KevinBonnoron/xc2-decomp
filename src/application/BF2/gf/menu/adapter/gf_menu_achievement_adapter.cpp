@@ -74,8 +74,7 @@ GfMenuAchievementAdapter *GfMenuAchievementAdapter::create(u32 handle, u32 type,
     if (plugin != nullptr) {
       // __LINE__ must be 190 as in the original source: it is the line argument of operator new.
 #line 190
-      GfMenuAchievementAdapter *adapter =
-          new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuAchievementAdapter(plugin, isUpdateAlways);
+      GfMenuAchievementAdapter *adapter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfMenuAchievementAdapter(plugin, isUpdateAlways);
       adapter->updater.bind(adapter, info.update);
       adapter->blade = blade;
       adapter->line = line;
@@ -222,8 +221,7 @@ bool GfMenuAchievementAdapter::update_AchievementCategoryIcon() {
   }
   ACHIEVEMENT_TYPE type;
   u32 index;
-  if (GfDataAchievement::getAchievementType(type, index, line) && type == ACHIEVEMENT_TYPE_KEY && line == ACHIEVEMENT_LINE_KEY &&
-      level == KEY_LEVEL_FIRST) {
+  if (GfDataAchievement::getAchievementType(type, index, line) && type == ACHIEVEMENT_TYPE_KEY && line == ACHIEVEMENT_LINE_KEY && level == KEY_LEVEL_FIRST) {
     return false;
   }
   int icon;
@@ -395,20 +393,17 @@ GfMenuAchievementAdapter *GfMenuAchievementAdapter::createFromCoverter(u32 handl
   return adapter;
 }
 
-GfMenuAchievementAdapter *GfMenuAchievementAdapter::createFromReferenceBlade(u32 handle, u32 type, u32 bladeIndex, u16 line, u16 level,
-                                                                             bool isUpdateAlways) {
+GfMenuAchievementAdapter *GfMenuAchievementAdapter::createFromReferenceBlade(u32 handle, u32 type, u32 bladeIndex, u16 line, u16 level, bool isUpdateAlways) {
   // __LINE__ must be 221 as in the original source: it is the line argument of operator new.
 #line 221
   ReferenceBladeConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceBladeConverter(bladeIndex, line, level);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
-GfMenuAchievementAdapter *GfMenuAchievementAdapter::createFromReferenceBladeLineLevel(u32 handle, u32 type, u32 bladeIndex, u16 lineIndex,
-                                                                                      u16 levelIndex, bool isUpdateAlways) {
+GfMenuAchievementAdapter *GfMenuAchievementAdapter::createFromReferenceBladeLineLevel(u32 handle, u32 type, u32 bladeIndex, u16 lineIndex, u16 levelIndex, bool isUpdateAlways) {
   // __LINE__ must be 229 as in the original source: it is the line argument of operator new.
 #line 229
-  ReferenceBladeLineLevelConverter *converter =
-      new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceBladeLineLevelConverter(bladeIndex, lineIndex, levelIndex);
+  ReferenceBladeLineLevelConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceBladeLineLevelConverter(bladeIndex, lineIndex, levelIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 

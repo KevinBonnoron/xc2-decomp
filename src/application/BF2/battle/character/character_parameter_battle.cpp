@@ -788,9 +788,7 @@ bool EnemyParameter::UsePerfectAvoid() const {
   return false;
 }
 
-const EnemyParameter::HATE_DATA *EnemyParameter::GetHateDataConst(int index) const {
-  return &unknown820[index >= 0 && index < HATE_COUNT ? index : 0];
-}
+const EnemyParameter::HATE_DATA *EnemyParameter::GetHateDataConst(int index) const { return &unknown820[index >= 0 && index < HATE_COUNT ? index : 0]; }
 
 void EnemyParameter::HATE_DATA::Set(int type, f32 hate) {
   if (!BattleGlobal::get()->unknown65df_4 && static_cast<u32>(type) < 2) {

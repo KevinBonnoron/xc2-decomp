@@ -147,9 +147,7 @@ void GfSound::setCategoryVolume(GF_SE_CATEGORY_HANDLE *handle, fw::SoundCategory
 
 GfSound::CategoryVolume *GfSound::getCategoryVolume(GF_SE_CATEGORY_HANDLE *handle) { return &categoryVolumes[getCategoryIndex(handle)]; }
 
-f32 GfSound::getCategoryVolume(GF_SE_CATEGORY_HANDLE *handle, fw::SoundCategory category) const {
-  return categoryVolumes[getCategoryIndex(handle)].volumes[static_cast<u32>(category)].current;
-}
+f32 GfSound::getCategoryVolume(GF_SE_CATEGORY_HANDLE *handle, fw::SoundCategory category) const { return categoryVolumes[getCategoryIndex(handle)].volumes[static_cast<u32>(category)].current; }
 
 const GfSound::CategoryVolume *GfSound::getCategoryVolume(GF_SE_CATEGORY_HANDLE *handle) const { return &categoryVolumes[getCategoryIndex(handle)]; }
 
@@ -384,9 +382,8 @@ void GfSound::gevPause(u32 resumeBits, u32 pauseBits) {
 void GfSound::gevLayerPause(u32, bool) {}
 
 GfMasterVolume::GfMasterVolume()
-    : eventVoiceVolume(0.7f), eventCsVolume(0.8f), eventBgmVolume(0.6f), eventSeVolume(0.7f), gameBgmVolume(0.6f), gameEnvVolume(0.4f),
-      gameWeatherVolume(0.4f), gameSeVolume(0.6f), playerVoiceVolume(0.8f), enemyVoiceVolume(0.8f), nareVoiceVolume(0.8f), systemVolume(0.5f),
-      menuBgmVolume(0.5f) {}
+    : eventVoiceVolume(0.7f), eventCsVolume(0.8f), eventBgmVolume(0.6f), eventSeVolume(0.7f), gameBgmVolume(0.6f), gameEnvVolume(0.4f), gameWeatherVolume(0.4f), gameSeVolume(0.6f),
+      playerVoiceVolume(0.8f), enemyVoiceVolume(0.8f), nareVoiceVolume(0.8f), systemVolume(0.5f), menuBgmVolume(0.5f) {}
 
 GfMasterVolume::~GfMasterVolume() {}
 

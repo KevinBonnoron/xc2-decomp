@@ -25,8 +25,7 @@ class GfItemBoxBase;
 
 class item_iterator {
 public:
-  item_iterator(GfItemBoxBase *box, GfItemInfo *current, u32 itemSize, bool isMulti, ItemType::Type type)
-      : box(box), current(current), itemSize(itemSize), isMulti(isMulti), type(type) {}
+  item_iterator(GfItemBoxBase *box, GfItemInfo *current, u32 itemSize, bool isMulti, ItemType::Type type) : box(box), current(current), itemSize(itemSize), isMulti(isMulti), type(type) {}
 
   item_iterator operator++();
   GfItemInfo &operator*() const { return *current; }

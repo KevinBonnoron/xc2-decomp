@@ -1,10 +1,10 @@
 #pragma once
 
-#define MM_ASSERT(cond)                                                                                                                              \
-  do {                                                                                                                                               \
-    if (!(cond)) {                                                                                                                                   \
-      mm::MMStdBase::mmAssert(#cond, __FILE__, __LINE__);                                                                                            \
-    }                                                                                                                                                \
+#define MM_ASSERT(cond)                                                                                                                                                                                \
+  do {                                                                                                                                                                                                 \
+    if (!(cond)) {                                                                                                                                                                                     \
+      mm::MMStdBase::mmAssert(#cond, __FILE__, __LINE__);                                                                                                                                              \
+    }                                                                                                                                                                                                  \
   } while (0)
 
 namespace mm {

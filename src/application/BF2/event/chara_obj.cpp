@@ -371,8 +371,7 @@ void CharaObj::playMotion(const char *name, f32 frame, f32 blend, f32 speed) {
   }
 }
 
-void CharaObj::playMotionABC(const char *nameA, const char *nameB, const char *nameC, f32 frameA, f32 frameB, f32 frameC, f32 blendA, f32 blendB,
-                             f32 blendC) {
+void CharaObj::playMotionABC(const char *nameA, const char *nameB, const char *nameC, f32 frameA, f32 frameB, f32 frameC, f32 blendA, f32 blendB, f32 blendC) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
     return;
   }
@@ -423,8 +422,7 @@ int CharaObj::getHead() const {
   return 0;
 }
 
-void CharaObj::playFacial(int type, f32 life, int browType, f32 browWeight, int eyeType, f32 eyeWeight, int lipType, f32 lipWeight, f32 blendIn,
-                          f32 blendOut) {
+void CharaObj::playFacial(int type, f32 life, int browType, f32 browWeight, int eyeType, f32 eyeWeight, int lipType, f32 lipWeight, f32 blendIn, f32 blendOut) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
     return;
   }
@@ -539,8 +537,7 @@ void CharaObj::playFade(bool isOut, f32 frame) {
 
 bool CharaObj::isFadeOut() const { return (flags & FLAG_FADE_OUT) != 0; }
 
-void CharaObj::playVolumeFade(CharaEffectPlayer::VF_TYPE type, int id, const mm::Vec3 &position, const mm::Vec3 &scale, f32 frame, f32 rate, int mode,
-                              f32 speed) {
+void CharaObj::playVolumeFade(CharaEffectPlayer::VF_TYPE type, int id, const mm::Vec3 &position, const mm::Vec3 &scale, f32 frame, f32 rate, int mode, f32 speed) {
   effectPlayer.playVolumeFade(type, id, position, scale, frame, rate, mode, speed);
 }
 

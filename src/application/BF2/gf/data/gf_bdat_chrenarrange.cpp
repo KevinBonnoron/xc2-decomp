@@ -104,21 +104,17 @@ static u8 *s_members[MEMBER_COUNT];
 void initChrEnArrangeParamID(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeParamID] = Bdat::getMember(wrapper.data, "ParamID"); }
 
 u32 getChrEnArrangeParamID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeParamID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeParamID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ChrEnArrangeParamID], id, 2).valueU16;
 }
 
-void initChrEnArrangeEnemyBladeID(const CBdatWrapper &wrapper) {
-  s_members[ChrEnArrangeEnemyBladeID] = Bdat::getMember(wrapper.data, "EnemyBladeID");
-}
+void initChrEnArrangeEnemyBladeID(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeEnemyBladeID] = Bdat::getMember(wrapper.data, "EnemyBladeID"); }
 
 u32 getChrEnArrangeEnemyBladeID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeEnemyBladeID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeEnemyBladeID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -128,8 +124,7 @@ u32 getChrEnArrangeEnemyBladeID(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeBladeID(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeBladeID] = Bdat::getMember(wrapper.data, "BladeID"); }
 
 u32 getChrEnArrangeBladeID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeBladeID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeBladeID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -139,8 +134,7 @@ u32 getChrEnArrangeBladeID(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeBladeAtr(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeBladeAtr] = Bdat::getMember(wrapper.data, "BladeAtr"); }
 
 u32 getChrEnArrangeBladeAtr(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeBladeAtr] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeBladeAtr] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -150,8 +144,7 @@ u32 getChrEnArrangeBladeAtr(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeExtraParts(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeExtraParts] = Bdat::getMember(wrapper.data, "ExtraParts"); }
 
 u32 getChrEnArrangeExtraParts(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeExtraParts] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeExtraParts] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -161,8 +154,7 @@ u32 getChrEnArrangeExtraParts(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeName(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeName] = Bdat::getMember(wrapper.data, "Name"); }
 
 u32 getChrEnArrangeName(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeName] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeName] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -172,8 +164,7 @@ u32 getChrEnArrangeName(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeDebug_Name(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeDebug_Name] = Bdat::getMember(wrapper.data, "Debug_Name"); }
 
 const char *getChrEnArrangeDebug_Name(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeDebug_Name] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeDebug_Name] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return nullptr;
   }
 
@@ -183,8 +174,7 @@ const char *getChrEnArrangeDebug_Name(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeLv(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeLv] = Bdat::getMember(wrapper.data, "Lv"); }
 
 u32 getChrEnArrangeLv(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeLv] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeLv] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -194,8 +184,7 @@ u32 getChrEnArrangeLv(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeLvRand(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeLvRand] = Bdat::getMember(wrapper.data, "LvRand"); }
 
 u32 getChrEnArrangeLvRand(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeLvRand] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeLvRand] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -205,8 +194,7 @@ u32 getChrEnArrangeLvRand(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeHpOver(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeHpOver] = Bdat::getMember(wrapper.data, "HpOver"); }
 
 u32 getChrEnArrangeHpOver(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeHpOver] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeHpOver] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -216,8 +204,7 @@ u32 getChrEnArrangeHpOver(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeExpRev(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeExpRev] = Bdat::getMember(wrapper.data, "ExpRev"); }
 
 u32 getChrEnArrangeExpRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeExpRev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeExpRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -227,8 +214,7 @@ u32 getChrEnArrangeExpRev(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeGoldRev(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeGoldRev] = Bdat::getMember(wrapper.data, "GoldRev"); }
 
 u32 getChrEnArrangeGoldRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeGoldRev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeGoldRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -238,8 +224,7 @@ u32 getChrEnArrangeGoldRev(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeWPRev(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeWPRev] = Bdat::getMember(wrapper.data, "WPRev"); }
 
 u32 getChrEnArrangeWPRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeWPRev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeWPRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -249,8 +234,7 @@ u32 getChrEnArrangeWPRev(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeSPRev(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeSPRev] = Bdat::getMember(wrapper.data, "SPRev"); }
 
 u32 getChrEnArrangeSPRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeSPRev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeSPRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -260,34 +244,27 @@ u32 getChrEnArrangeSPRev(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeDropTableID(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeDropTableID] = Bdat::getMember(wrapper.data, "DropTableID"); }
 
 u32 getChrEnArrangeDropTableID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeDropTableID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeDropTableID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ChrEnArrangeDropTableID], id, 2).valueU16;
 }
 
-void initChrEnArrangeDropTableID2(const CBdatWrapper &wrapper) {
-  s_members[ChrEnArrangeDropTableID2] = Bdat::getMember(wrapper.data, "DropTableID2");
-}
+void initChrEnArrangeDropTableID2(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeDropTableID2] = Bdat::getMember(wrapper.data, "DropTableID2"); }
 
 u32 getChrEnArrangeDropTableID2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeDropTableID2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeDropTableID2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ChrEnArrangeDropTableID2], id, 2).valueU16;
 }
 
-void initChrEnArrangeDropTableID3(const CBdatWrapper &wrapper) {
-  s_members[ChrEnArrangeDropTableID3] = Bdat::getMember(wrapper.data, "DropTableID3");
-}
+void initChrEnArrangeDropTableID3(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeDropTableID3] = Bdat::getMember(wrapper.data, "DropTableID3"); }
 
 u32 getChrEnArrangeDropTableID3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeDropTableID3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeDropTableID3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -297,8 +274,7 @@ u32 getChrEnArrangeDropTableID3(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangePreciousID(const CBdatWrapper &wrapper) { s_members[ChrEnArrangePreciousID] = Bdat::getMember(wrapper.data, "PreciousID"); }
 
 u32 getChrEnArrangePreciousID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangePreciousID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangePreciousID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -308,8 +284,7 @@ u32 getChrEnArrangePreciousID(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeScale(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeScale] = Bdat::getMember(wrapper.data, "Scale"); }
 
 u32 getChrEnArrangeScale(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeScale] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeScale] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -319,8 +294,7 @@ u32 getChrEnArrangeScale(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeChrSize(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeChrSize] = Bdat::getMember(wrapper.data, "ChrSize"); }
 
 u32 getChrEnArrangeChrSize(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeChrSize] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeChrSize] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -330,8 +304,7 @@ u32 getChrEnArrangeChrSize(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeTurnSize(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeTurnSize] = Bdat::getMember(wrapper.data, "TurnSize"); }
 
 u32 getChrEnArrangeTurnSize(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeTurnSize] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeTurnSize] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -554,8 +527,8 @@ void initChrEnArrangeFlagIgnoreLevPow(const CBdatWrapper &wrapper) {
 }
 
 bool isChrEnArrangeFlagIgnoreLevPow(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeFlagIgnoreLevPow] == nullptr || s_members[ChrEnArrangeFlagIgnoreLevPowFlag] == nullptr ||
-      id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeFlagIgnoreLevPow] == nullptr || s_members[ChrEnArrangeFlagIgnoreLevPowFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
+      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return false;
   }
 
@@ -568,8 +541,8 @@ void initChrEnArrangeFlagAlwaysAttack(const CBdatWrapper &wrapper) {
 }
 
 bool isChrEnArrangeFlagAlwaysAttack(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeFlagAlwaysAttack] == nullptr || s_members[ChrEnArrangeFlagAlwaysAttackFlag] == nullptr ||
-      id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeFlagAlwaysAttack] == nullptr || s_members[ChrEnArrangeFlagAlwaysAttackFlag] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
+      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return false;
   }
 
@@ -607,8 +580,7 @@ bool isChrEnArrangeFlagSalvage(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeLinkRadius(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeLinkRadius] = Bdat::getMember(wrapper.data, "LinkRadius"); }
 
 u32 getChrEnArrangeLinkRadius(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeLinkRadius] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeLinkRadius] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -618,8 +590,7 @@ u32 getChrEnArrangeLinkRadius(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeDetects(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeDetects] = Bdat::getMember(wrapper.data, "Detects"); }
 
 u32 getChrEnArrangeDetects(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeDetects] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeDetects] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -629,8 +600,7 @@ u32 getChrEnArrangeDetects(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeSearchRange(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeSearchRange] = Bdat::getMember(wrapper.data, "SearchRange"); }
 
 u32 getChrEnArrangeSearchRange(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeSearchRange] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeSearchRange] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -640,21 +610,17 @@ u32 getChrEnArrangeSearchRange(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeSearchAngle(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeSearchAngle] = Bdat::getMember(wrapper.data, "SearchAngle"); }
 
 u32 getChrEnArrangeSearchAngle(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeSearchAngle] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeSearchAngle] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ChrEnArrangeSearchAngle], id, 2).valueU16;
 }
 
-void initChrEnArrangeSearchRadius(const CBdatWrapper &wrapper) {
-  s_members[ChrEnArrangeSearchRadius] = Bdat::getMember(wrapper.data, "SearchRadius");
-}
+void initChrEnArrangeSearchRadius(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeSearchRadius] = Bdat::getMember(wrapper.data, "SearchRadius"); }
 
 u32 getChrEnArrangeSearchRadius(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeSearchRadius] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeSearchRadius] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -664,8 +630,7 @@ u32 getChrEnArrangeSearchRadius(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeBatInterval(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeBatInterval] = Bdat::getMember(wrapper.data, "BatInterval"); }
 
 u32 getChrEnArrangeBatInterval(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeBatInterval] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeBatInterval] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -675,8 +640,7 @@ u32 getChrEnArrangeBatInterval(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeBatArea(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeBatArea] = Bdat::getMember(wrapper.data, "BatArea"); }
 
 u32 getChrEnArrangeBatArea(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeBatArea] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeBatArea] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -686,8 +650,7 @@ u32 getChrEnArrangeBatArea(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeBatAreaType(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeBatAreaType] = Bdat::getMember(wrapper.data, "BatAreaType"); }
 
 u32 getChrEnArrangeBatAreaType(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeBatAreaType] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeBatAreaType] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -697,8 +660,7 @@ u32 getChrEnArrangeBatAreaType(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeAiGroup(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeAiGroup] = Bdat::getMember(wrapper.data, "AiGroup"); }
 
 u32 getChrEnArrangeAiGroup(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeAiGroup] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeAiGroup] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -708,8 +670,7 @@ u32 getChrEnArrangeAiGroup(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeAiGroupNum(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeAiGroupNum] = Bdat::getMember(wrapper.data, "AiGroupNum"); }
 
 u32 getChrEnArrangeAiGroupNum(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeAiGroupNum] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeAiGroupNum] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -719,8 +680,7 @@ u32 getChrEnArrangeAiGroupNum(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeBookID(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeBookID] = Bdat::getMember(wrapper.data, "BookID"); }
 
 u32 getChrEnArrangeBookID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeBookID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeBookID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -730,8 +690,7 @@ u32 getChrEnArrangeBookID(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeEnhanceID1(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeEnhanceID1] = Bdat::getMember(wrapper.data, "EnhanceID1"); }
 
 u32 getChrEnArrangeEnhanceID1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeEnhanceID1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeEnhanceID1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -741,8 +700,7 @@ u32 getChrEnArrangeEnhanceID1(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeEnhanceID2(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeEnhanceID2] = Bdat::getMember(wrapper.data, "EnhanceID2"); }
 
 u32 getChrEnArrangeEnhanceID2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeEnhanceID2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeEnhanceID2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -752,8 +710,7 @@ u32 getChrEnArrangeEnhanceID2(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeEnhanceID3(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeEnhanceID3] = Bdat::getMember(wrapper.data, "EnhanceID3"); }
 
 u32 getChrEnArrangeEnhanceID3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeEnhanceID3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeEnhanceID3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -763,34 +720,27 @@ u32 getChrEnArrangeEnhanceID3(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeParamRev(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeParamRev] = Bdat::getMember(wrapper.data, "ParamRev"); }
 
 u32 getChrEnArrangeParamRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeParamRev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeParamRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ChrEnArrangeParamRev], id, 2).valueU16;
 }
 
-void initChrEnArrangeRstDebuffRev(const CBdatWrapper &wrapper) {
-  s_members[ChrEnArrangeRstDebuffRev] = Bdat::getMember(wrapper.data, "RstDebuffRev");
-}
+void initChrEnArrangeRstDebuffRev(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeRstDebuffRev] = Bdat::getMember(wrapper.data, "RstDebuffRev"); }
 
 u32 getChrEnArrangeRstDebuffRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeRstDebuffRev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeRstDebuffRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ChrEnArrangeRstDebuffRev], id, 2).valueU16;
 }
 
-void initChrEnArrangeHealPotTypeRev(const CBdatWrapper &wrapper) {
-  s_members[ChrEnArrangeHealPotTypeRev] = Bdat::getMember(wrapper.data, "HealPotTypeRev");
-}
+void initChrEnArrangeHealPotTypeRev(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeHealPotTypeRev] = Bdat::getMember(wrapper.data, "HealPotTypeRev"); }
 
 u32 getChrEnArrangeHealPotTypeRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeHealPotTypeRev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeHealPotTypeRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -800,8 +750,7 @@ u32 getChrEnArrangeHealPotTypeRev(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeSummonID(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeSummonID] = Bdat::getMember(wrapper.data, "SummonID"); }
 
 u32 getChrEnArrangeSummonID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeSummonID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeSummonID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -811,8 +760,7 @@ u32 getChrEnArrangeSummonID(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeBGMID(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeBGMID] = Bdat::getMember(wrapper.data, "BGMID"); }
 
 u32 getChrEnArrangeBGMID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeBGMID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeBGMID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -822,8 +770,7 @@ u32 getChrEnArrangeBGMID(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeSeEnvID(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeSeEnvID] = Bdat::getMember(wrapper.data, "SeEnvID"); }
 
 u32 getChrEnArrangeSeEnvID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeSeEnvID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeSeEnvID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -833,8 +780,7 @@ u32 getChrEnArrangeSeEnvID(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeZoneID(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeZoneID] = Bdat::getMember(wrapper.data, "ZoneID"); }
 
 u32 getChrEnArrangeZoneID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeZoneID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeZoneID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -844,8 +790,7 @@ u32 getChrEnArrangeZoneID(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeTimeSet(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeTimeSet] = Bdat::getMember(wrapper.data, "TimeSet"); }
 
 u32 getChrEnArrangeTimeSet(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeTimeSet] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeTimeSet] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -855,8 +800,7 @@ u32 getChrEnArrangeTimeSet(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeWeatherSet(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeWeatherSet] = Bdat::getMember(wrapper.data, "WeatherSet"); }
 
 u32 getChrEnArrangeWeatherSet(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeWeatherSet] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeWeatherSet] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -866,8 +810,7 @@ u32 getChrEnArrangeWeatherSet(const CBdatWrapper &wrapper, u32 id) {
 void initChrEnArrangeDriverLev(const CBdatWrapper &wrapper) { s_members[ChrEnArrangeDriverLev] = Bdat::getMember(wrapper.data, "DriverLev"); }
 
 u32 getChrEnArrangeDriverLev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ChrEnArrangeDriverLev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ChrEnArrangeDriverLev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -877,8 +820,7 @@ u32 getChrEnArrangeDriverLev(const CBdatWrapper &wrapper, u32 id) {
 void initBTL_EnBookBaseEnemyID(const CBdatWrapper &wrapper) { s_members[BTL_EnBookBaseEnemyID] = Bdat::getMember(wrapper.data, "BaseEnemyID"); }
 
 u32 getBTL_EnBookBaseEnemyID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BTL_EnBookBaseEnemyID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BTL_EnBookBaseEnemyID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -888,21 +830,17 @@ u32 getBTL_EnBookBaseEnemyID(const CBdatWrapper &wrapper, u32 id) {
 void initBTL_EnBookBOOK_POP_TIME(const CBdatWrapper &wrapper) { s_members[BTL_EnBookBOOK_POP_TIME] = Bdat::getMember(wrapper.data, "BOOK_POP_TIME"); }
 
 u32 getBTL_EnBookBOOK_POP_TIME(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BTL_EnBookBOOK_POP_TIME] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BTL_EnBookBOOK_POP_TIME] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BTL_EnBookBOOK_POP_TIME], id, 3).valueU32;
 }
 
-void initBTL_EnBookBOOK_popWeather(const CBdatWrapper &wrapper) {
-  s_members[BTL_EnBookBOOK_popWeather] = Bdat::getMember(wrapper.data, "BOOK_popWeather");
-}
+void initBTL_EnBookBOOK_popWeather(const CBdatWrapper &wrapper) { s_members[BTL_EnBookBOOK_popWeather] = Bdat::getMember(wrapper.data, "BOOK_popWeather"); }
 
 u32 getBTL_EnBookBOOK_popWeather(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BTL_EnBookBOOK_popWeather] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BTL_EnBookBOOK_popWeather] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -927,7 +865,7 @@ void GfBdatChrEnArrange::destroyFP() {
   }
 }
 
-#define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
+#define NEW_BDAT_WRAPPER(bdat)                                                                                                                                                                         \
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 void GfBdatChrEnArrange::createFP() {

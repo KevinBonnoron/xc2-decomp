@@ -23,8 +23,8 @@ void ScriptCamTar::doit(const Param &param) {
   CV_TYPE cv = static_cast<CV_TYPE>(param.val(4).getS32());
   prevAxis = camera->getTarAxis();
   camera->setTarAxis(axis, cv);
-  if (prevAxis.getAxis() != axis.getAxis() || !(__builtin_fabsf(axis.getTar().x - prevAxis.getTar().x) <= 1e-6f) ||
-      !(__builtin_fabsf(axis.getTar().y - prevAxis.getTar().y) <= 1e-6f) || !(__builtin_fabsf(axis.getTar().z - prevAxis.getTar().z) <= 1e-6f)) {
+  if (prevAxis.getAxis() != axis.getAxis() || !(__builtin_fabsf(axis.getTar().x - prevAxis.getTar().x) <= 1e-6f) || !(__builtin_fabsf(axis.getTar().y - prevAxis.getTar().y) <= 1e-6f) ||
+      !(__builtin_fabsf(axis.getTar().z - prevAxis.getTar().z) <= 1e-6f)) {
     mm::mtl::Singleton<TextManager>::getPtr()->setCutChangeFrame();
   }
 }

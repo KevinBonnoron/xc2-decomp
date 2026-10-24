@@ -107,13 +107,9 @@ void CharaFacialUtil::getLensLimit(mm::Vec2 &translateMin, mm::Vec2 &translateMa
   rotateMax.y = static_cast<s16>(Bdat::getValCheck(lensBdat, "rvMax", lens, 5)) * 0.017453292f;
 }
 
-const char *CharaFacialUtil::headType2stat(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_headtype"), "stat", type, 7));
-}
+const char *CharaFacialUtil::headType2stat(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_headtype"), "stat", type, 7)); }
 
-const char *CharaFacialUtil::headType2name(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_headtype"), "name", type, 7));
-}
+const char *CharaFacialUtil::headType2name(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_headtype"), "name", type, 7)); }
 
 f32 CharaFacialUtil::headType2bld(int type) { return static_cast<s16>(Bdat::getValCheck(Bdat::getFP("EVT_headtype"), "blend", type, 5)); }
 
@@ -129,45 +125,27 @@ f32 CharaFacialUtil::headType2weight(int type) {
   return value;
 }
 
-const char *CharaFacialUtil::browType2stat(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_browtype"), "stat", type, 7));
-}
+const char *CharaFacialUtil::browType2stat(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_browtype"), "stat", type, 7)); }
 
-const char *CharaFacialUtil::browType2name(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_browtype"), "name", type, 7));
-}
+const char *CharaFacialUtil::browType2name(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_browtype"), "name", type, 7)); }
 
-const char *CharaFacialUtil::eyeType2stat(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_eyetype"), "stat", type, 7));
-}
+const char *CharaFacialUtil::eyeType2stat(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_eyetype"), "stat", type, 7)); }
 
-const char *CharaFacialUtil::eyeType2name(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_eyetype"), "name", type, 7));
-}
+const char *CharaFacialUtil::eyeType2name(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_eyetype"), "name", type, 7)); }
 
-bool CharaFacialUtil::lipType2disableWink(int type) {
-  return static_cast<s8>(Bdat::getValCheck(Bdat::getFP("EVT_eyetype"), "disableWink", type, 4)) > 0;
-}
+bool CharaFacialUtil::lipType2disableWink(int type) { return static_cast<s8>(Bdat::getValCheck(Bdat::getFP("EVT_eyetype"), "disableWink", type, 4)) > 0; }
 
-const char *CharaFacialUtil::lipType2stat(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_liptype"), "stat", type, 7));
-}
+const char *CharaFacialUtil::lipType2stat(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_liptype"), "stat", type, 7)); }
 
-const char *CharaFacialUtil::lipType2name(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_liptype"), "name", type, 7));
-}
+const char *CharaFacialUtil::lipType2name(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_liptype"), "name", type, 7)); }
 
-bool CharaFacialUtil::lipType2disableTalkLip(int type) {
-  return static_cast<s8>(Bdat::getValCheck(Bdat::getFP("EVT_liptype"), "disableTalkLip", type, 4)) > 0;
-}
+bool CharaFacialUtil::lipType2disableTalkLip(int type) { return static_cast<s8>(Bdat::getValCheck(Bdat::getFP("EVT_liptype"), "disableTalkLip", type, 4)) > 0; }
 
 const char *CharaFacialUtil::talkHeadStat() { return "S_headtalk"; }
 
 const char *CharaFacialUtil::talkLipStat() { return "S_lip_talk"; }
 
-const char *CharaFacialUtil::winkType2name(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_winktype"), "name", type, 7));
-}
+const char *CharaFacialUtil::winkType2name(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_winktype"), "name", type, 7)); }
 
 bool CharaFacialUtil::checkBdatID(gf::GF_OBJ_HANDLE *handle, int id) {
   gf::GfObj *obj = gf::GfObjUtil::getObj(handle);

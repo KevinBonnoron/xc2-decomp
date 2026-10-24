@@ -9,9 +9,7 @@
 
 namespace fw {
 
-BlockResource *BlockResource::search(mtl::ALLOC_HANDLE handle, const char *path) {
-  return static_cast<BlockResource *>(ResourceManager::get()->searchResource(6, handle, path));
-}
+BlockResource *BlockResource::search(mtl::ALLOC_HANDLE handle, const char *path) { return static_cast<BlockResource *>(ResourceManager::get()->searchResource(6, handle, path)); }
 
 BlockResource *BlockResource::request(mtl::ALLOC_HANDLE handle, const char *path, LOAD_PRIO priority) {
   BlockResource *resource = search(handle, path);
@@ -30,8 +28,7 @@ BlockResource *BlockResource::request(mtl::ALLOC_HANDLE handle, const char *path
   return resource;
 }
 
-BlockResource::BlockResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority)
-    : ResourceObject(6, handle, priority, 0), loaded(false), resourceHandle(handle), resourcePriority(priority) {
+BlockResource::BlockResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority) : ResourceObject(6, handle, priority, 0), loaded(false), resourceHandle(handle), resourcePriority(priority) {
   resourceAllocator.setMemHandle(FrameworkMemory::getMem(5));
   resources.setAllocator(&resourceAllocator);
   resources.reserve(16);

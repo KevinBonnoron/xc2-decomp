@@ -15,9 +15,7 @@ static void unknown001(gf::GfMenuCallContext *&context) { // Inferred role: rele
   }
 }
 
-ButtonChallenge::ButtonChallenge()
-    : unknown08(nullptr), unknown10(nullptr), unknown28(1), unknown2c(0), unknown30(0), unknown34(0), unknown35(false), unknown36(true),
-      unknown37(false) {}
+ButtonChallenge::ButtonChallenge() : unknown08(nullptr), unknown10(nullptr), unknown28(1), unknown2c(0), unknown30(0), unknown34(0), unknown35(false), unknown36(true), unknown37(false) {}
 
 ButtonChallenge::~ButtonChallenge() {
   unknown001(unknown08);

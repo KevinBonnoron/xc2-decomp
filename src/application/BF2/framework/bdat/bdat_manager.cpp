@@ -46,9 +46,7 @@ bool BdatManager::loadBdat(int id, mtl::ALLOC_HANDLE handle, const char *path) {
 
 void BdatManager::reloadBdat(int id) { get()->impl->reloadBdat(id); }
 
-void BdatManager::loadBdatFromMemory(int id, mtl::ALLOC_HANDLE handle, void *data, size_t size, const char *name) {
-  get()->impl->loadBdatFromMemory(id, handle, data, size, name);
-}
+void BdatManager::loadBdatFromMemory(int id, mtl::ALLOC_HANDLE handle, void *data, size_t size, const char *name) { get()->impl->loadBdatFromMemory(id, handle, data, size, name); }
 
 void BdatManager::loadBdatFromMemory(int id, void *data) { get()->impl->loadBdatFromMemory(id, data); }
 

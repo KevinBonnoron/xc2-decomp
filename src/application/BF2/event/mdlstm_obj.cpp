@@ -6,8 +6,8 @@
 namespace event {
 
 MdlstmObj::MdlstmObj()
-    : flags(0), state(STATE_NONE), frame(0.0f), _98(0), _9c(0), _a0(0), _a4(false), _a5(false), _a8(0), _b0(nullptr), _b8(nullptr), _c0(nullptr),
-      _c8(nullptr), _d0(nullptr), mReuseModel(nullptr), mModel(nullptr) {}
+    : flags(0), state(STATE_NONE), frame(0.0f), _98(0), _9c(0), _a0(0), _a4(false), _a5(false), _a8(0), _b0(nullptr), _b8(nullptr), _c0(nullptr), _c8(nullptr), _d0(nullptr), mReuseModel(nullptr),
+      mModel(nullptr) {}
 
 void MdlstmObj::finishLoaded() { state = STATE_LOADED; }
 

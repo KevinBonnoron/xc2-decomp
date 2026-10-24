@@ -7,9 +7,7 @@
 
 namespace ml {
 
-ScnObjModelDrSys::ScnObjModelDrSys(Scn *scn, const void *data, const char *name) : ScnObjModel(scn, name), m_drMdl(nullptr), m_data(data) {
-  m_drMan = m_scn->renderDrSys->drMan;
-}
+ScnObjModelDrSys::ScnObjModelDrSys(Scn *scn, const void *data, const char *name) : ScnObjModel(scn, name), m_drMdl(nullptr), m_data(data) { m_drMan = m_scn->renderDrSys->drMan; }
 
 void ScnObjModelDrSys::update() {}
 

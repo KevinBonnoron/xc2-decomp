@@ -63,9 +63,7 @@ void ScnRenderDrSys::setMotionBlur(f32 strength, f32 sub) { drMan->setMotionBlur
 
 void ScnRenderDrSys::setDepthOfField(bool isDepthOfField) { drMan->setDepthOfField(isDepthOfField); }
 
-void ScnRenderDrSys::setDepthOfFieldParm(f32 distance, f32 range, f32 strength, f32 blend) {
-  drMan->setDepthOfFieldParm(distance, range, strength, blend);
-}
+void ScnRenderDrSys::setDepthOfFieldParm(f32 distance, f32 range, f32 strength, f32 blend) { drMan->setDepthOfFieldParm(distance, range, strength, blend); }
 
 void ScnRenderDrSys::setTimeVal(f32 timeVal) { drMan->setTimeVal(timeVal); }
 
@@ -88,9 +86,7 @@ ScnObj *ScnRenderDrSys::createIBL(Scn *scn, const void *data, int screen) { retu
 
 ScnObj *ScnRenderDrSys::createEnvColi(Scn *scn, const void *data, int screen) { return ScnObjEnvColiDr::create(scn, data, screen); }
 
-void ScnRenderDrSys::createDrRender(Scn *scn) {
-  WorkCpu::runThread(WorkCpu::getRenderCPUID(), thDrSysInitialize, scn, nullptr, nullptr, true, WKCPU_SYNC_WAIT);
-}
+void ScnRenderDrSys::createDrRender(Scn *scn) { WorkCpu::runThread(WorkCpu::getRenderCPUID(), thDrSysInitialize, scn, nullptr, nullptr, true, WKCPU_SYNC_WAIT); }
 
 u32 ScnRenderDrSys::thDrSysInitialize(void *argument, void *userData) {
   Scn *scn = static_cast<Scn *>(argument);

@@ -12,13 +12,9 @@ class IAllocator;
 namespace fw {
 enum LOAD_PRIO : int;
 
-RenderResource *RenderResource::search(mtl::ALLOC_HANDLE handle, const char *path) {
-  return static_cast<RenderResource *>(ResourceManager::get()->searchResource(1, handle, path));
-}
+RenderResource *RenderResource::search(mtl::ALLOC_HANDLE handle, const char *path) { return static_cast<RenderResource *>(ResourceManager::get()->searchResource(1, handle, path)); }
 
-RenderResource *RenderResource::search(mm::mtl::IAllocator *allocator, const char *path) {
-  return static_cast<RenderResource *>(ResourceManager::get()->searchResource(1, allocator, path));
-}
+RenderResource *RenderResource::search(mm::mtl::IAllocator *allocator, const char *path) { return static_cast<RenderResource *>(ResourceManager::get()->searchResource(1, allocator, path)); }
 
 RenderResource *RenderResource::request(mtl::ALLOC_HANDLE handle, const char *path, int priority) {
   RenderResource *resource = search(handle, path);

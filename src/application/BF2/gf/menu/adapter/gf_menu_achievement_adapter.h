@@ -41,8 +41,7 @@ public:
 
   class ReferenceBladeLineLevelConverter : public IConverter {
   public:
-    ReferenceBladeLineLevelConverter(u32 bladeIndex, u32 lineIndex, u32 levelIndex)
-        : bladeIndex(bladeIndex), lineIndex(lineIndex), levelIndex(levelIndex) {}
+    ReferenceBladeLineLevelConverter(u32 bladeIndex, u32 lineIndex, u32 levelIndex) : bladeIndex(bladeIndex), lineIndex(lineIndex), levelIndex(levelIndex) {}
     u32 getBladeId() override { return GfMenuReference::getReferenceBladeID(bladeIndex); }
     u32 getKizunaLine() override { return GfMenuReference::getReferenceNumber(lineIndex); }
     u32 getKizunaLevel() override { return GfMenuReference::getReferenceNumber(levelIndex); }
@@ -82,8 +81,7 @@ public:
   bool update_NetabareOkDisp();
   static GfMenuAchievementAdapter *createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways);
   static GfMenuAchievementAdapter *createFromReferenceBlade(u32 handle, u32 type, u32 bladeIndex, u16 line, u16 level, bool isUpdateAlways);
-  static GfMenuAchievementAdapter *createFromReferenceBladeLineLevel(u32 handle, u32 type, u32 bladeIndex, u16 lineIndex, u16 levelIndex,
-                                                                     bool isUpdateAlways);
+  static GfMenuAchievementAdapter *createFromReferenceBladeLineLevel(u32 handle, u32 type, u32 bladeIndex, u16 lineIndex, u16 levelIndex, bool isUpdateAlways);
   void update(const fw::UpdateInfo &info) override;
   bool update_AchievementReleaseFlagDisp();
 

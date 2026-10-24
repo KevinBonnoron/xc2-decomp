@@ -76,21 +76,17 @@ static u8 *s_members[MEMBER_COUNT];
 void initConditionListPremise(const CBdatWrapper &wrapper) { s_members[ConditionListPremise] = Bdat::getMember(wrapper.data, "Premise"); }
 
 u32 getConditionListPremise(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListPremise] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListPremise] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionListPremise], id, 1).valueU8;
 }
 
-void initConditionListConditionType1(const CBdatWrapper &wrapper) {
-  s_members[ConditionListConditionType1] = Bdat::getMember(wrapper.data, "ConditionType1");
-}
+void initConditionListConditionType1(const CBdatWrapper &wrapper) { s_members[ConditionListConditionType1] = Bdat::getMember(wrapper.data, "ConditionType1"); }
 
 u32 getConditionListConditionType1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListConditionType1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListConditionType1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -100,21 +96,17 @@ u32 getConditionListConditionType1(const CBdatWrapper &wrapper, u32 id) {
 void initConditionListCondition1(const CBdatWrapper &wrapper) { s_members[ConditionListCondition1] = Bdat::getMember(wrapper.data, "Condition1"); }
 
 u32 getConditionListCondition1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListCondition1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListCondition1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionListCondition1], id, 2).valueU16;
 }
 
-void initConditionListConditionType2(const CBdatWrapper &wrapper) {
-  s_members[ConditionListConditionType2] = Bdat::getMember(wrapper.data, "ConditionType2");
-}
+void initConditionListConditionType2(const CBdatWrapper &wrapper) { s_members[ConditionListConditionType2] = Bdat::getMember(wrapper.data, "ConditionType2"); }
 
 u32 getConditionListConditionType2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListConditionType2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListConditionType2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -124,21 +116,17 @@ u32 getConditionListConditionType2(const CBdatWrapper &wrapper, u32 id) {
 void initConditionListCondition2(const CBdatWrapper &wrapper) { s_members[ConditionListCondition2] = Bdat::getMember(wrapper.data, "Condition2"); }
 
 u32 getConditionListCondition2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListCondition2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListCondition2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionListCondition2], id, 2).valueU16;
 }
 
-void initConditionListConditionType3(const CBdatWrapper &wrapper) {
-  s_members[ConditionListConditionType3] = Bdat::getMember(wrapper.data, "ConditionType3");
-}
+void initConditionListConditionType3(const CBdatWrapper &wrapper) { s_members[ConditionListConditionType3] = Bdat::getMember(wrapper.data, "ConditionType3"); }
 
 u32 getConditionListConditionType3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListConditionType3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListConditionType3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -148,21 +136,17 @@ u32 getConditionListConditionType3(const CBdatWrapper &wrapper, u32 id) {
 void initConditionListCondition3(const CBdatWrapper &wrapper) { s_members[ConditionListCondition3] = Bdat::getMember(wrapper.data, "Condition3"); }
 
 u32 getConditionListCondition3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListCondition3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListCondition3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionListCondition3], id, 2).valueU16;
 }
 
-void initConditionListConditionType4(const CBdatWrapper &wrapper) {
-  s_members[ConditionListConditionType4] = Bdat::getMember(wrapper.data, "ConditionType4");
-}
+void initConditionListConditionType4(const CBdatWrapper &wrapper) { s_members[ConditionListConditionType4] = Bdat::getMember(wrapper.data, "ConditionType4"); }
 
 u32 getConditionListConditionType4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListConditionType4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListConditionType4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -172,21 +156,17 @@ u32 getConditionListConditionType4(const CBdatWrapper &wrapper, u32 id) {
 void initConditionListCondition4(const CBdatWrapper &wrapper) { s_members[ConditionListCondition4] = Bdat::getMember(wrapper.data, "Condition4"); }
 
 u32 getConditionListCondition4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListCondition4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListCondition4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionListCondition4], id, 2).valueU16;
 }
 
-void initConditionListConditionType5(const CBdatWrapper &wrapper) {
-  s_members[ConditionListConditionType5] = Bdat::getMember(wrapper.data, "ConditionType5");
-}
+void initConditionListConditionType5(const CBdatWrapper &wrapper) { s_members[ConditionListConditionType5] = Bdat::getMember(wrapper.data, "ConditionType5"); }
 
 u32 getConditionListConditionType5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListConditionType5] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListConditionType5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -196,21 +176,17 @@ u32 getConditionListConditionType5(const CBdatWrapper &wrapper, u32 id) {
 void initConditionListCondition5(const CBdatWrapper &wrapper) { s_members[ConditionListCondition5] = Bdat::getMember(wrapper.data, "Condition5"); }
 
 u32 getConditionListCondition5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListCondition5] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListCondition5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionListCondition5], id, 2).valueU16;
 }
 
-void initConditionListConditionType6(const CBdatWrapper &wrapper) {
-  s_members[ConditionListConditionType6] = Bdat::getMember(wrapper.data, "ConditionType6");
-}
+void initConditionListConditionType6(const CBdatWrapper &wrapper) { s_members[ConditionListConditionType6] = Bdat::getMember(wrapper.data, "ConditionType6"); }
 
 u32 getConditionListConditionType6(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListConditionType6] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListConditionType6] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -220,21 +196,17 @@ u32 getConditionListConditionType6(const CBdatWrapper &wrapper, u32 id) {
 void initConditionListCondition6(const CBdatWrapper &wrapper) { s_members[ConditionListCondition6] = Bdat::getMember(wrapper.data, "Condition6"); }
 
 u32 getConditionListCondition6(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListCondition6] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListCondition6] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionListCondition6], id, 2).valueU16;
 }
 
-void initConditionListConditionType7(const CBdatWrapper &wrapper) {
-  s_members[ConditionListConditionType7] = Bdat::getMember(wrapper.data, "ConditionType7");
-}
+void initConditionListConditionType7(const CBdatWrapper &wrapper) { s_members[ConditionListConditionType7] = Bdat::getMember(wrapper.data, "ConditionType7"); }
 
 u32 getConditionListConditionType7(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListConditionType7] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListConditionType7] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -244,21 +216,17 @@ u32 getConditionListConditionType7(const CBdatWrapper &wrapper, u32 id) {
 void initConditionListCondition7(const CBdatWrapper &wrapper) { s_members[ConditionListCondition7] = Bdat::getMember(wrapper.data, "Condition7"); }
 
 u32 getConditionListCondition7(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListCondition7] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListCondition7] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionListCondition7], id, 2).valueU16;
 }
 
-void initConditionListConditionType8(const CBdatWrapper &wrapper) {
-  s_members[ConditionListConditionType8] = Bdat::getMember(wrapper.data, "ConditionType8");
-}
+void initConditionListConditionType8(const CBdatWrapper &wrapper) { s_members[ConditionListConditionType8] = Bdat::getMember(wrapper.data, "ConditionType8"); }
 
 u32 getConditionListConditionType8(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListConditionType8] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListConditionType8] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -268,60 +236,47 @@ u32 getConditionListConditionType8(const CBdatWrapper &wrapper, u32 id) {
 void initConditionListCondition8(const CBdatWrapper &wrapper) { s_members[ConditionListCondition8] = Bdat::getMember(wrapper.data, "Condition8"); }
 
 u32 getConditionListCondition8(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionListCondition8] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionListCondition8] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionListCondition8], id, 2).valueU16;
 }
 
-void initConditionScenarioScenarioMin(const CBdatWrapper &wrapper) {
-  s_members[ConditionScenarioScenarioMin] = Bdat::getMember(wrapper.data, "ScenarioMin");
-}
+void initConditionScenarioScenarioMin(const CBdatWrapper &wrapper) { s_members[ConditionScenarioScenarioMin] = Bdat::getMember(wrapper.data, "ScenarioMin"); }
 
 u32 getConditionScenarioScenarioMin(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionScenarioScenarioMin] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionScenarioScenarioMin] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionScenarioScenarioMin], id, 2).valueU16;
 }
 
-void initConditionScenarioScenarioMax(const CBdatWrapper &wrapper) {
-  s_members[ConditionScenarioScenarioMax] = Bdat::getMember(wrapper.data, "ScenarioMax");
-}
+void initConditionScenarioScenarioMax(const CBdatWrapper &wrapper) { s_members[ConditionScenarioScenarioMax] = Bdat::getMember(wrapper.data, "ScenarioMax"); }
 
 u32 getConditionScenarioScenarioMax(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionScenarioScenarioMax] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionScenarioScenarioMax] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionScenarioScenarioMax], id, 2).valueU16;
 }
 
-void initConditionScenarioNotScenarioMin(const CBdatWrapper &wrapper) {
-  s_members[ConditionScenarioNotScenarioMin] = Bdat::getMember(wrapper.data, "NotScenarioMin");
-}
+void initConditionScenarioNotScenarioMin(const CBdatWrapper &wrapper) { s_members[ConditionScenarioNotScenarioMin] = Bdat::getMember(wrapper.data, "NotScenarioMin"); }
 
 u32 getConditionScenarioNotScenarioMin(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionScenarioNotScenarioMin] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionScenarioNotScenarioMin] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionScenarioNotScenarioMin], id, 2).valueU16;
 }
 
-void initConditionScenarioNotScenarioMax(const CBdatWrapper &wrapper) {
-  s_members[ConditionScenarioNotScenarioMax] = Bdat::getMember(wrapper.data, "NotScenarioMax");
-}
+void initConditionScenarioNotScenarioMax(const CBdatWrapper &wrapper) { s_members[ConditionScenarioNotScenarioMax] = Bdat::getMember(wrapper.data, "NotScenarioMax"); }
 
 u32 getConditionScenarioNotScenarioMax(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionScenarioNotScenarioMax] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionScenarioNotScenarioMax] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -331,34 +286,27 @@ u32 getConditionScenarioNotScenarioMax(const CBdatWrapper &wrapper, u32 id) {
 void initConditionQuestQuestFlag1(const CBdatWrapper &wrapper) { s_members[ConditionQuestQuestFlag1] = Bdat::getMember(wrapper.data, "QuestFlag1"); }
 
 u32 getConditionQuestQuestFlag1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionQuestQuestFlag1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionQuestQuestFlag1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionQuestQuestFlag1], id, 2).valueU16;
 }
 
-void initConditionQuestQuestFlagMin1(const CBdatWrapper &wrapper) {
-  s_members[ConditionQuestQuestFlagMin1] = Bdat::getMember(wrapper.data, "QuestFlagMin1");
-}
+void initConditionQuestQuestFlagMin1(const CBdatWrapper &wrapper) { s_members[ConditionQuestQuestFlagMin1] = Bdat::getMember(wrapper.data, "QuestFlagMin1"); }
 
 u32 getConditionQuestQuestFlagMin1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionQuestQuestFlagMin1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionQuestQuestFlagMin1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionQuestQuestFlagMin1], id, 1).valueU8;
 }
 
-void initConditionQuestQuestFlagMax1(const CBdatWrapper &wrapper) {
-  s_members[ConditionQuestQuestFlagMax1] = Bdat::getMember(wrapper.data, "QuestFlagMax1");
-}
+void initConditionQuestQuestFlagMax1(const CBdatWrapper &wrapper) { s_members[ConditionQuestQuestFlagMax1] = Bdat::getMember(wrapper.data, "QuestFlagMax1"); }
 
 u32 getConditionQuestQuestFlagMax1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionQuestQuestFlagMax1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionQuestQuestFlagMax1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -368,112 +316,87 @@ u32 getConditionQuestQuestFlagMax1(const CBdatWrapper &wrapper, u32 id) {
 void initConditionQuestQuestFlag2(const CBdatWrapper &wrapper) { s_members[ConditionQuestQuestFlag2] = Bdat::getMember(wrapper.data, "QuestFlag2"); }
 
 u32 getConditionQuestQuestFlag2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionQuestQuestFlag2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionQuestQuestFlag2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionQuestQuestFlag2], id, 2).valueU16;
 }
 
-void initConditionQuestQuestFlagMin2(const CBdatWrapper &wrapper) {
-  s_members[ConditionQuestQuestFlagMin2] = Bdat::getMember(wrapper.data, "QuestFlagMin2");
-}
+void initConditionQuestQuestFlagMin2(const CBdatWrapper &wrapper) { s_members[ConditionQuestQuestFlagMin2] = Bdat::getMember(wrapper.data, "QuestFlagMin2"); }
 
 u32 getConditionQuestQuestFlagMin2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionQuestQuestFlagMin2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionQuestQuestFlagMin2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionQuestQuestFlagMin2], id, 1).valueU8;
 }
 
-void initConditionQuestQuestFlagMax2(const CBdatWrapper &wrapper) {
-  s_members[ConditionQuestQuestFlagMax2] = Bdat::getMember(wrapper.data, "QuestFlagMax2");
-}
+void initConditionQuestQuestFlagMax2(const CBdatWrapper &wrapper) { s_members[ConditionQuestQuestFlagMax2] = Bdat::getMember(wrapper.data, "QuestFlagMax2"); }
 
 u32 getConditionQuestQuestFlagMax2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionQuestQuestFlagMax2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionQuestQuestFlagMax2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionQuestQuestFlagMax2], id, 1).valueU8;
 }
 
-void initConditionQuestNotQuestFlag1(const CBdatWrapper &wrapper) {
-  s_members[ConditionQuestNotQuestFlag1] = Bdat::getMember(wrapper.data, "NotQuestFlag1");
-}
+void initConditionQuestNotQuestFlag1(const CBdatWrapper &wrapper) { s_members[ConditionQuestNotQuestFlag1] = Bdat::getMember(wrapper.data, "NotQuestFlag1"); }
 
 u32 getConditionQuestNotQuestFlag1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionQuestNotQuestFlag1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionQuestNotQuestFlag1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionQuestNotQuestFlag1], id, 2).valueU16;
 }
 
-void initConditionQuestNotQuestFlagMin1(const CBdatWrapper &wrapper) {
-  s_members[ConditionQuestNotQuestFlagMin1] = Bdat::getMember(wrapper.data, "NotQuestFlagMin1");
-}
+void initConditionQuestNotQuestFlagMin1(const CBdatWrapper &wrapper) { s_members[ConditionQuestNotQuestFlagMin1] = Bdat::getMember(wrapper.data, "NotQuestFlagMin1"); }
 
 u32 getConditionQuestNotQuestFlagMin1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionQuestNotQuestFlagMin1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionQuestNotQuestFlagMin1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionQuestNotQuestFlagMin1], id, 1).valueU8;
 }
 
-void initConditionQuestNotQuestFlagMax1(const CBdatWrapper &wrapper) {
-  s_members[ConditionQuestNotQuestFlagMax1] = Bdat::getMember(wrapper.data, "NotQuestFlagMax1");
-}
+void initConditionQuestNotQuestFlagMax1(const CBdatWrapper &wrapper) { s_members[ConditionQuestNotQuestFlagMax1] = Bdat::getMember(wrapper.data, "NotQuestFlagMax1"); }
 
 u32 getConditionQuestNotQuestFlagMax1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionQuestNotQuestFlagMax1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionQuestNotQuestFlagMax1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionQuestNotQuestFlagMax1], id, 1).valueU8;
 }
 
-void initConditionQuestNotQuestFlag2(const CBdatWrapper &wrapper) {
-  s_members[ConditionQuestNotQuestFlag2] = Bdat::getMember(wrapper.data, "NotQuestFlag2");
-}
+void initConditionQuestNotQuestFlag2(const CBdatWrapper &wrapper) { s_members[ConditionQuestNotQuestFlag2] = Bdat::getMember(wrapper.data, "NotQuestFlag2"); }
 
 u32 getConditionQuestNotQuestFlag2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionQuestNotQuestFlag2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionQuestNotQuestFlag2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionQuestNotQuestFlag2], id, 2).valueU16;
 }
 
-void initConditionQuestNotQuestFlagMin2(const CBdatWrapper &wrapper) {
-  s_members[ConditionQuestNotQuestFlagMin2] = Bdat::getMember(wrapper.data, "NotQuestFlagMin2");
-}
+void initConditionQuestNotQuestFlagMin2(const CBdatWrapper &wrapper) { s_members[ConditionQuestNotQuestFlagMin2] = Bdat::getMember(wrapper.data, "NotQuestFlagMin2"); }
 
 u32 getConditionQuestNotQuestFlagMin2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionQuestNotQuestFlagMin2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionQuestNotQuestFlagMin2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionQuestNotQuestFlagMin2], id, 1).valueU8;
 }
 
-void initConditionQuestNotQuestFlagMax2(const CBdatWrapper &wrapper) {
-  s_members[ConditionQuestNotQuestFlagMax2] = Bdat::getMember(wrapper.data, "NotQuestFlagMax2");
-}
+void initConditionQuestNotQuestFlagMax2(const CBdatWrapper &wrapper) { s_members[ConditionQuestNotQuestFlagMax2] = Bdat::getMember(wrapper.data, "NotQuestFlagMax2"); }
 
 u32 getConditionQuestNotQuestFlagMax2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionQuestNotQuestFlagMax2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionQuestNotQuestFlagMax2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -483,8 +406,7 @@ u32 getConditionQuestNotQuestFlagMax2(const CBdatWrapper &wrapper, u32 id) {
 void initConditionEnvTimeRange(const CBdatWrapper &wrapper) { s_members[ConditionEnvTimeRange] = Bdat::getMember(wrapper.data, "TimeRange"); }
 
 u32 getConditionEnvTimeRange(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionEnvTimeRange] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionEnvTimeRange] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -494,8 +416,7 @@ u32 getConditionEnvTimeRange(const CBdatWrapper &wrapper, u32 id) {
 void initConditionEnvWeather(const CBdatWrapper &wrapper) { s_members[ConditionEnvWeather] = Bdat::getMember(wrapper.data, "Weather"); }
 
 u32 getConditionEnvWeather(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionEnvWeather] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionEnvWeather] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -505,8 +426,7 @@ u32 getConditionEnvWeather(const CBdatWrapper &wrapper, u32 id) {
 void initConditionEnvCloudHeight(const CBdatWrapper &wrapper) { s_members[ConditionEnvCloudHeight] = Bdat::getMember(wrapper.data, "CloudHeight"); }
 
 u32 getConditionEnvCloudHeight(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionEnvCloudHeight] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionEnvCloudHeight] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -516,8 +436,7 @@ u32 getConditionEnvCloudHeight(const CBdatWrapper &wrapper, u32 id) {
 void initConditionFlagFlagType(const CBdatWrapper &wrapper) { s_members[ConditionFlagFlagType] = Bdat::getMember(wrapper.data, "FlagType"); }
 
 u32 getConditionFlagFlagType(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionFlagFlagType] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionFlagFlagType] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -527,8 +446,7 @@ u32 getConditionFlagFlagType(const CBdatWrapper &wrapper, u32 id) {
 void initConditionFlagFlagID(const CBdatWrapper &wrapper) { s_members[ConditionFlagFlagID] = Bdat::getMember(wrapper.data, "FlagID"); }
 
 u32 getConditionFlagFlagID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionFlagFlagID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionFlagFlagID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -538,8 +456,7 @@ u32 getConditionFlagFlagID(const CBdatWrapper &wrapper, u32 id) {
 void initConditionFlagFlagMin(const CBdatWrapper &wrapper) { s_members[ConditionFlagFlagMin] = Bdat::getMember(wrapper.data, "FlagMin"); }
 
 u32 getConditionFlagFlagMin(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionFlagFlagMin] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionFlagFlagMin] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -549,21 +466,17 @@ u32 getConditionFlagFlagMin(const CBdatWrapper &wrapper, u32 id) {
 void initConditionFlagFlagMax(const CBdatWrapper &wrapper) { s_members[ConditionFlagFlagMax] = Bdat::getMember(wrapper.data, "FlagMax"); }
 
 u32 getConditionFlagFlagMax(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionFlagFlagMax] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionFlagFlagMax] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionFlagFlagMax], id, 2).valueU16;
 }
 
-void initConditionItemItemCategory(const CBdatWrapper &wrapper) {
-  s_members[ConditionItemItemCategory] = Bdat::getMember(wrapper.data, "ItemCategory");
-}
+void initConditionItemItemCategory(const CBdatWrapper &wrapper) { s_members[ConditionItemItemCategory] = Bdat::getMember(wrapper.data, "ItemCategory"); }
 
 u32 getConditionItemItemCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionItemItemCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionItemItemCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -573,8 +486,7 @@ u32 getConditionItemItemCategory(const CBdatWrapper &wrapper, u32 id) {
 void initConditionItemItemID(const CBdatWrapper &wrapper) { s_members[ConditionItemItemID] = Bdat::getMember(wrapper.data, "ItemID"); }
 
 u32 getConditionItemItemID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionItemItemID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionItemItemID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -584,8 +496,7 @@ u32 getConditionItemItemID(const CBdatWrapper &wrapper, u32 id) {
 void initConditionItemNumber(const CBdatWrapper &wrapper) { s_members[ConditionItemNumber] = Bdat::getMember(wrapper.data, "Number"); }
 
 u32 getConditionItemNumber(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionItemNumber] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionItemNumber] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -595,8 +506,7 @@ u32 getConditionItemNumber(const CBdatWrapper &wrapper, u32 id) {
 void initConditionPTCategory(const CBdatWrapper &wrapper) { s_members[ConditionPTCategory] = Bdat::getMember(wrapper.data, "Category"); }
 
 u32 getConditionPTCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionPTCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionPTCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -606,8 +516,7 @@ u32 getConditionPTCategory(const CBdatWrapper &wrapper, u32 id) {
 void initConditionPTPCID1(const CBdatWrapper &wrapper) { s_members[ConditionPTPCID1] = Bdat::getMember(wrapper.data, "PCID1"); }
 
 u32 getConditionPTPCID1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionPTPCID1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionPTPCID1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -617,8 +526,7 @@ u32 getConditionPTPCID1(const CBdatWrapper &wrapper, u32 id) {
 void initConditionPTPCID2(const CBdatWrapper &wrapper) { s_members[ConditionPTPCID2] = Bdat::getMember(wrapper.data, "PCID2"); }
 
 u32 getConditionPTPCID2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionPTPCID2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionPTPCID2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -628,8 +536,7 @@ u32 getConditionPTPCID2(const CBdatWrapper &wrapper, u32 id) {
 void initConditionPTPCID3(const CBdatWrapper &wrapper) { s_members[ConditionPTPCID3] = Bdat::getMember(wrapper.data, "PCID3"); }
 
 u32 getConditionPTPCID3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionPTPCID3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionPTPCID3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -639,73 +546,57 @@ u32 getConditionPTPCID3(const CBdatWrapper &wrapper, u32 id) {
 void initConditionIdeaPCID(const CBdatWrapper &wrapper) { s_members[ConditionIdeaPCID] = Bdat::getMember(wrapper.data, "PCID"); }
 
 u32 getConditionIdeaPCID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionIdeaPCID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionIdeaPCID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionIdeaPCID], id, 2).valueU16;
 }
 
-void initConditionIdeaIdeaLevelBlue(const CBdatWrapper &wrapper) {
-  s_members[ConditionIdeaIdeaLevelBlue] = Bdat::getMember(wrapper.data, "IdeaLevelBlue");
-}
+void initConditionIdeaIdeaLevelBlue(const CBdatWrapper &wrapper) { s_members[ConditionIdeaIdeaLevelBlue] = Bdat::getMember(wrapper.data, "IdeaLevelBlue"); }
 
 u32 getConditionIdeaIdeaLevelBlue(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionIdeaIdeaLevelBlue] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionIdeaIdeaLevelBlue] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionIdeaIdeaLevelBlue], id, 1).valueU8;
 }
 
-void initConditionIdeaIdeaLevelRed(const CBdatWrapper &wrapper) {
-  s_members[ConditionIdeaIdeaLevelRed] = Bdat::getMember(wrapper.data, "IdeaLevelRed");
-}
+void initConditionIdeaIdeaLevelRed(const CBdatWrapper &wrapper) { s_members[ConditionIdeaIdeaLevelRed] = Bdat::getMember(wrapper.data, "IdeaLevelRed"); }
 
 u32 getConditionIdeaIdeaLevelRed(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionIdeaIdeaLevelRed] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionIdeaIdeaLevelRed] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionIdeaIdeaLevelRed], id, 1).valueU8;
 }
 
-void initConditionIdeaIdeaLevelWhite(const CBdatWrapper &wrapper) {
-  s_members[ConditionIdeaIdeaLevelWhite] = Bdat::getMember(wrapper.data, "IdeaLevelWhite");
-}
+void initConditionIdeaIdeaLevelWhite(const CBdatWrapper &wrapper) { s_members[ConditionIdeaIdeaLevelWhite] = Bdat::getMember(wrapper.data, "IdeaLevelWhite"); }
 
 u32 getConditionIdeaIdeaLevelWhite(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionIdeaIdeaLevelWhite] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionIdeaIdeaLevelWhite] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionIdeaIdeaLevelWhite], id, 1).valueU8;
 }
 
-void initConditionIdeaIdeaLevelBlack(const CBdatWrapper &wrapper) {
-  s_members[ConditionIdeaIdeaLevelBlack] = Bdat::getMember(wrapper.data, "IdeaLevelBlack");
-}
+void initConditionIdeaIdeaLevelBlack(const CBdatWrapper &wrapper) { s_members[ConditionIdeaIdeaLevelBlack] = Bdat::getMember(wrapper.data, "IdeaLevelBlack"); }
 
 u32 getConditionIdeaIdeaLevelBlack(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionIdeaIdeaLevelBlack] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionIdeaIdeaLevelBlack] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionIdeaIdeaLevelBlack], id, 1).valueU8;
 }
 
-void initConditionIdeaCompatibility(const CBdatWrapper &wrapper) {
-  s_members[ConditionIdeaCompatibility] = Bdat::getMember(wrapper.data, "Compatibility");
-}
+void initConditionIdeaCompatibility(const CBdatWrapper &wrapper) { s_members[ConditionIdeaCompatibility] = Bdat::getMember(wrapper.data, "Compatibility"); }
 
 u32 getConditionIdeaCompatibility(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionIdeaCompatibility] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionIdeaCompatibility] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -715,8 +606,7 @@ u32 getConditionIdeaCompatibility(const CBdatWrapper &wrapper, u32 id) {
 void initConditionIdeaTrustPoint(const CBdatWrapper &wrapper) { s_members[ConditionIdeaTrustPoint] = Bdat::getMember(wrapper.data, "TrustPoint"); }
 
 u32 getConditionIdeaTrustPoint(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionIdeaTrustPoint] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionIdeaTrustPoint] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -726,8 +616,7 @@ u32 getConditionIdeaTrustPoint(const CBdatWrapper &wrapper, u32 id) {
 void initConditionLevelPCID(const CBdatWrapper &wrapper) { s_members[ConditionLevelPCID] = Bdat::getMember(wrapper.data, "PCID"); }
 
 u32 getConditionLevelPCID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionLevelPCID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionLevelPCID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -737,21 +626,17 @@ u32 getConditionLevelPCID(const CBdatWrapper &wrapper, u32 id) {
 void initConditionLevelLevel(const CBdatWrapper &wrapper) { s_members[ConditionLevelLevel] = Bdat::getMember(wrapper.data, "Level"); }
 
 u32 getConditionLevelLevel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionLevelLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionLevelLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionLevelLevel], id, 1).valueU8;
 }
 
-void initConditionAchievementAchievementSetID(const CBdatWrapper &wrapper) {
-  s_members[ConditionAchievementAchievementSetID] = Bdat::getMember(wrapper.data, "AchievementSetID");
-}
+void initConditionAchievementAchievementSetID(const CBdatWrapper &wrapper) { s_members[ConditionAchievementAchievementSetID] = Bdat::getMember(wrapper.data, "AchievementSetID"); }
 
 u32 getConditionAchievementAchievementSetID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionAchievementAchievementSetID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionAchievementAchievementSetID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -761,34 +646,27 @@ u32 getConditionAchievementAchievementSetID(const CBdatWrapper &wrapper, u32 id)
 void initConditionAchievementValue(const CBdatWrapper &wrapper) { s_members[ConditionAchievementValue] = Bdat::getMember(wrapper.data, "Value"); }
 
 u32 getConditionAchievementValue(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionAchievementValue] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionAchievementValue] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionAchievementValue], id, 1).valueU8;
 }
 
-void initConditionFieldSkiiLevelFieldSkillID(const CBdatWrapper &wrapper) {
-  s_members[ConditionFieldSkiiLevelFieldSkillID] = Bdat::getMember(wrapper.data, "FieldSkillID");
-}
+void initConditionFieldSkiiLevelFieldSkillID(const CBdatWrapper &wrapper) { s_members[ConditionFieldSkiiLevelFieldSkillID] = Bdat::getMember(wrapper.data, "FieldSkillID"); }
 
 u32 getConditionFieldSkiiLevelFieldSkillID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionFieldSkiiLevelFieldSkillID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionFieldSkiiLevelFieldSkillID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[ConditionFieldSkiiLevelFieldSkillID], id, 2).valueU16;
 }
 
-void initConditionFieldSkiiLevelLevel(const CBdatWrapper &wrapper) {
-  s_members[ConditionFieldSkiiLevelLevel] = Bdat::getMember(wrapper.data, "Level");
-}
+void initConditionFieldSkiiLevelLevel(const CBdatWrapper &wrapper) { s_members[ConditionFieldSkiiLevelLevel] = Bdat::getMember(wrapper.data, "Level"); }
 
 u32 getConditionFieldSkiiLevelLevel(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[ConditionFieldSkiiLevelLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[ConditionFieldSkiiLevelLevel] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -798,9 +676,8 @@ u32 getConditionFieldSkiiLevelLevel(const CBdatWrapper &wrapper, u32 id) {
 } // namespace _gfbdb
 
 GfBdatCond::GfBdatCond()
-    : m_conditionList(nullptr), m_conditionScenario(nullptr), m_conditionQuest(nullptr), m_conditionEnv(nullptr), m_conditionFlag(nullptr),
-      m_conditionItem(nullptr), m_conditionPT(nullptr), m_conditionIdea(nullptr), m_conditionLevel(nullptr), m_conditionAchievement(nullptr),
-      m_conditionFieldSkiiLevel(nullptr) {
+    : m_conditionList(nullptr), m_conditionScenario(nullptr), m_conditionQuest(nullptr), m_conditionEnv(nullptr), m_conditionFlag(nullptr), m_conditionItem(nullptr), m_conditionPT(nullptr),
+      m_conditionIdea(nullptr), m_conditionLevel(nullptr), m_conditionAchievement(nullptr), m_conditionFieldSkiiLevel(nullptr) {
   bdatRefresh();
 }
 
@@ -863,7 +740,7 @@ void GfBdatCond::destroyFP() {
   }
 }
 
-#define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
+#define NEW_BDAT_WRAPPER(bdat)                                                                                                                                                                         \
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 void GfBdatCond::createFP() {
@@ -1145,10 +1022,8 @@ u32 GfBdatCond::getConditionIdeaCompatibility(u32 id) const { return _gfbdb::get
 u32 GfBdatCond::getConditionIdeaTrustPoint(u32 id) const { return _gfbdb::getConditionIdeaTrustPoint(*m_conditionIdea, id); }
 
 u32 GfBdatCond::getConditionIdeaIdeaLevel(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getConditionIdeaIdeaLevelBlue,
-                                                              _gfbdb::getConditionIdeaIdeaLevelRed,
-                                                              _gfbdb::getConditionIdeaIdeaLevelWhite,
-                                                              _gfbdb::getConditionIdeaIdeaLevelBlack};
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbdb::getConditionIdeaIdeaLevelBlue, _gfbdb::getConditionIdeaIdeaLevelRed, _gfbdb::getConditionIdeaIdeaLevelWhite, _gfbdb::getConditionIdeaIdeaLevelBlack};
   return getters[index](*m_conditionIdea, id);
 }
 
@@ -1162,25 +1037,17 @@ u32 GfBdatCond::getConditionLevelLevel(u32 id) const { return _gfbdb::getConditi
 
 u32 GfBdatCond::getConditionAchievementStart() const { return Bdat::getIdTop(m_conditionAchievement->data); }
 
-u32 GfBdatCond::getConditionAchievementEnd() const {
-  return Bdat::getIdTop(m_conditionAchievement->data) + Bdat::getIdCount(m_conditionAchievement->data);
-}
+u32 GfBdatCond::getConditionAchievementEnd() const { return Bdat::getIdTop(m_conditionAchievement->data) + Bdat::getIdCount(m_conditionAchievement->data); }
 
-u32 GfBdatCond::getConditionAchievementAchievementSetID(u32 id) const {
-  return _gfbdb::getConditionAchievementAchievementSetID(*m_conditionAchievement, id);
-}
+u32 GfBdatCond::getConditionAchievementAchievementSetID(u32 id) const { return _gfbdb::getConditionAchievementAchievementSetID(*m_conditionAchievement, id); }
 
 u32 GfBdatCond::getConditionAchievementValue(u32 id) const { return _gfbdb::getConditionAchievementValue(*m_conditionAchievement, id); }
 
 u32 GfBdatCond::getConditionFieldSkiiLevelStart() const { return Bdat::getIdTop(m_conditionFieldSkiiLevel->data); }
 
-u32 GfBdatCond::getConditionFieldSkiiLevelEnd() const {
-  return Bdat::getIdTop(m_conditionFieldSkiiLevel->data) + Bdat::getIdCount(m_conditionFieldSkiiLevel->data);
-}
+u32 GfBdatCond::getConditionFieldSkiiLevelEnd() const { return Bdat::getIdTop(m_conditionFieldSkiiLevel->data) + Bdat::getIdCount(m_conditionFieldSkiiLevel->data); }
 
-u32 GfBdatCond::getConditionFieldSkiiLevelFieldSkillID(u32 id) const {
-  return _gfbdb::getConditionFieldSkiiLevelFieldSkillID(*m_conditionFieldSkiiLevel, id);
-}
+u32 GfBdatCond::getConditionFieldSkiiLevelFieldSkillID(u32 id) const { return _gfbdb::getConditionFieldSkiiLevelFieldSkillID(*m_conditionFieldSkiiLevel, id); }
 
 u32 GfBdatCond::getConditionFieldSkiiLevelLevel(u32 id) const { return _gfbdb::getConditionFieldSkiiLevelLevel(*m_conditionFieldSkiiLevel, id); }
 

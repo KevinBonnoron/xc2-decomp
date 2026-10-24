@@ -100,9 +100,7 @@ void ARTS_SLOT_DATA::ResetRecast(bool isStart, bool) {
   }
 }
 
-void ARTS_SLOT_DATA::GetArtsData(ARTS_DATA &data) const {
-  DataManager::get()->GetArtsData(static_cast<ARTS_DATA::DATA_TYPE>(unknown01_3), unknown00_0, data);
-}
+void ARTS_SLOT_DATA::GetArtsData(ARTS_DATA &data) const { DataManager::get()->GetArtsData(static_cast<ARTS_DATA::DATA_TYPE>(unknown01_3), unknown00_0, data); }
 
 void ARTS_PALETTE_DATA::AddAllRecast(f32 recast, bool isRate) {
   AddArtsRecast(recast, isRate, -1);
@@ -192,8 +190,7 @@ bool ARTS_PALETTE_DATA::IsEnableHealArts(bool isRecastEnd) const {
       return true;
     }
     ENHANCE_EFFECT_DATA enhance;
-    if (data.unknown90[slot.unknown02_5 - 1].unknown04 != 0 &&
-        DataManager::GetEnhanceData(data.unknown90[slot.unknown02_5 - 1].unknown04, enhance, false) && enhance.unknown00 == ENHANCE_HEAL) {
+    if (data.unknown90[slot.unknown02_5 - 1].unknown04 != 0 && DataManager::GetEnhanceData(data.unknown90[slot.unknown02_5 - 1].unknown04, enhance, false) && enhance.unknown00 == ENHANCE_HEAL) {
       return true;
     }
   }

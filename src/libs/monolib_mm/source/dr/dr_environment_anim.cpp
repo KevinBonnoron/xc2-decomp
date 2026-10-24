@@ -66,9 +66,7 @@ void DrEnvironmentAnim::envlgt_dir_color_G(DrLightObjDir *light, const LgtAnimIn
 
 void DrEnvironmentAnim::envlgt_dir_color_B(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { m_color.b = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_dir_color_Intensity(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) {
-  m_intensity = getHermiteAttr(inf, frame);
-}
+void DrEnvironmentAnim::envlgt_dir_color_Intensity(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) { m_intensity = getHermiteAttr(inf, frame); }
 
 void DrEnvironmentAnim::envlgt_dir_spe_Intensity(DrLightObjDir *light, const LgtAnimInf *inf, f32 frame) {}
 
@@ -94,13 +92,9 @@ void DrEnvironmentAnim::envlgt_pnt_color_G(DrLightObjPnt *light, const LgtAnimIn
 
 void DrEnvironmentAnim::envlgt_pnt_color_B(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { m_color.b = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_pnt_color_Intensity(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) {
-  m_intensity = getHermiteAttr(inf, frame);
-}
+void DrEnvironmentAnim::envlgt_pnt_color_Intensity(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { m_intensity = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_pnt_spe_Intensity(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) {
-  light->m_speIntensity = getHermiteAttr(inf, frame);
-}
+void DrEnvironmentAnim::envlgt_pnt_spe_Intensity(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) { light->m_speIntensity = getHermiteAttr(inf, frame); }
 
 void DrEnvironmentAnim::envlgt_pnt_non(DrLightObjPnt *light, const LgtAnimInf *inf, f32 frame) {}
 
@@ -124,13 +118,9 @@ void DrEnvironmentAnim::envlgt_spt_color_G(DrLightObjSpt *light, const LgtAnimIn
 
 void DrEnvironmentAnim::envlgt_spt_color_B(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { m_color.b = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_spt_color_Intensity(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) {
-  m_intensity = getHermiteAttr(inf, frame);
-}
+void DrEnvironmentAnim::envlgt_spt_color_Intensity(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { m_intensity = getHermiteAttr(inf, frame); }
 
-void DrEnvironmentAnim::envlgt_spt_spe_Intensity(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) {
-  light->m_speIntensity = getHermiteAttr(inf, frame);
-}
+void DrEnvironmentAnim::envlgt_spt_spe_Intensity(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { light->m_speIntensity = getHermiteAttr(inf, frame); }
 
 void DrEnvironmentAnim::envlgt_spt_angle(DrLightObjSpt *light, const LgtAnimInf *inf, f32 frame) { light->m_angle = getHermiteAttr(inf, frame); }
 

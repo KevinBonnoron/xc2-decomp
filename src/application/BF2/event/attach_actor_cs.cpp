@@ -33,13 +33,7 @@ void AttachActorCS::setActor(gf::GF_OBJ_HANDLE *actor) {
     AttachUtil::setCaster(false, unknowna0, *unknowna8[i]);
   }
   for (size_t i = 0; i < unknown4b0.size(); i++) {
-    AttachUtil::setMount(false,
-                         unknowna0,
-                         unknown4b0[i]->unknown0,
-                         unknown4b0[i]->unknown8.c_str(),
-                         unknown4b0[i]->unknown30,
-                         unknown4b0[i]->unknown40,
-                         unknown4b0[i]->unknown44);
+    AttachUtil::setMount(false, unknowna0, unknown4b0[i]->unknown0, unknown4b0[i]->unknown8.c_str(), unknown4b0[i]->unknown30, unknown4b0[i]->unknown40, unknown4b0[i]->unknown44);
   }
   unknown50 = actor;
   unknowna0 = actor;
@@ -47,13 +41,7 @@ void AttachActorCS::setActor(gf::GF_OBJ_HANDLE *actor) {
     AttachUtil::setCaster(true, unknowna0, *unknowna8[i]);
   }
   for (size_t i = 0; i < unknown4b0.size(); i++) {
-    AttachUtil::setMount(true,
-                         unknowna0,
-                         unknown4b0[i]->unknown0,
-                         unknown4b0[i]->unknown8.c_str(),
-                         unknown4b0[i]->unknown30,
-                         unknown4b0[i]->unknown40,
-                         unknown4b0[i]->unknown44);
+    AttachUtil::setMount(true, unknowna0, unknown4b0[i]->unknown0, unknown4b0[i]->unknown8.c_str(), unknown4b0[i]->unknown30, unknown4b0[i]->unknown40, unknown4b0[i]->unknown44);
   }
 }
 
@@ -85,8 +73,7 @@ void AttachActorCS::setEffectMount(bool isSet, u32 effect, const char *bone, con
     if (unknown4b0.size() >= EFFECT_COUNT) {
       return;
     }
-    Mount *mount =
-        new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) Mount(effect, bone, offset, isRotate, type);
+    Mount *mount = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) Mount(effect, bone, offset, isRotate, type);
     AttachUtil::setMount(true, unknowna0, effect, bone, offset, isRotate, type);
     unknown4b0.push_back(mount);
   } else {

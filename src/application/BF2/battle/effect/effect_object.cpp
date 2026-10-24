@@ -77,8 +77,7 @@ void EffectObject::SetBulletData(int bulletId, int bulletEffectId) {
   }
 }
 
-void EffectObject::SetIntervalHitData(f32 radius, f32 damage, bool isDamageRate, f32 interval, f32 lifespan, bool isSpecialTarget,
-                                      bool isTargetFriend, bool isTargetEnemy) {
+void EffectObject::SetIntervalHitData(f32 radius, f32 damage, bool isDamageRate, f32 interval, f32 lifespan, bool isSpecialTarget, bool isTargetFriend, bool isTargetEnemy) {
   unknownc8_1.unknown00 = damage;
   unknownc8_1.unknown04 = radius * 100.0f;
   unknownc8_1.unknown06 = lifespan;

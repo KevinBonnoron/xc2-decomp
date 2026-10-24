@@ -16,8 +16,7 @@ void ScriptCharaMotion::doit(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_CHARA) {
     return;
   }
-  static_cast<ObjectChara *>(object)->getCharaObj()->playMotion(
-      param.val(0).getStr(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
+  static_cast<ObjectChara *>(object)->getCharaObj()->playMotion(param.val(0).getStr(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
 }
 
 void ScriptCharaMotion::undo(const Param &param) {}

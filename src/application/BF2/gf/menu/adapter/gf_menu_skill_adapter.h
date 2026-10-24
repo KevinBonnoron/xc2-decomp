@@ -30,8 +30,7 @@ public:
 
   class ReferenceDriverConverter : public IConverter {
   public:
-    ReferenceDriverConverter(u32 driverIndex, u32 line, u32 level, u32 roundIndex)
-        : driverIndex(driverIndex), line(line), level(level), roundIndex(roundIndex) {}
+    ReferenceDriverConverter(u32 driverIndex, u32 line, u32 level, u32 roundIndex) : driverIndex(driverIndex), line(line), level(level), roundIndex(roundIndex) {}
     u32 getDriverId() override { return GfMenuReference::getReferenceDriverID(driverIndex); }
     u32 getKizunaLine() override { return line; }
     u32 getKizunaLevel() override { return level; }
@@ -73,10 +72,8 @@ public:
   bool update_SkillLearnMax();
   bool update_SkillLevelUnlockNum();
   static GfMenuSkillAdapter *createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways);
-  static GfMenuSkillAdapter *createFromReferenceDriver(u32 handle, u32 type, u32 driverIndex, u16 line, u16 level, u16 roundIndex,
-                                                       bool isUpdateAlways);
-  static GfMenuSkillAdapter *createFromReferenceDriverLineLevel(u32 handle, u32 type, u32 driverIndex, u16 lineIndex, u16 levelIndex, u16 roundIndex,
-                                                                bool isUpdateAlways);
+  static GfMenuSkillAdapter *createFromReferenceDriver(u32 handle, u32 type, u32 driverIndex, u16 line, u16 level, u16 roundIndex, bool isUpdateAlways);
+  static GfMenuSkillAdapter *createFromReferenceDriverLineLevel(u32 handle, u32 type, u32 driverIndex, u16 lineIndex, u16 levelIndex, u16 roundIndex, bool isUpdateAlways);
   void update(const fw::UpdateInfo &info) override;
 
   mm::mtl::Delegate<bool()> updater;

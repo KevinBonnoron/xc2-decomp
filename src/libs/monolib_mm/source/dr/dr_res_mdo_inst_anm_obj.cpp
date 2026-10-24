@@ -49,8 +49,7 @@ void DrResMdoPosInstAnm::anmInsPosParm_SclY(mm::Vec3 *transform, f32 value) { tr
 
 void DrResMdoPosInstAnm::anmInsPosParm_SclZ(mm::Vec3 *transform, f32 value) { transform[2].z = value; }
 
-DrResMdoInstPartsObj::DrResMdoInstPartsObj(const u8 *data, const MdsInstObjPosData *info)
-    : m_names(reinterpret_cast<const char *>(data)), m_info(info), m_matrix(nullptr), m_alpha(1.0f) {
+DrResMdoInstPartsObj::DrResMdoInstPartsObj(const u8 *data, const MdsInstObjPosData *info) : m_names(reinterpret_cast<const char *>(data)), m_info(info), m_matrix(nullptr), m_alpha(1.0f) {
   m_flags.all = 0;
   m_flags.isLoop = info->flags & MdsInstObjPosData::FLAG_LOOP;
   if (info->flags & MdsInstObjPosData::FLAG_DISP_OFF && info->id != 0) {
@@ -88,8 +87,8 @@ bool DrResMdoInstPartsObj::isDisp() const {
 }
 
 DrResMdoInstPartsAnm::DrResMdoInstPartsAnm(const u8 *data, const MdsInstObjPosData *info)
-    : DrResMdoInstPartsObj(data, info), m_posAnm(nullptr), m_posFrame(0.0f), m_nodeFrame(0.0f), m_oldNodeFrame(0.0f), m_dblNodeFrames(),
-      m_frameScale(1.0f), m_invFrameScale(1.0f), m_nodeStart(0), m_nodeMax(0), m_coliParam(nullptr), m_switches(nullptr), m_switchMax(0) {
+    : DrResMdoInstPartsObj(data, info), m_posAnm(nullptr), m_posFrame(0.0f), m_nodeFrame(0.0f), m_oldNodeFrame(0.0f), m_dblNodeFrames(), m_frameScale(1.0f), m_invFrameScale(1.0f), m_nodeStart(0),
+      m_nodeMax(0), m_coliParam(nullptr), m_switches(nullptr), m_switchMax(0) {
   m_switchID = 1;
   if (info->frameScale != 0) {
     m_frameScale = info->frameScale * (1.0f / 255.0f) * 2.0f;

@@ -91,9 +91,7 @@ void DrShdDataList::renderEffVtx(int instanceCount) { m_effIndex.drawInsIndex(in
 
 void DrShdDataList::renderPoint(int count) { grlib::CGLibCtlVertex::renderVertex(GRL_PRIMITIVE_POINTS, count); }
 
-void DrShdDataList::renderPoint(int count, int instanceCount) {
-  grlib::CGLibCtlVertex::renderInstanceVertex(GRL_PRIMITIVE_POINTS, count, instanceCount);
-}
+void DrShdDataList::renderPoint(int count, int instanceCount) { grlib::CGLibCtlVertex::renderInstanceVertex(GRL_PRIMITIVE_POINTS, count, instanceCount); }
 
 DrResFetch *DrShdDataList::getFetchShader(int index) { return &m_fetches[index]; }
 

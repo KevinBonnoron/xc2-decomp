@@ -61,8 +61,7 @@ static_assert(offsetof(RQ_SETUP_PARTY_DRIVER, leader) == 0x14, "");
 
 struct GfMapjumpInfo {
   explicit GfMapjumpInfo(u32 mapjumpId = 0)
-      : mapjumpId(mapjumpId), map(0), landmarkId(-1), partyCreateRate(1.0f), isWithSaveData(false), isNoFadeIn(false), isNoFadeOut(false), _103(),
-        isSkipTravel(false), jumpType(0) {}
+      : mapjumpId(mapjumpId), map(0), landmarkId(-1), partyCreateRate(1.0f), isWithSaveData(false), isNoFadeIn(false), isNoFadeOut(false), _103(), isSkipTravel(false), jumpType(0) {}
 
   void setupForSaveData(u32 mapjumpId, const mm::Vec3 &position, const mm::Vec3 &rotation, bool isStartChapterSave);
 

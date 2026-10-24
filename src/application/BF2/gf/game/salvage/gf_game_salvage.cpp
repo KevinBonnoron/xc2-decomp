@@ -32,8 +32,8 @@ static const char *CAMERA_NAMES[] = {
 };
 
 GfGameSalvage::GfGameSalvage(const GfSetupParam &param)
-    : fsm(getAllocator(ALLOCATOR_DEFAULT)), initialized(false), buttonChallengePoint(0), skillPoint(0), model(nullptr), voice(nullptr),
-      climbAnimation(ANIMATION_RESULT_00), climbVoice(0), diveVibration(0) {
+    : fsm(getAllocator(ALLOCATOR_DEFAULT)), initialized(false), buttonChallengePoint(0), skillPoint(0), model(nullptr), voice(nullptr), climbAnimation(ANIMATION_RESULT_00), climbVoice(0),
+      diveVibration(0) {
   initialize(param);
 }
 

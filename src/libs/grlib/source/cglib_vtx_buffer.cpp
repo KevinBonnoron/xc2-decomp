@@ -63,51 +63,31 @@ void CGLibVtxIndex::resetIndexBuff(CGLibVtlMemPool *memPool, u32 offset) {
 void CGLibVtxIndex::drawIndex() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
   context->m_pipeline.updateVertex();
-  nvnCommandBufferDrawElements(
-      context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), m_count, m_gpuAddress);
+  nvnCommandBufferDrawElements(context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), m_count, m_gpuAddress);
 }
 
 void CGLibVtxIndex::drawIndex(u32 count, u32 offset) {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
   context->m_pipeline.updateVertex();
-  nvnCommandBufferDrawElements(
-      context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), count, m_gpuAddress + offset);
+  nvnCommandBufferDrawElements(context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), count, m_gpuAddress + offset);
 }
 
 void CGLibVtxIndex::drawInsIndex(int instanceCount) {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
   context->m_pipeline.updateVertex();
-  nvnCommandBufferDrawElementsInstanced(context->m_pipeline.m_cmdBuf,
-                                        static_cast<NVNdrawPrimitive>(m_type),
-                                        static_cast<NVNindexType>(m_format),
-                                        m_count,
-                                        m_gpuAddress,
-                                        0,
-                                        0,
-                                        instanceCount);
+  nvnCommandBufferDrawElementsInstanced(context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), m_count, m_gpuAddress, 0, 0, instanceCount);
 }
 
 void CGLibVtxIndex::drawInsIndex(int instanceCount, u32 count, u32 offset) {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
   context->m_pipeline.updateVertex();
-  nvnCommandBufferDrawElementsInstanced(context->m_pipeline.m_cmdBuf,
-                                        static_cast<NVNdrawPrimitive>(m_type),
-                                        static_cast<NVNindexType>(m_format),
-                                        count,
-                                        m_gpuAddress + offset,
-                                        0,
-                                        0,
-                                        instanceCount);
+  nvnCommandBufferDrawElementsInstanced(context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), count, m_gpuAddress + offset, 0, 0, instanceCount);
 }
 
 void CGLibVtxIndex::drawIndirect(const CGLibOneUniformBlock &block, u32 offset) {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
   context->m_pipeline.updateVertex();
-  nvnCommandBufferDrawElementsIndirect(context->m_pipeline.m_cmdBuf,
-                                       static_cast<NVNdrawPrimitive>(m_type),
-                                       static_cast<NVNindexType>(m_format),
-                                       m_gpuAddress,
-                                       block.m_gpuAddress + offset);
+  nvnCommandBufferDrawElementsIndirect(context->m_pipeline.m_cmdBuf, static_cast<NVNdrawPrimitive>(m_type), static_cast<NVNindexType>(m_format), m_gpuAddress, block.m_gpuAddress + offset);
 }
 
 void CGLibVtxIndex::lock(void **buffer, u32 *size) {

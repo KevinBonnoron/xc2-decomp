@@ -700,8 +700,7 @@ void GfGameScene::createDriverAppendModelControl(GF_OBJ_HANDLE *handle) {
 }
 
 void GfGameScene::destroyDriverAppendModelControl(GF_OBJ_HANDLE *handle) {
-  mm::mtl::FixedList<GfAppendWire *, 8>::iterator it = mm::mtl::find_if(
-      appendWires.begin(), appendWires.end(), [handle](GfAppendWire *wire) { return wire->owner == handle || wire->wire == handle; });
+  mm::mtl::FixedList<GfAppendWire *, 8>::iterator it = mm::mtl::find_if(appendWires.begin(), appendWires.end(), [handle](GfAppendWire *wire) { return wire->owner == handle || wire->wire == handle; });
   if (it != appendWires.end()) {
     delete *it;
     appendWires.erase(it);
@@ -729,8 +728,7 @@ void GfGameScene::leaveExtraControlForHanaJS(GF_OBJ_HANDLE *handle) {
 }
 
 GfAppendWire *GfGameScene::getAppendControl(GF_OBJ_HANDLE *handle) {
-  mm::mtl::FixedList<GfAppendWire *, 8>::iterator it = mm::mtl::find_if(
-      appendWires.begin(), appendWires.end(), [handle](GfAppendWire *wire) { return wire->owner == handle || wire->wire == handle; });
+  mm::mtl::FixedList<GfAppendWire *, 8>::iterator it = mm::mtl::find_if(appendWires.begin(), appendWires.end(), [handle](GfAppendWire *wire) { return wire->owner == handle || wire->wire == handle; });
   if (it == appendWires.end()) {
     return nullptr;
   }
@@ -1184,8 +1182,7 @@ void GfGameScene::gevSelectHikari(bool) {
   if (GfDataBlade::getSetDriver(BLADE_HOMURA) != DRIVER_REX || GfDataBlade::getSetDriver(BLADE_HIKARI) != DRIVER_REX) {
     return;
   }
-  if ((GfDataBlade::isHikariCurrent() && GfDataDriver::getBlade(DRIVER_REX, -1) == BLADE_HOMURA) ||
-      (!GfDataBlade::isHikariCurrent() && GfDataDriver::getBlade(DRIVER_REX, -1) == BLADE_HIKARI)) {
+  if ((GfDataBlade::isHikariCurrent() && GfDataDriver::getBlade(DRIVER_REX, -1) == BLADE_HOMURA) || (!GfDataBlade::isHikariCurrent() && GfDataDriver::getBlade(DRIVER_REX, -1) == BLADE_HIKARI)) {
     int bladeSet = GfDataDriver::getSetIdByBlade(DRIVER_REX, GfDataBlade::isHikariCurrent() ? BLADE_HIKARI : BLADE_HOMURA);
     GF_OBJ_HANDLE *driver = GfGameParty::getHandleDriverByBdatID(DRIVER_REX);
     if (!GfObjUtil::isValid(driver)) {
@@ -1450,8 +1447,7 @@ void GfGameScene::updateAfterEventCount(const fw::UpdateInfo &) {
 }
 
 void GfGameScene::updateControlFreeEvent(const fw::UpdateInfo &) {
-  if (GfPlayComGmkTutorialSeq::s_activate <= 0 && (!GfGameManager::isBladeChange() || GfSequentialPlay::isInnerState(GF_STATE_SALVAGE)) &&
-      !GfGameManager::isControlFree()) {
+  if (GfPlayComGmkTutorialSeq::s_activate <= 0 && (!GfGameManager::isBladeChange() || GfSequentialPlay::isInnerState(GF_STATE_SALVAGE)) && !GfGameManager::isControlFree()) {
     if (controlFreeFrames > 0 && --controlFreeFrames == 0 && playerControl != GEV_PLAYER_CONTROL_LOCK) {
       playerControl = GEV_PLAYER_CONTROL_LOCK;
       GfEvent::callPlayerControl(GEV_PLAYER_CONTROL_LOCK);
@@ -1478,8 +1474,7 @@ void GfGameScene::updateEventFadeVolume(const fw::UpdateInfo &) {
 }
 
 bool GfGameScene::isPartyBusy(u32 partyId) {
-  if (mm::mtl::find(GfPlayComResetBlade::s_execFlag.begin(), GfPlayComResetBlade::s_execFlag.end(), static_cast<u8>(partyId)) !=
-      GfPlayComResetBlade::s_execFlag.end()) {
+  if (mm::mtl::find(GfPlayComResetBlade::s_execFlag.begin(), GfPlayComResetBlade::s_execFlag.end(), static_cast<u8>(partyId)) != GfPlayComResetBlade::s_execFlag.end()) {
     return true;
   }
   return !isEnableRideCondition(partyId);
@@ -1640,8 +1635,7 @@ void GfGameScene::updateQuestTaskLog(const fw::UpdateInfo &) {
       questIdForTaskLog.variant = quest.variant;
     }
   } else if (!(questIdForTaskLog == quest)) {
-    if (GfGameManager::isFadeout() || (GfGameManager::isControlFree() && !GfGameManager::isTalking() && !GfGameManager::isEvent(false)) ||
-        GfGameManager::isFullScreenMenu()) {
+    if (GfGameManager::isFadeout() || (GfGameManager::isControlFree() && !GfGameManager::isTalking() && !GfGameManager::isEvent(false)) || GfGameManager::isFullScreenMenu()) {
       questIdForTaskLog.id = quest.id;
       questIdForTaskLog.variant = quest.variant;
     }
@@ -1673,8 +1667,7 @@ void GfGameScene::updateMoveAchievement(const fw::UpdateInfo &) {
         if (!achievement.isMove()) {
           continue;
         }
-        f32 moveDistance = distance < MOVE_DISTANCE_MAX ? distance + GfDataUtil::getMoveDistance(achievement.moveType)
-                                                        : GfDataUtil::getMoveDistance(achievement.moveType);
+        f32 moveDistance = distance < MOVE_DISTANCE_MAX ? distance + GfDataUtil::getMoveDistance(achievement.moveType) : GfDataUtil::getMoveDistance(achievement.moveType);
         u32 meter = moveDistance;
         if (meter != 0) {
           moveDistance -= meter;

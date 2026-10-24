@@ -54,8 +54,7 @@ void FrameManager::setLockFrame(bool isLock, f32 frame) {
 }
 
 FrameManager::FrameManager()
-    : flags(0), mPauseBits(0), frame(0.0f), mTotalFrame(0.0f), mSkipStartFrame(0.0f), mNextFrame(0.0f), mReachedFrame(0.0f),
-      mMaxFrame(DEFAULT_MAX_FRAME), mAccType(ACC_TYPE_NORMAL), mFrameInfo() {
+    : flags(0), mPauseBits(0), frame(0.0f), mTotalFrame(0.0f), mSkipStartFrame(0.0f), mNextFrame(0.0f), mReachedFrame(0.0f), mMaxFrame(DEFAULT_MAX_FRAME), mAccType(ACC_TYPE_NORMAL), mFrameInfo() {
   dispFlags = DISP_FLAG_SYNCFRAME;
   for (u32 i = 0; i < PAUSE_TYPE_COUNT; i++) {
     mPauseHandles[i] = reinterpret_cast<gf::GF_PAUSE_HANDLE *>(-1);
@@ -79,8 +78,7 @@ void FrameManager::render() {
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFont(30, height - 55, "TIME");
   fw::debug::drawLineSquare2D(mm::Rect<s32>(65, height - 37, width - 130, 15), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
-  fw::debug::drawSquare2D(mm::Rect<s32>(65, height - 36, (width - 130) * this->frame / __builtin_fmaxf(mMaxFrame, 1.0f), 14),
-                          mm::Col4(1.0f, 0.0f, 0.0f, 0.25f));
+  fw::debug::drawSquare2D(mm::Rect<s32>(65, height - 36, (width - 130) * this->frame / __builtin_fmaxf(mMaxFrame, 1.0f), 14), mm::Col4(1.0f, 0.0f, 0.0f, 0.25f));
   s32 lineTop = height - 46;
   s32 barWidth = ml::DevGraph::getRootWidth() - 130;
   for (size_t i = 0; i < mKeyFrames.size(); i++) {

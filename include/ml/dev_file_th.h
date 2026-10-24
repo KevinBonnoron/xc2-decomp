@@ -19,9 +19,7 @@ public:
 };
 
 struct DevFileParamTh {
-  DevFileParamTh()
-      : path(nullptr), _08(0), _10(0), buffer(nullptr), offset(0), readSize(0), _54(0), _58(1), _5c(0), event(nullptr), priority(10), _6c(true),
-        _6d(false), _6e(false) {}
+  DevFileParamTh() : path(nullptr), _08(0), _10(0), buffer(nullptr), offset(0), readSize(0), _54(0), _58(1), _5c(0), event(nullptr), priority(10), _6c(true), _6d(false), _6e(false) {}
 
   const char *path;
   u32 _08;

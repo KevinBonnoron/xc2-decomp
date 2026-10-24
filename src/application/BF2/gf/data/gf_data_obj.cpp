@@ -71,9 +71,7 @@ enum {
   ENHANCE_EFFECT_ARMOR_ADD = 146,
 };
 
-DataObjDriver::DataObjDriver(u32 id) : data(nullptr), handle(INVALID_HANDLE), virtualData(nullptr), virtualEquipWeapons(), menuParam(false) {
-  setup(id);
-}
+DataObjDriver::DataObjDriver(u32 id) : data(nullptr), handle(INVALID_HANDLE), virtualData(nullptr), virtualEquipWeapons(), menuParam(false) { setup(id); }
 
 void DataObjDriver::setup(u32 id) {
   this->id = id;
@@ -82,8 +80,7 @@ void DataObjDriver::setup(u32 id) {
   }
 }
 
-DataObjDriver::DataObjDriver(GF_OBJ_HANDLE *handle)
-    : id(0), data(nullptr), handle(handle), virtualData(nullptr), virtualEquipWeapons(), menuParam(false) {
+DataObjDriver::DataObjDriver(GF_OBJ_HANDLE *handle) : id(0), data(nullptr), handle(handle), virtualData(nullptr), virtualEquipWeapons(), menuParam(false) {
   GfObjAcc objAcc(handle);
   setup(objAcc.getDriverId());
 }
@@ -784,9 +781,7 @@ u32 DataObjBlade::getNorAtkDmgMax(bool isVirtual) const {
 
 u32 DataObjDriver::getEquipAcce(u32 slot, bool isVirtual) const { return GfDataDriver::getEquipAcce(*get(isVirtual), slot); }
 
-u32 DataObjDriver::getEquipAcceResult(u32 slot, u32 accessory, bool isVirtual) const {
-  return GfEquipUtil::getEquipAcceResult(*get(isVirtual), slot, accessory);
-}
+u32 DataObjDriver::getEquipAcceResult(u32 slot, u32 accessory, bool isVirtual) const { return GfEquipUtil::getEquipAcceResult(*get(isVirtual), slot, accessory); }
 
 int DataObjDriver::getBladeSet(bool isVirtual) const { return GfDataDriver::getBladeSet(*get(isVirtual)); }
 
@@ -1717,9 +1712,7 @@ u32 DataObjEnemyBlade::getPersonality() const { return dataBlade->personality; }
 
 u32 DataObjEnemyBlade::getCoolTime() const { return dataBlade->coolTime; }
 
-DataObjNpc::DataObjNpc(GF_OBJ_HANDLE *handle) : handle(handle), id(0) {
-  id = mm::mtl::dynamicCast<GfObjSetupNpc>(GfObjManager::getObjInfo(handle)->setup)->id;
-}
+DataObjNpc::DataObjNpc(GF_OBJ_HANDLE *handle) : handle(handle), id(0) { id = mm::mtl::dynamicCast<GfObjSetupNpc>(GfObjManager::getObjInfo(handle)->setup)->id; }
 
 DataObjNpc::DataObjNpc(u32 id) : handle(INVALID_HANDLE), id(id) {}
 
@@ -1745,9 +1738,7 @@ u32 DataObjNpc::getFootStepEffect() const { return GfDataNpc::getFootStepEffect(
 
 u32 DataObjNpc::getEyeRotControl() const { return GfDataNpc::getEyeRotControl(getBdatId()); }
 
-DataObjMap::DataObjMap(GF_OBJ_HANDLE *handle) : handle(handle), id(0) {
-  id = mm::mtl::dynamicCast<GfObjSetupMap>(GfObjManager::getObjInfo(handle)->setup)->id;
-}
+DataObjMap::DataObjMap(GF_OBJ_HANDLE *handle) : handle(handle), id(0) { id = mm::mtl::dynamicCast<GfObjSetupMap>(GfObjManager::getObjInfo(handle)->setup)->id; }
 
 DataObjMap::DataObjMap(u32 id) : handle(INVALID_HANDLE), id(id) {}
 
@@ -1757,9 +1748,7 @@ const char *DataObjMap::getName() const { return GfBdatMaplist::get()->getMaplis
 
 u32 DataObjMap::getBdatId() const { return id; }
 
-DataObjMob::DataObjMob(GF_OBJ_HANDLE *handle) : handle(handle), id(0) {
-  id = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(handle)->setup)->id;
-}
+DataObjMob::DataObjMob(GF_OBJ_HANDLE *handle) : handle(handle), id(0) { id = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(handle)->setup)->id; }
 
 DataObjMob::DataObjMob(u32 id) : handle(INVALID_HANDLE), id(id) {}
 
@@ -1783,9 +1772,7 @@ u32 DataObjMob::getFootStep() const { return GfDataMob::getFootStep(getBdatId())
 
 u32 DataObjMob::getFootStepEffect() const { return GfDataMob::getFootStepEffect(getBdatId()); }
 
-DataObjUiObj::DataObjUiObj(GF_OBJ_HANDLE *handle) : handle(handle), id(0) {
-  id = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(handle)->setup)->id;
-}
+DataObjUiObj::DataObjUiObj(GF_OBJ_HANDLE *handle) : handle(handle), id(0) { id = mm::mtl::dynamicCast<GfObjSetupMob>(GfObjManager::getObjInfo(handle)->setup)->id; }
 
 DataObjUiObj::DataObjUiObj(u32 id) : handle(INVALID_HANDLE), id(id) {}
 

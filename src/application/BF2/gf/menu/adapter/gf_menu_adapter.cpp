@@ -25,8 +25,7 @@
 
 namespace gf {
 
-GfMenuAdapter::GfMenuAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAfter, bool isUpdateAlways)
-    : plugin(nullptr), flags(0), linkedObject(0), rewriteNumber(nullptr) {
+GfMenuAdapter::GfMenuAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAfter, bool isUpdateAlways) : plugin(nullptr), flags(0), linkedObject(0), rewriteNumber(nullptr) {
   attachPlugin(plugin);
   flags |= FLAG_CHANGED;
   if (isUpdateAlways) {

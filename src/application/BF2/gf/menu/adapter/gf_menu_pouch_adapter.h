@@ -51,8 +51,7 @@ public:
 
   class ReferenceIndexReferenceDriverConverter : public IConverter {
   public:
-    ReferenceIndexReferenceDriverConverter(mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driverIndex)
-        : number(number), driverIndex(driverIndex) {}
+    ReferenceIndexReferenceDriverConverter(mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driverIndex) : number(number), driverIndex(driverIndex) {}
     ~ReferenceIndexReferenceDriverConverter() override { number = nullptr; }
     u32 getPouchIndex() override { return number->number; }
     u32 getDriverId() override { return GfMenuReference::getReferenceDriverID(driverIndex); }
@@ -65,12 +64,10 @@ public:
   ~GfMenuPouchAdapter() override;
   static GfMenuPouchAdapter *create(u32 handle, u32 type, u16 pouchIndex, u32 driver, bool isUpdateAlways);
   bool update_PouchRemainTime();
-  static GfMenuPouchAdapter *createFromReferenceIndex(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driver,
-                                                      bool isUpdateAlways);
+  static GfMenuPouchAdapter *createFromReferenceIndex(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driver, bool isUpdateAlways);
   static GfMenuPouchAdapter *createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways);
   static GfMenuPouchAdapter *createFromReferenceDriver(u32 handle, u32 type, u32 pouchIndex, u32 driverIndex, bool isUpdateAlways);
-  static GfMenuPouchAdapter *createFromReferenceIndexReferenceDriver(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number,
-                                                                     u32 driverIndex, bool isUpdateAlways);
+  static GfMenuPouchAdapter *createFromReferenceIndexReferenceDriver(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driverIndex, bool isUpdateAlways);
   void update(const fw::UpdateInfo &info) override;
 
   mm::mtl::Delegate<bool()> updater;

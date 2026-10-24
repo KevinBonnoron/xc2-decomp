@@ -12,9 +12,8 @@ LayerSetManager::LayerSetManager() : layerManager(nullptr) {}
 bool LayerSetManager::initialize() {
   if (layerManager == nullptr) {
     // __LINE__ of the game: it is the line argument of the operator new.
-#line 30
-    layerManager =
-        new (Framework::getAllocator(), 16, __FILE__, __LINE__) layer::LayerManager(Framework::get()->scn, FrameworkMemory::getMem(1), 0xe00000);
+#line 31
+    layerManager = new (Framework::getAllocator(), 16, __FILE__, __LINE__) layer::LayerManager(Framework::get()->scn, FrameworkMemory::getMem(1), 0xe00000);
   }
 
   return true;

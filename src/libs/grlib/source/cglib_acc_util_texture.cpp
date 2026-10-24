@@ -626,9 +626,7 @@ f32 CGLibAccUtilTexture::texaccread_f32_err(u32 index) { return 0.0f; }
 
 int CGLibAccUtilTexture::texaccread_int_8(u32 index) { return m_pixel[index]; }
 
-int CGLibAccUtilTexture::texaccread_int_16_float(u32 index) {
-  return CGLibUtilPixel::convF16toF32(*reinterpret_cast<u16 *>(m_pixel + index * 2)) * 255.0f;
-}
+int CGLibAccUtilTexture::texaccread_int_16_float(u32 index) { return CGLibUtilPixel::convF16toF32(*reinterpret_cast<u16 *>(m_pixel + index * 2)) * 255.0f; }
 
 int CGLibAccUtilTexture::texaccread_int_16_int(u32 index) { return *reinterpret_cast<s16 *>(m_pixel + index * 2); }
 
@@ -646,39 +644,25 @@ int CGLibAccUtilTexture::texaccread_int_err(u32 index) { return 0; }
 
 void CGLibAccUtilTexture::texaccwrite_f32_8(const f32 *values, u32 index) { m_pixel[index] = static_cast<int>(values[index] * 255.0f); }
 
-void CGLibAccUtilTexture::texaccwrite_f32_16_float(const f32 *values, u32 index) {
-  *reinterpret_cast<u16 *>(m_pixel + index * 2) = CGLibUtilPixel::convF32toF16(values[index]);
-}
+void CGLibAccUtilTexture::texaccwrite_f32_16_float(const f32 *values, u32 index) { *reinterpret_cast<u16 *>(m_pixel + index * 2) = CGLibUtilPixel::convF32toF16(values[index]); }
 
-void CGLibAccUtilTexture::texaccwrite_f32_16_int(const f32 *values, u32 index) {
-  *reinterpret_cast<s16 *>(m_pixel + index * 2) = static_cast<int>(values[index]);
-}
+void CGLibAccUtilTexture::texaccwrite_f32_16_int(const f32 *values, u32 index) { *reinterpret_cast<s16 *>(m_pixel + index * 2) = static_cast<int>(values[index]); }
 
-void CGLibAccUtilTexture::texaccwrite_f32_16_uint(const f32 *values, u32 index) {
-  *reinterpret_cast<u16 *>(m_pixel + index * 2) = static_cast<int>(values[index]);
-}
+void CGLibAccUtilTexture::texaccwrite_f32_16_uint(const f32 *values, u32 index) { *reinterpret_cast<u16 *>(m_pixel + index * 2) = static_cast<int>(values[index]); }
 
-void CGLibAccUtilTexture::texaccwrite_f32_16_unom(const f32 *values, u32 index) {
-  *reinterpret_cast<u16 *>(m_pixel + index * 2) = static_cast<int>(values[index] * 65535.0f);
-}
+void CGLibAccUtilTexture::texaccwrite_f32_16_unom(const f32 *values, u32 index) { *reinterpret_cast<u16 *>(m_pixel + index * 2) = static_cast<int>(values[index] * 65535.0f); }
 
 void CGLibAccUtilTexture::texaccwrite_f32_32_float(const f32 *values, u32 index) { *reinterpret_cast<f32 *>(m_pixel + index * 4) = values[index]; }
 
-void CGLibAccUtilTexture::texaccwrite_f32_32_int(const f32 *values, u32 index) {
-  *reinterpret_cast<s32 *>(m_pixel + index * 4) = static_cast<int>(values[index]);
-}
+void CGLibAccUtilTexture::texaccwrite_f32_32_int(const f32 *values, u32 index) { *reinterpret_cast<s32 *>(m_pixel + index * 4) = static_cast<int>(values[index]); }
 
-void CGLibAccUtilTexture::texaccwrite_f32_32_uint(const f32 *values, u32 index) {
-  *reinterpret_cast<u32 *>(m_pixel + index * 4) = static_cast<int>(values[index]);
-}
+void CGLibAccUtilTexture::texaccwrite_f32_32_uint(const f32 *values, u32 index) { *reinterpret_cast<u32 *>(m_pixel + index * 4) = static_cast<int>(values[index]); }
 
 void CGLibAccUtilTexture::texaccwrite_f32_err(const f32 *values, u32 index) {}
 
 void CGLibAccUtilTexture::texaccwrite_int_8(const int *values, u32 index) { m_pixel[index] = values[index]; }
 
-void CGLibAccUtilTexture::texaccwrite_int_16_float(const int *values, u32 index) {
-  *reinterpret_cast<u16 *>(m_pixel + index * 2) = CGLibUtilPixel::convF32toF16(values[index] * (1.0f / 255.0f));
-}
+void CGLibAccUtilTexture::texaccwrite_int_16_float(const int *values, u32 index) { *reinterpret_cast<u16 *>(m_pixel + index * 2) = CGLibUtilPixel::convF32toF16(values[index] * (1.0f / 255.0f)); }
 
 void CGLibAccUtilTexture::texaccwrite_int_16_int(const int *values, u32 index) { *reinterpret_cast<s16 *>(m_pixel + index * 2) = values[index]; }
 
@@ -686,9 +670,7 @@ void CGLibAccUtilTexture::texaccwrite_int_16_uint(const int *values, u32 index) 
 
 void CGLibAccUtilTexture::texaccwrite_int_16_unom(const int *values, u32 index) { *reinterpret_cast<u16 *>(m_pixel + index * 2) = values[index]; }
 
-void CGLibAccUtilTexture::texaccwrite_int_32_float(const int *values, u32 index) {
-  *reinterpret_cast<f32 *>(m_pixel + index * 4) = values[index] * (1.0f / 255.0f);
-}
+void CGLibAccUtilTexture::texaccwrite_int_32_float(const int *values, u32 index) { *reinterpret_cast<f32 *>(m_pixel + index * 4) = values[index] * (1.0f / 255.0f); }
 
 void CGLibAccUtilTexture::texaccwrite_int_32_int(const int *values, u32 index) { *reinterpret_cast<s32 *>(m_pixel + index * 4) = values[index]; }
 

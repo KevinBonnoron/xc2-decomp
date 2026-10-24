@@ -7,7 +7,7 @@
 #include <utility>
 
 #include "dr/dr_draw_callback.h"
-#include "framework/effect/effect_caster.h"
+#include "framework/effect/effect_caster.h" // IWYU pragma: keep
 #include "framework/manager_object.h"
 #include "ml/stl_custom_allocator.h"
 #include "mm_mtl/fixed_array.h"
@@ -56,12 +56,8 @@ public:
     EffectPack *pack;
   };
 
-  typedef std::unordered_map<std::string, EffectPack *, std::hash<std::string>, std::equal_to<std::string>,
-                             ml::StlCustomAllocator<std::pair<const std::string, EffectPack *>>>
-      PackMap;
-  typedef std::unordered_map<std::string, EffectData *, std::hash<std::string>, std::equal_to<std::string>,
-                             ml::StlCustomAllocator<std::pair<const std::string, EffectData *>>>
-      DataMap;
+  typedef std::unordered_map<std::string, EffectPack *, std::hash<std::string>, std::equal_to<std::string>, ml::StlCustomAllocator<std::pair<const std::string, EffectPack *>>> PackMap;
+  typedef std::unordered_map<std::string, EffectData *, std::hash<std::string>, std::equal_to<std::string>, ml::StlCustomAllocator<std::pair<const std::string, EffectData *>>> DataMap;
 
   ~EffectManager() override;
   bool initialize() override;

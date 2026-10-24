@@ -4,9 +4,7 @@
 
 namespace event {
 
-MemoryManager::MemoryManager()
-    : flags(0), mTxtbufState(0), mIsLargeEvent(0), mStaticSize(0), mSysSize(0), mResSize(0), mMotstmSize(0), mHighestSysHeap(0), mHighestResHeap(0),
-      mTxtbufTotalSize(0) {}
+MemoryManager::MemoryManager() : flags(0), mTxtbufState(0), mIsLargeEvent(0), mStaticSize(0), mSysSize(0), mResSize(0), mMotstmSize(0), mHighestSysHeap(0), mHighestResHeap(0), mTxtbufTotalSize(0) {}
 
 void MemoryManager::clear() {
   clearHighestMemHeap();

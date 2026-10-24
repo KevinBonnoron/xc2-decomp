@@ -35,30 +35,22 @@ public:
 
 class UICtrlCurveSin90 : public UICtrlCurve {
 public:
-  virtual f32 calc(f32 time, f32 start, f32 end, f32 duration) const {
-    return (end - start) * sinf(time / duration * 90.0f * mm::DEG_TO_RAD) + start;
-  }
+  virtual f32 calc(f32 time, f32 start, f32 end, f32 duration) const { return (end - start) * sinf(time / duration * 90.0f * mm::DEG_TO_RAD) + start; }
 };
 
 class UICtrlCurveSin180 : public UICtrlCurve {
 public:
-  virtual f32 calc(f32 time, f32 start, f32 end, f32 duration) const {
-    return (end - start) * sinf(time / duration * 180.0f * mm::DEG_TO_RAD) + start;
-  }
+  virtual f32 calc(f32 time, f32 start, f32 end, f32 duration) const { return (end - start) * sinf(time / duration * 180.0f * mm::DEG_TO_RAD) + start; }
 };
 
 class UICtrlCurveSin90Rev : public UICtrlCurve {
 public:
-  virtual f32 calc(f32 time, f32 start, f32 end, f32 duration) const {
-    return (end - start) * (1.0f - sinf((time / duration * 90.0f + 90.0f) * mm::DEG_TO_RAD)) + start;
-  }
+  virtual f32 calc(f32 time, f32 start, f32 end, f32 duration) const { return (end - start) * (1.0f - sinf((time / duration * 90.0f + 90.0f) * mm::DEG_TO_RAD)) + start; }
 };
 
 class UICtrlCurveSin180Rev : public UICtrlCurve {
 public:
-  virtual f32 calc(f32 time, f32 start, f32 end, f32 duration) const {
-    return (end - start) * (1.0f - fabsf(sinf((time / duration * 180.0f + 90.0f) * mm::DEG_TO_RAD))) + start;
-  }
+  virtual f32 calc(f32 time, f32 start, f32 end, f32 duration) const { return (end - start) * (1.0f - fabsf(sinf((time / duration * 180.0f + 90.0f) * mm::DEG_TO_RAD))) + start; }
 };
 
 } // namespace ui

@@ -151,8 +151,8 @@ bool GfPlayFactory::createMenuKizunaring(u32 blade) {
 }
 
 bool GfPlayFactory::createSalvage(GF_OBJ_HANDLE *handle) {
-  if (!GfGameManager::isLeaveGameForDebug() && !GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL) &&
-      !GfSequentialPlay::isInnerState(GF_STATE_RESET_BLADE) && GfGameManager::isControlFree()) {
+  if (!GfGameManager::isLeaveGameForDebug() && !GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL) && !GfSequentialPlay::isInnerState(GF_STATE_RESET_BLADE) &&
+      GfGameManager::isControlFree()) {
     GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
     GfSequentialPlay::pushState(GF_STATE_SALVAGE);
     GfSequentialPlay::addWaitBattleEnd(0);
@@ -722,8 +722,7 @@ bool GfPlayFactory::createResetBladeForBattleEnd(u32 partyId, int blade, bool is
     GfReqCommand::reqChangeBladeWithSetId(partyId, blade, true);
     return true;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_EVENT) || GfSequentialPlay::isSequenceSpecialAction() ||
-      GfSequentialPlay::isExistResetBladeParty(partyId)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_EVENT) || GfSequentialPlay::isSequenceSpecialAction() || GfSequentialPlay::isExistResetBladeParty(partyId)) {
     return false;
   }
   GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
@@ -754,8 +753,7 @@ bool GfPlayFactory::createResetBladeForBladeSwitch(u32 partyId, int blade) {
     GfReqCommand::reqChangeBladeWithSetId(partyId, blade, true);
     return true;
   }
-  if (GfSequentialPlay::isInnerState(GF_STATE_EVENT) || GfSequentialPlay::isSequenceSpecialAction() ||
-      GfSequentialPlay::isExistResetBladeParty(partyId)) {
+  if (GfSequentialPlay::isInnerState(GF_STATE_EVENT) || GfSequentialPlay::isSequenceSpecialAction() || GfSequentialPlay::isExistResetBladeParty(partyId)) {
     return false;
   }
   GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);

@@ -12,8 +12,7 @@ static GfMenuFlagAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuFlagAdapter::update_FlagNum, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 1, 99}},
 };
 
-GfMenuFlagAdapter::GfMenuFlagAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), flagBits(0), flagIndex(0), flagValue(0) {}
+GfMenuFlagAdapter::GfMenuFlagAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), flagBits(0), flagIndex(0), flagValue(0) {}
 
 GfMenuFlagAdapter::~GfMenuFlagAdapter() {}
 

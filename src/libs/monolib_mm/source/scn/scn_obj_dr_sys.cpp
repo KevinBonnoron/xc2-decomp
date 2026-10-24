@@ -19,10 +19,7 @@
 
 namespace ml {
 
-ScnObjClipDySys::ScnObjClipDySys(Scn *scn, const void *data, int screen)
-    : ScnObjClip(scn), m_clipObj(nullptr), m_screen(screen), m_listName("clipList") {
-  createClipObj(data);
-}
+ScnObjClipDySys::ScnObjClipDySys(Scn *scn, const void *data, int screen) : ScnObjClip(scn), m_clipObj(nullptr), m_screen(screen), m_listName("clipList") { createClipObj(data); }
 
 void ScnObjClipDySys::createClipObj(const void *data) {
   DrCreator creator;
@@ -133,9 +130,7 @@ void ScnObjIBLDr::setName(const char *name) {}
 
 const char *ScnObjIBLDr::getName() const { return "IBLList"; }
 
-ScnObjLightDrSys::ScnObjLightDrSys(Scn *scn, const void *data, int screen) : ScnObjLight(scn), m_data(data), m_drEnv(nullptr), m_screen(screen) {
-  createDrLgt();
-}
+ScnObjLightDrSys::ScnObjLightDrSys(Scn *scn, const void *data, int screen) : ScnObjLight(scn), m_data(data), m_drEnv(nullptr), m_screen(screen) { createDrLgt(); }
 
 void ScnObjLightDrSys::createDrLgt() {
   if (!m_scn->poolObj->isExistLgtEnv()) {
@@ -238,10 +233,7 @@ ScnObj *ScnObjLightDrSys::create(Scn *scn, const void *data, int screen) {
 
 bool ScnObjLightDrSys::isEnv() const { return m_drEnv != nullptr; }
 
-ScnObjModelDrSysStandard::ScnObjModelDrSysStandard(Scn *scn, const void *data, const char *name, int screen)
-    : ScnObjModelDrSys(scn, data, name), _438(nullptr) {
-  createScnMdl(screen);
-}
+ScnObjModelDrSysStandard::ScnObjModelDrSysStandard(Scn *scn, const void *data, const char *name, int screen) : ScnObjModelDrSys(scn, data, name), _438(nullptr) { createScnMdl(screen); }
 
 void ScnObjModelDrSysStandard::createScnMdl(int screen) {
   if (m_drMdl == nullptr) {

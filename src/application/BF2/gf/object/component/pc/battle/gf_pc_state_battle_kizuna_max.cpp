@@ -12,9 +12,7 @@ bool StateBattleKizunaMax::Enter(GfComBehaviorPc *behavior, ai::State *previous)
 
 void StateBattleKizunaMax::Leave(GfComBehaviorPc *behavior, ai::State *next) {}
 
-void StateBattleKizunaMax::Update(btl::BattleCharacter *character, GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
-  StateBattleActionBase::Update(character, behavior, info);
-}
+void StateBattleKizunaMax::Update(btl::BattleCharacter *character, GfComBehaviorPc *behavior, const fw::UpdateInfo &info) { StateBattleActionBase::Update(character, behavior, info); }
 
 } // namespace pc
 } // namespace gf

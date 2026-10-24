@@ -74,8 +74,7 @@ static bool isInGameObj(GF_OBJ_HANDLE *handle) {
 
 static bool isUpdateDriver(const GfMemberInfo &member) {
   GfObjAcc objAcc(member.driver);
-  return GfGameObj::isValidGameObj(member.driver, true, nullptr) || GfGameObj::isEnterGameObj(member.driver) || objAcc.isDestroy() ||
-         objAcc.isRebuild();
+  return GfGameObj::isValidGameObj(member.driver, true, nullptr) || GfGameObj::isEnterGameObj(member.driver) || objAcc.isDestroy() || objAcc.isRebuild();
 }
 
 GfSelectBlade *GfSelectBlade::s_pThis;
@@ -377,9 +376,7 @@ GF_OBJ_HANDLE *GfGameParty::getHandleBladeByBdatID(u32 blade) {
   return INVALID_HANDLE;
 }
 
-GfWeapon *GfGameParty::getHandleWeapon(u32 partyId, int slot) {
-  return GfMountManager::getGfWeapon(getHandleBlade(partyId, getBladeSetId(partyId, slot)), GFATTACH_WEAPON);
-}
+GfWeapon *GfGameParty::getHandleWeapon(u32 partyId, int slot) { return GfMountManager::getGfWeapon(getHandleBlade(partyId, getBladeSetId(partyId, slot)), GFATTACH_WEAPON); }
 
 void GfGameParty::destroyHandleWeapon(u32 partyId, int slot) {
   GfWeapon *weapon = GfMountManager::getGfWeapon(getHandleBlade(partyId, getBladeSetId(partyId, slot)), GFATTACH_WEAPON);
@@ -1375,8 +1372,8 @@ int GfSelectBlade::getChangeBladeIndex(GF_OBJ_HANDLE *handle, CHANGE_BLADE chang
 
 void GfSelectBlade::setBladeSetID(GF_OBJ_HANDLE *handle, int slot) {
   DataParamAcc paramAcc(handle);
-  if (paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER && paramAcc.getBdatId() == DRIVER_REX &&
-      paramAcc.getBlade(SLOT_HIKARI, false) == BLADE_HIKARI && paramAcc.getBlade(slot, false) == BLADE_HOMURA) {
+  if (paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER && paramAcc.getBdatId() == DRIVER_REX && paramAcc.getBlade(SLOT_HIKARI, false) == BLADE_HIKARI &&
+      paramAcc.getBlade(slot, false) == BLADE_HOMURA) {
     if (paramAcc.getBlade(-1, false) == BLADE_HIKARI) {
       paramAcc.setBladeSet(slot);
       s_isHomuraSelected = true;
@@ -1395,8 +1392,8 @@ void GfSelectBlade::setBladeSetID(GF_OBJ_HANDLE *handle, int slot) {
 
 int GfSelectBlade::getBladeSetID(GF_OBJ_HANDLE *handle, int slot) {
   DataParamAcc paramAcc(handle);
-  if (paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER && paramAcc.getBdatId() == DRIVER_REX &&
-      paramAcc.getBlade(SLOT_HIKARI, false) == BLADE_HIKARI && paramAcc.getBlade(slot, false) == BLADE_HOMURA) {
+  if (paramAcc.isValid() && paramAcc.getObjType() == OBJECT_TYPE_DRIVER && paramAcc.getBdatId() == DRIVER_REX && paramAcc.getBlade(SLOT_HIKARI, false) == BLADE_HIKARI &&
+      paramAcc.getBlade(slot, false) == BLADE_HOMURA) {
     if (paramAcc.getBlade(-1, false) == BLADE_HIKARI) {
       for (int homuraSlot = 0; homuraSlot < SLOT_HIKARI; homuraSlot++) {
         if (paramAcc.getBlade(homuraSlot, false) == BLADE_HOMURA) {

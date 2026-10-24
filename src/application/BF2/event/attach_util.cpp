@@ -21,16 +21,14 @@ void AttachUtil::setCaster(bool isSet, gf::GF_OBJ_HANDLE *handle, u32 effect) {
     return;
   }
   if (isSet) {
-    fw::EffectCasterBase *caster =
-        mm::mtl::dynamicCast<gf::GfComEffectCaster>(gf::GfObjUtil::getObj(handle)->components[gf::GfComEffectCaster::COMPONENT_INDEX])->unknown388;
+    fw::EffectCasterBase *caster = mm::mtl::dynamicCast<gf::GfComEffectCaster>(gf::GfObjUtil::getObj(handle)->components[gf::GfComEffectCaster::COMPONENT_INDEX])->unknown388;
     fw::EffectManager::get()->setParam(effect, caster, 1.0f);
   } else {
     fw::EffectManager::get()->setParam(effect, nullptr, 1.0f);
   }
 }
 
-void AttachUtil::setMount(bool isSet, gf::GF_OBJ_HANDLE *handle, u32 effect, const char *bone, const mm::Vec3 &offset, bool isRotate,
-                          ATTACH_TYPE type) {
+void AttachUtil::setMount(bool isSet, gf::GF_OBJ_HANDLE *handle, u32 effect, const char *bone, const mm::Vec3 &offset, bool isRotate, ATTACH_TYPE type) {
   if (handle == gf::INVALID_HANDLE) {
     return;
   }

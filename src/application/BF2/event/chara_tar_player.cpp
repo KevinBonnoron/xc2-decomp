@@ -81,8 +81,7 @@ void CharaTarPlayer::update(f32 delta) {
 
 void CharaTarPlayer::setTargetPos(const mm::Vec3 &position) { targetPos = position; }
 
-CharaTarPlayerMot::CharaTarPlayerMot()
-    : handle(gf::INVALID_HANDLE), weight(nullptr), flags(0), request(REQUEST_NONE), requestFrame(0.0f), isNoSpine(false), aimmotWeights() {}
+CharaTarPlayerMot::CharaTarPlayerMot() : handle(gf::INVALID_HANDLE), weight(nullptr), flags(0), request(REQUEST_NONE), requestFrame(0.0f), isNoSpine(false), aimmotWeights() {}
 
 void CharaTarPlayerMot::create(gf::GF_OBJ_HANDLE *handle, CharaWeightPlayer *weight) {
   this->handle = handle;

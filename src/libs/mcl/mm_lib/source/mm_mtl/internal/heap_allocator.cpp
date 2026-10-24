@@ -92,8 +92,7 @@ bool HeapAllocator::insideArea(const void *adr) const {
 // The assert line of the game: it is the line argument of the assert.
 #line 160
   MM_ASSERT(m_buffer != 0 && "allocator is not create");
-  return reinterpret_cast<size_t>(m_buffer) < reinterpret_cast<size_t>(adr) &&
-         reinterpret_cast<size_t>(adr) < reinterpret_cast<size_t>(m_buffer) + m_bufferSize;
+  return reinterpret_cast<size_t>(m_buffer) < reinterpret_cast<size_t>(adr) && reinterpret_cast<size_t>(adr) < reinterpret_cast<size_t>(m_buffer) + m_bufferSize;
 }
 
 bool HeapAllocator::hasMemory(const void *adr) const {

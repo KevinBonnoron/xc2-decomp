@@ -47,10 +47,8 @@ public:
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual u32 duplicateImpl(u32 parent);
 
-  static UIScreenObject *create(UILayoutObject *parent, ml::ScnRenderDrViewCtrl *viewCtrl, fw::ModelObject *model, const mm::mtl::FixStr<32> &name,
-                                mm::mtl::IAllocator *allocator);
-  static UIScreenObject *createOnMemory(UILayoutObject *parent, u32 width, u32 height, const mm::mtl::FixStr<32> &name,
-                                        mm::mtl::IAllocator *allocator, const OnMemoryInfo &info);
+  static UIScreenObject *create(UILayoutObject *parent, ml::ScnRenderDrViewCtrl *viewCtrl, fw::ModelObject *model, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator);
+  static UIScreenObject *createOnMemory(UILayoutObject *parent, u32 width, u32 height, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator, const OnMemoryInfo &info);
   u32 getOnMemoryPixelSize() const;
   void *getOnMemoryBuffer() const;
   void swapOnMemoryBuffer();

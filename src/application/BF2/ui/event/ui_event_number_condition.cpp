@@ -6,8 +6,7 @@
 
 namespace ui {
 
-UIEventNumberCondition::UIEventNumberCondition(u32 event, u32 value)
-    : UIEventCondition(event, value), plugin(nullptr), threshold(0.0f), prevNumber(0), first(true), mode(MODE_CHANGE) {}
+UIEventNumberCondition::UIEventNumberCondition(u32 event, u32 value) : UIEventCondition(event, value), plugin(nullptr), threshold(0.0f), prevNumber(0), first(true), mode(MODE_CHANGE) {}
 
 UIEventNumberCondition::~UIEventNumberCondition() { ; }
 

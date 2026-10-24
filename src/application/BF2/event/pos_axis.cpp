@@ -56,8 +56,7 @@ mm::Mat44 DataManager::getPosAxis(u32 axis) {
       break;
     case PosAxis::AXIS_SAY:
       if (mm::mtl::Singleton<TextManager>::getPtr()->getTalker() != nullptr) {
-        ObjectChara *chara =
-            mm::mtl::Singleton<ObjectManager>::getPtr()->searchByHandle(mm::mtl::Singleton<TextManager>::getPtr()->getTalker()->getHandle());
+        ObjectChara *chara = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByHandle(mm::mtl::Singleton<TextManager>::getPtr()->getTalker()->getHandle());
         if (chara != nullptr) {
           mat.setRotXYZ(chara->getRot());
           mat.setTrans(chara->getPos());

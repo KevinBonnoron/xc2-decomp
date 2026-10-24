@@ -21,8 +21,7 @@ static GfMenuBladeDataAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuBladeDataAdapter::update_AffinityIcon, {GfMenuAdapter::PLUGIN_TYPE_IMAGE, 0, 0}},
 };
 
-GfMenuBladeDataAdapter::GfMenuBladeDataAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), blade(0), driver(0), artsSlot(0) {}
+GfMenuBladeDataAdapter::GfMenuBladeDataAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), blade(0), driver(0), artsSlot(0) {}
 
 GfMenuBladeDataAdapter::~GfMenuBladeDataAdapter() {
   if (converter != nullptr) {

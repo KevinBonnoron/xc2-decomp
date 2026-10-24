@@ -65,8 +65,7 @@ ml::TimeCount s_loadGameTimer;
 
 } // namespace
 
-GfManager::GfManager(const GfSetupParam &param)
-    : initialized(false), destroyNow(false), execFlags(0), gameStart(GAME_START_NONE), frameCount(0), loadGameTime(-1.0f), existSaveData(false) {
+GfManager::GfManager(const GfSetupParam &param) : initialized(false), destroyNow(false), execFlags(0), gameStart(GAME_START_NONE), frameCount(0), loadGameTime(-1.0f), existSaveData(false) {
   s_pThis = this;
   setupParam = param;
   exec = param.exec;
@@ -328,10 +327,7 @@ void GfManager::startGame(bool isExistSaveData, bool isClearGameCheck) {
   setExec(EXEC_STATE_SCENARIO_GAME);
   if (isContinueGame()) {
     GfMapjumpInfo info;
-    info.setupForSaveData(GfDataUtil::getSkipTravelID(),
-                          *GfDataParty::getSavePos(0, true),
-                          *GfDataParty::getSaveRot(0, true) * mm::DEG_TO_RAD,
-                          GfDataUtil::isStartChapterSave());
+    info.setupForSaveData(GfDataUtil::getSkipTravelID(), *GfDataParty::getSavePos(0, true), *GfDataParty::getSaveRot(0, true) * mm::DEG_TO_RAD, GfDataUtil::isStartChapterSave());
     GfPlayFactory::createMapjump(info);
     if (GfDataUtil::isStartChapterSave()) {
       GfPlayFactory::createOneEvent(GfDataUtil::getEventChapterSave());

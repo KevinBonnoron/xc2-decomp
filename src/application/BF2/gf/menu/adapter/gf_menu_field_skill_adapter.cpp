@@ -15,8 +15,7 @@ static GfMenuFieldSkillAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuFieldSkillAdapter::update_Lv, {GfMenuAdapter::PLUGIN_TYPE_NUMBER, 0, 99}},
 };
 
-GfMenuFieldSkillAdapter::GfMenuFieldSkillAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr) {}
+GfMenuFieldSkillAdapter::GfMenuFieldSkillAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr) {}
 
 GfMenuFieldSkillAdapter::~GfMenuFieldSkillAdapter() {
   if (converter != nullptr) {

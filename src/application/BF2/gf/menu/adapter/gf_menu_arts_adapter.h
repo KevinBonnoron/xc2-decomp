@@ -43,9 +43,7 @@ public:
 
   class ListReferenceDriverConverter : public IConverter {
   public:
-    ListReferenceDriverConverter(GfMenuArtsList *list, int listIndex, u32 driverIndex) : list(list), listIndex(listIndex), driverIndex(driverIndex) {
-      list->addRef();
-    }
+    ListReferenceDriverConverter(GfMenuArtsList *list, int listIndex, u32 driverIndex) : list(list), listIndex(listIndex), driverIndex(driverIndex) { list->addRef(); }
     ~ListReferenceDriverConverter() override { mm::mtl::safeRelease(list); }
     void getArtsInfo(MenuArtsInfo &info) override;
     u32 getDriverId() override;
@@ -57,8 +55,7 @@ public:
 
   class ListReferenceDriverConverterReferenceIndex : public IConverter {
   public:
-    ListReferenceDriverConverterReferenceIndex(GfMenuArtsList *list, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driverIndex)
-        : list(list), number(number), driverIndex(driverIndex) {
+    ListReferenceDriverConverterReferenceIndex(GfMenuArtsList *list, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driverIndex) : list(list), number(number), driverIndex(driverIndex) {
       list->addRef();
     }
     ~ListReferenceDriverConverterReferenceIndex() override {
@@ -86,10 +83,8 @@ public:
 
   static GfMenuArtsAdapter *createFromList(u32 handle, u32 type, GfMenuArtsList *list, int listIndex, u32 driver, bool isUpdateAlways);
   static GfMenuArtsAdapter *createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways);
-  static GfMenuArtsAdapter *createFromListReferenceDriver(u32 handle, u32 type, GfMenuArtsList *list, int listIndex, u32 driverIndex,
-                                                          bool isUpdateAlways);
-  static GfMenuArtsAdapter *createFromListReferenceDriverReferenceIndex(u32 handle, u32 type, GfMenuArtsList *list,
-                                                                        mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driverIndex,
+  static GfMenuArtsAdapter *createFromListReferenceDriver(u32 handle, u32 type, GfMenuArtsList *list, int listIndex, u32 driverIndex, bool isUpdateAlways);
+  static GfMenuArtsAdapter *createFromListReferenceDriverReferenceIndex(u32 handle, u32 type, GfMenuArtsList *list, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, u32 driverIndex,
                                                                         bool isUpdateAlways);
   static GfMenuArtsAdapter *createFromReferenceDriverSlot(u32 handle, u32 type, u32 driverIndex, u32 slot, bool isUpdateAlways);
   GfMenuArtsAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways);

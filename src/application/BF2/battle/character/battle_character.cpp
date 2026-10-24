@@ -85,9 +85,7 @@ bool BattleCharacter::IsDriver() const {
   return parameter != nullptr && !parameter->m_invalidTarget && parameter->unknown10 != gf::INVALID_HANDLE;
 }
 
-CharacterParameter *BattleCharacter::GetCharacterParameter(bool isBattle) {
-  return const_cast<CharacterParameter *>(GetCharacterParameterConst(isBattle));
-}
+CharacterParameter *BattleCharacter::GetCharacterParameter(bool isBattle) { return const_cast<CharacterParameter *>(GetCharacterParameterConst(isBattle)); }
 
 gf::GF_OBJ_HANDLE *BattleCharacter::GetControlCharacterHandle() const { return Utility::GetControlCharacterHandle(); }
 
@@ -381,8 +379,7 @@ bool BattleCharacter::IsRegisterCommand(ActionCommand::COMMAND_TYPE type) const 
 }
 
 void BattleCharacter::ActionCommandBladeArts(const ActionCommand *command, ActionCommand::COMMAND_TYPE type) {
-  if ((type == ActionCommand::COMMAND_TYPE_MOVE_DIR_RATE || type == ActionCommand::COMMAND_TYPE_MOVE_LOCK) &&
-      unknown107e == ACTION_PHASE_BLADE_ARTS_MOVE) {
+  if ((type == ActionCommand::COMMAND_TYPE_MOVE_DIR_RATE || type == ActionCommand::COMMAND_TYPE_MOVE_LOCK) && unknown107e == ACTION_PHASE_BLADE_ARTS_MOVE) {
     ActionCommandRun(command, type);
   }
 }

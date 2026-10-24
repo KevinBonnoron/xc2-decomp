@@ -63,12 +63,9 @@ public:
   virtual void apply();
   virtual u32 duplicateImpl(u32 parent);
 
-  static UIPolygonObject *create(UILayoutObject *parent, const PolygonInfo &info, const void *data, u32 streamId, const mm::mtl::FixStr<32> &name,
-                                 mm::mtl::IAllocator *allocator);
-  static UIPolygonObject *createObject(UILayoutObject *parent, const PolygonInfo &info, const mm::mtl::FixStr<32> &name,
-                                       mm::mtl::IAllocator *allocator);
-  static UIPolygonObject *create(UILayoutObject *parent, const PolygonInfo &info, ml::ScnRenderDrCapture *capture, const mm::mtl::FixStr<32> &name,
-                                 mm::mtl::IAllocator *allocator);
+  static UIPolygonObject *create(UILayoutObject *parent, const PolygonInfo &info, const void *data, u32 streamId, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator);
+  static UIPolygonObject *createObject(UILayoutObject *parent, const PolygonInfo &info, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator);
+  static UIPolygonObject *create(UILayoutObject *parent, const PolygonInfo &info, ml::ScnRenderDrCapture *capture, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator);
   static UIShape *createShape(const PolygonInfo &info, mm::mtl::IAllocator *allocator);
 
   UIShape *shape;

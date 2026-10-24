@@ -114,9 +114,7 @@ void UIObjectDispPlugin::execute(UIObjectAcc &acc) {
 
 const mm::mtl::RTTI *UIObjectDispPlugin::getRTTI() const { return &m_rtti; }
 
-bool UIObjectDispPlugin::isNeedUpdate(UIObjectAcc &acc) {
-  return (needUpdate & 1) || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0;
-}
+bool UIObjectDispPlugin::isNeedUpdate(UIObjectAcc &acc) { return (needUpdate & 1) || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0; }
 
 void UIObjectAlphaParam::apply(AdditionalParam &param) const { param.alpha *= alpha; }
 

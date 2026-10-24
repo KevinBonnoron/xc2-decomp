@@ -18,8 +18,8 @@ f32 getValF32(unsigned char *bdat, const char *name, int id) {
 } // namespace
 
 DofManager::DofManager()
-    : dispFlags(0), flags(0), mAxis(1), mDist(0.0f), mCurrentDist(0.0f), mRange(5.0f), mIsAutoFocus(false), mFocusNum(0), mFocusMin(0.1f),
-      mPixel(5.0f), mLens(0.6f), mStrength(4.0f), mBlend(1.0f), mPixelLv(0), mIsHlv(false), mName("") {}
+    : dispFlags(0), flags(0), mAxis(1), mDist(0.0f), mCurrentDist(0.0f), mRange(5.0f), mIsAutoFocus(false), mFocusNum(0), mFocusMin(0.1f), mPixel(5.0f), mLens(0.6f), mStrength(4.0f), mBlend(1.0f),
+      mPixelLv(0), mIsHlv(false), mName("") {}
 
 void DofManager::stop() {
   unsigned char *bdat = Bdat::getFP("EVT_dof");

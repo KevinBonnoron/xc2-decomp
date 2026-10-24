@@ -23,8 +23,7 @@ public:
   static constexpr u32 EFFECT_COUNT = 128;
 
   struct Mount {
-    Mount(u32 effect, const char *bone, mm::Vec3 offset, bool isRotate, ATTACH_TYPE type)
-        : unknown0(effect), unknown8(bone), unknown30(offset), unknown40(isRotate), unknown44(type) {}
+    Mount(u32 effect, const char *bone, mm::Vec3 offset, bool isRotate, ATTACH_TYPE type) : unknown0(effect), unknown8(bone), unknown30(offset), unknown40(isRotate), unknown44(type) {}
 
     // Inferred record layout; original type and member names are unknown.
     u32 unknown0;                 // Effect identifier.

@@ -29,8 +29,7 @@ static GfMenuZoneAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuZoneAdapter::update_ZoneNotice, {GfMenuAdapter::PLUGIN_TYPE_TEXT, 0, 0}},
 };
 
-GfMenuZoneAdapter::GfMenuZoneAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), zone(0), team(0) {}
+GfMenuZoneAdapter::GfMenuZoneAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), zone(0), team(0) {}
 
 GfMenuZoneAdapter::~GfMenuZoneAdapter() {
   if (converter != nullptr) {
@@ -176,8 +175,7 @@ GfMenuZoneAdapter *GfMenuZoneAdapter::createFromReferenceZone(u32 handle, u32 ty
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 
-GfMenuZoneAdapter *GfMenuZoneAdapter::createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number,
-                                                          bool isUpdateAlways) {
+GfMenuZoneAdapter *GfMenuZoneAdapter::createFromReference(u32 handle, u32 type, mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number, bool isUpdateAlways) {
   // __LINE__ must be 161 as in the original source: it is the line argument of operator new.
 #line 161
   ReferenceNumberConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceNumberConverter(number);

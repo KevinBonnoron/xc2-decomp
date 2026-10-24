@@ -62,9 +62,7 @@ void SoundActor::SetPan(f32 pan, f32 fadeTime) {}
 
 int SoundActor::CountPlaySoundHandle() const { return static_cast<SystemCore *>(SoundCore::instance_)->CountPlaySoundHandleActor(this); }
 
-SoundHandle *SoundActor::GetPlaySoundHandle(int index) const {
-  return static_cast<SystemCore *>(SoundCore::instance_)->GetPlaySoundHandle(this, index);
-}
+SoundHandle *SoundActor::GetPlaySoundHandle(int index) const { return static_cast<SystemCore *>(SoundCore::instance_)->GetPlaySoundHandle(this, index); }
 
 void SoundActor::UpdateGameFrame(f32 deltaTime) {}
 

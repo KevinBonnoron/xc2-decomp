@@ -12,8 +12,7 @@ static GfMenuPouchAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuPouchAdapter::update_PouchRemainTime, {GfMenuAdapter::PLUGIN_TYPE_TIME, 3, 0}},
 };
 
-GfMenuPouchAdapter::GfMenuPouchAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), _58(), time(0.0f), pouchIndex(0) {}
+GfMenuPouchAdapter::GfMenuPouchAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), converter(nullptr), _58(), time(0.0f), pouchIndex(0) {}
 
 GfMenuPouchAdapter::~GfMenuPouchAdapter() {
   if (converter != nullptr) {
@@ -54,8 +53,7 @@ GfMenuPouchAdapter *GfMenuPouchAdapter::createFromCoverter(u32 handle, u32 type,
 GfMenuPouchAdapter *GfMenuPouchAdapter::createFromReferenceDriver(u32 handle, u32 type, u32 pouchIndex, u32 driverIndex, bool isUpdateAlways) {
   // __LINE__ must be 207 as in the original source: it is the line argument of operator new.
 #line 207
-  ReferenceDriverConverter *converter =
-      new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverConverter(pouchIndex, driverIndex);
+  ReferenceDriverConverter *converter = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) ReferenceDriverConverter(pouchIndex, driverIndex);
   return createFromCoverter(handle, type, converter, isUpdateAlways);
 }
 

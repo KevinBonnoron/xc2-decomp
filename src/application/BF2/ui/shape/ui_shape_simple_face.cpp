@@ -42,8 +42,7 @@ void UIShapeSimpleFace::writeFaceVertex(const layer::LayerPolyVertex *vertex, u3
   faceDirty = true;
 }
 
-static bool isCross(const layer::LayerPolyVertex &a, const layer::LayerPolyVertex &b, const layer::LayerPolyVertex &c,
-                    const layer::LayerPolyVertex &d) {
+static bool isCross(const layer::LayerPolyVertex &a, const layer::LayerPolyVertex &b, const layer::LayerPolyVertex &c, const layer::LayerPolyVertex &d) {
   f32 ta = (c.x - d.x) * (a.y - c.y) + (c.y - d.y) * (c.x - a.x);
   f32 tb = (c.x - d.x) * (b.y - c.y) + (c.y - d.y) * (c.x - b.x);
   f32 tc = (a.x - b.x) * (c.y - a.y) + (a.y - b.y) * (a.x - c.x);

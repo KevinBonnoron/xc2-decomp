@@ -55,13 +55,11 @@ void DrMdoSetup::uniformBlock_Bone(const MdsMatValShaderCate *cate, int paramInd
 
 void DrMdoSetup::uniformBlock_no(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {}
 
-void DrMdoSetup::uniformBlock_AvatarChar(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
-                                         u32 bufferIndex) {
+void DrMdoSetup::uniformBlock_AvatarChar(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   m_matRes->avatar->charColors->setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
 }
 
-void DrMdoSetup::uniformBlock_AvatarDoll(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
-                                         u32 bufferIndex) {
+void DrMdoSetup::uniformBlock_AvatarDoll(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   m_matRes->avatar->dollColors->setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
 }
 
@@ -73,8 +71,7 @@ void DrMdoSetup::uniformBlock_Toon(const MdsMatValShaderCate *cate, int paramInd
   m_drMan->calcMan->m_viewWork->m_toonUniform.setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
 }
 
-void DrMdoSetup::uniformBlock_VolTexCalc(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
-                                         u32 bufferIndex) {
+void DrMdoSetup::uniformBlock_VolTexCalc(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   (*m_matRes->volTexUniforms)[bufferIndex].setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
 }
 
@@ -82,8 +79,7 @@ void DrMdoSetup::uniformBlock_GlobalIBL(const MdsMatValShaderCate *cate, int par
   m_drMan->pixlMan->m_res->postMan->m_cubeMapIBL->setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
 }
 
-void DrMdoSetup::uniformBlock_ClusterParam(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
-                                           u32 bufferIndex) {
+void DrMdoSetup::uniformBlock_ClusterParam(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   DrShdLgtClustered *clustered = m_drMan->shdMan->m_lgtMan->getHybridLight()->m_clustered;
   u32 index = m_decExtTbl->getValGlobalParam(paramIndex);
   if (cate->flags & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
@@ -93,8 +89,7 @@ void DrMdoSetup::uniformBlock_ClusterParam(const MdsMatValShaderCate *cate, int 
   }
 }
 
-void DrMdoSetup::uniformBlock_ClusterPntList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
-                                             u32 bufferIndex) {
+void DrMdoSetup::uniformBlock_ClusterPntList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   DrShdLgtClustered *clustered = m_drMan->shdMan->m_lgtMan->getHybridLight()->m_clustered;
   u32 index = m_decExtTbl->getValGlobalParam(paramIndex);
   if (cate->flags & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
@@ -104,8 +99,7 @@ void DrMdoSetup::uniformBlock_ClusterPntList(const MdsMatValShaderCate *cate, in
   }
 }
 
-void DrMdoSetup::uniformBlock_ClusterSptList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
-                                             u32 bufferIndex) {
+void DrMdoSetup::uniformBlock_ClusterSptList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   DrShdLgtClustered *clustered = m_drMan->shdMan->m_lgtMan->getHybridLight()->m_clustered;
   u32 index = m_decExtTbl->getValGlobalParam(paramIndex);
   if (cate->flags & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
@@ -115,8 +109,7 @@ void DrMdoSetup::uniformBlock_ClusterSptList(const MdsMatValShaderCate *cate, in
   }
 }
 
-void DrMdoSetup::uniformBlock_ClusterIdxList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
-                                             u32 bufferIndex) {
+void DrMdoSetup::uniformBlock_ClusterIdxList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   DrShdLgtClustered *clustered = m_drMan->shdMan->m_lgtMan->getHybridLight()->m_clustered;
   u32 index = m_decExtTbl->getValGlobalParam(paramIndex);
   if (cate->flags & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
@@ -126,8 +119,7 @@ void DrMdoSetup::uniformBlock_ClusterIdxList(const MdsMatValShaderCate *cate, in
   }
 }
 
-void DrMdoSetup::uniformBlock_ClusterAddressList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
-                                                 u32 bufferIndex) {
+void DrMdoSetup::uniformBlock_ClusterAddressList(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   DrShdLgtClustered *clustered = m_drMan->shdMan->m_lgtMan->getHybridLight()->m_clustered;
   u32 index = m_decExtTbl->getValGlobalParam(paramIndex);
   if (cate->flags & MdsMatValShaderCate::FLAG_STORAGE_BUFFER) {
@@ -137,8 +129,7 @@ void DrMdoSetup::uniformBlock_ClusterAddressList(const MdsMatValShaderCate *cate
   }
 }
 
-void DrMdoSetup::uniformBlock_RimBloomCalc(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter,
-                                           u32 bufferIndex) {
+void DrMdoSetup::uniformBlock_RimBloomCalc(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   (*m_matRes->rimBloomUniforms)[mdlIndex].setUniformBlock(m_decExtTbl->getValGlobalParam(paramIndex));
 }
 
@@ -366,24 +357,14 @@ void DrMdoSetup::varStTex_ToonDarkGradTex(const MdsMatInfoHeader *header, u32 lo
   }
 }
 
-void DrMdoSetup::varStImg_BaseColor(const MdsMatInfoHeader *header, u32 location, u32 index) {
-  grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->pixlMan->getPixlObj(0)->m_texture, location, 0, 0);
-}
+void DrMdoSetup::varStImg_BaseColor(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->pixlMan->getPixlObj(0)->m_texture, location, 0, 0); }
 
-void DrMdoSetup::varStImg_Etc(const MdsMatInfoHeader *header, u32 location, u32 index) {
-  grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->pixlMan->getPixlObj(1)->m_texture, location, 0, 0);
-}
+void DrMdoSetup::varStImg_Etc(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->pixlMan->getPixlObj(1)->m_texture, location, 0, 0); }
 
-void DrMdoSetup::varStImg_Normal(const MdsMatInfoHeader *header, u32 location, u32 index) {
-  grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->pixlMan->getPixlObj(2)->m_texture, location, 0, 0);
-}
+void DrMdoSetup::varStImg_Normal(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->pixlMan->getPixlObj(2)->m_texture, location, 0, 0); }
 
-void DrMdoSetup::varStImg_Velocity(const MdsMatInfoHeader *header, u32 location, u32 index) {
-  grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->pixlMan->getPixlObj(3)->m_texture, location, 0, 0);
-}
+void DrMdoSetup::varStImg_Velocity(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->pixlMan->getPixlObj(3)->m_texture, location, 0, 0); }
 
-void DrMdoSetup::varStImg_ZBuff(const MdsMatInfoHeader *header, u32 location, u32 index) {
-  grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->pixlMan->getPixlObj(4)->m_texture, location, 0, 0);
-}
+void DrMdoSetup::varStImg_ZBuff(const MdsMatInfoHeader *header, u32 location, u32 index) { grlib::CGLibCtlTexture::setUAVTexture(*m_drMan->pixlMan->getPixlObj(4)->m_texture, location, 0, 0); }
 
 } // namespace ml

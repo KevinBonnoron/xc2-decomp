@@ -29,8 +29,8 @@ public:
   void callLastAlphaNomRender();
   void callFastAlphaNomRender();
   void callCldBackAlphaNomRender();
-  void createAfterImage(f32 count, f32 span, f32 fade, const mm::Col3 &headColor, f32 headAlpha, f32 headEmissive, f32 headScale,
-                        const mm::Col3 &tailColor, f32 tailAlpha, f32 tailEmissive, f32 tailScale);
+  void createAfterImage(f32 count, f32 span, f32 fade, const mm::Col3 &headColor, f32 headAlpha, f32 headEmissive, f32 headScale, const mm::Col3 &tailColor, f32 tailAlpha, f32 tailEmissive,
+                        f32 tailScale);
   void releaseAfterImage();
 
   u8 _190[0x1d0 - 0x190];

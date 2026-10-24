@@ -4,13 +4,9 @@
 
 namespace ml {
 
-static const MdsDecShdHeader *getDecShdHeader(const u8 *resource) {
-  return reinterpret_cast<const MdsDecShdHeader *>(resource + *reinterpret_cast<const u32 *>(resource + 0x88));
-}
+static const MdsDecShdHeader *getDecShdHeader(const u8 *resource) { return reinterpret_cast<const MdsDecShdHeader *>(resource + *reinterpret_cast<const u32 *>(resource + 0x88)); }
 
-static const MdsDecShdInfo *getDecShdInfos(const MdsDecShdHeader *header) {
-  return reinterpret_cast<const MdsDecShdInfo *>(reinterpret_cast<const u8 *>(header) + header->infoOfs);
-}
+static const MdsDecShdInfo *getDecShdInfos(const MdsDecShdHeader *header) { return reinterpret_cast<const MdsDecShdInfo *>(reinterpret_cast<const u8 *>(header) + header->infoOfs); }
 
 DrResMdoShdObj::DrResMdoShdObj() : m_header(nullptr), m_decShds(nullptr), m_decShdMax(0) {}
 

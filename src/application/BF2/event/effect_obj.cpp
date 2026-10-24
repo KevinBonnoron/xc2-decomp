@@ -105,8 +105,7 @@ void EffectPlayEff::render(const mm::Vec3 &pos) {
   textY = y + 25;
   fw::debug::drawFontColor(mm::Col4(0.8f, 0.8f, 1.0f, 1.0f));
   fw::debug::drawFont(textX, textY, "pos %.2f %.2f %.2f", ctrl->getPos().x, ctrl->getPos().y, ctrl->getPos().z);
-  fw::debug::drawFont(
-      textX, y + 40, "rot %.2f %.2f %.2f", ctrl->getRot().x * mm::RAD_TO_DEG, ctrl->getRot().y * mm::RAD_TO_DEG, ctrl->getRot().z * mm::RAD_TO_DEG);
+  fw::debug::drawFont(textX, y + 40, "rot %.2f %.2f %.2f", ctrl->getRot().x * mm::RAD_TO_DEG, ctrl->getRot().y * mm::RAD_TO_DEG, ctrl->getRot().z * mm::RAD_TO_DEG);
   fw::debug::drawFont(textX, y + 55, "sca %.2f", ctrl->getScale().x);
   fw::debug::drawFont(textX, y + 70, "col %.2f %.2f %.2f %.2f", ctrl->getColor().r, ctrl->getColor().g, ctrl->getColor().b, ctrl->getColor().a);
 }

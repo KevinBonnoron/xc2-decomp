@@ -12,9 +12,7 @@ class IAllocator;
 
 namespace anm {
 
-FrozenState::FrozenState(const ResStateData *pResStateData, mm::mtl::IAllocator &allocator) : AsmState(pResStateData, allocator) {
-  m_clip.createControl(pResStateData->m_clips[0], allocator);
-}
+FrozenState::FrozenState(const ResStateData *pResStateData, mm::mtl::IAllocator &allocator) : AsmState(pResStateData, allocator) { m_clip.createControl(pResStateData->m_clips[0], allocator); }
 
 FrozenState::~FrozenState() { m_clip.destroyControl(); }
 

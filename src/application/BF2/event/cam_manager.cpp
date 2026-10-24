@@ -107,8 +107,7 @@ void CamManager::setOffscrMode(bool isOffscrMode, u32 offscrID) {
 }
 
 CamObj *CamManager::createCam(u32 screenID) {
-  CamObj *cam = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false)
-      CamObj(screenID, (flags & FLAG_FOCAL) != 0, (flags & FLAG_STREAM_MODE) != 0);
+  CamObj *cam = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) CamObj(screenID, (flags & FLAG_FOCAL) != 0, (flags & FLAG_STREAM_MODE) != 0);
   mCams.push_back(cam);
   if (screenID == 0) {
     mMainCam = cam;

@@ -31,8 +31,7 @@ ParticleManager *ParticleManager::get() {
   return getPtr();
 }
 
-void ParticleManager::setUserAllocFunc(AllocFunc allocSys, FreeFunc freeSys, AllocFunc allocRes, FreeFunc freeRes, GetHandleFunc getSysHandle,
-                                       GetHandleFunc getResHandle) {
+void ParticleManager::setUserAllocFunc(AllocFunc allocSys, FreeFunc freeSys, AllocFunc allocRes, FreeFunc freeRes, GetHandleFunc getSysHandle, GetHandleFunc getResHandle) {
   s_pAllocFuncSys = allocSys;
   s_pFreeFuncSys = freeSys;
   s_pAllocFuncRes = allocRes;
@@ -51,11 +50,9 @@ void ParticleManager::setUserOutputString(OutputStringFunc outputDebug, OutputSt
   s_pOutputWarnStringFunc = outputWarn;
 }
 
-void ParticleManager::setUserDrFunc(void *(*createMdl)(const void *, const char *, int, const void *, int), void (*deleteMdl)(void *),
-                                    void *(*createLgt)(u32, int), void (*deleteLgt)(u32, void *), void (*setMdlPos)(void *, void *),
-                                    void (*setMdlMatrix)(void *, void *), void (*setMdlColor)(void *, void *), void (*setMdlAlpha)(void *, f32),
-                                    void (*setMdlSpd)(void *, void *), void (*setLgtPos)(u32, void *, void *),
-                                    void (*setLgtMatrix)(u32, void *, void *), void (*setLgtParam)(u32, void *, void *),
+void ParticleManager::setUserDrFunc(void *(*createMdl)(const void *, const char *, int, const void *, int), void (*deleteMdl)(void *), void *(*createLgt)(u32, int), void (*deleteLgt)(u32, void *),
+                                    void (*setMdlPos)(void *, void *), void (*setMdlMatrix)(void *, void *), void (*setMdlColor)(void *, void *), void (*setMdlAlpha)(void *, f32),
+                                    void (*setMdlSpd)(void *, void *), void (*setLgtPos)(u32, void *, void *), void (*setLgtMatrix)(u32, void *, void *), void (*setLgtParam)(u32, void *, void *),
                                     void (*debugRenderer)(void *), void *(*createGrp)(int, int), void (*destroyGrp)(void *)) {
   s_pDrFunc.m_createMdl = createMdl;
   s_pDrFunc.m_deleteMdl = deleteMdl;
@@ -121,9 +118,7 @@ void ParticleManager::outputString(const char *text) { s_pOutputDebugStringFunc(
 
 void ParticleManager::outputWarning(const char *text) { s_pOutputWarnStringFunc(text); }
 
-void *ParticleManager::createMdl(const void *model, const char *name, int index, const void *texture, int textureIndex) {
-  return s_pDrFunc.m_createMdl(model, name, index, texture, textureIndex);
-}
+void *ParticleManager::createMdl(const void *model, const char *name, int index, const void *texture, int textureIndex) { return s_pDrFunc.m_createMdl(model, name, index, texture, textureIndex); }
 
 void ParticleManager::deleteMdl(void *model) { s_pDrFunc.m_deleteMdl(model); }
 
@@ -187,33 +182,21 @@ bool ParticleManager::emitter_set_check(FxHeader *header) { return emitter::Emit
 
 void ParticleManager::emitter_set_free_all(bool isForce) { emitter::EmitterManager::get()->emitter_set_free_all_sub(isForce); }
 
-FxHeader *ParticleManager::emitter_set_search(int type, const char *name, void *owner, u32 category) {
-  return emitter::EmitterManager::get()->emitter_set_search(type, name, owner, category);
-}
+FxHeader *ParticleManager::emitter_set_search(int type, const char *name, void *owner, u32 category) { return emitter::EmitterManager::get()->emitter_set_search(type, name, owner, category); }
 
-void ParticleManager::emitter_set_param_pos_only(u32 handle, emitter::EmitterParam *param) {
-  emitter::EmitterManager::get()->emitter_set_param_pos_only(handle, param);
-}
+void ParticleManager::emitter_set_param_pos_only(u32 handle, emitter::EmitterParam *param) { emitter::EmitterManager::get()->emitter_set_param_pos_only(handle, param); }
 
-void ParticleManager::emitter_set_param_pos_only2(u32 handle, emitter::EmitterParam *param) {
-  emitter::EmitterManager::get()->emitter_set_param_pos_only2(handle, param);
-}
+void ParticleManager::emitter_set_param_pos_only2(u32 handle, emitter::EmitterParam *param) { emitter::EmitterManager::get()->emitter_set_param_pos_only2(handle, param); }
 
-void ParticleManager::emitter_set_param(u32 handle, emitter::EmitterParam *param) {
-  emitter::EmitterManager::get()->emitter_set_param(handle, param);
-}
+void ParticleManager::emitter_set_param(u32 handle, emitter::EmitterParam *param) { emitter::EmitterManager::get()->emitter_set_param(handle, param); }
 
-void ParticleManager::emitter_set_param(FxHeader *header, emitter::EmitterParam *param) {
-  emitter::EmitterManager::get()->emitter_set_param(header, param);
-}
+void ParticleManager::emitter_set_param(FxHeader *header, emitter::EmitterParam *param) { emitter::EmitterManager::get()->emitter_set_param(header, param); }
 
 void ParticleManager::emitter_set_casname(u32 handle, const void *model, const char *name, int index, f32 frame, int flags) {
   emitter::EmitterManager::get()->emitter_set_casname(handle, model, name, index, frame, flags);
 }
 
-void ParticleManager::emitter_set_casparam(u32 handle, const void *model, emitter::EmitterParam *param) {
-  emitter::EmitterManager::get()->emitter_set_casparam(handle, model, param);
-}
+void ParticleManager::emitter_set_casparam(u32 handle, const void *model, emitter::EmitterParam *param) { emitter::EmitterManager::get()->emitter_set_casparam(handle, model, param); }
 
 void ParticleManager::emitter_set_disp(u32 handle, int isDisp) { emitter::EmitterManager::get()->emitter_set_disp(handle, isDisp); }
 
@@ -239,9 +222,7 @@ void ParticleManager::emitter_pack_free(u64 pack) { emitter::EmitterManager::get
 
 void ParticleManager::emitter_set_free(FxHeader *header, int frame) { emitter::EmitterManager::get()->emitter_set_free(header, frame); }
 
-void ParticleManager::emitter_alloc01_set_draw(emitter::EmitterObj *emitter, emitter::EmitterArg *arg) {
-  renderer::RenderManager::get()->setEmitterDraw(emitter, arg);
-}
+void ParticleManager::emitter_alloc01_set_draw(emitter::EmitterObj *emitter, emitter::EmitterArg *arg) { renderer::RenderManager::get()->setEmitterDraw(emitter, arg); }
 
 void ParticleManager::move() {
   if (m_fxParam.m_isStop) {

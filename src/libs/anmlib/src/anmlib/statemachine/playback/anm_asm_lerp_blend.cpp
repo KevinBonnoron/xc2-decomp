@@ -11,8 +11,7 @@
 
 namespace anm {
 
-LerpBlendTree::LerpBlendTree(const ResStateData *pResStateData, const ResLerpTree *pResTree, mm::mtl::Vector<Variable> &variables,
-                             mm::mtl::IAllocator &allocator)
+LerpBlendTree::LerpBlendTree(const ResStateData *pResStateData, const ResLerpTree *pResTree, mm::mtl::Vector<Variable> &variables, mm::mtl::IAllocator &allocator)
     : AsmState(pResStateData, allocator), m_pResTree(pResTree) {
   m_clipNum = pResStateData->m_clips.size();
   m_pClips = static_cast<AsmClip *>(allocator.allocate(m_clipNum * sizeof(AsmClip), 8));

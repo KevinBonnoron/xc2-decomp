@@ -27,8 +27,7 @@ static u8 *s_members[MEMBER_COUNT];
 void initBgmListfilename(const CBdatWrapper &wrapper) { s_members[BgmListfilename] = Bdat::getMember(wrapper.data, "filename"); }
 
 const char *getBgmListfilename(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BgmListfilename] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BgmListfilename] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return nullptr;
   }
 
@@ -38,8 +37,7 @@ const char *getBgmListfilename(const CBdatWrapper &wrapper, u32 id) {
 void initBgmConditionConditionA(const CBdatWrapper &wrapper) { s_members[BgmConditionConditionA] = Bdat::getMember(wrapper.data, "ConditionA"); }
 
 u32 getBgmConditionConditionA(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BgmConditionConditionA] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BgmConditionConditionA] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -49,8 +47,7 @@ u32 getBgmConditionConditionA(const CBdatWrapper &wrapper, u32 id) {
 void initBgmConditionBgmIDA(const CBdatWrapper &wrapper) { s_members[BgmConditionBgmIDA] = Bdat::getMember(wrapper.data, "BgmIDA"); }
 
 u32 getBgmConditionBgmIDA(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BgmConditionBgmIDA] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BgmConditionBgmIDA] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -60,8 +57,7 @@ u32 getBgmConditionBgmIDA(const CBdatWrapper &wrapper, u32 id) {
 void initBgmConditionConditionB(const CBdatWrapper &wrapper) { s_members[BgmConditionConditionB] = Bdat::getMember(wrapper.data, "ConditionB"); }
 
 u32 getBgmConditionConditionB(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BgmConditionConditionB] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BgmConditionConditionB] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -71,8 +67,7 @@ u32 getBgmConditionConditionB(const CBdatWrapper &wrapper, u32 id) {
 void initBgmConditionBgmIDB(const CBdatWrapper &wrapper) { s_members[BgmConditionBgmIDB] = Bdat::getMember(wrapper.data, "BgmIDB"); }
 
 u32 getBgmConditionBgmIDB(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BgmConditionBgmIDB] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BgmConditionBgmIDB] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -82,8 +77,7 @@ u32 getBgmConditionBgmIDB(const CBdatWrapper &wrapper, u32 id) {
 void initBgmConditionConditionC(const CBdatWrapper &wrapper) { s_members[BgmConditionConditionC] = Bdat::getMember(wrapper.data, "ConditionC"); }
 
 u32 getBgmConditionConditionC(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BgmConditionConditionC] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BgmConditionConditionC] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -93,8 +87,7 @@ u32 getBgmConditionConditionC(const CBdatWrapper &wrapper, u32 id) {
 void initBgmConditionBgmIDC(const CBdatWrapper &wrapper) { s_members[BgmConditionBgmIDC] = Bdat::getMember(wrapper.data, "BgmIDC"); }
 
 u32 getBgmConditionBgmIDC(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BgmConditionBgmIDC] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BgmConditionBgmIDC] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -104,8 +97,7 @@ u32 getBgmConditionBgmIDC(const CBdatWrapper &wrapper, u32 id) {
 void initBgmConditionConditionD(const CBdatWrapper &wrapper) { s_members[BgmConditionConditionD] = Bdat::getMember(wrapper.data, "ConditionD"); }
 
 u32 getBgmConditionConditionD(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BgmConditionConditionD] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BgmConditionConditionD] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -115,8 +107,7 @@ u32 getBgmConditionConditionD(const CBdatWrapper &wrapper, u32 id) {
 void initBgmConditionBgmIDD(const CBdatWrapper &wrapper) { s_members[BgmConditionBgmIDD] = Bdat::getMember(wrapper.data, "BgmIDD"); }
 
 u32 getBgmConditionBgmIDD(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BgmConditionBgmIDD] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BgmConditionBgmIDD] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -126,8 +117,7 @@ u32 getBgmConditionBgmIDD(const CBdatWrapper &wrapper, u32 id) {
 void initBgmConditionPriority(const CBdatWrapper &wrapper) { s_members[BgmConditionPriority] = Bdat::getMember(wrapper.data, "Priority"); }
 
 u32 getBgmConditionPriority(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BgmConditionPriority] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BgmConditionPriority] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -152,7 +142,7 @@ void GfBdatBgm::destroyFP() {
   }
 }
 
-#define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
+#define NEW_BDAT_WRAPPER(bdat)                                                                                                                                                                         \
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 void GfBdatBgm::createFP() {
@@ -204,14 +194,13 @@ u32 GfBdatBgm::getBgmConditionBgmIDD(u32 id) const { return _gfbbg::getBgmCondit
 u32 GfBdatBgm::getBgmConditionPriority(u32 id) const { return _gfbbg::getBgmConditionPriority(*m_bgmCondition, id); }
 
 u32 GfBdatBgm::getBgmConditionCondition(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
-      _gfbbg::getBgmConditionConditionA, _gfbbg::getBgmConditionConditionB, _gfbbg::getBgmConditionConditionC, _gfbbg::getBgmConditionConditionD};
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {_gfbbg::getBgmConditionConditionA, _gfbbg::getBgmConditionConditionB, _gfbbg::getBgmConditionConditionC, _gfbbg::getBgmConditionConditionD};
   return getters[index](*m_bgmCondition, id);
 }
 
 u32 GfBdatBgm::getBgmConditionBgmID(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
-      _gfbbg::getBgmConditionBgmIDA, _gfbbg::getBgmConditionBgmIDB, _gfbbg::getBgmConditionBgmIDC, _gfbbg::getBgmConditionBgmIDD};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbbg::getBgmConditionBgmIDA, _gfbbg::getBgmConditionBgmIDB, _gfbbg::getBgmConditionBgmIDC, _gfbbg::getBgmConditionBgmIDD};
   return getters[index](*m_bgmCondition, id);
 }
 

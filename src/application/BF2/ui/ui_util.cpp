@@ -159,15 +159,7 @@ void UIUtil::drawDisplayRect(const UIObjectAcc &acc, const mm::Col4 &color) {
       if (acc.isDuplicate()) {
         name.format("%s (%03d)", acc.getName(), acc.getDuplicateIndex());
       }
-      fw::debug::drawFont(rect.x,
-                          rect.y - fw::debug::drawFontGetHeight(),
-                          "[%d,%d,%d,%d:%d] %s",
-                          rect.x,
-                          rect.y,
-                          rect.width,
-                          rect.height,
-                          acc.getDispPriority(),
-                          name.c_str());
+      fw::debug::drawFont(rect.x, rect.y - fw::debug::drawFontGetHeight(), "[%d,%d,%d,%d:%d] %s", rect.x, rect.y, rect.width, rect.height, acc.getDispPriority(), name.c_str());
     }
 
     mm::Pnt<s16> pos;

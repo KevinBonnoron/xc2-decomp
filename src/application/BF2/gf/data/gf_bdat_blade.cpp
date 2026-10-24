@@ -189,8 +189,7 @@ static u8 *s_members[MEMBER_COUNT];
 void initIdeaTableItem(const CBdatWrapper &wrapper) { s_members[IdeaTableItem] = Bdat::getMember(wrapper.data, "Item"); }
 
 u32 getIdeaTableItem(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[IdeaTableItem] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[IdeaTableItem] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -200,8 +199,7 @@ u32 getIdeaTableItem(const CBdatWrapper &wrapper, u32 id) {
 void initIdeaTableIdeaBlue(const CBdatWrapper &wrapper) { s_members[IdeaTableIdeaBlue] = Bdat::getMember(wrapper.data, "IdeaBlue"); }
 
 u32 getIdeaTableIdeaBlue(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[IdeaTableIdeaBlue] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[IdeaTableIdeaBlue] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -211,8 +209,7 @@ u32 getIdeaTableIdeaBlue(const CBdatWrapper &wrapper, u32 id) {
 void initIdeaTableIdeaRed(const CBdatWrapper &wrapper) { s_members[IdeaTableIdeaRed] = Bdat::getMember(wrapper.data, "IdeaRed"); }
 
 u32 getIdeaTableIdeaRed(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[IdeaTableIdeaRed] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[IdeaTableIdeaRed] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -222,8 +219,7 @@ u32 getIdeaTableIdeaRed(const CBdatWrapper &wrapper, u32 id) {
 void initIdeaTableIdeaWhite(const CBdatWrapper &wrapper) { s_members[IdeaTableIdeaWhite] = Bdat::getMember(wrapper.data, "IdeaWhite"); }
 
 u32 getIdeaTableIdeaWhite(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[IdeaTableIdeaWhite] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[IdeaTableIdeaWhite] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -233,8 +229,7 @@ u32 getIdeaTableIdeaWhite(const CBdatWrapper &wrapper, u32 id) {
 void initIdeaTableIdeaBlack(const CBdatWrapper &wrapper) { s_members[IdeaTableIdeaBlack] = Bdat::getMember(wrapper.data, "IdeaBlack"); }
 
 u32 getIdeaTableIdeaBlack(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[IdeaTableIdeaBlack] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[IdeaTableIdeaBlack] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -244,8 +239,7 @@ u32 getIdeaTableIdeaBlack(const CBdatWrapper &wrapper, u32 id) {
 void initIdeaTableCondition(const CBdatWrapper &wrapper) { s_members[IdeaTableCondition] = Bdat::getMember(wrapper.data, "Condition"); }
 
 u32 getIdeaTableCondition(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[IdeaTableCondition] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[IdeaTableCondition] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -255,8 +249,7 @@ u32 getIdeaTableCondition(const CBdatWrapper &wrapper, u32 id) {
 void initIdeaTableBladeTable(const CBdatWrapper &wrapper) { s_members[IdeaTableBladeTable] = Bdat::getMember(wrapper.data, "BladeTable"); }
 
 u32 getIdeaTableBladeTable(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[IdeaTableBladeTable] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[IdeaTableBladeTable] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -266,21 +259,17 @@ u32 getIdeaTableBladeTable(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID1(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID1] = Bdat::getMember(wrapper.data, "CharaID1"); }
 
 u32 getBladeTableCharaID1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID1], id, 2).valueU16;
 }
 
-void initBladeTableCharID1Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID1Percent] = Bdat::getMember(wrapper.data, "CharID1Percent");
-}
+void initBladeTableCharID1Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID1Percent] = Bdat::getMember(wrapper.data, "CharID1Percent"); }
 
 u32 getBladeTableCharID1Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID1Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID1Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -290,21 +279,17 @@ u32 getBladeTableCharID1Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID2(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID2] = Bdat::getMember(wrapper.data, "CharaID2"); }
 
 u32 getBladeTableCharaID2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID2], id, 2).valueU16;
 }
 
-void initBladeTableCharID2Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID2Percent] = Bdat::getMember(wrapper.data, "CharID2Percent");
-}
+void initBladeTableCharID2Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID2Percent] = Bdat::getMember(wrapper.data, "CharID2Percent"); }
 
 u32 getBladeTableCharID2Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID2Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID2Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -314,21 +299,17 @@ u32 getBladeTableCharID2Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID3(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID3] = Bdat::getMember(wrapper.data, "CharaID3"); }
 
 u32 getBladeTableCharaID3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID3], id, 2).valueU16;
 }
 
-void initBladeTableCharID3Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID3Percent] = Bdat::getMember(wrapper.data, "CharID3Percent");
-}
+void initBladeTableCharID3Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID3Percent] = Bdat::getMember(wrapper.data, "CharID3Percent"); }
 
 u32 getBladeTableCharID3Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID3Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID3Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -338,21 +319,17 @@ u32 getBladeTableCharID3Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID4(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID4] = Bdat::getMember(wrapper.data, "CharaID4"); }
 
 u32 getBladeTableCharaID4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID4], id, 2).valueU16;
 }
 
-void initBladeTableCharID4Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID4Percent] = Bdat::getMember(wrapper.data, "CharID4Percent");
-}
+void initBladeTableCharID4Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID4Percent] = Bdat::getMember(wrapper.data, "CharID4Percent"); }
 
 u32 getBladeTableCharID4Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID4Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID4Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -362,21 +339,17 @@ u32 getBladeTableCharID4Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID5(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID5] = Bdat::getMember(wrapper.data, "CharaID5"); }
 
 u32 getBladeTableCharaID5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID5] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID5], id, 2).valueU16;
 }
 
-void initBladeTableCharID5Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID5Percent] = Bdat::getMember(wrapper.data, "CharID5Percent");
-}
+void initBladeTableCharID5Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID5Percent] = Bdat::getMember(wrapper.data, "CharID5Percent"); }
 
 u32 getBladeTableCharID5Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID5Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID5Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -386,21 +359,17 @@ u32 getBladeTableCharID5Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID6(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID6] = Bdat::getMember(wrapper.data, "CharaID6"); }
 
 u32 getBladeTableCharaID6(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID6] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID6] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID6], id, 2).valueU16;
 }
 
-void initBladeTableCharID6Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID6Percent] = Bdat::getMember(wrapper.data, "CharID6Percent");
-}
+void initBladeTableCharID6Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID6Percent] = Bdat::getMember(wrapper.data, "CharID6Percent"); }
 
 u32 getBladeTableCharID6Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID6Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID6Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -410,21 +379,17 @@ u32 getBladeTableCharID6Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID7(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID7] = Bdat::getMember(wrapper.data, "CharaID7"); }
 
 u32 getBladeTableCharaID7(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID7] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID7] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID7], id, 2).valueU16;
 }
 
-void initBladeTableCharID7Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID7Percent] = Bdat::getMember(wrapper.data, "CharID7Percent");
-}
+void initBladeTableCharID7Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID7Percent] = Bdat::getMember(wrapper.data, "CharID7Percent"); }
 
 u32 getBladeTableCharID7Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID7Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID7Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -434,21 +399,17 @@ u32 getBladeTableCharID7Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID8(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID8] = Bdat::getMember(wrapper.data, "CharaID8"); }
 
 u32 getBladeTableCharaID8(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID8] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID8] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID8], id, 2).valueU16;
 }
 
-void initBladeTableCharID8Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID8Percent] = Bdat::getMember(wrapper.data, "CharID8Percent");
-}
+void initBladeTableCharID8Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID8Percent] = Bdat::getMember(wrapper.data, "CharID8Percent"); }
 
 u32 getBladeTableCharID8Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID8Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID8Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -458,21 +419,17 @@ u32 getBladeTableCharID8Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID9(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID9] = Bdat::getMember(wrapper.data, "CharaID9"); }
 
 u32 getBladeTableCharaID9(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID9] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID9] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID9], id, 2).valueU16;
 }
 
-void initBladeTableCharID9Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID9Percent] = Bdat::getMember(wrapper.data, "CharID9Percent");
-}
+void initBladeTableCharID9Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID9Percent] = Bdat::getMember(wrapper.data, "CharID9Percent"); }
 
 u32 getBladeTableCharID9Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID9Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID9Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -482,21 +439,17 @@ u32 getBladeTableCharID9Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID10(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID10] = Bdat::getMember(wrapper.data, "CharaID10"); }
 
 u32 getBladeTableCharaID10(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID10] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID10] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID10], id, 2).valueU16;
 }
 
-void initBladeTableCharID10Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID10Percent] = Bdat::getMember(wrapper.data, "CharID10Percent");
-}
+void initBladeTableCharID10Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID10Percent] = Bdat::getMember(wrapper.data, "CharID10Percent"); }
 
 u32 getBladeTableCharID10Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID10Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID10Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -506,21 +459,17 @@ u32 getBladeTableCharID10Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID11(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID11] = Bdat::getMember(wrapper.data, "CharaID11"); }
 
 u32 getBladeTableCharaID11(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID11] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID11] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID11], id, 2).valueU16;
 }
 
-void initBladeTableCharID11Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID11Percent] = Bdat::getMember(wrapper.data, "CharID11Percent");
-}
+void initBladeTableCharID11Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID11Percent] = Bdat::getMember(wrapper.data, "CharID11Percent"); }
 
 u32 getBladeTableCharID11Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID11Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID11Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -530,21 +479,17 @@ u32 getBladeTableCharID11Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID12(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID12] = Bdat::getMember(wrapper.data, "CharaID12"); }
 
 u32 getBladeTableCharaID12(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID12] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID12] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID12], id, 2).valueU16;
 }
 
-void initBladeTableCharID12Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID12Percent] = Bdat::getMember(wrapper.data, "CharID12Percent");
-}
+void initBladeTableCharID12Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID12Percent] = Bdat::getMember(wrapper.data, "CharID12Percent"); }
 
 u32 getBladeTableCharID12Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID12Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID12Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -554,21 +499,17 @@ u32 getBladeTableCharID12Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID13(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID13] = Bdat::getMember(wrapper.data, "CharaID13"); }
 
 u32 getBladeTableCharaID13(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID13] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID13] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID13], id, 2).valueU16;
 }
 
-void initBladeTableCharID13Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID13Percent] = Bdat::getMember(wrapper.data, "CharID13Percent");
-}
+void initBladeTableCharID13Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID13Percent] = Bdat::getMember(wrapper.data, "CharID13Percent"); }
 
 u32 getBladeTableCharID13Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID13Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID13Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -578,21 +519,17 @@ u32 getBladeTableCharID13Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID14(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID14] = Bdat::getMember(wrapper.data, "CharaID14"); }
 
 u32 getBladeTableCharaID14(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID14] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID14] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID14], id, 2).valueU16;
 }
 
-void initBladeTableCharID14Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID14Percent] = Bdat::getMember(wrapper.data, "CharID14Percent");
-}
+void initBladeTableCharID14Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID14Percent] = Bdat::getMember(wrapper.data, "CharID14Percent"); }
 
 u32 getBladeTableCharID14Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID14Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID14Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -602,21 +539,17 @@ u32 getBladeTableCharID14Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID15(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID15] = Bdat::getMember(wrapper.data, "CharaID15"); }
 
 u32 getBladeTableCharaID15(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID15] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID15] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID15], id, 2).valueU16;
 }
 
-void initBladeTableCharID15Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID15Percent] = Bdat::getMember(wrapper.data, "CharID15Percent");
-}
+void initBladeTableCharID15Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID15Percent] = Bdat::getMember(wrapper.data, "CharID15Percent"); }
 
 u32 getBladeTableCharID15Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID15Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID15Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -626,21 +559,17 @@ u32 getBladeTableCharID15Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeTableCharaID16(const CBdatWrapper &wrapper) { s_members[BladeTableCharaID16] = Bdat::getMember(wrapper.data, "CharaID16"); }
 
 u32 getBladeTableCharaID16(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharaID16] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharaID16] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeTableCharaID16], id, 2).valueU16;
 }
 
-void initBladeTableCharID16Percent(const CBdatWrapper &wrapper) {
-  s_members[BladeTableCharID16Percent] = Bdat::getMember(wrapper.data, "CharID16Percent");
-}
+void initBladeTableCharID16Percent(const CBdatWrapper &wrapper) { s_members[BladeTableCharID16Percent] = Bdat::getMember(wrapper.data, "CharID16Percent"); }
 
 u32 getBladeTableCharID16Percent(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeTableCharID16Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeTableCharID16Percent] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -650,8 +579,7 @@ u32 getBladeTableCharID16Percent(const CBdatWrapper &wrapper, u32 id) {
 void initBladeListCategory(const CBdatWrapper &wrapper) { s_members[BladeListCategory] = Bdat::getMember(wrapper.data, "Category"); }
 
 u32 getBladeListCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeListCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeListCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -661,8 +589,7 @@ u32 getBladeListCategory(const CBdatWrapper &wrapper, u32 id) {
 void initBladeListStatusID(const CBdatWrapper &wrapper) { s_members[BladeListStatusID] = Bdat::getMember(wrapper.data, "StatusID"); }
 
 u32 getBladeListStatusID(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeListStatusID] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeListStatusID] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -672,8 +599,7 @@ u32 getBladeListStatusID(const CBdatWrapper &wrapper, u32 id) {
 void initCommonListQuestRace(const CBdatWrapper &wrapper) { s_members[CommonListQuestRace] = Bdat::getMember(wrapper.data, "QuestRace"); }
 
 u32 getCommonListQuestRace(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListQuestRace] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListQuestRace] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -683,8 +609,7 @@ u32 getCommonListQuestRace(const CBdatWrapper &wrapper, u32 id) {
 void initCommonListGender(const CBdatWrapper &wrapper) { s_members[CommonListGender] = Bdat::getMember(wrapper.data, "Gender"); }
 
 u32 getCommonListGender(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListGender] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListGender] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -694,8 +619,7 @@ u32 getCommonListGender(const CBdatWrapper &wrapper, u32 id) {
 void initCommonListWeapon(const CBdatWrapper &wrapper) { s_members[CommonListWeapon] = Bdat::getMember(wrapper.data, "Weapon"); }
 
 u32 getCommonListWeapon(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListWeapon] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListWeapon] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -705,8 +629,7 @@ u32 getCommonListWeapon(const CBdatWrapper &wrapper, u32 id) {
 void initCommonListAtr(const CBdatWrapper &wrapper) { s_members[CommonListAtr] = Bdat::getMember(wrapper.data, "Atr"); }
 
 u32 getCommonListAtr(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListAtr] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListAtr] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -716,8 +639,7 @@ u32 getCommonListAtr(const CBdatWrapper &wrapper, u32 id) {
 void initCommonListModelTable(const CBdatWrapper &wrapper) { s_members[CommonListModelTable] = Bdat::getMember(wrapper.data, "ModelTable"); }
 
 u32 getCommonListModelTable(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListModelTable] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListModelTable] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -727,8 +649,7 @@ u32 getCommonListModelTable(const CBdatWrapper &wrapper, u32 id) {
 void initCommonListIdeaType(const CBdatWrapper &wrapper) { s_members[CommonListIdeaType] = Bdat::getMember(wrapper.data, "IdeaType"); }
 
 u32 getCommonListIdeaType(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListIdeaType] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListIdeaType] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -738,8 +659,7 @@ u32 getCommonListIdeaType(const CBdatWrapper &wrapper, u32 id) {
 void initCommonListIdeaMin(const CBdatWrapper &wrapper) { s_members[CommonListIdeaMin] = Bdat::getMember(wrapper.data, "IdeaMin"); }
 
 u32 getCommonListIdeaMin(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListIdeaMin] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListIdeaMin] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -749,8 +669,7 @@ u32 getCommonListIdeaMin(const CBdatWrapper &wrapper, u32 id) {
 void initCommonListIdeaMax(const CBdatWrapper &wrapper) { s_members[CommonListIdeaMax] = Bdat::getMember(wrapper.data, "IdeaMax"); }
 
 u32 getCommonListIdeaMax(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListIdeaMax] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListIdeaMax] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -760,8 +679,7 @@ u32 getCommonListIdeaMax(const CBdatWrapper &wrapper, u32 id) {
 void initCommonListRatio(const CBdatWrapper &wrapper) { s_members[CommonListRatio] = Bdat::getMember(wrapper.data, "Ratio"); }
 
 u32 getCommonListRatio(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListRatio] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListRatio] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -771,8 +689,7 @@ u32 getCommonListRatio(const CBdatWrapper &wrapper, u32 id) {
 void initCommonListRarityMin(const CBdatWrapper &wrapper) { s_members[CommonListRarityMin] = Bdat::getMember(wrapper.data, "RarityMin"); }
 
 u32 getCommonListRarityMin(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListRarityMin] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListRarityMin] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -782,8 +699,7 @@ u32 getCommonListRarityMin(const CBdatWrapper &wrapper, u32 id) {
 void initCommonListRarityMax(const CBdatWrapper &wrapper) { s_members[CommonListRarityMax] = Bdat::getMember(wrapper.data, "RarityMax"); }
 
 u32 getCommonListRarityMax(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListRarityMax] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListRarityMax] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -793,164 +709,127 @@ u32 getCommonListRarityMax(const CBdatWrapper &wrapper, u32 id) {
 void initCommonListFskill(const CBdatWrapper &wrapper) { s_members[CommonListFskill] = Bdat::getMember(wrapper.data, "Fskill"); }
 
 u32 getCommonListFskill(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListFskill] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListFskill] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CommonListFskill], id, 1).valueU8;
 }
 
-void initCommonListArtsAchievementSet1(const CBdatWrapper &wrapper) {
-  s_members[CommonListArtsAchievementSet1] = Bdat::getMember(wrapper.data, "ArtsAchievementSet1");
-}
+void initCommonListArtsAchievementSet1(const CBdatWrapper &wrapper) { s_members[CommonListArtsAchievementSet1] = Bdat::getMember(wrapper.data, "ArtsAchievementSet1"); }
 
 u32 getCommonListArtsAchievementSet1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListArtsAchievementSet1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListArtsAchievementSet1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CommonListArtsAchievementSet1], id, 1).valueU8;
 }
 
-void initCommonListArtsAchievementSet2(const CBdatWrapper &wrapper) {
-  s_members[CommonListArtsAchievementSet2] = Bdat::getMember(wrapper.data, "ArtsAchievementSet2");
-}
+void initCommonListArtsAchievementSet2(const CBdatWrapper &wrapper) { s_members[CommonListArtsAchievementSet2] = Bdat::getMember(wrapper.data, "ArtsAchievementSet2"); }
 
 u32 getCommonListArtsAchievementSet2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListArtsAchievementSet2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListArtsAchievementSet2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CommonListArtsAchievementSet2], id, 1).valueU8;
 }
 
-void initCommonListArtsAchievementSet3(const CBdatWrapper &wrapper) {
-  s_members[CommonListArtsAchievementSet3] = Bdat::getMember(wrapper.data, "ArtsAchievementSet3");
-}
+void initCommonListArtsAchievementSet3(const CBdatWrapper &wrapper) { s_members[CommonListArtsAchievementSet3] = Bdat::getMember(wrapper.data, "ArtsAchievementSet3"); }
 
 u32 getCommonListArtsAchievementSet3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListArtsAchievementSet3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListArtsAchievementSet3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CommonListArtsAchievementSet3], id, 1).valueU8;
 }
 
-void initCommonListSkillAchievementSet1(const CBdatWrapper &wrapper) {
-  s_members[CommonListSkillAchievementSet1] = Bdat::getMember(wrapper.data, "SkillAchievementSet1");
-}
+void initCommonListSkillAchievementSet1(const CBdatWrapper &wrapper) { s_members[CommonListSkillAchievementSet1] = Bdat::getMember(wrapper.data, "SkillAchievementSet1"); }
 
 u32 getCommonListSkillAchievementSet1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListSkillAchievementSet1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListSkillAchievementSet1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CommonListSkillAchievementSet1], id, 1).valueU8;
 }
 
-void initCommonListSkillAchievementSet2(const CBdatWrapper &wrapper) {
-  s_members[CommonListSkillAchievementSet2] = Bdat::getMember(wrapper.data, "SkillAchievementSet2");
-}
+void initCommonListSkillAchievementSet2(const CBdatWrapper &wrapper) { s_members[CommonListSkillAchievementSet2] = Bdat::getMember(wrapper.data, "SkillAchievementSet2"); }
 
 u32 getCommonListSkillAchievementSet2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListSkillAchievementSet2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListSkillAchievementSet2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CommonListSkillAchievementSet2], id, 1).valueU8;
 }
 
-void initCommonListSkillAchievementSet3(const CBdatWrapper &wrapper) {
-  s_members[CommonListSkillAchievementSet3] = Bdat::getMember(wrapper.data, "SkillAchievementSet3");
-}
+void initCommonListSkillAchievementSet3(const CBdatWrapper &wrapper) { s_members[CommonListSkillAchievementSet3] = Bdat::getMember(wrapper.data, "SkillAchievementSet3"); }
 
 u32 getCommonListSkillAchievementSet3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListSkillAchievementSet3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListSkillAchievementSet3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CommonListSkillAchievementSet3], id, 1).valueU8;
 }
 
-void initCommonListFskillAchivementSet1(const CBdatWrapper &wrapper) {
-  s_members[CommonListFskillAchivementSet1] = Bdat::getMember(wrapper.data, "FskillAchivementSet1");
-}
+void initCommonListFskillAchivementSet1(const CBdatWrapper &wrapper) { s_members[CommonListFskillAchivementSet1] = Bdat::getMember(wrapper.data, "FskillAchivementSet1"); }
 
 u32 getCommonListFskillAchivementSet1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListFskillAchivementSet1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListFskillAchivementSet1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CommonListFskillAchivementSet1], id, 1).valueU8;
 }
 
-void initCommonListFskillAchivementSet2(const CBdatWrapper &wrapper) {
-  s_members[CommonListFskillAchivementSet2] = Bdat::getMember(wrapper.data, "FskillAchivementSet2");
-}
+void initCommonListFskillAchivementSet2(const CBdatWrapper &wrapper) { s_members[CommonListFskillAchivementSet2] = Bdat::getMember(wrapper.data, "FskillAchivementSet2"); }
 
 u32 getCommonListFskillAchivementSet2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListFskillAchivementSet2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListFskillAchivementSet2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CommonListFskillAchivementSet2], id, 1).valueU8;
 }
 
-void initCommonListFskillAchivementSet3(const CBdatWrapper &wrapper) {
-  s_members[CommonListFskillAchivementSet3] = Bdat::getMember(wrapper.data, "FskillAchivementSet3");
-}
+void initCommonListFskillAchivementSet3(const CBdatWrapper &wrapper) { s_members[CommonListFskillAchivementSet3] = Bdat::getMember(wrapper.data, "FskillAchivementSet3"); }
 
 u32 getCommonListFskillAchivementSet3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListFskillAchivementSet3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListFskillAchivementSet3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CommonListFskillAchivementSet3], id, 1).valueU8;
 }
 
-void initCommonListKeyAchievementSet(const CBdatWrapper &wrapper) {
-  s_members[CommonListKeyAchievementSet] = Bdat::getMember(wrapper.data, "KeyAchievementSet");
-}
+void initCommonListKeyAchievementSet(const CBdatWrapper &wrapper) { s_members[CommonListKeyAchievementSet] = Bdat::getMember(wrapper.data, "KeyAchievementSet"); }
 
 u32 getCommonListKeyAchievementSet(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListKeyAchievementSet] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListKeyAchievementSet] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CommonListKeyAchievementSet], id, 1).valueU8;
 }
 
-void initCommonListFavoriteCategoryMax(const CBdatWrapper &wrapper) {
-  s_members[CommonListFavoriteCategoryMax] = Bdat::getMember(wrapper.data, "FavoriteCategoryMax");
-}
+void initCommonListFavoriteCategoryMax(const CBdatWrapper &wrapper) { s_members[CommonListFavoriteCategoryMax] = Bdat::getMember(wrapper.data, "FavoriteCategoryMax"); }
 
 u32 getCommonListFavoriteCategoryMax(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListFavoriteCategoryMax] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListFavoriteCategoryMax] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CommonListFavoriteCategoryMax], id, 1).valueU8;
 }
 
-void initCommonListFavoriteItemMax(const CBdatWrapper &wrapper) {
-  s_members[CommonListFavoriteItemMax] = Bdat::getMember(wrapper.data, "FavoriteItemMax");
-}
+void initCommonListFavoriteItemMax(const CBdatWrapper &wrapper) { s_members[CommonListFavoriteItemMax] = Bdat::getMember(wrapper.data, "FavoriteItemMax"); }
 
 u32 getCommonListFavoriteItemMax(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CommonListFavoriteItemMax] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CommonListFavoriteItemMax] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -960,8 +839,7 @@ u32 getCommonListFavoriteItemMax(const CBdatWrapper &wrapper, u32 id) {
 void initNameListCategory(const CBdatWrapper &wrapper) { s_members[NameListCategory] = Bdat::getMember(wrapper.data, "Category"); }
 
 u32 getNameListCategory(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[NameListCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[NameListCategory] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -971,8 +849,7 @@ u32 getNameListCategory(const CBdatWrapper &wrapper, u32 id) {
 void initNameListRace(const CBdatWrapper &wrapper) { s_members[NameListRace] = Bdat::getMember(wrapper.data, "Race"); }
 
 u32 getNameListRace(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[NameListRace] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[NameListRace] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -982,8 +859,7 @@ u32 getNameListRace(const CBdatWrapper &wrapper, u32 id) {
 void initNameListGender(const CBdatWrapper &wrapper) { s_members[NameListGender] = Bdat::getMember(wrapper.data, "Gender"); }
 
 u32 getNameListGender(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[NameListGender] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[NameListGender] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -993,8 +869,7 @@ u32 getNameListGender(const CBdatWrapper &wrapper, u32 id) {
 void initBladeModelListQuestRace(const CBdatWrapper &wrapper) { s_members[BladeModelListQuestRace] = Bdat::getMember(wrapper.data, "QuestRace"); }
 
 u32 getBladeModelListQuestRace(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeModelListQuestRace] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeModelListQuestRace] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1004,8 +879,7 @@ u32 getBladeModelListQuestRace(const CBdatWrapper &wrapper, u32 id) {
 void initBladeModelListGender(const CBdatWrapper &wrapper) { s_members[BladeModelListGender] = Bdat::getMember(wrapper.data, "Gender"); }
 
 u32 getBladeModelListGender(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeModelListGender] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeModelListGender] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1015,8 +889,7 @@ u32 getBladeModelListGender(const CBdatWrapper &wrapper, u32 id) {
 void initBladeModelListIdeaMin(const CBdatWrapper &wrapper) { s_members[BladeModelListIdeaMin] = Bdat::getMember(wrapper.data, "IdeaMin"); }
 
 u32 getBladeModelListIdeaMin(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeModelListIdeaMin] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeModelListIdeaMin] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1026,8 +899,7 @@ u32 getBladeModelListIdeaMin(const CBdatWrapper &wrapper, u32 id) {
 void initBladeModelListIdeaMax(const CBdatWrapper &wrapper) { s_members[BladeModelListIdeaMax] = Bdat::getMember(wrapper.data, "IdeaMax"); }
 
 u32 getBladeModelListIdeaMax(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeModelListIdeaMax] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeModelListIdeaMax] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1037,8 +909,7 @@ u32 getBladeModelListIdeaMax(const CBdatWrapper &wrapper, u32 id) {
 void initBladeModelListModel1(const CBdatWrapper &wrapper) { s_members[BladeModelListModel1] = Bdat::getMember(wrapper.data, "Model1"); }
 
 u32 getBladeModelListModel1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeModelListModel1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeModelListModel1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1048,34 +919,27 @@ u32 getBladeModelListModel1(const CBdatWrapper &wrapper, u32 id) {
 void initBladeModelListModel2(const CBdatWrapper &wrapper) { s_members[BladeModelListModel2] = Bdat::getMember(wrapper.data, "Model2"); }
 
 u32 getBladeModelListModel2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeModelListModel2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeModelListModel2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeModelListModel2], id, 1).valueU8;
 }
 
-void initBladeModelListPartsNumMin(const CBdatWrapper &wrapper) {
-  s_members[BladeModelListPartsNumMin] = Bdat::getMember(wrapper.data, "PartsNumMin");
-}
+void initBladeModelListPartsNumMin(const CBdatWrapper &wrapper) { s_members[BladeModelListPartsNumMin] = Bdat::getMember(wrapper.data, "PartsNumMin"); }
 
 u32 getBladeModelListPartsNumMin(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeModelListPartsNumMin] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeModelListPartsNumMin] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BladeModelListPartsNumMin], id, 1).valueU8;
 }
 
-void initBladeModelListPartsNumMax(const CBdatWrapper &wrapper) {
-  s_members[BladeModelListPartsNumMax] = Bdat::getMember(wrapper.data, "PartsNumMax");
-}
+void initBladeModelListPartsNumMax(const CBdatWrapper &wrapper) { s_members[BladeModelListPartsNumMax] = Bdat::getMember(wrapper.data, "PartsNumMax"); }
 
 u32 getBladeModelListPartsNumMax(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeModelListPartsNumMax] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeModelListPartsNumMax] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1085,8 +949,7 @@ u32 getBladeModelListPartsNumMax(const CBdatWrapper &wrapper, u32 id) {
 void initBladeModelListParts1(const CBdatWrapper &wrapper) { s_members[BladeModelListParts1] = Bdat::getMember(wrapper.data, "Parts1"); }
 
 u32 getBladeModelListParts1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeModelListParts1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeModelListParts1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1096,8 +959,7 @@ u32 getBladeModelListParts1(const CBdatWrapper &wrapper, u32 id) {
 void initBladeModelListParts2(const CBdatWrapper &wrapper) { s_members[BladeModelListParts2] = Bdat::getMember(wrapper.data, "Parts2"); }
 
 u32 getBladeModelListParts2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeModelListParts2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeModelListParts2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1107,8 +969,7 @@ u32 getBladeModelListParts2(const CBdatWrapper &wrapper, u32 id) {
 void initBladeModelListParts3(const CBdatWrapper &wrapper) { s_members[BladeModelListParts3] = Bdat::getMember(wrapper.data, "Parts3"); }
 
 u32 getBladeModelListParts3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeModelListParts3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeModelListParts3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1118,8 +979,7 @@ u32 getBladeModelListParts3(const CBdatWrapper &wrapper, u32 id) {
 void initBladeModelListParts4(const CBdatWrapper &wrapper) { s_members[BladeModelListParts4] = Bdat::getMember(wrapper.data, "Parts4"); }
 
 u32 getBladeModelListParts4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BladeModelListParts4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BladeModelListParts4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1129,112 +989,87 @@ u32 getBladeModelListParts4(const CBdatWrapper &wrapper, u32 id) {
 void initCreateConfigValue(const CBdatWrapper &wrapper) { s_members[CreateConfigValue] = Bdat::getMember(wrapper.data, "Value"); }
 
 u32 getCreateConfigValue(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CreateConfigValue] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CreateConfigValue] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CreateConfigValue], id, 3).valueU32;
 }
 
-void initCmnBl_CapacityArtsNum1Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityArtsNum1Prob] = Bdat::getMember(wrapper.data, "ArtsNum1Prob");
-}
+void initCmnBl_CapacityArtsNum1Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityArtsNum1Prob] = Bdat::getMember(wrapper.data, "ArtsNum1Prob"); }
 
 u32 getCmnBl_CapacityArtsNum1Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityArtsNum1Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityArtsNum1Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityArtsNum1Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityArtsNum2Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityArtsNum2Prob] = Bdat::getMember(wrapper.data, "ArtsNum2Prob");
-}
+void initCmnBl_CapacityArtsNum2Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityArtsNum2Prob] = Bdat::getMember(wrapper.data, "ArtsNum2Prob"); }
 
 u32 getCmnBl_CapacityArtsNum2Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityArtsNum2Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityArtsNum2Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityArtsNum2Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityArtsNum3Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityArtsNum3Prob] = Bdat::getMember(wrapper.data, "ArtsNum3Prob");
-}
+void initCmnBl_CapacityArtsNum3Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityArtsNum3Prob] = Bdat::getMember(wrapper.data, "ArtsNum3Prob"); }
 
 u32 getCmnBl_CapacityArtsNum3Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityArtsNum3Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityArtsNum3Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityArtsNum3Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityArtsLv1Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityArtsLv1Prob] = Bdat::getMember(wrapper.data, "ArtsLv1Prob");
-}
+void initCmnBl_CapacityArtsLv1Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityArtsLv1Prob] = Bdat::getMember(wrapper.data, "ArtsLv1Prob"); }
 
 u32 getCmnBl_CapacityArtsLv1Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityArtsLv1Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityArtsLv1Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityArtsLv1Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityArtsLv2Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityArtsLv2Prob] = Bdat::getMember(wrapper.data, "ArtsLv2Prob");
-}
+void initCmnBl_CapacityArtsLv2Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityArtsLv2Prob] = Bdat::getMember(wrapper.data, "ArtsLv2Prob"); }
 
 u32 getCmnBl_CapacityArtsLv2Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityArtsLv2Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityArtsLv2Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityArtsLv2Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityArtsLv3Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityArtsLv3Prob] = Bdat::getMember(wrapper.data, "ArtsLv3Prob");
-}
+void initCmnBl_CapacityArtsLv3Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityArtsLv3Prob] = Bdat::getMember(wrapper.data, "ArtsLv3Prob"); }
 
 u32 getCmnBl_CapacityArtsLv3Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityArtsLv3Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityArtsLv3Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityArtsLv3Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityArtsLv4Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityArtsLv4Prob] = Bdat::getMember(wrapper.data, "ArtsLv4Prob");
-}
+void initCmnBl_CapacityArtsLv4Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityArtsLv4Prob] = Bdat::getMember(wrapper.data, "ArtsLv4Prob"); }
 
 u32 getCmnBl_CapacityArtsLv4Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityArtsLv4Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityArtsLv4Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityArtsLv4Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityArtsLv5Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityArtsLv5Prob] = Bdat::getMember(wrapper.data, "ArtsLv5Prob");
-}
+void initCmnBl_CapacityArtsLv5Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityArtsLv5Prob] = Bdat::getMember(wrapper.data, "ArtsLv5Prob"); }
 
 u32 getCmnBl_CapacityArtsLv5Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityArtsLv5Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityArtsLv5Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1244,294 +1079,227 @@ u32 getCmnBl_CapacityArtsLv5Prob(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_CapacityArtsRevCon(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityArtsRevCon] = Bdat::getMember(wrapper.data, "ArtsRevCon"); }
 
 u32 getCmnBl_CapacityArtsRevCon(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityArtsRevCon] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityArtsRevCon] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityArtsRevCon], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityArtsRevRand(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityArtsRevRand] = Bdat::getMember(wrapper.data, "ArtsRevRand");
-}
+void initCmnBl_CapacityArtsRevRand(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityArtsRevRand] = Bdat::getMember(wrapper.data, "ArtsRevRand"); }
 
 u32 getCmnBl_CapacityArtsRevRand(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityArtsRevRand] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityArtsRevRand] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityArtsRevRand], id, 1).valueU8;
 }
 
-void initCmnBl_CapacitySpArtsRevCon(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacitySpArtsRevCon] = Bdat::getMember(wrapper.data, "SpArtsRevCon");
-}
+void initCmnBl_CapacitySpArtsRevCon(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacitySpArtsRevCon] = Bdat::getMember(wrapper.data, "SpArtsRevCon"); }
 
 u32 getCmnBl_CapacitySpArtsRevCon(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacitySpArtsRevCon] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacitySpArtsRevCon] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacitySpArtsRevCon], id, 1).valueU8;
 }
 
-void initCmnBl_CapacitySpArtsRevRand(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacitySpArtsRevRand] = Bdat::getMember(wrapper.data, "SpArtsRevRand");
-}
+void initCmnBl_CapacitySpArtsRevRand(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacitySpArtsRevRand] = Bdat::getMember(wrapper.data, "SpArtsRevRand"); }
 
 u32 getCmnBl_CapacitySpArtsRevRand(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacitySpArtsRevRand] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacitySpArtsRevRand] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacitySpArtsRevRand], id, 1).valueU8;
 }
 
-void initCmnBl_CapacitySkillNum1Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacitySkillNum1Prob] = Bdat::getMember(wrapper.data, "SkillNum1Prob");
-}
+void initCmnBl_CapacitySkillNum1Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacitySkillNum1Prob] = Bdat::getMember(wrapper.data, "SkillNum1Prob"); }
 
 u32 getCmnBl_CapacitySkillNum1Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacitySkillNum1Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacitySkillNum1Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacitySkillNum1Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacitySkillNum2Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacitySkillNum2Prob] = Bdat::getMember(wrapper.data, "SkillNum2Prob");
-}
+void initCmnBl_CapacitySkillNum2Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacitySkillNum2Prob] = Bdat::getMember(wrapper.data, "SkillNum2Prob"); }
 
 u32 getCmnBl_CapacitySkillNum2Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacitySkillNum2Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacitySkillNum2Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacitySkillNum2Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacitySkillNum3Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacitySkillNum3Prob] = Bdat::getMember(wrapper.data, "SkillNum3Prob");
-}
+void initCmnBl_CapacitySkillNum3Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacitySkillNum3Prob] = Bdat::getMember(wrapper.data, "SkillNum3Prob"); }
 
 u32 getCmnBl_CapacitySkillNum3Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacitySkillNum3Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacitySkillNum3Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacitySkillNum3Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacitySkillLv1Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacitySkillLv1Prob] = Bdat::getMember(wrapper.data, "SkillLv1Prob");
-}
+void initCmnBl_CapacitySkillLv1Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacitySkillLv1Prob] = Bdat::getMember(wrapper.data, "SkillLv1Prob"); }
 
 u32 getCmnBl_CapacitySkillLv1Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacitySkillLv1Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacitySkillLv1Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacitySkillLv1Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacitySkillLv2Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacitySkillLv2Prob] = Bdat::getMember(wrapper.data, "SkillLv2Prob");
-}
+void initCmnBl_CapacitySkillLv2Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacitySkillLv2Prob] = Bdat::getMember(wrapper.data, "SkillLv2Prob"); }
 
 u32 getCmnBl_CapacitySkillLv2Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacitySkillLv2Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacitySkillLv2Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacitySkillLv2Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacitySkillLv3Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacitySkillLv3Prob] = Bdat::getMember(wrapper.data, "SkillLv3Prob");
-}
+void initCmnBl_CapacitySkillLv3Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacitySkillLv3Prob] = Bdat::getMember(wrapper.data, "SkillLv3Prob"); }
 
 u32 getCmnBl_CapacitySkillLv3Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacitySkillLv3Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacitySkillLv3Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacitySkillLv3Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacitySkillLv4Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacitySkillLv4Prob] = Bdat::getMember(wrapper.data, "SkillLv4Prob");
-}
+void initCmnBl_CapacitySkillLv4Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacitySkillLv4Prob] = Bdat::getMember(wrapper.data, "SkillLv4Prob"); }
 
 u32 getCmnBl_CapacitySkillLv4Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacitySkillLv4Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacitySkillLv4Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacitySkillLv4Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacitySkillLv5Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacitySkillLv5Prob] = Bdat::getMember(wrapper.data, "SkillLv5Prob");
-}
+void initCmnBl_CapacitySkillLv5Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacitySkillLv5Prob] = Bdat::getMember(wrapper.data, "SkillLv5Prob"); }
 
 u32 getCmnBl_CapacitySkillLv5Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacitySkillLv5Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacitySkillLv5Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacitySkillLv5Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityOrbNum0Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityOrbNum0Prob] = Bdat::getMember(wrapper.data, "OrbNum0Prob");
-}
+void initCmnBl_CapacityOrbNum0Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityOrbNum0Prob] = Bdat::getMember(wrapper.data, "OrbNum0Prob"); }
 
 u32 getCmnBl_CapacityOrbNum0Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityOrbNum0Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityOrbNum0Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityOrbNum0Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityOrbNum1Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityOrbNum1Prob] = Bdat::getMember(wrapper.data, "OrbNum1Prob");
-}
+void initCmnBl_CapacityOrbNum1Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityOrbNum1Prob] = Bdat::getMember(wrapper.data, "OrbNum1Prob"); }
 
 u32 getCmnBl_CapacityOrbNum1Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityOrbNum1Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityOrbNum1Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityOrbNum1Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityOrbNum2Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityOrbNum2Prob] = Bdat::getMember(wrapper.data, "OrbNum2Prob");
-}
+void initCmnBl_CapacityOrbNum2Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityOrbNum2Prob] = Bdat::getMember(wrapper.data, "OrbNum2Prob"); }
 
 u32 getCmnBl_CapacityOrbNum2Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityOrbNum2Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityOrbNum2Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityOrbNum2Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityOrbNum3Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityOrbNum3Prob] = Bdat::getMember(wrapper.data, "OrbNum3Prob");
-}
+void initCmnBl_CapacityOrbNum3Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityOrbNum3Prob] = Bdat::getMember(wrapper.data, "OrbNum3Prob"); }
 
 u32 getCmnBl_CapacityOrbNum3Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityOrbNum3Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityOrbNum3Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityOrbNum3Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityNartsNum1Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityNartsNum1Prob] = Bdat::getMember(wrapper.data, "NartsNum1Prob");
-}
+void initCmnBl_CapacityNartsNum1Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityNartsNum1Prob] = Bdat::getMember(wrapper.data, "NartsNum1Prob"); }
 
 u32 getCmnBl_CapacityNartsNum1Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityNartsNum1Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityNartsNum1Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityNartsNum1Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityNartsNum2Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityNartsNum2Prob] = Bdat::getMember(wrapper.data, "NartsNum2Prob");
-}
+void initCmnBl_CapacityNartsNum2Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityNartsNum2Prob] = Bdat::getMember(wrapper.data, "NartsNum2Prob"); }
 
 u32 getCmnBl_CapacityNartsNum2Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityNartsNum2Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityNartsNum2Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityNartsNum2Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityNartsNum3Prob(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityNartsNum3Prob] = Bdat::getMember(wrapper.data, "NartsNum3Prob");
-}
+void initCmnBl_CapacityNartsNum3Prob(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityNartsNum3Prob] = Bdat::getMember(wrapper.data, "NartsNum3Prob"); }
 
 u32 getCmnBl_CapacityNartsNum3Prob(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityNartsNum3Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityNartsNum3Prob] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityNartsNum3Prob], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityNartsRevCon(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityNartsRevCon] = Bdat::getMember(wrapper.data, "NartsRevCon");
-}
+void initCmnBl_CapacityNartsRevCon(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityNartsRevCon] = Bdat::getMember(wrapper.data, "NartsRevCon"); }
 
 u32 getCmnBl_CapacityNartsRevCon(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityNartsRevCon] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityNartsRevCon] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityNartsRevCon], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityNartsRevRand(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityNartsRevRand] = Bdat::getMember(wrapper.data, "NartsRevRand");
-}
+void initCmnBl_CapacityNartsRevRand(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityNartsRevRand] = Bdat::getMember(wrapper.data, "NartsRevRand"); }
 
 u32 getCmnBl_CapacityNartsRevRand(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityNartsRevRand] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityNartsRevRand] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityNartsRevRand], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityStatusRevCon(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityStatusRevCon] = Bdat::getMember(wrapper.data, "StatusRevCon");
-}
+void initCmnBl_CapacityStatusRevCon(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityStatusRevCon] = Bdat::getMember(wrapper.data, "StatusRevCon"); }
 
 u32 getCmnBl_CapacityStatusRevCon(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityStatusRevCon] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityStatusRevCon] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[CmnBl_CapacityStatusRevCon], id, 1).valueU8;
 }
 
-void initCmnBl_CapacityStatusRevRand(const CBdatWrapper &wrapper) {
-  s_members[CmnBl_CapacityStatusRevRand] = Bdat::getMember(wrapper.data, "StatusRevRand");
-}
+void initCmnBl_CapacityStatusRevRand(const CBdatWrapper &wrapper) { s_members[CmnBl_CapacityStatusRevRand] = Bdat::getMember(wrapper.data, "StatusRevRand"); }
 
 u32 getCmnBl_CapacityStatusRevRand(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_CapacityStatusRevRand] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_CapacityStatusRevRand] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1541,8 +1309,7 @@ u32 getCmnBl_CapacityStatusRevRand(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_PowerMinLv(const CBdatWrapper &wrapper) { s_members[CmnBl_PowerMinLv] = Bdat::getMember(wrapper.data, "MinLv"); }
 
 u32 getCmnBl_PowerMinLv(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_PowerMinLv] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_PowerMinLv] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1552,8 +1319,7 @@ u32 getCmnBl_PowerMinLv(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_PowerMaxLv(const CBdatWrapper &wrapper) { s_members[CmnBl_PowerMaxLv] = Bdat::getMember(wrapper.data, "MaxLv"); }
 
 u32 getCmnBl_PowerMaxLv(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_PowerMaxLv] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_PowerMaxLv] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1563,8 +1329,7 @@ u32 getCmnBl_PowerMaxLv(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_PowerPow01(const CBdatWrapper &wrapper) { s_members[CmnBl_PowerPow01] = Bdat::getMember(wrapper.data, "Pow01"); }
 
 u32 getCmnBl_PowerPow01(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_PowerPow01] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_PowerPow01] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1574,8 +1339,7 @@ u32 getCmnBl_PowerPow01(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_PowerPow02(const CBdatWrapper &wrapper) { s_members[CmnBl_PowerPow02] = Bdat::getMember(wrapper.data, "Pow02"); }
 
 u32 getCmnBl_PowerPow02(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_PowerPow02] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_PowerPow02] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1585,8 +1349,7 @@ u32 getCmnBl_PowerPow02(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_PowerPow03(const CBdatWrapper &wrapper) { s_members[CmnBl_PowerPow03] = Bdat::getMember(wrapper.data, "Pow03"); }
 
 u32 getCmnBl_PowerPow03(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_PowerPow03] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_PowerPow03] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1596,8 +1359,7 @@ u32 getCmnBl_PowerPow03(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_PowerPow04(const CBdatWrapper &wrapper) { s_members[CmnBl_PowerPow04] = Bdat::getMember(wrapper.data, "Pow04"); }
 
 u32 getCmnBl_PowerPow04(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_PowerPow04] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_PowerPow04] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1607,8 +1369,7 @@ u32 getCmnBl_PowerPow04(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_PowerPow05(const CBdatWrapper &wrapper) { s_members[CmnBl_PowerPow05] = Bdat::getMember(wrapper.data, "Pow05"); }
 
 u32 getCmnBl_PowerPow05(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_PowerPow05] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_PowerPow05] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1618,8 +1379,7 @@ u32 getCmnBl_PowerPow05(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_PowerPow06(const CBdatWrapper &wrapper) { s_members[CmnBl_PowerPow06] = Bdat::getMember(wrapper.data, "Pow06"); }
 
 u32 getCmnBl_PowerPow06(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_PowerPow06] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_PowerPow06] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1629,8 +1389,7 @@ u32 getCmnBl_PowerPow06(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_PowerPow07(const CBdatWrapper &wrapper) { s_members[CmnBl_PowerPow07] = Bdat::getMember(wrapper.data, "Pow07"); }
 
 u32 getCmnBl_PowerPow07(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_PowerPow07] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_PowerPow07] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1640,8 +1399,7 @@ u32 getCmnBl_PowerPow07(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_PowerPow08(const CBdatWrapper &wrapper) { s_members[CmnBl_PowerPow08] = Bdat::getMember(wrapper.data, "Pow08"); }
 
 u32 getCmnBl_PowerPow08(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_PowerPow08] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_PowerPow08] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1651,8 +1409,7 @@ u32 getCmnBl_PowerPow08(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_PowerPow09(const CBdatWrapper &wrapper) { s_members[CmnBl_PowerPow09] = Bdat::getMember(wrapper.data, "Pow09"); }
 
 u32 getCmnBl_PowerPow09(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_PowerPow09] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_PowerPow09] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1662,8 +1419,7 @@ u32 getCmnBl_PowerPow09(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_PowerPow10(const CBdatWrapper &wrapper) { s_members[CmnBl_PowerPow10] = Bdat::getMember(wrapper.data, "Pow10"); }
 
 u32 getCmnBl_PowerPow10(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_PowerPow10] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_PowerPow10] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1673,8 +1429,7 @@ u32 getCmnBl_PowerPow10(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_NewBlArtsWpnType(const CBdatWrapper &wrapper) { s_members[CmnBl_NewBlArtsWpnType] = Bdat::getMember(wrapper.data, "WpnType"); }
 
 u32 getCmnBl_NewBlArtsWpnType(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_NewBlArtsWpnType] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_NewBlArtsWpnType] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1684,8 +1439,7 @@ u32 getCmnBl_NewBlArtsWpnType(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_NewBlArtsNBA_01(const CBdatWrapper &wrapper) { s_members[CmnBl_NewBlArtsNBA_01] = Bdat::getMember(wrapper.data, "NBA_01"); }
 
 u32 getCmnBl_NewBlArtsNBA_01(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_NewBlArtsNBA_01] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_NewBlArtsNBA_01] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1695,8 +1449,7 @@ u32 getCmnBl_NewBlArtsNBA_01(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_NewBlArtsNBA_02(const CBdatWrapper &wrapper) { s_members[CmnBl_NewBlArtsNBA_02] = Bdat::getMember(wrapper.data, "NBA_02"); }
 
 u32 getCmnBl_NewBlArtsNBA_02(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_NewBlArtsNBA_02] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_NewBlArtsNBA_02] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1706,8 +1459,7 @@ u32 getCmnBl_NewBlArtsNBA_02(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_NewBlArtsNBA_03(const CBdatWrapper &wrapper) { s_members[CmnBl_NewBlArtsNBA_03] = Bdat::getMember(wrapper.data, "NBA_03"); }
 
 u32 getCmnBl_NewBlArtsNBA_03(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_NewBlArtsNBA_03] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_NewBlArtsNBA_03] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1717,8 +1469,7 @@ u32 getCmnBl_NewBlArtsNBA_03(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_NewBlArtsNBA_04(const CBdatWrapper &wrapper) { s_members[CmnBl_NewBlArtsNBA_04] = Bdat::getMember(wrapper.data, "NBA_04"); }
 
 u32 getCmnBl_NewBlArtsNBA_04(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_NewBlArtsNBA_04] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_NewBlArtsNBA_04] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1728,8 +1479,7 @@ u32 getCmnBl_NewBlArtsNBA_04(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_NewBlArtsNBA_05(const CBdatWrapper &wrapper) { s_members[CmnBl_NewBlArtsNBA_05] = Bdat::getMember(wrapper.data, "NBA_05"); }
 
 u32 getCmnBl_NewBlArtsNBA_05(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_NewBlArtsNBA_05] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_NewBlArtsNBA_05] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1739,8 +1489,7 @@ u32 getCmnBl_NewBlArtsNBA_05(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_NewBlArtsNBA_06(const CBdatWrapper &wrapper) { s_members[CmnBl_NewBlArtsNBA_06] = Bdat::getMember(wrapper.data, "NBA_06"); }
 
 u32 getCmnBl_NewBlArtsNBA_06(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_NewBlArtsNBA_06] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_NewBlArtsNBA_06] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1750,8 +1499,7 @@ u32 getCmnBl_NewBlArtsNBA_06(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_NewBlArtsNBA_07(const CBdatWrapper &wrapper) { s_members[CmnBl_NewBlArtsNBA_07] = Bdat::getMember(wrapper.data, "NBA_07"); }
 
 u32 getCmnBl_NewBlArtsNBA_07(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_NewBlArtsNBA_07] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_NewBlArtsNBA_07] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1761,8 +1509,7 @@ u32 getCmnBl_NewBlArtsNBA_07(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_NewBlArtsNBA_08(const CBdatWrapper &wrapper) { s_members[CmnBl_NewBlArtsNBA_08] = Bdat::getMember(wrapper.data, "NBA_08"); }
 
 u32 getCmnBl_NewBlArtsNBA_08(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_NewBlArtsNBA_08] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_NewBlArtsNBA_08] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1772,8 +1519,7 @@ u32 getCmnBl_NewBlArtsNBA_08(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_StatusTypeWpnType(const CBdatWrapper &wrapper) { s_members[CmnBl_StatusTypeWpnType] = Bdat::getMember(wrapper.data, "WpnType"); }
 
 u32 getCmnBl_StatusTypeWpnType(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_StatusTypeWpnType] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_StatusTypeWpnType] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1783,8 +1529,7 @@ u32 getCmnBl_StatusTypeWpnType(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_StatusTypeStatus01(const CBdatWrapper &wrapper) { s_members[CmnBl_StatusTypeStatus01] = Bdat::getMember(wrapper.data, "Status01"); }
 
 u32 getCmnBl_StatusTypeStatus01(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_StatusTypeStatus01] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_StatusTypeStatus01] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1794,8 +1539,7 @@ u32 getCmnBl_StatusTypeStatus01(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_StatusTypeStatus02(const CBdatWrapper &wrapper) { s_members[CmnBl_StatusTypeStatus02] = Bdat::getMember(wrapper.data, "Status02"); }
 
 u32 getCmnBl_StatusTypeStatus02(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_StatusTypeStatus02] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_StatusTypeStatus02] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1805,8 +1549,7 @@ u32 getCmnBl_StatusTypeStatus02(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_StatusTypeStatus03(const CBdatWrapper &wrapper) { s_members[CmnBl_StatusTypeStatus03] = Bdat::getMember(wrapper.data, "Status03"); }
 
 u32 getCmnBl_StatusTypeStatus03(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_StatusTypeStatus03] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_StatusTypeStatus03] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1816,8 +1559,7 @@ u32 getCmnBl_StatusTypeStatus03(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_StatusTypeStatus04(const CBdatWrapper &wrapper) { s_members[CmnBl_StatusTypeStatus04] = Bdat::getMember(wrapper.data, "Status04"); }
 
 u32 getCmnBl_StatusTypeStatus04(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_StatusTypeStatus04] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_StatusTypeStatus04] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1827,8 +1569,7 @@ u32 getCmnBl_StatusTypeStatus04(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_StatusTypeStatus05(const CBdatWrapper &wrapper) { s_members[CmnBl_StatusTypeStatus05] = Bdat::getMember(wrapper.data, "Status05"); }
 
 u32 getCmnBl_StatusTypeStatus05(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_StatusTypeStatus05] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_StatusTypeStatus05] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1838,8 +1579,7 @@ u32 getCmnBl_StatusTypeStatus05(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_StatusTypeStatus06(const CBdatWrapper &wrapper) { s_members[CmnBl_StatusTypeStatus06] = Bdat::getMember(wrapper.data, "Status06"); }
 
 u32 getCmnBl_StatusTypeStatus06(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_StatusTypeStatus06] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_StatusTypeStatus06] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1849,8 +1589,7 @@ u32 getCmnBl_StatusTypeStatus06(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_ArmorWpnType(const CBdatWrapper &wrapper) { s_members[CmnBl_ArmorWpnType] = Bdat::getMember(wrapper.data, "WpnType"); }
 
 u32 getCmnBl_ArmorWpnType(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_ArmorWpnType] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_ArmorWpnType] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1860,8 +1599,7 @@ u32 getCmnBl_ArmorWpnType(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_ArmorPArmorCon(const CBdatWrapper &wrapper) { s_members[CmnBl_ArmorPArmorCon] = Bdat::getMember(wrapper.data, "PArmorCon"); }
 
 u32 getCmnBl_ArmorPArmorCon(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_ArmorPArmorCon] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_ArmorPArmorCon] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1871,8 +1609,7 @@ u32 getCmnBl_ArmorPArmorCon(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_ArmorPArmorRand(const CBdatWrapper &wrapper) { s_members[CmnBl_ArmorPArmorRand] = Bdat::getMember(wrapper.data, "PArmorRand"); }
 
 u32 getCmnBl_ArmorPArmorRand(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_ArmorPArmorRand] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_ArmorPArmorRand] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1882,8 +1619,7 @@ u32 getCmnBl_ArmorPArmorRand(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_ArmorEArmorCon(const CBdatWrapper &wrapper) { s_members[CmnBl_ArmorEArmorCon] = Bdat::getMember(wrapper.data, "EArmorCon"); }
 
 u32 getCmnBl_ArmorEArmorCon(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_ArmorEArmorCon] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_ArmorEArmorCon] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1893,8 +1629,7 @@ u32 getCmnBl_ArmorEArmorCon(const CBdatWrapper &wrapper, u32 id) {
 void initCmnBl_ArmorEArmorRand(const CBdatWrapper &wrapper) { s_members[CmnBl_ArmorEArmorRand] = Bdat::getMember(wrapper.data, "EArmorRand"); }
 
 u32 getCmnBl_ArmorEArmorRand(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[CmnBl_ArmorEArmorRand] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[CmnBl_ArmorEArmorRand] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1904,8 +1639,7 @@ u32 getCmnBl_ArmorEArmorRand(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_IdeaTableTrustPoint(const CBdatWrapper &wrapper) { s_members[FLD_IdeaTableTrustPoint] = Bdat::getMember(wrapper.data, "TrustPoint"); }
 
 u32 getFLD_IdeaTableTrustPoint(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_IdeaTableTrustPoint] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_IdeaTableTrustPoint] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1915,47 +1649,37 @@ u32 getFLD_IdeaTableTrustPoint(const CBdatWrapper &wrapper, u32 id) {
 void initFLD_IdeaTableWpnRatio(const CBdatWrapper &wrapper) { s_members[FLD_IdeaTableWpnRatio] = Bdat::getMember(wrapper.data, "WpnRatio"); }
 
 u32 getFLD_IdeaTableWpnRatio(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_IdeaTableWpnRatio] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_IdeaTableWpnRatio] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_IdeaTableWpnRatio], id, 2).valueU16;
 }
 
-void initFLD_IdeaTableNArtsProbRev(const CBdatWrapper &wrapper) {
-  s_members[FLD_IdeaTableNArtsProbRev] = Bdat::getMember(wrapper.data, "NArtsProbRev");
-}
+void initFLD_IdeaTableNArtsProbRev(const CBdatWrapper &wrapper) { s_members[FLD_IdeaTableNArtsProbRev] = Bdat::getMember(wrapper.data, "NArtsProbRev"); }
 
 u32 getFLD_IdeaTableNArtsProbRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_IdeaTableNArtsProbRev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_IdeaTableNArtsProbRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_IdeaTableNArtsProbRev], id, 1).valueU8;
 }
 
-void initFLD_IdeaTableBladeChangeRev(const CBdatWrapper &wrapper) {
-  s_members[FLD_IdeaTableBladeChangeRev] = Bdat::getMember(wrapper.data, "BladeChangeRev");
-}
+void initFLD_IdeaTableBladeChangeRev(const CBdatWrapper &wrapper) { s_members[FLD_IdeaTableBladeChangeRev] = Bdat::getMember(wrapper.data, "BladeChangeRev"); }
 
 s32 getFLD_IdeaTableBladeChangeRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_IdeaTableBladeChangeRev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_IdeaTableBladeChangeRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[FLD_IdeaTableBladeChangeRev], id, 5).valueS16;
 }
 
-void initFLD_IdeaTableBladeArtsRev(const CBdatWrapper &wrapper) {
-  s_members[FLD_IdeaTableBladeArtsRev] = Bdat::getMember(wrapper.data, "BladeArtsRev");
-}
+void initFLD_IdeaTableBladeArtsRev(const CBdatWrapper &wrapper) { s_members[FLD_IdeaTableBladeArtsRev] = Bdat::getMember(wrapper.data, "BladeArtsRev"); }
 
 s32 getFLD_IdeaTableBladeArtsRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[FLD_IdeaTableBladeArtsRev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[FLD_IdeaTableBladeArtsRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1965,8 +1689,7 @@ s32 getFLD_IdeaTableBladeArtsRev(const CBdatWrapper &wrapper, u32 id) {
 void initBLD_IdeaNeedPoint(const CBdatWrapper &wrapper) { s_members[BLD_IdeaNeedPoint] = Bdat::getMember(wrapper.data, "NeedPoint"); }
 
 u32 getBLD_IdeaNeedPoint(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_IdeaNeedPoint] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_IdeaNeedPoint] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1976,8 +1699,7 @@ u32 getBLD_IdeaNeedPoint(const CBdatWrapper &wrapper, u32 id) {
 void initBLD_IdeaProbRev(const CBdatWrapper &wrapper) { s_members[BLD_IdeaProbRev] = Bdat::getMember(wrapper.data, "ProbRev"); }
 
 u32 getBLD_IdeaProbRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_IdeaProbRev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_IdeaProbRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1987,8 +1709,7 @@ u32 getBLD_IdeaProbRev(const CBdatWrapper &wrapper, u32 id) {
 void initBLD_IdeaAtrDamRev(const CBdatWrapper &wrapper) { s_members[BLD_IdeaAtrDamRev] = Bdat::getMember(wrapper.data, "AtrDamRev"); }
 
 u32 getBLD_IdeaAtrDamRev(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_IdeaAtrDamRev] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_IdeaAtrDamRev] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -1998,8 +1719,7 @@ u32 getBLD_IdeaAtrDamRev(const CBdatWrapper &wrapper, u32 id) {
 void initBLD_RareListBlade(const CBdatWrapper &wrapper) { s_members[BLD_RareListBlade] = Bdat::getMember(wrapper.data, "Blade"); }
 
 u32 getBLD_RareListBlade(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_RareListBlade] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_RareListBlade] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2009,8 +1729,7 @@ u32 getBLD_RareListBlade(const CBdatWrapper &wrapper, u32 id) {
 void initBLD_RareListCondition(const CBdatWrapper &wrapper) { s_members[BLD_RareListCondition] = Bdat::getMember(wrapper.data, "Condition"); }
 
 u32 getBLD_RareListCondition(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_RareListCondition] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_RareListCondition] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2021,8 +1740,7 @@ void initBLD_RareListProb1(const CBdatWrapper &wrapper) { s_members[BLD_RareList
 
 f32 getBLD_RareListProb1(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[BLD_RareListProb1] != nullptr && id >= Bdat::getIdTop(wrapper.data) &&
-      id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_RareListProb1] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     value = wrapper.getValCheck(s_members[BLD_RareListProb1], id, 8).valueF32;
   }
 
@@ -2032,8 +1750,7 @@ f32 getBLD_RareListProb1(const CBdatWrapper &wrapper, u32 id) {
 void initBLD_RareListAssure1(const CBdatWrapper &wrapper) { s_members[BLD_RareListAssure1] = Bdat::getMember(wrapper.data, "Assure1"); }
 
 u32 getBLD_RareListAssure1(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_RareListAssure1] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_RareListAssure1] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2044,8 +1761,7 @@ void initBLD_RareListProb2(const CBdatWrapper &wrapper) { s_members[BLD_RareList
 
 f32 getBLD_RareListProb2(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[BLD_RareListProb2] != nullptr && id >= Bdat::getIdTop(wrapper.data) &&
-      id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_RareListProb2] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     value = wrapper.getValCheck(s_members[BLD_RareListProb2], id, 8).valueF32;
   }
 
@@ -2055,8 +1771,7 @@ f32 getBLD_RareListProb2(const CBdatWrapper &wrapper, u32 id) {
 void initBLD_RareListAssure2(const CBdatWrapper &wrapper) { s_members[BLD_RareListAssure2] = Bdat::getMember(wrapper.data, "Assure2"); }
 
 u32 getBLD_RareListAssure2(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_RareListAssure2] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_RareListAssure2] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2067,8 +1782,7 @@ void initBLD_RareListProb3(const CBdatWrapper &wrapper) { s_members[BLD_RareList
 
 f32 getBLD_RareListProb3(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[BLD_RareListProb3] != nullptr && id >= Bdat::getIdTop(wrapper.data) &&
-      id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_RareListProb3] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     value = wrapper.getValCheck(s_members[BLD_RareListProb3], id, 8).valueF32;
   }
 
@@ -2078,8 +1792,7 @@ f32 getBLD_RareListProb3(const CBdatWrapper &wrapper, u32 id) {
 void initBLD_RareListAssure3(const CBdatWrapper &wrapper) { s_members[BLD_RareListAssure3] = Bdat::getMember(wrapper.data, "Assure3"); }
 
 u32 getBLD_RareListAssure3(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_RareListAssure3] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_RareListAssure3] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2090,8 +1803,7 @@ void initBLD_RareListProb4(const CBdatWrapper &wrapper) { s_members[BLD_RareList
 
 f32 getBLD_RareListProb4(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[BLD_RareListProb4] != nullptr && id >= Bdat::getIdTop(wrapper.data) &&
-      id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_RareListProb4] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     value = wrapper.getValCheck(s_members[BLD_RareListProb4], id, 8).valueF32;
   }
 
@@ -2101,8 +1813,7 @@ f32 getBLD_RareListProb4(const CBdatWrapper &wrapper, u32 id) {
 void initBLD_RareListAssure4(const CBdatWrapper &wrapper) { s_members[BLD_RareListAssure4] = Bdat::getMember(wrapper.data, "Assure4"); }
 
 u32 getBLD_RareListAssure4(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_RareListAssure4] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_RareListAssure4] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2113,8 +1824,7 @@ void initBLD_RareListProb5(const CBdatWrapper &wrapper) { s_members[BLD_RareList
 
 f32 getBLD_RareListProb5(const CBdatWrapper &wrapper, u32 id) {
   f32 value = 0.0f;
-  if (s_members[BLD_RareListProb5] != nullptr && id >= Bdat::getIdTop(wrapper.data) &&
-      id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_RareListProb5] != nullptr && id >= Bdat::getIdTop(wrapper.data) && id < Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     value = wrapper.getValCheck(s_members[BLD_RareListProb5], id, 8).valueF32;
   }
 
@@ -2124,99 +1834,77 @@ f32 getBLD_RareListProb5(const CBdatWrapper &wrapper, u32 id) {
 void initBLD_RareListAssure5(const CBdatWrapper &wrapper) { s_members[BLD_RareListAssure5] = Bdat::getMember(wrapper.data, "Assure5"); }
 
 u32 getBLD_RareListAssure5(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_RareListAssure5] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_RareListAssure5] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BLD_RareListAssure5], id, 1).valueU8;
 }
 
-void initBLD_ReleaceRewardReleace001(const CBdatWrapper &wrapper) {
-  s_members[BLD_ReleaceRewardReleace001] = Bdat::getMember(wrapper.data, "Releace001");
-}
+void initBLD_ReleaceRewardReleace001(const CBdatWrapper &wrapper) { s_members[BLD_ReleaceRewardReleace001] = Bdat::getMember(wrapper.data, "Releace001"); }
 
 u32 getBLD_ReleaceRewardReleace001(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_ReleaceRewardReleace001] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_ReleaceRewardReleace001] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BLD_ReleaceRewardReleace001], id, 2).valueU16;
 }
 
-void initBLD_ReleaceRewardReleace002(const CBdatWrapper &wrapper) {
-  s_members[BLD_ReleaceRewardReleace002] = Bdat::getMember(wrapper.data, "Releace002");
-}
+void initBLD_ReleaceRewardReleace002(const CBdatWrapper &wrapper) { s_members[BLD_ReleaceRewardReleace002] = Bdat::getMember(wrapper.data, "Releace002"); }
 
 u32 getBLD_ReleaceRewardReleace002(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_ReleaceRewardReleace002] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_ReleaceRewardReleace002] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BLD_ReleaceRewardReleace002], id, 2).valueU16;
 }
 
-void initBLD_ReleaceRewardReleace003(const CBdatWrapper &wrapper) {
-  s_members[BLD_ReleaceRewardReleace003] = Bdat::getMember(wrapper.data, "Releace003");
-}
+void initBLD_ReleaceRewardReleace003(const CBdatWrapper &wrapper) { s_members[BLD_ReleaceRewardReleace003] = Bdat::getMember(wrapper.data, "Releace003"); }
 
 u32 getBLD_ReleaceRewardReleace003(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_ReleaceRewardReleace003] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_ReleaceRewardReleace003] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BLD_ReleaceRewardReleace003], id, 2).valueU16;
 }
 
-void initBLD_ReleaceRewardReleace004(const CBdatWrapper &wrapper) {
-  s_members[BLD_ReleaceRewardReleace004] = Bdat::getMember(wrapper.data, "Releace004");
-}
+void initBLD_ReleaceRewardReleace004(const CBdatWrapper &wrapper) { s_members[BLD_ReleaceRewardReleace004] = Bdat::getMember(wrapper.data, "Releace004"); }
 
 u32 getBLD_ReleaceRewardReleace004(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_ReleaceRewardReleace004] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_ReleaceRewardReleace004] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BLD_ReleaceRewardReleace004], id, 2).valueU16;
 }
 
-void initBLD_ReleaceRewardReleace005(const CBdatWrapper &wrapper) {
-  s_members[BLD_ReleaceRewardReleace005] = Bdat::getMember(wrapper.data, "Releace005");
-}
+void initBLD_ReleaceRewardReleace005(const CBdatWrapper &wrapper) { s_members[BLD_ReleaceRewardReleace005] = Bdat::getMember(wrapper.data, "Releace005"); }
 
 u32 getBLD_ReleaceRewardReleace005(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_ReleaceRewardReleace005] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_ReleaceRewardReleace005] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BLD_ReleaceRewardReleace005], id, 2).valueU16;
 }
 
-void initBLD_ReleaceRewardReleace006(const CBdatWrapper &wrapper) {
-  s_members[BLD_ReleaceRewardReleace006] = Bdat::getMember(wrapper.data, "Releace006");
-}
+void initBLD_ReleaceRewardReleace006(const CBdatWrapper &wrapper) { s_members[BLD_ReleaceRewardReleace006] = Bdat::getMember(wrapper.data, "Releace006"); }
 
 u32 getBLD_ReleaceRewardReleace006(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_ReleaceRewardReleace006] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_ReleaceRewardReleace006] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
   return wrapper.getValCheck(s_members[BLD_ReleaceRewardReleace006], id, 2).valueU16;
 }
 
-void initBLD_ReleaceRewardReleace007(const CBdatWrapper &wrapper) {
-  s_members[BLD_ReleaceRewardReleace007] = Bdat::getMember(wrapper.data, "Releace007");
-}
+void initBLD_ReleaceRewardReleace007(const CBdatWrapper &wrapper) { s_members[BLD_ReleaceRewardReleace007] = Bdat::getMember(wrapper.data, "Releace007"); }
 
 u32 getBLD_ReleaceRewardReleace007(const CBdatWrapper &wrapper, u32 id) {
-  if (s_members[BLD_ReleaceRewardReleace007] == nullptr || id < Bdat::getIdTop(wrapper.data) ||
-      id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
+  if (s_members[BLD_ReleaceRewardReleace007] == nullptr || id < Bdat::getIdTop(wrapper.data) || id >= Bdat::getIdTop(wrapper.data) + Bdat::getIdCount(wrapper.data)) {
     return 0;
   }
 
@@ -2224,23 +1912,18 @@ u32 getBLD_ReleaceRewardReleace007(const CBdatWrapper &wrapper, u32 id) {
 }
 
 u32 getCmnBl_CapacitySkillNumProb(const CBdatWrapper &wrapper, u32 id, u32 index) {
-  static u32 (*const getters[])(const CBdatWrapper &,
-                                u32) = {getCmnBl_CapacitySkillNum1Prob, getCmnBl_CapacitySkillNum2Prob, getCmnBl_CapacitySkillNum3Prob};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {getCmnBl_CapacitySkillNum1Prob, getCmnBl_CapacitySkillNum2Prob, getCmnBl_CapacitySkillNum3Prob};
   return getters[index](wrapper, id);
 }
 
 u32 getCmnBl_CapacitySkillLvProb(const CBdatWrapper &wrapper, u32 id, u32 index) {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {getCmnBl_CapacitySkillLv1Prob,
-                                                              getCmnBl_CapacitySkillLv2Prob,
-                                                              getCmnBl_CapacitySkillLv3Prob,
-                                                              getCmnBl_CapacitySkillLv4Prob,
-                                                              getCmnBl_CapacitySkillLv5Prob};
+  static u32 (*const getters[])(const CBdatWrapper &,
+                                u32) = {getCmnBl_CapacitySkillLv1Prob, getCmnBl_CapacitySkillLv2Prob, getCmnBl_CapacitySkillLv3Prob, getCmnBl_CapacitySkillLv4Prob, getCmnBl_CapacitySkillLv5Prob};
   return getters[index](wrapper, id);
 }
 
 u32 getCmnBl_CapacityOrbNumProb(const CBdatWrapper &wrapper, u32 id, u32 index) {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
-      getCmnBl_CapacityOrbNum0Prob, getCmnBl_CapacityOrbNum1Prob, getCmnBl_CapacityOrbNum2Prob, getCmnBl_CapacityOrbNum3Prob};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {getCmnBl_CapacityOrbNum0Prob, getCmnBl_CapacityOrbNum1Prob, getCmnBl_CapacityOrbNum2Prob, getCmnBl_CapacityOrbNum3Prob};
   return getters[index](wrapper, id);
 }
 
@@ -2271,61 +1954,48 @@ u32 getCmnBl_NewBlArtsNBA(const CBdatWrapper &wrapper, u32 id, u32 index) {
 }
 
 u32 getCmnBl_StatusTypeStatus(const CBdatWrapper &wrapper, u32 id, u32 index) {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {getCmnBl_StatusTypeStatus01,
-                                                              getCmnBl_StatusTypeStatus02,
-                                                              getCmnBl_StatusTypeStatus03,
-                                                              getCmnBl_StatusTypeStatus04,
-                                                              getCmnBl_StatusTypeStatus05,
-                                                              getCmnBl_StatusTypeStatus06};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      getCmnBl_StatusTypeStatus01, getCmnBl_StatusTypeStatus02, getCmnBl_StatusTypeStatus03, getCmnBl_StatusTypeStatus04, getCmnBl_StatusTypeStatus05, getCmnBl_StatusTypeStatus06};
   return getters[index](wrapper, id);
 }
 
 u32 getCommonListArtsAchievementSet(const CBdatWrapper &wrapper, u32 id, u32 index) {
-  static u32 (*const getters[])(const CBdatWrapper &,
-                                u32) = {getCommonListArtsAchievementSet1, getCommonListArtsAchievementSet2, getCommonListArtsAchievementSet3};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {getCommonListArtsAchievementSet1, getCommonListArtsAchievementSet2, getCommonListArtsAchievementSet3};
   return getters[index](wrapper, id);
 }
 
 u32 getCommonListSkillAchievementSet(const CBdatWrapper &wrapper, u32 id, u32 index) {
-  static u32 (*const getters[])(const CBdatWrapper &,
-                                u32) = {getCommonListSkillAchievementSet1, getCommonListSkillAchievementSet2, getCommonListSkillAchievementSet3};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {getCommonListSkillAchievementSet1, getCommonListSkillAchievementSet2, getCommonListSkillAchievementSet3};
   return getters[index](wrapper, id);
 }
 
 u32 getCommonListFskillAchivementSet(const CBdatWrapper &wrapper, u32 id, u32 index) {
-  static u32 (*const getters[])(const CBdatWrapper &,
-                                u32) = {getCommonListFskillAchivementSet1, getCommonListFskillAchivementSet2, getCommonListFskillAchivementSet3};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {getCommonListFskillAchivementSet1, getCommonListFskillAchivementSet2, getCommonListFskillAchivementSet3};
   return getters[index](wrapper, id);
 }
 
 f32 getBLD_RareListProb(const CBdatWrapper &wrapper, u32 id, u32 index) {
-  static f32 (*const getters[])(const CBdatWrapper &,
-                                u32) = {getBLD_RareListProb1, getBLD_RareListProb2, getBLD_RareListProb3, getBLD_RareListProb4, getBLD_RareListProb5};
+  static f32 (*const getters[])(const CBdatWrapper &, u32) = {getBLD_RareListProb1, getBLD_RareListProb2, getBLD_RareListProb3, getBLD_RareListProb4, getBLD_RareListProb5};
   return getters[index](wrapper, id);
 }
 
 u32 getBLD_RareListAssure(const CBdatWrapper &wrapper, u32 id, u32 index) {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
-      getBLD_RareListAssure1, getBLD_RareListAssure1, getBLD_RareListAssure2, getBLD_RareListAssure3, getBLD_RareListAssure4};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {getBLD_RareListAssure1, getBLD_RareListAssure1, getBLD_RareListAssure2, getBLD_RareListAssure3, getBLD_RareListAssure4};
   return getters[index](wrapper, id);
 }
 
 u32 getBLD_ReleaceRewardReleace(const CBdatWrapper &wrapper, u32 id, u32 index) {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {getBLD_ReleaceRewardReleace001,
-                                                              getBLD_ReleaceRewardReleace002,
-                                                              getBLD_ReleaceRewardReleace003,
-                                                              getBLD_ReleaceRewardReleace004,
-                                                              getBLD_ReleaceRewardReleace005,
-                                                              getBLD_ReleaceRewardReleace006};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      getBLD_ReleaceRewardReleace001, getBLD_ReleaceRewardReleace002, getBLD_ReleaceRewardReleace003, getBLD_ReleaceRewardReleace004, getBLD_ReleaceRewardReleace005, getBLD_ReleaceRewardReleace006};
   return getters[index](wrapper, id);
 }
 
 } // namespace _gfbdb
 
 GfBdatBlade::GfBdatBlade()
-    : m_ideaTable(nullptr), m_bladeTable(nullptr), m_bladeList(nullptr), m_commonList(nullptr), m_nameList(nullptr), m_bladeModelList(nullptr),
-      m_createConfig(nullptr), m_cmnBl_Capacity(nullptr), m_cmnBl_Power(nullptr), m_cmnBl_NewBlArts(nullptr), m_cmnBl_StatusType(nullptr),
-      m_cmnBl_Armor(nullptr), m_FLD_IdeaTable(nullptr), m_BLD_Idea(nullptr), m_BLD_RareList(nullptr), m_BLD_ReleaceReward(nullptr) {
+    : m_ideaTable(nullptr), m_bladeTable(nullptr), m_bladeList(nullptr), m_commonList(nullptr), m_nameList(nullptr), m_bladeModelList(nullptr), m_createConfig(nullptr), m_cmnBl_Capacity(nullptr),
+      m_cmnBl_Power(nullptr), m_cmnBl_NewBlArts(nullptr), m_cmnBl_StatusType(nullptr), m_cmnBl_Armor(nullptr), m_FLD_IdeaTable(nullptr), m_BLD_Idea(nullptr), m_BLD_RareList(nullptr),
+      m_BLD_ReleaceReward(nullptr) {
   bdatRefresh();
 }
 
@@ -2413,7 +2083,7 @@ void GfBdatBlade::destroyFP() {
   }
 }
 
-#define NEW_BDAT_WRAPPER(bdat)                                                                                                                       \
+#define NEW_BDAT_WRAPPER(bdat)                                                                                                                                                                         \
   new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) CBdatWrapper { GfDataBdat::getFP(bdat) }
 
 void GfBdatBlade::createFP() {
@@ -2798,17 +2468,11 @@ u32 GfBdatBlade::getCommonListFavoriteCategoryMax(u32 id) const { return _gfbdb:
 
 u32 GfBdatBlade::getCommonListFavoriteItemMax(u32 id) const { return _gfbdb::getCommonListFavoriteItemMax(*m_commonList, id); }
 
-u32 GfBdatBlade::getCommonListArtsAchievementSet(u32 id, u32 index) const {
-  return _gfbdb::getCommonListArtsAchievementSet(*m_commonList, id, index);
-}
+u32 GfBdatBlade::getCommonListArtsAchievementSet(u32 id, u32 index) const { return _gfbdb::getCommonListArtsAchievementSet(*m_commonList, id, index); }
 
-u32 GfBdatBlade::getCommonListSkillAchievementSet(u32 id, u32 index) const {
-  return _gfbdb::getCommonListSkillAchievementSet(*m_commonList, id, index);
-}
+u32 GfBdatBlade::getCommonListSkillAchievementSet(u32 id, u32 index) const { return _gfbdb::getCommonListSkillAchievementSet(*m_commonList, id, index); }
 
-u32 GfBdatBlade::getCommonListFskillAchivementSet(u32 id, u32 index) const {
-  return _gfbdb::getCommonListFskillAchivementSet(*m_commonList, id, index);
-}
+u32 GfBdatBlade::getCommonListFskillAchivementSet(u32 id, u32 index) const { return _gfbdb::getCommonListFskillAchivementSet(*m_commonList, id, index); }
 
 u32 GfBdatBlade::getNameListStart() const { return Bdat::getIdTop(m_nameList->data); }
 
@@ -2854,8 +2518,7 @@ u32 GfBdatBlade::getBladeModelListModel(u32 id, u32 index) const {
 }
 
 u32 GfBdatBlade::getBladeModelListParts(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
-      _gfbdb::getBladeModelListParts1, _gfbdb::getBladeModelListParts2, _gfbdb::getBladeModelListParts3, _gfbdb::getBladeModelListParts4};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getBladeModelListParts1, _gfbdb::getBladeModelListParts2, _gfbdb::getBladeModelListParts3, _gfbdb::getBladeModelListParts4};
   return getters[index](*m_bladeModelList, id);
 }
 
@@ -2932,31 +2595,24 @@ u32 GfBdatBlade::getCmnBl_CapacityStatusRevCon(u32 id) const { return _gfbdb::ge
 u32 GfBdatBlade::getCmnBl_CapacityStatusRevRand(u32 id) const { return _gfbdb::getCmnBl_CapacityStatusRevRand(*m_cmnBl_Capacity, id); }
 
 u32 GfBdatBlade::getCmnBl_CapacityArtsNumProb(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
-      _gfbdb::getCmnBl_CapacityArtsNum1Prob, _gfbdb::getCmnBl_CapacityArtsNum2Prob, _gfbdb::getCmnBl_CapacityArtsNum3Prob};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getCmnBl_CapacityArtsNum1Prob, _gfbdb::getCmnBl_CapacityArtsNum2Prob, _gfbdb::getCmnBl_CapacityArtsNum3Prob};
   return getters[index](*m_cmnBl_Capacity, id);
 }
 
 u32 GfBdatBlade::getCmnBl_CapacityArtsLvProb(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getCmnBl_CapacityArtsLv1Prob,
-                                                              _gfbdb::getCmnBl_CapacityArtsLv2Prob,
-                                                              _gfbdb::getCmnBl_CapacityArtsLv3Prob,
-                                                              _gfbdb::getCmnBl_CapacityArtsLv4Prob,
-                                                              _gfbdb::getCmnBl_CapacityArtsLv5Prob};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
+      _gfbdb::getCmnBl_CapacityArtsLv1Prob, _gfbdb::getCmnBl_CapacityArtsLv2Prob, _gfbdb::getCmnBl_CapacityArtsLv3Prob, _gfbdb::getCmnBl_CapacityArtsLv4Prob, _gfbdb::getCmnBl_CapacityArtsLv5Prob};
   return getters[index](*m_cmnBl_Capacity, id);
 }
 
-u32 GfBdatBlade::getCmnBl_CapacitySkillNumProb(u32 id, u32 index) const {
-  return _gfbdb::getCmnBl_CapacitySkillNumProb(*m_cmnBl_Capacity, id, index);
-}
+u32 GfBdatBlade::getCmnBl_CapacitySkillNumProb(u32 id, u32 index) const { return _gfbdb::getCmnBl_CapacitySkillNumProb(*m_cmnBl_Capacity, id, index); }
 
 u32 GfBdatBlade::getCmnBl_CapacitySkillLvProb(u32 id, u32 index) const { return _gfbdb::getCmnBl_CapacitySkillLvProb(*m_cmnBl_Capacity, id, index); }
 
 u32 GfBdatBlade::getCmnBl_CapacityOrbNumProb(u32 id, u32 index) const { return _gfbdb::getCmnBl_CapacityOrbNumProb(*m_cmnBl_Capacity, id, index); }
 
 u32 GfBdatBlade::getCmnBl_CapacityNartsNumProb(u32 id, u32 index) const {
-  static u32 (*const getters[])(const CBdatWrapper &, u32) = {
-      _gfbdb::getCmnBl_CapacityNartsNum1Prob, _gfbdb::getCmnBl_CapacityNartsNum2Prob, _gfbdb::getCmnBl_CapacityNartsNum3Prob};
+  static u32 (*const getters[])(const CBdatWrapper &, u32) = {_gfbdb::getCmnBl_CapacityNartsNum1Prob, _gfbdb::getCmnBl_CapacityNartsNum2Prob, _gfbdb::getCmnBl_CapacityNartsNum3Prob};
   return getters[index](*m_cmnBl_Capacity, id);
 }
 

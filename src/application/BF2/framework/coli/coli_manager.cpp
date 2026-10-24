@@ -21,9 +21,8 @@ void ColiManager::Impl::initializeContact() { contactTable.clear(); }
 bool ColiManager::Impl::initialize() {
   if (manager == nullptr) {
     // __LINE__ of the game: it is the line argument of the operator new.
-#line 247
-    manager =
-        new (Framework::getAllocator(), 16, __FILE__, __LINE__) idcoli::IDColiManager(Framework::get()->scn, FrameworkMemory::getMem(5), 0x80000);
+#line 248
+    manager = new (Framework::getAllocator(), 16, __FILE__, __LINE__) idcoli::IDColiManager(Framework::get()->scn, FrameworkMemory::getMem(5), 0x80000);
   }
 
   return true;

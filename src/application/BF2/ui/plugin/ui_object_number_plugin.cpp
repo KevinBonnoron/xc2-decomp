@@ -15,8 +15,7 @@
 
 namespace ui {
 
-UIObjectNumberPlugin::UIObjectNumberPlugin()
-    : number(0), min(0), max(9999), type(TYPE_NONE), isReverse(false), interpolate(false), format(nullptr), interpolateTime(0.0f) {}
+UIObjectNumberPlugin::UIObjectNumberPlugin() : number(0), min(0), max(9999), type(TYPE_NONE), isReverse(false), interpolate(false), format(nullptr), interpolateTime(0.0f) {}
 
 UIObjectNumberPlugin::~UIObjectNumberPlugin() {
   if (interpolationUpdater.ctrl != nullptr) {

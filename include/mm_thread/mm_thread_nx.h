@@ -30,8 +30,7 @@ public:
   void setSignalEvent(bool signal) override;
   bool waitSignalEvent() override;
   bool isWaitingEvent() const override;
-  static Thread *create(mtl::IAllocator *pAllocator, const char *name, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId,
-                        s32 threadPriority);
+  static Thread *create(mtl::IAllocator *pAllocator, const char *name, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, s32 threadPriority);
   MMTHREAD *getHandle() const override;
   u64 getID() const override;
   CPUID getCPUID() const override;

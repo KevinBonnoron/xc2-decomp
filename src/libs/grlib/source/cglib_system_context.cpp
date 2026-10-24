@@ -35,9 +35,7 @@ void CGLibSystemContext::setRegisterRenderTarget(CGLibColorBuffer &colorBuffer, 
 
 void CGLibSystemContext::setRegisterDepthTarget(CGLibDepthBuffer &depthBuffer) { m_registerDepth = depthBuffer.m_nvnTexture; }
 
-void CGLibSystemContext::endRegisterRenderTarget() {
-  nvnCommandBufferSetRenderTargets(m_pipeline.m_cmdBuf, m_registerNum, m_registerTextures, m_registerViews, m_registerDepth, nullptr);
-}
+void CGLibSystemContext::endRegisterRenderTarget() { nvnCommandBufferSetRenderTargets(m_pipeline.m_cmdBuf, m_registerNum, m_registerTextures, m_registerViews, m_registerDepth, nullptr); }
 
 void CGLibSystemContext::setMainFrameBuffer() { m_mainRenderTargets[m_mainRenderTargetIndex].setRenderTarget(*m_mainDepthTarget.m_depthBuffer); }
 

@@ -18,9 +18,7 @@ void DrLightObj::setBaseMapShadow(bool isEnable) { m_flags = !isEnable ? m_flags
 
 void DrLightObj::setInstMapShadow(bool isEnable) { m_flags = !isEnable ? m_flags & ~FLAG_INST_MAP_SHADOW : m_flags | FLAG_INST_MAP_SHADOW; }
 
-void DrLightObj::setInstSelMapShadow(bool isEnable) {
-  m_flags = !isEnable ? m_flags & ~FLAG_INST_SEL_MAP_SHADOW : m_flags | FLAG_INST_SEL_MAP_SHADOW;
-}
+void DrLightObj::setInstSelMapShadow(bool isEnable) { m_flags = !isEnable ? m_flags & ~FLAG_INST_SEL_MAP_SHADOW : m_flags | FLAG_INST_SEL_MAP_SHADOW; }
 
 bool DrLightObj::isShadowLight() const { return m_flags & FLAG_SHADOW; }
 

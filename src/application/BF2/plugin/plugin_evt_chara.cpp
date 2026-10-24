@@ -20,35 +20,23 @@
 namespace event {
 class ITodo;
 
-ITodo *ScriptCharaWalkPos::exec() {
-  return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaWalkPos;
-}
+ITodo *ScriptCharaWalkPos::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaWalkPos; }
 
-ITodo *ScriptCharaLinerPos::exec() {
-  return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaLinerPos;
-}
+ITodo *ScriptCharaLinerPos::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaLinerPos; }
 
-ITodo *ScriptCharaTurnRot::exec() {
-  return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaTurnRot;
-}
+ITodo *ScriptCharaTurnRot::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaTurnRot; }
 
-ITodo *ScriptCharaLinerRot::exec() {
-  return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaLinerRot;
-}
+ITodo *ScriptCharaLinerRot::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaLinerRot; }
 
 ITodo *ScriptCharaTgt::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaTgt; }
 
-ITodo *ScriptCharaSetIdle::exec() {
-  return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaSetIdle;
-}
+ITodo *ScriptCharaSetIdle::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaSetIdle; }
 
 ITodo *ScriptCharaAction::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaAction; }
 
 ITodo *ScriptCharaMotion::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaMotion; }
 
-ITodo *ScriptCharaMotionABC::exec() {
-  return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaMotionABC;
-}
+ITodo *ScriptCharaMotionABC::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaMotionABC; }
 
 ITodo *ScriptCharaHead::exec() { return new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) ScriptCharaHead; }
 

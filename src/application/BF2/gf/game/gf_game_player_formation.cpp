@@ -29,9 +29,7 @@ const FormationParam *getFormationParam(u32 formation) {
 
 const WarpForRandomTalkParam *getWarpForRandomTalkParam() {
   const fw::ParamList *paramList = fw::ParamManager::get()->formationParamList.operator->();
-  return paramList->count > PARAM_WARP_FOR_RANDOM_TALK
-             ? static_cast<const WarpForRandomTalkParam *>(paramList->entries[PARAM_WARP_FOR_RANDOM_TALK].param)
-             : nullptr;
+  return paramList->count > PARAM_WARP_FOR_RANDOM_TALK ? static_cast<const WarpForRandomTalkParam *>(paramList->entries[PARAM_WARP_FOR_RANDOM_TALK].param) : nullptr;
 }
 
 void GfGamePlayerFormation::build(const GfSetupParam &param) {
@@ -71,9 +69,7 @@ const fw::Transform &GfGamePlayerFormation::getFollowTransform(u32 playerId) con
   return transforms[playerId];
 }
 
-void GfGamePlayerFormation::swapFormation(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *otherHandle) {
-  swapFormation(findPlayer(handle), findPlayer(otherHandle));
-}
+void GfGamePlayerFormation::swapFormation(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *otherHandle) { swapFormation(findPlayer(handle), findPlayer(otherHandle)); }
 
 u32 GfGamePlayerFormation::findPlayer(GF_OBJ_HANDLE *handle) {
   for (u32 playerId = 0; playerId < PLAYER_NUM; playerId++) {

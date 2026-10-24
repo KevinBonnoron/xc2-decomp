@@ -32,8 +32,8 @@ bool SystemManager::isValid() {
 }
 
 SystemManager::SystemManager()
-    : m_isUpdate(true), m_isDraw(true), dispEmitter(false), isDispEmitterSet(true), m_isClearForce(false), _78249(0), dispParticleTexture(false),
-      workTexture(false), m_commandBuffer(0), writeBuffer(0), m_clearCount(0) {}
+    : m_isUpdate(true), m_isDraw(true), dispEmitter(false), isDispEmitterSet(true), m_isClearForce(false), _78249(0), dispParticleTexture(false), workTexture(false), m_commandBuffer(0),
+      writeBuffer(0), m_clearCount(0) {}
 
 SystemManager::~SystemManager() {
   m_commands[0].clear();
@@ -76,45 +76,24 @@ void SystemManager::setUserFuncClear() {
   ptlib::ParticleManager::setUserAllocFunc(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
   ptlib::ParticleManager::setUserFileFunc(nullptr, nullptr);
   ptlib::ParticleManager::setUserOutputString(nullptr, nullptr);
-  ptlib::ParticleManager::setUserDrFunc(
-      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+  ptlib::ParticleManager::setUserDrFunc(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 }
 
-void SystemManager::setUserAllocFunc(void *(*allocSys)(void *, u32, u32, const char *, u32), void (*freeSys)(void *, void *),
-                                     void *(*allocRes)(void *, u32, u32, const char *, u32), void (*freeRes)(void *, void *),
-                                     mtl::ALLOC_HANDLE (*getSysHandle)(), mtl::ALLOC_HANDLE (*getResHandle)()) {
+void SystemManager::setUserAllocFunc(void *(*allocSys)(void *, u32, u32, const char *, u32), void (*freeSys)(void *, void *), void *(*allocRes)(void *, u32, u32, const char *, u32),
+                                     void (*freeRes)(void *, void *), mtl::ALLOC_HANDLE (*getSysHandle)(), mtl::ALLOC_HANDLE (*getResHandle)()) {
   ptlib::ParticleManager::setUserAllocFunc(allocSys, freeSys, allocRes, freeRes, getSysHandle, getResHandle);
 }
 
-void SystemManager::setUserFileFunc(void *(*read)(const char *, int &), void (*readEnd)(void *)) {
-  ptlib::ParticleManager::setUserFileFunc(read, readEnd);
-}
+void SystemManager::setUserFileFunc(void *(*read)(const char *, int &), void (*readEnd)(void *)) { ptlib::ParticleManager::setUserFileFunc(read, readEnd); }
 
-void SystemManager::setUserOutputString(void (*outputDebug)(const char *), void (*outputWarn)(const char *)) {
-  ptlib::ParticleManager::setUserOutputString(outputDebug, outputWarn);
-}
+void SystemManager::setUserOutputString(void (*outputDebug)(const char *), void (*outputWarn)(const char *)) { ptlib::ParticleManager::setUserOutputString(outputDebug, outputWarn); }
 
-void SystemManager::setUserDrFunc(void *(*createMdl)(const void *, const char *, int, const void *, int), void (*deleteMdl)(void *),
-                                  void *(*createLgt)(u32, int), void (*deleteLgt)(u32, void *), void (*setMdlPos)(void *, void *),
-                                  void (*setMdlMatrix)(void *, void *), void (*setMdlColor)(void *, void *), void (*setMdlAlpha)(void *, f32),
-                                  void (*setMdlSpd)(void *, void *), void (*setLgtPos)(u32, void *, void *),
-                                  void (*setLgtMatrix)(u32, void *, void *), void (*setLgtParam)(u32, void *, void *), void (*debugRenderer)(void *),
-                                  void *(*createGrp)(int, int), void (*destroyGrp)(void *)) {
-  ptlib::ParticleManager::setUserDrFunc(createMdl,
-                                        deleteMdl,
-                                        createLgt,
-                                        deleteLgt,
-                                        setMdlPos,
-                                        setMdlMatrix,
-                                        setMdlColor,
-                                        setMdlAlpha,
-                                        setMdlSpd,
-                                        setLgtPos,
-                                        setLgtMatrix,
-                                        setLgtParam,
-                                        debugRenderer,
-                                        createGrp,
-                                        destroyGrp);
+void SystemManager::setUserDrFunc(void *(*createMdl)(const void *, const char *, int, const void *, int), void (*deleteMdl)(void *), void *(*createLgt)(u32, int), void (*deleteLgt)(u32, void *),
+                                  void (*setMdlPos)(void *, void *), void (*setMdlMatrix)(void *, void *), void (*setMdlColor)(void *, void *), void (*setMdlAlpha)(void *, f32),
+                                  void (*setMdlSpd)(void *, void *), void (*setLgtPos)(u32, void *, void *), void (*setLgtMatrix)(u32, void *, void *), void (*setLgtParam)(u32, void *, void *),
+                                  void (*debugRenderer)(void *), void *(*createGrp)(int, int), void (*destroyGrp)(void *)) {
+  ptlib::ParticleManager::setUserDrFunc(
+      createMdl, deleteMdl, createLgt, deleteLgt, setMdlPos, setMdlMatrix, setMdlColor, setMdlAlpha, setMdlSpd, setLgtPos, setLgtMatrix, setLgtParam, debugRenderer, createGrp, destroyGrp);
 }
 
 void SystemManager::syncRenderBegin() {}
@@ -137,9 +116,7 @@ void SystemManager::setAllDisp(bool isDisp) { ptlib::ParticleManager::get()->m_i
 
 void SystemManager::setDisableCollision(bool isDisable) { ptlib::ParticleManager::get()->m_isAllDisp = isDisable; }
 
-void SystemManager::MainDraw(const ptlib::DrDrawWorkInfoEF *info, int viewIndex, bool isBlur) {
-  ptlib::ParticleManager::get()->draw(info, viewIndex, isBlur);
-}
+void SystemManager::MainDraw(const ptlib::DrDrawWorkInfoEF *info, int viewIndex, bool isBlur) { ptlib::ParticleManager::get()->draw(info, viewIndex, isBlur); }
 
 void SystemManager::es_pack_free_(u64 pack) { ptlib::ParticleManager::get()->emitter_pack_free(pack); }
 

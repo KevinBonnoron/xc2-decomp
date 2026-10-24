@@ -19,8 +19,7 @@ public:
   s32 suspend();
   void resume();
   void join(s32 milliSeconds);
-  static Thread *create(mtl::IAllocator *pAllocator, const char *name, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId,
-                        s32 threadPriority);
+  static Thread *create(mtl::IAllocator *pAllocator, const char *name, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, s32 threadPriority);
 
   virtual bool isSuspended() const = 0;
   virtual bool isTerminated() = 0;

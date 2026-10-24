@@ -35,12 +35,12 @@ public:
 
 static_assert(offsetof(Plugin, isActive) == 0x08, "");
 
-#define GF_PLUGIN(Behavior)                                                                                                                          \
-public:                                                                                                                                              \
-  static mm::mtl::RTTI m_rtti;                                                                                                                       \
-  const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }                                                                                  \
-  bool onSetup(GfComBehavior &behavior) override { return setup(static_cast<Behavior &>(behavior)); }                                                \
-  void onCleanup(GfComBehavior &behavior) override { cleanup(static_cast<Behavior &>(behavior)); }                                                   \
+#define GF_PLUGIN(Behavior)                                                                                                                                                                            \
+public:                                                                                                                                                                                                \
+  static mm::mtl::RTTI m_rtti;                                                                                                                                                                         \
+  const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }                                                                                                                                    \
+  bool onSetup(GfComBehavior &behavior) override { return setup(static_cast<Behavior &>(behavior)); }                                                                                                  \
+  void onCleanup(GfComBehavior &behavior) override { cleanup(static_cast<Behavior &>(behavior)); }                                                                                                     \
   void onUpdate(GfComBehavior &behavior, const fw::UpdateInfo &info) override { update(static_cast<Behavior &>(behavior), info); }
 
 } // namespace gf

@@ -235,39 +235,25 @@ void GfQuestManager::applyQuestComplete(const CompQuest &compQuest) { checkQuest
 void GfQuestManager::flushEventParam(const QuestParam *param) {
   switch (param->type) {
   case QUEST_PARAM_TASK:
-    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) {
-      event->qevChangeTaskState(*static_cast<const QuestTaskParam *>(param));
-    });
+    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) { event->qevChangeTaskState(*static_cast<const QuestTaskParam *>(param)); });
     break;
   case QUEST_PARAM_COMPLETE:
-    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) {
-      event->qevCompleteQuest(*static_cast<const QuestCompleteParam *>(param));
-    });
+    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) { event->qevCompleteQuest(*static_cast<const QuestCompleteParam *>(param)); });
     break;
   case QUEST_PARAM_CHANGE:
-    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) {
-      event->qevChangeCurrentQuest(*static_cast<const QuestChangeParam *>(param));
-    });
+    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) { event->qevChangeCurrentQuest(*static_cast<const QuestChangeParam *>(param)); });
     break;
   case QUEST_PARAM_ORDER:
-    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) {
-      event->qevOrderQuest(*static_cast<const QuestOrderParam *>(param));
-    });
+    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) { event->qevOrderQuest(*static_cast<const QuestOrderParam *>(param)); });
     break;
   case QUEST_PARAM_COMPLETE_CHILD:
-    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) {
-      event->qevCompleteChildQuest(*static_cast<const QuestCompleteChildParam *>(param));
-    });
+    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) { event->qevCompleteChildQuest(*static_cast<const QuestCompleteChildParam *>(param)); });
     break;
   case QUEST_PARAM_PRE_COMPLETE:
-    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) {
-      event->qevPreCompleteQuest(*static_cast<const QuestPreCompleteParam *>(param));
-    });
+    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) { event->qevPreCompleteQuest(*static_cast<const QuestPreCompleteParam *>(param)); });
     break;
   case QUEST_PARAM_STATE:
-    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) {
-      event->qevChangeQuestState(*static_cast<const QuestStateParam *>(param));
-    });
+    mm::mtl::for_each(s_pThis->events.begin(), s_pThis->events.end(), [param](IQuestEvent *event) { event->qevChangeQuestState(*static_cast<const QuestStateParam *>(param)); });
     break;
   }
 }
@@ -449,9 +435,7 @@ void GfQuestManager::resetBattleTaskForPlayerDead() {
     GfQuestTask::resetBattleTaskForPlayerDead((*it).quest);
   }
 
-  for (mm::mtl::FixedQueue<QuestData, 15000>::iterator it = manager->orderAchievementQuests.begin(), last = manager->orderAchievementQuests.end();
-       it != last;
-       ++it) {
+  for (mm::mtl::FixedQueue<QuestData, 15000>::iterator it = manager->orderAchievementQuests.begin(), last = manager->orderAchievementQuests.end(); it != last; ++it) {
     GfQuestTask::resetBattleTaskForPlayerDead((*it).quest);
   }
 }
@@ -626,8 +610,7 @@ void GfQuestManager::eventChangeQuestState(QuestID quest, QSTATE oldState, QSTAT
 }
 
 void GfQuestManager::eventChangeTaskState(const QuestTaskParam &param) {
-  s_pThis->eventParams.push_back(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8)
-                                     QuestTaskParam(param.quest, param.taskIndex, param.state));
+  s_pThis->eventParams.push_back(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) QuestTaskParam(param.quest, param.taskIndex, param.state));
 }
 
 void GfQuestManager::eventChangeCurrentQuest(QuestID oldQuest, QuestID quest) {
@@ -636,9 +619,7 @@ void GfQuestManager::eventChangeCurrentQuest(QuestID oldQuest, QuestID quest) {
   }
 }
 
-void GfQuestManager::eventAchievementCount(QuestID quest) {
-  s_pThis->eventParams.push_back(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) QuestOrderParam(quest));
-}
+void GfQuestManager::eventAchievementCount(QuestID quest) { s_pThis->eventParams.push_back(new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) QuestOrderParam(quest)); }
 
 void GfQuestManager::eventCheckTaskAll() {
   if (s_pThis == nullptr) {

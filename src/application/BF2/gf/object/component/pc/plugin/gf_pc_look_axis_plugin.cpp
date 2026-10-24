@@ -9,8 +9,7 @@ namespace pc {
 
 constexpr u32 PC_PARAM_LOOK_AXIS = 4;
 
-LookAxisPlugin::LookAxisPlugin()
-    : behavior(nullptr), yaw(0.0f), startYaw(0.0f), targetYaw(0.0f), changeTimer(0.0f), isChanging(false), paramEntry(nullptr) {}
+LookAxisPlugin::LookAxisPlugin() : behavior(nullptr), yaw(0.0f), startYaw(0.0f), targetYaw(0.0f), changeTimer(0.0f), isChanging(false), paramEntry(nullptr) {}
 
 bool LookAxisPlugin::setup(GfComBehaviorPc &behavior) {
   mm::mtl::IntrusivePtr<fw::ParamList> paramList = fw::ParamManager::get()->pcParamList;
@@ -41,9 +40,7 @@ void LookAxisPlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &info) {
   }
 }
 
-const LookAxisParam *LookAxisPlugin::getParam() const {
-  return paramEntry != nullptr ? static_cast<const LookAxisParam *>(paramEntry->param) : nullptr;
-}
+const LookAxisParam *LookAxisPlugin::getParam() const { return paramEntry != nullptr ? static_cast<const LookAxisParam *>(paramEntry->param) : nullptr; }
 
 f32 LookAxisPlugin::calcYaw(f32 changeTime) const {
   f32 rate = mm::clamp(changeTimer / changeTime, 0.0f, 1.0f);

@@ -6,8 +6,7 @@
 
 namespace gf {
 
-GfMenuReferenceAdapter::GfMenuReferenceAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), lastNumber(0), lastMax(0), lastMin(0), offset(0) {}
+GfMenuReferenceAdapter::GfMenuReferenceAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), lastNumber(0), lastMax(0), lastMin(0), offset(0) {}
 
 GfMenuReferenceAdapter::~GfMenuReferenceAdapter() { reference = nullptr; }
 

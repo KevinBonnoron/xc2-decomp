@@ -76,17 +76,11 @@ void LayerObjPlace::placeReset_Pos_Srt_Col(LayerResNode *node) {
   node->rot.y = 0.0f;
 }
 
-void LayerObjPlace::placeFormat_u8(LayerResNode *node, int type, const u8 *data, const u8 *values, u32 index) {
-  s_resCallPlaceAnim[type](node, data, values[index]);
-}
+void LayerObjPlace::placeFormat_u8(LayerResNode *node, int type, const u8 *data, const u8 *values, u32 index) { s_resCallPlaceAnim[type](node, data, values[index]); }
 
-void LayerObjPlace::placeFormat_u16(LayerResNode *node, int type, const u8 *data, const u8 *values, u32 index) {
-  s_resCallPlaceAnim[type](node, data, reinterpret_cast<const u16 *>(values)[index]);
-}
+void LayerObjPlace::placeFormat_u16(LayerResNode *node, int type, const u8 *data, const u8 *values, u32 index) { s_resCallPlaceAnim[type](node, data, reinterpret_cast<const u16 *>(values)[index]); }
 
-void LayerObjPlace::placeFormat_u32(LayerResNode *node, int type, const u8 *data, const u8 *values, u32 index) {
-  s_resCallPlaceAnim[type](node, data, reinterpret_cast<const u32 *>(values)[index]);
-}
+void LayerObjPlace::placeFormat_u32(LayerResNode *node, int type, const u8 *data, const u8 *values, u32 index) { s_resCallPlaceAnim[type](node, data, reinterpret_cast<const u32 *>(values)[index]); }
 
 void LayerObjPlace::placeAnm_Pos(LayerResNode *node, const u8 *data, u32 index) {
   const f32 *values = reinterpret_cast<const f32 *>(data) + index * 2;

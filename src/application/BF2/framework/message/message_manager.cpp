@@ -102,9 +102,7 @@ void MessageManager::registObject(MessageObject *object) { impl->registObject(ob
 
 void MessageManager::removeObject(MessageObject *object) { impl->removeObject(object); }
 
-void MessageManager::push(MessageObject *sender, MessageObject *receiver, Message *message, f32 delay) {
-  impl->push(sender, receiver, message, delay);
-}
+void MessageManager::push(MessageObject *sender, MessageObject *receiver, Message *message, f32 delay) { impl->push(sender, receiver, message, delay); }
 
 const char *MessageManager::getName() const { return "MessageManager"; }
 

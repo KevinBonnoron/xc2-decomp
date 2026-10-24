@@ -63,8 +63,7 @@ void ResPack::load(mtl::ALLOC_HANDLE handle, const char *path, IResPackEvent *ev
   this->handle = handle;
   this->path = path;
   mEvent = event;
-  mResource = fw::RenderResource::request(
-      mm::mtl::Singleton<MemoryManager>::getPtr()->getResHandle(), mm::mtl::Singleton<Extend>::getPtr()->evpa(this->path.c_str()), 0);
+  mResource = fw::RenderResource::request(mm::mtl::Singleton<MemoryManager>::getPtr()->getResHandle(), mm::mtl::Singleton<Extend>::getPtr()->evpa(this->path.c_str()), 0);
   mFunc = &ResPack::func_loading;
 }
 

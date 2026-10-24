@@ -98,8 +98,7 @@ static_assert(offsetof(MsgObjectNotifyDamage, attacker) == 0x10, "");
 
 struct MsgObjectHealHp : fw::Message {
   MsgObjectHealHp(u32 hp, u32 healType)
-      : fw::Message(0x1000033, 0x20), hp(hp), healType(healType), position(nullptr), healer(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), _20(),
-        isRevive(false), isHpMax(false), isHealed(false) {}
+      : fw::Message(0x1000033, 0x20), hp(hp), healType(healType), position(nullptr), healer(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), _20(), isRevive(false), isHpMax(false), isHealed(false) {}
 
   u32 hp;
   u32 healType;

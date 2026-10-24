@@ -35,9 +35,8 @@ static void applyLayerPause(u32 layer, bool isPause) {
 }
 
 GfLayerPause::GfLayerPause(const GfSetupParam &param)
-    : section4PauseBits(0), section1PauseBits(0), section7PauseBits(0), section10PauseBits(0), section0PauseBits(0),
-      section4Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)), section0Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)),
-      section1Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)), section7Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)),
+    : section4PauseBits(0), section1PauseBits(0), section7PauseBits(0), section10PauseBits(0), section0PauseBits(0), section4Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)),
+      section0Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)), section1Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)), section7Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)),
       section10Handle(reinterpret_cast<GF_LP_HANDLE *>(-1)) {
   initialize(param);
 }
@@ -382,8 +381,8 @@ void GfGameEnv::setMapID(u32 mapJump, u32 map) {
 
 void GfGameEnv::destroyColorFilter(CFILTER_HANDLE handle) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<ColorFilter, FILTER_MAX>::iterator it = mm::mtl::find_if(
-      gameEnv->colorFilters.begin(), gameEnv->colorFilters.end(), [handle](const ColorFilter &colorFilter) { return colorFilter.handle == handle; });
+  mm::mtl::FixedQueue<ColorFilter, FILTER_MAX>::iterator it =
+      mm::mtl::find_if(gameEnv->colorFilters.begin(), gameEnv->colorFilters.end(), [handle](const ColorFilter &colorFilter) { return colorFilter.handle == handle; });
   if (it == gameEnv->colorFilters.end()) {
     return;
   }
@@ -402,22 +401,21 @@ void GfGameEnv::destroyColorFilter(CFILTER_HANDLE handle) {
 
 void GfGameEnv::setColorFilter(CFILTER_HANDLE handle, const ColorFilter &filter) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<ColorFilter, FILTER_MAX>::iterator it = mm::mtl::find_if(
-      gameEnv->colorFilters.begin(), gameEnv->colorFilters.end(), [handle](const ColorFilter &colorFilter) { return colorFilter.handle == handle; });
+  mm::mtl::FixedQueue<ColorFilter, FILTER_MAX>::iterator it =
+      mm::mtl::find_if(gameEnv->colorFilters.begin(), gameEnv->colorFilters.end(), [handle](const ColorFilter &colorFilter) { return colorFilter.handle == handle; });
   if (it == gameEnv->colorFilters.end()) {
     return;
   }
   (*it).time = filter.time;
   (*it).farFilter = filter.farFilter;
   (*it).filter = filter.filter;
-  fw::RenderParam::setColorFilter(
-      gameEnv->colorFilters.back().filter, gameEnv->colorFilters.back().farFilter, gameEnv->colorFilters.back().time, fw::CAMERA_TYPE_MAIN);
+  fw::RenderParam::setColorFilter(gameEnv->colorFilters.back().filter, gameEnv->colorFilters.back().farFilter, gameEnv->colorFilters.back().time, fw::CAMERA_TYPE_MAIN);
 }
 
 void GfGameEnv::destroyCloudSea(CLOUD_SEA_HANDLE handle) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it = mm::mtl::find_if(
-      gameEnv->cloudSeas.begin(), gameEnv->cloudSeas.end(), [handle](const CloudSea &cloudSea) { return cloudSea.handle == handle; });
+  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it =
+      mm::mtl::find_if(gameEnv->cloudSeas.begin(), gameEnv->cloudSeas.end(), [handle](const CloudSea &cloudSea) { return cloudSea.handle == handle; });
   if (it == gameEnv->cloudSeas.end()) {
     return;
   }
@@ -431,8 +429,7 @@ void GfGameEnv::destroyCloudSea(CLOUD_SEA_HANDLE handle) {
 
 void GfGameEnv::setCloudSea(CLOUD_SEA_HANDLE handle, CLOUD_SEA cloudSea) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it =
-      mm::mtl::find_if(gameEnv->cloudSeas.begin(), gameEnv->cloudSeas.end(), [handle](const CloudSea &other) { return other.handle == handle; });
+  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it = mm::mtl::find_if(gameEnv->cloudSeas.begin(), gameEnv->cloudSeas.end(), [handle](const CloudSea &other) { return other.handle == handle; });
   if (it == gameEnv->cloudSeas.end()) {
     return;
   }
@@ -442,8 +439,8 @@ void GfGameEnv::setCloudSea(CLOUD_SEA_HANDLE handle, CLOUD_SEA cloudSea) {
 
 CLOUD_SEA GfGameEnv::getCloudType(CLOUD_SEA_HANDLE handle) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it = mm::mtl::find_if(
-      gameEnv->cloudSeas.begin(), gameEnv->cloudSeas.end(), [handle](const CloudSea &cloudSea) { return cloudSea.handle == handle; });
+  mm::mtl::FixedQueue<CloudSea, FILTER_MAX>::iterator it =
+      mm::mtl::find_if(gameEnv->cloudSeas.begin(), gameEnv->cloudSeas.end(), [handle](const CloudSea &cloudSea) { return cloudSea.handle == handle; });
   if (it != gameEnv->cloudSeas.end()) {
     return (*it).cloudSea;
   }
@@ -546,8 +543,8 @@ void GfGameEnv::setWeather(WEATHERID weather) { GfFieldWeather::setMapWeatherID(
 
 void GfGameEnv::destroyTempWeather(WEATHER_HANDLE handle) {
   GfGameEnv *gameEnv = get();
-  mm::mtl::FixedQueue<WeatherSet, FILTER_MAX>::iterator it = mm::mtl::find_if(
-      gameEnv->tempWeathers.begin(), gameEnv->tempWeathers.end(), [handle](const WeatherSet &weatherSet) { return weatherSet.handle == handle; });
+  mm::mtl::FixedQueue<WeatherSet, FILTER_MAX>::iterator it =
+      mm::mtl::find_if(gameEnv->tempWeathers.begin(), gameEnv->tempWeathers.end(), [handle](const WeatherSet &weatherSet) { return weatherSet.handle == handle; });
   if (it != gameEnv->tempWeathers.end()) {
     gameEnv->tempWeathers.erase(it);
   }

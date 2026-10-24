@@ -14,8 +14,7 @@ namespace gf {
 
 constexpr s16 HIDDEN_POS = 10000;
 
-GfMenuFieldPosAdapter::GfMenuFieldPosAdapter(ui::UIObjectPlugin *plugin)
-    : GfMenuAdapter(plugin, false, true), isOutOfScreen(false), handle(0), isFirstUpdate(true) {}
+GfMenuFieldPosAdapter::GfMenuFieldPosAdapter(ui::UIObjectPlugin *plugin) : GfMenuAdapter(plugin, false, true), isOutOfScreen(false), handle(0), isFirstUpdate(true) {}
 
 GfMenuFieldPosAdapter::~GfMenuFieldPosAdapter() { ; }
 

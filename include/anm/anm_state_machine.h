@@ -32,10 +32,8 @@ public:
   f32 getLocalTime() const;
   void setSpeed(f32 speed);
   f32 getSpeed() const;
-  bool doEaseInAdditive(const char *state, f32 time, f32 weight = 1.0f, InterpolateType type = static_cast<InterpolateType>(1),
-                        InterpolateCurve curve = static_cast<InterpolateCurve>(0));
-  bool doEaseOutAdditive(const char *state, f32 time, InterpolateType type = static_cast<InterpolateType>(1),
-                         InterpolateCurve curve = static_cast<InterpolateCurve>(0));
+  bool doEaseInAdditive(const char *state, f32 time, f32 weight = 1.0f, InterpolateType type = static_cast<InterpolateType>(1), InterpolateCurve curve = static_cast<InterpolateCurve>(0));
+  bool doEaseOutAdditive(const char *state, f32 time, InterpolateType type = static_cast<InterpolateType>(1), InterpolateCurve curve = static_cast<InterpolateCurve>(0));
   void clearAdditiveState();
   bool setAdditiveStateWeight(const char *state, f32 weight);
   bool setAdditiveStateSpeed(const char *state, f32 speed);

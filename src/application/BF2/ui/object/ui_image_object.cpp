@@ -18,16 +18,13 @@
 
 namespace ui {
 
-UIImageObject::UIImageObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name)
-    : UIObject(layer, name, UI_OBJECT_TYPE_IMAGE), streamId(0), imageIndex(0), capture(nullptr) {}
+UIImageObject::UIImageObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name) : UIObject(layer, name, UI_OBJECT_TYPE_IMAGE), streamId(0), imageIndex(0), capture(nullptr) {}
 
-UIImageObject::UIImageObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name, u32 type)
-    : UIObject(layer, name, type), streamId(0), imageIndex(0), capture(nullptr) {}
+UIImageObject::UIImageObject(layer::LayerBase *layer, const mm::mtl::FixStr<32> &name, u32 type) : UIObject(layer, name, type), streamId(0), imageIndex(0), capture(nullptr) {}
 
 UIImageObject::~UIImageObject() { ; }
 
-UIImageObject *UIImageObject::create(UILayoutObject *parent, const void *data, u32 streamId, const mm::mtl::FixStr<32> &name,
-                                     mm::mtl::IAllocator *allocator, bool mask) {
+UIImageObject *UIImageObject::create(UILayoutObject *parent, const void *data, u32 streamId, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator, bool mask) {
   layer::LayerBase *layer;
   if (parent != nullptr) {
     layer::LayerAccLayoutObj layoutAcc(parent->layer);
@@ -51,8 +48,7 @@ UIImageObject *UIImageObject::create(UILayoutObject *parent, const void *data, u
   return image;
 }
 
-UIImageObject *UIImageObject::create(UILayoutObject *parent, ml::ScnRenderDrCapture *capture, const mm::mtl::FixStr<32> &name,
-                                     mm::mtl::IAllocator *allocator) {
+UIImageObject *UIImageObject::create(UILayoutObject *parent, ml::ScnRenderDrCapture *capture, const mm::mtl::FixStr<32> &name, mm::mtl::IAllocator *allocator) {
   layer::LayerBase *layer;
   if (parent != nullptr) {
     layer::LayerAccLayoutObj layoutAcc(parent->layer);

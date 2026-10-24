@@ -7,8 +7,7 @@
 namespace event {
 
 StmPackMemory::StmPackMemory(mtl::ALLOC_HANDLE handle)
-    : flags(0), handle(handle), mBuffer(nullptr), mPageCount(0), mFreePage(0), mLoadPage(0), mFileIndex(0), mNextPrio(0), mDataSize(0), mReadSize(0),
-      mCutCount(0), mLoadStream(0), mCurrentStream(0) {}
+    : flags(0), handle(handle), mBuffer(nullptr), mPageCount(0), mFreePage(0), mLoadPage(0), mFileIndex(0), mNextPrio(0), mDataSize(0), mReadSize(0), mCutCount(0), mLoadStream(0), mCurrentStream(0) {}
 
 void StmPackMemory::loadStream(const char *name, const char *headerPath, const char *dataPath) {
   Stream *stream = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle()) Stream(name);
@@ -140,8 +139,7 @@ void StmPackMemory::free(void *adr, int frame) {
     if (res->isLoading()) {
       continue;
     }
-    if (reinterpret_cast<size_t>(res->mBuffer) <= reinterpret_cast<size_t>(adr) &&
-        reinterpret_cast<size_t>(adr) < res->mSize + reinterpret_cast<size_t>(res->mBuffer)) {
+    if (reinterpret_cast<size_t>(res->mBuffer) <= reinterpret_cast<size_t>(adr) && reinterpret_cast<size_t>(adr) < res->mSize + reinterpret_cast<size_t>(res->mBuffer)) {
       res->flags |= StmPackRes::FLAG_FREE;
       res->mRefCount--;
       return;

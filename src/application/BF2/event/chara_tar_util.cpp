@@ -22,16 +22,10 @@ mm::Vec3 CharaTarUtil::getCharaDefaultEyeVec(gf::GF_OBJ_HANDLE *handle) {
   return mm::Vec3(0.0f, 1.0f, 0.0f);
 }
 
-f32 CharaTarUtil::getCharaEyeRotY(gf::GF_OBJ_HANDLE *handle) {
-  return mm::quatToEuler(gf::GfObjUtil::getObj(handle)->getComponent<gf::GfComTransform>()->getRotation()).y;
-}
+f32 CharaTarUtil::getCharaEyeRotY(gf::GF_OBJ_HANDLE *handle) { return mm::quatToEuler(gf::GfObjUtil::getObj(handle)->getComponent<gf::GfComTransform>()->getRotation()).y; }
 
-const char *CharaTarUtil::aimmotType2stat(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_aimmottype"), "stat", type, 7));
-}
+const char *CharaTarUtil::aimmotType2stat(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_aimmottype"), "stat", type, 7)); }
 
-const char *CharaTarUtil::aimmotType2name(int type) {
-  return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_aimmottype"), "name", type, 7));
-}
+const char *CharaTarUtil::aimmotType2name(int type) { return reinterpret_cast<const char *>(Bdat::getValCheck(Bdat::getFP("EVT_aimmottype"), "name", type, 7)); }
 
 } // namespace event

@@ -13,9 +13,7 @@ namespace ui {
 
 namespace {
 
-bool isSameColor(const mm::Col3 &a, const mm::Col3 &b) {
-  return mm::fabs(a.r - b.r) <= 1e-6f && mm::fabs(a.g - b.g) <= 1e-6f && mm::fabs(a.b - b.b) <= 1e-6f;
-}
+bool isSameColor(const mm::Col3 &a, const mm::Col3 &b) { return mm::fabs(a.r - b.r) <= 1e-6f && mm::fabs(a.g - b.g) <= 1e-6f && mm::fabs(a.b - b.b) <= 1e-6f; }
 
 } // namespace
 
@@ -111,8 +109,6 @@ void UIObjectColorPlugin::execute(UIObjectAcc &acc) {
 
 const mm::mtl::RTTI *UIObjectColorPlugin::getRTTI() const { return &m_rtti; }
 
-bool UIObjectColorPlugin::isNeedUpdate(UIObjectAcc &acc) {
-  return (needUpdate & 1) || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0;
-}
+bool UIObjectColorPlugin::isNeedUpdate(UIObjectAcc &acc) { return (needUpdate & 1) || acc.isDisp() != disp || fadeUpdater.ctrl != nullptr || followObjHandle != 0; }
 
 } // namespace ui

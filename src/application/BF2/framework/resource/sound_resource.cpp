@@ -13,9 +13,7 @@
 namespace fw {
 enum eResourceType : int;
 
-SoundResource *SoundResource::search(mm::mtl::IAllocator *allocator, const char *path) {
-  return static_cast<SoundResource *>(ResourceManager::get()->searchResource(5, allocator, path));
-}
+SoundResource *SoundResource::search(mm::mtl::IAllocator *allocator, const char *path) { return static_cast<SoundResource *>(ResourceManager::get()->searchResource(5, allocator, path)); }
 
 SoundResource *SoundResource::request(mm::mtl::IAllocator *allocator, const char *path, const SetupInfo &info, LOAD_PRIO priority) {
   SoundResource *resource = search(allocator, path);

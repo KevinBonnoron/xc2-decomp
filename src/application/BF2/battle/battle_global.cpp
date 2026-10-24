@@ -52,9 +52,7 @@ int BattleGlobal::GetNormalAttackArtsID(int type, int weapon, int index) const {
   return arts;
 }
 
-const BattleGlobal::ELEMENTAL_COMBO_FLOW_DATA *BattleGlobal::GetElementalComboFlowData(int combo) const {
-  return &unknown56a0[combo >= 0 && combo < ELEMENTAL_COMBO_NUM ? combo : 0];
-}
+const BattleGlobal::ELEMENTAL_COMBO_FLOW_DATA *BattleGlobal::GetElementalComboFlowData(int combo) const { return &unknown56a0[combo >= 0 && combo < ELEMENTAL_COMBO_NUM ? combo : 0]; }
 
 int BattleGlobal::GetElementalComboStage(int combo) const { return GetElementalComboFlowData(combo)->unknown01_0; }
 
@@ -313,9 +311,7 @@ f32 BattleGlobal::GetDamageRate(u32 attack, bool *isOverwrite) const {
   return 1.0f;
 }
 
-void BattleGlobal::SetPause(int pause, bool isPause) {
-  unknown65d6[pause >> 3] = isPause ? unknown65d6[pause >> 3] | (1 << (pause & 7)) : unknown65d6[pause >> 3] & ~(1 << (pause & 7));
-}
+void BattleGlobal::SetPause(int pause, bool isPause) { unknown65d6[pause >> 3] = isPause ? unknown65d6[pause >> 3] | (1 << (pause & 7)) : unknown65d6[pause >> 3] & ~(1 << (pause & 7)); }
 
 bool BattleGlobal::IsPause(int pause) const {
   if (pause >= 0) {

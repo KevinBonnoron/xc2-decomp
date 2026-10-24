@@ -92,8 +92,7 @@ bool GfGamePlayerPicker::isPick() {
   return picker->mIsPick;
 }
 
-GfGamePlayerPicker::GfGamePlayerPicker()
-    : mSpeedLevel(1), mIsPick(false), mIsModifierReleased(false), mUpDir(mm::Vec3::unitY), mFrontDir(mm::Vec3::unitZ), mRightDir(mm::Vec3::unitX) {}
+GfGamePlayerPicker::GfGamePlayerPicker() : mSpeedLevel(1), mIsPick(false), mIsModifierReleased(false), mUpDir(mm::Vec3::unitY), mFrontDir(mm::Vec3::unitZ), mRightDir(mm::Vec3::unitX) {}
 
 GfGamePlayerPicker::~GfGamePlayerPicker() {}
 

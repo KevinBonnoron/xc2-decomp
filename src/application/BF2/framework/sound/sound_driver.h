@@ -28,8 +28,7 @@ public:
   virtual ~ISoundDriver() {}
   virtual void update(const UpdateInfo &info) = 0;
   virtual void finalize() = 0;
-  virtual void updateDebugInfo(mm::mtl::FixedVector<SoundHandleDebugInfo, 128> &handles,
-                               mm::mtl::FixedVector<SoundCategoryDebugInfo, 18> &categories) = 0;
+  virtual void updateDebugInfo(mm::mtl::FixedVector<SoundHandleDebugInfo, 128> &handles, mm::mtl::FixedVector<SoundCategoryDebugInfo, 18> &categories) = 0;
   virtual void setListeningPoint(const mm::Mat44 &matrix) = 0;
   virtual const mm::Mat44 &getListeningPoint() const = 0;
   virtual void setMasterVolume(f32 volume) = 0;

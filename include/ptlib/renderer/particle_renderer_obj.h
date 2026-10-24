@@ -54,8 +54,7 @@ class RenderGrObj {
 public:
   static const u32 EMITTER_SORT_MAX = 4000;
 
-  void prioritySort(emitter::EmitterManager &emitterManager, int prioIdx, FxParam &fxParam,
-                    mm::mtl::FixedVector<sort::EmitterSort, EMITTER_SORT_MAX> &sorts);
+  void prioritySort(emitter::EmitterManager &emitterManager, int prioIdx, FxParam &fxParam, mm::mtl::FixedVector<sort::EmitterSort, EMITTER_SORT_MAX> &sorts);
 };
 
 } // namespace renderer

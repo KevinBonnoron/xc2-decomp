@@ -20,9 +20,7 @@ class Binding;
 namespace gf {
 struct MsgDebugActivateComponentWindow;
 
-void GfComAsm::procMsgObjectSetAsmPlaybackSpeed(fw::MessageObject *sender, MsgObjectSetAsmPlaybackSpeed &message) {
-  setSpeed(message.speed, message.layer);
-}
+void GfComAsm::procMsgObjectSetAsmPlaybackSpeed(fw::MessageObject *sender, MsgObjectSetAsmPlaybackSpeed &message) { setSpeed(message.speed, message.layer); }
 
 void GfComAsm::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
 
@@ -376,9 +374,7 @@ void GfComAsm::getVariable(const char *name, int *value) const {
   }
 }
 
-void GfComAsm::cacheCallback(anm::AsmListener::CallBackType type, const anm::AsmAnnotetion &annotation) {
-  callbackCaches.push_back(CallBackCache(type, &annotation));
-}
+void GfComAsm::cacheCallback(anm::AsmListener::CallBackType type, const anm::AsmAnnotetion &annotation) { callbackCaches.push_back(CallBackCache(type, &annotation)); }
 
 void GfComAsm::changeLayer(u32 oldLayer, u32 newLayer) {
   if (oldLayer == newLayer) {

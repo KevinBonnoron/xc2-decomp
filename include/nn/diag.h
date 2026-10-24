@@ -1,26 +1,26 @@
 #pragma once
 #include <stddef.h>
 
-#define NN_LOG(...)                                                                                                                                  \
-  do {                                                                                                                                               \
-    ::nn::diag::LogMetaData logMetaData;                                                                                                             \
-    logMetaData.sourceInfo.lineNumber = __LINE__;                                                                                                    \
-    logMetaData.sourceInfo.fileName = __FILE__;                                                                                                      \
-    logMetaData.sourceInfo.functionName = __FUNCTION__;                                                                                              \
-    logMetaData.moduleName = "";                                                                                                                     \
-    logMetaData.severity = ::nn::diag::LogSeverity_Info;                                                                                             \
-    logMetaData.verbosity = 0;                                                                                                                       \
-    logMetaData.useDefaultLocaleCharset = false;                                                                                                     \
-    logMetaData.pAdditionalData = nullptr;                                                                                                           \
-    logMetaData.additionalDataBytes = 0;                                                                                                             \
-    ::nn::diag::detail::LogImpl(logMetaData, __VA_ARGS__);                                                                                           \
+#define NN_LOG(...)                                                                                                                                                                                    \
+  do {                                                                                                                                                                                                 \
+    ::nn::diag::LogMetaData logMetaData;                                                                                                                                                               \
+    logMetaData.sourceInfo.lineNumber = __LINE__;                                                                                                                                                      \
+    logMetaData.sourceInfo.fileName = __FILE__;                                                                                                                                                        \
+    logMetaData.sourceInfo.functionName = __FUNCTION__;                                                                                                                                                \
+    logMetaData.moduleName = "";                                                                                                                                                                       \
+    logMetaData.severity = ::nn::diag::LogSeverity_Info;                                                                                                                                               \
+    logMetaData.verbosity = 0;                                                                                                                                                                         \
+    logMetaData.useDefaultLocaleCharset = false;                                                                                                                                                       \
+    logMetaData.pAdditionalData = nullptr;                                                                                                                                                             \
+    logMetaData.additionalDataBytes = 0;                                                                                                                                                               \
+    ::nn::diag::detail::LogImpl(logMetaData, __VA_ARGS__);                                                                                                                                             \
   } while (0)
 
-#define NN_ABORT_UNLESS(condition)                                                                                                                   \
-  do {                                                                                                                                               \
-    if (!(condition)) {                                                                                                                              \
-      ::nn::diag::detail::AbortImpl("", "", "", 0);                                                                                                  \
-    }                                                                                                                                                \
+#define NN_ABORT_UNLESS(condition)                                                                                                                                                                     \
+  do {                                                                                                                                                                                                 \
+    if (!(condition)) {                                                                                                                                                                                \
+      ::nn::diag::detail::AbortImpl("", "", "", 0);                                                                                                                                                    \
+    }                                                                                                                                                                                                  \
   } while (0)
 
 namespace nn {

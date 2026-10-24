@@ -128,8 +128,7 @@ u32 GfDataParty::getFixedHandleForDriver(u32 member) { return member; }
 u32 GfDataParty::getFixedHandleForBlade(u32 member, int slot) { return PARTY_BATTLE_MEMBER_COUNT + member * SET_BLADE_NUM_MAX + slot; }
 
 u32 GfDataParty::getFixedHandleForWeapon(u32 member, int slot, u32 weapon) {
-  return member * SET_BLADE_NUM_MAX * WEAPON_NUM_PER_BLADE + slot * WEAPON_NUM_PER_BLADE + weapon +
-         PARTY_BATTLE_MEMBER_COUNT * (1 + SET_BLADE_NUM_MAX);
+  return member * SET_BLADE_NUM_MAX * WEAPON_NUM_PER_BLADE + slot * WEAPON_NUM_PER_BLADE + weapon + PARTY_BATTLE_MEMBER_COUNT * (1 + SET_BLADE_NUM_MAX);
 }
 
 void GfDataParty::getDriver(mm::mtl::FixedArray<u16, 10> &drivers) {

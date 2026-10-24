@@ -31,9 +31,7 @@ void GfSlotAllocator::setupSizeAlloc(const char *name, mm::mtl::IAllocator *allo
   }
 }
 
-void GfSlotAllocator::setup(const char *name, GfSlotAllocator *allocator, size_t size, size_t alignment, bool useDebugMemory) {
-  setupSizeAlloc(name, allocator, size, alignment, useDebugMemory);
-}
+void GfSlotAllocator::setup(const char *name, GfSlotAllocator *allocator, size_t size, size_t alignment, bool useDebugMemory) { setupSizeAlloc(name, allocator, size, alignment, useDebugMemory); }
 
 void GfSlotAllocator::resize(size_t size) { sizeAlloc.resize(size); }
 

@@ -198,9 +198,7 @@ u32 GfSlotMapping::getSlotNumByByteSize(GfAssetType type, size_t size) const { r
 
 GF_SLOT_HANDLE *GfSlotMapping::allocateSlot(GfAssetType type, size_t size) { return slotAll->setupSlotByte(type, size, 1); }
 
-bool GfSlotMapping::getSlotInfo(mm::mtl::IAllocator *&allocator, void *&buffer, size_t &size, GF_SLOT_HANDLE *handle) {
-  return slotAll->getSlotInfo(allocator, buffer, size, handle);
-}
+bool GfSlotMapping::getSlotInfo(mm::mtl::IAllocator *&allocator, void *&buffer, size_t &size, GF_SLOT_HANDLE *handle) { return slotAll->getSlotInfo(allocator, buffer, size, handle); }
 
 bool GfSlotMapping::isExistAsset(GF_SLOT_HANDLE *handle) const { return slotAll->isExistAsset(handle); }
 

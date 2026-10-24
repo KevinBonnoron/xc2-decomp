@@ -36,8 +36,7 @@ static TimeRangeData s_rangeData[TIME_RANGE_COUNT] = {
     {5, 0, 6, 59},
 };
 
-GfFieldTime::GfFieldTime(const GfSetupParam &param)
-    : mInitialized(false), mTimeStopBits(0), mBaseElapseTime(), mElapseTime(), mRealTime(), mElapseStartRealTime(), mGameTime(), mIsDebugStop(false) {
+GfFieldTime::GfFieldTime(const GfSetupParam &param) : mInitialized(false), mTimeStopBits(0), mBaseElapseTime(), mElapseTime(), mRealTime(), mElapseStartRealTime(), mGameTime(), mIsDebugStop(false) {
   initialize(param);
 }
 
@@ -152,8 +151,8 @@ bool GfFieldTime::isTimeStop() const { return (mTimeStopBits & (TIME_STOP_BIT_GA
 void GfFieldTime::saveRealTime() { getRealTime(mRealTime); }
 
 s32 GfFieldTime::diffRealTimeSec(const RealTime &realTime, const RealTime &baseRealTime) const {
-  s32 diff = (realTime.second - baseRealTime.second) + (realTime.minute - baseRealTime.minute) * SECONDS_PER_MINUTE +
-             (realTime.hour - baseRealTime.hour) * SECONDS_PER_HOUR + (realTime.dayOfYear - baseRealTime.dayOfYear) * SECONDS_PER_DAY;
+  s32 diff = (realTime.second - baseRealTime.second) + (realTime.minute - baseRealTime.minute) * SECONDS_PER_MINUTE + (realTime.hour - baseRealTime.hour) * SECONDS_PER_HOUR +
+             (realTime.dayOfYear - baseRealTime.dayOfYear) * SECONDS_PER_DAY;
   if (realTime.year < baseRealTime.year + YEAR_DIFF_MAX) {
     diff += (realTime.year - baseRealTime.year) * SECONDS_PER_YEAR;
   }
@@ -295,8 +294,8 @@ void GfFieldTime::setTimeRangeBit(u32 timeRangeBits) {
 u32 GfFieldTime::getTimeRangeBits(u32 timeRange) const { return 1 << timeRange; }
 
 s32 GfFieldTime::diffRealTimeMin(const RealTime &realTime, const RealTime &baseRealTime) const {
-  return (realTime.minute - baseRealTime.minute) + (realTime.hour - baseRealTime.hour) * MINUTES_PER_HOUR +
-         (realTime.dayOfYear - baseRealTime.dayOfYear) * MINUTES_PER_DAY + (realTime.year - baseRealTime.year) * MINUTES_PER_YEAR;
+  return (realTime.minute - baseRealTime.minute) + (realTime.hour - baseRealTime.hour) * MINUTES_PER_HOUR + (realTime.dayOfYear - baseRealTime.dayOfYear) * MINUTES_PER_DAY +
+         (realTime.year - baseRealTime.year) * MINUTES_PER_YEAR;
 }
 
 f32 GfFieldTime::diffRealTime(const RealTime &realTime, const RealTime &baseRealTime) const {

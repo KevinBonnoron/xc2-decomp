@@ -283,9 +283,7 @@ void GfComEvtAnim::Asm::executeCallback(GfComEvtAnim *owner) {
 
 void GfComEvtAnim::Asm::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
 
-void GfComEvtAnim::Asm::cacheCallback(anm::AsmListener::CallBackType type, const anm::AsmAnnotetion &annotation) {
-  callbackCaches.push_back(CallBackCache(type, &annotation));
-}
+void GfComEvtAnim::Asm::cacheCallback(anm::AsmListener::CallBackType type, const anm::AsmAnnotetion &annotation) { callbackCaches.push_back(CallBackCache(type, &annotation)); }
 
 GfComEvtAnim::Mot::Mot() : model(nullptr), resAsm(nullptr), blender(nullptr), controlCount(0), current(0), speed(1.0f) {}
 
@@ -600,9 +598,7 @@ void GfComEvtAnim::setLocalTime(f32 time, AnimLayer layer) { animAsm.setLocalTim
 
 bool GfComEvtAnim::getPlaybackTime(const char *state, f32 *time) const { return animAsm.getPlaybackTime(state, time); }
 
-bool GfComEvtAnim::getLocomotionReference(const char *state, f32 time, anm::QsTransform *transform) const {
-  return animAsm.getLocomotionReference(state, time, transform);
-}
+bool GfComEvtAnim::getLocomotionReference(const char *state, f32 time, anm::QsTransform *transform) const { return animAsm.getLocomotionReference(state, time, transform); }
 
 const anm::QsTransform &GfComEvtAnim::getLocomotion() const { return animAsm.getLocomotion(); }
 

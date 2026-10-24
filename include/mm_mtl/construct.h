@@ -38,13 +38,9 @@ template <typename T> void destruct_n(T *, size_t, int_to_type<1>) {}
 
 } // namespace mtl_detail
 
-template <typename T> void construct_n(T *buffer, size_t count) {
-  mtl_detail::construct_n(buffer, count, int_to_type<__has_trivial_constructor(T)>());
-}
+template <typename T> void construct_n(T *buffer, size_t count) { mtl_detail::construct_n(buffer, count, int_to_type<__has_trivial_constructor(T)>()); }
 
-template <typename T> void copy_construct_n(const T *source, size_t count, T *destination) {
-  mtl_detail::copy_construct_n(source, count, destination, int_to_type<__has_trivial_copy(T)>());
-}
+template <typename T> void copy_construct_n(const T *source, size_t count, T *destination) { mtl_detail::copy_construct_n(source, count, destination, int_to_type<__has_trivial_copy(T)>()); }
 
 template <typename T> void destruct_n(T *buffer, size_t count) { mtl_detail::destruct_n(buffer, count, int_to_type<__has_trivial_destructor(T)>()); }
 

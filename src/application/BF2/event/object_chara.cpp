@@ -84,24 +84,21 @@ bool ObjectChara::isLoading() const { return !mCharaObj->isReady(); }
 
 void ObjectChara::linerPosAxis(const PosAxis &axis, bool isWalk, f32 frame, CV_TYPE cv) {
   posAxis = axis;
-  mCharaObj->linerPos(
-      mm::mtl::Singleton<DataManager>::getPtr()->axis2pos(axis.getAxis(), axis.getPos().x, axis.getPos().y, axis.getPos().z), isWalk, frame, cv);
+  mCharaObj->linerPos(mm::mtl::Singleton<DataManager>::getPtr()->axis2pos(axis.getAxis(), axis.getPos().x, axis.getPos().y, axis.getPos().z), isWalk, frame, cv);
   mCharaObj->mount(nullptr, "", mm::Vec3::zero, mm::Vec3::zero);
 }
 
 void ObjectChara::turnRotAxis(const RotAxis &axis, EVT_rotcvtype cv, f32 frame) {
   rotAxis = axis;
   const mm::Vec3 &pos = mCharaObj->getPosTo();
-  mCharaObj->turnRot(
-      mm::mtl::Singleton<DataManager>::getPtr()->axis2rot(axis.getAxis(), axis.getRot().x, axis.getRot().y, axis.getRot().z, pos), cv, frame);
+  mCharaObj->turnRot(mm::mtl::Singleton<DataManager>::getPtr()->axis2rot(axis.getAxis(), axis.getRot().x, axis.getRot().y, axis.getRot().z, pos), cv, frame);
   mCharaObj->mount(nullptr, "", mm::Vec3::zero, mm::Vec3::zero);
 }
 
 void ObjectChara::linerRotAxis(const RotAxis &axis, f32 frame, CV_TYPE cv) {
   rotAxis = axis;
   const mm::Vec3 &pos = mCharaObj->getPosTo();
-  mCharaObj->linerRot(
-      mm::mtl::Singleton<DataManager>::getPtr()->axis2rot(axis.getAxis(), axis.getRot().x, axis.getRot().y, axis.getRot().z, pos), frame, cv);
+  mCharaObj->linerRot(mm::mtl::Singleton<DataManager>::getPtr()->axis2rot(axis.getAxis(), axis.getRot().x, axis.getRot().y, axis.getRot().z, pos), frame, cv);
   mCharaObj->mount(nullptr, "", mm::Vec3::zero, mm::Vec3::zero);
 }
 

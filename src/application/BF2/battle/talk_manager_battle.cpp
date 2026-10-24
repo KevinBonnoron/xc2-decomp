@@ -4,8 +4,7 @@
 
 namespace btl {
 
-static const int s_bdatDefs[TalkManager::VOICE_TYPE_COUNT] = {
-    -1, gf::BDAT_VO_BATTLE_DRIVER, gf::BDAT_VO_BATTLE_BLADE, gf::BDAT_VO_BATTLE_ENEMY, gf::BDAT_VO_WIN_SP};
+static const int s_bdatDefs[TalkManager::VOICE_TYPE_COUNT] = {-1, gf::BDAT_VO_BATTLE_DRIVER, gf::BDAT_VO_BATTLE_BLADE, gf::BDAT_VO_BATTLE_ENEMY, gf::BDAT_VO_WIN_SP};
 
 void TalkManager::ResetVoiceGroupID() { __builtin_memset(unknown14dc, 0, sizeof(unknown14dc)); }
 
@@ -27,9 +26,7 @@ void TalkManager::PreUpdateProc(const fw::UpdateInfo &) {}
 
 void TalkManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
 
-bool TalkManager::CheckPriority(gf::GF_OBJ_HANDLE *handle, int priority, bool isExcludeSame) const {
-  return CheckPriority(GetRegisterDataConst(handle), priority, isExcludeSame);
-}
+bool TalkManager::CheckPriority(gf::GF_OBJ_HANDLE *handle, int priority, bool isExcludeSame) const { return CheckPriority(GetRegisterDataConst(handle), priority, isExcludeSame); }
 
 int TalkManager::GetBdatDef(int type) const {
   if (type >= VOICE_TYPE_NONE && type < VOICE_TYPE_COUNT) {
@@ -39,9 +36,7 @@ int TalkManager::GetBdatDef(int type) const {
   return -1;
 }
 
-bool TalkManager::CheckPriority(int id, int priority, bool isExcludeSame) const {
-  return CheckPriority(GetRegisterDataConst(id), priority, isExcludeSame);
-}
+bool TalkManager::CheckPriority(int id, int priority, bool isExcludeSame) const { return CheckPriority(GetRegisterDataConst(id), priority, isExcludeSame); }
 
 const TalkManager::CHR_VOICE_DATA *TalkManager::GetRegisterDataConst(int id) const {
   for (const CHR_VOICE_DATA &data : unknown08) {

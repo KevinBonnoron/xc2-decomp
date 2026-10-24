@@ -244,8 +244,8 @@ bool GfQuestTask::isReduceHpQuest(QuestID quest) {
       continue;
     }
 
-    if (questListAcc->getBattleEnemyGroupID(param.taskId) != 0 || questListAcc->getBattleEnemyID(param.taskId) != 0 ||
-        questListAcc->getBattleReduceEnemyHP(param.taskId) != 0 || questListAcc->getBattleReducePCHP(param.taskId) != 0) {
+    if (questListAcc->getBattleEnemyGroupID(param.taskId) != 0 || questListAcc->getBattleEnemyID(param.taskId) != 0 || questListAcc->getBattleReduceEnemyHP(param.taskId) != 0 ||
+        questListAcc->getBattleReducePCHP(param.taskId) != 0) {
       return true;
     }
   }
@@ -313,8 +313,7 @@ u16 GfQuestTask::getTaskMap(const QuestTaskParam &param) {
   return map;
 }
 
-QuestTaskParam::QuestTaskParam(QuestID quest, u32 taskIndex, TASK_STATE state)
-    : QuestParam(QUEST_PARAM_TASK), quest(quest), taskIndex(taskIndex), taskType(0), taskId(0), state(state), isDisp(false) {
+QuestTaskParam::QuestTaskParam(QuestID quest, u32 taskIndex, TASK_STATE state) : QuestParam(QUEST_PARAM_TASK), quest(quest), taskIndex(taskIndex), taskType(0), taskId(0), state(state), isDisp(false) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   purpose = GfDataQuest::getListPurposeID(quest);
   if (purpose == 0) {
