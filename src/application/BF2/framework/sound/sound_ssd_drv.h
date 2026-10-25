@@ -1,7 +1,9 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/pointer_map.h"
 #include "framework/sound/sound_driver.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/list.h"
@@ -25,6 +27,7 @@ class IAllocator;
 namespace fw {
 
 class SoundSsdBank;
+class SoundSsdPlayer;
 enum SoundCategory : int;
 
 class SoundSsdDriver : public ISoundDriver, public mm::mtl::PtrSingleton<SoundSsdDriver> {
@@ -41,14 +44,31 @@ public:
     mm::mtl::IAllocator *unknown08; // Inferred role: allocator; original member name unknown.
   };
 
+  ~SoundSsdDriver() override;
   SoundSsdBank *findBank(u32 id);
+  SoundSsdBank *findBank(u32 id) const;
+  SoundSsdPlayer *getPlayer(u32 id);
+  SoundSsdPlayer *getPlayer(u32 id) const;
+  SoundSsdBank *findBank(const char *name);
+  SoundSsdBank *findBank(const char *name) const;
+  void applyCategoryVolume(SoundCategory category, f32 volume);
+  bool isValid() const;
+  const mm::Mat44 &getListeningPoint() const;
 
-  u8 _10[0x838 - 0x10];
+  void *unknown10; // Inferred role: sound device; original member name unknown.
+  u8 _18[0x30 - 0x18];
+  mm::Mat44 unknown30; // Inferred role: listening point; original member name unknown.
+  u8 _70[0x838 - 0x70];
   mm::mtl::List<SoundSsdBank *> unknown838; // Inferred role: banks; original member name unknown.
+  u8 _878[0x8b8 - 0x878];
+  PointerMap unknown8b8; // Inferred role: players; original member name unknown.
 };
 
 static_assert(offsetof(SoundSsdDriver::SoundAllocator, unknown08) == 0x08, "");
+static_assert(offsetof(SoundSsdDriver, unknown10) == 0x10, "");
+static_assert(offsetof(SoundSsdDriver, unknown30) == 0x30, "");
 static_assert(offsetof(SoundSsdDriver, unknown838) == 0x838, "");
+static_assert(offsetof(SoundSsdDriver, unknown8b8) == 0x8b8, "");
 
 class SoundReferenceObject {
 public:

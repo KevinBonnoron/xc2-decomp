@@ -1,9 +1,12 @@
 #include "framework/sound/sound_ssd_drv.h"
 
 #include "framework/sound/sound_driver.h"
+#include <string.h>
+
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/allocator.h"
+#include "mm_mtl/hash.h"
 #include "mtl/mem_manager.h"
 
 namespace ssd {
@@ -71,11 +74,67 @@ SoundSsdBank *SoundSsdDriver::findBank(u32 id) {
   return nullptr;
 }
 
+SoundSsdBank *SoundSsdDriver::findBank(const char *name) {
+  u32 hash = mm::mtl::hashStrCrc(name);
+  for (mm::mtl::List<SoundSsdBank *>::iterator it = unknown838.begin(); it != unknown838.end(); ++it) {
+    SoundSsdBank *bank = *it;
+    if (bank->unknown258 == hash && strcmp(bank->unknown154.c_str(), name) == 0) {
+      return bank;
+    }
+  }
+
+  return nullptr;
+}
+
+SoundSsdBank *SoundSsdDriver::findBank(const char *name) const {
+  u32 hash = mm::mtl::hashStrCrc(name);
+  for (mm::mtl::List<SoundSsdBank *>::const_iterator it = unknown838.begin(); it != unknown838.end(); ++it) {
+    SoundSsdBank *bank = *it;
+    if (bank->unknown258 == hash && strcmp(bank->unknown154.c_str(), name) == 0) {
+      return bank;
+    }
+  }
+
+  return nullptr;
+}
+
+SoundSsdBank *SoundSsdDriver::findBank(u32 id) const {
+  for (mm::mtl::List<SoundSsdBank *>::const_iterator it = unknown838.begin(); it != unknown838.end(); ++it) {
+    if ((*it)->unknown25c == id) {
+      return *it;
+    }
+  }
+
+  return nullptr;
+}
+
+SoundSsdPlayer *SoundSsdDriver::getPlayer(u32 id) {
+  if (!unknown8b8.isValid(id)) {
+    return nullptr;
+  }
+
+  return static_cast<SoundSsdPlayer *>(unknown8b8.getPtr(id));
+}
+
+SoundSsdPlayer *SoundSsdDriver::getPlayer(u32 id) const {
+  if (!unknown8b8.isValid(id)) {
+    return nullptr;
+  }
+
+  return static_cast<SoundSsdPlayer *>(unknown8b8.getPtr(id));
+}
+
 void SoundSsdBank::removeEntry(ssd::SoundEntry *entry) {
   if (entry != nullptr) {
     unknown10.RemoveSoundEntry(entry);
   }
 }
+
+void SoundSsdDriver::applyCategoryVolume(SoundCategory category, f32 volume) {}
+
+bool SoundSsdDriver::isValid() const { return unknown10 != nullptr; }
+
+const mm::Mat44 &SoundSsdDriver::getListeningPoint() const { return unknown30; }
 
 bool SoundSsdSource::isLoop() const {
   if (unknown10 != nullptr) {

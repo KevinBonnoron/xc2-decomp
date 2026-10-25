@@ -50,6 +50,9 @@ public:
     mm::mtl::IntrusiveList<IkResolver> unknown60;                  // Inferred role: ik resolvers; original member name unknown.
   };
 
+  ~AnimationManager() override;
+  const char *getName() const override;
+  virtual void update(const UpdateInfo &info);
   void addControlUpdater(u32 layer, AnimControlUpdaterInterface &updater);
   void removeControlUpdater(u32 layer, AnimControlUpdaterInterface &updater);
   void addPoseSampler(u32 layer, AnimPoseSamplerInterface &sampler);

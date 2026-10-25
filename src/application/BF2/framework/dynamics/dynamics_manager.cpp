@@ -2,6 +2,10 @@
 
 namespace fw {
 
+const char *DyanmicsManager::getName() const { return "DyanmicsManager"; }
+
+void DyanmicsManager::update(const UpdateInfo &info) {}
+
 void DyanmicsManager::addColUpdater(u32 layer, DynamicsColObjUpdaterInterface &updater) { unknown18[layer].unknown18.push_back(&updater); }
 
 void DyanmicsManager::removeColUpdater(u32 layer, DynamicsColObjUpdaterInterface &updater) { unknown18[layer].unknown18.erase(&updater); }

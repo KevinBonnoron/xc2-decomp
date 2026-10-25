@@ -19,7 +19,9 @@ namespace fw {
 class MovieManager : public ManagerObject, public mm::mtl::PtrSingleton<MovieManager>, public ml::IWorkBackground {
 public:
   ~MovieManager();
+  const char *getName() const override;
   void open(mm::mtl::IAllocator *allocator, u32 layer);
+  void open(mm::mtl::IAllocator *allocator, int width, int height, u32 layer);
   void close();
   void stop();
   bool set_file(const char *path);

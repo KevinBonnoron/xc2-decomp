@@ -82,6 +82,8 @@ public:
   ~PadManager();
   bool finalize() override;
   static void stopVibration();
+  static bool registListener(IPadListener *listener);
+  static void removeListener(IPadListener *listener);
   static void setFilter(int padNo, IPadFilter *filter);
   bool isInitialized() const override;
   const char *getName() const override;
@@ -138,6 +140,13 @@ static_assert(offsetof(PadManager, unknown3650) == 0x3650, "");
 static_assert(offsetof(PadManager, unknown3200) == 0x3200, "");
 static_assert(offsetof(PadManager, unknown3660) == 0x3660, "");
 static_assert(offsetof(PadManager, unknown3678) == 0x3678, "");
+
+class IPadListener {
+public:
+  virtual ~IPadListener();
+};
+
+static_assert(sizeof(IPadListener) == 0x08, "");
 
 class alignas(8) PadRelay {
 public:

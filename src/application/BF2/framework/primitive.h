@@ -7,6 +7,7 @@
 
 namespace mm {
 struct Mat44;
+struct Quat;
 } // namespace mm
 
 namespace fw {
@@ -18,6 +19,7 @@ public:
   void setup(const mm::Vec3 &start, const mm::Vec3 &end, f32 radius);
   f32 getHeight() const;
   void getCenter(mm::Vec3 &center) const;
+  void getRot(mm::Quat &rotation) const;
   void getMat(mm::Mat44 &matrix) const;
   bool isCollide(const PrimCapsule &capsule) const;
   bool isCollide(const PrimSphere &sphere) const;

@@ -2,6 +2,10 @@
 
 namespace fw {
 
+const char *AnimationManager::getName() const { return "AnimObjectManager"; }
+
+void AnimationManager::update(const UpdateInfo &info) {}
+
 void AnimationManager::addControlUpdater(u32 layer, AnimControlUpdaterInterface &updater) { unknown18[layer].unknown00.push_back(&updater); }
 
 void AnimationManager::removeControlUpdater(u32 layer, AnimControlUpdaterInterface &updater) { unknown18[layer].unknown00.erase(&updater); }

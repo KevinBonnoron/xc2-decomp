@@ -32,6 +32,9 @@ public:
     mm::mtl::IntrusiveList<DynamicsColObjUpdaterInterface> unknown18; // Inferred role: col updaters; original member name unknown.
   };
 
+  ~DyanmicsManager() override;
+  const char *getName() const override;
+  virtual void update(const UpdateInfo &info);
   void addColUpdater(u32 layer, DynamicsColObjUpdaterInterface &updater);
   void removeColUpdater(u32 layer, DynamicsColObjUpdaterInterface &updater);
   void addUpdater(u32 layer, DynamicsUpdaterInterface &updater);

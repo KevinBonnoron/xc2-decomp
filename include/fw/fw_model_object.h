@@ -15,6 +15,9 @@ class ModelObject : public mm::mtl::ReferenceObject {
 public:
   virtual ~ModelObject();
   virtual void update();
+  void setup();
+  void changeLayer(u32 layer);
+  bool isRender() const;
   ml::ScnObjModel *getInterface();
   void setActive(bool isActive);
   bool isActive() const;
@@ -24,12 +27,14 @@ public:
   ml::ScnObjModel *m_interface;
   u8 _38[0x3c - 0x38];
   bool m_active;
-  u8 _3d[0x50 - 0x3d];
+  bool unknown3d; // Inferred role: offset dirty; original member name unknown.
+  u8 _3e[0x50 - 0x3e];
   mm::Vec3 unknown50; // Inferred role: add offset pos; original member name unknown.
 };
 
 static_assert(offsetof(ModelObject, m_interface) == 0x30, "");
 static_assert(offsetof(ModelObject, m_active) == 0x3c, "");
+static_assert(offsetof(ModelObject, unknown3d) == 0x3d, "");
 static_assert(offsetof(ModelObject, unknown50) == 0x50, "");
 
 } // namespace fw

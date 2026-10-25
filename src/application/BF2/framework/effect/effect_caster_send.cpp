@@ -49,4 +49,12 @@ f32 EffectCasterSend::getMdlFrame() { return unknown90[effect::SystemManager::ge
 
 f32 EffectCasterSend::getMdlScl() { return unknown88[effect::SystemManager::getPtr()->unknown7824d == 0]; }
 
+void EffectCasterSend::tailCopy() {
+  u32 src = effect::SystemManager::getPtr()->unknown7824d != 0;
+  u32 dst = effect::SystemManager::getPtr()->unknown7824d == 0;
+  unknown88[dst] = unknown88[src];
+  unknown90[dst] = unknown90[src];
+  unknown98[dst] = unknown98[src];
+}
+
 } // namespace fw

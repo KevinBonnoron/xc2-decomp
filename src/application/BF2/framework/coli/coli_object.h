@@ -46,7 +46,7 @@ public:
 
   virtual void enter(const EnterInfo &info) = 0;
   virtual void leave(const LeaveInfo &info) = 0;
-  virtual void contact(const EnterInfo &info) = 0;
+  virtual void contact(const EnterInfo &info);
 };
 
 struct IColiEventListener::EnterInfo {

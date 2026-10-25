@@ -1,9 +1,11 @@
 #include "framework/ik/ik_trans_solver.h"
 
 #include "anm/anm_pose.h"
+#include "anm/anm_qs_transform.h"
 #include "anm/anm_skeleton.h"
 #include "framework/memory/allocator.h"
 #include "framework/memory/framework_memory.h"
+#include "mm_math/mm_vec4.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/reference_object.h"
 
@@ -37,6 +39,18 @@ bool TransLocalIkSolver::setup(const char *boneName, mm::mtl::IntrusivePtr<Refer
 TransLocalIkSolver::TransLocalIkSolver() : unknown40(mm::Vec3::zero), unknown50(anm::Skeleton::INVALID_BONE) {}
 
 TransLocalIkSolver::~TransLocalIkSolver() {}
+
+void TransLocalIkSolver::calcIK(const UpdateInfo &info) {
+  if (unknown18 != nullptr) {
+    anm::QsTransform transform = unknown18->getBoneLocalSpace(unknown50);
+    mm::Vec3 offset = unknown40 * unknown20;
+    transform.unknown00.x += offset.x;
+    transform.unknown00.y += offset.y;
+    transform.unknown00.z += offset.z;
+    transform.unknown00.w += 1.0f;
+    unknown18->setBoneLocalSpace(unknown50, transform);
+  }
+}
 
 const mm::mtl::RTTI *TransLocalIkSolver::getRTTI() const { return &m_rtti; }
 

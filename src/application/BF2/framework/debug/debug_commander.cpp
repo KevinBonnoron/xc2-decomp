@@ -5,6 +5,14 @@
 namespace fw {
 namespace debug {
 
+const char *DebugCommander::getName() const { return "DebugCommander"; }
+
+void DebugCommander::onEnter() {}
+
+void DebugCommander::onLeave() {}
+
+void DebugCommander::enableDebugInput(bool enable) { unknownae8 = enable; }
+
 bool CommandManager::sendCommand(const char *server, const char *command) { return skt::CommandManager::sendCommand(server, command); }
 
 bool CommandManager::sendCommandHtcs(const char *server, const char *command) { return skt::CommandManager::sendCommandHtcs(server, command); }

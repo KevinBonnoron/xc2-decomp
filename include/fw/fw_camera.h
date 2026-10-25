@@ -32,6 +32,8 @@ class CameraPlugin : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveL
 
 class Camera : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<Camera> {
 public:
+  static mm::mtl::RTTI m_rtti;
+
   Camera(CAMERA_PRIO prio);
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual const char *getName() const;
@@ -63,6 +65,8 @@ static_assert(offsetof(Camera, unknowna4) == 0xa4, "");
 
 class CameraTarget : public mm::mtl::ReferenceObject {
 public:
+  static mm::mtl::RTTI m_rtti;
+
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual void update(const UpdateInfo &info) = 0;
   virtual void requestResetCamera();

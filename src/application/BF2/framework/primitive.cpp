@@ -2,6 +2,8 @@
 
 #include <math.h>
 
+#include "mm_math/mm_quat.h"
+
 namespace fw {
 
 void PrimCapsule::setup(const mm::Vec3 &start, const mm::Vec3 &end, f32 radius) {
@@ -14,6 +16,29 @@ f32 PrimCapsule::getHeight() const {
   f32 y = start.y - end.y;
   f32 z = start.z - end.z;
   return sqrtf(x * x + y * y + z * z);
+}
+
+void PrimCapsule::getRot(mm::Quat &rotation) const {
+  const mm::Vec3 &axis = mm::Vec3::unitY;
+  f32 dot = axis.x * direction.x + axis.y * direction.y + axis.z * direction.z;
+  if (!(dot < -0.9999f)) {
+    f32 x = axis.y * direction.z - direction.y * axis.z;
+    f32 y = direction.x * axis.z - axis.x * direction.z;
+    f32 z = axis.x * direction.y - direction.x * axis.y;
+    f32 value = dot + 1.0f;
+    value = value + value;
+    f32 length = sqrtf(value);
+    f32 scale = 1.0f / length;
+    rotation.x = x * scale;
+    rotation.y = y * scale;
+    rotation.z = z * scale;
+    rotation.w = length * 0.5f;
+  } else {
+    rotation.x = 0.0f;
+    rotation.y = 1.0f;
+    rotation.z = 0.0f;
+    rotation.w = 0.0f;
+  }
 }
 
 void PrimCapsule::getCenter(mm::Vec3 &center) const {

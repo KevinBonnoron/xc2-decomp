@@ -17,11 +17,16 @@ namespace fw {
 
 class EffectPoint {
 public:
+  int getPointCount() const;
+
   u8 _00[0x0c - 0x00];
   u32 unknown0c; // Inferred role: layer; original member name unknown.
+  u8 _10[0x18 - 0x10];
+  u32 unknown18; // Inferred role: point count; original member name unknown.
 };
 
 static_assert(offsetof(EffectPoint, unknown0c) == 0x0c, "");
+static_assert(offsetof(EffectPoint, unknown18) == 0x18, "");
 
 struct EffectBindData {
   u32 unknown00;               // Inferred role: hash; original member name unknown.
@@ -69,6 +74,7 @@ public:
   virtual void getMdlMat(mm::Mat44 &matrix);
   virtual void getEfpMat(mm::Mat44 &matrix, const char *name);
 
+  void tailCopy();
   EffectCasterBase *getCaster();
   bool checkCaster(EffectCasterBase *caster);
   void sendData(mm::Mat44 &matrix, const char *name, int index);

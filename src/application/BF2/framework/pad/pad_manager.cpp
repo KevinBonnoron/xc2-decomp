@@ -3,6 +3,7 @@
 #include "ml/dev_pad.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_array.h"
+#include "mm_mtl/fixed_queue.h"
 #include "types.h"
 
 namespace ml {
@@ -10,6 +11,14 @@ struct PadVibrationInfo;
 } // namespace ml
 
 namespace fw {
+
+IPadListener::~IPadListener() { PadManager::removeListener(this); }
+
+void PadManager::removeListener(IPadListener *listener) {
+  if (get() != nullptr) {
+    get()->unknown3678.remove(listener);
+  }
+}
 
 bool PadManager::finalize() {
   stopVibration();

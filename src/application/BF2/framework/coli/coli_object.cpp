@@ -426,6 +426,8 @@ void ColiObject::leave(const IColiEventListener::LeaveInfo &info) {
   }
 }
 
+void IColiEventListener::contact(const EnterInfo &info) {}
+
 void ColiObject::contact(const IColiEventListener::EnterInfo &info) {
   if (unknown50 != nullptr && unknown48.test(EVENT_CONTACT)) {
     unknown50->contact(info);

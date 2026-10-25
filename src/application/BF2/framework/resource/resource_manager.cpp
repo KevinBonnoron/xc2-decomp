@@ -13,4 +13,9 @@ void ResourceManager::setMemTMP(mtl::ALLOC_HANDLE handle) { m_hMemoryTemp = hand
 
 u32 ResourceManager::getHash(const char *name) { return mm::mtl::hashStrCrc(name); }
 
+void ResourceManager::enterFinalizeApplet() {
+  unknown530 = true;
+  unknown52c = 2;
+}
+
 } // namespace fw

@@ -1,11 +1,19 @@
 #include "fw/fw_model_object.h"
 #include "mm_math/mm_vec3.h"
+#include "scn/scn_obj_acc.h"
 
 namespace ml {
 class ScnObjModel;
 } // namespace ml
 
 namespace fw {
+
+void ModelObject::setup() { unknown3d = false; }
+
+bool ModelObject::isRender() const {
+  ml::ScnObjAccResMdlInfo info(m_interface);
+  return info.isGpuRender() != 0;
+}
 
 ml::ScnObjModel *ModelObject::getInterface() { return m_interface; }
 

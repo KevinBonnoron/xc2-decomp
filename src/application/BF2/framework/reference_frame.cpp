@@ -16,6 +16,8 @@ ReferenceFrame::ReferenceFrame() : unknowna0(0), unknowna8(nullptr) {
   _d0 = nullptr;
 }
 
+ReferenceFrame::~ReferenceFrame() { ; }
+
 void ReferenceFrame::addChild(ReferenceFrame &child) {
   unknownb0.push_back(&child);
   child.unknowna8 = this;

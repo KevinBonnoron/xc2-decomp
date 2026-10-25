@@ -14,6 +14,8 @@ public:
   void syncLocalSpace();
   void syncModelSpace();
   const QsTransform &getBoneModelSpace(u16 bone);
+  const QsTransform &getBoneLocalSpace(u16 bone);
+  void setBoneLocalSpace(u16 bone, const QsTransform &transform);
 
   const Skeleton *unknown18; // Inferred role: skeleton; original member name unknown.
 };

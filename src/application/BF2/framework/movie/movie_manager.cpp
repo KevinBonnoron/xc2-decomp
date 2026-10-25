@@ -4,6 +4,18 @@
 
 namespace fw {
 
+const char *MovieManager::getName() const { return "MovieManager"; }
+
+bool MovieManager::set_file(const char *path) {
+  if (unknown30 != nullptr) {
+    if (unknown30->set_file(path) == 0) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 void MovieManager::stop() {
   if (unknown30 != nullptr) {
     unknown30->stop();

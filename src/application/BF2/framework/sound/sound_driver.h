@@ -40,7 +40,7 @@ public:
   virtual void addCategory(SoundCategory category, f32 volume, const char *name) = 0;
   virtual void removeCategory(SoundCategory category) = 0;
   virtual void pauseCategory(SoundCategory category, bool isPause, f32 time) = 0;
-  virtual bool isDeviceEnable() const { return false; }
+  virtual bool isDeviceEnable() const;
   virtual u32 playBgm(const char *name, f32 volume, bool ignorePause, int loopCount, SoundCategory category) = 0;
   virtual bool startBgm(u32 handle) = 0;
   virtual void stopBgm(u32 handle, f32 time) = 0;
@@ -77,8 +77,8 @@ public:
   virtual void stopSeAll() = 0;
   virtual void pauseAll(bool isPause, f32 time) = 0;
   virtual u32 findSe(const char *name) const = 0;
-  virtual void attachPoolMemory(void *memory, u32 size) {}
-  virtual void detachPoolMemory(void *memory, u32 size) {}
+  virtual void attachPoolMemory(void *memory, u32 size);
+  virtual void detachPoolMemory(void *memory, u32 size);
 };
 
 } // namespace fw
