@@ -52,7 +52,7 @@ public:
   void update();
   void updateManipulate();
   void render();
-  void adjestPosY(mm::Vec3 &position);
+  static void adjestPosY(mm::Vec3 &position);
   void addManipulate(IManiCallback *callback, MANI_TYPE type);
   static bool exist(mm::mtl::FixedVector<Item, ITEM_COUNT> &items, IManiCallback *callback);
   void removeManipulate(IManiCallback *callback);

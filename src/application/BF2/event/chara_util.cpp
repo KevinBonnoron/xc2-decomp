@@ -7,8 +7,11 @@
 #include "fw/fw_coli_check.h"
 #include "gf/event/gf_evt_model.h"
 #include "gf/object/component/animation/gf_com_evt_anim.h"
+#include "gf/object/component/gf_com_transform.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/singleton.h"
 
@@ -102,6 +105,27 @@ bool CharaUtil::checkStat(gf::GfObj *obj, const char *state) {
   return __builtin_strcmp(name, state) == 0;
 }
 
+bool CharaUtil::checkStat(gf::GfObj *obj, const char *state, const char *otherState) {
+  gf::GfComEvtAnim *anim = obj->getComponent<gf::GfComEvtAnim>();
+  if (anim != nullptr) {
+    const char *name = anim->getStateName() != nullptr ? anim->getStateName() : "";
+    if (__builtin_strcmp(name, state) == 0) {
+      return true;
+    }
+    return __builtin_strcmp(name, otherState) == 0;
+  }
+
+  gf::GfComAsm *animAsm = obj->getComponent<gf::GfComAsm>();
+  if (animAsm == nullptr) {
+    return false;
+  }
+  const char *name = animAsm->getStateName(gf::ANIM_LAYER_BASE) != nullptr ? animAsm->getStateName(gf::ANIM_LAYER_BASE) : "";
+  if (__builtin_strcmp(name, state) == 0) {
+    return true;
+  }
+  return __builtin_strcmp(name, otherState) == 0;
+}
+
 bool CharaUtil::checkStatSeries(gf::GfObj *obj, const char *series) {
   const char *name;
   gf::GfComEvtAnim *anim = obj->getComponent<gf::GfComEvtAnim>();
@@ -179,6 +203,24 @@ bool CharaUtil::isNeedMove(const mm::Vec3 &position, const mm::Vec3 &target) {
 bool CharaUtil::isNeedTurn(f32 rotation, f32 target) {
   rotation = normalizeRotation(rotation, target);
   return __builtin_fabsf(target - rotation) > 0.43633232f;
+}
+
+bool CharaUtil::isCanTarget(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *target) {
+  gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
+  if (obj == nullptr) {
+    return true;
+  }
+  gf::GfObj *targetObj = gf::GfObjUtil::getObj(target);
+  if (targetObj == nullptr) {
+    return true;
+  }
+
+  gf::GfComTransform *transform = obj->getComponent<gf::GfComTransform>();
+  gf::GfComTransform *targetTransform = targetObj->getComponent<gf::GfComTransform>();
+  mm::Vec3 position = transform->getPosition();
+  mm::Vec3 rotation = mm::quatToEuler(transform->getRotation());
+  mm::Vec3 targetPosition = targetTransform->getPosition();
+  return isCanTarget(position, rotation, targetPosition);
 }
 
 bool CharaUtil::isCanTarget(const mm::Vec3 &position, const mm::Vec3 &rotation, const mm::Vec3 &target) {

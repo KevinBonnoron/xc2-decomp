@@ -65,6 +65,19 @@ f32 CharaWalkCalculator::getDecSpeed(bool isRun, f32 frame) {
   return getTopSpeed(isRun) * (blend - frame) / blend;
 }
 
+void CharaWalkCalculator::update(f32 delta) {
+  if ((unknown00 & FLAG_ACTIVE) != 0) {
+    unknown70 = calcPos(unknown84);
+    f32 frame = unknown84;
+    unknown80 = calcSpeed(frame);
+    frame += delta;
+    unknown84 = frame;
+    if (unknown64 < frame) {
+      unknown64 = frame;
+    }
+  }
+}
+
 void CharaWalkCalculator::test() {}
 
 } // namespace event

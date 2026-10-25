@@ -71,6 +71,11 @@ void ObjectChara::update() {
   }
 }
 
+void ObjectChara::setTar(const TarAxis &axis, f32 frame, EVT_tarcvtype cv, EVT_aimtype aim, f32 weight, f32 speed) {
+  unknownc0 = axis;
+  unknown70->setTar(axis, frame, cv, aim, weight, speed);
+}
+
 bool ObjectChara::isTar() const { return unknown70->isTar(); }
 
 void ObjectChara::tail() {

@@ -21,14 +21,18 @@ public:
   gf::GF_OBJ_HANDLE *getBlade(u32 index);
   u32 getLeaderDriverId() const;
 
-  gf::GF_OBJ_HANDLE *getDriver(u32 index) {
-    if (index == 0 || index > s_drlist.size()) {
-      return gf::INVALID_HANDLE;
-    }
-    return s_drlist[index - 1];
-  }
+  gf::GF_OBJ_HANDLE *getDriver(u32 index);
 
 private:
+  // Original name unknown: returns the 1-based entry of a party list, or
+  // INVALID_HANDLE when the index is out of range.
+  static gf::GF_OBJ_HANDLE *unknown001(const mm::mtl::FixedVector<gf::GF_OBJ_HANDLE *, MEMBER_COUNT> &list, u32 index) {
+    if (index == 0 || index > list.size()) {
+      return gf::INVALID_HANDLE;
+    }
+    return list[index - 1];
+  }
+
   static mm::mtl::FixedVector<gf::GF_OBJ_HANDLE *, MEMBER_COUNT> s_drlist;
   static mm::mtl::FixedVector<gf::GF_OBJ_HANDLE *, MEMBER_COUNT> s_bllist;
 };

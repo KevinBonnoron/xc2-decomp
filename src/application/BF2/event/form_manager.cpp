@@ -1,10 +1,23 @@
 #include "event/form_manager.h"
 
 #include "bdat.h"
+#include "fw/fw_coli_check.h"
+#include "mm_math/mm_vec3.h"
 
 namespace event {
 
 FormManager::FormManager() {}
+
+void FormManager::adjestPosY(mm::Vec3 &position) {
+  mm::Vec3 result = position;
+  mm::Vec3 start;
+  start.x = position.x;
+  start.y = position.y + 1.0f;
+  start.z = position.z;
+  if (fw::ColiCheck::getSnapPos(result, start, 6.0f, 0xffffffff)) {
+    position = result;
+  }
+}
 
 u32 FormManager::getReplaceNum(u32 id) const {
   unsigned char *bdat = Bdat::getFP("EVT_formation");

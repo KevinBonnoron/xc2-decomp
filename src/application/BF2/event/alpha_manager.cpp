@@ -71,4 +71,20 @@ void AlphaManager::setDisp(bool isDisp) {
 
 bool AlphaManager::isDisp() const { return (unknown14 & DISP_FLAG_DISP) != 0; }
 
+void AlphaManager::OnEventProc(MSG_TYPE type) {
+  switch (type) {
+  case MSG_TYPE_UPDATE:
+    update();
+    break;
+  case MSG_TYPE_CLEAR:
+    clear();
+    break;
+  case MSG_TYPE_RENDER:
+    render();
+    break;
+  default:
+    break;
+  }
+}
+
 } // namespace event

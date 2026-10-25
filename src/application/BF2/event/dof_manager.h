@@ -20,21 +20,7 @@ public:
 
   DofManager();
   virtual ~DofManager() {}
-  void play(int axis, f32 dist, f32 range, f32 pixel, f32 lens, f32 strength, f32 blend, int pixelLv, bool isHlv, const char *name) {
-    unknown14 |= FLAG_ENABLE | FLAG_CHANGED;
-    m_axis = axis;
-    m_dist = dist;
-    unknown20 = dist;
-    unknown24 = range;
-    unknown28 = false;
-    unknown34 = pixel;
-    unknown38 = lens;
-    unknown3c = strength;
-    unknown40 = blend;
-    unknown44 = pixelLv;
-    unknown48 = isHlv;
-    unknown50 = name;
-  }
+  void play(int axis, f32 dist, f32 range, f32 pixel, f32 lens, f32 strength, f32 blend, int pixelLv, bool isHlv, const char *name);
   void stop();
   void clear();
   void update();

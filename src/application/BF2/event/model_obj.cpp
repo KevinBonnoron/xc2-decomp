@@ -1,5 +1,7 @@
 #include "event/model_obj.h"
 
+#include "gf/event/gf_evt_model.h"
+
 namespace event {
 
 void ModelObj::setReserve(u32 index, bool isReserve) {
@@ -23,6 +25,32 @@ bool ModelObj::isSame(const char *path, bool isPriority, u32 id) {
     return false;
   }
   return unknown5c == id;
+}
+
+bool ModelObj::isBusy() const {
+  if ((unknown08 & 0xc) != 0) {
+    return true;
+  }
+  if (unknown130 >= 0) {
+    return true;
+  }
+  if (unknown128 != nullptr) {
+    if (unknown128->isBusy(nullptr)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void ModelObj::update() {
+  if (unknown128 != nullptr) {
+    if (unknown130 >= 0) {
+      unknown130--;
+    }
+    if (unknown128->isBusy(nullptr)) {
+      unknown130 = 2;
+    }
+  }
 }
 
 bool ModelObj::isSame() {

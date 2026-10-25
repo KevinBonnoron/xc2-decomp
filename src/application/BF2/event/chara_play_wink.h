@@ -14,6 +14,7 @@ namespace event {
 class CharaPlayWink : public ICmd {
 public:
   virtual void init();
+  void idle();
   virtual RESULT update(const Param &param);
   virtual void term();
   void render(const mm::Vec3 &position, f32 eyeOffset);

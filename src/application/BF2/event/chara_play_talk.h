@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "event/i_cmd.h"
 #include "types.h"
 
@@ -20,6 +22,7 @@ public:
   };
 
   virtual void init();
+  void idle();
   virtual RESULT update(const Param &param);
   virtual void term();
   void render(const mm::Vec3 &position, f32 eyeOffset);
@@ -29,9 +32,19 @@ public:
 private:
   u32 unknown08;                // Inferred role: flags; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
-  u8 _18[0x78 - 0x18];
+  u8 _18[0x68 - 0x18];
+  f32 unknown68; // Role and original member name unknown.
+  f32 unknown6c; // Role and original member name unknown.
+  f32 unknown70; // Role and original member name unknown.
+  f32 unknown74; // Role and original member name unknown.
+
+  friend struct CharaPlayTalkLayout;
 };
 
-static_assert(sizeof(CharaPlayTalk) == 0x78, "");
+struct CharaPlayTalkLayout {
+  static_assert(offsetof(CharaPlayTalk, unknown68) == 0x68, "");
+  static_assert(offsetof(CharaPlayTalk, unknown74) == 0x74, "");
+  static_assert(sizeof(CharaPlayTalk) == 0x78, "");
+};
 
 } // namespace event

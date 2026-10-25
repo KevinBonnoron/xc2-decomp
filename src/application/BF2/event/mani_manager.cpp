@@ -1,6 +1,20 @@
 #include "event/mani_manager.h"
 
+#include "fw/fw_coli_check.h"
+#include "mm_math/mm_vec3.h"
+
 namespace event {
+
+void ManiManager::adjestPosY(mm::Vec3 &position) {
+  mm::Vec3 result = position;
+  mm::Vec3 start;
+  start.x = position.x;
+  start.y = position.y + 1.0f;
+  start.z = position.z;
+  if (fw::ColiCheck::getSnapPos(result, start, 6.0f, 0xffffffff)) {
+    position = result;
+  }
+}
 
 bool ManiManager::exist(mm::mtl::FixedVector<Item, ITEM_COUNT> &items, IManiCallback *callback) {
   for (u32 i = 0; i < items.size(); i++) {

@@ -3,6 +3,7 @@
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
+#include "mtl/mem_manager.h"
 #include "types.h"
 
 namespace event {
@@ -26,6 +27,7 @@ public:
   void update();
   void render();
   static mtl::ALLOC_HANDLE getFwProcMem();
+  static mtl::ALLOC_HANDLE heapMemory(const char *name, mtl::ALLOC_HANDLE parent, u32 size, mtl::AllocatorType type);
   u32 getSysMemSize() const;
   u32 getResMemSize() const;
   char *createTxtbuf(const char *text);

@@ -24,7 +24,7 @@ public:
   };
 
   AlphaManager();
-  virtual ~AlphaManager() {}
+  virtual ~AlphaManager() = default;
   void clear();
   void update();
   void render();

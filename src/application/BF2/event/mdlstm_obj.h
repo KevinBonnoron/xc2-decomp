@@ -1,5 +1,6 @@
 #pragma once
 #include "event/i_res_event.h"
+#include "event/model_obj.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
@@ -8,8 +9,6 @@ struct GF_OBJ_HANDLE;
 } // namespace gf
 
 namespace event {
-
-class ModelObj;
 
 class MdlstmObj : public IResEvent {
 public:
@@ -29,6 +28,8 @@ public:
   MdlstmObj();
   virtual ~MdlstmObj();
   void destroy();
+  void finishFree();
+  void init(f32 frame, MODEL_TYPE type, u32 id, u32 value, bool isActive, int param);
   void finishLoaded();
   void finishDelay();
   void finishBusy();
@@ -39,6 +40,7 @@ public:
   bool isActive() const;
   bool isLoading(f32 frame) const;
   bool isBuildable(const char *path, u32 value) const;
+  bool isBuildable(MODEL_TYPE type, u32 id, u32 value) const;
   bool checkByHandle(gf::GF_OBJ_HANDLE *handle) const;
   virtual void OnResEvent(const PARAM &param);
 
@@ -61,6 +63,7 @@ private:
   ModelObj *unknownd8; // Inferred role: reuse model; original member name unknown.
   ModelObj *unknowne0; // Inferred role: model; original member name unknown.
   u32 unknowne8;       // Inferred role: dispose delay; original member name unknown.
+  u32 unknownec;       // Role and original member name unknown.
 };
 
 static_assert(sizeof(MdlstmObj) == 0xf0, "");

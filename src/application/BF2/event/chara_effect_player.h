@@ -29,7 +29,7 @@ public:
   };
 
   CharaEffectPlayer();
-  virtual ~CharaEffectPlayer() {}
+  virtual ~CharaEffectPlayer() = default;
   void create(gf::GF_OBJ_HANDLE *handle);
   void destroy();
   void stopAfterImage();

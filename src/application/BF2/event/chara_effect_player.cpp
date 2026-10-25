@@ -9,6 +9,8 @@
 
 namespace event {
 
+CharaEffectPlayer::CharaEffectPlayer() : unknown10(gf::INVALID_HANDLE) {}
+
 void CharaEffectPlayer::create(gf::GF_OBJ_HANDLE *handle) { this->unknown10 = handle; }
 
 void CharaEffectPlayer::destroy() {

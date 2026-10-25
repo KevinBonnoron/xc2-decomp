@@ -1,6 +1,7 @@
 #include "event/memory_manager.h"
 
 #include "framework/framework.h"
+#include "mtl/mem_manager.h"
 
 namespace event {
 
@@ -35,6 +36,10 @@ void MemoryManager::clearHighestMemHeap() {
 void MemoryManager::update() {}
 
 mtl::ALLOC_HANDLE MemoryManager::getFwProcMem() { return fw::Framework::getMemHandle(); }
+
+mtl::ALLOC_HANDLE MemoryManager::heapMemory(const char *name, mtl::ALLOC_HANDLE parent, u32 size, mtl::AllocatorType type) {
+  return mtl::MemManager::create(parent, size, name, true, type, 0x1000, "no name", 0);
+}
 
 u32 MemoryManager::getSysMemSize() const { return m_sysMemSize; }
 

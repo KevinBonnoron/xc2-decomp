@@ -1,6 +1,9 @@
 #include "event/object_party_list.h"
 
+#include "gf/game/event/gf_game_event.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
+#include "mm_mtl/fixed_vector.h"
 
 namespace gf {
 struct GF_OBJ_HANDLE;
@@ -13,12 +16,19 @@ mm::mtl::FixedVector<gf::GF_OBJ_HANDLE *, ObjectPartyList::MEMBER_COUNT> ObjectP
 
 bool ObjectPartyList::isInvalidChara(gf::GF_OBJ_HANDLE *handle) { return handle == gf::INVALID_HANDLE; }
 
-gf::GF_OBJ_HANDLE *ObjectPartyList::getBlade(u32 index) {
-  if (index == 0 || index > s_bllist.size()) {
-    return gf::INVALID_HANDLE;
+bool ObjectPartyList::isTemporaryChara(gf::GF_OBJ_HANDLE *handle) {
+  if (handle != gf::INVALID_HANDLE) {
+    u32 id = gf::GfObjAcc(handle).getBdatId();
+    if (gf::GfGameEvent::isLeaderCharaNG(id)) {
+      return true;
+    }
   }
-  return s_bllist[index - 1];
+  return false;
 }
+
+gf::GF_OBJ_HANDLE *ObjectPartyList::getDriver(u32 index) { return unknown001(s_drlist, index); }
+
+gf::GF_OBJ_HANDLE *ObjectPartyList::getBlade(u32 index) { return unknown001(s_bllist, index); }
 
 u32 ObjectPartyList::getLeaderDriverId() const {
   if (s_drlist.empty()) {

@@ -25,6 +25,8 @@ public:
   void setRot(const mm::Vec3 &rot);
 
 private:
+  friend class ObjectLight;
+
   u32 unknown08;                  // Inferred role: flags; original member name unknown.
   ml::ScnObjLight *unknown10;     // Inferred role: light; original member name unknown.
   int unknown18;                  // Inferred role: screen id; original member name unknown.

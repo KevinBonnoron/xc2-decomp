@@ -5,6 +5,7 @@
 
 namespace gf {
 struct GF_OBJ_HANDLE;
+class GfEvtModel;
 } // namespace gf
 namespace mm {
 struct Mat44;
@@ -30,6 +31,8 @@ public:
   void setReserve(u32 index, bool isReserve);
   bool isReserve(int index);
   bool isSame(const char *path, bool isPriority, u32 id);
+  bool isBusy() const;
+  void update();
   bool isSame();
   gf::GF_OBJ_HANDLE *getHandle() const { return unknown120; }
   virtual void OnResEvent(const PARAM &param);
@@ -42,8 +45,9 @@ private:
   u32 unknown5c;                 // Inferred role: id; original member name unknown.
   u8 _60[0x120 - 0x60];
   gf::GF_OBJ_HANDLE *unknown120; // Inferred role: handle; original member name unknown.
-  u8 _128[0x134 - 0x128];
-  u32 unknown134; // Inferred role: reserve; original member name unknown.
+  gf::GfEvtModel *unknown128;    // Inferred role: evt model; original member name unknown.
+  s32 unknown130;                // Inferred role: busy frame; original member name unknown.
+  u32 unknown134;                // Inferred role: reserve; original member name unknown.
 };
 
 static_assert(sizeof(ModelObj) == 0x138, "");
