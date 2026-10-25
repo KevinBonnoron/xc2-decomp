@@ -2,6 +2,7 @@
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_phantom.h"
 #include "types.h"
 
 struct CBdatWrapper;
@@ -24,9 +25,11 @@ public:
   ~GmkAreaBgm() override;
   GmkType getGmkType() const override;
   void create(const CreateInfo &info) override;
+  void createBgmCondInfos();
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
+  void onEnterPhantom(const IGmkPhantomEventListener::OnEnterInfo &info);
 
   u8 _48[0x170 - 0x48];
 };

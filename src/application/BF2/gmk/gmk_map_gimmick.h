@@ -33,6 +33,8 @@ public:
 
   ~GmkMapGimmick() override;
   GmkType getGmkType() const override;
+  int getGameFlagId() const;
+  void setSolved() const;
   void create(const CreateInfo &info) override;
   void dispose() override;
   void update(f32 deltaTime) override;

@@ -1,9 +1,21 @@
 #include "gmk/gmk_npc/gmk_npc.h"
 
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/game/gf_game_manager.h"
 #include "gmk/gmk_bdat.h"
+#include "mm_math/mm_vec3.h"
 
 namespace gmk {
+
+GmkType GmkNpc::getGmkType() const { return GMK_TYPE; }
+
+u8 *GmkNpc::getBindedBdatFp() const { return AGmkBase::getBindedBdatFp(); }
+
+void GmkNpc::debugDraw() const {
+  if (isValid()) {
+    getBdatInfo()->isPopCommonCondMatched(*this);
+  }
+}
 
 void GmkNpc::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown02 = bdat.getValCheck("Group", id, BDAT_TYPE_U16);
@@ -24,5 +36,43 @@ void GmkNpc::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
 }
 
 void GmkNpc::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
+
+bool GmkNpc::findPopPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const {
+  position = AGmkBase::unknown08.unknown08->unknown00;
+  rotation = AGmkBase::unknown08.unknown08->unknown10;
+  return true;
+}
+
+bool GmkNpc::isPopDistCondMatched() const {
+  if (!isValid()) {
+    return false;
+  }
+  return getBdatInfo()->unknown20.isMatch(AGmkBase::unknown08.unknown08->unknown00);
+}
+
+bool GmkNpc::isDepopDistCondMatched() const {
+  if (!isValid()) {
+    return false;
+  }
+  return !getBdatInfo()->unknown28.isMatch(AGmkBase::unknown08.unknown08->unknown00);
+}
+
+bool GmkNpc::isPopCondMatched() const {
+  if (!isValid()) {
+    return false;
+  }
+  const BdatInfo *info = getBdatInfo();
+  if (!gf::GfGameManager::isBattle() || info->unknown04 != 0) {
+    return info->isPopCommonCondMatched(*this);
+  }
+  return false;
+}
+
+bool GmkNpc::isDepopCondMatched() const {
+  if (!isValid()) {
+    return false;
+  }
+  return !getBdatInfo()->isPopCommonCondMatched(*this);
+}
 
 } // namespace gmk

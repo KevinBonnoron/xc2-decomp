@@ -1,11 +1,17 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_phantom.h"
 #include "types.h"
 
 struct CBdatWrapper;
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
 
 namespace gmk {
 
@@ -44,16 +50,32 @@ public:
 
   ~GmkElevator() override;
   GmkType getGmkType() const override;
+  int getGameFlagId() const;
   void create(const CreateInfo &info) override;
   void dispose() override;
   void update(f32 deltaTime) override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
+  void onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInfo &info);
+  void clearRequests();
+  bool isCallSwitch(gf::GF_OBJ_HANDLE *handle) const;
+  bool isLiftSwitch(gf::GF_OBJ_HANDLE *handle) const;
+  bool isElevatorMoveOK() const;
+  bool isGmkFinished() const;
 
-  u8 _48[0x4d0 - 0x48];
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+
+  u8 _48[0x290 - 0x48];
+  gf::GF_OBJ_HANDLE *unknown290[4]; // Inferred role: switches, call switches at even indices and lift switches at odd ones; original member name unknown.
+  u8 _2b0[0x4c8 - 0x2b0];
+  u32 unknown4C8; // Role and original member name unknown.
+  f32 unknown4CC; // Role and original member name unknown.
 };
 
 static_assert(sizeof(GmkElevator::BdatInfo) == 0x30, "");
+static_assert(offsetof(GmkElevator, unknown290) == 0x290, "");
+static_assert(offsetof(GmkElevator, unknown4C8) == 0x4c8, "");
+static_assert(offsetof(GmkElevator, unknown4CC) == 0x4cc, "");
 static_assert(sizeof(GmkElevator) == 0x4d0, "");
 
 typedef TGmkList<GmkElevator, GmkElevator::BdatInfo, 0x54564c45, 2, GmkElevatorGobCustom> GmkElevatorList;
@@ -64,7 +86,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_ELEVATOR_LOCATOR;
 
-  ~GmkElevatorLocator() override;
+  ~GmkElevatorLocator() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
 };

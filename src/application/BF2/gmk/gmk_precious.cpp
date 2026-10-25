@@ -1,11 +1,19 @@
 #include "gmk/gmk_precious.h"
 
+#include "bdat.h"
+#include "framework/effect/effect_manager.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/util/gf_item_util.h"
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+constexpr int WILDCARD_PRECIOUS_POP_DIST_ROW = 34;
 
 void GmkPrecious::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   dispose();
@@ -38,6 +46,47 @@ bool GmkPrecious::BdatInfo::isPopCondMatched() const {
     return false;
   }
   return true;
+}
+
+GmkType GmkPrecious::getGmkType() const { return GMK_TYPE; }
+
+int GmkPrecious::getGameFlagId() const { return unknown20.unknown18 + 0xb7ef; }
+
+void GmkPrecious::create(const CreateInfo &info) {
+  AGmkBase::create(info);
+  f32 popDist = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA), 0, WILDCARD_PRECIOUS_POP_DIST_ROW, BDAT_TYPE_F32).valueF32;
+  unknown70.unknown00 = popDist * popDist;
+}
+
+bool GmkPrecious::isObtained() const { return gf::GfGameFlag::getLocal(1, getGameFlagId()) != 0; }
+
+bool GmkPrecious::isPopCondMatched() const {
+  const BdatInfo *info = getBdatInfo();
+  if (isObtained() || !info->isPopCondMatched()) {
+    return false;
+  }
+  return DistCond::isMatch(unknown70.unknown00, unknown08.unknown08->unknown00);
+}
+
+void GmkPrecious::validateDisp() const {
+  bool isDisp = unknown74 && debugIsDispGmkType(getGmkType());
+  if (unknown58 != gf::INVALID_HANDLE) {
+    setEventDisp(unknown58, isDisp);
+  }
+  if (unknown60 != 0) {
+    fw::EffectManager::get()->setDisp(unknown60, isDisp);
+  }
+}
+
+void GmkPrecious::debugDraw() const {
+  if (!isValid()) {
+    return;
+  }
+  const BdatInfo *info = getBdatInfo();
+  if (isObtained() || !info->isPopCondMatched()) {
+    return;
+  }
+  DistCond::isMatch(unknown70.unknown00, unknown08.unknown08->unknown00);
 }
 
 } // namespace gmk

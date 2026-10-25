@@ -10,12 +10,6 @@ namespace gmk {
 
 AGmkBase::AGmkBase() : unknown08(), _40() {}
 
-void AGmkBase::disposeBase() {
-  unknown08.unknown00 = nullptr;
-  unknown08.unknown08 = nullptr;
-  unknown08.unknown10 = nullptr;
-}
-
 u8 *AGmkBase::getBindedBdatFp() const { return unknown08.unknown00->getBindedBdatFp(); }
 
 bool AGmkBase::canCreateGameEntity() const {

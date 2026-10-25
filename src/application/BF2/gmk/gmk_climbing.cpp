@@ -30,4 +30,6 @@ bool GmkClimbing::BdatInfo::isPopCondMatched() const {
   return true;
 }
 
+GmkType GmkClimbing::getGmkType() const { return GMK_TYPE; }
+
 } // namespace gmk

@@ -1,10 +1,15 @@
 #include "gmk/gmk_effect.h"
 
+#include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+void GmkEffect::debugDraw() const { isValid(); }
+
+void GmkEffect::debugUpdateMmf() {}
 
 void GmkEffect::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown02 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
@@ -23,6 +28,40 @@ bool GmkEffect::BdatInfo::isPopCondMatched() const {
     return false;
   }
   return true;
+}
+
+GmkType GmkEffectLocator::getGmkType() const { return GMK_TYPE; }
+
+bool GmkEffectLocator::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+
+GmkType GmkEffect::getGmkType() const { return GMK_TYPE; }
+
+void GmkEffect::validateDisp() const {
+  if (unknownAC == 0) {
+    return;
+  }
+  bool isDisp = unknownB0 && debugIsDispGmkType(getGmkType());
+  fw::EffectManager::get()->setDisp(unknownAC, isDisp);
+}
+
+bool GmkEffect::canPopInst() const {
+  if (unknownAC != 0) {
+    return false;
+  }
+  if (!unknownB8_0) {
+    return false;
+  }
+  return unknownB8_1;
+}
+
+bool GmkEffect::canDepopInst() const {
+  if (unknownAC == 0) {
+    return false;
+  }
+  if (!unknownB8_0) {
+    return true;
+  }
+  return unknownB8_2;
 }
 
 } // namespace gmk

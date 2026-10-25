@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
@@ -32,11 +34,18 @@ public:
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
+  IGmkList *getOwnerGmkEnemyList() const;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
 
-  u8 _48[0x1d0 - 0x48];
+  u8 *unknown48; // Role and original member name unknown.
+  u8 *unknown50; // Role and original member name unknown.
+  int unknown58; // Role and original member name unknown.
+  u8 _5c[0x1d0 - 0x5c];
 };
 
+static_assert(offsetof(GmkEnemy, unknown48) == 0x48, "");
+static_assert(offsetof(GmkEnemy, unknown50) == 0x50, "");
+static_assert(offsetof(GmkEnemy, unknown58) == 0x58, "");
 static_assert(sizeof(GmkEnemy::BdatInfo) == 0x8, "");
 static_assert(sizeof(GmkEnemy) == 0x1d0, "");
 

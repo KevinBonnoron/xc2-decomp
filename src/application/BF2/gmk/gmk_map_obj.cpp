@@ -3,6 +3,9 @@
 #include "bdat.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_manager.h"
+#include "gf/object/component/gf_com_transform.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_setup.h"
@@ -164,6 +167,27 @@ void GmkRoutedMapObj::update(f32 deltaTime) {
   } else if (canDepopGobInst()) {
     disposeGobInst();
   }
+}
+
+bool GmkRoutedMapObj::canDepopGobInst() const {
+  if (unknown50 == gf::INVALID_HANDLE || gf::GfGameManager::getControlMover() == gf::INVALID_HANDLE) {
+    return false;
+  }
+  const GmkMapObj::BdatInfo *info = getBdatInfo();
+  const mm::Vec3 &position = gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
+  mm::Vec3 nearest;
+  if (!GmkRoute::getNearestPos(nearest, position)) {
+    return false;
+  }
+  if (info->unknown0c.isMatch(nearest)) {
+    if (info->unknown00 == 0) {
+      return false;
+    }
+    if (gf::GfGameCond::isGameCond(info->unknown00)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 void GmkRoutedMapObj::createGobInst() {

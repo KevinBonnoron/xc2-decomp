@@ -16,10 +16,19 @@ public:
 
   ~GmkRoutedNpc() override;
   GmkType getGmkType() const override;
+  const IGmkList *getBindedRoutePointList() const override;
   void create(const CreateInfo &info) override;
   void dispose() override;
   void debugDraw() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
+  int getBindedBdatId() const;
+  u8 *getBindedBdatFp() const;
+  bool isPopCondMatched() const;
+  bool isDepopCondMatched() const;
+  bool isPopDistCondMatched() const;
+  bool isDepopDistCondMatched() const;
+
+  const GmkNpc::BdatInfo *getBdatInfo() const { return reinterpret_cast<const GmkNpc::BdatInfo *>(unknown20.unknown10); }
 
   u8 _50[0xa0 - 0x50];
 };

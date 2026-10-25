@@ -17,8 +17,8 @@ public:
   static const GmkType GMK_TYPE = GMK_TYPE_TARGET_POINT;
 
   ~GmkTargetPoint() override { dispose(); }
-  GmkType getGmkType() const override { return GMK_TYPE; }
-  bool isValid() const override { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+  GmkType getGmkType() const override;
+  bool isValid() const override;
 };
 
 static_assert(sizeof(GmkTargetPoint) == 0x48, "");

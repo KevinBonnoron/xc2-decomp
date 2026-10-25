@@ -1,10 +1,16 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
+
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
 
 namespace mm {
 struct Vec3;
@@ -34,16 +40,29 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_BLADE;
 
-  ~GmkBlade() override;
+  ~GmkBlade() override { dispose(); }
   GmkType getGmkType() const override;
   void dispose() override;
+  void disposeGobInst(bool isFadeOut);
   void update(f32 deltaTime) override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
+  bool canPopGobInst() const;
+  bool canDepopGobInst() const;
+  void validateDisp() const;
 
-  u8 _48[0x58 - 0x48];
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+
+  gf::GF_OBJ_HANDLE *unknown48; // Inferred role: gob instance handle; original member name unknown.
+  int unknown50;                // Inferred role: pop state; original member name unknown.
+  bool unknown54;               // Inferred role: keep shown; original member name unknown.
+  bool unknown55;               // Inferred role: visible; original member name unknown.
 };
 
 static_assert(sizeof(GmkBlade::BdatInfo) == 0x30, "");
+static_assert(offsetof(GmkBlade, unknown48) == 0x48, "");
+static_assert(offsetof(GmkBlade, unknown50) == 0x50, "");
+static_assert(offsetof(GmkBlade, unknown54) == 0x54, "");
+static_assert(offsetof(GmkBlade, unknown55) == 0x55, "");
 static_assert(sizeof(GmkBlade) == 0x58, "");
 
 typedef TGmkList<GmkBlade, GmkBlade::BdatInfo, 0x44414c42, 4, GmkBladeGob> GmkBladeList;

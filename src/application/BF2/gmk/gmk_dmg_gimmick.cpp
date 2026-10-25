@@ -1,18 +1,35 @@
 #include "gmk/gmk_dmg_gimmick.h"
 
+#include "framework/effect/effect_manager.h"
 #include "framework/sound/sound_manager.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_manager.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_set.h"
+#include "mm_mtl/vector.h"
 
 namespace fw {
 enum SoundCategory : int;
+enum EF_CATEGORY : int;
 } // namespace fw
 namespace mm {
 struct Vec3;
+
+namespace mtl {
+class RTTI;
+} // namespace mtl
 } // namespace mm
 
 namespace gmk {
+
+void GmkDmgGimmick::debugDraw() const {
+  isValid();
+  isValid();
+}
 
 const fw::SoundCategory DMG_SE_CATEGORY = static_cast<fw::SoundCategory>(7);
 
@@ -98,5 +115,124 @@ void GmkDmgSe::validateMute() const {
   }
   fw::SoundManager::get()->setVolume(unknowne4, unknowne0 ? 0.0f : unknowne8, 0.0f);
 }
+
+GmkType GmkDmgPhantom::getGmkType() const { return GMK_TYPE; }
+
+bool GmkDmgPhantom::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+
+GmkType GmkDmgEffect::getGmkType() const { return GMK_TYPE; }
+
+bool GmkDmgEffect::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+
+void GmkDmgEffect::update(f32 deltaTime) { debugUpdateMmf(); }
+
+void GmkDmgEffect::dispose() {
+  if (unknown4C != 0) {
+    fw::EffectManager::get()->remove(unknown4C);
+    unknown4C = 0;
+  }
+  AGmkBase::dispose();
+}
+
+void GmkDmgEffect::createEffectInst(void *const &data) const {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  if (unknown4C != 0) {
+    fw::EffectManager::get()->remove(unknown4C);
+    unknown4C = 0;
+  }
+  u32 handle = fw::EffectManager::get()->create(data, true);
+  unknown4C = handle;
+  fw::EffectManager::get()->setCategory(handle, static_cast<fw::EF_CATEGORY>(1));
+  applyEffectParam();
+}
+
+void GmkDmgEffect::disposeEffectInst(bool isFadeOut) const {
+  if (unknown4C != 0) {
+    if (isFadeOut) {
+      fw::EffectManager::get()->dead(unknown4C);
+    } else {
+      fw::EffectManager::get()->remove(unknown4C);
+    }
+    unknown4C = 0;
+  }
+}
+
+const AGmkBase *GmkDmgPhantomList::getInst(u32 index) const { return &gmkInsts[index]; }
+
+const AGmkBase *GmkDmgEffectList::getInst(u32 index) const { return &gmkInsts[index]; }
+
+const AGmkBase *GmkDmgSeList::getInst(u32 index) const { return &gmkInsts[index]; }
+
+u32 GmkDmgPhantomTargetInfo::getTargetType() const {
+  if (unknown00 == gf::INVALID_HANDLE) {
+    return 0;
+  }
+  if (unknown08 <= 0) {
+    return 0;
+  }
+  gf::GfObjAcc acc(unknown00);
+  switch (acc.getType()) {
+  case gf::OBJECT_TYPE_DRIVER:
+  case gf::OBJECT_TYPE_BLADE:
+    return 1;
+  case gf::OBJECT_TYPE_ENEMY:
+    return 2;
+  default:
+    return 0;
+  }
+}
+
+bool GmkDmgPhantomTargetInfo::isTargetPlayer() const {
+  if (gf::GfGameManager::getControlMover() == gf::INVALID_HANDLE) {
+    return false;
+  }
+  return unknown00 == gf::GfGameManager::getControlMover();
+}
+
+GmkType GmkDmgGimmick::getGmkType() const { return GMK_TYPE; }
+
+const mm::mtl::RTTI *GmkDmgGimmick::getRTTI() const { return &m_rtti; }
+
+void GmkDmgGimmick::dispose() {
+  unknown58 = nullptr;
+  AGmkBase::dispose();
+  unknown68 = nullptr;
+}
+
+void GmkDmgGimmick::seqWaitToCreateChild(f32 deltaTime) { unknown68 = &GmkDmgGimmick::seqUpdatePopDepop; }
+
+GmkDmgPhantom *GmkDmgGimmick::getGmkDmgPhantom(u32 index) const {
+  IGmkList *list = unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_DMG_PHANTOM];
+  const Data *data = getData();
+  if (list != nullptr && list->getInstNum() > data->unknown00 + index) {
+    u32 listIndex = data->unknown00 + index;
+    return static_cast<GmkDmgPhantom *>(const_cast<AGmkBase *>(list->getInst(listIndex)));
+  }
+  return nullptr;
+}
+
+GmkDmgEffect *GmkDmgGimmick::getGmkDmgEffect(u32 index) const {
+  IGmkList *list = unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_DMG_EFFECT];
+  const Data *data = getData();
+  if (list != nullptr && list->getInstNum() > data->unknown04 + index) {
+    u32 listIndex = data->unknown04 + index;
+    return static_cast<GmkDmgEffect *>(const_cast<AGmkBase *>(list->getInst(listIndex)));
+  }
+  return nullptr;
+}
+
+GmkDmgSe *GmkDmgGimmick::getGmkDmgSe(u32 index) const {
+  IGmkList *list = unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_DMG_SE];
+  const Data *data = getData();
+  if (list != nullptr && list->getInstNum() > data->unknown08 + index) {
+    u32 listIndex = data->unknown08 + index;
+    return static_cast<GmkDmgSe *>(const_cast<AGmkBase *>(list->getInst(listIndex)));
+  }
+  return nullptr;
+}
+
+void GmkDmgGimmick::validateDisp() const { bool isDisp = unknown80 && debugIsDispGmkType(getGmkType()); }
 
 } // namespace gmk

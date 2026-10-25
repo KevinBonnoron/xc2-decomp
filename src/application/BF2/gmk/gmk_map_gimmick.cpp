@@ -2,6 +2,7 @@
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
 #include "gmk/gmk_bdat.h"
 
@@ -35,5 +36,28 @@ bool GmkMapGimmick::BdatInfo::isPopCondMatched() const {
 }
 
 void GmkMapGimmick::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
+
+void GmkMapGimmick::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {}
+
+GmkType GmkMapGimmick::getGmkType() const { return GMK_TYPE; }
+
+int GmkMapGimmick::getGameFlagId() const { return unknown20.unknown18 + 0xab66; }
+
+void GmkMapGimmick::setSolved() const { gf::GfGameFlag::setLocal(1, getGameFlagId(), 1); }
+
+void GmkMapGimmickList::setUpdateGmkNumPerFrame(u32 num) {
+  TGmkList::setUpdateGmkNumPerFrame(num);
+  unknown230.setUpdateGmkNumPerFrame(num);
+}
+
+void GmkMapGimmickList::debugDraw() const {
+  TGmkList::debugDraw();
+  unknown230.debugDraw();
+}
+
+void GmkMapGimmickList::debugUpdateMmf() {
+  TGmkList::debugUpdateMmf();
+  unknown230.debugUpdateMmf();
+}
 
 } // namespace gmk

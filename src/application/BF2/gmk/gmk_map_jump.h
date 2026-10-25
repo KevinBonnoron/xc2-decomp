@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
@@ -30,11 +32,15 @@ public:
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
+  void endEvent();
 
-  u8 _48[0xf0 - 0x48];
+  u8 _48[0xe1 - 0x48];
+  bool unknownE1; // Role and original member name unknown.
+  u8 _e2[0xf0 - 0xe2];
 };
 
 static_assert(sizeof(GmkMapJump::BdatInfo) == 0xc, "");
+static_assert(offsetof(GmkMapJump, unknownE1) == 0xe1, "");
 static_assert(sizeof(GmkMapJump) == 0xf0, "");
 
 typedef TGmkList<GmkMapJump, GmkMapJump::BdatInfo, 0x504a504d, 2, GmkMapJumpGob> GmkMapJumpList;

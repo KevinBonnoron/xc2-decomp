@@ -6,6 +6,8 @@
 
 namespace gmk {
 
+void GmkMapJump::debugDraw() const { isValid(); }
+
 void GmkMapJump::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = bdat.getValCheck("MapJumpId", id, BDAT_TYPE_U16);
   unknown04 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
@@ -24,6 +26,14 @@ bool GmkMapJump::BdatInfo::isCondMatched() const {
     return false;
   }
   return true;
+}
+
+GmkType GmkMapJump::getGmkType() const { return GMK_TYPE; }
+
+void GmkMapJump::endEvent() {
+  if (unknownE1) {
+    unknownE1 = false;
+  }
 }
 
 } // namespace gmk

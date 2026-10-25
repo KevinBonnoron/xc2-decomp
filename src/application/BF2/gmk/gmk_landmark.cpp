@@ -4,6 +4,7 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
 #include "gmk/gmk_bdat.h"
 
@@ -25,5 +26,13 @@ bool GmkLandmark::BdatInfo::isCondMatched() const {
   }
   return true;
 }
+
+GmkType GmkLandmark::getGmkType() const { return GMK_TYPE; }
+
+int GmkLandmark::getGameFlagId() const { return unknown20.unknown18 + 0xc7d9; }
+
+bool GmkLandmark::isFound() const { return gf::GfGameFlag::getLocal(1, getGameFlagId()) != 0; }
+
+void GmkLandmark::onEnterPhantom(const IGmkPhantomEventListener::OnEnterInfo &info) {}
 
 } // namespace gmk

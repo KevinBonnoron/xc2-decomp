@@ -6,6 +6,8 @@
 
 namespace gmk {
 
+void GmkFieldLock::debugDraw() const { isValid(); }
+
 void GmkFieldLock::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown06 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
   unknown0a = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
@@ -26,5 +28,9 @@ bool GmkFieldLock::BdatInfo::isCondMatched() const {
   }
   return true;
 }
+
+void GmkFieldLock::create(const CreateInfo &info) { AGmkBase::create(info); }
+
+GmkType GmkFieldLock::getGmkType() const { return GMK_TYPE; }
 
 } // namespace gmk

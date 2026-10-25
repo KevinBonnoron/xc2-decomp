@@ -62,6 +62,9 @@ public:
   void create();
   void dispose();
   void update(f32 deltaTime);
+  GmkNpcIdInfo *getNpcIdInfoByNpcId(int npcId);
+  const GmkNpcIdInfo *getNpcIdInfoByNpcId(int npcId) const;
+  static int getNpcIdInfoIdxFromNpcId(int npcId);
   void setUpdateNpcNumPerFrame(u32 num) { unknown34 = num; }
 
   mm::mtl::Vector<GmkNpcIdInfo> unknown08; // Inferred role: npc id infos; original member name unknown.

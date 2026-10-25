@@ -10,4 +10,8 @@ void GmkAntiBladeArea::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBas
   unknown00 = bdat.getValCheck("BTL_MapRevId", id, BDAT_TYPE_U16);
 }
 
+GmkType GmkAntiBladeArea::getGmkType() const { return GMK_TYPE; }
+
+void GmkAntiBladeArea::debugDraw() const {}
+
 } // namespace gmk

@@ -16,6 +16,7 @@ public:
 
   ~GmkRoutedMob() override;
   GmkType getGmkType() const override;
+  const IGmkList *getBindedRoutePointList() const override;
   bool isValid() const override;
   void create(const CreateInfo &info) override;
   void dispose() override;

@@ -9,6 +9,11 @@
 #include "types.h"
 
 struct CBdatWrapper;
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+} // namespace mm
 
 namespace fw {
 class SoundPack;
@@ -16,13 +21,25 @@ class SoundPack;
 
 namespace gmk {
 
+class GmkDmgEffect;
 class GmkDmgEffectGob;
 class GmkDmgGimmickGobCustom;
+class GmkDmgPhantom;
 class GmkDmgPhantomGob;
+class GmkDmgSe;
 class GmkDmgSeGob;
 
 class GmkDmgGimmick : public AGmkBase {
 public:
+  struct Data {
+    u16 unknown00; // Role and original member name unknown.
+    u16 unknown02; // Role and original member name unknown.
+    u16 unknown04; // Role and original member name unknown.
+    u16 unknown06; // Role and original member name unknown.
+    u16 unknown08; // Role and original member name unknown.
+    u16 unknown0a; // Role and original member name unknown.
+  };
+
   struct BdatInfo {
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
@@ -42,6 +59,7 @@ public:
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_GIMMICK;
+  static mm::mtl::RTTI m_rtti;
 
   ~GmkDmgGimmick() override;
   GmkType getGmkType() const override;
@@ -49,11 +67,29 @@ public:
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
+  const mm::mtl::RTTI *getRTTI() const;
+  void seqWaitToCreateChild(f32 deltaTime);
+  void validateDisp() const;
+  GmkDmgPhantom *getGmkDmgPhantom(u32 index) const;
+  GmkDmgEffect *getGmkDmgEffect(u32 index) const;
+  GmkDmgSe *getGmkDmgSe(u32 index) const;
+  void seqUpdatePopDepop(f32 deltaTime);
 
-  u8 _48[0x88 - 0x48];
+  u8 _48[0x58 - 0x48];
+  void *unknown58; // Role and original member name unknown.
+  u8 _60[0x68 - 0x60];
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+
+  void (GmkDmgGimmick::*unknown68)(f32); // Inferred role: sequence; original member name unknown.
+  u8 _78[0x80 - 0x78];
+  bool unknown80; // Role and original member name unknown.
+  u8 _81[0x88 - 0x81];
 };
 
 static_assert(sizeof(GmkDmgGimmick::BdatInfo) == 0x28, "");
+static_assert(offsetof(GmkDmgGimmick, unknown58) == 0x58, "");
+static_assert(offsetof(GmkDmgGimmick, unknown68) == 0x68, "");
+static_assert(offsetof(GmkDmgGimmick, unknown80) == 0x80, "");
 static_assert(sizeof(GmkDmgGimmick) == 0x88, "");
 
 typedef TGmkList<GmkDmgGimmick, GmkDmgGimmick::BdatInfo, 0x4d474d44, 1, GmkDmgGimmickGobCustom> GmkDmgGimmickList;
@@ -87,15 +123,20 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_EFFECT;
 
-  ~GmkDmgEffect() override;
+  ~GmkDmgEffect() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
   void dispose() override;
   void update(f32 deltaTime) override;
+  void createEffectInst(void *const &data) const;
+  void disposeEffectInst(bool isFadeOut) const;
+  void applyEffectParam() const;
 
-  u8 _48[0x50 - 0x48];
+  u8 _48[0x4c - 0x48];
+  mutable u32 unknown4C; // Role and original member name unknown.
 };
 
+static_assert(offsetof(GmkDmgEffect, unknown4C) == 0x4c, "");
 static_assert(sizeof(GmkDmgEffect) == 0x50, "");
 
 class GmkDmgEffectList : public TGmkList<GmkDmgEffect, GmkDmgEffect::BdatInfo, 0x46454d44, 1, GmkDmgEffectGob> {

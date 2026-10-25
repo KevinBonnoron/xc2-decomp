@@ -3,6 +3,7 @@
 #include "gf/game/quest/gf_quest_id.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_npc/gmk_npc_manager.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 namespace gmk {
@@ -30,5 +31,9 @@ void GmkNpcIdInfo::BdatInfo::dispose() {
 }
 
 GmkNpcManager::GmkNpcManager(u32 updateNpcNumPerFrame) : _30(), unknown34(updateNpcNumPerFrame), unknown38(0), unknown3c(true) { create(); }
+
+GmkNpcIdInfo *GmkNpcManager::getNpcIdInfoByNpcId(int npcId) { return &unknown08[getNpcIdInfoIdxFromNpcId(npcId)]; }
+
+const GmkNpcIdInfo *GmkNpcManager::getNpcIdInfoByNpcId(int npcId) const { return &unknown08[getNpcIdInfoIdxFromNpcId(npcId)]; }
 
 } // namespace gmk

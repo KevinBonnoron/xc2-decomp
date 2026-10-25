@@ -25,6 +25,14 @@ mm::Vec3 getSidePos(const GmkRoutePoint::Data &data, f32 width) {
 
 } // namespace
 
+GmkRoute::GmkRoute() : _48() {}
+
+GmkType GmkRoute::getGmkType() const { return GMK_TYPE; }
+
+void GmkRoute::create(const CreateInfo &info) { AGmkBase::create(info); }
+
+void GmkRoute::dispose() { AGmkBase::dispose(); }
+
 GmkRouteNavi::CreateInfo::CreateInfo(const GmkRoute *route)
     : unknown00(-1), unknown04(GMK_TYPE_NUM), unknown08(0), unknown0c(0.0f), unknown10(1.0f), unknown14(2.0f), unknown18(16), unknown20(nullptr) {
   if (route != nullptr) {

@@ -1,8 +1,10 @@
 #pragma once
+#include <stddef.h>
+
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
-#include "types.h"
+#include "gmk/gmk_phantom.h"
 
 namespace gmk {
 
@@ -14,15 +16,17 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_AREA_WEATHER;
 
-  ~GmkAreaWeather() override;
+  ~GmkAreaWeather() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
   void create(const CreateInfo &info) override;
+  void createGmkPhantom();
   void dispose() override;
 
-  u8 _48[0xe0 - 0x48];
+  GmkPhantom unknown50; // Inferred role: phantom; original member name unknown.
 };
 
+static_assert(offsetof(GmkAreaWeather, unknown50) == 0x50, "");
 static_assert(sizeof(GmkAreaWeather) == 0xe0, "");
 
 typedef TGmkList<GmkAreaWeather, GmkAreaWeather::BdatInfo, 0x52545741, 2, GmkAreaWeatherGob> GmkAreaWeatherList;

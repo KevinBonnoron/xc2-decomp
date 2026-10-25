@@ -2,8 +2,20 @@
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_game_flag.h"
+#include "gf/data/gf_object_type.h"
+#include "gf/field/gf_field_lod.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_phantom.h"
+
+namespace mm {
+namespace mtl {
+class RTTI;
+} // namespace mtl
+} // namespace mm
 
 namespace gmk {
 
@@ -71,6 +83,44 @@ void GmkDoor::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown38 = bdat.getValCheck("sp_close_camGim_ATR", id, BDAT_TYPE_U8);
   unknown42 = BootedGmkCond(bdat, id, "SPOP_");
   unknown39 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "gmkCamPos") != 0;
+}
+
+u32 GmkDoorPhantomTargetInfo::getTargetType() const {
+  if (unknown00 == gf::INVALID_HANDLE) {
+    return 0;
+  }
+  gf::GfObjAcc acc(unknown00);
+  switch (acc.getType()) {
+  case gf::OBJECT_TYPE_DRIVER:
+  case gf::OBJECT_TYPE_BLADE:
+    return 1;
+  case gf::OBJECT_TYPE_ENEMY:
+    return 2;
+  default:
+    return 0;
+  }
+}
+
+GmkType GmkDoor::getGmkType() const { return GMK_TYPE; }
+
+int GmkDoor::getGameFlagId() const { return unknown20.unknown18 + 0x94b6; }
+
+const mm::mtl::RTTI *GmkDoor::getRTTI() const { return &m_rtti; }
+
+u32 GmkDoor::getProgress() const { return gf::GfGameFlag::getLocal(2, getGameFlagId()); }
+
+bool GmkDoor::isDoorOpened() const {
+  const BdatInfo *info = getBdatInfo();
+  gf::GfFieldLod *lod = gf::GfFieldLod::get();
+  return !lod->isAnimReverse(info->unknown06);
+}
+
+void GmkDoor::seqDoor_Shutdowned(f32 deltaTime) { seqDoor_Booted(deltaTime); }
+
+void GmkDoor::seqDoor_SpBooted(f32 deltaTime) {
+  if (unknown2C0 < getBdatInfo()->unknown2c) {
+    unknown2C0 += deltaTime;
+  }
 }
 
 } // namespace gmk

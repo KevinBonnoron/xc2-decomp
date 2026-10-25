@@ -42,4 +42,33 @@ bool GmkEnemyList::BdatInfo::create() {
   return true;
 }
 
+GmkType GmkEnemy::getGmkType() const { return GMK_TYPE; }
+
+IGmkList *GmkEnemy::getOwnerGmkEnemyList() const { return unknown08.unknown00; }
+
+bool GmkEnemy::isValid() const {
+  if (unknown08.unknown00 == nullptr || unknown20.unknown08 == nullptr || unknown20.unknown10 == nullptr) {
+    return false;
+  }
+  if (unknown48 == nullptr || unknown50 == nullptr) {
+    return false;
+  }
+  return unknown58 > 0;
+}
+
+void GmkEnemyList::setUpdateGmkNumPerFrame(u32 num) {
+  TGmkList::setUpdateGmkNumPerFrame(num);
+  unknown240.setUpdateGmkNumPerFrame(num);
+}
+
+void GmkEnemyList::debugDraw() const {
+  TGmkList::debugDraw();
+  unknown240.debugDraw();
+}
+
+void GmkEnemyList::debugUpdateMmf() {
+  TGmkList::debugUpdateMmf();
+  unknown240.debugUpdateMmf();
+}
+
 } // namespace gmk

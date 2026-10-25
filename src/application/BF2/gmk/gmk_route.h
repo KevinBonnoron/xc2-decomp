@@ -39,12 +39,12 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTE;
 
-  GmkRoute() : _48() {}
+  GmkRoute();
   ~GmkRoute() override { GmkRoute::dispose(); }
-  GmkType getGmkType() const override { return GMK_TYPE; }
+  GmkType getGmkType() const override;
   bool isValid() const override;
-  void create(const CreateInfo &info) override { AGmkBase::create(info); }
-  void dispose() override { AGmkBase::dispose(); }
+  void create(const CreateInfo &info) override;
+  void dispose() override;
   void debugDraw() const override;
   void debugUpdateMmf() override;
   virtual const IGmkList *getBindedRoutePointList() const;

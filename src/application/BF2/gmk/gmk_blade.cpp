@@ -3,6 +3,8 @@
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
@@ -68,6 +70,56 @@ bool GmkBlade::BdatInfo::isDepopCondMatched(const mm::Vec3 &position) const {
     return true;
   }
   return !unknown28.isMatch(position);
+}
+
+GmkType GmkBlade::getGmkType() const { return GMK_TYPE; }
+
+void GmkBlade::validateDisp() const {
+  if (unknown48 == gf::INVALID_HANDLE) {
+    return;
+  }
+  setEventDisp(unknown48, unknown55 && debugIsDispGmkType(getGmkType()));
+}
+
+void GmkBlade::dispose() {
+  if (unknown48 != gf::INVALID_HANDLE) {
+    unbindToGameObj(unknown48);
+    gf::GfObjUtil::destroy(unknown48);
+    unknown48 = gf::INVALID_HANDLE;
+  }
+  AGmkBase::dispose();
+}
+
+void GmkBlade::disposeGobInst(bool isFadeOut) {
+  if (unknown48 == gf::INVALID_HANDLE) {
+    return;
+  }
+  if (isFadeOut) {
+    gmk::disposeGobInst(unknown48, 1.0f);
+  } else {
+    unbindToGameObj(unknown48);
+    gf::GfObjUtil::destroy(unknown48);
+    unknown48 = gf::INVALID_HANDLE;
+  }
+}
+
+bool GmkBlade::canPopGobInst() const {
+  if (unknown48 != gf::INVALID_HANDLE || unknown50 == 0) {
+    return false;
+  }
+  return getBdatInfo()->isPopCondMatched(unknown08.unknown08->unknown00);
+}
+
+bool GmkBlade::canDepopGobInst() const {
+  if (!unknown54) {
+    if (unknown48 == gf::INVALID_HANDLE) {
+      return false;
+    }
+    if (unknown50 != 0) {
+      return getBdatInfo()->isDepopCondMatched(unknown08.unknown08->unknown00);
+    }
+  }
+  return true;
 }
 
 } // namespace gmk

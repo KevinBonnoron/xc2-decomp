@@ -1,8 +1,15 @@
 #include "gmk/gmk_foot_print.h"
 
+#include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_set.h"
+#include "mm_math/mm_col4.h"
+
+namespace fw {
+enum EF_CATEGORY : int;
+} // namespace fw
 
 namespace gmk {
 
@@ -24,6 +31,83 @@ bool GmkRoutedFootPrint::BdatInfo::isPopCondMatched() const {
     return false;
   }
   return true;
+}
+
+GmkType GmkRoutedFootPrint::getGmkType() const { return GMK_TYPE; }
+
+u32 GmkRoutedFootPrint::getRoutePointNum() const { return getData()->unknown10 - getData()->unknown0c; }
+
+const GmkRoutedFootPrintPointList *GmkRoutedFootPrint::getBindedRoutePointList() const {
+  return static_cast<const GmkRoutedFootPrintPointList *>(unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_ROUTED_FOOT_PRINT_POINT]);
+}
+
+void GmkRoutedFootPrint::debugDraw() const {
+  AGmkBase::debugDraw();
+  if (!isValid()) {
+    return;
+  }
+  debugDrawRoute(mm::Col4::yellow);
+}
+
+void GmkRoutedFootPrint::debugDraw(bool isSelected) const {
+  if (!isValid()) {
+    return;
+  }
+  mm::Col4 color;
+  if (isSelected) {
+    color = mm::Col4::yellow;
+  } else {
+    color = mm::Col4::gray;
+  }
+  debugDrawRoute(color);
+}
+
+void GmkRoutedFootPrint::dispose() {
+  AGmkBase::dispose();
+  unknown50 = nullptr;
+  unknown58 = nullptr;
+}
+
+GmkRoutedFootPrintPoint::GmkRoutedFootPrintPoint() : unknown50(0), unknown54(true) { unknown48.set(30.0f, 10.0f); }
+
+GmkType GmkRoutedFootPrintPoint::getGmkType() const { return GMK_TYPE; }
+
+bool GmkRoutedFootPrintPoint::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+
+void GmkRoutedFootPrintPoint::validateDisp() const {
+  if (unknown50 == 0) {
+    return;
+  }
+  bool isDisp = unknown54 && debugIsDispGmkType(getGmkType());
+  fw::EffectManager::get()->setDisp(unknown50, isDisp);
+}
+
+void GmkRoutedFootPrintPoint::createEffInst(void *data) {
+  const GmkSet *set = unknown08.unknown00->getCreateInfo().unknown08;
+  if (set != nullptr && set->unknown10.unknown24) {
+    return;
+  }
+  if (unknown50 != 0) {
+    fw::EffectManager::get()->dead(unknown50);
+    unknown50 = 0;
+  }
+  unknown50 = fw::EffectManager::get()->create(data, true);
+  fw::EffectManager::get()->setCategory(unknown50, static_cast<fw::EF_CATEGORY>(1));
+  applyEffectParam(false);
+}
+
+void GmkRoutedFootPrintPoint::disposeEffInst(bool isFadeOut) {
+  if (unknown50 != 0) {
+    fw::EffectManager::get()->dead(unknown50);
+    unknown50 = 0;
+  }
+}
+
+void GmkRoutedFootPrintPoint::dispose() {
+  disposeEffInst(false);
+  unknown20.unknown00 = 0;
+  unknown20.unknown08 = nullptr;
+  unknown20.unknown10 = nullptr;
 }
 
 } // namespace gmk

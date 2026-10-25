@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
@@ -6,6 +8,9 @@
 #include "types.h"
 
 struct CBdatWrapper;
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
 
 namespace gmk {
 
@@ -30,16 +35,37 @@ public:
 
   ~GmkCollection() override;
   GmkType getGmkType() const override;
+  int getGameFlagId() const;
+  bool isWaitRepop() const;
   void create(const CreateInfo &info) override;
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
+  bool canPopGobInst() const;
+  void disposeGfObjHandle();
+  void disposeIcon(bool isFadeOut);
+  void validateDisp() const;
+  void seqUpdateRepopCounter(f32 deltaTime);
+  void setTargetable(bool isTargetable);
 
-  u8 _48[0x70 - 0x48];
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+
+  gf::GF_OBJ_HANDLE *unknown48;          // Inferred role: gob instance handle; original member name unknown.
+  u32 unknown50;                         // Role and original member name unknown.
+  f32 unknown54;                         // Role and original member name unknown.
+  void (GmkCollection::*unknown58)(f32); // Inferred role: sequence; original member name unknown.
+  f32 unknown68;                         // Role and original member name unknown.
+  bool unknown6c;                        // Role and original member name unknown.
 };
 
 static_assert(sizeof(GmkCollection::BdatInfo) == 0x30, "");
+static_assert(offsetof(GmkCollection, unknown48) == 0x48, "");
+static_assert(offsetof(GmkCollection, unknown50) == 0x50, "");
+static_assert(offsetof(GmkCollection, unknown54) == 0x54, "");
+static_assert(offsetof(GmkCollection, unknown58) == 0x58, "");
+static_assert(offsetof(GmkCollection, unknown68) == 0x68, "");
+static_assert(offsetof(GmkCollection, unknown6c) == 0x6c, "");
 static_assert(sizeof(GmkCollection) == 0x70, "");
 
 class GmkCollectionList : public TGmkList<GmkCollection, GmkCollection::BdatInfo, 0x54434c43, 5, GmkCollectionGob> {

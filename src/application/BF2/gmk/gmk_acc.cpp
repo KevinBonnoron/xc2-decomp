@@ -6,6 +6,20 @@
 
 namespace gmk {
 
+GmkAcc::GmkAcc() : unknown18(), unknown28(), unknown38(nullptr) {}
+
+GmkAcc::GmkAcc(const CreateInfo &info) : unknown18(), unknown28(), unknown38(nullptr) { create(info); }
+
+GmkAcc::GmkAcc(const CreateInfoByBdatId &info) : unknown18(), unknown28(), unknown38(nullptr) { create(info); }
+
+GmkAcc::GmkAcc(const GmkAcc &other) : unknown18(), unknown28(), unknown38(nullptr) {
+  if (other.unknown18.isValid()) {
+    create(other.unknown18);
+  } else if (other.unknown28.isValid()) {
+    create(other.unknown28);
+  }
+}
+
 void GmkAcc::CreateInfo::validate(const AGmkBase &gmk) {
   IGmkList *list = gmk.unknown08.unknown00;
   unknown00 = list->getCreateInfo().unknown08->unknown10.unknown04;

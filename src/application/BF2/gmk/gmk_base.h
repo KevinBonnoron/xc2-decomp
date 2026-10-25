@@ -73,7 +73,11 @@ public:
   virtual void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {}
   virtual void debugUpdateMmf() {}
 
-  void disposeBase();
+  void disposeBase() {
+    unknown08.unknown00 = nullptr;
+    unknown08.unknown08 = nullptr;
+    unknown08.unknown10 = nullptr;
+  }
   u8 *getBindedBdatFp() const;
   bool canCreateGameEntity() const;
   f32 getYSnapRayLength() const;

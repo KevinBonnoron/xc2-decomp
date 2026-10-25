@@ -15,10 +15,35 @@ class RTTI;
 } // namespace mtl
 } // namespace mm
 
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
+
 namespace gmk {
 
 class AGmkBase;
 class GmkPhantom;
+
+class GmkDmgPhantomTargetInfo {
+public:
+  u32 getTargetType() const;
+  bool isTargetPlayer() const;
+
+  gf::GF_OBJ_HANDLE *unknown00; // Inferred role: target handle; original member name unknown.
+  int unknown08;                // Inferred role: remaining time; original member name unknown.
+};
+
+static_assert(sizeof(GmkDmgPhantomTargetInfo) == 0x10, "");
+static_assert(offsetof(GmkDmgPhantomTargetInfo, unknown08) == 0x8, "");
+
+class GmkDoorPhantomTargetInfo {
+public:
+  u32 getTargetType() const;
+
+  gf::GF_OBJ_HANDLE *unknown00; // Inferred role: target handle; original member name unknown.
+};
+
+static_assert(sizeof(GmkDoorPhantomTargetInfo) == 0x8, "");
 
 typedef mm::mtl::FixedArray<fw::TColiCheckResult<256>, 3> GmkPhantomCheckResults;
 

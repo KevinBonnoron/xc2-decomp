@@ -4,6 +4,7 @@
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_phantom.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -30,10 +31,13 @@ public:
 
   ~GmkLandmark() override;
   GmkType getGmkType() const override;
+  int getGameFlagId() const;
+  bool isFound() const;
   void create(const CreateInfo &info) override;
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
+  void onEnterPhantom(const IGmkPhantomEventListener::OnEnterInfo &info);
 
   u8 _48[0x100 - 0x48];
 };

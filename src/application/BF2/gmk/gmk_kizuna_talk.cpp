@@ -4,7 +4,11 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/sequential_play/gf_play_factory.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
@@ -66,6 +70,30 @@ void GmkKizunaTalk::debugDraw() const {
     return;
   }
   getBdatInfo()->isCondMatched();
+}
+
+void GmkKizunaTalk::validateDisp() const {
+  bool isDisp = unknown54 && debugIsDispGmkType(getGmkType());
+  if (unknown48 == gf::INVALID_HANDLE) {
+    return;
+  }
+  gf::GfObjAcc acc(unknown48);
+  if (acc.isValid()) {
+    acc.setDisp(gf::OBJDISP_GMK_EVENT, isDisp);
+  }
+}
+
+void GmkKizunaTalk::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {
+  disposeGfObjHandle();
+  if (getBdatInfo()->unknown04 == 0 || gf::GfGameCond::isGameCond(getBdatInfo()->unknown04)) {
+    u16 eventId = Bdat::getValCheck(getBindedBdatFp(), "EventID", unknown20.unknown18, BDAT_TYPE_U16);
+    gf::GfPlayFactory::createOneEvent(eventId);
+    gf::GfGameFlag::setLocal(2, unknown20.unknown18, 2);
+  } else {
+    const BdatInfo *bdatInfo = getBdatInfo();
+    gf::GfMenuObjCommonText::OpenKizunaParam param = {gf::GfDataBdat::getFP(gf::BDAT_FLD_KIZUNATALKTITLE), bdatInfo->unknown02, bdatInfo->unknown04};
+    gf::GfPlayFactory::createMenuObjCommonText(param);
+  }
 }
 
 } // namespace gmk

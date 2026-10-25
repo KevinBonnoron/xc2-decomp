@@ -7,6 +7,7 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
@@ -190,6 +191,17 @@ void GmkJump::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *ha
   AGmkBase::onGobEvent(event, handle);
   if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
     disposeGobInst(false);
+  }
+}
+
+void GmkJump::validateDisp() const {
+  bool isDisp = unknown79 && debugIsDispGmkType(getGmkType());
+  gf::GfObjAcc acc(unknown58);
+  if (acc.isValid()) {
+    acc.setDisp(gf::OBJDISP_GMK_EVENT, isDisp);
+  }
+  if (unknown70 != 0) {
+    fw::EffectManager::get()->setDisp(unknown70, isDisp);
   }
 }
 

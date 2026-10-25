@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
@@ -32,11 +34,17 @@ public:
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
+  void disposeGmkPhantom();
 
-  u8 _48[0x100 - 0x48];
+  u8 _48[0xf0 - 0x48];
+  u16 unknownF0;  // Role and original member name unknown.
+  bool unknownF2; // Role and original member name unknown.
+  u8 _f3[0x100 - 0xf3];
 };
 
 static_assert(sizeof(GmkEvent::BdatInfo) == 0xe, "");
+static_assert(offsetof(GmkEvent, unknownF0) == 0xf0, "");
+static_assert(offsetof(GmkEvent, unknownF2) == 0xf2, "");
 static_assert(sizeof(GmkEvent) == 0x100, "");
 
 typedef TGmkList<GmkEvent, GmkEvent::BdatInfo, 0x544e5645, 4, GmkEventGob> GmkEventList;

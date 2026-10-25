@@ -15,13 +15,14 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_SQUAD_LEADER;
 
-  ~GmkSquadLeader() override;
+  ~GmkSquadLeader() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
   void create(const CreateInfo &info) override;
   void dispose() override;
   void debugDraw() const override;
   void debugUpdateMmf() override;
+  const IGmkList *getBindedSquadMemberList() const;
 
   u8 _48[0x50 - 0x48];
 };
@@ -36,7 +37,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_SQUAD_MEMBER;
 
-  ~GmkSquadMember() override;
+  ~GmkSquadMember() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
   void create(const CreateInfo &info) override;

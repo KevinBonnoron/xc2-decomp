@@ -65,14 +65,14 @@ public:
   static const GmkType GMK_TYPE = GMK_TYPE_NPC;
 
   ~GmkNpc() override { dispose(); }
-  GmkType getGmkType() const override { return GMK_TYPE; }
+  GmkType getGmkType() const override;
   gf::GF_OBJ_HANDLE *getGobInst() const;
   bool isPopCondMatchedExceptDist() const;
   bool isPopCondMatched() const override;
   bool isDepopCondMatched() const override;
   bool isPopDistCondMatched() const override;
   bool isDepopDistCondMatched() const override;
-  u8 *getBindedBdatFp() const override { return AGmkBase::getBindedBdatFp(); }
+  u8 *getBindedBdatFp() const override;
   int getBindedBdatId() const override { return AGmkBase::unknown20.unknown18; }
   bool findPopPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const override;
   void bindToGameObj(gf::GF_OBJ_HANDLE *handle) const override;
