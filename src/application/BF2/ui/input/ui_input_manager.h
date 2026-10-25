@@ -8,6 +8,7 @@
 namespace ui {
 
 class IUIInputSelectionChecker;
+class UIInputLayer;
 
 class UIInputManager : public mm::mtl::PtrSingleton<UIInputManager> {
 public:
@@ -17,6 +18,8 @@ public:
   void resetInputSelection(u32 input);
   void setSelectionChecker(u32 input, IUIInputSelectionChecker *checker);
   void setInputActionEnable(u32 input, u32 action, bool enable);
+  u32 registInputLayer(UIInputLayer *layer, const char *name);
+  void releaseInputLayer(u32 handle);
   void setInputSelectEnable(u32 input, bool enable);
   u32 searchInputHandle(u32 handle);
   void migrateInput(u32 input, u32 handle);

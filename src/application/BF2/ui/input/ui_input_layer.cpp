@@ -4,7 +4,33 @@ namespace ui {
 
 UIInputLayer::~UIInputLayer() {}
 
+void UIInputLayer::setupSelection(int index, u32 size) {
+  int previous = unknown48;
+  index = index < static_cast<int>(size) ? index : 0;
+  unknown44 = size;
+  unknown48 = index;
+  unknown10.unknown00 = 6;
+  unknown10.unknown10 = 0;
+  unknown10.unknown14 = 0;
+  unknown10.unknown08 = index;
+  unknown10.unknown0c = previous;
+}
+
 void UIInputLayer::resetSelection() { unknown48 = -1; }
+
+bool UIInputLayer::changeSelect(int index, u8 cause) {
+  int previous = unknown48;
+  if (previous == index || !unknown4c) {
+    return false;
+  }
+  unknown10.unknown00 = 6;
+  unknown10.unknown10 = cause;
+  unknown10.unknown14 = 0;
+  unknown10.unknown08 = index;
+  unknown10.unknown0c = previous;
+  unknown48 = index;
+  return true;
+}
 
 bool UIInputLayer::isEnableSelect(int index) {
   if (unknown1d8 != nullptr) {

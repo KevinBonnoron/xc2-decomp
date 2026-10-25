@@ -17,8 +17,10 @@ public:
   static mm::mtl::RTTI m_rtti;
 
   UIShapeParticle(void *data, u32 size, u32 width, u32 height);
+  virtual ~UIShapeParticle();
   void activate(bool activate);
   bool isActive() const;
+  virtual const mm::mtl::RTTI *getRTTI() const;
 
   s32 unknown40; // Inferred role: emitter id; original member name unknown.
   u32 unknown44; // Inferred role: width; original member name unknown.

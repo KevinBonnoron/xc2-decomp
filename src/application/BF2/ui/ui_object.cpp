@@ -255,4 +255,27 @@ void UIObject::importDisplayInfo(UIDisplayInfo &displayInfo, layer::LayerBase *l
 
 const mm::mtl::RTTI *UIObject::getRTTI() const { return &m_rtti; }
 
+u32 UIObject::duplicate(u32 parent) {
+  // The game looks the parent up and ignores the result.
+  UIUtil::getObject(parent);
+  u32 handle = duplicateImpl(parent);
+  if (handle != 0) {
+    UIObject *copy = UIUtil::getObject(handle);
+    if (copy != this) {
+      copy->unknown98 = unknown98;
+    }
+    copy->unknown98.set(UI_OBJECT_FLAG_DUPLICATE);
+    copy->unknown9c = unknownda;
+    copy->unknown20 = unknown20;
+    copy->unknown50 = unknown50;
+    copy->unknownd0.setBlendType(BLEND_TYPES[copy->unknown50.unknown0a]);
+    copy->apply();
+    unknownda++;
+    if (unknownda > 998) {
+      unknownda = 0;
+    }
+  }
+  return handle;
+}
+
 } // namespace ui

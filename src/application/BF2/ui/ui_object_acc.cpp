@@ -169,6 +169,14 @@ bool UIObjectAcc::isIgnoreSize() const {
   return unknown08->unknown98.test(UI_OBJECT_FLAG_IGNORE_SIZE);
 }
 
+void UIObjectAcc::setIgnoreSize(bool ignoreSize) {
+  UIObject *object = unknown08;
+  if (object != nullptr && object->unknown98.test(UI_OBJECT_FLAG_IGNORE_SIZE) != ignoreSize) {
+    object->unknown98.set(UI_OBJECT_FLAG_IGNORE_SIZE, ignoreSize);
+    unknown08->unknown20.unknown24 = true;
+  }
+}
+
 bool UIObjectAcc::isSuspend() const {
   if (unknown08 == nullptr) {
     return false;

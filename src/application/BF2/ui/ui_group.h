@@ -17,8 +17,21 @@ class UIResource;
 
 class UIGroup {
 public:
-  struct RootObjInfo;
-  struct InputInfo;
+  struct RootObjInfo {
+    u8 _00[0x44];
+    u32 unknown44; // Inferred role: object handle; original member name unknown.
+    u16 unknown48; // Inferred role: layer; original member name unknown.
+    u8 _4a[0x5a - 0x4a];
+    bool unknown5a; // Inferred role: terminated; original member name unknown.
+    bool unknown5b; // Inferred role: immediate; original member name unknown.
+    u8 unknown5c;   // Inferred role: disp; original member name unknown.
+    u8 _5d[0x60 - 0x5d];
+  };
+  struct InputInfo {
+    UIInputLayer *unknown00; // Inferred role: input layer; original member name unknown.
+    u32 unknown08;           // Inferred role: input handle; original member name unknown.
+    u32 unknown0c;           // Inferred role: object handle; original member name unknown.
+  };
 
   UIGroup();
   virtual ~UIGroup();
@@ -52,6 +65,11 @@ public:
   u32 unknown60;                          // Inferred role: flags; original member name unknown.
 };
 
+static_assert(offsetof(UIGroup::RootObjInfo, unknown44) == 0x44, "");
+static_assert(offsetof(UIGroup::RootObjInfo, unknown48) == 0x48, "");
+static_assert(offsetof(UIGroup::RootObjInfo, unknown5a) == 0x5a, "");
+static_assert(sizeof(UIGroup::RootObjInfo) == 0x60, "");
+static_assert(sizeof(UIGroup::InputInfo) == 0x10, "");
 static_assert(offsetof(UIGroup, unknown08) == 0x08, "");
 static_assert(offsetof(UIGroup, unknown10) == 0x10, "");
 static_assert(offsetof(UIGroup, unknown38) == 0x38, "");
