@@ -5,6 +5,8 @@
 namespace ml {
 namespace irrvol {
 
+float frac(float value) { return value - static_cast<int>(value); }
+
 MemHandlebaseAllocator::MemHandlebaseAllocator() {}
 
 MemHandlebaseAllocator::MemHandlebaseAllocator(mtl::ALLOC_HANDLE handle) : unknown08(handle) {}

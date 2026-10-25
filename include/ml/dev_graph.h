@@ -17,6 +17,7 @@ class ALLOC_HANDLE;
 
 namespace ml {
 
+class CriticalSection;
 class DevGraphQue;
 
 enum FONT_STYLE : int {
@@ -31,6 +32,8 @@ extern s32 s_nVSync;
 extern s32 s_nVSyncOld;
 extern bool s_bIgnore;
 extern DevGraphModeType s_eGraphMode;
+
+CriticalSection &getCriticalSection();
 
 } // namespace dg
 

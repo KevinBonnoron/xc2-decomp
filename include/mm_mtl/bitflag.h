@@ -11,7 +11,7 @@ public:
 
   BitFlag &operator=(const BitFlag &other) {
     if (&other != this) {
-      copy_n(other.mBits, WORD_COUNT, mBits);
+      copy(other.mBits, WORD_COUNT, mBits);
     }
     return *this;
   }

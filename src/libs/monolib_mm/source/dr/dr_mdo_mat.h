@@ -220,6 +220,7 @@ public:
     ALPHA_FLAG_SINGLE_BUFFER = 1 << 18,
   };
 
+  void releaseMat();
   void setDrMan(DrMan *drMan);
   void updateAlphaCall();
   bool isBloomMdl() const;

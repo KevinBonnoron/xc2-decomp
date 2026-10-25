@@ -8,6 +8,11 @@
 
 namespace ml {
 
+void DrResMdoTexList::resetTexutre() {
+  _90 = 0;
+  createTexList(unknown80, unknown88);
+}
+
 DrResMdoTexList::DrResMdoTexList(const u8 *texData)
     : unknown00(nullptr), unknown08(nullptr), unknown10(texData), unknown18(1), unknown20(nullptr), unknown58(nullptr), m_buffer(nullptr), unknown68(0), unknown6c(0), _70(), unknown80(texData),
       unknown88(texData), _90(), _98() {

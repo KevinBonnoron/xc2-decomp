@@ -34,6 +34,24 @@ public:
     _ReslistBase *m_list;
   };
 
+  class const_iterator {
+  public:
+    const_iterator(Node *node, const _ReslistBase *list) : m_node(node), m_list(list) {}
+
+    const T &operator*() const { return m_node->m_value; }
+
+    const_iterator &operator++() {
+      m_node = m_node->m_next;
+      return *this;
+    }
+
+    bool operator==(const const_iterator &other) const { return m_node == other.m_node; }
+    bool operator!=(const const_iterator &other) const { return m_node != other.m_node; }
+
+    Node *m_node;
+    const _ReslistBase *m_list;
+  };
+
   explicit _ReslistBase(IAllocator *allocator = nullptr) : m_capacity(0), m_size(0), m_alignment(alignof(Node)), m_allocator(allocator) {
     m_head = &m_terminator;
     m_head->m_next = m_head;
@@ -43,6 +61,8 @@ public:
 
   iterator begin() { return iterator(m_head->m_next, this); }
   iterator end() { return iterator(m_head, this); }
+  const_iterator begin() const { return const_iterator(m_head->m_next, this); }
+  const_iterator end() const { return const_iterator(m_head, this); }
 
   int size() const { return m_size; }
   bool empty() const { return m_size == 0; }

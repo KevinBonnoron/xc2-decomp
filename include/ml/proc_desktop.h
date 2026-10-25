@@ -49,6 +49,7 @@ public:
   static _dsk::ProcDesktopBackGround *getBackGround();
   static _dsk::ProcDesktopException *getException();
   static void deleteApp();
+  static void deleteApp(const char *name);
   bool wkStandbyLogin() override;
   void debugEntryIcon();
   bool wkStandbyLogout() override;

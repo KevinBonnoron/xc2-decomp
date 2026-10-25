@@ -34,6 +34,16 @@ static_assert(offsetof(DrMdoZSortObj, unknown18) == 0x18, "");
 class DrMdoZSortMan {
 public:
   void setViewCloud(DrMdoZSortObj *object);
+  void viewRender();
+  void viewAlphaRender();
+  void viewGBuffRender();
+  void viewSetupRender();
+  void viewSpAlphaRender();
+  void viewZPrepassRender();
+  void viewRefractionRender();
+  void viewLightPrePassRender();
+  void viewThicknessRenderFirst();
+  void viewThicknessRenderSecond();
 };
 
 } // namespace ml

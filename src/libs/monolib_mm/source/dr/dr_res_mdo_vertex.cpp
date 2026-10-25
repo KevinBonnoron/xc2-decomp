@@ -18,6 +18,8 @@ namespace ml {
 static const GrlPrimitiveType s_primitiveTbl[] = {GRL_PRIMITIVE_TRIANGLES, GRL_PRIMITIVE_QUADS, GRL_PRIMITIVE_TRIANGLE_STRIP};
 static const GrlIndexFormat s_indexFormatTbl[] = {GRL_INDEX_FORMAT_U16, GRL_INDEX_FORMAT_U32};
 
+void DrResMdoVertex::beginVertexSetup() { unknown4e = -1; }
+
 DrResMdoVertex::DrResMdoVertex(const u8 *resource) : unknown00(nullptr), unknown08(nullptr), unknown10(resource), unknown18(1), m_buffer(nullptr), unknown78(nullptr) { setupVertex(resource); }
 
 void DrResMdoVertex::setupVertex(const u8 *resource) {

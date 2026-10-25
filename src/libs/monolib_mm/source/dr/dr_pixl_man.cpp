@@ -8,10 +8,13 @@
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_render_target.h"
 #include "dr/dr_pixl_shadow_cache_man.h"
+#include "dr/dr_pixl_shadow_obj.h"
 #include "grlib/cglib_color_ctl.h"
+#include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_depth_target.h"
 #include "grlib/cglib_render_target.h"
 #include "grlib/cglib_state.h"
+#include "grlib/cglib_uniform_array.h"
 
 namespace ml {
 
@@ -68,6 +71,15 @@ DrPixlRenderTarget *DrPixlMan::getPixlObj(int type) {
   }
   return unknown7f0->unknown00[type][0];
 }
+
+void DrPixlMan::setShadowObj(DrPixlShadowObj *shadowObj) {
+  unknown848 = shadowObj;
+  unknown850 = &shadowObj->unknown08;
+}
+
+void DrPixlMan::setShadowDirRenderTarget(int index) { unknown800->unknown0010[index].unknown5940.setRenderTarget(); }
+
+void DrPixlMan::setupShadowUnifrom(int index) { unknown850 = &unknown800->m_shadowDirUniform[index]; }
 
 grlib::CGLibDepthTarget *DrPixlMan::getDepthObj() { return unknown7f0->unknown1a0[DrMan::s_nDblIdx]; }
 

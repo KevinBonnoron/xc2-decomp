@@ -8,6 +8,13 @@
 
 namespace ml {
 
+void DrResMdoMeshParts::setResetAlpha(f32 alpha) {
+  unknown28 &= ~6;
+  unknown34 = alpha;
+  unknown2c[1] = alpha;
+  unknown2c[0] = alpha;
+}
+
 DrResMdoMat &DrResMdoMat::operator=(const DrResMdoMat &other) {
   unknown08 = other.unknown08;
   unknown18 = other.unknown18;

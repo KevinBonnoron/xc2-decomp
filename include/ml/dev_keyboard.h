@@ -131,6 +131,19 @@ public:
   bool wkStandbyLogout() override;
   static void clearKey();
 
+  // Inferred role: presses `key` and updates the key states like updateKey(); original name unknown.
+  void unknown001(u32 key) {
+    u32 up = unknown1bc;
+    u32 down = unknown1b8 | key;
+    u32 hold = unknown1c0;
+    unknown1c4 = hold;
+    unknown1c0 = (hold | down) & ~up;
+    unknown1c8 = (hold ^ unknown1c0) & down;
+    unknown1cc = (hold ^ unknown1c0) & up;
+    unknown1b8 = 0;
+    unknown1bc = 0;
+  }
+
   u32 unknown1b8;                            // Inferred role: down accum; original member name unknown.
   u32 unknown1bc;                            // Inferred role: up accum; original member name unknown.
   u32 unknown1c0;                            // Inferred role: hold; original member name unknown.

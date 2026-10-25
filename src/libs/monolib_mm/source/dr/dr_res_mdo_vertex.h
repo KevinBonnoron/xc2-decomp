@@ -122,7 +122,7 @@ struct DrResUniformVertex {
 class DrResMdoVertex {
 public:
   void changeMemVertex(const u8 *resource);
-  void beginVertexSetup() { unknown4e = -1; }
+  void beginVertexSetup();
   DrResMdoVertex(const u8 *resource);
   void setupVertex(const u8 *resource);
   ~DrResMdoVertex();

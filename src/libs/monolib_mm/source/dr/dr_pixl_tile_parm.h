@@ -9,6 +9,7 @@ public:
   };
 
   void begin(TileType type);
+  void end(TileType type);
 };
 
 } // namespace ml

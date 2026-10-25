@@ -59,7 +59,7 @@ public:
   const u16 *unknown78; // Inferred role: stm tex idx; original member name unknown.
   const u8 *unknown80;  // Inferred role: tex header; original member name unknown.
   const u8 *unknown88;  // Inferred role: tex data; original member name unknown.
-  u8 _90[0x98 - 0x90];
+  u64 _90;
   u8 _98[0xa0 - 0x98];
 };
 

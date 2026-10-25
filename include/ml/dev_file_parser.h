@@ -6,7 +6,9 @@ namespace ml {
 
 class DevFileParser : public WorkObj, public mm::mtl::PtrSingleton<DevFileParser> {
 public:
-  ~DevFileParser() override;
+  ~DevFileParser() override {}
+  static bool checkCommand(const char *command, const char *expected);
+  static bool isBusy();
   static bool isInitialized();
   bool wkStandbyLogin() override;
   bool wkStandbyLogout() override;

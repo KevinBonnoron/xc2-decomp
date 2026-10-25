@@ -52,6 +52,8 @@ static_assert(offsetof(wkPixlManRes, unknown1d0) == 0x1d0, "");
 static_assert(offsetof(wkPixlManRes, unknown1d8) == 0x1d8, "");
 static_assert(sizeof(wkPixlManRes) == 0x1f8, "");
 
+class DrPixlShadowObj;
+
 class DrPixlMan {
 public:
   enum ResFlag {
@@ -69,6 +71,9 @@ public:
   grlib::CGLibDepthTarget *getDepthObj();
   grlib::CGLibTextureBuffer *getDammyWhiteTexObj();
   static DrPixlMan *get();
+  void setShadowObj(DrPixlShadowObj *shadowObj);
+  void setShadowDirRenderTarget(int index);
+  void setupShadowUnifrom(int index);
   ~DrPixlMan();
   void releaseColorBuffer();
   void resetLightBuffOnly();
@@ -79,6 +84,7 @@ public:
   grlib::CGLibDepthTarget *getSeparateTransDepthObj();
   void displayUpdate();
   void renderEnd(int loop);
+  void renderBegin(int loop);
   void selectZprepassRenderTarget();
   void selectGBuffRenderTarget();
   bool selectGBuffRenderTarget(u32 mask);
@@ -143,10 +149,12 @@ public:
   u8 _808[0x830 - 0x808];
   DrPixlRenderTarget *unknown830; // Inferred role: dammy tex; original member name unknown.
   DrPixlRenderTarget *unknown838; // Inferred role: dammy white tex; original member name unknown.
-  u8 _840[0x858 - 0x840];
-  u32 unknown858; // Inferred role: render target; original member name unknown.
-  u32 unknown85c; // Inferred role: gbuff mask; original member name unknown.
-  s32 unknown860; // Inferred role: cate; original member name unknown.
+  u8 _840[0x848 - 0x840];
+  DrPixlShadowObj *unknown848; // Inferred role: shadow obj; original member name unknown.
+  void *unknown850;            // Inferred role: shadow uniform; original member name unknown.
+  u32 unknown858;              // Inferred role: render target; original member name unknown.
+  u32 unknown85c;              // Inferred role: gbuff mask; original member name unknown.
+  s32 unknown860;              // Inferred role: cate; original member name unknown.
 };
 
 static_assert(offsetof(DrPixlMan, unknown08) == 0x008, "");
@@ -155,6 +163,8 @@ static_assert(offsetof(DrPixlMan, unknown7f0) == 0x7f0, "");
 static_assert(offsetof(DrPixlMan, unknown7f8) == 0x7f8, "");
 static_assert(offsetof(DrPixlMan, unknown800) == 0x800, "");
 static_assert(offsetof(DrPixlMan, unknown830) == 0x830, "");
+static_assert(offsetof(DrPixlMan, unknown848) == 0x848, "");
+static_assert(offsetof(DrPixlMan, unknown850) == 0x850, "");
 static_assert(offsetof(DrPixlMan, unknown858) == 0x858, "");
 static_assert(offsetof(DrPixlMan, unknown860) == 0x860, "");
 

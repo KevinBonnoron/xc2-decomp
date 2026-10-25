@@ -31,6 +31,13 @@ static_assert(offsetof(MdsMatValShaderCate, unknown03) == 0x03, "");
 
 class DrMdoSetup : public DrMdoNode {
 public:
+  void changeShader(bool isChange);
+  void beginMatInfo();
+  void changeSeamMatInfo();
+  void changeShaderMat(bool isChange);
+  void changeShaderPos();
+  void setupCharAvatarUniform();
+  void setupDollAvatarUniform();
   void uniformBlock_Static(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex);
   void uniformBlock_Material(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex);
   void uniformBlock_Light(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex);
@@ -89,6 +96,17 @@ public:
   void varStImg_Normal(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStImg_Velocity(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStImg_ZBuff(const MdsMatInfoHeader *header, u32 location, u32 index);
+
+  u8 _16c[0x178 - 0x16c];
+  u8 unknown178; // Inferred role: setup flags; original member name unknown.
+  u8 unknown179; // Inferred role: seam flag; original member name unknown.
+  u8 _17a[0x17c - 0x17a];
+  u16 unknown17c; // Inferred role: material index; original member name unknown.
+  u16 unknown17e; // Inferred role: previous material index; original member name unknown.
 };
+
+static_assert(offsetof(DrMdoSetup, unknown178) == 0x178, "");
+static_assert(offsetof(DrMdoSetup, unknown17c) == 0x17c, "");
+static_assert(sizeof(DrMdoSetup) == 0x180, "");
 
 } // namespace ml

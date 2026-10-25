@@ -33,6 +33,42 @@ class CGLibTextureBuffer;
 
 namespace ml {
 
+void DrMdoSetup::changeShader(bool isChange) {
+  if (isChange) {
+    unknown178 |= 1;
+  } else {
+    unknown178 &= ~1;
+  }
+}
+
+void DrMdoSetup::beginMatInfo() {
+  unknown17c = 0xffff;
+  unknown17e = 0xffff;
+  unknown178 = 0x10;
+  unknown179 = 0;
+}
+
+void DrMdoSetup::changeSeamMatInfo() {
+  unknown17c = 0xffff;
+  unknown17e = 0xffff;
+  unknown179 = 0;
+  unknown178 |= 0x10;
+}
+
+void DrMdoSetup::changeShaderMat(bool isChange) {
+  if (isChange) {
+    unknown178 |= 0x10;
+  } else {
+    unknown178 &= ~0x10;
+  }
+}
+
+void DrMdoSetup::changeShaderPos() { unknown178 |= 2; }
+
+void DrMdoSetup::setupCharAvatarUniform() {}
+
+void DrMdoSetup::setupDollAvatarUniform() {}
+
 void DrMdoSetup::uniformBlock_Static(const MdsMatValShaderCate *cate, int paramIndex, int mdlIndex, int matIndex, bool isJitter, u32 bufferIndex) {
   m_drMan->unknown580->unknown10->unknown7b0.setUniformBlock(unknown38->getValGlobalParam(paramIndex));
 }

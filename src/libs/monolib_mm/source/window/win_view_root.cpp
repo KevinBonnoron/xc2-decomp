@@ -11,6 +11,16 @@
 
 namespace ml {
 
+WinView *WinViewRoot::getCurrent() {
+  WinViewRoot *root = get();
+  return root != nullptr ? root->unknown1f0 : nullptr;
+}
+
+WinProc *WinViewRoot::getCurrentProc() {
+  WinViewRoot *root = get();
+  return root != nullptr ? root->unknown1f8 : nullptr;
+}
+
 bool WinViewRoot::isInitialized() {
   WinViewRoot *root = get();
   if (root == nullptr || root->wkIsWaitException()) {

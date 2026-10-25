@@ -69,6 +69,12 @@ public:
   void render(int loop);
   void renderBegin(int loop);
   void setAlphaRenderTarget();
+  void setSkyGodRayRenderTarget();
+  void renderEnd(int loop);
+  void renderViewBegin();
+  void renderViewEnd();
+  void blurCallBackRender();
+  static void setSRGBMode(bool isSRGBMode);
   void tail();
   void setMainRenderTarget();
   bool isIBLHalfRes() const;
@@ -185,7 +191,12 @@ public:
   mm::Vec3 unknown1d30[2]; // Inferred role: global winds; original member name unknown.
   u8 _1d50[0x1d60 - 0x1d50];
   bool unknown1d60; // Inferred role: chara disp off; original member name unknown.
-  u8 _1d61[0x1d71 - 0x1d61];
+  u8 _1d61[0x1d64 - 0x1d61];
+  bool unknown1d64; // Inferred role: light pre pass and GBuff render skip; original member name unknown.
+  bool unknown1d65; // Inferred role: refraction render skip; original member name unknown.
+  bool unknown1d66; // Inferred role: alpha render skip; original member name unknown.
+  bool unknown1d67; // Inferred role: sp alpha render skip; original member name unknown.
+  u8 _1d68[0x1d71 - 0x1d68];
   bool unknown1d71; // Inferred role: fog skip; original member name unknown.
   u8 _1d72[0x1d7b - 0x1d72];
   bool unknown1d7b; // Inferred role: mdl dbl pause; original member name unknown.
@@ -252,6 +263,10 @@ static_assert(offsetof(DrMan, unknown1d20) == 0x1d20, "");
 static_assert(offsetof(DrMan, unknown1d28) == 0x1d28, "");
 static_assert(offsetof(DrMan, unknown1d30) == 0x1d30, "");
 static_assert(offsetof(DrMan, unknown1d60) == 0x1d60, "");
+static_assert(offsetof(DrMan, unknown1d64) == 0x1d64, "");
+static_assert(offsetof(DrMan, unknown1d65) == 0x1d65, "");
+static_assert(offsetof(DrMan, unknown1d66) == 0x1d66, "");
+static_assert(offsetof(DrMan, unknown1d67) == 0x1d67, "");
 static_assert(offsetof(DrMan, unknown1d71) == 0x1d71, "");
 static_assert(offsetof(DrMan, unknown1d7b) == 0x1d7b, "");
 static_assert(offsetof(DrMan, unknown1d80) == 0x1d80, "");

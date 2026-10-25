@@ -151,6 +151,8 @@ public:
     return found;
   }
 
+  void remove(const T &value);
+
   // __LINE__ must be 683 as in the original header: it is the line argument of the assert.
 #line 682
   iterator erase(iterator position) {

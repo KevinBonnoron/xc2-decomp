@@ -22,6 +22,7 @@ public:
   static bool isTopOfParent(const WorkObj *work);
   static bool searchWork(const WorkObj *parent, const WorkObj *work);
   static bool hasChild(WorkObj *parent, const char *name);
+  static void dispTree(const WorkObj *work, int depth);
 };
 
 } // namespace ml

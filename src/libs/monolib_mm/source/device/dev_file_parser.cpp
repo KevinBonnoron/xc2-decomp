@@ -6,6 +6,10 @@
 
 namespace ml {
 
+bool DevFileParser::checkCommand(const char *command, const char *expected) { return false; }
+
+bool DevFileParser::isBusy() { return get()->unknown60.size() != 0; }
+
 bool DevFileParser::isInitialized() {
   DevFileParser *parser = get();
   if (parser->wkIsWaitException()) {

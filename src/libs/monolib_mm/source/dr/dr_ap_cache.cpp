@@ -11,6 +11,15 @@
 
 namespace ml {
 
+DrAPCache *DrAPCache::s_pIns;
+
+void DrAPCache::releaseSampler() {
+  if (unknown30 != nullptr) {
+    delete[] unknown30;
+    unknown30 = nullptr;
+  }
+}
+
 u16 DrAPCache::getSamplerID() {
   if (unknown40 != 0) {
     return unknown40;

@@ -24,6 +24,7 @@ public:
   void setDefAlpha(f32 alpha);
   f32 getDefAlpha() const;
   void updateAlpha();
+  void setResetAlpha(f32 alpha);
 
   const char *m_name;
   const char *m_boneName;

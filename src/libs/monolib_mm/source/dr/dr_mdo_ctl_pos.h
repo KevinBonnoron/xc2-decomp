@@ -9,6 +9,8 @@ namespace ml {
 
 class DrMdoCtlPos : public DrMdlObj {
 public:
+  void callDisplistPrePsssRender(int param);
+  void callDisplistRender(int param);
   void callZpreePassRenderPosAll();
   void callRenderPosAll();
   void callRefractionRenderPosAll();

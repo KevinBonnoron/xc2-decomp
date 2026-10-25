@@ -198,14 +198,24 @@ void DevKeyboard::updateKey() {
   unknown1bc = 0;
 }
 
+void DevKeyboard::ikReturnDown() { unknown001(VK_RETURN); }
+
 void DevKeyboard::ikReturnUp() {
   unknown1bc |= VK_RETURN;
   updateKey();
 }
 
+void DevKeyboard::ikTabDown() { unknown001(VK_TAB); }
+
 void DevKeyboard::ikTabUp() {
   unknown1bc |= VK_TAB;
   updateKey();
+}
+
+void DevKeyboard::ikDeleteDown() {
+  if (!(unknown1c8 & VK_DELETE)) {
+    unknown001(VK_DELETE);
+  }
 }
 
 void DevKeyboard::ikDeleteUp() {
@@ -215,20 +225,28 @@ void DevKeyboard::ikDeleteUp() {
   }
 }
 
+void DevKeyboard::ikShiftDown() { unknown001(VK_SHIFT); }
+
 void DevKeyboard::ikShiftUp() {
   unknown1bc |= VK_SHIFT;
   updateKey();
 }
+
+void DevKeyboard::ikCtrlDown() { unknown001(VK_CTRL); }
 
 void DevKeyboard::ikCtrlUp() {
   unknown1bc |= VK_CTRL;
   updateKey();
 }
 
+void DevKeyboard::ikAltDown() { unknown001(VK_ALT); }
+
 void DevKeyboard::ikAltUp() {
   unknown1bc |= VK_ALT;
   updateKey();
 }
+
+void DevKeyboard::ikFuncDown(u8 index) { unknown001(1 << (index + VK_FUNC_SHIFT)); }
 
 void DevKeyboard::ikFuncUp(u8 index) {
   unknown1bc |= 1 << (index + VK_FUNC_SHIFT);
@@ -247,20 +265,28 @@ bool DevKeyboard::ikIsEndDown() const { return (unknown1b8 & VK_END) || (unknown
 
 bool DevKeyboard::ikIsEndUp() const { return (unknown1bc & VK_END) || !(unknown1c0 & VK_END); }
 
+void DevKeyboard::ikHomeDown() { unknown001(VK_HOME); }
+
 void DevKeyboard::ikHomeUp() {
   unknown1bc |= VK_HOME;
   updateKey();
 }
+
+void DevKeyboard::ikEndDown() { unknown001(VK_END); }
 
 void DevKeyboard::ikEndUp() {
   unknown1bc |= VK_END;
   updateKey();
 }
 
+void DevKeyboard::ikPageUpDown() { unknown001(VK_PAGE_UP); }
+
 void DevKeyboard::ikPageUpUp() {
   unknown1bc |= VK_PAGE_UP;
   updateKey();
 }
+
+void DevKeyboard::ikPageDownDown() { unknown001(VK_PAGE_DOWN); }
 
 void DevKeyboard::ikPageDownUp() {
   unknown1bc |= VK_PAGE_DOWN;
@@ -295,10 +321,14 @@ void DevKeyboard::ikCharUp(u8 code) {
   }
 }
 
+void DevKeyboard::ikPauseDown() { unknown001(VK_PAUSE); }
+
 void DevKeyboard::ikPauseUp() {
   unknown1bc |= VK_PAUSE;
   updateKey();
 }
+
+void DevKeyboard::ikScrollDown() { unknown001(VK_SCROLL); }
 
 void DevKeyboard::ikScrollUp() {
   unknown1bc |= VK_SCROLL;
@@ -357,5 +387,9 @@ void DevKeyboard::clearKey() {
 void DevKeyboard::ikKeyMsgOn(u32 message) { unknown260.push_back(message); }
 
 void DevKeyboard::ikKeyMsgOff(u32 message) { unknown668.push_back(message); }
+
+void IDevInputKeyboard::ikKeyMsgOn(u32 message) {}
+
+void IDevInputKeyboard::ikKeyMsgOff(u32 message) {}
 
 } // namespace ml

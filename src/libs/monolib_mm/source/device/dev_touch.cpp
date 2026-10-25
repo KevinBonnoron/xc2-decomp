@@ -6,6 +6,10 @@
 
 namespace ml {
 
+int DevTouch::getTouchCount() { return get()->m_touchCount; }
+
+void DevTouch::updateDevice() {}
+
 bool DevTouch::isInitialized() {
   DevTouch *touch = get();
   if (touch->wkIsWaitException()) {

@@ -19,7 +19,6 @@ public:
   const mm::Mat44 &getMatrix() const;
   void setFrameSpd(f32 speed) { unknowndc = speed; }
 
-  u8 _16c[0x180 - 0x16c];
   s16 m_nodeMax;
   u8 _182[0x190 - 0x182];
 };

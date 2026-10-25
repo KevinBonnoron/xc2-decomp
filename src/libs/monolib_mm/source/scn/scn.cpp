@@ -70,6 +70,8 @@ void Scn::setView(WinView *view, int screen) { unknown28->setView(view, screen);
 
 void Scn::clrView(WinView *view, int screen) { unknown28->clrView(view, screen); }
 
+void ScnCamMan::setCrossIdTarget(const WinView *view) {}
+
 const ScnObjCam *ScnCamMan::getCam(const WinView *view) const { return unknown08->unknown20->getCam(view); }
 
 ScnObjCam *ScnCamMan::getCam(const WinView *view) { return unknown08->unknown20->getCam(view); }

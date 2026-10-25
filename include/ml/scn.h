@@ -32,6 +32,7 @@ public:
 
 class ScnCamMan {
 public:
+  static void setCrossIdTarget(const WinView *view);
   void setView(WinView *view, int screen);
   void clrView(WinView *view, int screen);
   const ScnObjCam *getCam(const WinView *view) const;

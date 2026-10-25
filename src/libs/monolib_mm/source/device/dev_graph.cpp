@@ -5,6 +5,7 @@
 #include "grlib/cglib_gpu_cache.h"
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_polygon.h"
+#include "ml/critical_section.h"
 #include "ml/err_viewer.h"
 #include "ml/work_obj.h"
 #include "ml/work_util.h"
@@ -18,6 +19,11 @@ s32 s_nVSync = -1;
 s32 s_nVSyncOld = -1;
 bool s_bIgnore;
 DevGraphModeType s_eGraphMode;
+
+CriticalSection &getCriticalSection() {
+  static CriticalSection sect;
+  return sect;
+}
 
 } // namespace dg
 
@@ -218,6 +224,22 @@ f32 DevGraph::getVSyncSec() {
 }
 
 int DevGraph::getVSync() { return dg::s_nVSync; }
+
+f32 DevGraph::getFrameSyncSec() {
+  if (dg::s_nVSync == 0) {
+    return getVSyncSec() * 2.0f;
+  }
+
+  return getVSyncSec() * dg::s_nVSync;
+}
+
+f32 DevGraph::getMicro2FrameRatio(u32 micro) {
+  if (get() == nullptr) {
+    return 0.0f;
+  }
+
+  return static_cast<f32>(micro) * 0.000001f / getFrameSyncSec();
+}
 
 void DevGraph::setEnableFrustum(bool isEnable) { get()->unknown310 = isEnable; }
 

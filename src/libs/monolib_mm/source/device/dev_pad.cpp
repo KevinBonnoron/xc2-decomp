@@ -245,6 +245,18 @@ bool DevPad::wkStandbyLogout() {
   return false;
 }
 
+void DevPad::setCaptureName(const char *name) {}
+
+void DevPad::setCapture(bool isCapture) {}
+
+bool DevPad::isCapture() const { return false; }
+
+void DevPad::playLocalVibration(int padNo, const PadVibrationInfo &info) {}
+
+void DevPad::stopLocalVibration(int padNo) {}
+
+void DevPad::loadLocalVibration(u32 id, void *data, unsigned long size) {}
+
 void DevPad::viBeginFrame() { updateLocal(); }
 
 void DevPad::fnSubCpuUpdate(void *pad) { static_cast<DevPad *>(pad)->updateLocal(); }

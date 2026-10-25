@@ -12,6 +12,22 @@
 
 namespace ml {
 
+void DrMdlObj::setDblBuffAlpha(bool isEnable) {
+  if (isEnable) {
+    unknown100 &= ~0x40000;
+  } else {
+    unknown100 |= 0x40000;
+  }
+}
+
+void DrMdlObj::setClipBoxMode(bool isEnable) {
+  if (isEnable) {
+    unknownfc &= ~0x8000000;
+  } else {
+    unknownfc |= 0x8000000;
+  }
+}
+
 DrMdlObj::DrMdlObj(int viewNum) : DrMdoCtl(viewNum) {}
 
 void DrMdlObj::chageShadowObject(DrMdoSmlShadowMan *shadowMan) {

@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "ml/work_obj.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -17,6 +19,7 @@ class DevTouch : public WorkObj, public IDevInputTouch, public mm::mtl::PtrSingl
 public:
   ~DevTouch() override;
   static bool isInitialized();
+  static int getTouchCount();
   void wkUpdate() override;
   bool wkStandbyLogin() override;
   bool wkStandbyLogout() override;
@@ -26,6 +29,11 @@ public:
   virtual void updateDevice();
   virtual bool createDevice() = 0;
   virtual void releaseDevice() = 0;
+
+  u8 _1b8[0x7c0 - 0x1b8];
+  s32 m_touchCount;
 };
+
+static_assert(offsetof(DevTouch, m_touchCount) == 0x7c0, "");
 
 } // namespace ml

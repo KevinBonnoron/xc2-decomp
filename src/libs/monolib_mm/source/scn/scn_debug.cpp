@@ -176,6 +176,12 @@ void ScnDebugManipu::render(DebDraw *debDraw) {
   }
 }
 
+void ScnDebug::render(DebDraw *debDraw) {
+  if (m_manipulator != nullptr) {
+    m_manipulator->render(debDraw);
+  }
+}
+
 void ScnDebug::cbRenderAfter(Scn *scn, SCNPRIO_CB priority) { render(DebDraw::get(-1)); }
 
 ScnDebugManipu::ScnDebugManipu(Scn *scn) : unknown30(scn), unknown38(nullptr), unknown40(true) {}

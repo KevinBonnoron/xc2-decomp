@@ -63,4 +63,20 @@ bool WorkUtil::hasChild(WorkObj *parent, const char *name) {
   return false;
 }
 
+void WorkUtil::dispTree(const WorkObj *work, int depth) {
+  if (work == nullptr) {
+    return;
+  }
+
+  mm::mtl::FixStr<64> name;
+  for (int i = 0; i < depth; i++) {
+    name += " ";
+  }
+  name += work->unknown08.c_str();
+
+  for (reslist<WorkObj *>::Node *node = work->unknown60.begin(); node != work->unknown60.end(); node = node->getNext()) {
+    dispTree(node->value, depth + 1);
+  }
+}
+
 } // namespace ml

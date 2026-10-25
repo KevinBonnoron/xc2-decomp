@@ -4,6 +4,11 @@
 
 namespace ml {
 
-class WorkControl : public WorkObj, public mm::mtl::PtrSingleton<WorkControl> {};
+class WorkControl : public WorkObj, public mm::mtl::PtrSingleton<WorkControl> {
+public:
+  ~WorkControl() override;
+  void wkTail() override;
+  static bool hasFlow();
+};
 
 } // namespace ml

@@ -1,7 +1,10 @@
 #include "ml/proc_desktop.h"
 
+#include <string.h>
+
 #include "ml/desktop_icon.h"
 #include "ml/dev_graph.h"
+#include "ml/reslist.h"
 #include "ml/work_obj.h"
 #include "ml/work_util.h"
 #include "mm_mtl/fixstr.h"
@@ -139,6 +142,22 @@ void ProcDesktop::deleteApp() {
   ProcDesktop *desktop = get();
   desktop->unknown274 = true;
   desktop->wkSetEventChild(static_cast<EVT>(0));
+}
+
+void ProcDesktop::deleteApp(const char *name) {
+  ProcDesktop *desktop = get();
+  if (desktop == nullptr) {
+    return;
+  }
+
+  reslist<WorkObj *> *children = desktop->wkGetChild();
+  for (reslist<WorkObj *>::Node *node = children->begin(); node != desktop->wkGetChild()->end(); node = node->getNext()) {
+    WorkObj *child = node->value;
+    if (strcmp(child->unknown08.c_str(), name) == 0) {
+      child->wkSetEvent(static_cast<WorkObj::EVT>(0));
+      return;
+    }
+  }
 }
 
 void ProcDesktop::debugEntryIcon() {

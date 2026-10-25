@@ -12,9 +12,13 @@ struct Col3;
 
 namespace ml {
 
+class CriticalSection;
 class IThreadValue;
 class IWorkInfomation;
 class WorkCpuThread;
+
+struct DEFHBM;
+struct DEFIMM;
 
 enum CPUID {
   CPUID_ANY,
@@ -39,6 +43,16 @@ extern long s_aHearBeat[3];
 extern s32 s_cpuStall;
 extern bool s_bBackGround;
 
+CriticalSection &getSwapLock();
+CriticalSection &getHeartBeatLock();
+CriticalSection &getListGrpLock();
+CriticalSection &getJobBufLock();
+CriticalSection &getListenerLock();
+CriticalSection &getSuspendJobLock();
+CriticalSection &getTermThreadLock();
+CriticalSection &getAutoExecLock();
+CriticalSection &getWaitingJobLock();
+
 } // namespace _mlwcpu
 
 class WorkCpu : public WorkObj, public mm::mtl::PtrSingleton<WorkCpu> {
@@ -61,6 +75,7 @@ public:
   static CPUID getRenderCPUID();
   static u32 getCpuNum();
   static CPUID getSubWorkCPUID();
+  static WorkCpuThread *getCpuThread(CPUID cpuId);
   static void setThread(DO_THREAD thread);
   static DO_THREAD getThread();
   static u32 getEven();
@@ -90,6 +105,10 @@ public:
   static u32 thBackground(void *argument, void *userData);
   static void setAfterUpdateRender(bool isAfterUpdateRender);
   static bool isHomeMenuEnable();
+  static int reqHomeMenuDisable();
+  static int reqImm(bool isEnable);
+  static void removeHomeMenuDisable(DEFHBM *&handle);
+  static void removeImm(DEFIMM *&handle);
   static s32 getHeartBeatStall();
   static void clrHeartBeatStall();
 

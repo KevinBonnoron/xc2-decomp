@@ -220,6 +220,8 @@ void ScnObjLightDrSys::setDeugDisp2D(bool isDisp) {
   }
 }
 
+void ScnObjLightDrSys::setFromCaptureTool() { unknown320->unknown23c = 2; }
+
 void ScnObjLightDrSys::setLocalIBLName(const char *name) {}
 
 ScnObj *ScnObjLightDrSys::create(Scn *scn, const void *data, int screen) {

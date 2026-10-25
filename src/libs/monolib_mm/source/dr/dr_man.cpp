@@ -4,13 +4,18 @@
 
 #include "dr/dr_ap_cache.h"
 #include "dr/dr_calc_gpu_cost.h"
+#include "dr/dr_calc_man.h"
 #include "dr/dr_calc_tex_stream_man.h"
+#include "dr/dr_draw_callback.h"
 #include "dr/dr_light_man.h"
 #include "dr/dr_mdl_man.h"
+#include "dr/dr_mdo_sml_shadow_man.h"
+#include "dr/dr_mdo_zsort.h"
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_mem_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_tile_parm.h"
+#include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_debug.h"
 #include "grlib/cglib_manager.h"
 
@@ -24,6 +29,41 @@ int DrMan::loopCnt() { return 1; }
 
 void DrMan::applyEnd(int loop) {}
 
+void DrMan::setSRGBMode(bool isSRGBMode) { s_bSRGBMode = isSRGBMode; }
+
+void DrMan::renderEnd(int loop) {
+  unknown78->setMainRenderTarget();
+  unknown180->end(DrPixlTileParm::TILE_TYPE_MAIN);
+}
+
+void DrMan::renderViewBegin() {
+  unknown5c0->begin();
+  unknown78->renderBegin(unknown1c98);
+}
+
+void DrMan::renderViewEnd() {
+  unknown580->renderEnd();
+  unknown78->renderEnd(unknown1c98);
+}
+
+void DrMan::setSkyGodRayRenderTarget() {
+  unknown5c0->begin();
+  unknown78->resetRenderTarget();
+  unknown78->skyGodRayRenderTarget();
+}
+
+void DrMan::setAlphaRenderTarget() {
+  unknown5c0->begin();
+  unknown78->resetRenderTarget();
+  unknown78->alphaRenderTarget();
+}
+
+void DrMan::blurCallBackRender() {
+  for (int i = 0; i < unknown658; i++) {
+    unknown5d8[i]->blurRender(&unknown660[unknown1c98]);
+  }
+}
+
 void DrMan::applyViewBegin() {
   unknown5c0->begin();
   unknown78->updateShadowDisplayList();
@@ -34,6 +74,87 @@ void DrMan::renderBegin(int loop) { unknown180->begin(DrPixlTileParm::TILE_TYPE_
 void DrMan::setMainRenderTarget() { unknown78->setMainRenderTarget(); }
 
 bool DrMan::isIBLHalfRes() const { return true; }
+
+void DrMdlMan::simpleShadowRender() { unknown030->shadowRender(); }
+
+void DrMdlMan::lightPrePassRender() {
+  if (unknown000->unknown1d64) {
+    return;
+  }
+  if (unknown001()) {
+    return;
+  }
+  unknown218->viewLightPrePassRender();
+}
+
+void DrMdlMan::alphaRender() {
+  if (unknown000->unknown1d66) {
+    return;
+  }
+  if (unknown001()) {
+    return;
+  }
+  unknown218->viewAlphaRender();
+}
+
+void DrMdlMan::spAlphaRender() {
+  if (unknown000->unknown1d67) {
+    return;
+  }
+  if (unknown001()) {
+    return;
+  }
+  unknown218->viewSpAlphaRender();
+}
+
+void DrMdlMan::GBuffRender() {
+  if (unknown000->unknown1d64) {
+    return;
+  }
+  if (unknown001()) {
+    return;
+  }
+  grlib::CGLibCtlShader::setMemoryBarrierBit(2);
+  unknown218->viewGBuffRender();
+}
+
+void DrMdlMan::setupRender() {
+  if (unknown001()) {
+    return;
+  }
+  unknown218->viewSetupRender();
+}
+
+void DrMdlMan::ZPrePassRender() {
+  if (unknown001()) {
+    return;
+  }
+  unknown218->viewZPrepassRender();
+}
+
+void DrMdlMan::ThicknessRenderFirst() {
+  if (unknown001()) {
+    return;
+  }
+  unknown218->viewThicknessRenderFirst();
+}
+
+void DrMdlMan::ThicknessRenderSecond() {
+  if (unknown001()) {
+    return;
+  }
+  unknown218->viewThicknessRenderSecond();
+}
+
+void DrMdlMan::refractionRender() {
+  if (unknown000->unknown1d64 || unknown000->unknown1d65) {
+    return;
+  }
+  if (unknown001()) {
+    return;
+  }
+  unknown218->viewRefractionRender();
+}
 
 void DrMdlMan::renderBegin() {}
 

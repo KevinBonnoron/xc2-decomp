@@ -27,7 +27,20 @@ f32 TimeCount::getSecLap() const {
   return sec;
 }
 
+f32 TimeCount::getCpuLap() const {
+  u32 micro = getMicroLap();
+  f32 microSec = micro * 0.000001f;
+  return microSec / DevGraph::getFrameSyncSec() * 100.0f;
+}
+
 f32 TimeCount::getMicro2Cpu(u32 micro) { return micro * 0.000001f / DevGraph::getFrameSyncSec() * 100.0f; }
+
+void TimeCount::logLapRatio(const char *name) {
+  f32 ratio = getCpuLap();
+  mm::mtl::FixStr<128> lap;
+  lap.format("[LAP]: [%6.2f] [%s]", ratio, name);
+  reset();
+}
 
 TimeCountBreak::TimeCountBreak(f32 breakSec, const char *name) : unknown00(0), unknown08(breakSec) {
   if (name != nullptr) {

@@ -12,6 +12,7 @@ class DrMan;
 class DrCalcViewWork {
 public:
   f32 getPixlLen(f32 depth, f32 length) const;
+  void shadowEnd();
   int unistatic_view(f32 *work, bool isJitter);
   int unistatic_proj(f32 *work, bool isJitter);
   int unistatic_viewproj(f32 *work, bool isJitter);
@@ -40,7 +41,7 @@ public:
   u8 _80[0xc0 - 0x80];
   mm::Mat44 unknownc0;  // Inferred role: billboard; original member name unknown.
   mm::Mat44 unknown100; // Inferred role: prev billboard; original member name unknown.
-  u8 _140[0x180 - 0x140];
+  mm::Mat44 unknown140; // Inferred role: saved billboard; original member name unknown.
   mm::Mat44 unknown180; // Inferred role: proj; original member name unknown.
   u8 _1c0[0x200 - 0x1c0];
   mm::Mat44 unknown200; // Inferred role: view proj; original member name unknown.
@@ -81,6 +82,7 @@ public:
 
 static_assert(offsetof(DrCalcViewWork, unknown40) == 0x40, "");
 static_assert(offsetof(DrCalcViewWork, unknownc0) == 0xc0, "");
+static_assert(offsetof(DrCalcViewWork, unknown140) == 0x140, "");
 static_assert(offsetof(DrCalcViewWork, unknown180) == 0x180, "");
 static_assert(offsetof(DrCalcViewWork, unknown200) == 0x200, "");
 static_assert(offsetof(DrCalcViewWork, unknown2c0) == 0x2c0, "");

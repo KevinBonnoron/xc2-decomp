@@ -10,7 +10,7 @@ namespace ml {
 
 class IDevInputMouse {
 public:
-  virtual ~IDevInputMouse();
+  virtual ~IDevInputMouse() {}
   virtual void imPos(int x, int y) = 0;
   virtual void imMove(int x, int y) = 0;
   virtual void imWheel(int wheel) = 0;
@@ -27,7 +27,7 @@ public:
 
 class DevMouse : public WorkObj, public IDevInputMouse, public mm::mtl::PtrSingleton<DevMouse> {
 public:
-  ~DevMouse() override;
+  ~DevMouse() override {}
   static bool isInitialized();
   static void setClipMove(int x, int y);
   static void getClipMove(mm::Pnt<int> &move);

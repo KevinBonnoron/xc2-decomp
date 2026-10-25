@@ -1,9 +1,13 @@
 #include "dr/dr_calc_view_work.h"
 
+#include <string.h>
+
 #include "dr/dr_res_mdo_uniform_block.h"
 #include "grlib/shd_util.h"
 
 namespace ml {
+
+void DrCalcViewWork::shadowEnd() { memcpy(&unknownc0, &unknown140, 0x40); }
 
 f32 DrCalcViewWork::getPixlLen(f32 depth, f32 length) const {
   f32 clipW = unknown180.rows[2][3] * depth + unknown180.rows[3][3];

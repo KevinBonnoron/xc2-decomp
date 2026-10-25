@@ -22,7 +22,7 @@ public:
   virtual void stockBegin() = 0;
   virtual void stockEnd() = 0;
   virtual void update() = 0;
-  virtual void setupCate(int cate) { unknown08 = cate; }
+  virtual void setupCate(int cate);
   virtual void addViewInfo(int cate) = 0;
   virtual void delViewInfo(int cate) = 0;
   virtual void stockPntList(DrLightObjPnt *light) = 0;

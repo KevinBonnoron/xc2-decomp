@@ -7,6 +7,8 @@
 namespace ml {
 namespace irrvol {
 
+float frac(float value);
+
 class MemHandlebaseAllocator : public mm::mtl::IAllocator {
 public:
   MemHandlebaseAllocator();

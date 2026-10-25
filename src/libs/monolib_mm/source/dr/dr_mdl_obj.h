@@ -39,6 +39,7 @@ static_assert(sizeof(MdoWrkRimBloom) == 0x20, "");
 class DrMdlObj : public DrMdoCtl {
 public:
   void setDblBuffAlpha(bool isEnable);
+  void setClipBoxMode(bool isEnable);
   DrMdlObj(int viewNum);
   void chageShadowObject(DrMdoSmlShadowMan *shadowMan) override;
   void setFrame(f32 frame);

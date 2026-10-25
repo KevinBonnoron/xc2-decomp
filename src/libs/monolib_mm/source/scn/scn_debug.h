@@ -60,11 +60,7 @@ static_assert(offsetof(ScnDebugManipu, unknown40) == 0x40, "");
 
 class ScnDebug : public IWorkEvent, public IScnRender {
 public:
-  void render(DebDraw *debDraw) {
-    if (m_manipulator != nullptr) {
-      m_manipulator->render(debDraw);
-    }
-  }
+  void render(DebDraw *debDraw);
 
   ScnDebug(Scn *scn, mtl::ALLOC_HANDLE mem);
   ~ScnDebug() override;

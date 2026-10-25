@@ -8,6 +8,8 @@ class DrCalcViewWork;
 
 class DrCalcMan {
 public:
+  void renderEnd();
+
   u8 _00[0x10 - 0x00];
   DrCalcViewWork *unknown10; // Inferred role: view work; original member name unknown.
 };

@@ -1,10 +1,17 @@
 #include "ml/work_cpu.h"
 
+#include "ml/critical_section.h"
 #include "ml/dev_clock.h"
 #include "ml/thread_util.h"
 #include "ml/work_cpu_thread.h"
 
 namespace ml {
+
+WorkCpuThread *WorkCpu::getCpuThread(CPUID cpuId) {
+  WorkCpu *cpu = get();
+  u32 index = cpuId - CPUID_CORE_0;
+  return cpu->unknown1740[index];
+}
 
 namespace _mlwcpu {
 
@@ -14,6 +21,36 @@ bool s_bStallRender;
 long s_aHearBeat[3];
 s32 s_cpuStall;
 bool s_bBackGround;
+
+CriticalSection &getSwapLock() {
+  static CriticalSection lock;
+  return lock;
+}
+
+CriticalSection &getHeartBeatLock() {
+  static CriticalSection lock;
+  return lock;
+}
+
+CriticalSection &getListGrpLock() {
+  static CriticalSection lock;
+  return lock;
+}
+
+CriticalSection &getListenerLock() {
+  static CriticalSection lock;
+  return lock;
+}
+
+CriticalSection &getTermThreadLock() {
+  static CriticalSection lock;
+  return lock;
+}
+
+CriticalSection &getWaitingJobLock() {
+  static CriticalSection lock;
+  return lock;
+}
 
 } // namespace _mlwcpu
 
@@ -189,6 +226,14 @@ void WorkCpu::setAfterUpdateRender(bool isAfterUpdateRender) {
 }
 
 bool WorkCpu::isHomeMenuEnable() { return true; }
+
+int WorkCpu::reqHomeMenuDisable() { return 9999; }
+
+int WorkCpu::reqImm(bool isEnable) { return 9999; }
+
+void WorkCpu::removeHomeMenuDisable(DEFHBM *&handle) {}
+
+void WorkCpu::removeImm(DEFIMM *&handle) {}
 
 s32 WorkCpu::getHeartBeatStall() { return _mlwcpu::s_cpuStall; }
 

@@ -69,6 +69,8 @@ public:
 
   iterator begin() { return iterator(static_cast<T *>(m_head.unknown00)); }
   iterator end() { return iterator(static_cast<T *>(&m_head)); }
+  iterator begin() const { return iterator(static_cast<T *>(m_head.unknown00)); }
+  iterator end() const { return iterator(static_cast<T *>(const_cast<IntrusiveListNodeBase *>(&m_head))); }
 
   int size() const { return m_size; }
   bool empty() const { return m_head.unknown00 == &m_head; }

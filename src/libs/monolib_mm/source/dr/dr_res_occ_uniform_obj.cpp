@@ -24,6 +24,8 @@ void DrResOccUniformObj::begin() { unknown04 = 0; }
 
 void DrResOccUniformObj::end() {}
 
+mm::Mat44 *DrResOccUniformObj::getMatTbl(int index) { return unknown10 + index; }
+
 mm::Mat44 *DrResOccUniformObj::getMatTbl() {
   if (unknown00 > unknown04) {
     return &unknown10[unknown04++];

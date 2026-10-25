@@ -22,7 +22,10 @@ enum DrApCullType {
 
 class DrAPCache {
 public:
+  static DrAPCache *s_pIns;
+
   void begin();
+  void releaseSampler();
   u16 getSamplerID();
   void depthBegin();
   void shadowBegin();

@@ -1,8 +1,11 @@
 #pragma once
 #include <stddef.h>
 
-#include "mm_math/mm_mat44.h"
 #include "types.h"
+
+namespace mm {
+struct Mat44;
+} // namespace mm
 
 namespace ml {
 
@@ -10,7 +13,7 @@ class DrMan;
 
 class DrResOccUniformObj {
 public:
-  mm::Mat44 *getMatTbl(int index) { return &unknown10[index]; }
+  mm::Mat44 *getMatTbl(int index);
   DrResOccUniformObj(DrMan *drMan, int max);
   ~DrResOccUniformObj();
   void begin();
