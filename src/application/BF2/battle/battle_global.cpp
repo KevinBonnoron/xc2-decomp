@@ -2,15 +2,21 @@
 
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
+#include "battle/data_manager_battle.h"
 #include "battle/misc_battle.h"
 #include "battle/shake_camera_manager.h"
 #include "battle/ui_manager_battle.h"
 #include "bdat.h"
+#include "framework/dynamics/dynamics_updater.h"
+#include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "gf/object/component/effect/gf_com_effect_caster.h"
+#include "gf/object/component/gf_com_dynamics.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
 
 namespace btl {
@@ -323,6 +329,75 @@ bool BattleGlobal::IsPause(int pause) const {
 
 void BattleGlobal::RegisterStop(f32 time) { unknown6b8 = unknown6b8 > time ? unknown6b8 : time; }
 
+void BattleGlobal::InitializeConditionParameter() {
+  u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_BTL_CONDITION);
+  int top = Bdat::getIdTop(bdat);
+  int count = Bdat::getIdCount(bdat);
+  for (int id = top; id < top + count; id++) {
+    unknown65b0[id] = static_cast<u16>(Bdat::getValCheck(bdat, "Param01", id, 2));
+  }
+}
+
+void BattleGlobal::RegisterElementalComboSlow() {
+  DeleteElementalComboSlow();
+  int slow = BattleGlobal::get()->RegisterSlow(0.01f, 10.0f, 0.0f);
+  if (slow == 0) {
+    return;
+  }
+
+  unknown5b20 = slow;
+  u32 effect = unknown5b18;
+  if (effect != 0) {
+    if (unknown5b08 == nullptr) {
+      if (fw::EffectManager::get() != nullptr) {
+        fw::EffectManager::get()->setSpeed(effect, 100.0f);
+      }
+    } else {
+      unknown5b08->setSpeed(effect, 100.0f);
+    }
+  }
+
+  effect = unknown5b1c;
+  if (effect != 0) {
+    if (unknown5b10 != nullptr) {
+      unknown5b10->setSpeed(effect, 100.0f);
+      return;
+    }
+    if (fw::EffectManager::get() != nullptr) {
+      fw::EffectManager::get()->setSpeed(effect, 100.0f);
+    }
+  }
+}
+
+void BattleGlobal::SLOW_PROC_DATA::Finalize() {
+  if (unknown10 < 0x5a) {
+    BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown10);
+    if (character != nullptr) {
+      gf::GfComDynamics *dynamics = character->GetObject()->getComponent<gf::GfComDynamics>();
+      if (dynamics != nullptr) {
+        dynamics->unknown10.unknown98 = 1.0f;
+      }
+    }
+  }
+
+  unknown04 = 0.0f;
+  unknown08 = 0.0f;
+  unknown10 = 0x5a;
+}
+
+void BattleGlobal::FinalizeJingle() {
+  if (unknown5aa0 != reinterpret_cast<gf::GF_SE_CATEGORY_HANDLE *>(-1) && gf::GfSound::get() != nullptr) {
+    gf::GfSound::get()->releaseCategoryHandle(unknown5aa0);
+    unknown5aa0 = reinterpret_cast<gf::GF_SE_CATEGORY_HANDLE *>(-1);
+  }
+
+  unknown5aa8.clear();
+  unknown5ab0 = 0;
+  unknown5ab4 = 0;
+  unknown5ab8 = 0;
+  unknown65d5 = 0;
+}
+
 const BattleGlobal::SLOW_PROC_DATA *BattleGlobal::GetSlowProcDataConst(u32 slow) const {
   if (slow == 0) {
     return nullptr;
@@ -352,6 +427,17 @@ void BattleGlobal::SetBGM(u32 bgm) {
 void BattleGlobal::RequestJingle(JINGLE_TYPE jingle) { unknown65d5 = jingle; }
 
 bool BattleGlobal::IsJinglePlaying() const { return unknown5aa0 != reinterpret_cast<gf::GF_SE_CATEGORY_HANDLE *>(-1); }
+
+void BattleGlobal::EndSpecialEffect(SPECIAL_EFFECT_DATA &data) {
+  if (data.unknown00 != 0 && fw::EffectManager::get() != nullptr) {
+    fw::EffectManager::get()->dead(data.unknown00);
+    data.unknown00 = 0;
+  }
+  if (data.unknown04 == 0) {
+    DataManager::get()->SetSpecialEffects(2, false);
+  }
+  data.unknown04 = -1;
+}
 
 void BattleGlobal::PlayErrorSE() {
   if (!unknown65e2_2) {

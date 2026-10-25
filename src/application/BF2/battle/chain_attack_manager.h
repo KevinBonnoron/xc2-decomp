@@ -48,6 +48,9 @@ public:
   int GetSpAttackLevel(int group) const;
   f32 GetSpAttackRecast(int group, int blade) const;
   int GetOrderAttr(int order) const;
+  int GetAttrOrder(int attr) const;
+  void RecoveryRecastAll(f32 recast);
+  void RecoveryRecastOne(int group, f32 recast);
   bool IsProc(bool isExcludeStartWait) const;
   bool IsResult() const;
   void AddTotalDamage(u32 damage);
@@ -56,9 +59,11 @@ public:
   bool IsSelectAction() const;
   bool IsStopTime() const;
   bool IsTargetDead() const;
+  f32 GetBonusRate() const;
 
   gf::GF_OBJ_HANDLE *unknown08; // Inferred role: target handle; original member name unknown.
-  u8 _10[0x1930 - 0x10];
+  u8 _10[0x192c - 0x10];
+  f32 unknown192c; // Inferred role: bonus rate time; original member name unknown.
   u32 unknown1930; // Inferred role: total damage; original member name unknown.
   u8 _1934[0x1974 - 0x1934];
   SP_ATTACK_DATA unknown1974[3]; // Inferred role: SP attacks; original member name unknown.
@@ -78,6 +83,7 @@ public:
 
 static_assert(sizeof(ChainAttackManager::SP_ATTACK_DATA) == 0x1c, "");
 static_assert(offsetof(ChainAttackManager, unknown08) == 0x8, "");
+static_assert(offsetof(ChainAttackManager, unknown192c) == 0x192c, "");
 static_assert(offsetof(ChainAttackManager, unknown1930) == 0x1930, "");
 static_assert(offsetof(ChainAttackManager, unknown1974) == 0x1974, "");
 static_assert(offsetof(ChainAttackManager, unknown19cc) == 0x19cc, "");

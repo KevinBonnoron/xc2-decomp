@@ -38,6 +38,7 @@ public:
   void SetKakuseiData(bool isEnableKakusei, bool isKakusei, f32 kakuseiRestTimeRatio);
   void RegisterRescueUI(gf::GF_OBJ_HANDLE *handle);
   void DispChainUI(gf::GF_OBJ_HANDLE *handle);
+  void DispElementalEffectUI(gf::GF_OBJ_HANDLE *handle, int caption);
   void NotifyInput(INPUT_TYPE type, int value);
 
   gf::GfMenuCallContext *unknown08; // Inferred role: element effect context; original member name unknown.

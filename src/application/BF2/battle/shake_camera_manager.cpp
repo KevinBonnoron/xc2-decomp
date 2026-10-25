@@ -30,6 +30,8 @@ void ShakeCameraManager::RegisterData(ShakeCameraElement *element) {
 
 ShakeCameraElement::ShakeCameraElement() : unknown08(0), unknown10(0.0f), unknown14(0.0f), unknown18(true) {}
 
+ShakeCameraElement::~ShakeCameraElement() {}
+
 bool ShakeCameraElement::ProgressShakeCounter(f32 time) {
   f32 total = unknown14 + time;
   if (total >= unknown10) {

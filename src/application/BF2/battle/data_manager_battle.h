@@ -2,6 +2,7 @@
 #include "battle/arts_data.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
+#include "battle/group_data.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 #include <stddef.h>
@@ -40,6 +41,8 @@ public:
 
   static void Destroy();
   void Finalize();
+  void AddPartyGauge(f32 value, int partyId, bool isNotify);
+  void FluctuatePartyGauge(int value, int partyId);
   void InitializeComboRequestUI();
   const CharacterParameter *GetCharacterParameterConst(int id) const;
   void GetArtsData(ARTS_DATA::DATA_TYPE type, int id, ARTS_DATA &data) const;
@@ -61,11 +64,16 @@ public:
   void SetSpecialEffects(int effect, bool isEnable);
   void ResetRequestPermit();
   bool IsSpecialEffects(int effect) const;
+  static bool IsValidDeadEnhance(int enhance);
   static bool GetEnhanceData(int id, ENHANCE_EFFECT_DATA &data, bool);
+
+  // Inferred role: whether the group of a party has a kizuna gauge; original name unknown.
+  bool unknown001(int partyId) const { return partyId >= 0 && unknown10758[partyId].unknown105_5 && !unknown10758[partyId].unknown104_7; }
 
   PlayerParameter unknown08[PLAYER_PARAMETER_COUNT];                     // Inferred role: player parameters; original member name unknown.
   EnemyParameter *unknown7358[CHARACTER_COUNT - CHARACTER_PLAYER_COUNT]; // Inferred role: enemy parameters; original member name unknown.
-  u8 _7588[0x12e88 - 0x7588];
+  u8 _7588[0x10758 - 0x7588];
+  GROUP_DATA unknown10758[38];       // Inferred role: character groups; original member name unknown.
   ENEMY_GROUP_DATA unknown12e88[35]; // Inferred role: enemy groups; original member name unknown.
   POUCH_BUFF_DATA unknown131d0[3];   // Inferred role: pouch buffs; original member name unknown.
   u8 _13284[0x13290 - 0x13284];
@@ -82,6 +90,7 @@ public:
 
 static_assert(offsetof(DataManager, unknown08) == 0x8, "");
 static_assert(offsetof(DataManager, unknown7358) == 0x7358, "");
+static_assert(offsetof(DataManager, unknown10758) == 0x10758, "");
 static_assert(offsetof(DataManager, unknown12e88) == 0x12e88, "");
 static_assert(offsetof(DataManager, unknown131d0) == 0x131d0, "");
 static_assert(offsetof(DataManager, unknown13298) == 0x13298, "");

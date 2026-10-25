@@ -14,7 +14,9 @@
 #include "gf/game/gf_game_util.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_property.h"
 #include "gf/object/gf_obj_util.h"
 
 namespace btl {
@@ -23,6 +25,22 @@ constexpr f32 DEGREE_TO_RADIAN = 3.14159265f / 180.0f;
 constexpr int ENHANCE_LINK_DISTANCE_BONUS = 258;
 
 gf::GfObj *CharacterParameter::GetUserObject() const { return gf::GfObjUtil::getObj(unknown08); }
+
+gf::GfObjPropertyCharacter *CharacterParameter::GetCharacterProperty() const {
+  gf::GF_OBJ_HANDLE *handle = unknown08;
+  gf::GfObjProperty *property = gf::GfObjUtil::getProperty(handle);
+  gf::GfObjAcc acc(handle);
+  switch (acc.getType()) {
+  case 3:
+    return &property->getDriver()->unknown88;
+  case 4:
+    return &property->getBlade()->unknown88;
+  case 5:
+    return &property->getEnemy()->unknown88;
+  default:
+    return nullptr;
+  }
+}
 
 gf::GfObj *CharacterParameter::GetBuddyObject() const { return gf::GfObjUtil::getObj(unknown10); }
 

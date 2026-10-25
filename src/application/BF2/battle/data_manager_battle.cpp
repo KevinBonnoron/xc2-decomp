@@ -145,4 +145,18 @@ void DataManager::PostUpdateProc(const fw::UpdateInfo &updateInfo) {
 
 bool DataManager::IsSpecialEffects(int effect) const { return unknown132a5[effect]; }
 
+bool DataManager::IsValidDeadEnhance(int enhance) {
+  switch (enhance) {
+  case 0xa8:
+  case 0xc1:
+  case 0xc4:
+  case 0xf5:
+  case 0x14f:
+  case 0x173:
+    return true;
+  default:
+    return false;
+  }
+}
+
 } // namespace btl

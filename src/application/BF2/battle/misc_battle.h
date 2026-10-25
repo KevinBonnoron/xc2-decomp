@@ -29,7 +29,7 @@ public:
     TRANS_TYPE_DIRECTION,
   };
 
-  static bool Normalize(mm::Vec3 &vector);
+  static void Normalize(mm::Vec3 &vector);
   static void TurnDirectionAngle(mm::Vec3 &direction, const mm::Vec3 &axis, f32 angle, bool isRadian);
   static void GetCrossDirection(const mm::Vec3 &direction, mm::Vec3 &cross, CROSS_MODE mode);
   static f32 CalcAngle(const mm::Vec3 &from, const mm::Vec3 &to, bool isSigned);
@@ -58,6 +58,7 @@ public:
   static int CovertKizunaStageToID(int stage);
   static int GetKizunaStage(int kizuna, f32 *rate);
   static bool CheckInRange(const mm::Vec3 &position, const mm::Vec3 &target, f32 range, bool isXZ);
+  static f32 GetLandHeight(const mm::Vec3 &position, f32 distance, bool isUnder);
   static bool IsInWater(const mm::Vec3 &position, f32 depth);
   static const char *GetArtsTypeName(int type);
 };

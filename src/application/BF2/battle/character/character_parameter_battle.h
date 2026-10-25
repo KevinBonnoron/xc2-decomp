@@ -12,6 +12,7 @@ struct UpdateInfo;
 namespace gf {
 struct GF_OBJ_HANDLE;
 class GfObj;
+struct GfObjPropertyCharacter;
 class GfStatusProperty;
 struct SDataEnemy;
 } // namespace gf
@@ -156,6 +157,7 @@ public:
   bool GetEnhanceEffect(ENHANCE_DATA &data, int enhance) const;
   const ENHANCE_EFFECT_DATA *GetEnhanceEffectDataConst(int enhance) const;
   bool GetAdditionalEnhanceEffect(ENHANCE_DATA &data, int type, int *) const;
+  gf::GfObjPropertyCharacter *GetCharacterProperty() const;
   void SetSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value = 0);
   void AddSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value = 0);
   void MinSpecialEnhanceRate(SPECIAL_ENHANCE_TYPE type, f32 rate, u16 value = 0);
@@ -190,7 +192,8 @@ public:
   gf::GF_OBJ_HANDLE *unknown10; // Inferred role: buddy handle; original member name unknown.
   u32 unknown18;                // Inferred role: game object id; original member name unknown.
   int unknown1c;                // Inferred role: party id; original member name unknown.
-  u8 _20[0x2c - 0x20];
+  u8 _20[0x28 - 0x20];
+  f32 unknown28; // Inferred role: launch effect scale factor; original member name unknown.
   f32 unknown2c; // Inferred role: radius; original member name unknown.
   f32 unknown30; // Inferred role: ball height; original member name unknown.
   u8 _34[0x3c - 0x34];
@@ -243,6 +246,7 @@ static_assert(offsetof(CharacterParameter, unknown08) == 0x8, "");
 static_assert(offsetof(CharacterParameter, unknown10) == 0x10, "");
 static_assert(offsetof(CharacterParameter, unknown18) == 0x18, "");
 static_assert(offsetof(CharacterParameter, unknown1c) == 0x1c, "");
+static_assert(offsetof(CharacterParameter, unknown28) == 0x28, "");
 static_assert(offsetof(CharacterParameter, unknown2c) == 0x2c, "");
 static_assert(offsetof(CharacterParameter, unknownc0) == 0xc0, "");
 static_assert(offsetof(CharacterParameter, unknownf0) == 0xf0, "");
@@ -326,6 +330,7 @@ public:
   void BattleEndInitialize() override;
   void Update(const fw::UpdateInfo &updateInfo, bool) override;
   void MulHate(int index, int type, f32 rate);
+  void ResetHate(int index, bool isResetTarget);
   void PostUpdate(const fw::UpdateInfo &updateInfo) override;
   int GetBGMID() const override;
   void SetupBGM() override;

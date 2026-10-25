@@ -29,6 +29,7 @@ public:
   void gevBattleEnd() override;
   static void NotifyQuestTask(u32 task);
   void QuestTaskProc(u32 task);
+  void CheckTargetMode();
 
   u8 _10[0x14 - 0x10];
   bool unknown14; // Inferred role: initialized; original member name unknown.

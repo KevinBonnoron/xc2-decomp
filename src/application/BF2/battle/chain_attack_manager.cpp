@@ -1,5 +1,6 @@
 #include "battle/chain_attack_manager.h"
 
+#include "battle/btl_system_balance_access.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/misc_battle.h"
@@ -26,6 +27,52 @@ void ChainAttackManager::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->Pr
 void ChainAttackManager::PreUpdateProc(const fw::UpdateInfo &) { unknown19e4_4 = false; }
 
 void ChainAttackManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
+
+void ChainAttackManager::RecoveryRecastAll(f32 recast) {
+  int num = unknown19d5;
+  for (int i = 0; i < num; i++) {
+    u8 group = unknown19d2[i];
+    SP_ATTACK_DATA &data = unknown1974[group];
+    for (int j = 0; j < 3; j++) {
+      if (data.unknown00[j].unknown04 >= 0) {
+        data.unknown00[j].unknown00 = mm::clamp(data.unknown00[j].unknown00 + recast, 0.0f, 1.0f);
+      }
+    }
+  }
+}
+
+void ChainAttackManager::RecoveryRecastOne(int group, f32 recast) {
+  SP_ATTACK_DATA &data = unknown1974[group];
+  for (int j = 0; j < 3; j++) {
+    if (data.unknown00[j].unknown04 >= 0) {
+      data.unknown00[j].unknown00 = mm::clamp(data.unknown00[j].unknown00 + recast, 0.0f, 1.0f);
+    }
+  }
+}
+
+int ChainAttackManager::GetAttrOrder(int attr) const {
+  for (int i = 0; i < 9; i++) {
+    u8 order = unknown19d6[i];
+    if (order == 0) {
+      break;
+    }
+    if (order == attr) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+f32 ChainAttackManager::GetBonusRate() const {
+  f32 rate = 0.0f;
+  if (unknown19ce == STATE_NONE) {
+    return rate;
+  }
+  if (unknown19ce >= STATE_RESULT && unknown192c >= 0.2f) {
+    return rate;
+  }
+  return NextFloat(static_cast<f32>(BtlSystemBalanceAccess::get()->unknown76) * 0.01f);
+}
 
 void ChainAttackManager::AddDamageRate(int rate) {
   if (rate != 0 && unknown19ce >= STATE_START_WAIT && unknown19ce < STATE_RESULT) {

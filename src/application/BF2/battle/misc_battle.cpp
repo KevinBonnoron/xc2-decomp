@@ -2,10 +2,13 @@
 
 #include <math.h>
 
+#include "battle/utility_battle.h"
 #include "bdat.h"
+#include "fw/fw_coli_check.h"
 #include "fw/fw_transform.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
@@ -40,6 +43,34 @@ bool Misc::NormalizeXZ(mm::Vec3 &vector) {
   vector.x = scale * vector.x;
   vector.z = scale * vector.z;
   return true;
+}
+
+void Misc::Normalize(mm::Vec3 &vector) {
+  f32 length = sqrtf(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+  if (length > NORMALIZE_LENGTH_MIN) {
+    f32 scale = 1.0f / length;
+    vector.x = scale * vector.x;
+    vector.y = scale * vector.y;
+    vector.z = scale * vector.z;
+    return;
+  }
+
+  if (length == 0.0f) {
+    vector = mm::Vec3::unitZ;
+    return;
+  }
+
+  vector *= 1000000.0f;
+  length = sqrtf(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+  if (length <= NORMALIZE_LENGTH_MIN) {
+    vector = mm::Vec3::zero;
+    return;
+  }
+
+  f32 scale = 1.0f / length;
+  vector.x = scale * vector.x;
+  vector.y = scale * vector.y;
+  vector.z = scale * vector.z;
 }
 
 f32 Misc::CalcLength(const mm::Vec3 &from, const mm::Vec3 &to) {
@@ -145,6 +176,25 @@ int Misc::GetPartyID(const gf::GfObj *obj) {
   return GetPartyID(obj->unknownf8);
 }
 
+int Misc::GetPartyID(gf::GF_OBJ_HANDLE *handle) {
+  if (!Utility::IsThirdCharacter(handle)) {
+    return gf::GfGameParty::getPartyId(handle);
+  }
+
+  for (int i = 0; i < 3; i++) {
+    gf::GF_OBJ_HANDLE *driver = gf::GfGameParty::getHandleDriver(i);
+    if (driver == gf::INVALID_HANDLE) {
+      continue;
+    }
+    gf::GfObjAcc acc(driver);
+    if (acc.getBdatId() == 1) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
 void Misc::GetKizunaMinMax(int stage, int &minimum, int &maximum) {
   int id = CovertKizunaStageToID(stage);
   u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_BTL_KIZUNA);
@@ -157,6 +207,43 @@ int Misc::CovertKizunaStageToID(int stage) { return KIZUNA_STAGE_TO_ID - stage; 
 bool Misc::CheckInRange(const mm::Vec3 &position, const mm::Vec3 &target, f32 range, bool isXZ) {
   f32 length = isXZ ? CalcLengthXZ(position, target) : CalcLength(target, position);
   return length <= range;
+}
+
+bool Misc::GetObjectDirection(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &direction, bool isXZ) {
+  if (handle == gf::INVALID_HANDLE) {
+    return false;
+  }
+
+  bool isFound = GetObjectTransform(gf::GfObjUtil::getObj(handle), direction, TRANS_TYPE_DIRECTION);
+  if (isFound && isXZ) {
+    NormalizeXZ(direction);
+  }
+
+  return isFound;
+}
+
+f32 Misc::GetLandHeight(const mm::Vec3 &position, f32 distance, bool isUnder) {
+  mm::Vec3 pos = position;
+  pos.y += distance;
+  mm::Vec3 result;
+  if (isUnder) {
+    if (!fw::ColiCheck::getSnapPos(result, pos, distance + 15.0f, 3)) {
+      return position.y - 3000.0f;
+    }
+    return result.y;
+  }
+
+  u32 mask = 0x80000060;
+  f32 range = distance + 5.0f;
+  if (fw::ColiCheck::getSnapPos(result, pos, range, mask)) {
+    return result.y;
+  }
+  pos.y -= range;
+  if (!fw::ColiCheck::getSnapPos(result, pos, 10.0f, mask)) {
+    return position.y - 3000.0f;
+  }
+
+  return result.y;
 }
 
 const char *Misc::GetArtsTypeName(int) { return ""; }

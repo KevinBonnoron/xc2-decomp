@@ -130,11 +130,24 @@ public:
   bool IsBlade() const;
   bool IsEnemy() const;
   bool IsDriver() const;
+  void JoinProc(f32 rate, bool isScout);
   void SetWeaponType(int weaponType);
+  void SetCollisionPriority(int priority);
+  void StartFullBurst(int value);
   CharacterParameter *GetCharacterParameter(bool);
   bool IsControlCharacter() const;
   bool IsControlCharacterGroup() const;
   bool IsDead(u32 flags) const;
+  bool IsMoveHealPot() const;
+  void NotifyAngryEnd();
+  void NotifyAngryStart();
+  void NotifyBackAttack(int id);
+  void NotifyDropHealpot();
+  void NotifyEnemyAngry(gf::GF_OBJ_HANDLE *handle);
+  void NotifyFriendDead(int id);
+  void NotifyKillSpAttack();
+  void NotifyLostHateTarget(int);
+  void ResetHate();
   void SetAction(ACTION_ID actionId, bool, bool, int, f32);
   u8 CheckAttackPosition(gf::GF_OBJ_HANDLE *handle, bool, bool *) const;
   bool IsBattle() const;
@@ -159,12 +172,22 @@ public:
   void TurnDirection(const mm::Vec3 &direction, bool, bool);
   void TurnTarget(bool, bool, bool);
   int GetKizunaStage(f32 *rate) const;
+  int GetHateEnemyNum() const;
+  int GetSeType(int type, int attr) const;
   void AddRecast(f32 recast, bool isRate, int slot);
   void SetAngry(bool isAngry, f32 time);
   void RegisterDelayVoice(DELAY_VOICE_TYPE type, f32 time, int voice, int group, int priority);
   bool IsAngry() const;
+  void UpdateBuffEffect();
   void UpdateBuffEffect(int buff);
+  void UpdateLaunchEffect();
+  f32 GetLaunchEffectScale() const;
   void UpdateTargetLockArrow();
+  void DispElementalEffectUI(int effect);
+  void SlowProc();
+  void ScoutProc();
+  f32 GetChainSec();
+  f32 SatisfyEnhanceCondition(int enhance, int, f32, void *, bool);
   void ResetChangeActionStopSeData();
   void ReturnBladeChange();
   void FinalizeArtsEffect(bool);
@@ -173,6 +196,7 @@ public:
   void ActionCommandRun(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
   void ActionCommandBladeArts(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
   void HealHpRate(f32 rate, int, BattleCharacter *healer);
+  void AddPartyGauge(f32 value);
   void FluctuatePartyGauge(int);
   void StartBackHome();
   int GetArtsSlotIndex(int arts) const;
@@ -180,6 +204,8 @@ public:
   int IsEnableArts(int, int slot, int, gf::GF_OBJ_HANDLE *target) const;
   bool IsRescue() const;
   void AddKizuna(f32 kizuna);
+  void AddKizunaStage(int stage);
+  void SetKizunaStage(int stage);
   void SetSpAttackRecastByLevel(int level, bool);
   void SetSuperArmorTime(f32 time);
   void AddSlotRecast(int slot, f32 recast, bool isRate);
@@ -209,6 +235,7 @@ public:
   const CUSTOM_VOICE_DATA *GetCustomVoiceData(int voice, int *index) const;
   bool IsCustomVoice(int voice) const;
   void SetCustomVoiceEndFlag(int voice, bool isEnd);
+  bool PlayCustomVoice(int voice);
   void ClearCustomVoiceEndFlag(u32 flags);
   int GetWeaponSeType() const;
   void GetMoveDataPerSec(mm::Vec3 &moveData) const;
@@ -241,6 +268,9 @@ public:
   void StopAI(f32 time);
   bool CheckRandFriendEnhanceRate(int enhance) const;
   void ResetBladeSupportConditionFlag();
+  void ResetActionCommand();
+  void ActionCommandEndRun();
+  void UpdateCulling();
   void ActionCommandEndIdle();
   void ActionCommandPutOutWeapon(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
   void ActionCommandEndPutOutWeapon();
@@ -322,21 +352,31 @@ public:
   u32 unknownf60;                  // Inferred role: custom voice end flags; original member name unknown.
   CUSTOM_VOICE_DATA unknownf64[3]; // Inferred role: custom voices; original member name unknown.
   s16 unknownf6a;                  // Inferred role: parameter id; original member name unknown.
-  u8 _f6c[0xf76 - 0xf6c];
+  u8 _f6c[0xf72 - 0xf6c];
+  u16 unknownf72; // Inferred role: effect scale rate; original member name unknown.
+  u8 _f74[0xf76 - 0xf74];
   u16 : 9;
   u16 unknownf77_1 : 3; // Inferred role: blade timer mode; original member name unknown.
   u16 : 4;
-  u16 : 16;
+  u16 unknownf78_0 : 10; // Inferred role: SE type; original member name unknown.
+  u16 : 6;
   u8 _f7a[0xf7d - 0xf7a];
   s8 unknownf7d; // Inferred role: id; original member name unknown.
   s8 unknownf7e; // Inferred role: AI id; original member name unknown.
   s8 unknownf7f; // Inferred role: weapon type; original member name unknown.
-  u8 _f80[0xf8c - 0xf80];
+  u8 _f80[0xf83 - 0xf80];
+  u8 unknownf83; // Inferred role: camera fade disable for battle; original member name unknown.
+  u8 _f84[0xf8c - 0xf84];
   u8 : 7;
   u8 m_player : 1;
   u8 m_battle : 1;
   u8 : 7;
-  u8 _f8e[0xf8f - 0xf8e];
+  // Kept apart from the bitfields around it: in one run, clang reads unknownf8f_7 with a 32-bit load (Utility::AI_IsFly).
+  struct {
+    u8 : 4;
+    u8 unknownf8e_4 : 1; // Inferred role: event flag; original member name unknown.
+    u8 : 3;
+  };
   u8 : 7;
   u8 unknownf8f_7 : 1; // Inferred role: fly flag; original member name unknown.
   u8 _f90[0xf93 - 0xf90];
@@ -348,9 +388,18 @@ public:
   u8 unknown107c;               // Inferred role: action id; original member name unknown.
   u8 _107d[0x107e - 0x107d];
   u16 unknown107e; // Inferred role: action phase; original member name unknown.
-  u8 _1080[0x108c - 0x1080];
+  int unknown1080; // Inferred role: action phase time; original member name unknown.
+  u8 _1084[0x108c - 0x1084];
   int unknown108c; // Inferred role: rescue target; original member name unknown.
-  u8 _1090[0x10c0 - 0x1090];
+  u8 _1090[0x10a0 - 0x1090];
+  int unknown10a0; // Inferred role: send power state; original member name unknown.
+  f32 unknown10a4; // Inferred role: send power time; original member name unknown.
+  u32 unknown10a8; // Inferred role: send power value; original member name unknown.
+  u16 unknown10ac; // Inferred role: full burst counter; original member name unknown.
+  u8 unknown10ae;  // Inferred role: full burst count; original member name unknown.
+  u8 _10af[0x10b0 - 0x10af];
+  f32 unknown10b0; // Inferred role: full burst time; original member name unknown.
+  u8 _10b4[0x10c0 - 0x10b4];
   u32 unknown10c0;        // Inferred role: button challenge id; original member name unknown.
   u32 unknown10c4_0 : 16; // Inferred role: change action stop SE; original member name unknown.
   u32 unknown10c6_0 : 5;  // Inferred role: reaction id; original member name unknown.
@@ -361,7 +410,9 @@ public:
   f32 unknown10e0; // Inferred role: no damage time; original member name unknown.
   f32 unknown10e4; // Inferred role: super armor time; original member name unknown.
   f32 unknown10e8; // Inferred role: perfect avoid time; original member name unknown.
-  u8 _10ec[0x10fe - 0x10ec];
+  u8 _10ec[0x10f4 - 0x10ec];
+  u16 unknown10f4; // Inferred role: displayed elemental effect flags; original member name unknown.
+  u8 _10f6[0x10fe - 0x10f6];
   s16 unknown10fe; // Inferred role: back attacker; original member name unknown.
   u8 _1100[0x1108 - 0x1100];
   f32 unknown1108[7]; // Inferred role: enhance timers; original member name unknown.
@@ -408,16 +459,22 @@ static_assert(offsetof(BattleCharacter, unknownf58) == 0xf58, "");
 static_assert(offsetof(BattleCharacter, unknownf5c) == 0xf5c, "");
 static_assert(offsetof(BattleCharacter, unknownf64) == 0xf64, "");
 static_assert(offsetof(BattleCharacter, unknownf6a) == 0xf6a, "");
+static_assert(offsetof(BattleCharacter, unknownf72) == 0xf72, "");
 static_assert(offsetof(BattleCharacter, unknownf7d) == 0xf7d, "");
 static_assert(offsetof(BattleCharacter, unknownf7e) == 0xf7e, "");
 static_assert(offsetof(BattleCharacter, unknownf7f) == 0xf7f, "");
+static_assert(offsetof(BattleCharacter, unknownf83) == 0xf83, "");
 static_assert(offsetof(BattleCharacter, unknownfb0) == 0xfb0, "");
 static_assert(offsetof(BattleCharacter, unknown1078) == 0x1078, "");
 static_assert(offsetof(BattleCharacter, unknown107c) == 0x107c, "");
 static_assert(offsetof(BattleCharacter, unknown107e) == 0x107e, "");
+static_assert(offsetof(BattleCharacter, unknown1080) == 0x1080, "");
 static_assert(offsetof(BattleCharacter, unknown108c) == 0x108c, "");
+static_assert(offsetof(BattleCharacter, unknown10a0) == 0x10a0, "");
+static_assert(offsetof(BattleCharacter, unknown10a4) == 0x10a4, "");
 static_assert(offsetof(BattleCharacter, unknown10c0) == 0x10c0, "");
 static_assert(offsetof(BattleCharacter, unknown10c8) == 0x10c8, "");
+static_assert(offsetof(BattleCharacter, unknown10f4) == 0x10f4, "");
 static_assert(offsetof(BattleCharacter, unknown10e0) == 0x10e0, "");
 static_assert(offsetof(BattleCharacter, unknown10fe) == 0x10fe, "");
 static_assert(offsetof(BattleCharacter, unknown1108) == 0x1108, "");

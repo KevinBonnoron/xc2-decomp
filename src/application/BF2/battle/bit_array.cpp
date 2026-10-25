@@ -54,4 +54,32 @@ void BitArray::SetData(int index, int value) {
   }
 }
 
+int BitArray::GetData(int index) const {
+  int size = unknown12;
+  int position = size * index;
+  int byte = position >> 3;
+  int bit = position & 7;
+  int bits = 0;
+  int i = 0;
+  while (true) {
+    if ((unknown08[byte] & (1 << bit)) != 0) {
+      bits |= 1 << (size - 1 - i);
+    }
+    if (++i >= size) {
+      break;
+    }
+    if (++bit >= 8) {
+      bit = 0;
+      byte++;
+    }
+  }
+
+  int sign = 1 << (size - 1);
+  int value = (bits & sign) != 0 ? -(bits & (sign - 1)) : bits;
+  if (unknown13) {
+    return value;
+  }
+  return bits;
+}
+
 } // namespace btl

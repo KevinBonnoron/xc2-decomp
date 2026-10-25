@@ -5,20 +5,30 @@
 #include "battle/battle_global.h"
 #include "battle/btl_system_balance_access.h"
 #include "battle/button_challenge.h"
+#include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
 #include "battle/data_manager_battle.h"
+#include "battle/group_data.h"
 #include "battle/hate_ring_manager.h"
 #include "battle/misc_battle.h"
 #include "battle/talk_manager_battle.h"
+#include "battle/ui_manager_battle.h"
 #include "battle/utility_battle.h"
+#include "bdat.h"
 #include "framework/effect/effect_manager.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_weapon.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_scom.h"
 #include "ml/rand.h"
+#include "mm_math/mm_math.h"
 
 namespace btl {
 
@@ -161,6 +171,89 @@ bool BattleCharacter::IsBossOrNamed() const {
 
 bool BattleCharacter::IsMove() const { return unknown107c == ACTION_ID_MOVE || unknown1178 == AI_STATE_ACTIVE; }
 
+bool BattleCharacter::IsMoveHealPot() const {
+  if (unknown107c == ACTION_ID_MOVE && unknown1178 == AI_STATE_ACTIVE && unknown1160.unknown00 == 20) {
+    return true;
+  }
+  return false;
+}
+
+int BattleCharacter::GetSeType(int type, int attr) const {
+  int seType = 1;
+  switch (type) {
+  case 60000:
+    break;
+  case 60001:
+    seType = 2;
+    break;
+  case 60002:
+    seType = Utility::GetWeaponSeType(unknownf7f);
+    break;
+  case 60003:
+    seType = Utility::GetAttrSeType(attr);
+    break;
+  case 60004:
+    seType = unknownf78_0;
+    break;
+  case 0:
+    return 0;
+  default:
+    seType = type;
+    break;
+  }
+  return seType;
+}
+
+int BattleCharacter::GetKizunaStage(f32 *rate) const {
+  if (Utility::IsThirdCharacter(unknown118)) {
+    return 6;
+  }
+  if (rate != nullptr) {
+    *rate = 0.0f;
+  }
+
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter == nullptr) {
+    return 0;
+  }
+  int partyId = parameter->unknown1c;
+  if (!DataManager::get()->unknown001(partyId)) {
+    return 3;
+  }
+  return DataManager::get()->unknown10758[partyId].GetBladeDataConst(-1)->GetKizunaStage(rate);
+}
+
+int BattleCharacter::GetHateEnemyNum() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter == nullptr) {
+    return 0;
+  }
+  return HateRingManager::get()->GetHateEnemyNum(parameter->unknown1c);
+}
+
+void BattleCharacter::NotifyAngryEnd() {
+  if (unknown130[6] == 0) {
+    return;
+  }
+  if (!gf::GfGameManager::isPlayEvent()) {
+    fw::EffectManager::get()->fadeOutDead(unknown130[6], 5);
+  } else {
+    fw::EffectManager::get()->remove(unknown130[6]);
+  }
+  unknown130[6] = 0;
+}
+
+void BattleCharacter::ResetHate() {
+  if (m_player) {
+    return;
+  }
+  CharacterParameter *characterParameter = GetCharacterParameter(false);
+  if (characterParameter == nullptr) {
+    return;
+  }
+  static_cast<EnemyParameter *>(characterParameter)->ResetHate(-1, false);
+}
+
 void BattleCharacter::AddUseWeapon() {
   CharacterParameter *parameter = GetCharacterParameter(true);
   if (parameter != nullptr) {
@@ -250,6 +343,22 @@ void BattleCharacter::SetCustomVoiceEndFlag(int voice, bool isEnd) {
   } else {
     unknownf60 &= ~(1 << voice);
   }
+}
+
+bool BattleCharacter::PlayCustomVoice(int voice) {
+  if (!IsCustomVoice(voice)) {
+    return false;
+  }
+
+  int index;
+  if (GetCustomVoiceData(voice, &index) == nullptr) {
+    return false;
+  }
+  if (!TalkManager::get()->NotifyTrigger(unknownf7d, static_cast<TalkManager::TRIGGER>(0x2b + index), 0, 0)) {
+    return false;
+  }
+  SetCustomVoiceEndFlag(voice, true);
+  return true;
 }
 
 void BattleCharacter::ClearCustomVoiceEndFlag(u32 flags) { unknownf60 &= ~flags; }
@@ -539,6 +648,182 @@ bool BattleCharacter::CheckRandFriendEnhanceRate(int enhance) const {
 
 void BattleCharacter::ResetBladeSupportConditionFlag() { unknown11e0 = 0; }
 
+void BattleCharacter::FluctuatePartyGauge(int value) {
+  if (!m_player) {
+    return;
+  }
+
+  int partyId = GetGroupIndex();
+  DataManager::get()->FluctuatePartyGauge(value, partyId);
+}
+
+void BattleCharacter::AddPartyGauge(f32 value) {
+  if (!m_player) {
+    return;
+  }
+
+  int partyId = GetGroupIndex();
+  DataManager::get()->AddPartyGauge(value, partyId, true);
+}
+
+void BattleCharacter::NotifyFriendDead(int) { PlayCustomVoice(1); }
+
+void BattleCharacter::NotifyDropHealpot() { PlayCustomVoice(3); }
+
+void BattleCharacter::NotifyEnemyAngry(gf::GF_OBJ_HANDLE *) { PlayCustomVoice(7); }
+
+void BattleCharacter::NotifyBackAttack(int) { PlayCustomVoice(10); }
+
+void BattleCharacter::NotifyKillSpAttack() { PlayCustomVoice(9); }
+
+void BattleCharacter::NotifyLostHateTarget(int) {
+  if (!IsCustomVoice(5)) {
+    return;
+  }
+
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter == nullptr) {
+    return;
+  }
+  if (parameter->m_invalidTarget && gf::GfDataBlade::getRole(unknowncc8) == 1) {
+    PlayCustomVoice(5);
+  }
+}
+
+void BattleCharacter::AddKizuna(f32 kizuna) {
+  if (kizuna == 0.0f) {
+    return;
+  }
+
+  int partyId = GetGroupIndex();
+  if (DataManager::get()->unknown001(partyId)) {
+    DataManager::get()->unknown10758[partyId].unknown001(-1)->AddGauge(kizuna, true);
+  }
+}
+
+void BattleCharacter::SetKizunaStage(int stage) {
+  int partyId = GetGroupIndex();
+  if (DataManager::get()->unknown001(partyId)) {
+    DataManager::get()->unknown10758[partyId].unknown001(-1)->SetKizunaStage(stage, 0.5f, false);
+  }
+}
+
+void BattleCharacter::AddKizunaStage(int value) { SetKizunaStage(mm::clamp(GetKizunaStage(nullptr) + value, 0, 6)); }
+
+void BattleCharacter::ScoutProc() {
+  if (m_player) {
+    return;
+  }
+
+  gf::DataParamAcc acc(unknown118);
+  int id = acc.getBdatIdEnParam();
+  u8 radius = Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_CHR_EN_PARAM), "ScoutJoinRad", id, 1);
+  JoinProc(static_cast<f32>(radius), true);
+}
+
+f32 BattleCharacter::GetLaunchEffectScale() const {
+  f32 scale = static_cast<f32>(unknownf72) * 0.01f;
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter != nullptr) {
+    scale *= parameter->unknown28;
+  }
+  return scale;
+}
+
+void BattleCharacter::NotifyAngryStart() {
+  PlaySE(BTL_SE_HIT, 0x3c, nullptr, true);
+  TalkManager::get()->NotifyTrigger(unknownf7d, static_cast<TalkManager::TRIGGER>(0x33), 0, 0);
+  unknown130[6] = fw::EffectManager::get()->create("cmn_000_025", nullptr, true);
+  UpdateEffectPositionScale(6, nullptr, GetLaunchEffectScale());
+}
+
 void BattleCharacter::SetActionCallback(ACTION_ID) {}
+
+void BattleCharacter::StartFullBurst(int count) {
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+
+  if (!parameter->unknown5df_6) {
+    BattleCharacter *buddy = CharacterManager::get()->GetCharacterConst(parameter->unknown10);
+    if (buddy == nullptr || !buddy->m_battle) {
+      return;
+    }
+  }
+
+  unknown10ac = 0;
+  unknown10ae = count;
+  unknown10b0 = static_cast<f32>(count << 3);
+}
+
+void BattleCharacter::ResetActionCommand() {
+  int count = unknown1078;
+  for (int i = 0; i < count; i++) {
+    // The game resets a stack copy of each command (0x2ec4c..0x2ec68), not the stored one.
+    ActionCommand command = unknownfb0[i];
+    command.Reset();
+  }
+  unknown1078 = 0;
+}
+
+void BattleCharacter::ActionCommandEndRun() {
+  if (!unknownf8e_4 && unknown1080 == 0) {
+    SetAction(ACTION_ID_IDLE, false, false, 0, 0.0f);
+  }
+}
+
+void BattleCharacter::UpdateCulling() {
+  bool isDisable = unknownf83 != 0;
+  gf::GfObjAcc acc(unknown118);
+  acc.setCameraFadeDisableForBattle(isDisable);
+}
+
+void BattleCharacter::UpdateLaunchEffect() { UpdateEffectPositionScale(5, nullptr, GetLaunchEffectScale()); }
+
+void BattleCharacter::UpdateBuffEffect() {
+  UpdateEffectPositionScale(7, nullptr, -1.0f);
+  UpdateTargetLockArrow();
+  UpdateEffectPositionScale(9, nullptr, -1.0f);
+  UpdateEffectPositionScale(10, nullptr, -1.0f);
+  UpdateEffectPositionScale(11, nullptr, -1.0f);
+  UpdateEffectPositionScale(12, nullptr, -1.0f);
+}
+
+void BattleCharacter::SlowProc() {
+  f32 time = unknownf93_6 ? 0.0f : unknowncc0;
+  SLOW_PROC_DATA &slow = unknownf4c[0];
+  f32 rate = 1.0f;
+  if (slow.unknown04 != 0.0f) {
+    if (slow.unknown04 > 0.0f) {
+      if (time + slow.unknown08 >= slow.unknown04) {
+        slow.unknown00 = 1.0f;
+        slow.unknown04 = 0.0f;
+        slow.unknown08 = 0.0f;
+        rate = 1.0f;
+      } else {
+        slow.unknown08 = time + slow.unknown08;
+        rate = mm::min(1.0f, slow.unknown00);
+      }
+    } else {
+      rate = mm::min(1.0f, slow.unknown00);
+    }
+  }
+
+  unknownf58 = rate;
+}
+
+void BattleCharacter::DispElementalEffectUI(int effect) {
+  u32 flags = unknown10f4;
+  u32 bit = 1u << effect;
+  if ((flags & bit) != 0) {
+    return;
+  }
+  unknown10f4 = flags | bit;
+  UIManager::get()->DispElementalEffectUI(unknown118, effect);
+}
+
+f32 BattleCharacter::GetChainSec() {
+  f32 sec = static_cast<f32>(BtlSystemBalanceAccess::get()->unknown68) * (1.0f / 30.0f);
+  f32 rate = SatisfyEnhanceCondition(0x147, 0, 0.0f, nullptr, true);
+  return rate > 0.0f ? sec + rate * sec : sec;
+}
 
 } // namespace btl

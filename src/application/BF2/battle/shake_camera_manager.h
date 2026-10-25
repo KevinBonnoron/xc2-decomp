@@ -32,7 +32,7 @@ static_assert(sizeof(ShakeCameraManager) == 0xb8, "");
 class ShakeCameraElement {
 public:
   ShakeCameraElement();
-  virtual ~ShakeCameraElement() {}
+  virtual ~ShakeCameraElement();
   bool ProgressShakeCounter(f32 time);
   virtual void StopEternalShake() {}
   virtual bool Update(f32 time) = 0;

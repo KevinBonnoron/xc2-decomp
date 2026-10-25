@@ -1,11 +1,19 @@
 #include "battle/group_data.h"
 
+#include "battle/battle_global.h"
 #include "battle/data_manager_battle.h"
 #include "battle/misc_battle.h"
 #include "battle/utility_battle.h"
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_enemy.h"
+#include "gf/data/gf_data_param_acc.h"
+#include "gf/game/gf_game_mount.h"
+#include "gf/game/gf_game_party.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_manager.h"
 #include "mm_math/mm_math.h"
 
 namespace btl {
@@ -82,6 +90,29 @@ void KIZUNA_GAUGE_DATA::ResetTimingFlag() {
   unknown19_2 = false;
 }
 
+void GROUP_BLADE_DATA::Initialize(int blade, int driver, int index) {
+  unknown28_0 = index < 3;
+  if (index > 2) {
+    gf::DataParamAcc acc(5, blade, gf::GIMMICK_TYPE_NONE);
+    blade = acc.getSDataEnemy()->unknown0a;
+  }
+
+  unknown24 = static_cast<u16>(blade);
+  gf::DataParamAcc acc(4, blade, gf::GIMMICK_TYPE_NONE);
+  int personality = acc.getPersonality();
+  if (personality == 0) {
+    personality = 1;
+  }
+
+  unknown18 = static_cast<u8>(Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_BTL_BL_PERSONALITY), "KizunaBase", personality, 1));
+  InitializeCoolTime(0.0f);
+  unknown26 = static_cast<u16>(acc.getBladeArtsEx(false));
+  const BattleGlobal::MAP_DRIVER_REV_DATA *data = BattleGlobal::get()->GetMapDriverRevDataByBdatID(driver);
+  SetKizunaMax(data != nullptr ? data->unknown00_0 : 1000);
+  ResetGauge(index);
+  unknown28_3 = true;
+}
+
 void GROUP_BLADE_DATA::InitializeCoolTime(f32 rate) {
   if (unknown28_0) {
     m_coolTime = Utility::GetBladeCoolTime(unknown24);
@@ -122,6 +153,47 @@ void GROUP_BLADE_DATA::SynchroHomnuraData(const GROUP_BLADE_DATA &blade) {
   unknown20 = blade.unknown20;
 }
 
+void GROUP_DATA::Reset(gf::GF_OBJ_HANDLE *handle, bool isParty) {
+  if (handle == gf::INVALID_HANDLE) {
+    unknown104 = unknown104 & 0xdfff;
+    return;
+  }
+
+  if (isParty) {
+    int driver = gf::GfGameParty::getDriverBdatId(unknownfe);
+    for (int i = 0; i < 5; i++) {
+      int blade = gf::GfGameParty::getBladeBdatId(unknownfe, i);
+      if (blade == 0) {
+        unknown08[i].unknown28_3 = false;
+      } else {
+        unknown08[i].Initialize(blade, driver, unknownfe);
+      }
+    }
+  } else {
+    gf::GfObjAcc acc(handle);
+    int driver = acc.getBdatId();
+    gf::GF_OBJ_HANDLE *mount = gf::GfMountManager::getHandle(handle, gf::GFATTACH_WEAPON, gf::OPTMNT_BLADE);
+    gf::GfObjAcc mountAcc(mount);
+    int blade = mountAcc.getBdatId();
+    if (blade != 0) {
+      unknown08[0].Initialize(blade, driver, unknownfe);
+    } else {
+      unknown08[0].unknown28_3 = false;
+    }
+  }
+
+  unknownff = -1;
+  unknownf4 = 1.0f;
+  unknownf8 = 1.0f;
+  unknown100 = 4;
+  unknown101 = -1;
+  __builtin_memset(unknowne4, 0, sizeof(unknowne4));
+  unknown00 = handle;
+  unknownfc = 0;
+  unknown102 = 0;
+  unknown104 = (unknown104 & 0xc808) | 0x2040;
+}
+
 void GROUP_DATA::SetBuddyBladeIndex(int index) {
   if (unknownff != index) {
     unknownff = index;
@@ -159,6 +231,26 @@ void GROUP_DATA::FinishCoolTime() {
       unknown08[i].unknown20 = unknown08[i].m_coolTime;
     }
   }
+}
+
+void GROUP_DATA::SynchroHomnuraData(int from, int to) {
+  GROUP_BLADE_DATA *dst1;
+  GROUP_BLADE_DATA *dst2;
+  if (from == to) {
+    dst1 = &unknown08[3];
+    dst2 = &unknown08[4];
+  } else if (from == 3) {
+    dst1 = &unknown08[to];
+    dst2 = &unknown08[4];
+  } else if (from == 4) {
+    dst1 = &unknown08[to];
+    dst2 = &unknown08[3];
+  } else {
+    return;
+  }
+
+  dst1->SynchroHomnuraData(unknown08[from]);
+  dst2->SynchroHomnuraData(unknown08[from]);
 }
 
 } // namespace btl

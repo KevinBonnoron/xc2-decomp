@@ -2,6 +2,10 @@
 #include "types.h"
 #include <stddef.h>
 
+namespace gf {
+struct GF_OBJ_HANDLE;
+}
+
 namespace btl {
 
 constexpr f32 KIZUNA_GAUGE_MAX = 1000.0f;
@@ -79,32 +83,58 @@ static_assert(sizeof(GROUP_BLADE_DATA) == 0x2c, "");
 
 class GROUP_DATA {
 public:
+  void Reset(gf::GF_OBJ_HANDLE *handle, bool isParty);
   void SetBuddyBladeIndex(int index);
   const GROUP_BLADE_DATA *GetBladeDataConst(int index) const;
+  // Inferred role: non-const GetBladeDataConst, inlined in BattleCharacter::AddKizuna; original name unknown.
+  GROUP_BLADE_DATA *unknown001(int index) { return const_cast<GROUP_BLADE_DATA *>(GetBladeDataConst(index)); }
   void SetNeedPermit(bool isNeedPermit);
   void ProgressCoolTime(f32 time);
   void FinishCoolTime();
+  void SynchroHomnuraData(int from, int to);
 
-  u8 _00[0x08 - 0x00];
+  gf::GF_OBJ_HANDLE *unknown00;  // Inferred role: object handle; original member name unknown.
   GROUP_BLADE_DATA unknown08[5]; // Inferred role: blades; original member name unknown.
   f32 unknowne4[3];              // Inferred role: recasts; original member name unknown.
   f32 unknownf0;                 // Inferred role: buddy time; original member name unknown.
-  u8 _f4[0xff - 0xf4];
-  s8 unknownff; // Inferred role: buddy blade index; original member name unknown.
-  u8 _100[0x101 - 0x100];
-  s8 unknown101; // Inferred role: SP attack slot; original member name unknown.
-  u8 _102[0x104 - 0x102];
-  u16 : 1;
-  u16 unknown104_1 : 1; // Inferred role: need permit; original member name unknown.
-  u16 unknown104_2 : 2; // Inferred role: permit state; original member name unknown.
-  u16 : 9;
-  u16 unknown105_5 : 1; // Inferred role: entry; original member name unknown.
-  u16 : 2;
+  f32 unknownf4;                 // Role and original member name unknown.
+  f32 unknownf8;                 // Role and original member name unknown.
+  u16 unknownfc;                 // Role and original member name unknown.
+  s8 unknownfe;                  // Inferred role: party id; original member name unknown.
+  s8 unknownff;                  // Inferred role: buddy blade index; original member name unknown.
+  u8 unknown100;                 // Role and original member name unknown.
+  s8 unknown101;                 // Inferred role: SP attack slot; original member name unknown.
+  u8 unknown102;                 // Role and original member name unknown.
+  u8 _103[0x104 - 0x103];
+  // GROUP_DATA::Reset rewrites these flags with one masked store that clears bit 2 but keeps bit 3 of
+  // unknown104_2, which the bitfields cannot express, so the whole word stays readable as unknown104.
+  union {
+    u16 unknown104; // Role and original member name unknown.
+    struct {
+      u16 : 1;
+      u16 unknown104_1 : 1; // Inferred role: need permit; original member name unknown.
+      u16 unknown104_2 : 2; // Inferred role: permit state; original member name unknown.
+      u16 : 3;
+      u16 unknown104_7 : 1; // Role and original member name unknown.
+      u16 : 5;
+      u16 unknown105_5 : 1; // Inferred role: entry; original member name unknown.
+      u16 : 2;
+    };
+  };
 };
 
 static_assert(offsetof(GROUP_DATA, unknown08) == 0x08, "");
 static_assert(offsetof(GROUP_DATA, unknowne4) == 0xe4, "");
 static_assert(offsetof(GROUP_DATA, unknownf0) == 0xf0, "");
+static_assert(offsetof(GROUP_DATA, unknownf4) == 0xf4, "");
+static_assert(offsetof(GROUP_DATA, unknownf8) == 0xf8, "");
+static_assert(offsetof(GROUP_DATA, unknownfc) == 0xfc, "");
+static_assert(offsetof(GROUP_DATA, unknownfe) == 0xfe, "");
 static_assert(offsetof(GROUP_DATA, unknownff) == 0xff, "");
+static_assert(offsetof(GROUP_DATA, unknown100) == 0x100, "");
+static_assert(offsetof(GROUP_DATA, unknown101) == 0x101, "");
+static_assert(offsetof(GROUP_DATA, unknown102) == 0x102, "");
+static_assert(offsetof(GROUP_DATA, unknown104) == 0x104, "");
+static_assert(sizeof(GROUP_DATA) == 0x108, "");
 
 } // namespace btl

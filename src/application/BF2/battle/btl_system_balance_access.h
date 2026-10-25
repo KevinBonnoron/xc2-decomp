@@ -21,13 +21,20 @@ public:
 
   u8 _08[0x10 - 0x08];
   f32 unknown10; // Inferred role: resistant attribute damage rate; original member name unknown.
-  u8 _14[0x34 - 0x14];
+  u8 _14[0x20 - 0x14];
+  f32 unknown20; // Inferred role: critical damage rate; original member name unknown.
+  f32 unknown24; // Role and original member name unknown.
+  u8 _28[0x34 - 0x28];
   u8 unknown34; // Inferred role: elemental value max; original member name unknown.
   u8 _35[0x40 - 0x35];
   u8 unknown40;  // Inferred role: resistant attribute max HP; original member name unknown.
   u8 unknown41;  // Inferred role: ball scale min; original member name unknown.
   u16 unknown42; // Inferred role: ball scale max; original member name unknown.
-  u8 _44[0xb6 - 0x44];
+  u8 _44[0x68 - 0x44];
+  u8 unknown68; // Inferred role: chain attack seconds; original member name unknown.
+  u8 _69[0x76 - 0x69];
+  u16 unknown76; // Inferred role: chain attack bonus rate; original member name unknown.
+  u8 _78[0xb6 - 0x78];
   u16 unknownb6[2]; // Inferred role: one bound enemy ids; original member name unknown.
   u16 unknownba[1]; // Inferred role: SP size enemy ids; original member name unknown.
   u16 unknownbc[2]; // Inferred role: SP kizuna line enemy ids; original member name unknown.
@@ -38,7 +45,11 @@ public:
   u8 _e0[0xf0 - 0xe0];
 };
 
+static_assert(offsetof(BtlSystemBalanceAccess, unknown20) == 0x20, "");
+static_assert(offsetof(BtlSystemBalanceAccess, unknown24) == 0x24, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknown40) == 0x40, "");
+static_assert(offsetof(BtlSystemBalanceAccess, unknown68) == 0x68, "");
+static_assert(offsetof(BtlSystemBalanceAccess, unknown76) == 0x76, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownb6) == 0xb6, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownba) == 0xba, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownbc) == 0xbc, "");

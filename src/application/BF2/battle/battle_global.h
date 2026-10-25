@@ -1,6 +1,7 @@
 #pragma once
 #include "battle/button_challenge.h"
 #include "gf/data/gf_data_weapon.h"
+#include "gf/sound/gf_sound.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -17,6 +18,7 @@ struct UpdateInfo;
 namespace gf {
 struct GF_OBJ_HANDLE;
 struct GF_SE_CATEGORY_HANDLE;
+class GfComEffectCaster;
 } // namespace gf
 
 namespace btl {
@@ -43,9 +45,12 @@ public:
   struct SLOW_PROC_DATA {
     void Finalize();
 
-    u8 _00[0xc - 0x0];
+    f32 unknown00; // Inferred role: slow rate; original member name unknown.
+    f32 unknown04; // Inferred role: slow time; original member name unknown.
+    f32 unknown08; // Inferred role: slow fade; original member name unknown.
     u32 unknown0c; // Inferred role: slow id; original member name unknown.
     u8 unknown10;  // Inferred role: character id; original member name unknown.
+    u8 _11[0x14 - 0x11];
   };
 
   struct ATTACK_DAMAGE_DATA {
@@ -67,6 +72,11 @@ public:
     u8 unknown12_0 : 1; // Inferred role: enable add elemental ball; original member name unknown.
     u8 unknown12_1 : 1; // Inferred role: valid attack range; original member name unknown.
     u8 unknown13;       // Inferred role: main target; original member name unknown.
+  };
+
+  struct SPECIAL_EFFECT_DATA {
+    u32 unknown00; // Inferred role: effect handle; original member name unknown.
+    int unknown04; // Inferred role: special effect; original member name unknown.
   };
 
   struct ELEMENTAL_COMBO_FLOW_DATA {
@@ -102,6 +112,10 @@ public:
   void PostUpdateProc(const fw::UpdateInfo &updateInfo);
   void Tutorial(BTL_TUTORIAL_COND cond, int combo, void *character);
   void ResetBGM();
+  void InitializeConditionParameter();
+  void DeleteElementalComboSlow();
+  void RegisterElementalComboSlow();
+  void FinalizeJingle();
   void SetElementalComboImmortal(gf::GF_OBJ_HANDLE *handle);
   bool IsGameOver() const;
   bool IsEnableBattle() const;
@@ -138,6 +152,7 @@ public:
   void SetPause(int pause, bool isPause);
   bool IsPause(int pause) const;
   void RegisterStop(f32 time);
+  int RegisterSlow(f32 rate, f32 time, f32 fade);
   void DeleteSlow(u32 slow);
   const SLOW_PROC_DATA *GetSlowProcDataConst(u32 slow) const;
   void SetBGM(u32 bgm);
@@ -155,6 +170,7 @@ public:
   bool IsKakuseiFinished() const;
   bool IsKakuseiOrder(bool isCheckRestTime) const;
   void ApplyBattleCameraAdjustment(mm::Vec3 &position, mm::Vec3 &target);
+  void EndSpecialEffect(SPECIAL_EFFECT_DATA &data);
 
   u8 _08[0x18 - 0x08];
   mutable const char *unknown18[185]; // Inferred role: SE tag names; original member name unknown.
@@ -169,11 +185,21 @@ public:
   ELEMENTAL_COMBO_FLOW_DATA unknown56a0[50];                 // Inferred role: elemental combo flows; original member name unknown.
   u8 _5a88[0x5aa0 - 0x5a88];
   gf::GF_SE_CATEGORY_HANDLE *unknown5aa0; // Inferred role: jingle handle; original member name unknown.
-  u8 _5aa8[0x5ac0 - 0x5aa8];
+  gf::SoundHandle unknown5aa8;            // Inferred role: jingle sound; original member name unknown.
+  u32 unknown5ab0;                        // Role and original member name unknown.
+  u32 unknown5ab4;                        // Role and original member name unknown.
+  u32 unknown5ab8;                        // Role and original member name unknown.
+  u8 _5abc[0x5ac0 - 0x5abc];
   MAP_DRIVER_REV_DATA unknown5ac0[9]; // Inferred role: map driver revisions; original member name unknown.
   u8 _5ae4[0x5af8 - 0x5ae4];
   gf::GF_OBJ_HANDLE *m_elementalComboImmortal;
-  u8 _5b00[0x5b28 - 0x5b00];
+  u8 _5b00[0x5b08 - 0x5b00];
+  gf::GfComEffectCaster *unknown5b08; // Inferred role: slow effect caster; original member name unknown.
+  gf::GfComEffectCaster *unknown5b10; // Role and original member name unknown.
+  u32 unknown5b18;                    // Inferred role: slow effect id; original member name unknown.
+  u32 unknown5b1c;                    // Role and original member name unknown.
+  u32 unknown5b20;                    // Inferred role: elemental combo slow id; original member name unknown.
+  u8 _5b24[0x5b28 - 0x5b24];
   gf::GF_OBJ_HANDLE *unknown5b28; // Inferred role: unite combo target; original member name unknown.
   u8 _5b30[0x5b5f - 0x5b30];
   bool unknown5b5f; // Inferred role: unite combo direction; original member name unknown.
@@ -182,12 +208,12 @@ public:
   u8 _5b6c[0x5b8e - 0x5b6c];
   u16 unknown5b8e;                                   // Inferred role: enemy kill count; original member name unknown.
   u16 unknown5b90[16][gf::WEAPON_TYPE_COUNT + 1][3]; // Inferred role: normal attack arts ids; original member name unknown.
-  u8 _65b0[0x65d2 - 0x65b0];
-  u16 unknown65d2;       // Inferred role: BGM id; original member name unknown.
-  u8 unknown65d4;        // Inferred role: BGM priority; original member name unknown.
-  u8 unknown65d5;        // Inferred role: requested jingle; original member name unknown.
-  u8 unknown65d6[8];     // Inferred role: pause flags; original member name unknown.
-  u64 unknown65de_0 : 1; // Inferred role: lock arts palette; original member name unknown.
+  u16 unknown65b0[17];                               // Inferred role: condition parameters; original member name unknown.
+  u16 unknown65d2;                                   // Inferred role: BGM id; original member name unknown.
+  u8 unknown65d4;                                    // Inferred role: BGM priority; original member name unknown.
+  u8 unknown65d5;                                    // Inferred role: requested jingle; original member name unknown.
+  u8 unknown65d6[8];                                 // Inferred role: pause flags; original member name unknown.
+  u64 unknown65de_0 : 1;                             // Inferred role: lock arts palette; original member name unknown.
   u64 : 10;
   u64 unknown65df_3 : 1; // Inferred role: kakusei order; original member name unknown.
   u64 unknown65df_4 : 1; // Inferred role: kakusei; original member name unknown.
@@ -205,7 +231,12 @@ public:
   u8 _65e3[0x65e8 - 0x65e3];
 };
 
+static_assert(sizeof(BattleGlobal::SPECIAL_EFFECT_DATA) == 0x8, "");
 static_assert(sizeof(BattleGlobal::SLOW_PROC_DATA) == 0x14, "");
+static_assert(offsetof(BattleGlobal::SLOW_PROC_DATA, unknown04) == 0x4, "");
+static_assert(offsetof(BattleGlobal::SLOW_PROC_DATA, unknown08) == 0x8, "");
+static_assert(offsetof(BattleGlobal::SLOW_PROC_DATA, unknown0c) == 0xc, "");
+static_assert(offsetof(BattleGlobal::SLOW_PROC_DATA, unknown10) == 0x10, "");
 static_assert(sizeof(BattleGlobal::ATTACK_DAMAGE_DATA) == 0x14, "");
 static_assert(sizeof(BattleGlobal::MAP_DRIVER_REV_DATA) == 0x4, "");
 static_assert(offsetof(BattleGlobal, unknown18) == 0x18, "");
@@ -215,13 +246,21 @@ static_assert(offsetof(BattleGlobal, unknown6c0) == 0x6c0, "");
 static_assert(offsetof(BattleGlobal, unknown878) == 0x878, "");
 static_assert(offsetof(BattleGlobal, unknown56a0) == 0x56a0, "");
 static_assert(offsetof(BattleGlobal, unknown5aa0) == 0x5aa0, "");
+static_assert(offsetof(BattleGlobal, unknown5aa8) == 0x5aa8, "");
+static_assert(offsetof(BattleGlobal, unknown5ab0) == 0x5ab0, "");
 static_assert(offsetof(BattleGlobal, unknown5ac0) == 0x5ac0, "");
 static_assert(offsetof(BattleGlobal, m_elementalComboImmortal) == 0x5af8, "");
 static_assert(offsetof(BattleGlobal, unknown5b28) == 0x5b28, "");
 static_assert(offsetof(BattleGlobal, unknown5b5f) == 0x5b5f, "");
 static_assert(offsetof(BattleGlobal, unknown5b68) == 0x5b68, "");
+static_assert(offsetof(BattleGlobal, unknown5b08) == 0x5b08, "");
+static_assert(offsetof(BattleGlobal, unknown5b10) == 0x5b10, "");
+static_assert(offsetof(BattleGlobal, unknown5b18) == 0x5b18, "");
+static_assert(offsetof(BattleGlobal, unknown5b1c) == 0x5b1c, "");
+static_assert(offsetof(BattleGlobal, unknown5b20) == 0x5b20, "");
 static_assert(offsetof(BattleGlobal, unknown5b8e) == 0x5b8e, "");
 static_assert(offsetof(BattleGlobal, unknown5b90) == 0x5b90, "");
+static_assert(offsetof(BattleGlobal, unknown65b0) == 0x65b0, "");
 static_assert(offsetof(BattleGlobal, unknown65d2) == 0x65d2, "");
 static_assert(offsetof(BattleGlobal, unknown65d6) == 0x65d6, "");
 static_assert(sizeof(BattleGlobal) == 0x65e8, "");
