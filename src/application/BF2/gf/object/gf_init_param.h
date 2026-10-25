@@ -26,7 +26,7 @@ class GfInitParam {
 public:
   virtual bool isAllWeapon() const { return false; }
   virtual u32 getBladeID() const { return m_bladeID; }
-  virtual u32 getEnArrangeID() const { return 0; }
+  virtual u32 getEnArrangeID() const;
 
   bool isEvent() const {
     switch (unknown08) {
@@ -116,11 +116,15 @@ static_assert(offsetof(GfInitParamWeapon, unknown98) == 0x98, "");
 
 class GfInitParamEnWeapon : public GfInitParam {
 public:
+  u32 getEnArrangeID() const override;
+
   u8 _90[0x98 - 0x90];
   GfAppend unknown98; // Inferred role: append; original member name unknown.
+  u32 m_enArrangeID;
 };
 
 static_assert(offsetof(GfInitParamEnWeapon, unknown98) == 0x98, "");
+static_assert(offsetof(GfInitParamEnWeapon, m_enArrangeID) == 0x120, "");
 
 class GfInitParamBelonging : public GfInitParam {
 public:

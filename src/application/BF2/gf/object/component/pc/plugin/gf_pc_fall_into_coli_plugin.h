@@ -26,6 +26,7 @@ class FallIntoColiPlugin : public Plugin {
 
 public:
   FallIntoColiPlugin();
+  static FallIntoColiPlugin *create();
   ~FallIntoColiPlugin();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);

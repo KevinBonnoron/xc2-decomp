@@ -9,7 +9,8 @@
 
 namespace gf {
 struct GF_OBJ_HANDLE;
-}
+class GfGameTalk;
+} // namespace gf
 
 namespace ml {
 class Scn;
@@ -19,6 +20,8 @@ class EventView;
 namespace event {
 
 class Manager : public mm::mtl::PtrSingleton<Manager>, public ml::IWorkEvent, public ml::IWorkBackground {
+  friend class ::gf::GfGameTalk;
+
 public:
   static constexpr u32 MANAGER_COUNT = 64;
 

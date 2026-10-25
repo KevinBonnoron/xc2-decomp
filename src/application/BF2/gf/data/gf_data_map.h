@@ -100,6 +100,7 @@ public:
   static CLOUD_SEA getCloudType(u32 map);
   static void setCloudType(u32 map, CLOUD_SEA cloudType);
   static bool isArcadiaDestroy();
+  static u32 getDevelopMapId(u32 map);
 };
 
 } // namespace gf

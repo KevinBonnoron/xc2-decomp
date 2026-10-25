@@ -27,6 +27,7 @@ public:
   };
 
   GfComWind();
+  virtual ~GfComWind();
   void setup(const SetupInfo &info);
   void cleanup();
   const mm::mtl::RTTI *getRTTI() const override;

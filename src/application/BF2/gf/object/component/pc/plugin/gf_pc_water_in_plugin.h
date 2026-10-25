@@ -22,6 +22,7 @@ class WaterInPlugin : public Plugin {
 
 public:
   WaterInPlugin();
+  static WaterInPlugin *create();
   ~WaterInPlugin();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);

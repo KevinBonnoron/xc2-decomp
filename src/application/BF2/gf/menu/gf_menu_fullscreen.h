@@ -10,6 +10,8 @@ struct Param;
 
 class GfMenuFullScreen : public mm::mtl::PtrSingleton<GfMenuFullScreen> {
 public:
+  static bool isOpen();
+  static bool isSwitching();
   static void close(bool isFadeOut, bool isFadeIn);
   static void open(u32 layer, bool isFadeOut, bool isFadeIn);
   static void enableSwitching();

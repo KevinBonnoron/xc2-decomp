@@ -6,6 +6,7 @@
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_fade.h"
 #include "gf/menu/gf_menu_fullscreen.h"
+#include "gf/menu/gf_menu_hud.h"
 #include "gf/menu/gf_menu_minimap.h"
 #include "gf/menu/object/gf_menu_obj_blade_create.h"
 #include "gf/menu/object/gf_menu_obj_chapter_telop.h"
@@ -20,6 +21,12 @@
 #include "ui/ui_manager.h"
 
 namespace gf {
+
+bool GfMenuManager::isOpenFullScreen() { return GfMenuFullScreen::isOpen(); }
+
+bool GfMenuManager::isSwitchingFullScreen() { return GfMenuFullScreen::isSwitching(); }
+
+void GfMenuManager::changeHUDScene(u32 scene) { GfMenuHUD::changeScene(scene); }
 
 namespace {
 

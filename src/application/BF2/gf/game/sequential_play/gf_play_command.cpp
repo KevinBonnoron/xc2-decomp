@@ -30,6 +30,10 @@
 
 namespace gf {
 
+const mm::mtl::RTTI *GfPlayCom::getRTTI() const { return &m_rtti; }
+
+void GfPlayCom::start() {}
+
 void GfPlayComPause::start() {
   if (unknown10 != 0) {
     GfSequentialPlay::pauseOn(unknown10);

@@ -7,6 +7,7 @@ namespace gf {
 struct AchievQuest;
 struct GfSetupParam;
 struct QuestCompleteParam;
+struct QuestID;
 
 class GfKizunaringBlade {
 public:
@@ -26,6 +27,7 @@ public:
   static bool isNetabareOK(u32 blade, u32 line, u32 level);
   static bool isCompleteLevel(const AchievQuest &achievQuest);
   static void completeAllAchievementForDebug(u32 blade);
+  static void completeAchievementForDebug(QuestID quest);
   static void qevCompleteQuest(const QuestCompleteParam &param);
 };
 

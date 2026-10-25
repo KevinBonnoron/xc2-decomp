@@ -42,6 +42,7 @@ class FallDamagePlugin : public Plugin {
 
 public:
   FallDamagePlugin();
+  static FallDamagePlugin *create();
   ~FallDamagePlugin();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);

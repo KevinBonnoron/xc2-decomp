@@ -1068,6 +1068,11 @@ bool DataIdeaAcc::addPoint(u32 idea, u32 point) {
   return false;
 }
 
+u32 DataIdeaAcc::getPoint(u32 idea) const {
+  const SDataIdea::Idea *ideas = unknown00->unknown00;
+  return ideas[idea].unknown00;
+}
+
 void DataIdeaAcc::setPointForDebug(u32 idea, u32 point) {
   if (this->unknown00 != nullptr) {
     this->unknown00->setPoint(idea, point);

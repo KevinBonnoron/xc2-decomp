@@ -34,6 +34,7 @@ public:
   };
 
   TimerPlugin();
+  static TimerPlugin *create();
   void setActivateTimer(TYPE type, bool isActive);
   virtual bool setup(GfComBehaviorPc &) { return true; }
   virtual void cleanup(GfComBehaviorPc &) {}

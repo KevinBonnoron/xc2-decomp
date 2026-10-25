@@ -20,6 +20,7 @@ class SlidePlugin : public Plugin {
 
 public:
   SlidePlugin();
+  static SlidePlugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);
   void onActivate() override;

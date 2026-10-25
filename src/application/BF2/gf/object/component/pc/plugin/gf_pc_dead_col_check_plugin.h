@@ -20,6 +20,7 @@ class DeadColCheckPlugin : public Plugin {
 
 public:
   DeadColCheckPlugin();
+  static DeadColCheckPlugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);
   void onActivate() override;

@@ -157,6 +157,7 @@ public:
 
 class GfGameUtilCloudSea {
 public:
+  static bool isEnableChangeInn();
   static void setInnCloudSea(CLOUD_SEA cloudSea);
   static CLOUD_SEA getCloudSea();
 };

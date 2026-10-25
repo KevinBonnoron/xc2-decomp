@@ -11,6 +11,7 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 struct GfSetupParam;
+struct GfVoiceName;
 
 class GfGameVoice : public mm::mtl::PtrSingleton<GfGameVoice> {
 public:
@@ -22,6 +23,7 @@ public:
   static void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
   bool isPlayEnemyVoice() const;
   bool isPlayVoice(GF_OBJ_HANDLE *handle) const;
+  void applyHanaVoiceCondirtion(GfVoiceName &name);
 };
 
 } // namespace gf

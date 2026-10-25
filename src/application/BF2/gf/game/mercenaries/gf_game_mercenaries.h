@@ -30,6 +30,7 @@ public:
   static void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
   static void setMissionFlag(u32 mission, u32 missionFlag);
   static u32 getMissionFlag(u32 mission);
+  static void setupNewGameParam();
 };
 
 } // namespace gf

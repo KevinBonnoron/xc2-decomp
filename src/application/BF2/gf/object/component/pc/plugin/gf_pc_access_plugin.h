@@ -31,6 +31,7 @@ class AccessPlugin : public Plugin {
 
 public:
   AccessPlugin();
+  static AccessPlugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);
   void onActivate() override;

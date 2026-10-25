@@ -31,6 +31,7 @@ class LookAxisPlugin : public Plugin {
 
 public:
   LookAxisPlugin();
+  static LookAxisPlugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);
   void onActivate() override;

@@ -50,6 +50,7 @@ public:
   bool getEfpMatrix(const char *name, mm::Mat44 &matrix);
   void addMountEffectEv(const EffectMountSetupEv &setup);
   void removeMountEffectEv(u32 effect);
+  void setSpeed(u32 effect, f32 speed);
 
   u8 _10[0x388 - 0x10];
   fw::EffectCasterBase *unknown388; // Inferred role: effect caster; original member name unknown.

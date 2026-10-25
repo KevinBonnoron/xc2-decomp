@@ -117,6 +117,8 @@ void GfComPackAnim::Mot::changeLayer(u32 oldLayer, u32 newLayer) {
 
 GfComPackAnim::GfComPackAnim() : unknownc8(true) {}
 
+GfComPackAnim::~GfComPackAnim() {}
+
 void GfComPackAnim::cleanup() {
   unknown10.cleanup(getLayer());
   for (arc::CArcData **arc = unknown80.begin(); arc != unknown80.end(); arc++) {

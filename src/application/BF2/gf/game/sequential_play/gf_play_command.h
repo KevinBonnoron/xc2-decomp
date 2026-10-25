@@ -85,10 +85,10 @@ enum PCOMTYPE {
 class GfPlayCom {
 public:
   GfPlayCom(PCOMTYPE type, bool isContinue) : unknown08(true), unknown09(isContinue), unknown0c(type) {}
-  virtual const mm::mtl::RTTI *getRTTI() const { return &m_rtti; }
+  virtual const mm::mtl::RTTI *getRTTI() const;
   virtual ~GfPlayCom() {}
   virtual const char *getFuncName() const = 0;
-  virtual void start() {}
+  virtual void start();
   virtual void end() {}
   virtual bool update(const fw::UpdateInfo &, bool) { return true; }
 

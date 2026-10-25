@@ -124,6 +124,8 @@ void WeatherSnd::update(const fw::UpdateInfo &info, f32 rate, bool isFadeout) {
   applyVolume(info, rate);
 }
 
+bool WeatherSnd::isRoomSe() const { return GfGameManager::isRoom(); }
+
 bool WeatherSnd::isEraseSe() const {
   if (!GfFieldWeather::isDispWeather() || GfGameManager::isStartGame()) {
     return true;

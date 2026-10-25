@@ -12,6 +12,8 @@ namespace gf {
 
 GfComVisible::GfComVisible() : unknown10(nullptr) {}
 
+GfComVisible::~GfComVisible() {}
+
 void GfComVisible::setup(const SetupInfo &info) {
   fw::VisibleObject::SetupInfo visibleInfo;
   visibleInfo.unknown00 = getLayer();

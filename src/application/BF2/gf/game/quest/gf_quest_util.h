@@ -23,7 +23,15 @@ struct GfQuestReward {
     u32 getDevelopZone() const;
 
     mm::mtl::FixStr<64> unknown00; // Inferred role: name; original member name unknown.
-    u8 _44[0x48 - 0x44];
+    // Param() value-initializes these 4 bytes as one array: initializing the two u16 members instead reorders the
+    // zeroing stores in GfQuestManager::execReward, setCompleteQuest and checkQuestComplete.
+    union {
+      u8 _44[0x48 - 0x44];
+      struct {
+        u16 unknown44; // Role and original member name unknown.
+        u16 m_developZone;
+      };
+    };
   };
 
   Param unknown00[12]; // Inferred role: params; original member name unknown.
@@ -31,6 +39,7 @@ struct GfQuestReward {
   u8 _362[0x368 - 0x362];
 };
 
+static_assert(offsetof(GfQuestReward::Param, m_developZone) == 0x46, "");
 static_assert(sizeof(GfQuestReward::Param) == 0x48, "");
 static_assert(offsetof(GfQuestReward, unknown360) == 0x360, "");
 static_assert(sizeof(GfQuestReward) == 0x368, "");

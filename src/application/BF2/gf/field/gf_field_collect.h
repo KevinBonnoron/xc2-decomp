@@ -13,6 +13,7 @@ struct GfSetupParam;
 class GfFieldCollect : public mm::mtl::PtrSingleton<GfFieldCollect> {
 public:
   void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
+  void seqEnd(float time);
   static void build(const GfSetupParam &param);
   static void destroy();
   static void update(const fw::UpdateInfo &info);

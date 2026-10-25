@@ -3,6 +3,7 @@
 #include "gf/game/salvage/gf_game_salvage.h"
 #include "gf/gf_manager.h"
 #include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gf/scom/gf_scom_fade.h"
 #include "gmk/gmk_manager.h"
 #include "ml/dev_clock.h"
@@ -41,6 +42,11 @@ void StateSalvageTBoxCheck::update(GfGameSalvage *salvage, const fw::UpdateInfo 
   } else {
     reqState(GfGameSalvage::STATE_ITEM_SELECT);
   }
+}
+
+void StateSalvageErrorMessage::enter(GfGameSalvage *, ai::State *) {
+  context = GfMenuCallContext::create();
+  GfMenuObjCommonText::open(context, 0xe, 0);
 }
 
 void StateSalvageErrorMessage::leave(GfGameSalvage *, ai::State *) {

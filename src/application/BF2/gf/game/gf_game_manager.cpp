@@ -449,6 +449,8 @@ void GfGameManager::gevMercenariesMissionFlag(u32 mission, u32 flag, u32 value) 
   GfGameMercenaries::gevMercenariesMissionFlag(mission, flag, value);
 }
 
+void IQuestEvent::qevCompleteQuest(const QuestCompleteParam &) {}
+
 void GfGameManager::qevCompleteQuest(const QuestCompleteParam &param) {
   GfGameMercenaries::qevCompleteQuest(param);
   if (GfKizunaringManager::get() != nullptr) {

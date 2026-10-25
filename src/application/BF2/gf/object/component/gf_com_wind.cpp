@@ -12,6 +12,8 @@ namespace gf {
 
 GfComWind::GfComWind() : unknown10(nullptr) {}
 
+GfComWind::~GfComWind() { ; }
+
 void GfComWind::setup(const SetupInfo &info) {
   GfComTransform *transform = unknown08->getComponent<GfComTransform>();
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame = transform->unknown18.get() == nullptr ? transform->unknown10 : transform->unknown18;

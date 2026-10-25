@@ -22,6 +22,7 @@ class ColVelCalculatorPlugin : public Plugin {
 
 public:
   ColVelCalculatorPlugin();
+  static ColVelCalculatorPlugin *create();
   void onActivate() override;
   virtual bool setup(GfComBehaviorPc &) { return true; }
   virtual void cleanup(GfComBehaviorPc &) {}

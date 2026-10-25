@@ -10,6 +10,7 @@ namespace mm {
 struct Vec3;
 namespace mtl {
 class RTTI;
+template <int LEN> class FixStr;
 } // namespace mtl
 } // namespace mm
 
@@ -30,6 +31,8 @@ enum GF_EVT_MODEL {
 
 class GfEvtModel {
 public:
+  static mm::mtl::RTTI m_rtti;
+
   virtual ~GfEvtModel();
   virtual const mm::mtl::RTTI *getRTTI() const;
   virtual void update(const fw::UpdateInfo &info);
@@ -43,6 +46,8 @@ public:
   virtual void setWeaponFieldState();
   virtual void setWeaponBattleMount();
   virtual void setWeaponFieldMount();
+  bool isValid() const;
+  bool isBusy(mm::mtl::FixStr<128> *name) const;
   void resetMount(GfEvtModel *parent);
   void setMount(GfEvtModel *parent, const char *bone);
   void setMount(GfEvtModel *parent, const char *bone, const mm::Vec3 &pos, const mm::Vec3 &rot);

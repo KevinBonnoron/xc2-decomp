@@ -30,6 +30,8 @@ public:
   void finalize();
   static bool isInitialized();
   static void update(const fw::UpdateInfo &info);
+  static bool isPlaying();
+  static bool isError();
   static void play(const GfSetupPfTalk &talk);
   static void end();
 

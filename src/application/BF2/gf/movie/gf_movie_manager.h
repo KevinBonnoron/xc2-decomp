@@ -19,6 +19,8 @@ public:
   static void destroy();
   void close();
   void open(mm::mtl::IAllocator *allocator, u32 layer);
+  void open(mm::mtl::IAllocator *allocator);
+  void open(mm::mtl::IAllocator *allocator, int width, int height);
   bool set_file(const char *path);
   f32 get_length();
   f32 pos();

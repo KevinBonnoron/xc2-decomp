@@ -21,6 +21,7 @@ class FootStepPlugin : public Plugin {
 
 public:
   FootStepPlugin();
+  static FootStepPlugin *create();
   virtual bool setup(GfComBehavior &behavior);
   void setAnkleHeight(GfComBehavior &behavior);
   virtual void cleanup(GfComBehavior &behavior);

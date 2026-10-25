@@ -53,6 +53,7 @@ public:
   };
 
   GfComPackAnim();
+  virtual ~GfComPackAnim();
   void cleanup();
   void setup(const SetupInfo &info);
   void play(const char *name);

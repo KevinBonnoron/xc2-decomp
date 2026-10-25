@@ -29,6 +29,7 @@ class LurePlugin : public Plugin {
 
 public:
   LurePlugin();
+  static LurePlugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);
   void onActivate() override;

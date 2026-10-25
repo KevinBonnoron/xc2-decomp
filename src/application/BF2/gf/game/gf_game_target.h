@@ -15,6 +15,7 @@ public:
   static void destroy();
   static void update(const fw::UpdateInfo &info);
   static void lockTarget(bool isLock);
+  void changeBattleTarget(bool isEnable);
 };
 
 } // namespace gf

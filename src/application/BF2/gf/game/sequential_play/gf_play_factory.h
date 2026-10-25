@@ -1,5 +1,6 @@
 #pragma once
 #include "gf/game/quest/gf_quest_info.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
 
@@ -33,6 +34,7 @@ public:
   static void createMiniGame();
   static bool createMenuQuestList();
   static bool createMenuKizunaring(u32 blade);
+  static bool createMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param);
   static bool createSalvage(GF_OBJ_HANDLE *handle);
   static bool createCollect(GF_OBJ_HANDLE *handle);
   static bool createMapGimmick(GF_OBJ_HANDLE *handle);

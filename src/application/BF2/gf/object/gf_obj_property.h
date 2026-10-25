@@ -79,9 +79,21 @@ static_assert(offsetof(GfObjProperty, unknown18) == 0x18, "");
 
 class GfObjPropertyMap : public GfObjProperty {};
 
-class GfObjPropertyDriver : public GfObjProperty {};
+class GfObjPropertyDriver : public GfObjProperty {
+public:
+  u8 _20[0x88 - 0x20];
+  GfObjPropertyCharacter unknown88; // Inferred role: character, pointed to by unknown10; original member name unknown.
+};
 
-class GfObjPropertyBlade : public GfObjProperty {};
+static_assert(offsetof(GfObjPropertyDriver, unknown88) == 0x88, "");
+
+class GfObjPropertyBlade : public GfObjProperty {
+public:
+  u8 _20[0x88 - 0x20];
+  GfObjPropertyCharacter unknown88; // Inferred role: character, pointed to by unknown10; original member name unknown.
+};
+
+static_assert(offsetof(GfObjPropertyBlade, unknown88) == 0x88, "");
 
 class GfObjPropertyPcWeapon : public GfObjProperty {};
 
@@ -89,7 +101,13 @@ class GfObjPropertyEnWeapon : public GfObjProperty {};
 
 class GfObjPropertyBelonging : public GfObjProperty {};
 
-class GfObjPropertyEnemy : public GfObjProperty {};
+class GfObjPropertyEnemy : public GfObjProperty {
+public:
+  u8 _20[0x88 - 0x20];
+  GfObjPropertyCharacter unknown88; // Inferred role: character, pointed to by unknown10; original member name unknown.
+};
+
+static_assert(offsetof(GfObjPropertyEnemy, unknown88) == 0x88, "");
 
 class GfObjPropertyNpc : public GfObjProperty {};
 

@@ -3,6 +3,7 @@
 
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_hana.h"
+#include "gf/data/gf_data_idea.h"
 #include "gf/data/gf_item_handle.h"
 #include "gf/game/quest/gf_achiev_quest.h"
 #include "mm_mtl/fixed_array.h"
@@ -98,12 +99,13 @@ enum {
 constexpr u32 PERSONALITY_VOICE_FIRST = 61;
 
 struct SDataBlade {
-  u16 unknown00; // Inferred role: activate; original member name unknown.
-  u16 unknown02; // Inferred role: creator; original member name unknown.
-  u16 unknown04; // Inferred role: set driver; original member name unknown.
-  u16 unknown06; // Inferred role: id; original member name unknown.
-  u32 unknown08; // Inferred role: born time; original member name unknown.
-  u8 _00c[0x034 - 0x00c];
+  u16 unknown00;       // Inferred role: activate; original member name unknown.
+  u16 unknown02;       // Inferred role: creator; original member name unknown.
+  u16 unknown04;       // Inferred role: set driver; original member name unknown.
+  u16 unknown06;       // Inferred role: id; original member name unknown.
+  u32 unknown08;       // Inferred role: born time; original member name unknown.
+  SDataIdea unknown0c; // Inferred role: idea; original member name unknown.
+  u8 _02c[0x034 - 0x02c];
   u32 unknown34;                                    // Inferred role: trust point; original member name unknown.
   GfIdea unknown38;                                 // Inferred role: trust rank; original member name unknown.
   mm::mtl::FixedArray<SDataBladeArts, 3> unknown3c; // Inferred role: arts; original member name unknown.

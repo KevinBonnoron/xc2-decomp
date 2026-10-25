@@ -31,6 +31,10 @@ bool GfGameTalk::isInitialized() { return get() != nullptr && get()->unknown08; 
 
 void GfGameTalk::update(const fw::UpdateInfo &) {}
 
+bool GfGameTalk::isPlaying() { return event::Manager::get()->isPlay(); }
+
+bool GfGameTalk::isError() { return (event::Manager::get()->unknown18 & event::Manager::FLAG_PLAY_END) != 0; }
+
 void GfGameTalk::play(const GfSetupPfTalk &talk) {
   u8 *list = Bdat::getFP("EVT_listList");
   int listTop = Bdat::getIdTop(list);

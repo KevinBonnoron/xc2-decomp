@@ -25,7 +25,9 @@ struct SDataEnemy {
   u8 unknown05_3 : 1; // Inferred role: no camera fade; original member name unknown.
   u8 unknown05_4 : 1; // Inferred role: weapon draw disp; original member name unknown.
   u8 : 3;
-  u8 _006[0x012 - 0x006];
+  u8 _006[0x00a - 0x006];
+  u16 unknown0a; // Inferred role: blade id; original member name unknown.
+  u8 _00c[0x012 - 0x00c];
   u16 unknown12; // Inferred role: gold rev; original member name unknown.
   u8 _014[0x01f - 0x014];
   u8 unknown1f; // Inferred role: link radius; original member name unknown.

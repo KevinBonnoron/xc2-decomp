@@ -2,6 +2,8 @@
 
 #include "framework/movie/movie_manager.h"
 #include "gf/gf_allocator.h"
+#include "gf/menu/object/gf_menu_obj_movie_layer.h"
+#include "ui/object/ui_screen_object.h"
 
 namespace gf {
 
@@ -22,6 +24,20 @@ void GfMovieManager::destroy() {
 void GfMovieManager::close() { fw::MovieManager::get()->close(); }
 
 void GfMovieManager::open(mm::mtl::IAllocator *allocator, u32 layer) { fw::MovieManager::get()->open(allocator, layer); }
+
+void GfMovieManager::open(mm::mtl::IAllocator *allocator) {
+  u32 layer = GfMenuObjMovieLayer::createMovieLayer(0x500, 0x2d0, ui::UIScreenObject::OnMemoryInfo{0, 3});
+  if (layer != 0) {
+    fw::MovieManager::get()->open(allocator, layer);
+  }
+}
+
+void GfMovieManager::open(mm::mtl::IAllocator *allocator, int width, int height) {
+  u32 layer = GfMenuObjMovieLayer::createMovieLayer(width, height, ui::UIScreenObject::OnMemoryInfo{1, 3});
+  if (layer != 0) {
+    fw::MovieManager::get()->open(allocator, width, height, layer);
+  }
+}
 
 bool GfMovieManager::set_file(const char *path) { return fw::MovieManager::get()->set_file(path); }
 

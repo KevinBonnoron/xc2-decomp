@@ -77,7 +77,7 @@ public:
   virtual ~IQuestEvent() {}
   virtual void qevAchievementCount(const QuestOrderParam &) {}
   virtual void qevOrderQuest(const QuestOrderParam &) {}
-  virtual void qevCompleteQuest(const QuestCompleteParam &) {}
+  virtual void qevCompleteQuest(const QuestCompleteParam &);
   virtual void qevPreCompleteQuest(const QuestPreCompleteParam &) {}
   virtual void qevChangeTaskState(const QuestTaskParam &) {}
   virtual void qevLoadTaskState(u32) {}

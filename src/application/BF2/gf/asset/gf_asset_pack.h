@@ -45,6 +45,7 @@ public:
   GfAssetResource *getResource(GfFileIdx index) const;
   GfAssetType getAssetType() const;
   void dispAssetLogForDebug();
+  void setLoadComplete();
   const char *getAssetName() const;
   bool isPreSizeSizeValid() const;
   void setResource(GfFileIdx index, GfAssetResource *resource);

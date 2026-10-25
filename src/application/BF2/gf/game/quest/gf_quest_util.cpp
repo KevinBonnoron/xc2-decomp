@@ -6,6 +6,7 @@
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_manager.h"
+#include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
@@ -21,6 +22,8 @@
 #include "mm_mtl/fixstr.h"
 
 namespace gf {
+
+u32 GfQuestReward::Param::getDevelopZone() const { return GfDataMap::getDevelopMapId(m_developZone); }
 
 namespace {
 

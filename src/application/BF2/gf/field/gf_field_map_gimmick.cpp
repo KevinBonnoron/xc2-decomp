@@ -9,6 +9,7 @@
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
+#include "gmk/gmk_grave.h"
 #include "gmk/gmk_manager.h"
 #include "mm_mtl/array.h"
 
@@ -97,6 +98,22 @@ void GfFieldGrave::create(GF_OBJ_HANDLE *handle) {
   this->unknown10 = handle;
   GfMenuManager::openCommonWindow(COMMON_WINDOW_GRAVE);
   unknown20 = &GfFieldGrave::seqWaitToSelect;
+}
+
+void GfFieldGrave::seqWaitToSelect(f32) {
+  if (!GfMenuManager::isOpenCommonWindow()) {
+    s16 result = GfMenuManager::getCommonWindowResult();
+    if (result == 0) {
+      gmk::GmkGrave *grave = static_cast<gmk::GmkGrave *>(gmk::getBindedGmkInst(unknown10));
+      if (grave == nullptr) {
+        dispose();
+      } else {
+        grave->reqPopEnemy();
+      }
+    }
+    unknown20 = nullptr;
+    m_end = true;
+  }
 }
 
 void GfFieldGrave::dispose() {

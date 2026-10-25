@@ -23,6 +23,7 @@ class TerrainDamagePlugin : public Plugin {
 
 public:
   TerrainDamagePlugin();
+  static TerrainDamagePlugin *create();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);
   void onActivate() override;

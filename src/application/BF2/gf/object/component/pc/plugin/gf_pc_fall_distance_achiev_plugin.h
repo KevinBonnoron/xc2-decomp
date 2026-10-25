@@ -26,6 +26,7 @@ class FallDistanceAchievPlugin : public Plugin {
 
 public:
   FallDistanceAchievPlugin();
+  static FallDistanceAchievPlugin *create();
   ~FallDistanceAchievPlugin();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);

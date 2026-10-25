@@ -13,6 +13,7 @@ class Skeleton;
 } // namespace anm
 namespace fw {
 class ModelObject;
+class MessageObject;
 } // namespace fw
 namespace mm {
 namespace mtl {
@@ -22,12 +23,18 @@ class RTTI;
 
 namespace gf {
 
+struct MsgObjectNotifyDamage;
+struct MsgObjectNotifyDead;
+
 class GfComModel : public GfComponent {
 public:
   static mm::mtl::RTTI m_rtti;
   static const u32 COMPONENT_INDEX = 1;
 
   bool isRender() const;
+  void procMsgObjectNotifyDead(fw::MessageObject *sender, MsgObjectNotifyDead &message);
+  void procMsgObjectNotifyDamage(fw::MessageObject *sender, MsgObjectNotifyDamage &message);
+  void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
   void setModelScale(f32 scale);
 
   u8 _10[0x18 - 0x10];

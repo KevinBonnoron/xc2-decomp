@@ -3698,6 +3698,17 @@ tlist_iterator::tlist_iterator(QTYPE type) : unknown08(type), unknown0c(-1) {
   unknown10 = unknown00->getTaskCategory(type);
 }
 
+u16 tlist_iterator::getPurposeID() const {
+  if (unknown08 == QTYPE_NONE) {
+    CBdatWrapper *fp;
+    u16 purpose;
+    unknown00->getTaskInfoByIndex(fp, purpose, unknown0c);
+    return purpose;
+  }
+
+  return unknown10->ids[unknown0c];
+}
+
 tlist_iterator tlist_iterator::operator++() {
   if (unknown0c >= 0) {
     bool isValid;

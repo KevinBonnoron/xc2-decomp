@@ -1,6 +1,5 @@
 #include "gf/game/gf_game_util.h"
 
-#include "gf/object/gf_obj_handle.h"
 #include <stdarg.h>
 
 #include "battle/data_manager_battle.h"
@@ -30,6 +29,7 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/event/gf_event.h"
 #include "gf/field/gf_field_gimmick.h"
+#include "gf/field/gf_field_weather.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_mount.h"
@@ -44,6 +44,7 @@
 #include "gf/object/gf_append.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_property.h"
 #include "gf/object/gf_obj_setup.h"
@@ -62,6 +63,27 @@
 #include "mm_mtl/rtti.h"
 
 namespace gf {
+
+bool GfGameUtilCloudSea::isEnableChangeInn() {
+  u32 map = GfGameManager::getMapID();
+  if (map == 0) {
+    return false;
+  }
+
+  u32 condition = GfBdatMaplist::get()->getMaplistebb_inn_cndID(map);
+  if (condition == 0) {
+    return false;
+  }
+
+  return GfGameCond::isGameCond(condition);
+}
+
+void GfGameUtilCloudSea::setInnCloudSea(CLOUD_SEA cloudSea) {
+  GfDataMap::setCloudType(GfGameManager::getMapID(), cloudSea);
+  GfFieldWeather::setCloudSea(GfGameManager::getMapID(), cloudSea);
+}
+
+CLOUD_SEA GfGameUtilCloudSea::getCloudSea() { return GfFieldWeather::getCurrentCloudSea(); }
 
 enum {
   GAME_COND_METSU_WITHOUT_CRYSTAL = 2695,

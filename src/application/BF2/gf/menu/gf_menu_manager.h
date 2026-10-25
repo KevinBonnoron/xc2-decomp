@@ -65,6 +65,8 @@ public:
   static bool isRegionUS();
   void postUpdate(const fw::UpdateInfo &info);
   static bool isOpenFullScreen();
+  static bool isSwitchingFullScreen();
+  static void changeHUDScene(u32 scene);
   static void openFullScreen(u32 screen, bool isFadeOut, bool isFadeIn);
   static void openMenu(u32 menu);
   static void openBladeCreateFromEvent(u32 event);

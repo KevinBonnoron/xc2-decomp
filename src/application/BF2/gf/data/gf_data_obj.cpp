@@ -523,6 +523,8 @@ static void unknown002(u32 &value, SDataBlade &dataBlade, u32 percentEffect, u32
   value = base + base * percent;
 }
 
+SDataIdea *DataObjBlade::getIdea() const { return &GfDataBlade::getSDataBlade(getBdatId())->unknown0c; }
+
 u32 DataObjBlade::getPArmor(bool isVirtual) const {
   u32 pArmor = GfDataBlade::getParmor(getBdatId());
   GfBdatItem *bdatItem = GfBdatItem::get();

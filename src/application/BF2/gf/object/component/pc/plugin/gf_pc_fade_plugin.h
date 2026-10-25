@@ -37,6 +37,7 @@ public:
   };
 
   FadePlugin();
+  static FadePlugin *create();
   ~FadePlugin();
   virtual bool setup(GfComBehaviorPc &behavior);
   virtual void cleanup(GfComBehaviorPc &behavior);

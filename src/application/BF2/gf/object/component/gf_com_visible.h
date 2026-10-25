@@ -22,6 +22,7 @@ public:
   struct SetupInfo {};
 
   GfComVisible();
+  virtual ~GfComVisible();
   void setup(const SetupInfo &info);
   void cleanup();
   void changeLayer(u32 oldLayer, u32 newLayer) override;
