@@ -294,6 +294,20 @@ int GfItemBoxBase::countItem(u32 item) {
   return count;
 }
 
+GfItemHandle GfItemBoxBase::getNoEquipItemHandle(u32 item) {
+  if (item != 0) {
+    ItemType::Type type;
+    u32 index;
+    GfDataItem::getItemType(type, index, item);
+    for (item_iterator it = begin(type), last = end(type); it != last; ++it) {
+      if (it->getType() == type && it->unknown00_0 == index && !it->unknown03_6) {
+        return it->getHandle();
+      }
+    }
+  }
+  return GfItemHandle(0);
+}
+
 int GfItemBoxBase::countItemCategory(ItemType::Type type) {
   int count = 0;
   for (item_iterator it = begin(type), last = end(type); it != last; ++it) {

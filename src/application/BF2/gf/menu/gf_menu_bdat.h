@@ -25,7 +25,11 @@ public:
   static bool isValidBdatID(u8 *bdat, int id);
   static void getMenuOffset(int id, MenuOffset &offset);
   static u32 getIconImageIndex(int icon);
+  static void initialize();
+  static u32 getTopDriverIconID();
   static u32 getTopBladeIconID();
+  static int getFieldSkillTypeMax();
+  static u8 *getBladeDataFP(u32 blade, u32 &id);
   static u16 getIconIDFromArtsID(u16 arts);
   static int getIconIDFromWeatherType(u32 weatherType);
 };

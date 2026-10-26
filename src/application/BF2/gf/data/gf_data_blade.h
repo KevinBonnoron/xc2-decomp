@@ -274,6 +274,9 @@ public:
   static u32 getCreator(u32 blade);
   static void setActivateDriver(u32 bladeId, int slot, u32 driverId, u32 option);
   static SDataBlade *getSDataBlade(u32 blade);
+  static SDataIdea *getSDataIdea(u32 blade);
+  static void setUiCommonBlade(const SDataBlade &dataBlade, u32 blade);
+  static void setActCommonBlade(const SDataBlade &dataBlade, u32 blade);
   static u32 getBladeID(u32 index);
   static u32 getBladeWpnType(u32 blade);
   static bool isDisableHomuraHikari(u32 blade);

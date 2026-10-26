@@ -51,6 +51,20 @@ static const u16 saveScenarioEvents[] = {
     10405, 10406, 10410, 10411, 10418, 10428, 10433, 10437, 10439, 10444, 10451, 10456, 10458, 10461, 10463, 10464, 10465, 10468, 10471, 10473, 10485, 10488, 10491, 10494,
 };
 
+// Inferred role: bdat id of the event list holding the event; original name unknown.
+static u32 unknown001(u32 event) {
+  for (const EventListBdat *list = eventListBdats; list != eventListBdats + sizeof(eventListBdats) / sizeof(eventListBdats[0]); list++) {
+    u8 *bdat = GfDataBdat::getFP(list->bdat);
+    u32 top = Bdat::getIdTop(bdat);
+    u32 end = top + Bdat::getIdCount(bdat);
+    if (top <= event && event < end) {
+      return list->bdat;
+    }
+  }
+
+  return 0;
+}
+
 int GfDataEvent::getEventPlayFlag(u32 event) {
   if (event == 0) {
     return -1;
@@ -73,6 +87,46 @@ int GfDataEvent::getEventPlayFlag(u32 event) {
   }
 
   return -1;
+}
+
+int GfDataEvent::getEventType(u32 event) {
+  u8 *bdat = GfDataBdat::getFP(unknown001(event));
+  if (bdat != nullptr) {
+    return static_cast<u8>(Bdat::getValCheck(bdat, "category", event, 1));
+  }
+
+  return 0;
+}
+
+int GfDataEvent::getEventAfterScriptStartID(u32 event) {
+  u8 *bdat = GfDataBdat::getFP(unknown001(event));
+  if (bdat != nullptr) {
+    return Bdat::getValCheck(bdat, "scriptStartId", event, 6);
+  }
+
+  return 0;
+}
+
+const char *GfDataEvent::getEventAfterScriptName(u32 event) {
+  u8 *bdat = GfDataBdat::getFP(unknown001(event));
+  if (bdat != nullptr) {
+    return reinterpret_cast<const char *>(Bdat::getValCheck(bdat, "scriptName", event, 7));
+  }
+
+  return nullptr;
+}
+
+const char *GfDataEvent::getEventName(u32 event) {
+  u8 *bdat = GfDataBdat::getFP(unknown001(event));
+  const char *name = nullptr;
+  if (bdat != nullptr) {
+    name = reinterpret_cast<const char *>(Bdat::getValCheck(bdat, "evtName", event, 7));
+  }
+  if (name == nullptr) {
+    name = "";
+  }
+
+  return name;
 }
 
 bool GfDataEvent::isBladeCreateEvent(u32 event) { return event - EVENT_BLADE_CREATE_FIRST < EVENT_BLADE_CREATE_COUNT; }

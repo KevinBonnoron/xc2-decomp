@@ -1016,4 +1016,43 @@ u32 GfDataBlade::getBladeNumForWeapon(u32 weaponType) {
 
 bool GfDataBlade::isNeedChangeWeapon(u32 blade) { return blade - BLADE_CHANGE_WEAPON_RANGE_FIRST < BLADE_CHANGE_WEAPON_RANGE_COUNT || blade == BLADE_CHANGE_WEAPON; }
 
+bool GfDataBlade::isActivateParty(u32 blade) {
+  if (blade == 0) {
+    return false;
+  }
+
+  if (getSDataBlade(blade)->unknown00 != BLADE_ACTIVATE_DRIVER) {
+    return false;
+  }
+
+  return static_cast<u32>(GfDataParty::getDriverPartyID(getSDataBlade(blade)->unknown04)) < 3;
+}
+
+bool GfDataBlade::isActivateReserver(u32 blade) {
+  if (getSDataBlade(blade)->unknown00 != BLADE_ACTIVATE_DRIVER) {
+    return false;
+  }
+
+  u32 driver = getSetDriver(blade);
+  if (driver != 0) {
+    u32 partyId = GfDataParty::getDriverPartyID(driver);
+    return partyId > 2 && partyId != static_cast<u32>(-1);
+  }
+
+  return true;
+}
+
+SDataIdea *GfDataBlade::getSDataIdea(u32 blade) { return &getSDataBlade(blade)->unknown0c; }
+
+void GfDataBlade::setUiCommonBlade(const SDataBlade &dataBlade, u32 blade) {
+  SDataBlade *uiCommonBlade = getSDataBlade(blade);
+  *uiCommonBlade = dataBlade;
+  uiCommonBlade->unknown06 = blade;
+}
+
+void GfDataBlade::setActCommonBlade(const SDataBlade &dataBlade, u32 blade) {
+  *getSDataBlade(blade) = dataBlade;
+  getSDataBlade(blade)->unknown06 = blade;
+}
+
 } // namespace gf

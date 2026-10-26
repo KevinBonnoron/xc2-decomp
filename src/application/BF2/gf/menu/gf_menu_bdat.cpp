@@ -1,5 +1,10 @@
 #include "gf/menu/gf_menu_bdat.h"
 
+#include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_blade.h"
+
 namespace gf {
 
 u8 *GfMenuBdat::s_BdatArray[7];
@@ -9,6 +14,65 @@ u8 *GfMenuBdat::getFP(u32 bdat) {
     return s_BdatArray[bdat];
   }
   return nullptr;
+}
+
+void GfMenuBdat::initialize() {
+  static const char *const names[] = {"MNU_OffsetList", "MNU_IconList", "MNU_Layer", "FLD_FieldSkillList", "ITM_CollectionList", "itm_collection", "BTL_Arts_Dr"};
+
+  for (u32 i = 0; i < sizeof(names) / sizeof(names[0]); i++) {
+    s_BdatArray[i] = Bdat::getFP(names[i]);
+  }
+}
+
+bool GfMenuBdat::isValidBdatID(u8 *bdat, int id) {
+  if (bdat == nullptr || id < Bdat::getIdTop(bdat)) {
+    return false;
+  }
+
+  return id < Bdat::getIdTop(bdat) + Bdat::getIdCount(bdat);
+}
+
+void GfMenuBdat::getMenuOffset(int id, MenuOffset &offset) {
+  u8 *bdat = s_BdatArray[0];
+  if (isValidBdatID(bdat, id)) {
+    offset.unknown00 = Bdat::getVal(bdat, "offs_x", id).valueF32;
+    offset.unknown04 = Bdat::getVal(bdat, "offs_y", id).valueF32;
+    offset.unknown08 = Bdat::getVal(bdat, "offs_z", id).valueF32;
+    offset.unknown10 = Bdat::getVal(bdat, "bone_name", id).valueString;
+    if (*offset.unknown10 == '\0') {
+      offset.unknown10 = nullptr;
+    }
+  }
+}
+
+u32 GfMenuBdat::getIconImageIndex(int icon) {
+  u8 *bdat = s_BdatArray[1];
+  if (isValidBdatID(bdat, icon)) {
+    return Bdat::getVal(bdat, "icon_index", icon).valueU8;
+  }
+
+  return 0;
+}
+
+u32 GfMenuBdat::getTopDriverIconID() { return 199; }
+
+u32 GfMenuBdat::getTopBladeIconID() { return 207; }
+
+int GfMenuBdat::getFieldSkillTypeMax() { return Bdat::getIdCount(s_BdatArray[3]); }
+
+int GfMenuBdat::getIconIDFromWeatherType(u32 weatherType) { return weatherType + 167; }
+
+u8 *GfMenuBdat::getBladeDataFP(u32 blade, u32 &id) {
+  u8 *bdat;
+  if (GfDataBlade::isCommonBlade(blade)) {
+    bdat = GfDataBdat::getFP(BDAT_BLD_NAME_LIST);
+    blade = GfDataBlade::getBLD_NameList(blade);
+  } else {
+    bdat = GfDataBdat::getFP(BDAT_CHR_BL);
+  }
+
+  id = blade;
+  return bdat;
 }
 
 } // namespace gf

@@ -18,6 +18,7 @@ public:
   static int getEventAfterScriptStartID(u32 event);
   static const char *getEventAfterScriptName(u32 event);
   static u32 getEventID(const char *name);
+  static const char *getEventName(u32 event);
   static int getEventPlayFlag(u32 event);
   static u32 getMapjumpID(u32 event);
   static bool isBladeCreateEvent(u32 event);
