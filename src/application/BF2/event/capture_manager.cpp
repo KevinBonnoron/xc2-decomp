@@ -1,5 +1,8 @@
 #include "event/capture_manager.h"
 
+#include "event/env_manager.h"
+#include "event/fade_ctrl.h"
+#include "event/fade_manager.h"
 #include "fw/fw_debug.h"
 #include "ml/dev_graph.h"
 #include "mm_math/mm_col4.h"
@@ -17,6 +20,56 @@ CaptureManager::CaptureManager() : unknown10(0), unknown14(MODE_MOVIE), unknown1
 void CaptureManager::clear() {
   if ((unknown10 & FLAG_CAPTURE) != 0) {
     stop();
+  }
+}
+
+void CaptureManager::ready() {
+  switch (unknown14) {
+  case MODE_MOVIE:
+    mm::mtl::Singleton<FadeManager>::getPtr()->play(false, 0, FadeCtrl::PRIO_LOW, nullptr);
+    mm::mtl::Singleton<FadeManager>::getPtr()->setDisableFade(true);
+    break;
+  case MODE_DEVELOPER:
+    mm::mtl::Singleton<FadeManager>::getPtr()->play(false, 0, FadeCtrl::PRIO_LOW, nullptr);
+    mm::mtl::Singleton<FadeManager>::getPtr()->setDisableFade(true);
+    break;
+  case MODE_COMPOSER:
+    mm::mtl::Singleton<FadeManager>::getPtr()->play(false, 0, FadeCtrl::PRIO_LOW, nullptr);
+    mm::mtl::Singleton<FadeManager>::getPtr()->setDisableFade(true);
+    break;
+  case MODE_AFTEREFFECT:
+    mm::mtl::Singleton<FadeManager>::getPtr()->play(false, 0, FadeCtrl::PRIO_LOW, nullptr);
+    mm::mtl::Singleton<FadeManager>::getPtr()->setDisableFade(true);
+    break;
+  default:
+    break;
+  }
+  if (unknown18 != 0) {
+    mm::mtl::Singleton<EnvManager>::getPtr()->setColorFilter(EnvManager::COLORFILTER_TYPE_PLAY, unknown18, unknown18, 0.0f);
+  }
+}
+
+void CaptureManager::stop() {
+  MODE mode = unknown14;
+  unknown10 &= ~FLAG_CAPTURE;
+  switch (mode) {
+  case MODE_MOVIE:
+    mm::mtl::Singleton<FadeManager>::getPtr()->setDisableFade(false);
+    break;
+  case MODE_DEVELOPER:
+    mm::mtl::Singleton<FadeManager>::getPtr()->setDisableFade(false);
+    break;
+  case MODE_COMPOSER:
+    mm::mtl::Singleton<FadeManager>::getPtr()->setDisableFade(false);
+    break;
+  case MODE_AFTEREFFECT:
+    mm::mtl::Singleton<FadeManager>::getPtr()->setDisableFade(false);
+    break;
+  default:
+    break;
+  }
+  if (unknown18 != 0) {
+    mm::mtl::Singleton<EnvManager>::getPtr()->setColorFilter(EnvManager::COLORFILTER_TYPE_STOP, -1, -1, 0.0f);
   }
 }
 

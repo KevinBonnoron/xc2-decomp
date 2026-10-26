@@ -45,6 +45,8 @@ public:
   virtual void OnResEvent(const PARAM &param);
 
 private:
+  friend class MdlstmManager;
+
   u32 unknown08;                  // Inferred role: flags; original member name unknown.
   STATE unknown0c;                // Inferred role: state; original member name unknown.
   f32 unknown10;                  // Inferred role: frame; original member name unknown.

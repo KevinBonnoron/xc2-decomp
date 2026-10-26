@@ -39,6 +39,7 @@
 #include "event/stm_pack_res.cpp"
 #include "event/stm_pack_memory.cpp"
 #include "event/stm_manager.cpp"
+#include "event/mdlstm_data.cpp"
 #include "event/mdlstm_obj.cpp"
 #include "event/mdlstm_manager.cpp"
 #include "event/motstm_manager.cpp"

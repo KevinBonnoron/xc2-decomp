@@ -7,6 +7,7 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_util.h"
+#include "gf/gf_pause.h"
 #include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/gf_obj.h"
@@ -119,6 +120,24 @@ f32 Scheduler::getRotY(gf::GfObj *obj, gf::GfObj *target) {
   const mm::Vec3 &pos = transform->getPosition();
   const mm::Vec3 &targetPos = targetTransform->getPosition();
   return -atan2f(pos.x - targetPos.x, -(pos.z - targetPos.z));
+}
+
+void Scheduler::func_turn(gf::GfObj *obj) {
+  if (gf::GfPause::isPause(1)) {
+    return;
+  }
+  if ((unknown0c & USE_TURN) != 0) {
+    gf::GfObj *leader = gf::GfGameParty::getLeaderTransformObj();
+    gf::GfGameUtil::ExecTurnCmdInfo info;
+    f32 rotY = getRotY(obj, leader);
+    info.unknown00 = unknown10;
+    info.unknown08 = rotY;
+    info.unknown0c = 1.0f;
+    info.unknown10 = 0.7853982f;
+    info.unknown14 = 0;
+    gf::GfGameUtil::execTurnCmd(info);
+  }
+  unknown50[ORDER_FLD2EVT] = &Scheduler::func_turn_loop;
 }
 
 void Scheduler::func_turn_loop(gf::GfObj *obj) {

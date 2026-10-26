@@ -1,5 +1,6 @@
 #include "event/todo_manager.h"
 
+#include "event/frame_manager.h"
 #include "event/i_todo.h"
 #include "fw/fw_debug.h"
 #include "ml/dev_graph.h"
@@ -84,6 +85,14 @@ void TodoManager::doit() {
   size_t index = unknown8c20;
   unknown18[index].getTodo()->doit(unknown18[index].getParam());
   unknown8c20++;
+}
+
+void TodoManager::add(TodoItem::CREATE_FUNC create, const Param &param) {
+  f32 frame = mm::mtl::Singleton<FrameManager>::getPtr()->getFrame();
+  updateAdd();
+  ITodo *todo = create();
+  unknown18.push_back(TodoItem(frame, create, param, todo));
+  doit();
 }
 
 void TodoManager::undo() {

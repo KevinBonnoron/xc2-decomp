@@ -1,5 +1,6 @@
 #pragma once
 #include "event/i_manager.h"
+#include "event/mdlstm_data.h"
 #include "event/mdlstm_obj.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
@@ -7,6 +8,10 @@
 
 namespace gf {
 struct GF_OBJ_HANDLE;
+}
+
+namespace mtl {
+class ALLOC_HANDLE;
 }
 
 namespace event {
@@ -18,6 +23,7 @@ public:
   enum {
     FLAG_CREATE = 1 << 0,
     FLAG_START = 1 << 1,
+    FLAG_UNKNOWN4 = 1 << 2, // Role and original name unknown.
   };
 
   enum {
@@ -27,11 +33,14 @@ public:
   MdlstmManager();
   virtual ~MdlstmManager() {}
   void clear();
+  void create(mtl::ALLOC_HANDLE handle);
   void update();
   void render();
   void start();
   void setReuseEnable(bool isReuseEnable);
   void setReuseFlag(int reuseFlag);
+  f32 getNextCutFrame(f32 frame);
+  void addReplaceInfo(const MdlstmData::Info &info);
   virtual void OnEventProc(MSG_TYPE type);
 
   bool isReuseEnable() const;

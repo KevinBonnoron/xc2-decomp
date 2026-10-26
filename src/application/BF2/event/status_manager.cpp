@@ -3,9 +3,14 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include "event/chara_obj.h"
 #include "event/manager.h"
+#include "event/object.h"
+#include "event/object_chara.h"
+#include "event/object_manager.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/data/gf_object_type.h"
 #include "gf/game/event/gf_game_event.h"
 #include "gf/request/gf_req_scom.h"
 #include "mm_math/mm_math.h"
@@ -78,6 +83,48 @@ void StatusManager::setGameFlag2(u32 flag, int value, u32 math) const {
   case MATH_ADD:
     gf::GfGameFlag::setLocal(2, flag, mm::clamp(static_cast<int>(gf::GfGameFlag::getLocal(2, flag)) + value, 0, 3));
     break;
+  }
+}
+
+void StatusManager::setExtDisp(u32 chara, const char *name, bool isDisp) const {
+  ObjectChara *object = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByID(gf::OBJECT_TYPE_DRIVER, chara);
+  if (object == nullptr) {
+    object = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByID(gf::OBJECT_TYPE_BLADE, chara);
+  }
+  if (object == nullptr) {
+    object = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByID(gf::OBJECT_TYPE_NPC, chara);
+  }
+  if (object == nullptr) {
+    object = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByID(gf::OBJECT_TYPE_ENEMY, chara);
+  }
+  if (object != nullptr && object->getType() == OBJTYPE_CHARA) {
+    object->getCharaObj()->setExtDisp(name, isDisp);
+  }
+}
+
+void StatusManager::setExtDispWeapon(u32 chara, const char *name, bool isDisp) const {
+  ObjectChara *object = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByID(gf::OBJECT_TYPE_DRIVER, chara);
+  if (object == nullptr) {
+    object = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByID(gf::OBJECT_TYPE_BLADE, chara);
+  }
+  if (object != nullptr && object->getType() == OBJTYPE_CHARA) {
+    object->getCharaObj()->setExtDispWeapon(name, isDisp);
+  }
+}
+
+void StatusManager::setExtParam(u32 chara, const char *name, f32 value) const {
+  ObjectChara *object = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByID(gf::OBJECT_TYPE_DRIVER, chara);
+  if (object == nullptr) {
+    object = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByID(gf::OBJECT_TYPE_BLADE, chara);
+  }
+  if (object == nullptr) {
+    object = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByID(gf::OBJECT_TYPE_NPC, chara);
+  }
+  if (object == nullptr) {
+    object = mm::mtl::Singleton<ObjectManager>::getPtr()->searchByID(gf::OBJECT_TYPE_ENEMY, chara);
+  }
+  if (object != nullptr && object->getType() == OBJTYPE_CHARA) {
+    object->getCharaObj()->setExtParam(name, value);
   }
 }
 

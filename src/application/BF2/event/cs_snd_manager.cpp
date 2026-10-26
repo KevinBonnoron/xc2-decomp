@@ -1,7 +1,10 @@
 #include "event/cs_snd_manager.h"
 
+#include "event/debug_manager.h"
 #include "event/extend.h"
 #include "event/frame_manager.h"
+#include "event/status_manager.h"
+#include "framework/lang_util.h"
 #include "framework/sound/sound_manager.h"
 
 namespace fw {
@@ -11,6 +14,20 @@ enum SoundCategory : int;
 namespace event {
 
 CsSndManager::CsSndManager() : unknown10(0), unknown14(0), unknown18(0), unknown1c(0), unknown238(0), m_syncFrameOffset(0.0f) {}
+
+void CsSndManager::makePath(mm::mtl::FixStr<256> &path, const char *name) {
+  path.format("/stream/cs/%s/%s", fw::LangUtil::getVoiceFolder().c_str(), name);
+  if (__builtin_strcmp(name, "bf09170100") == 0 || __builtin_strcmp(name, "bf09370100") == 0 || __builtin_strcmp(name, "bf10430100") == 0 || __builtin_strcmp(name, "bf10440100") == 0 ||
+      __builtin_strcmp(name, "bf10460100") == 0) {
+    if (mm::mtl::Singleton<StatusManager>::getPtr()->getHomuriFlag() == 0) {
+      path += "_h";
+      mm::mtl::Singleton<DebugManager>::getPtr()->playMessage("call HOMURA cssnd");
+    } else {
+      path += "_s";
+      mm::mtl::Singleton<DebugManager>::getPtr()->playMessage("call HIKARI cssnd");
+    }
+  }
+}
 
 void CsSndManager::clear() {
   stop();

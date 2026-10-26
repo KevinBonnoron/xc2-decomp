@@ -30,7 +30,7 @@ public:
   void dispOff();
   void render();
   void preloadAuto(const char *name, bool isFullSize);
-  static void makePath(mm::mtl::FixStr<256> &path, const char *name);
+  static bool makePath(mm::mtl::FixStr<256> &path, const char *name);
   void preload(const char *path, bool isFullSize);
   static bool isSame(const char *path, const char *otherPath);
   bool isLoading() const;

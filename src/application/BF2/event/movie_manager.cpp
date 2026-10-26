@@ -1,8 +1,11 @@
 #include "event/movie_manager.h"
 
+#include "event/debug_manager.h"
 #include "event/extend.h"
 #include "event/manager.h"
 #include "event/skip_manager.h"
+#include "event/status_manager.h"
+#include "framework/lang_util.h"
 #include "gf/gf_allocator.h"
 #include "gf/movie/gf_movie_manager.h"
 #include "ml/scn.h"
@@ -12,7 +15,41 @@ namespace event {
 
 constexpr int CLOSE_WAIT_FRAMES = 2;
 
+namespace {
+
+// Inferred role: removes the first occurrence of a prefix from a movie name; original name unknown.
+void unknown001(mm::mtl::FixStr<256> &name, const char *pattern, int length) {
+  const char *found = __builtin_strstr(name.c_str(), pattern);
+  if (found != nullptr) {
+    name.erase(found - name.c_str(), length);
+  }
+}
+
+} // namespace
+
 MovieManager::MovieManager() : unknown10(0), unknown118(false), unknown220(-1) {}
+
+bool MovieManager::makePath(mm::mtl::FixStr<256> &path, const char *name) {
+  mm::mtl::FixStr<256> movieName = name;
+  unknown001(movieName, "bf", 2);
+  unknown001(movieName, "qst", 3);
+  unknown001(movieName, "fev", 3);
+  unknown001(movieName, "deb", 3);
+  path.format("/stream/movie/mv%s", movieName.c_str());
+  if (__builtin_strcmp(name, "bf10480100") == 0) {
+    if (mm::mtl::Singleton<StatusManager>::getPtr()->getHomuriFlag() == 0) {
+      path += "_h";
+      mm::mtl::Singleton<DebugManager>::getPtr()->playMessage("call HOMURA movie");
+    } else {
+      path += "_s";
+      mm::mtl::Singleton<DebugManager>::getPtr()->playMessage("call HIKARI movie");
+    }
+    if (__builtin_strcmp(fw::LangUtil::getVoiceFolder().c_str(), "us") == 0) {
+      path += "_us";
+    }
+  }
+  return true;
+}
 
 void MovieManager::close() {
   stop();

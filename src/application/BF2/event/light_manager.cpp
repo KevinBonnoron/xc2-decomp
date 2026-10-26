@@ -1,5 +1,7 @@
 #include "event/light_manager.h"
 
+#include "event/cam_interface.h"
+#include "event/cam_manager.h"
 #include "event/extend.h"
 #include "event/light_evt.h"
 #include "event/memory_manager.h"
@@ -61,6 +63,14 @@ void LightManager::clear() {
   clearEvtLight();
   clearOffScrLight();
   unknown14 = 0;
+}
+
+void LightManager::update() {
+  for (u32 i = 1; i < OFFSCR_LIGHT_COUNT; i++) {
+    if (unknown18[i] != nullptr && unknown18[i]->isPlaying()) {
+      unknown18[i]->setPos(mm::mtl::Singleton<CamManager>::getPtr()->unknown001(i)->unknown40);
+    }
+  }
 }
 
 void LightManager::render() {

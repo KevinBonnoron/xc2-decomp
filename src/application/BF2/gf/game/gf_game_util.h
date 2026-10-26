@@ -32,6 +32,14 @@ enum DriverSkillLevelUpResult {
 
 class GfGameUtil {
 public:
+  struct ExecTurnCmdInfo {
+    GF_OBJ_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
+    f32 unknown08;            // Inferred role: target rotation; original member name unknown.
+    f32 unknown0c;            // Inferred role: turn time; original member name unknown.
+    f32 unknown10;            // Inferred role: turn speed; original member name unknown.
+    u32 unknown14;            // Role and original member name unknown.
+  };
+
   static bool isUiGfObjHandleValid(GF_OBJ_HANDLE *handle);
   static bool evalSumFs(int condition, u32 option);
   static bool getNameMsId(u32 &nameId, GF_OBJ_HANDLE *handle);
@@ -122,6 +130,7 @@ public:
   static u32 execAddCommonBlade(const SDataBlade &dataBlade);
   static void changeAlphaBelonging(GF_OBJ_HANDLE *handle, u32 belonging, f32 alpha, f32 time);
   static bool hasBelonging(GF_OBJ_HANDLE *handle, u32 belonging);
+  static void execTurnCmd(const ExecTurnCmdInfo &info);
   static bool isTurnEnd(GF_OBJ_HANDLE *handle);
   static void disposeTurnEnd(GF_OBJ_HANDLE *handle);
   static void execAddDevelopPointArcadia2Iyasaki();

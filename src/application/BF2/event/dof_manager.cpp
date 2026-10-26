@@ -2,6 +2,8 @@
 
 #include "bdat.h"
 #include "event/manager.h"
+#include "event/object_chara.h"
+#include "event/object_manager.h"
 #include "ml/scn.h"
 #include "scn/scn_render_dr_sys_parm_acc.h"
 
@@ -16,6 +18,26 @@ f32 getValF32(unsigned char *bdat, const char *name, int id) {
 }
 
 } // namespace
+
+const char *DofManager::getAxisName(int axis) {
+  if (axis < 3) {
+    if (axis == 1) {
+      return "CAM";
+    }
+    if (axis == 2) {
+      return "SAY";
+    }
+    return "NONE";
+  }
+  if (static_cast<u32>(axis) > mm::mtl::Singleton<ObjectManager>::getPtr()->getCharaCount() + 3) {
+    return "NONE";
+  }
+  ObjectChara *chara = mm::mtl::Singleton<ObjectManager>::getPtr()->getChara(axis - 3);
+  if (chara == nullptr) {
+    return "ERR";
+  }
+  return chara->getName();
+}
 
 DofManager::DofManager()
     : unknown10(0), unknown14(0), m_axis(1), m_dist(0.0f), unknown20(0.0f), unknown24(5.0f), unknown28(false), unknown2c(0), unknown30(0.1f), unknown34(5.0f), unknown38(0.6f), unknown3c(4.0f),

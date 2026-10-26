@@ -72,6 +72,20 @@ void CharaEvaPlayer::setDispWeapon(int type) {
   unknown7c = type;
 }
 
+void CharaEvaPlayer::setBattleWeapon(int type) {
+  CharaWpnAsm::CMD cmd = static_cast<CharaWpnAsm::CMD>(type - 1);
+  if (unknown18->unknown18 == gf::GF_EVT_MODEL_WEAPON) {
+    unknown88.execCmd(unknown18, cmd, false, nullptr);
+  } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
+    unknown88.execCmd(unknown18, cmd, false, nullptr);
+    unknowne0.execCmd(unknown18, cmd, true, nullptr);
+  } else if (unknown18->unknown18 == gf::GF_EVT_MODEL_BLADE) {
+    unknown88.execCmd(unknown18, cmd, false, nullptr);
+    unknowne0.execCmd(unknown18, cmd, true, nullptr);
+  }
+  unknown84 = type;
+}
+
 void CharaEvaPlayer::setMountWeapon(int type) {
   if (unknown18->unknown18 == gf::GF_EVT_MODEL_DRIVER) {
     unknown88.mount(unknown18, type > 1, false);

@@ -48,6 +48,9 @@ public:
   bool isFocal() const;
   virtual void OnEventProc(MSG_TYPE type);
 
+  // Inferred role: camera interface of a screen id; original name unknown.
+  CamInterface *unknown001(u32 index) { return unknown60[index]; }
+
 private:
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {

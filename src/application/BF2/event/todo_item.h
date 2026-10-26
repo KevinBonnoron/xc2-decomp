@@ -11,6 +11,7 @@ class TodoItem {
 public:
   typedef ITodo *(*CREATE_FUNC)();
 
+  TodoItem(f32 frame, CREATE_FUNC create, const Param &param, ITodo *todo) : unknown08(frame), unknown10(create), unknown18(param), unknown110(todo) {}
   virtual ~TodoItem() {}
   void createString(mm::mtl::FixStr<256> &string);
 
