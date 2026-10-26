@@ -295,6 +295,10 @@ u32 DevGraphQue::getEven() { return unknown00; }
 
 bool DevGraphQue::getOdd() { return unknown00 == 0; }
 
+mm::Rect<int> &DevGraphQue::getViewport() { return unknown58.back(); }
+
+mm::Rect<int> &DevGraphQue::getRenderRect() { return unknown478.back(); }
+
 bool DevGraph::isInitialized() {
   DevGraph *graph = get();
   if (graph == nullptr) {

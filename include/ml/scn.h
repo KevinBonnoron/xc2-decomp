@@ -25,11 +25,20 @@ enum SCNCAM : int {};
 class ScnObjCam {
 public:
   struct RENDER_INFO {
-    u8 _00[0x10];
+    mm::Vec3 m_pos;
     mm::Vec3 position;
     u8 _20[0xf0 - 0x20];
     mm::Vec3 unknownf0; // Inferred role: rotation; original member name unknown.
-    u8 _100[0x200 - 0x100];
+    u8 _100[0x140 - 0x100];
+    mm::Vec3 m_targetPos;
+    f32 unknown150[4]; // Inferred role: frustum edges; original member name unknown.
+    u8 _160[0x1e8 - 0x160];
+    f32 unknown1e8; // Inferred role: fov in degrees; original member name unknown.
+    f32 unknown1ec; // Inferred role: inverse tangent of half fov; original member name unknown.
+    f32 unknown1f0; // Inferred role: aspect ratio; original member name unknown.
+    f32 unknown1f4; // Inferred role: near clip; original member name unknown.
+    u8 _1f8[0x1fc - 0x1f8];
+    f32 m_targetDist;
     mm::Plane unknown200[6]; // Inferred role: local planes; original member name unknown.
     mm::Plane unknown2c0[6]; // Inferred role: global planes; original member name unknown.
   };
@@ -41,6 +50,12 @@ public:
   const mm::Plane *getPlaneGbl(u32 index, bool isBack) const;
   void updateViewMatrix(bool isUpdate);
   void setRot(const mm::Vec3 &rot);
+  void updateFovNearFar();
+  void setFovDefault();
+  void setPos(const mm::Vec3 &pos);
+  void setTargetPos(const mm::Vec3 &pos);
+  void addPosTarget(const mm::Vec3 &pos);
+  void addTrack(const mm::Vec3 &pos);
   void addRotAtCam(const mm::Vec3 &rot);
 
   u8 _00[0x18];
@@ -55,6 +70,11 @@ static_assert(offsetof(ScnObjCam, m_name) == 0x18, "");
 static_assert(offsetof(ScnObjCam, renderInfo) == 0x78, "");
 static_assert(offsetof(ScnObjCam, unknown80) == 0x80, "");
 static_assert(offsetof(ScnObjCam::RENDER_INFO, unknownf0) == 0xf0, "");
+static_assert(offsetof(ScnObjCam::RENDER_INFO, m_targetPos) == 0x140, "");
+static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown150) == 0x150, "");
+static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown1e8) == 0x1e8, "");
+static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown1f4) == 0x1f4, "");
+static_assert(offsetof(ScnObjCam::RENDER_INFO, m_targetDist) == 0x1fc, "");
 static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown200) == 0x200, "");
 static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown2c0) == 0x2c0, "");
 

@@ -4,6 +4,7 @@
 #include "ml/dev_base.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_rect.h"
+#include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -169,8 +170,18 @@ public:
   void flushViewport();
   void pushRect(const mm::Rect<int> &viewport, const mm::Rect<int> &scissor, const mm::Rect<int> &renderRect, bool isFlush);
   void popRect();
+  mm::Rect<int> &getViewport();
+  mm::Rect<int> &getRenderRect();
 
   s32 unknown00; // Inferred role: view; original member name unknown.
+  u8 _04[0x58 - 0x04];
+  mm::mtl::FixedQueue<mm::Rect<int>, 32> unknown58;  // Inferred role: viewport stack; original member name unknown.
+  mm::mtl::FixedQueue<mm::Rect<int>, 32> unknown268; // Inferred role: scissor stack; original member name unknown.
+  mm::mtl::FixedQueue<mm::Rect<int>, 32> unknown478; // Inferred role: render rect stack; original member name unknown.
 };
+
+static_assert(offsetof(DevGraphQue, unknown58) == 0x58, "");
+static_assert(offsetof(DevGraphQue, unknown268) == 0x268, "");
+static_assert(offsetof(DevGraphQue, unknown478) == 0x478, "");
 
 } // namespace ml

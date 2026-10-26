@@ -22,6 +22,7 @@ static_assert(sizeof(TimeInfo) == 8, "");
 class TimeUtil {
 public:
   static bool getTime(TimeInfo &info);
+  static int aggregateNumberOfDays(int year, int month, int day);
 };
 
 } // namespace ml
