@@ -106,7 +106,7 @@ public:
   static void AI_GetObjectPosition(gf::GF_OBJ_HANDLE *handle, mm::Vec3 &position);
   static int AI_GetTargetCharacterID(gf::GF_OBJ_HANDLE *handle);
   static int AI_GetLinkCharacterID(gf::GF_OBJ_HANDLE *handle);
-  static int AI_IsFly(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_IsFly(gf::GF_OBJ_HANDLE *handle);
   static f32 AI_GetVertDiff(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *target);
   static int AI_GetEatTargetCharacterID(gf::GF_OBJ_HANDLE *handle, f32 range);
   static int AI_GetEnemyNum();

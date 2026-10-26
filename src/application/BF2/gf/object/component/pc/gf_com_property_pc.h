@@ -75,12 +75,20 @@ public:
   u32 unknown110_1 : 1; // Inferred role: battle control; original member name unknown.
   u32 : 1;
   u32 unknown110_3 : 1; // Inferred role: enable gravity; original member name unknown.
-  u32 : 6;
+  u32 : 3;
+  u32 unknown110_7 : 1; // Inferred role: on slide; original member name unknown.
+  u32 : 2;
   u32 unknown111_2 : 1; // Inferred role: pad control; original member name unknown.
   u32 : 21;
   u8 _114[0x160 - 0x114];
   mm::Vec3 unknown160; // Inferred role: position; original member name unknown.
-  u8 _170[0x310 - 0x170];
+  u8 _170[0x1e0 - 0x170];
+  mm::Vec3 unknown1e0; // Inferred role: default input direction; original member name unknown.
+  u8 _1f0[0x2b0 - 0x1f0];
+  mm::Vec3 unknown2b0; // Inferred role: input Y axis; original member name unknown.
+  u8 _2c0[0x2d0 - 0x2c0];
+  mm::Vec3 unknown2d0; // Inferred role: input X axis; original member name unknown.
+  u8 _2e0[0x310 - 0x2e0];
   pc::GfPropertyField unknown310; // Inferred role: field; original member name unknown.
 };
 
@@ -90,6 +98,9 @@ static_assert(offsetof(GfComPropertyPc, unknown80) == 0x80, "");
 static_assert(offsetof(GfComPropertyPc, unknown90) == 0x90, "");
 static_assert(offsetof(GfComPropertyPc, unknown94) == 0x94, "");
 static_assert(offsetof(GfComPropertyPc, unknown160) == 0x160, "");
+static_assert(offsetof(GfComPropertyPc, unknown1e0) == 0x1e0, "");
+static_assert(offsetof(GfComPropertyPc, unknown2b0) == 0x2b0, "");
+static_assert(offsetof(GfComPropertyPc, unknown2d0) == 0x2d0, "");
 static_assert(offsetof(GfComPropertyPc, unknown310) == 0x310, "");
 
 } // namespace gf

@@ -215,7 +215,9 @@ public:
   u8 _34[0x38 - 0x34];
   f32 unknown38; // Role and original member name unknown.
   f32 unknown3c; // Inferred role: ball radius; original member name unknown.
-  u8 _40[0x5c - 0x40];
+  u8 _40[0x4c - 0x40];
+  f32 unknown4c; // Inferred role: attack angle; original member name unknown.
+  u8 _50[0x5c - 0x50];
   f32 unknown5c[SPECIAL_ENHANCE_COUNT]; // Inferred role: special enhance rates; original member name unknown.
   u16 unknown94[SPECIAL_ENHANCE_COUNT]; // Inferred role: special enhance values; original member name unknown.
   u8 _b0[0xbc - 0xb0];
@@ -249,8 +251,8 @@ public:
   mutable u8 unknown5b0[0x2f]; // Inferred role: enhance flags; original member name unknown.
   u8 unknown5df_0 : 1;         // Inferred role: initialized; original member name unknown.
   u8 unknown5df_1 : 1;         // Inferred role: battle; original member name unknown.
-  u8 m_invalidTarget : 1;
-  u8 unknown5df_3 : 1; // Inferred role: cool time enabled; original member name unknown.
+  s16 m_invalidTarget : 1;     // Signed: BattleCharacter::SetUpperCollisionPriority adds it as -1.
+  u8 unknown5df_3 : 1;         // Inferred role: cool time enabled; original member name unknown.
   u8 : 2;
   u8 unknown5df_6 : 1; // Inferred role: ignore buddy; original member name unknown.
   u8 unknown5df_7 : 1; // Inferred role: debuff flag; original member name unknown.
@@ -267,6 +269,7 @@ static_assert(offsetof(CharacterParameter, unknown1c) == 0x1c, "");
 static_assert(offsetof(CharacterParameter, unknown20) == 0x20, "");
 static_assert(offsetof(CharacterParameter, unknown28) == 0x28, "");
 static_assert(offsetof(CharacterParameter, unknown2c) == 0x2c, "");
+static_assert(offsetof(CharacterParameter, unknown4c) == 0x4c, "");
 static_assert(offsetof(CharacterParameter, unknownc0) == 0xc0, "");
 static_assert(offsetof(CharacterParameter, unknownf0) == 0xf0, "");
 static_assert(offsetof(CharacterParameter, unknown458) == 0x458, "");

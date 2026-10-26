@@ -400,10 +400,10 @@ int Utility::AI_GetLinkCharacterID(gf::GF_OBJ_HANDLE *handle) {
   return AI_GetCharacterAIID(link);
 }
 
-int Utility::AI_IsFly(gf::GF_OBJ_HANDLE *handle) {
+bool Utility::AI_IsFly(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character == nullptr) {
-    return 0;
+    return false;
   }
 
   return character->unknownf8f_7;

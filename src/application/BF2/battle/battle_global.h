@@ -89,7 +89,8 @@ public:
   struct ELEMENTAL_COMBO_FLOW_DATA {
     u8 unknown00;       // Inferred role: parent combo; original member name unknown.
     u8 unknown01_0 : 3; // Inferred role: stage; original member name unknown.
-    u8 _02[0x14 - 0x02];
+    u8 unknown01_3 : 5; // Inferred role: attribute; original member name unknown.
+    u8 unknown02[9][2]; // Inferred role: next combo and needed attribute count of each attribute; original member name unknown.
   };
 
   struct LEVER_GACHA_DATA {
@@ -136,6 +137,7 @@ public:
   void ResetBGM();
   void InitializeConditionParameter();
   void DeleteElementalComboSlow();
+  void InitializeElementalComboFlowData();
   void RegisterElementalComboSlow();
   void FinalizeJingle();
   void SetElementalComboImmortal(gf::GF_OBJ_HANDLE *handle);
@@ -259,7 +261,10 @@ public:
   u64 unknown65df_5 : 1; // Inferred role: kakusei finished; original member name unknown.
   u64 : 2;
   u64 unknown65e0_0 : 1; // Inferred role: game over; original member name unknown.
-  u64 : 7;
+  u64 : 3;
+  u64 unknown65e0_4 : 1; // Inferred role: scout; original member name unknown.
+  u64 : 2;
+  u64 unknown65e0_7 : 1; // Role and original member name unknown.
   u64 unknown65e1_0 : 1; // Inferred role: kill child; original member name unknown.
   u64 : 5;
   u64 unknown65e1_6 : 1; // Inferred role: shift decided; original member name unknown.

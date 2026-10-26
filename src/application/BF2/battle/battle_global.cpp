@@ -88,6 +88,33 @@ int BattleGlobal::GetFirstStageElementalComboData(int combo) const {
   return first;
 }
 
+void BattleGlobal::InitializeElementalComboFlowData() {
+  u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_BTL_ELEMENTAL_COMBO);
+  ELEMENTAL_COMBO_FLOW_DATA *flowPointer = unknown56a0;
+  for (int combo = 0; combo < ELEMENTAL_COMBO_NUM; combo++, flowPointer++) {
+    ELEMENTAL_COMBO_FLOW_DATA &flow = *flowPointer;
+    if (combo == 0) {
+      flow.unknown00 = 0;
+      flow.unknown01_0 = 0;
+      flow.unknown01_3 = 0;
+    } else {
+      flow.unknown00 = Bdat::getValCheck(bdat, "PreCombo", combo, 1);
+      flow.unknown01_0 = Bdat::getValCheck(bdat, "ComboStage", combo, 1);
+      flow.unknown01_3 = Bdat::getValCheck(bdat, "Atr", combo, 1);
+    }
+    for (int next = 0; next < ELEMENTAL_COMBO_NUM; next++) {
+      if (next == 0) {
+        continue;
+      }
+      if (static_cast<u8>(Bdat::getValCheck(bdat, "PreCombo", next, 1)) == combo) {
+        u8 attribute = Bdat::getValCheck(bdat, "Atr", next, 1);
+        flow.unknown02[attribute][0] = next;
+        flow.unknown02[attribute][1] = Bdat::getValCheck(bdat, "NeedAtrNum", next, 1);
+      }
+    }
+  }
+}
+
 void BattleGlobal::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->PreUpdateProc(updateInfo); }
 
 void BattleGlobal::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }

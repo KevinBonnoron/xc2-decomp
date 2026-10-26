@@ -1,5 +1,6 @@
 #pragma once
 #include "battle/utility_battle.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
 #include <stddef.h>
 
@@ -49,13 +50,16 @@ public:
   };
 
   struct BALL_DATA {
-    u8 _00[0x34 - 0x00];
+    mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
+    u8 _10[0x34 - 0x10];
     u32 unknown34; // Inferred role: effect handle; original member name unknown.
     u8 _38[0x40 - 0x38];
   };
 
   virtual ~ElementalComboManager();
   void DeleteBallEffect(int attribute);
+  void CreateBreakEffect(int attribute);
+  void Burst(int character, int attribute, u32 attack, bool isAnyAttribute);
   void Initialize(gf::GF_OBJ_HANDLE *handle);
   void CheckCharacterID();
   void ResetElement(int attribute);

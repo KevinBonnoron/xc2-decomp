@@ -121,6 +121,28 @@ bool CharacterManager::IsControlCharacter(gf::GF_OBJ_HANDLE *handle) {
   return character != nullptr && character->unknown118 == handle;
 }
 
+BattleCharacter *CharacterManager::GetBattleEnemyCharacter(bool isAlive, bool isExcludeBlade) {
+  for (int id = CHARACTER_PLAYER_COUNT; id < CHARACTER_COUNT; id++) {
+    if (!unknown20[id].unknown11f0) {
+      continue;
+    }
+
+    BattleCharacter &character = unknown20[id].unknown00;
+    if (!character.IsBattle()) {
+      continue;
+    }
+    if (isExcludeBlade && character.IsBlade()) {
+      continue;
+    }
+    if (isAlive && character.IsDead(0)) {
+      continue;
+    }
+    return &character;
+  }
+
+  return nullptr;
+}
+
 int CharacterManager::GetAliveBossNum() const {
   int num = 0;
   for (int id = CHARACTER_PLAYER_COUNT; id < CHARACTER_COUNT; id++) {
@@ -176,6 +198,25 @@ bool CharacterManager::IsCharacterDead(int id) const {
 bool CharacterManager::IsCharacterDead(gf::GF_OBJ_HANDLE *handle) const { return IsCharacterDead(SearchCharacter(handle)); }
 
 void CharacterManager::PostUpdate(const fw::UpdateInfo &updateInfo) { get()->PostUpdateProc(updateInfo); }
+
+void CharacterManager::PostUpdateProc(const fw::UpdateInfo &updateInfo) {
+  bool isScout = false;
+  for (u8 id : unknown65420) {
+    BattleCharacter &character = unknown20[id].unknown00;
+    character.PostManagerUpdate(updateInfo);
+    if (character.IsPlayer()) {
+      character.UpdateHateRingData();
+    } else if (!isScout) {
+      isScout = character.IsScout();
+    }
+  }
+  BattleGlobal::get()->unknown65e0_4 = isScout;
+  for (u8 id : unknown65420) {
+    if (unknown20[id].unknown00.IsEnemy()) {
+      unknown20[id].unknown00.UpdateHateRingData();
+    }
+  }
+}
 
 bool CharacterManager::IsExistAlivePlayer() const {
   for (int id = 0; id < CHARACTER_PLAYER_COUNT; id++) {

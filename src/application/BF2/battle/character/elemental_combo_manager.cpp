@@ -10,6 +10,7 @@
 #include "framework/effect/effect_manager.h"
 #include "gf/object/gf_obj_handle.h"
 #include "mm_math/mm_math.h"
+#include "mm_mtl/fixstr.h"
 
 namespace btl {
 
@@ -43,6 +44,63 @@ void ElementalComboManager::DeleteBallEffect(int attribute) {
       unknown860[i].unknown34 = 0;
     }
   }
+}
+
+void ElementalComboManager::CreateBreakEffect(int attribute) {
+  fw::EffectManager *effectManager = fw::EffectManager::get();
+  if (effectManager == nullptr) {
+    return;
+  }
+
+  mm::mtl::FixStr<32> name;
+  name.format("cmn_012_%03d", attribute - 1);
+  u32 effect = effectManager->create(name.c_str(), nullptr, true);
+  if (effect == 0) {
+    return;
+  }
+
+  effectManager->setParam(effect, unknown860[attribute].unknown00, mm::Vec3::unit);
+  if (ChainAttackManager::get()->IsProc(true) && ChainAttackManager::get()->unknown08 == unknown08) {
+    BattleCharacter *character = CharacterManager::get()->GetCharacterConst(unknown10);
+    if (character != nullptr) {
+      character->PlaySE(BTL_SE_HIT, 0x1f, nullptr, true);
+    }
+  }
+}
+
+void ElementalComboManager::Burst(int character, int attribute, u32 attack, bool isAnyAttribute) {
+  u32 combo;
+  if (DataManager::get()->unknown13298 != unknown08 || DataManager::get()->unknown132a1 == 0) {
+    combo = GetNextElementalComboID(attribute, false, isAnyAttribute) & 0xff;
+  } else {
+    combo = DataManager::get()->unknown132a1;
+  }
+
+  ELEMENTAL_DATA &element = unknown1c[BattleGlobal::get()->GetElementalComboFlowData(combo)->unknown01_3];
+  if (element.unknown04 < 1.0f) {
+    return;
+  }
+
+  if (attack != 0) {
+    bool isRegistered = false;
+    for (int i = 0; i < ELEMENTAL_ATTACK_COUNT; i++) {
+      bool isSame = element.unknown14[i] == attack;
+      isRegistered |= isSame;
+      if (isSame) {
+        break;
+      }
+    }
+    if (!isRegistered) {
+      element.unknown14[ELEMENTAL_ATTACK_COUNT - 1] = attack;
+    }
+  }
+
+  element.unknownb9 = combo;
+  u8 stage = BattleGlobal::get()->GetElementalComboStage(combo);
+  element.unknown0c = ELEMENTAL_STATE_BURST;
+  element.unknownb8 = character < 0 ? -1 : character;
+  element.unknownba = stage;
+  unknownaa6 = element.unknownb9;
 }
 
 void ElementalComboManager::Initialize(gf::GF_OBJ_HANDLE *handle) {

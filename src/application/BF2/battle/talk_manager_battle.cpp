@@ -1,12 +1,33 @@
 #include "battle/talk_manager_battle.h"
 
+#include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
 
 namespace btl {
 
 static const int s_bdatDefs[TalkManager::VOICE_TYPE_COUNT] = {-1, gf::BDAT_VO_BATTLE_DRIVER, gf::BDAT_VO_BATTLE_BLADE, gf::BDAT_VO_BATTLE_ENEMY, gf::BDAT_VO_WIN_SP};
 
 void TalkManager::ResetVoiceGroupID() { __builtin_memset(unknown14dc, 0, sizeof(unknown14dc)); }
+
+void TalkManager::InitializeGroupTopData() {
+  ResetVoiceGroupID();
+  for (int type = VOICE_TYPE_DRIVER; type <= VOICE_TYPE_ENEMY; type++) {
+    u8 *bdat = gf::GfDataBdat::getFP(s_bdatDefs[type]);
+    int id = Bdat::getIdTop(bdat);
+    int count = Bdat::getIdCount(bdat);
+    u32 previous = 0;
+    for (int end = id + count; id < end; id++) {
+      u8 group = Bdat::getValCheck(bdat, "Group", id, 1);
+      if (group == 0) {
+        previous = 0;
+      } else if (group != previous) {
+        unknown14dc[group] = id;
+        previous = group;
+      }
+    }
+  }
+}
 
 void TalkManager::Initialize() { InitializeGroupTopData(); }
 

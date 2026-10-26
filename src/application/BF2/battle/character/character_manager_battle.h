@@ -43,6 +43,7 @@ public:
   gf::GF_OBJ_HANDLE *GetCharacterHandle(int id) const;
   BattleCharacter *GetControlCharacter();
   bool IsControlCharacter(gf::GF_OBJ_HANDLE *handle);
+  BattleCharacter *GetBattleEnemyCharacter(bool isAlive, bool isExcludeBlade);
   int GetAliveBossNum() const;
   bool IsCharacterDead(int id) const;
   bool IsCharacterDead(gf::GF_OBJ_HANDLE *handle) const;

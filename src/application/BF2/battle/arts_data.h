@@ -49,7 +49,9 @@ struct ARTS_DATA {
   u64 unknown04_0 : 11; // Inferred role: caption id; original member name unknown.
   u64 unknown05_3 : 14; // Inferred role: total damage rate; original member name unknown.
   u64 unknown07_1 : 7;  // Inferred role: start recast; original member name unknown.
-  u64 : 19;
+  u64 : 5;
+  u64 unknown08_5 : 6; // Role and original member name unknown.
+  u64 : 8;
   u64 unknown0a_3 : 4; // Inferred role: attribute; original member name unknown.
   u64 : 5;
   u64 unknown0b_4 : 4; // Inferred role: loop count; original member name unknown.
@@ -63,7 +65,9 @@ struct ARTS_DATA {
   u64 unknown15_4 : 8; // Inferred role: IK start frame; original member name unknown.
   u64 unknown16_4 : 4; // Inferred role: IK end number; original member name unknown.
   u64 unknown17_0 : 8; // Inferred role: IK end frame; original member name unknown.
-  u64 : 64;
+  u64 : 32;
+  u64 unknown1c_0 : 12; // Inferred role: attack distance; original member name unknown.
+  u64 : 20;
   u8 _20[0x2f - 0x20];
   u8 unknown2f_0 : 1; // Inferred role: IK flag; original member name unknown.
   u8 : 7;
