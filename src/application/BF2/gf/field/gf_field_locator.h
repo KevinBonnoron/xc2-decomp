@@ -16,7 +16,14 @@ public:
   virtual u32 getPosNum() const = 0;
   virtual const mm::Vec3 *getPos(u32 index) const = 0;
   virtual int getMapBdatId() const;
+
+  u8 _08[0x0c - 0x08];
+  int m_iconBdatId;
+  int m_mapBdatId;
 };
+
+static_assert(offsetof(AFieldLocator, m_iconBdatId) == 0x0c, "");
+static_assert(offsetof(AFieldLocator, m_mapBdatId) == 0x10, "");
 
 class GfFieldLocator {
 public:

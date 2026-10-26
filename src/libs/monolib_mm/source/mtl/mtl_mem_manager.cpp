@@ -10,7 +10,6 @@
 namespace mtl {
 struct MEMIMAGE_HEAD;
 struct MemoryInfo1;
-struct MemoryInfo;
 
 AllocatorWrapper::AllocatorWrapper() : m_allocator(nullptr), m_buffer(nullptr), m_capacity(0), unknown18(0) {}
 

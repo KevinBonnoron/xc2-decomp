@@ -6,7 +6,6 @@
 
 namespace mtl {
 struct MEMIMAGE_HEAD;
-struct MemoryInfo;
 struct MemoryInfo1;
 
 class IMemAllocator {

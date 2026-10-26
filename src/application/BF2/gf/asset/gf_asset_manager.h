@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/asset/gf_asset_def.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
@@ -21,6 +23,7 @@ struct GfSetupParam;
 struct GF_SLOT_HANDLE;
 class GfAssetPack;
 class GfAssetResource;
+class GfSlotMapping;
 struct GfAssetFilesInfo;
 
 class GfAssetManager : public mm::mtl::PtrSingleton<GfAssetManager> {
@@ -46,6 +49,13 @@ public:
   void releaseRefResource(void *data);
   static void lockEnterRersource(GF_ASSET_HANDLE *handle);
   void update(const fw::UpdateInfo &info);
+  static GfSlotMapping *getSlotMapping();
+  static void releaseSlotHandle(GF_SLOT_HANDLE *handle);
+
+  u8 _08[0xe0278 - 0x08];
+  GfSlotMapping *m_slotMapping;
 };
+
+static_assert(offsetof(GfAssetManager, m_slotMapping) == 0xe0278, "");
 
 } // namespace gf
