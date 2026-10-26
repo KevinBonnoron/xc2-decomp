@@ -20,6 +20,7 @@
 
 namespace mm {
 struct Mat44;
+struct Col4;
 struct Vec3;
 
 namespace mtl {
@@ -154,6 +155,7 @@ public:
   void updateHateRing(u32 handle, const mm::Vec3 &position, const f32 &rotation, bool isEnable, const f32 &scale);
   void destroyHateRing(u32 handle);
   u32 createHateRingVec();
+  void updateHateRingVec(u32 handle, const mm::Vec3 &position, const f32 &rotation, const f32 &scale, const mm::Col4 &color);
   void destroyHateRingVec(u32 handle);
   u32 createHateArrow();
   void destroyHateArrow(u32 handle);

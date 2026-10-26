@@ -71,6 +71,7 @@ constexpr int SLOT_ALL = -17;
 constexpr f32 DELAY_VOICE_TIME_SCALE = 4096.0f;
 constexpr int BUFF_EFFECT_UNKNOWN_7 = 7;
 constexpr int ENHANCE_GUARD_REFLECT_UNKNOWN_65 = 0x65;
+constexpr int KAKUSEI_BDAT_ID_UNKNOWN_3EA = 0x3ea;
 constexpr int KAKUSEI_BDAT_ID_UNKNOWN_3EB = 0x3eb;
 constexpr int ACTION_FLAGS_SLIDE = 0x3c000;
 constexpr int ENHANCE_CRITICAL_DAMAGE_UNKNOWN_2E = 0x2e;
@@ -86,6 +87,9 @@ constexpr int AI_STATE_ACTIVE = 1;
 constexpr f32 AI_SCOUT_TIME = 10.0f;
 constexpr u32 BLADE_CHANGE_ACTIONS = 0xd2;
 constexpr int BLADE_SUPPORT_CONDITION_HATE_ELSE = 8;
+constexpr int SP_ATTACK_SLOT = 15;
+constexpr int CONDITION_UNKNOWN_F = 15;
+constexpr int KIZUNA_STAGE_MAX = 6;
 
 BattleCharacter::~BattleCharacter() {
   for (int i = 0; i < EFFECT_ID_NUM; i++) {
@@ -663,6 +667,197 @@ static const CharacterParameter *unknown002(const BattleCharacter *character) { 
     character->unknown168 = DataManager::get()->GetCharacterParameterConst(character->unknownf6a);
   }
   return character->unknown168;
+}
+
+static const char *const unknown007[] = {"S", "M", "L", "LL"}; // Inferred role: size class names of the reaction bdat columns; original name unknown.
+
+bool BattleCharacter::GetReactionBlowParam(int reaction, int level, f32 &horizontal, f32 &vertical) const {
+  int sizeClass = unknown002(this)->unknown5a8_0;
+  if (sizeClass > 2) {
+    sizeClass = 3;
+  }
+  mm::mtl::FixStr<32> name;
+  name.format("PowLv%d_%s", level, unknown007[sizeClass]);
+  u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_BTL_REACTION);
+  u32 percent = static_cast<u16>(Bdat::getValCheck(bdat, name.c_str(), reaction, 2));
+  f32 rate = 1.0f;
+  if (percent != 0) {
+    rate = percent * 0.01f;
+  }
+  bool result = true;
+  switch (reaction) {
+  case 1:
+    horizontal = 0.3f;
+    vertical = 0.59999996f;
+    break;
+  case 2:
+    horizontal = 0.1f;
+    vertical = 4.5f;
+    break;
+  case 4:
+    horizontal = 0.0f;
+    vertical = 1.05f;
+    break;
+  case 5:
+    horizontal = 0.0f;
+    vertical = 6.0f;
+    break;
+  case 6:
+    horizontal = 0.0f;
+    vertical = -9.0f;
+    break;
+  default:
+    result = false;
+    horizontal = 0.0f;
+    vertical = 0.0f;
+    break;
+  }
+  horizontal = rate * horizontal;
+  vertical = rate * vertical;
+  return result;
+}
+
+bool BattleCharacter::SetBlow(const mm::Vec3 &direction, f32 horizontalRate, f32 verticalRate, f32 time) {
+  mm::Vec3 blow = direction;
+  if (blow.y != 0.0f) {
+    Misc::NormalizeXZ(blow);
+  }
+  blow.x = blow.x * horizontalRate;
+  blow.z = blow.z * horizontalRate;
+  bool isLand = false;
+  if (verticalRate != 0.0f) {
+    f32 landHeight = GetLandHeight();
+    f32 rate;
+    if (unknown10.y < landHeight + 2.7f) {
+      rate = 1.0f;
+    } else if (unknown10.y >= landHeight + 10.0f) {
+      rate = 0.1f;
+    } else {
+      rate = ((10.0f - (unknown10.y - landHeight)) * 0.11986301f + 0.125f) * 0.9f;
+    }
+    blow.y = rate * verticalRate;
+    if (blow.y < 0.0f) {
+      isLand = unknownf90_1;
+    }
+  }
+  if (blow.y > 0.0f) {
+    if (unknownd0.y > blow.y) {
+      blow.y = unknownd0.y;
+    }
+  } else if (unknownd0.y < blow.y) {
+    blow.y = unknownd0.y;
+  }
+  unknownd0 = blow;
+  f32 blowTime = 0.38f;
+  if (0.0f <= time) {
+    blowTime = time;
+  }
+  unknownd98 = blowTime;
+  unknownf91_0 = false;
+  if (isLand) {
+    OnLandCallback(true, true);
+  }
+  if (blow.y > 0.0f) {
+    f32 height = GetLandHeight() + BtlSystemBalanceAccess::get()->unknowna6 * 0.01f;
+    if (height >= unknown110) {
+      unknown110 = height;
+      unknown114 = 3.0f;
+    }
+  }
+  return true;
+}
+
+void BattleCharacter::WarpMirrorCopy() {
+  gf::GF_OBJ_HANDLE *buddyHandle = unknown002(this)->unknown10;
+  BattleCharacter *buddy = CharacterManager::get()->GetCharacterConst(buddyHandle);
+  mm::Vec3 position;
+  Misc::GetObjectTransform(buddyHandle, position, Misc::TRANS_TYPE_POSITION);
+  SetPosition(position, true);
+  SetWarpPostureByDir(buddy->unknown60);
+}
+
+bool BattleCharacter::IsEnableRecastSpAttack() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  if (parameter == nullptr || !parameter->m_invalidTarget) {
+    return false;
+  }
+
+  const ARTS_SLOT_DATA *slot = parameter->GetArtsPaletteDataConst(-1)->GetSlotDataConst(SP_ATTACK_SLOT, false);
+  if (slot->unknown00_0 == 0) {
+    return false;
+  }
+
+  const CharacterParameter *buddy = GetCharacterParameterConst(true);
+  if (buddy == nullptr || slot->unknown03_7) {
+    return false;
+  }
+  if (m_player && !IsControlCharacterGroup()) {
+    return false;
+  }
+  if (BladeChangeManager::get()->IsRegister(unknown118)) {
+    return false;
+  }
+  if (ChainAttackManager::get()->IsProc(true)) {
+    return false;
+  }
+
+  if (unknowncc8 == KAKUSEI_BDAT_ID_UNKNOWN_3EA) {
+    if (!BattleGlobal::get()->unknown65df_1 && !IsControlCharacterGroup()) {
+      return false;
+    }
+  }
+  if (unknowncc8 == KAKUSEI_BDAT_ID_UNKNOWN_3EB && !Utility::IsSatisfyCondition(CONDITION_UNKNOWN_F)) {
+    return false;
+  }
+
+  if (!Utility::IsThirdCharacter(unknown118)) {
+    const CharacterParameter *third = GetCharacterParameterConst(true);
+    if (third == nullptr) {
+      return false;
+    }
+    int partyId = third->unknown1c;
+    if (!DataManager::get()->unknown001(partyId)) {
+      return false;
+    }
+    if (DataManager::get()->unknown10758[partyId].GetBladeDataConst(-1)->GetKizunaStage(nullptr) != KIZUNA_STAGE_MAX) {
+      return false;
+    }
+  }
+
+  int partyId = buddy->unknown1c;
+  if (partyId >= 0 && DataManager::get()->unknown10758[partyId].unknown105_0) {
+    return true;
+  }
+  return false;
+}
+
+void BattleCharacter::ArtsGravityProc(const ARTS_DATA &arts, int level) {
+  if (arts.unknown20 == 0) {
+    return;
+  }
+
+  unknownf92_1 = false;
+  f32 frame = 0.0f;
+  gf::GfComAsm *comAsm = GetObject()->getComponent<gf::GfComAsm>();
+  if (comAsm != nullptr) {
+    frame = comAsm->getLocalTime(gf::ANIM_LAYER_BASE) * 30.0f;
+  }
+  u32 gravity = arts.unknown20;
+  int endLevel = gravity >> 16 & 7;
+  if (endLevel < level || (endLevel == level && frame >= static_cast<f32>(gravity >> 19))) {
+    unknownf90_7 = true;
+  } else {
+    int startLevel = gravity & 7;
+    if (level <= startLevel) {
+      if (startLevel != level) {
+        return;
+      }
+      if (!(frame >= static_cast<f32>(gravity >> 3 & 0x1fff))) {
+        return;
+      }
+    }
+    unknownf90_7 = false;
+  }
 }
 
 // Inferred role: turns to the direction of a move command, then starts moving; original function name unknown.

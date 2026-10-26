@@ -201,6 +201,7 @@ public:
   void StartFullBurst(int value);
   CharacterParameter *GetCharacterParameter(bool);
   bool IsControlCharacter() const;
+  void SetLimitHP(int limit);
   bool IsControlCharacterGroup() const;
   bool IsDead(u32 flags) const;
   bool IsMoveHealPot() const;
@@ -230,6 +231,7 @@ public:
   void NotifyFriendDead(int id);
   void NotifyKillSpAttack();
   void NotifyLostHateTarget(int);
+  void NotifyGetHateTarget(int id, bool isFirst);
   void ResetHate();
   void SetAction(ACTION_ID actionId, bool, bool, int, f32);
   u8 CheckAttackPosition(gf::GF_OBJ_HANDLE *handle, bool, bool *) const;
@@ -373,6 +375,7 @@ public:
   void SetNoDamageTime(f32 time);
   void SetPerfectAvoidTime(f32 time);
   f32 GetFriendEnhanceRate(int enhance, bool) const;
+  bool GetReactionBlowParam(int reaction, int level, f32 &horizontal, f32 &vertical) const;
   f32 GetArtsDamageRate(const ARTS_DATA::LEVEL_DATA &level) const;
   f32 ApplyResistantAttr(f32 damage, int attribute) const;
   f32 GetArtsDamageRate(const ARTS_DATA &data, int level) const;
@@ -422,11 +425,15 @@ public:
   bool IsSuperArmor(int level) const;
   bool IsSlide(bool isIgnoreBladeChange) const;
   f32 GetLandHeight() const;
+  bool IsEnableRecastSpAttack() const;
+  void WarpMirrorCopy();
+  bool SetBlow(const mm::Vec3 &direction, f32 horizontalRate, f32 verticalRate, f32 time);
   f32 GetPosLandHeight(const mm::Vec3 &position, f32, f32) const;
   void ModifyMoveData_FloatWater();
   int IsActBladeArts(int arts, bool) const;
   bool CheckInvalidSpAttack();
   void ManagerUpdate_Attack();
+  void ArtsGravityProc(const ARTS_DATA &arts, int level);
   void SuccessChain(int chain, bool isUnknown);
   void AddBladeArtsRecast(int, f32);
   void NotifyDead(const gf::MsgObjectNotifyDead &message);
@@ -457,7 +464,7 @@ public:
   mm::Vec3 unknown30; // Inferred role: previous position; original member name unknown.
   u8 _40[0x50 - 0x40];
   mm::Vec3 unknown50; // Inferred role: direction; original member name unknown.
-  u8 _60[0x70 - 0x60];
+  mm::Vec3 unknown60; // Role and original member name unknown.
   mm::Vec3 unknown70; // Role and original member name unknown.
   u8 _80[0xa0 - 0x80];
   mm::Quat unknowna0; // Inferred role: warp posture; original member name unknown.
@@ -469,7 +476,9 @@ public:
   u8 _e8[0xf0 - 0xe8];
   f32 unknownf0; // Role and original member name unknown.
   f32 unknownf4; // Inferred role: land height; original member name unknown.
-  u8 _f8[0x118 - 0xf8];
+  u8 _f8[0x110 - 0xf8];
+  f32 unknown110;                // Role and original member name unknown.
+  f32 unknown114;                // Role and original member name unknown.
   gf::GF_OBJ_HANDLE *unknown118; // Inferred role: object handle; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown120; // Inferred role: target handle; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown128; // Inferred role: second target handle; original member name unknown.
@@ -493,7 +502,9 @@ public:
   u8 _cd8[0xcdc - 0xcd8];
   f32 unknowncdc;                              // Role and original member name unknown.
   ANIMATION_MOVE_DISTANCE_DATA unknownce0[20]; // Inferred role: animation move distances; original member name unknown.
-  u8 _d80[0xdb4 - 0xd80];
+  u8 _d80[0xd98 - 0xd80];
+  f32 unknownd98; // Inferred role: blow time; original member name unknown.
+  u8 _d9c[0xdb4 - 0xd9c];
   u8 : 7;
   u8 unknowndb4_7 : 1; // Role and original member name unknown.
   u8 _db5[0xdb8 - 0xdb5];
@@ -574,16 +585,23 @@ public:
   u64 unknownf8f_1 : 1; // Role and original member name unknown.
   u64 : 5;
   u64 unknownf8f_7 : 1; // Inferred role: fly flag; original member name unknown.
-  u64 : 3;
+  u64 : 1;
+  u64 unknownf90_1 : 1; // Role and original member name unknown.
+  u64 : 1;
   u64 unknownf90_3 : 1; // Inferred role: bound flag; original member name unknown.
   u64 unknownf90_4 : 1; // Inferred role: enable character collision; original member name unknown.
   u64 unknownf90_5 : 1; // Inferred role: character collision needs write back; original member name unknown.
-  u64 : 5;
+  u64 : 1;
+  u64 unknownf90_7 : 1; // Role and original member name unknown.
+  u64 unknownf91_0 : 1; // Role and original member name unknown.
+  u64 : 2;
   u64 unknownf91_3 : 1; // Role and original member name unknown.
   u64 unknownf91_4 : 1; // Role and original member name unknown.
   u64 : 1;
   u64 unknownf91_6 : 1; // Role and original member name unknown.
-  u64 : 15;
+  u64 : 2;
+  u64 unknownf92_1 : 1; // Role and original member name unknown.
+  u64 : 12;
   u64 unknownf93_6 : 1; // Inferred role: stop flag; original member name unknown.
   u64 : 32;
   u64 : 1;
@@ -683,6 +701,7 @@ static_assert(offsetof(BattleCharacter, unknown10) == 0x10, "");
 static_assert(offsetof(BattleCharacter, unknown20) == 0x20, "");
 static_assert(offsetof(BattleCharacter, unknown30) == 0x30, "");
 static_assert(offsetof(BattleCharacter, unknown50) == 0x50, "");
+static_assert(offsetof(BattleCharacter, unknown60) == 0x60, "");
 static_assert(offsetof(BattleCharacter, unknown70) == 0x70, "");
 static_assert(offsetof(BattleCharacter, unknowna0) == 0xa0, "");
 static_assert(offsetof(BattleCharacter, unknownb0) == 0xb0, "");
@@ -691,6 +710,8 @@ static_assert(offsetof(BattleCharacter, unknowne0) == 0xe0, "");
 static_assert(offsetof(BattleCharacter, unknowne4) == 0xe4, "");
 static_assert(offsetof(BattleCharacter, unknownf0) == 0xf0, "");
 static_assert(offsetof(BattleCharacter, unknownf4) == 0xf4, "");
+static_assert(offsetof(BattleCharacter, unknown110) == 0x110, "");
+static_assert(offsetof(BattleCharacter, unknown114) == 0x114, "");
 static_assert(offsetof(BattleCharacter, unknown118) == 0x118, "");
 static_assert(offsetof(BattleCharacter, unknown120) == 0x120, "");
 static_assert(offsetof(BattleCharacter, unknown128) == 0x128, "");
@@ -707,6 +728,7 @@ static_assert(offsetof(BattleCharacter, unknownccc) == 0xccc, "");
 static_assert(offsetof(BattleCharacter, unknowncd4) == 0xcd4, "");
 static_assert(offsetof(BattleCharacter, unknowncdc) == 0xcdc, "");
 static_assert(offsetof(BattleCharacter, unknownce0) == 0xce0, "");
+static_assert(offsetof(BattleCharacter, unknownd98) == 0xd98, "");
 static_assert(offsetof(BattleCharacter, unknowndb8) == 0xdb8, "");
 static_assert(offsetof(BattleCharacter, unknowndc8) == 0xdc8, "");
 static_assert(offsetof(BattleCharacter, unknowndd0) == 0xdd0, "");

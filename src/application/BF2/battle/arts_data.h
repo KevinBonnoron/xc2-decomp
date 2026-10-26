@@ -68,7 +68,8 @@ struct ARTS_DATA {
   u64 : 32;
   u64 unknown1c_0 : 12; // Inferred role: attack distance; original member name unknown.
   u64 : 20;
-  u8 _20[0x2d - 0x20];
+  u32 unknown20; // Role and original member name unknown.
+  u8 _24[0x2d - 0x24];
   u8 : 7;
   u8 unknown2d_7 : 1; // Inferred role: condition flag; original member name unknown.
   u8 unknown2e_0 : 1; // Inferred role: cached condition result; original member name unknown.
@@ -120,6 +121,7 @@ struct ARTS_PALETTE_DATA {
 };
 
 static_assert(sizeof(ARTS_DATA::HIT_DATA) == 0x6, "");
+static_assert(offsetof(ARTS_DATA, unknown20) == 0x20, "");
 static_assert(offsetof(ARTS_DATA, unknown30) == 0x30, "");
 static_assert(offsetof(ARTS_DATA, unknown90) == 0x90, "");
 static_assert(sizeof(ARTS_DATA) == 0xe8, "");

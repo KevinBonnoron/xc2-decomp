@@ -116,7 +116,8 @@ public:
       u16 unknown104_2 : 2; // Inferred role: permit state; original member name unknown.
       u16 : 3;
       u16 unknown104_7 : 1; // Role and original member name unknown.
-      u16 : 5;
+      u16 unknown105_0 : 1; // Role and original member name unknown.
+      u16 : 4;
       u16 unknown105_5 : 1; // Inferred role: entry; original member name unknown.
       u16 : 2;
     };

@@ -36,6 +36,16 @@ template <typename T> void clampRef(T &value, const T &mi, const T &ma) {
 
 inline f32 fabs(f32 value) { return fabsf(value); }
 
+inline f32 acos(f32 r) {
+  // __LINE__ must be 546 as in the original header: it is the line argument of the assert.
+#line 546
+  MM_ASSERT(mm::fabs(r) < 1.001f);
+  if (mm::fabs(r) >= 1.0f) {
+    return r > 0.0f ? 0.0f : 3.1415927f;
+  }
+  return acosf(r);
+}
+
 __attribute__((always_inline)) inline Vec3 matrixToEuler(const Mat44 &matrix) {
   f32 r = matrix.rows[2][1];
   // __LINE__ must be 581 as in the original header: it is the line argument of the assert.

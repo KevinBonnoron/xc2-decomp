@@ -263,7 +263,8 @@ public:
   u8 _5a6[0x5a7 - 0x5a6];
   u8 unknown5a7_0 : 6; // Inferred role: object type; original member name unknown.
   u8 : 2;
-  u8 : 8;
+  u16 unknown5a8_0 : 4; // Inferred role: size class; original member name unknown.
+  u16 : 4;
   u8 m_perfectAvoid : 5;
   u8 unknown5a9_5 : 3;         // Inferred role: super armor level; original member name unknown.
   s8 unknown5aa;               // Inferred role: rotate X; original member name unknown.

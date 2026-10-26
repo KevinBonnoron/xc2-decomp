@@ -44,7 +44,7 @@ public:
   void UpdateProc(const fw::UpdateInfo &updateInfo);
   void UpdateArrow(int id, RING_DATA &ring, f32 time);
   void UpdateRing(int target, mm::Vec3 position, mm::Vec3 direction);
-  void SetData(int id, gf::GF_OBJ_HANDLE *handle, int);
+  void SetData(int id, gf::GF_OBJ_HANDLE *handle, int target);
   int GetTarget(gf::GF_OBJ_HANDLE *handle) const;
   int GetTarget(int id) const;
   gf::GF_OBJ_HANDLE *GetTargetHandle(gf::GF_OBJ_HANDLE *handle) const;

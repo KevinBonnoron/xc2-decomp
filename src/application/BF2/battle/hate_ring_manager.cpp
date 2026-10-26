@@ -8,6 +8,7 @@
 #include "gf/game/gf_game_party.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_handle.h"
+#include "mm_math/mm_col4.h"
 
 namespace btl {
 
@@ -114,6 +115,84 @@ void HateRingManager::UpdateRing(int target, mm::Vec3 position, mm::Vec3 directi
     effect = 0;
   }
   unknown1120[target] = effect;
+}
+
+void HateRingManager::SetData(int id, gf::GF_OBJ_HANDLE *handle, int target) {
+  RING_DATA &ring = unknown10[id];
+  if (target < 0) {
+    if (ring.unknown10 != gf::INVALID_HANDLE) {
+      ring.Reset(true);
+    }
+    return;
+  }
+
+  ring.unknown10 = handle;
+  fw::EffectManager *effectManager = fw::EffectManager::get();
+  if (ring.unknown18 != target) {
+    if (ring.unknown18 >= 0) {
+      gf::GF_OBJ_HANDLE *driverHandle = gf::GfGameParty::getHandleDriver(ring.unknown18);
+      BattleCharacter *driver = CharacterManager::get()->GetCharacterConst(driverHandle);
+      if (driver != nullptr) {
+        driver->NotifyLostHateTarget(id);
+      }
+      gf::GF_OBJ_HANDLE *bladeHandle = gf::GfGameParty::getHandleBlade(ring.unknown18, -1);
+      BattleCharacter *blade = CharacterManager::get()->GetCharacterConst(bladeHandle);
+      if (blade != nullptr) {
+        blade->NotifyLostHateTarget(id);
+      }
+    }
+    if (target >= 0) {
+      int previous = ring.unknown18;
+      gf::GF_OBJ_HANDLE *driverHandle = gf::GfGameParty::getHandleDriver(target);
+      BattleCharacter *driver = CharacterManager::get()->GetCharacterConst(driverHandle);
+      if (driver != nullptr) {
+        driver->NotifyGetHateTarget(id, previous < 0);
+      }
+      gf::GF_OBJ_HANDLE *bladeHandle = gf::GfGameParty::getHandleBlade(target, -1);
+      BattleCharacter *blade = CharacterManager::get()->GetCharacterConst(bladeHandle);
+      if (blade != nullptr) {
+        blade->NotifyGetHateTarget(id, previous < 0);
+      }
+    }
+    ring.unknown18 = target;
+    ring.unknown1c = 0.0f;
+    if (ring.unknown24 != 0) {
+      effectManager->destroyHateArrow(ring.unknown24);
+      ring.unknown24 = 0;
+    }
+    ring.unknown00 = mm::Vec3::zero;
+  }
+
+  if (unknown1120[target] == 0) {
+    if (ring.unknown20 != 0) {
+      effectManager->destroyHateRingVec(ring.unknown20);
+      ring.unknown20 = 0;
+    }
+    if (ring.unknown24 != 0) {
+      effectManager->destroyHateArrow(ring.unknown24);
+      ring.unknown24 = 0;
+    }
+    ring.unknown00 = mm::Vec3::zero;
+    return;
+  }
+
+  if (ring.unknown20 == 0) {
+    ring.unknown20 = effectManager->createHateRingVec();
+  }
+  if (ring.unknown20 != 0) {
+    mm::Vec3 position;
+    Misc::GetObjectTransform(handle, position, Misc::TRANS_TYPE_POSITION);
+    mm::Vec3 direction;
+    Misc::CalcDirectionXZ(unknown10f0[target], position, direction);
+    f32 rotation = Misc::CalcRotY(direction);
+    effectManager->updateHateRingVec(ring.unknown20, unknown10f0[target], rotation, 1.0f, mm::Col4::white);
+  }
+  if (ring.unknown24 == 0) {
+    ring.unknown24 = effectManager->createHateArrow();
+    ring.unknown1c = 0.0f;
+    ring.unknown00 = mm::Vec3::zero;
+    UpdateArrow(id, ring, 0.0f);
+  }
 }
 
 int HateRingManager::GetTarget(gf::GF_OBJ_HANDLE *handle) const {

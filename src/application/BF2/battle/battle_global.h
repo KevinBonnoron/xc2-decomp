@@ -267,7 +267,7 @@ public:
   u64 unknown65de_6 : 1; // Role and original member name unknown.
   u64 : 1;
   u64 unknown65df_0 : 1; // Role and original member name unknown.
-  u64 : 1;
+  u64 unknown65df_1 : 1; // Role and original member name unknown.
   u64 unknown65de_10 : 1;
   u64 unknown65df_3 : 1; // Inferred role: kakusei order; original member name unknown.
   u64 unknown65df_4 : 1; // Inferred role: kakusei; original member name unknown.

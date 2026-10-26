@@ -4,7 +4,9 @@
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/game/gf_game_voice.h"
 #include "gf/gf_allocator.h"
+#include "gf/object/gf_obj_handle.h"
 
 namespace btl {
 
@@ -128,7 +130,7 @@ int TalkManager::GetGroupTop(int group) const {
   return -1;
 }
 
-u64 TalkManager::PlayVoice(int id, int voice) {
+gf::GAME_VOICE_HANDLE *TalkManager::PlayVoice(int id, int voice) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(id);
   if (character != nullptr) {
     int type;
@@ -146,7 +148,32 @@ u64 TalkManager::PlayVoice(int id, int voice) {
       }
     }
   }
-  return 0;
+  return nullptr;
+}
+
+gf::GAME_VOICE_HANDLE *TalkManager::PlayVoice(int id, const char *name) {
+  gf::GAME_VOICE_HANDLE *voice = nullptr;
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(id);
+  if (character != nullptr && character->unknown118 != gf::INVALID_HANDLE) {
+    voice = gf::GfGameVoice::playVoice(character->unknown118, name, gf::CV_PRIO_UNKNOWN_2);
+    if (voice != nullptr) {
+      CHR_VOICE_DATA data;
+      data.unknown00 = character->unknown118;
+      data.unknown08 = voice;
+      data.unknown10_0 = 0;
+      data.unknown10_3 = 0;
+      data.unknown11_5 = id;
+      data.unknown12_4 = 0;
+      data.unknown14 = 0x5a5a5a5a;
+      CHR_VOICE_DATA *registered = unknown003(id);
+      if (registered != nullptr) {
+        *registered = data;
+        return voice;
+      }
+      unknown08.push_back(data);
+    }
+  }
+  return voice;
 }
 
 } // namespace btl

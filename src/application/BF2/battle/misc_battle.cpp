@@ -16,6 +16,7 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "ml/rand.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec3.h"
 #include "scn/scn_obj_acc.h"
@@ -46,6 +47,24 @@ bool Misc::CalcDirection(const mm::Vec3 &from, const mm::Vec3 &to, mm::Vec3 &dir
   Normalize(vector);
   direction = vector;
   return true;
+}
+
+f32 Misc::CalcAngle(const mm::Vec3 &from, const mm::Vec3 &to, bool isSigned) {
+  mm::Vec3 left = from;
+  mm::Vec3 right = to;
+  if (!(fabsf(sqrtf(left.x * left.x + left.y * left.y + left.z * left.z) - 1.0f) <= NORMALIZE_LENGTH_MIN)) {
+    Normalize(left);
+  }
+  if (!(fabsf(sqrtf(right.x * right.x + right.y * right.y + right.z * right.z) - 1.0f) <= NORMALIZE_LENGTH_MIN)) {
+    Normalize(right);
+  }
+  f32 dot = left.x * right.x + left.y * right.y + left.z * right.z;
+  f32 angle = mm::acos(mm::clamp(dot, -1.0f, 1.0f));
+  if (isSigned) {
+    f32 cross = left.z * right.x - left.x * right.z;
+    return cross < 0.0f ? -angle : angle;
+  }
+  return angle;
 }
 
 f32 Misc::CalcRotY(const mm::Vec3 &direction) { return CalcAngle(mm::Vec3::unitZ, direction, true); }
