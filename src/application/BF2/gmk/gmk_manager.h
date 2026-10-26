@@ -9,6 +9,10 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 }
 
+namespace fw {
+struct ColiCheckConfig;
+} // namespace fw
+
 namespace mm {
 struct Quat;
 struct Vec2;
@@ -150,6 +154,8 @@ void setEventDisp(gf::GF_OBJ_HANDLE *handle, bool isDisp);
 bool getGobPosRot(mm::Vec3 &position, mm::Quat &rotation, gf::GF_OBJ_HANDLE *handle);
 bool isModelRendered(gf::GF_OBJ_HANDLE *handle);
 bool isNaviMeshExist(const mm::Vec3 &position);
+bool getYSnapPos(mm::Vec3 &result, const mm::Vec3 &position, f32 distance);
+bool getYSnapPos(mm::Vec3 &result, const mm::Vec3 &position, f32 distance, const fw::ColiCheckConfig &config);
 int getCapaOfGmkDmgPhantomTargetInfo();
 bool isGfObjNumFull(u32 objectType);
 bool isInBattle();

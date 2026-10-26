@@ -11,6 +11,7 @@
 #include "framework/resource/common_resource.h"
 #include "framework/script/script_manager.h"
 #include "fw/fw_bdat_manager.h"
+#include "fw/fw_coli_check.h"
 #include "fw/fw_transform.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
@@ -641,6 +642,18 @@ bool isModelRendered(gf::GF_OBJ_HANDLE *handle) {
 bool isNaviMeshExist(const mm::Vec3 &position) {
   mm::Vec3 result;
   return fw::NaviUtil::testNaviColi(result, position, 2.0f, 2.0f);
+}
+
+bool getYSnapPos(mm::Vec3 &result, const mm::Vec3 &position, f32 distance) {
+  fw::ColiCheckConfig config;
+  config.unknown08 = 0.0f;
+  config.unknown0c = 0.0f;
+  config.unknown14 = true;
+  config.unknown15 = false;
+  config.unknown10 = 2;
+  config.unknown04 = 0x80000020;
+  config.unknown00 = 9;
+  return getYSnapPos(result, position, distance, config);
 }
 
 int getCapaOfGmkDmgPhantomTargetInfo() {

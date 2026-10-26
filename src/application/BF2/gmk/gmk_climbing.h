@@ -39,6 +39,11 @@ public:
   void dispose() override;
   void disposeIcon();
   void update(f32 deltaTime) override;
+  bool isPopCondMatched() const;
+  void createIcon();
+  void updateIcon();
+
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
   gf::GfMenuCallContext *unknown48; // Inferred role: menu icon; original member name unknown.
   mm::Vec3 unknown50;               // Inferred role: icon position; original member name unknown.

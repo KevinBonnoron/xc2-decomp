@@ -15,6 +15,10 @@ class GmkEffectLocatorGob;
 
 class GmkEffect : public AGmkBase {
 public:
+  struct Data {
+    const char *unknown00; // Inferred role: effect name; original member name unknown.
+  };
+
   struct BdatInfo {
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched() const;
@@ -33,9 +37,17 @@ public:
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   void debugUpdateMmf() override;
+  void createInst();
+  void disposeInst(bool isFadeOut);
+  void applyEffectParam(bool isUpdate) const;
+  void updatePopDepopCond();
+  void seqValidateResHandle(f32 deltaTime);
+  void seqUpdate(f32 deltaTime);
   bool canPopInst() const;
   bool canDepopInst() const;
   void validateDisp() const;
+
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   u8 _48[0x90 - 0x48];
   void (GmkEffect::*unknown90)(f32); // Inferred role: sequence; original member name unknown.

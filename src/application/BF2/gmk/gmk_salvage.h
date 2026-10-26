@@ -4,9 +4,12 @@
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_form_pc.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_set.h"
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 namespace gf {
@@ -16,6 +19,7 @@ struct GF_OBJ_HANDLE;
 namespace gmk {
 
 class GmkSalvageGobCustom;
+class GmkSalvageLocator;
 class GmkSalvageLocatorGob;
 
 class GmkSalvage : public AGmkBase {
@@ -42,6 +46,14 @@ public:
   GmkType getGmkType() const override;
   int getGameFlagId() const;
   int getGmkSalvageLocatorNum() const;
+  const GmkSalvageLocator *getGmkSalvageLocator(u32 index) const;
+  const GmkFormPc *getGmkFormPc() const;
+  void disposeGfObjHandle();
+  void disposeRaffle(bool isFadeOut);
+  void seqValidateGmkSalvageLocatorDetails(f32 deltaTime);
+  void disposeTboxes(bool isFadeOut);
+  void disposeEnemies(bool isFadeOut);
+  void validateDisp() const;
   void create(const CreateInfo &info) override;
   void dispose() override;
   void update(f32 deltaTime) override;
@@ -51,12 +63,30 @@ public:
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
-  u8 _48[0x129 - 0x48];
+  void (GmkSalvage::*unknown48)(f32);
+  gf::GF_OBJ_HANDLE *unknown58;                           // Inferred role: game object; original member name unknown.
+  f32 unknown60;                                          // Role and original member name unknown.
+  f32 unknown64;                                          // Role and original member name unknown.
+  mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknown68; // Role and original member name unknown.
+  mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknown88; // Inferred role: treasure box locators; original member name unknown.
+  void *unknownA8;                                        // Role and original member name unknown.
+  mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknownB0; // Inferred role: enemy locators; original member name unknown.
+  u8 _d0[0x128 - 0xd0];
+  bool unknown128; // Inferred role: display enabled; original member name unknown.
   bool unknown129; // Inferred role: request to sync the depop of the treasure boxes; original member name unknown.
   u8 _12a[0x130 - 0x12a];
 };
 
 static_assert(sizeof(GmkSalvage::BdatInfo) == 0x2, "");
+static_assert(offsetof(GmkSalvage, unknown48) == 0x48, "");
+static_assert(offsetof(GmkSalvage, unknown58) == 0x58, "");
+static_assert(offsetof(GmkSalvage, unknown60) == 0x60, "");
+static_assert(offsetof(GmkSalvage, unknown64) == 0x64, "");
+static_assert(offsetof(GmkSalvage, unknown68) == 0x68, "");
+static_assert(offsetof(GmkSalvage, unknown88) == 0x88, "");
+static_assert(offsetof(GmkSalvage, unknownA8) == 0xa8, "");
+static_assert(offsetof(GmkSalvage, unknownB0) == 0xb0, "");
+static_assert(offsetof(GmkSalvage, unknown128) == 0x128, "");
 static_assert(offsetof(GmkSalvage, unknown129) == 0x129, "");
 static_assert(sizeof(GmkSalvage) == 0x130, "");
 
@@ -79,12 +109,11 @@ public:
   void debugDraw() const override;
   void update(f32 deltaTime) override;
 
+  GmkSetOfSalvageChildren unknown230; // Inferred role: set of the salvage children lists; original member name unknown.
+
 protected:
   void createGmk(void *data) override;
   void disposeGmk() override;
-
-private:
-  GmkSetOfSalvageChildren unknown230; // Inferred role: set of the salvage children lists; original member name unknown.
 };
 
 static_assert(sizeof(GmkSalvageList) == 0x5d0, "");
@@ -112,6 +141,8 @@ public:
   void onEnemyDead(gf::GF_OBJ_HANDLE *handle);
   void onEnemyHomeToPlayerAccess(gf::GF_OBJ_HANDLE *handle);
   void setEnemyPopInfo(int, int, s8);
+  void disposeGobInst(bool isFadeOut);
+  void setTargetable(bool isTargetable) const;
   void reqDisposeTboxGobInst(f32 waitTime) const;
   void initWaitPopTime(f32 waitTime);
   void syncDepopTboxes();
@@ -121,8 +152,9 @@ public:
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   void (GmkSalvageLocator::*unknown48)(f32); // Inferred role: sequence; original member name unknown.
-  u8 _58[0xc8 - 0x58];
-  u8 unknownC8; // Role and original member name unknown.
+  u8 _58[0xc0 - 0x58];
+  gf::GF_OBJ_HANDLE *unknownC0; // Inferred role: game object; original member name unknown.
+  u8 unknownC8;                 // Role and original member name unknown.
   u8 _c9[0xd0 - 0xc9];
   GmkSalvage *unknownD0; // Inferred role: owner salvage, set by GmkSalvage; original member name unknown.
   f32 unknownD8;         // Role and original member name unknown.
@@ -138,6 +170,7 @@ public:
 };
 
 static_assert(offsetof(GmkSalvageLocator, unknown48) == 0x48, "");
+static_assert(offsetof(GmkSalvageLocator, unknownC0) == 0xc0, "");
 static_assert(offsetof(GmkSalvageLocator, unknownC8) == 0xc8, "");
 static_assert(offsetof(GmkSalvageLocator, unknownD0) == 0xd0, "");
 static_assert(offsetof(GmkSalvageLocator, unknownD8) == 0xd8, "");
@@ -153,6 +186,9 @@ public:
   explicit GmkSalvageLocatorList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame) {}
 
   const AGmkBase *getInst(u32 index) const override;
+
+  // Inlined access to the locator vector; the original helper name is unknown.
+  const GmkSalvageLocator *unknown001(u32 index) const { return &gmkInsts[index]; }
 };
 
 } // namespace gmk

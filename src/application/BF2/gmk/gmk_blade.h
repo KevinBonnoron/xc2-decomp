@@ -44,6 +44,7 @@ public:
   GmkType getGmkType() const override;
   void dispose() override;
   void disposeGobInst(bool isFadeOut);
+  void createGobInst();
   void update(f32 deltaTime) override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   bool canPopGobInst() const;

@@ -50,6 +50,12 @@ public:
   void disposeMenuIcon();
   void disposeEffectIcon(bool isFadeOut);
   void update(f32 deltaTime) override;
+  void createGobInst();
+  void disposeGobInst(bool isFadeOut);
+  void createEffectIcon();
+  void validateXform();
+  void createMenuIcon();
+  void updateMenuIcon();
   void debugDraw() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
 

@@ -8,6 +8,7 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/object/gf_menu_obj_field_icon.h"
 #include "gf/object/gf_obj_handle.h"
@@ -105,6 +106,43 @@ void GmkPrecious::validateDisp() const {
   if (unknown60 != 0) {
     fw::EffectManager::get()->setDisp(unknown60, isDisp);
   }
+}
+
+void GmkPrecious::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid() || !gf::GfGameManager::isControlFree()) {
+    return;
+  }
+  u32 effect = unknown60;
+  bool isPopCondMatched = this->isPopCondMatched();
+  if (effect == 0) {
+    if (isPopCondMatched) {
+      createGobInst();
+      createEffectIcon();
+      validateXform();
+    }
+  } else if (!isPopCondMatched) {
+    disposeGobInst(true);
+    disposeEffectIcon(true);
+    disposeMenuIcon();
+  }
+  if (unknown58 != gf::INVALID_HANDLE && unknown68 == nullptr) {
+    createMenuIcon();
+  }
+  updateMenuIcon();
+  if (unknown60 != 0 && isObtained()) {
+    disposeGobInst(true);
+    disposeEffectIcon(true);
+    disposeMenuIcon();
+  }
+}
+
+void GmkPrecious::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
+  AGmkBase::onGobEvent(event, handle);
+  if (event != gf::IGfObjListener::OBJEVT_DESTROY) {
+    return;
+  }
+  disposeGobInst(false);
 }
 
 void GmkPrecious::debugDraw() const {

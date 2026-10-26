@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/event/gf_event.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -19,6 +21,7 @@ class GfFieldLod : public mm::mtl::PtrSingleton<GfFieldLod> {
 public:
   int findBdatIdByLodId(u16 lodId) const;
   bool isAnimReverse(int bdatId) const;
+  bool isPlayAnimEnd(int bdatId) const;
   void setFade(int bdatId, bool isFadeIn, bool isImmediate);
   void setAnimReverse(int bdatId, bool isReverse, bool isSkip);
   bool isFadeOut(int bdatId) const;
@@ -29,6 +32,17 @@ public:
   static void build(const GfSetupParam &param);
   static void destroy();
   static void update(const fw::UpdateInfo &info);
+
+  u8 _08[0x80c - 0x08];
+  bool unknown80c; // Inferred role: lod data ready; original member name unknown.
+  u8 _80d[0x840 - 0x80d];
+  void *unknown840; // Role and original member name unknown.
+  u8 _848[0x850 - 0x848];
+  void *unknown850; // Role and original member name unknown.
 };
+
+static_assert(offsetof(GfFieldLod, unknown80c) == 0x80c, "");
+static_assert(offsetof(GfFieldLod, unknown840) == 0x840, "");
+static_assert(offsetof(GfFieldLod, unknown850) == 0x850, "");
 
 } // namespace gf

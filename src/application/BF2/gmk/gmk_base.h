@@ -86,6 +86,9 @@ public:
   void bindToGameObj(gf::GF_OBJ_HANDLE *handle) const;
   void unbindToGameObj(gf::GF_OBJ_HANDLE *handle) const;
   int findBdatRowIndex() const;
+  bool getPositionInShape(mm::Vec3 &position, bool isRandom) const;
+  bool getYSnapPosInShape(mm::Vec3 &position) const;
+  bool getPositionAppliedYSnap(mm::Vec3 &result, const mm::Vec3 &position, bool isXformY) const;
 
   CreateBaseInfo unknown08; // Inferred role: base info; original member name unknown.
   CreateInfo unknown20;     // Inferred role: create info; original member name unknown.

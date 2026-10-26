@@ -106,6 +106,24 @@ void GmkBlade::disposeGobInst(bool isFadeOut) {
   }
 }
 
+void GmkBlade::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  if (!isInterestPosExist()) {
+    return;
+  }
+  if (!canPopGobInst()) {
+    if (canDepopGobInst()) {
+      disposeGobInst(true);
+    }
+  } else {
+    createGobInst();
+  }
+  unknown54 = false;
+}
+
 bool GmkBlade::canPopGobInst() const {
   if (unknown48 != gf::INVALID_HANDLE || unknown50 == 0) {
     return false;

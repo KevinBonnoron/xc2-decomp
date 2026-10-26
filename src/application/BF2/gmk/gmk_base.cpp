@@ -1,5 +1,6 @@
 #include "gmk/gmk_base.h"
 #include "bdat.h"
+#include "fw/fw_coli_check.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_bdat.h"
@@ -32,6 +33,38 @@ f32 AGmkBase::getYSnapRayLength() const {
   default:
     return 1.0f;
   }
+}
+
+bool AGmkBase::getYSnapPosInShape(mm::Vec3 &position) const {
+  fw::ColiCheckConfig config;
+  mm::Vec3 shapePosition;
+  getPositionInShape(shapePosition, false);
+  shapePosition.y += unknown08.unknown08->unknown20.y * 0.5f;
+  config.unknown08 = 0.0f;
+  config.unknown0c = 0.0f;
+  config.unknown14 = true;
+  config.unknown15 = false;
+  config.unknown10 = 2;
+  config.unknown04 = 0x80000020;
+  config.unknown00 = 9;
+  return getYSnapPos(position, shapePosition, unknown08.unknown08->unknown20.y, config);
+}
+
+bool AGmkBase::getPositionAppliedYSnap(mm::Vec3 &result, const mm::Vec3 &position, bool isXformY) const {
+  f32 halfLength = getYSnapRayLength() * 0.5f;
+  fw::ColiCheckConfig config;
+  mm::Vec3 start;
+  start.x = position.x;
+  start.y = halfLength + (isXformY ? unknown08.unknown08->unknown00 : position).y;
+  start.z = position.z;
+  config.unknown08 = 0.0f;
+  config.unknown0c = 0.0f;
+  config.unknown15 = false;
+  config.unknown14 = true;
+  config.unknown10 = 2;
+  config.unknown04 = 0x80000020;
+  config.unknown00 = 9;
+  return getYSnapPos(result, start, halfLength + halfLength, config);
 }
 
 void AGmkBase::createBase(const CreateBaseInfo &info) { unknown08 = info; }

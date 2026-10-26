@@ -1,10 +1,16 @@
 #include "gmk/gmk_effect.h"
-#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/field/gf_field_manager.h"
 #include "gf/game/gf_game_cond.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
+
+namespace fw {
+class EffectPack;
+enum EF_CATEGORY : int;
+} // namespace fw
 
 namespace gmk {
 
@@ -51,6 +57,38 @@ void GmkEffect::dispose() {
   AGmkBase::dispose();
   unknown90 = nullptr;
   unknownA0 = nullptr;
+}
+
+void GmkEffect::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  updatePopDepopCond();
+  if (unknown90) {
+    (this->*unknown90)(deltaTime);
+  }
+}
+
+void GmkEffect::seqValidateResHandle(f32 deltaTime) {
+  fw::EffectPack *pack = gf::GfFieldManager::getEffectPack();
+  if (pack != nullptr) {
+    const char *name = getData()->unknown00;
+    unknownA0 = fw::EffectManager::get()->search(name, pack);
+    if (unknownA0 != nullptr) {
+      unknownA8 = fw::EffectManager::get()->containsCamAxis(unknownA0);
+      unknown90 = &GmkEffect::seqUpdate;
+    }
+  }
+}
+
+void GmkEffect::createInst() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  unknownAC = fw::EffectManager::get()->create(unknownA0, true);
+  fw::EffectManager::get()->setCategory(unknownAC, static_cast<fw::EF_CATEGORY>(1));
+  applyEffectParam(false);
 }
 
 void GmkEffect::validateDisp() const {
