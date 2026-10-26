@@ -24,6 +24,7 @@ class GfComEffectCaster;
 class GfComProperty;
 class GfObj;
 class GfWeapon;
+struct MsgObjectNotifyDead;
 } // namespace gf
 
 enum BTL_SE {
@@ -421,6 +422,17 @@ public:
   bool IsSuperArmor(int level) const;
   bool IsSlide(bool isIgnoreBladeChange) const;
   f32 GetLandHeight() const;
+  f32 GetPosLandHeight(const mm::Vec3 &position, f32, f32) const;
+  void ModifyMoveData_FloatWater();
+  int IsActBladeArts(int arts, bool) const;
+  bool CheckInvalidSpAttack();
+  void ManagerUpdate_Attack();
+  void SuccessChain(int chain, bool isUnknown);
+  void AddBladeArtsRecast(int, f32);
+  void NotifyDead(const gf::MsgObjectNotifyDead &message);
+  void CreateDeadEffect();
+  void InitializeAttackData(bool isReset);
+  void ResetAllEffect();
   bool SetAnimationNoComplement(ANIM_ID animId, int, int, bool);
   void StopSE(BTL_SE se, int number);
   void PlaySystemSE(BTL_SE se, int number, bool, bool);
@@ -442,7 +454,8 @@ public:
   u8 _08[0x10 - 0x08];
   mm::Vec3 unknown10; // Inferred role: position; original member name unknown.
   mm::Vec3 unknown20; // Inferred role: warp position; original member name unknown.
-  u8 _30[0x50 - 0x30];
+  mm::Vec3 unknown30; // Inferred role: previous position; original member name unknown.
+  u8 _40[0x50 - 0x40];
   mm::Vec3 unknown50; // Inferred role: direction; original member name unknown.
   u8 _60[0x70 - 0x60];
   mm::Vec3 unknown70; // Role and original member name unknown.
@@ -453,7 +466,8 @@ public:
   mm::Vec3 unknownd0; // Role and original member name unknown.
   f32 unknowne0;      // Role and original member name unknown.
   f32 unknowne4;      // Role and original member name unknown.
-  u8 _e8[0xf4 - 0xe8];
+  u8 _e8[0xf0 - 0xe8];
+  f32 unknownf0; // Role and original member name unknown.
   f32 unknownf4; // Inferred role: land height; original member name unknown.
   u8 _f8[0x118 - 0xf8];
   gf::GF_OBJ_HANDLE *unknown118; // Inferred role: object handle; original member name unknown.
@@ -567,7 +581,9 @@ public:
   u64 : 5;
   u64 unknownf91_3 : 1; // Role and original member name unknown.
   u64 unknownf91_4 : 1; // Role and original member name unknown.
-  u64 : 17;
+  u64 : 1;
+  u64 unknownf91_6 : 1; // Role and original member name unknown.
+  u64 : 15;
   u64 unknownf93_6 : 1; // Inferred role: stop flag; original member name unknown.
   u64 : 32;
   u64 : 1;
@@ -602,35 +618,47 @@ public:
   u8 unknown10c9_2 : 1; // Role and original member name unknown.
   u8 unknown10c9_3 : 1; // Inferred role: launch rotate; original member name unknown.
   u8 : 4;
-  u8 _10ca[0x10d0 - 0x10ca];
+  u8 _10ca[0x10cc - 0x10ca];
+  f32 unknown10cc; // Role and original member name unknown.
   f32 unknown10d0; // Role and original member name unknown.
-  u8 _10d4[0x10e0 - 0x10d4];
-  f32 unknown10e0; // Inferred role: no damage time; original member name unknown.
-  f32 unknown10e4; // Inferred role: super armor time; original member name unknown.
-  f32 unknown10e8; // Inferred role: perfect avoid time; original member name unknown.
-  f32 unknown10ec; // Role and original member name unknown.
-  f32 unknown10f0; // Role and original member name unknown.
-  u16 unknown10f4; // Inferred role: displayed elemental effect flags; original member name unknown.
-  u16 unknown10f6; // Role and original member name unknown.
-  u8 _10f8[0x10fa - 0x10f8];
-  s8 unknown10fa; // Role and original member name unknown.
-  u8 _10fb[0x10fe - 0x10fb];
-  s16 unknown10fe; // Inferred role: back attacker; original member name unknown.
-  u8 _1100[0x1101 - 0x1100];
-  u8 unknown1101; // Inferred role: attack position; original member name unknown.
-  u8 unknown1102; // Role and original member name unknown.
-  u8 unknown1103; // Role and original member name unknown.
-  u8 _1104[0x1105 - 0x1104];
-  u32 unknown1105_0 : 8; // Role and original member name unknown.
-  u32 unknown1106_0 : 1; // Role and original member name unknown.
-  u32 : 4;
-  u32 unknown1106_5 : 1; // Role and original member name unknown.
-  u32 : 3;
+  f32 unknown10d4; // Role and original member name unknown.
+  u8 _10d8[0x10db - 0x10d8];
+  u8 unknown10db;         // Role and original member name unknown.
+  u32 unknown10dc;        // Role and original member name unknown.
+  f32 unknown10e0;        // Inferred role: no damage time; original member name unknown.
+  f32 unknown10e4;        // Inferred role: super armor time; original member name unknown.
+  f32 unknown10e8;        // Inferred role: perfect avoid time; original member name unknown.
+  f32 unknown10ec;        // Role and original member name unknown.
+  f32 unknown10f0;        // Role and original member name unknown.
+  u16 unknown10f4;        // Inferred role: displayed elemental effect flags; original member name unknown.
+  u16 unknown10f6;        // Role and original member name unknown.
+  u16 unknown10f8;        // Role and original member name unknown.
+  s8 unknown10fa;         // Role and original member name unknown.
+  u8 unknown10fb;         // Role and original member name unknown.
+  s16 unknown10fc;        // Role and original member name unknown.
+  s16 unknown10fe;        // Inferred role: back attacker; original member name unknown.
+  u8 unknown1100;         // Role and original member name unknown.
+  u8 unknown1101;         // Inferred role: attack position; original member name unknown.
+  u8 unknown1102;         // Role and original member name unknown.
+  u8 unknown1103;         // Role and original member name unknown.
+  u8 unknown1104;         // Role and original member name unknown.
+  u32 unknown1105_0 : 8;  // Role and original member name unknown.
+  u32 unknown1106_0 : 1;  // Role and original member name unknown.
+  u32 unknown1106_1 : 2;  // Role and original member name unknown.
+  u32 unknown1106_3 : 2;  // Role and original member name unknown.
+  u32 unknown1106_5 : 1;  // Role and original member name unknown.
+  u32 unknown1106_6 : 1;  // Role and original member name unknown.
+  u32 unknown1106_7 : 1;  // Role and original member name unknown.
+  u32 unknown1107_0 : 1;  // Role and original member name unknown.
   u32 unknown1105_17 : 1; // Role and original member name unknown.
-  u32 : 6;
+  u32 unknown1107_2 : 1;  // Role and original member name unknown.
+  u32 unknown1107_3 : 1;  // Role and original member name unknown.
+  u32 unknown1107_4 : 1;  // Role and original member name unknown.
+  u32 : 3;
   f32 unknown1108[7];                           // Inferred role: enhance timers; original member name unknown.
   CharacterParameter::ENHANCE_DATA unknown1124; // Inferred role: last satisfied enhance; original member name unknown.
-  u8 _112c[0x1160 - 0x112c];
+  u8 unknown112c;                               // Role and original member name unknown.
+  u8 _112d[0x1160 - 0x112d];
   AI_ACTION_DATA unknown1160; // Inferred role: AI action; original member name unknown.
   u8 _1168[0x1174 - 0x1168];
   f32 unknown1174; // Inferred role: AI scout time; original member name unknown.
@@ -643,7 +671,8 @@ public:
   int unknown11d8; // Inferred role: stamp; original member name unknown.
   u8 _11dc[0x11e0 - 0x11dc];
   u16 unknown11e0; // Inferred role: blade support condition flags; original member name unknown.
-  u16 : 10;
+  u16 : 9;
+  u16 unknown11e3_1 : 1; // Role and original member name unknown.
   u16 unknown11e3_2 : 1; // Inferred role: use navi flag; original member name unknown.
   u16 unknown11e3_3 : 1; // Inferred role: battle opening flag; original member name unknown.
   u8 _11e4[0x11f0 - 0x11e4];
@@ -652,6 +681,7 @@ public:
 static_assert(sizeof(BattleCharacter::DIRECT_DAMAGE_DATA) == 0x18, "");
 static_assert(offsetof(BattleCharacter, unknown10) == 0x10, "");
 static_assert(offsetof(BattleCharacter, unknown20) == 0x20, "");
+static_assert(offsetof(BattleCharacter, unknown30) == 0x30, "");
 static_assert(offsetof(BattleCharacter, unknown50) == 0x50, "");
 static_assert(offsetof(BattleCharacter, unknown70) == 0x70, "");
 static_assert(offsetof(BattleCharacter, unknowna0) == 0xa0, "");
@@ -659,6 +689,7 @@ static_assert(offsetof(BattleCharacter, unknownb0) == 0xb0, "");
 static_assert(offsetof(BattleCharacter, unknownd0) == 0xd0, "");
 static_assert(offsetof(BattleCharacter, unknowne0) == 0xe0, "");
 static_assert(offsetof(BattleCharacter, unknowne4) == 0xe4, "");
+static_assert(offsetof(BattleCharacter, unknownf0) == 0xf0, "");
 static_assert(offsetof(BattleCharacter, unknownf4) == 0xf4, "");
 static_assert(offsetof(BattleCharacter, unknown118) == 0x118, "");
 static_assert(offsetof(BattleCharacter, unknown120) == 0x120, "");
@@ -710,18 +741,29 @@ static_assert(offsetof(BattleCharacter, unknown10a4) == 0x10a4, "");
 static_assert(offsetof(BattleCharacter, unknown10b8) == 0x10b8, "");
 static_assert(offsetof(BattleCharacter, unknown10c0) == 0x10c0, "");
 static_assert(offsetof(BattleCharacter, unknown10c8) == 0x10c8, "");
+static_assert(offsetof(BattleCharacter, unknown10cc) == 0x10cc, "");
 static_assert(offsetof(BattleCharacter, unknown10d0) == 0x10d0, "");
+static_assert(offsetof(BattleCharacter, unknown10d4) == 0x10d4, "");
+static_assert(offsetof(BattleCharacter, unknown10db) == 0x10db, "");
+static_assert(offsetof(BattleCharacter, unknown10dc) == 0x10dc, "");
 static_assert(offsetof(BattleCharacter, unknown10f4) == 0x10f4, "");
 static_assert(offsetof(BattleCharacter, unknown10e0) == 0x10e0, "");
 static_assert(offsetof(BattleCharacter, unknown10ec) == 0x10ec, "");
 static_assert(offsetof(BattleCharacter, unknown10f0) == 0x10f0, "");
 static_assert(offsetof(BattleCharacter, unknown10f6) == 0x10f6, "");
+static_assert(offsetof(BattleCharacter, unknown10f8) == 0x10f8, "");
+static_assert(offsetof(BattleCharacter, unknown10fa) == 0x10fa, "");
+static_assert(offsetof(BattleCharacter, unknown10fb) == 0x10fb, "");
+static_assert(offsetof(BattleCharacter, unknown10fc) == 0x10fc, "");
 static_assert(offsetof(BattleCharacter, unknown10fe) == 0x10fe, "");
+static_assert(offsetof(BattleCharacter, unknown1100) == 0x1100, "");
+static_assert(offsetof(BattleCharacter, unknown1104) == 0x1104, "");
 static_assert(offsetof(BattleCharacter, unknown1101) == 0x1101, "");
 static_assert(offsetof(BattleCharacter, unknown1102) == 0x1102, "");
 static_assert(offsetof(BattleCharacter, unknown1103) == 0x1103, "");
 static_assert(offsetof(BattleCharacter, unknown1108) == 0x1108, "");
 static_assert(offsetof(BattleCharacter, unknown1124) == 0x1124, "");
+static_assert(offsetof(BattleCharacter, unknown112c) == 0x112c, "");
 static_assert(offsetof(BattleCharacter, unknown1160) == 0x1160, "");
 static_assert(offsetof(BattleCharacter, unknown1174) == 0x1174, "");
 static_assert(offsetof(BattleCharacter, unknown1178) == 0x1178, "");

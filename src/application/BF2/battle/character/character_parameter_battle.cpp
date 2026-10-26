@@ -1031,4 +1031,63 @@ int EnemyParameter::GetHateTarget() const {
   return unknown850;
 }
 
+void CharacterParameter::ClearAllBuff() {
+  if (unknown598 != 0) {
+    for (int buff = 1; buff < 23; buff++) {
+      if (IsBuff(buff)) {
+        ClearBuff(buff, false);
+        if (unknown598 == 0) {
+          break;
+        }
+      }
+    }
+    __builtin_memset(unknown458, 0, sizeof(unknown458));
+    unknown598 = 0;
+    unknown599[0] = 0;
+    unknown599[1] = 0;
+    unknown599[2] = 0;
+  }
+}
+
+void CharacterParameter::ResetEnhance(bool isAll) {
+  if (isAll || unknown5e0_2) {
+    unknownf0.clear();
+    __builtin_memset(unknown5b0, 0, sizeof(unknown5b0));
+    __builtin_memset(unknown3f8, 0, sizeof(unknown3f8));
+    ResetSpecialEnhanceRate(isAll);
+    unknown5e0_2 = false;
+  }
+}
+
+void CharacterParameter::BattleEndInitialize() {
+  ResetEnhance(false);
+  unknown5a4 = 0;
+}
+
+void EnemyParameter::BattleStart(int arg) {
+  CharacterParameter::BattleStart(arg);
+  if (IsBoss()) {
+    BattleGlobal::get()->unknown65e0_2 = true;
+  }
+  if (IsNamed()) {
+    BattleGlobal::get()->unknown65e0_3 = true;
+  }
+  gf::GfBdatChrEnArrange *arrange = gf::GfBdatChrEnArrange::get();
+  u32 id = unknown24;
+  if (arrange->isChrEnArrangeFlagHikari(id)) {
+    BattleGlobal::get()->unknown65e1_4 = true;
+  }
+  if (arrange->isChrEnArrangeFlagPGMax(id)) {
+    if (BattleGlobal::get()->unknown65de_0) {
+      DataManager::get()->FluctuatePartyGauge(0x2713, -1);
+    } else {
+      BattleGlobal::get()->unknown65e2_1 = true;
+    }
+  }
+  if (m_invalidWarp) {
+    BattleGlobal::get()->unknown65e1_5 = true;
+  }
+  SetupBGM();
+}
+
 } // namespace btl

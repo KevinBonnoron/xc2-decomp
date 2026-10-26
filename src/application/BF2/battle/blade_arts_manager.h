@@ -54,6 +54,7 @@ public:
   bool IsRegister(gf::GF_OBJ_HANDLE *handle) const;
   bool IsBladeStart(gf::GF_OBJ_HANDLE *handle) const;
   bool IsBladeAttack(gf::GF_OBJ_HANDLE *handle) const;
+  bool RegisterBladeArts(gf::GF_OBJ_HANDLE *driver, gf::GF_OBJ_HANDLE *blade, gf::GF_OBJ_HANDLE *target, int arts, bool, bool isForce);
 
   PROC_DATA unknown08[10]; // Inferred role: procs; original member name unknown.
   int unknown198;          // Inferred role: proc count; original member name unknown.

@@ -111,7 +111,7 @@ public:
   union {
     u16 unknown104; // Role and original member name unknown.
     struct {
-      u16 : 1;
+      u16 unknown104_0 : 1; // Role and original member name unknown.
       u16 unknown104_1 : 1; // Inferred role: need permit; original member name unknown.
       u16 unknown104_2 : 2; // Inferred role: permit state; original member name unknown.
       u16 : 3;

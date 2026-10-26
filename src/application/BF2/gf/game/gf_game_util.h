@@ -69,7 +69,7 @@ public:
   static void setDispByGmkType(gmk::GmkType type, bool isDisp);
   static void setDispByGmkTypeAndBdatId(gmk::GmkType type, int bdatId, bool isDisp);
   static void setDispByGmkTypeAndGmkIdx(gmk::GmkType type, u32 index, bool isDisp);
-  static u16 getAntiBladeAreaBdatId();
+  static int getAntiBladeAreaBdatId();
   static bool getGmkTargetPointPos(mm::Vec3 &position, u32 gimmick);
   static bool getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle);
   static bool incEnemySuppress(u32 enemy);

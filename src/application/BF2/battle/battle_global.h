@@ -118,6 +118,7 @@ public:
   static void Create();
   void Initialize();
   void NotifyMapChange();
+  void BattleEndInitialize();
   static void Destroy();
   void Finalize();
   int GetNormalAttackArtsID(int type, int weapon, int index) const;
@@ -140,6 +141,10 @@ public:
   void ResetBGM();
   void InitializeConditionParameter();
   void DeleteElementalComboSlow();
+  void DeleteElementalComboCamera();
+  void UpdateMapRev();
+  void RegisterElementalComboCamera(mm::mtl::IntrusivePtr<fw::Camera> camera, gf::GF_OBJ_HANDLE *handle);
+  void AddChainCount(bool isControl);
   void InitializeElementalComboFlowData();
   void RegisterElementalComboSlow();
   void FinalizeJingle();
@@ -216,7 +221,8 @@ public:
   s32 unknown864; // Inferred role: battle count; original member name unknown.
   u8 _868[0x86c - 0x868];
   f32 unknown86c; // Inferred role: battle time; original member name unknown.
-  u8 _870[0x878 - 0x870];
+  u32 unknown870; // Role and original member name unknown.
+  u8 _874[0x878 - 0x874];
   mm::mtl::FixedVector<ATTACK_DAMAGE_DATA, 1000> unknown878; // Inferred role: attack damages; original member name unknown.
   ELEMENTAL_COMBO_FLOW_DATA unknown56a0[50];                 // Inferred role: elemental combo flows; original member name unknown.
   LEVER_GACHA_DATA unknown5a88;                              // Inferred role: lever gacha; original member name unknown.
@@ -227,7 +233,9 @@ public:
   u32 unknown5ab8;                                           // Role and original member name unknown.
   u8 _5abc[0x5ac0 - 0x5abc];
   MAP_DRIVER_REV_DATA unknown5ac0[9]; // Inferred role: map driver revisions; original member name unknown.
-  u8 _5ae4[0x5af8 - 0x5ae4];
+  int unknown5ae4;                    // Inferred role: anti blade area bdat id; original member name unknown.
+  u8 _5ae8[0x5af0 - 0x5ae8];
+  gf::GF_OBJ_HANDLE *unknown5af0; // Role and original member name unknown.
   gf::GF_OBJ_HANDLE *m_elementalComboImmortal;
   mm::mtl::IntrusivePtr<fw::Camera> unknown5b00; // Inferred role: elemental combo camera; original member name unknown.
   gf::GfComEffectCaster *unknown5b08;            // Inferred role: slow effect caster; original member name unknown.
@@ -264,17 +272,23 @@ public:
   u64 unknown65df_3 : 1; // Inferred role: kakusei order; original member name unknown.
   u64 unknown65df_4 : 1; // Inferred role: kakusei; original member name unknown.
   u64 unknown65df_5 : 1; // Inferred role: kakusei finished; original member name unknown.
-  u64 : 2;
+  u64 : 1;
+  u64 unknown65df_7 : 1; // Role and original member name unknown.
   u64 unknown65e0_0 : 1; // Inferred role: game over; original member name unknown.
-  u64 : 3;
+  u64 : 1;
+  u64 unknown65e0_2 : 1; // Role and original member name unknown.
+  u64 unknown65e0_3 : 1; // Role and original member name unknown.
   u64 unknown65e0_4 : 1; // Inferred role: scout; original member name unknown.
   u64 : 2;
   u64 unknown65e0_7 : 1; // Role and original member name unknown.
   u64 unknown65e1_0 : 1; // Inferred role: kill child; original member name unknown.
-  u64 : 5;
+  u64 : 3;
+  u64 unknown65e1_4 : 1; // Role and original member name unknown.
+  u64 unknown65e1_5 : 1; // Role and original member name unknown.
   u64 unknown65e1_6 : 1; // Inferred role: shift decided; original member name unknown.
   u64 unknown65e1_7 : 1; // Inferred role: shift time over; original member name unknown.
-  u64 : 2;
+  u64 : 1;
+  u64 unknown65e2_1 : 1; // Role and original member name unknown.
   u64 unknown65e2_2 : 1; // Inferred role: play error SE; original member name unknown.
   u64 : 5;
   u8 _65e3[0x65e8 - 0x65e3];
@@ -295,10 +309,13 @@ static_assert(offsetof(BattleGlobal, unknown5e0) == 0x5e0, "");
 static_assert(sizeof(BattleGlobal::LINK_JOIN_DATA) == 0x10, "");
 static_assert(offsetof(BattleGlobal, unknown620) == 0x620, "");
 static_assert(offsetof(BattleGlobal, unknown5a88) == 0x5a88, "");
+static_assert(offsetof(BattleGlobal, unknown5ae4) == 0x5ae4, "");
+static_assert(offsetof(BattleGlobal, unknown5af0) == 0x5af0, "");
 static_assert(offsetof(BattleGlobal, unknown6b8) == 0x6b8, "");
 static_assert(offsetof(BattleGlobal, unknown6c0) == 0x6c0, "");
 static_assert(offsetof(BattleGlobal, unknown864) == 0x864, "");
 static_assert(offsetof(BattleGlobal, unknown86c) == 0x86c, "");
+static_assert(offsetof(BattleGlobal, unknown870) == 0x870, "");
 static_assert(offsetof(BattleGlobal, unknown878) == 0x878, "");
 static_assert(offsetof(BattleGlobal, unknown56a0) == 0x56a0, "");
 static_assert(offsetof(BattleGlobal, unknown5aa0) == 0x5aa0, "");

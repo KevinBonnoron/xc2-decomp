@@ -31,9 +31,29 @@ constexpr int ADDITIONAL_ENHANCE_COUNT = 6;
 constexpr int HATE_COUNT = 3;
 
 struct FIGHT_COMBO_DATA {
-  u8 unknown00; // Inferred role: combo id; original member name unknown.
-  u8 _01[0x18 - 0x01];
+  // Inferred role: resets the combo to its empty state; original name unknown.
+  void unknown001() {
+    unknown00 = 0;
+    unknown01 = 0x5a;
+    unknown02 = 0;
+    unknown04 = 0;
+    unknown08 = 0.0f;
+    unknown0c = 0;
+    unknown10 = 0;
+    unknown14 = 0.0f;
+  }
+
+  u8 unknown00;  // Inferred role: combo id; original member name unknown.
+  u8 unknown01;  // Inferred role: character id; original member name unknown.
+  u16 unknown02; // Inferred role: base value; original member name unknown.
+  u32 unknown04; // Role and original member name unknown.
+  f32 unknown08; // Inferred role: rest time; original member name unknown.
+  u32 unknown0c; // Role and original member name unknown.
+  u32 unknown10; // Role and original member name unknown.
+  f32 unknown14; // Role and original member name unknown.
 };
+
+static_assert(sizeof(FIGHT_COMBO_DATA) == 0x18, "");
 
 struct ENHANCE_EFFECT_DATA {
   u16 unknown00; // Inferred role: enhance id; original member name unknown.
@@ -97,6 +117,7 @@ public:
   virtual void BattleEndInitialize();
   virtual void PreUpdate(const fw::UpdateInfo &updateInfo);
   void ResetSpecialEnhanceRate(bool isAll);
+  void ResetEnhance(bool isAll);
   virtual void Update(const fw::UpdateInfo &updateInfo, bool);
   virtual void PostUpdate(const fw::UpdateInfo &updateInfo);
   virtual int GetAttribute() const;
@@ -153,6 +174,9 @@ public:
   bool IsBuff(int buff) const;
   void CheckDebuff();
   void ClearBuff(int buff, bool isEnd);
+  void ClearAllBuff();
+  void SetArtsEffect(int effect);
+  void SetAdditionalEnhance(ADD_ENHANCE_TYPE type, int value);
   bool CheckUniteCombo(int id, bool);
   bool SetElementalComboID(int combo, int id);
   void AddEnhance(int enhance) const;
@@ -208,10 +232,10 @@ public:
   u32 unknown18;                // Inferred role: game object id; original member name unknown.
   int unknown1c;                // Inferred role: party id; original member name unknown.
   int unknown20;                // Inferred role: battle index; original member name unknown.
-  u8 _24[0x28 - 0x24];
-  f32 unknown28; // Inferred role: launch effect scale factor; original member name unknown.
-  f32 unknown2c; // Inferred role: radius; original member name unknown.
-  f32 unknown30; // Inferred role: ball height; original member name unknown.
+  u32 unknown24;                // Inferred role: blade id; original member name unknown.
+  f32 unknown28;                // Inferred role: launch effect scale factor; original member name unknown.
+  f32 unknown2c;                // Inferred role: radius; original member name unknown.
+  f32 unknown30;                // Inferred role: ball height; original member name unknown.
   u8 _34[0x38 - 0x34];
   f32 unknown38; // Role and original member name unknown.
   f32 unknown3c; // Inferred role: ball radius; original member name unknown.
@@ -234,8 +258,8 @@ public:
   u16 unknown59e;                                                  // Inferred role: resistant attribute flags; original member name unknown.
   u8 _5a0[0x5a2 - 0x5a0];
   mutable s16 unknown5a2; // Inferred role: link distance bonus; original member name unknown.
-  u8 _5a4[0x5a5 - 0x5a4];
-  u8 unknown5a5; // Inferred role: elemental combo id; original member name unknown.
+  u8 unknown5a4;          // Role and original member name unknown.
+  u8 unknown5a5;          // Inferred role: elemental combo id; original member name unknown.
   u8 _5a6[0x5a7 - 0x5a6];
   u8 unknown5a7_0 : 6; // Inferred role: object type; original member name unknown.
   u8 : 2;
@@ -267,6 +291,7 @@ static_assert(offsetof(CharacterParameter, unknown10) == 0x10, "");
 static_assert(offsetof(CharacterParameter, unknown18) == 0x18, "");
 static_assert(offsetof(CharacterParameter, unknown1c) == 0x1c, "");
 static_assert(offsetof(CharacterParameter, unknown20) == 0x20, "");
+static_assert(offsetof(CharacterParameter, unknown24) == 0x24, "");
 static_assert(offsetof(CharacterParameter, unknown28) == 0x28, "");
 static_assert(offsetof(CharacterParameter, unknown2c) == 0x2c, "");
 static_assert(offsetof(CharacterParameter, unknown4c) == 0x4c, "");
@@ -276,6 +301,7 @@ static_assert(offsetof(CharacterParameter, unknown458) == 0x458, "");
 static_assert(offsetof(CharacterParameter, unknown598) == 0x598, "");
 static_assert(offsetof(CharacterParameter, unknown599) == 0x599, "");
 static_assert(offsetof(CharacterParameter, unknown59e) == 0x59e, "");
+static_assert(offsetof(CharacterParameter, unknown5a4) == 0x5a4, "");
 static_assert(offsetof(CharacterParameter, unknown5a5) == 0x5a5, "");
 static_assert(offsetof(CharacterParameter, unknown5aa) == 0x5aa, "");
 static_assert(offsetof(CharacterParameter, unknown5ad) == 0x5ad, "");

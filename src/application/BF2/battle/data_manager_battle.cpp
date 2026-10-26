@@ -1,7 +1,13 @@
 #include "battle/data_manager_battle.h"
 
 #include "battle/battle_global.h"
+#include "battle/character/battle_character.h"
+#include "battle/character/character_manager_battle.h"
+#include "battle/character/elemental_combo_manager.h"
+#include "battle/utility_battle.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/gf_allocator.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/object/gf_menu_obj_party_status.h"
 #include "gf/object/gf_obj_handle.h"
@@ -12,6 +18,8 @@ constexpr int ENEMY_GROUP_NUM = 35;
 constexpr int ENEMY_GROUP_INDEX_OFFSET = 3;
 constexpr u16 GROUP_FLAGS_PERMIT = 0x2006;
 constexpr int PARTY_COUNT = 3;
+constexpr int POUCH_COUNT = 3;
+constexpr int KAKUSEI_BDAT_ID_UNKNOWN_3EB = 0x3eb;
 
 DataManager::~DataManager() {}
 
@@ -190,6 +198,105 @@ bool DataManager::IsExistRequestPermit() const {
     }
   }
   return false;
+}
+
+void DataManager::UpdatePouchBuff(f32 time) {
+  if (!BattleGlobal::get()->unknown65de_0) {
+    for (int i = 0; i < POUCH_COUNT; i++) {
+      unknown131d0[i].unknown00[POUCH_BUFF_TYPE_UNKNOWN_12] = 0.0f;
+      unknown131d0[i].unknown3b = false;
+    }
+    return;
+  }
+  for (int i = 0; i < POUCH_COUNT; i++) {
+    POUCH_BUFF_DATA &pouch = unknown131d0[i];
+    if (pouch.unknown00[POUCH_BUFF_TYPE_UNKNOWN_4] <= 0.0f && pouch.unknown00[POUCH_BUFF_TYPE_UNKNOWN_9] <= 0.0f) {
+      pouch.unknown00[POUCH_BUFF_TYPE_UNKNOWN_12] = 0.0f;
+      pouch.unknown3b = false;
+    } else {
+      f32 counter = pouch.unknown00[POUCH_BUFF_TYPE_UNKNOWN_12] + time;
+      if (counter < 30.0f) {
+        pouch.unknown3b = false;
+      } else {
+        counter -= 30.0f;
+        pouch.unknown3b = true;
+      }
+      pouch.unknown00[POUCH_BUFF_TYPE_UNKNOWN_12] = counter;
+    }
+  }
+}
+
+void DataManager::GetArtsData(ARTS_DATA::DATA_TYPE type, int id, ARTS_DATA &data) const {
+  if (id == 0) {
+    return;
+  }
+  ARTS_DATA *cache = GetCacheArtsDataConst(type, id);
+  if (cache == nullptr) {
+    cache = CacheArtsData(type, id, nullptr);
+    UpdateCacheID(cache);
+    if (cache == nullptr) {
+      data.unknown00_0 = 0;
+      return;
+    }
+  } else {
+    if (cache->unknown2d_7 && Utility::IsSatisfyCondition(0) != cache->unknown2e_0) {
+      CacheArtsData(type, id, cache);
+    }
+    UpdateCacheID(cache);
+  }
+  data = *cache;
+}
+
+void DataManager::RequestPermit(int party, gf::GF_OBJ_HANDLE *target) {
+  if (unknown10758[party].unknown104_0) {
+    gf::GF_OBJ_HANDLE *blade = gf::GfGameParty::getHandleBlade(party, -1);
+    BattleCharacter *bladeCharacter = CharacterManager::get()->GetCharacterConst(blade);
+    bool isKakusei;
+    if (bladeCharacter == nullptr) {
+      unknown132a0 = party;
+      isKakusei = false;
+    } else {
+      if (bladeCharacter->CheckInvalidSpAttack()) {
+        return;
+      }
+      unknown132a0 = party;
+      isKakusei = bladeCharacter->unknowncc8 == KAKUSEI_BDAT_ID_UNKNOWN_3EB;
+    }
+    gf::DataParamAcc acc(gf::GfGameParty::getHandleDriver(party));
+    int attribute = acc.getAttribute(-1, false);
+    BattleCharacter *character = CharacterManager::get()->GetCharacterConst(target);
+    int combo = character->unknown180.GetNextElementalComboID(attribute, false, isKakusei);
+    unknown132a1 = combo;
+    unknown132a2 = BattleGlobal::get()->GetElementalComboStage(combo);
+    unknown13298 = target;
+    unknown132a8 = false;
+  }
+}
+
+void DataManager::Initialize() {
+  unknown7588.clear();
+  unknownb0c0.clear();
+  unknownd0a8.clear();
+  unknownec00.clear();
+  for (int i = 0; i < 65; i++) {
+    unknown75d8[i].unknown00_0 = 0;
+  }
+  for (int i = 0; i < 35; i++) {
+    unknownb0f0[i].unknown00_0 = 0;
+  }
+  for (int i = 0; i < 30; i++) {
+    unknownd0d0[i].unknown00_0 = 0;
+  }
+  for (int i = 0; i < 30; i++) {
+    unknownec28[i].unknown00_0 = 0;
+  }
+}
+
+void DataManager::Create() {
+  // __LINE__ must be 104 as in the original file: it is an argument of operator new.
+#line 104
+  DataManager *manager = new (gf::getAllocator(gf::ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) DataManager();
+  manager->Initialize();
 }
 
 } // namespace btl

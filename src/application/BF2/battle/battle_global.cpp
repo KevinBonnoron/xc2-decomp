@@ -15,6 +15,7 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "gf/object/component/effect/gf_com_effect_caster.h"
@@ -22,6 +23,7 @@
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixstr.h"
 
 namespace fw {
 enum SoundCategory : int;
@@ -751,6 +753,83 @@ const char *BattleGlobal::GetSeTag(int se) const {
   }
 
   return nullptr;
+}
+
+void BattleGlobal::DeleteElementalComboCamera() {
+  DeleteElementalComboSlow();
+  if (unknown5b00.get() != nullptr) {
+    fw::CameraManager::get()->unknown20[0].pop(unknown5b00, 0.0f);
+    unknown5b00 = nullptr;
+  }
+  unknown5af0 = gf::INVALID_HANDLE;
+  unknown65df_0 = false;
+}
+
+void BattleGlobal::NotifyMapChange() {
+  BattleEndInitialize();
+  unknown65b0[16] = 0;
+  unknown65d6[0] = 0;
+  unknown6b8 = 0.0f;
+  DeleteSlowAll();
+  DeleteElementalComboCamera();
+  m_elementalComboImmortal = gf::INVALID_HANDLE;
+  DeleteUniteComboDirection();
+  FinalizeJingle();
+  unknown870 = 1;
+  unknown878.clear();
+  unknown65de_10 = false;
+}
+
+void BattleGlobal::RegisterElementalComboCamera(mm::mtl::IntrusivePtr<fw::Camera> camera, gf::GF_OBJ_HANDLE *handle) {
+  DeleteElementalComboSlow();
+  if (unknown5b00.get() != nullptr) {
+    fw::CameraManager::get()->unknown20[0].pop(unknown5b00, 0.0f);
+    unknown5b00 = nullptr;
+  }
+  unknown65df_0 = false;
+  unknown5af0 = handle;
+  unknown5b00 = camera;
+}
+
+// Inferred role: names of the Bdat flags that enable the map revision of each driver; original name unknown.
+static const char *const unknown002[MAP_DRIVER_REV_NUM] = {"Rex", "Nia", "Sieg", "Tora", "Vandamme", "Melef", "Sin", "Metsu", "Sin2"};
+
+void BattleGlobal::UpdateMapRev() {
+  int area = gf::GfGameUtil::getAntiBladeAreaBdatId();
+  if (area != unknown5ae4) {
+    if (area == 0) {
+      for (int i = 0; i < MAP_DRIVER_REV_NUM; i++) {
+        MAP_DRIVER_REV_DATA *rev = &unknown5ac0[i];
+        rev->unknown00_0 = 1000;
+        rev->unknown01_3 = 4;
+        rev->unknown01_7 = true;
+        rev->unknown02 = 100;
+        rev->unknown03 = 100;
+      }
+      unknown5ae4 = 0;
+    } else {
+      unknown5ae4 = area;
+      u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_BTL_MAP_REV);
+      mm::mtl::FixStr<32> name;
+      for (int i = 0; i < MAP_DRIVER_REV_NUM; i++) {
+        int isEnable = Bdat::getFlagVal(bdat, "Flag", area, unknown002[i]);
+        MAP_DRIVER_REV_DATA *rev = &unknown5ac0[i];
+        if (isEnable == 0) {
+          rev->unknown00_0 = 1000;
+          rev->unknown01_3 = 4;
+          rev->unknown01_7 = true;
+          rev->unknown02 = 100;
+          rev->unknown03 = 100;
+        } else {
+          rev->unknown00_0 = Bdat::getValCheck(bdat, "KizunaCap", area, 2);
+          rev->unknown01_3 = Bdat::getValCheck(bdat, "ArtSp", area, 1);
+          rev->unknown01_7 = Bdat::getFlagVal(bdat, "Flag", area, "nba") == 0;
+          rev->unknown02 = Bdat::getValCheck(bdat, name.format("PC%02dAtk", i + 1).c_str(), area, 1);
+          rev->unknown03 = Bdat::getValCheck(bdat, name.format("PC%02dDef", i + 1).c_str(), area, 1);
+        }
+      }
+    }
+  }
 }
 
 } // namespace btl

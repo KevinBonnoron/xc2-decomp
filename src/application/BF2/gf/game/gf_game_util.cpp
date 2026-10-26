@@ -551,7 +551,7 @@ void GfGameUtil::setDispByGmkTypeAndGmkIdx(gmk::GmkType type, u32 index, bool is
   gmk::setDispByGmkTypeAndGmkIdx(gmkSet, type, index, isDisp);
 }
 
-u16 GfGameUtil::getAntiBladeAreaBdatId() { return GfFieldGimmick::getBdatIdOfActiveGmkAntiBladeArea(); }
+int GfGameUtil::getAntiBladeAreaBdatId() { return GfFieldGimmick::getBdatIdOfActiveGmkAntiBladeArea(); }
 
 bool GfGameUtil::getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle) {
   gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(handle);

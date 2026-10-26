@@ -2541,4 +2541,213 @@ u64 BattleCharacter::GetAnimSpecialProcData(ANIM_SPDATA_TYPE type) const {
   return 0;
 }
 
+void BattleCharacter::ModifyMoveData_FloatWater() {
+  if (unknownf90_3) {
+    mm::Vec3 position;
+    position.x = unknown10.x + unknownb0.x;
+    position.y = unknown10.y + unknownb0.y;
+    position.z = unknown10.z + unknownb0.z;
+    f32 landHeight = GetPosLandHeight(position, unknownf0 + 5.0f, -1.0f);
+    if (!(landHeight > position.y + LAND_HEIGHT_NONE) && unknown10c6_0 == 0) {
+      unknownb0.x = 0.0f;
+      unknownb0.z = 0.0f;
+      GetLandHeight();
+    }
+  }
+}
+
+void BattleCharacter::ResetAllEffect() {
+  CharacterParameter *parameter = GetCharacterParameter(false);
+  if (parameter != nullptr) {
+    parameter->unknown59e = 0;
+    parameter->ClearAllBuff();
+    parameter->unknownc0.unknown001();
+    parameter->SetAngry(false, -1.0f);
+  }
+  unknown180.Reset(false);
+  CancelButtonChallenge();
+}
+
+void BattleCharacter::InitializeAttackData(bool isReset) {
+  if (isReset) {
+    unknown10d4 = -1.0f;
+    unknown10db = 0;
+    unknown1103 = 0;
+    unknown10cc = 0.0f;
+    unknown10d0 = -1.0f;
+    unknown10e4 = 0.0f;
+    unknown10e8 = 0.0f;
+    unknown10dc = 0;
+    unknown10e0 = 0.0f;
+    unknown10f0 = 0.7f;
+    unknown10ec = 0.0f;
+    unknown10f4 = 0;
+    unknown10f6 = 0;
+    unknown10fc = -1;
+    unknown10fe = -1;
+    unknown1100 = 0;
+    unknown1101 = 0;
+    unknown1102 = 0;
+    unknown1104 = 0xff;
+    unknown1105_0 = 0;
+    unknown1106_3 = 0;
+    unknown1106_5 = 0;
+    unknown1106_6 = 0;
+    unknown1106_7 = 0;
+    unknown1107_2 = 0;
+    unknown1107_3 = 1;
+    unknown1107_4 = 0;
+  }
+  unknown10fa = -1;
+  unknown10fb = 0;
+  unknown10f8 = 0;
+  unknown1106_0 = 0;
+  unknown1106_1 = 0;
+  unknown1107_0 = 0;
+  unknown1105_17 = 0;
+}
+
+void BattleCharacter::CreateDeadEffect() {
+  if (!m_player) {
+    return;
+  }
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter != nullptr && parameter->m_invalidTarget) {
+    return;
+  }
+  if (!gf::GfGameManager::isPlayEvent() && unknown130[0] == 0) {
+    fw::EffectManager *manager = fw::EffectManager::get();
+    u32 effect = manager->create("cmn_000_022", nullptr, true);
+    if (effect != 0) {
+      unknown130[0] = effect;
+      f32 scale = GetCharacterParameterConst(false)->unknown28;
+      manager->setParam(effect, unknown10, mm::Vec3(scale, scale, scale));
+      unknownd0.z = 0.0f;
+      unknownd0.x = 0.0f;
+    }
+  }
+}
+
+void BattleCharacter::NotifyDead(const gf::MsgObjectNotifyDead &message) {
+  if (IsControlCharacter()) {
+    BattleGlobal *global = BattleGlobal::get();
+    if (!global->unknown65de_0) {
+      DataManager::get()->SetPartyGauge(0, true);
+    } else if (message.unknown08 == 4) {
+      global->unknown65df_7 = true;
+    } else if (message.unknown08 == 3) {
+      if (message.unknown10 != nullptr && message.unknown10->unknown00 == 0x1000032) {
+        const CharacterParameter *parameter = GetCharacterParameterConst(false);
+        if (parameter != nullptr) {
+          u32 maxHp = parameter->GetMaxHP();
+          if (message.unknown10->unknown08 >= maxHp) {
+            BattleGlobal::get()->unknown65df_7 = true;
+          }
+        }
+      }
+    }
+  }
+  unknown1106_6 = true;
+}
+
+void BattleCharacter::FinalizeArtsEffect(bool isFinalize) {
+  if (unknown112c != 0) {
+    CharacterParameter *parameter = GetCharacterParameter(false);
+    parameter->SetArtsEffect(0);
+    parameter->unknown5a9_5 = 0;
+    if (isFinalize) {
+      parameter->SetAdditionalEnhance(CharacterParameter::ADD_ENHANCE_TYPE_HP_RATE, 0);
+      parameter->SetAdditionalEnhance(CharacterParameter::ADD_ENHANCE_TYPE_ETHER_POWER_RATE, 0);
+    }
+    parameter->ClearBuff(0x16, false);
+    if (!Utility::IsThirdCharacter(unknown118)) {
+      SetChrCollisionFlag(true);
+    }
+    unknown112c = 0;
+  }
+}
+
+void BattleCharacter::SuccessChain(int chain, bool isUnknown) {
+  if (ChainAttackManager::get()->IsProc(true)) {
+    return;
+  }
+  if (isUnknown) {
+    SatisfyEnhanceCondition(0xaf, GetCharacterParameter(false)->GetMaxHP(), 0.0f, nullptr, true);
+  }
+  f32 recast = SatisfyEnhanceCondition(0xb0, 0, 0.0f, nullptr, true);
+  AddBladeArtsRecast(chain, recast);
+  if (m_player) {
+    bool isControl = IsControlCharacter();
+    BattleGlobal::get()->AddChainCount(isControl);
+    if (isControl) {
+      UIManager::get()->DispChainUI(unknown118);
+      PlaySystemSE(BTL_SE_HIT, 0x46, true, false);
+    }
+  }
+  unknown10d0 = -1.0f;
+}
+
+void BattleCharacter::ManagerUpdate_Attack() {
+  f32 dt = unknownf93_6 ? 0.0f : unknowncc0 * unknownf58;
+  if (unknown10e0 > 0.0f) {
+    unknown10e0 = __builtin_fmaxf(unknown10e0 - dt, 0.0f);
+  }
+  if (unknown10e4 > 0.0f) {
+    unknown10e4 = __builtin_fmaxf(unknown10e4 - dt, 0.0f);
+  }
+  if (unknown10e8 > 0.0f) {
+    unknown10e8 = __builtin_fmaxf(unknown10e8 - dt, 0.0f);
+  }
+  if (unknown10ec > 0.0f) {
+    unknown10ec = unknown10ec - dt;
+    if (unknown10ec <= 0.0f) {
+      unknown10ec = 0.0f;
+      unknown1105_0 = 0;
+    }
+  }
+  unknown10f0 = dt + unknown10f0;
+  if (unknown10f6 != 0) {
+    int elapsed = static_cast<int>(dt * 4096.0f);
+    unknown10f6 = unknown10f6 > elapsed ? unknown10f6 - elapsed : 0;
+  }
+  if (unknown10d0 > 0.0f) {
+    unknown10d0 = unknown10d0 - m_systemDt;
+  }
+}
+
+void BattleCharacter::PreManagerUpdate(const fw::UpdateInfo &) {
+  unknown30 = unknown10;
+  unknown10f4 = 0;
+  unknown168 = nullptr;
+  unknownf8c_1 = false;
+  unknownf8c_3 = false;
+  unknownf91_6 = false;
+  if (!m_battle) {
+    unknownf82 = 0;
+    return;
+  }
+  bool isEnableBattle = BattleGlobal::get()->IsEnableBattle();
+  gf::GF_OBJ_HANDLE *handle = unknown118;
+  if (!isEnableBattle) {
+    unknownf82 |= 1;
+  } else {
+    unknownf82 &= 0xfe;
+  }
+  if (unknownf82 & 2) {
+    if (!BladeChangeManager::get()->IsRegister(handle)) {
+      unknownf82 &= 0xfd;
+    }
+  }
+  if (unknownf82 & 4) {
+    if (!BladeArtsManager::get()->IsRegister(handle)) {
+      unknownf82 &= 0xfb;
+    }
+  }
+  if (unknownf82 & 8) {
+    if (!SpAttackManager::get()->IsRegister(handle)) {
+      unknownf82 &= 0xf7;
+    }
+  }
+}
+
 } // namespace btl

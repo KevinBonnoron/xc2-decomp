@@ -31,7 +31,10 @@ public:
 
   enum POUCH_BUFF_TYPE {
     POUCH_BUFF_TYPE_DAMAGE_ARMOR,
+    POUCH_BUFF_TYPE_UNKNOWN_4 = 4, // Inferred role: first value checked by the timing update; original name unknown.
     POUCH_BUFF_TYPE_KIZUNA = 6,
+    POUCH_BUFF_TYPE_UNKNOWN_9 = 9,   // Inferred role: second value checked by the timing update; original name unknown.
+    POUCH_BUFF_TYPE_UNKNOWN_12 = 12, // Inferred role: timing counter; original name unknown.
   };
 
   struct POUCH_BUFF_DATA {
@@ -40,15 +43,21 @@ public:
     bool unknown3b; // Inferred role: timing flag; original member name unknown.
   };
 
+  DataManager();
   ~DataManager();
+  static void Create();
   static void Destroy();
   void Finalize();
+  void Initialize();
   void AddPartyGauge(f32 value, int partyId, bool isNotify);
   void FluctuatePartyGauge(int value, int partyId);
   void InitializeComboRequestUI();
   const CharacterParameter *GetCharacterParameterConst(int id) const;
   const CharacterParameter *SearchCharacterParameterConst(gf::GF_OBJ_HANDLE *handle, bool) const;
   void GetArtsData(ARTS_DATA::DATA_TYPE type, int id, ARTS_DATA &data) const;
+  ARTS_DATA *GetCacheArtsDataConst(ARTS_DATA::DATA_TYPE type, int id) const;
+  ARTS_DATA *CacheArtsData(ARTS_DATA::DATA_TYPE type, int id, ARTS_DATA *cache) const;
+  void UpdateCacheID(const ARTS_DATA *cache) const;
   f32 GetPouchBuffParam(int type, int pouch) const;
   int GetPartyGauge() const;
   void SetPartyGauge(int partyGauge, bool isNotify);
@@ -57,6 +66,8 @@ public:
   void ReleaseEnemyGroup(gf::GF_OBJ_HANDLE *handle);
   int GetEnemyGroupIndex(gf::GF_OBJ_HANDLE *handle);
   void DeleteElementalEffect();
+  void RequestPermit(int party, gf::GF_OBJ_HANDLE *target);
+  void UpdatePouchBuff(f32 time);
   static void PreUpdate(const fw::UpdateInfo &updateInfo);
   void PreUpdateProc(const fw::UpdateInfo &updateInfo);
   static void Update(const fw::UpdateInfo &updateInfo);

@@ -96,6 +96,13 @@ struct MsgObjectNotifyDamage : fw::Message {
 
 static_assert(offsetof(MsgObjectNotifyDamage, unknown10) == 0x10, "");
 
+struct MsgObjectNotifyDead : fw::Message {
+  int unknown08;                    // Inferred role: dead type; original member name unknown.
+  const MsgObjectDamage *unknown10; // Inferred role: damage; original member name unknown.
+};
+
+static_assert(offsetof(MsgObjectNotifyDead, unknown10) == 0x10, "");
+
 struct MsgObjectHealHp : fw::Message {
   MsgObjectHealHp(u32 hp, u32 healType)
       : fw::Message(0x1000033, 0x20), unknown08(hp), unknown0c(healType), unknown10(nullptr), unknown18(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), _20(), unknown21(false), unknown22(false),

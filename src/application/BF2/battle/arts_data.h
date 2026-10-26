@@ -68,7 +68,11 @@ struct ARTS_DATA {
   u64 : 32;
   u64 unknown1c_0 : 12; // Inferred role: attack distance; original member name unknown.
   u64 : 20;
-  u8 _20[0x2f - 0x20];
+  u8 _20[0x2d - 0x20];
+  u8 : 7;
+  u8 unknown2d_7 : 1; // Inferred role: condition flag; original member name unknown.
+  u8 unknown2e_0 : 1; // Inferred role: cached condition result; original member name unknown.
+  u8 : 7;
   u8 unknown2f_0 : 1; // Inferred role: IK flag; original member name unknown.
   u8 : 7;
   HIT_DATA unknown30[16];                 // Inferred role: hit data; original member name unknown.

@@ -63,6 +63,7 @@ public:
   void Initialize(gf::GF_OBJ_HANDLE *handle);
   void CheckCharacterID();
   void ResetElement(int attribute);
+  void Reset(bool);
   int GetResistantAttrBreakDamage(int attribute) const;
   int GetResistantAttrBreakTotalDamage(int attribute) const;
   bool IsEnableElementalCombo(int attribute, int stage, bool isIncludeBurst, bool isAnyAttribute) const;
