@@ -110,6 +110,9 @@ public:
   static f32 AI_GetVertDiff(gf::GF_OBJ_HANDLE *handle, gf::GF_OBJ_HANDLE *target);
   static int AI_GetEatTargetCharacterID(gf::GF_OBJ_HANDLE *handle, f32 range);
   static int AI_GetEnemyNum();
+  static int AI_GetArtsEnemyNum();
+  static int AI_GetArtsPlayerNum();
+  static int AI_GetAutoAttackState(gf::GF_OBJ_HANDLE *handle);
   static int AI_GetPlayerNum();
   static int AI_GetAimCharacterNum(gf::GF_OBJ_HANDLE *handle);
   static int AI_GetFightComboID(gf::GF_OBJ_HANDLE *handle);

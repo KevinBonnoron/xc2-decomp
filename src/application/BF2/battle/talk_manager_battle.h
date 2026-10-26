@@ -1,5 +1,6 @@
 #pragma once
 #include "battle/character/character_manager_battle.h"
+#include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -34,14 +35,30 @@ public:
 
   struct CHR_VOICE_DATA {
     gf::GF_OBJ_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
-    u8 _08[0x10 - 0x08];
-    u32 unknown10_0 : 3;  // Inferred role: type; original member name unknown.
-    u32 unknown10_3 : 10; // Inferred role: voice id; original member name unknown.
-    u32 unknown11_5 : 7;  // Inferred role: id; original member name unknown.
-    u32 unknown12_4 : 8;  // Inferred role: priority; original member name unknown.
+    u64 unknown08;                // Inferred role: voice handle; original member name unknown.
+    u32 unknown10_0 : 3;          // Inferred role: type; original member name unknown.
+    u32 unknown10_3 : 10;         // Inferred role: voice id; original member name unknown.
+    u32 unknown11_5 : 7;          // Inferred role: id; original member name unknown.
+    u32 unknown12_4 : 8;          // Inferred role: priority; original member name unknown.
   };
 
+  // Inferred role: a waiting talk; original type name unknown.
+  struct unknown001 {
+    u8 _00[0x2 - 0x0];
+    s8 unknown02; // Inferred role: rest count; original member name unknown.
+    u8 _03[0x4 - 0x3];
+  };
+
+  // Inferred role: a queued voice; original type name unknown.
+  struct unknown002 {
+    u32 unknown00; // Role and original member name unknown.
+    u32 unknown04; // Role and original member name unknown.
+  };
+
+  TalkManager();
+  ~TalkManager();
   void ResetVoiceGroupID();
+  static void Create();
   void Initialize();
   void NotifyMapChange();
   static void Destroy();
@@ -64,15 +81,22 @@ public:
   bool CheckPriority(const CHR_VOICE_DATA *data, int priority, bool isExcludeSame) const;
   int GetGroupTop(int group) const;
   bool NotifyTrigger(int id, TRIGGER trigger, int, int);
-  void PlayVoice(int id, int voice);
+  u64 PlayVoice(int id, int voice);
+  bool RegisterTalk(int id, int voice, int type, int group, int, int, bool);
 
   mm::mtl::FixedVector<CHR_VOICE_DATA, CHARACTER_COUNT> unknown08; // Inferred role: registered voices; original member name unknown.
-  u8 _880[0x14dc - 0x880];
-  u16 unknown14dc[77]; // Inferred role: group tops; original member name unknown.
+  mm::mtl::FixedVector<unknown001, 4> unknown880;                  // Inferred role: waiting talks; original member name unknown.
+  mm::mtl::FixedList<unknown002, 200> unknown898;                  // Inferred role: queued voices; original member name unknown.
+  u8 unknown12d8[0x14dc - 0x12d8];                                 // Role and original member name unknown.
+  u16 unknown14dc[77];                                             // Inferred role: group tops; original member name unknown.
+  u8 unknown1576[0x157a - 0x1576];                                 // Role and original member name unknown.
 };
 
+static_assert(offsetof(TalkManager::CHR_VOICE_DATA, unknown08) == 0x8, "");
 static_assert(sizeof(TalkManager::CHR_VOICE_DATA) == 0x18, "");
 static_assert(offsetof(TalkManager, unknown08) == 0x8, "");
+static_assert(offsetof(TalkManager, unknown880) == 0x880, "");
+static_assert(offsetof(TalkManager, unknown898) == 0x898, "");
 static_assert(offsetof(TalkManager, unknown14dc) == 0x14dc, "");
 
 } // namespace btl

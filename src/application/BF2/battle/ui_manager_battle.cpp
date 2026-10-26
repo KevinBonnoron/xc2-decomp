@@ -1,21 +1,30 @@
 #include "battle/ui_manager_battle.h"
 
+#include "battle/battle_global.h"
 #include "battle/btl_system_balance_access.h"
 #include "battle/character/battle_character.h"
+#include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
 #include "bdat.h"
+#include "fw/fw_update_info.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_manager.h"
+#include "gf/menu/object/gf_menu_obj_action_window.h"
 #include "gf/menu/object/gf_menu_obj_arts_palette.h"
 #include "gf/menu/object/gf_menu_obj_blade_change.h"
 #include "gf/menu/object/gf_menu_obj_chain_icon.h"
 #include "gf/menu/object/gf_menu_obj_damage_buff.h"
 #include "gf/menu/object/gf_menu_obj_element_eff.h"
 #include "gf/menu/object/gf_menu_obj_special_gauge.h"
+#include "gf/object/component/pc/gf_pc_state_util.h"
+#include "gf/object/gf_obj_handle.h"
 #include "mm_math/mm_vec3.h"
 
 namespace btl {
+
+constexpr int TUTORIAL_COUNT = 32;
 
 UIManager::~UIManager() {}
 
@@ -141,6 +150,51 @@ void UIManager::NotifyInput(INPUT_TYPE type, int value) {
   case INPUT_TYPE_REVERSE_PALETTE_3:
     unknown44_6 = true;
     break;
+  }
+}
+
+void UIManager::UpdateRescueUI() {
+  if (unknown20 == gf::INVALID_HANDLE) {
+    if (unknown28) {
+      gf::GfMenuObjActionWindow::closeBattle();
+      unknown28 = false;
+    }
+  } else if (!unknown28) {
+    static u32 padKey = gf::pc::StateUtil::getFwPadKey("battle_rescue");
+    gf::GfMenuObjActionWindow::OpenParam param;
+    param.unknown00 = unknown20;
+    param.unknown08 = padKey;
+    gf::GfMenuObjActionWindow::openBattle(param);
+    unknown28 = true;
+  }
+  unknown20 = gf::INVALID_HANDLE;
+}
+
+void UIManager::UpdateTutorial(const fw::UpdateInfo &updateInfo) {
+  u32 tutorials = unknown30;
+  if (tutorials != 0) {
+    if (BattleGlobal::get()->unknown65de_0 && CharacterManager::get()->IsExistBattleEnemy(nullptr, gf::INVALID_HANDLE, false) && BattleGlobal::get()->IsEnableBattle()) {
+      unknown34 -= updateInfo.unknown00;
+      if (unknown34 > 0.0f) {
+        return;
+      }
+      if (unknown45_2 && !unknown44_7) {
+        return;
+      }
+      for (int tutorial = 1;; tutorial++) {
+        if ((tutorials & 1) != 0) {
+          gf::GfMenuManager::startTutorial(tutorial);
+        }
+        tutorials >>= 1;
+        if (tutorials == 0 || tutorial >= TUTORIAL_COUNT) {
+          break;
+        }
+      }
+    }
+    unknown30 = 0;
+    unknown34 = -1.0f;
+    unknown45_1 = false;
+    unknown45_2 = false;
   }
 }
 

@@ -55,6 +55,8 @@ public:
   void PostUpdateProc(const fw::UpdateInfo &updateInfo);
   int GetCharacterIDByAiChrID(int aiId, bool isPlayer) const;
   bool IsExistAlivePlayer() const;
+  bool IsExistBattlePlayer() const;
+  bool IsExistBattleEnemy(bool *isAngry, gf::GF_OBJ_HANDLE *exclude, bool isIncludeAngry) const;
   void BattleEndInitialize();
   bool IsExistEnArrange(u32 enemy) const;
   bool IsExistHikariSp() const;

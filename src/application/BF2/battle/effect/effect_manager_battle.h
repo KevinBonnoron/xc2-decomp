@@ -45,7 +45,9 @@ public:
     u8 _262[0x270 - 0x262];
   };
 
+  EffectManager();
   virtual ~EffectManager();
+  static void Create();
   void Initialize();
   static void Destroy();
   void Finalize();

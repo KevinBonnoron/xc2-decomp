@@ -14,6 +14,7 @@
 #include "battle/utility_battle.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_target.h"
+#include "gf/game/sequential_play/gf_play_factory.h"
 
 namespace gf {
 struct GF_OBJ_HANDLE;
@@ -45,6 +46,36 @@ void BattleManager::postUpdate(const fw::UpdateInfo &updateInfo) {
   DataManager::PostUpdate(updateInfo);
   BattleGlobal::PostUpdate(updateInfo);
   CharacterManager::PostUpdate(updateInfo);
+}
+
+void BattleManager::Update(const fw::UpdateInfo &updateInfo) {
+  if (!unknown15) {
+    return;
+  }
+
+  bool isGameOver = CheckGameOver(updateInfo);
+  if (!isGameOver) {
+    unknown16 = false;
+    unknown17 = false;
+  } else {
+    if (!unknown17) {
+      CharacterManager::get()->PlayEnemyWinVoice();
+      unknown17 = true;
+    }
+    unknown16 = true;
+    if (Utility::IsEnableDeadSequence()) {
+      gf::GfPlayFactory::createPlayerDead(gf::PLAYER_DEAD_GAME_OVER);
+      unknown16 = false;
+    }
+  }
+
+  BattleGlobal *global = BattleGlobal::get();
+  f32 time = unknown10 * (1.0f / 15.0f);
+  global->unknown65e0_0 = isGameOver;
+  global->unknown86c = time;
+  CheckBattle();
+  CheckTargetMode();
+  CheckInBattle();
 }
 
 void BattleManager::gevBattleStart() {}

@@ -1,4 +1,7 @@
 #pragma once
+#include "fw/fw_camera.h" // IWYU pragma: keep
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 #include <stddef.h>
@@ -27,11 +30,16 @@ public:
     s8 unknown04;  // Inferred role: blade; original member name unknown.
   };
 
+  struct DROP_ITEM_DATA {
+    u8 _00[0xc0]; // Role and original member names unknown.
+  };
+
   struct SP_ATTACK_DATA {
     SP_ATTACK_BLADE_DATA unknown00[3]; // Inferred role: blades; original member name unknown.
     u8 unknown18;                      // Inferred role: level; original member name unknown.
   };
 
+  ~ChainAttackManager();
   void Initialize();
   static void Destroy();
   void Finalize();
@@ -64,10 +72,16 @@ public:
   f32 GetBonusRate() const;
 
   gf::GF_OBJ_HANDLE *unknown08; // Inferred role: target handle; original member name unknown.
-  u8 _10[0x192c - 0x10];
+  u8 _10[0x20 - 0x10];
+  mm::mtl::FixedVector<DROP_ITEM_DATA, 32> unknown20; // Inferred role: drop items; original member name unknown.
+  u8 _1828[0x192c - 0x1828];
   f32 unknown192c; // Inferred role: bonus rate time; original member name unknown.
   u32 unknown1930; // Inferred role: total damage; original member name unknown.
-  u8 _1934[0x1974 - 0x1934];
+  u8 _1934[0x1938 - 0x1934];
+  mm::mtl::IntrusivePtr<fw::Camera> unknown1938; // Inferred role: direction camera; original member name unknown.
+  u8 _1940[0x1958 - 0x1940];
+  mm::mtl::IntrusivePtr<fw::Camera> unknown1958; // Inferred role: result camera; original member name unknown.
+  u8 _1960[0x1974 - 0x1960];
   SP_ATTACK_DATA unknown1974[3]; // Inferred role: SP attacks; original member name unknown.
   u8 _19c8[0x19cc - 0x19c8];
   u16 unknown19cc; // Inferred role: damage rate; original member name unknown.
@@ -86,10 +100,14 @@ public:
   u16 : 11;
 };
 
+static_assert(sizeof(ChainAttackManager::DROP_ITEM_DATA) == 0xc0, "");
 static_assert(sizeof(ChainAttackManager::SP_ATTACK_DATA) == 0x1c, "");
 static_assert(offsetof(ChainAttackManager, unknown08) == 0x8, "");
+static_assert(offsetof(ChainAttackManager, unknown20) == 0x20, "");
 static_assert(offsetof(ChainAttackManager, unknown192c) == 0x192c, "");
 static_assert(offsetof(ChainAttackManager, unknown1930) == 0x1930, "");
+static_assert(offsetof(ChainAttackManager, unknown1938) == 0x1938, "");
+static_assert(offsetof(ChainAttackManager, unknown1958) == 0x1958, "");
 static_assert(offsetof(ChainAttackManager, unknown1974) == 0x1974, "");
 static_assert(offsetof(ChainAttackManager, unknown19cc) == 0x19cc, "");
 static_assert(offsetof(ChainAttackManager, unknown19ce) == 0x19ce, "");

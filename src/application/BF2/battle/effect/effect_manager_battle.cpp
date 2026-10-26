@@ -1,6 +1,15 @@
 #include "battle/effect/effect_manager_battle.h"
 
+#include "gf/gf_allocator.h"
+
 namespace btl {
+
+void EffectManager::Create() {
+  // __LINE__ must be 57 as in the original file: it is an argument of operator new.
+#line 57
+  EffectManager *manager = new (gf::getAllocator(gf::ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) EffectManager();
+  manager->Initialize();
+}
 
 void EffectManager::Initialize() {}
 

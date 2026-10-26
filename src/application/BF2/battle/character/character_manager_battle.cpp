@@ -311,4 +311,13 @@ void CharacterManager::SetupBGM() {
   }
 }
 
+bool CharacterManager::IsExistBattlePlayer() const {
+  for (int id = 0; id < CHARACTER_PLAYER_COUNT; id++) {
+    if (unknown20[id].unknown11f0 && unknown20[id].unknown00.IsBattle() && !unknown20[id].unknown00.unknownf8d_3) {
+      return true;
+    }
+  }
+  return false;
+}
+
 } // namespace btl

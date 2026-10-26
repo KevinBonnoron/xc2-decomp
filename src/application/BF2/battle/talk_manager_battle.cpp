@@ -1,12 +1,25 @@
 #include "battle/talk_manager_battle.h"
 
+#include "battle/character/battle_character.h"
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/gf_allocator.h"
 
 namespace btl {
 
 static const int s_bdatDefs[TalkManager::VOICE_TYPE_COUNT] = {-1, gf::BDAT_VO_BATTLE_DRIVER, gf::BDAT_VO_BATTLE_BLADE, gf::BDAT_VO_BATTLE_ENEMY, gf::BDAT_VO_WIN_SP};
+
+TalkManager::TalkManager() : unknown12d8(), unknown14dc(), unknown1576() {}
+
+TalkManager::~TalkManager() {}
+
+void TalkManager::Create() {
+  // __LINE__ must be 92 as in the original file: it is an argument of operator new.
+#line 92
+  TalkManager *manager = new (gf::getAllocator(gf::ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) TalkManager();
+  manager->Initialize();
+}
 
 void TalkManager::ResetVoiceGroupID() { __builtin_memset(unknown14dc, 0, sizeof(unknown14dc)); }
 
@@ -38,6 +51,8 @@ void TalkManager::Destroy() {
 }
 
 void TalkManager::Finalize() {}
+
+void TalkManager::NotifyMapChange() { unknown898.clear(); }
 
 bool TalkManager::IsEnableFieldBladeChange() const { return true; }
 
@@ -111,6 +126,27 @@ int TalkManager::GetGroupTop(int group) const {
   }
 
   return -1;
+}
+
+u64 TalkManager::PlayVoice(int id, int voice) {
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(id);
+  if (character != nullptr) {
+    int type;
+    if (character->IsBlade()) {
+      type = VOICE_TYPE_BLADE;
+    } else if (character->IsPlayer()) {
+      type = VOICE_TYPE_DRIVER;
+    } else {
+      type = VOICE_TYPE_ENEMY;
+    }
+    if (RegisterTalk(id, voice, type, -1, 0, 0, false)) {
+      const CHR_VOICE_DATA *data = GetRegisterDataConst(id);
+      if (data != nullptr) {
+        return data->unknown08;
+      }
+    }
+  }
+  return 0;
 }
 
 } // namespace btl

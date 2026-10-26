@@ -40,6 +40,8 @@ public:
   void PreUpdateProc(const fw::UpdateInfo &updateInfo);
   static void Update(const fw::UpdateInfo &updateInfo);
   void UpdateProc(const fw::UpdateInfo &updateInfo);
+  void UpdateRescueUI();
+  void UpdateTutorial(const fw::UpdateInfo &updateInfo);
   void ExitElementalComboDirectionUI(u32 id);
   void SetKakuseiData(bool isEnableKakusei, bool isKakusei, f32 kakuseiRestTimeRatio);
   void RegisterRescueUI(gf::GF_OBJ_HANDLE *handle);

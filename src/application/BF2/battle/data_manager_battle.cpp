@@ -10,6 +10,10 @@ namespace btl {
 
 constexpr int ENEMY_GROUP_NUM = 35;
 constexpr int ENEMY_GROUP_INDEX_OFFSET = 3;
+constexpr u16 GROUP_FLAGS_PERMIT = 0x2006;
+constexpr int PARTY_COUNT = 3;
+
+DataManager::~DataManager() {}
 
 void DataManager::Destroy() {
   DataManager *manager = get();
@@ -157,6 +161,35 @@ bool DataManager::IsValidDeadEnhance(int enhance) {
   default:
     return false;
   }
+}
+
+const CharacterParameter *DataManager::SearchCharacterParameterConst(gf::GF_OBJ_HANDLE *handle, bool) const {
+  if (handle == gf::INVALID_HANDLE) {
+    return nullptr;
+  }
+  for (const PlayerParameter &parameter : unknown08) {
+    if (parameter.unknown08 == handle) {
+      return &parameter;
+    }
+  }
+  for (int i = 0; i < CHARACTER_COUNT - CHARACTER_PLAYER_COUNT; i++) {
+    if (unknown7358[i] != nullptr && unknown7358[i]->unknown08 == handle) {
+      return unknown7358[i];
+    }
+  }
+  return nullptr;
+}
+
+bool DataManager::IsExistRequestPermit() const {
+  if (unknown132a0 >= 0) {
+    return true;
+  }
+  for (int i = 0; i < PARTY_COUNT; i++) {
+    if ((unknown10758[i].unknown104 & GROUP_FLAGS_PERMIT) == GROUP_FLAGS_PERMIT) {
+      return true;
+    }
+  }
+  return false;
 }
 
 } // namespace btl

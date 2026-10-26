@@ -17,6 +17,7 @@ namespace pc {
 
 class StateUtil {
 public:
+  static u32 getFwPadKey(const char *name);
   static void resetCamera();
   static bool isManualCamera();
   static void setTarget(GfComBehaviorPc &behavior, GF_OBJ_HANDLE *target);

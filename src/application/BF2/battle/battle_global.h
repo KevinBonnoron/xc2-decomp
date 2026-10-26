@@ -1,8 +1,10 @@
 #pragma once
 #include "battle/button_challenge.h"
+#include "fw/fw_camera.h" // IWYU pragma: keep
 #include "gf/data/gf_data_weapon.h"
 #include "gf/sound/gf_sound.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 #include <stddef.h>
@@ -112,6 +114,7 @@ public:
   };
 
   BattleGlobal();
+  ~BattleGlobal();
   static void Create();
   void Initialize();
   void NotifyMapChange();
@@ -211,7 +214,9 @@ public:
   mm::mtl::FixedVector<SLOW_PROC_DATA, 20> unknown6c0; // Inferred role: slow procs; original member name unknown.
   u8 _858[0x864 - 0x858];
   s32 unknown864; // Inferred role: battle count; original member name unknown.
-  u8 _868[0x878 - 0x868];
+  u8 _868[0x86c - 0x868];
+  f32 unknown86c; // Inferred role: battle time; original member name unknown.
+  u8 _870[0x878 - 0x870];
   mm::mtl::FixedVector<ATTACK_DAMAGE_DATA, 1000> unknown878; // Inferred role: attack damages; original member name unknown.
   ELEMENTAL_COMBO_FLOW_DATA unknown56a0[50];                 // Inferred role: elemental combo flows; original member name unknown.
   LEVER_GACHA_DATA unknown5a88;                              // Inferred role: lever gacha; original member name unknown.
@@ -224,16 +229,16 @@ public:
   MAP_DRIVER_REV_DATA unknown5ac0[9]; // Inferred role: map driver revisions; original member name unknown.
   u8 _5ae4[0x5af8 - 0x5ae4];
   gf::GF_OBJ_HANDLE *m_elementalComboImmortal;
-  void *unknown5b00;                  // Inferred role: elemental combo camera; original member name unknown.
-  gf::GfComEffectCaster *unknown5b08; // Inferred role: slow effect caster; original member name unknown.
-  gf::GfComEffectCaster *unknown5b10; // Role and original member name unknown.
-  u32 unknown5b18;                    // Inferred role: slow effect id; original member name unknown.
-  u32 unknown5b1c;                    // Role and original member name unknown.
-  u32 unknown5b20;                    // Inferred role: elemental combo slow id; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::Camera> unknown5b00; // Inferred role: elemental combo camera; original member name unknown.
+  gf::GfComEffectCaster *unknown5b08;            // Inferred role: slow effect caster; original member name unknown.
+  gf::GfComEffectCaster *unknown5b10;            // Role and original member name unknown.
+  u32 unknown5b18;                               // Inferred role: slow effect id; original member name unknown.
+  u32 unknown5b1c;                               // Role and original member name unknown.
+  u32 unknown5b20;                               // Inferred role: elemental combo slow id; original member name unknown.
   u8 _5b24[0x5b28 - 0x5b24];
   gf::GF_OBJ_HANDLE *unknown5b28; // Inferred role: unite combo target; original member name unknown.
   u8 _5b30[0x5b38 - 0x5b30];
-  void *unknown5b38; // Inferred role: unite combo camera; original member name unknown.
+  mm::mtl::IntrusivePtr<fw::Camera> unknown5b38; // Inferred role: unite combo camera; original member name unknown.
   u8 _5b40[0x5b5f - 0x5b40];
   bool unknown5b5f; // Inferred role: unite combo direction; original member name unknown.
   u8 _5b60[0x5b68 - 0x5b60];
@@ -293,6 +298,7 @@ static_assert(offsetof(BattleGlobal, unknown5a88) == 0x5a88, "");
 static_assert(offsetof(BattleGlobal, unknown6b8) == 0x6b8, "");
 static_assert(offsetof(BattleGlobal, unknown6c0) == 0x6c0, "");
 static_assert(offsetof(BattleGlobal, unknown864) == 0x864, "");
+static_assert(offsetof(BattleGlobal, unknown86c) == 0x86c, "");
 static_assert(offsetof(BattleGlobal, unknown878) == 0x878, "");
 static_assert(offsetof(BattleGlobal, unknown56a0) == 0x56a0, "");
 static_assert(offsetof(BattleGlobal, unknown5aa0) == 0x5aa0, "");

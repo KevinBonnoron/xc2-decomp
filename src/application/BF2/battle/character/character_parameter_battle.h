@@ -241,7 +241,7 @@ public:
   u8 : 2;
   u8 : 8;
   u8 m_perfectAvoid : 5;
-  u8 : 3;
+  u8 unknown5a9_5 : 3;         // Inferred role: super armor level; original member name unknown.
   s8 unknown5aa;               // Inferred role: rotate X; original member name unknown.
   s8 unknown5ab;               // Inferred role: rotate Y; original member name unknown.
   s8 unknown5ac;               // Inferred role: rotate Z; original member name unknown.

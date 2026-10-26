@@ -104,6 +104,9 @@ struct ARTS_PALETTE_DATA {
   const ARTS_SLOT_DATA *GetSupportSlotDataConst(int slot) const;
   bool IsEnableHealArts(bool isRecastEnd) const;
 
+  // Inferred role: non-const access to a slot; original name unknown.
+  ARTS_SLOT_DATA *unknown001(int slot, bool isTalent) const { return const_cast<ARTS_SLOT_DATA *>(GetSlotDataConst(slot, isTalent)); }
+
   gf::GF_OBJ_HANDLE *unknown00; // Inferred role: palette user; original member name unknown.
   ARTS_SLOT_DATA unknown08[19]; // Inferred role: arts slots; original member name unknown.
   ARTS_SLOT_DATA unknown1d0;    // Inferred role: level 4 special attack slot; original member name unknown.

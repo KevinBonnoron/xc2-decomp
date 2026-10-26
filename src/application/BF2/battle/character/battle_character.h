@@ -4,6 +4,7 @@
 #include "battle/arts_data.h"
 #include "battle/character/action_command.h"
 #include "battle/character/character_parameter_battle.h"
+#include "battle/character/elemental_combo_manager.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
@@ -12,6 +13,10 @@
 namespace fw {
 struct UpdateInfo;
 }
+
+namespace navi {
+class NvmshAcObj;
+} // namespace navi
 
 namespace gf {
 struct GF_OBJ_HANDLE;
@@ -37,6 +42,7 @@ public:
     DELAY_VOICE_TYPE_NORMAL,
   };
   enum ALPHA_PROC_ID {};
+  enum ANIM_SPDATA_TYPE {};
   enum BLADE_TIMER_MODE {};
   enum RIMBLOOM_ID {};
   enum ACTION_ID {
@@ -48,6 +54,8 @@ public:
     ACTION_ID_BLADE_ARTS = 8,
     ACTION_ID_BLADE_CHANGE = 9,
     ACTION_ID_SP_ATTACK = 10,
+    ACTION_ID_UNKNOWN_12 = 12, // Inferred role: set on a BLADE_GUARD action command; original name unknown.
+    ACTION_ID_UNKNOWN_13 = 13, // Inferred role: set on an ATTACK_REPELLED action command; original name unknown.
     ACTION_ID_RESCUE = 18,
   };
 
@@ -241,7 +249,7 @@ public:
   void AddUseWeapon();
   void StartBladeTimer(BLADE_TIMER_MODE mode);
   void EndBladeTimer(BLADE_TIMER_MODE mode);
-  void PlaySE(BTL_SE se, int number, const mm::Vec3 *position, bool isFollow);
+  bool PlaySE(BTL_SE se, int number, const mm::Vec3 *position, bool isFollow);
   void PlayHitAttrSE(int attribute, const mm::Vec3 *position);
   void PlayHitBulletSE(int attribute, const mm::Vec3 *position);
   int GetIKData(f32 &weight, f32 &height) const;
@@ -374,6 +382,9 @@ public:
   void ResetActionCommand();
   void ActionCommandEndRun();
   void UpdateCulling();
+  void ActionCommandIdle(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandAttack(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
+  void ActionCommandArts(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
   void ActionCommandEndIdle();
   void ActionCommandPutOutWeapon(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
   void ActionCommandEndPutOutWeapon();
@@ -403,6 +414,19 @@ public:
   void ActionCommandEndDead();
   void ActionCommandRescue(const ActionCommand *command, ActionCommand::COMMAND_TYPE type);
   void ActionCommandEndRescue();
+  bool CheckAttackAction(ACTION_ID action, bool isIncludeBladeArts) const;
+  f32 GetCriticalDamageRate(bool isUnknown);
+  void ResetBattleEnd_Attack();
+  u64 GetAnimSpecialProcData(ANIM_SPDATA_TYPE type) const;
+  bool IsSuperArmor(int level) const;
+  bool IsSlide(bool isIgnoreBladeChange) const;
+  f32 GetLandHeight() const;
+  bool SetAnimationNoComplement(ANIM_ID animId, int, int, bool);
+  void StopSE(BTL_SE se, int number);
+  void PlaySystemSE(BTL_SE se, int number, bool, bool);
+  bool CheckRandSatisfyEnhanceCondition(int enhance, int, f32, void *);
+  void RecoverNextBladeArtsRecast();
+  bool IsInvalidDead(bool isIgnoreBattle) const;
 
   // Inferred role: sets the stop time to the longest of the current and the new one; original name unknown.
   void unknown001(f32 time) {
@@ -438,9 +462,11 @@ public:
   u32 unknown130[EFFECT_ID_NUM]; // Inferred role: effects; original member name unknown.
   u8 _164[0x168 - 0x164];
   mutable const CharacterParameter *unknown168; // Inferred role: parameter; original member name unknown.
-  u8 _170[0xc30 - 0x170];
-  char unknownc30[0x28]; // Inferred role: default effect node name; original member name unknown.
-  char unknownc58[0x10]; // Inferred role: voice code; original member name unknown.
+  navi::NvmshAcObj *unknown170;                 // Inferred role: navi object; original member name unknown.
+  u8 _178[0x180 - 0x178];
+  ElementalComboManager unknown180; // Inferred role: elemental combo manager; original member name unknown.
+  char unknownc30[0x28];            // Inferred role: default effect node name; original member name unknown.
+  char unknownc58[0x10];            // Inferred role: voice code; original member name unknown.
   u8 _c68[0xcb8 - 0xc68];
   f32 m_animationSpeed;
   u8 _cbc[0xcc0 - 0xcbc];
@@ -465,7 +491,11 @@ public:
   u32 unknowndc2_3 : 4; // Inferred role: IK end number; original member name unknown.
   u32 unknowndc2_7 : 8; // Inferred role: IK end frame; original member name unknown.
   u32 unknowndc3_7 : 1; // Inferred role: IK flag; original member name unknown.
-  u8 _dc4[0xdd0 - 0xdc4];
+  u8 _dc4[0xdc7 - 0xdc4];
+  u8 unknowndc7_0 : 3; // Inferred role: animation special proc type; original member name unknown.
+  u8 : 5;
+  u32 unknowndc8; // Inferred role: animation special proc start; original member name unknown.
+  u32 unknowndcc; // Inferred role: animation special proc end; original member name unknown.
   s16 unknowndd0; // Inferred role: delay voice time; original member name unknown.
   s16 unknowndd2; // Inferred role: delay voice priority; original member name unknown.
   s16 unknowndd4; // Inferred role: delay voice group; original member name unknown.
@@ -487,8 +517,8 @@ public:
   u8 _f74[0xf76 - 0xf74];
   u16 m_driverType : 3;
   u16 : 6;
-  u16 unknownf77_1 : 3; // Inferred role: blade timer mode; original member name unknown.
-  u16 : 4;
+  u16 unknownf77_1 : 3;  // Inferred role: blade timer mode; original member name unknown.
+  u16 unknownf77_4 : 4;  // Inferred role: SE attribute; original member name unknown.
   u16 unknownf78_0 : 10; // Inferred role: SE type; original member name unknown.
   u16 : 6;
   u16 unknownf7a; // Inferred role: rim bloom flags; original member name unknown.
@@ -569,7 +599,7 @@ public:
   s8 unknown10c8; // Inferred role: arts target; original member name unknown.
   u8 : 1;
   u8 unknown10c9_1 : 1; // Role and original member name unknown.
-  u8 : 1;
+  u8 unknown10c9_2 : 1; // Role and original member name unknown.
   u8 unknown10c9_3 : 1; // Inferred role: launch rotate; original member name unknown.
   u8 : 4;
   u8 _10ca[0x10d0 - 0x10ca];
@@ -578,15 +608,29 @@ public:
   f32 unknown10e0; // Inferred role: no damage time; original member name unknown.
   f32 unknown10e4; // Inferred role: super armor time; original member name unknown.
   f32 unknown10e8; // Inferred role: perfect avoid time; original member name unknown.
-  u8 _10ec[0x10f4 - 0x10ec];
+  f32 unknown10ec; // Role and original member name unknown.
+  f32 unknown10f0; // Role and original member name unknown.
   u16 unknown10f4; // Inferred role: displayed elemental effect flags; original member name unknown.
-  u8 _10f6[0x10fe - 0x10f6];
+  u16 unknown10f6; // Role and original member name unknown.
+  u8 _10f8[0x10fa - 0x10f8];
+  s8 unknown10fa; // Role and original member name unknown.
+  u8 _10fb[0x10fe - 0x10fb];
   s16 unknown10fe; // Inferred role: back attacker; original member name unknown.
   u8 _1100[0x1101 - 0x1100];
   u8 unknown1101; // Inferred role: attack position; original member name unknown.
-  u8 _1102[0x1108 - 0x1102];
-  f32 unknown1108[7]; // Inferred role: enhance timers; original member name unknown.
-  u8 _1124[0x1160 - 0x1124];
+  u8 unknown1102; // Role and original member name unknown.
+  u8 unknown1103; // Role and original member name unknown.
+  u8 _1104[0x1105 - 0x1104];
+  u32 unknown1105_0 : 8; // Role and original member name unknown.
+  u32 unknown1106_0 : 1; // Role and original member name unknown.
+  u32 : 4;
+  u32 unknown1106_5 : 1; // Role and original member name unknown.
+  u32 : 3;
+  u32 unknown1105_17 : 1; // Role and original member name unknown.
+  u32 : 6;
+  f32 unknown1108[7];                           // Inferred role: enhance timers; original member name unknown.
+  CharacterParameter::ENHANCE_DATA unknown1124; // Inferred role: last satisfied enhance; original member name unknown.
+  u8 _112c[0x1160 - 0x112c];
   AI_ACTION_DATA unknown1160; // Inferred role: AI action; original member name unknown.
   u8 _1168[0x1174 - 0x1168];
   f32 unknown1174; // Inferred role: AI scout time; original member name unknown.
@@ -621,6 +665,8 @@ static_assert(offsetof(BattleCharacter, unknown120) == 0x120, "");
 static_assert(offsetof(BattleCharacter, unknown128) == 0x128, "");
 static_assert(offsetof(BattleCharacter, unknown130) == 0x130, "");
 static_assert(offsetof(BattleCharacter, unknown168) == 0x168, "");
+static_assert(offsetof(BattleCharacter, unknown170) == 0x170, "");
+static_assert(offsetof(BattleCharacter, unknown180) == 0x180, "");
 static_assert(offsetof(BattleCharacter, unknownc30) == 0xc30, "");
 static_assert(offsetof(BattleCharacter, unknownc58) == 0xc58, "");
 static_assert(offsetof(BattleCharacter, m_animationSpeed) == 0xcb8, "");
@@ -631,6 +677,7 @@ static_assert(offsetof(BattleCharacter, unknowncd4) == 0xcd4, "");
 static_assert(offsetof(BattleCharacter, unknowncdc) == 0xcdc, "");
 static_assert(offsetof(BattleCharacter, unknownce0) == 0xce0, "");
 static_assert(offsetof(BattleCharacter, unknowndb8) == 0xdb8, "");
+static_assert(offsetof(BattleCharacter, unknowndc8) == 0xdc8, "");
 static_assert(offsetof(BattleCharacter, unknowndd0) == 0xdd0, "");
 static_assert(offsetof(BattleCharacter, unknowndd6) == 0xdd6, "");
 static_assert(offsetof(BattleCharacter, unknowndd8) == 0xdd8, "");
@@ -666,9 +713,15 @@ static_assert(offsetof(BattleCharacter, unknown10c8) == 0x10c8, "");
 static_assert(offsetof(BattleCharacter, unknown10d0) == 0x10d0, "");
 static_assert(offsetof(BattleCharacter, unknown10f4) == 0x10f4, "");
 static_assert(offsetof(BattleCharacter, unknown10e0) == 0x10e0, "");
+static_assert(offsetof(BattleCharacter, unknown10ec) == 0x10ec, "");
+static_assert(offsetof(BattleCharacter, unknown10f0) == 0x10f0, "");
+static_assert(offsetof(BattleCharacter, unknown10f6) == 0x10f6, "");
 static_assert(offsetof(BattleCharacter, unknown10fe) == 0x10fe, "");
 static_assert(offsetof(BattleCharacter, unknown1101) == 0x1101, "");
+static_assert(offsetof(BattleCharacter, unknown1102) == 0x1102, "");
+static_assert(offsetof(BattleCharacter, unknown1103) == 0x1103, "");
 static_assert(offsetof(BattleCharacter, unknown1108) == 0x1108, "");
+static_assert(offsetof(BattleCharacter, unknown1124) == 0x1124, "");
 static_assert(offsetof(BattleCharacter, unknown1160) == 0x1160, "");
 static_assert(offsetof(BattleCharacter, unknown1174) == 0x1174, "");
 static_assert(offsetof(BattleCharacter, unknown1178) == 0x1178, "");

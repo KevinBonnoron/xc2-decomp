@@ -15,6 +15,8 @@ namespace btl {
 constexpr int DAMAGE_RATE_MIN = 1783;
 constexpr int DAMAGE_RATE_MAX = 11782;
 
+ChainAttackManager::~ChainAttackManager() {}
+
 void ChainAttackManager::Initialize() { Reset(0); }
 
 void ChainAttackManager::Start(gf::GF_OBJ_HANDLE *handle) {

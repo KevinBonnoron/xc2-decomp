@@ -3,6 +3,7 @@
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
 #include "battle/group_data.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 #include <stddef.h>
@@ -39,12 +40,14 @@ public:
     bool unknown3b; // Inferred role: timing flag; original member name unknown.
   };
 
+  ~DataManager();
   static void Destroy();
   void Finalize();
   void AddPartyGauge(f32 value, int partyId, bool isNotify);
   void FluctuatePartyGauge(int value, int partyId);
   void InitializeComboRequestUI();
   const CharacterParameter *GetCharacterParameterConst(int id) const;
+  const CharacterParameter *SearchCharacterParameterConst(gf::GF_OBJ_HANDLE *handle, bool) const;
   void GetArtsData(ARTS_DATA::DATA_TYPE type, int id, ARTS_DATA &data) const;
   f32 GetPouchBuffParam(int type, int pouch) const;
   int GetPartyGauge() const;
@@ -63,6 +66,7 @@ public:
   void PostUpdateProc(const fw::UpdateInfo &updateInfo);
   void SetSpecialEffects(int effect, bool isEnable);
   void ResetRequestPermit();
+  bool IsExistRequestPermit() const;
   bool IsSpecialEffects(int effect) const;
   static bool IsValidDeadEnhance(int enhance);
   static bool GetEnhanceData(int id, ENHANCE_EFFECT_DATA &data, bool);
@@ -72,10 +76,17 @@ public:
 
   PlayerParameter unknown08[PLAYER_PARAMETER_COUNT];                     // Inferred role: player parameters; original member name unknown.
   EnemyParameter *unknown7358[CHARACTER_COUNT - CHARACTER_PLAYER_COUNT]; // Inferred role: enemy parameters; original member name unknown.
-  u8 _7588[0x10758 - 0x7588];
-  GROUP_DATA unknown10758[38];       // Inferred role: character groups; original member name unknown.
-  ENEMY_GROUP_DATA unknown12e88[35]; // Inferred role: enemy groups; original member name unknown.
-  POUCH_BUFF_DATA unknown131d0[3];   // Inferred role: pouch buffs; original member name unknown.
+  mm::mtl::FixedVector<u8, 65> unknown7588;                              // Inferred role: sorted driver arts cache ids; original member name unknown.
+  ARTS_DATA unknown75d8[65];                                             // Inferred role: driver arts cache; original member name unknown.
+  mm::mtl::FixedVector<u8, 35> unknownb0c0;                              // Inferred role: sorted blade arts cache ids; original member name unknown.
+  ARTS_DATA unknownb0f0[35];                                             // Inferred role: blade arts cache; original member name unknown.
+  mm::mtl::FixedVector<u8, 30> unknownd0a8;                              // Inferred role: sorted enemy arts cache ids; original member name unknown.
+  ARTS_DATA unknownd0d0[30];                                             // Inferred role: enemy arts cache; original member name unknown.
+  mm::mtl::FixedVector<u8, 30> unknownec00;                              // Inferred role: sorted special blade arts cache ids; original member name unknown.
+  ARTS_DATA unknownec28[30];                                             // Inferred role: special blade arts cache; original member name unknown.
+  GROUP_DATA unknown10758[38];                                           // Inferred role: character groups; original member name unknown.
+  ENEMY_GROUP_DATA unknown12e88[35];                                     // Inferred role: enemy groups; original member name unknown.
+  POUCH_BUFF_DATA unknown131d0[3];                                       // Inferred role: pouch buffs; original member name unknown.
   u8 _13284[0x13290 - 0x13284];
   gf::GfMenuCallContext *unknown13290; // Inferred role: combo request context; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown13298;     // Inferred role: permit target; original member name unknown.
@@ -90,6 +101,14 @@ public:
 
 static_assert(offsetof(DataManager, unknown08) == 0x8, "");
 static_assert(offsetof(DataManager, unknown7358) == 0x7358, "");
+static_assert(offsetof(DataManager, unknown7588) == 0x7588, "");
+static_assert(offsetof(DataManager, unknown75d8) == 0x75d8, "");
+static_assert(offsetof(DataManager, unknownb0c0) == 0xb0c0, "");
+static_assert(offsetof(DataManager, unknownb0f0) == 0xb0f0, "");
+static_assert(offsetof(DataManager, unknownd0a8) == 0xd0a8, "");
+static_assert(offsetof(DataManager, unknownd0d0) == 0xd0d0, "");
+static_assert(offsetof(DataManager, unknownec00) == 0xec00, "");
+static_assert(offsetof(DataManager, unknownec28) == 0xec28, "");
 static_assert(offsetof(DataManager, unknown10758) == 0x10758, "");
 static_assert(offsetof(DataManager, unknown12e88) == 0x12e88, "");
 static_assert(offsetof(DataManager, unknown131d0) == 0x131d0, "");

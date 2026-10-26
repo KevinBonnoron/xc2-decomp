@@ -38,6 +38,8 @@ static const int unknown001[8] = {1, 4, 5, 6, 7, 8, 13, 14}; // Inferred role: s
 constexpr f32 DAMAGE_RATE_SCALE = 65536.0f;
 constexpr u32 SE_COMMON_ERROR = 2;
 
+BattleGlobal::~BattleGlobal() {}
+
 void BattleGlobal::Create() {
   // __LINE__ must be 265 as in the original file: its value changes the instruction order.
 #line 265

@@ -39,6 +39,7 @@ public:
 
   static void Normalize(mm::Vec3 &vector);
   static void TurnDirectionAngle(mm::Vec3 &direction, const mm::Vec3 &axis, f32 angle, bool isRadian);
+  static void TurnDirectionAngle(const mm::Vec3 &from, const mm::Vec3 &to, mm::Vec3 &direction, f32 angle, bool isRadian);
   static void GetCrossDirection(const mm::Vec3 &direction, mm::Vec3 &cross, CROSS_MODE mode);
   static bool CalcDirection(const mm::Vec3 &from, const mm::Vec3 &to, mm::Vec3 &direction);
   static f32 CalcAngle(const mm::Vec3 &from, const mm::Vec3 &to, bool isSigned);

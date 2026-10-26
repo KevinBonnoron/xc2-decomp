@@ -19,9 +19,11 @@
 #include "battle/sp_attack_manager.h"
 #include "battle/talk_manager_battle.h"
 #include "bdat.h"
+#include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_weapon.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_cond.h"
@@ -33,8 +35,10 @@
 #include "gf/scom/gf_scom_achiev.h"
 #include "gf/scom/gf_scom_enbook.h"
 #include "ml/rand.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/intrusive_ptr.h"
 
 namespace btl {
 
@@ -49,6 +53,7 @@ constexpr int BUTTON_CHALLENGE_RESULT_FAILURE = 2;
 constexpr int AI_ID_ENEMY_OFFSET = 100;
 constexpr int AI_ID_ENEMY_COUNT = 69;
 constexpr f32 FRAME_TO_SECOND = 1.0f / 30.0f;
+constexpr int ENHANCE_COOL_TIME_UNKNOWN_100 = 0x100;
 constexpr f32 POS_BACKWARD_DISTANCE = 0.7f;
 
 static const u16 s_weaponSeTypes[gf::WEAPON_TYPE_COUNT] = {12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
@@ -706,7 +711,7 @@ bool Utility::IsEnableEventStart() {
     return false;
   }
 
-  if (BattleGlobal::get()->unknown5b38 != nullptr) {
+  if (BattleGlobal::get()->unknown5b38.get() != nullptr) {
     return false;
   }
   if (ChainAttackManager::get()->IsProc(false)) {
@@ -1417,5 +1422,82 @@ int Utility::AI_EnemyKillNum() { return BattleGlobal::get()->unknown5b8e; }
 bool Utility::AI_IsKillChild() { return BattleGlobal::get()->unknown65e1_0; }
 
 bool Utility::AI_IsBenkeiWeather() { return DataManager::get()->IsSpecialEffects(SPECIAL_EFFECT_BENKEI_WEATHER); }
+
+f32 Utility::GetBladeCoolTime(int blade) {
+  gf::DataParamAcc acc(4, blade, gf::GIMMICK_TYPE_NONE);
+  f32 coolTime = static_cast<f32>(acc.getCoolTime());
+  int trust = gf::GfDataBlade::getTrustRank(blade);
+  if (trust != 0) {
+    coolTime += static_cast<s16>(Bdat::getValCheck(gf::GfDataBdat::getFP(gf::BDAT_FLD_IDEA_TABLE), "BladeChangeRev", trust, 5));
+  }
+
+  coolTime *= FRAME_TO_SECOND;
+  mm::mtl::FixedVector<u16, 64> enhances;
+  {
+    mm::mtl::FixedVector<u16, 64> orbEnhances;
+    gf::GfDataBlade::getEquipOrbEnance(orbEnhances, blade);
+    for (const u16 *it = orbEnhances.begin(); it != orbEnhances.end(); ++it) {
+      enhances.push_back(*it);
+    }
+  }
+
+  gf::GfBdatBtl *bdatBtl = gf::GfBdatBtl::get();
+  for (int i = 0; i < 3; i++) {
+    gf::SDataBladeSkill *skill = gf::GfDataBlade::getSkill(blade, i);
+    if (skill->unknown03 != 0 && skill->unknown00 != 0) {
+      int enhance = bdatBtl->getBTL_Skill_BlEnhance(skill->unknown00, skill->unknown03 - 1);
+      if (enhance != 0) {
+        enhances.push_back(enhance);
+      }
+    }
+  }
+
+  f32 reduceRate = 0.0f;
+  for (u16 enhance : enhances) {
+    ENHANCE_EFFECT_DATA data;
+    if (DataManager::GetEnhanceData(enhance, data, false) && data.unknown00 == ENHANCE_COOL_TIME_UNKNOWN_100) {
+      reduceRate += data.unknown08 * 0.01f;
+    }
+  }
+  if (reduceRate != 0.0f) {
+    f32 rate = 1.0f - reduceRate;
+    coolTime *= __builtin_fmaxf(rate, 0.0f);
+  }
+  return coolTime;
+}
+
+int Utility::AI_GetArtsEnemyNum() {
+  int count = 0;
+  for (int id = CHARACTER_PLAYER_COUNT; id < CHARACTER_COUNT; id++) {
+    BattleCharacter *character = CharacterManager::get()->GetCharacterConst(id);
+    if (character != nullptr && !character->IsBlade() && !character->IsDead(0) && character->IsBattle() &&
+        (character->unknown107c == BattleCharacter::ACTION_ID_ARTS || character->unknown107c == BattleCharacter::ACTION_ID_BLADE_ARTS ||
+         character->unknown107c == BattleCharacter::ACTION_ID_SP_ATTACK)) {
+      count++;
+    }
+  }
+  return count;
+}
+
+int Utility::AI_GetArtsPlayerNum() {
+  int count = 0;
+  for (int id = 0; id < CHARACTER_PLAYER_COUNT; id++) {
+    BattleCharacter *character = CharacterManager::get()->GetCharacterConst(id);
+    if (character != nullptr && !character->IsBlade() && !character->IsDead(0) && character->IsBattle() &&
+        (character->unknown107c == BattleCharacter::ACTION_ID_ARTS || character->unknown107c == BattleCharacter::ACTION_ID_BLADE_ARTS ||
+         character->unknown107c == BattleCharacter::ACTION_ID_SP_ATTACK)) {
+      count++;
+    }
+  }
+  return count;
+}
+
+int Utility::AI_GetAutoAttackState(gf::GF_OBJ_HANDLE *handle) {
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character == nullptr || character->unknown107c != BattleCharacter::ACTION_ID_ATTACK || !character->unknown1106_0) {
+    return 0;
+  }
+  return mm::clamp(character->unknown10fa + 1, 0, 3);
+}
 
 } // namespace btl

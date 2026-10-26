@@ -319,4 +319,13 @@ f32 Misc::GetVolumeFadeAlphaRate(gf::GF_OBJ_HANDLE *handle) {
 
 const char *Misc::GetArtsTypeName(int) { return ""; }
 
+void Misc::TurnDirectionAngle(const mm::Vec3 &from, const mm::Vec3 &to, mm::Vec3 &direction, f32 angle, bool isRadian) {
+  mm::Vec3 vector;
+  vector.x = to.x - from.x;
+  vector.y = to.y - from.y;
+  vector.z = to.z - from.z;
+  Normalize(vector);
+  TurnDirectionAngle(direction, vector, angle, isRadian);
+}
+
 } // namespace btl
