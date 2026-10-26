@@ -15,7 +15,7 @@ public:
     f32 to;
   };
 
-  UICtrlSimple() : curve(nullptr), time(0.0f), duration(0.0f), speedFactor(1.0f), loop(false), pause(false) {
+  UICtrlSimple() : values(), curve(nullptr), time(0.0f), duration(0.0f), speedFactor(1.0f), loop(false), pause(false) {
     for (int i = 0; i < N; i++) {
       values[i] = 0.0f;
     }
