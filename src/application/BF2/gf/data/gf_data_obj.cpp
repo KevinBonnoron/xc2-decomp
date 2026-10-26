@@ -1211,6 +1211,15 @@ const char *DataObjEnemy::getEffectResourceName() const { return GfBdatRsc::get(
 
 u32 DataObjEnemy::getBdatId() const { return m_SDataEnemy->unknown00; }
 
+u32 DataObjEnemy::getLevel(bool) const {
+  u16 level = m_SDataEnemy->unknowna8;
+  if (level != 0) {
+    return level < 1000 ? level : 999;
+  }
+
+  return 1;
+}
+
 static bool unknown003(f32 &value, u32 arrange, u32 percentEffect,
                        u32 addEffect) { // Inferred role: applyEnemyEnhance; original function name unknown.
   if (GfDataEnemy::getEquipBlade(arrange) == 0) {

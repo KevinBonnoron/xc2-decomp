@@ -8,6 +8,7 @@
 #include "gf/data/gf_data_npc.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/object/component/gf_component.h"
 #include "gf/object/component/model/gf_com_model.h"
@@ -337,6 +338,10 @@ int GfObjUtil::getPartyID(GF_OBJ_HANDLE *handle) {
 
   return info->unknown30->unknown14;
 }
+
+GfWeapon *GfObjUtil::getWeaponMountObject(GF_OBJ_HANDLE *handle) { return GfMountManager::getAppendHandles(handle, GFATTACH_WEAPON); }
+
+GfWeapon *GfObjUtil::getExtraMountObject(GF_OBJ_HANDLE *handle) { return GfMountManager::getAppendHandles(handle, GFATTACH_APPEND); }
 
 bool GfObjUtil::isValid(GF_OBJ_HANDLE *handle) { return getObj(handle) != nullptr; }
 

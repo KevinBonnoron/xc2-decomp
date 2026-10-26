@@ -108,6 +108,7 @@ public:
   static bool isReversePaletteBtnState(u32 index, u32 button);
   static ui::UIListInfo<MenuEnemyInfo> *getEnemyLinkList();
   static ui::UIListInfo<MenuItemInfo> *getItemLinkList();
+  static void addItemLink(const MenuItemInfo &info);
   static void setReferenceDriverID(u32 index, u32 id);
   static u32 getReferenceDriverID(u32 index);
   static void setReferenceBladeID(u32 index, u32 id);

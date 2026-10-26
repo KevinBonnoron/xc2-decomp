@@ -75,6 +75,8 @@ public:
   static u32 getTeamIDByMissionID(u32 mission);
   static SDataMercenariesTeam *getTeamMember(u32 teamID);
   static u8 getTeamAnimalNum(u32 teamID);
+  static int getTeamMaleNum(u32 teamID);
+  static int getTeamFemaleNum(u32 teamID);
   static bool getTeamByZoneMissionWorking(mm::mtl::FixedVector<u16, 3> &teams, u32 zone);
   static u32 getMissionFlag(u32 mission);
   static u32 getMissionMapID(u32 mission);
@@ -103,6 +105,7 @@ public:
   static bool isOrderOnlyOne(u32 mission);
   static u32 getMissionZoneID(u32 mission);
   static bool isMissionOrderTeam(u32 mission);
+  static u32 getMissionByQuestID(QuestID quest);
   static bool isMissionComplete(u32 mission);
   static bool isEnableMissionBlade(u32 blade, u32 requestBlade);
   static u16 getTeamLeader(u32 teamID);

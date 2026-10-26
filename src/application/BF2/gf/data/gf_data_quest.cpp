@@ -336,4 +336,6 @@ void GfDataQuest::setSelect(QuestID select) {
 
 QuestID GfDataQuest::getSelect() { return GfDataManager::getDataGame()->unknown1097e8; }
 
+mm::mtl::FixedVector<SDataTaskAchieve, 128> &GfDataQuest::getTaskAchieve() { return GfDataManager::getDataGame()->unknown109b30; }
+
 } // namespace gf

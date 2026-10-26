@@ -2,6 +2,7 @@
 
 #include <functional>
 
+#include "gf/data/gf_data_item.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/list/gf_menu_sort_type.h"
 #include "gf/util/gf_item_util.h"
@@ -103,6 +104,19 @@ void GfMenuItemList::sort(u32 type, bool ascending) {
     return;
   }
   UIListInfo<MenuItemInfo>::sort(compare);
+}
+
+bool GfMenuItemList::sortIdAscending(const MenuItemInfo &info, const MenuItemInfo &other) { return info.unknown04 < other.unknown04; }
+
+bool GfMenuItemList::sortIdDescending(const MenuItemInfo &info, const MenuItemInfo &other) { return info.unknown04 > other.unknown04; }
+
+bool GfMenuItemList::isValidItem(const MenuItemInfo &info) { return info.unknown04 != 0 && info.unknown08 > 0; }
+
+u32 GfMenuItemList::getSortRarity(const MenuItemInfo &info) {
+  if (info.unknown00 == ItemType::PRECIOUS || info.unknown00 == ItemType::INFO || info.unknown00 == ItemType::EVENT) {
+    return 0;
+  }
+  return GfDataItem::getRarity(info.unknown04);
 }
 
 } // namespace gf

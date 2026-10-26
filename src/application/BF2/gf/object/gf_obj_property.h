@@ -41,13 +41,16 @@ enum {
 
 struct GfObjPropertyMove {
   u32 unknown00; // Inferred role: type; original member name unknown.
-  u8 _04[0x80 - 0x04];
+  u8 _04[0x7d - 0x04];
+  bool unknown7d; // Inferred role: can start event; original member name unknown.
+  u8 _7e[0x80 - 0x7e];
   bool unknown80; // Inferred role: jump; original member name unknown.
   u8 _81[0xc0 - 0x81];
   GF_OBJ_HANDLE *unknownc0; // Inferred role: ground object; original member name unknown.
   f32 unknownc8;            // Inferred role: float time; original member name unknown.
 };
 
+static_assert(offsetof(GfObjPropertyMove, unknown7d) == 0x7d, "");
 static_assert(offsetof(GfObjPropertyMove, unknown80) == 0x80, "");
 static_assert(offsetof(GfObjPropertyMove, unknownc0) == 0xc0, "");
 static_assert(offsetof(GfObjPropertyMove, unknownc8) == 0xc8, "");

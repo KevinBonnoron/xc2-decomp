@@ -168,6 +168,38 @@ u32 GfDataMercenaries::getTeamPower(u32 teamID) {
   return power;
 }
 
+int GfDataMercenaries::getTeamMaleNum(u32 teamID) {
+  SDataMercenariesTeam *team = getTeamMember(teamID);
+  if (team == nullptr) {
+    return 0;
+  }
+
+  int num = 0;
+  for (u16 member : team->unknown00) {
+    if (GfDataBlade::isMale(member)) {
+      num++;
+    }
+  }
+
+  return num;
+}
+
+int GfDataMercenaries::getTeamFemaleNum(u32 teamID) {
+  SDataMercenariesTeam *team = getTeamMember(teamID);
+  if (team == nullptr) {
+    return 0;
+  }
+
+  int num = 0;
+  for (u16 member : team->unknown00) {
+    if (GfDataBlade::isFemale(member)) {
+      num++;
+    }
+  }
+
+  return num;
+}
+
 u32 GfDataMercenaries::getTeamID(u32 blade) {
   for (SDataMercenariesTeam &team : GfDataManager::getDataGame()->unknown1098c8.unknown00) {
     for (u16 member : team.unknown00) {
@@ -247,6 +279,16 @@ bool GfDataMercenaries::getTeamByZoneMissionWorking(mm::mtl::FixedVector<u16, 3>
   }
 
   return !teams.empty();
+}
+
+u32 GfDataMercenaries::getMissionByQuestID(QuestID quest) {
+  for (u32 mission = getStartMissionID(); mission < getEndMissionID(); mission++) {
+    if (quest == getMissionQuestID(mission)) {
+      return mission;
+    }
+  }
+
+  return 0;
 }
 
 u32 GfDataMercenaries::getMissionFlag(u32 mission) {

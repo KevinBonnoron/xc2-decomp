@@ -4,6 +4,11 @@
 
 namespace gf {
 
+GfAppend::GfAppend() : unknown00(), m_modelName(nullptr), m_motionName(nullptr), m_mountIndex(0xffff), m_rscID(0), unknown7c(1.0f), unknown80(false) {}
+
+GfAppend::GfAppend(const char *modelName, const char *motionName, u16 mountIndex, u16 rscID, f32 scale, bool multiMount)
+    : unknown00(), m_modelName(modelName), m_motionName(motionName), m_mountIndex(mountIndex), m_rscID(rscID), unknown7c(scale), unknown80(multiMount) {}
+
 const char *GfAppend::getBone(OPTMNT mount) const {
   for (const MOUNT_INFO *it = unknown00.begin(); it != unknown00.end(); ++it) {
     if (it->unknown14 == mount) {
@@ -13,6 +18,8 @@ const char *GfAppend::getBone(OPTMNT mount) const {
 
   return "";
 }
+
+void GfAppend::addMount(MOUNT_INFO &info) { unknown00.push_back(info); }
 
 const char *GfAppend::getModelName() const { return m_modelName; }
 

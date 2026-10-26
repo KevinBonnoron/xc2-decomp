@@ -10,6 +10,8 @@
 
 namespace gf {
 
+class GfInitParamDriver;
+
 constexpr u32 DRIVER_LEVEL_MAX = 99;
 constexpr u32 DRIVER_ARTS_LEVEL_MAX = 5;
 constexpr u32 SET_BLADE_NUM_MAX = 5;
@@ -122,7 +124,13 @@ public:
   static u32 getFavorite(u32 driver, FAVORITE favorite);
   static void setEquipBlade(u32 driver, bool isEquip, int slot);
   static u32 getExpNextLevel(const SDataDriver &dataDriver);
+  static u32 getExpNextLevel(u32 driver);
   static u32 getBattleExpNextLevel(const SDataDriver &dataDriver);
+  static u32 getBattleExpNextLevel(u32 driver);
+  static u32 getDummyBlade(u32 driver);
+  static const char *getBelongingModelName(const GfInitParamDriver &param);
+  static bool isActivatePartyAll(u32 driver);
+  static void setPouchData(u32 driver, u32 slot, const SDataPouch &pouch);
   static void calcDriverBaseParamByLevel(SDataDriver &dataDriver);
   static u32 getLevel(u32 driver);
   static bool isActivateParty(u32 driver);
@@ -157,10 +165,12 @@ public:
   static const char *getModelResourceName(u32 driver);
   static const char *getMotionResourceName(u32 driver);
   static const char *getDebugName(u32 driver);
+  static bool debugGetNameWithClass(mm::mtl::FixStr<128> &name, u32 driver);
   static u32 getRace(u32 driver);
   static u32 getAiID(u32 driver);
   static bool getDriverAddAnim(mm::mtl::FixStr<128> &animName, u32 driver, u32 weaponType);
   static u32 getDriverID(u32 index);
+  static u32 getDriverRelativeID(u32 driver);
   static u32 getLevel(const SDataDriver &dataDriver);
   static u32 getExp(const SDataDriver &dataDriver);
   static u32 getBattleExp(const SDataDriver &dataDriver);

@@ -163,6 +163,7 @@ public:
   GF_SE_CATEGORY_HANDLE *createCategoryHandle();
   void releaseCategoryHandle(GF_SE_CATEGORY_HANDLE *&handle);
   void update(const fw::UpdateInfo &info);
+  SeParam *getSeParam(u16 id);
   bool calcCategoryVolume(const fw::UpdateInfo &info);
   void updateSeParamList(const fw::UpdateInfo &info);
   void setupGame();
@@ -204,7 +205,9 @@ public:
   bool unknown11;                                                     // Inferred role: released; original member name unknown.
   u64 unknown18;                                                      // Inferred role: handle serial; original member name unknown.
   mm::mtl::FixedArray<CategoryVolume, CATEGORY_VOLUME_NUM> unknown20; // Inferred role: category volumes; original member name unknown.
-  u8 _2e20[0x6690 - 0x2e20];
+  u8 _2e20[0x5268 - 0x2e20];
+  SeParam *unknown5268; // Inferred role: se params; original member name unknown.
+  u8 _5270[0x6690 - 0x5270];
   GfMasterVolume unknown6690;         // Inferred role: master volume; original member name unknown.
   GF_SE_CATEGORY_HANDLE *unknown66d0; // Inferred role: category handle; original member name unknown.
 };
@@ -213,6 +216,7 @@ static_assert(sizeof(GfSound::SeParam) == 0x18, "");
 static_assert(sizeof(GfSound::CategoryVolume) == 0x170, "");
 static_assert(offsetof(GfSound, unknown10) == 0x10, "");
 static_assert(offsetof(GfSound, unknown20) == 0x20, "");
+static_assert(offsetof(GfSound, unknown5268) == 0x5268, "");
 static_assert(offsetof(GfSound, unknown6690) == 0x6690, "");
 static_assert(offsetof(GfSound, unknown66d0) == 0x66d0, "");
 static_assert(sizeof(GfSound) == 0x66d8, "");

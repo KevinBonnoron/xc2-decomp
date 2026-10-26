@@ -19,6 +19,9 @@ static_assert(sizeof(MenuOffset) == 0x18, "");
 
 class GfMenuBdat {
 public:
+  static u8 *s_BdatArray[7];
+
+  static u8 *getFP(u32 bdat);
   static bool isValidBdatID(u8 *bdat, int id);
   static void getMenuOffset(int id, MenuOffset &offset);
   static u32 getIconImageIndex(int icon);

@@ -1,5 +1,7 @@
 #include "gf/data/gf_data_driver_arts.h"
 
+#include "battle/battle_manager.h"
+#include "battle/utility_battle.h"
 #include "bdat.h"
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_id.h"
@@ -69,6 +71,19 @@ void GfDataDriverArts::initializeWp(u32 driver, u32 weaponType) {
 u8 *GfDataDriverArts::getNameFP() { return GfDataBdat::getFP(BDAT_BTL_ARTS_DR_MS); }
 
 u8 *GfDataDriverArts::getCaptionFP() { return GfDataBdat::getFP(BDAT_BTL_ARTS_DR_CAP); }
+
+u32 GfDataDriverArts::getCaptionID(u32 arts) {
+  int caption = GfBdatBtl::get()->getArtsDrCaption(arts);
+  u8 *bdat = GfDataBdat::getFP(BDAT_BTL_CONDITION);
+  u32 value = static_cast<u32>(Bdat::getValCheck(bdat, "Param01", 0, 2));
+  if ((value & 0xffff) == arts && btl::BattleManager::get() != nullptr) {
+    if (btl::Utility::IsSatisfyCondition(0)) {
+      caption++;
+    }
+  }
+
+  return caption;
+}
 
 u32 GfDataDriverArts::getNameID(u32 arts) { return GfBdatBtl::get()->getArtsDrName(arts); }
 

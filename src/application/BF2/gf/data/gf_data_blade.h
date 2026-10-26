@@ -336,7 +336,7 @@ public:
   static bool setActivateUnuse(u32 blade);
   static bool setActivateReserver(u32 blade);
   static bool isActivateReserver(u32 blade);
-  static void setActivateMercenaryTeam(u32 blade);
+  static bool setActivateMercenaryTeam(u32 blade);
   static u32 getEndRareBlade();
   static u32 addRareBlade(const SDataBlade &dataBlade);
   static u32 addCommonBlade(const SDataBlade &dataBlade);

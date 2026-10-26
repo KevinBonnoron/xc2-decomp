@@ -2,6 +2,7 @@
 #include "gf/event/gf_event.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gmk/gmk_manager.h"
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_queue.h"
@@ -34,6 +35,7 @@ public:
   };
 
   static void build(const GfSetupParam &param);
+  void initialize(const GfSetupParam &param);
   static void destroy();
   static bool isPlay();
   static bool isInitialized();
@@ -63,6 +65,7 @@ public:
   static void addCallbackEventSequence(int sequence, bool isStart);
   static void addMenuKizunaring(u32 blade);
   static void addMenuPrecious(u32 item);
+  static void addMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param);
   static int addMenuCommon(u32 window);
   static int addMenuCommon(const MenuCommonWindowParam &param);
   static void addMenuChapterSave(u32 chapter);

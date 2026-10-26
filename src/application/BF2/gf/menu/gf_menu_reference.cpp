@@ -1,5 +1,6 @@
 #include "gf/menu/gf_menu_reference.h"
 
+#include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_party_status.h"
 #include "ui/list/ui_list_info.h"
 
@@ -322,6 +323,13 @@ ui::UIListInfo<MenuItemInfo> *GfMenuReference::getItemLinkList() {
     return reference->unknown4cba0;
   }
   return nullptr;
+}
+
+void GfMenuReference::addItemLink(const MenuItemInfo &info) {
+  ui::UIListInfo<MenuItemInfo> *list = getItemLinkList();
+  if (list != nullptr) {
+    list->addContents(info);
+  }
 }
 
 void GfMenuReference::setReferenceDriverID(u32 index, u32 id) {

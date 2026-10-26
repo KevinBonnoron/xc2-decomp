@@ -491,4 +491,11 @@ void GfMasterVolume::setMenuBgmVolume(f32 volume) {
   }
 }
 
+GfSound::SeParam *GfSound::getSeParam(u16 id) {
+  if (id == 0xffff) {
+    return nullptr;
+  }
+  return &unknown5268[id];
+}
+
 } // namespace gf

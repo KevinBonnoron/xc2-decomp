@@ -24,6 +24,7 @@ public:
   };
 
   GfAppend();
+  GfAppend(const char *modelName, const char *motionName, u16 mountIndex, u16 rscID, f32 scale, bool multiMount);
   const char *getBone(OPTMNT mount) const;
   void addMount(MOUNT_INFO &info);
   const char *getModelName() const;

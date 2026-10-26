@@ -1,10 +1,13 @@
 #include "gf/event/gf_evt_model.h"
 
 #include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_vec3.h"
 
 namespace gf {
 
 const mm::mtl::RTTI *GfEvtModel::getRTTI() const { return &m_rtti; }
+
+void GfEvtModel::setMount(GfEvtModel *parent, const char *bone) { setMount(parent, bone, mm::Vec3::zero, mm::Vec3::zero); }
 
 bool GfEvtModel::isValid() const { return GfObjUtil::isValid(unknown20); }
 

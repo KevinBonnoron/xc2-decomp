@@ -351,6 +351,11 @@ u32 GfDataBlade::getSetDriver(u32 blade) {
 
 bool GfDataBlade::isDummyBlade(u32 blade) { return (blade == BLADE_DUMMY_REGULAR_FIRST || blade == BLADE_DUMMY_REGULAR_SECOND) || blade == BLADE_DUMMY_RARE; }
 
+bool GfDataBlade::setActivateMercenaryTeam(u32 blade) {
+  getSDataBlade(blade)->unknown00 = 2;
+  return true;
+}
+
 bool GfDataBlade::isUnselect(u32 blade) { return getSDataBlade(blade)->unknown8a0 != 0; }
 
 bool GfDataBlade::isActivateUnuse(u32 blade) {

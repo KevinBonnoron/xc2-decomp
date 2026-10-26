@@ -10,4 +10,6 @@ void GfMenuObjActionWindow::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjActionWindow::update() { GfMenuObject::update(); }
 
+void GfMenuObjActionWindow::eventHudSceneChange(u32) {}
+
 } // namespace gf

@@ -11,6 +11,7 @@ public:
   void initialize() override;
   void finalize() override;
   void update() override;
+  void eventHudSceneChange(u32 scene) override;
 };
 
 } // namespace gf

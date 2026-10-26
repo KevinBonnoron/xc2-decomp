@@ -1,17 +1,21 @@
 #include "gf/data/gf_data_driver.h"
 
+#include "bdat.h"
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_chrdr.h"
 #include "gf/data/gf_bdat_item.h"
+#include "gf/data/gf_bdat_msg.h"
 #include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_game.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_param_acc.h"
+#include "gf/data/gf_data_party.h"
 #include "gf/data/gf_data_weapon.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/object/gf_init_param.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 
@@ -200,9 +204,26 @@ u32 GfDataDriver::getDriverArtsIcon(u32 arts) {
 
 const char *GfDataDriver::getModelResourceName(u32 driver) { return GfBdatChrDr::get()->getChrDrModel(driver); }
 
+const char *GfDataDriver::getName(u32 driver) {
+  u32 nameId = GfBdatChrDr::get()->getChrDrName(driver);
+  u8 *bdat = GfBdatMsg::getFpChrDr();
+  if (nameId != 0) {
+    return Bdat::getMSText(bdat, nameId);
+  }
+  return nullptr;
+}
+
+bool GfDataDriver::getName(u8 *&bdat, u32 &textId, u32 driver) {
+  textId = GfBdatChrDr::get()->getChrDrName(driver);
+  bdat = GfBdatMsg::getFpChrDr();
+  return textId != 0;
+}
+
 const char *GfDataDriver::getMotionResourceName(u32 driver) { return GfBdatChrDr::get()->getChrDrMotion(driver); }
 
 const char *GfDataDriver::getDebugName(u32 driver) { return GfBdatChrDr::get()->getChrDrDebugName(driver); }
+
+bool GfDataDriver::debugGetNameWithClass(mm::mtl::FixStr<128> &, u32) { return false; }
 
 u32 GfDataDriver::getRace(u32 driver) { return GfBdatChrDr::get()->getChrDrRace(driver); }
 
@@ -230,6 +251,11 @@ bool GfDataDriver::getDriverAddAnim(mm::mtl::FixStr<128> &animName, u32 driver, 
 }
 
 u32 GfDataDriver::getDriverID(u32 index) { return index < DRIVER_COUNT ? index + 1 : 1; }
+
+u32 GfDataDriver::getDriverRelativeID(u32 driver) {
+  u32 relativeID = driver - 1;
+  return relativeID < DRIVER_COUNT ? relativeID : 1;
+}
 
 u32 GfDataDriver::getLevel(const SDataDriver &dataDriver) { return dataDriver.unknown94; }
 
@@ -509,6 +535,96 @@ bool GfDataDriver::isEquipDefaultAcce(u32 driver) {
   }
 
   return getSDataDriver(driver)->unknown572 != 0;
+}
+
+u32 GfDataDriver::getExpNextLevel(const SDataDriver &dataDriver) {
+  u32 level = dataDriver.unknown94;
+  u32 exp = dataDriver.unknownb4;
+  u32 growExp = GfBdatBtl::get()->getGrowLevelExp(level + 1);
+  if (exp > growExp) {
+    return growExp;
+  }
+  if (level >= DRIVER_LEVEL_MAX) {
+    return 0;
+  }
+  return growExp - exp;
+}
+
+u32 GfDataDriver::getExpNextLevel(u32 driver) { return getExpNextLevel(*getSDataDriver(driver)); }
+
+u32 GfDataDriver::getBattleExpNextLevel(u32 driver) { return getExpNextLevel(*getSDataDriver(driver)); }
+
+u32 GfDataDriver::getDummyBlade(u32 driver) {
+  if (driver == DRIVER_REX) {
+    return 0x3f4;
+  }
+
+  if (driver != 9) {
+    if (driver == 7) {
+      return 0x3f5;
+    }
+    return 0;
+  }
+
+  return 0x431;
+}
+
+const char *GfDataDriver::getBelongingModelName(const GfInitParamDriver &param) {
+  if (param.m_bladeID == 1) {
+    return (param.unknown08 | 4) == 0xd ? "oj/oj300002" : "oj/oj300001";
+  }
+
+  return nullptr;
+}
+
+bool GfDataDriver::isActivateParty(u32 driver) {
+  if (driver == 0) {
+    return false;
+  }
+
+  if (getSDataDriver(driver)->unknown20 != 1) {
+    return false;
+  }
+
+  return static_cast<u32>(GfDataParty::getDriverPartyID(driver)) < 3;
+}
+
+bool GfDataDriver::isActivateReserver(u32 driver) {
+  if (getSDataDriver(driver)->unknown20 != 1) {
+    return false;
+  }
+
+  return static_cast<u32>(GfDataParty::getDriverPartyID(driver) - 3) < 7;
+}
+
+bool GfDataDriver::isActivateUnuse(u32 driver) { return getSDataDriver(driver)->unknown20 == 0; }
+
+bool GfDataDriver::isActivatePartyAll(u32 driver) {
+  if (driver == 0) {
+    return false;
+  }
+
+  return getSDataDriver(driver)->unknown20 == 1;
+}
+
+u32 GfDataDriver::getFavorite(u32 driver, FAVORITE favorite) {
+  if (driver != 0) {
+    if (static_cast<u32>(favorite) < 2) {
+      return GfBdatChrDr::get()->getChrDrFavoriteCategory(driver, favorite);
+    }
+    if ((static_cast<u32>(favorite) & 0xfffffffe) == 2) {
+      return GfBdatChrDr::get()->getChrDrFavoriteItem(driver, static_cast<u32>(favorite) - 2);
+    }
+  }
+
+  return 0;
+}
+
+void GfDataDriver::setPouchData(u32 driver, u32 slot, const SDataPouch &pouch) {
+  SDataPouch *dataPouch = &getSDataDriver(driver)->unknown584[slot];
+  dataPouch->_06 = pouch._06;
+  dataPouch->unknown04 = pouch.unknown04;
+  dataPouch->unknown00 = pouch.unknown00;
 }
 
 } // namespace gf

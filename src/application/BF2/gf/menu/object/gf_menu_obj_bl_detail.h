@@ -4,6 +4,8 @@
 
 namespace gf {
 
+class GfMenuCallContext;
+
 class GfMenuObjBlDetail : public GfMenuObject {
 public:
   GfMenuObjBlDetail(u32 handle);
@@ -11,6 +13,9 @@ public:
   void initialize() override;
   void finalize() override;
   void update() override;
+  static void open(GfMenuCallContext *context);
+  static void nextPage(GfMenuCallContext *context);
+  static void prevPage(GfMenuCallContext *context);
 };
 
 } // namespace gf

@@ -26,6 +26,8 @@ constexpr f32 PARTY_FORM_DELAY_SEC = 0.2f;
 constexpr f32 CAM_WAIT_SEC = 1.0f;
 constexpr u32 FADE_FRAME = 10;
 
+void StateSalvageSkillCheck::leave(GfGameSalvage *, ai::State *) {}
+
 void StateSalvageWait::enter(GfGameSalvage *, ai::State *) {}
 
 void StateSalvageWait::leave(GfGameSalvage *, ai::State *) {}

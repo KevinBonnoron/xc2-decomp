@@ -7,6 +7,7 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
+#include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_party.h"
 #include "gf/data/gf_data_util.h"
@@ -24,6 +25,7 @@
 #include "gf/menu/gf_menu_sound_manager.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/util/gf_util.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_mtl/fixed_vector.h"
 #include "ui/ctrl/ui_ctrl_manager.h"
@@ -559,5 +561,40 @@ bool GfMenuObjUtil::getMenuCondition(u32 id) {
 bool GfMenuObjUtil::getMenuFullOpenFlag() { return false; }
 
 bool GfMenuObjUtil::isCustomEnableBlade(u32 blade) { return GfDataUtil::getScenarioFlag() > SCENARIO_CUSTOM_ENABLE; }
+
+u32 GfMenuObjUtil::getBladeRareIconID(u32 blade) {
+  u32 icon = ICON_WEAPON_TYPE_BASE - 1;
+  if (GfDataBlade::isValid(blade)) {
+    icon += GfDataBlade::isRareBlade(blade);
+  }
+  return icon;
+}
+
+bool GfMenuObjUtil::isEnemyBoss(GF_OBJ_HANDLE *handle) {
+  DataParamAcc dataParamAcc(handle);
+  const SDataEnemy *dataEnemy = dataParamAcc.getSDataEnemy();
+  if (dataEnemy == nullptr) {
+    return false;
+  }
+  return dataEnemy->unknown04_1;
+}
+
+bool GfMenuObjUtil::isEnemyNamed(GF_OBJ_HANDLE *handle) {
+  DataParamAcc dataParamAcc(handle);
+  const SDataEnemy *dataEnemy = dataParamAcc.getSDataEnemy();
+  if (dataEnemy == nullptr) {
+    return false;
+  }
+  return dataEnemy->unknown04_0;
+}
+
+void GfMenuObjUtil::setColDefault(u32 handle) {
+  ui::UIObjectAcc objectAcc(handle);
+  if (objectAcc.isValid()) {
+    objectAcc.loadDefColor();
+  }
+}
+
+bool GfMenuObjUtil::getScreenPos(mm::Vec3 &screenPos, const mm::Vec3 &position) { return util::getScreenPos(screenPos, position); }
 
 } // namespace gf

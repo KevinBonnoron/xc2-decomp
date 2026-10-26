@@ -55,6 +55,8 @@ public:
   static bool sortGetAreaDescending(const MenuItemInfo &info, const MenuItemInfo &other);
   static bool sortIdAscending(const MenuItemInfo &info, const MenuItemInfo &other);
   static bool sortIdDescending(const MenuItemInfo &info, const MenuItemInfo &other);
+  static bool isValidItem(const MenuItemInfo &info);
+  static u32 getSortRarity(const MenuItemInfo &info);
 };
 
 static_assert(sizeof(GfMenuItemList) == 0x78, "");

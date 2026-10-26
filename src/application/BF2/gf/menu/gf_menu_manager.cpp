@@ -1,7 +1,12 @@
 #include "gf/menu/gf_menu_manager.h"
 
+#include "bdat.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_option.h"
+#include "gf/data/gf_game_flag.h"
 #include "gf/event/gf_event.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_fade.h"
@@ -18,6 +23,8 @@
 #include "gf/menu/object/gf_menu_obj_tutorial.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "gf/object/gf_obj_handle.h"
+#include "layer/layer_acc_manager.h"
+#include "scn/scn_render_dr_sys_parm_acc.h"
 #include "ui/ui_manager.h"
 
 namespace gf {
@@ -66,6 +73,8 @@ bool isOpenCallMenu(GfMenuManager *manager, u32 menu) {
 
 } // namespace
 
+void GfMenuManager::qevCompleteQuest(const QuestCompleteParam &) {}
+
 void GfMenuManager::build(const GfSetupParam &param) {
   // __LINE__ must be 347 as in the original file: it is an argument of the allocation.
 #line 347
@@ -91,6 +100,23 @@ bool GfMenuManager::isFading(u32 fade) {
   }
   return false;
 }
+
+void GfMenuManager::getFadeColor(u32 fade, mm::Col4 &color) {
+  GfMenuManager *manager = get();
+  if (manager != nullptr && manager->unknown4090 && !manager->unknown4091) {
+    GfMenuFade::getFadeColor(fade, color);
+  }
+}
+
+void GfMenuManager::applyGammaCorrectValue(f32 value) {
+  f32 gamma = value + value + 1.2f;
+  layer::LayerAccManager layerAcc;
+  layerAcc.setGamma(gamma);
+  ml::ScnRenderDrSysParmAcc renderParam;
+  renderParam.setGamma(gamma);
+}
+
+void GfMenuManager::applyOptionData(const SDataOption &option) { applyGammaCorrectValue(static_cast<f32>(option._66) / VOLUME_SCALE); }
 
 f32 GfMenuManager::getUpdateDT() {
   GfMenuManager *manager = get();
@@ -154,6 +180,38 @@ u32 GfMenuManager::getCurCameraType() {
     return manager->unknown40cc;
   }
   return 0;
+}
+
+void GfMenuManager::gevCameraControl(u32 type) { unknown40cc = type; }
+
+bool GfMenuManager::isBattleState(u32 state) {
+  GfMenuManager *manager = get();
+  if (manager == nullptr || !manager->unknown4090) {
+    return false;
+  }
+  return manager->unknown40dc.test(state);
+}
+
+void GfMenuManager::setBattleState(u32 state, bool isEnable) {
+  GfMenuManager *manager = get();
+  if (manager != nullptr && manager->unknown4090 && manager->unknown40ca) {
+    manager->unknown40dc.set(state, isEnable);
+  }
+}
+
+bool GfMenuManager::isDispHud(int hud) {
+  GfMenuManager *manager = get();
+  if (manager == nullptr || manager->unknown4091) {
+    return false;
+  }
+  return manager->unknown40e4.test(hud);
+}
+
+void GfMenuManager::setDispAll(bool isDisp) {
+  GfMenuManager *manager = get();
+  if (manager != nullptr && !manager->unknown4091) {
+    manager->unknown4100 = !isDisp;
+  }
 }
 
 void GfMenuManager::openCommonWindow(u16 window) {
@@ -274,6 +332,22 @@ bool GfMenuManager::isOpenDummyTutorial() {
     return isOpenCallMenu(manager, MENU_DUMMY_TUTORIAL);
   }
   return false;
+}
+
+u32 GfMenuManager::startTutorial(u32 tutorial) {
+  u8 *bdat = GfDataBdat::getFP(0xe4);
+  if (bdat != nullptr) {
+    int top = Bdat::getIdTop(bdat);
+    if (static_cast<int>(tutorial - top) >= 0) {
+      int flag = (tutorial - top) + 0xc710;
+      if (GfGameFlag::getLocal(1, flag) != 1) {
+        GfPlayFactory::createStartTutorial(tutorial, nullptr);
+        GfGameFlag::setLocal(1, flag, 1);
+        return 1;
+      }
+    }
+  }
+  return 0;
 }
 
 void GfMenuManager::setEnableQuestOpen(bool isEnable) {

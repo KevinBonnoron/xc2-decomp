@@ -32,6 +32,7 @@ public:
   static const u32 COMPONENT_INDEX = 1;
 
   bool isRender() const;
+  bool isVolumeFadeForUser() const;
   void procMsgObjectNotifyDead(fw::MessageObject *sender, MsgObjectNotifyDead &message);
   void procMsgObjectNotifyDamage(fw::MessageObject *sender, MsgObjectNotifyDamage &message);
   void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);

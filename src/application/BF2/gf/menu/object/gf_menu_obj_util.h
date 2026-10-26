@@ -6,6 +6,10 @@ namespace ui {
 class UIStr;
 } // namespace ui
 
+namespace mm {
+struct Vec3;
+}
+
 namespace gf {
 
 class GfMenuCallContext;
@@ -68,6 +72,10 @@ public:
   static u16 getBladeFaceIconID(u32 blade);
   static u32 getBladeWeaponTypeIconID(u32 blade);
   static u32 getBladeAttributeIconID(u32 blade);
+  static u32 getBladeRareIconID(u32 blade);
+  static bool isEnemyBoss(GF_OBJ_HANDLE *handle);
+  static bool isEnemyNamed(GF_OBJ_HANDLE *handle);
+  static void setColDefault(u32 handle);
   static u16 getBladeCompatibilityIconID(u32 driver, u32 blade);
   static u32 getBladeAttributeID(u32 blade);
   static u32 getBladeRank(u32 blade);
@@ -104,6 +112,7 @@ public:
   static u8 getElementComboStage(u32 combo);
   static bool isQuestCompleted(QuestID quest);
   static bool getMenuCondition(u32 id);
+  static bool getScreenPos(mm::Vec3 &screenPos, const mm::Vec3 &position);
   static bool getMenuFullOpenFlag();
   static bool isCustomEnableBlade(u32 blade);
 };

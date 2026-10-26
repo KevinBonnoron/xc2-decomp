@@ -2,6 +2,8 @@
 
 #include "battle/battle_manager.h"
 #include "framework/framework.h"
+#include "fw/fw_transform.h"
+#include "fw/fw_update_info.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_character_id.h"
@@ -59,16 +61,20 @@
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/object/gf_menu_obj_tutorial.h"
 #include "gf/object/gf_init_param.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
+#include "gf/object/gf_obj_property.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_scom.h"
 #include "gf/sound/gf_sound.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_list.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 
 namespace gf {
@@ -983,6 +989,77 @@ bool GfGameManager::isPlayerFinishBattleState() {
   }
 
   return false;
+}
+
+f32 GfGameManager::getFieldSpeed(const fw::UpdateInfo &info) {
+  f32 speed = GfGameSpeed::getLayerSpeed(0);
+  f32 pause = GfLayerPause::isLayerPause(0) ? 0.0f : 1.0f;
+  return info.unknown08 * (speed * pause);
+}
+
+const mm::Vec3 &GfGameManager::getControlMoverPosition() {
+  GfObjAcc moverAcc(getControlMover());
+  if (moverAcc.isValidTransform()) {
+    return moverAcc.getWorldTransform().unknown00;
+  }
+  return mm::Vec3::zero;
+}
+
+bool GfGameManager::isEnemyChangeBattleOK() {
+  if (GfGameScene::get() != nullptr && GfGameScene::get()->isPlayerPauseForBattle()) {
+    return false;
+  }
+
+  GfObj *mover = GfObjUtil::getObj(getControlMover());
+  if (mover == nullptr) {
+    return false;
+  }
+
+  GfObjProperty *property = GfObjUtil::getProperty(mover->unknownf8);
+  if (property == nullptr || property->unknown18 == nullptr) {
+    return false;
+  }
+
+  return property->unknown18->unknown00 != PROPERTY_MOVE_CLIMB;
+}
+
+u8 GfGameManager::isPlayEventOK() {
+  GfObj *mover = GfObjUtil::getObj(getControlMover());
+  if (mover == nullptr) {
+    return false;
+  }
+
+  GfObjProperty *property = GfObjUtil::getProperty(mover->unknownf8);
+  if (property == nullptr || property->unknown18 == nullptr) {
+    return false;
+  }
+
+  switch (property->unknown18->unknown00) {
+  case PROPERTY_MOVE_WALK:
+  case PROPERTY_MOVE_SWIM_ON_CLOUD:
+  case 5: // Inferred role: move type that allows an event; original name unknown.
+    if (GfGameScene::get() == nullptr || !GfGameScene::get()->isControlFree()) {
+      return false;
+    }
+    if (GfGameState::getStateReserve() == GF_STATE_CONTROL) {
+      return true;
+    }
+    return GfGameState::getStateReserve() == GF_STATE_EVENT;
+  case PROPERTY_MOVE_SWIM:
+    return property->unknown18->unknown7d;
+  default:
+    return false;
+  }
+}
+
+void GfGameManager::callbackBladeActivateForGimmick() {
+  mm::mtl::FixedVector<u16, 422> blades;
+  GfDataBlade::getListReserver(blades);
+  for (const u16 *it = blades.begin(), *end = blades.end(); it != end; ++it) {
+    if (GfDataBlade::getBladeActivateType(*it) == ACTIVATE_TYPE_RESERVER) {
+      GfEvent::callBladeActivate(*it, ACTIVATE_TYPE_RESERVER, ACTIVATE_TYPE_RESERVER);
+    }
+  }
 }
 
 bool GfGameManager::isEnableOpenMainMenuSequence() {

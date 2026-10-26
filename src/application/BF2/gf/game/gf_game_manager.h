@@ -109,7 +109,7 @@ public:
   static bool isTalking();
   static bool isFullScreenMenu();
   static bool isPlayCommonMenu();
-  static bool isPlayEventOK();
+  static u8 isPlayEventOK();
   static bool isMapjumpOK();
   static bool isExecTutorial();
   static bool isGmkTutorialMoverOK();

@@ -58,6 +58,12 @@ void WeatherEff::applyAlpha(const fw::UpdateInfo &) {
   }
 }
 
+void WeatherEff::applySpeed(const fw::UpdateInfo &info) {
+  if (unknown14 != 0) {
+    fw::EffectManager::get()->setSpeed(unknown14, info.unknown08);
+  }
+}
+
 void WeatherEff::setForceName(const char *) {}
 
 void WeatherEff::setPause(bool) {}

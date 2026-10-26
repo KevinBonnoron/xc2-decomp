@@ -19,6 +19,8 @@ constexpr f32 BATTLE_START_END_RIDE_WAIT_TIME = 0.6f;
 
 bool GfSequentialPlay::isPlay() { return !get()->unknown08.empty() || !get()->unknown1850.empty(); }
 
+void GfSequentialPlay::initialize(const GfSetupParam &) { unknown20f4 = true; }
+
 bool GfSequentialPlay::isInitialized() {
   if (get() != nullptr) {
     return get()->unknown20f4;
@@ -90,6 +92,8 @@ void GfSequentialPlay::addCallbackEventSequence(int sequence, bool isStart) { ad
 void GfSequentialPlay::addMenuKizunaring(u32 blade) { addCommand(GfPlayComMenuKizunaring::create(blade)); }
 
 void GfSequentialPlay::addMenuPrecious(u32 item) { addCommand(GfPlayComMenuPrecious::create(item)); }
+
+void GfSequentialPlay::addMenuObjCommonText(GfMenuObjCommonText::OpenKizunaParam &param) { addCommand(GfPlayComMenuObjCommonText::create(param)); }
 
 int GfSequentialPlay::addMenuCommon(u32 window) {
   GfPlayComMenuCommon *command = GfPlayComMenuCommon::create(window);
