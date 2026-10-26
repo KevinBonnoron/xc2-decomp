@@ -17,6 +17,61 @@ u32 DrEnvironmentAnim::getAnimWork(const u8 *data, u32 offset) {
   return 0;
 }
 
+f32 DrEnvironmentAnim::setupAnim(void *frames, const u8 *data, u32 offset) {
+  const u32 *header = reinterpret_cast<const u32 *>(data + offset);
+  unknown30 = static_cast<f32 *>(frames);
+  unknown00 = reinterpret_cast<const unknown001 *>(data + header[1]);
+  unknown08 = data + header[3];
+  unknown10 = reinterpret_cast<const LgtHermiteKey *>(data + header[5]);
+  unknown18 = reinterpret_cast<const LgtBitKey *>(data + header[7]);
+  unknown20 = data + header[9];
+  unknown28 = static_cast<int>(header[0]);
+  f32 maxFrame = 0.0f;
+  for (int i = 0; i < unknown28; i++) {
+    if (maxFrame < unknown00[i].unknown0c) {
+      maxFrame = unknown00[i].unknown0c;
+    }
+  }
+  return maxFrame;
+}
+
+void DrEnvironmentAnim::changeMemAnim(const u8 *data, u32 offset) {
+  const u32 *header = reinterpret_cast<const u32 *>(data + offset);
+  unknown00 = reinterpret_cast<const unknown001 *>(data + header[1]);
+  unknown08 = data + header[3];
+  unknown10 = reinterpret_cast<const LgtHermiteKey *>(data + header[5]);
+  unknown18 = reinterpret_cast<const LgtBitKey *>(data + header[7]);
+  unknown20 = data + header[9];
+}
+
+void DrEnvironmentAnim::setFrame(f32 frame) {
+  for (int i = 0; i < unknown28; i++) {
+    unknown30[i] = unknown00[i].unknown0c < frame ? unknown00[i].unknown0c : frame;
+  }
+}
+
+void DrEnvironmentAnim::calcFrameUpdate(const LgtObjData *obj, f32 frame) {
+  u64 index = obj->unknown28;
+  f32 *frames = unknown30;
+  const unknown001 *range = &unknown00[index];
+  f32 current = frames[index] + frame;
+  frames[index] = current;
+  if (current > range->unknown0c) {
+    frames[index] = range->unknown0c - current + range->unknown08;
+  }
+}
+
+void DrEnvironmentAnim::calcFogFrameUpdate(const LgtGlbFogObj *obj, f32 frame) {
+  u64 index = obj->unknown44;
+  f32 *frames = unknown30;
+  const unknown001 *range = &unknown00[index];
+  f32 current = frames[index] + frame;
+  frames[index] = current;
+  if (current > range->unknown0c) {
+    frames[index] = range->unknown0c - current + range->unknown08;
+  }
+}
+
 void DrEnvironmentAnim::setupAnmVal(const f32 *values) {
   unknown60[2] = values[0];
   unknown60[1] = values[1];

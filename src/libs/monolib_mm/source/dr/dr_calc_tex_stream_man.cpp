@@ -4,6 +4,70 @@
 
 namespace ml {
 
+int DrCalcTexStreamMan::getUseMax() const {
+  const DrCalcTexStmObj *obj = unknown08;
+  if (obj != nullptr) {
+    int count = 0;
+    do {
+      count += obj->unknown24 & 1;
+      obj = obj->unknown10;
+    } while (obj != nullptr);
+    return count;
+  }
+  return 0;
+}
+
+int DrCalcTexStreamMan::getFreeMax() const {
+  const DrCalcTexStmObj *obj = unknown08;
+  if (obj != nullptr) {
+    int count = 0;
+    do {
+      count += ~obj->unknown24 & 1;
+      obj = obj->unknown10;
+    } while (obj != nullptr);
+    return count;
+  }
+  return 0;
+}
+
+int DrCalcTexStreamMan::getAllFreeSize() const {
+  const DrCalcTexStmObj *obj = unknown08;
+  if (obj != nullptr) {
+    int size = 0;
+    do {
+      if ((obj->unknown24 & 1) == 0) {
+        size += obj->unknown20;
+      }
+      obj = obj->unknown10;
+    } while (obj != nullptr);
+    return size;
+  }
+  return 0;
+}
+
+int DrCalcTexStreamMan::getAllUseSize() const {
+  const DrCalcTexStmObj *obj = unknown08;
+  if (obj != nullptr) {
+    int size = 0;
+    do {
+      if ((obj->unknown24 & 1) != 0) {
+        size += obj->unknown20;
+      }
+      obj = obj->unknown10;
+    } while (obj != nullptr);
+    return size;
+  }
+  return 0;
+}
+
+DrCalcTexStmObj *DrCalcTexStreamMan::getTopAheadFreeObj() {
+  DrCalcTexStmObj *obj = unknown08;
+  while (obj != nullptr && (obj->unknown24 & 1) != 0) {
+    obj = obj->unknown10;
+  }
+  return obj;
+}
+
 void DrCalcTexStreamMan::entryJob() { WorkCpu::wakeup(unknown2498); }
 
 void DrCalcTexStreamMan::jobWait() { WorkCpu::sync(unknown2498, WKCPU_SYNC_NONE, CPUID_ANY); }

@@ -70,21 +70,42 @@ static_assert(offsetof(MdsSeamInfo, m_seamMpfPosDataMax) == 0x74, "");
 
 class DrMdoCtlSeam : public DrMdlObj {
 public:
+  void *getColiListTbl();
+  u32 getColiListMax();
+  u32 isRead(int index) const;
+  void setErrCode(int code, int param);
+  static int calcSemaAlignment(u32 size, u32 alignment);
   void seamZPrePassEnd();
   void seamThicknessPassEnd(bool value);
 
   u8 _190[0x1a8 - 0x190];
   MdsSeamInfo *unknown1a8; // Inferred role: seam resource header; original member name unknown.
-  u8 _1b0[0x698 - 0x1b0];
+  u8 _1b0[0x640 - 0x1b0];
+  void *unknown640[2]; // Inferred role: collision list tables per buffer; original member name unknown.
+  u32 unknown650[2];   // Inferred role: collision list max per buffer; original member name unknown.
+  u8 _658[0x698 - 0x658];
   DrResMdoInstAnmObj unknown698; // Inferred role: inst anm object; original member name unknown.
   DrSeamEtcPosList unknown6c8;   // Inferred role: etc pos list; original member name unknown.
   u8 _6d8[0xb38 - 0x6d8];
   MdoWrkMatRes *unknownb38; // Inferred role: saved mat res; original member name unknown.
   u8 _b40[0xc7c - 0xb40];
   u32 unknownc7c; // Inferred role: seam flags; original member name unknown.
+  u8 _c80[0xcac - 0xc80];
+  s16 unknowncac;    // Inferred role: error code write index; original member name unknown.
+  s16 unknowncae[4]; // Inferred role: error codes; original member name unknown.
+  u8 _cb6[0xcb8 - 0xcb6];
+  u32 unknowncb8[4]; // Inferred role: error parameters; original member name unknown.
+  u8 _cc8[0xd1a - 0xcc8];
+  u16 unknownd1a; // Inferred role: read bits; original member name unknown.
 };
 
 static_assert(offsetof(DrMdoCtlSeam, unknown1a8) == 0x1a8, "");
+static_assert(offsetof(DrMdoCtlSeam, unknown640) == 0x640, "");
+static_assert(offsetof(DrMdoCtlSeam, unknown650) == 0x650, "");
+static_assert(offsetof(DrMdoCtlSeam, unknowncac) == 0xcac, "");
+static_assert(offsetof(DrMdoCtlSeam, unknowncae) == 0xcae, "");
+static_assert(offsetof(DrMdoCtlSeam, unknowncb8) == 0xcb8, "");
+static_assert(offsetof(DrMdoCtlSeam, unknownd1a) == 0xd1a, "");
 static_assert(offsetof(DrMdoCtlSeam, unknown698) == 0x698, "");
 static_assert(offsetof(DrMdoCtlSeam, unknown6c8) == 0x6c8, "");
 static_assert(offsetof(DrMdoCtlSeam, unknownb38) == 0xb38, "");

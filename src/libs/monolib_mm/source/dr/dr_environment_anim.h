@@ -31,6 +31,32 @@ struct LgtHermiteKey {
 
 static_assert(sizeof(LgtHermiteKey) == 0x10, "");
 
+struct LgtObjData {
+  u8 _00[0x28];
+  u16 unknown28; // Inferred role: animation index; original member name unknown.
+};
+
+static_assert(offsetof(LgtObjData, unknown28) == 0x28, "");
+
+struct LgtGlbFogObj {
+  u8 _00[0x44];
+  u16 unknown44; // Inferred role: animation index; original member name unknown.
+};
+
+static_assert(offsetof(LgtGlbFogObj, unknown44) == 0x44, "");
+
+// Inferred role: frame range of an environment animation; original type name unknown.
+struct unknown001 {
+  u16 unknown00; // Inferred role: first command; original member name unknown.
+  u16 unknown02; // Inferred role: command num; original member name unknown.
+  u8 _04[0x08 - 0x04];
+  f32 unknown08; // Inferred role: loop start frame; original member name unknown.
+  f32 unknown0c; // Inferred role: end frame; original member name unknown.
+};
+
+static_assert(offsetof(unknown001, unknown0c) == 0x0c, "");
+static_assert(sizeof(unknown001) == 0x10, "");
+
 struct LgtBitKey {
   u16 frame;
   u16 value;
@@ -40,6 +66,11 @@ class DrEnvironmentAnim {
 public:
   DrEnvironmentAnim();
   static u32 getAnimWork(const u8 *data, u32 offset);
+  f32 setupAnim(void *frames, const u8 *data, u32 offset);
+  void changeMemAnim(const u8 *data, u32 offset);
+  void setFrame(f32 frame);
+  void calcFrameUpdate(const LgtObjData *obj, f32 frame);
+  void calcFogFrameUpdate(const LgtGlbFogObj *obj, f32 frame);
   void setupAnmVal(const f32 *values);
   void envlgt_amb_color_R(const LgtAnimInf *inf, f32 frame);
   void envlgt_amb_color_G(const LgtAnimInf *inf, f32 frame);
@@ -104,19 +135,22 @@ public:
   void envfog_parm_color_sunB(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame);
   u16 getBitAttr(const LgtAnimInf *inf, f32 frame);
 
-  u8 _00[0x10 - 0x00];
+  const unknown001 *unknown00;    // Inferred role: animation ranges; original member name unknown.
+  const u8 *unknown08;            // Inferred role: animation commands; original member name unknown.
   const LgtHermiteKey *unknown10; // Inferred role: hermite keys; original member name unknown.
   const LgtBitKey *unknown18;     // Inferred role: bit keys; original member name unknown.
-  u8 _20[0x28 - 0x20];
-  int unknown28;      // Inferred role: anim num; original member name unknown.
-  f32 *unknown30;     // Inferred role: frames; original member name unknown.
-  mm::Col3 unknown38; // Inferred role: color; original member name unknown.
-  mm::Col3 unknown44; // Inferred role: side color; original member name unknown.
-  mm::Col3 unknown50; // Inferred role: sun color; original member name unknown.
-  f32 unknown5c;      // Inferred role: intensity; original member name unknown.
-  f32 unknown60[3];   // Inferred role: anm val; original member name unknown.
+  const u8 *unknown20;            // Inferred role: rotation values; original member name unknown.
+  int unknown28;                  // Inferred role: anim num; original member name unknown.
+  f32 *unknown30;                 // Inferred role: frames; original member name unknown.
+  mm::Col3 unknown38;             // Inferred role: color; original member name unknown.
+  mm::Col3 unknown44;             // Inferred role: side color; original member name unknown.
+  mm::Col3 unknown50;             // Inferred role: sun color; original member name unknown.
+  f32 unknown5c;                  // Inferred role: intensity; original member name unknown.
+  f32 unknown60[3];               // Inferred role: anm val; original member name unknown.
 };
 
+static_assert(offsetof(DrEnvironmentAnim, unknown08) == 0x08, "");
+static_assert(offsetof(DrEnvironmentAnim, unknown20) == 0x20, "");
 static_assert(offsetof(DrEnvironmentAnim, unknown10) == 0x10, "");
 static_assert(offsetof(DrEnvironmentAnim, unknown28) == 0x28, "");
 static_assert(offsetof(DrEnvironmentAnim, unknown38) == 0x38, "");
