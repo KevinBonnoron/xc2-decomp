@@ -7,9 +7,12 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "mm_mtl/vector.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkMapGimmick, GmkMapGimmick::BdatInfo, 1196441933u, 2u, GmkMapGimmickGob>::initGmkBdatInfo(GmkMapGimmick::BdatInfo &, int &, const AGmkBase &);
 
 void GmkMapGimmick::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   u16 popTime = bdat.getValCheck("popTime", id, BDAT_TYPE_U32);
@@ -151,6 +154,11 @@ bool GmkMapGimmickList::updateImmediate() {
 }
 
 const AGmkBase *GmkMapGimmickList::getInst(u32 index) const { return &gmkInsts[index]; }
+
+void GmkMapGimmickList::createGmk(void *data) {
+  TGmkList::createGmk(data);
+  unknown001(unknown230, getCreateInfo());
+}
 
 void GmkMapGimmickList::dispose() {
   unknown230.dispose();

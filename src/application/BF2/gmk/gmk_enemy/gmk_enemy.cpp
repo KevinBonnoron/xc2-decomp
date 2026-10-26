@@ -6,9 +6,12 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_manager.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "mm_mtl/vector.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkEnemy, GmkEnemy::BdatInfo, 1296387653u, 5u, GmkEnemyGob>::initGmkBdatInfo(GmkEnemy::BdatInfo &, int &, const AGmkBase &);
 
 static u32 getU8OrU16(const CBdatWrapper &bdat, const char *name, int id) {
   if (Bdat::getVarType(bdat.unknown00, name) == BDAT_TYPE_U16) {
@@ -65,6 +68,11 @@ void GmkEnemyList::create(const CreateInfo &info) {
     return;
   }
   TGmkList::create(info);
+}
+
+void GmkEnemyList::createGmk(void *data) {
+  TGmkList::createGmk(data);
+  unknown001(unknown240, getCreateInfo());
 }
 
 void GmkEnemyList::dispose() {

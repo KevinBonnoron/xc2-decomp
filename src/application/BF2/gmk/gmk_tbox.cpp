@@ -1,4 +1,5 @@
 #include "gmk/gmk_tbox.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
@@ -22,6 +23,8 @@ struct GF_OBJ_HANDLE;
 } // namespace gf
 
 namespace gmk {
+
+template bool TGmkList<GmkTbox, GmkTbox::BdatInfo, 1481589332u, 6u, GmkTboxGob>::initGmkBdatInfo(GmkTbox::BdatInfo &, int &, const AGmkBase &);
 
 void GmkTbox::BdatInfo::create(u8 *bdat, int id, const AGmkBase &gmk) {
   unknown00 = Bdat::getValCheck(bdat, "Condition", id, BDAT_TYPE_U16);

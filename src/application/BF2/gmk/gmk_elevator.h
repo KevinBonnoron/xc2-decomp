@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
@@ -8,7 +9,6 @@
 #include "gmk/gmk_phantom.h"
 #include "types.h"
 
-struct CBdatWrapper;
 namespace gf {
 struct GF_OBJ_HANDLE;
 } // namespace gf
@@ -82,7 +82,9 @@ typedef TGmkList<GmkElevator, GmkElevator::BdatInfo, 0x54564c45, 2, GmkElevatorG
 
 class GmkElevatorLocator : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   static const GmkType GMK_TYPE = GMK_TYPE_ELEVATOR_LOCATOR;
 

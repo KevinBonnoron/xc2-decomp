@@ -1,4 +1,5 @@
 #include "gmk/gmk_jump.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "framework/effect/effect_manager.h"
@@ -17,6 +18,8 @@ enum EF_CATEGORY : int;
 } // namespace fw
 
 namespace gmk {
+
+template bool TGmkList<GmkJump, GmkJump::BdatInfo, 1347245386u, 3u, GmkJumpGobCustom>::initGmkBdatInfo(GmkJump::BdatInfo &, int &, const AGmkBase &);
 
 constexpr int WILDCARD_JUMP_ICON_DIST_ROW = 1;
 constexpr u32 ICON_FADE_OUT_FRAME = 5;

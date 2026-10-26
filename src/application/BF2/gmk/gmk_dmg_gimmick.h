@@ -1,14 +1,21 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/data/gf_bdat_wrapper.h"
+#include "gf/event/gf_event.h"
+#include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_phantom.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
-struct CBdatWrapper;
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
+
 namespace mm {
 namespace mtl {
 class RTTI;
@@ -96,7 +103,9 @@ typedef TGmkList<GmkDmgGimmick, GmkDmgGimmick::BdatInfo, 0x4d474d44, 1, GmkDmgGi
 
 class GmkDmgPhantom : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_PHANTOM;
 
@@ -119,7 +128,9 @@ public:
 
 class GmkDmgEffect : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_EFFECT;
 
@@ -151,7 +162,9 @@ public:
 
 class GmkDmgSe : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_SE;
 
@@ -184,5 +197,24 @@ public:
 
   const AGmkBase *getInst(u32 index) const override;
 };
+
+class GmkDmgPhantomManager : public gf::IGfObjListener, public gf::IGfEvent {
+public:
+  GmkDmgPhantomManager();
+  ~GmkDmgPhantomManager() override;
+  void create();
+  void dispose();
+  void addTargetInfo(gf::GF_OBJ_HANDLE *handle);
+  void removeTargetInfo(gf::GF_OBJ_HANDLE *handle);
+  void listenerGfObj(OBJEVT event, gf::GF_OBJ_HANDLE *handle, u32 objectType) override;
+  void gevPartyMover(gf::GF_OBJ_HANDLE *handle, bool isJoin) override;
+
+  mm::mtl::Vector<GmkDmgPhantomTargetInfo> unknown10; // Inferred role: phantom targets; original member name unknown.
+  bool unknown38;                                     // Role and original member name unknown.
+};
+
+static_assert(offsetof(GmkDmgPhantomManager, unknown10) == 0x10, "");
+static_assert(offsetof(GmkDmgPhantomManager, unknown38) == 0x38, "");
+static_assert(sizeof(GmkDmgPhantomManager) == 0x40, "");
 
 } // namespace gmk

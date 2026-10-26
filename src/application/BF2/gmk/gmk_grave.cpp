@@ -1,4 +1,5 @@
 #include "gmk/gmk_grave.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
@@ -14,6 +15,8 @@ struct Vec3;
 } // namespace mm
 
 namespace gmk {
+
+template bool TGmkList<GmkGrave, GmkGrave::BdatInfo, 1447121479u, 4u, GmkGraveGob>::initGmkBdatInfo(GmkGrave::BdatInfo &, int &, const AGmkBase &);
 class GmkEnemy;
 class GmkRoutedEnemy;
 

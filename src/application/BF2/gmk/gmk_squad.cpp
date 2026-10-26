@@ -1,8 +1,12 @@
 #include "gmk/gmk_squad.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "gmk/gmk_set.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkSquadLeader, GmkSquadLeader::BdatInfo, 1145852243u, 2u, GmkSquadLeaderGobCustom>::initGmkBdatInfo(GmkSquadLeader::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkSquadMember, GmkSquadMember::BdatInfo, 1112363347u, 1u, GmkSquadMemberGobCustom>::initGmkBdatInfo(GmkSquadMember::BdatInfo &, int &, const AGmkBase &);
 
 GmkType GmkSquadLeader::getGmkType() const { return GMK_TYPE; }
 

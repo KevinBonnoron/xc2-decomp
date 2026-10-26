@@ -1,4 +1,5 @@
 #pragma once
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
@@ -11,7 +12,9 @@ class GmkSquadMemberGobCustom;
 
 class GmkSquadLeader : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   static const GmkType GMK_TYPE = GMK_TYPE_SQUAD_LEADER;
 
@@ -33,7 +36,9 @@ typedef TGmkList<GmkSquadLeader, GmkSquadLeader::BdatInfo, 0x444c5153, 2, GmkSqu
 
 class GmkSquadMember : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   static const GmkType GMK_TYPE = GMK_TYPE_SQUAD_MEMBER;
 

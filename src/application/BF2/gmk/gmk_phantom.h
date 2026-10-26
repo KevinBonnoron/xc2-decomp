@@ -31,10 +31,12 @@ public:
 
   gf::GF_OBJ_HANDLE *unknown00; // Inferred role: target handle; original member name unknown.
   int unknown08;                // Inferred role: remaining time; original member name unknown.
+  f32 unknown0c;                // Role and original member name unknown.
 };
 
 static_assert(sizeof(GmkDmgPhantomTargetInfo) == 0x10, "");
 static_assert(offsetof(GmkDmgPhantomTargetInfo, unknown08) == 0x8, "");
+static_assert(offsetof(GmkDmgPhantomTargetInfo, unknown0c) == 0xc, "");
 
 class GmkDoorPhantomTargetInfo {
 public:

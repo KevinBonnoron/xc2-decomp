@@ -1,4 +1,5 @@
 #include "gmk/gmk_elevator.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_wrapper.h"
@@ -11,6 +12,9 @@ struct GF_OBJ_HANDLE;
 } // namespace gf
 
 namespace gmk {
+
+template bool TGmkList<GmkElevator, GmkElevator::BdatInfo, 1414941765u, 2u, GmkElevatorGobCustom>::initGmkBdatInfo(GmkElevator::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkElevatorLocator, GmkElevatorLocator::BdatInfo, 1129073733u, 2u, GmkElevatorLocatorGob>::initGmkBdatInfo(GmkElevatorLocator::BdatInfo &, int &, const AGmkBase &);
 
 void GmkElevator::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = bdat.getValCheck("OP_Condition", id, BDAT_TYPE_U16);

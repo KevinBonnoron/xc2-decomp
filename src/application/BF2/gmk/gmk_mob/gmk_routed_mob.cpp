@@ -1,4 +1,5 @@
 #include "gmk/gmk_mob/gmk_routed_mob.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_route_navi.h"
@@ -9,6 +10,8 @@ struct GF_OBJ_HANDLE;
 } // namespace gf
 
 namespace gmk {
+
+template bool TGmkList<GmkRoutedMob, GmkMob::BdatInfo, 1112493394u, 6u, GmkRouteGob>::initGmkBdatInfo(GmkMob::BdatInfo &, int &, const AGmkBase &);
 
 GmkType GmkRoutedMob::getGmkType() const { return GMK_TYPE; }
 

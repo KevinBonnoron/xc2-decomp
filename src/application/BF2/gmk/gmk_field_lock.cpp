@@ -1,10 +1,13 @@
 #include "gmk/gmk_field_lock.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkFieldLock, GmkFieldLock::BdatInfo, 1129071686u, 2u, GmkFieldLockGob>::initGmkBdatInfo(GmkFieldLock::BdatInfo &, int &, const AGmkBase &);
 
 void GmkFieldLock::debugDraw() const { isValid(); }
 

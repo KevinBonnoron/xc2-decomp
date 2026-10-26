@@ -32,6 +32,17 @@ struct LvbChunk {
 
 static_assert(sizeof(LvbChunk) == 0x20, "");
 
+struct LvbHeader {
+  u32 unknown00; // Inferred role: magic; original member name unknown.
+  u32 unknown04; // Inferred role: size; original member name unknown.
+  u32 unknown08; // Inferred role: version; original member name unknown.
+  u32 unknown0c; // Role and original member name unknown.
+  u32 unknown10; // Inferred role: flags; original member name unknown.
+  u8 _14[0x20 - 0x14];
+};
+
+static_assert(sizeof(LvbHeader) == 0x20, "");
+
 class IGmkList {
 public:
   struct CreateInfo {
@@ -186,6 +197,7 @@ protected:
   static constexpr f32 DEBUG_DISTANCE = 100.0f;
 
   virtual void createGmk(void *data);
+  bool initGmkBdatInfo(BDAT_INFO &bdatInfo, int &index, const AGmkBase &gmk);
 
   virtual void disposeGmk() {
     gmkInsts.destroy();

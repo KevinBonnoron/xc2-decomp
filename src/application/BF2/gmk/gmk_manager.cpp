@@ -338,6 +338,16 @@ void GmkSet::update(f32 deltaTime) {
   }
 }
 
+GmkSet::GmkSet(const CreateInfo *info) : unknown40(nullptr), unknown178(0xffffffff) {
+  for (u32 type = 0; type < GMK_TYPE_NUM; type++) {
+    unknown1b8[type] = nullptr;
+  }
+  unknown388 = nullptr;
+  if (info != nullptr) {
+    create(*info);
+  }
+}
+
 void GmkSet::create(const CreateInfo &info) {
   dispose();
   unknown10 = info;

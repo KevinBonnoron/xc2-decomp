@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <utility>
 
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_enemy/gmk_enemy.h"
 #include "gmk/gmk_list.h"
@@ -20,6 +21,7 @@ namespace gmk {
 
 class GmkRoutedEnemyGobCustom;
 class GmkRoutedEnemyPointGobCustom;
+class AGmkBase;
 
 class GmkRoutedEnemy : public GmkRoute {
 public:
@@ -81,7 +83,9 @@ static_assert(sizeof(GmkRoutedEnemyList) == 0x470, "");
 
 class GmkRoutedEnemyPoint : public GmkRoutePoint {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_ENEMY_POINT;
 

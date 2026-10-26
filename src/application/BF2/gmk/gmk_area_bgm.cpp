@@ -1,4 +1,5 @@
 #include "gmk/gmk_area_bgm.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
@@ -9,6 +10,8 @@
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkAreaBgm, GmkAreaBgm::BdatInfo, 1380009794u, 2u, GmkAreaBgmGob>::initGmkBdatInfo(GmkAreaBgm::BdatInfo &, int &, const AGmkBase &);
 
 // Inferred role: bgm id of the owner of a condition info; original name unknown.
 static u32 unknown001(const GmkBgmCondInfo *info) { return info == nullptr ? 0 : info->unknown10->getBdatInfo()->unknown00; }

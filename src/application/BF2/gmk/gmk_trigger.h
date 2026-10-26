@@ -1,10 +1,13 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_phantom.h"
+#include "mm_mtl/fixstr.h"
+#include "mtl/alloc_handle.h"
 #include "types.h"
 
 namespace gmk {
@@ -13,7 +16,9 @@ class GmkTriggerGob;
 
 class GmkTrigger : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   struct Data {
     int unknown00; // Role and original member name unknown.
@@ -58,5 +63,13 @@ static_assert(offsetof(GmkTrigger, unknownE0) == 0xe0, "");
 static_assert(sizeof(GmkTrigger) == 0xf0, "");
 
 typedef TGmkList<GmkTrigger, GmkTrigger::BdatInfo, 0x52475254, 2, GmkTriggerGob> GmkTriggerList;
+
+// Inferred helper: creates the trigger list of a gmk list from the create info of that list without its bdat; original name unknown.
+inline void unknown001(GmkTriggerList &triggers, IGmkList::CreateInfo info) {
+  if (info.unknown00.isValid() && info.unknown10.length() != 0) {
+    info.unknown114.clear();
+    triggers.GmkTriggerList::create(info);
+  }
+}
 
 } // namespace gmk

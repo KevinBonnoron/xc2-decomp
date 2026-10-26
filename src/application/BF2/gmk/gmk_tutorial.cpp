@@ -1,4 +1,7 @@
 #include "gmk/gmk_tutorial.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
+
+#include <string.h>
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_util.h"
@@ -7,9 +10,10 @@
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gmk/gmk_active_list.h"
 #include "gmk/gmk_bdat.h"
-#include <string.h>
 
 namespace gmk {
+
+template bool TGmkList<GmkTutorial, GmkTutorial::BdatInfo, 1330926932u, 4u, GmkTutorialGob>::initGmkBdatInfo(GmkTutorial::BdatInfo &, int &, const AGmkBase &);
 
 template class TGmkActiveList<GmkTutorial>;
 

@@ -1,4 +1,5 @@
 #include "gmk/gmk_collection.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "framework/effect/effect_manager.h"
@@ -13,6 +14,8 @@
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkCollection, GmkCollection::BdatInfo, 1413696579u, 5u, GmkCollectionGob>::initGmkBdatInfo(GmkCollection::BdatInfo &, int &, const AGmkBase &);
 
 GmkCollection::GmkCollection() : unknown48(gf::INVALID_HANDLE), unknown50(0), unknown54(0.0f), unknown58(nullptr), unknown68(0.0f), unknown6c(true) {}
 

@@ -1,13 +1,12 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
-
-struct CBdatWrapper;
 
 namespace gmk {
 
@@ -69,7 +68,9 @@ typedef TGmkList<GmkEffect, GmkEffect::BdatInfo, 0x54434645, 8, GmkEffectGobCust
 
 class GmkEffectLocator : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   static const GmkType GMK_TYPE = GMK_TYPE_EFFECT_LOCATOR;
 

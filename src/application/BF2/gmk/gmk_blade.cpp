@@ -1,4 +1,5 @@
 #include "gmk/gmk_blade.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
@@ -8,6 +9,8 @@
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkBlade, GmkBlade::BdatInfo, 1145130050u, 4u, GmkBladeGob>::initGmkBdatInfo(GmkBlade::BdatInfo &, int &, const AGmkBase &);
 
 constexpr u16 BATTLE_REACTION_DEPOP = 0;
 constexpr u16 BATTLE_REACTION_HIDE = 1;

@@ -1,6 +1,9 @@
 #include "gmk/gmk_battle_lock.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 namespace gmk {
+
+template bool TGmkList<GmkBattleLock, GmkBattleLock::BdatInfo, 1129075778u, 3u, GmkBattleLockGob>::initGmkBdatInfo(GmkBattleLock::BdatInfo &, int &, const AGmkBase &);
 
 GmkType GmkBattleLock::getGmkType() const { return GMK_TYPE; }
 

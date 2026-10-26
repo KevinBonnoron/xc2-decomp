@@ -1,4 +1,5 @@
 #include "gmk/gmk_kizuna_talk.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
@@ -14,6 +15,8 @@
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkKizunaTalk, GmkKizunaTalk::BdatInfo, 1414421067u, 1u, GmkKizunaTalkGob>::initGmkBdatInfo(GmkKizunaTalk::BdatInfo &, int &, const AGmkBase &);
 
 constexpr int WILDCARD_KIZUNA_TALK_POP_DIST_ROW = 30;
 

@@ -1,4 +1,5 @@
 #include "gmk/gmk_climbing.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
@@ -8,6 +9,8 @@
 #include "mm_mtl/reference_object.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkClimbing, GmkClimbing::BdatInfo, 1112362051u, 2u, GmkClimbingGob>::initGmkBdatInfo(GmkClimbing::BdatInfo &, int &, const AGmkBase &);
 
 void GmkClimbing::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown04 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));

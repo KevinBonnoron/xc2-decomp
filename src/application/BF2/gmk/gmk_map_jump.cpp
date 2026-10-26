@@ -1,4 +1,5 @@
 #include "gmk/gmk_map_jump.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
@@ -8,6 +9,8 @@
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkMapJump, GmkMapJump::BdatInfo, 1347047501u, 2u, GmkMapJumpGob>::initGmkBdatInfo(GmkMapJump::BdatInfo &, int &, const AGmkBase &);
 
 GmkMapJump::GmkMapJump() : unknown50(nullptr), unknownE0(false), unknownE1(false) {}
 

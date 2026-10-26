@@ -1,4 +1,5 @@
 #include "gmk/gmk_route.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "framework/debug/debug_draw.h"
 #include "gf/data/gf_bdat_wrapper.h"
@@ -15,6 +16,9 @@
 #include "mm_math/mm_mat44.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkRoute, GmkRoute::BdatInfo, 1448236355u, 5u, GmkRouteGob>::initGmkBdatInfo(GmkRoute::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkRoutePoint, GmkRoutePoint::BdatInfo, 1414550595u, 2u, GmkRoutePointGobCustom>::initGmkBdatInfo(GmkRoutePoint::BdatInfo &, int &, const AGmkBase &);
 
 namespace {
 

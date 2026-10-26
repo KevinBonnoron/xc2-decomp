@@ -1,4 +1,5 @@
 #include "gmk/gmk_foot_print.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_wrapper.h"
@@ -13,6 +14,10 @@ enum EF_CATEGORY : int;
 } // namespace fw
 
 namespace gmk {
+
+template bool TGmkList<GmkRoutedFootPrint, GmkRoutedFootPrint::BdatInfo, 1414547026u, 2u, GmkRoutedFootPrintGobCustom>::initGmkBdatInfo(GmkRoutedFootPrint::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkRoutedFootPrintPoint, GmkRoutedFootPrintPoint::BdatInfo, 1347438162u, 1u, GmkRoutedFootPrintPointGobCustom>::initGmkBdatInfo(GmkRoutedFootPrintPoint::BdatInfo &, int &,
+                                                                                                                                                       const AGmkBase &);
 
 void GmkRoutedFootPrint::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = reinterpret_cast<const char *>(bdat.getValCheck("FootEffect", id, BDAT_TYPE_STRING));

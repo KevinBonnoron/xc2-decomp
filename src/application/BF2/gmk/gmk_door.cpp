@@ -8,11 +8,17 @@
 #include "gf/field/gf_field_lod.h"
 #include "gf/field/gf_field_sound.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_phantom.h"
 #include "mm_mtl/fixstr.h"
+
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
 
 namespace fw {
 class SoundPack;
@@ -25,6 +31,8 @@ class RTTI;
 } // namespace mm
 
 namespace gmk {
+
+template bool TGmkList<GmkDoor, GmkDoor::BdatInfo, 1380929348u, 2u, GmkDoorGob>::initGmkBdatInfo(GmkDoor::BdatInfo &, int &, const AGmkBase &);
 
 bool GmkDoor::BdatInfo::isGfObjMustExist() const {
   if (unknown06 == 0) {
@@ -153,6 +161,45 @@ void GmkDoor::seqDoor_Shutdowned(f32 deltaTime) { seqDoor_Booted(deltaTime); }
 void GmkDoor::seqDoor_SpBooted(f32 deltaTime) {
   if (unknown2C0 < getBdatInfo()->unknown2c) {
     unknown2C0 += deltaTime;
+  }
+}
+
+GmkDoorPhantomManager::GmkDoorPhantomManager() {
+  gf::GfObjManager::addListener(this, OBJEVT_ALL);
+  create();
+}
+
+GmkDoorPhantomManager::~GmkDoorPhantomManager() {
+  dispose();
+  gf::GfObjManager::removeListener(this);
+}
+
+void GmkDoorPhantomManager::create() {
+  dispose();
+  unknown08.setAllocator(gf::getAllocator(gf::ALLOCATOR_DEFAULT));
+  int capacity = gf::GfObjManager::getGfObjCapacity(5);
+  unknown08.reserve(capacity > 0 ? static_cast<u32>(capacity + 3) : 3);
+}
+
+void GmkDoorPhantomManager::dispose() { unknown08.destroy(); }
+
+void GmkDoorPhantomManager::addTargetInfo(gf::GF_OBJ_HANDLE *handle) {
+  if (unknown08.size() != unknown08.capacity()) {
+    GmkDoorPhantomTargetInfo info;
+    info.unknown00 = handle;
+    unknown08.push_back(info);
+  }
+}
+
+void GmkDoorPhantomManager::removeTargetInfo(gf::GF_OBJ_HANDLE *handle) {
+  if (handle == gf::INVALID_HANDLE) {
+    return;
+  }
+  for (GmkDoorPhantomTargetInfo *it = unknown08.begin(); it != unknown08.end(); it++) {
+    if (it->unknown00 == handle) {
+      unknown08.erase(it);
+      return;
+    }
   }
 }
 

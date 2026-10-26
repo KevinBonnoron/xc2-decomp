@@ -6,11 +6,17 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_set.h"
 #include "mm_mtl/vector.h"
+
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
 
 namespace fw {
 enum SoundCategory : int;
@@ -25,6 +31,11 @@ class RTTI;
 } // namespace mm
 
 namespace gmk {
+
+template bool TGmkList<GmkDmgEffect, GmkDmgEffect::BdatInfo, 1178946884u, 1u, GmkDmgEffectGob>::initGmkBdatInfo(GmkDmgEffect::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkDmgGimmick, GmkDmgGimmick::BdatInfo, 1296518468u, 1u, GmkDmgGimmickGobCustom>::initGmkBdatInfo(GmkDmgGimmick::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkDmgPhantom, GmkDmgPhantom::BdatInfo, 1213222212u, 2u, GmkDmgPhantomGob>::initGmkBdatInfo(GmkDmgPhantom::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkDmgSe, GmkDmgSe::BdatInfo, 1163087172u, 2u, GmkDmgSeGob>::initGmkBdatInfo(GmkDmgSe::BdatInfo &, int &, const AGmkBase &);
 
 void GmkDmgGimmick::debugDraw() const {
   isValid();
@@ -252,5 +263,56 @@ GmkDmgSe *GmkDmgGimmick::getGmkDmgSe(u32 index) const {
 }
 
 void GmkDmgGimmick::validateDisp() const { bool isDisp = unknown80 && debugIsDispGmkType(getGmkType()); }
+
+GmkDmgPhantomManager::GmkDmgPhantomManager() : unknown38(false) {
+  gf::GfObjManager::addListener(this, OBJEVT_ALL);
+  gf::GfEvent::addEventCallback(this);
+  create();
+}
+
+GmkDmgPhantomManager::~GmkDmgPhantomManager() {
+  dispose();
+  gf::GfEvent::removeEventCallback(this);
+  gf::GfObjManager::removeListener(this);
+}
+
+void GmkDmgPhantomManager::create() {
+  dispose();
+  unknown10.setAllocator(gf::getAllocator(gf::ALLOCATOR_DEFAULT));
+  int capacity = gf::GfObjManager::getGfObjCapacity(5);
+  unknown10.reserve(capacity > 0 ? static_cast<u32>(capacity + 3) : 3);
+}
+
+void GmkDmgPhantomManager::dispose() { unknown10.destroy(); }
+
+void GmkDmgPhantomManager::addTargetInfo(gf::GF_OBJ_HANDLE *handle) {
+  GmkDmgPhantomTargetInfo *it = unknown10.begin();
+  GmkDmgPhantomTargetInfo *last = unknown10.end();
+  while (it != last) {
+    if (it->unknown00 == handle) {
+      return;
+    }
+    it++;
+  }
+  if (unknown10.size() != unknown10.capacity()) {
+    GmkDmgPhantomTargetInfo info;
+    info.unknown00 = handle;
+    info.unknown08 = 0;
+    info.unknown0c = 0.0f;
+    unknown10.push_back(info);
+  }
+}
+
+void GmkDmgPhantomManager::removeTargetInfo(gf::GF_OBJ_HANDLE *handle) {
+  if (handle == gf::INVALID_HANDLE) {
+    return;
+  }
+  for (GmkDmgPhantomTargetInfo *it = unknown10.begin(); it != unknown10.end(); it++) {
+    if (it->unknown00 == handle) {
+      unknown10.erase(it);
+      return;
+    }
+  }
+}
 
 } // namespace gmk

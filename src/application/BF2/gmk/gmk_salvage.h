@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
@@ -8,7 +9,6 @@
 #include "gmk/gmk_set.h"
 #include "types.h"
 
-struct CBdatWrapper;
 namespace gf {
 struct GF_OBJ_HANDLE;
 } // namespace gf
@@ -91,7 +91,9 @@ static_assert(sizeof(GmkSalvageList) == 0x5d0, "");
 
 class GmkSalvageLocator : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   struct Data {
     u8 unknown00; // Role and original member name unknown.

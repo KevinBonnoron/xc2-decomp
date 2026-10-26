@@ -1,4 +1,5 @@
 #include "gmk/gmk_map_obj.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_wrapper.h"
@@ -16,6 +17,9 @@
 #include "mm_mtl/rtti.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkMapObj, GmkMapObj::BdatInfo, 1330659661u, 3u, GmkMapObjGob>::initGmkBdatInfo(GmkMapObj::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkRoutedMapObj, GmkMapObj::BdatInfo, 1330662738u, 7u, GmkRouteGob>::initGmkBdatInfo(GmkMapObj::BdatInfo &, int &, const AGmkBase &);
 
 void GmkMapObj::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);

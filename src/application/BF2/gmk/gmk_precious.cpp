@@ -1,4 +1,5 @@
 #include "gmk/gmk_precious.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "framework/effect/effect_manager.h"
@@ -16,6 +17,8 @@
 #include "mm_mtl/reference_object.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkPrecious, GmkPrecious::BdatInfo, 1396920912u, 2u, GmkPreciousGob>::initGmkBdatInfo(GmkPrecious::BdatInfo &, int &, const AGmkBase &);
 
 template class TGmkActiveList<GmkPrecious>;
 

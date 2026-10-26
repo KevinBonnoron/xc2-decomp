@@ -1,4 +1,5 @@
 #pragma once
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
@@ -11,7 +12,9 @@ class GmkMobGob;
 
 class GmkMob : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   static const GmkType GMK_TYPE = GMK_TYPE_MOB;
 

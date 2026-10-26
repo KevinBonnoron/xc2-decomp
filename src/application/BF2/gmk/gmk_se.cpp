@@ -1,4 +1,5 @@
 #include "gmk/gmk_se.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "framework/debug/debug_draw.h"
@@ -17,6 +18,10 @@
 #include "mm_math/mm_vec3.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkSe, GmkSe::BdatInfo, 1162104403u, 2u, GmkSeGob>::initGmkBdatInfo(GmkSe::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkSeLine, GmkSe::BdatInfo, 1313621331u, 2u, GmkSeLineGobCustom>::initGmkBdatInfo(GmkSe::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkSeLinePoint, GmkSeLinePoint::BdatInfo, 1414548563u, 1u, GmkSeLinePointGobCustom>::initGmkBdatInfo(GmkSeLinePoint::BdatInfo &, int &, const AGmkBase &);
 
 template class TGmkActiveList<GmkSe>;
 template class TGmkActiveList<GmkSeLine>;

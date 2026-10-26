@@ -1,13 +1,12 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
-
-struct CBdatWrapper;
 
 namespace mm {
 struct Col4;
@@ -69,7 +68,9 @@ typedef TGmkList<GmkRoute, GmkRoute::BdatInfo, 0x56525543, 5, GmkRouteGob> GmkRo
 
 class GmkRoutePoint : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   struct Data {
     mm::Vec3 unknown00; // Inferred role: position; original member name unknown.

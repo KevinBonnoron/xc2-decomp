@@ -1,4 +1,5 @@
 #include "gmk/gmk_landmark.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
@@ -10,6 +11,8 @@
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkLandmark, GmkLandmark::BdatInfo, 1263354956u, 2u, GmkLandmarkGob>::initGmkBdatInfo(GmkLandmark::BdatInfo &, int &, const AGmkBase &);
 
 void GmkLandmark::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = bdat.getValCheck("MSGID", id, BDAT_TYPE_U16);

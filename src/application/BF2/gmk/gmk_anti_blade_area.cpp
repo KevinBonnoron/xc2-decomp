@@ -1,9 +1,12 @@
 #include "gmk/gmk_anti_blade_area.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkAntiBladeArea, GmkAntiBladeArea::BdatInfo, 1095516737u, 2u, GmkAntiBladeAreaGob>::initGmkBdatInfo(GmkAntiBladeArea::BdatInfo &, int &, const AGmkBase &);
 
 void GmkAntiBladeArea::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   dispose();

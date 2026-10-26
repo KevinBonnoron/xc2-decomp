@@ -1,8 +1,13 @@
 #pragma once
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "types.h"
+
+namespace mm {
+struct Vec3;
+} // namespace mm
 
 namespace gmk {
 
@@ -11,7 +16,19 @@ class GmkFormPcnpcGob;
 
 template <GmkType TYPE> class TGmkFormPcnpc : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
+
+  struct Data {
+    f32 unknown00; // Inferred role: position x; original member name unknown.
+    f32 unknown04; // Inferred role: position y; original member name unknown.
+    f32 unknown08; // Inferred role: position z; original member name unknown.
+    f32 unknown0c; // Inferred role: rotation around Y; original member name unknown.
+
+    // Inferred helper: the position stored in the first three floats; original name unknown.
+    const mm::Vec3 &unknown001() const { return *reinterpret_cast<const mm::Vec3 *>(this); }
+  };
 
   static const GmkType GMK_TYPE = TYPE;
 
@@ -22,12 +39,28 @@ public:
   void dispose() override;
   void debugUpdateMmf() override;
 
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+
   u8 _48[0x50 - 0x48];
 };
 
 template <GmkType TYPE, typename FORM_PCNPC> class TGmkFormPc : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
+
+  struct Data {
+    f32 unknown00; // Inferred role: position x; original member name unknown.
+    f32 unknown04; // Inferred role: position y; original member name unknown.
+    f32 unknown08; // Inferred role: position z; original member name unknown.
+    f32 unknown0c; // Inferred role: rotation around Y; original member name unknown.
+
+    // Inferred helper: the position stored in the first three floats; original name unknown.
+    const mm::Vec3 &unknown001() const { return *reinterpret_cast<const mm::Vec3 *>(this); }
+    u32 unknown10; // Inferred role: first following member index; original member name unknown.
+    u32 unknown14; // Inferred role: last following member index; original member name unknown.
+  };
 
   static const GmkType GMK_TYPE = TYPE;
 
@@ -38,7 +71,9 @@ public:
   void dispose() override;
   void debugDraw() const override;
   void debugUpdateMmf() override;
-  const IGmkList *getBindedFormPcnpcList() const;
+  virtual const IGmkList *getBindedFormPcnpcList() const;
+
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   u8 _48[0x50 - 0x48];
 };

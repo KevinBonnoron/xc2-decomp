@@ -1,8 +1,15 @@
 #include "gmk/gmk_form_pc.h"
+#include "gmk/gmk_form_impl.h" // IWYU pragma: keep
 
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_set.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkFormPc, GmkFormPc::BdatInfo, 0x43505246, 3, GmkFormPcGob>::initGmkBdatInfo(GmkFormPc::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkFormPcnpc, GmkFormPcnpc::BdatInfo, 0x504e5246, 2, GmkFormPcnpcGob>::initGmkBdatInfo(GmkFormPcnpc::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkFormPcEv, GmkFormPcEv::BdatInfo, 0x43505246, 3, GmkFormPcGob>::initGmkBdatInfo(GmkFormPcEv::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkFormPcnpcEv, GmkFormPcnpcEv::BdatInfo, 0x504e5246, 2, GmkFormPcnpcGob>::initGmkBdatInfo(GmkFormPcnpcEv::BdatInfo &, int &, const AGmkBase &);
 
 template <GmkType TYPE> TGmkFormPcnpc<TYPE>::~TGmkFormPcnpc() { dispose(); }
 
@@ -36,5 +43,7 @@ template class TGmkFormPcnpc<GMK_TYPE_FORM_PCNPC>;
 template class TGmkFormPcnpc<GMK_TYPE_FORM_PCNPC_EV>;
 template class TGmkFormPc<GMK_TYPE_FORM_PC, TGmkFormPcnpc<GMK_TYPE_FORM_PCNPC>>;
 template class TGmkFormPc<GMK_TYPE_FORM_PC_EV, TGmkFormPcnpc<GMK_TYPE_FORM_PCNPC_EV>>;
+
+template bool GmkForm::create<GmkFormPc, GmkFormPcnpc>(const GmkFormPc &);
 
 } // namespace gmk

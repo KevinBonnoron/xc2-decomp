@@ -7,9 +7,13 @@
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 struct CBdatWrapper;
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
 
 namespace mm {
 namespace mtl {
@@ -20,6 +24,7 @@ class RTTI;
 namespace gmk {
 
 class GmkDoorGob;
+class GmkDoorPhantomTargetInfo;
 
 class GmkDoor : public AGmkBase {
 public:
@@ -94,5 +99,21 @@ static_assert(offsetof(GmkDoor, unknown2C0) == 0x2c0, "");
 static_assert(sizeof(GmkDoor) == 0x360, "");
 
 typedef TGmkList<GmkDoor, GmkDoor::BdatInfo, 0x524f4f44, 2, GmkDoorGob> GmkDoorList;
+
+class GmkDoorPhantomManager : public gf::IGfObjListener {
+public:
+  GmkDoorPhantomManager();
+  virtual ~GmkDoorPhantomManager();
+  void create();
+  void dispose();
+  void addTargetInfo(gf::GF_OBJ_HANDLE *handle);
+  void removeTargetInfo(gf::GF_OBJ_HANDLE *handle);
+  void listenerGfObj(OBJEVT event, gf::GF_OBJ_HANDLE *handle, u32 objectType) override;
+
+  mm::mtl::Vector<GmkDoorPhantomTargetInfo> unknown08; // Inferred role: phantom targets; original member name unknown.
+};
+
+static_assert(offsetof(GmkDoorPhantomManager, unknown08) == 0x08, "");
+static_assert(sizeof(GmkDoorPhantomManager) == 0x30, "");
 
 } // namespace gmk

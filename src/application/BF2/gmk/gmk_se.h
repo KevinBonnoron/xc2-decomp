@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
@@ -9,7 +10,6 @@
 #include "mm_mtl/intrusive_list.h"
 #include "types.h"
 
-struct CBdatWrapper;
 namespace mm {
 struct Vec3;
 } // namespace mm
@@ -130,7 +130,9 @@ typedef TGmkList<GmkSeLine, GmkSe::BdatInfo, 0x4e4c4553, 2, GmkSeLineGobCustom> 
 
 class GmkSeLinePoint : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   static const GmkType GMK_TYPE = GMK_TYPE_SE_LINE_POINT;
 

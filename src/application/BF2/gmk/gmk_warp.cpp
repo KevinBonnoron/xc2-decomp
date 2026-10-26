@@ -1,4 +1,5 @@
 #include "gmk/gmk_warp.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "framework/effect/effect_manager.h"
@@ -20,6 +21,8 @@ struct Vec3;
 } // namespace mm
 
 namespace gmk {
+
+template bool TGmkList<GmkWarp, GmkWarp::BdatInfo, 1347567959u, 1u, GmkWarpGobCustom>::initGmkBdatInfo(GmkWarp::BdatInfo &, int &, const AGmkBase &);
 
 constexpr int WILDCARD_WARP_ICON_DIST_ROW = 1;
 constexpr u32 WARP_ICON_FADE_OUT_FRAME = 5;

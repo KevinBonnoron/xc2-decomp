@@ -1,4 +1,5 @@
 #include "gmk/gmk_trigger.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "gmk/gmk_enemy/gmk_enemy.h"
 #include "gmk/gmk_enemy/gmk_routed_enemy.h"
@@ -8,6 +9,8 @@
 #include "mtl/alloc_handle.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkTrigger, GmkTrigger::BdatInfo, 1380405844u, 2u, GmkTriggerGob>::initGmkBdatInfo(GmkTrigger::BdatInfo &, int &, const AGmkBase &);
 
 namespace {
 

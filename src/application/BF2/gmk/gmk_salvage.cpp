@@ -1,4 +1,5 @@
 #include "gmk/gmk_salvage.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_game_flag.h"
@@ -11,6 +12,9 @@ struct GF_OBJ_HANDLE;
 } // namespace gf
 
 namespace gmk {
+
+template bool TGmkList<GmkSalvage, GmkSalvage::BdatInfo, 1447838035u, 2u, GmkSalvageGobCustom>::initGmkBdatInfo(GmkSalvage::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkSalvageLocator, GmkSalvageLocator::BdatInfo, 1129073747u, 1u, GmkSalvageLocatorGob>::initGmkBdatInfo(GmkSalvageLocator::BdatInfo &, int &, const AGmkBase &);
 
 void GmkSalvage::debugDraw() const {
   isValid();
@@ -75,6 +79,23 @@ void GmkSalvageLocator::seqWaitPop(f32 deltaTime) {
 }
 
 const IGmkList *GmkSetOfSalvageChildren::getGmkList(GmkType type) const { return unknown1b8[type]; }
+
+GmkSalvageList::GmkSalvageList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame) {}
+
+void GmkSalvageList::createGmk(void *data) {
+  TGmkList::createGmk(data);
+  unknown230.create(getCreateInfo().unknown08->unknown10);
+}
+
+void GmkSalvageList::disposeGmk() {
+  unknown230.dispose();
+  TGmkList::disposeGmk();
+}
+
+void GmkSalvageList::update(f32 deltaTime) {
+  TGmkList::update(deltaTime);
+  unknown230.update(deltaTime);
+}
 
 void GmkSalvageList::debugDraw() const { TGmkList::debugDraw(); }
 

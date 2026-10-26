@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
@@ -8,8 +9,6 @@
 #include "gmk/gmk_route.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
-
-struct CBdatWrapper;
 
 namespace mm {
 struct Col4;
@@ -74,7 +73,9 @@ typedef TGmkList<GmkRoutedFootPrint, GmkRoutedFootPrint::BdatInfo, 0x54504652, 2
 
 class GmkRoutedFootPrintPoint : public AGmkBase {
 public:
-  struct BdatInfo {};
+  struct BdatInfo {
+    void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
 
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_FOOT_PRINT_POINT;
 

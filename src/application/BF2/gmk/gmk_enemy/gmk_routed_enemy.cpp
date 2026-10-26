@@ -3,6 +3,7 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_gob_event_listener_impl.h" // IWYU pragma: keep
+#include "gmk/gmk_list_impl.h"               // IWYU pragma: keep
 #include "gmk/gmk_route_navi.h"
 #include "gmk/gmk_set.h"
 
@@ -11,6 +12,8 @@ struct GF_OBJ_HANDLE;
 } // namespace gf
 
 namespace gmk {
+
+template bool TGmkList<GmkRoutedEnemyPoint, GmkRoutedEnemyPoint::BdatInfo, 1347571269u, 4u, GmkRoutedEnemyPointGobCustom>::initGmkBdatInfo(GmkRoutedEnemyPoint::BdatInfo &, int &, const AGmkBase &);
 
 GmkType GmkRoutedEnemy::getGmkType() const { return GMK_TYPE; }
 
@@ -38,6 +41,11 @@ void GmkRoutedEnemyList::create(const CreateInfo &info) {
     return;
   }
   TGmkList::create(info);
+}
+
+void GmkRoutedEnemyList::createGmk(void *data) {
+  TGmkList::createGmk(data);
+  unknown001(unknown240, getCreateInfo());
 }
 
 void GmkRoutedEnemyList::dispose() {

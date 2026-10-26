@@ -1,4 +1,5 @@
 #include "gmk/gmk_npc/gmk_npc.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_manager.h"
@@ -9,6 +10,8 @@
 #include "mm_mtl/vector.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkNpc, GmkNpc::BdatInfo, 4411470u, 4u, GmkNpcGob>::initGmkBdatInfo(GmkNpc::BdatInfo &, int &, const AGmkBase &);
 
 GmkNpcList::GmkNpcList(u32 updateGmkNumPerFrame) : TGmkList(0) {}
 

@@ -1,4 +1,5 @@
 #include "gmk/gmk_event.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
@@ -8,6 +9,8 @@
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkEvent, GmkEvent::BdatInfo, 1414420037u, 4u, GmkEventGob>::initGmkBdatInfo(GmkEvent::BdatInfo &, int &, const AGmkBase &);
 
 template class TGmkActiveList<GmkEvent>;
 

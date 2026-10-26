@@ -1,4 +1,5 @@
 #include "gmk/gmk_effect.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_wrapper.h"
@@ -6,6 +7,9 @@
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+template bool TGmkList<GmkEffect, GmkEffect::BdatInfo, 1413695045u, 8u, GmkEffectGobCustom>::initGmkBdatInfo(GmkEffect::BdatInfo &, int &, const AGmkBase &);
+template bool TGmkList<GmkEffectLocator, GmkEffectLocator::BdatInfo, 1129072197u, 1u, GmkEffectLocatorGob>::initGmkBdatInfo(GmkEffectLocator::BdatInfo &, int &, const AGmkBase &);
 
 void GmkEffect::debugDraw() const { isValid(); }
 
