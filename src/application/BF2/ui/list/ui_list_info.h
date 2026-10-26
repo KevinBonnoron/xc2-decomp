@@ -102,6 +102,22 @@ public:
     contentsChanged = true;
   }
 
+  void swapContents(u32 index, u32 other) {
+    if (index < getSize() && other < getSize()) {
+      T value = contents[index];
+      contents[index] = contents[other];
+      contents[other] = value;
+    }
+  }
+
+  void swapContents(u32 index, UIListInfo<T> *list, u32 other) {
+    if (index < getSize() && other < list->getSize()) {
+      T value = contents[index];
+      contents[index] = list->contents[other];
+      list->contents[other] = value;
+    }
+  }
+
   T &getContents(u32 index) {
     if (index < contents.size()) {
       return contents[index];

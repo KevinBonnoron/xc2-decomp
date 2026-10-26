@@ -1,12 +1,33 @@
 #include "ui/shape/ui_particle_manager.h"
 
+#include "framework/memory/framework_memory.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_mtl/vector.h"
 #include "ui/shape/ui_particle_emitter.h"
+#include "ui/ui_util.h"
 
 namespace ui {
 
 UIParticleManager::UIParticleManager() : unknown20(1), m_loadReduction(0.0f) {}
+
+int UIParticleManager::create(const UIParticleData &data) {
+  UIParticleEmitter *emitter = UIParticleEmitter::create(data);
+  if (emitter == nullptr) {
+    return -1;
+  }
+// __LINE__ is the line argument of the operator new call.
+#line 78
+  EmitterInfo *info = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) EmitterInfo();
+  u32 id = unknown20;
+  info->unknown18 = emitter;
+  info->unknown10 = id;
+  info->unknown14 = 1.0f;
+  emitter->unknown08 = (1.0f - m_loadReduction) + (1.0f - (1.0f - m_loadReduction));
+  unknown08.push_back(info);
+  int result = info->unknown10;
+  unknown20++;
+  return result;
+}
 
 UIParticleManager::~UIParticleManager() {
   if (unknown08.size() != 0) {

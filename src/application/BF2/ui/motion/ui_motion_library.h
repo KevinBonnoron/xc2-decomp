@@ -25,6 +25,7 @@ public:
   UIMotionLibrary();
   virtual ~UIMotionLibrary();
   UIMotionData *find(const char *name);
+  bool add(const char *name);
   bool isLoading() const;
   void reset();
 

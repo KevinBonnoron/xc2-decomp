@@ -10,6 +10,8 @@ struct UpdateInfo;
 
 namespace ui {
 
+class UIParticleData;
+
 class UIParticleEmitter {
 public:
   struct Particle {
@@ -17,6 +19,7 @@ public:
   };
 
   virtual ~UIParticleEmitter();
+  static UIParticleEmitter *create(const UIParticleData &data);
   void update(const fw::UpdateInfo &info);
 
   f32 unknown08; // Inferred role: emission scale; original member name unknown.

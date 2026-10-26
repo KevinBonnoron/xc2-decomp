@@ -6,6 +6,12 @@
 #include "mm_mtl/vector.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace layer {
 class LayerBase;
 }
@@ -38,12 +44,14 @@ public:
   FontRes *getFontResFromStyle(u16 style);
   bool isLoading() const;
   bool getFontStyleInfo(u16 style, StyleInfo &info);
+  void loadFontSet(const char *name, mm::mtl::IAllocator *allocator);
   bool findFacePattern(const char *name, u32 &index);
 
   UIResource *unknown08;                      // Inferred role: resource; original member name unknown.
   mm::mtl::FixedVector<FontRes, 4> unknown10; // Inferred role: fonts; original member name unknown.
   FontRes m_fontStyle;
-  u8 _68[0x70 - 0x68];
+  bool unknown68; // Role and original member name unknown.
+  u8 _69[0x70 - 0x69];
   mm::mtl::Vector<FacePattern> unknown70; // Inferred role: face patterns; original member name unknown.
   layer::LayerBase *unknown98;            // Inferred role: color map; original member name unknown.
   u8 _a0[0xa8 - 0xa0];
@@ -53,6 +61,7 @@ static_assert(sizeof(UIFontManager::FontRes) == 0x10, "");
 static_assert(offsetof(UIFontManager, unknown08) == 0x08, "");
 static_assert(offsetof(UIFontManager, unknown10) == 0x10, "");
 static_assert(offsetof(UIFontManager, m_fontStyle) == 0x58, "");
+static_assert(offsetof(UIFontManager, unknown68) == 0x68, "");
 static_assert(offsetof(UIFontManager, unknown70) == 0x70, "");
 static_assert(offsetof(UIFontManager, unknown98) == 0x98, "");
 static_assert(sizeof(UIFontManager) == 0xa8, "");

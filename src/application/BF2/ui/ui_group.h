@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
 
@@ -18,14 +19,15 @@ class UIResource;
 class UIGroup {
 public:
   struct RootObjInfo {
-    u8 _00[0x44];
-    u32 unknown44; // Inferred role: object handle; original member name unknown.
-    u16 unknown48; // Inferred role: layer; original member name unknown.
-    u8 _4a[0x5a - 0x4a];
-    bool unknown5a; // Inferred role: terminated; original member name unknown.
-    bool unknown5b; // Inferred role: immediate; original member name unknown.
-    u8 unknown5c;   // Inferred role: disp; original member name unknown.
-    u8 _5d[0x60 - 0x5d];
+    mm::mtl::FixStr<64> unknown00; // Inferred role: name; original member name unknown.
+    u32 unknown44;                 // Inferred role: object handle; original member name unknown.
+    u16 unknown48;                 // Inferred role: layer; original member name unknown.
+    u8 _4a[0x50 - 0x4a];
+    UIResource *unknown50; // Inferred role: resource; original member name unknown.
+    u16 unknown58;         // Role and original member name unknown.
+    bool unknown5a;        // Inferred role: terminated; original member name unknown.
+    bool unknown5b;        // Inferred role: immediate; original member name unknown.
+    bool unknown5c;        // Inferred role: disp; original member name unknown.
   };
   struct InputInfo {
     UIInputLayer *unknown00; // Inferred role: input layer; original member name unknown.
@@ -41,7 +43,7 @@ public:
   void disp(bool disp);
   void updateObject(const fw::UpdateInfo &info);
   void applyObject();
-  void registObject(UIObject *object, const char *name, u16 layer, UIResource *resource);
+  int registObject(UIObject *object, const char *name, u16 layer, UIResource *resource);
   void initializeObject(const char *name);
   u32 searchObject(const char *name);
   RootObjInfo *getRootInfo(u32 handle);
@@ -67,6 +69,8 @@ public:
 
 static_assert(offsetof(UIGroup::RootObjInfo, unknown44) == 0x44, "");
 static_assert(offsetof(UIGroup::RootObjInfo, unknown48) == 0x48, "");
+static_assert(offsetof(UIGroup::RootObjInfo, unknown50) == 0x50, "");
+static_assert(offsetof(UIGroup::RootObjInfo, unknown58) == 0x58, "");
 static_assert(offsetof(UIGroup::RootObjInfo, unknown5a) == 0x5a, "");
 static_assert(sizeof(UIGroup::RootObjInfo) == 0x60, "");
 static_assert(sizeof(UIGroup::InputInfo) == 0x10, "");

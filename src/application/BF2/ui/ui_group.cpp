@@ -1,9 +1,13 @@
 #include "ui/ui_group.h"
 
+#include "framework/memory/framework_memory.h"
 #include "ui/input/ui_input_layer.h"
 #include "ui/input/ui_input_manager.h"
 #include "ui/object/ui_layout_object.h"
+#include "ui/ui_displayinfo.h"
+#include "ui/ui_object.h"
 #include "ui/ui_object_list.h"
+#include "ui/ui_resource.h"
 #include "ui/ui_util.h"
 
 namespace ui {
@@ -11,6 +15,21 @@ namespace ui {
 UIGroup::UIGroup() : unknown08(nullptr), unknown10(), unknown38(), unknown60(0) {}
 
 UIGroup::~UIGroup() { clean(); }
+
+void UIGroup::setup(u32 size) {
+  if (size == 0) {
+    return;
+  }
+  delete unknown08;
+  unknown08 = nullptr;
+// __LINE__ is the line argument of the operator new call.
+#line 60
+  unknown08 = new (UIUtil::getProgAllocator(), 16, __FILE__, __LINE__) UIObjectList;
+  unknown10.setAllocator(UIUtil::getProgAllocator());
+  unknown10.reserve(size);
+  unknown38.setAllocator(UIUtil::getProgAllocator());
+  unknown38.reserve(size);
+}
 
 void UIGroup::disp(bool disp) {
   if (disp) {
@@ -21,6 +40,51 @@ void UIGroup::disp(bool disp) {
 }
 
 bool UIGroup::hasObject() const { return unknown10.size() != 0; }
+
+int UIGroup::registObject(UIObject *object, const char *name, u16 layer, UIResource *resource) {
+  if (unknown08 == nullptr) {
+    return 0;
+  }
+
+  RootObjInfo info;
+  info.unknown44 = unknown08->regist(object, name);
+  if (info.unknown44 == 0) {
+    return 0;
+  }
+
+  info.unknown00 = name;
+  info.unknown48 = layer;
+  info.unknown50 = resource;
+  info.unknown5a = false;
+  info.unknown5b = false;
+  info.unknown58 = 0;
+  resource->addRef();
+  unknown10.push_back(info);
+  return info.unknown44;
+}
+
+void UIGroup::applyObject() {
+  if (unknown08 == nullptr || (unknown60 & 2) != 0) {
+    return;
+  }
+
+  if ((unknown60 & 4) != 0) {
+    for (RootObjInfo *it = unknown10.begin(); it != unknown10.end(); ++it) {
+      UIObject *object = UIUtil::getObject(it->unknown44);
+      it->unknown5c = object->unknown50.unknown08;
+      object->unknown50.setDisp(false);
+    }
+  }
+
+  unknown08->apply();
+
+  if ((unknown60 & 4) != 0) {
+    for (RootObjInfo *it = unknown10.begin(); it != unknown10.end(); ++it) {
+      UIObject *object = UIUtil::getObject(it->unknown44);
+      object->unknown50.setDisp(it->unknown5c);
+    }
+  }
+}
 
 u32 UIGroup::searchObject(const char *name) { return unknown08 != nullptr ? unknown08->search(name) : 0; }
 

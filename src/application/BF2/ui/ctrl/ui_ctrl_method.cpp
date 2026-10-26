@@ -28,6 +28,7 @@ void UICtrlMethodBright::execute(UIObject *object, f32 rate, const TimeInfo &tim
 }
 
 void UICtrlMethodPos::setup(const UIObject *object, const mm::Pnt<s16> &to) {
+  mm::Pnt<s16> pos;
   mm::Pnt<s16> offset;
   object->getDisplayOffset(UI_DISPLAY_MODE_TOP_LEFT, offset);
   object->getPos(unknown08);
@@ -88,12 +89,64 @@ void UICtrlMethodMotion::setup(const UIObject *object, const UIMotionData *motio
   unknown10 = motionData->searchMotion(name);
   unknown14 = 0;
   mm::Pnt<s16> current;
+  mm::Pnt<s16> pos;
   mm::Pnt<s16> offset;
   object->getDisplayOffset(UI_DISPLAY_MODE_TOP_LEFT, offset);
   object->getPos(current);
   unknown20.x = current.x - offset.x;
   unknown20.y = current.y - offset.y;
   unknown30 = object->unknown20.unknown10;
+}
+
+void UICtrlMethodMotion::execute(UIObject *object, f32, const TimeInfo &timeInfo) {
+  if (unknown10 == 0xffffffff) {
+    return;
+  }
+
+  UIMotionData::MotionParam param;
+  if (timeInfo.prevTime == 0.0f) {
+    unknown08->getMotionParamDefault(unknown10, param);
+    if (param.has(UIMotionData::PARAM_TYPE_ALPHA)) {
+      object->unknown50.unknown10.a = param.unknown18;
+    }
+    f32 scaleX = 1.0f;
+    f32 scaleY = 1.0f;
+    if (param.unknown00 & (1 << UIMotionData::PARAM_TYPE_SCALE_X)) {
+      scaleX = param.unknown0c;
+    }
+    if (param.unknown00 & (1 << UIMotionData::PARAM_TYPE_SCALE_Y)) {
+      scaleY = param.unknown10;
+    }
+    object->unknown20.setScale(unknown30.x * scaleX, scaleY * unknown30.y);
+  }
+
+  f32 frameRate = unknown08->getMotionLength(unknown10) / timeInfo.length;
+  unknown08->getMotionParamDelta(unknown10, frameRate * timeInfo.prevTime, frameRate * timeInfo.time, param);
+
+  f32 x = object->unknown20.unknown10.x;
+  f32 y = object->unknown20.unknown10.y;
+  x += unknown30.x * param.unknown0c;
+  y += unknown30.y * param.unknown10;
+  object->unknown20.setScale(x, y);
+  object->unknown20.unknown20 = object->unknown20.unknown20 + param.unknown14;
+
+  mm::Pnt<s16> pos;
+  mm::Pnt<s16> offset;
+  object->getDisplayOffset(UI_DISPLAY_MODE_TOP_LEFT, offset);
+  unknown20.x += param.unknown04;
+  unknown20.y += param.unknown08;
+  pos.x = static_cast<s16>(unknown20.x) + offset.x;
+  pos.y = static_cast<s16>(unknown20.y) + offset.y;
+  object->setPos(pos);
+
+  f32 alpha = object->unknown50.getColorSource()->unknown10.a + param.unknown18;
+  if (alpha > 1.0f) {
+    alpha = 1.0f;
+  }
+  if (alpha < 0.0f) {
+    alpha = 0.0f;
+  }
+  object->unknown50.unknown10.a = alpha;
 }
 
 } // namespace ui
