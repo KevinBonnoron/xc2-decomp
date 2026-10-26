@@ -75,6 +75,7 @@ public:
   void PreUpdateProc(const fw::UpdateInfo &updateInfo);
   static void Update(const fw::UpdateInfo &updateInfo);
   void UpdateProc(const fw::UpdateInfo &updateInfo);
+  void UpdateEffect(PROC_DATA &proc, f32 time);
   void FinishBladeChange(gf::GF_OBJ_HANDLE *handle);
   void NotiryProgress(gf::GF_OBJ_HANDLE *handle, PROGRESS_ID progress);
   int GetChangeBladeIndex(gf::GF_OBJ_HANDLE *handle) const;

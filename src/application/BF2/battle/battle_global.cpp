@@ -1,7 +1,10 @@
 #include "battle/battle_global.h"
 
+#include <float.h>
+
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
+#include "battle/character/character_parameter_battle.h"
 #include "battle/data_manager_battle.h"
 #include "battle/misc_battle.h"
 #include "battle/shake_camera_manager.h"
@@ -18,6 +21,7 @@
 #include "gf/object/component/gf_com_dynamics.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
+#include "mm_math/mm_vec3.h"
 
 namespace btl {
 
@@ -412,6 +416,75 @@ const BattleGlobal::SLOW_PROC_DATA *BattleGlobal::GetSlowProcDataConst(u32 slow)
   return nullptr;
 }
 
+void BattleGlobal::SetSlowDynamicsSpeed(u32 slow, int characterId, u32 speed) {
+  SLOW_PROC_DATA *data = const_cast<SLOW_PROC_DATA *>(GetSlowProcDataConst(slow));
+  if (data == nullptr) {
+    return;
+  }
+
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(characterId);
+  if (character == nullptr) {
+    return;
+  }
+  gf::GfComDynamics *dynamics = character->GetObject()->getComponent<gf::GfComDynamics>();
+  if (dynamics == nullptr) {
+    return;
+  }
+  dynamics->unknown10.unknown98 = static_cast<f32>(speed) * 0.01f;
+  data->unknown10 = static_cast<u8>(characterId);
+  data->unknown12 = static_cast<u16>(speed);
+}
+
+void BattleGlobal::DeleteSlow(u32 slow) {
+  if (slow == 0) {
+    return;
+  }
+
+  for (SLOW_PROC_DATA *it = unknown6c0.begin(); it != unknown6c0.end(); ++it) {
+    if (it->unknown0c == slow) {
+      it->Finalize();
+      unknown6c0.erase(it);
+      return;
+    }
+  }
+}
+
+void BattleGlobal::DeleteSpecialEffect(int special) {
+  for (SPECIAL_EFFECT_DATA *it = unknown6a8.begin(); it != unknown6a8.end(); ++it) {
+    if (it->unknown04 == special) {
+      u32 effect = it->unknown00;
+      if (effect != 0 && fw::EffectManager::get() != nullptr) {
+        fw::EffectManager::get()->dead(effect);
+        it->unknown00 = 0;
+      }
+      special = it->unknown04;
+      if (special == 0) {
+        DataManager::get()->SetSpecialEffects(2, false);
+      }
+      it->unknown04 = -1;
+      unknown6a8.erase(it);
+      return;
+    }
+  }
+}
+
+void BattleGlobal::CreateSpecialEffect(int special) {
+  DeleteSpecialEffect(special);
+  const char *name = special == 0 ? "cmn_020_007" : nullptr;
+  if (special != 0 || !unknown6a8.empty()) {
+    return;
+  }
+
+  fw::EffectManager *manager = fw::EffectManager::get();
+  u32 effect = manager->create(name, nullptr, true);
+  if (effect != 0) {
+    unknown6a8.push_back(SPECIAL_EFFECT_DATA{effect, special});
+    static const mm::Vec3 position(-1122.0f, -493.0f, 0.0f);
+    manager->setParam(effect, position, mm::Vec3::unit);
+  }
+  DataManager::get()->SetSpecialEffects(2, true);
+}
+
 void BattleGlobal::SetBGM(u32 bgm) {
   if (bgm == 0) {
     return;
@@ -518,6 +591,64 @@ void BattleGlobal::ApplyBattleCameraAdjustment(mm::Vec3 &position, mm::Vec3 &tar
   if (unknown5e0 != nullptr) {
     unknown5e0->ApplyShake(position, target);
   }
+}
+
+void BattleGlobal::NotifyLinkJoinBattle(gf::GF_OBJ_HANDLE *handle) {
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character == nullptr) {
+    return;
+  }
+
+  const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
+  if (parameter == nullptr || parameter->m_invalidTarget) {
+    return;
+  }
+
+  int level = parameter->GetLevel();
+  if (parameter->IsNamed()) {
+    level += 15;
+  }
+  if (level > unknown65dd) {
+    unknown65dd = level;
+  }
+  if (unknown620.size() < 8) {
+    unknown620.push_back(LINK_JOIN_DATA{handle, 30.0f});
+  }
+}
+
+gf::GF_OBJ_HANDLE *BattleGlobal::GetLinkJoinEnemyHandle(const mm::Vec3 &position) {
+  gf::GF_OBJ_HANDLE *nearest = gf::INVALID_HANDLE;
+  f32 nearestLength = FLT_MAX;
+  for (const LINK_JOIN_DATA &data : unknown620) {
+    mm::Vec3 enemyPosition;
+    if (Misc::GetObjectTransform(data.unknown00, enemyPosition, Misc::TRANS_TYPE_POSITION)) {
+      f32 length = Misc::CalcSquareLength(enemyPosition, position);
+      if (length < nearestLength) {
+        nearestLength = length;
+        nearest = data.unknown00;
+      }
+    }
+  }
+  return nearest;
+}
+
+const char *BattleGlobal::GetSeTag(int se) const {
+  if (static_cast<u32>(se - 1) < 0xb8) {
+    const char *tag = unknown18[se];
+    if (tag != nullptr) {
+      return tag;
+    }
+
+    u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_BTL_SE);
+    char delivered = static_cast<char>(Bdat::getValCheck(bdat, "delivered", se, 1));
+    if (delivered) {
+      tag = reinterpret_cast<const char *>(Bdat::getValCheck(bdat, "tag", se, 7));
+      unknown18[se] = tag;
+      return tag;
+    }
+  }
+
+  return nullptr;
 }
 
 } // namespace btl

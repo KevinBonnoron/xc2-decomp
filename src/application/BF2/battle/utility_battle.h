@@ -152,6 +152,7 @@ public:
   static int AI_GetKizunaStage(gf::GF_OBJ_HANDLE *handle);
   static int AI_GetSpAttackLevel(gf::GF_OBJ_HANDLE *handle);
   static bool AI_StartSpAttack(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_IsEnableSpAttack(gf::GF_OBJ_HANDLE *handle, int level);
   static bool AI_IsBattleOpening(gf::GF_OBJ_HANDLE *handle);
   static bool AI_IsInAttackRange(gf::GF_OBJ_HANDLE *handle);
   static bool AI_IsEnableArts(gf::GF_OBJ_HANDLE *handle, int slot, int aiId);
@@ -169,6 +170,8 @@ public:
   static bool AI_GetGimmickPoint(mm::Vec3 &position, u32 gimmick);
   static void AI_SetScout(gf::GF_OBJ_HANDLE *handle, bool isScout);
   static void AI_SetSuperArmor(gf::GF_OBJ_HANDLE *handle, f32 time);
+  static bool AI_IsEnableButtonChallenge();
+  static bool AI_RegisterButtonChallenge(int challenge, bool isSuccess);
   static int AI_GetButtonChallengeResult();
   static int AI_EnemyKillNum();
   static bool AI_IsKillChild();

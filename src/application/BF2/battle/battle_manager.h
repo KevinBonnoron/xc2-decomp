@@ -33,8 +33,10 @@ public:
 
   u8 _10[0x14 - 0x10];
   bool unknown14; // Inferred role: initialized; original member name unknown.
+  bool unknown15; // Inferred role: map jump end; original member name unknown.
 };
 
 static_assert(offsetof(BattleManager, unknown14) == 0x14, "");
+static_assert(offsetof(BattleManager, unknown15) == 0x15, "");
 
 } // namespace btl

@@ -51,6 +51,8 @@ public:
   ~SpAttackManager();
   static void Destroy();
   void Finalize();
+  void NotifyMapChange();
+  void DeleteCamera(bool isFade);
   static void PreUpdate(const fw::UpdateInfo &updateInfo);
   void PreUpdateProc(const fw::UpdateInfo &updateInfo);
   static void Update(const fw::UpdateInfo &updateInfo);
@@ -76,9 +78,13 @@ public:
   }
 
   mm::mtl::IntrusivePtr<fw::Camera> unknown08; // Inferred role: camera; original member name unknown.
-  u8 _10[0x28 - 0x10];
-  PROC_DATA unknown28[5]; // Inferred role: procs; original member name unknown.
-  int unknown208;         // Inferred role: proc count; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;                // Inferred role: driver handle; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown18;                // Inferred role: blade handle; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown20;                // Inferred role: target handle; original member name unknown.
+  PROC_DATA unknown28[5];                      // Inferred role: procs; original member name unknown.
+  int unknown208;                              // Inferred role: proc count; original member name unknown.
+  u32 unknown20c;                              // Inferred role: fade out; original member name unknown.
+  u8 unknown210;                               // Inferred role: fade frame; original member name unknown.
 };
 
 static_assert(sizeof(SpAttackManager::PROC_DATA) == 0x60, "");
@@ -86,6 +92,10 @@ static_assert(offsetof(SpAttackManager::PROC_DATA, unknown53) == 0x53, "");
 static_assert(offsetof(SpAttackManager::PROC_DATA, unknown5a) == 0x5a, "");
 static_assert(offsetof(SpAttackManager, unknown08) == 0x8, "");
 static_assert(offsetof(SpAttackManager, unknown28) == 0x28, "");
+static_assert(offsetof(SpAttackManager, unknown10) == 0x10, "");
 static_assert(offsetof(SpAttackManager, unknown208) == 0x208, "");
+static_assert(offsetof(SpAttackManager, unknown20c) == 0x20c, "");
+static_assert(offsetof(SpAttackManager, unknown210) == 0x210, "");
+static_assert(sizeof(SpAttackManager) == 0x218, "");
 
 } // namespace btl

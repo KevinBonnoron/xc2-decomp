@@ -45,6 +45,7 @@ public:
   bool IsControlCharacter(gf::GF_OBJ_HANDLE *handle);
   int GetAliveBossNum() const;
   bool IsCharacterDead(int id) const;
+  int GetBattleEnemyMaxLevel(bool includeNamed) const;
   static void Update(const fw::UpdateInfo &updateInfo);
   void UpdateProc(const fw::UpdateInfo &updateInfo);
   void AssignAiChrID();

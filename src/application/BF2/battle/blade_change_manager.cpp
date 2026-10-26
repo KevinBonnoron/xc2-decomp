@@ -1,6 +1,9 @@
 #include "battle/blade_change_manager.h"
 
+#include "battle/misc_battle.h"
+#include "framework/effect/effect_manager.h"
 #include "gf/gf_allocator.h"
+#include "mm_math/mm_vec3.h"
 
 namespace gf {
 struct GF_OBJ_HANDLE;
@@ -46,6 +49,20 @@ void BladeChangeManager::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->Pr
 void BladeChangeManager::PreUpdateProc(const fw::UpdateInfo &) {}
 
 void BladeChangeManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
+
+void BladeChangeManager::UpdateEffect(PROC_DATA &proc, f32) {
+  if (proc.unknown40 != 0) {
+    fw::EffectManager *manager = fw::EffectManager::get();
+    if (!manager->isExist(proc.unknown40)) {
+      proc.unknown40 = 0;
+    } else {
+      mm::Vec3 position;
+      if (Misc::GetObjectTransform(proc.unknown08, position, Misc::TRANS_TYPE_POSITION)) {
+        manager->setParam(proc.unknown40, position, mm::Vec3::unit);
+      }
+    }
+  }
+}
 
 void BladeChangeManager::FinishBladeChange(gf::GF_OBJ_HANDLE *handle) {
   int num = unknown470;

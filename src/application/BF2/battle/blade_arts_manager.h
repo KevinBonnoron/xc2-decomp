@@ -23,6 +23,10 @@ public:
     STATE_FINISH = 7,
   };
 
+  enum PROGRESS_ID {
+    PROGRESS_ID_NONE,
+  };
+
   struct PROC_DATA {
     PROC_DATA() : unknown00(gf::INVALID_HANDLE), unknown08(gf::INVALID_HANDLE), unknown10(gf::INVALID_HANDLE), unknown18(-1), unknown1c(STATE_NONE), unknown20(0.0f), unknown24(false) {}
 
@@ -45,6 +49,7 @@ public:
   static void PreUpdate(const fw::UpdateInfo &updateInfo);
   void PreUpdateProc(const fw::UpdateInfo &updateInfo);
   void FinishBladeArts(gf::GF_OBJ_HANDLE *handle);
+  bool NotifyProgress(gf::GF_OBJ_HANDLE *handle, PROGRESS_ID progress);
   gf::GF_OBJ_HANDLE *GetTargetHandle(gf::GF_OBJ_HANDLE *handle) const;
   bool IsRegister(gf::GF_OBJ_HANDLE *handle) const;
   bool IsBladeStart(gf::GF_OBJ_HANDLE *handle) const;

@@ -1,5 +1,9 @@
 #include "battle/ui_manager_battle.h"
 
+#include "bdat.h"
+#include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_game_flag.h"
+#include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/object/gf_menu_obj_arts_palette.h"
 #include "gf/menu/object/gf_menu_obj_blade_change.h"
 #include "gf/menu/object/gf_menu_obj_chain_icon.h"
@@ -41,10 +45,41 @@ void UIManager::SetKakuseiData(bool isEnableKakusei, bool isKakusei, f32 kakusei
 
 void UIManager::RegisterRescueUI(gf::GF_OBJ_HANDLE *handle) { unknown20 = handle; }
 
+u32 UIManager::StartElementalComboDirectionUI(int attribute) {
+  if (unknown08 == nullptr) {
+    unknown08 = gf::GfMenuCallContext::create();
+  } else {
+    unknown08->reset();
+  }
+
+  u32 id = 0;
+  if (unknown08 != nullptr) {
+    id = unknown38;
+    unknown38 = id < 0xfffffffe ? id + 1 : 1;
+    gf::GfMenuObjElementEff::StartParam param;
+    param.attribute = attribute;
+    gf::GfMenuObjElementEff::start(unknown08, param);
+  }
+
+  unknown10 = id;
+  unknown14 = attribute;
+  unknown15 = false;
+  return id;
+}
+
 void UIManager::DispChainUI(gf::GF_OBJ_HANDLE *handle) {
   gf::GfMenuObjChainIcon::OpenParam param;
   param.unknown00 = handle;
   gf::GfMenuObjChainIcon::open(param);
+}
+
+void UIManager::NotifyMapChange() {
+  u8 *bdat = gf::GfDataBdat::getFP(0xe4);
+  int top = Bdat::getIdTop(bdat);
+  int base = 0xc710 - top;
+  if (gf::GfGameFlag::getLocal(1, base + 0xc) != 0) {
+    gf::GfGameFlag::setLocal(1, base + 0xd, 1);
+  }
 }
 
 void UIManager::NotifyInput(INPUT_TYPE type, int value) {

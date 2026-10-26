@@ -54,6 +54,7 @@ public:
   bool IsProc(bool isExcludeStartWait) const;
   bool IsResult() const;
   void AddTotalDamage(u32 damage);
+  void RecoveryKizuna(int partyId);
   int GetGroupIndex() const;
   bool IsStartWait() const;
   bool IsSelectAction() const;

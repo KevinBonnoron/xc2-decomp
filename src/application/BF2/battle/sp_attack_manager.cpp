@@ -1,5 +1,7 @@
 #include "battle/sp_attack_manager.h"
 
+#include "battle/character/battle_character.h"
+#include "battle/character/character_manager_battle.h"
 #include "battle/utility_battle.h"
 #include "fw/fw_camera.h"
 #include "gf/object/gf_obj_handle.h"
@@ -7,6 +9,13 @@
 namespace btl {
 
 constexpr int SP_ATTACK_SLOT_NONE = 15;
+
+static void unknown001(gf::GF_OBJ_HANDLE *handle) { // Inferred role: clear camera fade disable; original function name unknown.
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character != nullptr) {
+    character->unknownf83 &= 0xfb;
+  }
+}
 
 bool SpAttackManager::PROC_DATA::IsRegister(gf::GF_OBJ_HANDLE *handle) const {
   if (unknown10 == handle) {
@@ -33,6 +42,30 @@ void SpAttackManager::Destroy() {
 }
 
 void SpAttackManager::Finalize() {}
+
+void SpAttackManager::DeleteCamera(bool isFade) {
+  if (unknown08.get() != nullptr) {
+    f32 time = 0.0f;
+    if (isFade) {
+      time = static_cast<f32>(unknown210) * (1.0f / 30.0f);
+    }
+    fw::CameraManager::get()->unknown20[0].pop(unknown08, time);
+    unknown08 = nullptr;
+    unknown20c = 0;
+  }
+
+  gf::GF_OBJ_HANDLE *handle = unknown10;
+  unknown001(handle);
+  unknown10 = gf::INVALID_HANDLE;
+
+  handle = unknown18;
+  unknown001(handle);
+  unknown18 = gf::INVALID_HANDLE;
+
+  handle = unknown20;
+  unknown001(handle);
+  unknown20 = gf::INVALID_HANDLE;
+}
 
 void SpAttackManager::PreUpdate(const fw::UpdateInfo &updateInfo) { get()->PreUpdateProc(updateInfo); }
 

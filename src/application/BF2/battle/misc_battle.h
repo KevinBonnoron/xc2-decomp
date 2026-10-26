@@ -1,9 +1,10 @@
 #pragma once
+#include "mm_math/mm_pnt.h"
 #include "types.h"
 
 namespace mm {
 struct Vec3;
-}
+} // namespace mm
 
 namespace gf {
 struct GF_OBJ_HANDLE;
@@ -11,6 +12,8 @@ class GfObj;
 } // namespace gf
 
 namespace btl {
+
+class BattleCharacter;
 
 inline f32 NextFloat(f32 value) {
   u32 bits = *reinterpret_cast<u32 *>(&value) + 1;
@@ -29,11 +32,18 @@ public:
     TRANS_TYPE_DIRECTION,
   };
 
+  struct SEGMENT_2D {
+    mm::Pnt<f32> unknown00; // Inferred role: start point; original member name unknown.
+    mm::Pnt<f32> unknown08; // Inferred role: end point; original member name unknown.
+  };
+
   static void Normalize(mm::Vec3 &vector);
   static void TurnDirectionAngle(mm::Vec3 &direction, const mm::Vec3 &axis, f32 angle, bool isRadian);
   static void GetCrossDirection(const mm::Vec3 &direction, mm::Vec3 &cross, CROSS_MODE mode);
+  static bool CalcDirection(const mm::Vec3 &from, const mm::Vec3 &to, mm::Vec3 &direction);
   static f32 CalcAngle(const mm::Vec3 &from, const mm::Vec3 &to, bool isSigned);
   static f32 CalcRotY(const mm::Vec3 &direction);
+  static f32 CalcSlipDirection(const mm::Vec3 &direction, mm::Vec3 &slip, f32 angle);
   static bool NormalizeXZ(mm::Vec3 &vector);
   static f32 CalcLength(const mm::Vec3 &from, const mm::Vec3 &to);
   static f32 CalcSquareLength(const mm::Vec3 &from, const mm::Vec3 &to);
@@ -57,10 +67,15 @@ public:
   static void GetKizunaMinMax(int stage, int &minimum, int &maximum);
   static int CovertKizunaStageToID(int stage);
   static int GetKizunaStage(int kizuna, f32 *rate);
+  static bool CheckOnSegment2D(const mm::Pnt<f32> &point, const SEGMENT_2D &segment);
   static bool CheckInRange(const mm::Vec3 &position, const mm::Vec3 &target, f32 range, bool isXZ);
+  static bool CheckInRange(const mm::Vec3 &position, BattleCharacter *character, f32 range, bool isXZ);
   static f32 GetLandHeight(const mm::Vec3 &position, f32 distance, bool isUnder);
+  static f32 GetVolumeFadeAlphaRate(gf::GF_OBJ_HANDLE *handle);
   static bool IsInWater(const mm::Vec3 &position, f32 depth);
   static const char *GetArtsTypeName(int type);
 };
+
+static_assert(sizeof(Misc::SEGMENT_2D) == 0x10, "");
 
 } // namespace btl

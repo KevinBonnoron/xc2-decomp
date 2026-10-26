@@ -1,6 +1,9 @@
 #include "battle/character/character_parameter_battle.h"
 
+#include <math.h>
+
 #include "battle/battle_global.h"
+#include "battle/blade_change_manager.h"
 #include "battle/chain_attack_manager.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
@@ -18,6 +21,7 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_property.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_vec3.h"
 
 namespace btl {
 
@@ -47,6 +51,15 @@ gf::GfObj *CharacterParameter::GetBuddyObject() const { return gf::GfObjUtil::ge
 bool CharacterParameter::InitializeEnhance() const {
   unknown5e0_2 = true;
   return true;
+}
+
+void CharacterParameter::BattleStart(int) {
+  InitializeArtsPalette(0);
+  if (unknown20 != BattleGlobal::get()->unknown864 && !BladeChangeManager::get()->IsRegister(unknown08)) {
+    ResetRecast();
+  }
+  unknown20 = BattleGlobal::get()->unknown864;
+  unknown5df_1 = true;
 }
 
 void CharacterParameter::BattleEnd() {
@@ -233,6 +246,21 @@ bool CharacterParameter::IsBlowRot() const {
     return false;
   }
 
+  return true;
+}
+
+bool CharacterParameter::GetBlowRotAxis(mm::Vec3 &axis) const {
+  if ((unknown5aa | unknown5ab | unknown5ac) == 0) {
+    return false;
+  }
+
+  axis = mm::Vec3(unknown5aa, unknown5ab, unknown5ac);
+  f32 length = sqrtf(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
+  if (length <= 1e-06f) {
+    axis = mm::Vec3::zero;
+  } else {
+    axis = axis * (1.0f / length);
+  }
   return true;
 }
 
@@ -767,6 +795,62 @@ int EnemyParameter::GetAttribute() const {
 
   gf::DataParamAcc acc(unknown08);
   return acc.getAttribute(-1, false);
+}
+
+void EnemyParameter::CheckChangeAttr() {
+  if (!unknown5df_1) {
+    unknown869 = 9;
+    return;
+  }
+
+  int attribute = GetAttribute();
+  int oldAttribute = unknown869;
+  if (oldAttribute < 9 && attribute != oldAttribute) {
+    mm::mtl::FixedVector<u8, CHARACTER_COUNT> list;
+    Utility::GetCharacterList(list, unknown08, Utility::CHECK_CHR_NUM_MODE_ENEMY, Utility::CHARACTER_LIST_BATTLE | Utility::CHARACTER_LIST_ALIVE | Utility::CHARACTER_LIST_EXCLUDE_BLADE);
+    CharacterManager *characterManager = CharacterManager::get();
+    for (u8 id : list) {
+      BattleCharacter *character = characterManager->GetCharacterConst(id);
+      character->NotifyChangeAttr(unknown08, attribute, oldAttribute);
+    }
+  }
+  unknown869 = attribute;
+}
+
+void EnemyParameter::SetBuddy(gf::GF_OBJ_HANDLE *handle, bool isIgnoreBuddy) {
+  unknown10 = handle;
+  unknown5df_6 = isIgnoreBuddy;
+  gf::GF_OBJ_HANDLE *self = unknown08;
+  if (handle == gf::INVALID_HANDLE) {
+    DataManager::get()->ReleaseEnemyGroup(self);
+    return;
+  }
+
+  int group = DataManager::get()->GetEnemyGroupIndex(self);
+  if (group < 0) {
+    gf::GF_OBJ_HANDLE *leader = CharacterParameter::m_invalidTarget ? handle : self;
+    gf::GF_OBJ_HANDLE *member = CharacterParameter::m_invalidTarget ? self : handle;
+    group = DataManager::get()->RegisterEnemyGroup(leader, member);
+  }
+  unknown1c = group < 0 ? -1 : group;
+}
+
+void EnemyParameter::AngryInfection(f32 range) {
+  mm::mtl::FixedVector<u8, CHARACTER_COUNT> list;
+  if (Utility::GetCharacterList(list, unknown08, Utility::CHECK_CHR_NUM_MODE_FRIEND, 0x1a) < 1) {
+    return;
+  }
+
+  CharacterManager *characterManager = CharacterManager::get();
+  BattleCharacter *center = characterManager->GetCharacterConst(unknown5ae);
+  mm::Vec3 centerPosition = center->unknown10;
+  for (u8 id : list) {
+    BattleCharacter *character = characterManager->GetCharacterConst(id);
+    CharacterParameter *parameter = character->GetCharacterParameter(true);
+    if (Misc::CheckInRange(centerPosition, character, parameter->unknown2c + range, false) && !parameter->IsAngry()) {
+      parameter->SetAngry(true, -1.0f);
+    }
+  }
 }
 
 int EnemyParameter::GetWeaponID(int) const {

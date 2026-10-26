@@ -10,6 +10,7 @@ namespace btl {
 class EffectManager : public mm::mtl::PtrSingleton<EffectManager> {
 public:
   void Initialize();
+  void NotifyMapChange();
   static void PreUpdate(const fw::UpdateInfo &updateInfo);
   void PreUpdateProc(const fw::UpdateInfo &updateInfo);
   static void Update(const fw::UpdateInfo &updateInfo);

@@ -50,7 +50,8 @@ public:
     f32 unknown08; // Inferred role: slow fade; original member name unknown.
     u32 unknown0c; // Inferred role: slow id; original member name unknown.
     u8 unknown10;  // Inferred role: character id; original member name unknown.
-    u8 _11[0x14 - 0x11];
+    u8 _11[0x12 - 0x11];
+    u16 unknown12; // Inferred role: dynamics speed; original member name unknown.
   };
 
   struct ATTACK_DAMAGE_DATA {
@@ -79,6 +80,11 @@ public:
     int unknown04; // Inferred role: special effect; original member name unknown.
   };
 
+  struct LINK_JOIN_DATA {
+    gf::GF_OBJ_HANDLE *unknown00; // Inferred role: enemy handle; original member name unknown.
+    f32 unknown08;                // Inferred role: join time; original member name unknown.
+  };
+
   struct ELEMENTAL_COMBO_FLOW_DATA {
     u8 unknown00;       // Inferred role: parent combo; original member name unknown.
     u8 unknown01_0 : 3; // Inferred role: stage; original member name unknown.
@@ -96,6 +102,7 @@ public:
   BattleGlobal();
   static void Create();
   void Initialize();
+  void NotifyMapChange();
   static void Destroy();
   void Finalize();
   int GetNormalAttackArtsID(int type, int weapon, int index) const;
@@ -154,11 +161,15 @@ public:
   void RegisterStop(f32 time);
   int RegisterSlow(f32 rate, f32 time, f32 fade);
   void DeleteSlow(u32 slow);
+  void SetSlowDynamicsSpeed(u32 slow, int characterId, u32 speed);
+  void CreateSpecialEffect(int special);
+  void DeleteSpecialEffect(int special);
   const SLOW_PROC_DATA *GetSlowProcDataConst(u32 slow) const;
   void SetBGM(u32 bgm);
   void RequestJingle(JINGLE_TYPE jingle);
   bool IsJinglePlaying() const;
   void PlayErrorSE();
+  void NotifyLinkJoinBattle(gf::GF_OBJ_HANDLE *handle);
   gf::GF_OBJ_HANDLE *GetLinkJoinEnemyHandle(const mm::Vec3 &position);
   const MAP_DRIVER_REV_DATA *GetMapDriverRevData(const BattleCharacter *character) const;
   const MAP_DRIVER_REV_DATA *GetMapDriverRevDataByBdatID(int driver) const;
@@ -173,14 +184,17 @@ public:
   void EndSpecialEffect(SPECIAL_EFFECT_DATA &data);
 
   u8 _08[0x18 - 0x08];
-  mutable const char *unknown18[185]; // Inferred role: SE tag names; original member name unknown.
-  ShakeCameraManager *unknown5e0;     // Inferred role: shake camera manager; original member name unknown.
-  ButtonChallenge unknown5e8;         // Inferred role: button challenge; original member name unknown.
-  u8 _620[0x6b8 - 0x620];
-  f32 unknown6b8; // Inferred role: stop time; original member name unknown.
+  mutable const char *unknown18[185];                      // Inferred role: SE tag names; original member name unknown.
+  ShakeCameraManager *unknown5e0;                          // Inferred role: shake camera manager; original member name unknown.
+  ButtonChallenge unknown5e8;                              // Inferred role: button challenge; original member name unknown.
+  mm::mtl::FixedVector<LINK_JOIN_DATA, 8> unknown620;      // Inferred role: link join enemies; original member name unknown.
+  mm::mtl::FixedVector<SPECIAL_EFFECT_DATA, 1> unknown6a8; // Inferred role: special effects; original member name unknown.
+  f32 unknown6b8;                                          // Inferred role: stop time; original member name unknown.
   u8 _6bc[0x6c0 - 0x6bc];
   mm::mtl::FixedVector<SLOW_PROC_DATA, 20> unknown6c0; // Inferred role: slow procs; original member name unknown.
-  u8 _858[0x878 - 0x858];
+  u8 _858[0x864 - 0x858];
+  s32 unknown864; // Inferred role: battle count; original member name unknown.
+  u8 _868[0x878 - 0x868];
   mm::mtl::FixedVector<ATTACK_DAMAGE_DATA, 1000> unknown878; // Inferred role: attack damages; original member name unknown.
   ELEMENTAL_COMBO_FLOW_DATA unknown56a0[50];                 // Inferred role: elemental combo flows; original member name unknown.
   u8 _5a88[0x5aa0 - 0x5a88];
@@ -201,7 +215,9 @@ public:
   u32 unknown5b20;                    // Inferred role: elemental combo slow id; original member name unknown.
   u8 _5b24[0x5b28 - 0x5b24];
   gf::GF_OBJ_HANDLE *unknown5b28; // Inferred role: unite combo target; original member name unknown.
-  u8 _5b30[0x5b5f - 0x5b30];
+  u8 _5b30[0x5b38 - 0x5b30];
+  void *unknown5b38; // Inferred role: unite combo camera; original member name unknown.
+  u8 _5b40[0x5b5f - 0x5b40];
   bool unknown5b5f; // Inferred role: unite combo direction; original member name unknown.
   u8 _5b60[0x5b68 - 0x5b60];
   f32 unknown5b68; // Inferred role: kakusei rest time; original member name unknown.
@@ -212,9 +228,11 @@ public:
   u16 unknown65d2;                                   // Inferred role: BGM id; original member name unknown.
   u8 unknown65d4;                                    // Inferred role: BGM priority; original member name unknown.
   u8 unknown65d5;                                    // Inferred role: requested jingle; original member name unknown.
-  u8 unknown65d6[8];                                 // Inferred role: pause flags; original member name unknown.
+  u8 unknown65d6[7];                                 // Inferred role: pause flags; original member name unknown.
+  u8 unknown65dd;                                    // Inferred role: link join max level; original member name unknown.
   u64 unknown65de_0 : 1;                             // Inferred role: lock arts palette; original member name unknown.
-  u64 : 10;
+  u64 : 9;
+  u64 unknown65de_10 : 1;
   u64 unknown65df_3 : 1; // Inferred role: kakusei order; original member name unknown.
   u64 unknown65df_4 : 1; // Inferred role: kakusei; original member name unknown.
   u64 unknown65df_5 : 1; // Inferred role: kakusei finished; original member name unknown.
@@ -231,6 +249,7 @@ public:
   u8 _65e3[0x65e8 - 0x65e3];
 };
 
+static_assert(sizeof(BattleGlobal::LINK_JOIN_DATA) == 0x10, "");
 static_assert(sizeof(BattleGlobal::SPECIAL_EFFECT_DATA) == 0x8, "");
 static_assert(sizeof(BattleGlobal::SLOW_PROC_DATA) == 0x14, "");
 static_assert(offsetof(BattleGlobal::SLOW_PROC_DATA, unknown04) == 0x4, "");
@@ -241,8 +260,11 @@ static_assert(sizeof(BattleGlobal::ATTACK_DAMAGE_DATA) == 0x14, "");
 static_assert(sizeof(BattleGlobal::MAP_DRIVER_REV_DATA) == 0x4, "");
 static_assert(offsetof(BattleGlobal, unknown18) == 0x18, "");
 static_assert(offsetof(BattleGlobal, unknown5e0) == 0x5e0, "");
+static_assert(sizeof(BattleGlobal::LINK_JOIN_DATA) == 0x10, "");
+static_assert(offsetof(BattleGlobal, unknown620) == 0x620, "");
 static_assert(offsetof(BattleGlobal, unknown6b8) == 0x6b8, "");
 static_assert(offsetof(BattleGlobal, unknown6c0) == 0x6c0, "");
+static_assert(offsetof(BattleGlobal, unknown864) == 0x864, "");
 static_assert(offsetof(BattleGlobal, unknown878) == 0x878, "");
 static_assert(offsetof(BattleGlobal, unknown56a0) == 0x56a0, "");
 static_assert(offsetof(BattleGlobal, unknown5aa0) == 0x5aa0, "");
@@ -251,6 +273,7 @@ static_assert(offsetof(BattleGlobal, unknown5ab0) == 0x5ab0, "");
 static_assert(offsetof(BattleGlobal, unknown5ac0) == 0x5ac0, "");
 static_assert(offsetof(BattleGlobal, m_elementalComboImmortal) == 0x5af8, "");
 static_assert(offsetof(BattleGlobal, unknown5b28) == 0x5b28, "");
+static_assert(offsetof(BattleGlobal, unknown5b38) == 0x5b38, "");
 static_assert(offsetof(BattleGlobal, unknown5b5f) == 0x5b5f, "");
 static_assert(offsetof(BattleGlobal, unknown5b68) == 0x5b68, "");
 static_assert(offsetof(BattleGlobal, unknown5b08) == 0x5b08, "");
@@ -263,6 +286,7 @@ static_assert(offsetof(BattleGlobal, unknown5b90) == 0x5b90, "");
 static_assert(offsetof(BattleGlobal, unknown65b0) == 0x65b0, "");
 static_assert(offsetof(BattleGlobal, unknown65d2) == 0x65d2, "");
 static_assert(offsetof(BattleGlobal, unknown65d6) == 0x65d6, "");
+static_assert(offsetof(BattleGlobal, unknown65dd) == 0x65dd, "");
 static_assert(sizeof(BattleGlobal) == 0x65e8, "");
 
 } // namespace btl

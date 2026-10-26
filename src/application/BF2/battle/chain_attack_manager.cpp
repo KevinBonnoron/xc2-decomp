@@ -3,6 +3,8 @@
 #include "battle/btl_system_balance_access.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
+#include "battle/data_manager_battle.h"
+#include "battle/group_data.h"
 #include "battle/misc_battle.h"
 #include "gf/game/gf_game_party.h"
 #include "mm_math/mm_math.h"
@@ -131,6 +133,18 @@ bool ChainAttackManager::IsProc(bool isExcludeStartWait) const {
 }
 
 bool ChainAttackManager::IsResult() const { return unknown19ce >= STATE_RESULT; }
+
+void ChainAttackManager::RecoveryKizuna(int partyId) {
+  GROUP_DATA *group = &DataManager::get()->unknown10758[partyId];
+  for (int i = 0; i < 5; i++) {
+    if (group->GetBladeDataConst(i)->unknown28_3) {
+      GROUP_BLADE_DATA *blade = group->unknown001(i);
+      if (blade->unknown00 < 300.0f) {
+        blade->SetGauge(300.0f, false);
+      }
+    }
+  }
+}
 
 void ChainAttackManager::AddTotalDamage(u32 damage) {
   if (unknown19ce >= STATE_START_WAIT && unknown19ce < STATE_RESULT) {

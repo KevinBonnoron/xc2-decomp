@@ -34,7 +34,10 @@ public:
   u8 unknown68; // Inferred role: chain attack seconds; original member name unknown.
   u8 _69[0x76 - 0x69];
   u16 unknown76; // Inferred role: chain attack bonus rate; original member name unknown.
-  u8 _78[0xb6 - 0x78];
+  u8 _78[0xaf - 0x78];
+  u8 unknownaf; // Inferred role: blade timer 2; original member name unknown.
+  u8 unknownb0; // Inferred role: blade timer 3; original member name unknown.
+  u8 _b1[0xb6 - 0xb1];
   u16 unknownb6[2]; // Inferred role: one bound enemy ids; original member name unknown.
   u16 unknownba[1]; // Inferred role: SP size enemy ids; original member name unknown.
   u16 unknownbc[2]; // Inferred role: SP kizuna line enemy ids; original member name unknown.
@@ -50,6 +53,8 @@ static_assert(offsetof(BtlSystemBalanceAccess, unknown24) == 0x24, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknown40) == 0x40, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknown68) == 0x68, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknown76) == 0x76, "");
+static_assert(offsetof(BtlSystemBalanceAccess, unknownaf) == 0xaf, "");
+static_assert(offsetof(BtlSystemBalanceAccess, unknownb0) == 0xb0, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownb6) == 0xb6, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownba) == 0xba, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownbc) == 0xbc, "");

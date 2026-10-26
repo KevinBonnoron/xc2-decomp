@@ -43,8 +43,13 @@ public:
     } unknown00_1;        // Inferred role: move lock data; original member name unknown.
     u8 unknown00_2[0x10]; // Inferred role: raw command data; original member name unknown.
   };
-  u32 unknown10_0 : 6;  // Inferred role: command type; original member name unknown.
-  u32 unknown10_6 : 25; // Inferred role: action flags; original member name unknown.
+  union {
+    u32 unknown10;
+    struct {
+      u32 unknown10_0 : 6;  // Inferred role: command type; original member name unknown.
+      u32 unknown10_6 : 25; // Inferred role: action flags; original member name unknown.
+    };
+  };
 };
 
 static_assert(sizeof(ActionCommand) == 0x14, "");

@@ -52,6 +52,31 @@ void BladeArtsManager::FinishBladeArts(gf::GF_OBJ_HANDLE *handle) {
   }
 }
 
+bool BladeArtsManager::NotifyProgress(gf::GF_OBJ_HANDLE *handle, PROGRESS_ID progress) {
+  int num = unknown198;
+  if (num <= 0) {
+    return true;
+  }
+
+  if (progress != PROGRESS_ID_NONE) {
+    bool isNotFound = true;
+    for (int i = 0; i < num; i++) {
+      if (unknown08[i].unknown00 == handle || unknown08[i].unknown08 == handle) {
+        isNotFound = false;
+      }
+    }
+    return isNotFound;
+  }
+
+  for (int i = 0; i < num; i++) {
+    if (unknown08[i].unknown00 == handle || unknown08[i].unknown08 == handle) {
+      unknown08[i].unknown1c = unknown08[i].unknown1c == 2 ? 3 : 6;
+      return true;
+    }
+  }
+  return true;
+}
+
 gf::GF_OBJ_HANDLE *BladeArtsManager::GetTargetHandle(gf::GF_OBJ_HANDLE *handle) const {
   for (int i = 0; i < unknown198; i++) {
     if (unknown08[i].unknown00 == handle || unknown08[i].unknown08 == handle) {

@@ -42,6 +42,7 @@ public:
 
   void ResetVoiceGroupID();
   void Initialize();
+  void NotifyMapChange();
   static void Destroy();
   void Finalize();
   void InitializeGroupTopData();

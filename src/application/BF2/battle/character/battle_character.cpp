@@ -3,6 +3,7 @@
 #include <float.h>
 
 #include "battle/battle_global.h"
+#include "battle/blade_arts_manager.h"
 #include "battle/btl_system_balance_access.h"
 #include "battle/button_challenge.h"
 #include "battle/character/character_manager_battle.h"
@@ -22,13 +23,20 @@
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_weapon.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/effect/gf_com_effect_caster.h"
+#include "gf/object/component/property/gf_com_property.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_scom.h"
 #include "ml/rand.h"
 #include "mm_math/mm_math.h"
+#include "mm_mtl/fixed_array.h"
 
 namespace btl {
 
@@ -143,6 +151,28 @@ void BattleCharacter::CancelButtonChallenge() {
   if (unknown10c0 != 0) {
     BattleGlobal::get()->unknown5e8.Cancel(unknown10c0);
     unknown10c0 = 0;
+  }
+}
+
+bool BattleCharacter::IsBound() const {
+  if ((unknownf90 & 8) == 0 && !Misc::IsInWater(unknown10, 5.0f)) {
+    return ((1ull << unknownf7c) & 0xe00000000ull) != 0;
+  }
+  return false;
+}
+
+void BattleCharacter::SetRimBloom(RIMBLOOM_ID id, bool isEnable) {
+  if (id == 0) {
+    if (isEnable) {
+      unknownf7a |= 1;
+    } else {
+      unknownf7a &= 0xfffe;
+    }
+  } else if (static_cast<u32>(id - 1) < 8) {
+    unknownf7a &= 0xfe01;
+    if (isEnable) {
+      unknownf7a |= 1u << id;
+    }
   }
 }
 
@@ -262,6 +292,25 @@ void BattleCharacter::AddUseWeapon() {
   }
 }
 
+void BattleCharacter::StartBladeTimer(BLADE_TIMER_MODE mode) {
+  if (unknownf77_1 > mode) {
+    return;
+  }
+
+  f32 time;
+  if (mode == 1) {
+    time = 5.0f;
+  } else if (mode == 2) {
+    time = static_cast<f32>(BtlSystemBalanceAccess::get()->unknownaf);
+  } else if (mode == 3) {
+    time = static_cast<f32>(BtlSystemBalanceAccess::get()->unknownb0);
+  } else {
+    time = 0.0f;
+  }
+  unknowncd0 = time;
+  unknownf77_1 = mode;
+}
+
 void BattleCharacter::EndBladeTimer(BLADE_TIMER_MODE mode) {
   if (unknownf77_1 == mode) {
     unknowncd0 = 0.0f;
@@ -298,6 +347,292 @@ void BattleCharacter::SetupPosDir() {
   Misc::GetObjectTransform(unknown118, unknown10, Misc::TRANS_TYPE_POSITION);
   Misc::GetObjectDirection(unknown118, unknown50, true);
 }
+
+gf::GF_OBJ_HANDLE *BattleCharacter::GetBuddyTargetObjectHandle() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter == nullptr) {
+    return gf::INVALID_HANDLE;
+  }
+
+  gf::GF_OBJ_HANDLE *handle = parameter->unknown10;
+  BattleCharacter *buddy = CharacterManager::get()->GetCharacterConst(handle);
+  return buddy != nullptr ? buddy->unknown120 : gf::INVALID_HANDLE;
+}
+
+int BattleCharacter::GetTrustRank(int index) const {
+  if (!m_player) {
+    return 5;
+  }
+
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter == nullptr) {
+    return 0;
+  }
+  int partyId = parameter->unknown1c;
+  if (partyId < 0) {
+    return 0;
+  }
+
+  const GROUP_DATA *group = &DataManager::get()->unknown10758[partyId];
+  if (!group->unknown105_5) {
+    return 0;
+  }
+  return group->GetBladeDataConst(index)->GetTrustRank();
+}
+
+bool BattleCharacter::IsPriorityReaction(int left, int right) const {
+  if (right < 0) {
+    right = unknown10c6_0;
+  }
+  if (right == left) {
+    return static_cast<u32>(left - 1) < 2;
+  }
+
+  u8 *table = gf::GfDataBdat::getFP(0x34);
+  u8 leftPriority = 0;
+  if (left != 0) {
+    leftPriority = Bdat::getValCheck(table, "Priority", left, 1);
+  }
+  u8 rightPriority = 0;
+  if (right != 0) {
+    rightPriority = Bdat::getValCheck(table, "Priority", right, 1);
+  }
+  return leftPriority >= rightPriority;
+}
+
+int BattleCharacter::GetArtsSlotIndex(int arts) const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter == nullptr) {
+    return -1;
+  }
+
+  const ARTS_PALETTE_DATA *palette = parameter->GetArtsPaletteDataConst(-1);
+  int index = -1;
+  for (int i = 0; i < 3; i++) {
+    bool isNoMatch = palette->GetSlotDataConst(i, false)->unknown00_0 != arts;
+    if (isNoMatch) {
+      continue;
+    }
+    index = i;
+    break;
+  }
+  return index;
+}
+
+bool BattleCharacter::IsBladeArtsEnd() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter == nullptr) {
+    return false;
+  }
+  if (!parameter->m_invalidTarget && parameter->unknown10 != gf::INVALID_HANDLE) {
+    return unknown10c6_5 != 1;
+  }
+  return false;
+}
+
+gf::GF_OBJ_HANDLE *BattleCharacter::GetWeaponObjectHandle(bool isAlternate) const {
+  gf::GfWeapon *weapon = GetWeaponInfo();
+  if (weapon == nullptr) {
+    return gf::INVALID_HANDLE;
+  }
+
+  const mm::mtl::FixedArray<gf::GF_OBJ_HANDLE *, 10> &handles = weapon->getCurrentHandles();
+  if (isAlternate) {
+    gf::GF_OBJ_HANDLE *handle = handles[1];
+    if (handle == gf::INVALID_HANDLE) {
+      handle = handles[0];
+    }
+    return handle;
+  }
+  gf::GF_OBJ_HANDLE *handle = handles[0];
+  if (handle == gf::INVALID_HANDLE) {
+    handle = handles[1];
+  }
+  return handle;
+}
+
+bool BattleCharacter::IsPerfectAvoid() const {
+  if (unknown10e8 > 0.0f) {
+    return true;
+  }
+
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter->m_perfectAvoid == 0) {
+    return false;
+  }
+  return (1U << parameter->m_perfectAvoid & 0xc4U) != 0;
+}
+
+void BattleCharacter::ResetRequestPermit() {
+  CharacterParameter *parameter = GetCharacterParameter(false);
+  if (parameter == nullptr) {
+    return;
+  }
+  int partyId = parameter->unknown1c;
+  if (partyId < 0) {
+    return;
+  }
+
+  DataManager *manager = DataManager::get();
+  manager->unknown10758[partyId].unknown104_2 = 0;
+  if (manager->unknown132a0 == partyId) {
+    manager->unknown132a8 = true;
+  }
+}
+
+gf::GfComProperty *BattleCharacter::GetComPropertyConst() const {
+  gf::GfObj *obj = GetObject();
+  if (obj == nullptr) {
+    return nullptr;
+  }
+  return obj->getComponent<gf::GfComProperty>();
+}
+
+gf::GfComEffectCaster *BattleCharacter::GetEffectCaster() {
+  gf::GfObj *obj = GetObject();
+  if (obj == nullptr) {
+    return nullptr;
+  }
+  return obj->getComponent<gf::GfComEffectCaster>();
+}
+
+gf::GfWeapon *BattleCharacter::GetWeaponInfo() const {
+  if (!m_player) {
+    return gf::GfMountManager::getGfWeapon(unknown118, gf::GFATTACH_WEAPON);
+  }
+
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter == nullptr) {
+    return nullptr;
+  }
+  return gf::GfGameParty::getHandleWeapon(parameter->unknown1c, -1);
+}
+
+gf::GfComEffectCaster *BattleCharacter::GetWeaponEffectCaster() {
+  gf::GfWeapon *weapon = GetWeaponInfo();
+  if (weapon == nullptr) {
+    return nullptr;
+  }
+
+  gf::GF_OBJ_HANDLE *handle = weapon->getCurrentHandles()[0];
+  if (handle == gf::INVALID_HANDLE) {
+    handle = weapon->getCurrentHandles()[1];
+  }
+  if (handle == gf::INVALID_HANDLE) {
+    return nullptr;
+  }
+
+  gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
+  if (obj == nullptr) {
+    return nullptr;
+  }
+  return obj->getComponent<gf::GfComEffectCaster>();
+}
+
+int BattleCharacter::GetDriverType() const {
+  if (m_player) {
+    return 4;
+  }
+
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter != nullptr && parameter->m_invalidTarget && !parameter->unknown5df_6) {
+    BattleCharacter *driver = CharacterManager::get()->GetCharacterConst(parameter->unknown10);
+    if (driver != nullptr) {
+      return driver->m_driverType;
+    }
+  }
+  return m_driverType;
+}
+
+const GROUP_DATA *BattleCharacter::GetGroupDataConst() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(false);
+  if (parameter == nullptr) {
+    return nullptr;
+  }
+  int partyId = parameter->unknown1c;
+  if (partyId < 0) {
+    return nullptr;
+  }
+
+  const GROUP_DATA *group = &DataManager::get()->unknown10758[partyId];
+  return group->unknown105_5 ? group : nullptr;
+}
+
+bool BattleCharacter::IsAnimationEnd() const {
+  gf::GfComAsm *comAsm = GetObject()->getComponent<gf::GfComAsm>();
+  if (comAsm == nullptr) {
+    return true;
+  }
+  return comAsm->isEnd(gf::ANIM_LAYER_BASE);
+}
+
+const void *BattleCharacter::GetAnimationAppendix(const char *name) const {
+  gf::GfComAsm *comAsm = GetObject()->getComponent<gf::GfComAsm>();
+  if (comAsm == nullptr) {
+    return nullptr;
+  }
+  return comAsm->getAppendix(name);
+}
+
+const char *BattleCharacter::GetNowAnimationStateName() const {
+  gf::GfObj *obj = GetObject();
+  if (obj == nullptr) {
+    return "";
+  }
+  gf::GfComAsm *comAsm = obj->getComponent<gf::GfComAsm>();
+  if (comAsm == nullptr) {
+    return "";
+  }
+  return comAsm->getStateName(gf::ANIM_LAYER_BASE);
+}
+
+bool BattleCharacter::IsAnimationState(const char *name) const {
+  gf::GfObj *obj = GetObject();
+  const char *state = "";
+  if (obj != nullptr) {
+    gf::GfComAsm *comAsm = obj->getComponent<gf::GfComAsm>();
+    if (comAsm != nullptr) {
+      state = comAsm->getStateName(gf::ANIM_LAYER_BASE);
+    }
+  }
+  return __builtin_strcmp(state + 2, name + 2) == 0;
+}
+
+f32 BattleCharacter::GetAnimationTime() const {
+  gf::GfComAsm *comAsm = GetObject()->getComponent<gf::GfComAsm>();
+  if (comAsm == nullptr) {
+    return 0.0f;
+  }
+  return comAsm->getLocalTime(gf::ANIM_LAYER_BASE);
+}
+
+f32 BattleCharacter::GetAnimationFrame() const {
+  gf::GfComAsm *comAsm = GetObject()->getComponent<gf::GfComAsm>();
+  if (comAsm == nullptr) {
+    return 0.0f;
+  }
+  return comAsm->getLocalTime(gf::ANIM_LAYER_BASE) * FRAME_RATE;
+}
+
+f32 BattleCharacter::GetAnimationLengthFrame() const {
+  gf::GfComAsm *comAsm = GetObject()->getComponent<gf::GfComAsm>();
+  if (comAsm == nullptr) {
+    return 0.0f;
+  }
+  const char *state = comAsm->getStateName(gf::ANIM_LAYER_BASE);
+  if (state == nullptr) {
+    return 0.0f;
+  }
+  f32 time;
+  if (!comAsm->getPlaybackTime(state, &time)) {
+    return 0.0f;
+  }
+  f32 frame = time * FRAME_RATE;
+  int base = static_cast<int>(frame);
+  return static_cast<f32>(base + (frame - static_cast<f32>(base) >= 0.9f));
+}
+
+f32 BattleCharacter::GetAnimationLengthSec() const { return GetAnimationLengthFrame() * (1.0f / FRAME_RATE); }
 
 int BattleCharacter::GetGroupIndex() const {
   const CharacterParameter *parameter = GetCharacterParameterConst(true);
@@ -385,6 +720,17 @@ void BattleCharacter::SetIKData(const ARTS_DATA &data) {
 
 void BattleCharacter::NotifyStrikeDamage(int) { TalkManager::get()->NotifyTrigger(unknownf7d, TalkManager::TRIGGER_STRIKE_DAMAGE, 0, 0); }
 
+void BattleCharacter::HealDirect(u32 value, int type, BattleCharacter *healer) {
+  DIRECT_DAMAGE_DATA data;
+  data.unknown08 = type;
+  data.unknown0c = value;
+  data.unknown11 = 0;
+  data.unknown12 = 0;
+  data.unknown00 = healer;
+  data.unknown10 = 1;
+  NotifyDirectDamage(data);
+}
+
 void BattleCharacter::LandingCallback() {}
 
 void BattleCharacter::BoundCallback() {}
@@ -466,6 +812,64 @@ void BattleCharacter::ResetChangeActionStopSeData() { unknown10c4_0 = 0; }
 void BattleCharacter::ReturnBladeChange() {
   SetAction(ACTION_ID_BLADE_CHANGE, false, false, 0, 0.0f);
   unknown107e = ACTION_PHASE_BLADE_CHANGE_RETURN;
+}
+
+void BattleCharacter::ReturnBladeArts() {
+  SetAction(ACTION_ID_BLADE_ARTS, false, false, 0, 0.0f);
+  BladeArtsManager *manager = BladeArtsManager::get();
+  if (manager->IsRegister(unknown118)) {
+    if (manager->IsBladeStart(unknown118)) {
+      unknown107e = 6;
+    } else {
+      unknown107e = 11;
+    }
+  } else {
+    unknown107e = 7;
+  }
+}
+
+void BattleCharacter::NotifyChangeAttr(gf::GF_OBJ_HANDLE *handle, u32 attribute, u32 oldAttribute) {
+  if (unknown120 == handle || unknown128 == handle) {
+    BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+    if (character != nullptr && !character->IsDead(0)) {
+      TalkManager::get()->NotifyTrigger(unknownf7d, static_cast<TalkManager::TRIGGER>(0x18), attribute, 0);
+    }
+  }
+}
+
+bool BattleCharacter::SetAngry(bool isAngry, f32 time) {
+  CharacterParameter *parameter = GetCharacterParameter(false);
+  if (parameter == nullptr) {
+    return false;
+  }
+
+  return parameter->SetAngry(isAngry, time);
+}
+
+ActionCommand *BattleCharacter::GetActionCommand(ACTION_ID action, bool isSet) {
+  int num = unknown1078;
+  if (num <= 0) {
+    return nullptr;
+  }
+
+  if (isSet) {
+    for (long i = 0; i < num; i++) {
+      ActionCommand *command = &unknownfb0[i];
+      if (static_cast<s32>(command->unknown10) >= 0 && command->IsProcAction(static_cast<u8>(action))) {
+        command->unknown10 |= 0x80000000;
+        return command;
+      }
+    }
+  } else {
+    for (long i = 0; i < num; i++) {
+      ActionCommand *command = &unknownfb0[i];
+      if (static_cast<s32>(command->unknown10) >= 0 && command->IsProcAction(static_cast<u8>(action))) {
+        return command;
+      }
+    }
+  }
+
+  return nullptr;
 }
 
 ActionCommand *BattleCharacter::GetFreeCommand() {

@@ -5,6 +5,8 @@
 #include <stdlib.h>
 
 #include "battle/battle_global.h"
+#include "battle/blade_arts_manager.h"
+#include "battle/blade_change_manager.h"
 #include "battle/btl_system_balance_access.h"
 #include "battle/button_challenge.h"
 #include "battle/chain_attack_manager.h"
@@ -689,6 +691,35 @@ bool Utility::AI_IsAngry(gf::GF_OBJ_HANDLE *handle) {
   return character != nullptr && character->IsAngry();
 }
 
+bool Utility::IsEnableEventStart() {
+  if (TalkManager::get()->IsPlayingEnemyVoice()) {
+    return false;
+  }
+  if (BladeArtsManager::get()->unknown198 >= 1) {
+    return false;
+  }
+  if (SpAttackManager::get()->unknown208 >= 1) {
+    return false;
+  }
+  if (BladeChangeManager::get()->IsProcDisableCancel()) {
+    return false;
+  }
+
+  if (BattleGlobal::get()->unknown5b38 != nullptr) {
+    return false;
+  }
+  if (ChainAttackManager::get()->IsProc(false)) {
+    return false;
+  }
+  if (BattleGlobal::get()->IsJinglePlaying()) {
+    return false;
+  }
+  if (!BattleGlobal::get()->unknown65de_10 && CharacterManager::get()->IsExistHomuri()) {
+    return false;
+  }
+  return true;
+}
+
 void Utility::AI_SetAngry(gf::GF_OBJ_HANDLE *handle, f32 time) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   if (character != nullptr) {
@@ -1074,6 +1105,20 @@ bool Utility::AI_StartSpAttack(gf::GF_OBJ_HANDLE *handle) {
   return false;
 }
 
+bool Utility::AI_IsEnableSpAttack(gf::GF_OBJ_HANDLE *handle, int level) {
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character != nullptr) {
+    if (level != 0 && AI_GetSpAttackLevel(handle) != level) {
+      return false;
+    }
+    if (character->IsProcAI(false)) {
+      return character->AI_SpAttack(static_cast<BattleCharacter::ACTION_ID>(character->unknown107c), true, false);
+    }
+  }
+
+  return false;
+}
+
 bool Utility::AI_IsBattleOpening(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   bool isBattleOpening = false;
@@ -1219,6 +1264,43 @@ void Utility::AI_SetSuperArmor(gf::GF_OBJ_HANDLE *handle, f32 time) {
   if (character != nullptr) {
     character->SetSuperArmorTime(time);
   }
+}
+
+bool Utility::AI_IsEnableButtonChallenge() {
+  if (!BattleGlobal::get()->unknown65de_0 || !BattleGlobal::get()->IsEnableBattle()) {
+    return false;
+  }
+
+  if (ChainAttackManager::get()->IsProc(false)) {
+    return false;
+  }
+
+  if (BladeArtsManager::get()->unknown198 < 1 && SpAttackManager::get()->unknown208 < 1) {
+    return !BattleGlobal::get()->unknown5e8.IsProc();
+  }
+  return false;
+}
+
+bool Utility::AI_RegisterButtonChallenge(int challenge, bool isSuccess) {
+  if (!BattleGlobal::get()->unknown65de_0 || !BattleGlobal::get()->IsEnableBattle()) {
+    return false;
+  }
+
+  if (ChainAttackManager::get()->IsProc(false)) {
+    return false;
+  }
+
+  if (BladeArtsManager::get()->unknown198 >= 1 || SpAttackManager::get()->unknown208 >= 1 || BattleGlobal::get()->unknown5e8.IsProc()) {
+    return false;
+  }
+
+  ButtonChallenge::BUTTON_CHALLENGE_PARAM param;
+  param.unknown00_0 = isSuccess ? 0xdf : 0xde;
+  param.unknown01_6 = challenge & 0x3fff;
+  param.unknown03_4 = ButtonChallenge::TYPE_ENEMY;
+  param.unknown0c = CharacterManager::get()->unknown65488;
+  BattleGlobal::get()->unknown5e8.Start(param);
+  return true;
 }
 
 int Utility::AI_GetButtonChallengeResult() {

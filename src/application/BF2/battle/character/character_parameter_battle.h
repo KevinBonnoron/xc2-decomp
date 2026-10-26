@@ -1,9 +1,14 @@
 #pragma once
+#include <stddef.h>
+
 #include "battle/arts_data.h"
 #include "gf/data/gf_data_weapon.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
-#include <stddef.h>
+
+namespace mm {
+struct Vec3;
+} // namespace mm
 
 namespace fw {
 struct UpdateInfo;
@@ -152,6 +157,7 @@ public:
   f32 GetBuffRestFrame(int buff) const;
   f32 GetBlowRotSpeed() const;
   bool IsBlowRot() const;
+  bool GetBlowRotAxis(mm::Vec3 &axis) const;
   bool IsProgressCoolTime() const;
   void SetupLinkDistanceBonus() const;
   bool GetEnhanceEffect(ENHANCE_DATA &data, int enhance) const;
@@ -192,7 +198,8 @@ public:
   gf::GF_OBJ_HANDLE *unknown10; // Inferred role: buddy handle; original member name unknown.
   u32 unknown18;                // Inferred role: game object id; original member name unknown.
   int unknown1c;                // Inferred role: party id; original member name unknown.
-  u8 _20[0x28 - 0x20];
+  int unknown20;                // Inferred role: battle index; original member name unknown.
+  u8 _24[0x28 - 0x24];
   f32 unknown28; // Inferred role: launch effect scale factor; original member name unknown.
   f32 unknown2c; // Inferred role: radius; original member name unknown.
   f32 unknown30; // Inferred role: ball height; original member name unknown.
@@ -221,7 +228,8 @@ public:
   u8 unknown5a7_0 : 6; // Inferred role: object type; original member name unknown.
   u8 : 2;
   u8 : 8;
-  u8 : 8;
+  u8 m_perfectAvoid : 5;
+  u8 : 3;
   s8 unknown5aa; // Inferred role: rotate X; original member name unknown.
   s8 unknown5ab; // Inferred role: rotate Y; original member name unknown.
   s8 unknown5ac; // Inferred role: rotate Z; original member name unknown.
@@ -246,6 +254,7 @@ static_assert(offsetof(CharacterParameter, unknown08) == 0x8, "");
 static_assert(offsetof(CharacterParameter, unknown10) == 0x10, "");
 static_assert(offsetof(CharacterParameter, unknown18) == 0x18, "");
 static_assert(offsetof(CharacterParameter, unknown1c) == 0x1c, "");
+static_assert(offsetof(CharacterParameter, unknown20) == 0x20, "");
 static_assert(offsetof(CharacterParameter, unknown28) == 0x28, "");
 static_assert(offsetof(CharacterParameter, unknown2c) == 0x2c, "");
 static_assert(offsetof(CharacterParameter, unknownc0) == 0xc0, "");
@@ -328,6 +337,8 @@ public:
   void BattleStart(int) override;
   void BattleEnd() override;
   void BattleEndInitialize() override;
+  void CheckChangeAttr();
+  void AngryInfection(f32 range);
   void Update(const fw::UpdateInfo &updateInfo, bool) override;
   void MulHate(int index, int type, f32 rate);
   void ResetHate(int index, bool isResetTarget);
@@ -373,7 +384,7 @@ public:
   u8 m_angryAttr;
   u8 m_deadSEID;
   u8 m_overwriteAttr;
-  u8 _869[0x86a - 0x869];
+  u8 unknown869; // Inferred role: attribute cache; original member name unknown.
   u8 m_eatNum;
   mutable u8 unknown86b; // Inferred role: perfect avoid count; original member name unknown.
   u8 m_angry : 1;

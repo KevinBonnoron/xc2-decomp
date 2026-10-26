@@ -140,6 +140,31 @@ int CharacterManager::GetAliveBossNum() const {
   return num;
 }
 
+int CharacterManager::GetBattleEnemyMaxLevel(bool includeNamed) const {
+  int maxLevel = 0;
+  for (int id = CHARACTER_PLAYER_COUNT; id < CHARACTER_COUNT; id++) {
+    const BattleCharacter *character = GetCharacterConst(id);
+    if (character == nullptr) {
+      continue;
+    }
+
+    const CharacterParameter *parameter = character->GetCharacterParameterConst(false);
+    if (parameter == nullptr || !parameter->unknown5df_1 || character->IsDead(0)) {
+      continue;
+    }
+
+    int level = parameter->GetLevel();
+    if (includeNamed && parameter->IsNamed()) {
+      level += 15;
+    }
+    if (maxLevel <= level) {
+      maxLevel = level;
+    }
+  }
+
+  return maxLevel;
+}
+
 bool CharacterManager::IsCharacterDead(int id) const {
   if (id < 0 || id >= CHARACTER_COUNT || !unknown20[id].unknown11f0) {
     return true;

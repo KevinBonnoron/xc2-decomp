@@ -5,16 +5,20 @@
 #include "battle/utility_battle.h"
 #include "bdat.h"
 #include "fw/fw_coli_check.h"
+#include "fw/fw_model_object.h"
 #include "fw/fw_transform.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "ml/rand.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec3.h"
+#include "scn/scn_obj_acc.h"
 
 namespace btl {
 
@@ -29,7 +33,36 @@ void Misc::GetCrossDirection(const mm::Vec3 &direction, mm::Vec3 &cross, CROSS_M
   cross.y = 0.0f;
 }
 
+bool Misc::CalcDirection(const mm::Vec3 &from, const mm::Vec3 &to, mm::Vec3 &direction) {
+  mm::Vec3 vector;
+  vector.x = to.x - from.x;
+  vector.y = to.y - from.y;
+  vector.z = to.z - from.z;
+  if (CalcLength(from, to) <= NORMALIZE_LENGTH_MIN) {
+    direction = mm::Vec3::zero;
+    return false;
+  }
+
+  Normalize(vector);
+  direction = vector;
+  return true;
+}
+
 f32 Misc::CalcRotY(const mm::Vec3 &direction) { return CalcAngle(mm::Vec3::unitZ, direction, true); }
+
+f32 Misc::CalcSlipDirection(const mm::Vec3 &direction, mm::Vec3 &slip, f32 angle) {
+  f32 result = CalcAngle(mm::Vec3::unitY, direction, false);
+  if (result < angle) {
+    return 0.0f;
+  }
+
+  f32 length = CalcLengthXZ(direction);
+  f32 rate = direction.y / length;
+  slip.x = rate * direction.x;
+  slip.z = rate * direction.z;
+  slip.y = direction.y < 0.0f ? length : -length;
+  return result;
+}
 
 bool Misc::NormalizeXZ(mm::Vec3 &vector) {
   f32 length = sqrtf(vector.x * vector.x + vector.z * vector.z);
@@ -204,6 +237,31 @@ void Misc::GetKizunaMinMax(int stage, int &minimum, int &maximum) {
 
 int Misc::CovertKizunaStageToID(int stage) { return KIZUNA_STAGE_TO_ID - stage; }
 
+bool Misc::CheckOnSegment2D(const mm::Pnt<f32> &point, const Misc::SEGMENT_2D &segment) {
+  if (NORMALIZE_LENGTH_MIN < segment.unknown08.x - segment.unknown00.x) {
+    f32 rate = (point.x - segment.unknown00.x) / (segment.unknown08.x - segment.unknown00.x);
+    if (rate < 0.0f || 1.0f < rate) {
+      return false;
+    }
+  } else {
+    if (point.x != segment.unknown00.x) {
+      return false;
+    }
+  }
+
+  if (NORMALIZE_LENGTH_MIN < segment.unknown08.y - segment.unknown00.y) {
+    f32 rate = (point.y - segment.unknown00.y) / (segment.unknown08.y - segment.unknown00.y);
+    if (rate < 0.0f || 1.0f < rate) {
+      return false;
+    }
+  } else {
+    if (point.y != segment.unknown00.y) {
+      return false;
+    }
+  }
+  return true;
+}
+
 bool Misc::CheckInRange(const mm::Vec3 &position, const mm::Vec3 &target, f32 range, bool isXZ) {
   f32 length = isXZ ? CalcLengthXZ(position, target) : CalcLength(target, position);
   return length <= range;
@@ -244,6 +302,19 @@ f32 Misc::GetLandHeight(const mm::Vec3 &position, f32 distance, bool isUnder) {
   }
 
   return result.y;
+}
+
+f32 Misc::GetVolumeFadeAlphaRate(gf::GF_OBJ_HANDLE *handle) {
+  f32 rate = 0.0f;
+  gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
+  if (obj != nullptr) {
+    gf::GfComModel *model = obj->getComponent<gf::GfComModel>();
+    if (model != nullptr && model->unknown18 != nullptr) {
+      ml::ScnObjAccVolumeFade fade(model->unknown18->getInterface());
+      rate = 1.0f - fade.getRatio(0);
+    }
+  }
+  return rate;
 }
 
 const char *Misc::GetArtsTypeName(int) { return ""; }

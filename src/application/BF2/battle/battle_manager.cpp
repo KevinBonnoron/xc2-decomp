@@ -1,10 +1,16 @@
 #include "battle/battle_manager.h"
 
 #include "battle/battle_global.h"
+#include "battle/blade_arts_manager.h"
+#include "battle/blade_change_manager.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
 #include "battle/data_manager_battle.h"
+#include "battle/effect/effect_manager_battle.h"
+#include "battle/sp_attack_manager.h"
+#include "battle/talk_manager_battle.h"
+#include "battle/ui_manager_battle.h"
 #include "battle/utility_battle.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_target.h"
@@ -66,5 +72,32 @@ void BattleManager::CheckTargetMode() {
 }
 
 void BattleManager::gevBattleEnd() {}
+
+void BattleManager::gevMapjump(gf::GEV gev, const gf::MapjumpCallbackInfo &) {
+  if (gev == gf::GEV_MAPJUMP_DESTROY_FIELD) {
+    if (BattleGlobal::get() != nullptr) {
+      BattleGlobal::get()->NotifyMapChange();
+    }
+    if (BladeArtsManager::get() != nullptr) {
+      BladeArtsManager::get()->NotifyMapChange();
+    }
+    if (BladeChangeManager::get() != nullptr) {
+      BladeChangeManager::get()->NotifyMapChange();
+    }
+    if (SpAttackManager::get() != nullptr) {
+      SpAttackManager::get()->NotifyMapChange();
+    }
+    if (EffectManager::get() != nullptr) {
+      EffectManager::get()->NotifyMapChange();
+    }
+    if (TalkManager::get() != nullptr) {
+      TalkManager::get()->NotifyMapChange();
+    }
+    if (UIManager::get() != nullptr) {
+      UIManager::get()->NotifyMapChange();
+    }
+  }
+  unknown15 = gev == gf::GEV_MAPJUMP_END;
+}
 
 } // namespace btl

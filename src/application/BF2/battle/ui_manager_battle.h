@@ -40,6 +40,8 @@ public:
   void DispChainUI(gf::GF_OBJ_HANDLE *handle);
   void DispElementalEffectUI(gf::GF_OBJ_HANDLE *handle, int caption);
   void NotifyInput(INPUT_TYPE type, int value);
+  void NotifyMapChange();
+  u32 StartElementalComboDirectionUI(int attribute);
 
   gf::GfMenuCallContext *unknown08; // Inferred role: element effect context; original member name unknown.
   u32 unknown10;                    // Inferred role: element effect id; original member name unknown.
@@ -51,7 +53,12 @@ public:
   bool unknown1d; // Inferred role: kakusei; original member name unknown.
   u8 _1e[0x20 - 0x1e];
   gf::GF_OBJ_HANDLE *unknown20; // Inferred role: rescue target; original member name unknown.
-  u8 _28[0x44 - 0x28];
+  bool unknown28;               // Inferred role: rescue window opened; original member name unknown.
+  u8 _29[0x30 - 0x29];
+  u32 unknown30; // Inferred role: pending tutorial bit field; original member name unknown.
+  f32 unknown34; // Inferred role: tutorial display delay; original member name unknown.
+  u32 unknown38; // Inferred role: element effect sequence id; original member name unknown.
+  u8 _3c[0x44 - 0x3c];
   u16 : 3;
   u16 unknown44_3 : 1; // Inferred role: push reverse palette 0; original member name unknown.
   u16 unknown44_4 : 1; // Inferred role: push reverse palette 1; original member name unknown.
@@ -66,5 +73,9 @@ static_assert(offsetof(UIManager, unknown15) == 0x15, "");
 static_assert(offsetof(UIManager, unknown18) == 0x18, "");
 static_assert(offsetof(UIManager, unknown1c) == 0x1c, "");
 static_assert(offsetof(UIManager, unknown20) == 0x20, "");
+static_assert(offsetof(UIManager, unknown28) == 0x28, "");
+static_assert(offsetof(UIManager, unknown30) == 0x30, "");
+static_assert(offsetof(UIManager, unknown34) == 0x34, "");
+static_assert(offsetof(UIManager, unknown38) == 0x38, "");
 
 } // namespace btl
