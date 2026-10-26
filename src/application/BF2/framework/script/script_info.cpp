@@ -7,7 +7,7 @@
 
 namespace fw {
 
-ScriptInfo::ScriptInfo() : unknown08(nullptr), unknown10(0), unknown21c(-1), unknown220(nullptr), unknown228(STATE_EMPTY), unknown22c(0), unknown230(0), unknown238(nullptr) {}
+ScriptInfo::ScriptInfo() : unknown08(nullptr), unknown10(0), unknown21c(-1), unknown220(nullptr), unknown228(STATE_EMPTY), unknown22c(0), unknown230(nullptr), unknown238(nullptr) {}
 
 ScriptInfo::~ScriptInfo() {
   if ((unknown22c & FLAG_LINKED) != 0 && unknown08 != nullptr) {

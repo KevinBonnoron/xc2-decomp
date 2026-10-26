@@ -1,7 +1,10 @@
 #include "framework/resource/resource_manager.h"
 
 #include "framework/framework.h"
+#include "framework/resource/resource_object.h"
+#include "mm_mtl/algorithm.h"
 #include "mm_mtl/hash.h"
+#include "mm_mtl/reference_object.h"
 
 namespace fw {
 
@@ -16,6 +19,95 @@ u32 ResourceManager::getHash(const char *name) { return mm::mtl::hashStrCrc(name
 void ResourceManager::enterFinalizeApplet() {
   unknown530 = true;
   unknown52c = 2;
+}
+
+void ResourceManager::addDelayReleaseExtention(const char *extension) {
+  ResourceManager *manager = get();
+  if (manager == nullptr) {
+    return;
+  }
+  if (extension[0] == '.') {
+    extension++;
+  }
+  if (mm::mtl::find(manager->unknown8548.begin(), manager->unknown8548.end(), extension) == manager->unknown8548.end()) {
+    manager->unknown8548.push_back(extension);
+  }
+}
+
+void ResourceManager::update(const UpdateInfo &info) {
+  updateSafeReleaseList(false);
+  unknown520 = 0;
+  for (int type = 0; type < 32; type++) {
+    for (u32 i = 0; i < unknown18[type].size(); i++) {
+      if (unknown18[type][i] != nullptr) {
+        unknown18[type][i]->update();
+      }
+    }
+  }
+}
+
+bool ResourceManager::isLoaded() {
+  for (int type = 0; type < 32; type++) {
+    for (u32 i = 0; i < unknown18[type].size(); i++) {
+      if (unknown18[type][i] != nullptr && !unknown18[type][i]->valid()) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+void ResourceManager::updateSafeReleaseList(bool isForce) {
+  SafeObject *it = unknown4540.begin();
+  while (it != unknown4540.end()) {
+    it->unknown08--;
+    if (isForce || it->unknown08 < 1) {
+      mm::mtl::safeRelease(it->unknown00);
+      it = unknown4540.erase(it);
+    } else {
+      it++;
+    }
+  }
+}
+
+void ResourceManager::addResource(ResourceObject *resource) {
+  mm::mtl::Vector<ResourceObject *> &resources = unknown18[resource->unknown0c];
+  ResourceObject **it = resources.begin();
+  while (it != resources.end() && resource->unknown28 >= (*it)->unknown28) {
+    it++;
+  }
+  if (it == resources.end()) {
+    resources.push_back(resource);
+  } else {
+    resources.insert(it, resource);
+  }
+}
+
+void ResourceManager::removeResource(ResourceObject *resource) {
+  mm::mtl::Vector<ResourceObject *> &resources = unknown18[resource->unknown0c];
+  ResourceObject **it = mm::mtl::find(resources.begin(), resources.end(), resource);
+  if (it != resources.end()) {
+    resources.erase(it);
+  }
+}
+
+void ResourceManager::addSafeObject(mm::mtl::ReferenceObject *object, eResourceType type) {
+  SafeObject *it = unknown538.begin();
+  while (it != unknown538.end()) {
+    if (it->unknown00 == object) {
+      it->unknown08++;
+      break;
+    }
+    it++;
+  }
+  if (it == unknown538.end()) {
+    object->addRef();
+    SafeObject safeObject;
+    safeObject.unknown00 = object;
+    safeObject.unknown08 = 1;
+    safeObject.unknown0c = type;
+    unknown538.push_back(safeObject);
+  }
 }
 
 } // namespace fw

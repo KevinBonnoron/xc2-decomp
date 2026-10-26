@@ -5,6 +5,7 @@
 #include "framework/manager_object.h"
 #include "ml/work_event.h"
 #include "mm_mtl/array.h"
+#include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -23,6 +24,17 @@ namespace fw {
 
 struct ScriptEventParam {
   enum State : int;
+
+  int unknown00;   // Inferred role: script type; original member name unknown.
+  State unknown04; // Inferred role: state; original member name unknown.
+};
+
+static_assert(sizeof(ScriptEventParam) == 0x8, "");
+
+class IScriptEvent {
+public:
+  virtual ~IScriptEvent();
+  virtual void scriptEvent(ScriptEventParam &param);
 };
 
 class ScriptManager;
@@ -70,7 +82,7 @@ public:
   ml::FileHandleTh *unknown220;    // Inferred role: file handle; original member name unknown.
   State unknown228;                // Inferred role: state; original member name unknown.
   u32 unknown22c;                  // Inferred role: flags; original member name unknown.
-  u64 unknown230;                  // Role and original member name unknown.
+  mm::mtl::IAllocator *unknown230; // Inferred role: script memory allocator; original member name unknown.
   ScriptManager *unknown238;       // Inferred role: manager; original member name unknown.
 };
 
@@ -90,14 +102,18 @@ public:
   bool isScriptCreated(int type) const;
   bool isScriptLoaded(int type) const;
   bool isScriptFree(int type) const;
+  void removeEvent(IScriptEvent *event);
   void loadScript(int type, const char *name, ml::FILE_PRIO priority);
   void notifyEvent(int type, ScriptEventParam::State state);
   u32 getTypeMax() const;
 
   u8 _18[0x20 - 0x18];
-  mm::mtl::Array<ScriptInfo> unknown20; // Inferred role: scripts; original member name unknown.
+  mm::mtl::Array<ScriptInfo> unknown20;              // Inferred role: scripts; original member name unknown.
+  mm::mtl::FixedQueue<IScriptEvent *, 32> unknown38; // Inferred role: events; original member name unknown.
 };
 
 static_assert(offsetof(ScriptManager, unknown20) == 0x20, "");
+static_assert(offsetof(ScriptManager, unknown38) == 0x38, "");
+static_assert(sizeof(ScriptManager) == 0x148, "");
 
 } // namespace fw

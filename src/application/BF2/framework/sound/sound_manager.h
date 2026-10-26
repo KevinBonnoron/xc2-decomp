@@ -129,6 +129,8 @@ public:
   void stopBgmAll();
   void stopSeAll();
   void registPack(SoundPack *pack);
+  void loadCommonSe();
+  void loadBattleSe();
   bool isRegistPack(SoundPack *pack) const;
   bool isCommonLoaded() const;
   SoundPack *getBattlePack();

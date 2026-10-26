@@ -2,10 +2,12 @@
 
 #include "framework/memory/framework_memory.h"
 #include "framework/resource/resource_object.h"
+#include "framework/resource/sound_resource.h"
 #include "framework/sound/sound_driver.h"
 #include "fw/fw_update_info.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/reference_object.h"
 
 namespace fw {
 enum SoundCategory : int;
@@ -211,6 +213,25 @@ void SoundManager::stopVoice(u32 handle, f32 time) {
 
 SoundPack *SoundManager::getCommonPack() { return findPack("common", nullptr); }
 
+u32 SoundManager::playSe(u32 id, SoundPack *pack, f32 volume, SoundCategory category) {
+  if (!isSoundEbable()) {
+    return 0;
+  }
+
+  if (pack == nullptr) {
+    pack = getCommonPack();
+  } else if (!isRegistPack(pack)) {
+    return 0;
+  }
+
+  u32 handle = unknown18->playSe(id, pack, volume, category);
+  if (handle != 0 && isPauseAll()) {
+    pause(handle, true, 0.0f);
+  }
+
+  return handle;
+}
+
 void SoundManager::stopSe(u32 handle, f32 time) {
   if (isSoundEbable() && handle != 0) {
     unknown18->stopSe(handle, time);
@@ -402,6 +423,26 @@ void SoundManager::stopSeAll() {
 }
 
 void SoundManager::registPack(SoundPack *pack) { unknowna0.push_back(pack); }
+
+void SoundManager::loadCommonSe() {
+  mm::mtl::safeRelease(unknowne0);
+  SoundResource::SetupInfo info;
+  info.unknown08 = 0x20;
+  unknowne0 = SoundResource::request(FrameworkMemory::getAllocator(6), "/sound/se/common.xsp", info, static_cast<LOAD_PRIO>(10));
+}
+
+void SoundManager::loadBattleSe() {
+  mm::mtl::safeRelease(unknowne8[2]);
+  mm::mtl::safeRelease(unknowne8[1]);
+  mm::mtl::safeRelease(unknowne8[0]);
+  SoundResource::SetupInfo info;
+  info.unknown08 = 0x20;
+  unknowne8[0] = SoundResource::request(FrameworkMemory::getAllocator(6), "/sound/se/se_btl_system.xsp", info, static_cast<LOAD_PRIO>(10));
+  info.unknown08 = 8;
+  unknowne8[1] = SoundResource::request(FrameworkMemory::getAllocator(6), "/sound/se/se_btl_elem.xsp", info, static_cast<LOAD_PRIO>(10));
+  info.unknown08 = 8;
+  unknowne8[2] = SoundResource::request(FrameworkMemory::getAllocator(6), "/sound/se/se_btl_weapon.xsp", info, static_cast<LOAD_PRIO>(10));
+}
 
 bool SoundManager::isRegistPack(SoundPack *pack) const {
   if (pack == nullptr) {
