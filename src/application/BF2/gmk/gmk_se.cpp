@@ -10,12 +10,16 @@
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
+#include "gmk/gmk_active_list.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_set.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_vec3.h"
 
 namespace gmk {
+
+template class TGmkActiveList<GmkSe>;
+template class TGmkActiveList<GmkSeLine>;
 
 void GmkSe::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "se_type") != 0;

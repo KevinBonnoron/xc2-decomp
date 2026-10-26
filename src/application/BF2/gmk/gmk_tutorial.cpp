@@ -5,10 +5,13 @@
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
+#include "gmk/gmk_active_list.h"
 #include "gmk/gmk_bdat.h"
 #include <string.h>
 
 namespace gmk {
+
+template class TGmkActiveList<GmkTutorial>;
 
 GmkTutorial::GmkTutorial() : unknown48(), unknown60(nullptr), unknownF0(false) {}
 

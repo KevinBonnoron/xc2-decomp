@@ -38,6 +38,7 @@ public:
   void dispose() override;
   void debugDraw() const override;
   void debugUpdateMmf() override;
+  const IGmkList *getBindedFormPcnpcList() const;
 
   u8 _48[0x50 - 0x48];
 };

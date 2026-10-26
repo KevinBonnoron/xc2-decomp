@@ -1,8 +1,14 @@
 #include "gmk/gmk_enemy/gmk_routed_enemy.h"
+
+#include "gf/object/gf_obj_handle.h"
+#include "gmk/gmk_base.h"
 #include "gmk/gmk_gob_event_listener_impl.h" // IWYU pragma: keep
+#include "gmk/gmk_route_navi.h"
 #include "gmk/gmk_set.h"
 
-#include "gmk/gmk_base.h"
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
 
 namespace gmk {
 
@@ -61,6 +67,24 @@ void GmkRoutedEnemyList::debugDraw() const {
 void GmkRoutedEnemyList::debugUpdateMmf() {
   TGmkList::debugUpdateMmf();
   unknown240.debugUpdateMmf();
+}
+
+GmkRouteNavi *GmkRoutedEnemy::findFreeRouteNavi() const {
+  for (std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi> *it = unknown1D8.begin(); it != unknown1D8.end(); ++it) {
+    if (it->first == gf::INVALID_HANDLE) {
+      return &it->second;
+    }
+  }
+  return nullptr;
+}
+
+GmkRouteNavi *GmkRoutedEnemy::findRouteNavi(gf::GF_OBJ_HANDLE *handle) const {
+  for (std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi> *it = unknown1D8.begin(); it != unknown1D8.end(); ++it) {
+    if (it->first == handle) {
+      return &it->second;
+    }
+  }
+  return nullptr;
 }
 
 } // namespace gmk

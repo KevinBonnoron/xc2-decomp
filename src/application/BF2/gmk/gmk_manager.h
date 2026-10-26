@@ -108,6 +108,12 @@ public:
   const AGmkBase *findFirstGmkInstByBdatId(GmkType type, int bdatId) const;
   const AGmkBase *findGmkInstByGmkInstIndex(int gmkSetId, GmkType type, u32 index) const;
   GmkSet *findGmkSet(int gmkSetId) const;
+  void update(f32 deltaTime);
+  void clearGmkSets();
+  void disposeGmkSet(int gmkSetId);
+  int findFirstBdatId_RSC_GmkSetList(int map) const;
+  int findFirstBdatId_RSC_GmkSetList(GmkType type, int bdatId) const;
+  bool isBdatIdOfGmkInstExist(int gmkSetId, GmkType type, int bdatId) const;
 
   u8 _08[0x58 - 0x08];
   GmkBdat unknown58;       // Inferred role: res def bdat; original member name unknown.
@@ -115,12 +121,14 @@ public:
   InterestType unknown198; // Inferred role: interest type; original member name unknown.
   u8 _19c[0xf358 - 0x19c];
   mm::mtl::Vector<GmkSet *> unknownf358; // Inferred role: sets; original member name unknown.
+  void (GmkManager::*unknownf380)(f32);  // Inferred role: seq; original member name unknown.
 };
 
 static_assert(offsetof(GmkManager, unknown58) == 0x58, "");
 static_assert(offsetof(GmkManager, unknown190) == 0x190, "");
 static_assert(offsetof(GmkManager, unknown198) == 0x198, "");
 static_assert(offsetof(GmkManager, unknownf358) == 0xf358, "");
+static_assert(offsetof(GmkManager, unknownf380) == 0xf380, "");
 
 int getCurrentMapBdatId();
 bool isInEvent();

@@ -5,6 +5,7 @@
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_set.h"
 #include "types.h"
 
 struct CBdatWrapper;
@@ -59,21 +60,31 @@ static_assert(sizeof(GmkSalvage::BdatInfo) == 0x2, "");
 static_assert(offsetof(GmkSalvage, unknown129) == 0x129, "");
 static_assert(sizeof(GmkSalvage) == 0x130, "");
 
+class GmkSetOfSalvageChildren : public GmkSet {
+public:
+  GmkSetOfSalvageChildren() : GmkSet(nullptr) {}
+  ~GmkSetOfSalvageChildren() override {}
+
+  const IGmkList *getGmkList(GmkType type) const;
+};
+
+static_assert(sizeof(GmkSetOfSalvageChildren) == 0x3a0, "");
+
 class GmkSalvageList : public TGmkList<GmkSalvage, GmkSalvage::BdatInfo, 0x564c4153, 2, GmkSalvageGobCustom> {
 public:
   explicit GmkSalvageList(u32 updateGmkNumPerFrame);
-  ~GmkSalvageList() override;
+  ~GmkSalvageList() override {}
 
-  void update(f32 deltaTime) override;
   void debugUpdateMmf() override;
   void debugDraw() const override;
+  void update(f32 deltaTime) override;
 
 protected:
   void createGmk(void *data) override;
   void disposeGmk() override;
 
 private:
-  u8 _228[0x5d0 - 0x228];
+  GmkSetOfSalvageChildren unknown230; // Inferred role: set of the salvage children lists; original member name unknown.
 };
 
 static_assert(sizeof(GmkSalvageList) == 0x5d0, "");

@@ -15,6 +15,7 @@ union Value {
 
 unsigned char *getFP(const char *name);
 unsigned char *getFP(int table, int id);
+unsigned char *isExistFP(const char *name);
 int getIdTop(unsigned char *bdat);
 int getIdEnd(unsigned char *bdat);
 int getIdCount(unsigned char *bdat);

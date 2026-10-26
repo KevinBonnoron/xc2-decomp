@@ -36,7 +36,10 @@ public:
 
   void dispose();
   void disposeGobInst(bool isFadeOut);
+  void addGmkNpc(AGmkNpc *npc);
+  void removeGmkNpc(AGmkNpc *npc);
   void setActiveGmkNpc(AGmkNpc *npc);
+  void unknown001();
 
   u16 unknown00;                              // Inferred role: npc id; original member name unknown.
   u8 *unknown08;                              // Inferred role: bdat; original member name unknown.

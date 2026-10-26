@@ -220,6 +220,92 @@ bool GmkManager::isValid() const {
   return unknown190 != nullptr;
 }
 
+void GmkManager::update(f32 deltaTime) {
+  unknown58.update(deltaTime);
+  if (unknownf380) {
+    (this->*unknownf380)(deltaTime);
+  }
+}
+
+void GmkManager::clearGmkSets() {
+  if (unknownf358.empty()) {
+    return;
+  }
+  for (GmkSet **it = unknownf358.begin(); it != unknownf358.end(); ++it) {
+    if (*it != nullptr) {
+      delete *it;
+      *it = nullptr;
+    }
+  }
+  unknownf358.clear();
+}
+
+void GmkManager::disposeGmkSet(int gmkSetId) {
+  if (unknownf358.empty()) {
+    return;
+  }
+  for (GmkSet **it = unknownf358.begin(); it != unknownf358.end(); ++it) {
+    if ((*it)->unknown10.unknown04 == gmkSetId) {
+      delete *it;
+      unknownf358.erase(it);
+      return;
+    }
+  }
+}
+
+int GmkManager::findFirstBdatId_RSC_GmkSetList(int map) const {
+  if (!unknown58.isValid()) {
+    return -1;
+  }
+  u8 *bdat = unknown190;
+  int count = Bdat::getIdCount(bdat);
+  int top = Bdat::getIdTop(bdat);
+  for (int id = top; id < top + count; id++) {
+    if (getMapBdatId(id) == map) {
+      return id;
+    }
+  }
+  return -1;
+}
+
+bool GmkManager::isBdatIdOfGmkInstExist(int gmkSetId, GmkType type, int bdatId) const {
+  if (gmkSetId <= 0) {
+    return false;
+  }
+  const char *sheetName = getSheetnameByType(gmkSetId, type);
+  if (sheetName == nullptr) {
+    return false;
+  }
+  if (sheetName[0] != '\0') {
+    u8 *bdat = Bdat::isExistFP(sheetName);
+    if (bdat != nullptr) {
+      int count = Bdat::getIdCount(bdat);
+      int top = Bdat::getIdTop(bdat);
+      return top <= bdatId && bdatId < top + count;
+    }
+  }
+  return false;
+}
+
+int GmkManager::findFirstBdatId_RSC_GmkSetList(GmkType type, int bdatId) const {
+  int gmkSetId = findFirstBdatId_RSC_GmkSetList(gf::GfGameManager::getMapID());
+  if (gmkSetId > 0 && isBdatIdOfGmkInstExist(gmkSetId, type, bdatId)) {
+    return gmkSetId;
+  }
+  u8 *bdat = unknown190;
+  if (bdat == nullptr) {
+    return -1;
+  }
+  int count = Bdat::getIdCount(bdat);
+  int top = Bdat::getIdTop(bdat);
+  for (int id = top; id < top + count; id++) {
+    if (isBdatIdOfGmkInstExist(id, type, bdatId)) {
+      return id;
+    }
+  }
+  return -1;
+}
+
 GmkSet *GmkManager::findGmkSet(int gmkSetId) const {
   for (GmkSet *const *it = unknownf358.begin(); it != unknownf358.end(); ++it) {
     GmkSet *set = *it;

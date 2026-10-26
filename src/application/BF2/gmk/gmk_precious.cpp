@@ -11,10 +11,13 @@
 #include "gf/menu/object/gf_menu_obj_field_icon.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/util/gf_item_util.h"
+#include "gmk/gmk_active_list.h"
 #include "gmk/gmk_bdat.h"
 #include "mm_mtl/reference_object.h"
 
 namespace gmk {
+
+template class TGmkActiveList<GmkPrecious>;
 
 GmkPrecious::GmkPrecious() : unknown48(), unknown58(gf::INVALID_HANDLE), unknown60(0), unknown68(nullptr), unknown70{0.0f}, unknown74(true) {}
 

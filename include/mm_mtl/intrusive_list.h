@@ -99,6 +99,15 @@ public:
     m_size++;
   }
 
+  // __LINE__ must be 256 as in the original header: it is the line argument of the assert.
+#line 255
+  iterator insert(iterator position, T *ptr) {
+    MM_ASSERT(ptr);
+    linkNode(ptr, position.get());
+    m_size++;
+    return iterator(ptr);
+  }
+
   // __LINE__ must be 268 and 269 as in the original header: they are the line arguments of the asserts.
 #line 267
   iterator erase(iterator it) {

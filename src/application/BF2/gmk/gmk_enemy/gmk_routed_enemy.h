@@ -1,13 +1,20 @@
 #pragma once
 #include <stddef.h>
+#include <utility>
 
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_enemy/gmk_enemy.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_route.h"
+#include "gmk/gmk_route_navi.h" // IWYU pragma: keep
 #include "gmk/gmk_trigger.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
+
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
 
 namespace gmk {
 
@@ -28,6 +35,8 @@ public:
   void debugDraw() const override;
   IGmkList *getOwnerGmkEnemyList() const;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
+  GmkRouteNavi *findFreeRouteNavi() const;
+  GmkRouteNavi *findRouteNavi(gf::GF_OBJ_HANDLE *handle) const;
 
   void *unknown50; // Role and original member name unknown.
   void *unknown58; // Role and original member name unknown.
@@ -35,7 +44,8 @@ public:
   u8 _64[0x1a8 - 0x64];
   bool unknown1A8; // Inferred role: pop condition flag; original member name unknown.
   bool unknown1A9; // Inferred role: pop condition matched; original member name unknown.
-  u8 _1aa[0x200 - 0x1aa];
+  u8 _1aa[0x1d8 - 0x1aa];
+  mutable mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi>> unknown1D8; // Inferred role: route navis with the game object they are bound to; original member name unknown.
 };
 
 static_assert(offsetof(GmkRoutedEnemy, unknown50) == 0x50, "");
@@ -43,6 +53,7 @@ static_assert(offsetof(GmkRoutedEnemy, unknown58) == 0x58, "");
 static_assert(offsetof(GmkRoutedEnemy, unknown60) == 0x60, "");
 static_assert(offsetof(GmkRoutedEnemy, unknown1A8) == 0x1a8, "");
 static_assert(offsetof(GmkRoutedEnemy, unknown1A9) == 0x1a9, "");
+static_assert(offsetof(GmkRoutedEnemy, unknown1D8) == 0x1d8, "");
 static_assert(sizeof(GmkRoutedEnemy) == 0x200, "");
 
 class GmkRoutedEnemyList : public TGmkList<GmkRoutedEnemy, GmkEnemy::BdatInfo, 0x4d4e4552, 8, GmkRoutedEnemyGobCustom> {

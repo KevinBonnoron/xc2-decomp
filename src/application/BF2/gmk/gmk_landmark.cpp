@@ -6,6 +6,7 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/menu/object/gf_menu_obj_location_telop.h"
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
@@ -41,5 +42,41 @@ void GmkLandmark::dispose() {
 }
 
 void GmkLandmark::onEnterPhantom(const IGmkPhantomEventListener::OnEnterInfo &info) {}
+
+void GmkLandmark::createGmkPhantom() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  unknown60.create(*this, this, false);
+}
+
+void GmkLandmark::endEvent() {
+  if (unknownF1) {
+    unknownF1 = false;
+    gf::GfMenuObjLocationTelop::cancel();
+    GmkLandmarkManager::removeGmkLandmark(this);
+  }
+}
+
+void GmkLandmarkManager::removeGmkLandmark(GmkLandmark *landmark) {
+  if (landmark == nullptr || get() == nullptr) {
+    return;
+  }
+  get()->unknown08.erase(landmark);
+  if (get()->unknown08.empty()) {
+    get()->unknown20 = nullptr;
+  } else {
+    get()->unknown20 = get()->unknown08.begin().get();
+  }
+}
+
+const GmkLandmark *GmkLandmarkManager::findFirstAddedGmkLandmarkByCategory(u8 category) const {
+  for (mm::mtl::IntrusiveList<GmkLandmark>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+    if (it.get()->getBdatInfo()->unknown02 == category) {
+      return it.get();
+    }
+  }
+  return nullptr;
+}
 
 } // namespace gmk

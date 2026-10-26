@@ -60,5 +60,6 @@ static_assert(offsetof(GmkSet, unknown40) == 0x40, "");
 static_assert(offsetof(GmkSet, unknown178) == 0x178, "");
 static_assert(offsetof(GmkSet, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(GmkSet, unknown388) == 0x388, "");
+static_assert(sizeof(GmkSet) == 0x3a0, "");
 
 } // namespace gmk

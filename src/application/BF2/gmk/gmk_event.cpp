@@ -4,9 +4,12 @@
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/scom/gf_scom_obj.h"
+#include "gmk/gmk_active_list.h"
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+template class TGmkActiveList<GmkEvent>;
 
 GmkEvent::GmkEvent() : unknown48(), unknown60(nullptr), unknownF0(false), unknownF1(false), unknownF2(false) {}
 

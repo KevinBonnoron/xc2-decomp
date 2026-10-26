@@ -74,6 +74,8 @@ void GmkSalvageLocator::seqWaitPop(f32 deltaTime) {
   }
 }
 
+const IGmkList *GmkSetOfSalvageChildren::getGmkList(GmkType type) const { return unknown1b8[type]; }
+
 void GmkSalvageList::debugDraw() const { TGmkList::debugDraw(); }
 
 void GmkSalvageList::debugUpdateMmf() { TGmkList::debugUpdateMmf(); }
