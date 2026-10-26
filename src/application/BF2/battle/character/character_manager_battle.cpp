@@ -173,6 +173,8 @@ bool CharacterManager::IsCharacterDead(int id) const {
   return unknown20[id].unknown00.IsDead(0);
 }
 
+bool CharacterManager::IsCharacterDead(gf::GF_OBJ_HANDLE *handle) const { return IsCharacterDead(SearchCharacter(handle)); }
+
 void CharacterManager::PostUpdate(const fw::UpdateInfo &updateInfo) { get()->PostUpdateProc(updateInfo); }
 
 bool CharacterManager::IsExistAlivePlayer() const {

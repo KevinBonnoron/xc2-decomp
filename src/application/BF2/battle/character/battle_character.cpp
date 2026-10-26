@@ -6,12 +6,14 @@
 #include "battle/blade_arts_manager.h"
 #include "battle/btl_system_balance_access.h"
 #include "battle/button_challenge.h"
+#include "battle/chain_attack_manager.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
 #include "battle/data_manager_battle.h"
 #include "battle/group_data.h"
 #include "battle/hate_ring_manager.h"
 #include "battle/misc_battle.h"
+#include "battle/sp_attack_manager.h"
 #include "battle/talk_manager_battle.h"
 #include "battle/ui_manager_battle.h"
 #include "battle/utility_battle.h"
@@ -25,6 +27,7 @@
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/menu/object/gf_menu_obj_damage_buff.h"
 #include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/effect/gf_com_effect_caster.h"
 #include "gf/object/component/property/gf_com_property.h"
@@ -37,6 +40,8 @@
 #include "ml/rand.h"
 #include "mm_math/mm_math.h"
 #include "mm_mtl/fixed_array.h"
+#include "mm_mtl/fixstr.h"
+#include "mm_mtl/intrusive_ptr.h"
 
 namespace btl {
 
@@ -74,6 +79,26 @@ void BattleCharacter::ResetCustomVoiceData() {
   for (int i = 0; i < 3; i++) {
     unknownf64[i].unknown00 = 0;
     unknownf64[i].unknown01 = 0;
+  }
+}
+
+void BattleCharacter::SetupCustomVoiceData() {
+  ResetCustomVoiceData();
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  if (parameter == nullptr || !parameter->m_invalidTarget) {
+    return;
+  }
+  gf::DataParamAcc acc(unknown118);
+  int personality = acc.getPersonality();
+  if (personality > 0) {
+    u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_BTL_BL_PERSONALITY);
+    mm::mtl::FixStr<32> name;
+    for (int i = 0; i < 3; i++) {
+      u32 voice = Bdat::getValCheck(bdat, name.format("Custom%02d", i + 1).c_str(), personality, 1) & 0xff;
+      unknownf64[i].unknown00 = voice;
+      unknownf64[i].unknown01 = Bdat::getValCheck(bdat, name.format("CustomParam%02d", i + 1).c_str(), personality, 1);
+      unknownf5c |= 1 << voice;
+    }
   }
 }
 
@@ -145,6 +170,253 @@ void BattleCharacter::DeleteKizunaAuraEffect() {
     }
     unknown130[EFFECT_ID_KIZUNA_AURA] = 0;
   }
+}
+
+void BattleCharacter::DeleteKizunaLinkEffect() {
+  if (unknown130[EFFECT_ID_KIZUNA_LINK] != 0) {
+    fw::EffectManager::get()->destroyKizunaLine(unknown130[EFFECT_ID_KIZUNA_LINK]);
+    unknown130[EFFECT_ID_KIZUNA_LINK] = 0;
+    PlaySE(BTL_SE_HIT, 0x25, nullptr, true);
+  }
+  unknownf7a &= 0xfffe;
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  if (parameter == nullptr) {
+    return;
+  }
+  gf::GF_OBJ_HANDLE *handle = parameter->unknown10;
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character != nullptr) {
+    character->unknownf7a &= 0xfffe;
+  }
+}
+
+void BattleCharacter::DeleteEffect(int effect, int fadeFrame) {
+  if (effect == EFFECT_ID_KIZUNA_LINK) {
+    DeleteKizunaLinkEffect();
+    return;
+  }
+  if (unknown130[effect] != 0) {
+    if (gf::GfGameManager::isPlayEvent()) {
+      fadeFrame = -1;
+    }
+    fw::EffectManager *manager = fw::EffectManager::get();
+    switch (fadeFrame) {
+    case -1:
+      manager->remove(unknown130[effect]);
+      break;
+    case 0:
+      manager->dead(unknown130[effect]);
+      break;
+    default:
+      manager->fadeOutDead(unknown130[effect], fadeFrame);
+      break;
+    }
+    unknown130[effect] = 0;
+  }
+}
+
+int BattleCharacter::GetBuffEffectIndex(int buff) const {
+  if (Utility::IsBladeArtsBuff(buff)) {
+    return IsBlade() ? -1 : 7;
+  }
+  switch (buff) {
+  case 0xb:
+    return IsBlade() ? -1 : 8;
+  case 0xc:
+    return IsBlade() ? -1 : 9;
+  case 0xd:
+    return IsBlade() ? -1 : 10;
+  case 0xe:
+    return IsBlade() ? 10 : -1;
+  case 0xf:
+    return IsBlade() ? -1 : 11;
+  case 0x10:
+    return IsBlade() ? -1 : 12;
+  case 0x11:
+    return IsBlade() ? -1 : 7;
+  default:
+    return -1;
+  }
+}
+
+void BattleCharacter::StopStart(f32 time, bool isSyncBuddy) {
+  unknown001(time);
+  if (!isSyncBuddy) {
+    return;
+  }
+  if (!SpAttackManager::get()->IsRegister(unknown118)) {
+    return;
+  }
+  if (unknown107c == 10) {
+    const CharacterParameter *parameter = GetCharacterParameterConst(true);
+    if (parameter == nullptr) {
+      return;
+    }
+    gf::GF_OBJ_HANDLE *handle = parameter->unknown10;
+    BattleCharacter *buddy = CharacterManager::get()->GetCharacterConst(handle);
+    if (buddy != nullptr) {
+      buddy->unknown001(time);
+    }
+  }
+}
+
+bool BattleCharacter::CheckPowerCharge(u32 attack) {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  if (parameter == nullptr) {
+    return false;
+  }
+  if (!parameter->m_invalidTarget && parameter->unknown10 != gf::INVALID_HANDLE && parameter->IsBuff(3)) {
+    f32 rate = parameter->GetBuffEffect(3) * 0.01f + 1.0f;
+    BattleGlobal::get()->MulDamageRate(attack, rate, false);
+    if (parameter->IsBuffInfinite(3)) {
+      const_cast<CharacterParameter *>(parameter)->ClearBuff(3, false);
+    }
+    return true;
+  }
+  return false;
+}
+
+void BattleCharacter::AddTrust(u32 point, int level) {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  if (parameter == nullptr) {
+    return;
+  }
+  int partyId = parameter->unknown1c;
+  if (DataManager::get()->unknown001(partyId)) {
+    const GROUP_BLADE_DATA *blade = DataManager::get()->unknown10758[partyId].GetBladeDataConst(-1);
+    u16 bladeId = blade->unknown24;
+    if (static_cast<u32>(bladeId - 1001) < 1000) {
+      if (level >= 0) {
+        const CharacterParameter *levelParameter = GetCharacterParameterConst(true);
+        if (levelParameter == nullptr) {
+          return;
+        }
+        if (level < static_cast<int>(levelParameter->GetLevel()) - BtlSystemBalanceAccess::get()->unknownea) {
+          return;
+        }
+      }
+      gf::SCOM_ADD_TRUST::create(bladeId, point);
+    }
+  }
+}
+
+bool BattleCharacter::GetTargetDirection(mm::Vec3 &direction, bool flag1, bool flag2, gf::GF_OBJ_HANDLE *target) const {
+  if (target == gf::INVALID_HANDLE) {
+    target = unknown120;
+  }
+  mm::Vec3 position;
+  bool result = false;
+  if (Misc::GetObjectTransform(target, position, Misc::TRANS_TYPE_POSITION)) {
+    result = GetTargetPosDirection(position, direction, flag1, flag2);
+  }
+  return result;
+}
+
+static const CharacterParameter *unknown002(const BattleCharacter *character) { // Inferred role: gets the cached parameter without checking the id; original function name unknown.
+  if (character->unknown168 == nullptr) {
+    character->unknown168 = DataManager::get()->GetCharacterParameterConst(character->unknownf6a);
+  }
+  return character->unknown168;
+}
+
+void BattleCharacter::CalcLocomotionMoveRate(f32 maxRate) {
+  f32 length = GetAnimationMoveLength(0.0f, 1.0f, true);
+  if (length <= 0.0f) {
+    return;
+  }
+  mm::Vec3 position;
+  gf::GF_OBJ_HANDLE *target = unknown128;
+  if (GetObjectNearPosition(unknown118, target, position, nullptr, nullptr)) {
+    f32 distance = Misc::CalcLengthXZ(unknown10, position);
+    f32 rate = (distance - unknown002(this)->unknown2c) / length;
+    unknowncdc = mm::clamp(rate, 0.15f, maxRate < 0.0f ? 1.0f : maxRate);
+    unknownce0[0].unknown00 = 1.0f;
+  }
+}
+
+void BattleCharacter::DispEnhanceName(const CharacterParameter::ENHANCE_DATA &data) const {
+  u16 name = data.unknown06;
+  if ((name & 0xff) != 0) {
+    u32 flag = (name >> 8) & 1;
+    f32 x = unknown10.x;
+    f32 y = unknown10.y;
+    f32 z = unknown10.z;
+    y += unknown002(this)->unknown38;
+    gf::GfMenuObjDamageBuff::OpenParam param;
+    param.unknown00 = flag ^ 1;
+    param.unknown10 = gf::GfDataBdat::getFP(0x158);
+    param.unknown18 = name & 0xff;
+    param.unknown20.x = x;
+    param.unknown20.y = y;
+    param.unknown20.z = z;
+    gf::GfMenuObjDamageBuff::open(param);
+  }
+}
+
+void BattleCharacter::DispEnhanceNameDirect(int text, bool flag) const {
+  if (text != 0) {
+    f32 x = unknown10.x;
+    f32 y = unknown10.y;
+    f32 z = unknown10.z;
+    y += unknown002(this)->unknown38;
+    gf::GfMenuObjDamageBuff::OpenParam param;
+    param.unknown00 = !flag;
+    param.unknown10 = gf::GfDataBdat::getFP(0x158);
+    param.unknown18 = text;
+    param.unknown20.x = x;
+    param.unknown20.y = y;
+    param.unknown20.z = z;
+    gf::GfMenuObjDamageBuff::open(param);
+  }
+}
+
+int BattleCharacter::GetArtsAttr(const ARTS_DATA &data, u32 attack) const {
+  if (attack != 0) {
+    int attribute = BattleGlobal::get()->GetAttackAttr(attack);
+    if (attribute >= 0) {
+      return attribute;
+    }
+  }
+  int attribute = data.unknown0a_3;
+  if (attribute == 0) {
+    const CharacterParameter *parameter = GetCharacterParameterConst(true);
+    if (parameter == nullptr) {
+      return 0;
+    }
+    attribute = parameter->GetAttribute();
+  }
+  return attribute;
+}
+
+bool BattleCharacter::IsNoDamage(bool) const {
+  if (unknown10e0 > 0.0f) {
+    return true;
+  }
+  const CharacterParameter *parameter = unknown002(this);
+  if (parameter->m_perfectAvoid == 10 || parameter->m_perfectAvoid == 15) {
+    return true;
+  }
+  if (parameter->IsInvalidTarget()) {
+    return true;
+  }
+  BattleGlobal *global = BattleGlobal::get();
+  if (m_player) {
+    if (global->unknown5b38 != nullptr) {
+      return true;
+    }
+    if (global->unknown65df_0 || global->unknown5b00 != nullptr) {
+      return true;
+    }
+    if (SpAttackManager::get()->unknown08.get() != nullptr) {
+      return true;
+    }
+    if (ChainAttackManager::get()->IsProc(false)) {
+      return true;
+    }
+  } else if (global->IsGameOver()) {
+    return true;
+  }
+  return false;
 }
 
 void BattleCharacter::CancelButtonChallenge() {
@@ -1077,6 +1349,38 @@ void BattleCharacter::NotifyDropHealpot() { PlayCustomVoice(3); }
 void BattleCharacter::NotifyEnemyAngry(gf::GF_OBJ_HANDLE *) { PlayCustomVoice(7); }
 
 void BattleCharacter::NotifyBackAttack(int) { PlayCustomVoice(10); }
+
+void BattleCharacter::NotifyElementalCombo(gf::GF_OBJ_HANDLE *, int, bool) {
+  if (IsBlade()) {
+    PlayCustomVoice(13);
+  }
+}
+
+void BattleCharacter::NotifySufferElementalCombo(int, int) {
+  if (IsBlade()) {
+    PlayCustomVoice(14);
+  }
+}
+
+void BattleCharacter::NotifyBuddyFightCombo(gf::GF_OBJ_HANDLE *, int fightCombo) {
+  if (!IsCustomVoice(11)) {
+    return;
+  }
+  const CUSTOM_VOICE_DATA *data = GetCustomVoiceData(11, nullptr);
+  if (data != nullptr && (data->unknown01 == fightCombo || data->unknown01 == 0)) {
+    PlayCustomVoice(11);
+  }
+}
+
+void BattleCharacter::NotifyBuddySufferFightCombo(int, int fightCombo) {
+  if (!IsCustomVoice(12)) {
+    return;
+  }
+  const CUSTOM_VOICE_DATA *data = GetCustomVoiceData(12, nullptr);
+  if (data != nullptr && (data->unknown01 == fightCombo || data->unknown01 == 0)) {
+    PlayCustomVoice(12);
+  }
+}
 
 void BattleCharacter::NotifyKillSpAttack() { PlayCustomVoice(9); }
 

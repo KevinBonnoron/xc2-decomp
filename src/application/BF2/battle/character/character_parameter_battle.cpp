@@ -1,5 +1,6 @@
 #include "battle/character/character_parameter_battle.h"
 
+#include <float.h>
 #include <math.h>
 
 #include "battle/battle_global.h"
@@ -21,12 +22,14 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_property.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 
 namespace btl {
 
 constexpr f32 DEGREE_TO_RADIAN = 3.14159265f / 180.0f;
 constexpr int ENHANCE_LINK_DISTANCE_BONUS = 258;
+constexpr int unknown001 = 5; // Inferred role: damage armor buff id; original name unknown.
 
 gf::GfObj *CharacterParameter::GetUserObject() const { return gf::GfObjUtil::getObj(unknown08); }
 
@@ -165,6 +168,127 @@ bool CharacterParameter::IsBuff(int buff) const {
   }
 
   return (unknown599[buff >> 3] & (1 << (buff & 7))) != 0;
+}
+
+void CharacterParameter::CheckDebuff() {
+  bool isDebuff = false;
+  if (unknown598 != 0) {
+    int buff = 1;
+    for (u32 flags = BattleGlobal::get()->unknown5b88; flags != 0; flags >>= 1, buff++) {
+      if ((flags & 1) && IsBuff(buff)) {
+        isDebuff = true;
+        break;
+      }
+    }
+  }
+  unknown5df_7 = isDebuff;
+}
+
+void CharacterParameter::ClearBuff(int buff, bool isEnd) {
+  f32 rest = FLT_MAX;
+  int count = unknown598;
+  for (int i = 0; i < count; i++) {
+    if (unknown458[i].unknown00 == buff) {
+      rest = unknown458[i].unknown08;
+      unknown458[i] = unknown458[count - 1];
+      unknown458[count - 1] = BUFF_DATA();
+      unknown598--;
+      break;
+    }
+  }
+  u8 &flags = unknown599[buff >> 3];
+  flags &= ~(1 << (buff & 7));
+  CharacterManager *manager = CharacterManager::get();
+  BattleCharacter *character = manager->GetCharacterConst(unknown5ae);
+  if (character != nullptr) {
+    character->NotifyBuffEnd(buff, rest, isEnd);
+  }
+  character = manager->GetCharacterConst(unknown10);
+  if (character != nullptr) {
+    character->NotifyBuffEnd(buff, rest, isEnd);
+  }
+  CheckDebuff();
+}
+
+u32 CharacterParameter::CalcDamageArmor(u32 damage) {
+  damage = CalcDamageArmorEx(damage);
+  if (damage == 0) {
+    return 0;
+  }
+  if (!IsBuff(unknown001)) {
+    return damage;
+  }
+  BUFF_DATA *data = const_cast<BUFF_DATA *>(GetBuffDataConst(unknown001, nullptr));
+  if (data == nullptr) {
+    return damage;
+  }
+  u32 armor = static_cast<u32>(data->unknown08);
+  u32 rest = damage - armor;
+  if (damage > armor) {
+    ClearBuff(unknown001, false);
+    return rest;
+  }
+  data->unknown08 = static_cast<f32>(armor - damage);
+  return 0;
+}
+
+void CharacterParameter::AddEnhance(int enhance) const {
+  ENHANCE_EFFECT_DATA data;
+  if (DataManager::GetEnhanceData(enhance, data, false)) {
+    ENHANCE_EFFECT_DATA *effect = const_cast<ENHANCE_EFFECT_DATA *>(GetEnhanceEffectDataConst(data.unknown00));
+    if (effect != nullptr) {
+      effect->unknown08 += data.unknown08;
+      return;
+    }
+    unknownf0.push_back(data);
+    unknown5b0[data.unknown00 >> 3] |= 1 << (data.unknown00 & 7);
+  }
+}
+
+bool CharacterParameter::SetElementalComboID(int combo, int id) {
+  if (unknown5a5 == combo) {
+    return false;
+  }
+  unknown5a5 = combo;
+  if (combo == 0) {
+    return false;
+  }
+  bool isUnite = CheckUniteCombo(id, false);
+  CharacterManager *manager = CharacterManager::get();
+  BattleCharacter *character = manager->GetCharacterConst(id);
+  if (character != nullptr) {
+    character->NotifyElementalCombo(unknown08, combo, isUnite);
+    const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
+    if (parameter != nullptr) {
+      BattleCharacter *buddy = manager->GetCharacterConst(parameter->unknown10);
+      if (buddy != nullptr) {
+        buddy->NotifyElementalCombo(unknown08, combo, isUnite);
+      }
+    }
+    int stage = BattleGlobal::get()->GetElementalComboStage(combo);
+    int value = stage == 2 ? 11 : -1;
+    if (stage == 1) {
+      value = 10;
+    }
+    if (value >= 0) {
+      character->FluctuatePartyGauge(value);
+    }
+  }
+  manager->GetCharacterConst(unknown5ae)->NotifySufferElementalCombo(id, combo);
+  character = manager->GetCharacterConst(unknown10);
+  if (character != nullptr) {
+    character->NotifySufferElementalCombo(id, combo);
+  }
+  if (IsEnemyParameter()) {
+    BattleGlobal::get()->Tutorial(BTL_TUTORIAL_COND_UNKNOWN_0B, 0, nullptr);
+  }
+  return isUnite;
+}
+
+void CharacterParameter::AddHP(int value) {
+  int hp = GetHP() + value;
+  int maxHp = GetMaxHP();
+  SetHP(mm::clamp(hp, 0, maxHp));
 }
 
 u32 CharacterParameter::GetWeakAttributeFlag() const {

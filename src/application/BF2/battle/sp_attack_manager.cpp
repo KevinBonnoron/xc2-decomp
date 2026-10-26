@@ -84,6 +84,37 @@ bool SpAttackManager::IsRegister(gf::GF_OBJ_HANDLE *handle) const {
   return false;
 }
 
+void SpAttackManager::NotifyProgress(gf::GF_OBJ_HANDLE *handle, PROGRESS_ID progress) {
+  PROC_DATA *proc = const_cast<PROC_DATA *>(GetProcDataConst(handle));
+  if (proc == nullptr) {
+    return;
+  }
+
+  int step;
+  if (progress == 0) {
+    if (proc->unknown08 == nullptr) {
+      proc->unknown5c_4 = true;
+    } else {
+      if (Utility::IsThirdCharacter(handle)) {
+        proc->unknown5c_5 = true;
+      } else {
+        proc->unknown5c_4 = true;
+      }
+      if (!(proc->unknown5c_4 && proc->unknown5c_5)) {
+        return;
+      }
+    }
+    step = 4;
+  } else if (progress == 2) {
+    step = 5;
+  } else if (progress == 3) {
+    step = 7;
+  } else {
+    return;
+  }
+  proc->unknown40 = step;
+}
+
 void SpAttackManager::FinishUpdateAttackData(gf::GF_OBJ_HANDLE *handle) {
   PROC_DATA *proc = const_cast<PROC_DATA *>(GetProcDataConst(handle));
   if (proc != nullptr) {

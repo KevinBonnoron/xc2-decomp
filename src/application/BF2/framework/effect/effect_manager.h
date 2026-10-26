@@ -94,6 +94,7 @@ public:
   void kill(u32 handle);
   void remove(u32 handle);
   void dead(u32 handle);
+  void destroyKizunaLine(u32 handle);
   void fadeOutDead(u32 handle);
   void fadeOutDead(u32 handle, u32 frame);
   void setDisp(u32 handle, bool isDisp);

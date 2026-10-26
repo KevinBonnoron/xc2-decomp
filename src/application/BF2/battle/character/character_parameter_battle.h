@@ -37,7 +37,8 @@ struct FIGHT_COMBO_DATA {
 
 struct ENHANCE_EFFECT_DATA {
   u16 unknown00; // Inferred role: enhance id; original member name unknown.
-  u8 _02[0xc - 0x2];
+  u8 _02[0x8 - 0x2];
+  f32 unknown08; // Inferred role: value; original member name unknown.
 };
 
 struct BUFF_DATA {
@@ -82,7 +83,8 @@ public:
 
   struct ENHANCE_DATA {
     f32 unknown00; // Inferred role: value; original member name unknown.
-    u8 _04[0x8 - 0x4];
+    u8 _04[0x6 - 0x4];
+    u16 unknown06; // Inferred role: display name; original member name unknown.
   };
 
   CharacterParameter();
@@ -149,6 +151,13 @@ public:
   u32 GetMaxHP() const;
   int ApplyStatusEnhance(int value, int rateType, int addType) const;
   bool IsBuff(int buff) const;
+  void CheckDebuff();
+  void ClearBuff(int buff, bool isEnd);
+  bool CheckUniteCombo(int id, bool);
+  bool SetElementalComboID(int combo, int id);
+  void AddEnhance(int enhance) const;
+  u32 CalcDamageArmor(u32 damage);
+  void AddHP(int value);
   const FIGHT_COMBO_DATA *GetFightComboDataConst() const;
   u32 GetLevel() const;
   f32 GetBuffEffect(int buff) const;
@@ -203,7 +212,8 @@ public:
   f32 unknown28; // Inferred role: launch effect scale factor; original member name unknown.
   f32 unknown2c; // Inferred role: radius; original member name unknown.
   f32 unknown30; // Inferred role: ball height; original member name unknown.
-  u8 _34[0x3c - 0x34];
+  u8 _34[0x38 - 0x34];
+  f32 unknown38; // Role and original member name unknown.
   f32 unknown3c; // Inferred role: ball radius; original member name unknown.
   u8 _40[0x5c - 0x40];
   f32 unknown5c[SPECIAL_ENHANCE_COUNT]; // Inferred role: special enhance rates; original member name unknown.
@@ -212,14 +222,14 @@ public:
   u8 unknownbc_0 : 7; // Inferred role: attack weapon type; original member name unknown.
   u8 : 1;
   u8 _bd[0xc0 - 0xbd];
-  FIGHT_COMBO_DATA unknownc0;                                   // Inferred role: fight combo; original member name unknown.
-  FIGHT_COMBO_DATA unknownd8;                                   // Inferred role: overwrite fight combo; original member name unknown.
-  mm::mtl::FixedVector<ENHANCE_EFFECT_DATA, 64> unknownf0;      // Inferred role: enhance effects; original member name unknown.
-  ADDITIONAL_ENHANCE_DATA unknown3f8[ADDITIONAL_ENHANCE_COUNT]; // Inferred role: additional enhances; original member name unknown.
-  BUFF_DATA unknown458[20];                                     // Inferred role: buffs; original member name unknown.
-  u8 unknown598;                                                // Inferred role: buff count; original member name unknown.
-  u8 unknown599[5];                                             // Inferred role: buff flags; original member name unknown.
-  u16 unknown59e;                                               // Inferred role: resistant attribute flags; original member name unknown.
+  FIGHT_COMBO_DATA unknownc0;                                      // Inferred role: fight combo; original member name unknown.
+  FIGHT_COMBO_DATA unknownd8;                                      // Inferred role: overwrite fight combo; original member name unknown.
+  mutable mm::mtl::FixedVector<ENHANCE_EFFECT_DATA, 64> unknownf0; // Inferred role: enhance effects; original member name unknown.
+  ADDITIONAL_ENHANCE_DATA unknown3f8[ADDITIONAL_ENHANCE_COUNT];    // Inferred role: additional enhances; original member name unknown.
+  BUFF_DATA unknown458[20];                                        // Inferred role: buffs; original member name unknown.
+  u8 unknown598;                                                   // Inferred role: buff count; original member name unknown.
+  u8 unknown599[5];                                                // Inferred role: buff flags; original member name unknown.
+  u16 unknown59e;                                                  // Inferred role: resistant attribute flags; original member name unknown.
   u8 _5a0[0x5a2 - 0x5a0];
   mutable s16 unknown5a2; // Inferred role: link distance bonus; original member name unknown.
   u8 _5a4[0x5a5 - 0x5a4];
@@ -230,20 +240,20 @@ public:
   u8 : 8;
   u8 m_perfectAvoid : 5;
   u8 : 3;
-  s8 unknown5aa; // Inferred role: rotate X; original member name unknown.
-  s8 unknown5ab; // Inferred role: rotate Y; original member name unknown.
-  s8 unknown5ac; // Inferred role: rotate Z; original member name unknown.
-  s8 unknown5ad; // Inferred role: rotate degrees; original member name unknown.
-  u8 unknown5ae; // Inferred role: character id; original member name unknown.
-  s8 unknown5af; // Inferred role: class id; original member name unknown.
-  u8 _5b0[0x5df - 0x5b0];
-  u8 unknown5df_0 : 1; // Inferred role: initialized; original member name unknown.
-  u8 unknown5df_1 : 1; // Inferred role: battle; original member name unknown.
+  s8 unknown5aa;               // Inferred role: rotate X; original member name unknown.
+  s8 unknown5ab;               // Inferred role: rotate Y; original member name unknown.
+  s8 unknown5ac;               // Inferred role: rotate Z; original member name unknown.
+  s8 unknown5ad;               // Inferred role: rotate degrees; original member name unknown.
+  u8 unknown5ae;               // Inferred role: character id; original member name unknown.
+  s8 unknown5af;               // Inferred role: class id; original member name unknown.
+  mutable u8 unknown5b0[0x2f]; // Inferred role: enhance flags; original member name unknown.
+  u8 unknown5df_0 : 1;         // Inferred role: initialized; original member name unknown.
+  u8 unknown5df_1 : 1;         // Inferred role: battle; original member name unknown.
   u8 m_invalidTarget : 1;
   u8 unknown5df_3 : 1; // Inferred role: cool time enabled; original member name unknown.
   u8 : 2;
   u8 unknown5df_6 : 1; // Inferred role: ignore buddy; original member name unknown.
-  u8 : 1;
+  u8 unknown5df_7 : 1; // Inferred role: debuff flag; original member name unknown.
   u8 : 1;
   u8 unknown5e0_1 : 1;         // Inferred role: overwrite fight combo; original member name unknown.
   mutable u8 unknown5e0_2 : 1; // Inferred role: initialized enhance; original member name unknown.
@@ -267,6 +277,8 @@ static_assert(offsetof(CharacterParameter, unknown5a5) == 0x5a5, "");
 static_assert(offsetof(CharacterParameter, unknown5aa) == 0x5aa, "");
 static_assert(offsetof(CharacterParameter, unknown5ad) == 0x5ad, "");
 static_assert(offsetof(CharacterParameter, unknown5ae) == 0x5ae, "");
+static_assert(offsetof(CharacterParameter, unknown5b0) == 0x5b0, "");
+static_assert(sizeof(ENHANCE_EFFECT_DATA) == 0xc, "");
 static_assert(offsetof(CharacterParameter, unknown5af) == 0x5af, "");
 static_assert(sizeof(CharacterParameter) == 0x5e8, "");
 

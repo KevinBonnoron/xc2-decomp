@@ -32,6 +32,7 @@
 #include "gf/object/gf_obj_util.h"
 #include "gf/scom/gf_scom_achiev.h"
 #include "gf/scom/gf_scom_enbook.h"
+#include "ml/rand.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_vector.h"
 
@@ -1133,6 +1134,106 @@ bool Utility::AI_IsBattleOpening(gf::GF_OBJ_HANDLE *handle) {
 bool Utility::AI_IsInAttackRange(gf::GF_OBJ_HANDLE *handle) {
   BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
   return character != nullptr && character->IsInAttackRange(-1, nullptr);
+}
+
+void Utility::SomebodyPraise(int id, bool isPartyPraise, bool isSpecialPraise) {
+  CharacterManager *characterManager = CharacterManager::get();
+  BattleCharacter *character = characterManager->GetCharacterConst(id);
+  if (character == nullptr) {
+    return;
+  }
+  const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
+  if (parameter == nullptr) {
+    return;
+  }
+
+  BattleCharacter *speakers[5];
+  int count = 0;
+  if (!isPartyPraise && !isSpecialPraise) {
+    if (!parameter->unknown5df_6) {
+      BattleCharacter *buddy = characterManager->GetCharacterConst(parameter->unknown10);
+      if (buddy != nullptr && buddy->IsEnableSpeakVoice()) {
+        speakers[count++] = buddy;
+      }
+    }
+  }
+  if (parameter->IsPlayerParameter()) {
+    int partyId = parameter->unknown1c;
+    for (int party = 0; party < 3; party++) {
+      if (party == partyId) {
+        continue;
+      }
+      BattleCharacter *driver = characterManager->GetCharacterConst(gf::GfGameParty::getHandleDriver(party));
+      if (driver != nullptr && driver->IsEnableSpeakVoice()) {
+        speakers[count++] = driver;
+      }
+    }
+  }
+
+  if (count != 0) {
+    BattleCharacter *speaker = speakers[0];
+    if (count != 1) {
+      speaker = speakers[ml::mtRand(count)];
+    }
+    if (isSpecialPraise) {
+      TalkManager::get()->NotifyTrigger(speaker->unknownf7d, static_cast<TalkManager::TRIGGER>(0x30), 0, 0);
+    } else {
+      TalkManager::get()->NotifyTrigger(speaker->unknownf7d, static_cast<TalkManager::TRIGGER>(0x15), 0, 0);
+    }
+  }
+}
+
+bool Utility::AI_CheckState(gf::GF_OBJ_HANDLE *handle, CHECK_STATE state, int value) {
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character == nullptr) {
+    return false;
+  }
+
+  switch (state) {
+  case 0:
+    return character->IsBattle();
+  case 1:
+    return character->unknown107c == BattleCharacter::ACTION_ID_ARTS;
+  case 2: {
+    bool isMatch = character->unknown10c6_0 == value;
+    if (!(value > 0)) {
+      isMatch = character->unknown10c6_0 != 0;
+    }
+    return isMatch;
+  }
+  case 3:
+    return character->IsDead(0);
+  case 4:
+    return BladeChangeManager::get()->IsRegister(handle);
+  case 5:
+    return character->unknown107c == BattleCharacter::ACTION_ID_BLADE_ARTS;
+  case 6:
+    return character->unknown107c == BattleCharacter::ACTION_ID_SP_ATTACK;
+  case 7:
+    return character->IsRescue();
+  case 8:
+    return ChainAttackManager::get()->IsProc(false);
+  case 9:
+    return !character->unknowndb4_7;
+  case 10:
+    return character->IsMove();
+  case 11:
+    return character->unknownf86 > 0x98;
+  case 12: {
+    const mm::Vec3 &position = character->unknown10;
+    const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
+    f32 depth = parameter != nullptr ? parameter->unknown30 * 1.5f : 3.0f;
+    return Misc::IsInWater(position, depth);
+  }
+  case 13:
+    return character->unknown10d0 > 0.0f;
+  case 14:
+    return character->IsProcAI(false);
+  case 15:
+    return character->IsScout();
+  default:
+    return false;
+  }
 }
 
 bool Utility::AI_IsEnableArts(gf::GF_OBJ_HANDLE *handle, int slot, int aiId) {

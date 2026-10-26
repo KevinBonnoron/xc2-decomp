@@ -29,6 +29,7 @@ enum BTL_TUTORIAL_COND {
   BTL_TUTORIAL_COND_DRIVER_ARTS_RECAST_END = 2,
   BTL_TUTORIAL_COND_BLADE_ARTS_RECAST_END = 3,
   BTL_TUTORIAL_COND_SP_ATTACK_LEVEL3_RECAST_END = 4,
+  BTL_TUTORIAL_COND_UNKNOWN_0B = 11, // Inferred role: raised on a player's elemental combo; original name unknown.
 };
 
 class BattleCharacter;
@@ -91,6 +92,16 @@ public:
     u8 _02[0x14 - 0x02];
   };
 
+  struct LEVER_GACHA_DATA {
+    enum BUTTON {};
+
+    f32 unknown00[4]; // Inferred role: button gauges; original member name unknown.
+    u8 _10[0x15 - 0x10];
+    u8 unknown15;   // Inferred role: input count; original member name unknown.
+    bool unknown16; // Inferred role: input flag; original member name unknown.
+    u8 _17[0x18 - 0x17];
+  };
+
   struct MAP_DRIVER_REV_DATA {
     u16 unknown00_0 : 11; // Inferred role: kizuna max; original member name unknown.
     u16 unknown01_3 : 4;  // Inferred role: SP level max; original member name unknown.
@@ -115,6 +126,10 @@ public:
   void UpdateProc(const fw::UpdateInfo &updateInfo);
   bool IsSlowProc(u32 slow) const;
   void DeleteUniteComboDirection();
+  void DeleteSlowAll();
+  void PlayJingle(JINGLE_TYPE jingle);
+  void StopJingle(bool isReset);
+  bool InputLeverGachaButton(LEVER_GACHA_DATA::BUTTON button);
   static void PostUpdate(const fw::UpdateInfo &updateInfo);
   void PostUpdateProc(const fw::UpdateInfo &updateInfo);
   void Tutorial(BTL_TUTORIAL_COND cond, int combo, void *character);
@@ -197,17 +212,17 @@ public:
   u8 _868[0x878 - 0x868];
   mm::mtl::FixedVector<ATTACK_DAMAGE_DATA, 1000> unknown878; // Inferred role: attack damages; original member name unknown.
   ELEMENTAL_COMBO_FLOW_DATA unknown56a0[50];                 // Inferred role: elemental combo flows; original member name unknown.
-  u8 _5a88[0x5aa0 - 0x5a88];
-  gf::GF_SE_CATEGORY_HANDLE *unknown5aa0; // Inferred role: jingle handle; original member name unknown.
-  gf::SoundHandle unknown5aa8;            // Inferred role: jingle sound; original member name unknown.
-  u32 unknown5ab0;                        // Role and original member name unknown.
-  u32 unknown5ab4;                        // Role and original member name unknown.
-  u32 unknown5ab8;                        // Role and original member name unknown.
+  LEVER_GACHA_DATA unknown5a88;                              // Inferred role: lever gacha; original member name unknown.
+  gf::GF_SE_CATEGORY_HANDLE *unknown5aa0;                    // Inferred role: jingle handle; original member name unknown.
+  gf::SoundHandle unknown5aa8;                               // Inferred role: jingle sound; original member name unknown.
+  u32 unknown5ab0;                                           // Role and original member name unknown.
+  u32 unknown5ab4;                                           // Role and original member name unknown.
+  u32 unknown5ab8;                                           // Role and original member name unknown.
   u8 _5abc[0x5ac0 - 0x5abc];
   MAP_DRIVER_REV_DATA unknown5ac0[9]; // Inferred role: map driver revisions; original member name unknown.
   u8 _5ae4[0x5af8 - 0x5ae4];
   gf::GF_OBJ_HANDLE *m_elementalComboImmortal;
-  u8 _5b00[0x5b08 - 0x5b00];
+  void *unknown5b00;                  // Inferred role: elemental combo camera; original member name unknown.
   gf::GfComEffectCaster *unknown5b08; // Inferred role: slow effect caster; original member name unknown.
   gf::GfComEffectCaster *unknown5b10; // Role and original member name unknown.
   u32 unknown5b18;                    // Inferred role: slow effect id; original member name unknown.
@@ -221,7 +236,9 @@ public:
   bool unknown5b5f; // Inferred role: unite combo direction; original member name unknown.
   u8 _5b60[0x5b68 - 0x5b60];
   f32 unknown5b68; // Inferred role: kakusei rest time; original member name unknown.
-  u8 _5b6c[0x5b8e - 0x5b6c];
+  u8 _5b6c[0x5b88 - 0x5b6c];
+  u32 unknown5b88; // Inferred role: debuff flags; original member name unknown.
+  u8 _5b8c[0x5b8e - 0x5b8c];
   u16 unknown5b8e;                                   // Inferred role: enemy kill count; original member name unknown.
   u16 unknown5b90[16][gf::WEAPON_TYPE_COUNT + 1][3]; // Inferred role: normal attack arts ids; original member name unknown.
   u16 unknown65b0[17];                               // Inferred role: condition parameters; original member name unknown.
@@ -231,7 +248,11 @@ public:
   u8 unknown65d6[7];                                 // Inferred role: pause flags; original member name unknown.
   u8 unknown65dd;                                    // Inferred role: link join max level; original member name unknown.
   u64 unknown65de_0 : 1;                             // Inferred role: lock arts palette; original member name unknown.
-  u64 : 9;
+  u64 : 5;
+  u64 unknown65de_6 : 1; // Role and original member name unknown.
+  u64 : 1;
+  u64 unknown65df_0 : 1; // Role and original member name unknown.
+  u64 : 1;
   u64 unknown65de_10 : 1;
   u64 unknown65df_3 : 1; // Inferred role: kakusei order; original member name unknown.
   u64 unknown65df_4 : 1; // Inferred role: kakusei; original member name unknown.
@@ -250,6 +271,7 @@ public:
 };
 
 static_assert(sizeof(BattleGlobal::LINK_JOIN_DATA) == 0x10, "");
+static_assert(sizeof(BattleGlobal::LEVER_GACHA_DATA) == 0x18, "");
 static_assert(sizeof(BattleGlobal::SPECIAL_EFFECT_DATA) == 0x8, "");
 static_assert(sizeof(BattleGlobal::SLOW_PROC_DATA) == 0x14, "");
 static_assert(offsetof(BattleGlobal::SLOW_PROC_DATA, unknown04) == 0x4, "");
@@ -262,6 +284,7 @@ static_assert(offsetof(BattleGlobal, unknown18) == 0x18, "");
 static_assert(offsetof(BattleGlobal, unknown5e0) == 0x5e0, "");
 static_assert(sizeof(BattleGlobal::LINK_JOIN_DATA) == 0x10, "");
 static_assert(offsetof(BattleGlobal, unknown620) == 0x620, "");
+static_assert(offsetof(BattleGlobal, unknown5a88) == 0x5a88, "");
 static_assert(offsetof(BattleGlobal, unknown6b8) == 0x6b8, "");
 static_assert(offsetof(BattleGlobal, unknown6c0) == 0x6c0, "");
 static_assert(offsetof(BattleGlobal, unknown864) == 0x864, "");
@@ -273,6 +296,7 @@ static_assert(offsetof(BattleGlobal, unknown5ab0) == 0x5ab0, "");
 static_assert(offsetof(BattleGlobal, unknown5ac0) == 0x5ac0, "");
 static_assert(offsetof(BattleGlobal, m_elementalComboImmortal) == 0x5af8, "");
 static_assert(offsetof(BattleGlobal, unknown5b28) == 0x5b28, "");
+static_assert(offsetof(BattleGlobal, unknown5b00) == 0x5b00, "");
 static_assert(offsetof(BattleGlobal, unknown5b38) == 0x5b38, "");
 static_assert(offsetof(BattleGlobal, unknown5b5f) == 0x5b5f, "");
 static_assert(offsetof(BattleGlobal, unknown5b68) == 0x5b68, "");
@@ -281,6 +305,7 @@ static_assert(offsetof(BattleGlobal, unknown5b10) == 0x5b10, "");
 static_assert(offsetof(BattleGlobal, unknown5b18) == 0x5b18, "");
 static_assert(offsetof(BattleGlobal, unknown5b1c) == 0x5b1c, "");
 static_assert(offsetof(BattleGlobal, unknown5b20) == 0x5b20, "");
+static_assert(offsetof(BattleGlobal, unknown5b88) == 0x5b88, "");
 static_assert(offsetof(BattleGlobal, unknown5b8e) == 0x5b8e, "");
 static_assert(offsetof(BattleGlobal, unknown5b90) == 0x5b90, "");
 static_assert(offsetof(BattleGlobal, unknown65b0) == 0x65b0, "");

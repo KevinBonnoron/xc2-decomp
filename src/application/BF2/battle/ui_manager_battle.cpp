@@ -1,5 +1,8 @@
 #include "battle/ui_manager_battle.h"
 
+#include "battle/btl_system_balance_access.h"
+#include "battle/character/battle_character.h"
+#include "battle/character/character_parameter_battle.h"
 #include "bdat.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_game_flag.h"
@@ -7,8 +10,10 @@
 #include "gf/menu/object/gf_menu_obj_arts_palette.h"
 #include "gf/menu/object/gf_menu_obj_blade_change.h"
 #include "gf/menu/object/gf_menu_obj_chain_icon.h"
+#include "gf/menu/object/gf_menu_obj_damage_buff.h"
 #include "gf/menu/object/gf_menu_obj_element_eff.h"
 #include "gf/menu/object/gf_menu_obj_special_gauge.h"
+#include "mm_math/mm_vec3.h"
 
 namespace btl {
 
@@ -80,6 +85,37 @@ void UIManager::NotifyMapChange() {
   if (gf::GfGameFlag::getLocal(1, base + 0xc) != 0) {
     gf::GfGameFlag::setLocal(1, base + 0xd, 1);
   }
+}
+
+void UIManager::RegisterTutorial(u32 tutorial, f32 time, bool isRequest) {
+  u8 *bdat = gf::GfDataBdat::getFP(0xe4);
+  int top = Bdat::getIdTop(bdat);
+  if (gf::GfGameFlag::getLocal(1, tutorial + 0xc710 - top) == 0) {
+    unknown30 |= 1 << (tutorial - 1);
+    unknown34 = unknown34 > time ? unknown34 : time;
+    if (isRequest) {
+      unknown45_1 = true;
+      unknown45_2 = tutorial != 1;
+    }
+  }
+}
+
+void UIManager::DispSystemMessageUI(const BattleCharacter *character, int message, bool flag) {
+  gf::GfMenuObjDamageBuff::OpenParam param;
+  param.unknown00 = !flag;
+  param.unknown10 = gf::GfDataBdat::getFP(0x158);
+  param.unknown18 = BtlSystemBalanceAccess::get()->unknownc6[message];
+  param.unknown20 = character->unknown10;
+  param.unknown20.y += character->GetCharacterParameterConst(true)->unknown38;
+  gf::GfMenuObjDamageBuff::open(param);
+}
+
+void UIManager::DispUniteComboUI(const mm::Vec3 &position, int attribute, int combo) {
+  gf::GfMenuObjDamageBuff::OpenUniteParam param;
+  param.unknown10 = position;
+  param.unknown00 = attribute;
+  param.unknown04 = combo;
+  gf::GfMenuObjDamageBuff::openUniteCombo(param);
 }
 
 void UIManager::NotifyInput(INPUT_TYPE type, int value) {

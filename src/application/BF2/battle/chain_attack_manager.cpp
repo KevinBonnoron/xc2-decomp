@@ -1,5 +1,6 @@
 #include "battle/chain_attack_manager.h"
 
+#include "battle/battle_global.h"
 #include "battle/btl_system_balance_access.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
@@ -15,6 +16,15 @@ constexpr int DAMAGE_RATE_MIN = 1783;
 constexpr int DAMAGE_RATE_MAX = 11782;
 
 void ChainAttackManager::Initialize() { Reset(0); }
+
+void ChainAttackManager::Start(gf::GF_OBJ_HANDLE *handle) {
+  Reset(1);
+  unknown08 = handle;
+  BattleGlobal::get()->unknown65de_6 = true;
+  unknown19e3 = 0;
+  unknown19e1 = 0;
+  unknown19e2 = 0;
+}
 
 void ChainAttackManager::Destroy() {
   if (get() != nullptr) {

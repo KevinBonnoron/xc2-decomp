@@ -36,7 +36,9 @@ public:
     gf::GF_OBJ_HANDLE *unknown10;   // Inferred role: driver handle; original member name unknown.
     gf::GF_OBJ_HANDLE *unknown18;   // Inferred role: blade handle; original member name unknown.
     gf::GF_OBJ_HANDLE *unknown20;   // Inferred role: target handle; original member name unknown.
-    u8 _28[0x53 - 0x28];
+    u8 _28[0x40 - 0x28];
+    int unknown40; // Inferred role: step; original member name unknown.
+    u8 _44[0x53 - 0x44];
     u8 unknown53; // Inferred role: movie step; original member name unknown.
     u8 _54[0x5a - 0x54];
     u8 unknown5a; // Inferred role: slot; original member name unknown.
@@ -44,9 +46,12 @@ public:
     u8 : 2;
     u8 unknown5c_2 : 1; // Inferred role: update attack data; original member name unknown.
     u8 unknown5c_3 : 1; // Inferred role: last attack driver; original member name unknown.
-    u8 : 2;
+    u8 unknown5c_4 : 1; // Role and original member name unknown.
+    u8 unknown5c_5 : 1; // Role and original member name unknown.
     u8 unknown5c_6 : 1; // Inferred role: display third character; original member name unknown.
   };
+
+  enum PROGRESS_ID {};
 
   ~SpAttackManager();
   static void Destroy();
@@ -58,6 +63,7 @@ public:
   static void Update(const fw::UpdateInfo &updateInfo);
   void UpdateProc(const fw::UpdateInfo &updateInfo);
   bool IsRegister(gf::GF_OBJ_HANDLE *handle) const;
+  void NotifyProgress(gf::GF_OBJ_HANDLE *handle, PROGRESS_ID progress);
   void FinishUpdateAttackData(gf::GF_OBJ_HANDLE *handle);
   int GetSpAttackSlot(gf::GF_OBJ_HANDLE *handle) const;
   gf::GF_OBJ_HANDLE *GetTargetHandle(gf::GF_OBJ_HANDLE *handle) const;
@@ -88,6 +94,7 @@ public:
 };
 
 static_assert(sizeof(SpAttackManager::PROC_DATA) == 0x60, "");
+static_assert(offsetof(SpAttackManager::PROC_DATA, unknown40) == 0x40, "");
 static_assert(offsetof(SpAttackManager::PROC_DATA, unknown53) == 0x53, "");
 static_assert(offsetof(SpAttackManager::PROC_DATA, unknown5a) == 0x5a, "");
 static_assert(offsetof(SpAttackManager, unknown08) == 0x8, "");

@@ -38,14 +38,16 @@ public:
   u8 unknownaf; // Inferred role: blade timer 2; original member name unknown.
   u8 unknownb0; // Inferred role: blade timer 3; original member name unknown.
   u8 _b1[0xb6 - 0xb1];
-  u16 unknownb6[2]; // Inferred role: one bound enemy ids; original member name unknown.
-  u16 unknownba[1]; // Inferred role: SP size enemy ids; original member name unknown.
-  u16 unknownbc[2]; // Inferred role: SP kizuna line enemy ids; original member name unknown.
-  u16 unknownc0[2]; // Inferred role: SP force land enemy ids; original member name unknown.
-  u16 unknownc4[1]; // Inferred role: SP benkei weapon enemy ids; original member name unknown.
-  u8 _c6[0xdc - 0xc6];
-  f32 unknowndc; // Inferred role: dying HP rate; original member name unknown.
-  u8 _e0[0xf0 - 0xe0];
+  u16 unknownb6[2];  // Inferred role: one bound enemy ids; original member name unknown.
+  u16 unknownba[1];  // Inferred role: SP size enemy ids; original member name unknown.
+  u16 unknownbc[2];  // Inferred role: SP kizuna line enemy ids; original member name unknown.
+  u16 unknownc0[2];  // Inferred role: SP force land enemy ids; original member name unknown.
+  u16 unknownc4[1];  // Inferred role: SP benkei weapon enemy ids; original member name unknown.
+  u16 unknownc6[11]; // Inferred role: system message text ids; original member name unknown.
+  f32 unknowndc;     // Inferred role: dying HP rate; original member name unknown.
+  u8 _e0[0xea - 0xe0];
+  u8 unknownea; // Role and original member name unknown.
+  u8 _eb[0xf0 - 0xeb];
 };
 
 static_assert(offsetof(BtlSystemBalanceAccess, unknown20) == 0x20, "");
@@ -60,7 +62,9 @@ static_assert(offsetof(BtlSystemBalanceAccess, unknownba) == 0xba, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownbc) == 0xbc, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownc0) == 0xc0, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownc4) == 0xc4, "");
+static_assert(offsetof(BtlSystemBalanceAccess, unknownc6) == 0xc6, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknowndc) == 0xdc, "");
+static_assert(offsetof(BtlSystemBalanceAccess, unknownea) == 0xea, "");
 static_assert(sizeof(BtlSystemBalanceAccess) == 0xf0, "");
 
 } // namespace btl

@@ -49,7 +49,9 @@ struct ARTS_DATA {
   u64 unknown04_0 : 11; // Inferred role: caption id; original member name unknown.
   u64 unknown05_3 : 14; // Inferred role: total damage rate; original member name unknown.
   u64 unknown07_1 : 7;  // Inferred role: start recast; original member name unknown.
-  u64 : 28;
+  u64 : 19;
+  u64 unknown0a_3 : 4; // Inferred role: attribute; original member name unknown.
+  u64 : 5;
   u64 unknown0b_4 : 4; // Inferred role: loop count; original member name unknown.
   u64 unknown0c_0 : 3; // Inferred role: fight combo id; original member name unknown.
   u64 : 29;

@@ -39,6 +39,8 @@ public:
     BTL_ACHIEVE_COND_BACK_ATTACK,
   };
 
+  enum CHECK_STATE {};
+
   enum CHECK_CHR_NUM_MODE {
     CHECK_CHR_NUM_MODE_ENEMY,
     CHECK_CHR_NUM_MODE_FRIEND,
@@ -92,6 +94,7 @@ public:
   static bool IsEnableEventStart();
   static bool IsThirdCharacter(gf::GF_OBJ_HANDLE *handle);
   static bool IsBladeArtsBuff(int buff);
+  static void SomebodyPraise(int id, bool isPartyPraise, bool isSpecialPraise);
   static void RegisterEnemyBook(ENBOOK_TYPE type, gf::GF_OBJ_HANDLE *handle, int value);
   static int AI_GetCharacterID(gf::GF_OBJ_HANDLE *handle);
   static int AI_GetCharacterAIID(gf::GF_OBJ_HANDLE *handle);
@@ -155,6 +158,7 @@ public:
   static bool AI_IsEnableSpAttack(gf::GF_OBJ_HANDLE *handle, int level);
   static bool AI_IsBattleOpening(gf::GF_OBJ_HANDLE *handle);
   static bool AI_IsInAttackRange(gf::GF_OBJ_HANDLE *handle);
+  static bool AI_CheckState(gf::GF_OBJ_HANDLE *handle, CHECK_STATE state, int value);
   static bool AI_IsEnableArts(gf::GF_OBJ_HANDLE *handle, int slot, int aiId);
   static bool AI_IsEnableArtsByID(gf::GF_OBJ_HANDLE *handle, int arts, int aiId);
   static int AI_SearchVoiceCodeCharacter(int voiceCode);

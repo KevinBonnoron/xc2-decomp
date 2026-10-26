@@ -36,6 +36,7 @@ public:
   static void Destroy();
   void Finalize();
   void Reset(int);
+  void Start(gf::GF_OBJ_HANDLE *handle);
   static void PreUpdate(const fw::UpdateInfo &updateInfo);
   void PreUpdateProc(const fw::UpdateInfo &updateInfo);
   static void Update(const fw::UpdateInfo &updateInfo);
@@ -76,7 +77,10 @@ public:
   u8 unknown19d2[3]; // Inferred role: groups; original member name unknown.
   u8 unknown19d5;    // Inferred role: group count; original member name unknown.
   u8 unknown19d6[9]; // Inferred role: order attributes; original member name unknown.
-  u8 _19df[0x19e4 - 0x19df];
+  u8 _19df[0x19e1 - 0x19df];
+  u8 unknown19e1; // Role and original member name unknown.
+  u8 unknown19e2; // Role and original member name unknown.
+  u8 unknown19e3; // Role and original member name unknown.
   u16 : 4;
   u16 unknown19e4_4 : 1; // Inferred role: start full burst; original member name unknown.
   u16 : 11;

@@ -3,6 +3,10 @@
 #include "types.h"
 #include <stddef.h>
 
+namespace mm {
+struct Vec3;
+}
+
 namespace fw {
 struct UpdateInfo;
 }
@@ -13,6 +17,8 @@ class GfMenuCallContext;
 } // namespace gf
 
 namespace btl {
+
+class BattleCharacter;
 
 class UIManager : public mm::mtl::PtrSingleton<UIManager> {
 public:
@@ -41,6 +47,9 @@ public:
   void DispElementalEffectUI(gf::GF_OBJ_HANDLE *handle, int caption);
   void NotifyInput(INPUT_TYPE type, int value);
   void NotifyMapChange();
+  void DispUniteComboUI(const mm::Vec3 &position, int attribute, int combo);
+  void DispSystemMessageUI(const BattleCharacter *character, int message, bool flag);
+  void RegisterTutorial(u32 tutorial, f32 time, bool isRequest);
   u32 StartElementalComboDirectionUI(int attribute);
 
   gf::GfMenuCallContext *unknown08; // Inferred role: element effect context; original member name unknown.
@@ -65,7 +74,10 @@ public:
   u16 unknown44_5 : 1; // Inferred role: push reverse palette 2; original member name unknown.
   u16 unknown44_6 : 1; // Inferred role: push reverse palette 3; original member name unknown.
   u16 unknown44_7 : 1; // Inferred role: display battle UI; original member name unknown.
-  u16 : 8;
+  u16 : 1;
+  u16 unknown45_1 : 1; // Role and original member name unknown.
+  u16 unknown45_2 : 1; // Role and original member name unknown.
+  u16 : 5;
 };
 
 static_assert(offsetof(UIManager, unknown08) == 0x08, "");

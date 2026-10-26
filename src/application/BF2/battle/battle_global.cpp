@@ -23,11 +23,18 @@
 #include "gf/object/gf_obj_handle.h"
 #include "mm_math/mm_vec3.h"
 
+namespace fw {
+enum SoundCategory : int;
+}
+
 namespace btl {
 
 constexpr int ELEMENTAL_COMBO_NUM = 50;
 constexpr int MAP_DRIVER_REV_NUM = 9;
 constexpr int ATTACK_ATTRIBUTE_NONE = 9;
+
+static const int unknown001[8] = {1, 4, 5, 6, 7, 8, 13, 14}; // Inferred role: sound categories silenced by a jingle; original name unknown.
+
 constexpr f32 DAMAGE_RATE_SCALE = 65536.0f;
 constexpr u32 SE_COMMON_ERROR = 2;
 
@@ -446,6 +453,72 @@ void BattleGlobal::DeleteSlow(u32 slow) {
       unknown6c0.erase(it);
       return;
     }
+  }
+}
+
+void BattleGlobal::DeleteSlowAll() {
+  mm::mtl::FixedVector<SLOW_PROC_DATA, 20> slows;
+  slows = unknown6c0;
+  for (SLOW_PROC_DATA &data : slows) {
+    data.Finalize();
+  }
+}
+
+bool BattleGlobal::InputLeverGachaButton(LEVER_GACHA_DATA::BUTTON button) {
+  if (static_cast<u32>(button) < 4 && !(unknown5a88.unknown00[button] > 0.0f)) {
+    for (int i = 0; i < 4; i++) {
+      if (i == button) {
+        unknown5a88.unknown00[i] = 1.0f / 3.0f;
+      } else {
+        unknown5a88.unknown00[i] -= 1.0f / 9.0f;
+      }
+    }
+    unknown5a88.unknown15++;
+    unknown5a88.unknown16 = true;
+    return true;
+  }
+  return false;
+}
+
+void BattleGlobal::PlayJingle(JINGLE_TYPE jingle) {
+  StopJingle(true);
+  gf::GfSound *sound = gf::GfSound::get();
+  if (sound != nullptr) {
+    if (unknown5aa0 == reinterpret_cast<gf::GF_SE_CATEGORY_HANDLE *>(-1)) {
+      unknown5aa0 = sound->createCategoryHandle();
+      if (unknown5aa0 == reinterpret_cast<gf::GF_SE_CATEGORY_HANDLE *>(-1)) {
+        return;
+      }
+    }
+    for (int category : unknown001) {
+      sound->setCategoryVolume(unknown5aa0, static_cast<fw::SoundCategory>(category), 0.0f, 0.7f);
+    }
+    unknown5ab0 = jingle;
+    unknown5ab4 = 1;
+  }
+}
+
+void BattleGlobal::StopJingle(bool isReset) {
+  gf::GfSound *sound = gf::GfSound::get();
+  if (sound != nullptr) {
+    if (unknown5aa8.isValid()) {
+      if (sound->isPlaying(unknown5aa8)) {
+        sound->stopBgm(unknown5aa8, 0.13333334f);
+      }
+      unknown5aa8.clear();
+      CharacterManager::get()->SetupBGM();
+    }
+    if (unknown5aa0 != reinterpret_cast<gf::GF_SE_CATEGORY_HANDLE *>(-1)) {
+      for (int category : unknown001) {
+        sound->setCategoryVolume(unknown5aa0, static_cast<fw::SoundCategory>(category), 1.0f, 0.7f);
+      }
+    }
+  }
+  if (isReset) {
+    unknown5aa8.clear();
+    unknown5ab0 = 0;
+    unknown5ab4 = 0;
+    unknown5ab8 = 0;
   }
 }
 
