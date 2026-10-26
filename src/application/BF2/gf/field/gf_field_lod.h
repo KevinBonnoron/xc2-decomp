@@ -3,6 +3,10 @@
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
+namespace mm {
+struct Mat44;
+} // namespace mm
+
 namespace fw {
 struct UpdateInfo;
 } // namespace fw
@@ -18,6 +22,7 @@ public:
   void setFade(int bdatId, bool isFadeIn, bool isImmediate);
   void setAnimReverse(int bdatId, bool isReverse, bool isSkip);
   bool isFadeOut(int bdatId) const;
+  bool findTransform(mm::Mat44 &matrix, int bdatId) const;
   void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
   void gevPlayEvent(GEV event, u32 value);
   static void validateByInitData();

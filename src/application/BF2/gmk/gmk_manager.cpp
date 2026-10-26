@@ -1153,4 +1153,5 @@ void BootedGmkCond::dispose() { unknown00 = 0; }
 #include "gmk/gmk_foot_print.cpp"
 #include "gmk/gmk_anti_blade_area.cpp"
 #include "gmk/gmk_tutorial.cpp"
+#include "gmk/gmk_camera.cpp"
 // clang-format on

@@ -2,7 +2,12 @@
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gmk/gmk_manager.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
+
+namespace fw {
+class Camera;
+} // namespace fw
 
 namespace gf {
 
@@ -42,6 +47,7 @@ public:
   static bool createJump(GF_OBJ_HANDLE *handle);
   static bool createWarp(GF_OBJ_HANDLE *handle);
   static bool createGmkTutorial(const char *name, u32 tutorial);
+  static bool createGmkCamera(mm::mtl::IntrusivePtr<fw::Camera> camera);
   static bool createPlayerDead(GfPlayerDead dead);
   static bool createGameOver();
   static bool createTalk(const GfSetupPfTalk &talk);

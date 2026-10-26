@@ -13,9 +13,9 @@ namespace gmk {
 
 template class TGmkActiveList<GmkTutorial>;
 
-GmkTutorial::GmkTutorial() : unknown48(), unknown60(nullptr), unknownF0(false) {}
+GmkTutorial::GmkTutorial() : IntrusiveListNode(), unknown60(nullptr), unknownF0(false) {}
 
-bool GmkTutorial::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkTutorial::isValid() const { return AGmkBase::unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
 
 constexpr int GAME_FLAG_SYS_MULTI_FLAG = 35322;
 
@@ -55,6 +55,13 @@ void GmkTutorial::updateInActiveList(f32 deltaTime) {
   }
 }
 
+void GmkTutorial::disposeGmkPhantom() {
+  if (this != nullptr && intoNode() && TGmkActiveList<GmkTutorial>::get() != nullptr) {
+    TGmkActiveList<GmkTutorial>::get()->unknown08.erase(this);
+  }
+  unknown60.dispose();
+}
+
 void GmkTutorial::create(const CreateInfo &info) { AGmkBase::create(info); }
 
 void GmkTutorial::dispose() {
@@ -77,7 +84,7 @@ void GmkTutorial::beginTutorial() {
   }
   const Data *data = getData();
   if (data->unknown00 != nullptr) {
-    static_cast<GmkTutorialList *>(unknown08.unknown00)->setBootedOthers(*this);
+    static_cast<GmkTutorialList *>(AGmkBase::unknown08.unknown00)->setBootedOthers(*this);
   }
   gf::GfGameFlag::setLocal(1, getGameFlagId(), 1);
   unknownF0 = true;

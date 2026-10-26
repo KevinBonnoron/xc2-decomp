@@ -11,7 +11,7 @@ namespace gmk {
 
 template class TGmkActiveList<GmkEvent>;
 
-GmkEvent::GmkEvent() : unknown48(), unknown60(nullptr), unknownF0(false), unknownF1(false), unknownF2(false) {}
+GmkEvent::GmkEvent() : IntrusiveListNode(), unknown60(nullptr), unknownF0(false), unknownF1(false), unknownF2(false) {}
 
 void GmkEvent::debugDraw() const { isValid(); }
 
@@ -42,6 +42,13 @@ void GmkEvent::beginEvent() {
     unknownF2 = false;
     gf::SCOM_QUEST_REACH::createArrivePlace(unknown20.unknown18);
   }
+}
+
+void GmkEvent::disposeGmkPhantom() {
+  if (this != nullptr && intoNode() && TGmkActiveList<GmkEvent>::get() != nullptr) {
+    TGmkActiveList<GmkEvent>::get()->unknown08.erase(this);
+  }
+  unknown60.dispose();
 }
 
 void GmkEvent::create(const CreateInfo &info) { AGmkBase::create(info); }

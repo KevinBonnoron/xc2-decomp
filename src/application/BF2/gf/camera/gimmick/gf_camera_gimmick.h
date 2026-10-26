@@ -24,6 +24,7 @@ public:
     u8 _00[0x40];
   };
 
+  static mm::mtl::IntrusivePtr<fw::Camera> create(const char *name);
   static mm::mtl::IntrusivePtr<fw::Camera> create(const char *name, const mm::Vec3 &position, f32 rotation);
   void play();
   bool isPlayEnd() const;

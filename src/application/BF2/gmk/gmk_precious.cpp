@@ -19,7 +19,7 @@ namespace gmk {
 
 template class TGmkActiveList<GmkPrecious>;
 
-GmkPrecious::GmkPrecious() : unknown48(), unknown58(gf::INVALID_HANDLE), unknown60(0), unknown68(nullptr), unknown70{0.0f}, unknown74(true) {}
+GmkPrecious::GmkPrecious() : IntrusiveListNode(), unknown58(gf::INVALID_HANDLE), unknown60(0), unknown68(nullptr), unknown70{0.0f}, unknown74(true) {}
 
 constexpr int WILDCARD_PRECIOUS_POP_DIST_ROW = 34;
 
@@ -91,7 +91,7 @@ bool GmkPrecious::isPopCondMatched() const {
   if (isObtained() || !info->isPopCondMatched()) {
     return false;
   }
-  return DistCond::isMatch(unknown70.unknown00, unknown08.unknown08->unknown00);
+  return DistCond::isMatch(unknown70.unknown00, AGmkBase::unknown08.unknown08->unknown00);
 }
 
 void GmkPrecious::validateDisp() const {
@@ -112,7 +112,7 @@ void GmkPrecious::debugDraw() const {
   if (isObtained() || !info->isPopCondMatched()) {
     return;
   }
-  DistCond::isMatch(unknown70.unknown00, unknown08.unknown08->unknown00);
+  DistCond::isMatch(unknown70.unknown00, AGmkBase::unknown08.unknown08->unknown00);
 }
 
 } // namespace gmk

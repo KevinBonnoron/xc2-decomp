@@ -15,7 +15,7 @@ namespace gmk {
 
 class GmkEventGob;
 
-class GmkEvent : public AGmkBase {
+class GmkEvent : public AGmkBase, public mm::mtl::IntrusiveListNode<GmkEvent> {
 public:
   struct BdatInfo {
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
@@ -40,7 +40,6 @@ public:
   void debugDraw() const override;
   void disposeGmkPhantom();
 
-  mm::mtl::IntrusiveListNode<GmkEvent> unknown48; // Role and original member name unknown.
   u8 _58[0x60 - 0x58];
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
   bool unknownF0;       // Role and original member name unknown.
@@ -50,7 +49,6 @@ public:
 };
 
 static_assert(sizeof(GmkEvent::BdatInfo) == 0xe, "");
-static_assert(offsetof(GmkEvent, unknown48) == 0x48, "");
 static_assert(offsetof(GmkEvent, unknown60) == 0x60, "");
 static_assert(offsetof(GmkEvent, unknownF0) == 0xf0, "");
 static_assert(offsetof(GmkEvent, unknownF1) == 0xf1, "");

@@ -24,7 +24,7 @@ class GmkSeGob;
 class GmkSeLineGobCustom;
 class GmkSeLinePointGobCustom;
 
-class GmkSe : public AGmkBase {
+class GmkSe : public AGmkBase, public mm::mtl::IntrusiveListNode<GmkSe> {
 public:
   struct BdatInfo {
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
@@ -59,7 +59,7 @@ public:
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
-  u8 _48[0x60 - 0x48];
+  u8 _58[0x60 - 0x58];
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
   bool unknownF0;       // Role and original member name unknown.
   u8 _f1[0xf4 - 0xf1];
@@ -78,7 +78,7 @@ static_assert(sizeof(GmkSe) == 0x110, "");
 
 typedef TGmkList<GmkSe, GmkSe::BdatInfo, 0x45444e53, 2, GmkSeGob> GmkSeList;
 
-class GmkSeLine : public AGmkBase {
+class GmkSeLine : public AGmkBase, public mm::mtl::IntrusiveListNode<GmkSeLine> {
 public:
   struct Data {
     f32 unknown00; // Inferred role: AABB minimum x; original member name unknown.
@@ -108,9 +108,8 @@ public:
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
-  mm::mtl::IntrusiveListNode<GmkSeLine> unknown48; // Role and original member name unknown.
-  bool unknown58;                                  // Role and original member name unknown.
-  bool unknown59;                                  // Role and original member name unknown.
+  bool unknown58; // Role and original member name unknown.
+  bool unknown59; // Role and original member name unknown.
   u8 _5a[0x5c - 0x5a];
   int unknown5C;  // Role and original member name unknown.
   f32 unknown60;  // Role and original member name unknown.
@@ -119,7 +118,6 @@ public:
   u8 _69[0x70 - 0x69];
 };
 
-static_assert(offsetof(GmkSeLine, unknown48) == 0x48, "");
 static_assert(offsetof(GmkSeLine, unknown58) == 0x58, "");
 static_assert(offsetof(GmkSeLine, unknown59) == 0x59, "");
 static_assert(offsetof(GmkSeLine, unknown5C) == 0x5c, "");

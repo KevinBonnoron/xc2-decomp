@@ -28,13 +28,17 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_MAP_JUMP;
 
-  ~GmkMapJump() override;
+  GmkMapJump();
+  ~GmkMapJump() override { dispose(); }
   GmkType getGmkType() const override;
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   void createGmkPhantom();
+  void beginEvent();
   void endEvent();
+
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
   u8 _48[0x50 - 0x48];
   GmkPhantom unknown50; // Inferred role: phantom; original member name unknown.

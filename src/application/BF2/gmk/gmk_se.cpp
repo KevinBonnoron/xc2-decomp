@@ -77,7 +77,7 @@ bool GmkSeLinePoint::isValid() const { return unknown08.unknown00 != nullptr && 
 GmkType GmkSe::getGmkType() const { return GMK_TYPE; }
 
 void GmkSe::createGmkPhantom() {
-  if (canCreateGameEntity() && static_cast<u32>(unknown08.unknown10->unknown0c - SHAPE_TYPE_SPHERE) < 3) {
+  if (canCreateGameEntity() && static_cast<u32>(AGmkBase::unknown08.unknown10->unknown0c - SHAPE_TYPE_SPHERE) < 3) {
     unknown60.create(*this, nullptr, false);
   }
 }
@@ -136,7 +136,7 @@ void GmkSeLine::debugDraw() const {
 }
 
 const AGmkBase *GmkSeLine::getPoint(u32 index) const {
-  const GmkSet *set = unknown08.unknown00->getCreateInfo().unknown08;
+  const GmkSet *set = AGmkBase::unknown08.unknown00->getCreateInfo().unknown08;
   if (set == nullptr) {
     return nullptr;
   }
@@ -166,7 +166,7 @@ bool GmkSeLine::getPointPos(mm::Vec3 &position, u32 index) const {
   return true;
 }
 
-GmkSeLine::GmkSeLine() : unknown48(), unknown58(false), unknown59(false), unknown5C(0), unknown60(0.0f), unknown64(0), unknown68(false) {}
+GmkSeLine::GmkSeLine() : IntrusiveListNode(), unknown58(false), unknown59(false), unknown5C(0), unknown60(0.0f), unknown64(0), unknown68(false) {}
 
 int GmkSeLine::getPointNum() const { return getData()->unknown1c - getData()->unknown0c; }
 

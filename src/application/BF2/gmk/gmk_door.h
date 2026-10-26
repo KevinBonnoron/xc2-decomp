@@ -3,6 +3,7 @@
 
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_camera.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
@@ -59,6 +60,7 @@ public:
   static const GmkType GMK_TYPE = GMK_TYPE_DOOR;
   static mm::mtl::RTTI m_rtti;
 
+  GmkDoor() : unknown60(nullptr) {}
   ~GmkDoor() override;
   GmkType getGmkType() const override;
   int getGameFlagId() const;
@@ -75,15 +77,19 @@ public:
   void debugDraw() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
+  bool createGmkCamera(const char *name, u8 attribute, bool param3);
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
-  u8 _48[0x2c0 - 0x48];
+  u8 _48[0x60 - 0x48];
+  GmkCamera unknown60; // Inferred role: gimmick camera; original member name unknown.
+  u8 _1c0[0x2c0 - 0x1c0];
   f32 unknown2C0; // Role and original member name unknown.
   u8 _2c4[0x360 - 0x2c4];
 };
 
 static_assert(sizeof(GmkDoor::BdatInfo) == 0x48, "");
+static_assert(offsetof(GmkDoor, unknown60) == 0x60, "");
 static_assert(offsetof(GmkDoor, unknown2C0) == 0x2c0, "");
 static_assert(sizeof(GmkDoor) == 0x360, "");
 

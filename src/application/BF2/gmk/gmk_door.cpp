@@ -12,6 +12,7 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_phantom.h"
+#include "mm_mtl/fixstr.h"
 
 namespace fw {
 class SoundPack;
@@ -105,6 +106,22 @@ u32 GmkDoorPhantomTargetInfo::getTargetType() const {
   default:
     return 0;
   }
+}
+
+bool GmkDoor::createGmkCamera(const char *name, u8 attribute, bool param3) {
+  unknown60.dispose();
+  GmkCamera::CreateInfo info;
+  info.unknown00 = name;
+  info.unknown104 = attribute;
+  info.unknown106 = param3;
+  if (getBdatInfo()->unknown39) {
+    info.validateTransform(getBdatInfo()->unknown06);
+  }
+  if (info.unknown00.length() > 0) {
+    unknown60.create(info);
+    return true;
+  }
+  return false;
 }
 
 GmkType GmkDoor::getGmkType() const { return GMK_TYPE; }

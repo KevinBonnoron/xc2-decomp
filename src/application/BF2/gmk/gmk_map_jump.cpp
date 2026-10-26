@@ -2,9 +2,14 @@
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_manager.h"
+#include "gf/game/sequential_play/gf_play_factory.h"
+#include "gf/request/gf_req_command.h"
 #include "gmk/gmk_bdat.h"
 
 namespace gmk {
+
+GmkMapJump::GmkMapJump() : unknown50(nullptr), unknownE0(false), unknownE1(false) {}
 
 void GmkMapJump::debugDraw() const { isValid(); }
 
@@ -33,6 +38,40 @@ GmkType GmkMapJump::getGmkType() const { return GMK_TYPE; }
 void GmkMapJump::createGmkPhantom() {
   if (canCreateGameEntity()) {
     unknown50.create(*this, nullptr, false);
+  }
+}
+
+void GmkMapJump::dispose() {
+  unknown50.dispose();
+  AGmkBase::dispose();
+}
+
+void GmkMapJump::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  bool isCondMatched = getBdatInfo()->isCondMatched();
+  if (unknownE0 != isCondMatched) {
+    if (isCondMatched) {
+      createGmkPhantom();
+    } else {
+      unknown50.dispose();
+    }
+    unknownE0 = isCondMatched;
+  }
+  if (unknown50.unknown83) {
+    beginEvent();
+  } else {
+    endEvent();
+  }
+}
+
+void GmkMapJump::beginEvent() {
+  if (!unknownE1 && gf::GfGameManager::isMapjumpOK()) {
+    unknownE1 = true;
+    gf::GfMapjumpInfo info(getBdatInfo()->unknown00);
+    gf::GfPlayFactory::createMapjump(info);
   }
 }
 

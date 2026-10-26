@@ -15,7 +15,7 @@ namespace gmk {
 
 class GmkTutorialGob;
 
-class GmkTutorial : public AGmkBase {
+class GmkTutorial : public AGmkBase, public mm::mtl::IntrusiveListNode<GmkTutorial> {
 public:
   struct BdatInfo {
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
@@ -50,7 +50,6 @@ public:
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
-  mm::mtl::IntrusiveListNode<GmkTutorial> unknown48; // Role and original member name unknown.
   u8 _58[0x60 - 0x58];
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
   bool unknownF0;       // Role and original member name unknown.
@@ -59,7 +58,6 @@ public:
 
 static_assert(sizeof(GmkTutorial::BdatInfo) == 0xa, "");
 static_assert(offsetof(GmkTutorial::Data, unknown08) == 0x08, "");
-static_assert(offsetof(GmkTutorial, unknown48) == 0x48, "");
 static_assert(offsetof(GmkTutorial, unknown60) == 0x60, "");
 static_assert(offsetof(GmkTutorial, unknownF0) == 0xf0, "");
 static_assert(sizeof(GmkTutorial) == 0x100, "");

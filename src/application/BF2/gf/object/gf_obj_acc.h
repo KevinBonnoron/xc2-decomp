@@ -34,6 +34,7 @@ enum OBJ_ALPHA {
 enum OBJDISP {
   OBJDISP_EVENT = 0x2,
   OBJDISP_GMK_EVENT = 0x8,
+  OBJDISP_UNKNOWN10 = 0x10, // Inferred role: hidden by a gimmick camera; original name unknown.
   OBJDISP_KOSMOS_ARTS_3 = 0x20,
 };
 

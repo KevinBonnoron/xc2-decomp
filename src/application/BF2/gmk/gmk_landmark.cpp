@@ -50,6 +50,11 @@ void GmkLandmark::createGmkPhantom() {
   unknown60.create(*this, this, false);
 }
 
+void GmkLandmark::disposeGmkPhantom() {
+  unknown60.dispose();
+  endEvent();
+}
+
 void GmkLandmark::endEvent() {
   if (unknownF1) {
     unknownF1 = false;

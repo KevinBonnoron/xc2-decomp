@@ -19,7 +19,7 @@ namespace gmk {
 
 class GmkPreciousGob;
 
-class GmkPrecious : public AGmkBase {
+class GmkPrecious : public AGmkBase, public mm::mtl::IntrusiveListNode<GmkPrecious> {
 public:
   struct BdatInfo {
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
@@ -55,9 +55,8 @@ public:
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
-  mm::mtl::IntrusiveListNode<GmkPrecious> unknown48; // Role and original member name unknown.
-  gf::GF_OBJ_HANDLE *unknown58;                      // Inferred role: gob instance handle; original member name unknown.
-  u32 unknown60;                                     // Inferred role: effect handle; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown58; // Inferred role: gob instance handle; original member name unknown.
+  u32 unknown60;                // Inferred role: effect handle; original member name unknown.
   u8 _64[0x68 - 0x64];
   gf::GfMenuCallContext *unknown68; // Inferred role: menu icon; original member name unknown.
   DistCond unknown70;               // Inferred role: pop dist; original member name unknown.
@@ -66,7 +65,6 @@ public:
 };
 
 static_assert(sizeof(GmkPrecious::BdatInfo) == 0x30, "");
-static_assert(offsetof(GmkPrecious, unknown48) == 0x48, "");
 static_assert(offsetof(GmkPrecious, unknown58) == 0x58, "");
 static_assert(offsetof(GmkPrecious, unknown60) == 0x60, "");
 static_assert(offsetof(GmkPrecious, unknown68) == 0x68, "");
