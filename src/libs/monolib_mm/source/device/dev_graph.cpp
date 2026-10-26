@@ -7,6 +7,7 @@
 #include "grlib/cglib_polygon.h"
 #include "ml/critical_section.h"
 #include "ml/err_viewer.h"
+#include "ml/reslist.h"
 #include "ml/work_obj.h"
 #include "ml/work_util.h"
 #include "mtl/alloc_handle.h"
@@ -386,5 +387,13 @@ void *DevGraph::cmdAlignSys(u32 alignment) { return nullptr; }
 void *DevGraph::cmdAddOfsSys(u32 offset) { return nullptr; }
 
 bool DevGraph::cmdIsOpenDisplayListSys() const { return false; }
+
+class DevGraphCB;
+class GraphQue;
+class IDevFontInfo;
+
+template class reslist<DevGraphCB *>;
+template class reslist<GraphQue *>;
+template class reslist<IDevFontInfo *>;
 
 } // namespace ml

@@ -2,6 +2,7 @@
 
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_party_status.h"
+#include "ml/fixed_size_alloc.h"
 #include "ui/list/ui_list_info.h"
 
 namespace gf {
@@ -644,3 +645,9 @@ void GfMenuReference::clearPartyStatusLock() {
 }
 
 } // namespace gf
+
+namespace gf {
+struct MENUREF_OBJ;
+} // namespace gf
+
+template class ml::fixed_size_alloc_inside<gf::MENUREF_OBJ, 512>;

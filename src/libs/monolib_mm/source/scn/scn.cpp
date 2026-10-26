@@ -1,6 +1,7 @@
 #include "ml/scn.h"
 
 #include "ml/proc_desktop.h"
+#include "ml/reslist.h"
 #include "ml/scn_obj_model.h"
 #include "ml/scn_pool_obj.h"
 #include "ml/work_cpu.h"
@@ -79,5 +80,7 @@ ScnObjCam *ScnCamMan::getCam(const WinView *view) { return unknown08->unknown20-
 ScnObjCam *Scn::getCam(const WinView *view) { return unknown28->getCam(view); }
 
 const ScnObjCam *Scn::getCam(const WinView *view) const { return unknown28->getCam(view); }
+
+template class reslist<ScnObj *>;
 
 } // namespace ml

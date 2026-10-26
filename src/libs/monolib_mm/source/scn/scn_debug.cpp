@@ -228,4 +228,6 @@ void ScnDebugManipu::update() {
   }
 }
 
+template class threadval<ScnDebugManipuObj::RENDER_INFO>;
+
 } // namespace ml

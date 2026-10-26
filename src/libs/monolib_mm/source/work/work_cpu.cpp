@@ -2,10 +2,13 @@
 
 #include "ml/critical_section.h"
 #include "ml/dev_clock.h"
+#include "ml/fixed_size_alloc.h"
+#include "ml/reslist.h"
 #include "ml/thread_util.h"
 #include "ml/work_cpu_thread.h"
 
 namespace ml {
+struct TJOB;
 
 WorkCpuThread *WorkCpu::getCpuThread(CPUID cpuId) {
   WorkCpu *cpu = get();
@@ -240,5 +243,9 @@ void WorkCpu::removeImm(DEFIMM *&handle) {}
 s32 WorkCpu::getHeartBeatStall() { return _mlwcpu::s_cpuStall; }
 
 void WorkCpu::clrHeartBeatStall() { _mlwcpu::s_cpuStall = 0; }
+
+template class reslist<IThreadValue *>;
+template class reslist<TJOB *>;
+template class fixed_size_alloc<TJOB>;
 
 } // namespace ml

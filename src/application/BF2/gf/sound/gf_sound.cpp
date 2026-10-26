@@ -9,6 +9,7 @@
 #include "gf/gf_pause.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
+#include "ml/fixed_size_alloc.h"
 #include "mm_mtl/fixed_vector.h"
 
 namespace fw {
@@ -499,3 +500,5 @@ GfSound::SeParam *GfSound::getSeParam(u16 id) {
 }
 
 } // namespace gf
+
+template class ml::fixed_size_alloc_inside<gf::GfSound::SeParam, 384>;

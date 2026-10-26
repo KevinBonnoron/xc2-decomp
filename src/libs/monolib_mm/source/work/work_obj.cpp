@@ -1,6 +1,7 @@
 #include "ml/work_obj.h"
 
 #include "ml/dev_clock.h"
+#include "ml/reslist.h"
 #include "ml/work_root.h"
 #include "ml/work_util.h"
 
@@ -234,5 +235,8 @@ bool WorkObj::wkStandbyLogout() {
   wkTimeoutInit();
   return true;
 }
+
+template class reslist<IWorkEvent *>;
+template class reslist<unsigned int>;
 
 } // namespace ml

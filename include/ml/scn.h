@@ -26,6 +26,7 @@ public:
   struct RENDER_INFO {
     u8 _00[0x10];
     mm::Vec3 position;
+    u8 _20[0x380 - 0x20];
   };
 
   static void renderDebug(DebDraw *debDraw);
@@ -38,6 +39,7 @@ public:
   RENDER_INFO *renderInfo;
 };
 
+static_assert(sizeof(ScnObjCam::RENDER_INFO) == 0x380, "");
 static_assert(offsetof(ScnObjCam, m_name) == 0x18, "");
 static_assert(offsetof(ScnObjCam, renderInfo) == 0x78, "");
 
