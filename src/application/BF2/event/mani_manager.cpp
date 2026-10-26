@@ -1,9 +1,16 @@
 #include "event/mani_manager.h"
 
+#include "event/manager.h"
 #include "fw/fw_coli_check.h"
+#include "ml/scn.h"
 #include "mm_math/mm_vec3.h"
+#include "scn/scn_debug.h"
 
 namespace event {
+
+ManiManager::ManiManager()
+    : unknown22030(MANI_TYPE_POS), unknown22040(mm::Mat44::identity), unknown22080(mm::Mat44::identity), unknown220c0(mm::Mat44::identity), unknown22100(mm::Mat44::identity),
+      unknown22140(mm::Mat44::identity) {}
 
 void ManiManager::adjestPosY(mm::Vec3 &position) {
   mm::Vec3 result = position;
@@ -23,6 +30,22 @@ bool ManiManager::exist(mm::mtl::FixedVector<Item, ITEM_COUNT> &items, IManiCall
     }
   }
   return false;
+}
+
+void ManiManager::clearManipulate() {
+  unknown20.clear();
+  unknown22030 = MANI_TYPE_POS;
+  Manager::get()->getScn()->unknown30->clrManipulator();
+  unknown18.set(FLAG_ACTIVE, false);
+}
+
+void ManiManager::setEnable(bool isEnable) {
+  if (isEnable) {
+    unknown18.set(FLAG_ENABLE, true);
+  } else {
+    clearManipulate();
+    unknown18.set(FLAG_ENABLE, false);
+  }
 }
 
 void ManiManager::setAdjestPosEnable(bool isEnable) { unknown18.set(FLAG_ADJEST_POS, isEnable); }

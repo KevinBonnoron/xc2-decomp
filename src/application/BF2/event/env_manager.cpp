@@ -5,6 +5,7 @@
 #include "event/manager.h"
 #include "framework/effect/effect_manager.h"
 #include "fw/fw_debug.h"
+#include "gf/field/gf_field_gimmick.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
 #include "gf/game/event/gf_game_event.h"
@@ -19,6 +20,53 @@ namespace event {
 EnvManager::EnvManager()
     : unknown10(0), unknown14(0), unknown18(-1), unknown1c(-1), unknown20(EVT_CLOUDTYPE_DEFAULT), unknown24(COLORFILTER_TYPE_STOP), unknown28(-1), unknown2c(-1), unknown30(0.0f), unknown34(0),
       unknown38(0) {}
+
+void EnvManager::clear() {
+  if (unknown10 & FLAG_WEATHER_TYPE) {
+    gf::GfGameEvent::resetWeaType();
+    unknown10 &= ~FLAG_WEATHER_TYPE;
+  }
+  if (unknown10 & FLAG_AUTO_RESET_SCENE) {
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
+    parmAcc.setAutoResetScene(false);
+    unknown10 &= ~FLAG_AUTO_RESET_SCENE;
+  }
+  endGimmickPopWait();
+  if (unknown10 & FLAG_CLOCK_STOP) {
+    if (gf::GfFieldTime::get() != nullptr) {
+      gf::GfFieldTime::get()->setTimeStop(false);
+    }
+    unknown10 &= ~FLAG_CLOCK_STOP;
+  }
+  if (unknown20 != EVT_CLOUDTYPE_DEFAULT) {
+    gf::GfGameEvent::setCloudSea(false, false);
+  }
+  if (unknown24 != COLORFILTER_TYPE_STOP) {
+    gf::GfGameEvent::setColorFilter(false, -1, -1, 0.0f);
+  }
+  if (unknown38 != 0) {
+    fw::EffectManager::get()->remove(unknown38);
+  }
+  if (unknown10 & FLAG_MOT_BLUR) {
+    ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
+    parmAcc.setMotBlurOverride(true);
+    parmAcc.setMotBlur(true);
+    unknown10 &= ~FLAG_MOT_BLUR;
+  }
+  if (unknown10 & FLAG_TONE_MAP) {
+    unknown10 &= ~FLAG_TONE_MAP;
+    unknown3c = 0.0f;
+  }
+  unknown18 = -1;
+  unknown1c = -1;
+  unknown20 = EVT_CLOUDTYPE_DEFAULT;
+  unknown24 = COLORFILTER_TYPE_STOP;
+  unknown28 = -1;
+  unknown2c = -1;
+  unknown30 = 0.0f;
+  unknown34 = 0;
+  unknown38 = 0;
+}
 
 void EnvManager::setCloudSea(EVT_cloudtype cloudType) {
   if (unknown20 != cloudType) {
@@ -65,6 +113,12 @@ void EnvManager::login() {
 }
 
 void EnvManager::logout() {}
+
+void EnvManager::update() {
+  updateColorFilter();
+  updateMotBlur();
+  updateToneMap();
+}
 
 void EnvManager::updateColorFilter() {
   if (unknown24 != COLORFILTER_TYPE_FADE) {
@@ -180,6 +234,29 @@ void EnvManager::setMapWeatherID(gf::WEATHERID weather, f32 frame) {
   gf::GfGameEvent::setMapWeather(weather);
   ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
   parmAcc.setWeatherFrame(frame);
+}
+
+void EnvManager::startGimmickPopWait() {
+  gf::GfFieldGimmick *gimmick = mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get();
+  gimmick->unknownf4ac = true;
+  gimmick->unknownf4ae = false;
+  gimmick->unknownf4ad = false;
+  gimmick->unknownf4b0 = 0;
+  unknown10 |= FLAG_GIMMICK_POP_WAIT;
+}
+
+void EnvManager::endGimmickPopWait() {
+  if (unknown10 & FLAG_GIMMICK_POP_WAIT) {
+    mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get()->unknownf4ac = false;
+    unknown10 &= ~FLAG_GIMMICK_POP_WAIT;
+  }
+}
+
+bool EnvManager::isGimmickPopWaiting() const {
+  if (!(unknown10 & FLAG_GIMMICK_POP_WAIT)) {
+    return false;
+  }
+  return !mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get()->unknownf4ae;
 }
 
 void EnvManager::setWeatherType(gf::WEATYPE type) {

@@ -1,10 +1,32 @@
 #include "event/fade_manager.h"
 
+#include "event/frame_manager.h"
+#include "event/skip_manager.h"
+#include "event/ui_manager.h"
 #include "mm_mtl/singleton.h"
 
 namespace event {
 
 FadeManager::FadeManager() : unknown10(0) {}
+
+void FadeManager::update() {
+  const FrameInfo &info = mm::mtl::Singleton<FrameManager>::getPtr()->frameInfo();
+  unknown18.update(info.unknown04);
+  mm::mtl::Singleton<FadeCtrl>::getPtr()->update();
+}
+
+void FadeManager::playEventSkip(bool isFadeOut, int frame) {
+  if (unknown10 & FLAG_DISABLE_FADE) {
+    return;
+  }
+  int fadeFrame = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() ? 0 : frame;
+  if (isFadeOut) {
+    mm::mtl::Singleton<FadeCtrl>::getPtr()->fadeoutEventSkip(fadeFrame);
+  } else {
+    mm::mtl::Singleton<FadeCtrl>::getPtr()->fadeinEventSkip(fadeFrame);
+  }
+  mm::mtl::Singleton<UIManager>::getPtr()->setPadDisable(isFadeOut);
+}
 
 void FadeManager::clear() {
   unknown18.clear();

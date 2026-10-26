@@ -11,6 +11,8 @@ namespace event {
 
 mm::Vec3 ObjectChara::getPos() const { return unknown70->getPos(); }
 
+mm::Vec3 ObjectChara::getRot() const { return unknown70->getRotTo(); }
+
 void ObjectChara::resetTar() { unknown70->resetTar(); }
 
 ObjectChara::ObjectChara(const char *name) : Object(OBJTYPE_CHARA, name), unknown68(0), unknown70(nullptr) {}

@@ -21,6 +21,32 @@ void AlphaManager::clear() {
   unknown10 = 0;
 }
 
+void AlphaManager::update() {
+  if ((unknown10 & FLAG_ACTIVE) == 0) {
+    return;
+  }
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    unknown18[i]->update();
+  }
+  for (;;) {
+    bool found = false;
+    for (AlphaObj **it = unknown18.begin(); it != unknown18.end(); ++it) {
+      if (!(*it)->isActive()) {
+        delete *it;
+        unknown18.erase(it);
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      break;
+    }
+  }
+  if (unknown18.empty()) {
+    unknown10 &= ~FLAG_ACTIVE;
+  }
+}
+
 void AlphaManager::render() {
   if (!(unknown14 & DISP_FLAG_DISP) || !(unknown10 & FLAG_ACTIVE)) {
     return;

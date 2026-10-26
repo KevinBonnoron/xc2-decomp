@@ -25,6 +25,20 @@ void CharaWeightPlayer::setAddWeight(const char *stat, f32 weight, WeightLayer w
   }
 }
 
+void CharaWeightPlayer::destroy() {
+  gf::GfObj *obj = gf::GfObjUtil::getObj(unknown08);
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    CharaWeightItem *item = unknown18[i];
+    if (obj != nullptr) {
+      item->destroy(obj);
+    }
+    delete item;
+  }
+  unknown18.clear();
+  unknown08 = gf::INVALID_HANDLE;
+  unknown10 = nullptr;
+}
+
 CharaWeightItem *CharaWeightPlayer::searchItem(const char *stat) {
   for (CharaWeightItem **it = unknown18.begin(); it != unknown18.end(); ++it) {
     if (__builtin_strcmp((*it)->getStat(), stat) == 0) {

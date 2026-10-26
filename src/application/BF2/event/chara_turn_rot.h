@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "event/i_cmd.h"
 #include "types.h"
 
@@ -7,6 +9,8 @@ struct GF_OBJ_HANDLE;
 } // namespace gf
 
 namespace event {
+
+class CharaDysUpdater;
 
 class CharaTurnRot : public ICmd {
 public:
@@ -17,9 +21,14 @@ public:
 private:
   u32 unknown08;                // Inferred role: flags; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
-  u8 _18[0x20 - 0x18];
+  CharaDysUpdater *unknown18;   // Inferred role: dys; original member name unknown.
+
+  friend struct CharaTurnRotLayout;
 };
 
-static_assert(sizeof(CharaTurnRot) == 0x20, "");
+struct CharaTurnRotLayout {
+  static_assert(offsetof(CharaTurnRot, unknown18) == 0x18, "");
+  static_assert(sizeof(CharaTurnRot) == 0x20, "");
+};
 
 } // namespace event

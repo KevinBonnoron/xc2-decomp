@@ -1,6 +1,9 @@
 #pragma once
+#include <stddef.h>
+
 #include "event/i_manager.h"
 #include "ml/work_event.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/noncopyable.h"
@@ -71,9 +74,23 @@ private:
   mm::mtl::FixedVector<Item, ITEM_COUNT> unknown20; // Inferred role: items; original member name unknown.
   u8 _22028[0x22030 - 0x22028];
   MANI_TYPE unknown22030; // Inferred role: type; original member name unknown.
-  u8 _22034[0x22180 - 0x22034];
+  u8 _22034[0x22040 - 0x22034];
+  mm::Mat44 unknown22040; // Inferred role: matrix; original member name unknown.
+  mm::Mat44 unknown22080; // Inferred role: matrix; original member name unknown.
+  mm::Mat44 unknown220c0; // Inferred role: matrix; original member name unknown.
+  mm::Mat44 unknown22100; // Inferred role: matrix; original member name unknown.
+  mm::Mat44 unknown22140; // Inferred role: matrix; original member name unknown.
+
+  friend struct ManiManagerLayout;
 };
 
-static_assert(sizeof(ManiManager) == 0x22180, "");
+struct ManiManagerLayout {
+  static_assert(offsetof(ManiManager, unknown22040) == 0x22040, "");
+  static_assert(offsetof(ManiManager, unknown22080) == 0x22080, "");
+  static_assert(offsetof(ManiManager, unknown220c0) == 0x220c0, "");
+  static_assert(offsetof(ManiManager, unknown22100) == 0x22100, "");
+  static_assert(offsetof(ManiManager, unknown22140) == 0x22140, "");
+  static_assert(sizeof(ManiManager) == 0x22180, "");
+};
 
 } // namespace event

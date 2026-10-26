@@ -175,4 +175,23 @@ void ResManager::setDisp(bool isDisp) {
 
 bool ResManager::isDisp() const { return (unknown18 & FLAG_DISP) != 0; }
 
+void ResManager::OnEventProc(MSG_TYPE type) {
+  switch (type) {
+  case MSG_TYPE_CLEAR:
+    clear();
+    return;
+  case MSG_TYPE_UPDATE:
+    update();
+    return;
+  case MSG_TYPE_RENDER:
+    render();
+    return;
+  case MSG_TYPE_INIT:
+    clear();
+    return;
+  default:
+    return;
+  }
+}
+
 } // namespace event

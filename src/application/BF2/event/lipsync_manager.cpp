@@ -72,6 +72,18 @@ f32 LipsyncManager::getFrameMax() const {
   return unknownf0->GetRowCount() - 1;
 }
 
+void LipsyncManager::setEvent(const char *name) {
+  LipsyncRes *res = nullptr;
+  for (size_t i = 0; i < unknown18.size(); i++) {
+    if (__builtin_strcmp(name, unknown18[i]->getName()) == 0) {
+      res = unknown18[i];
+      break;
+    }
+  }
+  unknown60 = res;
+  setFlag(FLAG_EVENT, unknown60 != nullptr);
+}
+
 void LipsyncManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
   case MSG_TYPE_INIT:

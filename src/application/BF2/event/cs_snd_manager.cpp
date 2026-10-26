@@ -135,6 +135,27 @@ u32 CsSndManager::playBgm(const char *path, f32 volume, bool isPause) {
 
 bool CsSndManager::isPlay() const { return (unknown10 & FLAG_PLAY) != 0; }
 
+void CsSndManager::pause(bool isPause) {
+  if ((unknown10 & FLAG_PLAY) == 0 || ((unknown10 & FLAG_PAUSE) != 0) == isPause) {
+    return;
+  }
+  if (isPause) {
+    unknown10 |= FLAG_PAUSE;
+  } else {
+    unknown10 &= ~FLAG_PAUSE;
+  }
+  f32 playTime = 0.0f;
+  f32 totalTime = 0.0f;
+  bool isPlaying = fw::SoundManager::get()->getPlayTime(unknown1c, playTime);
+  bool hasTotal = fw::SoundManager::get()->getTotalTime(unknown1c, totalTime);
+  if (isPlaying && hasTotal && totalTime > 0.0f && playTime > 0.0f && totalTime - 0.5f <= playTime) {
+    fw::SoundManager::get()->pause(unknown1c, false, 0.0f);
+    fw::SoundManager::get()->stopVoice(unknown1c, 0.0f);
+  } else {
+    fw::SoundManager::get()->pause(unknown1c, isPause, 0.0f);
+  }
+}
+
 void CsSndManager::setDisp(bool isDisp) {
   if (isDisp) {
     unknown14 |= DISP_FLAG_DISP;

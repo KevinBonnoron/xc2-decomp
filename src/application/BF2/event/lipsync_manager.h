@@ -36,6 +36,14 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
+  void setFlag(u32 flag, bool isSet) {
+    if (isSet) {
+      unknown10 |= flag;
+    } else {
+      unknown10 &= ~flag;
+    }
+  }
+
   u32 unknown10;                                           // Inferred role: flags; original member name unknown.
   mm::mtl::FixedVector<LipsyncRes *, RES_COUNT> unknown18; // Inferred role: res list; original member name unknown.
   LipsyncRes *unknown60;                                   // Inferred role: current res; original member name unknown.

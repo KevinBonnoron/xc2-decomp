@@ -6,6 +6,7 @@
 
 namespace gf {
 struct GF_OBJ_HANDLE;
+class GfObj;
 } // namespace gf
 namespace mm {
 struct Vec3;
@@ -13,20 +14,24 @@ struct Vec3;
 
 namespace event {
 
+class CharaDysUpdater;
+class CharaIKUpdater;
+
 class CharaPlayMotionABC : public ICmd {
 public:
   CharaPlayMotionABC();
   bool has(unsigned int index) const;
   virtual RESULT update(const Param &param);
   virtual void term();
+  void stopMotion(gf::GfObj *obj);
   void render(const mm::Vec3 &position, f32 eyeOffset);
 
 private:
   u32 unknown08; // Inferred role: flags; original member name unknown.
   u32 _0c;
   gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
-  u64 unknown18;                // Role and original member name unknown.
-  u64 unknown20;                // Role and original member name unknown.
+  CharaIKUpdater *unknown18;    // Inferred role: ik; original member name unknown.
+  CharaDysUpdater *unknown20;   // Inferred role: dys; original member name unknown.
   u32 unknown28;                // Role and original member name unknown.
   u8 _2c[0x34 - 0x2c];
   s32 unknown34[3]; // Inferred role: motion ids; original member name unknown.

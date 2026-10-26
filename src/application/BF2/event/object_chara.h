@@ -105,6 +105,4 @@ inline mm::Vec3 ObjectChara::getEyePos() const {
   return mm::Vec3(pos.x, pos.y + unknown70->getEyeOffset(), pos.z);
 }
 
-inline mm::Vec3 ObjectChara::getRot() const { return unknown70->getRotTo(); }
-
 } // namespace event
