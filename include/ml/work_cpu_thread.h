@@ -8,11 +8,14 @@
 namespace ml {
 class CriticalSection;
 class Thread;
+struct MLTHREAD;
 struct TJOB;
 
 class WorkCpuThread : public WorkObj {
 public:
   bool isSuspendThread() const;
+  bool isWaitEvent() const;
+  MLTHREAD *getHandle() const;
   CPUID getCPUID() const;
   void getStackInfo(unsigned long &address, unsigned long &size);
   u64 getThreadID() const;

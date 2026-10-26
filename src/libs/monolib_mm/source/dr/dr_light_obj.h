@@ -1,12 +1,10 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
-
-namespace mm {
-struct Mat44;
-struct Vec3;
-} // namespace mm
 
 namespace ml {
 class DrLightMan;
@@ -106,41 +104,71 @@ class DrLightObjDir : public DrLightObj {
 public:
   DrLightObjDir();
   void initDir();
+  void setDir(const mm::Vec3 &direction);
+  void setDirShadow(bool isEnable, int index);
+  void setMat(const mm::Mat44 &matrix);
+  void setMat(const f32 *matrix);
   DrLightObjDir(DrPixlMan *pixlMan);
   ~DrLightObjDir() override;
   void releaseDir();
   void deleteDirShadow();
   void update(DrLightMan *lightMan) override;
 
-  u8 _30[0x90 - 0x30];
-  f32 unknown90; // Inferred role: intensity; original member name unknown.
+  mm::Mat44 unknown30; // Inferred role: matrix; original member name unknown.
+  mm::Vec3 unknown70;  // Inferred role: direction; original member name unknown.
+  mm::Col4 unknown80;  // Inferred role: color; original member name unknown.
+  f32 unknown90;       // Inferred role: intensity; original member name unknown.
 };
 
+static_assert(offsetof(DrLightObjDir, unknown30) == 0x30, "");
+static_assert(offsetof(DrLightObjDir, unknown70) == 0x70, "");
+static_assert(offsetof(DrLightObjDir, unknown80) == 0x80, "");
 static_assert(offsetof(DrLightObjDir, unknown90) == 0x90, "");
+static_assert(sizeof(DrLightObjDir) == 0xa0, "");
 
 class DrLightObjPnt : public DrLightObj {
 public:
   void setMat(const mm::Mat44 &matrix);
+  void setMat(const f32 *matrix);
   void setPos(const mm::Vec3 &position);
+  void deletePntShadow();
   DrLightObjPnt();
   void initPnt();
   DrLightObjPnt(DrPixlMan *pixlMan);
   ~DrLightObjPnt() override;
   void releasePnt();
 
-  u8 _30[0x9c - 0x30];
+  mm::Mat44 unknown30; // Inferred role: matrix; original member name unknown.
+  mm::Vec3 m_pos;
+  u8 _80[0x90 - 0x80];
+  f32 unknown90; // Inferred role: color r; original member name unknown.
+  f32 unknown94; // Inferred role: color g; original member name unknown.
+  f32 unknown98; // Inferred role: color b; original member name unknown.
   f32 m_size;
-  u8 _a0[0xb0 - 0xa0];
-  f32 unknownb0; // Inferred role: spe intensity; original member name unknown.
+  bool unknowna0; // Inferred role: spe enable; original member name unknown.
+  u8 _a1[0xa4 - 0xa1];
+  f32 unknowna4;    // Inferred role: color intensity; original member name unknown.
+  f32 unknowna8;    // Inferred role: tex ofs x; original member name unknown.
+  f32 unknownac;    // Inferred role: tex ofs y; original member name unknown.
+  f32 unknownb0;    // Inferred role: spe intensity; original member name unknown.
+  f32 unknownb4[2]; // Inferred role: spot params; original member name unknown.
 };
 
+static_assert(offsetof(DrLightObjPnt, unknown30) == 0x30, "");
+static_assert(offsetof(DrLightObjPnt, m_pos) == 0x70, "");
+static_assert(offsetof(DrLightObjPnt, unknown90) == 0x90, "");
 static_assert(offsetof(DrLightObjPnt, m_size) == 0x9c, "");
+static_assert(offsetof(DrLightObjPnt, unknowna0) == 0xa0, "");
 static_assert(offsetof(DrLightObjPnt, unknownb0) == 0xb0, "");
+static_assert(offsetof(DrLightObjPnt, unknownb4) == 0xb4, "");
+static_assert(sizeof(DrLightObjPnt) == 0xc0, "");
 
 class DrLightObjSpt : public DrLightObj {
 public:
   void setMat(const mm::Mat44 &matrix);
+  void setMat(const f32 *matrix);
   void setPos(const mm::Vec3 &position);
+  void deleteSptShadow();
   DrLightObjSpt();
   void initSpt();
   DrLightObjSpt(DrPixlMan *pixlMan);

@@ -20,15 +20,18 @@ public:
   static WinViewRoot *create(WorkObj *parent);
   static WinView *getCurrent();
   static WinProc *getCurrentProc();
+  static void destroyProc(const WinProc *proc);
 
   u8 _1b0[0x1f0 - 0x1b0];
   WinView *unknown1f0; // Inferred role: current view; original member name unknown.
   WinProc *unknown1f8; // Inferred role: current proc; original member name unknown.
-  u8 _200[0x210 - 0x200];
+  WinProc *unknown200; // Inferred role: render proc; original member name unknown.
+  u8 _208[0x210 - 0x208];
 };
 
 static_assert(offsetof(WinViewRoot, unknown1f0) == 0x1f0, "");
 static_assert(offsetof(WinViewRoot, unknown1f8) == 0x1f8, "");
+static_assert(offsetof(WinViewRoot, unknown200) == 0x200, "");
 static_assert(sizeof(WinViewRoot) == 0x210, "");
 
 } // namespace ml

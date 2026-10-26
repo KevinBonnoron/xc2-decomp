@@ -8,6 +8,8 @@ namespace ml {
 
 DrShdLgtHybrid *DrShdLgtMan::getHybridLight() { return m_hybridLight; }
 
+const char *DrShdLgtMan::getDeclarationName(DECLARATION type) const { return s_DeclarationNames[type]; }
+
 void DrShdLgtMan::renderBegin() {
   unknown42 = 0xffff;
   unknown44 = 0xffff;

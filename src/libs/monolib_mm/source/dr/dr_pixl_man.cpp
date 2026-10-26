@@ -24,6 +24,11 @@ static bool isDblPixlObj(int type) { return (0x27200ULL >> type) & 1; }
 
 void DrPixlMan::endDeferredRenderTarget() { unknown7f0->unknown00[5][0]->setColorInvalidate(); }
 
+void DrPixlMan::endSkyRenderTarget() {
+  unknown7f0->unknown00[3][0]->setColorInvalidate();
+  grlib::CGLibColorCtl::setColorChannelMask(grlib::GRL_MRT_TYPE_1, 1, 1, 1, 1);
+}
+
 void DrPixlMan::setMainViewPort() {
   grlib::LibMainStateViewPort viewPort(0.0f, 0.0f, static_cast<f32>(unknown08->unknown5b8->unknown18), static_cast<f32>(unknown08->unknown5b8->unknown1c), 0.0f, 1.0f);
   grlib::CGLibState::setViewport(viewPort);

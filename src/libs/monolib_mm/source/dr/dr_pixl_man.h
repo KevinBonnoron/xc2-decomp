@@ -61,6 +61,7 @@ public:
   };
 
   void endDeferredRenderTarget();
+  void endSkyRenderTarget();
   void setMainViewPort();
   void resetRenderTarget();
   void endGBuffTexture();

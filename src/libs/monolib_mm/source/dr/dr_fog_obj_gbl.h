@@ -7,6 +7,8 @@ namespace ml {
 
 class DrFogObjGbl {
 public:
+  void update();
+
   u8 _00[0x44 - 0x00];
   f32 unknown44; // Inferred role: near; original member name unknown.
   f32 unknown48; // Inferred role: far; original member name unknown.

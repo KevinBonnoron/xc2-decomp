@@ -290,6 +290,10 @@ f32 DevGraph::getCost() {
 
 DevGraphQue *DevGraph::getGraphQue() { return get()->unknown330; }
 
+u32 DevGraphQue::getEven() { return unknown00; }
+
+bool DevGraphQue::getOdd() { return unknown00 == 0; }
+
 bool DevGraph::isInitialized() {
   DevGraph *graph = get();
   if (graph == nullptr) {

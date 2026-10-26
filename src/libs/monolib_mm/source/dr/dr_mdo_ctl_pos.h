@@ -5,10 +5,18 @@
 #include "dr/dr_res_mdo_inst_anm_obj.h"
 #include "types.h"
 
+namespace grlib {
+class CGLibVtxInstans;
+} // namespace grlib
+
 namespace ml {
+
+struct _MdoInstanceWork;
+struct MdsMdlInfoHeader;
 
 class DrMdoCtlPos : public DrMdlObj {
 public:
+  void createRenderDisplayList(const MdsMdlInfoHeader *header, int index, _MdoInstanceWork *work, grlib::CGLibVtxInstans *instans, int count);
   void callDisplistPrePsssRender(int param);
   void callDisplistRender(int param);
   void callZpreePassRenderPosAll();

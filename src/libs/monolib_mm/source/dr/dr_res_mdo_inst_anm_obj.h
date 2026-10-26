@@ -10,6 +10,7 @@ struct Vec3;
 
 namespace ml {
 class DrResMdoPos;
+struct MdsPosKeepData;
 
 struct MdsInstObjPosData {
   enum Flag {
@@ -83,8 +84,17 @@ static_assert(offsetof(MdsInstAnmSwitch, unknown02) == 0x02, "");
 
 static_assert(sizeof(MdsInstAnmSwitch) == 0x24, "");
 
+// Inferred type: instance animation object header; the original type name is unknown.
+struct MdsInstAnmObj {
+  u8 _00[0x3e];
+  u16 unknown3e;
+};
+
+static_assert(offsetof(MdsInstAnmObj, unknown3e) == 0x3e, "");
+
 class DrResMdoPosInstAnm {
 public:
+  DrResMdoPosInstAnm(const MdsInstAnmObj *anm, const u8 *data, const MdsPosKeepData *keep);
   void setup(f32 frame);
   void getAnmMatrix(mm::Mat44 *matrix, f32 frame) const;
   void update();
@@ -101,7 +111,10 @@ public:
   static void anmInsPosParm_SclY(mm::Vec3 *transform, f32 value);
   static void anmInsPosParm_SclZ(mm::Vec3 *transform, f32 value);
 
-  u8 _000[0x020 - 0x000];
+  const MdsInstAnmObj *unknown00;  // Inferred role: instance animation; original member name unknown.
+  const u8 *unknown08;             // Inferred role: animation data; original member name unknown.
+  const MdsPosKeepData *unknown10; // Inferred role: position keep data; original member name unknown.
+  u8 _018[0x020 - 0x018];
   mm::Mat44 unknown20; // Inferred role: matrix; original member name unknown.
   u8 _060[0x090 - 0x060];
   mm::Mat44 unknown90[2]; // Inferred role: dbl matrices; original member name unknown.
@@ -111,6 +124,7 @@ public:
   u16 unknown154; // Inferred role: start frame; original member name unknown.
 };
 
+static_assert(offsetof(DrResMdoPosInstAnm, unknown00) == 0x00, "");
 static_assert(offsetof(DrResMdoPosInstAnm, unknown20) == 0x020, "");
 static_assert(offsetof(DrResMdoPosInstAnm, unknown90) == 0x090, "");
 static_assert(offsetof(DrResMdoPosInstAnm, unknown150) == 0x150, "");
@@ -256,6 +270,8 @@ static_assert(offsetof(DrResMdoInstAnmHeader, unknown08) == 0x08, "");
 
 class DrResMdoInstAnmObj {
 public:
+  DrResMdoInstAnmObj();
+  void release();
   int getObjIdx(const char *name);
 
   DrResMdoInstPartsObj *getObj(u32 index) const {
@@ -267,8 +283,15 @@ public:
 
   const DrResMdoInstAnmHeader *unknown00; // Inferred role: header; original member name unknown.
   DrResMdoInstPartsObj **unknown08;       // Inferred role: objs; original member name unknown.
+  void *unknown10;                        // Inferred role: data; original member name unknown.
+  void *unknown18;                        // Inferred role: data; original member name unknown.
+  void *unknown20;                        // Inferred role: data; original member name unknown.
+  void *unknown28;                        // Inferred role: data; original member name unknown.
 };
 
 static_assert(offsetof(DrResMdoInstAnmObj, unknown08) == 0x08, "");
+static_assert(offsetof(DrResMdoInstAnmObj, unknown10) == 0x10, "");
+static_assert(offsetof(DrResMdoInstAnmObj, unknown28) == 0x28, "");
+static_assert(sizeof(DrResMdoInstAnmObj) == 0x30, "");
 
 } // namespace ml

@@ -64,6 +64,8 @@ class DebDraw {
 public:
   static DebDraw *get(u32 screen);
   static CacheDraw *getCacheDraw();
+  void initialize();
+  void release();
 };
 
 } // namespace ml

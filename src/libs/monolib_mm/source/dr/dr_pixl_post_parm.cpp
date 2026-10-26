@@ -15,6 +15,22 @@ void DrPixlPostParm::setDOF(bool dof) { unknown518[DrMan::s_nDblIdx].unknown21d 
 
 bool DrPixlPostParm::getTMAAOn() const { return m_TMAAOn; }
 
+bool DrPixlPostParm::isBlm2PassExtract() const { return unknownf72 && m_TMAAOn; }
+
+bool DrPixlPostParm::isShwRaytraceTemporalWithOthers() const {
+  if (!DrMan::getIns()->isIBLHalfRes()) {
+    return false;
+  }
+  return unknown1024;
+}
+
+f32 DrPixlPostParm::getTMAASharpness(u32 index) const {
+  if (DrMan::getIns()->unknown1c60 == 0) {
+    return unknown12c[index];
+  }
+  return unknown114[index];
+}
+
 bool DrPixlPostParm::isMotBlur2() const { return m_motBlur2; }
 
 bool DrPixlPostParm::getBloomOn() const { return m_bloomOn; }

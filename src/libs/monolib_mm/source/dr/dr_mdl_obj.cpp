@@ -1,4 +1,5 @@
 #include "dr/dr_mdl_obj.h"
+#include "dr/dr_res_mdo_mat.h"
 
 #include <string.h>
 
@@ -41,6 +42,31 @@ void DrMdlObj::setFrame(f32 frame) { setMatAnmFrme(frame); }
 void DrMdlObj::setMatrix(const mm::Mat44 &matrix) { DrMdoCtl::setMatrix(matrix); }
 
 void DrMdlObj::setOffsetPos(const mm::Vec3 &position) { DrMdoCtl::setOffsetPos(position); }
+
+bool DrMdlObj::getModelInfoHeader(int index, const MdsMdlInfoHeader **header) {
+  MdoWrkMatRes *res = unknown30;
+  if (res->unknown170 == 0) {
+    return false;
+  }
+  int infoIndex = 0;
+  u32 i = 0;
+  do {
+    const MdsMdlEntry &entry = res->unknown168[i];
+    int j = 0;
+    s64 offset = 0;
+    while (j < entry.unknown04) {
+      if (index - infoIndex == j) {
+        *header = reinterpret_cast<const MdsMdlInfoHeader *>(res->unknown18 + entry.unknown00 - offset);
+        return true;
+      }
+      j++;
+      offset -= sizeof(MdsMdlInfoHeader);
+    }
+    infoIndex += j;
+    i++;
+  } while (i < res->unknown170);
+  return false;
+}
 
 int DrMdlObj::getNodeMax() const { return m_nodeMax; }
 
@@ -146,7 +172,7 @@ void DrMdlObj::setTextureRes(int index, grlib::CGLibTextureBuffer *texture) {
 
 int DrMdlObj::getMaterialResIdx(const char *name) const {
   for (int i = 0; i < unknown30->unknown30; i++) {
-    if (strcmp(unknown30->unknownc0[i].unknown00, name) == 0) {
+    if (strcmp(unknown30->unknownc0[i].m_name, name) == 0) {
       return i;
     }
   }
@@ -157,19 +183,19 @@ const char *DrMdlObj::getMaterialIdxName(int index) const {
   if (index > unknown30->unknown30) {
     return nullptr;
   }
-  return unknown30->unknownc0[index].unknown00;
+  return unknown30->unknownc0[index].m_name;
 }
 
-MdoWrkMatEntry *DrMdlObj::getMaterialRes(const char *name) {
+DrResMdoMat *DrMdlObj::getMaterialRes(const char *name) {
   for (int i = 0; i < unknown30->unknown30; i++) {
-    if (strcmp(unknown30->unknownc0[i].unknown00, name) == 0) {
+    if (strcmp(unknown30->unknownc0[i].m_name, name) == 0) {
       return &unknown30->unknownc0[i];
     }
   }
   return nullptr;
 }
 
-MdoWrkMatEntry *DrMdlObj::getMaterialRes(int index) { return &unknown30->unknownc0[index]; }
+DrResMdoMat *DrMdlObj::getMaterialRes(int index) { return &unknown30->unknownc0[index]; }
 
 bool DrMdlObj::getVertexInfo(int index, const MdsMdlVertexFmt **format, int *count) { return unknown30->unknownc8->getVertexInfo(index, format, count); }
 

@@ -7,6 +7,8 @@ namespace ml {
 
 class DrGlobalIBLPack {
 public:
+  void setup();
+
   enum Flag {
     FLAG_DISP_OFF = 1 << 0,
   };

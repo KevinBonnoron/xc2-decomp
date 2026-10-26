@@ -7,6 +7,9 @@ namespace ml {
 
 class DrPixlPostObjMotionBlur {
 public:
+  void debugRender();
+  void resetColorBuff();
+  void calcBludBuffColorBuff();
   u8 _00[0x28 - 0x00];
   void *unknown28; // Inferred role: velocity map; original member name unknown.
 };

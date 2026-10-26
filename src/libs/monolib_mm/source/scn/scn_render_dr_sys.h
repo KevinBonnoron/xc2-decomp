@@ -64,10 +64,13 @@ public:
   s32 unknown08; // Inferred role: view id; original member name unknown.
   u8 _0c[0x20 - 0x0c];
   grlib::CGLibTextureBuffer *unknown20; // Inferred role: texture; original member name unknown.
+  u8 _28[0x35 - 0x28];
+  bool unknown35; // Role and original member name unknown.
 };
 
 static_assert(offsetof(ScnRenderDrViewCtrl, unknown08) == 0x08, "");
 static_assert(offsetof(ScnRenderDrViewCtrl, unknown20) == 0x20, "");
+static_assert(offsetof(ScnRenderDrViewCtrl, unknown35) == 0x35, "");
 
 class ScnRenderDrCapture {
 public:

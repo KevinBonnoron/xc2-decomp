@@ -19,7 +19,7 @@ struct MdsMatCharMkTexTbl;
 struct MdsMatInfoHeader;
 struct MdsMdlInfoHeader;
 struct MdsMdlVertexFmt;
-struct MdoWrkMatEntry;
+class DrResMdoMat;
 
 struct MdoWrkRimBloom {
   mm::Col3 unknown00; // Inferred role: color; original member name unknown.
@@ -66,8 +66,8 @@ public:
   void setTextureRes(int index, grlib::CGLibTextureBuffer *texture);
   int getMaterialResIdx(const char *name) const;
   const char *getMaterialIdxName(int index) const;
-  MdoWrkMatEntry *getMaterialRes(const char *name);
-  MdoWrkMatEntry *getMaterialRes(int index);
+  DrResMdoMat *getMaterialRes(const char *name);
+  DrResMdoMat *getMaterialRes(int index);
   bool getVertexInfo(int index, const MdsMdlVertexFmt **format, int *count);
   void setAlpha(f32 alpha);
   f32 getAlpha() const;

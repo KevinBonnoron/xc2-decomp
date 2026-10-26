@@ -6,6 +6,15 @@
 
 namespace ml {
 
+void DrMdoAnim::changeMemFixAnim(MdoWrkMatRes *matRes, const void *data) {
+  const MdsFixedAnimData *anim = static_cast<const MdsFixedAnimData *>(data);
+  const u8 *base = static_cast<const u8 *>(data);
+  matRes->unknown50 = base;
+  matRes->unknown58 = base + anim->unknown14;
+  matRes->unknown60 = base + anim->unknown1c;
+  matRes->unknown68 = base + anim->unknown24;
+}
+
 void DrMdoAnim::animcall_UV_Scr_U(DrResMdoMat *mat, f32 *work, f32 value) { work[0] = value; }
 
 void DrMdoAnim::animcall_UV_Scr_V(DrResMdoMat *mat, f32 *work, f32 value) { work[5] = value; }

@@ -7,6 +7,12 @@
 
 namespace ml {
 
+DrResMdoPosInstAnm::DrResMdoPosInstAnm(const MdsInstAnmObj *anm, const u8 *data, const MdsPosKeepData *keep) : unknown00(anm), unknown08(data), unknown10(keep) {
+  unknown150 = 0;
+  unknown154 = 0;
+  unknown152 = anm->unknown3e;
+}
+
 void DrResMdoPosInstAnm::setMatrix(const mm::Mat44 &matrix) {
   memcpy(&unknown90[DrMan::s_nDblStockIdx], &matrix, sizeof(mm::Mat44));
   unknown150 |= 1 << DrMan::s_nDblStockIdx;
@@ -213,5 +219,20 @@ void DrResMdoInstPartsAnm::setPosAnmData(DrResMdoPosInstAnm *posAnm, DrResMdoPos
 DrResMdoInstPartsGlbID::DrResMdoInstPartsGlbID(const u8 *data, const MdsInstObjPosData *info) : DrResMdoInstPartsObj(data, info) {}
 
 DrResMdoInstPartsGlbID::~DrResMdoInstPartsGlbID() {}
+
+} // namespace ml
+
+namespace ml {
+
+DrResMdoInstAnmObj::DrResMdoInstAnmObj() { release(); }
+
+void DrResMdoInstAnmObj::release() {
+  unknown20 = nullptr;
+  unknown28 = nullptr;
+  unknown10 = nullptr;
+  unknown18 = nullptr;
+  unknown00 = nullptr;
+  unknown08 = nullptr;
+}
 
 } // namespace ml

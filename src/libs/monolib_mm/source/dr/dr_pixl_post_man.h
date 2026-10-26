@@ -57,6 +57,7 @@ public:
   };
 
   void setDownDepth();
+  void setReflection(f32 x, f32 y, f32 z, bool isHigh);
   void renderDeferred();
   void renderDeferredLast();
   DrPixlRenderTarget *getDownDepth();
@@ -126,6 +127,9 @@ public:
   u8 _0d8[0x0f0 - 0x0d8];
   DrResUseQueryObj *unknownf0; // Inferred role: refraction query; original member name unknown.
   u32 unknownf8;               // Inferred role: flags; original member name unknown.
+  f32 unknownfc;
+  f32 unknown100;
+  f32 unknown104;
 };
 
 static_assert(offsetof(DrPixlPostMan, unknown18) == 0x018, "");
@@ -139,5 +143,7 @@ static_assert(offsetof(DrPixlPostMan, unknownb0) == 0x0b0, "");
 static_assert(offsetof(DrPixlPostMan, unknownc0) == 0x0c0, "");
 static_assert(offsetof(DrPixlPostMan, unknownf0) == 0x0f0, "");
 static_assert(offsetof(DrPixlPostMan, unknownf8) == 0x0f8, "");
+static_assert(offsetof(DrPixlPostMan, unknownfc) == 0x0fc, "");
+static_assert(offsetof(DrPixlPostMan, unknown104) == 0x104, "");
 
 } // namespace ml

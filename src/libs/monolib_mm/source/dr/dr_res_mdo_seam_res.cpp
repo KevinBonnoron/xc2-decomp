@@ -98,6 +98,17 @@ void DrResMdoSeamTexture::changeMemTexture(int size, int heightSize) { grlib::CG
 
 DrResMdoSeamVertex::DrResMdoSeamVertex(int index) : unknown08(nullptr), _10(), unknown18(nullptr), unknown20(nullptr), unknown28(index), unknown2a(0), _2c(), unknown2e(false) {}
 
+DrResMdoSeamVertex::~DrResMdoSeamVertex() { release(); }
+
+void DrResMdoSeamVertex::release() {
+  DrResMdoVertex *vertex = unknown20;
+  if (vertex != nullptr) {
+    vertex->vertexRelease();
+    ::operator delete(vertex);
+    unknown20 = nullptr;
+  }
+}
+
 bool DrResMdoSeamVertex::update() {
   unknown2e = false;
   unknown2a++;

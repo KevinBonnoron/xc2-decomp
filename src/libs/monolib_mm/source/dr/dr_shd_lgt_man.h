@@ -13,8 +13,12 @@ class DrShdLgtMan {
 public:
   enum COMP_SHADER_TYPE {};
   enum GIBL_SHADER_TYPE {};
+  enum DECLARATION {};
+
+  static const char *s_DeclarationNames[19];
 
   DrShdLgtHybrid *getHybridLight();
+  const char *getDeclarationName(DECLARATION type) const;
   void renderBegin();
   DrShdLgtObj *getGlobalIBLShader(GIBL_SHADER_TYPE type);
   DrShdLgtObj *getComputeShader(COMP_SHADER_TYPE type);

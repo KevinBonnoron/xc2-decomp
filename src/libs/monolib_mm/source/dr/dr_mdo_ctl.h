@@ -11,13 +11,20 @@ struct Vec3;
 
 namespace ml {
 
+class MdoWrkMatRes;
+struct MdoInstancePrePassArg;
+
 class DrMdoCtl : public DrMdoSetup {
 public:
   DrMdoCtl(int viewNum);
   void setMatrix(const mm::Mat44 &matrix);
   void setOffsetPos(const mm::Vec3 &position);
   const mm::Mat44 &getMatrix() const;
+  void partsInstanceThicknessBillRender(const MdoInstancePrePassArg &arg);
+  void createMaterialOneDisplayList(MdoWrkMatRes *matRes, int index);
   void setFrameSpd(f32 speed) { unknowndc = speed; }
+  static void waitWeightVtx();
+  static void waitBeginWeightVtx();
 
   s16 m_nodeMax;
   u8 _182[0x190 - 0x182];

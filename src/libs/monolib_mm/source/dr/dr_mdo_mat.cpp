@@ -1,8 +1,15 @@
 #include "dr/dr_mdo_mat.h"
 
 #include "dr/dr_man.h"
+#include "dr/dr_res_mdo_mat.h"
 
 namespace ml {
+
+void DrMdoMat::matCall_TransVal(const MdsMatInfoHeader *, int valueIndex, int matIndex) { unknown30->unknownc0[matIndex].setAlpha(unknown30->unknown118->unknown30[valueIndex]); }
+
+void DrMdoMat::matCall_CalcColor(const MdsMatInfoHeader *header, int valueIndex, int matIndex) {
+  unknown30->unknownc0[matIndex].setColor(header->unknown0c * unknownd8, unknownd8 * header->unknown10, unknownd8 * header->unknown14, header->unknown18);
+}
 
 void DrMdoMat::setDrMan(DrMan *drMan) { m_drMan = drMan; }
 

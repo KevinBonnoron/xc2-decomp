@@ -9,12 +9,15 @@ class DrShdMdoDecRes;
 
 class DrShdMdoDecExtTbl : public grlib::CGLibDecShdExtTbl {
 public:
+  DrShdMdoDecExtTbl();
+  ~DrShdMdoDecExtTbl();
   u32 getValGlobalParam(int index);
   void bindShader();
+  void setShaderParamAdd(u32 *param, u32 *globalParam);
 
   DrShdMdoDecRes *unknown18; // Inferred role: dec res; original member name unknown.
-  u8 _20[0x28 - 0x20];
-  u32 *unknown28; // Inferred role: global params; original member name unknown.
+  u32 *unknown20;            // Inferred role: shader param add; original member name unknown.
+  u32 *unknown28;            // Inferred role: global params; original member name unknown.
 };
 
 static_assert(offsetof(DrShdMdoDecExtTbl, unknown18) == 0x18, "");

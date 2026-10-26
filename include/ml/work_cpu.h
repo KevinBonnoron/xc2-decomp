@@ -76,6 +76,7 @@ public:
   static u32 getCpuNum();
   static CPUID getSubWorkCPUID();
   static WorkCpuThread *getCpuThread(CPUID cpuId);
+  static void removeCpu(CPUID cpu, WorkCpuThread *thread);
   static void setThread(DO_THREAD thread);
   static DO_THREAD getThread();
   static u32 getEven();
@@ -88,6 +89,8 @@ public:
   static bool getOdd();
   static bool isBackground();
   static void syncSubCpu();
+  static void wakeup(int cpu);
+  static void sync(int cpu, WKCPU_SYNC sync, CPUID cpuid);
   static void setHeartBeatCpu(CPUID cpu);
   static u32 getJobTrans();
   static const long &getBeginClock(bool isCurrent);

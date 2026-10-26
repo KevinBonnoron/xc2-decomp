@@ -15,6 +15,7 @@
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_res_etc_params.h"
 #include "dr/dr_res_mdo_inst_anm_obj.h"
+#include "dr/dr_res_mdo_mat.h"
 #include "dr/dr_res_mdo_mesh_obj.h"
 #include "dr/dr_res_mdo_shd_obj.h"
 #include "dr/dr_res_mdo_vtx_mesh_obj.h"
@@ -248,7 +249,7 @@ void ScnObjAccResMaterial::setDrMdl(ScnObjModel *model) {
   }
 }
 
-MdoWrkMatEntry *ScnObjAccResMaterial::getMatRes(int index) { return &m_matEntries[index]; }
+DrResMdoMat *ScnObjAccResMaterial::getMatRes(int index) { return &m_matEntries[index]; }
 
 MdsMatInfoHeader *ScnObjAccResMaterial::getMatData(int index) { return &m_matData[index]; }
 

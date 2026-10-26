@@ -15,6 +15,15 @@ bool WorkCpuThread::isSuspendThread() const {
   return unknown1b8->isSuspended();
 }
 
+bool WorkCpuThread::isWaitEvent() const {
+  if (unknown1b8 != nullptr) {
+    return unknown1b8->isWaitingEvent();
+  }
+  return false;
+}
+
+MLTHREAD *WorkCpuThread::getHandle() const { return unknown1b8->getHandle(); }
+
 CPUID WorkCpuThread::getCPUID() const { return m_CPUID; }
 
 void WorkCpuThread::getStackInfo(unsigned long &address, unsigned long &size) {

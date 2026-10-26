@@ -25,6 +25,20 @@ DrShdLgtHybrid::~DrShdLgtHybrid() {
   }
 }
 
+void DrShdLgtHybrid::render(DrShdLgtMan *shdLgtMan, DrLightMan *lightMan) {
+  if (unknown10->unknown1da4 != 1) {
+    if (unknown10->unknown1da4 != 0) {
+      return;
+    }
+    unknown20->render(shdLgtMan, lightMan);
+    return;
+  }
+  if (DrMan::getIns()->unknown1d70) {
+    return;
+  }
+  unknown18->render(shdLgtMan, lightMan);
+}
+
 void DrShdLgtHybrid::stockBegin() {
   unknown18->stockBegin();
   unknown20->stockBegin();

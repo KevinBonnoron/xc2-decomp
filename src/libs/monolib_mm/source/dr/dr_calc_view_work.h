@@ -11,7 +11,9 @@ class DrMan;
 
 class DrCalcViewWork {
 public:
+  void end();
   f32 getPixlLen(f32 depth, f32 length) const;
+  void shadowBegin(const mm::Mat44 &matrix);
   void shadowEnd();
   int unistatic_view(f32 *work, bool isJitter);
   int unistatic_proj(f32 *work, bool isJitter);

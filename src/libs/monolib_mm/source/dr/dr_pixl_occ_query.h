@@ -30,6 +30,7 @@ static_assert(offsetof(DrResQueryObj, unknown38) == 0x38, "");
 class DrPixlOccQuery {
 public:
   DrResQueryObj *createObj();
+  void end();
 };
 
 } // namespace ml

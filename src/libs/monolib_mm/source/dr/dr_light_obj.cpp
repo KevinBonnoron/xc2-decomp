@@ -1,5 +1,7 @@
 #include "dr/dr_light_obj.h"
 
+#include <math.h>
+
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_shadow_cache_man.h"
 #include "dr/dr_pixl_shadow_man.h"
@@ -84,6 +86,40 @@ DrLightObjAmb::~DrLightObjAmb() { releaseAmb(); }
 
 void DrLightObjAmb::releaseAmb() {}
 
+DrLightObjDir::DrLightObjDir() : DrLightObj() { initDir(); }
+
+DrLightObjDir::DrLightObjDir(DrPixlMan *pixlMan) : DrLightObj(pixlMan) { initDir(); }
+
+void DrLightObjDir::setDir(const mm::Vec3 &direction) {
+  f32 pitch = atan2f(direction.y, sqrtf(direction.x * direction.x + direction.z * direction.z));
+  f32 yaw = atan2f(direction.x, -direction.z);
+  unknown30.setRotXYZ(mm::Vec3(pitch, -yaw, 0.0f));
+  unknown70 = direction;
+}
+
+void DrLightObjDir::setDirShadow(bool isEnable, int index) {
+  releaseDir();
+  if (isEnable) {
+    unknown1c |= FLAG_SHADOW;
+    unknown28 = unknown20->unknown7f0->unknown178->createDirCacheShadow(this, index);
+  } else {
+    unknown1c &= ~FLAG_SHADOW;
+  }
+}
+
+void DrLightObjDir::initDir() {
+  unknown80.r = 1.0f;
+  unknown80.g = 1.0f;
+  unknown80.b = 1.0f;
+  unknown80.a = 1.0f;
+  unknown70.x = 0.0f;
+  unknown70.y = 0.0f;
+  unknown70.z = -1.0f;
+  unknown90 = 1.0f;
+  unknown30 = mm::Mat44::identity;
+  unknown18 = TYPE_DIR;
+}
+
 DrLightObjDir::~DrLightObjDir() { releaseDir(); }
 
 void DrLightObjDir::releaseDir() {
@@ -114,6 +150,13 @@ void DrLightObjDir::update(DrLightMan *lightMan) {
   }
 }
 
+void DrLightObjPnt::setMat(const mm::Mat44 &matrix) {
+  unknown30 = matrix;
+  m_pos = mm::Vec3(unknown30.rows[3][0], unknown30.rows[3][1], unknown30.rows[3][2]);
+}
+
+void DrLightObjPnt::deletePntShadow() { releasePnt(); }
+
 DrLightObjPnt::~DrLightObjPnt() { releasePnt(); }
 
 void DrLightObjPnt::releasePnt() {
@@ -124,6 +167,8 @@ void DrLightObjPnt::releasePnt() {
     unknown28 = nullptr;
   }
 }
+
+void DrLightObjSpt::deleteSptShadow() { releaseSpt(); }
 
 DrLightObjSpt::~DrLightObjSpt() { releaseSpt(); }
 

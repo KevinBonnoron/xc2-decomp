@@ -21,6 +21,14 @@ WinProc *WinViewRoot::getCurrentProc() {
   return root != nullptr ? root->unknown1f8 : nullptr;
 }
 
+void WinViewRoot::destroyProc(const WinProc *proc) {
+  WinViewRoot *root = get();
+  if (root != nullptr && (root->unknown200 == proc || root->unknown1f8 == proc)) {
+    root->unknown1f8 = nullptr;
+    root->unknown200 = nullptr;
+  }
+}
+
 bool WinViewRoot::isInitialized() {
   WinViewRoot *root = get();
   if (root == nullptr || root->wkIsWaitException()) {

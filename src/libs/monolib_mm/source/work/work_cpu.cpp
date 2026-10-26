@@ -13,6 +13,8 @@ WorkCpuThread *WorkCpu::getCpuThread(CPUID cpuId) {
   return cpu->unknown1740[index];
 }
 
+void WorkCpu::removeCpu(CPUID cpu, WorkCpuThread *) { get()->unknown1740[cpu - CPUID_CORE_0] = nullptr; }
+
 namespace _mlwcpu {
 
 bool s_bEnableLib;

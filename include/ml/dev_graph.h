@@ -164,9 +164,13 @@ static_assert(offsetof(DevGraph, unknown350) == 0x350, "");
 
 class DevGraphQue {
 public:
+  u32 getEven();
+  bool getOdd();
   void flushViewport();
   void pushRect(const mm::Rect<int> &viewport, const mm::Rect<int> &scissor, const mm::Rect<int> &renderRect, bool isFlush);
   void popRect();
+
+  s32 unknown00; // Inferred role: view; original member name unknown.
 };
 
 } // namespace ml

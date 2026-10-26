@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 #include "scn/scn_render_callback.h"
@@ -9,6 +10,7 @@
 
 namespace ml {
 
+class DebDraw;
 class Scn;
 class ScnDebug;
 class ScnObj;
@@ -26,9 +28,18 @@ public:
     mm::Vec3 position;
   };
 
-  u8 _00[0x78];
+  static void renderDebug(DebDraw *debDraw);
+  static void setCopydataCam(bool isCopydata);
+  const char *getName() const;
+
+  u8 _00[0x18];
+  mm::mtl::FixStr<64> m_name;
+  u8 _5c[0x78 - 0x5c];
   RENDER_INFO *renderInfo;
 };
+
+static_assert(offsetof(ScnObjCam, m_name) == 0x18, "");
+static_assert(offsetof(ScnObjCam, renderInfo) == 0x78, "");
 
 class ScnCamMan {
 public:

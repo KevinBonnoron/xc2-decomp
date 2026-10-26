@@ -16,6 +16,8 @@ class CGLibTriUniformBlock;
 } // namespace grlib
 
 namespace ml {
+
+class DrResMdoMat;
 class DrMan;
 class DrMdoSmlShadowObj;
 struct MdsMatCharMkTexTbl;
@@ -24,7 +26,12 @@ class DrResMdoVertex;
 class DrShdMdoDecExtTbl;
 
 struct MdsMatInfoHeader {
-  u8 _00[0x20 - 0x00];
+  u8 _00[0x0c - 0x00];
+  f32 unknown0c; // Inferred role: color r; original member name unknown.
+  f32 unknown10; // Inferred role: color g; original member name unknown.
+  f32 unknown14; // Inferred role: color b; original member name unknown.
+  f32 unknown18; // Inferred role: color a; original member name unknown.
+  u8 _1c[0x20 - 0x1c];
   u32 unknown20; // Inferred role: texture index offset; original member name unknown.
   u8 _24[0x40 - 0x24];
   u32 unknown40; // Inferred role: value offset; original member name unknown.
@@ -33,6 +40,8 @@ struct MdsMatInfoHeader {
   u8 _66[0x74 - 0x66];
 };
 
+static_assert(offsetof(MdsMatInfoHeader, unknown0c) == 0x0c, "");
+static_assert(offsetof(MdsMatInfoHeader, unknown18) == 0x18, "");
 static_assert(offsetof(MdsMatInfoHeader, unknown20) == 0x20, "");
 static_assert(offsetof(MdsMatInfoHeader, unknown40) == 0x40, "");
 static_assert(offsetof(MdsMatInfoHeader, unknown64) == 0x64, "");
@@ -65,13 +74,6 @@ struct MdsMeshHeader {
 static_assert(offsetof(MdsMeshHeader, unknown64) == 0x64, "");
 static_assert(offsetof(MdsMeshHeader, unknown94) == 0x94, "");
 
-struct MdoWrkMatEntry {
-  const char *unknown00; // Inferred role: name; original member name unknown.
-  u8 _08[0x20 - 0x08];
-};
-
-static_assert(sizeof(MdoWrkMatEntry) == 0x20, "");
-
 struct MdoWrkAvatar {
   u32 unknown00; // Inferred role: flags; original member name unknown.
   u8 _04[0x08 - 0x04];
@@ -99,6 +101,20 @@ struct MdoWrkShaderParm {
 };
 
 static_assert(offsetof(MdoWrkShaderParm, unknown30) == 0x30, "");
+
+// Inferred type: fixed animation data header; the original type name is unknown.
+struct MdsFixedAnimData {
+  u8 _00[0x14];
+  u32 unknown14;
+  u8 _18[0x1c - 0x18];
+  u32 unknown1c;
+  u8 _20[0x24 - 0x20];
+  u32 unknown24;
+};
+
+static_assert(offsetof(MdsFixedAnimData, unknown14) == 0x14, "");
+static_assert(offsetof(MdsFixedAnimData, unknown1c) == 0x1c, "");
+static_assert(offsetof(MdsFixedAnimData, unknown24) == 0x24, "");
 
 struct MdsMdlInfoHeader {
   u8 _00[0x30 - 0x00];
@@ -128,14 +144,19 @@ struct MdoWrkMatRes {
   s32 unknown30;                  // Inferred role: mat count; original member name unknown.
   u8 _034[0x038 - 0x034];
   f32 *unknown38; // Inferred role: base values; original member name unknown.
-  u8 _040[0x090 - 0x040];
+  u8 _040[0x050 - 0x040];
+  const u8 *unknown50; // Inferred role: fixed anim data; original member name unknown.
+  const u8 *unknown58; // Inferred role: fixed anim arrays; original member name unknown.
+  const u8 *unknown60; // Inferred role: fixed anim arrays; original member name unknown.
+  const u8 *unknown68; // Inferred role: fixed anim arrays; original member name unknown.
+  u8 _070[0x090 - 0x070];
   grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *unknown90; // Inferred role: material uniforms; original member name unknown.
   u8 _098[0x0a0 - 0x098];
   grlib::CGLibUniformArray<grlib::CGLibTriUniformBlock> *unknowna0; // Inferred role: mdl uniforms; original member name unknown.
   u8 _0a8[0x0b0 - 0x0a8];
   grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *unknownb0; // Inferred role: vol tex uniforms; original member name unknown.
   grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *unknownb8; // Inferred role: rim bloom uniforms; original member name unknown.
-  MdoWrkMatEntry *unknownc0;                                        // Inferred role: mat entries; original member name unknown.
+  DrResMdoMat *unknownc0;                                           // Inferred role: mat entries; original member name unknown.
   DrResMdoVertex *unknownc8;                                        // Inferred role: vertex; original member name unknown.
   DrResMdoTexList *unknownd0;                                       // Inferred role: texture list; original member name unknown.
   u8 _0d8[0x0e8 - 0x0d8];
@@ -155,6 +176,8 @@ struct MdoWrkMatRes {
 };
 
 static_assert(offsetof(MdoWrkMatRes, unknown10) == 0x010, "");
+static_assert(offsetof(MdoWrkMatRes, unknown50) == 0x050, "");
+static_assert(offsetof(MdoWrkMatRes, unknown68) == 0x068, "");
 static_assert(offsetof(MdoWrkMatRes, unknown18) == 0x018, "");
 static_assert(offsetof(MdoWrkMatRes, unknown20) == 0x020, "");
 static_assert(offsetof(MdoWrkMatRes, unknown28) == 0x028, "");
@@ -232,6 +255,8 @@ public:
   void setFlagWaveOn(bool isOn);
   void setExtraShaderSetup(const void *shader);
   void releaseExtraShader();
+  void matCall_TransVal(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
+  void matCall_CalcColor(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
   void matCall_EmissiveTime(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
   void matCall_RgbTime(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
   void matCall_RTime(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
@@ -261,11 +286,12 @@ public:
   DrShdMdoDecExtTbl *unknown38;        // Inferred role: dec ext tbl; original member name unknown.
   mm::Col3 *unknown40;                 // Inferred role: avatar map colors; original member name unknown.
   const MdsMatCharMkTexTbl *unknown48; // Inferred role: char mk textures; original member name unknown.
-  u8 _50[0x58 - 0x50];
-  DrMdoSmlShadowObj *unknown58; // Inferred role: sml shadow; original member name unknown.
+  void *unknown50;                     // Inferred role: dammy data; original member name unknown.
+  DrMdoSmlShadowObj *unknown58;        // Inferred role: sml shadow; original member name unknown.
   u8 _60[0x70 - 0x60];
   mm::Mat44 m_matrix;
-  u8 _b0[0xd0 - 0xb0];
+  mm::Vec3 m_offsetPos;
+  u8 _c0[0xd0 - 0xc0];
   f32 unknownd0[2]; // Inferred role: alphas; original member name unknown.
   f32 unknownd8;    // Inferred role: bloom; original member name unknown.
   f32 unknowndc;    // Inferred role: frame spd; original member name unknown.
@@ -294,8 +320,10 @@ static_assert(offsetof(DrMdoMat, unknown30) == 0x30, "");
 static_assert(offsetof(DrMdoMat, unknown38) == 0x38, "");
 static_assert(offsetof(DrMdoMat, unknown40) == 0x40, "");
 static_assert(offsetof(DrMdoMat, unknown48) == 0x48, "");
+static_assert(offsetof(DrMdoMat, unknown50) == 0x50, "");
 static_assert(offsetof(DrMdoMat, unknown58) == 0x58, "");
 static_assert(offsetof(DrMdoMat, m_matrix) == 0x70, "");
+static_assert(offsetof(DrMdoMat, m_offsetPos) == 0xb0, "");
 static_assert(offsetof(DrMdoMat, unknownd0) == 0xd0, "");
 static_assert(offsetof(DrMdoMat, unknownd8) == 0xd8, "");
 static_assert(offsetof(DrMdoMat, unknowndc) == 0xdc, "");

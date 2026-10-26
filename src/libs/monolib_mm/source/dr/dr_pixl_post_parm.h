@@ -64,10 +64,13 @@ public:
   void calcReductionTransBuffer(int &width, int &height) const;
   void setDOF(bool dof);
   bool getTMAAOn() const;
+  f32 getTMAASharpness(u32 index) const;
   bool isMotBlur2() const;
   bool getBloomOn() const;
   bool getToneMapOn() const;
   bool isMotBlur() const;
+  bool isBlm2PassExtract() const;
+  bool isShwRaytraceTemporalWithOthers() const;
   void update();
   bool getAAOn() const;
   bool getColTblOn() const;
@@ -168,8 +171,10 @@ public:
   f32 unknown10c; // Inferred role: aa edge ranges; original member name unknown.
   u8 _0110[0x0111 - 0x0110];
   bool m_TMAAOn;
-  u8 _0112[0x0194 - 0x0112];
-  bool unknown194; // Inferred role: ssao; original member name unknown.
+  u8 _0112[0x0114 - 0x0112];
+  f32 unknown114[6];  // Inferred role: tmaa sharpness; original member name unknown.
+  f32 unknown12c[26]; // Inferred role: tmaa sharpness; original member name unknown.
+  bool unknown194;    // Inferred role: ssao; original member name unknown.
   u8 _0195[0x019c - 0x0195];
   f32 unknown19c; // Inferred role: ssao blur str; original member name unknown.
   u8 _01a0[0x01ca - 0x01a0];
@@ -232,7 +237,9 @@ public:
   bool unknown4d0; // Inferred role: glass br; original member name unknown.
   u8 _04d1[0x0518 - 0x04d1];
   DrPixlPostDblParm unknown518[2]; // Inferred role: dbl parms; original member name unknown.
-  u8 _0f58[0x0fb2 - 0x0f58];
+  u8 _0f58[0x0f72 - 0x0f58];
+  bool unknownf72; // Inferred role: blm 2 pass; original member name unknown.
+  u8 _0f73[0x0fb2 - 0x0f73];
   bool unknownfb2; // Inferred role: reduction; original member name unknown.
   bool unknownfb3; // Inferred role: reduction buffer; original member name unknown.
   bool unknownfb4; // Inferred role: separate trans; original member name unknown.
@@ -247,7 +254,9 @@ public:
   f32 unknownfe0; // Inferred role: reduction trans sc y; original member name unknown.
   u8 _0fe4[0x0ff0 - 0x0fe4];
   mm::Vec3 unknownff0; // Inferred role: sp blur target; original member name unknown.
-  u8 _1000[0x103e - 0x1000];
+  u8 _1000[0x1024 - 0x1000];
+  bool unknown1024; // Inferred role: shw raytrace temporal; original member name unknown.
+  u8 _1025[0x103e - 0x1025];
   bool unknown103e; // Inferred role: char dir shadow; original member name unknown.
   u8 _103f[0x107c - 0x103f];
   s32 unknown107c;  // Inferred role: light num; original member name unknown.
@@ -298,6 +307,8 @@ static_assert(offsetof(DrPixlPostParm, unknownf4) == 0x00f4, "");
 static_assert(offsetof(DrPixlPostParm, unknownf8) == 0x00f8, "");
 static_assert(offsetof(DrPixlPostParm, m_AAOn) == 0x00fc, "");
 static_assert(offsetof(DrPixlPostParm, unknown100) == 0x0100, "");
+static_assert(offsetof(DrPixlPostParm, unknown114) == 0x0114, "");
+static_assert(offsetof(DrPixlPostParm, unknown12c) == 0x012c, "");
 static_assert(offsetof(DrPixlPostParm, unknown104) == 0x0104, "");
 static_assert(offsetof(DrPixlPostParm, unknown108) == 0x0108, "");
 static_assert(offsetof(DrPixlPostParm, unknown10c) == 0x010c, "");
@@ -341,6 +352,7 @@ static_assert(offsetof(DrPixlPostParm, unknown470) == 0x0470, "");
 static_assert(offsetof(DrPixlPostParm, unknown488) == 0x0488, "");
 static_assert(offsetof(DrPixlPostParm, unknown4d0) == 0x04d0, "");
 static_assert(offsetof(DrPixlPostParm, unknown518) == 0x0518, "");
+static_assert(offsetof(DrPixlPostParm, unknownf72) == 0x0f72, "");
 static_assert(offsetof(DrPixlPostParm, unknownfb2) == 0x0fb2, "");
 static_assert(offsetof(DrPixlPostParm, unknownfb3) == 0x0fb3, "");
 static_assert(offsetof(DrPixlPostParm, unknownfb4) == 0x0fb4, "");
@@ -350,6 +362,7 @@ static_assert(offsetof(DrPixlPostParm, unknownfbc) == 0x0fbc, "");
 static_assert(offsetof(DrPixlPostParm, unknownfc0) == 0x0fc0, "");
 static_assert(offsetof(DrPixlPostParm, unknownfc8) == 0x0fc8, "");
 static_assert(offsetof(DrPixlPostParm, unknownff0) == 0x0ff0, "");
+static_assert(offsetof(DrPixlPostParm, unknown1024) == 0x1024, "");
 static_assert(offsetof(DrPixlPostParm, unknown103e) == 0x103e, "");
 static_assert(offsetof(DrPixlPostParm, unknown107c) == 0x107c, "");
 static_assert(offsetof(DrPixlPostParm, unknown1080) == 0x1080, "");

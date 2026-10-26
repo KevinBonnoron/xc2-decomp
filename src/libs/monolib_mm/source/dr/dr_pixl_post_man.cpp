@@ -19,6 +19,15 @@
 
 namespace ml {
 
+void DrPixlPostMan::setReflection(f32 x, f32 y, f32 z, bool isHigh) {
+  u32 flags = unknownf8;
+  u32 mask = isHigh ? 0x60000 : 0x20000;
+  unknownfc = x;
+  unknown100 = y;
+  unknown104 = z;
+  unknownf8 = flags | mask;
+}
+
 void DrPixlPostMan::setDownDepth() { unknownf8 |= FLAG_DEPTH_DOWN; }
 
 void DrPixlPostMan::renderDeferred() {}

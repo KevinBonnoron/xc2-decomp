@@ -7,6 +7,12 @@
 
 namespace ml {
 
+void DrCalcViewWork::shadowBegin(const mm::Mat44 &matrix) {
+  unknownc0 = matrix;
+  unknownc0.rows[3][0] = unknownc0.rows[3][1] = 0.0f;
+  unknownc0.rows[3][2] = 0.0f;
+}
+
 void DrCalcViewWork::shadowEnd() { memcpy(&unknownc0, &unknown140, 0x40); }
 
 f32 DrCalcViewWork::getPixlLen(f32 depth, f32 length) const {

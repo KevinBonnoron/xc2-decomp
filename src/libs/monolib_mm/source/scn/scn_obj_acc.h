@@ -31,7 +31,7 @@ struct DrSeamEtcPos;
 struct DrSeamEtcPosList;
 struct MdlVtxParticle;
 struct MdoWrkAvatar;
-struct MdoWrkMatEntry;
+class DrResMdoMat;
 struct MdoWrkShaderParm;
 struct MdsMeshPartsInfo;
 struct MdsMatInfoHeader;
@@ -150,12 +150,12 @@ public:
   ScnObjAccResMaterial();
   ScnObjAccResMaterial(ScnObjModel *model);
   void setDrMdl(ScnObjModel *model);
-  MdoWrkMatEntry *getMatRes(int index);
+  DrResMdoMat *getMatRes(int index);
   MdsMatInfoHeader *getMatData(int index);
 
 private:
   MdsMatInfoHeader *m_matData;
-  MdoWrkMatEntry *m_matEntries;
+  DrResMdoMat *m_matEntries;
   u32 m_matCount;
 };
 

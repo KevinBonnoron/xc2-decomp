@@ -84,6 +84,20 @@ void DrResMdoMeshParts::setDefAlpha(f32 alpha) {
   unknown2c[DrMan::s_nDblIdx] = alpha;
 }
 
+f32 DrResMdoMeshParts::getDefAlpha() const {
+  int index = DrMan::s_nDblStockIdx;
+  u32 bit = 2 << index;
+  if (unknown28 & bit) {
+    return unknown2c[index];
+  }
+  index = DrMan::s_nDblIdx;
+  bit = 2 << index;
+  if (unknown28 & bit) {
+    return unknown2c[index];
+  }
+  return unknown34;
+}
+
 void DrResMdoMeshParts::updateAlpha() {
   int index = DrMan::s_nDblIdx;
   u32 bit = 2 << index;

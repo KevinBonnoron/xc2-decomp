@@ -10,6 +10,10 @@ class DrShdLgtMan;
 
 class DrShdMan {
 public:
+  void debugRender();
+  void beforeUpdateCate(int cate);
+  void resetColorBuff(int index);
+
   DrShdDataList *unknown00; // Inferred role: data list; original member name unknown.
   u8 _08[0x18 - 0x08];
   DrShdLgtMan *unknown18; // Inferred role: lgt man; original member name unknown.

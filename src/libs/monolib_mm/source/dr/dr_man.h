@@ -158,7 +158,8 @@ public:
   s32 unknown658;                  // Inferred role: callback num; original member name unknown.
   u8 _065c[0x0660 - 0x065c];
   IDrDrawWorkInfo unknown660[4]; // Inferred role: draw work infos; original member name unknown.
-  u8 _1c60[0x1c70 - 0x1c60];
+  s32 unknown1c60;               // Inferred role: tmaa mode; original member name unknown.
+  u8 _1c64[0x1c70 - 0x1c64];
   mm::Vec3 unknown1c70; // Inferred role: seam map read pos; original member name unknown.
   bool unknown1c80;     // Inferred role: seam map add pos mode; original member name unknown.
   u8 unknown1c81[2];    // Inferred role: capture modes; original member name unknown.
@@ -196,7 +197,8 @@ public:
   bool unknown1d65; // Inferred role: refraction render skip; original member name unknown.
   bool unknown1d66; // Inferred role: alpha render skip; original member name unknown.
   bool unknown1d67; // Inferred role: sp alpha render skip; original member name unknown.
-  u8 _1d68[0x1d71 - 0x1d68];
+  u8 _1d68[0x1d70 - 0x1d68];
+  bool unknown1d70; // Inferred role: shadow light skip; original member name unknown.
   bool unknown1d71; // Inferred role: fog skip; original member name unknown.
   u8 _1d72[0x1d7b - 0x1d72];
   bool unknown1d7b; // Inferred role: mdl dbl pause; original member name unknown.
@@ -240,6 +242,7 @@ static_assert(offsetof(DrMan, unknown5c8) == 0x05c8, "");
 static_assert(offsetof(DrMan, unknown5d8) == 0x05d8, "");
 static_assert(offsetof(DrMan, unknown658) == 0x0658, "");
 static_assert(offsetof(DrMan, unknown660) == 0x0660, "");
+static_assert(offsetof(DrMan, unknown1c60) == 0x1c60, "");
 static_assert(offsetof(DrMan, unknown1c70) == 0x1c70, "");
 static_assert(offsetof(DrMan, unknown1c80) == 0x1c80, "");
 static_assert(offsetof(DrMan, unknown1c81) == 0x1c81, "");

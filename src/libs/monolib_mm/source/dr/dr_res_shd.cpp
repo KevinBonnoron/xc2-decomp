@@ -5,6 +5,35 @@
 
 namespace ml {
 
+namespace _drrsm {
+
+const char *c_DeclOfsNames[2] = {"MODE_UMATE_ON", "DECL_DITHER"};
+
+} // namespace _drrsm
+
+DrResShdMpf::DrResShdMpf(DrShdDataObj *dataObj, int type) : unknown00(dataObj) {
+  for (int i = 0; i < 8; i++) {
+    unknown08[i] = -1;
+  }
+  unknown28 = 1;
+  unknown2a = type;
+  unknown2c[0] = unknown00->getDeclarationOfs(_drrsm::c_DeclOfsNames[0]);
+  unknown2c[1] = unknown00->getDeclarationOfs(_drrsm::c_DeclOfsNames[1]);
+  setShaderParam();
+}
+
+void DrResShdMpf::setShaderParam() {
+  unknown08[2] = 1;
+  unknown08[0] = 0;
+  unknown08[1] = 1;
+  unknown08[3] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_MpfWet");
+  unknown08[4] = (unknown00->unknown38 + unknown00->unknown58)->getUniformBlockOfs("U_MpfOld");
+  unknown08[5] = 1;
+  unknown08[6] = 0;
+  unknown08[7] = 2;
+  unknown28 &= ~1;
+}
+
 void DrResShdMpf::setupShader(u32 mode) {
   unknown00->setDeclarationIdx(unknown2c[0], 2 - (mode & 1));
   unknown00->setDeclarationIdx(unknown2c[1], 2 - ((mode >> 1) & 1));
@@ -232,6 +261,17 @@ void (DrResShdShw::*DrResShdShw::s_callShwSet[])() = {
     &DrResShdShw::shwShdset_InstMot,
     &DrResShdShw::shwShdset_Fw,
 };
+
+DrResShdStreamOut::DrResShdStreamOut(DrShdDataObj *dataObj, int type) : unknown00(dataObj) {
+  unknown08[0] = -1;
+  unknown08[1] = -1;
+  unknown08[2] = -1;
+  unknown14 = type;
+  unknown16 = 0;
+  setShaderParam();
+}
+
+void DrResShdStreamOut::setupStreamShader(u32 index) { unknown00->setupShader(index); }
 
 void DrResShdStreamOut::setShaderParam() { (this->*s_callStmOuSet[unknown14])(); }
 

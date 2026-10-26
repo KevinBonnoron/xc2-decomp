@@ -51,6 +51,8 @@ public:
   static bool rfRead(FileHandleTh *handle, const DevFileParamTh &param);
   static bool rfIsBusy(FileHandleTh *handle);
   static void rfClose(FileHandleTh *handle);
+  static FileHandleTh *readFile(const DevFileParamTh &param);
+  static void cancel(FileHandleTh *handle, bool isForce);
 };
 
 } // namespace ml

@@ -44,6 +44,7 @@ public:
   static void setBlendColor(const mm::Col4 &color);
   static void setColorBufferOn();
   static void setColorBufferOff();
+  static void setColorChannelMask(GrlMrtType mrt, u8 red, u8 green, u8 blue, u8 alpha);
   static void setColorChannelMask(u8 red, u8 green, u8 blue, u8 alpha);
   static void clearMainFrameBuffer(const mm::Col4 &color);
 };

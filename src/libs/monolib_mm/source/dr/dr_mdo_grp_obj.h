@@ -7,6 +7,7 @@ class DrMdlObj;
 
 class DrMdoGrpObj {
 public:
+  void resourceInit();
   DrMdlObj *createInstantMdl(const void *data, const char *name, u32 index);
   void callNomSetupRender();
   void callZSortNomZpreePassRender();

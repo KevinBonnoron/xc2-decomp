@@ -29,10 +29,23 @@ public:
 
   void release();
   bool isResSafe() const;
+  DrCalcStmRes *getResObj(u32 index);
   DrCalcStmRes *getResVertexObj();
   void setUseMode(DrTexUseMode mode);
   grlib::CGLibTextureBuffer *getTexObj(u32 index);
   u32 getAdder();
+  u32 texstm_size_Wait();
+
+  u8 _00[0x30];
+  DrCalcStmRes *unknown30[2]; // Inferred role: res; original member name unknown.
+  u8 _40[0x88 - 0x40];
+  u32 unknown88; // Inferred role: wait state; original member name unknown.
+  u8 _8c[0xb0 - 0x8c];
+  grlib::CGLibTextureBuffer *unknownb0; // Inferred role: textures; original member name unknown.
 };
+
+static_assert(offsetof(DrCalcStmListObj, unknown30) == 0x30, "");
+static_assert(offsetof(DrCalcStmListObj, unknown88) == 0x88, "");
+static_assert(offsetof(DrCalcStmListObj, unknownb0) == 0xb0, "");
 
 } // namespace ml

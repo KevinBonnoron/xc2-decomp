@@ -13,9 +13,12 @@ public:
   static const int TEXTURE_MAX = 7;
   static const int SH_TERM_NUM = 4;
 
+  int getPriority() const;
+
   u8 _00[0x08 - 0x00];
   int unknown08; // Inferred role: version; original member name unknown.
-  u8 m_priority[0x14 - 0x0c];
+  int m_priority;
+  u8 _10[0x14 - 0x10];
   int unknown14; // Inferred role: texture num; original member name unknown.
   u8 _18[0x78 - 0x18];
   grlib::CGLibTextureBuffer unknown78[TEXTURE_MAX]; // Inferred role: textures; original member name unknown.
@@ -30,6 +33,7 @@ public:
 };
 
 static_assert(offsetof(DrLightObjGlobalIBL, unknown08) == 0x08, "");
+static_assert(offsetof(DrLightObjGlobalIBL, m_priority) == 0x0c, "");
 static_assert(offsetof(DrLightObjGlobalIBL, unknown14) == 0x14, "");
 static_assert(offsetof(DrLightObjGlobalIBL, unknown78) == 0x78, "");
 static_assert(offsetof(DrLightObjGlobalIBL, unknown3a0) == 0x3a0, "");
