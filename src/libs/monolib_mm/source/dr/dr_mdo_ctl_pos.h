@@ -28,6 +28,11 @@ public:
   void callLightPrePassRenderPosAll();
   void callAlphaRenderPosAll();
   void callSpAlphaRenderPosAll();
+  void createThicknessRenderFirstDisplayList();
+  void createThicknessRenderSecondDisplayList();
+  void createThicknessRenderDisplayListSub(bool isFirst);
+  void createZBuffRenderDisplayList();
+  void callPosRender(u32 renderType);
 
   u8 _190[0x1e8 - 0x190];
   DrResMdoInstAnmObj unknown1e8; // Inferred role: inst anm object; original member name unknown.

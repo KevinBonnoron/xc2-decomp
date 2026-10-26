@@ -33,6 +33,13 @@ class DrMdoSetup : public DrMdoNode {
 public:
   void changeShader(bool isChange);
   void beginMatInfo();
+  // Inferred role: resets the material info state, the body of beginMatInfo inlined by callers; original name unknown.
+  void unknown001() {
+    unknown17c = 0xffff;
+    unknown17e = 0xffff;
+    unknown178 = 0x10;
+    unknown179 = 0;
+  }
   void changeSeamMatInfo();
   void changeShaderMat(bool isChange);
   void changeShaderPos();

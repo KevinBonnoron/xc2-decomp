@@ -232,6 +232,14 @@ public:
   };
 
   enum MdlFlag {
+    MDL_FLAG_UNKNOWN_0 = 1 << 0,
+    MDL_FLAG_UNKNOWN_1 = 1 << 1,
+    MDL_FLAG_UNKNOWN_2 = 1 << 2,
+    MDL_FLAG_UNKNOWN_3 = 1 << 3,
+    MDL_FLAG_UNKNOWN_4 = 1 << 4,
+    MDL_FLAG_UNKNOWN_5 = 1 << 5,
+    MDL_FLAG_UNKNOWN_6 = 1 << 6,
+    MDL_FLAG_UNKNOWN_20 = 1 << 20,
     MDL_FLAG_BLOOM = 1 << 15,
     MDL_FLAG_ALPHA_BLOOM = 1 << 16,
     MDL_FLAG_VOLUME = 1 << 17,
@@ -300,7 +308,10 @@ public:
   f32 unknowne8; // Inferred role: scale; original member name unknown.
   u8 _ec[0xf0 - 0xec];
   bool m_gpuRender;
-  u8 _f1[0xf8 - 0xf1];
+  u8 _f1;
+  u16 unknownf2; // Inferred role: render pass id; original member name unknown.
+  u16 unknownf4; // Inferred role: render pass index; original member name unknown.
+  u8 _f6[0xf8 - 0xf6];
   u32 unknownf8;  // Inferred role: mdl flags; original member name unknown.
   u32 unknownfc;  // Inferred role: draw flags; original member name unknown.
   u32 unknown100; // Inferred role: alpha flags; original member name unknown.
@@ -330,6 +341,8 @@ static_assert(offsetof(DrMdoMat, unknowndc) == 0xdc, "");
 static_assert(offsetof(DrMdoMat, unknowne0) == 0xe0, "");
 static_assert(offsetof(DrMdoMat, unknowne8) == 0xe8, "");
 static_assert(offsetof(DrMdoMat, m_gpuRender) == 0xf0, "");
+static_assert(offsetof(DrMdoMat, unknownf2) == 0xf2, "");
+static_assert(offsetof(DrMdoMat, unknownf4) == 0xf4, "");
 static_assert(offsetof(DrMdoMat, unknownf8) == 0xf8, "");
 static_assert(offsetof(DrMdoMat, unknownfc) == 0xfc, "");
 static_assert(offsetof(DrMdoMat, unknown100) == 0x100, "");

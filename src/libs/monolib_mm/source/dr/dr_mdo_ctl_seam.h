@@ -6,6 +6,7 @@
 #include "types.h"
 
 namespace ml {
+struct MdoWrkMatRes;
 
 struct MdsSeamEtcPosData {
   u32 unknown00;    // Inferred role: object name offset; original member name unknown.
@@ -77,13 +78,16 @@ public:
   u8 _1b0[0x698 - 0x1b0];
   DrResMdoInstAnmObj unknown698; // Inferred role: inst anm object; original member name unknown.
   DrSeamEtcPosList unknown6c8;   // Inferred role: etc pos list; original member name unknown.
-  u8 _6d8[0xc7c - 0x6d8];
+  u8 _6d8[0xb38 - 0x6d8];
+  MdoWrkMatRes *unknownb38; // Inferred role: saved mat res; original member name unknown.
+  u8 _b40[0xc7c - 0xb40];
   u32 unknownc7c; // Inferred role: seam flags; original member name unknown.
 };
 
 static_assert(offsetof(DrMdoCtlSeam, unknown1a8) == 0x1a8, "");
 static_assert(offsetof(DrMdoCtlSeam, unknown698) == 0x698, "");
 static_assert(offsetof(DrMdoCtlSeam, unknown6c8) == 0x6c8, "");
+static_assert(offsetof(DrMdoCtlSeam, unknownb38) == 0xb38, "");
 static_assert(offsetof(DrMdoCtlSeam, unknownc7c) == 0xc7c, "");
 
 class DrMdoCtlSeamAll : public DrMdoCtlSeam {

@@ -41,12 +41,7 @@ void DrMdoSetup::changeShader(bool isChange) {
   }
 }
 
-void DrMdoSetup::beginMatInfo() {
-  unknown17c = 0xffff;
-  unknown17e = 0xffff;
-  unknown178 = 0x10;
-  unknown179 = 0;
-}
+void DrMdoSetup::beginMatInfo() { unknown001(); }
 
 void DrMdoSetup::changeSeamMatInfo() {
   unknown17c = 0xffff;

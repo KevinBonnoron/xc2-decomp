@@ -7,6 +7,26 @@
 
 namespace ml {
 
+namespace _dcvwk {
+
+f32 calcHaltonSequence(u32 index, u32 base) {
+  f32 result = 0.0f;
+  if (index != 0) {
+    f32 fraction = 1.0f;
+    bool hasNext;
+    do {
+      u32 next = index / base;
+      fraction = fraction / (f32)base;
+      hasNext = base <= index;
+      result += fraction * (f32)(index - next * base);
+      index = next;
+    } while (hasNext);
+  }
+  return result;
+}
+
+} // namespace _dcvwk
+
 void DrCalcViewWork::shadowBegin(const mm::Mat44 &matrix) {
   unknownc0 = matrix;
   unknownc0.rows[3][0] = unknownc0.rows[3][1] = 0.0f;
