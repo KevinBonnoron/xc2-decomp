@@ -5,6 +5,7 @@
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_phantom.h"
 #include "types.h"
 
 struct CBdatWrapper;
@@ -32,14 +33,19 @@ public:
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
+  void createGmkPhantom();
   void endEvent();
 
-  u8 _48[0xe1 - 0x48];
-  bool unknownE1; // Role and original member name unknown.
+  u8 _48[0x50 - 0x48];
+  GmkPhantom unknown50; // Inferred role: phantom; original member name unknown.
+  bool unknownE0;       // Role and original member name unknown.
+  bool unknownE1;       // Role and original member name unknown.
   u8 _e2[0xf0 - 0xe2];
 };
 
 static_assert(sizeof(GmkMapJump::BdatInfo) == 0xc, "");
+static_assert(offsetof(GmkMapJump, unknown50) == 0x50, "");
+static_assert(offsetof(GmkMapJump, unknownE0) == 0xe0, "");
 static_assert(offsetof(GmkMapJump, unknownE1) == 0xe1, "");
 static_assert(sizeof(GmkMapJump) == 0xf0, "");
 

@@ -4,7 +4,10 @@
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
+#include "mm_mtl/vector.h"
 
 namespace gmk {
 
@@ -37,13 +40,127 @@ bool GmkMapGimmick::BdatInfo::isPopCondMatched() const {
 
 void GmkMapGimmick::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
 
+void GmkMapGimmick::update(f32 deltaTime) {
+  AGmkBase::update(deltaTime);
+  if (isValid() && unknown50) {
+    (this->*unknown50)(deltaTime);
+  }
+}
+
 void GmkMapGimmick::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {}
 
 GmkType GmkMapGimmick::getGmkType() const { return GMK_TYPE; }
 
+void GmkMapGimmick::dispose() {
+  unknown50 = nullptr;
+  disposeGobInst();
+  AGmkBase::dispose();
+}
+
+void GmkMapGimmick::disposeGobInst() {
+  if (unknown60 != gf::INVALID_HANDLE) {
+    unbindToGameObj(unknown60);
+    gf::GfObjUtil::destroy(unknown60);
+    unknown60 = gf::INVALID_HANDLE;
+  }
+}
+void GmkMapGimmick::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
+  AGmkBase::onGobEvent(event, handle);
+  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
+    unknown60 = gf::INVALID_HANDLE;
+  }
+}
+
+void GmkMapGimmick::debugDraw() const {
+  if (!isValid()) {
+    return;
+  }
+  GameFlagCond cond(1, getGameFlagId());
+  cond.isMatch(0);
+}
+
 int GmkMapGimmick::getGameFlagId() const { return unknown20.unknown18 + 0xab66; }
+bool GmkMapGimmick::isNotSolved() const {
+  GameFlagCond cond(1, getGameFlagId());
+  return cond.isMatch(0);
+}
 
 void GmkMapGimmick::setSolved() const { gf::GfGameFlag::setLocal(1, getGameFlagId(), 1); }
+
+void GmkMapGimmick::create(const CreateInfo &info) {
+  AGmkBase::create(info);
+  if (isValid()) {
+    f32 radius = static_cast<f32>(getBdatInfo()->unknown02);
+    unknown48 = (radius + 10.0f) * (radius + 10.0f);
+    unknown50 = &GmkMapGimmick::seqInit;
+  }
+}
+
+bool GmkMapGimmick::canPopGobInst() const {
+  if (unknown60 != gf::INVALID_HANDLE) {
+    return false;
+  }
+  if (!isNotSolved()) {
+    return false;
+  }
+  if (!getBdatInfo()->isPopCondMatched()) {
+    return false;
+  }
+  if (unknownA8 && !unknownA9) {
+    return false;
+  }
+  if (unknown48 > 0.0f) {
+    if (!DistCond::isMatch(unknown48, unknown08.unknown08->unknown00)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool GmkMapGimmick::canDepopGobInst() const {
+  if (unknown60 == gf::INVALID_HANDLE) {
+    return false;
+  }
+  if (!isNotSolved()) {
+    return true;
+  }
+  if (!getBdatInfo()->isPopCondMatched()) {
+    return true;
+  }
+  if (unknown48 > 0.0f && !DistCond::isMatch(unknown48, unknown08.unknown08->unknown00)) {
+    return true;
+  }
+  return false;
+}
+
+bool GmkMapGimmickList::updateImmediate() {
+  bool isValidList = isValid();
+  u32 savedUpdateGmkNumPerFrame = updateGmkNumPerFrame;
+  u32 savedUpdateGmkIndex = updateGmkIndex;
+  if (seq) {
+    updateGmkNumPerFrame = getInstNum();
+    updateGmkIndex = 0;
+    (this->*seq)(0.0f);
+  }
+  updateGmkNumPerFrame = savedUpdateGmkNumPerFrame;
+  updateGmkIndex = savedUpdateGmkIndex;
+  if (!isValidList) {
+    return false;
+  }
+  return unknown230.updateImmediate();
+}
+
+const AGmkBase *GmkMapGimmickList::getInst(u32 index) const { return &gmkInsts[index]; }
+
+void GmkMapGimmickList::dispose() {
+  unknown230.dispose();
+  TGmkList::dispose();
+}
+
+void GmkMapGimmickList::update(f32 deltaTime) {
+  unknown230.update(deltaTime);
+  TGmkList::update(deltaTime);
+}
 
 void GmkMapGimmickList::setUpdateGmkNumPerFrame(u32 num) {
   TGmkList::setUpdateGmkNumPerFrame(num);

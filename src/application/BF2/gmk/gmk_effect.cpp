@@ -36,6 +36,19 @@ bool GmkEffectLocator::isValid() const { return unknown08.unknown00 != nullptr &
 
 GmkType GmkEffect::getGmkType() const { return GMK_TYPE; }
 
+void GmkEffect::dispose() {
+  unknownB8_0 = false;
+  unknownB8_1 = false;
+  unknownB8_2 = false;
+  if (unknownAC != 0) {
+    fw::EffectManager::get()->remove(unknownAC);
+    unknownAC = 0;
+  }
+  AGmkBase::dispose();
+  unknown90 = nullptr;
+  unknownA0 = nullptr;
+}
+
 void GmkEffect::validateDisp() const {
   if (unknownAC == 0) {
     return;

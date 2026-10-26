@@ -5,6 +5,8 @@
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_phantom.h"
+#include "mm_mtl/intrusive_list.h"
 #include "types.h"
 
 struct CBdatWrapper;
@@ -28,22 +30,30 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_EVENT;
 
+  GmkEvent();
   ~GmkEvent() override;
   GmkType getGmkType() const override;
   void create(const CreateInfo &info) override;
+  void beginEvent();
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   void disposeGmkPhantom();
 
-  u8 _48[0xf0 - 0x48];
-  u16 unknownF0;  // Role and original member name unknown.
-  bool unknownF2; // Role and original member name unknown.
+  mm::mtl::IntrusiveListNode<GmkEvent> unknown48; // Role and original member name unknown.
+  u8 _58[0x60 - 0x58];
+  GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
+  bool unknownF0;       // Role and original member name unknown.
+  bool unknownF1;       // Role and original member name unknown.
+  bool unknownF2;       // Role and original member name unknown.
   u8 _f3[0x100 - 0xf3];
 };
 
 static_assert(sizeof(GmkEvent::BdatInfo) == 0xe, "");
+static_assert(offsetof(GmkEvent, unknown48) == 0x48, "");
+static_assert(offsetof(GmkEvent, unknown60) == 0x60, "");
 static_assert(offsetof(GmkEvent, unknownF0) == 0xf0, "");
+static_assert(offsetof(GmkEvent, unknownF1) == 0xf1, "");
 static_assert(offsetof(GmkEvent, unknownF2) == 0xf2, "");
 static_assert(sizeof(GmkEvent) == 0x100, "");
 

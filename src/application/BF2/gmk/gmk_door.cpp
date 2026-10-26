@@ -1,15 +1,21 @@
 #include "gmk/gmk_door.h"
 
 #include "bdat.h"
+#include "framework/sound/sound_manager.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/field/gf_field_lod.h"
+#include "gf/field/gf_field_sound.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_phantom.h"
+
+namespace fw {
+class SoundPack;
+} // namespace fw
 
 namespace mm {
 namespace mtl {
@@ -113,6 +119,16 @@ bool GmkDoor::isDoorOpened() const {
   const BdatInfo *info = getBdatInfo();
   gf::GfFieldLod *lod = gf::GfFieldLod::get();
   return !lod->isAnimReverse(info->unknown06);
+}
+
+void GmkDoor::isSeLoop(bool isMapPack, u16 seId) const {
+  fw::SoundPack *pack;
+  if (isMapPack) {
+    pack = gf::GfFieldSound::get()->getMapPack();
+  } else {
+    pack = gf::GfFieldSound::get()->getCommonPack();
+  }
+  fw::SoundManager::get()->isLoop(seId, pack);
 }
 
 void GmkDoor::seqDoor_Shutdowned(f32 deltaTime) { seqDoor_Booted(deltaTime); }

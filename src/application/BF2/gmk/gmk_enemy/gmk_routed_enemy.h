@@ -32,18 +32,23 @@ public:
   void *unknown50; // Role and original member name unknown.
   void *unknown58; // Role and original member name unknown.
   int unknown60;   // Role and original member name unknown.
-  u8 _64[0x200 - 0x64];
+  u8 _64[0x1a8 - 0x64];
+  bool unknown1A8; // Inferred role: pop condition flag; original member name unknown.
+  bool unknown1A9; // Inferred role: pop condition matched; original member name unknown.
+  u8 _1aa[0x200 - 0x1aa];
 };
 
 static_assert(offsetof(GmkRoutedEnemy, unknown50) == 0x50, "");
 static_assert(offsetof(GmkRoutedEnemy, unknown58) == 0x58, "");
 static_assert(offsetof(GmkRoutedEnemy, unknown60) == 0x60, "");
+static_assert(offsetof(GmkRoutedEnemy, unknown1A8) == 0x1a8, "");
+static_assert(offsetof(GmkRoutedEnemy, unknown1A9) == 0x1a9, "");
 static_assert(sizeof(GmkRoutedEnemy) == 0x200, "");
 
 class GmkRoutedEnemyList : public TGmkList<GmkRoutedEnemy, GmkEnemy::BdatInfo, 0x4d4e4552, 8, GmkRoutedEnemyGobCustom> {
 public:
-  explicit GmkRoutedEnemyList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), unknown240(0xffffffff) {}
-  ~GmkRoutedEnemyList() override;
+  explicit GmkRoutedEnemyList(u32 updateGmkNumPerFrame);
+  ~GmkRoutedEnemyList() override { dispose(); }
 
   void setUpdateGmkNumPerFrame(u32 num) override;
   void create(const CreateInfo &info) override;

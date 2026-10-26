@@ -65,6 +65,7 @@ public:
   const mm::mtl::RTTI *getRTTI() const;
   u32 getProgress() const;
   bool isDoorOpened() const;
+  void isSeLoop(bool isMapPack, u16 seId) const;
   void seqDoor_Shutdowned(f32 deltaTime);
   void seqDoor_Booted(f32 deltaTime);
   void seqDoor_SpBooted(f32 deltaTime);

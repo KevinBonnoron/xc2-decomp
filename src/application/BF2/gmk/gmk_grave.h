@@ -58,7 +58,7 @@ public:
   bool reqPopEnemy() const;
   template <typename T> bool reqPopEnemy() const;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
-  void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override {}
+  void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 

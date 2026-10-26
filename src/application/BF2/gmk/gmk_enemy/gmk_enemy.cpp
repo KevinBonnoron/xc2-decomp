@@ -6,6 +6,7 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_manager.h"
 #include "gmk/gmk_bdat.h"
+#include "mm_mtl/vector.h"
 
 namespace gmk {
 
@@ -55,6 +56,28 @@ bool GmkEnemy::isValid() const {
   }
   return unknown58 > 0;
 }
+
+GmkEnemyList::GmkEnemyList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), unknown240(0xffffffff) {}
+
+void GmkEnemyList::create(const CreateInfo &info) {
+  if (!unknown228.create()) {
+    dispose();
+    return;
+  }
+  TGmkList::create(info);
+}
+
+void GmkEnemyList::dispose() {
+  unknown240.dispose();
+  TGmkList::dispose();
+}
+
+void GmkEnemyList::update(f32 deltaTime) {
+  unknown240.update(deltaTime);
+  TGmkList::update(deltaTime);
+}
+
+const AGmkBase *GmkEnemyList::getInst(u32 index) const { return &gmkInsts[index]; }
 
 void GmkEnemyList::setUpdateGmkNumPerFrame(u32 num) {
   TGmkList::setUpdateGmkNumPerFrame(num);

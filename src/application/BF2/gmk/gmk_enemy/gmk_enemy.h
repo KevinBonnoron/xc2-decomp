@@ -40,12 +40,17 @@ public:
   u8 *unknown48; // Role and original member name unknown.
   u8 *unknown50; // Role and original member name unknown.
   int unknown58; // Role and original member name unknown.
-  u8 _5c[0x1d0 - 0x5c];
+  u8 _5c[0x1a0 - 0x5c];
+  bool unknown1A0; // Inferred role: pop condition flag; original member name unknown.
+  bool unknown1A1; // Inferred role: pop condition matched; original member name unknown.
+  u8 _1a2[0x1d0 - 0x1a2];
 };
 
 static_assert(offsetof(GmkEnemy, unknown48) == 0x48, "");
 static_assert(offsetof(GmkEnemy, unknown50) == 0x50, "");
 static_assert(offsetof(GmkEnemy, unknown58) == 0x58, "");
+static_assert(offsetof(GmkEnemy, unknown1A0) == 0x1a0, "");
+static_assert(offsetof(GmkEnemy, unknown1A1) == 0x1a1, "");
 static_assert(sizeof(GmkEnemy::BdatInfo) == 0x8, "");
 static_assert(sizeof(GmkEnemy) == 0x1d0, "");
 
@@ -64,8 +69,8 @@ public:
     u8 unknown08;  // Inferred role: enemy repop time; original member name unknown.
   };
 
-  explicit GmkEnemyList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), unknown240(0xffffffff) {}
-  ~GmkEnemyList() override;
+  explicit GmkEnemyList(u32 updateGmkNumPerFrame);
+  ~GmkEnemyList() override { dispose(); }
 
   const AGmkBase *getInst(u32 index) const override;
   void setUpdateGmkNumPerFrame(u32 num) override;

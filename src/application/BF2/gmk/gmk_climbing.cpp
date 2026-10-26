@@ -2,7 +2,10 @@
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/object/gf_menu_obj_field_icon.h"
 #include "gmk/gmk_bdat.h"
+#include "mm_mtl/reference_object.h"
 
 namespace gmk {
 
@@ -31,5 +34,17 @@ bool GmkClimbing::BdatInfo::isPopCondMatched() const {
 }
 
 GmkType GmkClimbing::getGmkType() const { return GMK_TYPE; }
+
+void GmkClimbing::disposeIcon() {
+  if (unknown48 != nullptr) {
+    gf::GfMenuObjFieldIcon::close(unknown48);
+    mm::mtl::safeRelease(unknown48);
+  }
+}
+
+void GmkClimbing::dispose() {
+  disposeIcon();
+  AGmkBase::dispose();
+}
 
 } // namespace gmk

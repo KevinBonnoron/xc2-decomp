@@ -110,6 +110,17 @@ bool GmkBlade::canPopGobInst() const {
   return getBdatInfo()->isPopCondMatched(unknown08.unknown08->unknown00);
 }
 
+void GmkBlade::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
+  AGmkBase::onGobEvent(event, handle);
+  if (event != gf::IGfObjListener::OBJEVT_DESTROY) {
+    return;
+  }
+  unbindToGameObj(handle);
+  if (unknown48 == handle) {
+    disposeGobInst(false);
+  }
+}
+
 bool GmkBlade::canDepopGobInst() const {
   if (!unknown54) {
     if (unknown48 == gf::INVALID_HANDLE) {

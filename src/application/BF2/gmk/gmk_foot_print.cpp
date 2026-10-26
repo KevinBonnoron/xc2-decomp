@@ -6,6 +6,7 @@
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_set.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_vec3.h"
 
 namespace fw {
 enum EF_CATEGORY : int;
@@ -33,12 +34,35 @@ bool GmkRoutedFootPrint::BdatInfo::isPopCondMatched() const {
   return true;
 }
 
+GmkRoutedFootPrint::GmkRoutedFootPrint() : unknown48(nullptr), unknown50(nullptr), unknown58(nullptr) {}
+
 GmkType GmkRoutedFootPrint::getGmkType() const { return GMK_TYPE; }
 
 u32 GmkRoutedFootPrint::getRoutePointNum() const { return getData()->unknown10 - getData()->unknown0c; }
 
 const GmkRoutedFootPrintPointList *GmkRoutedFootPrint::getBindedRoutePointList() const {
   return static_cast<const GmkRoutedFootPrintPointList *>(unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_ROUTED_FOOT_PRINT_POINT]);
+}
+
+const GmkRoutedFootPrintPoint *GmkRoutedFootPrint::getRoutePoint(u32 index) const {
+  const IGmkList *list = getBindedRoutePointList();
+  if (list == nullptr) {
+    return nullptr;
+  }
+  u32 pointIndex = getData()->unknown0c + index;
+  if (list->getInstNum() > pointIndex) {
+    return static_cast<const GmkRoutedFootPrintPointList *>(list)->unknown001(pointIndex);
+  }
+  return nullptr;
+}
+
+bool GmkRoutedFootPrint::getRoutePointPos(mm::Vec3 &position, u32 index) const {
+  const GmkRoutedFootPrintPoint *point = getRoutePoint(index);
+  if (point == nullptr || !point->isValid()) {
+    return false;
+  }
+  position = point->getData()->unknown00;
+  return true;
 }
 
 void GmkRoutedFootPrint::debugDraw() const {

@@ -1,4 +1,5 @@
 #include "gmk/gmk_enemy/gmk_routed_enemy.h"
+#include "gmk/gmk_gob_event_listener_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_set.h"
 
 #include "gmk/gmk_base.h"
@@ -22,6 +23,26 @@ bool GmkRoutedEnemy::isValid() const {
 }
 
 GmkType GmkRoutedEnemyPoint::getGmkType() const { return GMK_TYPE; }
+
+GmkRoutedEnemyList::GmkRoutedEnemyList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), unknown240(0xffffffff) {}
+
+void GmkRoutedEnemyList::create(const CreateInfo &info) {
+  if (!unknown228.create()) {
+    dispose();
+    return;
+  }
+  TGmkList::create(info);
+}
+
+void GmkRoutedEnemyList::dispose() {
+  unknown240.dispose();
+  TGmkList::dispose();
+}
+
+void GmkRoutedEnemyList::update(f32 deltaTime) {
+  unknown240.update(deltaTime);
+  TGmkList::update(deltaTime);
+}
 
 void GmkRoutedEnemyList::setUpdateGmkNumPerFrame(u32 num) {
   TGmkList::setUpdateGmkNumPerFrame(num);

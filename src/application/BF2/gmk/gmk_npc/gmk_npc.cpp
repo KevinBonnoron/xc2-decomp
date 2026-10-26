@@ -3,9 +3,35 @@
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_manager.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_npc/gmk_npc_manager.h"
+#include "gmk/gmk_set.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/vector.h"
 
 namespace gmk {
+
+GmkNpcList::GmkNpcList(u32 updateGmkNumPerFrame) : TGmkList(0) {}
+
+void GmkNpcList::createGmk(void *data) {
+  TGmkList::createGmk(data);
+  GmkNpcManager *manager = &getCreateInfo().unknown08->unknown178;
+  u32 num = getInstNum();
+  for (u32 i = 0; i < num; i++) {
+    manager->addGmkNpc(&gmkInsts[i]);
+  }
+}
+
+void GmkNpcList::disposeGmk() {
+  GmkSet *set = getCreateInfo().unknown08;
+  if (set != nullptr) {
+    GmkNpcManager *manager = &set->unknown178;
+    u32 num = getInstNum();
+    for (u32 i = 0; i < num; i++) {
+      manager->removeGmkNpc(&gmkInsts[i]);
+    }
+  }
+  TGmkList::disposeGmk();
+}
 
 GmkType GmkNpc::getGmkType() const { return GMK_TYPE; }
 
@@ -55,6 +81,13 @@ bool GmkNpc::isDepopDistCondMatched() const {
     return false;
   }
   return !getBdatInfo()->unknown28.isMatch(AGmkBase::unknown08.unknown08->unknown00);
+}
+
+bool GmkNpc::isPopCondMatchedExceptDist() const {
+  if (AGmkNpc::unknown18 != nullptr && AGmkNpc::unknown18->unknown18 == this) {
+    return isPopCondMatched();
+  }
+  return false;
 }
 
 bool GmkNpc::isPopCondMatched() const {

@@ -99,6 +99,7 @@ class GmkSet;
 class GmkManager : public mm::mtl::PtrSingleton<GmkManager> {
 public:
   ~GmkManager() override;
+  bool isValid() const;
 
   void updateImmediate();
   const char *getFilenameByType(int gmkSetId, GmkType type) const;
@@ -145,9 +146,15 @@ int getCapaOfGmkDmgPhantomTargetInfo();
 bool isGfObjNumFull(u32 objectType);
 bool isInBattle();
 bool isInMapJumpWithLoadingSaveData();
+f32 getMobPopDistSq();
+void resetMobPopDistSq();
+bool isMapJumpingWithSaveData();
 void setOpenMainMenuEnable(bool isEnable);
 void createMenuObj(gf::GF_OBJ_HANDLE *handle);
 bool isEnemyPopCondOfQuestMatched(u16 enemy);
+u32 getBdatIdOfQuestTargetIcon(u32 iconType);
+u32 getBdatIdOfQuestTargetIcon(gf::GF_OBJ_HANDLE *handle, u16 iconType);
+
 u32 getDefeatedNum(int enemy);
 void disposeGobInst(gf::GF_OBJ_HANDLE *handle, f32 fadeTime);
 void disposeGobInstWithAttr(gf::GF_OBJ_HANDLE *handle, u32 attribute, f32 fadeTime);

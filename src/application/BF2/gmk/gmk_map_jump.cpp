@@ -30,6 +30,12 @@ bool GmkMapJump::BdatInfo::isCondMatched() const {
 
 GmkType GmkMapJump::getGmkType() const { return GMK_TYPE; }
 
+void GmkMapJump::createGmkPhantom() {
+  if (canCreateGameEntity()) {
+    unknown50.create(*this, nullptr, false);
+  }
+}
+
 void GmkMapJump::endEvent() {
   if (unknownE1) {
     unknownE1 = false;

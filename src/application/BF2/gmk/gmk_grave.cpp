@@ -120,4 +120,6 @@ void GmkGrave::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *h
   }
 }
 
+void GmkGrave::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {}
+
 } // namespace gmk

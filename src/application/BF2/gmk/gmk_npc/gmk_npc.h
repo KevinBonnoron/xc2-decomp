@@ -90,8 +90,8 @@ static_assert(sizeof(GmkNpc) == 0x70, "");
 
 class GmkNpcList : public TGmkList<GmkNpc, GmkNpc::BdatInfo, 0x43504e, 4, GmkNpcGob> {
 public:
-  explicit GmkNpcList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame) {}
-  ~GmkNpcList() override;
+  explicit GmkNpcList(u32 updateGmkNumPerFrame);
+  ~GmkNpcList() override { dispose(); }
 
 protected:
   void createGmk(void *data) override;

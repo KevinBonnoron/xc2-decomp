@@ -72,6 +72,12 @@ bool GmkSeLinePoint::isValid() const { return unknown08.unknown00 != nullptr && 
 
 GmkType GmkSe::getGmkType() const { return GMK_TYPE; }
 
+void GmkSe::createGmkPhantom() {
+  if (canCreateGameEntity() && static_cast<u32>(unknown08.unknown10->unknown0c - SHAPE_TYPE_SPHERE) < 3) {
+    unknown60.create(*this, nullptr, false);
+  }
+}
+
 bool GmkSe::canPopInst() const {
   if (unknownF4 != 0) {
     return false;
@@ -79,7 +85,7 @@ bool GmkSe::canPopInst() const {
   if (!unknownF0) {
     return false;
   }
-  if (unknownD8 != nullptr && !unknownE3) {
+  if (unknown60.unknown78 != nullptr && !unknown60.unknown83) {
     return false;
   }
   return true;
@@ -90,7 +96,7 @@ bool GmkSe::canDepopInst() const {
     if (!unknownF0) {
       return true;
     }
-    if (unknownD8 != nullptr && !unknownE3) {
+    if (unknown60.unknown78 != nullptr && !unknown60.unknown83) {
       return true;
     }
   }

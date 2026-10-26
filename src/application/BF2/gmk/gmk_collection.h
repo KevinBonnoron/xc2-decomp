@@ -33,7 +33,8 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_COLLECTION;
 
-  ~GmkCollection() override;
+  GmkCollection();
+  ~GmkCollection() override { dispose(); }
   GmkType getGmkType() const override;
   int getGameFlagId() const;
   bool isWaitRepop() const;
@@ -79,8 +80,8 @@ public:
     u8 unknown04;  // Inferred role: repop time; original member name unknown.
   };
 
-  explicit GmkCollectionList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame) {}
-  ~GmkCollectionList() override;
+  explicit GmkCollectionList(u32 updateGmkNumPerFrame);
+  ~GmkCollectionList() override { dispose(); }
 
   void create(const CreateInfo &info) override;
 

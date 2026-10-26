@@ -121,6 +121,8 @@ static_assert(offsetof(InOutDoorCond, unknown09) == 0x9, "");
 
 class GameFlagCond {
 public:
+  GameFlagCond() {}
+  GameFlagCond(int size, int index) : unknown08(size), unknown0c(index) {}
   virtual ~GameFlagCond() {}
   bool isMatch(u32 value) const;
 

@@ -1,11 +1,18 @@
 #pragma once
+#include <stddef.h>
+
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
 
 struct CBdatWrapper;
+
+namespace gf {
+class GfMenuCallContext;
+} // namespace gf
 
 namespace gmk {
 
@@ -30,12 +37,16 @@ public:
   GmkType getGmkType() const override;
   void create(const CreateInfo &info) override;
   void dispose() override;
+  void disposeIcon();
   void update(f32 deltaTime) override;
 
-  u8 _48[0x60 - 0x48];
+  gf::GfMenuCallContext *unknown48; // Inferred role: menu icon; original member name unknown.
+  mm::Vec3 unknown50;               // Inferred role: icon position; original member name unknown.
 };
 
 static_assert(sizeof(GmkClimbing::BdatInfo) == 0x10, "");
+static_assert(offsetof(GmkClimbing, unknown48) == 0x48, "");
+static_assert(offsetof(GmkClimbing, unknown50) == 0x50, "");
 static_assert(sizeof(GmkClimbing) == 0x60, "");
 
 typedef TGmkList<GmkClimbing, GmkClimbing::BdatInfo, 0x424d4c43, 2, GmkClimbingGob> GmkClimbingList;

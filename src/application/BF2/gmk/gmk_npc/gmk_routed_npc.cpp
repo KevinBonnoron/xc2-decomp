@@ -6,10 +6,13 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_cond.h"
+#include "gmk/gmk_gob_event_listener_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_set.h"
 #include "mm_math/mm_vec3.h"
 
 namespace gmk {
+
+void GmkRoutedNpcList::create(const CreateInfo &info) { TGmkList::create(info); }
 
 GmkType GmkRoutedNpc::getGmkType() const { return GMK_TYPE; }
 

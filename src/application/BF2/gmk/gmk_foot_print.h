@@ -6,9 +6,11 @@
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_route.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 struct CBdatWrapper;
+
 namespace mm {
 struct Col4;
 struct Vec3;
@@ -41,6 +43,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_FOOT_PRINT;
 
+  GmkRoutedFootPrint();
   ~GmkRoutedFootPrint() override;
   GmkType getGmkType() const override;
   void create(const CreateInfo &info) override;
@@ -54,7 +57,7 @@ public:
   bool getRoutePointPos(mm::Vec3 &position, u32 index) const;
   const GmkRoutedFootPrintPointList *getBindedRoutePointList() const;
 
-  u8 _48[0x50 - 0x48];
+  void *unknown48; // Role and original member name unknown.
   void *unknown50; // Role and original member name unknown.
   void *unknown58; // Role and original member name unknown.
 
@@ -62,6 +65,7 @@ public:
 };
 
 static_assert(sizeof(GmkRoutedFootPrint::BdatInfo) == 0x18, "");
+static_assert(offsetof(GmkRoutedFootPrint, unknown48) == 0x48, "");
 static_assert(offsetof(GmkRoutedFootPrint, unknown50) == 0x50, "");
 static_assert(offsetof(GmkRoutedFootPrint, unknown58) == 0x58, "");
 static_assert(sizeof(GmkRoutedFootPrint) == 0x60, "");
@@ -99,6 +103,9 @@ static_assert(sizeof(GmkRoutedFootPrintPoint) == 0x58, "");
 class GmkRoutedFootPrintPointList : public TGmkList<GmkRoutedFootPrintPoint, GmkRoutedFootPrintPoint::BdatInfo, 0x50504652, 1, GmkRoutedFootPrintPointGobCustom> {
 public:
   explicit GmkRoutedFootPrintPointList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame) {}
+
+  // Inlined access to the point vector; the original helper name is unknown.
+  const GmkRoutedFootPrintPoint *unknown001(u32 index) const { return &gmkInsts[index]; }
 };
 
 } // namespace gmk

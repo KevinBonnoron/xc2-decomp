@@ -4,6 +4,7 @@
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_phantom.h"
 #include "types.h"
 
 namespace gmk {
@@ -34,23 +35,26 @@ public:
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
+  void createGmkPhantom();
   void seqUpdate(f32 deltaTime);
+  void seqWaitToValidLinkGmkList(f32 deltaTime);
   void applyPopCondMatched(bool matched);
   int getBindedMapGimmickNum() const;
   int getBindedEnemyNum() const;
   int getBindedRoutedEnemyNum() const;
-  const AGmkBase *getBindedMapGimmick(u32 index) const;
-  const AGmkBase *getBindedEnemy(u32 index) const;
-  const AGmkBase *getBindedRoutedEnemy(u32 index) const;
+  AGmkBase *getBindedMapGimmick(u32 index) const;
+  AGmkBase *getBindedEnemy(u32 index) const;
+  AGmkBase *getBindedRoutedEnemy(u32 index) const;
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
-  u8 _48[0xd3 - 0x48];
-  bool unknownD3; // Role and original member name unknown.
-  u8 _d4[0xf0 - 0xd4];
+  u8 _48[0x50 - 0x48];
+  GmkPhantom unknown50;               // Inferred role: phantom; original member name unknown.
+  void (GmkTrigger::*unknownE0)(f32); // Inferred role: sequence; original member name unknown.
 };
 
-static_assert(offsetof(GmkTrigger, unknownD3) == 0xd3, "");
+static_assert(offsetof(GmkTrigger, unknown50) == 0x50, "");
+static_assert(offsetof(GmkTrigger, unknownE0) == 0xe0, "");
 static_assert(sizeof(GmkTrigger) == 0xf0, "");
 
 typedef TGmkList<GmkTrigger, GmkTrigger::BdatInfo, 0x52475254, 2, GmkTriggerGob> GmkTriggerList;

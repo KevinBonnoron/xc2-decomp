@@ -126,6 +126,14 @@ bool GmkDmgEffect::isValid() const { return unknown08.unknown00 != nullptr && un
 
 void GmkDmgEffect::update(f32 deltaTime) { debugUpdateMmf(); }
 
+void GmkDmgEffect::validateDisp() const {
+  if (unknown4C == 0) {
+    return;
+  }
+  bool isDisp = unknown48 && debugIsDispGmkType(getGmkType());
+  fw::EffectManager::get()->setDisp(unknown4C, isDisp);
+}
+
 void GmkDmgEffect::dispose() {
   if (unknown4C != 0) {
     fw::EffectManager::get()->remove(unknown4C);
@@ -202,6 +210,16 @@ void GmkDmgGimmick::dispose() {
 }
 
 void GmkDmgGimmick::seqWaitToCreateChild(f32 deltaTime) { unknown68 = &GmkDmgGimmick::seqUpdatePopDepop; }
+
+void GmkDmgGimmick::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  if (unknown68) {
+    (this->*unknown68)(deltaTime);
+  }
+}
 
 GmkDmgPhantom *GmkDmgGimmick::getGmkDmgPhantom(u32 index) const {
   IGmkList *list = unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_DMG_PHANTOM];

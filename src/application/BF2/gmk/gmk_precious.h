@@ -6,10 +6,12 @@
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "mm_mtl/intrusive_list.h"
 #include "types.h"
 
 struct CBdatWrapper;
 namespace gf {
+class GfMenuCallContext;
 struct GF_OBJ_HANDLE;
 } // namespace gf
 
@@ -36,7 +38,8 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_PRECIOUS;
 
-  ~GmkPrecious() override;
+  GmkPrecious();
+  ~GmkPrecious() override { dispose(); }
   GmkType getGmkType() const override;
   int getGameFlagId() const;
   bool isObtained() const;
@@ -44,24 +47,29 @@ public:
   void validateDisp() const;
   void create(const CreateInfo &info) override;
   void dispose() override;
+  void disposeMenuIcon();
+  void disposeEffectIcon(bool isFadeOut);
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
-  u8 _48[0x58 - 0x48];
-  gf::GF_OBJ_HANDLE *unknown58; // Inferred role: gob instance handle; original member name unknown.
-  u32 unknown60;                // Inferred role: effect handle; original member name unknown.
-  u8 _64[0x70 - 0x64];
-  DistCond unknown70; // Inferred role: pop dist; original member name unknown.
-  bool unknown74;     // Inferred role: visible; original member name unknown.
+  mm::mtl::IntrusiveListNode<GmkPrecious> unknown48; // Role and original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown58;                      // Inferred role: gob instance handle; original member name unknown.
+  u32 unknown60;                                     // Inferred role: effect handle; original member name unknown.
+  u8 _64[0x68 - 0x64];
+  gf::GfMenuCallContext *unknown68; // Inferred role: menu icon; original member name unknown.
+  DistCond unknown70;               // Inferred role: pop dist; original member name unknown.
+  bool unknown74;                   // Inferred role: visible; original member name unknown.
   u8 _75[0x78 - 0x75];
 };
 
 static_assert(sizeof(GmkPrecious::BdatInfo) == 0x30, "");
+static_assert(offsetof(GmkPrecious, unknown48) == 0x48, "");
 static_assert(offsetof(GmkPrecious, unknown58) == 0x58, "");
 static_assert(offsetof(GmkPrecious, unknown60) == 0x60, "");
+static_assert(offsetof(GmkPrecious, unknown68) == 0x68, "");
 static_assert(offsetof(GmkPrecious, unknown70) == 0x70, "");
 static_assert(offsetof(GmkPrecious, unknown74) == 0x74, "");
 static_assert(sizeof(GmkPrecious) == 0x78, "");

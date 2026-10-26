@@ -29,9 +29,16 @@ bool GmkLandmark::BdatInfo::isCondMatched() const {
 
 GmkType GmkLandmark::getGmkType() const { return GMK_TYPE; }
 
+void GmkLandmark::create(const CreateInfo &info) { AGmkBase::create(info); }
+
 int GmkLandmark::getGameFlagId() const { return unknown20.unknown18 + 0xc7d9; }
 
 bool GmkLandmark::isFound() const { return gf::GfGameFlag::getLocal(1, getGameFlagId()) != 0; }
+
+void GmkLandmark::dispose() {
+  disposeGmkPhantom();
+  AGmkBase::dispose();
+}
 
 void GmkLandmark::onEnterPhantom(const IGmkPhantomEventListener::OnEnterInfo &info) {}
 

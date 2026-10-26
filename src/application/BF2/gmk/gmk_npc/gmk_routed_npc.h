@@ -38,7 +38,7 @@ static_assert(sizeof(GmkRoutedNpc) == 0xa0, "");
 class GmkRoutedNpcList : public TGmkList<GmkRoutedNpc, GmkNpc::BdatInfo, 0x43504e52, 6, GmkRouteGob> {
 public:
   explicit GmkRoutedNpcList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame) {}
-  ~GmkRoutedNpcList() override;
+  ~GmkRoutedNpcList() override { dispose(); }
 
   void create(const CreateInfo &info) override;
 

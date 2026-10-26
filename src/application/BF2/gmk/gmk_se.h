@@ -5,6 +5,7 @@
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_phantom.h"
 #include "mm_mtl/intrusive_list.h"
 #include "types.h"
 
@@ -52,25 +53,27 @@ public:
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
+  void createGmkPhantom();
   bool canPopInst() const;
   bool canDepopInst() const;
 
-  u8 _48[0xd8 - 0x48];
-  void *unknownD8; // Role and original member name unknown.
-  u8 _e0[0xe3 - 0xe0];
-  bool unknownE3; // Role and original member name unknown.
-  u8 _e4[0xf0 - 0xe4];
-  bool unknownF0; // Role and original member name unknown.
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+
+  u8 _48[0x60 - 0x48];
+  GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
+  bool unknownF0;       // Role and original member name unknown.
   u8 _f1[0xf4 - 0xf1];
   int unknownF4; // Role and original member name unknown.
-  u8 _f8[0x110 - 0xf8];
+  u8 _f8[0x100 - 0xf8];
+  bool unknown100; // Role and original member name unknown.
+  u8 _101[0x110 - 0x101];
 };
 
 static_assert(sizeof(GmkSe::BdatInfo) == 0x40, "");
-static_assert(offsetof(GmkSe, unknownD8) == 0xd8, "");
-static_assert(offsetof(GmkSe, unknownE3) == 0xe3, "");
+static_assert(offsetof(GmkSe, unknown60) == 0x60, "");
 static_assert(offsetof(GmkSe, unknownF0) == 0xf0, "");
 static_assert(offsetof(GmkSe, unknownF4) == 0xf4, "");
+static_assert(offsetof(GmkSe, unknown100) == 0x100, "");
 static_assert(sizeof(GmkSe) == 0x110, "");
 
 typedef TGmkList<GmkSe, GmkSe::BdatInfo, 0x45444e53, 2, GmkSeGob> GmkSeList;

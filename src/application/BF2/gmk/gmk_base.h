@@ -15,6 +15,7 @@ class IGmkList;
 
 struct GmkInfo {
   u16 id;
+  u16 unknown02; // Role and original member name unknown.
 };
 
 struct Xform {

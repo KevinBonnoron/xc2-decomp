@@ -131,11 +131,14 @@ public:
   void createEffectInst(void *const &data) const;
   void disposeEffectInst(bool isFadeOut) const;
   void applyEffectParam() const;
+  void validateDisp() const;
 
-  u8 _48[0x4c - 0x48];
+  bool unknown48; // Inferred role: visible; original member name unknown.
+  u8 _49[0x4c - 0x49];
   mutable u32 unknown4C; // Role and original member name unknown.
 };
 
+static_assert(offsetof(GmkDmgEffect, unknown48) == 0x48, "");
 static_assert(offsetof(GmkDmgEffect, unknown4C) == 0x4c, "");
 static_assert(sizeof(GmkDmgEffect) == 0x50, "");
 

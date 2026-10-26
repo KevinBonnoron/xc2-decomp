@@ -12,17 +12,21 @@
 #include "framework/script/script_manager.h"
 #include "fw/fw_bdat_manager.h"
 #include "fw/fw_transform.h"
+#include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/field/gf_field_gimmick.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
+#include "gf/game/quest/gf_quest_target.h"
 #include "gf/game/quest/gf_quest_util.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/gimmick/gf_com_behavior_gmk.h"
@@ -207,6 +211,13 @@ const AGmkBase *GmkManager::findGmkInstByGmkInstIndex(int gmkSetId, GmkType type
     return nullptr;
   }
   return set->findGmkInstByGmkInstIndex(type, index);
+}
+
+bool GmkManager::isValid() const {
+  if (unknown58.unknown120 == nullptr || !fw::BdatManager::isEnableBdat(unknown58.unknown08.unknown108)) {
+    return false;
+  }
+  return unknown190 != nullptr;
 }
 
 GmkSet *GmkManager::findGmkSet(int gmkSetId) const {
@@ -553,6 +564,33 @@ bool isInBattle() { return gf::GfGameManager::isBattle(); }
 
 bool isInMapJumpWithLoadingSaveData() { return gf::GfGameManager::isMapjumpWithSaveData(); }
 
+f32 getMobPopDistSq() {
+  const gf::GfFieldGimmick *gimmick = mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get();
+  if (gimmick == nullptr) {
+    return 1e12f;
+  }
+  return gimmick->unknownfe38;
+}
+
+void resetMobPopDistSq() {
+  gf::GfFieldGimmick *gimmick = mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get();
+  if (gimmick == nullptr) {
+    return;
+  }
+  if (gimmick->unknownfe30 != nullptr) {
+    gimmick->unknownfe30 = nullptr;
+  }
+  gimmick->unknownfe38 = 1e12f;
+}
+
+bool isMapJumpingWithSaveData() {
+  const gf::GfFieldGimmick *gimmick = mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get();
+  if (gimmick == nullptr) {
+    return false;
+  }
+  return gimmick->unknownfe40;
+}
+
 void setOpenMainMenuEnable(bool isEnable) { gf::GfGameManager::setStopMainMenuOpenForGimmick(!isEnable); }
 
 void createMenuObj(gf::GF_OBJ_HANDLE *handle) {
@@ -568,6 +606,36 @@ void createMenuObj(gf::GF_OBJ_HANDLE *handle) {
 }
 
 u32 GmkTbox::getProgress() const { return gf::GfGameFlag::getLocal(2, unknown20.unknown18 + GAME_FLAG_PROGRESS); }
+
+u32 getBdatIdOfQuestTargetIcon(gf::GF_OBJ_HANDLE *handle, u16 iconType) {
+  if (handle == gf::INVALID_HANDLE) {
+    return 0xffffffff;
+  }
+  gf::GfObjAcc acc(handle);
+  if (!acc.isValid() || acc.isDestroy() || acc.testFlag(gf::OBJ_FLAG_UI_HIDDEN) || acc.getObj() == nullptr) {
+    return 0xffffffff;
+  }
+  gf::QuestID questId = {iconType, 0};
+  return getBdatIdOfQuestTargetIcon(gf::GfQuestTarget::getIconType(handle, questId));
+}
+
+u32 getBdatIdOfQuestTargetIcon(u32 iconType) {
+  u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_FLD_WILDCARD_DATA);
+  switch (iconType) {
+  case 1:
+    return Bdat::getValCheck(bdat, 1, 0xf, BDAT_TYPE_U16).valueU16;
+  case 2:
+    return Bdat::getValCheck(bdat, 1, 0x10, BDAT_TYPE_U16).valueU16;
+  case 3:
+    return Bdat::getValCheck(bdat, 1, 0x11, BDAT_TYPE_U16).valueU16;
+  case 4:
+    return Bdat::getValCheck(bdat, 1, 0x12, BDAT_TYPE_U16).valueU16;
+  case 6:
+    return Bdat::getValCheck(bdat, 1, 0x13, BDAT_TYPE_U16).valueU16;
+  default:
+    return 0xffffffff;
+  }
+}
 
 bool isEnemyPopCondOfQuestMatched(u16 enemy) {
   int remain = gf::GfQuestUtil::getEnemyPopRemainNumber(enemy);

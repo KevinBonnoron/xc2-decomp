@@ -38,6 +38,7 @@ public:
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   void onEnterPhantom(const IGmkPhantomEventListener::OnEnterInfo &info);
+  void disposeGmkPhantom();
 
   u8 _48[0x100 - 0x48];
 };

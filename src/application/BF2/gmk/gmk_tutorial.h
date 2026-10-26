@@ -5,6 +5,8 @@
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_phantom.h"
+#include "mm_mtl/intrusive_list.h"
 #include "types.h"
 
 struct CBdatWrapper;
@@ -31,6 +33,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_TUTORIAL;
 
+  GmkTutorial();
   ~GmkTutorial() override;
   GmkType getGmkType() const override;
   int getGameFlagId() const;
@@ -47,23 +50,24 @@ public:
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
-  u8 _48[0xe3 - 0x48];
-  bool unknownE3; // Role and original member name unknown.
-  u8 _e4[0xf0 - 0xe4];
-  bool unknownF0; // Role and original member name unknown.
+  mm::mtl::IntrusiveListNode<GmkTutorial> unknown48; // Role and original member name unknown.
+  u8 _58[0x60 - 0x58];
+  GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
+  bool unknownF0;       // Role and original member name unknown.
   u8 _f1[0x100 - 0xf1];
 };
 
 static_assert(sizeof(GmkTutorial::BdatInfo) == 0xa, "");
 static_assert(offsetof(GmkTutorial::Data, unknown08) == 0x08, "");
-static_assert(offsetof(GmkTutorial, unknownE3) == 0xe3, "");
+static_assert(offsetof(GmkTutorial, unknown48) == 0x48, "");
+static_assert(offsetof(GmkTutorial, unknown60) == 0x60, "");
 static_assert(offsetof(GmkTutorial, unknownF0) == 0xf0, "");
 static_assert(sizeof(GmkTutorial) == 0x100, "");
 
 class GmkTutorialList : public TGmkList<GmkTutorial, GmkTutorial::BdatInfo, 0x4f545554, 4, GmkTutorialGob> {
 public:
-  explicit GmkTutorialList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame) {}
-  ~GmkTutorialList() override;
+  explicit GmkTutorialList(u32 updateGmkNumPerFrame);
+  ~GmkTutorialList() override { dispose(); }
   void setBootedOthers(const GmkTutorial &gmk) const;
 };
 

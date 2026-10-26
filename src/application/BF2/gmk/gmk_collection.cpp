@@ -14,6 +14,8 @@
 
 namespace gmk {
 
+GmkCollection::GmkCollection() : unknown48(gf::INVALID_HANDLE), unknown50(0), unknown54(0.0f), unknown58(nullptr), unknown68(0.0f), unknown6c(true) {}
+
 constexpr int WILDCARD_COLLECTION_POP_DIST_ROW = 1;
 
 void GmkCollection::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
@@ -53,6 +55,16 @@ bool GmkCollectionList::BdatInfo::create() {
   }
   unknown04 = Bdat::getValCheck(mapList, "m_repoptime", unknown00, BDAT_TYPE_U8);
   return true;
+}
+
+GmkCollectionList::GmkCollectionList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame) {}
+
+void GmkCollectionList::create(const CreateInfo &info) {
+  if (!unknown228.create()) {
+    dispose();
+    return;
+  }
+  TGmkList::create(info);
 }
 
 void GmkCollection::disposeIcon(bool isFadeOut) {

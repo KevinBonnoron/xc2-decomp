@@ -7,11 +7,16 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/object/gf_menu_obj_field_icon.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/util/gf_item_util.h"
 #include "gmk/gmk_bdat.h"
+#include "mm_mtl/reference_object.h"
 
 namespace gmk {
+
+GmkPrecious::GmkPrecious() : unknown48(), unknown58(gf::INVALID_HANDLE), unknown60(0), unknown68(nullptr), unknown70{0.0f}, unknown74(true) {}
 
 constexpr int WILDCARD_PRECIOUS_POP_DIST_ROW = 34;
 
@@ -59,6 +64,24 @@ void GmkPrecious::create(const CreateInfo &info) {
 }
 
 bool GmkPrecious::isObtained() const { return gf::GfGameFlag::getLocal(1, getGameFlagId()) != 0; }
+
+void GmkPrecious::disposeMenuIcon() {
+  if (unknown68 != nullptr) {
+    gf::GfMenuObjFieldIcon::close(unknown68);
+    mm::mtl::safeRelease(unknown68);
+  }
+}
+
+void GmkPrecious::disposeEffectIcon(bool isFadeOut) {
+  if (unknown60 != 0) {
+    if (isFadeOut) {
+      fw::EffectManager::get()->fadeOutDead(unknown60, 5);
+    } else {
+      fw::EffectManager::get()->remove(unknown60);
+    }
+    unknown60 = 0;
+  }
+}
 
 bool GmkPrecious::isPopCondMatched() const {
   const BdatInfo *info = getBdatInfo();
