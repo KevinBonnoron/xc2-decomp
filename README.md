@@ -150,6 +150,7 @@ Abbreviations and names imposed by the game's symbols:
 | `src/application/BF2/` | Decompiled game code, following the original source tree |
 | `include/` | Shared headers (basic types, libraries); the C and C++ standard headers come from the dev shell |
 | `tools/check.py` | Compile and compare functions |
+| `tools/quality_gate.py` | Flag match-forcing patterns and duplicated code added since a revision |
 | `tools/includes.py`, `tools/iwyu.imp` | Include-what-you-use pass and its mappings |
 | `tools/setup.sh` | Extract the executable from the XCI |
 | `tools/nso2elf.py`, `tools/nso_syms.py` | NSO to ELF conversion, symbol dump |

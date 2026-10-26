@@ -21,6 +21,7 @@ Most namespaces are worked on by regular automated passes, so code outside a res
 - [AGENTS.md](AGENTS.md) is the reference for naming: keep the names given by the game's symbols and strings, name a member after the game accessor that reads it (`m_` prefix), and use `unknownXX` with an inferred-role comment for everything else. Never invent a descriptive name.
 - Write the code a programmer would have written, not decompiler output forced to match. No `goto`, `volatile`, attributes, inline assembly, raw byte offsets on pointers or type punning to force a match. When a block is the body of an existing function, call that function. When a function only matches with such a trick, leave it for later.
 - Every function you keep must match. Before each commit the hook runs `format`, `includes` and `check`, and refuses the commit if anything fails to compile, does not match or is `NOT IN GAME`. Fix the problem rather than bypassing the hook.
+- Run `python3 -I tools/quality_gate.py main HEAD` before opening a pull request. It flags the patterns above, destructors declared without a definition, and code duplicated from an existing function or across several new ones. It also runs on every pull request.
 - Document new layouts with `static_assert(offsetof(...))` and `static_assert(sizeof(...))`, like the existing headers.
 - Never commit game executables, extracted assets, decompiler output, keys or SDK files. Keep local files under `work/`, which git ignores.
 
@@ -28,6 +29,6 @@ Most namespaces are worked on by regular automated passes, so code outside a res
 
 - Use commit messages of the form `feat(<namespace>): match <Class> functions`.
 - Keep a pull request to one namespace or a few classes, so it is easy to review and rebase. `main` moves often: rebase on it before opening the pull request.
-- The continuous integration cannot run `check`, since it needs the game executable. Each pull request is checked locally against the game before it is merged, along with a review of naming and code style.
+- The continuous integration runs the quality gate but cannot run `check`, since `check` needs the game executable. Each pull request is checked locally against the game before it is merged, along with a review of naming and code style.
 
 Questions are welcome in the issues.
