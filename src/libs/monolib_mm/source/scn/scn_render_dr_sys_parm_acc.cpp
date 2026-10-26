@@ -485,7 +485,7 @@ u32 ScnRenderDrSysParmAcc::getIrrVolCascadeMax() const {
   return cascadeNum < cascadeMax ? cascadeNum : cascadeMax;
 }
 
-bool ScnRenderDrSysParmAcc::getIrrVolVolumeArea(u32 cascade, mm::Aabb &area) const { return unknown00->unknown90->getVolumeArea(cascade, area); }
+void ScnRenderDrSysParmAcc::getIrrVolVolumeArea(u32 cascade, mm::Aabb &area) const { unknown00->unknown90->getVolumeArea(cascade, area); }
 
 void ScnRenderDrSysParmAcc::setToonDirLightScale(bool toonDirLightScale) { unknown00->unknown1e08 = toonDirLightScale; }
 

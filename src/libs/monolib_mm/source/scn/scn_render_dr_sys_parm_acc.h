@@ -224,7 +224,7 @@ public:
   const mm::Vec3 &getIrrVolCenterPos() const;
   void setIrrVolCenterPos(const mm::Vec3 &irrVolCenterPos);
   u32 getIrrVolCascadeMax() const;
-  bool getIrrVolVolumeArea(u32 cascade, mm::Aabb &area) const;
+  void getIrrVolVolumeArea(u32 cascade, mm::Aabb &area) const;
   void setToonDirLightScale(bool toonDirLightScale);
   void setToonAmbient(bool toonAmbient);
   void setDispChara(bool dispChara);

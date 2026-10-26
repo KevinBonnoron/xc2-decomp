@@ -7,7 +7,15 @@ namespace mm {
 struct Aabb;
 } // namespace mm
 
+namespace grlib {
+class CGLibTextureBuffer;
+} // namespace grlib
+
 namespace ml {
+
+namespace irrvol {
+class DrIrrVolCascade;
+} // namespace irrvol
 
 struct DrIrrVolSetting {
   u8 _00[0x20 - 0x00];
@@ -19,13 +27,18 @@ static_assert(offsetof(DrIrrVolSetting, unknown20) == 0x20, "");
 class DrIrrVolMan {
 public:
   bool isValid() const;
-  bool getVolumeArea(u32 cascade, mm::Aabb &area) const;
+  void getVolumeArea(u32 cascade, mm::Aabb &area) const;
   void debugRender();
+  grlib::CGLibTextureBuffer *getIrrVolTex(u32 cascade, u32 index) const;
+  const mm::Vec3 &getIrrVolUVScale(u32 cascade) const;
+  const mm::Vec3 &getUVPerPixl(u32 cascade) const;
+  const mm::Vec3 &getIrrVolEyeOffset(u32 cascade) const;
+  const mm::Vec3 &getIrrVolUVOffset(u32 cascade) const;
 
   u8 _000[0x008 - 0x000];
   DrIrrVolSetting *unknown08; // Inferred role: setting; original member name unknown.
   u8 _010[0x098 - 0x010];
-  void *unknown98; // Inferred role: cascades; original member name unknown.
+  irrvol::DrIrrVolCascade **unknown98; // Inferred role: cascades; original member name unknown.
   u8 _0a0[0x190 - 0x0a0];
   mm::Vec3 unknown190; // Inferred role: request center pos; original member name unknown.
   mm::Vec3 unknown1a0; // Inferred role: center pos; original member name unknown.
