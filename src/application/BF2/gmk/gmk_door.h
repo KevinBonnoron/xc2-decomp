@@ -83,18 +83,23 @@ public:
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
   bool createGmkCamera(const char *name, u8 attribute, bool param3);
+  void disposeGmkCamera();
+  void disposeGfObjHandle();
+  bool isGmkFinished() const;
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
   u8 _48[0x60 - 0x48];
   GmkCamera unknown60; // Inferred role: gimmick camera; original member name unknown.
-  u8 _1c0[0x2c0 - 0x1c0];
-  f32 unknown2C0; // Role and original member name unknown.
+  u8 _1c0[0x2b8 - 0x1c0];
+  gf::GF_OBJ_HANDLE *unknown2b8; // Inferred role: door game object handle; original member name unknown.
+  f32 unknown2C0;                // Role and original member name unknown.
   u8 _2c4[0x360 - 0x2c4];
 };
 
 static_assert(sizeof(GmkDoor::BdatInfo) == 0x48, "");
 static_assert(offsetof(GmkDoor, unknown60) == 0x60, "");
+static_assert(offsetof(GmkDoor, unknown2b8) == 0x2b8, "");
 static_assert(offsetof(GmkDoor, unknown2C0) == 0x2c0, "");
 static_assert(sizeof(GmkDoor) == 0x360, "");
 

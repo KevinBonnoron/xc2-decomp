@@ -32,4 +32,32 @@ void GmkSquadMember::dispose() { AGmkBase::dispose(); }
 
 void GmkSquadMember::debugUpdateMmf() {}
 
+bool GmkSquad::isValid() const {
+  if (m_bindedGmkSquadLeader == nullptr) {
+    return false;
+  }
+  if (!m_bindedGmkSquadLeader->isValid()) {
+    return false;
+  }
+  const IGmkList *list = m_bindedGmkSquadLeader->getBindedSquadMemberList();
+  if (list == nullptr || list->getInstNum() == 0) {
+    return false;
+  }
+  return unknown70 != 0;
+}
+
+GmkSquadLeader *GmkSquad::getBindedGmkSquadLeader() const {
+  if (m_bindedGmkSquadLeader == nullptr) {
+    return nullptr;
+  }
+  if (!m_bindedGmkSquadLeader->isValid()) {
+    return nullptr;
+  }
+  const IGmkList *list = m_bindedGmkSquadLeader->getBindedSquadMemberList();
+  if (list == nullptr || list->getInstNum() == 0 || unknown70 == 0) {
+    return nullptr;
+  }
+  return m_bindedGmkSquadLeader;
+}
+
 } // namespace gmk

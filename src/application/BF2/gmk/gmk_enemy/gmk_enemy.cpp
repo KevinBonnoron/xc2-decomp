@@ -4,9 +4,15 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_enemy.h"
 #include "gf/game/gf_game_manager.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
+#include "gmk/gmk_squad.h"
+#include "ml/rand.h"
+#include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec3.h"
+#include "mm_mtl/reference_object.h"
 #include "mm_mtl/vector.h"
 
 namespace gmk {
@@ -46,9 +52,136 @@ bool GmkEnemyList::BdatInfo::create() {
   return true;
 }
 
+// Inferred helper: deletes a vector of game objects; original name unknown.
+static void unknown003(mm::mtl::Vector<gf::GF_OBJ_HANDLE *> *&vector) {
+  if (vector != nullptr) {
+    delete vector;
+    vector = nullptr;
+  }
+}
+
+void GmkEnemyInsts::PopInfo::PopEnemyInfo::dispose() {
+  unknown003(unknown10);
+  unknown003(unknown18);
+  unknown24 = 0;
+}
+
+void GmkEnemyInsts::PopInfo::dispose() {
+  unknown08[0].dispose();
+  unknown08[1].dispose();
+  unknown08[2].dispose();
+  unknown08[3].dispose();
+  unknown02 = 0;
+}
+
+int GmkEnemyInsts::PopInfo::getGobInstNum() const {
+  int num = 0;
+  for (u32 i = 0; i < 4; i++) {
+    num += unknown08[i].unknown001();
+  }
+  return num;
+}
+
+bool GmkEnemyInsts::PopInfo::isPopFinished() const {
+  u8 *arrange = gf::GfDataBdat::getFP(gf::BDAT_CHR_EN_ARRANGE);
+  for (u32 i = 0; i < 4; i++) {
+    const PopEnemyInfo &info = unknown08[i];
+    if (info.unknown00 != 0 && Bdat::getFlagVal(arrange, "Flag", info.unknown00, "Named") != 0 && gf::GfDataEnemy::getEnemySuppress(info.unknown00) != 0) {
+      continue;
+    }
+    if (info.unknown04 != info.unknown001() + (info.unknown20 & 0xff) + (info.unknown20 >> 8)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void GmkEnemyInsts::PopInfo::removeDefeatedNamedEnemyInfo() {
+  u8 *arrange = gf::GfDataBdat::getFP(gf::BDAT_CHR_EN_ARRANGE);
+  for (u32 i = 0; i < 4; i++) {
+    PopEnemyInfo &info = unknown08[i];
+    if (info.unknown10 != nullptr && info.unknown18 != nullptr) {
+      if (Bdat::getFlagVal(arrange, "Flag", info.unknown00, "Named") != 0 && gf::GfDataEnemy::getEnemySuppress(info.unknown00) != 0) {
+        info.dispose();
+      }
+    }
+  }
+}
+
+bool GmkEnemyInsts::PopInfo::hasEneID(u16 eneId, bool flag) const {
+  for (u32 i = 0; i < 4; i++) {
+    const PopEnemyInfo &info = unknown08[i];
+    if (info.unknown10 == nullptr || info.unknown18 == nullptr) {
+      continue;
+    }
+    if (flag && info.unknown03 < 100) {
+      continue;
+    }
+    if (info.unknown00 == eneId) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool GmkEnemyInsts::PopInfo::hasTypeGenus(u8 genus, bool flag) const {
+  for (u32 i = 0; i < 4; i++) {
+    const PopEnemyInfo &info = unknown08[i];
+    if (info.unknown10 == nullptr || info.unknown18 == nullptr) {
+      continue;
+    }
+    if (flag && info.unknown03 < 100) {
+      continue;
+    }
+    if (info.unknown07 == genus) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool GmkEnemyInsts::isQuestDead() const {
+  for (u32 i = 0; i < 4; i++) {
+    if (unknown98.unknown08[i].unknown002() != unknown98.unknown08[i].unknown04) {
+      return false;
+    }
+  }
+  return true;
+}
+
+int GmkEnemyInsts::getGobInstCapa() const {
+  int capacity = 0;
+  for (u32 i = 0; i < 4; i++) {
+    capacity += unknown98.unknown08[i].unknown04;
+  }
+  return capacity;
+}
+
+void GmkEnemyInsts::disposeSquad() { mm::mtl::safeRelease(unknown150); }
+
 GmkType GmkEnemy::getGmkType() const { return GMK_TYPE; }
 
 IGmkList *GmkEnemy::getOwnerGmkEnemyList() const { return unknown08.unknown00; }
+
+bool GmkEnemy::isPointInsideRandomWalk(const mm::Vec3 &position) const {
+  const mm::Vec3 &center = unknown08.unknown08->unknown00;
+  f32 x = center.x - position.x;
+  f32 y = center.y - position.y;
+  f32 z = center.z - position.z;
+  return x * x + y * y + z * z <= getData()->unknown00 * getData()->unknown00;
+}
+
+mm::Vec3 &GmkEnemy::getPositionInRandomWalk(mm::Vec3 &result, f32 angleMin, f32 angleMax, f32 distanceMin, f32 distanceMax) const {
+  mm::Mat44 rotation;
+  rotation.setRotY(ml::mtRandf1(angleMin, angleMax));
+  f32 distance = getData()->unknown00 * ml::mtRandf1(distanceMin, distanceMax);
+  mm::Vec3 offset(0.0f, 0.0f, distance);
+  result.x = offset.x * rotation.rows[0][0] + offset.y * rotation.rows[1][0] + offset.z * rotation.rows[2][0];
+  result.y = offset.x * rotation.rows[0][1] + offset.y * rotation.rows[1][1] + offset.z * rotation.rows[2][1];
+  result.z = offset.x * rotation.rows[0][2] + offset.y * rotation.rows[1][2] + offset.z * rotation.rows[2][2];
+  result += unknown08.unknown08->unknown00;
+  return result;
+}
 
 bool GmkEnemy::isValid() const {
   if (unknown08.unknown00 == nullptr || unknown20.unknown08 == nullptr || unknown20.unknown10 == nullptr) {

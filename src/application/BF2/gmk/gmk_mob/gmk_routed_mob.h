@@ -33,13 +33,16 @@ public:
   void debugDraw() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
 
+  void bindRouteNavi(gf::GF_OBJ_HANDLE *handle, GmkRouteNavi &navi);
+  void unbindRouteNavi(gf::GF_OBJ_HANDLE *handle);
   GmkRouteNavi *findFreeRouteNavi() const;
   GmkRouteNavi *findRouteNavi(gf::GF_OBJ_HANDLE *handle) const;
 
-  u8 _50[0x120 - 0x50];
+  GmkMobInsts unknown50;                                                            // Inferred role: mob instances; original member name unknown.
   mutable mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi>> unknown120; // Inferred role: route navis with the game object they are bound to; original member name unknown.
 };
 
+static_assert(offsetof(GmkRoutedMob, unknown50) == 0x50, "");
 static_assert(offsetof(GmkRoutedMob, unknown120) == 0x120, "");
 static_assert(sizeof(GmkRoutedMob) == 0x148, "");
 

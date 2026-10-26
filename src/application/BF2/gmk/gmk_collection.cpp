@@ -157,4 +157,15 @@ bool GmkCollection::canPopGobInst() const {
   return DistCond::isMatch(info->unknown28.unknown00, unknown08.unknown08->unknown00);
 }
 
+bool GmkCollection::canDepopGobInst() const {
+  if (unknown48 == gf::INVALID_HANDLE) {
+    return false;
+  }
+  const BdatInfo *info = getBdatInfo();
+  if (info->isPopCondMatchedExceptDist() && DistCond::isMatch(info->unknown28.unknown00, unknown08.unknown08->unknown00)) {
+    return false;
+  }
+  return true;
+}
+
 } // namespace gmk

@@ -77,6 +77,31 @@ void GmkRoutedEnemyList::debugUpdateMmf() {
   unknown240.debugUpdateMmf();
 }
 
+void GmkRoutedEnemy::unbindRouteNavi(gf::GF_OBJ_HANDLE *handle, bool isDispose) {
+  if (handle == gf::INVALID_HANDLE) {
+    return;
+  }
+  for (std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi> *it = unknown1D8.begin(); it != unknown1D8.end(); ++it) {
+    if (it->first == handle) {
+      it->first = gf::INVALID_HANDLE;
+      if (isDispose) {
+        it->second.dispose();
+      }
+      break;
+    }
+  }
+}
+
+void GmkRoutedEnemy::bindRouteNavi(gf::GF_OBJ_HANDLE *handle, GmkRouteNavi &navi) {
+  unbindRouteNavi(handle, true);
+  for (std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi> *it = unknown1D8.begin(); it != unknown1D8.end(); ++it) {
+    if (&it->second == &navi) {
+      it->first = handle;
+      return;
+    }
+  }
+}
+
 GmkRouteNavi *GmkRoutedEnemy::findFreeRouteNavi() const {
   for (std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi> *it = unknown1D8.begin(); it != unknown1D8.end(); ++it) {
     if (it->first == gf::INVALID_HANDLE) {

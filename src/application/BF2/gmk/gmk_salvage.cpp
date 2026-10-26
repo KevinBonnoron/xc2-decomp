@@ -24,6 +24,27 @@ struct GF_OBJ_HANDLE;
 
 namespace gmk {
 
+GmkSalvage::RaffleResult::RaffleResult() {
+  unknown08 = -1;
+  unknown0c = -1;
+  unknown10 = -1;
+  unknown20 = -1;
+  unknown24 = -1;
+  unknown28 = -1;
+  unknown38 = -1;
+  unknown00 = 0;
+  unknown18 = 0;
+  unknown30 = 0;
+  unknown44 = 0;
+  unknown46 = 0;
+  unknown48 = 0;
+  unknown4a = 0;
+  unknown4c = 0;
+  unknown4e = 0;
+  unknown3c = -1;
+  unknown40 = -1;
+}
+
 template bool TGmkList<GmkSalvage, GmkSalvage::BdatInfo, 1447838035u, 2u, GmkSalvageGobCustom>::initGmkBdatInfo(GmkSalvage::BdatInfo &, int &, const AGmkBase &);
 template bool TGmkList<GmkSalvageLocator, GmkSalvageLocator::BdatInfo, 1129073747u, 1u, GmkSalvageLocatorGob>::initGmkBdatInfo(GmkSalvageLocator::BdatInfo &, int &, const AGmkBase &);
 

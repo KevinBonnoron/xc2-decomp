@@ -33,6 +33,34 @@ public:
     int unknown14; // Role and original member name unknown.
   };
 
+  struct RaffleResult {
+    RaffleResult();
+
+    u64 unknown00; // Role and original member name unknown.
+    s32 unknown08; // Role and original member name unknown.
+    s32 unknown0c; // Role and original member name unknown.
+    s32 unknown10; // Role and original member name unknown.
+    u8 _14[0x18 - 0x14];
+    u64 unknown18; // Role and original member name unknown.
+    s32 unknown20; // Role and original member name unknown.
+    s32 unknown24; // Role and original member name unknown.
+    s32 unknown28; // Role and original member name unknown.
+    u8 _2c[0x30 - 0x2c];
+    u64 unknown30; // Role and original member name unknown.
+    s32 unknown38; // Role and original member name unknown.
+    s32 unknown3c; // Role and original member name unknown.
+    s32 unknown40; // Role and original member name unknown.
+    u16 unknown44; // Role and original member name unknown.
+    u8 unknown46;  // Role and original member name unknown.
+    u8 _47;
+    u16 unknown48; // Role and original member name unknown.
+    u8 unknown4a;  // Role and original member name unknown.
+    u8 _4b;
+    u16 unknown4c; // Role and original member name unknown.
+    u8 unknown4e;  // Role and original member name unknown.
+    u8 _4f;
+  };
+
   struct BdatInfo {
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
@@ -71,12 +99,14 @@ public:
   mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknown88; // Inferred role: treasure box locators; original member name unknown.
   void *unknownA8;                                        // Role and original member name unknown.
   mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknownB0; // Inferred role: enemy locators; original member name unknown.
-  u8 _d0[0x128 - 0xd0];
-  bool unknown128; // Inferred role: display enabled; original member name unknown.
-  bool unknown129; // Inferred role: request to sync the depop of the treasure boxes; original member name unknown.
+  u8 _d0[0xd8 - 0xd0];
+  RaffleResult unknownd8; // Inferred role: raffle result; original member name unknown.
+  bool unknown128;        // Inferred role: display enabled; original member name unknown.
+  bool unknown129;        // Inferred role: request to sync the depop of the treasure boxes; original member name unknown.
   u8 _12a[0x130 - 0x12a];
 };
 
+static_assert(sizeof(GmkSalvage::RaffleResult) == 0x50, "");
 static_assert(sizeof(GmkSalvage::BdatInfo) == 0x2, "");
 static_assert(offsetof(GmkSalvage, unknown48) == 0x48, "");
 static_assert(offsetof(GmkSalvage, unknown58) == 0x58, "");
@@ -86,6 +116,7 @@ static_assert(offsetof(GmkSalvage, unknown68) == 0x68, "");
 static_assert(offsetof(GmkSalvage, unknown88) == 0x88, "");
 static_assert(offsetof(GmkSalvage, unknownA8) == 0xa8, "");
 static_assert(offsetof(GmkSalvage, unknownB0) == 0xb0, "");
+static_assert(offsetof(GmkSalvage, unknownd8) == 0xd8, "");
 static_assert(offsetof(GmkSalvage, unknown128) == 0x128, "");
 static_assert(offsetof(GmkSalvage, unknown129) == 0x129, "");
 static_assert(sizeof(GmkSalvage) == 0x130, "");

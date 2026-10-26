@@ -6,13 +6,90 @@
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_trigger.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 struct CBdatWrapper;
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
+
+namespace mm {
+struct Vec3;
+} // namespace mm
 
 namespace gmk {
 
 class GmkEnemyGob;
+class GmkSquad;
+
+class GmkEnemyInsts {
+public:
+  struct PopInfo {
+    struct PopEnemyInfo {
+      void dispose();
+
+      // Inferred helper: number of game objects of this enemy; original name unknown.
+      u32 unknown001() const {
+        if (unknown10 == nullptr || unknown18 == nullptr) {
+          return 0;
+        }
+        return (unknown10->size() + unknown18->size()) & 0xff;
+      }
+
+      // Inferred helper: number of defeated enemies, the high byte of unknown20; original name unknown.
+      u8 unknown002() const { return unknown20 >> 8; }
+
+      u16 unknown00; // Inferred role: enemy id; original member name unknown.
+      u8 unknown02;  // Role and original member name unknown.
+      u8 unknown03;  // Role and original member name unknown.
+      u8 unknown04;  // Inferred role: enemy num; original member name unknown.
+      u8 _05[0x07 - 0x05];
+      u8 unknown07; // Inferred role: type genus; original member name unknown.
+      u8 _08[0x10 - 0x08];
+      mm::mtl::Vector<gf::GF_OBJ_HANDLE *> *unknown10; // Inferred role: game objects; original member name unknown.
+      mm::mtl::Vector<gf::GF_OBJ_HANDLE *> *unknown18; // Inferred role: game objects; original member name unknown.
+      u16 unknown20;                                   // Inferred role: counts, the low byte then the defeated num in the high byte; original member name unknown.
+      u8 _22[0x24 - 0x22];
+      u32 unknown24; // Role and original member name unknown.
+    };
+
+    void dispose();
+    int getGobInstNum() const;
+    bool isPopFinished() const;
+    void removeDefeatedNamedEnemyInfo();
+    bool hasEneID(u16 eneId, bool flag) const;
+    bool hasTypeGenus(u8 genus, bool flag) const;
+
+    u16 unknown00; // Role and original member name unknown.
+    u8 unknown02;  // Role and original member name unknown.
+    u8 _03[0x08 - 0x03];
+    PopEnemyInfo unknown08[4]; // Inferred role: enemies; original member name unknown.
+  };
+
+  bool isQuestDead() const;
+  int getGobInstCapa() const;
+  void disposeSquad();
+
+  AGmkBase *unknown00; // Inferred role: owner gimmick; original member name unknown.
+  u8 *unknown08;       // Inferred role: bdat; original member name unknown.
+  int unknown10;       // Inferred role: bdat id; original member name unknown.
+  u8 _14[0x98 - 0x14];
+  PopInfo unknown98; // Inferred role: pop info; original member name unknown.
+  u8 _140[0x150 - 0x140];
+  GmkSquad *unknown150; // Inferred role: squad; original member name unknown.
+  u8 _158[0x188 - 0x158];
+};
+
+static_assert(sizeof(GmkEnemyInsts::PopInfo::PopEnemyInfo) == 0x28, "");
+static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown10) == 0x10, "");
+static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown18) == 0x18, "");
+static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown20) == 0x20, "");
+static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown24) == 0x24, "");
+static_assert(sizeof(GmkEnemyInsts::PopInfo) == 0xa8, "");
+static_assert(offsetof(GmkEnemyInsts, unknown98) == 0x98, "");
+static_assert(offsetof(GmkEnemyInsts, unknown150) == 0x150, "");
+static_assert(sizeof(GmkEnemyInsts) == 0x188, "");
 
 class GmkEnemy : public AGmkBase {
 public:
@@ -25,6 +102,10 @@ public:
     u16 unknown06;  // Inferred role: display height; original member name unknown.
   };
 
+  struct Data {
+    f32 unknown00; // Inferred role: random walk radius; original member name unknown. The size of this structure is unknown.
+  };
+
   static const GmkType GMK_TYPE = GMK_TYPE_ENEMY;
 
   ~GmkEnemy() override;
@@ -35,7 +116,11 @@ public:
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   IGmkList *getOwnerGmkEnemyList() const;
+  bool isPointInsideRandomWalk(const mm::Vec3 &position) const;
+  mm::Vec3 &getPositionInRandomWalk(mm::Vec3 &result, f32 angleMin, f32 angleMax, f32 distanceMin, f32 distanceMax) const;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
+
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   u8 *unknown48; // Role and original member name unknown.
   u8 *unknown50; // Role and original member name unknown.

@@ -3,6 +3,7 @@
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_npc/gmk_npc_manager.h"
 #include "gmk/gmk_set.h"
@@ -37,6 +38,25 @@ void GmkNpcList::disposeGmk() {
 }
 
 GmkType GmkNpc::getGmkType() const { return GMK_TYPE; }
+
+gf::GF_OBJ_HANDLE *GmkNpc::getGobInst() const {
+  if (AGmkNpc::unknown18 == nullptr) {
+    return gf::INVALID_HANDLE;
+  }
+  gf::GF_OBJ_HANDLE *handle = AGmkNpc::unknown18->unknown30;
+  if (this != getBindedGmkInst(handle)) {
+    return gf::INVALID_HANDLE;
+  }
+  return handle;
+}
+
+void GmkNpc::validateDisp() const {
+  gf::GF_OBJ_HANDLE *handle = getGobInst();
+  if (handle != gf::INVALID_HANDLE) {
+    bool isDisp = AGmkNpc::unknown20 && debugIsDispGmkType(getGmkType());
+    setEventDisp(handle, isDisp);
+  }
+}
 
 u8 *GmkNpc::getBindedBdatFp() const { return AGmkBase::getBindedBdatFp(); }
 

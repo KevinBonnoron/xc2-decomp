@@ -37,6 +37,8 @@ public:
   void debugDraw() const override;
   IGmkList *getOwnerGmkEnemyList() const;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
+  void bindRouteNavi(gf::GF_OBJ_HANDLE *handle, GmkRouteNavi &navi);
+  void unbindRouteNavi(gf::GF_OBJ_HANDLE *handle, bool isDispose);
   GmkRouteNavi *findFreeRouteNavi() const;
   GmkRouteNavi *findRouteNavi(gf::GF_OBJ_HANDLE *handle) const;
 

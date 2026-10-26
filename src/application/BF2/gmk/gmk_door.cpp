@@ -11,6 +11,7 @@
 #include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_phantom.h"
@@ -43,6 +44,22 @@ bool GmkDoor::BdatInfo::isGfObjMustExist() const {
   case 2:
   case 5:
   case 6:
+    return true;
+  }
+  return false;
+}
+
+bool GmkDoor::BdatInfo::isLoadSaveData() const {
+  if (isMapJumpingWithSaveData()) {
+    return true;
+  }
+  if (unknown06 == 0) {
+    return false;
+  }
+  switch (unknown02) {
+  case 2:
+  case 4:
+  case 5:
     return true;
   }
   return false;
@@ -130,6 +147,41 @@ bool GmkDoor::createGmkCamera(const char *name, u8 attribute, bool param3) {
     return true;
   }
   return false;
+}
+
+void GmkDoor::disposeGmkCamera() { unknown60.dispose(); }
+
+void GmkDoor::disposeGfObjHandle() {
+  if (unknown2b8 != gf::INVALID_HANDLE) {
+    gf::GfObjAcc acc(unknown2b8);
+    if (acc.isValid()) {
+      acc.setUserData(gf::OBJ_USER_DATA_GMK, 0);
+    }
+    gf::GfObjUtil::destroy(unknown2b8);
+    unknown2b8 = gf::INVALID_HANDLE;
+  }
+}
+
+bool GmkDoor::isGmkFinished() const {
+  u32 progress = getProgress();
+  if (progress == 0) {
+    return false;
+  }
+  const BdatInfo *info = getBdatInfo();
+  if (unknown2C0 < info->unknown2c) {
+    return false;
+  }
+  if (info->unknown42.isEnable()) {
+    return progress == 3;
+  }
+  return progress == 1;
+}
+
+void GmkDoor::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
+  AGmkBase::onGobEvent(event, handle);
+  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
+    unknown2b8 = gf::INVALID_HANDLE;
+  }
 }
 
 GmkType GmkDoor::getGmkType() const { return GMK_TYPE; }

@@ -44,6 +44,7 @@ public:
   void debugDraw() const override;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
   bool canPopGobInst() const;
+  bool canDepopGobInst() const;
   void disposeGfObjHandle();
   void disposeIcon(bool isFadeOut);
   void validateDisp() const;
