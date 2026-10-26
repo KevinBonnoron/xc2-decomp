@@ -26,6 +26,8 @@ struct ItemPrice {
 static_assert(sizeof(ItemPrice) == 0x14, "");
 
 struct ItemProperty {
+  ItemProperty() : unknown30() {}
+
   enum {
     FLAG_VALID = 0,
     FLAG_NO_SELL = 2,
