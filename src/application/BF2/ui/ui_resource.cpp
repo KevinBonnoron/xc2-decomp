@@ -4,8 +4,10 @@
 
 #include "framework/resource/common_resource.h"
 #include "grlib/cglib_texture_buffer.h"
+#include "ml/scn.h"
 #include "mm_mtl/hash.h"
 #include "mm_mtl/reference_object.h"
+#include "scn/scn_render_dr_sys_parm_acc.h"
 
 namespace ui {
 
@@ -39,6 +41,24 @@ bool UIResource::isLoading() const {
     }
   }
   return false;
+}
+
+void UIResource::releaseRenderViewList() {
+  if (unknown58.capacity() == 0) {
+    return;
+  }
+
+  ml::ScnRenderDrSysParmAcc parmAcc(ml::Scn::get()->unknown38, 0);
+  for (RenderView *it = unknown58.begin(); it != unknown58.end(); ++it) {
+    if (it->unknown00 != nullptr) {
+      parmAcc.deleteAddRenderView(it->unknown00);
+      if (it->unknown00 != nullptr) {
+        delete it->unknown00;
+        it->unknown00 = nullptr;
+      }
+    }
+  }
+  unknown58.clear();
 }
 
 void UIResource::releaseResourceList() {

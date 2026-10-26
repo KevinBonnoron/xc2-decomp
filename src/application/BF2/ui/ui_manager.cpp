@@ -12,6 +12,35 @@
 
 namespace ui {
 
+namespace {
+
+// Inferred role: calls an action for each sheet name of a created layer; original helper name unknown.
+template <typename Action> void unknown001(UIManager &manager, u32 layer, Action action) {
+  if (!manager.isLayerCreated(layer)) {
+    return;
+  }
+  u8 *bdat = UIUtil::getBdatFP(UI_BDAT_LAYER);
+  if (bdat == nullptr) {
+    return;
+  }
+
+  u8 group = Bdat::getVal(bdat, "group", layer).valueU8;
+  int memberSize = Bdat::getMemberSize(bdat);
+  int sheetCount = (memberSize - 1) / 2;
+  mm::mtl::FixStr<32> member;
+  if (memberSize >= 3) {
+    for (u32 i = 0; i < static_cast<u32>(sheetCount); i++) {
+      member.format("sheet%02d", i + 1);
+      const char *sheet = Bdat::getVal(bdat, member.c_str(), layer).valueString;
+      if (sheet != nullptr && *sheet != '\0') {
+        action(group, sheet);
+      }
+    }
+  }
+}
+
+} // namespace
+
 void UIManager::terminate() {
   for (int i = 0; i < GROUP_MAX; i++) {
     unknown08[i].terminateObjectAll(true);
@@ -56,6 +85,22 @@ bool UIManager::preloadLayer(u32 layer) {
     }
   }
   return true;
+}
+
+void UIManager::initializeLayer(u32 layer) {
+  unknown001(*this, layer, [this](u8 group, const char *sheet) { unknown08[group].initializeObject(sheet); });
+}
+
+void UIManager::terminateLayer(u32 layer, bool isImmediate) {
+  unknown001(*this, layer, [this, layer, isImmediate](u8 group, const char *sheet) {
+    if (unknown08[group].isAssignedLayer(sheet, layer)) {
+      unknown08[group].terminateObject(sheet, isImmediate);
+    }
+  });
+}
+
+void UIManager::releaseLayer(u32 layer) {
+  unknown001(*this, layer, [this](u8 group, const char *sheet) { unknown08[group].releaseObject(sheet); });
 }
 
 void UIManager::terminateObject(const char *name, u8 group, bool isImmediate) {

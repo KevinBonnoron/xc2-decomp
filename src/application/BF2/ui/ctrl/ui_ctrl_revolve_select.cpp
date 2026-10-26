@@ -10,6 +10,31 @@ UICtrlRevolveSelect::UICtrlRevolveSelect(u32 object)
 
 UICtrlRevolveSelect::~UICtrlRevolveSelect() { mm::mtl::safeRelease(unknown60); }
 
+void UICtrlRevolveSelect::reset() {
+  int index = unknown60->getIndex(false);
+  if (unknown60->getSize() != 0) {
+    u32 count = unknown60->getSize();
+    u16 range = unknown2c.unknown00;
+    f32 step;
+    if (count < 2) {
+      step = range;
+    } else if (range == 360) {
+      step = static_cast<f32>(range) / static_cast<f32>(unknown60->getSize());
+    } else {
+      step = static_cast<f32>(range) / static_cast<f32>(unknown60->getSize() - 1);
+    }
+    if (index >= 0) {
+      f32 angle = -step;
+      if (unknown2c.unknown03 != 0) {
+        angle = step;
+      }
+      unknown6c = -(index * angle);
+      unknown70 = -(index * angle);
+    }
+    unknown68 = index;
+  }
+}
+
 void UICtrlRevolveSelect::resetAngelRange(u16 range) { unknown2c.unknown00 = range; }
 
 void UICtrlRevolveSelect::getCenterPos(mm::Pnt<s16> &pos) const {

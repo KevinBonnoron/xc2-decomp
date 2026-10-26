@@ -1,6 +1,7 @@
 #include "ui/ui_group.h"
 
 #include "framework/memory/framework_memory.h"
+#include "framework/resource/common_resource.h"
 #include "ui/input/ui_input_layer.h"
 #include "ui/input/ui_input_manager.h"
 #include "ui/object/ui_layout_object.h"
@@ -15,6 +16,34 @@ namespace ui {
 UIGroup::UIGroup() : unknown08(nullptr), unknown10(), unknown38(), unknown60(0) {}
 
 UIGroup::~UIGroup() { clean(); }
+
+void UIGroup::clean() {
+  if (unknown10.capacity() != 0) {
+    for (RootObjInfo *it = unknown10.begin(); it != unknown10.end(); ++it) {
+      if (it->unknown50 != nullptr) {
+        it->unknown50->release();
+        it->unknown50 = nullptr;
+      }
+      releaseInput(it->unknown44);
+    }
+    unknown10.destroy();
+  }
+  if (unknown38.capacity() != 0) {
+    // The game never advances the iterator in this loop and clears unknown10 again below instead of unknown38.
+    for (InputInfo *it = unknown38.begin(); it != unknown38.end();) {
+      if (it->unknown00 != nullptr) {
+        it->unknown00->release();
+        it->unknown00 = nullptr;
+      }
+    }
+    unknown10.destroy();
+  }
+  if (unknown08 != nullptr) {
+    delete unknown08;
+    unknown08 = nullptr;
+  }
+  unknown60 = 0;
+}
 
 void UIGroup::setup(u32 size) {
   if (size == 0) {
@@ -168,6 +197,29 @@ void UIGroup::terminateObjectAll(bool isImmediate) {
   }
 }
 
+void UIGroup::attachInput(const char *name, UIInputLayer *input) {
+  if (unknown08 == nullptr) {
+    return;
+  }
+  u32 object = unknown08->search(name);
+  if (object == 0) {
+    return;
+  }
+  UIObject *inputObject = UIUtil::getObject(input->unknown40);
+  mm::mtl::FixStr<64> inputName;
+  inputName.format("%s_%s", name, inputObject->unknowna0.c_str());
+  u32 handle = UIInputManager::get()->registInputLayer(input, inputName.c_str());
+  if (handle == 0) {
+    return;
+  }
+  input->addRef();
+  InputInfo info;
+  info.unknown00 = input;
+  info.unknown08 = handle;
+  info.unknown0c = object;
+  unknown38.push_back(info);
+}
+
 void UIGroup::suspend(bool suspend) {
   // The game sets bit 0 in both cases; only a suspension also sets bit 1.
   if (suspend) {
@@ -181,6 +233,26 @@ void UIGroup::suspend(bool suspend) {
       it->unknown08 = 0;
     }
   }
+}
+
+void UIGroup::resume() {
+  unknown60 &= ~3;
+  for (InputInfo *it = unknown38.begin(); it != unknown38.end(); ++it) {
+    if (it->unknown08 == 0) {
+      it->unknown08 = UIInputManager::get()->registInputLayer(it->unknown00, getRootInfo(it->unknown0c)->unknown00.c_str());
+    }
+  }
+}
+
+u32 UIGroup::getLoadedResourceSize() {
+  u32 size = 0;
+  for (RootObjInfo *it = unknown10.begin(); it != unknown10.end(); ++it) {
+    UIResource *resource = it->unknown50;
+    for (u32 i = 0; i < resource->unknown30.size(); ++i) {
+      size += resource->unknown30[i]->getAssetSize();
+    }
+  }
+  return size;
 }
 
 void UIGroup::releaseInput(u32 handle) {
