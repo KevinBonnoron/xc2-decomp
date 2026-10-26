@@ -207,11 +207,14 @@ public:
   u8 _0c[0x10 - 0x0c];
   SoundSsdSourceData *unknown10; // Inferred role: data; original member name unknown.
   ssd::SoundEntry *unknown18;    // Inferred role: entry; original member name unknown.
-  u8 _20[0x240 - 0x20];
+  u8 _20[0x134 - 0x20];
+  mm::mtl::FixStr<256> unknown134; // Inferred role: name; original member name unknown.
+  u8 _238[0x240 - 0x238];
   u8 unknown240; // Inferred role: flags; original member name unknown.
 };
 
 static_assert(offsetof(SoundSsdSource, unknown18) == 0x18, "");
+static_assert(offsetof(SoundSsdSource, unknown134) == 0x134, "");
 static_assert(offsetof(SoundSsdSource, unknown240) == 0x240, "");
 
 class SoundSsdPlayer : public ssd::SoundActor3D {

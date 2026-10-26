@@ -16,8 +16,8 @@ public:
   LayerAccMemObj(LayerBase *layer);
   void *getMemBufer();
   void updateMemBufer();
-  u16 getMemWidth() const;
-  u16 getMemHeight() const;
+  u32 getMemWidth() const;
+  u32 getMemHeight() const;
   void setRender(bool render);
   bool isRender() const;
   grlib::CGLibTextureBuffer *getTexture();

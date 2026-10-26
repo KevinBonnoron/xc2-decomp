@@ -91,6 +91,7 @@ class EffectCasterSend : public mm::mtl::IntrusiveListNode<EffectCasterSend> {
 public:
   static const u32 BUFFER_NUM = 2;
 
+  explicit EffectCasterSend(mm::mtl::IAllocator *allocator);
   virtual ~EffectCasterSend();
   virtual void *getMdl();
   virtual const char *getStateName();
@@ -110,7 +111,8 @@ public:
 
   mm::mtl::Vector<EffectBindData> unknown18[BUFFER_NUM]; // Inferred role: bind datas; original member name unknown.
   EffectCasterBase *m_caster;
-  u8 _70[0x80 - 0x70];
+  void *unknown70;                           // Inferred role: point; original member name unknown.
+  mm::mtl::IAllocator *unknown78;            // Inferred role: allocator; original member name unknown.
   void *unknown80;                           // Inferred role: model; original member name unknown.
   f32 unknown88[BUFFER_NUM];                 // Inferred role: scales; original member name unknown.
   f32 unknown90[BUFFER_NUM];                 // Inferred role: frames; original member name unknown.
@@ -119,6 +121,8 @@ public:
 
 static_assert(offsetof(EffectCasterSend, unknown18) == 0x18, "");
 static_assert(offsetof(EffectCasterSend, m_caster) == 0x68, "");
+static_assert(offsetof(EffectCasterSend, unknown70) == 0x70, "");
+static_assert(offsetof(EffectCasterSend, unknown78) == 0x78, "");
 static_assert(offsetof(EffectCasterSend, unknown80) == 0x80, "");
 static_assert(offsetof(EffectCasterSend, unknown98) == 0x98, "");
 static_assert(sizeof(EffectCasterSend) == 0xe0, "");

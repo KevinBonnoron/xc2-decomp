@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/sound/sound_ssd_drv.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_ptr.h"
@@ -15,8 +16,6 @@ class IAllocator;
 
 namespace fw {
 
-class SoundSsdBank;
-class SoundSsdSource;
 enum SoundCategory : int;
 enum SoundPriority : int;
 
@@ -45,12 +44,14 @@ public:
   bool canRelease() const;
   mm::mtl::IntrusivePtr<SoundSsdSource> getSource(u32 index) const;
   mm::mtl::IntrusivePtr<SoundSsdSource> findSourceFromID(u32 id) const;
+  mm::mtl::IntrusivePtr<SoundSsdSource> findSource(const char *name) const;
   bool isLoopSource(u32 id) const;
+  bool isLoopSource(const char *name) const;
 
   u8 _10[0x178 - 0x10];
-  SoundSsdBank *unknown178;                               // Inferred role: bank; original member name unknown.
-  mm::mtl::FixedVector<SoundSsdSource *, 256> unknown180; // Inferred role: sources; original member name unknown.
-  mm::mtl::FixedVector<SoundSourceId, 256> unknown988;    // Inferred role: source ids; original member name unknown.
+  SoundSsdBank *unknown178;                                                    // Inferred role: bank; original member name unknown.
+  mm::mtl::FixedVector<mm::mtl::IntrusivePtr<SoundSsdSource>, 256> unknown180; // Inferred role: sources; original member name unknown.
+  mm::mtl::FixedVector<SoundSourceId, 256> unknown988;                         // Inferred role: source ids; original member name unknown.
 };
 
 static_assert(offsetof(SoundPack, unknown178) == 0x178, "");

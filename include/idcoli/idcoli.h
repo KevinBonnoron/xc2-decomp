@@ -206,6 +206,7 @@ static_assert(offsetof(IDColiManager, m_gblIdTbl) == 0xe8, "");
 class IDColiMove {
 public:
   IDColiMove();
+  void setFloor(f32 floor);
   void setAccuracy(bool accuracy);
   void moveColi(IDColiObj *object, const mm::Vec3 &move);
   bool moveColi(const mm::Vec3 &position, const mm::Vec3 &move);

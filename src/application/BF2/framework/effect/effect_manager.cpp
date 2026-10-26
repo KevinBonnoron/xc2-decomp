@@ -197,6 +197,15 @@ void *EffectManager::search(const char *name, EffectPack *pack) {
   return seachAssetEffectHandle(name);
 }
 
+u32 EffectManager::create(const char *name, EffectPack *pack, const effect::SendParam *param, bool isLoop) {
+  void *data = search(name, pack);
+  if (data == nullptr) {
+    return 0;
+  }
+
+  return create(data, param, isLoop);
+}
+
 u32 EffectManager::create(void *data, bool isLoop) {
   if (effect::SystemManager::getPtr() == nullptr) {
     return 0;
@@ -298,6 +307,25 @@ bool EffectManager::isLoop(const char *name, EffectPack *pack) const { return is
 bool EffectManager::containsCamAxis(void *data) const { return effect::SystemManager::getPtr()->es_contais_cam_axis(data); }
 
 bool EffectManager::containsCamAxis(const char *name, EffectPack *pack) const { return containsCamAxis(get()->search(name, pack)); }
+
+EffectData *EffectManager::searchData(const char *name) {
+  DataMap::iterator found = unknown350->find(name);
+  if (found != unknown350->end()) {
+    return found->second;
+  }
+
+  CommonEffect *end = unknown1fb8.end();
+  for (CommonEffect *it = unknown1fb8.begin(); it != end; ++it) {
+    if (it->unknown08 != nullptr) {
+      EffectData *data = it->unknown08->searchData(name);
+      if (data != nullptr) {
+        return data;
+      }
+    }
+  }
+
+  return nullptr;
+}
 
 void *EffectManager::seachAssetEffectHandle(const char *name) {
   CommonEffect *end = unknown1fb8.end();

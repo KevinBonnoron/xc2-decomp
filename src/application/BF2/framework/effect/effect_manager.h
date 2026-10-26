@@ -71,6 +71,7 @@ public:
   void addData(EffectData *data);
   void removeData(EffectData *data);
   EffectData *findData(const char *name);
+  EffectData *searchData(const char *name);
   void setMasterPause(bool isPause);
   bool isMasterPause() const;
   EffectCasterSend *getCaster(EffectCasterBase *caster);
@@ -89,6 +90,7 @@ public:
   void setDisableCollision(bool isDisable);
   u32 create(const char *name, EffectPack *pack, bool isLoop);
   void *search(const char *name, EffectPack *pack);
+  u32 create(const char *name, EffectPack *pack, const effect::SendParam *param, bool isLoop);
   u32 create(void *data, bool isLoop);
   u32 create(void *data, const effect::SendParam *param, bool isLoop);
   void kill(u32 handle);

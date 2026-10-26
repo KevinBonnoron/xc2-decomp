@@ -1,8 +1,11 @@
 #include "framework/resource/resource_manager.h"
 
+#include <string.h>
+
 #include "framework/framework.h"
 #include "framework/resource/resource_object.h"
 #include "mm_mtl/algorithm.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/hash.h"
 #include "mm_mtl/reference_object.h"
 
@@ -89,6 +92,26 @@ void ResourceManager::removeResource(ResourceObject *resource) {
   if (it != resources.end()) {
     resources.erase(it);
   }
+}
+
+ResourceObject *ResourceManager::searchResource(u32 type, mtl::ALLOC_HANDLE handle, const char *path) {
+  u32 hash = mm::mtl::hashStrCrc(path);
+  for (u32 i = 0; i < unknown18[type].size(); i++) {
+    if (unknown18[type][i] != nullptr && unknown18[type][i]->unknown10 == handle && unknown18[type][i]->unknown20 == hash && strcmp(unknown18[type][i]->unknown2c.c_str(), path) == 0) {
+      return unknown18[type][i];
+    }
+  }
+  return nullptr;
+}
+
+ResourceObject *ResourceManager::searchResource(u32 type, mm::mtl::IAllocator *allocator, const char *path) {
+  u32 hash = mm::mtl::hashStrCrc(path);
+  for (u32 i = 0; i < unknown18[type].size(); i++) {
+    if (unknown18[type][i] != nullptr && unknown18[type][i]->unknown18 == allocator && unknown18[type][i]->unknown20 == hash && strcmp(unknown18[type][i]->unknown2c.c_str(), path) == 0) {
+      return unknown18[type][i];
+    }
+  }
+  return nullptr;
 }
 
 void ResourceManager::addSafeObject(mm::mtl::ReferenceObject *object, eResourceType type) {

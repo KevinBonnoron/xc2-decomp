@@ -1,10 +1,39 @@
 #include "framework/movie/movie_manager.h"
 
+#include "layer/layer_acc_mem_obj.h"
 #include "movie/cmovie.h"
+#include "ui/ui_object_acc.h"
 
 namespace fw {
 
 const char *MovieManager::getName() const { return "MovieManager"; }
+
+void MovieManager::update() {
+  unknown40++;
+  if (unknown30 != nullptr) {
+    if (unknown28 == nullptr) {
+      if (unknown20 != 0) {
+        ui::UIObjectAcc acc(unknown20);
+        if (acc.isValid()) {
+          acc.setDisp(unknown38);
+          s16 width;
+          s16 height;
+          acc.getSize(false, width, height);
+          void *buffer = acc.getOnMemoryBuffer();
+          unknown30->update(static_cast<u8 *>(buffer), width, height, unknown3c);
+          acc.swapOnMemoryBuffer();
+        }
+      }
+    } else {
+      layer::LayerAccMemObj acc(unknown28);
+      void *buffer = acc.getMemBufer();
+      u32 width = acc.getMemWidth();
+      u32 height = acc.getMemHeight();
+      unknown30->update(static_cast<u8 *>(buffer), width, height, unknown3c);
+      acc.updateMemBufer();
+    }
+  }
+}
 
 bool MovieManager::set_file(const char *path) {
   if (unknown30 != nullptr) {

@@ -528,9 +528,9 @@ void *LayerAccMemObj::getMemBufer() { return m_memObj->getBuffer(); }
 
 void LayerAccMemObj::updateMemBufer() { m_memObj->updateBufer(); }
 
-u16 LayerAccMemObj::getMemWidth() const { return m_memObj->unknown740; }
+u32 LayerAccMemObj::getMemWidth() const { return m_memObj->unknown740; }
 
-u16 LayerAccMemObj::getMemHeight() const { return m_memObj->unknown744; }
+u32 LayerAccMemObj::getMemHeight() const { return m_memObj->unknown744; }
 
 void LayerAccMemObj::setRender(bool render) { m_memObj->setRender(render); }
 
