@@ -4,6 +4,7 @@
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
+#include "ui/ui_str.h"
 
 namespace gf {
 
@@ -22,6 +23,30 @@ void GfMenuBdat::initialize() {
   for (u32 i = 0; i < sizeof(names) / sizeof(names[0]); i++) {
     s_BdatArray[i] = Bdat::getFP(names[i]);
   }
+}
+
+u32 GfMenuBdat::getValueLevel(u8 *bdat, u32 value) {
+  int top = Bdat::getIdTop(bdat);
+  if (Bdat::getIdCount(bdat) < 2) {
+    return 1;
+  }
+
+  u32 first = Bdat::getVal(bdat, "value", top).valueU32;
+  u32 second = Bdat::getVal(bdat, "value", top + 1).valueU32;
+  if (first > second) {
+    for (int i = 0; i < Bdat::getIdCount(bdat); i++) {
+      if (Bdat::getVal(bdat, "value", top + i).valueU32 <= value) {
+        return i + 1;
+      }
+    }
+  } else {
+    for (int i = 0; i < Bdat::getIdCount(bdat); i++) {
+      if (Bdat::getVal(bdat, "value", top + i).valueU32 >= value) {
+        return i + 1;
+      }
+    }
+  }
+  return Bdat::getIdCount(bdat);
 }
 
 bool GfMenuBdat::isValidBdatID(u8 *bdat, int id) {
@@ -59,6 +84,15 @@ u32 GfMenuBdat::getTopDriverIconID() { return 199; }
 u32 GfMenuBdat::getTopBladeIconID() { return 207; }
 
 int GfMenuBdat::getFieldSkillTypeMax() { return Bdat::getIdCount(s_BdatArray[3]); }
+
+void GfMenuBdat::getFieldSkillName(u16 skill, ui::UIStr &name) {
+  u8 *list = GfDataBdat::getFP(BDAT_FLD_FIELD_SKILL_LIST);
+  u8 *text = GfDataBdat::getFP(BDAT_FLD_FIELDSKILLTXT);
+  if (list != nullptr && text != nullptr) {
+    ui::UIStr str(text, Bdat::getVal(list, "Name", skill).valueU16);
+    name.copy(str);
+  }
+}
 
 int GfMenuBdat::getIconIDFromWeatherType(u32 weatherType) { return weatherType + 167; }
 
