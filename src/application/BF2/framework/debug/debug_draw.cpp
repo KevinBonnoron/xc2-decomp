@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include "framework/debug/debug_commander.h"
 #include "framework/primitive.h"
 #include "ml/cache_draw.h"
 #include "ml/dev_graph.h"
@@ -14,6 +15,10 @@
 
 namespace fw {
 namespace debug {
+
+const char *CL_CONNECT_NAME = "dev_cl";
+
+void finalCommandLauncherReciever() { CommandManager::closeServer(CL_CONNECT_NAME); }
 
 static const u32 FONT_BUFFER_SIZE = 0x400;
 static const u32 CIRCLE_DIVISION = 16;

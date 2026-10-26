@@ -10,6 +10,10 @@
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
+namespace mtl {
+class ALLOC_HANDLE;
+} // namespace mtl
+
 namespace mm {
 namespace mtl {
 class IAllocator;
@@ -61,6 +65,7 @@ public:
   void unlink();
   void relink();
   void start();
+  void destroy();
   void execute();
   void update();
   void waitLoad();
@@ -97,6 +102,7 @@ class ScriptManager : public ManagerObject, public mm::mtl::PtrSingleton<ScriptM
 public:
   ~ScriptManager();
   bool initialize() override;
+  void createScript(int type, mtl::ALLOC_HANDLE handle, size_t size);
   void createScript(int type, mm::mtl::IAllocator *allocator, size_t size);
   void destroyScript(int type, bool isForce);
   bool isScriptCreated(int type) const;

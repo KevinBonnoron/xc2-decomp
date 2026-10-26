@@ -78,8 +78,11 @@ static_assert(offsetof(TColiCheckResult<256>, isHit) == 0x5014, "");
 
 class ColiCheck {
 public:
+  static bool testLine(TColiCheckResult<256> &result, const mm::Vec3 &start, const mm::Vec3 &end, const ColiCheckConfig &config);
   static bool testObjectChara(TColiCheckResult<256> &result, ColiObject *object, const ColiCheckConfig &config);
   static bool testObjectPhantom(TColiCheckResult<256> &result, ColiObject *object, const ColiCheckConfig &config);
+  static ColiObject *getObjectFromUserData(u32 handle);
+  static bool moveColi(mm::Vec3 &result, const mm::Vec3 &position, const mm::Vec3 &move);
   static bool getSnapPos(mm::Vec3 &result, const mm::Vec3 &position, f32 distance, u32 mask);
 };
 

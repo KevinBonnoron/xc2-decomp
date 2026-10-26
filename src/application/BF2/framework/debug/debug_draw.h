@@ -16,6 +16,9 @@ class PrimSphere;
 
 namespace debug {
 
+extern const char *CL_CONNECT_NAME;
+
+void finalCommandLauncherReciever();
 bool drawFont(int x, int y, const mm::Col4 &color, const char *format, ...);
 bool drawFont(int x, int y, const char *format, ...);
 bool drawFontColor(const mm::Col4 &color);

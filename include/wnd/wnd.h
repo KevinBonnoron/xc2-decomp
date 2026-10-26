@@ -10,7 +10,14 @@
 namespace wnd {
 
 struct Query;
-class LocalWind;
+
+class LocalWind {
+public:
+  u8 _00[0x88];
+  f32 unknown88; // Inferred role: power; original member name unknown.
+};
+
+static_assert(offsetof(LocalWind, unknown88) == 0x88, "");
 
 class WindProbe : public mm::mtl::ReferenceObject {
 public:

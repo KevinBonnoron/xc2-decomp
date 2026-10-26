@@ -1,6 +1,8 @@
 #include "framework/script/script_manager.h"
 
 #include "mm_mtl/allocator.h"
+#include "mtl/alloc_handle.h"
+#include "mtl/mem_manager.h"
 
 void pluginRegist();
 
@@ -20,6 +22,28 @@ void ScriptManager::createScript(int type, mm::mtl::IAllocator *allocator, size_
   void *memory = allocator->allocate(size, 0x1000);
   unknown20[type].initialize(this, type, memory, size);
   unknown20[type].unknown230 = allocator;
+}
+
+void ScriptManager::createScript(int type, mtl::ALLOC_HANDLE handle, size_t size) {
+  void *memory = mtl::MemManager::allocate(handle, size, 0x1000, false, "no name", 0);
+  unknown20[type].initialize(this, type, memory, size);
+}
+
+void ScriptManager::destroyScript(int type, bool isForce) {
+  unknown20[type].destroy();
+  if (isForce) {
+    void *memory = unknown20[type].unknown08;
+    if (memory != nullptr) {
+      mm::mtl::IAllocator *allocator = unknown20[type].unknown230;
+      if (allocator == nullptr) {
+        mtl::MemManager::deallocate(memory, 0, false);
+      } else {
+        allocator->deallocate(memory);
+      }
+
+      unknown20[type].unknown08 = nullptr;
+    }
+  }
 }
 
 void ScriptManager::notifyEvent(int type, ScriptEventParam::State state) {

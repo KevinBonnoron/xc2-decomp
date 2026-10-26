@@ -208,6 +208,7 @@ public:
   IDColiMove();
   void setAccuracy(bool accuracy);
   void moveColi(IDColiObj *object, const mm::Vec3 &move);
+  bool moveColi(const mm::Vec3 &position, const mm::Vec3 &move);
 
   u8 _000[0x130];
   mm::Vec3 unknown130; // Inferred role: moved distance; original member name unknown.

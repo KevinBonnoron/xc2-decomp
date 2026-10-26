@@ -9,6 +9,7 @@ namespace fw {
 
 class EffectData : public mm::mtl::ReferenceObject {
 public:
+  static EffectData *createFromMemory(void *data, u32 size, const char *name, bool isExternal);
   void *getHandle() const;
   const char *getName() const;
   EffectData(void *data, u32 size, const char *name, bool isExternal);
