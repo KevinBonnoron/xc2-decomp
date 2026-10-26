@@ -6,11 +6,16 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_event.h"
 #include "gf/data/gf_data_util.h"
+#include "gf/field/gf_field_map_gimmick.h"
 #include "gf/game/event/gf_game_event.h"
+#include "gf/game/gf_game_arts_movie.h"
+#include "gf/game/gf_game_chain_attack.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_scene.h"
 #include "gf/game/gf_game_speed.h"
 #include "gf/game/gf_game_state.h"
+#include "gf/game/quest/gf_quest_event.h"
+#include "gf/game/quest/gf_quest_manager.h"
 #include "gf/game/quest/gf_quest_task.h"
 #include "gf/game/salvage/gf_game_salvage.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
@@ -21,6 +26,8 @@
 #include "gf/menu/gf_menu_fade.h"
 #include "gf/menu/gf_menu_kizunaring.h"
 #include "gf/menu/gf_menu_manager.h"
+#include "gf/menu/object/gf_menu_obj_quest_log.h"
+#include "gf/request/gf_req_manager.h"
 #include "gf/request/gf_req_scom.h"
 #include "gf/scom/gf_scom_script.h"
 #include "gf/script/gf_script_manager.h"
@@ -615,6 +622,160 @@ GfPlayComMenuObjCommonText *GfPlayComMenuObjCommonText::create(GfMenuObjCommonTe
   // __LINE__ must be 3127 as in the original file: its value changes the instruction order.
 #line 3127
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuObjCommonText(param);
+}
+
+GfPlayComChainAttack::GfPlayComChainAttack() : GfPlayCom(PCOMTYPE_CHAIN_ATTACK, true), unknown10(0), unknown14(0) {}
+
+void GfPlayComChainAttack::start() { unknown14 = 3; }
+
+void GfPlayComChainAttack::end() { GfChainAttack::destroy(); }
+
+bool GfPlayComChainAttack::update(const fw::UpdateInfo &info, bool) {
+  switch (unknown10) {
+  case 0:
+    if (--unknown14 <= 0) {
+      if (GfSequentialPlay::isInnerState(GF_STATE_EVENT)) {
+        return true;
+      }
+      if (GfChainAttack::get() != nullptr) {
+        GfChainAttack::get()->startSetup();
+      }
+      unknown10 = 1;
+    }
+    return false;
+  case 1:
+    if (GfChainAttack::get() == nullptr) {
+      return true;
+    }
+    GfChainAttack::get()->update(info);
+    return false;
+  }
+  return true;
+}
+
+GfPlayComChainAttack *GfPlayComChainAttack::create() {
+  // __LINE__ must be 2783 as in the original file: its value changes the instruction order.
+#line 2783
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComChainAttack();
+}
+
+GfPlayComArtsMovie::GfPlayComArtsMovie(const char *name) : GfPlayCom(PCOMTYPE_ARTS_MOVIE, true) {
+  if (name != nullptr) {
+    unknown10 = name;
+  }
+}
+
+void GfPlayComArtsMovie::start() {
+  if (GfArtsMovie::get() != nullptr) {
+    GfArtsMovie::get()->startSetup(unknown10.c_str());
+  }
+}
+
+void GfPlayComArtsMovie::end() { GfArtsMovie::destroy(); }
+
+bool GfPlayComArtsMovie::update(const fw::UpdateInfo &info, bool) {
+  if (GfArtsMovie::get() != nullptr) {
+    GfArtsMovie::get()->update(info);
+    return false;
+  }
+  return true;
+}
+
+GfPlayComArtsMovie *GfPlayComArtsMovie::create(const char *name) {
+  // __LINE__ must be 2826 as in the original file: its value changes the instruction order.
+#line 2826
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComArtsMovie(name);
+}
+
+void GfPlayComMapjump::start() { unknown10 = GfReqCommand::reqMapjump(unknown20); }
+
+void GfPlayComMapjump::end() {}
+
+bool GfPlayComMapjump::update(const fw::UpdateInfo &, bool isCancel) {
+  if (isCancel) {
+    return true;
+  }
+  return !GfReqManager::isValid(unknown10);
+}
+
+GfPlayComMapjump *GfPlayComMapjump::create(const GfMapjumpInfo &info) {
+  // __LINE__ must be 424 as in the original file: its value changes the instruction order.
+#line 424
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMapjump(info);
+}
+
+int GfPlayComGmkTutorialSeq::s_activate;
+
+GfPlayComGmkTutorialSeq::GfPlayComGmkTutorialSeq(const char *name, u32 tutorial) : GfPlayCom(PCOMTYPE_GMK_TUTORIAL_SEQ, false) {
+  unknown10 = name;
+  unknown54 = tutorial;
+  if (GfGameScene::get() != nullptr) {
+    unknown58 = GfGameScene::get()->createPlayerPause();
+  }
+  s_activate++;
+}
+
+GfPlayComGmkTutorialSeq::~GfPlayComGmkTutorialSeq() { s_activate--; }
+
+void GfPlayComGmkTutorialSeq::start() { GfFieldGmkTutorial::get()->create(unknown10.c_str(), unknown54); }
+
+void GfPlayComGmkTutorialSeq::end() {
+  GfFieldGmkTutorial::get()->dispose();
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->destroyPlayerPause(unknown58);
+  }
+}
+
+bool GfPlayComGmkTutorialSeq::update(const fw::UpdateInfo &, bool isCancel) {
+  if (isCancel) {
+    GfFieldGmkTutorial::get()->dispose();
+  } else if (!GfFieldGmkTutorial::get()->isEnd()) {
+    return false;
+  }
+  GfGameManager::setGmkTutorialSequenceOK(false);
+  GfGameManager::setGmkTutorialMoverOK(false);
+  return true;
+}
+
+GfPlayComGmkTutorialSeq *GfPlayComGmkTutorialSeq::create(const char *name, u32 tutorial) {
+  // __LINE__ must be 2082 as in the original file: its value changes the instruction order.
+#line 2082
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComGmkTutorialSeq(name, tutorial);
+}
+
+int GfPlayComQuestCompleteUI::s_active;
+
+GfPlayComQuestCompleteUI::GfPlayComQuestCompleteUI(QuestID quest, QuestID child, QSTATE state)
+    : GfPlayCom(PCOMTYPE_QUEST_COMPLETE_UI, false), unknown10(quest), unknown14(child), unknown18(state), unknown20(nullptr) {
+  s_active++;
+}
+
+GfPlayComQuestCompleteUI::~GfPlayComQuestCompleteUI() {
+  mm::mtl::safeRelease(unknown20);
+  s_active--;
+}
+
+void GfPlayComQuestCompleteUI::start() {
+  unknown20 = GfMenuCallContext::create();
+  GfMenuObjQuestLog::complete(unknown20, unknown10);
+}
+
+void GfPlayComQuestCompleteUI::end() { GfQuestManager::requestRefreshQuestTaskState(); }
+
+bool GfPlayComQuestCompleteUI::update(const fw::UpdateInfo &, bool) {
+  if (unknown20->isTerm()) {
+    GfQuestEvent::clearDispUI();
+    return true;
+  }
+  return false;
+}
+
+GfPlayComQuestCompleteUI *GfPlayComQuestCompleteUI::create(QuestID quest, QuestID child, QSTATE state) {
+  // __LINE__ must be 2561 as in the original file: its value changes the instruction order.
+#line 2561
+  GfPlayComQuestCompleteUI *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComQuestCompleteUI(quest, child, state);
+  GfQuestManager::setCompleteQuest(quest, child, state);
+  return command;
 }
 
 } // namespace gf

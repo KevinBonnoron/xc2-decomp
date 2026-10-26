@@ -1,10 +1,13 @@
 #pragma once
 #include "gf/event/gf_event.h"
+#include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/menu/object/gf_menu_obj_common_text.h"
+#include "gf/request/gf_req_command.h"
 #include "gmk/gmk_manager.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -22,10 +25,8 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 struct GF_SCOM_HANDLE;
-struct GfMapjumpInfo;
 struct GfSetupPfTalk;
 struct MenuCommonWindowParam;
-struct QuestID;
 class GfMenuCallContext;
 class IFieldSeq;
 
@@ -167,9 +168,20 @@ public:
 };
 
 class GfPlayComMapjump : public GfPlayCom {
+  GF_PLAY_COM("PlayComMapjump")
+
 public:
+  GfPlayComMapjump(const GfMapjumpInfo &info) : GfPlayCom(PCOMTYPE_MAPJUMP, false), unknown10(-1), unknown20(info) {}
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComMapjump *create(const GfMapjumpInfo &info);
+
+  u32 unknown10;           // Inferred role: request; original member name unknown.
+  GfMapjumpInfo unknown20; // Inferred role: mapjump info; original member name unknown.
 };
+
+static_assert(sizeof(GfPlayComMapjump) == 0x130, "");
 
 class GfPlayComWaitBattleEnd : public GfPlayCom {
 public:
@@ -535,11 +547,24 @@ public:
 static_assert(sizeof(GfPlayComWaitPlayerToStartGmkTuto) == 0x18, "");
 
 class GfPlayComGmkTutorialSeq : public GfPlayCom {
+  GF_PLAY_COM("PlayComGmkTutorialSeq")
+
 public:
+  GfPlayComGmkTutorialSeq(const char *name, u32 tutorial);
+  ~GfPlayComGmkTutorialSeq() override;
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComGmkTutorialSeq *create(const char *name, u32 tutorial);
+
+  mm::mtl::FixStr<64> unknown10; // Inferred role: script name; original member name unknown.
+  u32 unknown54;                 // Inferred role: tutorial; original member name unknown.
+  int unknown58;                 // Inferred role: player pause; original member name unknown.
 
   static int s_activate;
 };
+
+static_assert(sizeof(GfPlayComGmkTutorialSeq) == 0x60, "");
 
 class GfPlayComPlayerDead : public GfPlayCom {
 public:
@@ -559,11 +584,25 @@ public:
 };
 
 class GfPlayComQuestCompleteUI : public GfPlayCom {
+  GF_PLAY_COM("QuestCompleteUI")
+
 public:
+  GfPlayComQuestCompleteUI(QuestID quest, QuestID child, QSTATE state);
+  ~GfPlayComQuestCompleteUI() override;
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComQuestCompleteUI *create(QuestID quest, QuestID child, QSTATE state);
+
+  QuestID unknown10;            // Inferred role: quest; original member name unknown.
+  QuestID unknown14;            // Inferred role: child quest; original member name unknown.
+  QSTATE unknown18;             // Inferred role: state; original member name unknown.
+  GfMenuCallContext *unknown20; // Inferred role: context; original member name unknown.
 
   static int s_active;
 };
+
+static_assert(sizeof(GfPlayComQuestCompleteUI) == 0x28, "");
 
 class GfPlayComGimmickTaskComplete : public GfPlayCom {
   GF_PLAY_COM("GimmickTaskComplete")
@@ -607,14 +646,35 @@ public:
 static_assert(sizeof(GfPlayComExecuteSignal) == 0x20, "");
 
 class GfPlayComChainAttack : public GfPlayCom {
+  GF_PLAY_COM("ChainAttack")
+
 public:
+  GfPlayComChainAttack();
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComChainAttack *create();
+
+  int unknown10; // Inferred role: state; original member name unknown.
+  int unknown14; // Inferred role: wait count; original member name unknown.
 };
 
+static_assert(sizeof(GfPlayComChainAttack) == 0x18, "");
+
 class GfPlayComArtsMovie : public GfPlayCom {
+  GF_PLAY_COM("ArtsMovie")
+
 public:
+  GfPlayComArtsMovie(const char *name);
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComArtsMovie *create(const char *name);
+
+  mm::mtl::FixStr<64> unknown10; // Inferred role: movie name; original member name unknown.
 };
+
+static_assert(sizeof(GfPlayComArtsMovie) == 0x58, "");
 
 class GfPlayComResetBlade : public GfPlayCom {
 public:
