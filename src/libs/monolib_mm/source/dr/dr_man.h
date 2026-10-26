@@ -16,6 +16,7 @@ class DrAPCache;
 class DrCalcMan;
 class DrCalcGpuCost;
 class DrCalcTexStreamMan;
+class DrIniSys;
 class DrEnvironmentMan;
 class DrGlobalIBLMan;
 class DrIrrVolMan;
@@ -44,13 +45,6 @@ struct DrScreenInfo {
 
 static_assert(offsetof(DrScreenInfo, unknown18) == 0x18, "");
 static_assert(offsetof(DrScreenInfo, unknown20) == 0x20, "");
-
-struct DrMotBlurState {
-  u8 _000[0xb6c - 0x000];
-  bool unknownb6c; // Inferred role: mot blur default; original member name unknown.
-};
-
-static_assert(offsetof(DrMotBlurState, unknownb6c) == 0xb6c, "");
 
 class DrMan : public IWorkBackground {
 public:
@@ -132,11 +126,11 @@ public:
   mtl::ALLOC_HANDLE unknown10; // Inferred role: mem class; original member name unknown.
   mtl::ALLOC_HANDLE unknown14; // Inferred role: mem work; original member name unknown.
   u8 _0018[0x0070 - 0x0018];
-  DrMotBlurState *unknown70; // Inferred role: mot blur state; original member name unknown.
-  DrPixlMan *unknown78;      // Inferred role: pixl man; original member name unknown.
-  DrShdMan *unknown80;       // Inferred role: shd man; original member name unknown.
-  DrMdlMan *unknown88;       // Inferred role: mdl man; original member name unknown.
-  DrIrrVolMan *unknown90;    // Inferred role: irr vol man; original member name unknown.
+  DrIniSys *unknown70;    // Inferred role: ini sys; original member name unknown.
+  DrPixlMan *unknown78;   // Inferred role: pixl man; original member name unknown.
+  DrShdMan *unknown80;    // Inferred role: shd man; original member name unknown.
+  DrMdlMan *unknown88;    // Inferred role: mdl man; original member name unknown.
+  DrIrrVolMan *unknown90; // Inferred role: irr vol man; original member name unknown.
   u8 _0098[0x00c0 - 0x0098];
   DrLightMan *unknownc0[4]; // Inferred role: light mans; original member name unknown.
   u8 _00e0[0x0100 - 0x00e0];

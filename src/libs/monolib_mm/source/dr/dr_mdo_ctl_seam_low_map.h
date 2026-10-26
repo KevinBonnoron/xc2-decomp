@@ -6,6 +6,9 @@ namespace ml {
 
 class DrMdoCtlSeamLowMap : public DrMdoCtlSeam {
 public:
+  void updateLowMap();
+  void readLowMapCheck();
+  void updateLowMapRenderList();
   void callRenderSeamLowMap();
   void callGBuffRenderSeamLowMap();
   void callLightPrePassRenderSeamLowMap();

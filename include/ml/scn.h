@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_math/mm_plane.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
@@ -26,22 +27,36 @@ public:
   struct RENDER_INFO {
     u8 _00[0x10];
     mm::Vec3 position;
-    u8 _20[0x380 - 0x20];
+    u8 _20[0xf0 - 0x20];
+    mm::Vec3 unknownf0; // Inferred role: rotation; original member name unknown.
+    u8 _100[0x200 - 0x100];
+    mm::Plane unknown200[6]; // Inferred role: local planes; original member name unknown.
+    mm::Plane unknown2c0[6]; // Inferred role: global planes; original member name unknown.
   };
 
   static void renderDebug(DebDraw *debDraw);
   static void setCopydataCam(bool isCopydata);
   const char *getName() const;
+  const mm::Plane *getPlaneLcl(u32 index, bool isBack) const;
+  const mm::Plane *getPlaneGbl(u32 index, bool isBack) const;
+  void updateViewMatrix(bool isUpdate);
+  void setRot(const mm::Vec3 &rot);
+  void addRotAtCam(const mm::Vec3 &rot);
 
   u8 _00[0x18];
   mm::mtl::FixStr<64> m_name;
   u8 _5c[0x78 - 0x5c];
   RENDER_INFO *renderInfo;
+  RENDER_INFO *unknown80; // Inferred role: back render info; original member name unknown.
 };
 
 static_assert(sizeof(ScnObjCam::RENDER_INFO) == 0x380, "");
 static_assert(offsetof(ScnObjCam, m_name) == 0x18, "");
 static_assert(offsetof(ScnObjCam, renderInfo) == 0x78, "");
+static_assert(offsetof(ScnObjCam, unknown80) == 0x80, "");
+static_assert(offsetof(ScnObjCam::RENDER_INFO, unknownf0) == 0xf0, "");
+static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown200) == 0x200, "");
+static_assert(offsetof(ScnObjCam::RENDER_INFO, unknown2c0) == 0x2c0, "");
 
 class ScnCamMan {
 public:

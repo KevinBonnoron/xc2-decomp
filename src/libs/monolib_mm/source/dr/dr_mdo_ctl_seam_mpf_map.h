@@ -6,6 +6,9 @@ namespace ml {
 
 class DrMdoCtlSeamMpfMap : public DrMdoCtlSeam {
 public:
+  void updateMpfMap();
+  void readMpfMapCheck();
+  void updateMpfMapRenderList();
   void createAllpfMapDisplayList();
   void renderMpfMapDisplayList();
   void createMpfMapDisplayList();

@@ -6,6 +6,9 @@ namespace ml {
 
 class DrMdoCtlSeamBaseMap : public DrMdoCtlSeam {
 public:
+  void updateBaseMap();
+  void readBaseMapCheck();
+  void updateBaseMapRenderList();
   void callRenderSeamBaseMap();
   void callGBuffRenderSeamBaseMap();
   void callLightPrePassRenderSeamBaseMap();

@@ -26,7 +26,9 @@ class DrResMdoVertex;
 class DrShdMdoDecExtTbl;
 
 struct MdsMatInfoHeader {
-  u8 _00[0x0c - 0x00];
+  u8 _00[0x09 - 0x00];
+  u8 unknown09; // Inferred role: flags; original member name unknown.
+  u8 _0a[0x0c - 0x0a];
   f32 unknown0c; // Inferred role: color r; original member name unknown.
   f32 unknown10; // Inferred role: color g; original member name unknown.
   f32 unknown14; // Inferred role: color b; original member name unknown.
@@ -40,6 +42,7 @@ struct MdsMatInfoHeader {
   u8 _66[0x74 - 0x66];
 };
 
+static_assert(offsetof(MdsMatInfoHeader, unknown09) == 0x09, "");
 static_assert(offsetof(MdsMatInfoHeader, unknown0c) == 0x0c, "");
 static_assert(offsetof(MdsMatInfoHeader, unknown18) == 0x18, "");
 static_assert(offsetof(MdsMatInfoHeader, unknown20) == 0x20, "");

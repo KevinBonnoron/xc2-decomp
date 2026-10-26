@@ -16,4 +16,11 @@ void DrMdoCtlSeamBaseMap::callSpAlphaRenderSeamBaseMap() { renderSeamBaseMap(5);
 
 void DrMdoCtlSeamBaseMap::createBaseMapDisplayList() {}
 
+void DrMdoCtlSeamBaseMap::updateBaseMap() {
+  readBaseMapCheck();
+  if (((unknownc7c >> 12) & 1) == 0) {
+    updateBaseMapRenderList();
+  }
+}
+
 } // namespace ml

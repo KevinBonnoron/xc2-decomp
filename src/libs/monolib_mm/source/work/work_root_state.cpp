@@ -1,8 +1,10 @@
+#include "ml/critical_section.h"
 #include "ml/reslist.h"
 #include "ml/work_obj.h"
 #include "ml/work_root.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
+#include "types.h"
 
 namespace ml {
 
@@ -15,9 +17,26 @@ public:
   bool wkStandbyLogout() override;
 };
 
+struct unknown001 {
+  u32 unknown00;
+  u32 unknown04; // Inferred role: work id; original member name unknown.
+  u32 unknown08;
+};
+
 WorkRoot *s_pWorkRoot;
+u32 *s_aBitWID;
+WorkObj **s_apBitWID;
+s32 s_nWidCount;
+CriticalSectionNC s_lockEntry;
+s32 s_nEntry;
+unknown001 s_aEntry[100];
 bool s_bThreadRenderReq;
 bool s_bThreadRender;
+
+CriticalSection &getCriticalSection() {
+  static CriticalSection sect;
+  return sect;
+}
 
 } // namespace _wrootst
 
@@ -25,6 +44,14 @@ void WorkRootState::standbyWork() {
   entryWork();
   _wrootst::s_pWorkRoot->procParent();
   standbyWork(_wrootst::s_pWorkRoot);
+}
+
+bool WorkRootState::isUsedWID(u32 wid) {
+  CS cs(_wrootst::getCriticalSection());
+  if (wid == 0xffffffff) {
+    return false;
+  }
+  return _wrootst::s_apBitWID[wid & 0xffff] != nullptr;
 }
 
 bool WorkRootState::isDebug(WorkObj *work) { return mtl::MemManager::isArea(WorkRootMem::getMemStateDebug(), work); }

@@ -142,12 +142,14 @@ public:
   DrPixlRenderTarget *getBackFaceDepthTexture() const;
 
   u8 _000[0x008 - 0x000];
-  DrMan *unknown08;                 // Inferred role: dr man; original member name unknown.
-  wkPixlManRes unknown10[4];        // Inferred role: resources; original member name unknown.
-  wkPixlManRes *unknown7f0;         // Inferred role: res; original member name unknown.
-  DrPixlOccQuery *unknown7f8;       // Inferred role: occ query; original member name unknown.
-  DrPixlShadowCacheMan *unknown800; // Inferred role: shadow cache man; original member name unknown.
-  u8 _808[0x830 - 0x808];
+  DrMan *unknown08;                         // Inferred role: dr man; original member name unknown.
+  wkPixlManRes unknown10[4];                // Inferred role: resources; original member name unknown.
+  wkPixlManRes *unknown7f0;                 // Inferred role: res; original member name unknown.
+  DrPixlOccQuery *unknown7f8;               // Inferred role: occ query; original member name unknown.
+  DrPixlShadowCacheMan *unknown800;         // Inferred role: shadow cache man; original member name unknown.
+  grlib::CGLibTextureBuffer *unknown808[4]; // Inferred role: movie textures; original member name unknown.
+  u8 unknown828[4];                         // Inferred role: movie mip filters; original member name unknown.
+  u8 _82c[0x830 - 0x82c];
   DrPixlRenderTarget *unknown830; // Inferred role: dammy tex; original member name unknown.
   DrPixlRenderTarget *unknown838; // Inferred role: dammy white tex; original member name unknown.
   u8 _840[0x848 - 0x840];
@@ -156,6 +158,8 @@ public:
   u32 unknown858;              // Inferred role: render target; original member name unknown.
   u32 unknown85c;              // Inferred role: gbuff mask; original member name unknown.
   s32 unknown860;              // Inferred role: cate; original member name unknown.
+  u8 _864[0x9c0 - 0x864];
+  grlib::CGLibRenderTarget *unknown9c0; // Inferred role: capture4 render target; original member name unknown.
 };
 
 static_assert(offsetof(DrPixlMan, unknown08) == 0x008, "");
@@ -163,10 +167,13 @@ static_assert(offsetof(DrPixlMan, unknown10) == 0x010, "");
 static_assert(offsetof(DrPixlMan, unknown7f0) == 0x7f0, "");
 static_assert(offsetof(DrPixlMan, unknown7f8) == 0x7f8, "");
 static_assert(offsetof(DrPixlMan, unknown800) == 0x800, "");
+static_assert(offsetof(DrPixlMan, unknown808) == 0x808, "");
+static_assert(offsetof(DrPixlMan, unknown828) == 0x828, "");
 static_assert(offsetof(DrPixlMan, unknown830) == 0x830, "");
 static_assert(offsetof(DrPixlMan, unknown848) == 0x848, "");
 static_assert(offsetof(DrPixlMan, unknown850) == 0x850, "");
 static_assert(offsetof(DrPixlMan, unknown858) == 0x858, "");
 static_assert(offsetof(DrPixlMan, unknown860) == 0x860, "");
+static_assert(offsetof(DrPixlMan, unknown9c0) == 0x9c0, "");
 
 } // namespace ml

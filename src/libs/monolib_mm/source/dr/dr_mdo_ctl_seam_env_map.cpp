@@ -6,4 +6,11 @@ namespace ml {
 
 void DrMdoCtlSeamEnvMap::createEnvDisplayList(DrResMdoSeamWrkEnv *wrk) { wrk->setDispState(); }
 
+void DrMdoCtlSeamEnvMap::updateEnvMap() {
+  readEnvMapCheck();
+  if (((unknownc7c >> 12) & 1) == 0) {
+    updateEnvMapRenderList();
+  }
+}
+
 } // namespace ml

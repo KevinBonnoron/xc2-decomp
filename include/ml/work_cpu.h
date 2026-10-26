@@ -75,6 +75,11 @@ public:
   static CPUID getRenderCPUID();
   static u32 getCpuNum();
   static CPUID getSubWorkCPUID();
+  static CPUID getCurrentCPUID();
+  static bool getStackInfo(u64 threadId, u64 &address, u64 &size);
+  static f32 getJobCost(CPUID cpuId);
+  static bool isSuspendThread(CPUID cpuId);
+  static void beginRender();
   static WorkCpuThread *getCpuThread(CPUID cpuId);
   static void removeCpu(CPUID cpu, WorkCpuThread *thread);
   static void setThread(DO_THREAD thread);
@@ -124,8 +129,9 @@ public:
   u8 _1c0[0x1738 - 0x1c0];
   DO_THREAD unknown1738;         // Inferred role: thread; original member name unknown.
   DO_THREAD unknown173c;         // Inferred role: next thread; original member name unknown.
-  WorkCpuThread *unknown1740[4]; // Inferred role: cpu threads; original member name unknown.
-  u8 _1760[0x1764 - 0x1760];
+  WorkCpuThread *unknown1740[3]; // Inferred role: cpu threads; original member name unknown.
+  s32 unknown1758;               // Inferred role: render wakeup cpu; original member name unknown.
+  u8 _175c[0x1764 - 0x175c];
   u32 unknown1764; // Inferred role: even; original member name unknown.
   u8 _1768[0x195c - 0x1768];
   u32 unknown195c; // Inferred role: counter; original member name unknown.
@@ -147,6 +153,7 @@ static_assert(offsetof(WorkCpu, unknown1b0) == 0x1b0, "");
 static_assert(offsetof(WorkCpu, unknown1bc) == 0x1bc, "");
 static_assert(offsetof(WorkCpu, unknown1738) == 0x1738, "");
 static_assert(offsetof(WorkCpu, unknown1740) == 0x1740, "");
+static_assert(offsetof(WorkCpu, unknown1758) == 0x1758, "");
 static_assert(offsetof(WorkCpu, unknown1764) == 0x1764, "");
 static_assert(offsetof(WorkCpu, unknown195c) == 0x195c, "");
 static_assert(offsetof(WorkCpu, unknown2020) == 0x2020, "");

@@ -6,4 +6,11 @@ void DrMdoCtlSeamMpfMap::createAllpfMapDisplayList() {}
 
 void DrMdoCtlSeamMpfMap::renderMpfMapDisplayList() { createMpfMapDisplayList(); }
 
+void DrMdoCtlSeamMpfMap::updateMpfMap() {
+  readMpfMapCheck();
+  if (((unknownc7c >> 12) & 1) == 0) {
+    updateMpfMapRenderList();
+  }
+}
+
 } // namespace ml

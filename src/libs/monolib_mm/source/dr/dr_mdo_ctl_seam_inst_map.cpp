@@ -25,4 +25,12 @@ void DrMdoCtlSeamInstMap::beginResAll(MdoWrkMatRes *matRes) {
 
 void DrMdoCtlSeamInstMap::endResAll() { unknown30 = unknownb38; }
 
+void DrMdoCtlSeamInstMap::updateInstMap(MdoArgSeamUpdate &arg) {
+  readInstMapCheck();
+  if (((unknownc7c >> 12) & 1) == 0) {
+    updateInstMapRenderList(arg);
+    createInstMapDisplayList();
+  }
+}
+
 } // namespace ml

@@ -16,4 +16,11 @@ void DrMdoCtlSeamLowMap::callSpAlphaRenderSeamLowMap() { renderSeamLowMap(5); }
 
 void DrMdoCtlSeamLowMap::createLowDisplayList() {}
 
+void DrMdoCtlSeamLowMap::updateLowMap() {
+  readLowMapCheck();
+  if (((unknownc7c >> 12) & 1) == 0) {
+    updateLowMapRenderList();
+  }
+}
+
 } // namespace ml

@@ -85,6 +85,7 @@ public:
   static bool isDebug(WorkObj *work);
   static u32 allocWID(WorkObj *work);
   static void freeWID(u32 wid);
+  static bool isUsedWID(u32 wid);
   static mtl::ALLOC_HANDLE getWorkMem();
   static void setThreadRender(bool isThreadRender);
   static bool isThreadRender();

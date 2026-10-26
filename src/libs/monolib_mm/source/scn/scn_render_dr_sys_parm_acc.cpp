@@ -1,6 +1,7 @@
 #include "scn/scn_render_dr_sys_parm_acc.h"
 
 #include "cloud/cloud_man.h"
+#include "dr/dr_ini_sys.h"
 #include "dr/dr_irr_vol_man.h"
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_man.h"

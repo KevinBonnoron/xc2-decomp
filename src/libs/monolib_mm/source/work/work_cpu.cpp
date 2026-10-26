@@ -198,6 +198,63 @@ const long &WorkCpu::getTailEndClock() { return get()->unknown2078; }
 
 const long &WorkCpu::getSyncClock() { return get()->unknown2080; }
 
+CPUID WorkCpu::getCurrentCPUID() {
+  WorkCpu *cpu = get();
+  if (cpu == nullptr) {
+    return CPUID_ANY;
+  }
+
+  u64 threadId = ThreadUtil::getCurrentID();
+  for (u32 i = 0; i < cpu->unknown1bc; i++) {
+    WorkCpuThread *thread = cpu->unknown1740[i];
+    if (thread != nullptr && thread->getThreadID() == threadId) {
+      return thread->getCPUID();
+    }
+  }
+
+  return ThreadUtil::getCurrentCPUID();
+}
+
+bool WorkCpu::getStackInfo(u64 threadId, u64 &address, u64 &size) {
+  WorkCpu *cpu = get();
+  if (cpu == nullptr) {
+    return false;
+  }
+
+  for (u32 i = 0; i < cpu->unknown1bc; i++) {
+    WorkCpuThread *thread = cpu->unknown1740[i];
+    if (thread != nullptr && thread->getThreadID() == threadId) {
+      thread->getStackInfo(address, size);
+      return true;
+    }
+  }
+
+  return true;
+}
+
+f32 WorkCpu::getJobCost(CPUID cpuId) { return getCpuThread(cpuId)->getJobCost(); }
+
+bool WorkCpu::isSuspendThread(CPUID cpuId) {
+  WorkCpu *cpu = get();
+  if (cpu == nullptr) {
+    return false;
+  }
+
+  WorkCpuThread *thread = cpu->unknown1740[cpuId - CPUID_CORE_0];
+  if (thread != nullptr) {
+    return thread->isSuspendThread();
+  }
+
+  return false;
+}
+
+void WorkCpu::beginRender() {
+  WorkCpu *cpu = get();
+  if (cpu != nullptr && cpu->unknown1758 != -1 && !_mlwcpu::s_bStallRender && (cpu->unknown1b0 & 0x2) == 0) {
+    wakeup(cpu->unknown1758);
+  }
+}
+
 u32 WorkCpu::getCounter() {
   WorkCpu *cpu = get();
   if (cpu != nullptr) {

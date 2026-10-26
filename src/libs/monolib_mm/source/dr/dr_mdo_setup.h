@@ -98,6 +98,15 @@ public:
   void varStTex_AOTex(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStTex_EtcTex(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStTex_ToonDarkGradTex(const MdsMatInfoHeader *header, u32 location, u32 index);
+  void varStTex_AmbBRDFTex(const MdsMatInfoHeader *header, u32 location, u32 index);
+  void varStTex_ToonRimTex(const MdsMatInfoHeader *header, u32 location, u32 index);
+  void varStTex_VolumeTex01(const MdsMatInfoHeader *header, u32 location, u32 index);
+  void varStTex_OrientationTex(const MdsMatInfoHeader *header, u32 location, u32 index);
+  void varStTex_FlagWaveTex0(const MdsMatInfoHeader *header, u32 location, u32 index);
+  void varStTex_FlagWaveTex1(const MdsMatInfoHeader *header, u32 location, u32 index);
+  void varStTex_DitherTex(const MdsMatInfoHeader *header, u32 location, u32 index);
+  void varStTex_Capture4(const MdsMatInfoHeader *header, u32 location, u32 index);
+  void varStTex_Movie0(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStImg_BaseColor(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStImg_Etc(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStImg_Normal(const MdsMatInfoHeader *header, u32 location, u32 index);
