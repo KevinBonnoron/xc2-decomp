@@ -4,6 +4,7 @@
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_queue.h"
+#include "mm_mtl/reference_object.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 #include <stddef.h>
@@ -51,7 +52,18 @@ public:
   virtual f32 filterARX(f32 x, f32 y) = 0;
   virtual f32 filterARY(f32 x, f32 y) = 0;
   virtual const char *getFilterName() const = 0;
-  virtual ~IPadFilter();
+  virtual ~IPadFilter() {}
+};
+
+class PadFilterStd : public IPadFilter, public mm::mtl::ReferenceObject, public mm::mtl::Singleton<PadFilterStd> {
+public:
+  u32 filterBtn(u32 button) override;
+  f32 filterALX(f32 x, f32 y) override;
+  f32 filterALY(f32 x, f32 y) override;
+  f32 filterARX(f32 x, f32 y) override;
+  f32 filterARY(f32 x, f32 y) override;
+  const char *getFilterName() const override;
+  ~PadFilterStd() override {}
 };
 
 class IPadListener;

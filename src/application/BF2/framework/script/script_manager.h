@@ -42,8 +42,8 @@ public:
   static const u32 FLAG_LOAD_ERROR = 1 << 5;
   static const u32 FLAG_ACTIVE = 1 << 6;
 
-  ~ScriptInfo();
-  void destroy();
+  ScriptInfo();
+  ~ScriptInfo() override;
   void initialize(ScriptManager *manager, int type, void *vm, u32 size);
   void clear();
   void unlink();
@@ -51,6 +51,8 @@ public:
   void start();
   void execute();
   void update();
+  void waitLoad();
+  bool OnFileEvent(ml::EventFileTh *event) override;
   bool isLoaded() const;
   bool isLoading() const;
   bool isLoadErr() const;
@@ -68,14 +70,15 @@ public:
   ml::FileHandleTh *unknown220;    // Inferred role: file handle; original member name unknown.
   State unknown228;                // Inferred role: state; original member name unknown.
   u32 unknown22c;                  // Inferred role: flags; original member name unknown.
-  u8 _230[0x238 - 0x230];
-  ScriptManager *unknown238; // Inferred role: manager; original member name unknown.
+  u64 unknown230;                  // Role and original member name unknown.
+  ScriptManager *unknown238;       // Inferred role: manager; original member name unknown.
 };
 
 static_assert(offsetof(ScriptInfo, unknown14) == 0x14, "");
 static_assert(offsetof(ScriptInfo, unknown118) == 0x118, "");
 static_assert(offsetof(ScriptInfo, unknown21c) == 0x21c, "");
 static_assert(offsetof(ScriptInfo, unknown228) == 0x228, "");
+static_assert(offsetof(ScriptInfo, unknown230) == 0x230, "");
 static_assert(offsetof(ScriptInfo, unknown238) == 0x238, "");
 
 class ScriptManager : public ManagerObject, public mm::mtl::PtrSingleton<ScriptManager> {

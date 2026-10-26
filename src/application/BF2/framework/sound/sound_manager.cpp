@@ -403,6 +403,21 @@ void SoundManager::stopSeAll() {
 
 void SoundManager::registPack(SoundPack *pack) { unknowna0.push_back(pack); }
 
+bool SoundManager::isRegistPack(SoundPack *pack) const {
+  if (pack == nullptr) {
+    return false;
+  }
+
+  mm::mtl::List<SoundPack *>::const_iterator it = unknowna0.begin();
+  for (; it != unknowna0.end(); ++it) {
+    if (*it == pack) {
+      break;
+    }
+  }
+
+  return it != unknowna0.end();
+}
+
 bool SoundManager::isCommonLoaded() const {
   if (unknowne0 != nullptr) {
     return unknowne0->valid();

@@ -1,7 +1,9 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 
@@ -13,8 +15,15 @@ class IAllocator;
 
 namespace fw {
 
+class SoundSsdBank;
+class SoundSsdSource;
 enum SoundCategory : int;
 enum SoundPriority : int;
+
+struct SoundSourceId {
+  u32 unknown00; // Inferred role: id; original member name unknown.
+  u32 unknown04; // Inferred role: name hash; original member name unknown.
+};
 
 class SoundPack : public mm::mtl::ReferenceObject {
 public:
@@ -32,7 +41,21 @@ public:
 
   static SoundPack *createFromStream(mm::mtl::IAllocator *allocator, const SetupInfo &info);
   ~SoundPack() override;
+  void stopAll();
+  bool canRelease() const;
+  mm::mtl::IntrusivePtr<SoundSsdSource> getSource(u32 index) const;
+  mm::mtl::IntrusivePtr<SoundSsdSource> findSourceFromID(u32 id) const;
+  bool isLoopSource(u32 id) const;
+
+  u8 _10[0x178 - 0x10];
+  SoundSsdBank *unknown178;                               // Inferred role: bank; original member name unknown.
+  mm::mtl::FixedVector<SoundSsdSource *, 256> unknown180; // Inferred role: sources; original member name unknown.
+  mm::mtl::FixedVector<SoundSourceId, 256> unknown988;    // Inferred role: source ids; original member name unknown.
 };
+
+static_assert(offsetof(SoundPack, unknown178) == 0x178, "");
+static_assert(offsetof(SoundPack, unknown180) == 0x180, "");
+static_assert(offsetof(SoundPack, unknown988) == 0x988, "");
 
 static_assert(offsetof(SoundPack::SetupInfo, unknown84) == 0x84, "");
 static_assert(offsetof(SoundPack::SetupInfo, unknown90) == 0x90, "");

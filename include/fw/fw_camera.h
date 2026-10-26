@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/manager_object.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/intrusive_list.h"
@@ -77,6 +78,7 @@ public:
   CameraLayer();
   ~CameraLayer();
   void setup(ml::Scn *scn, u32 index);
+  void cleanup();
   void onPopCamera(Camera &camera);
   virtual void update(const UpdateInfo &info);
   void push(mm::mtl::IntrusivePtr<Camera> &camera, f32 time);
@@ -100,16 +102,43 @@ static_assert(offsetof(CameraLayer, unknown38) == 0x38, "");
 static_assert(offsetof(CameraLayer, unknownc0) == 0xc0, "");
 static_assert(sizeof(CameraLayer) == 0xd0, "");
 
-class CameraManager : public mm::mtl::PtrSingleton<CameraManager> {
+class CameraManager : public ManagerObject, public mm::mtl::PtrSingleton<CameraManager> {
 public:
   static constexpr u32 LAYER_COUNT = 4;
 
-  u8 _08[0x20 - 0x08];
+  class Listener {
+  public:
+    virtual void onWkStandbyLogout();
+
+    CameraManager *unknown08; // Inferred role: owner; original member name unknown.
+  };
+
+  CameraManager(ml::Scn *scn) : unknown368(nullptr) {
+    unknown370.unknown08 = this;
+    for (u32 i = 0; i < LAYER_COUNT; i++) {
+      unknown20[i].setup(scn, i);
+    }
+  }
+
+  ~CameraManager() override {
+    for (u32 i = 0; i < LAYER_COUNT; i++) {
+      unknown20[i].cleanup();
+    }
+  }
+
+  virtual void update(const UpdateInfo &info);
+
+  u8 _18[0x20 - 0x18];
   CameraLayer unknown20[LAYER_COUNT];             // Inferred role: layers; original member name unknown.
   mm::mtl::IntrusivePtr<CameraTarget> unknown360; // Inferred role: target; original member name unknown.
+  void *unknown368;                               // Inferred role: reset target; original member name unknown.
+  Listener unknown370;                            // Inferred role: standby listener; original member name unknown.
 };
 
 static_assert(offsetof(CameraManager, unknown20) == 0x20, "");
 static_assert(offsetof(CameraManager, unknown360) == 0x360, "");
+static_assert(offsetof(CameraManager, unknown368) == 0x368, "");
+static_assert(offsetof(CameraManager, unknown370) == 0x370, "");
+static_assert(sizeof(CameraManager) == 0x380, "");
 
 } // namespace fw

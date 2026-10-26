@@ -2,6 +2,8 @@
 
 #include "framework/framework.h"
 #include "framework/memory/framework_memory.h"
+#include "ml/scn.h"
+#include "mm_math/mm_vec3.h"
 #include "mtl/alloc_handle.h"
 #include "navi/nvmsh_manager.h"
 
@@ -56,6 +58,17 @@ navi::NvmshAcObj *NaviManager::createObject() {
 void NaviManager::releaseObject(navi::NvmshAcObj *object) {
   if (object != nullptr && unknown20 != nullptr) {
     unknown20->releaseObj(object);
+  }
+}
+
+void NaviManager::update() {
+  if (!isFinalized() && unknown20 != nullptr && unknown18 != nullptr) {
+    ml::ScnObjCam *camera = Framework::get()->unknown58->getCam(-1);
+    if (camera != nullptr) {
+      navi::NvmshManager *manager = unknown20;
+      const mm::Vec3 &position = camera->renderInfo->position;
+      manager->unknown20[manager->unknown64] = position;
+    }
   }
 }
 

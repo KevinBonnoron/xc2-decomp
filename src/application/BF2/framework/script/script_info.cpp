@@ -1,9 +1,24 @@
 #include "framework/script/script_manager.h"
+
+#include "ml/dev_file_th.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 #include "vm/vm.h"
 
 namespace fw {
+
+ScriptInfo::ScriptInfo() : unknown08(nullptr), unknown10(0), unknown21c(-1), unknown220(nullptr), unknown228(STATE_EMPTY), unknown22c(0), unknown230(0), unknown238(nullptr) {}
+
+ScriptInfo::~ScriptInfo() {
+  if ((unknown22c & FLAG_LINKED) != 0 && unknown08 != nullptr) {
+    unlink();
+  } else if (unknown220 != nullptr) {
+    ml::DevFileTh::cancel(unknown220, false);
+    unknown220 = nullptr;
+  }
+
+  clear();
+}
 
 void ScriptInfo::initialize(ScriptManager *manager, int type, void *vm, u32 size) {
   clear();
@@ -43,6 +58,20 @@ void ScriptInfo::start() {
   unknown22c |= FLAG_STARTED;
   if ((previousFlags & FLAG_LOADED) != 0) {
     execute();
+  }
+}
+
+void ScriptInfo::waitLoad() {
+  if ((unknown22c & (FLAG_LOADED | FLAG_STARTED)) == (FLAG_LOADED | FLAG_STARTED)) {
+    if ((unknown22c & FLAG_LINKED) == 0 && vmLink(unknown08) != 0) {
+      vmStart(unknown08);
+      unknown22c |= FLAG_LINKED | FLAG_ACTIVE;
+      if (unknown238 != nullptr) {
+        unknown238->notifyEvent(unknown21c, static_cast<ScriptEventParam::State>(2));
+      }
+    }
+
+    unknown228 = static_cast<State>(2);
   }
 }
 

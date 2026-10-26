@@ -17,6 +17,7 @@ struct SoundResult;
 struct UpdateInfo;
 enum SoundCategory : int;
 enum SoundOutputType : int;
+
 enum SoundVolumeType : int {
   SOUND_VOLUME_TYPE_HANDLE = 0,
   SOUND_VOLUME_TYPE_DISTANCE = 1,

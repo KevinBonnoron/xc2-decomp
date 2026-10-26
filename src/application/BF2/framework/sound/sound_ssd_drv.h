@@ -12,6 +12,7 @@
 #include "types.h"
 
 namespace ssd {
+class SoundCore;
 class SoundEntry;
 class SoundListener;
 } // namespace ssd
@@ -29,9 +30,32 @@ namespace fw {
 class SoundSsdBank;
 class SoundSsdPlayer;
 enum SoundCategory : int;
+enum SoundType : int;
+
+struct SoundCategoryData {
+  u8 _00[8];
+  u32 unknown08; // Inferred role: category id; original member name unknown.
+  f32 unknown0c; // Inferred role: volume; original member name unknown.
+  u8 _10[0x14 - 0x10];
+  f32 unknown14; // Inferred role: current volume; original member name unknown.
+  u8 _18[0x40 - 0x18];
+  u32 unknown40; // Inferred role: mute count; original member name unknown.
+  u8 _44[0x48 - 0x44];
+  u32 unknown48;                 // Inferred role: registered; original member name unknown.
+  mm::mtl::FixStr<16> unknown4c; // Inferred role: name; original member name unknown.
+  u8 _60[0x68 - 0x60];
+};
+
+static_assert(offsetof(SoundCategoryData, unknown08) == 0x08, "");
+static_assert(offsetof(SoundCategoryData, unknown40) == 0x40, "");
+static_assert(offsetof(SoundCategoryData, unknown48) == 0x48, "");
+static_assert(offsetof(SoundCategoryData, unknown4c) == 0x4c, "");
+static_assert(sizeof(SoundCategoryData) == 0x68, "");
 
 class SoundSsdDriver : public ISoundDriver, public mm::mtl::PtrSingleton<SoundSsdDriver> {
 public:
+  static const u32 CATEGORY_COUNT = 18;
+
   class SoundAllocator : public ssd::Allocator {
   public:
     void *AllocInstance(size_t size) override;
@@ -54,12 +78,18 @@ public:
   void applyCategoryVolume(SoundCategory category, f32 volume);
   bool isValid() const;
   const mm::Mat44 &getListeningPoint() const;
+  SoundCategoryData *findCategory(SoundCategory category);
+  const SoundCategoryData *findCategory(SoundCategory category) const;
+  void removeCategory(SoundCategory category);
+  u32 registPlayer(SoundSsdPlayer *player, SoundType type);
+  f32 getCategoryVolume(SoundCategory category) const;
 
-  void *unknown10; // Inferred role: sound device; original member name unknown.
+  ssd::SoundCore *unknown10; // Inferred role: sound device; original member name unknown.
   u8 _18[0x30 - 0x18];
   mm::Mat44 unknown30; // Inferred role: listening point; original member name unknown.
-  u8 _70[0x838 - 0x70];
-  mm::mtl::List<SoundSsdBank *> unknown838; // Inferred role: banks; original member name unknown.
+  u8 _70[0xe8 - 0x70];
+  SoundCategoryData unknowne8[CATEGORY_COUNT]; // Inferred role: categories; original member name unknown.
+  mm::mtl::List<SoundSsdBank *> unknown838;    // Inferred role: banks; original member name unknown.
   u8 _878[0x8b8 - 0x878];
   PointerMap unknown8b8; // Inferred role: players; original member name unknown.
 };
@@ -67,6 +97,8 @@ public:
 static_assert(offsetof(SoundSsdDriver::SoundAllocator, unknown08) == 0x08, "");
 static_assert(offsetof(SoundSsdDriver, unknown10) == 0x10, "");
 static_assert(offsetof(SoundSsdDriver, unknown30) == 0x30, "");
+static_assert(offsetof(SoundSsdDriver, unknowne8) == 0xe8, "");
+static_assert(sizeof(SoundCategoryData[SoundSsdDriver::CATEGORY_COUNT]) == 0x750, "");
 static_assert(offsetof(SoundSsdDriver, unknown838) == 0x838, "");
 static_assert(offsetof(SoundSsdDriver, unknown8b8) == 0x8b8, "");
 
@@ -90,6 +122,7 @@ public:
   void removeSource(SoundSsdSource *source);
   void setMaxSound(int maxSound);
   bool canRelease() const;
+  u32 getActivityRatio() const;
   void stopAll();
 
   ssd::SoundBank unknown10;                   // Inferred role: sound bank; original member name unknown.

@@ -1,13 +1,14 @@
 #include "framework/sound/sound_ssd_drv.h"
 
-#include "framework/sound/sound_driver.h"
 #include <string.h>
 
+#include "framework/sound/sound_driver.h"
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/allocator.h"
 #include "mm_mtl/hash.h"
 #include "mtl/mem_manager.h"
+#include "ssd/ssd_sound_core.h"
 
 namespace ssd {
 class SoundListener;
@@ -15,6 +16,7 @@ class SoundListener;
 
 namespace fw {
 enum SoundCategory : int;
+enum SoundType : int;
 
 void *SoundSsdDriver::SoundAllocator::AllocInstance(size_t size) { return unknown08->allocate(size, 16); }
 
@@ -51,6 +53,49 @@ int SoundReferenceObject::release() {
   }
 
   return count;
+}
+
+SoundCategoryData *SoundSsdDriver::findCategory(SoundCategory category) {
+  SoundCategoryData *found = &unknowne8[static_cast<u32>(category)];
+  if (found->unknown08 != static_cast<u32>(category)) {
+    found = &unknowne8[CATEGORY_COUNT];
+  }
+
+  return found;
+}
+
+const SoundCategoryData *SoundSsdDriver::findCategory(SoundCategory category) const {
+  const SoundCategoryData *found = &unknowne8[static_cast<u32>(category)];
+  if (found->unknown08 != static_cast<u32>(category)) {
+    found = &unknowne8[CATEGORY_COUNT];
+  }
+
+  return found;
+}
+
+void SoundSsdDriver::removeCategory(SoundCategory category) {
+  SoundCategoryData *found = findCategory(category);
+  if (found != &unknowne8[CATEGORY_COUNT]) {
+    SoundCategoryData &data = unknowne8[static_cast<u32>(category)];
+    data.unknown08 = 0;
+    data.unknown0c = 1.0f;
+    data.unknown48 = 0;
+    unknown10->ResetCategory(category);
+  }
+}
+
+u32 SoundSsdDriver::registPlayer(SoundSsdPlayer *player, SoundType type) { return unknown8b8.regist(player) | (static_cast<u32>(type) << 24); }
+
+f32 SoundSsdDriver::getCategoryVolume(SoundCategory category) const {
+  f32 volume = 0.0f;
+  if (unknown10 != nullptr) {
+    const SoundCategoryData *found = findCategory(category);
+    if (found != &unknowne8[CATEGORY_COUNT]) {
+      volume = found->unknown14;
+    }
+  }
+
+  return volume;
 }
 
 void SoundSsdBank::addEntry(ssd::SoundEntry *entry) {
@@ -122,6 +167,11 @@ SoundSsdPlayer *SoundSsdDriver::getPlayer(u32 id) const {
   }
 
   return static_cast<SoundSsdPlayer *>(unknown8b8.getPtr(id));
+}
+
+u32 SoundSsdBank::getActivityRatio() const {
+  int count = unknown10.NumSoundEntry();
+  return static_cast<u32>(count * 100) / static_cast<u32>(unknown260);
 }
 
 void SoundSsdBank::removeEntry(ssd::SoundEntry *entry) {

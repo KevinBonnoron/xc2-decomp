@@ -32,6 +32,13 @@ public:
   }
 
   void syncWorldTransform();
+  void syncWorldMatrix() {
+    if ((unknowna0 & FLAG_MATRIX_SYNCED) == 0) {
+      syncWorldTransform();
+      unknown40.unknown001(unknown60);
+      unknowna0 |= FLAG_MATRIX_SYNCED;
+    }
+  }
   static void unlinkParent(ReferenceFrame &frame);
   static void unlinkChild(ReferenceFrame &frame);
   const mm::Mat44 &getSyncedWorldMatrix();
