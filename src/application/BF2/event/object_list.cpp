@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "event/bou_manager.h"
+#include "event/debug_manager.h"
 #include "event/memory_manager.h"
 #include "event/object_camera.h"
 #include "event/object_chara.h"
@@ -236,6 +237,40 @@ ObjectChara *ObjectList::createGfObj(const char *name, gf::GF_OBJ_HANDLE *handle
     unknown80 = chara;
   }
   return chara;
+}
+
+ObjectChara *ObjectList::createGfObjPcByWalkID(const char *name, u32 walkID, u32 param2) {
+  u32 flags = unknown08 & FLAG_CLONE_MODE;
+  gf::GF_OBJ_HANDLE *driver = mm::mtl::Singleton<ObjectPartyList>::getPtr()->getDriver(walkID);
+  if (flags == 0) {
+    return createGfObj(name, driver);
+  }
+  if (driver != gf::INVALID_HANDLE) {
+    return createGfObj(name, CHARA_TYPE_DRIVER, gf::GfObjAcc(driver).getBdatId(), param2, 0);
+  }
+  mm::mtl::Singleton<DebugManager>::getPtr()->playMessage("create ghost charactor[%s]", name);
+  return createGhost(name);
+}
+
+ObjectChara *ObjectList::createGfObjBlByWalkID(const char *name, u32 walkID, u32 param2) {
+  u32 flags = unknown08 & FLAG_CLONE_MODE;
+  gf::GF_OBJ_HANDLE *blade = mm::mtl::Singleton<ObjectPartyList>::getPtr()->getBlade(walkID);
+  if (flags == 0) {
+    return createGfObj(name, blade);
+  }
+  if (blade != gf::INVALID_HANDLE) {
+    return createGfObj(name, CHARA_TYPE_BLADE, gf::GfObjAcc(blade).getBdatId(), param2, 0);
+  }
+  mm::mtl::Singleton<DebugManager>::getPtr()->playMessage("create ghost charactor[%s]", name);
+  return createGhost(name);
+}
+
+ObjectChara *ObjectList::createGfObjPartyIn(const char *name, CHARA_TYPE type, u32 id, u32 param3, u32 param4) {
+  if (gf::GfDataDriver::isActivateUnuse(id)) {
+    mm::mtl::Singleton<DebugManager>::getPtr()->playMessage("create ghost charactor[%s]", name);
+    return createGhost(name);
+  }
+  return createGfObj(name, type, id, param3, param4);
 }
 
 ObjectChara *ObjectList::createGfObjPcByBladeID(const char *name, u32 bladeID, u32 param2) {

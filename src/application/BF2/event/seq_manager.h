@@ -193,6 +193,7 @@ public:
   SeqManager();
   virtual ~SeqManager();
   void clear();
+  void play(const char *name);
   void login();
   void logout();
   static bool checkWaitSeam(const SeqInfo &info, bool isSeamless);
@@ -201,6 +202,7 @@ public:
   static bool checkSyncBgm(const SeqInfo &info, bool isSync);
   static bool checkCapture(const SeqInfo &info);
   void update();
+  void render();
   void nextEvent(int next);
   bool isSetupSceneEnd() const;
   void setDisp(bool isDisp);

@@ -71,7 +71,7 @@ private:
   mm::mtl::FixedVector<Item *, ITEM_COUNT> unknown20; // Inferred role: items; original member name unknown.
   ResPackManager unknown1028;                         // Inferred role: pack manager; original member name unknown.
   s32 unknown10b8;                                    // Inferred role: loading count; original member name unknown.
-  u32 unknown10bc;                                    // Inferred role: loaded count; original member name unknown.
+  s32 unknown10bc;                                    // Inferred role: loaded count; original member name unknown.
 };
 
 static_assert(sizeof(ResManager::Item) == 0x438, "");

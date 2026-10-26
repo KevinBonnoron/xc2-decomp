@@ -37,7 +37,8 @@ private:
   f32 unknown38;                // Role and original member name unknown.
   f32 unknown3c;                // Role and original member name unknown.
   f32 unknown40;                // Role and original member name unknown.
-  u8 _44[0x50 - 0x44];
+  u8 _44[0x48 - 0x44];
+  const char *unknown48; // Inferred role: motion name; original member name unknown.
 
   friend struct CharaPlayMotionLayout;
 };

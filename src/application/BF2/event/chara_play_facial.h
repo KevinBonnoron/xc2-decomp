@@ -18,6 +18,9 @@ namespace event {
 class CharaWeightPlayer;
 
 class CharaPlayFacial : public ICmd {
+  friend class CharaPlayTalk;
+  friend class CharaPlayWink;
+
 public:
   enum {
     FLAG_PLAY = 1 << 0,

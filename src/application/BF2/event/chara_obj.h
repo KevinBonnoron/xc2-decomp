@@ -85,6 +85,12 @@ public:
     FLAG_DISP_JIJI = 1 << 7,
   };
 
+  enum {
+    STATE_UNKNOWN_1 = 1, // Role and original name unknown.
+    STATE_UNKNOWN_2 = 2, // Role and original name unknown.
+    STATE_UNKNOWN_5 = 5, // Role and original name unknown.
+  };
+
   CharaObj(const char *name);
   virtual ~CharaObj();
   void createGfObj(gf::GF_OBJ_HANDLE *handle);

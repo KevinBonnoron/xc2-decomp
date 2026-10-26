@@ -2,6 +2,9 @@
 
 #include <stddef.h>
 
+#include "event/chara_manager.h"
+#include "event/effect_manager.h"
+#include "event/light_manager.h"
 #include "event/manager.h"
 #include "event/memory_manager.h"
 #include "event/object_party_list.h"
@@ -129,6 +132,16 @@ void ObjectManager::endScene() {
 void ObjectManager::update() {
   if (unknown128 != nullptr) {
     unknown128->update();
+  }
+}
+
+void ObjectManager::render() {
+  if (!isDisp() && !mm::mtl::Singleton<CharaManager>::getPtr()->isCharaDisp() && !mm::mtl::Singleton<CharaManager>::getPtr()->isFacialDisp() &&
+      !mm::mtl::Singleton<CharaManager>::getPtr()->isBoneDisp() && !mm::mtl::Singleton<EffectManager>::getPtr()->isEffectDisp() && !mm::mtl::Singleton<LightManager>::getPtr()->isLightDisp()) {
+    return;
+  }
+  if (unknown128 != nullptr) {
+    unknown128->render();
   }
 }
 

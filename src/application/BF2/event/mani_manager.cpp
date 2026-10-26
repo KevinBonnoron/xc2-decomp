@@ -1,10 +1,15 @@
 #include "event/mani_manager.h"
 
+#include "event/i_mani_callback.h"
 #include "event/manager.h"
 #include "fw/fw_coli_check.h"
+#include "fw/fw_debug.h"
+#include "ml/dev_graph.h"
 #include "ml/event_view.h"
 #include "ml/scn.h"
 #include "ml/win_view.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_rect.h"
 #include "mm_math/mm_vec3.h"
 #include "scn/scn_debug.h"
 
@@ -63,6 +68,44 @@ void ManiManager::clearManipulate() {
   unknown22030 = MANI_TYPE_POS;
   Manager::get()->getScn()->unknown30->clrManipulator();
   unknown18.set(FLAG_ACTIVE, false);
+}
+
+void ManiManager::render() {
+  if (!unknown18.test(FLAG_ENABLE) || !unknown1c.test(DEBUG_FLAG_ENABLE)) {
+    return;
+  }
+  for (Item *it = unknown20.begin(); it != unknown20.end(); ++it) {
+    IManiCallback::RenderParam param;
+    param.unknown00 = mm::Col4(0.8f, 1.0f, 0.8f, 0.5f);
+    it->unknown00->OnManiRender(param);
+  }
+  if (unknown20.empty()) {
+    return;
+  }
+  int width = ml::DevGraph::getRootWidth();
+  fw::debug::drawSquare2D(mm::Rect<s32>(width - 160, 145, 150, 25), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
+  fw::debug::drawLineSquare2D(mm::Rect<s32>(width - 160, 145, 150, 25), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  int textX = width - 155;
+  if (unknown22030 == MANI_TYPE_POS) {
+    fw::debug::drawFontColor(mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  } else {
+    fw::debug::drawFontColor(mm::Col4(0.8f, 0.8f, 0.8f, 1.0f));
+  }
+  fw::debug::drawFont(textX, 150, "W:Pos");
+  textX = width - 110;
+  if (unknown22030 == MANI_TYPE_ROT) {
+    fw::debug::drawFontColor(mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  } else {
+    fw::debug::drawFontColor(mm::Col4(0.8f, 0.8f, 0.8f, 1.0f));
+  }
+  fw::debug::drawFont(textX, 150, "E:Rot");
+  textX = width - 65;
+  if (unknown22030 == MANI_TYPE_TAR) {
+    fw::debug::drawFontColor(mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  } else {
+    fw::debug::drawFontColor(mm::Col4(0.8f, 0.8f, 0.8f, 1.0f));
+  }
+  fw::debug::drawFont(textX, 150, "R:Tar");
 }
 
 void ManiManager::setEnable(bool isEnable) {

@@ -15,6 +15,7 @@ class ALLOC_HANDLE;
 }
 
 namespace event {
+class ModelObj;
 
 class MdlstmManager : public IManager, public mm::mtl::Singleton<MdlstmManager> {
 public:
@@ -33,6 +34,7 @@ public:
   MdlstmManager();
   virtual ~MdlstmManager() {}
   void clear();
+  void dispose(ModelObj *model);
   void create(mtl::ALLOC_HANDLE handle);
   void update();
   void render();

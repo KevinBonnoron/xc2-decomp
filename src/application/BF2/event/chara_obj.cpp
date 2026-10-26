@@ -1,5 +1,7 @@
 #include "event/chara_obj.h"
 
+#include "event/alpha_manager.h"
+#include "event/alpha_obj.h"
 #include "event/attach_actor_base.h"
 #include "event/chara_facial_util.h"
 #include "event/chara_manager.h"
@@ -7,10 +9,12 @@
 #include "event/cmd_param.h"
 #include "event/cmd_variable.h"
 #include "event/debug_manager.h"
+#include "event/group_manager.h"
 #include "event/skip_manager.h"
 #include "event/tar_axis.h"
 #include "gf/event/gf_evt_model.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_mtl/singleton.h"
@@ -23,6 +27,30 @@ void CharaObj::clear() {
   unknown1738.eraseAll();
   unknown2088.eraseAll();
   unknown29d8.eraseAll();
+}
+
+void CharaObj::start() {
+  if (unknownca4 == STATE_UNKNOWN_1) {
+    return;
+  }
+  mm::mtl::Singleton<GroupManager>::getPtr()->push(this);
+  if (unknownd40 != gf::INVALID_HANDLE) {
+    mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknownd40, ALPHA_ATTR_CHARA, 1.0f, 1.0f);
+  }
+  unknownde0.resetDynamics(0);
+  if (unknownca4 == STATE_UNKNOWN_5 || unknownca4 == STATE_UNKNOWN_2) {
+    playWink(0, -1.0f, false, 0.0f, 0.0f, -1, true, true);
+  }
+}
+
+void CharaObj::end() {
+  clear();
+  if (unknownca4 != STATE_UNKNOWN_1) {
+    if (unknownd40 != gf::INVALID_HANDLE) {
+      mm::mtl::Singleton<AlphaManager>::getPtr()->setAlpha(unknownd40, ALPHA_ATTR_CHARA, 0.0f, 1.0f);
+    }
+    mm::mtl::Singleton<GroupManager>::getPtr()->pop(this);
+  }
 }
 
 void CharaObj::playWink(int type, f32 frame, bool isLoop, f32 lensX, f32 lensY, int lensType, bool isDirect, bool isAuto) {

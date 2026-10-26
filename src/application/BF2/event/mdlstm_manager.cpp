@@ -5,6 +5,7 @@
 #include "mtl/alloc_handle.h"
 
 namespace event {
+class ModelObj;
 
 bool MdlstmManager::isReuseEnable() const { return (unknown14 & REUSE_FLAG_ENABLE) != 0; }
 
@@ -41,6 +42,18 @@ void MdlstmManager::clear() {
   unknown3e030 = 0;
   unknown10 = 0;
   unknown14 = 0;
+}
+
+void MdlstmManager::dispose(ModelObj *model) {
+  if (model == nullptr) {
+    return;
+  }
+  for (u32 i = 0; i < _3e028; i++) {
+    if (unknown3c020[i]->isDisposeable(model)) {
+      unknown3c020[i]->dispose();
+      return;
+    }
+  }
 }
 
 f32 MdlstmManager::getNextCutFrame(f32 frame) {

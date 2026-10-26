@@ -6,9 +6,12 @@
 #include "event/skip_manager.h"
 #include "event/status_manager.h"
 #include "framework/lang_util.h"
+#include "fw/fw_debug.h"
 #include "gf/gf_allocator.h"
 #include "gf/movie/gf_movie_manager.h"
+#include "ml/dev_graph.h"
 #include "ml/scn.h"
+#include "mm_math/mm_col4.h"
 #include "scn/scn_render_dr_sys_parm_acc.h"
 
 namespace event {
@@ -71,6 +74,23 @@ void MovieManager::captureScreen(bool isCapture) {
     ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
     parmAcc.setCaptureMode(false);
     unknown10 &= ~FLAG_CAPTURE;
+  }
+}
+
+void MovieManager::render() {
+  int x = (ml::DevGraph::getRootWidth() - 210) >> 1;
+  if (unknown10 & FLAG_LOADED) {
+    fw::debug::drawFontColor(mm::Col4(0.8f, 0.8f, 1.0f, 1.0f));
+    fw::debug::drawFont(x + 25, 105, "MOVIE PRELOADING");
+    fw::debug::drawFont(x + 150, 105, unknown118 ? "(OBJ)" : "");
+    fw::debug::drawFont(x + 25, 120, mm::mtl::Singleton<Extend>::getPtr()->filename(unknown14.c_str()));
+  } else if (unknown10 & FLAG_PLAY) {
+    fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+    fw::debug::drawFont(x + 25, 105, "MOVIE PLAYING");
+    fw::debug::drawFont(x + 150, 105, unknown118 ? "(OBJ)" : "");
+    fw::debug::drawFont(x + 25, 120, mm::mtl::Singleton<Extend>::getPtr()->filename(unknown11c.c_str()));
+    f32 length = gf::GfMovieManager::get()->get_length();
+    fw::debug::drawFont(x + 190, 120, "FR:%.2f", length * 30.0f);
   }
 }
 

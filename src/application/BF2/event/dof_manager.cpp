@@ -4,7 +4,11 @@
 #include "event/manager.h"
 #include "event/object_chara.h"
 #include "event/object_manager.h"
+#include "fw/fw_debug.h"
+#include "ml/dev_graph.h"
 #include "ml/scn.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_rect.h"
 #include "scn/scn_render_dr_sys_parm_acc.h"
 
 namespace event {
@@ -18,6 +22,53 @@ f32 getValF32(unsigned char *bdat, const char *name, int id) {
 }
 
 } // namespace
+
+void DofManager::render() {
+  if (!(unknown10 & DISP_FLAG_DISP)) {
+    return;
+  }
+  ml::ScnRenderDrSysParmAcc parmAcc(Manager::get()->getScn()->unknown38, 0);
+  int width = ml::DevGraph::getRootWidth();
+  int rectX = width - 200;
+  int height = ml::DevGraph::getRootHeight();
+  int rectY = height - 275;
+  fw::debug::drawSquare2D(mm::Rect<s32>(rectX, rectY, 180, 210), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
+  fw::debug::drawLineSquare2D(mm::Rect<s32>(rectX, rectY, 180, 210), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  int titleX = width - 195;
+  fw::debug::drawFont(titleX, height - 270, "DOF");
+  if (!parmAcc.isDOFAutoFocus()) {
+    fw::debug::drawFont(titleX, height - 270, "         [distance]");
+  } else {
+    fw::debug::drawFont(titleX, height - 270, "         [simple]");
+  }
+  if (parmAcc.isDOF()) {
+    int x = width - 190;
+    int y = height - 253;
+    if (!parmAcc.isDOFAutoFocus()) {
+      fw::debug::drawFont(x, y, "axis:     %s", getAxisName(m_axis));
+      fw::debug::drawFont(x, height - 236, "dist:     %.2f", parmAcc.getDoFDistance());
+      fw::debug::drawFont(x, height - 219, "range:    %.2f", parmAcc.getDoFRange());
+    } else {
+      if (parmAcc.getDOFFocusNum() < 1) {
+        fw::debug::drawFont(x, y, "foNo:     AUTO");
+      } else {
+        fw::debug::drawFont(x, y, "foNo:     %d", parmAcc.getDOFFocusNum());
+      }
+      fw::debug::drawFont(x, height - 236, "foMin:    %.2f", parmAcc.getDOFFocusMin());
+    }
+    fw::debug::drawFont(titleX, height - 190, "DETAIL");
+    if (*unknown50 != '\0') {
+      fw::debug::drawFont(titleX, height - 190, "         [%s]", unknown50);
+    }
+    fw::debug::drawFont(x, height - 173, "pixel:    %.2f", parmAcc.getDoFPixlRatio());
+    fw::debug::drawFont(x, height - 156, "lens:     %.2f", parmAcc.getDoFLens());
+    fw::debug::drawFont(x, height - 139, "strength: %.2f", parmAcc.getDoFStrength());
+    fw::debug::drawFont(x, height - 122, "blend:    %.2f", parmAcc.getDoFBlend());
+    fw::debug::drawFont(x, height - 105, "pixelLv:  %d", parmAcc.getDofPixlLv());
+    fw::debug::drawFont(x, height - 88, "hlv:  %s", parmAcc.isDofHLvMode() ? "ON" : "OFF");
+  }
+}
 
 const char *DofManager::getAxisName(int axis) {
   if (axis < 3) {

@@ -1,8 +1,12 @@
 #include "event/res_manager.h"
 
 #include "event/memory_manager.h"
+#include "fw/fw_debug.h"
+#include "fw/fw_pad.h"
 #include "fw/fw_render_resource.h"
 #include "gf/asset/gf_asset_manager.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_rect.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 
@@ -107,13 +111,85 @@ const char *ResManager::filename(const char *path) {
   return separator != nullptr ? separator + 1 : path;
 }
 
+void ResManager::render() {
+  if (!(unknown18 & FLAG_DISP)) {
+    return;
+  }
+  fw::debug::drawSquare2D(mm::Rect<s32>(530, 150, 490, 450), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
+  fw::debug::drawLineSquare2D(mm::Rect<s32>(530, 150, 490, 450), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  fw::debug::drawFont(535, 155, "RES");
+  fw::debug::drawFont(800, 155, "FILE %d / %d", unknown20.size() - unknown10b8, unknown20.size());
+  fw::debug::drawFont(550, 180, "file");
+  fw::debug::drawFont(750, 180, "adr");
+  fw::debug::drawFont(820, 180, "size");
+  fw::debug::drawFont(890, 180, "ref");
+  fw::debug::drawFont(930, 180, "packonly");
+  const fw::PadData *pad = fw::PadManager::getControlPadData(0);
+  u32 buttons = pad->unknown0c;
+  if (buttons & SCROLL_UP_BUTTON) {
+    unknown10bc--;
+  }
+  if (buttons & SCROLL_DOWN_BUTTON) {
+    unknown10bc++;
+  }
+  if (unknown10bc < 0) {
+    unknown10bc = 0;
+  }
+  s32 y = 195;
+  u32 index = unknown10bc;
+  while (index < unknown20.size()) {
+    Item *item = unknown20[index];
+    index++;
+    const char *name = filename(item->unknown00.c_str());
+    if (static_cast<s32>(item->unknown430) >= RES_RESULT_TYPE_SUCCESS) {
+      if (item->unknown420 == nullptr) {
+        fw::debug::drawFontColor(mm::Col4(0.5f, 0.5f, 0.5f, 1.0f));
+      } else {
+        fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+      }
+      fw::debug::drawFont(550, y, name);
+      fw::debug::drawFont(750, y, "%08x", item->unknown420);
+      if (item->unknown428 < 10) {
+        fw::debug::drawFont(876, y, "%d", item->unknown428);
+      } else if (item->unknown428 < 100) {
+        fw::debug::drawFont(868, y, "%d", item->unknown428);
+      } else if (item->unknown428 < 1000) {
+        fw::debug::drawFont(860, y, "%d", item->unknown428);
+      } else if (item->unknown428 < 10000) {
+        fw::debug::drawFont(852, y, "%d", item->unknown428);
+      } else if (item->unknown428 < 100000) {
+        fw::debug::drawFont(844, y, "%d", item->unknown428);
+      } else if (item->unknown428 < 1000000) {
+        fw::debug::drawFont(836, y, "%d", item->unknown428);
+      } else if (item->unknown428 < 10000000) {
+        fw::debug::drawFont(828, y, "%d", item->unknown428);
+      } else {
+        fw::debug::drawFont(820, y, "%d", item->unknown428);
+      }
+    } else if (static_cast<s32>(item->unknown430) >= RES_RESULT_TYPE_LOADING) {
+      fw::debug::drawFontColor(mm::Col4(1.0f, 0.7f, 0.7f, 1.0f));
+      fw::debug::drawFont(550, y, name);
+      fw::debug::drawFont(750, y, "LOADING..");
+    } else {
+      fw::debug::drawFontColor(mm::Col4(0.5f, 0.5f, 0.5f, 1.0f));
+      fw::debug::drawFont(550, y, name);
+      fw::debug::drawFont(750, y, "WAITING..");
+    }
+    fw::debug::drawFont(890, y, "%d", item->unknown410);
+    fw::debug::drawFont(930, y, item->unknown408 ? "yes" : "no");
+    y += 17;
+  }
+  unknown1028.draw();
+}
+
 void ResManager::loadPack(const char *path) { unknown1028.load(mm::mtl::Singleton<MemoryManager>::getPtr()->getResHandle(), path, this); }
 
 void ResManager::load(const char *path, IResEvent *event, bool isPackOnly) {
   Item *item = search(path);
   if (item != nullptr) {
     item->addRef(event);
-    if (item->unknown430 < RES_RESULT_TYPE_SUCCESS) {
+    if (static_cast<s32>(item->unknown430) < RES_RESULT_TYPE_SUCCESS) {
       return;
     }
     item->unknown430 = RES_RESULT_TYPE_LOADED;

@@ -1,28 +1,38 @@
 #include "event/seq_manager.h"
 
+#include "event/cmd_param.h"
 #include "event/cmd_variable.h"
 #include "event/debug_manager.h"
 #include "event/env_manager.h"
 #include "event/fade_manager.h"
+#include "event/frame_manager.h"
 #include "event/manager.h"
+#include "event/memory_manager.h"
 #include "event/motstm_manager.h"
 #include "event/mstxt_manager.h"
 #include "event/object_manager.h"
 #include "event/skip_manager.h"
 #include "event/status_manager.h"
+#include "fw/fw_debug.h"
 #include "gf/event/gf_event.h"
 #include "gf/request/gf_req_command.h"
 #include "gf/request/gf_req_manager.h"
 #include "gf/scom/gf_scom_script.h"
 #include "gf/script/gf_script_manager.h"
+#include "ml/dev_graph.h"
 #include "ml/dev_setting.h"
 #include "ml/scn.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_rect.h"
 #include "scn/scn_render_dr_sys_parm_acc.h"
 
 namespace event {
 
 constexpr u32 CATEGORY_CAPTURE = 5;
 constexpr u32 SCRIPT_SLOT_EVENT = 2;
+
+// Inferred role: names of the sequence categories; original name unknown.
+static const char *const unknown002[] = {"NONE", "TEV", "FEV", "SEV", "CS ", "MOV"};
 
 ICmd::RESULT SeqManager::play_start::update(const Param &param) {
   if (param.getFrame() <= 0) {
@@ -191,6 +201,15 @@ void SeqManager::clear() {
   unknown200.clear();
 }
 
+void SeqManager::play(const char *name) {
+  unknown178 = "";
+  unknown200.clear();
+  CmdParam param;
+  param.val(0).setUserdata(this);
+  param.val(1).setStr(mm::mtl::Singleton<MemoryManager>::getPtr()->createTxtbuf(name));
+  unknown200.push_back(&unknown10, param);
+}
+
 void SeqManager::login() {
   unknown2850 = 1;
   ml::DevSetting::setAutoSleepExtended(static_cast<ml::SleepExtendType>(1));
@@ -234,6 +253,28 @@ bool SeqManager::isSetupSceneEnd() const {
     return false;
   }
   return !mm::mtl::Singleton<MstxtManager>::getPtr()->isLoading();
+}
+
+void SeqManager::render() {
+  if (!(unknown174 & DISP_FLAG_DISP) || unknown200.isEmpty()) {
+    return;
+  }
+  int width = ml::DevGraph::getRootWidth();
+  fw::debug::drawSquare2D(mm::Rect<s32>(width - 180, 30, 170, 55), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
+  fw::debug::drawLineSquare2D(mm::Rect<s32>(width - 180, 30, 170, 55), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  fw::debug::drawFont(width - 175, 35, "EVENT");
+  fw::debug::drawFont(width - 170, 50, "phase:");
+  fw::debug::drawFont(width - 120, 50, unknown178.c_str());
+  f32 frame = mm::mtl::Singleton<FrameManager>::getPtr()->getFrame();
+  fw::debug::drawFont(width - 170, 65, "frame:");
+  fw::debug::drawFont(width - 120, 65, "%.2f", frame);
+  int height = ml::DevGraph::getRootHeight();
+  fw::debug::drawSquare2D(mm::Rect<s32>(25, height - 90, 200, 25), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
+  fw::debug::drawLineSquare2D(mm::Rect<s32>(25, height - 90, 200, 25), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  fw::debug::drawFont(30, height - 85, unknown002[static_cast<int>(unknown2710.unknown54)]);
+  fw::debug::drawFont(75, height - 85, mm::mtl::Singleton<FrameManager>::getPtr()->getPageName());
 }
 
 void SeqManager::setDisp(bool isDisp) {

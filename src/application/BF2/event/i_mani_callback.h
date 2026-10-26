@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "types.h"
 
@@ -7,7 +8,10 @@ namespace event {
 class IManiCallback {
 public:
   struct StartParam;
-  struct RenderParam;
+
+  struct RenderParam {
+    mm::Col4 unknown00; // Inferred role: color; original member name unknown.
+  };
 
   struct SetParam {
     u8 _00[0x80 - 0x00];
