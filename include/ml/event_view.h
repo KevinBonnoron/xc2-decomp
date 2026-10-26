@@ -13,12 +13,14 @@ public:
   };
 
   mm::Pnt<int> pos;
-  u8 _08[0x24 - 0x08];
-  u8 buttons;
-  u8 _25[0x28 - 0x25];
+  u8 _08[0x10 - 0x08];
+  mm::Pnt<int> unknown10; // Inferred role: mouse move; original member name unknown.
+  u8 _18[0x24 - 0x18];
+  u32 buttons;
   u32 unknown28; // Inferred role: key flags; original member name unknown.
 };
 
+static_assert(offsetof(EventView, unknown10) == 0x10, "");
 static_assert(offsetof(EventView, unknown28) == 0x28, "");
 
 } // namespace ml

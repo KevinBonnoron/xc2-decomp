@@ -12,7 +12,24 @@ class IAllocator;
 
 namespace mtl {
 
-struct MemoryInfo;
+struct MemoryInfo {
+  MemoryInfo() : unknown00(0), unknown08(0), unknown10(0), unknown18(0), unknown20(0), unknown28(0), unknown30(0), unknown38(0), unknown40(0) {}
+
+  u64 unknown00; // Inferred role: total size; original member name unknown.
+  u64 unknown08; // Role and original member name unknown.
+  u64 unknown10; // Inferred role: used size; original member name unknown.
+  u64 unknown18; // Role and original member name unknown.
+  u64 unknown20; // Role and original member name unknown.
+  int unknown28; // Inferred role: allocation count; original member name unknown.
+  u64 unknown30; // Role and original member name unknown.
+  u64 unknown38; // Role and original member name unknown.
+  u64 unknown40; // Role and original member name unknown.
+};
+
+static_assert(offsetof(MemoryInfo, unknown10) == 0x10, "");
+static_assert(offsetof(MemoryInfo, unknown28) == 0x28, "");
+static_assert(offsetof(MemoryInfo, unknown30) == 0x30, "");
+static_assert(sizeof(MemoryInfo) == 0x48, "");
 
 enum AllocatorType {
   ALLOCATOR_TYPE_PROGRAM = 1,
@@ -34,6 +51,7 @@ public:
   static u64 getTopAdr(const ALLOC_HANDLE &handle);
   static size_t getTotalSize(ALLOC_HANDLE handle);
   static void log(ALLOC_HANDLE handle, bool isDetail, MemoryInfo *info);
+  static bool getMemoryInfo(ALLOC_HANDLE handle, MemoryInfo *info);
   static const char *getName(ALLOC_HANDLE handle);
 };
 

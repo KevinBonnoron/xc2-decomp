@@ -1,5 +1,9 @@
 #include "event/chara_manager.h"
 
+#include "event/extend.h"
+#include "event/res_manager.h"
+#include "mm_mtl/singleton.h"
+
 namespace event {
 
 bool CharaManager::isSeamlessAction() const { return (unknown10 & FLAG_SEAMLESS_ACTION) != 0; }
@@ -19,6 +23,12 @@ bool CharaManager::isSystemTicket960() const { return (unknown10 & FLAG_SYSTEM_T
 bool CharaManager::isAutoTalkMode() const { return (unknown10 & FLAG_AUTO_TALK_MODE) != 0; }
 
 CharaManager::CharaManager() : unknown10(0), unknown14(0), m_offscrID(0), m_reuseFlag(0) {}
+
+void CharaManager::loadResource(const char *name) {
+  if (!isStreamMode()) {
+    mm::mtl::Singleton<ResManager>::getPtr()->load(mm::mtl::Singleton<Extend>::getPtr()->anm(name), nullptr, false);
+  }
+}
 
 void CharaManager::clear() {
   m_offscrID = 0;

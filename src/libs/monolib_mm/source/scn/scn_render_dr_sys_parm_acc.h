@@ -236,6 +236,7 @@ public:
   void setGBuffDebug(bool gBuffDebug);
   void setGBuffDebugDefault();
   void setGBuffDebugParam(GBuffDebugType type, f32 min, f32 max);
+  void createAddRenderView(ScnRenderDrViewCtrl *viewCtrl);
   void deleteAddRenderView(ScnRenderDrViewCtrl *viewCtrl);
   void setModelTexture(const ScnRenderDrMdlTexture &texture);
   void resetModelTexture(u32 index);

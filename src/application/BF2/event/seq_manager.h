@@ -199,6 +199,7 @@ public:
   static bool checkCapture(const SeqInfo &info);
   void update();
   void nextEvent(int next);
+  bool isSetupSceneEnd() const;
   void setDisp(bool isDisp);
   bool isDisp() const;
   virtual void OnEventProc(MSG_TYPE type);

@@ -21,6 +21,7 @@ public:
   void create();
   void destroy();
   void login();
+  static void checkMemory(mtl::ALLOC_HANDLE handle);
   void clear();
   void destroyTxtbuf(const char *txtbuf);
   void clearHighestMemHeap();

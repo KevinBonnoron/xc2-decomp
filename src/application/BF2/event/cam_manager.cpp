@@ -115,6 +115,25 @@ CamObj *CamManager::createCam(u32 screenID) {
   return cam;
 }
 
+void CamManager::OnEventProc(MSG_TYPE type) {
+  switch (type) {
+  case MSG_TYPE_INIT:
+    init();
+    break;
+  case MSG_TYPE_CLEAR:
+    clear();
+    break;
+  case MSG_TYPE_UPDATE:
+    update();
+    break;
+  case MSG_TYPE_RENDER:
+    render();
+    break;
+  default:
+    break;
+  }
+}
+
 CamFree *CamManager::getFreeCam() { return &m_freeCam; }
 
 void CamManager::setDisp(bool isDisp) { setDispFlag(DISP_FLAG_DISP, isDisp); }

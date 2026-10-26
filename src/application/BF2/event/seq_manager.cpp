@@ -4,6 +4,7 @@
 #include "event/env_manager.h"
 #include "event/fade_manager.h"
 #include "event/manager.h"
+#include "event/mstxt_manager.h"
 #include "event/status_manager.h"
 #include "gf/event/gf_event.h"
 #include "gf/scom/gf_scom_script.h"
@@ -165,6 +166,16 @@ void SeqManager::update() { unknown200.update(); }
 
 void SeqManager::nextEvent(int next) { unknown2840 = next; }
 
+bool SeqManager::isSetupSceneEnd() const {
+  if (unknown200.isExist(&unknown48)) {
+    return false;
+  }
+  if (unknown200.isExist(&unknown58)) {
+    return false;
+  }
+  return !mm::mtl::Singleton<MstxtManager>::getPtr()->isLoading();
+}
+
 void SeqManager::setDisp(bool isDisp) {
   if (isDisp) {
     unknown174 |= DISP_FLAG_DISP;
@@ -174,5 +185,8 @@ void SeqManager::setDisp(bool isDisp) {
 }
 
 bool SeqManager::isDisp() const { return (unknown174 & DISP_FLAG_DISP) != 0; }
+
+template void CmdQueue<SeqManager::QUEUE_COUNT, 0>::push_back(ICmd *cmd, const CmdParam &param);
+template CmdQueue<SeqManager::QUEUE_COUNT, 0>::~CmdQueue();
 
 } // namespace event

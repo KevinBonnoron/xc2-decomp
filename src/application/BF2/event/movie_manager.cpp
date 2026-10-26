@@ -1,6 +1,9 @@
 #include "event/movie_manager.h"
 
+#include "event/extend.h"
 #include "event/manager.h"
+#include "event/skip_manager.h"
+#include "gf/gf_allocator.h"
 #include "gf/movie/gf_movie_manager.h"
 #include "ml/scn.h"
 #include "scn/scn_render_dr_sys_parm_acc.h"
@@ -47,6 +50,47 @@ void MovieManager::update() {
     if (unknown22c-- <= 0) {
       close();
     }
+  }
+}
+
+void MovieManager::play(const char *path, bool isFullSize, bool isAutoStop) {
+  if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkip()) {
+    clear();
+    return;
+  }
+  if (!(unknown10 & FLAG_LOADED) || !isSame(unknown14.c_str(), path) || unknown118 != isFullSize) {
+    gf::GfMovieManager::get()->stop();
+    gf::GfMovieManager::get()->close();
+    gf::GfMovieManager *movie = gf::GfMovieManager::get();
+    gf::GfAllocator *allocator = gf::getAllocator(gf::ALLOCATOR_DEBUG);
+    if (isFullSize) {
+      movie->open(allocator, 1280, 720);
+    } else {
+      movie->open(allocator);
+    }
+    if (!gf::GfMovieManager::get()->set_file(mm::mtl::Singleton<Extend>::getPtr()->webm(path))) {
+      gf::GfMovieManager::get()->close();
+      return;
+    }
+    gf::GfMovieManager::get()->play();
+    unknown11c = path;
+  } else {
+    gf::GfMovieManager::get()->play();
+    unknown11c = path;
+    unknown10 &= ~FLAG_LOADED;
+    unknown14 = "";
+    unknown118 = false;
+  }
+  unknown10 |= FLAG_OPEN | FLAG_PLAY;
+  if (isAutoStop) {
+    unknown10 |= FLAG_AUTO_STOP;
+  } else {
+    unknown10 &= ~FLAG_AUTO_STOP;
+  }
+  unknown10 &= ~(FLAG_DISP_WAIT | FLAG_CLOSE_WAIT);
+  if (!isFullSize) {
+    unknown228 = 1;
+    unknown10 |= FLAG_DISP_REQUEST | FLAG_DISP_WAIT;
   }
 }
 

@@ -605,4 +605,7 @@ void CharaObj::updateDispJiji() {
   }
 }
 
+template void CmdQueue<CharaObj::SUB_QUEUE_COUNT, 0>::update();
+template CmdQueue<CharaObj::SUB_QUEUE_COUNT, 0>::~CmdQueue();
+
 } // namespace event

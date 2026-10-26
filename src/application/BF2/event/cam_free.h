@@ -43,6 +43,27 @@ public:
   void getFrustum(mm::Mat44 &matrix) const;
 
 private:
+  // Inferred role: ctrl mode update shared by the mouse button handlers; original name unknown.
+  bool unknown001() {
+    unknown50 = CTRL_MODE_NONE;
+    if ((unknown4c & 8) == 0) {
+      return false;
+    }
+    if ((unknown4c & 1) != 0) {
+      unknown50 = CTRL_MODE_DOLLY;
+      return true;
+    }
+    if ((unknown4c & 2) != 0) {
+      unknown50 = CTRL_MODE_TRACK;
+      return true;
+    }
+    if ((unknown4c & 4) == 0) {
+      return false;
+    }
+    unknown50 = CTRL_MODE_TUMBLE;
+    return true;
+  }
+
   u32 unknown48;       // Inferred role: flags; original member name unknown.
   u32 unknown4c;       // Inferred role: button flags; original member name unknown.
   CTRL_MODE unknown50; // Inferred role: ctrl mode; original member name unknown.

@@ -3,6 +3,7 @@
 #include "event/manager.h"
 #include "fw/fw_coli_check.h"
 #include "ml/scn.h"
+#include "ml/win_view.h"
 #include "mm_math/mm_vec3.h"
 #include "scn/scn_debug.h"
 
@@ -30,6 +31,24 @@ bool ManiManager::exist(mm::mtl::FixedVector<Item, ITEM_COUNT> &items, IManiCall
     }
   }
   return false;
+}
+
+void ManiManager::create() {
+  if (!unknown18.test(FLAG_ATTACHED)) {
+    Manager::get()->getScn()->getView(-1)->attachWorkEvent(this, false);
+    unknown18.set(FLAG_ATTACHED);
+  }
+  unknown20.clear();
+}
+
+void ManiManager::clear() {
+  clearManipulate();
+  if (unknown18.test(FLAG_ATTACHED)) {
+    Manager::get()->getScn()->getView(-1)->detachWorkEvent(this);
+    unknown18.set(FLAG_ATTACHED, false);
+  }
+  unknown20.clear();
+  unknown18.clear();
 }
 
 void ManiManager::clearManipulate() {

@@ -1,12 +1,33 @@
 #include "event/bou_manager.h"
 
 #include "event/i_bou_callback.h"
+#include "event/manager.h"
+#include "ml/scn.h"
+#include "ml/win_view.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_pnt.h"
 
 namespace event {
 
 BouManager::BouManager() : unknown18(), unknown1c() {}
+
+void BouManager::create() {
+  if (!unknown18.test(FLAG_ATTACHED)) {
+    Manager::get()->getScn()->getView(-1)->attachWorkEvent(this, false);
+    unknown18.set(FLAG_ATTACHED);
+  }
+}
+
+void BouManager::clear() {
+  unknown18.set(FLAG_ACTIVE, false);
+  if (unknown18.test(FLAG_ATTACHED)) {
+    Manager::get()->getScn()->getView(-1)->detachWorkEvent(this);
+    unknown18.set(FLAG_ATTACHED, false);
+  }
+  unknown2040.clear();
+  unknown38.clear();
+  unknown18.clear();
+}
 
 void BouManager::endActive() { unknown18.set(FLAG_ACTIVE, false); }
 
@@ -65,6 +86,19 @@ void BouManager::setEnable(bool isEnable) {
     unknown2040.clear();
     unknown18.set(FLAG_ENABLE, false);
     unknown18.set(FLAG_ACTIVE, false);
+  }
+}
+
+void BouManager::OnEventProc(MSG_TYPE type) {
+  switch (type) {
+  case MSG_TYPE_RENDER:
+    render();
+    break;
+  case MSG_TYPE_CLEAR:
+    clear();
+    break;
+  default:
+    break;
   }
 }
 

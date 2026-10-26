@@ -81,6 +81,7 @@ public:
   void setView(WinView *view, int screen);
   void clrView(WinView *view, int screen);
   ScnObjCam *getCam(int index);
+  WinView *getView(int index);
   ScnObjCam *getCam(const WinView *view);
   const ScnObjCam *getCam(const WinView *view) const;
 

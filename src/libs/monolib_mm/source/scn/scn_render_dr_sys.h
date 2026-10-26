@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_math/mm_pnt.h"
 #include <stddef.h>
 
 #include "scn/scn_render.h"
@@ -60,17 +61,29 @@ static_assert(sizeof(ScnRenderDrSys) == 0x18, "");
 
 class ScnRenderDrViewCtrl {
 public:
-  u8 _00[0x08 - 0x00];
-  s32 unknown08; // Inferred role: view id; original member name unknown.
-  u8 _0c[0x20 - 0x0c];
+  mm::Pnt<int> unknown00;               // Role and original member name unknown.
+  s32 unknown08;                        // Inferred role: view id; original member name unknown.
+  s32 unknown0c;                        // Role and original member name unknown.
+  s32 unknown10;                        // Role and original member name unknown.
+  s32 unknown14;                        // Role and original member name unknown.
+  s32 unknown18;                        // Role and original member name unknown.
+  bool unknown1c;                       // Role and original member name unknown.
   grlib::CGLibTextureBuffer *unknown20; // Inferred role: texture; original member name unknown.
-  u8 _28[0x35 - 0x28];
-  bool unknown35; // Role and original member name unknown.
+  bool unknown28;                       // Role and original member name unknown.
+  f32 unknown2c;                        // Role and original member name unknown.
+  f32 unknown30;                        // Role and original member name unknown.
+  bool unknown34;                       // Role and original member name unknown.
+  bool unknown35;                       // Role and original member name unknown.
 };
 
 static_assert(offsetof(ScnRenderDrViewCtrl, unknown08) == 0x08, "");
+static_assert(offsetof(ScnRenderDrViewCtrl, unknown1c) == 0x1c, "");
 static_assert(offsetof(ScnRenderDrViewCtrl, unknown20) == 0x20, "");
+static_assert(offsetof(ScnRenderDrViewCtrl, unknown28) == 0x28, "");
+static_assert(offsetof(ScnRenderDrViewCtrl, unknown2c) == 0x2c, "");
+static_assert(offsetof(ScnRenderDrViewCtrl, unknown30) == 0x30, "");
 static_assert(offsetof(ScnRenderDrViewCtrl, unknown35) == 0x35, "");
+static_assert(sizeof(ScnRenderDrViewCtrl) == 0x38, "");
 
 class ScnRenderDrCapture {
 public:

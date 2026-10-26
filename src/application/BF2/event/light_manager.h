@@ -11,6 +11,8 @@ class LightManager : public IManager, public mm::mtl::Singleton<LightManager> {
 public:
   static constexpr u32 OFFSCR_LIGHT_COUNT = 4;
 
+  static const char *OFF_PATH;
+
   enum {
     FLAG_STREAM_MODE = 1 << 0,
   };

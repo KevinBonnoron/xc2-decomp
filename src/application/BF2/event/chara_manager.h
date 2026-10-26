@@ -33,6 +33,7 @@ public:
   bool isUseHood() const;
   int getReuseFlag() const;
   void clear();
+  void loadResource(const char *name);
   void setStreamMode(bool isStreamMode);
   void setOffscrMode(bool isOffscrMode, u32 offscrID);
   void setAutoTalkMode(bool isAutoTalkMode);
