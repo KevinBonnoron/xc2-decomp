@@ -32,6 +32,10 @@ public:
   void createAfterImage(f32 count, f32 span, f32 fade, const mm::Col3 &headColor, f32 headAlpha, f32 headEmissive, f32 headScale, const mm::Col3 &tailColor, f32 tailAlpha, f32 tailEmissive,
                         f32 tailScale);
   void releaseAfterImage();
+  void nomCallRender(int pass);
+  void lastAlphaCallRender();
+  void fastAlphaCallRender();
+  void cldBackAlphaCallRender();
 
   u8 _190[0x1d0 - 0x190];
   DrResMdoShdObj *unknown1d0;     // Inferred role: shd object; original member name unknown.

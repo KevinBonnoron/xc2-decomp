@@ -1,0 +1,65 @@
+#include "dr/dr_mdo_ctl_nom.h"
+
+#include "dr/dr_res_mdo_vtx_mesh_obj.h"
+
+namespace ml {
+
+void DrMdoCtlNom::callZSortLightPrePassRender() {
+  if ((unknownf8 & MDL_FLAG_UNKNOWN_3) == 0) {
+    return;
+  }
+  nomCallRender(3);
+}
+
+void DrMdoCtlNom::callZSortNomAlphaRender() {
+  if ((unknownf8 & MDL_FLAG_UNKNOWN_4) != 0) {
+    nomCallRender(4);
+  }
+  if (unknown1d8 != nullptr) {
+    unknown1d8->alpRender();
+  }
+}
+
+void DrMdoCtlNom::callZSortNomSpAlphaRender() {
+  if ((unknownf8 & MDL_FLAG_UNKNOWN_5) == 0) {
+    return;
+  }
+  nomCallRender(5);
+}
+
+void DrMdoCtlNom::callZSortGBuffRender() {
+  if ((unknownf8 & MDL_FLAG_UNKNOWN_1) == 0) {
+    return;
+  }
+  nomCallRender(1);
+}
+
+void DrMdoCtlNom::callZSortNomRefractionRender() {
+  if ((unknownf8 & MDL_FLAG_UNKNOWN_2) == 0) {
+    return;
+  }
+  nomCallRender(2);
+}
+
+void DrMdoCtlNom::callLastAlphaNomRender() {
+  if ((unknownf8 & MDL_FLAG_UNKNOWN_25) == 0) {
+    return;
+  }
+  lastAlphaCallRender();
+}
+
+void DrMdoCtlNom::callFastAlphaNomRender() {
+  if ((unknownf8 & MDL_FLAG_UNKNOWN_26) == 0) {
+    return;
+  }
+  fastAlphaCallRender();
+}
+
+void DrMdoCtlNom::callCldBackAlphaNomRender() {
+  if ((unknownf8 & MDL_FLAG_UNKNOWN_27) == 0) {
+    return;
+  }
+  cldBackAlphaCallRender();
+}
+
+} // namespace ml

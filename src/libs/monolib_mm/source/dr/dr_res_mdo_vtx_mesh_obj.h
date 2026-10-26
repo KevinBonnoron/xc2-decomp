@@ -9,6 +9,7 @@ namespace ml {
 class DrResMdoVtxMeshObj {
 public:
   void setActive(bool isActive, u32 index);
+  void alpRender();
 
   u8 _000[0x0e0 - 0x000];
   mm::Vec3 unknowne0; // Inferred role: init vector; original member name unknown.

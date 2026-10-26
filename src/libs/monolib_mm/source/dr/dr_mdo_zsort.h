@@ -1,6 +1,8 @@
 #pragma once
 #include <stddef.h>
 
+#include "types.h"
+
 namespace ml {
 
 class DrMdoZSortObj {
@@ -44,6 +46,15 @@ public:
   void viewLightPrePassRender();
   void viewThicknessRenderFirst();
   void viewThicknessRenderSecond();
+
+  u8 _00[0x28 - 0x00];
+  DrMdoZSortObj *unknown28; // Inferred role: first object of the next chain; original member name unknown.
+  DrMdoZSortObj *unknown30; // Inferred role: first object of the parent chain; original member name unknown.
+  DrMdoZSortObj *unknown38; // Inferred role: cloud object; original member name unknown.
 };
+
+static_assert(offsetof(DrMdoZSortMan, unknown28) == 0x28, "");
+static_assert(offsetof(DrMdoZSortMan, unknown30) == 0x30, "");
+static_assert(offsetof(DrMdoZSortMan, unknown38) == 0x38, "");
 
 } // namespace ml

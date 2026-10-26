@@ -7,6 +7,7 @@ class DrMdoCtlMpf : public DrMdlObj {
 public:
   void callZPrepassRender();
   void callRenderMpf();
+  void defMpfZPreRender();
 };
 
 } // namespace ml

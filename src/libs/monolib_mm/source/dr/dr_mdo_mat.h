@@ -244,6 +244,9 @@ public:
     MDL_FLAG_ALPHA_BLOOM = 1 << 16,
     MDL_FLAG_VOLUME = 1 << 17,
     MDL_FLAG_FULL_SCREEN_SHADOW = 1 << 18,
+    MDL_FLAG_UNKNOWN_25 = 1 << 25,
+    MDL_FLAG_UNKNOWN_26 = 1 << 26,
+    MDL_FLAG_UNKNOWN_27 = 1 << 27,
   };
 
   enum AlphaFlag {
