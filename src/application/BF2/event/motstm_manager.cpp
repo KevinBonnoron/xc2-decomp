@@ -1,5 +1,6 @@
 #include "event/motstm_manager.h"
 
+#include "event/frame_manager.h"
 #include "event/memory_manager.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
@@ -7,12 +8,13 @@
 
 namespace event {
 
-MotstmManager::MotstmManager() : unknown10(0), unknown14(0), unknown18("streaming 1(eva lgt hkt)") {}
+MotstmManager::MotstmManager() : unknown10(), unknown14(0), unknown18("streaming 1(eva lgt hkt)") {}
 
 void MotstmManager::create(mtl::ALLOC_HANDLE handle) {
   unknown18.create(mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), handle);
   unknown18.pause(true);
-  unknown10 |= FLAG_CREATE | FLAG_PAUSE;
+  unknown10.set(FLAG_CREATE);
+  unknown10.set(FLAG_PAUSE);
 }
 
 void MotstmManager::loadStream(const char *name) {
@@ -27,26 +29,48 @@ void MotstmManager::changeStream(const char *name) { unknown18.changeStream(name
 
 void MotstmManager::clear() {
   unknown18.destroy();
-  unknown10 = 0;
+  unknown10.clear();
 }
 
 void MotstmManager::start() {
-  if (unknown10 & FLAG_CREATE) {
-    unknown10 |= FLAG_START;
+  if (unknown10.test(FLAG_CREATE)) {
+    unknown10.set(FLAG_START);
   }
 }
 
 void MotstmManager::stop() {
-  if (unknown10 & FLAG_CREATE) {
+  if (unknown10.test(FLAG_CREATE)) {
     unknown18.stopStream();
   }
 }
 
 bool MotstmManager::isBusy() {
-  if (unknown10 & FLAG_CREATE) {
+  if (unknown10.test(FLAG_CREATE)) {
     return unknown18.isBusy();
   }
   return false;
+}
+
+void MotstmManager::render() {
+  if (unknown10.test(FLAG_CREATE) && isDisp()) {
+    mm::mtl::Singleton<FrameManager>::getPtr();
+  }
+}
+
+void MotstmManager::OnEventProc(MSG_TYPE type) {
+  switch (type) {
+  case MSG_TYPE_UPDATE:
+    update();
+    break;
+  case MSG_TYPE_RENDER:
+    render();
+    break;
+  case MSG_TYPE_CLEAR:
+    clear();
+    break;
+  default:
+    break;
+  }
 }
 
 void *MotstmManager::adr(const char *path, size_t *size) { return unknown18.adr(path, size); }

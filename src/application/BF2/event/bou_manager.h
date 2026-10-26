@@ -54,6 +54,10 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
+  // Inferred role: a selection is being dragged; original name unknown.
+  bool unknown001() const { return isEnable() && isDebugEnable() && unknown18.test(FLAG_ACTIVE) && !unknown18.test(FLAG_KEY_DOWN); }
+  // Inferred role: no key is held down; original name unknown.
+  bool unknown002() const { return !unknown18.test(FLAG_KEY_DOWN); }
   bool isEnable() const { return unknown18.test(FLAG_ENABLE); }
   bool isDebugEnable() const { return unknown1c.test(DEBUG_FLAG_ENABLE); }
 

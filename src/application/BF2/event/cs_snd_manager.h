@@ -46,6 +46,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
+  static const s32 unknown001[7]; // Inferred role: heights of the debug sound bars; original name unknown.
+
   void stopPreload() {
     fw::SoundManager::get()->stopBgm(unknown18, 1.0f);
     unknown18 = 0;

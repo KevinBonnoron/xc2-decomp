@@ -2,6 +2,7 @@
 
 #include "event/i_bou_callback.h"
 #include "event/manager.h"
+#include "ml/event_view.h"
 #include "ml/scn.h"
 #include "ml/win_view.h"
 #include "mm_math/mm_col4.h"
@@ -52,6 +53,30 @@ void BouManager::render() {
   for (IBouCallback **it = unknown2040.begin(); it != unknown2040.end(); ++it) {
     (*it)->OnBouRender(IBouCallback::RenderParam(mm::Col4(1.0f, 1.0f, 0.8f, 0.5f)));
   }
+}
+
+bool BouManager::OnMouseButtonDown(ml::EventView *view) {
+  if (isEnable() && isDebugEnable() && unknown002() && (view->buttons & ml::EventView::BUTTON_LEFT) != 0) {
+    startActive(view->pos);
+    updateActive(view->pos);
+  }
+  return false;
+}
+
+bool BouManager::OnMouseMove(ml::EventView *view) {
+  if (unknown001()) {
+    unknown20.width = view->pos.x - unknown20.x;
+    unknown20.height = view->pos.y - unknown20.y;
+    updateActive(view->pos);
+  }
+  return false;
+}
+
+bool BouManager::OnMouseButtonUp(ml::EventView *view) {
+  if (unknown001()) {
+    unknown18.set(FLAG_ACTIVE, false);
+  }
+  return false;
 }
 
 bool BouManager::OnKeyDown(ml::EventView *view) {

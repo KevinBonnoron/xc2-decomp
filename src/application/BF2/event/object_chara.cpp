@@ -2,7 +2,9 @@
 
 #include "mm_math/mm_math.h"
 
+#include "event/bou_rect.h"
 #include "event/frame_manager.h"
+#include "event/mani_manager.h"
 #include "event/memory_manager.h"
 #include "mm_math/mm_mat44.h"
 #include "mtl/alloc_handle.h"
@@ -14,6 +16,17 @@ mm::Vec3 ObjectChara::getPos() const { return unknown70->getPos(); }
 mm::Vec3 ObjectChara::getRot() const { return unknown70->getRotTo(); }
 
 void ObjectChara::resetTar() { unknown70->resetTar(); }
+
+bool ObjectChara::OnBouRectSelect(const IBouCallback::SelectParam &param) {
+  const BouRect *rect = param.rect;
+  mm::Vec3 pos = unknown70->getPos();
+  if (rect->isInside(pos)) {
+    mm::mtl::Singleton<ManiManager>::getPtr()->addManipulate(this, static_cast<MANI_TYPE>(0));
+    return true;
+  }
+  mm::mtl::Singleton<ManiManager>::getPtr()->removeManipulate(this);
+  return false;
+}
 
 ObjectChara::ObjectChara(const char *name) : Object(OBJTYPE_CHARA, name), unknown68(0), unknown70(nullptr) {}
 

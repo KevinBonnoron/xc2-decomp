@@ -1,6 +1,7 @@
 #pragma once
 #include "event/cam_base.h"
 #include "ml/work_event.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
 
 namespace ml {
@@ -9,7 +10,6 @@ class EventView;
 
 namespace mm {
 struct Mat44;
-struct Vec3;
 
 template <typename T> struct Pnt;
 } // namespace mm
@@ -41,6 +41,19 @@ public:
   void getViewInvertMatrix(mm::Mat44 &matrix) const;
   void getViewMatrix(mm::Mat44 &matrix) const;
   void getFrustum(mm::Mat44 &matrix) const;
+
+  // Inferred role: copies the view parameters of a camera; original name unknown.
+  void unknown002(const CamBase &cam) {
+    unknown08 = cam.isFocal();
+    unknown10.x = cam.getPos().x;
+    unknown10.y = cam.getPos().y;
+    unknown10.z = cam.getPos().z;
+    unknown20.x = cam.getTarget().x;
+    unknown20.y = cam.getTarget().y;
+    unknown20.z = cam.getTarget().z;
+    unknown30 = cam.getFov();
+    unknown34 = cam.getRoll();
+  }
 
 private:
   // Inferred role: ctrl mode update shared by the mouse button handlers; original name unknown.

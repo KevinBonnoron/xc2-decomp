@@ -49,14 +49,15 @@ public:
   class start_notice : public ICmd {
   public:
     virtual RESULT update(const Param &param);
-
-  private:
-    u8 _08[0x10 - 0x08];
   };
 
   class start_areajump : public ICmd {
   public:
     virtual RESULT update(const Param &param);
+
+  private:
+    u32 unknown08; // Inferred role: request; original member name unknown.
+    u8 _0c[0x10 - 0x0c];
   };
 
   class start_loading : public ICmd {
@@ -133,7 +134,8 @@ public:
     virtual RESULT update(const Param &param);
 
   private:
-    u8 _08[0x10 - 0x08];
+    bool unknown08; // Inferred role: fade requested; original member name unknown.
+    u8 _09[0x10 - 0x09];
   };
 
   class end_eff : public ICmd {
@@ -159,7 +161,8 @@ public:
     virtual RESULT update(const Param &param);
 
   private:
-    u8 _08[0x10 - 0x08];
+    u32 unknown08; // Inferred role: request; original member name unknown.
+    u8 _0c[0x10 - 0x0c];
   };
 
   class end_env_seam : public ICmd {
@@ -209,8 +212,8 @@ private:
   play_next unknown18;                 // Inferred role: cmd play next; original member name unknown.
   start unknown20;                     // Inferred role: cmd start; original member name unknown.
   start_fadeout unknown28;             // Inferred role: cmd start fadeout; original member name unknown.
-  start_notice unknown30;              // Inferred role: cmd start notice; original member name unknown.
-  start_areajump unknown40;            // Inferred role: cmd start areajump; original member name unknown.
+  start_areajump unknown30;            // Inferred role: cmd start areajump; original member name unknown.
+  start_notice unknown40;              // Inferred role: cmd start notice; original member name unknown.
   start_loading unknown48;             // Inferred role: cmd start loading; original member name unknown.
   start_other unknown58;               // Inferred role: cmd start other; original member name unknown.
   start_form unknowna8;                // Inferred role: cmd start form; original member name unknown.

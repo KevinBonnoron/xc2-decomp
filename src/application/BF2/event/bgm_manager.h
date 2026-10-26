@@ -43,6 +43,8 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
+  static const s32 unknown001[7]; // Inferred role: heights of the debug sound bars; original name unknown.
+
   void setFlag(u32 flag, bool isSet) {
     if (isSet) {
       unknown10 |= flag;

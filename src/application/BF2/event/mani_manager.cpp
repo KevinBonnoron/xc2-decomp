@@ -2,6 +2,7 @@
 
 #include "event/manager.h"
 #include "fw/fw_coli_check.h"
+#include "ml/event_view.h"
 #include "ml/scn.h"
 #include "ml/win_view.h"
 #include "mm_math/mm_vec3.h"
@@ -51,6 +52,12 @@ void ManiManager::clear() {
   unknown18.clear();
 }
 
+void ManiManager::update() {
+  if (unknown18.test(FLAG_ENABLE) && unknown1c.test(DEBUG_FLAG_ENABLE) && unknown18.test(FLAG_ACTIVE)) {
+    updateManipulate();
+  }
+}
+
 void ManiManager::clearManipulate() {
   unknown20.clear();
   unknown22030 = MANI_TYPE_POS;
@@ -72,6 +79,43 @@ void ManiManager::setAdjestPosEnable(bool isEnable) { unknown18.set(FLAG_ADJEST_
 bool ManiManager::isAdjestPosEnable() const { return unknown18.test(FLAG_ADJEST_POS); }
 
 void ManiManager::setDebugEnable(bool isEnable) { unknown1c.set(DEBUG_FLAG_ENABLE, isEnable); }
+
+bool ManiManager::OnKeyDown(ml::EventView *view) {
+  if (!unknown18.test(FLAG_ENABLE) || !unknown1c.test(DEBUG_FLAG_ENABLE) || !unknown18.test(FLAG_ACTIVE)) {
+    return false;
+  }
+  switch (view->unknown33) {
+  case 'E':
+    changeManipulate(MANI_TYPE_ROT);
+    return true;
+  case 'Q':
+    clearManipulate();
+    return true;
+  case 'R':
+    changeManipulate(MANI_TYPE_TAR);
+    return true;
+  case 'W':
+    changeManipulate(MANI_TYPE_POS);
+    return true;
+  }
+  return false;
+}
+
+void ManiManager::OnEventProc(MSG_TYPE type) {
+  switch (type) {
+  case MSG_TYPE_UPDATE:
+    update();
+    break;
+  case MSG_TYPE_RENDER:
+    render();
+    break;
+  case MSG_TYPE_CLEAR:
+    clear();
+    break;
+  default:
+    break;
+  }
+}
 
 bool ManiManager::OnMouseButtonDown(ml::EventView *view) { return false; }
 

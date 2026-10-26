@@ -1,7 +1,9 @@
 #include "event/object_effect.h"
 
+#include "event/bou_rect.h"
 #include "event/data_manager.h"
 #include "event/effect_obj.h"
+#include "event/mani_manager.h"
 #include "mm_math/mm_math.h"
 #include "mm_mtl/singleton.h"
 
@@ -27,6 +29,17 @@ mm::Vec3 ObjectEffect::getPos() const { return unknown68->getPos(); }
 mm::Vec3 ObjectEffect::getRot() const { return unknown68->getRot(); }
 
 void ObjectEffect::tail() { unknown68->tail(); }
+
+bool ObjectEffect::OnBouRectSelect(const IBouCallback::SelectParam &param) {
+  const BouRect *rect = param.rect;
+  mm::Vec3 pos = unknown68->getPos();
+  if (rect->isInside(pos)) {
+    mm::mtl::Singleton<ManiManager>::getPtr()->addManipulate(this, static_cast<MANI_TYPE>(0));
+    return true;
+  }
+  mm::mtl::Singleton<ManiManager>::getPtr()->removeManipulate(this);
+  return false;
+}
 
 void ObjectEffect::setPosAxis(const PosAxis &axis) {
   unknown70 = axis;

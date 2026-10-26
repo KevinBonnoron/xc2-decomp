@@ -1,9 +1,13 @@
 #include "event/cam_manager.h"
 
+#include <stddef.h>
+
 #include "event/cam_base.h"
+#include "event/cam_interface.h"
 #include "event/cam_obj.h"
 #include "event/cam_util.h"
 #include "event/extend.h"
+#include "event/frame_manager.h"
 #include "event/memory_manager.h"
 #include "event/res_manager.h"
 #include "fw/fw_debug.h"
@@ -13,6 +17,10 @@
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
+
+namespace fw {
+enum CAMERA_TYPE : int;
+} // namespace fw
 
 namespace event {
 
@@ -36,6 +44,49 @@ void CamManager::destroyCam(CamObj *cam) {
       unknown18.erase(it);
       return;
     }
+  }
+}
+
+void CamManager::clear() {
+  while (!unknown18.empty()) {
+    destroyCam(unknown18[0]);
+  }
+  for (size_t i = 0; i < INTERFACE_COUNT; i++) {
+    if (unknown60[i]) {
+      delete unknown60[i];
+      unknown60[i] = nullptr;
+    }
+  }
+  unknown60.clear();
+  m_freeCam.setActive(false);
+  unknown10 = 0;
+  unknown14 &= ~DISP_FLAG_FREE_CAM;
+  unknown88 = nullptr;
+  m_offscrID = 0;
+}
+
+void CamManager::init() {
+  unknown10 = 0;
+  for (size_t i = 0; i < INTERFACE_COUNT; i++) {
+    CamInterface *cam = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) CamInterface(static_cast<fw::CAMERA_TYPE>(i));
+    cam->addRef();
+    unknown60.push_back(cam);
+  }
+}
+
+void CamManager::update() {
+  if ((unknown14 & DISP_FLAG_FREE_CAM) != 0) {
+    mm::mtl::Singleton<FrameManager>::getPtr()->frameInfo();
+    mm::Vec3 pos = m_freeCam.getPos();
+    mm::Vec3 target = m_freeCam.getTarget();
+    f32 fov = m_freeCam.getFov();
+    f32 roll = m_freeCam.getRoll();
+    if (m_freeCam.isFocal()) {
+      fov = CamUtil::toFov(fov);
+    }
+    CamInterface *cam = mm::mtl::Singleton<CamManager>::getPtr()->unknown001(0);
+    cam->setTargetPos(pos, target, roll);
+    cam->setFov(__builtin_fmaxf(fov, 5.0f));
   }
 }
 
@@ -135,6 +186,20 @@ void CamManager::OnEventProc(MSG_TYPE type) {
 }
 
 CamFree *CamManager::getFreeCam() { return &m_freeCam; }
+
+void CamManager::setFreeCam(bool isFreeCam) {
+  if (isFreeCam) {
+    if ((unknown14 & DISP_FLAG_FREE_CAM) != 0 || unknown88 == nullptr) {
+      return;
+    }
+    m_freeCam.setActive(true);
+    m_freeCam.unknown002(*unknown88);
+    unknown14 |= DISP_FLAG_FREE_CAM;
+  } else {
+    m_freeCam.setActive(false);
+    unknown14 &= ~DISP_FLAG_FREE_CAM;
+  }
+}
 
 void CamManager::setDisp(bool isDisp) { setDispFlag(DISP_FLAG_DISP, isDisp); }
 

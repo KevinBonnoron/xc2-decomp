@@ -6,12 +6,18 @@
 #include "event/status_manager.h"
 #include "framework/lang_util.h"
 #include "framework/sound/sound_manager.h"
+#include "fw/fw_debug.h"
+#include "ml/rand.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_rect.h"
 
 namespace fw {
 enum SoundCategory : int;
 } // namespace fw
 
 namespace event {
+
+const s32 CsSndManager::unknown001[7] = {15, 20, 23, 25, 23, 20, 15};
 
 CsSndManager::CsSndManager() : unknown10(0), unknown14(0), unknown18(0), unknown1c(0), unknown238(0), m_syncFrameOffset(0.0f) {}
 
@@ -70,6 +76,30 @@ void CsSndManager::update() {
     unknown22c = 0;
     unknown230++;
     fw::SoundManager::get()->pause(unknown1c, false, 0.0f);
+  }
+}
+
+void CsSndManager::render() {
+  if (!(unknown14 & DISP_FLAG_DISP) || !(unknown10 & FLAG_PLAY)) {
+    return;
+  }
+  fw::debug::drawCompareZ(false);
+  fw::debug::drawSquare2D(mm::Rect<s32>(20, 490, 350, 60), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
+  fw::debug::drawLineSquare2D(mm::Rect<s32>(20, 490, 350, 60), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
+  fw::debug::drawFont(25, 495, mm::Col4::white, "CS");
+  if (unknown10 & FLAG_PAUSE) {
+    ml::mtInit(0);
+  }
+  for (s32 i = 0; i < 7; i++) {
+    fw::debug::drawSquare2D(mm::Rect<s32>(30 + i * 5, 540, 5, -unknown001[i] - ml::mtRand(5)), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  }
+  fw::debug::drawFont(70, 510, "  %s", mm::mtl::Singleton<Extend>::getPtr()->filename(unknown124.c_str()));
+  fw::debug::drawFont(70, 530, "   %d / %d", static_cast<int>(getPlayFrame()), static_cast<int>(getTotalFrame()));
+  fw::debug::drawSquare2D(mm::Rect<s32>(210, 530, 8, -30), mm::Col4(1.0f, 0.5f, 0.5f, 1.0f));
+  fw::debug::drawFont(225, 510, "vol");
+  fw::debug::drawFont(200, 530, "%.2f", 1.0);
+  if (unknown10 & FLAG_PAUSE) {
+    fw::debug::drawFont(270, 525, "PAUSE");
   }
 }
 

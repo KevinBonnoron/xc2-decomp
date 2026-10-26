@@ -1,12 +1,18 @@
 #include "event/seq_manager.h"
 
 #include "event/cmd_variable.h"
+#include "event/debug_manager.h"
 #include "event/env_manager.h"
 #include "event/fade_manager.h"
 #include "event/manager.h"
+#include "event/motstm_manager.h"
 #include "event/mstxt_manager.h"
+#include "event/object_manager.h"
+#include "event/skip_manager.h"
 #include "event/status_manager.h"
 #include "gf/event/gf_event.h"
+#include "gf/request/gf_req_command.h"
+#include "gf/request/gf_req_manager.h"
 #include "gf/scom/gf_scom_script.h"
 #include "gf/script/gf_script_manager.h"
 #include "ml/dev_setting.h"
@@ -79,6 +85,60 @@ ICmd::RESULT SeqManager::start_capture_wait::update(const Param &param) {
 ICmd::RESULT SeqManager::start_streaming1::update(const Param &param) {
   if (param.getFrame() <= 0) {
     static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "start stream1";
+  }
+  return RESULT_END;
+}
+
+ICmd::RESULT SeqManager::end_eff::update(const Param &param) {
+  if (param.getFrame() <= 0) {
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "end eff";
+  }
+  bool isUsing = mm::mtl::Singleton<ObjectManager>::getPtr()->isUsingEffect();
+  mm::mtl::Singleton<ObjectManager>::getPtr()->stopEffect();
+  return static_cast<RESULT>(!isUsing);
+}
+
+ICmd::RESULT SeqManager::end_stream::update(const Param &param) {
+  if (param.getFrame() <= 0) {
+    mm::mtl::Singleton<MotstmManager>::getPtr()->stop();
+  }
+  return static_cast<RESULT>(!mm::mtl::Singleton<MotstmManager>::getPtr()->isBusy());
+}
+
+ICmd::RESULT SeqManager::start_areajump::update(const Param &param) {
+  if (param.getFrame() <= 0) {
+    gf::GfMapjumpInfo info(param.val(1).getS32());
+    info.unknown101 = true;
+    info.unknown102 = true;
+    unknown08 = gf::GfReqCommand::reqMapjump(info);
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "start areajump";
+  }
+  return static_cast<RESULT>(!gf::GfReqManager::isValid(unknown08));
+}
+
+ICmd::RESULT SeqManager::end_areajump::update(const Param &param) {
+  if (param.getFrame() <= 0) {
+    gf::GfMapjumpInfo info(param.val(1).getS32());
+    info.unknown101 = true;
+    info.unknown102 = true;
+    unknown08 = gf::GfReqCommand::reqMapjump(info);
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "end areajump";
+  }
+  return static_cast<RESULT>(!gf::GfReqManager::isValid(unknown08));
+}
+
+ICmd::RESULT SeqManager::end_change::update(const Param &param) {
+  if (param.getFrame() <= 0) {
+    unknown08 = false;
+    static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "end change";
+  }
+  if (!mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() && !unknown08) {
+    mm::mtl::Singleton<FadeManager>::getPtr()->playEventSkip(false, 30);
+    unknown08 = true;
+  }
+  int status = param.val(1).getS32();
+  if (status != 0 && !mm::mtl::Singleton<DebugManager>::getPtr()->isPlayCancel() && !mm::mtl::Singleton<StatusManager>::getPtr()->changeFromBdat(status)) {
+    return RESULT_WAIT;
   }
   return RESULT_END;
 }

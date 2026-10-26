@@ -2,6 +2,7 @@
 #include "event/i_manager.h"
 #include "event/outsider_field.h"
 #include "gmk/gmk_manager.h"
+#include "mm_mtl/bitflag.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -33,7 +34,7 @@ public:
   };
 
   enum {
-    DISP_FLAG_DISP = 1 << 0,
+    DISP_FLAG_DISP = 0,
   };
 
   OutsiderManager();
@@ -52,10 +53,10 @@ public:
   virtual void OnEventProc(MSG_TYPE type);
 
 private:
-  u32 unknown10;           // Inferred role: disp flags; original member name unknown.
-  u32 unknown14;           // Inferred role: flags; original member name unknown.
-  OBJ_TYPE unknown18;      // Inferred role: targets; original member name unknown.
-  OutsiderField unknown20; // Inferred role: field; original member name unknown.
+  mm::mtl::BitFlag<32> unknown10; // Inferred role: disp flags; original member name unknown.
+  u32 unknown14;                  // Inferred role: flags; original member name unknown.
+  OBJ_TYPE unknown18;             // Inferred role: targets; original member name unknown.
+  OutsiderField unknown20;        // Inferred role: field; original member name unknown.
 };
 
 static_assert(sizeof(OutsiderManager) == 0x70, "");

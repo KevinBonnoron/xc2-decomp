@@ -2,7 +2,10 @@
 
 #include <stddef.h>
 
+#include "event/copydata_manager.h"
+#include "event/cpu_manager.h"
 #include "event/manager.h"
+#include "event/skip_manager.h"
 #include "fw/fw_debug.h"
 #include "ml/dev_graph.h"
 #include "mm_math/mm_col4.h"
@@ -66,6 +69,22 @@ void FrameManager::login() {
   unknown138 = 0.0f;
 }
 
+void FrameManager::initPage() {
+  m_maxFrame = DEFAULT_MAX_FRAME;
+  m_pageName = "";
+  m_pageID = 0;
+  m_frame = 0.0f;
+  unknown13c = 0.0f;
+  unknown144 = 0.0f;
+  unknown158 = 0.0f;
+  unknown1188 = -1;
+  unknown168.clear();
+  unknown138 = m_totalFrame;
+  unknown160 = 0.0f;
+  unknown10 |= FLAG_PAGE_START;
+  CpuManager::get().start();
+}
+
 void FrameManager::render() {
   if (!(unknown14 & DISP_FLAG_DISP)) {
     return;
@@ -98,6 +117,22 @@ void FrameManager::render() {
   fw::debug::drawLine2D(mm::Pnt<s32>(x, lineTop), mm::Pnt<s32>(x, height - 16), mm::Col4(1.0f, 0.0f, 0.0f, 1.0f));
   fw::debug::drawFontColor(mm::Col4(0.7f, 0.0f, 0.0f, 1.0f));
   fw::debug::drawFont(x, height - 56, "%d", reachedFrame);
+}
+
+void FrameManager::tail() {
+  u32 dispFlags = unknown14;
+  if (dispFlags & DISP_FLAG_USE_ACC_PRINT) {
+    frameInfo();
+  }
+  if ((dispFlags & DISP_FLAG_SYNCFRAME) && ((unknown10 & FLAG_PAGE_START) || m_frame != unknown13c) && m_pageName.c_str()[0] != '\0') {
+    mm::mtl::Singleton<CopydataManager>::getPtr();
+  }
+  if (unknown14 & DISP_FLAG_PAGE) {
+    if (!mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() && unknown1184++ > 9) {
+      unknown14 &= ~DISP_FLAG_PAGE;
+    }
+  }
+  unknown10 &= ~(FLAG_CAPTURE_FRAME | FLAG_PAGE_START);
 }
 
 void FrameManager::tailAlways() {

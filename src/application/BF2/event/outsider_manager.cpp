@@ -2,7 +2,7 @@
 
 namespace event {
 
-OutsiderManager::OutsiderManager() : unknown10(0), unknown14(0), unknown18(OBJ_TYPE_NONE) {}
+OutsiderManager::OutsiderManager() : unknown10(), unknown14(0), unknown18(OBJ_TYPE_NONE) {}
 
 void OutsiderManager::clear() {
   if (unknown14 & FLAG_ACTIVE) {
@@ -49,6 +49,30 @@ void OutsiderManager::update() {
   }
 }
 
+void OutsiderManager::render() {
+  if (isDisp() && (unknown14 & FLAG_ACTIVE)) {
+    unknown20.draw();
+  }
+}
+
+void OutsiderManager::OnEventProc(MSG_TYPE type) {
+  switch (type) {
+  case MSG_TYPE_INIT:
+  case MSG_TYPE_END_SCENE:
+  case MSG_TYPE_CLEAR:
+    clear();
+    break;
+  case MSG_TYPE_UPDATE:
+    update();
+    break;
+  case MSG_TYPE_RENDER:
+    render();
+    break;
+  default:
+    break;
+  }
+}
+
 void OutsiderManager::defineTgt(OBJ_TYPE targets) { unknown18 = targets; }
 
 void OutsiderManager::defineFld(OutsiderField::TYPE type, const mm::Vec3 &pos, f32 radius) { unknown20.setField(type, pos, radius); }
@@ -61,14 +85,8 @@ void OutsiderManager::setActive(bool isActive) {
   }
 }
 
-void OutsiderManager::setDisp(bool isDisp) {
-  if (isDisp) {
-    unknown10 |= DISP_FLAG_DISP;
-  } else {
-    unknown10 &= ~DISP_FLAG_DISP;
-  }
-}
+void OutsiderManager::setDisp(bool isDisp) { unknown10.set(DISP_FLAG_DISP, isDisp); }
 
-bool OutsiderManager::isDisp() const { return (unknown10 & DISP_FLAG_DISP) != 0; }
+bool OutsiderManager::isDisp() const { return unknown10.test(DISP_FLAG_DISP); }
 
 } // namespace event

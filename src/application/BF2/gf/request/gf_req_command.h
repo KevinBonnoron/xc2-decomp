@@ -99,6 +99,7 @@ public:
   static void reqChangeParty(const RQ_SETUP_PARTY &info);
   static u32 reqChangeBladeWithSetId(u32 partyId, int bladeSet, bool isForce);
   static void reqDestroyGf();
+  static u32 reqMapjump(const GfMapjumpInfo &info);
 };
 
 } // namespace gf

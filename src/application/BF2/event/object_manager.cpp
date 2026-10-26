@@ -235,6 +235,44 @@ bool ObjectManager::isUsingEffect() {
   return unknown128->isUsingEffect();
 }
 
+void ObjectManager::OnEventProc(MSG_TYPE type) {
+  switch (type) {
+  case MSG_TYPE_INIT:
+    unknown10 = 0;
+    unknowna0 = "default";
+    unknowne4 = "";
+    unknown128 = nullptr;
+    mm::mtl::Singleton<ObjectPartyList>::getPtr()->init();
+    break;
+  case MSG_TYPE_SETUP_SCENE:
+    setupScene();
+    break;
+  case MSG_TYPE_START_SCENE:
+    startScene();
+    break;
+  case MSG_TYPE_START_PAGE:
+    startPage();
+    break;
+  case MSG_TYPE_END_SCENE:
+    endScene();
+    break;
+  case MSG_TYPE_CLEAR:
+    clear();
+    break;
+  case MSG_TYPE_UPDATE:
+    update();
+    break;
+  case MSG_TYPE_RENDER:
+    render();
+    break;
+  case MSG_TYPE_TAIL:
+    tail();
+    break;
+  default:
+    break;
+  }
+}
+
 void ObjectManager::setActivePath(const char *path) { getCurrent()->setActivePath(path); }
 
 Object *ObjectManager::searchByPath(const char *path) {
