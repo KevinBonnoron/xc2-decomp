@@ -17,6 +17,7 @@ class Control;
 class ResASM;
 class ResClipData;
 class AsmListener;
+struct QsTransform;
 
 class AsmClip : public mm::mtl::IntrusiveListNode<AsmClip> {
 public:
@@ -45,6 +46,9 @@ public:
   void cleanup();
   bool addClip(AsmClip &clip);
   void removeClip(AsmClip &clip);
+  void sampleTrucks(u32 count, QsTransform *transforms);
+  void sampleTrucksMS(u32 count, QsTransform *transforms);
+  void sampleExtraTrucks(u16 slot, u32 count, f32 *values);
 
   Blender *m_pBlender;
   mm::mtl::IntrusiveList<AsmClip> unknown08; // Inferred role: clips; original member name unknown.

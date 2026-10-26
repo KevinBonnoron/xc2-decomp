@@ -1,6 +1,8 @@
 #pragma once
 #include <stddef.h>
 
+#include "anm/anm_extra_truck.h"
+#include "anm/anm_skeleton.h"
 #include "framework/anim/anim_manager.h"
 #include "types.h"
 
@@ -8,11 +10,39 @@ namespace anm {
 class ASMControl;
 class Blender;
 class Control;
-class ExtraTruckBuffer;
 class Pose;
 } // namespace anm
 
 namespace fw {
+
+// Inferred helper shared by the unbind functions of the pose samplers; original name unknown.
+template <typename Sampler> static inline void unknown001(Sampler &sampler) {
+  if (sampler.unknown18 != nullptr) {
+    sampler.unknown18->release();
+    sampler.unknown18 = nullptr;
+  }
+  if (sampler.unknown20 != nullptr) {
+    sampler.unknown20->release();
+    sampler.unknown20 = nullptr;
+  }
+  if (sampler.unknown28 != nullptr) {
+    sampler.unknown28->release();
+    sampler.unknown28 = nullptr;
+  }
+  sampler.unknown30 = 0xffff;
+}
+
+// Inferred helper shared by the bind functions of the pose samplers; original name unknown.
+template <typename Sampler> static inline void unknown002(Sampler &sampler, anm::ExtraTruckBuffer *extraTruckBuffer) {
+  if (extraTruckBuffer != nullptr) {
+    u16 slotId = extraTruckBuffer->unknown18->getExtraTruckSlotID(extraTruckBuffer->unknown20->unknown00);
+    sampler.unknown30 = slotId;
+    if (slotId != 0xffff) {
+      sampler.unknown28 = extraTruckBuffer;
+      extraTruckBuffer->addRef();
+    }
+  }
+}
 
 class AnimSinglePoseSamper : public AnimPoseSamplerInterface {
 public:
@@ -33,6 +63,12 @@ static_assert(offsetof(AnimSinglePoseSamper, unknown18) == 0x18, "");
 static_assert(offsetof(AnimSinglePoseSamper, unknown30) == 0x30, "");
 static_assert(offsetof(AnimSinglePoseSamper, unknown32) == 0x32, "");
 static_assert(sizeof(AnimSinglePoseSamper) == 0x38, "");
+
+class AnimEventSinglePoseSamper : public AnimSinglePoseSamper {
+public:
+  ~AnimEventSinglePoseSamper() override {}
+  void samplePose() override;
+};
 
 class AnimPoseSamper : public AnimPoseSamplerInterface {
 public:

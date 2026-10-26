@@ -3,7 +3,9 @@
 #include <string.h>
 
 #include "framework/sound/sound_driver.h"
+#include "ml/critical_section.h"
 #include "mm/mm_std_base.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/allocator.h"
 #include "mm_mtl/hash.h"
@@ -16,7 +18,6 @@ class SoundListener;
 
 namespace fw {
 enum SoundCategory : int;
-enum SoundType : int;
 
 void *SoundSsdDriver::SoundAllocator::AllocInstance(size_t size) { return unknown08->allocate(size, 16); }
 
@@ -448,6 +449,205 @@ void SoundSsdPlayer::stop(f32 time) {
     unknown88->Stop(time);
     Stop(time);
   }
+}
+
+bool SoundSsdDriver::isValid(u32 handle) const {
+  ml::CS lock(unknown70);
+  return unknown8b8.isValid(handle);
+}
+
+bool SoundSsdDriver::isPlaying(u32 handle) const {
+  ml::CS lock(unknown70);
+  const SoundSsdPlayer *player = getPlayer(handle);
+  return player != nullptr && player->isPlaying();
+}
+
+bool SoundSsdDriver::isReady(u32 handle) const {
+  ml::CS lock(unknown70);
+  const SoundSsdPlayer *player = getPlayer(handle);
+  return player != nullptr && player->isReady();
+}
+
+bool SoundSsdDriver::isPreparing(u32 handle) const {
+  ml::CS lock(unknown70);
+  const SoundSsdPlayer *player = getPlayer(handle);
+  return player != nullptr && player->isPreparing();
+}
+
+bool SoundSsdDriver::isPause(u32 handle) const {
+  ml::CS lock(unknown70);
+  const SoundSsdPlayer *player = getPlayer(handle);
+  return player != nullptr && player->isPause();
+}
+
+bool SoundSsdDriver::isLoop(u32 handle) {
+  unknown001 access(*this, handle);
+  return access.unknown08 != nullptr && access.unknown08->isLoop();
+}
+
+void SoundSsdDriver::setCategory(u32 handle, SoundCategory category) {
+  unknown001 access(*this, handle);
+  if (access.unknown08 != nullptr) {
+    access.unknown08->setCategory(category);
+  }
+}
+
+SoundCategory SoundSsdDriver::getCategory(u32 handle) {
+  unknown001 access(*this, handle);
+  SoundCategory category = static_cast<SoundCategory>(0);
+  if (access.unknown08 != nullptr) {
+    category = access.unknown08->unknown98;
+  }
+
+  return category;
+}
+
+void SoundSsdDriver::setVolume(u32 handle, f32 volume, f32 time) {
+  unknown001 access(*this, handle);
+  if (access.unknown08 != nullptr) {
+    access.unknown08->setVolume(volume, time);
+  }
+}
+
+f32 SoundSsdDriver::getVolume(u32 handle, SoundVolumeType type) {
+  unknown001 access(*this, handle);
+  f32 volume = 0.0f;
+  if (access.unknown08 != nullptr) {
+    volume = access.unknown08->getVolume(type);
+  }
+
+  return volume;
+}
+
+void SoundSsdDriver::setPitch(u32 handle, f32 pitch, f32 time) {
+  unknown001 access(*this, handle);
+  if (access.unknown08 != nullptr) {
+    access.unknown08->setPitch(mm::clamp(pitch, 0.0f, 8.0f), time);
+  }
+}
+
+void SoundSsdDriver::setPan(u32 handle, f32 pan, f32 time) {
+  unknown001 access(*this, handle);
+  if (access.unknown08 != nullptr) {
+    access.unknown08->setPan(mm::clamp(pan, -1.0f, 1.0f), time);
+  }
+}
+
+void SoundSsdDriver::setPos(u32 handle, const mm::Vec3 &position) {
+  unknown001 access(*this, handle);
+  if (access.unknown08 != nullptr && access.unknown08->is3DSource()) {
+    access.unknown08->setListener(unknown28);
+    access.unknown08->setPos(position);
+  }
+}
+
+bool SoundSsdDriver::setPlayTime(u32 handle, f32 time) {
+  unknown001 access(*this, handle);
+  return access.unknown08 != nullptr && access.unknown08->setPlayTime(time);
+}
+
+bool SoundSsdDriver::getPlayTime(u32 handle, f32 &time) {
+  ml::CS lock(unknown70);
+  time = 0.0f;
+  SoundSsdPlayer *player = unknown8b8.isValid(handle) ? getPlayer(handle) : nullptr;
+  return player != nullptr && player->getPlayTime(time);
+}
+
+bool SoundSsdDriver::getTotalTime(u32 handle, f32 &time) {
+  ml::CS lock(unknown70);
+  time = 0.0f;
+  SoundSsdPlayer *player = unknown8b8.isValid(handle) ? getPlayer(handle) : nullptr;
+  return player != nullptr && player->getTotalTime(time);
+}
+
+bool SoundSsdDriver::setRemainLoopCount(u32 handle, int count) {
+  unknown001 access(*this, handle);
+  return access.unknown08 != nullptr && access.unknown08->setRemainLoopCount(count);
+}
+
+bool SoundSsdDriver::getRemainLoopCount(u32 handle, int &count) {
+  ml::CS lock(unknown70);
+  count = 0;
+  SoundSsdPlayer *player = unknown8b8.isValid(handle) ? getPlayer(handle) : nullptr;
+  return player != nullptr && player->getRemainLoopCount(count);
+}
+
+void SoundSsdDriver::pause(u32 handle, bool isPause, f32 time) {
+  unknown001 access(*this, handle);
+  if (access.unknown08 != nullptr) {
+    access.unknown08->pause(isPause, time);
+  }
+}
+
+bool SoundSsdDriver::startBgm(u32 handle) {
+  ml::CS lock(unknown70);
+  SoundSsdPlayer *player = static_cast<SoundSsdPlayer *>(unknown8b8.getPtr(handle));
+  return player != nullptr && player->isReady() && player->start();
+}
+
+bool SoundSsdDriver::startVoice(u32 handle) {
+  ml::CS lock(unknown70);
+  SoundSsdPlayer *player = static_cast<SoundSsdPlayer *>(unknown8b8.getPtr(handle));
+  return player != nullptr && player->isReady() && player->start();
+}
+
+bool SoundSsdDriver::stopSound(u32 handle, f32 time) {
+  SoundSsdPlayer *player = getPlayer(handle);
+  if (player == nullptr) {
+    return false;
+  }
+
+  player->stop(time);
+  return true;
+}
+
+void SoundSsdDriver::stopSoundAll(SoundType type, f32 time) {
+  for (PtrMapIterator it = unknown8b8.begin(); it != unknown8b8.end(); ++it) {
+    const SoundSsdPlayer *player = static_cast<const SoundSsdPlayer *>(*it);
+    if (player != nullptr && (player->m_handle >> 24) == static_cast<u32>(type)) {
+      stopSound(player->m_handle, time);
+    }
+  }
+}
+
+void SoundSsdDriver::stopBgmAll() {
+  ml::CS lock(unknown70);
+  stopSoundAll(SOUND_TYPE_BGM, 0.0f);
+}
+
+void SoundSsdDriver::stopVoiceAll() {
+  ml::CS lock(unknown70);
+  stopSoundAll(SOUND_TYPE_VOICE, 0.0f);
+}
+
+void SoundSsdDriver::stopSeAll() {
+  ml::CS lock(unknown70);
+  stopSoundAll(SOUND_TYPE_SE, 0.0f);
+}
+
+void SoundSsdDriver::stopAll() {
+  for (mm::mtl::List<SoundSsdBank *>::iterator it = unknown838.begin(); it != unknown838.end(); ++it) {
+    (*it)->stopAll();
+  }
+
+  if (unknown10 != nullptr) {
+    unknown10->StopSound(0.0f);
+  }
+}
+
+bool SoundSsdDriver::stopBgm(u32 handle, f32 time) {
+  ml::CS lock(unknown70);
+  return stopSound(handle, time);
+}
+
+bool SoundSsdDriver::stopVoice(u32 handle, f32 time) {
+  ml::CS lock(unknown70);
+  return stopSound(handle, time);
+}
+
+bool SoundSsdDriver::stopSe(u32 handle, f32 time) {
+  ml::CS lock(unknown70);
+  return stopSound(handle, time);
 }
 
 void SoundSsdBank::setMaxSound(int maxSound) {

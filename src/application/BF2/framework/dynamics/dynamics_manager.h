@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "anm/anm_job.h"
 #include "framework/manager_object.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/singleton.h"
@@ -22,6 +23,38 @@ public:
   virtual ~DynamicsColObjUpdaterInterface() {}
   virtual void update() = 0;
 };
+
+class DynamicsColUpdateJob : public anm::Job {
+public:
+  static const char *_TYPE_NAME;
+
+  explicit DynamicsColUpdateJob(u32 count);
+  static void exec(anm::Job &job);
+
+  DynamicsColObjUpdaterInterface *unknown10[1]; // Inferred role: col updaters; original member name unknown.
+  u32 unknown18;                                // Inferred role: updater count; original member name unknown.
+};
+
+static_assert(offsetof(DynamicsColUpdateJob, unknown10) == 0x10, "");
+static_assert(offsetof(DynamicsColUpdateJob, unknown18) == 0x18, "");
+static_assert(sizeof(DynamicsColUpdateJob) == 0x20, "");
+
+class DynamicsUpdateJob : public anm::Job {
+public:
+  static const char *_TYPE_NAME;
+
+  explicit DynamicsUpdateJob(u32 count);
+  static void exec(anm::Job &job);
+
+  DynamicsUpdaterInterface *unknown10[1]; // Inferred role: updaters; original member name unknown.
+  u32 unknown18;                          // Inferred role: updater count; original member name unknown.
+  const UpdateInfo *unknown20;            // Inferred role: update info; original member name unknown.
+};
+
+static_assert(offsetof(DynamicsUpdateJob, unknown10) == 0x10, "");
+static_assert(offsetof(DynamicsUpdateJob, unknown18) == 0x18, "");
+static_assert(offsetof(DynamicsUpdateJob, unknown20) == 0x20, "");
+static_assert(sizeof(DynamicsUpdateJob) == 0x28, "");
 
 class DyanmicsManager : public ManagerObject, public mm::mtl::PtrSingleton<DyanmicsManager> {
 public:

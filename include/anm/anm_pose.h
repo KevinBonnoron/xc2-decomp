@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "anm/anm_array-inl.h"
 #include "anm/anm_reference_object.h"
 #include "types.h"
 
@@ -13,6 +14,9 @@ class Pose : public ReferenceObject {
 public:
   void syncLocalSpace();
   void syncModelSpace();
+  void setReferencePose();
+  Array<QsTransform> &accessSyncedPoseLocalSpace();
+  Array<QsTransform> &accessSyncedPoseModelSpace();
   const QsTransform &getBoneModelSpace(u16 bone);
   const QsTransform &getBoneLocalSpace(u16 bone);
   void setBoneLocalSpace(u16 bone, const QsTransform &transform);

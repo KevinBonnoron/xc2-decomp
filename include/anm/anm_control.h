@@ -7,11 +7,14 @@
 namespace anm {
 
 class Binding;
+struct QsTransform;
 
 class Control : public ReferenceObject {
 public:
   void update(f32 deltaTime);
   f32 calcLocalTimeInternal(f32 time);
+  void sampleTrucks(u32 count, QsTransform *transforms) const;
+  void sampleExtraTrucks(u16 slot, u32 count, f32 *values);
 
   void setLocalTime(f32 time) {
     unknown48 = calcLocalTimeInternal(time);

@@ -203,6 +203,19 @@ static_assert(offsetof(IDColiManager, unknown08) == 0x8, "");
 static_assert(offsetof(IDColiManager, unknownd8) == 0xd8, "");
 static_assert(offsetof(IDColiManager, m_gblIdTbl) == 0xe8, "");
 
+class IDColiMove {
+public:
+  IDColiMove();
+  void setAccuracy(bool accuracy);
+  void moveColi(IDColiObj *object, const mm::Vec3 &move);
+
+  u8 _000[0x130];
+  mm::Vec3 unknown130; // Inferred role: moved distance; original member name unknown.
+  u8 _13c[0x1f8 - 0x13c];
+};
+
+static_assert(offsetof(IDColiMove, unknown130) == 0x130, "");
+
 class IDColiAccMan {
 public:
   IDColiAccMan();

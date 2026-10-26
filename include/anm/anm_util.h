@@ -5,6 +5,8 @@ namespace anm {
 
 class Binding;
 class Control;
+class ExtraTruckSlot;
+class Pose;
 class ResASM;
 struct QsTransform;
 struct ResState;
@@ -55,6 +57,8 @@ public:
   static const ResState *getComplexStateResource(const ResASM &resAsm, const char *name);
   static const ResState *getFrozenStateResource(const ResASM &resAsm, const char *name);
   static const Appendix *findAppendix(const ResASM &resAsm, const char *name);
+  static void samplePoseSmartFromControl(Control *control, Pose *pose, bool localSpace);
+  static void clampLimitExtraTruck(const ExtraTruckSlot &slot, u32 count, f32 *values);
 };
 
 } // namespace anm

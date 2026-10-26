@@ -28,6 +28,8 @@ public:
   PtrMapIterator(const mm::mtl::Array<ptr_detail::PtrParam> *params, ptr_detail::PtrParam *current) : unknown00(params), unknown08(current) {}
 
   PtrMapIterator operator++();
+  const void *operator*() const { return unknown08->ptr; }
+  bool operator!=(const PtrMapIterator &other) const { return unknown08 != other.unknown08; }
 
   const mm::mtl::Array<ptr_detail::PtrParam> *unknown00; // Inferred role: params; original member name unknown.
   ptr_detail::PtrParam *unknown08;                       // Inferred role: current; original member name unknown.

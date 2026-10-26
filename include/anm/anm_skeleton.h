@@ -26,6 +26,8 @@ public:
     return INVALID_BONE;
   }
 
+  u16 getExtraTruckSlotID(const char *name) const;
+
   u8 _00[0x30 - 0x00];
   Array<Bone> unknown30; // Inferred role: bones; original member name unknown.
 };

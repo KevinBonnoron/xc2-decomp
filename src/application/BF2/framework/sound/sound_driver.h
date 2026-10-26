@@ -18,6 +18,12 @@ struct UpdateInfo;
 enum SoundCategory : int;
 enum SoundOutputType : int;
 
+enum SoundType : int {
+  SOUND_TYPE_BGM = 1,
+  SOUND_TYPE_VOICE = 2,
+  SOUND_TYPE_SE = 3,
+};
+
 enum SoundVolumeType : int {
   SOUND_VOLUME_TYPE_HANDLE = 0,
   SOUND_VOLUME_TYPE_DISTANCE = 1,
@@ -44,15 +50,15 @@ public:
   virtual bool isDeviceEnable() const;
   virtual u32 playBgm(const char *name, f32 volume, bool ignorePause, int loopCount, SoundCategory category) = 0;
   virtual bool startBgm(u32 handle) = 0;
-  virtual void stopBgm(u32 handle, f32 time) = 0;
+  virtual bool stopBgm(u32 handle, f32 time) = 0;
   virtual void stopBgmAll() = 0;
   virtual u32 playVoice(const char *name, f32 volume, bool ignorePause, SoundCategory category) = 0;
   virtual bool startVoice(u32 handle) = 0;
-  virtual void stopVoice(u32 handle, f32 time) = 0;
+  virtual bool stopVoice(u32 handle, f32 time) = 0;
   virtual u32 playSe(const char *name, SoundPack *pack, f32 volume, SoundCategory category) = 0;
   virtual u32 playSe(u32 id, SoundPack *pack, f32 volume, SoundCategory category) = 0;
   virtual u32 playSeEx(const SoundPlayInfo &info, SoundResult &result) = 0;
-  virtual void stopSe(u32 handle, f32 time) = 0;
+  virtual bool stopSe(u32 handle, f32 time) = 0;
   virtual bool isValid(u32 handle) const = 0;
   virtual bool isPlaying(u32 handle) const = 0;
   virtual bool isPreparing(u32 handle) const = 0;

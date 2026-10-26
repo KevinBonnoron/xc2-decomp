@@ -24,6 +24,8 @@ public:
   bool getVariable(const char *name, int *value) const;
   void setVariable(const char *name, f32 value);
   bool getVariable(const char *name, f32 *value) const;
+  void sampleTrucks(u32 count, QsTransform *transforms) { unknown20.sampleTrucks(count, transforms); }
+  void sampleTrucksMS(u32 count, QsTransform *transforms) { unknown20.sampleTrucksMS(count, transforms); }
 
   const ResASM *unknown18;             // Inferred role: res asm; original member name unknown.
   AsmBlender unknown20;                // Inferred role: blender; original member name unknown.

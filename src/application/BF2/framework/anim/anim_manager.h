@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "anm/anm_job.h"
 #include "framework/manager_object.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/singleton.h"
@@ -18,18 +19,19 @@ public:
 
 class AnimPoseSamplerInterface : public mm::mtl::IntrusiveListNode<AnimPoseSamplerInterface> {
 public:
-  virtual ~AnimPoseSamplerInterface();
+  virtual ~AnimPoseSamplerInterface() {}
   virtual void samplePose() = 0;
 };
 
 class AnimPoseModifierInterface : public mm::mtl::IntrusiveListNode<AnimPoseModifierInterface> {
 public:
-  virtual ~AnimPoseModifierInterface();
+  virtual ~AnimPoseModifierInterface() {}
+  virtual void apply() = 0;
 };
 
 class AnimAfterModifierInterface : public mm::mtl::IntrusiveListNode<AnimAfterModifierInterface> {
 public:
-  virtual ~AnimAfterModifierInterface();
+  virtual ~AnimAfterModifierInterface() {}
   virtual void apply() = 0;
 };
 
@@ -37,6 +39,68 @@ class IkResolver : public mm::mtl::IntrusiveListNode<IkResolver> {
 public:
   void resolve(const UpdateInfo &info);
 };
+
+class AnimSamplePoseJob : public anm::Job {
+public:
+  static const char *_TYPE_NAME;
+
+  explicit AnimSamplePoseJob(u32 count);
+  static void exec(anm::Job &job);
+
+  AnimPoseSamplerInterface *unknown10[4]; // Inferred role: pose samplers; original member name unknown.
+  u32 unknown30;                          // Inferred role: sampler count; original member name unknown.
+};
+
+static_assert(offsetof(AnimSamplePoseJob, unknown10) == 0x10, "");
+static_assert(offsetof(AnimSamplePoseJob, unknown30) == 0x30, "");
+static_assert(sizeof(AnimSamplePoseJob) == 0x38, "");
+
+class AnimModifyPoseJob : public anm::Job {
+public:
+  static const char *_TYPE_NAME;
+
+  explicit AnimModifyPoseJob(u32 count);
+  static void exec(anm::Job &job);
+
+  AnimPoseModifierInterface *unknown10[4]; // Inferred role: pose modifiers; original member name unknown.
+  u32 unknown30;                           // Inferred role: modifier count; original member name unknown.
+};
+
+static_assert(offsetof(AnimModifyPoseJob, unknown10) == 0x10, "");
+static_assert(offsetof(AnimModifyPoseJob, unknown30) == 0x30, "");
+static_assert(sizeof(AnimModifyPoseJob) == 0x38, "");
+
+class AnimAfterModifyJob : public anm::Job {
+public:
+  static const char *_TYPE_NAME;
+
+  explicit AnimAfterModifyJob(u32 count);
+  static void exec(anm::Job &job);
+
+  AnimAfterModifierInterface *unknown10[4]; // Inferred role: after modifiers; original member name unknown.
+  u32 unknown30;                            // Inferred role: modifier count; original member name unknown.
+};
+
+static_assert(offsetof(AnimAfterModifyJob, unknown10) == 0x10, "");
+static_assert(offsetof(AnimAfterModifyJob, unknown30) == 0x30, "");
+static_assert(sizeof(AnimAfterModifyJob) == 0x38, "");
+
+class AnimIkResolveJob : public anm::Job {
+public:
+  static const char *_TYPE_NAME;
+
+  explicit AnimIkResolveJob(u32 count);
+  static void exec(anm::Job &job);
+
+  IkResolver *unknown10[1];    // Inferred role: ik resolvers; original member name unknown.
+  u32 unknown18;               // Inferred role: resolver count; original member name unknown.
+  const UpdateInfo *unknown20; // Inferred role: update info; original member name unknown.
+};
+
+static_assert(offsetof(AnimIkResolveJob, unknown10) == 0x10, "");
+static_assert(offsetof(AnimIkResolveJob, unknown18) == 0x18, "");
+static_assert(offsetof(AnimIkResolveJob, unknown20) == 0x20, "");
+static_assert(sizeof(AnimIkResolveJob) == 0x28, "");
 
 class AnimationManager : public ManagerObject, public mm::mtl::PtrSingleton<AnimationManager> {
 public:

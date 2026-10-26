@@ -1,7 +1,9 @@
 #pragma once
 #include <stddef.h>
 
+#include "anm/anm_job.h"
 #include "framework/manager_object.h"
+#include "mm_mtl/delegate.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/singleton.h"
@@ -11,11 +13,27 @@ namespace fw {
 
 class SensorUpdater : public mm::mtl::IntrusiveListNode<SensorUpdater> {
 public:
-  u8 _10[0x30 - 0x10];
-  bool unknown30; // Inferred role: registered; original member name unknown.
+  mm::mtl::Delegate<void()> unknown10; // Inferred role: update callback; original member name unknown.
+  bool unknown30;                      // Inferred role: registered; original member name unknown.
 };
 
+static_assert(offsetof(SensorUpdater, unknown10) == 0x10, "");
 static_assert(offsetof(SensorUpdater, unknown30) == 0x30, "");
+
+class SensorUpdateJob : public anm::Job {
+public:
+  static const char *_TYPE_NAME;
+
+  explicit SensorUpdateJob(u32 count);
+  static void exec(anm::Job &job);
+
+  SensorUpdater *unknown10[2]; // Inferred role: updaters; original member name unknown.
+  u32 unknown20;               // Inferred role: updater count; original member name unknown.
+};
+
+static_assert(offsetof(SensorUpdateJob, unknown10) == 0x10, "");
+static_assert(offsetof(SensorUpdateJob, unknown20) == 0x20, "");
+static_assert(sizeof(SensorUpdateJob) == 0x28, "");
 
 class SensorManager : public ManagerObject, public mm::mtl::PtrSingleton<SensorManager> {
 public:

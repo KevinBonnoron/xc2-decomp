@@ -6,6 +6,8 @@
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 
+#define MM_MAT_ALIGN 16
+
 namespace mm {
 
 struct alignas(16) Mat44 {
@@ -156,6 +158,14 @@ struct alignas(16) Mat44 {
     Vec3 position;
     memcpy(&position, rows[3], sizeof(f32) * 3);
     return Vec3(position);
+  }
+
+  // Inferred copy with an alignment check of the source (1.0.0: assert at line 195 of the original header); original helper name unknown.
+  // The implicit copy constructor must stay trivial: other matching functions copy matrices without the check.
+#line 194
+  void unknown006(const Mat44 &ma) {
+    MM_ASSERT((reinterpret_cast<size_t>(&ma) & size_t(MM_MAT_ALIGN - 1)) == 0);
+    memcpy(this, &ma, sizeof(Mat44));
   }
 
   f32 rows[4][4];

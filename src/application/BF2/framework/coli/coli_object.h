@@ -191,8 +191,24 @@ static_assert(sizeof(ColiObject) == 0x100, "");
 
 class ColiMoveObject : public ColiObject {
 public:
+  static const u32 FLAG_ACCURACY = 1 << 1;
+
+  static mm::mtl::RTTI m_rtti;
+
   static ColiObject *createColiCharacter(const ColiCharacterInfo &info, const mm::mtl::IntrusivePtr<ReferenceFrame> &frame);
   static ColiObject *createColiPhantom(const ColiPhantomInfo &info, const mm::mtl::IntrusivePtr<ReferenceFrame> &frame);
+  ColiMoveObject();
+  ~ColiMoveObject() {}
+  const mm::mtl::RTTI *getRTTI() const override;
+  void postUpdate() override;
+  void setDir(const mm::Vec3 &direction) override;
+
+  mm::Vec3 unknown100; // Inferred role: move direction; original member name unknown.
+  u32 unknown110;      // Inferred role: flags; original member name unknown.
 };
+
+static_assert(offsetof(ColiMoveObject, unknown100) == 0x100, "");
+static_assert(offsetof(ColiMoveObject, unknown110) == 0x110, "");
+static_assert(sizeof(ColiMoveObject) == 0x120, "");
 
 } // namespace fw
