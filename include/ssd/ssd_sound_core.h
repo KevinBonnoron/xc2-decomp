@@ -12,12 +12,31 @@ namespace ssd {
 class Allocator;
 class SoundBank;
 class SoundCategory;
-class SoundEffecter;
 class SoundActor;
 class SoundHandle;
 class StreamController;
 class SoundListener;
 class VoiceHandle;
+
+class SoundEffecter {
+public:
+  enum unknown001 : u8 {
+    unknown001_0 = 0,
+    unknown001_1 = 1,
+  };
+
+  u8 _00[0x18 - 0x00];
+  unknown001 unknown18; // Inferred role: effect type; original member name unknown.
+  u8 _19[0x1c - 0x19];
+  f32 unknown1c; // Inferred role: effect volume; original member name unknown.
+};
+
+static_assert(offsetof(SoundEffecter, unknown18) == 0x18, "");
+static_assert(offsetof(SoundEffecter, unknown1c) == 0x1c, "");
+
+class SoundDelayEffecter : public SoundEffecter {};
+
+class SoundI3dl2ReverbEffecter : public SoundEffecter {};
 
 struct OutputMode {
   enum Type {};
@@ -91,11 +110,33 @@ static_assert(offsetof(SoundCore, m_init) == 0x10, "");
 
 class SystemCorePlatform : public SoundCore {
 public:
+  struct EffectBusInfo {
+    bool unknown00; // Inferred role: effect flag; original member name unknown.
+    bool unknown01; // Inferred role: effect flag; original member name unknown.
+    u8 _02[0x08 - 0x02];
+    f32 unknown08; // Inferred role: effect volume; original member name unknown.
+    u8 _0c[0x10 - 0x0c];
+    SoundEffecter *unknown10; // Inferred role: effecter; original member name unknown.
+    u8 _18[0x38 - 0x18];
+  };
+
   void *GetPlatformDataImpl(const char *name) override;
   Result InitEffect(u8 bus, SoundEffecter *effecter);
+  Result InitI3dl2ReverbEffect(u8 bus, SoundI3dl2ReverbEffecter *effecter);
+  Result InitDelayEffect(u8 bus, SoundDelayEffecter *effecter);
   Result QuitEffect(SoundEffecter *effecter);
   void FreeAudioDataBuffer(void *buffer);
+  int GetBusNumberFormEffecter(SoundEffecter *effecter);
+  void UpdateEffectVolume(SoundEffecter *effecter);
+  void UpdateEffectParam(SoundEffecter *effecter);
+
+  u8 _011[0x1f0 - 0x011];
+  EffectBusInfo unknown1f0[2]; // Inferred role: effect buses; original member name unknown.
 };
+
+static_assert(offsetof(SystemCorePlatform, unknown1f0) == 0x1f0, "");
+static_assert(sizeof(SystemCorePlatform::EffectBusInfo) == 0x38, "");
+static_assert(sizeof(SystemCorePlatform) == 0x260, "");
 
 class SystemCore : public SystemCorePlatform {
 public:
@@ -162,16 +203,6 @@ public:
   void DisconnectActor(SoundActor *actor);
   void UpdateGameFrame(f32 deltaTime);
 
-  struct unknown001 {
-    bool unknown00; // Inferred role: effect flag; original member name unknown.
-    bool unknown01; // Inferred role: effect flag; original member name unknown.
-    u8 _02[0x10 - 0x02];
-    SoundEffecter *unknown10; // Inferred role: effecter; original member name unknown.
-    u8 _18[0x38 - 0x18];
-  };
-
-  u8 _011[0x1f0 - 0x011];
-  unknown001 unknown1f0[2]; // Inferred role: effect buses; original member name unknown.
   u8 _260[0x270 - 0x260];
   u64 unknown270; // Inferred role: game frame counter; original member name unknown.
   u64 unknown278; // Inferred role: audio frame counter; original member name unknown.
@@ -210,8 +241,6 @@ public:
   static DebugInfo debugInfo_;
 };
 
-static_assert(offsetof(SystemCore, unknown1f0) == 0x1f0, "");
-static_assert(sizeof(SystemCore::unknown001) == 0x38, "");
 static_assert(offsetof(SystemCore, unknown270) == 0x270, "");
 static_assert(offsetof(SystemCore, unknown3a0) == 0x3a0, "");
 static_assert(offsetof(SystemCore, unknown3c8) == 0x3c8, "");

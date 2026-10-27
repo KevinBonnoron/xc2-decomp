@@ -1,3 +1,4 @@
+#include "ssd/ssd_allocator.h"
 #include "ssd/ssd_file_stream.h"
 #include "ssd/ssd_memory_buffer.h"
 #include "ssd/ssd_sound_core.h"
@@ -47,6 +48,31 @@ s64 StreamController::CloseStream() {
   unknownee = true;
   unknownf8 = 3;
   return 1;
+}
+
+void StreamController::ExecCloseStream() {
+  unknown148 = nullptr;
+  unknown138 = nullptr;
+  unknown100.Close();
+  Allocator *allocator = SoundMemory::allocator_;
+  if (unknown1b8 != nullptr) {
+    Allocator::Block *block = allocator->GetMemoryBlock(unknown1b8);
+    allocator->DeleteBufferImpl(block);
+    unknown1b8 = nullptr;
+  }
+  if (unknown1c0 != nullptr) {
+    Allocator::Block *block = allocator->GetMemoryBlock(unknown1c0);
+    allocator->DeleteBufferImpl(block);
+    unknown1c0 = nullptr;
+  }
+  unknown1f0 = 0;
+  if (unknown1f8 != nullptr) {
+    Allocator::Block *block = allocator->GetMemoryBlock(unknown1f8);
+    allocator->DeleteBufferImpl(block);
+    unknown1f8 = nullptr;
+  }
+  unknownf8 = 1;
+  unknownec = false;
 }
 
 s64 StreamController::QuitStream() {

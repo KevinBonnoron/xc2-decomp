@@ -19,6 +19,7 @@ public:
   u32 GetBufferSize() const override;
   u32 GetDataSize() const override;
   u64 GetFreeSize() const override;
+  int Alloc(u64 size, Allocator *allocator);
   void Clear();
   int Free();
 

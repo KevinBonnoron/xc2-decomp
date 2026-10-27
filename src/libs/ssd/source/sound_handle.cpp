@@ -20,6 +20,49 @@ class SoundSsdDriver;
 
 namespace ssd {
 
+void SoundHandle::Init() {
+  unknown6c.Reset(1.0f);
+  unknown68 = 0.0f;
+  unknown98 = 1.0f;
+  unknown94 = 1.0f;
+  unknown84 = 1.0f;
+  unknown90 = 0.0f;
+  unknown88 = 0.0f;
+  unknown8c = 0.0f;
+  unknown9c.Reset(0.0f);
+  unknownb4 = 1.0f;
+  unknownb8 = 1.0f;
+  unknownbc = 0.0f;
+  unknown60 = 0;
+  unknownc0[0].unknown00 = false;
+  unknownc0[0].unknown04.Reset(1.0f);
+  unknownc0[1].unknown00 = false;
+  unknownc0[1].unknown04.Reset(1.0f);
+  ClearDelegate();
+  unknown58 = true;
+}
+
+void SoundHandle::Quit() {
+  unknown58 = false;
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  if (core != nullptr) {
+    VoiceHandle *voice = core->GetVoiceHandle(unknownf8);
+    if (voice != nullptr) {
+      Stop(0.0f);
+      voice->unknown58 = nullptr;
+    }
+    unknown30 = nullptr;
+    ClearDelegate();
+    unknown128.unknown001();
+  }
+}
+
+void SoundHandle::Delete() {
+  Quit();
+  ClearDelegateImpl();
+  unknown128.unknown001();
+}
+
 void SoundHandle::ClearDelegateImpl() {
   unknown100.Clear();
   for (int i = 0; i < unknown128.unknown08; i++) {

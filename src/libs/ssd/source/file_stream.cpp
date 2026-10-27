@@ -1,3 +1,4 @@
+#include "ssd/ssd_debug.h"
 #include "ssd/ssd_file_stream.h"
 #include "types.h"
 
@@ -22,6 +23,18 @@ bool FileStream::IsOpen() const { return unknown30 != 0; }
 long FileStream::Write(u64 size, const void *buffer, u64 *writeSize) {
   IsOpen();
   return -1;
+}
+
+long FileStream::GetSize(u64 *size) const {
+  if (!IsOpen()) {
+    return -1;
+  }
+  if (size == nullptr) {
+    log_message(u"Assert : \"%s\" = nullptr, %s:%d", u"fileSize", get_logfilename(u"D:/ssd/ssd51/ssd/sources/io/file_stream.cpp"), 0x1a8);
+    abort();
+  }
+  *size = unknown28;
+  return 0;
 }
 
 long FileStream::Tell(u64 *position) {

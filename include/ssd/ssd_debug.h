@@ -55,6 +55,9 @@ void InitDebug();
 void QuitDebug();
 
 void log_message(const char *format, ...);
+void log_message(const char16_t *format, ...);
+const char16_t *get_logfilename(const char16_t *path);
+void abort();
 Result log_error(Result result, Debug::LogFlag::Type flag, const char *format, ...);
 Result log_error(Result result, Debug::LogFlag::Type flag, const char16_t *format, ...);
 

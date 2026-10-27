@@ -1,7 +1,23 @@
+#include "ssd/ssd_sound_core.h"
+#include "ssd/ssd_text.h"
 #include "ssd/ssd_wave_source.h"
 #include "types.h"
 
 namespace ssd {
+enum Result : long;
+
+Result WaveSource::Quit() {
+  unknown80 = nullptr;
+  unknown88 = 0;
+  unknown70 = nullptr;
+  unknown78 = 0;
+  if (unknown98 != nullptr) {
+    static_cast<SystemCore *>(SoundCore::instance_)->FreeAudioDataBuffer(unknown98);
+    unknown98 = nullptr;
+  }
+  unknowna0.FreeImpl();
+  return static_cast<Result>(0);
+}
 
 const WaveSource::unknown002 *WaveSource::GetAdpcmHeader(int index) const {
   if (unknown90 != nullptr) {

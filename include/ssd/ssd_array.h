@@ -1,6 +1,8 @@
 #pragma once
 #include <stddef.h>
 
+#include "ssd/ssd_allocator.h"
+
 namespace ssd {
 
 template <typename T> class Array {
@@ -9,6 +11,19 @@ public:
 
   virtual ~Array();
   void SetArraySize(int size);
+  // Inferred role: release the element buffer and reset the counts; original name unknown.
+  void unknown001() {
+    if (unknown10 != nullptr) {
+      Allocator *allocator = SoundMemory::allocator_;
+      Allocator::Block *block = allocator->GetMemoryBlock(unknown10);
+      if (block != nullptr) {
+        allocator->DeleteInstanceImpl(block);
+      }
+    }
+    unknown08 = 0;
+    unknown0c = 0;
+    unknown10 = nullptr;
+  }
 
   int unknown08; // Inferred role: element count; original member name unknown.
   int unknown0c; // Inferred role: capacity; original member name unknown.

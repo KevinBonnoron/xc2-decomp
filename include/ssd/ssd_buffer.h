@@ -17,4 +17,6 @@ public:
 
 static_assert(offsetof(BufferBase, unknown10) == 0x10, "");
 
+void ClearMemory8(void *buffer, unsigned long size);
+
 } // namespace ssd

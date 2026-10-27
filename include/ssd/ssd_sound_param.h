@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "ssd/ssd_hash.h"
+#include "ssd/ssd_text.h"
 #include "types.h"
 
 namespace ssd {
@@ -10,6 +11,7 @@ class SoundParam {
 public:
   struct Name {
     void Init();
+    Name &operator=(const TextRef &text);
 
     char16_t unknown00[32]; // Inferred role: text; original member name unknown.
     Hash unknown40;         // Inferred role: text hash; original member name unknown.

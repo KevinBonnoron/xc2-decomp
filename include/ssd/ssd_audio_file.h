@@ -12,7 +12,8 @@ class IoStreamBase;
 class AudioMarker : public List<AudioMarker>::Node {
 public:
   u16 unknown18; // Inferred role: marker id; original member name unknown.
-  u8 _1a[0x20 - 0x1a];
+  u8 _1a[0x1c - 0x1a];
+  u32 unknown1c;            // Inferred role: marker position; original member name unknown.
   TextFixed<256> unknown20; // Inferred role: marker name; original member name unknown.
 };
 
@@ -25,6 +26,14 @@ public:
 };
 
 static_assert(sizeof(AudioMarkerList) == 0x28, "");
+
+class AudioChunk {
+public:
+  u32 unknown00; // Inferred role: chunk tag; original member name unknown.
+  u32 unknown04; // Inferred role: chunk size; original member name unknown.
+};
+
+static_assert(sizeof(AudioChunk) == 0x8, "");
 
 class AudioFileBase {
 public:
@@ -63,7 +72,8 @@ public:
   u32 unknown40;  // Inferred role: sample size; original member name unknown.
   u32 unknown44;  // Inferred role: loop start; original member name unknown.
   u32 unknown48;  // Inferred role: loop end; original member name unknown.
-  u32 unknown4c;  // Inferred role: cleared by the constructor; original member name unknown.
+  u16 unknown4c;  // Inferred role: cleared by the constructor; original member name unknown.
+  u16 unknown4e;  // Inferred role: cleared by the constructor; original member name unknown.
   bool unknown50; // Inferred role: loop; original member name unknown.
   u8 _51[0x70 - 0x51];
   AudioMarkerList unknown70; // Inferred role: markers; original member name unknown.
@@ -77,5 +87,56 @@ static_assert(offsetof(AudioFileBase, unknown40) == 0x40, "");
 static_assert(offsetof(AudioFileBase, unknown50) == 0x50, "");
 static_assert(offsetof(AudioFileBase, unknown70) == 0x70, "");
 static_assert(sizeof(AudioFileBase) == 0x98, "");
+
+struct unknown001 {
+  u16 unknown00; // Inferred role: sustain loop play mode; original member name unknown.
+  u16 unknown02; // Inferred role: sustain loop begin marker id; original member name unknown.
+  u16 unknown04; // Inferred role: sustain loop end marker id; original member name unknown.
+  u16 unknown06; // Inferred role: release loop play mode; original member name unknown.
+  u16 unknown08; // Inferred role: release loop begin marker id; original member name unknown.
+  u16 unknown0a; // Inferred role: release loop end marker id; original member name unknown.
+};
+
+static_assert(sizeof(unknown001) == 0xc, "");
+
+class AudioFileAiff : public AudioFileBase {
+public:
+  Result Open(IoStreamBase *stream) override;
+  Result Close() override;
+  Result PreLoad() override;
+  void SetPositionBySample(u64 sample) override;
+  void ReadAiffSound(AudioChunk *chunk);
+  void CheckAiffLoopPosition();
+
+  unknown001 unknown98; // Inferred role: instrument loop points; original member name unknown.
+  u8 _a4[0xc0 - 0xa4];
+};
+
+static_assert(offsetof(AudioFileAiff, unknown98) == 0x98, "");
+static_assert(sizeof(AudioFileAiff) == 0xc0, "");
+
+class AudioFileWave : public AudioFileBase {
+public:
+  Result Open(IoStreamBase *stream) override;
+  Result Close() override;
+  Result PreLoad() override;
+  void SetPositionBySample(u64 sample) override;
+  Result PreSave() override;
+  Result SaveAudioData(const s16 *data, int count) override;
+  void ReadWaveSound(AudioChunk *chunk);
+  void ReadWaveLoopPosition(AudioChunk *chunk);
+};
+
+static_assert(sizeof(AudioFileWave) == 0x98, "");
+
+class AudioFileSadf : public AudioFileBase {
+public:
+  Result Open(IoStreamBase *stream) override;
+  Result Close() override;
+  Result PreLoad() override;
+  void SetPositionBySample(u64 sample) override;
+};
+
+static_assert(sizeof(AudioFileSadf) == 0x98, "");
 
 } // namespace ssd

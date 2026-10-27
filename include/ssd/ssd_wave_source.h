@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "ssd/ssd_result.h"
+#include "ssd/ssd_text.h"
 #include "types.h"
 
 namespace ssd {
@@ -53,12 +54,12 @@ public:
   int unknown68;               // Inferred role: frame count; original member name unknown.
   int unknown6c;               // Inferred role: reference counter; original member name unknown.
   const unknown003 *unknown70; // Inferred role: file header; original member name unknown.
-  u8 _78[0x80 - 0x78];
-  u8 *unknown80; // Inferred role: data; original member name unknown.
-  u8 _88[0x90 - 0x88];
+  u64 unknown78;               // Inferred role: cleared by Quit; original member name unknown.
+  u8 *unknown80;               // Inferred role: data; original member name unknown.
+  u64 unknown88;               // Inferred role: cleared by Quit; original member name unknown.
   const unknown002 *unknown90; // Inferred role: adpcm headers; original member name unknown.
   void *unknown98;             // Inferred role: audio data buffer; original member name unknown.
-  u8 _a0[0xd0 - 0xa0];
+  String unknowna0;            // Inferred role: name; original member name unknown.
 };
 
 static_assert(offsetof(WaveSource, unknown18) == 0x18, "");
@@ -73,9 +74,12 @@ static_assert(offsetof(WaveSource, unknown5c) == 0x5c, "");
 static_assert(offsetof(WaveSource, unknown68) == 0x68, "");
 static_assert(offsetof(WaveSource, unknown6c) == 0x6c, "");
 static_assert(offsetof(WaveSource, unknown70) == 0x70, "");
+static_assert(offsetof(WaveSource, unknown78) == 0x78, "");
 static_assert(offsetof(WaveSource, unknown80) == 0x80, "");
+static_assert(offsetof(WaveSource, unknown88) == 0x88, "");
 static_assert(offsetof(WaveSource, unknown90) == 0x90, "");
 static_assert(offsetof(WaveSource, unknown98) == 0x98, "");
+static_assert(offsetof(WaveSource, unknowna0) == 0xa0, "");
 static_assert(sizeof(WaveSource) == 0xd0, "");
 
 } // namespace ssd

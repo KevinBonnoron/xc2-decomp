@@ -11,7 +11,7 @@ enum Result : long;
 
 AudioFileBase::AudioFileBase()
     : unknown08(nullptr), unknown10(nullptr), unknown18(false), unknown19(false), unknown1a(false), unknown1b(false), unknown1c(0), unknown20(0), unknown24(0), unknown28(0), unknown2c(48000.0f),
-      unknown30(0), unknown34(0), unknown35(0), unknown38(0), unknown3c(0), unknown40(0), unknown44(0), unknown48(0), unknown4c(0), unknown50(false) {}
+      unknown30(0), unknown34(0), unknown35(0), unknown38(0), unknown3c(0), unknown40(0), unknown44(0), unknown48(0), unknown4c(0), unknown4e(0), unknown50(false) {}
 
 AudioFileBase::~AudioFileBase() { DeleteReadBuffer(); }
 

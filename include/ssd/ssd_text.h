@@ -15,6 +15,7 @@ enum TextEncodeType : u8 {
 
 class TextRef {
 public:
+  TextRef() : unknown10(nullptr), unknown18(TEXT_ENCODE_UTF16) {}
   TextRef(const TextRef &text);
   TextRef(const char *text);
   TextRef(const char16_t *text);
@@ -55,5 +56,29 @@ template <int N> class TextFixed : public TextFixedBase {
 public:
   char16_t unknown28[N]; // Inferred role: text buffer; original member name unknown.
 };
+
+struct MemoryBlock {
+  void *unknown00;         // Inferred role: block address; original member name unknown.
+  unsigned long unknown08; // Inferred role: block size; original member name unknown.
+};
+
+static_assert(sizeof(MemoryBlock) == 0x10, "");
+
+Result Utf8ToUTF16(const char *source, MemoryBlock *block);
+
+class String : public TextRef {
+public:
+  String();
+  virtual ~String();
+  void FreeImpl();
+  void Set(const TextRef &text) override;
+  void Set(const char *text) override;
+  void Set(const char16_t *text) override;
+
+  MemoryBlock unknown20; // Inferred role: text buffer; original member name unknown.
+};
+
+static_assert(offsetof(String, unknown20) == 0x20, "");
+static_assert(sizeof(String) == 0x30, "");
 
 } // namespace ssd

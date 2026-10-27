@@ -4,18 +4,7 @@
 
 namespace ssd {
 
-template <typename T> Array<T>::~Array() {
-  if (unknown10 != nullptr) {
-    Allocator *allocator = SoundMemory::allocator_;
-    Allocator::Block *block = allocator->GetMemoryBlock(unknown10);
-    if (block != nullptr) {
-      allocator->DeleteInstanceImpl(block);
-    }
-  }
-  unknown08 = 0;
-  unknown0c = 0;
-  unknown10 = nullptr;
-}
+template <typename T> Array<T>::~Array() { unknown001(); }
 
 template <typename T> void Array<T>::SetArraySize(int size) {
   if (unknown0c <= size) {
