@@ -1,6 +1,7 @@
 #include "dr/dr_pixl_shadow_man.h"
 
 #include "dr/dr_man.h"
+#include "dr/dr_mdl_man.h"
 #include "dr/dr_pixl_format.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_shadow_obj.h"
@@ -32,6 +33,33 @@ void DrPixlShadowMan::afterUpdate() {
   for (int i = 0; i < unknown8900; i++) {
     unknown0000[i]->afterUpdate();
   }
+}
+
+bool DrPixlShadowMan::renderShadowObj() {
+  bool result = false;
+  DrMdlMan *mdlMan = unknown8908->unknown88;
+  for (int i = 0; i < unknown8900; i++) {
+    if (unknown0000[i]->dispChk() && unknown0000[i]->unknown4c != 0) {
+      if (mdlMan->shadowRender(unknown0000[i])) {
+        unknown0000[i]->renderLight();
+        result = true;
+      } else {
+        unknown0000[i]->stockTile();
+      }
+    }
+  }
+  return result;
+}
+
+bool DrPixlShadowMan::renderDirShadowObj() {
+  bool result = false;
+  DrMdlMan *mdlMan = unknown8908->unknown88;
+  for (int i = 0; i < unknown8900; i++) {
+    if (unknown0000[i]->dispChk() && unknown0000[i]->unknown4c == 0) {
+      result |= mdlMan->shadowRender(unknown0000[i]);
+    }
+  }
+  return result;
 }
 
 bool DrPixlShadowMan::setAddObjPos(const mm::Vec3 &position, f32 value) {

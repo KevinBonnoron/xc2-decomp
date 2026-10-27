@@ -7,6 +7,10 @@
 #include "mtl/alloc_handle.h"
 #include "types.h"
 
+namespace grlib {
+class CGLibTextureBuffer;
+} // namespace grlib
+
 namespace cloud {
 class CloudMan;
 } // namespace cloud
@@ -36,16 +40,42 @@ enum RenderSpecMode {};
 
 struct DR_CAPCUBE_PARAM;
 
+struct DR_VIEW_PARAM {
+  u8 unknown00[0x38]; // Inferred role: view parameters; original member name unknown.
+};
+
+static_assert(sizeof(DR_VIEW_PARAM) == 0x38, "");
+
+struct DR_CAPTURE_PARAM {
+  grlib::CGLibTextureBuffer *unknown00; // Inferred role: capture target; original member name unknown.
+  u32 unknown08;                        // Inferred role: capture width; original member name unknown.
+  u32 unknown0c;                        // Inferred role: capture height; original member name unknown.
+  bool unknown10;                       // Inferred role: capture double index; original member name unknown.
+};
+
+static_assert(sizeof(DR_CAPTURE_PARAM) == 0x18, "");
+
+struct DR_MODEL_TEXTURE {
+  grlib::CGLibTextureBuffer *unknown00; // Inferred role: model texture; original member name unknown.
+  bool unknown08;                       // Inferred role: texture enable; original member name unknown.
+};
+
+static_assert(sizeof(DR_MODEL_TEXTURE) == 0x10, "");
+
 struct DrScreenInfo {
   u8 _00[0x18 - 0x00];
   s32 unknown18; // Inferred role: width; original member name unknown.
   s32 unknown1c; // Inferred role: height; original member name unknown.
   s32 unknown20; // Inferred role: render width; original member name unknown.
   s32 unknown24; // Inferred role: render height; original member name unknown.
+  s32 unknown28; // Inferred role: screen width; original member name unknown.
+  s32 unknown2c; // Inferred role: screen height; original member name unknown.
 };
 
 static_assert(offsetof(DrScreenInfo, unknown18) == 0x18, "");
 static_assert(offsetof(DrScreenInfo, unknown20) == 0x20, "");
+static_assert(offsetof(DrScreenInfo, unknown28) == 0x28, "");
+static_assert(offsetof(DrScreenInfo, unknown2c) == 0x2c, "");
 
 class DrMan : public IWorkBackground {
 public:
@@ -115,6 +145,10 @@ public:
   void setAvatarCapMode(s32 avatarCapMode);
   static void setDblNowIdx(int index);
   void bkgHomeMenu(bool isOpen) override;
+  void createAddRenderSystem(DR_VIEW_PARAM *param);
+  void startCapture(DR_CAPTURE_PARAM *param);
+  void captureRender(bool isDouble);
+  void setModelTexture(DR_MODEL_TEXTURE *texture, u32 index);
 
   static DrMan *s_pTop;
   static s32 s_nDblStockIdx;
@@ -135,7 +169,8 @@ public:
   DrShdMan *unknown80;    // Inferred role: shd man; original member name unknown.
   DrMdlMan *unknown88;    // Inferred role: mdl man; original member name unknown.
   DrIrrVolMan *unknown90; // Inferred role: irr vol man; original member name unknown.
-  u8 _0098[0x00c0 - 0x0098];
+  u8 _0098[0x00a0 - 0x0098];
+  DrCalcMan *unknowna0[4];  // Inferred role: calc mans; original member name unknown.
   DrLightMan *unknownc0[4]; // Inferred role: light mans; original member name unknown.
   u8 _00e0[0x0100 - 0x00e0];
   DrEnvironmentMan *unknown100[4]; // Inferred role: environment mans; original member name unknown.
@@ -143,7 +178,17 @@ public:
   u8 _0140[0x0160 - 0x0140];
   DrGlobalIBLMan *unknown160[4]; // Inferred role: global ibl mans; original member name unknown.
   DrPixlTileParm *unknown180;    // Inferred role: tile parm; original member name unknown.
-  u8 _0188[0x0580 - 0x0188];
+  u8 _0188[0x0190 - 0x0188];
+  DR_VIEW_PARAM unknown190[2][4]; // Inferred role: additional render system view params; original member name unknown.
+  s32 unknown350[2];              // Inferred role: additional render system counts; original member name unknown.
+  u32 unknown358[2][4];           // Inferred role: deleted render system ids; original member name unknown.
+  s32 unknown378[2];              // Inferred role: deleted render system counts; original member name unknown.
+  DR_CAPTURE_PARAM unknown380[2]; // Inferred role: capture requests; original member name unknown.
+  u32 unknown3b0;                 // Inferred role: capture request mask; original member name unknown.
+  u8 _03b4[0x03b8 - 0x03b4];
+  DR_MODEL_TEXTURE unknown3b8[2][4]; // Inferred role: model textures; original member name unknown.
+  u32 unknown438[2];                 // Inferred role: model texture update masks; original member name unknown.
+  u8 _0440[0x0580 - 0x0440];
   DrCalcMan *unknown580;  // Inferred role: calc man; original member name unknown.
   DrLightMan *unknown588; // Inferred role: light man; original member name unknown.
   u8 _0590[0x0598 - 0x0590];
@@ -192,12 +237,14 @@ public:
   mm::Vec3 unknown1d30[2]; // Inferred role: global winds; original member name unknown.
   u8 _1d50[0x1d60 - 0x1d50];
   bool unknown1d60; // Inferred role: chara disp off; original member name unknown.
-  u8 _1d61[0x1d64 - 0x1d61];
+  u8 _1d61[0x1d63 - 0x1d61];
+  bool unknown1d63; // Inferred role: model render skip; original member name unknown.
   bool unknown1d64; // Inferred role: light pre pass and GBuff render skip; original member name unknown.
   bool unknown1d65; // Inferred role: refraction render skip; original member name unknown.
   bool unknown1d66; // Inferred role: alpha render skip; original member name unknown.
   bool unknown1d67; // Inferred role: sp alpha render skip; original member name unknown.
-  u8 _1d68[0x1d70 - 0x1d68];
+  bool unknown1d68; // Inferred role: shadow render skip; original member name unknown.
+  u8 _1d69[0x1d70 - 0x1d69];
   bool unknown1d70; // Inferred role: shadow light skip; original member name unknown.
   bool unknown1d71; // Inferred role: fog skip; original member name unknown.
   u8 _1d72[0x1d75 - 0x1d72];
@@ -232,11 +279,20 @@ static_assert(offsetof(DrMan, unknown78) == 0x0078, "");
 static_assert(offsetof(DrMan, unknown80) == 0x0080, "");
 static_assert(offsetof(DrMan, unknown88) == 0x0088, "");
 static_assert(offsetof(DrMan, unknown90) == 0x0090, "");
+static_assert(offsetof(DrMan, unknowna0) == 0x00a0, "");
 static_assert(offsetof(DrMan, unknownc0) == 0x00c0, "");
 static_assert(offsetof(DrMan, unknown100) == 0x0100, "");
 static_assert(offsetof(DrMan, unknown120) == 0x0120, "");
 static_assert(offsetof(DrMan, unknown160) == 0x0160, "");
 static_assert(offsetof(DrMan, unknown180) == 0x0180, "");
+static_assert(offsetof(DrMan, unknown190) == 0x0190, "");
+static_assert(offsetof(DrMan, unknown350) == 0x0350, "");
+static_assert(offsetof(DrMan, unknown358) == 0x0358, "");
+static_assert(offsetof(DrMan, unknown378) == 0x0378, "");
+static_assert(offsetof(DrMan, unknown380) == 0x0380, "");
+static_assert(offsetof(DrMan, unknown3b0) == 0x03b0, "");
+static_assert(offsetof(DrMan, unknown3b8) == 0x03b8, "");
+static_assert(offsetof(DrMan, unknown438) == 0x0438, "");
 static_assert(offsetof(DrMan, unknown580) == 0x0580, "");
 static_assert(offsetof(DrMan, unknown588) == 0x0588, "");
 static_assert(offsetof(DrMan, unknown598) == 0x0598, "");
@@ -271,6 +327,7 @@ static_assert(offsetof(DrMan, unknown1d20) == 0x1d20, "");
 static_assert(offsetof(DrMan, unknown1d28) == 0x1d28, "");
 static_assert(offsetof(DrMan, unknown1d30) == 0x1d30, "");
 static_assert(offsetof(DrMan, unknown1d60) == 0x1d60, "");
+static_assert(offsetof(DrMan, unknown1d63) == 0x1d63, "");
 static_assert(offsetof(DrMan, unknown1d64) == 0x1d64, "");
 static_assert(offsetof(DrMan, unknown1d65) == 0x1d65, "");
 static_assert(offsetof(DrMan, unknown1d66) == 0x1d66, "");

@@ -14,6 +14,7 @@ class DrMdoSamplerMan;
 class DrMdoSmlShadowMan;
 class DrMdoVertexMan;
 class DrMdoZSortMan;
+class DrPixlShadowObj;
 class DrResEtcUniformObj;
 class DrResOccUniformObj;
 class DrStmReadObj;
@@ -34,6 +35,9 @@ public:
   void addMpfObj();
   void delMpfObj();
   void renderBegin();
+  void render();
+  bool shadowRender(DrPixlShadowObj *shadow);
+  void occRender(bool isFirst);
   void callShadowCacheUpdate(u64 flags);
   void setGroupsDisp(s32 group, bool disp);
   void lightPrePassRender();

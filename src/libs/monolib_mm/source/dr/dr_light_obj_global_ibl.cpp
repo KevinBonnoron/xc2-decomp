@@ -1,5 +1,7 @@
 #include "dr/dr_light_obj_global_ibl.h"
 
+#include "mm_math/mm_math.h"
+
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_res_use_query_obj.h"
@@ -23,6 +25,14 @@ void DrLightObjGlobalIBL::beginOccQuery() {
 }
 
 void DrLightObjGlobalIBL::endOccQuery() { unknown20[unknown70].unknown110->end(); }
+
+f32 DrLightObjGlobalIBL::calcSimilarity(const DrLightObjGlobalIBL &other) const {
+  f32 similarity = 0.0f;
+  for (int i = 0; i < 16; i++) {
+    similarity += mm::fabs(unknown410[i] - other.unknown410[i]);
+  }
+  return similarity;
+}
 
 } // namespace ml
 

@@ -42,6 +42,8 @@ public:
   void createWork(DrLightObj *light, int index, MdoShdPxlWrkTex *work);
   void setInstSelMapShadow(bool value);
   void releaseWork();
+  void renderSetup();
+  bool renderEnd();
 
   grlib::CGLibDblUniformBlock unknown08; // Inferred role: shadow uniform; original member name unknown.
   MdoShdPxlWrkTex *unknown40;            // Inferred role: shadow work texture; original member name unknown.

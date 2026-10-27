@@ -4,17 +4,24 @@
 #include "dr/dr_ap_gx_type.h"
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_deferred.h"
+#include "dr/dr_pixl_occ_query.h"
 #include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_render_target.h"
 #include "dr/dr_pixl_shadow_cache_man.h"
 #include "dr/dr_pixl_shadow_obj.h"
+#include "dr/dr_pixl_tile_parm.h"
+#include "dr/dr_res_use_query_obj.h"
+#include "dr/dr_shd_data_list.h"
+#include "dr/dr_shd_data_obj.h"
 #include "grlib/cglib_color_ctl.h"
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_depth_target.h"
+#include "grlib/cglib_gpu_cache.h"
 #include "grlib/cglib_polygon.h"
 #include "grlib/cglib_render_target.h"
+#include "grlib/cglib_shader.h"
 #include "grlib/cglib_state.h"
 #include "grlib/cglib_uniform_array.h"
 
@@ -82,6 +89,23 @@ DrPixlRenderTarget *DrPixlMan::getPixlObj(int type) {
 void DrPixlMan::setShadowObj(DrPixlShadowObj *shadowObj) {
   unknown848 = shadowObj;
   unknown850 = &shadowObj->unknown08;
+}
+
+void DrPixlMan::occRenderBegin(bool isFirst) {
+  unknown858 = 0;
+  if (isFirst) {
+    grlib::CGLibState::beginRegisterRenderTarget();
+    grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+    grlib::CGLibState::endRegisterRenderTarget();
+  } else {
+    unknown7f0->unknown1b0->setRenderTarget();
+  }
+  DrPixlOccQuery *occQuery = unknown7f8;
+  DrAPGxType::beginOccQuery();
+  occQuery->unknown10->bindShdBoxVertex();
+  occQuery->unknown28 = 0;
+  occQuery->unknown18->setupShader(0u);
+  occQuery->unknown24 = (occQuery->unknown18->unknown38 + occQuery->unknown18->unknown58)->getUniformBlockOfs("U_POST");
 }
 
 void DrPixlMan::setShadowDirRenderTarget(int index) { unknown800->unknown0010[index].unknown5940.setRenderTarget(); }
@@ -278,6 +302,18 @@ void DrPixlMan::renderSkyGodRay() { unknown7f0->unknown180->renderSkyGodRay(); }
 void DrPixlMan::renderRainDrop() { unknown7f0->unknown180->renderRainDrop(); }
 
 void DrPixlMan::renderTMAA() { unknown7f0->unknown180->renderTMAA(); }
+
+void DrPixlMan::renderRefractionEnd() {
+  DrPixlTileParm *tileParm = unknown08->unknown180;
+  if (!tileParm->unknown04[tileParm->unknown00][0].unknown00 && tileParm->unknown04[tileParm->unknown00][2].unknown00) {
+    grlib::CGLibGPUCache::setTiledCacheAction(GRL_TILED_CACHE_ACTION_UNKNOWN_3);
+    grlib::CGLibGPUCache::setTiledCacheAction(GRL_TILED_CACHE_ACTION_UNKNOWN_2);
+  }
+  DrResUseQueryObj *query = unknown7f0->unknown180->unknownf0;
+  if (query != nullptr) {
+    query->end();
+  }
+}
 
 bool DrPixlMan::isRefractionMap() { return unknown7f0->unknown180->unknownd0 != nullptr; }
 

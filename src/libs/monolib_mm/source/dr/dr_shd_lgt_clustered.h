@@ -9,6 +9,11 @@ namespace grlib {
 class CGLibTexture;
 } // namespace grlib
 
+namespace mm {
+struct Vec2;
+struct Vec3;
+} // namespace mm
+
 namespace ml {
 class DrMan;
 
@@ -28,7 +33,9 @@ public:
     grlib::CGLibDblUniformBlock unknowna8; // Inferred role: light list; original member name unknown.
     u8 _e0[0x118 - 0xe0];
     grlib::CGLibDblUniformBlock unknown118; // Inferred role: param; original member name unknown.
-    u8 _150[0x188 - 0x150];
+    s32 unknown150;                         // Inferred role: pnt light count; original member name unknown.
+    s32 unknown154;                         // Inferred role: spt light count; original member name unknown.
+    u8 _158[0x188 - 0x158];
     u8 *unknown188; // Inferred role: light list data; original member name unknown.
   };
 
@@ -59,6 +66,8 @@ public:
   void endLightList();
   void render(DrShdLgtMan *shdLgtMan, DrLightMan *lightMan) override;
   void debugRender() override;
+  void ssboBiteSwap();
+  void convertToViewProj(mm::Vec3 &result, const mm::Vec2 &position);
 
   static const ClusterSetting c_ClusterSettings[4];
 
@@ -67,6 +76,8 @@ public:
   u8 _4d0[0x6b0 - 0x4d0];
 };
 
+static_assert(offsetof(DrShdLgtClustered::ViewInfo, unknown150) == 0x150, "");
+static_assert(offsetof(DrShdLgtClustered::ViewInfo, unknown154) == 0x154, "");
 static_assert(sizeof(DrShdLgtClustered::ViewInfo) == 0x190, "");
 static_assert(offsetof(DrShdLgtClustered, unknown18) == 0x18, "");
 static_assert(offsetof(DrShdLgtClustered, unknown20) == 0x20, "");

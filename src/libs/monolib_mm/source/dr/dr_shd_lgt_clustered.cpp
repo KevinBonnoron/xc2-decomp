@@ -1,8 +1,37 @@
 #include "dr/dr_shd_lgt_clustered.h"
 
+#include "dr/dr_calc_man.h"
+#include "dr/dr_calc_view_work.h"
+#include "dr/dr_man.h"
+#include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec2.h"
+#include "mm_math/mm_vec3.h"
+
 namespace ml {
 
 const DrShdLgtClustered::ClusterSetting *DrShdLgtClustered::getClusterSetting(u32 cate) const { return &c_ClusterSettings[(unknown18 << 1) | (cate != 0)]; }
+
+void DrShdLgtClustered::convertToViewProj(mm::Vec3 &result, const mm::Vec2 &position) {
+  DrMan *man = unknown10;
+  const mm::Mat44 &matrix = man->unknowna0[unknown08]->unknown10->unknown1c0;
+  f32 vec[4] = {position.x, position.y, 1.0f, 1.0f};
+  f32 out[4];
+  for (int i = 0; i < 4; i++) {
+    out[i] = vec[0] * matrix.rows[0][i] + vec[1] * matrix.rows[1][i] + vec[2] * matrix.rows[2][i] + vec[3] * matrix.rows[3][i];
+  }
+  result.x = out[0] / out[3];
+  result.y = out[1] / out[3];
+  result.z = out[2] / out[3];
+}
+void DrShdLgtClustered::ssboBiteSwap() {
+  ViewInfo &view = unknown20[unknown08];
+  for (int i = 0; i < view.unknown150; i++) {
+    view.unknown00.getBuff();
+  }
+  for (int i = 0; i < view.unknown154; i++) {
+    view.unknown38.getBuff();
+  }
+}
 
 void DrShdLgtClustered::update() {}
 

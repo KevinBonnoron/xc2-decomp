@@ -21,7 +21,9 @@ public:
   MdoWrkMatRes *unknown68; // Inferred role: material work; original member name unknown.
   u8 _70[0x78 - 0x70];
   DrResMdoSeamWrkBaseVertex *unknown78; // Inferred role: vertices; original member name unknown.
-  u8 _80[0x8c - 0x80];
+  u8 _80[0x84 - 0x80];
+  s32 unknown84; // Inferred role: base map index; original member name unknown.
+  u8 _88[0x8c - 0x88];
   u32 unknown8c; // Inferred role: render count; original member name unknown.
   u32 unknown90; // Inferred role: render count; original member name unknown.
   u32 unknown94; // Inferred role: render count; original member name unknown.
@@ -40,6 +42,7 @@ public:
 
 static_assert(offsetof(DrResMdoSeamWrkBase, unknown68) == 0x68, "");
 static_assert(offsetof(DrResMdoSeamWrkBase, unknown78) == 0x78, "");
+static_assert(offsetof(DrResMdoSeamWrkBase, unknown84) == 0x84, "");
 static_assert(offsetof(DrResMdoSeamWrkBase, unknown8c) == 0x8c, "");
 static_assert(offsetof(DrResMdoSeamWrkBase, unknown98) == 0x98, "");
 static_assert(offsetof(DrResMdoSeamWrkBase, unknownf0) == 0xf0, "");

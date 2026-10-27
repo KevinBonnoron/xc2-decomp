@@ -19,6 +19,7 @@ public:
   void renderSeamBaseMap(int renderType);
   void createBaseMapDisplayList();
   void releaseBaseMap();
+  DrResMdoSeamWrkBase *seachBaseIdx(int index);
   void releaseFreeSeamBase(DrResMdoSeamWrkBase *base);
 };
 

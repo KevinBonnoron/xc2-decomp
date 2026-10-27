@@ -1,11 +1,43 @@
 #include "dr/dr_res_etc_tex_list.h"
 
+#include <new>
 #include <string.h>
 
+#include "dr/dr_man.h"
+#include "grlib/cglib_texture.h"
 #include "grlib/cglib_texture_buffer.h"
+#include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 
 namespace ml {
+
+DrResEtcTexList::DrResEtcTexList(const void *data) {
+  unknown30 = 0;
+  unknown28 = nullptr;
+  unknown20 = 0;
+  unknown00 = nullptr;
+  unknown08 = nullptr;
+  unknown10 = nullptr;
+  createTexture(data);
+}
+
+DrResEtcTexList::~DrResEtcTexList() { releaseTexture(); }
+
+void DrResEtcTexList::createTexture(const void *data) {
+  releaseTexture();
+  unknown18 = static_cast<const unknown001 *>(data);
+  s32 count = unknown18->unknown08;
+  u32 tableOffset = unknown18->unknown0c;
+  unknown20 = count;
+  u32 size = count * 0x70;
+  unknown28 = mtl::MemManager::allocate(DrMan::getIns()->unknown14, size, 8, false, "no name", 0);
+  unknown10 = static_cast<grlib::CGLibTextureBuffer *>(unknown28);
+  const unknown002 *entry = reinterpret_cast<const unknown002 *>(static_cast<const u8 *>(data) + tableOffset);
+  for (int i = 0; i < unknown20; i++, entry++) {
+    new (&unknown10[i]) grlib::CGLibTextureBuffer();
+    grlib::CGLibTexture::createTextureImagePtrs(unknown10[i], reinterpret_cast<const u8 *>(unknown18) + entry->unknown04, entry->unknown00, false, nullptr, false);
+  }
+}
 
 void DrResEtcTexList::releaseTexture() {
   if (unknown28 == nullptr) {

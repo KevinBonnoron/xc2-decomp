@@ -63,6 +63,7 @@ public:
   };
 
   void debugRender(const grlib::CGLibTextureBuffer &texture, int x, int y, int width, int height, bool isAlpha, bool isDepth, f32 scale, bool isFlip);
+  void captureMainFrameBuffer(grlib::CGLibTextureBuffer *buffer, u32 width, u32 height);
   void debugRenderCh(const grlib::CGLibTextureBuffer &texture, int x, int y, int width, int height, u32 channel);
   void endDeferredRenderTarget();
   void endSkyRenderTarget();
@@ -118,6 +119,7 @@ public:
   DrPixlRenderTarget *getBackFaceDepthTexture();
   void thicknessFirstEnd();
   void lastDeferredRender();
+  void occRenderBegin(bool isFirst);
   void occRenderEnd();
   void depCheckBegin(bool isDblDepth);
   void depCheckEnd();

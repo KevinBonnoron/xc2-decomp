@@ -21,6 +21,8 @@ public:
   void setAddShadowObj(DrPixlShadowObjDir *shadow);
   f32 getShadowTexSize(int index);
   void beforUpdate();
+  bool renderShadowObj();
+  bool renderDirShadowObj();
   void afterUpdate();
   bool setAddObjPos(const mm::Vec3 &position, f32 value);
   bool setSptCalcPos(const mm::Vec3 &position, f32 value);

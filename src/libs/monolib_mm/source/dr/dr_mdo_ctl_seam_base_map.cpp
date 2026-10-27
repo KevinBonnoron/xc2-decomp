@@ -13,6 +13,14 @@ void DrMdoCtlSeamBaseMap::releaseBaseMap() {
   unknownc40 = 0;
 }
 
+DrResMdoSeamWrkBase *DrMdoCtlSeamBaseMap::seachBaseIdx(int index) {
+  DrResMdoSeamWrkBase *base = unknown2a0;
+  while (base != nullptr && (base->unknown68 == nullptr || base->unknown84 != index)) {
+    base = base->unknown08;
+  }
+  return base;
+}
+
 void DrMdoCtlSeamBaseMap::callRenderSeamBaseMap() { renderSeamBaseMap(0); }
 
 void DrMdoCtlSeamBaseMap::callGBuffRenderSeamBaseMap() { renderSeamBaseMap(1); }

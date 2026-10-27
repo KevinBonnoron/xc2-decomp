@@ -132,6 +132,7 @@ public:
   f32 unknownfc;
   f32 unknown100;
   f32 unknown104;
+  f32 unknown108; // Inferred role: SSR strength; original member name unknown.
 };
 
 static_assert(offsetof(DrPixlPostMan, unknown18) == 0x018, "");
@@ -147,5 +148,6 @@ static_assert(offsetof(DrPixlPostMan, unknownf0) == 0x0f0, "");
 static_assert(offsetof(DrPixlPostMan, unknownf8) == 0x0f8, "");
 static_assert(offsetof(DrPixlPostMan, unknownfc) == 0x0fc, "");
 static_assert(offsetof(DrPixlPostMan, unknown104) == 0x104, "");
+static_assert(offsetof(DrPixlPostMan, unknown108) == 0x108, "");
 
 } // namespace ml

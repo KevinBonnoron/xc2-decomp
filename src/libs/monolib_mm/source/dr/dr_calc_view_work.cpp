@@ -2,10 +2,13 @@
 
 #include <string.h>
 
+#include "dr/dr_ini_sys.h"
 #include "dr/dr_light_man.h"
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_man.h"
+#include "dr/dr_pixl_render_target.h"
 #include "dr/dr_res_mdo_uniform_block.h"
+#include "grlib/cglib_texture_buffer.h"
 #include "grlib/shd_util.h"
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_vec4.h"
@@ -220,6 +223,32 @@ int DrCalcViewWork::unistatic_mpf_OldViewPos(f32 *work) {
   work[2] = unknown770.z;
   work[3] = 1.0f;
   return 4;
+}
+
+int DrCalcViewWork::unistatic_digher_val(f32 *work, bool isJitter) {
+  grlib::CGLibTextureBuffer &texture = unknown700->unknown70->unknown98[1];
+  f32 width = texture.getWidth();
+  f32 height = texture.getHeight();
+  work[0] = unknown700->unknown5b8->unknown18 * 0.25f;
+  work[1] = (1.0f / height) * unknown700->unknown5b8->unknown1c;
+  work[2] = 4.0f / width;
+  work[3] = width * 0.25f;
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_26];
+}
+
+int DrCalcViewWork::unistatic_screenSize(f32 *work, bool isJitter) {
+  mm::Vec4 value = mm::Vec4::unit;
+  DrPixlRenderTarget *target = unknown700->unknown78->getPixlObj(5);
+  if (target != nullptr) {
+    value.x = target->unknownbc;
+    value.y = target->unknownc0;
+    value.x = 1.0f / value.x;
+    value.y = 1.0f / value.y;
+    value.z = 0.0f;
+    value.w = 0.0f;
+  }
+  grlib::ShdF32SetVec4(work, &value.x);
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_62];
 }
 
 int DrCalcViewWork::unistatic_mpf_Fade(f32 *work) {

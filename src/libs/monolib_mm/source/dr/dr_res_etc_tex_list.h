@@ -27,12 +27,15 @@ public:
     u8 _10[0x18 - 0x10];
   };
 
+  DrResEtcTexList(const void *data);
+  ~DrResEtcTexList();
+  void createTexture(const void *data);
   void releaseTexture();
   void release();
   grlib::CGLibTextureBuffer *getTextureID(u32 id);
   grlib::CGLibTextureBuffer *getTextureName(const char *name);
 
-  u8 _00[0x08 - 0x00];
+  DrResEtcTexList *unknown00;           // Inferred role: prev; original member name unknown.
   DrResEtcTexList *unknown08;           // Inferred role: next; original member name unknown.
   grlib::CGLibTextureBuffer *unknown10; // Inferred role: textures; original member name unknown.
   const unknown001 *unknown18;          // Inferred role: resource; original member name unknown.

@@ -1,6 +1,10 @@
 #include "dr/dr_pixl_post_parm.h"
 
+#include "dr/dr_calc_man.h"
+#include "dr/dr_calc_view_work.h"
 #include "dr/dr_man.h"
+#include "dr/dr_pixl_man.h"
+#include "dr/dr_pixl_post_man.h"
 
 namespace ml {
 
@@ -153,5 +157,15 @@ void DrPixlPostParm::setColorFilterFarNum(s32 colorFilterFarNum) { unknown518[Dr
 bool DrPixlPostParm::getRainDropOn() const { return m_rainDropOn; }
 
 bool DrPixlPostParm::getSSRWithTrans() const { return !DrMan::getIns()->unknown1cc1; }
+
+bool DrPixlPostParm::getSSROn() const {
+  if (DrMan::getIns()->unknown78->unknown7f0->unknown180->unknown108 < 0.01f) {
+    return false;
+  }
+  if (DrMan::getIns()->unknown580->unknown10->unknown9aa && unknown1104) {
+    return false;
+  }
+  return unknown48a != 0;
+}
 
 } // namespace ml

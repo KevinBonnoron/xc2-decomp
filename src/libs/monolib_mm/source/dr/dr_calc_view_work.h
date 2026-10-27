@@ -45,6 +45,8 @@ public:
   int unistatic_mpf_ViewPos(f32 *work);
   int unistatic_mpf_OldViewPos(f32 *work);
   int unistatic_mpf_Fade(f32 *work);
+  int unistatic_digher_val(f32 *work, bool isJitter);
+  int unistatic_screenSize(f32 *work, bool isJitter);
 
   mm::Mat44 unknown00; // Inferred role: inv view; original member name unknown.
   mm::Mat44 unknown40; // Inferred role: view; original member name unknown.
@@ -53,7 +55,7 @@ public:
   mm::Mat44 unknown100; // Inferred role: prev billboard; original member name unknown.
   mm::Mat44 unknown140; // Inferred role: saved billboard; original member name unknown.
   mm::Mat44 unknown180; // Inferred role: proj; original member name unknown.
-  u8 _1c0[0x200 - 0x1c0];
+  mm::Mat44 unknown1c0; // Inferred role: inverse view proj; original member name unknown.
   mm::Mat44 unknown200; // Inferred role: view proj; original member name unknown.
   mm::Mat44 unknown240; // Inferred role: billboard y vec; original member name unknown.
   mm::Mat44 unknown280; // Inferred role: prev view; original member name unknown.
@@ -84,7 +86,9 @@ public:
   grlib::CGLibDblUniformBlock unknown858; // Inferred role: toon uniform; original member name unknown.
   grlib::CGLibDblUniformBlock unknown890; // Inferred role: toon2 uniform; original member name unknown.
   grlib::CGLibDblUniformBlock unknown8c8; // Inferred role: light uniform; original member name unknown.
-  u8 _900[0x9ad - 0x900];
+  u8 _900[0x9aa - 0x900];
+  bool unknown9aa; // Inferred role: SSR skip; original member name unknown.
+  u8 _9ab[0x9ad - 0x9ab];
   bool unknown9ad; // Inferred role: request flag; original member name unknown.
   u8 _9ae[0xae0 - 0x9ae];
   f32 unknownae0[2]; // Inferred role: jitter; original member name unknown.
@@ -99,6 +103,7 @@ static_assert(offsetof(DrCalcViewWork, unknown40) == 0x40, "");
 static_assert(offsetof(DrCalcViewWork, unknownc0) == 0xc0, "");
 static_assert(offsetof(DrCalcViewWork, unknown140) == 0x140, "");
 static_assert(offsetof(DrCalcViewWork, unknown180) == 0x180, "");
+static_assert(offsetof(DrCalcViewWork, unknown1c0) == 0x1c0, "");
 static_assert(offsetof(DrCalcViewWork, unknown200) == 0x200, "");
 static_assert(offsetof(DrCalcViewWork, unknown280) == 0x280, "");
 static_assert(offsetof(DrCalcViewWork, unknown2c0) == 0x2c0, "");
@@ -116,6 +121,7 @@ static_assert(offsetof(DrCalcViewWork, unknown820) == 0x820, "");
 static_assert(offsetof(DrCalcViewWork, unknown858) == 0x858, "");
 static_assert(offsetof(DrCalcViewWork, unknown890) == 0x890, "");
 static_assert(offsetof(DrCalcViewWork, unknown8c8) == 0x8c8, "");
+static_assert(offsetof(DrCalcViewWork, unknown9aa) == 0x9aa, "");
 static_assert(offsetof(DrCalcViewWork, unknown9ad) == 0x9ad, "");
 static_assert(offsetof(DrCalcViewWork, unknownae0) == 0xae0, "");
 static_assert(offsetof(DrCalcViewWork, unknownaf0) == 0xaf0, "");

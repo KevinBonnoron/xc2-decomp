@@ -1,13 +1,13 @@
 #pragma once
 #include <stddef.h>
 
+#include "grlib/cglib_texture_buffer.h"
 #include "types.h"
 
 namespace grlib {
 class CGLibDecShader;
 class CGLibDecShdExtTbl;
 class CGLibSampler;
-class CGLibTextureBuffer;
 } // namespace grlib
 
 namespace ml {
@@ -23,6 +23,7 @@ enum DrApCullType {
 class DrAPCache {
 public:
   static DrAPCache *s_pIns;
+  static GrlSurfaceFormat TEXTYPE_RGBA_8;
 
   void begin();
   void releaseSampler();

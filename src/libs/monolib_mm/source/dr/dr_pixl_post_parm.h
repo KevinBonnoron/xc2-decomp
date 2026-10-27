@@ -119,6 +119,7 @@ public:
   void setColorFilterFarNum(s32 colorFilterFarNum);
   bool getRainDropOn() const;
   bool getSSRWithTrans() const;
+  bool getSSROn() const;
   void setGlassBrk(bool glassBrk, u32 type);
 
   static DrPixlPostParm *s_pIns;
@@ -235,7 +236,9 @@ public:
   f32 unknown470; // Inferred role: specular str; original member name unknown.
   u8 _0474[0x0488 - 0x0474];
   bool unknown488; // Inferred role: g buff debug; original member name unknown.
-  u8 _0489[0x04d0 - 0x0489];
+  u8 _0489[0x048a - 0x0489];
+  bool unknown48a; // Inferred role: SSR; original member name unknown.
+  u8 _048b[0x04d0 - 0x048b];
   bool unknown4d0; // Inferred role: glass br; original member name unknown.
   u8 _04d1[0x0518 - 0x04d1];
   DrPixlPostDblParm unknown518[2]; // Inferred role: dbl parms; original member name unknown.
@@ -275,7 +278,8 @@ public:
   bool unknown10fc; // Inferred role: attri menu closed; original member name unknown.
   u8 _10fd[0x10fe - 0x10fd];
   bool unknown10fe; // Inferred role: disp reduction; original member name unknown.
-  u8 _10ff[0x1105 - 0x10ff];
+  u8 _10ff[0x1104 - 0x10ff];
+  bool unknown1104;    // Inferred role: SSR disable by scene; original member name unknown.
   bool unknown1105[2]; // Inferred role: reset scenes; original member name unknown.
   u8 _1107[0x1110 - 0x1107];
 };
@@ -288,6 +292,8 @@ static_assert(offsetof(DrPixlPostParm, unknown14) == 0x0014, "");
 static_assert(offsetof(DrPixlPostParm, unknown18) == 0x0018, "");
 static_assert(offsetof(DrPixlPostParm, unknown1c) == 0x001c, "");
 static_assert(offsetof(DrPixlPostParm, unknown20) == 0x0020, "");
+static_assert(offsetof(DrPixlPostParm, unknown48a) == 0x048a, "");
+static_assert(offsetof(DrPixlPostParm, unknown1104) == 0x1104, "");
 static_assert(offsetof(DrPixlPostParm, unknown24) == 0x0024, "");
 static_assert(offsetof(DrPixlPostParm, m_bloomOn) == 0x003c, "");
 static_assert(offsetof(DrPixlPostParm, unknown3e) == 0x003e, "");
