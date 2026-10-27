@@ -106,6 +106,28 @@ void LayerObjUtil::calcSwfScl_Correction_Up(f32 *scl, const LayerBasePos &base, 
   scl[1] = height * base.unknown10;
 }
 
+void LayerObjUtil::calcScl_Pixel_Up(f32 *scl, const LayerBasePos &base, const LayerResRenderInfo &info) {
+  f32 pixelWidth = info.unknown14 + info.unknown10;
+  f32 width = LayerManager::get()->getScreenCalcSclWidth() * pixelWidth;
+  f32 pixelHeight = info.unknown16 + info.unknown12;
+  f32 height = LayerManager::get()->getScreenCalcSclHeight() * pixelHeight;
+  scl[0] = base.unknown0c * width;
+  scl[1] = height * base.unknown10;
+}
+
+void LayerObjUtil::calcSwfScl_Pixel_Up(f32 *scl, const LayerBasePos &base, const LayerResRenderInfo &info) {
+  f32 width = info.unknown14 + info.unknown10;
+  f32 height = info.unknown16 + info.unknown12;
+  f32 size = height;
+  if (width > height) {
+    size = width;
+  }
+  f32 sclWidth = LayerManager::get()->getScreenCalcSclWidth() * size;
+  f32 sclHeight = LayerManager::get()->getScreenCalcSclHeight() * size;
+  scl[0] = base.unknown0c * sclWidth;
+  scl[1] = sclHeight * base.unknown10;
+}
+
 void LayerObjUtil::calcMdlPos_Center_Up(f32 *pos, f32 *size, const f32 *scl, const LayerBasePos &base) {
   size[0] = base.unknown14 * scl[0];
   size[1] = base.unknown18 * scl[1];

@@ -51,12 +51,12 @@ public:
   void changeUtf8ToUtf16(u16 &result, const u8 *string, u32 &length);
   virtual ~LayerTag() {}
   virtual void beginParseString() = 0;
-  virtual void endParseString() {}
+  virtual void endParseString();
   virtual void parseNotTag(const u8 *string, u32 &index) = 0;
   virtual void parseNotTag(const wchar_t *string, u32 &index) = 0;
   virtual bool callTagStart(const char *tag, const LayerTagTbl *table, u32 index) { return false; }
   virtual bool callTagEnd(const char *tag) { return false; }
-  virtual void callTagNoUse(const u8 *tag) {}
+  virtual void callTagNoUse(const u8 *tag);
 };
 
 class LayerTagStr : public LayerTag {

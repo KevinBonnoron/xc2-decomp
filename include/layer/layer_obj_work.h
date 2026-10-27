@@ -39,7 +39,7 @@ public:
     const unknown001 *unknown00; // Inferred role: animation data; original member name unknown.
     u8 _08[0x80 - 0x08];
     f32 unknown80; // Inferred role: frame count; original member name unknown.
-    u32 unknown84; // Inferred role: cleared by calcFrmParm; original member name unknown.
+    f32 unknown84; // Inferred role: start frame; original member name unknown.
   };
 
   struct unknown003 {

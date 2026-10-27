@@ -19,6 +19,7 @@ public:
   ~LayerTextureObj();
   void setupTexture(const u8 *data, LayerManager *manager);
   void textureRelease();
+  void setupResource();
   void release();
   const grlib::CGLibTextureBuffer *getTexture(int index) const;
   grlib::CGLibTextureBuffer *getTexture(int index);

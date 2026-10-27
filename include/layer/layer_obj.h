@@ -125,7 +125,8 @@ public:
   f32 unknown17c;                // Inferred role: clip value; original member name unknown.
   f32 unknown180;                // Inferred role: width; original member name unknown.
   f32 unknown184;                // Inferred role: height; original member name unknown.
-  u8 _188[0x190 - 0x188];
+  f32 unknown188;                // Inferred role: scale; original member name unknown.
+  f32 unknown18c;                // Inferred role: scale; original member name unknown.
   u16 unknown190;                // Inferred role: pixel x; original member name unknown.
   u16 unknown192;                // Inferred role: pixel y; original member name unknown.
   u16 unknown194;                // Inferred role: pixel width; original member name unknown.
@@ -136,7 +137,8 @@ public:
   u8 _1dc[0x1f4 - 0x1dc];
   f32 unknown1f4; // Inferred role: ctrl spd; original member name unknown.
   f32 unknown1f8; // Inferred role: frame ctrl spd; original member name unknown.
-  u8 _1fc[0x208 - 0x1fc];
+  f32 unknown1fc; // Inferred role: uniform block parameter; original member name unknown.
+  u8 _200[0x208 - 0x200];
   LayerAnimeObj *unknown208[3];            // Inferred role: anim objs; original member name unknown.
   LayerResSecTexture *unknown220[3];       // Inferred role: second texs; original member name unknown.
   grlib::CGLibDblUniformBlock *unknown238; // Inferred role: world matrix uniform; original member name unknown.
@@ -157,11 +159,12 @@ static_assert(offsetof(LayerObj, unknownc8) == 0xc8, "");
 static_assert(offsetof(LayerObj, unknown170) == 0x170, "");
 static_assert(offsetof(LayerObj, unknown17c) == 0x17c, "");
 static_assert(offsetof(LayerObj, unknown180) == 0x180, "");
-static_assert(offsetof(LayerObj, unknown190) == 0x190, "");
+static_assert(offsetof(LayerObj, unknown188) == 0x188, "");
 static_assert(offsetof(LayerObj, unknown198) == 0x198, "");
 static_assert(offsetof(LayerObj, unknown19c) == 0x19c, "");
 static_assert(offsetof(LayerObj, unknown1d8) == 0x1d8, "");
 static_assert(offsetof(LayerObj, unknown1f4) == 0x1f4, "");
+static_assert(offsetof(LayerObj, unknown1fc) == 0x1fc, "");
 static_assert(offsetof(LayerObj, unknown208) == 0x208, "");
 static_assert(offsetof(LayerObj, unknown220) == 0x220, "");
 static_assert(offsetof(LayerObj, unknown238) == 0x238, "");

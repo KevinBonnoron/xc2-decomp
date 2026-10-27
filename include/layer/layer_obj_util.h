@@ -4,6 +4,10 @@
 #include "layer/layer_acc_obj_base.h"
 #include "types.h"
 
+namespace mm {
+struct Vec3;
+} // namespace mm
+
 namespace grlib {
 class CGLibDblUniformBlock;
 } // namespace grlib
@@ -15,6 +19,7 @@ struct LayerResColor;
 struct LyrLayoutPosData;
 
 enum LayerUniType {
+  LAYER_UNI_TYPE_UNKNOWN_9 = 9,
   LAYER_UNI_TYPE_UNKNOWN_10 = 10,
 };
 
@@ -58,6 +63,10 @@ public:
   static void calcPos_Correction_Down(f32 *pos, const LayerBasePos &base);
   static void calcScl_Correction_Up(f32 *scl, const LayerBasePos &base, const LayerResRenderInfo &info);
   static void calcSwfScl_Correction_Up(f32 *scl, const LayerBasePos &base, const LayerResRenderInfo &info);
+  static void updatePosMatrixUniformBlock(f32 *uniform, const LayerResMatrix *matrix, const LayerResMatrix &parent, f32 depth, bool flag);
+  static void calcLayerInvertMatrix(mm::Vec3 &pos, mm::Vec3 &scl, const LayerResMatrix &matrix);
+  static void calcScl_Pixel_Up(f32 *scl, const LayerBasePos &base, const LayerResRenderInfo &info);
+  static void calcSwfScl_Pixel_Up(f32 *scl, const LayerBasePos &base, const LayerResRenderInfo &info);
   static void calcMdlPos_Center_Up(f32 *pos, f32 *size, const f32 *scl, const LayerBasePos &base);
   static void calcMdlPos_Center_Down(f32 *pos, f32 *size, const f32 *scl, const LayerBasePos &base);
   static void calcMdlPos_Center_Center(f32 *pos, f32 *size, const f32 *scl, const LayerBasePos &base);

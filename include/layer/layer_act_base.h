@@ -43,6 +43,7 @@ static_assert(sizeof(LayerActWork) == 0x30, "");
 
 class LayerActBase : public LayerObj {
 public:
+  void setupAction(u8 *work, const u8 *data);
   void startSetupAction();
   void checkActionEnd(const LyrActionData *action, bool isCmdEnd);
   u32 calcActionWorkSize(const u8 *data);

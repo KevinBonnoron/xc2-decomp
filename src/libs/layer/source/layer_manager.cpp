@@ -94,4 +94,10 @@ void LayerManager::defSetup() {
 
 void LayerManager::reLoadShd() { unknown78 |= 1; }
 
+void LayerManager::opacityRender(const ml::IDrDrawWorkInfo *info) {}
+
+void LayerManager::alphaRender(const ml::IDrDrawWorkInfo *info) {}
+
+void LayerManager::lastRender(const ml::IDrDrawWorkInfo *info) {}
+
 } // namespace layer

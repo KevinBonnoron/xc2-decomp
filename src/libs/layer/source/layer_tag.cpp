@@ -37,6 +37,10 @@ void LayerStrInfo::setS32(const char *name, s32 value) {
   unknown00.m_s32 = value;
 }
 
+void LayerTag::endParseString() {}
+
+void LayerTag::callTagNoUse(const u8 *tag) {}
+
 void LayerTag::calcParseString(const u8 *string) {
   beginParseString();
   calcUTF8ParseString(string);
