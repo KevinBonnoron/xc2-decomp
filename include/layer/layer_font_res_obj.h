@@ -30,7 +30,8 @@ public:
     u32 unknown18; // Inferred role: offset of the hash table; original member name unknown.
     u8 _1c[0x20 - 0x1c];
     u32 unknown20; // Inferred role: hash mask; original member name unknown.
-    u8 _24[0x2c - 0x24];
+    u32 unknown24; // Inferred role: offset of the texture image; original member name unknown.
+    u32 unknown28; // Inferred role: size of the texture image; original member name unknown.
     u32 unknown2c; // Inferred role: offset of the texture info; original member name unknown.
     u32 unknown30; // Inferred role: line height; original member name unknown.
   };
@@ -53,6 +54,7 @@ public:
   const LyrFontInfoData *getFontInfo(u16 &index, u16 code) const;
   void getFontUvParms(f32 &u, f32 &v, f32 &w, f32 &h, u16 index) const;
   void setFontData(const void *data);
+  void setupResource();
   void release() override;
 
   u8 unknown1c; // Inferred role: state; original member name unknown.

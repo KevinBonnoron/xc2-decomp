@@ -28,6 +28,44 @@ void LayerMemHandleAllocator::deallocate(void *pointer) {
   }
 }
 
+LayerManager::LayerManager(ml::Scn *scn, mtl::ALLOC_HANDLE handle, unsigned int size) : unknown50(scn) {
+  unknown10 = &LayerManager::beginFastSetup;
+  unknown20 = mtl::ALLOC_HANDLE();
+  unknown24 = mtl::ALLOC_HANDLE();
+  unknown28 = mtl::ALLOC_HANDLE();
+  unknown2c = mtl::ALLOC_HANDLE();
+  unknown20 = mtl::MemManager::create(handle, size + 0x1000, "LayerTop", false);
+  unknown24 = mtl::MemManager::create(unknown20, 0x190000, "LayerData", false);
+  unknown7c = 30.0f;
+  unknown80 = 0.033333335f;
+  unknown88 = 1.0f;
+  unknown8c = 1.0f;
+  unknown90 = 1.0f;
+  unknown94 = 1.0f;
+  unknown98 = 0.003125f;
+  u32 restSize = size - 0x190000;
+  u32 gxSize = restSize / 5 + (-(restSize / 5) & 0xff);
+  u32 workSize = restSize - gxSize;
+  unknown28 = mtl::MemManager::create(unknown20, workSize, "LayerWork", true);
+  unknown2c = mtl::MemManager::create(unknown20, gxSize, "LayerGx", true);
+  unknown30.setMemHandle(unknown28);
+  unknown40.setMemHandle(unknown2c);
+  unknowna0.setMemHandle(unknown28);
+  unknown58 = new (unknown28) LayerShdManager(this);
+  unknown60 = new (unknown28) LayerObjManager(this);
+  unknown68 = new (unknown28) LayerFontManager(this);
+  unknown70 = new (unknown28) LayerRceManager(this);
+  unknown78 = 1;
+  if (unknown50->unknown38 != nullptr) {
+    unknown50->unknown38->setCallBack(this);
+  }
+  s_nDebIdx = 0;
+  s_nStkIdx = 1;
+  s_nTriIdx = 0;
+  unknown9c = LAYER_COORDINATE_PIXEL;
+  unknown84 = 1.0f;
+}
+
 LayerManager::~LayerManager() {
   if (unknown50->unknown38 != nullptr) {
     unknown50->unknown38->releaseCallBack(this);

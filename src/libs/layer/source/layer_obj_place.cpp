@@ -139,4 +139,16 @@ void LayerObjPlace::placeAnm_Blend(LayerResNode *node, const u8 *data, u32 index
   node->unknown36 |= 2;
 }
 
+void LayerObjPlace::updatePlace() {
+  f32 frame = updateGblFrm();
+  calcNodePos(frame);
+}
+
+void LayerObjPlace::calcPartsNodePos(LayerResNode *node, const LyrPlaceData *data, s32 index) {
+  u32 count = data->unknown30;
+  for (u32 i = 0; i != count; i++) {
+    s_resCallPlaceFormat[data->unknown2c[i]](node, data->unknown28[i], unknown298->unknown20 + data->unknown08[i], unknown298->unknown20 + data->unknown18[i], index);
+  }
+}
+
 } // namespace layer

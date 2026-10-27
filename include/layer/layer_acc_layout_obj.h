@@ -34,6 +34,8 @@ public:
   bool isRender() const;
   LayerBase *createObj(const void *data);
   LayerBase *createFontObj();
+  LayerBase *createLayoutObj();
+  LayerBase *createFilterObj();
   LayerBase *createMaskObj(const void *data);
   LayerBase *createTexObj(const grlib::CGLibTextureBuffer &texture);
   LayerBase *createMemObj(u32 width, u32 height, LayerMemType type);

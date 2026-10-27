@@ -6,7 +6,9 @@
 #include "grlib/cglib_vtx_fetch.h"
 #include "grlib/cglib_vtx_index.h"
 #include "grlib/cglib_vtx_vertex.h"
+#include "ml/work_event.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_rect.h"
 #include "types.h"
 
 namespace grlib {
@@ -18,11 +20,14 @@ class CGLibVtxOneInstans;
 } // namespace grlib
 
 namespace ml {
+class FileHandleTh;
 class IDrDrawWorkInfo;
 } // namespace ml
 
 namespace layer {
+class LayerManager;
 class LayerObjTopMaskObj;
+struct LayerResViewPortInfo;
 class LayerResSecTexture;
 class LayerTextureMan;
 class LayerVertexMan;
@@ -31,7 +36,7 @@ class LayerVertexObj;
 enum LayerSamplerType {};
 enum LayerDefVertType {};
 
-class LayerShdManager {
+class LayerShdManager : public ml::IWorkEvent {
 public:
   // Inferred layout of the declaration offsets of one shader; original type and member names unknown.
   struct unknown001 {
@@ -43,7 +48,9 @@ public:
     u16 unknown0a; // Inferred role: offset of MENU_SECTEX_TYPE; original member name unknown.
   };
 
+  LayerShdManager(LayerManager *manager);
   virtual ~LayerShdManager();
+  bool OnFileEvent(ml::EventFileTh *event) override;
   void allRelease();
   void shaderRelease();
   void readShader();
@@ -77,6 +84,9 @@ public:
   void createResWork();
   void setSecTexture(LayerResSecTexture *secTexture);
   void setupShader();
+  void setupShader(grlib::CGLibDblUniformBlock *uniform);
+  void setShaderMaskMode(const LayerObjTopMaskObj *mask);
+  void setViewPort(LayerResViewPortInfo *viewPort);
   grlib::CGLibDecShader *selectGamma();
   grlib::CGLibDecShader *selectFlowMap();
   grlib::CGLibDecShader *selectGsBlur();
@@ -93,6 +103,7 @@ public:
 
   static grlib::CGLibDecShader *(LayerShdManager::*s_CallSelect[])();
   static const u32 s_eFetchTbl[];
+  static void (*s_CallBlend[])();
   void initColor(u32 index);
   void initTex(u32 index);
   void initFont(u32 index);
@@ -105,10 +116,12 @@ public:
   void initTest(u32 index);
   void resetViewPort();
 
-  u8 _008[0x010 - 0x008];
+  void *unknown08;       // Inferred role: shader binary data; original member name unknown.
   const void *unknown10; // Inferred role: shader resource data; original member name unknown.
   u32 unknown18;         // Inferred role: shader resource size; original member name unknown.
-  u8 _01c[0x038 - 0x01c];
+  u8 _01c[0x028 - 0x01c];
+  ml::FileHandleTh *unknown28;            // Inferred role: pending shader binary file; original member name unknown.
+  ml::FileHandleTh *unknown30;            // Inferred role: pending shader resource file; original member name unknown.
   LayerVertexMan *unknown38;              // Inferred role: vertex manager; original member name unknown.
   LayerTextureMan *unknown40;             // Inferred role: texture manager; original member name unknown.
   unknown001 *unknown48;                  // Inferred role: declaration offsets per shader; original member name unknown.
@@ -130,29 +143,27 @@ public:
   u8 _3d8[0x4a0 - 0x3d8];
   mm::Mat44 unknown4a0; // Inferred role: view projection matrix; original member name unknown.
   u8 _4e0[0x4f0 - 0x4e0];
-  s16 unknown4f0; // Inferred role: shader index; original member name unknown.
-  s16 unknown4f2; // Inferred role: shader parameter; original member name unknown.
-  s16 unknown4f4; // Inferred role: depth mode; original member name unknown.
-  s16 unknown4f6; // Inferred role: shader parameter; original member name unknown.
-  s16 unknown4f8; // Inferred role: shader parameter; original member name unknown.
-  s16 unknown4fa; // Inferred role: mask mode; original member name unknown.
-  s16 unknown4fc; // Inferred role: second texture mode; original member name unknown.
-  s16 unknown4fe; // Inferred role: selected shader index; original member name unknown.
-  s16 unknown500; // Inferred role: selected shader parameter; original member name unknown.
-  s16 unknown502; // Inferred role: selected depth mode; original member name unknown.
-  s16 unknown504; // Inferred role: selected shader parameter; original member name unknown.
-  s16 unknown506; // Inferred role: selected shader parameter; original member name unknown.
-  s16 unknown508; // Inferred role: selected mask mode; original member name unknown.
-  s16 unknown50a; // Inferred role: selected second texture mode; original member name unknown.
-  f32 unknown50c; // Inferred role: view port x; original member name unknown.
-  f32 unknown510; // Inferred role: view port y; original member name unknown.
-  f32 unknown514; // Inferred role: view port width; original member name unknown.
-  f32 unknown518; // Inferred role: view port height; original member name unknown.
+  s16 unknown4f0;           // Inferred role: shader index; original member name unknown.
+  s16 unknown4f2;           // Inferred role: shader parameter; original member name unknown.
+  s16 unknown4f4;           // Inferred role: depth mode; original member name unknown.
+  s16 unknown4f6;           // Inferred role: shader parameter; original member name unknown.
+  s16 unknown4f8;           // Inferred role: shader parameter; original member name unknown.
+  s16 unknown4fa;           // Inferred role: mask mode; original member name unknown.
+  s16 unknown4fc;           // Inferred role: second texture mode; original member name unknown.
+  s16 unknown4fe;           // Inferred role: selected shader index; original member name unknown.
+  s16 unknown500;           // Inferred role: selected shader parameter; original member name unknown.
+  s16 unknown502;           // Inferred role: selected depth mode; original member name unknown.
+  s16 unknown504;           // Inferred role: selected shader parameter; original member name unknown.
+  s16 unknown506;           // Inferred role: selected shader parameter; original member name unknown.
+  s16 unknown508;           // Inferred role: selected mask mode; original member name unknown.
+  s16 unknown50a;           // Inferred role: selected second texture mode; original member name unknown.
+  mm::Rect<f32> unknown50c; // Inferred role: view port; original member name unknown.
   u8 _51c[0x528 - 0x51c];
   bool unknown528; // Inferred role: view port changed; original member name unknown.
   bool unknown529; // Inferred role: depth check; original member name unknown.
   bool unknown52a; // Inferred role: render target view port; original member name unknown.
-  u8 _52b[0x530 - 0x52b];
+  u8 _52b[0x52c - 0x52b];
+  u32 unknown52c; // Inferred role: current blend type; original member name unknown.
   f32 unknown530; // Inferred role: screen width; original member name unknown.
   f32 unknown534; // Inferred role: screen height; original member name unknown.
   f32 unknown538; // Inferred role: screen div width; original member name unknown.
@@ -163,7 +174,7 @@ public:
   f32 unknown54c; // Inferred role: screen calc scl height; original member name unknown.
   f32 unknown550; // Inferred role: screen org width; original member name unknown.
   f32 unknown554; // Inferred role: screen org height; original member name unknown.
-  u8 _558[0x55c - 0x558];
+  f32 unknown558; // Inferred role: screen scale; original member name unknown.
   f32 unknown55c; // Inferred role: screen scale width; original member name unknown.
   f32 unknown560; // Inferred role: screen scale height; original member name unknown.
   u8 _564[0x574 - 0x564];
@@ -171,7 +182,10 @@ public:
   f32 unknown578; // Inferred role: gamma; original member name unknown.
 };
 
+static_assert(offsetof(LayerShdManager, unknown08) == 0x008, "");
 static_assert(offsetof(LayerShdManager, unknown10) == 0x010, "");
+static_assert(offsetof(LayerShdManager, unknown28) == 0x028, "");
+static_assert(offsetof(LayerShdManager, unknown30) == 0x030, "");
 static_assert(offsetof(LayerShdManager, unknown18) == 0x018, "");
 static_assert(offsetof(LayerShdManager, unknown38) == 0x038, "");
 static_assert(offsetof(LayerShdManager, unknown40) == 0x040, "");
@@ -193,7 +207,9 @@ static_assert(offsetof(LayerShdManager, unknown50c) == 0x50c, "");
 static_assert(offsetof(LayerShdManager, unknown528) == 0x528, "");
 static_assert(offsetof(LayerShdManager, unknown529) == 0x529, "");
 static_assert(offsetof(LayerShdManager, unknown52a) == 0x52a, "");
+static_assert(offsetof(LayerShdManager, unknown558) == 0x558, "");
 static_assert(offsetof(LayerShdManager, unknown55c) == 0x55c, "");
+static_assert(offsetof(LayerShdManager, unknown52c) == 0x52c, "");
 static_assert(offsetof(LayerShdManager, unknown530) == 0x530, "");
 static_assert(offsetof(LayerShdManager, unknown550) == 0x550, "");
 static_assert(offsetof(LayerShdManager, unknown578) == 0x578, "");

@@ -1,7 +1,9 @@
 #include "layer/layer_font_res_obj.h"
 
+#include "grlib/cglib_texture.h"
 #include "grlib/cglib_texture_buffer.h"
 #include "layer/layer_manager.h"
+#include "mtl/alloc_handle.h"
 
 namespace layer {
 
@@ -19,6 +21,13 @@ LayerFontResObj::LayerFontResObj(LayerFontManager *manager) {
   unknown6c = 1.0f;
   unknown70 = 0.0f;
   unknown74 = 0.0f;
+}
+
+void LayerFontResObj::setupResource() {
+  const u8 *image = static_cast<const u8 *>(unknown30) + unknown38->unknown24;
+  grlib::CGLibTextureBuffer *texture = new (LayerManager::get()->unknown2c) grlib::CGLibTextureBuffer();
+  unknown60 = texture;
+  grlib::CGLibTexture::createTextureImagePtrs(*texture, image, unknown38->unknown28, false, nullptr, true);
 }
 
 LayerFontResObj::~LayerFontResObj() {

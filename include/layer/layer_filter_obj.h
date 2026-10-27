@@ -23,6 +23,7 @@ public:
   virtual grlib::CGLibTextureBuffer *getTexture() = 0;
   void releaseCall();
   u32 isReleaseCall() const;
+  void calcFilterUvParam(f32 *param, const LayerRenderView *view);
   void calcMatInvert(f32 *param, const LayerResMatrix &matrix);
   void calcMatRotParam(f32 *param, const LayerResMatrix &matrix);
   f32 gaussianDistribution(f32 x, f32 y, f32 rho) const;

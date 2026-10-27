@@ -7,6 +7,7 @@
 
 namespace grlib {
 class CGLibTextureBuffer;
+class CGLibVtxInstans;
 } // namespace grlib
 
 namespace layer {
@@ -35,11 +36,21 @@ public:
     f32 unknown1c; // Inferred role: frame time; original member name unknown.
   };
 
+  struct unknown008 {
+    grlib::CGLibVtxInstans *unknown00; // Inferred role: instance vertex; original member name unknown.
+    u32 unknown08;                     // Inferred role: instance count; original member name unknown.
+  };
+
   struct unknown002 {
     const unknown001 *unknown00; // Inferred role: animation data; original member name unknown.
-    u8 _08[0x80 - 0x08];
-    f32 unknown80; // Inferred role: frame count; original member name unknown.
-    f32 unknown84; // Inferred role: start frame; original member name unknown.
+    const u8 *unknown08;         // Inferred role: texture table of the draw data; original member name unknown.
+    const u8 *unknown10;         // Inferred role: draw table; original member name unknown.
+    u8 _18[0x20 - 0x18];
+    const u8 *unknown20; // Inferred role: place resource data; original member name unknown.
+    u8 _28[0x78 - 0x28];
+    unknown008 *unknown78; // Inferred role: instance vertex info; original member name unknown.
+    f32 unknown80;         // Inferred role: frame count; original member name unknown.
+    f32 unknown84;         // Inferred role: start frame; original member name unknown.
   };
 
   struct unknown003 {

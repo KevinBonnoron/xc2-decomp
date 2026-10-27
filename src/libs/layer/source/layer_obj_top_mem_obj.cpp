@@ -61,4 +61,11 @@ void LayerObjTopMemObj::setRender(bool render) {
 
 bool LayerObjTopMemObj::isRender() const { return (unknown270 >> 2) & 0x1; }
 
+void LayerObjTopMemObj::finalRender() {
+  setupRender();
+  if (isRender()) {
+    lastRender();
+  }
+}
+
 } // namespace layer

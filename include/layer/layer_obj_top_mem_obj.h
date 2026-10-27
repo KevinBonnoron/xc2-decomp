@@ -19,6 +19,9 @@ public:
   void updateBufer();
   void setRender(bool render);
   bool isRender() const;
+  void setupRender();
+  void lastRender();
+  void finalRender();
 
   u8 _250[0x270 - 0x250];
   u32 unknown270; // Inferred role: flags; original member name unknown.

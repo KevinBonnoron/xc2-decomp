@@ -23,6 +23,7 @@
 #include "layer/layer_obj.h"
 #include "layer/layer_obj_font.h"
 #include "layer/layer_obj_layout.h"
+#include "layer/layer_obj_list.h"
 #include "layer/layer_obj_manager.h"
 #include "layer/layer_obj_top_filter.h"
 #include "layer/layer_obj_top_mask_obj.h"
@@ -30,6 +31,7 @@
 #include "layer/layer_obj_top_poly_obj.h"
 #include "layer/layer_obj_work.h"
 #include "layer/layer_shd_manager.h"
+#include "ml/critical_section.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
@@ -230,6 +232,40 @@ bool LayerAccAction::isRunning() const {
   }
 
   return (m_layer->getStateFlags(LayerManager::s_nDebIdx) & 0x10000) != 0;
+}
+
+const char *LayerAccAction::getRunningActName() const {
+  const LayerActBase *layer = m_layer;
+  if (layer->unknowna8 & 0x40) {
+    const LayerActWork *work = layer->unknown250;
+    const LyrActionData *action = work->unknown08 + work->unknown20;
+    return reinterpret_cast<const char *>(work->unknown00 + (action->unknown0c + action->unknown14));
+  }
+
+  if (layer->getStateFlags(LayerManager::s_nDebIdx) & 0x10000) {
+    const LayerActWork *work = layer->unknown250;
+    const LyrActionData *action = work->unknown08 + layer->unknown1d8[LayerManager::s_nDebIdx];
+    return reinterpret_cast<const char *>(work->unknown00 + (action->unknown0c + action->unknown14));
+  }
+
+  return nullptr;
+}
+
+u32 LayerAccAction::getRunningActID() const {
+  const LayerActBase *layer = m_layer;
+  if (layer->unknowna8 & 0x40) {
+    const LayerActWork *work = layer->unknown250;
+    const LyrActionData *action = work->unknown08 + work->unknown20;
+    return action->unknown08;
+  }
+
+  if (layer->getStateFlags(LayerManager::s_nDebIdx) & 0x10000) {
+    const LayerActWork *work = layer->unknown250;
+    const LyrActionData *action = work->unknown08 + layer->unknown1d8[LayerManager::s_nDebIdx];
+    return action->unknown08;
+  }
+
+  return -1;
 }
 
 s32 LayerAccAction::getRunningActIdx() const {
@@ -822,6 +858,62 @@ grlib::CGLibTextureBuffer *LayerAccLayoutObj::getTexture() { return static_cast<
 void LayerAccLayoutObj::setRender(bool render) { static_cast<LayerObjLayout *>(unknown00)->setRender(render); }
 
 bool LayerAccLayoutObj::isRender() const { return static_cast<LayerObjLayout *>(unknown00)->isRender(); }
+
+LayerBase *LayerAccLayoutObj::createObj(const void *data) {
+  ml::CS lock(LayerObjManager::getCriticalSection());
+  LayerBase *object = LayerObjManager::createStaticObj(data);
+  static_cast<LayerObjList *>(unknown00)->unknown270[LayerManager::s_nStkIdx].unknown002(object);
+  return object;
+}
+
+LayerBase *LayerAccLayoutObj::createMaskObj(const void *data) {
+  ml::CS lock(LayerObjManager::getCriticalSection());
+  LayerBase *object = LayerObjManager::createStaticMaskObj(data);
+  static_cast<LayerObjList *>(unknown00)->unknown270[LayerManager::s_nStkIdx].unknown002(object);
+  return object;
+}
+
+LayerBase *LayerAccLayoutObj::createLayoutObj() {
+  ml::CS lock(LayerObjManager::getCriticalSection());
+  LayerBase *object = LayerObjManager::createStaticLayoutObj();
+  static_cast<LayerObjList *>(unknown00)->unknown270[LayerManager::s_nStkIdx].unknown002(object);
+  return object;
+}
+
+LayerBase *LayerAccLayoutObj::createFontObj() {
+  ml::CS lock(LayerObjManager::getCriticalSection());
+  LayerBase *object = LayerObjManager::createStaticFontObj();
+  static_cast<LayerObjList *>(unknown00)->unknown270[LayerManager::s_nStkIdx].unknown002(object);
+  return object;
+}
+
+LayerBase *LayerAccLayoutObj::createFilterObj() {
+  ml::CS lock(LayerObjManager::getCriticalSection());
+  LayerBase *object = LayerObjManager::createStaticFilterObj();
+  static_cast<LayerObjList *>(unknown00)->unknown270[LayerManager::s_nStkIdx].unknown002(object);
+  return object;
+}
+
+LayerBase *LayerAccLayoutObj::createTexObj(const grlib::CGLibTextureBuffer &texture) {
+  ml::CS lock(LayerObjManager::getCriticalSection());
+  LayerBase *object = LayerObjManager::createStaticTexObj(texture);
+  static_cast<LayerObjList *>(unknown00)->unknown270[LayerManager::s_nStkIdx].unknown002(object);
+  return object;
+}
+
+LayerBase *LayerAccLayoutObj::createMemObj(u32 width, u32 height, LayerMemType type) {
+  ml::CS lock(LayerObjManager::getCriticalSection());
+  LayerBase *object = LayerObjManager::createStaticMemObj(width, height, type);
+  static_cast<LayerObjList *>(unknown00)->unknown270[LayerManager::s_nStkIdx].unknown002(object);
+  return object;
+}
+
+LayerBase *LayerAccLayoutObj::createPolyObj(u32 width, u32 height, u16 vertexNum, u16 indexNum, LayerPrimitiveType type) {
+  ml::CS lock(LayerObjManager::getCriticalSection());
+  LayerBase *object = LayerObjManager::createStaticPolyObj(width, height, vertexNum, indexNum, type);
+  static_cast<LayerObjList *>(unknown00)->unknown270[LayerManager::s_nStkIdx].unknown002(object);
+  return object;
+}
 
 LayerAccFilterObj::LayerAccFilterObj(LayerBase *layer) : LayerAccObjBase(layer) {}
 

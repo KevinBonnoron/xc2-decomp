@@ -20,6 +20,7 @@ public:
   void createFlowMap(u32 width, u32 height, const void *data);
   void setFlowMapParameter(f32 speed, f32 strength);
   void finalRender();
+  void setupWorkBuffer(u32 width, u32 height);
   void releaseWorkBuffer();
   void resourceInit() override;
   void applyPartsSetup() override;

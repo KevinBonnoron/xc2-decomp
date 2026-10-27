@@ -16,6 +16,7 @@ public:
     s32 unknown10;          // Inferred role: node count; original member name unknown.
   };
 
+  LayerRceManager(LayerManager *manager);
   ~LayerRceManager();
   void releaseObj(LayerRceObj *obj);
   void update();

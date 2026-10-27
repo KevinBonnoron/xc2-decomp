@@ -73,7 +73,7 @@ public:
   f32 unknown8c;                     // Inferred role: screen pos height; original member name unknown.
   f32 unknown90;                     // Inferred role: screen scl width; original member name unknown.
   f32 unknown94;                     // Inferred role: screen scl height; original member name unknown.
-  u8 _98[0x9c - 0x98];
+  f32 unknown98;                     // Inferred role: initialised to 0.003125; original member name unknown.
   LayerCoordinate unknown9c;         // Inferred role: coordinate; original member name unknown.
   LayerMemHandleAllocator unknowna0; // Inferred role: work mem allocator; original member name unknown.
 };

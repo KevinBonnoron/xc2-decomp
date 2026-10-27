@@ -7,11 +7,15 @@
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_dec_shader.h"
 #include "grlib/cglib_depth_ctl.h"
+#include "grlib/cglib_render_target.h"
 #include "grlib/cglib_state.h"
 #include "grlib/cglib_texture.h"
 #include "layer/layer_handle_allocator.h"
+#include "layer/layer_obj_top_mask_obj.h"
 #include "layer/layer_res_sec_texture.h"
+#include "layer/layer_res_view_port_info.h"
 #include "layer/layer_vertex_obj.h"
+#include "ml/dev_file_th.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 
@@ -341,11 +345,82 @@ void LayerShdManager::resetViewPort() {
     unknown360 = nullptr;
     unknown528 = false;
     unknown52a = false;
-    unknown50c = 0.0f;
-    unknown510 = 0.0f;
-    unknown514 = unknown550;
-    unknown518 = unknown554;
+    unknown50c.x = 0.0f;
+    unknown50c.y = 0.0f;
+    unknown50c.width = unknown550;
+    unknown50c.height = unknown554;
     grlib::CGLibState::setViewport(grlib::LibMainStateViewPort(0.0f, 0.0f, unknown550 * unknown55c, unknown554 * unknown560, 0.0f, 1.0f));
+  }
+}
+
+void LayerShdManager::endShader(const ml::IDrDrawWorkInfo *info) {
+  grlib::CGLibState::setMainFrameBuffer();
+  resetViewPort();
+}
+
+bool LayerShdManager::OnFileEvent(ml::EventFileTh *event) {
+  if (event->type == ml::EventFileTh::TYPE_COMPLETE) {
+    if (unknown28 == event->unknown08) {
+      unknown08 = event->moveFileData();
+      unknown28 = nullptr;
+    }
+    if (unknown30 == event->unknown08) {
+      unknown10 = event->moveFileData();
+      unknown18 = event->unknown30;
+      unknown30 = nullptr;
+    }
+  }
+  return true;
+}
+
+void LayerShdManager::setViewPort(LayerResViewPortInfo *viewPort) {
+  grlib::CGLibRenderTarget *target = viewPort->unknown10;
+  if (target == nullptr) {
+    unknown360 = nullptr;
+    const mm::Rect<f32> &rect = viewPort->unknown00;
+    if (unknown52a || unknown50c.x != rect.x || unknown50c.y != rect.y || unknown50c.width != rect.width || unknown50c.height != rect.height) {
+      unknown50c = rect;
+      unknown528 = true;
+      unknown52a = false;
+      f32 width = unknown558 * rect.width;
+      f32 height = unknown558 * rect.height;
+      f32 x = unknown558 * rect.x;
+      f32 y = unknown558 * rect.y;
+      grlib::CGLibState::setViewport(grlib::LibMainStateViewPort(x, y, width, height, 0.0f, 1.0f));
+    }
+  } else if (unknown360 != target) {
+    if (!(viewPort->unknown30 & 1)) {
+      target->clearTexture(viewPort->unknown20, static_cast<GrlClaerMask>(0xf));
+      target = viewPort->unknown10;
+      viewPort->unknown30 |= 1;
+    }
+    target->setRenderTarget();
+    unknown52a = true;
+    unknown528 = true;
+    unknown360 = viewPort->unknown10;
+    unknown50c.x = 0.0f;
+    unknown50c.y = 0.0f;
+    unknown50c.width = static_cast<f32>(viewPort->unknown10->unknownbc) / unknown558;
+    unknown50c.height = static_cast<f32>(viewPort->unknown10->unknownc0) / unknown558;
+  }
+  unknown358 = viewPort->unknown18;
+  unknown4fa = 3;
+}
+
+void LayerShdManager::setShaderMaskMode(const LayerObjTopMaskObj *mask) {
+  unknown50 = mask;
+  unknown358 = nullptr;
+  unknown4fa = 2;
+  const mm::Rect<f32> &rect = mask->unknown258;
+  if (unknown52a || unknown50c.x != rect.x || unknown50c.y != rect.y || unknown50c.width != rect.width || unknown50c.height != rect.height) {
+    unknown50c = rect;
+    unknown528 = true;
+    unknown52a = false;
+    f32 width = unknown558 * rect.width;
+    f32 height = unknown558 * rect.height;
+    f32 x = unknown558 * rect.x;
+    f32 y = unknown558 * rect.y;
+    grlib::CGLibState::setViewport(grlib::LibMainStateViewPort(x, y, width, height, 0.0f, 1.0f));
   }
 }
 

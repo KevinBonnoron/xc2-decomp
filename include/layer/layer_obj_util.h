@@ -74,6 +74,8 @@ public:
   static void calcLayerScaleMatrix(LayerResMatrix &result, const LayerBasePos &base, f32 x, f32 y);
   static u32 getUniformBlockSizeAlOff(LayerUniType type);
   static u32 getUniformBlockSize(LayerUniType type);
+  static void calcPosData_Pixel_Up(f32 *info, const LyrLayoutPosData *data, LayerCenterType type, f32 x, f32 y);
+  static void calcPosData_Correction_Up(f32 *info, const LyrLayoutPosData *data, LayerCenterType type, f32 x, f32 y);
   static void getLayoutInfo(f32 *info, const LyrLayoutPosData *data, LayerCenterType type, f32 x, f32 y);
 
   static const u16 UNIFORM_BLOCK_SIZE[];

@@ -1,6 +1,7 @@
 #include "layer/layer_obj_util.h"
 
 #include "grlib/cglib_dbl_uniform_block.h"
+#include "layer/layer_acc_layout_binary.h"
 #include "layer/layer_manager.h"
 #include "layer/layer_obj.h"
 #include "mm_math/mm_col3.h"
@@ -162,6 +163,41 @@ void LayerObjUtil::calcLayerScaleMatrix(LayerResMatrix &result, const LayerBaseP
   result.unknown00 = 0.0f;
   result.unknown0c = base.unknown10;
   result.unknown04 = 0.0f;
+}
+
+void LayerObjUtil::calcPosData_Pixel_Up(f32 *info, const LyrLayoutPosData *data, LayerCenterType type, f32 x, f32 y) {
+  info[2] = static_cast<f32>(data->unknown30 - data->unknown2c) / x;
+  info[3] = static_cast<f32>(data->unknown32 - data->unknown2e) / y;
+  s16 left = data->unknown2c;
+  info[0] = left;
+  s16 top = data->unknown2e;
+  info[1] = top;
+  f32 offset;
+  if (type == LAYER_CENTER_TYPE_UNKNOWN_1) {
+    offset = data->unknown32;
+  } else if (type == LAYER_CENTER_TYPE_CENTER) {
+    info[0] = left + static_cast<f32>(data->unknown30 - data->unknown2c) * 0.5f;
+    offset = static_cast<f32>(data->unknown32 - data->unknown2e) * 0.5f;
+  } else {
+    return;
+  }
+  info[1] = top + offset;
+}
+
+void LayerObjUtil::calcPosData_Correction_Up(f32 *info, const LyrLayoutPosData *data, LayerCenterType type, f32 x, f32 y) {
+  info[0] = data->unknown20;
+  info[1] = data->unknown24;
+  info[2] = data->unknown18;
+  info[3] = data->unknown1c;
+  if (type == LAYER_CENTER_TYPE_UNKNOWN_1) {
+    f32 height = data->unknown1c;
+    info[1] += height * LayerManager::get()->getScreenCalcPosHeight();
+  } else if (type == LAYER_CENTER_TYPE_CENTER) {
+    f32 width = data->unknown18;
+    info[0] += width * 0.5f * LayerManager::get()->getScreenCalcPosWidth();
+    f32 height = data->unknown1c;
+    info[1] += height * 0.5f * LayerManager::get()->getScreenCalcPosHeight();
+  }
 }
 
 u32 LayerObjUtil::getUniformBlockSizeAlOff(LayerUniType type) { return UNIFORM_BLOCK_SIZE[type]; }

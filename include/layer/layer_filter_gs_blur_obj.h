@@ -16,6 +16,8 @@ public:
   void update(const LayerResMatrix &matrix, const LayerResColor &color, const LayerRenderView *view, f32 time) override;
   void render() override;
   grlib::CGLibTextureBuffer *getTexture() override;
+  void renderMain();
+  void renderSub();
   void setParameter(f32 strength, f32 scale, u32 sampleNum, bool isHalf, u32 passNum);
 
   grlib::CGLibRenderTarget unknown18;     // Inferred role: render target; original member name unknown.
