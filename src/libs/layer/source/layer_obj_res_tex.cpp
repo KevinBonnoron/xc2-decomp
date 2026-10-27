@@ -5,6 +5,8 @@
 
 namespace layer {
 
+LayerObjResTex::LayerObjResTex() {}
+
 void LayerObjResTex::setAddTexture(grlib::CGLibTextureBuffer &texture, u32 index) {
   resetAddTexutre(index);
   LayerResAddTexObj *addTexture = new (LayerManager::get()->unknown28) LayerResAddTexObj(&texture, index);

@@ -3,8 +3,14 @@
 #include "layer/layer_manager.h"
 #include "layer/layer_obj.h"
 #include "layer/layer_sort_man.h"
+#include "ml/critical_section.h"
 
 namespace layer {
+
+ml::CriticalSection &LayerObjManager::getCriticalSection() {
+  static ml::CriticalSection sect;
+  return sect;
+}
 
 void LayerObjManager::alphaRender(const ml::IDrDrawWorkInfo *info) {
   unknown00 = info;

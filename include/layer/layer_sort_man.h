@@ -15,6 +15,8 @@ public:
   void set2DSpace(LayerSortObj *object, u32 index);
   void stock2DObj(LayerSortObj *object, s32 index);
   void stock3DObj(LayerSortObj *object, s32 index);
+  void begin(const mm::Vec3 &position);
+  void end();
   void alphaRender();
   void lastRender();
   void finalRender();

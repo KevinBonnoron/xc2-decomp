@@ -20,6 +20,8 @@ LayerAnimeObj::LayerAnimeObj(int count) : unknown10(nullptr), unknown18(0), unkn
   unknown06 = 0;
 }
 
+LayerAnimeObj *LayerAnimeObj::createAnimObj(int id) { return new (LayerManager::get()->unknown28) LayerAnimeObj(id); }
+
 void LayerAnimeObj::release() { unknown06 |= 0x8000; }
 
 void LayerAnimeObj::setAnimeLoop(bool loop) {

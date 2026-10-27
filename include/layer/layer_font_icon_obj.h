@@ -34,10 +34,24 @@ public:
     u32 unknown18; // Inferred role: offset of the icon entries; original member name unknown.
   };
 
+  struct unknown005 {
+    f32 unknown00; // Inferred role: u scale; original member name unknown.
+    f32 unknown04; // Inferred role: v scale; original member name unknown.
+    f32 unknown08; // Inferred role: u; original member name unknown.
+    f32 unknown0c; // Inferred role: v; original member name unknown.
+    f32 unknown10; // Inferred role: scale u; original member name unknown.
+    f32 unknown14; // Inferred role: scale v; original member name unknown.
+    u8 _18[0x1c - 0x18];
+  };
+
+  static_assert(sizeof(unknown005) == 0x1c, "");
+
   ~LayerFontIconObj() override;
   void release() override;
   virtual void setupResource();
   void createIconRes();
+  void getFontUvParms(f32 *uv, u16 index) const;
+  void getFontUvOnlyParms(f32 *uv, u16 index) const;
 
   u8 unknown1c; // Inferred role: state; original member name unknown.
   u8 _1d[0x20 - 0x1d];

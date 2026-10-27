@@ -2,6 +2,11 @@
 
 namespace layer {
 
+LayerResAddTexObj::LayerResAddTexObj(const void *data, u32 index) : unknown00(nullptr), unknown08(nullptr), unknown10(data), unknown18(nullptr) {
+  unknown22 = 0;
+  unknown20 = index;
+}
+
 LayerResAddTexObj::LayerResAddTexObj(grlib::CGLibTextureBuffer *texture, u32 index) {
   unknown00 = nullptr;
   unknown08 = nullptr;

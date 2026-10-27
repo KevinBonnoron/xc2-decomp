@@ -13,6 +13,7 @@ class LayerTextureObj;
 
 class LayerResAddTexObj {
 public:
+  LayerResAddTexObj(const void *data, u32 index);
   LayerResAddTexObj(grlib::CGLibTextureBuffer *texture, u32 index);
   grlib::CGLibTextureBuffer *getTexObj(u32 index);
 

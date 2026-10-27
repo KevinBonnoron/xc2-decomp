@@ -33,6 +33,54 @@ void LayerFontIconObj::createIconRes() {
   }
 }
 
+void LayerFontIconObj::getFontUvParms(f32 *uv, u16 index) const {
+  if (unknown38 != nullptr) {
+    u32 offset = unknown38->unknown18;
+    u32 count = unknown48;
+    const u8 *base = reinterpret_cast<const u8 *>(unknown38) + offset;
+    u32 entryIndex = index;
+    if (count <= index) {
+      entryIndex = 0;
+    }
+    const unknown005 &entry = reinterpret_cast<const unknown005 *>(base)[entryIndex];
+    uv[0] = unknown50 * entry.unknown00;
+    uv[1] = unknown4c * entry.unknown04;
+    uv[2] = entry.unknown08;
+    uv[3] = entry.unknown0c;
+    uv[4] = entry.unknown10;
+    uv[5] = entry.unknown14;
+  } else {
+    uv[0] = unknown50;
+    uv[1] = unknown4c;
+    uv[2] = 1.0f;
+    uv[3] = 1.0f;
+    uv[4] = 0.0f;
+    uv[5] = 0.0f;
+  }
+}
+
+void LayerFontIconObj::getFontUvOnlyParms(f32 *uv, u16 index) const {
+  if (unknown38 != nullptr) {
+    u32 offset = unknown38->unknown18;
+    u32 count = unknown48;
+    const u8 *base = reinterpret_cast<const u8 *>(unknown38) + offset;
+    u32 entryIndex = index;
+    if (count <= index) {
+      entryIndex = 0;
+    }
+    const unknown005 &entry = reinterpret_cast<const unknown005 *>(base)[entryIndex];
+    uv[0] = entry.unknown08;
+    uv[1] = entry.unknown0c;
+    uv[2] = entry.unknown10;
+    uv[3] = entry.unknown14;
+  } else {
+    uv[0] = 1.0f;
+    uv[1] = 1.0f;
+    uv[2] = 0.0f;
+    uv[3] = 0.0f;
+  }
+}
+
 void LayerFontIconObj::setupResource() {
   if (unknown40 != nullptr) {
     unknown40->setupResource();

@@ -7,6 +7,8 @@
 #include "layer/layer_obj_manager.h"
 #include "layer/layer_rce_manager.h"
 #include "layer/layer_shd_manager.h"
+#include "ml/scn.h"
+#include "scn/scn_render_dr_sys.h"
 
 namespace layer {
 
@@ -23,6 +25,44 @@ void *LayerMemHandleAllocator::allocate(size_t size, size_t alignment) { return 
 void LayerMemHandleAllocator::deallocate(void *pointer) {
   if (pointer != nullptr) {
     mtl::MemManager::deallocate(pointer, 0, false);
+  }
+}
+
+LayerManager::~LayerManager() {
+  if (unknown50->unknown38 != nullptr) {
+    unknown50->unknown38->releaseCallBack(this);
+  }
+  if (unknown60 != nullptr) {
+    delete unknown60;
+    unknown60 = nullptr;
+  }
+  if (unknown68 != nullptr) {
+    delete unknown68;
+    unknown68 = nullptr;
+  }
+  if (unknown70 != nullptr) {
+    delete unknown70;
+    unknown70 = nullptr;
+  }
+  if (unknown58 != nullptr) {
+    delete unknown58;
+    unknown58 = nullptr;
+  }
+  if (unknown2c.isValid()) {
+    mtl::MemManager::erase(unknown2c);
+    unknown2c = mtl::ALLOC_HANDLE();
+  }
+  if (unknown28.isValid()) {
+    mtl::MemManager::erase(unknown28);
+    unknown28 = mtl::ALLOC_HANDLE();
+  }
+  if (unknown24.isValid()) {
+    mtl::MemManager::erase(unknown24);
+    unknown24 = mtl::ALLOC_HANDLE();
+  }
+  if (unknown20.isValid()) {
+    mtl::MemManager::erase(unknown20);
+    unknown20 = mtl::ALLOC_HANDLE();
   }
 }
 

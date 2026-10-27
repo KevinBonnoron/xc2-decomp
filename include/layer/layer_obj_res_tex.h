@@ -16,6 +16,7 @@ class LayerTextureObj;
 
 class LayerObjResTex {
 public:
+  LayerObjResTex();
   void setAddTexture(const void *data, u32 index);
   void setAddTexture(grlib::CGLibTextureBuffer &texture, u32 index);
 

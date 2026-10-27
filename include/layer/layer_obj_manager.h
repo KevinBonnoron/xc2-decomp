@@ -9,6 +9,7 @@ class CGLibTextureBuffer;
 } // namespace grlib
 
 namespace ml {
+class CriticalSection;
 class IDrDrawWorkInfo;
 } // namespace ml
 
@@ -41,6 +42,7 @@ public:
   void setDeleteList(LayerObj *object);
   void allRelease();
   ~LayerObjManager();
+  static ml::CriticalSection &getCriticalSection();
 
   const ml::IDrDrawWorkInfo *unknown00; // Inferred role: work info; original member name unknown.
   u8 _08[0x10 - 0x08];
