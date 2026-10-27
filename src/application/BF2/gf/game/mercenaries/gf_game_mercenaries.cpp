@@ -1,12 +1,65 @@
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
 
+#include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_manager.h"
+#include "gf/gf_allocator.h"
 
 namespace gf {
+
+GfGameMercenaries::GfGameMercenaries(const GfSetupParam &param) : unknown08(false), unknown788(false) { initialize(param); }
+
+void GfGameMercenaries::initialize(const GfSetupParam &) {
+  rebuildAutoStartList();
+  unknown08 = true;
+}
+
+GfGameMercenaries::~GfGameMercenaries() {}
+
+void GfGameMercenaries::build(const GfSetupParam &param) {
+  // __LINE__ must be 72 as in the original file: its value changes the instruction order.
+#line 72
+  new (getAllocator(ALLOCATOR_SYSTEM), __FILE__, __LINE__, 8) GfGameMercenaries(param);
+}
+
+void GfGameMercenaries::destroy() {
+  GfGameMercenaries *mercenaries = get();
+  mercenaries->finalize();
+  delete mercenaries;
+}
+
+void GfGameMercenaries::finalize() { unknown08 = false; }
+
+bool GfGameMercenaries::isInitialized() {
+  if (get() != nullptr) {
+    return get()->unknown08;
+  }
+  return false;
+}
+
+void GfGameMercenaries::update(const fw::UpdateInfo &info) { get()->updateMercenariesTeam(info); }
+
+void GfGameMercenaries::rebuildAutoStartList() {
+  unknown380.clear();
+  QuestListAcc *questListAcc = QuestListAcc::get();
+  u32 mission = questListAcc->getFLD_MercenariesMissionStart();
+  u32 end = questListAcc->getFLD_MercenariesMissionEnd();
+  for (; mission < end; mission++) {
+    if (questListAcc->getFLD_MercenariesMissionAutoStart(mission) != 0) {
+      unknown380.push_back(mission);
+    }
+  }
+}
+
+void GfGameMercenaries::findMemberForMission(u16 blade) {
+  GfGameMercenaries *mercenaries = get();
+  if (GfDataMercenaries::isEnableMissionBlade(blade, mercenaries->unknown378)) {
+    mercenaries->unknown10.push_back(blade);
+  }
+}
 
 void GfGameMercenaries::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
   if (event == GEV_MAPJUMP_END && get() != nullptr) {
@@ -129,6 +182,59 @@ void GfGameMercenaries::clearTeamMember(u32 team) {
       }
     }
   }
+}
+
+void GfGameMercenaries::setMissionComplete(u32 mission) {
+  GfDataMercenaries::getMissionFlag(mission);
+  u32 previous = GfDataMercenaries::getMissionFlag(mission);
+  GfDataMercenaries::setMissionFlag(mission, 3);
+  GfEvent::callMercenariesMissionFlag(mission, 3, previous);
+  if (GfDataMercenaries::getMissionTaskType(mission) == 2) {
+    previous = GfDataMercenaries::getMissionFlag(mission);
+    GfDataMercenaries::setMissionFlag(mission, 4);
+    if (!GfDataMercenaries::isMissionCompleteFlag(mission)) {
+      GfDataMercenaries::setMissionCompleteFlag(mission);
+    }
+    GfEvent::callMercenariesMissionFlag(mission, 4, previous);
+  }
+}
+
+void GfGameMercenaries::applyCompleteMission(const QuestCompleteParam &param) {
+  u32 mission = GfDataMercenaries::getMissionByQuestID(param.unknown04);
+  if (mission != 0 && GfDataMercenaries::getMissionFlag(mission) == 2) {
+    setMissionComplete(mission);
+  }
+}
+
+void GfGameMercenaries::qevOrderQuest(const QuestOrderParam &param) {
+  u32 mission = GfDataMercenaries::getMissionByQuestID(param.unknown04);
+  if (mission != 0 && GfDataMercenaries::getMissionFlag(mission) == 1) {
+    u32 previous = GfDataMercenaries::getMissionFlag(mission);
+    GfDataMercenaries::setMissionFlag(mission, 2);
+    GfEvent::callMercenariesMissionFlag(mission, 2, previous);
+  }
+}
+
+bool GfGameMercenaries::isQuestMission(QuestID quest) {
+  for (u32 mission = GfDataMercenaries::getStartMissionID(); mission < GfDataMercenaries::getEndMissionID(); mission++) {
+    if (quest == GfDataMercenaries::getMissionQuestID(mission)) {
+      return GfDataMercenaries::getMissionFlag(mission) != 0;
+    }
+  }
+  return false;
+}
+
+bool GfGameMercenaries::getTeam(mm::mtl::FixedVector<u16, 3> &teams) {
+  teams.clear();
+  for (u32 i = 0; i < GfDataMercenaries::getTeamNum(); i++) {
+    teams.push_back(GfDataMercenaries::getTeamByIndex(i)->unknown10);
+  }
+  return !teams.empty();
+}
+
+void GfGameMercenaries::execMissionRewardByTeamID(u32 team) {
+  execMissionReward(GfDataMercenaries::getTeamMission(team));
+  GfQuestManager::requestOrderAchievementQuestForce();
 }
 
 void GfGameMercenaries::setupNewGameParam() {}

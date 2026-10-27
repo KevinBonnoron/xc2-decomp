@@ -1,17 +1,27 @@
 #include "gf/util/gf_util.h"
 
-#include "fw/fw_coli_check.h"
-#include "gf/camera/gf_camera_player.h"
-#include "ml/char_code.h"
-#include "ml/path_util.h"
-#include "mm_math/mm_vec3.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "fw/fw_coli_check.h"
+#include "gf/camera/gf_camera_player.h"
+#include "gf/gf_info.h"
+#include "ml/char_code.h"
+#include "ml/path_util.h"
+#include "mm_math/mm_mat44.h"
+#include "mm_math/mm_plane.h"
+#include "mm_math/mm_vec3.h"
 
 namespace gf {
 namespace util {
 
 constexpr u32 UTF16_BUFFER_LENGTH = 0x400;
+
+void getViewLocalToDeviceCoord(mm::Vec3 &device, const mm::Mat44 &frustum, const mm::Vec3 &local) {
+  device.x = frustum.rows[0][0] * (local.x / local.z) - frustum.rows[2][0];
+  device.y = frustum.rows[1][1] * (local.y / local.z) - frustum.rows[2][1];
+  device.z = -frustum.rows[3][2] / local.z - frustum.rows[2][2];
+}
 
 bool getHitCollision(mm::Vec3 &hit, const mm::Vec3 &start, const mm::Vec3 &end) {
   fw::TColiCheckResult<256> result;
@@ -66,6 +76,16 @@ bool getUpperHitCollision(mm::Vec3 &hit, const mm::Vec3 &position, f32 distance)
   }
 
   hit = result.getPosition(0);
+  return true;
+}
+
+bool isInsideView(const mm::Vec3 &position, f32 radius) {
+  for (u32 i = 0; i < GfInfo::CAMERA_PLANE_COUNT; i++) {
+    const mm::Plane &plane = GfInfo::m_camPlanes[i];
+    if (position.x * plane.normal.x + position.y * plane.normal.y + position.z * plane.normal.z + plane.distance < -radius) {
+      return false;
+    }
+  }
   return true;
 }
 
