@@ -37,6 +37,7 @@ public:
   WorkCpuThread(const char *name, WorkObj *parent);
   ~WorkCpuThread() override;
   void setWorkingJob(TJOB *job);
+  void setup(CPUID cpuId);
   void setBackground(bool isBackground);
   bool isBackground() const;
   void setStackInfo(unsigned long address, unsigned long size, void *stack);

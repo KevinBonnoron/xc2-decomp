@@ -2,6 +2,10 @@
 
 namespace ml {
 
+WorkObjFlowSystemPause::WorkObjFlowSystemPause(const char *name, WorkObj *parent) : WorkObj(name, parent, 1), unknown1b0(0), unknown1b4(0), unknown1b8(false), unknown1bc(-1) {}
+
+WorkObjFlowSystemPause::~WorkObjFlowSystemPause() {}
+
 f32 WorkObjFlowSystemPause::getRate() {
   WorkObjFlowSystemPause *pause = get();
   if (pause != nullptr) {

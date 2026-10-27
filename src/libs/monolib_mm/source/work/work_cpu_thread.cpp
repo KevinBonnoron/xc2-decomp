@@ -4,7 +4,9 @@
 #include "ml/dev_clock.h"
 #include "ml/dev_graph.h"
 #include "ml/thread.h"
+#include "ml/thread_util.h"
 #include "mm_math/mm_col3.h"
+#include "mm_mtl/fixstr.h"
 
 namespace ml {
 
@@ -102,6 +104,17 @@ void WorkCpuThread::waitEvent() {
 void WorkCpuThread::setWorkingJob(TJOB *job) {
   CS cs(*unknown1e8);
   unknown650 = job;
+}
+
+void WorkCpuThread::setup(CPUID cpuId) {
+  m_CPUID = cpuId;
+  if (cpuId == CPUID_CORE_0) {
+    m_threadID = ThreadUtil::getCurrentID();
+    return;
+  }
+  Thread::create(&unknown1b8, unknown08.c_str(), false, threadFunc, this, 0x40000, cpuId, 0);
+  m_threadID = unknown1b8->getID();
+  unknown1b8->resume();
 }
 
 void WorkCpuThread::setBackground(bool isBackground) { m_background = isBackground; }

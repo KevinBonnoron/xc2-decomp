@@ -9,6 +9,8 @@ namespace ml {
 
 class WorkFlowShutdownAll : public WorkObj, public mm::mtl::PtrSingleton<WorkFlowShutdownAll> {
 public:
+  WorkFlowShutdownAll(const char *name, WorkObj *parent);
+  ~WorkFlowShutdownAll() override;
   bool wkStandbyLogout() override;
   void wkUpdate() override;
 

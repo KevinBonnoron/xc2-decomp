@@ -5,7 +5,11 @@ namespace mtl {
 class ALLOC_HANDLE;
 } // namespace mtl
 
-enum GrlTiledCacheAction {};
+enum GrlTiledCacheAction {
+  GRL_TILED_CACHE_ACTION_UNKNOWN_1 = 1,
+  GRL_TILED_CACHE_ACTION_UNKNOWN_2,
+  GRL_TILED_CACHE_ACTION_UNKNOWN_3,
+};
 
 namespace grlib {
 class CGLibDepthBuffer;

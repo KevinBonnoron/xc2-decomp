@@ -4,8 +4,23 @@
 #include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "grlib/cglib_render_target.h"
+#include "mm_math/mm_vec4.h"
 
 namespace ml {
+
+void DrPixlPostObjTSSAO::calcFragCoordToUV(mm::Vec4 &uv, f32 width, f32 height) {
+  uv.x = 1.0f / width;
+  uv.y = 1.0f / height;
+  uv.z = static_cast<f32>(unknown70) / width;
+  uv.w = static_cast<f32>(unknown70) / height;
+}
+
+void DrPixlPostObjTSSAO::calcFragCoordToScreen(mm::Vec4 &screen, f32 width, f32 height) {
+  screen.x = 2.0f / width;
+  screen.y = 2.0f / height;
+  screen.z = (static_cast<f32>(unknown70) + static_cast<f32>(unknown70)) / width - 1.0f;
+  screen.w = (static_cast<f32>(unknown70) + static_cast<f32>(unknown70)) / height - 1.0f;
+}
 
 void DrPixlPostObjTSSAO::passUpScaling() { passUpScaleToMiddle(); }
 

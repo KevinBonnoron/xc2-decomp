@@ -9,6 +9,8 @@ namespace ml {
 
 class WorkObjFlowSystemPause : public WorkObj, public mm::mtl::PtrSingleton<WorkObjFlowSystemPause> {
 public:
+  WorkObjFlowSystemPause(const char *name, WorkObj *parent);
+  ~WorkObjFlowSystemPause() override;
   static f32 getRate();
   static void releasePause();
   bool wkStandbyLogout() override;

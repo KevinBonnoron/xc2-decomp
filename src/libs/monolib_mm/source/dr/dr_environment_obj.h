@@ -14,6 +14,7 @@ class DrEnvironmentObj {
 public:
   enum Flag {
     FLAG_DISP_OFF = 1 << 0,
+    FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: zone object; original name unknown.
     FLAG_GROUP = 1 << 2,
     FLAG_OFS_MATRIX = 1 << 3,
     FLAG_DEBUG_DISP_2D = 1 << 20,

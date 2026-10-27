@@ -37,17 +37,21 @@ public:
   void *unknownc8;         // Inferred role: buffer; original member name unknown.
   int unknownd0;           // Inferred role: size; original member name unknown.
   u8 _d4[0xe0 - 0xd4];
-  u64 unknowne0; // Inferred role: time stamp; original member name unknown.
-  u8 _e8[0xf0 - 0xe8];
+  u64 unknowne0;  // Inferred role: time stamp; original member name unknown.
+  u64 unknowne8;  // Inferred role: file time; original member name unknown.
   bool unknownf0; // Inferred role: buffer owner; original member name unknown.
-  u8 _f1[0xf8 - 0xf1];
+  u8 _f1[0xf4 - 0xf1];
+  u32 unknownf4;                  // Inferred role: load state; original member name unknown.
   mm::mtl::IAllocator *unknownf8; // Inferred role: allocator; original member name unknown.
 };
 
 static_assert(offsetof(FileResTh, unknownc0) == 0xc0, "");
 static_assert(offsetof(FileResTh, unknownd0) == 0xd0, "");
 static_assert(offsetof(FileResTh, unknowne0) == 0xe0, "");
+static_assert(offsetof(FileResTh, unknowne8) == 0xe8, "");
 static_assert(offsetof(FileResTh, unknownf0) == 0xf0, "");
+static_assert(offsetof(FileResTh, unknownf4) == 0xf4, "");
+static_assert(offsetof(FileResTh, unknownf8) == 0xf8, "");
 static_assert(sizeof(FileResTh) == 0x100, "");
 
 } // namespace ml

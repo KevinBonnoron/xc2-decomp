@@ -18,6 +18,51 @@ DrEnvironmentObj::DrEnvironmentObj(DrMan *drMan, DrLightMan *lightMan, DrFogMan 
 
 void DrEnvironmentMan::releaseObj(DrEnvironmentObj *obj) { obj->release(); }
 
+namespace {
+
+// Inferred role: deletes every object of a list; original name unknown.
+void unknown001(DrEnvironmentObj *&head, DrEnvironmentObj *&tail) {
+  DrEnvironmentObj *obj = head;
+  while (obj != nullptr) {
+    DrEnvironmentObj *next = obj->unknown10;
+    delete obj;
+    obj = next;
+  }
+  head = nullptr;
+  tail = nullptr;
+}
+
+} // namespace
+
+void DrEnvironmentMan::releaseAll() {
+  unknown001(unknown28[0], unknown28[1]);
+  unknown001(unknown28[2], unknown28[3]);
+  unknown001(unknown58, unknown60);
+  unknown001(unknown48, unknown50);
+}
+
+void DrEnvironmentMan::renderLgt() {
+  for (DrEnvironmentObj *obj = unknown48; obj != nullptr; obj = obj->unknown10) {
+    obj->renderLgt();
+  }
+}
+
+void DrEnvironmentMan::setZoneObj(DrEnvironmentObj *obj, bool isOn) {
+  if (isOn) {
+    for (DrEnvironmentObj *current = unknown48; current != nullptr; current = current->unknown10) {
+      if (current->unknown8c & DrEnvironmentObj::FLAG_UNKNOWN_1) {
+        current->unknown8c &= ~DrEnvironmentObj::FLAG_DISP_OFF;
+      }
+    }
+  } else {
+    for (DrEnvironmentObj *current = unknown48; current != nullptr; current = current->unknown10) {
+      if (current->unknown8c & DrEnvironmentObj::FLAG_UNKNOWN_1) {
+        current->unknown8c |= DrEnvironmentObj::FLAG_DISP_OFF;
+      }
+    }
+  }
+}
+
 f32 DrEnvironmentObj::getFrame() const { return m_frame; }
 
 f32 DrEnvironmentObj::getMaxFrame() const { return m_maxFrame; }

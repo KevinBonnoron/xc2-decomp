@@ -2,7 +2,12 @@
 
 namespace ml {
 
+class DrLightObjGlobalIBL;
 class DrShdLgtMan;
+
+namespace _dr_shd_lgt_glb_ibl {
+bool CompareByPriority(const DrLightObjGlobalIBL *a, const DrLightObjGlobalIBL *b);
+} // namespace _dr_shd_lgt_glb_ibl
 
 class DrShdLgtGlobalIBL {
 public:
