@@ -1146,6 +1146,7 @@ void BootedGmkCond::dispose() { unknown00 = 0; }
 } // namespace gmk
 
 // clang-format off
+#include "gmk/gmk_collision.cpp"
 #include "gmk/gmk_enemy/gmk_enemy.cpp"
 #include "gmk/gmk_enemy/gmk_routed_enemy.cpp"
 #include "gmk/gmk_npc/gmk_npc_manager_impl.h" // IWYU pragma: keep

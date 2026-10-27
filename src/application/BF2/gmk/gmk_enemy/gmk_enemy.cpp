@@ -1,6 +1,7 @@
 #include "gmk/gmk_enemy/gmk_enemy.h"
 
 #include "bdat.h"
+#include "framework/debug/debug_draw.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
@@ -10,8 +11,11 @@
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_squad.h"
 #include "ml/rand.h"
+#include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/vector.h"
 
@@ -24,6 +28,34 @@ static u32 getU8OrU16(const CBdatWrapper &bdat, const char *name, int id) {
     return static_cast<u16>(bdat.getValCheck(name, id, BDAT_TYPE_U16));
   }
   return static_cast<u8>(bdat.getValCheck(name, id, BDAT_TYPE_U8));
+}
+
+void GmkEnemy::debugDraw() const {
+  if (!isValid()) {
+    return;
+  }
+  {
+    mm::Vec3 position = AGmkBase::unknown08.unknown08->unknown00;
+    mm::Mat44 matrix;
+    unknown001(matrix, position);
+    fw::debug::drawCircleLine(matrix, getData()->unknown00, mm::Col4::cyan);
+  }
+  mm::Vec2 screen;
+  if (toScreenPos(screen, AGmkBase::unknown08.unknown08->unknown00)) {
+    mm::mtl::FixStr<128> text;
+    int offset;
+    if (unknown1B8 > 0.0f) {
+      text.format("repop-time=%.1f", unknown1B8);
+      fw::debug::drawFont(static_cast<int>(screen.x), static_cast<int>(screen.y) + 24, mm::Col4::green, text.c_str());
+      offset = 48;
+    } else {
+      offset = 24;
+    }
+    if (reinterpret_cast<const BdatInfo *>(unknown20.unknown10)->unknown02) {
+      text.format("summon");
+      fw::debug::drawFont(static_cast<int>(screen.x), static_cast<int>(screen.y) + offset, mm::Col4::red, text.c_str());
+    }
+  }
 }
 
 void GmkEnemy::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {

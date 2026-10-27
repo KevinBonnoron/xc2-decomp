@@ -31,7 +31,7 @@ public:
   static const GmkType GMK_TYPE = GMK_TYPE_EVENT;
 
   GmkEvent();
-  ~GmkEvent() override;
+  ~GmkEvent() override { dispose(); }
   GmkType getGmkType() const override;
   void create(const CreateInfo &info) override;
   void beginEvent();

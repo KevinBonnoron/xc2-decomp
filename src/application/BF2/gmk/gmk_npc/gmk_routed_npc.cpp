@@ -54,6 +54,14 @@ bool GmkRoutedNpc::isDepopDistCondMatched() const {
   return !getBdatInfo()->unknown28.isMatch(nearest);
 }
 
+void GmkRoutedNpc::debugDraw() const {
+  if (!isValid()) {
+    return;
+  }
+  bool isPopCondMatched = getBdatInfo()->isPopCommonCondMatched(*this);
+  GmkRoute::debugDraw(isPopCondMatched);
+}
+
 int GmkRoutedNpc::getBindedBdatId() const { return unknown20.unknown18; }
 
 u8 *GmkRoutedNpc::getBindedBdatFp() const { return unknown08.unknown00->getBindedBdatFp(); }

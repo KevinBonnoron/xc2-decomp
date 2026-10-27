@@ -12,10 +12,15 @@
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/object/gf_menu_obj_field_icon.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "gf/util/gf_item_util.h"
 #include "gmk/gmk_active_list.h"
 #include "gmk/gmk_bdat.h"
 #include "mm_mtl/reference_object.h"
+
+namespace fw {
+enum EF_CATEGORY : int;
+} // namespace fw
 
 namespace gmk {
 
@@ -87,6 +92,44 @@ void GmkPrecious::disposeEffectIcon(bool isFadeOut) {
       fw::EffectManager::get()->remove(unknown60);
     }
     unknown60 = 0;
+  }
+}
+
+void GmkPrecious::dispose() {
+  disposeMenuIcon();
+  disposeEffectIcon(false);
+  disposeGobInst(false);
+  AGmkBase::dispose();
+}
+
+void GmkPrecious::disposeGobInst(bool isFadeOut) {
+  if (unknown58 == gf::INVALID_HANDLE) {
+    return;
+  }
+  if (intoNode() && TGmkActiveList<GmkPrecious>::get() != nullptr) {
+    TGmkActiveList<GmkPrecious>::get()->unknown08.erase(this);
+  }
+  if (isFadeOut) {
+    gmk::disposeGobInst(unknown58, 1.0f);
+  } else {
+    unbindToGameObj(unknown58);
+    gf::GfObjUtil::destroy(unknown58);
+    unknown58 = gf::INVALID_HANDLE;
+  }
+}
+
+void GmkPrecious::createEffectIcon() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  disposeEffectIcon(false);
+  void *data = fw::EffectManager::get()->search("cmn_202_000", nullptr);
+  if (data == nullptr) {
+    return;
+  }
+  unknown60 = fw::EffectManager::get()->create(data, true);
+  if (unknown60 != 0) {
+    fw::EffectManager::get()->setCategory(unknown60, static_cast<fw::EF_CATEGORY>(1));
   }
 }
 

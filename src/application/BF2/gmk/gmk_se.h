@@ -46,11 +46,17 @@ public:
     BootedGmkCond unknown3c;    // Inferred role: op booted gmk; original member name unknown.
   };
 
+  struct Data {
+    f32 unknown00; // Inferred role: far distance; original member name unknown. The size of this structure is unknown.
+    f32 unknown04; // Inferred role: near distance; original member name unknown.
+  };
+
   static const GmkType GMK_TYPE = GMK_TYPE_SE;
 
-  ~GmkSe() override;
+  ~GmkSe() override { dispose(); }
   GmkType getGmkType() const override;
   void dispose() override;
+  void disposeInst(bool isFadeOut);
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   void createGmkPhantom();
@@ -58,6 +64,7 @@ public:
   bool canDepopInst() const;
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   u8 _58[0x60 - 0x58];
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
@@ -94,9 +101,10 @@ public:
   static const GmkType GMK_TYPE = GMK_TYPE_SE_LINE;
 
   GmkSeLine();
-  ~GmkSeLine() override;
+  ~GmkSeLine() override { dispose(); }
   GmkType getGmkType() const override;
   void dispose() override;
+  void disposeInst(bool isFadeOut);
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   int getPointNum() const;

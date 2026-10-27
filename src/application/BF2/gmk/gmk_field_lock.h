@@ -1,5 +1,8 @@
 #pragma once
+#include <stddef.h>
+
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_collision.h"
 #include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
@@ -26,17 +29,20 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_FIELD_LOCK;
 
-  ~GmkFieldLock() override;
+  ~GmkFieldLock() override { dispose(); }
   GmkType getGmkType() const override;
   void create(const CreateInfo &info) override;
   void dispose() override;
   void update(f32 deltaTime) override;
   void debugDraw() const override;
 
-  u8 _48[0xd0 - 0x48];
+  u8 _48[0x50 - 0x48];
+  GmkCollision unknown50; // Inferred role: collision; original member name unknown.
+  u8 _b8[0xd0 - 0xb8];
 };
 
 static_assert(sizeof(GmkFieldLock::BdatInfo) == 0xe, "");
+static_assert(offsetof(GmkFieldLock, unknown50) == 0x50, "");
 static_assert(sizeof(GmkFieldLock) == 0xd0, "");
 
 typedef TGmkList<GmkFieldLock, GmkFieldLock::BdatInfo, 0x434c4446, 2, GmkFieldLockGob> GmkFieldLockList;

@@ -2,6 +2,7 @@
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
+#include "framework/debug/debug_draw.h"
 #include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
@@ -12,6 +13,9 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_vec2.h"
+#include "mm_mtl/fixstr.h"
 
 namespace gmk {
 
@@ -86,6 +90,18 @@ void GmkCollection::disposeGfObjHandle() {
     unbindToGameObj(unknown48);
     gf::GfObjUtil::destroy(unknown48);
     unknown48 = gf::INVALID_HANDLE;
+  }
+}
+
+void GmkCollection::debugDraw() const {
+  AGmkBase::debugDraw();
+  if (isValid() && unknown68 > 0.0f) {
+    mm::Vec2 screen;
+    if (toScreenPos(screen, AGmkBase::unknown08.unknown08->unknown00)) {
+      mm::mtl::FixStr<128> text;
+      text.format("repop-time=%.1f", unknown68);
+      fw::debug::drawFont(static_cast<int>(screen.x), static_cast<int>(screen.y) + 24, mm::Col4::green, text.c_str());
+    }
   }
 }
 

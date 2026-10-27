@@ -2,6 +2,7 @@
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
+#include "framework/debug/debug_draw.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
@@ -9,6 +10,7 @@
 #include "gf/game/gf_game_cond.h"
 #include "gf/menu/object/gf_menu_obj_location_telop.h"
 #include "gmk/gmk_bdat.h"
+#include "mm_math/mm_vec2.h"
 
 namespace gmk {
 
@@ -42,6 +44,18 @@ bool GmkLandmark::isFound() const { return gf::GfGameFlag::getLocal(1, getGameFl
 void GmkLandmark::dispose() {
   disposeGmkPhantom();
   AGmkBase::dispose();
+}
+
+void GmkLandmark::debugDraw() const {
+  if (!isValid()) {
+    return;
+  }
+  static const char *unknown001[] = {"LND", "UR", "AREA", "FSKL"}; // Inferred role: debug label per category; original name unknown.
+  mm::Vec2 screen;
+  if (toScreenPos(screen, AGmkBase::unknown08.unknown08->unknown00)) {
+    const char *label = unknown001[getBdatInfo()->unknown02];
+    fw::debug::drawFont(static_cast<int>(screen.x), static_cast<int>(screen.y) + 16, label);
+  }
 }
 
 void GmkLandmark::onEnterPhantom(const IGmkPhantomEventListener::OnEnterInfo &info) {}

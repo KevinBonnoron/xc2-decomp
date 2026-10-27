@@ -1,6 +1,7 @@
 #pragma once
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_manager.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 #include <stddef.h>
@@ -34,6 +35,19 @@ struct GobInfo {
 };
 
 static_assert(sizeof(GobInfo) == 0x10, "");
+
+// Inferred helper: matrix of a debug drawing, the identity moved to a position; original name unknown.
+inline void unknown001(mm::Mat44 &matrix, const mm::Vec3 &position) {
+  for (int row = 0; row < 3; row++) {
+    for (int column = 0; column < 4; column++) {
+      matrix.rows[row][column] = row == column ? 1.0f : 0.0f;
+    }
+  }
+  matrix.rows[3][0] = position.x;
+  matrix.rows[3][1] = position.y;
+  matrix.rows[3][2] = position.z;
+  matrix.rows[3][3] = 1.0f;
+}
 
 class AGmkBase {
 public:

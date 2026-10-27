@@ -34,7 +34,7 @@ public:
   static const GmkType GMK_TYPE = GMK_TYPE_TUTORIAL;
 
   GmkTutorial();
-  ~GmkTutorial() override;
+  ~GmkTutorial() override { dispose(); }
   GmkType getGmkType() const override;
   int getGameFlagId() const;
   bool isBooted() const;

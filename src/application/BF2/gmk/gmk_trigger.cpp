@@ -33,6 +33,12 @@ bool GmkTrigger::isValid() const { return unknown08.unknown00 != nullptr && unkn
 
 void GmkTrigger::debugDraw() const {}
 
+void GmkTrigger::dispose() {
+  unknownE0 = nullptr;
+  unknown50.dispose();
+  AGmkBase::dispose();
+}
+
 void GmkTrigger::createGmkPhantom() {
   const GmkSet *set = unknown08.unknown00->getCreateInfo().unknown08;
   if (set != nullptr && set->unknown10.unknown24) {

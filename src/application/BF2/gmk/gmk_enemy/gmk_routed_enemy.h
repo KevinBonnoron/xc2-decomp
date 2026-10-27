@@ -91,7 +91,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_ENEMY_POINT;
 
-  ~GmkRoutedEnemyPoint() override;
+  ~GmkRoutedEnemyPoint() override { dispose(); }
   GmkType getGmkType() const override;
 };
 

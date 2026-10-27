@@ -70,7 +70,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_SALVAGE;
 
-  ~GmkSalvage() override;
+  ~GmkSalvage() override { dispose(); }
   GmkType getGmkType() const override;
   int getGameFlagId() const;
   int getGmkSalvageLocatorNum() const;

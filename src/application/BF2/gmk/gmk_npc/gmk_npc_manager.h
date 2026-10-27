@@ -73,12 +73,13 @@ public:
   void setUpdateNpcNumPerFrame(u32 num) { unknown34 = num; }
 
   mm::mtl::Vector<GmkNpcIdInfo> unknown08; // Inferred role: npc id infos; original member name unknown.
-  u8 _30[0x34 - 0x30];
-  u32 unknown34;  // Inferred role: update npc num per frame; original member name unknown.
-  u32 unknown38;  // Inferred role: update npc index; original member name unknown.
-  bool unknown3c; // Inferred role: create game entity; original member name unknown.
+  int unknown30;                           // Inferred role: first npc list bdat id; original member name unknown.
+  u32 unknown34;                           // Inferred role: update npc num per frame; original member name unknown.
+  u32 unknown38;                           // Inferred role: update npc index; original member name unknown.
+  bool unknown3c;                          // Inferred role: create game entity; original member name unknown.
 };
 
+static_assert(offsetof(GmkNpcManager, unknown30) == 0x30, "");
 static_assert(sizeof(GmkNpcManager) == 0x40, "");
 
 } // namespace gmk

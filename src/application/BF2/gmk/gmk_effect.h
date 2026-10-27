@@ -30,7 +30,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_EFFECT;
 
-  ~GmkEffect() override;
+  ~GmkEffect() override { dispose(); }
   GmkType getGmkType() const override;
   void create(const CreateInfo &info) override;
   void dispose() override;

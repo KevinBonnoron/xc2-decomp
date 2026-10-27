@@ -128,7 +128,9 @@ public:
   u8 _5c[0x1a0 - 0x5c];
   bool unknown1A0; // Inferred role: pop condition flag; original member name unknown.
   bool unknown1A1; // Inferred role: pop condition matched; original member name unknown.
-  u8 _1a2[0x1d0 - 0x1a2];
+  u8 _1a2[0x1b8 - 0x1a2];
+  f32 unknown1B8; // Role and original member name unknown.
+  u8 _1bc[0x1d0 - 0x1bc];
 };
 
 static_assert(offsetof(GmkEnemy, unknown48) == 0x48, "");
@@ -136,6 +138,7 @@ static_assert(offsetof(GmkEnemy, unknown50) == 0x50, "");
 static_assert(offsetof(GmkEnemy, unknown58) == 0x58, "");
 static_assert(offsetof(GmkEnemy, unknown1A0) == 0x1a0, "");
 static_assert(offsetof(GmkEnemy, unknown1A1) == 0x1a1, "");
+static_assert(offsetof(GmkEnemy, unknown1B8) == 0x1b8, "");
 static_assert(sizeof(GmkEnemy::BdatInfo) == 0x8, "");
 static_assert(sizeof(GmkEnemy) == 0x1d0, "");
 

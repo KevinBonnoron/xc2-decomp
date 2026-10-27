@@ -2,6 +2,7 @@
 
 #include <math.h>
 
+#include "framework/debug/debug_draw.h"
 #include "framework/sound/sound_manager.h"
 #include "fw/fw_transform.h"
 #include "gf/game/gf_game_manager.h"
@@ -10,6 +11,9 @@
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
+#include "gmk/gmk_base.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_math.h"
 
 namespace gmk {
@@ -39,6 +43,17 @@ void GmkCtrlVolSe::disposeInst(bool isFadeOut) {
     fw::SoundManager::get()->stopSe(unknown60, isFadeOut ? 1.0f : 0.0f);
   }
   unknown60 = 0;
+}
+
+void GmkCtrlVolSe::debugDraw() const {
+  if (unknown20.unknown00 == nullptr || unknown20.unknown08 == 0 || unknown60 == 0) {
+    return;
+  }
+  mm::Vec3 position = unknown70;
+  mm::Mat44 matrix;
+  unknown001(matrix, position);
+  fw::debug::drawCircleLine(matrix, unknown20.unknown14, mm::Col4::blue);
+  fw::debug::drawCircleLine(matrix, unknown20.unknown10, mm::Col4::red);
 }
 
 void GmkCtrlVolSe::validateMute() const {

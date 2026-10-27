@@ -33,7 +33,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_TRIGGER;
 
-  ~GmkTrigger() override;
+  ~GmkTrigger() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
   void create(const CreateInfo &info) override;

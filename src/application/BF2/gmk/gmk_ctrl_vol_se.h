@@ -46,6 +46,7 @@ public:
   void update(f32 deltaTime);
   bool isPlayEnd() const;
   void validateMute() const;
+  void debugDraw() const;
 
   CreateInfo unknown20; // Inferred role: create info; original member name unknown.
   u32 unknown60;        // Inferred role: sound handle; original member name unknown.

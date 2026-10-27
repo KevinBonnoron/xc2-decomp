@@ -3,6 +3,7 @@
 
 #include "bdat.h"
 #include "framework/debug/debug_draw.h"
+#include "framework/sound/sound_manager.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/field/gf_field_sound.h"
 #include "gf/game/gf_game_cond.h"
@@ -15,6 +16,7 @@
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_set.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 
 namespace gmk {
@@ -80,6 +82,33 @@ GmkType GmkSeLinePoint::getGmkType() const { return GMK_TYPE; }
 bool GmkSeLinePoint::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
 
 GmkType GmkSe::getGmkType() const { return GMK_TYPE; }
+
+void GmkSe::dispose() {
+  disposeInst(true);
+  AGmkBase::dispose();
+}
+
+void GmkSe::disposeInst(bool isFadeOut) {
+  if (unknownF4 != 0) {
+    fw::SoundManager::get()->stopSe(unknownF4, isFadeOut ? 1.0f : 0.0f);
+    unknownF4 = 0;
+    if (intoNode() && TGmkActiveList<GmkSe>::get() != nullptr) {
+      TGmkActiveList<GmkSe>::get()->unknown08.erase(this);
+    }
+  }
+}
+
+void GmkSe::debugDraw() const {
+  if (!isValid() || !unknownF0) {
+    return;
+  }
+  mm::Vec3 position = AGmkBase::unknown08.unknown08->unknown00;
+  mm::Mat44 matrix;
+  unknown001(matrix, position);
+  const Data *data = getData();
+  fw::debug::drawCircleLine(matrix, data->unknown04, mm::Col4::blue);
+  fw::debug::drawCircleLine(matrix, data->unknown00, mm::Col4::red);
+}
 
 void GmkSe::createGmkPhantom() {
   if (canCreateGameEntity() && static_cast<u32>(AGmkBase::unknown08.unknown10->unknown0c - SHAPE_TYPE_SPHERE) < 3) {
@@ -169,6 +198,21 @@ bool GmkSeLine::getPointPos(mm::Vec3 &position, u32 index) const {
   const mm::Vec3 *pointPos = reinterpret_cast<const mm::Vec3 *>(point->unknown20.unknown08);
   position = *pointPos;
   return true;
+}
+
+void GmkSeLine::dispose() {
+  disposeInst(true);
+  AGmkBase::dispose();
+}
+
+void GmkSeLine::disposeInst(bool isFadeOut) {
+  if (unknown5C != 0) {
+    fw::SoundManager::get()->stopSe(unknown5C, isFadeOut ? 1.0f : 0.0f);
+    unknown5C = 0;
+    if (intoNode() && TGmkActiveList<GmkSeLine>::get() != nullptr) {
+      TGmkActiveList<GmkSeLine>::get()->unknown08.erase(this);
+    }
+  }
 }
 
 GmkSeLine::GmkSeLine() : IntrusiveListNode(), unknown58(false), unknown59(false), unknown5C(0), unknown60(0.0f), unknown64(0), unknown68(false) {}

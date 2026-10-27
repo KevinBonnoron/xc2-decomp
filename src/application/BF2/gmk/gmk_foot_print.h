@@ -43,7 +43,7 @@ public:
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_FOOT_PRINT;
 
   GmkRoutedFootPrint();
-  ~GmkRoutedFootPrint() override;
+  ~GmkRoutedFootPrint() override { dispose(); }
   GmkType getGmkType() const override;
   void create(const CreateInfo &info) override;
   void dispose() override;

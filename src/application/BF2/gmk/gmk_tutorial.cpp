@@ -3,6 +3,7 @@
 
 #include <string.h>
 
+#include "framework/debug/debug_draw.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
@@ -10,6 +11,9 @@
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gmk/gmk_active_list.h"
 #include "gmk/gmk_bdat.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_vec2.h"
+#include "mm_mtl/fixstr.h"
 
 namespace gmk {
 
@@ -49,6 +53,19 @@ bool GmkTutorial::BdatInfo::isCondMatched() const {
     return false;
   }
   return true;
+}
+
+void GmkTutorial::debugDraw() const {
+  if (!isValid()) {
+    return;
+  }
+  mm::Col4 color = unknownF0 ? mm::Col4::red : mm::Col4::white;
+  mm::Vec2 screen;
+  if (toScreenPos(screen, AGmkBase::unknown08.unknown08->unknown00)) {
+    mm::mtl::FixStr<256> text;
+    text.format("%s:%d", getData()->unknown00, getData()->unknown08);
+    fw::debug::drawFont(static_cast<int>(screen.x), static_cast<int>(screen.y) + 16, color, text.c_str());
+  }
 }
 
 GmkType GmkTutorial::getGmkType() const { return GMK_TYPE; }
