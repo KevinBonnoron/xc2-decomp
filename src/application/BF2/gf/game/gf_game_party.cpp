@@ -28,6 +28,7 @@
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_command.h"
 #include "gf/request/gf_req_scom.h"
+#include "gf/request/gf_scom.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/rtti.h"
 

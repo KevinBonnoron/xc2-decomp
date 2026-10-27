@@ -20,6 +20,7 @@
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_scom.h"
+#include "gf/request/gf_scom.h"
 #include "idcoli/idcoli.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"

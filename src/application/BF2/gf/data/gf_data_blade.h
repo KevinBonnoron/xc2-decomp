@@ -315,6 +315,7 @@ public:
   static bool isDummyBlade(u32 blade);
   static bool isUnselect(u32 blade);
   static void getListParty(mm::mtl::FixedVector<u16, 422> &blades);
+  static void getListPartyAll(mm::mtl::FixedVector<u16, 422> &blades);
   static void getListReserver(mm::mtl::FixedVector<u16, 422> &reservers);
   static bool isActivateUnuse(u32 blade);
   static bool isActivateMercenaryTeam(u32 blade);
