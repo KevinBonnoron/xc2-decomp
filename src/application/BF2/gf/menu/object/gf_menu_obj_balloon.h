@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "gf/menu/gf_menu_bdat.h"
+#include "gf/menu/gf_menu_object.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
 
@@ -10,8 +11,10 @@ namespace gf {
 class GfMenuCallContext;
 struct GF_OBJ_HANDLE;
 
-class GfMenuObjBalloon {
+class GfMenuObjBalloon : public GfMenuObject {
 public:
+  void initialize() override;
+  void finalize() override;
   struct NextParam {
     u8 *unknown00; // Inferred role: bdat; original member name unknown.
     u32 unknown08; // Inferred role: text id; original member name unknown.

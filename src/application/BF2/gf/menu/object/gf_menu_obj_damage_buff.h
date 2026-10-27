@@ -1,13 +1,18 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/menu/gf_menu_object.h"
+
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 
 namespace gf {
 
-class GfMenuObjDamageBuff {
+class GfMenuObjDamageBuff : public GfMenuObject {
 public:
+  void initialize() override;
+  void finalize() override;
+  void update() override;
   struct OpenParam {
     OpenParam() : unknown04(0), unknown05(0), unknown08(0), unknown10(nullptr), unknown18(0), unknown1c(0) {}
 

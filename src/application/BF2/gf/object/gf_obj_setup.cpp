@@ -2,6 +2,8 @@
 
 namespace gf {
 
+u32 GfObjSetup::getEnArrangeID() const { return 0; }
+
 void GfObjSetup::setInitialScale(f32 scale) {
   unknown40 = scale;
   unknown44 = scale;

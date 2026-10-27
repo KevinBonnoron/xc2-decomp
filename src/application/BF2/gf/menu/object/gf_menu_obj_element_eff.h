@@ -1,12 +1,15 @@
 #pragma once
+#include "gf/menu/gf_menu_object.h"
 #include "types.h"
 
 namespace gf {
 
 class GfMenuCallContext;
 
-class GfMenuObjElementEff {
+class GfMenuObjElementEff : public GfMenuObject {
 public:
+  void initialize() override;
+  void finalize() override;
   struct StartParam {
     u32 attribute;
   };

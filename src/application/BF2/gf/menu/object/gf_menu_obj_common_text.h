@@ -1,4 +1,5 @@
 #pragma once
+#include "gf/menu/gf_menu_object.h"
 #include "types.h"
 
 namespace gf {
@@ -6,8 +7,11 @@ namespace gf {
 class GfMenuCallContext;
 struct MenuCommonWindowParam;
 
-class GfMenuObjCommonText {
+class GfMenuObjCommonText : public GfMenuObject {
 public:
+  void initialize() override;
+  void finalize() override;
+  void update() override;
   struct OpenKizunaParam {
     const u8 *unknown00; // Inferred role: bdat; original member name unknown.
     u32 unknown08;       // Inferred role: text id; original member name unknown.

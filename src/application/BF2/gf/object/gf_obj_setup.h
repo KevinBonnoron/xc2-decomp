@@ -25,6 +25,7 @@ public:
   virtual ~GfObjSetup();
   virtual u32 getFootStep() const;
   virtual u32 getFootStepEffect() const;
+  virtual u32 getEnArrangeID() const;
 
   void setInitialScale(f32 scale);
   void setInitialScale(const mm::Vec3 &scale);
@@ -159,7 +160,7 @@ public:
   static mm::mtl::RTTI m_rtti;
   static const u32 OBJECT_TYPE = OBJECT_TYPE_ENEMY;
 
-  virtual u32 getEnArrangeID() const;
+  u32 getEnArrangeID() const override;
 
   u8 _5c[0x6c - 0x5c];
   u32 unknown6c; // Inferred role: en param id; original member name unknown.
