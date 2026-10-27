@@ -146,7 +146,9 @@ public:
   u8 _0188[0x0580 - 0x0188];
   DrCalcMan *unknown580;  // Inferred role: calc man; original member name unknown.
   DrLightMan *unknown588; // Inferred role: light man; original member name unknown.
-  u8 _0590[0x05b0 - 0x0590];
+  u8 _0590[0x0598 - 0x0590];
+  DrEnvironmentMan *unknown598; // Inferred role: environment man; original member name unknown.
+  u8 _05a0[0x05b0 - 0x05a0];
   DrCalcTexStreamMan *unknown5b0; // Inferred role: tex stream man; original member name unknown.
   DrScreenInfo *unknown5b8;       // Inferred role: screen info; original member name unknown.
   DrAPCache *unknown5c0;          // Inferred role: ap cache; original member name unknown.
@@ -236,6 +238,7 @@ static_assert(offsetof(DrMan, unknown160) == 0x0160, "");
 static_assert(offsetof(DrMan, unknown180) == 0x0180, "");
 static_assert(offsetof(DrMan, unknown580) == 0x0580, "");
 static_assert(offsetof(DrMan, unknown588) == 0x0588, "");
+static_assert(offsetof(DrMan, unknown598) == 0x0598, "");
 static_assert(offsetof(DrMan, unknown5b0) == 0x05b0, "");
 static_assert(offsetof(DrMan, unknown5b8) == 0x05b8, "");
 static_assert(offsetof(DrMan, unknown5c0) == 0x05c0, "");
