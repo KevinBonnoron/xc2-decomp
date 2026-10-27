@@ -80,6 +80,7 @@ public:
   void removeLocalWind(LocalWind &wind);
   void setDebugMode(bool enable, u32 mask);
   bool query(Query *query);
+  void update(f32 deltaTime);
 
   u8 _0c[0x10 - 0x0c];
   GlobalWindManager unknown10; // Inferred role: global wind; original member name unknown.

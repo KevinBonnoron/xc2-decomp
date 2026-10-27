@@ -1,6 +1,99 @@
 #include "framework/anim/anim_manager.h"
 
+#include "anm/anm_thread_pool.h"
+#include "framework/memory/allocator.h"
+#include "framework/memory/framework_memory.h"
+
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace fw {
+
+AnimationManager::AnimationManager() {
+  unknownf20 = nullptr;
+  unknownf18 = nullptr;
+  mm::mtl::IAllocator *allocator = Allocator::getProcAllocator();
+  anm::TreadPoolInfo info;
+  info.unknown00 = 3;
+  info.unknown04 = 2;
+  info.unknown08 = 2;
+#line 40
+  unknownf18 = new (allocator, 16, __FILE__, __LINE__) anm::ThreadPool(info, *allocator);
+#line 43
+  unknownf20 = new (allocator, 16, __FILE__, __LINE__) anm::JobQueue(allocator);
+  unknownf20->registerJobExecuter(0, AnimSamplePoseJob::exec);
+  unknownf20->registerJobExecuter(1, AnimModifyPoseJob::exec);
+  unknownf20->registerJobExecuter(2, AnimAfterModifyJob::exec);
+  unknownf20->registerJobExecuter(3, AnimIkResolveJob::exec);
+}
+
+AnimationManager::~AnimationManager() {
+  unknownf18->waitForCompletion();
+  if (unknownf20 != nullptr) {
+    delete unknownf20;
+    unknownf20 = nullptr;
+  }
+
+  if (unknownf18 != nullptr) {
+    delete unknownf18;
+    unknownf18 = nullptr;
+  }
+}
+
+void AnimationManager::samplePose(u32 layers) {
+  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+    if ((layers & 1 << layer) != 0) {
+      unknown002<AnimSamplePoseJob, AnimPoseSamplerInterface>(unknown18[layer].unknown18);
+    }
+  }
+
+  unknownf18->processAllJob(*unknownf20);
+  unknownf18->waitForCompletion();
+}
+
+void AnimationManager::applyPose(u32 layers) {
+  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+    if ((layers & 1 << layer) != 0) {
+      unknown002<AnimModifyPoseJob, AnimPoseModifierInterface>(unknown18[layer].unknown30);
+    }
+  }
+
+  unknownf18->processAllJob(*unknownf20);
+  unknownf18->waitForCompletion();
+}
+
+void AnimationManager::applyAfterModifyPose(u32 layers) {
+  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+    if ((layers & 1 << layer) != 0) {
+      unknown002<AnimAfterModifyJob, AnimAfterModifierInterface>(unknown18[layer].unknown48);
+    }
+  }
+
+  unknownf18->processAllJob(*unknownf20);
+  unknownf18->waitForCompletion();
+}
+
+void AnimationManager::solveIK(const UpdateInfo &info, u32 layers) {
+  for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+    if ((layers & 1 << layer) != 0) {
+      mm::mtl::IntrusiveList<IkResolver> &list = unknown18[layer].unknown60;
+      mm::mtl::IntrusiveList<IkResolver>::iterator it = list.begin();
+      for (int count = list.size(); count != 0; count--) {
+        AnimIkResolveJob job(1);
+        job.unknown20 = &info;
+        job.unknown10[0] = &*it;
+        ++it;
+        unknownf20->unknown001(job);
+      }
+    }
+  }
+
+  unknownf18->processAllJob(*unknownf20);
+  unknownf18->waitForCompletion();
+}
 
 const char *AnimationManager::getName() const { return "AnimObjectManager"; }
 
@@ -31,50 +124,6 @@ void IkResolver::resolve(const UpdateInfo &info) {
     if (unknown10[i].get() != nullptr) {
       unknown10[i]->solve(info);
     }
-  }
-}
-
-const char *AnimSamplePoseJob::_TYPE_NAME = "AnimSamplePoseJob";
-
-AnimSamplePoseJob::AnimSamplePoseJob(u32 count) : anm::Job(_TYPE_NAME, sizeof(AnimSamplePoseJob), 0), unknown30(count) {}
-
-void AnimSamplePoseJob::exec(anm::Job &job) {
-  AnimSamplePoseJob &samplePoseJob = static_cast<AnimSamplePoseJob &>(job);
-  for (int i = 0; i < samplePoseJob.unknown30; i++) {
-    samplePoseJob.unknown10[i]->samplePose();
-  }
-}
-
-const char *AnimModifyPoseJob::_TYPE_NAME = "AnimModifyPoseJob";
-
-AnimModifyPoseJob::AnimModifyPoseJob(u32 count) : anm::Job(_TYPE_NAME, sizeof(AnimModifyPoseJob), 1), unknown30(count) {}
-
-void AnimModifyPoseJob::exec(anm::Job &job) {
-  AnimModifyPoseJob &modifyPoseJob = static_cast<AnimModifyPoseJob &>(job);
-  for (int i = 0; i < modifyPoseJob.unknown30; i++) {
-    modifyPoseJob.unknown10[i]->apply();
-  }
-}
-
-const char *AnimAfterModifyJob::_TYPE_NAME = "AnimAfterModifyJob";
-
-AnimAfterModifyJob::AnimAfterModifyJob(u32 count) : anm::Job(_TYPE_NAME, sizeof(AnimAfterModifyJob), 2), unknown30(count) {}
-
-void AnimAfterModifyJob::exec(anm::Job &job) {
-  AnimAfterModifyJob &afterModifyJob = static_cast<AnimAfterModifyJob &>(job);
-  for (int i = 0; i < afterModifyJob.unknown30; i++) {
-    afterModifyJob.unknown10[i]->apply();
-  }
-}
-
-const char *AnimIkResolveJob::_TYPE_NAME = "AnimIkResolveJob";
-
-AnimIkResolveJob::AnimIkResolveJob(u32 count) : anm::Job(_TYPE_NAME, sizeof(AnimIkResolveJob), 3), unknown18(count), unknown20(nullptr) {}
-
-void AnimIkResolveJob::exec(anm::Job &job) {
-  AnimIkResolveJob &ikResolveJob = static_cast<AnimIkResolveJob &>(job);
-  for (int i = 0; i < ikResolveJob.unknown18; i++) {
-    ikResolveJob.unknown10[i]->resolve(*ikResolveJob.unknown20);
   }
 }
 

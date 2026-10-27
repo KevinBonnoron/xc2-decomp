@@ -104,6 +104,7 @@ public:
   static const long &getSyncClock();
   static u32 getCounter();
   static void gotoBackground();
+  static void setBackground(bool isBackground);
   static void gotoForeground();
   static void backgroundProcess();
   static void backgroundProcess(CPUID cpu);

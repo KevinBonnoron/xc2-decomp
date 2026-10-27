@@ -100,10 +100,12 @@ static_assert(offsetof(ScriptInfo, unknown228) == 0x228, "");
 static_assert(offsetof(ScriptInfo, unknown230) == 0x230, "");
 static_assert(offsetof(ScriptInfo, unknown238) == 0x238, "");
 
-class ScriptManager : public ManagerObject, public mm::mtl::PtrSingleton<ScriptManager> {
+class ScriptManager : public ManagerObject, public mm::mtl::PtrSingleton<ScriptManager>, public ml::IWorkEvent {
 public:
+  ScriptManager(mm::mtl::IAllocator *allocator, size_t count);
   ~ScriptManager();
   bool initialize() override;
+  bool finalize() override;
   virtual void update(const UpdateInfo &info);
   void createScript(int type, mtl::ALLOC_HANDLE handle, size_t size);
   void createScript(int type, mm::mtl::IAllocator *allocator, size_t size);
@@ -116,7 +118,6 @@ public:
   void notifyEvent(int type, ScriptEventParam::State state);
   u32 getTypeMax() const;
 
-  u8 _18[0x20 - 0x18];
   mm::mtl::Array<ScriptInfo> unknown20;              // Inferred role: scripts; original member name unknown.
   mm::mtl::FixedQueue<IScriptEvent *, 32> unknown38; // Inferred role: events; original member name unknown.
 };

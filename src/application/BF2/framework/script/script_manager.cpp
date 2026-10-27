@@ -9,6 +9,10 @@ extern "C" void vmExec();
 
 namespace fw {
 
+ScriptManager::ScriptManager(mm::mtl::IAllocator *allocator, size_t count) : unknown20(allocator) { unknown20.reserve(count); }
+
+ScriptManager::~ScriptManager() { finalize(); }
+
 IScriptEvent::~IScriptEvent() {
   if (ScriptManager::get() != nullptr) {
     ScriptManager::get()->removeEvent(this);

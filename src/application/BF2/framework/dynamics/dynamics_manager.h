@@ -3,9 +3,14 @@
 
 #include "anm/anm_job.h"
 #include "framework/manager_object.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
+
+namespace anm {
+class JobQueue;
+} // namespace anm
 
 namespace fw {
 
@@ -56,27 +61,33 @@ static_assert(offsetof(DynamicsUpdateJob, unknown18) == 0x18, "");
 static_assert(offsetof(DynamicsUpdateJob, unknown20) == 0x20, "");
 static_assert(sizeof(DynamicsUpdateJob) == 0x28, "");
 
+struct DynamicsGroup {
+  mm::mtl::IntrusiveList<DynamicsUpdaterInterface> unknown00;       // Inferred role: updaters; original member name unknown.
+  mm::mtl::IntrusiveList<DynamicsColObjUpdaterInterface> unknown18; // Inferred role: col updaters; original member name unknown.
+};
+
+static_assert(sizeof(DynamicsGroup) == 0x30, "");
+
 class DyanmicsManager : public ManagerObject, public mm::mtl::PtrSingleton<DyanmicsManager> {
 public:
   static const u32 LAYER_MAX = 32;
 
-  struct Group {
-    mm::mtl::IntrusiveList<DynamicsUpdaterInterface> unknown00;       // Inferred role: updaters; original member name unknown.
-    mm::mtl::IntrusiveList<DynamicsColObjUpdaterInterface> unknown18; // Inferred role: col updaters; original member name unknown.
-  };
-
+  DyanmicsManager();
   ~DyanmicsManager() override;
   const char *getName() const override;
   virtual void update(const UpdateInfo &info);
+  void updateColObjects(u32 layers);
+  void updateDynamics(const UpdateInfo &info, u32 layers);
   void addColUpdater(u32 layer, DynamicsColObjUpdaterInterface &updater);
   void removeColUpdater(u32 layer, DynamicsColObjUpdaterInterface &updater);
   void addUpdater(u32 layer, DynamicsUpdaterInterface &updater);
   void removeUpdater(u32 layer, DynamicsUpdaterInterface &updater);
 
-  Group unknown18[LAYER_MAX]; // Inferred role: groups; original member name unknown.
+  mm::mtl::FixedArray<DynamicsGroup, LAYER_MAX> unknown18; // Inferred role: groups; original member name unknown.
+  anm::JobQueue *unknown618;                               // Inferred role: job queue; original member name unknown.
 };
 
-static_assert(sizeof(DyanmicsManager::Group) == 0x30, "");
 static_assert(offsetof(DyanmicsManager, unknown18) == 0x18, "");
+static_assert(offsetof(DyanmicsManager, unknown618) == 0x618, "");
 
 } // namespace fw

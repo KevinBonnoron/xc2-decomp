@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "anm/anm_reference_object.h"
 #include "types.h"
 
 namespace fw {
@@ -12,9 +13,8 @@ struct ResAction {
 
 static_assert(sizeof(ResAction) == 0x18, "");
 
-class PadResEvent {
+class PadResEvent : public anm::ReferenceObject {
 public:
-  u8 _00[0x18];               // Inferred role: vtable pointer and header fields; original member names unknown.
   const ResAction *unknown18; // Inferred role: actions; original member name unknown.
   u32 unknown20;              // Inferred role: action count; original member name unknown.
 };

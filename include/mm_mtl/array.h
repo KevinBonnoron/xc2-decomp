@@ -1,9 +1,9 @@
 #pragma once
-#include <new>
-#include <stddef.h>
-
 #include "mm/mm_std_base.h"
 #include "mm_mtl/allocator.h"
+#include "mm_mtl/construct.h"
+#include <new>
+#include <stddef.h>
 
 namespace mm {
 namespace mtl {
@@ -11,6 +11,7 @@ namespace mtl {
 template <typename T> class Array {
 public:
   Array() : m_element(nullptr), m_size(0), m_allocator(nullptr) {}
+  explicit Array(IAllocator *allocator) : m_element(nullptr), m_size(0), m_allocator(allocator) {}
   ~Array() { destroy(); }
 
   T *begin() const {
@@ -57,6 +58,9 @@ public:
 
   void destroy() {
     if (m_element != nullptr) {
+      for (size_t i = 0; i < m_size; i++) {
+        destruct(&m_element[i]);
+      }
       m_allocator->deallocate(m_element);
       m_element = nullptr;
       m_size = 0;

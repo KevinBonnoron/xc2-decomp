@@ -15,24 +15,24 @@ public:
   explicit ReferenceObject(const SerialiseArg &arg) {}
   virtual ~ReferenceObject() {}
 
-  void addRef() {
+  void addRef() const {
     if (unknown0a) {
       unknown08++;
     }
   }
 
-  void release() {
+  void release() const {
     if (unknown0a) {
       if (--unknown08 <= 0) {
         MM_ASSERT(m_pAllocator);
         this->~ReferenceObject();
-        m_pAllocator->deallocate(this);
+        m_pAllocator->deallocate(const_cast<ReferenceObject *>(this));
       }
     }
   }
 
-  s16 unknown08; // Inferred role: ref count; original member name unknown.
-  u16 unknown0a; // Inferred role: shared; original member name unknown.
+  mutable s16 unknown08; // Inferred role: ref count; original member name unknown.
+  u16 unknown0a;         // Inferred role: shared; original member name unknown.
   mm::mtl::IAllocator *m_pAllocator;
 };
 

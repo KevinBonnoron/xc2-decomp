@@ -1,5 +1,6 @@
 #pragma once
 #include "framework/manager_object.h"
+#include "framework/pad/pad_res_event_manager.h"
 #include "ml/dev_graph_cb.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_array.h"
@@ -20,6 +21,8 @@ struct PadVibrationInfo;
 } // namespace ml
 
 namespace fw {
+
+struct UpdateInfo;
 
 struct PadData {
   PadData() : unknown00(0), unknown04(0), unknown08(0), unknown0c(0), _10(), _28(), unknown2c(0.2f), unknown30(0.2f), unknown34(0.2f), unknown38(0.2f), unknown3c(-1), unknown40(), unknown44() {}
@@ -92,6 +95,7 @@ public:
   static PadData m_nullPad;
 
   ~PadManager();
+  bool initialize() override;
   bool finalize() override;
   static void stopVibration();
   static bool registListener(IPadListener *listener);
@@ -99,6 +103,9 @@ public:
   static void setFilter(int padNo, IPadFilter *filter);
   bool isInitialized() const override;
   const char *getName() const override;
+  virtual void debugDraw(int x, int y);
+  virtual void update(const UpdateInfo &info);
+  void viBeginFrame() override;
   static int getPadMax();
   u32 updateRepeat(int padNo, const PadData &pad, PadWorkArray &works, f32 deltaTime);
   u32 updateCnt(int padNo, const PadData &pad, PadWorkArray &works, f32 deltaTime);
@@ -122,6 +129,7 @@ public:
   static void enableDebugDraw(bool isEnable);
   static bool isDebugDraw();
   static void setConfigData(int padNo, const PadConfigData &data);
+  void updateControlPadNo(int padNo);
 
   IPadFilter *unknown20[PAD_MAX]; // Inferred role: filters; original member name unknown.
   PadData unknown80[PAD_MAX];     // Inferred role: pads; original member name unknown.
@@ -141,6 +149,7 @@ public:
   int unknown3670; // Inferred role: user select pad no; original member name unknown.
   u8 _3674[0x3678 - 0x3674];
   mm::mtl::FixedQueue<IPadListener *, LISTENER_MAX> unknown3678; // Inferred role: listeners; original member name unknown.
+  PadResEventManager unknown3708;                                // Inferred role: pad res event manager; original member name unknown.
 };
 
 static_assert(offsetof(PadManager, unknown20) == 0x20, "");
@@ -152,6 +161,7 @@ static_assert(offsetof(PadManager, unknown3650) == 0x3650, "");
 static_assert(offsetof(PadManager, unknown3200) == 0x3200, "");
 static_assert(offsetof(PadManager, unknown3660) == 0x3660, "");
 static_assert(offsetof(PadManager, unknown3678) == 0x3678, "");
+static_assert(offsetof(PadManager, unknown3708) == 0x3708, "");
 
 class IPadListener {
 public:

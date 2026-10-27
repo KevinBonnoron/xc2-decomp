@@ -1,6 +1,10 @@
 #include "framework/manager_object.h"
+#include "framework/sound/sound_manager.h"
 #include "fw/fw_pad.h"
+#include "ml/controller_applet.h"
 #include "ml/dev_pad.h"
+#include "ml/dev_perf.h"
+#include "ml/work_cpu.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_queue.h"
@@ -11,6 +15,8 @@ struct PadVibrationInfo;
 } // namespace ml
 
 namespace fw {
+
+PadManager::~PadManager() {}
 
 IPadListener::~IPadListener() { PadManager::removeListener(this); }
 
@@ -190,6 +196,52 @@ void PadManager::setConfigData(int padNo, const PadConfigData &data) {
   if (manager != nullptr) {
     manager->unknown3200[padNo] = data;
   }
+}
+
+void PadManager::updateControlPadNo(int padNo) {
+  int userPadNo = ml::DevPad::getUserSelectPadID();
+  if (userPadNo == -1) {
+    unknown3670 = -1;
+  } else {
+    int prevPadNo = unknown3670;
+    if (!unknown80[userPadNo].unknown40) {
+      userPadNo = -1;
+    }
+    unknown3670 = userPadNo;
+    if (prevPadNo != userPadNo && userPadNo != -1) {
+      unknown35f0[padNo] = userPadNo;
+      return;
+    }
+  }
+
+  if (ml::DevPerf::getOperationMode() == ml::DEV_PERF_OPERATION_MODE_HANDHELD) {
+    if (padNo == 0) {
+      const PadData &handheldPad = unknown80[4];
+      if (handheldPad.unknown40 && handheldPad.unknown44 == 3) {
+        unknown35f0[0] = 4;
+        return;
+      }
+    }
+    u32 index = padNo;
+    if (unknown80[index].unknown40 && unknown80[index].unknown44 - 1 < 2) {
+      unknown35f0[padNo] = padNo;
+      return;
+    }
+  } else if (ml::DevPerf::getOperationMode() == ml::DEV_PERF_OPERATION_MODE_CONSOLE) {
+    for (u32 i = padNo; i < PAD_MAX; i++) {
+      if (unknown80[i].unknown40 && unknown80[i].unknown44 - 1 < 2) {
+        unknown35f0[padNo] = i;
+        return;
+      }
+    }
+  }
+
+  SoundManager::get()->pauseAll(true, 0.0f);
+  ml::WorkCpu::setBackground(true);
+  ml::ControllerApplet::showApplet();
+  ml::WorkCpu::setBackground(false);
+  SoundManager::get()->pauseAll(false, 0.0f);
+  unknown35f0[padNo] = -1;
 }
 
 const char *PadManager::getName() const { return "PadManager"; }
