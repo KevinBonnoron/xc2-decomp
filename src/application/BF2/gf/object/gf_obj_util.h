@@ -6,6 +6,10 @@
 #include "mm_mtl/rtti.h"
 #include "types.h"
 
+namespace mm {
+struct Vec3;
+} // namespace mm
+
 namespace fw {
 class SoundPack;
 }
@@ -35,6 +39,7 @@ enum {
   OBJ_FLAG_CAMERA_FADE_DISABLE_FOR_EVENT = 0xb,
   OBJ_FLAG_CAMERA_FADE_DISABLE_FOR_BATTLE = 0xc,
   OBJ_FLAG_CALC_CAMERA_ALPHA = 0xd,
+  OBJ_FLAG_UNKNOWN_E = 0xe, // Inferred role: flag tested by isDestroyGameObj; original name unknown.
   OBJ_FLAG_WAIT = 0x10,
   OBJ_FLAG_UI_HIDDEN = 0x11,
   OBJ_FLAG_PARTY_OBJ = 0x12,
@@ -98,6 +103,7 @@ public:
   static bool setFlag(GFOBJ_INFO *info, u32 flag, bool value);
   static bool testFlag(GF_OBJ_HANDLE *handle, u32 flag);
   static bool testFlag(const GFOBJ_INFO *info, u32 flag);
+  static void copyTransformToSetup(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation);
   static bool testFlag(const GfObj *obj, u32 flag);
   static const char *getModelBaseName(GF_OBJ_HANDLE *handle);
   static const char *getAssetModelName(GF_OBJ_HANDLE *handle);

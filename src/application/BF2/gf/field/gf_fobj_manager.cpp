@@ -10,6 +10,14 @@ bool GfFobjManager::isInitialized() {
   return false;
 }
 
+GfDropitemParams *GfFobjManager::getDropitemParams() {
+  GfFobjManager *manager = get();
+  if (manager != nullptr) {
+    return manager->unknown9060;
+  }
+  return nullptr;
+}
+
 bool GfFobjManager::isExistObj() {
   GfFobjManager *manager = get();
   if (manager->unknown4830 != 0) {

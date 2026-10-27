@@ -8,6 +8,7 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 struct GF_SEARCH_OBJ;
+struct GfSetupParam;
 
 static GF_SEARCH_OBJ *const INVALID_SEARCH_OBJ = reinterpret_cast<GF_SEARCH_OBJ *>(-1);
 
@@ -31,6 +32,7 @@ public:
   static GfSearchInfo *getInfo(GF_SEARCH_OBJ *searchObj);
   static GF_OBJ_HANDLE *getObj(GF_SEARCH_OBJ *searchObj);
   u64 createHandle(u32 index);
+  void initialize(const GfSetupParam &param);
 
   u8 _08[0x2428 - 0x08];
   GfSearchInfo *unknown2428; // Inferred role: search infos; original member name unknown.

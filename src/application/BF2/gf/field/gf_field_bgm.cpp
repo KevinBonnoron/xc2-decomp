@@ -1,14 +1,150 @@
 #include "gf/field/gf_field_bgm.h"
 
+#include "fw/fw_update_info.h"
 #include "gf/data/gf_bdat_maplist.h"
 #include "gf/event/gf_event.h"
+#include "gf/game/event/gf_evt_bgm.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_scene.h"
+#include "gf/gf_manager.h"
+#include "gf/gf_pause.h"
 
 namespace gf {
 
 namespace _gffsn {
 bool s_bStopBGM;
+
+// Inferred role: bgm condition ids of the field bgm; original name unknown.
+static const u16 unknown001[] = {2, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 45, 46, 47, 48};
+
+bool isFieldBgmList(u32 id) {
+  for (u32 i = 0; i < sizeof(unknown001) / sizeof(unknown001[0]); i++) {
+    if (unknown001[i] == id) {
+      return true;
+    }
+  }
+  return false;
+}
+
+f32 bgmvolControlFade(const fw::UpdateInfo &info, f32 time, bool isFadeOut) {
+  if (time < 1e-6f) {
+    if (isFadeOut) {
+      return -1.0f;
+    }
+    return 1.0f;
+  }
+  if (isFadeOut) {
+    return -(info.unknown04 / time);
+  }
+  return info.unknown04 / time;
+}
+
+f32 bgmvolControlMulti(f32 volume, bool isEnable) {
+  if (!isEnable) {
+    volume = 1.0f;
+  }
+  return volume;
+}
+
+f32 bgmvolMultiWeather(f32, f32, f32 volume) { return bgmvolControlMulti(volume, GfGameManager::isWeatherSE()); }
+
+f32 bgmvolMultiMenuPause(f32, f32, f32 volume) { return bgmvolControlMulti(volume, GfPause::isPause(4) && GfGameManager::isFullScreenMenu()); }
+
+f32 bgmvolMultiTalkPause(f32, f32, f32 volume) { return bgmvolControlMulti(volume, GfPause::isPause(4) && GfGameManager::isTalking()); }
+
+f32 bgmvolFadeDeadSequence(ExecFadeParam &param) {
+  bool isFadeOut = param.unknown00->unknown620->unknowna9;
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolFadeGimmick(ExecFadeParam &param) {
+  bool isFadeOut = param.unknown00->unknown620->m_rscGimmickBgmID != 0;
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolAdvertize(ExecFadeParam &param) {
+  const fw::UpdateInfo &info = *param.unknown08;
+  f32 time = GfManager::isExecModeAdvertize() ? param.unknown10->unknown20 : param.unknown10->unknown24;
+  return bgmvolControlFade(info, time, GfManager::isExecModeAdvertize());
+}
+
+f32 bgmvolBattleBoss(ExecFadeParam &param) {
+  bool isFadeOut = param.unknown00->unknown620->m_rscBossBattleBgmID != 0 || GfGameManager::isForceBossBattleBgm();
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolNotBattleBoss(ExecFadeParam &param) {
+  bool isFadeOut = !(param.unknown00->unknown620->m_rscBossBattleBgmID != 0 || GfGameManager::isForceBossBattleBgm());
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolFadeBattle(ExecFadeParam &param) {
+  bool isFadeOut = GfGameManager::isBattle() || GfGameManager::isForceBossBattleBgm();
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolFadeNotBattle(ExecFadeParam &param) {
+  bool isFadeOut = !(GfGameManager::isBattle() || GfGameManager::isForceBossBattleBgm());
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolFadeField(ExecFadeParam &param) {
+  bool isFadeOut = !(GfGameManager::isBattle() || GfGameManager::isForceBossBattleBgm());
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolFadeLeaveGame(ExecFadeParam &param) {
+  bool isFadeOut = GfGameManager::isLeaveGameForDebug();
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolFadeEnableEventBgm(ExecFadeParam &param) {
+  bool isFadeOut = GfEvtBgm::get()->isEnableEventBgm() || GfGameManager::isForceEventBgm();
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolFadeDisableEventBgm(ExecFadeParam &param) {
+  bool isFadeOut = !(GfEvtBgm::get()->isEnableEventBgm() || GfGameManager::isForceEventBgm());
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolFadeBattleEvent(ExecFadeParam &param) {
+  bool isFadeOut = GfGameScene::get()->unknown648;
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolFadeNotBattleEvent(ExecFadeParam &param) {
+  bool isFadeOut = GfGameScene::get()->unknown648;
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolFadeEvent(ExecFadeParam &param) {
+  bool isFadeOut = GfGameManager::isInnerState(GF_STATE_EVENT) || GfGameManager::isForceEventBgm();
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolIsBattleDead(ExecFadeParam &param) {
+  bool isFadeOut = GfGameManager::getDeadType() == 1;
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolMapMatch(ExecFadeParam &param) {
+  u32 map = GfGameManager::getMapID();
+  u32 bgmCond = 0;
+  if (map != 0) {
+    bgmCond = GfBdatMaplist::get()->getMaplistbgm_cndID(map);
+  }
+  bool isFadeOut = bgmCond != param.unknown00->m_bgmCondID;
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
+
+f32 bgmvolGimmickMatch(ExecFadeParam &param) {
+  bool isFadeOut = param.unknown00->unknown620->m_rscGimmickBgmID != param.unknown00->m_bgmCondID;
+  return bgmvolControlFade(*param.unknown08, isFadeOut ? param.unknown10->unknown20 : param.unknown10->unknown24, isFadeOut);
+}
 } // namespace _gffsn
+
+u32 BgmTrack::getBgmCondID() const { return m_bgmCondID; }
 
 enum {
   MAPJUMP_TYPE_FIELD_DESTROY = 2,

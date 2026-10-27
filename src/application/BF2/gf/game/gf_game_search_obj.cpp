@@ -2,6 +2,8 @@
 
 namespace gf {
 
+void GfGameSearchObj::initialize(const GfSetupParam &) { unknown9097c = true; }
+
 bool GfGameSearchObj::isInitialized() {
   GfGameSearchObj *search = get();
   if (search != nullptr) {

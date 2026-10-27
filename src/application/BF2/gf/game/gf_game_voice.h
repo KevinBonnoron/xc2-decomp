@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "gf/event/gf_event.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -34,6 +35,7 @@ public:
   bool isPlayVoice(GF_OBJ_HANDLE *handle) const;
   void applyHanaVoiceCondirtion(GfVoiceName &name);
   static bool isInitialized();
+  static const mm::mtl::FixStr<16> &getLangPath();
 
   GAME_VOICE_HANDLE *createHandle();
 

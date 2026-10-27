@@ -17,6 +17,7 @@
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_property.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_vector.h"
 
@@ -385,6 +386,31 @@ bool GfObjUtil::testFlag(GF_OBJ_HANDLE *handle, u32 flag) {
 }
 
 bool GfObjUtil::testFlag(const GfObj *obj, u32 flag) { return obj->unknown100 != nullptr && obj->unknown100->unknown38.test(flag); }
+
+void GfObjUtil::copyTransformToSetup(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation) {
+  GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
+  if (info != nullptr) {
+    GfObjSetup *setup = info->unknown30;
+    if (setup != nullptr) {
+      setup->unknown20 = position;
+      setup->unknown30 = rotation;
+    }
+  }
+}
+
+void GfObjUtil::rebuild(GF_OBJ_HANDLE *handle) {
+  GfObjAcc acc(handle);
+  if (acc.isValid()) {
+    if (acc.getUserData(OBJ_USER_DATA_GMK) == 0) {
+      acc.setFlag(OBJ_FLAG_REBUILD, true);
+      if (GfObjManager::get() != nullptr) {
+        GfObjManager::get()->addDestroyObj(handle, false);
+      }
+    } else {
+      destroy(handle);
+    }
+  }
+}
 
 const char *GfObjUtil::getModelBaseName(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);

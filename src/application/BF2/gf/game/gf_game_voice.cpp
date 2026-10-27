@@ -1,5 +1,8 @@
 #include "gf/game/gf_game_voice.h"
 
+#include "framework/lang_util.h"
+#include "mm_mtl/fixstr.h"
+
 namespace gf {
 
 bool GfGameVoice::isInitialized() {
@@ -9,6 +12,8 @@ bool GfGameVoice::isInitialized() {
   }
   return false;
 }
+
+const mm::mtl::FixStr<16> &GfGameVoice::getLangPath() { return fw::LangUtil::getVoiceFolder(); }
 
 GAME_VOICE_HANDLE *GfGameVoice::createHandle() {
   u64 handle = unknown110 + 1;
