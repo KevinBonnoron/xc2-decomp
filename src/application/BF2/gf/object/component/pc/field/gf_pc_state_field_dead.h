@@ -24,7 +24,7 @@ class StateFieldDead : public GfStateBase {
   void enter(GfComBehaviorPc *behavior, ai::State *previous);
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
-  void recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
+  bool recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
 
   bool unknown18; // Inferred role: down pose pending; original member name unknown.
   u8 _19[0x20 - 0x19];

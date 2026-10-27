@@ -48,7 +48,7 @@ public:
   const btl::PlayerParameter *GetPlayerParameterConst() const;
   bool IsDriver() const;
   bool IsBlade() const;
-  void recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
+  bool recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
   void procMsgObjectNotifyDamage(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgObjectNotifyDamage &message);
   void procMsgObjectNotifyDead(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgObjectNotifyDead &message);
   void procMsgObjectNotifyHealHp(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgObjectNotifyHealHp &message);
@@ -74,7 +74,7 @@ public:
   void BeforeUpdate(btl::BattleCharacter *character, GfComBehaviorPc *behavior, const fw::UpdateInfo &info) override;
   void Update(btl::BattleCharacter *character, GfComBehaviorPc *behavior, const fw::UpdateInfo &info) override;
   void AfterUpdate(btl::BattleCharacter *character, GfComBehaviorPc *behavior, const fw::UpdateInfo &info) override;
-  void recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
+  bool recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
   void ProcMessageAsmCallback(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgObjectNotifyAsmCallback &message);
   void ProcMessageBattleEnd(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcBattleEnd &message);
   bool IsBattleActionState() const override { return true; }

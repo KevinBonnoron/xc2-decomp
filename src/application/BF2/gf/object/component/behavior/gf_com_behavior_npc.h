@@ -33,7 +33,7 @@ public:
   gmk::AGmkBase *getBindedGmkInst() const;
   void setGoalPos(const mm::Vec3 &position);
 
-  u8 _10[0xc0 - 0x10];
+  u8 _98[0xc0 - 0x98];
   mm::Vec3 unknownc0; // Inferred role: goal position; original member name unknown.
   u8 _d0[0x100 - 0xd0];
   bool unknown100; // Role and original member name unknown.

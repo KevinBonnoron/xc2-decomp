@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_list.h"
@@ -25,9 +27,12 @@ public:
   void update(f32 deltaTime) override;
   void debugDraw() const override;
 
-  u8 _48[0xd0 - 0x48];
+  u8 _48[0xc4 - 0x48];
+  mutable int unknownc4; // Inferred role: number of enemies that hold the battle lock; original member name unknown.
+  u8 _c8[0xd0 - 0xc8];
 };
 
+static_assert(offsetof(GmkBattleLock, unknownc4) == 0xc4, "");
 static_assert(sizeof(GmkBattleLock) == 0xd0, "");
 
 typedef TGmkList<GmkBattleLock, GmkBattleLock::BdatInfo, 0x434c5442, 3, GmkBattleLockGob> GmkBattleLockList;

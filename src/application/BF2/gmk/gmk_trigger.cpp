@@ -60,16 +60,16 @@ void GmkTrigger::applyPopCondMatched(bool matched) {
   for (u32 i = 0; i < enemyNum; i++) {
     GmkEnemy *gmk = static_cast<GmkEnemy *>(getBindedEnemy(i));
     if (gmk != nullptr) {
-      gmk->unknown1A0 = true;
-      gmk->unknown1A1 = matched;
+      gmk->unknown48.unknown158 = true;
+      gmk->unknown48.unknown159 = matched;
     }
   }
   u32 routedEnemyNum = getBindedRoutedEnemyNum();
   for (u32 i = 0; i < routedEnemyNum; i++) {
     GmkRoutedEnemy *gmk = static_cast<GmkRoutedEnemy *>(getBindedRoutedEnemy(i));
     if (gmk != nullptr) {
-      gmk->unknown1A8 = true;
-      gmk->unknown1A9 = matched;
+      gmk->unknown50.unknown158 = true;
+      gmk->unknown50.unknown159 = matched;
     }
   }
 }

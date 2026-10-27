@@ -14,7 +14,7 @@ public:
   virtual void onEnter(void *owner, State *previous) = 0;
   virtual void onLeave(void *owner, State *next) = 0;
   virtual void onStep(void *owner, const void *param) = 0;
-  virtual void onEvent(void *owner, void *event);
+  virtual bool onEvent(void *owner, void *event);
 
   // __LINE__ must be 51 as in the original header: it is the line argument of the assert.
 #line 50

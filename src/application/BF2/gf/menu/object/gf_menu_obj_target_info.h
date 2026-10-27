@@ -4,6 +4,8 @@
 
 namespace gf {
 
+class GfMenuCallContext;
+
 class GfMenuObjTargetInfo : public GfMenuObject {
 public:
   GfMenuObjTargetInfo(u32 handle);
@@ -11,6 +13,7 @@ public:
   void initialize() override;
   void finalize() override;
   void update() override;
+  static void close(GfMenuCallContext *context);
   static void dispAllSymbol(bool disp);
   static void dispAllOther(bool disp);
   static void dispAllEnemy(bool disp);

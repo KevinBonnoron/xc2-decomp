@@ -28,7 +28,7 @@ bool GmkRoutedEnemy::isValid() const {
   if (list->getInstNum() == 0) {
     return false;
   }
-  return unknown50 != nullptr && unknown58 != nullptr && unknown60 > 0;
+  return unknown50.unknown00 != nullptr && unknown50.unknown08 != nullptr && unknown50.unknown10 > 0;
 }
 
 GmkType GmkRoutedEnemyPoint::getGmkType() const { return GMK_TYPE; }

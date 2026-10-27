@@ -279,7 +279,8 @@ public:
   u64 unknown65e0_2 : 1; // Role and original member name unknown.
   u64 unknown65e0_3 : 1; // Role and original member name unknown.
   u64 unknown65e0_4 : 1; // Inferred role: scout; original member name unknown.
-  u64 : 2;
+  u64 unknown65e0_5 : 1; // Inferred role: return home distances come from the system balance; original member name unknown.
+  u64 : 1;
   u64 unknown65e0_7 : 1; // Role and original member name unknown.
   u64 unknown65e1_0 : 1; // Inferred role: kill child; original member name unknown.
   u64 : 3;

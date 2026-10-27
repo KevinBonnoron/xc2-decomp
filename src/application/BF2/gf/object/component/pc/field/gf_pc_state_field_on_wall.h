@@ -22,7 +22,7 @@ class StateFieldOnWall : public GfStateBase {
   void enter(GfComBehaviorPc *behavior, ai::State *previous);
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
-  void recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
+  bool recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
 
   u8 _18[0x50 - 0x18];
 };

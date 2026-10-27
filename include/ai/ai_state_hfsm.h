@@ -7,6 +7,12 @@
 #include "mm_mtl/vector.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace ai {
 
 class Hfsm {
@@ -26,6 +32,14 @@ public:
     m_stateInfos[stateID].unknown08 = parent;
     unknown78 = (mm::max(sizeof(T), unknown78) + 15) & ~static_cast<size_t>(15);
   }
+
+  explicit Hfsm(mm::mtl::IAllocator *allocator);
+  void beginSetup(void *owner, u32 stateCount, u32 param3);
+  void endSetup();
+  void cleanup();
+  void setState(u32 state);
+  void update(const void *info);
+  void execEvent(void *event);
 
   void *unknown00; // Inferred role: p owner; original member name unknown.
   State *m_pState;

@@ -236,9 +236,9 @@ public:
   f32 unknown28;                // Inferred role: launch effect scale factor; original member name unknown.
   f32 unknown2c;                // Inferred role: radius; original member name unknown.
   f32 unknown30;                // Inferred role: ball height; original member name unknown.
-  u8 _34[0x38 - 0x34];
-  f32 unknown38; // Role and original member name unknown.
-  f32 unknown3c; // Inferred role: ball radius; original member name unknown.
+  f32 unknown34;                // Inferred role: height; original member name unknown.
+  f32 unknown38;                // Role and original member name unknown.
+  f32 unknown3c;                // Inferred role: ball radius; original member name unknown.
   u8 _40[0x4c - 0x40];
   f32 unknown4c; // Inferred role: attack angle; original member name unknown.
   u8 _50[0x5c - 0x50];

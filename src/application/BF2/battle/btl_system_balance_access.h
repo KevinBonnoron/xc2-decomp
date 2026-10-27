@@ -36,7 +36,9 @@ public:
   u16 unknown76; // Inferred role: chain attack bonus rate; original member name unknown.
   u8 _78[0xa6 - 0x78];
   u16 unknowna6; // Inferred role: blow land height rate; original member name unknown.
-  u8 _a8[0xaf - 0xa8];
+  u8 _a8[0xaa - 0xa8];
+  u16 unknownaa; // Role and original member name unknown.
+  u8 _ac[0xaf - 0xac];
   u8 unknownaf; // Inferred role: blade timer 2; original member name unknown.
   u8 unknownb0; // Inferred role: blade timer 3; original member name unknown.
   u8 _b1[0xb6 - 0xb1];
@@ -58,6 +60,7 @@ static_assert(offsetof(BtlSystemBalanceAccess, unknown40) == 0x40, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknown68) == 0x68, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknown76) == 0x76, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknowna6) == 0xa6, "");
+static_assert(offsetof(BtlSystemBalanceAccess, unknownaa) == 0xaa, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownaf) == 0xaf, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownb0) == 0xb0, "");
 static_assert(offsetof(BtlSystemBalanceAccess, unknownb6) == 0xb6, "");

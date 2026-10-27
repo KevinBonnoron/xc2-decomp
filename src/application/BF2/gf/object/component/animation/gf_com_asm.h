@@ -23,6 +23,7 @@ class RTTI;
 } // namespace mm
 
 namespace gf {
+class GfComAsm;
 struct MsgDebugActivateComponentWindow;
 
 enum AnimLayer {
@@ -36,8 +37,18 @@ enum AnimLayer {
 enum AsmCategory {};
 
 enum {
+  MSG_OBJECT_NOTIFY_ASM_CALLBACK = 0x100003f,
   MSG_OBJECT_SET_ASM_PLAYBACK_SPEED = 0x1000047,
 };
+
+struct MsgObjectNotifyAsmCallback : fw::Message {
+  MsgObjectNotifyAsmCallback(GfComAsm *comAsm, const anm::AsmAnnotetion *annotation) : fw::Message(MSG_OBJECT_NOTIFY_ASM_CALLBACK, 0x40), unknown08(comAsm), unknown10(annotation) {}
+
+  GfComAsm *unknown08;                 // Inferred role: sender; original member name unknown.
+  const anm::AsmAnnotetion *unknown10; // Inferred role: annotation; original member name unknown.
+};
+
+static_assert(offsetof(MsgObjectNotifyAsmCallback, unknown10) == 0x10, "");
 
 struct MsgObjectSetAsmPlaybackSpeed : fw::Message {
   f32 unknown08;       // Inferred role: speed; original member name unknown.

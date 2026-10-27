@@ -99,6 +99,7 @@ public:
   void validateDisp(gf::GF_OBJ_HANDLE *handle) const;
   bool isQuestDead() const;
   int getGobInstCapa() const;
+  gf::GF_OBJ_HANDLE *getGobInst(u32 index) const;
   void disposeSquad();
 
   AGmkBase *unknown00; // Inferred role: owner gimmick; original member name unknown.
@@ -111,7 +112,11 @@ public:
   bool unknown140;   // Inferred role: display enabled; original member name unknown.
   u8 _141[0x150 - 0x141];
   GmkSquad *unknown150; // Inferred role: squad; original member name unknown.
-  u8 _158[0x178 - 0x158];
+  bool unknown158;      // Inferred role: pop condition flag; original member name unknown.
+  bool unknown159;      // Inferred role: pop condition matched; original member name unknown.
+  u8 _15a[0x170 - 0x15a];
+  f32 unknown170; // Role and original member name unknown.
+  u8 _174[0x178 - 0x174];
   u64 unknown178; // Inferred role: matched condition flags; original member name unknown.
   u8 _180[0x188 - 0x180];
 };
@@ -127,6 +132,8 @@ static_assert(sizeof(GmkEnemyInsts::PopInfo) == 0xa8, "");
 static_assert(offsetof(GmkEnemyInsts, unknown98) == 0x98, "");
 static_assert(offsetof(GmkEnemyInsts, unknown140) == 0x140, "");
 static_assert(offsetof(GmkEnemyInsts, unknown150) == 0x150, "");
+static_assert(offsetof(GmkEnemyInsts, unknown158) == 0x158, "");
+static_assert(offsetof(GmkEnemyInsts, unknown170) == 0x170, "");
 static_assert(offsetof(GmkEnemyInsts, unknown178) == 0x178, "");
 static_assert(sizeof(GmkEnemyInsts) == 0x188, "");
 
@@ -161,23 +168,10 @@ public:
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
-  u8 *unknown48; // Role and original member name unknown.
-  u8 *unknown50; // Role and original member name unknown.
-  int unknown58; // Role and original member name unknown.
-  u8 _5c[0x1a0 - 0x5c];
-  bool unknown1A0; // Inferred role: pop condition flag; original member name unknown.
-  bool unknown1A1; // Inferred role: pop condition matched; original member name unknown.
-  u8 _1a2[0x1b8 - 0x1a2];
-  f32 unknown1B8; // Role and original member name unknown.
-  u8 _1bc[0x1d0 - 0x1bc];
+  GmkEnemyInsts unknown48; // Inferred role: enemy instances; original member name unknown.
 };
 
 static_assert(offsetof(GmkEnemy, unknown48) == 0x48, "");
-static_assert(offsetof(GmkEnemy, unknown50) == 0x50, "");
-static_assert(offsetof(GmkEnemy, unknown58) == 0x58, "");
-static_assert(offsetof(GmkEnemy, unknown1A0) == 0x1a0, "");
-static_assert(offsetof(GmkEnemy, unknown1A1) == 0x1a1, "");
-static_assert(offsetof(GmkEnemy, unknown1B8) == 0x1b8, "");
 static_assert(sizeof(GmkEnemy::BdatInfo) == 0x8, "");
 static_assert(sizeof(GmkEnemy) == 0x1d0, "");
 

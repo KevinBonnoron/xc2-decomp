@@ -35,6 +35,7 @@ public:
   static void Destroy();
   void Finalize();
   int SearchCharacter(gf::GF_OBJ_HANDLE *handle) const;
+  int Register(gf::GF_OBJ_HANDLE *handle, bool isEnemy);
   void Release(gf::GF_OBJ_HANDLE *handle);
   void Release(int id, gf::GF_OBJ_HANDLE *handle);
   void SetAiChrTable(int id, int aiId, bool isPlayer);

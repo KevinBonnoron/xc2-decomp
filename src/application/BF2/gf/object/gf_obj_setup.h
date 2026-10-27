@@ -179,7 +179,8 @@ public:
   u32 m_enArrangeID;
   u8 _74[0xa0 - 0x74];
   SDataEnemy *unknowna0; // Inferred role: data enemy; original member name unknown.
-  u8 _a8[0xb4 - 0xa8];
+  int unknowna8;         // Inferred role: row id of BDAT_FLD_ENACT_MOVE; original member name unknown.
+  u8 _ac[0xb4 - 0xac];
   u32 unknownb4; // Inferred role: saved hp; original member name unknown.
   u32 unknownb8; // Inferred role: blade; original member name unknown.
   u8 _bc[0xc0 - 0xbc];
@@ -189,6 +190,7 @@ public:
 static_assert(offsetof(GfObjSetupEnemy, unknown6c) == 0x6c, "");
 static_assert(offsetof(GfObjSetupEnemy, m_enArrangeID) == 0x70, "");
 static_assert(offsetof(GfObjSetupEnemy, unknowna0) == 0xa0, "");
+static_assert(offsetof(GfObjSetupEnemy, unknowna8) == 0xa8, "");
 static_assert(offsetof(GfObjSetupEnemy, unknownb8) == 0xb8, "");
 static_assert(offsetof(GfObjSetupEnemy, unknownc0) == 0xc0, "");
 

@@ -99,8 +99,8 @@ void GmkEnemy::debugDraw() const {
   if (toScreenPos(screen, AGmkBase::unknown08.unknown08->unknown00)) {
     mm::mtl::FixStr<128> text;
     int offset;
-    if (unknown1B8 > 0.0f) {
-      text.format("repop-time=%.1f", unknown1B8);
+    if (unknown48.unknown170 > 0.0f) {
+      text.format("repop-time=%.1f", unknown48.unknown170);
       fw::debug::drawFont(static_cast<int>(screen.x), static_cast<int>(screen.y) + 24, mm::Col4::green, text.c_str());
       offset = 48;
     } else {
@@ -290,10 +290,10 @@ bool GmkEnemy::isValid() const {
   if (unknown08.unknown00 == nullptr || unknown20.unknown08 == nullptr || unknown20.unknown10 == nullptr) {
     return false;
   }
-  if (unknown48 == nullptr || unknown50 == nullptr) {
+  if (unknown48.unknown00 == nullptr || unknown48.unknown08 == nullptr) {
     return false;
   }
-  return unknown58 > 0;
+  return unknown48.unknown10 > 0;
 }
 
 GmkEnemyList::GmkEnemyList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), unknown240(0xffffffff) {}

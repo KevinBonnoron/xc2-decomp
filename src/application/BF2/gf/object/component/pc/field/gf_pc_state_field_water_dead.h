@@ -21,7 +21,7 @@ class StateFieldWaterDead : public GfStateBase {
   void enter(GfComBehaviorPc *behavior, ai::State *previous);
   void leave(GfComBehaviorPc *behavior, ai::State *next);
   void update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info);
-  void recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
+  bool recieveMessage(void *owner, fw::MessageObject *sender, fw::Message &message) override;
 };
 
 static_assert(sizeof(StateFieldWaterDead) == 0x18, "");

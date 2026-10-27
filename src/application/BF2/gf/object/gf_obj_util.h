@@ -49,6 +49,7 @@ enum {
   OBJ_FLAG_UPDATED = 0x13,
   OBJ_FLAG_VOLUME_FADE_FOR_USER = 0x14,
   OBJ_FLAG_TALKING = 0x15,
+  OBJ_FLAG_UNKNOWN_17 = 0x17, // Inferred role: set by enemies leaving the battle state; original name unknown.
   OBJ_FLAG_TOOL_MODE = 0x18,
   OBJ_FLAG_LOADED_WAIT_BLOCK = 0x1a,
 };

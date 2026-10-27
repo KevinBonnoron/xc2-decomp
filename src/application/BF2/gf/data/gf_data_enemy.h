@@ -50,7 +50,8 @@ struct SDataEnemy {
   u16 unknown68; // Inferred role: invincible combo; original member name unknown.
   u8 _06a[0x099 - 0x06a];
   u8 unknown99; // Inferred role: genus; original member name unknown.
-  u8 _09a[0x09e - 0x09a];
+  u8 unknown9a; // Inferred role: move type; original member name unknown.
+  u8 _09b[0x09e - 0x09b];
   u16 unknown9e[5]; // Inferred role: equip weapons; original member name unknown.
   u16 unknowna8;    // Inferred role: level; original member name unknown.
   u8 _0aa[0x0ac - 0x0aa];
@@ -79,6 +80,7 @@ static_assert(offsetof(SDataEnemy, unknown64) == 0x064, "");
 static_assert(offsetof(SDataEnemy, unknown66) == 0x066, "");
 static_assert(offsetof(SDataEnemy, unknown68) == 0x068, "");
 static_assert(offsetof(SDataEnemy, unknown99) == 0x099, "");
+static_assert(offsetof(SDataEnemy, unknown9a) == 0x09a, "");
 static_assert(offsetof(SDataEnemy, unknown9e) == 0x09e, "");
 static_assert(offsetof(SDataEnemy, unknowna8) == 0x0a8, "");
 static_assert(offsetof(SDataEnemy, unknownac) == 0x0ac, "");

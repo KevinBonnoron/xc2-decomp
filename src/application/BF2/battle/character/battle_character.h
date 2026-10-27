@@ -24,6 +24,8 @@ class GfComEffectCaster;
 class GfComProperty;
 class GfObj;
 class GfWeapon;
+struct MsgObjectNotifyAsmCallback;
+struct MsgObjectNotifyDamage;
 struct MsgObjectNotifyDead;
 } // namespace gf
 
@@ -48,6 +50,7 @@ public:
   enum RIMBLOOM_ID {};
   enum ACTION_ID {
     ACTION_ID_IDLE = 1,
+    ACTION_ID_UNKNOWN_2 = 2, // Inferred role: put out weapon; original name unknown.
     ACTION_ID_PUT_AWAY_WEAPON = 3,
     ACTION_ID_MOVE = 4,
     ACTION_ID_ATTACK = 6,
@@ -158,6 +161,10 @@ public:
   bool IsBlade() const;
   bool IsEnemy() const;
   bool IsDriver() const;
+  void NotifySufferDamage(const gf::MsgObjectNotifyDamage &message);
+  void NotifyBattleStart(bool isStart);
+  void AsmCallback(const gf::MsgObjectNotifyAsmCallback &message);
+  void NotifyBattleEnd();
   void JoinProc(f32 rate, bool isScout);
   void SetWeaponType(int weaponType);
   void SetCollisionPriority(int priority);
