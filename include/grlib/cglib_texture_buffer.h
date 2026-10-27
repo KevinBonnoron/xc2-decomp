@@ -88,6 +88,14 @@ enum GrlSurfaceFormat {
   GRL_SURFACE_FORMAT_BPTC_UNSIGNED_FLOAT,
 };
 
+enum GrlDepthFormat {
+  GRL_DEPTH_FORMAT_UNKNOWN_0 = 0x32,
+  GRL_DEPTH_FORMAT_UNKNOWN_1,
+  GRL_DEPTH_FORMAT_UNKNOWN_2,
+  GRL_DEPTH_FORMAT_UNKNOWN_3,
+  GRL_DEPTH_FORMAT_UNKNOWN_4,
+};
+
 struct NVNtexture;
 
 namespace grlib {
@@ -106,6 +114,7 @@ public:
   u16 getMipmap() const;
   u16 getDepth() const;
   u32 get1PixelImageSize() const;
+  u32 getImageSize() const;
   CGLibTextureBuffer();
   ~CGLibTextureBuffer();
   void release();

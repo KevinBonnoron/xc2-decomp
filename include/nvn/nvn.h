@@ -21,6 +21,11 @@ struct alignas(8) NVNbuffer {
   u8 reserved[0x30];
 };
 
+struct NVNcounterData {
+  u64 counter;
+  u64 timestamp;
+};
+
 struct alignas(8) NVNbufferBuilder {
   u8 reserved[0x40];
 };
@@ -94,6 +99,30 @@ enum NVNtextureFlags {
   NVN_TEXTURE_FLAGS_COMPRESSIBLE = 0x8,
 };
 
+enum NVNlogicOp {};
+
+enum NVNblendEquation {};
+
+enum NVNblendFunc {};
+
+enum NVNdepthFunc {
+  NVN_DEPTH_FUNC_NEVER = 0x1,
+  NVN_DEPTH_FUNC_LESS,
+  NVN_DEPTH_FUNC_EQUAL,
+  NVN_DEPTH_FUNC_LEQUAL,
+  NVN_DEPTH_FUNC_GREATER,
+  NVN_DEPTH_FUNC_NOTEQUAL,
+  NVN_DEPTH_FUNC_GEQUAL,
+  NVN_DEPTH_FUNC_ALWAYS,
+};
+
+enum NVNstencilOp {};
+
+enum NVNcounterType {
+  NVN_COUNTER_TYPE_TIMESTAMP,
+  NVN_COUNTER_TYPE_SAMPLES_PASSED,
+};
+
 enum NVNdrawPrimitive {};
 
 enum NVNindexType {};
@@ -153,6 +182,29 @@ typedef void (*PFNNVNTEXTUREBUILDERSETDEPTHPROC)(NVNtextureBuilder *builder, int
 typedef size_t (*PFNNVNTEXTUREBUILDERGETSTORAGESIZEPROC)(const NVNtextureBuilder *builder);
 typedef size_t (*PFNNVNTEXTUREBUILDERGETSTORAGEALIGNMENTPROC)(const NVNtextureBuilder *builder);
 typedef void (*PFNNVNTEXTUREFINALIZEPROC)(NVNtexture *texture);
+typedef void (*PFNNVNCOLORSTATESETLOGICOPPROC)(NVNcolorState *color, NVNlogicOp logicOp);
+typedef void (*PFNNVNCOMMANDBUFFERBINDCOLORSTATEPROC)(NVNcommandBuffer *cmdBuf, const NVNcolorState *color);
+typedef void (*PFNNVNBLENDSTATESETBLENDEQUATIONPROC)(NVNblendState *blend, NVNblendEquation modeRGB, NVNblendEquation modeAlpha);
+typedef void (*PFNNVNBLENDSTATESETBLENDFUNCPROC)(NVNblendState *blend, NVNblendFunc srcFunc, NVNblendFunc dstFunc, NVNblendFunc srcFuncAlpha, NVNblendFunc dstFuncAlpha);
+typedef void (*PFNNVNBLENDSTATESETBLENDTARGETPROC)(NVNblendState *blend, int target);
+typedef void (*PFNNVNCOMMANDBUFFERBINDBLENDSTATEPROC)(NVNcommandBuffer *cmdBuf, const NVNblendState *blend);
+typedef void (*PFNNVNDEPTHSTENCILSTATESETDEPTHTESTENABLEPROC)(NVNdepthStencilState *depthStencil, NVNboolean enable);
+typedef void (*PFNNVNDEPTHSTENCILSTATESETDEPTHFUNCPROC)(NVNdepthStencilState *depthStencil, NVNdepthFunc func);
+typedef void (*PFNNVNDEPTHSTENCILSTATESETDEPTHWRITEENABLEPROC)(NVNdepthStencilState *depthStencil, NVNboolean enable);
+typedef void (*PFNNVNDEPTHSTENCILSTATESETSTENCILTESTENABLEPROC)(NVNdepthStencilState *depthStencil, NVNboolean enable);
+typedef void (*PFNNVNDEPTHSTENCILSTATESETSTENCILOPPROC)(NVNdepthStencilState *depthStencil, NVNface faces, NVNstencilOp fail, NVNstencilOp depthFail, NVNstencilOp depthPass);
+typedef void (*PFNNVNDEPTHSTENCILSTATESETSTENCILFUNCPROC)(NVNdepthStencilState *depthStencil, NVNface faces, NVNdepthFunc func);
+typedef void (*PFNNVNCOMMANDBUFFERBINDDEPTHSTENCILSTATEPROC)(NVNcommandBuffer *cmdBuf, const NVNdepthStencilState *depthStencil);
+typedef void (*PFNNVNCOMMANDBUFFERSETSTENCILREFPROC)(NVNcommandBuffer *cmdBuf, NVNface faces, int ref);
+typedef void (*PFNNVNCOMMANDBUFFERSETSTENCILVALUEMASKPROC)(NVNcommandBuffer *cmdBuf, NVNface faces, int mask);
+typedef void (*PFNNVNCOMMANDBUFFERSETSTENCILMASKPROC)(NVNcommandBuffer *cmdBuf, NVNface faces, int mask);
+typedef void (*PFNNVNCOMMANDBUFFERCLEARCOLORPROC)(NVNcommandBuffer *cmdBuf, int index, const float *color, int mask);
+typedef void (*PFNNVNCOMMANDBUFFERCLEARCOLORIPROC)(NVNcommandBuffer *cmdBuf, int index, const int *color, int mask);
+typedef void (*PFNNVNCOMMANDBUFFERCLEARDEPTHSTENCILPROC)(NVNcommandBuffer *cmdBuf, float depthValue, NVNboolean depthMask, int stencilValue, int stencilMask);
+typedef void (*PFNNVNCOMMANDBUFFERRESETCOUNTERPROC)(NVNcommandBuffer *cmdBuf, NVNcounterType counter);
+typedef void (*PFNNVNCOMMANDBUFFERREPORTCOUNTERPROC)(NVNcommandBuffer *cmdBuf, NVNcounterType counter, NVNbufferAddress buffer);
+typedef NVNbufferAddress (*PFNNVNMEMORYPOOLGETBUFFERADDRESSPROC)(const NVNmemoryPool *pool);
+typedef u64 (*PFNNVNDEVICEGETTIMESTAMPINNANOSECONDSPROC)(const NVNdevice *device, const NVNcounterData *counterData);
 
 extern "C" {
 extern PFNNVNCOMMANDBUFFERSETBLENDCOLORPROC pfnc_nvnCommandBufferSetBlendColor;
@@ -206,6 +258,29 @@ extern PFNNVNTEXTUREBUILDERSETDEPTHPROC pfnc_nvnTextureBuilderSetDepth;
 extern PFNNVNTEXTUREBUILDERGETSTORAGESIZEPROC pfnc_nvnTextureBuilderGetStorageSize;
 extern PFNNVNTEXTUREBUILDERGETSTORAGEALIGNMENTPROC pfnc_nvnTextureBuilderGetStorageAlignment;
 extern PFNNVNTEXTUREFINALIZEPROC pfnc_nvnTextureFinalize;
+extern PFNNVNCOLORSTATESETLOGICOPPROC pfnc_nvnColorStateSetLogicOp;
+extern PFNNVNCOMMANDBUFFERBINDCOLORSTATEPROC pfnc_nvnCommandBufferBindColorState;
+extern PFNNVNBLENDSTATESETBLENDEQUATIONPROC pfnc_nvnBlendStateSetBlendEquation;
+extern PFNNVNBLENDSTATESETBLENDFUNCPROC pfnc_nvnBlendStateSetBlendFunc;
+extern PFNNVNBLENDSTATESETBLENDTARGETPROC pfnc_nvnBlendStateSetBlendTarget;
+extern PFNNVNCOMMANDBUFFERBINDBLENDSTATEPROC pfnc_nvnCommandBufferBindBlendState;
+extern PFNNVNDEPTHSTENCILSTATESETDEPTHTESTENABLEPROC pfnc_nvnDepthStencilStateSetDepthTestEnable;
+extern PFNNVNDEPTHSTENCILSTATESETDEPTHFUNCPROC pfnc_nvnDepthStencilStateSetDepthFunc;
+extern PFNNVNDEPTHSTENCILSTATESETDEPTHWRITEENABLEPROC pfnc_nvnDepthStencilStateSetDepthWriteEnable;
+extern PFNNVNDEPTHSTENCILSTATESETSTENCILTESTENABLEPROC pfnc_nvnDepthStencilStateSetStencilTestEnable;
+extern PFNNVNDEPTHSTENCILSTATESETSTENCILOPPROC pfnc_nvnDepthStencilStateSetStencilOp;
+extern PFNNVNDEPTHSTENCILSTATESETSTENCILFUNCPROC pfnc_nvnDepthStencilStateSetStencilFunc;
+extern PFNNVNCOMMANDBUFFERBINDDEPTHSTENCILSTATEPROC pfnc_nvnCommandBufferBindDepthStencilState;
+extern PFNNVNCOMMANDBUFFERSETSTENCILREFPROC pfnc_nvnCommandBufferSetStencilRef;
+extern PFNNVNCOMMANDBUFFERSETSTENCILVALUEMASKPROC pfnc_nvnCommandBufferSetStencilValueMask;
+extern PFNNVNCOMMANDBUFFERSETSTENCILMASKPROC pfnc_nvnCommandBufferSetStencilMask;
+extern PFNNVNCOMMANDBUFFERCLEARCOLORPROC pfnc_nvnCommandBufferClearColor;
+extern PFNNVNCOMMANDBUFFERCLEARCOLORIPROC pfnc_nvnCommandBufferClearColori;
+extern PFNNVNCOMMANDBUFFERCLEARDEPTHSTENCILPROC pfnc_nvnCommandBufferClearDepthStencil;
+extern PFNNVNCOMMANDBUFFERRESETCOUNTERPROC pfnc_nvnCommandBufferResetCounter;
+extern PFNNVNCOMMANDBUFFERREPORTCOUNTERPROC pfnc_nvnCommandBufferReportCounter;
+extern PFNNVNMEMORYPOOLGETBUFFERADDRESSPROC pfnc_nvnMemoryPoolGetBufferAddress;
+extern PFNNVNDEVICEGETTIMESTAMPINNANOSECONDSPROC pfnc_nvnDeviceGetTimestampInNanoseconds;
 }
 
 inline void nvnCommandBufferSetBlendColor(NVNcommandBuffer *cmdBuf, const float *blendColor) { pfnc_nvnCommandBufferSetBlendColor(cmdBuf, blendColor); }
@@ -325,3 +400,55 @@ inline size_t nvnTextureBuilderGetStorageSize(const NVNtextureBuilder *builder) 
 inline size_t nvnTextureBuilderGetStorageAlignment(const NVNtextureBuilder *builder) { return pfnc_nvnTextureBuilderGetStorageAlignment(builder); }
 
 inline void nvnTextureFinalize(NVNtexture *texture) { pfnc_nvnTextureFinalize(texture); }
+
+inline void nvnColorStateSetLogicOp(NVNcolorState *color, NVNlogicOp logicOp) { pfnc_nvnColorStateSetLogicOp(color, logicOp); }
+
+inline void nvnCommandBufferBindColorState(NVNcommandBuffer *cmdBuf, const NVNcolorState *color) { pfnc_nvnCommandBufferBindColorState(cmdBuf, color); }
+
+inline void nvnBlendStateSetBlendEquation(NVNblendState *blend, NVNblendEquation modeRGB, NVNblendEquation modeAlpha) { pfnc_nvnBlendStateSetBlendEquation(blend, modeRGB, modeAlpha); }
+
+inline void nvnBlendStateSetBlendFunc(NVNblendState *blend, NVNblendFunc srcFunc, NVNblendFunc dstFunc, NVNblendFunc srcFuncAlpha, NVNblendFunc dstFuncAlpha) {
+  pfnc_nvnBlendStateSetBlendFunc(blend, srcFunc, dstFunc, srcFuncAlpha, dstFuncAlpha);
+}
+
+inline void nvnBlendStateSetBlendTarget(NVNblendState *blend, int target) { pfnc_nvnBlendStateSetBlendTarget(blend, target); }
+
+inline void nvnCommandBufferBindBlendState(NVNcommandBuffer *cmdBuf, const NVNblendState *blend) { pfnc_nvnCommandBufferBindBlendState(cmdBuf, blend); }
+
+inline void nvnDepthStencilStateSetDepthTestEnable(NVNdepthStencilState *depthStencil, NVNboolean enable) { pfnc_nvnDepthStencilStateSetDepthTestEnable(depthStencil, enable); }
+
+inline void nvnDepthStencilStateSetDepthFunc(NVNdepthStencilState *depthStencil, NVNdepthFunc func) { pfnc_nvnDepthStencilStateSetDepthFunc(depthStencil, func); }
+
+inline void nvnDepthStencilStateSetDepthWriteEnable(NVNdepthStencilState *depthStencil, NVNboolean enable) { pfnc_nvnDepthStencilStateSetDepthWriteEnable(depthStencil, enable); }
+
+inline void nvnDepthStencilStateSetStencilTestEnable(NVNdepthStencilState *depthStencil, NVNboolean enable) { pfnc_nvnDepthStencilStateSetStencilTestEnable(depthStencil, enable); }
+
+inline void nvnDepthStencilStateSetStencilOp(NVNdepthStencilState *depthStencil, NVNface faces, NVNstencilOp fail, NVNstencilOp depthFail, NVNstencilOp depthPass) {
+  pfnc_nvnDepthStencilStateSetStencilOp(depthStencil, faces, fail, depthFail, depthPass);
+}
+
+inline void nvnDepthStencilStateSetStencilFunc(NVNdepthStencilState *depthStencil, NVNface faces, NVNdepthFunc func) { pfnc_nvnDepthStencilStateSetStencilFunc(depthStencil, faces, func); }
+
+inline void nvnCommandBufferBindDepthStencilState(NVNcommandBuffer *cmdBuf, const NVNdepthStencilState *depthStencil) { pfnc_nvnCommandBufferBindDepthStencilState(cmdBuf, depthStencil); }
+
+inline void nvnCommandBufferSetStencilRef(NVNcommandBuffer *cmdBuf, NVNface faces, int ref) { pfnc_nvnCommandBufferSetStencilRef(cmdBuf, faces, ref); }
+
+inline void nvnCommandBufferSetStencilValueMask(NVNcommandBuffer *cmdBuf, NVNface faces, int mask) { pfnc_nvnCommandBufferSetStencilValueMask(cmdBuf, faces, mask); }
+
+inline void nvnCommandBufferSetStencilMask(NVNcommandBuffer *cmdBuf, NVNface faces, int mask) { pfnc_nvnCommandBufferSetStencilMask(cmdBuf, faces, mask); }
+
+inline void nvnCommandBufferClearColor(NVNcommandBuffer *cmdBuf, int index, const float *color, int mask) { pfnc_nvnCommandBufferClearColor(cmdBuf, index, color, mask); }
+
+inline void nvnCommandBufferClearColori(NVNcommandBuffer *cmdBuf, int index, const int *color, int mask) { pfnc_nvnCommandBufferClearColori(cmdBuf, index, color, mask); }
+
+inline void nvnCommandBufferClearDepthStencil(NVNcommandBuffer *cmdBuf, float depthValue, NVNboolean depthMask, int stencilValue, int stencilMask) {
+  pfnc_nvnCommandBufferClearDepthStencil(cmdBuf, depthValue, depthMask, stencilValue, stencilMask);
+}
+
+inline void nvnCommandBufferResetCounter(NVNcommandBuffer *cmdBuf, NVNcounterType counter) { pfnc_nvnCommandBufferResetCounter(cmdBuf, counter); }
+
+inline void nvnCommandBufferReportCounter(NVNcommandBuffer *cmdBuf, NVNcounterType counter, NVNbufferAddress buffer) { pfnc_nvnCommandBufferReportCounter(cmdBuf, counter, buffer); }
+
+inline NVNbufferAddress nvnMemoryPoolGetBufferAddress(const NVNmemoryPool *pool) { return pfnc_nvnMemoryPoolGetBufferAddress(pool); }
+
+inline u64 nvnDeviceGetTimestampInNanoseconds(const NVNdevice *device, const NVNcounterData *counterData) { return pfnc_nvnDeviceGetTimestampInNanoseconds(device, counterData); }

@@ -41,7 +41,10 @@ public:
   static void setBlendControl(GrlBlendFunc source, GrlBlendFunc destination, GrlBlendCombine combine, GrlBlendFunc alphaSource, GrlBlendFunc alphaDestination, GrlBlendCombine alphaCombine,
                               GrlLogicType logic);
   static void setMrtBlendControl(GrlMrtType mrt, GrlBlendFunc source, GrlBlendFunc destination, GrlBlendCombine combine);
+  static void setMrtBlendControl(GrlMrtType mrt, GrlBlendFunc source, GrlBlendFunc destination, GrlBlendCombine combine, GrlBlendFunc alphaSource, GrlBlendFunc alphaDestination,
+                                 GrlBlendCombine alphaCombine);
   static void setBlendOffControl(GrlLogicType logic);
+  static void setMrtBlend(u8 mask, GrlLogicType logic);
   static void setBlendColor(const mm::Col4 &color);
   static void setColorBufferOn();
   static void setColorBufferOff();

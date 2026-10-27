@@ -11,6 +11,7 @@ class CGLibRenderTargetBase : public CGLibTextureBuffer {
 public:
   ~CGLibRenderTargetBase() { unknown78.release(); }
   void setColorInvalidate();
+  u32 getImageSize() const;
 
   CGLibTextureBuffer *unknown70; // Inferred role: texture; original member name unknown.
   CGLibColorBuffer unknown78;    // Inferred role: color buffer; original member name unknown.

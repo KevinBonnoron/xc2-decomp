@@ -10,6 +10,7 @@
 #include "grlib/cglib_render_cube_map.h"
 #include "grlib/cglib_render_target.h"
 #include "grlib/cglib_render_target_1d.h"
+#include "grlib/cglib_render_target_base.h"
 #include "grlib/cglib_render_target_mip_map.h"
 #include "grlib/cglib_render_volume.h"
 #include "grlib/cglib_state.h"
@@ -41,6 +42,10 @@ void CGLibTextureBuffer::delayRelease() {
   unknown38 = -1;
   unknown40.delayRelease();
 }
+
+void CGLibRenderTargetBase::setColorInvalidate() {}
+
+u32 CGLibRenderTargetBase::getImageSize() const { return unknown70->CGLibTextureBuffer::getImageSize(); }
 
 CGLibRenderArray::CGLibRenderArray() : unknown70(this), unknown78(nullptr), unknown80(false), unknown84(0), unknown88(0), unknown8c(0), unknown90(0) {}
 

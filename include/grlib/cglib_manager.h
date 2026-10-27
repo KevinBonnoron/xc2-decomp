@@ -16,6 +16,7 @@ public:
 
   static int s_nDblNowIdx;
   static int s_nTriNowIdx;
+  static int s_nStkNowIdx;
 
   NVNdevice unknown08; // Inferred role: device; original member name unknown.
   u8 _3008[0x5030 - 0x3008];

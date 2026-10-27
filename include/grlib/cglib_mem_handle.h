@@ -26,6 +26,8 @@ static_assert(offsetof(CGLibMemType, unknown08) == 0x8, "");
 class CGLibMemHandle {
 public:
   static mtl::ALLOC_HANDLE s_hDefHandle;
+  static mtl::ALLOC_HANDLE s_hCntHandle;
+  static mtl::ALLOC_HANDLE s_hPxlHandle;
 
   static void setMemBuff(CGLibMemType &memType, void *buffer);
   static void allocVertex(CGLibMemType &memType, u32 size);

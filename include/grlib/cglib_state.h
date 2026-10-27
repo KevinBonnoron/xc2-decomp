@@ -24,6 +24,7 @@ public:
   static void setMainFrameBuffer();
   static void setupInitialize();
   static void setViewport(const LibMainStateViewPort &viewPort);
+  static void setPixelResidentArea(bool isEnable, u32 size);
   static void setOnlyViewport(const LibMainStateViewPort &viewPort);
   static void setOnlyScissor(const LibMainStateViewPort &viewPort);
   static void beginRegisterRenderTarget();

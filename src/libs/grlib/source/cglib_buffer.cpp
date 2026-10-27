@@ -2,6 +2,7 @@
 
 #include "grlib/cglib_buff_fix_alloc.h"
 #include "grlib/cglib_buff_mem_pool_tbl.h"
+#include "grlib/cglib_buff_occlusion.h"
 #include "grlib/cglib_buff_texture.h"
 #include "grlib/cglib_buffer.h"
 #include "grlib/cglib_manager.h"
@@ -95,6 +96,27 @@ void CGLibBuffTexture::createTexture(u32 num) {
   unknown28 = m_buffer;
 }
 
+u32 CGLibBuffOcclusion_plf::createPlf(u32 num, u8 *buffer) { return num; }
+
+int CGLibBuffOcclusion_plf::getBufferSize() { return context::CGLibSystemContext::s_nvReportCounterSize << 1; }
+
+void CGLibBuffOcclusion_plf::releasePlf() {}
+
+CGLibBuffOcclusion::CGLibBuffOcclusion() {}
+
+CGLibBuffOcclusion::~CGLibBuffOcclusion() { release(); }
+
+void CGLibBuffOcclusion::release() {
+  releasePlf();
+  releaseTbl();
+}
+
+void CGLibBuffOcclusion::createOcclusion(u32 num) {
+  release();
+  setupTbl(CGLibMemHandle::s_hDefHandle, CGLibMemHandle::s_hCntHandle, num, getBufferSize(), 0x1000);
+  createPlf(num, m_buffer);
+}
+
 CGLibBuffMemPoolTbl::CGLibBuffMemPoolTbl() {}
 
 CGLibBuffMemPoolTbl::~CGLibBuffMemPoolTbl() { release(); }
@@ -157,6 +179,37 @@ void CGLibVtlMemPool::delayRelease() {
   m_buffer = nullptr;
   unknown20 = false;
   unknown18 = 0;
+}
+
+CGLibMemPool::CGLibMemPool() : unknown08(0), unknown10(nullptr), unknown18(nullptr) {}
+
+CGLibMemPool::~CGLibMemPool() { release(); }
+
+void CGLibMemPool::release() {
+  if (unknown08 != 0) {
+    nvnMemoryPoolFinalize(m_memoryPool);
+    context::CGLibSystemContext::get()->unknowne90.freeBuffer(m_memoryPool);
+    unknown08 = 0;
+    if (unknown10 != nullptr) {
+      mtl::MemManager::deallocate(unknown10, 0, false);
+      unknown10 = nullptr;
+    }
+    m_memoryPool = nullptr;
+  }
+}
+
+void CGLibMemPool::delayRelease() {
+  if (unknown08 != 0) {
+    context::CGLibSystemContext::get()->releaseDelayMempool(m_memoryPool, unknown10);
+    unknown10 = nullptr;
+    unknown08 = 0;
+  }
+}
+
+void CGLibMemPool::setupHandle(mtl::ALLOC_HANDLE handle, u32 size, u32 flags) {
+  release();
+  unknown10 = mtl::MemManager::allocate(handle, size, 0x1000, false, "no name", 0);
+  setupBuffer(unknown10, size + (-size & 0xfff), flags);
 }
 
 } // namespace grlib
