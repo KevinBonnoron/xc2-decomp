@@ -7,9 +7,11 @@
 #include "ssd/ssd_result.h"
 #include "ssd/ssd_sound.h"
 #include "ssd/ssd_sound_core.h"
+#include "ssd/ssd_stream_buffer.h"
 #include "ssd/ssd_stream_controller.h"
 #include "ssd/ssd_text.h"
 #include "ssd/ssd_voice_handle.h"
+#include "ssd/ssd_wave_source.h"
 #include "types.h"
 
 namespace fw {
@@ -236,6 +238,27 @@ long SoundHandle::GetPlayTime(f32 *time) const {
   return set_result(voice->GetPlayTime(time));
 }
 
+long SoundHandle::GetDataTime(f32 *time) const {
+  *time = 0.0f;
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  if (core == nullptr) {
+    return -12;
+  }
+  VoiceHandle *voice = core->GetVoiceHandle(unknownf8);
+  if (voice == nullptr) {
+    return -29;
+  }
+  WaveSource *waveSource = voice->unknown002();
+  f32 dataTime;
+  if (waveSource->unknown18) {
+    dataTime = waveSource->unknown30 / waveSource->unknown2c;
+  } else {
+    dataTime = 0.0f;
+  }
+  *time = dataTime;
+  return set_result(static_cast<Result>(0));
+}
+
 long SoundHandle::SetPlayPosition(u64 position) {
   SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
   if (core == nullptr) {
@@ -326,7 +349,7 @@ long SoundHandle::SetRemainLoopCount(int count) {
   if (voice->unknown70 == nullptr) {
     return -44;
   }
-  if (!voice->unknown70->unknown68) {
+  if (!voice->unknown70->unknown50) {
     return -1;
   }
   return set_result(voice->SetRemainLoopCount(count));
@@ -375,6 +398,55 @@ long SoundHandle::IsEmptyStreamBuffer(bool *isEmpty) {
   }
   voice->IsEmptyStreamBuffer(isEmpty);
   return set_result(static_cast<Result>(0));
+}
+
+long SoundHandle::GetWaveSource(WaveSource **waveSource) {
+  *waveSource = nullptr;
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  if (core == nullptr) {
+    return -12;
+  }
+  VoiceHandle *voice = core->GetVoiceHandle(unknownf8);
+  if (voice == nullptr) {
+    return -29;
+  }
+  *waveSource = voice->unknown002();
+  return set_result(static_cast<Result>(0));
+}
+
+long SoundHandle::GetStreamBuffer(StreamBufferBase **buffer) const {
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  if (core == nullptr) {
+    return -12;
+  }
+  VoiceHandle *voice = core->GetVoiceHandle(unknownf8);
+  if (voice == nullptr) {
+    return -29;
+  }
+  if (voice->unknown70 == nullptr) {
+    return -44;
+  }
+  *buffer = &voice->unknown70->unknown158;
+  return 0;
+}
+
+long SoundHandle::GetStreamDecodeInfo(DecodeInfo *info) const {
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  if (core == nullptr) {
+    return -12;
+  }
+  VoiceHandle *voice = core->GetVoiceHandle(unknownf8);
+  if (voice == nullptr) {
+    return -29;
+  }
+  StreamController *stream = voice->unknown70;
+  if (stream == nullptr) {
+    return -44;
+  }
+  info->unknown00 = stream->unknown1ec;
+  info->unknown04 = stream->unknown1e8;
+  info->unknown08 = stream->unknown1e0 * 1000.0;
+  return 0;
 }
 
 long SoundHandle::KeepStreamOpen(bool isKeep) {

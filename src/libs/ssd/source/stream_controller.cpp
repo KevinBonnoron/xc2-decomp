@@ -1,3 +1,4 @@
+#include "ssd/ssd_stream_buffer.h"
 #include "ssd/ssd_stream_controller.h"
 #include "types.h"
 
@@ -28,6 +29,43 @@ int StreamController::PositionToFrame(u64 position) {
     }
   }
   return 0;
+}
+
+void StreamController::ExecAdpcmDecode() {}
+
+void StreamController::ClearReadBuffer() { unknown158.Clear(); }
+
+s64 StreamController::CloseStream() {
+  if (unknownf5) {
+    return 0;
+  }
+  unknownf1 = false;
+  unknownee = true;
+  unknownf8 = 3;
+  return 1;
+}
+
+u64 StreamController::SizeToReadPosition(u64 size) {
+  if (unknown34 == unknown001_3) {
+    return unknown35 * (size & ~0xfULL);
+  }
+  if (unknown34 == unknown001_4) {
+    if (unknown40 != 0) {
+      int frame = size / unknown40;
+      int index = frame / unknown5c;
+      unknown1ec = index;
+      size = unknown1c0[index];
+    }
+  }
+  return size;
+}
+
+u32 StreamController::PlayTimeToPosition(f32 time) {
+  int index = static_cast<int>(unknown2c * time) / unknown5c;
+  if (index > unknown68) {
+    index = unknown68;
+  }
+  return unknown1c0[index];
 }
 
 template List<StreamController>::Node::~Node();

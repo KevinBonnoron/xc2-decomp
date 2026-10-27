@@ -1,3 +1,4 @@
+#include "ssd/ssd_allocator.h"
 #include "ssd/ssd_behavior_impl.h" // IWYU pragma: keep
 #include "ssd/ssd_result.h"
 #include "ssd/ssd_sound.h"
@@ -8,6 +9,26 @@
 #include "types.h"
 
 namespace ssd {
+
+VoiceHandle::~VoiceHandle() {}
+
+void VoiceHandle::AllocAdpcmSplitBuffer() {
+  Allocator::Block *block = SoundMemory::allocator_->NewBufferImpl(0x10000, 1, 16);
+  if (block != nullptr) {
+    adpcmSplitBuffer_ = block->unknown08;
+  } else {
+    adpcmSplitBuffer_ = nullptr;
+  }
+}
+
+void VoiceHandle::FreeAdpcmSplitBuffer() {
+  if (adpcmSplitBuffer_ != nullptr) {
+    Allocator *allocator = SoundMemory::allocator_;
+    Allocator::Block *block = allocator->GetMemoryBlock(adpcmSplitBuffer_);
+    allocator->DeleteBufferImpl(block);
+    adpcmSplitBuffer_ = nullptr;
+  }
+}
 
 void VoiceHandle::DeleteHWVoice() {}
 

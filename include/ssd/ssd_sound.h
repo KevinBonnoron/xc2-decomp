@@ -29,6 +29,7 @@ class SoundCore;
 class SoundEntry;
 class SoundHandle;
 class SoundListener;
+class StreamBufferBase;
 class WaveSource;
 
 namespace ObjectType {
@@ -129,18 +130,23 @@ class SoundBank;
 
 class SoundEntry : public Object, public List<SoundEntry>::Node {
 public:
+  SoundEntry();
+  ~SoundEntry() override;
   SoundGroup *GetSoundGroup() const;
 
-  u8 _30[0x78 - 0x30];
+  u8 _30[0x70 - 0x30];
+  u64 unknown70; // Inferred role: cleared by the constructor; original member name unknown.
   u16 unknown78; // Inferred role: sound number; original member name unknown.
   u8 _7a[0x7d - 0x7a];
   u8 unknown7d; // Inferred role: sound group id; original member name unknown.
   u8 _7e[0xc8 - 0x7e];
   WaveSource *unknownc8; // Inferred role: wave source; original member name unknown.
   SoundBank *unknownd0;  // Inferred role: sound bank; original member name unknown.
-  u8 _d8[0xe0 - 0xd8];
+  bool unknownd8;        // Inferred role: allocated entry; original member name unknown.
+  u8 _d9[0xe0 - 0xd9];
 };
 
+static_assert(offsetof(SoundEntry, unknown70) == 0x70, "");
 static_assert(offsetof(SoundEntry, unknown78) == 0x78, "");
 static_assert(offsetof(SoundEntry, unknown7d) == 0x7d, "");
 static_assert(offsetof(SoundEntry, unknownc8) == 0xc8, "");
@@ -232,6 +238,12 @@ public:
     enum Type {};
   };
 
+  struct DecodeInfo {
+    u32 unknown00; // Inferred role: first stream decode value; original member name unknown.
+    u32 unknown04; // Inferred role: second stream decode value; original member name unknown.
+    f64 unknown08; // Inferred role: stream decode time in milliseconds; original member name unknown.
+  };
+
   bool IsValidHandle() const;
   long Stop(f32 fadeTime);
   int GetState() const;
@@ -265,6 +277,8 @@ public:
   long IsEmptyVoiceQueue(bool *isEmpty);
   long IsEmptyStreamBuffer(bool *isEmpty);
   long GetWaveSource(WaveSource **waveSource);
+  long GetStreamBuffer(StreamBufferBase **buffer) const;
+  long GetStreamDecodeInfo(DecodeInfo *info) const;
   long KeepStreamOpen(bool isKeep);
   void DisplayDebugVerbose();
   void AddDelegate(Delegate::Handle *handle);

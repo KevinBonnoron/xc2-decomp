@@ -2,20 +2,28 @@
 #include <stddef.h>
 
 #include "ssd/ssd_behavior.h"
+#include "ssd/ssd_stream_buffer.h"
+#include "ssd/ssd_wave_source.h"
 #include "types.h"
 
 namespace ssd {
 
-class StreamController : public List<StreamController>::Node {
+class StreamController : public List<StreamController>::Node, public WaveSource {
 public:
   s64 ResetStream();
   u32 SampleToPosition(int sample);
   void SetReadPosition(u64 position);
   int PositionToFrame(u64 position);
+  void ExecAdpcmDecode();
+  void ClearReadBuffer();
+  s64 CloseStream();
+  u64 SizeToReadPosition(u64 size);
+  u32 PlayTimeToPosition(f32 time);
 
-  u8 _18[0x68 - 0x18];
-  bool unknown68; // Inferred role: loop; original member name unknown.
-  u8 _69[0xf0 - 0x69];
+  int unknowne8; // Inferred role: stream id; original member name unknown.
+  u8 _ec[0xee - 0xec];
+  bool unknownee; // Inferred role: close request; original member name unknown.
+  u8 _ef[0xf0 - 0xef];
   bool unknownf0; // Inferred role: open; original member name unknown.
   bool unknownf1; // Inferred role: set position done; original member name unknown.
   u8 _f2[0xf5 - 0xf2];
@@ -23,9 +31,15 @@ public:
   bool unknownf6; // Inferred role: set position request; original member name unknown.
   bool unknownf7; // Inferred role: set position pending; original member name unknown.
   u32 unknownf8;  // Inferred role: state; original member name unknown.
-  u8 _fc[0x1c0 - 0xfc];
+  u8 _fc[0x158 - 0xfc];
+  StreamBuffer unknown158; // Inferred role: stream buffer; original member name unknown.
+  u8 _188[0x1c0 - 0x188];
   const u32 *unknown1c0; // Inferred role: frame position table; original member name unknown.
-  u8 _1c8[0x208 - 0x1c8];
+  u8 _1c8[0x1e0 - 0x1c8];
+  f64 unknown1e0; // Inferred role: stream decode info time; original member name unknown.
+  int unknown1e8; // Inferred role: stream decode info second value; original member name unknown.
+  int unknown1ec; // Inferred role: stream decode info first value; original member name unknown.
+  u8 _1f0[0x208 - 0x1f0];
   u64 unknown208; // Inferred role: read position; original member name unknown.
   u8 _210[0x218 - 0x210];
   u64 unknown218; // Inferred role: file position; original member name unknown.
@@ -35,11 +49,14 @@ public:
   int unknown250; // Inferred role: remain loop count; original member name unknown.
 };
 
-static_assert(offsetof(StreamController, unknown68) == 0x68, "");
+static_assert(offsetof(StreamController, unknowne8) == 0xe8, "");
+static_assert(offsetof(StreamController, unknownee) == 0xee, "");
 static_assert(offsetof(StreamController, unknownf0) == 0xf0, "");
 static_assert(offsetof(StreamController, unknownf5) == 0xf5, "");
 static_assert(offsetof(StreamController, unknownf8) == 0xf8, "");
 static_assert(offsetof(StreamController, unknown1c0) == 0x1c0, "");
+static_assert(offsetof(StreamController, unknown158) == 0x158, "");
+static_assert(offsetof(StreamController, unknown1e0) == 0x1e0, "");
 static_assert(offsetof(StreamController, unknown208) == 0x208, "");
 static_assert(offsetof(StreamController, unknown218) == 0x218, "");
 static_assert(offsetof(StreamController, unknown248) == 0x248, "");

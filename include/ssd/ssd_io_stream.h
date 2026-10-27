@@ -10,6 +10,8 @@ class TextRef;
 
 class IoStreamBase : public Object {
 public:
+  IoStreamBase() : Object(ObjectType::FILE_STREAM) {}
+
   enum OpenMode : u8 {
     OPEN_MODE_READ = 1,
   };

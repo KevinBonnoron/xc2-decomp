@@ -9,6 +9,7 @@
 #include "types.h"
 
 namespace ssd {
+class Allocator;
 class SoundBank;
 class SoundCategory;
 class SoundEffecter;
@@ -24,6 +25,7 @@ struct OutputMode {
 
 class SoundCore {
 public:
+  SoundCore();
   virtual OutputMode::Type GetOutputMode() const = 0;
   virtual void SetOutputMode(OutputMode::Type mode) = 0;
   virtual f32 GetMasterVolume() const = 0;
@@ -46,6 +48,8 @@ public:
   virtual ~SoundCore();
   virtual const void *GetDebugInfo() const = 0;
 
+  static SoundCore *NewInstance(Allocator *allocator);
+  static void DeleteInstance();
   static bool IsInstance();
   static SoundCore *GetInstance();
   void GetVersion(int *major, int *minor, int *revision, int *build, char16_t *configuration);
@@ -85,7 +89,12 @@ public:
 
 static_assert(offsetof(SoundCore, m_init) == 0x10, "");
 
-class SystemCore : public SoundCore {
+class SystemCorePlatform : public SoundCore {
+public:
+  void *GetPlatformDataImpl(const char *name) override;
+};
+
+class SystemCore : public SystemCorePlatform {
 public:
   struct DebugInfo;
 
@@ -94,6 +103,7 @@ public:
     f64 unknown08; // Inferred role: frame time; original member name unknown.
   };
 
+  SystemCore();
   ~SystemCore() override;
   static void StreamThreadEntry(SystemCore *core, void *argument);
   void SetMasterVolume(f32 volume, f32 fadeTime) override;
@@ -114,7 +124,11 @@ public:
   void LockAudio() const override;
   void UnlockAudio() const override;
   const void *GetDebugInfo() const override;
+  Result AddSoundListener(SoundListener *listener) override;
+  Result RemoveSoundListener(SoundListener *listener) override;
   Result GetSoundEffectList(int bus, SoundEffecter **effecters, int *num) override;
+  Result AddSoundEffecter(u8 bus, SoundEffecter *effecter) override;
+  Result RemoveSoundEffecter(SoundEffecter *effecter) override;
   bool IsActiveEffect(u8 bus) override;
   Result Quit();
   Result StopSound(f32 fadeTime);
@@ -211,5 +225,6 @@ static_assert(offsetof(SystemCore, unknown708) == 0x708, "");
 static_assert(offsetof(SystemCore, unknown978) == 0x978, "");
 static_assert(offsetof(SystemCore, unknown9f8) == 0x9f8, "");
 static_assert(offsetof(SystemCore, unknowna20) == 0xa20, "");
+static_assert(sizeof(SystemCore) == 0xa28, "");
 
 } // namespace ssd

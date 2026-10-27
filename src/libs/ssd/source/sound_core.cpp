@@ -1,6 +1,9 @@
 #include <stddef.h>
 
+#include <new>
+
 #include "anm/anm_array-inl.h"
+#include "ssd/ssd_allocator.h"
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_debug.h"
 #include "ssd/ssd_memory_manager.h"
@@ -14,9 +17,35 @@ class SoundCategory;
 class SoundActor;
 class SoundHandle;
 
+SoundCore *SoundCore::NewInstance(Allocator *allocator) {
+  SoundCore *core = instance_;
+  if (core == nullptr) {
+    MemoryManager::Init(0x800, allocator);
+    Allocator::Block *block = allocator->NewInstanceImpl(sizeof(SystemCore), 1, 16);
+    if (block != nullptr) {
+      core = new (block->unknown08) SystemCore();
+    } else {
+      core = nullptr;
+    }
+    instance_ = core;
+  }
+  return core;
+}
+
+void SoundCore::DeleteInstance() {
+  SystemCore *core = static_cast<SystemCore *>(instance_);
+  if (core != nullptr) {
+    SoundMemory::allocator_->unknown001(core);
+    MemoryManager::Quit();
+  }
+  instance_ = nullptr;
+}
+
 bool SoundCore::IsInstance() { return instance_ != nullptr; }
 
 SoundCore *SoundCore::GetInstance() { return instance_; }
+
+SoundCore::SoundCore() : unknown08(static_cast<Result>(0x80000000)), m_init(false) { Debug::Init(); }
 
 SoundCore::~SoundCore() {}
 

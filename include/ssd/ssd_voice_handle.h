@@ -4,11 +4,11 @@
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_result.h"
 #include "ssd/ssd_sound.h"
+#include "ssd/ssd_stream_controller.h"
 #include "types.h"
 
 namespace ssd {
 
-class StreamController;
 class WaveSource;
 
 class VoiceHandle : public Object, public List<VoiceHandle>::Node {
@@ -18,6 +18,18 @@ public:
     f32 unknown01; // Inferred role: time position; original member name unknown.
   };
 
+  ~VoiceHandle() override;
+
+  // Inferred role: the wave source of the stream when streaming, otherwise of the voice; original name unknown.
+  WaveSource *unknown002() const {
+    if (unknown70 == nullptr) {
+      return unknown68;
+    }
+    return unknown70;
+  }
+
+  static void AllocAdpcmSplitBuffer();
+  static void FreeAdpcmSplitBuffer();
   void DisplayDebugVerbose();
   void DeleteHWVoice();
   Result AllocHWVoice();
@@ -42,6 +54,8 @@ public:
   void NullBufferProcess();
   void LooppingBufferProcess();
   void AddLooppingBuffer();
+
+  static void *adpcmSplitBuffer_;
 
   bool unknown30; // Inferred role: active; original member name unknown.
   bool unknown31; // Inferred role: start; original member name unknown.

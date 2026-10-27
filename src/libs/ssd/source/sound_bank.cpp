@@ -1,3 +1,4 @@
+#include "ssd/ssd_allocator.h"
 #include "ssd/ssd_array.h"
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_behavior_impl.h" // IWYU pragma: keep
@@ -76,6 +77,26 @@ Result SoundBank::RemoveSoundEntry(int number) {
   return static_cast<Result>(-27);
 }
 
+Result SoundBank::RemoveSoundEntry(SoundEntry *entry) {
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  if (core == nullptr) {
+    return static_cast<Result>(-12);
+  }
+  if (m_number < 0) {
+    return static_cast<Result>(-14);
+  }
+  if (entry == nullptr) {
+    return static_cast<Result>(-6);
+  }
+  core->unknown708.Lock();
+  unknowne0.unknown001(entry);
+  core->unknown708.Unlock();
+  if (entry->unknownd8) {
+    SoundMemory::allocator_->unknown001(entry);
+  }
+  return set_result(static_cast<Result>(0));
+}
+
 SoundEntry *SoundBank::GetSoundEntryFromNumber(int number) const {
   if (SoundCore::instance_ == nullptr) {
     return nullptr;
@@ -147,6 +168,10 @@ Result SoundBank::Stop(f32 fadeTime) {
   }
   return static_cast<Result>(-14);
 }
+
+SoundEntry::SoundEntry() : Object(ObjectType::SOUND_ENTRY), unknown70(0), unknownc8(nullptr), unknownd0(nullptr), unknownd8(false) {}
+
+SoundEntry::~SoundEntry() {}
 
 SoundGroup *SoundEntry::GetSoundGroup() const {
   if (SoundCore::instance_ == nullptr) {

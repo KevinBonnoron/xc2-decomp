@@ -13,6 +13,8 @@ public:
   class BlockNode : public List<BlockNode>::Node, public Allocator::Block {};
 
   virtual ~MemoryManager();
+  static void Init(int size, Allocator *allocator);
+  static void Quit();
   Allocator::Block *AllocInstance(Allocator *allocator, size_t size, size_t count, size_t alignment);
   Allocator::Block *AllocBuffer(Allocator *allocator, size_t size, size_t count, size_t alignment);
   Allocator::Block *AllocStream(Allocator *allocator, size_t size, size_t alignment);

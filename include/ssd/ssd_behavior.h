@@ -9,6 +9,7 @@ template <typename T> class List {
 public:
   class Node {
   public:
+    Node() : prev(this), next(this) {}
     virtual ~Node() {}
 
     Node *prev;
