@@ -1,7 +1,6 @@
 #include "idcoli/idcoli_util_coli.h"
 
 namespace idcoli {
-class IDColiResult;
 
 bool IDColiUtilColiResult::isSpherePoli(IDColiResult &result, const IDColiInput &input, const void *data) { return false; }
 

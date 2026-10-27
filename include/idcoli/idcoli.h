@@ -17,6 +17,9 @@ class WinProc;
 
 namespace idcoli {
 
+class IDColiResult;
+struct IDColiInput;
+struct CLSphereWork;
 enum ColiState : int;
 enum ColiAtrr : int;
 
@@ -26,7 +29,7 @@ enum ObjType {
   OBJ_TYPE_GRAND = 3,
 };
 
-enum ShapeType {
+enum ShapeType : unsigned int {
   SHAPE_TYPE_SPHERE = 0,
   SHAPE_TYPE_BOX = 1,
   SHAPE_TYPE_CAPSULE = 2,
@@ -68,6 +71,7 @@ public:
   void begin();
   void end();
   void updateTree();
+  int setupTreeList(IDColiTreeObj *node, const mm::Vec3 &max, const mm::Vec3 &min);
   ColiLinkList<IDColiTreeObj> *getObjList(int x, int z, int level);
   static u32 getMorton2(u32 x, u32 y);
   static u32 getPart1By1(u32 value);
@@ -134,23 +138,77 @@ static_assert(offsetof(IDColiObj, unknown2c) == 0x2c, "");
 static_assert(offsetof(IDColiObj, unknown48) == 0x48, "");
 static_assert(sizeof(IDColiObj) == 0x50, "");
 
+enum IdSweepAxisType : unsigned int {
+  IdSweepAxisType_UNKNOWN_0 = 0,
+  IdSweepAxisType_UNKNOWN_1 = 1,
+};
+
+enum IdVectorAxisType : unsigned int {
+  IdVectorAxisType_UNKNOWN_0 = 0,
+  IdVectorAxisType_UNKNOWN_1 = 1,
+  IdVectorAxisType_UNKNOWN_2 = 2,
+};
+
+enum IDColiBaseType : unsigned int {
+  IDColiBaseType_UNKNOWN_3 = 3,
+};
+
+class IDColiPrimitive {
+public:
+  static void createSphere(CLSphereWork &sphere, const IDColiInput &input);
+  static void createSphere(CLSphereWork &sphere, const mm::Vec3 &center, f32 radius);
+  static void createAaBbBox(mm::Vec3 &max, mm::Vec3 &min, const void *data);
+  static void createAaBbPoli(mm::Vec3 &max, mm::Vec3 &min, const void *data);
+  static void createBaPosSphere(mm::Vec3 &position, mm::Vec3 &unknown, bool &isRotate, f32 &radius, f32 &length, const void *data);
+  static void createBaPosBox(mm::Vec3 &position, mm::Vec3 &unknown, bool &isRotate, f32 &radius, f32 &length, const void *data);
+  static void (*const s_CallPrimSet[5])(void *, IDColiBaseType &, const mm::Mat44 &, const mm::Vec3 &);
+  static void (*const s_CallAaBb[5])(mm::Vec3 &, mm::Vec3 &, const void *);
+};
+
 class IDColiObjBase : public IDColiObj {
 public:
+  IDColiObjBase(IDColiTreeTop *tree);
+  ~IDColiObjBase() override {}
+  void sweepPush(IDColiObjBase *object);
+  void sweepPop();
+  bool sweepUpdate(IdSweepAxisType sweepAxis, IdVectorAxisType vectorAxis);
+  void sweepTreeMax(IdSweepAxisType sweepAxis, IdVectorAxisType vectorAxis);
+  void defTreeUpdate();
+  void updateBaseTree();
+
   mm::Vec3 unknown50;  // Inferred role: max; original member name unknown.
   mm::Vec3 unknown60;  // Inferred role: min; original member name unknown.
   mm::Mat44 unknown70; // Inferred role: matrix; original member name unknown.
   mm::Vec3 m_size;
-  ShapeType unknownc0; // Inferred role: shape type; original member name unknown.
-  u32 _c4;
-  u32 unknownc8; // Inferred role: off material bit; original member name unknown.
-  u8 _cc[0x1cc - 0xcc];
-  int unknown1cc; // Inferred role: priority; original member name unknown.
+  ShapeType unknownc0;      // Inferred role: shape type; original member name unknown.
+  IDColiBaseType unknownc4; // Inferred role: primitive type; original member name unknown.
+  u32 unknownc8;            // Inferred role: off material bit; original member name unknown.
+  u8 _cc[0xd0 - 0xcc];
+  u8 unknownd0[0x180 - 0xd0];   // Inferred role: primitive work; original member name unknown.
+  f32 unknown180[2];            // Inferred role: sweep max per axis; original member name unknown.
+  IDColiObjBase *unknown188[2]; // Inferred role: sweep prev per axis; original member name unknown.
+  IDColiObjBase *unknown198[2]; // Inferred role: sweep next per axis; original member name unknown.
+  IDColiTreeTop *unknown1a8;    // Inferred role: tree top; original member name unknown.
+  IDColiTreeObj unknown1b0;     // Inferred role: tree list node; original member name unknown.
+  IDColiObjBase *unknown1c0;    // Inferred role: owner of the tree node; original member name unknown.
+  int unknown1c8;               // Inferred role: tree cell index; original member name unknown.
+  int unknown1cc;               // Inferred role: priority; original member name unknown.
 };
 
 static_assert(offsetof(IDColiObjBase, unknown50) == 0x50, "");
 static_assert(offsetof(IDColiObjBase, unknown70) == 0x70, "");
 static_assert(offsetof(IDColiObjBase, unknownc0) == 0xc0, "");
+static_assert(offsetof(IDColiObjBase, unknownc4) == 0xc4, "");
 static_assert(offsetof(IDColiObjBase, unknownc8) == 0xc8, "");
+static_assert(offsetof(IDColiObjBase, unknownd0) == 0xd0, "");
+static_assert(offsetof(IDColiObjBase, unknown180) == 0x180, "");
+static_assert(offsetof(IDColiObjBase, unknown188) == 0x188, "");
+static_assert(offsetof(IDColiObjBase, unknown198) == 0x198, "");
+static_assert(offsetof(IDColiObjBase, unknown1a8) == 0x1a8, "");
+static_assert(offsetof(IDColiObjBase, unknown1b0) == 0x1b0, "");
+static_assert(offsetof(IDColiObjBase, unknown1c0) == 0x1c0, "");
+static_assert(offsetof(IDColiObjBase, unknown1c8) == 0x1c8, "");
+static_assert(offsetof(IDColiObjBase, unknown1cc) == 0x1cc, "");
 static_assert(sizeof(IDColiObjBase) == 0x1d0, "");
 
 struct unknown001 {
@@ -170,9 +228,33 @@ struct unknown002 {
 
 static_assert(sizeof(unknown002) == 0x10, "");
 
+struct unknown007 {
+  u8 _00[0x18 - 0x00];
+  u32 unknown18; // Inferred role: first check list offset; original member name unknown.
+  s32 unknown1c; // Inferred role: first check list count; original member name unknown.
+  u32 unknown20; // Inferred role: second check list offset; original member name unknown.
+  s32 unknown24; // Inferred role: second check list count; original member name unknown.
+  u32 unknown28; // Inferred role: third check list offset; original member name unknown.
+  s32 unknown2c; // Inferred role: third check list count; original member name unknown.
+};
+
+static_assert(offsetof(unknown007, unknown18) == 0x18, "");
+static_assert(offsetof(unknown007, unknown2c) == 0x2c, "");
+
+struct unknown008 {
+  u8 _00[0xb0 - 0x00];
+  IDColiBaseType unknownb0; // Inferred role: primitive type; original member name unknown.
+  u8 _b4[0xc0 - 0xb4];
+};
+
+static_assert(offsetof(unknown008, unknownb0) == 0xb0, "");
+static_assert(sizeof(unknown008) == 0xc0, "");
+
 class IDColiObjData : public IDColiObjBase {
 public:
+  IDColiObjData(IDColiTreeTop *tree);
   void createBinary(const void *binary);
+  void workNodeClear();
   const char *getBoneName(int index) const;
   int getBoneIdx(const char *name) const;
   void setBoneMatrix(int index, const mm::Mat44 &matrix);
@@ -180,16 +262,22 @@ public:
 
   const unknown002 *unknown1d0; // Inferred role: binary; original member name unknown.
   const unknown001 *unknown1d8; // Inferred role: bone tbl; original member name unknown.
-  u8 _1e0[0x1f0 - 0x1e0];
-  mm::Mat44 *unknown1f0; // Inferred role: bone matrix tbl; original member name unknown.
-  int unknown1f8;        // Inferred role: bone max; original member name unknown.
-  u8 _1fc[0x208 - 0x1fc];
+  void *unknown1e0;             // Inferred role: work buffer; original member name unknown.
+  unknown008 *unknown1e8;       // Inferred role: primitive work tbl; original member name unknown.
+  mm::Mat44 *unknown1f0;        // Inferred role: bone matrix tbl; original member name unknown.
+  int unknown1f8;               // Inferred role: bone max; original member name unknown.
+  int unknown1fc;               // Inferred role: primitive max; original member name unknown.
+  IDColiObj *unknown200;        // Inferred role: work node; original member name unknown.
 };
 
 static_assert(offsetof(IDColiObjData, unknown1d0) == 0x1d0, "");
 static_assert(offsetof(IDColiObjData, unknown1d8) == 0x1d8, "");
+static_assert(offsetof(IDColiObjData, unknown1e0) == 0x1e0, "");
+static_assert(offsetof(IDColiObjData, unknown1e8) == 0x1e8, "");
 static_assert(offsetof(IDColiObjData, unknown1f0) == 0x1f0, "");
 static_assert(offsetof(IDColiObjData, unknown1f8) == 0x1f8, "");
+static_assert(offsetof(IDColiObjData, unknown1fc) == 0x1fc, "");
+static_assert(offsetof(IDColiObjData, unknown200) == 0x200, "");
 
 class IDColiObjChar : public IDColiObjData {
 public:
@@ -199,22 +287,93 @@ public:
 
 static_assert(offsetof(IDColiObjChar, unknown220) == 0x220, "");
 
-class IDColiObjPhantom : public IDColiObjBase {};
+class IDColiObjCharCheck : public IDColiObjChar {
+public:
+  bool testCheckLine(IDColiResult &result, const IDColiInput &input);
+  bool testCheckRay(IDColiResult &result, const IDColiInput &input);
+  bool testCheckSphere(IDColiResult &result, const IDColiInput &input);
+  bool testCheckCapsule(IDColiResult &result, const IDColiInput &input);
+  bool testCheckBox(IDColiResult &result, const IDColiInput &input);
+};
+
+class IDColiObjPhantom : public IDColiObjBase {
+public:
+  IDColiObjPhantom(IDColiTreeTop *tree);
+  ~IDColiObjPhantom() override {}
+  void sizeUpdate() override;
+  void update() override;
+  bool SweepAndPruneUpdate() override;
+  void consistentUpdate() override;
+};
+
+class IDColiObjPhantomCheck : public IDColiObjBase {
+public:
+  u32 testResultLine(IDColiResult &result, const IDColiInput &input);
+  u32 testResultRay(IDColiResult &result, const IDColiInput &input);
+  u32 testResultSphere(IDColiResult &result, const IDColiInput &input);
+  u32 testResultCapsule(IDColiResult &result, const IDColiInput &input);
+  bool testCheckLine(IDColiResult &result, const IDColiInput &input);
+  bool testCheckRay(IDColiResult &result, const IDColiInput &input);
+  bool testCheckSphere(IDColiResult &result, const IDColiInput &input);
+  bool testCheckCapsule(IDColiResult &result, const IDColiInput &input);
+};
+
+struct IDCmfMovePosData {
+  mm::Mat44 unknown00; // Inferred role: initial matrix; original member name unknown.
+  u8 _40[0x50 - 0x40];
+  mm::Vec3 unknown50; // Inferred role: bounds corner; original member name unknown.
+  mm::Vec3 unknown60; // Inferred role: bounds corner; original member name unknown.
+};
+
+static_assert(offsetof(IDCmfMovePosData, unknown50) == 0x50, "");
+static_assert(offsetof(IDCmfMovePosData, unknown60) == 0x60, "");
+
+struct IDCmfPosData {
+  u8 _00[0x80];
+  mm::Vec3 unknown80; // Inferred role: max; original member name unknown.
+  mm::Vec3 unknown90; // Inferred role: min; original member name unknown.
+};
+
+static_assert(offsetof(IDCmfPosData, unknown80) == 0x80, "");
+static_assert(offsetof(IDCmfPosData, unknown90) == 0x90, "");
+static_assert(sizeof(IDCmfPosData) == 0xa0, "");
+
+class IDColiGrdMoveObj;
+
+struct unknown006 {
+  IDColiTreeObj unknown00;     // Inferred role: tree node; original member name unknown.
+  IDColiGrdMoveObj *unknown10; // Inferred role: owner; original member name unknown.
+};
+
+static_assert(sizeof(unknown006) == 0x18, "");
 
 class IDColiGrdMoveObj {
 public:
+  IDColiGrdMoveObj();
   void setMat(const mm::Mat44 &matrix);
+  void treeUpdate(IDColiTreeTop *tree, int index);
 
-  u8 _000[0x1a2 - 0x000];
-  u16 unknown1a2; // Inferred role: id; original member name unknown.
-  u8 _1a4[0x1b0 - 0x1a4];
-  const char *unknown1b0; // Inferred role: name; original member name unknown.
-  void *unknown1b8;       // Inferred role: user data; original member name unknown.
-  u8 _1c0[0x200 - 0x1c0];
+  mm::Mat44 unknown00[3];             // Inferred role: matrices (two by stack index, then previous); original member name unknown.
+  mm::Mat44 unknownc0;                // Inferred role: inverse matrix work; original member name unknown.
+  IDCmfPosData unknown100;            // Inferred role: position data; original member name unknown.
+  u16 unknown1a0;                     // Inferred role: unknown; original member name unknown.
+  u16 unknown1a2;                     // Inferred role: id; original member name unknown.
+  const IDCmfMovePosData *unknown1a8; // Inferred role: move data; original member name unknown.
+  const char *unknown1b0;             // Inferred role: name; original member name unknown.
+  void *unknown1b8;                   // Inferred role: user data; original member name unknown.
+  u16 unknown1c0;                     // Inferred role: update flags per index; original member name unknown.
+  unknown006 unknown1c8[2];           // Inferred role: tree nodes; original member name unknown.
 };
 
+static_assert(offsetof(IDColiGrdMoveObj, unknownc0) == 0xc0, "");
+static_assert(offsetof(IDColiGrdMoveObj, unknown100) == 0x100, "");
+static_assert(offsetof(IDColiGrdMoveObj, unknown1a0) == 0x1a0, "");
 static_assert(offsetof(IDColiGrdMoveObj, unknown1a2) == 0x1a2, "");
+static_assert(offsetof(IDColiGrdMoveObj, unknown1a8) == 0x1a8, "");
 static_assert(offsetof(IDColiGrdMoveObj, unknown1b0) == 0x1b0, "");
+static_assert(offsetof(IDColiGrdMoveObj, unknown1b8) == 0x1b8, "");
+static_assert(offsetof(IDColiGrdMoveObj, unknown1c0) == 0x1c0, "");
+static_assert(offsetof(IDColiGrdMoveObj, unknown1c8) == 0x1c8, "");
 static_assert(sizeof(IDColiGrdMoveObj) == 0x200, "");
 
 struct IDColiGrandWork {
@@ -224,6 +383,17 @@ struct IDColiGrandWork {
 };
 
 static_assert(offsetof(IDColiGrandWork, unknown70) == 0x70, "");
+
+class IDColiGrandTree {
+public:
+  bool isAaBbToAaBb(const float *max, const float *min);
+
+  IDColiGrandWork *unknown00; // Inferred role: work; original member name unknown.
+  u8 _08[0x10 - 0x08];
+  IDColiInput *unknown10; // Inferred role: current input; original member name unknown.
+};
+
+static_assert(offsetof(IDColiGrandTree, unknown10) == 0x10, "");
 
 class IDColiObjGrand : public IDColiObj {
 public:
@@ -242,6 +412,9 @@ public:
   IDColiManager(ml::Scn *scn, mtl::ALLOC_HANDLE handle, u32 size);
   ~IDColiManager() override;
   void update();
+  void objUpdate();
+  void addList(ColiLinkList<IDColiObj> &list, ColiLinkList<IDColiObj> &source, bool isSweep);
+  void release();
   void addDelUpdate();
   void consistentUpdate();
   void updateConsistentList(ColiLinkList<IDColiObj> &list);
@@ -249,6 +422,7 @@ public:
   IDColiObj *createColiGrand(const void *binary);
   IDColiObj *createColiCharacter();
   IDColiObj *createColiPhantom();
+  bool getGrandAABB(mm::Vec3 &max, mm::Vec3 &min) const;
   IDColiObj *getUseObject(ColiLinkList<IDColiObj> &list);
   void updateList(ColiLinkList<IDColiObj> &list);
   static void poolUpdate(void *object);
@@ -260,8 +434,9 @@ public:
   void debugDrawGrand(bool isDraw);
   void debugDrawPhantom(bool isDraw);
 
-  ColiLinkList<IDColiObj> unknown08[4]; // Inferred role: object lists; original member name unknown.
-  u8 _48[0xd8 - 0x48];
+  ColiLinkList<IDColiObj> unknown08[4];    // Inferred role: object lists; original member name unknown.
+  ColiLinkList<IDColiObj> unknown48[4][2]; // Inferred role: object lists waiting to be added or removed; original member name unknown.
+  u8 _c8[0xd8 - 0xc8];
   IDColiTreeTop *unknownd8[2]; // Inferred role: tree tops; original member name unknown.
   u32 *m_gblIdTbl;
   u32 unknownf0; // Inferred role: sub num; original member name unknown.
@@ -269,6 +444,7 @@ public:
 };
 
 static_assert(offsetof(IDColiManager, unknown08) == 0x8, "");
+static_assert(offsetof(IDColiManager, unknown48) == 0x48, "");
 static_assert(offsetof(IDColiManager, unknownd8) == 0xd8, "");
 static_assert(offsetof(IDColiManager, m_gblIdTbl) == 0xe8, "");
 
