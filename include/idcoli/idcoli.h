@@ -36,15 +36,63 @@ enum ShapeType {
 };
 
 template <typename T> struct ColiLinkList {
+  ColiLinkList() : m_head(nullptr), m_tail(nullptr) {}
+
   T *m_head;
   T *m_tail;
 };
 
+struct IDColiTreeObj {
+  IDColiTreeObj *unknown00; // Inferred role: prev; original member name unknown.
+  IDColiTreeObj *unknown08; // Inferred role: next; original member name unknown.
+};
+
+static_assert(offsetof(IDColiTreeObj, unknown08) == 0x8, "");
+static_assert(sizeof(IDColiTreeObj) == 0x10, "");
+
+struct unknown003 {
+  f32 unknown00; // Inferred role: max x; original member name unknown.
+  f32 unknown04; // Inferred role: max z; original member name unknown.
+  f32 unknown08; // Inferred role: min x; original member name unknown.
+  f32 unknown0c; // Inferred role: min z; original member name unknown.
+};
+
+static_assert(sizeof(unknown003) == 0x10, "");
+
 class IDColiTreeTop {
 public:
+  static const u8 COLI_TBL_GRID[5];
+  static const u8 COLI_TBL_INDEX[5];
+
+  ~IDColiTreeTop();
   void begin();
   void end();
+  void updateTree();
+  ColiLinkList<IDColiTreeObj> *getObjList(int x, int z, int level);
+  static u32 getMorton2(u32 x, u32 y);
+  static u32 getPart1By1(u32 value);
+
+  mm::Vec3 unknown00;                          // Inferred role: max of the registered objects; original member name unknown.
+  mm::Vec3 unknown10;                          // Inferred role: min of the registered objects; original member name unknown.
+  mm::Vec3 unknown20;                          // Inferred role: max of the tree; original member name unknown.
+  mm::Vec3 unknown30;                          // Inferred role: min of the tree; original member name unknown.
+  mm::Vec3 unknown40[5];                       // Inferred role: cell size per level; original member name unknown.
+  mm::Vec3 unknown90[5];                       // Inferred role: inverse cell size per level; original member name unknown.
+  mm::Vec3 unknowne0[5];                       // Inferred role: cell margin per level; original member name unknown.
+  u64 unknown130[6];                           // Inferred role: initialized cell bits; original member name unknown.
+  u32 unknown160;                              // Inferred role: flags; original member name unknown.
+  u32 unknown164;                              // Inferred role: usable level bits; original member name unknown.
+  ColiLinkList<IDColiTreeObj> unknown168[341]; // Inferred role: object lists per cell; original member name unknown.
+  unknown003 unknown16b8[341];                 // Inferred role: cell bounds; original member name unknown.
 };
+
+static_assert(offsetof(IDColiTreeTop, unknown40) == 0x40, "");
+static_assert(offsetof(IDColiTreeTop, unknown90) == 0x90, "");
+static_assert(offsetof(IDColiTreeTop, unknowne0) == 0xe0, "");
+static_assert(offsetof(IDColiTreeTop, unknown130) == 0x130, "");
+static_assert(offsetof(IDColiTreeTop, unknown168) == 0x168, "");
+static_assert(offsetof(IDColiTreeTop, unknown16b8) == 0x16b8, "");
+static_assert(sizeof(IDColiTreeTop) == 0x2c10, "");
 
 class IDColiObj {
 public:
@@ -105,6 +153,23 @@ static_assert(offsetof(IDColiObjBase, unknownc0) == 0xc0, "");
 static_assert(offsetof(IDColiObjBase, unknownc8) == 0xc8, "");
 static_assert(sizeof(IDColiObjBase) == 0x1d0, "");
 
+struct unknown001 {
+  u8 _00[0x40 - 0x00];
+  u32 unknown40; // Inferred role: name offset; original member name unknown.
+};
+
+static_assert(offsetof(unknown001, unknown40) == 0x40, "");
+static_assert(sizeof(unknown001) == 0x44, "");
+
+struct unknown002 {
+  u32 unknown00; // Inferred role: magic; original member name unknown.
+  u32 unknown04; // Inferred role: version; original member name unknown.
+  u32 unknown08; // Inferred role: flags; original member name unknown.
+  u32 unknown0c; // Inferred role: info offset; original member name unknown.
+};
+
+static_assert(sizeof(unknown002) == 0x10, "");
+
 class IDColiObjData : public IDColiObjBase {
 public:
   void createBinary(const void *binary);
@@ -113,12 +178,16 @@ public:
   void setBoneMatrix(int index, const mm::Mat44 &matrix);
   mm::Mat44 &getBoneMatrix(int index);
 
-  u8 _1d0[0x1f0 - 0x1d0];
+  const unknown002 *unknown1d0; // Inferred role: binary; original member name unknown.
+  const unknown001 *unknown1d8; // Inferred role: bone tbl; original member name unknown.
+  u8 _1e0[0x1f0 - 0x1e0];
   mm::Mat44 *unknown1f0; // Inferred role: bone matrix tbl; original member name unknown.
   int unknown1f8;        // Inferred role: bone max; original member name unknown.
   u8 _1fc[0x208 - 0x1fc];
 };
 
+static_assert(offsetof(IDColiObjData, unknown1d0) == 0x1d0, "");
+static_assert(offsetof(IDColiObjData, unknown1d8) == 0x1d8, "");
 static_assert(offsetof(IDColiObjData, unknown1f0) == 0x1f0, "");
 static_assert(offsetof(IDColiObjData, unknown1f8) == 0x1f8, "");
 
@@ -206,17 +275,40 @@ static_assert(offsetof(IDColiManager, m_gblIdTbl) == 0xe8, "");
 class IDColiMove {
 public:
   IDColiMove();
+  void setShapeParms(f32 radius, f32 height);
+  void setAngle(f32 angle);
   void setFloor(f32 floor);
+  void setDown(f32 down);
   void setAccuracy(bool accuracy);
+  void calcVecDeceleration(f32 &value, mm::Vec3 vector);
   void moveColi(IDColiObj *object, const mm::Vec3 &move);
   bool moveColi(const mm::Vec3 &position, const mm::Vec3 &move);
 
   u8 _000[0x130];
   mm::Vec3 unknown130; // Inferred role: moved distance; original member name unknown.
-  u8 _13c[0x1f8 - 0x13c];
+  u8 _140[0x1a0 - 0x140];
+  mm::Vec3 unknown1a0; // Inferred role: deceleration axis; original member name unknown.
+  u8 _1b0[0x1b8 - 0x1b0];
+  f32 unknown1b8; // Inferred role: shape parameter; original member name unknown.
+  f32 unknown1bc; // Inferred role: shape parameter; original member name unknown.
+  f32 m_angle;
+  f32 m_floor;
+  f32 m_down;
+  u8 _1cc[0x1ed - 0x1cc];
+  bool m_accuracy;
+  u8 _1ee[0x1f3 - 0x1ee];
+  bool unknown1f3; // Inferred role: deceleration enabled; original member name unknown.
+  u8 _1f4[0x1f8 - 0x1f4];
 };
 
 static_assert(offsetof(IDColiMove, unknown130) == 0x130, "");
+static_assert(offsetof(IDColiMove, unknown1a0) == 0x1a0, "");
+static_assert(offsetof(IDColiMove, unknown1b8) == 0x1b8, "");
+static_assert(offsetof(IDColiMove, m_angle) == 0x1c0, "");
+static_assert(offsetof(IDColiMove, m_down) == 0x1c8, "");
+static_assert(offsetof(IDColiMove, m_accuracy) == 0x1ed, "");
+static_assert(offsetof(IDColiMove, unknown1f3) == 0x1f3, "");
+static_assert(sizeof(IDColiMove) == 0x200, "");
 
 class IDColiAccMan {
 public:
