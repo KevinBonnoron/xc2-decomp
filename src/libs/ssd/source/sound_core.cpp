@@ -1,5 +1,6 @@
 #include <stddef.h>
 
+#include "ssd/ssd_debug.h"
 #include "ssd/ssd_memory_manager.h"
 #include "ssd/ssd_result.h"
 #include "ssd/ssd_sound_core.h"
@@ -117,5 +118,11 @@ int SoundCore::GetVoiceHandleCount() const { return static_cast<const SystemCore
 int SoundCore::GetHWAllocVoiceCount() const { return static_cast<const SystemCore *>(this)->unknown410; }
 
 int SoundCore::GetAllocMemoryCount() const { return MemoryManager::memoryManager_.unknown58; }
+
+u32 SoundCore::GetErrorLogFlag() const { return Debug::log_.m_errorLogFlag; }
+
+u32 SoundCore::GetWarningLogFlag() const { return Debug::log_.m_warningLogFlag; }
+
+LogTimeStamp::Type SoundCore::GetLogTimeStampType() const { return Debug::log_.m_logTimeStampType; }
 
 } // namespace ssd

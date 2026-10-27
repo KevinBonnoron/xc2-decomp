@@ -5,6 +5,8 @@
 
 namespace ssd {
 
+SoundListener::SoundListener() : Object(ObjectType::SOUND_LISTENER), unknown78(false), unknown79(false), unknown7a(false), unknown7b(false), m_enableDoppler(true), m_dopplerFactor(1.0f) { Connect(); }
+
 void SoundListener::Connect() {
   if (SoundCore::instance_ != nullptr) {
     SoundCore::instance_->AddSoundListener(this);

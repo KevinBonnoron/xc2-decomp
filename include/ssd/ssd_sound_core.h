@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "ssd/ssd_behavior.h"
+#include "ssd/ssd_debug.h"
 #include "ssd/ssd_mutex.h"
 #include "ssd/ssd_result.h"
 #include "types.h"
@@ -68,10 +69,13 @@ public:
   int GetVoiceHandleCount() const;
   int GetHWAllocVoiceCount() const;
   int GetAllocMemoryCount() const;
+  u32 GetErrorLogFlag() const;
+  u32 GetWarningLogFlag() const;
+  LogTimeStamp::Type GetLogTimeStampType() const;
 
   static SoundCore *instance_;
 
-  u8 _08[0x10 - 0x08];
+  Result unknown08; // Inferred role: last result; original member name unknown.
   bool m_init;
 };
 

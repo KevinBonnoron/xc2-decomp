@@ -8,6 +8,7 @@
 namespace ssd {
 
 struct Vec3 {
+  Vec3() {}
   Vec3(f32 x, f32 y, f32 z) : x(x), y(y), z(z) {}
 
   Vec3 &operator=(const Vec3 &vector) {
@@ -22,6 +23,7 @@ struct Vec3 {
   f32 z;
 };
 
+class SoundCore;
 class SoundEntry;
 class SoundHandle;
 class SoundListener;
@@ -57,8 +59,9 @@ public:
   Object(ObjectType::Id type);
   virtual ~Object() {}
 
-  u32 unknown08; // Inferred role: type; original member name unknown.
-  u8 _0c[0x18 - 0x0c];
+  u32 unknown08;        // Inferred role: type; original member name unknown.
+  u32 unknown0c;        // Inferred role: cleared by the constructor; original member name unknown.
+  SoundCore *unknown10; // Inferred role: sound core instance at construction; original member name unknown.
 };
 
 class SoundActor : public Object, public List<SoundActor>::Node {
@@ -131,6 +134,21 @@ public:
 
 static_assert(sizeof(SoundGroup) == 0x20, "");
 
+class SoundBank;
+
+class SoundEntry : public Object, public List<SoundEntry>::Node {
+public:
+  SoundGroup *GetSoundGroup() const;
+
+  u8 _30[0x7d - 0x30];
+  u8 unknown7d; // Inferred role: sound group id; original member name unknown.
+  u8 _7e[0xd0 - 0x7e];
+  SoundBank *unknownd0; // Inferred role: sound bank; original member name unknown.
+};
+
+static_assert(offsetof(SoundEntry, unknown7d) == 0x7d, "");
+static_assert(offsetof(SoundEntry, unknownd0) == 0xd0, "");
+
 class SoundBank {
 public:
   virtual ~SoundBank();
@@ -138,10 +156,22 @@ public:
   void RemoveSoundEntry(SoundEntry *entry);
   int GetReferenceCounter() const;
   int NumSoundEntry() const;
+  int GetNumber() const;
+  SoundGroup *GetSoundGroup(int id) const;
   void Stop(f32 fadeTime);
 
-  u8 _08[0x120 - 0x08];
+  u8 _08[0x30 - 0x08];
+  int m_number;
+  u8 _34[0x100 - 0x34];
+  int m_numSoundEntry;
+  u8 _104[0x110 - 0x104];
+  int unknown110;          // Inferred role: sound group count; original member name unknown.
+  SoundGroup **unknown118; // Inferred role: sound groups; original member name unknown.
 };
+
+static_assert(offsetof(SoundBank, m_number) == 0x30, "");
+static_assert(offsetof(SoundBank, m_numSoundEntry) == 0x100, "");
+static_assert(offsetof(SoundBank, unknown118) == 0x118, "");
 
 static_assert(sizeof(SoundBank) == 0x120, "");
 

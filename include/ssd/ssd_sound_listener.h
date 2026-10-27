@@ -7,11 +7,20 @@
 namespace ssd {
 
 struct Mat34 {
-  f32 unknown00[3][4]; // Inferred role: m; original member name unknown.
+  f32 unknown00[4][3]; // Inferred role: three axes and the translation; original member name unknown.
 };
 
+struct Vector3 {
+  f32 unknown00; // Inferred role: x; original member name unknown.
+  f32 unknown04; // Inferred role: y; original member name unknown.
+  f32 unknown08; // Inferred role: z; original member name unknown.
+};
+
+void MakeIdentityf34(Mat34 *matrix);
+void GetMatAxes(Vector3 *axisX, Vector3 *axisY, Vector3 *axisZ, Vector3 *translation, const Mat34 &matrix);
+
 void Mat34LookAt(Mat34 *matrix, const Vec3 *position, const Vec3 *look, const Vec3 *up);
-void Vec3Transform(const Mat34 *matrix, const Vec3 *in, Vec3 *out);
+Vec3 *Vec3Transform(const Mat34 *matrix, const Vec3 *in, Vec3 *out);
 
 class SoundListener : public Object {
 public:
@@ -22,6 +31,7 @@ public:
     Vec3 unknown24; // Inferred role: velocity; original member name unknown.
   };
 
+  SoundListener();
   void Connect();
   ~SoundListener() override;
   void Disconnect();
