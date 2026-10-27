@@ -6,6 +6,10 @@
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
 
+namespace ui {
+class UIObjectAcc;
+} // namespace ui
+
 namespace gf {
 
 class GfMenuCallContext;
@@ -13,6 +17,7 @@ struct GF_OBJ_HANDLE;
 
 class GfMenuObjBalloon : public GfMenuObject {
 public:
+  static void resetFeeling(ui::UIObjectAcc &acc);
   void initialize() override;
   void finalize() override;
   struct NextParam {

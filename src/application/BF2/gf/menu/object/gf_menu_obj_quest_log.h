@@ -7,6 +7,8 @@ struct QuestID;
 
 class GfMenuObjQuestLog : public GfMenuObject {
 public:
+  bool seqLogNextEnd();
+  bool seqLogStart();
   void initialize() override;
   void finalize() override;
   static void order(GfMenuCallContext *context, QuestID quest);

@@ -6,6 +6,7 @@ namespace gf {
 
 class GfMenuObjItemList2 : public GfMenuObject {
 public:
+  static void sendEvent(u32 handle, u32 type, u32 param, u32 delay);
   void initialize() override;
   void finalize() override;
   void update() override;
