@@ -3,9 +3,12 @@
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
+#include "gf/game/talk/gf_game_talk.h"
+#include "gf/menu/gf_menu_common_window_param.h"
 #include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gf/request/gf_req_command.h"
 #include "gmk/gmk_manager.h"
+#include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
@@ -25,8 +28,6 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 struct GF_SCOM_HANDLE;
-struct GfSetupPfTalk;
-struct MenuCommonWindowParam;
 class GfMenuCallContext;
 class IFieldSeq;
 
@@ -351,23 +352,45 @@ public:
 static_assert(sizeof(GfPlayComMenuChapterSave) == 0x18, "");
 
 class GfPlayComMenuCommon : public GfPlayCom {
+  GF_PLAY_COM("PlayComMenuCommon")
+
 public:
+  GfPlayComMenuCommon(u32 window, u32 handle);
+  ~GfPlayComMenuCommon() override;
+  void start() override;
+  void end() override {}
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static bool isDisp(u32 window);
   static u32 getResult(u32 window);
   static GfPlayComMenuCommon *create(u32 window);
 
   u32 unknown10; // Inferred role: window; original member name unknown.
-  int unknown14; // Inferred role: id; original member name unknown.
+  u32 unknown14; // Inferred role: id; original member name unknown.
+
+  static mm::mtl::FixedQueue<u32, 32> s_list;
+  static u32 s_gblHandle;
 };
 
 static_assert(sizeof(GfPlayComMenuCommon) == 0x18, "");
 
 class GfPlayComMenuCommonFromParam : public GfPlayCom {
+  GF_PLAY_COM("PlayComMenuCommon")
+
 public:
+  GfPlayComMenuCommonFromParam(const MenuCommonWindowParam &param, u32 handle);
+  ~GfPlayComMenuCommonFromParam() override;
+  void start() override;
+  void end() override {}
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
+  static bool isDisp(u32 window);
+  static u32 getResult(u32 window);
   static GfPlayComMenuCommonFromParam *create(const MenuCommonWindowParam &param);
 
-  u8 _10[0x60 - 0x10];
-  int unknown60; // Inferred role: id; original member name unknown.
+  MenuCommonWindowParam unknown10; // Inferred role: window param; original member name unknown.
+  u32 unknown60;                   // Inferred role: id; original member name unknown.
+
+  static mm::mtl::FixedQueue<u32, 32> s_list;
+  static u32 s_gblHandle;
 };
 
 static_assert(sizeof(GfPlayComMenuCommonFromParam) == 0x68, "");
@@ -573,15 +596,46 @@ public:
   static GfPlayComPlayerDead *create(GfPlayerDead dead);
 };
 
-class GfPlayComTalk : public GfPlayCom {
+class GfPlayComTalk : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComTalk> {
+  GF_PLAY_COM("PlayComTalk")
+
 public:
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
+  static u32 getQuestTargetNpc(u32 condId);
   static GfPlayComTalk *create(const GfSetupPfTalk &talk);
+
+  GfSetupPfTalk unknown18; // Inferred role: talk; original member name unknown.
+  int unknown30;           // Inferred role: player pause; original member name unknown.
+  u32 unknown34;           // Inferred role: npc; original member name unknown.
+  u32 unknown38;           // Inferred role: map; original member name unknown.
+  QuestID unknown3c;       // Inferred role: progress quest; original member name unknown.
+  QuestID unknown40;       // Inferred role: last order quest; original member name unknown.
+
+  static u32 s_questTargetNpc;
+  static u32 s_questTargetCondID;
 };
 
+static_assert(sizeof(GfPlayComTalk) == 0x48, "");
+
 class GfPlayComQuestOrderUI : public GfPlayCom {
+  GF_PLAY_COM("PlayComQuestOrderUI")
+
 public:
+  GfPlayComQuestOrderUI(QuestID quest, bool isForce);
+  ~GfPlayComQuestOrderUI() override;
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComQuestOrderUI *create(QuestID quest, bool isForce);
+
+  QuestID unknown10;            // Inferred role: quest; original member name unknown.
+  bool unknown14;               // Inferred role: force; original member name unknown.
+  GfMenuCallContext *unknown18; // Inferred role: context; original member name unknown.
 };
+
+static_assert(sizeof(GfPlayComQuestOrderUI) == 0x20, "");
 
 class GfPlayComQuestCompleteUI : public GfPlayCom {
   GF_PLAY_COM("QuestCompleteUI")
@@ -627,9 +681,21 @@ public:
 };
 
 class GfPlayComBattleStart : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComBattleStart> {
+  GF_PLAY_COM("PlayComBattleStart")
+
 public:
+  GfPlayComBattleStart(bool isStart) : GfPlayCom(PCOMTYPE_BATTLE_START, false), unknown18(isStart), unknown1c(0.0f), unknown20(0) {}
+  void start() override {}
+  void end() override {}
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComBattleStart *create(bool isStart);
+
+  bool unknown18; // Inferred role: start; original member name unknown.
+  f32 unknown1c;  // Inferred role: wait time; original member name unknown.
+  int unknown20;  // Inferred role: state; original member name unknown.
 };
+
+static_assert(sizeof(GfPlayComBattleStart) == 0x28, "");
 
 class GfPlayComExecuteSignal : public GfPlayCom {
   GF_PLAY_COM("PlayComExecuteSignal")

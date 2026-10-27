@@ -25,6 +25,7 @@ public:
   static u32 checkMove(u32 move, u32 count);
   static void checkItem(u32 item, int count);
   static void checkBladeActivate(u32 blade);
+  static void checkTalk(u32 npc, GF_OBJ_HANDLE *handle);
 };
 
 class GfAchievManager : public mm::mtl::PtrSingleton<GfAchievManager> {

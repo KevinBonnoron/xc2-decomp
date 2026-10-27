@@ -133,7 +133,8 @@ public:
 #line 632
   void push(const T &value) {
     MM_ASSERT(!full());
-    element((mFront + mSize) % N) = value;
+    T &slot = element((mFront + mSize) % N);
+    slot = value;
     mSize++;
   }
 

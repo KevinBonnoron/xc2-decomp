@@ -41,6 +41,7 @@ public:
   };
 
   static bool isUiGfObjHandleValid(GF_OBJ_HANDLE *handle);
+  static bool enterPlayerBattle(bool isStart, GF_OBJ_HANDLE *target, bool isForce);
   static bool evalSumFs(int condition, u32 option);
   static bool getNameMsId(u32 &nameId, GF_OBJ_HANDLE *handle);
   static u32 getFsLevelSum(u32 fieldSkill);

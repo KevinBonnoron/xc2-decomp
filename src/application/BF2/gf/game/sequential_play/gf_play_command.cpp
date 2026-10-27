@@ -3,10 +3,12 @@
 #include "bdat.h"
 #include "fw/fw_update_info.h"
 #include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_event.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/field/gf_field_map_gimmick.h"
+#include "gf/game/achiev/gf_achiev_manager.h"
 #include "gf/game/event/gf_game_event.h"
 #include "gf/game/gf_game_arts_movie.h"
 #include "gf/game/gf_game_chain_attack.h"
@@ -14,9 +16,12 @@
 #include "gf/game/gf_game_scene.h"
 #include "gf/game/gf_game_speed.h"
 #include "gf/game/gf_game_state.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/game/quest/gf_quest_event.h"
+#include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/quest/gf_quest_manager.h"
 #include "gf/game/quest/gf_quest_task.h"
+#include "gf/game/quest/gf_quest_util.h"
 #include "gf/game/salvage/gf_game_salvage.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/game/sequential_play/gf_sequential_play.h"
@@ -27,12 +32,16 @@
 #include "gf/menu/gf_menu_kizunaring.h"
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/object/gf_menu_obj_quest_log.h"
+#include "gf/object/gf_obj_setup.h"
+#include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_manager.h"
 #include "gf/request/gf_req_scom.h"
+#include "gf/scom/gf_scom_fade.h"
 #include "gf/scom/gf_scom_script.h"
 #include "gf/script/gf_script_manager.h"
 #include "gmk/gmk_manager.h"
 #include "mm_math/mm_col4.h"
+#include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/reference_object.h"
 
 namespace gf {
@@ -480,6 +489,130 @@ GfPlayComMenuPrecious *GfPlayComMenuPrecious::create(u32 item) {
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuPrecious(item);
 }
 
+mm::mtl::FixedQueue<u32, 32> GfPlayComMenuCommon::s_list;
+u32 GfPlayComMenuCommon::s_gblHandle;
+
+GfPlayComMenuCommon::GfPlayComMenuCommon(u32 window, u32 handle) : GfPlayCom(PCOMTYPE_MENU_COMMON, false), unknown10(window) {
+  unknown14 = handle & 0xffffff;
+  if (s_list.size() >= 32) {
+    s_list.pop_front();
+  }
+  s_list.push(unknown14);
+}
+
+GfPlayComMenuCommon::~GfPlayComMenuCommon() {
+  for (mm::mtl::FixedQueue<u32, 32>::iterator it = s_list.begin(); it != s_list.end(); ++it) {
+    if ((*it & 0xffffff) == unknown14) {
+      *it = ((GfMenuManager::getCommonWindowResult() + 1) << 24) | unknown14;
+      break;
+    }
+  }
+}
+
+void GfPlayComMenuCommon::start() {
+  if (!GfGameManager::isAdvertize()) {
+    SCOM_FADE::create(1, 15, mm::Col4::zero);
+  }
+  GfMenuManager::openCommonWindow(unknown10);
+}
+
+bool GfPlayComMenuCommon::update(const fw::UpdateInfo &, bool isCancel) {
+  if (!isCancel && GfMenuManager::isOpenCommonWindow()) {
+    if (!GfGameManager::isLeaveGameForDebug()) {
+      return false;
+    }
+    GfMenuManager::closeCommonWindow();
+  }
+  return true;
+}
+
+bool GfPlayComMenuCommon::isDisp(u32 window) {
+  for (mm::mtl::FixedQueue<u32, 32>::iterator it = s_list.begin(); it != s_list.end(); ++it) {
+    if ((*it >> 24) == 0 && (*it & 0xffffff) == window) {
+      return true;
+    }
+  }
+  return false;
+}
+
+u32 GfPlayComMenuCommon::getResult(u32 window) {
+  for (mm::mtl::FixedQueue<u32, 32>::iterator it = s_list.begin(); it != s_list.end(); ++it) {
+    if ((*it & 0xffffff) == window) {
+      return *it >> 24;
+    }
+  }
+  return 0;
+}
+
+GfPlayComMenuCommon *GfPlayComMenuCommon::create(u32 window) {
+  u32 handle = s_gblHandle++;
+  // __LINE__ must be 1526 as in the original file: its value changes the instruction order.
+#line 1526
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuCommon(window, handle);
+}
+
+mm::mtl::FixedQueue<u32, 32> GfPlayComMenuCommonFromParam::s_list;
+u32 GfPlayComMenuCommonFromParam::s_gblHandle;
+
+GfPlayComMenuCommonFromParam::GfPlayComMenuCommonFromParam(const MenuCommonWindowParam &param, u32 handle)
+    : GfPlayCom(PCOMTYPE_MENU_COMMON_FROM_PARAM, false), unknown10(param), unknown60(handle & 0xffffff) {
+  if (s_list.size() >= 32) {
+    s_list.pop_front();
+  }
+  s_list.push(unknown60);
+}
+
+GfPlayComMenuCommonFromParam::~GfPlayComMenuCommonFromParam() {
+  for (mm::mtl::FixedQueue<u32, 32>::iterator it = s_list.begin(); it != s_list.end(); ++it) {
+    if ((*it & 0xffffff) == unknown60) {
+      *it = ((GfMenuManager::getCommonWindowResult() + 1) << 24) | unknown60;
+      break;
+    }
+  }
+}
+
+void GfPlayComMenuCommonFromParam::start() {
+  if (!GfGameManager::isAdvertize()) {
+    SCOM_FADE::create(1, 15, mm::Col4::zero);
+  }
+  GfMenuManager::openCommonWindow(unknown10);
+}
+
+bool GfPlayComMenuCommonFromParam::update(const fw::UpdateInfo &, bool isCancel) {
+  if (!isCancel && GfMenuManager::isOpenCommonWindow()) {
+    if (!GfGameManager::isLeaveGameForDebug()) {
+      return false;
+    }
+    GfMenuManager::closeCommonWindow();
+  }
+  return true;
+}
+
+bool GfPlayComMenuCommonFromParam::isDisp(u32 window) {
+  for (mm::mtl::FixedQueue<u32, 32>::iterator it = s_list.begin(); it != s_list.end(); ++it) {
+    if ((*it >> 24) == 0 && (*it & 0xffffff) == window) {
+      return true;
+    }
+  }
+  return false;
+}
+
+u32 GfPlayComMenuCommonFromParam::getResult(u32 window) {
+  for (mm::mtl::FixedQueue<u32, 32>::iterator it = s_list.begin(); it != s_list.end(); ++it) {
+    if ((*it & 0xffffff) == window) {
+      return *it >> 24;
+    }
+  }
+  return 0;
+}
+
+GfPlayComMenuCommonFromParam *GfPlayComMenuCommonFromParam::create(const MenuCommonWindowParam &param) {
+  u32 handle = s_gblHandle++;
+  // __LINE__ must be 1624 as in the original file: its value changes the instruction order.
+#line 1624
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMenuCommonFromParam(param, handle);
+}
+
 GfPlayComSalvage::GfPlayComSalvage(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_SALVAGE, false), unknown18(handle), unknown20(3), unknown24(STATE_WAIT) {
   if (GfGameScene::get() != nullptr) {
     unknown10 = GfGameScene::get()->createPlayerPause();
@@ -567,6 +700,134 @@ GfPlayComGimmickTaskComplete *GfPlayComGimmickTaskComplete::create(gmk::GmkType 
   // __LINE__ must be 2596 as in the original file: its value changes the instruction order.
 #line 2596
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComGimmickTaskComplete(gmkType, gimmick, time);
+}
+
+u32 GfPlayComTalk::s_questTargetNpc;
+u32 GfPlayComTalk::s_questTargetCondID;
+
+u32 GfPlayComTalk::getQuestTargetNpc(u32 condId) {
+  if (s_questTargetCondID == condId) {
+    return s_questTargetNpc;
+  }
+  return 0;
+}
+
+void GfPlayComTalk::start() {
+  QuestID progress = GfQuestManager::getProgressCurrentQuest(QTYPE_NONE);
+  unknown3c.unknown00 = progress.unknown00;
+  unknown3c.unknown02 = progress.unknown02;
+  QuestID lastOrder = GfQuestManager::getLastOrder();
+  unknown40.unknown00 = lastOrder.unknown00;
+  unknown40.unknown02 = lastOrder.unknown02;
+  GfGameTalk::play(unknown18);
+  GfObjSetupNpc *setup = GfObjUtil::getObjSetup<GfObjSetupNpc>(unknown18.unknown08);
+  if (setup != nullptr) {
+    unknown34 = setup->unknown10;
+    if (unknown34 != 0) {
+      GfAchievStats::checkTalk(unknown34, unknown18.unknown08);
+      u32 taskIndex;
+      if (GfQuestUtil::getTalkNpcInfo(taskIndex, unknown34, unknown3c)) {
+        s_questTargetNpc = unknown34;
+        s_questTargetCondID = taskIndex;
+      }
+    }
+  }
+}
+
+void GfPlayComTalk::end() {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->destroyPlayerPause(unknown30);
+  }
+  if (!GfGameEvent::isCancelFlag()) {
+    QuestID quest;
+    if (unknown40 == GfQuestManager::getLastOrder()) {
+      quest.unknown00 = 0;
+      quest.unknown02 = 0;
+    } else {
+      quest = GfQuestManager::getLastOrder();
+    }
+    GfQuestUtil::finishTalkNpc(unknown38, unknown34, quest);
+  }
+  s_questTargetNpc = 0;
+  s_questTargetCondID = 0;
+}
+
+bool GfPlayComTalk::update(const fw::UpdateInfo &, bool isCancel) {
+  if (isCancel) {
+    GfGameTalk::end();
+    return true;
+  }
+  return !GfGameTalk::isPlaying();
+}
+
+GfPlayComQuestOrderUI::GfPlayComQuestOrderUI(QuestID quest, bool isForce) : GfPlayCom(PCOMTYPE_QUEST_ORDER_UI, false), unknown10(quest), unknown14(isForce), unknown18(nullptr) {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->setPlayerTalkForce(true);
+  }
+}
+
+GfPlayComQuestOrderUI::~GfPlayComQuestOrderUI() { mm::mtl::safeRelease(unknown18); }
+
+void GfPlayComQuestOrderUI::start() {
+  if (GfQuestInfo::isDispUI(unknown10)) {
+    unknown18 = GfMenuCallContext::create();
+    GfMenuObjQuestLog::order(unknown18, unknown10);
+  }
+}
+
+void GfPlayComQuestOrderUI::end() {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->setPlayerTalkForce(false);
+  }
+}
+
+bool GfPlayComQuestOrderUI::update(const fw::UpdateInfo &, bool) {
+  if (unknown18 != nullptr) {
+    if (!unknown18->isTerm()) {
+      return false;
+    }
+    GfQuestEvent::clearDispUI();
+  }
+  return true;
+}
+
+GfPlayComQuestOrderUI *GfPlayComQuestOrderUI::create(QuestID quest, bool isForce) {
+  // __LINE__ must be 2502 as in the original file: its value changes the instruction order.
+#line 2502
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComQuestOrderUI(quest, isForce);
+}
+
+bool GfPlayComBattleStart::update(const fw::UpdateInfo &info, bool) {
+  if (unknown20 == 0) {
+    if (!GfGameUtil::enterPlayerBattle(unknown18, reinterpret_cast<GF_OBJ_HANDLE *>(-1), false)) {
+      unknown1c += info.unknown04;
+      if (unknown1c < 3.0f) {
+        return false;
+      }
+    }
+    unknown1c = 0.0f;
+    unknown20 = 1;
+    return false;
+  } else if (unknown20 == 1) {
+    unknown1c += info.unknown04;
+    if (unknown1c < 1.0f) {
+      return false;
+    }
+  }
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->setAutoBattle(false);
+  }
+  return true;
+}
+
+GfPlayComBattleStart *GfPlayComBattleStart::create(bool isStart) {
+  // __LINE__ must be 2689 as in the original file: its value changes the instruction order.
+#line 2689
+  GfPlayComBattleStart *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComBattleStart(isStart);
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->setAutoBattle(true);
+  }
+  return command;
 }
 
 GfPlayComExecuteSignal::GfPlayComExecuteSignal(bool isStart, GfSequentialPlaySignal *signal) : GfPlayCom(PCOMTYPE_EXECUTE_SIGNAL, true), unknown10(isStart), unknown18(signal) {
