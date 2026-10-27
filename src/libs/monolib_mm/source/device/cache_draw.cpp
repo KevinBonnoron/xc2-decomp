@@ -4,6 +4,18 @@ namespace ml {
 
 void CacheDraw::DMAT::flush(DebDraw *draw) { draw->setMatrix(unknown10); }
 
+void CacheDraw::DCLEAR::flush(DebDraw *draw) { draw->clear(); }
+
+void CacheDraw::DEND::flush(DebDraw *draw) { draw->end(); }
+
+void CacheDraw::DORTHO::flush(DebDraw *draw) { draw->setOrtho(); }
+
+void CacheDraw::DBEGIN::flush(DebDraw *draw) { draw->begin(unknown0c, unknown10); }
+
+void CacheDraw::DADDV3_1::flush(DebDraw *draw) { draw->add(unknown0c); }
+
+void CacheDraw::DPERS::flush(DebDraw *draw) { draw->setPerspective(unknown4c, unknown50, unknown54, unknown0c, &unknown58); }
+
 void CacheDraw::DRAXIS::flush(DebDraw *draw) { draw->renderAxis(unknown0c); }
 
 void CacheDraw::DRCAMERA::flush(DebDraw *draw) { draw->renderCamera(); }

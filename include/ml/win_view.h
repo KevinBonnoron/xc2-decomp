@@ -17,7 +17,8 @@ class WinView : public WorkObj, public FontLayer {
 public:
   struct RENDER_INFO {
     mm::Pnt<int> unknown00; // Inferred role: size; original member name unknown.
-    u8 _08[0x18 - 0x08];
+    mm::Pnt<int> unknown08; // Inferred role: work size; original member name unknown.
+    u8 _10[0x18 - 0x10];
     mm::Pnt<int> unknown18; // Inferred role: client offset from the top left; original member name unknown.
     mm::Pnt<int> unknown20; // Inferred role: client offset from the bottom right; original member name unknown.
     u8 _28[0x30 - 0x28];
@@ -77,6 +78,7 @@ public:
 };
 
 static_assert(sizeof(WinView::RENDER_INFO) == 0xb0, "");
+static_assert(offsetof(WinView::RENDER_INFO, unknown08) == 0x08, "");
 static_assert(offsetof(WinView::RENDER_INFO, unknown30) == 0x30, "");
 static_assert(offsetof(WinView::RENDER_INFO, unknown48) == 0x48, "");
 static_assert(offsetof(WinView, unknown1b8) == 0x1b8, "");
