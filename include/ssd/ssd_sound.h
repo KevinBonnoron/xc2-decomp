@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "ssd/ssd_array.h"
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_result.h"
 #include "types.h"
@@ -38,7 +39,27 @@ public:
   virtual void FreeBuffer(void *pointer) = 0;
   virtual void *AllocStream(size_t size, size_t alignment) = 0;
   virtual void FreeStream(void *pointer) = 0;
+
+  struct Block {
+    Allocator *unknown00; // Inferred role: allocator; original member name unknown.
+    void *unknown08;      // Inferred role: aligned address; original member name unknown.
+    void *unknown10;      // Inferred role: allocated address; original member name unknown.
+    u32 unknown18;        // Inferred role: requested size; original member name unknown.
+    u32 unknown1c;        // Inferred role: aligned size; original member name unknown.
+    u32 unknown20;        // Inferred role: element size; original member name unknown.
+    u32 unknown24;        // Inferred role: element count; original member name unknown.
+  };
+
+  Block *NewInstanceImpl(size_t size, size_t count, size_t alignment);
+  Block *NewBufferImpl(size_t size, size_t count, size_t alignment);
+  Block *NewStreamImpl(size_t size, size_t alignment);
+  Block *GetMemoryBlock(void *address);
+  void DeleteInstanceImpl(Block *block);
+  void DeleteBufferImpl(Block *block);
+  void DeleteStreamImpl(Block *block);
 };
+
+static_assert(sizeof(Allocator::Block) == 0x28, "");
 
 namespace ObjectType {
 enum Id {
@@ -140,40 +161,64 @@ class SoundEntry : public Object, public List<SoundEntry>::Node {
 public:
   SoundGroup *GetSoundGroup() const;
 
-  u8 _30[0x7d - 0x30];
+  u8 _30[0x78 - 0x30];
+  u16 unknown78; // Inferred role: sound number; original member name unknown.
+  u8 _7a[0x7d - 0x7a];
   u8 unknown7d; // Inferred role: sound group id; original member name unknown.
-  u8 _7e[0xd0 - 0x7e];
-  SoundBank *unknownd0; // Inferred role: sound bank; original member name unknown.
+  u8 _7e[0xc8 - 0x7e];
+  WaveSource *unknownc8; // Inferred role: wave source; original member name unknown.
+  SoundBank *unknownd0;  // Inferred role: sound bank; original member name unknown.
 };
 
+static_assert(offsetof(SoundEntry, unknown78) == 0x78, "");
 static_assert(offsetof(SoundEntry, unknown7d) == 0x7d, "");
+static_assert(offsetof(SoundEntry, unknownc8) == 0xc8, "");
 static_assert(offsetof(SoundEntry, unknownd0) == 0xd0, "");
 
-class SoundBank {
+class SoundBank : public Object, public List<SoundBank>::Node {
 public:
   virtual ~SoundBank();
-  void AddSoundEntry(SoundEntry *entry);
-  void RemoveSoundEntry(SoundEntry *entry);
+  SoundEntry *begin() const;
+  const SoundEntry *end() const;
+  bool empty() const;
+  SoundEntry *AddSoundEntry(SoundEntry *entry);
+  Result RemoveSoundEntry(int number);
+  Result RemoveSoundEntry(SoundEntry *entry);
+  SoundEntry *GetSoundEntryFromNumber(int number) const;
+  SoundEntry *GetSoundEntryFromIndex(int index) const;
+  Result AddSoundGroup(SoundGroup *group);
   int GetReferenceCounter() const;
   int NumSoundEntry() const;
   int GetNumber() const;
   SoundGroup *GetSoundGroup(int id) const;
-  void Stop(f32 fadeTime);
+  Result Stop(f32 fadeTime);
 
-  u8 _08[0x30 - 0x08];
   int m_number;
-  u8 _34[0x100 - 0x34];
-  int m_numSoundEntry;
-  u8 _104[0x110 - 0x104];
-  int unknown110;          // Inferred role: sound group count; original member name unknown.
-  SoundGroup **unknown118; // Inferred role: sound groups; original member name unknown.
+  u8 _34[0xe0 - 0x34];
+  List<SoundEntry> unknowne0;     // Inferred role: sound entries; original member name unknown.
+  Array<SoundGroup *> unknown108; // Inferred role: sound groups; original member name unknown.
 };
 
 static_assert(offsetof(SoundBank, m_number) == 0x30, "");
-static_assert(offsetof(SoundBank, m_numSoundEntry) == 0x100, "");
-static_assert(offsetof(SoundBank, unknown118) == 0x118, "");
+static_assert(offsetof(SoundBank, unknowne0) == 0xe0, "");
+static_assert(offsetof(SoundBank, unknown108) == 0x108, "");
 
 static_assert(sizeof(SoundBank) == 0x120, "");
+
+class SoundCategory {
+public:
+  struct unknown001 {
+    int unknown00; // Inferred role: category id; original member name unknown.
+    f32 unknown04; // Inferred role: category volume; original member name unknown.
+  };
+
+  virtual ~SoundCategory() {}
+
+  unknown001 unknown08; // Inferred role: category parameters; original member name unknown.
+};
+
+static_assert(offsetof(SoundCategory, unknown08) == 0x8, "");
+static_assert(sizeof(SoundCategory) == 0x10, "");
 
 class SoundHandle {
 public:
@@ -223,6 +268,7 @@ public:
   void SetPitch(f32 pitch, f32 fadeTime);
   void SetVolume(f32 volume, f32 fadeTime);
   void SetPan(f32 pan, f32 fadeTime);
+  void UpdateAudioFrame(f32 deltaTime);
   long SetEnableEffect(int index, bool isEnable);
   long SetEffectVolume(int index, f32 volume, f32 fadeTime);
   long SetPregapTime(f32 time);
@@ -246,8 +292,11 @@ public:
   long KeepStreamOpen(bool isKeep);
   void DisplayDebugVerbose();
 
-  u8 _00[0x58 - 0x00];
-  bool unknown58; // Inferred role: valid; original member name unknown.
+  u8 _00[0x38 - 0x00];
+  SoundActor *unknown38; // Inferred role: sound actor; original member name unknown.
+  u8 _40[0x50 - 0x40];
+  SoundCategory::unknown001 unknown50; // Inferred role: category parameters; original member name unknown.
+  bool unknown58;                      // Inferred role: valid; original member name unknown.
   u8 _59[0x68 - 0x59];
   f32 unknown68;  // Inferred role: pregap time; original member name unknown.
   Fade unknown6c; // Inferred role: pitch; original member name unknown.
@@ -265,6 +314,8 @@ public:
   u32 unknownf8;       // Inferred role: voice handle id; original member name unknown.
 };
 
+static_assert(offsetof(SoundHandle, unknown38) == 0x38, "");
+static_assert(offsetof(SoundHandle, unknown50) == 0x50, "");
 static_assert(offsetof(SoundHandle, unknown68) == 0x68, "");
 static_assert(offsetof(SoundHandle, unknown9c) == 0x9c, "");
 static_assert(offsetof(SoundHandle, unknownc0) == 0xc0, "");

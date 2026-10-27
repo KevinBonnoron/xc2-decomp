@@ -1,18 +1,19 @@
 #pragma once
 #include <stddef.h>
 
+#include "ssd/ssd_behavior.h"
 #include "types.h"
 
 namespace ssd {
 
-class StreamController {
+class StreamController : public List<StreamController>::Node {
 public:
   s64 ResetStream();
   u32 SampleToPosition(int sample);
   void SetReadPosition(u64 position);
   int PositionToFrame(u64 position);
 
-  u8 _00[0x68 - 0x00];
+  u8 _18[0x68 - 0x18];
   bool unknown68; // Inferred role: loop; original member name unknown.
   u8 _69[0xf0 - 0x69];
   bool unknownf0; // Inferred role: open; original member name unknown.

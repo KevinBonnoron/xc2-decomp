@@ -40,7 +40,8 @@ public:
   u32 unknown48; // Inferred role: loop end; original member name unknown.
   u8 _4c[0x50 - 0x4c];
   bool unknown50; // Inferred role: loop; original member name unknown.
-  u8 _51[0x70 - 0x51];
+  u8 _51[0x6c - 0x51];
+  int unknown6c;               // Inferred role: reference counter; original member name unknown.
   const unknown003 *unknown70; // Inferred role: file header; original member name unknown.
   u8 _78[0x80 - 0x78];
   u8 *unknown80; // Inferred role: data; original member name unknown.
@@ -53,6 +54,7 @@ static_assert(offsetof(WaveSource, unknown2c) == 0x2c, "");
 static_assert(offsetof(WaveSource, unknown34) == 0x34, "");
 static_assert(offsetof(WaveSource, unknown40) == 0x40, "");
 static_assert(offsetof(WaveSource, unknown50) == 0x50, "");
+static_assert(offsetof(WaveSource, unknown6c) == 0x6c, "");
 static_assert(offsetof(WaveSource, unknown70) == 0x70, "");
 static_assert(offsetof(WaveSource, unknown80) == 0x80, "");
 static_assert(offsetof(WaveSource, unknown90) == 0x90, "");

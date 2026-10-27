@@ -1,6 +1,10 @@
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_mutex.h"
+#include "ssd/ssd_result.h"
+#include "ssd/ssd_sound.h"
 #include "ssd/ssd_sound_core.h"
+#include "ssd/ssd_stream_controller.h"
+#include "ssd/ssd_voice_handle.h"
 #include "types.h"
 
 namespace ssd {
@@ -29,7 +33,7 @@ f32 SystemCore::GetMasterVolume() const { return unknown308.unknown18; }
 
 f32 SystemCore::GetMasterPitch() const { return unknown350.unknown18; }
 
-int SystemCore::GetNumPlaySound() const { return m_numPlaySound; }
+int SystemCore::GetNumPlaySound() const { return unknown3a0.count; }
 
 f32 SystemCore::GetSpeedOfSound() const { return m_speedOfSound; }
 
@@ -46,6 +50,243 @@ f64 SystemCore::GetAudioCpuLoad() const {
 void SystemCore::LockAudio() const { unknown708.Lock(); }
 
 void SystemCore::UnlockAudio() const { unknown708.Unlock(); }
+
+void SystemCore::AddStreamController(StreamController *controller) {
+  unknown708.Lock();
+  unknown950.PushBack(controller);
+  unknown708.Unlock();
+}
+
+void SystemCore::RemoveStreamController(StreamController *controller) {
+  unknown708.Lock();
+  unknown950.unknown001(controller);
+  unknown708.Unlock();
+}
+
+void SystemCore::AddBank(SoundBank *bank) {
+  unknown708.Lock();
+  unknown418.PushBack(bank);
+  set_result(static_cast<Result>(0));
+  unknown708.Unlock();
+}
+
+void SystemCore::RemoveBank(SoundBank *bank) {
+  unknown708.Lock();
+  unknown418.unknown001(bank);
+  set_result(static_cast<Result>(0));
+  unknown708.Unlock();
+}
+
+void SystemCore::StopBank(SoundBank *bank, f32 fadeTime) {
+  unknown708.Lock();
+  VoiceHandle *it = unknown3a0.unknown002();
+  while (it != unknown3a0.unknown003()) {
+    if (it->unknown60->unknownd0 == bank) {
+      it->unknown58->Stop(fadeTime);
+    }
+    it = List<VoiceHandle>::unknown004(it);
+  }
+  set_result(static_cast<Result>(0));
+  unknown708.Unlock();
+}
+
+bool SystemCore::IsPlayActor(const SoundActor *actor) const {
+  set_result(static_cast<Result>(0));
+  unknown708.Lock();
+  bool isPlay = false;
+  VoiceHandle *it = unknown3a0.unknown002();
+  while (it != unknown3a0.unknown003()) {
+    if (it->unknown58 != nullptr && it->unknown58->unknown38 == actor) {
+      isPlay = true;
+      break;
+    }
+    it = List<VoiceHandle>::unknown004(it);
+  }
+  unknown708.Unlock();
+  return isPlay;
+}
+
+void SystemCore::StopActor(SoundActor *actor, f32 fadeTime) {
+  set_result(static_cast<Result>(0));
+  unknown708.Lock();
+  const VoiceHandle *end = unknown3a0.unknown003();
+  for (VoiceHandle *it = unknown3a0.unknown002(); it != end; it = List<VoiceHandle>::unknown004(it)) {
+    SoundHandle *handle = it->unknown58;
+    if (handle != nullptr && handle->unknown38 == actor) {
+      handle->Stop(fadeTime);
+    }
+  }
+  unknown708.Unlock();
+}
+
+void SystemCore::PauseActor(SoundActor *actor, bool isPause, f32 fadeTime) {
+  set_result(static_cast<Result>(0));
+  unknown708.Lock();
+  const VoiceHandle *end = unknown3a0.unknown003();
+  for (VoiceHandle *it = unknown3a0.unknown002(); it != end; it = List<VoiceHandle>::unknown004(it)) {
+    SoundHandle *handle = it->unknown58;
+    if (handle != nullptr && handle->unknown38 == actor) {
+      handle->Pause(isPause, fadeTime);
+    }
+  }
+  unknown708.Unlock();
+}
+
+int SystemCore::CountPlaySoundHandleActor(const SoundActor *actor) const {
+  set_result(static_cast<Result>(0));
+  unknown708.Lock();
+  int count = 0;
+  VoiceHandle *it = unknown3a0.unknown002();
+  while (it != unknown3a0.unknown003()) {
+    if (it->unknown58 != nullptr && it->unknown58->unknown38 == actor) {
+      count++;
+    }
+    it = List<VoiceHandle>::unknown004(it);
+  }
+  unknown708.Unlock();
+  return count;
+}
+
+SoundHandle *SystemCore::GetPlaySoundHandle(const SoundActor *actor, int index) const {
+  set_result(static_cast<Result>(0));
+  unknown708.Lock();
+  SoundHandle *handle = nullptr;
+  VoiceHandle *it = unknown3a0.unknown002();
+  while (it != unknown3a0.unknown003()) {
+    if (index == 0) {
+      handle = it->unknown58;
+      if (handle != nullptr && handle->unknown38 == actor) {
+        break;
+      }
+    }
+    handle = nullptr;
+    it = List<VoiceHandle>::unknown004(it);
+  }
+  unknown708.Unlock();
+  return handle;
+}
+
+Result SystemCore::AllocVoiceHandle(int, VoiceHandle **voice) {
+  VoiceHandle *allocated = unknown3c8.unknown002();
+  VoiceHandle *result = nullptr;
+  if (unknown3c8.unknown003() != allocated) {
+    unknown3c8.unknown001(allocated);
+    unknown3a0.PushBack(allocated);
+    int id = unknown39c;
+    allocated->unknown44 = 5;
+    allocated->unknown30 = true;
+    allocated->unknown54 = allocated->unknown50 + id * 0x100;
+    if (unknown39c > 0xffffe) {
+      unknown39c = 1;
+    } else {
+      unknown39c++;
+    }
+    allocated->unknown68 = nullptr;
+    result = allocated;
+  }
+  *voice = result;
+  return set_result(static_cast<Result>(0));
+}
+
+void SystemCore::FreeVoiceHandle(VoiceHandle *voice) {
+  unknown3a0.unknown001(voice);
+  unknown3c8.PushBack(voice);
+  voice->unknown44 = 0;
+  voice->unknown58 = nullptr;
+  voice->unknown54 = 0;
+  set_result(static_cast<Result>(0));
+}
+
+void SystemCore::ConnectActor(SoundActor *actor) {
+  unknown708.Lock();
+  unknown440.PushBack(actor);
+  actor->unknown31 = true;
+  unknown708.Unlock();
+}
+
+void SystemCore::DisconnectActor(SoundActor *actor) {
+  unknown708.Lock();
+  VoiceHandle *it = unknown3a0.unknown002();
+  while (it != unknown3a0.unknown003()) {
+    SoundHandle *handle = it->unknown58;
+    if (handle != nullptr && handle->unknown38 == actor) {
+      handle->unknown38 = nullptr;
+    }
+    it = List<VoiceHandle>::unknown004(it);
+  }
+  if (actor->unknown31) {
+    actor->unknown31 = false;
+    unknown440.unknown001(actor);
+  }
+  unknown708.Unlock();
+}
+
+SoundBank *SystemCore::GetBank(int id) const {
+  unknown708.Lock();
+  SoundBank *bank = unknown418.unknown002();
+  while (bank != unknown418.unknown003()) {
+    if (bank->GetNumber() == id) {
+      break;
+    }
+    bank = List<SoundBank>::unknown004(bank);
+  }
+  if (bank == unknown418.unknown003()) {
+    set_result(static_cast<Result>(0));
+    bank = nullptr;
+  }
+  unknown708.Unlock();
+  return bank;
+}
+
+VoiceHandle *SystemCore::GetVoiceHandle(u32 id) const {
+  set_result(static_cast<Result>(0));
+  VoiceHandle *voice = nullptr;
+  if (id != 0) {
+    VoiceHandle *candidate = &unknown3f0[id & 0xff];
+    if (candidate->unknown54 == id) {
+      voice = candidate;
+    }
+  }
+  return voice;
+}
+
+Result SystemCore::GetSoundEffectList(int bus, SoundEffecter **effecters, int *num) {
+  unknown708.Lock();
+  int count = 0;
+  for (int i = 0; i < 2; i++) {
+    if (unknown1f0[i].unknown10 != nullptr && count < bus) {
+      effecters[i] = unknown1f0[i].unknown10;
+      count++;
+    }
+  }
+  unknown708.Unlock();
+  return static_cast<Result>(0);
+}
+
+bool SystemCore::IsActiveEffect(u8 bus) {
+  if (bus > 1) {
+    return false;
+  }
+  if (unknown1f0[bus].unknown10 != nullptr) {
+    return true;
+  }
+  if (unknown1f0[bus].unknown00) {
+    return true;
+  }
+  return unknown1f0[bus].unknown01;
+}
+
+SoundCategory *SystemCore::GetCategory(int id) const {
+  if (id != 0) {
+    SoundCategory *end = unknown478 + unknown470;
+    for (SoundCategory *it = unknown478; it != end; it++) {
+      if (it->unknown08.unknown00 == id) {
+        return it;
+      }
+    }
+  }
+  return unknown478;
+}
 
 const void *SystemCore::GetDebugInfo() const { return &debugInfo_; }
 

@@ -25,6 +25,20 @@ public:
     count++;
   }
 
+  void unknown001(Node *node) { // Inferred role: unlink a node; original name unknown.
+    node->prev->next = node->next;
+    node->next->prev = node->prev;
+    node->prev = node;
+    node->next = node;
+    count--;
+  }
+
+  T *unknown002() const { return static_cast<T *>(head.next); } // Inferred role: first element; original name unknown.
+
+  const T *unknown003() const { return static_cast<const T *>(&head); } // Inferred role: end sentinel; original name unknown.
+
+  static T *unknown004(T *element) { return static_cast<T *>(element->next); } // Inferred role: next element; original name unknown.
+
   Node head;
   s32 count;
 };

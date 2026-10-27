@@ -1,18 +1,23 @@
 #pragma once
 #include <stddef.h>
 
+#include "ssd/ssd_behavior.h"
 #include "ssd/ssd_result.h"
+#include "ssd/ssd_sound.h"
 #include "types.h"
 
 namespace ssd {
 
-class SoundEntry;
-class SoundHandle;
 class StreamController;
 class WaveSource;
 
-class VoiceHandle {
+class VoiceHandle : public Object, public List<VoiceHandle>::Node {
 public:
+  union unknown001 {
+    s32 unknown00; // Inferred role: sample position; original member name unknown.
+    f32 unknown01; // Inferred role: time position; original member name unknown.
+  };
+
   void DisplayDebugVerbose();
   void DeleteHWVoice();
   Result AllocHWVoice();
@@ -38,7 +43,6 @@ public:
   void LooppingBufferProcess();
   void AddLooppingBuffer();
 
-  u8 _00[0x30 - 0x00];
   bool unknown30; // Inferred role: active; original member name unknown.
   bool unknown31; // Inferred role: start; original member name unknown.
   bool unknown32; // Inferred role: play; original member name unknown.
@@ -68,8 +72,19 @@ public:
   StreamController *unknown70; // Inferred role: stream; original member name unknown.
   u8 _78[0x88 - 0x78];
   int unknown88; // Inferred role: voice queue count; original member name unknown.
-  u8 _8c[0x6f0 - 0x8c];
+  u8 _8c[0x669 - 0x8c];
+  u8 unknown669; // Inferred role: play position request type; original member name unknown.
+  u8 _66a[0x680 - 0x66a];
+  u64 unknown680;        // Inferred role: play position base; original member name unknown.
+  u64 unknown688;        // Inferred role: play position; original member name unknown.
+  u64 unknown690;        // Inferred role: play position offset; original member name unknown.
+  u64 unknown698;        // Inferred role: play position limit; original member name unknown.
+  unknown001 unknown6a0; // Inferred role: play position request value; original member name unknown.
+  u8 _6a4[0x6d0 - 0x6a4];
+  SoundHandle::Fade unknown6d0; // Inferred role: stop fade; original member name unknown.
+  u8 _6e8[0x6f0 - 0x6e8];
   f32 unknown6f0; // Inferred role: distance volume; original member name unknown.
+  u8 _6f4[0x710 - 0x6f4];
 };
 
 static_assert(offsetof(VoiceHandle, unknown30) == 0x30, "");
@@ -77,5 +92,10 @@ static_assert(offsetof(VoiceHandle, unknown44) == 0x44, "");
 static_assert(offsetof(VoiceHandle, unknown88) == 0x88, "");
 static_assert(offsetof(VoiceHandle, unknown70) == 0x70, "");
 static_assert(offsetof(VoiceHandle, unknown6f0) == 0x6f0, "");
+static_assert(offsetof(VoiceHandle, unknown669) == 0x669, "");
+static_assert(offsetof(VoiceHandle, unknown680) == 0x680, "");
+static_assert(offsetof(VoiceHandle, unknown6a0) == 0x6a0, "");
+static_assert(offsetof(VoiceHandle, unknown6d0) == 0x6d0, "");
+static_assert(sizeof(VoiceHandle) == 0x710, "");
 
 } // namespace ssd

@@ -1,5 +1,6 @@
 #include <stddef.h>
 
+#include "ssd/ssd_behavior.h"
 #include "ssd/ssd_debug.h"
 #include "ssd/ssd_memory_manager.h"
 #include "ssd/ssd_result.h"
@@ -77,7 +78,7 @@ Result SoundCore::NumSoundBank(int *num) const {
   if (num == nullptr) {
     return static_cast<Result>(-6);
   }
-  *num = static_cast<const SystemCore *>(this)->unknown438;
+  *num = static_cast<const SystemCore *>(this)->unknown418.count;
   return set_result(static_cast<Result>(0));
 }
 
@@ -85,7 +86,7 @@ Result SoundCore::NumSoundActor(int *num) const {
   if (num == nullptr) {
     return static_cast<Result>(-6);
   }
-  *num = static_cast<const SystemCore *>(this)->unknown460;
+  *num = static_cast<const SystemCore *>(this)->unknown440.count;
   return set_result(static_cast<Result>(0));
 }
 
@@ -113,11 +114,11 @@ int SoundCore::GetBufferAllocCount() const { return MemoryManager::memoryManager
 
 int SoundCore::GetStreamAllocCount() const { return MemoryManager::memoryManager_.unknown9c; }
 
-int SoundCore::GetVoiceHandleCount() const { return static_cast<const SystemCore *>(this)->m_numPlaySound; }
+int SoundCore::GetVoiceHandleCount() const { return static_cast<const SystemCore *>(this)->unknown3a0.count; }
 
 int SoundCore::GetHWAllocVoiceCount() const { return static_cast<const SystemCore *>(this)->unknown410; }
 
-int SoundCore::GetAllocMemoryCount() const { return MemoryManager::memoryManager_.unknown58; }
+int SoundCore::GetAllocMemoryCount() const { return MemoryManager::memoryManager_.unknown38.count; }
 
 u32 SoundCore::GetErrorLogFlag() const { return Debug::log_.m_errorLogFlag; }
 

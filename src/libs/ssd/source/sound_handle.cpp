@@ -60,6 +60,12 @@ bool SoundHandle::IsPlay() const {
   return core->GetVoiceHandle(unknownf8) != nullptr;
 }
 
+void SoundHandle::SetCategoryId(int category) {
+  if (SoundCore::instance_ != nullptr) {
+    unknown50 = static_cast<SystemCore *>(SoundCore::instance_)->GetCategory(category)->unknown08;
+  }
+}
+
 void SoundHandle::SetPitch(f32 pitch, f32 fadeTime) { this->unknown6c.Set(pitch, fadeTime); }
 
 void SoundHandle::SetVolume(f32 volume, f32 fadeTime) {
@@ -71,6 +77,27 @@ void SoundHandle::SetVolume(f32 volume, f32 fadeTime) {
   this->unknown84 = begin;
   unknown90 = volume - begin;
   unknown88 = 0.0f;
+}
+
+void SoundHandle::UpdateAudioFrame(f32 deltaTime) {
+  f32 time = unknown6c.unknown08;
+  if (unknown6c.unknown04 < time) {
+    f32 elapsed = unknown6c.unknown04 + deltaTime;
+    if (elapsed >= time) {
+      elapsed = time;
+    }
+    unknown6c.unknown00 = unknown6c.unknown10 + (elapsed * unknown6c.unknown0c) / time;
+    unknown6c.unknown04 = elapsed;
+  }
+  time = unknown8c;
+  if (unknown88 < time) {
+    f32 elapsed = unknown88 + deltaTime;
+    if (elapsed >= time) {
+      elapsed = time;
+    }
+    unknown84 = unknown94 + (elapsed * unknown90) / time;
+    unknown88 = elapsed;
+  }
 }
 
 void SoundHandle::SetPan(f32 pan, f32 fadeTime) { this->unknown9c.Set(pan, fadeTime); }

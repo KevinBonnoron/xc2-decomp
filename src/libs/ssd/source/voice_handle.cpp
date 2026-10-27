@@ -1,5 +1,6 @@
 #include "ssd/ssd_result.h"
 #include "ssd/ssd_sound.h"
+#include "ssd/ssd_sound_core.h"
 #include "ssd/ssd_stream_controller.h"
 #include "ssd/ssd_voice_handle.h"
 #include "ssd/ssd_wave_source.h"
@@ -21,6 +22,50 @@ Result VoiceHandle::ForceStop() {
     unknown58 = nullptr;
   }
   return set_result(static_cast<Result>(0));
+}
+
+Result VoiceHandle::GetPlayPosition(u64 *position) const {
+  u64 limit = unknown690 + unknown680;
+  u64 current = unknown688;
+  if (limit <= current) {
+    current = limit;
+  }
+  u64 result = current;
+  if (!unknown68->unknown50) {
+    result = unknown698;
+    if (current <= unknown698) {
+      result = current;
+    }
+  }
+  *position = result;
+  return set_result(static_cast<Result>(0));
+}
+
+Result VoiceHandle::SetPlayPosition(u64 position) {
+  SoundCore *core = SoundCore::instance_;
+  core->LockAudio();
+  unknown6a0.unknown00 = static_cast<s32>(position);
+  unknown669 = 1;
+  core->UnlockAudio();
+  return set_result(static_cast<Result>(0));
+}
+
+Result VoiceHandle::SetPlaySample(unsigned long long sample) {
+  SoundCore *core = SoundCore::instance_;
+  core->LockAudio();
+  unknown6a0.unknown00 = static_cast<s32>(sample);
+  unknown669 = 2;
+  core->UnlockAudio();
+  return set_result(static_cast<Result>(0));
+}
+
+Result VoiceHandle::SetPlayTime(f32 time) {
+  SoundCore *core = SoundCore::instance_;
+  core->LockAudio();
+  unknown6a0.unknown01 = time;
+  unknown669 = 3;
+  core->UnlockAudio();
+  return static_cast<Result>(0);
 }
 
 Result VoiceHandle::GetFilePosition(u64 *position) const {
