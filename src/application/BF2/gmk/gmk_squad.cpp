@@ -71,4 +71,58 @@ GmkSquadLeader *GmkSquad::getBindedGmkSquadLeader() const {
   return m_bindedGmkSquadLeader;
 }
 
+void GmkSquad::removeGmkSquadNavi(GmkSquadNavi *navi) {
+  if (navi != nullptr && navi->intoNode()) {
+    unknownf0[navi->unknown28] = false;
+    unknown88.erase(navi);
+    navi->unknown002();
+  }
+}
+
+void GmkSquadNavi::dispose() {
+  if (unknown10 != nullptr && unknown18 != gf::INVALID_HANDLE) {
+    unknown10->removeGmkSquadNavi(this);
+    unknown002();
+  }
+}
+
+u32 GmkSquadNavi::getMemberDefType() const {
+  GmkSquadLeader *leader = unknown10->getBindedGmkSquadLeader();
+  if (leader == nullptr) {
+    return 0;
+  }
+  return leader->getData()->unknown00;
+}
+
+bool GmkSquadNavi::getPosRotY(mm::Vec3 &position, f32 &rotY) const {
+  if (unknown001() && unknown10->isValid()) {
+    unknown10->getPosRotY(position, rotY, unknown28);
+    position += unknown30;
+    return true;
+  }
+  return false;
+}
+
+bool GmkSquadNavi::isArrived(const mm::Vec3 &position) const {
+  mm::Vec3 naviPosition;
+  f32 rotY;
+  if (!getPosRotY(naviPosition, rotY)) {
+    return false;
+  }
+  f32 height = naviPosition.y - position.y;
+  if (unknown20.y < height) {
+    return false;
+  }
+  f32 x = naviPosition.x - position.x;
+  f32 z = naviPosition.z - position.z;
+  f32 distSq = x * x + z * z;
+  return !(unknown20.x * unknown20.x < distSq);
+}
+
+void GmkSquadManager::update(f32 deltaTime) {
+  for (mm::mtl::IntrusiveList<GmkSquad>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+    it->update(deltaTime);
+  }
+}
+
 } // namespace gmk

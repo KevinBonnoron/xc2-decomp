@@ -24,8 +24,47 @@ namespace gmk {
 class GmkEnemyGob;
 class GmkSquad;
 
+// Layout evidence: gmk::GmkEnemyInsts::reqForcePopGobInst (0x71005efab8) copies these 8 bytes to offset 0x144 of the
+// instances and GfSmnEnemyManager fills them; the first byte is the 4th member of PopInfo::CreateInfo.
+struct ForcePopEnemyInfo {
+  u8 unknown00; // Role and original member name unknown.
+  u8 _01[0x04 - 0x01];
+  u32 unknown04; // Role and original member name unknown.
+};
+
+static_assert(sizeof(ForcePopEnemyInfo) == 0x8, "");
+
 class GmkEnemyInsts {
 public:
+  class IPopXformFinder;
+
+  // Layout evidence: GmkEnemy::create at 0x71005f05d0 fills it on the stack, GmkEnemyInsts::create copies 0x38 bytes of it
+  // to the start of the instances and GmkEnemyInsts::dispose restores the defaults written by GmkEnemyInsts::GmkEnemyInsts.
+  struct CreateInfo {
+    CreateInfo()
+        : unknown00(nullptr), unknown08(nullptr), unknown10(-1), unknown14(100.0f), unknown18(50.0f), unknown1c(110.0f), unknown20(55.0f), unknown24(0.0f), unknown28(0), unknown2c(0), unknown30(0),
+          unknown34(0) {}
+
+    AGmkBase *unknown00; // Inferred role: owner gimmick; original member name unknown.
+    u8 *unknown08;       // Inferred role: bdat; original member name unknown.
+    int unknown10;       // Inferred role: bdat id; original member name unknown.
+    f32 unknown14;       // Inferred role: display radius; original member name unknown.
+    f32 unknown18;       // Inferred role: display height; original member name unknown.
+    f32 unknown1c;       // Inferred role: release radius; original member name unknown.
+    f32 unknown20;       // Inferred role: release height; original member name unknown.
+    f32 unknown24;       // Inferred role: repop time in seconds; original member name unknown.
+    u32 unknown28;       // Role and original member name unknown.
+    u32 unknown2c;       // Role and original member name unknown.
+    u32 unknown30;       // Role and original member name unknown.
+    u32 unknown34;       // Role and original member name unknown.
+  };
+
+  struct UpdateInfo {
+    f32 unknown00;                    // Inferred role: delta time; original member name unknown.
+    const mm::Vec3 *unknown08;        // Inferred role: position; original member name unknown.
+    const IPopXformFinder *unknown10; // Inferred role: pop xform finder; original member name unknown.
+  };
+
   struct BdatInfo {
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isInvincibleCondMatched() const;
@@ -93,36 +132,49 @@ public:
   enum Matched {
     MATCHED_UNKNOWN_0 = 1 << 0, // Inferred role: pop condition matched; original name unknown.
     MATCHED_UNKNOWN_1 = 1 << 1, // Inferred role: pop distance condition matched; original name unknown.
+    MATCHED_UNKNOWN_2 = 1 << 2, // Inferred role: depop distance condition matched; original name unknown.
   };
 
   bool isPopFinished() const;
   void validateDisp(gf::GF_OBJ_HANDLE *handle) const;
+  void validateDisp() const;
+  bool reqForcePopGobInst(const ForcePopEnemyInfo &info) const;
   bool isQuestDead() const;
   int getGobInstCapa() const;
   gf::GF_OBJ_HANDLE *getGobInst(u32 index) const;
+  void update(const UpdateInfo &info);
+  void disposeGobInsts(bool isFadeOut, bool isCheckBattle);
+  void dispose();
   void disposeSquad();
 
-  AGmkBase *unknown00; // Inferred role: owner gimmick; original member name unknown.
-  u8 *unknown08;       // Inferred role: bdat; original member name unknown.
-  int unknown10;       // Inferred role: bdat id; original member name unknown.
-  u8 _14[0x38 - 0x14];
-  BdatInfo unknown38; // Inferred role: bdat info; original member name unknown.
-  u8 _88[0x98 - 0x88];
-  PopInfo unknown98; // Inferred role: pop info; original member name unknown.
-  bool unknown140;   // Inferred role: display enabled; original member name unknown.
-  u8 _141[0x150 - 0x141];
+  CreateInfo unknown00;    // Inferred role: create info; original member name unknown.
+  BdatInfo unknown38;      // Inferred role: bdat info; original member name unknown.
+  DistHvCond unknown88;    // Inferred role: pop dist; original member name unknown.
+  DistHvCond unknown90;    // Inferred role: depop dist; original member name unknown.
+  PopInfo unknown98;       // Inferred role: pop info; original member name unknown.
+  bool unknown140;         // Inferred role: display enabled; original member name unknown.
+  mutable bool unknown141; // Inferred role: force pop requested; original member name unknown.
+  u8 _142[0x144 - 0x142];
+  mutable ForcePopEnemyInfo unknown144; // Inferred role: force pop request; original member name unknown.
+  u8 _14c[0x150 - 0x14c];
   GmkSquad *unknown150; // Inferred role: squad; original member name unknown.
   bool unknown158;      // Inferred role: pop condition flag; original member name unknown.
   bool unknown159;      // Inferred role: pop condition matched; original member name unknown.
-  u8 _15a[0x170 - 0x15a];
-  f32 unknown170; // Role and original member name unknown.
+  bool unknown15a;      // Inferred role: request to clear the repop counter; original member name unknown.
+  u8 _15b[0x160 - 0x15b];
+  void (GmkEnemyInsts::*unknown160)(const UpdateInfo &info); // Inferred role: seq; original member name unknown.
+  f32 unknown170;                                            // Inferred role: repop counter; original member name unknown.
   u8 _174[0x178 - 0x174];
-  u64 unknown178; // Inferred role: matched condition flags; original member name unknown.
-  u8 _180[0x188 - 0x180];
+  u64 unknown178;  // Inferred role: matched condition flags; original member name unknown.
+  bool unknown180; // Role and original member name unknown.
+  u8 _181[0x188 - 0x181];
 };
 
 static_assert(sizeof(GmkEnemyInsts::BdatInfo) == 0x50, "");
+static_assert(sizeof(GmkEnemyInsts::CreateInfo) == 0x38, "");
 static_assert(offsetof(GmkEnemyInsts, unknown38) == 0x38, "");
+static_assert(offsetof(GmkEnemyInsts, unknown88) == 0x88, "");
+static_assert(offsetof(GmkEnemyInsts, unknown90) == 0x90, "");
 static_assert(sizeof(GmkEnemyInsts::PopInfo::PopEnemyInfo) == 0x28, "");
 static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown10) == 0x10, "");
 static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown18) == 0x18, "");
@@ -131,11 +183,24 @@ static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown24) == 0x24,
 static_assert(sizeof(GmkEnemyInsts::PopInfo) == 0xa8, "");
 static_assert(offsetof(GmkEnemyInsts, unknown98) == 0x98, "");
 static_assert(offsetof(GmkEnemyInsts, unknown140) == 0x140, "");
+static_assert(offsetof(GmkEnemyInsts, unknown141) == 0x141, "");
+static_assert(offsetof(GmkEnemyInsts, unknown144) == 0x144, "");
 static_assert(offsetof(GmkEnemyInsts, unknown150) == 0x150, "");
+static_assert(offsetof(GmkEnemyInsts, unknown15a) == 0x15a, "");
+static_assert(offsetof(GmkEnemyInsts, unknown160) == 0x160, "");
 static_assert(offsetof(GmkEnemyInsts, unknown158) == 0x158, "");
 static_assert(offsetof(GmkEnemyInsts, unknown170) == 0x170, "");
 static_assert(offsetof(GmkEnemyInsts, unknown178) == 0x178, "");
+static_assert(offsetof(GmkEnemyInsts, unknown180) == 0x180, "");
 static_assert(sizeof(GmkEnemyInsts) == 0x188, "");
+
+class GmkEnemyInsts::IPopXformFinder {
+public:
+  virtual bool findPosRot(mm::Vec3 &position, mm::Vec3 &rotation, gf::GF_OBJ_HANDLE *handle, const GmkEnemyInsts::PopInfo::PopEnemyInfo &info) const = 0;
+  virtual bool isYSnap() const = 0;
+  virtual bool onPopGob(gf::GF_OBJ_HANDLE *handle) const = 0;
+  virtual void onCreateGobInsts(u32 num) const = 0;
+};
 
 class GmkEnemy : public AGmkBase {
 public:
@@ -149,7 +214,20 @@ public:
   };
 
   struct Data {
-    f32 unknown00; // Inferred role: random walk radius; original member name unknown. The size of this structure is unknown.
+    f32 unknown00;  // Inferred role: random walk radius; original member name unknown. The size of this structure is unknown.
+    bool unknown04; // Inferred role: snap the pop position to the ground; original member name unknown.
+  };
+
+  // Layout evidence: the vtable at 0x11a3688 holds the four virtual functions of GmkEnemyInsts::IPopXformFinder in this order
+  // (findPosRot called through slot 0 by PopInfo::findPopPosRot, onPopGob through slot 2 and onCreateGobInsts through slot 3).
+  class PopXformFinder : public GmkEnemyInsts::IPopXformFinder {
+  public:
+    bool findPosRot(mm::Vec3 &position, mm::Vec3 &rotation, gf::GF_OBJ_HANDLE *handle, const GmkEnemyInsts::PopInfo::PopEnemyInfo &info) const override;
+    bool isYSnap() const override;
+    bool onPopGob(gf::GF_OBJ_HANDLE *handle) const override;
+    void onCreateGobInsts(u32 num) const override;
+
+    GmkEnemy *unknown08; // Inferred role: owner; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_ENEMY;
@@ -171,6 +249,7 @@ public:
   GmkEnemyInsts unknown48; // Inferred role: enemy instances; original member name unknown.
 };
 
+static_assert(sizeof(GmkEnemy::PopXformFinder) == 0x10, "");
 static_assert(offsetof(GmkEnemy, unknown48) == 0x48, "");
 static_assert(sizeof(GmkEnemy::BdatInfo) == 0x8, "");
 static_assert(sizeof(GmkEnemy) == 0x1d0, "");

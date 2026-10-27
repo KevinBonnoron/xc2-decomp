@@ -5,7 +5,8 @@
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gmk/gmk_bdat.h"
-#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
+#include "gmk/gmk_list_impl.h"        // IWYU pragma: keep
+#include "gmk/gmk_mob/gmk_mob_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_squad.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/reference_object.h"
@@ -78,14 +79,10 @@ bool GmkMobInsts::isPopFinished() const {
 }
 
 bool GmkMobInsts::isValid() const {
-  if (unknowna8 == nullptr) {
-    return false;
-  }
-  if (unknown18.unknown04 == 0) {
-    return true;
-  }
-  if (unknownb0 != nullptr && unknownb0->isValid()) {
-    return true;
+  if (unknowna8 != nullptr) {
+    if (unknown18.unknown04 == 0 || (unknownb0 != nullptr && unknownb0->isValid())) {
+      return true;
+    }
   }
   return false;
 }
@@ -194,6 +191,41 @@ void GmkMob::PopXformFinder::onPopGob(gf::GF_OBJ_HANDLE *handle) const {}
 void GmkMob::PopXformFinder::onCreateGobInsts(u32 num) const {}
 
 void GmkMobInsts::disposeSquad() { mm::mtl::safeRelease(unknownb0); }
+
+void GmkMobInsts::dispose() {
+  unknownc0 = nullptr;
+  unknownb8 &= ~(MATCHED_UNKNOWN_0 | MATCHED_UNKNOWN_1 | MATCHED_UNKNOWN_2);
+  disposeSquad();
+  disposeGobInsts(false);
+  if (unknowna8 != nullptr) {
+    delete unknowna8;
+    unknowna8 = nullptr;
+  }
+  unknown00 = CreateInfo();
+}
+
+bool GmkMob::isValid() const {
+  if (AGmkBase::isValid() && unknown48.isValid()) {
+    return true;
+  }
+  return false;
+}
+
+void GmkMob::create(const CreateInfo &info) {
+  if (info.unknown10 != nullptr) {
+    AGmkBase::create(info);
+    GmkMobInsts::CreateInfo createInfo;
+    createInfo.unknown00 = this;
+    createInfo.unknown08 = unknown08.unknown00->getBindedBdatFp();
+    createInfo.unknown10 = info.unknown18;
+    unknown48.create(createInfo);
+  }
+}
+
+void GmkMob::dispose() {
+  unknown48.dispose();
+  AGmkBase::dispose();
+}
 
 void GmkMob::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   if (event == gf::IGfObjListener::OBJEVT_DESTROY && handle != gf::INVALID_HANDLE) {

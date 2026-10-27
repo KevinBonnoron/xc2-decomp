@@ -21,6 +21,18 @@ class GmkRouteGob;
 
 class GmkRoutedMob : public GmkRoute {
 public:
+  // Layout evidence: the vtable at 0x11a3d58 holds the three virtual functions of GmkMobInsts::IPopXformFinder and the
+  // functions at 0x71006043ec to 0x71006047a0 read the routed mob at offset 8 and a route navi at offset 0x10.
+  class PopXformFinder : public GmkMobInsts::IPopXformFinder {
+  public:
+    bool findPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const override;
+    void onPopGob(gf::GF_OBJ_HANDLE *handle) const override;
+    void onCreateGobInsts(u32 num) const override;
+
+    GmkRoutedMob *unknown08;         // Inferred role: owner; original member name unknown.
+    mutable GmkRouteNavi *unknown10; // Inferred role: route navi found by findPosRot; original member name unknown.
+  };
+
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_MOB;
 
   GmkRoutedMob();
@@ -38,11 +50,13 @@ public:
   void unbindRouteNavi(gf::GF_OBJ_HANDLE *handle);
   GmkRouteNavi *findFreeRouteNavi() const;
   GmkRouteNavi *findRouteNavi(gf::GF_OBJ_HANDLE *handle) const;
+  void createRouteNavis(u32 num);
 
   GmkMobInsts unknown50;                                                            // Inferred role: mob instances; original member name unknown.
   mutable mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi>> unknown120; // Inferred role: route navis with the game object they are bound to; original member name unknown.
 };
 
+static_assert(sizeof(GmkRoutedMob::PopXformFinder) == 0x18, "");
 static_assert(offsetof(GmkRoutedMob, unknown50) == 0x50, "");
 static_assert(offsetof(GmkRoutedMob, unknown120) == 0x120, "");
 static_assert(sizeof(GmkRoutedMob) == 0x148, "");

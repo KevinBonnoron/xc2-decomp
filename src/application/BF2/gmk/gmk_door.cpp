@@ -133,6 +133,53 @@ u32 GmkDoorPhantomTargetInfo::getTargetType() const {
   }
 }
 
+void GmkDoor::dispose() {
+  disposeGmkPhantom();
+  disposeGmkCamera();
+  disposeGfObjHandle();
+  unknown2e0.dispose();
+  AGmkBase::dispose();
+}
+
+void GmkDoor::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  if (unknown2b1 != unknown2b0) {
+    if (unknown2b1 && !unknown2b0 && (getBdatInfo()->unknown02 & 0xfe) == 6 && getProgress() != PROGRESS_UNKNOWN_2) {
+      const BdatInfo *info = getBdatInfo();
+      if (!info->unknown19) {
+        openDoor(false);
+      } else {
+        closeDoor(false);
+      }
+      createGmkCamera(info->unknown20, info->unknown28, true);
+      setProgress(PROGRESS_UNKNOWN_2);
+    }
+    unknown2b1 = unknown2b0;
+  }
+  const BdatInfo *info = getBdatInfo();
+  unknown2b0 = false;
+  if (info->isPopCondMatched()) {
+    if (unknown2b8 == gf::INVALID_HANDLE && info->isGfObjMustExist()) {
+      createGfObjHandle();
+    }
+    if (unknown238 == nullptr && unknown2a0 == nullptr && info->isPhantomMustExist()) {
+      createGmkPhantom();
+    }
+  } else {
+    disposeGfObjHandle();
+    if (unknown238 != nullptr || unknown2a0 != nullptr) {
+      disposeGmkPhantom();
+    }
+  }
+  unknown60.update(deltaTime);
+  if (unknown2c8) {
+    (this->*unknown2c8)(deltaTime);
+  }
+}
+
 bool GmkDoor::createGmkCamera(const char *name, u8 attribute, bool param3) {
   unknown60.dispose();
   GmkCamera::CreateInfo info;
@@ -160,6 +207,23 @@ void GmkDoor::disposeGfObjHandle() {
     gf::GfObjUtil::destroy(unknown2b8);
     unknown2b8 = gf::INVALID_HANDLE;
   }
+}
+
+bool GmkDoor::isSpLocked() const {
+  if (getBdatInfo()->unknown42.isEnable()) {
+    return !getBdatInfo()->unknown42.isMatch();
+  }
+  return false;
+}
+
+bool GmkDoor::isLocked() const {
+  if (getBdatInfo()->unknown02 == 5) {
+    return true;
+  }
+  if (getBdatInfo()->unknown3e.isEnable()) {
+    return !getBdatInfo()->unknown3e.isMatch();
+  }
+  return false;
 }
 
 bool GmkDoor::isGmkFinished() const {
@@ -206,6 +270,98 @@ void GmkDoor::isSeLoop(bool isMapPack, u16 seId) const {
     pack = gf::GfFieldSound::get()->getCommonPack();
   }
   fw::SoundManager::get()->isLoop(seId, pack);
+}
+
+void GmkDoor::pollBootGmk() {
+  if (unknown2b1 || unknown243) {
+    const BdatInfo *info = getBdatInfo();
+    switch (info->unknown02) {
+    case 3:
+    case 4:
+    case 7: {
+      const BootedGmkCond &cond = info->unknown3e;
+      if (!cond.isEnable() || cond.isMatch()) {
+        bootGmk(false, true);
+      }
+      break;
+    }
+    }
+  }
+}
+
+void GmkDoor::seqDoor_BeforeBoot(f32 deltaTime) { pollBootGmk(); }
+
+void GmkDoor::seqDoor_Booted(f32 deltaTime) {
+  if (unknown2C0 < getBdatInfo()->unknown2c) {
+    unknown2C0 += deltaTime;
+  }
+  if (getBdatInfo()->unknown42.isEnable() && getBdatInfo()->unknown42.isMatch() && getProgress() != PROGRESS_UNKNOWN_3) {
+    const BdatInfo *info = getBdatInfo();
+    if (!info->unknown0a) {
+      closeDoor(false);
+    } else {
+      openDoor(false);
+    }
+    createGmkCamera(info->unknown30, info->unknown38, false);
+    unknown2C0 = 0.0f;
+    setProgress(PROGRESS_UNKNOWN_3);
+  }
+  pollBootGmk();
+}
+
+void GmkDoor::bootGmk(bool isImmediate, bool isCamera) {
+  if (getProgress() == PROGRESS_UNKNOWN_1) {
+    return;
+  }
+  const BdatInfo *info = getBdatInfo();
+  if (!info->unknown0a) {
+    openDoor(isImmediate);
+  } else {
+    closeDoor(isImmediate);
+  }
+  u16 lodId = info->unknown06;
+  const gf::GfFieldLod::unknown001 *lodInfo = gf::GfFieldLod::get()->findBdatInfo(lodId);
+  if (lodInfo != nullptr) {
+    if (lodInfo->unknown04 > 0.0f) {
+      gf::GfFieldLod::get()->setFade(lodId, true, isImmediate);
+    } else if (lodInfo->unknown08 > 0.0f) {
+      gf::GfFieldLod::get()->setFade(lodId, false, isImmediate);
+    }
+  }
+  createGmkCamera(info->unknown10, info->unknown18, isCamera);
+  if (!info->unknown42.isEnable()) {
+    unknown2C0 = isImmediate ? info->unknown2c : 0.0f;
+  }
+  setProgress(PROGRESS_UNKNOWN_1);
+}
+
+void GmkDoor::spBootGmk(bool isImmediate, bool isCamera) {
+  if (getProgress() == PROGRESS_UNKNOWN_3) {
+    return;
+  }
+  const BdatInfo *info = getBdatInfo();
+  if (!info->unknown0a) {
+    closeDoor(isImmediate);
+  } else {
+    openDoor(isImmediate);
+  }
+  createGmkCamera(info->unknown30, info->unknown38, isCamera);
+  unknown2C0 = isImmediate ? info->unknown2c : 0.0f;
+  setProgress(PROGRESS_UNKNOWN_3);
+}
+
+void GmkDoor::shutdownGmk(bool isImmediate, bool isCamera) {
+  if (getProgress() == PROGRESS_UNKNOWN_2) {
+    return;
+  }
+  const BdatInfo *info = getBdatInfo();
+  if (!info->unknown19) {
+    openDoor(isImmediate);
+  } else {
+    closeDoor(isImmediate);
+  }
+  createGmkCamera(info->unknown20, info->unknown28, isCamera);
+  setProgress(PROGRESS_UNKNOWN_2);
 }
 
 void GmkDoor::seqDoor_Shutdowned(f32 deltaTime) { seqDoor_Booted(deltaTime); }

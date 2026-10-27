@@ -31,6 +31,18 @@ public:
 
   static const u32 FLAG_UNKNOWN_3 = 1 << 3;
 
+  // Layout evidence: the vtable at 0x11a3720 holds the four virtual functions of GmkEnemyInsts::IPopXformFinder and the
+  // functions at 0x71005f2984 to 0x7100623c38 read the routed enemy at offset 8.
+  class PopXformFinder : public GmkEnemyInsts::IPopXformFinder {
+  public:
+    bool findPosRot(mm::Vec3 &position, mm::Vec3 &rotation, gf::GF_OBJ_HANDLE *handle, const GmkEnemyInsts::PopInfo::PopEnemyInfo &info) const override;
+    bool isYSnap() const override;
+    bool onPopGob(gf::GF_OBJ_HANDLE *handle) const override;
+    void onCreateGobInsts(u32 num) const override;
+
+    GmkRoutedEnemy *unknown08; // Inferred role: owner; original member name unknown.
+  };
+
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_ENEMY;
 
   ~GmkRoutedEnemy() override;
@@ -48,6 +60,7 @@ public:
   void unbindRouteNavi(gf::GF_OBJ_HANDLE *handle, bool isDispose);
   GmkRouteNavi *findFreeRouteNavi() const;
   GmkRouteNavi *findRouteNavi(gf::GF_OBJ_HANDLE *handle) const;
+  void createRouteNavis(u32 num);
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
@@ -55,6 +68,7 @@ public:
   mutable mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi>> unknown1D8; // Inferred role: route navis with the game object they are bound to; original member name unknown.
 };
 
+static_assert(sizeof(GmkRoutedEnemy::PopXformFinder) == 0x10, "");
 static_assert(offsetof(GmkRoutedEnemy::Data, unknown14) == 0x14, "");
 static_assert(offsetof(GmkRoutedEnemy, unknown50) == 0x50, "");
 static_assert(offsetof(GmkRoutedEnemy, unknown1D8) == 0x1d8, "");

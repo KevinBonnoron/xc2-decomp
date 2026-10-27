@@ -262,6 +262,57 @@ int GmkEnemyInsts::getGobInstCapa() const {
 
 void GmkEnemyInsts::disposeSquad() { mm::mtl::safeRelease(unknown150); }
 
+void GmkEnemyInsts::dispose() {
+  unknown178 &= ~(MATCHED_UNKNOWN_0 | MATCHED_UNKNOWN_1 | MATCHED_UNKNOWN_2);
+  disposeGobInsts(false, false);
+  disposeSquad();
+  unknown00 = CreateInfo();
+}
+
+void GmkEnemyInsts::validateDisp() const {
+  u32 num = unknown98.getGobInstNum();
+  for (u32 i = 0; i < num; i++) {
+    validateDisp(getGobInst(i));
+  }
+}
+
+bool GmkEnemyInsts::reqForcePopGobInst(const ForcePopEnemyInfo &info) const {
+  if (unknown98.getGobInstNum() == 0) {
+    if (unknown38.unknown03 && !(unknown178 & MATCHED_UNKNOWN_2)) {
+      return false;
+    }
+    unknown141 = true;
+    unknown144 = info;
+    return true;
+  }
+  return false;
+}
+
+bool GmkEnemy::PopXformFinder::isYSnap() const { return unknown08->getData()->unknown04; }
+
+bool GmkEnemy::PopXformFinder::onPopGob(gf::GF_OBJ_HANDLE *handle) const { return true; }
+
+void GmkEnemy::PopXformFinder::onCreateGobInsts(u32 num) const {}
+
+void GmkEnemy::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  GmkEnemyInsts::UpdateInfo info;
+  PopXformFinder finder;
+  finder.unknown08 = this;
+  info.unknown00 = deltaTime;
+  info.unknown08 = &unknown08.unknown08->unknown00;
+  info.unknown10 = &finder;
+  unknown48.update(info);
+}
+
+void GmkEnemy::dispose() {
+  unknown48.dispose();
+  AGmkBase::dispose();
+}
+
 GmkType GmkEnemy::getGmkType() const { return GMK_TYPE; }
 
 IGmkList *GmkEnemy::getOwnerGmkEnemyList() const { return unknown08.unknown00; }
@@ -290,10 +341,10 @@ bool GmkEnemy::isValid() const {
   if (unknown08.unknown00 == nullptr || unknown20.unknown08 == nullptr || unknown20.unknown10 == nullptr) {
     return false;
   }
-  if (unknown48.unknown00 == nullptr || unknown48.unknown08 == nullptr) {
+  if (unknown48.unknown00.unknown00 == nullptr || unknown48.unknown00.unknown08 == nullptr) {
     return false;
   }
-  return unknown48.unknown10 > 0;
+  return unknown48.unknown00.unknown10 > 0;
 }
 
 GmkEnemyList::GmkEnemyList(u32 updateGmkNumPerFrame) : TGmkList(updateGmkNumPerFrame), unknown240(0xffffffff) {}

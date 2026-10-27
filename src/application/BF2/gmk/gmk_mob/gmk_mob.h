@@ -106,6 +106,11 @@ public:
   bool canDepopGobInst(const mm::Vec3 &position) const;
   void removeGobInst(gf::GF_OBJ_HANDLE *handle);
   void update(const UpdateInfo &info);
+  void create(const CreateInfo &info);
+  void createSquad(u16 squadId);
+  void seqUpdatePopDepop(const UpdateInfo &info);
+  void disposeGobInsts(bool isFadeOut);
+  void dispose();
   void disposeSquad();
 
   CreateInfo unknown00;                                   // Inferred role: create info; original member name unknown.

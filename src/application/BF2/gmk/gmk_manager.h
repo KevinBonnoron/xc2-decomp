@@ -161,6 +161,8 @@ bool isModelRendered(gf::GF_OBJ_HANDLE *handle);
 bool isNaviMeshExist(const mm::Vec3 &position);
 bool getYSnapPos(mm::Vec3 &result, const mm::Vec3 &position, f32 distance);
 bool getYSnapPos(mm::Vec3 &result, const mm::Vec3 &position, f32 distance, const fw::ColiCheckConfig &config);
+bool getWaterHeight(f32 &height, const mm::Vec3 &position, f32 range);
+bool isWaterHeightCondMatchedOfEnemy(const mm::Vec3 &position, u8 type, f32 depth);
 void reqDrawCmnMsg(u32 messageId);
 int getCapaOfGmkDmgPhantomTargetInfo();
 bool isGfObjNumFull(u32 objectType);
@@ -178,6 +180,8 @@ u32 getBdatIdOfQuestTargetIcon(u32 iconType);
 u32 getBdatIdOfQuestTargetIcon(gf::GF_OBJ_HANDLE *handle, u16 iconType);
 
 bool canDepop(gf::GF_OBJ_HANDLE *handle);
+bool canPopSquadMember(gf::GF_OBJ_HANDLE *handle);
+bool isEnemyHoming(gf::GF_OBJ_HANDLE *handle);
 void applyLodFade(u16 lodId, bool isImmediate);
 u32 getDefeatedNum(int enemy);
 void disposeGobInst(gf::GF_OBJ_HANDLE *handle, f32 fadeTime);

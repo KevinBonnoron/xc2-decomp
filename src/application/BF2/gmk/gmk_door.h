@@ -5,6 +5,7 @@
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_camera.h"
 #include "gmk/gmk_cond.h"
+#include "gmk/gmk_ctrl_vol_se.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "mm_mtl/vector.h"
@@ -24,6 +25,7 @@ class RTTI;
 namespace gmk {
 
 class GmkDoorGob;
+class GmkPhantom;
 class GmkDoorPhantomTargetInfo;
 
 class GmkDoor : public AGmkBase {
@@ -62,6 +64,13 @@ public:
     BootedGmkCond unknown42; // Inferred role: special pop booted gmk; original member name unknown.
   };
 
+  enum Progress {
+    PROGRESS_UNKNOWN_0 = 0, // Inferred role: before boot (seqDoor_BeforeBoot); original name unknown.
+    PROGRESS_UNKNOWN_1 = 1, // Inferred role: booted (seqDoor_Booted); original name unknown.
+    PROGRESS_UNKNOWN_2 = 2, // Inferred role: shutdowned (seqDoor_Shutdowned); original name unknown.
+    PROGRESS_UNKNOWN_3 = 3, // Inferred role: special booted (seqDoor_SpBooted); original name unknown.
+  };
+
   static const GmkType GMK_TYPE = GMK_TYPE_DOOR;
   static mm::mtl::RTTI m_rtti;
 
@@ -71,7 +80,19 @@ public:
   int getGameFlagId() const;
   const mm::mtl::RTTI *getRTTI() const;
   u32 getProgress() const;
+  void setProgress(Progress progress);
+  void pollBootGmk();
+  void bootGmk(bool isImmediate, bool isCamera);
+  void spBootGmk(bool isImmediate, bool isCamera);
+  void shutdownGmk(bool isImmediate, bool isCamera);
+  void openDoor(bool isImmediate);
+  void closeDoor(bool isImmediate);
+  void seqDoor_BeforeBoot(f32 deltaTime);
+  void createGfObjHandle();
+  void createGmkPhantom();
   bool isDoorOpened() const;
+  bool isLocked() const;
+  bool isSpLocked() const;
   void isSeLoop(bool isMapPack, u16 seId) const;
   void seqDoor_Shutdowned(f32 deltaTime);
   void seqDoor_Booted(f32 deltaTime);
@@ -84,6 +105,7 @@ public:
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
   bool createGmkCamera(const char *name, u8 attribute, bool param3);
   void disposeGmkCamera();
+  void disposeGmkPhantom();
   void disposeGfObjHandle();
   bool isGmkFinished() const;
 
@@ -91,16 +113,34 @@ public:
 
   u8 _48[0x60 - 0x48];
   GmkCamera unknown60; // Inferred role: gimmick camera; original member name unknown.
-  u8 _1c0[0x2b8 - 0x1c0];
+  u8 _1c0[0x238 - 0x1c0];
+  GmkPhantom *unknown238; // Inferred role: phantom; original member name unknown.
+  u8 _240[0x243 - 0x240];
+  bool unknown243; // Inferred role: player is inside the phantom; original member name unknown.
+  u8 _244[0x2a0 - 0x244];
+  GmkPhantom *unknown2a0; // Inferred role: phantom; original member name unknown.
+  u8 _2a8[0x2b0 - 0x2a8];
+  bool unknown2b0; // Inferred role: player entered the phantom this frame; original member name unknown.
+  bool unknown2b1; // Inferred role: unknown2b0 of the previous frame; original member name unknown.
+  u8 _2b2[0x2b8 - 0x2b2];
   gf::GF_OBJ_HANDLE *unknown2b8; // Inferred role: door game object handle; original member name unknown.
   f32 unknown2C0;                // Role and original member name unknown.
-  u8 _2c4[0x360 - 0x2c4];
+  u8 _2c4[0x2c8 - 0x2c4];
+  void (GmkDoor::*unknown2c8)(f32); // Inferred role: seq; original member name unknown.
+  u8 _2d8[0x2e0 - 0x2d8];
+  GmkCtrlVolSe unknown2e0; // Inferred role: se; original member name unknown.
 };
 
 static_assert(sizeof(GmkDoor::BdatInfo) == 0x48, "");
 static_assert(offsetof(GmkDoor, unknown60) == 0x60, "");
+static_assert(offsetof(GmkDoor, unknown238) == 0x238, "");
+static_assert(offsetof(GmkDoor, unknown243) == 0x243, "");
+static_assert(offsetof(GmkDoor, unknown2a0) == 0x2a0, "");
+static_assert(offsetof(GmkDoor, unknown2b0) == 0x2b0, "");
 static_assert(offsetof(GmkDoor, unknown2b8) == 0x2b8, "");
 static_assert(offsetof(GmkDoor, unknown2C0) == 0x2c0, "");
+static_assert(offsetof(GmkDoor, unknown2c8) == 0x2c8, "");
+static_assert(offsetof(GmkDoor, unknown2e0) == 0x2e0, "");
 static_assert(sizeof(GmkDoor) == 0x360, "");
 
 typedef TGmkList<GmkDoor, GmkDoor::BdatInfo, 0x524f4f44, 2, GmkDoorGob> GmkDoorList;

@@ -1,11 +1,16 @@
 #include "gmk/gmk_enemy/gmk_routed_enemy.h"
 
+#include "gf/game/gf_game_manager.h"
+#include "gf/object/component/gf_com_transform.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_gob_event_listener_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_list_impl.h"               // IWYU pragma: keep
 #include "gmk/gmk_route_navi.h"
 #include "gmk/gmk_set.h"
+#include "mm_math/mm_vec3.h"
 
 namespace gf {
 struct GF_OBJ_HANDLE;
@@ -28,7 +33,29 @@ bool GmkRoutedEnemy::isValid() const {
   if (list->getInstNum() == 0) {
     return false;
   }
-  return unknown50.unknown00 != nullptr && unknown50.unknown08 != nullptr && unknown50.unknown10 > 0;
+  return unknown50.unknown00.unknown00 != nullptr && unknown50.unknown00.unknown08 != nullptr && unknown50.unknown00.unknown10 > 0;
+}
+
+bool GmkRoutedEnemy::PopXformFinder::isYSnap() const { return false; }
+
+void GmkRoutedEnemy::PopXformFinder::onCreateGobInsts(u32 num) const { unknown08->createRouteNavis(num); }
+
+void GmkRoutedEnemy::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid() || gf::GfGameManager::getControlMover() == gf::INVALID_HANDLE) {
+    return;
+  }
+  const mm::Vec3 &playerPosition = gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
+  mm::Vec3 nearestPosition;
+  if (getNearestPos(nearestPosition, playerPosition)) {
+    GmkEnemyInsts::UpdateInfo info;
+    PopXformFinder finder;
+    finder.unknown08 = this;
+    info.unknown00 = deltaTime;
+    info.unknown08 = &nearestPosition;
+    info.unknown10 = &finder;
+    unknown50.update(info);
+  }
 }
 
 GmkType GmkRoutedEnemyPoint::getGmkType() const { return GMK_TYPE; }

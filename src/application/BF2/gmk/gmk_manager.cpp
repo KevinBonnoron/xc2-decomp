@@ -34,6 +34,8 @@
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/menu/gf_menu_common_window_param.h"
 #include "gf/object/component/behavior/gf_com_behavior_npc.h"
+#include "gf/object/component/enemy/gf_com_behavior_enemy.h"
+#include "gf/object/component/enemy/gf_enemy_state_id.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/gimmick/gf_com_behavior_gmk.h"
 #include "gf/object/component/model/gf_com_model.h"
@@ -811,6 +813,36 @@ bool canDepop(gf::GF_OBJ_HANDLE *handle) {
   return true;
 }
 
+bool canPopSquadMember(gf::GF_OBJ_HANDLE *handle) {
+  if (gf::GfGameUtil::isGameObjWait(handle)) {
+    return false;
+  }
+  gf::GfObjAcc acc(handle);
+  if (acc.isValidTransform() && !acc.isDestroy() && !acc.testFlag(gf::OBJ_FLAG_UI_HIDDEN)) {
+    gf::GfObj *obj = acc.getObj();
+    if (obj == nullptr) {
+      return false;
+    }
+    gf::GfComBehaviorEnemy *behavior = obj->getComponent<gf::GfComBehaviorEnemy>();
+    if (behavior != nullptr) {
+      return behavior->getStateId() != gf::enemy::STATE_ID_UNKNOWN_13;
+    }
+  }
+  return false;
+}
+
+bool isEnemyHoming(gf::GF_OBJ_HANDLE *handle) {
+  gf::GfObjAcc acc(handle);
+  gf::GfObj *obj = acc.getObj();
+  if (obj != nullptr) {
+    gf::GfComBehaviorEnemy *behavior = obj->getComponent<gf::GfComBehaviorEnemy>();
+    if (behavior != nullptr) {
+      return behavior->getStateId() == gf::enemy::STATE_ID_UNKNOWN_13;
+    }
+  }
+  return false;
+}
+
 void applyLodFade(u16 lodId, bool isImmediate) {
   const gf::GfFieldLod::unknown001 *info = gf::GfFieldLod::get()->findBdatInfo(lodId);
   if (info == nullptr) {
@@ -1181,6 +1213,31 @@ PopPosSafeCond::PopPosSafeCond(const CreateInfo *info) : unknown20(false) {
   if (info != nullptr) {
     create(*info);
   }
+}
+
+bool isWaterHeightCondMatchedOfEnemy(const mm::Vec3 &position, u8 type, f32 depth) {
+  f32 waterHeight = 0.0f;
+  bool hasWater = getWaterHeight(waterHeight, position, 10.0f);
+  bool isMatched = false;
+  switch (type) {
+  case 0:
+    isMatched = !hasWater;
+    break;
+  case 1:
+    isMatched = hasWater;
+    break;
+  case 2:
+    if (hasWater) {
+      isMatched = waterHeight - position.y < depth;
+      break;
+    }
+    isMatched = true;
+    break;
+  case 3:
+    isMatched = true;
+    break;
+  }
+  return isMatched;
 }
 
 BootedGmkCond::BootedGmkCond(u8 gimmickType, u16 gimmickId) : unknown00(0), unknown02(0) { createIfEnable(gimmickType, gimmickId); }
