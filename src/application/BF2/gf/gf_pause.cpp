@@ -1,9 +1,25 @@
 #include "gf/gf_pause.h"
+
+#include "gf/gf_manager.h"
 #include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
 namespace gf {
 
 void GfPause::initialize(const GfSetupParam &) { unknowne64 = true; }
+
+void GfPause::finalize() {
+  while (unknown590 > 0) {
+    GfSleep(1);
+  }
+  unknowne58 = 0;
+  unknowne64 = false;
+}
+
+void GfPause::destroy() {
+  GfPause *pause = get();
+  pause->finalize();
+  delete pause;
+}
 
 bool GfPause::isInitialized() {
   GfPause *pause = get();

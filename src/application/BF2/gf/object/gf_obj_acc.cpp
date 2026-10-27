@@ -1,5 +1,6 @@
 #include "gf/object/gf_obj_acc.h"
 
+#include "anm/anm_skeleton.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
 #include "battle/character/character_parameter_battle.h"
@@ -19,6 +20,7 @@
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "ml/scn_obj_model.h"
+#include "mm_math/mm_aabb.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/rtti.h"
 #include "scn/scn_obj_acc.h"
@@ -43,6 +45,21 @@ GfObjAcc::GfObjAcc(GF_OBJ_HANDLE *handle) {
   } else {
     m_obj = unknown00->unknown18;
   }
+}
+
+int GfObjAcc::getBoneIdx(const char *name) {
+  if (m_obj != nullptr) {
+    GfComModel *model = m_obj->getComponent<GfComModel>();
+    if (model != nullptr && model->unknown28 != nullptr) {
+      u16 bone = anm::Skeleton::INVALID_BONE;
+      if (name != nullptr) {
+        bone = model->unknown28->getBoneID(name);
+      }
+      return static_cast<s16>(bone);
+    }
+  }
+
+  return -1;
 }
 
 bool GfObjAcc::isValidTransform() const {
@@ -159,6 +176,41 @@ ml::ScnObjModel *GfObjAcc::getScnModel() const {
   }
 
   return nullptr;
+}
+
+f32 GfObjAcc::getModelAlpha() const {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    return model->getAlpha();
+  }
+
+  return 1.0f;
+}
+
+f32 GfObjAcc::getModelRadius() const {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    return model->getLength();
+  }
+
+  return 0.0f;
+}
+
+bool GfObjAcc::getModelAabb(mm::Aabb &aabb) const {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    aabb.set(model->getAABBMin(), model->getAABBMax());
+    return true;
+  }
+
+  return false;
+}
+
+void GfObjAcc::applyAlpha() {
+  ml::ScnObjModel *model = getScnModel();
+  if (model != nullptr) {
+    model->setAlpha(getAlpha());
+  }
 }
 
 void GfObjAcc::setFrameSpeed(f32 speed) {

@@ -3,6 +3,7 @@
 #include "types.h"
 
 namespace mm {
+struct Aabb;
 struct Vec3;
 } // namespace mm
 
@@ -74,6 +75,10 @@ public:
   f32 getAlphaNormal() const;
   f32 getAlpha() const;
   ml::ScnObjModel *getScnModel() const;
+  f32 getModelAlpha() const;
+  f32 getModelRadius() const;
+  bool getModelAabb(mm::Aabb &aabb) const;
+  void applyAlpha();
   void setFrameSpeed(f32 speed);
   void setCameraFade(bool isEnable);
   bool setFlag(u32 flag, bool value);

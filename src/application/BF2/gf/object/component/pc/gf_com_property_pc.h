@@ -87,7 +87,8 @@ public:
   u32 unknown110_4 : 1; // Inferred role: set by GfPropertyField::flushOwner while sliding; original member name unknown.
   u32 : 2;
   u32 unknown110_7 : 1; // Inferred role: on slide; original member name unknown.
-  u32 : 2;
+  u32 : 1;
+  u32 unknown111_1 : 1; // Inferred role: selects mode 2 in getMode; original member name unknown.
   u32 unknown111_2 : 1; // Inferred role: pad control; original member name unknown.
   u32 unknown111_3 : 1; // Inferred role: dead; original member name unknown.
   u32 unknown111_4 : 1; // Inferred role: dead sequence requested; original member name unknown.
@@ -126,5 +127,7 @@ static_assert(offsetof(GfComPropertyPc, unknown2b0) == 0x2b0, "");
 static_assert(offsetof(GfComPropertyPc, unknown2d0) == 0x2d0, "");
 static_assert(offsetof(GfComPropertyPc, unknown2f0) == 0x2f0, "");
 static_assert(offsetof(GfComPropertyPc, unknown310) == 0x310, "");
+
+u32 getMode(GfComPropertyPc &property);
 
 } // namespace gf

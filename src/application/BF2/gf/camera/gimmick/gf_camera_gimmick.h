@@ -42,6 +42,11 @@ public:
   const mm::Vec3 &getRot() const;
   void setRot(const mm::Vec3 &rotation);
   const f32 &getFov() const;
+  void setFov(const f32 &fov);
+  static f32 curve(f32 a, f32 b, f32 t);
+  static f32 slowOut(f32 t);
+  static f32 fastOut(f32 t);
+  static f32 fastInFastOut(f32 t);
   const s32 &getIndex() const;
   const s32 &getFrame() const;
   const f32 &getSpeed() const;

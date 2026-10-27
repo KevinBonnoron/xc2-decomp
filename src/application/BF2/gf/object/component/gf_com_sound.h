@@ -12,6 +12,41 @@ class RTTI;
 
 namespace gf {
 
+enum SoundVariable : int {
+  SOUND_VARIABLE_UNKNOWN_0,
+  SOUND_VARIABLE_UNKNOWN_1,
+  SOUND_VARIABLE_UNKNOWN_2,
+  SOUND_VARIABLE_UNKNOWN_3,
+  SOUND_VARIABLE_UNKNOWN_4,
+};
+
+enum SoundVariableWall : int {
+  SOUND_VARIABLE_WALL_UNKNOWN_0,
+  SOUND_VARIABLE_WALL_UNKNOWN_1,
+};
+
+enum SoundVariableWaterDepth : int {
+  SOUND_VARIABLE_WATER_DEPTH_UNKNOWN_0,
+  SOUND_VARIABLE_WATER_DEPTH_UNKNOWN_1,
+};
+
+enum SoundVarMoveStatus : int {
+  SOUND_VAR_MOVE_STATUS_UNKNOWN_0,
+  SOUND_VAR_MOVE_STATUS_UNKNOWN_1,
+};
+
+const char *getSoundVariableName(SoundVariable variable);
+const char *getMaterialVariableName(int variable);
+const char *getWallVariableName(SoundVariableWall variable);
+const char *getWaterDepthVariableName(SoundVariableWaterDepth variable);
+const char *getMoveStatusVariableName(SoundVarMoveStatus variable);
+int getMaterialVariable(const char *name);
+const char *getAttributeVariableName(int variable);
+int getAttrbiteVariable(const char *name);
+int getWallVariable(const char *name);
+int getWaterDepthVariable(const char *name);
+int getMoveStatusVariable(const char *name);
+
 // Declaration rebuilt from the game's symbols (gf::GfComSound::stopSe, playSe2D); the component slot comes from the access offset 0x88.
 class GfComSound : public GfComponent {
 public:

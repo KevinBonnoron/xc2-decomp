@@ -25,6 +25,7 @@ public:
   static void build(const GfSetupParam &param);
   static void destroy();
   void initialize(const GfSetupParam &param);
+  void finalize();
   static GF_PAUSE_HANDLE *reqPause(u32 pauseBits);
   static void destroyHandle(GF_PAUSE_HANDLE *handle);
   static void update();
@@ -32,13 +33,16 @@ public:
   static bool isInitialized();
   u64 createPauseHandleByIndex(u32 index);
 
-  u8 _08[0xe58 - 0x08];
+  u8 _08[0x590 - 0x08];
+  s32 unknown590; // Inferred role: count of running pause update; original member name unknown.
+  u8 _594[0xe58 - 0x594];
   u32 unknowne58; // Inferred role: current pause bits; original member name unknown.
   u8 _e5c[0xe60 - 0xe5c];
   u32 unknowne60;  // Inferred role: pause handle serial; original member name unknown.
   bool unknowne64; // Inferred role: initialized; original member name unknown.
 };
 
+static_assert(offsetof(GfPause, unknown590) == 0x590, "");
 static_assert(offsetof(GfPause, unknowne58) == 0xe58, "");
 static_assert(offsetof(GfPause, unknowne60) == 0xe60, "");
 static_assert(offsetof(GfPause, unknowne64) == 0xe64, "");

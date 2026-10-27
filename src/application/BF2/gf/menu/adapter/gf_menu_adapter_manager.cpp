@@ -36,4 +36,18 @@ void GfMenuAdapterManager::endAddAfter() {
   }
 }
 
+void GfMenuAdapterManager::addActiveCategory(u32 category) {
+  GfMenuAdapterManager *manager = get();
+  if (manager != nullptr) {
+    manager->unknown98 |= 1 << category;
+  }
+}
+
+void GfMenuAdapterManager::delActiveCategory(u32 category) {
+  GfMenuAdapterManager *manager = get();
+  if (manager != nullptr) {
+    manager->unknown98 &= ~(1 << category);
+  }
+}
+
 } // namespace gf
