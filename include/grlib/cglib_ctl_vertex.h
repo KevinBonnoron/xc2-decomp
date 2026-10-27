@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "types.h"
 
 enum GrlPrimitiveType {
@@ -9,7 +11,13 @@ enum GrlPrimitiveType {
 };
 
 namespace grlib {
+namespace context {
+class CGLibSystemContext;
+} // namespace context
+class CGLibDblUniformBlock;
 class CGLibOneUniformBlock;
+class CGLibTriUniformBlock;
+class CGLibVtxStmOut;
 class CGLibVtxInstans;
 class CGLibVtxOneInstans;
 class CGLibVtxVertex;
@@ -17,12 +25,19 @@ class CGLibVtxVertex;
 class CGLibCtlVertex {
 public:
   static void setVertex(CGLibVtxVertex &vertex);
+  static void setVertex(CGLibVtxVertex &vertex, u32 offset);
   static void setAddVertex(CGLibVtxVertex &vertex, int offset, int stream, u32 divisor);
   static void setUniformVertex(CGLibOneUniformBlock &block, int stride, int offset, int stream, u32 divisor);
+  static void setUniformVertex(CGLibDblUniformBlock &block, int stride, int offset, int stream, u32 divisor);
+  static void setUniformVertex(CGLibTriUniformBlock &block, int stride, int offset, int stream, u32 divisor);
+  static void setStreamOutVertex(CGLibVtxStmOut &streamOut, int stride, int offset, int stream, u32 divisor);
   static void setInstanceVertex(CGLibVtxInstans &instance, int stride, int offset, int stream, u32 divisor);
   static void setInstanceVertex(CGLibVtxOneInstans &instance, int stride, int offset, int stream, u32 divisor);
   static void renderVertex(GrlPrimitiveType type, int count);
   static void renderInstanceVertex(GrlPrimitiveType type, int count, int instanceCount);
+
+  // Inferred role: sets the stride and divisor of a vertex stream; original name unknown.
+  static void unknown001(context::CGLibSystemContext *context, size_t stride, u32 divisor, int stream);
 };
 
 } // namespace grlib

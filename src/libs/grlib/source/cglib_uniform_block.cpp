@@ -3,16 +3,27 @@
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_mem_handle.h"
 #include "grlib/cglib_one_uniform_block.h"
+#include "grlib/cglib_pipeline.h"
 #include "grlib/cglib_system_context.h"
 #include "grlib/cglib_tri_uniform_block.h"
 #include "grlib/cglib_uni_base_utility.h"
 #include "grlib/cglib_vtl_mem_pool.h"
 #include "nn/os.h"
+#include "nvn/nvn.h"
 #include "types.h"
 
 namespace grlib {
 
-CGLibDblUniformBlock::CGLibDblUniformBlock() : unknown00(), unknown18() {}
+u64 CGLibDblUniformBlock_plf::getGPUAdress() const { return unknown18[CGLibManager::s_nDblNowIdx]; }
+
+void CGLibDblUniformBlock_plf::setupUniformBuffer(u32 size, CGLibMemType &memType, u32 offset) {
+  context::CGLibSystemContext::get()->getUniformoGpuAddress(unknown18[0], memType);
+  u64 address = unknown18[0];
+  unknown18[0] = address + offset;
+  unknown18[1] = address + offset + size;
+}
+
+CGLibDblUniformBlock::CGLibDblUniformBlock() {}
 
 CGLibDblUniformBlock::~CGLibDblUniformBlock() { release(); }
 
@@ -66,6 +77,13 @@ void *CGLibDblUniformBlock::getOldBuff() { return unknown00[CGLibManager::s_nDbl
 
 void *CGLibDblUniformBlock::getMapping() { return unknown00[CGLibManager::s_nDblNowIdx]; }
 
+void CGLibDblUniformBlock::beginStreamOut(u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, true);
+  nvnCommandBufferBindTransformFeedbackBuffer(context->unknown1070.unknown00, 0, unknown18[CGLibManager::s_nDblNowIdx], offset);
+  nvnCommandBufferBeginTransformFeedback(context->unknown1070.unknown00, unknown18[CGLibManager::s_nDblNowIdx]);
+}
+
 CGLibOneUniformBlock::CGLibOneUniformBlock() : m_mapping(nullptr), unknown10(0) {}
 
 CGLibOneUniformBlock::~CGLibOneUniformBlock() { release(); }
@@ -113,7 +131,24 @@ void CGLibOneUniformBlock::updateData(u32 offset, u32 size) { nn::os::FlushDataC
 
 void *CGLibOneUniformBlock::getMapping() { return m_mapping; }
 
-CGLibTriUniformBlock::CGLibTriUniformBlock() : unknown00(), unknown20() {}
+void CGLibOneUniformBlock::beginStreamOut(u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, true);
+  nvnCommandBufferBindTransformFeedbackBuffer(context->unknown1070.unknown00, 0, unknown10, offset);
+  nvnCommandBufferBeginTransformFeedback(context->unknown1070.unknown00, unknown10);
+}
+
+u64 CGLibTriUniformBlock_plf::getGPUAdress() const { return unknown20[CGLibManager::s_nTriNowIdx]; }
+
+void CGLibTriUniformBlock_plf::setupUniformBuffer(u32 size, CGLibMemType &memType, u32 offset) {
+  context::CGLibSystemContext::get()->getUniformoGpuAddress(unknown20[0], memType);
+  u64 address = unknown20[0] + offset;
+  unknown20[0] = address;
+  unknown20[1] = address + size;
+  unknown20[2] = address + size * 2;
+}
+
+CGLibTriUniformBlock::CGLibTriUniformBlock() {}
 
 CGLibTriUniformBlock::~CGLibTriUniformBlock() { release(); }
 
@@ -195,6 +230,13 @@ void *CGLibTriUniformBlock::getOldTriBuff() {
 
 void *CGLibTriUniformBlock::getMapping() { return unknown00[CGLibManager::s_nTriNowIdx]; }
 
+void CGLibTriUniformBlock::beginStreamOut(u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, true);
+  nvnCommandBufferBindTransformFeedbackBuffer(context->unknown1070.unknown00, 0, unknown20[CGLibManager::s_nTriNowIdx], offset);
+  nvnCommandBufferBeginTransformFeedback(context->unknown1070.unknown00, unknown20[CGLibManager::s_nTriNowIdx]);
+}
+
 CGLibEtcUniformBlock::~CGLibEtcUniformBlock() {}
 
 void CGLibEtcUniformBlock::updateData(u32 size) {
@@ -211,6 +253,13 @@ void CGLibEtcUniformBlock::setMoveMem(u32 size) {
     m_size = size;
     context::CGLibSystemContext::get()->nextGlbUniformOfs(size);
   }
+}
+
+void CGLibEtcUniformBlock::beginStreamOut(u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, true);
+  nvnCommandBufferBindTransformFeedbackBuffer(context->unknown1070.unknown00, 0, unknown10, offset);
+  nvnCommandBufferBeginTransformFeedback(context->unknown1070.unknown00, unknown10);
 }
 
 void CGLibUniformEtcUtility::setMoveMem() { unknown20.setMoveMem(m_size); }

@@ -8,7 +8,22 @@ namespace grlib {
 
 class CGLibVtlMemPool;
 
-class CGLibDblUniformBlock {
+class CGLibDblUniformBlock_plf {
+public:
+  CGLibDblUniformBlock_plf() : unknown00(), unknown18() {}
+  u64 getGPUAdress() const;
+  void setupUniformBuffer(u32 size, CGLibMemType &memType, u32 offset);
+
+  void *unknown00[2]; // Inferred role: mappings; original member name unknown.
+  u32 m_size;
+  u64 unknown18[2]; // Inferred role: gpu addresses; original member name unknown.
+};
+
+static_assert(offsetof(CGLibDblUniformBlock_plf, m_size) == 0x10, "");
+static_assert(offsetof(CGLibDblUniformBlock_plf, unknown18) == 0x18, "");
+static_assert(sizeof(CGLibDblUniformBlock_plf) == 0x28, "");
+
+class CGLibDblUniformBlock : public CGLibDblUniformBlock_plf {
 public:
   CGLibDblUniformBlock();
   ~CGLibDblUniformBlock();
@@ -24,10 +39,8 @@ public:
   void setUniformBlock(u32 index);
   void setUniformBlock(u32 index, u32 offset, u32 size);
   void setStorageBuffer(u32 index);
+  void beginStreamOut(u32 offset);
 
-  void *unknown00[2]; // Inferred role: mappings; original member name unknown.
-  u32 m_size;
-  u64 unknown18[2];       // Inferred role: gpu addresses; original member name unknown.
   CGLibMemType unknown28; // Inferred role: mem type; original member name unknown.
 };
 

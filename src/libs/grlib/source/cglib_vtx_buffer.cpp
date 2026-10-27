@@ -5,6 +5,7 @@
 #include "grlib/cglib_mem_handle.h"
 #include "grlib/cglib_one_uniform_block.h"
 #include "grlib/cglib_pipeline.h"
+#include "grlib/cglib_shader.h"
 #include "grlib/cglib_system_context.h"
 #include "grlib/cglib_vtl_mem_pool.h"
 #include "grlib/cglib_vtx_index.h"
@@ -181,6 +182,50 @@ void CGLibVtxStmOut::createWorkBuff(int size) {
   unknown00 = 0;
   m_size = alignedSize;
   context::CGLibSystemContext::get()->getVertexGpuAddress(unknown20, unknown10);
+}
+
+void CGLibVtxStmOut::begin(int stride) {
+  unknown08 = stride;
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, true);
+  nvnCommandBufferBindTransformFeedbackBuffer(context->unknown1070.unknown00, 0, unknown20, m_size);
+  nvnCommandBufferBeginTransformFeedback(context->unknown1070.unknown00, unknown20 + m_size);
+}
+
+void CGLibVtxStmOut::end(u32 count) {
+  unknown00 = unknown08 * count;
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  nvnCommandBufferEndTransformFeedback(context->unknown1070.unknown00, unknown20 + unknown00);
+  nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, false);
+  nvnCommandBufferBarrier(context->unknown1070.unknown00, 0x21);
+}
+
+void CGLibVtxStmOut::setUniformBlock(u32 index) {
+  if (index != 0xffffffff) {
+    context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+    context->unknown1070._98->setUniformBlock(index, context->unknown1070.unknown00, unknown20, m_size);
+  }
+}
+
+void CGLibVtxStmOut::setUniformBlock(u32 index, u32 offset, u32 size) {
+  if (index != 0xffffffff) {
+    context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+    context->unknown1070._98->setUniformBlock(index, context->unknown1070.unknown00, unknown20 + offset, size);
+  }
+}
+
+void CGLibVtxStmOut::setStorageBuffer(u32 index) {
+  if (index != 0xffffffff) {
+    context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+    context->unknown1070._98->setStorageBuffer(index, context->unknown1070.unknown00, unknown20, m_size);
+  }
+}
+
+void CGLibVtxStmOut::setStorageBuffer(u32 index, u32 offset, u32 size) {
+  if (index != 0xffffffff) {
+    context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+    context->unknown1070._98->setStorageBuffer(index, context->unknown1070.unknown00, unknown20 + offset, size);
+  }
 }
 
 int CGLibVtxStmOut::getSize() { return m_size; }

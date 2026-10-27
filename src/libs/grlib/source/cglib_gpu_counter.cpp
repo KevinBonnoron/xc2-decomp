@@ -66,8 +66,8 @@ int CGLibGpuCounter::getTimeStamp() {
   if (unknown10[index].unknown00 == nullptr || unknown30[index].unknown00 == nullptr) {
     return 0;
   }
-  int beginTime = nvnDeviceGetTimestampInNanoseconds(&CGLibManager::get()->unknown08, unknown10[index].unknown00);
-  int endTime = nvnDeviceGetTimestampInNanoseconds(&CGLibManager::get()->unknown08, unknown30[index].unknown00);
+  int beginTime = nvnDeviceGetTimestampInNanoseconds(&CGLibManager::get()->unknown00, unknown10[index].unknown00);
+  int endTime = nvnDeviceGetTimestampInNanoseconds(&CGLibManager::get()->unknown00, unknown30[index].unknown00);
   return endTime - beginTime;
 }
 

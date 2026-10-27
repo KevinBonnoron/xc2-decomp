@@ -13,7 +13,7 @@ public:
   // Inferred role: texture builder setup shared by the size queries; original name unknown.
   static void unknown001(NVNtextureBuilder &builder, NVNtextureTarget target, int format) {
     nvnTextureBuilderSetDefaults(&builder);
-    nvnTextureBuilderSetDevice(&builder, &CGLibManager::get()->unknown08);
+    nvnTextureBuilderSetDevice(&builder, &CGLibManager::get()->unknown00);
     nvnTextureBuilderSetTarget(&builder, target);
     nvnTextureBuilderSetFormat(&builder, static_cast<NVNformat>(format));
   }

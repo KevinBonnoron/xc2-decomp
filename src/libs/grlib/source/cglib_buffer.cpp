@@ -217,7 +217,7 @@ void CGLibBuffer::setup(u32 offset, u32 size, CGLibMemPool &memPool) {
   nvnBufferFinalize(&m_buffer);
   NVNbufferBuilder builder;
   nvnBufferBuilderSetDefaults(&builder);
-  nvnBufferBuilderSetDevice(&builder, &CGLibManager::get()->unknown08);
+  nvnBufferBuilderSetDevice(&builder, &CGLibManager::get()->unknown00);
   nvnBufferBuilderSetStorage(&builder, memPool.m_memoryPool, offset, size);
   nvnBufferInitialize(&m_buffer, &builder);
 }

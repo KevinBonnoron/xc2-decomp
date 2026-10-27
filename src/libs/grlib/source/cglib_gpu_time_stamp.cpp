@@ -41,8 +41,8 @@ void CGLibGpuTimeStamp::end() {
   if (unknown38[index].unknown10) {
     int nowIndex = CGLibManager::s_nDblNowIdx;
     if (unknown08[nowIndex].unknown00 != nullptr && unknown38[nowIndex].unknown00 != nullptr) {
-      s64 beginTime = nvnDeviceGetTimestampInNanoseconds(&CGLibManager::get()->unknown08, unknown08[nowIndex].unknown00);
-      s64 endTime = nvnDeviceGetTimestampInNanoseconds(&CGLibManager::get()->unknown08, unknown38[nowIndex].unknown00);
+      s64 beginTime = nvnDeviceGetTimestampInNanoseconds(&CGLibManager::get()->unknown00, unknown08[nowIndex].unknown00);
+      s64 endTime = nvnDeviceGetTimestampInNanoseconds(&CGLibManager::get()->unknown00, unknown38[nowIndex].unknown00);
       unknown00 = endTime - beginTime;
     } else {
       unknown00 = 0;

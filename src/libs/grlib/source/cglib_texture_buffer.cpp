@@ -490,7 +490,7 @@ u32 CGLibColorBuffer::getImageSize() const {
   GrlSurfaceFormat format = m_format;
   NVNtextureBuilder builder;
   nvnTextureBuilderSetDefaults(&builder);
-  nvnTextureBuilderSetDevice(&builder, &CGLibManager::get()->unknown08);
+  nvnTextureBuilderSetDevice(&builder, &CGLibManager::get()->unknown00);
   nvnTextureBuilderSetTarget(&builder, NVN_TEXTURE_TARGET_2D);
   nvnTextureBuilderSetFormat(&builder, static_cast<NVNformat>(format));
   nvnTextureBuilderSetSize2D(&builder, width, height);
@@ -613,7 +613,7 @@ u32 CGLibDepthBuffer::getImageSize() const {
   GrlSurfaceFormat format = m_format;
   NVNtextureBuilder builder;
   nvnTextureBuilderSetDefaults(&builder);
-  nvnTextureBuilderSetDevice(&builder, &CGLibManager::get()->unknown08);
+  nvnTextureBuilderSetDevice(&builder, &CGLibManager::get()->unknown00);
   nvnTextureBuilderSetTarget(&builder, NVN_TEXTURE_TARGET_2D);
   nvnTextureBuilderSetFormat(&builder, static_cast<NVNformat>(format));
   nvnTextureBuilderSetSize2D(&builder, width, height);

@@ -16,7 +16,12 @@ public:
   int getSize();
   void *getBuff();
   void *getMapping();
+  void begin(int stride);
+  void end(u32 count);
+  void setUniformBlock(u32 index);
+  void setUniformBlock(u32 index, u32 offset, u32 size);
   void setStorageBuffer(u32 index);
+  void setStorageBuffer(u32 index, u32 offset, u32 size);
 
   int unknown00; // Inferred role: written size; original member name unknown.
   int m_size;

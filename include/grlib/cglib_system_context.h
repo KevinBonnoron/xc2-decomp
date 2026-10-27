@@ -14,6 +14,7 @@
 #include "grlib/cglib_mem_pool_adder.h"
 #include "grlib/cglib_pipeline.h"
 #include "grlib/cglib_render_target.h"
+#include "grlib/cglib_sampler.h"
 #include "grlib/cglib_state.h"
 #include "grlib/cglib_tex_descriptor.h"
 #include "grlib/cglib_vtx_fetch.h"
@@ -47,6 +48,8 @@ public:
   static ml::CriticalSection &getCriticalSection();
   void createMemPool(CGLibMemPool &memPool, mtl::ALLOC_HANDLE handle, u32 flags);
   bool isRelease();
+  bool cleanup();
+  void end();
   void beginRegisterRenderTarget();
   void setRegisterRenderTarget(CGLibColorBuffer &colorBuffer, GrlMrtType mrt);
   void setRegisterDepthTarget(CGLibDepthBuffer &depthBuffer);
@@ -79,9 +82,9 @@ public:
   u8 _19c8[0x20d4 - 0x19c8];
   s32 unknown20d4; // Inferred role: main render target index; original member name unknown.
   u8 _20d8[0x2320 - 0x20d8];
-  CGLibDecShader unknown2320;   // Inferred role: dec shader; original member name unknown.
-  CGLibVtxFetch unknown2388[3]; // Inferred role: vtx fetches; original member name unknown.
-  u8 _23b8[0x2458 - 0x23b8];
+  CGLibDecShader unknown2320;    // Inferred role: dec shader; original member name unknown.
+  CGLibVtxFetch unknown2388[3];  // Inferred role: vtx fetches; original member name unknown.
+  CGLibSampler unknown23b8[5];   // Inferred role: util samplers; original member name unknown.
   CGLibMemPool unknown2458;      // Inferred role: counter mem pool; original member name unknown.
   CGLibMemPool unknown2478;      // Inferred role: pixel mem pool; original member name unknown.
   CGLibMemPool unknown2498;      // Inferred role: vertex mem pool; original member name unknown.
@@ -121,6 +124,7 @@ static_assert(offsetof(CGLibSystemContext, unknown18a0) == 0x18a0, "");
 static_assert(offsetof(CGLibSystemContext, unknown20d4) == 0x20d4, "");
 static_assert(offsetof(CGLibSystemContext, unknown2320) == 0x2320, "");
 static_assert(offsetof(CGLibSystemContext, unknown2388) == 0x2388, "");
+static_assert(offsetof(CGLibSystemContext, unknown23b8) == 0x23b8, "");
 static_assert(offsetof(CGLibSystemContext, unknown2458) == 0x2458, "");
 static_assert(offsetof(CGLibSystemContext, unknown24d8) == 0x24d8, "");
 static_assert(offsetof(CGLibSystemContext, unknown2548) == 0x2548, "");

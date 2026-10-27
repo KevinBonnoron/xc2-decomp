@@ -8,6 +8,7 @@ typedef u8 NVNboolean;
 struct NVNcommandBuffer;
 struct NVNmemoryPool;
 struct NVNtexture;
+struct NVNvertexAttribState;
 
 struct alignas(8) NVNdevice {
   u8 reserved[0x3000];
@@ -218,6 +219,14 @@ typedef void (*PFNNVNCOMMANDBUFFERBINDUNIFORMBUFFERPROC)(NVNcommandBuffer *cmdBu
 typedef void (*PFNNVNCOMMANDBUFFERBINDSTORAGEBUFFERPROC)(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNbufferAddress buffer, size_t size);
 typedef void (*PFNNVNCOMMANDBUFFERBINDTEXTUREPROC)(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNtextureHandle texture);
 typedef void (*PFNNVNCOMMANDBUFFERBINDIMAGEPROC)(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNimageHandle image);
+typedef void (*PFNNVNCOMMANDBUFFERBINDTRANSFORMFEEDBACKBUFFERPROC)(NVNcommandBuffer *cmdBuf, int index, NVNbufferAddress buffer, size_t size);
+typedef void (*PFNNVNVERTEXSTREAMSTATESETSTRIDEPROC)(NVNvertexStreamState *stream, size_t stride);
+typedef void (*PFNNVNVERTEXSTREAMSTATESETDIVISORPROC)(NVNvertexStreamState *stream, int divisor);
+typedef void (*PFNNVNCOMMANDBUFFERBINDVERTEXBUFFERPROC)(NVNcommandBuffer *cmdBuf, int index, NVNbufferAddress buffer, size_t size);
+typedef void (*PFNNVNCOMMANDBUFFERBINDPROGRAMPROC)(NVNcommandBuffer *cmdBuf, const NVNprogram *program, int stages);
+typedef void (*PFNNVNCOMMANDBUFFERBINDVERTEXATTRIBSTATEPROC)(NVNcommandBuffer *cmdBuf, int numAttribs, const NVNvertexAttribState *attribs);
+typedef void (*PFNNVNCOMMANDBUFFERBEGINTRANSFORMFEEDBACKPROC)(NVNcommandBuffer *cmdBuf, NVNbufferAddress buffer);
+typedef void (*PFNNVNCOMMANDBUFFERENDTRANSFORMFEEDBACKPROC)(NVNcommandBuffer *cmdBuf, NVNbufferAddress buffer);
 
 extern "C" {
 extern PFNNVNCOMMANDBUFFERSETBLENDCOLORPROC pfnc_nvnCommandBufferSetBlendColor;
@@ -299,6 +308,14 @@ extern PFNNVNCOMMANDBUFFERBINDUNIFORMBUFFERPROC pfnc_nvnCommandBufferBindUniform
 extern PFNNVNCOMMANDBUFFERBINDSTORAGEBUFFERPROC pfnc_nvnCommandBufferBindStorageBuffer;
 extern PFNNVNCOMMANDBUFFERBINDTEXTUREPROC pfnc_nvnCommandBufferBindTexture;
 extern PFNNVNCOMMANDBUFFERBINDIMAGEPROC pfnc_nvnCommandBufferBindImage;
+extern PFNNVNCOMMANDBUFFERBINDTRANSFORMFEEDBACKBUFFERPROC pfnc_nvnCommandBufferBindTransformFeedbackBuffer;
+extern PFNNVNVERTEXSTREAMSTATESETSTRIDEPROC pfnc_nvnVertexStreamStateSetStride;
+extern PFNNVNVERTEXSTREAMSTATESETDIVISORPROC pfnc_nvnVertexStreamStateSetDivisor;
+extern PFNNVNCOMMANDBUFFERBINDVERTEXBUFFERPROC pfnc_nvnCommandBufferBindVertexBuffer;
+extern PFNNVNCOMMANDBUFFERBINDPROGRAMPROC pfnc_nvnCommandBufferBindProgram;
+extern PFNNVNCOMMANDBUFFERBINDVERTEXATTRIBSTATEPROC pfnc_nvnCommandBufferBindVertexAttribState;
+extern PFNNVNCOMMANDBUFFERBEGINTRANSFORMFEEDBACKPROC pfnc_nvnCommandBufferBeginTransformFeedback;
+extern PFNNVNCOMMANDBUFFERENDTRANSFORMFEEDBACKPROC pfnc_nvnCommandBufferEndTransformFeedback;
 }
 
 inline void nvnCommandBufferSetBlendColor(NVNcommandBuffer *cmdBuf, const float *blendColor) { pfnc_nvnCommandBufferSetBlendColor(cmdBuf, blendColor); }
@@ -484,3 +501,23 @@ inline void nvnCommandBufferBindStorageBuffer(NVNcommandBuffer *cmdBuf, NVNshade
 inline void nvnCommandBufferBindTexture(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNtextureHandle texture) { pfnc_nvnCommandBufferBindTexture(cmdBuf, stage, index, texture); }
 
 inline void nvnCommandBufferBindImage(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNimageHandle image) { pfnc_nvnCommandBufferBindImage(cmdBuf, stage, index, image); }
+
+inline void nvnCommandBufferBindTransformFeedbackBuffer(NVNcommandBuffer *cmdBuf, int index, NVNbufferAddress buffer, size_t size) {
+  pfnc_nvnCommandBufferBindTransformFeedbackBuffer(cmdBuf, index, buffer, size);
+}
+
+inline void nvnCommandBufferBeginTransformFeedback(NVNcommandBuffer *cmdBuf, NVNbufferAddress buffer) { pfnc_nvnCommandBufferBeginTransformFeedback(cmdBuf, buffer); }
+
+inline void nvnCommandBufferEndTransformFeedback(NVNcommandBuffer *cmdBuf, NVNbufferAddress buffer) { pfnc_nvnCommandBufferEndTransformFeedback(cmdBuf, buffer); }
+
+inline void nvnCommandBufferBindProgram(NVNcommandBuffer *cmdBuf, const NVNprogram *program, int stages) { pfnc_nvnCommandBufferBindProgram(cmdBuf, program, stages); }
+
+inline void nvnCommandBufferBindVertexAttribState(NVNcommandBuffer *cmdBuf, int numAttribs, const NVNvertexAttribState *attribs) {
+  pfnc_nvnCommandBufferBindVertexAttribState(cmdBuf, numAttribs, attribs);
+}
+
+inline void nvnVertexStreamStateSetStride(NVNvertexStreamState *stream, size_t stride) { pfnc_nvnVertexStreamStateSetStride(stream, stride); }
+
+inline void nvnVertexStreamStateSetDivisor(NVNvertexStreamState *stream, int divisor) { pfnc_nvnVertexStreamStateSetDivisor(stream, divisor); }
+
+inline void nvnCommandBufferBindVertexBuffer(NVNcommandBuffer *cmdBuf, int index, NVNbufferAddress buffer, size_t size) { pfnc_nvnCommandBufferBindVertexBuffer(cmdBuf, index, buffer, size); }

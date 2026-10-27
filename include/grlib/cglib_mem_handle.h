@@ -43,6 +43,7 @@ public:
   static void allocVertex(CGLibMemType &memType, u32 size);
   static void allocUniform(CGLibMemType &memType, u32 size);
   static void free(CGLibMemType &memType);
+  static void release();
 };
 
 } // namespace grlib

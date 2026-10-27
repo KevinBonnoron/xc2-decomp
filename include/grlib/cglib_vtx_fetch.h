@@ -1,6 +1,8 @@
 #pragma once
 #include "types.h"
 
+struct NVNvertexAttribState;
+
 enum GrlVtxFormat {
   GRL_VTX_FORMAT_R32F = 10,
   GRL_VTX_FORMAT_R32UI = 11,
@@ -35,7 +37,9 @@ public:
   void release();
   void createFetchObj(CGLibVtxAttr *attributes, int num);
 
-  u8 _00[0x10 - 0x00];
+  NVNvertexAttribState *unknown00; // Inferred role: attribute states; original member name unknown.
+  u16 unknown08;                   // Inferred role: attribute num; original member name unknown.
+  u8 _0a[0x10 - 0x0a];
 };
 
 } // namespace grlib
