@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "ssd/ssd_result.h"
 #include "types.h"
 
 namespace ssd {
@@ -24,10 +25,12 @@ public:
   };
 
   virtual ~WaveSource();
+  Result Quit();
   const unknown002 *GetAdpcmHeader(int index) const;
   u8 *GetDataAddress(int index) const;
   u32 GetDataSize() const;
   u64 TimeToSample(f32 time) const;
+  u64 SampleToPosition(u32 sample) const;
 
   u8 _08[0x18 - 0x08];
   bool unknown18; // Inferred role: has data; original member name unknown.

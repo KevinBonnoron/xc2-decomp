@@ -6,12 +6,26 @@
 #include "ssd/ssd_result.h"
 #include "ssd/ssd_sound.h"
 #include "ssd/ssd_sound_core.h"
+#include "ssd/ssd_text.h"
 #include "ssd/ssd_wave_source.h"
 #include "types.h"
 
 namespace ssd {
 
 int SoundBank::GetNumber() const { return m_number; }
+
+const TextRef &SoundBank::GetName() const { return unknown38; }
+
+Result SoundBank::Init(int number, const TextRef &name) {
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  if (core == nullptr) {
+    return static_cast<Result>(-1);
+  }
+  m_number = number;
+  unknown38.Set(name);
+  core->AddBank(this);
+  return set_result(static_cast<Result>(0));
+}
 
 int SoundBank::NumSoundEntry() const { return unknowne0.count; }
 

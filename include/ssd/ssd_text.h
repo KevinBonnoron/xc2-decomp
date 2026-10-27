@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "ssd/ssd_hash.h"
+#include "ssd/ssd_result.h"
 #include "types.h"
 
 namespace ssd {
@@ -33,5 +34,26 @@ public:
 
 static_assert(offsetof(TextRef, unknown08) == 0x8, "");
 static_assert(offsetof(TextRef, unknown18) == 0x18, "");
+
+Result Utf8ToUTF16(const char *source, char16_t *destination, unsigned long size);
+
+class TextFixedBase : public TextRef {
+public:
+  void Set(const TextRef &text) override;
+  void Set(const char *text) override;
+  void Set(const char16_t *text) override;
+
+  // Inferred role: writable text buffer owned by the object; original name unknown.
+  char16_t *unknown001() const { return static_cast<char16_t *>(const_cast<void *>(unknown10)); }
+
+  unsigned long unknown20; // Inferred role: capacity in characters; original member name unknown.
+};
+
+static_assert(offsetof(TextFixedBase, unknown20) == 0x20, "");
+
+template <int N> class TextFixed : public TextFixedBase {
+public:
+  char16_t unknown28[N]; // Inferred role: text buffer; original member name unknown.
+};
 
 } // namespace ssd

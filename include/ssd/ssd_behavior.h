@@ -16,6 +16,7 @@ public:
     Node *next;
   };
 
+  List() : count(0) {}
   virtual ~List();
   List *Delete();
 

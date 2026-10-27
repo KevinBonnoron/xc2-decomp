@@ -1,5 +1,9 @@
+#include "ssd/ssd_file_stream.h"
+#include "ssd/ssd_memory_buffer.h"
+#include "ssd/ssd_sound_core.h"
 #include "ssd/ssd_stream_buffer.h"
 #include "ssd/ssd_stream_controller.h"
+#include "ssd/ssd_wave_source.h"
 #include "types.h"
 
 namespace ssd {
@@ -43,6 +47,17 @@ s64 StreamController::CloseStream() {
   unknownee = true;
   unknownf8 = 3;
   return 1;
+}
+
+s64 StreamController::QuitStream() {
+  unknownef = false;
+  unknownf8 = 0;
+  static_cast<SystemCore *>(SoundCore::instance_)->RemoveStreamController(this);
+  unknown258.Free();
+  unknown158.Free();
+  unknown100.Close();
+  WaveSource::Quit();
+  return 0;
 }
 
 u64 StreamController::SizeToReadPosition(u64 size) {

@@ -30,6 +30,50 @@ void VoiceHandle::FreeAdpcmSplitBuffer() {
   }
 }
 
+void VoiceHandle::Quit() {
+  if (unknown658 != nullptr) {
+    static_cast<SystemCore *>(SoundCore::instance_)->FreeAudioDataBuffer(unknown658);
+    unknown658 = nullptr;
+  }
+}
+
+void VoiceHandle::DeleteStream() {
+  if (unknown70 != nullptr) {
+    unknown70->QuitStream();
+    StreamController *stream = unknown70;
+    SoundMemory::allocator_->unknown001(stream);
+    unknown44 = 1;
+    unknown70 = nullptr;
+  }
+}
+
+Result VoiceHandle::SetPlayPositionImpl() {
+  StreamController *stream = unknown70;
+  u64 position;
+  if (stream == nullptr) {
+    position = static_cast<u32>(unknown6a0.unknown00);
+  } else {
+    WaveSource *source = stream;
+    if (unknown669 == 3) {
+      position = source->TimeToSample(unknown6a0.unknown01) * stream->unknown40;
+    } else if (unknown669 == 2) {
+      position = source->SampleToPosition(static_cast<u32>(unknown6a0.unknown00));
+    } else {
+      position = static_cast<u32>(unknown6a0.unknown00);
+    }
+  }
+  unknown44 = 6;
+  unknown88 = 0;
+  unknown669 = 0;
+  unknown668 = false;
+  unknown688 = position;
+  unknown690 = position;
+  if (unknown70 != nullptr) {
+    unknown70->SetReadPosition(position);
+  }
+  return static_cast<Result>(1);
+}
+
 void VoiceHandle::DeleteHWVoice() {}
 
 Result VoiceHandle::AllocHWVoice() { return static_cast<Result>(0); }
@@ -44,6 +88,29 @@ Result VoiceHandle::ForceStop() {
     unknown58 = nullptr;
   }
   return set_result(static_cast<Result>(0));
+}
+
+Result VoiceHandle::Pause(bool isPause, f32 fadeTime) {
+  if (isPause) {
+    unknown6d0.Set(0.0f, fadeTime);
+    if (unknown44 == 13) {
+      unknown44 = 11;
+    }
+    unknown34 = true;
+    unknown35 = false;
+    return static_cast<Result>(1);
+  }
+  if (!unknown34 && !unknown33) {
+    return static_cast<Result>(0);
+  }
+  if (unknown32) {
+    unknown6d0.Set(1.0f, fadeTime);
+    unknown44 = 13;
+    unknown34 = false;
+    unknown35 = true;
+    return static_cast<Result>(1);
+  }
+  return static_cast<Result>(0);
 }
 
 Result VoiceHandle::GetPlayPosition(u64 *position) const {

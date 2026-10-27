@@ -92,6 +92,9 @@ static_assert(offsetof(SoundCore, m_init) == 0x10, "");
 class SystemCorePlatform : public SoundCore {
 public:
   void *GetPlatformDataImpl(const char *name) override;
+  Result InitEffect(u8 bus, SoundEffecter *effecter);
+  Result QuitEffect(SoundEffecter *effecter);
+  void FreeAudioDataBuffer(void *buffer);
 };
 
 class SystemCore : public SystemCorePlatform {
@@ -144,6 +147,7 @@ public:
   Result ResetCategory(int id);
   SoundCategory *GetCategory(int id) const;
   Result GetCategory(int id, SoundCategory *category) const;
+  void ChangeCategoryEvent(const SoundCategory &category);
   bool IsPlayActor(const SoundActor *actor) const;
   void StopActor(SoundActor *actor, f32 fadeTime);
   void PauseActor(SoundActor *actor, bool isPause, f32 fadeTime);

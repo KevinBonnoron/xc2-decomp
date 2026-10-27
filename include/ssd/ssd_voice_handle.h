@@ -35,6 +35,10 @@ public:
   Result AllocHWVoice();
   Result SetPlayPosition(u64 position);
   Result Stop(f32 fadeTime);
+  Result Pause(bool isPause, f32 fadeTime);
+  Result SetPlayPositionImpl();
+  void Quit();
+  void DeleteStream();
   Result ForceStop();
   Result GetPlayPosition(u64 *position) const;
   Result GetPlaySample(unsigned long long *sample) const;
@@ -86,8 +90,11 @@ public:
   StreamController *unknown70; // Inferred role: stream; original member name unknown.
   u8 _78[0x88 - 0x78];
   int unknown88; // Inferred role: voice queue count; original member name unknown.
-  u8 _8c[0x669 - 0x8c];
-  u8 unknown669; // Inferred role: play position request type; original member name unknown.
+  u8 _8c[0x658 - 0x8c];
+  void *unknown658; // Inferred role: audio data buffer; original member name unknown.
+  u8 _660[0x668 - 0x660];
+  bool unknown668; // Inferred role: play position request; original member name unknown.
+  u8 unknown669;   // Inferred role: play position request type; original member name unknown.
   u8 _66a[0x680 - 0x66a];
   u64 unknown680;        // Inferred role: play position base; original member name unknown.
   u64 unknown688;        // Inferred role: play position; original member name unknown.
@@ -104,6 +111,8 @@ public:
 static_assert(offsetof(VoiceHandle, unknown30) == 0x30, "");
 static_assert(offsetof(VoiceHandle, unknown44) == 0x44, "");
 static_assert(offsetof(VoiceHandle, unknown88) == 0x88, "");
+static_assert(offsetof(VoiceHandle, unknown658) == 0x658, "");
+static_assert(offsetof(VoiceHandle, unknown668) == 0x668, "");
 static_assert(offsetof(VoiceHandle, unknown70) == 0x70, "");
 static_assert(offsetof(VoiceHandle, unknown6f0) == 0x6f0, "");
 static_assert(offsetof(VoiceHandle, unknown669) == 0x669, "");

@@ -83,6 +83,21 @@ bool SoundHandle::IsValidHandle() const {
   return core->GetVoiceHandle(unknownf8) != nullptr;
 }
 
+long SoundHandle::Pause(bool isPause, f32 fadeTime) {
+  if (!unknown58 || unknown30 == nullptr) {
+    return -5;
+  }
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  if (core == nullptr) {
+    return -12;
+  }
+  VoiceHandle *voice = core->GetVoiceHandle(unknownf8);
+  if (voice == nullptr) {
+    return -29;
+  }
+  return set_result(voice->Pause(isPause, fadeTime));
+}
+
 long SoundHandle::Stop(f32 fadeTime) {
   SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
   if (core == nullptr) {

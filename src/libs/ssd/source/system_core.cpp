@@ -369,7 +369,36 @@ SoundCategory *SystemCore::GetCategory(int id) const {
   return unknown478;
 }
 
+void SystemCore::ChangeCategoryEvent(const SoundCategory &category) {
+  unknown708.Lock();
+  VoiceHandle *it = unknown3a0.unknown002();
+  while (it != unknown3a0.unknown003()) {
+    SoundHandle *handle = it->unknown58;
+    if (handle != nullptr && handle->unknown50.unknown00 == category.unknown08.unknown00) {
+      handle->unknown50 = category.unknown08;
+    }
+    it = List<VoiceHandle>::unknown004(it);
+  }
+  unknown708.Unlock();
+}
+
+Result SystemCore::AddSoundEffecter(u8 bus, SoundEffecter *effecter) {
+  unknown708.Lock();
+  Result result = InitEffect(bus, effecter);
+  unknown708.Unlock();
+  return result;
+}
+
+Result SystemCore::RemoveSoundEffecter(SoundEffecter *effecter) {
+  unknown708.Lock();
+  Result result = QuitEffect(effecter);
+  unknown708.Unlock();
+  return result;
+}
+
 const void *SystemCore::GetDebugInfo() const { return &debugInfo_; }
+
+template class BehaviorInstance<SystemCore>;
 
 template List<BehaviorControl>::Node::~Node();
 

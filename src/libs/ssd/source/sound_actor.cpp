@@ -80,6 +80,10 @@ SoundHandle *SoundActor::GetPlaySoundHandle(int index) const { return static_cas
 
 void SoundActor::UpdateGameFrame(f32 deltaTime) {}
 
+SoundActor3D::SoundActor3D() : SoundActor(ObjectType::SOUND_ACTOR_3D), unknown50(0.0f, 0.0f, 0.0f), unknown68(true), unknown69(false), unknown6a(false), unknown6b(false), m_listener(nullptr) {
+  unknown32 = true;
+}
+
 SoundActor3D::~SoundActor3D() {}
 
 Result SoundActor3D::Init() {

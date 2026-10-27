@@ -5,6 +5,7 @@
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_delegate.h"
 #include "ssd/ssd_result.h"
+#include "ssd/ssd_text.h"
 #include "types.h"
 
 namespace ssd {
@@ -59,7 +60,7 @@ public:
 class SoundActor : public Object, public List<SoundActor>::Node {
 public:
   SoundActor();
-  SoundActor(ObjectType::Id type);
+  SoundActor(ObjectType::Id type) : Object(type), unknown30(false), unknown31(false), unknown32(false), unknown33(false), unknown34(false), m_pitch(1.0f), m_volume(1.0f), unknown40(0) {}
   virtual ~SoundActor();
   virtual Result Init();
   virtual Result Quit();
@@ -79,10 +80,12 @@ public:
   bool unknown30; // Inferred role: init; original member name unknown.
   bool unknown31; // Inferred role: connect; original member name unknown.
   bool unknown32; // Inferred role: is3 d; original member name unknown.
-  u8 _33[0x38 - 0x33];
+  bool unknown33; // Inferred role: cleared by the constructor; original member name unknown.
+  bool unknown34; // Inferred role: cleared by the constructor; original member name unknown.
+  u8 _35[0x38 - 0x35];
   f32 m_pitch;
   f32 m_volume;
-  u8 _40[0x44 - 0x40];
+  u32 unknown40; // Inferred role: cleared by the constructor; original member name unknown.
 };
 
 static_assert(offsetof(SoundActor, unknown30) == 0x30, "");
@@ -106,9 +109,9 @@ public:
   Vec3 unknown44; // Inferred role: position; original member name unknown.
   Vec3 unknown50; // Inferred role: velocity; original member name unknown.
   Vec3 unknown5c; // Inferred role: prev position; original member name unknown.
-  u8 _68[0x69 - 0x68];
+  bool unknown68; // Inferred role: set by the constructor; original member name unknown.
   bool unknown69; // Inferred role: position update; original member name unknown.
-  u8 _6a[0x6b - 0x6a];
+  bool unknown6a; // Inferred role: cleared by the constructor; original member name unknown.
   bool unknown6b; // Inferred role: velocity update; original member name unknown.
   const SoundListener *m_listener;
 };
@@ -168,16 +171,20 @@ public:
   int GetReferenceCounter() const;
   int NumSoundEntry() const;
   int GetNumber() const;
+  const TextRef &GetName() const;
+  Result Init(int number, const TextRef &name);
   SoundGroup *GetSoundGroup(int id) const;
   Result Stop(f32 fadeTime);
 
   int m_number;
-  u8 _34[0xe0 - 0x34];
+  u8 _34[0x38 - 0x34];
+  TextFixed<64> unknown38;        // Inferred role: name; original member name unknown.
   List<SoundEntry> unknowne0;     // Inferred role: sound entries; original member name unknown.
   Array<SoundGroup *> unknown108; // Inferred role: sound groups; original member name unknown.
 };
 
 static_assert(offsetof(SoundBank, m_number) == 0x30, "");
+static_assert(offsetof(SoundBank, unknown38) == 0x38, "");
 static_assert(offsetof(SoundBank, unknowne0) == 0xe0, "");
 static_assert(offsetof(SoundBank, unknown108) == 0x108, "");
 
@@ -287,8 +294,9 @@ public:
   void ClearDelegate();
   void ClearDelegateImpl();
 
-  u8 _00[0x38 - 0x00];
-  SoundActor *unknown38; // Inferred role: sound actor; original member name unknown.
+  u8 _00[0x30 - 0x00];
+  const SoundEntry *unknown30; // Inferred role: sound entry; original member name unknown.
+  SoundActor *unknown38;       // Inferred role: sound actor; original member name unknown.
   u8 _40[0x50 - 0x40];
   SoundCategory::unknown001 unknown50; // Inferred role: category parameters; original member name unknown.
   bool unknown58;                      // Inferred role: valid; original member name unknown.
