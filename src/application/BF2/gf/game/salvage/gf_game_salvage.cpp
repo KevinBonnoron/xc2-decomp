@@ -9,8 +9,13 @@
 #include "gf/event/gf_evt_model.h"
 #include "gf/game/event/gf_game_event.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_speed.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/gf_allocator.h"
+#include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/request/gf_req_scom.h"
 
 namespace gf {
@@ -240,6 +245,52 @@ bool GfGameSalvage::isValidModel() {
 void GfGameSalvage::setModelTransform(const mm::Vec3 &position, f32 rotation) {
   if (unknownc0 != nullptr) {
     unknownc0->setTransform(position, rotation);
+  }
+}
+
+static const char *const unknown001[] = {"S_idle",
+                                         "C_salvage",
+                                         "C_success",
+                                         "C_greatsuccess",
+                                         "C_failure",
+                                         "C_result_00",
+                                         "C_result_01",
+                                         "C_result_02",
+                                         "C_result_03",
+                                         "C_result_04",
+                                         "C_result_05"}; // Inferred role: animation names of AnimationType; original name unknown.
+
+GfComAsm *GfGameSalvage::getGfComAsm() const {
+  if (unknownc0 == nullptr) {
+    return nullptr;
+  }
+  GfObjAcc acc(unknownc0->unknown20);
+  if (acc.isValid()) {
+    GfObj *obj = acc.getObj();
+    if (obj == nullptr) {
+      return nullptr;
+    }
+    return obj->getComponent<GfComAsm>();
+  }
+  return nullptr;
+}
+
+void GfGameSalvage::playAnimation(AnimationType animation) {
+  GfComAsm *comAsm = getGfComAsm();
+  if (comAsm != nullptr) {
+    const char *name = unknown001[animation];
+    if (name[0] == 'S') {
+      comAsm->setState(name, ANIM_LAYER_BASE);
+    } else {
+      comAsm->execCmd(name, ANIM_LAYER_BASE);
+    }
+  }
+}
+
+void GfGameSalvage::playClimbReady() {
+  if (unknownc0 != nullptr && unknownc0->unknown20 != INVALID_HANDLE) {
+    playAnimation(m_climbAnimationType);
+    GfGameSpeed::setSalvageCharacterSpeed(0.01f);
   }
 }
 

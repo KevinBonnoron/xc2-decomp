@@ -110,6 +110,9 @@ public:
   static void startSignal(GfSequentialPlaySignal *signal);
   static void endSignal(GfSequentialPlaySignal *signal);
   bool isExistEvent(u32 event) const;
+  int getRequestEvent() const;
+  bool isExistPauseType(GfPlayCom *command, u32 pauseBits) const;
+  bool isExistState(GfPlayCom *command, GF_STATE state) const;
   static const char *getFuncName();
 
   mm::mtl::FixedList<GfPlayCom *, 256> unknown08;          // Inferred role: commands; original member name unknown.

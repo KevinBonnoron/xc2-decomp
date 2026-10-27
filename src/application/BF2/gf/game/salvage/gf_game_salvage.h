@@ -21,6 +21,7 @@ namespace gf {
 struct GAME_VOICE_HANDLE;
 class GfMenuCallContext;
 struct GF_OBJ_HANDLE;
+class GfComAsm;
 class GfEvtModelSalvage;
 class GfGameSalvage;
 struct GfSetupParam;
@@ -300,6 +301,8 @@ public:
   void createModel();
   void destroyModel();
   bool isValidModel();
+  GfComAsm *getGfComAsm() const;
+  void playAnimation(AnimationType animation);
   bool isAnimationEnd() const;
   void setModelTransform(const mm::Vec3 &position, f32 rotation);
   void setPartyDisp(bool isDisp);

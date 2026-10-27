@@ -33,4 +33,6 @@ u16 GfAppend::getMountIndex() const { return m_mountIndex; }
 
 u16 GfAppend::getRscID() const { return m_rscID; }
 
+void GfAppendWire::startWire(GF_OBJ_HANDLE *target, f32 time) { startWireWithClose(target, time, 0.0f, 0.0f); }
+
 } // namespace gf
