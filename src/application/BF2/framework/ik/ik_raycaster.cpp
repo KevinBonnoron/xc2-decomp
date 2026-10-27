@@ -24,4 +24,8 @@ bool Raycaster::castRay(const mm::Vec3 &start, const mm::Vec3 &end, mm::Vec3 *po
   return result.isHit;
 }
 
+PlaneRayCaster::PlaneRayCaster() : unknown08(nullptr) {}
+
+void PlaneRayCaster::bind(IKFootGroundInterface &ground) { unknown08 = &ground; }
+
 } // namespace fw

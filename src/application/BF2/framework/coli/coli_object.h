@@ -136,6 +136,7 @@ public:
   bool isChar() const;
   bool isPhantom() const;
   void setMatrix(const mm::Mat44 &matrix);
+  void setInstantlyMatrix(const mm::Mat44 &matrix);
   const mm::Mat44 &getMatrix() const;
   int getPriority() const;
   bool isGrand() const;

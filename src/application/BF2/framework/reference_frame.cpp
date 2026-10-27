@@ -1,7 +1,9 @@
 #include "framework/reference_frame.h"
 
+#include "anm/anm_qs_transform.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec4.h"
 
 namespace fw {
 
@@ -12,8 +14,10 @@ ReferenceFrame::ReferenceFrame() : unknowna0(0), unknowna8(nullptr) {
   unknown40.unknown10 = mm::Quat::identity;
   unknown60 = mm::Mat44::identity;
   unknowna0 |= FLAG_LOCAL_SYNCED | FLAG_WORLD_SYNCED | FLAG_MATRIX_SYNCED;
-  _c8 = nullptr;
-  _d0 = nullptr;
+  unknownc8 = 0.0f;
+  unknowncc = 0.0f;
+  unknownd0 = 0.0f;
+  unknownd4 = 0.0f;
 }
 
 ReferenceFrame::~ReferenceFrame() { ; }
@@ -60,6 +64,12 @@ void ReferenceFrame::syncWorldTransform() {
 
 void Transform::mul(const Transform &transform, const Transform &other, Transform *result) {
   result->unknown00 = transform.unknown00 + transform.unknown10.rotate(other.unknown00);
+  result->unknown10 = mm::Quat::mul(other.unknown10, transform.unknown10);
+}
+
+void TransformUtil::mul(const Transform &transform, const anm::QsTransform &other, f32 scale, Transform *result) {
+  mm::Vec3 translation(other.unknown00.x, other.unknown00.y, other.unknown00.z);
+  result->unknown00 = transform.unknown00 + transform.unknown10.rotate(translation) * scale;
   result->unknown10 = mm::Quat::mul(other.unknown10, transform.unknown10);
 }
 

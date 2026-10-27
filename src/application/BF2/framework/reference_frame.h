@@ -49,14 +49,18 @@ public:
   u32 unknowna0;                                    // Inferred role: flags; original member name unknown.
   ReferenceFrame *unknowna8;                        // Inferred role: parent; original member name unknown.
   mm::mtl::IntrusiveList<ReferenceFrame> unknownb0; // Inferred role: children; original member name unknown.
-  void *_c8;
-  void *_d0;
+  f32 unknownc8;                                    // Inferred role: scale x; original member name unknown.
+  f32 unknowncc;                                    // Inferred role: scale y; original member name unknown.
+  f32 unknownd0;                                    // Inferred role: scale z; original member name unknown.
+  f32 unknownd4;
 };
 
 static_assert(offsetof(ReferenceFrame, unknown20) == 0x20, "");
 static_assert(offsetof(ReferenceFrame, unknown60) == 0x60, "");
 static_assert(offsetof(ReferenceFrame, unknowna0) == 0xa0, "");
 static_assert(offsetof(ReferenceFrame, unknownb0) == 0xb0, "");
+static_assert(offsetof(ReferenceFrame, unknownc8) == 0xc8, "");
+static_assert(offsetof(ReferenceFrame, unknownd0) == 0xd0, "");
 static_assert(sizeof(ReferenceFrame) == 0xe0, "");
 
 class TransformUpdater : public mm::mtl::IntrusiveListNode<TransformUpdater> {

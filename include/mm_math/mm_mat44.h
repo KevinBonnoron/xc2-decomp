@@ -67,6 +67,26 @@ struct alignas(16) Mat44 {
     rows[3][2] = pos.z;
   }
 
+  // Inferred helper: identity rotation with the given translation; original name unknown.
+  void unknown007(const Vec3 &pos) {
+    rows[0][0] = 1.0f;
+    rows[0][1] = 0.0f;
+    rows[0][2] = 0.0f;
+    rows[0][3] = 0.0f;
+    rows[1][0] = 0.0f;
+    rows[1][1] = 1.0f;
+    rows[1][2] = 0.0f;
+    rows[1][3] = 0.0f;
+    rows[2][0] = 0.0f;
+    rows[2][1] = 0.0f;
+    rows[2][2] = 1.0f;
+    rows[2][3] = 0.0f;
+    rows[3][0] = pos.x;
+    rows[3][1] = pos.y;
+    rows[3][2] = pos.z;
+    rows[3][3] = 1.0f;
+  }
+
   // Inferred from AttachActorBase::get{Mtp,Efp,Bone}MatGlobal
   // (1.0.0: 0x710009e7b8, 0x710009ed2c, 0x710009f2a0).
   // Product order: local * attachment transform; original helper names unknown.

@@ -40,4 +40,12 @@ static_assert(offsetof(ReferenceObject, unknown08) == 0x08, "");
 static_assert(offsetof(ReferenceObject, unknown0a) == 0x0a, "");
 static_assert(offsetof(ReferenceObject, m_pAllocator) == 0x10, "");
 
+// Inferred helper: releases a reference and clears the pointer; original name unknown.
+template <typename T> void unknown001(T *&object) {
+  if (object != nullptr) {
+    object->release();
+    object = nullptr;
+  }
+}
+
 } // namespace anm

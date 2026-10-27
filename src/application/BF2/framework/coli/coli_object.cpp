@@ -194,6 +194,50 @@ void ColiObject::resetCharacter(f32 radius, f32 height) {
   }
 }
 
+void ColiObject::setMatrix(const mm::Mat44 &matrix) {
+  f32 scale = unknowne0;
+  m_matrix = matrix;
+  mm::Mat44 world;
+  world.unknown006(matrix);
+  for (u32 row = 0; row < 3; row++) {
+    for (u32 column = 0; column < 3; column++) {
+      world.rows[row][column] = scale * world.rows[row][column];
+    }
+  }
+  world = unknown60 * world;
+  if (m_coliObject != nullptr) {
+    if (m_coliObject->unknown24 == idcoli::OBJ_TYPE_CHARACTER) {
+      idcoli::IDColiParmsCharacter params(m_coliObject);
+      params.setMatrix(world);
+    } else if (m_coliObject->unknown24 == idcoli::OBJ_TYPE_PHANTOM) {
+      idcoli::IDColiParmsPhantom params(m_coliObject);
+      params.setMatrix(world);
+    }
+  }
+}
+
+void ColiObject::setInstantlyMatrix(const mm::Mat44 &matrix) {
+  f32 scale = unknowne0;
+  m_matrix = matrix;
+  mm::Mat44 world;
+  world.unknown006(matrix);
+  for (u32 row = 0; row < 3; row++) {
+    for (u32 column = 0; column < 3; column++) {
+      world.rows[row][column] = scale * world.rows[row][column];
+    }
+  }
+  world = unknown60 * world;
+  if (m_coliObject != nullptr) {
+    if (m_coliObject->unknown24 == idcoli::OBJ_TYPE_CHARACTER) {
+      idcoli::IDColiParmsCharacter params(m_coliObject);
+      params.setInstantlyMatrix(world);
+    } else if (m_coliObject->unknown24 == idcoli::OBJ_TYPE_PHANTOM) {
+      idcoli::IDColiParmsPhantom params(m_coliObject);
+      params.setInstantlyMatrix(world);
+    }
+  }
+}
+
 ColiObject::ColiObject() : m_coliObject(nullptr), unknown34(0), unknown50(nullptr), unknown58(nullptr), unknowne0(1.0f), unknowne8(nullptr) {
   unknown60 = mm::Mat44::identity;
   m_matrix = mm::Mat44::identity;
