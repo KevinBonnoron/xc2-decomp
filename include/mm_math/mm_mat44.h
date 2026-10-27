@@ -68,7 +68,7 @@ struct alignas(16) Mat44 {
   }
 
   // Inferred helper: identity rotation with the given translation; original name unknown.
-  void unknown007(const Vec3 &pos) {
+  void unknown007(Vec3 pos) {
     rows[0][0] = 1.0f;
     rows[0][1] = 0.0f;
     rows[0][2] = 0.0f;

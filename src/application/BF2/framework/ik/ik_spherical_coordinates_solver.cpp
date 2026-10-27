@@ -4,6 +4,7 @@
 #include "anm/anm_skeleton.h"
 #include "framework/memory/allocator.h"
 #include "framework/memory/framework_memory.h"
+#include "framework/reflection.h"
 #include "mm_math/mm_math.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/reference_object.h"
@@ -36,6 +37,20 @@ bool SphericalCoordinatesIkSolver::setupLimit(const ParamAdapter &param, const c
   }
 
   return false;
+}
+
+void SphericalCoordinatesIkSolver::AngleLimit::createReflection(Reflection *reflection, const char *name, u32 index) {
+#line 19
+  ReflectionValueStruct *value = new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueStruct(name, sizeof(AngleLimit));
+#line 20
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("limitAngleUp", offsetof(AngleLimit, limitAngleUp), 0.0f, 90.0f, 30.0f));
+#line 21
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("limitAngleDown", offsetof(AngleLimit, limitAngleDown), 0.0f, 90.0f, 65.0f));
+#line 22
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("limitAngleLeft", offsetof(AngleLimit, limitAngleLeft), 0.0f, 180.0f, 180.0f));
+#line 23
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("limitAngleRight", offsetof(AngleLimit, limitAngleRight), 0.0f, 180.0f, 180.0f));
+  reflection->setReflectionStruct(index, value);
 }
 
 SphericalCoordinatesIkSolver::SphericalCoordinatesIkSolver() : m_enable(false), unknown78() {}

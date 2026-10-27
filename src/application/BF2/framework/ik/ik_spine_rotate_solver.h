@@ -19,9 +19,24 @@ class Pose;
 namespace fw {
 
 class ReferenceFrame;
+class Reflection;
 
 class SpineRotateIKSolver : public IkFadeSolver {
 public:
+  struct Param {
+    f32 minYaw0;
+    f32 maxYaw0;
+    f32 minPitch0;
+    f32 maxPitch0;
+    f32 minYaw1;
+    f32 maxYaw1;
+    f32 minPitch1;
+    f32 maxPitch1;
+    f32 ratio;
+
+    static void createReflection(Reflection *reflection, const char *name, u32 index);
+  };
+
   static mm::mtl::RTTI m_rtti;
 
   static SpineRotateIKSolver *create(const ParamAdapter &param, const char *boneName, const char *endBoneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose);

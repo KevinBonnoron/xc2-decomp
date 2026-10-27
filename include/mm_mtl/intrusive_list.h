@@ -83,6 +83,14 @@ public:
     MM_ASSERT(m_size >= 0);
   }
 
+  // __LINE__ must be 170 as in the original header: it is the line argument of the assert.
+#line 167
+  void pop_front() {
+    unlinkNode(m_head.unknown00);
+    m_size--;
+    MM_ASSERT(m_size >= 0);
+  }
+
   // __LINE__ must be 231 as in the original header: it is the line argument of the assert.
 #line 230
   void push_back(T *ptr) {

@@ -15,13 +15,16 @@ class RTTI;
 
 namespace fw {
 class ParamAdapter;
+class Reflection;
 
 class FootPlacementIKSolver : public IkSolver {
 public:
   struct Param {
-    f32 unknown00; // Inferred role: unknown; original member name unknown.
-    f32 unknown04; // Inferred role: raycast distance offset; original member name unknown.
-    f32 unknown08; // Inferred role: raycast distance offset; original member name unknown.
+    f32 unknown00; // Reflected as "maxAnkleHeight"; original member name unknown.
+    f32 unknown04; // Reflected as "raisedAnkleOffset"; original member name unknown.
+    f32 unknown08; // Reflected as "plantedAnkleOffset"; original member name unknown.
+
+    static void createReflection(Reflection *reflection, const char *name, u32 index);
   };
 
   static mm::mtl::RTTI m_rtti;

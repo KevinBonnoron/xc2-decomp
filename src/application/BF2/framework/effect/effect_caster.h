@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "eflib/effect_callback.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
@@ -87,7 +88,7 @@ static_assert(offsetof(EffectCasterBase, unknown10) == 0x10, "");
 static_assert(offsetof(EffectCasterBase, unknown20) == 0x20, "");
 static_assert(offsetof(EffectCasterBase, unknown3c) == 0x3c, "");
 
-class EffectCasterSend : public mm::mtl::IntrusiveListNode<EffectCasterSend> {
+class EffectCasterSend : public effect::IEffectCallBack, public mm::mtl::IntrusiveListNode<EffectCasterSend> {
 public:
   static const u32 BUFFER_NUM = 2;
 

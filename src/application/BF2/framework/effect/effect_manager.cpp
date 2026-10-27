@@ -7,6 +7,7 @@
 #include "dr/dr_mdl_base.h"
 #include "dr/dr_mdl_obj.h"
 #include "dr/dr_mdo_grp_obj.h"
+#include "eflib/effect_send_param.h"
 #include "eflib/effect_system_manager.h"
 #include "framework/effect/effect_caster.h"
 #include "framework/effect/effect_data.h"
@@ -14,8 +15,11 @@
 #include "framework/framework.h"
 #include "ml/dev_file_th.h"
 #include "mm_math/mm_col3.h"
+#include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/reference_object.h"
 #include "mtl/mem_manager.h"
 
 namespace ptlib {
@@ -238,6 +242,40 @@ u32 EffectManager::create(void *data, bool isLoop) {
 
 u32 EffectManager::create(void *data, const effect::SendParam *param, bool isLoop) { return effect::SystemManager::getPtr()->es_create(data, param, isLoop); }
 
+u32 EffectManager::create(void *data, const mm::Mat44 &matrix, const mm::Vec3 &scale, bool isLoop) {
+  effect::SendParam param;
+  param.unknown00 = matrix;
+  param.unknown60 = scale;
+  return effect::SystemManager::getPtr()->es_create(data, &param, isLoop);
+}
+
+EffectManager::KizunaWork::~KizunaWork() { term(); }
+
+void EffectManager::KizunaWork::term() {
+  if (unknown468 != nullptr) {
+    unknown468->setDisp(false);
+    unknown468->setDeleteCall(ml::DrMan::s_nDblStockIdx);
+    unknown468 = nullptr;
+  }
+  for (u32 i = 0; i < unknown002; i++) {
+    u32 handle = unknown3f0[i];
+    if (handle != 0) {
+      effect::SystemManager::getPtr()->es_fade_core(nullptr, handle, -1);
+      unknown3f0[i] = 0;
+    }
+  }
+}
+
+void EffectManager::create(void *data, EffectCasterBase *caster, int category, f32 scale, bool isLoop) {
+  effect::SendParam param;
+  param.unknown60 = mm::Vec3(scale, scale, scale);
+  effect::SystemManager::getPtr()->es_create(data, &param, getCaster(caster), 0, category, isLoop);
+}
+
+void EffectManager::create(void *data, const effect::SendParam *param, EffectCasterBase *caster, int category, bool isLoop) {
+  effect::SystemManager::getPtr()->es_create(data, param, getCaster(caster), 0, category, isLoop);
+}
+
 void EffectManager::kill(u32 handle) {
   if (handle != 0) {
     effect::SystemManager::getPtr()->es_fade_core(nullptr, handle, 1);
@@ -309,6 +347,125 @@ void EffectManager::setParamPosOnly2(u32 handle, const effect::SendParam *param)
 void EffectManager::setParam(u32 handle, const effect::SendParam *param) {
   if (handle != 0) {
     effect::SystemManager::getPtr()->es_set_param(handle, param);
+  }
+}
+
+void EffectManager::setParam(u32 handle, const mm::Mat44 &matrix, const mm::Vec3 &scale, u8 unknown) {
+  effect::SendParam param;
+  param.unknown00 = matrix;
+  param.unknown60 = scale;
+  param.unknown40 = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
+  param.unknowna5 = unknown;
+  effect::SystemManager::getPtr()->es_set_param(handle, &param);
+}
+
+void EffectManager::setParam(u32 handle, const mm::Vec3 &position, const mm::Vec3 &scale) {
+  effect::SendParam param;
+  param.unknown00.unknown007(position);
+  param.unknown60 = scale;
+  param.unknown40 = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
+  effect::SystemManager::getPtr()->es_set_param(handle, &param);
+}
+
+void EffectManager::setParam(u32 handle, const mm::Vec3 &position, f32 scale) {
+  effect::SendParam param;
+  param.unknown00.unknown007(position);
+  param.unknown84 = scale;
+  param.unknown40 = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
+  effect::SystemManager::getPtr()->es_set_param(handle, &param);
+}
+
+void EffectManager::setParam(u32 handle, EffectCasterBase *caster, int category, f32 scale) {
+  effect::SendParam param;
+  param.unknown60 = mm::Vec3(scale, scale, scale);
+  param.unknown40 = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
+  effect::SystemManager::getPtr()->es_set_param(handle, &param, getCaster(caster), 0, category);
+}
+
+void EffectManager::setParam(u32 handle, EffectCasterBase *caster, f32 scale) {
+  if (handle == 0) {
+    return;
+  }
+
+  effect::SystemManager *manager = effect::SystemManager::getPtr();
+  if (caster == nullptr) {
+    manager->es_set_param_cas(handle, nullptr, "", 2, scale, 0);
+  } else {
+    manager->es_set_param_cas(handle, getCaster(caster), "", 2, scale, 0);
+  }
+}
+
+void EffectManager::setParam(u32 handle, EffectCasterBase *caster, const mm::Mat44 &matrix) {
+  if (handle != 0) {
+    effect::SendParam param;
+    param.unknown00 = matrix;
+    effect::SystemManager *manager = effect::SystemManager::getPtr();
+    if (caster == nullptr) {
+      manager->es_set_param_cas(handle, nullptr, &param);
+    } else {
+      manager->es_set_param_cas(handle, getCaster(caster), &param);
+    }
+  }
+}
+
+void EffectManager::setParam(u32 handle, EffectCasterBase *caster, const mm::Vec3 &position) {
+  if (handle != 0) {
+    effect::SendParam param;
+    param.unknown00.unknown007(position);
+    effect::SystemManager *manager = effect::SystemManager::getPtr();
+    if (caster == nullptr) {
+      manager->es_set_param_cas(handle, nullptr, &param);
+    } else {
+      manager->es_set_param_cas(handle, getCaster(caster), &param);
+    }
+  }
+}
+
+void EffectManager::setMatrix(u32 handle, const mm::Mat44 &matrix) {
+  if (handle != 0) {
+    effect::SendParam param;
+    param.unknown00 = matrix;
+    effect::SystemManager::getPtr()->es_set_param_pos_only(handle, &param);
+  }
+}
+
+void EffectManager::destroyKizunaLine(u32 handle) {
+  if (handle != 0 && handle < unknown002) {
+    unknown353e0[handle].unknown459 = 0;
+    unknown353e0[handle].unknown10 = mm::Vec3::zero;
+    unknown353e0[handle].unknown20 = mm::Vec3::zero;
+    if (unknown353e0[handle].unknown468 != nullptr) {
+      unknown353e0[handle].unknown468->setDisp(false);
+    }
+    for (u32 i = 0; i < KizunaWork::unknown002; i++) {
+      u32 effectHandle = unknown353e0[handle].unknown3f0[i];
+      if (effectHandle != 0) {
+        effect::SystemManager::getPtr()->es_fade_core(nullptr, effectHandle, -1);
+        unknown353e0[handle].unknown3f0[i] = 0;
+      }
+    }
+  }
+}
+
+void EffectManager::setDispAllKizunaLine(bool isDisp) {
+  for (u32 i = 1; i < unknown002; i++) {
+    if (unknown353e0[i].unknown459 != 0) {
+      unknown353e0[i].unknown45a = isDisp;
+    }
+  }
+}
+
+void EffectManager::updateKizunaLine(u32 handle, const mm::Vec3 &start, const mm::Vec3 &end, u32 level) {
+  if (handle != 0 && handle < unknown002) {
+    unknown353e0[handle].unknown10 = start;
+    if (level == 0) {
+      level = 1;
+    }
+    if (level > 6) {
+      level = 6;
+    }
+    unknown353e0[handle].unknown20 = end;
+    unknown353e0[handle].unknown04 = level;
   }
 }
 
@@ -606,6 +763,17 @@ void EffectManager::destroyHateRingVec(u32 handle) { remove(handle); }
 u32 EffectManager::createHateArrow() { return create("cmn_000_002", nullptr, true); }
 
 void EffectManager::destroyHateArrow(u32 handle) { remove(handle); }
+
+bool EffectManager::updateComboBall(u32 handle, const mm::Vec3 &position, const f32 &scale) {
+  effect::SendParam param;
+  param.unknown60.x = scale;
+  param.unknown00.unknown007(position);
+  if (handle != 0) {
+    effect::SystemManager::getPtr()->es_set_param(handle, &param);
+  }
+
+  return true;
+}
 
 u32 EffectManager::createComboBall(u32 level) {
   if (level == 0) {

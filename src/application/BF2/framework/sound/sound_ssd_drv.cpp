@@ -1,5 +1,6 @@
 #include "framework/sound/sound_ssd_drv.h"
 
+#include <math.h>
 #include <string.h>
 
 #include "framework/sound/sound_driver.h"
@@ -13,10 +14,7 @@
 #include "mm_mtl/hash.h"
 #include "mtl/mem_manager.h"
 #include "ssd/ssd_sound_core.h"
-
-namespace ssd {
-class SoundListener;
-} // namespace ssd
+#include "ssd/ssd_sound_listener.h"
 
 namespace fw {
 enum SoundCategory : int;
@@ -226,6 +224,37 @@ void SoundSsdDriver::applyCategoryVolume(SoundCategory category, f32 volume) {}
 bool SoundSsdDriver::isValid() const { return unknown10 != nullptr; }
 
 const mm::Mat44 &SoundSsdDriver::getListeningPoint() const { return unknown30; }
+
+SoundPoolMemory *SoundSsdDriver::findPoolMemory(void *pointer, u32 size) const {
+  for (mm::mtl::FixedList<SoundPoolMemory *, 256>::const_iterator it = unknown8f0.begin(); it != unknown8f0.end(); ++it) {
+    SoundPoolMemory *memory = *it;
+    if (memory->unknown00 == pointer && memory->unknown10 == size) {
+      return memory;
+    }
+  }
+
+  return nullptr;
+}
+
+void SoundSsdDriver::setListeningPoint(const mm::Mat44 &matrix) {
+  if (unknown10 != nullptr && unknown28 != nullptr) {
+    unknown28->SetPosition(ssd::Vec3(matrix.rows[3][0], matrix.rows[3][1], matrix.rows[3][2]));
+    mm::Vec3 forward(matrix.rows[0][0] * 0.0f + matrix.rows[1][0] * 0.0f - matrix.rows[2][0],
+                     matrix.rows[0][1] * 0.0f + matrix.rows[1][1] * 0.0f - matrix.rows[2][1],
+                     matrix.rows[0][2] * 0.0f + matrix.rows[1][2] * 0.0f - matrix.rows[2][2]);
+    f32 length = sqrtf(forward.x * forward.x + forward.y * forward.y + forward.z * forward.z);
+    if (length <= 0.000001f) {
+      forward = mm::Vec3::zero;
+    } else {
+      f32 scale = 1.0f / length;
+      forward.x = forward.x * scale;
+      forward.y = forward.y * scale;
+      forward.z = scale * forward.z;
+    }
+    unknown28->SetOrientation(ssd::Vec3(forward.x, forward.y, forward.z), ssd::Vec3(0.0f, 1.0f, 0.0f));
+    unknown30 = matrix;
+  }
+}
 
 bool SoundSsdSource::isLoop() const {
   if (unknown10 != nullptr) {

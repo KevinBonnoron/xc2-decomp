@@ -19,6 +19,7 @@ class RTTI;
 namespace fw {
 
 class ReferenceFrame;
+class Reflection;
 
 class SphericalCoordinatesIkSolver : public IkSolver {
 public:
@@ -27,6 +28,8 @@ public:
     f32 limitAngleDown;
     f32 limitAngleLeft;
     f32 limitAngleRight;
+
+    static void createReflection(Reflection *reflection, const char *name, u32 index);
   };
 
   static mm::mtl::RTTI m_rtti;

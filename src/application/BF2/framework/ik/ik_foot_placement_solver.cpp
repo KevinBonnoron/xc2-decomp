@@ -1,5 +1,9 @@
 #include "framework/ik/ik_foot_placement_solver.h"
 
+#include "framework/memory/allocator.h"
+#include "framework/memory/framework_memory.h"
+#include "framework/reflection.h"
+
 #include "anm/anm_foot_placement_ik_solver.h"
 #include "anm/anm_pose.h"
 #include "anm/anm_qs_transform.h"
@@ -9,6 +13,18 @@
 #include "mm_math/mm_vec4.h"
 
 namespace fw {
+
+void FootPlacementIKSolver::Param::createReflection(Reflection *reflection, const char *name, u32 index) {
+#line 26
+  ReflectionValueStruct *value = new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueStruct(name, sizeof(Param));
+#line 27
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("maxAnkleHeight", offsetof(Param, unknown00), 0.0f, 90.0f, 0.7f));
+#line 28
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("raisedAnkleOffset", offsetof(Param, unknown04), 0.0f, 90.0f, 0.3f));
+#line 29
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("plantedAnkleOffset", offsetof(Param, unknown08), 0.0f, 90.0f, 0.1f));
+  reflection->setReflectionStruct(index, value);
+}
 
 FootPlacementIKSolver::~FootPlacementIKSolver() {
   if (unknown20 != nullptr) {

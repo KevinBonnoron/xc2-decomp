@@ -21,10 +21,20 @@ class RTTI;
 namespace fw {
 
 class ReferenceFrame;
+class Reflection;
 
 // Only the members read by LookIkSolver are declared; the original member names are unknown.
 class LookAtIkSolver : public IkFadeSolver {
 public:
+  struct BoxLimit {
+    f32 limitAngleUp;
+    f32 limitAngleDown;
+    f32 limitAngleLeft;
+    f32 limitAngleRight;
+
+    static void createReflection(Reflection *reflection, const char *name, u32 index);
+  };
+
   static mm::mtl::RTTI m_rtti;
 
   static LookAtIkSolver *create(const ParamAdapter &param, const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose);

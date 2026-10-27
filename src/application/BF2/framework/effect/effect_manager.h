@@ -1,7 +1,6 @@
 #pragma once
-#include <stddef.h>
-
 #include <functional>
+#include <stddef.h>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -10,9 +9,12 @@
 #include "framework/effect/effect_caster.h" // IWYU pragma: keep
 #include "framework/manager_object.h"
 #include "ml/stl_custom_allocator.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_list.h"
+#include "mm_mtl/intrusive_ptr.h"
+#include "mm_mtl/reference_object.h" // IWYU pragma: keep
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 #include "ptlib/forcefield/particle_force_field.h"
@@ -22,7 +24,6 @@
 namespace mm {
 struct Mat44;
 struct Col4;
-struct Vec3;
 
 namespace mtl {
 class IAllocator;
@@ -30,6 +31,7 @@ class IAllocator;
 } // namespace mm
 
 namespace ml {
+class DrMdlObj;
 class Scn;
 } // namespace ml
 
@@ -50,6 +52,7 @@ class EffectManager : public mm::mtl::PtrSingleton<EffectManager>, public Manage
 public:
   static const u32 LAYER_MAX = 32;
   static const u32 COMMON_EFFECT_MAX = 128;
+  static const u32 unknown002 = 8; // Inferred role: kizuna line slot count, slot 0 is unused; original name unknown.
 
   struct CasterGroup {
     mm::mtl::IntrusiveList<EffectCasterSend> unknown00; // Inferred role: casters; original member name unknown.
@@ -58,6 +61,37 @@ public:
   struct CommonEffect {
     RenderResource *unknown00; // Inferred role: resource; original member name unknown.
     EffectPack *unknown08;     // Inferred role: pack; original member name unknown.
+  };
+
+  class KizunaWork {
+  public:
+    static const u32 unknown001 = 20; // Inferred role: rope point count; original name unknown.
+    static const u32 unknown002 = 8;  // Inferred role: effect handle count; original name unknown.
+
+    ~KizunaWork();
+    void term();
+
+    f32 unknown00; // Inferred role: gravity; original member name unknown.
+    u32 unknown04; // Inferred role: line level; original member name unknown.
+    u8 _08[0x10 - 0x08];
+    mm::Vec3 unknown10;              // Inferred role: start position; original member name unknown.
+    mm::Vec3 unknown20;              // Inferred role: end position; original member name unknown.
+    mm::Vec3 unknown30[unknown001];  // Inferred role: rope points; original member name unknown.
+    mm::Vec3 unknown170[unknown001]; // Inferred role: previous rope points; original member name unknown.
+    mm::Vec3 unknown2b0[unknown001]; // Inferred role: rope velocities; original member name unknown.
+    u32 unknown3f0[unknown002];      // Inferred role: effect handles; original member name unknown.
+    mm::Vec3 unknown410;             // Inferred role: previous start position; original member name unknown.
+    mm::Vec3 unknown420;             // Inferred role: previous end position; original member name unknown.
+    u8 _430[0x440 - 0x430];
+    mm::Vec3 unknown440;                                        // Inferred role: default offset; original member name unknown.
+    f32 unknown450;                                             // Inferred role: rope length; original member name unknown.
+    f32 unknown454;                                             // Inferred role: phase; original member name unknown.
+    u8 unknown458;                                              // Inferred role: counter; original member name unknown.
+    u8 unknown459;                                              // Role and original member name unknown.
+    u8 unknown45a;                                              // Role and original member name unknown.
+    u8 unknown45b;                                              // Inferred role: reset flag; original member name unknown.
+    mm::mtl::IntrusivePtr<mm::mtl::ReferenceObject> unknown460; // Inferred role: unknown reference object; original type and member name unknown.
+    ml::DrMdlObj *unknown468;                                   // Inferred role: model; original member name unknown.
   };
 
   typedef std::unordered_map<std::string, EffectPack *, std::hash<std::string>, std::equal_to<std::string>, ml::StlCustomAllocator<std::pair<const std::string, EffectPack *>>> PackMap;
@@ -98,10 +132,15 @@ public:
   u32 create(const char *name, EffectPack *pack, const effect::SendParam *param, bool isLoop);
   u32 create(void *data, bool isLoop);
   u32 create(void *data, const effect::SendParam *param, bool isLoop);
+  u32 create(void *data, const mm::Mat44 &matrix, const mm::Vec3 &scale, bool isLoop);
+  void create(void *data, EffectCasterBase *caster, int category, f32 scale, bool isLoop);
+  void create(void *data, const effect::SendParam *param, EffectCasterBase *caster, int category, bool isLoop);
   void kill(u32 handle);
   void remove(u32 handle);
   void dead(u32 handle);
   void destroyKizunaLine(u32 handle);
+  void setDispAllKizunaLine(bool isDisp);
+  void updateKizunaLine(u32 handle, const mm::Vec3 &start, const mm::Vec3 &end, u32 level);
   void fadeOutDead(u32 handle);
   void fadeOutDead(u32 handle, u32 frame);
   void setDisp(u32 handle, bool isDisp);
@@ -112,6 +151,12 @@ public:
   void setParamPosOnly(u32 handle, const effect::SendParam *param);
   void setParamPosOnly2(u32 handle, const effect::SendParam *param);
   void setParam(u32 handle, const effect::SendParam *param);
+  void setParam(u32 handle, const mm::Mat44 &matrix, const mm::Vec3 &scale, u8 unknown);
+  void setParam(u32 handle, const mm::Vec3 &position, f32 scale);
+  void setParam(u32 handle, EffectCasterBase *caster, int category, f32 scale);
+  void setParam(u32 handle, EffectCasterBase *caster, const mm::Mat44 &matrix);
+  void setParam(u32 handle, EffectCasterBase *caster, const mm::Vec3 &position);
+  void setMatrix(u32 handle, const mm::Mat44 &matrix);
   void setParam(u32 handle, EffectCasterBase *caster, f32 scale);
   void setParam(u32 handle, const mm::Vec3 &position, const mm::Vec3 &scale);
   void setSignal(u32 handle);
@@ -166,6 +211,7 @@ public:
   u32 createHateArrow();
   void destroyHateArrow(u32 handle);
   u32 createComboBall(u32 level);
+  bool updateComboBall(u32 handle, const mm::Vec3 &position, const f32 &scale);
   void destroyComboBall(u32 handle);
   void setPerfLoggingCsv(bool isLogging);
   void begin() override;
@@ -190,8 +236,23 @@ public:
   u8 _27c0[0x2fd5 - 0x27c0];
   bool unknown2fd5; // Inferred role: master pause; original member name unknown.
   bool unknown2fd6; // Inferred role: finalizing; original member name unknown.
+  u8 _2fd7[0x353e0 - 0x2fd7];
+  KizunaWork unknown353e0[unknown002]; // Inferred role: kizuna lines; original member name unknown.
+  u8 _37760[0x37980 - 0x37760];
 };
 
+static_assert(offsetof(EffectManager::KizunaWork, unknown10) == 0x10, "");
+static_assert(offsetof(EffectManager::KizunaWork, unknown30) == 0x30, "");
+static_assert(offsetof(EffectManager::KizunaWork, unknown170) == 0x170, "");
+static_assert(offsetof(EffectManager::KizunaWork, unknown2b0) == 0x2b0, "");
+static_assert(offsetof(EffectManager::KizunaWork, unknown3f0) == 0x3f0, "");
+static_assert(offsetof(EffectManager::KizunaWork, unknown410) == 0x410, "");
+static_assert(offsetof(EffectManager::KizunaWork, unknown440) == 0x440, "");
+static_assert(offsetof(EffectManager::KizunaWork, unknown450) == 0x450, "");
+static_assert(offsetof(EffectManager::KizunaWork, unknown458) == 0x458, "");
+static_assert(offsetof(EffectManager::KizunaWork, unknown460) == 0x460, "");
+static_assert(offsetof(EffectManager::KizunaWork, unknown468) == 0x468, "");
+static_assert(sizeof(EffectManager::KizunaWork) == 0x470, "");
 static_assert(sizeof(EffectManager::CasterGroup) == 0x18, "");
 static_assert(offsetof(EffectManager, unknown2c) == 0x2c, "");
 static_assert(offsetof(EffectManager, unknown38) == 0x38, "");
@@ -201,5 +262,7 @@ static_assert(offsetof(EffectManager, unknown350) == 0x350, "");
 static_assert(offsetof(EffectManager, unknown1fb8) == 0x1fb8, "");
 static_assert(offsetof(EffectManager, unknown2fd5) == 0x2fd5, "");
 static_assert(offsetof(EffectManager, unknown2fd6) == 0x2fd6, "");
+static_assert(offsetof(EffectManager, unknown353e0) == 0x353e0, "");
+static_assert(sizeof(EffectManager) == 0x37980, "");
 
 } // namespace fw

@@ -16,6 +16,20 @@ CameraLayer::~CameraLayer() {}
 
 void CameraLayer::setup(ml::Scn *scn, u32 index) { unknown38 = scn->getCam(index); }
 
+void CameraLayer::cleanup() {
+  while (!unknown08.empty()) {
+    Camera *camera = unknown08.begin().get();
+    onPopCamera(*camera);
+    unknown08.pop_front();
+    camera->release();
+  }
+  while (!unknown20.empty()) {
+    CameraPlugin *plugin = unknown20.begin().get();
+    unknown20.pop_front();
+    plugin->release();
+  }
+}
+
 void CameraLayer::onPopCamera(Camera &camera) {
   camera.onPop();
   camera.unknowna0 = false;

@@ -21,9 +21,21 @@ class RTTI;
 namespace fw {
 
 class ReferenceFrame;
+class Reflection;
 
 class SpineIkSolver : public IkFadeSolver {
 public:
+  struct Param {
+    f32 angleThreasold0;
+    f32 angleThreasold1;
+    f32 response0;
+    f32 response1;
+    f32 limitAngle0;
+    f32 limitAngle1;
+
+    static void createReflection(Reflection *reflection, const char *name, u32 index);
+  };
+
   static mm::mtl::RTTI m_rtti;
 
   static SpineIkSolver *create(const ParamAdapter &param, const char *boneName, const char *endBoneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose);

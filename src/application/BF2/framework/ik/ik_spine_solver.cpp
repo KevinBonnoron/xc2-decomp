@@ -3,10 +3,31 @@
 #include "anm/anm_pose.h"
 #include "anm/anm_qs_transform.h"
 #include "anm/anm_skeleton.h"
+#include "framework/memory/allocator.h"
+#include "framework/memory/framework_memory.h"
+#include "framework/reflection.h"
 #include "mm_math/mm_math.h"
 #include "mm_mtl/intrusive_ptr.h"
 
 namespace fw {
+
+void SpineIkSolver::Param::createReflection(Reflection *reflection, const char *name, u32 index) {
+#line 21
+  ReflectionValueStruct *value = new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueStruct(name, sizeof(Param));
+#line 22
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("angleThreasold0", offsetof(Param, angleThreasold0), 0.0f, 180.0f, 20.0f));
+#line 23
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("angleThreasold1", offsetof(Param, angleThreasold1), 0.0f, 180.0f, 20.0f));
+#line 24
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("response0", offsetof(Param, response0), 0.0f, 10.0f, 0.5f));
+#line 25
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("response1", offsetof(Param, response1), 0.0f, 10.0f, 0.5f));
+#line 26
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("limitAngle0", offsetof(Param, limitAngle0), 0.0f, 180.0f, 90.0f));
+#line 27
+  value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("limitAngle1", offsetof(Param, limitAngle1), 0.0f, 180.0f, 90.0f));
+  reflection->setReflectionStruct(index, value);
+}
 
 bool SpineIkSolver::setupLimit(const ParamAdapter &param, const char *boneName, const char *endBoneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose) {
   bind(frame, pose);

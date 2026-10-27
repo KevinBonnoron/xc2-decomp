@@ -15,6 +15,7 @@ struct DrDrawWorkInfoEF;
 
 namespace effect {
 
+class IEffectCallBack;
 struct SendParam;
 
 class SystemManager {
@@ -73,6 +74,10 @@ public:
   void es_set_speed(u32 handle, f32 speed);
   void es_set_viewnum(u32 handle, int viewnum);
   u32 es_create(void *data, const SendParam *param, bool isLoop);
+  u32 es_create(void *data, const SendParam *param, const IEffectCallBack *callback, int unknown, int category, bool isLoop);
+  void es_set_param(u32 handle, const SendParam *param, const IEffectCallBack *callback, int unknown, int category);
+  void es_set_param_cas(u32 handle, const IEffectCallBack *callback, const SendParam *param);
+  void es_set_param_cas(u32 handle, const IEffectCallBack *callback, const char *name, int unknown, f32 value, int category);
   CommandList *getCommand(u32 index);
   f32 getGlobalSpeed();
   void es_set_disp(u32 handle, int isDisp);

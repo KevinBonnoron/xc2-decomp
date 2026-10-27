@@ -5,6 +5,7 @@
 #include "framework/sound/sound_driver.h"
 #include "ml/critical_section.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_ptr.h"
@@ -56,6 +57,17 @@ static_assert(offsetof(SoundCategoryData, unknown48) == 0x48, "");
 static_assert(offsetof(SoundCategoryData, unknown4c) == 0x4c, "");
 static_assert(sizeof(SoundCategoryData) == 0x68, "");
 
+struct SoundPoolMemory {
+  void *unknown00; // Inferred role: pool memory address; original member name unknown.
+  u8 _08[0x10 - 0x08];
+  u32 unknown10; // Inferred role: pool memory size; original member name unknown.
+  u32 unknown14; // Inferred role: state; original member name unknown.
+};
+
+static_assert(offsetof(SoundPoolMemory, unknown10) == 0x10, "");
+static_assert(offsetof(SoundPoolMemory, unknown14) == 0x14, "");
+static_assert(sizeof(SoundPoolMemory) == 0x18, "");
+
 class SoundSsdDriver : public ISoundDriver, public mm::mtl::PtrSingleton<SoundSsdDriver> {
 public:
   static const u32 CATEGORY_COUNT = 18;
@@ -92,6 +104,8 @@ public:
   void applyCategoryVolume(SoundCategory category, f32 volume);
   bool isValid() const;
   const mm::Mat44 &getListeningPoint() const;
+  SoundPoolMemory *findPoolMemory(void *pointer, u32 size) const;
+  void setListeningPoint(const mm::Mat44 &matrix);
   SoundCategoryData *findCategory(SoundCategory category);
   const SoundCategoryData *findCategory(SoundCategory category) const;
   void removeCategory(SoundCategory category);
@@ -146,7 +160,8 @@ public:
   SoundCategoryData unknowne8[CATEGORY_COUNT]; // Inferred role: categories; original member name unknown.
   mm::mtl::List<SoundSsdBank *> unknown838;    // Inferred role: banks; original member name unknown.
   u8 _878[0x8b8 - 0x878];
-  PointerMap unknown8b8; // Inferred role: players; original member name unknown.
+  PointerMap unknown8b8;                                 // Inferred role: players; original member name unknown.
+  mm::mtl::FixedList<SoundPoolMemory *, 256> unknown8f0; // Inferred role: pool memories; original member name unknown.
 };
 
 static_assert(offsetof(SoundSsdDriver::SoundAllocator, unknown08) == 0x08, "");
@@ -161,6 +176,8 @@ static_assert(offsetof(SoundSsdDriver, unknowne8) == 0xe8, "");
 static_assert(sizeof(SoundCategoryData[SoundSsdDriver::CATEGORY_COUNT]) == 0x750, "");
 static_assert(offsetof(SoundSsdDriver, unknown838) == 0x838, "");
 static_assert(offsetof(SoundSsdDriver, unknown8b8) == 0x8b8, "");
+static_assert(offsetof(SoundSsdDriver, unknown8f0) == 0x8f0, "");
+static_assert(sizeof(mm::mtl::FixedList<SoundPoolMemory *, 256>) == 0x1220, "");
 
 class SoundReferenceObject {
 public:

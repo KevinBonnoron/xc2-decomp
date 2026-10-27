@@ -13,6 +13,12 @@ template class ReflectionValuePod<f32, static_cast<ValueType>(6)>;
 template class ReflectionValuePod<int, static_cast<ValueType>(5)>;
 template class ReflectionValuePod<u32, static_cast<ValueType>(2)>;
 
+void ReflectionValueStruct::writeDefault(u8 *data) const {
+  for (mm::mtl::IntrusiveList<ReflectionValue>::iterator it = unknown78.begin(); it != unknown78.end(); ++it) {
+    it.get()->writeDefault(data);
+  }
+}
+
 void ReflectionValueFlag::writeDefaultFlag(u32 &flags) const {
   if (unknown7c) {
     flags |= unknown78;
