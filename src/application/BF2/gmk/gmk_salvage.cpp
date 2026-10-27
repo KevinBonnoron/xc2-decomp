@@ -63,6 +63,10 @@ bool GmkSalvage::BdatInfo::isCondMatched() const {
   return true;
 }
 
+GmkSalvage::GmkSalvage()
+    : unknown48(nullptr), unknown58(gf::INVALID_HANDLE), unknown60(0.0f), unknown64(0.0f), unknown68(), unknown88(), unknownA8(nullptr), unknownB0(), unknownd0(0), unknownd8(), unknown128(true),
+      unknown129(false) {}
+
 GmkType GmkSalvage::getGmkType() const { return GMK_TYPE; }
 
 int GmkSalvage::getGameFlagId() const { return unknown20.unknown18 + 0x2e1c; }

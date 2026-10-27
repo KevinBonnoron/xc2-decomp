@@ -30,6 +30,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_LANDMARK;
 
+  GmkLandmark();
   ~GmkLandmark() override;
   GmkType getGmkType() const override;
   int getGameFlagId() const;

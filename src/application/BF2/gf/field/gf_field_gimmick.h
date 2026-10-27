@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/field/gf_mob_slot_manager.h"
 #include "types.h"
 
 namespace event {
@@ -14,6 +15,7 @@ struct UpdateInfo;
 namespace gmk {
 f32 getMobPopDistSq();
 void resetMobPopDistSq();
+bool addFailedPopDistSq(f32 distSq);
 bool isMapJumpingWithSaveData();
 } // namespace gmk
 
@@ -33,6 +35,7 @@ private:
   friend class event::EnvManager;
   friend f32 gmk::getMobPopDistSq();
   friend void gmk::resetMobPopDistSq();
+  friend bool gmk::addFailedPopDistSq(f32 distSq);
   friend bool gmk::isMapJumpingWithSaveData();
 
   u8 _00[0xf4ac];
@@ -41,11 +44,9 @@ private:
   bool unknownf4ae; // Role and original member name unknown.
   u8 _f4af[0xf4b0 - 0xf4af];
   u32 unknownf4b0; // Role and original member name unknown.
-  u8 _f4b4[0xfe30 - 0xf4b4];
-  void *unknownfe30; // Role and original member name unknown.
-  f32 unknownfe38;   // Inferred role: squared mob pop distance; original member name unknown.
-  u8 _fe3c[0xfe40 - 0xfe3c];
-  bool unknownfe40; // Inferred role: map jumping with save data; original member name unknown.
+  u8 _f4b4[0xf910 - 0xf4b4];
+  GfMobSlotManager unknownf910; // Inferred role: mob slot manager; original member name unknown.
+  bool unknownfe40;             // Inferred role: map jumping with save data; original member name unknown.
   u8 _fe41[0xfe50 - 0xfe41];
 
   friend struct GfFieldGimmickLayout;
@@ -53,8 +54,7 @@ private:
 
 struct GfFieldGimmickLayout {
   static_assert(offsetof(GfFieldGimmick, unknownf4ac) == 0xf4ac, "");
-  static_assert(offsetof(GfFieldGimmick, unknownfe30) == 0xfe30, "");
-  static_assert(offsetof(GfFieldGimmick, unknownfe38) == 0xfe38, "");
+  static_assert(offsetof(GfFieldGimmick, unknownf910) == 0xf910, "");
   static_assert(offsetof(GfFieldGimmick, unknownfe40) == 0xfe40, "");
   static_assert(sizeof(GfFieldGimmick) == 0xfe50, "");
 };

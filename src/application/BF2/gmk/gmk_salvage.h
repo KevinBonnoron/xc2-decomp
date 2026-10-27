@@ -70,6 +70,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_SALVAGE;
 
+  GmkSalvage();
   ~GmkSalvage() override { dispose(); }
   GmkType getGmkType() const override;
   int getGameFlagId() const;
@@ -100,7 +101,8 @@ public:
   mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknown88; // Inferred role: treasure box locators; original member name unknown.
   void *unknownA8;                                        // Role and original member name unknown.
   mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknownB0; // Inferred role: enemy locators; original member name unknown.
-  u8 _d0[0xd8 - 0xd0];
+  u16 unknownd0;                                          // Role and original member name unknown.
+  u8 _d2[0xd8 - 0xd2];
   RaffleResult unknownd8; // Inferred role: raffle result; original member name unknown.
   bool unknown128;        // Inferred role: display enabled; original member name unknown.
   bool unknown129;        // Inferred role: request to sync the depop of the treasure boxes; original member name unknown.
@@ -117,6 +119,7 @@ static_assert(offsetof(GmkSalvage, unknown68) == 0x68, "");
 static_assert(offsetof(GmkSalvage, unknown88) == 0x88, "");
 static_assert(offsetof(GmkSalvage, unknownA8) == 0xa8, "");
 static_assert(offsetof(GmkSalvage, unknownB0) == 0xb0, "");
+static_assert(offsetof(GmkSalvage, unknownd0) == 0xd0, "");
 static_assert(offsetof(GmkSalvage, unknownd8) == 0xd8, "");
 static_assert(offsetof(GmkSalvage, unknown128) == 0x128, "");
 static_assert(offsetof(GmkSalvage, unknown129) == 0x129, "");

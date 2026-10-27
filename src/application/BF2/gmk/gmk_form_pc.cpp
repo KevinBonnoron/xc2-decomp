@@ -46,4 +46,9 @@ template class TGmkFormPc<GMK_TYPE_FORM_PC_EV, TGmkFormPcnpc<GMK_TYPE_FORM_PCNPC
 
 template bool GmkForm::create<GmkFormPc, GmkFormPcnpc>(const GmkFormPc &);
 
+template void GmkFormPcnpcList::createGmk(void *);
+template void GmkFormPcnpcEvList::createGmk(void *);
+template void GmkFormPcList::createGmk(void *);
+template void GmkFormPcEvList::createGmk(void *);
+
 } // namespace gmk

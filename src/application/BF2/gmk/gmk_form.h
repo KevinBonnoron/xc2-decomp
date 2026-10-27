@@ -25,6 +25,7 @@ public:
   void dispose();
   void getPosRotY(mm::Vec3 &position, f32 &rotationY, u32 index) const;
   void validatePosRotY();
+  void apply(f32 snapDistance);
 
   u32 unknown00;               // Inferred role: number of members; original member name unknown.
   mm::Vec3 unknown10[MAX_NUM]; // Inferred role: positions; original member name unknown.

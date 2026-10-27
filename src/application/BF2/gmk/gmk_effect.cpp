@@ -17,6 +17,10 @@ namespace gmk {
 template bool TGmkList<GmkEffect, GmkEffect::BdatInfo, 1413695045u, 8u, GmkEffectGobCustom>::initGmkBdatInfo(GmkEffect::BdatInfo &, int &, const AGmkBase &);
 template bool TGmkList<GmkEffectLocator, GmkEffectLocator::BdatInfo, 1129072197u, 1u, GmkEffectLocatorGob>::initGmkBdatInfo(GmkEffectLocator::BdatInfo &, int &, const AGmkBase &);
 
+GmkEffect::GmkEffect()
+    : unknown48(0), unknown90(nullptr), unknownA0(nullptr), unknownA8(false), unknownAC(0), unknownB0(true), unknownB8_0(false), unknownB8_1(false), unknownB8_2(false), unknownB8_3(0),
+      unknownC0(false), unknownC1(false) {}
+
 void GmkEffect::debugDraw() const { isValid(); }
 
 void GmkEffect::debugUpdateMmf() {}

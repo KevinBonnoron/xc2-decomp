@@ -72,6 +72,7 @@ public:
 
 class TimeCond {
 public:
+  TimeCond() : unknown08(0xffff) {}
   virtual ~TimeCond() {}
   bool isEnable() const { return unknown08 != 0; }
   bool isMatch() const;
@@ -83,6 +84,7 @@ static_assert(offsetof(TimeCond, unknown08) == 0x8, "");
 
 class WeatherCond {
 public:
+  WeatherCond() : unknown08(0xff) {}
   virtual ~WeatherCond() {}
   bool isEnable() const { return unknown08 != 0; }
   bool isMatch() const;
@@ -99,6 +101,7 @@ public:
     TYPE_CLOUD_SEA = 1,
   };
 
+  CloudCond() : unknown08(static_cast<Type>(-1)) {}
   virtual ~CloudCond() {}
   bool isMatch() const;
 
@@ -109,6 +112,7 @@ static_assert(offsetof(CloudCond, unknown08) == 0x8, "");
 
 class InOutDoorCond {
 public:
+  InOutDoorCond() : unknown08(true), unknown09(true) {}
   virtual ~InOutDoorCond() {}
   bool isMatch() const;
 

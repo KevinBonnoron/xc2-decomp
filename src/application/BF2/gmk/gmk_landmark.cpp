@@ -33,6 +33,8 @@ bool GmkLandmark::BdatInfo::isCondMatched() const {
   return true;
 }
 
+GmkLandmark::GmkLandmark() : unknown60(nullptr), unknownF0(false), unknownF1(false) {}
+
 GmkType GmkLandmark::getGmkType() const { return GMK_TYPE; }
 
 void GmkLandmark::create(const CreateInfo &info) { AGmkBase::create(info); }

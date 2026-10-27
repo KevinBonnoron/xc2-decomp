@@ -21,14 +21,19 @@
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/field/gf_field_gimmick.h"
+#include "gf/field/gf_field_lod.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
+#include "gf/field/gf_mob_slot_manager.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/quest/gf_quest_target.h"
 #include "gf/game/quest/gf_quest_util.h"
+#include "gf/game/sequential_play/gf_play_factory.h"
+#include "gf/menu/gf_menu_common_window_param.h"
+#include "gf/object/component/behavior/gf_com_behavior_npc.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/gimmick/gf_com_behavior_gmk.h"
 #include "gf/object/component/model/gf_com_model.h"
@@ -656,6 +661,13 @@ bool getYSnapPos(mm::Vec3 &result, const mm::Vec3 &position, f32 distance) {
   return getYSnapPos(result, position, distance, config);
 }
 
+void reqDrawCmnMsg(u32 messageId) {
+  gf::MenuCommonWindowParam param;
+  param.unknown10 = gf::GfDataBdat::getFP(gf::BDAT_FLD_HELPMS);
+  param.unknown18 = messageId;
+  gf::GfPlayFactory::createCommonMessage(param);
+}
+
 int getCapaOfGmkDmgPhantomTargetInfo() {
   int capacity = gf::GfObjManager::getGfObjCapacity(gf::OBJECT_TYPE_ENEMY);
   return capacity > 0 ? capacity + 3 : 3;
@@ -678,7 +690,7 @@ f32 getMobPopDistSq() {
   if (gimmick == nullptr) {
     return 1e12f;
   }
-  return gimmick->unknownfe38;
+  return gimmick->unknownf910.unknown528;
 }
 
 void resetMobPopDistSq() {
@@ -686,10 +698,34 @@ void resetMobPopDistSq() {
   if (gimmick == nullptr) {
     return;
   }
-  if (gimmick->unknownfe30 != nullptr) {
-    gimmick->unknownfe30 = nullptr;
+  if (gimmick->unknownf910.unknown520 != 0) {
+    gimmick->unknownf910.unknown520 = 0;
   }
-  gimmick->unknownfe38 = 1e12f;
+  gimmick->unknownf910.unknown528 = 1e12f;
+}
+
+bool addFailedPopDistSq(f32 distSq) {
+  gf::GfFieldGimmick *gimmick = mm::mtl::PtrSingleton<gf::GfFieldGimmick>::get();
+  if (gimmick == nullptr) {
+    return false;
+  }
+  return gimmick->unknownf910.addFailedPopDistSq(distSq);
+}
+
+u32 getBindedFsId(const AGmkBase &gmk) {
+  GmkType type = gmk.getGmkType();
+  if (type == GMK_TYPE_TBOX) {
+    const GmkTbox &tbox = static_cast<const GmkTbox &>(gmk);
+    const char *column = "FSID";
+    if (tbox.getBdatInfo()->unknown02 && tbox.getProgress() == GmkTbox::PROGRESS_CLOSED) {
+      column = "FSID2";
+    }
+    return Bdat::getValCheck(gmk.getBindedBdatFp(), column, gmk.unknown20.unknown18, BDAT_TYPE_U16);
+  }
+  if (type == GMK_TYPE_JUMP || type == GMK_TYPE_WARP || type == GMK_TYPE_MAP_GIMMICK) {
+    return Bdat::getValCheck(gmk.getBindedBdatFp(), "FSID", gmk.unknown20.unknown18, BDAT_TYPE_U16);
+  }
+  return 0;
 }
 
 bool isMapJumpingWithSaveData() {
@@ -755,6 +791,36 @@ bool isEnemyPopCondOfQuestMatched(u16 enemy) {
     return false;
   }
   return remain > static_cast<int>(gf::GfGameUtil::getObjNumberByEnArrangeId(enemy));
+}
+
+bool canDepop(gf::GF_OBJ_HANDLE *handle) {
+  gf::GfObjAcc acc(handle);
+  gf::GfObj *obj = acc.getObj();
+  if (obj != nullptr) {
+    if (obj->unknown28 == gf::OBJECT_TYPE_ENEMY) {
+      if (acc.isBattle()) {
+        return false;
+      }
+    } else if (obj->unknown28 == gf::OBJECT_TYPE_NPC) {
+      gf::GfComBehaviorNpc *behavior = obj->getComponent<gf::GfComBehaviorNpc>();
+      if (behavior != nullptr && behavior->unknown100) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+void applyLodFade(u16 lodId, bool isImmediate) {
+  const gf::GfFieldLod::unknown001 *info = gf::GfFieldLod::get()->findBdatInfo(lodId);
+  if (info == nullptr) {
+    return;
+  }
+  if (info->unknown04 > 0.0f) {
+    gf::GfFieldLod::get()->setFade(lodId, true, isImmediate);
+  } else if (info->unknown08 > 0.0f) {
+    gf::GfFieldLod::get()->setFade(lodId, false, isImmediate);
+  }
 }
 
 u32 getDefeatedNum(int enemy) { return gf::GfDataEnemy::getEnemySuppress(enemy); }

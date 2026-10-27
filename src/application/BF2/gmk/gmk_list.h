@@ -260,7 +260,7 @@ protected:
   const LvbChunk *gobInfoChunk;
   GobInfo *gobInfos;
   const LvbChunk *gmkChunk;
-  const u8 *gmkData;
+  u8 *gmkData;
   const char *strings;
   u8 *bdatFp;
   void (TGmkList::*seq)(f32);

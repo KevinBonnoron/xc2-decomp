@@ -49,6 +49,10 @@ public:
   };
 
   struct BdatInfo {
+    BdatInfo()
+        : unknown00(0), unknown02(0), unknown04(0), unknown06(0), unknown08(0), unknown0a(0), unknown0c(0), unknown0e(0), unknown10(0), unknown12(0, 0),
+          unknown16(static_cast<u16>(0), static_cast<u8>(0), static_cast<u8>(0)), unknown30(), unknown38() {}
+
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     void debugDraw(const AGmkBase &gmk) const;
     bool isMobPopDistCondMatched(const mm::Vec3 &position) const;
@@ -70,6 +74,10 @@ public:
   };
 
   struct PopInfo {
+    PopInfo()
+        : unknown00(100), unknown01(100), unknown02(100), unknown03(100), unknown04(0), unknown08(0), unknown0c(0), unknown0e(0), unknown10(0), unknown12(0), unknown14(0), unknown40(0),
+          unknown44(false) {}
+
     void dispose();
 
     u8 unknown00;                           // Inferred role: scale min; original member name unknown.
@@ -88,6 +96,7 @@ public:
     bool unknown44;                         // Inferred role: has squad; original member name unknown.
   };
 
+  GmkMobInsts();
   void validateDisp(gf::GF_OBJ_HANDLE *handle) const;
   void validateDisp() const;
   bool isValid() const;

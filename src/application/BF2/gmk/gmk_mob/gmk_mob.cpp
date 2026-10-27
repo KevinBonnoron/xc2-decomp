@@ -58,6 +58,8 @@ void GmkMobInsts::PopInfo::dispose() {
   unknown18.clear();
 }
 
+GmkMobInsts::GmkMobInsts() : unknowna0(true), unknowna8(nullptr), unknownb0(nullptr), unknownb8(0), unknownc0(nullptr) {}
+
 void GmkMobInsts::validateDisp(gf::GF_OBJ_HANDLE *handle) const {
   AGmkBase *gmk = getBindedGmkInst(handle);
   if (gmk == nullptr) {
@@ -201,6 +203,20 @@ void GmkMob::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *han
     }
     unknown48.removeGobInst(handle);
   }
+}
+
+void GmkMob::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  GmkMobInsts::UpdateInfo info;
+  PopXformFinder finder;
+  finder.unknown08 = this;
+  info.unknown00 = deltaTime;
+  info.unknown08 = &unknown08.unknown08->unknown00;
+  info.unknown10 = &finder;
+  unknown48.update(info);
 }
 
 GmkType GmkMob::getGmkType() const { return GMK_TYPE; }

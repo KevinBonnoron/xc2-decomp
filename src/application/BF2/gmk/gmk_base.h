@@ -93,7 +93,7 @@ public:
     CreateInfo() : unknown00(0), unknown08(nullptr), unknown10(nullptr), unknown18(-1) {}
 
     u32 unknown00;            // Inferred role: version; original member name unknown.
-    const void *unknown08;    // Inferred role: data; original member name unknown.
+    void *unknown08;          // Inferred role: data; original member name unknown.
     const GmkInfo *unknown10; // Inferred role: info; original member name unknown.
     int unknown18;            // Inferred role: bdat index; original member name unknown.
   };

@@ -30,6 +30,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_EFFECT;
 
+  GmkEffect();
   ~GmkEffect() override { dispose(); }
   GmkType getGmkType() const override;
   void create(const CreateInfo &info) override;
@@ -49,7 +50,11 @@ public:
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
-  u8 _48[0x90 - 0x48];
+  u64 unknown48;                     // Role and original member name unknown.
+  TimeCond unknown50;                // Inferred role: time cond; original member name unknown.
+  WeatherCond unknown60;             // Inferred role: weather cond; original member name unknown.
+  InOutDoorCond unknown70;           // Inferred role: indoor and outdoor cond; original member name unknown.
+  CloudCond unknown80;               // Inferred role: cloud sea cond; original member name unknown.
   void (GmkEffect::*unknown90)(f32); // Inferred role: sequence; original member name unknown.
   void *unknownA0;                   // Role and original member name unknown.
   bool unknownA8;                    // Role and original member name unknown.
@@ -57,16 +62,21 @@ public:
   u32 unknownAC;  // Role and original member name unknown.
   bool unknownB0; // Role and original member name unknown.
   u8 _b1[0xb8 - 0xb1];
-  u64 unknownB8_0 : 1; // Role and original member name unknown.
-  u64 unknownB8_1 : 1; // Inferred role: can pop; original member name unknown.
-  u64 unknownB8_2 : 1; // Inferred role: can depop; original member name unknown.
-  u64 : 61;
-  bool unknownC0; // Role and original member name unknown.
-  bool unknownC1; // Inferred role: fade out inst; original member name unknown.
+  u64 unknownB8_0 : 1;  // Role and original member name unknown.
+  u64 unknownB8_1 : 1;  // Inferred role: can pop; original member name unknown.
+  u64 unknownB8_2 : 1;  // Inferred role: can depop; original member name unknown.
+  u64 unknownB8_3 : 61; // Role and original member name unknown.
+  bool unknownC0;       // Role and original member name unknown.
+  bool unknownC1;       // Inferred role: fade out inst; original member name unknown.
   u8 _c2[0xc8 - 0xc2];
 };
 
 static_assert(sizeof(GmkEffect::BdatInfo) == 0xa, "");
+static_assert(offsetof(GmkEffect, unknown48) == 0x48, "");
+static_assert(offsetof(GmkEffect, unknown50) == 0x50, "");
+static_assert(offsetof(GmkEffect, unknown60) == 0x60, "");
+static_assert(offsetof(GmkEffect, unknown70) == 0x70, "");
+static_assert(offsetof(GmkEffect, unknown80) == 0x80, "");
 static_assert(offsetof(GmkEffect, unknown90) == 0x90, "");
 static_assert(offsetof(GmkEffect, unknownA0) == 0xa0, "");
 static_assert(offsetof(GmkEffect, unknownA8) == 0xa8, "");

@@ -101,6 +101,7 @@ static_assert(offsetof(GfObjSetupDriver, unknown70) == 0x70, "");
 class GfObjSetupBlade : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
+  static const u32 OBJECT_TYPE = OBJECT_TYPE_BLADE;
 
   u8 _5c[0x6c - 0x5c];
   int unknown6c; // Inferred role: slot; original member name unknown.

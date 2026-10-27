@@ -19,7 +19,14 @@ struct GfSetupParam;
 
 class GfFieldLod : public mm::mtl::PtrSingleton<GfFieldLod> {
 public:
+  struct unknown001 {
+    u8 _00[0x04];
+    f32 unknown04; // Inferred role: fade in speed; original member name unknown.
+    f32 unknown08; // Inferred role: fade out speed; original member name unknown.
+  };
+
   int findBdatIdByLodId(u16 lodId) const;
+  const unknown001 *findBdatInfo(int bdatId) const;
   bool isAnimReverse(int bdatId) const;
   bool isPlayAnimEnd(int bdatId) const;
   void setFade(int bdatId, bool isFadeIn, bool isImmediate);

@@ -1,6 +1,10 @@
 #pragma once
 #include "types.h"
 
+namespace mm {
+struct Vec3;
+} // namespace mm
+
 namespace gf {
 
 struct GF_OBJ_HANDLE;
@@ -19,6 +23,11 @@ public:
   static void createMapGimmick(u32 gimmick, f32 delay);
   static void createElevator(u32 gimmick, f32 delay);
   static void createSalvage(u32 gimmick, f32 delay);
+};
+
+class SCOM_OBJ_WARP_POS {
+public:
+  static void create(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation, bool isFollow);
 };
 
 class SCOM_DESTROY_GAME_OBJ {

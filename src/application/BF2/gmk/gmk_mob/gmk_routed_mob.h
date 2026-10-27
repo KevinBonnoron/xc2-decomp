@@ -23,6 +23,7 @@ class GmkRoutedMob : public GmkRoute {
 public:
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_MOB;
 
+  GmkRoutedMob();
   ~GmkRoutedMob() override;
   GmkType getGmkType() const override;
   const IGmkList *getBindedRoutePointList() const override;
