@@ -17,6 +17,7 @@ struct Vec3;
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+struct GfEnvProperty;
 
 class GfStatusProperty : public mm::mtl::ReferenceObject {
 public:
@@ -71,16 +72,17 @@ public:
   void procMsgObjectStopAutoHeal(fw::MessageObject *object, MsgObjectStopAutoHeal &message);
   void procMsgObjectLimitHP(fw::MessageObject *object, MsgObjectLimitHP &message);
 
-  GfStatusProperty *unknown10; // Inferred role: status; original member name unknown.
-  GfPropertyTarget *unknown18; // Inferred role: target; original member name unknown.
-  GfPropertyAlpha *unknown20;  // Inferred role: alpha; original member name unknown.
-  u8 _28[0x30 - 0x28];
+  GfStatusProperty *unknown10;     // Inferred role: status; original member name unknown.
+  GfPropertyTarget *unknown18;     // Inferred role: target; original member name unknown.
+  GfPropertyAlpha *unknown20;      // Inferred role: alpha; original member name unknown.
+  GfEnvProperty *unknown28;        // Inferred role: environment; original member name unknown.
   GfPropertyDebugFlags *unknown30; // Inferred role: debug flags; original member name unknown.
 };
 
 static_assert(offsetof(GfComProperty, unknown10) == 0x10, "");
 static_assert(offsetof(GfComProperty, unknown18) == 0x18, "");
 static_assert(offsetof(GfComProperty, unknown20) == 0x20, "");
+static_assert(offsetof(GfComProperty, unknown28) == 0x28, "");
 static_assert(offsetof(GfComProperty, unknown30) == 0x30, "");
 
 enum {

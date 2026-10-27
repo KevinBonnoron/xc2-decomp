@@ -14,6 +14,7 @@
 #include "gf/object/component/gf_component.h"
 #include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/property/gf_com_property.h"
+#include "gf/object/gf_append_info.h"
 #include "gf/object/gf_init_param.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
@@ -563,6 +564,30 @@ bool GfObjUtil::getMobSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slo
   }
 
   return !slots.empty();
+}
+
+GfAppendInfo *GfObjUtil::getAppendInfo(GF_OBJ_HANDLE *handle, GFATTACH attach) {
+  GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
+  GFOBJ_MOUNT *mount = info != nullptr ? &info->unknownb8[attach] : nullptr;
+  return info == nullptr ? nullptr : &mount->unknown10;
+}
+
+GfAppend *GfObjUtil::getAppend(GF_OBJ_HANDLE *handle, GFATTACH attach) {
+  bool isAlternate = false;
+  GfObjSetupWeapon *setup = getObjSetup<GfObjSetupWeapon>(handle);
+  if (setup != nullptr) {
+    isAlternate = setup->unknown78;
+  }
+  GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
+  GFOBJ_MOUNT *mount = info != nullptr ? &info->unknownb8[attach] : nullptr;
+  if (info == nullptr) {
+    return nullptr;
+  }
+  u32 index = mount->unknown08;
+  if (static_cast<s32>(index) < 0 || mount->unknown10.unknown00[isAlternate].size() <= index) {
+    return nullptr;
+  }
+  return *mount->unknown10.unknown00[isAlternate].at(index);
 }
 
 bool GfObjUtil::isTrinityBlade(GF_OBJ_HANDLE *handle) {

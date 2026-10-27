@@ -89,7 +89,9 @@ public:
   u32 unknown18; // Inferred role: rim bloom state; original member name unknown.
   f32 unknown1c; // Inferred role: rim bloom time; original member name unknown.
   f32 unknown20; // Inferred role: rim bloom duration; original member name unknown.
-  u8 _24[0x388 - 0x24];
+  f32 unknown24; // Inferred role: water depth threshold of the first swim state; original member name unknown.
+  f32 unknown28; // Inferred role: water depth threshold of the second swim state; original member name unknown.
+  u8 _2c[0x388 - 0x2c];
   fw::EffectCasterBase *unknown388; // Inferred role: effect caster; original member name unknown.
   fw::EffectPoint *unknown390;      // Inferred role: effect point; original member name unknown.
   u8 _398[0x3a0 - 0x398];
@@ -103,6 +105,8 @@ static_assert(offsetof(GfComEffectCaster, unknown14) == 0x14, "");
 static_assert(offsetof(GfComEffectCaster, unknown18) == 0x18, "");
 static_assert(offsetof(GfComEffectCaster, unknown1c) == 0x1c, "");
 static_assert(offsetof(GfComEffectCaster, unknown20) == 0x20, "");
+static_assert(offsetof(GfComEffectCaster, unknown24) == 0x24, "");
+static_assert(offsetof(GfComEffectCaster, unknown28) == 0x28, "");
 static_assert(offsetof(GfComEffectCaster, unknown388) == 0x388, "");
 static_assert(offsetof(GfComEffectCaster, unknown390) == 0x390, "");
 static_assert(offsetof(GfComEffectCaster, unknown3a0) == 0x3a0, "");

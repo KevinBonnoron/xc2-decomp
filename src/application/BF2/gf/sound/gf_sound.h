@@ -221,6 +221,10 @@ static_assert(offsetof(GfSound, unknown6690) == 0x6690, "");
 static_assert(offsetof(GfSound, unknown66d0) == 0x66d0, "");
 static_assert(sizeof(GfSound) == 0x66d8, "");
 
+extern const char *const SS_NAME_TABLE[];
+
+u32 getSoundSourceCount();
+const char *getSoundSourceFileName(u32 index);
 void bindGFSoundSource();
 void unrbindGFSoundSource();
 

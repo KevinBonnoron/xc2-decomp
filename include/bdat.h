@@ -27,6 +27,7 @@ const char *getMSText(unsigned char *bdat, int id);
 int getMSStyle(unsigned char *bdat, int id);
 const char *getSheetName(unsigned char *bdat);
 Value getVal(unsigned char *bdat, const char *name, int id);
+Value getVal(unsigned char *bdat, int column, int id);
 unsigned long getValCheck(unsigned char *bdat, const char *name, int id, int type);
 Value getValCheck(unsigned char *bdat, unsigned char *member, int id, int type);
 Value getValCheck(unsigned char *bdat, int column, int id, int type);

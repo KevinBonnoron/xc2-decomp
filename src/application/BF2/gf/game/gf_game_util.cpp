@@ -45,6 +45,7 @@
 #include "gf/game/quest/gf_quest_manager.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_append.h"
+#include "gf/object/gf_append_info.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
@@ -1298,6 +1299,18 @@ bool GfGameUtil::isDummyBlade(GF_OBJ_HANDLE *handle) {
   }
 
   return GfDataBlade::isDummyBlade(dataParamAcc.isValid() ? dataParamAcc.getBdatId() : 0);
+}
+
+GF_OBJ_HANDLE *GfGameUtil::getWeaponOwner(GF_OBJ_HANDLE *handle) {
+  GF_OBJ_HANDLE *owner = GfObjUtil::getOwner(handle);
+  GfAppendInfo *info = GfObjUtil::getAppendInfo(handle, GFATTACH_WEAPON);
+  if (info != nullptr) {
+    GfObjSetupWeapon *setup = GfObjUtil::getObjSetup<GfObjSetupWeapon>(handle);
+    if (setup != nullptr && info->unknown00[1].size() != 0 && !setup->unknown118.unknown80) {
+      return GfMountManager::getHandle(owner, GFATTACH_WEAPON, OPTMNT_BLADE);
+    }
+  }
+  return owner;
 }
 
 GF_OBJ_HANDLE *GfGameUtil::getDriverWeaponRight(GF_OBJ_HANDLE *handle) {

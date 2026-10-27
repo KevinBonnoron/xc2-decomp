@@ -145,6 +145,7 @@ public:
   static void setSaikaLensOff(GF_OBJ_HANDLE *handle);
   static void setSaikaLensOff();
   static bool isDummyBlade(GF_OBJ_HANDLE *handle);
+  static GF_OBJ_HANDLE *getWeaponOwner(GF_OBJ_HANDLE *handle);
   static GF_OBJ_HANDLE *getDriverWeaponRight(GF_OBJ_HANDLE *handle);
   static GF_OBJ_HANDLE *getDriverWeaponLeft(GF_OBJ_HANDLE *handle);
   static void setKosmosArts3EnableBothWeapon(GF_OBJ_HANDLE *handle, bool isEnable);

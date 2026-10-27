@@ -28,6 +28,10 @@ u32 getCategoryIndex(GF_SE_CATEGORY_HANDLE *handle) { return reinterpret_cast<u6
 
 } // namespace
 
+u32 getSoundSourceCount() { return 3; }
+
+const char *getSoundSourceFileName(u32 index) { return SS_NAME_TABLE[index]; }
+
 void SoundParam::clear() {
   unknown28 = 1.0f;
   unknown00 = 0;

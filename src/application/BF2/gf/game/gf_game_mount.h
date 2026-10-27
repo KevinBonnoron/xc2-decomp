@@ -69,6 +69,9 @@ public:
   u32 getAllWeapons() const;
   GF_OBJ_HANDLE *getAllWeapons(u32 index) const;
   void setWeaponOwner(GF_OBJ_HANDLE *owner);
+  void setScaleMount(f32 scale);
+  void attach(OPTMNT type, GF_OBJ_HANDLE *handle);
+  void detach();
 
   GF_OBJ_HANDLE *unknown10; // Inferred role: owner handle; original member name unknown.
   GfWeapon *unknown18;      // Inferred role: mounted handles; original member name unknown.

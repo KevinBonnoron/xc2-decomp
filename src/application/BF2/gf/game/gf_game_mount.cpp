@@ -1,11 +1,36 @@
 #include "gf/game/gf_game_mount.h"
 
+#include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/game/gf_game_util.h"
+#include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/gf_append.h"
+#include "gf/object/gf_append_info.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
 
 namespace gf {
+
+// Inferred role: sets the idle weapon state on every mounted weapon; original name unknown.
+static void unknown001(GfWeapon *weapon) {
+  for (u32 index = 0; index < 10; index++) {
+    GfObj *obj = GfObjUtil::getObj(weapon->getCurrentHandles()[index]);
+    if (obj != nullptr) {
+      GfComAsm *comAsm = obj->getComponent<GfComAsm>();
+      if (comAsm != nullptr) {
+        GfObjAcc acc(GfGameUtil::getWeaponOwner(obj->unknownf8));
+        mm::mtl::FixStr<32> state;
+        GfGameUtil::makeWeaponStateIdle(state, acc.getHandle(), acc.isBattle());
+        comAsm->setState(state.c_str(), ANIM_LAYER_BASE);
+      }
+    }
+  }
+}
 
 GfGameMount::~GfGameMount() {
   if (unknown18 != nullptr) {
@@ -22,6 +47,72 @@ GF_OBJ_HANDLE *GfGameMount::getHandle(OPTMNT type) {
     return unknown10;
   default:
     return INVALID_HANDLE;
+  }
+}
+
+void GfGameMount::setScaleMount(f32 scale) {
+  for (u32 index = 0; index < 10; index++) {
+    GF_OBJ_HANDLE *handle = unknown18->getCurrentHandles()[index];
+    if (handle != INVALID_HANDLE) {
+      GfObjSetup *setup = GfObjUtil::getObjSetup(handle);
+      GfAppend *append = GfObjUtil::getAppend(handle, unknown2c);
+      f32 mountScale = 1.0f;
+      if (append != nullptr) {
+        mountScale = append->unknown7c * setup->unknown40;
+      }
+      GfObjAcc acc(unknown18->getCurrentHandles()[index]);
+      acc.setModelScale(mountScale * scale);
+    }
+  }
+}
+
+void GfGameMount::detach() {
+  for (u32 index = 0; index < 10; index++) {
+    GF_OBJ_HANDLE *handle = unknown18->getCurrentHandles()[index];
+    if (handle != INVALID_HANDLE) {
+      GfObjUtil::unmountFromBone(handle);
+    }
+  }
+  if (unknown28) {
+    unknown28 = false;
+  }
+  setScaleMount(1.0f);
+}
+
+void GfGameMount::attach(OPTMNT type, GF_OBJ_HANDLE *handle) {
+  if (handle == INVALID_HANDLE) {
+    return;
+  }
+  GfAppendInfo *info = getAppendInfo();
+  if (info != nullptr && info->unknown00[1].size() != 0) {
+    u32 offset = type - OPTMNT_UNKNOWN_1;
+    bool isMain = offset < 2;
+    info->unknownb0 = !isMain;
+    unknown18->unknowna8 = !isMain;
+    GfMountManager::setAlphaMount(handle, unknown2c, 0.0f);
+    unknown001(unknown18);
+    info->unknownb0 = isMain;
+    unknown18->unknowna8 = isMain;
+    GfMountManager::setAlphaMount(handle, unknown2c, 1.0f);
+    unknown001(unknown18);
+  }
+  for (u32 index = 0; index < 10; index++) {
+    GfObjAcc acc(unknown18->getCurrentHandles()[index]);
+    if (acc.isValidModel()) {
+      GF_OBJ_HANDLE *parent = GfObjUtil::getParentHandle(acc.getHandle());
+      if (GfObjUtil::isUpdate(handle) && acc.isValidModel() && parent == INVALID_HANDLE) {
+        GfAppend *append = GfObjUtil::getAppend(acc.getHandle(), unknown2c);
+        if (append != nullptr) {
+          GfObjUtil::mountToBone(acc.getHandle(), handle, append->getBone(type));
+        }
+      }
+    }
+  }
+  if (type == OPTMNT_BLADE) {
+    GfObjAcc bladeAcc(handle);
+    if (bladeAcc.getType() == OBJECT_TYPE_BLADE) {
+      setScaleMount(GfDataBlade::getWpnScale(bladeAcc.getBladeId()));
+    }
   }
 }
 

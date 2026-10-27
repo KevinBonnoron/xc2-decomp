@@ -38,8 +38,10 @@ public:
     GF_OBJ_HANDLE *unknown00; // Inferred role: object handle; original member name unknown.
     f32 unknown08;            // Inferred role: fade time elapsed; original member name unknown.
     f32 unknown0c;            // Inferred role: fade time; original member name unknown.
-    u8 _10[0x16 - 0x10];
-    bool unknown16; // Inferred role: effect fade enabled; original member name unknown.
+    f32 unknown10;            // Inferred role: alpha of the object when the fade started; original member name unknown.
+    bool unknown14;           // Role and original member name unknown.
+    bool unknown15;           // Inferred role: entering the game; original member name unknown.
+    bool unknown16;           // Inferred role: effect fade enabled; original member name unknown.
     u8 _17[0x18 - 0x17];
   };
 
@@ -81,6 +83,13 @@ public:
   static void enterStayObject(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type);
   static void enterStayObject(GF_MOUNT_HANDLE *mountHandle);
   static void enterStayObjectMount(GF_OBJ_HANDLE *handle, GFATTACH attach);
+  void addInObj(GF_OBJ_HANDLE *handle, f32 fadeTime);
+  static void setupLeaveGameObj(GF_OBJ_HANDLE *handle, f32 fadeTime);
+  static void setupLeaveGameObjMount(GF_OBJ_HANDLE *handle, GFATTACH attach, f32 fadeTime);
+  static void enterStayObjectWithVolumeFade(GF_OBJ_HANDLE *handle);
+  static void enterStayObjectWithVolumeFade(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type);
+  static void enterStayObjectWithVolumeFade(GF_MOUNT_HANDLE *mountHandle);
+  static void enterStayObjectMountWithVolumeFade(GF_OBJ_HANDLE *handle, GFATTACH attach);
 
   u8 _08[0x10 - 0x08];
   mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> unknown10;      // Inferred role: object list; original member name unknown.

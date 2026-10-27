@@ -1,5 +1,6 @@
 #pragma once
 #include "gf/event/gf_event.h"
+#include "gf/object/gf_append_info.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_list.h"
@@ -37,9 +38,13 @@ enum {
 
 struct GFOBJ_MOUNT {
   GF_MOUNT_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
-  u8 _08[0xc8 - 0x08];
+  u32 unknown08;              // Inferred role: append index; original member name unknown.
+  u8 _0c[0x10 - 0x0c];
+  GfAppendInfo unknown10; // Inferred role: append info; original member name unknown.
 };
 
+static_assert(offsetof(GFOBJ_MOUNT, unknown08) == 0x08, "");
+static_assert(offsetof(GFOBJ_MOUNT, unknown10) == 0x10, "");
 static_assert(sizeof(GFOBJ_MOUNT) == 0xc8, "");
 
 struct GFOBJ_INFO {

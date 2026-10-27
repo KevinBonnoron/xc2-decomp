@@ -5,15 +5,18 @@
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/event/gf_event.h"
+#include "gf/game/event/gf_game_event.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_obj_enemy.h"
 #include "gf/game/gf_game_util.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/rtti.h"
 
 namespace gf {
 struct GF_MOUNT_HANDLE;
@@ -265,6 +268,82 @@ void GfGameObj::enterStayObjectMount(GF_OBJ_HANDLE *handle, GFATTACH attach) {
     u32 count = mount->getAllWeapons();
     for (u32 index = 0; index < count; index++) {
       GfObjManager::enterStayObject(mount->getAllWeapons(index));
+    }
+  }
+}
+
+void GfGameObj::enterStayObjectWithVolumeFade(GF_OBJ_HANDLE *handle) {
+  GfObjSetup *setup = GfObjUtil::getObjSetup(handle);
+  if (setup != nullptr) {
+    setup->unknown50 = 1.0f;
+    setup->unknown60 = false;
+    setup->unknown64 = VFEFF_UNKNOWN_4;
+  }
+  GfObjManager::enterStayObject(handle);
+}
+
+void GfGameObj::enterStayObjectWithVolumeFade(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type) { enterStayObjectWithVolumeFade(GfMountManager::getHandle(handle, attach, type)); }
+
+void GfGameObj::enterStayObjectMountWithVolumeFade(GF_OBJ_HANDLE *handle, GFATTACH attach) {
+  GfGameMount *mount = GfMountManager::getMount(GfObjUtil::getMountHandle(handle, attach));
+  if (mount != nullptr) {
+    u32 count = mount->getAllWeapons();
+    for (u32 index = 0; index < count; index++) {
+      enterStayObjectWithVolumeFade(mount->getAllWeapons(index));
+    }
+  }
+}
+
+void GfGameObj::enterStayObjectWithVolumeFade(GF_MOUNT_HANDLE *mountHandle) {
+  GfGameMount *mount = GfMountManager::getMount(mountHandle);
+  if (mount != nullptr) {
+    u32 count = mount->getAllWeapons();
+    for (u32 index = 0; index < count; index++) {
+      enterStayObjectWithVolumeFade(mount->getAllWeapons(index));
+    }
+  }
+}
+
+void GfGameObj::addInObj(GF_OBJ_HANDLE *handle, f32 fadeTime) {
+  GfGameEvent::applySetDispObject(handle);
+  GfObjAcc acc(handle);
+  INOUT inout;
+  inout.unknown00 = handle;
+  inout.unknown15 = true;
+  inout.unknown08 = fadeTime;
+  inout.unknown10 = acc.getAlphaLife();
+  inout.unknown14 = false;
+  inout.unknown16 = false;
+  unknown3f1d0.push_back(inout);
+  acc.setFlag(OBJ_FLAG_UNKNOWN_F, true);
+  if (acc.getType() == OBJECT_TYPE_ENEMY) {
+    acc.getObj()->setUpdateComponent(true);
+  }
+}
+
+void GfGameObj::setupLeaveGameObj(GF_OBJ_HANDLE *handle, f32 fadeTime) {
+  if (handle != INVALID_HANDLE) {
+    GfGameObj *gameObj = get();
+    GfObjAcc acc(handle);
+    if (gameObj->addOutObj(handle, fadeTime, true)) {
+      acc.setCollisionChar(false);
+      if (acc.testFlag(OBJ_FLAG_LOADED_WAIT)) {
+        if (acc.getType() == OBJECT_TYPE_BLADE) {
+          mm::mtl::dynamicCast<GfObjSetupBlade>(GfObjManager::getObjInfo(handle)->unknown30)->unknown70 = true;
+        } else if (acc.getType() == OBJECT_TYPE_PC_WEAPON) {
+          mm::mtl::dynamicCast<GfObjSetupWeapon>(GfObjManager::getObjInfo(handle)->unknown30)->unknown70 = true;
+        }
+      }
+    }
+  }
+}
+
+void GfGameObj::setupLeaveGameObjMount(GF_OBJ_HANDLE *handle, GFATTACH attach, f32 fadeTime) {
+  GfGameMount *mount = GfMountManager::getMount(GfObjUtil::getMountHandle(handle, attach));
+  if (mount != nullptr) {
+    u32 count = mount->getAllWeapons();
+    for (u32 index = 0; index < count; index++) {
+      setupLeaveGameObj(mount->getAllWeapons(index), fadeTime);
     }
   }
 }

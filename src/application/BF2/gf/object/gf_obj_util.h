@@ -43,6 +43,7 @@ enum {
   OBJ_FLAG_CAMERA_FADE_DISABLE_FOR_BATTLE = 0xc,
   OBJ_FLAG_CALC_CAMERA_ALPHA = 0xd,
   OBJ_FLAG_UNKNOWN_E = 0xe, // Inferred role: flag tested by isDestroyGameObj; original name unknown.
+  OBJ_FLAG_UNKNOWN_F = 0xf, // Inferred role: flag set when an object enters the game; original name unknown.
   OBJ_FLAG_WAIT = 0x10,
   OBJ_FLAG_UI_HIDDEN = 0x11,
   OBJ_FLAG_PARTY_OBJ = 0x12,
@@ -100,6 +101,8 @@ public:
   static bool isValid(GF_OBJ_HANDLE *handle);
   static bool isLoading(GF_OBJ_HANDLE *handle);
   static bool isUpdate(GF_OBJ_HANDLE *handle);
+  static void mountToBone(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *parent, const char *bone);
+  static void unmountFromBone(GF_OBJ_HANDLE *handle);
   static void setOwner(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *owner);
   static GF_OBJ_HANDLE *getOwner(GF_OBJ_HANDLE *handle);
   static u32 getSetupObjNumberByEnArrangeId(u32 arrange);
