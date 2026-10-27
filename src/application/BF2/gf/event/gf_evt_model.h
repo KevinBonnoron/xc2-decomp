@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "ai/ai_state.h"
 #include "types.h"
 
 namespace fw {
@@ -64,6 +65,24 @@ static_assert(offsetof(GfEvtModel, unknown20) == 0x20, "");
 
 class GfEvtModelDriver : public GfEvtModel {
 public:
+  class StateIdleBattle : public ai::State {
+  public:
+    static ai::State *create(void *buffer);
+    const char *getName() const override;
+    void onEnter(void *owner, ai::State *previous) override;
+    void onLeave(void *owner, ai::State *next) override;
+    void onStep(void *owner, const void *param) override;
+  };
+
+  class StateIdleField : public ai::State {
+  public:
+    static ai::State *create(void *buffer);
+    const char *getName() const override;
+    void onEnter(void *owner, ai::State *previous) override;
+    void onLeave(void *owner, ai::State *next) override;
+    void onStep(void *owner, const void *param) override;
+  };
+
   bool isAnimEnd() const;
   void setDispRexCoreCrystal(bool isDisp);
   void setDispJiji(bool isDisp);
@@ -83,6 +102,24 @@ public:
 
 class GfEvtModelBlade : public GfEvtModel {
 public:
+  class StateIdleBattle : public ai::State {
+  public:
+    static ai::State *create(void *buffer);
+    const char *getName() const override;
+    void onEnter(void *owner, ai::State *previous) override;
+    void onLeave(void *owner, ai::State *next) override;
+    void onStep(void *owner, const void *param) override;
+  };
+
+  class StateIdleField : public ai::State {
+  public:
+    static ai::State *create(void *buffer);
+    const char *getName() const override;
+    void onEnter(void *owner, ai::State *previous) override;
+    void onLeave(void *owner, ai::State *next) override;
+    void onStep(void *owner, const void *param) override;
+  };
+
   bool isAnimEnd() const;
   void playAnimWeaponRightCS(const char *name);
   bool isPlayEndAnimWeaponRightCS();
@@ -94,6 +131,24 @@ public:
 
 class GfEvtModelEnemy : public GfEvtModel {
 public:
+  class StateIdleBattle : public ai::State {
+  public:
+    static ai::State *create(void *buffer);
+    const char *getName() const override;
+    void onEnter(void *owner, ai::State *previous) override;
+    void onLeave(void *owner, ai::State *next) override;
+    void onStep(void *owner, const void *param) override;
+  };
+
+  class StateIdleField : public ai::State {
+  public:
+    static ai::State *create(void *buffer);
+    const char *getName() const override;
+    void onEnter(void *owner, ai::State *previous) override;
+    void onLeave(void *owner, ai::State *next) override;
+    void onStep(void *owner, const void *param) override;
+  };
+
   bool isAnimEnd() const;
 };
 

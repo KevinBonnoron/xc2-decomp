@@ -1,5 +1,7 @@
 #include "gf/event/gf_evt_model.h"
 
+#include <new>
+
 #include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/object/component/animation/gf_com_asm.h"
@@ -256,5 +258,65 @@ void GfEvtModelWeapon::setAnimSpeedCS(f32 speed) {
     anim->setSpeed(speed);
   }
 }
+
+ai::State *GfEvtModelDriver::StateIdleBattle::create(void *buffer) { return new (buffer) StateIdleBattle; }
+
+const char *GfEvtModelDriver::StateIdleBattle::getName() const { return "StateIdleBattle"; }
+
+void GfEvtModelDriver::StateIdleBattle::onEnter(void *owner, ai::State *previous) {}
+
+void GfEvtModelDriver::StateIdleBattle::onLeave(void *owner, ai::State *next) {}
+
+void GfEvtModelDriver::StateIdleBattle::onStep(void *owner, const void *param) {}
+
+ai::State *GfEvtModelDriver::StateIdleField::create(void *buffer) { return new (buffer) StateIdleField; }
+
+const char *GfEvtModelDriver::StateIdleField::getName() const { return "StateIdleField"; }
+
+void GfEvtModelDriver::StateIdleField::onEnter(void *owner, ai::State *previous) {}
+
+void GfEvtModelDriver::StateIdleField::onLeave(void *owner, ai::State *next) {}
+
+void GfEvtModelDriver::StateIdleField::onStep(void *owner, const void *param) {}
+
+ai::State *GfEvtModelBlade::StateIdleBattle::create(void *buffer) { return new (buffer) StateIdleBattle; }
+
+const char *GfEvtModelBlade::StateIdleBattle::getName() const { return "StateIdleBattle"; }
+
+void GfEvtModelBlade::StateIdleBattle::onEnter(void *owner, ai::State *previous) {}
+
+void GfEvtModelBlade::StateIdleBattle::onLeave(void *owner, ai::State *next) {}
+
+void GfEvtModelBlade::StateIdleBattle::onStep(void *owner, const void *param) {}
+
+ai::State *GfEvtModelBlade::StateIdleField::create(void *buffer) { return new (buffer) StateIdleField; }
+
+const char *GfEvtModelBlade::StateIdleField::getName() const { return "StateIdleField"; }
+
+void GfEvtModelBlade::StateIdleField::onEnter(void *owner, ai::State *previous) {}
+
+void GfEvtModelBlade::StateIdleField::onLeave(void *owner, ai::State *next) {}
+
+void GfEvtModelBlade::StateIdleField::onStep(void *owner, const void *param) {}
+
+ai::State *GfEvtModelEnemy::StateIdleBattle::create(void *buffer) { return new (buffer) StateIdleBattle; }
+
+const char *GfEvtModelEnemy::StateIdleBattle::getName() const { return "StateIdleBattle"; }
+
+void GfEvtModelEnemy::StateIdleBattle::onEnter(void *owner, ai::State *previous) {}
+
+void GfEvtModelEnemy::StateIdleBattle::onLeave(void *owner, ai::State *next) {}
+
+void GfEvtModelEnemy::StateIdleBattle::onStep(void *owner, const void *param) {}
+
+ai::State *GfEvtModelEnemy::StateIdleField::create(void *buffer) { return new (buffer) StateIdleField; }
+
+const char *GfEvtModelEnemy::StateIdleField::getName() const { return "StateIdleField"; }
+
+void GfEvtModelEnemy::StateIdleField::onEnter(void *owner, ai::State *previous) {}
+
+void GfEvtModelEnemy::StateIdleField::onLeave(void *owner, ai::State *next) {}
+
+void GfEvtModelEnemy::StateIdleField::onStep(void *owner, const void *param) {}
 
 } // namespace gf
