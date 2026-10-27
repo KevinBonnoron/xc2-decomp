@@ -2,8 +2,13 @@
 
 #include <string.h>
 
+#include "dr/dr_light_man.h"
+#include "dr/dr_man.h"
+#include "dr/dr_pixl_man.h"
 #include "dr/dr_res_mdo_uniform_block.h"
 #include "grlib/shd_util.h"
+#include "mm_math/mm_col3.h"
+#include "mm_math/mm_vec4.h"
 
 namespace ml {
 
@@ -106,6 +111,58 @@ int DrCalcViewWork::unistatic_lightNotUse(f32 *work) {
   work[2] = 0.0f;
   work[3] = 0.0f;
   return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_LIGHT_NOT_USE];
+}
+
+int DrCalcViewWork::unistatic_depth_change(f32 *work, bool isJitter) {
+  work[0] = unknown430.x;
+  work[1] = unknown430.y;
+  work[2] = unknown430.z;
+  work[3] = unknown700->unknown78->unknown00;
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_25];
+}
+
+int DrCalcViewWork::unistatic_lightAmb(f32 *work) {
+  DrLightMan *lightMan = unknown700->unknown588;
+  work[0] = lightMan->unknown12c.r;
+  work[1] = lightMan->unknown12c.g;
+  work[2] = lightMan->unknown12c.b;
+  work[3] = 1.0f;
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_30];
+}
+
+int DrCalcViewWork::unistatic_diffuseIBL(f32 *work) {
+  mm::Mat44 matrices[3];
+  memset(matrices, 0, sizeof(matrices));
+  grlib::ShdMat44TransposeMat44Array(work, matrices, 3);
+  return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_58];
+}
+
+int DrCalcViewWork::unistatic_dither_param(f32 *work) {
+  mm::Vec4 value;
+  value.x = 1.0f;
+  value.y = 0.0f;
+  value.z = unknownb10[0];
+  value.w = unknownb10[1];
+  grlib::ShdVec4SetVec4(work, value);
+  return 4;
+}
+
+int DrCalcViewWork::unistatic_inv_dither_param(f32 *work) {
+  mm::Vec4 value;
+  value.x = -1.0f;
+  value.y = 1.0f;
+  value.z = unknownb10[0];
+  value.w = unknownb10[1];
+  grlib::ShdVec4SetVec4(work, value);
+  return 4;
+}
+
+void DrCalcViewWork::renderEnd() {
+  if (unknown9ad) {
+    unknown9ad = false;
+  }
+  memcpy(&unknown280, &unknown40, 0x40);
+  memcpy(&unknown100, &unknownc0, 0x40);
 }
 
 int DrCalcViewWork::unistatic_mpf_ViewProj(f32 *work) {

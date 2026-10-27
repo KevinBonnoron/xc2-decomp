@@ -1,6 +1,8 @@
 #include "dr/dr_shd_lgt_man.h"
 
+#include "dr/dr_shd_lgt_clustered.h"
 #include "dr/dr_shd_lgt_global_ibl.h"
+#include "dr/dr_shd_lgt_hybrid.h"
 #include "dr/dr_shd_lgt_obj.h"
 #include "grlib/cglib_ctl_shader.h"
 
@@ -33,5 +35,36 @@ void DrShdLgtMan::setupGlobalIBLShader(DrShdLgtObj *obj) { grlib::CGLibCtlShader
 DrShdLgtObj *DrShdLgtMan::getGlobalIBLShader(GIBL_SHADER_TYPE type) { return &unknown20[type]; }
 
 DrShdLgtObj *DrShdLgtMan::getComputeShader(COMP_SHADER_TYPE type) { return &unknown28[type]; }
+
+void DrShdLgtMan::stockBegin() {
+  m_hybridLight->stockBegin();
+  unknown60->stockBegin();
+}
+
+void DrShdLgtMan::stockEnd() {
+  m_hybridLight->stockEnd();
+  unknown60->stockEnd();
+}
+
+void DrShdLgtMan::updateCate(int cate) {
+  m_hybridLight->update();
+  unknown60->update();
+}
+
+void DrShdLgtMan::setupCate(int cate) {
+  m_hybridLight->setupCate(cate);
+  unknown60->setupCate(cate);
+}
+
+void DrShdLgtMan::addViewInfo(int cate) {
+  m_hybridLight->addViewInfo(cate);
+  unknown60->addViewInfo(cate);
+}
+
+void DrShdLgtMan::delViewInfo(int cate) {
+  m_hybridLight->delViewInfo(cate);
+  unknown60->delViewInfo(cate);
+  unknown58->delViewInfo(cate);
+}
 
 } // namespace ml

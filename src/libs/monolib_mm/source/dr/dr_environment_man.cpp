@@ -16,6 +16,8 @@ DrEnvironmentObj::DrEnvironmentObj(DrMan *drMan, DrLightMan *lightMan, DrFogMan 
   unknown30 = mm::Mat44::identity;
 }
 
+void DrEnvironmentMan::releaseObj(DrEnvironmentObj *obj) { obj->release(); }
+
 f32 DrEnvironmentObj::getFrame() const { return m_frame; }
 
 f32 DrEnvironmentObj::getMaxFrame() const { return m_maxFrame; }

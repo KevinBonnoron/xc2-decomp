@@ -34,7 +34,8 @@ struct wkPixlManRes {
   u8 _19c[0x1a0 - 0x19c];
   grlib::CGLibDepthTarget *unknown1a0[2]; // Inferred role: depth objs; original member name unknown.
   grlib::CGLibDepthTarget *unknown1b0;    // Inferred role: separate trans depth object; original member name unknown.
-  u8 _1b8[0x1d0 - 0x1b8];
+  grlib::CGLibDepthTarget *unknown1b8;    // Inferred role: light depth object; original member name unknown.
+  u8 _1c0[0x1d0 - 0x1c0];
   grlib::CGLibRenderTarget *unknown1d0; // Inferred role: main render target; original member name unknown.
   u32 unknown1d8;                       // Inferred role: flags; original member name unknown.
   u8 _1dc[0x1f8 - 0x1dc];
@@ -48,6 +49,7 @@ static_assert(offsetof(wkPixlManRes, unknown180) == 0x180, "");
 static_assert(offsetof(wkPixlManRes, unknown194) == 0x194, "");
 static_assert(offsetof(wkPixlManRes, unknown1a0) == 0x1a0, "");
 static_assert(offsetof(wkPixlManRes, unknown1b0) == 0x1b0, "");
+static_assert(offsetof(wkPixlManRes, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(wkPixlManRes, unknown1d0) == 0x1d0, "");
 static_assert(offsetof(wkPixlManRes, unknown1d8) == 0x1d8, "");
 static_assert(sizeof(wkPixlManRes) == 0x1f8, "");
@@ -97,6 +99,9 @@ public:
   void selectGlobalIBLIndexRenderTarget();
   void endGlobalIBLIndexRenderTarget();
   void alphaRenderTarget();
+  void selectLightRenderTarget();
+  void selectSubtractLightRenderTarget();
+  void skyRenderTarget();
   void skyVisibilityRenderTarget();
   void skyGodRayRenderTarget();
   void renderRefractionMap(bool isRefractionMap, bool isHalfMap);
@@ -112,6 +117,7 @@ public:
   void thicknessFirstEnd();
   void lastDeferredRender();
   void occRenderEnd();
+  void depCheckBegin(bool isDblDepth);
   void depCheckEnd();
   void shadowCallDirBegin();
   void shadowCallDirEnd();
@@ -141,7 +147,8 @@ public:
   void swapPixlObj(int type);
   DrPixlRenderTarget *getBackFaceDepthTexture() const;
 
-  u8 _000[0x008 - 0x000];
+  f32 unknown00; // Inferred role: depth value; original member name unknown.
+  u8 _004[0x008 - 0x004];
   DrMan *unknown08;                         // Inferred role: dr man; original member name unknown.
   wkPixlManRes unknown10[4];                // Inferred role: resources; original member name unknown.
   wkPixlManRes *unknown7f0;                 // Inferred role: res; original member name unknown.
@@ -162,6 +169,7 @@ public:
   grlib::CGLibRenderTarget *unknown9c0; // Inferred role: capture4 render target; original member name unknown.
 };
 
+static_assert(offsetof(DrPixlMan, unknown00) == 0x000, "");
 static_assert(offsetof(DrPixlMan, unknown08) == 0x008, "");
 static_assert(offsetof(DrPixlMan, unknown10) == 0x010, "");
 static_assert(offsetof(DrPixlMan, unknown7f0) == 0x7f0, "");

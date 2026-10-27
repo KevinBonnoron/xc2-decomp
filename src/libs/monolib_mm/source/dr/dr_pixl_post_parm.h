@@ -257,9 +257,13 @@ public:
   mm::Vec3 unknownff0; // Inferred role: sp blur target; original member name unknown.
   u8 _1000[0x1024 - 0x1000];
   bool unknown1024; // Inferred role: shw raytrace temporal; original member name unknown.
-  u8 _1025[0x103e - 0x1025];
+  u8 _1025[0x103c - 0x1025];
+  bool unknown103c; // Inferred role: temporal shadow enable; original member name unknown.
+  bool unknown103d; // Inferred role: temporal shadow history valid; original member name unknown.
   bool unknown103e; // Inferred role: char dir shadow; original member name unknown.
-  u8 _103f[0x107c - 0x103f];
+  u8 _103f[0x1061 - 0x103f];
+  bool unknown1061; // Inferred role: selects the IBL pixl objs; original member name unknown.
+  u8 _1062[0x107c - 0x1062];
   s32 unknown107c;  // Inferred role: light num; original member name unknown.
   bool unknown1080; // Inferred role: in out; original member name unknown.
   u8 _1081[0x1084 - 0x1081];
@@ -364,7 +368,10 @@ static_assert(offsetof(DrPixlPostParm, unknownfc0) == 0x0fc0, "");
 static_assert(offsetof(DrPixlPostParm, unknownfc8) == 0x0fc8, "");
 static_assert(offsetof(DrPixlPostParm, unknownff0) == 0x0ff0, "");
 static_assert(offsetof(DrPixlPostParm, unknown1024) == 0x1024, "");
+static_assert(offsetof(DrPixlPostParm, unknown103c) == 0x103c, "");
+static_assert(offsetof(DrPixlPostParm, unknown103d) == 0x103d, "");
 static_assert(offsetof(DrPixlPostParm, unknown103e) == 0x103e, "");
+static_assert(offsetof(DrPixlPostParm, unknown1061) == 0x1061, "");
 static_assert(offsetof(DrPixlPostParm, unknown107c) == 0x107c, "");
 static_assert(offsetof(DrPixlPostParm, unknown1080) == 0x1080, "");
 static_assert(offsetof(DrPixlPostParm, unknown1084) == 0x1084, "");

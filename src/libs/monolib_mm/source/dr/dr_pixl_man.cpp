@@ -11,7 +11,9 @@
 #include "dr/dr_pixl_shadow_obj.h"
 #include "grlib/cglib_color_ctl.h"
 #include "grlib/cglib_dbl_uniform_block.h"
+#include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_depth_target.h"
+#include "grlib/cglib_polygon.h"
 #include "grlib/cglib_render_target.h"
 #include "grlib/cglib_state.h"
 #include "grlib/cglib_uniform_array.h"
@@ -218,6 +220,47 @@ void DrPixlMan::alphaRenderTarget() {
   }
 }
 
+void DrPixlMan::selectLightRenderTarget() {
+  if (unknown858 != 14) {
+    unknown858 = 14;
+    grlib::CGLibState::beginRegisterRenderTarget();
+    grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[5][0], grlib::GRL_MRT_TYPE_0);
+    grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[6][0], grlib::GRL_MRT_TYPE_1);
+    grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1b8->unknown120);
+    grlib::CGLibState::endRegisterRenderTarget();
+    grlib::CGLibColorCtl::setMrtBlendControl(grlib::GRL_MRT_TYPE_0, GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_ADD);
+    grlib::CGLibColorCtl::setMrtBlendControl(grlib::GRL_MRT_TYPE_1, GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_ADD);
+  }
+  setMainViewPort();
+  DrAPGxType::setupDepthContl(true, false, 2);
+}
+
+void DrPixlMan::selectSubtractLightRenderTarget() {
+  if (unknown858 != 16) {
+    unknown858 = 16;
+    grlib::CGLibState::beginRegisterRenderTarget();
+    grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[2][0], grlib::GRL_MRT_TYPE_0);
+    grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
+    grlib::CGLibState::endRegisterRenderTarget();
+    grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_ONE, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_MIN, GRL_LOGIC_TYPE_COPY);
+  }
+  setMainViewPort();
+  DrAPGxType::setupStencilTest(false, false, 7, true, 0, 8, 5, 0, 0, 0);
+}
+
+void DrPixlMan::skyRenderTarget() {
+  if (unknown858 != 12) {
+    unknown858 = 12;
+    grlib::CGLibState::beginRegisterRenderTarget();
+    grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[5][0], grlib::GRL_MRT_TYPE_0);
+    grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[3][0], grlib::GRL_MRT_TYPE_1);
+    grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
+    grlib::CGLibState::endRegisterRenderTarget();
+    grlib::CGLibColorCtl::setColorChannelMask(grlib::GRL_MRT_TYPE_1, true, true, false, true);
+    setMainViewPort();
+  }
+}
+
 void DrPixlMan::skyVisibilityRenderTarget() {}
 
 void DrPixlMan::skyGodRayRenderTarget() {
@@ -253,6 +296,20 @@ void DrPixlMan::thicknessFirstEnd() { unknown7f0->unknown148->setColorInvalidate
 void DrPixlMan::lastDeferredRender() { unknown7f0->unknown170->lastDeferredRender(); }
 
 void DrPixlMan::occRenderEnd() { DrAPGxType::endOccQuery(); }
+
+void DrPixlMan::depCheckBegin(bool isDblDepth) {
+  unknown858 = 0;
+  if (isDblDepth) {
+    grlib::CGLibState::beginRegisterRenderTarget();
+    grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
+    grlib::CGLibState::endRegisterRenderTarget();
+  } else {
+    unknown7f0->unknown1b0->setRenderTarget();
+  }
+  grlib::CGLibPolygon::setCullingOff();
+  grlib::CGLibColorCtl::setColorBufferOff();
+  grlib::CGLibDepthCtl::setDepthControl(true, false, GRL_COMPARE_LEQUAL);
+}
 
 void DrPixlMan::depCheckEnd() { grlib::CGLibColorCtl::setColorBufferOn(); }
 
@@ -356,6 +413,16 @@ void DrPixlMan::swapPixlObj(int type) {
     unknown7f0->unknown00[type][DrMan::s_nDblIdx ^ 1] = unknown7f0->unknown00[type][DrMan::s_nDblIdx];
     unknown7f0->unknown00[type][DrMan::s_nDblIdx] = deactive;
   }
+}
+
+DrPixlRenderTarget *DrPixlMan::getSpecIBLObj() {
+  int type = unknown08->unknown120[unknown08->unknown1c98]->unknown1061 ? 9 : 11;
+  return unknown08->unknown78->getPixlObj(type);
+}
+
+DrPixlRenderTarget *DrPixlMan::getDiffIBLObj() {
+  int type = unknown08->unknown120[unknown08->unknown1c98]->unknown1061 ? 14 : 10;
+  return unknown08->unknown78->getPixlObj(type);
 }
 
 DrPixlRenderTarget *DrPixlMan::getBackFaceDepthTexture() const { return unknown7f0->unknown148; }

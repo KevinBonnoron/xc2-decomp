@@ -8,6 +8,7 @@ namespace ml {
 class DrGlobalIBLPack {
 public:
   void setup();
+  static bool checkFileType(const void *data);
 
   enum Flag {
     FLAG_DISP_OFF = 1 << 0,

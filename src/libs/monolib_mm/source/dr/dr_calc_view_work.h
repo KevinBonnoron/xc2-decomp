@@ -27,6 +27,12 @@ public:
   int unistatic_proj_non_jitter(f32 *work, bool isJitter);
   int unistatic_diff_pre_orijmat(f32 *work, bool isJitter);
   int unistatic_lightNotUse(f32 *work);
+  int unistatic_depth_change(f32 *work, bool isJitter);
+  int unistatic_lightAmb(f32 *work);
+  int unistatic_diffuseIBL(f32 *work);
+  int unistatic_dither_param(f32 *work);
+  int unistatic_inv_dither_param(f32 *work);
+  void renderEnd();
   int unistatic_mpf_ViewProj(f32 *work);
   int unistatic_mpf_OldViewProj(f32 *work);
   int unistatic_mpf_View(f32 *work);
@@ -82,6 +88,7 @@ public:
   f32 unknownaf0[2]; // Inferred role: prev jitter; original member name unknown.
   u8 _af8[0xb00 - 0xaf8];
   f32 unknownb00[4]; // Inferred role: dither tmaa values; original member name unknown.
+  f32 unknownb10[2]; // Inferred role: dither param; original member name unknown.
 };
 
 static_assert(offsetof(DrCalcViewWork, unknown40) == 0x40, "");
@@ -108,5 +115,6 @@ static_assert(offsetof(DrCalcViewWork, unknown9ad) == 0x9ad, "");
 static_assert(offsetof(DrCalcViewWork, unknownae0) == 0xae0, "");
 static_assert(offsetof(DrCalcViewWork, unknownaf0) == 0xaf0, "");
 static_assert(offsetof(DrCalcViewWork, unknownb00) == 0xb00, "");
+static_assert(offsetof(DrCalcViewWork, unknownb10) == 0xb10, "");
 
 } // namespace ml

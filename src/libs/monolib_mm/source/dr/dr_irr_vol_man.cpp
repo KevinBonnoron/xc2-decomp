@@ -18,6 +18,21 @@ void DrIrrVolMan::getVolumeArea(u32 cascade, mm::Aabb &area) const {
   area = irrVolCascade->unknown560[irrVolCascade->unknown5e0];
 }
 
+int DrIrrVolMan::getSectorMax(u32 index) const {
+  const DrIrrVolSetting::unknown001 &area = unknown08->unknown28[index];
+  f32 width = area.unknown10 - area.unknown00;
+  f32 depth = area.unknown18 - area.unknown08;
+  return static_cast<u32>(width / area.unknown24 + 0.5f) * static_cast<u32>(depth / area.unknown24 + 0.5f);
+}
+
+void DrIrrVolMan::tail() {
+  unknown1a0 = unknown190;
+  unknown1b4 = unknown1b0;
+  unknown1bc = unknown1b8;
+  unknown1c4 = unknown1c0;
+  unknown0b4 ^= 1;
+}
+
 void DrIrrVolMan::debugRender() {}
 
 grlib::CGLibTextureBuffer *DrIrrVolMan::getIrrVolTex(u32 cascade, u32 index) const {

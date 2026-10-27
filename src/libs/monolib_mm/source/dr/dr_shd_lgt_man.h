@@ -5,6 +5,7 @@
 #include "types.h"
 
 namespace ml {
+class DrShdLgtClustered;
 class DrShdLgtGlobalIBL;
 class DrShdLgtHybrid;
 class DrShdLgtObj;
@@ -26,6 +27,12 @@ public:
   void resetColorBuff(int index);
   void setupLocalIBLShader(DrShdLgtObj *obj);
   void setupGlobalIBLShader(DrShdLgtObj *obj);
+  void stockBegin();
+  void stockEnd();
+  void updateCate(int cate);
+  void setupCate(int cate);
+  void addViewInfo(int cate);
+  void delViewInfo(int cate);
 
   u8 _00[0x20 - 0x00];
   DrShdLgtObj *unknown20;         // Inferred role: global IBL shaders; original member name unknown.
@@ -39,6 +46,7 @@ public:
   u8 _4c[0x50 - 0x4c];
   DrShdLgtHybrid *m_hybridLight;
   DrShdLgtGlobalIBL *unknown58; // Inferred role: global IBL; original member name unknown.
+  DrShdLgtClustered *unknown60; // Inferred role: clustered light; original member name unknown.
 };
 
 static_assert(offsetof(DrShdLgtMan, unknown20) == 0x20, "");
@@ -48,5 +56,6 @@ static_assert(offsetof(DrShdLgtMan, unknown40) == 0x40, "");
 static_assert(offsetof(DrShdLgtMan, unknown48) == 0x48, "");
 static_assert(offsetof(DrShdLgtMan, m_hybridLight) == 0x50, "");
 static_assert(offsetof(DrShdLgtMan, unknown58) == 0x58, "");
+static_assert(offsetof(DrShdLgtMan, unknown60) == 0x60, "");
 
 } // namespace ml
