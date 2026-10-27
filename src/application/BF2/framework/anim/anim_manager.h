@@ -2,9 +2,12 @@
 #include <stddef.h>
 
 #include "anm/anm_job.h"
+#include "framework/ik/ik_solver.h"
 #include "framework/manager_object.h"
 #include "mm_mtl/intrusive_list.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/singleton.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 namespace fw {
@@ -38,7 +41,11 @@ public:
 class IkResolver : public mm::mtl::IntrusiveListNode<IkResolver> {
 public:
   void resolve(const UpdateInfo &info);
+
+  mm::mtl::Vector<mm::mtl::IntrusivePtr<IkSolver>> unknown10; // Inferred role: solvers; original member name unknown.
 };
+
+static_assert(offsetof(IkResolver, unknown10) == 0x10, "");
 
 class AnimSamplePoseJob : public anm::Job {
 public:

@@ -5,6 +5,10 @@
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 
+namespace mm {
+struct Vec3;
+} // namespace mm
+
 namespace wnd {
 class LocalWind;
 } // namespace wnd
@@ -15,6 +19,7 @@ struct UpdateInfo;
 
 class WindImpluse : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<WindImpluse> {
 public:
+  WindImpluse(const mm::Vec3 &position, f32 radius, f32 param3, f32 param4, f32 param5);
   ~WindImpluse() override;
   bool update(const UpdateInfo &info);
 

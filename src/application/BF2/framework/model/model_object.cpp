@@ -1,12 +1,38 @@
+#include "framework/reference_frame.h"
 #include "fw/fw_model_object.h"
+#include "ml/scn_obj_model.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "scn/scn_obj_acc.h"
+#include "types.h"
 
-namespace ml {
-class ScnObjModel;
-} // namespace ml
+namespace mm {
+struct Mat44;
+} // namespace mm
 
 namespace fw {
+
+ModelObject::ModelObject() : unknown20(0), m_interface(nullptr), unknown38(0), m_active(true), unknown3d(false), unknown50(0.0f, 0.0f, 0.0f), unknown60(1.0f) {}
+
+void ModelObject::update() {
+  if (m_active && unknown40.get() != nullptr) {
+    if (m_interface != nullptr) {
+      const mm::Mat44 &matrix = unknown40.get()->unknown60;
+      m_interface->setMat(matrix);
+      if (unknown3d) {
+        m_interface->getOffsetInfo(true)->unknown00 = unknown50;
+      }
+    }
+  }
+}
+
+void ModelObject::setScale(f32 scale) {
+  unknown60 = scale;
+  if (m_interface != nullptr) {
+    mm::Vec3 vector(scale, scale, scale);
+    m_interface->setScl(vector);
+  }
+}
 
 void ModelObject::setup() { unknown3d = false; }
 

@@ -5,6 +5,7 @@
 #include "mtl/mem_manager.h"
 
 void pluginRegist();
+extern "C" void vmExec();
 
 namespace fw {
 
@@ -61,6 +62,15 @@ bool ScriptManager::initialize() {
   }
 
   return true;
+}
+
+void ScriptManager::update(const UpdateInfo &info) {
+  if (!isFinalized()) {
+    vmExec();
+    for (size_t i = 0; i < unknown20.size(); i++) {
+      unknown20[i].execute();
+    }
+  }
 }
 
 bool ScriptManager::isScriptCreated(int type) const { return unknown20[type].unknown08 != nullptr; }

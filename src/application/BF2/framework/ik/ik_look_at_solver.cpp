@@ -10,6 +10,8 @@ LookAtIkSolver::LookAtIkSolver()
     : unknowna0(mm::Vec3::zero), unknownb0(mm::Vec3::zero), unknownc0(), unknownc8(0xffff), unknowncc(1.0f), unknownd0(1.0f), unknownd4(false), unknowne0(mm::Quat::identity), unknownf0(0.0f),
       unknownf4(0.0f) {}
 
+LookAtIkSolver::~LookAtIkSolver() {}
+
 void LookAtIkSolver::startTargetFade(f32 time) {
   if (time > 0.0f) {
     unknownd4 = true;

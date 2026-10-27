@@ -75,6 +75,29 @@ private:
     m_size = size;
   }
 
+  void extend(size_t size, size_t alignment, const T &value) {
+    size_t oldSize = m_size;
+    T *ptr = static_cast<T *>(m_allocator->allocate(size * sizeof(T), alignment));
+    copy_construct_n(begin(), oldSize, ptr);
+    if (oldSize < size) {
+      T *position = ptr + oldSize;
+      for (size_t count = size - oldSize; count != 0; count--, position++) {
+        if (position != nullptr) {
+          new (position) T(value);
+        }
+      }
+    }
+    clear();
+    if (m_buffer != nullptr) {
+      MM_ASSERT(m_allocator);
+      m_allocator->deallocate(m_buffer);
+      m_buffer = nullptr;
+    }
+    m_buffer = ptr;
+    m_capacity = size;
+    m_size = size;
+  }
+
 public:
   // __LINE__ must be 338 and 339 as in the original header: they are the line arguments of the asserts.
 #line 337
@@ -125,6 +148,39 @@ public:
       } else if (count != 0) {
         construct_n(m_buffer + m_size, count);
         m_size += count;
+      }
+    }
+  }
+  void resize(size_t size, const T &value) {
+    if (m_size == size) {
+      return;
+    }
+
+    m_alignment = 8;
+    if (m_buffer == nullptr) {
+      T *ptr = static_cast<T *>(m_allocator->allocate(size * sizeof(T), 8));
+      m_capacity = size;
+      m_size = size;
+      m_buffer = ptr;
+      size_t i = 0;
+      while (i < size) {
+        T *position = begin() + i++;
+        if (position != nullptr) {
+          new (position) T(value);
+        }
+      }
+    } else if (static_cast<long>(size - m_capacity) > 0) {
+      extend(size, 8, value);
+    } else {
+      long count = size - m_size;
+      if (count < 0) {
+        for (long i = -count; i > 0; i--) {
+          pop_back();
+        }
+      } else if (count != 0) {
+        for (long i = count; i > 0; i--) {
+          push_back(value);
+        }
       }
     }
   }

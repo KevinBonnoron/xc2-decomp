@@ -30,6 +30,7 @@ public:
   static LookAtIkSolver *create(const ParamAdapter &param, const char *boneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose);
   void startTargetFade(f32 time);
   LookAtIkSolver();
+  ~LookAtIkSolver() override;
   void resetLimitParam();
   void onDisable() override;
   void calcIK(const UpdateInfo &info) override;

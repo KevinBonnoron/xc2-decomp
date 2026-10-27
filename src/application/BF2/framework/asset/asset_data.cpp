@@ -9,6 +9,28 @@
 
 namespace fw {
 
+AssetData *AssetData::CreateFromFile(mtl::ALLOC_HANDLE handle, const char *name) {
+  mm::mtl::FixStr<256> fileName;
+  ml::DevFileTh::normalizeDvdFileName(fileName, name);
+  int size = 0;
+  ml::DevFileParamTh param;
+  param._08 = handle;
+  param.unknown00 = fileName.c_str();
+  param._54 = 0x1000;
+  param._58 = 0;
+  void *data = ml::DevFileTh::readFileBlock(param, &size, nullptr);
+  AssetData *asset = new (AssetManager::getMemSYS()) AssetData();
+  if (asset != nullptr) {
+    asset->unknown0c = handle;
+    asset->unknown20 = data;
+    asset->unknown1c = size;
+    asset->setName(fileName.c_str());
+    asset->addRef();
+  }
+
+  return asset;
+}
+
 AssetData *AssetData::CreateFromMemory(mtl::ALLOC_HANDLE handle, const void *data, u32 size, const char *name) {
   mm::mtl::FixStr<256> fileName;
   ml::DevFileTh::normalizeDvdFileName(fileName, name);

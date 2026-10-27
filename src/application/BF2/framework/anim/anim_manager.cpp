@@ -26,6 +26,14 @@ void AnimationManager::addIkResolver(u32 layer, IkResolver &resolver) { unknown1
 
 void AnimationManager::removeIkResolver(u32 layer, IkResolver &resolver) { unknown18[layer].unknown60.erase(&resolver); }
 
+void IkResolver::resolve(const UpdateInfo &info) {
+  for (u32 i = 0; i < unknown10.size(); i++) {
+    if (unknown10[i].get() != nullptr) {
+      unknown10[i]->solve(info);
+    }
+  }
+}
+
 const char *AnimSamplePoseJob::_TYPE_NAME = "AnimSamplePoseJob";
 
 AnimSamplePoseJob::AnimSamplePoseJob(u32 count) : anm::Job(_TYPE_NAME, sizeof(AnimSamplePoseJob), 0), unknown30(count) {}

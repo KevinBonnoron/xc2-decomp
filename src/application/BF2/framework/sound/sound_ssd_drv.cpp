@@ -3,11 +3,13 @@
 #include <string.h>
 
 #include "framework/sound/sound_driver.h"
+#include "framework/sound/sound_pack.h"
 #include "ml/critical_section.h"
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/allocator.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/hash.h"
 #include "mtl/mem_manager.h"
 #include "ssd/ssd_sound_core.h"
@@ -108,6 +110,44 @@ void SoundSsdBank::addEntry(ssd::SoundEntry *entry) {
 void SoundSsdBank::addSource(SoundSsdSource *source) {
   source->addRef();
   unknown270.push_back(source);
+}
+
+mm::mtl::List<SoundSsdSource *>::iterator SoundSsdBank::findSource(const char *name) {
+  for (mm::mtl::List<SoundSsdSource *>::iterator it = unknown270.begin(); it != unknown270.end(); ++it) {
+    if (strcmp((*it)->unknown134.c_str(), name) == 0) {
+      return it;
+    }
+  }
+
+  return unknown270.end();
+}
+
+void SoundSsdBank::update() {
+  for (mm::mtl::List<SoundSsdSource *>::iterator it = unknown270.begin(); it != unknown270.end();) {
+    SoundSsdSource *source = *it;
+    if (source->m_RefCount == 1 && source->getSourceRefCount() == 0) {
+      it = unknown270.erase(it);
+      source->release();
+    } else {
+      ++it;
+    }
+  }
+}
+
+void SoundSsdDriver::updateBank() {
+  ml::CS lock(unknown70);
+  for (mm::mtl::List<SoundSsdBank *>::iterator it = unknown838.begin(); it != unknown838.end();) {
+    SoundSsdBank *bank = *it;
+    bank->update();
+    if (bank->m_RefCount == 1 && bank->unknown10.GetReferenceCounter() == 0 && bank->unknown10.NumSoundEntry() == 0) {
+      it = unknown838.erase(it);
+      if (bank != nullptr) {
+        bank->release();
+      }
+    } else {
+      ++it;
+    }
+  }
 }
 
 SoundSsdBank *SoundSsdDriver::findBank(u32 id) {
@@ -609,6 +649,77 @@ void SoundSsdDriver::stopSoundAll(SoundType type, f32 time) {
     }
   }
 }
+
+void SoundSsdDriver::pauseAll(bool isPause, f32 time) {
+  ml::CS lock(unknown70);
+  for (PtrMapIterator it = unknown8b8.begin(); it != unknown8b8.end(); ++it) {
+    SoundSsdPlayer *player = static_cast<SoundSsdPlayer *>(*it);
+    if (player != nullptr) {
+      player->pause(isPause, time);
+    }
+  }
+}
+
+u32 SoundSsdDriver::findSe(const char *name) const {
+  ml::CS lock(unknown70);
+  for (PtrMapIterator it = unknown8b8.begin(); it != unknown8b8.end();) {
+    const SoundSsdPlayer *player = static_cast<const SoundSsdPlayer *>(*it);
+    ++it;
+    if (player != nullptr && player->unknownb0 == SOUND_TYPE_SE && strcmp(player->unknown80->unknown134.c_str(), name) == 0) {
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+bool SoundSsdDriver::isLoop(u32 id, SoundPack *pack) {
+  if (pack == nullptr) {
+    return false;
+  }
+
+  ml::CS lock(unknown70);
+  mm::mtl::IntrusivePtr<SoundSsdSource> source = pack->findSourceFromID(id);
+  if (source.get() == nullptr) {
+    return false;
+  }
+
+  return source->isLoop();
+}
+
+void SoundSsdDriver::pauseCategory(SoundCategory category, bool isPause, f32 time) {
+  ml::CS lock(unknown70);
+  for (PtrMapIterator it = unknown8b8.begin(); it != unknown8b8.end(); ++it) {
+    SoundSsdPlayer *player = static_cast<SoundSsdPlayer *>(*it);
+    if (player != nullptr && player->unknown98 == category) {
+      player->pause(isPause, time);
+    }
+  }
+}
+
+void SoundSsdDriver::setCategoryPitch(SoundCategory category, f32 pitch, f32 time) {
+  if (unknown10 != nullptr) {
+    ml::CS lock(unknown70);
+    for (PtrMapIterator it = unknown8b8.begin(); it != unknown8b8.end(); ++it) {
+      SoundSsdPlayer *player = static_cast<SoundSsdPlayer *>(*it);
+      if (player != nullptr && player->unknown98 == category && player->isValid()) {
+        player->unknowna4 = pitch;
+        player->unknown88->SetPitch(pitch, time);
+      }
+    }
+
+    SoundCategoryData *found = findCategory(category);
+    if (found != &unknowne8[CATEGORY_COUNT]) {
+      found->unknown44 = pitch;
+    }
+  }
+}
+
+void SoundSsdDriver::updateDebugInfoLocal(mm::mtl::FixedVector<SoundHandleDebugInfo, 128> &handles) {}
+
+void SoundSsdDriver::updateDebugInfoLocal(mm::mtl::FixedVector<SoundCategoryDebugInfo, 18> &categories) {}
+
+void SoundSsdDriver::updateDebugInfo(mm::mtl::FixedVector<SoundHandleDebugInfo, 128> &handles, mm::mtl::FixedVector<SoundCategoryDebugInfo, 18> &categories) {}
 
 void SoundSsdDriver::stopBgmAll() {
   ml::CS lock(unknown70);

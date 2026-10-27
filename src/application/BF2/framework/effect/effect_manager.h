@@ -15,6 +15,7 @@
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
+#include "ptlib/forcefield/particle_force_field.h"
 #include "scn/scn_render_callback.h"
 #include "types.h"
 
@@ -42,6 +43,8 @@ class EffectData;
 class EffectPack;
 class RenderResource;
 enum EF_CATEGORY : int;
+
+struct AddForceParam : public ptlib::forcefield::AddForceParam {};
 
 class EffectManager : public mm::mtl::PtrSingleton<EffectManager>, public ManagerObject, public ml::IDrDrawCallback, public ml::IScnRender {
 public:
@@ -83,6 +86,7 @@ public:
   void sendCasterFrame(EffectCasterBase *caster, f32 frame);
   void sendCasterStateName(EffectCasterBase *caster, const char *name);
   EffectCasterSend *getCasterCB(EffectCasterBase *caster);
+  void addForce(const AddForceParam *param);
   void setIBLSaturation(f32 saturation);
   void setDirScale(f32 scale);
   void setSpecScale(f32 scale);
@@ -124,6 +128,7 @@ public:
   static void effectFreeRes(void *user, void *pointer);
   static mtl::ALLOC_HANDLE effectSysHandle();
   static mtl::ALLOC_HANDLE effectResHandle();
+  static void *debugReadFile(const char *path, int &size);
   static void debugReadFileEnd(void *data);
   static void debugOutputString(const char *string);
   static void warnOutputString(const char *string);
@@ -133,6 +138,7 @@ public:
   static void setMdlPos(void *model, void *position);
   static void setMdlMatrix(void *model, void *matrix);
   static void setMdlAlpha(void *model, f32 alpha);
+  static void setMdlColor(void *model, void *color);
   static void setMdlSpeed(void *model, void *speed);
   static void setLgtPos(u32 type, void *light, void *position);
   static void setLgtMatrix(u32 type, void *light, void *matrix);

@@ -18,7 +18,12 @@ public:
 
   class iterator {
   public:
-    iterator(Node *node, _ReslistBase *list) : m_node(node), m_list(list) {}
+    iterator(Node *node, _ReslistBase *list) : m_node(node) {}
+    iterator(const iterator &other) : m_node(other.m_node) {}
+    iterator &operator=(const iterator &other) {
+      m_node = other.m_node;
+      return *this;
+    }
 
     T &operator*() const { return m_node->m_value; }
 
@@ -31,7 +36,6 @@ public:
     bool operator!=(const iterator &other) const { return m_node != other.m_node; }
 
     Node *m_node;
-    _ReslistBase *m_list;
   };
 
   class const_iterator {

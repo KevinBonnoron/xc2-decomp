@@ -29,6 +29,7 @@ public:
   static SpineIkSolver *create(const ParamAdapter &param, const char *boneName, const char *endBoneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose);
   bool setupLimit(const ParamAdapter &param, const char *boneName, const char *endBoneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose);
   SpineIkSolver();
+  ~SpineIkSolver() override;
   void resetLimit();
   void startTargetFade(f32 time);
   void onDisable() override;

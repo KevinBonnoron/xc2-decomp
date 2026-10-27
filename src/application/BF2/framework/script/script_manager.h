@@ -26,6 +26,8 @@ class FileHandleTh;
 
 namespace fw {
 
+struct UpdateInfo;
+
 struct ScriptEventParam {
   enum State : int;
 
@@ -102,6 +104,7 @@ class ScriptManager : public ManagerObject, public mm::mtl::PtrSingleton<ScriptM
 public:
   ~ScriptManager();
   bool initialize() override;
+  virtual void update(const UpdateInfo &info);
   void createScript(int type, mtl::ALLOC_HANDLE handle, size_t size);
   void createScript(int type, mm::mtl::IAllocator *allocator, size_t size);
   void destroyScript(int type, bool isForce);

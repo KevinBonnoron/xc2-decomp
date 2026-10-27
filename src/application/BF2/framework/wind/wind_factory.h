@@ -41,6 +41,7 @@ static_assert(sizeof(DynamicWindResource) == 0x40, "");
 
 class WindFactory {
 public:
+  static void generateImpluse(const mm::Vec3 &position, f32 radius, f32 param3, f32 param4, f32 param5);
   static WindProbe *createProbe(u32 group, f32 radius, mm::mtl::IntrusivePtr<ReferenceFrame> frame, bool isFollowFrame);
   static mm::mtl::IntrusivePtr<DynamicWindResource> createWindResource(const mm::Vec3 &min, const mm::Vec3 &max);
 };

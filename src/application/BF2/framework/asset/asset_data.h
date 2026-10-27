@@ -17,6 +17,7 @@ namespace fw {
 
 class AssetData : public mm::mtl::ReferenceObject {
 public:
+  static AssetData *CreateFromFile(mtl::ALLOC_HANDLE handle, const char *name);
   static AssetData *CreateFromMemory(mtl::ALLOC_HANDLE handle, const void *data, u32 size, const char *name);
   static AssetData *CreateFromMemory(mm::mtl::IAllocator *allocator, const void *data, u32 size, const char *name);
   static AssetData *AssignFromMemory(mtl::ALLOC_HANDLE handle, const void *data, u32 size, const char *name, u64 timeStamp);

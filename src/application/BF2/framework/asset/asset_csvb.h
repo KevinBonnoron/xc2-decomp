@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/asset/asset_manager.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
 #include "mtl/alloc_handle.h"
@@ -20,6 +21,7 @@ namespace fw {
 
 class AssetCsvb : public mm::mtl::ReferenceObject {
 public:
+  static AssetCsvb *CreateFromFile(mtl::ALLOC_HANDLE handle, const char *name);
   static AssetCsvb *CreateFromMemory(mtl::ALLOC_HANDLE handle, const void *data, u32 size, const char *name);
   static AssetCsvb *CreateFromMemory(mm::mtl::IAllocator *allocator, const void *data, u32 size, const char *name);
   static AssetCsvb *CreateFromCache(mtl::ALLOC_HANDLE handle, const char *name);
@@ -29,6 +31,13 @@ public:
   static void *LoadFromPacdata(mtl::ALLOC_HANDLE handle, const char *name, int &size);
   AssetCsvb();
   ~AssetCsvb() override;
+
+  // Inferred helper: names a created asset and takes the first reference; original name unknown.
+  void unknown001(const char *name) {
+    unknown28 = name;
+    unknown18 = AssetManager::getHash(name);
+    addRef();
+  }
 
   mtl::ALLOC_HANDLE unknown0c;    // Inferred role: handle; original member name unknown.
   mm::mtl::IAllocator *unknown10; // Inferred role: allocator; original member name unknown.

@@ -6,6 +6,26 @@
 
 namespace fw {
 
+AssetCsvb *AssetCsvb::CreateFromFile(mtl::ALLOC_HANDLE handle, const char *name) {
+  mm::mtl::FixStr<256> fileName;
+  ml::DevFileTh::normalizeDvdFileName(fileName, name);
+  int size = 0;
+  ml::DevFileParamTh param;
+  param._08 = handle;
+  param.unknown00 = fileName.c_str();
+  param._58 = 0;
+  void *data = ml::DevFileTh::readFileBlock(param, &size, nullptr);
+  AssetCsvb *csvb = new (AssetManager::getMemSYS()) AssetCsvb();
+  if (csvb != nullptr) {
+    csvb->unknown0c = handle;
+    csvb->unknown20 = new (handle) csvb::CCsvbData();
+    csvb->unknown20->Load(handle, data, size);
+    csvb->unknown001(fileName.c_str());
+  }
+
+  return csvb;
+}
+
 AssetCsvb *AssetCsvb::CreateFromMemory(mtl::ALLOC_HANDLE handle, const void *data, u32 size, const char *name) {
   mm::mtl::FixStr<256> fileName;
   ml::DevFileTh::normalizeDvdFileName(fileName, name);
@@ -17,9 +37,7 @@ AssetCsvb *AssetCsvb::CreateFromMemory(mtl::ALLOC_HANDLE handle, const void *dat
       csvb->unknown20->Load(handle, data, size);
     }
 
-    csvb->unknown28 = fileName.c_str();
-    csvb->unknown18 = AssetManager::getHash(fileName.c_str());
-    csvb->addRef();
+    csvb->unknown001(fileName.c_str());
   }
 
   return csvb;
@@ -36,9 +54,7 @@ AssetCsvb *AssetCsvb::CreateFromMemory(mm::mtl::IAllocator *allocator, const voi
       csvb->unknown20->Load(allocator, data, size);
     }
 
-    csvb->unknown28 = fileName.c_str();
-    csvb->unknown18 = AssetManager::getHash(fileName.c_str());
-    csvb->addRef();
+    csvb->unknown001(fileName.c_str());
   }
 
   return csvb;

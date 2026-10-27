@@ -29,6 +29,8 @@ SpineIkSolver::SpineIkSolver()
   unknownb4 = 0.0f;
 }
 
+SpineIkSolver::~SpineIkSolver() {}
+
 void SpineIkSolver::resetLimit() {
   const f32 *limit = unknown80.get<f32>();
   unknown38 = limit[0] * mm::DEG_TO_RAD;

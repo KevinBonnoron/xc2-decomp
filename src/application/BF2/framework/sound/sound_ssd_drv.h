@@ -5,6 +5,7 @@
 #include "framework/sound/sound_driver.h"
 #include "ml/critical_section.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/list.h"
@@ -31,6 +32,8 @@ namespace fw {
 class SoundSsdBank;
 class SoundSsdPlayer;
 enum SoundCategory : int;
+struct SoundCategoryDebugInfo;
+struct SoundHandleDebugInfo;
 
 struct SoundCategoryData {
   u8 _00[8];
@@ -39,8 +42,8 @@ struct SoundCategoryData {
   u8 _10[0x14 - 0x10];
   f32 unknown14; // Inferred role: current volume; original member name unknown.
   u8 _18[0x40 - 0x18];
-  u32 unknown40; // Inferred role: mute count; original member name unknown.
-  u8 _44[0x48 - 0x44];
+  u32 unknown40;                 // Inferred role: mute count; original member name unknown.
+  f32 unknown44;                 // Inferred role: pitch; original member name unknown.
   u32 unknown48;                 // Inferred role: registered; original member name unknown.
   mm::mtl::FixStr<16> unknown4c; // Inferred role: name; original member name unknown.
   u8 _60[0x68 - 0x60];
@@ -48,6 +51,7 @@ struct SoundCategoryData {
 
 static_assert(offsetof(SoundCategoryData, unknown08) == 0x08, "");
 static_assert(offsetof(SoundCategoryData, unknown40) == 0x40, "");
+static_assert(offsetof(SoundCategoryData, unknown44) == 0x44, "");
 static_assert(offsetof(SoundCategoryData, unknown48) == 0x48, "");
 static_assert(offsetof(SoundCategoryData, unknown4c) == 0x4c, "");
 static_assert(sizeof(SoundCategoryData) == 0x68, "");
@@ -78,6 +82,7 @@ public:
   };
 
   ~SoundSsdDriver() override;
+  void updateBank();
   SoundSsdBank *findBank(u32 id);
   SoundSsdBank *findBank(u32 id) const;
   SoundSsdPlayer *getPlayer(u32 id);
@@ -122,6 +127,14 @@ public:
   void stopVoiceAll() override;
   void stopSeAll() override;
   void stopAll() override;
+  void pauseAll(bool isPause, f32 time) override;
+  u32 findSe(const char *name) const override;
+  bool isLoop(u32 id, SoundPack *pack) override;
+  void pauseCategory(SoundCategory category, bool isPause, f32 time) override;
+  void setCategoryPitch(SoundCategory category, f32 pitch, f32 time) override;
+  void updateDebugInfo(mm::mtl::FixedVector<SoundHandleDebugInfo, 128> &handles, mm::mtl::FixedVector<SoundCategoryDebugInfo, 18> &categories) override;
+  void updateDebugInfoLocal(mm::mtl::FixedVector<SoundHandleDebugInfo, 128> &handles);
+  void updateDebugInfoLocal(mm::mtl::FixedVector<SoundCategoryDebugInfo, 18> &categories);
 
   ssd::SoundCore *unknown10;                   // Inferred role: sound device; original member name unknown.
   SoundAllocator unknown18;                    // Inferred role: allocator; original member name unknown.
@@ -167,6 +180,8 @@ public:
   void addSource(SoundSsdSource *source);
   void removeEntry(ssd::SoundEntry *entry);
   void removeSource(SoundSsdSource *source);
+  void update();
+  mm::mtl::List<SoundSsdSource *>::iterator findSource(const char *name);
   void setMaxSound(int maxSound);
   bool canRelease() const;
   u32 getActivityRatio() const;
@@ -265,7 +280,9 @@ public:
   f32 unknowna0;                                   // Inferred role: fade time; original member name unknown.
   f32 unknowna4;                                   // Inferred role: pitch; original member name unknown.
   f32 unknowna8;                                   // Inferred role: pan; original member name unknown.
-  u8 _ac[0xb8 - 0xac];
+  u8 _ac[0xb0 - 0xac];
+  SoundType unknownb0; // Inferred role: sound type; original member name unknown.
+  u8 _b4[0xb8 - 0xb4];
   u32 m_handle;
   f32 _bc;
   u8 _c0[0xc4 - 0xc0];
@@ -277,6 +294,7 @@ static_assert(offsetof(SoundSsdPlayer, unknown78) == 0x78, "");
 static_assert(offsetof(SoundSsdPlayer, unknown88) == 0x88, "");
 static_assert(offsetof(SoundSsdPlayer, unknown98) == 0x98, "");
 static_assert(offsetof(SoundSsdPlayer, unknowna8) == 0xa8, "");
+static_assert(offsetof(SoundSsdPlayer, unknownb0) == 0xb0, "");
 static_assert(offsetof(SoundSsdPlayer, m_handle) == 0xb8, "");
 static_assert(offsetof(SoundSsdPlayer, unknownc4) == 0xc4, "");
 

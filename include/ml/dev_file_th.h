@@ -7,6 +7,7 @@
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "mm_mtl/unique_ptr.h"
+#include "mtl/alloc_handle.h"
 #include "types.h"
 
 namespace mm {
@@ -29,10 +30,10 @@ public:
 };
 
 struct DevFileParamTh {
-  DevFileParamTh() : unknown00(nullptr), _08(0), _10(0), unknown40(nullptr), unknown4c(0), unknown50(0), _54(0), _58(1), _5c(0), unknown60(nullptr), unknown68(10), _6c(true), _6d(false), _6e(false) {}
+  DevFileParamTh() : unknown00(nullptr), _08(), _10(0), unknown40(nullptr), unknown4c(0), unknown50(0), _54(0), _58(1), _5c(0), unknown60(nullptr), unknown68(10), _6c(true), _6d(false), _6e(false) {}
 
   const char *unknown00; // Inferred role: path; original member name unknown.
-  u32 _08;
+  mtl::ALLOC_HANDLE _08;
   u64 _10;
   mm::mtl::FixedVector<u64, 4> _18;
   void *unknown40; // Inferred role: buffer; original member name unknown.
@@ -74,6 +75,7 @@ public:
   static bool rfIsBusy(FileHandleTh *handle);
   static bool rfClose(FileHandleTh *handle);
   static FileHandleTh *readFile(const DevFileParamTh &param);
+  static void *readFileBlock(const DevFileParamTh &param, int *size, mm::VAL64 *fileSize);
   static void cancel(FileHandleTh *handle, bool isForce);
   static bool isValidHandle(FileHandleTh *handle);
   static bool rfIsBusy();

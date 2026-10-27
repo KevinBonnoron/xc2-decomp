@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
@@ -11,13 +12,44 @@ namespace wnd {
 
 struct Query;
 
+struct Transform {
+  mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
+  mm::Quat unknown10; // Inferred role: rotation; original member name unknown.
+};
+
+static_assert(sizeof(Transform) == 0x20, "");
+
+class SphereShape {
+public:
+  explicit SphereShape(f32 radius);
+
+  u8 _00[0x18];
+};
+
+static_assert(sizeof(SphereShape) == 0x18, "");
+
+struct LocalWindCreateInfo {
+  const Transform *unknown00; // Inferred role: transform; original member name unknown.
+  SphereShape *unknown08;     // Inferred role: shape; original member name unknown.
+  u32 unknown10;              // Role and original member name unknown.
+  f32 unknown14;              // Role and original member name unknown.
+  f32 unknown18;              // Role and original member name unknown.
+  f32 unknown1c;              // Role and original member name unknown.
+};
+
+static_assert(sizeof(LocalWindCreateInfo) == 0x20, "");
+
 class LocalWind {
 public:
+  explicit LocalWind(const LocalWindCreateInfo &info);
+
   u8 _00[0x88];
   f32 unknown88; // Inferred role: power; original member name unknown.
+  u8 _8c[0xb0 - 0x8c];
 };
 
 static_assert(offsetof(LocalWind, unknown88) == 0x88, "");
+static_assert(sizeof(LocalWind) == 0xb0, "");
 
 class WindProbe : public mm::mtl::ReferenceObject {
 public:

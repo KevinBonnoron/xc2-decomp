@@ -12,6 +12,8 @@
 #include "framework/effect/effect_data.h"
 #include "framework/effect/effect_pack.h"
 #include "framework/framework.h"
+#include "ml/dev_file_th.h"
+#include "mm_math/mm_col3.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_mtl/fixstr.h"
 #include "mtl/mem_manager.h"
@@ -21,6 +23,26 @@ struct DrDrawWorkInfoEF;
 } // namespace ptlib
 
 namespace fw {
+
+namespace {
+
+// Inferred role: color parameter handed over by the effect system; original name unknown.
+struct unknown001 {
+  mm::Col3 unknown00; // Inferred role: ace color; original member name unknown.
+  f32 unknown0c;      // Inferred role: ace value 0; original member name unknown.
+  f32 unknown10;      // Inferred role: ace value 1; original member name unknown.
+  f32 unknown14;      // Inferred role: ace value 2; original member name unknown.
+  f32 unknown18;      // Inferred role: view num; original member name unknown.
+  f32 unknown1c;      // Inferred role: display threshold; original member name unknown.
+};
+
+} // namespace
+
+void EffectManager::addForce(const AddForceParam *param) {
+  if (effect::SystemManager::getPtr() != nullptr) {
+    effect::SystemManager::getPtr()->unknown10.push_back(*param);
+  }
+}
 
 bool EffectManager::initialize() { return true; }
 
@@ -424,6 +446,32 @@ void EffectManager::setMdlAlpha(void *model, f32 alpha) {
   if (model != nullptr) {
     static_cast<ml::DrMdlObj *>(model)->setAlpha(alpha);
   }
+}
+
+void EffectManager::setMdlColor(void *model, void *color) {
+  if (model != nullptr && color != nullptr) {
+    ml::DrMdlObj *object = static_cast<ml::DrMdlObj *>(model);
+    const unknown001 *param = static_cast<const unknown001 *>(color);
+    mm::Col3 aceColor(param->unknown00.r, param->unknown00.g, param->unknown00.b);
+    object->setAceColor(0, aceColor);
+    object->setAceVal(1, param->unknown10);
+    object->setAceVal(2, param->unknown14);
+    object->unknown1a = static_cast<s16>(static_cast<int>(param->unknown18));
+    if (param->unknown1c > 0.01f) {
+      object->setDisp(false);
+    } else {
+      object->setDisp(true);
+    }
+    object->setAceVal(0, param->unknown0c);
+  }
+}
+
+void *EffectManager::debugReadFile(const char *path, int &size) {
+  ml::DevFileParamTh param;
+  param._08 = get()->unknown30;
+  param._54 = 0x1000;
+  param.unknown00 = path;
+  return ml::DevFileTh::readFileBlock(param, &size, nullptr);
 }
 
 void EffectManager::setMdlSpeed(void *model, void *speed) {
