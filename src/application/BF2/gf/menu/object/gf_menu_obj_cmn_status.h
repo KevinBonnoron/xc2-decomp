@@ -9,6 +9,8 @@ public:
   void update() override;
   static bool isOpenDrStatus();
   static bool isOpenBlStatus();
+  static void setInputEnable();
+  static void setInputDisable();
 
   static bool s_DispFlag[2];
 };

@@ -6,6 +6,10 @@ namespace gf {
 
 class GfMenuObjChainAttack : public GfMenuObject {
 public:
+  static void closeResult();
+  static void closeRoundExtend();
+  static void openRoundExtend();
+  static void closeStatus();
   static void changeCharacter(u32 character);
   void initialize() override;
   void finalize() override;

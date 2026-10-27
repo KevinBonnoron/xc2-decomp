@@ -5,6 +5,7 @@ namespace gf {
 
 class GfMenuObjLinkJump : public GfMenuObject {
 public:
+  static void open();
   void initialize() override;
   void update() override;
   static void close();

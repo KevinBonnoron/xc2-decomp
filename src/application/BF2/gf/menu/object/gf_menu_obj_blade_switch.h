@@ -5,6 +5,8 @@ namespace gf {
 
 class GfMenuObjBladeSwitch : public GfMenuObject {
 public:
+  static void open();
+  static void close();
   void initialize() override;
   void finalize() override;
 };

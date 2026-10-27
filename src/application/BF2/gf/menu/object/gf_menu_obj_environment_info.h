@@ -6,6 +6,10 @@ namespace gf {
 
 class GfMenuObjEnvironmentInfo : public GfMenuObject {
 public:
+  static void close();
+  static void open();
+  static void disable();
+  static void enable();
   GfMenuObjEnvironmentInfo(u32 handle);
   ~GfMenuObjEnvironmentInfo() override;
   void initialize() override;

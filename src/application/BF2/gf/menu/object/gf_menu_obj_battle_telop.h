@@ -5,6 +5,8 @@ namespace gf {
 
 class GfMenuObjBattleTelop : public GfMenuObject {
 public:
+  static void close();
+  static void closeUniteCombo();
   void initialize() override;
   void finalize() override;
   void update() override;

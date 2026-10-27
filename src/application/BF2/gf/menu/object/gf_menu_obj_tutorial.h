@@ -5,6 +5,7 @@ namespace gf {
 
 class GfMenuObjTutorial : public GfMenuObject {
 public:
+  static void closeAll();
   void initialize() override;
   void finalize() override;
   static bool isWaiting();

@@ -7,6 +7,7 @@ class GfMenuObjTargetCursor : public GfMenuObject {
 public:
   void initialize() override;
   void finalize() override;
+  static void disp(bool disp);
 };
 
 } // namespace gf

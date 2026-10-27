@@ -11,6 +11,10 @@ public:
   void initialize() override;
   void finalize() override;
   void update() override;
+  static void dispAllSymbol(bool disp);
+  static void dispAllOther(bool disp);
+  static void dispAllEnemy(bool disp);
+  static void disp(bool disp);
 };
 
 } // namespace gf

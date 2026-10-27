@@ -9,6 +9,8 @@ public:
   static void sendEvent(u32 handle, u32 type, u32 param, f32 delay);
   void initialize() override;
   void finalize() override;
+  static void setCloseToReturn();
+  static void setCloseToFSClose();
 };
 
 } // namespace gf

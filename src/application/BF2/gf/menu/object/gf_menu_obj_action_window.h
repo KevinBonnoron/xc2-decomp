@@ -16,6 +16,7 @@ public:
   static void openBattle(const OpenParam &param);
   static void close();
   static void closeBattle();
+  static void disp(bool disp);
   GfMenuObjActionWindow(u32 handle);
   ~GfMenuObjActionWindow() override;
   void initialize() override;

@@ -5,6 +5,8 @@ namespace gf {
 
 class GfMenuObjComboRoute : public GfMenuObject {
 public:
+  static void close();
+  static void open();
   void initialize() override;
   void finalize() override;
   void update() override;

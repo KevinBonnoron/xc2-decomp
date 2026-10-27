@@ -7,6 +7,8 @@ class GfMenuObjHelpHud : public GfMenuObject {
 public:
   void initialize() override;
   void finalize() override;
+  void enable();
+  void disable();
 };
 
 } // namespace gf

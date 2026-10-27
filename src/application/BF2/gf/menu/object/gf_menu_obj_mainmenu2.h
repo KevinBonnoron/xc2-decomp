@@ -10,6 +10,7 @@ public:
   };
 
   static void registOpenParam(const OpenParam &param);
+  static void sendEvent(u32 handle, u32 type, u32 param);
 };
 
 } // namespace gf

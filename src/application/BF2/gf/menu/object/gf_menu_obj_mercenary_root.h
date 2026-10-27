@@ -5,6 +5,7 @@ namespace gf {
 
 class GfMenuObjMercenaryRoot : public GfMenuObject {
 public:
+  static void closeBg();
   void initialize() override;
   void finalize() override;
 };

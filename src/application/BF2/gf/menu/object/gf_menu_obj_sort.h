@@ -5,6 +5,7 @@ namespace gf {
 
 class GfMenuObjSort : public GfMenuObject {
 public:
+  static void close();
   void initialize() override;
   void finalize() override;
 };

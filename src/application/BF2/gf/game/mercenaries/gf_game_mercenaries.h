@@ -1,6 +1,9 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/event/gf_event.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace fw {
@@ -14,7 +17,7 @@ struct QuestCompleteParam;
 struct QuestID;
 struct QuestOrderParam;
 
-class GfGameMercenaries {
+class GfGameMercenaries : public mm::mtl::PtrSingleton<GfGameMercenaries> {
 public:
   static void build(const GfSetupParam &param);
   static void destroy();
@@ -40,6 +43,12 @@ public:
   static bool orderMission(u32 mission);
   static bool addTeamMember(u32 team, u32 blade);
   static bool isRemoveTeamMember(u32 team, u32 blade);
+  static void stopMissionTime(bool isStop);
+
+  u8 _08[0x788 - 0x08];
+  bool unknown788; // Inferred role: mission time stopped; original member name unknown.
 };
+
+static_assert(offsetof(GfGameMercenaries, unknown788) == 0x788, "");
 
 } // namespace gf

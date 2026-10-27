@@ -6,6 +6,7 @@ namespace gf {
 
 class GfMenuObjCharSelect : public GfMenuObject {
 public:
+  static void returnSubMenu();
   static void sendEvent(u32 handle, u32 type, u32 param);
   void initialize() override;
   void finalize() override;

@@ -6,6 +6,7 @@ namespace gf {
 
 class GfMenuObjQuestOrder : public GfMenuObject {
 public:
+  static void close();
   GfMenuObjQuestOrder(u32 handle);
   ~GfMenuObjQuestOrder() override;
   void initialize() override;

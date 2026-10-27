@@ -6,6 +6,7 @@ namespace gf {
 
 class GfMenuObjPopup : public GfMenuObject {
 public:
+  static void pausePickup();
   static void sendEvent(u32 handle, u32 type, u32 param);
   void initialize() override;
   void finalize() override;

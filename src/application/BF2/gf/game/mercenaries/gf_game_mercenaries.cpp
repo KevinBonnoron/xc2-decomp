@@ -8,6 +8,18 @@
 
 namespace gf {
 
+void GfGameMercenaries::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
+  if (event == GEV_MAPJUMP_END && get() != nullptr) {
+    get()->unknown788 = false;
+  }
+}
+
+void GfGameMercenaries::stopMissionTime(bool isStop) {
+  if (get() != nullptr) {
+    get()->unknown788 = isStop;
+  }
+}
+
 u32 GfGameMercenaries::getMissionFlag(u32 mission) { return GfDataMercenaries::getMissionFlag(mission); }
 
 void GfGameMercenaries::setLevel(u32 level) {

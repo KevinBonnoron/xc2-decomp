@@ -5,6 +5,9 @@ namespace gf {
 
 class GfMenuObjMinimap2 : public GfMenuObject {
 public:
+  static void changeMap();
+  static void close();
+  static void open();
   void initialize() override;
   void finalize() override;
 
