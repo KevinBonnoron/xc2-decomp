@@ -7,6 +7,7 @@ namespace ml {
 
 class DrPixlTileParm {
 public:
+  ~DrPixlTileParm();
   enum TileType {
     TILE_TYPE_MAIN,
   };

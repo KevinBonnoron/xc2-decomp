@@ -21,6 +21,7 @@ static_assert(sizeof(DrSeamStockInstEntry) == 0x10, "");
 
 class DrResMdoSeamParmRead {
 public:
+  ~DrResMdoSeamParmRead();
   void addPos(const mm::Vec3 &position);
   void setStockEnvMdl(int index);
   void setStockBaseMap(int index);

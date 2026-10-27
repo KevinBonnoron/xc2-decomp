@@ -5,6 +5,8 @@
 
 namespace ml {
 
+DrPixlTileParm::~DrPixlTileParm() {}
+
 void DrPixlTileParm::begin(TileType type) {
   if (unknown04[unknown00][TILE_TYPE_MAIN].unknown00) {
     if (type != TILE_TYPE_MAIN) {

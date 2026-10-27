@@ -263,14 +263,24 @@ struct DrResMdoInstAnmHeader {
   u8 _00[0x04 - 0x00];
   u32 unknown04; // Inferred role: object max; original member name unknown.
   u32 unknown08; // Inferred role: anm max; original member name unknown.
+  u8 _0c[0x18 - 0x0c];
+  s32 unknown18; // Inferred role: pos anm max; original member name unknown.
+  u8 _1c[0x28 - 0x1c];
+  s32 unknown28; // Inferred role: switch max; original member name unknown.
+  u8 _2c[0x34 - 0x2c];
+  s32 unknown34; // Inferred role: node anm max; original member name unknown.
 };
 
 static_assert(offsetof(DrResMdoInstAnmHeader, unknown04) == 0x04, "");
 static_assert(offsetof(DrResMdoInstAnmHeader, unknown08) == 0x08, "");
+static_assert(offsetof(DrResMdoInstAnmHeader, unknown18) == 0x18, "");
+static_assert(offsetof(DrResMdoInstAnmHeader, unknown28) == 0x28, "");
+static_assert(offsetof(DrResMdoInstAnmHeader, unknown34) == 0x34, "");
 
 class DrResMdoInstAnmObj {
 public:
   DrResMdoInstAnmObj();
+  static int getWorkSize(const u8 *data);
   void release();
   int getObjIdx(const char *name);
 

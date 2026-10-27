@@ -4,6 +4,8 @@ namespace ml {
 
 class DrCalcGpuCost {
 public:
+  ~DrCalcGpuCost();
+
   bool m_autoReduction;
 };
 

@@ -6,6 +6,19 @@
 
 namespace ml {
 
+DevTouchInfo::DevTouchInfo() { initialize(); }
+
+void DevTouchInfo::initialize() {
+  unknown00 = 0;
+  unknown08 = 0;
+  unknown0c = -1;
+  unknown10 = 0;
+  unknown20 = dev_touch_detail::s_initPos;
+  unknown30 = dev_touch_detail::s_initPos;
+  unknown40 = dev_touch_detail::s_initPos;
+  unknown50 = mm::Vec2::zero;
+}
+
 int DevTouch::getTouchCount() { return get()->m_touchCount; }
 
 void DevTouch::updateDevice() {}

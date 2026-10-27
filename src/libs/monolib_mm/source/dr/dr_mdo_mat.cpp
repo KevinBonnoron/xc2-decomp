@@ -1,9 +1,110 @@
 #include "dr/dr_mdo_mat.h"
 
+#include <string.h>
+
 #include "dr/dr_man.h"
 #include "dr/dr_res_mdo_mat.h"
+#include "mm_math/mm_col4.h"
 
 namespace ml {
+
+void DrMdoMat::initMdlInfo(const u8 *data, MdoWrkMatRes *matRes) {
+  const MdsMeshHeader *header = reinterpret_cast<const MdsMeshHeader *>(data);
+  matRes->unknown18 = data;
+  matRes->unknown20 = header;
+  matRes->unknown170 = header->unknown20;
+  matRes->unknown168 = reinterpret_cast<const MdsMdlEntry *>(data + header->unknown1c);
+  if (header->unknown34 != 0) {
+    matRes->unknown178 = data + header->unknown30;
+  }
+}
+
+int DrMdoMat::getNodeAnmWrkRes(const u8 *data, u8 *work, MdoWrkMatRes *matRes) {
+  const MdsMeshHeader *header = reinterpret_cast<const MdsMeshHeader *>(data);
+  if (!(header->unknown00 & MdsMeshHeader::FLAG_UNKNOWN_3)) {
+    return 0;
+  }
+  if (work != nullptr) {
+    const unknown001 *table = reinterpret_cast<const unknown001 *>(data + header->unknown78);
+    unknown002 *nodeAnm = reinterpret_cast<unknown002 *>(work);
+    u32 dataOffset = table->unknown04;
+    nodeAnm->unknown00 = table;
+    nodeAnm->unknown08 = table;
+    nodeAnm->unknown10 = table->unknown00;
+    nodeAnm->unknown18 = reinterpret_cast<const u8 *>(table) + dataOffset;
+    matRes->unknown148 = nodeAnm;
+  }
+  return sizeof(unknown002);
+}
+
+void DrMdoMat::resetNodeAnmWrkRes(const u8 *data, MdoWrkMatRes *matRes) {
+  const MdsMeshHeader *header = reinterpret_cast<const MdsMeshHeader *>(data);
+  if (header->unknown00 & MdsMeshHeader::FLAG_UNKNOWN_3) {
+    const unknown001 *table = reinterpret_cast<const unknown001 *>(data + header->unknown78);
+    matRes->unknown148->unknown00 = table;
+    matRes->unknown148->unknown08 = table;
+    matRes->unknown148->unknown18 = reinterpret_cast<const u8 *>(table) + table->unknown04;
+  }
+}
+
+int DrMdoMat::getDispCallRes(const u8 *data, u32 offset, u8 *work, MdoWrkMatRes *matRes) {
+  const unknown004 *table = reinterpret_cast<const unknown004 *>(data + offset);
+  if (work != nullptr) {
+    unknown003 *dispCall = reinterpret_cast<unknown003 *>(work);
+    dispCall->unknown00 = table->unknown00;
+    dispCall->unknown10 = data + table->unknown04;
+    dispCall->unknown08 = work + sizeof(unknown003);
+    memset(dispCall->unknown08, 0, static_cast<u64>(table->unknown00) * 8);
+    matRes->unknown130 = dispCall;
+  }
+  return table->unknown00 * 8 + sizeof(unknown003);
+}
+
+void DrMdoMat::resetDispCallRes(const u8 *data, u32 offset, MdoWrkMatRes *matRes) {
+  const unknown004 *table = reinterpret_cast<const unknown004 *>(data + offset);
+  matRes->unknown130->unknown10 = data + table->unknown04;
+}
+
+int DrMdoMat::getFurShaderRes(const u8 *data, u32 offset, u8 *work, MdoWrkMatRes *matRes) {
+  const unknown008 *table = reinterpret_cast<const unknown008 *>(data + offset);
+  if (work != nullptr) {
+    unknown007 *furShader = reinterpret_cast<unknown007 *>(work);
+    furShader->unknown08 = reinterpret_cast<const unknown005 *>(data + table->unknown04);
+    const u8 *first = data + table->unknown00;
+    furShader->unknown10 = reinterpret_cast<unknown006 *>(work + sizeof(unknown007));
+    furShader->unknown00 = first;
+    for (int i = 0; i < table->unknown08; i++) {
+      furShader->unknown10[i].unknown00 = furShader->unknown08[i].unknown00;
+      furShader->unknown10[i].unknown04 = furShader->unknown08[i].unknown00;
+      furShader->unknown10[i].unknown08 = furShader->unknown08[i].unknown04;
+      furShader->unknown10[i].unknown0c = furShader->unknown08[i].unknown08;
+      furShader->unknown10[i].unknown10 = furShader->unknown08[i].unknown0c;
+      furShader->unknown10[i].unknown14 = furShader->unknown08[i].unknown10;
+    }
+    matRes->unknown138 = furShader;
+  }
+  return table->unknown08 * sizeof(unknown006) + 0x18;
+}
+
+void DrMdoMat::resetFurShaderRes(const u8 *data, u32 offset, MdoWrkMatRes *matRes) {
+  const unknown008 *table = reinterpret_cast<const unknown008 *>(data + offset);
+  matRes->unknown138->unknown08 = reinterpret_cast<const unknown005 *>(data + table->unknown04);
+  matRes->unknown138->unknown00 = data + table->unknown00;
+}
+
+void DrMdoMat::matCall_BaseColor(const MdsMatInfoHeader *header, int valueIndex, int matIndex) {
+  DrResMdoMat *mat = &unknown30->unknownc0[matIndex];
+  mat->unknown08.r = unknown30->unknown118->unknown00[valueIndex].r;
+  mat->unknown08.g = unknown30->unknown118->unknown00[valueIndex].g;
+  mat->unknown08.b = unknown30->unknown118->unknown00[valueIndex].b;
+}
+
+void DrMdoMat::matCall_BaseVal(const MdsMatInfoHeader *header, int valueIndex, int matIndex) {
+  DrResMdoMat *mat = &unknown30->unknownc0[matIndex];
+  mat->unknown08.r = unknown30->unknown118->unknown30[valueIndex];
+  mat->unknown08.g = unknown30->unknown118->unknown30[valueIndex];
+  mat->unknown08.b = unknown30->unknown118->unknown30[valueIndex];
+}
 
 void DrMdoMat::matCall_TransVal(const MdsMatInfoHeader *, int valueIndex, int matIndex) { unknown30->unknownc0[matIndex].setAlpha(unknown30->unknown118->unknown30[valueIndex]); }
 

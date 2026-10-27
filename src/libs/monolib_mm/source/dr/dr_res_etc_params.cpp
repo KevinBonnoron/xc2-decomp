@@ -45,4 +45,10 @@ void DrResEtcPamObj::release(DrResEtcPamObj *&obj) {
   }
 }
 
+int DrResEtcPamObj::calcWorkSize(const u8 *data) {
+  const unknown001 *header = reinterpret_cast<const unknown001 *>(data);
+  const unknown002 *params = reinterpret_cast<const unknown002 *>(data + header->unknown84);
+  return params->unknown04 * sizeof(DrResEtcParams) + 0x20;
+}
+
 } // namespace ml

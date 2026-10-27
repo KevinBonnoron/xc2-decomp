@@ -64,18 +64,114 @@ static_assert(sizeof(MdsMeshPartsInfo) == 0x10, "");
 
 struct MdsMeshHeader {
   enum Flag {
+    FLAG_UNKNOWN_3 = 1 << 3,
     FLAG_VANISH_EFFECT = 1 << 13,
   };
 
   u16 unknown00; // Inferred role: flags; original member name unknown.
-  u8 _02[0x64 - 0x02];
+  u8 _02[0x1c - 0x02];
+  u32 unknown1c; // Inferred role: mdl entry offset; original member name unknown.
+  u32 unknown20; // Inferred role: mdl entry count; original member name unknown.
+  u8 _24[0x30 - 0x24];
+  u32 unknown30; // Inferred role: offset of the second table; original member name unknown.
+  s32 unknown34; // Inferred role: count of the second table; original member name unknown.
+  u8 _38[0x64 - 0x38];
   u32 unknown64; // Inferred role: parts info offset; original member name unknown.
-  u8 _68[0x94 - 0x68];
+  u8 _68[0x78 - 0x68];
+  u32 unknown78; // Inferred role: offset of the node animation table; original member name unknown.
+  u8 _7c[0x94 - 0x7c];
   u8 unknown94; // Inferred role: vanish effect num; original member name unknown.
 };
 
+static_assert(offsetof(MdsMeshHeader, unknown1c) == 0x1c, "");
+static_assert(offsetof(MdsMeshHeader, unknown20) == 0x20, "");
+static_assert(offsetof(MdsMeshHeader, unknown30) == 0x30, "");
+static_assert(offsetof(MdsMeshHeader, unknown34) == 0x34, "");
 static_assert(offsetof(MdsMeshHeader, unknown64) == 0x64, "");
+static_assert(offsetof(MdsMeshHeader, unknown78) == 0x78, "");
 static_assert(offsetof(MdsMeshHeader, unknown94) == 0x94, "");
+
+// Inferred role: node animation table header; original type name unknown.
+struct unknown001 {
+  u32 unknown00; // Inferred role: count; original member name unknown.
+  u32 unknown04; // Inferred role: offset of the data; original member name unknown.
+};
+
+static_assert(sizeof(unknown001) == 0x08, "");
+
+// Inferred role: node animation work; original type name unknown.
+struct unknown002 {
+  const unknown001 *unknown00; // Inferred role: table; original member name unknown.
+  const unknown001 *unknown08; // Inferred role: table; original member name unknown.
+  u32 unknown10;               // Inferred role: count; original member name unknown.
+  const u8 *unknown18;         // Inferred role: data; original member name unknown.
+  u8 _20[0x28 - 0x20];
+};
+
+static_assert(offsetof(unknown002, unknown10) == 0x10, "");
+static_assert(offsetof(unknown002, unknown18) == 0x18, "");
+static_assert(sizeof(unknown002) == 0x28, "");
+
+// Inferred role: display call work, followed by one 8 byte slot per entry; original type name unknown.
+struct unknown003 {
+  u32 unknown00; // Inferred role: entry count; original member name unknown.
+  u8 _04[0x08 - 0x04];
+  u8 *unknown08;       // Inferred role: entries; original member name unknown.
+  const u8 *unknown10; // Inferred role: data; original member name unknown.
+};
+
+static_assert(offsetof(unknown003, unknown08) == 0x08, "");
+static_assert(offsetof(unknown003, unknown10) == 0x10, "");
+
+// Inferred role: display call table header; original type name unknown.
+struct unknown004 {
+  u32 unknown00; // Inferred role: entry count; original member name unknown.
+  u32 unknown04; // Inferred role: offset of the data; original member name unknown.
+};
+
+static_assert(sizeof(unknown004) == 0x08, "");
+
+// Inferred role: fur shader source entry; original type name unknown.
+struct unknown005 {
+  u32 unknown00;
+  u32 unknown04;
+  u32 unknown08;
+  u32 unknown0c;
+  u32 unknown10;
+};
+
+static_assert(sizeof(unknown005) == 0x14, "");
+
+// Inferred role: fur shader work entry; original type name unknown.
+struct unknown006 {
+  u32 unknown00;
+  u32 unknown04;
+  u32 unknown08;
+  u32 unknown0c;
+  u32 unknown10;
+  u32 unknown14;
+};
+
+static_assert(sizeof(unknown006) == 0x18, "");
+
+// Inferred role: fur shader work, followed by the work entries; original type name unknown.
+struct unknown007 {
+  const u8 *unknown00;         // Inferred role: first data; original member name unknown.
+  const unknown005 *unknown08; // Inferred role: source entries; original member name unknown.
+  unknown006 *unknown10;       // Inferred role: work entries; original member name unknown.
+};
+
+static_assert(offsetof(unknown007, unknown08) == 0x08, "");
+static_assert(offsetof(unknown007, unknown10) == 0x10, "");
+
+// Inferred role: fur shader table header; original type name unknown.
+struct unknown008 {
+  u32 unknown00; // Inferred role: offset of the first data; original member name unknown.
+  u32 unknown04; // Inferred role: offset of the source entries; original member name unknown.
+  s32 unknown08; // Inferred role: entry count; original member name unknown.
+};
+
+static_assert(sizeof(unknown008) == 0x0c, "");
 
 struct MdoWrkAvatar {
   u32 unknown00; // Inferred role: flags; original member name unknown.
@@ -170,12 +266,18 @@ struct MdoWrkMatRes {
   u8 _100[0x110 - 0x100];
   MdoWrkAvatar *unknown110;     // Inferred role: avatar; original member name unknown.
   MdoWrkShaderParm *unknown118; // Inferred role: shader parm; original member name unknown.
-  u8 _120[0x150 - 0x120];
+  u8 _120[0x130 - 0x120];
+  unknown003 *unknown130; // Inferred role: display call; original member name unknown.
+  unknown007 *unknown138; // Inferred role: fur shader; original member name unknown.
+  u8 _140[0x148 - 0x140];
+  unknown002 *unknown148;         // Inferred role: node animation; original member name unknown.
   MdoWrkVanishEffect *unknown150; // Inferred role: vanish effects; original member name unknown.
   MdoWrkRimBloom *unknown158;     // Inferred role: rim blooms; original member name unknown.
   u8 _160[0x168 - 0x160];
   const MdsMdlEntry *unknown168; // Inferred role: mdl entries; original member name unknown.
   u32 unknown170;                // Inferred role: mdl entry count; original member name unknown.
+  u8 _174[0x178 - 0x174];
+  const u8 *unknown178; // Inferred role: second table; original member name unknown.
 };
 
 static_assert(offsetof(MdoWrkMatRes, unknown10) == 0x010, "");
@@ -198,10 +300,14 @@ static_assert(offsetof(MdoWrkMatRes, unknownf0) == 0x0f0, "");
 static_assert(offsetof(MdoWrkMatRes, unknownf8) == 0x0f8, "");
 static_assert(offsetof(MdoWrkMatRes, unknown110) == 0x110, "");
 static_assert(offsetof(MdoWrkMatRes, unknown118) == 0x118, "");
+static_assert(offsetof(MdoWrkMatRes, unknown130) == 0x130, "");
+static_assert(offsetof(MdoWrkMatRes, unknown138) == 0x138, "");
+static_assert(offsetof(MdoWrkMatRes, unknown148) == 0x148, "");
 static_assert(offsetof(MdoWrkMatRes, unknown150) == 0x150, "");
 static_assert(offsetof(MdoWrkMatRes, unknown158) == 0x158, "");
 static_assert(offsetof(MdoWrkMatRes, unknown168) == 0x168, "");
 static_assert(offsetof(MdoWrkMatRes, unknown170) == 0x170, "");
+static_assert(offsetof(MdoWrkMatRes, unknown178) == 0x178, "");
 
 struct MdoWrkVanishEffect {
   u8 _00[0xa4 - 0x00];
@@ -257,6 +363,13 @@ public:
     ALPHA_FLAG_SINGLE_BUFFER = 1 << 18,
   };
 
+  void initMdlInfo(const u8 *data, MdoWrkMatRes *matRes);
+  int getNodeAnmWrkRes(const u8 *data, u8 *work, MdoWrkMatRes *matRes);
+  void resetNodeAnmWrkRes(const u8 *data, MdoWrkMatRes *matRes);
+  int getDispCallRes(const u8 *data, u32 offset, u8 *work, MdoWrkMatRes *matRes);
+  void resetDispCallRes(const u8 *data, u32 offset, MdoWrkMatRes *matRes);
+  int getFurShaderRes(const u8 *data, u32 offset, u8 *work, MdoWrkMatRes *matRes);
+  void resetFurShaderRes(const u8 *data, u32 offset, MdoWrkMatRes *matRes);
   void releaseMat();
   void setDrMan(DrMan *drMan);
   void updateAlphaCall();
@@ -269,6 +382,8 @@ public:
   void setFlagWaveOn(bool isOn);
   void setExtraShaderSetup(const void *shader);
   void releaseExtraShader();
+  void matCall_BaseColor(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
+  void matCall_BaseVal(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
   void matCall_TransVal(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
   void matCall_CalcColor(const MdsMatInfoHeader *header, int valueIndex, int matIndex);
   void matCall_EmissiveTime(const MdsMatInfoHeader *header, int valueIndex, int matIndex);

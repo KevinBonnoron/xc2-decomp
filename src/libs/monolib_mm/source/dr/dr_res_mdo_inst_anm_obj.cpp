@@ -226,6 +226,24 @@ namespace ml {
 
 DrResMdoInstAnmObj::DrResMdoInstAnmObj() { release(); }
 
+int DrResMdoInstAnmObj::getWorkSize(const u8 *data) {
+  const DrResMdoInstAnmHeader *header = reinterpret_cast<const DrResMdoInstAnmHeader *>(data);
+  u32 size = header->unknown08 * 0x78 + header->unknown04 * 8 + (header->unknown28 + header->unknown34) * 0x30 + header->unknown18 * 0x28;
+  u32 align = (0x10 - (size & 0xf)) & 0xf;
+  return size + header->unknown18 * 0x160 + align;
+}
+int DrResMdoInstAnmObj::getObjIdx(const char *name) {
+  if (unknown00 != nullptr) {
+    int count = static_cast<int>(unknown00->unknown04);
+    for (int i = 0; i < count; i++) {
+      DrResMdoInstPartsObj *object = unknown08[i];
+      if (strcmp(object->unknown10 + object->unknown18->unknown00, name) == 0) {
+        return i;
+      }
+    }
+  }
+  return -1;
+}
 void DrResMdoInstAnmObj::release() {
   unknown20 = nullptr;
   unknown28 = nullptr;

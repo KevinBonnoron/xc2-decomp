@@ -2,6 +2,8 @@
 
 namespace ml {
 
+DrResMdoSeamParmRead::~DrResMdoSeamParmRead() {}
+
 void DrResMdoSeamParmRead::addPos(const mm::Vec3 &position) {
   unknown00 |= 1;
   unknown10[unknown40] = position;
