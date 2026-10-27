@@ -14,11 +14,14 @@
 #include "gf/data/gf_data_hana.h"
 #include "gf/data/gf_data_idea.h"
 #include "gf/data/gf_data_manager.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_party.h"
 #include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_data_weapon.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/data/gf_object_type.h"
 #include "gf/event/gf_event.h"
+#include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixed_vector.h"
 
 namespace gf {
@@ -58,6 +61,28 @@ constexpr f32 SCALE_PERCENT = 0.01f;
 constexpr u32 CROWN_POINT_MAX = 5;
 constexpr u32 CROWN_POINT_MIN = 1;
 constexpr u32 NORMAL_TALK_COUNT = 32;
+
+namespace {
+
+// Inferred role: lists the named blades of a condition; original name unknown.
+template <typename Condition> bool unknown001(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades, Condition condition) {
+  for (u32 i = 0; i < BLADE_COUNT; i++) {
+    u32 blade = GfDataBlade::getBladeID(i);
+    if (blade != 0) {
+      DataParamAcc acc(OBJECT_TYPE_BLADE, blade, GIMMICK_TYPE_NONE);
+      if (acc.isValid() && condition(blade)) {
+        const char *name = acc.getName();
+        if (name != nullptr && name[0] != '\0') {
+          blades.push_back(blade);
+        }
+      }
+    }
+  }
+
+  return !blades.empty();
+}
+
+} // namespace
 
 void GfDataBlade::setCreator(u32 blade, u32 creator) {
   if (blade != 0) {
@@ -608,6 +633,25 @@ u8 GfDataBlade::getAttribute(u32 blade) {
   return getSDataBlade(blade)->unknown823;
 }
 
+bool GfDataBlade::isMatchIdeaAttribute(u32 blade, u32 idea) {
+  switch (getAttribute(blade)) {
+  case 1:
+  case 2:
+    return idea == 0;
+  case 3:
+  case 6:
+    return idea == 1;
+  case 4:
+  case 5:
+    return idea == 2;
+  case 7:
+  case 8:
+    return idea == 3;
+  default:
+    return false;
+  }
+}
+
 const char *GfDataBlade::getDeathBlowWeaponName(u32 blade) {
   static const char *const deathBlowWeaponNames[] = {
       "", "_01", "_02", "_03", "_04", "_05", "_06", "_07", "_08", "_09", "_10", "_11", "_12", "_13", "_14", "_15", "_16", "_17", "_18", "_19", "_20",
@@ -797,6 +841,143 @@ u32 GfDataBlade::getArtsEnhance(u32 blade, u32 slot) {
 }
 
 SDataBladeSkill *GfDataBlade::getSkill(u32 blade, u32 slot) { return &getSDataBlade(blade)->unknown9c[slot]; }
+
+bool GfDataBlade::getListRegular(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
+  for (u32 blade = BLADE_REGULAR_FIRST; blade < BLADE_REGULAR_END; blade++) {
+    if (!isDummyBlade(blade)) {
+      blades.push_back(blade);
+    }
+  }
+
+  return !blades.empty();
+}
+
+bool GfDataBlade::getListRare(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
+  for (u32 blade = BLADE_RARE_FIRST; blade < BLADE_ACT_FIRST; blade++) {
+    blades.push_back(blade);
+  }
+
+  return !blades.empty();
+}
+
+bool GfDataBlade::getListParty(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
+  for (u32 i = 0; i < BLADE_COUNT; i++) {
+    u32 blade = getBladeID(i);
+    if (blade != 0) {
+      if (isActivateDriver(blade) && GfDataDriver::isActivateParty(getSetDriver(blade)) && GfDataParty::isExistBlade(blade) && !isDummyBlade(blade) && !isUnselect(blade)) {
+        blades.push_back(blade);
+      }
+    }
+  }
+
+  return !blades.empty();
+}
+
+bool GfDataBlade::getListReserver(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
+  for (u32 i = 0; i < BLADE_COUNT; i++) {
+    u32 blade = getBladeID(i);
+    if (blade != 0) {
+      if (!isActivateUnuse(blade) && !isActivateMercenaryTeam(blade) && !GfDataDriver::isActivateParty(getSetDriver(blade)) && !isDummyBlade(blade) && !isUnselect(blade)) {
+        blades.push_back(blade);
+      }
+    }
+  }
+
+  return !blades.empty();
+}
+
+bool GfDataBlade::getListUnuse(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
+  return unknown001(blades, [](u32 blade) { return isActivateUnuse(blade) && !isDummyBlade(blade); });
+}
+
+bool GfDataBlade::getListUse(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
+  return unknown001(blades, [](u32 blade) { return !isActivateUnuse(blade) && !isDummyBlade(blade) && !isUnselect(blade); });
+}
+
+bool GfDataBlade::getListForAchievement(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
+  return unknown001(blades, [](u32 blade) { return (!isActivateUnuse(blade) || isAttachedParty(blade)) && !isDummyBlade(blade) && !isUnselect(blade); });
+}
+
+bool GfDataBlade::getListParty(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades, bool unknown001, bool unknown002) {
+  blades.clear();
+  for (u32 i = 0; i < BLADE_COUNT; i++) {
+    u32 blade = getBladeID(i);
+    if (blade != 0) {
+      if (!unknown001 && (blade == BLADE_HIKARI || blade == BLADE_HOMURI)) {
+        continue;
+      }
+      if (isActivateDriver(blade) && (unknown002 || !isDummyBlade(blade)) && !isUnselect(blade)) {
+        blades.push_back(blade);
+      }
+    }
+  }
+
+  return !blades.empty();
+}
+
+bool GfDataBlade::getListReserverWithSolo(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
+  getListReserver(blades);
+  for (u16 *it = blades.begin(); it != blades.end();) {
+    if (getSetDriver(*it) != 0) {
+      it = blades.erase(it);
+    } else {
+      it++;
+    }
+  }
+
+  return !blades.empty();
+}
+
+bool GfDataBlade::getlistCommon(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
+  for (u32 blade = BLADE_COMMON_FIRST; blade < BLADE_COMMON_END; blade++) {
+    if (!isActivateUnuse(blade) || isUnselect(blade)) {
+      blades.push_back(blade);
+    }
+  }
+
+  return !blades.empty();
+}
+
+bool GfDataBlade::getListLeave(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
+  for (u32 i = 0; i < BLADE_COUNT; i++) {
+    u32 blade = getBladeID(i);
+    if (blade != 0) {
+      if (!isActivateUnuse(blade) && isUnselect(blade) && !isDummyBlade(blade)) {
+        if (mm::mtl::find(blades.begin(), blades.end(), static_cast<u16>(blade)) == blades.end()) {
+          blades.push_back(blade);
+        }
+      }
+    }
+  }
+
+  return !blades.empty();
+}
+
+bool GfDataBlade::getListReserverAndUnuse(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
+  for (u32 i = 0; i < BLADE_COUNT; i++) {
+    u32 blade = getBladeID(i);
+    if (blade != 0) {
+      if (!isActivateDriver(blade) && !isDummyBlade(blade)) {
+        blades.push_back(blade);
+      }
+    }
+  }
+
+  return !blades.empty();
+}
+
+bool GfDataBlade::getListPartyAll(mm::mtl::FixedVector<u16, BLADE_COUNT> &blades) {
+  for (u32 i = 0; i < BLADE_COUNT; i++) {
+    u32 blade = getBladeID(i);
+    if (blade != 0) {
+      if (isActivateDriver(blade) && GfDataDriver::isActivatePartyAll(getSetDriver(blade)) && !isDummyBlade(blade) && !isUnselect(blade)) {
+        blades.push_back(blade);
+      }
+    }
+  }
+
+  return !blades.empty();
+}
 
 u32 GfDataBlade::getCreateEvent(u32 blade) { return getSDataBlade(blade)->unknown850; }
 

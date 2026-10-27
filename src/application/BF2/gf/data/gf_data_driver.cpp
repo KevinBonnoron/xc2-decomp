@@ -815,4 +815,17 @@ void GfDataDriver::setPouchData(u32 driver, u32 slot, const SDataPouch &pouch) {
   dataPouch->unknown00 = pouch.unknown00;
 }
 
+int GfDataDriver::getSetIdByDummyBlade(u32 driver) {
+  SDataDriver *dataDriver = getSDataDriver(driver);
+  if (driver != 0) {
+    for (int slot = 0; slot < getMaxSetBladeNum(driver); slot++) {
+      if (GfDataBlade::isDummyBlade(dataDriver->unknown26[slot])) {
+        return slot;
+      }
+    }
+  }
+
+  return -1;
+}
+
 } // namespace gf

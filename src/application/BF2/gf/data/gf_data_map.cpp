@@ -316,6 +316,13 @@ void GfDataMap::setCloudType(u32 map, CLOUD_SEA cloudType) {
   dataGame->unknown10a53c[map].unknown1c = cloudType != 0;
 }
 
+void GfDataMap::resetCloudType() {
+  SDataGame *dataGame = GfDataManager::getDataGame();
+  for (SDataMapInfo &info : dataGame->unknown10a53c) {
+    info.unknown1c = 0;
+  }
+}
+
 bool GfDataMap::isArcadiaDestroy() { return GfDataUtil::getScenarioFlag() >= SCENARIO_FLAG_ARCADIA_DESTROY; }
 
 } // namespace gf

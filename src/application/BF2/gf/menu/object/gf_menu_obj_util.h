@@ -12,7 +12,9 @@ struct Vec3;
 
 namespace gf {
 
+class DataParamAcc;
 class GfMenuBladeList;
+struct SDataIdea;
 class GfMenuCallContext;
 struct QuestID;
 struct GF_OBJ_HANDLE;
@@ -67,8 +69,16 @@ public:
   static GF_OBJ_HANDLE *getBladeHandleFromPartySlot(u32 partyId, int offset, bool isVirtual);
   static GF_OBJ_HANDLE *getBladeHandleFromPartyBackSlot(u32 partyId, int offset, bool isVirtual);
   static u32 getBladeIDFromPartyBackSlot(u32 partyId, int offset, bool isVirtual);
+  static u32 getBladeIDFromPartySlot(u32 partyId, int offset, bool isVirtual);
   static GF_OBJ_HANDLE *getBladeHandleOffset(u32 partyId, int offset);
   static u32 getBladeSlotMax();
+  static u32 getBladeCorrectiveType(u32 blade);
+  static u32 getBladeCorrectiveRatio(u32 blade);
+  static bool isBladeDifferentImage(u32 blade, u32 other);
+  static void getIdeagramDriver(u32 driver, SDataIdea &idea);
+  static void getIdeagramBlade(u32 blade, SDataIdea &idea);
+  static void getIdeagramDriverFromHandle(GF_OBJ_HANDLE *handle, SDataIdea &idea);
+  static int getDriverPartyID(u32 driver);
   static u16 getBladeFaceIconID(GF_OBJ_HANDLE *handle);
   static u16 getBladeFaceIconID(u32 blade);
   static u32 getBladeWeaponTypeIconID(u32 blade);
@@ -108,6 +118,12 @@ public:
   static bool isValidSoundHandle(u32 handle);
   static void stopBGM(u32 handle, f32 time);
   static u32 playJingle(u32 id);
+  static bool getBladeTeamName(u32 blade, ui::UIStr &name);
+  static int getFaceIconID(const DataParamAcc &acc);
+  static ui::UIStr getEnemyArtsName(u32 arts);
+  static ui::UIStr getDriverClassName(u32 driver);
+  static ui::UIStr getElementComboName(u32 combo);
+  static ui::UIStr getElementComboEffectName(u32 combo);
   static u8 getElementComboAtr(u32 combo);
   static u32 getElementComboEffect(u32 combo);
   static u8 getElementComboStage(u32 combo);

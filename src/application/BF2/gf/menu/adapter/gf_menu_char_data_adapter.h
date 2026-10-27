@@ -62,6 +62,22 @@ public:
   bool update_EN_BookID(const DataParamAcc &acc);
   bool update_EN_RewardExp(const DataParamAcc &acc);
   bool update_EN_RewardGold(const DataParamAcc &acc);
+  bool update_AttrName(const DataParamAcc &acc);
+  bool update_EN_Genus(const DataParamAcc &acc);
+  bool update_FaceIcon(const DataParamAcc &acc);
+  bool update_DR_SetBladeFace(const DataParamAcc &acc);
+  bool update_DR_IdeaLv(const DataParamAcc &acc);
+  bool update_DR_ExpNextVirtual(const DataParamAcc &acc);
+  bool update_BL_SpecialName(const DataParamAcc &acc);
+  bool update_BL_SpecialDesc(const DataParamAcc &acc);
+  bool update_BL_FieldSkillName(const DataParamAcc &acc);
+  bool update_BL_FieldSkillDesc(const DataParamAcc &acc);
+  bool update_BL_SkillName(const DataParamAcc &acc);
+  bool update_BL_weaponTypeName(const DataParamAcc &acc);
+  bool update_BL_CorrectiveTypeName(const DataParamAcc &acc);
+  bool update_BL_TeamName(const DataParamAcc &acc);
+  u32 getBL_FieldSkillIndex(const DataParamAcc &acc);
+  u32 getBL_SkillIndex(const DataParamAcc &acc);
 
   // Inferred role: the four receiver interfaces (0x30 to 0x50) and members not reconstructed yet; original member names unknown.
   u8 _30[0x79 - 0x30];

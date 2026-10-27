@@ -4,10 +4,12 @@
 #include "framework/sound/sound_manager.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_character_id.h"
+#include "gf/data/gf_data_battle.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_enemy.h"
+#include "gf/data/gf_data_idea.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_party.h"
 #include "gf/data/gf_data_util.h"
@@ -31,6 +33,7 @@
 #include "ui/ctrl/ui_ctrl_manager.h"
 #include "ui/event/ui_event_manager.h"
 #include "ui/ui_object_acc.h"
+#include "ui/ui_str.h"
 #include "ui/ui_util.h"
 
 namespace fw {
@@ -323,6 +326,20 @@ GF_OBJ_HANDLE *GfMenuObjUtil::getLeaderBladeHandle(bool isVirtual) {
 
 GF_OBJ_HANDLE *GfMenuObjUtil::getBladeHandle(u32 partyId, u32 slot) { return GfGameParty::getHandleBlade(partyId, slot); }
 
+u32 GfMenuObjUtil::getBladeIDFromPartySlot(u32 partyId, int offset, bool isVirtual) {
+  if (partyId >= 10) {
+    return 0;
+  }
+
+  DataParamAcc acc(OBJECT_TYPE_DRIVER, GfDataParty::getDriver(partyId), GIMMICK_TYPE_NONE);
+  int slot = getSetBladeID(partyId, offset, isVirtual);
+  u32 blade = 0;
+  if (slot != -1) {
+    blade = acc.getBlade(slot, false);
+  }
+  return blade;
+}
+
 GF_OBJ_HANDLE *GfMenuObjUtil::getBladeHandleFromPartySlot(u32 partyId, int offset, bool isVirtual) {
   int slot = getSetBladeID(partyId, offset, isVirtual);
   if (slot == -1) {
@@ -352,6 +369,94 @@ u32 GfMenuObjUtil::getBladeSlotMax() {
     slotMax = 3;
   }
   return slotMax;
+}
+
+u32 GfMenuObjUtil::getBladeCorrectiveType(u32 blade) {
+  if (!GfDataBlade::isValid(blade)) {
+    return 0;
+  }
+  if (GfDataBlade::getHpMaxRev(blade) * 0.01f > 0.0f) {
+    return 1;
+  }
+  if (GfDataBlade::getStrengthRev(blade) * 0.01f > 0.0f) {
+    return 2;
+  }
+  if (GfDataBlade::getPowerEtherRev(blade) * 0.01f > 0.0f) {
+    return 3;
+  }
+  if (GfDataBlade::getDexRev(blade) * 0.01f > 0.0f) {
+    return 4;
+  }
+  if (GfDataBlade::getAgilityRev(blade) != 0) {
+    return 5;
+  }
+  if (GfDataBlade::getLuckRev(blade) != 0) {
+    return 6;
+  }
+
+  return 0;
+}
+
+u32 GfMenuObjUtil::getBladeCorrectiveRatio(u32 blade) {
+  if (!GfDataBlade::isValid(blade)) {
+    return 0;
+  }
+
+  u32 rev;
+  if (GfDataBlade::getHpMaxRev(blade) * 0.01f > 0.0f) {
+    rev = GfDataBlade::getHpMaxRev(blade);
+  } else if (GfDataBlade::getStrengthRev(blade) * 0.01f > 0.0f) {
+    rev = GfDataBlade::getStrengthRev(blade);
+  } else if (GfDataBlade::getPowerEtherRev(blade) * 0.01f > 0.0f) {
+    rev = GfDataBlade::getPowerEtherRev(blade);
+  } else if (GfDataBlade::getDexRev(blade) * 0.01f > 0.0f) {
+    rev = GfDataBlade::getDexRev(blade);
+  } else if (GfDataBlade::getAgilityRev(blade) != 0) {
+    rev = GfDataBlade::getAgilityRev(blade);
+  } else if (GfDataBlade::getLuckRev(blade) != 0) {
+    rev = GfDataBlade::getLuckRev(blade);
+  } else {
+    return 0;
+  }
+
+  f32 percent = rev * 0.01f * 100.0f;
+  f32 half;
+  if (percent > 0.0f) {
+    half = 0.5f;
+  } else {
+    half = -0.5f;
+  }
+
+  return static_cast<int>(percent + half);
+}
+
+bool GfMenuObjUtil::isBladeDifferentImage(u32 blade, u32 other) { return convMenuBladeID(blade) != convMenuBladeID(other); }
+
+void GfMenuObjUtil::getIdeagramDriver(u32 driver, SDataIdea &idea) { idea = *GfDataDriver::getSDataIdea(driver); }
+
+void GfMenuObjUtil::getIdeagramBlade(u32 blade, SDataIdea &idea) {
+  if (blade != 0) {
+    idea = *GfDataBlade::getSDataIdea(blade);
+  }
+}
+
+void GfMenuObjUtil::getIdeagramDriverFromHandle(GF_OBJ_HANDLE *handle, SDataIdea &idea) {
+  u32 driver = GfObjAcc(handle).getBdatId();
+  if (driver != 0) {
+    idea = *GfDataDriver::getSDataIdea(driver);
+  } else {
+    idea = SDataIdea();
+  }
+}
+
+int GfMenuObjUtil::getDriverPartyID(u32 driver) {
+  for (u32 member = 0; member < 10; member++) {
+    if (GfDataParty::getDriver(member) == driver) {
+      return member;
+    }
+  }
+
+  return -1;
 }
 
 u16 GfMenuObjUtil::getBladeFaceIconID(GF_OBJ_HANDLE *handle) {
@@ -529,6 +634,60 @@ void GfMenuObjUtil::stopBGM(u32 handle, f32 time) {
 }
 
 u32 GfMenuObjUtil::playJingle(u32 id) { return GfMenuSoundManager::playJingle(id); }
+
+ui::UIStr GfMenuObjUtil::getElementComboName(u32 combo) {
+  u8 *bdat = Bdat::getFP("BTL_ElementalCombo");
+  if (!GfMenuBdat::isValidBdatID(bdat, combo)) {
+    return ui::UIStr();
+  }
+
+  u8 name = Bdat::getVal(bdat, "Name", combo).valueU8;
+  if (name != 0) {
+    return ui::UIStr(Bdat::getFP("btl_elementalcombo_ms"), name);
+  }
+
+  return ui::UIStr(Bdat::getVal(bdat, "DebugName", combo).valueString, false);
+}
+
+ui::UIStr GfMenuObjUtil::getElementComboEffectName(u32 combo) {
+  u8 *bdat = Bdat::getFP("BTL_ElementalCombo");
+  if (GfMenuBdat::isValidBdatID(bdat, combo)) {
+    u8 atr = Bdat::getVal(bdat, "Atr", combo).valueU8;
+    u8 name = Bdat::getVal(Bdat::getFP("BTL_ElementalEffect"), "Name", atr).valueU8;
+    if (name != 0) {
+      return ui::UIStr(Bdat::getFP("btl_elementaleffect_ms"), name);
+    }
+  }
+
+  return ui::UIStr();
+}
+
+ui::UIStr GfMenuObjUtil::getEnemyArtsName(u32 arts) {
+  u8 *bdat = GfDataBdat::getFP(BDAT_BTL_ARTS_EN);
+  u8 *msBdat = GfDataBdat::getFP(BDAT_BTL_ARTS_EN_MS);
+  if (GfMenuBdat::isValidBdatID(bdat, arts)) {
+    u16 name = Bdat::getVal(bdat, "Name", arts).valueU16;
+    if (name != 0) {
+      return ui::UIStr(msBdat, name);
+    }
+  }
+
+  return ui::UIStr();
+}
+
+ui::UIStr GfMenuObjUtil::getDriverClassName(u32 driver) {
+  u32 battleClass = GfDataDriver::getClass(driver);
+  if (battleClass != 0) {
+    u8 *bdat;
+    u32 textId;
+    if (GfDataBattle::getClassName(bdat, textId, battleClass)) {
+      return ui::UIStr(bdat, textId);
+    }
+    return ui::UIStr();
+  }
+
+  return ui::UIStr();
+}
 
 u8 GfMenuObjUtil::getElementComboAtr(u32 combo) {
   u8 *bdat = Bdat::getFP("BTL_ElementalCombo");

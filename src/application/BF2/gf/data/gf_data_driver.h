@@ -144,6 +144,7 @@ public:
   static int getSetIdByBlade(u32 driver, u32 blade);
   static int getSetIdByBlade(const SDataDriver &dataDriver, u32 blade);
   static int getMaxSetBladeNum(u32 driver);
+  static int getSetIdByDummyBlade(u32 driver);
   static u32 getBlade(u32 driver, int slot);
   static void unsetBlade(u32 blade);
   static SDataPouch *getPouchData(u32 driver, u32 slot);
