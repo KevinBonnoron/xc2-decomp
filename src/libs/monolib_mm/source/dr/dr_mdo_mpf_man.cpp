@@ -3,8 +3,19 @@
 #include <string.h>
 
 #include "dr/dr_mpf_work_auto_inf.h"
+#include "mtl/mem_manager.h"
 
 namespace ml {
+
+DrMdoMpfMan::~DrMdoMpfMan() {
+  unknown18.release();
+  unknown60.release();
+  unknown98.release();
+  if (unknown3d28 != nullptr) {
+    mtl::MemManager::deallocate(unknown3d28, 0, false);
+    unknown3d28 = nullptr;
+  }
+}
 
 void DrMdoMpfMan::begin() {
   unknown3d24 = 1.0f;

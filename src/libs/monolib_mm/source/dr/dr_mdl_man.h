@@ -25,6 +25,14 @@ public:
     DrMdlBase *unknown00; // Inferred role: first model; original member name unknown.
   };
 
+  // Inferred role: resource header start; original type name unknown.
+  struct unknown003 {
+    u32 unknown00; // Inferred role: magic; original member name unknown.
+    u32 unknown04; // Inferred role: version; original member name unknown.
+  };
+
+  void addMpfObj();
+  void delMpfObj();
   void renderBegin();
   void callShadowCacheUpdate(u64 flags);
   void setGroupsDisp(s32 group, bool disp);
@@ -40,6 +48,7 @@ public:
   void ThicknessRenderSecond();
   void refractionRender();
   void simpleShadowRender();
+  static int headerChek(const void *data);
   static void getTextureStreamInfo(u32 &size, u32 &count, const void *data, bool isMiddle);
   DrMdlObj *createMdl(const void *data, const char *name, int index);
   DrMdlObj *createInstantMdl(const void *data, const char *name, int index);

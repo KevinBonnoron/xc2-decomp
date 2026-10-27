@@ -308,6 +308,7 @@ public:
   void renderPrimFill(const mm::PrimBase *prim);
   void cubeFill(const mm::Cube *cube);
   static DebDraw *get(u32 screen);
+  static void swap();
   static CacheDraw *getCacheDraw();
   void initialize();
   void release();

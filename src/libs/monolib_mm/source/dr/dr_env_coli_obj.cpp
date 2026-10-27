@@ -1,5 +1,6 @@
 #include "dr/dr_env_coli_obj.h"
 
+#include "dr/dr_env_coli_man.h"
 #include "dr/dr_man.h"
 #include "mm_math/mm_vec3.h"
 #include "mtl/mem_manager.h"
@@ -45,6 +46,33 @@ DrEnvColiObj::~DrEnvColiObj() {
     mtl::MemManager::deallocate(unknown28, 0, false);
     unknown28 = nullptr;
   }
+}
+
+void DrEnvColiMan::clear() {
+  DrEnvColiObj *object = unknown10[0];
+  while (object != nullptr) {
+    DrEnvColiObj *next = object->unknown08;
+    delete object;
+    object = next;
+  }
+  unknown10[0] = nullptr;
+  unknown10[1] = nullptr;
+  object = unknown20[0];
+  while (object != nullptr) {
+    DrEnvColiObj *next = object->unknown08;
+    delete object;
+    object = next;
+  }
+  unknown20[0] = nullptr;
+  unknown20[1] = nullptr;
+  object = unknown00[0];
+  while (object != nullptr) {
+    DrEnvColiObj *next = object->unknown08;
+    delete object;
+    object = next;
+  }
+  unknown00[0] = nullptr;
+  unknown00[1] = nullptr;
 }
 
 void DrEnvColiObj::release() { unknown38 |= 1 << DrMan::s_nDblStockIdx; }

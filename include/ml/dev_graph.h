@@ -2,10 +2,12 @@
 #include <stddef.h>
 
 #include "ml/dev_base.h"
+#include "ml/reslist.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/singleton.h"
+#include "mtl/mem_manager.h"
 #include "types.h"
 
 namespace mm {
@@ -19,6 +21,7 @@ class ALLOC_HANDLE;
 namespace ml {
 
 class CriticalSection;
+class DevGraphCB;
 class DevGraphQue;
 
 enum FONT_STYLE : int {
@@ -92,6 +95,7 @@ public:
   static void renderBegin();
   static void renderEnd();
   static void renderSync();
+  static bool entryCb(DevGraphCB *callback);
   static void resetSize(s16 width, s16 height);
   static f32 getCost();
   static DevGraphQue *getGraphQue();
@@ -136,7 +140,8 @@ public:
   virtual void *cmdAddOfsSys(u32 offset);
   virtual bool cmdIsOpenDisplayListSys() const;
 
-  u8 _1b8[0x208 - 0x1b8];
+  reslist<DevGraphCB *> unknown1b8; // Inferred role: graph callbacks; original member name unknown.
+  u8 _1f8[0x208 - 0x1f8];
   mm::Rect<int> unknown208; // Inferred role: viewport; original member name unknown.
   mm::Rect<int> unknown218; // Inferred role: render port; original member name unknown.
   u8 _228[0x230 - 0x228];
@@ -156,6 +161,7 @@ public:
   void (*unknown350[4])(); // Inferred role: outer renders; original member name unknown.
 };
 
+static_assert(offsetof(DevGraph, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(DevGraph, unknown208) == 0x208, "");
 static_assert(offsetof(DevGraph, unknown230) == 0x230, "");
 static_assert(offsetof(DevGraph, unknown310) == 0x310, "");
@@ -164,8 +170,39 @@ static_assert(offsetof(DevGraph, unknown330) == 0x330, "");
 static_assert(offsetof(DevGraph, unknown348) == 0x348, "");
 static_assert(offsetof(DevGraph, unknown350) == 0x350, "");
 
+class GraphQue {
+public:
+  virtual ~GraphQue() {
+    if (unknown10[0] != nullptr) {
+      mtl::MemManager::deallocate(unknown10[0], 0, false);
+      unknown10[0] = nullptr;
+    }
+  }
+
+  DevGraphQue *unknown08; // Inferred role: owner; original member name unknown.
+  u8 *unknown10[2];       // Inferred role: double buffers; original member name unknown.
+  u32 unknown20;          // Inferred role: buffer size; original member name unknown.
+  u8 _24[0x28 - 0x24];
+  u8 *unknown28; // Inferred role: write start; original member name unknown.
+  u8 *unknown30; // Inferred role: write end; original member name unknown.
+  u16 unknown38; // Inferred role: write count; original member name unknown.
+  u8 _3a[0x40 - 0x3a];
+  u64 unknown40; // Inferred role: write size; original member name unknown.
+  u32 unknown48; // Inferred role: write flags; original member name unknown.
+};
+
+static_assert(offsetof(GraphQue, unknown08) == 0x08, "");
+static_assert(offsetof(GraphQue, unknown10) == 0x10, "");
+static_assert(offsetof(GraphQue, unknown20) == 0x20, "");
+static_assert(offsetof(GraphQue, unknown28) == 0x28, "");
+static_assert(offsetof(GraphQue, unknown30) == 0x30, "");
+static_assert(offsetof(GraphQue, unknown38) == 0x38, "");
+static_assert(offsetof(GraphQue, unknown40) == 0x40, "");
+static_assert(offsetof(GraphQue, unknown48) == 0x48, "");
+
 class DevGraphQue {
 public:
+  ~DevGraphQue();
   u32 getEven();
   bool getOdd();
   void flushViewport();
@@ -173,14 +210,20 @@ public:
   void popRect();
   mm::Rect<int> &getViewport();
   mm::Rect<int> &getRenderRect();
+  bool entryQue(GraphQue *que);
+  bool removeQue(GraphQue *que);
+  void swap();
 
-  s32 unknown00; // Inferred role: view; original member name unknown.
-  u8 _04[0x58 - 0x04];
+  u32 unknown00; // Inferred role: view; original member name unknown.
+  u8 _04[0x08 - 0x04];
+  reslist<GraphQue *> unknown08; // Inferred role: que list; original member name unknown.
+  u8 _48[0x58 - 0x48];
   mm::mtl::FixedQueue<mm::Rect<int>, 32> unknown58;  // Inferred role: viewport stack; original member name unknown.
   mm::mtl::FixedQueue<mm::Rect<int>, 32> unknown268; // Inferred role: scissor stack; original member name unknown.
   mm::mtl::FixedQueue<mm::Rect<int>, 32> unknown478; // Inferred role: render rect stack; original member name unknown.
 };
 
+static_assert(offsetof(DevGraphQue, unknown08) == 0x08, "");
 static_assert(offsetof(DevGraphQue, unknown58) == 0x58, "");
 static_assert(offsetof(DevGraphQue, unknown268) == 0x268, "");
 static_assert(offsetof(DevGraphQue, unknown478) == 0x478, "");

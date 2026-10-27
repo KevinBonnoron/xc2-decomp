@@ -26,9 +26,9 @@ public:
   bool envcoli_notrot_box(const u8 *data, const mm::Vec3 &position, f32 margin, const mm::Vec3 *center);
   bool envcoli_notrot_cylinder(const u8 *data, const mm::Vec3 &position, f32 margin, const mm::Vec3 *center);
 
-  void *unknown00; // Inferred role: unused data; original member name unknown.
-  void *unknown08; // Inferred role: unused data; original member name unknown.
-  void *unknown10; // Inferred role: env coli data; original member name unknown.
+  void *unknown00;         // Inferred role: unused data; original member name unknown.
+  DrEnvColiObj *unknown08; // Inferred role: next object; original member name unknown.
+  void *unknown10;         // Inferred role: env coli data; original member name unknown.
   u8 _18[0x28 - 0x18];
   void *unknown28;  // Inferred role: unused data; original member name unknown.
   DrMan *unknown30; // Inferred role: dr man; original member name unknown.

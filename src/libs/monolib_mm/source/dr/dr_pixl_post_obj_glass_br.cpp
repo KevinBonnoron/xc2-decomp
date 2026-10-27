@@ -24,7 +24,7 @@ void DrPixlPostObjGlassBr::render() {
   }
 }
 
-DrPixlPostObjGlassBr::~DrPixlPostObjGlassBr() {
+void DrPixlPostObjGlassBr::release() {
   unknown98.release();
   unknown18.release();
   unknown40.release();
@@ -36,5 +36,7 @@ DrPixlPostObjGlassBr::~DrPixlPostObjGlassBr() {
   }
   unknown508 = 3;
 }
+
+DrPixlPostObjGlassBr::~DrPixlPostObjGlassBr() { release(); }
 
 } // namespace ml

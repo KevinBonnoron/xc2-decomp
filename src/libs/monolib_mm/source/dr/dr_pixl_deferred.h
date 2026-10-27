@@ -20,6 +20,7 @@ public:
   grlib::CGLibTextureBuffer *getShadowMapTexture() const;
   void shadowBuffBegin();
   void shadowBuffClear();
+  void releaseColorBuff();
   DrPixlRenderTarget *getTemporalInputShadowMap();
   DrPixlRenderTarget *getTemporalOutputShadowMap();
   DrPixlRenderTarget *getTemporalOutputShadowMap() const;
@@ -30,10 +31,12 @@ public:
   u8 _10[0x20 - 0x10];
   DrPixlRenderTarget *unknown20;    // Inferred role: temporal input shadow; original member name unknown.
   DrPixlRenderTarget *unknown28[2]; // Inferred role: temporal shadow buffers; original member name unknown.
+  s32 unknown38;                    // Inferred role: temporal shadow state; original member name unknown.
 };
 
 static_assert(offsetof(DrPixlDeferred, unknown08) == 0x08, "");
 static_assert(offsetof(DrPixlDeferred, unknown20) == 0x20, "");
 static_assert(offsetof(DrPixlDeferred, unknown28) == 0x28, "");
+static_assert(offsetof(DrPixlDeferred, unknown38) == 0x38, "");
 
 } // namespace ml

@@ -104,6 +104,38 @@ bool DrMan::isTemporalUPSToGlobalIBL() const {
   return unknown80->unknown18->unknown58->isEnable();
 }
 
+int DrMdlMan::headerChek(const void *data) {
+  const unknown003 *header = static_cast<const unknown003 *>(data);
+  switch (header->unknown00) {
+  case 0x4d584d44:
+    return header->unknown04 == 0x2780 ? 1 : 0;
+  case 0x4d454d44:
+    return header->unknown04 == 0x2780 ? 3 : 0;
+  case 0x4d534d44:
+    return header->unknown04 == 0x2780 ? 4 : 0;
+  case 0x53494d44:
+    return header->unknown04 == 0x2780 ? 2 : 0;
+  case 0x444c4d43:
+    return header->unknown04 == 0x2712 ? 5 : 0;
+  }
+  return 0;
+}
+
+void DrMdlMan::addMpfObj() {
+  if (unknown020 != nullptr) {
+    unknown020->addMpfObj();
+    return;
+  }
+  unknown020 = new (unknown000->unknown0c) DrMdoMpfMan(unknown000);
+}
+
+void DrMdlMan::delMpfObj() {
+  if (unknown020 != nullptr && unknown020->delMpfObj()) {
+    delete unknown020;
+    unknown020 = nullptr;
+  }
+}
+
 void DrMdlMan::simpleShadowRender() { unknown030->shadowRender(); }
 
 void DrMdlMan::lightPrePassRender() {

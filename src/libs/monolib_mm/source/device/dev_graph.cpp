@@ -5,6 +5,7 @@
 #include "grlib/cglib_gpu_cache.h"
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_polygon.h"
+#include "ml/cache_draw.h"
 #include "ml/critical_section.h"
 #include "ml/err_viewer.h"
 #include "ml/reslist.h"
@@ -27,6 +28,8 @@ CriticalSection &getCriticalSection() {
 }
 
 } // namespace dg
+
+DevGraph::~DevGraph() {}
 
 f32 DevGraph::fontGetWidth(const char *text, FONT_STYLE style, f32 scale) {
   f32 width;
@@ -291,6 +294,54 @@ f32 DevGraph::getCost() {
 
 DevGraphQue *DevGraph::getGraphQue() { return get()->unknown330; }
 
+bool DevGraph::entryCb(DevGraphCB *callback) {
+  DevGraph *graph = get();
+  if (graph != nullptr) {
+    graph->unknown1b8.push_back(callback);
+  }
+
+  return true;
+}
+
+void DevGraph::renderSync() {
+  DevGraph *graph = get();
+  if (graph != nullptr) {
+    graph->renderSyncSys();
+    DebDraw::swap();
+  }
+}
+
+DevGraphQue::~DevGraphQue() {}
+
+bool DevGraphQue::entryQue(GraphQue *que) {
+  unknown08.push_back(que);
+  return true;
+}
+
+bool DevGraphQue::removeQue(GraphQue *que) {
+  for (reslist<GraphQue *>::Node *node = unknown08.begin(); node != unknown08.end(); node = node->getNext()) {
+    if (node->value == que) {
+      delete que;
+      unknown08.erase(node);
+      break;
+    }
+  }
+
+  return true;
+}
+
+void DevGraphQue::swap() {
+  unknown00 = unknown00 == 0;
+  for (reslist<GraphQue *>::Node *node = unknown08.begin(); node != unknown08.end(); node = node->getNext()) {
+    GraphQue *que = node->value;
+    que->unknown28 = que->unknown10[que->unknown08->unknown00];
+    que->unknown30 = que->unknown28 + que->unknown20;
+    que->unknown38 = 0;
+    que->unknown40 = 0;
+    que->unknown48 = 0;
+  }
+}
+
 u32 DevGraphQue::getEven() { return unknown00; }
 
 bool DevGraphQue::getOdd() { return unknown00 == 0; }
@@ -393,7 +444,6 @@ void *DevGraph::cmdAddOfsSys(u32 offset) { return nullptr; }
 bool DevGraph::cmdIsOpenDisplayListSys() const { return false; }
 
 class DevGraphCB;
-class GraphQue;
 class IDevFontInfo;
 
 template class reslist<DevGraphCB *>;

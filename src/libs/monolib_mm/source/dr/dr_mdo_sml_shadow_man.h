@@ -31,15 +31,20 @@ public:
   void changeViewNum(DrMdoSmlShadowObj *shadow, int viewNum);
   void shadowRender();
   void releaseObj(DrMdoSmlShadowObj *shadow);
+  void delObjList();
   bool checkDisp();
 
   u8 _00[0x04 - 0x00];
   s32 unknown04; // Inferred role: view index; original member name unknown.
   u8 _08[0x10 - 0x08];
   DrMdoSmlShadowObj *unknown10[4][2]; // Inferred role: object lists (first and last per view); original member name unknown.
+  DrMdoSmlShadowObj *unknown50[2][2]; // Inferred role: added object lists (first and last per buffer); original member name unknown.
+  DrMdoSmlShadowObj *unknown70[2];    // Inferred role: object list to delete (first and last); original member name unknown.
 };
 
 static_assert(offsetof(DrMdoSmlShadowMan, unknown04) == 0x04, "");
 static_assert(offsetof(DrMdoSmlShadowMan, unknown10) == 0x10, "");
+static_assert(offsetof(DrMdoSmlShadowMan, unknown50) == 0x50, "");
+static_assert(offsetof(DrMdoSmlShadowMan, unknown70) == 0x70, "");
 
 } // namespace ml

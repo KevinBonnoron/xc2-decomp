@@ -67,6 +67,15 @@ public:
     m_size++;
   }
 
+  void erase(Node *node) {
+    NodeBase *next = node->next;
+    NodeBase *prev = node->prev;
+    prev->next = next;
+    next->prev = prev;
+    node->next = nullptr;
+    m_size--;
+  }
+
   void clear() {
     Node *node = begin();
     while (node != end()) {

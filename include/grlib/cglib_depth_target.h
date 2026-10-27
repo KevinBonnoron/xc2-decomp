@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "grlib/cglib_texture_buffer.h"
 #include "types.h"
 
 namespace grlib {
@@ -11,6 +12,7 @@ public:
   void setRenderTarget();
   void release();
   void clearDepth(bool isClear);
+  void setTextureInfo(f32 width, f32 height, GrlDepthFormat format, bool isResArea, u32 resArea);
   void clearValDepth(float value, bool isClear);
 
   u32 unknown00; // Inferred role: width; original member name unknown.

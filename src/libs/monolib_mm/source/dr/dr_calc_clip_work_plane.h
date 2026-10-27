@@ -11,6 +11,7 @@ public:
   DrCalcClipWorkPlane();
   ~DrCalcClipWorkPlane();
   bool clipTest(const mm::Vec3 &position, f32 radius) const override;
+  int clipTypeTest(const mm::Vec3 &position, f32 radius) const override;
 
   unknown001 unknown10[6]; // Inferred role: clip planes; original member name unknown.
 };

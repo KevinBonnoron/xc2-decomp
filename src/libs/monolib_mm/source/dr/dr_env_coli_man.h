@@ -28,11 +28,17 @@ class DrEnvColiMan {
 public:
   DrEnvColiObj *createObj(const void *data);
   bool testEnvColi(DrEnvColiResult *result, const mm::Vec3 &position, f32 radius);
+  void clear();
 
-  u8 _00[0x48 - 0x00];
+  DrEnvColiObj *unknown00[2]; // Inferred role: object list (first and last); original member name unknown.
+  DrEnvColiObj *unknown10[2]; // Inferred role: object list (first and last); original member name unknown.
+  DrEnvColiObj *unknown20[2]; // Inferred role: object list (first and last); original member name unknown.
+  u8 _30[0x48 - 0x30];
   DrEnvColiResult unknown48; // Inferred role: result; original member name unknown.
 };
 
+static_assert(offsetof(DrEnvColiMan, unknown10) == 0x10, "");
+static_assert(offsetof(DrEnvColiMan, unknown20) == 0x20, "");
 static_assert(offsetof(DrEnvColiMan, unknown48) == 0x48, "");
 
 } // namespace ml

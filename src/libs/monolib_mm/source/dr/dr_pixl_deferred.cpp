@@ -42,4 +42,19 @@ DrPixlRenderTarget *DrPixlDeferred::getTemporalOutputShadowMap() const { return 
 
 DrPixlRenderTarget *DrPixlDeferred::getTemporalHistoryShadowMap() { return unknown28[DrMan::s_nDblStockIdx]; }
 
+void DrPixlDeferred::releaseColorBuff() {
+  DrPixlPostParm *postParm = unknown08->unknown120[unknown08->unknown1c98];
+  unknown38 = 0;
+  if (postParm->unknownfe4 == 3) {
+    unknown28[0]->releaseTexture();
+    unknown28[1]->releaseTexture();
+  } else {
+    unknown28[DrMan::s_nDblIdx]->releaseTexture();
+  }
+  if (postParm->unknownfe4 == 2) {
+    return;
+  }
+  unknown20->releaseTexture();
+}
+
 } // namespace ml
