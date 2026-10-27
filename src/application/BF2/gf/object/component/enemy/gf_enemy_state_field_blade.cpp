@@ -1,6 +1,7 @@
 #include "gf/object/component/enemy/gf_enemy_state_field_blade.h"
 
 #include "fw/fw_transform.h"
+#include "fw/fw_update_info.h"
 #include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
@@ -41,6 +42,13 @@ void StateFieldBlade::update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo 
 
   if (unknown50) {
     (this->*unknown50)(*behavior, info);
+  }
+}
+
+void StateFieldBlade::seqWaitIdle(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
+  unknown18.update(info.unknown04);
+  if (unknown18.unknown34 && unknown18.unknown35) {
+    unknown50 = &StateFieldBlade::seqIdle;
   }
 }
 

@@ -4,6 +4,7 @@
 #include "framework/message/message_object.h"
 #include "gf/object/component/gf_component.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 
@@ -38,7 +39,7 @@ static_assert(offsetof(GfStatusProperty, unknown14) == 0x14, "");
 static_assert(offsetof(GfStatusProperty, unknown18) == 0x18, "");
 static_assert(offsetof(GfStatusProperty, unknown1a) == 0x1a, "");
 
-struct GfPropertyTarget {
+struct GfTargetProperty {
   GF_OBJ_HANDLE *handle;
 };
 
@@ -75,7 +76,7 @@ public:
   void procMsgObjectLimitHP(fw::MessageObject *object, MsgObjectLimitHP &message);
 
   GfStatusProperty *unknown10;     // Inferred role: status; original member name unknown.
-  GfPropertyTarget *unknown18;     // Inferred role: target; original member name unknown.
+  GfTargetProperty *unknown18;     // Inferred role: target; original member name unknown.
   GfPropertyAlpha *unknown20;      // Inferred role: alpha; original member name unknown.
   GfEnvProperty *unknown28;        // Inferred role: environment; original member name unknown.
   GfPropertyDebugFlags *unknown30; // Inferred role: debug flags; original member name unknown.
@@ -93,14 +94,46 @@ enum {
   HEAL_TYPE_SET = 2,
 };
 
+enum {
+  MSG_OBJECT_DAMAGE = 0x1000032,
+  MSG_OBJECT_NOTIFY_DAMAGE = 0x1000037,
+  MSG_OBJECT_NOTIFY_DEAD = 0x1000038,
+};
+
+// Layout evidence: GfComBehaviorEnemy::procMsgObjectLure (0x7100513fc4) and GfFieldDmg::update build it on the stack and the
+// handlers of GfComBehaviorEnemy read the members at 0x20, 0x2a and 0x2e.
 struct MsgObjectDamage : fw::Message {
-  u32 unknown08; // Inferred role: damage; original member name unknown.
-  u8 _0c[0x28 - 0x0c];
-  u8 : 1;
-  u8 unknown28_1 : 1; // Inferred role: critical; original member name unknown.
+  MsgObjectDamage(u32 damage, u32 type)
+      : fw::Message(MSG_OBJECT_DAMAGE, 0x20), unknown08(damage), unknown0c(damage), unknown10(type), unknown18(nullptr), unknown20(INVALID_HANDLE), unknown28_0(0), unknown28_1(0), unknown28_2(0),
+        unknown29(0), unknown2a(false), unknown2b(0), unknown2c(0), unknown2e(false), unknown2f(true), unknown30(false), unknown34(0), unknown38(false) {}
+
+  u32 unknown08;             // Inferred role: damage; original member name unknown.
+  u32 unknown0c;             // Role and original member name unknown.
+  u32 unknown10;             // Role and original member name unknown.
+  const mm::Vec3 *unknown18; // Role and original member name unknown.
+  GF_OBJ_HANDLE *unknown20;  // Inferred role: attacker; original member name unknown.
+  u8 unknown28_0 : 1;        // Role and original member name unknown.
+  u8 unknown28_1 : 1;        // Inferred role: critical; original member name unknown.
+  u8 unknown28_2 : 6;        // Role and original member name unknown.
+  u8 unknown29;              // Role and original member name unknown.
+  bool unknown2a;            // Role and original member name unknown.
+  u8 unknown2b;              // Role and original member name unknown.
+  u16 unknown2c;             // Role and original member name unknown.
+  bool unknown2e;            // Role and original member name unknown.
+  bool unknown2f;            // Role and original member name unknown.
+  bool unknown30;            // Role and original member name unknown.
+  u32 unknown34;             // Role and original member name unknown.
+  bool unknown38;            // Role and original member name unknown.
 };
 
 static_assert(offsetof(MsgObjectDamage, unknown08) == 0x08, "");
+static_assert(offsetof(MsgObjectDamage, unknown18) == 0x18, "");
+static_assert(offsetof(MsgObjectDamage, unknown20) == 0x20, "");
+static_assert(offsetof(MsgObjectDamage, unknown2a) == 0x2a, "");
+static_assert(offsetof(MsgObjectDamage, unknown2c) == 0x2c, "");
+static_assert(offsetof(MsgObjectDamage, unknown2e) == 0x2e, "");
+static_assert(offsetof(MsgObjectDamage, unknown38) == 0x38, "");
+static_assert(sizeof(MsgObjectDamage) == 0x40, "");
 
 struct MsgObjectNotifyDamage : fw::Message {
   const MsgObjectDamage *unknown08; // Inferred role: damage; original member name unknown.

@@ -10,6 +10,9 @@
 
 namespace gf {
 
+struct GF_OBJ_HANDLE;
+class IGfBehFieldOwner;
+
 // Sensor of GfBehaviorEnemyField, a sub object at 0xd0 of it. The layout follows the inlined constructor in
 // GfBehaviorEnemyField::GfBehaviorEnemyField (0x7100511c74), GfFieldEnemySensor::GfFieldEnemySensor (0x7100511068), the copy of
 // the CreateInfo in GfFieldEnemySensor::create (0x71005110f4) and the vtable at 0x119bd90, which holds the slots enter, leave and
@@ -26,9 +29,12 @@ public:
     int unknown4c;       // Inferred role: battle lock gimmick index; original member name unknown.
   };
 
+  GfFieldEnemySensor(const CreateInfo *info = nullptr);
   ~GfFieldEnemySensor() { dispose(); }
+  void create(const CreateInfo &info);
   void dispose();
   void createByGmkBattleLock();
+  void update(GF_OBJ_HANDLE *handle, const IGfBehFieldOwner &owner);
   bool isPlayerEnter() const;
   f32 getEyeRadiusSq() const;
   void enter(const EnterInfo &info) override;

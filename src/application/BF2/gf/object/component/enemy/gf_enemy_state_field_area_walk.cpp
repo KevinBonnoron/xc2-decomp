@@ -1,5 +1,6 @@
 #include "gf/object/component/enemy/gf_enemy_state_field_area_walk.h"
 
+#include "fw/fw_update_info.h"
 #include "gf/object/component/enemy/gf_behavior_enemy_field.h"
 #include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/component/enemy/gf_enemy_state_id.h"
@@ -32,6 +33,13 @@ void StateFieldAreaWalk::seqChangeState(GfComBehaviorEnemy &behavior, const fw::
     reqState(next);
   } else {
     reqState(STATE_ID_UNKNOWN_1);
+  }
+}
+
+void StateFieldAreaWalk::seqWaitMoveEnd(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
+  unknown20.update(info.unknown04);
+  if (unknown20.unknown34) {
+    unknown58 = &StateFieldAreaWalk::seqChangeState;
   }
 }
 

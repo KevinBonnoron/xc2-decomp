@@ -32,6 +32,12 @@ class StateFieldWalk : public GfStateBase {
   void leave(GfComBehaviorEnemy *behavior, ai::State *next);
   void update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo &info);
   bool has_move_fly_ON() const;
+  bool canLotteryMoveSpeed(GfComBehaviorEnemy &behavior) const;
+  void updateRouteNavi(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqIdleInfinit(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqWaitSpecialEndAtRoutePoint(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqWaitSyncLoco(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqWaitTurnEnd(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
 
   u8 unknown18;                                                                    // Inferred role: actMove_Atr of BDAT_FLD_ENACT_MOVE; original member name unknown.
   bool unknown19;                                                                  // Role and original member name unknown.

@@ -16,10 +16,12 @@
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/field/gf_field_enemy_sensor.h"
+#include "gf/field/gf_field_pitch_roll_controller.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/object/gf_menu_obj_target_info.h"
 #include "gf/object/component/animation/gf_com_asm.h"
+#include "gf/object/component/behavior/plugin/gf_plugin_manager.h"
 #include "gf/object/component/enemy/gf_enemy_state_battle.h"
 #include "gf/object/component/enemy/gf_enemy_state_field_area_walk.h"
 #include "gf/object/component/enemy/gf_enemy_state_field_blade.h"
@@ -29,6 +31,8 @@
 #include "gf/object/component/enemy/gf_enemy_state_field_squad_member.h"
 #include "gf/object/component/enemy/gf_enemy_state_field_walk.h"
 #include "gf/object/component/gf_com_collider.h"
+#include "gf/object/component/gf_component.h"
+#include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_manager.h"
@@ -71,6 +75,54 @@ void GfComBehaviorEnemy::callbackField(GfComAsm *comAsm, const CallBackCache &ca
 void GfComBehaviorEnemy::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
 
 const mm::mtl::RTTI *GfComBehaviorEnemy::getRTTI() const { return &m_rtti; }
+
+bool GfComBehaviorEnemy::recieveMessage(fw::MessageObject *sender, fw::Message &message) {
+  switch (message.unknown00) {
+  case MSG_OBJECT_NOTIFY_DAMAGE:
+    procMsgObjectNotifyDamage(sender, static_cast<MsgObjectNotifyDamage &>(message));
+    return true;
+  case MSG_OBJECT_NOTIFY_DEAD:
+    procMsgObjectNotifyDead(sender, static_cast<MsgObjectNotifyDead &>(message));
+    return true;
+  case MSG_OBJECT_LURE:
+    procMsgObjectLure(sender, static_cast<MsgObjectLure &>(message));
+    return true;
+  case MSG_OBJECT_GET_VELOCITY:
+    procMsgObjectGetVelocity(sender, static_cast<MsgObjectGetVelocity &>(message));
+    return true;
+  default:
+    break;
+  }
+
+  if (message.unknown00 == MSG_DEBUG_ACTIVATE_COMPONENT_WINDOW) {
+    procMsgActivateComponentDebugWindow(sender, static_cast<MsgDebugActivateComponentWindow &>(message));
+    return true;
+  }
+
+  if (message.unknown00 == MSG_PC_GET_LOOK_POINT) {
+    procMsgPcGetLookPoint(sender, static_cast<MsgPcGetLookPoint &>(message));
+    return true;
+  }
+
+  return false;
+}
+
+void GfComBehaviorEnemy::cleanup() {
+  unknown140.dispose();
+  disposeFsm();
+  disposeMenuObj();
+  unknown10.cleanup();
+  unknown138 = nullptr;
+}
+
+void GfComBehaviorEnemy::procMsgObjectLure(fw::MessageObject *sender, MsgObjectLure &message) {
+  if (sender != nullptr) {
+    unknown54e4 = true;
+    MsgObjectDamage damage(1, 0);
+    damage.unknown2e = true;
+    sender->sendMessage(static_cast<GfObj *>(unknown08), damage);
+  }
+}
 
 gmk::AGmkBase *GfComBehaviorEnemy::getBindedGmkInst() const { return gmk::getBindedGmkInst(static_cast<GfObj *>(unknown08)->unknownf8); }
 
@@ -174,8 +226,8 @@ void GfComBehaviorEnemy::setStateId(enemy::STATE_ID stateId) {
   if (stateId == enemy::STATE_ID_UNKNOWN_0) {
     unknown54e2 = false;
     unknown54e3 = false;
-    unknown140.unknown5298 = true;
-    unknown140.unknown5299 = true;
+    unknown140.unknown5268.unknown30 = true;
+    unknown140.unknown5268.unknown31 = true;
     static_cast<GfObj *>(unknown08)->unknown110 |= 4;
     GfObjUtil::setInvincible(static_cast<GfObj *>(unknown08)->unknownf8, false, false);
     if (unknown140.unknown37 != 0) {

@@ -37,31 +37,31 @@ GfComAsm *GfEnemyFieldMoveSpeed::getComAsm() const {
 }
 
 void GfEnemyFieldMoveSpeed::setSpeedKmph(f32 speed, f32 time) {
-  f32 current = unknown28;
-  unknown24 = speed;
+  f32 current = unknown18.unknown10;
+  unknown18.unknown0c = speed;
   unknown10 = current;
-  unknown20 = current;
-  unknown28 = time == 0.0f ? speed : current;
-  unknown2c = time;
+  unknown18.unknown08 = current;
+  unknown18.unknown10 = time == 0.0f ? speed : current;
+  unknown18.unknown14 = time;
 }
 
 void GfEnemyFieldMoveSpeed::update(f32 deltaTime) {
   if (unknown00 == INVALID_HANDLE) {
     return;
   }
-  f32 target = unknown24;
-  if (unknown20 < target) {
-    unknown28 += unknown2c * deltaTime;
-    if (target <= unknown28) {
-      unknown28 = target;
+  f32 target = unknown18.unknown0c;
+  if (unknown18.unknown08 < target) {
+    unknown18.unknown10 += unknown18.unknown14 * deltaTime;
+    if (target <= unknown18.unknown10) {
+      unknown18.unknown10 = target;
     }
   } else {
-    unknown28 -= unknown2c * deltaTime;
-    if (unknown28 <= target) {
-      unknown28 = target;
+    unknown18.unknown10 -= unknown18.unknown14 * deltaTime;
+    if (unknown18.unknown10 <= target) {
+      unknown18.unknown10 = target;
     }
   }
-  unknown10 = unknown28;
+  unknown10 = unknown18.unknown10;
   GfObjAcc acc(unknown00);
   GfObj *obj = acc.getObj();
   if (obj != nullptr) {

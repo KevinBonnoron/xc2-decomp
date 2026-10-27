@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "ai/ai_state_hfsm.h"
+#include "framework/message/message_object.h"
 #include "framework/object/updatable_object.h"
 #include "gf/field/gf_field_dmg.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
@@ -22,7 +23,6 @@ struct Quat;
 
 namespace fw {
 class ColiMoveObject;
-class MessageObject;
 struct UpdateInfo;
 class ReferenceFrame;
 } // namespace fw
@@ -37,9 +37,14 @@ class GfComAsm;
 class GfMenuCallContext;
 struct CallBackCache;
 struct MsgDebugActivateComponentWindow;
-struct MsgObjectLure;
 struct MsgObjectNotifyDamage;
 struct MsgObjectNotifyDead;
+
+enum {
+  MSG_OBJECT_LURE = 0x1000041,
+};
+
+struct MsgObjectLure : fw::Message {};
 
 // Layout evidence: the constructor at 0x7100514074 initializes the members below in this order, the allocation in
 // GfObjFactory::createComponent is 0x5510 bytes with 16 byte alignment, and the vtable at 0x119bdd8 holds, after the

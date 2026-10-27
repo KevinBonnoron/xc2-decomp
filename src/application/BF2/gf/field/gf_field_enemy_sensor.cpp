@@ -5,6 +5,13 @@
 
 namespace gf {
 
+GfFieldEnemySensor::GfFieldEnemySensor(const CreateInfo *info)
+    : unknown60(0), unknown61(false), unknown80(false), unknown90(0.0f), unknown94(0.0f), unknown98(false), unknown99(false), unknowna8(0.0f), unknownac(false), unknownf0(false) {
+  if (info != nullptr) {
+    create(*info);
+  }
+}
+
 void GfFieldEnemySensor::dispose() {
   unknownf0 = false;
   unknownac = false;

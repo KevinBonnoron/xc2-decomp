@@ -18,6 +18,8 @@ public:
   };
 
   struct UpdateInfo {
+    UpdateInfo() : position(0.0f, 0.0f, 0.0f) {}
+
     mm::Vec3 position;
   };
 

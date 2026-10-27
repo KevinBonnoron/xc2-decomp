@@ -83,6 +83,7 @@ public:
   GmkSquadLeader *getBindedGmkSquadLeader() const;
   void getPosRotY(mm::Vec3 &position, f32 &rotY, u32 index) const;
   void update(f32 deltaTime);
+  void addGmkSquadNavi(GmkSquadNavi *navi);
   void removeGmkSquadNavi(GmkSquadNavi *navi);
 
   u8 _20[0x68 - 0x20];
@@ -111,13 +112,46 @@ static_assert(sizeof(GmkSquad) == 0x118, "");
 // padding followed by the offset at 0x80).
 class GmkSquadNavi : public mm::mtl::IntrusiveListNode<GmkSquadNavi> {
 public:
+  struct CreateInfo {
+    CreateInfo() : unknown00(nullptr), unknown08(gf::INVALID_HANDLE) {
+      unknown10.x = 0.1f;
+      unknown10.y = 1.0f;
+    }
+
+    GmkSquad *unknown00;          // Inferred role: squad; original member name unknown.
+    gf::GF_OBJ_HANDLE *unknown08; // Inferred role: object handle; original member name unknown.
+    mm::Vec2 unknown10;           // Inferred role: arrival radius and height; original member name unknown.
+  };
+
+  struct UpdateInfo {
+    UpdateInfo() : position(mm::Vec3::zero) {}
+
+    mm::Vec3 position; // Inferred role: position of the member; original member name unknown.
+  };
+
+  GmkSquadNavi() : unknown10(nullptr), unknown18(gf::INVALID_HANDLE), unknown28(-1), unknown30(mm::Vec3::zero) {
+    unknown20.x = 0.1f;
+    unknown20.y = 1.0f;
+  }
+
+  ~GmkSquadNavi() { dispose(); }
+  void create(const CreateInfo &info);
+  void update(const UpdateInfo &info);
   void dispose();
   u32 getMemberDefType() const;
   bool getPosRotY(mm::Vec3 &position, f32 &rotY) const;
   bool isArrived(const mm::Vec3 &position) const;
 
   // Inferred helper: whether the navi is bound to a member of its squad; original name unknown.
-  bool unknown001() const { return unknown10 != nullptr && unknown18 != gf::INVALID_HANDLE && unknown28 >= 0 && static_cast<u32>(unknown28) < static_cast<u32>(unknown10->unknown70); }
+  bool unknown001() const {
+    if (unknown10 != nullptr && unknown18 != gf::INVALID_HANDLE && unknown28 >= 0) {
+      if (static_cast<u32>(unknown28) < static_cast<u32>(unknown10->unknown70)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   // Inferred helper: unbinds the navi from its squad; original name unknown.
   void unknown002() {
@@ -135,6 +169,7 @@ public:
   mm::Vec3 unknown30; // Inferred role: position offset; original member name unknown.
 };
 
+static_assert(sizeof(GmkSquadNavi::CreateInfo) == 0x18, "");
 static_assert(offsetof(GmkSquadNavi, unknown10) == 0x10, "");
 static_assert(offsetof(GmkSquadNavi, unknown18) == 0x18, "");
 static_assert(offsetof(GmkSquadNavi, unknown20) == 0x20, "");
