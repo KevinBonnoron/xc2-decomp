@@ -1,5 +1,8 @@
 #pragma once
+#include <stddef.h>
+
 #include "mm_mtl/singleton.h"
+#include "types.h"
 
 namespace fw {
 struct UpdateInfo;
@@ -16,6 +19,14 @@ public:
   static void update(const fw::UpdateInfo &info);
   static bool isExistObj();
   static void destroyObj();
+
+  u8 _08[0x4830 - 0x08];
+  s32 unknown4830; // Inferred role: number of objects; original member name unknown.
+  u8 _4834[0x9050 - 0x4834];
+  s32 unknown9050; // Inferred role: number of objects; original member name unknown.
 };
+
+static_assert(offsetof(GfFobjManager, unknown4830) == 0x4830, "");
+static_assert(offsetof(GfFobjManager, unknown9050) == 0x9050, "");
 
 } // namespace gf

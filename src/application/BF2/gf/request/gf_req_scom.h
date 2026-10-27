@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -137,6 +139,15 @@ class GfReqSmallCom : public mm::mtl::PtrSingleton<GfReqSmallCom> {
 public:
   bool isValid(GF_SCOM_HANDLE *handle);
   static bool isExistCommand(SCOM_TYPE type);
+  static bool isExistCommand();
+
+  u8 _08[0x4820 - 0x08];
+  s32 unknown4820; // Inferred role: number of commands; original member name unknown.
+  u8 _4824[0x9040 - 0x4824];
+  s32 unknown9040; // Inferred role: number of commands; original member name unknown.
 };
+
+static_assert(offsetof(GfReqSmallCom, unknown4820) == 0x4820, "");
+static_assert(offsetof(GfReqSmallCom, unknown9040) == 0x9040, "");
 
 } // namespace gf

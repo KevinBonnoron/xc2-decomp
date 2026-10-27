@@ -219,7 +219,7 @@ void GfDataHana::setEquipExtendCondenserParts(u32 blade, u32 slot, u32 parts, Gf
   dataBlade->unknown68c.unknown6c[slot] = extendCondenserHandle;
 }
 
-u16 GfDataHana::getEquipPowerRank(u32 blade) { return GfDataBlade::getSDataBlade(blade)->unknown704; }
+u32 GfDataHana::getEquipPowerRank(u32 blade) { return GfDataBlade::getSDataBlade(blade)->unknown704; }
 
 u16 GfDataHana::getEquipPowerRank(const SDataBlade &dataBlade) { return dataBlade.unknown704; }
 

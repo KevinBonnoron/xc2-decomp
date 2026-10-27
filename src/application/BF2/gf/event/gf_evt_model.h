@@ -64,6 +64,8 @@ static_assert(offsetof(GfEvtModel, unknown20) == 0x20, "");
 
 class GfEvtModelDriver : public GfEvtModel {
 public:
+  bool isAnimEnd() const;
+  void setDispRexCoreCrystal(bool isDisp);
   void setDispJiji(bool isDisp);
   void playAnimWeaponRightCS(const char *name);
   bool isPlayEndAnimWeaponRightCS();
@@ -81,12 +83,18 @@ public:
 
 class GfEvtModelBlade : public GfEvtModel {
 public:
+  bool isAnimEnd() const;
   void playAnimWeaponRightCS(const char *name);
   bool isPlayEndAnimWeaponRightCS();
   void setAnimSpeedWeaponRightCS(f32 speed);
   void playAnimWeaponLeftCS(const char *name);
   bool isPlayEndAnimWeaponLeftCS();
   void setAnimSpeedWeaponLeftCS(f32 speed);
+};
+
+class GfEvtModelEnemy : public GfEvtModel {
+public:
+  bool isAnimEnd() const;
 };
 
 class GfEvtModelWeapon : public GfEvtModel {

@@ -94,7 +94,7 @@ public:
   static void setEquipCondenserParts(u32 blade, u32 slot, u32 parts, GfItemHandle handle);
   static bool getEquipExtendCondenserParts(mm::mtl::FixedArray<u16, 3> &extendCondenser, u32 blade);
   static void setEquipExtendCondenserParts(u32 blade, u32 slot, u32 parts, GfItemHandle handle);
-  static u16 getEquipPowerRank(u32 blade);
+  static u32 getEquipPowerRank(u32 blade);
   static u16 getEquipPowerRank(const SDataBlade &dataBlade);
   static void setEquipPowerRank(u32 blade, u32 equipPowerRank);
   static u32 getPowerCapacity(u32 blade);

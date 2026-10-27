@@ -26,6 +26,7 @@ class GfComModel;
 class GfComPackAnim : public GfComAnimation {
 public:
   static mm::mtl::RTTI m_rtti;
+  static const u32 COMPONENT_INDEX = 2;
   static const u32 ARC_MAX = 8;
 
   struct SetupInfo {

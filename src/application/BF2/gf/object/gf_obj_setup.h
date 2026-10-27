@@ -27,6 +27,7 @@ public:
   virtual u32 getFootStepEffect() const;
 
   void setInitialScale(f32 scale);
+  void setInitialScale(const mm::Vec3 &scale);
 
   bool isEvent() const {
     switch (unknown1c) {
@@ -47,8 +48,10 @@ public:
   u32 unknown1c;      // Inferred role: character type; original member name unknown.
   mm::Vec3 unknown20; // Inferred role: position; original member name unknown.
   mm::Vec3 unknown30; // Inferred role: rotation; original member name unknown.
-  f32 unknown40;      // Inferred role: scale; original member name unknown.
-  u8 _44[0x50 - 0x44];
+  f32 unknown40;      // Inferred role: scale x; original member name unknown.
+  f32 unknown44;      // Inferred role: scale y; original member name unknown.
+  f32 unknown48;      // Inferred role: scale z; original member name unknown.
+  u8 _4c[0x50 - 0x4c];
   f32 unknown50;  // Inferred role: opacity; original member name unknown.
   bool unknown54; // Inferred role: has fixed blade; original member name unknown.
   u8 _55[0x58 - 0x55];
@@ -62,6 +65,8 @@ static_assert(offsetof(GfObjSetup, unknown1c) == 0x1c, "");
 static_assert(offsetof(GfObjSetup, unknown20) == 0x20, "");
 static_assert(offsetof(GfObjSetup, unknown30) == 0x30, "");
 static_assert(offsetof(GfObjSetup, unknown40) == 0x40, "");
+static_assert(offsetof(GfObjSetup, unknown44) == 0x44, "");
+static_assert(offsetof(GfObjSetup, unknown48) == 0x48, "");
 static_assert(offsetof(GfObjSetup, unknown50) == 0x50, "");
 static_assert(offsetof(GfObjSetup, unknown54) == 0x54, "");
 static_assert(offsetof(GfObjSetup, unknown58) == 0x58, "");
