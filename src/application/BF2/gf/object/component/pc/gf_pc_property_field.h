@@ -35,16 +35,20 @@ public:
   virtual void flush(const GfComPropertyPc &property);
   virtual void flushOwner(GfComPropertyPc &property);
   virtual bool recieveMessage(const GfComPropertyPc &property, fw::MessageObject *sender, fw::Message &message);
+  void resetStatus(const GfComPropertyPc &property);
 
   mm::mtl::IntrusivePtr<fw::ParamList> unknown08; // Inferred role: param list; original member name unknown.
   u32 unknown10_0 : 1;                            // Inferred role: walk mode; original member name unknown.
   u32 : 1;
   u32 unknown10_2 : 1; // Inferred role: idle; original member name unknown.
-  u32 : 5;
+  u32 unknown10_3 : 1; // Inferred role: pad control; original member name unknown.
+  u32 : 4;
   u32 unknown11_0 : 1; // Inferred role: auto run; original member name unknown.
   u32 : 2;
   u32 unknown11_3 : 1; // Inferred role: slide; original member name unknown.
-  u32 : 20;
+  u32 : 5;
+  u32 unknown12_1 : 1; // Inferred role: field status reset; original member name unknown.
+  u32 : 14;
   WALL_MOVE_MODE unknown14; // Inferred role: wall move mode; original member name unknown.
   u8 _18[0x130 - 0x18];
 };

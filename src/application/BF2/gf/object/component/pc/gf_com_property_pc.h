@@ -7,6 +7,10 @@
 #include "mm_mtl/bitflag.h"
 #include "types.h"
 
+namespace fw {
+class MessageObject;
+} // namespace fw
+
 namespace anm {
 struct QsTransform;
 } // namespace anm
@@ -18,6 +22,8 @@ class RTTI;
 } // namespace mm
 
 namespace gf {
+
+struct MsgPcFieldWarpCancel;
 
 namespace pc {
 
@@ -62,6 +68,8 @@ public:
   bool existInputXY() const;
   void setLocomotion(const anm::QsTransform &locomotion);
   void setEnvSensorCheckFlags(u32 flags, bool isEnable);
+  void resetInput();
+  void procMsgPcFieldWarpCancel(fw::MessageObject *object, MsgPcFieldWarpCancel &message);
 
   u32 unknown38; // Inferred role: player id set by MsgPcFieldNotifyChangePlayerID; original member name unknown.
   u8 _3c[0x60 - 0x3c];
@@ -76,13 +84,16 @@ public:
   u32 unknown110_1 : 1; // Inferred role: battle control; original member name unknown.
   u32 : 1;
   u32 unknown110_3 : 1; // Inferred role: enable gravity; original member name unknown.
-  u32 : 3;
+  u32 unknown110_4 : 1; // Inferred role: set by GfPropertyField::flushOwner while sliding; original member name unknown.
+  u32 : 2;
   u32 unknown110_7 : 1; // Inferred role: on slide; original member name unknown.
   u32 : 2;
   u32 unknown111_2 : 1; // Inferred role: pad control; original member name unknown.
   u32 unknown111_3 : 1; // Inferred role: dead; original member name unknown.
   u32 unknown111_4 : 1; // Inferred role: dead sequence requested; original member name unknown.
-  u32 : 19;
+  u32 : 13;
+  u32 unknown113_2 : 1; // Inferred role: warp requested, cleared by MsgPcFieldWarpCancel; original member name unknown.
+  u32 : 5;
   u8 _114[0x118 - 0x114];
   f32 unknown118; // Inferred role: water height compared by StateUtilField::isInterruptionWater; original member name unknown.
   u8 _11c[0x120 - 0x11c];

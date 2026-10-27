@@ -55,12 +55,21 @@ struct GfPropertyDebugFlags {
   bool disableFallDead;
 };
 
+struct MsgObjectMaxHp;
+struct MsgObjectSetHp;
+struct MsgObjectStopAutoHeal;
+struct MsgObjectLimitHP;
+
 class GfComProperty : public GfComponent {
 public:
   static mm::mtl::RTTI m_rtti;
   static const u32 COMPONENT_INDEX = 5;
 
   void flush();
+  void procMsgObjectMaxHp(fw::MessageObject *object, MsgObjectMaxHp &message);
+  void procMsgObjectSetHp(fw::MessageObject *object, MsgObjectSetHp &message);
+  void procMsgObjectStopAutoHeal(fw::MessageObject *object, MsgObjectStopAutoHeal &message);
+  void procMsgObjectLimitHP(fw::MessageObject *object, MsgObjectLimitHP &message);
 
   GfStatusProperty *unknown10; // Inferred role: status; original member name unknown.
   GfPropertyTarget *unknown18; // Inferred role: target; original member name unknown.
@@ -130,14 +139,14 @@ struct MsgObjectAlpha : fw::Message {
   f32 alpha;
 };
 
-struct MsgObjectChangeHpMax : fw::Message {
-  MsgObjectChangeHpMax(u32 maxHp) : fw::Message(0x1000034, 0x20), maxHp(maxHp) {}
+struct MsgObjectMaxHp : fw::Message {
+  MsgObjectMaxHp(u32 maxHp) : fw::Message(0x1000034, 0x20), maxHp(maxHp) {}
 
   u32 maxHp;
 };
 
-struct MsgObjectChangeHp : fw::Message {
-  MsgObjectChangeHp(u32 hp) : fw::Message(0x1000035, 0x20), hp(hp) {}
+struct MsgObjectSetHp : fw::Message {
+  MsgObjectSetHp(u32 hp) : fw::Message(0x1000035, 0x20), hp(hp) {}
 
   u32 hp;
 };

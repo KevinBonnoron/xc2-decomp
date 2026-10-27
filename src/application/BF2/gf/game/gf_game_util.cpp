@@ -764,7 +764,7 @@ void GfGameUtil::refreshEnhanceState(u32 driver) {
   }
 
   DataParamAcc dataParamAcc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
-  MsgObjectChangeHpMax message(dataParamAcc.getHpMax(false));
+  MsgObjectMaxHp message(dataParamAcc.getHpMax(false));
   obj->sendMessage(obj, message);
 }
 
@@ -998,7 +998,7 @@ void GfGameUtil::levelupForEnemy(GF_OBJ_HANDLE *handle, u32 addLevel) {
   u32 level = dataParamAcc.getLevel(false) + addLevel;
   GfDataEnemy::setupGameParamForLevel(*setup->unknowna0, level > levelMax ? levelMax : level);
   GfObj *obj = GfObjUtil::getObj(handle);
-  MsgObjectChangeHpMax changeHpMax(dataParamAcc.getHpMax(false));
+  MsgObjectMaxHp changeHpMax(dataParamAcc.getHpMax(false));
   obj->sendMessage(obj, changeHpMax);
   u32 maxHp = dataParamAcc.getHpMax(false);
   u32 hp = dataParamAcc.getHp();

@@ -11,6 +11,8 @@ public:
   void finalize() override;
   static void order(GfMenuCallContext *context, QuestID quest);
   static void complete(GfMenuCallContext *context, QuestID quest);
+  static void lockLogOpen();
+  static void unlockLogOpen();
 };
 
 } // namespace gf

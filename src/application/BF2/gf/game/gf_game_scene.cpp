@@ -1763,7 +1763,7 @@ void GfGameScene::updateEnemySaveHp(const fw::UpdateInfo &) {
     if (setup != nullptr && setup->unknownb4 != 0) {
       GfObjAcc obj(*it);
       if (obj.isBattle()) {
-        MsgObjectChangeHp message(setup->unknownb4);
+        MsgObjectSetHp message(setup->unknownb4);
         obj.getObj()->sendMessage(obj.getObj(), message);
         setup->unknownb4 = 0;
       }

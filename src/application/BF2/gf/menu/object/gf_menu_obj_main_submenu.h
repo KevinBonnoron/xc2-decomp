@@ -8,6 +8,8 @@ public:
   void initialize() override;
   void finalize() override;
   void update() override;
+
+  static bool isEnableSkipTime();
 };
 
 } // namespace gf

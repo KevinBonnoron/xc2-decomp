@@ -4,4 +4,8 @@ namespace gf {
 
 void GfMenuObjBlKizunaRing::finalize() { GfMenuObject::finalize(); }
 
+bool GfMenuObjBlKizunaRing::isLockPos(int index) { return index % 10 == 0; }
+
+bool GfMenuObjBlKizunaRing::isScreenLR(u32 screen) { return screen < 4; }
+
 } // namespace gf

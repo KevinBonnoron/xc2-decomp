@@ -13,6 +13,7 @@ public:
 
   static void open(GfMenuCallContext *context, const OpenParam &param);
   static void close(GfMenuCallContext *context);
+  static u32 getSellItemTypeMax();
 };
 
 } // namespace gf
