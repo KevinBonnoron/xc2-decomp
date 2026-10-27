@@ -109,6 +109,7 @@ public:
   static mm::mtl::RTTI m_rtti;
 
   static ColiObject *createColiCharacter(const ColiCharacterInfo &info, const mm::mtl::IntrusivePtr<ReferenceFrame> &frame);
+  static ColiObject *createColiGrand(const void *binary);
   static ColiObject *createColiPhantom(const ColiPhantomInfo &info, const mm::mtl::IntrusivePtr<ReferenceFrame> &frame);
   ColiObject();
   ~ColiObject();

@@ -32,6 +32,9 @@ struct GfSetupParam;
 class GfAssetResource;
 
 const GfFileIdx MAP_FILE_IDX_COLLISION = static_cast<GfFileIdx>(1);
+const GfFileIdx MAP_FILE_IDX_UNKNOWN_2 = static_cast<GfFileIdx>(2);
+const GfFileIdx MAP_FILE_IDX_UNKNOWN_7 = static_cast<GfFileIdx>(7);
+const GfFileIdx MAP_FILE_IDX_UNKNOWN_8 = static_cast<GfFileIdx>(8);
 
 class MapEff {
 public:

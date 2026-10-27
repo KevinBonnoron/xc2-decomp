@@ -8,6 +8,13 @@
 namespace gf {
 namespace pc {
 
+void StateFieldWaterDeadDive::enter(GfComBehaviorPc *behavior, ai::State *previous) {
+  GfComPropertyPc *property = behavior->getProperty();
+  if (property->unknown120 != 1) {
+    StateUtilField::setWaterDiveMove(*property, true);
+  }
+}
+
 void StateFieldWaterDeadDive::leave(GfComBehaviorPc *behavior, ai::State *next) { StateUtilField::setWaterDiveMove(*behavior->unknown08->getComponent<GfComPropertyPc>(), false); }
 
 void StateFieldWaterDeadDive::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {}

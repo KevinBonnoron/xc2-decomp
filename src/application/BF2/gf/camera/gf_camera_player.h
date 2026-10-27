@@ -30,6 +30,7 @@ public:
   static f32 getNearClip();
   static f32 getFarClip();
   static f32 getFov();
+  static void setOnceOff();
   void reset();
   void resetClimb(ResetCameraWallTiming timing);
   void resetLoad();
@@ -42,7 +43,27 @@ public:
   f32 getSaveHeight() const;
   u32 getSaveSide() const;
   bool isSaveFreeMode() const;
+
+  u8 _a8[0xbc - 0xa8];
+  f32 m_saveYaw;
+  u8 _c0[0xc4 - 0xc0];
+  f32 m_savePitch;
+  u8 _c8[0xd4 - 0xc8];
+  f32 m_saveDistance;
+  u8 _d8[0xdc - 0xd8];
+  f32 m_saveHeight;
+  u8 _e0[0xe8 - 0xe0];
+  u8 m_saveSide;
+  u8 _e9[0x120 - 0xe9];
+  bool m_manual;
 };
+
+static_assert(offsetof(PlayerCamera, m_saveYaw) == 0xbc, "");
+static_assert(offsetof(PlayerCamera, m_savePitch) == 0xc4, "");
+static_assert(offsetof(PlayerCamera, m_saveDistance) == 0xd4, "");
+static_assert(offsetof(PlayerCamera, m_saveHeight) == 0xdc, "");
+static_assert(offsetof(PlayerCamera, m_saveSide) == 0xe8, "");
+static_assert(offsetof(PlayerCamera, m_manual) == 0x120, "");
 
 class CameraPadData : public fw::PadRelay {
 public:

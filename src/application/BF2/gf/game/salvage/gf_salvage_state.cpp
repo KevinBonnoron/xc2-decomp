@@ -1,13 +1,17 @@
+#include "gf/camera/gf_camera_player.h"
 #include "gf/event/gf_event.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/game/salvage/gf_game_salvage.h"
 #include "gf/gf_manager.h"
 #include "gf/menu/call/gf_menu_call_context.h"
+#include "gf/menu/gf_menu_field_skill.h"
 #include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gf/scom/gf_scom_fade.h"
+#include "gf/util/gf_item_util.h"
 #include "gmk/gmk_manager.h"
 #include "ml/dev_clock.h"
 #include "mm_math/mm_col4.h"
+#include "mm_mtl/fixed_vector.h"
 #include "types.h"
 
 namespace ai {
@@ -27,6 +31,15 @@ constexpr f32 CAM_WAIT_SEC = 1.0f;
 constexpr u32 FADE_FRAME = 10;
 
 void StateSalvageSkillCheck::leave(GfGameSalvage *, ai::State *) {}
+
+void StateSalvageSkillCheck::update(GfGameSalvage *, const fw::UpdateInfo &) {
+  if (GfManager::isDestroyNow()) {
+    reqState(GfGameSalvage::STATE_FINISH);
+  }
+  if (!GfMenuFieldSkill::isRunning()) {
+    reqState(unknown08 + 1);
+  }
+}
 
 void StateSalvageWait::enter(GfGameSalvage *, ai::State *) {}
 
@@ -71,6 +84,23 @@ void StateSalvageItemSelect::leave(GfGameSalvage *, ai::State *) {
   if (context != nullptr) {
     context->release();
     context = nullptr;
+  }
+}
+
+void StateSalvageItemSelect::update(GfGameSalvage *salvage, const fw::UpdateInfo &) {
+  if (context->isTerm() && !context->unknown18.empty()) {
+    GfMenuCallContext::GfMenuResult result;
+    context->popResult(result);
+    if (result.unknown00 == 0) {
+      salvage->unknownb8 = result.unknown04;
+      GfItemUtil::addItemBox(result.unknown04, -1);
+      reqState(unknown08 + 1);
+    } else {
+      reqState(GfGameSalvage::STATE_FINISH);
+    }
+  }
+  if (GfManager::isDestroyNow()) {
+    reqState(GfGameSalvage::STATE_FINISH);
   }
 }
 
@@ -226,6 +256,13 @@ void StateSalvageResultUi::update(GfGameSalvage *, const fw::UpdateInfo &) {
 }
 
 void StateSalvagePartyFormDelay::enter(GfGameSalvage *, ai::State *) { ml::DevClock::getClockNow(startClock); }
+
+void StateSalvagePartyFormDelay::leave(GfGameSalvage *salvage, ai::State *) {
+  PlayerCamera::setOnceOff();
+  salvage->destroyCameraCut01();
+  salvage->destroyModel();
+  salvage->createLog();
+}
 
 void StateSalvagePartyFormDelay::update(GfGameSalvage *, const fw::UpdateInfo &) {
   f32 time = 0.0f;

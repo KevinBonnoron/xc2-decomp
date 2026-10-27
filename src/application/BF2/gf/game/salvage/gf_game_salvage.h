@@ -310,7 +310,7 @@ public:
   void playWireStart(f32 time, f32 speed, f32 length);
   void addSalvagerPoint(u32 point);
   static bool isChaseKikuInSupervia();
-  static void createLog();
+  void createLog();
   static void setLogSkill(bool isSuccess, u32 skill);
   static void clearLogSkill();
   static void setLogButtonChallenge(int index, int challenge);

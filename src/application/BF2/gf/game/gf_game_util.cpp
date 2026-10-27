@@ -22,6 +22,7 @@
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_mercenaries.h"
+#include "gf/data/gf_data_nanakoori.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
@@ -1529,6 +1530,24 @@ void GfGameUtil::execSaveAchievementPopup(u32 blade) {
     popup = dataGame->unknown1171d8[popupNum - 1];
     popupNum--;
   }
+}
+
+bool GfGameUtilNanakoori::checkCompleteMission(u32 mission, u32 flag) {
+  if (flag == 4 && !GfDataNanakoori::isMissionComplete(mission)) {
+    GfDataNanakoori::setMissionComplete(mission);
+    return true;
+  }
+  return false;
+}
+
+bool GfGameUtilNanakoori::calcLevelAndFan() {
+  GfDataNanakoori::setVocalLevel(GfDataNanakoori::getLevelForNanakoori(GfItemUtil::getItemBoxCount(GfDataNanakoori::getItemForVocalLevelUp())));
+  GfDataNanakoori::setVisualLevel(GfDataNanakoori::getLevelForNanakoori(GfItemUtil::getItemBoxCount(GfDataNanakoori::getItemForVisualLevelUp())));
+  GfDataNanakoori::setSoulLevel(GfDataNanakoori::getLevelForNanakoori(GfItemUtil::getItemBoxCount(GfDataNanakoori::getItemForSoulLevelUp())));
+  u32 level = GfDataNanakoori::getSoulLevel() + GfDataNanakoori::getVisualLevel() + GfDataNanakoori::getVocalLevel();
+  u32 special = GfDataNanakoori::getClearMissionForSpecial();
+  u32 live = GfDataNanakoori::getClearMissionForLive();
+  return GfDataNanakoori::setFan((live * 12 + special * 16 + GfDataNanakoori::getClearMissionForLesson() * 3) * level);
 }
 
 } // namespace gf

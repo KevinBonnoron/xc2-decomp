@@ -80,7 +80,9 @@ public:
   u32 : 2;
   u32 unknown111_2 : 1; // Inferred role: pad control; original member name unknown.
   u32 : 21;
-  u8 _114[0x160 - 0x114];
+  u8 _114[0x120 - 0x114];
+  s32 unknown120; // Inferred role: mode compared with 1 by StateFieldWaterDeadDive::enter; original member name unknown.
+  u8 _124[0x160 - 0x124];
   mm::Vec3 unknown160; // Inferred role: position; original member name unknown.
   u8 _170[0x1e0 - 0x170];
   mm::Vec3 unknown1e0; // Inferred role: default input direction; original member name unknown.
@@ -97,6 +99,7 @@ static_assert(offsetof(GfComPropertyPc, unknown6c) == 0x6c, "");
 static_assert(offsetof(GfComPropertyPc, unknown80) == 0x80, "");
 static_assert(offsetof(GfComPropertyPc, unknown90) == 0x90, "");
 static_assert(offsetof(GfComPropertyPc, unknown94) == 0x94, "");
+static_assert(offsetof(GfComPropertyPc, unknown120) == 0x120, "");
 static_assert(offsetof(GfComPropertyPc, unknown160) == 0x160, "");
 static_assert(offsetof(GfComPropertyPc, unknown1e0) == 0x1e0, "");
 static_assert(offsetof(GfComPropertyPc, unknown2b0) == 0x2b0, "");

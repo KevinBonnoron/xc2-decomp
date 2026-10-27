@@ -29,6 +29,7 @@ public:
   static void bdatReload();
   static bool isValidGameObj(GF_OBJ_HANDLE *handle, bool isCheckState, mm::mtl::FixStr<128> *reason);
   static bool isEnterGameObj(GF_OBJ_HANDLE *handle);
+  static void destroyGameObj(GF_OBJ_HANDLE *handle, f32 fadeTime);
   static void changeStopLayerIgnoreEventObj(u32 layer, bool isIgnore);
   u32 getObjNumberByEnArrangeId(u32 arrange);
 };

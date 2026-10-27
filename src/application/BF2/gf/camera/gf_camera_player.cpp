@@ -6,6 +6,24 @@ namespace gf {
 
 constexpr int CAMERA_PAD_TYPE = 2;
 
+f32 PlayerCamera::getNearClip() { return 0.4f; }
+
+f32 PlayerCamera::getFarClip() { return 80000.0f; }
+
+bool PlayerCamera::isManual() { return m_manual; }
+
+f32 PlayerCamera::getSaveYaw() const { return m_saveYaw; }
+
+f32 PlayerCamera::getSavePitch() const { return m_savePitch; }
+
+f32 PlayerCamera::getSaveDistance() const { return m_saveDistance; }
+
+f32 PlayerCamera::getSaveHeight() const { return m_saveHeight; }
+
+u32 PlayerCamera::getSaveSide() const { return m_saveSide; }
+
+bool PlayerCamera::isSaveFreeMode() const { return m_manual; }
+
 CameraPadData::CameraPadData() {
   reset();
   bind();
