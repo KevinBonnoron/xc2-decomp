@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "layer/layer_act_base.h"
+#include "layer/layer_obj_res_tex.h"
 #include "types.h"
 
 namespace grlib {
@@ -9,6 +10,9 @@ class CGLibTextureBuffer;
 } // namespace grlib
 
 namespace layer {
+
+class LayerTextureObj;
+class LayerVertexObj;
 
 class LayerObjWork : public LayerActBase {
 public:
@@ -19,21 +23,63 @@ public:
   void resetAddTexutre(u32 index);
   void setAddTexture(grlib::CGLibTextureBuffer &texture, u32 index);
   void resetAddAllTexutre();
+  void workCreate();
+  void workRelease();
+  void setupDefTexList();
+  void updapteAddTexList();
+  void calcFrmParm(s32 count);
 
-  u8 _258[0x288 - 0x258];
+  struct unknown001 {
+    u8 _00[0x18];
+    u32 unknown18; // Inferred role: frame count; original member name unknown.
+    f32 unknown1c; // Inferred role: frame time; original member name unknown.
+  };
+
+  struct unknown002 {
+    const unknown001 *unknown00; // Inferred role: animation data; original member name unknown.
+    u8 _08[0x80 - 0x08];
+    f32 unknown80; // Inferred role: frame count; original member name unknown.
+    u32 unknown84; // Inferred role: cleared by calcFrmParm; original member name unknown.
+  };
+
+  struct unknown003 {
+    f32 unknown00; // Inferred role: second; original member name unknown.
+    f32 unknown04; // Inferred role: cleared by calcFrmParm; original member name unknown.
+  };
+
+  u8 _258[0x270 - 0x258];
+  LayerVertexObj *unknown270;             // Inferred role: vertex object; original member name unknown.
+  LayerTextureObj *unknown278;            // Inferred role: texture object; original member name unknown.
+  grlib::CGLibTextureBuffer **unknown280; // Inferred role: default texture list; original member name unknown.
+
   u32 unknown288; // Inferred role: texture max; original member name unknown.
-  u8 _28c[0x2a0 - 0x28c];
+  u8 _28c[0x290 - 0x28c];
+  void *unknown290;       // Inferred role: allocated memory; original member name unknown.
+  unknown002 *unknown298; // Inferred role: animation work; original member name unknown.
+
   f32 unknown2a0; // Inferred role: parm; original member name unknown.
   u16 unknown2a4; // Inferred role: icon num; original member name unknown.
   u16 unknown2a6; // Inferred role: icon max; original member name unknown.
   u16 unknown2a8; // Inferred role: gauge; original member name unknown.
   u8 _2aa[0x2ac - 0x2aa];
-  u32 unknown2ac; // Inferred role: data type; original member name unknown.
+  u32 unknown2ac;         // Inferred role: data type; original member name unknown.
+  unknown003 *unknown2b0; // Inferred role: frame params; original member name unknown.
+  u32 unknown2b8;         // Inferred role: cleared by calcFrmParm; original member name unknown.
+  u8 _2bc[0x2c0 - 0x2bc];
+  LayerObjResTex unknown2c0; // Inferred role: additional textures; original member name unknown.
 };
 
+static_assert(offsetof(LayerObjWork, unknown270) == 0x270, "");
+static_assert(offsetof(LayerObjWork, unknown278) == 0x278, "");
+static_assert(offsetof(LayerObjWork, unknown280) == 0x280, "");
 static_assert(offsetof(LayerObjWork, unknown288) == 0x288, "");
+static_assert(offsetof(LayerObjWork, unknown290) == 0x290, "");
 static_assert(offsetof(LayerObjWork, unknown2a0) == 0x2a0, "");
 static_assert(offsetof(LayerObjWork, unknown2a8) == 0x2a8, "");
+static_assert(offsetof(LayerObjWork, unknown298) == 0x298, "");
 static_assert(offsetof(LayerObjWork, unknown2ac) == 0x2ac, "");
+static_assert(offsetof(LayerObjWork, unknown2b0) == 0x2b0, "");
+static_assert(offsetof(LayerObjWork, unknown2b8) == 0x2b8, "");
+static_assert(offsetof(LayerObjWork, unknown2c0) == 0x2c0, "");
 
 } // namespace layer

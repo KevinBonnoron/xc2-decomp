@@ -21,6 +21,8 @@ class IDrDrawWorkInfo;
 
 namespace layer {
 class LayerObjTopMaskObj;
+class LayerTextureMan;
+class LayerVertexMan;
 class LayerVertexObj;
 
 enum LayerSamplerType {};
@@ -60,7 +62,10 @@ public:
   void initFlowMap(u32 index);
   void initGamma(u32 index);
 
-  u8 _008[0x050 - 0x008];
+  u8 _008[0x038 - 0x008];
+  LayerVertexMan *unknown38;  // Inferred role: vertex manager; original member name unknown.
+  LayerTextureMan *unknown40; // Inferred role: texture manager; original member name unknown.
+  u8 _048[0x050 - 0x048];
   const LayerObjTopMaskObj *unknown50; // Inferred role: mask object; original member name unknown.
   u8 _058[0x0c0 - 0x058];
   grlib::CGLibSampler unknownc0[11]; // Inferred role: samplers; original member name unknown.
@@ -95,6 +100,8 @@ public:
   f32 unknown578; // Inferred role: gamma; original member name unknown.
 };
 
+static_assert(offsetof(LayerShdManager, unknown38) == 0x038, "");
+static_assert(offsetof(LayerShdManager, unknown40) == 0x040, "");
 static_assert(offsetof(LayerShdManager, unknown50) == 0x050, "");
 static_assert(offsetof(LayerShdManager, unknownc0) == 0x0c0, "");
 static_assert(offsetof(LayerShdManager, unknown238) == 0x238, "");

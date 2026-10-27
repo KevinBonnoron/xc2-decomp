@@ -124,4 +124,28 @@ void LayerObjUtil::calcMdlPos_Center_Center(f32 *pos, f32 *size, const f32 *scl,
   pos[1] = pos[1] - scl[1] * 0.5f;
 }
 
+void LayerObjUtil::calcLayerMatrix(LayerResMatrix &result, const LayerResMatrix &base, const LayerResMatrix &parent) {
+  result.unknown08 = base.unknown08 * parent.unknown08 + base.unknown10 * parent.unknown14;
+  result.unknown14 = base.unknown14 * parent.unknown08 + base.unknown0c * parent.unknown14;
+  result.unknown00 = base.unknown00 * parent.unknown08 + base.unknown04 * parent.unknown14 + parent.unknown00;
+  result.unknown10 = base.unknown08 * parent.unknown10 + base.unknown10 * parent.unknown0c;
+  result.unknown0c = base.unknown14 * parent.unknown10 + base.unknown0c * parent.unknown0c;
+  result.unknown04 = base.unknown00 * parent.unknown10 + base.unknown04 * parent.unknown0c + parent.unknown04;
+}
+
+void LayerObjUtil::calcLayerScaleMatrix(LayerResMatrix &result, const LayerBasePos &base, f32 x, f32 y) {
+  result.unknown08 = base.unknown0c;
+  result.unknown10 = 0.0f;
+  result.unknown14 = 0.0f;
+  result.unknown00 = 0.0f;
+  result.unknown0c = base.unknown10;
+  result.unknown04 = 0.0f;
+}
+
+u16 LayerObjUtil::getUniformBlockSizeAlOff(LayerUniType type) { return UNIFORM_BLOCK_SIZE[type]; }
+
+u32 LayerObjUtil::getUniformBlockSize(LayerUniType type) { return getUniformBlockAligment(UNIFORM_BLOCK_SIZE[type]); }
+
+void LayerObjUtil::getLayoutInfo(f32 *info, const LyrLayoutPosData *data, LayerCenterType type, f32 x, f32 y) { s_CallDataPos[LayerManager::get()->unknown9c](info, data, type, x, y); }
+
 } // namespace layer

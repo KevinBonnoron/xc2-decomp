@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "layer/layer_acc_obj_base.h"
 #include "types.h"
 
 namespace grlib {
@@ -11,6 +12,9 @@ namespace layer {
 
 struct LayerResMatrix;
 struct LayerResColor;
+struct LyrLayoutPosData;
+
+enum LayerUniType {};
 
 struct LayerBasePos {
   f32 unknown00; // Inferred role: pos x; original member name unknown.
@@ -55,6 +59,14 @@ public:
   static void calcMdlPos_Center_Up(f32 *pos, f32 *size, const f32 *scl, const LayerBasePos &base);
   static void calcMdlPos_Center_Down(f32 *pos, f32 *size, const f32 *scl, const LayerBasePos &base);
   static void calcMdlPos_Center_Center(f32 *pos, f32 *size, const f32 *scl, const LayerBasePos &base);
+  static void calcLayerMatrix(LayerResMatrix &result, const LayerResMatrix &base, const LayerResMatrix &parent);
+  static void calcLayerScaleMatrix(LayerResMatrix &result, const LayerBasePos &base, f32 x, f32 y);
+  static u16 getUniformBlockSizeAlOff(LayerUniType type);
+  static u32 getUniformBlockSize(LayerUniType type);
+  static void getLayoutInfo(f32 *info, const LyrLayoutPosData *data, LayerCenterType type, f32 x, f32 y);
+
+  static const u16 UNIFORM_BLOCK_SIZE[];
+  static void (*s_CallDataPos[])(f32 *info, const LyrLayoutPosData *data, LayerCenterType type, f32 x, f32 y);
 };
 
 } // namespace layer
