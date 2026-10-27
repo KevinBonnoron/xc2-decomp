@@ -3,7 +3,9 @@
 namespace anm {
 struct SerialiseArg;
 
-CubicAnimation::CubicAnimation(const SerialiseArg &arg) : Animation(arg) {}
+CubicAnimation::CubicAnimation(mm::mtl::IAllocator *pAllocator) : Animation(pAllocator) {}
+
+CubicAnimation::CubicAnimation(const SerialiseArg &arg) : Animation(arg), unknown48(arg) {}
 
 s32 CubicAnimation::getImplType() const { return 1; }
 

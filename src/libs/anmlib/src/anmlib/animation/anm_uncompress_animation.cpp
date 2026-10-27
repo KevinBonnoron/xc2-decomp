@@ -3,7 +3,9 @@
 namespace anm {
 struct SerialiseArg;
 
-UncompressAnimation::UncompressAnimation(const SerialiseArg &arg) : Animation(arg) {}
+UncompressAnimation::UncompressAnimation(mm::mtl::IAllocator *pAllocator) : Animation(pAllocator) {}
+
+UncompressAnimation::UncompressAnimation(const SerialiseArg &arg) : Animation(arg), unknown48(arg) {}
 
 s32 UncompressAnimation::getImplType() const { return 0; }
 

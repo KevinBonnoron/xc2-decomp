@@ -78,6 +78,7 @@ void DestroyThread(ThreadType *thread);
 void StartThread(ThreadType *thread);
 void SetThreadName(ThreadType *thread, const char *name);
 void YieldThread();
+void SleepThread(TimeSpan timeSpan);
 ThreadType *GetCurrentThread();
 int GetCurrentCoreNumber();
 const char *GetThreadNamePointer(const ThreadType *thread);

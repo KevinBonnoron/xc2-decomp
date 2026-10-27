@@ -46,6 +46,16 @@ inline f32 acos(f32 r) {
   return acosf(r);
 }
 
+inline f32 asin(f32 r) {
+  // __LINE__ must be 581 as in the original header: it is the line argument of the assert.
+#line 581
+  MM_ASSERT(mm::fabs(r) < 1.001f);
+  if (mm::fabs(r) >= 1.0f) {
+    return r > 0.0f ? 1.5707964f : -1.5707964f;
+  }
+  return asinf(r);
+}
+
 __attribute__((always_inline)) inline Vec3 matrixToEuler(const Mat44 &matrix) {
   f32 r = matrix.rows[2][1];
   // __LINE__ must be 581 as in the original header: it is the line argument of the assert.

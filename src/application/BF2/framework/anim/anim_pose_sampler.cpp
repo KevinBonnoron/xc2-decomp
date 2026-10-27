@@ -24,7 +24,7 @@ void AnimSinglePoseSamper::unbind() { unknown001(*this); }
 
 void AnimSinglePoseSamper::bind(anm::Control *control, anm::Pose *pose, anm::ExtraTruckBuffer *extraTruckBuffer) {
   unbind();
-  if (pose->unknown18->unknown30.size() == control->m_pBinding->unknown28) {
+  if (pose->unknown18->unknown30.size() == control->m_pBinding->m_indexTable.size()) {
     unknown18 = control;
     control->addRef();
     unknown20 = pose;
@@ -37,7 +37,7 @@ void AnimSinglePoseSamper::bind(anm::Control *control, anm::Pose *pose, anm::Ext
     if (slotId != -1) {
       const anm::Binding *binding = control->m_pBinding;
       if (slotId < binding->unknown30.size()) {
-        if (slot->unknown20 == binding->unknown30[slotId].unknown10) {
+        if (slot->unknown20 == binding->unknown30[slotId].unknown08.size()) {
           unknown28 = extraTruckBuffer;
           extraTruckBuffer->addRef();
         }

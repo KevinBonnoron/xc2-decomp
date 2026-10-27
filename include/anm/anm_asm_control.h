@@ -8,6 +8,12 @@
 #include "mm_mtl/vector.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace anm {
 class AsmListener;
 class ResASM;
@@ -17,6 +23,7 @@ class ASMControl : public ReferenceObject {
 public:
   static const u32 LAYER_MAX = 7;
 
+  ASMControl(const ResASM &resAsm, mm::mtl::IAllocator &allocator);
   ~ASMControl() override;
   void setListener(AsmListener *listener);
   void updateFrame(f32 deltaTime);
@@ -39,5 +46,6 @@ static_assert(offsetof(ASMControl, unknown20) == 0x20, "");
 static_assert(offsetof(ASMControl, unknown48) == 0x48, "");
 static_assert(offsetof(ASMControl, unknown70) == 0x70, "");
 static_assert(offsetof(ASMControl, unknown380) == 0x380, "");
+static_assert(sizeof(ASMControl) == 0x3b0, "");
 
 } // namespace anm

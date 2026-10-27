@@ -1,13 +1,16 @@
 #include "anm/anm_util.h"
 
+#include <math.h>
+
 #include "anm/anm_animation.h"
 #include "anm/anm_binding.h"
 #include "anm/anm_control.h"
 #include "anm/anm_res_asm.h"
+#include "anm/anm_res_clip_data.h"
 #include "anm/anm_res_state_data.h"
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_math.h"
-#include <math.h>
+#include "mm_mtl/vector.h"
 
 namespace anm {
 
@@ -64,6 +67,26 @@ f32 Util::calcLocalTime(f32 time, f32 start, f32 end, PlayMode playMode) {
 }
 
 void Util::setKeyFrame(Control &control, f32 frame) { control.setLocalTime(control.m_pBinding->m_pAnimation->unknown28 * frame); }
+
+bool Util::getAsmPlaybackTime(const ResASM &resAsm, const char *state, u32 index, f32 *time) {
+  const ResStateData *resStateData = resAsm.findResStateData(state);
+  if (resStateData == nullptr || index >= resStateData->unknown08.size()) {
+    return false;
+  }
+  *time = resStateData->unknown08[index].unknown14;
+  return true;
+}
+
+const Binding *Util::getAsmBinding(const ResASM &resAsm, const char *state, u32 index) {
+  if (state == nullptr) {
+    return nullptr;
+  }
+  const ResStateData *resStateData = resAsm.findResStateData(state);
+  if (resStateData == nullptr || index >= resStateData->unknown08.size()) {
+    return nullptr;
+  }
+  return resStateData->unknown08[index].m_pBinding;
+}
 
 const char *Util::getLayerName(Layer layer) { return s_layerNames[layer]; }
 

@@ -4,9 +4,23 @@
 #include "anm/anm_reference_object.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace anm {
 
+class Binding;
 class Skeleton;
+struct ExtraBinding;
+
+// Inferred base class of CubicExtraTruck and UncompressExtraTruck (first virtual is sampleTrucks); original name unknown.
+class unknown002 {
+public:
+  virtual void sampleTrucks(f32 time, const Binding &binding, const ExtraBinding &extraBinding, u32 count, f32 *values) const = 0;
+};
 
 class ExtraTruckSlot {
 public:
@@ -24,6 +38,7 @@ static_assert(sizeof(ExtraTruckSlot) == 0x38, "");
 
 class ExtraTruckBuffer : public ReferenceObject {
 public:
+  ExtraTruckBuffer(const Skeleton &skeleton, const ExtraTruckSlot &slot, mm::mtl::IAllocator *pAllocator);
   const Skeleton *unknown18;       // Inferred role: skeleton; original member name unknown.
   const ExtraTruckSlot *unknown20; // Inferred role: slot; original member name unknown.
   f32 *unknown28;                  // Inferred role: truck values (start of an mtl::Vector<float>); original member name unknown.

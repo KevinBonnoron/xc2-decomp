@@ -2,23 +2,43 @@
 #include <stddef.h>
 
 #include "mm_mtl/intrusive_ptr.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace anm {
+
+class AsmBlender;
+class ResASM;
+class Variable;
 
 struct InterpolateInfo;
 class AsmListener;
 class AsmState;
 
 enum StartFrameType {};
-enum InterpolateType {};
-enum InterpolateCurve {};
+enum InterpolateType {
+  INTERPOLATE_TYPE_UNKNOWN_0,
+  INTERPOLATE_TYPE_UNKNOWN_1,
+};
+enum InterpolateCurve {
+  INTERPOLATE_CURVE_UNKNOWN_0,
+  INTERPOLATE_CURVE_UNKNOWN_1,
+};
 
 class StateMachine {
 public:
   StateMachine();
   ~StateMachine();
+  void setup(const ResASM &resAsm, u32 layer, mm::mtl::IAllocator &allocator);
   void cleanup();
+  void update(f32 deltaTime);
+  void updateFrame(f32 deltaTime);
   void resetInterpolate();
   bool executeCmd(const char *command);
   bool setState(const char *state, StartFrameType startFrame = static_cast<StartFrameType>(0));
@@ -44,13 +64,17 @@ public:
   const InterpolateInfo *unknown28; // Inferred role: p interpolate info; original member name unknown.
   f32 unknown30;                    // Inferred role: interpolate time; original member name unknown.
   u8 _34[0x50 - 0x34];
-  AsmListener *unknown50; // Inferred role: listener; original member name unknown.
-  u8 _58[0x70 - 0x58];
+  AsmListener *unknown50;               // Inferred role: listener; original member name unknown.
+  AsmBlender *unknown58;                // Inferred role: p blender; original member name unknown.
+  mm::mtl::Vector<Variable> *unknown60; // Inferred role: p variables; original member name unknown.
+  u8 _68[0x70 - 0x68];
 };
 
 static_assert(offsetof(StateMachine, unknown28) == 0x28, "");
 static_assert(offsetof(StateMachine, unknown30) == 0x30, "");
 static_assert(offsetof(StateMachine, unknown50) == 0x50, "");
+static_assert(offsetof(StateMachine, unknown58) == 0x58, "");
+static_assert(offsetof(StateMachine, unknown60) == 0x60, "");
 static_assert(sizeof(StateMachine) == 0x70, "");
 
 } // namespace anm

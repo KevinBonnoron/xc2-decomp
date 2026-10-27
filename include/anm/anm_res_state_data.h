@@ -1,13 +1,16 @@
 #pragma once
 #include <stddef.h>
 
-#include "anm/anm_asm_listener.h" // IWYU pragma: keep
-#include "anm/anm_res_clip_data.h"
+#include "anm/anm_asm_listener.h"  // IWYU pragma: keep
+#include "anm/anm_res_clip_data.h" // IWYU pragma: keep
+#include "mm/mm_std_base.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
 
 namespace anm {
+
+class ResResolver;
 
 struct ResLoopCount {
   u8 _00[0x8];
@@ -32,6 +35,19 @@ struct ResState {
 
 class ResStateData {
 public:
+  ResStateData();
+  void cleanup();
+  void restore(const ResResolver &resolver);
+  void sortAnnotation(u32 type);
+  void clearFrameAnnotation(u32 type);
+
+  // __LINE__ must be 47 as in the original header: it is the line argument of the assert.
+#line 46
+  void setAttribute(u32 category, u64 attribute) {
+    MM_ASSERT(category > 0);
+    unknown30[category - 1] = attribute;
+  }
+  void setFrameAnnotation(u32 type, u32 clip, f32 frame, const AsmAnnotetion &annotation);
   const ResState *unknown00;                                         // Inferred role: p res state; original member name unknown.
   mm::mtl::Vector<ResClipData> unknown08;                            // Inferred role: clips; original member name unknown.
   u64 unknown30[4];                                                  // Inferred role: attributes; original member name unknown.

@@ -3,6 +3,8 @@
 namespace anm {
 struct SerialiseArg;
 
+EmptyAnimation::EmptyAnimation(mm::mtl::IAllocator *pAllocator) : Animation(pAllocator) {}
+
 EmptyAnimation::EmptyAnimation(const SerialiseArg &arg) : Animation(arg) {}
 
 void EmptyAnimation::sampleTrucks(f32 time, const Binding &binding, QsTransform *transforms) const {}

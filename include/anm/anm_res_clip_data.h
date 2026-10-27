@@ -9,9 +9,12 @@
 namespace anm {
 
 class Binding;
+class ResResolver;
 
 struct ResClipInfo {
-  u8 _00[0x10];
+  const char *unknown00; // Inferred role: binding name; original member name unknown.
+  u32 unknown08;         // Inferred role: binding id; original member name unknown.
+  u32 unknown0c;         // Inferred role: flags; original member name unknown.
   f32 speed;
   f32 weight;
 };
@@ -20,6 +23,10 @@ bool lessAsmKeyframeAnnotation(const AsmKeyframeAnnotation &annotation, const As
 
 class ResClipData {
 public:
+  ResClipData();
+  void cleanup();
+  void setFrameAnnotation(u32 type, f32 frame, const AsmAnnotetion &annotation);
+  void restore(const ResResolver &resolver);
   void sortAnnotation(u32 type);
 
   const ResClipInfo *unknown00; // Inferred role: p info; original member name unknown.

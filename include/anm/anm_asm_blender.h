@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "anm/anm_res_clip_data.h"
 #include "mm_mtl/intrusive_list.h"
 #include "types.h"
 
@@ -15,7 +16,6 @@ namespace anm {
 class Blender;
 class Control;
 class ResASM;
-class ResClipData;
 class AsmListener;
 struct QsTransform;
 
@@ -46,9 +46,18 @@ public:
   void cleanup();
   bool addClip(AsmClip &clip);
   void removeClip(AsmClip &clip);
+  void getDeltaExtractMotion(f32 deltaTime, QsTransform *transform) const;
   void sampleTrucks(u32 count, QsTransform *transforms);
   void sampleTrucksMS(u32 count, QsTransform *transforms);
   void sampleExtraTrucks(u16 slot, u32 count, f32 *values);
+
+  // Inferred helper: updates the skip sample flag from the clips; original name unknown.
+  void unknown002() {
+    unknown20 = !unknown08.empty();
+    for (mm::mtl::IntrusiveList<AsmClip>::iterator it = unknown08.begin(); it != unknown08.end(); ++it) {
+      unknown20 = unknown20 & (it.get()->unknown18->unknown00->unknown0c >> 2);
+    }
+  }
 
   Blender *m_pBlender;
   mm::mtl::IntrusiveList<AsmClip> unknown08; // Inferred role: clips; original member name unknown.
