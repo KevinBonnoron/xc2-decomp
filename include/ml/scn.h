@@ -4,6 +4,7 @@
 #include "ml/work_event.h"
 #include "mm_math/mm_plane.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
@@ -13,7 +14,9 @@
 
 namespace ml {
 
+class CriticalSection;
 class DebDraw;
+class FileResTh;
 class Scn;
 class ScnDebug;
 class ScnObj;
@@ -107,6 +110,17 @@ public:
     s32 unknown04;        // Inferred role: screen; original member name unknown.
   };
 
+  // Inferred type: render callback entry; the original type name is unknown.
+  struct unknown001 {
+    unknown001(IScnRender *render, SCNPRIO_CB priority, bool flag1, bool flag2) : unknown00(render), unknown08(priority), unknown0c(flag2), unknown0d(flag1), unknown0e(false) {}
+
+    IScnRender *unknown00; // Inferred role: callback; original member name unknown.
+    SCNPRIO_CB unknown08;  // Inferred role: priority; original member name unknown.
+    bool unknown0c;        // Inferred role: flag; original member name unknown.
+    bool unknown0d;        // Inferred role: flag; original member name unknown.
+    bool unknown0e;        // Inferred role: removed; original member name unknown.
+  };
+
   void setPause(bool isPause);
   void setDebDraw(SCNCAM cam, SCNPRIO_CB priority);
   ScnObjModel *createMdl(const void *data, const char *name, int screenID);
@@ -125,6 +139,9 @@ public:
   void clrView(WinView *view, int screen);
   ScnObjCam *getCam(int index);
   WinView *getView(int index);
+  void addRenderCB(IScnRender *render, SCNPRIO_CB priority, bool flag1, bool flag2);
+  void addEntryRes(FileResTh *res);
+  const WinView *getView(int index) const;
   ScnObjCam *getCam(const WinView *view);
   const ScnObjCam *getCam(const WinView *view) const;
 
@@ -137,9 +154,13 @@ public:
   mtl::ALLOC_HANDLE unknown64; // Inferred role: alloc handle; original member name unknown.
   u8 _68[0xac - 0x68];
   bool unknownac; // Inferred role: tex stm; original member name unknown.
-  u8 _ad[0xdf8 - 0xad];
-  bool unknowndf8; // Inferred role: pause; original member name unknown.
-  bool unknowndf9; // Inferred role: render stop; original member name unknown.
+  u8 _ad[0x4c0 - 0xad];
+  mm::mtl::FixedQueue<unknown001, 64> unknown4c0; // Inferred role: render callbacks to add; original member name unknown.
+  u8 _8d0[0xce8 - 0x8d0];
+  CriticalSection *unknownce8;                      // Inferred role: entry res critical section; original member name unknown.
+  mm::mtl::FixedVector<FileResTh *, 32> unknowncf0; // Inferred role: entry res; original member name unknown.
+  bool unknowndf8;                                  // Inferred role: pause; original member name unknown.
+  bool unknowndf9;                                  // Inferred role: render stop; original member name unknown.
   u8 _dfa[0xe00 - 0xdfa];
   DebDrawInfo unknowne00[2]; // Inferred role: deb draw infos; original member name unknown.
 };
@@ -148,6 +169,9 @@ static_assert(offsetof(Scn, unknown20) == 0x20, "");
 static_assert(offsetof(Scn, unknown38) == 0x38, "");
 static_assert(offsetof(Scn, unknown64) == 0x64, "");
 static_assert(offsetof(Scn, unknownac) == 0xac, "");
+static_assert(offsetof(Scn, unknown4c0) == 0x4c0, "");
+static_assert(offsetof(Scn, unknownce8) == 0xce8, "");
+static_assert(offsetof(Scn, unknowncf0) == 0xcf0, "");
 static_assert(offsetof(Scn, unknowndf8) == 0xdf8, "");
 static_assert(offsetof(Scn, unknowne00) == 0xe00, "");
 

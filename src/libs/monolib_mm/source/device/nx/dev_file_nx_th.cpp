@@ -2,6 +2,7 @@
 
 #include "ml/critical_section.h"
 #include "mm_mtl/internal/heap_allocator.h"
+#include "nn/fs.h"
 
 namespace ml {
 
@@ -10,6 +11,14 @@ namespace dfn_detail {
 mm::mtl::HeapAllocator g_allocator;
 
 } // namespace dfn_detail
+
+bool DevFileNxTh::m_mountSave;
+
+void DevFileNxTh::flushSave() {
+  if (m_mountSave) {
+    nn::fs::CommitSaveData("save");
+  }
+}
 
 CriticalSection &DevFileNxTh::getLocker() {
   static CriticalSection sect;

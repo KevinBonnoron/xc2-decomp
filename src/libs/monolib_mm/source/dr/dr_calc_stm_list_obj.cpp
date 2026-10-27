@@ -3,6 +3,7 @@
 #include "dr/dr_calc_tex_stream_man.h"
 #include "dr/dr_man.h"
 #include "grlib/cglib_texture_buffer.h"
+#include "ml/dev_file_th.h"
 
 namespace ml {
 
@@ -47,7 +48,7 @@ void *DrCalcStmListObj::getAdder() {
 
 DrCalcStmRes *DrCalcStmListObj::getResLowTexObj() { return &unknown30[DrMan::s_nDblStockIdx][unknown78]; }
 
-u32 DrCalcStmListObj::texstm_requestWait() {
+bool DrCalcStmListObj::texstm_requestWait() {
   unknown88 = 0x13;
   unknownaa--;
   if (unknownaa < 1) {
@@ -56,9 +57,135 @@ u32 DrCalcStmListObj::texstm_requestWait() {
   return 0;
 }
 
-u32 DrCalcStmListObj::texstm_size_Wait() {
+bool DrCalcStmListObj::texstm_size_Wait() {
   unknown88 = 0xf;
   return 0;
+}
+
+void DrCalcStmListObj::setupReadCheck() {
+  if (unknown50 != nullptr) {
+    DrCalcTexStreamMan::get()->clearMemObj(unknown50);
+    unknown50 = nullptr;
+  }
+  unknown1e0 = unknown1f0;
+  unknown80 |= 0x8000;
+}
+
+bool DrCalcStmListObj::texstm_notfileWait() {
+  unknown88 = 0x13;
+  unknown80 |= 0x1000;
+  if (!(unknown80 & 0x2000)) {
+    setupReadCheck();
+  }
+  return 0;
+}
+
+bool DrCalcStmListObj::texstm_oldVerWait() {
+  unknown88 = 4;
+  if (!(unknown80 & 0x2000)) {
+    setupReadCheck();
+  }
+  return 0;
+}
+
+bool DrCalcStmListObj::texstm_stmchk_setWait() {
+  unknown88 = 3;
+  if (!(unknown80 & 0x2000)) {
+    setupReadCheck();
+  }
+  return 0;
+}
+
+bool DrCalcStmListObj::texstm_defErrWait() {
+  unknown88 = 7;
+  DrCalcTexStreamMan *man = DrCalcTexStreamMan::get();
+  man->unknown2488 += unknown84;
+  unknowna8++;
+  if (unknowna8 > 0x3b) {
+    unknowna8 = 0;
+    unknown1e0 = &DrCalcStmListObj::texstm_defRead;
+    return 1;
+  }
+  return 0;
+}
+
+void DrCalcStmListObj::chacheDefClear() {
+  for (s32 i = 0; i < unknowna2; i++) {
+    DrCalcTexStmObj **objects = unknown28;
+    DrCalcTexStmObj *object = objects[i];
+    if (object != nullptr) {
+      DrCalcTexStreamMan::get()->clearMemObj(object);
+      objects[i] = nullptr;
+    }
+  }
+  unknown80 &= ~8u;
+  unknown94 = 0;
+}
+
+void DrCalcStmListObj::update() {
+  if (unknown80 & (0x1000000 << DrMan::s_nDblIdx)) {
+    s32 index = DrMan::s_nDblIdx;
+    s32 mode = unknowncc[index];
+    unknown80 &= ~(0x1000000 << index);
+    unknownc8 = mode;
+    unknowncc[index] = 0;
+  }
+  if (unknowna6 == 0) {
+    unknownc8 = 0;
+  }
+  while ((this->*unknown1e0)()) {
+  }
+}
+
+bool DrCalcStmListObj::texstm_defMidtexErrWait() {
+  unknown88 = 10;
+  DrCalcTexStreamMan *man = DrCalcTexStreamMan::get();
+  man->unknown2488 += unknown84;
+  unknowna8++;
+  if (unknowna8 > 0x3b) {
+    unknowna8 = 0;
+    unknown1e0 = &DrCalcStmListObj::texstm_deTexCheck;
+    return 1;
+  }
+  return 0;
+}
+
+bool DrCalcStmListObj::texstm_fastErrWait() {
+  unknown88 = 0x11;
+  DrCalcTexStreamMan *man = DrCalcTexStreamMan::get();
+  man->unknown2488 += unknown84;
+  unknowna8++;
+  if (unknowna8 > 0x3b) {
+    unknowna8 = 0;
+    unknown1e0 = &DrCalcStmListObj::texstm_checkTexStm;
+    return 1;
+  }
+  return 0;
+}
+
+bool DrCalcStmListObj::texstm_defupdate() {
+  unknown88 = 0x13;
+  if (unknownc8 != 0) {
+    unknown8c = 0;
+  }
+  if (!(unknown80 & 0x10)) {
+    unknown1e0 = &DrCalcStmListObj::texstm_checkTexStm;
+  }
+  return 0;
+}
+
+bool DrCalcStmListObj::OnFileEvent(EventFileTh *event) {
+  if (event->type != EventFileTh::TYPE_COMPLETE) {
+    unknown40 = nullptr;
+    unknown80 = (unknown80 & ~0x0c000000u) | 0x08000000;
+    return 0;
+  }
+  if (unknown40 != event->unknown08) {
+    return 0;
+  }
+  unknown80 &= ~0x04000000u;
+  unknown40 = nullptr;
+  return 1;
 }
 
 } // namespace ml

@@ -1,6 +1,8 @@
 #include "dr/dr_ibl_coli_acc.h"
 
 #include "mm_math/mm_vec3.h"
+#include "mtl/alloc_handle.h"
+#include "mtl/mem_manager.h"
 
 namespace ml {
 
@@ -34,7 +36,120 @@ struct unknown004 {
   f32 unknown40[3];    // Inferred role: half extents; original member name unknown.
 };
 
+// Inferred role: IBL collision data header; original type name unknown.
+struct unknown005 {
+  u8 _00[0x08];
+  u32 unknown08; // Inferred role: texture num; original member name unknown.
+  u8 _0c[0x14 - 0x0c];
+  u32 unknown14; // Inferred role: primitives offset; original member name unknown.
+  u32 unknown18; // Inferred role: collision tree num; original member name unknown.
+  u32 unknown1c; // Inferred role: collision tree offset; original member name unknown.
+  u32 unknown20; // Inferred role: invalid collision tree num; original member name unknown.
+  u32 unknown24; // Inferred role: invalid collision tree offset; original member name unknown.
+};
+
 } // namespace
+
+DrIBLColiAcc::COLITEST DrIBLColiAcc::s_pColiTest[5] = {
+    &DrIBLColiAcc::envcoli_box,
+    &DrIBLColiAcc::envcoli_sphere,
+    &DrIBLColiAcc::envcoli_cylinder,
+    &DrIBLColiAcc::envcoli_notrot_box,
+    &DrIBLColiAcc::envcoli_notrot_cylinder,
+};
+
+DrIBLColiAcc::DrIBLColiAcc(const void *data, mtl::ALLOC_HANDLE handle) {
+  const unknown005 *header = static_cast<const unknown005 *>(data);
+  unknown00 = static_cast<const u8 *>(data);
+  unknown08 = reinterpret_cast<const _IBLPrimHeader *>(unknown00 + header->unknown14);
+  if (header->unknown18 != 0) {
+    unknown10 = reinterpret_cast<const _EnvColiListTreeData *>(unknown00 + header->unknown1c);
+  }
+  if (header->unknown20 != 0) {
+    unknown18 = reinterpret_cast<const _EnvColiListTreeData *>(unknown00 + header->unknown24);
+  }
+  unknown28.initialize(mtl::MemManager::getAllocator(handle), header->unknown08);
+  unknown28.clrLocal();
+}
+
+DrIBLColiAcc::~DrIBLColiAcc() { unknown28.destroy(); }
+
+bool DrIBLColiAcc::testColi(const mm::Vec3 &position, f32 margin, const _IBLPrimHeader *&result) {
+  result = nullptr;
+  unknown20 = 0;
+  if (unknown18 != nullptr) {
+    unknown28.clrLocal();
+    testTreeInvalidColi(unknown18, position, margin);
+  }
+  if (unknown10 != nullptr) {
+    return testTreeColi(unknown10, position, margin, result);
+  }
+  return false;
+}
+
+void DrIBLColiAcc::testTreeInvalidColi(const _EnvColiListTreeData *tree, const mm::Vec3 &position, f32 margin) {
+  if (!(tree->unknown00[0] + margin < position.x || tree->unknown0c[0] - margin > position.x || tree->unknown00[2] + margin < position.z || tree->unknown0c[2] - margin > position.z ||
+        tree->unknown00[1] + margin < position.y || tree->unknown0c[1] - margin > position.y)) {
+    u32 childCount = tree->unknown20;
+    u32 primCount;
+    if (childCount != 0) {
+      const u16 *children = reinterpret_cast<const u16 *>(unknown00 + tree->unknown18);
+      for (u32 i = 0; i < childCount; i++) {
+        const _EnvColiListTreeData *base = unknown18;
+        testTreeInvalidColi(base + children[i], position, margin);
+      }
+      primCount = tree->unknown22;
+    } else {
+      primCount = tree->unknown22;
+    }
+    if (primCount != 0) {
+      const u16 *primitives = reinterpret_cast<const u16 *>(unknown00 + tree->unknown1c);
+      for (u32 i = 0; i < primCount; i++) {
+        const _IBLPrimHeader *base = unknown08;
+        const _IBLPrimHeader *primitive = base + primitives[i];
+        if ((this->*s_pColiTest[primitive->unknown04])(unknown00 + primitive->unknown00, position, margin)) {
+          unknown28.setLocal(primitive->unknown06, true);
+        }
+      }
+    }
+  }
+}
+
+bool DrIBLColiAcc::testTreeColi(const _EnvColiListTreeData *tree, const mm::Vec3 &position, f32 margin, const _IBLPrimHeader *&result) {
+  bool isHit = false;
+  if (!(tree->unknown00[0] + margin < position.x || tree->unknown0c[0] - margin > position.x || tree->unknown00[2] + margin < position.z || tree->unknown0c[2] - margin > position.z ||
+        tree->unknown00[1] + margin < position.y || tree->unknown0c[1] - margin > position.y)) {
+    u32 childCount = tree->unknown20;
+    u32 primCount;
+    if (childCount != 0) {
+      u8 childHit = 0;
+      const u16 *children = reinterpret_cast<const u16 *>(unknown00 + tree->unknown18);
+      for (u32 i = 0; i < childCount; i++) {
+        const _EnvColiListTreeData *base = unknown10;
+        childHit |= testTreeColi(base + children[i], position, margin, result) & 1;
+      }
+      primCount = tree->unknown22;
+      isHit = childHit != 0;
+    } else {
+      primCount = tree->unknown22;
+    }
+    if (primCount != 0) {
+      const u16 *primitives = reinterpret_cast<const u16 *>(unknown00 + tree->unknown1c);
+      for (u32 i = 0; i < primCount; i++) {
+        const _IBLPrimHeader *base = unknown08;
+        const _IBLPrimHeader *primitive = base + primitives[i];
+        if (!unknown28.getLocal(primitive->unknown06) && unknown20 < primitive->unknown08) {
+          if ((this->*s_pColiTest[primitive->unknown04])(unknown00 + primitive->unknown00, position, margin)) {
+            isHit = true;
+            unknown20 = primitive->unknown08;
+            result = primitive;
+          }
+        }
+      }
+    }
+  }
+  return isHit;
+}
 
 bool DrIBLColiAcc::envcoli_box(const u8 *data, const mm::Vec3 &position, f32 margin) {
   const unknown004 *box = reinterpret_cast<const unknown004 *>(data);

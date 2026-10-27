@@ -12,6 +12,7 @@ struct DrEnvColiResult;
 
 class DrEnvColiParameter {
 public:
+  DrEnvColiParameter(DrEnvColiObj *object, DrEnvColiResult *result, DrMan *man, DrEnvColiMan *coliMan);
   ~DrEnvColiParameter();
 
   DrMan *unknown00;           // Inferred role: dr manager; original member name unknown.

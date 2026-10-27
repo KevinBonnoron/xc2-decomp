@@ -1,10 +1,47 @@
 #include "ml/err_viewer.h"
 
+#include "ml/critical_section.h"
+#include "ml/work_root.h"
 #include "mtl/mem_manager.h"
 
 namespace ml {
 
 s32 ErrViewer::s_nHandle;
+
+bool ErrViewer::isValid(CERR_STRUCT *error) {
+  ErrViewer *viewer = get();
+  if (viewer == nullptr) {
+    return false;
+  }
+  CS lock(*viewer->unknown10);
+  for (mm::mtl::FixedList<unknown001 *, 32>::iterator it = viewer->unknown18.begin(); it != viewer->unknown18.end(); ++it) {
+    if ((*it)->unknown10 == error) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void ErrViewer::reqCancel(CERR_STRUCT *error) {
+  ErrViewer *viewer = get();
+  if (viewer != nullptr) {
+    CS lock(*viewer->unknown10);
+    for (mm::mtl::FixedList<unknown001 *, 32>::iterator it = viewer->unknown18.begin(); it != viewer->unknown18.end(); ++it) {
+      if ((*it)->unknown10 == error) {
+        (*it)->unknown08 = nullptr;
+        break;
+      }
+    }
+  }
+}
+
+bool ErrViewer::isExistError() const {
+  if (WorkRoot::isRestart()) {
+    return false;
+  }
+  CS lock(*unknown10);
+  return unknown18.begin() != unknown18.end();
+}
 
 bool ErrViewer::isInitialized() {
   ErrViewer *viewer = get();

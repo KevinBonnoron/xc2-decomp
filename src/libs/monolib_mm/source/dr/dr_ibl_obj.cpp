@@ -1,5 +1,6 @@
 #include "dr/dr_ibl_obj.h"
 
+#include "dr/dr_ibl_coli_acc.h"
 #include "grlib/cglib_texture_buffer.h"
 #include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 

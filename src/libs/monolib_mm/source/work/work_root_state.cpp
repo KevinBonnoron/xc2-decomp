@@ -9,6 +9,8 @@
 #include "ml/work_obj.h"
 #include "ml/work_root.h"
 #include "ml/work_system.h"
+#include "mm_mtl/algorithm.h"
+#include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixstr.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
@@ -44,6 +46,7 @@ s32 s_nWidCount;
 CriticalSectionNC s_lockEntry;
 s32 s_nEntry;
 unknown001 s_aEntry[100];
+mm::mtl::FixedList<WorkObj *, 32> s_frameEnd;
 bool s_bThreadRenderReq;
 bool s_bThreadRender;
 
@@ -53,6 +56,15 @@ CriticalSection &getCriticalSection() {
 }
 
 } // namespace _wrootst
+
+void WorkRootState::addFrameEnd(WorkObj *work) { _wrootst::s_frameEnd.push_back(work); }
+
+void WorkRootState::removeFrameEnd(WorkObj *work) {
+  mm::mtl::FixedList<WorkObj *, 32>::iterator it = mm::mtl::find(_wrootst::s_frameEnd.begin(), _wrootst::s_frameEnd.end(), work);
+  if (it != _wrootst::s_frameEnd.end()) {
+    _wrootst::s_frameEnd.erase(it);
+  }
+}
 
 void WorkRootState::standbyWork() {
   entryWork();

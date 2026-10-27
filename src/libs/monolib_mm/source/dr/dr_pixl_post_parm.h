@@ -229,7 +229,9 @@ public:
   bool m_rainDropOn;
   u8 _03b9[0x0460 - 0x03b9];
   bool m_shwRaytrace;
-  u8 _0461[0x0470 - 0x0461];
+  u8 _0461[0x0468 - 0x0461];
+  f32 unknown468; // Inferred role: sky luminance weight; original member name unknown.
+  f32 unknown46c; // Inferred role: sky luminance weight; original member name unknown.
   f32 unknown470; // Inferred role: specular str; original member name unknown.
   u8 _0474[0x0488 - 0x0474];
   bool unknown488; // Inferred role: g buff debug; original member name unknown.
@@ -353,6 +355,8 @@ static_assert(offsetof(DrPixlPostParm, unknown360) == 0x0360, "");
 static_assert(offsetof(DrPixlPostParm, unknown37c) == 0x037c, "");
 static_assert(offsetof(DrPixlPostParm, m_rainDropOn) == 0x03b8, "");
 static_assert(offsetof(DrPixlPostParm, m_shwRaytrace) == 0x0460, "");
+static_assert(offsetof(DrPixlPostParm, unknown468) == 0x0468, "");
+static_assert(offsetof(DrPixlPostParm, unknown46c) == 0x046c, "");
 static_assert(offsetof(DrPixlPostParm, unknown470) == 0x0470, "");
 static_assert(offsetof(DrPixlPostParm, unknown488) == 0x0488, "");
 static_assert(offsetof(DrPixlPostParm, unknown4d0) == 0x04d0, "");

@@ -19,8 +19,11 @@ public:
     u8 _10d[0x1d8 - 0x10d];
   };
 
+  static bool m_mountSave;
+
   bool initialize() override;
   u32 addressAlignment() override;
+  static void flushSave();
   static CriticalSection &getLocker();
   static void *allocate(size_t size);
   static void deallocate(void *pointer, size_t size);

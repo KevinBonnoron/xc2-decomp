@@ -8,15 +8,7 @@ class CGLibTextureBuffer;
 } // namespace grlib
 
 namespace ml {
-
-struct _IBLPrimHeader {
-  u8 _00[0x06];
-  u16 unknown06; // Inferred role: texture index; original member name unknown.
-  u16 unknown08; // Inferred role: priority; original member name unknown.
-};
-
-static_assert(offsetof(_IBLPrimHeader, unknown06) == 0x06, "");
-static_assert(offsetof(_IBLPrimHeader, unknown08) == 0x08, "");
+struct _IBLPrimHeader;
 
 struct unknown001 { // Inferred role: IBL data header; original name unknown.
   u8 _00[0x08];

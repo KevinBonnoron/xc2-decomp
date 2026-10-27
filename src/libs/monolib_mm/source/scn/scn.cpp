@@ -1,5 +1,7 @@
 #include "ml/scn.h"
 
+#include "ml/critical_section.h"
+#include "ml/file_res_th.h"
 #include "ml/proc_desktop.h"
 #include "ml/reslist.h"
 #include "ml/scn_obj_model.h"
@@ -69,6 +71,16 @@ void Scn::enableScnDebug(bool isEnable) {
   }
 }
 
+void Scn::addRenderCB(IScnRender *render, SCNPRIO_CB priority, bool flag1, bool flag2) { unknown4c0.push(unknown001(render, priority, flag1, flag2)); }
+
+void Scn::addEntryRes(FileResTh *res) {
+  CS lock(*unknownce8);
+  if (res != nullptr) {
+    res->AddRef();
+    unknowncf0.push_back(res);
+  }
+}
+
 void Scn::setView(WinView *view, int screen) { unknown28->setView(view, screen); }
 
 void Scn::clrView(WinView *view, int screen) { unknown28->clrView(view, screen); }
@@ -92,6 +104,10 @@ const WinView *ScnCamMan::getView(s16 screen) const {
   }
   return static_cast<WinView *>(WorkRootState::getWork(unknown10[screen]));
 }
+
+WinView *Scn::getView(int index) { return unknown28->getView(index); }
+
+const WinView *Scn::getView(int index) const { return unknown28->getView(index); }
 
 void ScnCamMan::setCrossIdTarget(const WinView *view) {}
 

@@ -1,8 +1,16 @@
 #include "ml/dev_file_th.h"
 
+#include "device/nx/dev_file_nx_th.h"
 #include "mm_mtl/fixstr.h"
+#include "nn/fs.h"
 
 namespace ml {
+
+void DevFileTh::flushSave() {
+  if (DevFileNxTh::m_mountSave) {
+    nn::fs::CommitSaveData("save");
+  }
+}
 
 FileHandleTh *DevFileTh::checkValidFile(const char *path, IWorkEvent *event) {
   DevFileTh *file = get();

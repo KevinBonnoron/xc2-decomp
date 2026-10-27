@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace ml {
@@ -23,7 +24,7 @@ static_assert(offsetof(DrCalcTexStmObj, unknown18) == 0x18, "");
 static_assert(offsetof(DrCalcTexStmObj, unknown20) == 0x20, "");
 static_assert(offsetof(DrCalcTexStmObj, unknown24) == 0x24, "");
 
-class DrCalcTexStreamMan {
+class DrCalcTexStreamMan : public mm::mtl::PtrSingleton<DrCalcTexStreamMan> {
 public:
   static CriticalSection &getCriticalSection();
   int getUseMax() const;
@@ -48,7 +49,6 @@ public:
     FLAG_CACHER_CLEAR_MODE = 1 << 4,
   };
 
-  u8 _0000[0x08 - 0x00];
   DrCalcTexStmObj *unknown08; // Inferred role: first object of the list; original member name unknown.
   u8 _0010[0x2068 - 0x0010];
   u32 unknown2068; // Inferred role: flags; original member name unknown.
