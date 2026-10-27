@@ -118,6 +118,9 @@ public:
   static const char *getNArtsName(u32 parts);
   static const char *getArtsName(u32 parts);
   static const char *getAssistName(u32 parts);
+  static u32 getEquipArtsItemNum(u32 blade, u32 parts);
+  static u32 getEquipNArtsItemNum(u32 blade, u32 parts);
+  static u32 getEquipCondenserItemNum(u32 blade, u32 parts);
   static u32 getEquipRoleItemNum(u32 blade, u32 parts);
   static u32 getEquipAttributeItemNum(u32 blade, u32 parts);
 };

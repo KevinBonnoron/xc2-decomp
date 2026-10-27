@@ -1,5 +1,8 @@
 #include "gf/object/component/effect/gf_com_effect_caster.h"
 
+#include "framework/effect/effect_manager.h"
+#include "gf/data/gf_data_param_acc.h"
+#include "gf/data/gf_data_weapon.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/object/gf_obj.h"
 
@@ -8,6 +11,10 @@ class MessageObject;
 } // namespace fw
 
 namespace gf {
+
+void GfComEffectCaster::procMsgObjectNotifyDamage(fw::MessageObject *object, MsgObjectNotifyDamage &message) {}
+
+void GfComEffectCaster::procMsgObjectNotifyDead(fw::MessageObject *object, MsgObjectNotifyDead &message) {}
 
 void GfComEffectCaster::procMsgFxRimBloomEnd(fw::MessageObject *object, MsgFxRimBloomEnd &message) {
   unknown14 = false;
@@ -28,6 +35,32 @@ fw::EffectPoint *GfComEffectCaster::getEffectPoint() { return unknown390; }
 bool GfComEffectCaster::getValidEffectName(const char *name) const { return true; }
 
 bool GfComEffectCaster::isDynamicAnnotationEffect(u8 type) const { return type != 0 && type != 0xe; }
+
+u32 GfComEffectCaster::calcWeaponID() const {
+  DataParamAcc paramAcc(static_cast<GfObj *>(unknown08)->unknownf8);
+  return GfDataWeapon::getEffWeaponType(paramAcc.getWeaponType(-1, false));
+}
+
+void GfComEffectCaster::setCaster(u32 effect) { fw::EffectManager::get()->setParam(effect, unknown388, 1.0f); }
+
+bool GfComEffectCaster::setSpeed(u32 effect, f32 speed) {
+  Param *param = findEffectCasterParam(effect);
+  if (param == nullptr) {
+    return false;
+  }
+
+  param->unknown30 = speed;
+  return true;
+}
+
+f32 GfComEffectCaster::getElapsedSecond(u32 effect) {
+  Param *param = findEffectCasterParam(effect);
+  if (param == nullptr) {
+    return -1.0f;
+  }
+
+  return param->unknown28;
+}
 
 GfComEffectCaster::Param *GfComEffectCaster::findEffectCasterParam(u32 effect) {
   for (Param *param = unknown3a0.begin(); param != unknown3a0.end(); param++) {

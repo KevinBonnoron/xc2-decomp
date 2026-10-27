@@ -8,8 +8,9 @@
 #include "types.h"
 
 namespace fw {
+class SoundPack;
 struct UpdateInfo;
-}
+} // namespace fw
 
 namespace mm {
 namespace mtl {
@@ -21,6 +22,7 @@ namespace gf {
 
 struct GF_ASSET_HANDLE;
 struct GfSetupParam;
+struct GF_OBJ_HANDLE;
 struct GF_SLOT_HANDLE;
 class GfAssetPack;
 class GfAssetResource;
@@ -51,6 +53,8 @@ public:
   static u32 getSlotNumByByteSize(GfAssetType type, size_t size);
   static GF_SLOT_HANDLE *allocateFromAssetTypeSlot(GfAssetType type, size_t size);
   static bool getSlotInfo(mm::mtl::IAllocator *&allocator, void *&buffer, size_t &size, GF_SLOT_HANDLE *handle);
+  static GF_OBJ_HANDLE *getObj(GF_ASSET_HANDLE *handle);
+  fw::SoundPack *getSePackByFileIdx(GF_ASSET_HANDLE *handle, GfFileIdx index);
   static GfAssetPack *getAssetPack(GF_ASSET_HANDLE *handle, GfFileIdx index);
   static GfAssetResource *getResource(GF_ASSET_HANDLE *handle, GfFileIdx index, GfAssetType type);
   static void destroySlotCache(GfAssetType type);

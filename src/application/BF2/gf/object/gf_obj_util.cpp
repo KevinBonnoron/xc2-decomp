@@ -3,6 +3,7 @@
 #include "framework/object/component_object.h"
 #include "framework/object/updatable_object.h"
 #include "framework/pointer_map.h"
+#include "gf/asset/gf_asset_def.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/data/gf_bdat_rsc.h"
 #include "gf/data/gf_data_npc.h"
@@ -479,6 +480,80 @@ bool GfObjUtil::isSearchEmptyResource(GF_OBJ_HANDLE *handle) {
   }
 
   return false;
+}
+
+GfAssetResource *GfObjUtil::getResourceEab(GF_OBJ_HANDLE *handle) {
+  GfObj *obj = getObj(handle);
+  if (obj == nullptr) {
+    return nullptr;
+  }
+
+  switch (obj->unknown28) {
+  case OBJECT_TYPE_DRIVER:
+  case OBJECT_TYPE_BLADE:
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(36), ASSET_TYPE_BASE);
+  case OBJECT_TYPE_ENEMY:
+  case OBJECT_TYPE_NPC:
+  case OBJECT_TYPE_MOB:
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(10), ASSET_TYPE_BASE);
+  case OBJECT_TYPE_GIMMICK:
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(4), ASSET_TYPE_BASE);
+  case OBJECT_TYPE_EVENT:
+  case OBJECT_TYPE_BELONGING:
+  case OBJECT_TYPE_UNKNOWN_14:
+  case OBJECT_TYPE_UI:
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(3), ASSET_TYPE_BASE);
+  default:
+    return nullptr;
+  }
+}
+
+GfAssetResource *GfObjUtil::getResourceEfb(GF_OBJ_HANDLE *handle) {
+  GfObj *obj = getObj(handle);
+  if (obj == nullptr) {
+    return nullptr;
+  }
+
+  switch (obj->unknown28) {
+  case OBJECT_TYPE_DRIVER:
+  case OBJECT_TYPE_BLADE:
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(37), ASSET_TYPE_BASE);
+  case OBJECT_TYPE_ENEMY:
+  case OBJECT_TYPE_NPC:
+  case OBJECT_TYPE_MOB:
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(11), ASSET_TYPE_BASE);
+  case OBJECT_TYPE_GIMMICK:
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(5), ASSET_TYPE_BASE);
+  case OBJECT_TYPE_EVENT:
+  case OBJECT_TYPE_BELONGING:
+  case OBJECT_TYPE_UNKNOWN_14:
+  case OBJECT_TYPE_UI:
+    return GfAssetManager::getResource(getAssetHandle(handle), static_cast<GfFileIdx>(4), ASSET_TYPE_BASE);
+  default:
+    return nullptr;
+  }
+}
+
+fw::SoundPack *GfObjUtil::getSePackFoot1(GF_OBJ_HANDLE *handle) {
+  if (getObjType(handle) - OBJECT_TYPE_DRIVER < 5) {
+    GfAssetManager *assetManager = GfAssetManager::get();
+    if (assetManager != nullptr) {
+      return assetManager->getSePackByFileIdx(getAssetHandle(handle), static_cast<GfFileIdx>(1));
+    }
+  }
+
+  return nullptr;
+}
+
+fw::SoundPack *GfObjUtil::getSePackFoot2(GF_OBJ_HANDLE *handle) {
+  if (getObjType(handle) - OBJECT_TYPE_DRIVER < 5) {
+    GfAssetManager *assetManager = GfAssetManager::get();
+    if (assetManager != nullptr) {
+      return assetManager->getSePackByFileIdx(getAssetHandle(handle), static_cast<GfFileIdx>(2));
+    }
+  }
+
+  return nullptr;
 }
 
 bool GfObjUtil::getMobSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slots, GF_OBJ_HANDLE *handle) {

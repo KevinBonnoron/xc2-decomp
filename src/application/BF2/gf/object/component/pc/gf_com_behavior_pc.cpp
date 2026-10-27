@@ -104,4 +104,7 @@ WaterInPlugin *WaterInPlugin::create() {
 }
 
 } // namespace pc
+
+void GfComBehaviorPc::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
+
 } // namespace gf

@@ -445,6 +445,46 @@ const char *GfDataHana::getAssistName(u32 parts) {
   return name != nullptr ? name : "";
 }
 
+u32 GfDataHana::getEquipArtsItemNum(u32 blade, u32 parts) {
+  u32 count = 0;
+  for (u32 slot = 0; slot < 3; slot++) {
+    u32 equipParts = GfDataBlade::getSDataBlade(blade)->unknown68c.unknown04[slot].unknown04;
+    if (equipParts != 0) {
+      count += equipParts == parts;
+    }
+  }
+
+  return count;
+}
+
+u32 GfDataHana::getEquipNArtsItemNum(u32 blade, u32 parts) {
+  u32 count = 0;
+  for (u32 slot = 0; slot < 3; slot++) {
+    u32 equipParts = GfDataBlade::getSDataBlade(blade)->unknown68c.unknown28[slot].unknown04;
+    if (equipParts != 0) {
+      count += equipParts == parts;
+    }
+  }
+
+  return count;
+}
+
+u32 GfDataHana::getEquipCondenserItemNum(u32 blade, u32 parts) {
+  u32 count = 0;
+  for (u32 slot = 0; slot < 3; slot++) {
+    u32 condenser = GfDataBlade::getSDataBlade(blade)->unknown68c.unknown4c[slot];
+    if (condenser != 0) {
+      count += condenser == parts;
+      u32 extendCondenser = GfDataBlade::getSDataBlade(blade)->unknown68c.unknown52[slot];
+      if (extendCondenser != 0) {
+        count += extendCondenser == parts;
+      }
+    }
+  }
+
+  return count;
+}
+
 u32 GfDataHana::getEquipRoleItemNum(u32 blade, u32 parts) {
   u32 role = GfDataBlade::getSDataBlade(blade)->unknown68c.unknown00;
   if (role == 0) {

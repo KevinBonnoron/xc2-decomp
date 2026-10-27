@@ -23,6 +23,8 @@ class RTTI;
 
 namespace gf {
 
+struct MsgDebugActivateComponentWindow;
+struct MsgPcFieldNotifyChangePlayerID;
 struct MsgPcFieldWarpCancel;
 
 namespace pc {
@@ -69,6 +71,8 @@ public:
   void setLocomotion(const anm::QsTransform &locomotion);
   void setEnvSensorCheckFlags(u32 flags, bool isEnable);
   void resetInput();
+  void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
+  void procMsgPcFieldNotifyChangePlayerID(fw::MessageObject *object, MsgPcFieldNotifyChangePlayerID &message);
   void procMsgPcFieldWarpCancel(fw::MessageObject *object, MsgPcFieldWarpCancel &message);
 
   u32 unknown38; // Inferred role: player id set by MsgPcFieldNotifyChangePlayerID; original member name unknown.
@@ -79,7 +83,9 @@ public:
   mm::Vec3 unknown80; // Inferred role: velocity; original member name unknown.
   f32 unknown90;      // Inferred role: vertical speed; original member name unknown.
   f32 unknown94;      // Inferred role: horizontal speed; original member name unknown.
-  u8 _98[0x110 - 0x98];
+  u8 _98[0xc0 - 0x98];
+  f32 unknownc0; // Role and original member name unknown.
+  u8 _c4[0x110 - 0xc4];
   u32 unknown110_0 : 1; // Inferred role: field control; original member name unknown.
   u32 unknown110_1 : 1; // Inferred role: battle control; original member name unknown.
   u32 : 1;
@@ -119,6 +125,7 @@ static_assert(offsetof(GfComPropertyPc, unknown6c) == 0x6c, "");
 static_assert(offsetof(GfComPropertyPc, unknown80) == 0x80, "");
 static_assert(offsetof(GfComPropertyPc, unknown90) == 0x90, "");
 static_assert(offsetof(GfComPropertyPc, unknown94) == 0x94, "");
+static_assert(offsetof(GfComPropertyPc, unknownc0) == 0xc0, "");
 static_assert(offsetof(GfComPropertyPc, unknown118) == 0x118, "");
 static_assert(offsetof(GfComPropertyPc, unknown120) == 0x120, "");
 static_assert(offsetof(GfComPropertyPc, unknown160) == 0x160, "");

@@ -6,6 +6,8 @@
 
 namespace gf {
 
+void GfComBehaviorNpc::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
+
 gmk::AGmkBase *GfComBehaviorNpc::getBindedGmkInst() const { return gmk::getBindedGmkInst(static_cast<GfObj *>(unknown08)->unknownf8); }
 
 void GfComBehaviorNpc::setGoalPos(const mm::Vec3 &position) { unknownc0 = position; }

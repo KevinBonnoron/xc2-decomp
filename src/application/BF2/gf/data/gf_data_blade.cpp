@@ -317,6 +317,17 @@ bool GfDataBlade::getNameWithMsgID(u8 *&bdat, u32 &textId, const SDataBlade &dat
   return true;
 }
 
+int GfDataBlade::getDriverSetID(u32 blade) {
+  if (blade != 0) {
+    u32 driver = getSDataBlade(blade)->unknown04;
+    if (driver != 0) {
+      return GfDataDriver::getSetIdByBlade(driver, blade);
+    }
+  }
+
+  return -1;
+}
+
 bool GfDataBlade::getName(u8 *&bdat, u32 &textId, u32 blade) {
   textId = 0;
   return getNameWithMsgID(bdat, textId, blade);

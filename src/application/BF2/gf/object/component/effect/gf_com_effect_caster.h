@@ -30,6 +30,8 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 struct MsgFxRimBloomEnd;
 struct MsgFxRimBloomTarget;
+struct MsgObjectNotifyDamage;
+struct MsgObjectNotifyDead;
 
 struct EffectMountSetupEv {
   EffectMountSetupEv() : unknown30(mm::Vec3::zero), _40(), unknown41(false), unknown42(false) {}
@@ -49,7 +51,11 @@ static_assert(offsetof(EffectMountSetupEv, unknown41) == 0x41, "");
 class GfComEffectCaster : public GfComponent {
 public:
   struct Param {
-    u8 _00[0x58];
+    u8 _00[0x28];
+    f32 unknown28; // Inferred role: elapsed second; original member name unknown.
+    u8 _2c[0x30 - 0x2c];
+    f32 unknown30; // Inferred role: speed; original member name unknown.
+    u8 _34[0x58 - 0x34];
     u32 unknown58; // Inferred role: effect identifier; original member name unknown.
     u8 _5c[0xc0 - 0x5c];
   };
@@ -61,7 +67,12 @@ public:
   bool getEfpMatrix(const char *name, mm::Mat44 &matrix);
   void addMountEffectEv(const EffectMountSetupEv &setup);
   void removeMountEffectEv(u32 effect);
-  void setSpeed(u32 effect, f32 speed);
+  u32 calcWeaponID() const;
+  void setCaster(u32 effect);
+  bool setSpeed(u32 effect, f32 speed);
+  f32 getElapsedSecond(u32 effect);
+  void procMsgObjectNotifyDamage(fw::MessageObject *object, MsgObjectNotifyDamage &message);
+  void procMsgObjectNotifyDead(fw::MessageObject *object, MsgObjectNotifyDead &message);
   void procMsgFxRimBloomEnd(fw::MessageObject *object, MsgFxRimBloomEnd &message);
   void procMsgFxRimBloomTarget(fw::MessageObject *object, MsgFxRimBloomTarget &message);
   fw::EffectPoint *getEffectPoint();
@@ -97,6 +108,8 @@ static_assert(offsetof(GfComEffectCaster, unknown390) == 0x390, "");
 static_assert(offsetof(GfComEffectCaster, unknown3a0) == 0x3a0, "");
 static_assert(offsetof(GfComEffectCaster, unknown113d0) == 0x113d0, "");
 static_assert(offsetof(GfComEffectCaster, unknown11410) == 0x11410, "");
+static_assert(offsetof(GfComEffectCaster::Param, unknown28) == 0x28, "");
+static_assert(offsetof(GfComEffectCaster::Param, unknown30) == 0x30, "");
 static_assert(sizeof(GfComEffectCaster::Param) == 0xc0, "");
 
 } // namespace gf

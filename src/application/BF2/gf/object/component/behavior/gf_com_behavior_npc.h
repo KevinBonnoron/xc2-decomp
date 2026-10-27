@@ -11,6 +11,10 @@ class RTTI;
 } // namespace mtl
 } // namespace mm
 
+namespace fw {
+class MessageObject;
+} // namespace fw
+
 namespace gmk {
 class AGmkBase;
 } // namespace gmk
@@ -18,11 +22,13 @@ class AGmkBase;
 namespace gf {
 
 class GfComAsm;
+struct MsgDebugActivateComponentWindow;
 
 class GfComBehaviorNpc : public GfComBehavior {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
   void validateBindedGmkInstInfo(bool param1);
   gmk::AGmkBase *getBindedGmkInst() const;
   void setGoalPos(const mm::Vec3 &position);

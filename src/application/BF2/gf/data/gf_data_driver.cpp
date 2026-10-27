@@ -46,6 +46,60 @@ SDataDriver *GfDataDriver::getSDataDriver(u32 driver) {
   return &dataGame->unknown2c[index < DRIVER_COUNT ? index : 1];
 }
 
+bool GfDataDriver::getPouchEnhance(mm::mtl::FixedVector<u16, 64> &enhances, u32 driver) {
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  for (u32 slot = 0; slot < POUCH_COUNT; slot++) {
+    u32 item = getSDataDriver(driver)->unknown584[slot].unknown04;
+    if (item != 0) {
+      u32 enhance = bdatItem->getFavoriteType(item);
+      if (enhance != 0) {
+        enhances.push_back(enhance);
+      }
+    }
+  }
+
+  return !enhances.empty();
+}
+
+u8 GfDataDriver::getFavoritePouchNum(u32 driver, FAVORITE favorite) {
+  u8 count = 0;
+  if (static_cast<u32>(favorite) < 2) {
+    u32 category = getFavorite(driver, favorite);
+    for (u32 slot = 0; slot < POUCH_COUNT; slot++) {
+      u32 item = getSDataDriver(driver)->unknown584[slot].unknown04;
+      if (item != 0 && GfDataItem::getCategory(item) == category) {
+        count++;
+      }
+    }
+  } else if ((static_cast<u32>(favorite) & 0xfffffffe) == 2) {
+    u32 favoriteItem = getFavorite(driver, favorite);
+    for (u32 slot = 0; slot < POUCH_COUNT; slot++) {
+      u32 item = getSDataDriver(driver)->unknown584[slot].unknown04;
+      if (item != 0 && item == favoriteItem) {
+        count++;
+      }
+    }
+  }
+
+  return count;
+}
+
+void GfDataDriver::calcDriverBaseParamByLevel(SDataDriver &dataDriver) {
+  u32 id = dataDriver.unknown22;
+  GfBdatChrDr *bdatDriver = GfBdatChrDr::get();
+  if (bdatDriver->getChrDrStart() > dataDriver.unknown22) {
+    return;
+  }
+
+  u16 level = dataDriver.unknown94;
+  dataDriver.unknown96 = bdatDriver->getChrDrHpMaxLv1(id) + (bdatDriver->getChrDrHpMaxLv99(id) - bdatDriver->getChrDrHpMaxLv1(id)) * (level - 1) / (DRIVER_LEVEL_MAX - 1);
+  dataDriver.unknown98 = bdatDriver->getChrDrStrengthLv1(id) + (bdatDriver->getChrDrStrengthLv99(id) - bdatDriver->getChrDrStrengthLv1(id)) * (level - 1) / (DRIVER_LEVEL_MAX - 1);
+  dataDriver.unknown9a = bdatDriver->getChrDrPowEtherLv1(id) + (bdatDriver->getChrDrPowEtherLv99(id) - bdatDriver->getChrDrPowEtherLv1(id)) * (level - 1) / (DRIVER_LEVEL_MAX - 1);
+  dataDriver.unknown9c = bdatDriver->getChrDrDexLv1(id) + (bdatDriver->getChrDrDexLv99(id) - bdatDriver->getChrDrDexLv1(id)) * (level - 1) / (DRIVER_LEVEL_MAX - 1);
+  dataDriver.unknown9e = bdatDriver->getChrDrAgilityLv1(id) + (bdatDriver->getChrDrAgilityLv99(id) - bdatDriver->getChrDrAgilityLv1(id)) * (level - 1) / (DRIVER_LEVEL_MAX - 1);
+  dataDriver.unknowna0 = bdatDriver->getChrDrLuckLv1(id) + (bdatDriver->getChrDrLuckLv99(id) - bdatDriver->getChrDrLuckLv1(id)) * (level - 1) / (DRIVER_LEVEL_MAX - 1);
+}
+
 u32 GfDataDriver::getLevel(u32 driver) { return getLevel(*getSDataDriver(driver)); }
 
 int GfDataDriver::getMaxSetBladeNum(u32 driver) {
@@ -509,6 +563,21 @@ u32 GfDataDriver::getEquipAcceEnhance(const SDataDriver &dataDriver, u32 slot) {
   }
 
   return GfBdatItem::get()->getPcEquipEnhance1(dataDriver.unknown574[slot].unknown04);
+}
+
+bool GfDataDriver::getEquipAcceEnhance(mm::mtl::FixedVector<u16, 64> &enhances, const SDataDriver &dataDriver) {
+  GfBdatItem *bdatItem = GfBdatItem::get();
+  for (u32 slot = 0; slot < 2; slot++) {
+    u32 item = dataDriver.unknown574[slot].unknown04;
+    if (item != 0) {
+      u32 enhance = bdatItem->getPcEquipEnhance1(item);
+      if (enhance != 0) {
+        enhances.push_back(enhance);
+      }
+    }
+  }
+
+  return !enhances.empty();
 }
 
 u32 GfDataDriver::getEquipAcce(const SDataDriver &dataDriver, u32 slot) { return dataDriver.unknown574[slot].unknown04; }

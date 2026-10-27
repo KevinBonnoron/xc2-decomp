@@ -1,5 +1,7 @@
 #include "gf/object/component/pc/gf_com_property_pc.h"
 
+#include "gf/game/gf_game_player_formation.h"
+
 namespace fw {
 class MessageObject;
 } // namespace fw
@@ -14,6 +16,10 @@ void GfComPropertyPc::resetInput() {
   unknown6c.unknown04 = 0.0f;
   unknown6c.unknown08.clear();
 }
+
+void GfComPropertyPc::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
+
+void GfComPropertyPc::procMsgPcFieldNotifyChangePlayerID(fw::MessageObject *object, MsgPcFieldNotifyChangePlayerID &message) { unknown38 = message.playerId; }
 
 void GfComPropertyPc::procMsgPcFieldWarpCancel(fw::MessageObject *object, MsgPcFieldWarpCancel &message) { unknown113_2 = false; }
 

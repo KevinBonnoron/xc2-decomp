@@ -21,6 +21,7 @@ struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
 struct GF_SLOT_HANDLE;
 class GfAppend;
+class GfAssetResource;
 class GfComModel;
 class GfObjProperty;
 class GfVolumeFade;
@@ -120,6 +121,10 @@ public:
   static void setTalking(GF_OBJ_HANDLE *handle, bool isTalking);
   static bool isTalking(GF_OBJ_HANDLE *handle);
   static bool isSearchEmptyResource(GF_OBJ_HANDLE *handle);
+  static GfAssetResource *getResourceEab(GF_OBJ_HANDLE *handle);
+  static GfAssetResource *getResourceEfb(GF_OBJ_HANDLE *handle);
+  static fw::SoundPack *getSePackFoot1(GF_OBJ_HANDLE *handle);
+  static fw::SoundPack *getSePackFoot2(GF_OBJ_HANDLE *handle);
   static bool getSePackAll(mm::mtl::FixedVector<fw::SoundPack *, 4> &packs, GF_OBJ_HANDLE *handle);
   static bool getMobSlotHandle(mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> &slots, GF_OBJ_HANDLE *handle);
   static bool isTrinityBlade(GF_OBJ_HANDLE *handle);

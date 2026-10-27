@@ -302,6 +302,7 @@ public:
   static const char *getName(const SDataBlade &dataBlade, u32 textId);
   static bool getNameWithMsgID(u8 *&bdat, u32 &textId, const SDataBlade &dataBlade);
   static bool getName(u8 *&bdat, u32 &textId, u32 blade);
+  static int getDriverSetID(u32 blade);
   static const char *getCommonBladeName(u32 nameList);
   static bool getCommonBladeName(u8 *&bdat, u32 &textId, u32 nameList);
   static u32 getFavorite(u32 blade, FAVORITE favorite);

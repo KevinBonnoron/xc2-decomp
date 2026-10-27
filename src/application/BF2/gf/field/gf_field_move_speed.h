@@ -6,10 +6,12 @@
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+class GfComAsm;
 
 class GfFieldMoveSpeed {
 public:
   void dispose();
+  GfComAsm *getComAsm() const;
   void setSpeedKmph(f32 speed, f32 time);
 
   GF_OBJ_HANDLE *unknown00; // Inferred role: object; original member name unknown.
@@ -30,7 +32,11 @@ static_assert(offsetof(GfFieldMoveSpeed, unknown2c) == 0x2c, "");
 
 class GfEnemyFieldMoveSpeed {
 public:
+  GfComAsm *getComAsm() const;
   void setSpeedKmph(f32 speed, f32 time);
+  void update(f32 deltaTime);
+
+  static const char *s_V_speed;
 
   GF_OBJ_HANDLE *unknown00; // Inferred role: object; original member name unknown.
   f32 unknown08;            // Role and original member name unknown.

@@ -5,12 +5,19 @@
 #include "gf/object/component/pc/gf_com_property_pc.h"
 #include "mm_mtl/rtti.h"
 
+namespace fw {
+class MessageObject;
+} // namespace fw
+
 namespace gf {
+
+struct MsgDebugActivateComponentWindow;
 
 class GfComBehaviorPc : public GfComBehavior {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
   void setEnableAgentField(bool isEnable);
   void setEnableAgentBattle(bool isEnable);
 
