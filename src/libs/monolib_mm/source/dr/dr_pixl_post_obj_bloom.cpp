@@ -12,6 +12,37 @@ f32 lerp(f32 a, f32 b, f32 t) { return a * (1.0f - t) + b * t; }
 
 } // namespace _dppob
 
+// Inferred role: releases and deletes a render target; original name unknown.
+inline void unknown001(grlib::CGLibRenderTarget *&target) {
+  grlib::CGLibRenderTarget *renderTarget = target;
+  if (renderTarget != nullptr) {
+    renderTarget->releaseWork();
+    delete renderTarget;
+    target = nullptr;
+  }
+}
+
+DrPixlPostObjBloom::~DrPixlPostObjBloom() { releaseBloomTexture(); }
+
+void DrPixlPostObjBloom::releaseBloomTexture() {
+  unknown001(unknown18);
+  unknown001(unknown20);
+  unknown001(unknown28);
+  unknown001(unknown30);
+  unknown001(unknown38);
+  unknown001(unknown60);
+  unknown001(unknown40);
+  unknown001(unknown68);
+  unknown001(unknown48);
+  unknown001(unknown70);
+  unknown001(unknown50);
+  unknown001(unknown78);
+  unknown001(unknown58);
+  unknown001(unknown80);
+  unknown001(unknown98[0]);
+  unknown001(unknown98[1]);
+}
+
 void DrPixlPostObjBloom::update() { unknown90 = 0; }
 
 void DrPixlPostObjBloom::releaseColorBuff(bool isForce) {

@@ -13,6 +13,7 @@ class DrResClip;
 
 class DrCalcClipObj {
 public:
+  ~DrCalcClipObj();
   void release();
   bool clipcoli_sphere(const u8 *data, const mm::Vec3 &pos);
   bool clipcoli_notrot_cylinder(const u8 *data, const mm::Vec3 &pos);
@@ -28,10 +29,13 @@ public:
   DrResClip *unknown28; // Inferred role: owner clip; original member name unknown.
   u8 _30[0x3c - 0x30];
   u32 unknown3c; // Inferred role: state flags; original member name unknown.
+  u8 _40[0x58 - 0x40];
+  void *unknown58; // Inferred role: clip work buffer; original member name unknown.
 };
 
 static_assert(offsetof(DrCalcClipObj, unknown08) == 0x08, "");
 static_assert(offsetof(DrCalcClipObj, unknown28) == 0x28, "");
 static_assert(offsetof(DrCalcClipObj, unknown3c) == 0x3c, "");
+static_assert(offsetof(DrCalcClipObj, unknown58) == 0x58, "");
 
 } // namespace ml

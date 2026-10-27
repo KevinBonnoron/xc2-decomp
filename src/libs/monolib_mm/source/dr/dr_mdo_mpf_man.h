@@ -11,6 +11,7 @@ class DrMdoMpfMan {
 public:
   void freeMemWork(_MPFWorkAutoInf *work);
   void begin();
+  void update();
   static int getMpfWindMax();
   void updateInstanceBuff(u32 offset, u32 size);
   u32 advanceInstanceBuffOsf(u32 size);

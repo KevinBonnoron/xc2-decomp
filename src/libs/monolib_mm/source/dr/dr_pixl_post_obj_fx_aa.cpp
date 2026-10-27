@@ -6,6 +6,15 @@
 
 namespace ml {
 
+DrPixlPostObjFxAA::~DrPixlPostObjFxAA() {
+  grlib::CGLibRenderTarget *renderTarget = unknown18;
+  if (renderTarget != nullptr) {
+    renderTarget->releaseWork();
+    delete renderTarget;
+    unknown18 = nullptr;
+  }
+}
+
 void DrPixlPostObjFxAA::releaseColorBuff() { unknown18->releaseTexture(); }
 
 void DrPixlPostObjFxAA::update() {}

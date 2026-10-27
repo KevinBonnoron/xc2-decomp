@@ -5,8 +5,16 @@
 #include "dr/dr_calc_man.h"
 #include "dr/dr_calc_view_work.h"
 #include "dr/dr_man.h"
+#include "mtl/mem_manager.h"
 
 namespace ml {
+
+DrMdoZSortMan::~DrMdoZSortMan() {
+  if (unknown20 != nullptr) {
+    mtl::MemManager::deallocate(unknown20, 0, false);
+    unknown20 = nullptr;
+  }
+}
 
 void DrMdoZSortMan::beginViewWorld() {
   const mm::Vec3 &viewPos = unknown00->unknown580->unknown10->unknown400;

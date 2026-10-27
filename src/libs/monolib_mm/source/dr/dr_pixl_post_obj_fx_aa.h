@@ -13,6 +13,7 @@ class DrMan;
 
 class DrPixlPostObjFxAA {
 public:
+  ~DrPixlPostObjFxAA();
   void releaseColorBuff();
   void update();
   void resetColorBuff();

@@ -2,8 +2,17 @@
 
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_post_parm.h"
+#include "dr/dr_pixl_render_target.h"
 
 namespace ml {
+
+DrPixlPostObjRainDrop::~DrPixlPostObjRainDrop() {
+  DrPixlRenderTarget *renderTarget = unknown20;
+  if (renderTarget != nullptr) {
+    delete renderTarget;
+    unknown20 = nullptr;
+  }
+}
 
 void DrPixlPostObjRainDrop::resetColorBuff() {}
 

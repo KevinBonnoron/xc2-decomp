@@ -73,6 +73,8 @@ public:
   void renderDeferredFast_AfterTemporal();
   void fastRender();
   void capRender();
+  void setGlassBreak(bool isGlassBreak);
+  void setCaputureMode(bool isCapture);
   void setBloom(bool isBloom);
   void setSSAO(bool isSSAO);
   DrPixlRenderTarget *getOldDownDepth();

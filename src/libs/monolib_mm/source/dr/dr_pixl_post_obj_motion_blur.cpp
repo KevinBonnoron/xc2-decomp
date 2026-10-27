@@ -4,6 +4,22 @@
 
 namespace ml {
 
+// Inferred role: releases and deletes a render target; original name unknown.
+inline void unknown001(grlib::CGLibRenderTarget *&target) {
+  grlib::CGLibRenderTarget *renderTarget = target;
+  if (renderTarget != nullptr) {
+    renderTarget->releaseWork();
+    delete renderTarget;
+    target = nullptr;
+  }
+}
+
+DrPixlPostObjMotionBlur::~DrPixlPostObjMotionBlur() {
+  unknown001(unknown28);
+  unknown001(unknown30);
+  unknown001(unknown20);
+}
+
 void DrPixlPostObjMotionBlur::debugRender() {}
 
 void DrPixlPostObjMotionBlur::resetColorBuff() { calcBludBuffColorBuff(); }

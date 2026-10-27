@@ -1,8 +1,16 @@
 #include "dr/dr_mdo_sml_shadow_man.h"
 
 #include "dr/dr_man.h"
+#include "mtl/mem_manager.h"
 
 namespace ml {
+
+DrMdoSmlShadowObj::~DrMdoSmlShadowObj() {
+  if (unknown18 != nullptr) {
+    mtl::MemManager::deallocate(unknown18, 0, false);
+    unknown18 = nullptr;
+  }
+}
 
 void DrMdoSmlShadowMan::releaseObj(DrMdoSmlShadowObj *shadow) { shadow->unknown28 |= DrMdoSmlShadowObj::FLAG_UNKNOWN_14 << DrMan::s_nDblStockIdx; }
 

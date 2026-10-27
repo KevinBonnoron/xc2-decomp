@@ -2,6 +2,7 @@
 
 #include "dr/dr_man.h"
 #include "mm_math/mm_vec3.h"
+#include "mtl/mem_manager.h"
 
 namespace ml {
 
@@ -36,6 +37,13 @@ struct unknown004 {
 };
 
 } // namespace
+
+DrCalcClipObj::~DrCalcClipObj() {
+  if (unknown58 != nullptr) {
+    mtl::MemManager::deallocate(unknown58, 0, false);
+    unknown58 = nullptr;
+  }
+}
 
 void DrCalcClipObj::release() { unknown3c |= 1 << DrMan::s_nDblStockIdx; }
 

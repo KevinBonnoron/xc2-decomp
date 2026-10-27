@@ -12,6 +12,7 @@ namespace ml {
 
 class DrPixlPostObjVolume {
 public:
+  ~DrPixlPostObjVolume();
   void resetColorBuff();
   void calcColorBuff();
   void update();

@@ -10,6 +10,7 @@ class DrMdoSamplerMan {
 public:
   DrMdoSamplerMan(DrMan *drMan);
   ~DrMdoSamplerMan();
+  void begin();
   void releaseSamplerObj(DrResMdoSampler *sampler);
   void releaseSamplerSeamObj(DrResMdoSampler *sampler);
 

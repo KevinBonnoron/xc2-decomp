@@ -4,6 +4,11 @@
 
 namespace ml {
 
+DrPixlPostObjCapture::~DrPixlPostObjCapture() {
+  unknown18.release();
+  unknown3e0 = 3;
+}
+
 void DrPixlPostObjCapture::release() {
   unknown18.release();
   unknown3e0 = 3;

@@ -8,9 +8,13 @@ namespace ml {
 class DrGpuCheckBase;
 class DrMdlObj;
 class DrMdoGrpObj;
+class DrMdoMpfMan;
+class DrMdoSamplerMan;
 class DrMdoSmlShadowMan;
 class DrMdoVertexMan;
 class DrMdoZSortMan;
+class DrResEtcUniformObj;
+class DrResOccUniformObj;
 class DrStmReadObj;
 
 class DrMdlMan {
@@ -22,6 +26,8 @@ public:
   void spAlphaRender();
   void GBuffRender();
   void setupRender();
+  void beginApply();
+  void endApply();
   void ZPrePassRender();
   void ThicknessRenderFirst();
   void ThicknessRenderSecond();
@@ -45,9 +51,14 @@ public:
 
   DrMan *unknown000;          // Inferred role: dr man; original member name unknown.
   DrMdoVertexMan *unknown008; // Inferred role: vertex man; original member name unknown.
-  u8 _010[0x030 - 0x010];
-  DrMdoSmlShadowMan *unknown030; // Inferred role: small shadow man; original member name unknown.
-  u8 _038[0x218 - 0x038];
+  u8 _010[0x018 - 0x010];
+  DrMdoSamplerMan *unknown018; // Inferred role: sampler man; original member name unknown.
+  DrMdoMpfMan *unknown020;     // Inferred role: mpf man; original member name unknown.
+  u8 _028[0x030 - 0x028];
+  DrMdoSmlShadowMan *unknown030;  // Inferred role: small shadow man; original member name unknown.
+  DrResOccUniformObj *unknown038; // Inferred role: occ uniform; original member name unknown.
+  DrResEtcUniformObj *unknown040; // Inferred role: etc uniform; original member name unknown.
+  u8 _048[0x218 - 0x048];
   DrMdoZSortMan *unknown218; // Inferred role: z sort man; original member name unknown.
   u8 _220[0x238 - 0x220];
   u32 unknown238; // Inferred role: cate; original member name unknown.
@@ -56,7 +67,11 @@ public:
 
 static_assert(offsetof(DrMdlMan, unknown000) == 0x000, "");
 static_assert(offsetof(DrMdlMan, unknown008) == 0x008, "");
+static_assert(offsetof(DrMdlMan, unknown018) == 0x018, "");
+static_assert(offsetof(DrMdlMan, unknown020) == 0x020, "");
 static_assert(offsetof(DrMdlMan, unknown030) == 0x030, "");
+static_assert(offsetof(DrMdlMan, unknown038) == 0x038, "");
+static_assert(offsetof(DrMdlMan, unknown040) == 0x040, "");
 static_assert(offsetof(DrMdlMan, unknown218) == 0x218, "");
 static_assert(offsetof(DrMdlMan, unknown238) == 0x238, "");
 static_assert(offsetof(DrMdlMan, unknown23c) == 0x23c, "");

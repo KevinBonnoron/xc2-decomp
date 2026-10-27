@@ -9,12 +9,17 @@
 #include "dr/dr_draw_callback.h"
 #include "dr/dr_light_man.h"
 #include "dr/dr_mdl_man.h"
+#include "dr/dr_mdo_mpf_man.h"
+#include "dr/dr_mdo_sampler_man.h"
 #include "dr/dr_mdo_sml_shadow_man.h"
+#include "dr/dr_mdo_vertex_man.h"
 #include "dr/dr_mdo_zsort.h"
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_mem_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_tile_parm.h"
+#include "dr/dr_res_etc_uniform_obj.h"
+#include "dr/dr_res_occ_uniform_obj.h"
 #include "dr/dr_shd_lgt_global_ibl.h"
 #include "dr/dr_shd_lgt_man.h"
 #include "dr/dr_shd_man.h"
@@ -241,6 +246,25 @@ void DrMan::setTimeVal(f32 timeVal) {
 }
 
 void DrMan::setGroupsDisp(s32 group, bool disp) { unknown88->setGroupsDisp(group, disp); }
+
+void DrMdlMan::beginApply() {
+  if (unknown020 != nullptr) {
+    unknown020->begin();
+  }
+  unknown008->begin();
+  unknown038->begin();
+  unknown040->begin();
+  unknown018->begin();
+}
+
+void DrMdlMan::endApply() {
+  if (unknown020 != nullptr) {
+    unknown020->update();
+  }
+  unknown008->end();
+  unknown038->end();
+  unknown040->end();
+}
 
 void DrMdlMan::setGroupsDisp(s32 group, bool disp) {
   if (disp) {

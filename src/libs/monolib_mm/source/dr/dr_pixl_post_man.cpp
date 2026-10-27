@@ -5,6 +5,7 @@
 #include "dr/dr_pixl_post_obj_capture.h"
 #include "dr/dr_pixl_post_obj_cube_map_ibl.h"
 #include "dr/dr_pixl_post_obj_cube_map_multi_ibl.h"
+#include "dr/dr_pixl_post_obj_glass_br.h"
 #include "dr/dr_pixl_post_obj_histgram.h"
 #include "dr/dr_pixl_post_obj_rain_drop.h"
 #include "dr/dr_pixl_post_obj_tmaa.h"
@@ -16,6 +17,7 @@
 #include "dr/dr_pixl_toon_grad.h"
 #include "dr/dr_res_use_query_obj.h"
 #include "mm_math/mm_vec3.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
 
@@ -108,6 +110,38 @@ void DrPixlPostMan::fastRender() {
 void DrPixlPostMan::capRender() {
   if (unknownb0 != nullptr) {
     unknownb0->render();
+  }
+}
+
+void DrPixlPostMan::setGlassBreak(bool isGlassBreak) {
+  DrPixlPostObjGlassBr *glassBreak = unknowna8;
+  if (glassBreak == nullptr) {
+    if (isGlassBreak) {
+      unknowna8 = new (unknown00->unknown0c) DrPixlPostObjGlassBr(unknown00, unknown08, this);
+    }
+  } else if ((glassBreak->unknown508 & DrPixlPostObjGlassBr::FLAG_UNKNOWN_3) == 0) {
+    if (!isGlassBreak) {
+      glassBreak->unknown508 |= DrPixlPostObjGlassBr::FLAG_UNKNOWN_2;
+    }
+  } else {
+    delete glassBreak;
+    unknowna8 = nullptr;
+  }
+}
+
+void DrPixlPostMan::setCaputureMode(bool isCapture) {
+  DrPixlPostObjCapture *capture = unknownb0;
+  if (capture == nullptr) {
+    if (isCapture) {
+      unknownb0 = new (unknown00->unknown0c) DrPixlPostObjCapture(unknown00, unknown08, this);
+    }
+  } else if ((capture->unknown3e0 & DrPixlPostObjCapture::FLAG_UNKNOWN_3) == 0) {
+    if (!isCapture) {
+      capture->unknown3e0 |= DrPixlPostObjCapture::FLAG_UNKNOWN_2;
+    }
+  } else {
+    delete capture;
+    unknownb0 = nullptr;
   }
 }
 

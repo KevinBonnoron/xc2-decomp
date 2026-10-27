@@ -3,6 +3,10 @@
 
 #include "types.h"
 
+namespace mm {
+struct Vec3;
+} // namespace mm
+
 namespace ml {
 
 class DrMan;
@@ -10,11 +14,17 @@ class DrMan;
 class DrEnvColiObj {
 public:
   DrEnvColiObj(DrMan *man);
+  ~DrEnvColiObj();
   void release();
   void setPause(bool isPause);
   bool isPause() const;
   u32 isDeleteCall() const;
   u32 isDeleteAll() const;
+  bool envcoli_box(const u8 *data, const mm::Vec3 &position, f32 margin, const mm::Vec3 *axes);
+  bool envcoli_sphere(const u8 *data, const mm::Vec3 &position, f32 margin, const mm::Vec3 *center);
+  bool envcoli_cylinder(const u8 *data, const mm::Vec3 &position, f32 margin, const mm::Vec3 *axes);
+  bool envcoli_notrot_box(const u8 *data, const mm::Vec3 &position, f32 margin, const mm::Vec3 *center);
+  bool envcoli_notrot_cylinder(const u8 *data, const mm::Vec3 &position, f32 margin, const mm::Vec3 *center);
 
   void *unknown00; // Inferred role: unused data; original member name unknown.
   void *unknown08; // Inferred role: unused data; original member name unknown.

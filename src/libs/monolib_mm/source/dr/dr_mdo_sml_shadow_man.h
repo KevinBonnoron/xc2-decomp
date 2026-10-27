@@ -7,6 +7,8 @@ namespace ml {
 
 class DrMdoSmlShadowObj {
 public:
+  ~DrMdoSmlShadowObj();
+
   enum Flag {
     FLAG_UNKNOWN_0 = 1 << 0,
     FLAG_UNKNOWN_14 = 1 << 14,
@@ -14,11 +16,14 @@ public:
 
   u8 _00[0x08 - 0x00];
   DrMdoSmlShadowObj *unknown08; // Inferred role: next; original member name unknown.
-  u8 _10[0x28 - 0x10];
+  u8 _10[0x18 - 0x10];
+  void *unknown18; // Inferred role: shadow work buffer; original member name unknown.
+  u8 _20[0x28 - 0x20];
   u16 unknown28; // Inferred role: flags; original member name unknown.
 };
 
 static_assert(offsetof(DrMdoSmlShadowObj, unknown08) == 0x08, "");
+static_assert(offsetof(DrMdoSmlShadowObj, unknown18) == 0x18, "");
 static_assert(offsetof(DrMdoSmlShadowObj, unknown28) == 0x28, "");
 
 class DrMdoSmlShadowMan {

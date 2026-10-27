@@ -8,8 +8,18 @@ namespace ml {
 
 class DrMan;
 
+class DrPixlMan;
+class DrPixlPostMan;
+
 class DrPixlPostObjCapture {
 public:
+  enum Flag {
+    FLAG_UNKNOWN_2 = 1 << 2,
+    FLAG_UNKNOWN_3 = 1 << 3,
+  };
+
+  DrPixlPostObjCapture(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan);
+  ~DrPixlPostObjCapture();
   void render();
   void release();
   void renderCaputre();

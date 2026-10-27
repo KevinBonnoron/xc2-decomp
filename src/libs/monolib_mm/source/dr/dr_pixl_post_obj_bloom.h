@@ -13,6 +13,8 @@ class DrMan;
 
 class DrPixlPostObjBloom {
 public:
+  ~DrPixlPostObjBloom();
+  void releaseBloomTexture();
   void update();
   void releaseColorBuff(bool isForce);
   grlib::CGLibRenderTarget *getLgtDownTarget();
