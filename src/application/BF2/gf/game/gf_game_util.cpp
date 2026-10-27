@@ -1,8 +1,10 @@
 #include "gf/game/gf_game_util.h"
 
+#include <math.h>
 #include <stdarg.h>
 
 #include "battle/data_manager_battle.h"
+#include "fw/fw_transform.h"
 #include "gf/data/gf_bdat_blade.h"
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_chrdr.h"
@@ -57,6 +59,8 @@
 #include "gf/util/gf_item_util.h"
 #include "gf/util/gf_util.h"
 #include "gmk/gmk_base.h"
+#include "mm_math/mm_quat.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_vector.h"
@@ -170,6 +174,44 @@ u32 GfGameUtil::getFsLevelSum(u32 fieldSkill) {
   }
 
   return levelSum;
+}
+
+// Inferred role: epsilon comparison of two quaternions; original name unknown.
+static inline bool unknown001(const mm::Quat &a, const mm::Quat &b) { return fabsf(b.x - a.x) <= 1e-6f && fabsf(b.y - a.y) <= 1e-6f && fabsf(b.z - a.z) <= 1e-6f && fabsf(b.w - a.w) <= 1e-6f; }
+
+void GfGameUtil::flushProperty(GF_OBJ_HANDLE *handle) {
+  GfObjProperty *property = GfObjUtil::getProperty(handle);
+  if (property == nullptr) {
+    return;
+  }
+
+  GfObjAcc acc(handle);
+  const fw::Transform &worldTransform = acc.getWorldTransform();
+  if (!(fabsf(worldTransform.unknown00.x - property->unknown20.x) <= 1e-6f) || !(fabsf(worldTransform.unknown00.y - property->unknown20.y) <= 1e-6f) ||
+      !(fabsf(worldTransform.unknown00.z - property->unknown20.z) <= 1e-6f)) {
+    property->unknown20 = acc.getWorldTransform().unknown00;
+  }
+  const fw::Transform &worldTransform2 = acc.getWorldTransform();
+  if (!unknown001(property->unknown30, worldTransform2.unknown10)) {
+    property->unknown30 = acc.getWorldTransform().unknown10;
+  }
+
+  DataParamAcc paramAcc(handle);
+  GfObjPropertyCharacter *character = property->unknown10;
+  if (character != nullptr) {
+    character->unknown08 = paramAcc.getLevel(false);
+  }
+  if (acc.getType() == OBJECT_TYPE_DRIVER) {
+    GfObjPropertyDriver *driver = property->getDriver();
+    driver->unknown190 = paramAcc.getExp();
+    driver->unknown198 = paramAcc.getWeaponPoint(0);
+    driver->unknown19c = paramAcc.getSkillPoint();
+    driver->unknown194 = paramAcc.getExpNext(false);
+  } else if (acc.getType() == OBJECT_TYPE_BLADE) {
+    mm::mtl::FixedArray<SDataBladeSkill, 3> &skills = property->getBlade()->unknown190;
+    SDataBlade *sdata = GfDataBlade::getSDataBlade(paramAcc.isValid() ? paramAcc.getBdatId() : 0);
+    skills = sdata->unknownae;
+  }
 }
 
 void GfGameUtil::addMoney(int money) {

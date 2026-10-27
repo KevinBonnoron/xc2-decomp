@@ -1,6 +1,11 @@
 #pragma once
-#include "types.h"
 #include <stddef.h>
+
+#include "gf/data/gf_data_blade.h"
+#include "mm_math/mm_quat.h"
+#include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixed_array.h"
+#include "types.h"
 
 namespace gf {
 
@@ -75,28 +80,45 @@ public:
   GF_OBJ_HANDLE *unknown08;          // Inferred role: handle; original member name unknown.
   GfObjPropertyCharacter *unknown10; // Inferred role: character; original member name unknown.
   GfObjPropertyMove *unknown18;      // Inferred role: move; original member name unknown.
+  mm::Vec3 unknown20;                // Inferred role: cached world position written by GfGameUtil::flushProperty; original member name unknown.
+  mm::Quat unknown30;                // Inferred role: cached world rotation written by GfGameUtil::flushProperty; original member name unknown.
 };
 
 static_assert(offsetof(GfObjProperty, unknown10) == 0x10, "");
 static_assert(offsetof(GfObjProperty, unknown18) == 0x18, "");
+static_assert(offsetof(GfObjProperty, unknown20) == 0x20, "");
+static_assert(offsetof(GfObjProperty, unknown30) == 0x30, "");
+static_assert(sizeof(GfObjProperty) == 0x40, "");
 
 class GfObjPropertyMap : public GfObjProperty {};
 
 class GfObjPropertyDriver : public GfObjProperty {
 public:
-  u8 _20[0x88 - 0x20];
+  u8 _40[0x88 - 0x40];
   GfObjPropertyCharacter unknown88; // Inferred role: character, pointed to by unknown10; original member name unknown.
+  u8 _bc[0x190 - 0xbc];
+  u32 unknown190; // Inferred role: exp, set from DataParamAcc::getExp by GfGameUtil::flushProperty; original member name unknown.
+  u32 unknown194; // Inferred role: exp next, set from DataParamAcc::getExpNext; original member name unknown.
+  u32 unknown198; // Inferred role: weapon point, set from DataParamAcc::getWeaponPoint; original member name unknown.
+  u32 unknown19c; // Inferred role: skill point, set from DataParamAcc::getSkillPoint; original member name unknown.
 };
 
 static_assert(offsetof(GfObjPropertyDriver, unknown88) == 0x88, "");
+static_assert(offsetof(GfObjPropertyDriver, unknown190) == 0x190, "");
+static_assert(offsetof(GfObjPropertyDriver, unknown194) == 0x194, "");
+static_assert(offsetof(GfObjPropertyDriver, unknown198) == 0x198, "");
+static_assert(offsetof(GfObjPropertyDriver, unknown19c) == 0x19c, "");
 
 class GfObjPropertyBlade : public GfObjProperty {
 public:
-  u8 _20[0x88 - 0x20];
+  u8 _40[0x88 - 0x40];
   GfObjPropertyCharacter unknown88; // Inferred role: character, pointed to by unknown10; original member name unknown.
+  u8 _bc[0x190 - 0xbc];
+  mm::mtl::FixedArray<SDataBladeSkill, 3> unknown190; // Inferred role: field skills copied from SDataBlade::unknownae by GfGameUtil::flushProperty; original member name unknown.
 };
 
 static_assert(offsetof(GfObjPropertyBlade, unknown88) == 0x88, "");
+static_assert(offsetof(GfObjPropertyBlade, unknown190) == 0x190, "");
 
 class GfObjPropertyPcWeapon : public GfObjProperty {};
 
@@ -106,7 +128,7 @@ class GfObjPropertyBelonging : public GfObjProperty {};
 
 class GfObjPropertyEnemy : public GfObjProperty {
 public:
-  u8 _20[0x88 - 0x20];
+  u8 _40[0x88 - 0x40];
   GfObjPropertyCharacter unknown88; // Inferred role: character, pointed to by unknown10; original member name unknown.
 };
 

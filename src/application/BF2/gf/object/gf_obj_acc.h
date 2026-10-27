@@ -119,7 +119,7 @@ public:
   bool isDestroy() const;
   u32 getType() const;
   void setCalcCameraAlpha();
-  u16 getMultiBindUniqId() const;
+  u32 getMultiBindUniqId() const;
   bool isMultiBindWaiting() const;
   GF_ASSET_HANDLE *getAssetHandle() const;
   GF_OBJ_HANDLE *getTarget() const;

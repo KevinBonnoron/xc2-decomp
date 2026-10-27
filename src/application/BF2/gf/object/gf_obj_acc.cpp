@@ -395,7 +395,7 @@ u32 GfObjAcc::getType() const { return m_obj != nullptr ? m_obj->unknown28 : 0; 
 
 void GfObjAcc::setCalcCameraAlpha() { GfObjUtil::setFlag(unknown00, OBJ_FLAG_CALC_CAMERA_ALPHA, true); }
 
-u16 GfObjAcc::getMultiBindUniqId() const { return unknown00 != nullptr ? unknown00->unknown00 : 0; }
+u32 GfObjAcc::getMultiBindUniqId() const { return unknown00 != nullptr ? unknown00->unknown00 : 0; }
 
 bool GfObjAcc::isMultiBindWaiting() const {
   if (unknown00 == nullptr || unknown00->unknown00 == 0) {

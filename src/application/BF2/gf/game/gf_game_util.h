@@ -103,6 +103,8 @@ public:
   static void makeWeaponCommandBattle(mm::mtl::FixStr<32> &command, u32 driver, bool isStart, bool isMotion);
   static void makeWeaponRecieveStateForUiModel(mm::mtl::FixStr<32> &state, u32 weaponType);
   static u32 getKizunaLink(u32 blade);
+  static void flushProperty(GF_OBJ_HANDLE *handle);
+  static bool isPointSavable(const mm::Vec3 &position);
   static void makeCommandBattle(mm::mtl::FixStr<32> &command, bool isStart);
   static void makeStateBattle(mm::mtl::FixStr<32> &state, GF_OBJ_HANDLE *handle, bool isStart);
   static void makeStateBattleByBlade(mm::mtl::FixStr<32> &state, u32 blade, bool isStart);

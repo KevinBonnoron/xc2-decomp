@@ -8,6 +8,7 @@ namespace gf {
 class GfMobSlotManager {
 public:
   bool addFailedPopDistSq(f32 distSq);
+  void update();
 
   u8 _00[0x520];
   u64 unknown520; // Inferred role: number of failed pop squared distances; original member name unknown.

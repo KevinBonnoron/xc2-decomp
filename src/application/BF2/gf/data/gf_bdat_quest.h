@@ -1,10 +1,13 @@
 #pragma once
-#include "gf/data/gf_bdat_wrapper.h"
+#include <stddef.h>
+
+#include "gf/data/gf_data_bdat.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
+
+struct CBdatWrapper;
 
 namespace gf {
 
@@ -415,7 +418,7 @@ struct QuestListAccLayout {
   static_assert(sizeof(QuestListAcc) == 0x62d18, "");
 };
 
-class GfBdatQuest : public mm::mtl::PtrSingleton<GfBdatQuest>, public GfBdatRefresh {
+class GfBdatQuest : public mm::mtl::PtrSingleton<GfBdatQuest>, public IDataBdat {
 public:
   GfBdatQuest();
   virtual ~GfBdatQuest();

@@ -1,13 +1,15 @@
 #pragma once
-#include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_bdat.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
+struct CBdatWrapper;
+
 namespace gf {
 
-class GfBdatItem : public mm::mtl::PtrSingleton<GfBdatItem>, public GfBdatRefresh {
+class GfBdatItem : public mm::mtl::PtrSingleton<GfBdatItem>, public IDataBdat {
 public:
   GfBdatItem();
   virtual ~GfBdatItem();

@@ -1,5 +1,6 @@
 // clang-format off
 #include "gf/data/gf_bdat_cond.h"
+#include "gf/data/gf_bdat_wrapper.h"
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"

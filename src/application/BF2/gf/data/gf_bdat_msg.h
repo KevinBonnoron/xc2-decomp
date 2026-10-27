@@ -1,12 +1,14 @@
 #pragma once
-#include "gf/data/gf_bdat_wrapper.h"
+#include "gf/data/gf_data_bdat.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
+
+struct CBdatWrapper;
 
 namespace gf {
 struct QuestID;
 
-class GfBdatMsg : public mm::mtl::PtrSingleton<GfBdatMsg>, public GfBdatRefresh {
+class GfBdatMsg : public mm::mtl::PtrSingleton<GfBdatMsg>, public IDataBdat {
 public:
   GfBdatMsg();
   virtual ~GfBdatMsg();

@@ -1,6 +1,7 @@
 #include "gf/data/gf_bdat_shop.h"
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
 

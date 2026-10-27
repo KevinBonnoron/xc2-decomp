@@ -104,8 +104,11 @@ class GmkManager : public mm::mtl::PtrSingleton<GmkManager> {
 public:
   ~GmkManager() override;
   bool isValid() const;
+  void dispose();
+  bool isGmkSetsReady() const;
 
-  void updateImmediate();
+  bool updateImmediate();
+  bool isValidView() const;
   const char *getFilenameByType(int gmkSetId, GmkType type) const;
   const char *getSheetnameByType(int gmkSetId, GmkType type) const;
   int getMapBdatId(int gmkSetId) const;
@@ -133,6 +136,8 @@ static_assert(offsetof(GmkManager, unknown190) == 0x190, "");
 static_assert(offsetof(GmkManager, unknown198) == 0x198, "");
 static_assert(offsetof(GmkManager, unknownf358) == 0xf358, "");
 static_assert(offsetof(GmkManager, unknownf380) == 0xf380, "");
+// The GfFieldGimmick constructor places the next member 0xf3b0 bytes after its start, with the manager at 0x20.
+static_assert(sizeof(GmkManager) == 0xf390, "");
 
 int getCurrentMapBdatId();
 bool isInEvent();

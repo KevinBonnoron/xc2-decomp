@@ -64,7 +64,7 @@ static_assert(sizeof(GmkCtrlVolSe) == 0x80, "");
 class GmkCtrlVolSeManager : public mm::mtl::PtrSingleton<GmkCtrlVolSeManager> {
 public:
   ~GmkCtrlVolSeManager() override {}
-  static void update(f32 deltaTime);
+  void update(f32 deltaTime);
 
   mm::mtl::IntrusiveList<GmkCtrlVolSe> unknown08; // Inferred role: ctrl vol ses; original member name unknown.
   bool unknown20;                                 // Inferred role: updating; original member name unknown.

@@ -12,7 +12,7 @@ struct GfSetupParam;
 class IDataBdat {
 public:
   virtual ~IDataBdat() {}
-  virtual void reloadBdat() = 0;
+  virtual void bdatRefresh() = 0;
 };
 
 class GfDataBdat : public mm::mtl::PtrSingleton<GfDataBdat>, public IGfEvent {

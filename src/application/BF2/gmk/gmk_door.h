@@ -114,6 +114,7 @@ public:
   void addTargetInfo(gf::GF_OBJ_HANDLE *handle);
   void removeTargetInfo(gf::GF_OBJ_HANDLE *handle);
   void listenerGfObj(OBJEVT event, gf::GF_OBJ_HANDLE *handle, u32 objectType) override;
+  void update(f32 deltaTime);
 
   mm::mtl::Vector<GmkDoorPhantomTargetInfo> unknown08; // Inferred role: phantom targets; original member name unknown.
 };

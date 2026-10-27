@@ -21,6 +21,8 @@ struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
 struct GF_SLOT_HANDLE;
 class GfAppend;
+class GfAppendInfo;
+enum OPTMNT : u32;
 class GfAssetResource;
 class GfComModel;
 class GfObjProperty;
@@ -92,6 +94,8 @@ public:
   static u32 getHp(GF_OBJ_HANDLE *handle);
   static int getPartyID(GF_OBJ_HANDLE *handle);
   static GfAppend *getAppend(GF_OBJ_HANDLE *handle, GFATTACH attach);
+  static GfAppendInfo *getAppendInfo(GF_OBJ_HANDLE *handle, GFATTACH attach);
+  static void resetWeaponMotion(GF_OBJ_HANDLE *handle, OPTMNT type);
   static bool isValid(GF_OBJ_HANDLE *handle);
   static bool isLoading(GF_OBJ_HANDLE *handle);
   static bool isUpdate(GF_OBJ_HANDLE *handle);

@@ -1,4 +1,5 @@
 #pragma once
+#include "gf/event/gf_event.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_list.h"
@@ -15,6 +16,7 @@ namespace gf {
 struct GF_ASSET_HANDLE;
 struct GF_MOUNT_HANDLE;
 struct GF_OBJ_HANDLE;
+class GfAssetMultiBind;
 class GfObj;
 class GfObjProperty;
 class GfObjSetup;
@@ -98,8 +100,16 @@ public:
   virtual void listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectType) = 0;
 };
 
-class GfObjManager : public mm::mtl::PtrSingleton<GfObjManager> {
+class GfObjManager : public mm::mtl::PtrSingleton<GfObjManager>, public IGfEvent {
 public:
+  struct ObjListener {
+    IGfObjListener *unknown00;        // Inferred role: listener; original member name unknown.
+    IGfObjListener::OBJEVT unknown08; // Inferred role: event; original member name unknown.
+  };
+
+  static GfObjManager *s_pThis;
+  static mm::mtl::FixedList<ObjListener, 256> m_aListenerObj;
+
   static void build(const GfSetupParam &param);
   static void destroy();
   void update(const fw::UpdateInfo &info);
@@ -110,6 +120,10 @@ public:
   static int getGfObjCapacity(u32 objectType);
   static int getObjectNum(u32 objectType);
   bool isValidMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId) const;
+  GfAssetMultiBind *getAssetMultiBind(u32 uniqId) const;
+  GfAssetMultiBind *getMultiBinder(GF_OBJ_HANDLE *handle);
+  void loadedMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId);
+  void unloadedMultiBind(GF_OBJ_HANDLE *handle, u32 uniqId);
   void addDestroyObj(GF_OBJ_HANDLE *handle, bool isImmediate);
   void addApplyParam(GF_OBJ_HANDLE *handle);
   bool isSuspendUpdate() const;
@@ -118,6 +132,48 @@ public:
   void addHandle(GF_OBJ_HANDLE *handle);
   void setStateLoading(GF_OBJ_HANDLE *handle);
   bool getFollowObj(mm::mtl::FixedList<GF_OBJ_HANDLE *, 768> &objs, GF_OBJ_HANDLE *handle);
+  static bool isInitialized();
+  void requestDestroyAll();
+  void callGfObjListener(IGfObjListener::OBJEVT event, GF_OBJ_HANDLE *handle);
+  void addApplyParamObj(GfObj *obj);
+  void checkLoadingAndCreate(GF_OBJ_HANDLE *handle);
+  bool isEmptyObj() const;
+  void destroyLayerObj(u32 layer);
+  void destroyAllObj(bool isIgnoreMap);
+  void getObjList(mm::mtl::FixedList<GF_OBJ_HANDLE *, 768> &objs);
+  bool isExistGfObj(bool isIgnoreMap) const;
+  bool isExistLayerObj(u32 layer) const;
+  const mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> *getLoadingObj() const;
+  const mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> *getDestroyObj() const;
+  u32 createGfObjHandle(const GFOBJ_INFO *info, u32 index, int multiBind);
+
+  bool unknown10; // Inferred role: initialized; original member name unknown.
+  u32 unknown14;  // Inferred role: handle generation; original member name unknown.
+  u8 _18[0x420228 - 0x18];
+  u32 *unknown420228;        // Inferred role: usage bit flags of the object infos; original member name unknown.
+  GFOBJ_INFO *unknown420230; // Inferred role: object infos; original member name unknown.
+  u8 _420238[0x420240 - 0x420238];
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> unknown420240; // Inferred role: loading objects; original member name unknown.
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, 2048> unknown432260; // Inferred role: destroying objects; original member name unknown.
+  u8 _43b280[0x44d2a0 - 0x43b280];
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, 4096> unknown44d2a0; // Inferred role: objects to destroy; original member name unknown.
+  u8 _45f2c0[0x484538 - 0x45f2c0];
+  u32 unknown484538; // Inferred role: object count of the last list; original member name unknown.
+  u8 _48453c[0x484540 - 0x48453c];
+  s16 unknown484540[16];                                    // Inferred role: object count per type; original member name unknown.
+  mm::mtl::FixedList<GfAssetMultiBind *, 64> unknown484560; // Inferred role: multi binds; original member name unknown.
+  u8 _4849c0[0x484a28 - 0x4849c0];
+  bool unknown484a28; // Inferred role: update suspended; original member name unknown.
+  int unknown484a2c;  // Inferred role: capacity of the effect objects; original member name unknown.
 };
+
+static_assert(offsetof(GfObjManager, unknown420228) == 0x420228, "");
+static_assert(offsetof(GfObjManager, unknown420240) == 0x420240, "");
+static_assert(offsetof(GfObjManager, unknown432260) == 0x432260, "");
+static_assert(offsetof(GfObjManager, unknown44d2a0) == 0x44d2a0, "");
+static_assert(offsetof(GfObjManager, unknown484540) == 0x484540, "");
+static_assert(offsetof(GfObjManager, unknown484560) == 0x484560, "");
+static_assert(offsetof(GfObjManager, unknown484a28) == 0x484a28, "");
+static_assert(offsetof(GfObjManager, unknown484a2c) == 0x484a2c, "");
 
 } // namespace gf

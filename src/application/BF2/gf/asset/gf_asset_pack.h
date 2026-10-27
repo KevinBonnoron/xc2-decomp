@@ -42,27 +42,51 @@ static_assert(sizeof(GfAssetFilesInfo) == 0x48, "");
 class GfAssetFiles {
 public:
   struct AssetFile {
+    AssetFile(GfFileIdx index, const char *name);
+
     GfFileIdx unknown00; // Inferred role: file index; original member name unknown.
-    u8 _04[0x10 - 0x04];
+    u8 _04[0x08 - 0x04];
+    u64 unknown08;                  // Inferred role: file size request handle; original member name unknown.
     mm::mtl::FixStr<128> unknown10; // Inferred role: file name; original member name unknown.
     int unknown94;                  // Inferred role: file size; original member name unknown.
     bool unknown98;                 // Inferred role: model file; original member name unknown.
+    u8 _99[0xa0 - 0x99];
   };
 
+  ~GfAssetFiles();
   bool addResource(GfFileIdx index, const char *name);
+  void addResourceWithLockAsset(GfFileIdx index, const char *name);
   void replaceAssetType(GfAssetType type);
+  void destroyFileSizeCache();
+  void applyPreFileSize();
+  bool isPreSizeSizeValid() const;
+  s64 calcAllFileSize() const;
+  s64 calcFileSize(GfFileIdx index) const;
   bool isExistSameAsset(const GfAssetFiles &other) const;
   const mm::mtl::FixStr<128> &getFileName(GfFileIdx index) const;
 
-  GfAssetType unknown00; // Inferred role: asset type; original member name unknown.
-  u8 _04[0x08 - 0x04];
+  GfAssetType unknown00;         // Inferred role: asset type; original member name unknown.
+  u32 unknown04;                 // Inferred role: asset name hash; original member name unknown.
   mm::mtl::FixStr<64> unknown08; // Inferred role: asset name; original member name unknown.
+  u8 _4c[0x50 - 0x4c];
+  mm::mtl::FixedVector<AssetFile *, 16> unknown50; // Inferred role: files; original member name unknown.
+  mm::mtl::FixedVector<u32, 8> unknownd8;          // Inferred role: common resources, file index in the low half and replacing file index in the high half; original member name unknown.
+  u8 _100[0x108 - 0x100];
+  bool unknown108; // Inferred role: resource locked; original member name unknown.
+  u8 _109[0x110 - 0x109];
 };
 
+static_assert(offsetof(GfAssetFiles, unknown04) == 0x04, "");
 static_assert(offsetof(GfAssetFiles, unknown08) == 0x08, "");
+static_assert(offsetof(GfAssetFiles, unknown50) == 0x50, "");
+static_assert(offsetof(GfAssetFiles, unknownd8) == 0xd8, "");
+static_assert(offsetof(GfAssetFiles, unknown108) == 0x108, "");
+static_assert(sizeof(GfAssetFiles) == 0x110, "");
+static_assert(offsetof(GfAssetFiles::AssetFile, unknown08) == 0x08, "");
 static_assert(offsetof(GfAssetFiles::AssetFile, unknown10) == 0x10, "");
 static_assert(offsetof(GfAssetFiles::AssetFile, unknown94) == 0x94, "");
 static_assert(offsetof(GfAssetFiles::AssetFile, unknown98) == 0x98, "");
+static_assert(sizeof(GfAssetFiles::AssetFile) == 0xa0, "");
 
 class GfAssetPack : public mm::mtl::ReferenceObject {
 public:
@@ -89,11 +113,6 @@ public:
 
   u8 _0c[0x120 - 0x0c];
   GfAssetFiles m_assetType;
-  u8 _16c[0x170 - 0x16c];
-  mm::mtl::FixedVector<GfAssetFiles::AssetFile *, 16> unknown170; // Inferred role: files; original member name unknown.
-  u8 _1f8[0x228 - 0x1f8];
-  bool unknown228; // Inferred role: resource locked; original member name unknown.
-  u8 _229[0x230 - 0x229];
   GF_SLOT_HANDLE *unknown230; // Inferred role: slot handle; original member name unknown.
   bool unknown238;            // Inferred role: force destroy flag; original member name unknown.
   bool unknown239;            // Inferred role: no cache flag; original member name unknown.
@@ -114,8 +133,6 @@ public:
 };
 
 static_assert(offsetof(GfAssetPack, m_assetType) == 0x120, "");
-static_assert(offsetof(GfAssetPack, unknown170) == 0x170, "");
-static_assert(offsetof(GfAssetPack, unknown228) == 0x228, "");
 static_assert(offsetof(GfAssetPack, unknown230) == 0x230, "");
 static_assert(offsetof(GfAssetPack, unknown238) == 0x238, "");
 static_assert(offsetof(GfAssetPack, unknown239) == 0x239, "");

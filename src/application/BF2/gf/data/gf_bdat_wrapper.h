@@ -13,12 +13,3 @@ struct CBdatWrapper {
 
   u8 *unknown00; // Inferred role: raw bdat data; original member name unknown.
 };
-
-namespace gf {
-
-class GfBdatRefresh {
-public:
-  virtual void bdatRefresh() = 0;
-};
-
-} // namespace gf

@@ -1,4 +1,5 @@
 #include "gf/data/gf_bdat_msg.h"
+#include "gf/data/gf_bdat_wrapper.h"
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"

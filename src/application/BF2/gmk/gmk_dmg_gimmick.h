@@ -210,6 +210,7 @@ public:
   void removeTargetInfo(gf::GF_OBJ_HANDLE *handle);
   void listenerGfObj(OBJEVT event, gf::GF_OBJ_HANDLE *handle, u32 objectType) override;
   void gevPartyMover(gf::GF_OBJ_HANDLE *handle, bool isJoin) override;
+  void update(f32 deltaTime);
 
   mm::mtl::Vector<GmkDmgPhantomTargetInfo> unknown10; // Inferred role: phantom targets; original member name unknown.
   bool unknown38;                                     // Role and original member name unknown.

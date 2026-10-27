@@ -69,7 +69,7 @@ u8 *GfDataBdat::getFP(u32 bdat) { return bdat < BDAT_COUNT ? get()->unknown10[bd
 void GfDataBdat::gevReloadBdat(RELOAD_BDAT reload, u32 value) {
   if (reload == RELOAD_BDAT_ALL) {
     for (IDataBdat **listener = unknownd00.begin(); listener != unknownd00.end(); ++listener) {
-      (*listener)->reloadBdat();
+      (*listener)->bdatRefresh();
     }
   }
 }
