@@ -52,8 +52,8 @@ int DrMdoMat::getDispCallRes(const u8 *data, u32 offset, u8 *work, MdoWrkMatRes 
   if (work != nullptr) {
     unknown003 *dispCall = reinterpret_cast<unknown003 *>(work);
     dispCall->unknown00 = table->unknown00;
-    dispCall->unknown10 = data + table->unknown04;
-    dispCall->unknown08 = work + sizeof(unknown003);
+    dispCall->unknown10 = reinterpret_cast<const MdsMatDispCCData *>(data + table->unknown04);
+    dispCall->unknown08 = reinterpret_cast<_MdoWrkDispCallTemp *>(work + sizeof(unknown003));
     memset(dispCall->unknown08, 0, static_cast<u64>(table->unknown00) * 8);
     matRes->unknown130 = dispCall;
   }
@@ -62,7 +62,38 @@ int DrMdoMat::getDispCallRes(const u8 *data, u32 offset, u8 *work, MdoWrkMatRes 
 
 void DrMdoMat::resetDispCallRes(const u8 *data, u32 offset, MdoWrkMatRes *matRes) {
   const unknown004 *table = reinterpret_cast<const unknown004 *>(data + offset);
-  matRes->unknown130->unknown10 = data + table->unknown04;
+  matRes->unknown130->unknown10 = reinterpret_cast<const MdsMatDispCCData *>(data + table->unknown04);
+}
+
+void DrMdoMat::updateDispCall() {
+  unknown003 *dispCall = unknown30->unknown130;
+  if (dispCall != nullptr && dispCall->unknown00 > 0) {
+    _MdoWrkDispCallTemp *temp = dispCall->unknown08;
+    const MdsMatDispCCData *data = dispCall->unknown10;
+    for (s32 i = 0; i < dispCall->unknown00; i++, data++, temp++) {
+      if (checkCallBackParam(temp, data)) {
+        unknown20 &= ~0x60;
+      }
+    }
+  }
+}
+
+bool DrMdoMat::updateDispEnvCall(MdoWrkMatRes *matRes) {
+  unknown003 *dispCall = matRes->unknown130;
+  if (dispCall == nullptr || dispCall->unknown00 < 1) {
+    return false;
+  }
+  _MdoWrkDispCallTemp *temp = dispCall->unknown08;
+  const MdsMatDispCCData *data = dispCall->unknown10;
+  s32 i = 0;
+  u8 result = 0;
+  do {
+    result = checkCallBackParam(temp, data) | result;
+    i++;
+    data++;
+    temp++;
+  } while (i < dispCall->unknown00);
+  return result != 0;
 }
 
 int DrMdoMat::getFurShaderRes(const u8 *data, u32 offset, u8 *work, MdoWrkMatRes *matRes) {

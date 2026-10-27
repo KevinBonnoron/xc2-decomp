@@ -219,8 +219,9 @@ public:
   cloud::CloudMan *unknown1e00; // Inferred role: cloud man; original member name unknown.
   bool unknown1e08;             // Inferred role: toon dir light scale; original member name unknown.
   u8 _1e09[0x1e0c - 0x1e09];
-  s32 unknown1e0c; // Inferred role: toon ambient; original member name unknown.
-  u8 _1e10[0x1e20 - 0x1e10];
+  s32 unknown1e0c;  // Inferred role: toon ambient; original member name unknown.
+  bool unknown1e10; // Inferred role: quarter depth; original member name unknown.
+  u8 _1e11[0x1e20 - 0x1e11];
 };
 
 static_assert(offsetof(DrMan, unknown0c) == 0x000c, "");

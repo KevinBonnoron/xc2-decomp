@@ -17,7 +17,8 @@ public:
   void release();
   void changeMemCall();
 
-  u8 _08[0x18 - 0x08];
+  DrResMdoSeamWrkLow *unknown08; // Inferred role: next object; original member name unknown.
+  u8 _10[0x18 - 0x10];
   const MdsSeamLowMapHead *unknown18; // Inferred role: low map header; original member name unknown.
   u8 _20[0x28 - 0x20];
   void *unknown28;               // Inferred role: allocated work; original member name unknown.

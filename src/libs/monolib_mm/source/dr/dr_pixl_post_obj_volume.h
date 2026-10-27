@@ -9,6 +9,7 @@ class CGLibRenderTarget;
 } // namespace grlib
 
 namespace ml {
+class DrMan;
 
 class DrPixlPostObjVolume {
 public:
@@ -17,7 +18,12 @@ public:
   void calcColorBuff();
   void update();
   void releaseColorBuff();
-  u8 _00[0x18 - 0x00];
+  void calculateSclDown();
+  void calculateSclDown_Temporal();
+  void calculateSclDown_NonTemporal();
+
+  DrMan *unknown00; // Inferred role: driver manager; original member name unknown.
+  u8 _08[0x18 - 0x08];
   grlib::CGLibRenderTarget *unknown18; // Inferred role: render target; original member name unknown.
   grlib::CGLibRenderTarget *unknown20; // Inferred role: render target; original member name unknown.
   grlib::CGLibRenderTarget *unknown28; // Inferred role: render target; original member name unknown.

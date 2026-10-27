@@ -1,6 +1,17 @@
 #include "dr/dr_mdo_ctl_seam_inst_map.h"
+#include "dr/dr_res_mdo_seam_wrk_inst.h"
 
 namespace ml {
+
+void DrMdoCtlSeamInstMap::releaseInstMap() {
+  DrResMdoSeamWrkInst *inst = unknown310;
+  while (inst != nullptr) {
+    DrResMdoSeamWrkInst *next = inst->unknown08;
+    releaseFreeSeamInst(inst);
+    inst = next;
+  }
+}
+
 struct MdoWrkMatRes;
 
 void DrMdoCtlSeamInstMap::callRenderSeamInstMap() { renderSeamInstMap(0); }

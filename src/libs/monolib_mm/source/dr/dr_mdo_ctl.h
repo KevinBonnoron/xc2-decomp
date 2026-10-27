@@ -13,10 +13,15 @@ namespace ml {
 
 class MdoWrkMatRes;
 struct MdoInstancePrePassArg;
+struct MdsMdlInfoHeader;
 
 class DrMdoCtl : public DrMdoSetup {
 public:
   DrMdoCtl(int viewNum);
+  void bindShader(int index);
+  void beginSetup();
+  void updateMdl();
+  void partsBaseMdlRender(const MdsMdlInfoHeader *header);
   void setMatrix(const mm::Mat44 &matrix);
   void setOffsetPos(const mm::Vec3 &position);
   const mm::Mat44 &getMatrix() const;

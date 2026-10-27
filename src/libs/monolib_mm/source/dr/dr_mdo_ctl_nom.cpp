@@ -1,8 +1,16 @@
 #include "dr/dr_mdo_ctl_nom.h"
 
+#include "dr/dr_mdo_mat.h"
+#include "dr/dr_res_mdo_shd_obj.h"
 #include "dr/dr_res_mdo_vtx_mesh_obj.h"
 
 namespace ml {
+
+void DrMdoCtlNom::updateShdMdl() {
+  if (unknown1d0 != nullptr && unknown1d0->update(unknown30->unknown88)) {
+    unknown20 &= ~0x60;
+  }
+}
 
 void DrMdoCtlNom::callZSortLightPrePassRender() {
   if ((unknownf8 & MDL_FLAG_UNKNOWN_3) == 0) {

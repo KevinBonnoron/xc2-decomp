@@ -4,7 +4,9 @@
 #include "ml/reslist.h"
 #include "ml/scn_obj_model.h"
 #include "ml/scn_pool_obj.h"
+#include "ml/win_view.h"
 #include "ml/work_cpu.h"
+#include "ml/work_root.h"
 #include "scn/scn_debug.h"
 #include "scn/scn_render_dr_sys.h"
 
@@ -70,6 +72,26 @@ void Scn::enableScnDebug(bool isEnable) {
 void Scn::setView(WinView *view, int screen) { unknown28->setView(view, screen); }
 
 void Scn::clrView(WinView *view, int screen) { unknown28->clrView(view, screen); }
+
+WinView *ScnCamMan::getView(s16 screen) {
+  if (screen < 0) {
+    screen = unknown40;
+  }
+  if (unknown10[screen] == 0xffffffff) {
+    return nullptr;
+  }
+  return static_cast<WinView *>(WorkRootState::getWork(unknown10[screen]));
+}
+
+const WinView *ScnCamMan::getView(s16 screen) const {
+  if (screen < 0) {
+    screen = unknown40;
+  }
+  if (unknown10[screen] == 0xffffffff) {
+    return nullptr;
+  }
+  return static_cast<WinView *>(WorkRootState::getWork(unknown10[screen]));
+}
 
 void ScnCamMan::setCrossIdTarget(const WinView *view) {}
 

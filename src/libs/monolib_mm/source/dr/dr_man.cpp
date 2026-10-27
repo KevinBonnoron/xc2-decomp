@@ -8,6 +8,7 @@
 #include "dr/dr_calc_tex_stream_man.h"
 #include "dr/dr_draw_callback.h"
 #include "dr/dr_light_man.h"
+#include "dr/dr_mdl_base.h"
 #include "dr/dr_mdl_man.h"
 #include "dr/dr_mdo_mpf_man.h"
 #include "dr/dr_mdo_sampler_man.h"
@@ -185,6 +186,12 @@ void DrMdlMan::refractionRender() {
 }
 
 void DrMdlMan::renderBegin() {}
+
+void DrMdlMan::callShadowCacheUpdate(u64 flags) {
+  for (DrMdlBase *mdl = unknown220->unknown00; mdl != nullptr; mdl = mdl->unknown10) {
+    mdl->callShadowCacheUpdate(flags);
+  }
+}
 
 void DrMan::fastRender() { unknown78->fastRender(); }
 

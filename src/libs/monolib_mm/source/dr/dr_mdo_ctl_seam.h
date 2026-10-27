@@ -6,6 +6,10 @@
 #include "types.h"
 
 namespace ml {
+class DrResMdoSeamWrkBase;
+class DrResMdoSeamWrkEnv;
+class DrResMdoSeamWrkInst;
+class DrResMdoSeamWrkLow;
 struct MdoWrkMatRes;
 
 struct MdsSeamEtcPosData {
@@ -75,12 +79,21 @@ public:
   u32 isRead(int index) const;
   void setErrCode(int code, int param);
   static int calcSemaAlignment(u32 size, u32 alignment);
+  void seamZPrePassBegin();
   void seamZPrePassEnd();
   void seamThicknessPassEnd(bool value);
 
   u8 _190[0x1a8 - 0x190];
   MdsSeamInfo *unknown1a8; // Inferred role: seam resource header; original member name unknown.
-  u8 _1b0[0x640 - 0x1b0];
+  u8 _1b0[0x2a0 - 0x1b0];
+  DrResMdoSeamWrkBase *unknown2a0; // Inferred role: first base map object; original member name unknown.
+  u8 _2a8[0x2d8 - 0x2a8];
+  DrResMdoSeamWrkLow *unknown2d8; // Inferred role: first low map object; original member name unknown.
+  u8 _2e0[0x310 - 0x2e0];
+  DrResMdoSeamWrkInst *unknown310; // Inferred role: first inst map object; original member name unknown.
+  u8 _318[0x380 - 0x318];
+  DrResMdoSeamWrkEnv *unknown380; // Inferred role: first env map object; original member name unknown.
+  u8 _388[0x640 - 0x388];
   void *unknown640[2]; // Inferred role: collision list tables per buffer; original member name unknown.
   u32 unknown650[2];   // Inferred role: collision list max per buffer; original member name unknown.
   u8 _658[0x698 - 0x658];
@@ -88,7 +101,12 @@ public:
   DrSeamEtcPosList unknown6c8;   // Inferred role: etc pos list; original member name unknown.
   u8 _6d8[0xb38 - 0x6d8];
   MdoWrkMatRes *unknownb38; // Inferred role: saved mat res; original member name unknown.
-  u8 _b40[0xc7c - 0xb40];
+  u8 _b40[0xc40 - 0xb40];
+  s32 unknownc40; // Inferred role: base map object count; original member name unknown.
+  s32 unknownc44; // Inferred role: low map object count; original member name unknown.
+  u8 _c48[0xc50 - 0xc48];
+  s32 unknownc50; // Inferred role: env map object count; original member name unknown.
+  u8 _c54[0xc7c - 0xc54];
   u32 unknownc7c; // Inferred role: seam flags; original member name unknown.
   u8 _c80[0xcac - 0xc80];
   s16 unknowncac;    // Inferred role: error code write index; original member name unknown.
@@ -100,7 +118,14 @@ public:
 };
 
 static_assert(offsetof(DrMdoCtlSeam, unknown1a8) == 0x1a8, "");
+static_assert(offsetof(DrMdoCtlSeam, unknown2a0) == 0x2a0, "");
+static_assert(offsetof(DrMdoCtlSeam, unknown2d8) == 0x2d8, "");
+static_assert(offsetof(DrMdoCtlSeam, unknown310) == 0x310, "");
+static_assert(offsetof(DrMdoCtlSeam, unknown380) == 0x380, "");
 static_assert(offsetof(DrMdoCtlSeam, unknown640) == 0x640, "");
+static_assert(offsetof(DrMdoCtlSeam, unknownc40) == 0xc40, "");
+static_assert(offsetof(DrMdoCtlSeam, unknownc44) == 0xc44, "");
+static_assert(offsetof(DrMdoCtlSeam, unknownc50) == 0xc50, "");
 static_assert(offsetof(DrMdoCtlSeam, unknown650) == 0x650, "");
 static_assert(offsetof(DrMdoCtlSeam, unknowncac) == 0xcac, "");
 static_assert(offsetof(DrMdoCtlSeam, unknowncae) == 0xcae, "");

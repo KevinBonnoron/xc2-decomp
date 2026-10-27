@@ -3,9 +3,12 @@
 #include "dr/dr_mdo_ctl_seam.h"
 
 namespace ml {
+class DrResMdoSeamWrkLow;
 
 class DrMdoCtlSeamLowMap : public DrMdoCtlSeam {
 public:
+  void releaseLowMap();
+  void releaseFreeSeamLow(DrResMdoSeamWrkLow *low);
   void updateLowMap();
   void readLowMapCheck();
   void updateLowMapRenderList();

@@ -8,6 +8,7 @@ class DrShdMdoDecShdObj;
 class DrShdMdoMan {
 public:
   DrShdMdoMan();
+  void update();
 
   DrShdMdoDecShdObj *unknown00; // Inferred role: first shader object; original member name unknown.
   DrShdMdoDecShdObj *unknown08; // Inferred role: last shader object; original member name unknown.

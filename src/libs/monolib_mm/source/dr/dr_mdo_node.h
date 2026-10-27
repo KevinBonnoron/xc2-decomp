@@ -9,6 +9,7 @@ namespace ml {
 
 class DrMdoNode : public DrMdoAnim {
 public:
+  void updateMdlPos();
   const char *getNodeName(int index) const;
   int getNodeIdx(const char *name) const;
   void setNodeMatrix(int index, const mm::Mat44 &matrix);

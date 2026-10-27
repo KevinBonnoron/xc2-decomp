@@ -18,7 +18,9 @@ public:
   void changeMemCall(const MdsSeamEnvMapHead *head);
   void setInfo(const mm::Vec3 &position, const mm::Vec3 &scale, bool isEnable, u32 flags);
 
-  u8 _00[0x18];
+  u8 _00[0x08];
+  DrResMdoSeamWrkEnv *unknown08; // Inferred role: next object; original member name unknown.
+  u8 _10[0x18 - 0x10];
   const MdsSeamEnvMapHead *unknown18; // Inferred role: env map header; original member name unknown.
   u8 _20[0x38 - 0x20];
   u8 *unknown38[2]; // Inferred role: display work per buffer; original member name unknown.

@@ -7,6 +7,8 @@
 
 namespace ml {
 
+class WinView;
+
 class WinProc : public WorkObj {
 public:
   WinProc(const char *name, WorkObj *parent, s16 childNum);
@@ -14,7 +16,10 @@ public:
   bool wkStandbyLogin() override;
   bool wkStandbyLogout() override;
 
+  static WinProc *pssGetRoot(WinProc *proc);
   WorkObj *pssGetParentView();
+  WinView *pssGetView(u32 wid);
+  const WinView *pssGetView(u32 wid) const;
 
   reslist<u32> unknown1a8; // Inferred role: attached view wids; original member name unknown.
   u32 unknown1e8;          // Inferred role: parent view wid; original member name unknown.

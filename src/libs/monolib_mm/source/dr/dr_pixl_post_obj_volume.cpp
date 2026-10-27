@@ -1,5 +1,7 @@
 #include "dr/dr_pixl_post_obj_volume.h"
 
+#include "dr/dr_man.h"
+#include "dr/dr_pixl_post_parm.h"
 #include "grlib/cglib_render_target.h"
 
 namespace ml {
@@ -11,6 +13,14 @@ inline void unknown001(grlib::CGLibRenderTarget *&target) {
     renderTarget->releaseWork();
     delete renderTarget;
     target = nullptr;
+  }
+}
+
+void DrPixlPostObjVolume::calculateSclDown() {
+  if (unknown00->unknown120[unknown00->unknown1c98]->m_TMAAOn) {
+    calculateSclDown_Temporal();
+  } else {
+    calculateSclDown_NonTemporal();
   }
 }
 

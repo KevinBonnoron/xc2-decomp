@@ -23,6 +23,9 @@ public:
 
   DrPixlPostObjGlassBr(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan);
   ~DrPixlPostObjGlassBr();
+  void render();
+  void renderCaputre();
+  void renderGlass();
 
   grlib::CGLibVtxVertex unknown18;        // Inferred role: vertex; original member name unknown.
   grlib::CGLibVtxIndex unknown40;         // Inferred role: index; original member name unknown.

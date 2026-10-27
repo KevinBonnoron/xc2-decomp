@@ -18,6 +18,7 @@ class CGLibTriUniformBlock;
 namespace ml {
 
 class DrResMdoMat;
+class DrShdMdoExtTblObj;
 class DrMan;
 class DrMdoSmlShadowObj;
 struct MdsMatCharMkTexTbl;
@@ -112,12 +113,24 @@ static_assert(offsetof(unknown002, unknown10) == 0x10, "");
 static_assert(offsetof(unknown002, unknown18) == 0x18, "");
 static_assert(sizeof(unknown002) == 0x28, "");
 
+struct _MdoWrkDispCallTemp {
+  u8 _00[0x08];
+};
+
+static_assert(sizeof(_MdoWrkDispCallTemp) == 0x08, "");
+
+struct MdsMatDispCCData {
+  u8 _00[0x0c];
+};
+
+static_assert(sizeof(MdsMatDispCCData) == 0x0c, "");
+
 // Inferred role: display call work, followed by one 8 byte slot per entry; original type name unknown.
 struct unknown003 {
-  u32 unknown00; // Inferred role: entry count; original member name unknown.
+  s32 unknown00; // Inferred role: entry count; original member name unknown.
   u8 _04[0x08 - 0x04];
-  u8 *unknown08;       // Inferred role: entries; original member name unknown.
-  const u8 *unknown10; // Inferred role: data; original member name unknown.
+  _MdoWrkDispCallTemp *unknown08;    // Inferred role: entries; original member name unknown.
+  const MdsMatDispCCData *unknown10; // Inferred role: data; original member name unknown.
 };
 
 static_assert(offsetof(unknown003, unknown08) == 0x08, "");
@@ -216,8 +229,14 @@ static_assert(offsetof(MdsFixedAnimData, unknown1c) == 0x1c, "");
 static_assert(offsetof(MdsFixedAnimData, unknown24) == 0x24, "");
 
 struct MdsMdlInfoHeader {
-  u8 _00[0x30 - 0x00];
+  u8 _00[0x08 - 0x00];
+  u16 unknown08; // Inferred role: vertex bind index; original member name unknown.
+  u16 unknown0a; // Inferred role: render index; original member name unknown.
+  u8 _0c[0x30 - 0x0c];
 };
+
+static_assert(offsetof(MdsMdlInfoHeader, unknown08) == 0x08, "");
+static_assert(offsetof(MdsMdlInfoHeader, unknown0a) == 0x0a, "");
 
 static_assert(sizeof(MdsMdlInfoHeader) == 0x30, "");
 
@@ -248,7 +267,8 @@ struct MdoWrkMatRes {
   const u8 *unknown58; // Inferred role: fixed anim arrays; original member name unknown.
   const u8 *unknown60; // Inferred role: fixed anim arrays; original member name unknown.
   const u8 *unknown68; // Inferred role: fixed anim arrays; original member name unknown.
-  u8 _070[0x090 - 0x070];
+  u8 _070[0x088 - 0x070];
+  DrShdMdoExtTblObj *unknown88;                                     // Inferred role: shader extension tables; original member name unknown.
   grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *unknown90; // Inferred role: material uniforms; original member name unknown.
   u8 _098[0x0a0 - 0x098];
   grlib::CGLibUniformArray<grlib::CGLibTriUniformBlock> *unknowna0; // Inferred role: mdl uniforms; original member name unknown.
@@ -288,6 +308,7 @@ static_assert(offsetof(MdoWrkMatRes, unknown20) == 0x020, "");
 static_assert(offsetof(MdoWrkMatRes, unknown28) == 0x028, "");
 static_assert(offsetof(MdoWrkMatRes, unknown30) == 0x030, "");
 static_assert(offsetof(MdoWrkMatRes, unknown38) == 0x038, "");
+static_assert(offsetof(MdoWrkMatRes, unknown88) == 0x088, "");
 static_assert(offsetof(MdoWrkMatRes, unknown90) == 0x090, "");
 static_assert(offsetof(MdoWrkMatRes, unknowna0) == 0x0a0, "");
 static_assert(offsetof(MdoWrkMatRes, unknownb0) == 0x0b0, "");
@@ -368,6 +389,9 @@ public:
   void resetNodeAnmWrkRes(const u8 *data, MdoWrkMatRes *matRes);
   int getDispCallRes(const u8 *data, u32 offset, u8 *work, MdoWrkMatRes *matRes);
   void resetDispCallRes(const u8 *data, u32 offset, MdoWrkMatRes *matRes);
+  bool checkCallBackParam(_MdoWrkDispCallTemp *temp, const MdsMatDispCCData *data);
+  void updateDispCall();
+  bool updateDispEnvCall(MdoWrkMatRes *matRes);
   int getFurShaderRes(const u8 *data, u32 offset, u8 *work, MdoWrkMatRes *matRes);
   void resetFurShaderRes(const u8 *data, u32 offset, MdoWrkMatRes *matRes);
   void releaseMat();
@@ -442,8 +466,9 @@ public:
   mm::Vec3 unknown130; // Inferred role: center; original member name unknown.
   u8 _140[0x160 - 0x140];
   f32 unknown160; // Inferred role: length; original member name unknown.
-  u8 _164[0x16a - 0x164];
-  u8 unknown16a; // Inferred role: char mk texture count; original member name unknown.
+  u8 _164[0x168 - 0x164];
+  u16 unknown168; // Inferred role: update flags; original member name unknown.
+  u8 unknown16a;  // Inferred role: char mk texture count; original member name unknown.
   u8 _16b;
 };
 
@@ -468,6 +493,7 @@ static_assert(offsetof(DrMdoMat, unknownf8) == 0xf8, "");
 static_assert(offsetof(DrMdoMat, unknownfc) == 0xfc, "");
 static_assert(offsetof(DrMdoMat, unknown100) == 0x100, "");
 static_assert(offsetof(DrMdoMat, m_AABBMax) == 0x110, "");
+static_assert(offsetof(DrMdoMat, unknown168) == 0x168, "");
 static_assert(offsetof(DrMdoMat, m_AABBMin) == 0x120, "");
 static_assert(offsetof(DrMdoMat, unknown130) == 0x130, "");
 static_assert(offsetof(DrMdoMat, unknown160) == 0x160, "");

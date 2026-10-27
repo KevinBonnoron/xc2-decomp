@@ -1,6 +1,17 @@
 #include "dr/dr_mdo_ctl_seam_low_map.h"
+#include "dr/dr_res_mdo_seam_wrk_low.h"
 
 namespace ml {
+
+void DrMdoCtlSeamLowMap::releaseLowMap() {
+  DrResMdoSeamWrkLow *low = unknown2d8;
+  while (low != nullptr) {
+    DrResMdoSeamWrkLow *next = low->unknown08;
+    releaseFreeSeamLow(low);
+    low = next;
+  }
+  unknownc44 = 0;
+}
 
 void DrMdoCtlSeamLowMap::callRenderSeamLowMap() { renderSeamLowMap(0); }
 

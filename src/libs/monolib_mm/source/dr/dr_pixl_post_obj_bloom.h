@@ -13,11 +13,18 @@ class DrMan;
 
 class DrPixlPostObjBloom {
 public:
+  enum DownScaleType {
+    DOWN_SCALE_TYPE_UNKNOWN_1 = 1,
+    DOWN_SCALE_TYPE_UNKNOWN_2 = 2,
+  };
+
   ~DrPixlPostObjBloom();
   void releaseBloomTexture();
   void update();
   void releaseColorBuff(bool isForce);
   grlib::CGLibRenderTarget *getLgtDownTarget();
+  void calculateDownScale_TwoPass();
+  void calculateDownScaleImpl(DownScaleType type);
 
   DrMan *unknown00; // Inferred role: driver manager; original member name unknown.
   u8 _08[0x18 - 0x08];

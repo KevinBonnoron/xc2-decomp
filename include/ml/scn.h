@@ -1,8 +1,10 @@
 #pragma once
 #include <stddef.h>
 
+#include "ml/work_event.h"
 #include "mm_math/mm_plane.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
@@ -85,14 +87,20 @@ public:
   void clrView(WinView *view, int screen);
   const ScnObjCam *getCam(const WinView *view) const;
   ScnObjCam *getCam(const WinView *view);
+  WinView *getView(s16 screen);
+  const WinView *getView(s16 screen) const;
 
   u8 _00[0x08 - 0x00];
-  Scn *unknown08; // Inferred role: scn; original member name unknown.
+  Scn *unknown08;                          // Inferred role: scn; original member name unknown.
+  mm::mtl::FixedVector<u32, 10> unknown10; // Inferred role: view work ids per screen; original member name unknown.
+  s32 unknown40;                           // Inferred role: current screen; original member name unknown.
 };
 
 static_assert(offsetof(ScnCamMan, unknown08) == 0x08, "");
+static_assert(offsetof(ScnCamMan, unknown10) == 0x10, "");
+static_assert(offsetof(ScnCamMan, unknown40) == 0x40, "");
 
-class Scn : public mm::mtl::PtrSingleton<Scn> {
+class Scn : public IWorkEvent, public mm::mtl::PtrSingleton<Scn> {
 public:
   struct DebDrawInfo {
     SCNPRIO_CB unknown00; // Inferred role: priority; original member name unknown.
@@ -120,7 +128,7 @@ public:
   ScnObjCam *getCam(const WinView *view);
   const ScnObjCam *getCam(const WinView *view) const;
 
-  u8 _08[0x20 - 0x08];
+  u8 _10[0x20 - 0x10];
   ScnPoolObj *unknown20;     // Inferred role: pool object; original member name unknown.
   ScnCamMan *unknown28;      // Inferred role: cam man; original member name unknown.
   ScnDebug *unknown30;       // Inferred role: scn debug; original member name unknown.

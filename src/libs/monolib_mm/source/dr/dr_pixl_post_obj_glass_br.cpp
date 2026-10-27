@@ -1,5 +1,6 @@
 #include "dr/dr_pixl_post_obj_glass_br.h"
 
+#include "dr/dr_ap_gx_type.h"
 #include "mtl/mem_manager.h"
 
 namespace ml {
@@ -13,6 +14,14 @@ DrPixlPostObjGlassBr::DrPixlPostObjGlassBr(DrMan *drMan, DrPixlMan *pixlMan, DrP
   unknown508 = 3;
   unknown4e8 = 0;
   unknown50c = 0;
+}
+
+void DrPixlPostObjGlassBr::render() {
+  if ((unknown508 & FLAG_UNKNOWN_2) == 0) {
+    DrAPGxType::setupScreenQuads(false);
+    renderCaputre();
+    renderGlass();
+  }
 }
 
 DrPixlPostObjGlassBr::~DrPixlPostObjGlassBr() {

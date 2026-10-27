@@ -1,6 +1,17 @@
 #include "dr/dr_mdo_ctl_seam_base_map.h"
+#include "dr/dr_res_mdo_seam_wrk_base.h"
 
 namespace ml {
+
+void DrMdoCtlSeamBaseMap::releaseBaseMap() {
+  DrResMdoSeamWrkBase *base = unknown2a0;
+  while (base != nullptr) {
+    DrResMdoSeamWrkBase *next = base->unknown08;
+    releaseFreeSeamBase(base);
+    base = next;
+  }
+  unknownc40 = 0;
+}
 
 void DrMdoCtlSeamBaseMap::callRenderSeamBaseMap() { renderSeamBaseMap(0); }
 

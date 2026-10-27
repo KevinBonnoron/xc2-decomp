@@ -33,6 +33,7 @@ public:
     return static_cast<WinView *>(work);
   }
   static WinView *getView(const char *name);
+  static void renderView();
   static bool isCurrent(const WinView *view);
   static void invalidCurrent(WinView *view);
   static bool isCurrentChild(const WinView *view, const WinView *current);

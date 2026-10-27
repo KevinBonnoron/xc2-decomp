@@ -52,6 +52,21 @@ public:
     m_capacity = capacity;
   }
 
+  void push_back(const T &value) {
+    NodeBase *last = end();
+    int index = 0;
+    while (index < m_capacity && m_pool[index].next != nullptr) {
+      index++;
+    }
+    Node *node = &m_pool[index];
+    node->value = value;
+    node->next = last;
+    node->prev = last->prev;
+    last->prev->next = node;
+    last->prev = node;
+    m_size++;
+  }
+
   void clear() {
     Node *node = begin();
     while (node != end()) {

@@ -13,6 +13,9 @@ public:
   void debugRender();
   void resetColorBuff();
   void update();
+  void render();
+  void renderFull();
+  void renderQuater();
 };
 
 } // namespace ml

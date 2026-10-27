@@ -85,6 +85,9 @@ public:
   static WorkObj *getWork(WorkObj *parent, u32 wid);
   static bool isEntryWork(u32 wid, const WorkObj *parent);
   static WorkObj *getWork(WorkObj *parent, const char *name);
+  static const WorkObj *getWork(const WorkObj *parent, const char *name);
+  static WorkObj *getActiveWork(WorkObj *parent, const char *name);
+  static bool requestParent(WorkObj *work, WorkObj *parent);
   static bool isDebug(WorkObj *work);
   static u32 allocWID(WorkObj *work);
   static void freeWID(u32 wid);
@@ -102,6 +105,7 @@ public:
   static void tailWork(WorkObj *work);
   static void updateWork();
   static void tailWork();
+  static void renderWork();
   static bool runSingle();
 };
 

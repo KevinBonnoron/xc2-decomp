@@ -6,6 +6,7 @@
 
 namespace ml {
 class DrGpuCheckBase;
+class DrMdlBase;
 class DrMdlObj;
 class DrMdoGrpObj;
 class DrMdoMpfMan;
@@ -19,7 +20,13 @@ class DrStmReadObj;
 
 class DrMdlMan {
 public:
+  // Inferred role: list of models; original type name unknown.
+  struct unknown002 {
+    DrMdlBase *unknown00; // Inferred role: first model; original member name unknown.
+  };
+
   void renderBegin();
+  void callShadowCacheUpdate(u64 flags);
   void setGroupsDisp(s32 group, bool disp);
   void lightPrePassRender();
   void alphaRender();
@@ -60,7 +67,8 @@ public:
   DrResEtcUniformObj *unknown040; // Inferred role: etc uniform; original member name unknown.
   u8 _048[0x218 - 0x048];
   DrMdoZSortMan *unknown218; // Inferred role: z sort man; original member name unknown.
-  u8 _220[0x238 - 0x220];
+  unknown002 *unknown220;    // Inferred role: model list; original member name unknown.
+  u8 _228[0x238 - 0x228];
   u32 unknown238; // Inferred role: cate; original member name unknown.
   u32 unknown23c; // Inferred role: groups disp; original member name unknown.
 };
@@ -73,6 +81,7 @@ static_assert(offsetof(DrMdlMan, unknown030) == 0x030, "");
 static_assert(offsetof(DrMdlMan, unknown038) == 0x038, "");
 static_assert(offsetof(DrMdlMan, unknown040) == 0x040, "");
 static_assert(offsetof(DrMdlMan, unknown218) == 0x218, "");
+static_assert(offsetof(DrMdlMan, unknown220) == 0x220, "");
 static_assert(offsetof(DrMdlMan, unknown238) == 0x238, "");
 static_assert(offsetof(DrMdlMan, unknown23c) == 0x23c, "");
 

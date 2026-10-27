@@ -16,6 +16,7 @@ class DrResMdoVtxMeshObj;
 
 class DrMdoCtlNom : public DrMdlObj {
 public:
+  void updateShdMdl();
   void callNomSetupRender();
   void callZSortNomZpreePassRender();
   void callZSortThicknessRenderFirst();

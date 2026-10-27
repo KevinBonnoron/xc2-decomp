@@ -1,5 +1,6 @@
 #include "dr/dr_mdo_ctl_seam.h"
 
+#include "dr/dr_ap_cache.h"
 #include "dr/dr_man.h"
 
 namespace ml {
@@ -32,6 +33,12 @@ int DrMdoCtlSeam::calcSemaAlignment(u32 size, u32 alignment) {
     padding = alignment - remainder;
   }
   return padding + size;
+}
+
+void DrMdoCtlSeam::seamZPrePassBegin() {
+  unknownf2 = 0;
+  unknown001();
+  m_drMan->unknown5c0->setupCulling(DR_AP_CULL_TYPE_OFF);
 }
 
 void DrMdoCtlSeam::seamZPrePassEnd() {}

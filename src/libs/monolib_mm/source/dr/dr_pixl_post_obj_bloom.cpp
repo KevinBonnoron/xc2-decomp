@@ -2,6 +2,7 @@
 
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_post_parm.h"
+#include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_render_target.h"
 
 namespace ml {
@@ -11,6 +12,12 @@ namespace _dppob {
 f32 lerp(f32 a, f32 b, f32 t) { return a * (1.0f - t) + b * t; }
 
 } // namespace _dppob
+
+void DrPixlPostObjBloom::calculateDownScale_TwoPass() {
+  calculateDownScaleImpl(DOWN_SCALE_TYPE_UNKNOWN_1);
+  grlib::CGLibCtlShader::setMemoryBarrierBit(2);
+  calculateDownScaleImpl(DOWN_SCALE_TYPE_UNKNOWN_2);
+}
 
 // Inferred role: releases and deletes a render target; original name unknown.
 inline void unknown001(grlib::CGLibRenderTarget *&target) {

@@ -89,6 +89,7 @@ public:
   static bool getEnableFrustum();
   static void setFrustumPort(const mm::Rect<int> &port);
   static const mm::Rect<int> &getFrustumPort();
+  static void renderBegin();
   static void renderEnd();
   static void renderSync();
   static void resetSize(s16 width, s16 height);

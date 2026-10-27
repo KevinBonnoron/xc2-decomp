@@ -49,15 +49,17 @@ public:
     }
   }
 
-  u8 _08[0x18 - 0x08];
-  s16 unknown18; // Inferred role: groups; original member name unknown.
-  s16 unknown1a; // Inferred role: view num; original member name unknown.
-  u8 unknown1c;  // Inferred role: type; original member name unknown.
-  u8 unknown1d;  // Inferred role: change view num; original member name unknown.
+  u8 _08[0x10 - 0x08];
+  DrMdlBase *unknown10; // Inferred role: next model; original member name unknown.
+  s16 unknown18;        // Inferred role: groups; original member name unknown.
+  s16 unknown1a;        // Inferred role: view num; original member name unknown.
+  u8 unknown1c;         // Inferred role: type; original member name unknown.
+  u8 unknown1d;         // Inferred role: change view num; original member name unknown.
   u8 _1e[0x20 - 0x1e];
   u32 unknown20; // Inferred role: update flags; original member name unknown.
 };
 
+static_assert(offsetof(DrMdlBase, unknown10) == 0x10, "");
 static_assert(offsetof(DrMdlBase, unknown18) == 0x18, "");
 static_assert(offsetof(DrMdlBase, unknown1a) == 0x1a, "");
 static_assert(offsetof(DrMdlBase, unknown1c) == 0x1c, "");

@@ -2,6 +2,7 @@
 
 #include <string.h>
 
+#include "dr/dr_mdo_mat.h"
 #include "dr/dr_res_mdo_seam_wrk_base_vertex.h"
 #include "dr/dr_res_mdo_vertex.h"
 

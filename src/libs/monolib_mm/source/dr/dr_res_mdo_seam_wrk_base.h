@@ -5,14 +5,7 @@
 
 namespace ml {
 class DrResMdoSeamWrkBaseVertex;
-class DrResMdoVertex;
-
-struct MdoWrkMatRes {
-  u8 _00[0xc8];
-  DrResMdoVertex *unknownc8; // Inferred role: selected vertex; original member name unknown.
-};
-
-static_assert(offsetof(MdoWrkMatRes, unknownc8) == 0xc8, "");
+struct MdoWrkMatRes;
 
 class DrResMdoSeamWrkBase {
 public:
@@ -22,7 +15,9 @@ public:
   void endRender();
   void selectVertex(int index);
 
-  u8 _00[0x68 - 0x00];
+  u8 _00[0x08 - 0x00];
+  DrResMdoSeamWrkBase *unknown08; // Inferred role: next object; original member name unknown.
+  u8 _10[0x68 - 0x10];
   MdoWrkMatRes *unknown68; // Inferred role: material work; original member name unknown.
   u8 _70[0x78 - 0x70];
   DrResMdoSeamWrkBaseVertex *unknown78; // Inferred role: vertices; original member name unknown.

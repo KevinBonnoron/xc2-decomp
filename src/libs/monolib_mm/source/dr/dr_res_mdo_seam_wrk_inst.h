@@ -18,7 +18,9 @@ public:
   void linkReadMdl(u32 index);
   u32 isSubMdl(u32 index);
 
-  u8 _00[0x20 - 0x00];
+  u8 _00[0x08 - 0x00];
+  DrResMdoSeamWrkInst *unknown08; // Inferred role: next object; original member name unknown.
+  u8 _10[0x20 - 0x10];
   const unknown001 *unknown20; // Inferred role: instance map header; original member name unknown.
   u8 _28[0x88 - 0x28];
   s16 unknown88; // Inferred role: read count; original member name unknown.

@@ -16,6 +16,8 @@ struct MdoWrkMatRes;
 
 class DrMdoCtlSeamInstMap : public DrMdoCtlSeam {
 public:
+  void releaseInstMap();
+  void releaseFreeSeamInst(DrResMdoSeamWrkInst *inst);
   void updateInstMap(MdoArgSeamUpdate &arg);
   void readInstMapCheck();
   void updateInstMapRenderList(MdoArgSeamUpdate &arg);

@@ -117,7 +117,7 @@ public:
   u8 unknown178; // Inferred role: setup flags; original member name unknown.
   u8 unknown179; // Inferred role: seam flag; original member name unknown.
   u8 _17a[0x17c - 0x17a];
-  u16 unknown17c; // Inferred role: material index; original member name unknown.
+  s16 unknown17c; // Inferred role: material index; original member name unknown.
   u16 unknown17e; // Inferred role: previous material index; original member name unknown.
 };
 
