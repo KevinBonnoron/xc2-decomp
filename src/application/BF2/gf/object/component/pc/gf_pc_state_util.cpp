@@ -1,5 +1,6 @@
 #include "gf/object/component/pc/gf_pc_state_util.h"
 
+#include "framework/object/component_object.h"
 #include "framework/object/updatable_object.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
@@ -14,6 +15,7 @@
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_mtl/rtti.h"
 
 namespace gf {
 namespace pc {
@@ -47,6 +49,55 @@ void StateUtil::setEnableGravity(GfComBehaviorPc &behavior, bool isEnable) {
 bool StateUtil::testEnableGravity(GfComBehaviorPc &behavior) { return behavior.getProperty()->unknown110_3; }
 
 void StateUtil::setEnvSensor(GfComBehaviorPc &behavior, u32 flags, bool isEnable) { behavior.unknown08->getComponent<GfComPropertyPc>()->setEnvSensorCheckFlags(flags, isEnable); }
+
+EnviromentSensor::GroundInfo *StateUtil::getGroundInfo(GfComBehaviorPc &behavior) {
+  EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
+  return sensor->unknown24_0 ? &sensor->unknown30 : nullptr;
+}
+
+EnviromentSensor::unknown003 *StateUtil::getClimbWallInfo(GfComBehaviorPc &behavior) {
+  EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
+  EnviromentSensor::unknown003 *info = &sensor->unknown30.unknown180;
+  if (!sensor->unknown24_6 || !info->unknown24_4) {
+    info = nullptr;
+  }
+
+  return info;
+}
+
+EnviromentSensor::GroundInfo *StateUtil::getClimbEndGroundInfo(GfComBehaviorPc &behavior) {
+  EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
+  return sensor->unknown25_0 ? &sensor->unknown1f0 : nullptr;
+}
+
+EnviromentSensor::unknown004 *StateUtil::getDescendWallInfo(GfComBehaviorPc &behavior) {
+  EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
+  return sensor->unknown24_7 ? &sensor->unknown260 : nullptr;
+}
+
+EnviromentSensor::unknown001 *StateUtil::getWaterInfo(GfComBehaviorPc &behavior) {
+  EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
+  return sensor->unknown24_1 ? &sensor->unknown30.unknown70 : nullptr;
+}
+
+EnviromentSensor::unknown002 *StateUtil::getDeadPlaneInfo(GfComBehaviorPc &behavior) {
+  EnviromentSensor *sensor = behavior.unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
+  return sensor->unknown24_2 ? &sensor->unknown30.unknownb0 : nullptr;
+}
+
+bool StateUtil::isOnSlideGround(GfComBehaviorPc &behavior) {
+  GfComPropertyPc *property = mm::mtl::dynamicCast<GfComPropertyPc>(behavior.unknown08->unknown38[GfComPropertyPc::COMPONENT_INDEX]);
+  if (!property->unknown110_4) {
+    return false;
+  }
+
+  EnviromentSensor *sensor = property->getEnvSensor();
+  if (!sensor->unknown24_0) {
+    return false;
+  }
+
+  return (sensor->unknown30.unknown30 >> 5) & 1;
+}
 
 GF_OBJ_HANDLE *StateUtil::getBuddyHandle(GfComBehaviorPc &behavior) {
   u32 playerId = behavior.getProperty()->unknown38;

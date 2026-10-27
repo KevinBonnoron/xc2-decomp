@@ -23,6 +23,7 @@ class RTTI;
 
 namespace gf {
 
+class EnviromentSensor;
 struct MsgDebugActivateComponentWindow;
 struct MsgPcFieldNotifyChangePlayerID;
 struct MsgPcFieldWarpCancel;
@@ -70,6 +71,7 @@ public:
   bool existInputXY() const;
   void setLocomotion(const anm::QsTransform &locomotion);
   void setEnvSensorCheckFlags(u32 flags, bool isEnable);
+  EnviromentSensor *getEnvSensor() const;
   void resetInput();
   void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
   void procMsgPcFieldNotifyChangePlayerID(fw::MessageObject *object, MsgPcFieldNotifyChangePlayerID &message);

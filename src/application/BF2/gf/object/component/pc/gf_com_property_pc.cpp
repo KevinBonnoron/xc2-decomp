@@ -1,6 +1,8 @@
 #include "gf/object/component/pc/gf_com_property_pc.h"
 
+#include "framework/object/updatable_object.h"
 #include "gf/game/gf_game_player_formation.h"
+#include "gf/object/component/env_sensor/gf_com_env_sensor.h"
 
 namespace fw {
 class MessageObject;
@@ -15,6 +17,17 @@ void GfComPropertyPc::resetInput() {
   unknown6c.unknown00 = 0.0f;
   unknown6c.unknown04 = 0.0f;
   unknown6c.unknown08.clear();
+}
+
+EnviromentSensor *GfComPropertyPc::getEnvSensor() const { return &unknown08->getComponent<GfComEnvSensor>()->unknown10; }
+
+void GfComPropertyPc::setEnvSensorCheckFlags(u32 flags, bool isEnable) {
+  EnviromentSensor *sensor = &unknown08->getComponent<GfComEnvSensor>()->unknown10;
+  if (isEnable) {
+    sensor->m_envSensorCheckFlags |= flags;
+  } else {
+    sensor->m_envSensorCheckFlags &= ~flags;
+  }
 }
 
 void GfComPropertyPc::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}

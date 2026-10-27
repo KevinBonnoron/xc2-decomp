@@ -3,6 +3,7 @@
 #include "framework/object/component_object.h"
 #include "framework/object/updatable_object.h"
 #include "framework/pointer_map.h"
+#include "framework/reference_frame.h"
 #include "gf/asset/gf_asset_def.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/data/gf_bdat_rsc.h"
@@ -11,6 +12,7 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/gf_component.h"
 #include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/property/gf_com_property.h"
@@ -22,6 +24,7 @@
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/intrusive_ptr.h"
 
 namespace gf {
 
@@ -32,6 +35,57 @@ void GfObjUtil::addGfObj(GF_OBJ_HANDLE *handle, GfObj *obj) {
   if (info != nullptr) {
     info->unknown18 = obj;
   }
+}
+
+bool GfObjUtil::attachGfObj(GF_OBJ_HANDLE *parent, GF_OBJ_HANDLE *child) {
+  GfObj *parentObj = getObj(parent);
+  GfObj *childObj = getObj(child);
+  if (parentObj == nullptr || childObj == nullptr) {
+    return false;
+  }
+
+  GfComTransform *parentTransform = parentObj->getComponent<GfComTransform>();
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> *parentFrame;
+  if (parentTransform->unknown18.get() == nullptr) {
+    parentFrame = &parentTransform->unknown10;
+  } else {
+    parentFrame = &parentTransform->unknown18;
+  }
+  GfComTransform *childTransform = mm::mtl::dynamicCast<GfComTransform>(childObj->unknown38[GfComTransform::COMPONENT_INDEX]);
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> &childFrame = childTransform->unknown10;
+  if (childFrame->unknowna8 != nullptr) {
+    return false;
+  }
+
+  (*parentFrame)->addChild(*childFrame);
+  childFrame->unknown001();
+  childFrame->syncLocalTransform();
+  return true;
+}
+
+bool GfObjUtil::dettachGfObject(GF_OBJ_HANDLE *parent, GF_OBJ_HANDLE *child) {
+  GfObj *parentObj = getObj(parent);
+  GfObj *childObj = getObj(child);
+  if (parentObj == nullptr || childObj == nullptr) {
+    return false;
+  }
+
+  GfComTransform *parentTransform = parentObj->getComponent<GfComTransform>();
+  if (parentTransform == nullptr) {
+    return false;
+  }
+
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> &parentFrame = parentTransform->unknown18.get() == nullptr ? parentTransform->unknown10 : parentTransform->unknown18;
+  GfComTransform *childTransform = mm::mtl::dynamicCast<GfComTransform>(childObj->unknown38[GfComTransform::COMPONENT_INDEX]);
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> &childFrame = childTransform->unknown10;
+  if (childFrame->unknowna8 != parentFrame.get()) {
+    return false;
+  }
+
+  parentFrame->removeChild(*childFrame);
+  childFrame->unknown001();
+  childFrame->syncLocalTransform();
+  return true;
 }
 
 void GfObjUtil::removeGfObj(GF_OBJ_HANDLE *handle) {

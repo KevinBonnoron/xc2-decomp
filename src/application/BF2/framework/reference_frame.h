@@ -23,6 +23,8 @@ public:
   ~ReferenceFrame() override;
   void invalidateLocal() { unknowna0 = (unknowna0 & ~FLAG_ALL_SYNCED) | FLAG_WORLD_SYNCED; }
   void invalidateWorld() { unknowna0 = (unknowna0 & ~FLAG_ALL_SYNCED) | FLAG_LOCAL_SYNCED; }
+  // Inferred role: marks the local transform as outdated and keeps the matrix flag; original name unknown.
+  void unknown001() { unknowna0 = (unknowna0 & ~(FLAG_LOCAL_SYNCED | FLAG_WORLD_SYNCED)) | FLAG_WORLD_SYNCED; }
   void addChild(ReferenceFrame &child);
   void removeChild(ReferenceFrame &child);
   void syncLocalTransform();

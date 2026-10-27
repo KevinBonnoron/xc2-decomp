@@ -7,7 +7,9 @@ namespace anm {
 
 struct AsmAnnotetion {
   const char *unknown00; // Inferred role: name; original member name unknown.
-  u8 _08[0x18 - 0x08];
+  s32 unknown08;         // Inferred role: kind; original member name unknown.
+  u8 _0c[0x10 - 0x0c];
+  const char *unknown10; // Inferred role: parameter; original member name unknown.
 };
 
 struct AsmKeyframeAnnotation {

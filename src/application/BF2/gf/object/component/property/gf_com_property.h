@@ -66,6 +66,8 @@ public:
   static mm::mtl::RTTI m_rtti;
   static const u32 COMPONENT_INDEX = 5;
 
+  GfComProperty();
+  ~GfComProperty() override;
   void flush();
   void procMsgObjectMaxHp(fw::MessageObject *object, MsgObjectMaxHp &message);
   void procMsgObjectSetHp(fw::MessageObject *object, MsgObjectSetHp &message);

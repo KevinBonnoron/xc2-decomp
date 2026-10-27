@@ -1,6 +1,7 @@
 #pragma once
 #include "types.h"
 
+#include "gf/object/component/env_sensor/gf_com_env_sensor.h"
 #include "gf/object/component/pc/plugin/gf_pc_timer_plugin.h"
 
 namespace mm {
@@ -42,6 +43,13 @@ public:
   static void setActivateTimer(GfComBehaviorPc &behavior, TimerPlugin::TYPE type, bool isActive);
   static void notifyDead(GfComBehaviorPc &behavior, MsgObjectNotifyDead &message, bool isBroadcast);
   static void setEnableFallDistChecker(GfComBehaviorPc &behavior, bool isEnable);
+  static EnviromentSensor::GroundInfo *getGroundInfo(GfComBehaviorPc &behavior);
+  static EnviromentSensor::unknown003 *getClimbWallInfo(GfComBehaviorPc &behavior);
+  static EnviromentSensor::GroundInfo *getClimbEndGroundInfo(GfComBehaviorPc &behavior);
+  static EnviromentSensor::unknown004 *getDescendWallInfo(GfComBehaviorPc &behavior);
+  static EnviromentSensor::unknown001 *getWaterInfo(GfComBehaviorPc &behavior);
+  static EnviromentSensor::unknown002 *getDeadPlaneInfo(GfComBehaviorPc &behavior);
+  static bool isOnSlideGround(GfComBehaviorPc &behavior);
   static GF_OBJ_HANDLE *getBuddyHandle(GfComBehaviorPc &behavior);
   static void sendMessageToBuddy(GfComBehaviorPc &behavior, fw::Message &message);
   static void notifyRevival(GfComBehaviorPc &behavior, MsgObjectNotifyHealHp &message);

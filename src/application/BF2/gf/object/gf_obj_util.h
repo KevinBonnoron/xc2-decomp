@@ -103,6 +103,8 @@ public:
   static bool isUpdate(GF_OBJ_HANDLE *handle);
   static void mountToBone(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *parent, const char *bone);
   static void unmountFromBone(GF_OBJ_HANDLE *handle);
+  static bool attachGfObj(GF_OBJ_HANDLE *parent, GF_OBJ_HANDLE *child);
+  static bool dettachGfObject(GF_OBJ_HANDLE *parent, GF_OBJ_HANDLE *child);
   static void setOwner(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *owner);
   static GF_OBJ_HANDLE *getOwner(GF_OBJ_HANDLE *handle);
   static u32 getSetupObjNumberByEnArrangeId(u32 arrange);
