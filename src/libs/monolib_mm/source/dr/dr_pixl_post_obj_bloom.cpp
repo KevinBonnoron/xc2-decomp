@@ -13,6 +13,15 @@ f32 lerp(f32 a, f32 b, f32 t) { return a * (1.0f - t) + b * t; }
 
 } // namespace _dppob
 
+void DrPixlPostObjBloom::calculateDownScale() {
+  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  if (postParm->unknownf72 && postParm->m_TMAAOn) {
+    calculateDownScale_TwoPass();
+  } else {
+    calculateDownScaleImpl(DOWN_SCALE_TYPE_UNKNOWN_0);
+  }
+}
+
 void DrPixlPostObjBloom::calculateDownScale_TwoPass() {
   calculateDownScaleImpl(DOWN_SCALE_TYPE_UNKNOWN_1);
   grlib::CGLibCtlShader::setMemoryBarrierBit(2);

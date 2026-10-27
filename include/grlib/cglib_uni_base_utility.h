@@ -1,7 +1,9 @@
 #pragma once
 #include <stddef.h>
 
+#include "grlib/cglib_dec_shader.h"
 #include "grlib/cglib_etc_uniform_block.h"
+#include "grlib/cglib_shader.h"
 #include "types.h"
 
 namespace mm {
@@ -13,8 +15,6 @@ struct Vec4;
 } // namespace mm
 
 namespace grlib {
-
-class CGLibDecShader;
 
 class CGLibUniBaseUtility {
 public:
@@ -47,6 +47,9 @@ public:
   void setUseStorageBuffer(u32 index);
   u8 *getUniformBlockAdder(const char *name);
   u8 *getStorageBufferAdder(const char *name);
+
+  // Inferred role: offset of a value inside the used uniform block; original name unknown.
+  u32 unknown001(const char *name) const { return (unknown08->unknown38 + unknown08->unknown58)->getUniformBlockValOfs(unknown10, name); }
 
   virtual ~CGLibUniBaseUtility() {}
   virtual u8 *getBuff() = 0;

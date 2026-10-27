@@ -11,6 +11,7 @@ namespace ml {
 
 class DrPixlPostObjDepthofField {
 public:
+  ~DrPixlPostObjDepthofField();
   void releaseColorBuff();
 
   u8 _00[0x18 - 0x00];
@@ -19,12 +20,13 @@ public:
   grlib::CGLibRenderTarget *unknown28; // Inferred role: render target; original member name unknown.
   grlib::CGLibRenderTarget *unknown30; // Inferred role: render target; original member name unknown.
   grlib::CGLibRenderTarget *unknown38; // Inferred role: render target; original member name unknown.
-  u8 _40[0x48 - 0x40];
+  grlib::CGLibRenderTarget *unknown40; // Inferred role: render target; original member name unknown.
   grlib::CGLibRenderTarget *unknown48; // Inferred role: render target; original member name unknown.
 };
 
 static_assert(offsetof(DrPixlPostObjDepthofField, unknown18) == 0x18, "");
 static_assert(offsetof(DrPixlPostObjDepthofField, unknown38) == 0x38, "");
+static_assert(offsetof(DrPixlPostObjDepthofField, unknown40) == 0x40, "");
 static_assert(offsetof(DrPixlPostObjDepthofField, unknown48) == 0x48, "");
 
 } // namespace ml

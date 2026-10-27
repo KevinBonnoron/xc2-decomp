@@ -9,7 +9,10 @@
 #include "dr/dr_shd_lgt_global_ibl.h"
 #include "dr/dr_shd_lgt_man.h"
 #include "dr/dr_shd_man.h"
+#include "grlib/cglib_color_ctl.h"
+#include "grlib/cglib_depth_target.h"
 #include "grlib/cglib_render_target.h"
+#include "grlib/cglib_state.h"
 #include "mm_math/mm_col4.h"
 
 namespace ml {
@@ -41,6 +44,25 @@ DrPixlRenderTarget *DrPixlDeferred::getTemporalOutputShadowMap() { return unknow
 DrPixlRenderTarget *DrPixlDeferred::getTemporalOutputShadowMap() const { return unknown28[DrMan::s_nDblIdx]; }
 
 DrPixlRenderTarget *DrPixlDeferred::getTemporalHistoryShadowMap() { return unknown28[DrMan::s_nDblStockIdx]; }
+
+void DrPixlDeferred::lgtCalcRender() {
+  DrPixlMan *pixlMan = unknown18;
+  pixlMan->unknown858 = 6;
+  grlib::CGLibState::beginRegisterRenderTarget();
+  grlib::CGLibState::setRegisterRenderTarget(*pixlMan->unknown7f0->unknown00[5][0], grlib::GRL_MRT_TYPE_0);
+  grlib::CGLibState::setRegisterRenderTarget(*pixlMan->unknown7f0->unknown00[6][0], grlib::GRL_MRT_TYPE_1);
+  DrPixlRenderTarget **row = pixlMan->unknown7f0->unknown00[9];
+  grlib::CGLibState::setRegisterRenderTarget(*row[DrMan::s_nDblIdx], grlib::GRL_MRT_TYPE_2);
+  grlib::CGLibState::setRegisterDepthTarget(*pixlMan->unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+  grlib::CGLibState::endRegisterRenderTarget();
+  DrAPGxType::setupCullingOff();
+  DrAPGxType::setupBlend(7);
+  pixlMan = unknown18;
+  grlib::CGLibState::beginRegisterRenderTarget();
+  grlib::CGLibState::setRegisterRenderTarget(*pixlMan->unknown7f0->unknown00[5][0], grlib::GRL_MRT_TYPE_0);
+  grlib::CGLibState::setRegisterDepthTarget(*pixlMan->unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+  grlib::CGLibState::endRegisterRenderTarget();
+}
 
 void DrPixlDeferred::releaseColorBuff() {
   DrPixlPostParm *postParm = unknown08->unknown120[unknown08->unknown1c98];

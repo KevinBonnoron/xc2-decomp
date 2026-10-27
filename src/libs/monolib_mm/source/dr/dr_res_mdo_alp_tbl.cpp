@@ -2,6 +2,15 @@
 
 namespace ml {
 
+DrResMdoAlpTbl::~DrResMdoAlpTbl() { CGLibVtxInstans::release(); }
+
+void DrResMdoAlpTbl::release(DrResMdoAlpTbl *&table) {
+  if (table != nullptr) {
+    table->~DrResMdoAlpTbl();
+    table = nullptr;
+  }
+}
+
 DrResMdoAlpTbl::DrResMdoAlpTbl() {}
 
 int DrResMdoAlpTbl::calcCntWorkSize(u32 count) {

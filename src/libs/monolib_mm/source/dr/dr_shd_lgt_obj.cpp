@@ -5,6 +5,8 @@
 
 namespace ml {
 
+DrShdLgtObj::~DrShdLgtObj() { lgtRelease(); }
+
 DrShdLgtObj::DrShdLgtObj() : unknown148(~0ull), unknown150(~0ull) {}
 
 void DrShdLgtObj::shaderComputeSetup() { grlib::CGLibCtlShader::setComputeShader(*this); }

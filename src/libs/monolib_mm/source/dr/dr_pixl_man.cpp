@@ -14,6 +14,7 @@
 #include "dr/dr_res_use_query_obj.h"
 #include "dr/dr_shd_data_list.h"
 #include "dr/dr_shd_data_obj.h"
+#include "dr/dr_shd_man.h"
 #include "grlib/cglib_color_ctl.h"
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_depth_ctl.h"
@@ -23,13 +24,116 @@
 #include "grlib/cglib_render_target.h"
 #include "grlib/cglib_shader.h"
 #include "grlib/cglib_state.h"
+#include "grlib/cglib_texture.h"
+#include "grlib/cglib_texture_buffer.h"
+#include "grlib/cglib_uni_base_utility.h"
 #include "grlib/cglib_uniform_array.h"
+#include "mm_math/mm_col4.h"
 
 namespace ml {
 
 static const s32 s_gbuffPixlObjs[] = {0, 1, 2, 3, 4, 8, 5, 6, 7, 15, 18};
 
 static bool isDblPixlObj(int type) { return (0x27200ULL >> type) & 1; }
+
+void DrPixlMan::captureMainFrameBuffer(grlib::CGLibTextureBuffer *buffer, u32 width, u32 height) {
+  if (buffer->getWidth() != width || buffer->getHeight() != height || !buffer->isInitialized()) {
+    grlib::CGLibTexture::createTextureBuff(*buffer, width, height, GRL_SURFACE_FORMAT_RGBA8);
+  }
+  grlib::CGLibRenderTarget renderTarget;
+  renderTarget.setTextureInfo(*buffer);
+  renderTarget.setRenderTarget();
+  DrShdDataList *shdList = unknown08->unknown80->unknown00;
+  DrShdDataObj *shader = shdList->getSelectShdObj(1);
+  grlib::CGLibRenderTarget *mainTarget = grlib::CGLibState::getMainRenderTarget();
+  shader->setDeclarationIdx(shader->getDeclarationOfs("PIXL_TYPE"), 1);
+  shader->setDeclarationIdx(shader->getDeclarationOfs("MRT_NUM"), 1);
+  shdList->unknown002(shader);
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  u32 offset = uniform.unknown001("gScal");
+  int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+  DrAPCache *apCache = unknown08->unknown5c0;
+  f32 mainHeight = static_cast<f32>(mainTarget->unknownc0);
+  f32 mainWidth = static_cast<f32>(mainTarget->unknownbc);
+  f32 scale[4];
+  scale[0] = (mainWidth - 1.0f) / mainWidth;
+  scale[1] = (mainHeight - 1.0f) / mainHeight;
+  scale[2] = 1.0f / (mainWidth + mainWidth);
+  scale[3] = 1.0f / (mainHeight + mainHeight);
+  apCache->beginTexSampling(2, 1);
+  apCache->setTexture(*mainTarget->unknown70, location);
+  uniform.setF32SetVec4(offset, scale);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  shdList->renderQuads();
+  grlib::CGLibState::setMainFrameBuffer();
+}
+
+void DrPixlMan::setupGodRay() {
+  if (unknown08->unknown120[unknown08->unknown1c98]->m_bloomOn && (unknown7f0->unknown180->unknownf8 & DrPixlPostMan::FLAG_CALC_VOLUME)) {
+    unknown7f0->unknown00[7][0]->clearTexture(mm::Col4(0.0f, 0.0f, 0.0f, 0.0f), static_cast<GrlClaerMask>(0xf));
+  }
+}
+
+void DrPixlMan::lastTexRender() {
+  DrShdDataList *shdList = unknown08->unknown80->unknown00;
+  DrShdDataObj *shader = shdList->unknown001();
+  shdList->unknown002(shader);
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  u32 offset = uniform.unknown001("gScal");
+  int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+  DrPixlPostParm *postParm = unknown08->unknown120[unknown08->unknown1c98];
+  DrAPCache *apCache = unknown08->unknown5c0;
+  f32 scale[4];
+  if (!postParm->unknownfb2) {
+    scale[0] = 1.0f;
+    scale[1] = 1.0f;
+    scale[2] = 0.0f;
+    scale[3] = 0.0f;
+    apCache->beginTexSampling(2, 0);
+  } else {
+    f32 height = static_cast<f32>(unknown7f0->unknown138->unknownc0);
+    f32 width = static_cast<f32>(unknown7f0->unknown138->unknownbc);
+    scale[0] = (width - 1.0f) / width;
+    scale[1] = (height - 1.0f) / height;
+    scale[2] = 1.0f / (width + width);
+    scale[3] = 1.0f / (height + height);
+    apCache->beginTexSampling(2, 1);
+  }
+  apCache->setTexture(*unknown7f0->unknown138->unknown70, location);
+  uniform.setF32SetVec4(offset, scale);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  shdList->renderQuads();
+}
+
+void DrPixlMan::debugIlluminanceRender() {
+  DrMan *man = unknown08;
+  DrShdDataList *shdList = man->unknown80->unknown00;
+  DrPixlPostParm *postParm = man->unknown120[man->unknown1c98];
+  DrAPCache *apCache = man->unknown5c0;
+  DrAPGxType::setupScreenQuads(false);
+  DrShdDataObj *shader = shdList->getDebugShdObj(0xe);
+  shdList->unknown002(shader);
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  f32 scale[4];
+  scale[0] = 1.0f / postParm->unknown484;
+  scale[1] = 0.0f;
+  scale[2] = 0.0f;
+  scale[3] = 0.0f;
+  uniform.setF32SetVec4(0, scale);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+  apCache->beginTexSampling(2, 0);
+  apCache->setTexture(*unknown7f0->unknown138->unknown70, location);
+  shdList->renderQuads();
+}
+
+void DrPixlMan::debugRender(int type, int x, int y, int width, int height, bool isAlpha) { debugRender(*getPixlObj(type)->unknown70, x, y, width, height, isAlpha, false, 1.0f, true); }
 
 void DrPixlMan::endDeferredRenderTarget() { unknown7f0->unknown00[5][0]->setColorInvalidate(); }
 

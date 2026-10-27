@@ -28,6 +28,7 @@ class DrIrrVolMan;
 class DrLightMan;
 class DrMdlMan;
 class DrPixlTileParm;
+class DrResFilterData;
 class DrShdMan;
 class IDrDrawCallback;
 class DrPixlMan;
@@ -164,14 +165,14 @@ public:
   mtl::ALLOC_HANDLE unknown10; // Inferred role: mem class; original member name unknown.
   mtl::ALLOC_HANDLE unknown14; // Inferred role: mem work; original member name unknown.
   u8 _0018[0x0070 - 0x0018];
-  DrIniSys *unknown70;    // Inferred role: ini sys; original member name unknown.
-  DrPixlMan *unknown78;   // Inferred role: pixl man; original member name unknown.
-  DrShdMan *unknown80;    // Inferred role: shd man; original member name unknown.
-  DrMdlMan *unknown88;    // Inferred role: mdl man; original member name unknown.
-  DrIrrVolMan *unknown90; // Inferred role: irr vol man; original member name unknown.
-  u8 _0098[0x00a0 - 0x0098];
-  DrCalcMan *unknowna0[4];  // Inferred role: calc mans; original member name unknown.
-  DrLightMan *unknownc0[4]; // Inferred role: light mans; original member name unknown.
+  DrIniSys *unknown70;        // Inferred role: ini sys; original member name unknown.
+  DrPixlMan *unknown78;       // Inferred role: pixl man; original member name unknown.
+  DrShdMan *unknown80;        // Inferred role: shd man; original member name unknown.
+  DrMdlMan *unknown88;        // Inferred role: mdl man; original member name unknown.
+  DrIrrVolMan *unknown90;     // Inferred role: irr vol man; original member name unknown.
+  DrResFilterData *unknown98; // Inferred role: filter data; original member name unknown.
+  DrCalcMan *unknowna0[4];    // Inferred role: calc mans; original member name unknown.
+  DrLightMan *unknownc0[4];   // Inferred role: light mans; original member name unknown.
   u8 _00e0[0x0100 - 0x00e0];
   DrEnvironmentMan *unknown100[4]; // Inferred role: environment mans; original member name unknown.
   DrPixlPostParm *unknown120[4];   // Inferred role: post parms; original member name unknown.
@@ -279,6 +280,7 @@ static_assert(offsetof(DrMan, unknown78) == 0x0078, "");
 static_assert(offsetof(DrMan, unknown80) == 0x0080, "");
 static_assert(offsetof(DrMan, unknown88) == 0x0088, "");
 static_assert(offsetof(DrMan, unknown90) == 0x0090, "");
+static_assert(offsetof(DrMan, unknown98) == 0x0098, "");
 static_assert(offsetof(DrMan, unknowna0) == 0x00a0, "");
 static_assert(offsetof(DrMan, unknownc0) == 0x00c0, "");
 static_assert(offsetof(DrMan, unknown100) == 0x0100, "");

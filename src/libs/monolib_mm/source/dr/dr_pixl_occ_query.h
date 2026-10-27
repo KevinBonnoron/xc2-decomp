@@ -32,7 +32,10 @@ static_assert(offsetof(DrResQueryObj, unknown38) == 0x38, "");
 class DrPixlOccQuery {
 public:
   DrResQueryObj *createObj();
+  void begin();
   void end();
+  void releaseObj(DrResQueryObj *obj);
+  void update();
 
   u8 _00[0x10 - 0x00];
   DrShdDataList *unknown10; // Inferred role: shader data list; original member name unknown.
@@ -40,11 +43,23 @@ public:
   u8 _20[0x24 - 0x20];
   s32 unknown24; // Inferred role: post uniform block offset; original member name unknown.
   u32 unknown28; // Inferred role: query state; original member name unknown.
+  u8 _2c[0x48 - 0x2c];
+  DrResQueryObj *unknown48; // Inferred role: first free query object; original member name unknown.
+  DrResQueryObj *unknown50; // Inferred role: last free query object; original member name unknown.
+  DrResQueryObj *unknown58; // Inferred role: first used query object; original member name unknown.
+  DrResQueryObj *unknown60; // Inferred role: last used query object; original member name unknown.
+  u8 _68[0x70 - 0x68];
+  s32 unknown70; // Inferred role: used query object count; original member name unknown.
+  s32 unknown74; // Inferred role: free query object count; original member name unknown.
 };
 
 static_assert(offsetof(DrPixlOccQuery, unknown10) == 0x10, "");
 static_assert(offsetof(DrPixlOccQuery, unknown18) == 0x18, "");
 static_assert(offsetof(DrPixlOccQuery, unknown24) == 0x24, "");
 static_assert(offsetof(DrPixlOccQuery, unknown28) == 0x28, "");
+static_assert(offsetof(DrPixlOccQuery, unknown48) == 0x48, "");
+static_assert(offsetof(DrPixlOccQuery, unknown60) == 0x60, "");
+static_assert(offsetof(DrPixlOccQuery, unknown70) == 0x70, "");
+static_assert(offsetof(DrPixlOccQuery, unknown74) == 0x74, "");
 
 } // namespace ml

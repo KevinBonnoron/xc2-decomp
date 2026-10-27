@@ -15,6 +15,7 @@ class DrResFetch;
 class DrShdLgtObj : public grlib::CGLibDecShader {
 public:
   DrShdLgtObj();
+  ~DrShdLgtObj();
   void shaderComputeSetup();
   void shaderSetup(DrResFetch *fetch);
   void lgtRelease();

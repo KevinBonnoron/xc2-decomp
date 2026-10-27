@@ -15,6 +15,7 @@ class DrPixlPostMan;
 
 class DrPixlPostObj3dLut {
 public:
+  ~DrPixlPostObj3dLut();
   void update();
   void render(bool isFirst, bool isSecond);
   void renderLUT();

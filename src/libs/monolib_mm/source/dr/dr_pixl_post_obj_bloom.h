@@ -14,6 +14,7 @@ class DrMan;
 class DrPixlPostObjBloom {
 public:
   enum DownScaleType {
+    DOWN_SCALE_TYPE_UNKNOWN_0 = 0,
     DOWN_SCALE_TYPE_UNKNOWN_1 = 1,
     DOWN_SCALE_TYPE_UNKNOWN_2 = 2,
   };
@@ -23,6 +24,7 @@ public:
   void update();
   void releaseColorBuff(bool isForce);
   grlib::CGLibRenderTarget *getLgtDownTarget();
+  void calculateDownScale();
   void calculateDownScale_TwoPass();
   void calculateDownScaleImpl(DownScaleType type);
 

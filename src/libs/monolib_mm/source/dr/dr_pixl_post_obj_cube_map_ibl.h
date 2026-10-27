@@ -7,14 +7,16 @@
 
 namespace grlib {
 class CGLibDblUniformBlock;
-class CGLibRenderTargetBase;
 class CGLibTextureBuffer;
 } // namespace grlib
 
 namespace ml {
 
+class DrPixlRenderCubeMapMipMap;
+
 class DrPixlPostObjCubeMapIBL {
 public:
+  ~DrPixlPostObjCubeMapIBL();
   void render();
   void update();
   void setUniformBlock(u32 index) const;
@@ -28,7 +30,7 @@ public:
   u8 _00[0x18];
   bool unknown18; // Inferred role: initialize flag; original member name unknown.
   u8 _19[0x20 - 0x19];
-  grlib::CGLibRenderTargetBase *m_premTexture[2];
+  DrPixlRenderCubeMapMipMap *m_premTexture[2];
   u32 m_premMipCount;
   u8 _34[0x40 - 0x34];
   mm::Mat44 m_shMatrix[2][3];

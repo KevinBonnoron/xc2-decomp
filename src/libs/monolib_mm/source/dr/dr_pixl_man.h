@@ -63,8 +63,12 @@ public:
   };
 
   void debugRender(const grlib::CGLibTextureBuffer &texture, int x, int y, int width, int height, bool isAlpha, bool isDepth, f32 scale, bool isFlip);
+  void debugRender(int type, int x, int y, int width, int height, bool isAlpha);
   void captureMainFrameBuffer(grlib::CGLibTextureBuffer *buffer, u32 width, u32 height);
   void debugRenderCh(const grlib::CGLibTextureBuffer &texture, int x, int y, int width, int height, u32 channel);
+  void setupGodRay();
+  void lastTexRender();
+  void debugIlluminanceRender();
   void endDeferredRenderTarget();
   void endSkyRenderTarget();
   void setMainViewPort();

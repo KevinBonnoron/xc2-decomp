@@ -3,6 +3,12 @@
 #include "dr/dr_ap_cache.h"
 #include "dr/dr_ap_gx_type.h"
 #include "dr/dr_man.h"
+#include "dr/dr_shd_data_list.h"
+#include "dr/dr_shd_data_obj.h"
+#include "dr/dr_shd_man.h"
+#include "grlib/cglib_shader.h"
+#include "grlib/cglib_state.h"
+#include "grlib/cglib_uni_base_utility.h"
 
 namespace ml {
 
@@ -39,6 +45,58 @@ void DrPixlPostObjCapture::render() {
     renderCaputre();
     renderDef();
     unknown3e0 &= ~2;
+  }
+}
+
+void DrPixlPostObjCapture::renderCaputre() {
+  if (unknown3e0 & 2) {
+    unknown18.setRenderTarget();
+    DrShdDataList *shdList = unknown00->unknown80->unknown00;
+    DrShdDataObj *shader = shdList->unknown001();
+    shdList->bindTriangleTex();
+    shader->setupShader(0u);
+    int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+    DrAPCache *apCache = unknown00->unknown5c0;
+    apCache->beginTexSampling(2, 0);
+    apCache->setTexture(*grlib::CGLibState::getMainRenderTarget()->unknown70, location);
+    grlib::CGLibUniformEtcUtility uniform(shader);
+    uniform.setUseUniformBlock("U_POST");
+    u32 offset = uniform.unknown001("gScal");
+    f32 scale[4];
+    scale[0] = 1.0f;
+    scale[1] = 1.0f;
+    scale[2] = 0.0f;
+    scale[3] = 0.0f;
+    uniform.setF32SetVec4(offset, scale);
+    uniform.updateData();
+    uniform.setUniformBlock();
+    shdList->renderTriangle();
+  }
+}
+
+void DrPixlPostObjCapture::renderDef() {
+  grlib::CGLibState::setMainFrameBuffer();
+  if (!(unknown3e0 & 2)) {
+    DrShdDataList *shdList = unknown00->unknown80->unknown00;
+    DrShdDataObj *shader = shdList->unknown001();
+    shdList->bindTriangleTex();
+    shader->setupShader(0u);
+    int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
+    DrAPCache *apCache = unknown00->unknown5c0;
+    apCache->beginTexSampling(2, 0);
+    apCache->setTexture(*unknown18.unknown70, location);
+    grlib::CGLibUniformEtcUtility uniform(shader);
+    uniform.setUseUniformBlock("U_POST");
+    u32 offset = uniform.unknown001("gScal");
+    f32 scale[4];
+    scale[0] = 1.0f;
+    scale[1] = 1.0f;
+    scale[2] = 0.0f;
+    scale[3] = 0.0f;
+    uniform.setF32SetVec4(offset, scale);
+    uniform.updateData();
+    uniform.setUniformBlock();
+    shdList->renderTriangle();
   }
 }
 

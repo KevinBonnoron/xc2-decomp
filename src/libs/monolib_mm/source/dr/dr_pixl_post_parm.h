@@ -213,10 +213,18 @@ public:
   bool unknown248; // Inferred role: disp global ibl tex; original member name unknown.
   u8 _0249[0x026a - 0x0249];
   bool m_colTblOn;
-  u8 _026b[0x0270 - 0x026b];
+  u8 _026b[0x026c - 0x026b];
+  u32 unknown26c;  // Inferred role: color filter near first texture id; original member name unknown.
   f32 unknown270;  // Inferred role: color filter frm; original member name unknown.
   bool unknown274; // Inferred role: color filter trans z; original member name unknown.
-  u8 _0275[0x02a0 - 0x0275];
+  u8 _0275[0x0278 - 0x0275];
+  u32 unknown278; // Inferred role: color filter far first texture id; original member name unknown.
+  u8 _027c[0x028c - 0x027c];
+  u32 unknown28c; // Inferred role: color filter near second texture id; original member name unknown.
+  u32 unknown290; // Inferred role: color filter far second texture id; original member name unknown.
+  f32 unknown294; // Inferred role: color filter near ratio; original member name unknown.
+  f32 unknown298; // Inferred role: color filter far ratio; original member name unknown.
+  u8 _029c[0x02a0 - 0x029c];
   f32 unknown2a0; // Inferred role: toon dir light scale; original member name unknown.
   u8 _02a4[0x0304 - 0x02a4];
   bool unknown304; // Inferred role: deffered color; original member name unknown.
@@ -234,7 +242,8 @@ public:
   f32 unknown468; // Inferred role: sky luminance weight; original member name unknown.
   f32 unknown46c; // Inferred role: sky luminance weight; original member name unknown.
   f32 unknown470; // Inferred role: specular str; original member name unknown.
-  u8 _0474[0x0488 - 0x0474];
+  u8 _0474[0x0484 - 0x0474];
+  f32 unknown484;  // Inferred role: illuminance debug scale; original member name unknown.
   bool unknown488; // Inferred role: g buff debug; original member name unknown.
   u8 _0489[0x048a - 0x0489];
   bool unknown48a; // Inferred role: SSR; original member name unknown.
@@ -352,6 +361,11 @@ static_assert(offsetof(DrPixlPostParm, unknown240) == 0x0240, "");
 static_assert(offsetof(DrPixlPostParm, unknown244) == 0x0244, "");
 static_assert(offsetof(DrPixlPostParm, unknown248) == 0x0248, "");
 static_assert(offsetof(DrPixlPostParm, m_colTblOn) == 0x026a, "");
+static_assert(offsetof(DrPixlPostParm, unknown26c) == 0x026c, "");
+static_assert(offsetof(DrPixlPostParm, unknown278) == 0x0278, "");
+static_assert(offsetof(DrPixlPostParm, unknown28c) == 0x028c, "");
+static_assert(offsetof(DrPixlPostParm, unknown294) == 0x0294, "");
+static_assert(offsetof(DrPixlPostParm, unknown298) == 0x0298, "");
 static_assert(offsetof(DrPixlPostParm, unknown270) == 0x0270, "");
 static_assert(offsetof(DrPixlPostParm, unknown274) == 0x0274, "");
 static_assert(offsetof(DrPixlPostParm, unknown2a0) == 0x02a0, "");
@@ -361,6 +375,7 @@ static_assert(offsetof(DrPixlPostParm, unknown360) == 0x0360, "");
 static_assert(offsetof(DrPixlPostParm, unknown37c) == 0x037c, "");
 static_assert(offsetof(DrPixlPostParm, m_rainDropOn) == 0x03b8, "");
 static_assert(offsetof(DrPixlPostParm, m_shwRaytrace) == 0x0460, "");
+static_assert(offsetof(DrPixlPostParm, unknown484) == 0x0484, "");
 static_assert(offsetof(DrPixlPostParm, unknown468) == 0x0468, "");
 static_assert(offsetof(DrPixlPostParm, unknown46c) == 0x046c, "");
 static_assert(offsetof(DrPixlPostParm, unknown470) == 0x0470, "");

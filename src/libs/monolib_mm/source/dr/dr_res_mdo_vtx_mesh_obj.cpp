@@ -6,6 +6,15 @@
 
 namespace ml {
 
+DrResMdoVtxMeshObj::~DrResMdoVtxMeshObj() { releaseWork(); }
+
+void DrResMdoVtxMeshObj::release(DrResMdoVtxMeshObj *&obj) {
+  if (obj != nullptr) {
+    obj->~DrResMdoVtxMeshObj();
+    obj = nullptr;
+  }
+}
+
 void DrResMdoVtxMeshObj::resourceInit(DrResMdoVertex *vertex) {
   DrResUniformVertex *uniformVertex = vertex->unknown70;
   unknown00 = uniformVertex->unknown00;

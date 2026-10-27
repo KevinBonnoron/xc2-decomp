@@ -9,6 +9,29 @@
 
 namespace ml {
 
+DrPixlShadowRaytrace::~DrPixlShadowRaytrace() {
+  if (unknown38 != nullptr) {
+    delete unknown38;
+    unknown38 = nullptr;
+  }
+  if (unknown30 != nullptr) {
+    delete unknown30;
+    unknown30 = nullptr;
+  }
+  if (unknown20[0] != nullptr) {
+    delete unknown20[0];
+    unknown20[0] = nullptr;
+  }
+  if (unknown20[1] != nullptr) {
+    delete unknown20[1];
+    unknown20[1] = nullptr;
+  }
+  if (unknown18 != nullptr) {
+    delete unknown18;
+    unknown18 = nullptr;
+  }
+}
+
 void DrPixlShadowRaytrace::update() {}
 
 void DrPixlShadowRaytrace::render_beforeTemporal() {

@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "dr/dr_res_fetch.h"
+#include "dr/dr_shd_data_obj.h"
 #include "grlib/cglib_uniform_array.h"
 #include "grlib/cglib_vtx_index.h"
 #include "grlib/cglib_vtx_stm_out.h"
@@ -19,7 +20,6 @@ class DrResShdObjMot;
 class DrResShdPrePass;
 class DrResShdShw;
 class DrResShdStreamOut;
-class DrShdDataObj;
 
 class DrShdDataList {
 public:
@@ -27,6 +27,21 @@ public:
   void reloadShader(int type);
   DrShdDataObj *getDebugShdObj(int index);
   DrShdDataObj *getSelectShdObj(int index);
+
+  // Inferred role: binds the quad vertices and sets the shader up; original name unknown.
+  void unknown002(DrShdDataObj *shader) {
+    bindQuadsTex();
+    shader->setupShader(0u);
+  }
+
+  // Inferred role: select shader for a single render target quad; original name unknown.
+  DrShdDataObj *unknown001() {
+    DrShdDataObj *shader = getSelectShdObj(1);
+    shader->setDeclarationIdx(shader->getDeclarationOfs("PIXL_TYPE"), 1);
+    shader->setDeclarationIdx(shader->getDeclarationOfs("MRT_NUM"), 1);
+    return shader;
+  }
+
   DrShdDataObj *getShadowShdObj(int index);
   DrShdDataObj *getPostShdObj(int index);
   DrShdDataObj *getSteamShdObj(int index);

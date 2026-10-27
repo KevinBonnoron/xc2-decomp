@@ -22,6 +22,9 @@ public:
   };
 
   DrResMdoLight();
+  ~DrResMdoLight();
+  static void release(DrResMdoLight *&light);
+  void release();
   static int calcWorkSize(const u8 *resource);
   void setDisp(bool isDisp);
   static void lgtCall_col_r(f32 *color, DrResEtcParams *params);

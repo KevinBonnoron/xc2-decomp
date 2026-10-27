@@ -8,6 +8,8 @@ namespace ml {
 class DrResMdoAlpTbl : public grlib::CGLibVtxInstans {
 public:
   DrResMdoAlpTbl();
+  ~DrResMdoAlpTbl();
+  static void release(DrResMdoAlpTbl *&table);
   static int calcCntWorkSize(u32 count);
 };
 

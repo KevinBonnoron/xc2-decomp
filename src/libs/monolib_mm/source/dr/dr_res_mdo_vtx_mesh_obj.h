@@ -15,6 +15,8 @@ class DrResMdoVertex;
 
 class DrResMdoVtxMeshObj {
 public:
+  ~DrResMdoVtxMeshObj();
+  static void release(DrResMdoVtxMeshObj *&obj);
   void setActive(bool isActive, u32 index);
   void alpRender();
   u32 setup(const u8 *, u8 *);
