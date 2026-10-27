@@ -2,19 +2,62 @@
 
 #include <algorithm>
 
+#include "grlib/cglib_render_target.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3_na.h"
 #include "mm_mtl/fixed_vector.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/emitter/particle_emitter_manager.h"
 #include "ptlib/emitter/particle_emitter_param.h"
+#include "ptlib/material/particle_material_manager.h"
 #include "ptlib/particle_system.h"
+
+// clang-format off
+#include "particle_renderer_shader.cpp"
+// clang-format on
 
 namespace ptlib {
 namespace renderer {
 
 constexpr int ARG_DRAW_TYPE_NONE = 5;
 constexpr int PRIORITY_MAX = 0xff;
+
+RenderGrObj::~RenderGrObj() { term(); }
+
+void RenderGrObj::clear() { unknown00.unknown002(); }
+
+BackBuffer *RenderGrObj::getBackBuffer() { return &unknown00; }
+
+grlib::CGLibTextureBuffer *RenderGrObj::getDummyTex() { return unknown00.unknown20->unknown70; }
+
+grlib::CGLibRenderTarget *RenderGrObj::getReduceBuffer(u32 index) { return unknown258->unknown060; }
+
+void RenderGrObj::fxcore_setup_target() {
+  grlib::CGLibRenderTarget *target = unknown258->unknown000;
+  grlib::CGLibRenderTarget *subTarget = unknown258->unknown068;
+  unknown00.createAll(
+      unknown268, static_cast<s32>(target->unknownbc), static_cast<s32>(target->unknownc0), static_cast<s32>(subTarget->unknownbc), static_cast<s32>(subTarget->unknownc0), unknown258->unknown1d0);
+}
+
+material::MaterialBase *RenderGrObj::tex_loadmem(int key, void *data, int size, int format, u8 *userData, bool isResident, void *owner) {
+  material::MaterialBase *material = material::MaterialManager::getPtr()->create(key, material::eMaterialType_UNKNOWN_0, data, size, false, userData, owner, format);
+  if (material != nullptr && isResident) {
+    material->unknown3c = true;
+  }
+  return material;
+}
+
+void RenderGrObj::tex_freemem(int key, void *owner) {
+  int materialKey = key;
+  material::MaterialManager::getPtr()->destroyMateriaByKey(materialKey, owner);
+}
+
+void RenderGrObj::tex_freemem(void *material, void *owner) { material::MaterialManager::getPtr()->destroyMateriaByKey(material, owner); }
+
+void RenderGrObj::term() {
+  unknown00.unknown001();
+  unknownb0.term();
+}
 
 void RenderGrObj::prioritySort(emitter::EmitterManager &emitterManager, int prioIdx, FxParam &fxParam, mm::mtl::FixedVector<sort::EmitterSort, EMITTER_SORT_MAX> &sorts) {
   const CamParam &camParam = ParticleManager::get()->getCamParam();

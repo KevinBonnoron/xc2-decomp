@@ -1,7 +1,6 @@
 #pragma once
 #include <stddef.h>
 
-#include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_voice.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/request/gf_scom.h"
@@ -15,6 +14,7 @@ struct GAME_VOICE_HANDLE;
 struct GF_SCOM_HANDLE;
 struct GF_OBJ_HANDLE;
 struct ParamObj;
+enum OPTMNT : u32;
 
 class SCOM_ADD_TRUST : public SCOM {
 public:

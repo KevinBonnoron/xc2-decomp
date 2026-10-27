@@ -3,6 +3,7 @@
 #include "gf/util/gf_util.h"
 
 namespace gf {
+enum OPTMNT : u32;
 
 GfAppend::GfAppend() : unknown00(), m_modelName(nullptr), m_motionName(nullptr), m_mountIndex(0xffff), m_rscID(0), unknown7c(1.0f), unknown80(false) {}
 

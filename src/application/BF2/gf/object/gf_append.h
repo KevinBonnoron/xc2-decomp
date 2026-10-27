@@ -1,7 +1,6 @@
 #pragma once
 #include <stddef.h>
 
-#include "gf/game/gf_game_mount.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
@@ -13,6 +12,7 @@ struct UpdateInfo;
 namespace gf {
 
 struct GF_OBJ_HANDLE;
+enum OPTMNT : u32;
 
 class GfAppend {
 public:

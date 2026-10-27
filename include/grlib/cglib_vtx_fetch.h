@@ -8,6 +8,7 @@ struct NVNvertexAttribState;
 enum GrlVtxFormat {
   GRL_VTX_FORMAT_R32F = 10,
   GRL_VTX_FORMAT_R32UI = 11,
+  GRL_VTX_FORMAT_UNKNOWN_13 = 13,
   GRL_VTX_FORMAT_RG16F = 17,
   GRL_VTX_FORMAT_RG16SN = 19,
   GRL_VTX_FORMAT_RG16UI = 20,
@@ -38,6 +39,7 @@ public:
   ~CGLibVtxFetch();
   void release();
   void createFetchObj(CGLibVtxAttr *attributes, int num);
+  void createMemFetchObj(void *memory, CGLibVtxAttr *attributes, int num);
   static int calcFetchWorkSize(int num);
 
   NVNvertexAttribState *unknown00; // Inferred role: attribute states; original member name unknown.

@@ -5,6 +5,10 @@
 #include "mtl/alloc_handle.h"
 #include "types.h"
 
+namespace grlib {
+class CGLibRenderTarget;
+} // namespace grlib
+
 namespace ptlib {
 
 namespace emitter {
@@ -18,10 +22,19 @@ class RenderManager;
 } // namespace renderer
 
 struct DrDrawWorkInfoEF {
-  u8 _000[0x560 - 0x000];
+  grlib::CGLibRenderTarget *unknown000; // Inferred role: main target; original member name unknown.
+  u8 _008[0x060 - 0x008];
+  grlib::CGLibRenderTarget *unknown060; // Inferred role: reduce target; original member name unknown.
+  grlib::CGLibRenderTarget *unknown068; // Inferred role: sub target; original member name unknown.
+  u8 _070[0x1d0 - 0x070];
+  u32 unknown1d0; // Inferred role: buffer offset; original member name unknown.
+  u8 _1d4[0x560 - 0x1d4];
   u32 unknown560; // Inferred role: view index; original member name unknown.
 };
 
+static_assert(offsetof(DrDrawWorkInfoEF, unknown060) == 0x060, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown068) == 0x068, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown1d0) == 0x1d0, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown560) == 0x560, "");
 
 struct FxHeader {

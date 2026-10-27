@@ -55,6 +55,7 @@ public:
   void initSub();
   void termSub(bool isAll);
   void allClear(bool isAll);
+  MaterialBase *create(int key, eMaterialType type, void *data, u32 size, bool isResident, u8 *userData, void *owner, int format);
   MaterialBase *getMaterial(eMaterialType type, void *data, u32 size, u8 *owner);
   MaterialBase *createTexture(void *data, u32 size, bool isResident, int format);
   void addActiveMaterial(MaterialBase *material);
