@@ -4,6 +4,7 @@
 #include "eflib/effect_callback.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/vector.h"
@@ -16,6 +17,8 @@ class IAllocator;
 } // namespace mm
 
 namespace fw {
+
+struct UpdateInfo;
 
 class EffectPoint {
 public:
@@ -66,12 +69,19 @@ static_assert(sizeof(EffectBindData) == 0x60, "");
 
 class EffectCasterBase {
 public:
+  // Inferred role: per frame update; original name unknown.
+  virtual void unknown001(const UpdateInfo &info) = 0;
+  // Inferred role: update after the effect system update; original name unknown.
+  virtual void unknown002(const UpdateInfo &info) = 0;
   virtual ~EffectCasterBase();
   void setScl(f32 scale);
   void setMotionFrame(f32 frame);
   void setStateName(const char *name);
   void setEfpMat(mm::Mat44 &matrix, const char *name, int index);
   void changeLayer(u32 layer, u32 newLayer);
+  static void tail();
+
+  static mm::mtl::FixedVector<EffectCasterBase *, 256> s_casterList;
 
   u8 _08[0x10 - 0x08];
   EffectPoint *unknown10;         // Inferred role: point; original member name unknown.

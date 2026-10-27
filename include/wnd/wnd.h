@@ -6,6 +6,12 @@
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 // Reconstructed from the symbols and call sites of the game executable (wnd:: namespace of the wind library).
 // Only the members read by the framework are declared; the original member names are unknown.
 namespace wnd {
@@ -51,16 +57,29 @@ public:
 static_assert(offsetof(LocalWind, unknown88) == 0x88, "");
 static_assert(sizeof(LocalWind) == 0xb0, "");
 
+struct ProbeCreateInfo {
+  const Transform *unknown00; // Inferred role: transform; original member name unknown.
+  SphereShape *unknown08;     // Inferred role: shape; original member name unknown.
+  u32 unknown10;              // Role and original member name unknown.
+  u32 unknown14;              // Inferred role: group; original member name unknown.
+};
+
+static_assert(sizeof(ProbeCreateInfo) == 0x18, "");
+
 class WindProbe : public mm::mtl::ReferenceObject {
 public:
+  WindProbe(const ProbeCreateInfo &info, u32 seed, mm::mtl::IAllocator *allocator);
+
   u8 _0c[0x88 - 0x0c];
   u32 unknown88; // Inferred role: current power index; original member name unknown.
   u8 _8c[0xa0 - 0x8c];
   mm::Vec3 unknowna0[4]; // Inferred role: power per index; original member name and size unknown.
+  u8 _e0[0x1c0 - 0xe0];
 };
 
 static_assert(offsetof(WindProbe, unknown88) == 0x88, "");
 static_assert(offsetof(WindProbe, unknowna0) == 0xa0, "");
+static_assert(sizeof(WindProbe) == 0x1c0, "");
 
 class GlobalWindManager {
 public:

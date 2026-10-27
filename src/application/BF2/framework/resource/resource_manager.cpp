@@ -19,6 +19,13 @@ void ResourceManager::setMemTMP(mtl::ALLOC_HANDLE handle) { m_hMemoryTemp = hand
 
 u32 ResourceManager::getHash(const char *name) { return mm::mtl::hashStrCrc(name); }
 
+ResourceManager::ResourceManager(mm::mtl::IAllocator *allocator, u32 capacity) : unknown518(allocator), unknown520(0), unknown524(0), unknown528(0), unknown52c(0), unknown530(false) {
+  for (int type = 0; type < 32; type++) {
+    unknown18[type].setAllocator(allocator);
+    unknown18[type].reserve(capacity);
+  }
+}
+
 void ResourceManager::enterFinalizeApplet() {
   unknown530 = true;
   unknown52c = 2;

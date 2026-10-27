@@ -10,6 +10,8 @@ class Skeleton;
 
 class ExtraTruckSlot {
 public:
+  u16 getTruckID(const char *name) const;
+
   const char *unknown00; // Inferred role: name; original member name unknown.
   u8 _08[0x20 - 0x08];
   u32 unknown20; // Inferred role: truck count; original member name unknown.

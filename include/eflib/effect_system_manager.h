@@ -96,6 +96,7 @@ public:
   void memoryDump();
   void begin();
   void end();
+  void tail(bool flag);
   void apply(const ptlib::DrDrawWorkInfoEF *info);
   void opacityRender(const ptlib::DrDrawWorkInfoEF *info);
   void alphaRender(const ptlib::DrDrawWorkInfoEF *info);

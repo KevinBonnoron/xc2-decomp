@@ -58,6 +58,37 @@ void EffectManager::getNum(u32 &emitterNum, u32 &particleNum, u32 &drawNum) {
   }
 }
 
+void EffectManager::updateLayerPost(const UpdateInfo &info, u32 layers) {
+  for (u32 i = 0; i < LAYER_MAX; i++) {
+    if (layers & (1 << i)) {
+      mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[i].unknown00;
+      for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
+        EffectCasterBase *caster = it.get()->m_caster;
+        if (caster != nullptr && !caster->_40) {
+          caster->unknown002(info);
+        }
+      }
+    }
+  }
+}
+
+void EffectManager::tail(const UpdateInfo &info, bool flag) {
+  if (unknown2fd9) {
+    efSystemEnd();
+  }
+  for (u32 i = 0; i < LAYER_MAX; i++) {
+    mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[i].unknown00;
+    for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
+      it.get()->tailCopy();
+    }
+  }
+  unknown2fd8 = ~unknown2fd8 & 1;
+  EffectCasterBase::tail();
+  if (effect::SystemManager::getPtr() != nullptr) {
+    effect::SystemManager::getPtr()->tail(flag);
+  }
+}
+
 void EffectManager::efSystemEnd() {
   if (effect::SystemManager::getPtr() != nullptr) {
     effect::SystemManager::destroy();

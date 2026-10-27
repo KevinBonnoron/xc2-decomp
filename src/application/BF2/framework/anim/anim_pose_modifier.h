@@ -8,6 +8,12 @@
 #include "mm_mtl/vector.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace anm {
 class ExtraTruckBuffer;
 class Pose;
@@ -26,6 +32,7 @@ public:
 
   AnimPoseModifier();
   ~AnimPoseModifier() override;
+  void bind(anm::Pose *pose, ModelObject *modelObject, anm::ExtraTruckBuffer *extraTruckBuffer, mm::mtl::IAllocator *allocator);
   void unbind();
   void bindReferenceFrameToBone(u16 bone, mm::mtl::IntrusivePtr<ReferenceFrame> &frame);
   void unbindReferenceFrame(mm::mtl::IntrusivePtr<ReferenceFrame> &frame);

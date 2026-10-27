@@ -41,6 +41,7 @@ struct SendParam;
 
 namespace fw {
 
+struct UpdateInfo;
 class EffectData;
 class EffectPack;
 class RenderResource;
@@ -101,6 +102,8 @@ public:
   bool initialize() override;
   bool isCommonLoaded();
   bool commonLoaded();
+  void updateLayerPost(const UpdateInfo &info, u32 layers);
+  void tail(const UpdateInfo &info, bool flag);
   void getNum(u32 &emitterNum, u32 &particleNum, u32 &drawNum);
   static void efSystemEnd();
   void addPack(EffectPack *pack);
@@ -236,7 +239,10 @@ public:
   u8 _27c0[0x2fd5 - 0x27c0];
   bool unknown2fd5; // Inferred role: master pause; original member name unknown.
   bool unknown2fd6; // Inferred role: finalizing; original member name unknown.
-  u8 _2fd7[0x353e0 - 0x2fd7];
+  u8 _2fd7[0x2fd8 - 0x2fd7];
+  u8 unknown2fd8;   // Inferred role: caster buffer index flipped every tail; original member name unknown.
+  bool unknown2fd9; // Inferred role: destroy the effect system on tail; original member name unknown.
+  u8 _2fda[0x353e0 - 0x2fda];
   KizunaWork unknown353e0[unknown002]; // Inferred role: kizuna lines; original member name unknown.
   u8 _37760[0x37980 - 0x37760];
 };
@@ -262,6 +268,8 @@ static_assert(offsetof(EffectManager, unknown350) == 0x350, "");
 static_assert(offsetof(EffectManager, unknown1fb8) == 0x1fb8, "");
 static_assert(offsetof(EffectManager, unknown2fd5) == 0x2fd5, "");
 static_assert(offsetof(EffectManager, unknown2fd6) == 0x2fd6, "");
+static_assert(offsetof(EffectManager, unknown2fd8) == 0x2fd8, "");
+static_assert(offsetof(EffectManager, unknown2fd9) == 0x2fd9, "");
 static_assert(offsetof(EffectManager, unknown353e0) == 0x353e0, "");
 static_assert(sizeof(EffectManager) == 0x37980, "");
 

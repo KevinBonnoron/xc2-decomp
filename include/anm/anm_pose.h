@@ -12,6 +12,10 @@ struct QsTransform;
 
 class Pose : public ReferenceObject {
 public:
+  enum PROPAGATE_TYPE : int {
+    PROPAGATE_TYPE_UNKNOWN_1 = 1,
+  };
+
   void syncLocalSpace();
   void syncModelSpace();
   void setReferencePose();
@@ -20,6 +24,7 @@ public:
   const QsTransform &getBoneModelSpace(u16 bone);
   const QsTransform &getBoneLocalSpace(u16 bone);
   void setBoneLocalSpace(u16 bone, const QsTransform &transform);
+  void setBoneModelSpace(u16 bone, const QsTransform &transform, PROPAGATE_TYPE propagate);
 
   const Skeleton *unknown18; // Inferred role: skeleton; original member name unknown.
 };

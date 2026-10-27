@@ -25,13 +25,14 @@ class ResourceManager : public ManagerObject, public mm::mtl::PtrSingleton<Resou
 public:
   static mtl::ALLOC_HANDLE m_hMemoryTemp;
 
+  ResourceManager(mm::mtl::IAllocator *allocator, u32 capacity);
   ~ResourceManager() override;
   void enterFinalizeApplet() override;
   static mtl::ALLOC_HANDLE getMemSYS();
   static mtl::ALLOC_HANDLE getMemTMP();
   static void setMemTMP(mtl::ALLOC_HANDLE handle);
   static u32 getHash(const char *name);
-  void update(const UpdateInfo &info);
+  virtual void update(const UpdateInfo &info);
   bool isLoaded();
   void updateSafeReleaseList(bool isForce);
   void addResource(ResourceObject *resource);
@@ -53,10 +54,11 @@ public:
     eResourceType unknown0c;             // Inferred role: type; original member name unknown.
   };
 
-  mm::mtl::Vector<ResourceObject *> unknown18[TYPE_MAX]; // Inferred role: resources per type; original member name unknown.
-  u8 _518[0x520 - 0x518];
-  u32 unknown520; // Inferred role: unknown; original member name unknown.
-  u8 _524[0x52c - 0x524];
+  mm::mtl::Vector<ResourceObject *> unknown18[TYPE_MAX];                       // Inferred role: resources per type; original member name unknown.
+  mm::mtl::IAllocator *unknown518;                                             // Inferred role: allocator; original member name unknown.
+  u32 unknown520;                                                              // Inferred role: unknown; original member name unknown.
+  u32 unknown524;                                                              // Role and original member name unknown.
+  u32 unknown528;                                                              // Role and original member name unknown.
   u32 unknown52c;                                                              // Inferred role: applet state; original member name unknown.
   bool unknown530;                                                             // Inferred role: finalize applet; original member name unknown.
   mm::mtl::FixedVector<SafeObject, SAFE_OBJECT_MAX> unknown538;                // Inferred role: safe objects; original member name unknown.
@@ -66,7 +68,9 @@ public:
 
 static_assert(sizeof(ResourceManager::SafeObject) == 0x10, "");
 static_assert(offsetof(ResourceManager, unknown18) == 0x18, "");
+static_assert(offsetof(ResourceManager, unknown518) == 0x518, "");
 static_assert(offsetof(ResourceManager, unknown520) == 0x520, "");
+static_assert(offsetof(ResourceManager, unknown528) == 0x528, "");
 static_assert(offsetof(ResourceManager, unknown52c) == 0x52c, "");
 static_assert(offsetof(ResourceManager, unknown530) == 0x530, "");
 static_assert(offsetof(ResourceManager, unknown538) == 0x538, "");
