@@ -9,6 +9,7 @@ namespace anm {
 class Skeleton;
 struct ResVariable;
 class ResStateData;
+class ResResolver;
 
 struct ResStateArray {
   u8 _00[0x28];
@@ -20,6 +21,10 @@ static_assert(offsetof(ResStateArray, unknown28) == 0x28, "");
 class ResASM {
 public:
   const ResStateData *findResStateData(const char *name) const;
+  void restore(const ResResolver &resolver);
+  void clearAnnotations(u32 type);
+  void clearEnterAnnotation(u32 type);
+  void clearLeaveAnnotation(u32 type);
   void sortAnnotation(u32 type);
   void clearAttribute(u32 category);
   void clearFrameAnnotation(u32 type);

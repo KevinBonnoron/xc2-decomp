@@ -38,6 +38,9 @@ public:
   void syncLocalSpace();
   void syncModelSpace();
   void setReferencePose();
+  void setLocalPose(const mm::mtl::Vector<QsTransform> &pose);
+  void setModelPose(const mm::mtl::Vector<QsTransform> &pose);
+  Pose &operator=(const Pose &rhs);
   Array<QsTransform> &accessSyncedPoseLocalSpace();
   Array<QsTransform> &accessSyncedPoseModelSpace();
   const QsTransform &getBoneModelSpace(u16 bone);

@@ -269,6 +269,7 @@ public:
 private:
   static void copy(const T *first, const T *last, T *result);
 
+public:
   T *m_buffer;
   size_t m_size;
   size_t m_capacity;

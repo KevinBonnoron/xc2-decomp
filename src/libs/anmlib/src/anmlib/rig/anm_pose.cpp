@@ -1,11 +1,55 @@
 #include "anm/anm_pose.h"
 
+#include <string.h>
+
 #include "anm/anm_qs_transform.h"
 #include "anm/anm_skeleton.h"
 #include "anm/anm_transform_util.h"
 #include "mm/mm_std_base.h"
 
 namespace anm {
+
+void Pose::setLocalPose(const mm::mtl::Vector<QsTransform> &pose) {
+  u32 boneCount = unknown18->unknown30.size();
+  MM_ASSERT(boneCount != pose.size());
+  memcpy(unknown20.m_buffer, pose.m_buffer, boneCount * sizeof(QsTransform));
+  for (u32 i = 0; i < boneCount; i++) {
+    unknown002(i, BONE_MODEL_SPACE_DIRTY, true);
+  }
+  unknown88 = (unknown88 & ~3) | 1;
+}
+
+void Pose::setModelPose(const mm::mtl::Vector<QsTransform> &pose) {
+  u32 boneCount = unknown18->unknown30.size();
+  MM_ASSERT(boneCount != pose.size());
+  memcpy(unknown48.m_buffer, pose.m_buffer, boneCount * sizeof(QsTransform));
+  for (u32 i = 0; i < boneCount; i++) {
+    unknown002(i, BONE_LOCAL_SPACE_DIRTY, true);
+  }
+  unknown88 = (unknown88 & ~3) | 2;
+}
+
+void Pose::setReferencePose() {
+  u32 boneCount = unknown18->unknown30.size();
+  memcpy(unknown20.m_buffer, unknown18->unknown40.m_pElements, boneCount * sizeof(QsTransform));
+  for (u16 i = 0; i < boneCount; i++) {
+    unknown002(i, BONE_MODEL_SPACE_DIRTY, true);
+    unknown002(i, BONE_LOCAL_SPACE_DIRTY, false);
+  }
+  unknown88 = (unknown88 & ~3) | 1;
+}
+
+Pose &Pose::operator=(const Pose &rhs) {
+  if (unknown18 != rhs.unknown18) {
+    mm::MMStdBase::mmAssert("m_pSkeleton == rhs.m_pSkeleton", __FILE__, __LINE__);
+  }
+  size_t size = unknown18->unknown30.size() * sizeof(QsTransform);
+  memcpy(unknown20.m_buffer, rhs.unknown20.m_buffer, size);
+  memcpy(unknown48.m_buffer, rhs.unknown48.m_buffer, size);
+  memcpy(unknown70.m_element, rhs.unknown70.m_element, static_cast<size_t>(unknown70.unknown0c) * sizeof(u32));
+  unknown88 = rhs.unknown88;
+  return *this;
+}
 
 Pose::~Pose() { unknown001(unknown18); }
 

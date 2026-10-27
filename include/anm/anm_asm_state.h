@@ -8,7 +8,9 @@
 #include "anm/anm_res_state_data.h"
 #include "anm/anm_util.h"
 #include "mm_mtl/fixed_array.h"
+#include "mm_mtl/mt_rand.h"
 #include "mm_mtl/vector.h"
+#include "nn/os.h"
 #include "types.h"
 
 namespace mm {
@@ -23,7 +25,10 @@ class AsmBlender;
 class AsmClip;
 class Binding;
 
-f32 rand();
+inline f32 rand() {
+  static mm::mtl::MTRand sRand(nn::os::GetSystemTick().GetInt64Value());
+  return sRand.generate() * (1.0 / 4294967296.0);
+}
 
 class AsmState : public ReferenceObject {
 public:

@@ -47,6 +47,10 @@ public:
     MM_ASSERT(category > 0);
     unknown30[category - 1] = attribute;
   }
+  // Inferred helper: clears the enter annotations of a type; original name unknown.
+  void unknown001(u32 type) { unknown50[type].clear(); }
+  // Inferred helper: clears the leave annotations of a type; original name unknown.
+  void unknown002(u32 type) { unknown118[type].clear(); }
   void setFrameAnnotation(u32 type, u32 clip, f32 frame, const AsmAnnotetion &annotation);
   const ResState *unknown00;                                         // Inferred role: p res state; original member name unknown.
   mm::mtl::Vector<ResClipData> unknown08;                            // Inferred role: clips; original member name unknown.
