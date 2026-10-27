@@ -2,11 +2,12 @@
 #include <stddef.h>
 
 #include "nvn/nvn.h"
-#include "types.h"
 
 struct NVNcommandBuffer;
 
 namespace grlib {
+
+class CGLibShader_plf;
 
 class CGLibPipeline {
 public:
@@ -39,7 +40,7 @@ public:
   NVNvertexStreamState unknown50[VERTEX_STREAM_NUM]; // Inferred role: vertex streams; original member name unknown.
   int unknown90;                                     // Inferred role: vertex stream max; original member name unknown.
   bool unknown94;                                    // Inferred role: vertex stream dirty; original member name unknown.
-  u64 _98;
+  CGLibShader_plf *_98;
 };
 
 static_assert(offsetof(CGLibPipeline, unknown08) == 0x08, "");

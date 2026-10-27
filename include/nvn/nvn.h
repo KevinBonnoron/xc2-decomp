@@ -26,6 +26,10 @@ struct NVNcounterData {
   u64 timestamp;
 };
 
+struct alignas(8) NVNprogram {
+  u8 reserved[0xc0];
+};
+
 struct alignas(8) NVNbufferBuilder {
   u8 reserved[0x40];
 };
@@ -125,9 +129,13 @@ enum NVNcounterType {
 
 enum NVNdrawPrimitive {};
 
+enum NVNshaderStage {};
+
 enum NVNindexType {};
 
 typedef u64 NVNbufferAddress;
+typedef u64 NVNtextureHandle;
+typedef u64 NVNimageHandle;
 
 typedef void (*PFNNVNCOMMANDBUFFERCOPYBUFFERTOBUFFERPROC)(NVNcommandBuffer *cmdBuf, NVNbufferAddress src, NVNbufferAddress dst, size_t size, int copyFlags);
 typedef void (*PFNNVNCOMMANDBUFFERDISPATCHCOMPUTEINDIRECTPROC)(NVNcommandBuffer *cmdBuf, NVNbufferAddress indirectBuffer);
@@ -205,6 +213,11 @@ typedef void (*PFNNVNCOMMANDBUFFERRESETCOUNTERPROC)(NVNcommandBuffer *cmdBuf, NV
 typedef void (*PFNNVNCOMMANDBUFFERREPORTCOUNTERPROC)(NVNcommandBuffer *cmdBuf, NVNcounterType counter, NVNbufferAddress buffer);
 typedef NVNbufferAddress (*PFNNVNMEMORYPOOLGETBUFFERADDRESSPROC)(const NVNmemoryPool *pool);
 typedef u64 (*PFNNVNDEVICEGETTIMESTAMPINNANOSECONDSPROC)(const NVNdevice *device, const NVNcounterData *counterData);
+typedef void (*PFNNVNPROGRAMFINALIZEPROC)(NVNprogram *program);
+typedef void (*PFNNVNCOMMANDBUFFERBINDUNIFORMBUFFERPROC)(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNbufferAddress buffer, size_t size);
+typedef void (*PFNNVNCOMMANDBUFFERBINDSTORAGEBUFFERPROC)(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNbufferAddress buffer, size_t size);
+typedef void (*PFNNVNCOMMANDBUFFERBINDTEXTUREPROC)(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNtextureHandle texture);
+typedef void (*PFNNVNCOMMANDBUFFERBINDIMAGEPROC)(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNimageHandle image);
 
 extern "C" {
 extern PFNNVNCOMMANDBUFFERSETBLENDCOLORPROC pfnc_nvnCommandBufferSetBlendColor;
@@ -281,6 +294,11 @@ extern PFNNVNCOMMANDBUFFERRESETCOUNTERPROC pfnc_nvnCommandBufferResetCounter;
 extern PFNNVNCOMMANDBUFFERREPORTCOUNTERPROC pfnc_nvnCommandBufferReportCounter;
 extern PFNNVNMEMORYPOOLGETBUFFERADDRESSPROC pfnc_nvnMemoryPoolGetBufferAddress;
 extern PFNNVNDEVICEGETTIMESTAMPINNANOSECONDSPROC pfnc_nvnDeviceGetTimestampInNanoseconds;
+extern PFNNVNPROGRAMFINALIZEPROC pfnc_nvnProgramFinalize;
+extern PFNNVNCOMMANDBUFFERBINDUNIFORMBUFFERPROC pfnc_nvnCommandBufferBindUniformBuffer;
+extern PFNNVNCOMMANDBUFFERBINDSTORAGEBUFFERPROC pfnc_nvnCommandBufferBindStorageBuffer;
+extern PFNNVNCOMMANDBUFFERBINDTEXTUREPROC pfnc_nvnCommandBufferBindTexture;
+extern PFNNVNCOMMANDBUFFERBINDIMAGEPROC pfnc_nvnCommandBufferBindImage;
 }
 
 inline void nvnCommandBufferSetBlendColor(NVNcommandBuffer *cmdBuf, const float *blendColor) { pfnc_nvnCommandBufferSetBlendColor(cmdBuf, blendColor); }
@@ -452,3 +470,17 @@ inline void nvnCommandBufferReportCounter(NVNcommandBuffer *cmdBuf, NVNcounterTy
 inline NVNbufferAddress nvnMemoryPoolGetBufferAddress(const NVNmemoryPool *pool) { return pfnc_nvnMemoryPoolGetBufferAddress(pool); }
 
 inline u64 nvnDeviceGetTimestampInNanoseconds(const NVNdevice *device, const NVNcounterData *counterData) { return pfnc_nvnDeviceGetTimestampInNanoseconds(device, counterData); }
+
+inline void nvnProgramFinalize(NVNprogram *program) { pfnc_nvnProgramFinalize(program); }
+
+inline void nvnCommandBufferBindUniformBuffer(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNbufferAddress buffer, size_t size) {
+  pfnc_nvnCommandBufferBindUniformBuffer(cmdBuf, stage, index, buffer, size);
+}
+
+inline void nvnCommandBufferBindStorageBuffer(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNbufferAddress buffer, size_t size) {
+  pfnc_nvnCommandBufferBindStorageBuffer(cmdBuf, stage, index, buffer, size);
+}
+
+inline void nvnCommandBufferBindTexture(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNtextureHandle texture) { pfnc_nvnCommandBufferBindTexture(cmdBuf, stage, index, texture); }
+
+inline void nvnCommandBufferBindImage(NVNcommandBuffer *cmdBuf, NVNshaderStage stage, int index, NVNimageHandle image) { pfnc_nvnCommandBufferBindImage(cmdBuf, stage, index, image); }

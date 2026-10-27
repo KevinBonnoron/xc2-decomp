@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "grlib/cglib_buff_mem_pool_tbl.h"
+#include "grlib/cglib_buff_min_uniform.h"
 #include "grlib/cglib_buff_occlusion.h"
 #include "grlib/cglib_buff_sampler_tbl.h"
 #include "grlib/cglib_buff_texture.h"
@@ -10,6 +11,7 @@
 #include "grlib/cglib_depth_target.h"
 #include "grlib/cglib_gpu_time_stamp.h"
 #include "grlib/cglib_mem_pool.h"
+#include "grlib/cglib_mem_pool_adder.h"
 #include "grlib/cglib_pipeline.h"
 #include "grlib/cglib_render_target.h"
 #include "grlib/cglib_state.h"
@@ -68,10 +70,12 @@ public:
   CGLibBuffOcclusion unknowne38;  // Inferred role: buff occlusion; original member name unknown.
   CGLibBuffTexture unknowne60;    // Inferred role: buff texture; original member name unknown.
   CGLibBuffMemPoolTbl unknowne90; // Inferred role: buff mem pool tbl; original member name unknown.
-  u8 _0eb8[0x1070 - 0x0eb8];
-  CGLibPipeline unknown1070;        // Inferred role: pipeline; original member name unknown.
-  CGLibRenderTarget unknown1110[2]; // Inferred role: main render targets; original member name unknown.
-  CGLibDepthTarget unknown18a0;     // Inferred role: main depth target; original member name unknown.
+  u8 _0eb8[0x0ef8 - 0x0eb8];
+  CGLibMemPoolAdder unknownef8;      // Inferred role: mem pool adder; original member name unknown.
+  CGLibBuffMinUniform unknownf08[5]; // Inferred role: min uniform buffers by size class; original member name unknown.
+  CGLibPipeline unknown1070;         // Inferred role: pipeline; original member name unknown.
+  CGLibRenderTarget unknown1110[2];  // Inferred role: main render targets; original member name unknown.
+  CGLibDepthTarget unknown18a0;      // Inferred role: main depth target; original member name unknown.
   u8 _19c8[0x20d4 - 0x19c8];
   s32 unknown20d4; // Inferred role: main render target index; original member name unknown.
   u8 _20d8[0x2320 - 0x20d8];
@@ -109,6 +113,8 @@ static_assert(offsetof(CGLibSystemContext, unknown608) == 0x0608, "");
 static_assert(offsetof(CGLibSystemContext, unknowne38) == 0x0e38, "");
 static_assert(offsetof(CGLibSystemContext, unknowne60) == 0x0e60, "");
 static_assert(offsetof(CGLibSystemContext, unknowne90) == 0x0e90, "");
+static_assert(offsetof(CGLibSystemContext, unknownef8) == 0x0ef8, "");
+static_assert(offsetof(CGLibSystemContext, unknownf08) == 0x0f08, "");
 static_assert(offsetof(CGLibSystemContext, unknown1070) == 0x1070, "");
 static_assert(offsetof(CGLibSystemContext, unknown1110) == 0x1110, "");
 static_assert(offsetof(CGLibSystemContext, unknown18a0) == 0x18a0, "");

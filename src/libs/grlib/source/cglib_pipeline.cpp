@@ -45,14 +45,14 @@ void CGLibPipeline::setDefaults() {
   }
   unknown90 = 0;
   unknown94 = false;
-  _98 = 0;
+  _98 = nullptr;
 }
 
 void CGLibPipeline::relase() {}
 
 void CGLibPipeline::begin() {
   unknown94 = false;
-  _98 = 0;
+  _98 = nullptr;
   unknown90 = 0;
 }
 
