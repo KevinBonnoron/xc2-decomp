@@ -9,6 +9,7 @@
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_game.h"
+#include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_party.h"
@@ -323,6 +324,126 @@ void GfDataDriver::setScenarioMask(u32 driver, bool scenarioMask) {
   dataDriver->unknown570 = scenarioMask;
 }
 
+u32 GfDataDriver::getHpMaxRev(const SDataDriver &dataDriver) {
+  u32 hpMaxRev = 0;
+  bool hasHikari = false;
+  for (int slot = 0; slot < getMaxSetBladeNum(dataDriver); slot++) {
+    u32 blade = getBlade(dataDriver, slot);
+    if (blade != 0) {
+      hpMaxRev += GfDataBlade::getHpMaxRev(blade);
+      if (blade == BLADE_HIKARI) {
+        hasHikari = true;
+      }
+    }
+  }
+
+  if (dataDriver.unknown22 == DRIVER_REX && GfDataBlade::getSDataBlade(BLADE_HIKARI)->unknown00 != 0 && !hasHikari) {
+    hpMaxRev += GfDataBlade::getHpMaxRev(BLADE_HIKARI);
+  }
+
+  return hpMaxRev;
+}
+
+u32 GfDataDriver::getStrengthRev(const SDataDriver &dataDriver) {
+  u32 strengthRev = 0;
+  bool hasHikari = false;
+  for (int slot = 0; slot < getMaxSetBladeNum(dataDriver); slot++) {
+    u32 blade = getBlade(dataDriver, slot);
+    if (blade != 0) {
+      strengthRev += GfDataBlade::getStrengthRev(blade);
+      if (blade == BLADE_HIKARI) {
+        hasHikari = true;
+      }
+    }
+  }
+
+  if (dataDriver.unknown22 == DRIVER_REX && GfDataBlade::getSDataBlade(BLADE_HIKARI)->unknown00 != 0 && !hasHikari) {
+    strengthRev += GfDataBlade::getStrengthRev(BLADE_HIKARI);
+  }
+
+  return strengthRev;
+}
+
+u32 GfDataDriver::getPowEtherRev(const SDataDriver &dataDriver) {
+  u32 powEtherRev = 0;
+  bool hasHikari = false;
+  for (int slot = 0; slot < getMaxSetBladeNum(dataDriver); slot++) {
+    u32 blade = getBlade(dataDriver, slot);
+    if (blade != 0) {
+      powEtherRev += GfDataBlade::getPowerEtherRev(blade);
+      if (blade == BLADE_HIKARI) {
+        hasHikari = true;
+      }
+    }
+  }
+
+  if (dataDriver.unknown22 == DRIVER_REX && GfDataBlade::getSDataBlade(BLADE_HIKARI)->unknown00 != 0 && !hasHikari) {
+    powEtherRev += GfDataBlade::getPowerEtherRev(BLADE_HIKARI);
+  }
+
+  return powEtherRev;
+}
+
+u32 GfDataDriver::getDexRev(const SDataDriver &dataDriver) {
+  u32 dexRev = 0;
+  bool hasHikari = false;
+  for (int slot = 0; slot < getMaxSetBladeNum(dataDriver); slot++) {
+    u32 blade = getBlade(dataDriver, slot);
+    if (blade != 0) {
+      dexRev += GfDataBlade::getDexRev(blade);
+      if (blade == BLADE_HIKARI) {
+        hasHikari = true;
+      }
+    }
+  }
+
+  if (dataDriver.unknown22 == DRIVER_REX && GfDataBlade::getSDataBlade(BLADE_HIKARI)->unknown00 != 0 && !hasHikari) {
+    dexRev += GfDataBlade::getDexRev(BLADE_HIKARI);
+  }
+
+  return dexRev;
+}
+
+u32 GfDataDriver::getAgilityRev(const SDataDriver &dataDriver) {
+  u32 agilityRev = 0;
+  bool hasHikari = false;
+  for (int slot = 0; slot < getMaxSetBladeNum(dataDriver); slot++) {
+    u32 blade = getBlade(dataDriver, slot);
+    if (blade != 0) {
+      agilityRev += GfDataBlade::getAgilityRev(blade);
+      if (blade == BLADE_HIKARI) {
+        hasHikari = true;
+      }
+    }
+  }
+
+  if (dataDriver.unknown22 == DRIVER_REX && GfDataBlade::getSDataBlade(BLADE_HIKARI)->unknown00 != 0 && !hasHikari) {
+    agilityRev += GfDataBlade::getAgilityRev(BLADE_HIKARI);
+  }
+
+  return agilityRev;
+}
+
+u32 GfDataDriver::getLuckRev(const SDataDriver &dataDriver) {
+  u32 luckRev = 0;
+  bool hasHikari = false;
+  for (int slot = 0; slot < getMaxSetBladeNum(dataDriver); slot++) {
+    u32 blade = getBlade(dataDriver, slot);
+    if (blade != 0) {
+      luckRev += GfDataBlade::getLuckRev(blade);
+      if (blade == BLADE_HIKARI) {
+        hasHikari = true;
+      }
+    }
+  }
+
+  if (dataDriver.unknown22 == DRIVER_REX && GfDataBlade::getSDataBlade(BLADE_HIKARI)->unknown00 != 0 && !hasHikari) {
+    luckRev += GfDataBlade::getLuckRev(BLADE_HIKARI);
+  }
+
+  return luckRev;
+}
+
 u32 GfDataDriver::getHpMaxRev(u32 driver) { return getHpMaxRev(*getSDataDriver(driver)); }
 
 u32 GfDataDriver::getStrengthRev(u32 driver) { return getStrengthRev(*getSDataDriver(driver)); }
@@ -554,6 +675,36 @@ u32 GfDataDriver::getExpNextLevel(u32 driver) { return getExpNextLevel(*getSData
 
 u32 GfDataDriver::getBattleExpNextLevel(u32 driver) { return getExpNextLevel(*getSDataDriver(driver)); }
 
+int GfDataDriver::getSetIdByBlade(const SDataDriver &dataDriver, u32 blade) {
+  int count = getMaxSetBladeNum(dataDriver);
+  for (int slot = 0; slot < count; slot++) {
+    if (getBlade(dataDriver, slot) == blade) {
+      return slot;
+    }
+  }
+
+  return -1;
+}
+
+int GfDataDriver::getSetIdByBlade(u32 driver, u32 blade) { return getSetIdByBlade(*getSDataDriver(driver), blade); }
+
+u32 GfDataDriver::getDriverBySetBlade(u32 blade) { return GfDataBlade::getSDataBlade(blade)->unknown04; }
+
+u32 GfDataDriver::getDummyBlade(const SDataDriver &dataDriver) {
+  if (dataDriver.unknown22 == DRIVER_REX) {
+    return BLADE_REX_DUMMY;
+  }
+
+  if (dataDriver.unknown22 != DRIVER_SHIN_2) {
+    if (dataDriver.unknown22 == DRIVER_SHIN) {
+      return BLADE_SHIN_DUMMY;
+    }
+    return 0;
+  }
+
+  return BLADE_UNKNOWN_1073;
+}
+
 u32 GfDataDriver::getDummyBlade(u32 driver) {
   if (driver == DRIVER_REX) {
     return 0x3f4;
@@ -575,6 +726,26 @@ const char *GfDataDriver::getBelongingModelName(const GfInitParamDriver &param) 
   }
 
   return nullptr;
+}
+
+u32 GfDataDriver::getDriverActivateType(const SDataDriver &dataDriver) {
+  if (dataDriver.unknown20 != 1) {
+    return 0;
+  }
+
+  if (GfDataParty::isExistDriver(dataDriver.unknown22)) {
+    return 2;
+  }
+
+  return 1;
+}
+
+u32 GfDataDriver::getDriverActivateType(u32 driver) {
+  if (driver == 0) {
+    return 0;
+  }
+
+  return getDriverActivateType(*getSDataDriver(driver));
 }
 
 bool GfDataDriver::isActivateParty(u32 driver) {
@@ -605,6 +776,23 @@ bool GfDataDriver::isActivatePartyAll(u32 driver) {
   }
 
   return getSDataDriver(driver)->unknown20 == 1;
+}
+
+bool GfDataDriver::isFavoriteCategory(u32 driver, u32 item) {
+  if (item == 0) {
+    return false;
+  }
+
+  u32 category = GfDataItem::getCategory(item);
+  if (driver == 0) {
+    return category == 0;
+  }
+
+  if (GfBdatChrDr::get()->getChrDrFavoriteCategory(driver, 0) == category) {
+    return true;
+  }
+
+  return GfBdatChrDr::get()->getChrDrFavoriteCategory(driver, 1) == category;
 }
 
 u32 GfDataDriver::getFavorite(u32 driver, FAVORITE favorite) {

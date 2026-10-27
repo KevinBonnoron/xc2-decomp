@@ -7,11 +7,16 @@ namespace mm {
 struct Vec3;
 } // namespace mm
 
+namespace fw {
+struct Message;
+} // namespace fw
+
 namespace gf {
 
 class GfComBehaviorPc;
 struct GF_OBJ_HANDLE;
 struct MsgObjectNotifyDead;
+struct MsgObjectNotifyHealHp;
 
 namespace pc {
 
@@ -37,6 +42,18 @@ public:
   static void setActivateTimer(GfComBehaviorPc &behavior, TimerPlugin::TYPE type, bool isActive);
   static void notifyDead(GfComBehaviorPc &behavior, MsgObjectNotifyDead &message, bool isBroadcast);
   static void setEnableFallDistChecker(GfComBehaviorPc &behavior, bool isEnable);
+  static GF_OBJ_HANDLE *getBuddyHandle(GfComBehaviorPc &behavior);
+  static void sendMessageToBuddy(GfComBehaviorPc &behavior, fw::Message &message);
+  static void notifyRevival(GfComBehaviorPc &behavior, MsgObjectNotifyHealHp &message);
+  static bool sendMessageToRider(GfComBehaviorPc &behavior, fw::Message &message);
+  static void broadcastDriver(GfComBehaviorPc &behavior, fw::Message &message);
+  static void broadcastBlade(GfComBehaviorPc &behavior, fw::Message &message);
+  static void broadcastPlayer(GfComBehaviorPc &behavior, fw::Message &message);
+  static void broadcastMainChar(GfComBehaviorPc &behavior, fw::Message &message);
+  static void broadcastDriverAll(GfComBehaviorPc &behavior, fw::Message &message);
+  static void broadcastBladeAll(GfComBehaviorPc &behavior, fw::Message &message);
+  static void broadcastPlayerAll(GfComBehaviorPc &behavior, fw::Message &message);
+  static void sendMessageGfObj(GfComBehaviorPc &behavior, GF_OBJ_HANDLE *handle, fw::Message &message);
 };
 
 } // namespace pc

@@ -6,7 +6,9 @@
 #include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/pc/gf_com_behavior_pc.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
+#include "gf/object/component/pc/gf_pc_state_util.h"
 #include "gf/object/gf_obj.h"
+#include "mm_math/mm_vec3.h"
 
 namespace gf {
 namespace pc {
@@ -56,6 +58,20 @@ void StateUtilField::resetCameraForWall(GfComBehaviorPc &behavior, Timing timing
   }
   static const ResetCameraWallTiming CAMERA_TIMINGS[] = {RESET_CAMERA_WALL_TIMING_UNDER_GROUND, RESET_CAMERA_WALL_TIMING_GROUND, RESET_CAMERA_WALL_TIMING_AIR};
   GfGamePlayerCamera::resetCameraClimb(CAMERA_TIMINGS[timing]);
+}
+
+void StateUtilField::notifyRiderEvent(GfComBehaviorPc &behavior, VehicleEvent event) {
+  MsgPcFieldNotifyRiderEvent message(event);
+  StateUtil::sendMessageToRider(behavior, message);
+}
+
+bool StateUtilField::isBackMove(GfComPropertyPc &property) {
+  return property.unknown1e0.x * property.unknown80.x + property.unknown1e0.y * property.unknown80.y + property.unknown1e0.z * property.unknown80.z < 0.0f;
+}
+
+bool StateUtilField::isInterruptionWater(GfComPropertyPc &property) {
+  f32 depth = property.unknown118 - property.unknown2f0;
+  return 0.2f <= property.unknown160.y - depth;
 }
 
 } // namespace pc

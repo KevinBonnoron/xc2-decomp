@@ -24,7 +24,11 @@ public:
   static u32 getAchievementQuest(u32 blade, u32 line, u32 level);
   static u32 getAchievementSetCategory(u32 blade, u32 line);
   static u32 getAchievementSetAbilityLevel(u32 blade, u32 line);
+  static bool isEnableAchievementCount(u32 blade);
+  static bool getAchievementTitleMsg(u8 *&bdat, u32 &textId, u32 blade, u32 line, u32 level);
+  static int getSkillLevel(u32 blade, u32 line, u32 level);
   static bool isNetabareOK(u32 blade, u32 line, u32 level);
+  static bool isCompleteLevel(u32 blade, u32 line, u32 level);
   static bool isCompleteLevel(const AchievQuest &achievQuest);
   static void completeAllAchievementForDebug(u32 blade);
   static void completeAchievementForDebug(QuestID quest);

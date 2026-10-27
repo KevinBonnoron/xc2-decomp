@@ -28,6 +28,7 @@ enum MAINMENU {
 enum GfPlayerDead {
   PLAYER_DEAD_NONE,
   PLAYER_DEAD_GAME_OVER,
+  PLAYER_DEAD_UNKNOWN_4 = 4,
 };
 
 class GfPlayFactory {

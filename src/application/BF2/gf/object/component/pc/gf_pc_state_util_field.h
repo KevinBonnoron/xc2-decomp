@@ -1,4 +1,5 @@
 #pragma once
+#include "framework/message/message_object.h"
 #include "gf/object/component/pc/gf_pc_asm_cmd_id_field.h"
 #include "gf/object/component/pc/gf_pc_property_field.h"
 #include "types.h"
@@ -16,6 +17,14 @@ class GfComponent;
 struct GF_OBJ_HANDLE;
 
 namespace pc {
+
+enum VehicleEvent {};
+
+struct MsgPcFieldNotifyRiderEvent : fw::Message {
+  MsgPcFieldNotifyRiderEvent(VehicleEvent event) : fw::Message(0x1000024, 0x40), unknown08(event) {}
+
+  VehicleEvent unknown08; // Inferred role: vehicle event; original member name unknown.
+};
 
 class StateUtilField {
 public:
@@ -54,6 +63,9 @@ public:
   static ASM_CMD_ID_FIELD getAsmID(GfPropertyField::WALL_MOVE_MODE mode);
   static void resetCameraForWall(GfComBehaviorPc &behavior, Timing timing);
   static void setAsmSpeedSlideBrake(GfComPropertyPc &property);
+  static void notifyRiderEvent(GfComBehaviorPc &behavior, VehicleEvent event);
+  static bool isBackMove(GfComPropertyPc &property);
+  static bool isInterruptionWater(GfComPropertyPc &property);
 };
 
 } // namespace pc

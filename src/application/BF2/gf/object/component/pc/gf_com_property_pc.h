@@ -63,7 +63,8 @@ public:
   void setLocomotion(const anm::QsTransform &locomotion);
   void setEnvSensorCheckFlags(u32 flags, bool isEnable);
 
-  u8 _38[0x60 - 0x38];
+  u32 unknown38; // Inferred role: player id set by MsgPcFieldNotifyChangePlayerID; original member name unknown.
+  u8 _3c[0x60 - 0x3c];
   Input unknown60; // Inferred role: input; original member name unknown.
   Input unknown6c; // Inferred role: previous input; original member name unknown.
   u8 _78[0x80 - 0x78];
@@ -79,8 +80,12 @@ public:
   u32 unknown110_7 : 1; // Inferred role: on slide; original member name unknown.
   u32 : 2;
   u32 unknown111_2 : 1; // Inferred role: pad control; original member name unknown.
-  u32 : 21;
-  u8 _114[0x120 - 0x114];
+  u32 unknown111_3 : 1; // Inferred role: dead; original member name unknown.
+  u32 unknown111_4 : 1; // Inferred role: dead sequence requested; original member name unknown.
+  u32 : 19;
+  u8 _114[0x118 - 0x114];
+  f32 unknown118; // Inferred role: water height compared by StateUtilField::isInterruptionWater; original member name unknown.
+  u8 _11c[0x120 - 0x11c];
   s32 unknown120; // Inferred role: mode compared with 1 by StateFieldWaterDeadDive::enter; original member name unknown.
   u8 _124[0x160 - 0x124];
   mm::Vec3 unknown160; // Inferred role: position; original member name unknown.
@@ -90,20 +95,25 @@ public:
   mm::Vec3 unknown2b0; // Inferred role: input Y axis; original member name unknown.
   u8 _2c0[0x2d0 - 0x2c0];
   mm::Vec3 unknown2d0; // Inferred role: input X axis; original member name unknown.
-  u8 _2e0[0x310 - 0x2e0];
+  u8 _2e0[0x2f0 - 0x2e0];
+  f32 unknown2f0; // Inferred role: water offset compared by StateUtilField::isInterruptionWater; original member name unknown.
+  u8 _2f4[0x310 - 0x2f4];
   pc::GfPropertyField unknown310; // Inferred role: field; original member name unknown.
 };
 
+static_assert(offsetof(GfComPropertyPc, unknown38) == 0x38, "");
 static_assert(offsetof(GfComPropertyPc, unknown60) == 0x60, "");
 static_assert(offsetof(GfComPropertyPc, unknown6c) == 0x6c, "");
 static_assert(offsetof(GfComPropertyPc, unknown80) == 0x80, "");
 static_assert(offsetof(GfComPropertyPc, unknown90) == 0x90, "");
 static_assert(offsetof(GfComPropertyPc, unknown94) == 0x94, "");
+static_assert(offsetof(GfComPropertyPc, unknown118) == 0x118, "");
 static_assert(offsetof(GfComPropertyPc, unknown120) == 0x120, "");
 static_assert(offsetof(GfComPropertyPc, unknown160) == 0x160, "");
 static_assert(offsetof(GfComPropertyPc, unknown1e0) == 0x1e0, "");
 static_assert(offsetof(GfComPropertyPc, unknown2b0) == 0x2b0, "");
 static_assert(offsetof(GfComPropertyPc, unknown2d0) == 0x2d0, "");
+static_assert(offsetof(GfComPropertyPc, unknown2f0) == 0x2f0, "");
 static_assert(offsetof(GfComPropertyPc, unknown310) == 0x310, "");
 
 } // namespace gf

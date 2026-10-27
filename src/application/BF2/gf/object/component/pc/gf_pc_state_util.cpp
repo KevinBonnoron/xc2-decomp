@@ -2,10 +2,18 @@
 
 #include "framework/object/updatable_object.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_player_camera.h"
+#include "gf/game/gf_game_player_formation.h"
+#include "gf/game/gf_game_ride.h"
 #include "gf/game/gf_game_target.h"
+#include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/object/component/pc/gf_com_behavior_pc.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
+#include "gf/object/component/property/gf_com_property.h"
+#include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 
 namespace gf {
 namespace pc {
@@ -39,6 +47,127 @@ void StateUtil::setEnableGravity(GfComBehaviorPc &behavior, bool isEnable) {
 bool StateUtil::testEnableGravity(GfComBehaviorPc &behavior) { return behavior.getProperty()->unknown110_3; }
 
 void StateUtil::setEnvSensor(GfComBehaviorPc &behavior, u32 flags, bool isEnable) { behavior.unknown08->getComponent<GfComPropertyPc>()->setEnvSensorCheckFlags(flags, isEnable); }
+
+GF_OBJ_HANDLE *StateUtil::getBuddyHandle(GfComBehaviorPc &behavior) {
+  u32 playerId = behavior.getProperty()->unknown38;
+  GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
+  if (formation == nullptr) {
+    return INVALID_HANDLE;
+  }
+
+  u32 buddyId = (playerId & 1) != 0 ? playerId - 1 : playerId + 1;
+  return formation->unknown1a0[buddyId].unknown08;
+}
+
+void StateUtil::sendMessageToBuddy(GfComBehaviorPc &behavior, fw::Message &message) {
+  GfObj *obj = GfObjUtil::getObj(getBuddyHandle(behavior));
+  if (obj != nullptr) {
+    static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message);
+  }
+}
+
+void StateUtil::notifyDead(GfComBehaviorPc &behavior, MsgObjectNotifyDead &message, bool isBroadcast) {
+  GfComPropertyPc *property = behavior.unknown08->getComponent<GfComPropertyPc>();
+  if (!property->unknown111_3) {
+    property->unknown111_3 = true;
+  }
+  if (property->unknown111_2 && isBroadcast) {
+    if (!property->unknown111_4) {
+      property->unknown111_4 = true;
+      GfPlayFactory::createPlayerDead(static_cast<GfPlayerDead>(message.unknown08));
+    } else if (message.unknown08 == PLAYER_DEAD_UNKNOWN_4) {
+      GfPlayFactory::createPlayerDead(PLAYER_DEAD_UNKNOWN_4);
+    }
+  }
+}
+
+void StateUtil::notifyRevival(GfComBehaviorPc &behavior, MsgObjectNotifyHealHp &message) { behavior.getProperty()->unknown111_3 = false; }
+
+bool StateUtil::sendMessageToRider(GfComBehaviorPc &behavior, fw::Message &message) {
+  if (GfGameRide::isVehicle(static_cast<GfObj *>(behavior.unknown08)->unknownf8)) {
+    GfObj *obj = GfObjUtil::getObj(getBuddyHandle(behavior));
+    if (obj != nullptr) {
+      return static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message);
+    }
+  }
+  return false;
+}
+
+void StateUtil::broadcastDriver(GfComBehaviorPc &behavior, fw::Message &message) {
+  behavior.unknown08->getComponent<GfComPropertyPc>();
+  for (u32 i = 0; i < 3; i++) {
+    GF_OBJ_HANDLE *handle = GfGameParty::getHandleDriver(i);
+    if (handle != static_cast<GfObj *>(behavior.unknown08)->unknownf8) {
+      GfObj *obj = GfObjUtil::getObj(handle);
+      if (obj != nullptr) {
+        static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message);
+      }
+    }
+  }
+}
+
+void StateUtil::broadcastBlade(GfComBehaviorPc &behavior, fw::Message &message) {
+  behavior.unknown08->getComponent<GfComPropertyPc>();
+  for (u32 i = 0; i < 3; i++) {
+    GF_OBJ_HANDLE *handle = GfGameParty::getHandleBlade(i, -1);
+    if (handle != static_cast<GfObj *>(behavior.unknown08)->unknownf8) {
+      GfObj *obj = GfObjUtil::getObj(handle);
+      if (obj != nullptr) {
+        static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message);
+      }
+    }
+  }
+}
+
+void StateUtil::broadcastPlayer(GfComBehaviorPc &behavior, fw::Message &message) {
+  broadcastDriver(behavior, message);
+  broadcastBlade(behavior, message);
+}
+
+void StateUtil::broadcastMainChar(GfComBehaviorPc &behavior, fw::Message &message) {
+  GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
+  behavior.unknown08->getComponent<GfComPropertyPc>();
+  for (u32 i = 0; i < GfGamePlayerFormation::PLAYER_NUM; i++) {
+    if (formation->unknown1a0[i].unknown10 && formation->unknown1a0[i].unknown08 != static_cast<GfObj *>(behavior.unknown08)->unknownf8) {
+      GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[i].unknown08);
+      if (obj != nullptr) {
+        static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message);
+      }
+    }
+  }
+}
+
+void StateUtil::broadcastDriverAll(GfComBehaviorPc &behavior, fw::Message &message) {
+  behavior.unknown08->getComponent<GfComPropertyPc>();
+  for (u32 i = 0; i < 3; i++) {
+    GfObj *obj = GfObjUtil::getObj(GfGameParty::getHandleDriver(i));
+    if (obj != nullptr) {
+      static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message);
+    }
+  }
+}
+
+void StateUtil::broadcastBladeAll(GfComBehaviorPc &behavior, fw::Message &message) {
+  behavior.unknown08->getComponent<GfComPropertyPc>();
+  for (u32 i = 0; i < 3; i++) {
+    GfObj *obj = GfObjUtil::getObj(GfGameParty::getHandleBlade(i, -1));
+    if (obj != nullptr) {
+      static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message);
+    }
+  }
+}
+
+void StateUtil::broadcastPlayerAll(GfComBehaviorPc &behavior, fw::Message &message) {
+  broadcastDriverAll(behavior, message);
+  broadcastBladeAll(behavior, message);
+}
+
+void StateUtil::sendMessageGfObj(GfComBehaviorPc &behavior, GF_OBJ_HANDLE *handle, fw::Message &message) {
+  GfObj *obj = GfObjUtil::getObj(handle);
+  if (obj != nullptr) {
+    static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message);
+  }
+}
 
 } // namespace pc
 } // namespace gf

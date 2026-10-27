@@ -33,6 +33,7 @@ enum {
   BLADE_REAL_ALIAS_TARGET = 1022,
   BLADE_KOSMOS = 1039,
   BLADE_REAL_ALIAS = 1050,
+  BLADE_UNKNOWN_1073 = 1073,
 };
 
 } // namespace gf
