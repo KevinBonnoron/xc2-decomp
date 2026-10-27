@@ -50,3 +50,5 @@ bool DevTouch::wkStandbyLogout() {
 }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::DevTouch>::~PtrSingleton();

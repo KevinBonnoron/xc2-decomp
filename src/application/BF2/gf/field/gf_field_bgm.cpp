@@ -217,3 +217,5 @@ void GfFieldBgm::stopBgmForDebug(bool stop) { _gffsn::s_bStopBGM = stop; }
 bool GfFieldBgm::isStopBgmForDebug() { return _gffsn::s_bStopBGM; }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfFieldBgm>::~PtrSingleton();

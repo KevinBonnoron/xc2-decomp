@@ -101,3 +101,5 @@ void DrCalcTexStreamMan::callReadStopMode() {
 }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::DrCalcTexStreamMan>::~PtrSingleton();

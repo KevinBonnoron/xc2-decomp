@@ -389,3 +389,5 @@ void GfMountManager::execAttachMount(GF_OBJ_HANDLE *handle, GFATTACH attach) {
 void GfMountManager::gevGameObjLeave(GF_OBJ_HANDLE *) {}
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfMountManager>::~PtrSingleton();

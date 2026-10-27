@@ -253,3 +253,5 @@ const char *GfSequentialPlay::getFuncName() {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfSequentialPlay>::~PtrSingleton();

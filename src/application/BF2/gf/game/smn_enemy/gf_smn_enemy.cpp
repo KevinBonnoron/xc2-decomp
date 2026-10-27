@@ -34,3 +34,5 @@ void GfRelSmnEnemy::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objec
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfSmnEnemyManager>::~PtrSingleton();

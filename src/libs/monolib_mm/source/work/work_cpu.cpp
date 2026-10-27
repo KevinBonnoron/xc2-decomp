@@ -406,3 +406,5 @@ bool WorkCpu::unregistErrorCB(IErrorCB *callback) {
 }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::WorkCpu>::~PtrSingleton();

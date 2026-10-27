@@ -11,3 +11,5 @@ void SoundResSourceManager::stopSe(u32 handle, f32 time) {
 }
 
 } // namespace fw
+
+template mm::mtl::PtrSingleton<fw::SoundResSourceManager>::~PtrSingleton();

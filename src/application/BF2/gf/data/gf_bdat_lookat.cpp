@@ -83,3 +83,5 @@ u16 GfBdatLookAt::getCharaType(u32 category, u32 refId) {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfBdatLookAt>::~PtrSingleton();

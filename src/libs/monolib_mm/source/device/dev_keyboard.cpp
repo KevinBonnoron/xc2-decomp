@@ -393,3 +393,5 @@ void IDevInputKeyboard::ikKeyMsgOn(u32 message) {}
 void IDevInputKeyboard::ikKeyMsgOff(u32 message) {}
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::DevKeyboard>::~PtrSingleton();

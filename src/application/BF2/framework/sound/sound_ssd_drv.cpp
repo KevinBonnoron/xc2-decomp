@@ -810,3 +810,5 @@ void SoundSsdBank::stopAll() { unknown10.Stop(0.0f); }
 } // namespace fw
 
 template mm::mtl::FixedList<fw::SoundPoolMemory *, 256>::iterator mm::mtl::FixedList<fw::SoundPoolMemory *, 256>::erase(mm::mtl::FixedList<fw::SoundPoolMemory *, 256>::iterator);
+
+template mm::mtl::PtrSingleton<fw::SoundSsdDriver>::~PtrSingleton();

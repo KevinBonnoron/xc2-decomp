@@ -122,3 +122,5 @@ const ScnObjCam *Scn::getCam(const WinView *view) const { return unknown28->getC
 template class reslist<ScnObj *>;
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::Scn>::~PtrSingleton();

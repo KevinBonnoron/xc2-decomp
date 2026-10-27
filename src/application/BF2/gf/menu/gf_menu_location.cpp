@@ -72,3 +72,5 @@ void GfMenuLocation::updateDataNum(u32 type) {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfMenuLocation>::~PtrSingleton();

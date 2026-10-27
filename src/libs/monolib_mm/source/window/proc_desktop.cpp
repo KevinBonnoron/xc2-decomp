@@ -210,3 +210,5 @@ void ProcDesktop::setBuildRevision(const char *revision) {
 }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::ProcDesktop>::~PtrSingleton();

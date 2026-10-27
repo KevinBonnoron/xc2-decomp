@@ -90,3 +90,5 @@ void TransformManager::update(u32 layerMask) {
 }
 
 } // namespace fw
+
+template mm::mtl::PtrSingleton<fw::TransformManager>::~PtrSingleton();

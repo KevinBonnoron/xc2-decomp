@@ -27,3 +27,5 @@ void ProcException::setMessage(const wchar_t *message) {
 }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::ProcException>::~PtrSingleton();

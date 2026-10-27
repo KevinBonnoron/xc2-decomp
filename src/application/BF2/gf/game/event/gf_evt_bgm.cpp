@@ -29,3 +29,5 @@ void GfEvtBgm::setFadeoutVolume() {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfEvtBgm>::~PtrSingleton();

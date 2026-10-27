@@ -50,3 +50,7 @@ skt::SERVER_OPTION DebugCommander::getServerOption(const char *server) const { r
 
 } // namespace debug
 } // namespace fw
+
+template mm::mtl::PtrSingleton<fw::debug::DebugCommander>::~PtrSingleton();
+
+template mm::mtl::PtrSingleton<skt::CommandManager>::~PtrSingleton();

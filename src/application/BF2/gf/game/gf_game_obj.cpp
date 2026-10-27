@@ -478,3 +478,5 @@ void GfGameObj::setupEnterGameObjMount(GF_OBJ_HANDLE *handle, GFATTACH attach, f
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfGameObj>::~PtrSingleton();

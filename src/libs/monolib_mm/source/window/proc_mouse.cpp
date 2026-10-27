@@ -13,3 +13,5 @@ void ProcMouse::setPos(const mm::Pnt<int> &position) {
 }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::ProcMouse>::~PtrSingleton();

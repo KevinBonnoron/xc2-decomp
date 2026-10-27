@@ -737,3 +737,7 @@ bool GfReqSmallCom::isExistCommand() {
 } // namespace gf
 
 template mm::mtl::FixedList<gf::SCOM *, 1024>::iterator mm::mtl::FixedList<gf::SCOM *, 1024>::erase(mm::mtl::FixedList<gf::SCOM *, 1024>::iterator);
+
+template mm::mtl::PtrSingleton<gf::GfReqSmallCom>::~PtrSingleton();
+
+template mm::mtl::PtrSingleton<gf::SCOM_PARTY_ADD>::~PtrSingleton();

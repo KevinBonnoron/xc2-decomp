@@ -32,3 +32,5 @@ u64 MicroThread::getCurrentThreadID() {
 }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::MicroThread>::~PtrSingleton();

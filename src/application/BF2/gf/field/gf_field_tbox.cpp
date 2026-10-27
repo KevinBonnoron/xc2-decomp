@@ -5,3 +5,5 @@ namespace gf {
 bool GfFieldTbox::isDropitemsEmitted() const { return m_dropitemsEmitted; }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfFieldTbox>::~PtrSingleton();

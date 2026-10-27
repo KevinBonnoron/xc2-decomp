@@ -30,3 +30,5 @@ bool GfFobjManager::isExistObj() {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfFobjManager>::~PtrSingleton();

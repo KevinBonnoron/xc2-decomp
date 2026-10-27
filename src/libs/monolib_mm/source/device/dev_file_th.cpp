@@ -244,3 +244,5 @@ bool DevFileTh::icbError(CERR_STRUCT *error) { return true; }
 void DevFileTh::icbDecide(CERR_STRUCT *error, ERR_DECIDE decide) {}
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::DevFileTh>::~PtrSingleton();

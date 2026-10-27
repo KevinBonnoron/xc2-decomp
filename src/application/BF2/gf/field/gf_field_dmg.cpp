@@ -37,3 +37,5 @@ s32 GfFieldDmg::calculateDamage(u32 maxHp, u8 rate, f32 reduction) {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfFieldDmgManager>::~PtrSingleton();

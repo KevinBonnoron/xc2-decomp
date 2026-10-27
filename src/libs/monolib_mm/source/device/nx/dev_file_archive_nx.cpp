@@ -9,3 +9,5 @@ DevFileJobTh *DevFileArchiveNx::createWriter(mtl::ALLOC_HANDLE handle) { return 
 bool DevFileArchiveNx::rfIsUsedChannel(u32 channel) { return (&*unknown20 + channel)->unknown10c; }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::DevFileArchiveNx>::~PtrSingleton();

@@ -24,3 +24,5 @@ void GfReqManager::terminateCommand() { get()->unknown1840 = true; }
 fw::UpdateInfo *GfReqManager::getUpdateInfo() { return &get()->unknown08; }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfReqManager>::~PtrSingleton();

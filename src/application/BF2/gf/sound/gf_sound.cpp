@@ -506,3 +506,5 @@ GfSound::SeParam *GfSound::getSeParam(u16 id) {
 } // namespace gf
 
 template class ml::fixed_size_alloc_inside<gf::GfSound::SeParam, 384>;
+
+template mm::mtl::PtrSingleton<gf::GfSound>::~PtrSingleton();

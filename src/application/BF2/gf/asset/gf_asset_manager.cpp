@@ -68,3 +68,5 @@ u32 GfAssetManager::getDestroyAssetPackInfo() {
 } // namespace gf
 
 template mm::mtl::FixedList<gf::GF_ASSET_HANDLE *, 1024>::iterator mm::mtl::FixedList<gf::GF_ASSET_HANDLE *, 1024>::erase(mm::mtl::FixedList<gf::GF_ASSET_HANDLE *, 1024>::iterator);
+
+template mm::mtl::PtrSingleton<gf::GfAssetManager>::~PtrSingleton();

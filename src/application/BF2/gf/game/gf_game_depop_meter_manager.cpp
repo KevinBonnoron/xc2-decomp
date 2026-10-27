@@ -9,3 +9,5 @@ void GfGameDepopMeterManager::dispose() {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfGameDepopMeterManager>::~PtrSingleton();

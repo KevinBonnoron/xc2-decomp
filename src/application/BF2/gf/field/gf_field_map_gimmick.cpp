@@ -165,3 +165,5 @@ void GfFieldGmkTutorial::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfFieldMapGimmick>::~PtrSingleton();

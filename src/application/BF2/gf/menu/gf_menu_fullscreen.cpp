@@ -130,3 +130,5 @@ bool GfMenuFullScreen::isActiveInput(u32 layer) {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfMenuFullScreen>::~PtrSingleton();

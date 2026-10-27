@@ -94,3 +94,5 @@ int GfFieldGimmick::getBdatIdOfActiveGmkAntiBladeArea() {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfFieldGimmick>::~PtrSingleton();

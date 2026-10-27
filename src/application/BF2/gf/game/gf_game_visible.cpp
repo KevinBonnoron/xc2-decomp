@@ -11,3 +11,5 @@ void GfGameVisible::destroy() {
 void GfGameVisible::cleanup() {}
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfGameVisible>::~PtrSingleton();

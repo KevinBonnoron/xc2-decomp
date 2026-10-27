@@ -262,3 +262,5 @@ void DevPad::viBeginFrame() { updateLocal(); }
 void DevPad::fnSubCpuUpdate(void *pad) { static_cast<DevPad *>(pad)->updateLocal(); }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::DevPad>::~PtrSingleton();

@@ -891,3 +891,5 @@ void EffectManager::finalRender(const ml::IDrDrawWorkInfo *info) {
 }
 
 } // namespace fw
+
+template mm::mtl::PtrSingleton<fw::EffectManager>::~PtrSingleton();

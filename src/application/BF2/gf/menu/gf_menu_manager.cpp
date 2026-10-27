@@ -510,3 +510,5 @@ void GfMenuManager::openSave() {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfMenuManager>::~PtrSingleton();

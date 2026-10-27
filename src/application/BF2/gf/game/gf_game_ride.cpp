@@ -35,3 +35,5 @@ void GfGameRide::resetHandles() {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfGameRide>::~PtrSingleton();

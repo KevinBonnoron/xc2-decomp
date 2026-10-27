@@ -51,3 +51,5 @@ void GfMenuAdapterManager::delActiveCategory(u32 category) {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfMenuAdapterManager>::~PtrSingleton();

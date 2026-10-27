@@ -31,3 +31,5 @@ bool GfFieldLod::isAnimReverseOfInit(int bdatId) { return Bdat::getFlagVal(GfDat
 bool GfFieldLod::isVisibleOfInit(int bdatId) { return Bdat::getFlagVal(GfDataBdat::getFP(BDAT_FLD_LODLIST), "flag", bdatId, "Visible") != 0; }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfFieldLod>::~PtrSingleton();

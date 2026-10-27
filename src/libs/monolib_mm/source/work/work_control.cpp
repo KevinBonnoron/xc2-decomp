@@ -15,3 +15,5 @@ void WorkControl::wkTail() {}
 bool WorkControl::hasFlow() { return WorkFlowShutdownAll::get() != nullptr; }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::WorkControl>::~PtrSingleton();

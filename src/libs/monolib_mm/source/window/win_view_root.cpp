@@ -94,3 +94,5 @@ WinViewRoot *WinViewRoot::create(WorkObj *parent) {
 }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::WinViewRoot>::~PtrSingleton();

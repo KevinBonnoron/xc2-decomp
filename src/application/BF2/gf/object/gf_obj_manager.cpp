@@ -247,3 +247,5 @@ bool GfObjManager::hasReloadObjForDebug() { return false; }
 void GfObjManager::addHandle(GF_OBJ_HANDLE *handle) { setStateLoading(handle); }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfObjManager>::~PtrSingleton();

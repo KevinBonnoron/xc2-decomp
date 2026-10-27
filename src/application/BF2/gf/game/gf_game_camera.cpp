@@ -9,3 +9,5 @@ void GfGameCamera::clear() {}
 void GfGameCamera::setCameraControlType(int type) { GfEvent::callCameraControl(type); }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfGameCamera>::~PtrSingleton();

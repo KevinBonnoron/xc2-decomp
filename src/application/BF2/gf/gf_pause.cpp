@@ -44,3 +44,5 @@ u64 GfPause::createPauseHandleByIndex(u32 index) {
 } // namespace gf
 
 template mm::mtl::FixedList<gf::GF_PAUSE_HANDLE *, 64>::iterator mm::mtl::FixedList<gf::GF_PAUSE_HANDLE *, 64>::erase(mm::mtl::FixedList<gf::GF_PAUSE_HANDLE *, 64>::iterator);
+
+template mm::mtl::PtrSingleton<gf::GfPause>::~PtrSingleton();

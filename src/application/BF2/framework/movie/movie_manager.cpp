@@ -117,3 +117,5 @@ void MovieManager::bkgHomeMenu(bool isEnter) {
 }
 
 } // namespace fw
+
+template mm::mtl::PtrSingleton<fw::MovieManager>::~PtrSingleton();

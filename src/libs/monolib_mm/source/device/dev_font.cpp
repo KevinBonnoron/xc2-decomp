@@ -8,3 +8,5 @@ void FontLayer::fontStyle(FONT_STYLE style) { DevFont::fontLayerStyle(this, styl
 void FontLayer::fontZ(u32 z) { DevFont::fontLayerZ(this, z); }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::DevFont>::~PtrSingleton();

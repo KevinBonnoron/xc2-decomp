@@ -651,3 +651,5 @@ struct MENUREF_OBJ;
 } // namespace gf
 
 template class ml::fixed_size_alloc_inside<gf::MENUREF_OBJ, 512>;
+
+template mm::mtl::PtrSingleton<gf::GfMenuReference>::~PtrSingleton();

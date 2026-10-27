@@ -511,3 +511,5 @@ void SoundManager::setMasterMute(bool isMute, f32 time) {
 const char *SoundManager::getName() const { return "SoundManager"; }
 
 } // namespace fw
+
+template mm::mtl::PtrSingleton<fw::SoundManager>::~PtrSingleton();

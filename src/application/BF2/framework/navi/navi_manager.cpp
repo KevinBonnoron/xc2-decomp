@@ -89,3 +89,5 @@ void NaviManager::openDebugWindow() {
 }
 
 } // namespace fw
+
+template mm::mtl::PtrSingleton<navi::NvmshManager>::~PtrSingleton();

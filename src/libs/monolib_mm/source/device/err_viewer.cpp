@@ -82,3 +82,5 @@ void ErrViewer::term() {
 }
 
 } // namespace ml
+
+template mm::mtl::PtrSingleton<ml::ErrViewer>::~PtrSingleton();

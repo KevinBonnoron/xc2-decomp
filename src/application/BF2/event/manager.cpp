@@ -111,3 +111,5 @@ void Manager::destroy() {
 bool Manager::OnKeyDown(ml::EventView *view) { return false; }
 
 } // namespace event
+
+template mm::mtl::PtrSingleton<event::Manager>::~PtrSingleton();

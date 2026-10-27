@@ -27,3 +27,5 @@ GAME_VOICE_HANDLE *GfGameVoice::createHandle() {
 void GfGameVoice::applyHanaVoiceCondirtion(GfVoiceName &) {}
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfGameVoice>::~PtrSingleton();

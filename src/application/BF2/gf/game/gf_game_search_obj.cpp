@@ -44,3 +44,5 @@ u64 GfGameSearchObj::createHandle(u32 index) {
 }
 
 } // namespace gf
+
+template mm::mtl::PtrSingleton<gf::GfGameSearchObj>::~PtrSingleton();
