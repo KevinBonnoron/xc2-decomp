@@ -21,6 +21,8 @@ public:
   static void update(const fw::UpdateInfo &info);
   static bool getZoneMission(mm::mtl::FixedVector<u16, 500> &missions, u32 zone);
   static void cancelMission(u32 mission);
+  static void addPoint(u32 point);
+  static void setLevel(u32 level);
   static void clearTeamMember(u32 team);
   static void gevMercenariesMissionFlag(u32 mission, u32 flag, u32 value);
   static void qevOrderQuest(const QuestOrderParam &param);

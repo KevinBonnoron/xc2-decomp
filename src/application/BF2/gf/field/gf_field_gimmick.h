@@ -28,6 +28,8 @@ public:
   static void build(const GfSetupParam &param);
   static void destroy();
   static void update(const fw::UpdateInfo &info);
+  static void createGmkSet(int gmkSet);
+  static void disposeGmkSet(int gmkSet);
   static int getBdatIdFrom_FLD_maplist_To_RSC_GmkSetList(int map);
   static int getBdatIdOfActiveGmkAntiBladeArea();
 

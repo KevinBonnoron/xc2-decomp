@@ -89,6 +89,8 @@ struct ItemProperty {
     _7e = 0;
   }
 
+  bool isAcceEquipDriver(u32 driver) const;
+
   mm::mtl::BitFlag<32> unknown00; // Inferred role: flags; original member name unknown.
   u16 unknown04;                  // Inferred role: id; original member name unknown.
   u16 unknown06;                  // Inferred role: index; original member name unknown.

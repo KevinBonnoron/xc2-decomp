@@ -44,6 +44,7 @@ public:
   static bool evalSumFs(int condition, u32 option);
   static bool getNameMsId(u32 &nameId, GF_OBJ_HANDLE *handle);
   static u32 getFsLevelSum(u32 fieldSkill);
+  static void changeStopLayer(GF_OBJ_HANDLE *handle, bool isStop);
   static void addMoney(int money);
   static void addCoin(int coin);
   static void addEther(int ether);

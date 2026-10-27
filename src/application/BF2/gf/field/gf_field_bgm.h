@@ -26,6 +26,7 @@ public:
   u32 getRscGimmickBgmID() const;
   bool isDisableFieldBgmChange() const;
   bool isBossBgmCopied() const;
+  void setRscBattleBgmID(u32 id);
   void setGimmickBgmID(u32 id);
   void gevBattleEnd();
   void gevMapjump(GEV gev, const MapjumpCallbackInfo &info);

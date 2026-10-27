@@ -58,6 +58,8 @@ public:
   static void removeMountHandle(GF_OBJ_HANDLE *handle, GFATTACH attach);
   static void gevGameObjEnter(GF_OBJ_HANDLE *handle);
   static void gevGameObjLeave(GF_OBJ_HANDLE *handle);
+  static void execMount(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type);
+  static void resetMount(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type);
 };
 
 } // namespace gf

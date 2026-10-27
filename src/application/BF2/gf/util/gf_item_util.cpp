@@ -184,6 +184,25 @@ GfItem GfItemUtil::getInfo(u32 item) {
 
 bool GfItemUtil::isPrecious(u32 item) { return GfDataItem::getItemType(item) == ItemType::PRECIOUS; }
 
+bool ItemProperty::isAcceEquipDriver(u32 driver) const {
+  switch (driver) {
+  case 1:
+    return unknown00.test(FLAG_EQUIP_DRIVER + 0);
+  case 2:
+    return unknown00.test(FLAG_EQUIP_DRIVER + 1);
+  case 3:
+    return unknown00.test(FLAG_EQUIP_DRIVER + 2);
+  case 4:
+    return unknown00.test(FLAG_EQUIP_DRIVER + 3);
+  case 5:
+    return unknown00.test(FLAG_EQUIP_DRIVER + 4);
+  case 6:
+    return unknown00.test(FLAG_EQUIP_DRIVER + 5);
+  default:
+    return false;
+  }
+}
+
 void GfItemUtil::getPropertyChip(ItemProperty &property) {
   GfBdatItem *bdatItem = GfBdatItem::get();
   property.unknown18 = bdatItem->getPcWpnChipDebugName(property.unknown04);

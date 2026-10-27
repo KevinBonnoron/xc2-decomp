@@ -107,6 +107,7 @@ public:
   static GfComModel *getComModel(GF_OBJ_HANDLE *handle);
   static GfVolumeFade *getVolumeFade(GF_OBJ_HANDLE *handle);
   static bool isBattle(GF_OBJ_HANDLE *handle);
+  static void rebuild(GF_OBJ_HANDLE *handle);
   static bool isVolumeFadeForUser(GF_OBJ_HANDLE *handle);
   static void setVolumeFadeUserFlag(GF_OBJ_HANDLE *handle, bool isForUser);
   static bool isStanbyTalkingPlayer(GF_OBJ_HANDLE *handle);

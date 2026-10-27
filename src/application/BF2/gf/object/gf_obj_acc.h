@@ -84,6 +84,7 @@ public:
   bool isCameraFadeDisableForBattle() const;
   void setCameraFadeDisableForBattle(bool isDisable);
   bool isCameraFadeAllOK() const;
+  void setCollisionChar(bool isEnable);
   bool hasParent() const;
   GfObj *getObj() const;
   GF_OBJ_HANDLE *getHandle() const;
