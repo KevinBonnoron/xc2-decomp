@@ -106,7 +106,7 @@ CGLibRenderTarget::~CGLibRenderTarget() {
 }
 
 void CGLibRenderTarget::releaseWork() {
-  unknown84 &= ~CGLibColorBuffer::FLAG_INITIALIZED;
+  unknown78.release();
   delayRelease();
   unknownb8 = false;
 }
@@ -137,6 +137,81 @@ void CGLibRenderVolume::releaseWork() {
   unknown88 = 0;
   unknown8c = 0;
 }
+
+void CGLibRenderTarget1D::release() { releaseWork(); }
+
+void CGLibRenderTarget1D::releaseTexture() {
+  releaseWork();
+  unknownb8 = 0;
+}
+
+void CGLibRenderTarget1D::clearTexture(const mm::Col4 &color, GrlClaerMask mask) { CGLibDepthCtl::clearColorBuffer(unknown78, color, mask); }
+
+void CGLibRenderTarget1D::clearIntTexture(const int *color, GrlClaerMask mask) { CGLibDepthCtl::clearIntColorBuffer(unknown78, color, mask); }
+
+void CGLibRenderTargetMipMap::release() { releaseWork(); }
+
+void CGLibRenderTargetMipMap::releaseTexture() {
+  releaseWork();
+  unknown47c = 0;
+  unknown480 = 0;
+}
+
+void CGLibRenderTargetMipMap::clearTexture(u32 mipmap, const mm::Col4 &color, GrlClaerMask mask) { CGLibDepthCtl::clearColorBuffer(unknown78[mipmap], color, mask); }
+
+void CGLibRenderTargetMipMap::clearIntTexture(u32 mipmap, const int *color, GrlClaerMask mask) { CGLibDepthCtl::clearIntColorBuffer(unknown78[mipmap], color, mask); }
+
+void CGLibRenderCubeMapMipMap::release() { releaseWork(); }
+
+void CGLibRenderCubeMapMipMap::releaseTexture() {
+  releaseWork();
+  unknown1880 = 0;
+  unknown1884 = 0;
+}
+
+void CGLibRenderCubeMapMipMap::clearTexture(GrlCubeMapFace face, u32 mipmap, const mm::Col4 &color, GrlClaerMask mask) { CGLibDepthCtl::clearColorBuffer(unknown78[face][mipmap], color, mask); }
+
+void CGLibRenderCubeMapMipMap::clearIntTexture(GrlCubeMapFace face, u32 mipmap, const int *color, GrlClaerMask mask) { CGLibDepthCtl::clearIntColorBuffer(unknown78[face][mipmap], color, mask); }
+
+CGLibColorBuffer *CGLibRenderCubeMapMipMap::getColorBuffer(GrlCubeMapFace face, u32 mipmap) { return &unknown78[face][mipmap]; }
+
+const CGLibColorBuffer *CGLibRenderCubeMapMipMap::getColorBuffer(GrlCubeMapFace face, u32 mipmap) const { return &unknown78[face][mipmap]; }
+
+void CGLibRenderCubeMapMipMap::setRegisterRenderTarget(GrlCubeMapFace face, u32 mipmap, GrlMrtType mrt) { CGLibState::setRegisterRenderTarget(unknown78[face][mipmap], mrt); }
+
+void CGLibRenderTarget::release() { releaseWork(); }
+
+void CGLibRenderTarget::releaseTexture() {
+  releaseWork();
+  unknownbc = 0;
+  unknownc0 = 0;
+}
+
+void CGLibRenderTarget::clearTexture(const mm::Col4 &color, GrlClaerMask mask) { CGLibDepthCtl::clearColorBuffer(unknown78, color, mask); }
+
+void CGLibRenderTarget::clearIntTexture(const int *color, GrlClaerMask mask) { CGLibDepthCtl::clearIntColorBuffer(unknown78, color, mask); }
+
+void CGLibRenderCubeMap::release() { releaseWork(); }
+
+void CGLibRenderCubeMap::releaseTexture() {
+  releaseWork();
+  unknown1fc = 0;
+  unknown200 = 0;
+}
+
+void CGLibRenderCubeMap::clearTexture(GrlCubeMapFace face, const mm::Col4 &color, GrlClaerMask mask) { CGLibDepthCtl::clearColorBuffer(unknown78[face], color, mask); }
+
+void CGLibRenderCubeMap::clearIntTexture(GrlCubeMapFace face, const int *color, GrlClaerMask mask) { CGLibDepthCtl::clearIntColorBuffer(unknown78[face], color, mask); }
+
+void CGLibRenderCubeMap::setRegisterRenderTarget(GrlCubeMapFace face, GrlMrtType mrt) { CGLibState::setRegisterRenderTarget(unknown78[face], mrt); }
+
+void CGLibRenderVolume::release() { releaseWork(); }
+
+void CGLibRenderVolume::releaseTexture() { releaseWork(); }
+
+void CGLibRenderVolume::clearTexture(u32 slice, const mm::Col4 &color, GrlClaerMask mask) { CGLibDepthCtl::clearColorBuffer(unknown78[slice], color, mask); }
+
+void CGLibRenderVolume::clearIntTexture(u32 slice, const int *color, GrlClaerMask mask) { CGLibDepthCtl::clearIntColorBuffer(unknown78[slice], color, mask); }
 
 u16 CGLibColorBuffer::getWidth() const { return m_width; }
 

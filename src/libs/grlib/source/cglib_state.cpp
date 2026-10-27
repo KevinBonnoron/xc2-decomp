@@ -40,8 +40,8 @@ void CGLibState::setRegisterRenderTarget(CGLibColorBuffer &colorBuffer, GrlMrtTy
 
 void CGLibState::setRegisterRenderTarget(CGLibRenderTarget &renderTarget, GrlMrtType mrt) {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  context->unknown25b0[mrt] = &renderTarget.unknown88;
-  context->unknown25f0[mrt] = renderTarget.unknownb0;
+  context->unknown25b0[mrt] = &renderTarget.unknown78.unknown10;
+  context->unknown25f0[mrt] = renderTarget.unknown78.unknown38;
   context->unknown25ac++;
 }
 

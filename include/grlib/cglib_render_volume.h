@@ -1,8 +1,13 @@
 #pragma once
 #include <stddef.h>
 
+#include "grlib/cglib_render_target.h"
 #include "grlib/cglib_texture_buffer.h"
 #include "types.h"
+
+namespace mm {
+struct Col4;
+} // namespace mm
 
 namespace grlib {
 class CGLibColorBuffer;
@@ -12,6 +17,10 @@ public:
   CGLibRenderVolume();
   ~CGLibRenderVolume();
   void releaseWork();
+  void release();
+  void releaseTexture();
+  void clearTexture(u32 slice, const mm::Col4 &color, GrlClaerMask mask);
+  void clearIntTexture(u32 slice, const int *color, GrlClaerMask mask);
   void setTextureInfo(f32 width, f32 height, f32 depth, GrlSurfaceFormat format, bool isResArea, u32 resArea);
 
   CGLibTextureBuffer *unknown70; // Inferred role: texture; original member name unknown.

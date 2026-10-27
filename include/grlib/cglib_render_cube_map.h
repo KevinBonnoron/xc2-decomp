@@ -2,8 +2,15 @@
 #include <stddef.h>
 
 #include "grlib/cglib_color_buffer.h"
+#include "grlib/cglib_color_ctl.h"
+#include "grlib/cglib_render_array.h"
+#include "grlib/cglib_render_target.h"
 #include "grlib/cglib_texture_buffer.h"
 #include "types.h"
+
+namespace mm {
+struct Col4;
+} // namespace mm
 
 namespace grlib {
 
@@ -12,6 +19,11 @@ public:
   CGLibRenderCubeMap();
   ~CGLibRenderCubeMap();
   void releaseWork();
+  void release();
+  void releaseTexture();
+  void clearTexture(GrlCubeMapFace face, const mm::Col4 &color, GrlClaerMask mask);
+  void clearIntTexture(GrlCubeMapFace face, const int *color, GrlClaerMask mask);
+  void setRegisterRenderTarget(GrlCubeMapFace face, GrlMrtType mrt);
 
   CGLibTextureBuffer *unknown70; // Inferred role: texture; original member name unknown.
   CGLibColorBuffer unknown78[6]; // Inferred role: face color buffers; original member name unknown.
@@ -28,6 +40,13 @@ public:
   CGLibRenderCubeMapMipMap();
   ~CGLibRenderCubeMapMipMap();
   void releaseWork();
+  void release();
+  void releaseTexture();
+  void clearTexture(GrlCubeMapFace face, u32 mipmap, const mm::Col4 &color, GrlClaerMask mask);
+  void clearIntTexture(GrlCubeMapFace face, u32 mipmap, const int *color, GrlClaerMask mask);
+  CGLibColorBuffer *getColorBuffer(GrlCubeMapFace face, u32 mipmap);
+  const CGLibColorBuffer *getColorBuffer(GrlCubeMapFace face, u32 mipmap) const;
+  void setRegisterRenderTarget(GrlCubeMapFace face, u32 mipmap, GrlMrtType mrt);
 
   CGLibTextureBuffer *unknown70;     // Inferred role: texture; original member name unknown.
   CGLibColorBuffer unknown78[6][16]; // Inferred role: face mipmap color buffers; original member name unknown.

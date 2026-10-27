@@ -2,8 +2,13 @@
 #include <stddef.h>
 
 #include "grlib/cglib_color_buffer.h"
+#include "grlib/cglib_render_target.h"
 #include "grlib/cglib_texture_buffer.h"
 #include "types.h"
+
+namespace mm {
+struct Col4;
+} // namespace mm
 
 namespace grlib {
 
@@ -12,6 +17,10 @@ public:
   CGLibRenderTargetMipMap();
   ~CGLibRenderTargetMipMap();
   void releaseWork();
+  void release();
+  void releaseTexture();
+  void clearTexture(u32 mipmap, const mm::Col4 &color, GrlClaerMask mask);
+  void clearIntTexture(u32 mipmap, const int *color, GrlClaerMask mask);
 
   CGLibTextureBuffer *unknown70;  // Inferred role: texture; original member name unknown.
   CGLibColorBuffer unknown78[16]; // Inferred role: mipmap color buffers; original member name unknown.

@@ -19,6 +19,7 @@ public:
   void release();
   void releaseWork();
   void clearTexture(const mm::Col4 &color, GrlClaerMask mask);
+  void clearIntTexture(const int *color, GrlClaerMask mask);
   void setRenderTarget();
   void setRenderTarget(CGLibDepthBuffer &depthBuffer);
   void releaseTexture();

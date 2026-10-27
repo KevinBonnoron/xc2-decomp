@@ -100,6 +100,8 @@ enum NVNindexType {};
 
 typedef u64 NVNbufferAddress;
 
+typedef void (*PFNNVNCOMMANDBUFFERCOPYBUFFERTOBUFFERPROC)(NVNcommandBuffer *cmdBuf, NVNbufferAddress src, NVNbufferAddress dst, size_t size, int copyFlags);
+typedef void (*PFNNVNCOMMANDBUFFERDISPATCHCOMPUTEINDIRECTPROC)(NVNcommandBuffer *cmdBuf, NVNbufferAddress indirectBuffer);
 typedef void (*PFNNVNCOMMANDBUFFERDRAWELEMENTSPROC)(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count, NVNbufferAddress indexBuffer);
 typedef void (*PFNNVNCOMMANDBUFFERDRAWELEMENTSINSTANCEDPROC)(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, int count, NVNbufferAddress indexBuffer, int baseVertex,
                                                              int baseInstance, int instanceCount);
@@ -160,6 +162,8 @@ extern PFNNVNCOMMANDBUFFERSETRENDERTARGETSPROC pfnc_nvnCommandBufferSetRenderTar
 extern PFNNVNCOMMANDBUFFERDRAWELEMENTSPROC pfnc_nvnCommandBufferDrawElements;
 extern PFNNVNCOMMANDBUFFERDRAWELEMENTSINSTANCEDPROC pfnc_nvnCommandBufferDrawElementsInstanced;
 extern PFNNVNCOMMANDBUFFERDRAWELEMENTSINDIRECTPROC pfnc_nvnCommandBufferDrawElementsIndirect;
+extern PFNNVNCOMMANDBUFFERCOPYBUFFERTOBUFFERPROC pfnc_nvnCommandBufferCopyBufferToBuffer;
+extern PFNNVNCOMMANDBUFFERDISPATCHCOMPUTEINDIRECTPROC pfnc_nvnCommandBufferDispatchComputeIndirect;
 extern PFNNVNCOMMANDBUFFERSETVIEWPORTPROC pfnc_nvnCommandBufferSetViewport;
 extern PFNNVNCOMMANDBUFFERSETSCISSORPROC pfnc_nvnCommandBufferSetScissor;
 extern PFNNVNCOMMANDBUFFERSETLINEWIDTHPROC pfnc_nvnCommandBufferSetLineWidth;
@@ -227,6 +231,12 @@ inline void nvnCommandBufferDrawElementsInstanced(NVNcommandBuffer *cmdBuf, NVNd
 inline void nvnCommandBufferDrawElementsIndirect(NVNcommandBuffer *cmdBuf, NVNdrawPrimitive mode, NVNindexType type, NVNbufferAddress indexBuffer, NVNbufferAddress indirectBuffer) {
   pfnc_nvnCommandBufferDrawElementsIndirect(cmdBuf, mode, type, indexBuffer, indirectBuffer);
 }
+
+inline void nvnCommandBufferCopyBufferToBuffer(NVNcommandBuffer *cmdBuf, NVNbufferAddress src, NVNbufferAddress dst, size_t size, int copyFlags) {
+  pfnc_nvnCommandBufferCopyBufferToBuffer(cmdBuf, src, dst, size, copyFlags);
+}
+
+inline void nvnCommandBufferDispatchComputeIndirect(NVNcommandBuffer *cmdBuf, NVNbufferAddress indirectBuffer) { pfnc_nvnCommandBufferDispatchComputeIndirect(cmdBuf, indirectBuffer); }
 
 inline void nvnCommandBufferSetViewport(NVNcommandBuffer *cmdBuf, int x, int y, int w, int h) { pfnc_nvnCommandBufferSetViewport(cmdBuf, x, y, w, h); }
 

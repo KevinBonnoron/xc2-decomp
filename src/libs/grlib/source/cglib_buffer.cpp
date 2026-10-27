@@ -67,6 +67,19 @@ void CGLibBuffFixAlloc::freeID(u32 id) {
   unknown14--;
 }
 
+u32 CGLibBuffFixAlloc::createBuff() {
+  unknown08[unknown18 >> 6] |= 1ul << (unknown18 & 0x3f);
+  int id = unknown18;
+  if (id + 1 < unknown1c) {
+    unknown18 = id + 1;
+  } else {
+    unknown18 = 0;
+  }
+  unknown24 = unknown18 >> 6;
+  unknown14++;
+  return id;
+}
+
 CGLibBuffTexture::CGLibBuffTexture() : unknown28(nullptr) {}
 
 CGLibBuffTexture::~CGLibBuffTexture() { release(); }

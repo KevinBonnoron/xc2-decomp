@@ -1,5 +1,7 @@
 #include "grlib/cglib_ctl_shader.h"
 
+#include "grlib/cglib_etc_uniform_block.h"
+#include "grlib/cglib_one_uniform_block.h"
 #include "grlib/cglib_pipeline.h"
 #include "grlib/cglib_system_context.h"
 #include "grlib/cglib_vtx_fetch.h"
@@ -9,6 +11,14 @@ namespace grlib {
 
 void CGLibCtlShader::setDispatchCompute(u32 groupsX, u32 groupsY, u32 groupsZ) {
   nvnCommandBufferDispatchCompute(context::CGLibSystemContext::get()->unknown1070.unknown00, groupsX, groupsY, groupsZ);
+}
+
+void CGLibCtlShader::setDispatchComputeIndirect(const CGLibEtcUniformBlock &block, u32 offset) {
+  nvnCommandBufferDispatchComputeIndirect(context::CGLibSystemContext::get()->unknown1070.unknown00, block.unknown10 + offset);
+}
+
+void CGLibCtlShader::setDispatchComputeIndirect(const CGLibOneUniformBlock &block, u32 offset) {
+  nvnCommandBufferDispatchComputeIndirect(context::CGLibSystemContext::get()->unknown1070.unknown00, block.unknown10 + offset);
 }
 
 void CGLibCtlShader::setMemoryBarrier() { nvnCommandBufferBarrier(context::CGLibSystemContext::get()->unknown1070.unknown00, 9); }
