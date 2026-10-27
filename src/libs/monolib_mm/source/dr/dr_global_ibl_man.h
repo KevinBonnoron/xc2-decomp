@@ -5,6 +5,8 @@
 
 namespace ml {
 
+class DrMan;
+
 class DrGlobalIBLPack {
 public:
   void setup();
@@ -26,8 +28,16 @@ static_assert(offsetof(DrGlobalIBLPack, unknown58) == 0x58, "");
 
 class DrGlobalIBLMan {
 public:
+  DrGlobalIBLMan(DrMan *man, int index);
   DrGlobalIBLPack *createObj(const void *data);
   void releaseObj(DrGlobalIBLPack *pack);
+
+  DrMan *unknown00;              // Inferred role: dr man; original member name unknown.
+  s32 unknown08;                 // Inferred role: view index; original member name unknown.
+  DrGlobalIBLPack *unknown10[8]; // Inferred role: packs; original member name unknown.
 };
+
+static_assert(offsetof(DrGlobalIBLMan, unknown10) == 0x10, "");
+static_assert(sizeof(DrGlobalIBLMan) == 0x50, "");
 
 } // namespace ml

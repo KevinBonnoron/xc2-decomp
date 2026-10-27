@@ -7,6 +7,8 @@
 
 namespace ml {
 
+enum ERR_CALL {};
+
 class ErrViewer : public mm::mtl::PtrSingleton<ErrViewer>, public IWorkBackground {
 public:
   static bool standby();
@@ -17,6 +19,7 @@ public:
   static void upErrViewer();
   static void renderDRC();
   s32 createHandle() const;
+  void callbackError(ERR_CALL call);
   void term();
 
   static s32 s_nHandle;

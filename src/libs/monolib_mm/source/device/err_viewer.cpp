@@ -22,6 +22,13 @@ bool ErrViewer::isErrorDisp() {
   return false;
 }
 
+void ErrViewer::update() {
+  ErrViewer *viewer = get();
+  if (viewer != nullptr) {
+    viewer->callbackError(static_cast<ERR_CALL>(1));
+  }
+}
+
 s32 ErrViewer::createHandle() const { return s_nHandle++; }
 
 void ErrViewer::setup() {}

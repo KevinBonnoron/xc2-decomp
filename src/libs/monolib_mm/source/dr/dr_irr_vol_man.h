@@ -48,6 +48,9 @@ class DrIrrVolMan {
 public:
   bool isValid() const;
   void tail();
+  void update();
+  void createResources();
+  void updateIrrVol(bool);
   int getSectorMax(u32 index) const;
   void getVolumeArea(u32 cascade, mm::Aabb &area) const;
   void debugRender();

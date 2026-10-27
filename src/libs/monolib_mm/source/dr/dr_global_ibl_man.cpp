@@ -14,6 +14,12 @@ bool DrGlobalIBLPack::checkFileType(const void *data) {
   return false;
 }
 
+DrGlobalIBLMan::DrGlobalIBLMan(DrMan *man, int index) : unknown00(man), unknown08(index) {
+  for (int i = 0; i < 8; i++) {
+    unknown10[i] = nullptr;
+  }
+}
+
 void DrGlobalIBLMan::releaseObj(DrGlobalIBLPack *pack) { pack->unknown50 |= DrGlobalIBLPack::FLAG_UNKNOWN_30 << DrMan::s_nDblStockIdx; }
 
 } // namespace ml

@@ -1,9 +1,15 @@
 #include "dr/dr_calc_man.h"
 
+#include "dr/dr_calc_clip_man.h"
 #include "dr/dr_calc_view_work.h"
 #include "mm_math/mm_mat44.h"
 
 namespace ml {
+
+void DrCalcMan::begin() {
+  unknown10->begin(unknown08);
+  unknown18->update();
+}
 
 void DrCalcMan::end() { unknown10->end(); }
 

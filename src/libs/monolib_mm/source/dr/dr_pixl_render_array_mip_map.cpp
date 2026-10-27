@@ -2,6 +2,10 @@
 
 namespace ml {
 
+DrPixlRenderArrayMipMap::DrPixlRenderArrayMipMap(DrMan *man) { unknown98 = man; }
+
+DrPixlRenderArrayMipMap::~DrPixlRenderArrayMipMap() { releaseWork(); }
+
 void DrPixlRenderArrayMipMap::setTextureInfo(f32 width, f32 height, u32 slice, GrlSurfaceFormat format, bool isResArea, u32 resArea) {
   grlib::CGLibRenderArray::setTextureInfo(width, height, slice, true, format, isResArea, resArea);
 }

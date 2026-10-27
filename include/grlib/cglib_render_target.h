@@ -1,5 +1,6 @@
 #pragma once
 #include "grlib/cglib_render_target_base.h"
+#include "grlib/cglib_texture_buffer.h"
 #include "types.h"
 
 namespace mm {
@@ -13,12 +14,17 @@ class CGLibDepthBuffer;
 
 class CGLibRenderTarget : public CGLibRenderTargetBase {
 public:
+  CGLibRenderTarget();
+  ~CGLibRenderTarget();
+  void releaseWork();
   void clearTexture(const mm::Col4 &color, GrlClaerMask mask);
   void setRenderTarget();
   void setRenderTarget(CGLibDepthBuffer &depthBuffer);
   void releaseTexture();
 
-  u8 _c8[0x3c8 - 0xc8];
+  u16 unknownc4; // Inferred role: mrt state; original member name unknown.
+  u8 _c6[0x128 - 0xc6];
+  CGLibTextureBuffer unknown128[6]; // Inferred role: mrt textures; original member name unknown.
 };
 
 static_assert(sizeof(CGLibRenderTarget) == 0x3c8, "");

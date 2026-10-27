@@ -25,6 +25,13 @@ int DrIrrVolMan::getSectorMax(u32 index) const {
   return static_cast<u32>(width / area.unknown24 + 0.5f) * static_cast<u32>(depth / area.unknown24 + 0.5f);
 }
 
+void DrIrrVolMan::update() {
+  if (unknown08 != nullptr && unknown98 == nullptr) {
+    createResources();
+  }
+  updateIrrVol(false);
+}
+
 void DrIrrVolMan::tail() {
   unknown1a0 = unknown190;
   unknown1b4 = unknown1b0;

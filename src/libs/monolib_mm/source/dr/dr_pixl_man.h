@@ -62,6 +62,8 @@ public:
     RES_FLAG_SHADOW_DISPLAY_LIST = 0x20,
   };
 
+  void debugRender(const grlib::CGLibTextureBuffer &texture, int x, int y, int width, int height, bool isAlpha, bool isDepth, f32 scale, bool isFlip);
+  void debugRenderCh(const grlib::CGLibTextureBuffer &texture, int x, int y, int width, int height, u32 channel);
   void endDeferredRenderTarget();
   void endSkyRenderTarget();
   void setMainViewPort();

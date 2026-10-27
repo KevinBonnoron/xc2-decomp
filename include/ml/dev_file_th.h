@@ -19,6 +19,8 @@ namespace ml {
 class FileHandleTh;
 class IWorkEvent;
 
+enum CBM {};
+
 class EventFileTh {
 public:
   enum {
@@ -26,8 +28,23 @@ public:
     TYPE_VALID = 9,
   };
 
+  EventFileTh(CBM cbm, FileHandleTh *handle);
+  void setMemHandle(mtl::ALLOC_HANDLE handle);
+  void *moveFileData();
+
   int type;
+  FileHandleTh *unknown08;     // Inferred role: file handle; original member name unknown.
+  mtl::ALLOC_HANDLE unknown10; // Inferred role: mem handle; original member name unknown.
+  void *unknown18;             // Inferred role: file size; original member name unknown.
+  const u8 *unknown20;         // Inferred role: path; original member name unknown.
+  void *unknown28;             // Inferred role: file data; original member name unknown.
+  s32 unknown30;               // Inferred role: read size; original member name unknown.
+  void *unknown38;             // Inferred role: event; original member name unknown.
 };
+
+static_assert(offsetof(EventFileTh, unknown08) == 0x08, "");
+static_assert(offsetof(EventFileTh, unknown10) == 0x10, "");
+static_assert(offsetof(EventFileTh, unknown38) == 0x38, "");
 
 struct DevFileParamTh {
   DevFileParamTh() : unknown00(nullptr), _08(), _10(0), unknown40(nullptr), unknown4c(0), unknown50(0), _54(0), _58(1), _5c(0), unknown60(nullptr), unknown68(10), _6c(true), _6d(false), _6e(false) {}

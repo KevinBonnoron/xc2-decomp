@@ -11,6 +11,7 @@ class DrMan;
 
 class DrCalcViewWork {
 public:
+  void begin(int loop);
   void end();
   f32 getPixlLen(f32 depth, f32 length) const;
   void shadowBegin(const mm::Mat44 &matrix);

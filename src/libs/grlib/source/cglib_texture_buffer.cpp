@@ -7,7 +7,11 @@
 #include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_render_array.h"
+#include "grlib/cglib_render_cube_map.h"
 #include "grlib/cglib_render_target.h"
+#include "grlib/cglib_render_target_1d.h"
+#include "grlib/cglib_render_target_mip_map.h"
+#include "grlib/cglib_render_volume.h"
 #include "grlib/cglib_state.h"
 #include "grlib/cglib_system_context.h"
 #include "grlib/cglib_tex_descriptor.h"
@@ -60,6 +64,79 @@ void CGLibRenderArray::releaseWork() {
 }
 
 void CGLibRenderArray::release() { releaseWork(); }
+
+CGLibRenderTarget1D::~CGLibRenderTarget1D() { releaseWork(); }
+
+void CGLibRenderTarget1D::releaseWork() {
+  unknown78.release();
+  delayRelease();
+  unknownbc = false;
+}
+
+CGLibRenderTargetMipMap::~CGLibRenderTargetMipMap() { releaseWork(); }
+
+void CGLibRenderTargetMipMap::releaseWork() {
+  unknown484 = 0;
+  for (u32 i = 0; i < 16; i++) {
+    unknown78[i].release();
+  }
+  delayRelease();
+  unknown478 = false;
+}
+
+CGLibRenderCubeMapMipMap::~CGLibRenderCubeMapMipMap() { releaseWork(); }
+
+void CGLibRenderCubeMapMipMap::releaseWork() {
+  for (u32 i = 0; i < GRL_CUBE_MAP_FACE_NUM; i++) {
+    for (u32 j = 0; j < 16; j++) {
+      unknown78[i][j].release();
+    }
+  }
+  unknown187c = 0;
+  delayRelease();
+  unknown1878 = false;
+}
+
+CGLibRenderTarget::~CGLibRenderTarget() {
+  releaseWork();
+  for (int i = 0; i < 6; i++) {
+    unknown128[i].delayRelease();
+  }
+  unknownc4 = 0;
+}
+
+void CGLibRenderTarget::releaseWork() {
+  unknown84 &= ~CGLibColorBuffer::FLAG_INITIALIZED;
+  delayRelease();
+  unknownb8 = false;
+}
+
+CGLibRenderCubeMap::~CGLibRenderCubeMap() { releaseWork(); }
+
+void CGLibRenderCubeMap::releaseWork() {
+  for (u32 i = 0; i < GRL_CUBE_MAP_FACE_NUM; i++) {
+    unknown78[i].release();
+  }
+  delayRelease();
+  unknown1f8 = false;
+}
+
+CGLibRenderVolume::~CGLibRenderVolume() { releaseWork(); }
+
+void CGLibRenderVolume::releaseWork() {
+  for (u32 i = 0; i < unknown8c; i++) {
+    unknown78[i].release();
+  }
+  if (unknown78 != nullptr) {
+    mtl::MemManager::deallocate(unknown78, 0, false);
+    unknown78 = nullptr;
+  }
+  delayRelease();
+  unknown80 = false;
+  unknown84 = 0;
+  unknown88 = 0;
+  unknown8c = 0;
+}
 
 u16 CGLibColorBuffer::getWidth() const { return m_width; }
 

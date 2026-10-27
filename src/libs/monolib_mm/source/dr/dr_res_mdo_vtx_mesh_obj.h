@@ -10,6 +10,8 @@ class DrResMdoVtxMeshObj {
 public:
   void setActive(bool isActive, u32 index);
   void alpRender();
+  u32 setup(const u8 *, u8 *);
+  u32 calcWorkSize(const u8 *);
 
   u8 _000[0x0e0 - 0x000];
   mm::Vec3 unknowne0; // Inferred role: init vector; original member name unknown.
