@@ -21,4 +21,17 @@ bool GfGameRide::isVehicle(GF_OBJ_HANDLE *handle) {
   return false;
 }
 
+bool GfGameRide::isRider(GF_OBJ_HANDLE *handle) {
+  if (handle != INVALID_HANDLE) {
+    return get()->unknown30 == handle;
+  }
+
+  return false;
+}
+
+void GfGameRide::resetHandles() {
+  unknown28 = INVALID_HANDLE;
+  unknown30 = INVALID_HANDLE;
+}
+
 } // namespace gf

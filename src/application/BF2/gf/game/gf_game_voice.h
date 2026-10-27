@@ -30,6 +30,9 @@ public:
   bool isPlayEnemyVoice() const;
   bool isPlayVoice(GF_OBJ_HANDLE *handle) const;
   void applyHanaVoiceCondirtion(GfVoiceName &name);
+  static bool isInitialized();
+
+  bool unknown08; // Inferred role: initialized; original member name unknown.
 };
 
 } // namespace gf

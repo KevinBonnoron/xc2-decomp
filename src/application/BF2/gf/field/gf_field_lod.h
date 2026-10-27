@@ -36,19 +36,23 @@ public:
   bool findTransform(mm::Mat44 &matrix, int bdatId) const;
   void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
   void gevPlayEvent(GEV event, u32 value);
+  static bool isAnimReverseOfInit(int bdatId);
+  static bool isVisibleOfInit(int bdatId);
   static void validateByInitData();
   static void build(const GfSetupParam &param);
   static void destroy();
   static void update(const fw::UpdateInfo &info);
 
-  u8 _08[0x80c - 0x08];
-  bool unknown80c; // Inferred role: lod data ready; original member name unknown.
+  u16 unknown08[0x400]; // Inferred role: lod id of each bdat entry; original member name unknown.
+  int unknown808;       // Inferred role: first bdat id; original member name unknown.
+  bool unknown80c;      // Inferred role: lod data ready; original member name unknown.
   u8 _80d[0x840 - 0x80d];
   void *unknown840; // Role and original member name unknown.
   u8 _848[0x850 - 0x848];
   void *unknown850; // Role and original member name unknown.
 };
 
+static_assert(offsetof(GfFieldLod, unknown808) == 0x808, "");
 static_assert(offsetof(GfFieldLod, unknown80c) == 0x80c, "");
 static_assert(offsetof(GfFieldLod, unknown840) == 0x840, "");
 static_assert(offsetof(GfFieldLod, unknown850) == 0x850, "");

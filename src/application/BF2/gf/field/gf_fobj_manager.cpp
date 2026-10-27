@@ -2,6 +2,14 @@
 
 namespace gf {
 
+bool GfFobjManager::isInitialized() {
+  GfFobjManager *manager = get();
+  if (manager != nullptr) {
+    return manager->unknown9058;
+  }
+  return false;
+}
+
 bool GfFobjManager::isExistObj() {
   GfFobjManager *manager = get();
   if (manager->unknown4830 != 0) {

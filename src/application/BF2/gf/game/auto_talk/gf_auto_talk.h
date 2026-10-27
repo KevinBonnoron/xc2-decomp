@@ -14,6 +14,7 @@ public:
   void create();
   static void build(const GfSetupParam &param);
   static void destroy();
+  static bool isInitialized();
   static void update(const fw::UpdateInfo &info);
 };
 

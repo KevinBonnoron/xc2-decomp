@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -26,6 +28,18 @@ public:
   static void destroyHandle(GF_PAUSE_HANDLE *handle);
   static void update();
   static bool isPause(u32 pauseBits);
+  static bool isInitialized();
+  u64 createPauseHandleByIndex(u32 index);
+
+  u8 _08[0xe58 - 0x08];
+  u32 unknowne58; // Inferred role: current pause bits; original member name unknown.
+  u8 _e5c[0xe60 - 0xe5c];
+  u32 unknowne60;  // Inferred role: pause handle serial; original member name unknown.
+  bool unknowne64; // Inferred role: initialized; original member name unknown.
 };
+
+static_assert(offsetof(GfPause, unknowne58) == 0xe58, "");
+static_assert(offsetof(GfPause, unknowne60) == 0xe60, "");
+static_assert(offsetof(GfPause, unknowne64) == 0xe64, "");
 
 } // namespace gf

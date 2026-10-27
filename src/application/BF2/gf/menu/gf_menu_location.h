@@ -30,8 +30,11 @@ public:
   };
 
   void updateDataNum(u32 type);
+  static bool isInitialized();
+  static u32 getLocatorDataNum(u32 type);
 
-  u8 _08[0x10 - 0x08];
+  bool unknown08; // Inferred role: initialized; original member name unknown.
+  u8 _09[0x10 - 0x09];
   LocatorGroup unknown10[LOCATOR_TYPE_COUNT]; // Inferred role: groups; original member name unknown.
 };
 

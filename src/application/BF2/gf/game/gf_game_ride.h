@@ -15,6 +15,8 @@ public:
   static void destroy();
   static void setRideOn(bool isRide);
   static bool testRideOn();
+  static bool isRider(GF_OBJ_HANDLE *handle);
+  void resetHandles();
   static bool isVehicle(GF_OBJ_HANDLE *handle);
 
   u8 _08[0x28 - 0x08];

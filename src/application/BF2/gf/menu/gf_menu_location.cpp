@@ -13,6 +13,22 @@ namespace gf {
 
 constexpr u32 ORDER_DISTANCE_OTHER_MAP = 0xffffffff;
 
+bool GfMenuLocation::isInitialized() {
+  GfMenuLocation *location = get();
+  if (location != nullptr) {
+    return location->unknown08;
+  }
+  return false;
+}
+
+u32 GfMenuLocation::getLocatorDataNum(u32 type) {
+  GfMenuLocation *location = get();
+  if (type < LOCATOR_TYPE_COUNT && location != nullptr) {
+    return location->unknown10[type].unknown28;
+  }
+  return 0;
+}
+
 void GfMenuLocation::updateDataNum(u32 type) {
   LocatorGroup &group = unknown10[type];
   if (type >= LOCATOR_TYPE_COUNT) {
