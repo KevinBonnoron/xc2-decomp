@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/event/gf_event.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
@@ -32,7 +34,13 @@ public:
   void applyHanaVoiceCondirtion(GfVoiceName &name);
   static bool isInitialized();
 
+  GAME_VOICE_HANDLE *createHandle();
+
   bool unknown08; // Inferred role: initialized; original member name unknown.
+  u8 _09[0x110 - 0x09];
+  u64 unknown110; // Inferred role: handle serial; original member name unknown.
 };
+
+static_assert(offsetof(GfGameVoice, unknown110) == 0x110, "");
 
 } // namespace gf

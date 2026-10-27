@@ -28,6 +28,7 @@ public:
   static const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> *getList(u32 objectType);
   static const mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> *getListEnemyBlade();
   static bool isEmpty();
+  static bool isExistEnemy();
   static void bdatReload();
   static bool isValidGameObj(GF_OBJ_HANDLE *handle, bool isCheckState, mm::mtl::FixStr<128> *reason);
   static bool isEnterGameObj(GF_OBJ_HANDLE *handle);
@@ -38,10 +39,16 @@ public:
   static bool isInitialized();
   static bool isGameObjWaiting(GF_OBJ_HANDLE *handle);
 
-  u8 _08[0x55c70 - 0x08];
+  u8 _08[0xd868 - 0x08];
+  s32 unknownd868; // Inferred role: number of enemies; original member name unknown.
+  u8 _d86c[0xd870 - 0xd86c];
+  mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> unknownd870; // Inferred role: enemy blades; original member name unknown.
+  u8 _12090[0x55c70 - 0x12090];
   bool unknown55c70; // Inferred role: initialized; original member name unknown.
 };
 
+static_assert(offsetof(GfGameObj, unknownd868) == 0xd868, "");
+static_assert(offsetof(GfGameObj, unknownd870) == 0xd870, "");
 static_assert(offsetof(GfGameObj, unknown55c70) == 0x55c70, "");
 
 } // namespace gf

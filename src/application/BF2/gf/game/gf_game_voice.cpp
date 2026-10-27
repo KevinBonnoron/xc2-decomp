@@ -10,6 +10,15 @@ bool GfGameVoice::isInitialized() {
   return false;
 }
 
+GAME_VOICE_HANDLE *GfGameVoice::createHandle() {
+  u64 handle = unknown110 + 1;
+  if (handle == 0) {
+    handle++;
+  }
+  unknown110 = handle;
+  return reinterpret_cast<GAME_VOICE_HANDLE *>(handle);
+}
+
 void GfGameVoice::applyHanaVoiceCondirtion(GfVoiceName &) {}
 
 } // namespace gf

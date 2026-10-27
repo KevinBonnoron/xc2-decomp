@@ -33,6 +33,13 @@ public:
   static void setMissionFlag(u32 mission, u32 missionFlag);
   static u32 getMissionFlag(u32 mission);
   static void setupNewGameParam();
+  static void setMissionCompleteForce(u32 mission);
+  static void setMissionTimeForDebug(u32 mission, u32 time);
+  static bool isAddTeamMember(u32 team);
+  static bool isCompleteMission();
+  static bool orderMission(u32 mission);
+  static bool addTeamMember(u32 team, u32 blade);
+  static bool isRemoveTeamMember(u32 team, u32 blade);
 };
 
 } // namespace gf

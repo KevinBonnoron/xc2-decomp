@@ -60,6 +60,14 @@ void unknown001(MapMdl &map, GF_ASSET_HANDLE *handle, GfFileIdx index) {
   }
 }
 
+// Original name unknown: release of a scene object, common body of the destroy functions of the map parts.
+template <typename T> void unknown002(T *&object) {
+  if (object != nullptr) {
+    GfManager::getSetupParam().unknown00->releaseItem(object);
+    object = nullptr;
+  }
+}
+
 } // namespace
 
 MapMdl::~MapMdl() {}
@@ -68,12 +76,7 @@ void MapMdl::createLod(GF_ASSET_HANDLE *handle) { unknown001(*this, handle, MAP_
 
 void MapMdl::createMpf(GF_ASSET_HANDLE *handle) { unknown001(*this, handle, MAP_FILE_IDX_UNKNOWN_5); }
 
-void MapMdl::destroy() {
-  if (unknown00 != nullptr) {
-    GfManager::getSetupParam().unknown00->releaseItem(unknown00);
-    unknown00 = nullptr;
-  }
-}
+void MapMdl::destroy() { unknown002(unknown00); }
 
 ml::ScnObjModel *MapMdl::getModel() const { return unknown00; }
 
@@ -95,12 +98,7 @@ void MapGIBL::create(GF_ASSET_HANDLE *handle) {
   }
 }
 
-void MapGIBL::destroy() {
-  if (unknown00 != nullptr) {
-    GfManager::getSetupParam().unknown00->releaseItem(unknown00);
-    unknown00 = nullptr;
-  }
-}
+void MapGIBL::destroy() { unknown002(unknown00); }
 
 MapLIBL::~MapLIBL() {}
 
@@ -113,11 +111,47 @@ void MapLIBL::create(GF_ASSET_HANDLE *handle) {
   }
 }
 
-void MapLIBL::destroy() {
-  if (unknown00 != nullptr) {
-    GfManager::getSetupParam().unknown00->releaseItem(unknown00);
-    unknown00 = nullptr;
+void MapLIBL::destroy() { unknown002(unknown00); }
+
+MapLgt::~MapLgt() {}
+
+void MapLgt::create(GF_ASSET_HANDLE *handle) {
+  GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_3, ASSET_TYPE_BASE);
+  if (resource != nullptr && unknown00 == nullptr) {
+    unknown00 = GfManager::getSetupParam().unknown00->createLgt(resource->getAssetData(), 0);
   }
 }
+
+void MapLgt::destroy() { unknown002(unknown00); }
+
+MapClip::~MapClip() {}
+
+void MapClip::create(GF_ASSET_HANDLE *handle) {
+  if (unknown00 == nullptr) {
+    GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_10, ASSET_TYPE_BASE);
+    if (resource != nullptr) {
+      unknown00 = GfManager::getSetupParam().unknown00->createClip(resource->getAssetData(), 0);
+    }
+  }
+}
+
+void MapClip::destroy() { unknown002(unknown00); }
+
+MapAco::~MapAco() {}
+
+void MapAco::create(GF_ASSET_HANDLE *handle) {
+  GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_9, ASSET_TYPE_BASE);
+  if (resource != nullptr && unknown00 == nullptr) {
+    unknown00 = GfManager::getSetupParam().unknown00->createEnvColi(resource->getAssetData(), 0);
+  }
+}
+
+void MapAco::destroy() { unknown002(unknown00); }
+
+MapSe::~MapSe() {}
+
+void MapSe::create(GF_ASSET_HANDLE *handle) { GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_9, ASSET_TYPE_BASE); }
+
+void MapSe::destroy() {}
 
 } // namespace gf

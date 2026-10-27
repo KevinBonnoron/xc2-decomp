@@ -86,9 +86,9 @@ public:
   u8 _229[0x230 - 0x229];
   GF_SLOT_HANDLE *unknown230; // Inferred role: slot handle; original member name unknown.
   bool unknown238;            // Inferred role: force destroy flag; original member name unknown.
-  u8 _239[0x23a - 0x239];
-  bool unknown23a; // Inferred role: waiting slot; original member name unknown.
-  bool unknown23b; // Inferred role: timeout flag; original member name unknown.
+  bool unknown239;            // Inferred role: no cache flag; original member name unknown.
+  bool unknown23a;            // Inferred role: waiting slot; original member name unknown.
+  bool unknown23b;            // Inferred role: timeout flag; original member name unknown.
   u8 _23c[0x248 - 0x23c];
   u32 unknown248; // Inferred role: slot num; original member name unknown.
   u32 unknown24c; // Inferred role: load slot num; original member name unknown.
@@ -108,6 +108,7 @@ static_assert(offsetof(GfAssetPack, unknown170) == 0x170, "");
 static_assert(offsetof(GfAssetPack, unknown228) == 0x228, "");
 static_assert(offsetof(GfAssetPack, unknown230) == 0x230, "");
 static_assert(offsetof(GfAssetPack, unknown238) == 0x238, "");
+static_assert(offsetof(GfAssetPack, unknown239) == 0x239, "");
 static_assert(offsetof(GfAssetPack, unknown23a) == 0x23a, "");
 static_assert(offsetof(GfAssetPack, unknown248) == 0x248, "");
 static_assert(offsetof(GfAssetPack, unknown254) == 0x254, "");

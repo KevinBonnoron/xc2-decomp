@@ -35,10 +35,13 @@ class GfAssetResource;
 
 const GfFileIdx MAP_FILE_IDX_COLLISION = static_cast<GfFileIdx>(1);
 const GfFileIdx MAP_FILE_IDX_UNKNOWN_2 = static_cast<GfFileIdx>(2);
+const GfFileIdx MAP_FILE_IDX_UNKNOWN_3 = static_cast<GfFileIdx>(3);
 const GfFileIdx MAP_FILE_IDX_UNKNOWN_4 = static_cast<GfFileIdx>(4);
 const GfFileIdx MAP_FILE_IDX_UNKNOWN_5 = static_cast<GfFileIdx>(5);
 const GfFileIdx MAP_FILE_IDX_UNKNOWN_7 = static_cast<GfFileIdx>(7);
 const GfFileIdx MAP_FILE_IDX_UNKNOWN_8 = static_cast<GfFileIdx>(8);
+const GfFileIdx MAP_FILE_IDX_UNKNOWN_9 = static_cast<GfFileIdx>(9);
+const GfFileIdx MAP_FILE_IDX_UNKNOWN_10 = static_cast<GfFileIdx>(10);
 
 class MapEff {
 public:
@@ -109,6 +112,43 @@ public:
   void destroy();
 
   ml::ScnObj *unknown00; // Inferred role: ibl; original member name unknown.
+};
+
+class MapLgt {
+public:
+  MapLgt() : unknown00(nullptr) {}
+  ~MapLgt();
+  void create(GF_ASSET_HANDLE *handle);
+  void destroy();
+
+  ml::ScnObj *unknown00; // Inferred role: light; original member name unknown.
+};
+
+class MapClip {
+public:
+  MapClip() : unknown00(nullptr) {}
+  ~MapClip();
+  void create(GF_ASSET_HANDLE *handle);
+  void destroy();
+
+  ml::ScnObj *unknown00; // Inferred role: clip; original member name unknown.
+};
+
+class MapAco {
+public:
+  MapAco() : unknown00(nullptr) {}
+  ~MapAco();
+  void create(GF_ASSET_HANDLE *handle);
+  void destroy();
+
+  ml::ScnObj *unknown00; // Inferred role: environment collision; original member name unknown.
+};
+
+class MapSe {
+public:
+  ~MapSe();
+  void create(GF_ASSET_HANDLE *handle);
+  void destroy();
 };
 
 class GfMapManager : public mm::mtl::PtrSingleton<GfMapManager>, public IGfObjListener, public IGfEvent {

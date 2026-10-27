@@ -297,6 +297,13 @@ bool GfDataBlade::getName(u8 *&bdat, u32 &textId, u32 blade) {
   return getNameWithMsgID(bdat, textId, blade);
 }
 
+bool GfDataBlade::getCommonBladeName(const char *model) {
+  if (model == nullptr || __builtin_strlen(model) < 6) {
+    return false;
+  }
+  return __builtin_strncmp(model, "bl/bl2", 6) == 0;
+}
+
 const char *GfDataBlade::getCommonBladeName(u32 nameList) {
   u32 textId = GfBdatBlade::get()->getNameListCategory(nameList);
   u8 *bdat = GfBdatMsg::getFpCommonBladeName();

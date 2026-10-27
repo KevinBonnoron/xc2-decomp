@@ -31,4 +31,14 @@ bool GfGameSearchObj::isEnable(GF_SEARCH_OBJ *searchObj) {
   return false;
 }
 
+u64 GfGameSearchObj::createHandle(u32 index) {
+  u32 serial = unknown90978;
+  unknown90978 = serial + 1;
+  if (serial >= 0x3ffffff) {
+    serial++;
+    unknown90978 = serial + 1;
+  }
+  return (index & 0x3f) | (serial << 6);
+}
+
 } // namespace gf

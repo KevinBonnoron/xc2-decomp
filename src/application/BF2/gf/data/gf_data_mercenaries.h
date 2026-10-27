@@ -54,6 +54,7 @@ static_assert(sizeof(SDataMercenaries) == 0x260, "");
 class GfDataMercenaries {
 public:
   static u32 getReserverMax();
+  static u32 getReserverNum();
   static SDataMercenaries *getSDataMercenaries();
   static u32 getLevel();
   static u32 getLevelMax();

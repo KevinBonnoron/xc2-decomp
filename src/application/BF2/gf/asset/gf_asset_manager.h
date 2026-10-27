@@ -32,6 +32,7 @@ public:
   static void build(const GfSetupParam &param);
   static void destroy();
   static void destroy(GF_ASSET_HANDLE *handle);
+  static void callEventAssetPack(GfAssetPack *pack);
   static void loadStart(GfAssetPack *pack, mm::mtl::IAllocator *allocator);
   static GfAssetPack *createAssetFiles(const GfAssetFilesInfo &info);
   static bool isReload(GF_ASSET_HANDLE *handle);

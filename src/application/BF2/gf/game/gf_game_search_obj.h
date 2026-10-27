@@ -30,14 +30,17 @@ public:
   static bool isInitialized();
   static GfSearchInfo *getInfo(GF_SEARCH_OBJ *searchObj);
   static GF_OBJ_HANDLE *getObj(GF_SEARCH_OBJ *searchObj);
+  u64 createHandle(u32 index);
 
   u8 _08[0x2428 - 0x08];
   GfSearchInfo *unknown2428; // Inferred role: search infos; original member name unknown.
-  u8 _2430[0x9097c - 0x2430];
+  u8 _2430[0x90978 - 0x2430];
+  u32 unknown90978;  // Inferred role: handle serial; original member name unknown.
   bool unknown9097c; // Inferred role: initialized; original member name unknown.
 };
 
 static_assert(offsetof(GfGameSearchObj, unknown2428) == 0x2428, "");
+static_assert(offsetof(GfGameSearchObj, unknown90978) == 0x90978, "");
 static_assert(offsetof(GfGameSearchObj, unknown9097c) == 0x9097c, "");
 
 } // namespace gf
