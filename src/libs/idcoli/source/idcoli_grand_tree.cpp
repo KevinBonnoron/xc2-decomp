@@ -4,6 +4,8 @@
 
 namespace idcoli {
 
+IDColiGrandTree::IDColiGrandTree() {}
+
 bool IDColiGrandTree::isAaBbToAaBb(const float *max, const float *min) {
   const IDColiInput *input = unknown10;
   if (input->unknown00.x < min[0]) {

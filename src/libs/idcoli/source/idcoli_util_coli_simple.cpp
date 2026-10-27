@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "idcoli/idcoli_util_coli.h"
 #include "mm_math/mm_vec3.h"
 #include "types.h"
@@ -74,5 +76,36 @@ bool IDColiUtilColiSimple::isRayInCapsule(IDColiResult &result, const IDColiInpu
 }
 
 bool IDColiUtilColiSimple::isRayPoli(IDColiResult &result, const IDColiInput &input, const void *data) { return false; }
+
+bool IDColiUtilColiSimple::isPartsLineSphere(IDColiResult &result, const CLLineWork *line, const void *data) {
+  const CLSphereWork *sphere = static_cast<const CLSphereWork *>(data);
+  f32 x = line->unknown00.x - sphere->unknown00.x;
+  f32 y = line->unknown00.y - sphere->unknown00.y;
+  f32 z = line->unknown00.z - sphere->unknown00.z;
+  f32 projection = x * line->unknown30.x + y * line->unknown30.y + z * line->unknown30.z;
+  f32 distance = (x * x + y * y + z * z) - sphere->unknown10 * sphere->unknown10;
+  if (0.0f <= projection && 0.0f <= distance) {
+    return false;
+  }
+  f32 discriminant = projection * projection - distance;
+  if (discriminant <= 0.0f) {
+    return false;
+  }
+  f32 hit = -projection - sqrtf(discriminant);
+  if (hit < 0.0f || line->unknown64 < hit) {
+    return false;
+  }
+
+  return result.unknown001();
+}
+
+bool IDColiUtilColiSimple::isLineSphere(IDColiResult &result, const IDColiInput &input, const void *data) { return isPartsLineSphere(result, &input.line, data); }
+
+bool IDColiUtilColiSimple::isRaySphere(IDColiResult &result, const IDColiInput &input, const void *data) {
+  if (isPartsLineSphere(result, &input.ray.unknown00[0], data)) {
+    return true;
+  }
+  return isPartsLineSphere(result, &input.ray.unknown00[1], data);
+}
 
 } // namespace idcoli

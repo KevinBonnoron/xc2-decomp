@@ -6,8 +6,24 @@
 
 namespace idcoli {
 
+struct IDCmfPosData;
+class IDColiObj;
+
+struct IDColiCallArg {
+  mm::Vec3 unknown00; // Inferred role: hit position; original member name unknown.
+  mm::Vec3 unknown10; // Inferred role: hit normal; original member name unknown.
+  mm::Vec3 unknown20; // Inferred role: hit vector; original member name unknown.
+  u32 *unknown30;     // Inferred role: material data of the hit object; original member name unknown.
+};
+
+static_assert(offsetof(IDColiCallArg, unknown10) == 0x10, "");
+static_assert(offsetof(IDColiCallArg, unknown20) == 0x20, "");
+static_assert(offsetof(IDColiCallArg, unknown30) == 0x30, "");
+static_assert(sizeof(IDColiCallArg) == 0x40, "");
+
 struct unknown005 {
-  virtual void unknown00(u64 value) {} // Inferred role: result callback; original name unknown.
+  virtual void unknown00(u64 value) {}                     // Inferred role: result callback; original name unknown.
+  virtual void unknown01(u64 value, IDColiCallArg *arg) {} // Inferred role: stock callback; original name unknown.
 };
 
 class IDColiResult {
@@ -20,16 +36,49 @@ public:
     return true;
   }
 
-  u8 _00[0xe8];
+  s32 unknown00; // Inferred role: result mode; original member name unknown.
+  u8 _04[0x10 - 0x04];
+  IDColiCallArg unknown10; // Inferred role: front hit; original member name unknown.
+  IDColiCallArg unknown50; // Inferred role: back hit; original member name unknown.
+  f32 unknown90;           // Inferred role: front hit distance; original member name unknown.
+  u8 _94[0x98 - 0x94];
+  u64 unknown98; // Inferred role: front hit callback argument; original member name unknown.
+  f32 unknowna0; // Inferred role: back hit distance; original member name unknown.
+  u8 _a4[0xa8 - 0xa4];
+  u64 unknowna8;  // Inferred role: back hit callback argument; original member name unknown.
+  bool unknownb0; // Inferred role: front hit found; original member name unknown.
+  bool unknownb1; // Inferred role: back hit found; original member name unknown.
+  u8 _b2;
+  bool unknownb3; // Inferred role: clear the back hit vector after a hit; original member name unknown.
+  u8 _b4[0xb8 - 0xb4];
+  mm::Vec3 *unknownb8; // Inferred role: stock positions; original member name unknown.
+  mm::Vec3 *unknownc0; // Inferred role: stock normals; original member name unknown.
+  mm::Vec3 *unknownc8; // Inferred role: stock vectors; original member name unknown.
+  u32 **unknownd0;     // Inferred role: stock material data; original member name unknown.
+  u8 _d8[0xe0 - 0xd8];
+  u32 unknowne0; // Inferred role: stock count; original member name unknown.
+  u32 unknowne4; // Inferred role: stock max; original member name unknown.
   u32 unknowne8; // Inferred role: material bits to skip; original member name unknown.
   u8 _ec[0xf0 - 0xec];
-  u64 unknownf0; // Inferred role: callback argument; original member name unknown.
-  u8 _f8[0x100 - 0xf8];
+  u64 unknownf0;          // Inferred role: callback argument; original member name unknown.
+  IDColiObj *unknownf8;   // Inferred role: tested object; original member name unknown.
   unknown005 *unknown100; // Inferred role: callback; original member name unknown.
 };
 
+static_assert(offsetof(IDColiResult, unknown10) == 0x10, "");
+static_assert(offsetof(IDColiResult, unknown50) == 0x50, "");
+static_assert(offsetof(IDColiResult, unknown90) == 0x90, "");
+static_assert(offsetof(IDColiResult, unknown98) == 0x98, "");
+static_assert(offsetof(IDColiResult, unknowna0) == 0xa0, "");
+static_assert(offsetof(IDColiResult, unknowna8) == 0xa8, "");
+static_assert(offsetof(IDColiResult, unknownb0) == 0xb0, "");
+static_assert(offsetof(IDColiResult, unknownb3) == 0xb3, "");
+static_assert(offsetof(IDColiResult, unknownb8) == 0xb8, "");
+static_assert(offsetof(IDColiResult, unknownd0) == 0xd0, "");
+static_assert(offsetof(IDColiResult, unknowne0) == 0xe0, "");
 static_assert(offsetof(IDColiResult, unknowne8) == 0xe8, "");
 static_assert(offsetof(IDColiResult, unknownf0) == 0xf0, "");
+static_assert(offsetof(IDColiResult, unknownf8) == 0xf8, "");
 static_assert(offsetof(IDColiResult, unknown100) == 0x100, "");
 
 struct CLBoxWork {
@@ -61,11 +110,12 @@ struct CLCapsuleWork {
   mm::Vec3 unknown30; // Inferred role: max; original member name unknown.
   mm::Vec3 unknown40; // Inferred role: min; original member name unknown.
   f32 unknown50;      // Inferred role: radius; original member name unknown.
-  u8 _54[0x58 - 0x54];
-  f32 unknown58; // Inferred role: inverse squared length; original member name unknown.
+  f32 unknown54;      // Inferred role: squared length; original member name unknown.
+  f32 unknown58;      // Inferred role: inverse squared length; original member name unknown.
 };
 
 static_assert(offsetof(CLCapsuleWork, unknown50) == 0x50, "");
+static_assert(offsetof(CLCapsuleWork, unknown54) == 0x54, "");
 static_assert(offsetof(CLCapsuleWork, unknown58) == 0x58, "");
 
 struct CLLineWork {
@@ -124,6 +174,7 @@ public:
   static void getAaBb(IDColiInput &input, const mm::Vec3 &max, const mm::Vec3 &min);
   static void getBox(IDColiInput &input, const CLBoxWork &box);
   static void getSphere(IDColiInput &input, const mm::Vec3 &center, f32 radius, bool isTree);
+  static void getSphere(IDColiInput &input, const IDColiInput &source, const IDCmfPosData *posData, bool isTree);
 };
 
 class IDColiUtilColiResult {
@@ -161,6 +212,9 @@ public:
   static const unknown009 s_CallBox[5];
 
   static bool isSphereSphere(IDColiResult &result, const IDColiInput &input, const void *data);
+  static bool isPartsLineSphere(IDColiResult &result, const CLLineWork *line, const void *data);
+  static bool isLineSphere(IDColiResult &result, const IDColiInput &input, const void *data);
+  static bool isRaySphere(IDColiResult &result, const IDColiInput &input, const void *data);
   static bool isSphereBox(IDColiResult &result, const CLSphereWork *sphere, const CLBoxWork *box);
   static bool isSphereBox(IDColiResult &result, const IDColiInput &input, const void *data);
   static bool isSpherePoli(IDColiResult &result, const IDColiInput &input, const void *data);

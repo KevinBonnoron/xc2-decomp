@@ -1,4 +1,5 @@
 #pragma once
+#include <math.h>
 #include <stddef.h>
 
 #include "mm_math/mm_mat44.h"
@@ -11,6 +12,7 @@ class ALLOC_HANDLE;
 } // namespace mtl
 
 namespace ml {
+class CriticalSection;
 class Scn;
 class WinProc;
 } // namespace ml
@@ -20,6 +22,8 @@ namespace idcoli {
 class IDColiResult;
 struct IDColiInput;
 struct CLSphereWork;
+struct CLCapsuleWork;
+struct CLLineWork;
 enum ColiState : int;
 enum ColiAtrr : int;
 
@@ -108,6 +112,8 @@ public:
   static const u32 UPDATE_SIZE = 1 << 5;
   static const u32 UPDATE_ROTATE = 1 << 10;
 
+  static const f32 OBJ_CALC_RADIUS;
+
   bool isDeleteCall() const;
   IDColiObj();
   virtual ~IDColiObj() {}
@@ -150,7 +156,14 @@ enum IdVectorAxisType : unsigned int {
 };
 
 enum IDColiBaseType : unsigned int {
+  IDColiBaseType_UNKNOWN_0 = 0,
+  IDColiBaseType_UNKNOWN_1 = 1,
+  IDColiBaseType_UNKNOWN_2 = 2,
   IDColiBaseType_UNKNOWN_3 = 3,
+  IDColiBaseType_UNKNOWN_4 = 4,
+  IDColiBaseType_UNKNOWN_5 = 5,
+  IDColiBaseType_UNKNOWN_6 = 6,
+  IDColiBaseType_UNKNOWN_7 = 7,
 };
 
 class IDColiPrimitive {
@@ -161,6 +174,13 @@ public:
   static void createAaBbPoli(mm::Vec3 &max, mm::Vec3 &min, const void *data);
   static void createBaPosSphere(mm::Vec3 &position, mm::Vec3 &unknown, bool &isRotate, f32 &radius, f32 &length, const void *data);
   static void createBaPosBox(mm::Vec3 &position, mm::Vec3 &unknown, bool &isRotate, f32 &radius, f32 &length, const void *data);
+  static void createAaBbCapsule(mm::Vec3 &max, mm::Vec3 &min, const void *data);
+  static void createBaPosCapsule(mm::Vec3 &position, mm::Vec3 &unknown, bool &isRotate, f32 &radius, f32 &length, const void *data);
+  static void createBaPosPoli(mm::Vec3 &position, mm::Vec3 &unknown, bool &isRotate, f32 &radius, f32 &length, const void *data);
+  static void createLine(CLLineWork &line, const IDColiInput &input);
+  static void createLine(CLLineWork &line, const mm::Vec3 &start, const mm::Vec3 &end);
+  static void createCapsule(CLCapsuleWork &capsule, const IDColiInput &input);
+  static void createBaseSphere(void *data, IDColiBaseType &type, const mm::Mat44 &matrix, const mm::Vec3 &size);
   static void (*const s_CallPrimSet[5])(void *, IDColiBaseType &, const mm::Mat44 &, const mm::Vec3 &);
   static void (*const s_CallAaBb[5])(mm::Vec3 &, mm::Vec3 &, const void *);
 };
@@ -329,14 +349,38 @@ static_assert(offsetof(IDCmfMovePosData, unknown50) == 0x50, "");
 static_assert(offsetof(IDCmfMovePosData, unknown60) == 0x60, "");
 
 struct IDCmfPosData {
-  u8 _00[0x80];
+  // Inferred helper: brings a point into the local space through the inverse matrix; original name unknown.
+  mm::Vec3 unknown011(const mm::Vec3 &point) const {
+    mm::Vec3 delta = point - mm::Vec3(unknown00[0][3], unknown00[1][3], unknown00[2][3]);
+    return mm::Vec3(delta.x * unknown40[0][0] + delta.y * unknown40[0][1] + delta.z * unknown40[0][2],
+                    delta.x * unknown40[1][0] + delta.y * unknown40[1][1] + delta.z * unknown40[1][2],
+                    delta.x * unknown40[2][0] + delta.y * unknown40[2][1] + delta.z * unknown40[2][2]);
+  }
+
+  // Inferred helper: scale of the inverse matrix; original name unknown.
+  f32 unknown012() const {
+    f32 x = unknown40[0][0] + unknown40[0][1] + unknown40[0][2];
+    f32 y = unknown40[1][0] + unknown40[1][1] + unknown40[1][2];
+    f32 z = unknown40[2][0] + unknown40[2][1] + unknown40[2][2];
+    return sqrtf(x * x + y * y + z * z);
+  }
+
+  f32 unknown00[3][4]; // Inferred role: transposed matrix rows, translation in the fourth column; original member name unknown.
+  u8 _30[0x40 - 0x30];
+  f32 unknown40[3][4]; // Inferred role: transposed inverse matrix rows; original member name unknown.
+  u8 _70[0x80 - 0x70];
   mm::Vec3 unknown80; // Inferred role: max; original member name unknown.
   mm::Vec3 unknown90; // Inferred role: min; original member name unknown.
 };
 
+static_assert(offsetof(IDCmfPosData, unknown40) == 0x40, "");
 static_assert(offsetof(IDCmfPosData, unknown80) == 0x80, "");
 static_assert(offsetof(IDCmfPosData, unknown90) == 0x90, "");
 static_assert(sizeof(IDCmfPosData) == 0xa0, "");
+
+struct unknown010 {
+  IDCmfPosData *unknown00; // Inferred role: position data; original member name unknown.
+};
 
 class IDColiGrdMoveObj;
 
@@ -376,16 +420,87 @@ static_assert(offsetof(IDColiGrdMoveObj, unknown1c0) == 0x1c0, "");
 static_assert(offsetof(IDColiGrdMoveObj, unknown1c8) == 0x1c8, "");
 static_assert(sizeof(IDColiGrdMoveObj) == 0x200, "");
 
-struct IDColiGrandWork {
-  u8 _00[0x70 - 0x00];
-  IDColiGrdMoveObj *unknown70; // Inferred role: move objs; original member name unknown.
-  int unknown78;               // Inferred role: move max; original member name unknown.
+struct unknown014 {
+  f32 unknown00; // Inferred role: x; original member name unknown.
+  f32 unknown04; // Inferred role: y; original member name unknown.
+  f32 unknown08; // Inferred role: z; original member name unknown.
 };
 
+static_assert(sizeof(unknown014) == 0xc, "");
+
+struct IDColiGrandWork {
+  IDColiGrandWork();
+
+  const u8 *unknown00; // Inferred role: binary; original member name unknown.
+  u8 _08[0x28 - 0x08];
+  const unknown014 *const *unknown28; // Inferred role: vector tables; original member name unknown.
+  u8 _30[0x70 - 0x30];
+  IDColiGrdMoveObj *unknown70; // Inferred role: move objs; original member name unknown.
+  int unknown78;               // Inferred role: move max; original member name unknown.
+  u8 _7c[0x90 - 0x7c];
+  IDColiTreeTop *unknown90; // Inferred role: tree top of the first move object bank; original member name unknown.
+  IDColiTreeTop *unknown98; // Inferred role: tree top of the second move object bank; original member name unknown.
+  int unknowna0;            // Inferred role: current move object bank; original member name unknown.
+  u8 _a4[0xa8 - 0xa4];
+  void *unknowna8; // Inferred role: allocated buffer; original member name unknown.
+};
+
+static_assert(offsetof(IDColiGrandWork, unknown28) == 0x28, "");
 static_assert(offsetof(IDColiGrandWork, unknown70) == 0x70, "");
+static_assert(offsetof(IDColiGrandWork, unknown90) == 0x90, "");
+static_assert(offsetof(IDColiGrandWork, unknowna8) == 0xa8, "");
+static_assert(sizeof(IDColiGrandWork) == 0xb0, "");
+
+struct unknown017 {
+  u8 _00[0x08 - 0x00];
+  u32 unknown08; // Inferred role: size; original member name unknown.
+  u8 _0c[0x1c - 0x0c];
+  s32 unknown1c; // Inferred role: move object count; original member name unknown.
+  u8 _20[0x24 - 0x20];
+  s32 unknown24; // Inferred role: unknown; original member name unknown.
+  u8 _28[0x2c - 0x28];
+  s32 unknown2c; // Inferred role: unknown; original member name unknown.
+  u8 _30[0x34 - 0x30];
+  s32 unknown34; // Inferred role: unknown; original member name unknown.
+  u8 _38[0x3c - 0x38];
+  s32 unknown3c; // Inferred role: unknown; original member name unknown.
+  u8 _40[0x88 - 0x40];
+  u32 unknown88; // Inferred role: flags; original member name unknown.
+  u32 unknown8c; // Inferred role: bounds offset; original member name unknown.
+  u8 _90[0x94 - 0x90];
+  s32 unknown94; // Inferred role: tree count; original member name unknown.
+};
+
+static_assert(offsetof(unknown017, unknown1c) == 0x1c, "");
+static_assert(offsetof(unknown017, unknown3c) == 0x3c, "");
+static_assert(offsetof(unknown017, unknown88) == 0x88, "");
+static_assert(offsetof(unknown017, unknown94) == 0x94, "");
+
+struct unknown018 {
+  f32 unknown00[3]; // Inferred role: max; original member name unknown.
+  f32 unknown0c[3]; // Inferred role: min; original member name unknown.
+};
+
+static_assert(sizeof(unknown018) == 0x18, "");
+
+struct IDCmfNormalData {
+  s16 unknown00; // Inferred role: x in 1/16384 units; original member name unknown.
+  s16 unknown02; // Inferred role: y in 1/16384 units; original member name unknown.
+  s16 unknown04; // Inferred role: z in 1/16384 units; original member name unknown.
+};
+
+static_assert(sizeof(IDCmfNormalData) == 6, "");
+
+struct IDCmfPoliData {
+  u32 unknown00; // Inferred role: vertex index list offset; original member name unknown.
+  u16 unknown04; // Inferred role: vector table index in the high byte, vertex count in the low byte; original member name unknown.
+};
+
+static_assert(offsetof(IDCmfPoliData, unknown04) == 4, "");
 
 class IDColiGrandTree {
 public:
+  IDColiGrandTree();
   bool isAaBbToAaBb(const float *max, const float *min);
 
   IDColiGrandWork *unknown00; // Inferred role: work; original member name unknown.
@@ -397,17 +512,53 @@ static_assert(offsetof(IDColiGrandTree, unknown10) == 0x10, "");
 
 class IDColiObjGrand : public IDColiObj {
 public:
-  bool getGrandAABB(mm::Vec3 &max, mm::Vec3 &min) const;
+  IDColiObjGrand();
+  ~IDColiObjGrand() override;
+  void workClear();
+  static int calcGrandBufferSize(const void *binary);
+  void getGrandAABB(mm::Vec3 &max, mm::Vec3 &min) const;
 
   IDColiGrandWork unknown50; // Inferred role: work; original member name unknown.
 };
 
 static_assert(offsetof(IDColiObjGrand, unknown50) == 0x50, "");
+static_assert(sizeof(IDColiObjGrand) == 0x100, "");
+
+struct unknown019 {
+  u8 _00[0xa0 - 0x00];
+  IDColiObj *unknowna0; // Inferred role: collision object; original member name unknown.
+  u8 _a8[0xc0 - 0xa8];
+};
+
+static_assert(offsetof(unknown019, unknowna0) == 0xa0, "");
+static_assert(sizeof(unknown019) == 0xc0, "");
+
+class IDColiObjGrdChar : public IDColiObj {
+public:
+  IDColiObjGrdChar();
+  ~IDColiObjGrdChar() override;
+  void workClear();
+
+  mm::Vec3 unknown50;    // Inferred role: max; original member name unknown.
+  mm::Vec3 unknown60;    // Inferred role: min; original member name unknown.
+  void *unknown70;       // Inferred role: allocated buffer; original member name unknown.
+  u64 unknown78;         // Inferred role: unknown; original member name unknown.
+  unknown019 *unknown80; // Inferred role: collision objects; original member name unknown.
+  int unknown88;         // Inferred role: collision object count; original member name unknown.
+};
+
+static_assert(offsetof(IDColiObjGrdChar, unknown50) == 0x50, "");
+static_assert(offsetof(IDColiObjGrdChar, unknown60) == 0x60, "");
+static_assert(offsetof(IDColiObjGrdChar, unknown70) == 0x70, "");
+static_assert(offsetof(IDColiObjGrdChar, unknown80) == 0x80, "");
+static_assert(offsetof(IDColiObjGrdChar, unknown88) == 0x88, "");
 
 class IDColiManager : public mm::mtl::PtrSingleton<IDColiManager> {
 public:
   static int s_nDebIdx;
   static int s_nStkIdx;
+
+  static ml::CriticalSection &getCriticalSection();
 
   IDColiManager(ml::Scn *scn, mtl::ALLOC_HANDLE handle, u32 size);
   ~IDColiManager() override;

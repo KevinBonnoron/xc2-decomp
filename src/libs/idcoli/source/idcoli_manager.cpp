@@ -2,6 +2,7 @@
 
 #include "idcoli/idcoli.h"
 #include "idcoli/idcoli_mem_handle_allocator.h"
+#include "ml/critical_section.h"
 #include "mm_math/mm_vec3.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
@@ -27,6 +28,11 @@ void IDColiMemHandleAllocator::deallocate(void *pointer) {
   if (pointer != nullptr) {
     mtl::MemManager::deallocate(pointer, 0, false);
   }
+}
+
+ml::CriticalSection &IDColiManager::getCriticalSection() {
+  static ml::CriticalSection sect;
+  return sect;
 }
 
 bool IDColiManager::getGrandAABB(mm::Vec3 &max, mm::Vec3 &min) const {
