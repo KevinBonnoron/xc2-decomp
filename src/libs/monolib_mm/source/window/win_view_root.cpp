@@ -29,6 +29,39 @@ void WinViewRoot::destroyProc(const WinProc *proc) {
   }
 }
 
+bool WinViewRoot::isCurrent(const WinView *view) {
+  WinViewRoot *root = get();
+  if (root != nullptr) {
+    WinView *current = root->unknown1f0;
+    return current == view && current != nullptr;
+  }
+  return false;
+}
+
+bool WinViewRoot::isCurrentChild(const WinView *view, const WinView *current) {
+  if (current != nullptr && get() != nullptr) {
+    for (reslist<WorkObj *>::Node *node = view->wkGetChild()->begin(); node != view->wkGetChild()->end(); node = node->getNext()) {
+      WinView *child = static_cast<WinView *>(node->value);
+      if (child == current || isCurrentChild(child, current)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+WinView *WinViewRoot::getView(const char *name) {
+  if (get() != nullptr) {
+    for (reslist<WorkObj *>::Node *node = get()->wkGetChild()->begin(); node != get()->wkGetChild()->end(); node = node->getNext()) {
+      WinView *view = static_cast<WinView *>(WorkRootState::getWork(node->value, name));
+      if (view != nullptr) {
+        return view;
+      }
+    }
+  }
+  return nullptr;
+}
+
 bool WinViewRoot::isInitialized() {
   WinViewRoot *root = get();
   if (root == nullptr || root->wkIsWaitException()) {

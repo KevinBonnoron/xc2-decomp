@@ -82,6 +82,9 @@ public:
   static void standbyWork();
   static void finalize();
   static WorkObj *getWork(u32 wid);
+  static WorkObj *getWork(WorkObj *parent, u32 wid);
+  static bool isEntryWork(u32 wid, const WorkObj *parent);
+  static WorkObj *getWork(WorkObj *parent, const char *name);
   static bool isDebug(WorkObj *work);
   static u32 allocWID(WorkObj *work);
   static void freeWID(u32 wid);
