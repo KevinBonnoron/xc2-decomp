@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "types.h"
 
 struct NVNvertexAttribState;
@@ -36,10 +38,14 @@ public:
   ~CGLibVtxFetch();
   void release();
   void createFetchObj(CGLibVtxAttr *attributes, int num);
+  static int calcFetchWorkSize(int num);
 
   NVNvertexAttribState *unknown00; // Inferred role: attribute states; original member name unknown.
   u16 unknown08;                   // Inferred role: attribute num; original member name unknown.
-  u8 _0a[0x10 - 0x0a];
+  u16 unknown0a;                   // Inferred role: owns attribute states; original member name unknown.
+  u8 _0c[0x10 - 0x0c];
 };
+
+static_assert(offsetof(CGLibVtxFetch, unknown0a) == 0x0a, "");
 
 } // namespace grlib

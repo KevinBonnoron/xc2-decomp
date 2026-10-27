@@ -10,6 +10,7 @@ struct Col4;
 enum GrlClaerMask {};
 
 namespace grlib {
+class CGLibColorBuffer;
 class CGLibDepthBuffer;
 
 class CGLibRenderTarget : public CGLibRenderTargetBase {
@@ -22,6 +23,13 @@ public:
   void clearIntTexture(const int *color, GrlClaerMask mask);
   void setRenderTarget();
   void setRenderTarget(CGLibDepthBuffer &depthBuffer);
+  void setRenderTarget(CGLibColorBuffer &colorBuffer);
+  void setRenderTarget(CGLibRenderTarget &target1);
+  void setRenderTarget(CGLibRenderTarget &target1, CGLibRenderTarget &target2);
+  void setRenderTarget(CGLibRenderTarget &target1, CGLibRenderTarget &target2, CGLibRenderTarget &target3);
+  void setRenderTarget(CGLibRenderTarget &target1, CGLibRenderTarget &target2, CGLibRenderTarget &target3, CGLibRenderTarget &target4);
+  void setRenderTarget(CGLibDepthBuffer &depthBuffer, CGLibRenderTarget &target1);
+  void setRenderTarget(CGLibDepthBuffer &depthBuffer, CGLibRenderTarget &target1, CGLibRenderTarget &target2);
   void releaseTexture();
 
   u16 unknownc4; // Inferred role: mrt state; original member name unknown.

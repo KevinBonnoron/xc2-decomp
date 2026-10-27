@@ -70,12 +70,21 @@ void CGLibRenderArray::releaseWork() {
 
 void CGLibRenderArray::release() { releaseWork(); }
 
+CGLibRenderTarget1D::CGLibRenderTarget1D() : unknown70(this), unknownb8(0), unknownbc(false) {}
+
 CGLibRenderTarget1D::~CGLibRenderTarget1D() { releaseWork(); }
 
 void CGLibRenderTarget1D::releaseWork() {
   unknown78.release();
   delayRelease();
   unknownbc = false;
+}
+
+CGLibRenderTargetMipMap::CGLibRenderTargetMipMap() : unknown70(this) {
+  unknown47c = 0;
+  unknown480 = 0;
+  unknown484 = 0;
+  unknown478 = false;
 }
 
 CGLibRenderTargetMipMap::~CGLibRenderTargetMipMap() { releaseWork(); }
@@ -87,6 +96,13 @@ void CGLibRenderTargetMipMap::releaseWork() {
   }
   delayRelease();
   unknown478 = false;
+}
+
+CGLibRenderCubeMapMipMap::CGLibRenderCubeMapMipMap() : unknown70(this) {
+  unknown1880 = 0;
+  unknown1884 = 0;
+  unknown187c = 0;
+  unknown1878 = false;
 }
 
 CGLibRenderCubeMapMipMap::~CGLibRenderCubeMapMipMap() { releaseWork(); }
@@ -116,6 +132,12 @@ void CGLibRenderTarget::releaseWork() {
   unknownb8 = false;
 }
 
+CGLibRenderCubeMap::CGLibRenderCubeMap() : unknown70(this) {
+  unknown1fc = 0.0f;
+  unknown200 = 0.0f;
+  unknown1f8 = false;
+}
+
 CGLibRenderCubeMap::~CGLibRenderCubeMap() { releaseWork(); }
 
 void CGLibRenderCubeMap::releaseWork() {
@@ -124,6 +146,13 @@ void CGLibRenderCubeMap::releaseWork() {
   }
   delayRelease();
   unknown1f8 = false;
+}
+
+CGLibRenderVolume::CGLibRenderVolume() : unknown70(this), unknown78(nullptr) {
+  unknown84 = 0;
+  unknown88 = 0;
+  unknown8c = 0;
+  unknown80 = false;
 }
 
 CGLibRenderVolume::~CGLibRenderVolume() { releaseWork(); }
@@ -154,6 +183,21 @@ void CGLibRenderTarget1D::clearTexture(const mm::Col4 &color, GrlClaerMask mask)
 
 void CGLibRenderTarget1D::clearIntTexture(const int *color, GrlClaerMask mask) { CGLibDepthCtl::clearIntColorBuffer(unknown78, color, mask); }
 
+void CGLibRenderTarget1D::setRenderTarget() {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknownb8, 1.0f, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78, GRL_MRT_TYPE_0);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderTarget1D::setRenderTarget(CGLibDepthBuffer &depthBuffer) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknownb8, 1.0f, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterDepthTarget(depthBuffer);
+  CGLibState::endRegisterRenderTarget();
+}
+
 void CGLibRenderTargetMipMap::release() { releaseWork(); }
 
 void CGLibRenderTargetMipMap::releaseTexture() {
@@ -165,6 +209,21 @@ void CGLibRenderTargetMipMap::releaseTexture() {
 void CGLibRenderTargetMipMap::clearTexture(u32 mipmap, const mm::Col4 &color, GrlClaerMask mask) { CGLibDepthCtl::clearColorBuffer(unknown78[mipmap], color, mask); }
 
 void CGLibRenderTargetMipMap::clearIntTexture(u32 mipmap, const int *color, GrlClaerMask mask) { CGLibDepthCtl::clearIntColorBuffer(unknown78[mipmap], color, mask); }
+
+void CGLibRenderTargetMipMap::setRenderTarget(u32 mipmap) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknown78[mipmap].getWidth(), unknown78[mipmap].getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78[mipmap], GRL_MRT_TYPE_0);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderTargetMipMap::setRenderTarget(u32 mipmap, CGLibDepthBuffer &depthBuffer) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknown78[mipmap].getWidth(), unknown78[mipmap].getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78[mipmap], GRL_MRT_TYPE_0);
+  CGLibState::setRegisterDepthTarget(depthBuffer);
+  CGLibState::endRegisterRenderTarget();
+}
 
 void CGLibRenderCubeMapMipMap::release() { releaseWork(); }
 
@@ -184,6 +243,21 @@ const CGLibColorBuffer *CGLibRenderCubeMapMipMap::getColorBuffer(GrlCubeMapFace 
 
 void CGLibRenderCubeMapMipMap::setRegisterRenderTarget(GrlCubeMapFace face, u32 mipmap, GrlMrtType mrt) { CGLibState::setRegisterRenderTarget(unknown78[face][mipmap], mrt); }
 
+void CGLibRenderCubeMapMipMap::setRenderTarget(GrlCubeMapFace face, u32 mipmap) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknown78[face][mipmap].getWidth(), unknown78[face][mipmap].getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78[face][mipmap], GRL_MRT_TYPE_0);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderCubeMapMipMap::setRenderTarget(GrlCubeMapFace face, u32 mipmap, CGLibDepthBuffer &depthBuffer) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknown78[face][mipmap].getWidth(), unknown78[face][mipmap].getHeight(), 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78[face][mipmap], GRL_MRT_TYPE_0);
+  CGLibState::setRegisterDepthTarget(depthBuffer);
+  CGLibState::endRegisterRenderTarget();
+}
+
 void CGLibRenderTarget::release() { releaseWork(); }
 
 void CGLibRenderTarget::releaseTexture() {
@@ -195,6 +269,86 @@ void CGLibRenderTarget::releaseTexture() {
 void CGLibRenderTarget::clearTexture(const mm::Col4 &color, GrlClaerMask mask) { CGLibDepthCtl::clearColorBuffer(unknown78, color, mask); }
 
 void CGLibRenderTarget::clearIntTexture(const int *color, GrlClaerMask mask) { CGLibDepthCtl::clearIntColorBuffer(unknown78, color, mask); }
+
+void CGLibRenderTarget::setRenderTarget() {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknownbc, unknownc0, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78, GRL_MRT_TYPE_0);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderTarget::setRenderTarget(CGLibColorBuffer &colorBuffer) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknownbc, unknownc0, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterRenderTarget(colorBuffer, GRL_MRT_TYPE_1);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderTarget::setRenderTarget(CGLibRenderTarget &target1) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknownbc, unknownc0, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterRenderTarget(target1, GRL_MRT_TYPE_1);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderTarget::setRenderTarget(CGLibRenderTarget &target1, CGLibRenderTarget &target2) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknownbc, unknownc0, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterRenderTarget(target1, GRL_MRT_TYPE_1);
+  CGLibState::setRegisterRenderTarget(target2, GRL_MRT_TYPE_2);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderTarget::setRenderTarget(CGLibRenderTarget &target1, CGLibRenderTarget &target2, CGLibRenderTarget &target3) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknownbc, unknownc0, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterRenderTarget(target1, GRL_MRT_TYPE_1);
+  CGLibState::setRegisterRenderTarget(target2, GRL_MRT_TYPE_2);
+  CGLibState::setRegisterRenderTarget(target3, GRL_MRT_TYPE_UNKNOWN_3);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderTarget::setRenderTarget(CGLibDepthBuffer &depthBuffer) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknownbc, unknownc0, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterDepthTarget(depthBuffer);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderTarget::setRenderTarget(CGLibDepthBuffer &depthBuffer, CGLibRenderTarget &target1) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknownbc, unknownc0, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterRenderTarget(target1, GRL_MRT_TYPE_1);
+  CGLibState::setRegisterDepthTarget(depthBuffer);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderTarget::setRenderTarget(CGLibDepthBuffer &depthBuffer, CGLibRenderTarget &target1, CGLibRenderTarget &target2) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknownbc, unknownc0, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterRenderTarget(target1, GRL_MRT_TYPE_1);
+  CGLibState::setRegisterRenderTarget(target2, GRL_MRT_TYPE_2);
+  CGLibState::setRegisterDepthTarget(depthBuffer);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderTarget::setRenderTarget(CGLibRenderTarget &target1, CGLibRenderTarget &target2, CGLibRenderTarget &target3, CGLibRenderTarget &target4) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknownbc, unknownc0, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78, GRL_MRT_TYPE_0);
+  CGLibState::setRegisterRenderTarget(target1, GRL_MRT_TYPE_1);
+  CGLibState::setRegisterRenderTarget(target2, GRL_MRT_TYPE_2);
+  CGLibState::setRegisterRenderTarget(target3, GRL_MRT_TYPE_UNKNOWN_3);
+  CGLibState::setRegisterRenderTarget(target4, GRL_MRT_TYPE_UNKNOWN_4);
+  CGLibState::endRegisterRenderTarget();
+}
 
 void CGLibRenderCubeMap::release() { releaseWork(); }
 
@@ -210,6 +364,21 @@ void CGLibRenderCubeMap::clearIntTexture(GrlCubeMapFace face, const int *color, 
 
 void CGLibRenderCubeMap::setRegisterRenderTarget(GrlCubeMapFace face, GrlMrtType mrt) { CGLibState::setRegisterRenderTarget(unknown78[face], mrt); }
 
+void CGLibRenderCubeMap::setRenderTarget(GrlCubeMapFace face) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknown1fc, unknown200, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78[face], GRL_MRT_TYPE_0);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderCubeMap::setRenderTarget(GrlCubeMapFace face, CGLibDepthBuffer &depthBuffer) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknown1fc, unknown200, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78[face], GRL_MRT_TYPE_0);
+  CGLibState::setRegisterDepthTarget(depthBuffer);
+  CGLibState::endRegisterRenderTarget();
+}
+
 void CGLibRenderVolume::release() { releaseWork(); }
 
 void CGLibRenderVolume::releaseTexture() { releaseWork(); }
@@ -217,6 +386,29 @@ void CGLibRenderVolume::releaseTexture() { releaseWork(); }
 void CGLibRenderVolume::clearTexture(u32 slice, const mm::Col4 &color, GrlClaerMask mask) { CGLibDepthCtl::clearColorBuffer(unknown78[slice], color, mask); }
 
 void CGLibRenderVolume::clearIntTexture(u32 slice, const int *color, GrlClaerMask mask) { CGLibDepthCtl::clearIntColorBuffer(unknown78[slice], color, mask); }
+
+void CGLibRenderVolume::setRenderTarget(u32 slice) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknown84, unknown88, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78[slice], GRL_MRT_TYPE_0);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderVolume::setRenderTarget(u32 slice, CGLibDepthBuffer &depthBuffer) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknown84, unknown88, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78[slice], GRL_MRT_TYPE_0);
+  CGLibState::setRegisterDepthTarget(depthBuffer);
+  CGLibState::endRegisterRenderTarget();
+}
+
+void CGLibRenderVolume::setRenderTarget(u32 slice, CGLibRenderVolume &target) {
+  CGLibState::setViewport(LibMainStateViewPort(0.0f, 0.0f, unknown84, unknown88, 0.0f, 1.0f));
+  CGLibState::beginRegisterRenderTarget();
+  CGLibState::setRegisterRenderTarget(unknown78[slice], GRL_MRT_TYPE_0);
+  CGLibState::setRegisterRenderTarget(target.unknown78[slice], GRL_MRT_TYPE_1);
+  CGLibState::endRegisterRenderTarget();
+}
 
 u16 CGLibColorBuffer::getWidth() const { return m_width; }
 

@@ -11,6 +11,7 @@ struct Col4;
 } // namespace mm
 
 namespace grlib {
+class CGLibDepthBuffer;
 
 class CGLibRenderTargetMipMap : public CGLibTextureBuffer {
 public:
@@ -21,6 +22,8 @@ public:
   void releaseTexture();
   void clearTexture(u32 mipmap, const mm::Col4 &color, GrlClaerMask mask);
   void clearIntTexture(u32 mipmap, const int *color, GrlClaerMask mask);
+  void setRenderTarget(u32 mipmap);
+  void setRenderTarget(u32 mipmap, CGLibDepthBuffer &depthBuffer);
 
   CGLibTextureBuffer *unknown70;  // Inferred role: texture; original member name unknown.
   CGLibColorBuffer unknown78[16]; // Inferred role: mipmap color buffers; original member name unknown.

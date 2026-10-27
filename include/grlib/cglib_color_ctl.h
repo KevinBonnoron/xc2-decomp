@@ -33,6 +33,8 @@ enum GrlMrtType {
   GRL_MRT_TYPE_0,
   GRL_MRT_TYPE_1,
   GRL_MRT_TYPE_2,
+  GRL_MRT_TYPE_UNKNOWN_3,
+  GRL_MRT_TYPE_UNKNOWN_4,
 };
 
 class CGLibColorCtl {

@@ -11,6 +11,7 @@ struct Col4;
 } // namespace mm
 
 namespace grlib {
+class CGLibDepthBuffer;
 
 class CGLibRenderTarget1D : public CGLibTextureBuffer {
 public:
@@ -21,6 +22,8 @@ public:
   void releaseTexture();
   void clearTexture(const mm::Col4 &color, GrlClaerMask mask);
   void clearIntTexture(const int *color, GrlClaerMask mask);
+  void setRenderTarget();
+  void setRenderTarget(CGLibDepthBuffer &depthBuffer);
 
   CGLibTextureBuffer *unknown70; // Inferred role: texture; original member name unknown.
   CGLibColorBuffer unknown78;    // Inferred role: color buffer; original member name unknown.

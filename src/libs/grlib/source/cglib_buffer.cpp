@@ -145,19 +145,23 @@ u32 CGLibBuffFixAlloc::createBuff() {
   return id;
 }
 
-CGLibBuffTexture::CGLibBuffTexture() : unknown28(nullptr) {}
+void CGLibBuffTexture_plf::createPlf(u32 num, u8 *buffer) { unknown00 = buffer; }
+
+void CGLibBuffTexture_plf::releasePlf() { unknown00 = nullptr; }
+
+CGLibBuffTexture::CGLibBuffTexture() { unknown00 = nullptr; }
 
 CGLibBuffTexture::~CGLibBuffTexture() { release(); }
 
 void CGLibBuffTexture::release() {
-  unknown28 = nullptr;
+  releasePlf();
   releaseTbl();
 }
 
 void CGLibBuffTexture::createTexture(u32 num) {
   release();
   setupTbl(CGLibMemHandle::s_hDefHandle, CGLibMemHandle::s_hDefHandle, num, 0xc0, 0x10);
-  unknown28 = m_buffer;
+  createPlf(num, m_buffer);
 }
 
 u32 CGLibBuffOcclusion_plf::createPlf(u32 num, u8 *buffer) { return num; }

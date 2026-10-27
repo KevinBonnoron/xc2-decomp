@@ -13,6 +13,7 @@ struct Col4;
 } // namespace mm
 
 namespace grlib {
+class CGLibDepthBuffer;
 
 class CGLibRenderCubeMap : public CGLibTextureBuffer {
 public:
@@ -24,12 +25,14 @@ public:
   void clearTexture(GrlCubeMapFace face, const mm::Col4 &color, GrlClaerMask mask);
   void clearIntTexture(GrlCubeMapFace face, const int *color, GrlClaerMask mask);
   void setRegisterRenderTarget(GrlCubeMapFace face, GrlMrtType mrt);
+  void setRenderTarget(GrlCubeMapFace face);
+  void setRenderTarget(GrlCubeMapFace face, CGLibDepthBuffer &depthBuffer);
 
   CGLibTextureBuffer *unknown70; // Inferred role: texture; original member name unknown.
   CGLibColorBuffer unknown78[6]; // Inferred role: face color buffers; original member name unknown.
   bool unknown1f8;               // Inferred role: res area; original member name unknown.
-  u32 unknown1fc;                // Inferred role: width; original member name unknown.
-  u32 unknown200;                // Inferred role: height; original member name unknown.
+  f32 unknown1fc;                // Inferred role: width; original member name unknown.
+  f32 unknown200;                // Inferred role: height; original member name unknown.
 };
 
 static_assert(offsetof(CGLibRenderCubeMap, unknown70) == 0x70, "");
@@ -47,6 +50,8 @@ public:
   CGLibColorBuffer *getColorBuffer(GrlCubeMapFace face, u32 mipmap);
   const CGLibColorBuffer *getColorBuffer(GrlCubeMapFace face, u32 mipmap) const;
   void setRegisterRenderTarget(GrlCubeMapFace face, u32 mipmap, GrlMrtType mrt);
+  void setRenderTarget(GrlCubeMapFace face, u32 mipmap);
+  void setRenderTarget(GrlCubeMapFace face, u32 mipmap, CGLibDepthBuffer &depthBuffer);
 
   CGLibTextureBuffer *unknown70;     // Inferred role: texture; original member name unknown.
   CGLibColorBuffer unknown78[6][16]; // Inferred role: face mipmap color buffers; original member name unknown.
