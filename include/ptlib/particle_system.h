@@ -181,6 +181,7 @@ public:
   static void *getGrp(int index);
   int get_prio_idx(int priority);
   CamParam &getCamParam();
+  int convert_key_by_material_index(int key, FxHeader *header) const;
   void parse_efb_type0051(u8 *data);
   renderer::RenderManager &getRenderManager();
   bool emitter_set_check(FxHeader *header);

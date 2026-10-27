@@ -3,10 +3,12 @@
 #include <string.h>
 
 #include "mm/mm_std_base.h"
+#include "mm_math/mm_vec3.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/emitter/particle_emitter_param.h"
 #include "ptlib/emitter/particle_emitter_particle.h"
 #include "ptlib/emitter/particle_emitter_set_node.h"
+#include "ptlib/particle_math.h"
 #include "ptlib/particle_system.h"
 #include "ptlib/renderer/particle_renderer_stream.h"
 
@@ -32,6 +34,29 @@ EmitterManager *EmitterManager::get() {
 EmitterManager *&EmitterManager::getPtr() { return s_instance; }
 
 void EmitterManager::moveAfter() {}
+
+void EmitterObj::remove_particle_free_tbl(ParticleObj *particle) {
+  unknown40.erase(particle);
+  particle->particle_clear_union();
+  EmitterManager::get()->addFreeParticleFront(particle);
+}
+
+void EmitterObj::releaseParticleAll() {
+  IntrusiveList<ParticleObj>::iterator it = unknown40.begin();
+  while (it != unknown40.end()) {
+    ParticleObj &particle = *it;
+    unknown40.erase(it);
+    EmitterManager::get()->addFreeParticleFront(&particle);
+    it = unknown40.begin();
+  }
+}
+
+void EmitterObj::emitter_set_param_sub_pos_only2(EmitterParam *param) {
+  if (unknown80 == nullptr) {
+    unknowne0.unknown30 = mm::Vec3(param->unknown00.unknown30);
+  }
+  ParticleManager::get()->update_model_spd(this, 1.0f);
+}
 
 IntrusiveList<EmitterObj> &EmitterManager::getEmitterActiveList() { return unknown17a8; }
 
@@ -78,6 +103,14 @@ void EmitterManager::emitter_set_param_pos_only(u32 handle, EmitterParam *param)
         memcpy(&it->unknowne0, param, sizeof(unknown001));
       }
       ParticleManager::get()->update_model_spd(it.get(), 1.0f);
+    }
+  }
+}
+
+void EmitterManager::emitter_set_param_pos_only2(u32 handle, EmitterParam *param) {
+  for (IntrusiveList<EmitterObj>::iterator it = unknown17a8.begin(); it != unknown17a8.end(); ++it) {
+    if (it->unknown264 == handle) {
+      it->emitter_set_param_sub_pos_only2(param);
     }
   }
 }
@@ -149,6 +182,39 @@ void EmitterManager::emitter_set_viewnum(u32 handle, int viewnum) {
       it->unknown90 = ParticleManager::getGrp(viewnum & 0xff);
     }
   }
+}
+
+void EmitterManager::emitter_set_link(FxHeader *header) {
+  if (unknown1808.m_size < 1) {
+#line 908
+    MM_ASSERT(0);
+    return;
+  }
+  IntrusiveList<EmitterSetNode>::iterator it = unknown1808.begin();
+  EmitterSetNode &node = *it;
+  unknown1808.erase(it);
+  node.unknown18 = header;
+  unknown17f0.push_back(&node);
+}
+
+void EmitterManager::emitter_create_local_common_life(EmitterObj *emitter, ParticleObj *particle, EmitterArg *arg) {
+  u16 base = arg->unknown8e;
+  u32 life;
+  f32 rate;
+  if (base == 0) {
+    life = 0x7fff;
+    rate = 1.0f;
+  } else {
+    f32 range = arg->unknown90;
+    f32 random = math::unknown001(emitter->unknown268);
+    life = static_cast<u32>(range * random) + base;
+    f32 total = arg->unknown8c;
+    rate = total / static_cast<f32>(life);
+  }
+  particle->unknownc0 = life;
+  particle->unknownbc = rate;
+  particle->unknownb8 = 1.0f;
+  particle->unknownc3 = 0;
 }
 
 void EmitterManager::emitter_set_casparam(u32 handle, const void *model, EmitterParam *param) {

@@ -4,7 +4,7 @@
 
 #include "grlib/cglib_render_target.h"
 #include "mm_math/mm_mat44.h"
-#include "mm_math/mm_vec3_na.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_vector.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/emitter/particle_emitter_manager.h"
@@ -21,6 +21,18 @@ namespace renderer {
 
 constexpr int ARG_DRAW_TYPE_NONE = 5;
 constexpr int PRIORITY_MAX = 0xff;
+
+RenderGrObj::RenderGrObj() : unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown60(mm::Vec3::zero), unknown70(nullptr) {
+  clear();
+  unknown80 = nullptr;
+  unknown88 = nullptr;
+  unknown90 = nullptr;
+  unknown98 = nullptr;
+  unknowna0 = nullptr;
+  unknowna8 = nullptr;
+  unknown260 = nullptr;
+  unknown270 = 0;
+}
 
 RenderGrObj::~RenderGrObj() { term(); }
 
@@ -53,6 +65,58 @@ void RenderGrObj::tex_freemem(int key, void *owner) {
 }
 
 void RenderGrObj::tex_freemem(void *material, void *owner) { material::MaterialManager::getPtr()->destroyMateriaByKey(material, owner); }
+
+void RenderGrObj::fxcore_setup_target_core(int &width, int &height, int &subWidth, int &subHeight) {
+  width = unknown258->unknown000->unknownbc;
+  height = unknown258->unknown000->unknownc0;
+  subWidth = unknown258->unknown068->unknownbc;
+  subHeight = unknown258->unknown068->unknownc0;
+}
+
+void RenderGrObj::setEffectRenderTarget(grlib::CGLibRenderTarget *target, grlib::CGLibDepthBuffer *depth, grlib::CGLibRenderTarget *subTarget1, grlib::CGLibRenderTarget *subTarget2) {
+  if (subTarget1 == nullptr) {
+    if (depth == nullptr) {
+      if (subTarget2 != nullptr) {
+        target->setRenderTarget(*subTarget2);
+        return;
+      }
+      target->setRenderTarget();
+      return;
+    }
+    if (subTarget2 != nullptr) {
+      target->setRenderTarget(*depth, *subTarget2);
+      return;
+    }
+    target->setRenderTarget(*depth);
+    return;
+  }
+  if (depth == nullptr) {
+    if (subTarget2 != nullptr) {
+      target->setRenderTarget(*subTarget1, *subTarget2);
+      return;
+    }
+    target->setRenderTarget(*subTarget1);
+    return;
+  }
+  if (subTarget2 != nullptr) {
+    target->setRenderTarget(*depth, *subTarget1, *subTarget2);
+    return;
+  }
+  target->setRenderTarget(*depth, *subTarget1);
+}
+
+void *RenderGrObj::lockStream(emitter::EmitterObj *emitter) {
+  if (emitter != nullptr) {
+    return emitter->lockStream(unknown258);
+  }
+  return nullptr;
+}
+
+void RenderGrObj::unlockStream(emitter::EmitterObj *emitter, int count) {
+  if (emitter != nullptr) {
+    emitter->unlockStream(unknown258, count);
+  }
+}
 
 void RenderGrObj::term() {
   unknown00.unknown001();

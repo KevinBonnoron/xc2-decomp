@@ -47,6 +47,8 @@ public:
   void emitter_set_viewnum(u32 handle, int viewnum);
   void emitter_set_nowait(u32 handle, int isNoWait);
   void emitter_set_free_all_sub(bool isForce);
+  void emitter_set_link(FxHeader *header);
+  void emitter_create_local_common_life(EmitterObj *emitter, ParticleObj *particle, EmitterArg *arg);
   void emitter_pack_free(u64 pack);
   void emitter_set_free(FxHeader *header, int frame);
   void emitter_set_fadeout(u32 handle, int frame);

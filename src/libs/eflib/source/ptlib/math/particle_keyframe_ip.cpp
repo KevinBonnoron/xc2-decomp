@@ -1,20 +1,11 @@
 #include "ptlib/math/particle_keyframe_ip.h"
 
-#include <string.h>
+#include "ptlib/particle_math.h"
 
 namespace ptlib {
 namespace math {
 
 namespace {
-
-// Inferred role: next value in [-1, 1) of the random sequence of a key; original name unknown.
-inline f32 unknown001(u32 &seed) {
-  seed = seed * 0x41c64e6d + 0x3039;
-  u32 bits = seed & 0x7fffff | 0x40000000;
-  f32 value;
-  memcpy(&value, &bits, sizeof(value));
-  return value - 3.0f;
-}
 
 // Inferred role: value of a key with the random range applied; original name unknown.
 inline f32 unknown002(const f32 *key, u32 &seed) { return key[0] + key[1] * unknown001(seed); }

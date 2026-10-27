@@ -1,5 +1,8 @@
 #include "ptlib/emitter/compute/particle_emitter_compute.h"
 
+// The game compiles ComputeManager::get, getPtr, init and term in this translation unit, from the _impl header.
+#include "particle_emitter_compute_impl.h" // IWYU pragma: keep
+
 namespace ptlib {
 namespace emitter {
 

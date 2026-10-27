@@ -21,13 +21,7 @@ f32 fxMath_rsqrt(f32 value) {
 
 u32 fxMath_RandI() { return s_randSeed = s_randSeed * 0x41c64e6d + 0x3039; }
 
-f32 randf2() {
-  s_randSeed = s_randSeed * 0x41c64e6d + 0x3039;
-  u32 bits = s_randSeed & 0x7fffff | 0x40000000;
-  f32 value;
-  memcpy(&value, &bits, sizeof(value));
-  return value - 3.0f;
-}
+f32 randf2() { return unknown001(s_randSeed); }
 
 } // namespace math
 

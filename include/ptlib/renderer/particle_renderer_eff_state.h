@@ -10,6 +10,8 @@
 
 namespace ptlib {
 
+class StaticAllocObj;
+
 namespace renderer {
 
 // Layout evidence: constructor 0x710093e200 (member offsets), initVtxIndex 0x710093ed18 (u16 tables at 0x648, 0x690, 0x6d8, each indexed [6][6]).
@@ -19,7 +21,9 @@ public:
   ~EffStateManager();
   static EffStateManager *get();
   void initSampler();
+  void init(StaticAllocObj *allocator);
   void initVtxFetch();
+  void initVtxIndex();
   void begin();
 
   grlib::CGLibSampler unknown00[27];  // Inferred role: samplers indexed by clamp s + t * 3 + r * 9; original member name unknown.

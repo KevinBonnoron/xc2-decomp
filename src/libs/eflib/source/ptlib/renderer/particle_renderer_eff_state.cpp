@@ -27,6 +27,12 @@ EffStateManager::~EffStateManager() {
   unknown001 = nullptr;
 }
 
+void EffStateManager::init(StaticAllocObj *allocator) {
+  initSampler();
+  initVtxFetch();
+  initVtxIndex();
+}
+
 void EffStateManager::begin() { unknown618.beginInstansBuff(); }
 
 void EffStateManager::initSampler() {

@@ -20,7 +20,12 @@ namespace emitter {
 class ParticleObj;
 
 struct EmitterArg {
-  u8 _000[0x0fc - 0x000];
+  u8 unknown00; // Inferred role: emitter type; original member name unknown.
+  u8 _001[0x08c - 0x001];
+  u16 unknown8c; // Inferred role: life base; original member name unknown.
+  u16 unknown8e; // Inferred role: life; original member name unknown.
+  u16 unknown90; // Inferred role: life random range; original member name unknown.
+  u8 _092[0x0fc - 0x092];
   u8 unknownfc; // Inferred role: blend mode; original member name unknown.
   u8 unknownfd; // Inferred role: fadeout mode; original member name unknown.
   u8 _0fe[0x100 - 0x0fe];
@@ -29,6 +34,9 @@ struct EmitterArg {
   u8 unknown24c[1]; // Inferred role: keyframe data; original member name unknown.
 };
 
+static_assert(offsetof(EmitterArg, unknown00) == 0x00, "");
+static_assert(offsetof(EmitterArg, unknown8c) == 0x8c, "");
+static_assert(offsetof(EmitterArg, unknown90) == 0x90, "");
 static_assert(offsetof(EmitterArg, unknownfc) == 0xfc, "");
 static_assert(offsetof(EmitterArg, unknownfd) == 0xfd, "");
 static_assert(offsetof(EmitterArg, unknown100) == 0x100, "");
@@ -48,22 +56,42 @@ static_assert(offsetof(unknown002, unknown70) == 0x70, "");
 static_assert(offsetof(unknown002, unknown88) == 0x88, "");
 static_assert(sizeof(unknown002) == 0x90, "");
 
+// Inferred role: gravity parameters of an emitter; original name unknown.
+struct unknown004 {
+  u16 unknown00; // Inferred role: first frame; original member name unknown.
+  u16 unknown02; // Inferred role: last frame, 0 for no limit; original member name unknown.
+  u16 unknown04; // Inferred role: frame source; original member name unknown.
+  u8 _06[0x08 - 0x06];
+  f32 unknown08; // Inferred role: direction x; original member name unknown.
+  f32 unknown0c; // Inferred role: direction y; original member name unknown.
+  f32 unknown10; // Inferred role: direction z; original member name unknown.
+};
+
+static_assert(offsetof(unknown004, unknown04) == 0x04, "");
+static_assert(offsetof(unknown004, unknown10) == 0x10, "");
+
 class EmitterObj : public IntrusiveListNode {
 public:
   bool isRenderCheck() const;
   void releaseParticleAll();
+  void remove_particle_free_tbl(ParticleObj *particle);
   void emitter_set_param_sub(EmitterParam *param);
   void emitter_set_param_sub_pos_only(EmitterParam *param);
+  void emitter_set_param_sub_pos_only2(EmitterParam *param);
+  void emitter_alloc01_set_move(FxHeader *header, EmitterArg *arg);
   int getParentParticleState() const;
   f32 getEmitterScale();
   EmitterObj *emitter_free();
   void emitter_dead(u8 value);
   f32 calc_fade();
   f32 getCateSpd();
-  void lockStream(const DrDrawWorkInfoEF *info);
+  void *lockStream(const DrDrawWorkInfoEF *info);
   void unlockStream(const DrDrawWorkInfoEF *info, u32 count);
   void renderStreamNum(renderer::RenderSet &renderSet, const DrDrawWorkInfoEF *info);
   void releaseStream();
+  bool localUpdateParticleObj(ParticleObj *&particle, IntrusiveList<ParticleObj>::iterator &it, f32 speed, int isMove, int &count);
+  bool localUpdateParticleObjLgt(ParticleObj *&particle, IntrusiveList<ParticleObj>::iterator &it, f32 speed, int isMove, int &count);
+  bool localUpdateParticleObjMdl(ParticleObj *&particle, IntrusiveList<ParticleObj>::iterator &it, f32 speed, int isMove, int &count);
 
   u8 _010[0x040 - 0x010];
   IntrusiveList<ParticleObj> unknown40; // Inferred role: particles; original member name unknown.
@@ -78,7 +106,9 @@ public:
   u8 _0a0[0x0c0 - 0x0a0];
   unknown002 *unknownc0; // Inferred role: shared data; original member name unknown.
   EmitterObj *unknownc8; // Inferred role: p next; original member name unknown.
-  u8 _0d0[0x0e0 - 0x0d0];
+  u32 unknownd0;         // Inferred role: move type; original member name unknown.
+  u32 unknownd4;         // Inferred role: move flag; original member name unknown.
+  u8 _0d8[0x0e0 - 0x0d8];
   unknown001 unknowne0; // Inferred role: transform; original member name unknown.
   u8 _120[0x12c - 0x120];
   f32 unknown12c; // Inferred role: alpha; original member name unknown.
@@ -98,11 +128,14 @@ public:
   u8 unknown182; // Inferred role: fadeout frame; original member name unknown.
   u8 _183[0x188 - 0x183];
   u32 unknown188; // Inferred role: dead value; original member name unknown.
-  u8 _18c[0x260 - 0x18c];
+  f32 unknown18c; // Inferred role: frame; original member name unknown.
+  u8 _190[0x1c8 - 0x190];
+  unknown004 *unknown1c8; // Inferred role: gravity; original member name unknown.
+  u8 _1d0[0x260 - 0x1d0];
   u8 unknown260; // Inferred role: priority; original member name unknown.
   u8 _261[0x264 - 0x261];
   u32 unknown264; // Inferred role: handle; original member name unknown.
-  u8 _268[0x26c - 0x268];
+  u32 unknown268; // Inferred role: random seed; original member name unknown.
   u16 _26c_0 : 4;
   u16 unknown26c_4 : 1; // Inferred role: dead; original member name unknown.
   u16 _26c_5 : 11;
@@ -120,6 +153,8 @@ static_assert(offsetof(EmitterObj, unknown90) == 0x90, "");
 static_assert(offsetof(EmitterObj, unknown98) == 0x98, "");
 static_assert(offsetof(EmitterObj, unknownc0) == 0xc0, "");
 static_assert(offsetof(EmitterObj, unknownc8) == 0xc8, "");
+static_assert(offsetof(EmitterObj, unknownd0) == 0xd0, "");
+static_assert(offsetof(EmitterObj, unknownd4) == 0xd4, "");
 static_assert(offsetof(EmitterObj, unknowne0) == 0xe0, "");
 static_assert(offsetof(EmitterObj, unknown12c) == 0x12c, "");
 static_assert(offsetof(EmitterObj, unknown14c) == 0x14c, "");
@@ -131,8 +166,11 @@ static_assert(offsetof(EmitterObj, unknown158) == 0x158, "");
 static_assert(offsetof(EmitterObj, unknown170) == 0x170, "");
 static_assert(offsetof(EmitterObj, unknown180) == 0x180, "");
 static_assert(offsetof(EmitterObj, unknown188) == 0x188, "");
+static_assert(offsetof(EmitterObj, unknown18c) == 0x18c, "");
+static_assert(offsetof(EmitterObj, unknown1c8) == 0x1c8, "");
 static_assert(offsetof(EmitterObj, unknown260) == 0x260, "");
 static_assert(offsetof(EmitterObj, unknown264) == 0x264, "");
+static_assert(offsetof(EmitterObj, unknown268) == 0x268, "");
 static_assert(offsetof(EmitterObj, unknown274) == 0x274, "");
 static_assert(sizeof(EmitterObj) == 0x320, "");
 

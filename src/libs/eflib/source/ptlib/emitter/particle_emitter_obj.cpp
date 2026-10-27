@@ -29,17 +29,6 @@ int EmitterObj::getParentParticleState() const {
   return 2;
 }
 
-f32 EmitterObj::getEmitterScale() {
-  f32 scale = 1.0f;
-  if (unknownc0 != nullptr) {
-    scale = unknownc0->unknown88;
-    if (unknownc0->unknown00 == nullptr) {
-      scale = 1.0f;
-    }
-  }
-  return scale * unknown14c;
-}
-
 EmitterObj *EmitterObj::emitter_free() {
   unknown26c_4 = 1;
   unknownc0->unknown00 = nullptr;
@@ -62,6 +51,32 @@ void EmitterObj::emitter_set_param_sub_pos_only(EmitterParam *param) {
   ParticleManager::get()->update_model_spd(this, 1.0f);
 }
 
+void EmitterObj::emitter_alloc01_set_move(FxHeader *header, EmitterArg *arg) {
+  unknownd0 = 0;
+  unknownd4 = 1;
+  switch (arg->unknown00) {
+  case 1:
+    unknownd0 = 2;
+    break;
+  case 4:
+    unknownd0 = 4;
+    break;
+  case 5:
+    unknownd0 = 5;
+    break;
+  case 9:
+    unknownd0 = 3;
+    break;
+  case 0xc:
+  case 0xd:
+    unknownd0 = 6;
+    break;
+  default:
+    unknownd0 = 1;
+    break;
+  }
+}
+
 f32 EmitterObj::calc_fade() {
   if (unknown182 != 0) {
     return static_cast<f32>(unknown181) / unknown182;
@@ -69,7 +84,7 @@ f32 EmitterObj::calc_fade() {
   return 1.0f;
 }
 
-void EmitterObj::lockStream(const DrDrawWorkInfoEF *info) { unknown60->lockStream(info); }
+void *EmitterObj::lockStream(const DrDrawWorkInfoEF *info) { return unknown60->lockStream(info); }
 
 void EmitterObj::unlockStream(const DrDrawWorkInfoEF *info, u32 count) { unknown60->unlockStream(info, count); }
 

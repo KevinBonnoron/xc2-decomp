@@ -29,6 +29,32 @@ ParticleManager::OutputStringFunc ParticleManager::s_pOutputWarnStringFunc;
 ParticleManager::DrFunc ParticleManager::s_pDrFunc;
 
 namespace {
+// Inferred role: texture entry of an efb section; original name unknown.
+struct unknown006 {
+  int unknown00; // Inferred role: material key; original member name unknown.
+  int unknown04; // Inferred role: format; original member name unknown.
+  int unknown08; // Inferred role: size; original member name unknown.
+  u32 unknown0c; // Inferred role: offset of the data from the table, 0 when absent; original member name unknown.
+};
+
+static_assert(sizeof(unknown006) == 0x10, "");
+
+// Inferred role: texture table of an efb section, a count followed by entries; original name unknown.
+struct unknown007 {
+  u32 unknown00;           // Inferred role: entry count; original member name unknown.
+  unknown006 unknown04[1]; // Inferred role: entries; original member name unknown.
+
+  // Inferred role: entry of an index, null when out of range; original name unknown.
+  const unknown006 *get(u32 index) const {
+    if (index < unknown00) {
+      return &unknown04[index];
+    }
+    return nullptr;
+  }
+};
+
+static_assert(offsetof(unknown007, unknown04) == 0x04, "");
+
 ParticleManager *s_instance;
 f32 s_unknown001;
 char s_messageBuffer[0x1000];
@@ -146,6 +172,17 @@ void ParticleManager::clear() {
 }
 
 CamParam &ParticleManager::getCamParam() { return m_camParam; }
+
+int ParticleManager::convert_key_by_material_index(int key, FxHeader *header) const {
+  if (key < 0x10000000) {
+    const unknown007 *table = unknown002<unknown007>(header, reinterpret_cast<const unknown001 *>(header)->unknown10);
+    if (table != nullptr && key < static_cast<int>(table->unknown00)) {
+      const unknown006 *entry = table->get(key);
+      key = entry->unknown00;
+    }
+  }
+  return key;
+}
 
 void ParticleManager::parse_efb_type0051(u8 *data) { unknown160 = unknown002<u8>(data, reinterpret_cast<const unknown001 *>(data)->unknown10); }
 

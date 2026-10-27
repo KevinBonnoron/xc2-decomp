@@ -14,6 +14,7 @@ namespace renderer {
 // Layout evidence: createAll 0x7100939b30, bufferClear 0x7100939e6c.
 class BackBuffer {
 public:
+  BackBuffer() { unknown002(); }
   ~BackBuffer() { unknown001(); }
 
   // Inferred role: destroys the render targets; original name unknown.

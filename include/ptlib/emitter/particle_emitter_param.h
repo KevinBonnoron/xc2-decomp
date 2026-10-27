@@ -1,7 +1,7 @@
 #pragma once
 #include <stddef.h>
 
-#include "mm_math/mm_vec3_na.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
 
 namespace ptlib {
@@ -10,8 +10,7 @@ namespace emitter {
 // Inferred role: transform block copied between an EmitterParam and an EmitterObj; original name unknown.
 struct unknown001 {
   u8 _00[0x30 - 0x00];
-  mm::Vec3NA unknown30; // Inferred role: position; original member name unknown.
-  u8 _3c[0x40 - 0x3c];
+  mm::Vec3 unknown30; // Inferred role: position; original member name unknown.
 };
 
 static_assert(offsetof(unknown001, unknown30) == 0x30, "");
