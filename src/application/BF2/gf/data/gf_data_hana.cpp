@@ -16,6 +16,19 @@ constexpr u32 HANA_BASE_FIRST = BLADE_HANA_JS - 1;
 constexpr u32 EXTEND_CIRCUIT_FIRST = 3;
 constexpr u32 POWER_RANK_MAX = 20;
 
+void EquipHana::setArtsParts(u32 parts, u32 handle, u32 index) {
+  unknown04[index].unknown04 = parts;
+  unknown04[index].unknown0a = handle;
+  unknown04[index].unknown00 = GfBdatItem::get()->getITM_HanaArtsEnhEnhance(parts);
+}
+
+void EquipHana::setNArtsParts(u32 parts, u32 handle, u32 index) {
+  unknown28[index].unknown04 = parts;
+  unknown28[index].unknown0a = handle;
+  unknown28[index].unknown00 = GfBdatItem::get()->getITM_HanaNArtsSetNArts(parts);
+  unknown28[index].unknown02 = GfBdatItem::get()->getITM_HanaNArtsSetNArtsRecastRev(parts);
+}
+
 bool GfDataHana::getRoleName(u8 *&bdat, u32 &textId, u32 parts) {
   textId = GfBdatItem::get()->getITM_HanaRoleName(parts);
   bdat = GfBdatMsg::getFpBtlHanaRole();

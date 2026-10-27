@@ -118,6 +118,8 @@ public:
   static FileHandleTh *checkValidFile(const char *path, IWorkEvent *event);
   static bool isInitialized();
   static bool writeFileBlock(const char *path, const void *data, u32 size, int priority);
+  static FileHandleTh *writeFile(const char *path, IWorkEvent *event, const void *data, int size, int priority);
+  static void flushSave();
   static FileHandleTh *rfOpen(const DevFileParamTh &param);
   static bool rfRead(FileHandleTh *handle, const DevFileParamTh &param);
   static bool rfIsBusy(FileHandleTh *handle);

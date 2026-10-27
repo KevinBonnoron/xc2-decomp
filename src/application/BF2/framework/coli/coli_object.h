@@ -28,6 +28,8 @@ class UpdatableObject;
 struct ColiCharacterInfo;
 struct ColiPhantomInfo;
 
+extern const u32 COLI_INVALID_DAMAGE_ID;
+
 enum ColiType : int {
   COLI_TYPE_STATIC = 0,
 };

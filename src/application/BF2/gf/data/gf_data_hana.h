@@ -10,17 +10,21 @@ struct SDataBlade;
 
 struct EquipHanaArts {
   u16 unknown00; // Inferred role: enhance; original member name unknown.
-  u8 _02[0x04 - 0x02];
+  u16 unknown02; // Inferred role: recast reverse of the n arts; original member name unknown.
   u16 unknown04; // Inferred role: parts; original member name unknown.
   u8 _06[0x0a - 0x06];
   u16 unknown0a; // Inferred role: handle; original member name unknown.
 };
 
+static_assert(offsetof(EquipHanaArts, unknown02) == 0x02, "");
 static_assert(offsetof(EquipHanaArts, unknown04) == 0x04, "");
 static_assert(offsetof(EquipHanaArts, unknown0a) == 0x0a, "");
 static_assert(sizeof(EquipHanaArts) == 0x0c, "");
 
 struct EquipHana {
+  void setArtsParts(u32 parts, u32 handle, u32 index);
+  void setNArtsParts(u32 parts, u32 handle, u32 index);
+
   u16 unknown00;                                   // Inferred role: role; original member name unknown.
   u16 unknown02;                                   // Inferred role: attribute; original member name unknown.
   mm::mtl::FixedArray<EquipHanaArts, 3> unknown04; // Inferred role: arts; original member name unknown.

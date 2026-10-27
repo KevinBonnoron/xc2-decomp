@@ -8,6 +8,7 @@
 #include "gf/data/gf_data_map.h"
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_party.h"
+#include "gf/data/gf_data_system.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/game/quest/gf_quest_data.h"
@@ -138,5 +139,17 @@ static_assert(offsetof(SDataGame, unknown1171d4) == 0x1171d4, "");
 static_assert(offsetof(SDataGame, unknown1171d8) == 0x1171d8, "");
 static_assert(offsetof(SDataGame, unknown117688) == 0x117688, "");
 static_assert(sizeof(SDataGame) == 0x117690, "");
+
+struct SDataSave {
+  SDataSave() : unknown00(SAVE_DATA_VERSION), unknown08(0) {}
+
+  u32 unknown00;       // Inferred role: version; original member name unknown.
+  u64 unknown08;       // Inferred role: flags; original member name unknown.
+  SDataGame unknown10; // Inferred role: game data; original member name unknown.
+};
+
+static_assert(offsetof(SDataSave, unknown08) == 0x08, "");
+static_assert(offsetof(SDataSave, unknown10) == 0x10, "");
+static_assert(sizeof(SDataSave) == 0x1176a0, "");
 
 } // namespace gf

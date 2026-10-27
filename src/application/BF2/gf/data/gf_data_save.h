@@ -3,6 +3,14 @@
 
 namespace gf {
 
+struct SDataOption;
+struct SDataSave;
+
+namespace _gfgsv {
+extern SDataSave s_SDataSave;
+extern SDataOption s_SDataOption;
+} // namespace _gfgsv
+
 enum SAVESLOT {
   SAVESLOT_NONE = -1,
   SAVESLOT_CHAPTER_FIRST = 10,
