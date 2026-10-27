@@ -378,7 +378,7 @@ public:
 class IDColiObjPhantom : public IDColiObjBase {
 public:
   IDColiObjPhantom(IDColiTreeTop *tree);
-  ~IDColiObjPhantom() override {}
+  ~IDColiObjPhantom() override;
   void sizeUpdate() override;
   void update() override;
   bool SweepAndPruneUpdate() override;
@@ -665,8 +665,8 @@ static_assert(offsetof(IDColiObjGrand, unknown50) == 0x50, "");
 static_assert(sizeof(IDColiObjGrand) == 0x100, "");
 
 struct unknown019 {
-  u8 _00[0xa0 - 0x00];
-  IDColiObj *unknowna0; // Inferred role: collision object; original member name unknown.
+  IDCmfPosData unknown00; // Inferred role: position data; original member name unknown.
+  IDColiObj *unknowna0;   // Inferred role: collision object; original member name unknown.
   u8 _a8[0xc0 - 0xa8];
 };
 
@@ -678,6 +678,7 @@ public:
   IDColiObjGrdChar();
   ~IDColiObjGrdChar() override;
   void workClear();
+  void update() override;
 
   mm::Vec3 unknown50;    // Inferred role: max; original member name unknown.
   mm::Vec3 unknown60;    // Inferred role: min; original member name unknown.

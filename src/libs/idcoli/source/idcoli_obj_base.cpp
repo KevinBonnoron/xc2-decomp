@@ -142,6 +142,8 @@ void IDColiObjBase::updateBaseTree() {
 
 IDColiObjPhantom::IDColiObjPhantom(IDColiTreeTop *tree) : IDColiObjBase(tree) { unknown24 = OBJ_TYPE_PHANTOM; }
 
+IDColiObjPhantom::~IDColiObjPhantom() {}
+
 void IDColiObjPhantom::update() { sizeUpdate(); }
 
 void IDColiObjPhantom::sizeUpdate() {
