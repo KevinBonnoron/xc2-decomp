@@ -6,7 +6,7 @@
 
 namespace grlib {
 
-class CGLibTexSwizzle;
+struct CGLibTexSwizzle;
 
 class CGLibTexture {
 public:

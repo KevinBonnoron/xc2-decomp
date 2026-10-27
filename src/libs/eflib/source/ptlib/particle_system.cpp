@@ -1,7 +1,17 @@
 #include "ptlib/particle_system.h"
 
+#include <stdarg.h>
+#include <stdio.h>
+
 #include "mm/mm_std_base.h"
+#include "ptlib/emitter/particle_emitter.h"
+#include "ptlib/emitter/particle_emitter_ext.h"
 #include "ptlib/emitter/particle_emitter_manager.h"
+#include "ptlib/emitter/particle_emitter_particle.h"
+#include "ptlib/material/particle_material_manager.h"
+#include "ptlib/particle_hash.h"
+#include "ptlib/particle_heap_allocater.h"
+#include "ptlib/particle_intrusive_list.h"
 #include "ptlib/renderer/particle_renderer_manager.h"
 
 namespace ptlib {
@@ -20,6 +30,8 @@ ParticleManager::DrFunc ParticleManager::s_pDrFunc;
 
 namespace {
 ParticleManager *s_instance;
+f32 s_unknown001;
+char s_messageBuffer[0x1000];
 } // namespace
 
 bool ParticleManager::isValid() { return getPtr() != nullptr; }
@@ -27,6 +39,7 @@ bool ParticleManager::isValid() { return getPtr() != nullptr; }
 ParticleManager *&ParticleManager::getPtr() { return s_instance; }
 
 ParticleManager *ParticleManager::get() {
+#line 40
   MM_ASSERT(getPtr());
   return getPtr();
 }
@@ -71,8 +84,50 @@ void ParticleManager::setUserDrFunc(void *(*createMdl)(const void *, const char 
   s_pDrFunc.unknown70 = debugRenderer;
 }
 
+void ParticleManager::init(const DrDrawWorkInfoEF *info) {
+  HeapAllocaterManager::init();
+#line 122
+  s_instance = static_cast<ParticleManager *>(sysAlloc(sizeof(ParticleManager), 0x10, __FILE__, __LINE__));
+  getPtr()->m_fxParam.unknown001();
+  efAstMsg("getPtr()", "particle system cannot create");
+  getPtr()->clear();
+  getPtr()->unknown168 = true;
+  getPtr()->unknown169 = false;
+  emitter::EmitterManager::init();
+  HashManager::init();
+  material::MaterialManager::init();
+  getPtr()->m_fxParam.unknown001();
+  renderer::RenderManager::init(info, &getPtr()->m_fxParam);
+  getPtr()->fxcore_setup_target();
+  getPtr()->unknown170[0] = createGrp(0, 11);
+  getPtr()->unknown170[1] = createGrp(1, 11);
+  getPtr()->unknown170[2] = createGrp(2, 11);
+  getPtr()->unknown170[3] = createGrp(3, 11);
+}
+
+void ParticleManager::term() {
+  HashManager::term();
+  material::MaterialManager::term();
+  renderer::RenderManager::term();
+  emitter::EmitterManager::term();
+  destroyGrp(getPtr()->unknown170[0]);
+  destroyGrp(getPtr()->unknown170[1]);
+  destroyGrp(getPtr()->unknown170[2]);
+  destroyGrp(getPtr()->unknown170[3]);
+  getPtr()->unknown170[2] = nullptr;
+  getPtr()->unknown170[3] = nullptr;
+  getPtr()->unknown170[0] = nullptr;
+  getPtr()->unknown170[1] = nullptr;
+  if (getPtr() != nullptr) {
+    sysFree(getPtr());
+    getPtr() = nullptr;
+  }
+  HeapAllocaterManager::term();
+}
+
 void *ParticleManager::sysAlloc(u32 size, u32 alignment, const char *file, u32 line) {
   void *ptr = s_pAllocFuncSys(nullptr, size, alignment, file, line);
+#line 213
   MM_ASSERT(ptr);
   return ptr;
 }
@@ -88,6 +143,17 @@ void ParticleManager::clear() {
   for (int i = 0; i < 4; i++) {
     unknown170[i] = nullptr;
   }
+}
+
+CamParam &ParticleManager::getCamParam() { return m_camParam; }
+
+void ParticleManager::parse_efb_type0051(u8 *data) { unknown160 = unknown002<u8>(data, reinterpret_cast<const unknown001 *>(data)->unknown10); }
+
+void *ParticleManager::getGrp(int index) {
+  if (isValid() && static_cast<u32>(index) <= 3) {
+    return getPtr()->unknown170[index];
+  }
+  return nullptr;
 }
 
 FxParam *ParticleManager::getFxParam() { return &m_fxParam; }
@@ -224,6 +290,48 @@ void ParticleManager::emitter_set_free(FxHeader *header, int frame) { emitter::E
 
 void ParticleManager::emitter_alloc01_set_draw(emitter::EmitterObj *emitter, emitter::EmitterArg *arg) { renderer::RenderManager::get()->setEmitterDraw(emitter, arg); }
 
+void ParticleManager::update_pause() {
+  m_fxParam.unknown0d = m_fxParam.unknown0e;
+  f32 rate = 0.0f;
+  if (!m_fxParam.unknown0e) {
+    rate = 1.0f;
+  }
+  emitter::EmitterManager *emitterManager = emitter::EmitterManager::getPtr();
+  for (IntrusiveList<emitter::EmitterObj>::iterator emitterIt = emitterManager->getEmitterActiveList().begin(); emitterIt != emitterManager->getEmitterActiveList().end(); ++emitterIt) {
+    s_unknown001 = rate * emitterIt->unknown158;
+    for (IntrusiveList<emitter::ParticleObj>::iterator particleIt = emitterIt->unknown40.begin(); particleIt != emitterIt->unknown40.end(); ++particleIt) {
+      if (particleIt->unknown13e != 0 && particleIt->unknown130->unknown110 != nullptr) {
+        setMdlSpd(particleIt->unknown130->unknown110, &s_unknown001);
+      }
+    }
+  }
+}
+
+void ParticleManager::update_model_spd(emitter::EmitterObj *emitter, f32 speed) {
+  f32 rate = speed;
+  if (m_fxParam.unknown0d) {
+    rate = 0.0f;
+  }
+  if (emitter == nullptr) {
+    emitter::EmitterManager *emitterManager = emitter::EmitterManager::getPtr();
+    for (IntrusiveList<emitter::EmitterObj>::iterator emitterIt = emitterManager->getEmitterActiveList().begin(); emitterIt != emitterManager->getEmitterActiveList().end(); ++emitterIt) {
+      s_unknown001 = rate * emitterIt->unknown158;
+      for (IntrusiveList<emitter::ParticleObj>::iterator particleIt = emitterIt->unknown40.begin(); particleIt != emitterIt->unknown40.end(); ++particleIt) {
+        if (particleIt->unknown13e != 0 && particleIt->unknown130->unknown110 != nullptr) {
+          setMdlSpd(particleIt->unknown130->unknown110, &s_unknown001);
+        }
+      }
+    }
+  } else {
+    for (IntrusiveList<emitter::ParticleObj>::iterator particleIt = emitter->unknown40.begin(); particleIt != emitter->unknown40.end(); ++particleIt) {
+      s_unknown001 = rate * emitter->unknown158;
+      if (particleIt->unknown13e != 0 && particleIt->unknown130->unknown110 != nullptr) {
+        setMdlSpd(particleIt->unknown130->unknown110, &s_unknown001);
+      }
+    }
+  }
+}
+
 void ParticleManager::move() {
   if (m_fxParam.unknown10) {
     return;
@@ -255,4 +363,23 @@ void ParticleManager::draw(const DrDrawWorkInfoEF *info, int viewIndex, bool isB
 
 void ParticleManager::setDrInfo(const DrDrawWorkInfoEF *info) { get()->getRenderManager().setDrInfo(info); }
 
+void efMsg(const char *format, ...) {
+  va_list args;
+  va_start(args, format);
+  vsnprintf(s_messageBuffer, sizeof(s_messageBuffer), format, args);
+  va_end(args);
+  ParticleManager::s_pOutputDebugStringFunc(s_messageBuffer);
+}
+
+void efWng(const char *format, ...) {
+  va_list args;
+  va_start(args, format);
+  vsnprintf(s_messageBuffer, sizeof(s_messageBuffer), format, args);
+  va_end(args);
+  ParticleManager::s_pOutputWarnStringFunc(s_messageBuffer);
+}
+
 } // namespace ptlib
+
+#include "forcefield/particle_force_field.cpp"
+#include "particle_hash.cpp"

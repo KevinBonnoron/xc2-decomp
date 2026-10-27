@@ -30,23 +30,57 @@ struct FxHeader {
   u8 unknown0a; // Inferred role: cam axis; original member name unknown.
   u8 _0b[0x14 - 0x0b];
   char unknown14[0x20]; // Inferred role: name; original member name unknown.
+  u8 _34[0x48 - 0x34];
+  u64 unknown48; // Inferred role: pack; original member name unknown.
 };
 
 static_assert(offsetof(FxHeader, unknown09) == 0x09, "");
 static_assert(offsetof(FxHeader, unknown14) == 0x14, "");
+static_assert(offsetof(FxHeader, unknown48) == 0x48, "");
 
 struct FxParam {
+  // Inferred role: sets the default values of the parameters; original name unknown.
+  void unknown001() {
+    unknown0d = false;
+    unknown0e = false;
+    unknown0f = 1;
+    unknown10 = false;
+    unknown11 = 0;
+    unknown12 = 0;
+    unknown14 = 1;
+  }
+
   u8 _00[0x0d - 0x00];
   bool unknown0d; // Inferred role: pause; original member name unknown.
   bool unknown0e; // Inferred role: pause request; original member name unknown.
-  u8 _0f[0x10 - 0x0f];
+  u8 unknown0f;   // Original member name unknown.
   bool unknown10; // Inferred role: stop; original member name unknown.
-  u8 _11[0x18 - 0x11];
+  u8 unknown11;   // Original member name unknown.
+  u8 unknown12;   // Original member name unknown.
+  u8 _13[0x14 - 0x13];
+  u32 unknown14; // Original member name unknown.
 };
 
 static_assert(offsetof(FxParam, unknown0d) == 0x0d, "");
 static_assert(offsetof(FxParam, unknown10) == 0x10, "");
+static_assert(offsetof(FxParam, unknown14) == 0x14, "");
 static_assert(sizeof(FxParam) == 0x18, "");
+
+// Inferred role: efb section header holding the offset of its data; original name unknown.
+struct unknown001 {
+  u8 _00[0x10 - 0x00];
+  u32 unknown10;
+};
+
+static_assert(offsetof(unknown001, unknown10) == 0x10, "");
+
+// Inferred role: pointer at an offset from a base, null when the offset is 0; original name unknown.
+template <typename T> inline const T *unknown002(const void *base, u32 offset) {
+  if (offset == 0) {
+    return nullptr;
+  }
+  return reinterpret_cast<const T *>(static_cast<const u8 *>(base) + offset);
+}
 
 struct CamParam {
   mm::Mat44 m_viewMatrix;
@@ -108,7 +142,7 @@ public:
   FxParam *getFxParam();
   void fxcore_setup_target();
   static void *createGrp(int index, int count);
-  void term();
+  static void term();
   static void destroyGrp(void *group);
   static void sysFree(void *ptr);
   static void *resAlloc(u32 size, u32 alignment, const char *file, u32 line);
@@ -134,6 +168,7 @@ public:
   static void *getGrp(int index);
   int get_prio_idx(int priority);
   CamParam &getCamParam();
+  void parse_efb_type0051(u8 *data);
   renderer::RenderManager &getRenderManager();
   bool emitter_set_check(FxHeader *header);
   void emitter_set_free_all(bool isForce);
@@ -156,12 +191,15 @@ public:
   void set_pause(bool isPause);
   void emitter_pack_free(u64 pack);
   void emitter_set_free(FxHeader *header, int frame);
+  void update_model_spd(emitter::EmitterObj *emitter, f32 speed);
   void emitter_alloc01_set_draw(emitter::EmitterObj *emitter, emitter::EmitterArg *arg);
+  void update_pause();
   void move();
   void draw(const DrDrawWorkInfoEF *info, int viewIndex, bool isBlur);
   void setDrInfo(const DrDrawWorkInfoEF *info);
 
-  u8 _000[0x130 - 0x000];
+  CamParam m_camParam;
+  u8 _040[0x130 - 0x040];
   FxParam m_fxParam;
   f32 unknown148; // Inferred role: responsive aa; original member name unknown.
   f32 unknown14c; // Inferred role: spec scale; original member name unknown.
@@ -171,13 +209,16 @@ public:
   f32 unknown15c;       // Inferred role: frame count; original member name unknown.
   const u8 *unknown160; // Inferred role: model table; original member name unknown.
   bool unknown168;      // Inferred role: all disp; original member name unknown.
-  u8 _169[0x170 - 0x169];
+  bool unknown169;      // Original member name unknown.
+  u8 _16a[0x170 - 0x16a];
   void *unknown170[4]; // Inferred role: groups; original member name unknown.
 };
 
+static_assert(offsetof(ParticleManager, m_camParam) == 0x000, "");
 static_assert(offsetof(ParticleManager, m_fxParam) == 0x130, "");
 static_assert(offsetof(ParticleManager, unknown148) == 0x148, "");
 static_assert(offsetof(ParticleManager, unknown168) == 0x168, "");
+static_assert(offsetof(ParticleManager, unknown169) == 0x169, "");
 static_assert(offsetof(ParticleManager, unknown15c) == 0x15c, "");
 static_assert(offsetof(ParticleManager, unknown160) == 0x160, "");
 static_assert(offsetof(ParticleManager, unknown170) == 0x170, "");
@@ -185,5 +226,6 @@ static_assert(sizeof(ParticleManager::DrFunc) == 0x80, "");
 
 void efAstMsg(const char *cond, const char *format, ...);
 void efMsg(const char *format, ...);
+void efWng(const char *format, ...);
 
 } // namespace ptlib

@@ -17,6 +17,8 @@ class RenderManager {
 public:
   static RenderManager *get();
   static RenderManager *&getPtr();
+  static void init(const DrDrawWorkInfoEF *info, FxParam *fxParam);
+  static void term();
   void setDrInfo(const DrDrawWorkInfoEF *info);
   void setEmitterDraw(emitter::EmitterObj *emitter, emitter::EmitterArg *arg);
   void fxcore_setup_target();

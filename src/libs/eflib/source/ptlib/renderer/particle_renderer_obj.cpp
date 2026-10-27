@@ -3,10 +3,11 @@
 #include <algorithm>
 
 #include "mm_math/mm_mat44.h"
-#include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec3_na.h"
 #include "mm_mtl/fixed_vector.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/emitter/particle_emitter_manager.h"
+#include "ptlib/emitter/particle_emitter_param.h"
 #include "ptlib/particle_system.h"
 
 namespace ptlib {
@@ -34,7 +35,7 @@ void RenderGrObj::prioritySort(emitter::EmitterManager &emitterManager, int prio
         priority = PRIORITY_MAX;
       }
       entry.unknown01 = priority;
-      entry.unknown04 = emitter->unknown110.x * view.rows[0][2] + emitter->unknown110.y * view.rows[1][2] + emitter->unknown110.z * view.rows[2][2] + view.rows[3][2];
+      entry.unknown04 = emitter->unknowne0.unknown30.x * view.rows[0][2] + emitter->unknowne0.unknown30.y * view.rows[1][2] + emitter->unknowne0.unknown30.z * view.rows[2][2] + view.rows[3][2];
       entry.unknown08 = false;
       entry.unknown10 = emitter;
       sorts.push_back(entry);

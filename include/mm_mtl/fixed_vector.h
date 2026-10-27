@@ -76,6 +76,7 @@ public:
   bool validate_iterator(const T *it) const { return begin() <= it && it <= end(); }
 
   T *erase(T *it) {
+#line 345
     MM_ASSERT(validate_iterator(it));
     if (it == end()) {
       return it;

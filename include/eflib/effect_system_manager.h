@@ -108,14 +108,14 @@ public:
   u32 getEmitterForm(u32 handle);
 
   u8 _08[0x09 - 0x08];
-  bool unknown09;                                                      // Inferred role: update; original member name unknown.
-  bool unknown0a;                                                      // Inferred role: draw; original member name unknown.
-  bool unknown0b;                                                      // Inferred role: disp emitter; original member name unknown.
-  bool unknown0c;                                                      // Inferred role: disp emitter set; original member name unknown.
-  mm::mtl::FixedVector<ptlib::forcefield::AddForceParam, 8> unknown10; // Inferred role: forces; original member name unknown.
-  CommandList unknown220[2];                                           // Inferred role: commands; original member name unknown.
-  f32 unknown78240[2];                                                 // Inferred role: global speed; original member name unknown.
-  bool unknown78248;                                                   // Inferred role: clear force; original member name unknown.
+  bool unknown09;                                          // Inferred role: update; original member name unknown.
+  bool unknown0a;                                          // Inferred role: draw; original member name unknown.
+  bool unknown0b;                                          // Inferred role: disp emitter; original member name unknown.
+  bool unknown0c;                                          // Inferred role: disp emitter set; original member name unknown.
+  mm::mtl::FixedVector<ptlib::AddForceParam, 8> unknown10; // Inferred role: forces; original member name unknown.
+  CommandList unknown220[2];                               // Inferred role: commands; original member name unknown.
+  f32 unknown78240[2];                                     // Inferred role: global speed; original member name unknown.
+  bool unknown78248;                                       // Inferred role: clear force; original member name unknown.
   u8 _78249;
   bool unknown7824a; // Inferred role: disp particle texture; original member name unknown.
   bool unknown7824b; // Inferred role: work texture; original member name unknown.

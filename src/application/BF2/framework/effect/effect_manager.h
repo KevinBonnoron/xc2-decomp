@@ -47,7 +47,7 @@ class EffectPack;
 class RenderResource;
 enum EF_CATEGORY : int;
 
-struct AddForceParam : public ptlib::forcefield::AddForceParam {};
+struct AddForceParam : public ptlib::AddForceParam {};
 
 class EffectManager : public mm::mtl::PtrSingleton<EffectManager>, public ManagerObject, public ml::IDrDrawCallback, public ml::IScnRender {
 public:
