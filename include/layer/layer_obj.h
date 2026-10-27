@@ -123,7 +123,9 @@ public:
   f32 unknown174;                // Inferred role: clip value; original member name unknown.
   f32 unknown178;                // Inferred role: clip value; original member name unknown.
   f32 unknown17c;                // Inferred role: clip value; original member name unknown.
-  u8 _180[0x190 - 0x180];
+  f32 unknown180;                // Inferred role: width; original member name unknown.
+  f32 unknown184;                // Inferred role: height; original member name unknown.
+  u8 _188[0x190 - 0x188];
   u16 unknown190;                // Inferred role: pixel x; original member name unknown.
   u16 unknown192;                // Inferred role: pixel y; original member name unknown.
   u16 unknown194;                // Inferred role: pixel width; original member name unknown.
@@ -154,6 +156,7 @@ static_assert(offsetof(LayerObj, unknownc6) == 0xc6, "");
 static_assert(offsetof(LayerObj, unknownc8) == 0xc8, "");
 static_assert(offsetof(LayerObj, unknown170) == 0x170, "");
 static_assert(offsetof(LayerObj, unknown17c) == 0x17c, "");
+static_assert(offsetof(LayerObj, unknown180) == 0x180, "");
 static_assert(offsetof(LayerObj, unknown190) == 0x190, "");
 static_assert(offsetof(LayerObj, unknown198) == 0x198, "");
 static_assert(offsetof(LayerObj, unknown19c) == 0x19c, "");

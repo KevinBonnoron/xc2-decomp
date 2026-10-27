@@ -82,6 +82,46 @@ u32 LayerTag::calcStringLength(const wchar_t *string) {
   return length;
 }
 
+void LayerTag::changeUtf16ToUtf8(u8 *result, u32 &length, u16 code) {
+  if (code < 0x80) {
+    result[0] = code;
+    length = 1;
+  } else if (code < 0x800) {
+    result[0] = (code >> 6) | 0xc0;
+    result[1] = (code & 0x3f) | 0x80;
+    length = 2;
+  } else {
+    result[0] = (code >> 12) | 0xe0;
+    result[1] = ((code >> 6) & 0x3f) | 0x80;
+    result[2] = (code & 0x3f) | 0x80;
+    length = 3;
+  }
+}
+
+void LayerTag::changeUtf8ToUtf16(u16 &result, const u8 *string, u32 &length) {
+  result = 0x20;
+  u8 code = string[0];
+  if (static_cast<s8>(code) < 0) {
+    if (code >= 0xc2 && code <= 0xdf) {
+      result = (string[1] & 0x3f) | ((code & 0x1f) << 6);
+      length = 2;
+      return;
+    }
+    if ((code & 0xf0) == 0xe0) {
+      result = (code << 12) | ((string[1] & 0x3f) << 6) | (string[2] & 0x3f);
+      length = 3;
+      return;
+    }
+    if ((code & 0xf8) == 0xf0) {
+      length = 4;
+      return;
+    }
+  } else {
+    result = code;
+  }
+  length = 1;
+}
+
 LayerTagStr::LayerTagStr() : m_result(nullptr), unknown10(0), unknown14(0) {}
 
 LayerTagStr::~LayerTagStr() {}
@@ -104,6 +144,21 @@ void LayerTagStr::endParseString() { m_result[unknown14] = 0; }
 void LayerTagStr::parseNotTag(const u8 *string, u32 &index) {
   m_result[unknown14++] = string[index];
   index++;
+}
+
+void LayerTagStr::parseNotTag(const wchar_t *string, u32 &index) {
+  u32 length;
+  changeUtf16ToUtf8(reinterpret_cast<u8 *>(&m_result[unknown14]), length, string[index]);
+  unknown14 += length;
+  index++;
+}
+
+void LayerTagStr::stockString(const wchar_t *string) {
+  for (u32 i = 0; string[i] != 0; i++) {
+    u32 length;
+    changeUtf16ToUtf8(reinterpret_cast<u8 *>(&m_result[unknown14]), length, string[i]);
+    unknown14 += length;
+  }
 }
 
 void LayerTagStr::callTagNoUse(const u8 *tag) {

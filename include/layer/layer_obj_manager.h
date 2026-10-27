@@ -31,6 +31,8 @@ public:
   LayerBase *createFilterObj();
   void begin();
   void apply(const ml::IDrDrawWorkInfo *info);
+  void alphaRender(const ml::IDrDrawWorkInfo *info);
+  void lastRender(const ml::IDrDrawWorkInfo *info);
   void finalRender(const ml::IDrDrawWorkInfo *info);
   void end();
 

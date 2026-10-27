@@ -43,6 +43,7 @@ public:
   void setTexutre(grlib::CGLibTextureBuffer &texture);
   void resetTexutre();
   void setIndexInfo(u16 start, u16 num);
+  void finalRender();
 
   u32 unknown250; // Inferred role: update flags; original member name unknown.
   u8 _254[0x280 - 0x254];

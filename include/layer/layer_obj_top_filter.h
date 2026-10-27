@@ -11,6 +11,7 @@ public:
   void setGaussianBlurParameter(f32 strength, f32 scale, u32 sampleNum, bool isHalf, u32 passNum);
   void createFlowMap(u32 width, u32 height, const void *data);
   void setFlowMapParameter(f32 speed, f32 strength);
+  void finalRender();
 };
 
 } // namespace layer

@@ -142,7 +142,7 @@ void LayerObjUtil::calcLayerScaleMatrix(LayerResMatrix &result, const LayerBaseP
   result.unknown04 = 0.0f;
 }
 
-u16 LayerObjUtil::getUniformBlockSizeAlOff(LayerUniType type) { return UNIFORM_BLOCK_SIZE[type]; }
+u32 LayerObjUtil::getUniformBlockSizeAlOff(LayerUniType type) { return UNIFORM_BLOCK_SIZE[type]; }
 
 u32 LayerObjUtil::getUniformBlockSize(LayerUniType type) { return getUniformBlockAligment(UNIFORM_BLOCK_SIZE[type]); }
 

@@ -47,6 +47,8 @@ public:
   void calcUTF16ParseString(const wchar_t *string);
   u32 calcStringLength(const u8 *string);
   u32 calcStringLength(const wchar_t *string);
+  void changeUtf16ToUtf8(u8 *result, u32 &length, u16 code);
+  void changeUtf8ToUtf16(u16 &result, const u8 *string, u32 &length);
   virtual ~LayerTag() {}
   virtual void beginParseString() = 0;
   virtual void endParseString() {}
