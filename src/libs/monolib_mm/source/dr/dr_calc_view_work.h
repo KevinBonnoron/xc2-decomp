@@ -48,7 +48,7 @@ public:
   u8 _1c0[0x200 - 0x1c0];
   mm::Mat44 unknown200; // Inferred role: view proj; original member name unknown.
   mm::Mat44 unknown240; // Inferred role: billboard y vec; original member name unknown.
-  u8 _280[0x2c0 - 0x280];
+  mm::Mat44 unknown280; // Inferred role: prev view; original member name unknown.
   mm::Mat44 unknown2c0; // Inferred role: prev view proj; original member name unknown.
   mm::Mat44 unknown300; // Inferred role: diff pre orij matrix; original member name unknown.
   mm::Mat44 unknown340; // Inferred role: view proj non jitter; original member name unknown.
@@ -74,7 +74,9 @@ public:
   grlib::CGLibDblUniformBlock unknown858; // Inferred role: toon uniform; original member name unknown.
   grlib::CGLibDblUniformBlock unknown890; // Inferred role: toon2 uniform; original member name unknown.
   grlib::CGLibDblUniformBlock unknown8c8; // Inferred role: light uniform; original member name unknown.
-  u8 _900[0xae0 - 0x900];
+  u8 _900[0x9ad - 0x900];
+  bool unknown9ad; // Inferred role: request flag; original member name unknown.
+  u8 _9ae[0xae0 - 0x9ae];
   f32 unknownae0[2]; // Inferred role: jitter; original member name unknown.
   u8 _ae8[0xaf0 - 0xae8];
   f32 unknownaf0[2]; // Inferred role: prev jitter; original member name unknown.
@@ -87,6 +89,7 @@ static_assert(offsetof(DrCalcViewWork, unknownc0) == 0xc0, "");
 static_assert(offsetof(DrCalcViewWork, unknown140) == 0x140, "");
 static_assert(offsetof(DrCalcViewWork, unknown180) == 0x180, "");
 static_assert(offsetof(DrCalcViewWork, unknown200) == 0x200, "");
+static_assert(offsetof(DrCalcViewWork, unknown280) == 0x280, "");
 static_assert(offsetof(DrCalcViewWork, unknown2c0) == 0x2c0, "");
 static_assert(offsetof(DrCalcViewWork, unknown380) == 0x380, "");
 static_assert(offsetof(DrCalcViewWork, unknown400) == 0x400, "");
@@ -101,6 +104,7 @@ static_assert(offsetof(DrCalcViewWork, unknown820) == 0x820, "");
 static_assert(offsetof(DrCalcViewWork, unknown858) == 0x858, "");
 static_assert(offsetof(DrCalcViewWork, unknown890) == 0x890, "");
 static_assert(offsetof(DrCalcViewWork, unknown8c8) == 0x8c8, "");
+static_assert(offsetof(DrCalcViewWork, unknown9ad) == 0x9ad, "");
 static_assert(offsetof(DrCalcViewWork, unknownae0) == 0xae0, "");
 static_assert(offsetof(DrCalcViewWork, unknownaf0) == 0xaf0, "");
 static_assert(offsetof(DrCalcViewWork, unknownb00) == 0xb00, "");

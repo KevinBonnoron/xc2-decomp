@@ -16,6 +16,7 @@ public:
   void clearTexture(const mm::Col4 &color, GrlClaerMask mask);
   void setRenderTarget();
   void setRenderTarget(CGLibDepthBuffer &depthBuffer);
+  void releaseTexture();
 
   u8 _c8[0x3c8 - 0xc8];
 };

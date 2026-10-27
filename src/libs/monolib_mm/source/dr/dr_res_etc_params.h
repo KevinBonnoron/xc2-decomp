@@ -11,16 +11,15 @@ public:
   void setParams(f32 value);
   void setPreParams(f32 value);
   void setInitParams(f32 value);
+  void update();
   f32 getValParams() const;
   f32 getParams() const;
 
   u16 unknown00; // Inferred role: param flags; original member name unknown.
   u8 _02[0x04 - 0x02];
-  f32 unknown04; // Inferred role: params; original member name unknown.
-  f32 unknown08; // Inferred role: params; original member name unknown.
-  f32 unknown0c; // Inferred role: params; original member name unknown.
-  f32 unknown10; // Inferred role: params; original member name unknown.
-  f32 unknown14; // Inferred role: params; original member name unknown.
+  f32 unknown04[2]; // Inferred role: params per buffer; original member name unknown.
+  f32 unknown0c[2]; // Inferred role: pre params per buffer; original member name unknown.
+  f32 unknown14;    // Inferred role: current param; original member name unknown.
 };
 
 static_assert(offsetof(DrResEtcParams, unknown00) == 0x00, "");

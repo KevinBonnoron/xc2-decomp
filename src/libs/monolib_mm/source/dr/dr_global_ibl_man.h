@@ -11,6 +11,7 @@ public:
 
   enum Flag {
     FLAG_DISP_OFF = 1 << 0,
+    FLAG_UNKNOWN_30 = 1 << 30, // Inferred role: release per buffer; original name unknown.
   };
 
   u8 _00[0x50 - 0x00];

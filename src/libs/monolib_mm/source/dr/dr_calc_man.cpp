@@ -7,6 +7,15 @@ namespace ml {
 
 void DrCalcMan::end() { unknown10->end(); }
 
+void DrCalcMan::renderEnd() {
+  DrCalcViewWork *work = unknown10;
+  if (work->unknown9ad) {
+    work->unknown9ad = false;
+  }
+  work->unknown280 = work->unknown40;
+  work->unknown100 = work->unknownc0;
+}
+
 void DrCalcMan::shadowEnd() { unknown10->unknownc0 = unknown10->unknown140; }
 
 } // namespace ml

@@ -26,6 +26,7 @@ public:
     FLAG_CACHE_SHADOW = 1 << 2,
     FLAG_TEX = 1 << 3,
     FLAG_TEX_LOOP = 1 << 4,
+    FLAG_UNKNOWN_16 = 1 << 16, // Inferred role: release per buffer; original name unknown.
     FLAG_AMB_MODE_ON = 1 << 11,
     FLAG_OUT_LGT_OFF = 1 << 12,
     FLAG_IN_LGT_OFF = 1 << 13,

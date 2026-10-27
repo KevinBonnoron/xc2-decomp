@@ -1,0 +1,9 @@
+#include "dr/dr_pixl_render_array_mip_map.h"
+
+namespace ml {
+
+void DrPixlRenderArrayMipMap::setTextureInfo(f32 width, f32 height, u32 slice, GrlSurfaceFormat format, bool isResArea, u32 resArea) {
+  grlib::CGLibRenderArray::setTextureInfo(width, height, slice, true, format, isResArea, resArea);
+}
+
+} // namespace ml

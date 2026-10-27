@@ -252,7 +252,8 @@ public:
   u8 _0fcc[0x0fdc - 0x0fcc];
   f32 unknownfdc; // Inferred role: reduction trans sc x; original member name unknown.
   f32 unknownfe0; // Inferred role: reduction trans sc y; original member name unknown.
-  u8 _0fe4[0x0ff0 - 0x0fe4];
+  s32 unknownfe4; // Inferred role: render mode; original member name unknown.
+  u8 _0fe8[0x0ff0 - 0x0fe8];
   mm::Vec3 unknownff0; // Inferred role: sp blur target; original member name unknown.
   u8 _1000[0x1024 - 0x1000];
   bool unknown1024; // Inferred role: shw raytrace temporal; original member name unknown.

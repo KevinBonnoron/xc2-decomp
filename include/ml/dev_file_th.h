@@ -1,7 +1,17 @@
 #pragma once
+#include <stddef.h>
+
+#include "ml/dev_base.h"
+#include "ml/error_cb.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/singleton.h"
+#include "mm_mtl/unique_ptr.h"
 #include "types.h"
+
+namespace mm {
+union VAL64;
+} // namespace mm
 
 namespace ml {
 
@@ -41,18 +51,48 @@ struct DevFileParamTh {
 
 static_assert(sizeof(DevFileParamTh) == 0x70, "");
 
-class DevFileTh {
+class DevFileTh : public DevBase, public mm::mtl::PtrSingleton<DevFileTh>, public IErrorCB {
 public:
+  class Impl {
+  public:
+    FileHandleTh *checkValidFile(const char *path, IWorkEvent *event);
+    bool writeFileBlock(const char *path, const void *data, u32 size, int priority);
+    FileHandleTh *readFile(const DevFileParamTh &param);
+    FileHandleTh *rfOpen(const DevFileParamTh &param);
+    bool rfClose(FileHandleTh *handle);
+    bool rfIsBusy();
+    void cancelRequest(FileHandleTh *handle);
+    bool isValidHandle(FileHandleTh *handle);
+  };
+
   static void normalizeDvdFileName(mm::mtl::FixStr<256> &fileName, const char *path);
-  static void checkValidFile(const char *path, IWorkEvent *event);
+  static FileHandleTh *checkValidFile(const char *path, IWorkEvent *event);
   static bool isInitialized();
   static bool writeFileBlock(const char *path, const void *data, u32 size, int priority);
   static FileHandleTh *rfOpen(const DevFileParamTh &param);
   static bool rfRead(FileHandleTh *handle, const DevFileParamTh &param);
   static bool rfIsBusy(FileHandleTh *handle);
-  static void rfClose(FileHandleTh *handle);
+  static bool rfClose(FileHandleTh *handle);
   static FileHandleTh *readFile(const DevFileParamTh &param);
   static void cancel(FileHandleTh *handle, bool isForce);
+  static bool isValidHandle(FileHandleTh *handle);
+  static bool rfIsBusy();
+  static bool isNowSaving();
+  static void setNowSaving(bool isSaving);
+  static int getFileSize(const char *path, mm::VAL64 *size);
+  static bool checkValidFileBlock(const char *path);
+  static void sendCommand(const char *command, const char *argument);
+  void wkTail() override;
+  void wkUpdate() override;
+  bool icbError(CERR_STRUCT *error) override;
+  void icbDecide(CERR_STRUCT *error, ERR_DECIDE decide) override;
+
+  mm::mtl::UniquePtr<Impl> unknown1c0; // Inferred role: implementation; original member name unknown.
+  u8 _1c8;
+  bool unknown1c9; // Inferred role: now saving; original member name unknown.
 };
+
+static_assert(offsetof(DevFileTh, unknown1c0) == 0x1c0, "");
+static_assert(offsetof(DevFileTh, unknown1c9) == 0x1c9, "");
 
 } // namespace ml
