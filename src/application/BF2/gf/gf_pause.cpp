@@ -3,6 +3,8 @@
 
 namespace gf {
 
+void GfPause::initialize(const GfSetupParam &) { unknowne64 = true; }
+
 bool GfPause::isInitialized() {
   GfPause *pause = get();
   if (pause != nullptr) {

@@ -3,6 +3,7 @@
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_mtl/fixed_vector.h"
 
@@ -209,5 +210,9 @@ bool GfGameObj::isEmpty() {
   }
   return gameObj->unknown47a00.size() == 0;
 }
+
+void GfGameObj::enterStayObject(GF_OBJ_HANDLE *handle) { GfObjManager::enterStayObject(handle); }
+
+void GfGameObj::enterStayObject(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type) { GfObjManager::enterStayObject(GfMountManager::getHandle(handle, attach, type)); }
 
 } // namespace gf

@@ -7,6 +7,7 @@ class GfMenuObjPopup : public GfMenuObject {
 public:
   void initialize() override;
   void finalize() override;
+  static void closeAll();
 };
 
 } // namespace gf

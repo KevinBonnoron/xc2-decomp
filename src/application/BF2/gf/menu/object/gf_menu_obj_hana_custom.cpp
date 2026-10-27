@@ -13,4 +13,6 @@ u32 GfMenuObjHanaCustom::convPartsId(u32 partsId) {
 
 bool GfMenuObjHanaCustom::isExpandParts(u32 partsId) { return partsId - 9 < 6; }
 
+void GfMenuObjHanaCustom::refreshPlanLine(ui::UIObjectAcc &) {}
+
 } // namespace gf

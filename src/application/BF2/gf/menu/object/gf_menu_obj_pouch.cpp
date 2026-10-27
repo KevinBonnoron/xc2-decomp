@@ -6,4 +6,6 @@ void GfMenuObjPouch::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjPouch::update() { GfMenuObject::update(); }
 
+void GfMenuObjPouch::setupPouch(ui::UIObjectAcc &) {}
+
 } // namespace gf

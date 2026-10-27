@@ -10,6 +10,7 @@ struct UpdateInfo;
 
 namespace gf {
 
+struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 class GfDropitemParams;
 
@@ -21,6 +22,8 @@ public:
   static bool isInitialized();
   static bool isExistObj();
   static void destroyObj();
+  static void leaveGameField(GF_OBJ_HANDLE *handle);
+  static void gevGameObjLeave(GF_OBJ_HANDLE *handle);
   static GfDropitemParams *getDropitemParams();
 
   u8 _08[0x4830 - 0x08];

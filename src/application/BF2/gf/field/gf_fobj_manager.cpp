@@ -10,6 +10,8 @@ bool GfFobjManager::isInitialized() {
   return false;
 }
 
+void GfFobjManager::gevGameObjLeave(GF_OBJ_HANDLE *handle) { leaveGameField(handle); }
+
 GfDropitemParams *GfFobjManager::getDropitemParams() {
   GfFobjManager *manager = get();
   if (manager != nullptr) {

@@ -4,4 +4,6 @@ namespace gf {
 
 void GfMenuObjPartyForm3::finalize() { GfMenuObject::finalize(); }
 
+void GfMenuObjPartyForm3::setupBGLayout(ui::UIObjectAcc &, u32, bool) {}
+
 } // namespace gf

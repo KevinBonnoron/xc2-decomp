@@ -38,6 +38,7 @@ public:
   f32 getPlayBgmTime() const;
   f32 getTotalBgmTime() const;
   void update(const fw::UpdateInfo &info);
+  void updateBgmTask(const fw::UpdateInfo &info);
   void setPlayBgmVolume(f32 volume);
   void setPlayState(PLAY_STATE playState);
   bool isEnableEventBgm() const;

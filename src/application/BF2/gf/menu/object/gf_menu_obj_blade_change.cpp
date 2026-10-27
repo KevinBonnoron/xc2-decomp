@@ -4,4 +4,6 @@ namespace gf {
 
 void GfMenuObjBladeChange::finalize() { GfMenuObject::finalize(); }
 
+void GfMenuObjBladeChange::enableAwakening(bool) {}
+
 } // namespace gf

@@ -19,6 +19,7 @@
 #include "gf/menu/object/gf_menu_obj_dummy_tutorial.h"
 #include "gf/menu/object/gf_menu_obj_main_root.h"
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
+#include "gf/menu/object/gf_menu_obj_option.h"
 #include "gf/menu/object/gf_menu_obj_save_load2.h"
 #include "gf/menu/object/gf_menu_obj_tutorial.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
@@ -107,6 +108,8 @@ void GfMenuManager::getFadeColor(u32 fade, mm::Col4 &color) {
     GfMenuFade::getFadeColor(fade, color);
   }
 }
+
+void GfMenuManager::initOptionData(SDataOption &option) { GfMenuObjOption::initOptionData(option); }
 
 void GfMenuManager::applyGammaCorrectValue(f32 value) {
   f32 gamma = value + value + 1.2f;

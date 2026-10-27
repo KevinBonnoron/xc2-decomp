@@ -24,6 +24,7 @@ class GfPause : public mm::mtl::PtrSingleton<GfPause> {
 public:
   static void build(const GfSetupParam &param);
   static void destroy();
+  void initialize(const GfSetupParam &param);
   static GF_PAUSE_HANDLE *reqPause(u32 pauseBits);
   static void destroyHandle(GF_PAUSE_HANDLE *handle);
   static void update();

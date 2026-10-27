@@ -30,6 +30,8 @@ void GfGameSave::destroySaveData() {
   }
 }
 
+void GfGameSave::flushSaveData() { ml::DevFileTh::flushSave(); }
+
 void GfGameSave::terminateNonBlock() {
   ml::DevFileTh::flushSave();
   destroySaveData();

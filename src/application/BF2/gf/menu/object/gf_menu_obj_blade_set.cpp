@@ -6,4 +6,6 @@ void GfMenuObjBladeSet::finalize() { GfMenuObject::finalize(); }
 
 void GfMenuObjBladeSet::update() { GfMenuObject::update(); }
 
+void GfMenuObjBladeSet::registOpenParam(const OpenParam &) {}
+
 } // namespace gf

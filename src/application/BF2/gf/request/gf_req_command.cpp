@@ -18,4 +18,14 @@ void GfMapjumpInfo::setupForSaveData(u32 mapjumpId, const mm::Vec3 &position, co
   unknown108 = 1;
 }
 
+void GfReqCommand::execChangeAttributeForDebug(const GfReqParam *) {}
+
+u32 GfReqCommand::reqDebugPartyNum(u32) { return 0xffffffff; }
+
+void GfReqCommand::execPartyNumForDebug(const GfReqParam *) {}
+
+u32 GfReqCommand::reqDebugPartyInBlade(bool) { return 0xffffffff; }
+
+void GfReqCommand::execPartyInBladeForDebug(const GfReqParam *) {}
+
 } // namespace gf

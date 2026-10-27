@@ -11,6 +11,7 @@ struct Vec3;
 
 namespace gf {
 struct GF_OBJ_HANDLE;
+struct GfReqParam;
 
 struct RQ_SETUP_PARTY {
   struct Member {
@@ -102,6 +103,11 @@ public:
   static void reqDestroyGf();
   static u32 reqMapjump(const GfMapjumpInfo &info);
   static u32 reqWaitEvent(f32 time, GF_OBJ_HANDLE *handle);
+  static void execChangeAttributeForDebug(const GfReqParam *param);
+  static u32 reqDebugPartyNum(u32 num);
+  static void execPartyNumForDebug(const GfReqParam *param);
+  static u32 reqDebugPartyInBlade(bool isInBlade);
+  static void execPartyInBladeForDebug(const GfReqParam *param);
 };
 
 } // namespace gf

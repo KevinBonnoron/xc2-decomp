@@ -63,6 +63,14 @@ bool GfAssetPack::isPreSizeSizeValid() const {
   return !unknown170.empty();
 }
 
+bool GfAssetPack::isExistSameAsset(const GfAssetPack &other) const { return m_assetType.isExistSameAsset(other.m_assetType); }
+
+void GfAssetFiles::replaceAssetType(GfAssetType type) {
+  if (type != ASSET_TYPE_BASE) {
+    unknown00 = type;
+  }
+}
+
 void GfAssetPack::dispAssetLogForDebug() {}
 
 void GfAssetPack::setLoadComplete() {}

@@ -114,6 +114,9 @@ public:
   void addApplyParam(GF_OBJ_HANDLE *handle);
   bool isSuspendUpdate() const;
   bool hasReloadObjForDebug();
+  static void enterStayObject(GF_OBJ_HANDLE *handle);
+  void addHandle(GF_OBJ_HANDLE *handle);
+  void setStateLoading(GF_OBJ_HANDLE *handle);
   bool getFollowObj(mm::mtl::FixedList<GF_OBJ_HANDLE *, 768> &objs, GF_OBJ_HANDLE *handle);
 };
 

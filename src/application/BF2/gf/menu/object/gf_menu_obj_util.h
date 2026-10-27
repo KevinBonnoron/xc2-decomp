@@ -34,6 +34,7 @@ public:
   static u32 getBtnIconNumber(u32 button);
   static u32 getPadSelectIconNumber(u32 select);
   static u32 getPointerSelectIconNumber();
+  static void setCommonFadeOut(u32 handle, u32 fade, u8 unknown);
   static void setChildDisp(u32 handle, const char *name, bool disp);
   static void setChildMulColor(u32 handle, const char *name, const char *color);
   static void setChildAddColor(u32 handle, const char *name, const char *color);

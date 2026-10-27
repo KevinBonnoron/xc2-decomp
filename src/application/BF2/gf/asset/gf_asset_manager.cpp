@@ -1,5 +1,6 @@
 #include "gf/asset/gf_asset_manager.h"
 
+#include "gf/asset/gf_asset_pack.h"
 #include "gf/asset/gf_slot_mapping.h"
 #include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
@@ -23,6 +24,8 @@ bool GfAssetManager::isInitialized() {
 void GfAssetManager::releaseSlotHandle(GF_SLOT_HANDLE *handle) { get()->m_slotMapping->releaseSlot(handle); }
 
 bool GfAssetManager::isLoading() { return get()->unknownce0b8.size() > 0; }
+
+void GfAssetManager::loadStart(GfAssetPack *pack, mm::mtl::IAllocator *allocator) { pack->loadStart(allocator); }
 
 void GfAssetManager::clear() { destroySlotCache(ASSET_TYPE_BASE); }
 

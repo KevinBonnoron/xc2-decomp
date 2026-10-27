@@ -1,6 +1,8 @@
 #pragma once
 #include <stddef.h>
 
+#include "gf/game/gf_game_mount.h"
+#include "gf/object/gf_obj_manager.h"
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
@@ -59,6 +61,8 @@ public:
   u32 getObjNumberByEnArrangeId(u32 arrange);
   static bool isInitialized();
   static bool isGameObjWaiting(GF_OBJ_HANDLE *handle);
+  static void enterStayObject(GF_OBJ_HANDLE *handle);
+  static void enterStayObject(GF_OBJ_HANDLE *handle, GFATTACH attach, OPTMNT type);
 
   u8 _08[0x10 - 0x08];
   mm::mtl::FixedList<GF_OBJ_HANDLE *, GAME_OBJ_LIST_CAPACITY> unknown10;    // Inferred role: object list; original member name unknown.

@@ -12,4 +12,6 @@ void GfMenuObjActionWindow::update() { GfMenuObject::update(); }
 
 void GfMenuObjActionWindow::eventHudSceneChange(u32) {}
 
+void GfMenuObjActionWindow::closeBattle() { close(); }
+
 } // namespace gf

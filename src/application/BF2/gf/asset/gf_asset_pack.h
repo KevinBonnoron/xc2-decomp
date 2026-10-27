@@ -8,6 +8,12 @@
 #include "mm_mtl/reference_object.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace gf {
 
 class GfAssetResource;
@@ -44,6 +50,8 @@ public:
   };
 
   bool addResource(GfFileIdx index, const char *name);
+  void replaceAssetType(GfAssetType type);
+  bool isExistSameAsset(const GfAssetFiles &other) const;
   const mm::mtl::FixStr<128> &getFileName(GfFileIdx index) const;
 
   GfAssetType unknown00; // Inferred role: asset type; original member name unknown.
@@ -74,6 +82,8 @@ public:
   void updateReloadCount();
   bool isEnableReload() const;
   void releaseSlotHandle();
+  bool isExistSameAsset(const GfAssetPack &other) const;
+  void loadStart(mm::mtl::IAllocator *allocator);
 
   void setLoadSlotNum(u32 num) { unknown24c = num; }
 

@@ -8,4 +8,6 @@ bool GfMenuObjBlKizunaRing::isLockPos(int index) { return index % 10 == 0; }
 
 bool GfMenuObjBlKizunaRing::isScreenLR(u32 screen) { return screen < 4; }
 
+void GfMenuObjBlKizunaRing::setupCircle(ui::UIObjectAcc &) {}
+
 } // namespace gf

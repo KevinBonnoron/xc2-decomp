@@ -815,6 +815,7 @@ class GfPlayComReturnTitle : public GfPlayCom, public mm::mtl::PtrSingleton<GfPl
 
 public:
   GfPlayComReturnTitle(const ParamReturnTitle &param) : GfPlayCom(PCOMTYPE_RETURN_TITLE, false), unknown18(param), unknown1c(0) {}
+  void start() override;
   void end() override;
   static GfPlayComReturnTitle *create(const ParamReturnTitle &param);
 

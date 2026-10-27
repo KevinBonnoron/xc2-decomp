@@ -22,6 +22,7 @@
 #include "gf/game/mercenaries/gf_game_mercenaries.h"
 #include "gf/game/quest/gf_quest_manager.h"
 #include "gf/game/quest/gf_quest_task.h"
+#include "gf/game/salvage/gf_salvage_voice.h"
 #include "gf/gf_allocator.h"
 #include "gf/map/gf_map_manager.h"
 #include "gf/menu/gf_menu_fade.h"
@@ -719,6 +720,10 @@ GF_SCOM_HANDLE *SCOM_ADD_ETHER::create(int ether) {
   GfGameUtil::addEther(ether);
   return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
 }
+
+GAME_VOICE_HANDLE *SCOM_SALVAGE_VOICE::create(GF_OBJ_HANDLE *handle, CV_SALVAGE voice) { return GfSalvageVoice::playVoice(handle, voice); }
+
+GAME_VOICE_HANDLE *SCOM_SALVAGE_VOICE::createResult(GF_OBJ_HANDLE *handle, CV_SALVAGE_RESULT voice) { return GfSalvageVoice::playResultVoice(handle, voice); }
 
 bool GfReqSmallCom::isExistCommand() {
   GfReqSmallCom *smallCom = get();

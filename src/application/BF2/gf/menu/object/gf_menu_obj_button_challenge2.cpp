@@ -4,4 +4,6 @@ namespace gf {
 
 void GfMenuObjButtonChallenge2::finalize() { GfMenuObject::finalize(); }
 
+void GfMenuObjButtonChallenge2::dispRelationHUD(bool) {}
+
 } // namespace gf

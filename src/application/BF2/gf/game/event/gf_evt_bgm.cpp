@@ -8,6 +8,10 @@ void GfEvtBgm::destroy() {
   delete bgm;
 }
 
+void GfEvtBgm::initialize(const GfSetupParam &) { m_initialized = true; }
+
+void GfEvtBgm::update(const fw::UpdateInfo &info) { updateBgmTask(info); }
+
 void GfEvtBgm::finalize() { m_initialized = false; }
 
 bool GfEvtBgm::isInitialized() { return m_initialized; }

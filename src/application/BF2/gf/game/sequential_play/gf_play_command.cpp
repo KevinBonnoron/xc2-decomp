@@ -38,6 +38,7 @@
 #include "gf/menu/gf_menu_fade.h"
 #include "gf/menu/gf_menu_kizunaring.h"
 #include "gf/menu/gf_menu_manager.h"
+#include "gf/menu/object/gf_menu_obj_popup.h"
 #include "gf/menu/object/gf_menu_obj_quest_log.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
@@ -1264,6 +1265,8 @@ bool GfPlayComHoodHomuraBattou::update(const fw::UpdateInfo &, bool) {
   }
   return true;
 }
+
+void GfPlayComReturnTitle::start() { GfMenuObjPopup::closeAll(); }
 
 void GfPlayComReturnTitle::end() {}
 

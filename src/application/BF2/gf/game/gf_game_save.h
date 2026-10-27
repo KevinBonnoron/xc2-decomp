@@ -26,6 +26,7 @@ public:
   void execGameSaveNonBlock();
   void execOptionSaveNonBlock();
   void execGameSaveWithMicroThread();
+  static void flushSaveData();
   void terminateNonBlock();
   void startNonBlockBin(mm::mtl::FixStr<256> &path);
   void waitNonBlockBin();

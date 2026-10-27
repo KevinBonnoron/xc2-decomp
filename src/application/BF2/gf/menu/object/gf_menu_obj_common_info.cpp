@@ -6,4 +6,12 @@ void GfMenuObjCommonInfo::finalize() {}
 
 void GfMenuObjCommonInfo::update() {}
 
+void GfMenuObjCommonInfo::close(u32) {}
+
+void GfMenuObjCommonInfo::closeAll() {}
+
+void GfMenuObjCommonInfo::pausePickup() {}
+
+void GfMenuObjCommonInfo::continuePickup() {}
+
 } // namespace gf

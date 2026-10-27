@@ -4,4 +4,6 @@ namespace gf {
 
 void GfMenuObjLinkJump::update() { GfMenuObject::update(); }
 
+void GfMenuObjLinkJump::close() {}
+
 } // namespace gf

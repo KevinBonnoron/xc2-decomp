@@ -8,6 +8,8 @@ public:
   void initialize() override;
   void finalize() override;
   void update() override;
+  struct OpenParam;
+  static void registOpenParam(const OpenParam &);
 };
 
 } // namespace gf
