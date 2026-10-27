@@ -122,7 +122,7 @@ def main():
     print("\n== Destructors declared but never defined")
     sources = git("grep", "-h", "-E", r"~\w+\(\)", HEAD, "--", *PATHS)
     for path, at, text in texts:
-        m = re.search(r"(virtual )?~(\w+)\(\)( override)?;", text)
+        m = re.search(r"^\s*(virtual )?~(\w+)\(\)( override)?;", text)
         if m and not re.search(rf"(::|\b){m.group(2)}::~{m.group(2)}\(\)|~{m.group(2)}\(\)[^;]*\{{|~{m.group(2)}\(\) = default", sources):
             print(f"{path}:{at}: ~{m.group(2)}() has no definition")
             problems += 1
