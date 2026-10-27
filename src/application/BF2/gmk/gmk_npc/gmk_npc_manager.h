@@ -35,11 +35,16 @@ public:
   ~GmkNpcIdInfo() { dispose(); }
 
   void dispose();
+  void update(f32 deltaTime, bool isCreate);
+  void createGobInst();
   void disposeGobInst(bool isFadeOut);
   void addGmkNpc(AGmkNpc *npc);
   void removeGmkNpc(AGmkNpc *npc);
   void setActiveGmkNpc(AGmkNpc *npc);
   void unknown001();
+
+  // Inferred helper: checks that the npc id info has been created; original name unknown.
+  bool unknown002() const { return unknown00 != 0 && unknown08 != nullptr && unknown10 != nullptr; }
 
   u16 unknown00;                              // Inferred role: npc id; original member name unknown.
   u8 *unknown08;                              // Inferred role: bdat; original member name unknown.

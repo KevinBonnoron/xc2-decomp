@@ -51,6 +51,7 @@ public:
   struct BdatInfo {
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     void debugDraw(const AGmkBase &gmk) const;
+    bool isMobPopDistCondMatched(const mm::Vec3 &position) const;
 
     u16 unknown00;              // Inferred role: condition; original member name unknown.
     u16 unknown02;              // Inferred role: group; original member name unknown.
@@ -88,12 +89,14 @@ public:
   };
 
   void validateDisp(gf::GF_OBJ_HANDLE *handle) const;
+  void validateDisp() const;
   bool isValid() const;
   bool isPopFinished() const;
   bool isGobInstExist() const;
   bool canPopGobInst(const mm::Vec3 &position) const;
   bool canDepopGobInst(const mm::Vec3 &position) const;
   void removeGobInst(gf::GF_OBJ_HANDLE *handle);
+  void update(const UpdateInfo &info);
   void disposeSquad();
 
   CreateInfo unknown00;                                   // Inferred role: create info; original member name unknown.
@@ -116,10 +119,30 @@ static_assert(offsetof(GmkMobInsts, unknownb0) == 0xb0, "");
 static_assert(offsetof(GmkMobInsts, unknownc0) == 0xc0, "");
 static_assert(sizeof(GmkMobInsts) == 0xd0, "");
 
+class GmkMobInsts::IPopXformFinder {
+public:
+  virtual bool findPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const = 0;
+  virtual void onPopGob(gf::GF_OBJ_HANDLE *handle) const = 0;
+  virtual void onCreateGobInsts(u32 num) const = 0;
+};
+
 class GmkMob : public AGmkBase {
 public:
   struct BdatInfo {
     void create(CBdatWrapper, int, const AGmkBase &) {}
+  };
+
+  struct Data {
+    u8 unknown00; // Inferred role: snap to the ground; original member name unknown. The size of this structure is unknown.
+  };
+
+  class PopXformFinder : public GmkMobInsts::IPopXformFinder {
+  public:
+    bool findPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const override;
+    void onPopGob(gf::GF_OBJ_HANDLE *handle) const override;
+    void onCreateGobInsts(u32 num) const override;
+
+    GmkMob *unknown08; // Inferred role: owner; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_MOB;
@@ -133,10 +156,13 @@ public:
   void debugDraw() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
 
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+
   GmkMobInsts unknown48; // Inferred role: mob instances; original member name unknown.
 };
 
 static_assert(offsetof(GmkMob, unknown48) == 0x48, "");
+static_assert(sizeof(GmkMob::PopXformFinder) == 0x10, "");
 static_assert(sizeof(GmkMob) == 0x118, "");
 
 class GmkMobList : public TGmkList<GmkMob, GmkMob::BdatInfo, 0x424f4d, 2, GmkMobGob> {

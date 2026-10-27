@@ -65,6 +65,21 @@ void GmkRoutedEnemyList::setUpdateGmkNumPerFrame(u32 num) {
 
 IGmkList *GmkRoutedEnemy::getOwnerGmkEnemyList() const { return unknown08.unknown00; }
 
+bool GmkRoutedEnemy::isPopPointRouteEnd(const GmkRouteNavi &navi) const {
+  if (navi.isValid()) {
+    bool isReverse = navi.unknowna4;
+    const Data *data = getData();
+    if (data->unknown00 == data->unknown14) {
+      if (isReverse && (data->unknown0c & FLAG_UNKNOWN_3)) {
+        return true;
+      }
+    } else if (!isReverse && data->unknown04 - 1 == data->unknown14 && (data->unknown0c & FLAG_UNKNOWN_3)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 const IGmkList *GmkRoutedEnemy::getBindedRoutePointList() const { return unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_ROUTED_ENEMY_POINT]; }
 
 void GmkRoutedEnemyList::debugDraw() const {

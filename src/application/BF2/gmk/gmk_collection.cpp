@@ -10,12 +10,16 @@
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_manager.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_vec2.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/rtti.h"
 
 namespace gmk {
 
@@ -91,6 +95,20 @@ void GmkCollection::disposeGfObjHandle() {
     gf::GfObjUtil::destroy(unknown48);
     unknown48 = gf::INVALID_HANDLE;
   }
+}
+
+void GmkCollection::createGfObjHandle() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  disposeGfObjHandle();
+  CBdatWrapper bdat = {getBindedBdatFp()};
+  unknown48 = gf::GfObjFactory::createGmkCollection(bdat, unknown20.unknown18);
+  bindToGameObj(unknown48);
+  validateDisp();
+  gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(unknown48)->unknown30);
+  unknown003(setup, unknown08.unknown08);
+  setTargetable(gf::GfGameFlag::getLocal(1, getGameFlagId()) == 0);
 }
 
 void GmkCollection::debugDraw() const {

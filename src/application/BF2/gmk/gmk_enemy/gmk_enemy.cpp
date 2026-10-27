@@ -6,6 +6,8 @@
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_enemy.h"
+#include "gf/data/gf_object_type.h"
+#include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
@@ -28,6 +30,59 @@ static u32 getU8OrU16(const CBdatWrapper &bdat, const char *name, int id) {
     return static_cast<u16>(bdat.getValCheck(name, id, BDAT_TYPE_U16));
   }
   return static_cast<u8>(bdat.getValCheck(name, id, BDAT_TYPE_U8));
+}
+
+void GmkEnemyInsts::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
+  unknown0e = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_U16), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_U16));
+  unknown12 = QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_U16), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_U8), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_U8));
+  unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_U16);
+  unknown18.unknown08 = bdat.getValCheck("POP_TIME", id, BDAT_TYPE_U32);
+  unknown28.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_U8);
+  if (Bdat::getFlagVal(bdat.unknown00, "flag", id, "popCloud") != 0) {
+    unknown38.unknown08 = CloudCond::TYPE_CLOUD_SEA;
+  }
+  unknown02 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "ene_priority") != 0;
+  unknown03 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "pop_smn") != 0;
+  unknown04 = bdat.getValCheck("squadId", id, BDAT_TYPE_U16);
+  s16 squadScale = bdat.getValCheck("squadScale", id, BDAT_TYPE_U16);
+  unknown06 = squadScale == 0 ? 100 : squadScale;
+  unknown08 = bdat.getValCheck("form", id, BDAT_TYPE_U8);
+  unknown09 = bdat.getValCheck("form_range", id, BDAT_TYPE_U8);
+  u16 mutekiQuest = bdat.getValCheck("muteki_QuestFlag", id, BDAT_TYPE_U16);
+  u8 mutekiQuestMin = bdat.getValCheck("muteki_QuestFlagMin", id, BDAT_TYPE_U8);
+  u8 mutekiQuestMax = bdat.getValCheck("muteki_QuestFlagMax", id, BDAT_TYPE_U8);
+  if (mutekiQuestMax >= mutekiQuestMin) {
+    unknown48 = QuestFlagCond(mutekiQuest, mutekiQuestMin, mutekiQuestMax);
+  }
+  unknown0a = bdat.getValCheck("muteki_Condition", id, BDAT_TYPE_U16);
+  const char *name = reinterpret_cast<const char *>(bdat.getValCheck("name", id, BDAT_TYPE_STRING));
+  if (name != nullptr && (__builtin_strcmp("ma20a_b05_23", name) == 0 || __builtin_strcmp("ma20a_b05_24", name) == 0)) {
+    unknown0c = true;
+  }
+}
+
+bool GmkEnemyInsts::BdatInfo::isInvincibleCondMatched() const {
+  bool isMatched = false;
+  if (unknown0a != 0) {
+    if (!gf::GfGameCond::isGameCond(unknown0a)) {
+      return false;
+    }
+    isMatched = true;
+  }
+  if (unknown48.isEnable()) {
+    if (!unknown48.isMatch()) {
+      return false;
+    }
+    isMatched = true;
+  }
+  return isMatched;
+}
+
+bool GmkEnemyInsts::BdatInfo::isPopCondMatchedOfSmn() const {
+  if (unknown0e.isEnable() && !unknown0e.isMatch()) {
+    return false;
+  }
+  return true;
 }
 
 void GmkEnemy::debugDraw() const {
@@ -170,6 +225,22 @@ bool GmkEnemyInsts::PopInfo::hasTypeGenus(u8 genus, bool flag) const {
     }
   }
   return false;
+}
+
+bool GmkEnemyInsts::isPopFinished() const {
+  if (!isGfObjNumFull(gf::OBJECT_TYPE_ENEMY) && (unknown178 & MATCHED_UNKNOWN_0) && (unknown178 & MATCHED_UNKNOWN_1)) {
+    return unknown98.isPopFinished();
+  }
+  return true;
+}
+
+void GmkEnemyInsts::validateDisp(gf::GF_OBJ_HANDLE *handle) const {
+  AGmkBase *gmk = getBindedGmkInst(handle);
+  if (gmk == nullptr) {
+    return;
+  }
+  bool isDisp = debugIsDispGmkType(gmk->getGmkType()) && unknown140;
+  setEventDisp(handle, isDisp);
 }
 
 bool GmkEnemyInsts::isQuestDead() const {

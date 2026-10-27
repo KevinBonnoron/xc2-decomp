@@ -23,6 +23,7 @@ public:
   bool isAnimReverse(int bdatId) const;
   bool isPlayAnimEnd(int bdatId) const;
   void setFade(int bdatId, bool isFadeIn, bool isImmediate);
+  void setLodSwitchId(int bdatId, u32 switchId);
   void setAnimReverse(int bdatId, bool isReverse, bool isSkip);
   bool isFadeOut(int bdatId) const;
   bool findTransform(mm::Mat44 &matrix, int bdatId) const;

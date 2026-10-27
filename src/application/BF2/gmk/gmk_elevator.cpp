@@ -5,6 +5,7 @@
 #include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/field/gf_field_lod.h"
+#include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/quest/gf_quest_util.h"
 #include "gf/object/gf_obj_acc.h"
@@ -103,6 +104,20 @@ const GmkElevatorLocator *GmkElevator::getBindedGmkElevatorLocator(u32 index) co
   return static_cast<const GmkElevatorLocator *>(list->getInst(data->unknown00 + index));
 }
 
+const AGmkBase *GmkElevator::getGmkBaseByItemType(ItemType type) const {
+  switch (type) {
+  case ITEM_TYPE_UNKNOWN_0:
+    return this;
+  case ITEM_TYPE_UNKNOWN_1:
+    return getBindedGmkElevatorLocator(0);
+  case ITEM_TYPE_UNKNOWN_2:
+    return getBindedGmkElevatorLocator(1);
+  case ITEM_TYPE_UNKNOWN_3:
+    return getBindedGmkElevatorLocator(2);
+  }
+  return nullptr;
+}
+
 bool GmkElevator::getLiftPos(mm::Vec3 &position) const {
   gf::GfFieldLod *lod = gf::GfFieldLod::get();
   if (lod == nullptr) {
@@ -182,6 +197,29 @@ bool GmkElevator::isPlayEnd(u16 lodId) {
   return false;
 }
 
+void GmkElevator::setTargetableByItemType(ItemType type, bool isTargetable) {
+  if (unknown290[type] == gf::INVALID_HANDLE) {
+    return;
+  }
+  if (canCreateGameEntity()) {
+    u32 switchId = 2;
+    if (getBdatInfo()->unknown00 == 0 || gf::GfGameCond::isGameCond(getBdatInfo()->unknown00)) {
+      switchId = isTargetable ? 1 : 2;
+    }
+    const BdatInfo *info = getBdatInfo();
+    if (type == ITEM_TYPE_UNKNOWN_0) {
+      if (info->unknown0c != 0) {
+        gf::GfFieldLod::get()->setLodSwitchId(info->unknown0c, switchId);
+      }
+    } else if (type == ITEM_TYPE_UNKNOWN_2) {
+      if (info->unknown0e != 0) {
+        gf::GfFieldLod::get()->setLodSwitchId(info->unknown0e, switchId);
+      }
+    }
+  }
+  unknown002(unknown290[type], isTargetable);
+}
+
 void GmkElevator::setUntargetableOfAllItem() {
   setTargetableByItemType(ITEM_TYPE_UNKNOWN_0, false);
   setTargetableByItemType(ITEM_TYPE_UNKNOWN_1, false);
@@ -240,6 +278,25 @@ void GmkElevator::clearGobInsts() {
       unknown290[i] = gf::INVALID_HANDLE;
     }
   }
+}
+
+void GmkElevator::dispose() {
+  unknown4c8 = 0;
+  unknown4b0 = gf::INVALID_HANDLE;
+  unknown4b8 = nullptr;
+  clearGobInsts();
+  clearSe();
+  bool isGmkValid = isValid();
+  gf::GfFieldLod *lod = gf::GfFieldLod::get();
+  if (lod != nullptr && isGmkValid && !isMapJumpingWithSaveData()) {
+    const BdatInfo *info = getBdatInfo();
+    if (info->unknown2c != 0) {
+      lod->setAnimReverse(info->unknown06, true, true);
+    } else if (info->unknown2e != 0) {
+      lod->setAnimReverse(info->unknown06, false, true);
+    }
+  }
+  AGmkBase::dispose();
 }
 
 void GmkElevator::update(f32 deltaTime) {

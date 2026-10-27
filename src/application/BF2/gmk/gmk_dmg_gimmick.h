@@ -83,9 +83,10 @@ public:
   void seqUpdatePopDepop(f32 deltaTime);
 
   u8 _48[0x58 - 0x48];
-  void *unknown58; // Role and original member name unknown.
-  u8 _60[0x68 - 0x60];
+  void *unknown58;          // Role and original member name unknown.
+  fw::SoundPack *unknown60; // Inferred role: map sound pack; original member name unknown.
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
   void (GmkDmgGimmick::*unknown68)(f32); // Inferred role: sequence; original member name unknown.
   u8 _78[0x80 - 0x78];
@@ -95,6 +96,7 @@ public:
 
 static_assert(sizeof(GmkDmgGimmick::BdatInfo) == 0x28, "");
 static_assert(offsetof(GmkDmgGimmick, unknown58) == 0x58, "");
+static_assert(offsetof(GmkDmgGimmick, unknown60) == 0x60, "");
 static_assert(offsetof(GmkDmgGimmick, unknown68) == 0x68, "");
 static_assert(offsetof(GmkDmgGimmick, unknown80) == 0x80, "");
 static_assert(sizeof(GmkDmgGimmick) == 0x88, "");

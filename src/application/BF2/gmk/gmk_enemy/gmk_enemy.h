@@ -3,6 +3,7 @@
 
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
+#include "gmk/gmk_cond.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_trigger.h"
@@ -25,6 +26,28 @@ class GmkSquad;
 
 class GmkEnemyInsts {
 public:
+  struct BdatInfo {
+    void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
+    bool isInvincibleCondMatched() const;
+    bool isPopCondMatchedOfSmn() const;
+
+    u16 unknown00;              // Inferred role: condition; original member name unknown.
+    bool unknown02;             // Inferred role: enemy priority; original member name unknown.
+    bool unknown03;             // Inferred role: pop summon; original member name unknown.
+    u16 unknown04;              // Inferred role: squad id; original member name unknown.
+    u16 unknown06;              // Inferred role: squad scale; original member name unknown.
+    u8 unknown08;               // Inferred role: form; original member name unknown.
+    u8 unknown09;               // Inferred role: form range; original member name unknown.
+    u16 unknown0a;              // Inferred role: invincible condition; original member name unknown.
+    bool unknown0c;             // Role and original member name unknown.
+    ScenarioFlagCond unknown0e; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond unknown12;    // Inferred role: quest flag; original member name unknown.
+    TimeCond unknown18;         // Inferred role: time cond; original member name unknown.
+    WeatherCond unknown28;      // Inferred role: weather cond; original member name unknown.
+    CloudCond unknown38;        // Inferred role: cloud cond; original member name unknown.
+    QuestFlagCond unknown48;    // Inferred role: invincible quest flag; original member name unknown.
+  };
+
   struct PopInfo {
     struct PopEnemyInfo {
       void dispose();
@@ -67,6 +90,13 @@ public:
     PopEnemyInfo unknown08[4]; // Inferred role: enemies; original member name unknown.
   };
 
+  enum Matched {
+    MATCHED_UNKNOWN_0 = 1 << 0, // Inferred role: pop condition matched; original name unknown.
+    MATCHED_UNKNOWN_1 = 1 << 1, // Inferred role: pop distance condition matched; original name unknown.
+  };
+
+  bool isPopFinished() const;
+  void validateDisp(gf::GF_OBJ_HANDLE *handle) const;
   bool isQuestDead() const;
   int getGobInstCapa() const;
   void disposeSquad();
@@ -74,13 +104,20 @@ public:
   AGmkBase *unknown00; // Inferred role: owner gimmick; original member name unknown.
   u8 *unknown08;       // Inferred role: bdat; original member name unknown.
   int unknown10;       // Inferred role: bdat id; original member name unknown.
-  u8 _14[0x98 - 0x14];
+  u8 _14[0x38 - 0x14];
+  BdatInfo unknown38; // Inferred role: bdat info; original member name unknown.
+  u8 _88[0x98 - 0x88];
   PopInfo unknown98; // Inferred role: pop info; original member name unknown.
-  u8 _140[0x150 - 0x140];
+  bool unknown140;   // Inferred role: display enabled; original member name unknown.
+  u8 _141[0x150 - 0x141];
   GmkSquad *unknown150; // Inferred role: squad; original member name unknown.
-  u8 _158[0x188 - 0x158];
+  u8 _158[0x178 - 0x158];
+  u64 unknown178; // Inferred role: matched condition flags; original member name unknown.
+  u8 _180[0x188 - 0x180];
 };
 
+static_assert(sizeof(GmkEnemyInsts::BdatInfo) == 0x50, "");
+static_assert(offsetof(GmkEnemyInsts, unknown38) == 0x38, "");
 static_assert(sizeof(GmkEnemyInsts::PopInfo::PopEnemyInfo) == 0x28, "");
 static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown10) == 0x10, "");
 static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown18) == 0x18, "");
@@ -88,7 +125,9 @@ static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown20) == 0x20,
 static_assert(offsetof(GmkEnemyInsts::PopInfo::PopEnemyInfo, unknown24) == 0x24, "");
 static_assert(sizeof(GmkEnemyInsts::PopInfo) == 0xa8, "");
 static_assert(offsetof(GmkEnemyInsts, unknown98) == 0x98, "");
+static_assert(offsetof(GmkEnemyInsts, unknown140) == 0x140, "");
 static_assert(offsetof(GmkEnemyInsts, unknown150) == 0x150, "");
+static_assert(offsetof(GmkEnemyInsts, unknown178) == 0x178, "");
 static_assert(sizeof(GmkEnemyInsts) == 0x188, "");
 
 class GmkEnemy : public AGmkBase {

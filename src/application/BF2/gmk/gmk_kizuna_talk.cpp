@@ -10,9 +10,13 @@
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_manager.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
+#include "mm_mtl/rtti.h"
 
 namespace gmk {
 
@@ -52,6 +56,21 @@ void GmkKizunaTalk::disposeGfObjHandle() {
     gf::GfObjUtil::destroy(unknown48);
     unknown48 = gf::INVALID_HANDLE;
   }
+}
+
+void GmkKizunaTalk::createGfObjHandle() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  disposeGfObjHandle();
+  CBdatWrapper bdat = {getBindedBdatFp()};
+  unknown48 = gf::GfObjFactory::createGmkCollection(bdat, unknown20.unknown18);
+  bindToGameObj(unknown48);
+  setEventDisp(unknown48, debugIsDispGmkType(getGmkType()));
+  unknown002(unknown48, true);
+  gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(unknown48)->unknown30);
+  unknown003(setup, unknown08.unknown08);
+  gf::GfGameFlag::setLocal(2, getGameFlagId(), 1);
 }
 
 void GmkKizunaTalk::update(f32 deltaTime) {

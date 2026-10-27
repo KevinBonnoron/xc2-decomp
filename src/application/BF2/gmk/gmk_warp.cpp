@@ -129,6 +129,20 @@ void GmkWarp::disposeIcon(u32 index, bool isFadeOut) {
   unknown60[index] = 0;
 }
 
+void GmkWarp::validateDisp() const {
+  bool isDisp = unknown6d && debugIsDispGmkType(getGmkType());
+  for (u32 i = 0; i < POINT_NUM; i++) {
+    if (unknown50[i] != gf::INVALID_HANDLE) {
+      setEventDisp(unknown50[i], isDisp);
+    }
+  }
+  for (u32 i = 0; i < POINT_NUM; i++) {
+    if (unknown60[i] != 0) {
+      fw::EffectManager::get()->setDisp(unknown60[i], isDisp);
+    }
+  }
+}
+
 void GmkWarp::debugUpdateMmf() {}
 
 void GmkWarp::reqDeadIcon() {

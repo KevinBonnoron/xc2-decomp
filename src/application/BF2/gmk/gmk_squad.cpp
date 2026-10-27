@@ -46,6 +46,17 @@ bool GmkSquad::isValid() const {
   return unknown70 != 0;
 }
 
+void GmkSquad::update(f32 deltaTime) {
+  if (unknown78) {
+    (this->*unknown78)(deltaTime);
+  }
+}
+
+void GmkSquad::getPosRotY(mm::Vec3 &position, f32 &rotY, u32 index) const {
+  position = unknowna0[index];
+  rotY = unknownc8[index];
+}
+
 GmkSquadLeader *GmkSquad::getBindedGmkSquadLeader() const {
   if (m_bindedGmkSquadLeader == nullptr) {
     return nullptr;

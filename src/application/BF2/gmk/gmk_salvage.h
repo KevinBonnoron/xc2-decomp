@@ -76,6 +76,7 @@ public:
   int getGmkSalvageLocatorNum() const;
   const GmkSalvageLocator *getGmkSalvageLocator(u32 index) const;
   const GmkFormPc *getGmkFormPc() const;
+  void createGfObjHandle();
   void disposeGfObjHandle();
   void disposeRaffle(bool isFadeOut);
   void seqValidateGmkSalvageLocatorDetails(f32 deltaTime);

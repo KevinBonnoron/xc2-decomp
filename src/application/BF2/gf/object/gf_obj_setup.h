@@ -127,6 +127,7 @@ public:
 class GfObjSetupNpc : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
+  static const u32 OBJECT_TYPE = OBJECT_TYPE_NPC;
 };
 
 class GfObjSetupGimmick : public GfObjSetup {

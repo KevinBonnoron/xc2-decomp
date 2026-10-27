@@ -2,10 +2,20 @@
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_object_type.h"
+#include "gf/game/gf_game_manager.h"
+#include "gf/object/component/behavior/gf_com_behavior_npc.h"
+#include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
+#include "gmk/gmk_manager.h"
 #include "gmk/gmk_npc/gmk_npc.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/intrusive_list.h"
 
 namespace gmk {
@@ -64,6 +74,100 @@ void GmkNpcIdInfo::dispose() {
   }
   unknown00 = 0;
   unknown08 = nullptr;
+}
+
+void GmkNpcIdInfo::disposeGobInst(bool isFadeOut) {
+  if (unknown30 == gf::INVALID_HANDLE) {
+    return;
+  }
+  if (isFadeOut) {
+    gmk::disposeGobInst(unknown30, 1.0f);
+  } else {
+    unknown001();
+  }
+}
+
+void GmkNpcIdInfo::update(f32 deltaTime, bool isCreate) {
+  if (!unknown002()) {
+    return;
+  }
+  if (!isInterestPosExist()) {
+    return;
+  }
+  {
+    gf::GfObjAcc acc(unknown30);
+    gf::GfObj *obj = acc.getObj();
+    if (obj != nullptr) {
+      if (obj->unknown28 == gf::OBJECT_TYPE_ENEMY) {
+        if (acc.isBattle()) {
+          return;
+        }
+      } else if (obj->unknown28 == gf::OBJECT_TYPE_NPC) {
+        gf::GfComBehaviorNpc *behavior = obj->getComponent<gf::GfComBehaviorNpc>();
+        if (behavior != nullptr && behavior->unknown100) {
+          return;
+        }
+      }
+    }
+  }
+  for (mm::mtl::IntrusiveList<AGmkNpc>::iterator it = unknown10->begin(); it != unknown10->end(); ++it) {
+    if (it.get()->isPopCondMatched()) {
+      setActiveGmkNpc(it.get());
+      break;
+    }
+  }
+  if (unknown30 == gf::INVALID_HANDLE) {
+    if (isCreate && unknown18 != nullptr && unknown18->isPopDistCondMatched()) {
+      createGobInst();
+    }
+  } else if (unknown18->isDepopCondMatched() || unknown18->isDepopDistCondMatched()) {
+    disposeGobInst(true);
+  }
+}
+
+void GmkNpcIdInfo::createGobInst() {
+  if (unknown30 != gf::INVALID_HANDLE) {
+    unknown001();
+  }
+  unknown30 = gf::GfObjFactory::createGmkNpc({unknown18->getBindedBdatFp()}, unknown18->getBindedBdatId());
+  if (unknown30 != gf::INVALID_HANDLE) {
+    unknown18->bindToGameObj(unknown30);
+    unknown18->validateDisp();
+    gf::GfObjSetupNpc *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupNpc>(unknown30);
+    mm::Vec3 position;
+    mm::Vec3 rotation;
+    unknown18->findPopPosRot(position, rotation);
+    setup->unknown20 = position;
+    setup->unknown30 = rotation;
+  }
+}
+
+void GmkNpcManager::update(f32 deltaTime) {
+  bool isFadeout = gf::GfGameManager::isFadeout();
+  u32 num = unknown08.size();
+  if (isFadeout) {
+    for (u32 i = 0; i < num; i++) {
+      GmkNpcIdInfo &info = unknown08[i];
+      if (info.unknown002()) {
+        info.update(deltaTime, unknown3c);
+      }
+    }
+    return;
+  }
+  if (num <= unknown38) {
+    unknown38 = 0;
+  }
+  u32 updateNum = unknown34 < num ? unknown34 : num;
+  for (u32 i = 0; i < updateNum; i++, unknown38++) {
+    if (num <= unknown38) {
+      unknown38 = 0;
+      return;
+    }
+    GmkNpcIdInfo &info = unknown08[unknown38];
+    if (info.unknown002()) {
+      info.update(deltaTime, unknown3c);
+    }
+  }
 }
 
 void GmkNpcIdInfo::removeGmkNpc(AGmkNpc *npc) {

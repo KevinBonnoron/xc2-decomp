@@ -43,6 +43,7 @@ public:
   ~GmkBlade() override { dispose(); }
   GmkType getGmkType() const override;
   void dispose() override;
+  void bindToGameObj(gf::GF_OBJ_HANDLE *handle) const;
   void disposeGobInst(bool isFadeOut);
   void createGobInst();
   void update(f32 deltaTime) override;

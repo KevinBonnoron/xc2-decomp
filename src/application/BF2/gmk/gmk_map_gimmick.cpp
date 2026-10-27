@@ -4,7 +4,11 @@
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/sequential_play/gf_play_factory.h"
+#include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_manager.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
@@ -58,6 +62,25 @@ void GmkMapGimmick::dispose() {
   unknown50 = nullptr;
   disposeGobInst();
   AGmkBase::dispose();
+}
+
+void GmkMapGimmick::createGobInst() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  disposeGobInst();
+  CBdatWrapper bdat = {getBindedBdatFp()};
+  unknown60 = gf::GfObjFactory::createGmkMapGimmick(bdat, unknown20.unknown18);
+  gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(unknown60);
+  unknown003(setup, unknown08.unknown08);
+  unknown002(unknown60, !unknownA8);
+  if (getBdatInfo()->unknown06) {
+    setup->unknown6c |= 8;
+  }
+  bindToGameObj(unknown60);
+  if (unknownA8) {
+    gf::GfPlayFactory::createMapGimmick(unknown60);
+  }
 }
 
 void GmkMapGimmick::disposeGobInst() {

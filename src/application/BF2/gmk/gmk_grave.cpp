@@ -3,16 +3,17 @@
 
 #include "bdat.h"
 #include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_set.h"
 
-namespace mm {
-struct Vec3;
-} // namespace mm
+namespace mm {} // namespace mm
 
 namespace gmk {
 
@@ -70,6 +71,21 @@ void GmkGrave::disposeGobInst(bool isFadeOut) {
     gf::GfObjUtil::destroy(unknown50);
     unknown50 = gf::INVALID_HANDLE;
   }
+}
+
+void GmkGrave::createGobInst() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  disposeGobInst(false);
+  CBdatWrapper bdat = {getBindedBdatFp()};
+  unknown50 = gf::GfObjFactory::createGmkMapObj(bdat, unknown20.unknown18);
+  bindToGameObj(unknown50);
+  unknown002(unknown50, true);
+  setEventDisp(unknown50, debugIsDispGmkType(getGmkType()));
+  gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(unknown50);
+  unknown003(setup, unknown08.unknown08);
+  setup->setInitialScale(getData()->unknown00 * 0.1f);
 }
 
 void GmkGrave::update(f32 deltaTime) {

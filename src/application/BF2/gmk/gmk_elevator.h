@@ -109,6 +109,7 @@ public:
   bool getDownShutterPos(mm::Vec3 &position) const;
   bool getUpShutterPos(mm::Vec3 &position) const;
   const GmkElevatorLocator *getBindedGmkElevatorLocator(u32 index) const;
+  const AGmkBase *getGmkBaseByItemType(ItemType type) const;
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }

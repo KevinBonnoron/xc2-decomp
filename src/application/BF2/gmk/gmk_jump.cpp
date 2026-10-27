@@ -9,9 +9,12 @@
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
+#include "mm_mtl/rtti.h"
 
 namespace fw {
 enum EF_CATEGORY : int;
@@ -91,6 +94,20 @@ void GmkJump::disposeGobInst(bool isFadeOut) {
     gf::GfObjUtil::destroy(unknown58);
     unknown58 = gf::INVALID_HANDLE;
   }
+}
+
+void GmkJump::createGobInst() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  disposeGobInst(false);
+  CBdatWrapper bdat = unknown004();
+  unknown58 = gf::GfObjFactory::createGmkCollection(bdat, unknown20.unknown18);
+  bindToGameObj(unknown58);
+  unknown002(unknown58, true);
+  setEventDisp(unknown58, debugIsDispGmkType(getGmkType()));
+  gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(unknown58)->unknown30);
+  setup->unknown20 = getData()->position;
 }
 
 void GmkJump::update(f32 deltaTime) {

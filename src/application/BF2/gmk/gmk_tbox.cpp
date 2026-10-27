@@ -7,16 +7,12 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
-#include "gf/object/gf_obj.h"
-#include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
-#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/rtti.h"
 
 namespace gf {
 struct GF_OBJ_HANDLE;
@@ -72,23 +68,7 @@ void setGobTargetable(gf::GF_OBJ_HANDLE *handle, bool isTargetable) {
   if (handle == gf::INVALID_HANDLE) {
     return;
   }
-  gf::GfObjAcc acc(handle);
-  if (acc.isValid()) {
-    gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(handle)->unknown30);
-    if (isTargetable) {
-      setup->unknown6c |= gf::OBJ_ATTRIBUTE_TARGET_MASK;
-    } else {
-      setup->unknown6c &= ~gf::OBJ_ATTRIBUTE_TARGET_MASK;
-    }
-  }
-  gf::GfObj *obj = acc.getObj();
-  if (obj != nullptr) {
-    if (isTargetable) {
-      obj->unknown110 |= gf::OBJ_ATTRIBUTE_TARGET_MASK;
-    } else {
-      obj->unknown110 &= ~gf::OBJ_ATTRIBUTE_TARGET_MASK;
-    }
-  }
+  unknown002(handle, isTargetable);
 }
 
 } // namespace
@@ -175,9 +155,7 @@ void GmkTbox::createGobInst() {
   bool isOpened = getProgress() == PROGRESS_OPENED;
   gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(unknown48);
   setup->unknown70 = isOpened ? "S_open_02" : "S_open_00";
-  const Xform *xform = unknown08.unknown08;
-  setup->unknown20 = xform->unknown00;
-  setup->unknown30 = xform->unknown10;
+  unknown003(setup, unknown08.unknown08);
   setup->setInitialScale(getData()->unknown04 * 0.1f);
   if (getBdatInfo()->unknown02 && getProgress() == PROGRESS_CLOSED) {
     setup->unknown50 = 0.0f;

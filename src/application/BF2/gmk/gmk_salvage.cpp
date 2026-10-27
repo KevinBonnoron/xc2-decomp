@@ -6,10 +6,9 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
-#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
-#include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
@@ -157,6 +156,34 @@ void GmkSalvage::validateDisp() const {
   }
 }
 
+void GmkSalvage::createGfObjHandle() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  disposeGfObjHandle();
+  CBdatWrapper bdat = {getBindedBdatFp()};
+  unknown58 = gf::GfObjFactory::createGmkCollection(bdat, unknown20.unknown18);
+  bindToGameObj(unknown58);
+  validateDisp();
+  unknown002(unknown58, true);
+  gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(unknown58)->unknown30);
+  unknown003(setup, unknown08.unknown08);
+}
+
+void GmkSalvage::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  if (unknown129) {
+    unknown129 = false;
+    disposeTboxes(true);
+  }
+  if (unknown48) {
+    (this->*unknown48)(deltaTime);
+  }
+}
+
 GmkType GmkSalvageLocator::getGmkType() const { return GMK_TYPE; }
 
 void GmkSalvageLocator::onEnemyDead(gf::GF_OBJ_HANDLE *handle) { unknownF1 = true; }
@@ -221,23 +248,7 @@ void GmkSalvageLocator::setTargetable(bool isTargetable) const {
   if (handle == gf::INVALID_HANDLE) {
     return;
   }
-  gf::GfObjAcc acc(handle);
-  if (acc.isValid()) {
-    gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(handle)->unknown30);
-    if (isTargetable) {
-      setup->unknown6c |= gf::OBJ_ATTRIBUTE_TARGET_MASK;
-    } else {
-      setup->unknown6c &= ~gf::OBJ_ATTRIBUTE_TARGET_MASK;
-    }
-  }
-  gf::GfObj *obj = acc.getObj();
-  if (obj != nullptr) {
-    if (isTargetable) {
-      obj->unknown110 |= gf::OBJ_ATTRIBUTE_TARGET_MASK;
-    } else {
-      obj->unknown110 &= ~gf::OBJ_ATTRIBUTE_TARGET_MASK;
-    }
-  }
+  unknown002(handle, isTargetable);
 }
 
 const IGmkList *GmkSetOfSalvageChildren::getGmkList(GmkType type) const { return unknown1b8[type]; }

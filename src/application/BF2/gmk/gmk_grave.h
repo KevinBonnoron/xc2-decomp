@@ -42,6 +42,10 @@ public:
     DistHvCond unknown0c; // Inferred role: depop dist; original member name unknown.
   };
 
+  struct Data {
+    u8 unknown00; // Inferred role: scale in tenths; original member name unknown. The size of this structure is unknown.
+  };
+
   static const GmkType GMK_TYPE = GMK_TYPE_GRAVE;
 
   GmkGrave();
@@ -60,6 +64,7 @@ public:
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
 
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
   bool unknown48;               // Inferred role: enemy defeated; original member name unknown.

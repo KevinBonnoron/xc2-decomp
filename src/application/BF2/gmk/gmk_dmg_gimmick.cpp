@@ -4,6 +4,8 @@
 #include "framework/sound/sound_manager.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/field/gf_field_manager.h"
+#include "gf/field/gf_field_sound.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/gf_allocator.h"
@@ -29,6 +31,10 @@ namespace mtl {
 class RTTI;
 } // namespace mtl
 } // namespace mm
+
+namespace fw {
+class EffectPack;
+} // namespace fw
 
 namespace gmk {
 
@@ -213,6 +219,23 @@ bool GmkDmgPhantomTargetInfo::isTargetPlayer() const {
 GmkType GmkDmgGimmick::getGmkType() const { return GMK_TYPE; }
 
 const mm::mtl::RTTI *GmkDmgGimmick::getRTTI() const { return &m_rtti; }
+
+void GmkDmgGimmick::create(const CreateInfo &info) {
+  AGmkBase::create(info);
+  if (!isValid()) {
+    dispose();
+    return;
+  }
+  fw::EffectPack *pack = gf::GfFieldManager::getEffectPack();
+  if (pack != nullptr && getBdatInfo()->unknown10 != nullptr && getBdatInfo()->unknown10[0] != '\0') {
+    unknown58 = fw::EffectManager::get()->search(getBdatInfo()->unknown10, pack);
+    if (unknown58 == nullptr) {
+      canCreateGameEntity();
+    }
+  }
+  unknown60 = gf::GfFieldSound::get()->getMapPack();
+  unknown68 = &GmkDmgGimmick::seqWaitToCreateChild;
+}
 
 void GmkDmgGimmick::dispose() {
   unknown58 = nullptr;

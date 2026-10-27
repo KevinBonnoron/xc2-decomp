@@ -4,9 +4,16 @@
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/object/component/behavior/gf_com_behavior_npc.h"
+#include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_factory.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_manager.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
+#include "mm_mtl/rtti.h"
 
 namespace gmk {
 
@@ -84,6 +91,19 @@ void GmkBlade::validateDisp() const {
   setEventDisp(unknown48, unknown55 && debugIsDispGmkType(getGmkType()));
 }
 
+void GmkBlade::bindToGameObj(gf::GF_OBJ_HANDLE *handle) const {
+  AGmkBase::bindToGameObj(handle);
+  gf::GfObjAcc acc(handle);
+  gf::GfObj *obj = acc.getObj();
+  if (obj == nullptr) {
+    return;
+  }
+  gf::GfComBehaviorNpc *behavior = obj->getComponent<gf::GfComBehaviorNpc>();
+  if (behavior != nullptr) {
+    behavior->validateBindedGmkInstInfo(false);
+  }
+}
+
 void GmkBlade::dispose() {
   if (unknown48 != gf::INVALID_HANDLE) {
     unbindToGameObj(unknown48);
@@ -104,6 +124,22 @@ void GmkBlade::disposeGobInst(bool isFadeOut) {
     gf::GfObjUtil::destroy(unknown48);
     unknown48 = gf::INVALID_HANDLE;
   }
+}
+
+void GmkBlade::createGobInst() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  disposeGobInst(false);
+  CBdatWrapper bdat = {getBindedBdatFp()};
+  unknown48 = gf::GfObjFactory::createGmkBlade(bdat, unknown20.unknown18, unknown50);
+  if (unknown48 == gf::INVALID_HANDLE) {
+    return;
+  }
+  bindToGameObj(unknown48);
+  validateDisp();
+  gf::GfObjSetupNpc *setup = mm::mtl::dynamicCast<gf::GfObjSetupNpc>(gf::GfObjManager::getObjInfo(unknown48)->unknown30);
+  unknown003(setup, unknown08.unknown08);
 }
 
 void GmkBlade::update(f32 deltaTime) {

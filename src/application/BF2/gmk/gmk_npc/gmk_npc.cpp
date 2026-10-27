@@ -3,7 +3,11 @@
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/object/component/behavior/gf_com_behavior_npc.h"
+#include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_npc/gmk_npc_manager.h"
 #include "gmk/gmk_set.h"
@@ -85,6 +89,19 @@ void GmkNpc::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
 }
 
 void GmkNpc::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
+
+void GmkNpc::bindToGameObj(gf::GF_OBJ_HANDLE *handle) const {
+  AGmkBase::bindToGameObj(handle);
+  gf::GfObjAcc acc(handle);
+  gf::GfObj *obj = acc.getObj();
+  if (obj == nullptr || acc.isDestroy() || acc.testFlag(gf::OBJ_FLAG_UI_HIDDEN)) {
+    return;
+  }
+  gf::GfComBehaviorNpc *behavior = obj->getComponent<gf::GfComBehaviorNpc>();
+  if (behavior != nullptr) {
+    behavior->validateBindedGmkInstInfo(true);
+  }
+}
 
 bool GmkNpc::findPopPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const {
   position = AGmkBase::unknown08.unknown08->unknown00;

@@ -7,12 +7,9 @@
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_squad.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/reference_object.h"
 #include "mm_mtl/vector.h"
-
-namespace mm {
-struct Vec3;
-} // namespace mm
 
 namespace gmk {
 
@@ -43,6 +40,18 @@ void GmkMobInsts::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gm
 }
 
 void GmkMobInsts::BdatInfo::debugDraw(const AGmkBase &gmk) const {}
+
+bool GmkMobInsts::BdatInfo::isMobPopDistCondMatched(const mm::Vec3 &position) const {
+  if (!isInterestPosExist()) {
+    return false;
+  }
+  const mm::Vec3 &interestPos = getInterestPos();
+  f32 x = interestPos.x - position.x;
+  f32 y = interestPos.y - position.y;
+  f32 z = interestPos.z - position.z;
+  f32 distSq = x * x + y * y + z * z;
+  return !(getMobPopDistSq() < distSq);
+}
 
 void GmkMobInsts::PopInfo::dispose() {
   unknown40 = 0;
@@ -123,6 +132,64 @@ void GmkMobInsts::removeGobInst(gf::GF_OBJ_HANDLE *handle) {
     }
   }
 }
+
+void GmkMobInsts::validateDisp() const {
+  if (!isValid()) {
+    return;
+  }
+  u32 num = unknowna8->size();
+  for (u32 i = 0; i < num; i++) {
+    validateDisp((*unknowna8)[i]);
+  }
+}
+
+void GmkMobInsts::update(const UpdateInfo &info) {
+  if (isValid() && unknownc0) {
+    (this->*unknownc0)(info);
+  }
+}
+
+bool GmkMob::PopXformFinder::findPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const {
+  GmkSquad *squad = unknown08->unknown48.unknownb0;
+  bool isPlaced = false;
+  if (squad != nullptr) {
+    mm::mtl::Vector<gf::GF_OBJ_HANDLE *> *handles = unknown08->unknown48.unknowna8;
+    u32 num = handles->size();
+    if (num != 0 && num < static_cast<u32>(squad->unknown70)) {
+      gf::GfObjAcc acc((*handles)[0]);
+      if (!acc.isValidTransform()) {
+        return false;
+      }
+      squad->getPosRotY(position, rotation.y, unknown08->unknown48.unknowna8->size());
+      rotation.z = 0.0f;
+      rotation.x = 0.0f;
+      isPlaced = true;
+    }
+  }
+  if (!isPlaced) {
+    if (unknown08->unknown48.unknown58.unknown40 == 1) {
+      position = unknown08->unknown08.unknown08->unknown00;
+    } else {
+      unknown08->getPositionInShape(position, false);
+    }
+  }
+  rotation = unknown08->unknown08.unknown08->unknown10;
+  if (unknown08->getData()->unknown00 != 0) {
+    f32 halfLength = unknown08->getYSnapRayLength() * 0.5f;
+    mm::Vec3 start;
+    start.x = position.x;
+    start.y = halfLength + position.y;
+    start.z = position.z;
+    if (!getYSnapPos(position, start, halfLength + halfLength)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void GmkMob::PopXformFinder::onPopGob(gf::GF_OBJ_HANDLE *handle) const {}
+
+void GmkMob::PopXformFinder::onCreateGobInsts(u32 num) const {}
 
 void GmkMobInsts::disposeSquad() { mm::mtl::safeRelease(unknownb0); }
 

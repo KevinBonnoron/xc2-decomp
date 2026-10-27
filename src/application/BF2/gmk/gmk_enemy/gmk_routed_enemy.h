@@ -25,6 +25,12 @@ class AGmkBase;
 
 class GmkRoutedEnemy : public GmkRoute {
 public:
+  struct Data : GmkRoute::Data {
+    int unknown14; // Inferred role: pop point index; original member name unknown.
+  };
+
+  static const u32 FLAG_UNKNOWN_3 = 1 << 3;
+
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_ENEMY;
 
   ~GmkRoutedEnemy() override;
@@ -36,11 +42,14 @@ public:
   void update(f32 deltaTime) override;
   void debugDraw() const override;
   IGmkList *getOwnerGmkEnemyList() const;
+  bool isPopPointRouteEnd(const GmkRouteNavi &navi) const;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void bindRouteNavi(gf::GF_OBJ_HANDLE *handle, GmkRouteNavi &navi);
   void unbindRouteNavi(gf::GF_OBJ_HANDLE *handle, bool isDispose);
   GmkRouteNavi *findFreeRouteNavi() const;
   GmkRouteNavi *findRouteNavi(gf::GF_OBJ_HANDLE *handle) const;
+
+  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
   void *unknown50; // Role and original member name unknown.
   void *unknown58; // Role and original member name unknown.
@@ -52,6 +61,7 @@ public:
   mutable mm::mtl::Vector<std::pair<gf::GF_OBJ_HANDLE *, GmkRouteNavi>> unknown1D8; // Inferred role: route navis with the game object they are bound to; original member name unknown.
 };
 
+static_assert(offsetof(GmkRoutedEnemy::Data, unknown14) == 0x14, "");
 static_assert(offsetof(GmkRoutedEnemy, unknown50) == 0x50, "");
 static_assert(offsetof(GmkRoutedEnemy, unknown58) == 0x58, "");
 static_assert(offsetof(GmkRoutedEnemy, unknown60) == 0x60, "");

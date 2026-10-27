@@ -648,8 +648,8 @@ bool getYSnapPos(mm::Vec3 &result, const mm::Vec3 &position, f32 distance) {
   fw::ColiCheckConfig config;
   config.unknown08 = 0.0f;
   config.unknown0c = 0.0f;
-  config.unknown14 = true;
   config.unknown15 = false;
+  config.unknown14 = true;
   config.unknown10 = 2;
   config.unknown04 = 0x80000020;
   config.unknown00 = 9;

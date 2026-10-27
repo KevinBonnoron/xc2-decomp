@@ -43,6 +43,7 @@ public:
   void setSolved() const;
   void create(const CreateInfo &info) override;
   void dispose() override;
+  void createGobInst();
   void disposeGobInst();
   void update(f32 deltaTime) override;
   void debugDraw() const override;

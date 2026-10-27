@@ -1,8 +1,13 @@
 #pragma once
+#include "gf/data/gf_bdat_wrapper.h"
+#include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_manager.h"
+#include "gf/object/gf_obj_setup.h"
 #include "gmk/gmk_manager.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/rtti.h"
 #include "types.h"
 #include <stddef.h>
 
@@ -47,6 +52,33 @@ inline void unknown001(mm::Mat44 &matrix, const mm::Vec3 &position) {
   matrix.rows[3][1] = position.y;
   matrix.rows[3][2] = position.z;
   matrix.rows[3][3] = 1.0f;
+}
+
+// Inferred helper: sets or clears the target attribute of a game object; original name unknown.
+inline void unknown002(gf::GF_OBJ_HANDLE *handle, bool isTargetable) {
+  gf::GfObjAcc acc(handle);
+  if (acc.isValid()) {
+    gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(handle)->unknown30);
+    if (isTargetable) {
+      setup->unknown6c |= gf::OBJ_ATTRIBUTE_TARGET_MASK;
+    } else {
+      setup->unknown6c &= ~gf::OBJ_ATTRIBUTE_TARGET_MASK;
+    }
+  }
+  gf::GfObj *obj = acc.getObj();
+  if (obj != nullptr) {
+    if (isTargetable) {
+      obj->unknown110 |= gf::OBJ_ATTRIBUTE_TARGET_MASK;
+    } else {
+      obj->unknown110 &= ~gf::OBJ_ATTRIBUTE_TARGET_MASK;
+    }
+  }
+}
+
+// Inferred helper: places a game object setup at the position and rotation of a transform; original name unknown.
+inline void unknown003(gf::GfObjSetup *setup, const Xform *xform) {
+  setup->unknown20 = xform->unknown00;
+  setup->unknown30 = xform->unknown10;
 }
 
 class AGmkBase {
@@ -94,6 +126,12 @@ public:
     unknown08.unknown10 = nullptr;
   }
   u8 *getBindedBdatFp() const;
+
+  // Inferred helper: wraps the bdat of the list; original name unknown.
+  CBdatWrapper unknown004() const {
+    CBdatWrapper bdat = {getBindedBdatFp()};
+    return bdat;
+  }
   bool canCreateGameEntity() const;
   f32 getYSnapRayLength() const;
   void createBase(const CreateBaseInfo &info);
