@@ -1,7 +1,9 @@
 #pragma once
 #include <stddef.h>
 
+#include "ml/critical_section.h"
 #include "ml/work_obj.h"
+#include "mm_mtl/fixed_list.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 #include "types.h"
@@ -12,8 +14,10 @@ struct Col3;
 
 namespace ml {
 
-class CriticalSection;
 class IThreadValue;
+class IErrorCB;
+class IWorkBackground;
+class IWorkEvent;
 class IWorkInfomation;
 class WorkCpuThread;
 
@@ -108,6 +112,11 @@ public:
   static void gotoForeground();
   static void backgroundProcess();
   static void backgroundProcess(CPUID cpu);
+  static bool unregistErrorCB(IErrorCB *callback);
+  static void addShutdownForceListener(IWorkEvent *listener);
+  static void removeShutdownForceListener(IWorkEvent *listener);
+  static void addBackgroundListener(IWorkBackground *listener);
+  static void removeBackgroundListener(IWorkBackground *listener);
   static void addSystemInfoListener(IWorkInfomation *listener);
   static void removeSystemInfoListener(IWorkInfomation *listener);
   static u32 thForeground(void *argument, void *userData);
@@ -135,10 +144,12 @@ public:
   u8 _175c[0x1764 - 0x175c];
   u32 unknown1764; // Inferred role: even; original member name unknown.
   u8 _1768[0x195c - 0x1768];
-  u32 unknown195c; // Inferred role: counter; original member name unknown.
-  u8 _1960[0x2020 - 0x1960];
-  u64 unknown2020;    // Inferred role: main thread id; original member name unknown.
-  u32 unknown2028[2]; // Inferred role: job trans; original member name unknown.
+  u32 unknown195c;                                       // Inferred role: counter; original member name unknown.
+  mm::mtl::FixedList<IWorkEvent *, 32> unknown1960;      // Inferred role: shutdown force listeners; original member name unknown.
+  mm::mtl::FixedList<IWorkBackground *, 32> unknown1ba0; // Inferred role: background listeners; original member name unknown.
+  mm::mtl::FixedList<IWorkInfomation *, 32> unknown1de0; // Inferred role: system info listeners; original member name unknown.
+  u64 unknown2020;                                       // Inferred role: main thread id; original member name unknown.
+  u32 unknown2028[2];                                    // Inferred role: job trans; original member name unknown.
   u8 _2030[0x2034 - 0x2030];
   f32 unknown2034; // Inferred role: all cost sec; original member name unknown.
   u8 _2038[0x2048 - 0x2038];
@@ -148,6 +159,9 @@ public:
   long unknown2080;    // Inferred role: sync clock; original member name unknown.
   u8 _2088[0x2090 - 0x2088];
   unsigned long unknown2090; // Inferred role: frame count; original member name unknown.
+  u8 _2098[0x20a0 - 0x2098];
+  mm::mtl::FixedList<IErrorCB *, 32> unknown20a0; // Inferred role: error callbacks; original member name unknown.
+  CriticalSectionNC unknown22e0;                  // Inferred role: error callbacks lock; original member name unknown.
 };
 
 static_assert(offsetof(WorkCpu, unknown1b0) == 0x1b0, "");
@@ -157,10 +171,15 @@ static_assert(offsetof(WorkCpu, unknown1740) == 0x1740, "");
 static_assert(offsetof(WorkCpu, unknown1758) == 0x1758, "");
 static_assert(offsetof(WorkCpu, unknown1764) == 0x1764, "");
 static_assert(offsetof(WorkCpu, unknown195c) == 0x195c, "");
+static_assert(offsetof(WorkCpu, unknown1960) == 0x1960, "");
+static_assert(offsetof(WorkCpu, unknown1ba0) == 0x1ba0, "");
+static_assert(offsetof(WorkCpu, unknown1de0) == 0x1de0, "");
 static_assert(offsetof(WorkCpu, unknown2020) == 0x2020, "");
 static_assert(offsetof(WorkCpu, unknown2034) == 0x2034, "");
 static_assert(offsetof(WorkCpu, unknown2048) == 0x2048, "");
 static_assert(offsetof(WorkCpu, unknown2080) == 0x2080, "");
 static_assert(offsetof(WorkCpu, unknown2090) == 0x2090, "");
+static_assert(offsetof(WorkCpu, unknown20a0) == 0x20a0, "");
+static_assert(offsetof(WorkCpu, unknown22e0) == 0x22e0, "");
 
 } // namespace ml

@@ -6,6 +6,7 @@
 #include "ml/reslist.h"
 #include "ml/thread_util.h"
 #include "ml/work_cpu_thread.h"
+#include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
 namespace ml {
@@ -308,6 +309,100 @@ template class fixed_size_alloc<TJOB>;
 
 } // namespace ml
 
+template mm::mtl::FixedList<ml::IWorkBackground *, 32>::iterator mm::mtl::FixedList<ml::IWorkBackground *, 32>::erase(mm::mtl::FixedList<ml::IWorkBackground *, 32>::iterator);
+
+template mm::mtl::FixedList<ml::IWorkEvent *, 32>::iterator mm::mtl::FixedList<ml::IWorkEvent *, 32>::erase(mm::mtl::FixedList<ml::IWorkEvent *, 32>::iterator);
+
 template mm::mtl::FixedList<ml::IWorkInfomation *, 32>::iterator mm::mtl::FixedList<ml::IWorkInfomation *, 32>::erase(mm::mtl::FixedList<ml::IWorkInfomation *, 32>::iterator);
 
+template mm::mtl::FixedList<ml::IErrorCB *, 32>::iterator mm::mtl::FixedList<ml::IErrorCB *, 32>::erase(mm::mtl::FixedList<ml::IErrorCB *, 32>::iterator);
+
 template mm::mtl::FixedList<ml::TJOB *, 64>::iterator mm::mtl::FixedList<ml::TJOB *, 64>::erase(mm::mtl::FixedList<ml::TJOB *, 64>::iterator);
+
+namespace ml {
+
+void WorkCpu::addShutdownForceListener(IWorkEvent *listener) {
+  WorkCpu *cpu = get();
+  if (cpu != nullptr) {
+    CriticalSection &lock = _mlwcpu::getListenerLock();
+    CriticalSection::enter(lock);
+    cpu->unknown1960.push_back(listener);
+    CriticalSection::leave(lock);
+  }
+}
+
+void WorkCpu::addBackgroundListener(IWorkBackground *listener) {
+  WorkCpu *cpu = get();
+  if (cpu != nullptr) {
+    CriticalSection &lock = _mlwcpu::getListenerLock();
+    CriticalSection::enter(lock);
+    cpu->unknown1ba0.push_back(listener);
+    CriticalSection::leave(lock);
+  }
+}
+
+void WorkCpu::addSystemInfoListener(IWorkInfomation *listener) {
+  WorkCpu *cpu = get();
+  if (cpu != nullptr) {
+    CriticalSection &lock = _mlwcpu::getListenerLock();
+    CriticalSection::enter(lock);
+    cpu->unknown1de0.push_back(listener);
+    CriticalSection::leave(lock);
+  }
+}
+
+void WorkCpu::removeShutdownForceListener(IWorkEvent *listener) {
+  WorkCpu *cpu = get();
+  if (cpu != nullptr && (cpu->unknown1b0 & 2) == 0) {
+    CriticalSection &lock = _mlwcpu::getListenerLock();
+    CriticalSection::enter(lock);
+    mm::mtl::FixedList<IWorkEvent *, 32>::iterator it = mm::mtl::find(cpu->unknown1960.begin(), cpu->unknown1960.end(), listener);
+    if (it != cpu->unknown1960.end()) {
+      cpu->unknown1960.erase(it);
+    }
+    CriticalSection::leave(lock);
+  }
+}
+
+void WorkCpu::removeBackgroundListener(IWorkBackground *listener) {
+  WorkCpu *cpu = get();
+  if (cpu != nullptr && (cpu->unknown1b0 & 2) == 0) {
+    CriticalSection &lock = _mlwcpu::getListenerLock();
+    CriticalSection::enter(lock);
+    mm::mtl::FixedList<IWorkBackground *, 32>::iterator it = mm::mtl::find(cpu->unknown1ba0.begin(), cpu->unknown1ba0.end(), listener);
+    if (it != cpu->unknown1ba0.end()) {
+      cpu->unknown1ba0.erase(it);
+    }
+    CriticalSection::leave(lock);
+  }
+}
+
+void WorkCpu::removeSystemInfoListener(IWorkInfomation *listener) {
+  WorkCpu *cpu = get();
+  if (cpu != nullptr && (cpu->unknown1b0 & 2) == 0) {
+    CriticalSection &lock = _mlwcpu::getListenerLock();
+    CriticalSection::enter(lock);
+    mm::mtl::FixedList<IWorkInfomation *, 32>::iterator it = mm::mtl::find(cpu->unknown1de0.begin(), cpu->unknown1de0.end(), listener);
+    if (it != cpu->unknown1de0.end()) {
+      cpu->unknown1de0.erase(it);
+    }
+    CriticalSection::leave(lock);
+  }
+}
+
+bool WorkCpu::unregistErrorCB(IErrorCB *callback) {
+  WorkCpu *cpu = get();
+  if (callback == nullptr || cpu == nullptr) {
+    return false;
+  }
+
+  CSNC lock(cpu->unknown22e0);
+  mm::mtl::FixedList<IErrorCB *, 32>::iterator it = mm::mtl::find(cpu->unknown20a0.begin(), cpu->unknown20a0.end(), callback);
+  if (it != cpu->unknown20a0.end()) {
+    cpu->unknown20a0.erase(it);
+  }
+
+  return true;
+}
+
+} // namespace ml
