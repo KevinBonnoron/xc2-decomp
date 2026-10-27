@@ -80,6 +80,7 @@ public:
   void getAnchor(f32 &x, f32 &y) const;
   const mm::Col4 *getMulCol() const;
   const mm::Col3 *getAddCol() const;
+  bool isClip() const;
   const mm::Mat44 *getMatrix() const;
   void setDisp(bool disp);
   bool isDisp() const;
@@ -118,7 +119,11 @@ public:
   u8 _c5[0xc6 - 0xc5];
   u8 unknownc6;                  // Inferred role: tex filter type; original member name unknown.
   LayerResParmInfo unknownc8[3]; // Inferred role: parms; original member name unknown.
-  u8 _170[0x190 - 0x170];
+  f32 unknown170;                // Inferred role: clip value; original member name unknown.
+  f32 unknown174;                // Inferred role: clip value; original member name unknown.
+  f32 unknown178;                // Inferred role: clip value; original member name unknown.
+  f32 unknown17c;                // Inferred role: clip value; original member name unknown.
+  u8 _180[0x190 - 0x180];
   u16 unknown190;                // Inferred role: pixel x; original member name unknown.
   u16 unknown192;                // Inferred role: pixel y; original member name unknown.
   u16 unknown194;                // Inferred role: pixel width; original member name unknown.
@@ -147,6 +152,8 @@ static_assert(offsetof(LayerObj, unknownc3) == 0xc3, "");
 static_assert(offsetof(LayerObj, unknownc4) == 0xc4, "");
 static_assert(offsetof(LayerObj, unknownc6) == 0xc6, "");
 static_assert(offsetof(LayerObj, unknownc8) == 0xc8, "");
+static_assert(offsetof(LayerObj, unknown170) == 0x170, "");
+static_assert(offsetof(LayerObj, unknown17c) == 0x17c, "");
 static_assert(offsetof(LayerObj, unknown190) == 0x190, "");
 static_assert(offsetof(LayerObj, unknown198) == 0x198, "");
 static_assert(offsetof(LayerObj, unknown19c) == 0x19c, "");

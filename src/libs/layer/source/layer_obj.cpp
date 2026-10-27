@@ -82,6 +82,24 @@ void LayerObj::updateCtrlSpd(f32 speed) {
   unknown1f8 = unknown1f4 * speed;
 }
 
+void LayerObj::updateAnimObj() {
+  if (unknown208[2] != nullptr) {
+    f32 frame = unknown1f8 * LayerManager::get()->unknown80;
+    if (unknowna8 & 0x200) {
+      frame = 0.0f;
+    }
+
+    if (unknown208[2]->update(unknownc8[2], frame) && unknown208[2] != nullptr) {
+      delete unknown208[2];
+      unknown208[2] = nullptr;
+    }
+  }
+
+  if (unknownc8[2].unknown1c.unknown00.a <= 0.0f && unknown18 != LAYER_OBJ_TYPE_MASK) {
+    unknowna8 |= 0x80000;
+  }
+}
+
 void LayerObj::updateSecondTex() {
   if (unknown220[2] != nullptr) {
     unknown220[2]->update();
@@ -164,6 +182,20 @@ void LayerObj::getAnchor(f32 &x, f32 &y) const {
   y = matrix->unknown18;
 }
 
+const mm::Mat44 *LayerObj::getMatrix() const {
+  if (getStateFlags(LayerManager::s_nStkIdx) & 0x40000) {
+    if (unknownc2) {
+      return &unknown20[0];
+    }
+    return &unknown20[1];
+  }
+
+  if (unknownc2) {
+    return &unknown20[1];
+  }
+  return &unknown20[0];
+}
+
 const mm::Col4 *LayerObj::getMulCol() const { return &getColorParm(this, 0x20)->unknown00; }
 
 const mm::Col3 *LayerObj::getAddCol() const { return &getColorParm(this, 0x40)->unknown10; }
@@ -176,6 +208,19 @@ void LayerObj::setDisp(bool disp) {
     onStateFlags(0x100);
     offStateFlags(0x80);
   }
+}
+
+bool LayerObj::isClip() const {
+  if (unknown170 <= 0.0f) {
+    return true;
+  }
+  if (unknown174 <= 0.0f) {
+    return true;
+  }
+  if (unknown178 >= 1.0f) {
+    return true;
+  }
+  return unknown17c >= 1.0f;
 }
 
 bool LayerObj::isDisp() const { return (unknowna8 & 0x20000) != 0; }

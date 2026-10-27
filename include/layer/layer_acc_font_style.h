@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "types.h"
 
 namespace layer {
@@ -8,18 +10,22 @@ class LayerFontStyleObj;
 
 // Inferred layout of a font style row; original type and member names unknown.
 struct LayerStyleData {
-  u8 _00[0x0c];
+  u8 _00[0x04];
+  u32 unknown04; // Inferred role: style name offset; original member name unknown.
+  u32 unknown08; // Inferred role: font name offset; original member name unknown.
   f32 unknown0c;
   f32 unknown10;
   u8 _14[0x28 - 0x14];
 };
 
+static_assert(offsetof(LayerStyleData, unknown04) == 0x04, "");
+static_assert(offsetof(LayerStyleData, unknown08) == 0x08, "");
 static_assert(sizeof(LayerStyleData) == 0x28, "");
 
 // Inferred layout of the pair returned by LayerAccFontStyle::getStyleInfo; original type name unknown.
 struct LayerStyleInfo {
   const void *unknown00;
-  LayerStyleData *unknown08;
+  const LayerStyleData *unknown08;
 };
 
 class LayerAccFontStyle {

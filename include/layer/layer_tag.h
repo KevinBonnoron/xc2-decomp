@@ -4,6 +4,11 @@
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
+namespace mm {
+struct Col3;
+struct Col4;
+} // namespace mm
+
 namespace layer {
 
 struct LayerTagTbl {
@@ -13,9 +18,22 @@ struct LayerTagTbl {
 
 class LayerStrInfo {
 public:
-  LayerStrInfo();
+  union unknown001 {
+    f32 m_float;
+    s32 m_s32;
+    u32 m_u32;
+    f32 m_col3[3];
+    f32 m_col4[4];
+  };
 
-  u8 _00[0x10 - 0x00];
+  LayerStrInfo();
+  void setCol4(const char *name, const mm::Col4 &color);
+  void setCol3(const char *name, const mm::Col3 &color);
+  void setFloat(const char *name, f32 value);
+  void setU32(const char *name, u32 value);
+  void setS32(const char *name, s32 value);
+
+  unknown001 unknown00;          // Inferred role: value; original member name unknown.
   mm::mtl::FixStr<16> unknown10; // Inferred role: name; original member name unknown.
 };
 

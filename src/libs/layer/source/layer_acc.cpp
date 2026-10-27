@@ -1,4 +1,6 @@
 #include <math.h>
+#include <stddef.h>
+#include <string.h>
 
 #include "layer/layer_acc_action.h"
 #include "layer/layer_acc_def_obj.h"
@@ -6,6 +8,7 @@
 #include "layer/layer_acc_filter_obj.h"
 #include "layer/layer_acc_font_obj.h"
 #include "layer/layer_acc_font_style.h"
+#include "layer/layer_acc_format.h"
 #include "layer/layer_acc_layout_obj.h"
 #include "layer/layer_acc_manager.h"
 #include "layer/layer_acc_mem_obj.h"
@@ -153,6 +156,69 @@ void LayerAccManager::openDebugWindow(ml::WinProc *window) {}
 
 void LayerManager::openDebugWindow(ml::WinProc *window) {}
 
+namespace {
+
+struct unknown001 {
+  u32 unknown00; // Inferred role: magic; original member name unknown.
+  u32 unknown04; // Inferred role: version; original member name unknown.
+  u32 unknown08; // Inferred role: flags; original member name unknown.
+  u8 _0c[0x18 - 0x0c];
+  u32 unknown18; // Inferred role: offset of the entry table; original member name unknown.
+  u8 _1c[0x24 - 0x1c];
+  u32 unknown24; // Inferred role: extra data; original member name unknown.
+};
+
+static_assert(offsetof(unknown001, unknown08) == 0x08, "");
+static_assert(offsetof(unknown001, unknown18) == 0x18, "");
+static_assert(offsetof(unknown001, unknown24) == 0x24, "");
+
+} // namespace
+
+LayerAccFormat::LayerAccFormat() : unknown00(0), unknown04(false), unknown05(false), unknown06(false) {}
+
+LayerAccFormat::LayerAccFormat(const void *data) : unknown00(0), unknown04(false), unknown05(false), unknown06(false) { setLayerData(data); }
+
+void LayerAccFormat::setLayerData(const void *data) {
+  const unknown001 *header = static_cast<const unknown001 *>(data);
+  switch (header->unknown00) {
+  case 0x4448414c:
+    if (header->unknown04 == 0x2711) {
+      unknown00 = 1;
+      if (header->unknown08 & 0x20) {
+        unknown05 = true;
+      }
+      if (header->unknown24 != 0) {
+        unknown04 = true;
+      }
+      if (*reinterpret_cast<const u16 *>(static_cast<const u8 *>(data) + header->unknown18) >= 2) {
+        unknown06 = true;
+      }
+      return;
+    }
+    break;
+  case 0x5350414c:
+    if (header->unknown04 == 0x2711) {
+      unknown00 = 2;
+      return;
+    }
+    break;
+  case 0x5446414c:
+    if (header->unknown04 == 0x2711) {
+      unknown00 = 3;
+      unknown04 = true;
+      return;
+    }
+    break;
+  case 0x5453414c:
+    if (header->unknown04 == 0x2711) {
+      unknown00 = 4;
+      return;
+    }
+    break;
+  }
+  unknown00 = 0;
+}
+
 LayerAccAction::LayerAccAction(LayerBase *layer) : m_layer(static_cast<LayerActBase *>(layer)) {}
 
 bool LayerAccAction::isActionData() const { return m_layer->unknown250 != nullptr; }
@@ -267,6 +333,21 @@ bool LayerAccAction::actionID(u32 id) {
     if (work->unknown08[i].unknown08 == id) {
       m_layer->actionIdx(i);
       return true;
+    }
+  }
+
+  return false;
+}
+
+bool LayerAccAction::actionName(const char *name) {
+  const LayerActWork *work = m_layer->unknown250;
+  if (work != nullptr) {
+    for (s32 i = 0; i < work->unknown10; i++) {
+      const LyrActionData &action = work->unknown08[i];
+      if (strcmp(name, reinterpret_cast<const char *>(work->unknown00 + (action.unknown0c + action.unknown14))) == 0) {
+        m_layer->actionIdx(i);
+        return true;
+      }
     }
   }
 
@@ -564,6 +645,17 @@ LayerAccFontStyle::LayerAccFontStyle(LayerBase *layer) : m_style(static_cast<Lay
 
 u32 LayerAccFontStyle::getStyleDataMax() const { return m_style->unknown28; }
 
+LayerStyleInfo LayerAccFontStyle::getStyleInfo(u32 index) const {
+  LayerStyleInfo info;
+  u32 max = m_style->unknown28;
+  info.unknown00 = m_style->unknown20;
+  info.unknown08 = m_style->unknown30;
+  if (index < max) {
+    info.unknown08 += index;
+  }
+  return info;
+}
+
 s32 LayerAccFontStyle::getStyleIndex(const char *name) const { return m_style->getStyleIndex(name); }
 
 const char *LayerAccFontStyle::getStyleName(u32 index) const { return m_style->getStyleName(index); }
@@ -638,6 +730,42 @@ void LayerAccFontObj::setMsg(const char *text, const LayerBase *res, u32 flags) 
 void LayerAccFontObj::setMsg(const wchar_t *text, const LayerBase *res, u32 flags) {
   LayerFontManager *fontManager = LayerManager::get()->unknown68;
   static_cast<LayerObjFont *>(unknown00)->setMsg(text, reinterpret_cast<const LayerFontResObj *>(res), fontManager->unknown70, fontManager->unknown68, flags);
+}
+
+void LayerAccFontObj::setMsg(const char *text) {
+  LayerObjFont *object = static_cast<LayerObjFont *>(unknown00);
+  const LayerFontResObj *res = object->unknown278;
+  const LayerFontStyleObj *style = object->unknown280;
+  const LayerFontIconObj *icon = object->unknown288;
+  u32 flags = object->unknown298;
+  if (style == nullptr) {
+    style = LayerManager::get()->unknown68->unknown70;
+  }
+  if (res == nullptr) {
+    res = reinterpret_cast<const LayerFontResObj *>(LayerManager::get()->unknown68->unknown68);
+  }
+  if (icon == nullptr) {
+    icon = LayerManager::get()->unknown68->unknown68;
+  }
+  object->setMsg(reinterpret_cast<const u8 *>(text), res, style, icon, flags);
+}
+
+void LayerAccFontObj::setMsg(const wchar_t *text) {
+  LayerObjFont *object = static_cast<LayerObjFont *>(unknown00);
+  const LayerFontResObj *res = object->unknown278;
+  const LayerFontStyleObj *style = object->unknown280;
+  const LayerFontIconObj *icon = object->unknown288;
+  u32 flags = object->unknown298;
+  if (style == nullptr) {
+    style = LayerManager::get()->unknown68->unknown70;
+  }
+  if (res == nullptr) {
+    res = reinterpret_cast<const LayerFontResObj *>(LayerManager::get()->unknown68->unknown68);
+  }
+  if (icon == nullptr) {
+    icon = LayerManager::get()->unknown68->unknown68;
+  }
+  object->setMsg(text, res, style, icon, flags);
 }
 
 void LayerAccFontObj::setColorMap(const LayerBase *colorMap, u32 index) { static_cast<LayerObjFont *>(unknown00)->setColorMap(reinterpret_cast<const LayerFontIconObj *>(colorMap), index); }

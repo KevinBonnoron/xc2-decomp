@@ -1,8 +1,41 @@
 #include "layer/layer_tag.h"
 
+#include "mm_math/mm_col3.h"
+#include "mm_math/mm_col4.h"
+
 namespace layer {
 
 LayerStrInfo::LayerStrInfo() {}
+
+void LayerStrInfo::setCol4(const char *name, const mm::Col4 &color) {
+  unknown10 = name;
+  unknown00.m_col4[0] = color.r;
+  unknown00.m_col4[1] = color.g;
+  unknown00.m_col4[2] = color.b;
+  unknown00.m_col4[3] = color.a;
+}
+
+void LayerStrInfo::setCol3(const char *name, const mm::Col3 &color) {
+  unknown10 = name;
+  unknown00.m_col3[0] = color.r;
+  unknown00.m_col3[1] = color.g;
+  unknown00.m_col3[2] = color.b;
+}
+
+void LayerStrInfo::setFloat(const char *name, f32 value) {
+  unknown10 = name;
+  unknown00.m_float = value;
+}
+
+void LayerStrInfo::setU32(const char *name, u32 value) {
+  unknown10 = name;
+  unknown00.m_u32 = value;
+}
+
+void LayerStrInfo::setS32(const char *name, s32 value) {
+  unknown10 = name;
+  unknown00.m_s32 = value;
+}
 
 void LayerTag::calcParseString(const u8 *string) {
   beginParseString();
