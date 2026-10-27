@@ -1,5 +1,7 @@
 #include "ml/dev_file_th.h"
 
+#include "mm_mtl/fixstr.h"
+
 namespace ml {
 
 FileHandleTh *DevFileTh::checkValidFile(const char *path, IWorkEvent *event) {
@@ -63,6 +65,149 @@ bool DevFileTh::isValidHandle(FileHandleTh *handle) {
     file->unknown1c0->isValidHandle(handle);
   }
   return false;
+}
+
+void DevFileTh::Impl::registAccessor(MEDIA media, DevFileAccessor *accessor) { unknown588b0[media] = accessor; }
+
+void DevFileTh::Impl::removeAccessor(MEDIA media) { unknown588b0[media] = nullptr; }
+
+void DevFileTh::Impl::registArchiveAccessor(MEDIA media, DevFileAccessor *accessor) { unknown588f0[media] = accessor; }
+
+void DevFileTh::Impl::removeArchiveAccessor(MEDIA media) { unknown588f0[media] = nullptr; }
+
+void DevFileTh::Impl::suspendThread() {}
+
+bool DevFileTh::Impl::isSuspendThread() { return false; }
+
+void DevFileTh::Impl::resumeThread() {}
+
+void DevFileTh::Impl::setSuspend(bool suspend) {}
+
+bool DevFileTh::Impl::isSuspend() const { return false; }
+
+bool DevFileTh::Impl::isInitialized() { return m_initialized; }
+
+bool DevFileTh::isSuspend() {
+  DevFileTh *file = get();
+  if (file != nullptr) {
+    file->unknown1c0->isSuspend();
+  }
+  return false;
+}
+
+bool DevFileTh::setSuspend(bool suspend) {
+  DevFileTh *file = get();
+  if (file == nullptr) {
+    return false;
+  }
+  file->unknown1c0->setSuspend(suspend);
+  return true;
+}
+
+void DevFileTh::registAccessor(MEDIA media, DevFileAccessor *accessor) {
+  DevFileTh *file = get();
+  if (file != nullptr) {
+    file->unknown1c0->registAccessor(media, accessor);
+  }
+}
+
+void DevFileTh::removeAccessor(MEDIA media) {
+  DevFileTh *file = get();
+  if (file != nullptr) {
+    file->unknown1c0->removeAccessor(media);
+  }
+}
+
+void DevFileTh::registArchiveAccessor(MEDIA media, DevFileAccessor *accessor) {
+  DevFileTh *file = get();
+  if (file != nullptr) {
+    file->unknown1c0->registArchiveAccessor(media, accessor);
+  }
+}
+
+void DevFileTh::removeArchiveAccessor(MEDIA media) {
+  DevFileTh *file = get();
+  if (file != nullptr) {
+    file->unknown1c0->removeArchiveAccessor(media);
+  }
+}
+
+bool DevFileTh::initialize() {
+  DevFileTh *file = get();
+  if (file == nullptr) {
+    return false;
+  }
+  return file->unknown1c0->initialize();
+}
+
+bool DevFileTh::finalize() {
+  DevFileTh *file = get();
+  if (file == nullptr) {
+    return true;
+  }
+  return file->unknown1c0->finalize();
+}
+
+void DevFileTh::initializeEnv(const char *path) {
+  char buffer[1024] = {};
+  initializePath(buffer, false);
+}
+
+void DevFileTh::addMediaPath(MEDIA media, const char *path, int priority) {
+  if (path != nullptr && path[0] != '\0') {
+    dvfl_detail::addMediaPath(media, path, priority);
+  }
+}
+
+bool DevFileTh::removeFileJob(DevFileJob *job) { return true; }
+
+bool DevFileTh::getReadingInfo(mm::mtl::FixStr<256> &name, f32 &ratio) {
+  DevFileTh *file = get();
+  if (file != nullptr) {
+    file->unknown1c0->getReadingInfo(name, ratio);
+  }
+  return false;
+}
+
+bool DevFileTh::getWritingInfo(mm::mtl::FixStr<256> &name, f32 &ratio) {
+  DevFileTh *file = get();
+  if (file != nullptr) {
+    file->unknown1c0->getWritingInfo(name, ratio);
+  }
+  return false;
+}
+
+void DevFileTh::enableLapTimeForDebug(bool enable) {
+  DevFileTh *file = get();
+  if (file != nullptr) {
+    file->unknown1c0->enableLapTimeForDebug(enable);
+  }
+}
+
+bool DevFileTh::isLapTimeForDebug() {
+  DevFileTh *file = get();
+  if (file != nullptr) {
+    file->unknown1c0->isLapTimeForDebug();
+  }
+  return false;
+}
+
+bool DevFileTh::entryCb(IWorkEvent *event) {
+  DevFileTh *file = get();
+  if (file == nullptr) {
+    return false;
+  }
+  file->unknown1c0->unknown5a348 = event;
+  return true;
+}
+
+bool DevFileTh::removeCb(IWorkEvent *event) {
+  DevFileTh *file = get();
+  if (file == nullptr) {
+    return false;
+  }
+  file->unknown1c0->unknown5a348 = nullptr;
+  return true;
 }
 
 bool DevFileTh::isNowSaving() {
