@@ -25,14 +25,15 @@ namespace enemy {
 class StateFieldWalk : public GfStateBase {
   GF_STATE_CLASS(StateFieldWalk, GfComBehaviorEnemy)
   StateFieldWalk()
-      : unknown18(false), unknown19(false), unknown1c(0), unknown20(), unknown58(nullptr), unknown68(0.0f), unknown70(mm::Vec3::zero), unknown80(-1), unknown84(-1), unknown88(false), unknown8c(0),
+      : unknown18(0), unknown19(false), unknown1c(0), unknown20(), unknown58(nullptr), unknown68(0.0f), unknown70(mm::Vec3::zero), unknown80(-1), unknown84(-1), unknown88(false), unknown8c(0),
         unknown90(0), unknown94(0.0f), unknown98(5.0f), unknown9c(0.0f) {}
   static bool isCondMatch(const GfComBehaviorEnemy &behavior);
   void enter(GfComBehaviorEnemy *behavior, ai::State *previous);
   void leave(GfComBehaviorEnemy *behavior, ai::State *next);
   void update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo &info);
+  bool has_move_fly_ON() const;
 
-  bool unknown18;                                                                  // Role and original member name unknown.
+  u8 unknown18;                                                                    // Inferred role: actMove_Atr of BDAT_FLD_ENACT_MOVE; original member name unknown.
   bool unknown19;                                                                  // Role and original member name unknown.
   u32 unknown1c;                                                                   // Role and original member name unknown.
   TFieldExecCmd<GfComAsm> unknown20;                                               // Inferred role: asm command; original member name unknown.

@@ -37,7 +37,10 @@ struct SDataEnemy {
   u8 unknown42; // Inferred role: extra parts; original member name unknown.
   u8 _043[0x044 - 0x043];
   u16 unknown44; // Inferred role: resource; original member name unknown.
-  u8 _046[0x05c - 0x046];
+  u8 _046[0x049 - 0x046];
+  u8 unknown49; // Inferred role: walk speed; original member name unknown.
+  u8 unknown4a; // Inferred role: run speed; original member name unknown.
+  u8 _04b[0x05c - 0x04b];
   u16 unknown5c; // Inferred role: p armor; original member name unknown.
   u16 unknown5e; // Inferred role: e armor; original member name unknown.
   u8 unknown60;  // Inferred role: resistance power; original member name unknown.
@@ -73,6 +76,8 @@ static_assert(offsetof(SDataEnemy, unknown1f) == 0x01f, "");
 static_assert(offsetof(SDataEnemy, unknown34) == 0x034, "");
 static_assert(offsetof(SDataEnemy, unknown42) == 0x042, "");
 static_assert(offsetof(SDataEnemy, unknown44) == 0x044, "");
+static_assert(offsetof(SDataEnemy, unknown49) == 0x049, "");
+static_assert(offsetof(SDataEnemy, unknown4a) == 0x04a, "");
 static_assert(offsetof(SDataEnemy, unknown5c) == 0x05c, "");
 static_assert(offsetof(SDataEnemy, unknown60) == 0x060, "");
 static_assert(offsetof(SDataEnemy, unknown62) == 0x062, "");

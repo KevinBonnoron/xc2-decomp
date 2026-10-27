@@ -1,5 +1,7 @@
 #include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 
+#include <math.h>
+
 #include "ai/ai_state.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
@@ -13,6 +15,7 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
+#include "gf/field/gf_field_enemy_sensor.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/object/gf_menu_obj_target_info.h"
@@ -249,18 +252,18 @@ void GfComBehaviorEnemy::disposeMenuObj() {
 }
 
 void GfComBehaviorEnemy::validateBattleLock(bool isLock) {
-  if ((unknown140.unknown128 | unknown140.unknown12c) < 0) {
+  if ((unknown140.unknownd0.unknown10.unknown48 | unknown140.unknownd0.unknown10.unknown4c) < 0) {
     return;
   }
 
-  if (!unknown140.unknown180.isValid()) {
+  if (!unknown140.unknownd0.unknownb0.isValid()) {
     if (unknown54e0) {
       unknown54e0 = false;
     }
     return;
   }
 
-  const gmk::GmkBattleLock *lock = static_cast<const gmk::GmkBattleLock *>(unknown140.unknown180.unknown38);
+  const gmk::GmkBattleLock *lock = static_cast<const gmk::GmkBattleLock *>(unknown140.unknownd0.unknownb0.unknown38);
   bool isFree = true;
   if (unknown54e0) {
     if (lock->unknownc4 != 0) {
@@ -279,6 +282,20 @@ void GfComBehaviorEnemy::validateBattleLock(bool isLock) {
     unknown54e0 = false;
     lock->unknownc4--;
   }
+}
+
+f32 GfComBehaviorEnemy::getCollisionRadius() const {
+  GfComCollider *collider = unknown08->getComponent<GfComCollider>();
+  mm::Vec3 min;
+  mm::Vec3 max;
+  if (!collider->unknown18[0]->getAABB(min, max)) {
+    return 0.0f;
+  }
+
+  f32 dx = max.x - min.x;
+  f32 dy = max.y - min.y;
+  f32 dz = max.z - min.z;
+  return sqrtf(dx * dx + dy * dy + dz * dz) * 0.5f;
 }
 
 void GfComBehaviorEnemy::createFsm() {

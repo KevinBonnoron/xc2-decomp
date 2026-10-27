@@ -36,6 +36,13 @@ public:
     return *this;
   }
 
+  void reset() {
+    if (mPtr != nullptr) {
+      mPtr->release();
+      mPtr = nullptr;
+    }
+  }
+
   void swap(IntrusivePtr &other) {
     T *ptr = mPtr;
     mPtr = other.mPtr;
