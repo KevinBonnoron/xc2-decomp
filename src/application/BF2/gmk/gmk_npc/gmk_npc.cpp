@@ -18,6 +18,8 @@ namespace gmk {
 
 template bool TGmkList<GmkNpc, GmkNpc::BdatInfo, 4411470u, 4u, GmkNpcGob>::initGmkBdatInfo(GmkNpc::BdatInfo &, int &, const AGmkBase &);
 
+void AGmkNpc::debugUpdate(f32 deltaTime) {}
+
 GmkNpcList::GmkNpcList(u32 updateGmkNumPerFrame) : TGmkList(0) {}
 
 void GmkNpcList::createGmk(void *data) {

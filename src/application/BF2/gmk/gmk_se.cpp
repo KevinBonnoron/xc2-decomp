@@ -1,5 +1,6 @@
 #include "gmk/gmk_se.h"
-#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
+
+#include <math.h>
 
 #include "bdat.h"
 #include "framework/debug/debug_draw.h"
@@ -14,9 +15,11 @@
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_active_list.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_set.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 
 namespace gmk {
@@ -96,6 +99,44 @@ void GmkSe::disposeInst(bool isFadeOut) {
       TGmkActiveList<GmkSe>::get()->unknown08.erase(this);
     }
   }
+}
+
+void GmkSe::updateInActiveList(f32 deltaTime) {
+  if (unknownF4 == 0) {
+    return;
+  }
+  unknownF8 += deltaTime;
+  if (unknownF8 < 1.0f || unknown100) {
+    return;
+  }
+  const Data *data = getData();
+  if (data->unknown00 <= 0.0f || gf::GfGameManager::getControlMover() == gf::INVALID_HANDLE) {
+    return;
+  }
+  const mm::Vec3 &playerPos = gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
+  const mm::Vec3 &pos = AGmkBase::unknown08.unknown08->unknown00;
+  mm::Vec3 diff = pos - playerPos;
+  unknownFC = sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
+  const BdatInfo *info = getBdatInfo();
+  f32 volume;
+  if (data->unknown00 <= unknownFC) {
+    volume = info->unknown05 * 0.01f;
+  } else if (unknownFC <= data->unknown04) {
+    volume = info->unknown04 * 0.01f;
+  } else {
+    f32 rate = 0.0f;
+    if (data->unknown04 < data->unknown00) {
+      rate = (data->unknown00 - unknownFC) / (data->unknown00 - data->unknown04);
+    }
+    f32 range = (info->unknown04 - info->unknown05) * 0.01f;
+    mm::clampRef(range, 0.0f, 1.0f);
+    f32 minVolume = info->unknown05 * 0.01f;
+    volume = rate * range + minVolume;
+  }
+  if (gf::GfGameManager::isRoom()) {
+    volume = volume * (info->unknown08 * 0.01f);
+  }
+  fw::SoundManager::get()->setVolume(unknownF4, volume, 0.0f);
 }
 
 void GmkSe::debugDraw() const {

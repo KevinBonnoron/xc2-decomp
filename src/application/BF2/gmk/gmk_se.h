@@ -58,6 +58,7 @@ public:
   void dispose() override;
   void disposeInst(bool isFadeOut);
   void update(f32 deltaTime) override;
+  void updateInActiveList(f32 deltaTime);
   void debugDraw() const override;
   void createGmkPhantom();
   bool canPopInst() const;
@@ -70,8 +71,9 @@ public:
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
   bool unknownF0;       // Role and original member name unknown.
   u8 _f1[0xf4 - 0xf1];
-  int unknownF4; // Role and original member name unknown.
-  u8 _f8[0x100 - 0xf8];
+  int unknownF4;   // Role and original member name unknown.
+  f32 unknownF8;   // Role and original member name unknown.
+  f32 unknownFC;   // Role and original member name unknown.
   bool unknown100; // Role and original member name unknown.
   u8 _101[0x110 - 0x101];
 };
@@ -80,6 +82,8 @@ static_assert(sizeof(GmkSe::BdatInfo) == 0x40, "");
 static_assert(offsetof(GmkSe, unknown60) == 0x60, "");
 static_assert(offsetof(GmkSe, unknownF0) == 0xf0, "");
 static_assert(offsetof(GmkSe, unknownF4) == 0xf4, "");
+static_assert(offsetof(GmkSe, unknownF8) == 0xf8, "");
+static_assert(offsetof(GmkSe, unknownFC) == 0xfc, "");
 static_assert(offsetof(GmkSe, unknown100) == 0x100, "");
 static_assert(sizeof(GmkSe) == 0x110, "");
 

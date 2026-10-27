@@ -35,7 +35,7 @@ public:
   virtual void bindToGameObj(gf::GF_OBJ_HANDLE *handle) const = 0;
   virtual void unbindToGameObj(gf::GF_OBJ_HANDLE *handle) const = 0;
   virtual void validateDisp() const = 0;
-  virtual void debugUpdate(f32 deltaTime) {}
+  virtual void debugUpdate(f32 deltaTime);
 
   GmkNpcIdInfo *unknown18; // Inferred role: shared NPC instance information; original member name unknown.
   bool unknown20;          // Inferred role: display enabled; original member name unknown.
