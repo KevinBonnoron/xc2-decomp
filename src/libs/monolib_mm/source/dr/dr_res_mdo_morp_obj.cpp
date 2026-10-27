@@ -2,7 +2,7 @@
 
 namespace ml {
 
-DrResMdoMorpObj::DrResMdoMorpObj() : unknown00(0), unknown02(0), unknown08(nullptr), unknown10(0) {}
+DrResMdoMorpObj::DrResMdoMorpObj() : unknown00(0), unknown01(0), unknown02(0), unknown08(nullptr), unknown10(0) {}
 
 DrResMdoMorpObj::~DrResMdoMorpObj() {}
 
