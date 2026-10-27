@@ -149,6 +149,35 @@ void SCOM_TARGET_UI::create(GF_OBJ_HANDLE *target) {
   GfReqSmallCom::addRequestParallel(command);
 }
 
+SCOM_REFRESH_COMPASS::SCOM_REFRESH_COMPASS(GF_SCOM_HANDLE *handle) : SCOM(handle, SCOM_TYPE_UNKNOWN_78, SCOM_EXEC_UNKNOWN_0, 1), unknown28(3) {}
+
+GF_SCOM_HANDLE *SCOM_REFRESH_COMPASS::create() {
+  if (get() == nullptr) {
+#line 4841
+    SCOM_REFRESH_COMPASS *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) SCOM_REFRESH_COMPASS(GfReqSmallCom::get()->allocate());
+    return GfReqSmallCom::addRequestParallel(command);
+  }
+  return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+}
+
+bool SCOM_REFRESH_COMPASS::exec(const fw::UpdateInfo &) {
+  if (--unknown28 > 0) {
+    return false;
+  }
+  GfQuestManager::requestRefreshQuestTaskState();
+  return true;
+}
+
+SCOM_BATTLE_TASK_RESET::SCOM_BATTLE_TASK_RESET(GF_SCOM_HANDLE *handle) : SCOM(handle, SCOM_TYPE_UNKNOWN_78, SCOM_EXEC_UNKNOWN_0, 1), unknown28(3) {}
+
+bool SCOM_BATTLE_TASK_RESET::exec(const fw::UpdateInfo &) {
+  if (--unknown28 > 0) {
+    return false;
+  }
+  GfQuestManager::resetBattleTaskForBattleEnd();
+  return true;
+}
+
 bool SCOM_ZONE::exec(const fw::UpdateInfo &) {
   if (!GfGameManager::isControlFree()) {
     return false;
@@ -237,6 +266,53 @@ GF_SCOM_HANDLE *SCOM_ADD_SP::create(u32 driver, int skillPoint) {
   if (skillPoint != 0) {
 #line 353
     SCOM_ADD_SP *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) SCOM_ADD_SP(GfReqSmallCom::get()->allocate(), skillPoint, driver, INVALID_HANDLE);
+    return GfReqSmallCom::addRequestParallel(command);
+  }
+  return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+}
+
+bool SCOM_ADD_IDEA::exec(const fw::UpdateInfo &) {
+  u32 driverId = unknown20;
+  if (driverId == 0) {
+    if (unknown28 == INVALID_HANDLE) {
+      driverId = 0;
+    } else {
+      GfObjAcc acc(unknown28);
+      driverId = acc.getDriverId();
+    }
+  }
+  GfGameUtil::addIdeaPoint(driverId, unknown24, unknown1c);
+  return true;
+}
+
+bool SCOM_EXEC_DRIVER_ARTS_LVUP::exec(const fw::UpdateInfo &) {
+  u32 driverId = unknown20;
+  if (driverId == 0) {
+    if (unknown28 == INVALID_HANDLE) {
+      driverId = 0;
+    } else {
+      GfObjAcc acc(unknown28);
+      driverId = acc.getDriverId();
+    }
+  }
+  GfGameUtil::execDriverArtsLevelUp(driverId, unknown24, unknown1c);
+  return true;
+}
+
+GF_SCOM_HANDLE *SCOM_EXEC_DRIVER_ARTS_LVUP::create(u32 level, u32 arts, GF_OBJ_HANDLE *handle) {
+  if (level != 0) {
+#line 265
+    SCOM_EXEC_DRIVER_ARTS_LVUP *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) SCOM_EXEC_DRIVER_ARTS_LVUP(GfReqSmallCom::get()->allocate(), level, 0, arts, handle);
+    return GfReqSmallCom::addRequestParallel(command);
+  }
+  return reinterpret_cast<GF_SCOM_HANDLE *>(-1);
+}
+
+GF_SCOM_HANDLE *SCOM_EXEC_DRIVER_ARTS_LVUP::create(u32 level, u32 arts, u32 driver) {
+  if (level != 0) {
+#line 270
+    SCOM_EXEC_DRIVER_ARTS_LVUP *command =
+        new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) SCOM_EXEC_DRIVER_ARTS_LVUP(GfReqSmallCom::get()->allocate(), level, driver, arts, INVALID_HANDLE);
     return GfReqSmallCom::addRequestParallel(command);
   }
   return reinterpret_cast<GF_SCOM_HANDLE *>(-1);

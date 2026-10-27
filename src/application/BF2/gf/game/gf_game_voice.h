@@ -17,6 +17,7 @@ struct GfVoiceName;
 struct GAME_VOICE_HANDLE;
 
 enum CV_PRIO {
+  CV_PRIO_UNKNOWN_1 = 1,
   CV_PRIO_UNKNOWN_2 = 2,
 };
 

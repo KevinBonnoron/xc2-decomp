@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_mtl/singleton.h"
 
 namespace fw {
 struct UpdateInfo;
@@ -8,7 +9,7 @@ namespace gf {
 
 struct GfSetupParam;
 
-class GfGameVisible {
+class GfGameVisible : public mm::mtl::PtrSingleton<GfGameVisible> {
 public:
   static void build(const GfSetupParam &param);
   static void destroy();

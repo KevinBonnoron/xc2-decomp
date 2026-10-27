@@ -21,6 +21,12 @@ void GfRelSmnEnemy::removeEnemy(GF_OBJ_HANDLE *handle) {
   }
 }
 
+void GfSmnEnemyManager::dispose() {
+  if (get() != nullptr) {
+    delete get();
+  }
+}
+
 void GfRelSmnEnemy::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objectType) {
   if (event == OBJEVT_DESTROY) {
     removeEnemy(handle);

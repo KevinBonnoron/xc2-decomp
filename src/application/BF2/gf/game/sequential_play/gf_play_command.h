@@ -32,6 +32,7 @@ namespace gf {
 
 struct GF_OBJ_HANDLE;
 struct GF_SCOM_HANDLE;
+class GfDeadCamera;
 class GfMenuCallContext;
 class IFieldSeq;
 
@@ -168,9 +169,23 @@ public:
 static_assert(sizeof(GfPlayComWait) == 0x18, "");
 
 class GfPlayComWaitEvent : public GfPlayCom {
+  GF_PLAY_COM("PlayComWaitEvent")
+
 public:
+  GfPlayComWaitEvent(f32 time, GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_WAIT_EVENT, false), unknown10(time), unknown18(handle), unknown20(-1) {}
+  void start() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComWaitEvent *create(f32 time, GF_OBJ_HANDLE *handle);
+
+  f32 unknown10;            // Inferred role: time; original member name unknown.
+  GF_OBJ_HANDLE *unknown18; // Inferred role: handle; original member name unknown.
+  u32 unknown20;            // Inferred role: request; original member name unknown.
 };
+
+static_assert(offsetof(GfPlayComWaitEvent, unknown10) == 0x10, "");
+static_assert(offsetof(GfPlayComWaitEvent, unknown18) == 0x18, "");
+static_assert(offsetof(GfPlayComWaitEvent, unknown20) == 0x20, "");
+static_assert(sizeof(GfPlayComWaitEvent) == 0x28, "");
 
 class GfPlayComMapjump : public GfPlayCom {
   GF_PLAY_COM("PlayComMapjump")
@@ -189,11 +204,25 @@ public:
 static_assert(sizeof(GfPlayComMapjump) == 0x130, "");
 
 class GfPlayComWaitBattleEnd : public GfPlayCom {
+  GF_PLAY_COM("PlayComWaitBattleEnd")
+
 public:
+  GfPlayComWaitBattleEnd(u32 battle) : GfPlayCom(PCOMTYPE_PLAYER_STOP, true), unknown10(false), unknown18(battle) {}
+  void start() override;
+  void end() override;
   static GfPlayComWaitBattleEnd *create(u32 battle);
+
+  bool unknown10; // Inferred role: unknown; original member name unknown.
+  f32 unknown14;  // Inferred role: elapsed time; original member name unknown.
+  u32 unknown18;  // Inferred role: battle event; original member name unknown.
 
   static int s_activate;
 };
+
+static_assert(offsetof(GfPlayComWaitBattleEnd, unknown10) == 0x10, "");
+static_assert(offsetof(GfPlayComWaitBattleEnd, unknown14) == 0x14, "");
+static_assert(offsetof(GfPlayComWaitBattleEnd, unknown18) == 0x18, "");
+static_assert(sizeof(GfPlayComWaitBattleEnd) == 0x20, "");
 
 class GfPlayComEventPlayerStop : public GfPlayCom {
   GF_PLAY_COM("PlayComEventPlayerStop")
@@ -245,11 +274,33 @@ public:
 
 static_assert(sizeof(GfPlayComAfterEventScript) == 0x20, "");
 
-class GfPlayComEvent : public GfPlayCom {
+class GfPlayComEvent : public GfPlayCom, public IGfEvent {
+  GF_PLAY_COM("PlayComEvent")
+
 public:
+  GfPlayComEvent(u32 event, u32 param0, u32 param1, bool isEndFadeOut);
+  ~GfPlayComEvent() override;
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
+  void gevPlayEvent(GEV event, u32 value) override;
   static GfPlayComEvent *create(u32 event, u32 param0, u32 param1, bool isEndFadeOut);
   static GfPlayComEvent *create(const char *name, u32 param0, u32 param1, bool isEndFadeOut);
+
+  u32 unknown18;  // Inferred role: event; original member name unknown.
+  u32 unknown1c;  // Inferred role: param0; original member name unknown.
+  u32 unknown20;  // Inferred role: param1; original member name unknown.
+  bool unknown24; // Inferred role: end fade out; original member name unknown.
+  bool unknown25; // Inferred role: event end; original member name unknown.
+  bool unknown26; // Inferred role: battle event; original member name unknown.
+
+  static int m_activate;
 };
+
+static_assert(offsetof(GfPlayComEvent, unknown18) == 0x18, "");
+static_assert(offsetof(GfPlayComEvent, unknown24) == 0x24, "");
+static_assert(offsetof(GfPlayComEvent, unknown26) == 0x26, "");
+static_assert(sizeof(GfPlayComEvent) == 0x28, "");
 
 class GfPlayComCallbackEventSequence : public GfPlayCom {
   GF_PLAY_COM("PlayComCallbackEventSequence")
@@ -543,20 +594,59 @@ public:
 
 static_assert(sizeof(GfPlayComSalvage) == 0x28, "");
 
-class GfPlayComCollect : public GfPlayCom {
+class GfPlayComCollect : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComCollect> {
+  GF_PLAY_COM("PlayComCollect")
+
 public:
+  GfPlayComCollect(GF_OBJ_HANDLE *handle);
+  void start() override;
+  void end() override;
   static GfPlayComCollect *create(GF_OBJ_HANDLE *handle);
+
+  u32 unknown18;            // Inferred role: player pause; original member name unknown.
+  GF_OBJ_HANDLE *unknown20; // Inferred role: handle; original member name unknown.
 };
 
-class GfPlayComFieldTbox : public GfPlayCom {
+static_assert(offsetof(GfPlayComCollect, unknown18) == 0x18, "");
+static_assert(offsetof(GfPlayComCollect, unknown20) == 0x20, "");
+static_assert(sizeof(GfPlayComCollect) == 0x28, "");
+
+class GfPlayComFieldTbox : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComFieldTbox> {
+  GF_PLAY_COM("PlayComFieldTbox")
+
 public:
+  void start() override;
+  void end() override;
   static GfPlayComFieldTbox *create(GF_OBJ_HANDLE *handle);
+
+  u32 unknown18;            // Inferred role: player pause; original member name unknown.
+  GF_OBJ_HANDLE *unknown20; // Inferred role: handle; original member name unknown.
+  u8 _28[0x38 - 0x28];
 };
 
-class GfPlayComFieldSeq : public GfPlayCom {
+static_assert(offsetof(GfPlayComFieldTbox, unknown18) == 0x18, "");
+static_assert(offsetof(GfPlayComFieldTbox, unknown20) == 0x20, "");
+static_assert(sizeof(GfPlayComFieldTbox) == 0x38, "");
+
+class GfPlayComFieldSeq : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComFieldSeq> {
+  GF_PLAY_COM("PlayComFieldSeq")
+
 public:
+  GfPlayComFieldSeq(IFieldSeq *sequence, GF_OBJ_HANDLE *handle);
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComFieldSeq *create(IFieldSeq *sequence, GF_OBJ_HANDLE *handle);
+
+  IFieldSeq *unknown18;     // Inferred role: sequence; original member name unknown.
+  GF_OBJ_HANDLE *unknown20; // Inferred role: handle; original member name unknown.
+  u32 unknown28;            // Inferred role: player pause; original member name unknown.
 };
+
+static_assert(offsetof(GfPlayComFieldSeq, unknown18) == 0x18, "");
+static_assert(offsetof(GfPlayComFieldSeq, unknown20) == 0x20, "");
+static_assert(offsetof(GfPlayComFieldSeq, unknown28) == 0x28, "");
+static_assert(sizeof(GfPlayComFieldSeq) == 0x30, "");
 
 class GfPlayComWaitPlayerToStartGmkTuto : public GfPlayCom {
   GF_PLAY_COM("PlayComWaitPlayerToStartGmkTuto")
@@ -614,12 +704,32 @@ static_assert(offsetof(GfPlayComGmkCameraSeq, unknown10) == 0x10, "");
 static_assert(offsetof(GfPlayComGmkCameraSeq, unknown18) == 0x18, "");
 static_assert(sizeof(GfPlayComGmkCameraSeq) == 0x20, "");
 
-class GfPlayComPlayerDead : public GfPlayCom {
+class GfPlayComPlayerDead : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComPlayerDead>, public IGfEvent {
+  GF_PLAY_COM("PlayComPlayerDead")
+
 public:
+  GfPlayComPlayerDead(GfPlayerDead dead)
+      : GfPlayCom(PCOMTYPE_PLAYER_DEAD, false), unknown20(dead), unknown24(0.0f), unknown28(0.0f), unknown2c(15.0f), unknown30(nullptr), unknown38(false), unknown39(false), unknown3a(false) {}
+  void gevMapjump(GEV event, const MapjumpCallbackInfo &info) override;
   static bool isDead();
   static bool replaceDeadType(GfPlayerDead dead);
   static GfPlayComPlayerDead *create(GfPlayerDead dead);
+
+  GfPlayerDead unknown20;  // Inferred role: dead type; original member name unknown.
+  f32 unknown24;           // Inferred role: unknown; original member name unknown.
+  f32 unknown28;           // Inferred role: unknown; original member name unknown.
+  f32 unknown2c;           // Inferred role: unknown; original member name unknown.
+  GfDeadCamera *unknown30; // Inferred role: dead camera; original member name unknown.
+  bool unknown38;          // Inferred role: unknown; original member name unknown.
+  bool unknown39;          // Inferred role: unknown; original member name unknown.
+  bool unknown3a;          // Inferred role: unknown; original member name unknown.
+  bool m_dead;
 };
+
+static_assert(offsetof(GfPlayComPlayerDead, unknown20) == 0x20, "");
+static_assert(offsetof(GfPlayComPlayerDead, unknown30) == 0x30, "");
+static_assert(offsetof(GfPlayComPlayerDead, m_dead) == 0x3b, "");
+static_assert(sizeof(GfPlayComPlayerDead) == 0x40, "");
 
 class GfPlayComTalk : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComTalk> {
   GF_PLAY_COM("PlayComTalk")
@@ -701,9 +811,20 @@ public:
 static_assert(sizeof(GfPlayComGimmickTaskComplete) == 0x20, "");
 
 class GfPlayComReturnTitle : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComReturnTitle> {
+  GF_PLAY_COM("PlayComReturnTitle")
+
 public:
+  GfPlayComReturnTitle(const ParamReturnTitle &param) : GfPlayCom(PCOMTYPE_RETURN_TITLE, false), unknown18(param), unknown1c(0) {}
+  void end() override;
   static GfPlayComReturnTitle *create(const ParamReturnTitle &param);
+
+  ParamReturnTitle unknown18; // Inferred role: param; original member name unknown.
+  u32 unknown1c;              // Inferred role: unknown; original member name unknown.
 };
+
+static_assert(offsetof(GfPlayComReturnTitle, unknown18) == 0x18, "");
+static_assert(offsetof(GfPlayComReturnTitle, unknown1c) == 0x1c, "");
+static_assert(sizeof(GfPlayComReturnTitle) == 0x20, "");
 
 class GfPlayComBattleStart : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComBattleStart> {
   GF_PLAY_COM("PlayComBattleStart")
@@ -776,14 +897,35 @@ public:
 };
 
 class GfPlayComMoverSwitch : public GfPlayCom {
+  GF_PLAY_COM("PlayComMoverSwitch")
+
 public:
+  GfPlayComMoverSwitch() : GfPlayCom(PCOMTYPE_MOVER_SWITCH, true), unknown10(-1), unknown14(0), unknown18(0) {}
+  void start() override;
+  void end() override;
   static GfPlayComMoverSwitch *create();
+
+  int unknown10; // Inferred role: unknown; original member name unknown.
+  u32 unknown14; // Inferred role: state; original member name unknown.
+  u32 unknown18; // Inferred role: unknown; original member name unknown.
 };
 
+static_assert(offsetof(GfPlayComMoverSwitch, unknown10) == 0x10, "");
+static_assert(offsetof(GfPlayComMoverSwitch, unknown14) == 0x14, "");
+static_assert(offsetof(GfPlayComMoverSwitch, unknown18) == 0x18, "");
+static_assert(sizeof(GfPlayComMoverSwitch) == 0x20, "");
+
 class GfPlayComHoodHomuraBattou : public GfPlayCom, public mm::mtl::PtrSingleton<GfPlayComHoodHomuraBattou> {
+  GF_PLAY_COM("PlayComHoodHomuraBattou")
+
 public:
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
   static GfPlayComHoodHomuraBattou *create();
 };
+
+static_assert(sizeof(GfPlayComHoodHomuraBattou) == 0x18, "");
 
 class GfPlayComMenuObjCommonText : public GfPlayCom {
   GF_PLAY_COM("PlayComMenuObjCommonText")

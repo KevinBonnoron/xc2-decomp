@@ -2,6 +2,12 @@
 
 namespace gf {
 
+void GfGameVisible::destroy() {
+  if (get() != nullptr) {
+    delete get();
+  }
+}
+
 void GfGameVisible::cleanup() {}
 
 } // namespace gf

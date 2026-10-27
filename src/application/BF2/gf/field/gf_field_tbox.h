@@ -12,10 +12,12 @@ struct UpdateInfo;
 namespace gf {
 
 struct GfSetupParam;
+struct GF_OBJ_HANDLE;
 
 class GfFieldTbox : public mm::mtl::PtrSingleton<GfFieldTbox> {
 public:
   void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
+  void start(GF_OBJ_HANDLE *handle);
   static void build(const GfSetupParam &param);
   static void destroy();
   bool isDropitemsEmitted() const;

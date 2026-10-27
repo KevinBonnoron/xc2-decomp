@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "gf/object/gf_obj_manager.h"
+#include "mm_mtl/singleton.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
 
@@ -27,7 +28,7 @@ public:
 static_assert(offsetof(GfRelSmnEnemy, unknown78) == 0x78, "");
 static_assert(offsetof(GfRelSmnEnemy, unknowna0) == 0xa0, "");
 
-class GfSmnEnemyManager {
+class GfSmnEnemyManager : public mm::mtl::PtrSingleton<GfSmnEnemyManager> {
 public:
   static void create();
   static void dispose();

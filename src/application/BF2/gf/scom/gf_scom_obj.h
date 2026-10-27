@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "gf/request/gf_scom.h"
+#include "gmk/gmk_manager.h"
 #include "types.h"
 
 namespace mm {
@@ -18,8 +19,9 @@ public:
   static void createArrivePlace(u32 questId);
 };
 
-class SCOM_QUEST_GIMMICK {
+class SCOM_QUEST_GIMMICK : public SCOM {
 public:
+  bool exec(const fw::UpdateInfo &info) override;
   static void createJump(u32 gimmick, f32 delay);
   static void createWarp(u32 gimmick, f32 delay);
   static void createDoor(u32 gimmick, f32 delay);
@@ -27,7 +29,16 @@ public:
   static void createMapGimmick(u32 gimmick, f32 delay);
   static void createElevator(u32 gimmick, f32 delay);
   static void createSalvage(u32 gimmick, f32 delay);
+
+  gmk::GmkType unknown1c; // Inferred role: gimmick type; original member name unknown.
+  u32 unknown20;          // Inferred role: gimmick; original member name unknown.
+  f32 unknown24;          // Inferred role: delay; original member name unknown.
 };
+
+static_assert(offsetof(SCOM_QUEST_GIMMICK, unknown1c) == 0x1c, "");
+static_assert(offsetof(SCOM_QUEST_GIMMICK, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_QUEST_GIMMICK, unknown24) == 0x24, "");
+static_assert(sizeof(SCOM_QUEST_GIMMICK) == 0x28, "");
 
 class SCOM_OBJ_WARP_POS {
 public:

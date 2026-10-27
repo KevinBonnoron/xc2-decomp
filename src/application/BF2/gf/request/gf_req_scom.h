@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "gf/game/gf_game_mount.h"
+#include "gf/game/gf_game_voice.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/request/gf_scom.h"
 #include "mm_mtl/fixed_list.h"
@@ -82,20 +83,36 @@ public:
   static void create(u32 objectType, u32 leader);
 };
 
-class SCOM_REFRESH_COMPASS {
+class SCOM_REFRESH_COMPASS : public SCOM, public mm::mtl::PtrSingleton<SCOM_REFRESH_COMPASS> {
 public:
-  static void create();
+  SCOM_REFRESH_COMPASS(GF_SCOM_HANDLE *handle);
+  bool exec(const fw::UpdateInfo &info) override;
+  static GF_SCOM_HANDLE *create();
+
+  int unknown28; // Inferred role: wait count; original member name unknown.
 };
 
-class SCOM_BATTLE_TASK_RESET {
+static_assert(offsetof(SCOM_REFRESH_COMPASS, unknown28) == 0x28, "");
+static_assert(sizeof(SCOM_REFRESH_COMPASS) == 0x30, "");
+
+class SCOM_BATTLE_TASK_RESET : public SCOM, public mm::mtl::PtrSingleton<SCOM_BATTLE_TASK_RESET> {
 public:
-  static void create();
+  SCOM_BATTLE_TASK_RESET(GF_SCOM_HANDLE *handle);
+  bool exec(const fw::UpdateInfo &info) override;
+  static GF_SCOM_HANDLE *create();
+
+  int unknown28; // Inferred role: wait count; original member name unknown.
 };
+
+static_assert(offsetof(SCOM_BATTLE_TASK_RESET, unknown28) == 0x28, "");
+static_assert(sizeof(SCOM_BATTLE_TASK_RESET) == 0x30, "");
 
 enum CV_SALVAGE {};
 enum CV_SALVAGE_RESULT {};
 
 enum CV_FIELD {
+  CV_FIELD_UNKNOWN_3 = 3,
+  CV_FIELD_UNKNOWN_4 = 4,
   CV_FIELD_TIME_MORNING = 31,
   CV_FIELD_TIME_NIGHT = 32,
 };
@@ -109,6 +126,7 @@ public:
 
 class SCOM_FIELD_VOICE {
 public:
+  static void create(CV_FIELD voice, CV_PRIO priority);
   static void createLevelup(const ParamObj &paramObj);
   static void createBadWeather();
   static void createTime(CV_FIELD voice);
@@ -143,10 +161,44 @@ public:
   static void create(GF_OBJ_HANDLE *handle);
 };
 
-class SCOM_ADD_IDEA {
+class SCOM_ADD_IDEA : public SCOM {
 public:
-  static void create(GF_OBJ_HANDLE *handle, u32 idea, int point);
+  SCOM_ADD_IDEA(GF_SCOM_HANDLE *handle, int point, u32 driver, u32 idea, GF_OBJ_HANDLE *target)
+      : SCOM(handle, SCOM_TYPE_UNKNOWN_9, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(point), unknown20(driver), unknown24(idea), unknown28(target) {}
+  bool exec(const fw::UpdateInfo &info) override;
+  static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *handle, u32 idea, int point);
+
+  int unknown1c;            // Inferred role: idea point; original member name unknown.
+  u32 unknown20;            // Inferred role: driver; original member name unknown.
+  u32 unknown24;            // Inferred role: idea; original member name unknown.
+  GF_OBJ_HANDLE *unknown28; // Inferred role: driver object; original member name unknown.
 };
+
+static_assert(offsetof(SCOM_ADD_IDEA, unknown1c) == 0x1c, "");
+static_assert(offsetof(SCOM_ADD_IDEA, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_ADD_IDEA, unknown24) == 0x24, "");
+static_assert(offsetof(SCOM_ADD_IDEA, unknown28) == 0x28, "");
+static_assert(sizeof(SCOM_ADD_IDEA) == 0x30, "");
+
+class SCOM_EXEC_DRIVER_ARTS_LVUP : public SCOM {
+public:
+  SCOM_EXEC_DRIVER_ARTS_LVUP(GF_SCOM_HANDLE *handle, u32 level, u32 driver, u32 arts, GF_OBJ_HANDLE *target)
+      : SCOM(handle, SCOM_TYPE_UNKNOWN_54, SCOM_EXEC_UNKNOWN_0, 1), unknown1c(level), unknown20(driver), unknown24(arts), unknown28(target) {}
+  bool exec(const fw::UpdateInfo &info) override;
+  static GF_SCOM_HANDLE *create(u32 level, u32 arts, GF_OBJ_HANDLE *handle);
+  static GF_SCOM_HANDLE *create(u32 level, u32 arts, u32 driver);
+
+  u32 unknown1c;            // Inferred role: level; original member name unknown.
+  u32 unknown20;            // Inferred role: driver; original member name unknown.
+  u32 unknown24;            // Inferred role: arts; original member name unknown.
+  GF_OBJ_HANDLE *unknown28; // Inferred role: driver object; original member name unknown.
+};
+
+static_assert(offsetof(SCOM_EXEC_DRIVER_ARTS_LVUP, unknown1c) == 0x1c, "");
+static_assert(offsetof(SCOM_EXEC_DRIVER_ARTS_LVUP, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_EXEC_DRIVER_ARTS_LVUP, unknown24) == 0x24, "");
+static_assert(offsetof(SCOM_EXEC_DRIVER_ARTS_LVUP, unknown28) == 0x28, "");
+static_assert(sizeof(SCOM_EXEC_DRIVER_ARTS_LVUP) == 0x30, "");
 
 class SCOM_OBJ_ALPHA : public SCOM {
 public:

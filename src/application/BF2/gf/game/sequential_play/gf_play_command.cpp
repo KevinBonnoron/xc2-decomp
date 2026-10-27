@@ -7,17 +7,23 @@
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_event.h"
+#include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_util.h"
+#include "gf/field/gf_field_collect.h"
 #include "gf/field/gf_field_map_gimmick.h"
+#include "gf/field/gf_field_tbox.h"
 #include "gf/game/achiev/gf_achiev_manager.h"
 #include "gf/game/event/gf_game_event.h"
 #include "gf/game/gf_game_arts_movie.h"
 #include "gf/game/gf_game_chain_attack.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_obj.h"
+#include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_scene.h"
 #include "gf/game/gf_game_speed.h"
 #include "gf/game/gf_game_state.h"
 #include "gf/game/gf_game_util.h"
+#include "gf/game/gf_game_voice.h"
 #include "gf/game/quest/gf_quest_event.h"
 #include "gf/game/quest/gf_quest_info.h"
 #include "gf/game/quest/gf_quest_manager.h"
@@ -33,6 +39,8 @@
 #include "gf/menu/gf_menu_kizunaring.h"
 #include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/object/gf_menu_obj_quest_log.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_manager.h"
@@ -108,6 +116,99 @@ GfPlayComWait *GfPlayComWait::create(f32 time) {
 #line 327
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComWait(time);
 }
+
+void GfPlayComWaitEvent::start() { unknown20 = GfReqCommand::reqWaitEvent(unknown10, unknown18); }
+
+bool GfPlayComWaitEvent::update(const fw::UpdateInfo &, bool isCancel) {
+  for (u32 partyId = 0; partyId < 3; partyId++) {
+    DataParamAcc acc(GfGameParty::getHandleDriver(partyId));
+    if (acc.isValid() && acc.getHp() == 0) {
+      GfGameUtil::setHp(acc.unknown10, 1);
+    }
+  }
+  return !GfReqManager::isValid(unknown20);
+}
+
+GfPlayComWaitEvent *GfPlayComWaitEvent::create(f32 time, GF_OBJ_HANDLE *handle) {
+  // __LINE__ must be 385 as in the original file: its value changes the instruction order.
+#line 385
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComWaitEvent(time, handle);
+}
+
+int GfPlayComWaitBattleEnd::s_activate;
+
+void GfPlayComWaitBattleEnd::start() {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->setForceStopBattle(true);
+  }
+  unknown14 = 0.0f;
+  s_activate++;
+}
+
+void GfPlayComWaitBattleEnd::end() {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->setForceStopBattle(false);
+  }
+  s_activate--;
+}
+
+GfPlayComWaitBattleEnd *GfPlayComWaitBattleEnd::create(u32 battle) {
+  // __LINE__ must be 518 as in the original file: its value changes the instruction order.
+#line 518
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComWaitBattleEnd(battle);
+}
+
+int GfPlayComEvent::m_activate;
+
+GfPlayComEvent::GfPlayComEvent(u32 event, u32 param0, u32 param1, bool isEndFadeOut)
+    : GfPlayCom(PCOMTYPE_EVENT, false), unknown18(event), unknown1c(param0), unknown20(param1), unknown24(isEndFadeOut), unknown25(false), unknown26(false) {
+  m_activate++;
+  GfObjAcc leaderAcc(GfGameManager::getPartyLeaderDriver());
+  unknown26 = leaderAcc.isBattle();
+  if (!unknown26) {
+    unknown26 = GfGameManager::isExistBossEnemy();
+  }
+  if (unknown26 && GfGameScene::get() != nullptr) {
+    GfGameScene::get()->unknown648 = true;
+  }
+}
+
+GfPlayComEvent::~GfPlayComEvent() { m_activate--; }
+
+void GfPlayComEvent::start() {
+  GfEvent::addEventCallback(this);
+  GfGameEvent::setAfterEventStartID(0);
+  GfGameEvent::play(unknown18, unknown1c, unknown20, unknown24);
+}
+
+void GfPlayComEvent::end() { GfEvent::removeEventCallback(this); }
+
+bool GfPlayComEvent::update(const fw::UpdateInfo &, bool isCancel) {
+  if (isCancel) {
+    return true;
+  }
+  if (GfGameEvent::isPlaying()) {
+    if (GfPlayComPlayerDead::get() != nullptr) {
+      GfPlayComPlayerDead::get()->unknown3a = true;
+    }
+    return false;
+  }
+  return true;
+}
+
+void GfPlayComEvent::gevPlayEvent(GEV event, u32) {
+  if (event == GEV_EVENT_END) {
+    unknown25 = true;
+  }
+}
+
+GfPlayComEvent *GfPlayComEvent::create(u32 event, u32 param0, u32 param1, bool isEndFadeOut) {
+  // __LINE__ must be 752 as in the original file: its value changes the instruction order.
+#line 752
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComEvent(event, param0, param1, isEndFadeOut);
+}
+
+GfPlayComEvent *GfPlayComEvent::create(const char *name, u32 param0, u32 param1, bool isEndFadeOut) { return create(GfDataEvent::getEventID(name), param0, param1, isEndFadeOut); }
 
 GfPlayComEventPlayerStop::GfPlayComEventPlayerStop(bool isStop) : GfPlayCom(PCOMTYPE_PLAYER_STOP, true), unknown10(isStop) {
   if (unknown10 && GfGameScene::get() != nullptr) {
@@ -1071,6 +1172,124 @@ GfPlayComQuestCompleteUI *GfPlayComQuestCompleteUI::create(QuestID quest, QuestI
 #line 2561
   GfPlayComQuestCompleteUI *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComQuestCompleteUI(quest, child, state);
   GfQuestManager::setCompleteQuest(quest, child, state);
+  return command;
+}
+
+GfPlayComCollect::GfPlayComCollect(GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_COLLECT, false), unknown20(handle) {
+  if (GfGameScene::get() != nullptr) {
+    unknown18 = GfGameScene::get()->createPlayerPause();
+  }
+}
+
+GfPlayComCollect *GfPlayComCollect::create(GF_OBJ_HANDLE *handle) {
+  // __LINE__ must be 1769 as in the original file: its value changes the instruction order.
+#line 1769
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComCollect(handle);
+}
+
+void GfPlayComCollect::start() {
+  GfFieldCollect::get()->start(unknown20);
+  SCOM_FIELD_VOICE::create(CV_FIELD_UNKNOWN_4, CV_PRIO_UNKNOWN_1);
+}
+
+void GfPlayComCollect::end() {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->destroyPlayerPause(unknown18);
+  }
+}
+
+void GfPlayComFieldTbox::start() {
+  GfFieldTbox::get()->start(unknown20);
+  SCOM_FIELD_VOICE::create(CV_FIELD_UNKNOWN_3, CV_PRIO_UNKNOWN_1);
+}
+
+void GfPlayComFieldTbox::end() {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->destroyPlayerPause(unknown18);
+  }
+}
+
+void GfPlayComFieldSeq::start() { unknown18->create(unknown20); }
+
+void GfPlayComFieldSeq::end() {
+  unknown18->dispose();
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->destroyPlayerPause(unknown28);
+  }
+}
+
+bool GfPlayComFieldSeq::update(const fw::UpdateInfo &, bool isCancel) {
+  if (isCancel) {
+    return unknown18->cancel();
+  }
+  return unknown18->isEnd();
+}
+
+GfPlayComFieldSeq::GfPlayComFieldSeq(IFieldSeq *sequence, GF_OBJ_HANDLE *handle) : GfPlayCom(PCOMTYPE_FIELD_SEQ, false), unknown18(sequence), unknown20(handle) {
+  if (GfGameScene::get() != nullptr) {
+    unknown28 = GfGameScene::get()->createPlayerPause();
+  }
+}
+
+GfPlayComFieldSeq *GfPlayComFieldSeq::create(IFieldSeq *sequence, GF_OBJ_HANDLE *handle) {
+  // __LINE__ must be 1972 as in the original file: its value changes the instruction order.
+#line 1972
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComFieldSeq(sequence, handle);
+}
+
+void GfPlayComMoverSwitch::start() { unknown14 = 3; }
+
+void GfPlayComMoverSwitch::end() {}
+
+GfPlayComMoverSwitch *GfPlayComMoverSwitch::create() {
+  // __LINE__ must be 2999 as in the original file: its value changes the instruction order.
+#line 2999
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComMoverSwitch();
+}
+
+void GfPlayComHoodHomuraBattou::start() {}
+
+void GfPlayComHoodHomuraBattou::end() {}
+
+bool GfPlayComHoodHomuraBattou::update(const fw::UpdateInfo &, bool) {
+  GfObjAcc bladeAcc(GfGameParty::getHandleBlade(0, -1));
+  if (!bladeAcc.isValid()) {
+    return true;
+  }
+  if (bladeAcc.isRebuild() || !GfGameObj::isValidGameObj(bladeAcc.getHandle(), true, nullptr)) {
+    return false;
+  }
+  if (GfGameManager::isEnableBattouWithHoodHomura(false)) {
+    GfGameUtil::enterPlayerBattle(false, INVALID_HANDLE, false);
+  }
+  return true;
+}
+
+void GfPlayComReturnTitle::end() {}
+
+GfPlayComReturnTitle *GfPlayComReturnTitle::create(const ParamReturnTitle &param) {
+  // __LINE__ must be 2650 as in the original file: its value changes the instruction order.
+#line 2650
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComReturnTitle(param);
+}
+
+bool GfPlayComPlayerDead::isDead() { return get() != nullptr && get()->m_dead; }
+
+void GfPlayComPlayerDead::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
+  if (event == GEV_MAPJUMP_CHANGE_MAP) {
+    m_dead = false;
+  } else if (event == GEV_MAPJUMP_FADEIN) {
+    unknown39 = true;
+  }
+}
+
+GfPlayComPlayerDead *GfPlayComPlayerDead::create(GfPlayerDead dead) {
+  // __LINE__ must be 2329 as in the original file: its value changes the instruction order.
+#line 2329
+  GfPlayComPlayerDead *command = new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComPlayerDead(dead);
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->setDeadType(dead);
+  }
   return command;
 }
 

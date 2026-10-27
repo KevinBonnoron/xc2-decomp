@@ -10,6 +10,7 @@ struct Vec3;
 } // namespace mm
 
 namespace gf {
+struct GF_OBJ_HANDLE;
 
 struct RQ_SETUP_PARTY {
   struct Member {
@@ -100,6 +101,7 @@ public:
   static u32 reqChangeBladeWithSetId(u32 partyId, int bladeSet, bool isForce);
   static void reqDestroyGf();
   static u32 reqMapjump(const GfMapjumpInfo &info);
+  static u32 reqWaitEvent(f32 time, GF_OBJ_HANDLE *handle);
 };
 
 } // namespace gf
