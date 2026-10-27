@@ -1,8 +1,14 @@
 #include "dr/dr_calc_tex_stream_man.h"
 
+#include "ml/critical_section.h"
 #include "ml/work_cpu.h"
 
 namespace ml {
+
+CriticalSection &DrCalcTexStreamMan::getCriticalSection() {
+  static CriticalSection sect;
+  return sect;
+}
 
 int DrCalcTexStreamMan::getUseMax() const {
   const DrCalcTexStmObj *obj = unknown08;

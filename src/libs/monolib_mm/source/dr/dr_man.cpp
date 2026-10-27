@@ -21,12 +21,18 @@
 #include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_debug.h"
 #include "grlib/cglib_manager.h"
+#include "ml/critical_section.h"
 
 namespace ml {
 
 DrMan *DrMan::getIns() { return s_pTop; }
 
 DrMan *DrMan::get() { return s_pTop; }
+
+CriticalSection &DrMan::getCriticalSection() {
+  static CriticalSection sect;
+  return sect;
+}
 
 int DrMan::loopCnt() { return 1; }
 

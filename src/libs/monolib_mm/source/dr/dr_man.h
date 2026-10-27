@@ -12,6 +12,7 @@ class CloudMan;
 } // namespace cloud
 
 namespace ml {
+class CriticalSection;
 class DrAPCache;
 class DrCalcMan;
 class DrCalcGpuCost;
@@ -50,6 +51,7 @@ class DrMan : public IWorkBackground {
 public:
   static DrMan *getIns();
   static DrMan *get();
+  static CriticalSection &getCriticalSection();
   DrMan(Scn *scn);
   ~DrMan() override;
   void resetModelTexture(u32 index);

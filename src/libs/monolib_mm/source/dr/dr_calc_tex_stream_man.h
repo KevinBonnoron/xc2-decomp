@@ -5,6 +5,7 @@
 
 namespace ml {
 
+class CriticalSection;
 class DrCalcStmListObj;
 
 // Inferred layout from DrCalcTexStreamMan list walks; the original member names are unknown.
@@ -24,6 +25,7 @@ static_assert(offsetof(DrCalcTexStmObj, unknown24) == 0x24, "");
 
 class DrCalcTexStreamMan {
 public:
+  static CriticalSection &getCriticalSection();
   int getUseMax() const;
   int getFreeMax() const;
   int getAllFreeSize() const;

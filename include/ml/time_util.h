@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_mtl/fixstr.h"
 #include "types.h"
 
 namespace ml {
@@ -22,6 +23,8 @@ static_assert(sizeof(TimeInfo) == 8, "");
 class TimeUtil {
 public:
   static bool getTime(TimeInfo &info);
+  static bool getDateStr(mm::mtl::FixStr<64> &str);
+  static bool getTimeStr(mm::mtl::FixStr<64> &str);
   static int aggregateNumberOfDays(int year, int month, int day);
 };
 

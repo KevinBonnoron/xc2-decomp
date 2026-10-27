@@ -8,6 +8,7 @@
 #include "types.h"
 
 namespace ml {
+class CriticalSection;
 
 class DevFileNxTh : public DevFileAccessor, public mm::mtl::PtrSingleton<DevFileNxTh> {
 public:
@@ -20,6 +21,9 @@ public:
 
   bool initialize() override;
   u32 addressAlignment() override;
+  static CriticalSection &getLocker();
+  static void *allocate(size_t size);
+  static void deallocate(void *pointer, size_t size);
   bool rfIsUsedChannel(u32 channel) override;
 
   u8 _10[0x14 - 0x10];

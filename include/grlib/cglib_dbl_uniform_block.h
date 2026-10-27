@@ -22,6 +22,7 @@ public:
   void *getOldBuff();
   void *getMapping();
   void setUniformBlock(u32 index);
+  void setUniformBlock(u32 index, u32 offset, u32 size);
   void setStorageBuffer(u32 index);
 
   void *unknown00[2]; // Inferred role: mappings; original member name unknown.

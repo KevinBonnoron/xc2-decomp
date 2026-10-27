@@ -9,13 +9,13 @@ namespace ml {
 
 class DrGpuCheckBase {
 public:
-  virtual ~DrGpuCheckBase();
+  virtual ~DrGpuCheckBase() {}
   virtual void release();
   virtual bool isRender() const;
   virtual void setPause(bool isPause);
   virtual void setPos(const mm::Vec3 &position, f32 radius);
   virtual void setWorldPos(const mm::Vec3 &position, f32 radius);
-  virtual bool isDeleteCall() const;
+  virtual u32 isDeleteCall() const;
   virtual void update();
   virtual void render();
 

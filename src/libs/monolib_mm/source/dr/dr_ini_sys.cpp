@@ -3,10 +3,29 @@
 #include "grlib/cglib_texture.h"
 #include "ml/file_res_th.h"
 #include "ml/scn_obj_model.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 namespace ml {
+
+namespace {
+
+// Inferred helper: reloads the volume textures; original name unknown.
+inline void unknown001(DrIniSys *self) {
+  for (int i = 0; i < 5; i++) {
+    char name[128];
+    snprintf(name, sizeof(name), "%s%d", VOLUME_FILE, i);
+    if (self->unknown40[i] != nullptr) {
+      self->unknown40[i]->Release();
+      self->unknown40[i] = nullptr;
+    }
+    self->unknown40[i] = self->readTextureMapFile(name);
+    grlib::CGLibTexture::createTextureImagePtrs(self->unknown98[7 + i], self->unknown40[i]->unknownc8, self->unknown40[i]->unknownd0, false, nullptr, true);
+  }
+}
+
+} // namespace
 
 bool DrIniSys::chkOnOff(const char *value) { return strcmp("on", value) == 0; }
 
@@ -24,6 +43,10 @@ void DrIniSys::loadToonRimTexture() {
   unknown38 = readTextureMapFile(TOON_RIM_FILE);
   grlib::CGLibTexture::createTextureImagePtrs(unknown98[6], unknown38->unknownc8, unknown38->unknownd0, false, nullptr, true);
 }
+
+void DrIniSys::loadVolumeTexture() { unknown001(this); }
+
+void DrIniSys::reloadVolumeTexture() { unknown001(this); }
 
 void DrIniSys::reloadToonGradTexture() { loadToonGradTexture(); }
 

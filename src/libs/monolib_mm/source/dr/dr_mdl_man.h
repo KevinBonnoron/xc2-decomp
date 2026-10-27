@@ -9,6 +9,7 @@ class DrGpuCheckBase;
 class DrMdlObj;
 class DrMdoGrpObj;
 class DrMdoSmlShadowMan;
+class DrMdoVertexMan;
 class DrMdoZSortMan;
 class DrStmReadObj;
 
@@ -42,8 +43,9 @@ public:
     return (unknown000->unknown1c9c & (1 << cate)) != 0;
   }
 
-  DrMan *unknown000; // Inferred role: dr man; original member name unknown.
-  u8 _008[0x030 - 0x008];
+  DrMan *unknown000;          // Inferred role: dr man; original member name unknown.
+  DrMdoVertexMan *unknown008; // Inferred role: vertex man; original member name unknown.
+  u8 _010[0x030 - 0x010];
   DrMdoSmlShadowMan *unknown030; // Inferred role: small shadow man; original member name unknown.
   u8 _038[0x218 - 0x038];
   DrMdoZSortMan *unknown218; // Inferred role: z sort man; original member name unknown.
@@ -53,6 +55,7 @@ public:
 };
 
 static_assert(offsetof(DrMdlMan, unknown000) == 0x000, "");
+static_assert(offsetof(DrMdlMan, unknown008) == 0x008, "");
 static_assert(offsetof(DrMdlMan, unknown030) == 0x030, "");
 static_assert(offsetof(DrMdlMan, unknown218) == 0x218, "");
 static_assert(offsetof(DrMdlMan, unknown238) == 0x238, "");
