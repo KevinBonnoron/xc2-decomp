@@ -16,6 +16,7 @@ public:
   };
 
   virtual ~List();
+  List *Delete();
 
   void PushBack(Node *node) {
     node->prev = head.prev;

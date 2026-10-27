@@ -1,10 +1,12 @@
+#include "ssd/ssd_array.h"
+#include "ssd/ssd_array_impl.h"    // IWYU pragma: keep
+#include "ssd/ssd_behavior_impl.h" // IWYU pragma: keep
 #include "ssd/ssd_result.h"
 #include "ssd/ssd_sound.h"
 #include "ssd/ssd_sound_core.h"
 #include "types.h"
 
 namespace ssd {
-class SoundEntry;
 class SoundListener;
 
 SoundActor::~SoundActor() { Quit(); }
@@ -59,6 +61,18 @@ void SoundActor::SetPitch(f32 pitch, f32 fadeTime) { this->m_pitch = pitch; }
 void SoundActor::SetVolume(f32 volume, f32 fadeTime) { this->m_volume = volume; }
 
 void SoundActor::SetPan(f32 pan, f32 fadeTime) {}
+
+void SoundActor::SetCategoryId(int category) {
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  Array<SoundHandle *> handles;
+  core->LockAudio();
+  core->GetPlaySoundHandleFromActor(this, &handles);
+  SoundHandle **end = handles.unknown10 + handles.unknown08;
+  for (SoundHandle **it = handles.unknown10; it != end; it++) {
+    (*it)->SetCategoryId(category);
+  }
+  core->UnlockAudio();
+}
 
 int SoundActor::CountPlaySoundHandle() const { return static_cast<SystemCore *>(SoundCore::instance_)->CountPlaySoundHandleActor(this); }
 
@@ -124,5 +138,12 @@ Result SoundActor3D::Quit() {
   }
   return static_cast<Result>(-15);
 }
+
+template class Array<SoundActor *>;
+
+template class Array<SoundHandle *>;
+
+template List<SoundActor> *List<SoundActor>::Delete();
+template List<SoundActor>::Node::~Node();
 
 } // namespace ssd

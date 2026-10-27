@@ -1,3 +1,4 @@
+#include "ssd/ssd_behavior_impl.h" // IWYU pragma: keep
 #include "ssd/ssd_result.h"
 #include "ssd/ssd_sound.h"
 #include "ssd/ssd_sound_core.h"
@@ -39,6 +40,24 @@ Result VoiceHandle::GetPlayPosition(u64 *position) const {
   }
   *position = result;
   return set_result(static_cast<Result>(0));
+}
+
+Result VoiceHandle::GetPlaySample(unsigned long long *sample) const {
+  u64 position;
+  Result result = GetPlayPosition(&position);
+  if (result < 0) {
+    return result;
+  }
+  u64 value = 0;
+  if (unknown68->unknown34 == WaveSource::unknown001_3) {
+    if (unknown68->unknown18) {
+      value = position * 14 / 8;
+    }
+  } else if (unknown68->unknown18 && unknown68->unknown40 != 0) {
+    value = static_cast<u32>(position / unknown68->unknown40);
+  }
+  *sample = value;
+  return result;
 }
 
 Result VoiceHandle::SetPlayPosition(u64 position) {
@@ -136,5 +155,8 @@ void VoiceHandle::NullBufferProcess() {}
 void VoiceHandle::LooppingBufferProcess() {}
 
 void VoiceHandle::AddLooppingBuffer() { unknown88++; }
+
+template List<VoiceHandle> *List<VoiceHandle>::Delete();
+template List<VoiceHandle>::Node::~Node();
 
 } // namespace ssd

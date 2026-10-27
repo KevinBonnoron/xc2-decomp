@@ -1,9 +1,10 @@
+#include "ssd/ssd_behavior_impl.h" // IWYU pragma: keep
 #include <stddef.h>
 
+#include "ssd/ssd_allocator.h"
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_memory_manager.h"
 #include "ssd/ssd_mutex.h"
-#include "ssd/ssd_sound.h"
 
 namespace ssd {
 
@@ -57,5 +58,8 @@ void Allocator::DeleteStreamImpl(Block *block) {
     MemoryManager::memoryManager_.FreeStream(this, block);
   }
 }
+
+template List<MemoryManager::BlockNode> *List<MemoryManager::BlockNode>::Delete();
+template List<MemoryManager::BlockNode>::Node::~Node();
 
 } // namespace ssd

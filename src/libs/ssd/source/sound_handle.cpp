@@ -1,4 +1,9 @@
+#include "ssd/ssd_allocator.h"
+#include "ssd/ssd_array.h"
+#include "ssd/ssd_behavior_impl.h" // IWYU pragma: keep
 #include "ssd/ssd_debug.h"
+#include "ssd/ssd_delegate.h"
+#include "ssd/ssd_mutex.h"
 #include "ssd/ssd_result.h"
 #include "ssd/ssd_sound.h"
 #include "ssd/ssd_sound_core.h"
@@ -7,7 +12,63 @@
 #include "ssd/ssd_voice_handle.h"
 #include "types.h"
 
+namespace fw {
+class SoundSsdDriver;
+} // namespace fw
+
 namespace ssd {
+
+void SoundHandle::ClearDelegateImpl() {
+  unknown100.Clear();
+  for (int i = 0; i < unknown128.unknown08; i++) {
+    Delegate::Handle *handle = unknown128.unknown10[i];
+    SoundMemory::allocator_->unknown001(handle);
+  }
+  unknown128.unknown08 = 0;
+}
+
+void SoundHandle::ClearDelegate() {
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  if (core != nullptr) {
+    core->unknown708.Lock();
+    ClearDelegateImpl();
+    core->unknown708.Unlock();
+  }
+}
+
+void SoundHandle::AddDelegate(Delegate::Handle *handle) {
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  core->unknown708.Lock();
+  Result result = unknown100.AddDelegate(handle);
+  core->unknown708.Unlock();
+  set_result(result);
+}
+
+long SoundHandle::RemoveDelegate(Delegate::Handle *handle) {
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  if (core == nullptr) {
+    return -1;
+  }
+  core->unknown708.Lock();
+  Result result = unknown100.RemoveDelegate(handle);
+  core->unknown708.Unlock();
+  return result;
+}
+
+void SoundHandle::AddDelegateInternal(Delegate::Handle *handle) {
+  SystemCore *core = static_cast<SystemCore *>(SoundCore::instance_);
+  core->unknown708.Lock();
+  int count = unknown128.unknown08;
+  if (unknown128.unknown0c <= count) {
+    unknown128.SetArraySize(unknown128.unknown0c + 16);
+    count = unknown128.unknown08;
+  }
+  unknown128.unknown10[count] = handle;
+  unknown128.unknown08++;
+  Result result = unknown100.AddDelegate(handle);
+  core->unknown708.Unlock();
+  set_result(result);
+}
 
 bool SoundHandle::IsValidHandle() const {
   if (!unknown58) {
@@ -344,5 +405,7 @@ void SoundHandle::DisplayDebugVerbose() {
   }
   voice->DisplayDebugVerbose();
 }
+
+template class Delegate::Object<fw::SoundSsdDriver, SoundHandle *, SoundHandle::Notify::Type>;
 
 } // namespace ssd

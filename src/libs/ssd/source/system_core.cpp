@@ -1,3 +1,4 @@
+#include "ssd/ssd_array.h"
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_mutex.h"
 #include "ssd/ssd_result.h"
@@ -166,6 +167,86 @@ SoundHandle *SystemCore::GetPlaySoundHandle(const SoundActor *actor, int index) 
   return handle;
 }
 
+int SystemCore::GetPlaySoundHandleFromActor(const SoundActor *actor, Array<SoundHandle *> *handles) const {
+  set_result(static_cast<Result>(0));
+  unknown708.Lock();
+  VoiceHandle *it = unknown3a0.unknown002();
+  while (it != unknown3a0.unknown003()) {
+    SoundHandle *handle = it->unknown58;
+    if (handle != nullptr && handle->unknown38 == actor) {
+      int count = handles->unknown08;
+      if (handles->unknown0c <= count) {
+        handles->SetArraySize(handles->unknown0c + 16);
+        count = handles->unknown08;
+      }
+      handles->unknown10[count] = handle;
+      handles->unknown08++;
+    }
+    it = List<VoiceHandle>::unknown004(it);
+  }
+  int count = handles->unknown08;
+  unknown708.Unlock();
+  return count;
+}
+
+Result SystemCore::GetSoundActorListByCategoty(int category, Array<SoundActor *> *actors) const {
+  unknown708.Lock();
+  VoiceHandle *it = unknown3a0.unknown002();
+  while (it != unknown3a0.unknown003()) {
+    SoundHandle *handle = it->unknown58;
+    if (handle != nullptr && handle->unknown38 != nullptr) {
+      int count = actors->unknown08;
+      if (actors->unknown0c <= count) {
+        actors->SetArraySize(actors->unknown0c + 16);
+        count = actors->unknown08;
+      }
+      actors->unknown10[count] = handle->unknown38;
+      actors->unknown08++;
+    }
+    it = List<VoiceHandle>::unknown004(it);
+  }
+  Result result = set_result(static_cast<Result>(0));
+  unknown708.Unlock();
+  return result;
+}
+
+Result SystemCore::GetSoundHandleListByCategoty(int category, Array<SoundHandle *> *handles) const {
+  unknown708.Lock();
+  VoiceHandle *it = unknown3a0.unknown002();
+  if (category < 0) {
+    while (it != unknown3a0.unknown003()) {
+      SoundHandle *handle = it->unknown58;
+      if (handle != nullptr) {
+        int count = handles->unknown08;
+        if (handles->unknown0c <= count) {
+          handles->SetArraySize(handles->unknown0c + 16);
+          count = handles->unknown08;
+        }
+        handles->unknown10[count] = handle;
+        handles->unknown08++;
+      }
+      it = List<VoiceHandle>::unknown004(it);
+    }
+  } else {
+    while (it != unknown3a0.unknown003()) {
+      SoundHandle *handle = it->unknown58;
+      if (handle != nullptr && handle->unknown50.unknown00 == category) {
+        int count = handles->unknown08;
+        if (handles->unknown0c <= count) {
+          handles->SetArraySize(handles->unknown0c + 16);
+          count = handles->unknown08;
+        }
+        handles->unknown10[count] = handle;
+        handles->unknown08++;
+      }
+      it = List<VoiceHandle>::unknown004(it);
+    }
+  }
+  Result result = set_result(static_cast<Result>(0));
+  unknown708.Unlock();
+  return result;
+}
+
 Result SystemCore::AllocVoiceHandle(int, VoiceHandle **voice) {
   VoiceHandle *allocated = unknown3c8.unknown002();
   VoiceHandle *result = nullptr;
@@ -289,5 +370,7 @@ SoundCategory *SystemCore::GetCategory(int id) const {
 }
 
 const void *SystemCore::GetDebugInfo() const { return &debugInfo_; }
+
+template List<BehaviorControl>::Node::~Node();
 
 } // namespace ssd

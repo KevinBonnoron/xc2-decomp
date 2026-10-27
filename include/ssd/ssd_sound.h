@@ -3,6 +3,7 @@
 
 #include "ssd/ssd_array.h"
 #include "ssd/ssd_behavior.h"
+#include "ssd/ssd_delegate.h"
 #include "ssd/ssd_result.h"
 #include "types.h"
 
@@ -29,37 +30,6 @@ class SoundEntry;
 class SoundHandle;
 class SoundListener;
 class WaveSource;
-
-class Allocator {
-public:
-  virtual ~Allocator() {}
-  virtual void *AllocInstance(size_t size) = 0;
-  virtual void FreeInstance(void *pointer) = 0;
-  virtual void *AllocBuffer(size_t size, size_t alignment) = 0;
-  virtual void FreeBuffer(void *pointer) = 0;
-  virtual void *AllocStream(size_t size, size_t alignment) = 0;
-  virtual void FreeStream(void *pointer) = 0;
-
-  struct Block {
-    Allocator *unknown00; // Inferred role: allocator; original member name unknown.
-    void *unknown08;      // Inferred role: aligned address; original member name unknown.
-    void *unknown10;      // Inferred role: allocated address; original member name unknown.
-    u32 unknown18;        // Inferred role: requested size; original member name unknown.
-    u32 unknown1c;        // Inferred role: aligned size; original member name unknown.
-    u32 unknown20;        // Inferred role: element size; original member name unknown.
-    u32 unknown24;        // Inferred role: element count; original member name unknown.
-  };
-
-  Block *NewInstanceImpl(size_t size, size_t count, size_t alignment);
-  Block *NewBufferImpl(size_t size, size_t count, size_t alignment);
-  Block *NewStreamImpl(size_t size, size_t alignment);
-  Block *GetMemoryBlock(void *address);
-  void DeleteInstanceImpl(Block *block);
-  void DeleteBufferImpl(Block *block);
-  void DeleteStreamImpl(Block *block);
-};
-
-static_assert(sizeof(Allocator::Block) == 0x28, "");
 
 namespace ObjectType {
 enum Id {
@@ -168,12 +138,14 @@ public:
   u8 _7e[0xc8 - 0x7e];
   WaveSource *unknownc8; // Inferred role: wave source; original member name unknown.
   SoundBank *unknownd0;  // Inferred role: sound bank; original member name unknown.
+  u8 _d8[0xe0 - 0xd8];
 };
 
 static_assert(offsetof(SoundEntry, unknown78) == 0x78, "");
 static_assert(offsetof(SoundEntry, unknown7d) == 0x7d, "");
 static_assert(offsetof(SoundEntry, unknownc8) == 0xc8, "");
 static_assert(offsetof(SoundEntry, unknownd0) == 0xd0, "");
+static_assert(sizeof(SoundEntry) == 0xe0, "");
 
 class SoundBank : public Object, public List<SoundBank>::Node {
 public:
@@ -256,6 +228,10 @@ public:
     Fade unknown04; // Inferred role: volume; original member name unknown.
   };
 
+  struct Notify {
+    enum Type {};
+  };
+
   bool IsValidHandle() const;
   long Stop(f32 fadeTime);
   int GetState() const;
@@ -291,6 +267,11 @@ public:
   long GetWaveSource(WaveSource **waveSource);
   long KeepStreamOpen(bool isKeep);
   void DisplayDebugVerbose();
+  void AddDelegate(Delegate::Handle *handle);
+  long RemoveDelegate(Delegate::Handle *handle);
+  void AddDelegateInternal(Delegate::Handle *handle);
+  void ClearDelegate();
+  void ClearDelegateImpl();
 
   u8 _00[0x38 - 0x00];
   SoundActor *unknown38; // Inferred role: sound actor; original member name unknown.
@@ -312,6 +293,9 @@ public:
   u8 _bc[0xc0 - 0xbc];
   Effect unknownc0[2]; // Inferred role: effects; original member name unknown.
   u32 unknownf8;       // Inferred role: voice handle id; original member name unknown.
+  u8 _fc[0x100 - 0xfc];
+  Delegate::MultiCast unknown100;       // Inferred role: delegates; original member name unknown.
+  Array<Delegate::Handle *> unknown128; // Inferred role: delegates added internally; original member name unknown.
 };
 
 static_assert(offsetof(SoundHandle, unknown38) == 0x38, "");
@@ -320,6 +304,9 @@ static_assert(offsetof(SoundHandle, unknown68) == 0x68, "");
 static_assert(offsetof(SoundHandle, unknown9c) == 0x9c, "");
 static_assert(offsetof(SoundHandle, unknownc0) == 0xc0, "");
 static_assert(offsetof(SoundHandle, unknownf8) == 0xf8, "");
+static_assert(offsetof(SoundHandle, unknown100) == 0x100, "");
+static_assert(offsetof(SoundHandle, unknown128) == 0x128, "");
+static_assert(sizeof(SoundHandle) == 0x140, "");
 static_assert(offsetof(SoundHandle, unknown84) == 0x84, "");
 static_assert(offsetof(SoundHandle, unknownb8) == 0xb8, "");
 

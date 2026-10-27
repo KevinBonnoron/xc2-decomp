@@ -5,6 +5,8 @@ namespace ssd {
 
 template <typename T> class Array {
 public:
+  Array() : unknown08(0), unknown0c(0), unknown10(nullptr) {}
+
   virtual ~Array();
   void SetArraySize(int size);
 

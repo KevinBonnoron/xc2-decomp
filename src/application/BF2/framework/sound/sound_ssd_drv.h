@@ -11,12 +11,12 @@
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/list.h"
 #include "mm_mtl/singleton.h"
+#include "ssd/ssd_allocator.h"
 #include "ssd/ssd_sound.h"
 #include "types.h"
 
 namespace ssd {
 class SoundCore;
-class SoundEntry;
 class SoundListener;
 } // namespace ssd
 

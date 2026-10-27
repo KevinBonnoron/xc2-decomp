@@ -1,5 +1,6 @@
 #include "ssd/ssd_array.h"
 #include "ssd/ssd_behavior.h"
+#include "ssd/ssd_behavior_impl.h" // IWYU pragma: keep
 #include "ssd/ssd_mutex.h"
 #include "ssd/ssd_result.h"
 #include "ssd/ssd_sound.h"
@@ -153,5 +154,11 @@ SoundGroup *SoundEntry::GetSoundGroup() const {
   }
   return unknownd0->GetSoundGroup(unknown7d);
 }
+
+template List<SoundBank> *List<SoundBank>::Delete();
+template List<SoundBank>::Node::~Node();
+
+template List<SoundEntry> *List<SoundEntry>::Delete();
+template List<SoundEntry>::Node::~Node();
 
 } // namespace ssd

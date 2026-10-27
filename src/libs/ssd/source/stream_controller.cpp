@@ -30,4 +30,6 @@ int StreamController::PositionToFrame(u64 position) {
   return 0;
 }
 
+template List<StreamController>::Node::~Node();
+
 } // namespace ssd

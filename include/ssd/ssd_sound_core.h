@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "ssd/ssd_array.h" // IWYU pragma: keep
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_debug.h"
 #include "ssd/ssd_mutex.h"
@@ -54,6 +55,8 @@ public:
   Result SetCategory(const SoundCategory &category);
   Result ResetCategory(int id);
   Result GetSoundBankList(SoundBank **banks, size_t num) const;
+  Result GetSoundActorListByCategoty(int category, Array<SoundActor *> *actors) const;
+  Result GetSoundHandleListByCategoty(int category, Array<SoundHandle *> *handles) const;
   Result GetSoundBank(int id, SoundBank **bank) const;
   Result NumSoundBank(int *num) const;
   Result NumSoundActor(int *num) const;
@@ -132,6 +135,9 @@ public:
   void PauseActor(SoundActor *actor, bool isPause, f32 fadeTime);
   int CountPlaySoundHandleActor(const SoundActor *actor) const;
   SoundHandle *GetPlaySoundHandle(const SoundActor *actor, int index) const;
+  int GetPlaySoundHandleFromActor(const SoundActor *actor, Array<SoundHandle *> *handles) const;
+  Result GetSoundActorListByCategoty(int category, Array<SoundActor *> *actors) const;
+  Result GetSoundHandleListByCategoty(int category, Array<SoundHandle *> *handles) const;
   Result AllocVoiceHandle(int, VoiceHandle **voice);
   void FreeVoiceHandle(VoiceHandle *voice);
   void ConnectActor(SoundActor *actor);

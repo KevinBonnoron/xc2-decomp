@@ -1,5 +1,6 @@
 #include <stddef.h>
 
+#include "anm/anm_array-inl.h"
 #include "ssd/ssd_behavior.h"
 #include "ssd/ssd_debug.h"
 #include "ssd/ssd_memory_manager.h"
@@ -10,6 +11,8 @@
 namespace ssd {
 class SoundBank;
 class SoundCategory;
+class SoundActor;
+class SoundHandle;
 
 bool SoundCore::IsInstance() { return instance_ != nullptr; }
 
@@ -55,6 +58,10 @@ Result SoundCore::Quit(bool isForce) {
 Result SoundCore::GetCategory(int id, SoundCategory *category) const { return static_cast<const SystemCore *>(this)->GetCategory(id, category); }
 
 Result SoundCore::SetCategory(const SoundCategory &category) { return static_cast<SystemCore *>(this)->SetCategory(category); }
+
+Result SoundCore::GetSoundActorListByCategoty(int category, Array<SoundActor *> *actors) const { return static_cast<const SystemCore *>(this)->GetSoundActorListByCategoty(category, actors); }
+
+Result SoundCore::GetSoundHandleListByCategoty(int category, Array<SoundHandle *> *handles) const { return static_cast<const SystemCore *>(this)->GetSoundHandleListByCategoty(category, handles); }
 
 Result SoundCore::ResetCategory(int id) { return static_cast<SystemCore *>(this)->ResetCategory(id); }
 

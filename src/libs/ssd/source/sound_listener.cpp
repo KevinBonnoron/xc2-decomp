@@ -1,3 +1,5 @@
+#include "ssd/ssd_array.h"
+#include "ssd/ssd_array_impl.h" // IWYU pragma: keep
 #include "ssd/ssd_sound.h"
 #include "ssd/ssd_sound_core.h"
 #include "ssd/ssd_sound_listener.h"
@@ -189,5 +191,7 @@ void SoundListener::UpdateGameFrame(f32 deltaTime) {
 void SoundListener::UpdateMatrix() { Mat34LookAt(&unknown88, &unknown48.unknown00, &unknown48.unknown0c, &unknown48.unknown18); }
 
 void SoundListener::Vec3Transform(const Vec3 *in, Vec3 *out) { ssd::Vec3Transform(&unknown88, in, out); }
+
+template class Array<SoundListener *>;
 
 } // namespace ssd

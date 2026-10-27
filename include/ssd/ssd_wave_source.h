@@ -28,7 +28,9 @@ public:
   u32 GetDataSize() const;
   u64 TimeToSample(f32 time) const;
 
-  u8 _08[0x24 - 0x08];
+  u8 _08[0x18 - 0x08];
+  bool unknown18; // Inferred role: has data; original member name unknown.
+  u8 _19[0x24 - 0x19];
   u32 unknown24; // Inferred role: data size; original member name unknown.
   u8 _28[0x2c - 0x28];
   f32 unknown2c; // Inferred role: sample rate; original member name unknown.
@@ -49,6 +51,7 @@ public:
   const unknown002 *unknown90; // Inferred role: adpcm headers; original member name unknown.
 };
 
+static_assert(offsetof(WaveSource, unknown18) == 0x18, "");
 static_assert(offsetof(WaveSource, unknown24) == 0x24, "");
 static_assert(offsetof(WaveSource, unknown2c) == 0x2c, "");
 static_assert(offsetof(WaveSource, unknown34) == 0x34, "");
