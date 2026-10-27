@@ -12,7 +12,7 @@ struct QsTransform;
 namespace fw {
 
 TwoCharaGroundSolver::TwoCharaGroundSolver()
-    : unknown90(0.3f), unknown94(4), unknown98(0), unknowna0(0), unknowna8(0.0f), unknownac(0.0f), unknownb0(0.0f), unknownb4(0xffff), unknownb6(0xffff), unknownb8(false), unknownb9(false),
+    : unknown90(0.3f), unknown94(4), unknown98(0), unknowna0(0), unknowna8(0), unknownac(0.0f), unknownb0(0.0f), unknownb4(0xffff), unknownb6(0xffff), unknownb8(false), unknownb9(false),
       unknownba(true), unknownbb(true), unknownc0(nullptr) {}
 
 TwoCharaGroundSolver::~TwoCharaGroundSolver() {}

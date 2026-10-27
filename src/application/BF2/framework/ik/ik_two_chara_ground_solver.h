@@ -40,7 +40,7 @@ public:
   u32 unknown94;                                                                   // Inferred role: unknown; original member name unknown.
   u64 unknown98;                                                                   // Inferred role: unknown; original member name unknown.
   u64 unknowna0;                                                                   // Inferred role: unknown; original member name unknown.
-  f32 unknowna8;                                                                   // Inferred role: unknown; original member name unknown.
+  u32 unknowna8;                                                                   // Inferred role: ground fit enable; original member name unknown.
   f32 unknownac;                                                                   // Inferred role: unknown; original member name unknown.
   f32 unknownb0;                                                                   // Inferred role: unknown; original member name unknown.
   u16 unknownb4;                                                                   // Inferred role: main body bone index; original member name unknown.
