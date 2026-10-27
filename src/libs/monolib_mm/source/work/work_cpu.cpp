@@ -6,6 +6,7 @@
 #include "ml/reslist.h"
 #include "ml/thread_util.h"
 #include "ml/work_cpu_thread.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
 namespace ml {
 struct TJOB;
@@ -306,3 +307,7 @@ template class reslist<TJOB *>;
 template class fixed_size_alloc<TJOB>;
 
 } // namespace ml
+
+template mm::mtl::FixedList<ml::IWorkInfomation *, 32>::iterator mm::mtl::FixedList<ml::IWorkInfomation *, 32>::erase(mm::mtl::FixedList<ml::IWorkInfomation *, 32>::iterator);
+
+template mm::mtl::FixedList<ml::TJOB *, 64>::iterator mm::mtl::FixedList<ml::TJOB *, 64>::erase(mm::mtl::FixedList<ml::TJOB *, 64>::iterator);

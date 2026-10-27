@@ -18,6 +18,7 @@
 #include "gf/game/quest/gf_quest_task.h"
 #include "gf/game/quest/gf_quest_task_param.h"
 #include "gf/util/gf_item_util.h"
+#include "mm_mtl/fixed_queue.h" // IWYU pragma: keep
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 
@@ -481,3 +482,9 @@ void GfQuestUtil::incFieldSkillTask(u32 blade, u32 fieldSkill) {
 void GfQuestUtil::completeCurrentQuestForAutoPilot() {}
 
 } // namespace gf
+
+template mm::mtl::FixedQueue<gf::QuestData, 8000>::iterator mm::mtl::FixedQueue<gf::QuestData, 8000>::insert(mm::mtl::FixedQueue<gf::QuestData, 8000>::fixed_queue_iterator<gf::QuestData, 8000>,
+                                                                                                             gf::QuestData const &);
+
+template mm::mtl::FixedQueue<gf::QuestData, 15000>::iterator mm::mtl::FixedQueue<gf::QuestData, 15000>::insert(mm::mtl::FixedQueue<gf::QuestData, 15000>::fixed_queue_iterator<gf::QuestData, 15000>,
+                                                                                                               gf::QuestData const &);

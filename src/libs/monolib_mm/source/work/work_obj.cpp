@@ -4,6 +4,7 @@
 #include "ml/reslist.h"
 #include "ml/work_root.h"
 #include "ml/work_util.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
 namespace ml {
 
@@ -240,3 +241,6 @@ template class reslist<IWorkEvent *>;
 template class reslist<unsigned int>;
 
 } // namespace ml
+
+template mm::mtl::FixedList<ml::WorkObj *, 32>::iterator mm::mtl::FixedList<ml::WorkObj *, 32>::erase(mm::mtl::FixedList<ml::WorkObj *, 32>::iterator);
+template mm::mtl::FixedList<ml::WorkObj *, 32>::~FixedList();

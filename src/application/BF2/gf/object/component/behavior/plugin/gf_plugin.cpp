@@ -3,6 +3,7 @@
 #include "gf/gf_allocator.h"
 #include "gf/object/component/behavior/plugin/gf_foot_step_plugin.h"
 #include "gf/object/component/behavior/plugin/gf_lip_sync_plugin.h"
+#include "mm_mtl/vector.h" // IWYU pragma: keep
 
 namespace gf {
 
@@ -42,3 +43,10 @@ LipSyncPlugin *LipSyncPlugin::create() { return new (getAllocator(ALLOCATOR_DEFA
 FootStepPlugin *FootStepPlugin::create() { return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) FootStepPlugin(); }
 
 } // namespace gf
+
+template void mm::mtl::Vector<gf::Plugin *(*)()>::expand(size_t, size_t);
+template void mm::mtl::Vector<gf::Plugin *(*)()>::extend(size_t, size_t, gf::Plugin *(*const &)());
+template void mm::mtl::Vector<gf::Plugin *(*)()>::resize(size_t, gf::Plugin *(*const &)());
+template void mm::mtl::Vector<gf::Plugin *>::expand(size_t, size_t);
+template void mm::mtl::Vector<gf::Plugin *>::extend(size_t, size_t, gf::Plugin *const &);
+template void mm::mtl::Vector<gf::Plugin *>::resize(size_t, gf::Plugin *const &);

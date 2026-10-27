@@ -10,6 +10,7 @@
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/allocator.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/hash.h"
 #include "mtl/mem_manager.h"
@@ -807,3 +808,5 @@ bool SoundSsdBank::canRelease() const {
 void SoundSsdBank::stopAll() { unknown10.Stop(0.0f); }
 
 } // namespace fw
+
+template mm::mtl::FixedList<fw::SoundPoolMemory *, 256>::iterator mm::mtl::FixedList<fw::SoundPoolMemory *, 256>::erase(mm::mtl::FixedList<fw::SoundPoolMemory *, 256>::iterator);

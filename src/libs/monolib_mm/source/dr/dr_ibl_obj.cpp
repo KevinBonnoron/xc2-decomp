@@ -1,6 +1,7 @@
 #include "dr/dr_ibl_obj.h"
 
 #include "grlib/cglib_texture_buffer.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
 namespace ml {
 
@@ -62,3 +63,5 @@ grlib::CGLibTextureBuffer *DrIBLObj::debug_getNormalTexture(u32 index) const {
 }
 
 } // namespace ml
+
+template mm::mtl::FixedList<ml::DrIBLObj *, 32>::iterator mm::mtl::FixedList<ml::DrIBLObj *, 32>::erase(mm::mtl::FixedList<ml::DrIBLObj *, 32>::iterator);

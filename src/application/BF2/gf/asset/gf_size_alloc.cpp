@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "mm_mtl/allocator.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
 namespace gf {
 
@@ -54,3 +55,6 @@ void GfSizeAlloc::resize(size_t size) {
 void GfSizeAlloc::logFreeBlock() {}
 
 } // namespace gf
+
+template mm::mtl::FixedList<unsigned int, 512>::iterator mm::mtl::FixedList<unsigned int, 512>::erase(mm::mtl::FixedList<unsigned int, 512>::iterator);
+template mm::mtl::FixedList<unsigned int, 512>::~FixedList();

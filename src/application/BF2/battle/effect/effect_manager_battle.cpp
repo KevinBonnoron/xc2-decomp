@@ -1,6 +1,7 @@
 #include "battle/effect/effect_manager_battle.h"
 
 #include "gf/gf_allocator.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
 namespace btl {
 
@@ -69,3 +70,7 @@ void EffectManager::PreUpdateProc(const fw::UpdateInfo &) {}
 void EffectManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc(updateInfo); }
 
 } // namespace btl
+
+template mm::mtl::FixedList<btl::EffectManager::REGISTER_PROC_DATA, 30>::iterator
+    mm::mtl::FixedList<btl::EffectManager::REGISTER_PROC_DATA, 30>::erase(mm::mtl::FixedList<btl::EffectManager::REGISTER_PROC_DATA, 30>::iterator);
+template mm::mtl::FixedList<btl::EffectManager::REGISTER_PROC_DATA, 30>::~FixedList();

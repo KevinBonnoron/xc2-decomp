@@ -6,6 +6,8 @@ namespace mtl {
 
 template <typename T, size_t N> class FixedArray {
 public:
+  ~FixedArray() {}
+
   T &operator[](size_t index) { return mData[index]; }
   T *begin() { return mData; }
   T *end() { return mData + N; }

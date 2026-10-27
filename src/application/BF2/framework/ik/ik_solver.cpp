@@ -3,6 +3,8 @@
 #include "anm/anm_pose.h"
 #include "framework/reference_frame.h"
 #include "fw/fw_update_info.h"
+#include "mm_mtl/intrusive_ptr.h" // IWYU pragma: keep
+#include "mm_mtl/vector.h"        // IWYU pragma: keep
 
 namespace fw {
 
@@ -106,3 +108,7 @@ const mm::mtl::RTTI *IkSolver::getRTTI() const { return &m_rtti; }
 const mm::mtl::RTTI *IkFadeSolver::getRTTI() const { return &m_rtti; }
 
 } // namespace fw
+
+template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>>::destroy();
+template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>>::expand(size_t, size_t);
+template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>>::push_back(mm::mtl::IntrusivePtr<fw::IkSolver> const &);

@@ -1,6 +1,7 @@
 #include "gf/asset/gf_asset_pack.h"
 
 #include "gf/asset/gf_asset_manager.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
 namespace gf {
 
@@ -67,3 +68,5 @@ void GfAssetPack::dispAssetLogForDebug() {}
 void GfAssetPack::setLoadComplete() {}
 
 } // namespace gf
+
+template mm::mtl::FixedList<gf::GfAssetPack *, 1024>::iterator mm::mtl::FixedList<gf::GfAssetPack *, 1024>::erase(mm::mtl::FixedList<gf::GfAssetPack *, 1024>::iterator);

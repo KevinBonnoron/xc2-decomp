@@ -49,3 +49,6 @@ bool ASMControl::getVariable(const char *name, f32 *value) const {
 }
 
 } // namespace anm
+
+template anm::Control **mm::mtl::Vector<anm::Control *>::erase(anm::Control **);
+template void mm::mtl::Vector<anm::Control *>::expand(size_t, size_t);

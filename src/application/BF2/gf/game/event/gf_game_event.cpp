@@ -27,6 +27,7 @@
 #include "ml/ml_mem.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/algorithm.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 #include "mtl/mem_manager.h"
 
 namespace gf {
@@ -667,3 +668,5 @@ bool GfGameEvent::isLeaderCharaNG(u32 chara) {
 }
 
 } // namespace gf
+
+template mm::mtl::FixedList<gf::GfEvtModel *, 32>::iterator mm::mtl::FixedList<gf::GfEvtModel *, 32>::erase(mm::mtl::FixedList<gf::GfEvtModel *, 32>::iterator);

@@ -12,3 +12,9 @@ void ResClipData::sortAnnotation(u32 type) {
 }
 
 } // namespace anm
+
+template mm::mtl::FixedArray<mm::mtl::Vector<anm::AsmAnnotetion>, 5>::~FixedArray();
+template mm::mtl::FixedArray<mm::mtl::Vector<anm::AsmKeyframeAnnotation>, 5>::~FixedArray();
+template void mm::mtl::Vector<anm::AsmAnnotetion>::expand(size_t, size_t);
+template void mm::mtl::Vector<anm::AsmKeyframeAnnotation>::expand(size_t, size_t);
+template void mm::mtl::Vector<anm::AsmKeyframeAnnotation>::assign(const mm::mtl::Vector<anm::AsmKeyframeAnnotation> &);

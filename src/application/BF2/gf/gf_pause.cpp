@@ -1,4 +1,5 @@
 #include "gf/gf_pause.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
 namespace gf {
 
@@ -23,3 +24,5 @@ u64 GfPause::createPauseHandleByIndex(u32 index) {
 }
 
 } // namespace gf
+
+template mm::mtl::FixedList<gf::GF_PAUSE_HANDLE *, 64>::iterator mm::mtl::FixedList<gf::GF_PAUSE_HANDLE *, 64>::erase(mm::mtl::FixedList<gf::GF_PAUSE_HANDLE *, 64>::iterator);

@@ -2,6 +2,7 @@
 
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_col4.h"
+#include "mm_mtl/vector.h" // IWYU pragma: keep
 
 namespace layer {
 
@@ -172,3 +173,6 @@ void LayerTagStr::callTagNoUse(const u8 *tag) {
 }
 
 } // namespace layer
+
+template void mm::mtl::Vector<layer::LayerStrInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<layer::LayerStrInfo>::push_back(layer::LayerStrInfo const &);

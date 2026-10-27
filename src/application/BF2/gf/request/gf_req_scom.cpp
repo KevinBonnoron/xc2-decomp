@@ -32,6 +32,7 @@
 #include "gf/request/gf_scom.h"
 #include "gf/scom/gf_scom_enbook.h"
 #include "gf/scom/gf_scom_obj.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 #include "mm_mtl/fixed_vector.h"
 
 namespace gf {
@@ -729,3 +730,5 @@ bool GfReqSmallCom::isExistCommand() {
 }
 
 } // namespace gf
+
+template mm::mtl::FixedList<gf::SCOM *, 1024>::iterator mm::mtl::FixedList<gf::SCOM *, 1024>::erase(mm::mtl::FixedList<gf::SCOM *, 1024>::iterator);

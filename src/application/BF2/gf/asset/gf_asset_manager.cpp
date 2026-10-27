@@ -1,6 +1,7 @@
 #include "gf/asset/gf_asset_manager.h"
 
 #include "gf/asset/gf_slot_mapping.h"
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
 namespace gf {
 
@@ -62,3 +63,5 @@ u32 GfAssetManager::getDestroyAssetPackInfo() {
 }
 
 } // namespace gf
+
+template mm::mtl::FixedList<gf::GF_ASSET_HANDLE *, 1024>::iterator mm::mtl::FixedList<gf::GF_ASSET_HANDLE *, 1024>::erase(mm::mtl::FixedList<gf::GF_ASSET_HANDLE *, 1024>::iterator);
