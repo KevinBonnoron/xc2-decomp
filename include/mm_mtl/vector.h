@@ -245,6 +245,21 @@ public:
     }
     m_size++;
   }
+
+  void assign(const Vector &other) {
+    m_allocator = other.m_allocator;
+    m_alignment = other.m_alignment;
+    m_capacity = other.m_capacity;
+    if (m_capacity != 0 && m_allocator != nullptr) {
+      m_buffer = static_cast<T *>(m_allocator->allocate(other.m_capacity * sizeof(T), m_alignment));
+      const T *source = other.begin();
+      if (source != other.end()) {
+        copy_construct_n(source, other.m_capacity, begin());
+        m_size = other.m_size;
+      }
+    }
+  }
+
 #line 512
 
   T *insert(T *it, const T &value);

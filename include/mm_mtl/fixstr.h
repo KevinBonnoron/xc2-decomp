@@ -41,6 +41,12 @@ public:
     return *this;
   }
 
+  FixStr operator+(const char *pszBack) const {
+    FixStr result(c_str());
+    result += pszBack;
+    return result;
+  }
+
   void clear() {
     mData[0] = 0;
     m_nLen = 0;
@@ -84,6 +90,22 @@ public:
     copy(pszStr, len, position);
     m_nLen = newSize;
     mData[newSize] = 0;
+    return *this;
+  }
+
+  // __LINE__ must be 761 as in the original header: it is the line argument of the assert.
+#line 760
+  FixStr &replace(int pos, int count, const char *strNew) {
+    MM_ASSERT(strNew);
+    int len = __builtin_strlen(strNew);
+    if (count == -1) {
+      if (pos < m_nLen) {
+        resize(pos);
+      }
+    } else {
+      erase(pos, count);
+    }
+    insert(pos, strNew, len);
     return *this;
   }
 

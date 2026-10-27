@@ -492,3 +492,7 @@ void ColiObject::postUpdate() {
 }
 
 } // namespace fw
+
+template void mm::mtl::Vector<fw::ColiObject *>::expand(size_t, size_t);
+template void mm::mtl::Vector<fw::ColiObject *>::extend(size_t, size_t, fw::ColiObject *const &);
+template void mm::mtl::Vector<fw::ColiObject *>::resize(size_t, fw::ColiObject *const &);

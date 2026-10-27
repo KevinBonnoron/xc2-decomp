@@ -25,3 +25,6 @@ void DrLightObjGlobalIBL::beginOccQuery() {
 void DrLightObjGlobalIBL::endOccQuery() { unknown20[unknown70].unknown110->end(); }
 
 } // namespace ml
+
+template void mm::mtl::Vector<ml::DrLightObjGlobalIBL *>::extend(size_t, size_t);
+template void mm::mtl::Vector<ml::DrLightObjGlobalIBL *>::resize(size_t);

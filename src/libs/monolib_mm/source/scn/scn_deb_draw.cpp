@@ -182,7 +182,7 @@ void DebDraw::renderRectFill(int x, int y, int width, int height) {
 }
 
 void DebDraw::renderPrimFill(const mm::PrimBase *prim) {
-  if (prim->type == mm::PrimBase::TYPE_CUBE) {
+  if (prim->type == mm::PrimBase::PRIM_CUBE) {
     cubeFill(static_cast<const mm::Cube *>(prim));
   }
 }
