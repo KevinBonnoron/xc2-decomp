@@ -6,13 +6,15 @@
 #include "gmk/gmk_manager.h"
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_queue.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 #include <stddef.h>
 
 namespace fw {
+class Camera;
 struct UpdateInfo;
-}
+} // namespace fw
 
 namespace gf {
 
@@ -90,6 +92,7 @@ public:
   static void addWarp(GF_OBJ_HANDLE *handle);
   static void addWaitPlayerToStartGmkTuto();
   static void addGmkTutorial(const char *name, u32 tutorial);
+  static void addWaitGmkCameraEnd(mm::mtl::IntrusivePtr<fw::Camera> camera);
   static void addPlayerDead(GfPlayerDead dead);
   static void addTalk(const GfSetupPfTalk &talk);
   static void addQuestUIOrder(QuestID quest, bool isForce);

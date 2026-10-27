@@ -1,5 +1,6 @@
 #include "gf/game/sequential_play/gf_play_factory.h"
 
+#include "fw/fw_camera.h"
 #include "gf/data/gf_data_event.h"
 #include "gf/event/gf_event.h"
 #include "gf/game/gf_game_manager.h"
@@ -273,6 +274,26 @@ bool GfPlayFactory::createGmkTutorial(const char *name, u32 tutorial) {
   GfSequentialPlay::addWaitPlayerToStartGmkTuto();
   GfSequentialPlay::pushPause(PAUSE_BIT_FIELD_TIME);
   GfSequentialPlay::addGmkTutorial(name, tutorial);
+  GfSequentialPlay::popPause();
+  GfSequentialPlay::popState();
+  GfSequentialPlay::play();
+  return true;
+}
+
+bool GfPlayFactory::createGmkCamera(mm::mtl::IntrusivePtr<fw::Camera> camera) {
+  if (GfGameManager::isLeaveGameForDebug()) {
+    return false;
+  }
+  if (!GfGameManager::isGmkTutorialOK() || GfSequentialPlay::isInnerState(GF_STATE_MAPJUMP_SKIP_TRAVEL)) {
+    return false;
+  }
+  GfGameManager::setGmkTutorialSequenceOK(true);
+  GfSequentialPlay::beginCommand(GfSequentialPlay::TYPE_NORMAL);
+  GfSequentialPlay::pushState(GF_STATE_GMK_CAMERA);
+  GfSequentialPlay::addWaitBattleEnd(0);
+  GfSequentialPlay::addWaitPlayerToStartGmkTuto();
+  GfSequentialPlay::pushPause(PAUSE_BIT_FIELD_TIME);
+  GfSequentialPlay::addWaitGmkCameraEnd(camera);
   GfSequentialPlay::popPause();
   GfSequentialPlay::popState();
   GfSequentialPlay::play();

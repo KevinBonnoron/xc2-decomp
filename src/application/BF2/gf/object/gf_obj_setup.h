@@ -21,8 +21,10 @@ struct SDataEnemy;
 
 class GfObjSetup {
 public:
+  static mm::mtl::RTTI m_rtti;
+
   virtual const mm::mtl::RTTI *getRTTI() const;
-  virtual ~GfObjSetup();
+  virtual ~GfObjSetup() {}
   virtual u32 getFootStep() const;
   virtual u32 getFootStepEffect() const;
   virtual u32 getEnArrangeID() const;
@@ -76,6 +78,8 @@ class GfObjSetupMap : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
 
+  const mm::mtl::RTTI *getRTTI() const override;
+
   u8 _5c[0x6c - 0x5c];
   u32 unknown6c; // Inferred role: bdat id; original member name unknown.
   u8 _70[0x75 - 0x70];
@@ -102,6 +106,8 @@ static_assert(offsetof(GfObjSetupDriver, unknown70) == 0x70, "");
 class GfObjSetupBlade : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
   static const u32 OBJECT_TYPE = OBJECT_TYPE_BLADE;
 
   u8 _5c[0x6c - 0x5c];
@@ -129,17 +135,23 @@ static_assert(offsetof(GfObjSetupWeapon, unknown78) == 0x78, "");
 class GfObjSetupMob : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
 };
 
 class GfObjSetupNpc : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
   static const u32 OBJECT_TYPE = OBJECT_TYPE_NPC;
 };
 
 class GfObjSetupGimmick : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
   static const u32 OBJECT_TYPE = OBJECT_TYPE_GIMMICK;
 
   GimmickType unknown5c; // Inferred role: gimmick type; original member name unknown.
@@ -183,7 +195,58 @@ static_assert(offsetof(GfObjSetupEnemy, unknownc0) == 0xc0, "");
 class GfObjSetupBelonging : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
   static const u32 OBJECT_TYPE = OBJECT_TYPE_BELONGING;
+};
+
+class GfObjSetupEnWeapon : public GfObjSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
+};
+
+class GfObjSetupEventObj : public GfObjSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
+};
+
+class GfObjSetupExtra : public GfObjSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
+};
+
+class GfObjSetupFieldObj : public GfObjSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
+};
+
+class GfObjSetupMapLodAnim : public GfObjSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
+};
+
+class GfObjSetupMapObj : public GfObjSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
+};
+
+class GfObjSetupUiObj : public GfObjSetup {
+public:
+  static mm::mtl::RTTI m_rtti;
+
+  const mm::mtl::RTTI *getRTTI() const override;
 };
 
 } // namespace gf

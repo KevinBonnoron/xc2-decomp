@@ -1,4 +1,6 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/event/gf_event.h"
 #include "gf/game/quest/gf_quest_id.h"
 #include "gf/game/quest/gf_quest_info.h"
@@ -11,6 +13,7 @@
 #include "mm_mtl/fixed_queue.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -21,6 +24,7 @@ class RTTI;
 } // namespace mm
 
 namespace fw {
+class Camera;
 struct UpdateInfo;
 } // namespace fw
 
@@ -588,6 +592,27 @@ public:
 };
 
 static_assert(sizeof(GfPlayComGmkTutorialSeq) == 0x60, "");
+
+class GfPlayComGmkCameraSeq : public GfPlayCom {
+  GF_PLAY_COM("PlayComGmkCameraSeq")
+
+public:
+  GfPlayComGmkCameraSeq(mm::mtl::IntrusivePtr<fw::Camera> camera);
+  ~GfPlayComGmkCameraSeq() override;
+  void start() override;
+  void end() override;
+  bool update(const fw::UpdateInfo &info, bool isCancel) override;
+  static GfPlayComGmkCameraSeq *create(mm::mtl::IntrusivePtr<fw::Camera> camera);
+
+  mm::mtl::IntrusivePtr<fw::Camera> unknown10; // Inferred role: camera; original member name unknown.
+  int unknown18;                               // Inferred role: player pause; original member name unknown.
+
+  static int s_activate;
+};
+
+static_assert(offsetof(GfPlayComGmkCameraSeq, unknown10) == 0x10, "");
+static_assert(offsetof(GfPlayComGmkCameraSeq, unknown18) == 0x18, "");
+static_assert(sizeof(GfPlayComGmkCameraSeq) == 0x20, "");
 
 class GfPlayComPlayerDead : public GfPlayCom {
 public:

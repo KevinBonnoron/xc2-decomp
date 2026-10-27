@@ -1,6 +1,7 @@
 #include "gf/game/sequential_play/gf_play_command.h"
 
 #include "bdat.h"
+#include "fw/fw_camera.h"
 #include "fw/fw_update_info.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_quest.h"
@@ -1002,6 +1003,40 @@ GfPlayComGmkTutorialSeq *GfPlayComGmkTutorialSeq::create(const char *name, u32 t
   // __LINE__ must be 2082 as in the original file: its value changes the instruction order.
 #line 2082
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComGmkTutorialSeq(name, tutorial);
+}
+
+int GfPlayComGmkCameraSeq::s_activate;
+
+GfPlayComGmkCameraSeq::GfPlayComGmkCameraSeq(mm::mtl::IntrusivePtr<fw::Camera> camera) : GfPlayCom(PCOMTYPE_GMK_CAMERA_SEQ, false) {
+  unknown10 = camera;
+  if (GfGameScene::get() != nullptr) {
+    unknown18 = GfGameScene::get()->createPlayerPause();
+  }
+  s_activate++;
+}
+
+GfPlayComGmkCameraSeq::~GfPlayComGmkCameraSeq() { s_activate--; }
+
+void GfPlayComGmkCameraSeq::start() {}
+
+void GfPlayComGmkCameraSeq::end() {
+  if (GfGameScene::get() != nullptr) {
+    GfGameScene::get()->destroyPlayerPause(unknown18);
+  }
+}
+
+bool GfPlayComGmkCameraSeq::update(const fw::UpdateInfo &, bool isCancel) {
+  if (!isCancel && unknown10->unknowna0) {
+    return false;
+  }
+  GfGameManager::setGmkTutorialSequenceOK(false);
+  GfGameManager::setGmkTutorialMoverOK(false);
+  return true;
+}
+
+GfPlayComGmkCameraSeq *GfPlayComGmkCameraSeq::create(mm::mtl::IntrusivePtr<fw::Camera> camera) {
+#line 2139
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) GfPlayComGmkCameraSeq(camera);
 }
 
 int GfPlayComQuestCompleteUI::s_active;

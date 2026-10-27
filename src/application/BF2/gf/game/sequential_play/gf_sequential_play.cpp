@@ -1,5 +1,6 @@
 #include "gf/game/sequential_play/gf_sequential_play.h"
 
+#include "fw/fw_camera.h"
 #include "gf/field/gf_field_map_gimmick.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_scene.h"
@@ -161,6 +162,8 @@ void GfSequentialPlay::addWarp(GF_OBJ_HANDLE *handle) { addCommand(GfPlayComFiel
 void GfSequentialPlay::addWaitPlayerToStartGmkTuto() { addCommand(GfPlayComWaitPlayerToStartGmkTuto::create()); }
 
 void GfSequentialPlay::addGmkTutorial(const char *name, u32 tutorial) { addCommand(GfPlayComGmkTutorialSeq::create(name, tutorial)); }
+
+void GfSequentialPlay::addWaitGmkCameraEnd(mm::mtl::IntrusivePtr<fw::Camera> camera) { addCommand(GfPlayComGmkCameraSeq::create(camera)); }
 
 void GfSequentialPlay::addPlayerDead(GfPlayerDead dead) { addCommand(GfPlayComPlayerDead::create(dead)); }
 
