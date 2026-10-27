@@ -11,6 +11,7 @@
 namespace gf {
 
 class GfInitParamDriver;
+struct SDataIdea;
 
 constexpr u32 DRIVER_LEVEL_MAX = 99;
 constexpr u32 DRIVER_ARTS_LEVEL_MAX = 5;
@@ -118,6 +119,7 @@ static_assert(sizeof(SDataDriver) == 0x5a0, "");
 class GfDataDriver {
 public:
   static SDataDriver *getSDataDriver(u32 driver);
+  static SDataIdea *getSDataIdea(u32 driver);
   static const char *getName(u32 driver);
   static bool getName(u8 *&bdat, u32 &textId, u32 driver);
   static int getRuleSetBlade(u32 driver, u32 blade, int slot);

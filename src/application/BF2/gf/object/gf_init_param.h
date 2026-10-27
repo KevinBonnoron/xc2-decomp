@@ -10,16 +10,24 @@ struct CBdatWrapper;
 
 namespace gf {
 
+struct GF_OBJ_HANDLE;
+
 enum CharacterType {
   CHARACTER_TYPE_PARTY = 1,
   CHARACTER_TYPE_EVENT = 2,
   CHARACTER_TYPE_EVENT_CS = 3,
+  CHARACTER_TYPE_UNKNOWN_4 = 4,
   CHARACTER_TYPE_ENEMY_BLADE = 5,
   CHARACTER_TYPE_EVENT_DRIVER = 6,
   CHARACTER_TYPE_EVENT_BLADE = 7,
   CHARACTER_TYPE_TRINITY_BLADE = 8,
+  CHARACTER_TYPE_UNKNOWN_10 = 10,
   CHARACTER_TYPE_ACT_VIEWER_EVENT = 11,
   CHARACTER_TYPE_EVENT_NPC = 12,
+};
+
+enum VIEWCAM {
+  VIEWCAM_UNKNOWN_0 = 0,
 };
 
 class GfInitParam {
@@ -44,12 +52,18 @@ public:
   u32 m_bladeID;
   u8 _14[0x18 - 0x14];
   const CBdatWrapper *unknown18; // Inferred role: bdat; original member name unknown.
-  u8 _20[0x40 - 0x20];
-  u32 unknown40; // Inferred role: layer; original member name unknown.
-  u16 unknown44; // Inferred role: priority; original member name unknown.
+  u32 unknown20;                 // Inferred role: party member; original member name unknown.
+  VIEWCAM unknown24;             // Inferred role: view camera; original member name unknown.
+  u8 _28[0x38 - 0x28];
+  GF_OBJ_HANDLE *unknown38; // Inferred role: owner handle; original member name unknown.
+  u32 unknown40;            // Inferred role: layer; original member name unknown.
+  u16 unknown44;            // Inferred role: priority; original member name unknown.
   u8 _46[0x48 - 0x46];
   u32 unknown48; // Inferred role: gimmick type; original member name unknown.
-  u8 _4c[0x83 - 0x4c];
+  f32 unknown4c; // Inferred role: scale; original member name unknown.
+  u8 _50[0x81 - 0x50];
+  bool unknown81; // Inferred role: flag; original member name unknown.
+  bool unknown82; // Inferred role: flag; original member name unknown.
   bool unknown83; // Inferred role: death blow weapon; original member name unknown.
   u8 _84[0x90 - 0x84];
 };
@@ -57,7 +71,13 @@ public:
 static_assert(offsetof(GfInitParam, unknown08) == 0x08, "");
 static_assert(offsetof(GfInitParam, m_bladeID) == 0x10, "");
 static_assert(offsetof(GfInitParam, unknown18) == 0x18, "");
+static_assert(offsetof(GfInitParam, unknown20) == 0x20, "");
+static_assert(offsetof(GfInitParam, unknown24) == 0x24, "");
+static_assert(offsetof(GfInitParam, unknown38) == 0x38, "");
 static_assert(offsetof(GfInitParam, unknown40) == 0x40, "");
+static_assert(offsetof(GfInitParam, unknown4c) == 0x4c, "");
+static_assert(offsetof(GfInitParam, unknown81) == 0x81, "");
+static_assert(offsetof(GfInitParam, unknown82) == 0x82, "");
 static_assert(offsetof(GfInitParam, unknown44) == 0x44, "");
 static_assert(offsetof(GfInitParam, unknown48) == 0x48, "");
 static_assert(offsetof(GfInitParam, unknown83) == 0x83, "");
@@ -76,25 +96,72 @@ public:
 
   static const u32 WEAPON_MAX = 32;
 
+  bool isAllWeapon() const override;
+
   u8 _90[0x98 - 0x90];
   mm::mtl::FixedVector<Weapon, WEAPON_MAX> unknown98; // Inferred role: weapons; original member name unknown.
+  u8 _1a0[0x1a1 - 0x1a0];
+  bool m_allWeapon;
+  u8 _1a2[0x1a8 - 0x1a2];
 };
 
 static_assert(sizeof(GfInitParamDriver::Weapon) == 0x08, "");
 static_assert(offsetof(GfInitParamDriver, unknown98) == 0x98, "");
+static_assert(offsetof(GfInitParamDriver, m_allWeapon) == 0x1a1, "");
+static_assert(sizeof(GfInitParamDriver) == 0x1a8, "");
+
+class GfInitParamBlade : public GfInitParam {
+public:
+  bool isAllWeapon() const override;
+  void setupForParty(u32 blade, int slot, u32 driver, GF_OBJ_HANDLE *owner, bool isVirtual);
+  void setupForEvent(u32 blade, bool isFirst);
+  void setupForEventWithWeapon(u32 blade);
+  void setupForActViewer(u32 blade, u32 weapon);
+  void setupForActViewerEvent(u32 blade, u32 weapon);
+  void setupForActViewerUI(u32 blade, u32 weapon);
+  void setupForUi(u32 blade, VIEWCAM camera);
+
+  bool unknown90; // Inferred role: party flag; original member name unknown.
+  bool unknown91; // Inferred role: flag; original member name unknown.
+  u8 _92[0x94 - 0x92];
+  u32 unknown94; // Inferred role: weapon; original member name unknown.
+  int unknown98; // Inferred role: party slot; original member name unknown.
+  bool m_allWeapon;
+  u8 _9d[0xa4 - 0x9d];
+  bool unknowna4; // Inferred role: flag; original member name unknown.
+};
+
+static_assert(offsetof(GfInitParamBlade, unknown90) == 0x90, "");
+static_assert(offsetof(GfInitParamBlade, unknown91) == 0x91, "");
+static_assert(offsetof(GfInitParamBlade, unknown94) == 0x94, "");
+static_assert(offsetof(GfInitParamBlade, unknown98) == 0x98, "");
+static_assert(offsetof(GfInitParamBlade, m_allWeapon) == 0x9c, "");
+static_assert(offsetof(GfInitParamBlade, unknowna4) == 0xa4, "");
 
 class GfInitParamEnemy : public GfInitParam {
 public:
-  u32 getBladeID() const override { return m_bladeID; }
-  u32 getEnArrangeID() const override { return m_enArrangeID; }
+  u32 getBladeID() const override;
+  u32 getEnArrangeID() const override;
+  void setupForEvent(u32 enArrange);
+  void setupEnArrangeId(u32 enArrange);
+  void setupBlade(const GfInitParamEnemy &enemy);
+  void setupForUi(u32 enArrange, VIEWCAM camera);
+  void setupForActViewer(u32 resource, const CBdatWrapper *bdat);
+  void setupForActViewerEvent(u32 resource, const CBdatWrapper *bdat);
 
-  u8 _90[0x9c - 0x90];
+  u8 _90[0x98 - 0x90];
+  u32 unknown98; // Inferred role: en param id; original member name unknown.
   u32 m_enArrangeID;
   u32 m_bladeID;
+  u32 unknowna4; // Inferred role: resource id; original member name unknown.
+  u32 unknowna8; // Inferred role: blade flag; original member name unknown.
 };
 
+static_assert(offsetof(GfInitParamEnemy, unknown98) == 0x98, "");
 static_assert(offsetof(GfInitParamEnemy, m_enArrangeID) == 0x9c, "");
 static_assert(offsetof(GfInitParamEnemy, m_bladeID) == 0xa0, "");
+static_assert(offsetof(GfInitParamEnemy, unknowna4) == 0xa4, "");
+static_assert(offsetof(GfInitParamEnemy, unknowna8) == 0xa8, "");
 
 class GfInitParamNpc : public GfInitParam {};
 

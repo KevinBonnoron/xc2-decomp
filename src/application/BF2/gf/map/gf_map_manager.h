@@ -17,7 +17,9 @@ class DynamicWindResource;
 } // namespace fw
 
 namespace ml {
+class DrMdlObj;
 class ScnObj;
+class ScnObjModel;
 } // namespace ml
 
 namespace mm {
@@ -33,6 +35,8 @@ class GfAssetResource;
 
 const GfFileIdx MAP_FILE_IDX_COLLISION = static_cast<GfFileIdx>(1);
 const GfFileIdx MAP_FILE_IDX_UNKNOWN_2 = static_cast<GfFileIdx>(2);
+const GfFileIdx MAP_FILE_IDX_UNKNOWN_4 = static_cast<GfFileIdx>(4);
+const GfFileIdx MAP_FILE_IDX_UNKNOWN_5 = static_cast<GfFileIdx>(5);
 const GfFileIdx MAP_FILE_IDX_UNKNOWN_7 = static_cast<GfFileIdx>(7);
 const GfFileIdx MAP_FILE_IDX_UNKNOWN_8 = static_cast<GfFileIdx>(8);
 
@@ -70,6 +74,21 @@ public:
 
   fw::ColiObject *unknown00; // Inferred role: coli object; original member name unknown.
 };
+
+class MapMdl {
+public:
+  MapMdl() : unknown00(nullptr) {}
+  ~MapMdl();
+  void createLod(GF_ASSET_HANDLE *handle);
+  void createMpf(GF_ASSET_HANDLE *handle);
+  void destroy();
+  ml::ScnObjModel *getModel() const;
+  ml::DrMdlObj *getDrModel() const;
+
+  ml::ScnObjModel *unknown00; // Inferred role: model; original member name unknown.
+};
+
+static_assert(sizeof(MapMdl) == 0x8, "");
 
 class MapGIBL {
 public:

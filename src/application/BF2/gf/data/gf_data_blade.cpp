@@ -476,7 +476,7 @@ u32 GfDataBlade::getBladeWeaponWithChip(u32 blade, u32 chip) {
   return weaponRank < chipRank ? weapon - weaponRank + chipRank : 0;
 }
 
-u16 GfDataBlade::getBladeWeapon(u32 blade) {
+u32 GfDataBlade::getBladeWeapon(u32 blade) {
   if (blade == 0) {
     return 0;
   }

@@ -6,7 +6,13 @@
 #include "gf/gf_manager.h"
 #include "gf/map/gf_map_manager.h"
 #include "ml/scn.h"
+#include "ml/scn_obj_model.h"
 #include "mm_mtl/reference_object.h"
+#include "scn/scn_obj_model_dr_sys.h"
+
+namespace ml {
+class DrMdlObj;
+} // namespace ml
 
 namespace gf {
 struct GF_ASSET_HANDLE;
@@ -41,6 +47,42 @@ void MapColi::create(GF_ASSET_HANDLE *handle) {
 }
 
 void MapColi::destroy() { mm::mtl::safeRelease(unknown00); }
+
+namespace {
+
+// Original name unknown: common body of MapMdl::createLod and MapMdl::createMpf.
+void unknown001(MapMdl &map, GF_ASSET_HANDLE *handle, GfFileIdx index) {
+  if (map.unknown00 == nullptr) {
+    GfAssetResource *resource = GfAssetManager::getResource(handle, index, ASSET_TYPE_BASE);
+    if (resource != nullptr) {
+      map.unknown00 = GfManager::getSetupParam().unknown00->createMdl(resource->getAssetData(), resource->getAssetName(), 0);
+    }
+  }
+}
+
+} // namespace
+
+MapMdl::~MapMdl() {}
+
+void MapMdl::createLod(GF_ASSET_HANDLE *handle) { unknown001(*this, handle, MAP_FILE_IDX_UNKNOWN_4); }
+
+void MapMdl::createMpf(GF_ASSET_HANDLE *handle) { unknown001(*this, handle, MAP_FILE_IDX_UNKNOWN_5); }
+
+void MapMdl::destroy() {
+  if (unknown00 != nullptr) {
+    GfManager::getSetupParam().unknown00->releaseItem(unknown00);
+    unknown00 = nullptr;
+  }
+}
+
+ml::ScnObjModel *MapMdl::getModel() const { return unknown00; }
+
+ml::DrMdlObj *MapMdl::getDrModel() const {
+  if (unknown00 != nullptr) {
+    return static_cast<ml::ScnObjModelDrSys *>(unknown00)->unknown3d8;
+  }
+  return nullptr;
+}
 
 MapGIBL::~MapGIBL() {}
 

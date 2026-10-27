@@ -376,7 +376,7 @@ u32 GfMenuObjUtil::getBladeWeaponTypeIconID(u32 blade) {
   return ICON_WEAPON_TYPE_NONE;
 }
 
-u32 GfMenuObjUtil::getBladeAttributeIconID(u32 blade) {
+u16 GfMenuObjUtil::getBladeAttributeIconID(u32 blade) {
   if (GfDataBlade::isValid(blade)) {
     return GfDataBlade::getAttribute(blade) + ICON_ATTRIBUTE_BASE;
   }
@@ -390,7 +390,7 @@ u16 GfMenuObjUtil::getBladeCompatibilityIconID(u32 driver, u32 blade) {
   return ICON_TRUST_RANK_BASE;
 }
 
-u32 GfMenuObjUtil::getBladeAttributeID(u32 blade) {
+u16 GfMenuObjUtil::getBladeAttributeID(u32 blade) {
   if (GfDataBlade::isValid(blade)) {
     return GfDataBlade::getSDataBlade(blade)->unknown823;
   }
@@ -562,7 +562,7 @@ bool GfMenuObjUtil::getMenuFullOpenFlag() { return false; }
 
 bool GfMenuObjUtil::isCustomEnableBlade(u32 blade) { return GfDataUtil::getScenarioFlag() > SCENARIO_CUSTOM_ENABLE; }
 
-u32 GfMenuObjUtil::getBladeRareIconID(u32 blade) {
+u16 GfMenuObjUtil::getBladeRareIconID(u32 blade) {
   u32 icon = ICON_WEAPON_TYPE_BASE - 1;
   if (GfDataBlade::isValid(blade)) {
     icon += GfDataBlade::isRareBlade(blade);

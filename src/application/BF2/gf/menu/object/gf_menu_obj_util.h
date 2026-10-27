@@ -12,6 +12,7 @@ struct Vec3;
 
 namespace gf {
 
+class GfMenuBladeList;
 class GfMenuCallContext;
 struct QuestID;
 struct GF_OBJ_HANDLE;
@@ -71,13 +72,13 @@ public:
   static u16 getBladeFaceIconID(GF_OBJ_HANDLE *handle);
   static u16 getBladeFaceIconID(u32 blade);
   static u32 getBladeWeaponTypeIconID(u32 blade);
-  static u32 getBladeAttributeIconID(u32 blade);
-  static u32 getBladeRareIconID(u32 blade);
+  static u16 getBladeAttributeIconID(u32 blade);
+  static u16 getBladeRareIconID(u32 blade);
   static bool isEnemyBoss(GF_OBJ_HANDLE *handle);
   static bool isEnemyNamed(GF_OBJ_HANDLE *handle);
   static void setColDefault(u32 handle);
   static u16 getBladeCompatibilityIconID(u32 driver, u32 blade);
-  static u32 getBladeAttributeID(u32 blade);
+  static u16 getBladeAttributeID(u32 blade);
   static u32 getBladeRank(u32 blade);
   static bool isScenarioBlade(u32 blade);
   static u32 getBladeRarity(u32 blade);
@@ -115,6 +116,12 @@ public:
   static bool getScreenPos(mm::Vec3 &screenPos, const mm::Vec3 &position);
   static bool getMenuFullOpenFlag();
   static bool isCustomEnableBlade(u32 blade);
+  static int convMenuDriverID(u32 driver);
+  static int convMenuBladeID(u32 blade);
+  static int getDriverClassBuffRatio(u32 driverClass, u32 index);
+  static u8 getDriverClassBuffLv(u32 driverClass, u32 index);
+  static bool isBladeSelectable(u32 blade, const GfMenuBladeList *list);
+  static bool isBladeReleasable(u32 blade, const GfMenuBladeList *list);
 };
 
 } // namespace gf

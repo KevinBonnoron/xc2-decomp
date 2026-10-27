@@ -350,7 +350,7 @@ public:
   static u32 getEndActCommonBlade();
   static bool isSetBlade(u32 blade);
   static u32 getBladeWeaponWithChip(u32 blade, u32 chip);
-  static u16 getBladeWeapon(u32 blade);
+  static u32 getBladeWeapon(u32 blade);
   static u32 getBladeWeaponByRank(u32 blade, u32 chip);
   static const char *getResourceNameModel(u32 blade);
   static const char *getResourceNameMotion(u32 blade);
