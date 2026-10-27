@@ -35,6 +35,55 @@ ml::CriticalSection &IDColiManager::getCriticalSection() {
   return sect;
 }
 
+IDColiManager::~IDColiManager() {
+  release();
+  if (m_gblIdTbl != nullptr) {
+    mtl::MemManager::deallocate(m_gblIdTbl, 0, false);
+    m_gblIdTbl = nullptr;
+  }
+  if (unknownd8[0] != nullptr) {
+    delete unknownd8[0];
+    unknownd8[0] = nullptr;
+  }
+  if (unknownd8[1] != nullptr) {
+    delete unknownd8[1];
+    unknownd8[1] = nullptr;
+  }
+  if (unknownf4.isValid()) {
+    mtl::MemManager::erase(unknownf4);
+    unknownf4 = mtl::ALLOC_HANDLE();
+  }
+}
+
+IDColiObj *IDColiManager::createColiGrand(const void *binary) {
+  ml::CS cs(getCriticalSection());
+  IDColiObjGrand *object = new (unknownf4) IDColiObjGrand();
+  object->createGrand(unknownf4, binary);
+  unknown48[0][s_nStkIdx].unknown001(object);
+  return object;
+}
+
+IDColiObj *IDColiManager::createColiCharacter() {
+  ml::CS cs(getCriticalSection());
+  IDColiObjCharCheck *object = new (unknownf4) IDColiObjCharCheck(unknownd8[0]);
+  unknown48[1][s_nStkIdx].unknown001(object);
+  return object;
+}
+
+IDColiObj *IDColiManager::createColiPhantom() {
+  ml::CS cs(getCriticalSection());
+  IDColiObjPhantomCheck *object = new (unknownf4) IDColiObjPhantomCheck(unknownd8[1]);
+  unknown48[2][s_nStkIdx].unknown001(object);
+  return object;
+}
+
+IDColiObj *IDColiManager::createColiGrdChar() {
+  ml::CS cs(getCriticalSection());
+  IDColiObjGrdChar *object = new (unknownf4) IDColiObjGrdChar();
+  unknown48[3][s_nStkIdx].unknown001(object);
+  return object;
+}
+
 bool IDColiManager::getGrandAABB(mm::Vec3 &max, mm::Vec3 &min) const {
   max = mm::Vec3(-10000.0f, -10000.0f, -10000.0f);
   min = mm::Vec3(10000.0f, 10000.0f, 10000.0f);

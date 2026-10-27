@@ -242,13 +242,7 @@ IDColiObjData::IDColiObjData(IDColiTreeTop *tree) : IDColiObjBase(tree) {
 }
 
 void IDColiObjData::workNodeClear() {
-  if (unknown1c & 0x200) {
-    unknown1c &= ~0x200;
-    if (unknown200 != nullptr) {
-      unknown200->release();
-    }
-    unknown200 = nullptr;
-  }
+  unknown021();
 
   if (unknown1e0 != nullptr) {
     mtl::MemManager::deallocate(unknown1e0, 0, false);
@@ -258,5 +252,49 @@ void IDColiObjData::workNodeClear() {
   unknown1f8 = 0;
   unknown1fc = 0;
 }
+
+IDColiObjChar::~IDColiObjChar() { workNodeClear(); }
+
+void IDColiObjChar::release() {
+  unknown48 = nullptr;
+  setDeleteCall();
+  unknown021();
+}
+
+void IDColiObjChar::update() {
+  if (!(unknown1c & 0x80)) {
+    unknown210.x = 0.0f;
+    unknown210.y = 0.0f;
+    unknown210.z = 0.0f;
+    sizeUpdate();
+  }
+}
+
+void IDColiObjChar::moveUpdate() {}
+
+void IDColiObjChar::sizeUpdate() {
+  if (unknown1fc != 0) {
+    primUpdate();
+    return;
+  }
+
+  void *prim = unknownd0;
+  IDColiPrimitive::s_CallPrimSet[unknownc0](prim, unknownc4, unknown70, m_size);
+  unknown50 = mm::Vec3(-100000.0f, -100000.0f, -100000.0f);
+  unknown60 = mm::Vec3(100000.0f, 100000.0f, 100000.0f);
+  IDColiPrimitive::s_CallAaBb[unknownc4](unknown50, unknown60, unknownd0);
+}
+
+bool IDColiObjChar::SweepAndPruneUpdate() {
+  if (unknown1c & 0x80) {
+    return false;
+  }
+
+  bool isUpdated = sweepUpdate(IdSweepAxisType_UNKNOWN_0, IdVectorAxisType_UNKNOWN_0) | sweepUpdate(IdSweepAxisType_UNKNOWN_1, IdVectorAxisType_UNKNOWN_2);
+  unknown1c |= 0x1000;
+  return isUpdated;
+}
+
+void IDColiObjChar::consistentUpdate() { updateBaseTree(); }
 
 } // namespace idcoli

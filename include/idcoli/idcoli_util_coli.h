@@ -136,6 +136,8 @@ struct CLRayWork {
 };
 
 struct IDColiInput {
+  IDColiInput() {}
+
   const CLBoxWork *getBox() const { return &box; }
 
   mm::Vec3 unknown00; // Inferred role: max; original member name unknown.
@@ -175,6 +177,10 @@ public:
   static void getBox(IDColiInput &input, const CLBoxWork &box);
   static void getSphere(IDColiInput &input, const mm::Vec3 &center, f32 radius, bool isTree);
   static void getSphere(IDColiInput &input, const IDColiInput &source, const IDCmfPosData *posData, bool isTree);
+  static void getLine(IDColiInput &input, const IDColiInput &source, const IDCmfPosData *posData, bool isTree);
+  static void getRay(IDColiInput &input, const IDColiInput &source, const IDCmfPosData *posData, bool isTree);
+  static void getCapsule(IDColiInput &input, const IDColiInput &source, const IDCmfPosData *posData, bool isTree);
+  static void getOBB(IDColiInput &input, const mm::Vec3 &max, const mm::Vec3 &min, const IDCmfPosData *posData);
 };
 
 class IDColiUtilColiResult {

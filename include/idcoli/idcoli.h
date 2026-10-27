@@ -2,14 +2,13 @@
 #include <math.h>
 #include <stddef.h>
 
+#include "idcoli/idcoli_grand_mesh.h"
+#include "idcoli/idcoli_mem_handle_allocator.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/singleton.h"
+#include "mtl/alloc_handle.h"
 #include "types.h"
-
-namespace mtl {
-class ALLOC_HANDLE;
-} // namespace mtl
 
 namespace ml {
 class CriticalSection;
@@ -19,13 +18,14 @@ class WinProc;
 
 namespace idcoli {
 
-class IDColiResult;
-struct IDColiInput;
-struct CLSphereWork;
-struct CLCapsuleWork;
-struct CLLineWork;
 enum ColiState : int;
 enum ColiAtrr : int;
+class IDColiResult;
+struct CLBoxWork;
+struct CLCapsuleWork;
+struct CLLineWork;
+struct CLSphereWork;
+struct IDColiInput;
 
 enum ObjType {
   OBJ_TYPE_CHARACTER = 1,
@@ -44,6 +44,20 @@ enum ShapeType : unsigned int {
 
 template <typename T> struct ColiLinkList {
   ColiLinkList() : m_head(nullptr), m_tail(nullptr) {}
+
+  // Inferred helper: appends an object to the list; original name unknown.
+  void unknown001(T *object) {
+    if (m_tail == nullptr) {
+      m_head = object;
+      m_tail = object;
+      object->unknown08 = nullptr;
+    } else {
+      m_tail->unknown10 = object;
+      object->unknown08 = m_tail;
+      m_tail = object;
+    }
+    object->unknown10 = nullptr;
+  }
 
   T *m_head;
   T *m_tail;
@@ -181,6 +195,12 @@ public:
   static void createLine(CLLineWork &line, const mm::Vec3 &start, const mm::Vec3 &end);
   static void createCapsule(CLCapsuleWork &capsule, const IDColiInput &input);
   static void createBaseSphere(void *data, IDColiBaseType &type, const mm::Mat44 &matrix, const mm::Vec3 &size);
+  static void calcBaseBoxSetup(CLBoxWork *box, const mm::Mat44 &matrix, const mm::Vec3 &size);
+  static void createBaseBox(void *data, IDColiBaseType &type, const mm::Mat44 &matrix, const mm::Vec3 &size);
+  static void createBaseCapsule(void *data, IDColiBaseType &type, const mm::Mat44 &matrix, const mm::Vec3 &size);
+  static void createBaseCharacter(void *data, IDColiBaseType &type, const mm::Mat44 &matrix, const mm::Vec3 &size);
+  static void createBasePoli(void *data, IDColiBaseType &type, const mm::Mat44 &matrix, const mm::Vec3 &size);
+  static void createSubBaseCharacter(void *data, IDColiBaseType &type, const mm::Mat44 &matrix, const mm::Vec3 &size, bool isSub);
   static void (*const s_CallPrimSet[5])(void *, IDColiBaseType &, const mm::Mat44 &, const mm::Vec3 &);
   static void (*const s_CallAaBb[5])(mm::Vec3 &, mm::Vec3 &, const void *);
 };
@@ -188,7 +208,10 @@ public:
 class IDColiObjBase : public IDColiObj {
 public:
   IDColiObjBase(IDColiTreeTop *tree);
-  ~IDColiObjBase() override {}
+  ~IDColiObjBase() override {
+    // A body that generates no code still makes the destructor keep its vtable pointer store, which the game's destructors show.
+    (void)0;
+  }
   void sweepPush(IDColiObjBase *object);
   void sweepPop();
   bool sweepUpdate(IdSweepAxisType sweepAxis, IdVectorAxisType vectorAxis);
@@ -270,6 +293,12 @@ struct unknown008 {
 static_assert(offsetof(unknown008, unknownb0) == 0xb0, "");
 static_assert(sizeof(unknown008) == 0xc0, "");
 
+struct CHCLBaseData {
+  mm::Vec3 unknown00; // Inferred role: size; original member name unknown.
+};
+
+struct CHCLBaseInfo;
+
 class IDColiObjData : public IDColiObjBase {
 public:
   IDColiObjData(IDColiTreeTop *tree);
@@ -279,6 +308,25 @@ public:
   int getBoneIdx(const char *name) const;
   void setBoneMatrix(int index, const mm::Mat44 &matrix);
   mm::Mat44 &getBoneMatrix(int index);
+  bool nodeUpdate();
+  void primUpdate();
+  void calcNodeMatrix(mm::Mat44 &result, const mm::Mat44 &parent, const CHCLBaseData *data, const CHCLBaseInfo *info);
+  void primset_base(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info);
+  void primset_subbase(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info);
+  void primset_capsule(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info);
+  void primset_box(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info);
+  void primset_poli(void *work, IDColiBaseType &type, const CHCLBaseData *data, const CHCLBaseInfo *info);
+
+  // Inferred helper: releases the ground character object created from the binary; original name unknown.
+  void unknown021() {
+    if (unknown1c & 0x200) {
+      unknown1c &= ~0x200;
+      if (unknown200 != nullptr) {
+        unknown200->release();
+      }
+      unknown200 = nullptr;
+    }
+  }
 
   const unknown002 *unknown1d0; // Inferred role: binary; original member name unknown.
   const unknown001 *unknown1d8; // Inferred role: bone tbl; original member name unknown.
@@ -301,14 +349,25 @@ static_assert(offsetof(IDColiObjData, unknown200) == 0x200, "");
 
 class IDColiObjChar : public IDColiObjData {
 public:
-  u8 _208[0x220 - 0x208];
-  f32 unknown220; // Inferred role: adsorption; original member name unknown.
+  ~IDColiObjChar() override;
+  void release() override;
+  void sizeUpdate() override;
+  void update() override;
+  bool SweepAndPruneUpdate() override;
+  void consistentUpdate() override;
+  virtual void moveUpdate();
+
+  u8 _208[0x210 - 0x208];
+  mm::Vec3 unknown210; // Inferred role: unknown; original member name unknown.
+  f32 unknown220;      // Inferred role: adsorption; original member name unknown.
 };
 
+static_assert(offsetof(IDColiObjChar, unknown210) == 0x210, "");
 static_assert(offsetof(IDColiObjChar, unknown220) == 0x220, "");
 
 class IDColiObjCharCheck : public IDColiObjChar {
 public:
+  IDColiObjCharCheck(IDColiTreeTop *tree);
   bool testCheckLine(IDColiResult &result, const IDColiInput &input);
   bool testCheckRay(IDColiResult &result, const IDColiInput &input);
   bool testCheckSphere(IDColiResult &result, const IDColiInput &input);
@@ -328,6 +387,7 @@ public:
 
 class IDColiObjPhantomCheck : public IDColiObjBase {
 public:
+  IDColiObjPhantomCheck(IDColiTreeTop *tree);
   u32 testResultLine(IDColiResult &result, const IDColiInput &input);
   u32 testResultRay(IDColiResult &result, const IDColiInput &input);
   u32 testResultSphere(IDColiResult &result, const IDColiInput &input);
@@ -396,6 +456,7 @@ public:
   IDColiGrdMoveObj();
   void setMat(const mm::Mat44 &matrix);
   void treeUpdate(IDColiTreeTop *tree, int index);
+  void update();
 
   mm::Mat44 unknown00[3];             // Inferred role: matrices (two by stack index, then previous); original member name unknown.
   mm::Mat44 unknownc0;                // Inferred role: inverse matrix work; original member name unknown.
@@ -428,27 +489,60 @@ struct unknown014 {
 
 static_assert(sizeof(unknown014) == 0xc, "");
 
-struct IDColiGrandWork {
-  IDColiGrandWork();
+struct IDCmfPosInfo {
+  u16 unknown00; // Inferred role: index of the parts record; original member name unknown.
+  u16 unknown02; // Inferred role: global id; original member name unknown.
+};
 
-  const u8 *unknown00; // Inferred role: binary; original member name unknown.
-  u8 _08[0x28 - 0x08];
+static_assert(sizeof(IDCmfPosInfo) == 4, "");
+
+struct unknown021 {
+  u8 _00[0x0c];
+  u32 unknown0c; // Inferred role: tree cell object index; original member name unknown.
+  u8 _10[0x14 - 0x10];
+};
+
+static_assert(sizeof(unknown021) == 0x14, "");
+
+struct wrkIDCmfWork {
+  const u8 *unknown00;         // Inferred role: binary; original member name unknown.
+  const unknown021 *unknown08; // Inferred role: tree cell object table; original member name unknown.
+  u8 _10[0x18 - 0x10];
+  void *unknown18;                    // Inferred role: first table of pointers into the binary; original member name unknown.
+  void *unknown20;                    // Inferred role: second table of pointers into the binary; original member name unknown.
   const unknown014 *const *unknown28; // Inferred role: vector tables; original member name unknown.
-  u8 _30[0x70 - 0x30];
+  const IDCmfPosData *unknown30;      // Inferred role: position data table; original member name unknown.
+  const IDCmfPosInfo *unknown38;      // Inferred role: position info table; original member name unknown.
+  u8 _40[0x48 - 0x40];
+  u32 *unknown48; // Inferred role: first table copied from the binary; original member name unknown.
+  u32 *unknown50; // Inferred role: second table copied from the binary; original member name unknown.
+  u32 *unknown58; // Inferred role: third table copied from the binary; original member name unknown.
+  u8 _60[0x70 - 0x60];
   IDColiGrdMoveObj *unknown70; // Inferred role: move objs; original member name unknown.
   int unknown78;               // Inferred role: move max; original member name unknown.
   u8 _7c[0x90 - 0x7c];
-  IDColiTreeTop *unknown90; // Inferred role: tree top of the first move object bank; original member name unknown.
-  IDColiTreeTop *unknown98; // Inferred role: tree top of the second move object bank; original member name unknown.
-  int unknowna0;            // Inferred role: current move object bank; original member name unknown.
+  IDColiTreeTop *unknown90[2]; // Inferred role: tree tops of the two move object banks; original member name unknown.
+  int unknowna0;               // Inferred role: current move object bank; original member name unknown.
   u8 _a4[0xa8 - 0xa4];
   void *unknowna8; // Inferred role: allocated buffer; original member name unknown.
 };
 
-static_assert(offsetof(IDColiGrandWork, unknown28) == 0x28, "");
-static_assert(offsetof(IDColiGrandWork, unknown70) == 0x70, "");
-static_assert(offsetof(IDColiGrandWork, unknown90) == 0x90, "");
-static_assert(offsetof(IDColiGrandWork, unknowna8) == 0xa8, "");
+static_assert(offsetof(wrkIDCmfWork, unknown08) == 0x8, "");
+static_assert(offsetof(wrkIDCmfWork, unknown18) == 0x18, "");
+static_assert(offsetof(wrkIDCmfWork, unknown28) == 0x28, "");
+static_assert(offsetof(wrkIDCmfWork, unknown30) == 0x30, "");
+static_assert(offsetof(wrkIDCmfWork, unknown38) == 0x38, "");
+static_assert(offsetof(wrkIDCmfWork, unknown48) == 0x48, "");
+static_assert(offsetof(wrkIDCmfWork, unknown58) == 0x58, "");
+static_assert(offsetof(wrkIDCmfWork, unknown70) == 0x70, "");
+static_assert(offsetof(wrkIDCmfWork, unknown90) == 0x90, "");
+static_assert(offsetof(wrkIDCmfWork, unknowna8) == 0xa8, "");
+static_assert(sizeof(wrkIDCmfWork) == 0xb0, "");
+
+struct IDColiGrandWork : wrkIDCmfWork {
+  IDColiGrandWork();
+};
+
 static_assert(sizeof(IDColiGrandWork) == 0xb0, "");
 
 struct unknown017 {
@@ -498,23 +592,69 @@ struct IDCmfPoliData {
 
 static_assert(offsetof(IDCmfPoliData, unknown04) == 4, "");
 
-class IDColiGrandTree {
+class IDColiGrandTree : public IDColiGrandMesh {
 public:
   IDColiGrandTree();
   bool isAaBbToAaBb(const float *max, const float *min);
+  bool isLineAaBb(const float *max, const float *min);
+  bool isRangeAaBb(const mm::Vec3 *max, const mm::Vec3 *min);
+  bool treeHitEnd(u32 index);
+  bool treeHitDef(u32 index);
+  bool instLineHit(u32 index);
+  bool instLineHitParts(const IDCmfPosData *posData, const IDCmfPosInfo *posInfo);
+  bool instRayHit(u32 index);
+  bool instRayHitParts(const IDCmfPosData *posData, const IDCmfPosInfo *posInfo);
+  bool instSphereHit(u32 index);
+  bool instSphereHitParts(const IDCmfPosData *posData, const IDCmfPosInfo *posInfo);
+  bool instCapsuleHit(u32 index);
+  bool instCapsuleHitParts(const IDCmfPosData *posData, const IDCmfPosInfo *posInfo);
+  bool instAaBbHit(u32 index);
+  bool instAaBbHitParts(const IDCmfPosData *posData, const IDCmfPosInfo *posInfo);
 
-  IDColiGrandWork *unknown00; // Inferred role: work; original member name unknown.
-  u8 _08[0x10 - 0x08];
-  IDColiInput *unknown10; // Inferred role: current input; original member name unknown.
+  bool (IDColiGrandTree::*unknown90)(u32);                          // Inferred role: hit test of a tree cell object; original member name unknown.
+  bool (IDColiGrandTree::*unknowna0)(u32);                          // Inferred role: hit test of a moved instance; original member name unknown.
+  bool (IDColiGrandTree::*unknownb0)(const float *, const float *); // Inferred role: bounds test; original member name unknown.
 };
 
-static_assert(offsetof(IDColiGrandTree, unknown10) == 0x10, "");
+static_assert(offsetof(IDColiGrandTree, unknown90) == 0x90, "");
+static_assert(offsetof(IDColiGrandTree, unknowna0) == 0xa0, "");
+static_assert(offsetof(IDColiGrandTree, unknownb0) == 0xb0, "");
+static_assert(sizeof(IDColiGrandTree) == 0xc0, "");
+
+typedef bool (IDColiGrandTree::*unknown020)(const IDCmfPosData *, const IDCmfPosInfo *); // Inferred role: instance hit test with parts; original name unknown.
+
+class IDColiGrandObj : public IDColiGrandTree {
+public:
+  IDColiGrandObj(wrkIDCmfWork *work);
+  ~IDColiGrandObj();
+  bool testLine(IDColiResult &result, const IDColiInput &input);
+  bool testLine(IDColiResult &result, const IDColiInput &input, const IDCmfPosData *posData);
+  bool testRay(IDColiResult &result, const IDColiInput &input);
+  bool testRay(IDColiResult &result, const IDColiInput &input, const IDCmfPosData *posData);
+  bool testSphere(IDColiResult &result, const IDColiInput &input, bool isWall);
+  bool testSphere(IDColiResult &result, const IDColiInput &input, bool isWall, const IDCmfPosData *posData);
+  bool testCapsule(IDColiResult &result, const IDColiInput &input, bool isWall);
+  bool testCapsule(IDColiResult &result, const IDColiInput &input, bool isWall, const IDCmfPosData *posData);
+  bool testMoveSphere(IDColiResult &result, const IDColiInput &input, bool isStop);
+  bool testMoveCapsule(IDColiResult &result, const IDColiInput &input, bool isStop);
+  bool testAaBb(IDColiResult &result, const IDColiInput &input);
+  bool getAaBbPoliAaBb(IDColiResult &result, const IDColiInput &input);
+  bool coliCallCheck(unknown020 function);
+  bool coliCallResl(unknown020 function);
+  bool coliMoveCallResl(unknown020 function, bool isStop);
+};
+
+static_assert(sizeof(IDColiGrandObj) == 0xc0, "");
 
 class IDColiObjGrand : public IDColiObj {
 public:
   IDColiObjGrand();
   ~IDColiObjGrand() override;
   void workClear();
+  void update() override;
+  void createGrand(mtl::ALLOC_HANDLE handle, const void *binary);
+  void createGrandAdder(void *buffer, const void *binary);
+  void createMemBinary();
   static int calcGrandBufferSize(const void *binary);
   void getGrandAABB(mm::Vec3 &max, mm::Vec3 &min) const;
 
@@ -573,6 +713,7 @@ public:
   IDColiObj *createColiGrand(const void *binary);
   IDColiObj *createColiCharacter();
   IDColiObj *createColiPhantom();
+  IDColiObj *createColiGrdChar();
   bool getGrandAABB(mm::Vec3 &max, mm::Vec3 &min) const;
   IDColiObj *getUseObject(ColiLinkList<IDColiObj> &list);
   void updateList(ColiLinkList<IDColiObj> &list);
@@ -590,11 +731,15 @@ public:
   u8 _c8[0xd8 - 0xc8];
   IDColiTreeTop *unknownd8[2]; // Inferred role: tree tops; original member name unknown.
   u32 *m_gblIdTbl;
-  u32 unknownf0; // Inferred role: sub num; original member name unknown.
-  u8 _f4[0x108 - 0xf4];
+  u32 unknownf0;               // Inferred role: sub num; original member name unknown.
+  mtl::ALLOC_HANDLE unknownf4; // Inferred role: memory handle; original member name unknown.
+  IDColiMemHandleAllocator m_allocator;
 };
 
 static_assert(offsetof(IDColiManager, unknown08) == 0x8, "");
+static_assert(offsetof(IDColiManager, unknownf4) == 0xf4, "");
+static_assert(offsetof(IDColiManager, m_allocator) == 0xf8, "");
+static_assert(sizeof(IDColiManager) == 0x108, "");
 static_assert(offsetof(IDColiManager, unknown48) == 0x48, "");
 static_assert(offsetof(IDColiManager, unknownd8) == 0xd8, "");
 static_assert(offsetof(IDColiManager, m_gblIdTbl) == 0xe8, "");

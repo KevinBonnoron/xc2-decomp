@@ -107,6 +107,11 @@ void IDColiPrimitive::createBaseSphere(void *data, IDColiBaseType &type, const m
   sphere->unknown00 = mm::Vec3(matrix.rows[3][0], matrix.rows[3][1], matrix.rows[3][2]);
 }
 
+void IDColiPrimitive::createBaseBox(void *data, IDColiBaseType &type, const mm::Mat44 &matrix, const mm::Vec3 &size) {
+  calcBaseBoxSetup(static_cast<CLBoxWork *>(data), matrix, size);
+  type = IDColiBaseType_UNKNOWN_1;
+}
+
 void IDColiPrimitive::createAaBbBox(mm::Vec3 &max, mm::Vec3 &min, const void *data) {
   const CLBoxWork *box = static_cast<const CLBoxWork *>(data);
   if (max.x < box->unknown80.x) {

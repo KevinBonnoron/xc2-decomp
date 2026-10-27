@@ -8,8 +8,6 @@
 
 namespace idcoli {
 
-IDColiGrandMesh::IDColiGrandMesh() {}
-
 void IDColiGrandMesh::calNomParm(mm::Vec3 &normal, const IDCmfNormalData *data) {
   normal.x = data->unknown00 * 6.1035156e-05f;
   normal.y = data->unknown02 * 6.1035156e-05f;
