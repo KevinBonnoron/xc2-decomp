@@ -13,6 +13,7 @@ class DrMdoAnim : public DrMdoMat {
 public:
   void setMatAnmFrme(f32 frame);
   void changeMemFixAnim(MdoWrkMatRes *matRes, const void *data);
+  void setupFixAnim(const void *data);
   static void animcall_UV_Scr_U(DrResMdoMat *mat, f32 *work, f32 value);
   static void animcall_UV_Scr_V(DrResMdoMat *mat, f32 *work, f32 value);
   static void animcall_UV_Trans_U(DrResMdoMat *mat, f32 *work, f32 value);

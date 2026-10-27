@@ -1,6 +1,118 @@
 #include "dr/dr_mdo_zsort.h"
 
+#include <string.h>
+
+#include "dr/dr_calc_man.h"
+#include "dr/dr_calc_view_work.h"
+#include "dr/dr_man.h"
+
 namespace ml {
+
+void DrMdoZSortMan::beginViewWorld() {
+  const mm::Vec3 &viewPos = unknown00->unknown580->unknown10->unknown400;
+  memset(unknown18, 0, 64);
+  unknown40 = viewPos;
+  unknown28 = nullptr;
+  unknown30 = nullptr;
+  unknown38 = nullptr;
+}
+
+void DrMdoZSortMan::stockObj(DrMdoZSortObj *object, int index) {
+  u32 bits = unknown18[index >> 5];
+  u32 mask = 1 << (index & 31);
+  if ((bits & mask) == 0) {
+    unknown18[index >> 5] = bits | mask;
+    object->setParent(nullptr);
+    unknown08[index] = object;
+  } else {
+    object->setParent(unknown10[index]);
+    unknown10[index]->setNext(object);
+  }
+  object->setNext(nullptr);
+  unknown10[index] = object;
+}
+
+void DrMdoZSortMan::setViewCloud(DrMdoZSortObj *object) { stockObj(object, 510); }
+
+void DrMdoZSortMan::setViewCloudBack(DrMdoZSortObj *object) { stockObj(object, 511); }
+
+void DrMdoZSortMan::setViewLast(DrMdoZSortObj *object) { stockObj(object, 505); }
+
+void DrMdoZSortMan::setViewSeamLast(DrMdoZSortObj *object) {
+  if (unknown38 != nullptr) {
+    stockObj(object, 511);
+  } else {
+    unknown38 = object;
+  }
+}
+
+void DrMdoZSortMan::setViewWorldPos(DrMdoZSortObj *object, const mm::Vec3 &position) {
+  f32 ratio = unknown001(position);
+  if (ratio >= 1.0f) {
+    stockObj(object, 505);
+  } else if (ratio <= 0.001f) {
+    stockObj(object, 4);
+  } else {
+    ratio = powf(ratio, unknown54);
+    int index = static_cast<int>(ratio * 502.0f) + 4;
+    if (index > 505) {
+      index = 505;
+    } else if (index < 4) {
+      index = 4;
+    }
+    stockObj(object, index);
+  }
+}
+
+void DrMdoZSortMan::setViewWorldPosLastAlpha(DrMdoZSortObj *object, const mm::Vec3 &position) {
+  f32 ratio = unknown001(position);
+  if (ratio >= 1.0f) {
+    stockObj(object, 3);
+  } else if (ratio <= 0.001f) {
+    stockObj(object, 0);
+  } else {
+    ratio = powf(ratio, unknown54);
+    int index = static_cast<int>(ratio * 4.0f);
+    if (index > 3) {
+      index = 3;
+    } else if (index < 0) {
+      index = 0;
+    }
+    stockObj(object, index);
+  }
+}
+
+void DrMdoZSortMan::setViewWorldPosFastAlpha(DrMdoZSortObj *object, const mm::Vec3 &position) {
+  f32 ratio = unknown001(position);
+  if (ratio >= 1.0f) {
+    stockObj(object, 509);
+  } else if (ratio <= 0.001f) {
+    stockObj(object, 506);
+  } else {
+    ratio = powf(ratio, unknown54);
+    int index = static_cast<int>(ratio * 4.0f) + 506;
+    if (index > 508) {
+      index = 509;
+    } else if (index < 506) {
+      index = 506;
+    }
+    stockObj(object, index);
+  }
+}
+
+void DrMdoZSortMan::endViewWorld() {
+  for (int i = 0; i < 512; i++) {
+    if ((unknown18[i >> 5] & (1 << (i & 31))) != 0) {
+      if (unknown28 == nullptr) {
+        unknown28 = unknown08[i];
+      } else {
+        unknown30->setNext(unknown08[i]);
+        unknown08[i]->setParent(unknown30);
+      }
+      unknown30 = unknown10[i];
+    }
+  }
+}
 
 void DrMdoZSortObj::setNext(DrMdoZSortObj *next) { m_next = next; }
 

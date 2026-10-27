@@ -17,6 +17,7 @@ public:
   DrShdLgtObj();
   void shaderComputeSetup();
   void shaderSetup(DrResFetch *fetch);
+  void lgtRelease();
 
   grlib::CGLibDblUniformBlock unknown68[4]; // Inferred role: uniform blocks; original member name unknown.
   u64 unknown148;                           // Inferred role: global ibl index; original member name unknown.

@@ -101,4 +101,6 @@ u32 DrResMdoSeamMemMan::getFreeSize(int &freeCount, int &separatedCount) {
   return maxSize;
 }
 
+void DrResMdoSeamMemMan::renderMemInfo() {}
+
 } // namespace ml

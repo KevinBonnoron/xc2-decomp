@@ -15,6 +15,9 @@
 #include "dr/dr_pixl_mem_man.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_tile_parm.h"
+#include "dr/dr_shd_lgt_global_ibl.h"
+#include "dr/dr_shd_lgt_man.h"
+#include "dr/dr_shd_man.h"
 #include "grlib/cglib_ctl_shader.h"
 #include "grlib/cglib_debug.h"
 #include "grlib/cglib_manager.h"
@@ -74,6 +77,20 @@ void DrMan::renderBegin(int loop) { unknown180->begin(DrPixlTileParm::TILE_TYPE_
 void DrMan::setMainRenderTarget() { unknown78->setMainRenderTarget(); }
 
 bool DrMan::isIBLHalfRes() const { return true; }
+
+bool DrMan::isIBLSkip() const {
+  if (unknown1d75) {
+    return true;
+  }
+  return !unknown80->unknown18->unknown58->isEnable();
+}
+
+bool DrMan::isTemporalUPSToGlobalIBL() const {
+  if (unknown1d75) {
+    return false;
+  }
+  return unknown80->unknown18->unknown58->isEnable();
+}
 
 void DrMdlMan::simpleShadowRender() { unknown030->shadowRender(); }
 

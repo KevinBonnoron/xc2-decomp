@@ -30,6 +30,8 @@ public:
   };
 
   void release();
+  void setupInfo(const u8 *header, bool isSetup);
+  void setHeaderInfo(const u8 *header);
   bool isResSafe() const;
   DrCalcStmRes *getResObj(u32 index);
   DrCalcStmRes *getResVertexObj();

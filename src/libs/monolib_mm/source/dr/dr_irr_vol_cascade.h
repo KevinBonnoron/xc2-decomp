@@ -11,6 +11,8 @@ namespace irrvol {
 
 class DrIrrVolCascade {
 public:
+  void createSector(void *buffer, u32 index);
+
   u8 _000[0x560];
   mm::Aabb unknown560[2]; // Inferred role: volume area per buffer; original member name unknown.
   u8 _5a0[0x5b0 - 0x5a0];

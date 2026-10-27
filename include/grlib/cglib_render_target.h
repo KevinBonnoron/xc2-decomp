@@ -16,6 +16,7 @@ class CGLibRenderTarget : public CGLibRenderTargetBase {
 public:
   CGLibRenderTarget();
   ~CGLibRenderTarget();
+  void release();
   void releaseWork();
   void clearTexture(const mm::Col4 &color, GrlClaerMask mask);
   void setRenderTarget();

@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "dr/dr_calc_clip_work_view_plane.h"
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
@@ -70,7 +71,9 @@ public:
   f32 unknown490[12]; // Inferred role: fades; original member name unknown.
   u8 _4c0[0x4d0 - 0x4c0];
   f32 unknown4d0; // Inferred role: pixl scale; original member name unknown.
-  u8 _4d4[0x700 - 0x4d4];
+  u8 _4d4[0x4e0 - 0x4d4];
+  DrCalcClipWorkViewPlane unknown4e0; // Inferred role: view clip plane; original member name unknown.
+  u8 _590[0x700 - 0x590];
   DrMan *unknown700; // Inferred role: dr man; original member name unknown.
   u8 _708[0x770 - 0x708];
   mm::Vec3 unknown770; // Inferred role: prev view pos; original member name unknown.
@@ -105,6 +108,7 @@ static_assert(offsetof(DrCalcViewWork, unknown430) == 0x430, "");
 static_assert(offsetof(DrCalcViewWork, unknown460) == 0x460, "");
 static_assert(offsetof(DrCalcViewWork, unknown490) == 0x490, "");
 static_assert(offsetof(DrCalcViewWork, unknown4d0) == 0x4d0, "");
+static_assert(offsetof(DrCalcViewWork, unknown4e0) == 0x4e0, "");
 static_assert(offsetof(DrCalcViewWork, unknown700) == 0x700, "");
 static_assert(offsetof(DrCalcViewWork, unknown770) == 0x770, "");
 static_assert(offsetof(DrCalcViewWork, unknown7b0) == 0x7b0, "");

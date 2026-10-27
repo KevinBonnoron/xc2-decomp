@@ -22,6 +22,13 @@ bool DrPixlShadowCacheObj::clipTest(const mm::Vec3 &position, f32 radius) { retu
 
 void DrPixlShadowCacheObj::end() { grlib::CGLibGPUCache::depthInvalidate(*unknown120); }
 
+void DrPixlShadowCacheObj::depthClear() {
+  if (!(unknown808 & 2)) {
+    clearDepth(false);
+    unknown808 |= 2;
+  }
+}
+
 void DrPixlShadowCacheObj::setClear() { unknown808 &= ~2; }
 
 void DrPixlShadowCacheObj::setNewGrid() { unknown808 &= ~6; }

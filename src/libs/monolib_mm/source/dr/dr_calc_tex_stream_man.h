@@ -33,6 +33,10 @@ public:
   DrCalcStmListObj *createTexStmListObj(const char *path);
   DrCalcStmListObj *createBufferListObj(u32 size);
   void entryJob();
+  void update();
+  static u32 jobUpdate(void *argument, void *userData);
+  void clearMemObj(DrCalcTexStmObj *object);
+  void releaseFreeObj(DrCalcTexStmObj *&object);
   void jobWait();
   void callHlvTexOptimization();
   void callOptimization(u32 value);

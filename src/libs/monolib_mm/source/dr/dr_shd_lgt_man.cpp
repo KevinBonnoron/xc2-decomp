@@ -1,5 +1,8 @@
 #include "dr/dr_shd_lgt_man.h"
 
+#include "dr/dr_ap_gx_type.h"
+#include "dr/dr_man.h"
+#include "dr/dr_pixl_man.h"
 #include "dr/dr_shd_lgt_clustered.h"
 #include "dr/dr_shd_lgt_global_ibl.h"
 #include "dr/dr_shd_lgt_hybrid.h"
@@ -65,6 +68,15 @@ void DrShdLgtMan::delViewInfo(int cate) {
   m_hybridLight->delViewInfo(cate);
   unknown60->delViewInfo(cate);
   unknown58->delViewInfo(cate);
+}
+
+void DrShdLgtMan::setupLgtBuff() {
+  if (unknown48 != 0) {
+    unknown48 = 0;
+    DrAPGxType::setupCullingOff();
+    DrAPGxType::setupBlend(7);
+    unknown00->unknown78->selectLightRenderTarget();
+  }
 }
 
 } // namespace ml

@@ -18,6 +18,10 @@ public:
   virtual bool isDeleteCall() const;
   virtual void update();
   virtual void render();
+
+  static bool isClip(const mm::Vec3 &position, f32 radius);
+  static DrGpuCheckBase *createGpuCheckObj(int type);
+  static DrGpuCheckBase *createEffGpuCheckObj(int type);
 };
 
 } // namespace ml

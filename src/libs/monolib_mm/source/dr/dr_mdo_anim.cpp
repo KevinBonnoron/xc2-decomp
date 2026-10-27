@@ -15,6 +15,14 @@ void DrMdoAnim::changeMemFixAnim(MdoWrkMatRes *matRes, const void *data) {
   matRes->unknown68 = base + anim->unknown24;
 }
 
+void DrMdoAnim::setupFixAnim(const void *data) {
+  const MdsFixedAnimData *anim = static_cast<const MdsFixedAnimData *>(data);
+  unknown30->unknown50 = static_cast<const u8 *>(data);
+  unknown30->unknown58 = unknown30->unknown50 + anim->unknown14;
+  unknown30->unknown60 = unknown30->unknown50 + anim->unknown1c;
+  unknown30->unknown68 = unknown30->unknown50 + anim->unknown24;
+}
+
 void DrMdoAnim::animcall_UV_Scr_U(DrResMdoMat *mat, f32 *work, f32 value) { work[0] = value; }
 
 void DrMdoAnim::animcall_UV_Scr_V(DrResMdoMat *mat, f32 *work, f32 value) { work[5] = value; }

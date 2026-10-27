@@ -41,6 +41,10 @@ public:
   void callSelectShadowCacheUpdate(u64 mask);
   bool isShadowCache() const;
   void debugInfoRender();
+  void createCacheBuff();
+  void resetColorBuff();
+  void createShadowTemp();
+  void buffUpdate();
 
   u32 unknown00;                   // Inferred role: flags; original member name unknown.
   DrPixlMan *unknown08;            // Inferred role: pixl man; original member name unknown.

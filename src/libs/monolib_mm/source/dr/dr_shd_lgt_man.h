@@ -5,6 +5,7 @@
 #include "types.h"
 
 namespace ml {
+class DrMan;
 class DrShdLgtClustered;
 class DrShdLgtGlobalIBL;
 class DrShdLgtHybrid;
@@ -29,12 +30,14 @@ public:
   void setupGlobalIBLShader(DrShdLgtObj *obj);
   void stockBegin();
   void stockEnd();
+  void setupLgtBuff();
   void updateCate(int cate);
   void setupCate(int cate);
   void addViewInfo(int cate);
   void delViewInfo(int cate);
 
-  u8 _00[0x20 - 0x00];
+  DrMan *unknown00; // Inferred role: dr man; original member name unknown.
+  u8 _08[0x20 - 0x08];
   DrShdLgtObj *unknown20;         // Inferred role: global IBL shaders; original member name unknown.
   DrShdLgtObj *unknown28;         // Inferred role: compute shaders; original member name unknown.
   grlib::CGLibVtxFetch unknown30; // Inferred role: IBL vertex fetch; original member name unknown.
@@ -49,6 +52,7 @@ public:
   DrShdLgtClustered *unknown60; // Inferred role: clustered light; original member name unknown.
 };
 
+static_assert(offsetof(DrShdLgtMan, unknown00) == 0x00, "");
 static_assert(offsetof(DrShdLgtMan, unknown20) == 0x20, "");
 static_assert(offsetof(DrShdLgtMan, unknown28) == 0x28, "");
 static_assert(offsetof(DrShdLgtMan, unknown30) == 0x30, "");

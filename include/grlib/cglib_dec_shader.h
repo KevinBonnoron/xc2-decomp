@@ -11,6 +11,7 @@ class CGLibDecShader {
 public:
   CGLibDecShader();
   ~CGLibDecShader();
+  void release();
   u32 getDeclarationOfs(const char *name) const;
   void setDeclarationIdx(u32 offset, u32 index);
 

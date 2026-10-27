@@ -6,6 +6,13 @@
 
 namespace ml {
 
+void DrCalcStmListObj::setHeaderInfo(const u8 *header) {
+  if (unknown80 & 0x2000) {
+    setupInfo(header, true);
+    unknown80 &= ~0x6000;
+  }
+}
+
 DrCalcStmRes *DrCalcStmListObj::getResObj(u32 index) { return unknown30[DrMan::s_nDblStockIdx] + index; }
 
 DrCalcStmRes *DrCalcStmListObj::getResVertexObj() { return &unknown30[DrMan::s_nDblStockIdx][unknown74]; }

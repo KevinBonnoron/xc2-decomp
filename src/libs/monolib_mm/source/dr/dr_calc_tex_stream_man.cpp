@@ -70,6 +70,18 @@ DrCalcTexStmObj *DrCalcTexStreamMan::getTopAheadFreeObj() {
 
 void DrCalcTexStreamMan::entryJob() { WorkCpu::wakeup(unknown2498); }
 
+u32 DrCalcTexStreamMan::jobUpdate(void *argument, void *userData) {
+  static_cast<DrCalcTexStreamMan *>(argument)->update();
+  return 0;
+}
+
+void DrCalcTexStreamMan::releaseFreeObj(DrCalcTexStmObj *&object) {
+  if (object != nullptr) {
+    clearMemObj(object);
+    object = nullptr;
+  }
+}
+
 void DrCalcTexStreamMan::jobWait() { WorkCpu::sync(unknown2498, WKCPU_SYNC_NONE, CPUID_ANY); }
 
 void DrCalcTexStreamMan::callHlvTexOptimization() { unknown248c = 0xa0; }

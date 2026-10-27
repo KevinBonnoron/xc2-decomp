@@ -1,9 +1,27 @@
 #include "dr/dr_pixl_shadow_cache_man.h"
 
+#include "dr/dr_man.h"
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_depth_target.h"
 
 namespace ml {
+
+void DrPixlShadowCacheMan::createShadowTemp() {
+  DrMan::get();
+  if (unknown00 & 2) {
+    for (int i = 0; i < 4; i++) {
+      unknown0010[i].unknown5940.release();
+    }
+    unknown00 &= ~2;
+  }
+  unknown00 |= 2;
+  resetColorBuff();
+}
+
+void DrPixlShadowCacheMan::buffUpdate() {
+  createCacheBuff();
+  createShadowTemp();
+}
 
 bool DrPixlShadowCacheMan::isShadowMap() const { return unknown00 & 8; }
 

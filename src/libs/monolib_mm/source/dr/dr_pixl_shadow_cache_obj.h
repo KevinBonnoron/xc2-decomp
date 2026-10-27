@@ -22,6 +22,7 @@ public:
   void setNewGrid();
   void setBigMode(bool isBig);
   void setID(int id);
+  void depthClear();
 
   u8 _128[0x808 - 0x128];
   u32 unknown808; // Inferred role: flags; original member name unknown.

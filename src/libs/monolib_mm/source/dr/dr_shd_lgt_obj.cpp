@@ -11,4 +11,13 @@ void DrShdLgtObj::shaderComputeSetup() { grlib::CGLibCtlShader::setComputeShader
 
 void DrShdLgtObj::shaderSetup(DrResFetch *fetch) { grlib::CGLibCtlShader::setShader(*this, *fetch); }
 
+void DrShdLgtObj::lgtRelease() {
+  for (int i = 0; i < 4; i++) {
+    unknown68[i].release();
+  }
+  unknown148 = ~0ull;
+  unknown150 = ~0ull;
+  CGLibDecShader::release();
+}
+
 } // namespace ml
