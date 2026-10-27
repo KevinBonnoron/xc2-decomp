@@ -20,7 +20,7 @@ public:
   void setAddTexture(grlib::CGLibTextureBuffer &texture, u32 index);
 
   void clear();
-  void updateTexutre(grlib::CGLibTextureBuffer **textures, LayerTextureObj *textureObj);
+  bool updateTexutre(grlib::CGLibTextureBuffer **textures, LayerTextureObj *textureObj);
 
   void resetAddTexutre(u32 index) {
     for (LayerResAddTexObj *texture = unknown00.unknown00; texture != nullptr; texture = texture->unknown08) {

@@ -1,10 +1,11 @@
 #pragma once
-#include "layer/layer_obj.h"
+#include "layer/layer_obj_font.h"
 
 namespace layer {
 
-class LayerObjTopFont : public LayerObj {
+class LayerObjTopFont : public LayerObjFont {
 public:
+  ~LayerObjTopFont() override;
   void finalRender();
 };
 

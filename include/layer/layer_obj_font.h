@@ -4,14 +4,37 @@
 #include "layer/layer_obj.h"
 #include "types.h"
 
+namespace grlib {
+class CGLibDblUniformBlock;
+class CGLibVtxOneInstans;
+} // namespace grlib
+
 namespace layer {
 
 class LayerFontIconObj;
 class LayerFontResObj;
 class LayerFontStyleObj;
 
+struct LayerResFontInfo {
+  u8 _00[0x10];
+  const u8 *unknown10; // Inferred role: message; original member name unknown.
+  u32 unknown18;       // Inferred role: message length; original member name unknown.
+  u8 _1c[0x60 - 0x1c];
+  grlib::CGLibVtxOneInstans *unknown60;   // Inferred role: instance vertex; original member name unknown.
+  grlib::CGLibDblUniformBlock *unknown68; // Inferred role: uniform block; original member name unknown.
+};
+
+static_assert(offsetof(LayerResFontInfo, unknown10) == 0x10, "");
+static_assert(offsetof(LayerResFontInfo, unknown18) == 0x18, "");
+static_assert(offsetof(LayerResFontInfo, unknown60) == 0x60, "");
+static_assert(offsetof(LayerResFontInfo, unknown68) == 0x68, "");
+
 class LayerObjFont : public LayerObj {
 public:
+  void workPartsRelease(LayerResFontInfo *&info);
+  void workRelease();
+  bool isMsg(const LayerResFontInfo *info, const u8 *msg) const;
+  void updateAddDel();
   void setMsg(const u8 *text, const LayerFontResObj *res, const LayerFontStyleObj *style, const LayerFontIconObj *icon, u32 flags);
   void setMsg(const wchar_t *text, const LayerFontResObj *res, const LayerFontStyleObj *style, const LayerFontIconObj *icon, u32 flags);
   void setColorMap(const LayerFontIconObj *colorMap, u32 index);
@@ -20,7 +43,10 @@ public:
   f32 getBorderWeight() const;
   f32 getSlopeRot() const;
 
-  u8 _250[0x278 - 0x250];
+  LayerResFontInfo *unknown250;    // Inferred role: current font info; original member name unknown.
+  LayerResFontInfo *unknown258[2]; // Inferred role: font info per buffer; original member name unknown.
+  LayerResFontInfo *unknown268;    // Inferred role: font info to release; original member name unknown.
+  u8 _270[0x278 - 0x270];
   const LayerFontResObj *unknown278;   // Inferred role: res; original member name unknown.
   const LayerFontStyleObj *unknown280; // Inferred role: style; original member name unknown.
   const LayerFontIconObj *unknown288;  // Inferred role: icon; original member name unknown.
@@ -41,6 +67,9 @@ public:
   f32 unknown2c4[2]; // Inferred role: border weight per index; original member name unknown.
 };
 
+static_assert(offsetof(LayerObjFont, unknown250) == 0x250, "");
+static_assert(offsetof(LayerObjFont, unknown258) == 0x258, "");
+static_assert(offsetof(LayerObjFont, unknown268) == 0x268, "");
 static_assert(offsetof(LayerObjFont, unknown278) == 0x278, "");
 static_assert(offsetof(LayerObjFont, m_colorMap) == 0x290, "");
 static_assert(offsetof(LayerObjFont, unknown298) == 0x298, "");

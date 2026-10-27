@@ -2,8 +2,8 @@
 
 #include <string.h>
 
+#include "grlib/cglib_dbl_uniform_block.h"
 #include "layer/layer_act_base.h"
-
 #include "layer/layer_anime_obj.h"
 #include "layer/layer_manager.h"
 #include "layer/layer_res_sec_texture.h"
@@ -38,6 +38,37 @@ const LayerResColor *getColorParm(const LayerObj *layer, u32 flag) {
 }
 
 } // namespace
+
+void LayerObj::resourceInit() {}
+
+void LayerObj::applyPartsSetup() {}
+
+void LayerObj::applyParams(const LayerRenderView *view, const LayerResMatrix &matrix, const LayerResColor &color) {}
+
+void LayerObj::release() {
+  onStateFlags(1);
+  unknown18 = 0;
+  unknown1c = 0x22;
+}
+
+void LayerObj::baseRelease() {
+  if (unknown238 != nullptr) {
+    delete unknown238;
+    unknown238 = nullptr;
+  }
+  for (s32 i = 0; i < 3; i++) {
+    if (unknown208[i] != nullptr) {
+      delete unknown208[i];
+      unknown208[i] = nullptr;
+    }
+  }
+  for (s32 i = 0; i < 3; i++) {
+    if (unknown220[i] != nullptr) {
+      delete unknown220[i];
+      unknown220[i] = nullptr;
+    }
+  }
+}
 
 void LayerObj::setInitPos(f32 x, f32 y) {
   unknownc8[1].unknown00.unknown00 = x;
@@ -307,6 +338,50 @@ f32 LayerObj::getSecondTexBlend() const {
   }
 
   return 0.0f;
+}
+
+void LayerActBase::updatePartsAction(const LyrActionData *action) {}
+
+void LayerActBase::setupAction(u8 *work, const u8 *data) {
+  const LyrActionHeader *header = reinterpret_cast<const LyrActionHeader *>(data);
+  unknown250 = reinterpret_cast<LayerActWork *>(work);
+  unknown250->unknown00 = data;
+  unknown250->unknown28 = reinterpret_cast<u32 *>(work + sizeof(LayerActWork));
+  unknown250->unknown10 = header->unknown08;
+  unknown250->unknown08 = reinterpret_cast<const LyrActionData *>(data + header->unknown04);
+  unknown250->unknown14 = 0.0f;
+  unknown250->unknown20 = 0;
+  unknown250->unknown24 = 0;
+  if (header->actionNum != 0) {
+    memset(unknown250->unknown28, 0, header->actionNum * sizeof(u32));
+  }
+  if (!(header->unknown00 & 1)) {
+    return;
+  }
+  unknown250->unknown24 |= 1;
+  unknown250->unknown14 = 0.0f;
+  const LyrActionData &action = *(unknown250->unknown08 + unknown250->unknown20);
+  if (action.unknown00 & 0x7e) {
+    if (action.unknown00 & 0x2) {
+      unknowna8 |= 0x80;
+    } else if (action.unknown00 & 0x4) {
+      unknowna8 &= ~0x80;
+    }
+    if (action.unknown00 & 0x8) {
+      unknowna8 |= 0x20000;
+    } else if (action.unknown00 & 0x10) {
+      unknowna8 &= ~0x20000;
+    }
+    if (action.unknown00 & 0x20) {
+      unknowna8 |= 0x200;
+    } else if (action.unknown00 & 0x40) {
+      unknowna8 &= ~0x200;
+    }
+  }
+  unknowna8 |= 0x40;
+  unknown250->unknown20 = header->unknown10;
+  unknown250->unknown24 |= 1;
+  unknown250->unknown14 = 0.0f;
 }
 
 void LayerActBase::startSetupAction() {

@@ -27,6 +27,58 @@ u32 LayerObjTopFilter::getFilterType() const {
   return filter->m_filterType;
 }
 
+void LayerObjTopFilter::releaseWorkBuffer() {
+  if (unknown270 != nullptr) {
+    delete unknown270;
+    unknown270 = nullptr;
+  }
+  if (unknown288 != nullptr) {
+    delete unknown288;
+    unknown288 = nullptr;
+  }
+  if (unknown278[0] != nullptr) {
+    delete unknown278[0];
+    unknown278[0] = nullptr;
+  }
+  if (unknown278[1] != nullptr) {
+    delete unknown278[1];
+    unknown278[1] = nullptr;
+  }
+  unknown290.release();
+}
+
+void LayerObjTopFilter::resourceInit() {
+  unknown290.setup(0x80);
+  if (unknown270 != nullptr) {
+    unknown270->resourceInit();
+  }
+}
+
+void LayerObjTopFilter::applyPartsSetup() {
+  if (unknown288 != nullptr) {
+    delete unknown288;
+    unknown288 = nullptr;
+  }
+  if (unknown270 != nullptr && unknown270->isReleaseCall()) {
+    unknown288 = unknown270;
+    unknown270 = nullptr;
+  }
+  s32 index = LayerManager::s_nDebIdx;
+  if (unknown278[index] != nullptr) {
+    if (unknown270 != nullptr) {
+      unknown288 = unknown270;
+    }
+    unknown270 = unknown278[index];
+    unknown278[index] = nullptr;
+    unknown270->resourceInit();
+  }
+}
+
+LayerObjTopFilter::~LayerObjTopFilter() {
+  baseRelease();
+  releaseWorkBuffer();
+}
+
 void LayerObjTopFilter::createGaussianBlur(u32 width, u32 height) {
   if (unknown270 != nullptr) {
     unknown270->releaseCall();

@@ -16,7 +16,9 @@ class CGLibDblUniformBlock;
 namespace layer {
 
 class LayerAnimeObj;
+struct LayerRenderView;
 class LayerResSecTexture;
+class LayerSortMan;
 
 struct LayerResMatrix {
   f32 unknown00; // Inferred role: pos x; original member name unknown.
@@ -56,6 +58,12 @@ static_assert(sizeof(LayerResUvParam) == 0x14, "");
 
 class LayerObj : public LayerBase {
 public:
+  virtual void resourceInit();
+  virtual void setDrawList(LayerSortMan *sortMan, bool is3D) = 0;
+  virtual void applyPartsSetup();
+  virtual void applyParams(const LayerRenderView *view, const LayerResMatrix &matrix, const LayerResColor &color);
+  void release() override;
+  void baseRelease();
   void setInitPos(f32 x, f32 y);
   void setInitRot(f32 rot);
   void setInitScl(f32 x, f32 y);
@@ -106,7 +114,8 @@ public:
     unknowna0[index] &= ~flags;
   }
 
-  u8 _1c[0x20 - 0x1c];
+  u8 unknown1c; // Inferred role: state marker set by release; original member name unknown.
+  u8 _1d[0x20 - 0x1d];
   mm::Mat44 unknown20[2]; // Inferred role: matrices; original member name unknown.
   u32 unknowna0[2];       // Inferred role: state flags; original member name unknown.
   u32 unknowna8;          // Inferred role: flags; original member name unknown.
@@ -138,7 +147,8 @@ public:
   f32 unknown1f4; // Inferred role: ctrl spd; original member name unknown.
   f32 unknown1f8; // Inferred role: frame ctrl spd; original member name unknown.
   f32 unknown1fc; // Inferred role: uniform block parameter; original member name unknown.
-  u8 _200[0x208 - 0x200];
+  f32 unknown200; // Inferred role: 3d sort depth; original member name unknown.
+  u8 _204[0x208 - 0x204];
   LayerAnimeObj *unknown208[3];            // Inferred role: anim objs; original member name unknown.
   LayerResSecTexture *unknown220[3];       // Inferred role: second texs; original member name unknown.
   grlib::CGLibDblUniformBlock *unknown238; // Inferred role: world matrix uniform; original member name unknown.
@@ -146,6 +156,7 @@ public:
   u8 _248[0x250 - 0x248];
 };
 
+static_assert(offsetof(LayerObj, unknown1c) == 0x1c, "");
 static_assert(offsetof(LayerObj, unknown20) == 0x20, "");
 static_assert(offsetof(LayerObj, unknowna0) == 0xa0, "");
 static_assert(offsetof(LayerObj, unknowna8) == 0xa8, "");
@@ -165,6 +176,7 @@ static_assert(offsetof(LayerObj, unknown19c) == 0x19c, "");
 static_assert(offsetof(LayerObj, unknown1d8) == 0x1d8, "");
 static_assert(offsetof(LayerObj, unknown1f4) == 0x1f4, "");
 static_assert(offsetof(LayerObj, unknown1fc) == 0x1fc, "");
+static_assert(offsetof(LayerObj, unknown200) == 0x200, "");
 static_assert(offsetof(LayerObj, unknown208) == 0x208, "");
 static_assert(offsetof(LayerObj, unknown220) == 0x220, "");
 static_assert(offsetof(LayerObj, unknown238) == 0x238, "");

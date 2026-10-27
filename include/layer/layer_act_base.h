@@ -22,8 +22,11 @@ struct LyrActionData {
 static_assert(sizeof(LyrActionData) == 0x2c, "");
 
 struct LyrActionHeader {
-  u8 _00[0xc];
+  u32 unknown00; // Inferred role: flags; original member name unknown.
+  u32 unknown04; // Inferred role: offset of the actions; original member name unknown.
+  s32 unknown08; // Inferred role: action count; original member name unknown.
   s32 actionNum;
+  u32 unknown10; // Inferred role: first action idx; original member name unknown.
 };
 
 struct LayerActWork {
@@ -43,6 +46,7 @@ static_assert(sizeof(LayerActWork) == 0x30, "");
 
 class LayerActBase : public LayerObj {
 public:
+  virtual void updatePartsAction(const LyrActionData *action);
   void setupAction(u8 *work, const u8 *data);
   void startSetupAction();
   void checkActionEnd(const LyrActionData *action, bool isCmdEnd);

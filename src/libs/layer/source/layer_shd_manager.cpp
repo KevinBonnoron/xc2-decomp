@@ -5,7 +5,9 @@
 #include "grlib/cglib_ctl_vertex.h"
 #include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_state.h"
+#include "grlib/cglib_texture.h"
 #include "layer/layer_handle_allocator.h"
+#include "layer/layer_res_sec_texture.h"
 #include "layer/layer_vertex_obj.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
@@ -15,6 +17,19 @@ namespace layer {
 void LayerShdManager::allRelease() { shaderRelease(); }
 
 void LayerShdManager::setupMainRenderTarget() { grlib::CGLibState::setMainFrameBuffer(); }
+
+void LayerShdManager::createResWork() { grlib::CGLibTexture::createTextureImagePtrs(unknown368, unknown10, unknown18, false, nullptr, true); }
+
+void LayerShdManager::setSecTexture(LayerResSecTexture *secTexture) {
+  if (secTexture != nullptr && secTexture->unknown14 > 0.0f) {
+    unknown58 = secTexture->getTexture();
+    unknown60 = &secTexture->unknown18;
+    unknown4fc = 2;
+  } else {
+    unknown58 = nullptr;
+    unknown4fc = 1;
+  }
+}
 
 void LayerShdManager::setShaderMaskOff() {
   unknown358 = nullptr;

@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <string.h>
 
+#include "grlib/cglib_render_target.h"
 #include "layer/layer_acc_action.h"
 #include "layer/layer_acc_def_obj.h"
 #include "layer/layer_acc_def_texture.h"
@@ -617,7 +618,7 @@ void LayerAccMemObj::setRender(bool render) { m_memObj->setRender(render); }
 
 bool LayerAccMemObj::isRender() const { return m_memObj->isRender(); }
 
-grlib::CGLibTextureBuffer *LayerAccMemObj::getTexture() { return m_memObj->unknown2e8; }
+grlib::CGLibTextureBuffer *LayerAccMemObj::getTexture() { return m_memObj->unknown278.unknown70; }
 
 LayerAccPolyObj::LayerAccPolyObj(LayerBase *layer) : LayerAccObjBase(layer), m_polyObj(static_cast<LayerObjTopPolyObj *>(layer)) {}
 

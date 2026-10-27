@@ -33,6 +33,12 @@ public:
     u8 _54[0x58 - 0x54];
   };
 
+  ~LayerObjTopPolyObj() override;
+  void releasePoly(layPolyWork &work);
+  void releaseWorkBuffer();
+  void createWorkBuffer(u32 width, u32 height);
+  void updateVertexBuffer();
+  void applyPartsSetup() override;
   void LockVertex();
   void setVertex(u32 index, const LayerPolyVertex &vertex);
   void UnlockVertex();
@@ -46,19 +52,23 @@ public:
   void finalRender();
 
   u32 unknown250; // Inferred role: update flags; original member name unknown.
-  u8 _254[0x280 - 0x254];
+  u8 _254[0x278 - 0x254];
+  grlib::CGLibTextureBuffer *unknown278;  // Inferred role: first additional texture; original member name unknown.
   grlib::CGLibDblUniformBlock unknown280; // Inferred role: uniform block; original member name unknown.
   LayerObjResTex unknown2b8;              // Inferred role: textures; original member name unknown.
   layPolyWork unknown300;                 // Inferred role: poly work; original member name unknown.
   void *unknown358;                       // Inferred role: locked buffer; original member name unknown.
-  u8 _360[0x370 - 0x360];
+  u8 _360[0x368 - 0x360];
+  void *unknown368; // Inferred role: allocated memory; original member name unknown.
 };
 
 static_assert(offsetof(LayerObjTopPolyObj, unknown250) == 0x250, "");
+static_assert(offsetof(LayerObjTopPolyObj, unknown278) == 0x278, "");
 static_assert(offsetof(LayerObjTopPolyObj, unknown280) == 0x280, "");
 static_assert(offsetof(LayerObjTopPolyObj, unknown2b8) == 0x2b8, "");
 static_assert(offsetof(LayerObjTopPolyObj, unknown300) == 0x300, "");
 static_assert(offsetof(LayerObjTopPolyObj, unknown358) == 0x358, "");
+static_assert(offsetof(LayerObjTopPolyObj, unknown368) == 0x368, "");
 static_assert(sizeof(LayerObjTopPolyObj::layPolyWork) == 0x58, "");
 static_assert(sizeof(LayerObjTopPolyObj) == 0x370, "");
 

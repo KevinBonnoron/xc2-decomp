@@ -1,6 +1,8 @@
 #pragma once
 #include <stddef.h>
 
+#include "types.h"
+
 namespace layer {
 
 enum LAYER_TYPE {
@@ -21,6 +23,62 @@ public:
   virtual ~LayerBase() {}
   virtual void release();
 
+  // Inferred layout of a list of objects linked through unknown08 and unknown10; original type name unknown.
+  struct unknown001 {
+    void unknown002(LayerBase *node) {
+      if (unknown08 == nullptr) {
+        unknown00 = node;
+        unknown08 = node;
+        node->unknown08 = nullptr;
+      } else {
+        unknown08->unknown10 = node;
+        node->unknown08 = unknown08;
+        unknown08 = node;
+      }
+      node->unknown10 = nullptr;
+      unknown10++;
+    }
+
+    void unknown004(LayerBase *node) {
+      LayerBase *prev = node->unknown08;
+      LayerBase *next = node->unknown10;
+      if (prev == nullptr) {
+        if (next == nullptr) {
+          unknown00 = nullptr;
+          unknown08 = nullptr;
+        } else {
+          unknown00 = next;
+          next->unknown08 = nullptr;
+        }
+      } else if (next == nullptr) {
+        unknown08 = prev;
+        prev->unknown10 = nullptr;
+      } else {
+        prev->unknown10 = next;
+        node->unknown10->unknown08 = node->unknown08;
+      }
+      node->unknown08 = nullptr;
+      node->unknown10 = nullptr;
+      unknown10--;
+    }
+
+    void unknown003() {
+      LayerBase *node = unknown00;
+      while (node != nullptr) {
+        LayerBase *next = node->unknown10;
+        delete node;
+        node = next;
+      }
+      unknown10 = 0;
+      unknown00 = nullptr;
+      unknown08 = nullptr;
+    }
+
+    LayerBase *unknown00; // Inferred role: first object; original member name unknown.
+    LayerBase *unknown08; // Inferred role: last object; original member name unknown.
+    s32 unknown10;        // Inferred role: object count; original member name unknown.
+  };
+
   LayerBase *unknown08; // Inferred role: previous node; original member name unknown.
   LayerBase *unknown10; // Inferred role: next node; original member name unknown.
   int unknown18;        // Inferred role: type; original member name unknown.
@@ -29,5 +87,6 @@ public:
 static_assert(offsetof(LayerBase, unknown08) == 0x08, "");
 static_assert(offsetof(LayerBase, unknown10) == 0x10, "");
 static_assert(offsetof(LayerBase, unknown18) == 0x18, "");
+static_assert(sizeof(LayerBase::unknown001) == 0x18, "");
 
 } // namespace layer

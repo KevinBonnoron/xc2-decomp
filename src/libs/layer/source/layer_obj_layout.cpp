@@ -1,10 +1,60 @@
 #include "layer/layer_obj_layout.h"
 
+#include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_render_target.h"
 #include "layer/layer_manager.h"
+#include "layer/layer_obj_top_tex_obj.h"
+#include "layer/layer_sort_man.h"
 #include "mtl/alloc_handle.h"
 
 namespace layer {
+
+void LayerObjLayout::workLayoutRelease() {
+  if (unknown2d0 != nullptr) {
+    delete unknown2d0;
+    unknown2d0 = nullptr;
+  }
+  if (unknown310[0].unknown18 != nullptr) {
+    delete unknown310[0].unknown18;
+    unknown310[0].unknown18 = nullptr;
+  }
+  if (unknown310[1].unknown18 != nullptr) {
+    delete unknown310[1].unknown18;
+    unknown310[1].unknown18 = nullptr;
+  }
+  if (unknown380.unknown18 != nullptr) {
+    delete unknown380.unknown18;
+    unknown380.unknown18 = nullptr;
+  }
+  if (unknown3b8.unknown18 != nullptr) {
+    delete unknown3b8.unknown18;
+    unknown3b8.unknown18 = nullptr;
+  }
+  if (unknown310[0].unknown20 != nullptr) {
+    delete unknown310[0].unknown20;
+    unknown310[0].unknown20 = nullptr;
+  }
+  if (unknown310[1].unknown20 != nullptr) {
+    delete unknown310[1].unknown20;
+    unknown310[1].unknown20 = nullptr;
+  }
+  if (unknown380.unknown20 != nullptr) {
+    delete unknown380.unknown20;
+    unknown380.unknown20 = nullptr;
+  }
+  if (unknown3b8.unknown20 != nullptr) {
+    delete unknown3b8.unknown20;
+    unknown3b8.unknown20 = nullptr;
+  }
+  if (unknown3f0 != nullptr) {
+    delete unknown3f0;
+    unknown3f0 = nullptr;
+  }
+  if (unknown3f8 != nullptr) {
+    delete unknown3f8;
+    unknown3f8 = nullptr;
+  }
+}
 
 void LayerObjLayout::createRenderTarget(f32 x, f32 y, f32 width, f32 height, mm::Col4 clearColor) {
   unknown001 &target = unknown310[LayerManager::s_nStkIdx];

@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "layer/layer_base.h"
 #include "types.h"
 
 namespace grlib {
@@ -13,10 +14,12 @@ class IDrDrawWorkInfo;
 
 namespace layer {
 
-class LayerBase;
+class LayerObj;
 class LayerSortMan;
 
-enum LayerMemType {};
+enum LayerMemType {
+  LAYER_MEM_TYPE_UNKNOWN_3 = 3,
+};
 enum LayerPrimitiveType {};
 
 class LayerObjManager {
@@ -35,12 +38,21 @@ public:
   void lastRender(const ml::IDrDrawWorkInfo *info);
   void finalRender(const ml::IDrDrawWorkInfo *info);
   void end();
+  void setDeleteList(LayerObj *object);
+  void allRelease();
+  ~LayerObjManager();
 
   const ml::IDrDrawWorkInfo *unknown00; // Inferred role: work info; original member name unknown.
   u8 _08[0x10 - 0x08];
-  LayerSortMan *unknown10; // Inferred role: sort man; original member name unknown.
+  LayerSortMan *unknown10;            // Inferred role: sort man; original member name unknown.
+  LayerBase::unknown001 unknown18;    // Inferred role: active objects; original member name unknown.
+  LayerBase::unknown001 unknown30[2]; // Inferred role: objects to add per buffer; original member name unknown.
+  LayerBase::unknown001 unknown60;    // Inferred role: objects to delete; original member name unknown.
 };
 
 static_assert(offsetof(LayerObjManager, unknown10) == 0x10, "");
+static_assert(offsetof(LayerObjManager, unknown18) == 0x18, "");
+static_assert(offsetof(LayerObjManager, unknown30) == 0x30, "");
+static_assert(offsetof(LayerObjManager, unknown60) == 0x60, "");
 
 } // namespace layer

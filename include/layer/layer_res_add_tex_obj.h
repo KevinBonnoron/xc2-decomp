@@ -3,12 +3,19 @@
 
 #include "types.h"
 
+namespace grlib {
+class CGLibTextureBuffer;
+} // namespace grlib
+
 namespace layer {
 
 class LayerTextureObj;
 
 class LayerResAddTexObj {
 public:
+  LayerResAddTexObj(grlib::CGLibTextureBuffer *texture, u32 index);
+  grlib::CGLibTextureBuffer *getTexObj(u32 index);
+
   LayerResAddTexObj *unknown00; // Inferred role: previous node; original member name unknown.
   LayerResAddTexObj *unknown08; // Inferred role: next node; original member name unknown.
   const void *unknown10;        // Inferred role: texture resource or texture buffer; original member name unknown.
