@@ -9,7 +9,7 @@ class LayerBase;
 class LayerFontStyleObj;
 
 // Inferred layout of a font style row; original type and member names unknown.
-struct LayerStyleData {
+struct LyrFontStyleData {
   u8 _00[0x04];
   u32 unknown04; // Inferred role: style name offset; original member name unknown.
   u32 unknown08; // Inferred role: font name offset; original member name unknown.
@@ -18,14 +18,14 @@ struct LayerStyleData {
   u8 _14[0x28 - 0x14];
 };
 
-static_assert(offsetof(LayerStyleData, unknown04) == 0x04, "");
-static_assert(offsetof(LayerStyleData, unknown08) == 0x08, "");
-static_assert(sizeof(LayerStyleData) == 0x28, "");
+static_assert(offsetof(LyrFontStyleData, unknown04) == 0x04, "");
+static_assert(offsetof(LyrFontStyleData, unknown08) == 0x08, "");
+static_assert(sizeof(LyrFontStyleData) == 0x28, "");
 
 // Inferred layout of the pair returned by LayerAccFontStyle::getStyleInfo; original type name unknown.
 struct LayerStyleInfo {
   const void *unknown00;
-  const LayerStyleData *unknown08;
+  const LyrFontStyleData *unknown08;
 };
 
 class LayerAccFontStyle {

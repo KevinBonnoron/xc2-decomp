@@ -7,7 +7,7 @@
 
 namespace layer {
 
-struct LayerStyleData;
+struct LyrFontStyleData;
 
 class LayerFontStyleObj : public LayerBase {
 public:
@@ -17,7 +17,7 @@ public:
   };
 
   void setStyleData(const void *data);
-  const LayerStyleData *getStyleData(u32 index) const;
+  const LyrFontStyleData *getStyleData(u32 index) const;
   void releaseColorInfo();
   void releaseIconInfo();
   s32 getStyleIndex(const char *name) const;
@@ -30,7 +30,7 @@ public:
   const void *unknown20; // Inferred role: first value of the style info; original member name unknown.
   u32 unknown28;         // Inferred role: style data max; original member name unknown.
   u8 _2c[0x30 - 0x2c];
-  const LayerStyleData *unknown30; // Inferred role: style data table; original member name unknown.
+  const LyrFontStyleData *unknown30; // Inferred role: style data table; original member name unknown.
   u8 _38[0x40 - 0x38];
   f32 unknown40; // Inferred role: ruby scale; original member name unknown.
   u8 _44[0x48 - 0x44];

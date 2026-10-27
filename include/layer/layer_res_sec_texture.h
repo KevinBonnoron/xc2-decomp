@@ -4,6 +4,10 @@
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "types.h"
 
+namespace grlib {
+class CGLibTextureBuffer;
+} // namespace grlib
+
 namespace layer {
 
 class LayerTextureObj;
@@ -12,6 +16,7 @@ class LayerResSecTexture {
 public:
   LayerResSecTexture(const void *data);
   ~LayerResSecTexture();
+  grlib::CGLibTextureBuffer *getTexture();
   void resourceInit();
   void update();
 

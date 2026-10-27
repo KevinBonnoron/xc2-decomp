@@ -24,10 +24,10 @@ void LayerFontStyleObj::setStyleData(const void *data) {
   const unknown002 *header = static_cast<const unknown002 *>(data);
   unknown20 = data;
   unknown28 = header->unknown0c;
-  unknown30 = reinterpret_cast<const LayerStyleData *>(static_cast<const u8 *>(data) + header->unknown08);
+  unknown30 = reinterpret_cast<const LyrFontStyleData *>(static_cast<const u8 *>(data) + header->unknown08);
 }
 
-const LayerStyleData *LayerFontStyleObj::getStyleData(u32 index) const {
+const LyrFontStyleData *LayerFontStyleObj::getStyleData(u32 index) const {
   if (index < unknown28) {
     return unknown30 + index;
   }

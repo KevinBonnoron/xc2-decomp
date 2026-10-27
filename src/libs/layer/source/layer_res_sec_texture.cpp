@@ -50,6 +50,8 @@ LayerResSecTexture::LayerResSecTexture(const void *data) : unknown08(nullptr) {
   unknown14 = 1.0f;
 }
 
+grlib::CGLibTextureBuffer *LayerResSecTexture::getTexture() { return unknown08->unknown30; }
+
 void LayerResSecTexture::resourceInit() { unknown18.setup(LayerObjUtil::getUniformBlockSizeAlOff(LAYER_UNI_TYPE_UNKNOWN_10)); }
 
 void LayerResSecTexture::update() {
