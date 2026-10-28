@@ -7,6 +7,7 @@
 
 namespace grlib {
 class CGLibRenderTarget;
+class CGLibTextureBuffer;
 } // namespace grlib
 
 namespace ptlib {
@@ -26,7 +27,11 @@ struct DrDrawWorkInfoEF {
   u8 _008[0x060 - 0x008];
   grlib::CGLibRenderTarget *unknown060; // Inferred role: reduce target; original member name unknown.
   grlib::CGLibRenderTarget *unknown068; // Inferred role: sub target; original member name unknown.
-  u8 _070[0x1d0 - 0x070];
+  u8 _070[0x090 - 0x070];
+  grlib::CGLibTextureBuffer *unknown090; // Inferred role: shadow texture 1; original member name unknown.
+  grlib::CGLibTextureBuffer *unknown098; // Inferred role: shadow texture 2; original member name unknown.
+  grlib::CGLibTextureBuffer *unknown0a0; // Inferred role: shadow texture 3; original member name unknown.
+  u8 _0a8[0x1d0 - 0x0a8];
   u32 unknown1d0; // Inferred role: buffer offset; original member name unknown.
   u8 _1d4[0x560 - 0x1d4];
   u32 unknown560; // Inferred role: view index; original member name unknown.
@@ -34,6 +39,9 @@ struct DrDrawWorkInfoEF {
 
 static_assert(offsetof(DrDrawWorkInfoEF, unknown060) == 0x060, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown068) == 0x068, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown090) == 0x090, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown098) == 0x098, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown0a0) == 0x0a0, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown1d0) == 0x1d0, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown560) == 0x560, "");
 
@@ -93,6 +101,13 @@ template <typename T> inline const T *unknown002(const void *base, u32 offset) {
     return nullptr;
   }
   return reinterpret_cast<const T *>(static_cast<const u8 *>(base) + offset);
+}
+
+template <typename T> inline T *unknown002(void *base, u32 offset) {
+  if (offset == 0) {
+    return nullptr;
+  }
+  return reinterpret_cast<T *>(static_cast<u8 *>(base) + offset);
 }
 
 struct CamParam {
@@ -156,6 +171,7 @@ public:
   void fxcore_setup_target();
   static void *createGrp(int index, int count);
   static void term();
+  static void tail();
   static void destroyGrp(void *group);
   static void sysFree(void *ptr);
   static void *resAlloc(u32 size, u32 alignment, const char *file, u32 line);
@@ -182,6 +198,7 @@ public:
   int get_prio_idx(int priority);
   CamParam &getCamParam();
   int convert_key_by_material_index(int key, FxHeader *header) const;
+  void parse_efb_type0050(u8 *data);
   void parse_efb_type0051(u8 *data);
   renderer::RenderManager &getRenderManager();
   bool emitter_set_check(FxHeader *header);

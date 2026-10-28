@@ -1,9 +1,14 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_math/mm_vec3.h"
 #include "ptlib/emitter/particle_emitter_param.h"
 #include "ptlib/particle_intrusive_list.h"
 #include "types.h"
+
+namespace ml {
+class DrGpuCheckBase;
+} // namespace ml
 
 namespace ptlib {
 
@@ -15,6 +20,10 @@ class RenderSet;
 class StreamObj;
 } // namespace renderer
 
+namespace math {
+struct Vec3r;
+} // namespace math
+
 namespace emitter {
 
 class ParticleObj;
@@ -25,19 +34,31 @@ struct EmitterArg {
   u16 unknown8c; // Inferred role: life base; original member name unknown.
   u16 unknown8e; // Inferred role: life; original member name unknown.
   u16 unknown90; // Inferred role: life random range; original member name unknown.
-  u8 _092[0x0fc - 0x092];
+  u8 _092[0x094 - 0x092];
+  u8 unknown94; // Inferred role: draw parameter; original member name unknown.
+  u8 _095[0x0e0 - 0x095];
+  u8 unknowne0; // Inferred role: draw parameter; original member name unknown.
+  u8 _0e1[0x0fc - 0x0e1];
   u8 unknownfc; // Inferred role: blend mode; original member name unknown.
   u8 unknownfd; // Inferred role: fadeout mode; original member name unknown.
   u8 _0fe[0x100 - 0x0fe];
   int unknown100; // Inferred role: draw type; original member name unknown.
-  u8 _104[0x24c - 0x104];
+  u8 _104[0x120 - 0x104];
+  f32 unknown120; // Inferred role: draw parameter; original member name unknown.
+  u8 _124[0x128 - 0x124];
+  f32 unknown128; // Inferred role: draw parameter; original member name unknown.
+  u8 _12c[0x24c - 0x12c];
   u8 unknown24c[1]; // Inferred role: keyframe data; original member name unknown.
 };
 
 static_assert(offsetof(EmitterArg, unknown00) == 0x00, "");
 static_assert(offsetof(EmitterArg, unknown8c) == 0x8c, "");
 static_assert(offsetof(EmitterArg, unknown90) == 0x90, "");
+static_assert(offsetof(EmitterArg, unknown94) == 0x94, "");
+static_assert(offsetof(EmitterArg, unknowne0) == 0xe0, "");
 static_assert(offsetof(EmitterArg, unknownfc) == 0xfc, "");
+static_assert(offsetof(EmitterArg, unknown120) == 0x120, "");
+static_assert(offsetof(EmitterArg, unknown128) == 0x128, "");
 static_assert(offsetof(EmitterArg, unknownfd) == 0xfd, "");
 static_assert(offsetof(EmitterArg, unknown100) == 0x100, "");
 static_assert(offsetof(EmitterArg, unknown24c) == 0x24c, "");
@@ -70,6 +91,21 @@ struct unknown004 {
 static_assert(offsetof(unknown004, unknown04) == 0x04, "");
 static_assert(offsetof(unknown004, unknown10) == 0x10, "");
 
+// Inferred role: newton force parameters of an emitter; original name unknown.
+struct unknown005 {
+  u16 unknown00; // Inferred role: first frame; original member name unknown.
+  u16 unknown02; // Inferred role: last frame, 0 for no limit; original member name unknown.
+  u16 unknown04; // Inferred role: frame source; original member name unknown.
+  u8 _06[0x14 - 0x06];
+  f32 unknown14; // Inferred role: minimum distance; original member name unknown.
+  f32 unknown18; // Inferred role: strength; original member name unknown.
+  f32 unknown1c; // Inferred role: distance exponent; original member name unknown.
+};
+
+static_assert(offsetof(unknown005, unknown04) == 0x04, "");
+static_assert(offsetof(unknown005, unknown14) == 0x14, "");
+static_assert(offsetof(unknown005, unknown1c) == 0x1c, "");
+
 class EmitterObj : public IntrusiveListNode {
 public:
   bool isRenderCheck() const;
@@ -80,6 +116,7 @@ public:
   void emitter_set_param_sub_pos_only2(EmitterParam *param);
   void emitter_alloc01_set_move(FxHeader *header, EmitterArg *arg);
   int getParentParticleState() const;
+  static void calc_scale(mm::Vec3 *result, math::Vec3r *range, f32 scale, u32 &seed);
   f32 getEmitterScale();
   EmitterObj *emitter_free();
   void emitter_dead(u8 value);
@@ -131,7 +168,10 @@ public:
   f32 unknown18c; // Inferred role: frame; original member name unknown.
   u8 _190[0x1c8 - 0x190];
   unknown004 *unknown1c8; // Inferred role: gravity; original member name unknown.
-  u8 _1d0[0x260 - 0x1d0];
+  unknown005 *unknown1d0; // Inferred role: newton; original member name unknown.
+  u8 _1d8[0x1e0 - 0x1d8];
+  mm::Vec3 unknown1e0; // Inferred role: newton center; original member name unknown.
+  u8 _1f0[0x260 - 0x1f0];
   u8 unknown260; // Inferred role: priority; original member name unknown.
   u8 _261[0x264 - 0x261];
   u32 unknown264; // Inferred role: handle; original member name unknown.
@@ -141,7 +181,14 @@ public:
   u16 _26c_5 : 11;
   u8 _26e[0x274 - 0x26e];
   u8 unknown274; // Inferred role: prio idx; original member name unknown.
-  u8 _275[0x320 - 0x275];
+  u8 _275[0x27a - 0x275];
+  u16 unknown27a; // Inferred role: compute particle offset; original member name unknown.
+  u16 unknown27c; // Inferred role: compute particle count; original member name unknown.
+  u16 unknown27e; // Inferred role: compute block offset; original member name unknown.
+  u8 _280[0x310 - 0x280];
+  // Evidence: name from the assertion string "m_pGpuCheck == nullptr" in emitter_alloc01; vtable +0x10 (release) and +0x18 (isRender) called in emitter_free_core and isRenderCheck.
+  ml::DrGpuCheckBase *m_pGpuCheck;
+  u8 _318[0x320 - 0x318];
 };
 
 static_assert(offsetof(EmitterObj, unknown40) == 0x40, "");
@@ -168,10 +215,16 @@ static_assert(offsetof(EmitterObj, unknown180) == 0x180, "");
 static_assert(offsetof(EmitterObj, unknown188) == 0x188, "");
 static_assert(offsetof(EmitterObj, unknown18c) == 0x18c, "");
 static_assert(offsetof(EmitterObj, unknown1c8) == 0x1c8, "");
+static_assert(offsetof(EmitterObj, unknown1d0) == 0x1d0, "");
+static_assert(offsetof(EmitterObj, unknown1e0) == 0x1e0, "");
 static_assert(offsetof(EmitterObj, unknown260) == 0x260, "");
 static_assert(offsetof(EmitterObj, unknown264) == 0x264, "");
 static_assert(offsetof(EmitterObj, unknown268) == 0x268, "");
 static_assert(offsetof(EmitterObj, unknown274) == 0x274, "");
+static_assert(offsetof(EmitterObj, unknown27a) == 0x27a, "");
+static_assert(offsetof(EmitterObj, unknown27c) == 0x27c, "");
+static_assert(offsetof(EmitterObj, unknown27e) == 0x27e, "");
+static_assert(offsetof(EmitterObj, m_pGpuCheck) == 0x310, "");
 static_assert(sizeof(EmitterObj) == 0x320, "");
 
 } // namespace emitter

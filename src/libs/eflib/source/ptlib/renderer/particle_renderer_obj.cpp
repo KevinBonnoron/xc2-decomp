@@ -13,6 +13,7 @@
 #include "ptlib/particle_system.h"
 
 // clang-format off
+#include "particle_renderer_back_buffer.cpp"
 #include "particle_renderer_shader.cpp"
 // clang-format on
 
@@ -22,14 +23,45 @@ namespace renderer {
 constexpr int ARG_DRAW_TYPE_NONE = 5;
 constexpr int PRIORITY_MAX = 0xff;
 
+void RenderGrObj::fxcore_setup_target_update(int index) {
+  if (index == 0) {
+    grlib::CGLibRenderTarget *target = unknown258->unknown000;
+    int width = target->unknownbc;
+    int height = target->unknownc0;
+    if (unknown00.unknown18->unknownbc != width / 2 || unknown00.unknown18->unknownc0 != height / 2) {
+      unknown00.setTextureAll(width, height, 0.0f, 0.0f, unknown258->unknown1d0);
+    }
+  }
+  unknown00.bufferClear();
+}
+
+u32 RenderGrObj::changeShader(u32 type, bool isSimple) {
+  if (isSimple) {
+    if (type == 8) {
+      return 7;
+    } else if (type == 3) {
+      return 4;
+    } else if (type == 6) {
+      return 5;
+    }
+  }
+  return type;
+}
+
 RenderGrObj::RenderGrObj() : unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown60(mm::Vec3::zero), unknown70(nullptr) {
   clear();
-  unknown80 = nullptr;
-  unknown88 = nullptr;
-  unknown90 = nullptr;
-  unknown98 = nullptr;
-  unknowna0 = nullptr;
-  unknowna8 = nullptr;
+  unknown80.x = 0.0f;
+  unknown80.y = 0.0f;
+  unknown80.z = 0.0f;
+  unknown80.w = 0.0f;
+  unknown90.x = 0.0f;
+  unknown90.y = 0.0f;
+  unknown90.z = 0.0f;
+  unknown90.w = 0.0f;
+  unknowna0.x = 0.0f;
+  unknowna0.y = 0.0f;
+  unknowna0.z = 0.0f;
+  unknowna0.w = 0.0f;
   unknown260 = nullptr;
   unknown270 = 0;
 }
@@ -121,6 +153,37 @@ void RenderGrObj::unlockStream(emitter::EmitterObj *emitter, int count) {
 void RenderGrObj::term() {
   unknown00.unknown001();
   unknownb0.term();
+}
+
+void RenderGrObj::draw_common_uconst(f32 *uniform, emitter::EmitterObj *emitter) {
+  emitter::EmitterArg *arg = emitter->unknown98;
+  if (arg == nullptr) {
+    return;
+  }
+  f32 value94 = arg->unknown94;
+  f32 value128 = arg->unknown128;
+  if (emitter->unknown260 == 0xff) {
+    value128 = -3.0f;
+  }
+  f32 value120 = arg->unknown120;
+  f32 valuee0 = arg->unknowne0;
+  f32 fade = emitter->calc_fade();
+  uniform[0] = unknown80.x;
+  uniform[1] = unknown80.y;
+  uniform[2] = unknown80.z;
+  uniform[3] = value94;
+  uniform[4] = 0.0f;
+  uniform[5] = 0.0f;
+  uniform[6] = 0.0f;
+  uniform[7] = 0.0f;
+  uniform[8] = 0.0f;
+  uniform[9] = 0.0f;
+  uniform[10] = 0.0f;
+  uniform[11] = 0.0f;
+  uniform[12] = valuee0;
+  uniform[13] = value128;
+  uniform[14] = value120;
+  uniform[15] = fade;
 }
 
 void RenderGrObj::prioritySort(emitter::EmitterManager &emitterManager, int prioIdx, FxParam &fxParam, mm::mtl::FixedVector<sort::EmitterSort, EMITTER_SORT_MAX> &sorts) {

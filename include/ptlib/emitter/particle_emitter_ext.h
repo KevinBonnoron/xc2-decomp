@@ -17,7 +17,9 @@ public:
   EmitterObj *unknown08; // Inferred role: emitter parent; original member name unknown.
   mm::Vec3 unknown10;    // Inferred role: accumulated force; original member name unknown.
   f32 unknown20;         // Inferred role: force rate; original member name unknown.
-  u8 _24[0xfc - 0x24];
+  u8 _24[0x90 - 0x24];
+  mm::Vec3 unknown90; // Inferred role: accumulated newton force; original member name unknown.
+  u8 _a0[0xfc - 0xa0];
   f32 unknownfc; // Inferred role: flow map speed; original member name unknown.
   u8 _100[0x108 - 0x100];
   void *unknown108; // Inferred role: light; original member name unknown.
@@ -36,6 +38,7 @@ public:
 static_assert(offsetof(ExtObj, unknown08) == 0x08, "");
 static_assert(offsetof(ExtObj, unknown10) == 0x10, "");
 static_assert(offsetof(ExtObj, unknown20) == 0x20, "");
+static_assert(offsetof(ExtObj, unknown90) == 0x90, "");
 static_assert(offsetof(ExtObj, unknownfc) == 0xfc, "");
 static_assert(offsetof(ExtObj, unknown108) == 0x108, "");
 static_assert(offsetof(ExtObj, unknown110) == 0x110, "");

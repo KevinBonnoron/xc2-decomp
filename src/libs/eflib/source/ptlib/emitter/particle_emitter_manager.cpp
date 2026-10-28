@@ -2,14 +2,29 @@
 
 #include <string.h>
 
+#include "dr/dr_gpu_check_base.h"
+#include "grlib/cglib_color_ctl.h"
+#include "grlib/cglib_ctl_shader.h"
+#include "grlib/cglib_ctl_texture.h"
+#include "grlib/cglib_ctl_vertex.h"
+#include "grlib/cglib_dbl_uniform_block.h"
+#include "grlib/cglib_dec_shader.h"
+#include "grlib/cglib_depth_ctl.h"
+#include "grlib/cglib_polygon.h"
+#include "grlib/cglib_shader.h"
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_vec3.h"
+#include "ptlib/emitter/compute/particle_emitter_compute.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/emitter/particle_emitter_param.h"
 #include "ptlib/emitter/particle_emitter_particle.h"
 #include "ptlib/emitter/particle_emitter_set_node.h"
 #include "ptlib/particle_math.h"
 #include "ptlib/particle_system.h"
+#include "ptlib/renderer/particle_renderer_eff_state.h"
+#include "ptlib/renderer/particle_renderer_manager.h"
+#include "ptlib/renderer/particle_renderer_obj.h"
+#include "ptlib/renderer/particle_renderer_shader.h"
 #include "ptlib/renderer/particle_renderer_stream.h"
 
 namespace ptlib {
@@ -285,11 +300,163 @@ void EmitterManager::emitter_pack_free(u64 pack) {
   }
 }
 
+EmitterObj *EmitterManager::emitter_free_core(EmitterObj *emitter) {
+  if (emitter->unknown98 == nullptr) {
+    efMsg("free type error");
+  } else {
+    switch (emitter->unknown98->unknown00) {
+    case 4:
+      for (IntrusiveList<ParticleObj>::iterator it = emitter->unknown40.begin(); it != emitter->unknown40.end(); ++it) {
+        (*it).particle_clear_union();
+      }
+      break;
+    case 5:
+      for (IntrusiveList<ParticleObj>::iterator it = emitter->unknown40.begin(); it != emitter->unknown40.end(); ++it) {
+        *it;
+      }
+      for (IntrusiveList<ParticleObj>::iterator it = emitter->unknown40.begin(); it != emitter->unknown40.end(); ++it) {
+        (*it).particle_clear_union();
+      }
+      break;
+    default:
+      for (IntrusiveList<ParticleObj>::iterator it = emitter->unknown40.begin(); it != emitter->unknown40.end(); ++it) {
+        (*it).particle_clear_union();
+      }
+      break;
+    }
+  }
+  if (emitter->unknown90 != nullptr) {
+    emitter->unknown90 = nullptr;
+  }
+  EmitterObj *next = static_cast<EmitterObj *>(emitter->unknown00);
+  if (emitter->m_pGpuCheck != nullptr) {
+    emitter->m_pGpuCheck->release();
+    emitter->m_pGpuCheck = nullptr;
+  }
+  emitter->unknown98 = nullptr;
+  removeEmitterActive(emitter);
+  addEmitterFree(emitter);
+  return next;
+}
+
+void EmitterManager::move() {
+  EmitterObj *lastTop = nullptr;
+  EmitterObj *lastSecond = nullptr;
+  EmitterObj *lastThird = nullptr;
+  for (IntrusiveList<EmitterObj>::iterator it = unknown17a8.begin(); it != unknown17a8.end(); ++it) {
+    EmitterObj *emitter = it.get();
+    EmitterArg *arg = emitter->unknown98;
+    bool isRender = emitter->isRenderCheck();
+    if (arg != nullptr && isRender && ((arg->unknown00 & 0xfe) == 4 || (emitter->unknown151 != 0 && 0.0f < emitter->unknown12c))) {
+      switch (arg->unknown00) {
+      case 0:
+      case 1:
+      case 9:
+        if (lastTop == nullptr) {
+          unknown1750 = emitter;
+        } else {
+          lastTop->unknownc8 = emitter;
+        }
+        lastTop = emitter;
+        break;
+      case 2:
+        if (lastSecond == nullptr) {
+          unknown1760 = emitter;
+        } else {
+          lastSecond->unknownc8 = emitter;
+        }
+        lastSecond = emitter;
+        break;
+      case 4:
+      case 5:
+        if (lastThird == nullptr) {
+          unknown1758 = emitter;
+        } else {
+          lastThird->unknownc8 = emitter;
+        }
+        lastThird = emitter;
+        break;
+      case 0xc:
+        if (lastTop != nullptr) {
+          lastTop->unknownc8 = emitter;
+        } else {
+          unknown1750 = emitter;
+        }
+        lastTop = emitter;
+        break;
+      }
+      if (lastTop == nullptr) {
+        unknown1750 = nullptr;
+      } else {
+        lastTop->unknownc8 = nullptr;
+      }
+      if (lastSecond == nullptr) {
+        unknown1760 = nullptr;
+      } else {
+        lastSecond->unknownc8 = nullptr;
+      }
+      if (lastThird == nullptr) {
+        unknown1758 = nullptr;
+      } else {
+        lastThird->unknownc8 = nullptr;
+      }
+      unknown1768 = nullptr;
+    }
+  }
+}
+
 void EmitterManager::emitter_set_speed(u32 handle, f32 speed) {
   for (IntrusiveList<EmitterObj>::iterator it = unknown17a8.begin(); it != unknown17a8.end(); ++it) {
     if (handle == 0 || it->unknown264 == handle) {
       it->unknown158 = speed;
     }
+  }
+}
+
+bool EmitterObj::isRenderCheck() const {
+  if (m_pGpuCheck == nullptr || m_pGpuCheck->isRender()) {
+    return true;
+  }
+  return unknown18c < 60.0f;
+}
+
+// The game executable compiles ComputeManager::calculateParticle in the translation unit of the EmitterManager functions, where EmitterManager::getPtr is inlined.
+void ComputeManager::calculateParticle() {
+  grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
+  grlib::CGLibColorCtl::setColorBufferOn();
+  grlib::CGLibDepthCtl::setDepthControl(0, 0, GRL_COMPARE_ALWAYS);
+  grlib::CGLibPolygon::setCullingOff();
+  EmitterManager *emitterManager = EmitterManager::getPtr();
+  renderer::RenderGrObj *renderGrObj = renderer::RenderManager::get()->getRenderGrObj();
+  const DrDrawWorkInfoEF *info = renderGrObj->unknown258;
+  grlib::CGLibDecShader *decShader = renderGrObj->unknownb0.getShaderByIndex(renderer::EFF_SHD_TYPE_UNKNOWN_13);
+  grlib::CGLibCtlShader::setShader(*decShader, renderer::EffStateManager::get()->unknown4f0);
+  u32 shadowLocation1 = (decShader->unknown38 + decShader->unknown58)->getTextureLocation("shw1");
+  u32 shadowLocation2 = (decShader->unknown38 + decShader->unknown58)->getTextureLocation("shw2");
+  u32 shadowLocation3 = (decShader->unknown38 + decShader->unknown58)->getTextureLocation("shw3");
+  grlib::CGLibCtlTexture::setTexture(*info->unknown090, renderer::EffStateManager::get()->unknown360, shadowLocation1);
+  grlib::CGLibCtlTexture::setTexture(*info->unknown098, renderer::EffStateManager::get()->unknown360, shadowLocation2);
+  grlib::CGLibCtlTexture::setTexture(*info->unknown0a0, renderer::EffStateManager::get()->unknown360, shadowLocation3);
+  u32 commonBuffOffset = (decShader->unknown38 + decShader->unknown58)->getUniformBlockOfs("CommonBuff");
+  u32 readBlockOffset = (decShader->unknown38 + decShader->unknown58)->getUniformBlockOfs("ReadBlock");
+  unknown108[unknown208].unknown08.setUniformBlock(commonBuffOffset);
+  int uniformBlockSize = ComputeUniform::s_nUniformBlockSize[0];
+  bool isRasterizerSet = false;
+  for (IntrusiveList<EmitterObj>::iterator it = emitterManager->getEmitterActiveList().begin(); it != emitterManager->getEmitterActiveList().end(); ++it) {
+    if (it->isRenderCheck() && it->unknown27c != 0) {
+      if (!isRasterizerSet) {
+        grlib::CGLibPolygon::setRasterizer(true);
+      }
+      unknown48.unknown08.setUniformBlock(readBlockOffset, it->unknown27e << 9, 0x200);
+      grlib::CGLibCtlVertex::setUniformVertex(unknown08.unknown08, uniformBlockSize, it->unknown27a * uniformBlockSize, 0, 0);
+      unknown08.unknown08.setStorageBuffer(0);
+      grlib::CGLibCtlVertex::renderVertex(GRL_PRIMITIVE_POINTS, it->unknown27c);
+      isRasterizerSet = true;
+    }
+  }
+  if (isRasterizerSet) {
+    grlib::CGLibPolygon::setRasterizer(false);
+    grlib::CGLibCtlShader::setMemoryBarrierBit(1);
   }
 }
 

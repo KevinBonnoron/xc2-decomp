@@ -1,10 +1,12 @@
 #include <string.h>
 
+#include "mm_math/mm_vec3.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/emitter/particle_emitter_ext.h"
 #include "ptlib/emitter/particle_emitter_param.h"
 #include "ptlib/emitter/particle_emitter_particle.h"
 #include "ptlib/particle_intrusive_list.h"
+#include "ptlib/particle_math.h"
 #include "ptlib/particle_system.h"
 #include "ptlib/renderer/particle_renderer_stream.h"
 #include "types.h"
@@ -42,6 +44,15 @@ void EmitterObj::emitter_dead(u8 value) {
       it->unknownc0 = 0;
     }
   }
+}
+
+void EmitterObj::calc_scale(mm::Vec3 *result, math::Vec3r *range, f32 scale, u32 &seed) {
+  f32 x = range->unknown0c * math::unknown001(seed);
+  f32 y = range->unknown10 * math::unknown001(seed);
+  f32 z = range->unknown14 * math::unknown001(seed);
+  result->x = (range->unknown00 + x) * scale;
+  result->y = (range->unknown04 + y) * scale;
+  result->z = (range->unknown08 + z) * scale;
 }
 
 void EmitterObj::emitter_set_param_sub_pos_only(EmitterParam *param) {

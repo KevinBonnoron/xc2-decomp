@@ -45,6 +45,8 @@ struct unknown007 {
   unknown006 unknown04[1]; // Inferred role: entries; original member name unknown.
 
   // Inferred role: entry of an index, null when out of range; original name unknown.
+  unknown006 *entries() { return reinterpret_cast<unknown006 *>(&unknown00 + 1); }
+
   const unknown006 *get(u32 index) const {
     if (index < unknown00) {
       return &unknown04[index];
@@ -151,6 +153,14 @@ void ParticleManager::term() {
   HeapAllocaterManager::term();
 }
 
+void ParticleManager::tail() {
+  emitter::EmitterManager::get()->moveAfter();
+  HashManager::get()->build(nullptr);
+  emitter::EmitterManager *emitterManager = emitter::EmitterManager::get();
+  emitterManager->unknown1790 = ~emitterManager->unknown1790 & 1;
+  get()->getRenderManager();
+}
+
 void *ParticleManager::sysAlloc(u32 size, u32 alignment, const char *file, u32 line) {
   void *ptr = s_pAllocFuncSys(nullptr, size, alignment, file, line);
 #line 213
@@ -185,6 +195,15 @@ int ParticleManager::convert_key_by_material_index(int key, FxHeader *header) co
 }
 
 void ParticleManager::parse_efb_type0051(u8 *data) { unknown160 = unknown002<u8>(data, reinterpret_cast<const unknown001 *>(data)->unknown10); }
+
+void ParticleManager::parse_efb_type0050(u8 *data) {
+  unknown007 *table = unknown002<unknown007>(data, reinterpret_cast<const unknown001 *>(data)->unknown10);
+  renderer::RenderManager *renderManager = renderer::RenderManager::get();
+  for (u32 i = 0; i < table->unknown00; i++) {
+    unknown006 *entry = &table->entries()[i];
+    renderManager->tex_loadmem(entry->unknown00, unknown002<void>(table, entry->unknown0c), entry->unknown08, entry->unknown04, data, true, nullptr);
+  }
+}
 
 void *ParticleManager::getGrp(int index) {
   if (isValid() && static_cast<u32>(index) <= 3) {

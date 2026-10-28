@@ -11,7 +11,9 @@ class CGLibDecShader;
 namespace ptlib {
 namespace renderer {
 
-enum EffShdType {};
+enum EffShdType {
+  EFF_SHD_TYPE_UNKNOWN_13 = 13,
+};
 
 // Inferred role: declaration offsets of the VERIATION_MODE, SOFT_MODE, SHADOW_MODE, CLIP_MODE and USING_TEMPORAL_AA
 // declarations of a shader; original type name unknown.

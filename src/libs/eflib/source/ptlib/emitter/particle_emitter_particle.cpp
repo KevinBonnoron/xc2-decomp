@@ -91,6 +91,40 @@ void ParticleObj::calcGravity(EmitterObj *emitter, f32 speed, mm::Vec3 &result) 
   }
 }
 
+void ParticleObj::calcNewton(EmitterObj *emitter, mm::Vec3 &result) {
+  unknown005 *newton = emitter->unknown1d0;
+  if (newton != nullptr) {
+    if (move_common_check_begin_end(emitter, newton->unknown00, newton->unknown02, newton->unknown04)) {
+      mm::Vec3 direction;
+      direction.x = unknown10.x - emitter->unknown1e0.x;
+      direction.y = unknown10.y - emitter->unknown1e0.y;
+      direction.z = unknown10.z - emitter->unknown1e0.z;
+      f32 distanceSquared = direction.x * direction.x + direction.y * direction.y + direction.z * direction.z;
+      f32 distance = sqrtf(distanceSquared);
+      if (distance > newton->unknown14) {
+        f32 strength = newton->unknown18;
+        f32 power = powf(distance, newton->unknown1c);
+        f32 length = sqrtf(distanceSquared);
+        strength = strength * power;
+        if (length <= 1e-06f) {
+          direction = mm::Vec3::zero;
+        } else {
+          f32 inverse = 1.0f / length;
+          direction.x = direction.x * inverse;
+          direction.y = direction.y * inverse;
+          direction.z = direction.z * inverse;
+        }
+        mm::Vec3 force = direction * strength;
+        ExtObj *ext = unknown130;
+        ext->unknown90 -= force;
+      }
+      result.x = unknown130->unknown90.x + result.x;
+      result.y = unknown130->unknown90.y + result.y;
+      result.z = unknown130->unknown90.z + result.z;
+    }
+  }
+}
+
 void ParticleObj::calc_fit(f32 &pitch, f32 &yaw, const mm::Vec3 *direction) {
   f32 y = direction->y;
   f32 length = sqrtf(direction->x * direction->x + direction->z * direction->z);

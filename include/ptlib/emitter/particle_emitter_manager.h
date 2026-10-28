@@ -55,13 +55,19 @@ public:
   void emitter_set_fadeout(FxHeader *header, int frame);
   void emitter_set_fadeout(void *owner, int frame);
   bool emitter_set_check(FxHeader *header);
+  EmitterObj *emitter_free_core(EmitterObj *emitter);
   void move();
   FxHeader *emitter_set_search(int type, const char *name, void *owner, u32 category);
 
   u8 _0000[0x1700 - 0x0000];
   f32 unknown1700[(0x1750 - 0x1700) / sizeof(f32)]; // Inferred role: category speed; original member name unknown.
   EmitterObj *unknown1750;                          // Inferred role: p emitter top; original member name unknown.
-  u8 _1758[0x17a8 - 0x1758];
+  EmitterObj *unknown1758;                          // Inferred role: p emitter top of the type 4 and 5 emitters; original member name unknown.
+  EmitterObj *unknown1760;                          // Inferred role: p emitter top of the type 2 emitters; original member name unknown.
+  EmitterObj *unknown1768;                          // Inferred role: cleared by move; original member name unknown.
+  u8 _1770[0x1790 - 0x1770];
+  u32 unknown1790; // Inferred role: update parity; original member name unknown.
+  u8 _1794[0x17a8 - 0x1794];
   IntrusiveList<EmitterObj> unknown17a8;     // Inferred role: active emitters; original member name unknown.
   IntrusiveList<EmitterObj> unknown17c0;     // Inferred role: free emitters; original member name unknown.
   IntrusiveList<ParticleObj> unknown17d8;    // Inferred role: free particles; original member name unknown.
@@ -71,6 +77,10 @@ public:
 
 static_assert(offsetof(EmitterManager, unknown1700) == 0x1700, "");
 static_assert(offsetof(EmitterManager, unknown1750) == 0x1750, "");
+static_assert(offsetof(EmitterManager, unknown1758) == 0x1758, "");
+static_assert(offsetof(EmitterManager, unknown1760) == 0x1760, "");
+static_assert(offsetof(EmitterManager, unknown1768) == 0x1768, "");
+static_assert(offsetof(EmitterManager, unknown1790) == 0x1790, "");
 static_assert(offsetof(EmitterManager, unknown17a8) == 0x17a8, "");
 static_assert(offsetof(EmitterManager, unknown17c0) == 0x17c0, "");
 static_assert(offsetof(EmitterManager, unknown17d8) == 0x17d8, "");

@@ -19,6 +19,7 @@ public:
   void particle_clear_union();
   void addCalcTbl(mm::Vec3 &vector, f32 scale);
   void calcGravity(EmitterObj *emitter, f32 speed, mm::Vec3 &result);
+  void calcNewton(EmitterObj *emitter, mm::Vec3 &result);
   bool move_common_check_begin_end(EmitterObj *emitter, u16 begin, u16 end, int mode) {
     f32 frame;
     if (static_cast<u32>(mode) < 2) {

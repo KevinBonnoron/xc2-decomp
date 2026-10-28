@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec4.h"
 #include "mm_mtl/fixed_vector.h"
 #include "ptlib/renderer/particle_renderer_back_buffer.h"
 #include "ptlib/renderer/particle_renderer_shader.h"
@@ -83,8 +84,10 @@ public:
   void fxcore_setup_target_core(int &width, int &height, int &subWidth, int &subHeight);
   void setEffectRenderTarget(grlib::CGLibRenderTarget *target, grlib::CGLibDepthBuffer *depth, grlib::CGLibRenderTarget *subTarget1, grlib::CGLibRenderTarget *subTarget2);
   void fxcore_setup_target_update(int index);
+  u32 changeShader(u32 type, bool isSimple);
   void *lockStream(emitter::EmitterObj *emitter);
   void unlockStream(emitter::EmitterObj *emitter, int count);
+  void draw_common_uconst(f32 *uniform, emitter::EmitterObj *emitter);
   void draw(emitter::EmitterManager &emitterManager, FxParam &fxParam, int viewIndex, int isBlur);
   void prioritySort(emitter::EmitterManager &emitterManager, int prioIdx, FxParam &fxParam, mm::mtl::FixedVector<sort::EmitterSort, EMITTER_SORT_MAX> &sorts);
 
@@ -97,12 +100,9 @@ public:
   mm::Vec3 unknown60; // Inferred role: reset by the constructor; original member name unknown.
   void *unknown70;    // Inferred role: cleared by the constructor; original member name unknown.
   u8 _78[0x80 - 0x78];
-  void *unknown80;         // Inferred role: cleared by the constructor; original member name unknown.
-  void *unknown88;         // Inferred role: cleared by the constructor; original member name unknown.
-  void *unknown90;         // Inferred role: cleared by the constructor; original member name unknown.
-  void *unknown98;         // Inferred role: cleared by the constructor; original member name unknown.
-  void *unknowna0;         // Inferred role: cleared by the constructor; original member name unknown.
-  void *unknowna8;         // Inferred role: cleared by the constructor; original member name unknown.
+  mm::Vec4 unknown80;      // Inferred role: render target size ratios; original member name unknown.
+  mm::Vec4 unknown90;      // Inferred role: render target size; original member name unknown.
+  mm::Vec4 unknowna0;      // Inferred role: sub render target size; original member name unknown.
   ShaderManager unknownb0; // Inferred role: shaders; original member name unknown.
   u8 _250[0x258 - 0x250];
   const DrDrawWorkInfoEF *unknown258; // Inferred role: draw work info; original member name unknown.
@@ -117,7 +117,8 @@ static_assert(offsetof(RenderGrObj, unknown50) == 0x50, "");
 static_assert(offsetof(RenderGrObj, unknown60) == 0x60, "");
 static_assert(offsetof(RenderGrObj, unknown70) == 0x70, "");
 static_assert(offsetof(RenderGrObj, unknown80) == 0x80, "");
-static_assert(offsetof(RenderGrObj, unknowna8) == 0xa8, "");
+static_assert(offsetof(RenderGrObj, unknown90) == 0x90, "");
+static_assert(offsetof(RenderGrObj, unknowna0) == 0xa0, "");
 static_assert(offsetof(RenderGrObj, unknownb0) == 0xb0, "");
 static_assert(offsetof(RenderGrObj, unknown258) == 0x258, "");
 static_assert(offsetof(RenderGrObj, unknown260) == 0x260, "");
