@@ -64,6 +64,16 @@ void GmkNpc::validateDisp() const {
   }
 }
 
+void GmkNpc::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
+  AGmkBase::onGobEvent(event, handle);
+  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
+    unbindToGameObj(handle);
+    if (AGmkNpc::unknown18->unknown30 == handle) {
+      AGmkNpc::unknown18->disposeGobInst(false);
+    }
+  }
+}
+
 u8 *GmkNpc::getBindedBdatFp() const { return AGmkBase::getBindedBdatFp(); }
 
 void GmkNpc::debugDraw() const {

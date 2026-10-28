@@ -335,7 +335,7 @@ public:
   void setMatrix(const mm::Mat44 &matrix);
   void getMatrix(mm::Mat44 &matrix);
   const char *getName() const;
-  u16 getID() const;
+  u32 getID() const;
   bool isPosAnm() const;
   bool isNodeAnm() const;
   bool isPosMatrix() const;

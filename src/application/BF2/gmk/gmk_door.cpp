@@ -16,6 +16,11 @@
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_phantom.h"
 #include "mm_mtl/fixstr.h"
+#include "scn/scn_obj_acc.h"
+
+namespace ml {
+class ScnObjModel;
+} // namespace ml
 
 namespace gf {
 struct GF_OBJ_HANDLE;
@@ -41,6 +46,40 @@ bool GmkDoor::BdatInfo::isGfObjMustExist() const {
     return true;
   }
   return false;
+}
+
+void GmkDoor::setLodSwitch(LodSwitch lodSwitch) {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  u32 switchId;
+  switch (lodSwitch) {
+  case LOD_SWITCH_UNKNOWN_0:
+    switchId = 2;
+    break;
+  case LOD_SWITCH_UNKNOWN_1:
+    switchId = 2;
+    break;
+  case LOD_SWITCH_UNKNOWN_2:
+    switchId = 1;
+    break;
+  default:
+    switchId = 0;
+    break;
+  }
+  gf::GfFieldLod *lod = gf::GfFieldLod::get();
+  if (lod->unknown840 == nullptr || lod->unknown850 == nullptr) {
+    return;
+  }
+  u16 lodId = lod->unknown08[getBdatInfo()->unknown06 - lod->unknown808];
+  ml::ScnObjAccSeamPos seamPos(static_cast<ml::ScnObjModel *>(lod->unknown840));
+  int num = seamPos.getMax();
+  for (int i = 0; i < num; i++) {
+    ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
+    if (lodId == partsPos.getID()) {
+      partsPos.setSwitchID(switchId);
+    }
+  }
 }
 
 bool GmkDoor::BdatInfo::isLoadSaveData() const {

@@ -195,6 +195,36 @@ void GmkSalvage::seqUpdatePopDepop(f32 deltaTime) {
   }
 }
 
+void GmkSalvage::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
+  AGmkBase::onGobEvent(event, handle);
+  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
+    u32 enemyCount = unknownB0.size();
+    if (enemyCount != 0) {
+      bool isFound = false;
+      for (u32 i = 0; i < enemyCount; i++) {
+        GmkSalvageLocator *locator = unknownB0[i];
+        if (locator != nullptr && locator->isValid() && !locator->unknownF1) {
+          isFound |= locator->unknownC0 == handle;
+          if (locator->unknownC0 == handle) {
+            break;
+          }
+        }
+      }
+      if (isFound) {
+        u32 tboxCount = unknown88.size();
+        for (u32 i = 0; i < tboxCount; i++) {
+          GmkSalvageLocator *locator = unknown88[i];
+          if (locator != nullptr) {
+            locator->unknownC8 = false;
+            locator->disposeGobInst(true);
+          }
+        }
+      }
+    }
+    unknown58 = gf::INVALID_HANDLE;
+  }
+}
+
 void GmkSalvage::disposeTboxes(bool isFadeOut) {
   u32 count = unknown88.size();
   for (u32 i = 0; i < count; i++) {
@@ -275,6 +305,13 @@ void GmkSalvage::update(f32 deltaTime) {
 }
 
 GmkType GmkSalvageLocator::getGmkType() const { return GMK_TYPE; }
+
+void GmkSalvageLocator::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
+  AGmkBase::onGobEvent(event, handle);
+  if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
+    disposeGobInst(false);
+  }
+}
 
 void GmkSalvageLocator::onEnemyDead(gf::GF_OBJ_HANDLE *handle) { unknownF1 = true; }
 

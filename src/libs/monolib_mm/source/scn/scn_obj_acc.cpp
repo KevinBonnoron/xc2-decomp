@@ -779,7 +779,7 @@ void ScnObjAccPartsPos::getMatrix(mm::Mat44 &matrix) { m_partsObj->getMatrix(mat
 
 const char *ScnObjAccPartsPos::getName() const { return m_partsObj->unknown10 + m_partsObj->unknown18->unknown00; }
 
-u16 ScnObjAccPartsPos::getID() const { return m_partsObj->unknown18->unknown08; }
+u32 ScnObjAccPartsPos::getID() const { return m_partsObj->unknown18->unknown08; }
 
 bool ScnObjAccPartsPos::isPosAnm() const { return m_partsObj->unknown18->isPosAnm; }
 

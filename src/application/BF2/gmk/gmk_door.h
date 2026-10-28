@@ -75,6 +75,12 @@ public:
     PROGRESS_UNKNOWN_3 = 3, // Inferred role: special booted (seqDoor_SpBooted); original name unknown.
   };
 
+  enum LodSwitch {
+    LOD_SWITCH_UNKNOWN_0 = 0, // Role and original enumerator name unknown.
+    LOD_SWITCH_UNKNOWN_1 = 1, // Role and original enumerator name unknown.
+    LOD_SWITCH_UNKNOWN_2 = 2, // Role and original enumerator name unknown.
+  };
+
   static const GmkType GMK_TYPE = GMK_TYPE_DOOR;
   static mm::mtl::RTTI m_rtti;
 
@@ -113,6 +119,7 @@ public:
   void disposeGmkCamera();
   void disposeGmkPhantom();
   void disposeGfObjHandle();
+  void setLodSwitch(LodSwitch lodSwitch);
   bool isGmkFinished() const;
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }

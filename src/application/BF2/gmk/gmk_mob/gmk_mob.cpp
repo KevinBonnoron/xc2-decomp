@@ -270,6 +270,14 @@ void GmkMob::dispose() {
   AGmkBase::dispose();
 }
 
+void GmkMobList::onResetUpdateGmkIndex() {
+  unknown228++;
+  if (unknown228 > 1) {
+    unknown228 = 0;
+    resetMobPopDistSq();
+  }
+}
+
 void GmkMob::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   if (event == gf::IGfObjListener::OBJEVT_DESTROY && handle != gf::INVALID_HANDLE) {
     gf::GfObjAcc acc(handle);
