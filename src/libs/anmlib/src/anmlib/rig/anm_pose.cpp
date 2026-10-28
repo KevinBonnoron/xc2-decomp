@@ -9,6 +9,22 @@
 
 namespace anm {
 
+Pose::Pose(const Skeleton *skeleton, mm::mtl::IAllocator *allocator) : ReferenceObject(allocator), unknown18(skeleton), unknown20(allocator), unknown48(allocator), unknown88(0) {
+  if (unknown18 == nullptr) {
+    mm::MMStdBase::mmAssert("m_pSkeleton", __FILE__, __LINE__);
+  }
+  unknown18->addRef();
+  u32 boneCount = unknown18->unknown30.size();
+  unknown20.reserve(boneCount, 16);
+  unknown48.reserve(boneCount, 16);
+  unknown70.initialize(allocator, boneCount * 3);
+  unknown20.resize(boneCount);
+  unknown48.resize(boneCount);
+  unknown70.set(0, boneCount * 2, true);
+  unknown70.set(boneCount * 2, boneCount * 3, false);
+  unknown88 &= ~3;
+}
+
 void Pose::setLocalPose(const mm::mtl::Vector<QsTransform> &pose) {
   u32 boneCount = unknown18->unknown30.size();
   MM_ASSERT(boneCount != pose.size());
@@ -37,6 +53,26 @@ void Pose::setReferencePose() {
     unknown002(i, BONE_LOCAL_SPACE_DIRTY, false);
   }
   unknown88 = (unknown88 & ~3) | 1;
+}
+
+mm::mtl::Vector<QsTransform> &Pose::accessSyncedPoseLocalSpace() {
+  syncLocalSpace();
+  u32 boneCount = unknown18->unknown30.size();
+  for (u32 i = 0; i < boneCount; i++) {
+    unknown002(i, BONE_MODEL_SPACE_DIRTY, true);
+  }
+  unknown88 = (unknown88 & ~3) | 1;
+  return unknown20;
+}
+
+mm::mtl::Vector<QsTransform> &Pose::accessSyncedPoseModelSpace() {
+  syncModelSpace();
+  u32 boneCount = unknown18->unknown30.size();
+  for (u32 i = 0; i < boneCount; i++) {
+    unknown002(i, BONE_LOCAL_SPACE_DIRTY, true);
+  }
+  unknown88 = (unknown88 & ~3) | 2;
+  return unknown48;
 }
 
 Pose &Pose::operator=(const Pose &rhs) {

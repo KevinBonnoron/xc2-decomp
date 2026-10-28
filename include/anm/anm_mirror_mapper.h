@@ -17,6 +17,7 @@ struct QsTransform;
 class MirrorMapper : public ReferenceObject {
 public:
   ~MirrorMapper() override;
+  void canonicalize(f32 tolerance, mm::Quat *quat);
   void setBonePairTable(s16 *pBonePairTable);
   void mirrorExtractMotion(const QsTransform &source, QsTransform *destination) const;
 

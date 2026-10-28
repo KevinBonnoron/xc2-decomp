@@ -9,6 +9,7 @@
 #include "anm/anm_pose.h"
 #include "anm/anm_skeleton.h"
 #include "anm/anm_util.h"
+#include "mm_mtl/vector.h"
 
 namespace anm {
 struct QsTransform;
@@ -50,22 +51,22 @@ void AnimSinglePoseSamper::samplePose() {
   anm::Util::samplePoseSmartFromControl(unknown18, unknown20, unknown32);
   anm::ExtraTruckBuffer *buffer = unknown28;
   if (buffer != nullptr) {
-    unknown18->sampleExtraTrucks(unknown30, buffer->unknown30, buffer->unknown28);
-    anm::Util::clampLimitExtraTruck(*unknown28->unknown20, buffer->unknown30, buffer->unknown28);
+    unknown18->sampleExtraTrucks(unknown30, buffer->unknown28.size(), buffer->unknown28.m_buffer);
+    anm::Util::clampLimitExtraTruck(*unknown28->unknown20, buffer->unknown28.size(), buffer->unknown28.m_buffer);
   }
 }
 
 void AnimEventSinglePoseSamper::samplePose() {
   if (unknown18 != nullptr && unknown20 != nullptr) {
     unknown20->setReferencePose();
-    anm::Array<anm::QsTransform> &local = unknown20->accessSyncedPoseLocalSpace();
-    unknown18->sampleTrucks(local.m_size, local.m_pElements);
+    mm::mtl::Vector<anm::QsTransform> &local = unknown20->accessSyncedPoseLocalSpace();
+    unknown18->sampleTrucks(local.size(), local.m_buffer);
     unknown20->syncModelSpace();
   }
   anm::ExtraTruckBuffer *buffer = unknown28;
   if (buffer != nullptr) {
-    unknown18->sampleExtraTrucks(unknown30, buffer->unknown30, buffer->unknown28);
-    anm::Util::clampLimitExtraTruck(*unknown28->unknown20, buffer->unknown30, buffer->unknown28);
+    unknown18->sampleExtraTrucks(unknown30, buffer->unknown28.size(), buffer->unknown28.m_buffer);
+    anm::Util::clampLimitExtraTruck(*unknown28->unknown20, buffer->unknown28.size(), buffer->unknown28.m_buffer);
   }
 }
 
@@ -91,15 +92,15 @@ void AnimPoseSamper::bind(anm::Blender *blender, anm::Pose *pose, anm::ExtraTruc
 void AnimPoseSamper::samplePose() {
   if (unknown32) {
     if (unknown33) {
-      anm::Array<anm::QsTransform> &local = unknown20->accessSyncedPoseLocalSpace();
-      unknown18->sampleTrucks(local.m_size, local.m_pElements);
+      mm::mtl::Vector<anm::QsTransform> &local = unknown20->accessSyncedPoseLocalSpace();
+      unknown18->sampleTrucks(local.size(), local.m_buffer);
       unknown20->syncModelSpace();
     } else {
-      anm::Array<anm::QsTransform> &model = unknown20->accessSyncedPoseModelSpace();
-      unknown18->sampleTrucksMS(model.m_size, model.m_pElements);
+      mm::mtl::Vector<anm::QsTransform> &model = unknown20->accessSyncedPoseModelSpace();
+      unknown18->sampleTrucksMS(model.size(), model.m_buffer);
     }
     if (unknown28 != nullptr) {
-      unknown18->sampleExtraTrucks(unknown30, unknown28->unknown30, unknown28->unknown28);
+      unknown18->sampleExtraTrucks(unknown30, unknown28->unknown28.size(), unknown28->unknown28.m_buffer);
     }
   }
 }
@@ -131,15 +132,15 @@ void AnimAsmPoseSampler::bind(anm::ASMControl *asmControl, anm::Pose *pose, anm:
 
 void AnimAsmPoseSampler::samplePose() {
   if (!unknown32) {
-    anm::Array<anm::QsTransform> &model = unknown20->accessSyncedPoseModelSpace();
-    unknown18->sampleTrucksMS(model.m_size, model.m_pElements);
+    mm::mtl::Vector<anm::QsTransform> &model = unknown20->accessSyncedPoseModelSpace();
+    unknown18->sampleTrucksMS(model.size(), model.m_buffer);
   } else {
-    anm::Array<anm::QsTransform> &local = unknown20->accessSyncedPoseLocalSpace();
-    unknown18->sampleTrucks(local.m_size, local.m_pElements);
+    mm::mtl::Vector<anm::QsTransform> &local = unknown20->accessSyncedPoseLocalSpace();
+    unknown18->sampleTrucks(local.size(), local.m_buffer);
     unknown20->syncModelSpace();
   }
   if (unknown28 != nullptr) {
-    unknown18->unknown20.sampleExtraTrucks(unknown30, unknown28->unknown30, unknown28->unknown28);
+    unknown18->unknown20.sampleExtraTrucks(unknown30, unknown28->unknown28.size(), unknown28->unknown28.m_buffer);
   }
 }
 
@@ -165,12 +166,12 @@ void AnimEventAsmPoseSampler::samplePose() {
     if (unknown18 == nullptr) {
       unknown20->setReferencePose();
     } else {
-      anm::Array<anm::QsTransform> &local = unknown20->accessSyncedPoseLocalSpace();
-      unknown18->sampleTrucks(local.m_size, local.m_pElements);
+      mm::mtl::Vector<anm::QsTransform> &local = unknown20->accessSyncedPoseLocalSpace();
+      unknown18->sampleTrucks(local.size(), local.m_buffer);
     }
     unknown20->syncModelSpace();
     if (unknown28 != nullptr) {
-      unknown18->unknown20.sampleExtraTrucks(unknown30, unknown28->unknown30, unknown28->unknown28);
+      unknown18->unknown20.sampleExtraTrucks(unknown30, unknown28->unknown28.size(), unknown28->unknown28.m_buffer);
     }
   }
 }

@@ -17,6 +17,7 @@
 #include "anm/anm_res_asm.h"
 #include "anm/anm_res_clip_data.h"
 #include "anm/anm_res_state_data.h"
+#include "anm/anm_skeleton.h"
 #include "anm/anm_space_resolve_util.h"
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_math.h"
@@ -24,12 +25,31 @@
 #include "mm_mtl/vector.h"
 
 namespace anm {
-class Skeleton;
 
 static_assert(sizeof(mm::mtl::Set<StringPtr>) == 0x18, "");
 static_assert(sizeof(mm::mtl::RedBlackTreeBase<mm::mtl::Set<StringPtr>::TreeTraits<StringPtr>>::node) == 0x28, "");
 
 static const char *s_layerNames[LAYER_NUM] = {"base", "upperbody", "head", "eye", "mouth", "brow", "extra"};
+
+void Util::computeIgnoreMirrorFromName(const mm::mtl::Vector<IgnoreName> &names, const Skeleton *skeleton, mm::mtl::Vector<s8> *ignore) {
+  if (skeleton != nullptr) {
+    ignore->clear();
+    u32 boneCount = skeleton->getBoneCount();
+    if (ignore->capacity() < boneCount) {
+      ignore->reserve(boneCount);
+    }
+    for (u32 i = 0; i < boneCount; i++) {
+      s8 value = 0;
+      for (u32 j = 0; j < names.size(); j++) {
+        if (strncmp(skeleton->unknown001(i).unknown00, names[j].unknown00, names[j].unknown08) == 0) {
+          value = -1;
+          break;
+        }
+      }
+      ignore->push_back(value);
+    }
+  }
+}
 
 const char *Util::getName(const Binding &binding) {
   MM_ASSERT(binding.m_pAnimation);
@@ -94,29 +114,29 @@ void Util::samplePoseSmartFromControl(Control *control, Pose *pose, bool localSp
     u8 blendHint = pBinding->m_pAnimation->unknown21;
     if (localSpace) {
       if (blendHint == 0) {
-        Array<QsTransform> &local = pose->accessSyncedPoseLocalSpace();
-        control->sampleTrucks(local.m_size, local.m_pElements);
+        mm::mtl::Vector<QsTransform> &local = pose->accessSyncedPoseLocalSpace();
+        control->sampleTrucks(local.size(), local.m_buffer);
       } else if (blendHint == 1) {
-        Array<QsTransform> &local = pose->accessSyncedPoseLocalSpace();
-        control->sampleTrucks(local.m_size, local.m_pElements);
+        mm::mtl::Vector<QsTransform> &local = pose->accessSyncedPoseLocalSpace();
+        control->sampleTrucks(local.size(), local.m_buffer);
         const Skeleton *pSkeleton = pose->unknown18;
         MM_ASSERT(pSkeleton);
-        SpaceResolveUtil::clacPoseMSNoTruck(pBinding, pSkeleton, local.m_pElements);
-        SpaceResolveUtil::convertMStoLS(pSkeleton, local.m_pElements);
+        SpaceResolveUtil::clacPoseMSNoTruck(pBinding, pSkeleton, local.m_buffer);
+        SpaceResolveUtil::convertMStoLS(pSkeleton, local.m_buffer);
       } else {
         return;
       }
       pose->syncModelSpace();
     } else if (blendHint == 0) {
-      Array<QsTransform> &model = pose->accessSyncedPoseModelSpace();
-      control->sampleTrucks(model.m_size, model.m_pElements);
+      mm::mtl::Vector<QsTransform> &model = pose->accessSyncedPoseModelSpace();
+      control->sampleTrucks(model.size(), model.m_buffer);
       const Skeleton *pSkeleton = pose->unknown18;
       MM_ASSERT(pSkeleton);
-      SpaceResolveUtil::setReferencePoseNoTruck(pBinding, pSkeleton, model.m_pElements);
-      SpaceResolveUtil::convertLStoMS(pSkeleton, model.m_pElements);
+      SpaceResolveUtil::setReferencePoseNoTruck(pBinding, pSkeleton, model.m_buffer);
+      SpaceResolveUtil::convertLStoMS(pSkeleton, model.m_buffer);
     } else if (blendHint == 1) {
-      Array<QsTransform> &model = pose->accessSyncedPoseModelSpace();
-      control->sampleTrucks(model.m_size, model.m_pElements);
+      mm::mtl::Vector<QsTransform> &model = pose->accessSyncedPoseModelSpace();
+      control->sampleTrucks(model.size(), model.m_buffer);
     }
   }
 }

@@ -7,6 +7,7 @@
 namespace anm {
 
 class ExtraTruckSlot;
+class Skeleton;
 struct QsTransform;
 
 struct BlendSrc {
@@ -25,6 +26,11 @@ struct NormalizeSrc {
   u32 unknown00;                // Inferred role: bone count; original member name unknown.
   const QsTransform *unknown08; // Inferred role: reference poses; original member name unknown.
   const f32 *unknown10;         // Inferred role: weight sums; original member name unknown.
+};
+
+struct NormalizeMSSrc {
+  const Skeleton *unknown00; // Inferred role: p skeleton; original member name unknown.
+  const f32 *unknown08;      // Inferred role: weight sums; original member name unknown.
 };
 
 struct BlendExtraTruckSrc {
@@ -58,6 +64,7 @@ class BlendUtil {
 public:
   static void blendNormal(const BlendSrc &src, BlendNormalDst *dst);
   static void normalizePose(const NormalizeSrc &src, QsTransform *poses);
+  static void normalizePoseMS(const NormalizeMSSrc &src, QsTransform *poses);
   static void blendNormalExtraTruck(const BlendExtraTruckSrc &src, BlendNormalExtraTruckDst *dst);
   static void blendAddExtraTruck(const BlendExtraTruckSrc &src, BlendAddExtraTruckDst *dst);
   static void normalizeExtraTruck(const NormalizeExtraTruckSrc &src, f32 *values);

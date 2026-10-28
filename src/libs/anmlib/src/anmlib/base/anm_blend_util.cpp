@@ -4,6 +4,8 @@
 
 #include "anm/anm_array-inl.h"
 #include "anm/anm_qs_transform.h"
+#include "anm/anm_skeleton.h"
+#include "anm/anm_transform_util.h"
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec4.h"
@@ -72,6 +74,47 @@ void BlendUtil::normalizePose(const NormalizeSrc &src, QsTransform *poses) {
       f32 lengthSquared = x * x + y * y + z * z + w * w;
       pose.unknown10.w = w;
       f32 length = sqrtf(lengthSquared);
+      f32 inverseLength = 1.0f / length;
+      pose.unknown10.x = pose.unknown10.x * inverseLength;
+      pose.unknown10.y = inverseLength * pose.unknown10.y;
+      pose.unknown10.z = inverseLength * pose.unknown10.z;
+      pose.unknown10.w = inverseLength * pose.unknown10.w;
+    }
+  }
+}
+
+void BlendUtil::normalizePoseMS(const NormalizeMSSrc &src, QsTransform *poses) {
+  const Skeleton *skeleton = src.unknown00;
+  u32 boneCount = skeleton->getBoneCount();
+  for (u32 i = 0; i < boneCount; i++) {
+    f32 weight = src.unknown08[i];
+    if (weight == 0.0f) {
+      s16 parent = skeleton->unknown003(i);
+      if (parent == -1) {
+        poses[i] = skeleton->unknown40[i];
+      } else {
+        TransformUtil::mul(poses[parent], skeleton->unknown40[i], &poses[i]);
+      }
+    } else {
+      f32 inverse = 1.0f / weight;
+      QsTransform &pose = poses[i];
+      pose.unknown00.x = inverse * pose.unknown00.x;
+      pose.unknown00.y = inverse * pose.unknown00.y;
+      pose.unknown00.z = inverse * pose.unknown00.z;
+      pose.unknown00.w = inverse * pose.unknown00.w;
+      pose.unknown20.x = inverse * pose.unknown20.x;
+      pose.unknown20.y = inverse * pose.unknown20.y;
+      pose.unknown20.z = inverse * pose.unknown20.z;
+      pose.unknown20.w = inverse * pose.unknown20.w;
+      f32 x = inverse * pose.unknown10.x;
+      f32 y = inverse * pose.unknown10.y;
+      f32 z = inverse * pose.unknown10.z;
+      f32 w = inverse * pose.unknown10.w;
+      pose.unknown10.x = x;
+      pose.unknown10.y = y;
+      pose.unknown10.z = z;
+      pose.unknown10.w = w;
+      f32 length = sqrtf(x * x + y * y + z * z + w * w);
       f32 inverseLength = 1.0f / length;
       pose.unknown10.x = pose.unknown10.x * inverseLength;
       pose.unknown10.y = inverseLength * pose.unknown10.y;

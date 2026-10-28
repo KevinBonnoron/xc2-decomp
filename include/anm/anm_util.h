@@ -1,6 +1,9 @@
 #pragma once
+#include <stddef.h>
+
 #include "anm/anm_string_ptr.h"
 #include "mm_mtl/set.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 namespace anm {
@@ -9,6 +12,7 @@ class Binding;
 class Control;
 class ExtraTruckSlot;
 class Pose;
+class Skeleton;
 class ResASM;
 struct QsTransform;
 struct ResAppendix;
@@ -33,6 +37,13 @@ enum Layer {
 
 class Util {
 public:
+  // Inferred name prefix of a bone to ignore when mirroring; original member names unknown.
+  struct IgnoreName {
+    char unknown00[8]; // Inferred role: name prefix; original member name unknown.
+    s32 unknown08;     // Inferred role: length of the prefix; original member name unknown.
+    u8 _0c[4];
+  };
+
   static const char *getName(const Binding &binding);
   static s32 getAnimationType(const Binding &binding);
   static PlayMode getPlayMode(const Binding &binding);
@@ -48,6 +59,7 @@ public:
   static const Binding *getAsmBinding(const ResASM &resAsm, const char *state, u32 index);
   static bool getAsmLocomotionReference(const ResASM &resAsm, const char *state, f32 time, u32 index, QsTransform *transform);
   static bool getAsmLocomotionDeltaReference(const ResASM &resAsm, const char *state, f32 startTime, f32 endTime, u32 index, QsTransform *transform);
+  static void computeIgnoreMirrorFromName(const mm::mtl::Vector<IgnoreName> &names, const Skeleton *skeleton, mm::mtl::Vector<s8> *ignore);
   static const char *getLayerName(Layer layer);
   static Layer getLayer(const char *name);
   static const ResState *getStateResource(const ResASM &resAsm, const char *name);
@@ -67,5 +79,8 @@ public:
   static void queryVariableFloat(const ResASM &resAsm, mm::mtl::Set<StringPtr> *pDst);
   static void queryVariableInt(const ResASM &resAsm, mm::mtl::Set<StringPtr> *pDst);
 };
+
+static_assert(offsetof(Util::IgnoreName, unknown08) == 0x08, "");
+static_assert(sizeof(Util::IgnoreName) == 0x10, "");
 
 } // namespace anm

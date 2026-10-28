@@ -3,6 +3,7 @@
 
 #include "anm/anm_array-inl.h"
 #include "anm/anm_reference_object.h"
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 namespace mm {
@@ -43,6 +44,8 @@ public:
   struct CompTruck;
 
   u16 getTruckID(const char *name) const;
+  // Inferred helper: truck name by 16-bit index; original name unknown.
+  const char *unknown001(u16 index) const { return unknown08[index]; }
 
   const char *unknown00;         // Inferred role: name; original member name unknown.
   Array<const char *> unknown08; // Inferred role: truck names, sorted; original member name unknown.
@@ -59,17 +62,16 @@ static_assert(sizeof(ExtraTruckSlot) == 0x38, "");
 class ExtraTruckBuffer : public ReferenceObject {
 public:
   ExtraTruckBuffer(const Skeleton &skeleton, const ExtraTruckSlot &slot, mm::mtl::IAllocator *pAllocator);
+  ~ExtraTruckBuffer() override;
+
   const Skeleton *unknown18;       // Inferred role: skeleton; original member name unknown.
   const ExtraTruckSlot *unknown20; // Inferred role: slot; original member name unknown.
-  f32 *unknown28;                  // Inferred role: truck values (start of an mtl::Vector<float>); original member name unknown.
-  size_t unknown30;                // Inferred role: truck value count; original member name unknown.
-  u8 _38[0x50 - 0x38];
+  mm::mtl::Vector<f32> unknown28;  // Inferred role: truck values; original member name unknown.
 };
 
 static_assert(offsetof(ExtraTruckBuffer, unknown18) == 0x18, "");
 static_assert(offsetof(ExtraTruckBuffer, unknown20) == 0x20, "");
 static_assert(offsetof(ExtraTruckBuffer, unknown28) == 0x28, "");
-static_assert(offsetof(ExtraTruckBuffer, unknown30) == 0x30, "");
 static_assert(sizeof(ExtraTruckBuffer) == 0x50, "");
 
 } // namespace anm

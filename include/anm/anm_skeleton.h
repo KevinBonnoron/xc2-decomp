@@ -3,12 +3,12 @@
 #include <string.h>
 
 #include "anm/anm_array-inl.h"
+#include "anm/anm_extra_truck.h"
 #include "anm/anm_reference_object.h"
 #include "types.h"
 
 namespace anm {
 
-class ExtraTruckSlot;
 struct QsTransform;
 
 enum LabelType {};
@@ -41,6 +41,14 @@ public:
 
     return INVALID_BONE;
   }
+
+  // Inferred helper: bone by 16-bit index; original name unknown.
+  const Bone &unknown001(u16 index) const { return unknown30[index]; }
+  // Inferred helper: parent bone by 16-bit index; original name unknown.
+  s16 unknown003(u16 index) const { return unknown20[index]; }
+  // Inferred helper: extra truck slot by 16-bit index; original name unknown.
+  const ExtraTruckSlot &unknown002(u16 index) const { return unknown50[index]; }
+  u32 getBoneCount() const { return unknown30.size(); }
 
   u16 getExtraTruckSlotID(const char *name) const;
   const Bone *getBoneFromLabel(LabelType type, u16 id) const;
