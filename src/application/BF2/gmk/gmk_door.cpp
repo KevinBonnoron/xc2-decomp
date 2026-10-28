@@ -25,12 +25,6 @@ namespace fw {
 class SoundPack;
 } // namespace fw
 
-namespace mm {
-namespace mtl {
-class RTTI;
-} // namespace mtl
-} // namespace mm
-
 namespace gmk {
 
 template bool TGmkList<GmkDoor, GmkDoor::BdatInfo, 1380929348u, 2u, GmkDoorGob>::initGmkBdatInfo(GmkDoor::BdatInfo &, int &, const AGmkBase &);
@@ -245,6 +239,19 @@ void GmkDoor::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *ha
   AGmkBase::onGobEvent(event, handle);
   if (event == gf::IGfObjListener::OBJEVT_DESTROY) {
     unknown2b8 = gf::INVALID_HANDLE;
+  }
+}
+
+void GmkDoor::onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInfo &info) {
+  if ((getBdatInfo()->unknown02 & 0xfe) == 6 && getProgress() != PROGRESS_UNKNOWN_2) {
+    const BdatInfo *bdatInfo = getBdatInfo();
+    if (!bdatInfo->unknown19) {
+      openDoor(false);
+    } else {
+      closeDoor(false);
+    }
+    createGmkCamera(bdatInfo->unknown20, bdatInfo->unknown28, true);
+    setProgress(PROGRESS_UNKNOWN_2);
   }
 }
 

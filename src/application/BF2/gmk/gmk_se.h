@@ -53,9 +53,11 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_SE;
 
+  GmkSe();
   ~GmkSe() override { dispose(); }
   GmkType getGmkType() const override;
   void dispose() override;
+  void createInst();
   void disposeInst(bool isFadeOut);
   void update(f32 deltaTime) override;
   void updateInActiveList(f32 deltaTime);
@@ -67,10 +69,10 @@ public:
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
-  u8 _58[0x60 - 0x58];
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
   bool unknownF0;       // Role and original member name unknown.
-  u8 _f1[0xf4 - 0xf1];
+  bool unknownF1;       // Role and original member name unknown.
+  u8 _f2[0xf4 - 0xf2];
   int unknownF4;   // Role and original member name unknown.
   f32 unknownF8;   // Role and original member name unknown.
   f32 unknownFC;   // Role and original member name unknown.
@@ -81,6 +83,7 @@ public:
 static_assert(sizeof(GmkSe::BdatInfo) == 0x40, "");
 static_assert(offsetof(GmkSe, unknown60) == 0x60, "");
 static_assert(offsetof(GmkSe, unknownF0) == 0xf0, "");
+static_assert(offsetof(GmkSe, unknownF1) == 0xf1, "");
 static_assert(offsetof(GmkSe, unknownF4) == 0xf4, "");
 static_assert(offsetof(GmkSe, unknownF8) == 0xf8, "");
 static_assert(offsetof(GmkSe, unknownFC) == 0xfc, "");
@@ -100,6 +103,8 @@ public:
     f32 unknown14; // Inferred role: AABB maximum y; original member name unknown.
     f32 unknown18; // Inferred role: AABB maximum z; original member name unknown.
     int unknown1c; // Inferred role: point index end; original member name unknown.
+    f32 unknown20; // Inferred role: far distance; original member name unknown.
+    f32 unknown24; // Inferred role: near distance; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_SE_LINE;
@@ -108,8 +113,10 @@ public:
   ~GmkSeLine() override { dispose(); }
   GmkType getGmkType() const override;
   void dispose() override;
+  void createInst();
   void disposeInst(bool isFadeOut);
   void update(f32 deltaTime) override;
+  void updateInActiveList(f32 deltaTime);
   void debugDraw() const override;
   int getPointNum() const;
   const AGmkBase *getPoint(u32 index) const;
@@ -119,15 +126,15 @@ public:
   bool isPlayerInsideAabb() const;
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const GmkSe::BdatInfo *getBdatInfo() const { return reinterpret_cast<const GmkSe::BdatInfo *>(unknown20.unknown10); }
 
   bool unknown58; // Role and original member name unknown.
   bool unknown59; // Role and original member name unknown.
   u8 _5a[0x5c - 0x5a];
   int unknown5C;  // Role and original member name unknown.
   f32 unknown60;  // Role and original member name unknown.
-  u32 unknown64;  // Role and original member name unknown.
+  f32 unknown64;  // Role and original member name unknown.
   bool unknown68; // Role and original member name unknown.
-  u8 _69[0x70 - 0x69];
 };
 
 static_assert(offsetof(GmkSeLine, unknown58) == 0x58, "");

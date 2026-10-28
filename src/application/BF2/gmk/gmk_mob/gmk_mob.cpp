@@ -2,8 +2,10 @@
 
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_object_type.h"
+#include "gf/gf_allocator.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h"        // IWYU pragma: keep
 #include "gmk/gmk_mob/gmk_mob_impl.h" // IWYU pragma: keep
@@ -189,6 +191,47 @@ bool GmkMob::PopXformFinder::findPosRot(mm::Vec3 &position, mm::Vec3 &rotation) 
 void GmkMob::PopXformFinder::onPopGob(gf::GF_OBJ_HANDLE *handle) const {}
 
 void GmkMob::PopXformFinder::onCreateGobInsts(u32 num) const {}
+
+void GmkMobInsts::seqWaitToFadeOutOfGobInst(const UpdateInfo &info) {
+  u32 num = unknowna8->size();
+  if (num == 0) {
+    unknowna8->destroy();
+    unknown58.dispose();
+    unknownc0 = &GmkMobInsts::seqUpdatePopDepop;
+  }
+}
+
+void GmkMobInsts::disposeGobInsts(bool isFadeOut) {
+  if (isGobInstExist()) {
+    size_t num = unknowna8->size();
+    for (size_t i = 0; i < num; i++) {
+      gf::GF_OBJ_HANDLE *handle = (*unknowna8)[i];
+      if (handle != gf::INVALID_HANDLE) {
+        if (isFadeOut) {
+          gmk::disposeGobInst(handle, 1.0f);
+        } else {
+          unknown00.unknown00->unbindToGameObj(handle);
+          gf::GfObjUtil::destroy(handle);
+        }
+      }
+    }
+    if (isFadeOut) {
+      unknownc0 = &GmkMobInsts::seqWaitToFadeOutOfGobInst;
+      return;
+    }
+    unknowna8->destroy();
+    unknown58.dispose();
+  }
+}
+
+void GmkMobInsts::createGobInsts() {
+  disposeGobInsts(false);
+  CBdatWrapper bdat = {unknown00.unknown08};
+  unknown58.create(bdat, unknown00.unknown10);
+  unknowna8->destroy();
+  unknowna8->setAllocator(gf::getAllocator(gf::ALLOCATOR_DEFAULT));
+  unknowna8->reserve(unknown58.unknown40);
+}
 
 void GmkMobInsts::disposeSquad() { mm::mtl::safeRelease(unknownb0); }
 

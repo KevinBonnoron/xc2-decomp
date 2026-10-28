@@ -84,7 +84,7 @@ public:
   void es_fade_core(void *data, u32 handle, int frame);
   void es_remove_cas(void *callback);
   int es_isalive(u32 handle);
-  bool es_getDeadFlag(u32 handle);
+  int es_getDeadFlag(u32 handle);
   bool es_is_loop(void *data) const;
   bool es_contais_cam_axis(void *data);
   const char *es_get_name(void *data);

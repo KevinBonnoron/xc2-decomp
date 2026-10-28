@@ -47,8 +47,11 @@ public:
   bool canDepopGobInst() const;
   void createGfObjHandle();
   void disposeGfObjHandle();
+  void createIcon();
   void disposeIcon(bool isFadeOut);
+  void validateIconPos();
   void validateDisp() const;
+  void seqUpdatePopDepop(f32 deltaTime);
   void seqUpdateRepopCounter(f32 deltaTime);
   void setTargetable(bool isTargetable);
 

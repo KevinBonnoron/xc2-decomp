@@ -78,6 +78,7 @@ public:
         : unknown00(100), unknown01(100), unknown02(100), unknown03(100), unknown04(0), unknown08(0), unknown0c(0), unknown0e(0), unknown10(0), unknown12(0), unknown14(0), unknown40(0),
           unknown44(false) {}
 
+    void create(CBdatWrapper bdat, int id);
     void dispose();
 
     u8 unknown00;                           // Inferred role: scale min; original member name unknown.
@@ -97,6 +98,7 @@ public:
   };
 
   GmkMobInsts();
+  ~GmkMobInsts() { dispose(); }
   void validateDisp(gf::GF_OBJ_HANDLE *handle) const;
   void validateDisp() const;
   bool isValid() const;
@@ -107,8 +109,10 @@ public:
   void removeGobInst(gf::GF_OBJ_HANDLE *handle);
   void update(const UpdateInfo &info);
   void create(const CreateInfo &info);
+  void createGobInsts();
   void createSquad(u16 squadId);
   void seqUpdatePopDepop(const UpdateInfo &info);
+  void seqWaitToFadeOutOfGobInst(const UpdateInfo &info);
   void disposeGobInsts(bool isFadeOut);
   void dispose();
   void disposeSquad();
@@ -161,7 +165,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_MOB;
 
-  ~GmkMob() override;
+  ~GmkMob() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
   void create(const CreateInfo &info) override;

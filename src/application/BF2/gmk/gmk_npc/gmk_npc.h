@@ -38,12 +38,10 @@ public:
   virtual void debugUpdate(f32 deltaTime);
 
   GmkNpcIdInfo *unknown18; // Inferred role: shared NPC instance information; original member name unknown.
-  bool unknown20;          // Inferred role: display enabled; original member name unknown.
 };
 
 static_assert(offsetof(AGmkNpc, unknown18) == 0x18, "");
-static_assert(offsetof(AGmkNpc, unknown20) == 0x20, "");
-static_assert(sizeof(AGmkNpc) == 0x28, "");
+static_assert(sizeof(AGmkNpc) == 0x20, "");
 
 class GmkNpc : public AGmkBase, public AGmkNpc {
 public:
@@ -83,9 +81,12 @@ public:
   void debugUpdate(f32 deltaTime) override {}
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(AGmkBase::unknown20.unknown10); }
+
+  bool unknown68; // Inferred role: display enabled; original member name unknown.
 };
 
 static_assert(sizeof(GmkNpc::BdatInfo) == 0x30, "");
+static_assert(offsetof(GmkNpc, unknown68) == 0x68, "");
 static_assert(sizeof(GmkNpc) == 0x70, "");
 
 class GmkNpcList : public TGmkList<GmkNpc, GmkNpc::BdatInfo, 0x43504e, 4, GmkNpcGob> {

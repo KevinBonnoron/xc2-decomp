@@ -59,7 +59,7 @@ gf::GF_OBJ_HANDLE *GmkNpc::getGobInst() const {
 void GmkNpc::validateDisp() const {
   gf::GF_OBJ_HANDLE *handle = getGobInst();
   if (handle != gf::INVALID_HANDLE) {
-    bool isDisp = AGmkNpc::unknown20 && debugIsDispGmkType(getGmkType());
+    bool isDisp = unknown68 && debugIsDispGmkType(getGmkType());
     setEventDisp(handle, isDisp);
   }
 }

@@ -59,6 +59,16 @@ GmkType GmkElevator::getGmkType() const { return GMK_TYPE; }
 
 int GmkElevator::getGameFlagId() const { return unknown20.unknown18 + 0xb248; }
 
+void GmkElevator::create(const CreateInfo &info) {
+  AGmkBase::create(info);
+  if (isValid() && static_cast<s16>(getData()->unknown02 - getData()->unknown00) == 3) {
+    unknown4cc = getBdatInfo()->unknown28;
+    unknown4b8 = canCreateGameEntity() ? &GmkElevator::seqWaitToValidate_GfFieldLod : &GmkElevator::seqInit;
+  } else {
+    dispose();
+  }
+}
+
 void GmkElevator::onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInfo &info) {}
 
 void GmkElevator::clearRequests() { unknown4c8 = 0; }

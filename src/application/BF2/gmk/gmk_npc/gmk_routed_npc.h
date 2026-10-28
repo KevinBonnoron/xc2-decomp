@@ -1,16 +1,25 @@
 #pragma once
+#include <stddef.h>
+
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_npc/gmk_npc.h"
 #include "gmk/gmk_route.h"
+#include "mm_math/mm_quat.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
+
+namespace gf {
+struct GF_OBJ_HANDLE;
+} // namespace gf
 
 namespace gmk {
 
 class GmkRouteGob;
+class GmkRouteNavi;
 
-class GmkRoutedNpc : public GmkRoute {
+class GmkRoutedNpc : public GmkRoute, public AGmkNpc {
 public:
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTED_NPC;
 
@@ -21,18 +30,33 @@ public:
   void dispose() override;
   void debugDraw() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
-  int getBindedBdatId() const;
-  u8 *getBindedBdatFp() const;
-  bool isPopCondMatched() const;
-  bool isDepopCondMatched() const;
-  bool isPopDistCondMatched() const;
-  bool isDepopDistCondMatched() const;
+  gf::GF_OBJ_HANDLE *getGobInst() const;
+  bool isPopCondMatchedExceptDist() const;
+  bool isPopCondMatched() const override;
+  bool isDepopCondMatched() const override;
+  bool isPopDistCondMatched() const override;
+  bool isDepopDistCondMatched() const override;
+  u8 *getBindedBdatFp() const override;
+  int getBindedBdatId() const override;
+  bool findPopPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const override;
+  void bindToGameObj(gf::GF_OBJ_HANDLE *handle) const override;
+  void unbindToGameObj(gf::GF_OBJ_HANDLE *handle) const override;
+  void validateDisp() const override;
 
-  const GmkNpc::BdatInfo *getBdatInfo() const { return reinterpret_cast<const GmkNpc::BdatInfo *>(unknown20.unknown10); }
+  const GmkNpc::BdatInfo *getBdatInfo() const { return reinterpret_cast<const GmkNpc::BdatInfo *>(GmkRoute::unknown20.unknown10); }
 
-  u8 _50[0xa0 - 0x50];
+  GmkRouteNavi *unknown70; // Inferred role: route navi; original member name unknown.
+  bool unknown78;          // Role and original member name unknown.
+  bool unknown79;          // Inferred role: display enabled; original member name unknown.
+  mm::Vec3 unknown80;      // Inferred role: position; original member name unknown.
+  mm::Quat unknown90;      // Inferred role: rotation; original member name unknown.
 };
 
+static_assert(offsetof(GmkRoutedNpc, unknown70) == 0x70, "");
+static_assert(offsetof(GmkRoutedNpc, unknown78) == 0x78, "");
+static_assert(offsetof(GmkRoutedNpc, unknown79) == 0x79, "");
+static_assert(offsetof(GmkRoutedNpc, unknown80) == 0x80, "");
+static_assert(offsetof(GmkRoutedNpc, unknown90) == 0x90, "");
 static_assert(sizeof(GmkRoutedNpc) == 0xa0, "");
 
 class GmkRoutedNpcList : public TGmkList<GmkRoutedNpc, GmkNpc::BdatInfo, 0x43504e52, 6, GmkRouteGob> {

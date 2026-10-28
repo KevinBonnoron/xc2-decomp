@@ -508,7 +508,7 @@ void EffectManager::setSignal(u32 handle) {
 
 bool EffectManager::isExist(u32 handle) { return effect::SystemManager::getPtr()->es_isalive(handle) > 0; }
 
-bool EffectManager::getDeadFlag(u32 handle) { return effect::SystemManager::getPtr()->es_getDeadFlag(handle); }
+int EffectManager::getDeadFlag(u32 handle) { return effect::SystemManager::getPtr()->es_getDeadFlag(handle); }
 
 bool EffectManager::isLoop(void *data) const { return effect::SystemManager::getPtr()->es_is_loop(data); }
 

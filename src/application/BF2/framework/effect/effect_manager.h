@@ -164,7 +164,7 @@ public:
   void setParam(u32 handle, const mm::Vec3 &position, const mm::Vec3 &scale);
   void setSignal(u32 handle);
   bool isExist(u32 handle);
-  bool getDeadFlag(u32 handle);
+  int getDeadFlag(u32 handle);
   bool isLoop(void *data) const;
   bool isLoop(const char *name, EffectPack *pack) const;
   bool containsCamAxis(void *data) const;

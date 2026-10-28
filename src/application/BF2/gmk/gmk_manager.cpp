@@ -110,7 +110,6 @@ struct Col4;
 
 namespace gmk {
 
-constexpr u16 SCENARIO_FLAG_KEEP_BATTLE_LOCK_IN_BATTLE = 7039;
 const ml::FILE_PRIO GMK_SCRIPT_FILE_PRIO = static_cast<ml::FILE_PRIO>(7);
 
 static const char *const s_gmkFileNames[] = {
@@ -233,6 +232,34 @@ void GmkManager::update(f32 deltaTime) {
   if (unknownf380) {
     (this->*unknownf380)(deltaTime);
   }
+}
+
+void GmkManager::seqWaitValidateResDefBdatFp(f32 deltaTime) {
+  if (unknown58.isValid()) {
+    unknown190 = Bdat::getFP(unknown08.unknown28.c_str());
+    unknownf380 = &GmkManager::seqUpdate;
+  }
+}
+
+void GmkManager::create(const CreateInfo &info) {
+  dispose();
+  unknown08 = info;
+  GmkBdat::CreateInfo bdatInfo;
+  bdatInfo.unknown00 = info.unknown00;
+  bdatInfo.unknown04 = unknown08.unknown04.c_str();
+  bdatInfo.unknown108 = 3;
+  unknown58.create(bdatInfo);
+  unknownf358.setAllocator(fw::FrameworkMemory::getAllocator(5));
+  unknownf358.reserve(info.unknown4c);
+  unknownf380 = &GmkManager::seqWaitValidateResDefBdatFp;
+}
+
+void GmkManager::dispose() {
+  unknownf380 = nullptr;
+  clearGmkSets();
+  unknownf358.destroy();
+  unknown190 = nullptr;
+  unknown58.dispose();
 }
 
 void GmkManager::clearGmkSets() {
@@ -375,6 +402,45 @@ GmkSet::~GmkSet() { dispose(); }
 const IGmkList *GmkSet::getGmkList(GmkType type) const { return unknown1b8[type]; }
 
 IGmkList *GmkSet::getGmkList(GmkType type) { return unknown1b8[type]; }
+
+void GmkSetOfSalvageChildren::createGmkLists(int gmkSetId) {
+  for (int i = 0; i < GMK_TYPE_NUM; i++) {
+    delete unknown1b8[i];
+    unknown1b8[i] = nullptr;
+  }
+  u8 *bdat = GmkManager::get()->unknown190;
+  if (Bdat::getMember(bdat, "salvage") == nullptr) {
+    return;
+  }
+  const char *fileName = reinterpret_cast<const char *>(Bdat::getValCheck(bdat, "salvage", gmkSetId, BDAT_TYPE_STRING));
+  if (fileName == nullptr || fileName[0] == '\0') {
+    return;
+  }
+  unknown1b8[GMK_TYPE_ENEMY] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkEnemyList(0);
+  unknown1b8[GMK_TYPE_FORM_PC] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFormPcList(0);
+  unknown1b8[GMK_TYPE_FORM_PCNPC] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkFormPcnpcList(0);
+  unknown1b8[GMK_TYPE_SALVAGE_LOCATOR] = new (fw::FrameworkMemory::getMem(5), nullptr, 0, 4, false) GmkSalvageLocatorList(0);
+  for (u32 type = 0; type < GMK_TYPE_NUM; type++) {
+    IGmkList *list = unknown1b8[type];
+    if (list == nullptr) {
+      continue;
+    }
+    const char *bdatName = GmkManager::get()->getSheetnameByType(gmkSetId, static_cast<GmkType>(type));
+    IGmkList::CreateInfo info;
+    info.unknown00 = unknown10.unknown00;
+    info.unknown08 = this;
+    info.unknown10 = "gmk/";
+    info.unknown10 += fileName;
+    info.unknown10 += ".lvb";
+    if (bdatName != nullptr) {
+      info.unknown114 = bdatName;
+    }
+    info.unknown140 = unknown10.unknown10;
+    info.unknown150 = unknown10.unknown20;
+    list->create(info);
+  }
+  unknown178.dispose();
+}
 
 void GmkSet::seqWaitToValidate_GfGameManager_m_mapID(f32 deltaTime) {
   if (gf::GfGameManager::getMapID() != 0) {

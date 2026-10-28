@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/coli/coli_object.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gmk/gmk_base.h"
 #include "gmk/gmk_camera.h"
@@ -8,10 +9,12 @@
 #include "gmk/gmk_ctrl_vol_se.h"
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
+#include "gmk/gmk_phantom.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
 
 struct CBdatWrapper;
+
 namespace gf {
 struct GF_OBJ_HANDLE;
 } // namespace gf
@@ -25,10 +28,8 @@ class RTTI;
 namespace gmk {
 
 class GmkDoorGob;
-class GmkPhantom;
-class GmkDoorPhantomTargetInfo;
 
-class GmkDoor : public AGmkBase {
+class GmkDoor : public AGmkBase, public IGmkPhantomEventListener, public fw::ColiUserData {
 public:
   struct BdatInfo {
     bool isGfObjMustExist() const;
@@ -78,7 +79,9 @@ public:
   ~GmkDoor() override;
   GmkType getGmkType() const override;
   int getGameFlagId() const;
-  const mm::mtl::RTTI *getRTTI() const;
+  const mm::mtl::RTTI *getRTTI() const override;
+  void onEnterPhantom(const IGmkPhantomEventListener::OnEnterInfo &info) override;
+  void onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInfo &info) override;
   u32 getProgress() const;
   void setProgress(Progress progress);
   void pollBootGmk();
@@ -111,7 +114,6 @@ public:
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
-  u8 _48[0x60 - 0x48];
   GmkCamera unknown60; // Inferred role: gimmick camera; original member name unknown.
   u8 _1c0[0x238 - 0x1c0];
   GmkPhantom *unknown238; // Inferred role: phantom; original member name unknown.

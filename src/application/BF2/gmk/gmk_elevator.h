@@ -8,6 +8,7 @@
 #include "gmk/gmk_list.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_phantom.h"
+#include "mm_mtl/fixed_array.h"
 #include "types.h"
 
 namespace mm {
@@ -24,10 +25,11 @@ class GmkElevatorGobCustom;
 class GmkElevatorLocator;
 class GmkElevatorLocatorGob;
 
-class GmkElevator : public AGmkBase {
+class GmkElevator : public AGmkBase, public IGmkPhantomEventListener {
 public:
   struct Data {
     u16 unknown00; // Inferred role: index of the first elevator locator; original member name unknown.
+    u16 unknown02; // Inferred role: index after the last elevator locator; original member name unknown.
   };
 
   struct BdatInfo {
@@ -72,7 +74,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_ELEVATOR;
 
-  ~GmkElevator() override;
+  ~GmkElevator() override { dispose(); }
   GmkType getGmkType() const override;
   int getGameFlagId() const;
   void create(const CreateInfo &info) override;
@@ -80,7 +82,8 @@ public:
   void update(f32 deltaTime) override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
-  void onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInfo &info);
+  void onEnterPhantom(const IGmkPhantomEventListener::OnEnterInfo &info) override;
+  void onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInfo &info) override;
   void clearRequests();
   bool isCallSwitch(gf::GF_OBJ_HANDLE *handle) const;
   bool isLiftSwitch(gf::GF_OBJ_HANDLE *handle) const;
@@ -99,6 +102,8 @@ public:
   void initDownFloorState();
   void initUpFloorState();
   void startLiftSe();
+  void seqInit(f32 deltaTime);
+  void seqWaitToValidate_GfFieldLod(f32 deltaTime);
   void seqDownIdle(f32 deltaTime);
   void seqUpIdle(f32 deltaTime);
   void seqWaitToArriveDownFloor(f32 deltaTime);
@@ -114,16 +119,17 @@ public:
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
-  u8 _48[0x290 - 0x48];
-  gf::GF_OBJ_HANDLE *unknown290[4];     // Inferred role: switches, call switches at even indices and lift switches at odd ones; original member name unknown.
-  GmkCtrlVolSe unknown2b0[4];           // Inferred role: se, indexed by SeType; original member name unknown.
-  gf::GF_OBJ_HANDLE *unknown4b0;        // Inferred role: lift game object followed by the lift se; original member name unknown.
-  void (GmkElevator::*unknown4b8)(f32); // Inferred role: seq; original member name unknown.
-  u32 unknown4c8;                       // Role and original member name unknown.
-  f32 unknown4cc;                       // Role and original member name unknown.
+  mm::mtl::FixedArray<GmkPhantom, 4> unknown50; // Inferred role: phantoms; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown290[4];             // Inferred role: switches, call switches at even indices and lift switches at odd ones; original member name unknown.
+  GmkCtrlVolSe unknown2b0[4];                   // Inferred role: se, indexed by SeType; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown4b0;                // Inferred role: lift game object followed by the lift se; original member name unknown.
+  void (GmkElevator::*unknown4b8)(f32);         // Inferred role: seq; original member name unknown.
+  u32 unknown4c8;                               // Role and original member name unknown.
+  f32 unknown4cc;                               // Role and original member name unknown.
 };
 
 static_assert(sizeof(GmkElevator::BdatInfo) == 0x30, "");
+static_assert(offsetof(GmkElevator, unknown50) == 0x50, "");
 static_assert(offsetof(GmkElevator, unknown290) == 0x290, "");
 static_assert(offsetof(GmkElevator, unknown2b0) == 0x2b0, "");
 static_assert(offsetof(GmkElevator, unknown4b0) == 0x4b0, "");

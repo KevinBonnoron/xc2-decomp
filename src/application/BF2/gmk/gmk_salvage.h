@@ -75,11 +75,12 @@ public:
   GmkType getGmkType() const override;
   int getGameFlagId() const;
   int getGmkSalvageLocatorNum() const;
-  const GmkSalvageLocator *getGmkSalvageLocator(u32 index) const;
+  GmkSalvageLocator *getGmkSalvageLocator(u32 index) const;
   const GmkFormPc *getGmkFormPc() const;
   void createGfObjHandle();
   void disposeGfObjHandle();
   void disposeRaffle(bool isFadeOut);
+  void seqUpdatePopDepop(f32 deltaTime);
   void seqValidateGmkSalvageLocatorDetails(f32 deltaTime);
   void disposeTboxes(bool isFadeOut);
   void disposeEnemies(bool isFadeOut);
@@ -92,6 +93,7 @@ public:
   void onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) override;
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
 
   void (GmkSalvage::*unknown48)(f32);
   gf::GF_OBJ_HANDLE *unknown58;                           // Inferred role: game object; original member name unknown.
@@ -99,9 +101,10 @@ public:
   f32 unknown64;                                          // Role and original member name unknown.
   mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknown68; // Role and original member name unknown.
   mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknown88; // Inferred role: treasure box locators; original member name unknown.
-  void *unknownA8;                                        // Role and original member name unknown.
+  GmkSalvageLocator *unknownA8;                           // Role and original member name unknown.
   mm::mtl::FixedVector<GmkSalvageLocator *, 3> unknownB0; // Inferred role: enemy locators; original member name unknown.
-  u16 unknownd0;                                          // Role and original member name unknown.
+  u8 unknownd0;                                           // Role and original member name unknown.
+  u8 unknownd1;                                           // Role and original member name unknown.
   u8 _d2[0xd8 - 0xd2];
   RaffleResult unknownd8; // Inferred role: raffle result; original member name unknown.
   bool unknown128;        // Inferred role: display enabled; original member name unknown.
@@ -120,6 +123,7 @@ static_assert(offsetof(GmkSalvage, unknown88) == 0x88, "");
 static_assert(offsetof(GmkSalvage, unknownA8) == 0xa8, "");
 static_assert(offsetof(GmkSalvage, unknownB0) == 0xb0, "");
 static_assert(offsetof(GmkSalvage, unknownd0) == 0xd0, "");
+static_assert(offsetof(GmkSalvage, unknownd1) == 0xd1, "");
 static_assert(offsetof(GmkSalvage, unknownd8) == 0xd8, "");
 static_assert(offsetof(GmkSalvage, unknown128) == 0x128, "");
 static_assert(offsetof(GmkSalvage, unknown129) == 0x129, "");
@@ -130,7 +134,8 @@ public:
   GmkSetOfSalvageChildren() : GmkSet(nullptr) {}
   ~GmkSetOfSalvageChildren() override {}
 
-  const IGmkList *getGmkList(GmkType type) const;
+  void createGmkLists(int gmkSetId) override;
+  IGmkList *getGmkList(GmkType type) const;
 };
 
 static_assert(sizeof(GmkSetOfSalvageChildren) == 0x3a0, "");
@@ -223,7 +228,7 @@ public:
   const AGmkBase *getInst(u32 index) const override;
 
   // Inlined access to the locator vector; the original helper name is unknown.
-  const GmkSalvageLocator *unknown001(u32 index) const { return &gmkInsts[index]; }
+  GmkSalvageLocator *unknown001(u32 index) { return &gmkInsts[index]; }
 };
 
 } // namespace gmk

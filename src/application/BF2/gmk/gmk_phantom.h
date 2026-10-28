@@ -87,7 +87,7 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
-  explicit GmkPhantom(const CreateInfo *info);
+  explicit GmkPhantom(const CreateInfo *info = nullptr);
   void create(const CreateInfo &info);
   ~GmkPhantom() override;
   void dispose();

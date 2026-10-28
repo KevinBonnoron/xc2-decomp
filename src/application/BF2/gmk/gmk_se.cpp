@@ -18,6 +18,7 @@
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "gmk/gmk_set.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_line2.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
@@ -30,6 +31,8 @@ template bool TGmkList<GmkSeLinePoint, GmkSeLinePoint::BdatInfo, 1414548563u, 1u
 
 template class TGmkActiveList<GmkSe>;
 template class TGmkActiveList<GmkSeLine>;
+
+GmkSe::GmkSe() : IntrusiveListNode(), unknown60(nullptr), unknownF0(false), unknownF1(false), unknownF4(0), unknownF8(0.0f), unknownFC(0.0f), unknown100(false) {}
 
 void GmkSe::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "se_type") != 0;
@@ -98,6 +101,27 @@ void GmkSe::disposeInst(bool isFadeOut) {
     if (intoNode() && TGmkActiveList<GmkSe>::get() != nullptr) {
       TGmkActiveList<GmkSe>::get()->unknown08.erase(this);
     }
+  }
+}
+
+void GmkSe::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  bool isPopCondMatched = getBdatInfo()->isPopCondMatched();
+  if (unknownF0 != isPopCondMatched) {
+    if (isPopCondMatched) {
+      createGmkPhantom();
+    } else {
+      unknown60.dispose();
+    }
+    unknownF0 = isPopCondMatched;
+  }
+  if (canPopInst()) {
+    createInst();
+  } else if (canDepopInst()) {
+    disposeInst(true);
   }
 }
 
@@ -256,7 +280,70 @@ void GmkSeLine::disposeInst(bool isFadeOut) {
   }
 }
 
-GmkSeLine::GmkSeLine() : IntrusiveListNode(), unknown58(false), unknown59(false), unknown5C(0), unknown60(0.0f), unknown64(0), unknown68(false) {}
+void GmkSeLine::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  unknown58 = getBdatInfo()->isPopCondMatched();
+  if (canPopInst()) {
+    createInst();
+  } else if (canDepopInst()) {
+    disposeInst(true);
+  }
+}
+
+void GmkSeLine::updateInActiveList(f32 deltaTime) {
+  if (unknown5C == 0) {
+    return;
+  }
+  unknown60 += deltaTime;
+  if (unknown60 < 1.0f || unknown68) {
+    return;
+  }
+  const Data *data = getData();
+  if (data->unknown20 <= 0.0f || gf::GfGameManager::getControlMover() == gf::INVALID_HANDLE) {
+    return;
+  }
+  unknown64 = 1000000000000.0f;
+  const mm::Vec3 &playerPos = gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
+  u32 pointNum = getPointNum();
+  for (u32 i = 1; i < pointNum; i++) {
+    mm::Vec3 start;
+    mm::Vec3 end;
+    if (!getPointPos(start, i - 1) || !getPointPos(end, i)) {
+      return;
+    }
+    mm::Line2 line;
+    line.set(start, end);
+    f32 length = mm::Line2::getNearestLength(line, playerPos);
+    if (length < unknown64) {
+      unknown64 = length;
+    }
+  }
+  const GmkSe::BdatInfo *info = getBdatInfo();
+  f32 volume;
+  if (data->unknown20 <= unknown64) {
+    volume = info->unknown05 * 0.01f;
+  } else if (unknown64 <= data->unknown24) {
+    volume = info->unknown04 * 0.01f;
+  } else {
+    f32 rate = 0.0f;
+    if (data->unknown24 < data->unknown20) {
+      rate = (data->unknown20 - unknown64) / (data->unknown20 - data->unknown24);
+    }
+    f32 range = (info->unknown04 - info->unknown05) * 0.01f;
+    mm::clampRef(range, 0.0f, 1.0f);
+    f32 minVolume = info->unknown05 * 0.01f;
+    volume = rate * range + minVolume;
+  }
+  if (gf::GfGameManager::isRoom()) {
+    volume = volume * (info->unknown08 * 0.01f);
+  }
+  fw::SoundManager::get()->setVolume(unknown5C, volume, 0.0f);
+}
+
+GmkSeLine::GmkSeLine() : IntrusiveListNode(), unknown58(false), unknown59(false), unknown5C(0), unknown60(0.0f), unknown64(0.0f), unknown68(false) {}
 
 int GmkSeLine::getPointNum() const { return getData()->unknown1c - getData()->unknown0c; }
 

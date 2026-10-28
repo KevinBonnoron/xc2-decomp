@@ -43,6 +43,7 @@ public:
   void onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInfo &info) override { endEvent(); }
   void createGmkPhantom();
   void disposeGmkPhantom();
+  void beginEvent();
   void endEvent();
 
   const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
@@ -50,7 +51,6 @@ public:
   GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
   bool unknownF0;       // Inferred role: condition matched; original member name unknown.
   bool unknownF1;       // Inferred role: event started; original member name unknown.
-  u8 _f2[0x100 - 0xf2];
 };
 
 static_assert(offsetof(GmkLandmark, unknown60) == 0x60, "");

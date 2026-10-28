@@ -1,5 +1,4 @@
 #include "gmk/gmk_collection.h"
-#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "framework/debug/debug_draw.h"
@@ -16,10 +15,15 @@
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
+#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_vec2.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/rtti.h"
+
+namespace fw {
+enum EF_CATEGORY : int;
+} // namespace fw
 
 namespace gmk {
 
@@ -86,6 +90,38 @@ void GmkCollection::disposeIcon(bool isFadeOut) {
       fw::EffectManager::get()->remove(unknown50);
     }
     unknown50 = 0;
+  }
+}
+
+void GmkCollection::seqUpdatePopDepop(f32 deltaTime) {
+  if (isValid()) {
+    if (canPopGobInst()) {
+      createGfObjHandle();
+    } else if (canDepopGobInst()) {
+      disposeGfObjHandle();
+    }
+    if (unknown48 != gf::INVALID_HANDLE && DistCond::isMatch(unknown54, unknown08.unknown08->unknown00)) {
+      if (unknown50 == 0) {
+        createIcon();
+      }
+    } else {
+      disposeIcon(true);
+    }
+  }
+}
+
+void GmkCollection::createIcon() {
+  if (!canCreateGameEntity()) {
+    return;
+  }
+  disposeIcon(false);
+  void *effect = fw::EffectManager::get()->search("cmn_200_000", nullptr);
+  if (effect != nullptr) {
+    unknown50 = fw::EffectManager::get()->create(effect, true);
+    if (unknown50 != 0) {
+      fw::EffectManager::get()->setCategory(unknown50, static_cast<fw::EF_CATEGORY>(1));
+      validateIconPos();
+    }
   }
 }
 

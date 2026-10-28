@@ -33,6 +33,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_TRIGGER;
 
+  GmkTrigger();
   ~GmkTrigger() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
@@ -53,7 +54,6 @@ public:
 
   const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
 
-  u8 _48[0x50 - 0x48];
   GmkPhantom unknown50;               // Inferred role: phantom; original member name unknown.
   void (GmkTrigger::*unknownE0)(f32); // Inferred role: sequence; original member name unknown.
 };

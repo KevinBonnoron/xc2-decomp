@@ -1,7 +1,9 @@
 #pragma once
 #include "gmk/gmk_bdat.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "mm_mtl/vector.h"
+#include "mtl/alloc_handle.h"
 #include "types.h"
 #include <stddef.h>
 
@@ -84,6 +86,8 @@ enum GmkType {
   GMK_TYPE_INVALID = 59,
 };
 
+constexpr u16 SCENARIO_FLAG_KEEP_BATTLE_LOCK_IN_BATTLE = 7039;
+
 enum ShapeType {
   SHAPE_TYPE_NONE = 0,
   SHAPE_TYPE_POINT = 1,
@@ -102,9 +106,19 @@ class GmkSet;
 
 class GmkManager : public mm::mtl::PtrSingleton<GmkManager> {
 public:
+  struct CreateInfo {
+    mtl::ALLOC_HANDLE unknown00;   // Inferred role: memory; original member name unknown.
+    mm::mtl::FixStr<32> unknown04; // Inferred role: res def bdat path; original member name unknown.
+    mm::mtl::FixStr<32> unknown28; // Inferred role: gmk set list bdat name; original member name unknown.
+    u32 unknown4c;                 // Inferred role: gmk set capacity; original member name unknown.
+  };
+
   ~GmkManager() override;
+  void create(const CreateInfo &info);
   bool isValid() const;
   void dispose();
+  void seqWaitValidateResDefBdatFp(f32 deltaTime);
+  void seqUpdate(f32 deltaTime);
   bool isGmkSetsReady() const;
 
   bool updateImmediate();
@@ -122,7 +136,7 @@ public:
   int findFirstBdatId_RSC_GmkSetList(GmkType type, int bdatId) const;
   bool isBdatIdOfGmkInstExist(int gmkSetId, GmkType type, int bdatId) const;
 
-  u8 _08[0x58 - 0x08];
+  CreateInfo unknown08;    // Inferred role: create info; original member name unknown.
   GmkBdat unknown58;       // Inferred role: res def bdat; original member name unknown.
   u8 *unknown190;          // Inferred role: gmk set list bdat; original member name unknown.
   InterestType unknown198; // Inferred role: interest type; original member name unknown.
@@ -131,6 +145,8 @@ public:
   void (GmkManager::*unknownf380)(f32);  // Inferred role: seq; original member name unknown.
 };
 
+static_assert(sizeof(GmkManager::CreateInfo) == 0x50, "");
+static_assert(offsetof(GmkManager, unknown08) == 0x08, "");
 static_assert(offsetof(GmkManager, unknown58) == 0x58, "");
 static_assert(offsetof(GmkManager, unknown190) == 0x190, "");
 static_assert(offsetof(GmkManager, unknown198) == 0x198, "");

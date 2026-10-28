@@ -8,6 +8,7 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/game/gf_game_cond.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/menu/object/gf_menu_obj_location_telop.h"
 #include "gmk/gmk_bdat.h"
 #include "mm_math/mm_vec2.h"
@@ -36,6 +37,25 @@ bool GmkLandmark::BdatInfo::isCondMatched() const {
 GmkLandmark::GmkLandmark() : unknown60(nullptr), unknownF0(false), unknownF1(false) {}
 
 GmkType GmkLandmark::getGmkType() const { return GMK_TYPE; }
+
+void GmkLandmark::update(f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  bool isCondMatched = getBdatInfo()->isCondMatched();
+  if (unknownF0 != isCondMatched) {
+    if (isCondMatched) {
+      createGmkPhantom();
+    } else {
+      disposeGmkPhantom();
+    }
+    unknownF0 = isCondMatched;
+  }
+  if (unknown60.unknown83 && gf::GfGameManager::isLandmarkUiOK()) {
+    beginEvent();
+  }
+}
 
 void GmkLandmark::create(const CreateInfo &info) { AGmkBase::create(info); }
 

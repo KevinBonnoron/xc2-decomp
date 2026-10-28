@@ -125,6 +125,22 @@ void GmkRoutedFootPrintPoint::createEffInst(void *data) {
   applyEffectParam(false);
 }
 
+void GmkRoutedFootPrintPoint::updateConcrete(void *data, f32 deltaTime) {
+  debugUpdateMmf();
+  if (!isValid()) {
+    return;
+  }
+  u32 effect = unknown50;
+  bool isCondMatched = unknown48.isMatch(getData()->unknown00);
+  if (effect == 0) {
+    if (isCondMatched) {
+      createEffInst(data);
+    }
+  } else if (!isCondMatched) {
+    disposeEffInst(false);
+  }
+}
+
 void GmkRoutedFootPrintPoint::disposeEffInst(bool isFadeOut) {
   if (unknown50 != 0) {
     fw::EffectManager::get()->dead(unknown50);

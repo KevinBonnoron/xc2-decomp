@@ -62,10 +62,10 @@ void GmkRoutedNpc::debugDraw() const {
   GmkRoute::debugDraw(isPopCondMatched);
 }
 
-int GmkRoutedNpc::getBindedBdatId() const { return unknown20.unknown18; }
+int GmkRoutedNpc::getBindedBdatId() const { return GmkRoute::unknown20.unknown18; }
 
-u8 *GmkRoutedNpc::getBindedBdatFp() const { return unknown08.unknown00->getBindedBdatFp(); }
+u8 *GmkRoutedNpc::getBindedBdatFp() const { return GmkRoute::unknown08.unknown00->getBindedBdatFp(); }
 
-const IGmkList *GmkRoutedNpc::getBindedRoutePointList() const { return unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_NPC_ROUTE_POINT]; }
+const IGmkList *GmkRoutedNpc::getBindedRoutePointList() const { return GmkRoute::unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_NPC_ROUTE_POINT]; }
 
 } // namespace gmk

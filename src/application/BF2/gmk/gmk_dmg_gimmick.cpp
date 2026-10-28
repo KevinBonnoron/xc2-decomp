@@ -26,10 +26,6 @@ enum EF_CATEGORY : int;
 } // namespace fw
 namespace mm {
 struct Vec3;
-
-namespace mtl {
-class RTTI;
-} // namespace mtl
 } // namespace mm
 
 namespace fw {
@@ -236,6 +232,8 @@ void GmkDmgGimmick::create(const CreateInfo &info) {
   unknown60 = gf::GfFieldSound::get()->getMapPack();
   unknown68 = &GmkDmgGimmick::seqWaitToCreateChild;
 }
+
+GmkDmgGimmick::GmkDmgGimmick() : unknown50(false), unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown78(this), unknown80(true) {}
 
 void GmkDmgGimmick::dispose() {
   unknown58 = nullptr;

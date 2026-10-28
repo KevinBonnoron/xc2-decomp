@@ -10,6 +10,8 @@
 
 namespace gmk {
 
+GmkTrigger::GmkTrigger() : unknown50(nullptr), unknownE0(nullptr) {}
+
 template bool TGmkList<GmkTrigger, GmkTrigger::BdatInfo, 1380405844u, 2u, GmkTriggerGob>::initGmkBdatInfo(GmkTrigger::BdatInfo &, int &, const AGmkBase &);
 
 namespace {

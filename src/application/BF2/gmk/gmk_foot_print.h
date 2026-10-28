@@ -86,6 +86,7 @@ public:
   void dispose() override;
   void disposeEffInst(bool isFadeOut);
   void createEffInst(void *data);
+  void updateConcrete(void *data, f32 deltaTime);
   void applyEffectParam(bool isDisp) const;
   void validateDisp() const;
 
