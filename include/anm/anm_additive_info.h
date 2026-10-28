@@ -13,6 +13,7 @@ class AsmListener;
 
 class AdditiveInfo {
 public:
+  AdditiveInfo();
   void easeIn(AsmBlender *blender, AsmListener *listener, mm::mtl::IntrusivePtr<AsmState> state, f32 time, f32 weight, InterpolateType type, InterpolateCurve curve);
 
   mm::mtl::IntrusivePtr<AsmState> unknown00; // Inferred role: state; original member name unknown.

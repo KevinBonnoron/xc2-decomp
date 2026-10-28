@@ -15,6 +15,8 @@ public:
   explicit ReferenceObject(const SerialiseArg &arg) {}
   virtual ~ReferenceObject() {}
 
+  s16 getRefCount() const { return unknown08; }
+
   void addRef() const {
     if (unknown0a) {
       unknown08++;

@@ -5,6 +5,16 @@
 
 namespace anm {
 
+AdditiveInfo::AdditiveInfo() {
+  unknown10 = INTERPOLATE_TYPE_UNKNOWN_1;
+  unknown14 = 0.0f;
+  unknown1c = 1.0f;
+  unknown20 = 1.0f;
+  unknown08 = 0.01f;
+  unknown18 = 0;
+  unknown0c = INTERPOLATE_CURVE_UNKNOWN_0;
+}
+
 void AdditiveInfo::easeIn(AsmBlender *blender, AsmListener *listener, mm::mtl::IntrusivePtr<AsmState> state, f32 time, f32 weight, InterpolateType type, InterpolateCurve curve) {
   if (unknown00.get() != nullptr) {
     unknown00.get()->onLeave(listener);

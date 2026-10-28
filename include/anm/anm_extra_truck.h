@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "anm/anm_array-inl.h"
 #include "anm/anm_reference_object.h"
 #include "types.h"
 
@@ -24,15 +25,19 @@ public:
 
 class ExtraTruckSlot {
 public:
+  struct CompTruck;
+
   u16 getTruckID(const char *name) const;
 
-  const char *unknown00; // Inferred role: name; original member name unknown.
-  u8 _08[0x20 - 0x08];
+  const char *unknown00;         // Inferred role: name; original member name unknown.
+  Array<const char *> unknown08; // Inferred role: truck names, sorted; original member name unknown.
+  u8 _18[0x20 - 0x18];
   u32 unknown20; // Inferred role: truck count; original member name unknown.
   u8 _24[0x38 - 0x24];
 };
 
 static_assert(offsetof(ExtraTruckSlot, unknown00) == 0x00, "");
+static_assert(offsetof(ExtraTruckSlot, unknown08) == 0x08, "");
 static_assert(offsetof(ExtraTruckSlot, unknown20) == 0x20, "");
 static_assert(sizeof(ExtraTruckSlot) == 0x38, "");
 

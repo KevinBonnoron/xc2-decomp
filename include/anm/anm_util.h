@@ -1,4 +1,6 @@
 #pragma once
+#include "anm/anm_string_ptr.h"
+#include "mm_mtl/set.h"
 #include "types.h"
 
 namespace anm {
@@ -9,12 +11,8 @@ class ExtraTruckSlot;
 class Pose;
 class ResASM;
 struct QsTransform;
+struct ResAppendix;
 struct ResState;
-
-struct Appendix {
-  const char *name;
-  const void *data;
-};
 
 enum PlayMode {
   PLAY_MODE_LOOP,
@@ -56,9 +54,16 @@ public:
   static const ResState *getSimpleStateResource(const ResASM &resAsm, const char *name);
   static const ResState *getComplexStateResource(const ResASM &resAsm, const char *name);
   static const ResState *getFrozenStateResource(const ResASM &resAsm, const char *name);
-  static const Appendix *findAppendix(const ResASM &resAsm, const char *name);
+  static const ResAppendix *findAppendix(const ResASM &resAsm, const char *name);
   static void samplePoseSmartFromControl(Control *control, Pose *pose, bool localSpace);
   static void clampLimitExtraTruck(const ExtraTruckSlot &slot, u32 count, f32 *values);
+  static void queryState(u32 mask, const ResASM &resAsm, mm::mtl::Set<StringPtr> *pDst);
+  static void queryCmd(u32 mask, const ResASM &resAsm, mm::mtl::Set<StringPtr> *pDst);
+  static void queryCmdFromStateSimple(u32 mask, const ResASM &resAsm, const StringPtr &state, mm::mtl::Set<StringPtr> *pDst);
+  static bool queryStateAutoTrans(u32 mask, const ResASM &resAsm, const StringPtr &state, StringPtr *autoTrans);
+  static void queryStateFromStateCmd(u32 mask, const ResASM &resAsm, const StringPtr &state, const StringPtr &cmd, mm::mtl::Set<StringPtr> *pDst);
+  static void queryVariableFloat(const ResASM &resAsm, mm::mtl::Set<StringPtr> *pDst);
+  static void queryVariableInt(const ResASM &resAsm, mm::mtl::Set<StringPtr> *pDst);
 };
 
 } // namespace anm

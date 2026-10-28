@@ -1,8 +1,10 @@
 #pragma once
 #include <stddef.h>
 
+#include "anm/anm_array-inl.h"
 #include "anm/anm_asm_listener.h"  // IWYU pragma: keep
 #include "anm/anm_res_clip_data.h" // IWYU pragma: keep
+#include "anm/anm_string_ptr.h"
 #include "mm/mm_std_base.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/vector.h"
@@ -13,7 +15,7 @@ namespace anm {
 class ResResolver;
 
 struct ResLoopCount {
-  u8 _00[0x8];
+  const char *unknown00; // Inferred role: name of the next state; original member name unknown.
   s32 min;
   u32 range;
 };
@@ -24,14 +26,70 @@ enum StateType {
   STATE_TYPE_COMPLEX,
 };
 
+// Inferred element of a command target list (stride 0x38); original name unknown.
+struct unknown005 {
+  u8 _00[0x10];
+  StringPtr unknown10; // Inferred role: target state name; original member name unknown.
+  u8 _18[0x38 - 0x18];
+};
+
+// Inferred element of a command target list (stride 0x30); original name unknown.
+struct unknown006 {
+  u8 _00[0x8];
+  StringPtr unknown08; // Inferred role: target state name; original member name unknown.
+  u8 _10[0x30 - 0x10];
+};
+
+// Inferred state command, a name and a kind followed by the targets; original name unknown.
+struct unknown007 {
+  const char *unknown00; // Inferred role: command name; original member name unknown.
+  s32 unknown08;         // Inferred role: kind (0 single target, 1 and 2 target lists); original member name unknown.
+};
+
+// Inferred state command of kind 0; original name unknown.
+struct unknown008 : unknown007 {
+  StringPtr unknown10; // Inferred role: target state name; original member name unknown.
+};
+
+// Inferred state command of kind 1; original name unknown.
+struct unknown009 : unknown007 {
+  Array<unknown005> unknown10; // Inferred role: targets; original member name unknown.
+};
+
+// Inferred state command of kind 2; original name unknown.
+struct unknown00a : unknown007 {
+  u8 _10[0x18 - 0x10];
+  Array<unknown006> unknown18; // Inferred role: targets; original member name unknown.
+};
+
+// Inferred common head of the resources of the complex states; the kind selects the real resource type; original name unknown.
+struct unknown00c {
+  s32 unknown00; // Inferred role: kind (0 lerp, 2 speed lerp, 3 add, 4 lerp add); original member name unknown.
+};
+
 struct ResState {
   StateType type;
   u8 _04[0x8 - 0x4];
   const char *name;
   u64 attribute;
-  u8 _18[0x30 - 0x18];
+  u32 unknown18; // Inferred role: layer; original member name unknown.
+  u8 _1c[0x20 - 0x1c];
+  Array<unknown007 *> unknown20; // Inferred role: commands; original member name unknown.
   const ResLoopCount *loopCount;
+  u8 _38[0x68 - 0x38];
+  const unknown00c *unknown68; // Inferred role: p resource of a complex state; original member name unknown.
 };
+
+static_assert(offsetof(ResState, unknown18) == 0x18, "");
+static_assert(offsetof(ResState, unknown20) == 0x20, "");
+static_assert(offsetof(ResState, loopCount) == 0x30, "");
+static_assert(offsetof(ResState, unknown68) == 0x68, "");
+static_assert(sizeof(unknown005) == 0x38, "");
+static_assert(sizeof(unknown006) == 0x30, "");
+static_assert(sizeof(unknown007) == 0x10, "");
+static_assert(sizeof(unknown008) == 0x18, "");
+static_assert(offsetof(unknown009, unknown10) == 0x10, "");
+static_assert(offsetof(unknown00a, unknown18) == 0x18, "");
 
 class ResStateData {
 public:

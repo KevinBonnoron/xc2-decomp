@@ -155,7 +155,7 @@ const void *GfComAsm::getAppendix(const char *name) const {
     return nullptr;
   }
 
-  const anm::Appendix *appendix = anm::Util::findAppendix(*resAsm, name);
+  const anm::ResAppendix *appendix = anm::Util::findAppendix(*resAsm, name);
   if (appendix == nullptr) {
     return nullptr;
   }
