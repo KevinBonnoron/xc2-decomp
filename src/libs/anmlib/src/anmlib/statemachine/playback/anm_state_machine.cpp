@@ -18,7 +18,6 @@
 #include "anm/anm_string_ptr.h"
 #include "mm/mm_std_base.h"
 #include "mm_mtl/allocator.h"
-#include "mm_mtl/construct.h"
 
 namespace anm {
 
@@ -290,3 +289,9 @@ f32 StateMachine::getSpeed() const {
 }
 
 } // namespace anm
+
+typedef mm::mtl::RedBlackTreeBase<mm::mtl::Map<anm::StringPtr, anm::AdditiveInfo>::MapTraits<anm::StringPtr, anm::AdditiveInfo>> unknown101;
+
+template unknown101::node *unknown101::insert(const mm::mtl::MapPair<anm::StringPtr, anm::AdditiveInfo> &);
+template void unknown101::rebalance(unknown101::node *);
+template void unknown101::rebalance_after_erase(unknown101::node *);

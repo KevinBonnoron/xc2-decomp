@@ -14,6 +14,12 @@ public:
   const T &operator[](size_t index) const { return mData[index]; }
   size_t size() const { return N; }
 
+  void assign(const T &value) {
+    for (T *it = begin(); it != end(); ++it) {
+      *it = value;
+    }
+  }
+
 private:
   T mData[N];
 };

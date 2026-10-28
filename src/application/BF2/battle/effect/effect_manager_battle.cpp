@@ -74,3 +74,5 @@ void EffectManager::Update(const fw::UpdateInfo &updateInfo) { get()->UpdateProc
 template mm::mtl::FixedList<btl::EffectManager::REGISTER_PROC_DATA, 30>::iterator
     mm::mtl::FixedList<btl::EffectManager::REGISTER_PROC_DATA, 30>::erase(mm::mtl::FixedList<btl::EffectManager::REGISTER_PROC_DATA, 30>::iterator);
 template mm::mtl::FixedList<btl::EffectManager::REGISTER_PROC_DATA, 30>::~FixedList();
+
+template mm::mtl::PtrSingleton<btl::EffectManager>::~PtrSingleton();

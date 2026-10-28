@@ -1,6 +1,11 @@
 #include "framework/debug/debug_commander.h"
 
+#include "mm_mtl/delegate.h" // IWYU pragma: keep
 #include "skt/command_manager.h"
+
+namespace skt {
+struct CommandParam; // IWYU pragma: keep
+} // namespace skt
 
 namespace fw {
 namespace debug {
@@ -54,3 +59,4 @@ skt::SERVER_OPTION DebugCommander::getServerOption(const char *server) const { r
 template mm::mtl::PtrSingleton<fw::debug::DebugCommander>::~PtrSingleton();
 
 template mm::mtl::PtrSingleton<skt::CommandManager>::~PtrSingleton();
+template bool mm::mtl::Delegate<bool(const skt::CommandParam &)>::staticFuncInvoker(const mm::mtl::Delegate<bool(const skt::CommandParam &)> *, const skt::CommandParam &);

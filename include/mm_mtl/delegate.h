@@ -25,6 +25,11 @@ public:
     return (object->*function)(args...);
   }
 
+  static R staticFuncInvoker(const Delegate *delegate, Args... args) {
+    R (*function)(Args...) = *reinterpret_cast<R (*const *)(Args...)>(delegate->m_function);
+    return function(args...);
+  }
+
   template <typename T> void bind(T *object, R (T::*function)(Args...)) {
     *reinterpret_cast<R (T::**)(Args...)>(m_function) = function;
     m_object = object;

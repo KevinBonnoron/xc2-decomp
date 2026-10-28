@@ -480,3 +480,4 @@ void GfGameObj::setupEnterGameObjMount(GF_OBJ_HANDLE *handle, GFATTACH attach, f
 } // namespace gf
 
 template mm::mtl::PtrSingleton<gf::GfGameObj>::~PtrSingleton();
+template mm::mtl::FixedList<gf::GfGameObj::INOUT, 1024>::iterator mm::mtl::FixedList<gf::GfGameObj::INOUT, 1024>::erase(mm::mtl::FixedList<gf::GfGameObj::INOUT, 1024>::iterator);

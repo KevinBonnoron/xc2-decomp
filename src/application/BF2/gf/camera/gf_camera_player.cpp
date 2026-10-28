@@ -1,6 +1,9 @@
 #include "gf/camera/gf_camera_player.h"
 
 #include "gf/gf_allocator.h"
+#include "mm_mtl/delegate.h" // IWYU pragma: keep
+#include "mm_mtl/fixstr.h"   // IWYU pragma: keep
+#include "mm_mtl/map.h"      // IWYU pragma: keep
 
 namespace gf {
 
@@ -82,3 +85,15 @@ void CameraPadData::setARX(f32 value) { m_ARX = value; }
 void CameraPadData::setARY(f32 value) { m_ARY = value; }
 
 } // namespace gf
+
+typedef mm::mtl::RedBlackTreeBase<mm::mtl::Map<mm::mtl::FixStr<32>, mm::mtl::Delegate<void()>>::MapTraits<mm::mtl::FixStr<32>, mm::mtl::Delegate<void()>>> unknown101;
+
+template void unknown101::free_node(unknown101::node *, bool);
+template unknown101::node *unknown101::insert(const mm::mtl::MapPair<mm::mtl::FixStr<32>, mm::mtl::Delegate<void()>> &);
+template void unknown101::rebalance(unknown101::node *);
+
+typedef mm::mtl::RedBlackTreeBase<mm::mtl::Map<mm::mtl::FixStr<32>, mm::mtl::Delegate<void(float)>>::MapTraits<mm::mtl::FixStr<32>, mm::mtl::Delegate<void(float)>>> unknown102;
+
+template void unknown102::free_node(unknown102::node *, bool);
+template unknown102::node *unknown102::insert(const mm::mtl::MapPair<mm::mtl::FixStr<32>, mm::mtl::Delegate<void(float)>> &);
+template void unknown102::rebalance(unknown102::node *);

@@ -10,6 +10,7 @@
 #include "gf/game/gf_game_scene.h"
 #include "gf/gf_manager.h"
 #include "gf/gf_pause.h"
+#include "mm_mtl/delegate.h" // IWYU pragma: keep
 
 namespace gf {
 
@@ -251,3 +252,4 @@ bool GfFieldBgm::isStopBgmForDebug() { return _gffsn::s_bStopBGM; }
 } // namespace gf
 
 template mm::mtl::PtrSingleton<gf::GfFieldBgm>::~PtrSingleton();
+template float mm::mtl::Delegate<float(gf::ExecFadeParam &)>::staticFuncInvoker(const mm::mtl::Delegate<float(gf::ExecFadeParam &)> *, gf::ExecFadeParam &);

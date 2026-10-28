@@ -6,8 +6,10 @@ namespace mtl {
 class IAllocator;
 
 template <typename Key, typename Value> struct MapPair {
-  MapPair() : first(), second() {}
+  MapPair() {}
   template <typename K, typename V> MapPair(const K &key, const V &value) : first(key), second(value) {}
+  // The user-provided destructor makes the pair non-POD: its copy then leaves out the tail padding.
+  ~MapPair() {}
 
   Key first;
   Value second;

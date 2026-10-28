@@ -1,6 +1,8 @@
 #include "gf/field/gf_field_gimmick.h"
+#include "mm_mtl/map.h" // IWYU pragma: keep
 
 #include "fw/fw_update_info.h"
+#include "gf/asset/gf_slot.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/gf_manager.h"
 #include "gmk/gmk_anti_blade_area.h"
@@ -96,3 +98,9 @@ int GfFieldGimmick::getBdatIdOfActiveGmkAntiBladeArea() {
 } // namespace gf
 
 template mm::mtl::PtrSingleton<gf::GfFieldGimmick>::~PtrSingleton();
+
+typedef mm::mtl::RedBlackTreeBase<mm::mtl::Map<gf::GF_SLOT_HANDLE *, float>::MapTraits<gf::GF_SLOT_HANDLE *, float>> unknown101;
+
+template void unknown101::free_node(unknown101::node *, bool);
+template unknown101::node *unknown101::insert(const mm::mtl::MapPair<gf::GF_SLOT_HANDLE *, float> &);
+template void unknown101::rebalance(unknown101::node *);

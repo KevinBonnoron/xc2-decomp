@@ -4,6 +4,8 @@
 #include "gf/game/gf_game_player_formation.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
 #include "gf/object/component/env_sensor/gf_com_env_sensor.h"
+#include "gf/object/component/pc/gf_pc_agent.h" // IWYU pragma: keep
+#include "mm_mtl/unique_ptr.h"                  // IWYU pragma: keep
 
 namespace fw {
 class MessageObject;
@@ -52,3 +54,5 @@ u32 getMode(GfComPropertyPc &property) {
 }
 
 } // namespace gf
+
+template void mm::mtl::UniquePtr<gf::pc::Agent>::_safe_bool_helper::safe_bool_function() const;

@@ -3,6 +3,7 @@
 
 #include "mm/mm_std_base.h"
 #include "mm_mtl/allocator.h"
+#include "mm_mtl/construct.h"
 
 namespace mm {
 namespace mtl {
@@ -20,7 +21,7 @@ public:
   enum unknown001 { red, unknown001_UNKNOWN_1 };
 
   struct node {
-    node() : unknown18() {}
+    node() {}
     explicit node(node *sentinel) : unknown00(sentinel), unknown08(sentinel), unknown10(sentinel), unknown18(), color(unknown001_UNKNOWN_1) {}
 
     node *unknown00; // Inferred role: left child; original member name unknown.
@@ -237,6 +238,62 @@ private:
     }
     child->unknown10 = pivot;
     pivot->unknown08 = child;
+  }
+
+  // Inferred helper: restores the red black properties after a black node was removed; original name unknown.
+  void rebalance_after_erase(node *current) {
+    while (current != m_root && current->color == unknown001_UNKNOWN_1) {
+      if (current == current->unknown08->unknown00) {
+        node *sibling = current->unknown08->unknown10;
+        if (sibling->color == red) {
+          sibling->color = unknown001_UNKNOWN_1;
+          current->unknown08->color = red;
+          unknown001(current->unknown08);
+          sibling = current->unknown08->unknown10;
+        }
+        if (sibling->unknown00->color == unknown001_UNKNOWN_1 && sibling->unknown10->color == unknown001_UNKNOWN_1) {
+          sibling->color = red;
+          current = current->unknown08;
+        } else {
+          if (sibling->unknown10->color == unknown001_UNKNOWN_1) {
+            sibling->unknown00->color = unknown001_UNKNOWN_1;
+            sibling->color = red;
+            unknown002(sibling);
+            sibling = current->unknown08->unknown10;
+          }
+          sibling->color = current->unknown08->color;
+          current->unknown08->color = unknown001_UNKNOWN_1;
+          sibling->unknown10->color = unknown001_UNKNOWN_1;
+          unknown001(current->unknown08);
+          current = m_root;
+        }
+      } else {
+        node *sibling = current->unknown08->unknown00;
+        if (sibling->color == red) {
+          sibling->color = unknown001_UNKNOWN_1;
+          current->unknown08->color = red;
+          unknown002(current->unknown08);
+          sibling = current->unknown08->unknown00;
+        }
+        if (sibling->unknown00->color == unknown001_UNKNOWN_1 && sibling->unknown10->color == unknown001_UNKNOWN_1) {
+          sibling->color = red;
+          current = current->unknown08;
+        } else {
+          if (sibling->unknown00->color == unknown001_UNKNOWN_1) {
+            sibling->unknown10->color = unknown001_UNKNOWN_1;
+            sibling->color = red;
+            unknown001(sibling);
+            sibling = current->unknown08->unknown00;
+          }
+          sibling->color = current->unknown08->color;
+          current->unknown08->color = unknown001_UNKNOWN_1;
+          sibling->unknown00->color = unknown001_UNKNOWN_1;
+          unknown002(current->unknown08);
+          current = m_root;
+        }
+      }
+    }
+    current->color = unknown001_UNKNOWN_1;
   }
 
   // __LINE__ must be 419 as in the original header: it is the line argument of the assert.

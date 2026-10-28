@@ -249,3 +249,10 @@ void GfObjManager::addHandle(GF_OBJ_HANDLE *handle) { setStateLoading(handle); }
 } // namespace gf
 
 template mm::mtl::PtrSingleton<gf::GfObjManager>::~PtrSingleton();
+template mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 4096>::iterator mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 4096>::erase(mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 4096>::iterator);
+template mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 2048>::iterator mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 2048>::erase(mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 2048>::iterator);
+template mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 1024>::iterator mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 1024>::erase(mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 1024>::iterator);
+template mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 256>::iterator mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 256>::erase(mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 256>::iterator);
+template mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 64>::iterator mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 64>::erase(mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 64>::iterator);
+template mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 32>::iterator mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 32>::erase(mm::mtl::FixedList<gf::GF_OBJ_HANDLE *, 32>::iterator);
+template mm::mtl::FixedList<gf::GfAssetMultiBind *, 64>::iterator mm::mtl::FixedList<gf::GfAssetMultiBind *, 64>::erase(mm::mtl::FixedList<gf::GfAssetMultiBind *, 64>::iterator);

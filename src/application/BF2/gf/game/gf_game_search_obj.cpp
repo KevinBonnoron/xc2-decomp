@@ -1,5 +1,7 @@
 #include "gf/game/gf_game_search_obj.h"
 
+#include "mm_mtl/fixed_list.h" // IWYU pragma: keep
+
 namespace gf {
 
 void GfGameSearchObj::initialize(const GfSetupParam &) { unknown9097c = true; }
@@ -46,3 +48,4 @@ u64 GfGameSearchObj::createHandle(u32 index) {
 } // namespace gf
 
 template mm::mtl::PtrSingleton<gf::GfGameSearchObj>::~PtrSingleton();
+template mm::mtl::FixedList<gf::GF_SEARCH_OBJ *, 64>::iterator mm::mtl::FixedList<gf::GF_SEARCH_OBJ *, 64>::erase(mm::mtl::FixedList<gf::GF_SEARCH_OBJ *, 64>::iterator);

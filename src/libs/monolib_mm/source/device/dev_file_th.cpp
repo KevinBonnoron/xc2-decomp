@@ -246,3 +246,5 @@ void DevFileTh::icbDecide(CERR_STRUCT *error, ERR_DECIDE decide) {}
 } // namespace ml
 
 template mm::mtl::PtrSingleton<ml::DevFileTh>::~PtrSingleton();
+
+template void mm::mtl::UniquePtr<ml::DevFileTh::Impl>::_safe_bool_helper::safe_bool_function() const;

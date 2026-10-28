@@ -255,3 +255,4 @@ const char *GfSequentialPlay::getFuncName() {
 } // namespace gf
 
 template mm::mtl::PtrSingleton<gf::GfSequentialPlay>::~PtrSingleton();
+template mm::mtl::FixedList<gf::GfPlayCom *, 256>::iterator mm::mtl::FixedList<gf::GfPlayCom *, 256>::erase(mm::mtl::FixedList<gf::GfPlayCom *, 256>::iterator);

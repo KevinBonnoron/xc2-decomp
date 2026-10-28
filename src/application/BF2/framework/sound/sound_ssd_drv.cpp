@@ -1,4 +1,5 @@
 #include "framework/sound/sound_ssd_drv.h"
+#include "mm_mtl/map.h" // IWYU pragma: keep
 
 #include <math.h>
 #include <string.h>
@@ -812,3 +813,9 @@ void SoundSsdBank::stopAll() { unknown10.Stop(0.0f); }
 template mm::mtl::FixedList<fw::SoundPoolMemory *, 256>::iterator mm::mtl::FixedList<fw::SoundPoolMemory *, 256>::erase(mm::mtl::FixedList<fw::SoundPoolMemory *, 256>::iterator);
 
 template mm::mtl::PtrSingleton<fw::SoundSsdDriver>::~PtrSingleton();
+
+typedef mm::mtl::RedBlackTreeBase<mm::mtl::Map<ssd::SoundHandle *, fw::SoundSsdPlayer *>::MapTraits<ssd::SoundHandle *, fw::SoundSsdPlayer *>> unknown101;
+
+template void unknown101::free_node(unknown101::node *, bool);
+template unknown101::node *unknown101::insert(const mm::mtl::MapPair<ssd::SoundHandle *, fw::SoundSsdPlayer *> &);
+template void unknown101::rebalance(unknown101::node *);

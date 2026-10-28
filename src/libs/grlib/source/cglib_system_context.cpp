@@ -56,3 +56,5 @@ u32 CGLibSystemContext::getPixelResAreaOffset(u32 offset) { return unknown25a8 +
 
 } // namespace context
 } // namespace grlib
+
+template mm::mtl::PtrSingleton<grlib::context::CGLibSystemContext>::~PtrSingleton();

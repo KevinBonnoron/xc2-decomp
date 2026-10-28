@@ -3,6 +3,7 @@
 #include "mm_mtl/algorithm.h"
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 
 namespace mm {
 namespace mtl {
@@ -110,6 +111,7 @@ public:
   }
 
   const char *c_str() const { return mData; }
+  bool operator<(const FixStr &rhs) const { return strcmp(mData, rhs.mData) < 0; }
   bool empty() const { return m_nLen == 0; }
   int capacity() const { return LEN - 1; }
   int length() const { return m_nLen; }

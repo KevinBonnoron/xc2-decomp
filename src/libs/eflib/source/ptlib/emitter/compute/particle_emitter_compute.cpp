@@ -1,5 +1,8 @@
 #include "ptlib/emitter/compute/particle_emitter_compute.h"
 
+#include "mm_math/mm_vec3.h"    // IWYU pragma: keep
+#include "mm_mtl/fixed_array.h" // IWYU pragma: keep
+
 // The game compiles ComputeManager::get, getPtr, init and term in this translation unit, from the _impl header.
 #include "particle_emitter_compute_impl.h" // IWYU pragma: keep
 
@@ -54,3 +57,5 @@ void ComputeManager::update(u32 viewIndex) {
 
 } // namespace emitter
 } // namespace ptlib
+
+template void mm::mtl::FixedArray<mm::Vec3, 20>::assign(const mm::Vec3 &);

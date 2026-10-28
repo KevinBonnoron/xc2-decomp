@@ -40,3 +40,6 @@ bool MlMem::isDebug(const void *pointer) { return mtl::MemManager::isArea(s_debu
 void MlMem::setMemoryPermission(void *address, size_t size, AccessMode mode) {}
 
 } // namespace ml
+
+template mm::mtl::FixedList<::mtl::ALLOC_HANDLE, 128>::iterator mm::mtl::FixedList<::mtl::ALLOC_HANDLE, 128>::erase(mm::mtl::FixedList<::mtl::ALLOC_HANDLE, 128>::iterator);
+template mm::mtl::FixedList<::mtl::ALLOC_HANDLE, 64>::iterator mm::mtl::FixedList<::mtl::ALLOC_HANDLE, 64>::erase(mm::mtl::FixedList<::mtl::ALLOC_HANDLE, 64>::iterator);
