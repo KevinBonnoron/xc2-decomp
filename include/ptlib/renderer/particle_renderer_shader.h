@@ -12,7 +12,13 @@ namespace ptlib {
 namespace renderer {
 
 enum EffShdType {
+  EFF_SHD_TYPE_UNKNOWN_7 = 7,
+  EFF_SHD_TYPE_UNKNOWN_8 = 8,
+  EFF_SHD_TYPE_UNKNOWN_9 = 9,
+  EFF_SHD_TYPE_UNKNOWN_10 = 10,
   EFF_SHD_TYPE_UNKNOWN_13 = 13,
+  EFF_SHD_TYPE_UNKNOWN_14 = 14,
+  EFF_SHD_TYPE_UNKNOWN_15 = 15,
 };
 
 // Inferred role: declaration offsets of the VERIATION_MODE, SOFT_MODE, SHADOW_MODE, CLIP_MODE and USING_TEMPORAL_AA

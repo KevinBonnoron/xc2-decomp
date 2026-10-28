@@ -24,26 +24,52 @@ class RenderManager;
 
 struct DrDrawWorkInfoEF {
   grlib::CGLibRenderTarget *unknown000; // Inferred role: main target; original member name unknown.
-  u8 _008[0x060 - 0x008];
+  u8 _008[0x018 - 0x008];
+  grlib::CGLibRenderTarget *unknown018; // Inferred role: downsampled depth target; original member name unknown.
+  grlib::CGLibRenderTarget *unknown020; // Inferred role: original depth target; original member name unknown.
+  u8 _028[0x040 - 0x028];
+  grlib::CGLibRenderTarget *unknown040; // Inferred role: second color target; original member name unknown.
+  u8 _048[0x058 - 0x048];
+  grlib::CGLibRenderTarget *unknown058; // Inferred role: third color target; original member name unknown.
   grlib::CGLibRenderTarget *unknown060; // Inferred role: reduce target; original member name unknown.
   grlib::CGLibRenderTarget *unknown068; // Inferred role: sub target; original member name unknown.
-  u8 _070[0x090 - 0x070];
+  grlib::CGLibRenderTarget *unknown070; // Inferred role: bloom target; original member name unknown.
+  u8 _078[0x090 - 0x078];
   grlib::CGLibTextureBuffer *unknown090; // Inferred role: shadow texture 1; original member name unknown.
   grlib::CGLibTextureBuffer *unknown098; // Inferred role: shadow texture 2; original member name unknown.
   grlib::CGLibTextureBuffer *unknown0a0; // Inferred role: shadow texture 3; original member name unknown.
-  u8 _0a8[0x1d0 - 0x0a8];
+  u8 _0a8[0x1b8 - 0x0a8];
+  f32 unknown1b8; // Inferred role: fxaa ratio y; original member name unknown.
+  u8 _1bc[0x1c8 - 0x1bc];
+  f32 unknown1c8; // Inferred role: fxaa ratio z; original member name unknown.
+  u8 _1cc[0x1d0 - 0x1cc];
   u32 unknown1d0; // Inferred role: buffer offset; original member name unknown.
-  u8 _1d4[0x560 - 0x1d4];
+  u8 _1d4[0x550 - 0x1d4];
+  u32 unknown550; // Inferred role: screen width; original member name unknown.
+  u32 unknown554; // Inferred role: screen height; original member name unknown.
+  u8 _558[0x560 - 0x558];
   u32 unknown560; // Inferred role: view index; original member name unknown.
+  u8 _564[0x570 - 0x564];
+  u8 *unknown570; // Inferred role: capture done flag; original member name unknown.
 };
 
+static_assert(offsetof(DrDrawWorkInfoEF, unknown018) == 0x018, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown020) == 0x020, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown040) == 0x040, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown058) == 0x058, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown060) == 0x060, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown068) == 0x068, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown070) == 0x070, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown090) == 0x090, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown098) == 0x098, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown0a0) == 0x0a0, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown1b8) == 0x1b8, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown1c8) == 0x1c8, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown1d0) == 0x1d0, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown550) == 0x550, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown554) == 0x554, "");
 static_assert(offsetof(DrDrawWorkInfoEF, unknown560) == 0x560, "");
+static_assert(offsetof(DrDrawWorkInfoEF, unknown570) == 0x570, "");
 
 struct FxHeader {
   u8 _00[0x09 - 0x00];

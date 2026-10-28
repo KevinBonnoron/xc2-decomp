@@ -29,6 +29,8 @@ public:
   void removeEmitterActive(EmitterObj *emitter);
   void addEmitterActive(EmitterObj *emitter);
   void addEmitterActiveAfterParent(EmitterObj *emitter, EmitterObj *parent);
+  ParticleObj *particleAlloc(EmitterObj *emitter, bool isFront);
+  ParticleObj *getFreeParticle();
   void addFreeParticleFront(ParticleObj *particle);
   void addFreeParticleBack(ParticleObj *particle);
   void emitter_update(u32 category, f32 speed, bool isSkipDraw);

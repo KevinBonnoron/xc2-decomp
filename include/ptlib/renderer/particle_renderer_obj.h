@@ -84,6 +84,7 @@ public:
   void fxcore_setup_target_core(int &width, int &height, int &subWidth, int &subHeight);
   void setEffectRenderTarget(grlib::CGLibRenderTarget *target, grlib::CGLibDepthBuffer *depth, grlib::CGLibRenderTarget *subTarget1, grlib::CGLibRenderTarget *subTarget2);
   void fxcore_setup_target_update(int index);
+  void draw_capture();
   u32 changeShader(u32 type, bool isSimple);
   void *lockStream(emitter::EmitterObj *emitter);
   void unlockStream(emitter::EmitterObj *emitter, int count);

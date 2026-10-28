@@ -6,9 +6,24 @@
 #include "grlib/cglib_vtx_index.h"
 #include "grlib/cglib_vtx_vertex.h"
 
+namespace mm {
+struct Col4;
+struct Mat44;
+struct Vec3;
+struct Vec4;
+} // namespace mm
+
+namespace grlib {
+class CGLibTextureBuffer;
+} // namespace grlib
+
 namespace ptlib {
 
 class StaticAllocObj;
+namespace material {
+class MaterialTexture;
+} // namespace material
+struct DrDrawWorkInfoEF;
 
 namespace screen {
 
@@ -27,6 +42,14 @@ public:
   void InitTexture();
   void InitFetchVertex();
   void ReleaseSub();
+  void RenderBuffer(const DrDrawWorkInfoEF *info, const mm::Mat44 &rect, const mm::Vec3 &unused, const mm::Col4 &color, const grlib::CGLibTextureBuffer *texture);
+  void RenderScreen(const DrDrawWorkInfoEF *info, const mm::Mat44 &rect, const mm::Vec3 &unused, const mm::Col4 &color, const grlib::CGLibTextureBuffer *texture, bool isBlend, mm::Vec4 parameter);
+  void RenderScreenDebug(const DrDrawWorkInfoEF *info, const mm::Mat44 &rect, const mm::Vec3 &unused, const mm::Col4 &color, material::MaterialTexture *texture, bool isBlend, mm::Vec4 parameter);
+  void RenderCapScreen(const DrDrawWorkInfoEF *info, const grlib::CGLibTextureBuffer *texture0, const grlib::CGLibTextureBuffer *texture1);
+  void RenderSeparate(const DrDrawWorkInfoEF *info);
+  void RenderBufferWithFXAA(const DrDrawWorkInfoEF *info, const mm::Mat44 &rect, const mm::Vec3 &unused, const mm::Col4 &color, const grlib::CGLibTextureBuffer *texture);
+  void RenderScreen3D(const DrDrawWorkInfoEF *info, const mm::Mat44 &rect, const mm::Vec3 &unused, const mm::Col4 &color, const grlib::CGLibTextureBuffer *texture, bool isBlend);
+  void RenderBufferMain(const DrDrawWorkInfoEF *info, const mm::Mat44 &rect, const mm::Vec3 &unused, const mm::Col4 &color, const grlib::CGLibTextureBuffer *texture);
 
   grlib::CGLibSampler unknown00[4]; // Inferred role: samplers; original member name unknown.
   grlib::CGLibVtxVertex unknown80;  // Inferred role: screen vertex buffer; original member name unknown.

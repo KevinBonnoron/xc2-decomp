@@ -22,7 +22,7 @@ int EmitterObj::getParentParticleState() const {
   if (unknown80 == nullptr) {
     return 0;
   }
-  if (unknown80->unknown130->unknown08 != nullptr) {
+  if (unknown80->m_extParam->m_emParent != nullptr) {
     if (unknown88 != unknown80->unknown138) {
       return 2;
     }

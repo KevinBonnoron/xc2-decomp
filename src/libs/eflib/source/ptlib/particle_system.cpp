@@ -356,8 +356,8 @@ void ParticleManager::update_pause() {
   for (IntrusiveList<emitter::EmitterObj>::iterator emitterIt = emitterManager->getEmitterActiveList().begin(); emitterIt != emitterManager->getEmitterActiveList().end(); ++emitterIt) {
     s_unknown001 = rate * emitterIt->unknown158;
     for (IntrusiveList<emitter::ParticleObj>::iterator particleIt = emitterIt->unknown40.begin(); particleIt != emitterIt->unknown40.end(); ++particleIt) {
-      if (particleIt->unknown13e != 0 && particleIt->unknown130->unknown110 != nullptr) {
-        setMdlSpd(particleIt->unknown130->unknown110, &s_unknown001);
+      if (particleIt->unknown13e != 0 && particleIt->m_extParam->unknown110 != nullptr) {
+        setMdlSpd(particleIt->m_extParam->unknown110, &s_unknown001);
       }
     }
   }
@@ -373,16 +373,16 @@ void ParticleManager::update_model_spd(emitter::EmitterObj *emitter, f32 speed) 
     for (IntrusiveList<emitter::EmitterObj>::iterator emitterIt = emitterManager->getEmitterActiveList().begin(); emitterIt != emitterManager->getEmitterActiveList().end(); ++emitterIt) {
       s_unknown001 = rate * emitterIt->unknown158;
       for (IntrusiveList<emitter::ParticleObj>::iterator particleIt = emitterIt->unknown40.begin(); particleIt != emitterIt->unknown40.end(); ++particleIt) {
-        if (particleIt->unknown13e != 0 && particleIt->unknown130->unknown110 != nullptr) {
-          setMdlSpd(particleIt->unknown130->unknown110, &s_unknown001);
+        if (particleIt->unknown13e != 0 && particleIt->m_extParam->unknown110 != nullptr) {
+          setMdlSpd(particleIt->m_extParam->unknown110, &s_unknown001);
         }
       }
     }
   } else {
     for (IntrusiveList<emitter::ParticleObj>::iterator particleIt = emitter->unknown40.begin(); particleIt != emitter->unknown40.end(); ++particleIt) {
       s_unknown001 = rate * emitter->unknown158;
-      if (particleIt->unknown13e != 0 && particleIt->unknown130->unknown110 != nullptr) {
-        setMdlSpd(particleIt->unknown130->unknown110, &s_unknown001);
+      if (particleIt->unknown13e != 0 && particleIt->m_extParam->unknown110 != nullptr) {
+        setMdlSpd(particleIt->m_extParam->unknown110, &s_unknown001);
       }
     }
   }

@@ -1,5 +1,6 @@
 #include "ptlib/emitter/particle_emitter_manager.h"
 
+#include <math.h>
 #include <string.h>
 
 #include "dr/dr_gpu_check_base.h"
@@ -13,9 +14,14 @@
 #include "grlib/cglib_polygon.h"
 #include "grlib/cglib_shader.h"
 #include "mm/mm_std_base.h"
+#include "mm_math/mm_col3.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec3_na.h"
 #include "ptlib/emitter/compute/particle_emitter_compute.h"
 #include "ptlib/emitter/particle_emitter.h"
+#include "ptlib/emitter/particle_emitter_ext.h"
 #include "ptlib/emitter/particle_emitter_param.h"
 #include "ptlib/emitter/particle_emitter_particle.h"
 #include "ptlib/emitter/particle_emitter_set_node.h"
@@ -73,6 +79,65 @@ void EmitterObj::emitter_set_param_sub_pos_only2(EmitterParam *param) {
   ParticleManager::get()->update_model_spd(this, 1.0f);
 }
 
+void EmitterObj::emitter_set_param_sub(EmitterParam *param) {
+  u32 type;
+  if (unknown80 == nullptr) {
+    memcpy(&unknowne0, param, sizeof(unknown001));
+    if (unknown98 == nullptr) {
+      return;
+    }
+    type = unknown98->unknown109;
+    if (type == 0xff) {
+      unknown120 = param->unknown40;
+    } else if (type - 1 < 0xe) {
+      unknown140 = param->unknown60;
+    }
+    unknown14c = param->unknown6c;
+    unknown130 = param->unknown50;
+    unknown150 = param->unknown70;
+    f32 radius = param->unknown68;
+    if (radius > 0.0f && m_pGpuCheck == nullptr) {
+      mm::Vec3NA start = unknown98->unknown14;
+      mm::Vec3NA end = unknown98->unknown44;
+      f32 dy = start.y - end.y;
+      f32 dx = start.x - end.x;
+      f32 dz = start.z - end.z;
+      unknown31c = sqrtf(dx * dx + dy * dy + dz * dz);
+      unknown31c = (unknown31c + (unknown98->unknown9c + unknown98->unknowna0)) * 1.5f;
+      const DrDrawWorkInfoEF *info = renderer::RenderManager::get()->getRenderGrObj()->unknown258;
+      if (unknown31c < radius) {
+        unknown318 = radius;
+      } else {
+        unknown318 = unknown31c;
+      }
+      m_pGpuCheck = ml::DrGpuCheckBase::createEffGpuCheckObj(info->unknown560);
+    }
+  } else {
+    type = unknown98->unknown109;
+  }
+  if (type == 0xff) {
+    unknown120 = param->unknown40;
+  }
+  unknown151 = param->unknown71;
+  unknown152 = param->unknown72;
+  unknown153 = param->unknown73;
+  if (param->unknown78 >= 0.0f) {
+    unknown158 = param->unknown78;
+  }
+  if (param->unknown90 != -1) {
+    unknown170 = param->unknown90;
+  }
+  unknown15c = param->unknown7c;
+  unknown154 = param->unknown74;
+  unknown156 = param->unknown76;
+  unknown157 = param->unknown77;
+  unknown160 = param->unknown80;
+  unknown164 = param->unknown84;
+  unknown168 = param->unknown88;
+  unknown16c = param->unknown8c;
+  unknown174 = param->unknown94;
+}
+
 IntrusiveList<EmitterObj> &EmitterManager::getEmitterActiveList() { return unknown17a8; }
 
 IntrusiveList<EmitterObj>::iterator EmitterManager::getEmitterActiveIt(EmitterObj *emitter) { return unknown17a8.find(emitter); }
@@ -106,6 +171,47 @@ void EmitterManager::removeEmitterActive(EmitterObj *emitter) {
 void EmitterManager::addEmitterActive(EmitterObj *emitter) { unknown17a8.push_back(emitter); }
 
 void EmitterManager::addEmitterActiveAfterParent(EmitterObj *emitter, EmitterObj *parent) { unknown17a8.push_back(emitter); }
+
+ParticleObj *EmitterManager::particleAlloc(EmitterObj *emitter, bool isFront) {
+  ParticleObj *et = getFreeParticle();
+  if (et != nullptr) {
+    if (isFront) {
+      emitter->unknown40.push_front(et);
+    } else {
+      emitter->unknown40.push_back(et);
+    }
+    u8 isModel = 1;
+    if (emitter->unknown98 == nullptr || emitter->unknown98->unknown00 != 4) {
+      isModel = 0;
+    }
+    et->unknown13e = isModel;
+    u8 isLight = 1;
+    if (emitter->unknown98 == nullptr || emitter->unknown98->unknown00 != 5) {
+      isLight = 0;
+    }
+    et->unknown144 = isLight;
+    et->initUtilObj();
+    et->unknown20 = et->unknown10;
+    et->getExtParam().m_emParent = emitter;
+#line 893
+    MM_ASSERT(et->getExtParam().getEmParent());
+  }
+  return et;
+}
+
+ParticleObj *EmitterManager::getFreeParticle() {
+  if (unknown17d8.m_size < 1) {
+    return nullptr;
+  }
+  IntrusiveList<ParticleObj>::iterator it = unknown17d8.begin();
+  if (it == unknown17d8.end()) {
+    return nullptr;
+  }
+  ParticleObj *particle = it.get();
+  unknown17d8.erase(it);
+  particle->unknown001();
+  return particle;
+}
 
 void EmitterManager::addFreeParticleFront(ParticleObj *particle) { unknown17d8.push_front(particle); }
 
@@ -169,7 +275,7 @@ void EmitterManager::emitter_set_disp(u32 handle, int isDisp) {
 void EmitterManager::emitter_set_alpha(u32 handle, f32 alpha) {
   for (IntrusiveList<EmitterObj>::iterator it = unknown17a8.begin(); it != unknown17a8.end(); ++it) {
     if (it->unknown264 == handle) {
-      it->unknown12c = alpha;
+      it->unknown120.a = alpha;
     }
   }
 }
@@ -243,7 +349,7 @@ void EmitterManager::emitter_set_casparam(u32 handle, const void *model, Emitter
 }
 
 void *EmitterManager::createFunc(EmitterObj *emitter, ParticleObj *particle, f32 frame, int param) {
-  if (particle->unknownd4 == 1) {
+  if (particle->unknownd4_int == 1) {
     return create_local01(emitter, particle, frame, param);
   }
   efAstMsg("0", "create func set error !!!");
@@ -347,7 +453,7 @@ void EmitterManager::move() {
     EmitterObj *emitter = it.get();
     EmitterArg *arg = emitter->unknown98;
     bool isRender = emitter->isRenderCheck();
-    if (arg != nullptr && isRender && ((arg->unknown00 & 0xfe) == 4 || (emitter->unknown151 != 0 && 0.0f < emitter->unknown12c))) {
+    if (arg != nullptr && isRender && ((arg->unknown00 & 0xfe) == 4 || (emitter->unknown151 != 0 && 0.0f < emitter->unknown120.a))) {
       switch (arg->unknown00) {
       case 0:
       case 1:

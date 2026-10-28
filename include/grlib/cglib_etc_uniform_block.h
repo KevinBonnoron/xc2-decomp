@@ -1,7 +1,6 @@
 #pragma once
 #include <stddef.h>
 
-#include "grlib/cglib_system_context.h"
 #include "types.h"
 
 namespace grlib {
@@ -12,7 +11,7 @@ public:
   void updateDataMoveOff();
   void setUniformBlock(u32 index);
   void setStorageBuffer(u32 index);
-  CGLibEtcUniformBlock() : m_size(0) { context::CGLibSystemContext::get()->getGlbUniformParam(m_buff, unknown10); }
+  CGLibEtcUniformBlock();
   ~CGLibEtcUniformBlock();
   void updateData(u32 size);
   void Rebuilding();

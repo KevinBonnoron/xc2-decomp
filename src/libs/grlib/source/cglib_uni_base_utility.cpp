@@ -4,6 +4,7 @@
 
 #include "grlib/cglib_dec_shader.h"
 #include "grlib/cglib_shader.h"
+#include "grlib/cglib_system_context.h"
 #include "grlib/shd_util.h"
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_col4.h"
@@ -393,6 +394,8 @@ void CGLibUniBaseUtility::setUseStorageBuffer(u32 index) {
   unknown18 = true;
   setMoveMem();
 }
+
+CGLibEtcUniformBlock::CGLibEtcUniformBlock() : m_size(0) { context::CGLibSystemContext::get()->getGlbUniformParam(m_buff, unknown10); }
 
 CGLibUniformEtcUtility::CGLibUniformEtcUtility(const CGLibDecShader *decShader) : CGLibUniBaseUtility(decShader) {}
 

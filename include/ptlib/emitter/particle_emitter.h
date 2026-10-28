@@ -1,7 +1,11 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_math/mm_col3.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec3_na.h"
 #include "ptlib/emitter/particle_emitter_param.h"
 #include "ptlib/particle_intrusive_list.h"
 #include "types.h"
@@ -30,20 +34,29 @@ class ParticleObj;
 
 struct EmitterArg {
   u8 unknown00; // Inferred role: emitter type; original member name unknown.
-  u8 _001[0x08c - 0x001];
+  u8 _001[0x014 - 0x001];
+  mm::Vec3NA unknown14; // Inferred role: bound start point; original member name unknown.
+  u8 _020[0x044 - 0x020];
+  mm::Vec3NA unknown44; // Inferred role: bound end point; original member name unknown.
+  u8 _050[0x08c - 0x050];
   u16 unknown8c; // Inferred role: life base; original member name unknown.
   u16 unknown8e; // Inferred role: life; original member name unknown.
   u16 unknown90; // Inferred role: life random range; original member name unknown.
   u8 _092[0x094 - 0x092];
   u8 unknown94; // Inferred role: draw parameter; original member name unknown.
-  u8 _095[0x0e0 - 0x095];
+  u8 _095[0x09c - 0x095];
+  f32 unknown9c; // Inferred role: bound extent; original member name unknown.
+  f32 unknowna0; // Inferred role: bound extent; original member name unknown.
+  u8 _0a4[0x0e0 - 0x0a4];
   u8 unknowne0; // Inferred role: draw parameter; original member name unknown.
   u8 _0e1[0x0fc - 0x0e1];
   u8 unknownfc; // Inferred role: blend mode; original member name unknown.
   u8 unknownfd; // Inferred role: fadeout mode; original member name unknown.
   u8 _0fe[0x100 - 0x0fe];
   int unknown100; // Inferred role: draw type; original member name unknown.
-  u8 _104[0x120 - 0x104];
+  u8 _104[0x109 - 0x104];
+  u8 unknown109; // Inferred role: color mode, 0xff for a color block; original member name unknown.
+  u8 _10a[0x120 - 0x10a];
   f32 unknown120; // Inferred role: draw parameter; original member name unknown.
   u8 _124[0x128 - 0x124];
   f32 unknown128; // Inferred role: draw parameter; original member name unknown.
@@ -52,7 +65,11 @@ struct EmitterArg {
 };
 
 static_assert(offsetof(EmitterArg, unknown00) == 0x00, "");
+static_assert(offsetof(EmitterArg, unknown14) == 0x14, "");
+static_assert(offsetof(EmitterArg, unknown44) == 0x44, "");
 static_assert(offsetof(EmitterArg, unknown8c) == 0x8c, "");
+static_assert(offsetof(EmitterArg, unknown9c) == 0x9c, "");
+static_assert(offsetof(EmitterArg, unknowna0) == 0xa0, "");
 static_assert(offsetof(EmitterArg, unknown90) == 0x90, "");
 static_assert(offsetof(EmitterArg, unknown94) == 0x94, "");
 static_assert(offsetof(EmitterArg, unknowne0) == 0xe0, "");
@@ -61,6 +78,7 @@ static_assert(offsetof(EmitterArg, unknown120) == 0x120, "");
 static_assert(offsetof(EmitterArg, unknown128) == 0x128, "");
 static_assert(offsetof(EmitterArg, unknownfd) == 0xfd, "");
 static_assert(offsetof(EmitterArg, unknown100) == 0x100, "");
+static_assert(offsetof(EmitterArg, unknown109) == 0x109, "");
 static_assert(offsetof(EmitterArg, unknown24c) == 0x24c, "");
 
 // Inferred role: shared data of an emitter; original name unknown.
@@ -147,19 +165,28 @@ public:
   u32 unknownd4;         // Inferred role: move flag; original member name unknown.
   u8 _0d8[0x0e0 - 0x0d8];
   unknown001 unknowne0; // Inferred role: transform; original member name unknown.
-  u8 _120[0x12c - 0x120];
-  f32 unknown12c; // Inferred role: alpha; original member name unknown.
-  u8 _130[0x14c - 0x130];
+  mm::Col4 unknown120;  // Inferred role: color, the alpha is read by the draw sort; original member name unknown.
+  mm::Col3 unknown130;  // Inferred role: copied from the emitter parameter; original member name unknown.
+  u8 _13c[0x140 - 0x13c];
+  mm::Vec2 unknown140; // Inferred role: copied from the emitter parameter; original member name unknown.
+  u8 _148[0x14c - 0x148];
   f32 unknown14c; // Inferred role: scale; original member name unknown.
   s8 unknown150;  // Inferred role: priority offset; original member name unknown.
   u8 unknown151;  // Inferred role: disp; original member name unknown.
   u8 unknown152;  // Inferred role: no wait; original member name unknown.
   u8 unknown153;  // Original member name unknown.
-  u8 _154[0x158 - 0x154];
+  u16 unknown154; // Inferred role: copied from the emitter parameter; original member name unknown.
+  u8 unknown156;  // Inferred role: copied from the emitter parameter; original member name unknown.
+  u8 unknown157;  // Inferred role: copied from the emitter parameter; original member name unknown.
   f32 unknown158; // Inferred role: speed; original member name unknown.
-  u8 _15c[0x170 - 0x15c];
+  f32 unknown15c; // Inferred role: copied from the emitter parameter; original member name unknown.
+  f32 unknown160; // Inferred role: copied from the emitter parameter; original member name unknown.
+  f32 unknown164; // Inferred role: copied from the emitter parameter; original member name unknown.
+  f32 unknown168; // Inferred role: copied from the emitter parameter; original member name unknown.
+  f32 unknown16c; // Inferred role: copied from the emitter parameter; original member name unknown.
   u32 unknown170; // Inferred role: category; original member name unknown.
-  u8 _174[0x180 - 0x174];
+  u8 unknown174;  // Inferred role: copied from the emitter parameter; original member name unknown.
+  u8 _175[0x180 - 0x175];
   u8 unknown180; // Inferred role: fadeout state; original member name unknown.
   u8 unknown181; // Inferred role: fadeout count; original member name unknown.
   u8 unknown182; // Inferred role: fadeout frame; original member name unknown.
@@ -188,7 +215,8 @@ public:
   u8 _280[0x310 - 0x280];
   // Evidence: name from the assertion string "m_pGpuCheck == nullptr" in emitter_alloc01; vtable +0x10 (release) and +0x18 (isRender) called in emitter_free_core and isRenderCheck.
   ml::DrGpuCheckBase *m_pGpuCheck;
-  u8 _318[0x320 - 0x318];
+  f32 unknown318; // Inferred role: gpu check radius; original member name unknown.
+  f32 unknown31c; // Inferred role: gpu check bounding size; original member name unknown.
 };
 
 static_assert(offsetof(EmitterObj, unknown40) == 0x40, "");
@@ -203,14 +231,21 @@ static_assert(offsetof(EmitterObj, unknownc8) == 0xc8, "");
 static_assert(offsetof(EmitterObj, unknownd0) == 0xd0, "");
 static_assert(offsetof(EmitterObj, unknownd4) == 0xd4, "");
 static_assert(offsetof(EmitterObj, unknowne0) == 0xe0, "");
-static_assert(offsetof(EmitterObj, unknown12c) == 0x12c, "");
+static_assert(offsetof(EmitterObj, unknown120) == 0x120, "");
+static_assert(offsetof(EmitterObj, unknown130) == 0x130, "");
+static_assert(offsetof(EmitterObj, unknown140) == 0x140, "");
 static_assert(offsetof(EmitterObj, unknown14c) == 0x14c, "");
 static_assert(offsetof(EmitterObj, unknown150) == 0x150, "");
 static_assert(offsetof(EmitterObj, unknown151) == 0x151, "");
 static_assert(offsetof(EmitterObj, unknown152) == 0x152, "");
 static_assert(offsetof(EmitterObj, unknown153) == 0x153, "");
 static_assert(offsetof(EmitterObj, unknown158) == 0x158, "");
+static_assert(offsetof(EmitterObj, unknown154) == 0x154, "");
+static_assert(offsetof(EmitterObj, unknown15c) == 0x15c, "");
+static_assert(offsetof(EmitterObj, unknown160) == 0x160, "");
+static_assert(offsetof(EmitterObj, unknown16c) == 0x16c, "");
 static_assert(offsetof(EmitterObj, unknown170) == 0x170, "");
+static_assert(offsetof(EmitterObj, unknown174) == 0x174, "");
 static_assert(offsetof(EmitterObj, unknown180) == 0x180, "");
 static_assert(offsetof(EmitterObj, unknown188) == 0x188, "");
 static_assert(offsetof(EmitterObj, unknown18c) == 0x18c, "");
@@ -225,6 +260,8 @@ static_assert(offsetof(EmitterObj, unknown27a) == 0x27a, "");
 static_assert(offsetof(EmitterObj, unknown27c) == 0x27c, "");
 static_assert(offsetof(EmitterObj, unknown27e) == 0x27e, "");
 static_assert(offsetof(EmitterObj, m_pGpuCheck) == 0x310, "");
+static_assert(offsetof(EmitterObj, unknown318) == 0x318, "");
+static_assert(offsetof(EmitterObj, unknown31c) == 0x31c, "");
 static_assert(sizeof(EmitterObj) == 0x320, "");
 
 } // namespace emitter

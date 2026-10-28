@@ -22,21 +22,27 @@ f32 EmitterObj::getEmitterScale() {
   return scale * unknown14c;
 }
 
+ParticleObj::ParticleObj() {
+  unknown00 = this;
+  unknown08 = this;
+  unknown001();
+}
+
 ParticleObj::~ParticleObj() {}
 
 void ParticleObj::free_plight() {}
 
 void ParticleObj::freeUtilObj() {
-  if (unknown130 != nullptr) {
+  if (m_extParam != nullptr) {
     if (unknown13e != 0) {
-      ParticleManager::get()->deleteMdl(unknown130->unknown110);
-      unknown130->unknown110 = nullptr;
+      ParticleManager::get()->deleteMdl(m_extParam->unknown110);
+      m_extParam->unknown110 = nullptr;
       unknown13e = 0;
     }
     if (unknown144 != 0) {
-      ParticleManager::get()->deleteLgt(unknown130->unknown110_u8, unknown130->unknown108);
-      unknown130->unknown110_u8 = 0;
-      unknown130->unknown108 = nullptr;
+      ParticleManager::get()->deleteLgt(m_extParam->unknown110_u8, m_extParam->unknown108);
+      m_extParam->unknown110_u8 = 0;
+      m_extParam->unknown108 = nullptr;
       unknown144 = 0;
     }
   }
@@ -44,25 +50,25 @@ void ParticleObj::freeUtilObj() {
 
 void ParticleObj::particle_clear_union() {
   if (unknown13e != 0) {
-    if (unknown130->unknown110 != nullptr) {
-      ParticleManager::deleteMdl(unknown130->unknown110);
-      unknown130->unknown110 = nullptr;
+    if (m_extParam->unknown110 != nullptr) {
+      ParticleManager::deleteMdl(m_extParam->unknown110);
+      m_extParam->unknown110 = nullptr;
     }
     unknown13e = 0;
   }
   if (unknown144 != 0) {
-    void *light = unknown130->unknown108;
+    void *light = m_extParam->unknown108;
     if (light != nullptr) {
-      ParticleManager::deleteLgt(unknown130->unknown110_u8, light);
-      unknown130->unknown108 = nullptr;
+      ParticleManager::deleteLgt(m_extParam->unknown110_u8, light);
+      m_extParam->unknown108 = nullptr;
     }
     unknown144 = 0;
   }
-  unknown130->unknown08 = nullptr;
-  unknown130->unknown108 = nullptr;
-  unknown130->unknown110 = nullptr;
-  unknown130->unknown118 = nullptr;
-  unknown130->unknown120 = nullptr;
+  m_extParam->m_emParent = nullptr;
+  m_extParam->unknown108 = nullptr;
+  m_extParam->unknown110 = nullptr;
+  m_extParam->unknown118 = nullptr;
+  m_extParam->unknown120 = nullptr;
   freeUtilObj();
 }
 
@@ -76,7 +82,7 @@ void ParticleObj::calcGravity(EmitterObj *emitter, f32 speed, mm::Vec3 &result) 
   unknown004 *gravity = emitter->unknown1c8;
   if (gravity != nullptr) {
     if (move_common_check_begin_end(emitter, gravity->unknown00, gravity->unknown02, gravity->unknown04)) {
-      ExtObj *ext = unknown130;
+      ExtObj *ext = m_extParam;
       f32 force = ext->unknown20 * speed * emitter->getEmitterScale();
       f32 x = ext->unknown10.x + force * gravity->unknown08;
       f32 y = ext->unknown10.y + force * gravity->unknown0c;
@@ -115,12 +121,12 @@ void ParticleObj::calcNewton(EmitterObj *emitter, mm::Vec3 &result) {
           direction.z = direction.z * inverse;
         }
         mm::Vec3 force = direction * strength;
-        ExtObj *ext = unknown130;
+        ExtObj *ext = m_extParam;
         ext->unknown90 -= force;
       }
-      result.x = unknown130->unknown90.x + result.x;
-      result.y = unknown130->unknown90.y + result.y;
-      result.z = unknown130->unknown90.z + result.z;
+      result.x = m_extParam->unknown90.x + result.x;
+      result.y = m_extParam->unknown90.y + result.y;
+      result.z = m_extParam->unknown90.z + result.z;
     }
   }
 }
@@ -210,13 +216,13 @@ void ParticleObj::move_common_check_begin_end_sub(EmitterObj *emitter, int mode,
 
 void ParticleObj::moveFlowMap(EmitterObj *emitter, int isMove) {
   if (isMove != 0) {
-    f32 position = unknown130->unknown22c + unknown130->unknownfc;
+    f32 position = m_extParam->unknown22c + m_extParam->unknownfc;
     while (1.0f < position) {
       position -= 1.0f;
     }
-    unknown130->unknown22c = position;
-    if (1e-06f < unknown130->unknown22c) {
-      unknown130->unknown230 = 1;
+    m_extParam->unknown22c = position;
+    if (1e-06f < m_extParam->unknown22c) {
+      m_extParam->unknown230 = 1;
     }
   }
 }

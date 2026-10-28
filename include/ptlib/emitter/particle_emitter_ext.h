@@ -12,11 +12,13 @@ class EmitterObj;
 class ExtObj {
 public:
   ~ExtObj();
+  EmitterObj *getEmParent() { return m_emParent; }
 
   u8 _00[0x08 - 0x00];
-  EmitterObj *unknown08; // Inferred role: emitter parent; original member name unknown.
-  mm::Vec3 unknown10;    // Inferred role: accumulated force; original member name unknown.
-  f32 unknown20;         // Inferred role: force rate; original member name unknown.
+  // Evidence: name from the accessor getEmParent in the assertion string "et->getExtParam().getEmParent()" of particleAlloc.
+  EmitterObj *m_emParent;
+  mm::Vec3 unknown10; // Inferred role: accumulated force; original member name unknown.
+  f32 unknown20;      // Inferred role: force rate; original member name unknown.
   u8 _24[0x90 - 0x24];
   mm::Vec3 unknown90; // Inferred role: accumulated newton force; original member name unknown.
   u8 _a0[0xfc - 0xa0];
@@ -35,7 +37,7 @@ public:
   u8 _234[0x240 - 0x234];
 };
 
-static_assert(offsetof(ExtObj, unknown08) == 0x08, "");
+static_assert(offsetof(ExtObj, m_emParent) == 0x08, "");
 static_assert(offsetof(ExtObj, unknown10) == 0x10, "");
 static_assert(offsetof(ExtObj, unknown20) == 0x20, "");
 static_assert(offsetof(ExtObj, unknown90) == 0x90, "");

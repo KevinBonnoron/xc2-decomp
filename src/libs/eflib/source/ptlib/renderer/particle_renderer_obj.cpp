@@ -2,7 +2,10 @@
 
 #include <algorithm>
 
+#include "grlib/cglib_color_ctl.h"
+#include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_render_target.h"
+#include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_vector.h"
@@ -11,6 +14,7 @@
 #include "ptlib/emitter/particle_emitter_param.h"
 #include "ptlib/material/particle_material_manager.h"
 #include "ptlib/particle_system.h"
+#include "ptlib/renderer/screen_render_manager.h"
 
 // clang-format off
 #include "particle_renderer_back_buffer.cpp"
@@ -33,6 +37,19 @@ void RenderGrObj::fxcore_setup_target_update(int index) {
     }
   }
   unknown00.bufferClear();
+}
+
+void RenderGrObj::draw_capture() {
+  if (unknown258->unknown060 != nullptr && screen::ScreenRenderManager::isValid()) {
+    screen::ScreenRenderManager *screenRenderManager = screen::ScreenRenderManager::getPtr();
+    grlib::CGLibDepthCtl::setDepthControl(0, 0, GRL_COMPARE_ALWAYS);
+    grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
+    unknown258->unknown060->setRenderTarget();
+    screenRenderManager->RenderCapScreen(unknown258, unknown258->unknown000->unknown70, unknown258->unknown068->unknown70);
+    *unknown258->unknown570 = 1;
+    grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_SRC_ALPHA, GRL_BLEND_FUNC_ONE_MINUS_SRC_ALPHA, GRL_BLEND_COMBINE_ADD, GRL_LOGIC_TYPE_COPY);
+    unknown270 = 0;
+  }
 }
 
 u32 RenderGrObj::changeShader(u32 type, bool isSimple) {
@@ -192,7 +209,7 @@ void RenderGrObj::prioritySort(emitter::EmitterManager &emitterManager, int prio
     return;
   }
   for (emitter::EmitterObj *emitter = emitterManager.unknown1750; emitter != nullptr; emitter = emitter->unknownc8) {
-    if (emitter->isRenderCheck() && emitter->unknown274 == prioIdx && emitter->unknown151 && emitter->unknown12c > 0.0f && emitter->unknown98 != nullptr &&
+    if (emitter->isRenderCheck() && emitter->unknown274 == prioIdx && emitter->unknown151 && emitter->unknown120.a > 0.0f && emitter->unknown98 != nullptr &&
         emitter->unknown98->unknown100 != ARG_DRAW_TYPE_NONE) {
       const mm::Mat44 &view = camParam.m_viewMatrix;
       sort::EmitterSort entry;
