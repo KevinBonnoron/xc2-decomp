@@ -1,10 +1,14 @@
 #include <math.h>
 
+#include "ml/dev_graph.h"
 #include "ml/scn.h"
 #include "ml/threadval.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_plane.h"
+#include "mm_math/mm_rect.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
+#include "scn/scn_render_dr_sys.h"
 #include "types.h"
 
 namespace ml {
@@ -66,6 +70,32 @@ void ScnObjCam::addTrack(const mm::Vec3 &pos) {
   info->m_pos = info->m_pos + pos;
   info->m_targetPos += pos;
   updateViewMatrix(true);
+}
+
+void ScnObjCam::setDist(const f32 &dist) {
+  RENDER_INFO *info = unknown80;
+  info->m_targetDist = dist;
+  const mm::Mat44 &matrix = info->unknown70;
+  mm::Vec3 pos;
+  pos.x = matrix.rows[0][0] * 0.0f + matrix.rows[1][0] * 0.0f + dist * matrix.rows[2][0];
+  pos.y = matrix.rows[0][1] * 0.0f + matrix.rows[1][1] * 0.0f + dist * matrix.rows[2][1];
+  pos.z = matrix.rows[0][2] * 0.0f + matrix.rows[1][2] * 0.0f + dist * matrix.rows[2][2];
+  info->m_pos = pos + info->m_targetPos;
+  updateViewMatrix(true);
+}
+
+void ScnObjCam::apply() {
+  RENDER_INFO *info = renderInfo;
+  const mm::Rect<int> &viewport = DevGraph::getViewport();
+  if (viewport.width == 0 || viewport.height == 0) {
+    info->unknown1f0 = 1.0f;
+  } else {
+    info->unknown1f0 = static_cast<f32>(viewport.width) / static_cast<f32>(viewport.height);
+  }
+  ScnRenderDrSys *render = unknown08->unknown38;
+  if (render != nullptr) {
+    render->applyCamera(this);
+  }
 }
 
 void ScnObjCam::updateFovNearFar() {

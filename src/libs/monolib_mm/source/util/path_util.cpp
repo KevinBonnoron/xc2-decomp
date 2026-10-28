@@ -24,4 +24,19 @@ const char *PathUtil::getFileExtPtr(const char *path) {
   return nullptr;
 }
 
+void PathUtil::itoa(mm::mtl::FixStr<16> &string, int value, int digits) {
+  string = "";
+  for (int i = 0; i < digits; i++) {
+    char text[2] = {};
+    int unit = 1;
+    for (int j = 0; j < i; j++) {
+      unit *= 10;
+    }
+    int digit = value % (unit * 10) / unit;
+    text[0] = '0' + digit;
+    mm::mtl::FixStr<16> character(text);
+    string = character + string.c_str();
+  }
+}
+
 } // namespace ml

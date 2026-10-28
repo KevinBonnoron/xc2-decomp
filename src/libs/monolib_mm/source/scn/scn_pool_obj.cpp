@@ -5,6 +5,29 @@
 
 namespace ml {
 
+ScnPoolObj::~ScnPoolObj() {
+  {
+    CS lock(unknown10);
+  }
+  release(1);
+  release(2);
+  release(3);
+  release(4);
+  release(5);
+  release(6);
+  for (reslist<ScnObj *>::Node *node = unknown1e8.begin(); node != unknown1e8.end(); node = node->getNext()) {
+    if (node->value != nullptr) {
+      delete node->value;
+    }
+  }
+}
+
+void ScnPoolObj::deleteObj() {
+  for (u16 type = 0; type < 7; type++) {
+    release(type);
+  }
+}
+
 void ScnPoolObj::update() {
   CS lock(unknown10);
   for (reslist<ScnObj *>::Node *node = unknown68.begin(); node != unknown68.end(); node = node->getNext()) {

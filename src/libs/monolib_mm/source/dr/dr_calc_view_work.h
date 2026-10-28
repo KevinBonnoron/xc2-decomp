@@ -86,7 +86,10 @@ public:
   grlib::CGLibDblUniformBlock unknown858; // Inferred role: toon uniform; original member name unknown.
   grlib::CGLibDblUniformBlock unknown890; // Inferred role: toon2 uniform; original member name unknown.
   grlib::CGLibDblUniformBlock unknown8c8; // Inferred role: light uniform; original member name unknown.
-  u8 _900[0x9aa - 0x900];
+  grlib::CGLibDblUniformBlock unknown900; // Inferred role: mpf uniform; original member name unknown.
+  grlib::CGLibDblUniformBlock unknown938; // Inferred role: dither uniform for the first tex; original member name unknown.
+  grlib::CGLibDblUniformBlock unknown970; // Inferred role: dither uniform; original member name unknown.
+  u8 _9a8[0x9aa - 0x9a8];
   bool unknown9aa; // Inferred role: SSR skip; original member name unknown.
   u8 _9ab[0x9ad - 0x9ab];
   bool unknown9ad; // Inferred role: request flag; original member name unknown.
@@ -121,6 +124,9 @@ static_assert(offsetof(DrCalcViewWork, unknown820) == 0x820, "");
 static_assert(offsetof(DrCalcViewWork, unknown858) == 0x858, "");
 static_assert(offsetof(DrCalcViewWork, unknown890) == 0x890, "");
 static_assert(offsetof(DrCalcViewWork, unknown8c8) == 0x8c8, "");
+static_assert(offsetof(DrCalcViewWork, unknown900) == 0x900, "");
+static_assert(offsetof(DrCalcViewWork, unknown938) == 0x938, "");
+static_assert(offsetof(DrCalcViewWork, unknown970) == 0x970, "");
 static_assert(offsetof(DrCalcViewWork, unknown9aa) == 0x9aa, "");
 static_assert(offsetof(DrCalcViewWork, unknown9ad) == 0x9ad, "");
 static_assert(offsetof(DrCalcViewWork, unknownae0) == 0xae0, "");

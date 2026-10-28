@@ -1,7 +1,10 @@
 #include "ml/err_viewer.h"
 
 #include "ml/critical_section.h"
+#include "ml/dev_clock.h"
+#include "ml/ml_mem.h"
 #include "ml/work_root.h"
+#include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 
 namespace ml {
@@ -64,6 +67,43 @@ void ErrViewer::update() {
   if (viewer != nullptr) {
     viewer->callbackError(static_cast<ERR_CALL>(1));
   }
+}
+
+ErrViewer *ErrViewer::create() {
+  ErrViewer *viewer = get();
+  if (viewer == nullptr) {
+    viewer = new (MlMem::getProductMem()) ErrViewer();
+  }
+  return viewer;
+}
+
+void ErrViewer::tail() {
+  ErrViewer *viewer = get();
+  if (viewer != nullptr) {
+    viewer->callbackError(static_cast<ERR_CALL>(2));
+    if (viewer->unknown26c) {
+      f32 elapsed;
+      DevClock::getTimeNow(elapsed, viewer->unknown260);
+      if (3.0f <= elapsed) {
+        viewer->unknown26c = false;
+      }
+    }
+  }
+}
+
+bool ErrViewer::destroy() {
+  ErrViewer *viewer = get();
+  if (viewer == nullptr) {
+    return true;
+  }
+  if (!viewer->unknown269) {
+    viewer->unknown269 = true;
+  }
+  if (viewer->unknown26a) {
+    delete viewer;
+    return true;
+  }
+  return false;
 }
 
 s32 ErrViewer::createHandle() const { return s_nHandle++; }

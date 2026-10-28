@@ -3,6 +3,8 @@
 
 #include "ml/critical_section.h"
 #include "ml/reslist.h"
+#include "ml/work_event.h"
+#include "scn/scn_render_callback.h"
 #include "types.h"
 
 namespace ml {
@@ -13,8 +15,9 @@ class ScnObj;
 class ScnObjCam;
 class WinView;
 
-class ScnPoolObj {
+class ScnPoolObj : public IWorkEvent, public IScnRender {
 public:
+  ~ScnPoolObj() override;
   bool isValidInsert(u16 type) const;
   bool insert(ScnObj *obj);
   bool isExistLgtEnv() const;
@@ -27,7 +30,6 @@ public:
   reslist<ScnObj *> *getList(u16 type);
   const reslist<ScnObj *> *getList(u16 type) const;
 
-  u8 _00[0x10 - 0x00];
   CriticalSection unknown10;    // Inferred role: update lock; original member name unknown.
   CriticalSection unknown38;    // Inferred role: list lock; original member name unknown.
   Scn *unknown60;               // Inferred role: scn; original member name unknown.

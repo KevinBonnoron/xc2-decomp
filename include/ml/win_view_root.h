@@ -1,15 +1,14 @@
 #pragma once
 #include <stddef.h>
 
-#include "ml/win_view.h"
 #include "ml/work_obj.h"
-#include "ml/work_root.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
 namespace ml {
 
 class WinProc;
+class WinView;
 
 class WinViewRoot : public WorkObj, public mm::mtl::PtrSingleton<WinViewRoot> {
 public:
@@ -22,16 +21,7 @@ public:
   static WinView *getCurrent();
   static WinProc *getCurrentProc();
   static void destroyProc(const WinProc *proc);
-  static WinView *getView(u32 wid) {
-    if (get() == nullptr) {
-      return nullptr;
-    }
-    WorkObj *work = WorkRootState::getWork(wid);
-    if (work != nullptr && WorkRootState::getWork(get(), wid) == nullptr && !WorkRootState::isEntryWork(wid, get())) {
-      work = nullptr;
-    }
-    return static_cast<WinView *>(work);
-  }
+  static WinView *getView(u32 wid);
   static WinView *getView(const char *name);
   static void renderView();
   static bool isCurrent(const WinView *view);

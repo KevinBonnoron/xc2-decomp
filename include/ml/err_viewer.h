@@ -33,6 +33,10 @@ public:
   static void setup();
   static void upErrViewer();
   static void renderDRC();
+  ErrViewer();
+  static ErrViewer *create();
+  static void tail();
+  static bool destroy();
   s32 createHandle() const;
   void callbackError(ERR_CALL call);
   void term();
@@ -42,16 +46,25 @@ public:
   CriticalSection *unknown10;                     // Inferred role: critical section; original member name unknown.
   mm::mtl::FixedList<unknown001 *, 32> unknown18; // Inferred role: errors; original member name unknown.
   s32 unknown258;                                 // Inferred role: state; original member name unknown.
-  u8 _25c[0x26b - 0x25c];
+  u8 _25c[0x260 - 0x25c];
+  long unknown260; // Inferred role: clock; original member name unknown.
+  bool unknown268; // Inferred role: render registered; original member name unknown.
+  bool unknown269; // Inferred role: destroy requested; original member name unknown.
+  bool unknown26a; // Inferred role: terminated; original member name unknown.
   bool unknown26b; // Inferred role: error displayed; original member name unknown.
-  u8 _26c[0x278 - 0x26c];
+  bool unknown26c; // Inferred role: error cooldown; original member name unknown.
+  u8 _26d[0x278 - 0x26d];
   void *unknown278; // Inferred role: memory; original member name unknown.
 };
 
 static_assert(offsetof(ErrViewer, unknown10) == 0x10, "");
 static_assert(offsetof(ErrViewer, unknown18) == 0x18, "");
 static_assert(offsetof(ErrViewer, unknown258) == 0x258, "");
+static_assert(offsetof(ErrViewer, unknown260) == 0x260, "");
+static_assert(offsetof(ErrViewer, unknown269) == 0x269, "");
+static_assert(offsetof(ErrViewer, unknown26a) == 0x26a, "");
 static_assert(offsetof(ErrViewer, unknown26b) == 0x26b, "");
+static_assert(offsetof(ErrViewer, unknown26c) == 0x26c, "");
 static_assert(offsetof(ErrViewer, unknown278) == 0x278, "");
 
 } // namespace ml

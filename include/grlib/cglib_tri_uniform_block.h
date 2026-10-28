@@ -40,6 +40,7 @@ public:
   void *getOldTriBuff();
   void *getMapping();
   void setUniformBlock(u32 index);
+  void setOldUniformBlock(u32 index);
   void beginStreamOut(u32 offset);
 
   CGLibMemType unknown38; // Inferred role: mem type; original member name unknown.

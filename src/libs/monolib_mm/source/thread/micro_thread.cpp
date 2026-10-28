@@ -1,6 +1,17 @@
 #include "ml/micro_thread.h"
 
+#include "ml/ml_mem.h"
+#include "mtl/alloc_handle.h"
+
 namespace ml {
+
+MicroThread *MicroThread::create() {
+  MicroThread *thread = get();
+  if (thread == nullptr) {
+    thread = new (MlMem::getProductMem()) MicroThreadNx();
+  }
+  return thread;
+}
 
 u64 MicroThread::createHandle(MLTHG *group, u32 index) {
   u64 handle = (reinterpret_cast<u64>(group) & 0xff) << 28 | (index & 0xff) << 16 | (unknown294 & 0xffff);

@@ -24,6 +24,7 @@ public:
     MLTH *unknown670; // Inferred role: current thread; original member name unknown.
   };
 
+  static MicroThread *create();
   void sleep(unsigned int frame, bool isWait);
   void exit();
   u64 createHandle(MLTHG *group, u32 index);
@@ -36,6 +37,15 @@ public:
   unknown001 *unknown2c0; // Inferred role: thread context; original member name unknown.
 };
 
+class MicroThreadNx : public MicroThread {
+public:
+  MicroThreadNx();
+
+  u8 _2c8[0x9c8 - 0x2c8];
+};
+
+static_assert(sizeof(MicroThread) == 0x2c8, "");
+static_assert(sizeof(MicroThreadNx) == 0x9c8, "");
 static_assert(offsetof(MicroThread, unknown294) == 0x294, "");
 static_assert(offsetof(MicroThread, unknown2c0) == 0x2c0, "");
 static_assert(offsetof(MicroThread::MLTH, unknown18) == 0x18, "");

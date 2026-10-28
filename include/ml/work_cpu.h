@@ -99,6 +99,8 @@ public:
   static bool isBackground();
   static void syncSubCpu();
   static void wakeup(int cpu);
+  static void removeAutoExecGrp(int group);
+  static void releaseGroupHandle(int group);
   static void sync(int cpu, WKCPU_SYNC sync, CPUID cpuid);
   static void setHeartBeatCpu(CPUID cpu);
   static u32 getJobTrans();

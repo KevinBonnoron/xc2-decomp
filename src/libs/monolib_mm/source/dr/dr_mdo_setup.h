@@ -4,6 +4,10 @@
 #include "dr/dr_mdo_node.h"
 #include "types.h"
 
+namespace grlib {
+class CGLibEtcUniformBlock;
+} // namespace grlib
+
 namespace ml {
 class DrResMdoMat;
 struct MdsMatInfoHeader;
@@ -113,15 +117,18 @@ public:
   void varStImg_Velocity(const MdsMatInfoHeader *header, u32 location, u32 index);
   void varStImg_ZBuff(const MdsMatInfoHeader *header, u32 location, u32 index);
 
-  u8 _16c[0x178 - 0x16c];
-  u8 unknown178; // Inferred role: setup flags; original member name unknown.
-  u8 unknown179; // Inferred role: seam flag; original member name unknown.
-  u8 _17a[0x17c - 0x17a];
-  s16 unknown17c; // Inferred role: material index; original member name unknown.
-  u16 unknown17e; // Inferred role: previous material index; original member name unknown.
+  u8 _16c[0x170 - 0x16c];
+  grlib::CGLibEtcUniformBlock *unknown170; // Inferred role: etc uniform; original member name unknown.
+  u8 unknown178;                           // Inferred role: setup flags; original member name unknown.
+  u8 unknown179;                           // Inferred role: seam flag; original member name unknown.
+  s16 unknown17a;                          // Inferred role: uniform index; original member name unknown.
+  s16 unknown17c;                          // Inferred role: material index; original member name unknown.
+  u16 unknown17e;                          // Inferred role: previous material index; original member name unknown.
 };
 
+static_assert(offsetof(DrMdoSetup, unknown170) == 0x170, "");
 static_assert(offsetof(DrMdoSetup, unknown178) == 0x178, "");
+static_assert(offsetof(DrMdoSetup, unknown17a) == 0x17a, "");
 static_assert(offsetof(DrMdoSetup, unknown17c) == 0x17c, "");
 static_assert(sizeof(DrMdoSetup) == 0x180, "");
 

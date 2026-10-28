@@ -5,11 +5,29 @@
 #include "ml/lib_main.h"
 #include "ml/reslist.h"
 #include "ml/win_proc_root.h"
+#include "ml/win_view.h"
 #include "ml/work_root.h"
 #include "ml/work_util.h"
 #include "mtl/alloc_handle.h"
 
 namespace ml {
+
+WinView *WinViewRoot::getView(u32 wid) {
+  if (get() == nullptr) {
+    return nullptr;
+  }
+  WorkObj *work = WorkRootState::getWork(wid);
+  if (work == nullptr) {
+    return nullptr;
+  }
+  if (WorkRootState::getWork(get(), wid) != nullptr) {
+    return static_cast<WinView *>(work);
+  }
+  if (WorkRootState::isEntryWork(wid, get())) {
+    return static_cast<WinView *>(work);
+  }
+  return nullptr;
+}
 
 WinView *WinViewRoot::getCurrent() {
   WinViewRoot *root = get();

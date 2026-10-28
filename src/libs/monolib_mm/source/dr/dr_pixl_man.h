@@ -4,6 +4,7 @@
 #include "types.h"
 
 namespace grlib {
+class CGLibDblUniformBlock;
 class CGLibDepthTarget;
 class CGLibRenderTarget;
 class CGLibTextureBuffer;
@@ -168,11 +169,11 @@ public:
   DrPixlRenderTarget *unknown830; // Inferred role: dammy tex; original member name unknown.
   DrPixlRenderTarget *unknown838; // Inferred role: dammy white tex; original member name unknown.
   u8 _840[0x848 - 0x840];
-  DrPixlShadowObj *unknown848; // Inferred role: shadow obj; original member name unknown.
-  void *unknown850;            // Inferred role: shadow uniform; original member name unknown.
-  u32 unknown858;              // Inferred role: render target; original member name unknown.
-  u32 unknown85c;              // Inferred role: gbuff mask; original member name unknown.
-  s32 unknown860;              // Inferred role: cate; original member name unknown.
+  DrPixlShadowObj *unknown848;             // Inferred role: shadow obj; original member name unknown.
+  grlib::CGLibDblUniformBlock *unknown850; // Inferred role: shadow uniform; original member name unknown.
+  u32 unknown858;                          // Inferred role: render target; original member name unknown.
+  u32 unknown85c;                          // Inferred role: gbuff mask; original member name unknown.
+  s32 unknown860;                          // Inferred role: cate; original member name unknown.
   u8 _864[0x9c0 - 0x864];
   grlib::CGLibRenderTarget *unknown9c0; // Inferred role: capture4 render target; original member name unknown.
 };

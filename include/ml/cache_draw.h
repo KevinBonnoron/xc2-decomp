@@ -308,6 +308,8 @@ public:
   void renderPrimFill(const mm::PrimBase *prim);
   void cubeFill(const mm::Cube *cube);
   static DebDraw *get(u32 screen);
+  static void setCurrentPrio(int priority);
+  static void flushPrio(int priority, const mm::Mat44 &projection, const mm::Mat44 &view);
   static void swap();
   static CacheDraw *getCacheDraw();
   void initialize();
