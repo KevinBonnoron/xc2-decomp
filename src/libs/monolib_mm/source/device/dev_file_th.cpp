@@ -1,5 +1,9 @@
 #include "ml/dev_file_th.h"
 
+#include "ml/dev_file_accessor.h"
+#include "ml/dev_file_job_th.h"
+#include "ml/file_handle_th.h"
+
 #include "device/nx/dev_file_nx_th.h"
 #include "mm_mtl/fixstr.h"
 #include "nn/fs.h"
@@ -75,6 +79,14 @@ bool DevFileTh::isValidHandle(FileHandleTh *handle) {
   return false;
 }
 
+bool DevFileTh::isLoading(FileHandleTh *handle) {
+  DevFileTh *file = get();
+  if (file == nullptr) {
+    return false;
+  }
+  return file->unknown1c0->isLoading(handle);
+}
+
 void DevFileTh::Impl::registAccessor(MEDIA media, DevFileAccessor *accessor) { unknown588b0[media] = accessor; }
 
 void DevFileTh::Impl::removeAccessor(MEDIA media) { unknown588b0[media] = nullptr; }
@@ -94,6 +106,114 @@ void DevFileTh::Impl::setSuspend(bool suspend) {}
 bool DevFileTh::Impl::isSuspend() const { return false; }
 
 bool DevFileTh::Impl::isInitialized() { return m_initialized; }
+
+namespace {
+
+typedef mm::mtl::FixedList<DevFileJobTh *, 640> unknown001;
+
+// Inferred role: tells whether a job list holds a job of the file handle; original name unknown.
+bool unknown002(unknown001 &list, FileHandleTh *handle) {
+  for (unknown001::iterator it = list.begin(); it != list.end(); ++it) {
+    if ((*it)->unknown10 == handle) {
+      return true;
+    }
+  }
+  return false;
+}
+
+} // namespace
+
+bool DevFileTh::Impl::isValidHandle(FileHandleTh *handle) {
+  CS cs(unknown5a350);
+  if (handle != nullptr) {
+    if (unknown002(unknown00000, handle) || unknown002(unknown02d20, handle) || unknown002(unknown05a40, handle)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void DevFileTh::Impl::cancelRequest(FileHandleTh *handle) {
+  CS cs(unknown5a350);
+  if (handle != nullptr) {
+    bool found = false;
+    for (unknown001::iterator it = unknown00000.begin(); it != unknown00000.end(); ++it) {
+      if ((*it)->unknown10 == handle) {
+        (*it)->unknown18 = true;
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      for (unknown001::iterator it = unknown02d20.begin(); it != unknown02d20.end(); ++it) {
+        if ((*it)->unknown10 == handle) {
+          (*it)->unknown18 = true;
+          found = true;
+          break;
+        }
+      }
+    }
+    if (!found) {
+      for (unknown001::iterator it = unknown05a40.begin(); it != unknown05a40.end(); ++it) {
+        if ((*it)->unknown10 == handle) {
+          (*it)->unknown18 = true;
+          break;
+        }
+      }
+    }
+    handle->unknown94 |= 0x10000;
+  }
+}
+
+int DevFileTh::Impl::getFileSize(const char *path, mm::VAL64 *size, const dvfl_detail::LoadMediaParam &param) {
+  DevFileAccessor *accessor = unknown588b0[param.unknown00];
+  if (accessor != nullptr && accessor->isValid()) {
+    return accessor->getFileSize(path, size, &param.unknown08);
+  }
+  return -1;
+}
+
+void DevFileTh::Impl::rfCancel(FileHandleTh *handle) {
+  if (handle != nullptr) {
+    CS cs(unknown5a378);
+    if ((handle->unknown94 >> 5 & 1) && handle->unknown1d4 != INVALID_FILE_CHANNEL) {
+      handle->unknown94 |= 0x10000;
+    }
+  }
+}
+
+bool DevFileTh::Impl::rfIsBusy() {
+  CS cs(unknown5a378);
+  DevFileAccessor *accessor = unknown588f0[0];
+  if (accessor == nullptr) {
+    accessor = unknown588b0[0];
+  }
+  if (accessor != nullptr && accessor->rfIsBusy(nullptr)) {
+    return true;
+  }
+  for (int i = 1; i < 8; i++) {
+    accessor = unknown588b0[i];
+    if (accessor != nullptr && accessor->rfIsBusy(nullptr)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool DevFileTh::Impl::isBusy() {
+  CS cs(unknown5a350);
+  return unknown00000.size() != 0 || unknown02d20.size() != 0;
+}
+
+bool DevFileTh::Impl::isLoading(FileHandleTh *handle) {
+  CS cs(unknown5a350);
+  for (mm::mtl::FixedList<DevFileJobTh *, 640>::iterator it = unknown02d20.begin(); it != unknown02d20.end(); ++it) {
+    if ((*it)->unknown10 == handle) {
+      return true;
+    }
+  }
+  return false;
+}
 
 bool DevFileTh::isSuspend() {
   DevFileTh *file = get();

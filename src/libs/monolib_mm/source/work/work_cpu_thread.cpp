@@ -3,11 +3,14 @@
 #include "ml/critical_section.h"
 #include "ml/dev_clock.h"
 #include "ml/dev_graph.h"
+#include "ml/reslist.h"
 #include "ml/thread.h"
 #include "ml/thread_util.h"
+#include "ml/work_control.h"
 #include "ml/work_root.h"
 #include "mm_math/mm_col3.h"
 #include "mm_mtl/fixstr.h"
+#include "mm_mtl/reference_object.h"
 #include "mtl/alloc_handle.h"
 
 namespace ml {
@@ -231,6 +234,28 @@ void WorkCpuThread::resumeThread() {
 void WorkCpuThread::wkTail() { unknown658 = WorkCpu::unknown001(mm::Col3::yellow); }
 
 bool WorkCpuThread::wkStandbyLogin() { return WorkObj::wkStandbyLogin(); }
+
+bool WorkCpuThread::wkStandbyLogout() {
+  if (unknown60.size() != 0 || WorkControl::get() != nullptr) {
+    return false;
+  }
+  if (unknown1c0 == 0) {
+    m_beginTerm = true;
+    setEvent(true);
+    unknown1c0++;
+  } else if (unknown1c0 != 1) {
+    return false;
+  }
+  if (unknown1b8 != nullptr) {
+    if (!unknown1b8->isTerminated()) {
+      return false;
+    }
+    mm::mtl::safeRelease(unknown1b8);
+  }
+  unknown1c0++;
+  WorkCpu::removeCpu(m_CPUID, this);
+  return WorkObj::wkStandbyLogout();
+}
 
 void WorkCpuThread::termThread() { m_beginTerm = true; }
 

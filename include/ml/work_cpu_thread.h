@@ -49,6 +49,7 @@ public:
   void resumeThread();
   void wkTail() override;
   bool wkStandbyLogin() override;
+  bool wkStandbyLogout() override;
   void termThread();
   bool isTermThread();
   void exitThread();

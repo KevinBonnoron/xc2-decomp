@@ -1,8 +1,6 @@
 #pragma once
-
-namespace mtl {
-class ALLOC_HANDLE;
-} // namespace mtl
+#include "ml/work_root.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
 
@@ -23,6 +21,12 @@ public:
   static bool searchWork(const WorkObj *parent, const WorkObj *work);
   static bool hasChild(WorkObj *parent, const char *name);
   static void dispTree(const WorkObj *work, int depth);
+
+  template <typename T> static T *createWork(const char *name, WorkObj *parent, bool isFront) {
+    T *work = new (WorkRootState::getWorkMem()) T(name, parent);
+    WorkRootState::entryWork(work, parent, isFront);
+    return work;
+  }
 };
 
 } // namespace ml

@@ -28,7 +28,8 @@ public:
   FileHandleTh *unknown1a8;       // Inferred role: file handle; original member name unknown.
   mm::mtl::FixStr<64> unknown1b0; // Inferred role: file name; original member name unknown.
   u32 unknown1f4;                 // Inferred role: unused value; original member name unknown.
-  u16 unknown1f8;                 // Inferred role: unused value; original member name unknown.
+  bool unknown1f8;                // Inferred role: flag; original member name unknown.
+  bool unknown1f9;                // Inferred role: flag; original member name unknown.
   bool unknown1fa;                // Inferred role: shutdown force; original member name unknown.
 
   static mm::mtl::FixedList<u32, 512> s_jobs;

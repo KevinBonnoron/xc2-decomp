@@ -15,7 +15,7 @@ namespace ml {
 
 u64 ThreadUtil::getCurrentID() { return reinterpret_cast<u64>(nn::os::GetCurrentThread()); }
 
-Thread::Thread() : unknown08(0) {}
+Thread::Thread() {}
 
 s32 Thread::suspend() { return ThreadUtil::suspendThread(getHandle()); }
 
@@ -28,7 +28,7 @@ void ThreadUtil::resumeThread(MLTHREAD *thread) { nn::os::StartThread(thread); }
 Thread *Thread::create(const char *name, bool isStart, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, int priority) {
   Thread *thread = nullptr;
   ThreadNx::create(&thread, name, isStart, func, argument, stackSize, cpuId, priority);
-  thread->unknown08++;
+  thread->addRef();
   return thread;
 }
 
@@ -38,7 +38,7 @@ void ThreadNx::create(Thread **thread, const char *name, bool isStart, ThreadFun
 
 bool Thread::create(Thread **thread, const char *name, bool isStart, ThreadFunc func, void *argument, u32 stackSize, CPUID cpuId, int priority) {
   new (WorkUtil::getWorkMem()) ThreadNx(thread, name, isStart, func, argument, stackSize, cpuId, priority);
-  (*thread)->unknown08++;
+  (*thread)->addRef();
   return *thread != nullptr;
 }
 

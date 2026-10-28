@@ -1,6 +1,7 @@
 // Same order as in the game executable.
 // clang-format off
 #include "work_obj.cpp"
+#include "work_control.cpp"
 #include "work_cpu.cpp"
 #include "work_cpu_thread.cpp"
 #include "work_root.cpp"

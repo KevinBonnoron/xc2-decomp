@@ -5,10 +5,22 @@
 #include "ml/win_view.h"
 #include "ml/win_view_root.h"
 #include "ml/work_root.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
 
+WinProc::WinProc(const char *name, WorkObj *parent, s16 childNum) : WorkObj(name, parent, childNum), unknown1e8(0xffffffff), unknown1ec(2) { unknown1a8.create(16, unknown54); }
+
+WinProc::~WinProc() {}
+
 bool WinProc::wkStandbyLogin() { return WorkObj::wkStandbyLogin(); }
+
+bool WinProc::pssAttachView(WinView *view) {
+  view->attachRenderWork(this);
+  u32 wid = view->unknown50;
+  unknown1a8.push_back(wid);
+  return true;
+}
 
 WorkObj *WinProc::pssGetParentView() {
   WorkObj *parent = WorkRootState::getWork(unknown1e8);

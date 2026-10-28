@@ -165,4 +165,6 @@ mm::Rect<int> WinView::getRealAbsRect(bool isBack) const {
 
 template class threadval<WinView::RENDER_INFO>;
 
+template MsgParam<10>::~MsgParam();
+
 } // namespace ml

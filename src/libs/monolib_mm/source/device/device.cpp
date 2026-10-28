@@ -65,6 +65,7 @@ template mm::mtl::PtrSingleton<ml::Device>::~PtrSingleton();
 #include "dev_keyboard.cpp"
 #include "dev_mouse.cpp"
 #include "dev_pad.cpp"
+#include "dev_pad_util.cpp"
 #include "dev_touch.cpp"
 #include "dev_perf.cpp"
 #include "nx/dev_keyboard_nx.cpp"

@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "ml/dev_font.h"
+#include "ml/msg_param.h"
 #include "ml/reslist.h"
 #include "ml/threadval.h"
 #include "ml/win_view_frame.h"
@@ -71,9 +72,10 @@ public:
   threadval<RENDER_INFO> unknown1b8; // Inferred role: render info; original member name unknown.
   reslist<u32> unknown338;           // Inferred role: render work ids; original member name unknown.
   u8 _378[0x3b8 - 0x378];
-  u32 unknown3b8; // Inferred role: state flags; original member name unknown.
-  u32 unknown3bc; // Inferred role: frame flags; original member name unknown.
-  u8 _3c0[0x524 - 0x3c0];
+  u32 unknown3b8;          // Inferred role: state flags; original member name unknown.
+  u32 unknown3bc;          // Inferred role: frame flags; original member name unknown.
+  MsgParam<10> unknown3c0; // Inferred role: event messages; original member name unknown.
+  u8 _4d0[0x524 - 0x4d0];
   f32 unknown524; // Inferred role: transparency; original member name unknown.
 };
 
@@ -84,6 +86,7 @@ static_assert(offsetof(WinView::RENDER_INFO, unknown48) == 0x48, "");
 static_assert(offsetof(WinView, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(WinView, unknown338) == 0x338, "");
 static_assert(offsetof(WinView, unknown3b8) == 0x3b8, "");
+static_assert(offsetof(WinView, unknown3c0) == 0x3c0, "");
 static_assert(offsetof(WinView, unknown524) == 0x524, "");
 
 inline mm::Pnt<int> WinViewFrame::getFrame2ViewOffset() const {

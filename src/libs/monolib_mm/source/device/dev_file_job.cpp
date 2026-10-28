@@ -16,7 +16,7 @@ CriticalSection &DevFileJob::getCriticalSection() {
   return sect;
 }
 
-DevFileJob::DevFileJob(const char *name, WorkObj *parent) : WorkObj(name, parent, 0), unknown1a8(nullptr), unknown1f4(0), unknown1f8(0), unknown1fa(false) {
+DevFileJob::DevFileJob(const char *name, WorkObj *parent) : WorkObj(name, parent, 0), unknown1a8(nullptr), unknown1f4(0), unknown1f8(false), unknown1f9(false), unknown1fa(false) {
   CS lock(getCriticalSection());
   u32 wid = unknown50;
   s_jobs.push_back(wid);

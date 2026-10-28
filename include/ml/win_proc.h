@@ -17,17 +17,19 @@ public:
   bool wkStandbyLogout() override;
 
   static WinProc *pssGetRoot(WinProc *proc);
+  bool pssAttachView(WinView *view);
   WorkObj *pssGetParentView();
   WinView *pssGetView(u32 wid);
   const WinView *pssGetView(u32 wid) const;
 
   reslist<u32> unknown1a8; // Inferred role: attached view wids; original member name unknown.
   u32 unknown1e8;          // Inferred role: parent view wid; original member name unknown.
-  u8 _1ec[0x1f0 - 0x1ec];
+  u32 unknown1ec;          // Inferred role: initial value 2; original member name unknown.
 };
 
 static_assert(offsetof(WinProc, unknown1a8) == 0x1a8, "");
 static_assert(offsetof(WinProc, unknown1e8) == 0x1e8, "");
+static_assert(offsetof(WinProc, unknown1ec) == 0x1ec, "");
 
 static_assert(sizeof(WinProc) == 0x1f0, "");
 

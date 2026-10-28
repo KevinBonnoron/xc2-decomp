@@ -1,8 +1,10 @@
 #pragma once
 #include <stddef.h>
 
+#include "ml/critical_section.h"
 #include "ml/dev_base.h"
 #include "ml/error_cb.h"
+#include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
@@ -17,6 +19,7 @@ union VAL64;
 namespace ml {
 
 class DevFileAccessor;
+class DevFileJobTh;
 class DevFileJob;
 class FileHandleTh;
 class IWorkEvent;
@@ -25,6 +28,13 @@ enum CBM {};
 enum MEDIA {};
 
 namespace dvfl_detail {
+// Inferred type: load media parameter; the original type name is unknown.
+struct LoadMediaParam {
+  MEDIA unknown00; // Inferred role: media; original member name unknown.
+  u8 _04[0x08 - 0x04];
+  char unknown08; // Inferred role: archive name start; original member name unknown.
+};
+
 void addMediaPath(MEDIA media, const char *path, int priority);
 } // namespace dvfl_detail
 
@@ -102,18 +112,28 @@ public:
     void removeAccessor(MEDIA media);
     void registArchiveAccessor(MEDIA media, DevFileAccessor *accessor);
     void removeArchiveAccessor(MEDIA media);
+    int getFileSize(const char *path, mm::VAL64 *size, const dvfl_detail::LoadMediaParam &param);
+    void rfCancel(FileHandleTh *handle);
+    bool isBusy();
+    bool isLoading(FileHandleTh *handle);
     bool isLapTimeForDebug() { return false; }
     static void enableLapTimeForDebug(bool enable) {}
 
-    u8 _00000[0x588b0];
+    mm::mtl::FixedList<DevFileJobTh *, 640> unknown00000; // Inferred role: waiting jobs; original member name unknown.
+    mm::mtl::FixedList<DevFileJobTh *, 640> unknown02d20; // Inferred role: loading jobs; original member name unknown.
+    mm::mtl::FixedList<DevFileJobTh *, 640> unknown05a40; // Inferred role: finished jobs; original member name unknown.
+    u8 _08760[0x588b0 - 0x8760];
     DevFileAccessor *unknown588b0[8]; // Inferred role: accessor per media; original member name unknown.
     DevFileAccessor *unknown588f0[8]; // Inferred role: archive accessor per media; original member name unknown.
     u8 _58930[0x58934 - 0x58930];
     bool m_initialized;
     u8 _58935[0x5a348 - 0x58935];
-    IWorkEvent *unknown5a348; // Inferred role: registered event callback; original member name unknown.
+    IWorkEvent *unknown5a348;     // Inferred role: registered event callback; original member name unknown.
+    CriticalSection unknown5a350; // Inferred role: job lock; original member name unknown.
+    CriticalSection unknown5a378; // Inferred role: read lock; original member name unknown.
   };
 
+  static const int INVALID_FILE_CHANNEL;
   static void normalizeDvdFileName(mm::mtl::FixStr<256> &fileName, const char *path);
   static FileHandleTh *checkValidFile(const char *path, IWorkEvent *event);
   static bool isInitialized();
@@ -128,6 +148,7 @@ public:
   static void *readFileBlock(const DevFileParamTh &param, int *size, mm::VAL64 *fileSize);
   static void cancel(FileHandleTh *handle, bool isForce);
   static bool isValidHandle(FileHandleTh *handle);
+  static bool isLoading(FileHandleTh *handle);
   static bool rfIsBusy();
   static void registAccessor(MEDIA media, DevFileAccessor *accessor);
   static void removeAccessor(MEDIA media);
@@ -162,10 +183,14 @@ public:
   bool unknown1c9; // Inferred role: now saving; original member name unknown.
 };
 
+static_assert(offsetof(DevFileTh::Impl, unknown02d20) == 0x2d20, "");
+static_assert(offsetof(DevFileTh::Impl, unknown05a40) == 0x5a40, "");
 static_assert(offsetof(DevFileTh::Impl, unknown588b0) == 0x588b0, "");
 static_assert(offsetof(DevFileTh::Impl, unknown588f0) == 0x588f0, "");
 static_assert(offsetof(DevFileTh::Impl, m_initialized) == 0x58934, "");
 static_assert(offsetof(DevFileTh::Impl, unknown5a348) == 0x5a348, "");
+static_assert(offsetof(DevFileTh::Impl, unknown5a350) == 0x5a350, "");
+static_assert(offsetof(DevFileTh::Impl, unknown5a378) == 0x5a378, "");
 static_assert(offsetof(DevFileTh, unknown1c0) == 0x1c0, "");
 static_assert(offsetof(DevFileTh, unknown1c9) == 0x1c9, "");
 
