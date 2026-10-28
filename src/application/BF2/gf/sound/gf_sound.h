@@ -185,6 +185,7 @@ public:
   SoundHandle playSeWithPack(const SoundParam &param, mm::mtl::FixedVector<fw::SoundPack *, 4> &packs, SEINFO seInfo);
   SoundHandle playSe(const char *name, fw::SoundCategory category);
   void stopSe(SoundHandle handle, f32 fadeTime);
+  void setCategory(SoundHandle handle, fw::SoundCategory category);
   void setPause(SoundHandle handle, bool isPause, f32 fadeTime);
   void setPan(SoundHandle handle, f32 pan, f32 fadeTime);
   void setPlayTime(SoundHandle handle, f32 time);

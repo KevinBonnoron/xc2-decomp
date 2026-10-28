@@ -496,6 +496,13 @@ void GfMasterVolume::setMenuBgmVolume(f32 volume) {
   }
 }
 
+void GfSound::setCategory(SoundHandle handle, fw::SoundCategory category) {
+  SeParam *param = getSeParam(static_cast<u16>(handle.unknown04));
+  if (param != nullptr && fw::SoundManager::get() != nullptr) {
+    fw::SoundManager::get()->setCategory(handle.unknown00, category);
+  }
+}
+
 GfSound::SeParam *GfSound::getSeParam(u16 id) {
   if (id == 0xffff) {
     return nullptr;

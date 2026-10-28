@@ -2,7 +2,9 @@
 #include <stddef.h>
 
 #include "gf/event/gf_event.h"
+#include "gf/sound/gf_sound.h"
 #include "mm_mtl/fixed_vector.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -13,7 +15,28 @@ struct UpdateInfo;
 namespace gf {
 
 class GfFieldBgm;
-struct BGMCOND;
+
+struct BGMCOND {
+  BGMCOND();
+  void clear();
+  void copyPlayInfo(const BGMCOND &src);
+  bool isInvalidBgm() const;
+  bool isInvalidPlay() const;
+  bool isSilentPlay() const;
+
+  u32 unknown00;                 // Inferred role: bgm condition id; original member name unknown.
+  SoundHandle unknown04;         // Inferred role: playing sound handle; original member name unknown.
+  u32 unknown0c;                 // Inferred role: play parameter cleared by clear; original member name unknown.
+  u8 unknown10;                  // Inferred role: play flag; original member name unknown.
+  u8 unknown11;                  // Inferred role: play flag read by isInvalidPlay; original member name unknown.
+  mm::mtl::FixStr<64> unknown14; // Inferred role: bgm name; original member name unknown.
+  u32 unknown58;                 // Inferred role: cleared by the constructor; original member name unknown.
+};
+
+static_assert(offsetof(BGMCOND, unknown04) == 0x04, "");
+static_assert(offsetof(BGMCOND, unknown14) == 0x14, "");
+static_assert(offsetof(BGMCOND, unknown58) == 0x58, "");
+static_assert(sizeof(BGMCOND) == 0x5c, "");
 
 class BgmTrack {
 public:

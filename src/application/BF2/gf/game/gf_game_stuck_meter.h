@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/intrusive_list.h"
 #include "types.h"
 
 namespace fw {
@@ -9,6 +10,29 @@ class ColiMoveObject;
 } // namespace fw
 
 namespace gf {
+
+struct GF_OBJ_HANDLE;
+
+class GfGameDepopMeter : public mm::mtl::IntrusiveListNode<GfGameDepopMeter> {
+public:
+  void dispose();
+  void update(f32 deltaTime);
+
+  GF_OBJ_HANDLE *unknown10; // Inferred role: target object; original member name unknown.
+  bool unknown18;           // Inferred role: destroy the object when it is hidden by a collision; original member name unknown.
+  u8 _19[0x20 - 0x19];
+  bool unknown20; // Role and original member name unknown.
+  u8 _21[0x30 - 0x21];
+  mm::Vec3 unknown30; // Inferred role: last position of the object; original member name unknown.
+  bool unknown40;     // Inferred role: hidden by a collision; original member name unknown.
+};
+
+static_assert(offsetof(GfGameDepopMeter, unknown10) == 0x10, "");
+static_assert(offsetof(GfGameDepopMeter, unknown18) == 0x18, "");
+static_assert(offsetof(GfGameDepopMeter, unknown20) == 0x20, "");
+static_assert(offsetof(GfGameDepopMeter, unknown30) == 0x30, "");
+static_assert(offsetof(GfGameDepopMeter, unknown40) == 0x40, "");
+static_assert(sizeof(GfGameDepopMeter) == 0x50, "");
 
 class GfGameStuckMeter {
 public:

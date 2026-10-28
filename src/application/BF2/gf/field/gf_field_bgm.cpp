@@ -1,5 +1,7 @@
 #include "gf/field/gf_field_bgm.h"
 
+#include <string.h>
+
 #include "fw/fw_update_info.h"
 #include "gf/data/gf_bdat_maplist.h"
 #include "gf/event/gf_event.h"
@@ -10,6 +12,36 @@
 #include "gf/gf_pause.h"
 
 namespace gf {
+
+BGMCOND::BGMCOND() : unknown00(0), unknown0c(0), unknown10(0), unknown11(0), unknown58(0) {}
+
+void BGMCOND::clear() {
+  if (!unknown14.empty()) {
+    unknown14 = "";
+  }
+  if (unknown04.isValid()) {
+    unknown04.clear();
+  }
+  unknown00 = 0;
+  unknown10 = 0;
+  unknown11 = 0;
+  unknown0c = 0;
+}
+
+void BGMCOND::copyPlayInfo(const BGMCOND &src) {
+  unknown11 = src.unknown11;
+  unknown0c = src.unknown0c;
+  unknown10 = src.unknown10;
+  unknown04 = src.unknown04;
+  unknown14 = src.unknown14;
+  unknown00 = src.unknown00;
+}
+
+bool BGMCOND::isInvalidBgm() const { return !unknown04.isValid(); }
+
+bool BGMCOND::isInvalidPlay() const { return !unknown04.isValid() && unknown11 == 0; }
+
+bool BGMCOND::isSilentPlay() const { return strcmp(unknown14.c_str(), "SilentBgm") == 0; }
 
 namespace _gffsn {
 bool s_bStopBGM;

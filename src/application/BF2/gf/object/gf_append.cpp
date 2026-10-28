@@ -1,9 +1,59 @@
 #include "gf/object/gf_append.h"
 
+#include "framework/message/message_object.h"
+#include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "gf/util/gf_util.h"
 
 namespace gf {
 enum OPTMNT : u32;
+
+void GfAppendHandles::sendMessage(fw::MessageObject *sender, fw::Message &message) const {
+  for (u32 index = 0; index < 10; index++) {
+    GfObj *obj = GfObjUtil::getObj(getCurrentHandles()[index]);
+    if (obj != nullptr) {
+      static_cast<fw::MessageObject *>(obj)->recieveMessage(sender, message);
+    }
+  }
+}
+
+void GfAppendHandles::setAlpha(f32 alpha) {
+  for (u32 index = 0; index < 10; index++) {
+    GfObjAcc acc(getCurrentHandles()[index]);
+    acc.setAlphaNormal(alpha);
+  }
+}
+
+void GfAppendHandles::destroy(mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> &handles) {
+  for (u32 index = 0; index < 10; index++) {
+    GF_OBJ_HANDLE *handle = handles[index];
+    if (handle != INVALID_HANDLE) {
+      handles[index] = INVALID_HANDLE;
+      GfObjUtil::destroy(handle);
+    }
+  }
+}
+
+void GfAppendHandles::destroy() {
+  destroy(unknown08);
+  destroy(unknown58);
+}
+
+void GfAppendHandles::eraseHandle(mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> &handles, GF_OBJ_HANDLE *handle) {
+  for (u32 index = 0; index < 10; index++) {
+    if (handles[index] == handle) {
+      handles[index] = INVALID_HANDLE;
+      return;
+    }
+  }
+}
+
+void GfAppendHandles::eraseHandle(GF_OBJ_HANDLE *handle) {
+  eraseHandle(unknown08, handle);
+  eraseHandle(unknown58, handle);
+}
 
 GfAppend::GfAppend() : unknown00(), m_modelName(nullptr), m_motionName(nullptr), m_mountIndex(0xffff), m_rscID(0), unknown7c(1.0f), unknown80(false) {}
 

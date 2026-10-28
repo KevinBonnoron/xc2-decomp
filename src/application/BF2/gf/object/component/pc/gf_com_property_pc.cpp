@@ -2,6 +2,7 @@
 
 #include "framework/object/updatable_object.h"
 #include "gf/game/gf_game_player_formation.h"
+#include "gf/object/component/behavior/gf_com_behavior.h"
 #include "gf/object/component/env_sensor/gf_com_env_sensor.h"
 
 namespace fw {
@@ -9,6 +10,8 @@ class MessageObject;
 } // namespace fw
 
 namespace gf {
+
+void GfComPropertyPc::procMsgObjectGetVelocity(fw::MessageObject *sender, MsgObjectGetVelocity &message) { message.unknown10 = unknown80 + mm::Vec3::unitY * unknown90; }
 
 void GfComPropertyPc::resetInput() {
   unknown60.unknown00 = 0.0f;

@@ -1,13 +1,16 @@
 #pragma once
 #include <stddef.h>
 
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
 namespace fw {
 struct UpdateInfo;
-}
+struct Message;
+class MessageObject;
+} // namespace fw
 
 namespace gf {
 
@@ -51,6 +54,28 @@ static_assert(offsetof(GfAppend, m_rscID) == 0x7a, "");
 static_assert(offsetof(GfAppend, unknown7c) == 0x7c, "");
 static_assert(offsetof(GfAppend, unknown80) == 0x80, "");
 static_assert(sizeof(GfAppend) == 0x88, "");
+
+class GfAppendHandles {
+public:
+  virtual ~GfAppendHandles() {}
+  void destroy();
+  void destroy(mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> &handles);
+  void eraseHandle(GF_OBJ_HANDLE *handle);
+  void eraseHandle(mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> &handles, GF_OBJ_HANDLE *handle);
+  void sendMessage(fw::MessageObject *sender, fw::Message &message) const;
+  void setAlpha(f32 alpha);
+
+  const mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> &getCurrentHandles() const { return unknowna8 ? unknown58 : unknown08; }
+
+  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> unknown08; // Inferred role: handles; original member name unknown.
+  mm::mtl::FixedArray<GF_OBJ_HANDLE *, 10> unknown58; // Inferred role: alternate handles; original member name unknown.
+  bool unknowna8;                                     // Inferred role: selects the alternate handles; original member name unknown.
+};
+
+static_assert(offsetof(GfAppendHandles, unknown08) == 0x08, "");
+static_assert(offsetof(GfAppendHandles, unknown58) == 0x58, "");
+static_assert(offsetof(GfAppendHandles, unknowna8) == 0xa8, "");
+static_assert(sizeof(GfAppendHandles) == 0xb0, "");
 
 class GfAppendWire {
 public:

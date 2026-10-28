@@ -26,6 +26,7 @@ namespace gf {
 
 class EnviromentSensor;
 struct MsgDebugActivateComponentWindow;
+struct MsgObjectGetVelocity;
 struct MsgPcFieldNotifyChangePlayerID;
 struct MsgPcFieldWarpCancel;
 
@@ -71,6 +72,7 @@ public:
 
   bool existInputXY() const;
   void setLocomotion(const anm::QsTransform &locomotion);
+  void procMsgObjectGetVelocity(fw::MessageObject *sender, MsgObjectGetVelocity &message);
   void setEnvSensorCheckFlags(u32 flags, bool isEnable);
   EnviromentSensor *getEnvSensor() const;
   void resetInput();
