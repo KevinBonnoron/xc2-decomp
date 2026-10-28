@@ -34,11 +34,13 @@ public:
   bool unknown9058; // Inferred role: initialized; original member name unknown.
   u8 _9059[0x9060 - 0x9059];
   GfDropitemParams *unknown9060; // Inferred role: dropitem params; original member name unknown.
+  u8 *unknown9068;               // Inferred role: dropitem bdat; original member name unknown.
 };
 
 static_assert(offsetof(GfFobjManager, unknown4830) == 0x4830, "");
 static_assert(offsetof(GfFobjManager, unknown9050) == 0x9050, "");
 static_assert(offsetof(GfFobjManager, unknown9058) == 0x9058, "");
 static_assert(offsetof(GfFobjManager, unknown9060) == 0x9060, "");
+static_assert(offsetof(GfFobjManager, unknown9068) == 0x9068, "");
 
 } // namespace gf

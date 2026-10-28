@@ -8,6 +8,7 @@
 #include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_blade.h"
 #include "gf/data/gf_data_driver.h"
+#include "gf/data/gf_data_driver_arts.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_idea.h"
 #include "gf/data/gf_data_param_acc.h"
@@ -29,6 +30,7 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/util/gf_util.h"
 #include "mm_math/mm_pnt.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "ui/ctrl/ui_ctrl_manager.h"
 #include "ui/event/ui_event_manager.h"
@@ -561,6 +563,32 @@ u16 GfMenuObjUtil::getMsgIDFromList(u32 bdat, u16 id) {
   return 0;
 }
 
+int GfMenuObjUtil::getEnableArts(mm::mtl::FixedArray<u32, 4> &arts, u32 driver, u32 weaponType) {
+  mm::mtl::FixedArray<u32, 3> slotArts;
+  GfDataDriverArts::getSlotArts(slotArts, driver, weaponType);
+  mm::mtl::FixedArray<u32, 4> enableArts;
+  GfDataDriverArts::getEnableArts(enableArts, driver, weaponType);
+
+  int count = 0;
+  for (u32 i = 0; i < slotArts.size(); i++) {
+    arts[i] = slotArts[i];
+    if (slotArts[i] != 0) {
+      count++;
+    }
+  }
+  arts[3] = 0;
+
+  for (u32 i = 0; i < enableArts.size(); i++) {
+    if (enableArts[i] != 0 && GfDataDriverArts::getArtsLevel(driver, enableArts[i]) != 0 && enableArts[i] != arts[0] && enableArts[i] != arts[1] && enableArts[i] != arts[2] &&
+        enableArts[i] != arts[3]) {
+      arts[3] = enableArts[i];
+      count++;
+      break;
+    }
+  }
+  return count;
+}
+
 bool GfMenuObjUtil::checkCCStart(GfMenuCallContext *context) { return context != nullptr && !context->isActive(); }
 
 bool GfMenuObjUtil::checkCCNext(GfMenuCallContext *context, u32 menu) { return context != nullptr && context->unknown10 == menu; }
@@ -697,7 +725,7 @@ u8 GfMenuObjUtil::getElementComboAtr(u32 combo) {
   return 0;
 }
 
-u32 GfMenuObjUtil::getElementComboEffect(u32 combo) { return 1; }
+u8 GfMenuObjUtil::getElementComboEffect(u32 combo) { return 1; }
 
 u8 GfMenuObjUtil::getElementComboStage(u32 combo) {
   u8 *bdat = Bdat::getFP("BTL_ElementalCombo");

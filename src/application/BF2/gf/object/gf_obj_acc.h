@@ -33,6 +33,7 @@ enum OBJ_ALPHA {
 };
 
 enum OBJDISP {
+  OBJDISP_UNKNOWN_1 = 0x1,
   OBJDISP_EVENT = 0x2,
   OBJDISP_GMK_EVENT = 0x8,
   OBJDISP_UNKNOWN10 = 0x10, // Inferred role: hidden by a gimmick camera; original name unknown.
@@ -41,6 +42,7 @@ enum OBJDISP {
 
 enum GfObjUserData {
   OBJ_USER_DATA_GMK = 0,
+  OBJ_USER_DATA_UNKNOWN_2 = 2,
 };
 
 class GfObjAcc {

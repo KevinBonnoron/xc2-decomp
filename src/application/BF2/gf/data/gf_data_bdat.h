@@ -34,9 +34,9 @@ public:
   static u8 *getFP(u32 bdat);
   static u32 getReloadCount();
 
-private:
   static const u32 BDAT_COUNT = 0x19d;
 
+private:
   u8 *unknown10[BDAT_COUNT];                         // Inferred role: fps; original member name unknown.
   u32 unknowncf8;                                    // Inferred role: reload count; original member name unknown.
   bool unknowncfc;                                   // Inferred role: initialized; original member name unknown.

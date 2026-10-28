@@ -1,4 +1,5 @@
 #pragma once
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "types.h"
 
@@ -101,6 +102,7 @@ public:
   static bool hasHomura(u32 driver);
   static u16 getMsgIDFromList(u32 bdat, u16 id);
   static bool getArtsIconInfo(u32 arts, u32 level, ArtsIconInfo &info);
+  static int getEnableArts(mm::mtl::FixedArray<u32, 4> &arts, u32 driver, u32 weaponType);
   static bool checkCCStart(GfMenuCallContext *context);
   static bool checkCCNext(GfMenuCallContext *context, u32 menu);
   static u32 convIdeaPointToLevel(u32 point);
@@ -126,7 +128,7 @@ public:
   static ui::UIStr getElementComboName(u32 combo);
   static ui::UIStr getElementComboEffectName(u32 combo);
   static u8 getElementComboAtr(u32 combo);
-  static u32 getElementComboEffect(u32 combo);
+  static u8 getElementComboEffect(u32 combo);
   static u8 getElementComboStage(u32 combo);
   static bool isQuestCompleted(QuestID quest);
   static bool getMenuCondition(u32 id);

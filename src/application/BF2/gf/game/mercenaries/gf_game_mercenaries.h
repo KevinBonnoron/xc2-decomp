@@ -49,7 +49,7 @@ public:
   static void execMissionAchievementForBlade(u32 mission);
   void applyMercenariesLevel(const QuestCompleteParam &param);
   static u32 getRewardDevelopZone(u32 mission);
-  static u16 getRewardTrust(u32 mission);
+  static u32 getRewardTrust(u32 mission);
   static u16 getRewardIdeaPoint(u32 mission);
   static u16 getRewardIdeaType(u32 mission);
   static bool getTeam(mm::mtl::FixedVector<u16, 3> &teams);

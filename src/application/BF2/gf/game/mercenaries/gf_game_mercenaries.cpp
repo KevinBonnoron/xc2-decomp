@@ -251,7 +251,7 @@ u32 GfGameMercenaries::getRewardDevelopZone(u32 mission) {
   return zone;
 }
 
-u16 GfGameMercenaries::getRewardTrust(u32 mission) {
+u32 GfGameMercenaries::getRewardTrust(u32 mission) {
   GfQuestReward reward;
   bool isValid = GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false);
   return isValid ? reward.unknown00[5].unknown44 : 0;
