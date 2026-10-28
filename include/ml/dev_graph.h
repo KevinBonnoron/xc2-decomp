@@ -30,6 +30,18 @@ enum FONT_STYLE : int {
 
 enum DevGraphModeType {};
 
+enum RCB : int {
+  RCB_UNKNOWN_0 = 0,
+  RCB_UNKNOWN_1 = 1,
+  RCB_UNKNOWN_2 = 2,
+  RCB_UNKNOWN_3 = 3,
+  RCB_UNKNOWN_4 = 4,
+};
+
+enum RSTAT : int {
+  RSTAT_UNKNOWN_2 = 2,
+};
+
 namespace dg {
 
 extern s32 s_nVSync;
@@ -101,6 +113,9 @@ public:
   static DevGraphQue *getGraphQue();
   static bool isInitialized();
   static void setVSync(int vsync);
+  static void cb(RCB type);
+  static void setRenderState(RSTAT state);
+  static RSTAT getRenderState();
   void wkStandby() override;
   void wkUpdate() override;
   static void setFrameSpd(f32 speed);
@@ -150,7 +165,8 @@ public:
   mm::Rect<int> unknown238; // Inferred role: frustum port; original member name unknown.
   u8 _248[0x310 - 0x248];
   bool unknown310; // Inferred role: enable frustum; original member name unknown.
-  u8 _311[0x318 - 0x311];
+  u8 _311[0x314 - 0x311];
+  RSTAT unknown314;    // Inferred role: render state; original member name unknown.
   mm::Col4 unknown318; // Inferred role: clear col; original member name unknown.
   f32 unknown328;      // Inferred role: clear depth; original member name unknown.
   u8 _32c[0x330 - 0x32c];
@@ -165,6 +181,7 @@ static_assert(offsetof(DevGraph, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(DevGraph, unknown208) == 0x208, "");
 static_assert(offsetof(DevGraph, unknown230) == 0x230, "");
 static_assert(offsetof(DevGraph, unknown310) == 0x310, "");
+static_assert(offsetof(DevGraph, unknown314) == 0x314, "");
 static_assert(offsetof(DevGraph, unknown318) == 0x318, "");
 static_assert(offsetof(DevGraph, unknown330) == 0x330, "");
 static_assert(offsetof(DevGraph, unknown348) == 0x348, "");

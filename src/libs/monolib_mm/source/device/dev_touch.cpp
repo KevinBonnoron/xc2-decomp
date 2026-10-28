@@ -19,7 +19,22 @@ void DevTouchInfo::initialize() {
   unknown50 = mm::Vec2::zero;
 }
 
-int DevTouch::getTouchCount() { return get()->m_touchCount; }
+DevTouch::DevTouch(const char *name, WorkObj *parent) : WorkObj(name, parent, 0) {}
+
+void DevTouch::releseContact(u32 contactId) {
+  for (DevTouchInfo *it = unknown1c0.begin(); it != unknown1c0.end(); ++it) {
+    if (it->unknown0c == contactId) {
+      unknown1c0.erase(it);
+      return;
+    }
+  }
+}
+
+DevTouchInfo *DevTouch::getInfo(u32 index) { return &get()->unknown1c0[index]; }
+
+void DevTouch::itUp(u32 index, f32 x, f32 y) { releseContact(index); }
+
+int DevTouch::getTouchCount() { return get()->unknown1c0.size(); }
 
 void DevTouch::updateDevice() {}
 

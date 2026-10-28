@@ -13,6 +13,15 @@ mm::Pnt<int> s_clipMove;
 
 } // namespace
 
+DevMouse::DevMouse(const char *name, WorkObj *parent)
+    : WorkObj(name, parent, 0), unknown1d0(0), unknown1d4(0), unknown1d8(0), unknown1dc(0), unknown1e0(0), unknown1e4(0), unknown1e8(0), unknown1ec(0), unknown1f0(0), unknown1f4(true),
+      unknown1f8(0.0f), unknown1fc(false) {
+  unknown1b8 = mm::Pnt<int>(0, 0);
+  unknown1c0 = mm::Pnt<int>(0, 0);
+  unknown1c8 = mm::Pnt<int>(0, 0);
+  s_clipMove = mm::Pnt<int>(0, 0);
+}
+
 bool DevMouse::isInitialized() {
   DevMouse *mouse = get();
   if (mouse->wkIsWaitException()) {

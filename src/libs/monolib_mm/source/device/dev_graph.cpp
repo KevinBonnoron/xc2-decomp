@@ -7,6 +7,7 @@
 #include "grlib/cglib_polygon.h"
 #include "ml/cache_draw.h"
 #include "ml/critical_section.h"
+#include "ml/dev_graph_cb.h"
 #include "ml/err_viewer.h"
 #include "ml/reslist.h"
 #include "ml/work_obj.h"
@@ -350,6 +351,43 @@ mm::Rect<int> &DevGraphQue::getViewport() { return unknown58.back(); }
 
 mm::Rect<int> &DevGraphQue::getRenderRect() { return unknown478.back(); }
 
+void DevGraph::cb(RCB type) {
+  DevGraph *graph = get();
+  if (graph != nullptr) {
+    for (reslist<DevGraphCB *>::Node *node = graph->unknown1b8.begin(); node != get()->unknown1b8.end(); node = node->getNext()) {
+      DevGraphCB *callback = node->value;
+      if (type == RCB_UNKNOWN_0) {
+        callback->viBeginFrame();
+      } else if (type == RCB_UNKNOWN_1) {
+        callback->viBeforeDrawDone();
+      } else if (type == RCB_UNKNOWN_2) {
+        callback->viAfterDrawDone();
+      } else if (type == RCB_UNKNOWN_3) {
+        callback->viAfterSync();
+      } else if (type == RCB_UNKNOWN_4) {
+        callback->viAfterRenderCall();
+      }
+    }
+  }
+}
+
+void DevGraph::setRenderState(RSTAT state) {
+  CS lock(dg::getCriticalSection());
+  DevGraph *graph = get();
+  if (graph != nullptr) {
+    graph->unknown314 = state;
+  }
+}
+
+RSTAT DevGraph::getRenderState() {
+  CS lock(dg::getCriticalSection());
+  DevGraph *graph = get();
+  if (graph == nullptr) {
+    return RSTAT_UNKNOWN_2;
+  }
+  return graph->unknown314;
+}
+
 bool DevGraph::isInitialized() {
   DevGraph *graph = get();
   if (graph == nullptr) {
@@ -443,7 +481,6 @@ void *DevGraph::cmdAddOfsSys(u32 offset) { return nullptr; }
 
 bool DevGraph::cmdIsOpenDisplayListSys() const { return false; }
 
-class DevGraphCB;
 class IDevFontInfo;
 
 template class reslist<DevGraphCB *>;

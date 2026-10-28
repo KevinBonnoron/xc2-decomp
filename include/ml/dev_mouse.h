@@ -27,6 +27,7 @@ public:
 
 class DevMouse : public WorkObj, public IDevInputMouse, public mm::mtl::PtrSingleton<DevMouse> {
 public:
+  DevMouse(const char *name, WorkObj *parent);
   ~DevMouse() override {}
   static bool isInitialized();
   static void setClipMove(int x, int y);

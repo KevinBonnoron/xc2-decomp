@@ -54,6 +54,9 @@ static u8 convertKeyCode(u8 code) {
   return code;
 }
 
+DevKeyboard::DevKeyboard(const char *name, WorkObj *parent)
+    : WorkObj(name, parent, 0), unknown1b8(0), unknown1bc(0), unknown1c0(0), unknown1c4(0), unknown1c8(0), unknown1cc(0), unknown250(0), unknown254(0), unknown258(0), unknown25c(0) {}
+
 bool DevKeyboard::isInitialized() {
   DevKeyboard *keyboard = get();
   if (keyboard == nullptr || keyboard->wkIsWaitException()) {

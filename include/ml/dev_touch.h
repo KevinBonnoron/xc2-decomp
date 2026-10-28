@@ -3,6 +3,7 @@
 
 #include "ml/work_obj.h"
 #include "mm_math/mm_vec2.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -41,7 +42,7 @@ static_assert(sizeof(DevTouchInfo) == 0x60, "");
 
 class IDevInputTouch {
 public:
-  virtual ~IDevInputTouch();
+  virtual ~IDevInputTouch() {}
   virtual void itDown(u32 index, f32 x, f32 y) = 0;
   virtual void itUp(u32 index, f32 x, f32 y) = 0;
   virtual void itMove(u32 index, f32 x, f32 y) = 0;
@@ -49,23 +50,27 @@ public:
 
 class DevTouch : public WorkObj, public IDevInputTouch, public mm::mtl::PtrSingleton<DevTouch> {
 public:
-  ~DevTouch() override;
+  DevTouch(const char *name, WorkObj *parent);
+  ~DevTouch() override {}
   static bool isInitialized();
   static int getTouchCount();
+  void itUp(u32 index, f32 x, f32 y) override;
+  void itMove(u32 index, f32 x, f32 y) override;
+  void itDown(u32 index, f32 x, f32 y) override;
   void wkUpdate() override;
   bool wkStandbyLogin() override;
   bool wkStandbyLogout() override;
-  void itDown(u32 index, f32 x, f32 y) override;
-  void itUp(u32 index, f32 x, f32 y) override;
-  void itMove(u32 index, f32 x, f32 y) override;
+  void releseContact(u32 contactId);
+  static DevTouchInfo *getInfo(u32 index);
   virtual void updateDevice();
   virtual bool createDevice() = 0;
   virtual void releaseDevice() = 0;
 
-  u8 _1b8[0x7c0 - 0x1b8];
-  s32 m_touchCount;
+  u8 _1b8[0x1c0 - 0x1b8];
+  mm::mtl::FixedVector<DevTouchInfo, 16> unknown1c0; // Inferred role: touch contacts; original member name unknown.
 };
 
-static_assert(offsetof(DevTouch, m_touchCount) == 0x7c0, "");
+static_assert(offsetof(DevTouch, unknown1c0) == 0x1c0, "");
+static_assert(sizeof(DevTouch) == 0x7c8, "");
 
 } // namespace ml

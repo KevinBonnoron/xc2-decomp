@@ -5,10 +5,27 @@
 #include "ml/dev_graph.h"
 #include "ml/thread.h"
 #include "ml/thread_util.h"
+#include "ml/work_root.h"
 #include "mm_math/mm_col3.h"
 #include "mm_mtl/fixstr.h"
+#include "mtl/alloc_handle.h"
 
 namespace ml {
+
+WorkCpuThread::WorkCpuThread(const char *name, WorkObj *parent)
+    : WorkObj(name, parent, 0), m_CPUID(CPUID_CORE_0), m_threadID(0), unknown1b8(nullptr), unknown1c0(0), unknown1c4(0), m_aboutJobNumC(0), unknown1d0(0), unknown1d8(0), unknown1e0(0.0f),
+      unknown1e4(0.0f), unknown1e8(nullptr), unknown650(nullptr), unknown658(WorkCpu::unknown001(mm::Col3::yellow)), unknown660(0), unknown668(0), m_background(false), unknown671(false),
+      m_beginTerm(false) {
+  unknown1e8 = new (WorkRootState::getWorkMem()) CriticalSection();
+  unknown1e8->setCostIgnore(true);
+}
+
+WorkCpuThread::~WorkCpuThread() {
+  if (unknown1e8 != nullptr) {
+    delete unknown1e8;
+    unknown1e8 = nullptr;
+  }
+}
 
 bool WorkCpuThread::isSuspendThread() const {
   if (unknown1b8 == nullptr) {
@@ -39,7 +56,7 @@ f32 WorkCpuThread::getJobCost() const { return unknown1e4 / DevGraph::getFrameSy
 
 int WorkCpuThread::getJobNum() const {
   CS cs(*unknown1e8);
-  return unknown648;
+  return unknown1f0.size();
 }
 
 void WorkCpuThread::setEvent(bool isSignal) {
@@ -58,6 +75,79 @@ u32 WorkCpuThread::updateDirect(bool isDirect) {
 bool WorkCpuThread::hasWorkingJob() const {
   CS cs(*unknown1e8);
   return unknown650 != nullptr;
+}
+
+bool WorkCpuThread::isBusyJob(int handle) const {
+  CS cs(*unknown1e8);
+  if (unknown650 != nullptr && unknown650->unknown24 == handle) {
+    return true;
+  }
+  for (mm::mtl::FixedList<TJOB *, 64>::const_iterator it = unknown1f0.begin(); it != unknown1f0.end(); ++it) {
+    if ((*it)->unknown24 == handle) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool WorkCpuThread::addJobThread(TJOB *job) {
+  CS cs(*unknown1e8);
+  unknown1c4++;
+  if (job->unknown30 == 0) {
+    m_aboutJobNumC++;
+  }
+  unknown1f0.push_back(job);
+  return true;
+}
+
+TJOB *WorkCpuThread::transferJob(WorkCpuThread *destination) {
+  CS cs(*unknown1e8);
+  if (unknown1f0.size() != 0) {
+    for (mm::mtl::FixedList<TJOB *, 64>::iterator it = unknown1f0.begin(); it != unknown1f0.end(); ++it) {
+      TJOB *job = *it;
+      if (job->unknown30 == 0) {
+        destination->setWorkingJob(job);
+        unknown1f0.erase(it);
+        unknown1c4--;
+        m_aboutJobNumC--;
+        return job;
+      }
+    }
+  }
+  return nullptr;
+}
+
+bool WorkCpuThread::getJobThread(TJOB *&job, bool isBackground) {
+  job = nullptr;
+  if (unknown1c4 == 0) {
+    return false;
+  }
+  CS cs(*unknown1e8);
+  if (unknown1f0.size() == 0) {
+    return false;
+  }
+  if (isBackground) {
+    for (mm::mtl::FixedList<TJOB *, 64>::iterator it = unknown1f0.begin(); it != unknown1f0.end(); ++it) {
+      if ((*it)->unknown3c) {
+        unknown650 = *it;
+        job = *it;
+        unknown1f0.erase(it);
+        break;
+      }
+    }
+    if (job == nullptr) {
+      return false;
+    }
+  } else {
+    unknown650 = unknown1f0.front();
+    job = unknown1f0.front();
+    unknown1f0.pop_front();
+  }
+  unknown1c4--;
+  if (job->unknown30 == 0) {
+    m_aboutJobNumC--;
+  }
+  return true;
 }
 
 u32 WorkCpuThread::getAboutJobNumC() const { return m_aboutJobNumC; }
@@ -138,10 +228,7 @@ void WorkCpuThread::resumeThread() {
   }
 }
 
-void WorkCpuThread::wkTail() {
-  const mm::Col3 &color = mm::Col3::yellow;
-  unknown658 = static_cast<u32>(color.r * 255.0f) | static_cast<u32>(color.g * 255.0f) << 8 | static_cast<u32>(color.b * 255.0f) << 16 | 0xff000000;
-}
+void WorkCpuThread::wkTail() { unknown658 = WorkCpu::unknown001(mm::Col3::yellow); }
 
 bool WorkCpuThread::wkStandbyLogin() { return WorkObj::wkStandbyLogin(); }
 

@@ -37,7 +37,7 @@ enum DevKeyboardVk {
 
 class IDevInputKeyboard {
 public:
-  virtual ~IDevInputKeyboard();
+  virtual ~IDevInputKeyboard() {}
   virtual void ikReturnDown() = 0;
   virtual void ikReturnUp() = 0;
   virtual void ikTabDown() = 0;
@@ -74,7 +74,8 @@ public:
 
 class DevKeyboard : public WorkObj, public IDevInputKeyboard, public mm::mtl::PtrSingleton<DevKeyboard> {
 public:
-  ~DevKeyboard() override;
+  DevKeyboard(const char *name, WorkObj *parent);
+  ~DevKeyboard() override {}
   static bool isInitialized();
   static u32 getVkDown();
   static u32 getVkUp();

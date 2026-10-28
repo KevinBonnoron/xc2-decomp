@@ -3,14 +3,11 @@
 
 #include "ml/critical_section.h"
 #include "ml/work_obj.h"
+#include "mm_math/mm_col3.h"
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
 #include "types.h"
-
-namespace mm {
-struct Col3;
-} // namespace mm
 
 namespace ml {
 
@@ -37,6 +34,34 @@ enum WKCPU_SYNC {
 };
 
 enum DO_THREAD {};
+
+struct TJOB {
+  u32 (*unknown00)(void *, void *); // Inferred role: job function; original member name unknown.
+  u32 unknown08;                    // Inferred role: priority; original member name unknown.
+  u8 _0c[0x10 - 0x0c];
+  void *unknown10; // Inferred role: first argument; original member name unknown.
+  void *unknown18; // Inferred role: second argument; original member name unknown.
+  u32 unknown20;   // Inferred role: result; original member name unknown.
+  s32 unknown24;   // Inferred role: group handle; original member name unknown.
+  u32 unknown28;   // Inferred role: color; original member name unknown.
+  u8 _2c[0x30 - 0x2c];
+  s32 unknown30;  // Inferred role: cpu id; original member name unknown.
+  bool unknown34; // Inferred role: debug; original member name unknown.
+  u8 _35[0x38 - 0x35];
+  s32 unknown38;  // Inferred role: executed cpu id; original member name unknown.
+  bool unknown3c; // Inferred role: background; original member name unknown.
+  u8 _3d[0x40 - 0x3d];
+};
+
+static_assert(offsetof(TJOB, unknown10) == 0x10, "");
+static_assert(offsetof(TJOB, unknown20) == 0x20, "");
+static_assert(offsetof(TJOB, unknown24) == 0x24, "");
+static_assert(offsetof(TJOB, unknown28) == 0x28, "");
+static_assert(offsetof(TJOB, unknown30) == 0x30, "");
+static_assert(offsetof(TJOB, unknown34) == 0x34, "");
+static_assert(offsetof(TJOB, unknown38) == 0x38, "");
+static_assert(offsetof(TJOB, unknown3c) == 0x3c, "");
+static_assert(sizeof(TJOB) == 0x40, "");
 
 namespace _mlwcpu {
 
@@ -129,6 +154,10 @@ public:
   static int reqImm(bool isEnable);
   static void removeHomeMenuDisable(DEFHBM *&handle);
   static void removeImm(DEFIMM *&handle);
+  static void attachJobCol(const mm::Col3 &color);
+
+  // Inferred role: packs a color into an ABGR word; original name unknown.
+  static u32 unknown001(const mm::Col3 &color) { return static_cast<u32>(color.r * 255.0f) | static_cast<u32>(color.g * 255.0f) << 8 | static_cast<u32>(color.b * 255.0f) << 16 | 0xff000000; }
   static s32 getHeartBeatStall();
   static void clrHeartBeatStall();
 
@@ -145,7 +174,9 @@ public:
   s32 unknown1758;               // Inferred role: render wakeup cpu; original member name unknown.
   u8 _175c[0x1764 - 0x175c];
   u32 unknown1764; // Inferred role: even; original member name unknown.
-  u8 _1768[0x195c - 0x1768];
+  u8 _1768[0x1798 - 0x1768];
+  TJOB *unknown1798; // Inferred role: last entered job; original member name unknown.
+  u8 _17a0[0x195c - 0x17a0];
   u32 unknown195c;                                       // Inferred role: counter; original member name unknown.
   mm::mtl::FixedList<IWorkEvent *, 32> unknown1960;      // Inferred role: shutdown force listeners; original member name unknown.
   mm::mtl::FixedList<IWorkBackground *, 32> unknown1ba0; // Inferred role: background listeners; original member name unknown.
@@ -172,6 +203,7 @@ static_assert(offsetof(WorkCpu, unknown1738) == 0x1738, "");
 static_assert(offsetof(WorkCpu, unknown1740) == 0x1740, "");
 static_assert(offsetof(WorkCpu, unknown1758) == 0x1758, "");
 static_assert(offsetof(WorkCpu, unknown1764) == 0x1764, "");
+static_assert(offsetof(WorkCpu, unknown1798) == 0x1798, "");
 static_assert(offsetof(WorkCpu, unknown195c) == 0x195c, "");
 static_assert(offsetof(WorkCpu, unknown1960) == 0x1960, "");
 static_assert(offsetof(WorkCpu, unknown1ba0) == 0x1ba0, "");

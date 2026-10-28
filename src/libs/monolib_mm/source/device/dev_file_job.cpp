@@ -1,9 +1,46 @@
 #include "ml/dev_file_job.h"
 
+#include "ml/critical_section.h"
 #include "ml/file_handle_th.h"
+#include "ml/work_root.h"
+#include "mm_mtl/algorithm.h"
+#include "mm_mtl/fixed_list.h"
 
 namespace ml {
 class IWorkEvent;
+
+mm::mtl::FixedList<u32, 512> DevFileJob::s_jobs;
+
+CriticalSection &DevFileJob::getCriticalSection() {
+  static CriticalSection sect;
+  return sect;
+}
+
+DevFileJob::DevFileJob(const char *name, WorkObj *parent) : WorkObj(name, parent, 0), unknown1a8(nullptr), unknown1f4(0), unknown1f8(0), unknown1fa(false) {
+  CS lock(getCriticalSection());
+  u32 wid = unknown50;
+  s_jobs.push_back(wid);
+}
+
+DevFileJob::~DevFileJob() {
+  CS lock(getCriticalSection());
+  u32 wid = unknown50;
+  mm::mtl::FixedList<u32, 512>::iterator it = mm::mtl::find(s_jobs.begin(), s_jobs.end(), wid);
+  if (it != s_jobs.end()) {
+    s_jobs.erase(it);
+  }
+}
+
+u32 DevFileJob::getJob(FileHandleTh *handle) {
+  CS lock(getCriticalSection());
+  for (mm::mtl::FixedList<u32, 512>::iterator it = s_jobs.begin(); it != s_jobs.end(); ++it) {
+    DevFileJob *job = static_cast<DevFileJob *>(WorkRootState::getWork(*it));
+    if (job != nullptr && job->unknown1a8 == handle) {
+      return *it;
+    }
+  }
+  return -1;
+}
 
 void DevFileJob::clearJob(IWorkEvent *event) {
   if (event == nullptr) {

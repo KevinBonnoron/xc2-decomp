@@ -2,6 +2,8 @@
 
 namespace ml {
 
+DevMouseNx::~DevMouseNx() {}
+
 bool DevMouseNx::createDevice() { return true; }
 
 void DevMouseNx::releaseDevice() {}

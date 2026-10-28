@@ -10,7 +10,6 @@
 #include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 
 namespace ml {
-struct TJOB;
 
 WorkCpuThread *WorkCpu::getCpuThread(CPUID cpuId) {
   WorkCpu *cpu = get();
@@ -298,6 +297,12 @@ int WorkCpu::reqImm(bool isEnable) { return 9999; }
 void WorkCpu::removeHomeMenuDisable(DEFHBM *&handle) {}
 
 void WorkCpu::removeImm(DEFIMM *&handle) {}
+
+void WorkCpu::attachJobCol(const mm::Col3 &color) {
+  if (get()->unknown1798 != nullptr) {
+    get()->unknown1798->unknown28 = unknown001(color);
+  }
+}
 
 s32 WorkCpu::getHeartBeatStall() { return _mlwcpu::s_cpuStall; }
 
