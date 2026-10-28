@@ -225,3 +225,7 @@ void Pose::calcMatrixModelSpace(u16 boneID, mm::Mat44 *pDst) {
 }
 
 } // namespace anm
+
+template void mm::mtl::Vector<anm::QsTransform>::expand(size_t, size_t);
+template void mm::mtl::Vector<anm::QsTransform>::extend(size_t, size_t);
+template void mm::mtl::Vector<anm::QsTransform>::resize(size_t);

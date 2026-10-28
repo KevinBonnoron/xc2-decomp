@@ -14,6 +14,11 @@ template <typename T> class Vector {
 public:
   Vector() : m_buffer(nullptr), m_size(0), m_capacity(0), m_alignment(16), m_allocator(nullptr) {}
   explicit Vector(IAllocator *allocator) : m_buffer(nullptr), m_size(0), m_capacity(0), m_alignment(16), m_allocator(allocator) {}
+  Vector(const Vector &other) : m_buffer(nullptr), m_size(0), m_capacity(0), m_alignment(16), m_allocator(other.m_allocator) {
+    if (this != &other) {
+      assign(other);
+    }
+  }
   ~Vector() { destroy(); }
 
   // __LINE__ must be 60 as in the original header: it is the line argument of the assert.
@@ -65,7 +70,8 @@ private:
     T *ptr = static_cast<T *>(m_allocator->allocate(size * sizeof(T), alignment));
     copy_construct_n(begin(), oldSize, ptr);
     if (oldSize < size) {
-      construct_n(ptr + oldSize, size - oldSize);
+      size_t count = size - oldSize;
+      construct_n(ptr + oldSize, count);
     }
     clear();
     if (m_buffer != nullptr) {

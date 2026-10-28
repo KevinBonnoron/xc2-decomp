@@ -2,7 +2,8 @@
 
 #include <utility> // IWYU pragma: keep
 
-#include "mm_mtl/fixstr.h" // IWYU pragma: keep
+#include "mm_math/mm_vec3.h" // IWYU pragma: keep
+#include "mm_mtl/fixstr.h"   // IWYU pragma: keep
 
 namespace mm {
 namespace mtl {
@@ -23,6 +24,13 @@ template void Vector<void *>::expand(size_t, size_t);
 template void Vector<bool>::extend(size_t, size_t, const bool &);
 template void Vector<bool>::resize(size_t, const bool &);
 template void Vector<short>::assign(const Vector<short> &);
+template void Vector<Vec3>::expand(size_t, size_t);
+template void Vector<Vec3>::extend(size_t, size_t, const Vec3 &);
+template void Vector<Vec3>::resize(size_t, const Vec3 &);
+template void Vector<Vec3>::push_back(const Vec3 &);
+template void Vector<FixStr<32>>::extend(size_t, size_t);
+template void Vector<Vector<short>>::extend(size_t, size_t);
+template void Vector<Vector<short>>::resize(size_t);
 
 } // namespace mtl
 } // namespace mm

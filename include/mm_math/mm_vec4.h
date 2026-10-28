@@ -10,7 +10,13 @@ struct alignas(16) Vec4 {
 
   Vec4() {}
   Vec4(const Vec3 &vector, f32 w) : x(vector.x), y(vector.y), z(vector.z), w(w) {}
-  Vec4(const Vec4 &vector) : x(vector.x), y(vector.y), z(vector.z), w(vector.w) {}
+  // Assigns in the body: a mem-initializer list changes the address order of the Vector copy loops, which the game's code does not have.
+  Vec4(const Vec4 &vector) {
+    x = vector.x;
+    y = vector.y;
+    z = vector.z;
+    w = vector.w;
+  }
 
   Vec4 &operator=(const Vec4 &vector) {
     x = vector.x;

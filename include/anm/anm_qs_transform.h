@@ -11,7 +11,8 @@ struct Vec3;
 namespace anm {
 
 struct alignas(16) QsTransform {
-  QsTransform() {}
+  // Defaulted: value-initialization in Vector zero-fills the elements, as in the game.
+  QsTransform() = default;
   QsTransform(const mm::Vec3 &translation, const mm::Quat &rotation, const mm::Vec3 &scale) : unknown00(translation, 1.0f), unknown10(rotation), unknown20(scale, 1.0f) {}
 
   mm::Vec4 unknown00; // Inferred role: translation; original member name unknown.

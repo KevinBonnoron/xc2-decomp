@@ -22,3 +22,5 @@ EffectResData *EffectResData::createEffectResData(const SetupInfo &info) {
 void EffectResData::term() { unknown10.clear(); }
 
 } // namespace fw
+template void mm::mtl::Vector<fw::EffectAnnotationData>::expand(size_t, size_t);
+template void mm::mtl::Vector<fw::EffectAnnotationData>::push_back(const fw::EffectAnnotationData &);
