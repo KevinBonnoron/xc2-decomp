@@ -1,17 +1,22 @@
 #include "gf/object/component/enemy/gf_enemy_state_field_home.h"
+#include "gf/field/gf_field_exec_cmd_turn.h"
 
 #include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/object/component/enemy/gf_behavior_enemy_field.h"
 #include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/component/enemy/gf_enemy_state_id.h"
 #include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_manager.h"
 #include "gf/object/gf_obj_setup.h"
 #include "gf/scom/gf_scom_obj.h"
 #include "gmk/gmk_acc.h"
+#include "gmk/gmk_base.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_route_navi.h"
+#include "gmk/gmk_salvage.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/rtti.h"
 
@@ -19,6 +24,29 @@ namespace gf {
 namespace enemy {
 
 StateFieldHome::StateFieldHome() : unknown18(), unknown50(nullptr), unknown60(false), unknown64(0.0f) {}
+
+void StateFieldHome::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {
+  GfObjAcc acc(static_cast<GfObj *>(behavior->unknown08)->unknownf8);
+  if (acc.isEnemyBlade()) {
+    reqState(STATE_ID_UNKNOWN_15);
+    return;
+  }
+
+  gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(static_cast<GfObj *>(behavior->unknown08)->unknownf8);
+  if (gmkInst != nullptr && gmkInst->getGmkType() == gmk::GmkSalvageLocator::GMK_TYPE) {
+    gmk::GmkSalvageLocator *locator = static_cast<gmk::GmkSalvageLocator *>(gmkInst);
+    if (GfGameManager::isEnemyChangeBattleOK()) {
+      locator->syncDepopTboxes();
+    } else {
+      locator->onEnemyHomeToPlayerAccess(static_cast<GfObj *>(behavior->unknown08)->unknownf8);
+    }
+  }
+
+  unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior->unknown08)->unknownf8, "C_idle"));
+  unknown50 = &StateFieldHome::seqWaitIdle;
+  unknown60 = false;
+  unknown64 = 0.0f;
+}
 
 bool StateFieldHome::isCondMatch(const GfComBehaviorEnemy &behavior) { return gmk::isPlayerExist(); }
 
@@ -79,6 +107,14 @@ void StateFieldHome::seqInitHomePos(GfComBehaviorEnemy &behavior, const fw::Upda
   behavior.unknown140.unknownc0 = position;
   behavior.execTurnCmdToGoal();
   unknown50 = &StateFieldHome::seqWaitTurnEnd;
+}
+
+void StateFieldHome::seqWaitTurnEnd(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
+  if (behavior.unknown53f0.unknown6c) {
+    behavior.unknown140.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, behavior);
+    unknown50 = &StateFieldHome::seqMoveToHomePos;
+    unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, "C_move"));
+  }
 }
 
 } // namespace enemy

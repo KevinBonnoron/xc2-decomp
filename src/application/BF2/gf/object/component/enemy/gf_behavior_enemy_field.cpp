@@ -3,11 +3,14 @@
 #include "gf/field/gf_field_enemy_sensor.cpp"
 // clang-format on
 #include "gf/object/component/enemy/gf_behavior_enemy_field.h"
+#include <math.h>
+
 #include "framework/coli/coli_object.h"
 #include "framework/navi/navi_manager.h"
 #include "fw/fw_transform.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
+#include "gf/field/gf_field_local_steer.h"
 #include "gf/object/component/enemy/gf_beh_field_owner.h"
 #include "gf/object/component/gf_com_collider.h"
 #include "gf/object/gf_obj.h"
@@ -62,6 +65,28 @@ bool GfBehaviorEnemyField::isArrivedToGoal() const {
 
   f32 distanceSq = dx * dx + dy * dy + dz * dz;
   return !(unknown18 * unknown18 < distanceSq);
+}
+
+void GfBehaviorEnemyField::getMoveDir(mm::Vec3 &direction) const {
+  if (!getMoveVec(direction, unknown40)) {
+    const mm::Vec3 &position = unknown08->getTransform().unknown00;
+    direction = unknownc0 - position;
+    if (unknown20 != 3) {
+      direction.y = 0.0f;
+    }
+  }
+
+  if (!(fabsf(direction.x) <= 0.000001f) || !(fabsf(direction.y) <= 0.000001f) || !(fabsf(direction.z) <= 0.000001f)) {
+    f32 length = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+    if (length <= 0.000001f) {
+      direction = mm::Vec3::zero;
+    } else {
+      f32 inverse = 1.0f / length;
+      direction.x = inverse * direction.x;
+      direction.y = inverse * direction.y;
+      direction.z = inverse * direction.z;
+    }
+  }
 }
 
 void GfBehaviorEnemyField::dispose() {

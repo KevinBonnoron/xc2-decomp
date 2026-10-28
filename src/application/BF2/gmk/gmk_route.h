@@ -72,15 +72,21 @@ public:
     void create(CBdatWrapper, int, const AGmkBase &) {}
   };
 
+  // Layout evidence: gf::enemy::StateFieldWalk::seqUpdateMove (0x7100510114) reads the members at 0x1c, 0x20, 0x24 and 0x28.
   struct Data {
     mm::Vec3 unknown00; // Inferred role: position; original member name unknown.
     f32 unknown10;      // Inferred role: side x; original member name unknown.
     f32 unknown14;      // Inferred role: side y; original member name unknown.
     f32 unknown18;      // Inferred role: side z; original member name unknown.
     u32 unknown1c;      // Inferred role: flags; original member name unknown.
+    f32 unknown20;      // Role and original member name unknown.
+    f32 unknown24;      // Role and original member name unknown.
+    u8 unknown28;       // Role and original member name unknown.
   };
 
   static const u32 FLAG_LINE = 1 << 0;
+  static const u32 FLAG_UNKNOWN_1 = 1 << 1;
+  static const u32 FLAG_UNKNOWN_2 = 1 << 2;
 
   static const GmkType GMK_TYPE = GMK_TYPE_ROUTE_POINT;
 
@@ -98,7 +104,9 @@ public:
 };
 
 static_assert(offsetof(GmkRoutePoint::Data, unknown1c) == 0x1c, "");
-static_assert(sizeof(GmkRoutePoint::Data) == 0x20, "");
+static_assert(offsetof(GmkRoutePoint::Data, unknown20) == 0x20, "");
+static_assert(offsetof(GmkRoutePoint::Data, unknown24) == 0x24, "");
+static_assert(offsetof(GmkRoutePoint::Data, unknown28) == 0x28, "");
 static_assert(sizeof(GmkRoutePoint) == 0x50, "");
 
 class GmkRoutePointList : public TGmkList<GmkRoutePoint, GmkRoutePoint::BdatInfo, 0x54505443, 2, GmkRoutePointGobCustom> {

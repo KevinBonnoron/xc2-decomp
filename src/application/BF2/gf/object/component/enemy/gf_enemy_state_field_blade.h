@@ -34,6 +34,7 @@ class StateFieldBlade : public GfStateBase {
   void update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo &info);
   void seqWaitIdle(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
   void seqIdle(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqMoveToDriver(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
   bool getOwnerDriverPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle) const;
   f32 getEnRadius(const GfComBehaviorEnemy &behavior) const;
 

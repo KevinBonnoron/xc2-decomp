@@ -1,4 +1,5 @@
 #include "gf/object/component/enemy/gf_enemy_state_field_squad_member.h"
+#include "gf/field/gf_field_exec_cmd_turn.h"
 
 #include <math.h>
 
@@ -7,11 +8,19 @@
 #include "gf/object/component/enemy/gf_behavior_enemy_field.h"
 #include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/component/enemy/gf_enemy_state_id.h"
+#include "gf/object/gf_obj.h"
 #include "gmk/gmk_squad.h"
 #include "mm_math/mm_vec3.h"
 
 namespace gf {
 namespace enemy {
+
+StateFieldSquadMember::StateFieldSquadMember() : unknown18(), unknown50(nullptr), unknown60(false), unknown64(0.0f) {}
+
+void StateFieldSquadMember::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {
+  unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior->unknown08)->unknownf8, "C_idle"));
+  unknown50 = &StateFieldSquadMember::seqUpdateIdle;
+}
 
 void StateFieldSquadMember::leave(GfComBehaviorEnemy *behavior, ai::State *next) {}
 
@@ -70,7 +79,7 @@ void StateFieldSquadMember::seqUpdateMove(GfComBehaviorEnemy &behavior, const fw
     f32 rotY;
     if (!unknown60 || !behavior.unknown140.unknown50.getPosRotY(position, rotY)) {
       behavior.execTurnCmdToGoal();
-      if (behavior.unknown545c) {
+      if (behavior.unknown53f0.unknown6c) {
         behavior.unknown140.moveToGoal(info.unknown04);
         return;
       }
@@ -79,6 +88,17 @@ void StateFieldSquadMember::seqUpdateMove(GfComBehaviorEnemy &behavior, const fw
     }
 
     unknown50 = &StateFieldSquadMember::seqWaitTurnEnd;
+  }
+}
+
+void StateFieldSquadMember::seqWaitTurnEnd(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
+  if (behavior.unknown53f0.unknown6c) {
+    if (unknown60) {
+      behavior.unknown140.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0, behavior);
+    }
+
+    unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, unknown60 ? "C_idle" : "C_move"));
+    unknown50 = unknown60 ? &StateFieldSquadMember::seqUpdateIdle : &StateFieldSquadMember::seqUpdateMove;
   }
 }
 

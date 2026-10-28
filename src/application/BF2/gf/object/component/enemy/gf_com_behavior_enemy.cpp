@@ -16,6 +16,8 @@
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/field/gf_field_enemy_sensor.h"
+#include "gf/field/gf_field_local_steer.h"
+#include "gf/field/gf_field_move_speed.h"
 #include "gf/field/gf_field_pitch_roll_controller.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/menu/call/gf_menu_call_context.h"
@@ -59,6 +61,8 @@ static const gmk::GmkEnemyInsts &unknown002(const gmk::GmkEnemy &gmk) { return g
 
 // Inferred helper: the enemy instances embedded in the gimmick; original name unknown.
 static const gmk::GmkEnemyInsts &unknown002(const gmk::GmkRoutedEnemy &gmk) { return gmk.unknown50; }
+
+void GfComBehaviorEnemy::Listener::onWkStandbyLogout() { unknown08->unknown54e8 = nullptr; }
 
 u32 GfComBehaviorEnemy::getStateId() const {
   if (unknowna0.m_pState != nullptr) {
@@ -511,6 +515,62 @@ bool GfComBehaviorEnemy::isOtherMemberHome() const {
   }
 
   return isOtherMemberHome<gmk::GmkRoutedEnemy>();
+}
+
+void GfComBehaviorEnemy::execTurnCmd(f32 angle) {
+  getTransform();
+  TFieldExecCmdTurn<GfComAsm>::CreateInfo info;
+  info.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
+  info.unknown08 = unknown140.unknown200.getCurAngle() + angle;
+  info.unknown0c = unknown140.unknown30;
+  unknown53f0.create(info);
+  if (!unknown53f0.unknown6c) {
+    unknown140.unknown1d0.setSpeedKmph(unknown140.unknown1d0.unknown08, 0.0f);
+  }
+}
+
+void GfComBehaviorEnemy::execTurnCmd(f32 angle, f32 param2, f32 param3, f32 param4) {
+  TFieldExecCmdTurn<GfComAsm>::CreateInfo info;
+  info.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
+  info.unknown08 = unknown140.unknown200.getCurAngle() + angle;
+  info.unknown0c = param3;
+  info.unknown14 = param2;
+  info.unknown18 = param4;
+  unknown53f0.create(info);
+  if (!unknown53f0.unknown6c) {
+    unknown140.unknown1d0.setSpeedKmph(unknown140.unknown1d0.unknown08, 0.0f);
+  }
+}
+
+void GfComBehaviorEnemy::execTurnCmdAccurately(f32 angle) {
+  getTransform();
+  TFieldExecCmdTurn<GfComAsm>::CreateInfo info;
+  info.unknown00 = static_cast<GfObj *>(unknown08)->unknownf8;
+  info.unknown08 = unknown140.unknown200.getCurAngle() + angle;
+  info.unknown0c = 0.0f;
+  unknown53f0.create(info);
+  if (!unknown53f0.unknown6c) {
+    unknown140.unknown1d0.setSpeedKmph(unknown140.unknown1d0.unknown08, 0.0f);
+  }
+}
+
+void GfComBehaviorEnemy::execTurnCmdToGoal() {
+  mm::Vec3 direction;
+  unknown140.getMoveDir(direction);
+  direction.y = 0.0f;
+  if (!(fabsf(direction.x) <= 0.000001f) || !(fabsf(direction.z) <= 0.000001f)) {
+    f32 length = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+    if (length <= 0.000001f) {
+      direction = mm::Vec3::zero;
+    } else {
+      f32 inverse = 1.0f / length;
+      direction.x = inverse * direction.x;
+      direction.y = inverse * direction.y;
+      direction.z = inverse * direction.z;
+    }
+  }
+
+  execTurnCmd(atan2f(direction.x, direction.z));
 }
 
 template void GfComBehaviorEnemy::reqChangeBattleToOtherMember<gmk::GmkEnemy>() const;

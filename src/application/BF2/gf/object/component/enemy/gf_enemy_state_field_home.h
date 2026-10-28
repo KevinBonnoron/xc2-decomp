@@ -31,6 +31,7 @@ class StateFieldHome : public GfStateBase {
   void seqWaitIdle(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
   void seqInitHomePos(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
   void seqWaitTurnEnd(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqMoveToHomePos(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
 
   TFieldExecCmd<GfComAsm> unknown18;                                               // Inferred role: asm command; original member name unknown.
   void (StateFieldHome::*unknown50)(GfComBehaviorEnemy &, const fw::UpdateInfo &); // Inferred role: sequence; original member name unknown.

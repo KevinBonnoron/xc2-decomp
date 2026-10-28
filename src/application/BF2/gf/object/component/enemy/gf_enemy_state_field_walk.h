@@ -25,7 +25,7 @@ namespace enemy {
 class StateFieldWalk : public GfStateBase {
   GF_STATE_CLASS(StateFieldWalk, GfComBehaviorEnemy)
   StateFieldWalk()
-      : unknown18(0), unknown19(false), unknown1c(0), unknown20(), unknown58(nullptr), unknown68(0.0f), unknown70(mm::Vec3::zero), unknown80(-1), unknown84(-1), unknown88(false), unknown8c(0),
+      : unknown18(0), unknown19(false), unknown1c(0), unknown20(), unknown58(nullptr), unknown68(0.0f), unknown70(mm::Vec3::zero), unknown80(-1), unknown84(-1), unknown88(false), unknown8c(0.0f),
         unknown90(0), unknown94(0.0f), unknown98(5.0f), unknown9c(0.0f) {}
   static bool isCondMatch(const GfComBehaviorEnemy &behavior);
   void enter(GfComBehaviorEnemy *behavior, ai::State *previous);
@@ -38,6 +38,17 @@ class StateFieldWalk : public GfStateBase {
   void seqWaitSpecialEndAtRoutePoint(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
   void seqWaitSyncLoco(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
   void seqWaitTurnEnd(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void validateMoveSpeed(GfComBehaviorEnemy &behavior);
+  void pollToShiftLandingSeq(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqInitGoalPos(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqUpdateMove(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqWaitToIdle(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqMoveToBeginLanding(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqWaitToIdleAtRoutePoint(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqWaitTurnEndAtRoutePoint(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqPlayMotAtRoutePoint(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqLandingIdle(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqWaitTakeOffEnd(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
 
   u8 unknown18;                                                                    // Inferred role: actMove_Atr of BDAT_FLD_ENACT_MOVE; original member name unknown.
   bool unknown19;                                                                  // Role and original member name unknown.
@@ -49,7 +60,7 @@ class StateFieldWalk : public GfStateBase {
   int unknown80;                                                                   // Role and original member name unknown.
   int unknown84;                                                                   // Role and original member name unknown.
   bool unknown88;                                                                  // Role and original member name unknown.
-  u32 unknown8c;                                                                   // Role and original member name unknown.
+  f32 unknown8c;                                                                   // Role and original member name unknown.
   u32 unknown90;                                                                   // Role and original member name unknown.
   f32 unknown94;                                                                   // Role and original member name unknown.
   f32 unknown98;                                                                   // Role and original member name unknown.

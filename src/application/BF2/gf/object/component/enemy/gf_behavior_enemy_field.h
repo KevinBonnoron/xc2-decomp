@@ -61,7 +61,10 @@ public:
   void updateSensor(f32 deltaTime);
   void updatePitchRollController();
   void moveToGoal(f32 deltaTime);
+  void getMoveDir(mm::Vec3 &direction) const;
   void applyFieldMoveSpeed(MoveSpeed moveSpeed, GfComBehaviorEnemy &behavior);
+  void applyFieldMoveSpeed(enemy::STATE_ID stateId, GfComBehaviorEnemy &behavior);
+  void applyFieldMoveSpeed(MoveSpeed currentMoveSpeed, MoveSpeed targetMoveSpeed, GfComBehaviorEnemy &behavior);
 
   bool isChangeBattleCondMatch() const {
     if (!unknown52a8) {

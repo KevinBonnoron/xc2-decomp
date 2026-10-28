@@ -5,6 +5,7 @@
 #include "framework/message/message_object.h"
 #include "framework/object/updatable_object.h"
 #include "gf/field/gf_field_dmg.h"
+#include "gf/field/gf_field_exec_cmd_turn.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
 #include "gf/object/component/enemy/gf_beh_field_owner.h"
 #include "gf/object/component/enemy/gf_behavior_enemy_field.h"
@@ -54,7 +55,7 @@ class GfComBehaviorEnemy : public GfComBehavior, public IGfBehFieldOwner {
 public:
   class Listener {
   public:
-    virtual void onWkStandbyLogout() { unknown08->unknown54e8 = nullptr; }
+    virtual void onWkStandbyLogout();
 
     GfComBehaviorEnemy *unknown08; // Inferred role: owner; original member name unknown.
   };
@@ -134,11 +135,9 @@ public:
   GfMenuCallContext *unknown130;                        // Inferred role: target info menu context; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown138; // Inferred role: search base bone frame; original member name unknown.
   GfBehaviorEnemyField unknown140;                      // Inferred role: field behavior; original member name unknown.
-  u8 unknown53f0[0x545c - 0x53f0];                      // Inferred role: TFieldExecCmdTurn<GfComAsm>, not reconstructed; original member name unknown.
-  bool unknown545c;                                     // Inferred role: member of TFieldExecCmdTurn<GfComAsm>, turn command active; original member name unknown.
-  u8 _545d[0x5460 - 0x545d];
-  u8 unknown5460[0x54a0 - 0x5460]; // Inferred role: GfFieldUndulator, not reconstructed; original member name unknown.
-  GfFieldDmg unknown54a0;          // Inferred role: field damage; original member name unknown.
+  TFieldExecCmdTurn<GfComAsm> unknown53f0;              // Inferred role: turn command; original member name unknown.
+  u8 unknown5460[0x54a0 - 0x5460];                      // Inferred role: GfFieldUndulator, not reconstructed; original member name unknown.
+  GfFieldDmg unknown54a0;                               // Inferred role: field damage; original member name unknown.
   u8 _54c8[0x54d0 - 0x54c8];
   mm::Vec3 unknown54d0; // Inferred role: velocity; original member name unknown.
   bool unknown54e0;     // Inferred role: battle lock counted; original member name unknown.
@@ -158,7 +157,7 @@ static_assert(offsetof(GfComBehaviorEnemy, unknown128) == 0x128, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown130) == 0x130, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown138) == 0x138, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown140) == 0x140, "");
-static_assert(offsetof(GfComBehaviorEnemy, unknown545c) == 0x545c, "");
+static_assert(offsetof(GfComBehaviorEnemy, unknown53f0) == 0x53f0, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown54a0) == 0x54a0, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown54d0) == 0x54d0, "");
 static_assert(offsetof(GfComBehaviorEnemy, unknown54e0) == 0x54e0, "");

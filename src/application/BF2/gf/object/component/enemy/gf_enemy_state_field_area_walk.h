@@ -29,6 +29,9 @@ class StateFieldAreaWalk : public GfStateBase {
   void leave(GfComBehaviorEnemy *behavior, ai::State *next);
   void update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo &info);
   void seqChangeState(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqInitGoalPos(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqWaitTurnEnd(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
+  void seqMoveToGoal(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
   void seqWaitMoveEnd(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info);
 
   u32 unknown18;                                                                       // Inferred role: move mode; original member name unknown.
