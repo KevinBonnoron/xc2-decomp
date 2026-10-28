@@ -1,11 +1,18 @@
 #include "gf/menu/gf_menu_reference.h"
 
+#include "gf/data/gf_object_type.h"
+#include "gf/menu/gf_menu_manager.h"
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_party_status.h"
+#include "gf/object/gf_obj_acc.h"
+#include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_property.h"
+#include "gf/object/gf_obj_util.h"
 #include "ml/fixed_size_alloc.h"
 #include "ui/list/ui_list_info.h"
 
 namespace gf {
+struct GF_OBJ_HANDLE;
 
 bool GfMenuReference::isInitialized() {
   GfMenuReference *reference = get();
@@ -61,6 +68,39 @@ void GfMenuReference::getFieldSkillInfo(u8 index, FieldSkillInfo &info) {
   if (reference != nullptr && index < reference->unknown4ca48.size()) {
     info = reference->unknown4ca48.begin()[index];
   }
+}
+
+const GfMenuReference::ArtsPaletteInfo &GfMenuReference::getArtsPaletteInfo(u8 index) {
+  static ArtsPaletteInfo empty;
+  GfMenuReference *reference = get();
+  const ArtsPaletteInfo *info = &empty;
+  if (reference != nullptr) {
+    if (index < ARTS_PALETTE_COUNT) {
+      info = &reference->unknown4cac0[index].unknown00;
+    } else {
+      info = &reference->unknown4cda0[index].unknown00;
+      if (!(index < ALL_ARTS_PALETTE_COUNT)) {
+        info = &empty;
+      }
+    }
+  }
+  return *info;
+}
+
+const GfMenuObjUtil::ArtsIconInfo &GfMenuReference::getArtsPaletteIconInfo(u8 index) {
+  static GfMenuObjUtil::ArtsIconInfo empty;
+  GfMenuReference *reference = get();
+  if (reference == nullptr) {
+    return empty;
+  }
+  if (index < ARTS_PALETTE_COUNT) {
+    return reference->unknown4cac0[index].unknown08;
+  }
+  const GfMenuObjUtil::ArtsIconInfo *info = &reference->unknown4cda0[index].unknown08;
+  if (!(index < ALL_ARTS_PALETTE_COUNT)) {
+    info = &empty;
+  }
+  return *info;
 }
 
 u32 GfMenuReference::getTargetEnemyBuff(u32 index) {
@@ -228,6 +268,67 @@ u32 GfMenuReference::getChainAttackBurstCount() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
     return reference->unknown4cb5c;
+  }
+  return 0;
+}
+
+const GfMenuReference::ElemComboRoot &GfMenuReference::getElementComboRootInfo(u32 index) {
+  static ElemComboRoot empty;
+  GfMenuReference *reference = get();
+  if (index < 7 && reference != nullptr) {
+    return reference->unknown4cba8[index];
+  }
+  return empty;
+}
+
+u32 GfMenuReference::getElementComboRootCurrent() {
+  GfMenuReference *reference = get();
+  if (reference != nullptr) {
+    GF_OBJ_HANDLE *handle = GfMenuManager::getTargetObjHandle();
+    if (handle != INVALID_HANDLE && GfObjAcc(handle).getType() == OBJECT_TYPE_ENEMY) {
+      GfObjProperty *property = GfObjUtil::getProperty(handle);
+      if (property != nullptr) {
+        GfObjPropertyEnemy *enemy = property->getEnemy();
+        if (enemy != nullptr && enemy->unknowndc != 0) {
+          for (u32 i = 0; i < 7; i++) {
+            if (reference->unknown4cba8[i].unknown00 == enemy->unknowndc) {
+              return i;
+            }
+          }
+        }
+      }
+    }
+  }
+  return 7;
+}
+
+u32 GfMenuReference::getActiveElementComboID(u32 level) {
+  GfMenuReference *reference = get();
+  if (reference != nullptr) {
+    GfObjAcc acc(GfMenuManager::getTargetObjHandle());
+    if (acc.isValid() && acc.getType() == OBJECT_TYPE_ENEMY) {
+      GfObjProperty *property = GfObjUtil::getProperty(acc.getHandle());
+      if (property == nullptr) {
+        return 0;
+      }
+      GfObjPropertyEnemy *enemy = property->getEnemy();
+      if (enemy == nullptr) {
+        return 0;
+      }
+      if (level <= enemy->unknowne8) {
+        u32 root = 0;
+        if (level != 1) {
+          root = 1;
+          if (level != 2) {
+            root = 3;
+            if (level != 3) {
+              return 0;
+            }
+          }
+        }
+        return getElementComboRootInfo(root).unknown00;
+      }
+    }
   }
   return 0;
 }

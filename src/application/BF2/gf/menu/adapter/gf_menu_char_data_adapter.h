@@ -76,6 +76,19 @@ public:
   bool update_BL_weaponTypeName(const DataParamAcc &acc);
   bool update_BL_CorrectiveTypeName(const DataParamAcc &acc);
   bool update_BL_TeamName(const DataParamAcc &acc);
+  bool update_DR_Exp(const DataParamAcc &acc);
+  bool update_DR_BtlFace(const DataParamAcc &acc);
+  bool update_DR_ClassName(const DataParamAcc &acc);
+  bool update_BL_FieldSkillLv(const DataParamAcc &acc);
+  bool update_BL_SkillLv(const DataParamAcc &acc);
+  bool update_BL_AttrCol2(const DataParamAcc &acc);
+  bool update_BL_RoleName(const DataParamAcc &acc);
+  bool update_BL_Selectable2(const DataParamAcc &acc);
+  bool update_BL_CorrectiveValue(const DataParamAcc &acc);
+  bool update_BL_ArtsName(const DataParamAcc &acc);
+  bool update_BL_ArtsDesc(const DataParamAcc &acc);
+  bool update_BL_GenderIcon(const DataParamAcc &acc);
+  bool update_BL_DR_Face(const DataParamAcc &acc);
   u32 getBL_FieldSkillIndex(const DataParamAcc &acc);
   u32 getBL_SkillIndex(const DataParamAcc &acc);
 

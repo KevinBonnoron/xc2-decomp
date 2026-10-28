@@ -10,6 +10,34 @@ namespace {
 
 const u32 unknown001[] = {0, 0x16, 2, 1, 0xa}; // Inferred role: common window id of each equip error; original name unknown.
 
+// Inferred role: shop icon to item type conversion entry; original name unknown.
+struct unknown002 {
+  u32 unknown00;            // Inferred role: shop icon id; original member name unknown.
+  ItemType::Type unknown04; // Inferred role: item type; original member name unknown.
+  u32 unknown08;            // Inferred role: item type parameter; original member name unknown.
+};
+
+const unknown002 unknown003[] = {
+    // Inferred role: shop icon conversion table; original name unknown.
+    {428, ItemType::SALVAGE, 0},
+    {429, ItemType::INFO, 0},
+    {430, ItemType::PC_WPN_CHIP, 0},
+    {432, ItemType::EQUIP_ORB, 0},
+    {434, ItemType::FAVORITE, 12},
+    {435, ItemType::FAVORITE, 13},
+    {436, ItemType::FAVORITE, 14},
+    {437, ItemType::FAVORITE, 15},
+    {438, ItemType::FAVORITE, 16},
+    {439, ItemType::FAVORITE, 17},
+    {440, ItemType::FAVORITE, 18},
+    {441, ItemType::FAVORITE, 19},
+    {442, ItemType::FAVORITE, 20},
+    {443, ItemType::FAVORITE, 21},
+    {444, ItemType::FAVORITE, 22},
+    {445, ItemType::FAVORITE, 23},
+    {446, ItemType::PC_EQUIP, 0},
+};
+
 } // namespace
 
 bool GfMenuItemUtil::canCountStack(u32 itemType) {
@@ -89,5 +117,16 @@ u32 GfMenuItemUtil::getEquipErrorCmnWindowID(u32 error) {
 u32 GfMenuItemUtil::getItemNum(u8 itemType, u32 itemId) { return GfItemUtil::getItemBoxCount(itemId); }
 
 int GfMenuItemUtil::getItemIconID(u8 itemType, u32 itemId) { return itemType - 1; }
+
+bool GfMenuItemUtil::convShopIcon(u32 icon, ItemType::Type &type, u32 &param) {
+  for (u32 i = 0; i < sizeof(unknown003) / sizeof(unknown003[0]); i++) {
+    if (unknown003[i].unknown00 == icon) {
+      type = unknown003[i].unknown04;
+      param = unknown003[i].unknown08;
+      return true;
+    }
+  }
+  return false;
+}
 
 } // namespace gf

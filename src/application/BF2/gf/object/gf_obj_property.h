@@ -133,9 +133,15 @@ class GfObjPropertyEnemy : public GfObjProperty {
 public:
   u8 _40[0x88 - 0x40];
   GfObjPropertyCharacter unknown88; // Inferred role: character, pointed to by unknown10; original member name unknown.
+  u8 _bc[0xdc - 0xbc];
+  u32 unknowndc; // Inferred role: element combo id, read by GfMenuReference::getElementComboRootCurrent; original member name unknown.
+  u8 _e0[0xe8 - 0xe0];
+  u32 unknowne8; // Inferred role: element combo level, read by GfMenuElementComboAdapter::getTargetElementComboLv; original member name unknown.
 };
 
 static_assert(offsetof(GfObjPropertyEnemy, unknown88) == 0x88, "");
+static_assert(offsetof(GfObjPropertyEnemy, unknowndc) == 0xdc, "");
+static_assert(offsetof(GfObjPropertyEnemy, unknowne8) == 0xe8, "");
 
 class GfObjPropertyNpc : public GfObjProperty {};
 

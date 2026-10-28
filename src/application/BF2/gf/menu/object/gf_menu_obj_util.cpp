@@ -28,6 +28,8 @@
 #include "gf/menu/gf_menu_sound_manager.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_property.h"
+#include "gf/object/gf_obj_util.h"
 #include "gf/util/gf_util.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_mtl/fixed_array.h"
@@ -253,6 +255,42 @@ const char *GfMenuObjUtil::getMenuMS(u32 id) {
 }
 
 u32 GfMenuObjUtil::getLeaderPartyID() { return 0; }
+
+bool GfMenuObjUtil::isInBattle(GF_OBJ_HANDLE *handle) {
+  if (GfObjAcc(handle).getType() == OBJECT_TYPE_ENEMY) {
+    GfObjProperty *property = GfObjUtil::getProperty(handle);
+    if (property == nullptr) {
+      return false;
+    }
+    if (property->unknown10 != nullptr) {
+      return property->unknown10->unknown30;
+    }
+  }
+  return false;
+}
+
+int GfMenuObjUtil::convMenuDriverID(u32 driver) {
+  u8 *bdat = GfDataBdat::getFP(BDAT_MNU_DR_IMAGE_ID);
+  DataParamAcc acc(OBJECT_TYPE_DRIVER, driver, GIMMICK_TYPE_NONE);
+  int index = 0;
+  if (acc.isValid()) {
+    int top = Bdat::getIdTop(bdat);
+    u32 icon = getFaceIconID(acc);
+    index = 0;
+    do {
+      if (index >= Bdat::getIdCount(bdat)) {
+        index = 0;
+        break;
+      }
+      u32 iconId = Bdat::getVal(bdat, "icon_id", top + index).valueU16;
+      index++;
+      if (icon == iconId) {
+        break;
+      }
+    } while (true);
+  }
+  return index;
+}
 
 int GfMenuObjUtil::getLeaderPartyType() {
   GF_OBJ_HANDLE *leader = GfGameParty::getLeader();

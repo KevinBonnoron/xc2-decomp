@@ -47,9 +47,10 @@ public:
   };
 
   struct ArtsPaletteInfo {
-    ArtsPaletteInfo() : unknown00(0), unknown04(0.0f) {}
+    ArtsPaletteInfo() : unknown00(0), _02(), unknown04(0.0f) {}
 
     u16 unknown00; // Inferred role: arts id; original member name unknown.
+    u8 _02[0x04 - 0x02];
     f32 unknown04; // Inferred role: recast; original member name unknown.
   };
 
@@ -96,7 +97,10 @@ public:
   static u32 getChainAttackTotalDamage();
   static void setChainAttackBurstCount(u32 count);
   static u32 getChainAttackBurstCount();
+  static const ElemComboRoot &getElementComboRootInfo(u32 index);
   static u32 getElementComboRootLevel(u32 index);
+  static u32 getElementComboRootCurrent();
+  static u32 getActiveElementComboID(u32 level);
   static void setElementComboParty(u32 index, u32 id, f32 timeLeft);
   static u32 getElementComboParty(u32 index);
   static f32 getElementComboPartyTimeLeft(u32 index);

@@ -123,6 +123,7 @@ public:
   static u32 playJingle(u32 id);
   static bool getBladeTeamName(u32 blade, ui::UIStr &name);
   static int getFaceIconID(const DataParamAcc &acc);
+  static bool isInBattle(GF_OBJ_HANDLE *handle);
   static ui::UIStr getEnemyArtsName(u32 arts);
   static ui::UIStr getDriverClassName(u32 driver);
   static ui::UIStr getElementComboName(u32 combo);

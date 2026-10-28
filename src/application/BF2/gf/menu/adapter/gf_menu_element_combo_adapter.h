@@ -11,6 +11,8 @@ class UIObjectPlugin;
 
 namespace gf {
 
+class GfObjPropertyEnemy;
+
 class GfMenuElementComboAdapter : public GfMenuAdapter {
 public:
   class IConverter {
@@ -20,6 +22,23 @@ public:
     virtual u32 getElementComboId() = 0;
   };
 
+  class ReferenceRouteConverter : public IConverter {
+  public:
+    ReferenceRouteConverter(u32 routeNo) : routeNo(routeNo) {}
+    ~ReferenceRouteConverter() override {}
+    u32 getElementComboRouteNo() override;
+    u32 getElementComboId() override;
+
+    u32 routeNo;
+  };
+
+  class TargetEnemyConverter : public IConverter {
+  public:
+    ~TargetEnemyConverter() override {}
+    u32 getElementComboRouteNo() override;
+    u32 getElementComboId() override;
+  };
+
   GfMenuElementComboAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways);
   ~GfMenuElementComboAdapter() override;
   bool update_ComboRouteColor();
@@ -27,6 +46,10 @@ public:
   bool update_ComboRouteEffectName();
   bool update_ComboRouteEffect();
   bool update_ComboRouteAttrPtn();
+  bool update_ComboRouteCurrentDisp();
+  static GfObjPropertyEnemy *getTargetProperty();
+  static u32 getTargetElementComboId();
+  static u32 getTargetElementComboLv();
   void update(const fw::UpdateInfo &info) override;
 
   mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
