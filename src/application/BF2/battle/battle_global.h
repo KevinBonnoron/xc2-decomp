@@ -99,9 +99,11 @@ public:
     enum BUTTON {};
 
     f32 unknown00[4]; // Inferred role: button gauges; original member name unknown.
-    u8 _10[0x15 - 0x10];
-    u8 unknown15;   // Inferred role: input count; original member name unknown.
-    bool unknown16; // Inferred role: input flag; original member name unknown.
+    u16 unknown10;    // Inferred role: last stick input; original member name unknown.
+    u16 unknown12;    // Inferred role: last button input; original member name unknown.
+    u8 unknown14;     // Role and original member name unknown.
+    u8 unknown15;     // Inferred role: input count; original member name unknown.
+    bool unknown16;   // Inferred role: input flag; original member name unknown.
     u8 _17[0x18 - 0x17];
   };
 
@@ -135,6 +137,7 @@ public:
   void PlayJingle(JINGLE_TYPE jingle);
   void StopJingle(bool isReset);
   bool InputLeverGachaButton(LEVER_GACHA_DATA::BUTTON button);
+  void InputLeverGachaStick(f32 angle);
   static void PostUpdate(const fw::UpdateInfo &updateInfo);
   void PostUpdateProc(const fw::UpdateInfo &updateInfo);
   void Tutorial(BTL_TUTORIAL_COND cond, int combo, void *character);
@@ -260,7 +263,8 @@ public:
   u16 unknown65d2;                                   // Inferred role: BGM id; original member name unknown.
   u8 unknown65d4;                                    // Inferred role: BGM priority; original member name unknown.
   u8 unknown65d5;                                    // Inferred role: requested jingle; original member name unknown.
-  u8 unknown65d6[7];                                 // Inferred role: pause flags; original member name unknown.
+  u8 unknown65d6[6];                                 // Inferred role: pause flags; original member name unknown.
+  s8 unknown65dc;                                    // Inferred role: blade change type; original member name unknown.
   u8 unknown65dd;                                    // Inferred role: link join max level; original member name unknown.
   u64 unknown65de_0 : 1;                             // Inferred role: lock arts palette; original member name unknown.
   u64 : 5;
@@ -283,7 +287,9 @@ public:
   u64 : 1;
   u64 unknown65e0_7 : 1; // Role and original member name unknown.
   u64 unknown65e1_0 : 1; // Inferred role: kill child; original member name unknown.
-  u64 : 3;
+  u64 : 1;
+  u64 unknown65e1_2 : 1; // Inferred role: forced blade change type; original member name unknown.
+  u64 : 1;
   u64 unknown65e1_4 : 1; // Role and original member name unknown.
   u64 unknown65e1_5 : 1; // Role and original member name unknown.
   u64 unknown65e1_6 : 1; // Inferred role: shift decided; original member name unknown.
@@ -340,6 +346,7 @@ static_assert(offsetof(BattleGlobal, unknown5b90) == 0x5b90, "");
 static_assert(offsetof(BattleGlobal, unknown65b0) == 0x65b0, "");
 static_assert(offsetof(BattleGlobal, unknown65d2) == 0x65d2, "");
 static_assert(offsetof(BattleGlobal, unknown65d6) == 0x65d6, "");
+static_assert(offsetof(BattleGlobal, unknown65dc) == 0x65dc, "");
 static_assert(offsetof(BattleGlobal, unknown65dd) == 0x65dd, "");
 static_assert(sizeof(BattleGlobal) == 0x65e8, "");
 

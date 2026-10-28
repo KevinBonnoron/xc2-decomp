@@ -4,6 +4,9 @@
 #include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/object/component/gf_com_transform.h"
+#include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_util.h"
 
 namespace btl {
 
@@ -50,6 +53,20 @@ void EffectObject::Initialize(u32 id) {
   unknown25a_3 = true;
   unknown190.Initialize();
   SetOneShotHitData(-1.0f, true);
+}
+
+void EffectObject::SetObject(gf::GF_OBJ_HANDLE *handle, mm::mtl::FixedVector<fw::EffectPack *, 8> &packs) {
+  gf::GfObj *object = gf::GfObjUtil::getObj(handle);
+  if (object != nullptr) {
+    gf::GfComTransform *transform = object->getComponent<gf::GfComTransform>();
+    if (transform != nullptr) {
+      unknown257 = OBJECT_TYPE_OBJECT;
+      unknownc0_0 = handle;
+      unknown00 = packs;
+      unknown80 = transform->getPosition();
+      unknown25a_0 = false;
+    }
+  }
 }
 
 void EffectObject::SetOneShotHitData(f32 time, bool isHitOnEnd) {

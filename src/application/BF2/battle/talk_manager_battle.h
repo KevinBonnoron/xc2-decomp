@@ -23,6 +23,7 @@ public:
     TRIGGER_STRIKE_DAMAGE = 20,
     TRIGGER_UNKNOWN_1C = 28, // Inferred role: blade guard, one less for a player; original name unknown.
     TRIGGER_ENEMY_WIN = 26,
+    TRIGGER_UNKNOWN_2B = 43, // Inferred role: first of three triggers raised when the character gets the hate, one per custom voice slot; original name unknown.
   };
 
   enum VOICE_TYPE {

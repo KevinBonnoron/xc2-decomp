@@ -81,6 +81,7 @@ public:
   int GetChangeBladeIndex(gf::GF_OBJ_HANDLE *handle) const;
   int GetBaseBladeBdatID(gf::GF_OBJ_HANDLE *handle) const;
   int GetBladeChangeType(gf::GF_OBJ_HANDLE *handle) const;
+  void StartBladeChange(gf::GF_OBJ_HANDLE *driver, gf::GF_OBJ_HANDLE *blade, int type, int, bool);
   bool IsRegister(gf::GF_OBJ_HANDLE *handle) const;
   bool IsReceiveLater(gf::GF_OBJ_HANDLE *handle) const;
   bool IsProcDisableCancel() const;

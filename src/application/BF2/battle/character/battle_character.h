@@ -48,7 +48,7 @@ public:
   enum ANIM_SPDATA_TYPE {};
   enum BLADE_TIMER_MODE {};
   enum RIMBLOOM_ID {};
-  enum ACTION_ID {
+  enum ACTION_ID : u8 {
     ACTION_ID_IDLE = 1,
     ACTION_ID_UNKNOWN_2 = 2, // Inferred role: put out weapon; original name unknown.
     ACTION_ID_PUT_AWAY_WEAPON = 3,
@@ -58,6 +58,7 @@ public:
     ACTION_ID_BLADE_ARTS = 8,
     ACTION_ID_BLADE_CHANGE = 9,
     ACTION_ID_SP_ATTACK = 10,
+    ACTION_ID_UNKNOWN_0E = 14, // Inferred role: lever gacha action; original name unknown.
     ACTION_ID_UNKNOWN_12 = 12, // Inferred role: set on a BLADE_GUARD action command; original name unknown.
     ACTION_ID_UNKNOWN_13 = 13, // Inferred role: set on an ATTACK_REPELLED action command; original name unknown.
     ACTION_ID_RESCUE = 18,
@@ -119,6 +120,16 @@ public:
   struct AI_ACTION_DATA {
     u8 unknown00;  // Inferred role: action; original member name unknown.
     int unknown04; // Inferred role: target; original member name unknown.
+  };
+
+  struct HEALER_ENHANCE_PARAM {
+    BattleCharacter *unknown00; // Inferred role: the other character; original member name unknown.
+    bool unknown08;             // Inferred role: restricts the enhance to the healer; original member name unknown.
+  };
+
+  struct HEAL_TARGET_ENHANCE_PARAM {
+    BattleCharacter *unknown00; // Inferred role: the other character; original member name unknown.
+    bool unknown08;             // Inferred role: selects the second enhance; original member name unknown.
   };
 
   struct DIRECT_DAMAGE_DATA {
@@ -208,6 +219,9 @@ public:
   void StartFullBurst(int value);
   CharacterParameter *GetCharacterParameter(bool);
   bool IsControlCharacter() const;
+  bool AI_Warp(ACTION_ID action);
+  bool CheckWarp(ACTION_ID action, mm::Vec3 &position, bool &isDirect);
+  void SetWarp(const mm::Vec3 &position, bool isDirect, f32 time);
   void SetLimitHP(int limit);
   bool IsControlCharacterGroup() const;
   bool IsDead(u32 flags) const;
@@ -382,6 +396,9 @@ public:
   void SetNoDamageTime(f32 time);
   void SetPerfectAvoidTime(f32 time);
   f32 GetFriendEnhanceRate(int enhance, bool) const;
+  f32 GetHealerEnhanceRate(HEALER_ENHANCE_PARAM &param) const;
+  f32 GetHealTargetEnhanceRate(HEAL_TARGET_ENHANCE_PARAM &param) const;
+  f32 GetGuardRate() const;
   bool GetReactionBlowParam(int reaction, int level, f32 &horizontal, f32 &vertical) const;
   f32 GetArtsDamageRate(const ARTS_DATA::LEVEL_DATA &level) const;
   f32 ApplyResistantAttr(f32 damage, int attribute) const;
@@ -390,6 +407,10 @@ public:
   void StopAI(f32 time);
   bool CheckRandFriendEnhanceRate(int enhance) const;
   void ResetBladeSupportConditionFlag();
+  void LeverReduceProc();
+  void UpdateInvincible();
+  bool IsImmortal(bool, bool *);
+  bool CheckForceExit(ACTION_ID action);
   void ResetActionCommand();
   void ActionCommandEndRun();
   void UpdateCulling();
@@ -610,7 +631,10 @@ public:
   u64 unknownf92_1 : 1; // Role and original member name unknown.
   u64 : 12;
   u64 unknownf93_6 : 1; // Inferred role: stop flag; original member name unknown.
-  u64 : 32;
+  u64 : 12;
+  u64 unknownf95_3 : 1; // Inferred role: cached invincible state; original member name unknown.
+  u64 unknownf95_4 : 1; // Inferred role: invincible state is cached; original member name unknown.
+  u64 : 18;
   u64 : 1;
   u64 : 24;
   u8 _f9b[0xfb0 - 0xf9b];
@@ -694,7 +718,9 @@ public:
   f32 unknown11cc; // Inferred role: stop AI time; original member name unknown.
   u8 _11d0[0x11d8 - 0x11d0];
   int unknown11d8; // Inferred role: stamp; original member name unknown.
-  u8 _11dc[0x11e0 - 0x11dc];
+  u8 _11dc[0x11de - 0x11dc];
+  u8 unknown11de; // Inferred role: AI warp retry count; original member name unknown.
+  u8 _11df[0x11e0 - 0x11df];
   u16 unknown11e0; // Inferred role: blade support condition flags; original member name unknown.
   u16 : 9;
   u16 unknown11e3_1 : 1; // Role and original member name unknown.
@@ -799,6 +825,7 @@ static_assert(offsetof(BattleCharacter, unknown1178) == 0x1178, "");
 static_assert(offsetof(BattleCharacter, unknown1180) == 0x1180, "");
 static_assert(offsetof(BattleCharacter, unknown11cc) == 0x11cc, "");
 static_assert(offsetof(BattleCharacter, unknown11d8) == 0x11d8, "");
+static_assert(offsetof(BattleCharacter, unknown11de) == 0x11de, "");
 static_assert(offsetof(BattleCharacter, unknown11e0) == 0x11e0, "");
 static_assert(sizeof(BattleCharacter) == 0x11f0, "");
 

@@ -31,6 +31,7 @@ public:
 
   enum POUCH_BUFF_TYPE {
     POUCH_BUFF_TYPE_DAMAGE_ARMOR,
+    POUCH_BUFF_TYPE_UNKNOWN_1 = 1, // Inferred role: heal target bonus in percent; original name unknown.
     POUCH_BUFF_TYPE_UNKNOWN_4 = 4, // Inferred role: first value checked by the timing update; original name unknown.
     POUCH_BUFF_TYPE_KIZUNA = 6,
     POUCH_BUFF_TYPE_UNKNOWN_9 = 9,   // Inferred role: second value checked by the timing update; original name unknown.

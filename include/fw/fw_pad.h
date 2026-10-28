@@ -25,13 +25,18 @@ namespace fw {
 struct UpdateInfo;
 
 struct PadData {
-  PadData() : unknown00(0), unknown04(0), unknown08(0), unknown0c(0), _10(), _28(), unknown2c(0.2f), unknown30(0.2f), unknown34(0.2f), unknown38(0.2f), unknown3c(-1), unknown40(), unknown44() {}
+  PadData()
+      : unknown00(0), unknown04(0), unknown08(0), unknown0c(0), _10(), unknown1c(0.0f), unknown20(0.0f), _24(), _28(), unknown2c(0.2f), unknown30(0.2f), unknown34(0.2f), unknown38(0.2f),
+        unknown3c(-1), unknown40(), unknown44() {}
 
   u32 unknown00; // Inferred role: hold; original member name unknown.
   u32 unknown04; // Inferred role: trigger; original member name unknown.
   u32 unknown08; // Inferred role: release; original member name unknown.
   u32 unknown0c; // Inferred role: repeat; original member name unknown.
-  u8 _10[0x28 - 0x10];
+  u8 _10[0x1c - 0x10];
+  f32 unknown1c; // Inferred role: stick x read by LeverReduceProc; original member name unknown.
+  f32 unknown20; // Inferred role: stick y read by LeverReduceProc; original member name unknown.
+  u8 _24[0x28 - 0x24];
   u8 _28[0x2c - 0x28];
   f32 unknown2c;  // Inferred role: arx threshold; original member name unknown.
   f32 unknown30;  // Inferred role: ary threshold; original member name unknown.
@@ -42,6 +47,8 @@ struct PadData {
   u32 unknown44;  // Inferred role: style; original member name unknown.
 };
 
+static_assert(offsetof(PadData, unknown1c) == 0x1c, "");
+static_assert(offsetof(PadData, unknown20) == 0x20, "");
 static_assert(offsetof(PadData, unknown2c) == 0x2c, "");
 static_assert(offsetof(PadData, unknown40) == 0x40, "");
 static_assert(offsetof(PadData, unknown3c) == 0x3c, "");

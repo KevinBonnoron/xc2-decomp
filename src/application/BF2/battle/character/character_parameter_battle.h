@@ -94,7 +94,9 @@ public:
     ADD_ENHANCE_TYPE_GUARD,
   };
 
-  enum SPECIAL_ENHANCE_TYPE {};
+  enum SPECIAL_ENHANCE_TYPE {
+    SPECIAL_ENHANCE_TYPE_UNKNOWN_5 = 5, // Inferred role: heal target rate read by GetHealTargetEnhanceRate; original name unknown.
+  };
 
   struct ADDITIONAL_ENHANCE_DATA {
     ENHANCE_EFFECT_DATA unknown00; // Inferred role: effect; original member name unknown.

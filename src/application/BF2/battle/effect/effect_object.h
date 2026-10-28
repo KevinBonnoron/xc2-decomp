@@ -54,6 +54,7 @@ public:
 
   EffectObject();
   void Initialize(u32 id);
+  void SetObject(gf::GF_OBJ_HANDLE *handle, mm::mtl::FixedVector<fw::EffectPack *, 8> &packs);
   void SetOneShotHitData(f32 time, bool isHitOnEnd);
   void SetArtsData(int artsSlot, int hit, bool isArts, u32 attackId);
   void SetBulletData(int bulletId, int bulletEffectId);

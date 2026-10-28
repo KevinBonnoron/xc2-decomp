@@ -1,4 +1,5 @@
 #include "battle/character/battle_character.h"
+#include "fw/fw_pad.h"
 
 #include <float.h>
 #include <math.h>
@@ -56,6 +57,7 @@
 namespace btl {
 
 constexpr int ALPHA_RATE_NUM = 7;
+constexpr int BLADE_BDAT_ID_UNKNOWN_3EB = 0x3eb;
 constexpr s16 COLLISION_PRIORITY_UNKNOWN_8AD0 = -30000;
 constexpr f32 PAUSE_DT = 0.000001f;
 constexpr f32 NORMALIZE_LENGTH_MIN = 0.000001f;
@@ -295,6 +297,30 @@ void BattleCharacter::TurnTarget(bool isSecond, bool a, bool b) {
       TurnDirection(direction, a, b);
     }
   }
+}
+
+bool BattleCharacter::AI_Warp(ACTION_ID action) {
+  if (IsControlCharacter()) {
+    return false;
+  }
+
+  mm::Vec3 position;
+  bool isDirect;
+  if (!CheckWarp(action, position, isDirect)) {
+    unknown11de = 0;
+    return false;
+  }
+
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  if (parameter != nullptr && parameter->m_invalidTarget) {
+    unknown11de++;
+    if (unknown11de < 5) {
+      return false;
+    }
+    unknown11de = 0;
+  }
+  SetWarp(position, isDirect, 2.0f);
+  return true;
 }
 
 void BattleCharacter::ActionRun() {
@@ -953,6 +979,93 @@ void BattleCharacter::DispEnhanceName(const CharacterParameter::ENHANCE_DATA &da
     param.unknown20.z = z;
     gf::GfMenuObjDamageBuff::open(param);
   }
+}
+
+f32 BattleCharacter::GetGuardRate() const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  u32 guardPercent = parameter->GetGuardPercent();
+  f32 guardRate = static_cast<f32>(guardPercent) * 0.01f;
+  f32 hpRate = parameter->GetHPRate();
+  int last;
+  if (hpRate >= 1.0f) {
+    last = 0x79;
+  } else {
+    last = 0x82 - static_cast<int>(hpRate * 10.0f);
+  }
+  f32 bonus = 0.0f;
+  if (last >= 0x79) {
+    for (int enhance = 0x79; enhance <= last; enhance++) {
+      CharacterParameter::ENHANCE_DATA data;
+      parameter->GetEnhanceEffect(data, enhance);
+      bonus += data.unknown00;
+    }
+  }
+  f32 rate = guardRate + bonus;
+
+  f32 result = rate;
+  if (IsDriver()) {
+    gf::GF_OBJ_HANDLE *buddyHandle = parameter->unknown10;
+    const BattleCharacter *buddy = CharacterManager::get()->GetCharacterConst(buddyHandle);
+    result = 0.0f;
+    if (!parameter->unknown5df_6 && !parameter->IsBuff(0xe) && buddy != nullptr && buddy->m_battle) {
+      DataManager *dataManager = DataManager::get();
+      f32 half = rate * 0.5f;
+      rate = dataManager->unknown10758[parameter->unknown1c].unknown105_0 ? rate : half;
+      result = rate;
+      if (BladeArtsManager::get()->IsBladeAttack(unknown118)) {
+        result = rate + 0.5f;
+      }
+    }
+  }
+  return result;
+}
+
+f32 BattleCharacter::GetHealerEnhanceRate(HEALER_ENHANCE_PARAM &param) const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  f32 total = 0.0f;
+  for (int i = 0; i < 2; i++) {
+    f32 rate = 0.0f;
+    switch (i) {
+    case 0:
+      if (param.unknown08) {
+        CharacterParameter::ENHANCE_DATA data;
+        if (parameter->GetEnhanceEffect(data, 0xac)) {
+          rate = data.unknown00;
+          DispEnhanceName(data);
+        }
+      }
+      break;
+    }
+    total += rate;
+  }
+  return total;
+}
+
+f32 BattleCharacter::GetHealTargetEnhanceRate(HEAL_TARGET_ENHANCE_PARAM &param) const {
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  f32 total = 0.0f;
+  for (int i = 0; i < 2; i++) {
+    f32 rate = 0.0f;
+    switch (i) {
+    case 0: {
+      int enhance = !param.unknown08 ? 0xad : 0x108;
+      CharacterParameter::ENHANCE_DATA data;
+      if (parameter->GetEnhanceEffect(data, enhance)) {
+        rate = data.unknown00;
+        DispEnhanceName(data);
+      }
+      break;
+    }
+    }
+    total += rate;
+  }
+  total += parameter->GetSpecialEnhanceRate(CharacterParameter::SPECIAL_ENHANCE_TYPE_UNKNOWN_5, nullptr);
+  if (IsPlayer()) {
+    int partyId = parameter->unknown1c;
+    f32 pouch = DataManager::get()->GetPouchBuffParam(DataManager::POUCH_BUFF_TYPE_UNKNOWN_1, partyId);
+    total += pouch * 0.01f;
+  }
+  return total;
 }
 
 void BattleCharacter::DispEnhanceNameDirect(int text, bool flag) const {
@@ -1833,6 +1946,147 @@ int BattleCharacter::GetAlphaSetID(ALPHA_PROC_ID alpha) {
   return -1;
 }
 
+bool BattleCharacter::CheckForceExit(ACTION_ID action) {
+  if (unknownf8e_5 && unknownf8e_6) {
+    const CharacterParameter *parameter = GetCharacterParameterConst(true);
+    if (parameter != nullptr && parameter->m_invalidTarget && unknowncc8 == BLADE_BDAT_ID_UNKNOWN_3EB) {
+      if (BladeChangeManager::get()->IsRegister(unknown118)) {
+        return true;
+      }
+      gf::GF_OBJ_HANDLE *driver = unknown002(this)->unknown10;
+      int type = 3;
+      if (!BattleGlobal::get()->unknown65e1_2) {
+        type = BattleGlobal::get()->unknown65dc;
+      }
+      BladeChangeManager::get()->StartBladeChange(driver, unknown118, type, 5, false);
+      return true;
+    }
+
+    if (((1 << action) & 0x7fbde) != 0 || (IsDriver() && action == ACTION_ID_BLADE_ARTS)) {
+      unknownf8e_4 = true;
+      return true;
+    }
+  }
+  return false;
+}
+
+void BattleCharacter::UpdateInvincible() {
+  if (IsBlade()) {
+    return;
+  }
+
+  if (!m_player && !m_battle) {
+    if (!unknownf95_4) {
+      unknownf95_3 = gf::GfObjUtil::testInvincible(unknown118);
+      unknownf95_4 = true;
+    }
+    if (unknownf95_3) {
+      gf::GfObjUtil::setInvincible(unknown118, true, false);
+      return;
+    }
+  }
+
+  if (!unknownf8e_4) {
+    bool isNoDamage = IsNoDamage(false);
+    gf::GfObjUtil::setInvincible(unknown118, isNoDamage, isNoDamage);
+    if (isNoDamage) {
+      return;
+    }
+  } else {
+    gf::GfObjUtil::setInvincible(unknown118, false, false);
+  }
+
+  const CharacterParameter *parameter = GetCharacterParameterConst(true);
+  if (parameter == nullptr) {
+    return;
+  }
+  u32 limit = 0;
+  if (parameter->unknown5a4 != 0) {
+    f32 maxHp = parameter->GetMaxHP();
+    f32 rate = static_cast<f32>(parameter->unknown5a4) * 0.01f;
+    limit = static_cast<u32>(maxHp * rate);
+  }
+  u32 limitHp = IsImmortal(false, nullptr) + limit;
+  gf::GfObjUtil::setLimitHP(unknown118, limitHp);
+}
+
+void BattleCharacter::LeverReduceProc() {
+  if (unknown107c == ACTION_ID_UNKNOWN_0E) {
+    const FIGHT_COMBO_DATA *combo = GetCharacterParameterConst(true)->GetFightComboDataConst();
+    if ((combo->unknown00 | 1) == 3) {
+      const fw::PadData *pad = fw::PadManager::getControlPadData(0);
+      f32 x = pad->unknown1c;
+      f32 z = pad->unknown20;
+      u32 trigger = pad->unknown04;
+      mm::Vec3 stick;
+      stick.x = x;
+      stick.y = 0.0f;
+      stick.z = z;
+      if (Misc::CalcLengthXZ(stick) >= 0.7f && Misc::NormalizeXZ(stick)) {
+        f32 angle = Misc::CalcAngle(mm::Vec3::unitX, stick, true) + 3.1415927f;
+        BattleGlobal::get()->InputLeverGachaStick(angle);
+      }
+      if (trigger == 0) {
+        return;
+      }
+      if ((trigger & 8) != 0) {
+        BattleGlobal::get()->InputLeverGachaButton(static_cast<BattleGlobal::LEVER_GACHA_DATA::BUTTON>(0));
+      }
+      if ((trigger & 2) != 0) {
+        BattleGlobal::get()->InputLeverGachaButton(static_cast<BattleGlobal::LEVER_GACHA_DATA::BUTTON>(2));
+      }
+      if ((trigger & 1) != 0) {
+        BattleGlobal::get()->InputLeverGachaButton(static_cast<BattleGlobal::LEVER_GACHA_DATA::BUTTON>(3));
+      }
+      if ((trigger & 4) != 0) {
+        BattleGlobal::get()->InputLeverGachaButton(static_cast<BattleGlobal::LEVER_GACHA_DATA::BUTTON>(1));
+      }
+      return;
+    }
+  }
+
+  BattleGlobal::LEVER_GACHA_DATA &lever = BattleGlobal::get()->unknown5a88;
+  lever.unknown00[0] = 0.0f;
+  lever.unknown00[1] = 0.0f;
+  lever.unknown00[2] = 0.0f;
+  lever.unknown00[3] = 0.0f;
+  lever.unknown10 = 0xffff;
+  lever.unknown12 = 0xffff;
+  lever.unknown14 = 0;
+  lever.unknown15 = 0;
+  lever.unknown16 = false;
+}
+
+void BattleCharacter::AddBladeArtsRecast(int chain, f32 rate) {
+  BattleCharacter *character = this;
+  while (true) {
+    if (ChainAttackManager::get()->IsProc(true)) {
+      return;
+    }
+    if (!character->IsDriver()) {
+      break;
+    }
+    character = CharacterManager::get()->GetCharacterConst(character->GetCharacterParameterConst(true)->unknown10);
+    if (character == nullptr) {
+      return;
+    }
+  }
+  if (!character->IsBlade()) {
+    return;
+  }
+
+  const char *column = "Param";
+  if (character->IsPlayer()) {
+    if (!character->IsControlCharacterGroup()) {
+      f32 enhance = character->SatisfyEnhanceCondition(0x146, 0, 0.0f, nullptr, true);
+      column = enhance <= 0.0f ? "Param" : "Param2";
+    }
+  }
+  u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_BTL_SP_ARTS_RECAST);
+  f32 recast = static_cast<u8>(Bdat::getValCheck(bdat, column, chain, 1));
+  character->AddSlotRecast(SLOT_ALL, (rate + 1.0f) * recast, false);
+}
+
 void BattleCharacter::AddRecast(f32 recast, bool isRate, int slot) { AddSlotRecast(slot < 0 ? SLOT_ALL : -1 - slot, recast, isRate); }
 
 void BattleCharacter::RegisterDelayVoice(DELAY_VOICE_TYPE type, f32 time, int voice, int group, int priority) {
@@ -2480,6 +2734,21 @@ bool BattleCharacter::CheckRandSatisfyEnhanceCondition(int enhance, int value, f
   }
   DispEnhanceName(unknown1124);
   return true;
+}
+
+void BattleCharacter::NotifyGetHateTarget(int id, bool isFirst) {
+  if (IsControlCharacter()) {
+    PlaySystemSE(BTL_SE_HIT, 0x32, true, false);
+  }
+  if (!isFirst && IsCustomVoice(4)) {
+    int index;
+    if (GetCustomVoiceData(4, &index) == nullptr) {
+      return;
+    }
+    if (TalkManager::get()->NotifyTrigger(unknownf7d, static_cast<TalkManager::TRIGGER>(TalkManager::TRIGGER_UNKNOWN_2B + index), 0, 0)) {
+      SetCustomVoiceEndFlag(4, true);
+    }
+  }
 }
 
 void BattleCharacter::StopSE(BTL_SE se, int number) {
