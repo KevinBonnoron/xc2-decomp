@@ -2,7 +2,7 @@
 #include <stddef.h>
 
 #include "anm/anm_asm_state.h"
-#include "anm/anm_state_machine.h"
+#include "anm/anm_res_state_data.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
@@ -14,6 +14,7 @@ class AsmListener;
 class AdditiveInfo {
 public:
   AdditiveInfo();
+  void easeOut(AsmBlender *blender, AsmListener *listener, f32 time, InterpolateType type, InterpolateCurve curve);
   void easeIn(AsmBlender *blender, AsmListener *listener, mm::mtl::IntrusivePtr<AsmState> state, f32 time, f32 weight, InterpolateType type, InterpolateCurve curve);
 
   mm::mtl::IntrusivePtr<AsmState> unknown00; // Inferred role: state; original member name unknown.

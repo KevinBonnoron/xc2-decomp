@@ -4,6 +4,7 @@
 #include "mm/mm_std_base.h"
 #include "mm_mtl/allocator.h"
 #include "mm_mtl/construct.h"
+#include "types.h"
 
 namespace mm {
 namespace mtl {
@@ -27,6 +28,22 @@ public:
   }
 
   void push_back(const T &value);
+
+  u32 size() const { return m_size; }
+
+  T &front() { return at(m_front); }
+
+  // __LINE__ must be 782 as in the original header: it is the line argument of the assert.
+#line 781
+  void pop_front() {
+    MM_ASSERT(!empty());
+    size_t index = m_front;
+    m_front = (m_front + 1) % m_capacity;
+    m_size--;
+    destruct(&at(index));
+  }
+
+  bool empty() const { return m_size == 0; }
 
   void clear() {
     while (m_size != 0) {

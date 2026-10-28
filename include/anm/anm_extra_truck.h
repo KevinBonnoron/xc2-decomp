@@ -21,7 +21,22 @@ struct ExtraBinding;
 class unknown002 {
 public:
   virtual void sampleTrucks(f32 time, const Binding &binding, const ExtraBinding &extraBinding, u32 count, f32 *values) const = 0;
+
+  u8 _08[0x10 - 0x08];
+  u8 unknown10; // Inferred role: impl type tag (0 uncompressed, 1 cubic); original member name unknown.
+  u8 _11[0x18 - 0x11];
 };
+
+static_assert(offsetof(unknown002, unknown10) == 0x10, "");
+static_assert(sizeof(unknown002) == 0x18, "");
+
+// Inferred limit of an extra truck value; original name unknown.
+struct unknown00f {
+  f32 unknown00; // Inferred role: minimum; original member name unknown.
+  f32 unknown04; // Inferred role: maximum; original member name unknown.
+};
+
+static_assert(sizeof(unknown00f) == 0x8, "");
 
 class ExtraTruckSlot {
 public:
@@ -31,14 +46,14 @@ public:
 
   const char *unknown00;         // Inferred role: name; original member name unknown.
   Array<const char *> unknown08; // Inferred role: truck names, sorted; original member name unknown.
-  u8 _18[0x20 - 0x18];
-  u32 unknown20; // Inferred role: truck count; original member name unknown.
-  u8 _24[0x38 - 0x24];
+  Array<f32> unknown18;          // Inferred role: reference values of the trucks; original member name unknown.
+  Array<unknown00f> unknown28;   // Inferred role: limits of the trucks; original member name unknown.
 };
 
 static_assert(offsetof(ExtraTruckSlot, unknown00) == 0x00, "");
 static_assert(offsetof(ExtraTruckSlot, unknown08) == 0x08, "");
-static_assert(offsetof(ExtraTruckSlot, unknown20) == 0x20, "");
+static_assert(offsetof(ExtraTruckSlot, unknown18) == 0x18, "");
+static_assert(offsetof(ExtraTruckSlot, unknown28) == 0x28, "");
 static_assert(sizeof(ExtraTruckSlot) == 0x38, "");
 
 class ExtraTruckBuffer : public ReferenceObject {

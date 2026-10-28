@@ -14,12 +14,15 @@ class IAllocator;
 namespace anm {
 
 class Animation;
+struct SerialiseArg;
 
 class unknown002;
 
 struct ExtraBinding {
-  const unknown002 *unknown00; // Inferred role: p extra truck; original member name unknown.
-  Array<s16> unknown08;        // Inferred role: truck index table; original member name unknown.
+  explicit ExtraBinding(const SerialiseArg &arg);
+
+  unknown002 *unknown00; // Inferred role: p extra truck; original member name unknown.
+  Array<s16> unknown08;  // Inferred role: truck index table; original member name unknown.
 };
 
 static_assert(offsetof(ExtraBinding, unknown08) == 0x08, "");
@@ -28,6 +31,7 @@ static_assert(sizeof(ExtraBinding) == 0x18, "");
 class Binding : public ReferenceObject {
 public:
   explicit Binding(mm::mtl::IAllocator *pAllocator);
+  explicit Binding(const SerialiseArg &arg);
   ~Binding() override;
 
   const Animation *m_pAnimation;

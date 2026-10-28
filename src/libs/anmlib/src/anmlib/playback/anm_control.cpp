@@ -1,11 +1,16 @@
 #include "anm/anm_control.h"
 
+#include <algorithm>
+#include <math.h>
+
 #include "anm/anm_animation.h"
 #include "anm/anm_array-inl.h"
+#include "anm/anm_array.h"
 #include "anm/anm_binding.h"
 #include "anm/anm_extra_truck.h"
 #include "anm/anm_util.h"
 #include "mm/mm_std_base.h"
+#include "mm_math/mm_math.h"
 
 namespace mm {
 namespace mtl {
@@ -32,6 +37,60 @@ Control::Control(const Binding *pBinding, mm::mtl::IAllocator *pAllocator)
 }
 
 Control::~Control() { unknown001(m_pBinding); }
+
+struct CmpAnnotetion {
+  bool operator()(const Annotetion &annotation, f32 frame) const { return annotation.unknown00 < frame; }
+};
+
+void Control::procAnnotetionCallBack(f32 time, f32 deltaTime, bool includeStart) {
+  if (unknown60 == nullptr) {
+    return;
+  }
+  const Animation *pAnimation = m_pBinding->m_pAnimation;
+  if (pAnimation->unknown38 == 0) {
+    return;
+  }
+  f32 frame = pAnimation->unknown24 * time;
+  ArrayIterartor<const Annotetion> found = std::lower_bound(ArrayIterartor<const Annotetion>(static_cast<const Annotetion *>(pAnimation->unknown30)),
+                                                            ArrayIterartor<const Annotetion>(static_cast<const Annotetion *>(pAnimation->unknown30) + pAnimation->unknown38),
+                                                            frame,
+                                                            CmpAnnotetion());
+  ArrayIterartor<const Annotetion> last(static_cast<const Annotetion *>(pAnimation->unknown30) + pAnimation->unknown38);
+  ArrayIterartor<const Annotetion> it = found;
+  if (includeStart) {
+    while (it != last && found->unknown00 == frame) {
+      unknown60->unknown00(&*it);
+      ++it;
+    }
+  }
+  f32 end = calcLocalTimeInternal(time + deltaTime) * pAnimation->unknown24;
+  f32 lastFrame = pAnimation->unknown2c;
+  f32 endFrame = end < lastFrame ? end : lastFrame;
+  for (; found != last && frame < found->unknown00 && found->unknown00 <= endFrame; ++found) {
+    unknown60->unknown00(&*found);
+  }
+  if (frame > end) {
+    for (ArrayIterartor<const Annotetion> p(static_cast<const Annotetion *>(pAnimation->unknown30)); p != last && p->unknown00 <= end; ++p) {
+      unknown60->unknown00(&*p);
+    }
+  }
+}
+
+void Control::update(f32 deltaTime) {
+  unknown48 += unknown50 * deltaTime;
+  unknown48 = calcLocalTimeInternal(unknown48);
+}
+
+f32 Control::calcLocalTimeInternal(f32 time) {
+  if (m_pBinding->m_pAnimation->unknown22 == PLAY_MODE_LOOP) {
+    f32 localTime = fmodf(time, unknown54);
+    if (localTime < 0.0f) {
+      localTime = localTime + unknown54;
+    }
+    return localTime;
+  }
+  return mm::clamp(time, 0.0f, unknown54);
+}
 
 void Control::sampleTrucks(u32 count, QsTransform *transforms) const {
   MM_ASSERT(count == m_pBinding->m_indexTable.size());

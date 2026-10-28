@@ -5,12 +5,19 @@
 #include "mm_mtl/vector.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace anm {
 
 class Skeleton;
 
 class SimpleMapper : public ReferenceObject {
 public:
+  SimpleMapper(const Skeleton &skeletonA, const Skeleton &skeletonB, mm::mtl::IAllocator *pAllocator);
   ~SimpleMapper() override;
 
   const Skeleton *m_pSkeletonA;

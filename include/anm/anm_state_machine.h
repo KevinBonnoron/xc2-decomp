@@ -1,6 +1,7 @@
 #pragma once
 #include <stddef.h>
 
+#include "anm/anm_res_state_data.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/map.h"
 #include "mm_mtl/vector.h"
@@ -17,9 +18,7 @@ namespace anm {
 class AdditiveInfo;
 class AsmBlender;
 class ResASM;
-class ResStateData;
 class Variable;
-struct InterpolateInfo;
 class AsmListener;
 class AsmState;
 class StringPtr;
@@ -27,14 +26,6 @@ class StringPtr;
 enum StartFrameType {
   START_FRAME_TYPE_UNKNOWN_0,
   START_FRAME_TYPE_UNKNOWN_1,
-};
-enum InterpolateType {
-  INTERPOLATE_TYPE_UNKNOWN_0,
-  INTERPOLATE_TYPE_UNKNOWN_1,
-};
-enum InterpolateCurve {
-  INTERPOLATE_CURVE_UNKNOWN_0,
-  INTERPOLATE_CURVE_UNKNOWN_1,
 };
 
 class StateMachine {

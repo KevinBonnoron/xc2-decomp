@@ -139,6 +139,76 @@ bool StateMachine::setState(const char *state, StartFrameType startFrame) {
   return true;
 }
 
+bool StateMachine::doEaseInAdditive(const char *state, f32 time, f32 weight, InterpolateType type, InterpolateCurve curve) {
+  mm::mtl::Map<StringPtr, mm::mtl::IntrusivePtr<AsmState>>::iterator it = unknown38.find(state);
+  if (it == unknown38.end()) {
+    return false;
+  }
+  AsmState *pState = it->second.get();
+  if (pState->getRefCount() != 1) {
+    pState = createState(*pState->unknown18);
+  }
+  AdditiveInfo info;
+  unknown10.insert(mm::mtl::MapPair<StringPtr, AdditiveInfo>{it->first, info});
+  mm::mtl::Map<StringPtr, AdditiveInfo>::iterator additive = unknown10.find(it->first);
+  if (additive != unknown10.end()) {
+    additive->second.easeIn(unknown58, unknown50, pState, time, weight, type, curve);
+  }
+  return true;
+}
+
+bool StateMachine::doEaseOutAdditive(const char *state, f32 time, InterpolateType type, InterpolateCurve curve) {
+  mm::mtl::Map<StringPtr, AdditiveInfo>::iterator it = unknown10.find(state);
+  if (it == unknown10.end()) {
+    return false;
+  }
+  it->second.easeOut(unknown58, unknown50, time, type, curve);
+  return true;
+}
+
+void StateMachine::clearAdditiveState() {
+  for (mm::mtl::Map<StringPtr, AdditiveInfo>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
+    it->second.easeOut(unknown58, unknown50, 0.0f, INTERPOLATE_TYPE_UNKNOWN_0, INTERPOLATE_CURVE_UNKNOWN_0);
+  }
+  unknown10.clear();
+}
+
+bool StateMachine::resetState(const char *state, StartFrameType startFrame) {
+  mm::mtl::Map<StringPtr, mm::mtl::IntrusivePtr<AsmState>>::iterator it = unknown38.find(state);
+  if (it == unknown38.end()) {
+    return false;
+  }
+  if (unknown08.get() != nullptr) {
+    unknown08->dettach(unknown58);
+    unknown08 = nullptr;
+  }
+  if (unknown00.get() != nullptr) {
+    unknown00->dettach(unknown58);
+    unknown00 = nullptr;
+  }
+  resetInterpolate();
+  AsmState *pState = it->second.get();
+  MM_ASSERT(pState->getRefCount() == 1);
+  unknown00 = pState;
+  const AsmClip *baseClip = unknown00->getBaseClip();
+  f32 time = 0.0f;
+  if (baseClip != nullptr) {
+    const ResClipData *resClipData = baseClip->unknown18;
+    if (startFrame == START_FRAME_TYPE_UNKNOWN_0) {
+      time = resClipData->unknown10;
+    } else if (startFrame == START_FRAME_TYPE_UNKNOWN_1) {
+      time = resClipData->unknown10 + resClipData->unknown14 * rand();
+    }
+  }
+  unknown00->setLocalTime(time);
+  AsmState *current = unknown00.operator->();
+  current->unknown24 = 1.0f;
+  current->onSetWeight();
+  unknown00->attach(unknown58);
+  unknown00->onEnter(unknown50);
+  return true;
+}
+
 bool StateMachine::setAdditiveStateSpeed(const char *state, f32 speed) {
   mm::mtl::Map<StringPtr, AdditiveInfo>::iterator it = unknown10.find(state);
   if (it == unknown10.end()) {

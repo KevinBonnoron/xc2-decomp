@@ -6,6 +6,9 @@ namespace mtl {
 class IAllocator;
 
 template <typename Key, typename Value> struct MapPair {
+  MapPair() : first(), second() {}
+  template <typename K, typename V> MapPair(const K &key, const V &value) : first(key), second(value) {}
+
   Key first;
   Value second;
 };

@@ -14,14 +14,21 @@ class IAllocator;
 namespace anm {
 
 class Binding;
-class unknown003;
+struct Annotetion;
 struct QsTransform;
+
+// Inferred receiver of the annotations of an animation; original name unknown.
+class unknown003 {
+public:
+  virtual void unknown00(const Annotetion *annotation) = 0;
+};
 
 class Control : public ReferenceObject {
 public:
   Control(const Binding *pBinding, mm::mtl::IAllocator *pAllocator);
   ~Control() override;
   void update(f32 deltaTime);
+  void procAnnotetionCallBack(f32 time, f32 deltaTime, bool includeStart);
   f32 calcLocalTimeInternal(f32 time);
   void sampleTrucks(u32 count, QsTransform *transforms) const;
   bool sampleExtraTrucks(u16 slot, u32 count, f32 *values);

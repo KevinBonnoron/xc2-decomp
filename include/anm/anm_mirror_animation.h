@@ -5,6 +5,12 @@
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+} // namespace mtl
+} // namespace mm
+
 namespace anm {
 
 class Binding;
@@ -12,7 +18,9 @@ class MirrorMapper;
 
 class MirrorAnimation : public Animation {
 public:
+  MirrorAnimation(const Binding *pOriginal, const MirrorMapper *pMapper, mm::mtl::IAllocator *pAllocator);
   ~MirrorAnimation() override;
+  Binding *createBinding();
   s32 getImplType() const override;
   void sampleTrucks(f32 time, const Binding &binding, QsTransform *transforms) const override;
   bool getExtractMotion(f32 time, QsTransform *transform) const override;

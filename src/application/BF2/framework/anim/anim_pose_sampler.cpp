@@ -37,7 +37,7 @@ void AnimSinglePoseSamper::bind(anm::Control *control, anm::Pose *pose, anm::Ext
     if (slotId != -1) {
       const anm::Binding *binding = control->m_pBinding;
       if (slotId < binding->unknown30.size()) {
-        if (slot->unknown20 == binding->unknown30[slotId].unknown08.size()) {
+        if (slot->unknown18.size() == binding->unknown30[slotId].unknown08.size()) {
           unknown28 = extraTruckBuffer;
           extraTruckBuffer->addRef();
         }

@@ -1,4 +1,5 @@
 #pragma once
+#include <math.h>
 #include <stddef.h>
 
 #include "anm/anm_locomotion.h"
@@ -16,6 +17,13 @@ namespace anm {
 class Binding;
 struct QsTransform;
 struct SerialiseArg;
+
+struct Annotetion {
+  f32 unknown00; // Inferred role: frame; original member name unknown.
+  u8 _04[0x18 - 0x04];
+};
+
+static_assert(sizeof(Annotetion) == 0x18, "");
 
 class AnimationObject : public ReferenceObject {
 public:
@@ -46,6 +54,23 @@ public:
     }
     unknown40->getDeltaReference(previousTime, time, 0.0f, unknown28 * (unknown2c - 1), looped, transform);
     return true;
+  }
+
+  // Inferred helper: converts a time to a frame, looped or clamped to the last frame; original name unknown.
+  f32 unknown010(f32 time) const {
+    f32 frame = unknown24 * time;
+    u8 playMode = unknown22;
+    f32 last = unknown2c - 1;
+    if (playMode == 0) {
+      return fmodf(frame, last);
+    }
+    if (frame < 0.0f) {
+      return 0.0f;
+    }
+    if (frame > last) {
+      return last;
+    }
+    return frame;
   }
 
   const char *unknown18; // Inferred role: name; original member name unknown.

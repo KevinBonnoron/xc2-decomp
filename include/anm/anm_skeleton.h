@@ -53,7 +53,7 @@ public:
     u16 unknown04;       // Inferred role: label id; original member name unknown.
   };
 
-  u8 _18[0x20 - 0x18];
+  const char *unknown18;           // Inferred role: name; original member name unknown.
   Array<s16> unknown20;            // Inferred role: parent bone indices; original member name unknown.
   Array<Bone> unknown30;           // Inferred role: bones; original member name unknown.
   Array<QsTransform> unknown40;    // Inferred role: reference pose; original member name unknown.
@@ -63,6 +63,7 @@ public:
 };
 
 static_assert(sizeof(Skeleton::Bone) == 0x10, "");
+static_assert(offsetof(Skeleton, unknown18) == 0x18, "");
 static_assert(offsetof(Skeleton, unknown20) == 0x20, "");
 static_assert(offsetof(Skeleton, unknown30) == 0x30, "");
 static_assert(offsetof(Skeleton, unknown40) == 0x40, "");

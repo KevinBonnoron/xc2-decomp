@@ -13,7 +13,11 @@ class Binding;
 class Blender;
 class Control;
 class ExtraTruckBuffer;
+class MirrorMapper;
 class Pose;
+class SimpleMapper;
+class SkeletonMapper;
+struct SkeletonMapperData;
 class ResASM;
 class Skeleton;
 
@@ -22,6 +26,10 @@ public:
   static Pose *createPose(const Skeleton *skeleton, mm::mtl::IAllocator *allocator);
   static Binding *createReferencePoseAnimation(const Skeleton *skeleton, mm::mtl::IAllocator *allocator);
   static ExtraTruckBuffer *createExtraTruckBuffer(const Skeleton *skeleton, const char *name, mm::mtl::IAllocator *allocator);
+  static SimpleMapper *createSimpleMapper(const Skeleton *skeletonA, const Skeleton *skeletonB, mm::mtl::IAllocator *allocator);
+  static Binding *createRetargetAnimation(const Binding *binding, const SimpleMapper *mapper, mm::mtl::IAllocator *allocator);
+  static Binding *createMirrorAnimation(const Binding *binding, const MirrorMapper *mapper, mm::mtl::IAllocator *allocator);
+  static SkeletonMapper *createSkeletonMapper(const Skeleton *skeletonA, const Skeleton *skeletonB, const SkeletonMapperData *data, mm::mtl::IAllocator *allocator);
   static Blender *createBlender(const Skeleton *skeleton, mm::mtl::IAllocator *allocator);
   static Control *createControl(const Binding *binding, mm::mtl::IAllocator *allocator);
   static ASMControl *createASMControl(const ResASM &resAsm, mm::mtl::IAllocator &allocator);

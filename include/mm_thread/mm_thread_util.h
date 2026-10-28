@@ -53,6 +53,8 @@ static_assert(offsetof(EventWait, unknown58) == 0x58, "");
 class SpinLock {
 public:
   SpinLock();
+  void lock(f32 timeout);
+  void unlock() { __atomic_store_n(&locked, 0, __ATOMIC_RELEASE); }
 
   s32 locked;
 };

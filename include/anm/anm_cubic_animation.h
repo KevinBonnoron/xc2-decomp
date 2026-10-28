@@ -11,9 +11,12 @@ class IAllocator;
 } // namespace mtl
 } // namespace mm
 
+namespace mm {
+struct Quat;
+} // namespace mm
+
 namespace anm {
 struct SerialiseArg;
-struct Cubic4Curve;
 
 // Cubic polynomial pieces: the start time, then for each axis the cubic, quadratic, linear and constant terms.
 struct Cubic3Curve {
@@ -23,12 +26,21 @@ struct Cubic3Curve {
 
 static_assert(sizeof(Cubic3Curve) == 0x34, "");
 
+// Cubic polynomial pieces: the start time, then for each component the cubic, quadratic, linear and constant terms.
+struct Cubic4Curve {
+  f32 unknown00;
+  f32 unknown04[16];
+};
+
+static_assert(sizeof(Cubic4Curve) == 0x44, "");
+
 // Orders a time against the start of a cubic piece; shared with the extra truck curves.
 struct CmpCubic {
   template <typename Curve> bool operator()(f32 time, const Curve &curve) const { return time < curve.unknown00; }
 };
 
 void calcVec3(const Array<Cubic3Curve> &curves, f32 time, f32 *pOut);
+void calcQuat(const Array<Cubic4Curve> &curves, f32 time, mm::Quat *pOut);
 
 // Inferred per-bone curve set of CubicAnimation; original name unknown.
 struct unknown004 {

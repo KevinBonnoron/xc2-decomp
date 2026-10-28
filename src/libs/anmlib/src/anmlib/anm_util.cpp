@@ -7,18 +7,24 @@
 #include "anm/anm_animation.h"
 #include "anm/anm_array-inl.h"
 #include "anm/anm_array.h"
+#include "anm/anm_asm_lerp_blend.h"
+#include "anm/anm_asm_speed_lerp_blend.h"
 #include "anm/anm_asm_variable.h"
 #include "anm/anm_binding.h"
 #include "anm/anm_control.h"
+#include "anm/anm_extra_truck.h"
+#include "anm/anm_pose.h"
 #include "anm/anm_res_asm.h"
 #include "anm/anm_res_clip_data.h"
 #include "anm/anm_res_state_data.h"
+#include "anm/anm_space_resolve_util.h"
 #include "mm/mm_std_base.h"
 #include "mm_math/mm_math.h"
 #include "mm_mtl/set.h"
 #include "mm_mtl/vector.h"
 
 namespace anm {
+class Skeleton;
 
 static_assert(sizeof(mm::mtl::Set<StringPtr>) == 0x18, "");
 static_assert(sizeof(mm::mtl::RedBlackTreeBase<mm::mtl::Set<StringPtr>::TreeTraits<StringPtr>>::node) == 0x28, "");
@@ -75,7 +81,99 @@ f32 Util::calcLocalTime(f32 time, f32 start, f32 end, PlayMode playMode) {
   return mm::clamp(time, start, end);
 }
 
+void Util::setReferrenceExtraTruck(const ExtraTruckSlot &slot, u32 count, f32 *values) {
+  for (u32 i = 0; i < count; i++) {
+    values[i] = slot.unknown18[i];
+  }
+}
+
+void Util::samplePoseSmartFromControl(Control *control, Pose *pose, bool localSpace) {
+  if (control != nullptr && pose != nullptr) {
+    const Binding *pBinding = control->m_pBinding;
+    MM_ASSERT(pBinding);
+    u8 blendHint = pBinding->m_pAnimation->unknown21;
+    if (localSpace) {
+      if (blendHint == 0) {
+        Array<QsTransform> &local = pose->accessSyncedPoseLocalSpace();
+        control->sampleTrucks(local.m_size, local.m_pElements);
+      } else if (blendHint == 1) {
+        Array<QsTransform> &local = pose->accessSyncedPoseLocalSpace();
+        control->sampleTrucks(local.m_size, local.m_pElements);
+        const Skeleton *pSkeleton = pose->unknown18;
+        MM_ASSERT(pSkeleton);
+        SpaceResolveUtil::clacPoseMSNoTruck(pBinding, pSkeleton, local.m_pElements);
+        SpaceResolveUtil::convertMStoLS(pSkeleton, local.m_pElements);
+      } else {
+        return;
+      }
+      pose->syncModelSpace();
+    } else if (blendHint == 0) {
+      Array<QsTransform> &model = pose->accessSyncedPoseModelSpace();
+      control->sampleTrucks(model.m_size, model.m_pElements);
+      const Skeleton *pSkeleton = pose->unknown18;
+      MM_ASSERT(pSkeleton);
+      SpaceResolveUtil::setReferencePoseNoTruck(pBinding, pSkeleton, model.m_pElements);
+      SpaceResolveUtil::convertLStoMS(pSkeleton, model.m_pElements);
+    } else if (blendHint == 1) {
+      Array<QsTransform> &model = pose->accessSyncedPoseModelSpace();
+      control->sampleTrucks(model.m_size, model.m_pElements);
+    }
+  }
+}
+
+void Util::clampLimitExtraTruck(const ExtraTruckSlot &slot, u32 count, f32 *values) {
+  for (u32 i = 0; i < count; i++) {
+    const unknown00f &limit = slot.unknown28[i];
+    values[i] = mm::clamp(values[i], limit.unknown00, limit.unknown04);
+  }
+}
+
 void Util::setKeyFrame(Control &control, f32 frame) { control.setLocalTime(control.m_pBinding->m_pAnimation->unknown28 * frame); }
+
+struct CompResState {
+  bool operator()(const ResState *lhs, const char *rhs) const { return strcmp(lhs->name, rhs) < 0; }
+};
+
+bool Util::getVariableMinMax(const ResASM &resAsm, const char *stateName, const char *variableName, f32 *pMin, f32 *pMax) {
+  MM_ASSERT(stateName);
+  const ResStateArray *states = resAsm.unknown20;
+  if (states != nullptr) {
+    ArrayIterartor<ResState *const> it = std::lower_bound(states->unknown18.begin(), states->unknown18.end(), stateName, CompResState());
+    if (it != states->unknown18.end()) {
+      const ResState *resState = *it;
+      if (strcmp(resState->name, stateName) == 0 && resState->type == STATE_TYPE_COMPLEX) {
+        const unknown00c *resTree = resState->unknown68;
+        switch (resTree->unknown00) {
+        case 0: {
+          const ResLerpTree *tree = reinterpret_cast<const ResLerpTree *>(resTree);
+          if (states->unknown28.size() > tree->variableIndex) {
+            if (strcmp(states->unknown28[tree->variableIndex].name, variableName) == 0) {
+              *pMin = tree->unknown08.begin()->unknown00;
+              *pMax = tree->unknown08[tree->unknown08.size() - 1].unknown00;
+              return true;
+            }
+          }
+          break;
+        }
+        case 2: {
+          const ResSpeedLerpTree *tree = reinterpret_cast<const ResSpeedLerpTree *>(resTree);
+          if (states->unknown28.size() > tree->variableIndex) {
+            if (strcmp(states->unknown28[tree->variableIndex].name, variableName) == 0) {
+              *pMin = tree->unknown08.begin()->unknown00;
+              *pMax = tree->unknown08[tree->unknown08.size() - 1].unknown00;
+              return true;
+            }
+          }
+          break;
+        }
+        default:
+          return false;
+        }
+      }
+    }
+  }
+  return false;
+}
 
 void Util::queryState(u32 mask, const ResASM &resAsm, mm::mtl::Set<StringPtr> *pDst) {
   MM_ASSERT(pDst);
@@ -97,8 +195,8 @@ void Util::queryCmd(u32 mask, const ResASM &resAsm, mm::mtl::Set<StringPtr> *pDs
     for (ArrayIterartor<ResState *const> it = states->unknown18.begin(), last = states->unknown18.end(); it != last; ++it) {
       const ResState *resState = *it;
       if (resState != nullptr && ((1 << resState->unknown18) & mask) != 0) {
-        for (ArrayIterartor<unknown007 *const> cmd = resState->unknown20.begin(), cmdLast = resState->unknown20.end(); cmd != cmdLast; ++cmd) {
-          const unknown007 *resCmd = *cmd;
+        for (ArrayIterartor<ResCmd *const> cmd = resState->unknown20.begin(), cmdLast = resState->unknown20.end(); cmd != cmdLast; ++cmd) {
+          const ResCmd *resCmd = *cmd;
           if (resCmd != nullptr) {
             pDst->insert(resCmd->unknown00);
           }
@@ -121,9 +219,9 @@ const ResState *searchState(u32 mask, const ResASM &resAsm, const StringPtr &nam
   return nullptr;
 }
 
-const unknown007 *searchCmd(const ResState *pResState, const StringPtr &name) {
+const ResCmd *searchCmd(const ResState *pResState, const StringPtr &name) {
   MM_ASSERT(pResState);
-  for (ArrayIterartor<unknown007 *const> it = pResState->unknown20.begin(), last = pResState->unknown20.end(); it != last; ++it) {
+  for (ArrayIterartor<ResCmd *const> it = pResState->unknown20.begin(), last = pResState->unknown20.end(); it != last; ++it) {
     if (name == (*it)->unknown00) {
       return *it;
     }
@@ -134,7 +232,7 @@ const unknown007 *searchCmd(const ResState *pResState, const StringPtr &name) {
 void Util::queryCmdFromStateSimple(u32 mask, const ResASM &resAsm, const StringPtr &state, mm::mtl::Set<StringPtr> *pDst) {
   const ResState *resState = searchState(mask, resAsm, state);
   if (resState != nullptr) {
-    for (ArrayIterartor<unknown007 *const> it = resState->unknown20.begin(), last = resState->unknown20.end(); it != last; ++it) {
+    for (ArrayIterartor<ResCmd *const> it = resState->unknown20.begin(), last = resState->unknown20.end(); it != last; ++it) {
       pDst->insert((*it)->unknown00);
     }
   }
@@ -143,8 +241,8 @@ void Util::queryCmdFromStateSimple(u32 mask, const ResASM &resAsm, const StringP
 void Util::queryStateFromStateCmd(u32 mask, const ResASM &resAsm, const StringPtr &state, const StringPtr &cmd, mm::mtl::Set<StringPtr> *pDst) {
   const ResState *resState = searchState(mask, resAsm, state);
   if (resState != nullptr) {
-    for (ArrayIterartor<unknown007 *const> it = resState->unknown20.begin(), last = resState->unknown20.end(); it != last; ++it) {
-      const unknown007 *resCmd = *it;
+    for (ArrayIterartor<ResCmd *const> it = resState->unknown20.begin(), last = resState->unknown20.end(); it != last; ++it) {
+      const ResCmd *resCmd = *it;
       if (resCmd->unknown00 == cmd) {
         switch (resCmd->unknown08) {
         case 0:
@@ -159,7 +257,7 @@ void Util::queryStateFromStateCmd(u32 mask, const ResASM &resAsm, const StringPt
         }
         case 2: {
           const unknown00a *cmd2 = static_cast<const unknown00a *>(resCmd);
-          for (ArrayIterartor<const unknown006> target = cmd2->unknown18.begin(), targetLast = cmd2->unknown18.end(); target != targetLast; ++target) {
+          for (ArrayIterartor<const SelectNode> target = cmd2->unknown18.begin(), targetLast = cmd2->unknown18.end(); target != targetLast; ++target) {
             pDst->insert((*target).unknown08);
           }
           break;
@@ -246,6 +344,22 @@ const ResAppendix *Util::findAppendix(const ResASM &resAsm, const char *name) {
     appendix = nullptr;
   }
   return appendix;
+}
+
+bool Util::getAsmLocomotionReference(const ResASM &resAsm, const char *state, f32 time, u32 index, QsTransform *transform) {
+  const ResStateData *resStateData = resAsm.findResStateData(state);
+  if (resStateData == nullptr || index >= resStateData->unknown08.size()) {
+    return false;
+  }
+  return resStateData->unknown08[index].getReference(time, transform);
+}
+
+bool Util::getAsmLocomotionDeltaReference(const ResASM &resAsm, const char *state, f32 startTime, f32 endTime, u32 index, QsTransform *transform) {
+  const ResStateData *resStateData = resAsm.findResStateData(state);
+  if (resStateData == nullptr || index >= resStateData->unknown08.size()) {
+    return false;
+  }
+  return resStateData->unknown08[index].getDeltaReference(startTime, endTime, transform);
 }
 
 const ResState *Util::getStateResource(const ResASM &resAsm, const char *name) {

@@ -56,7 +56,9 @@ public:
   static const ResState *getFrozenStateResource(const ResASM &resAsm, const char *name);
   static const ResAppendix *findAppendix(const ResASM &resAsm, const char *name);
   static void samplePoseSmartFromControl(Control *control, Pose *pose, bool localSpace);
+  static void setReferrenceExtraTruck(const ExtraTruckSlot &slot, u32 count, f32 *values);
   static void clampLimitExtraTruck(const ExtraTruckSlot &slot, u32 count, f32 *values);
+  static bool getVariableMinMax(const ResASM &resAsm, const char *stateName, const char *variableName, f32 *pMin, f32 *pMax);
   static void queryState(u32 mask, const ResASM &resAsm, mm::mtl::Set<StringPtr> *pDst);
   static void queryCmd(u32 mask, const ResASM &resAsm, mm::mtl::Set<StringPtr> *pDst);
   static void queryCmdFromStateSimple(u32 mask, const ResASM &resAsm, const StringPtr &state, mm::mtl::Set<StringPtr> *pDst);

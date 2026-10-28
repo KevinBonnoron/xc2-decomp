@@ -21,6 +21,15 @@ template <typename T> T clamp(T value, T mi, T ma) {
   return value > ma ? ma : value;
 }
 
+inline f32 clamp(const f32 &value, const f32 &mi, const f32 &ma) {
+  MM_ASSERT(mi <= ma);
+  if (value < mi) {
+    return mi;
+  }
+
+  return value > ma ? ma : value;
+}
+
 template <typename T> const T &min(const T &a, const T &b) { return a < b ? a : b; }
 
 template <typename T> const T &max(const T &a, const T &b) { return a < b ? b : a; }

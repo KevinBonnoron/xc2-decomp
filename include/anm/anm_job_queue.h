@@ -15,6 +15,7 @@ class IAllocator;
 namespace anm {
 
 struct JobEntry : public Job {
+  JobEntry() : Job("JobEntry", 0x100, 0) {}
   explicit JobEntry(const Job &job) : Job("JobEntry", 0x100, 0) { memcpy(this, &job, job.unknown08); }
 
   u8 unknown10[0x100 - 0x10]; // Inferred role: job payload; original member name unknown.
@@ -33,6 +34,13 @@ public:
   void registerJobExecuter(u32 index, void (*function)(Job &)) {
     MM_ASSERT(m_funcs[index] == nullptr);
     m_funcs[index] = function;
+  }
+
+  // Inferred helper: runs the function registered for a job; original name unknown.
+#line 43
+  void unknown002(Job &job) {
+    MM_ASSERT(m_funcs[job.m_funcIndex]);
+    m_funcs[job.m_funcIndex](job);
   }
 
   // Inferred helper: queues a copy of a job; original name unknown.
