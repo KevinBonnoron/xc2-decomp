@@ -59,7 +59,7 @@ fw::RotateIkSolver *GfComIK::createRotateBodyIK(const char *boneName) {
   fw::RotateIkSolver *solver = nullptr;
   if (model->unknown30 != nullptr) {
     solver = fw::RotateIkSolver::create(boneName, frame, *model->unknown30);
-    unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_0] = solver;
+    unknown10.unknown10[unknown002_0] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -74,7 +74,7 @@ fw::SpineIkSolver *GfComIK::createSpineIK(const fw::ParamAdapter &param, const c
   fw::SpineIkSolver *solver = nullptr;
   if (model->unknown30 != nullptr) {
     solver = fw::SpineIkSolver::create(param, boneName, endBoneName, frame, *model->unknown30);
-    unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_3] = solver;
+    unknown10.unknown10[unknown002_3] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -89,7 +89,7 @@ fw::LookAtIkSolver *GfComIK::createLookAtIK(const fw::ParamAdapter &param, const
   fw::LookAtIkSolver *solver = nullptr;
   if (model->unknown30 != nullptr) {
     solver = fw::LookAtIkSolver::create(param, boneName, frame, *model->unknown30);
-    unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_5] = solver;
+    unknown10.unknown10[unknown002_5] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -104,7 +104,7 @@ fw::SphericalCoordinatesIkSolver *GfComIK::createSphericalCoordinatesIkSolver(co
   fw::SphericalCoordinatesIkSolver *solver = nullptr;
   if (model->unknown30 != nullptr) {
     solver = fw::SphericalCoordinatesIkSolver::create(param, boneName, frame, *model->unknown30);
-    unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_8] = solver;
+    unknown10.unknown10[unknown002_8] = solver;
     if (solver != nullptr) {
       solver->release();
     }
@@ -119,7 +119,7 @@ fw::SpineRotateIKSolver *GfComIK::createSpineRotateIkSolver(const fw::ParamAdapt
   fw::SpineRotateIKSolver *solver = nullptr;
   if (model->unknown30 != nullptr) {
     solver = fw::SpineRotateIKSolver::create(param, boneName, endBoneName, frame, *model->unknown30);
-    unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_4] = solver;
+    unknown10.unknown10[unknown002_4] = solver;
     if (solver != nullptr) {
       solver->release();
     }

@@ -27,16 +27,17 @@ class RTTI;
 
 namespace gf {
 
-enum IK_SOLVER_INDEX {
-  IK_SOLVER_INDEX_UNKNOWN_0,
-  IK_SOLVER_INDEX_UNKNOWN_1,
-  IK_SOLVER_INDEX_UNKNOWN_2,
-  IK_SOLVER_INDEX_UNKNOWN_3,
-  IK_SOLVER_INDEX_UNKNOWN_4,
-  IK_SOLVER_INDEX_UNKNOWN_5,
-  IK_SOLVER_INDEX_UNKNOWN_6,
-  IK_SOLVER_INDEX_UNKNOWN_7,
-  IK_SOLVER_INDEX_UNKNOWN_8,
+// Inferred role: slot indices of the IK solver vector, from the size asserts; original name unknown.
+enum unknown002 {
+  unknown002_0,
+  unknown002_1,
+  unknown002_2,
+  unknown002_3,
+  unknown002_4,
+  unknown002_5,
+  unknown002_6,
+  unknown002_7,
+  unknown002_8,
 };
 
 // Evidence: component slot 3 (access offset 0x50 in GfObjFactory), IkResolver at 0x10 (add/removeIkResolver with this + 0x10), vtables and sizes from the constructor.

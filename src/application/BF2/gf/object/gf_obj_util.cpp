@@ -140,7 +140,7 @@ u32 GfObjUtil::getObjType(GF_OBJ_HANDLE *handle) {
 void GfObjUtil::setEnableBlowRotateIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_1]);
+    fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->unknown10.unknown10[unknown002_1]);
     if (solver != nullptr) {
       if (isEnable) {
         solver->fadeIn(time);
@@ -154,7 +154,7 @@ void GfObjUtil::setEnableBlowRotateIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 
 void GfObjUtil::setEnableBodyIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    fw::RotateIkSolver *rotate = castSolver<fw::RotateIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_0]);
+    fw::RotateIkSolver *rotate = castSolver<fw::RotateIkSolver>(ik->unknown10.unknown10[unknown002_0]);
     if (rotate != nullptr) {
       if (isEnable) {
         rotate->fadeIn(time);
@@ -162,7 +162,7 @@ void GfObjUtil::setEnableBodyIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) 
         rotate->fadeOut(time);
       }
     }
-    fw::SpineRotateIKSolver *spine = castSolver<fw::SpineRotateIKSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_4]);
+    fw::SpineRotateIKSolver *spine = castSolver<fw::SpineRotateIKSolver>(ik->unknown10.unknown10[unknown002_4]);
     if (spine != nullptr) {
       if (isEnable) {
         spine->fadeIn(time);
@@ -176,7 +176,7 @@ void GfObjUtil::setEnableBodyIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) 
 void GfObjUtil::setEnableLookIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    fw::LookIkSolver *look = castSolver<fw::LookIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_3]);
+    fw::LookIkSolver *look = castSolver<fw::LookIkSolver>(ik->unknown10.unknown10[unknown002_3]);
     if (look != nullptr) {
       if (isEnable) {
         look->fadeIn(time);
@@ -184,7 +184,7 @@ void GfObjUtil::setEnableLookIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) 
         look->fadeOut(time);
       }
     }
-    fw::SpineIkSolver *spine = castSolver<fw::SpineIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_3]);
+    fw::SpineIkSolver *spine = castSolver<fw::SpineIkSolver>(ik->unknown10.unknown10[unknown002_3]);
     if (spine != nullptr) {
       if (isEnable) {
         spine->fadeIn(time);
@@ -192,7 +192,7 @@ void GfObjUtil::setEnableLookIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) 
         spine->fadeOut(time);
       }
     }
-    fw::LookAtIkSolver *lookAt = castSolver<fw::LookAtIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_5]);
+    fw::LookAtIkSolver *lookAt = castSolver<fw::LookAtIkSolver>(ik->unknown10.unknown10[unknown002_5]);
     if (lookAt != nullptr) {
       if (isEnable) {
         lookAt->fadeIn(time);
@@ -206,17 +206,17 @@ void GfObjUtil::setEnableLookIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) 
 void GfObjUtil::setEnableFootIK(GF_OBJ_HANDLE *handle, bool isEnable) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    fw::PlacementGroundSolver *placement = castSolver<fw::PlacementGroundSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_2]);
+    fw::PlacementGroundSolver *placement = castSolver<fw::PlacementGroundSolver>(ik->unknown10.unknown10[unknown002_2]);
     if (placement != nullptr) {
       placement->unknown65 = isEnable;
       placement->setEnablePlacement(isEnable);
     }
-    fw::SlopeGroundSolver *slope = castSolver<fw::SlopeGroundSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_0]);
+    fw::SlopeGroundSolver *slope = castSolver<fw::SlopeGroundSolver>(ik->unknown10.unknown10[unknown002_0]);
     if (slope != nullptr) {
       slope->setEnablePlacement(isEnable);
       slope->unknown88 = isEnable;
     }
-    fw::TwoCharaGroundSolver *twoChara = castSolver<fw::TwoCharaGroundSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_2]);
+    fw::TwoCharaGroundSolver *twoChara = castSolver<fw::TwoCharaGroundSolver>(ik->unknown10.unknown10[unknown002_2]);
     if (twoChara != nullptr) {
       twoChara->unknownb9 = isEnable;
       twoChara->setEnablePlacement(isEnable);
@@ -227,7 +227,7 @@ void GfObjUtil::setEnableFootIK(GF_OBJ_HANDLE *handle, bool isEnable) {
 void GfObjUtil::setEnableSPCIK(GF_OBJ_HANDLE *handle, bool isEnable) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    fw::SphericalCoordinatesIkSolver *solver = castSolver<fw::SphericalCoordinatesIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_8]);
+    fw::SphericalCoordinatesIkSolver *solver = castSolver<fw::SphericalCoordinatesIkSolver>(ik->unknown10.unknown10[unknown002_8]);
     if (solver != nullptr) {
       solver->m_enable = true;
     }
@@ -237,7 +237,7 @@ void GfObjUtil::setEnableSPCIK(GF_OBJ_HANDLE *handle, bool isEnable) {
 void GfObjUtil::setBlowRotate(GF_OBJ_HANDLE *handle, const mm::Quat &rotation) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_1]);
+    fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->unknown10.unknown10[unknown002_1]);
     if (solver != nullptr) {
       solver->unknown40 = rotation;
     }
@@ -273,9 +273,9 @@ void GfObjUtil::setEnableLipSync(GF_OBJ_HANDLE *handle, bool isEnable) {
 u32 GfObjUtil::getEyeIKType(GF_OBJ_HANDLE *handle) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    u32 index = IK_SOLVER_INDEX_UNKNOWN_6;
-    if (ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_6].get() == nullptr) {
-      index = IK_SOLVER_INDEX_UNKNOWN_7;
+    u32 index = unknown002_6;
+    if (ik->unknown10.unknown10[unknown002_6].get() == nullptr) {
+      index = unknown002_7;
     }
     if (castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[index]) != nullptr) {
       return 1;
@@ -293,7 +293,7 @@ const mm::Quat &GfObjUtil::getBlowRotate(GF_OBJ_HANDLE *handle) {
   if (obj != nullptr) {
     GfComIK *ik = obj->getComponent<GfComIK>();
     if (ik != nullptr) {
-      fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_1]);
+      fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->unknown10.unknown10[unknown002_1]);
       if (solver != nullptr) {
         const mm::Quat &blowRotate = solver->unknown40;
         if (solver->isEnable()) {
@@ -311,14 +311,14 @@ void GfObjUtil::setEnableEyeIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
     u32 type = getEyeIKType(handle);
     if (isEnable) {
       if (type == 1) {
-        for (u32 i = IK_SOLVER_INDEX_UNKNOWN_6; i <= IK_SOLVER_INDEX_UNKNOWN_7; i++) {
+        for (u32 i = unknown002_6; i <= unknown002_7; i++) {
           fw::TransLocalIkSolver *solver = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[i]);
           if (solver != nullptr) {
             solver->fadeIn(time);
           }
         }
       } else if (type == 2) {
-        for (u32 i = IK_SOLVER_INDEX_UNKNOWN_6; i <= IK_SOLVER_INDEX_UNKNOWN_7; i++) {
+        for (u32 i = unknown002_6; i <= unknown002_7; i++) {
           fw::RotateLocalIkSolver *solver = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[i]);
           if (solver != nullptr) {
             solver->fadeIn(time);
@@ -327,14 +327,14 @@ void GfObjUtil::setEnableEyeIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
       }
     } else {
       if (type == 1) {
-        for (u32 i = IK_SOLVER_INDEX_UNKNOWN_6; i <= IK_SOLVER_INDEX_UNKNOWN_7; i++) {
+        for (u32 i = unknown002_6; i <= unknown002_7; i++) {
           fw::TransLocalIkSolver *solver = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[i]);
           if (solver != nullptr) {
             solver->fadeOut(time);
           }
         }
       } else if (type == 2) {
-        for (u32 i = IK_SOLVER_INDEX_UNKNOWN_6; i <= IK_SOLVER_INDEX_UNKNOWN_7; i++) {
+        for (u32 i = unknown002_6; i <= unknown002_7; i++) {
           fw::RotateLocalIkSolver *solver = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[i]);
           if (solver != nullptr) {
             solver->fadeOut(time);
@@ -355,16 +355,16 @@ void GfObjUtil::setMoveEyeIK(GF_OBJ_HANDLE *handle, f32 moveX, f32 moveY) {
       control = paramAcc.getEyeRotControl();
     }
     if (type == 1) {
-      fw::TransLocalIkSolver *first = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_6]);
+      fw::TransLocalIkSolver *first = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[unknown002_6]);
       if (first != nullptr) {
         first->unknown40 = mm::Vec3(moveX, 0.0f, moveY);
       }
-      fw::TransLocalIkSolver *second = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_7]);
+      fw::TransLocalIkSolver *second = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[unknown002_7]);
       if (second != nullptr) {
         second->unknown40 = mm::Vec3(moveX, 0.0f, moveY);
       }
     } else if (type == 2) {
-      fw::RotateLocalIkSolver *first = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_6]);
+      fw::RotateLocalIkSolver *first = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[unknown002_6]);
       if (first != nullptr) {
         switch (control) {
         case 1:
@@ -382,7 +382,7 @@ void GfObjUtil::setMoveEyeIK(GF_OBJ_HANDLE *handle, f32 moveX, f32 moveY) {
           break;
         }
       }
-      fw::RotateLocalIkSolver *second = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_7]);
+      fw::RotateLocalIkSolver *second = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[unknown002_7]);
       if (second != nullptr) {
         switch (control) {
         case 1:

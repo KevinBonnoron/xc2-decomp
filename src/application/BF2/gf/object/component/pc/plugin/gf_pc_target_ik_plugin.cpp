@@ -20,7 +20,7 @@ TargetIKPlugin::~TargetIKPlugin() {}
 void TargetIKPlugin::cleanup(GfComBehaviorPc &) { unknown18 = nullptr; }
 
 bool TargetIKPlugin::isActiveRange(GfComPropertyPc &property, const mm::Vec3 &target) {
-  const TargetIKParam *param = getParam();
+  const unknown001 *param = getParam();
   mm::Vec3 direction(target.x - property.unknown160.x, 0.0f, target.z - property.unknown160.z);
   if (!(mm::fabs(direction.x) <= EPSILON && mm::fabs(direction.z) <= EPSILON)) {
     f32 length = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
@@ -39,7 +39,7 @@ bool TargetIKPlugin::isActiveRange(GfComPropertyPc &property, const mm::Vec3 &ta
 
 void TargetIKPlugin::procMsgGameChangeTarget(fw::MessageObject *object, MsgGameChangeTarget &message) {
   if (message.unknown08 != INVALID_HANDLE) {
-    const TargetIKParam *param = getParam();
+    const unknown001 *param = getParam();
     if (unknown18.get() != nullptr) {
       unknown18->startTargetFade(param->unknown04);
     }
@@ -48,14 +48,14 @@ void TargetIKPlugin::procMsgGameChangeTarget(fw::MessageObject *object, MsgGameC
 }
 
 void TargetIKPlugin::onActivate() {
-  const TargetIKParam *param = getParam();
+  const unknown001 *param = getParam();
   unknown18->fadeIn(param->unknown04);
 }
 
-const TargetIKParam *TargetIKPlugin::getParam() const { return unknown20 != nullptr ? static_cast<const TargetIKParam *>(unknown20->param) : nullptr; }
+const unknown001 *TargetIKPlugin::getParam() const { return unknown20 != nullptr ? static_cast<const unknown001 *>(unknown20->param) : nullptr; }
 
 void TargetIKPlugin::onDeactivate() {
-  const TargetIKParam *param = getParam();
+  const unknown001 *param = getParam();
   unknown18->fadeOut(param->unknown04);
   unknown40 = 1.0f;
   unknown44 = 1.0f;

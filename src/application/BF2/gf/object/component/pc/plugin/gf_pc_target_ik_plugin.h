@@ -28,15 +28,16 @@ struct MsgGameChangeTarget;
 
 namespace pc {
 
-struct TargetIKParam {
+// Inferred role: TargetIKPlugin parameters; original name unknown.
+struct unknown001 {
   f32 unknown00; // Inferred role: active angle in degrees; original member name unknown.
   f32 unknown04; // Inferred role: fade time; original member name unknown.
   u8 _08[0x14 - 0x08];
   f32 unknown14; // Inferred role: ratio change time; original member name unknown.
 };
 
-static_assert(offsetof(TargetIKParam, unknown04) == 0x04, "");
-static_assert(offsetof(TargetIKParam, unknown14) == 0x14, "");
+static_assert(offsetof(unknown001, unknown04) == 0x04, "");
+static_assert(offsetof(unknown001, unknown14) == 0x14, "");
 
 // Evidence: size 0x50 from the operator new of create, the constructor stores (handle -1 at 0x10, Vec3::unitZ at 0x30, two 1.0f at 0x40), the look solver at 0x18 is released by the destructor, the
 // param entry at 0x20 is entry 4 of the pc param list (setup, 0x40 / 0x10).
@@ -52,7 +53,7 @@ public:
   void onActivate() override;
   void onDeactivate() override;
   virtual void update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info);
-  const TargetIKParam *getParam() const;
+  const unknown001 *getParam() const;
   bool isActiveRange(GfComPropertyPc &property, const mm::Vec3 &target);
   void procMsgGameChangeTarget(fw::MessageObject *object, MsgGameChangeTarget &message);
 
