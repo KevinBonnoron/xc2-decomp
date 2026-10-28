@@ -7,6 +7,7 @@
 #include "types.h"
 
 namespace mm {
+struct Quat;
 struct Vec3;
 } // namespace mm
 
@@ -62,6 +63,16 @@ public:
   static void removeGfObj(GF_OBJ_HANDLE *handle);
   static u32 getObjType(GF_OBJ_HANDLE *handle);
   static void setEnableBlowRotateIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time);
+  static void setEnableBodyIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time);
+  static void setEnableLookIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time);
+  static void setEnableFootIK(GF_OBJ_HANDLE *handle, bool isEnable);
+  static void setEnableSPCIK(GF_OBJ_HANDLE *handle, bool isEnable);
+  static void setBlowRotate(GF_OBJ_HANDLE *handle, const mm::Quat &rotation);
+  static void setEnableLipSync(GF_OBJ_HANDLE *handle, bool isEnable);
+  static u32 getEyeIKType(GF_OBJ_HANDLE *handle);
+  static const mm::Quat &getBlowRotate(GF_OBJ_HANDLE *handle);
+  static void setEnableEyeIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time);
+  static void setMoveEyeIK(GF_OBJ_HANDLE *handle, f32 moveX, f32 moveY);
   static GfObj *getObj(GF_OBJ_HANDLE *handle);
   static u32 getObjLayer(GF_OBJ_HANDLE *handle);
   static f32 getSetupScale(GF_OBJ_HANDLE *handle);

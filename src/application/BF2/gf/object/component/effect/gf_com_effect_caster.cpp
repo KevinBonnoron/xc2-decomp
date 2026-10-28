@@ -71,6 +71,41 @@ GfComEffectCaster::Param *GfComEffectCaster::findEffectCasterParam(u32 effect) {
   return nullptr;
 }
 
+bool GfComEffectCaster::startTimer(u32 effect) {
+  Param *param = findEffectCasterParam(effect);
+  if (param == nullptr) {
+    return false;
+  }
+
+  param->unknown28 = 0.0f;
+  return true;
+}
+
+bool GfComEffectCaster::stopTimer(u32 effect) {
+  Param *param = findEffectCasterParam(effect);
+  if (param == nullptr) {
+    return false;
+  }
+
+  param->unknown28 = -1.0f;
+  return true;
+}
+
+bool GfComEffectCaster::addCasterEffectEv(u32 effect) {
+  setCaster(effect);
+  return true;
+}
+
+void GfComEffectCaster::effectEnd(u32 effect) {
+  for (Param *param = unknown3a0.begin(); param != unknown3a0.end(); param++) {
+    if (param->unknown58 == effect && param->unknown58 != 0) {
+      fw::EffectManager::get()->dead(effect);
+      param->unknownba = true;
+      return;
+    }
+  }
+}
+
 GF_OBJ_HANDLE *GfComEffectCaster::getWeaponHandle(u16 weapon) {
   if (weapon == 3 || weapon == 4) {
     return GfGameUtil::getDriverWeaponRight(static_cast<GfObj *>(unknown08)->unknownf8);

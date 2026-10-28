@@ -1,5 +1,17 @@
 #include "gf/object/gf_obj_util.h"
 
+#include "framework/anim/anim_manager.h"
+#include "framework/ik/ik_blow_rotate_solver.h"
+#include "framework/ik/ik_look_at_solver.h"
+#include "framework/ik/ik_look_solver.h"
+#include "framework/ik/ik_placement_ground_solver.h"
+#include "framework/ik/ik_rotate_solver.h"
+#include "framework/ik/ik_slope_ground_solver.h"
+#include "framework/ik/ik_spherical_coordinates_solver.h"
+#include "framework/ik/ik_spine_rotate_solver.h"
+#include "framework/ik/ik_spine_solver.h"
+#include "framework/ik/ik_trans_solver.h"
+#include "framework/ik/ik_two_chara_ground_solver.h"
 #include "framework/object/component_object.h"
 #include "framework/object/updatable_object.h"
 #include "framework/pointer_map.h"
@@ -12,6 +24,12 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_mount.h"
 #include "gf/game/gf_game_party.h"
+#include "gf/object/component/behavior/gf_com_behavior.h"
+#include "gf/object/component/behavior/plugin/gf_eye_blink_plugin.h"
+#include "gf/object/component/behavior/plugin/gf_lip_sync_plugin.h"
+#include "gf/object/component/behavior/plugin/gf_plugin.h"
+#include "gf/object/component/behavior/plugin/gf_plugin_manager.h"
+#include "gf/object/component/gf_com_ik.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/gf_component.h"
 #include "gf/object/component/model/gf_com_model.h"
@@ -21,12 +39,31 @@
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_property.h"
+#include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_ptr.h"
+#include "mm_mtl/vector.h"
+
+namespace fw {
+class IkSolver;
+} // namespace fw
 
 namespace gf {
+
+// Inferred helper: ik component of the object; original name unknown.
+static GfComIK *unknown001(GF_OBJ_HANDLE *handle) {
+  GfObj *obj = GfObjUtil::getObj(handle);
+  return obj != nullptr ? obj->getComponent<GfComIK>() : nullptr;
+}
+
+template <typename T> static T *castSolver(const mm::mtl::IntrusivePtr<fw::IkSolver> &solver) {
+  if (solver.get() == nullptr) {
+    return nullptr;
+  }
+  return mm::mtl::dynamicCast<T>(solver.get());
+}
 
 void GfObjUtil::addDebugName(GF_OBJ_HANDLE *handle) {}
 
@@ -98,6 +135,273 @@ void GfObjUtil::removeGfObj(GF_OBJ_HANDLE *handle) {
 u32 GfObjUtil::getObjType(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
   return obj != nullptr ? obj->unknown28 : 0;
+}
+
+void GfObjUtil::setEnableBlowRotateIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
+  GfComIK *ik = unknown001(handle);
+  if (ik != nullptr) {
+    fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_1]);
+    if (solver != nullptr) {
+      if (isEnable) {
+        solver->fadeIn(time);
+      } else {
+        solver->fadeOut(time);
+      }
+    }
+  }
+}
+
+void GfObjUtil::setEnableBodyIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
+  GfComIK *ik = unknown001(handle);
+  if (ik != nullptr) {
+    fw::RotateIkSolver *rotate = castSolver<fw::RotateIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_0]);
+    if (rotate != nullptr) {
+      if (isEnable) {
+        rotate->fadeIn(time);
+      } else {
+        rotate->fadeOut(time);
+      }
+    }
+    fw::SpineRotateIKSolver *spine = castSolver<fw::SpineRotateIKSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_4]);
+    if (spine != nullptr) {
+      if (isEnable) {
+        spine->fadeIn(time);
+      } else {
+        spine->fadeOut(time);
+      }
+    }
+  }
+}
+
+void GfObjUtil::setEnableLookIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
+  GfComIK *ik = unknown001(handle);
+  if (ik != nullptr) {
+    fw::LookIkSolver *look = castSolver<fw::LookIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_3]);
+    if (look != nullptr) {
+      if (isEnable) {
+        look->fadeIn(time);
+      } else {
+        look->fadeOut(time);
+      }
+    }
+    fw::SpineIkSolver *spine = castSolver<fw::SpineIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_3]);
+    if (spine != nullptr) {
+      if (isEnable) {
+        spine->fadeIn(time);
+      } else {
+        spine->fadeOut(time);
+      }
+    }
+    fw::LookAtIkSolver *lookAt = castSolver<fw::LookAtIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_5]);
+    if (lookAt != nullptr) {
+      if (isEnable) {
+        lookAt->fadeIn(time);
+      } else {
+        lookAt->fadeOut(time);
+      }
+    }
+  }
+}
+
+void GfObjUtil::setEnableFootIK(GF_OBJ_HANDLE *handle, bool isEnable) {
+  GfComIK *ik = unknown001(handle);
+  if (ik != nullptr) {
+    fw::PlacementGroundSolver *placement = castSolver<fw::PlacementGroundSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_2]);
+    if (placement != nullptr) {
+      placement->unknown65 = isEnable;
+      placement->setEnablePlacement(isEnable);
+    }
+    fw::SlopeGroundSolver *slope = castSolver<fw::SlopeGroundSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_0]);
+    if (slope != nullptr) {
+      slope->setEnablePlacement(isEnable);
+      slope->unknown88 = isEnable;
+    }
+    fw::TwoCharaGroundSolver *twoChara = castSolver<fw::TwoCharaGroundSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_2]);
+    if (twoChara != nullptr) {
+      twoChara->unknownb9 = isEnable;
+      twoChara->setEnablePlacement(isEnable);
+    }
+  }
+}
+
+void GfObjUtil::setEnableSPCIK(GF_OBJ_HANDLE *handle, bool isEnable) {
+  GfComIK *ik = unknown001(handle);
+  if (ik != nullptr) {
+    fw::SphericalCoordinatesIkSolver *solver = castSolver<fw::SphericalCoordinatesIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_8]);
+    if (solver != nullptr) {
+      solver->m_enable = true;
+    }
+  }
+}
+
+void GfObjUtil::setBlowRotate(GF_OBJ_HANDLE *handle, const mm::Quat &rotation) {
+  GfComIK *ik = unknown001(handle);
+  if (ik != nullptr) {
+    fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_1]);
+    if (solver != nullptr) {
+      solver->unknown40 = rotation;
+    }
+  }
+}
+
+void GfObjUtil::setEnableEyeBlink(GF_OBJ_HANDLE *handle, bool isEnable) {
+  GfObj *obj = getObj(handle);
+  if (obj != nullptr) {
+    GfComBehavior *behavior = obj->getComponent<GfComBehavior>();
+    if (behavior != nullptr && behavior->unknown10.unknown28.size() > 1) {
+      Plugin *plugin = behavior->unknown10.unknown28[1];
+      if (plugin != nullptr && mm::mtl::dynamicCast<EyeBlinkPlugin>(plugin) != nullptr) {
+        plugin->setActivate(isEnable);
+      }
+    }
+  }
+}
+
+void GfObjUtil::setEnableLipSync(GF_OBJ_HANDLE *handle, bool isEnable) {
+  GfObj *obj = getObj(handle);
+  if (obj != nullptr) {
+    GfComBehavior *behavior = obj->getComponent<GfComBehavior>();
+    if (behavior != nullptr && behavior->unknown10.unknown28.size() > 2) {
+      Plugin *plugin = behavior->unknown10.unknown28[2];
+      if (plugin != nullptr && mm::mtl::dynamicCast<LipSyncPlugin>(plugin) != nullptr) {
+        plugin->setActivate(isEnable);
+      }
+    }
+  }
+}
+
+u32 GfObjUtil::getEyeIKType(GF_OBJ_HANDLE *handle) {
+  GfComIK *ik = unknown001(handle);
+  if (ik != nullptr) {
+    u32 index = IK_SOLVER_INDEX_UNKNOWN_6;
+    if (ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_6].get() == nullptr) {
+      index = IK_SOLVER_INDEX_UNKNOWN_7;
+    }
+    if (castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[index]) != nullptr) {
+      return 1;
+    }
+    if (castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[index]) != nullptr) {
+      return 2;
+    }
+  }
+  return 0;
+}
+
+const mm::Quat &GfObjUtil::getBlowRotate(GF_OBJ_HANDLE *handle) {
+  const mm::Quat *rotation = &mm::Quat::identity;
+  GfObj *obj = getObj(handle);
+  if (obj != nullptr) {
+    GfComIK *ik = obj->getComponent<GfComIK>();
+    if (ik != nullptr) {
+      fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_1]);
+      if (solver != nullptr) {
+        const mm::Quat &blowRotate = solver->unknown40;
+        if (solver->isEnable()) {
+          rotation = &blowRotate;
+        }
+      }
+    }
+  }
+  return *rotation;
+}
+
+void GfObjUtil::setEnableEyeIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
+  GfComIK *ik = unknown001(handle);
+  if (ik != nullptr) {
+    u32 type = getEyeIKType(handle);
+    if (isEnable) {
+      if (type == 1) {
+        for (u32 i = IK_SOLVER_INDEX_UNKNOWN_6; i <= IK_SOLVER_INDEX_UNKNOWN_7; i++) {
+          fw::TransLocalIkSolver *solver = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[i]);
+          if (solver != nullptr) {
+            solver->fadeIn(time);
+          }
+        }
+      } else if (type == 2) {
+        for (u32 i = IK_SOLVER_INDEX_UNKNOWN_6; i <= IK_SOLVER_INDEX_UNKNOWN_7; i++) {
+          fw::RotateLocalIkSolver *solver = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[i]);
+          if (solver != nullptr) {
+            solver->fadeIn(time);
+          }
+        }
+      }
+    } else {
+      if (type == 1) {
+        for (u32 i = IK_SOLVER_INDEX_UNKNOWN_6; i <= IK_SOLVER_INDEX_UNKNOWN_7; i++) {
+          fw::TransLocalIkSolver *solver = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[i]);
+          if (solver != nullptr) {
+            solver->fadeOut(time);
+          }
+        }
+      } else if (type == 2) {
+        for (u32 i = IK_SOLVER_INDEX_UNKNOWN_6; i <= IK_SOLVER_INDEX_UNKNOWN_7; i++) {
+          fw::RotateLocalIkSolver *solver = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[i]);
+          if (solver != nullptr) {
+            solver->fadeOut(time);
+          }
+        }
+      }
+    }
+  }
+}
+
+void GfObjUtil::setMoveEyeIK(GF_OBJ_HANDLE *handle, f32 moveX, f32 moveY) {
+  GfComIK *ik = unknown001(handle);
+  if (ik != nullptr) {
+    u32 type = getEyeIKType(handle);
+    u32 control;
+    {
+      DataParamAcc paramAcc(handle);
+      control = paramAcc.getEyeRotControl();
+    }
+    if (type == 1) {
+      fw::TransLocalIkSolver *first = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_6]);
+      if (first != nullptr) {
+        first->unknown40 = mm::Vec3(moveX, 0.0f, moveY);
+      }
+      fw::TransLocalIkSolver *second = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_7]);
+      if (second != nullptr) {
+        second->unknown40 = mm::Vec3(moveX, 0.0f, moveY);
+      }
+    } else if (type == 2) {
+      fw::RotateLocalIkSolver *first = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_6]);
+      if (first != nullptr) {
+        switch (control) {
+        case 1:
+        case 4:
+          first->unknown40 = mm::Vec3(0.0f, moveY, moveX);
+          break;
+        case 2:
+          first->unknown40 = mm::Vec3(moveY, 0.0f, -moveX);
+          break;
+        case 6:
+          first->unknown40 = mm::Vec3(0.0f, -moveY, -moveX);
+          break;
+        case 7:
+          first->unknown40 = mm::Vec3(moveX, -moveY, 0.0f);
+          break;
+        }
+      }
+      fw::RotateLocalIkSolver *second = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[IK_SOLVER_INDEX_UNKNOWN_7]);
+      if (second != nullptr) {
+        switch (control) {
+        case 1:
+        case 4:
+          second->unknown40 = mm::Vec3(0.0f, moveY, moveX);
+          break;
+        case 2:
+          second->unknown40 = mm::Vec3(moveY, 0.0f, -moveX);
+          break;
+        case 6:
+          second->unknown40 = mm::Vec3(0.0f, -moveY, -moveX);
+          break;
+        case 7:
+          second->unknown40 = mm::Vec3(-moveX, -moveY, 0.0f);
+          break;
+        }
+      }
+    }
+  }
 }
 
 GfObj *GfObjUtil::getObj(GF_OBJ_HANDLE *handle) {

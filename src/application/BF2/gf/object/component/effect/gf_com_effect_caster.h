@@ -57,7 +57,9 @@ public:
     f32 unknown30; // Inferred role: speed; original member name unknown.
     u8 _34[0x58 - 0x34];
     u32 unknown58; // Inferred role: effect identifier; original member name unknown.
-    u8 _5c[0xc0 - 0x5c];
+    u8 _5c[0xba - 0x5c];
+    bool unknownba; // Inferred role: effect ended; original member name unknown.
+    u8 _bb[0xc0 - 0xbb];
   };
 
   static mm::mtl::RTTI m_rtti;
@@ -71,6 +73,10 @@ public:
   void setCaster(u32 effect);
   bool setSpeed(u32 effect, f32 speed);
   f32 getElapsedSecond(u32 effect);
+  bool startTimer(u32 effect);
+  bool stopTimer(u32 effect);
+  bool addCasterEffectEv(u32 effect);
+  void effectEnd(u32 effect);
   void procMsgObjectNotifyDamage(fw::MessageObject *object, MsgObjectNotifyDamage &message);
   void procMsgObjectNotifyDead(fw::MessageObject *object, MsgObjectNotifyDead &message);
   void procMsgFxRimBloomEnd(fw::MessageObject *object, MsgFxRimBloomEnd &message);
@@ -114,6 +120,7 @@ static_assert(offsetof(GfComEffectCaster, unknown113d0) == 0x113d0, "");
 static_assert(offsetof(GfComEffectCaster, unknown11410) == 0x11410, "");
 static_assert(offsetof(GfComEffectCaster::Param, unknown28) == 0x28, "");
 static_assert(offsetof(GfComEffectCaster::Param, unknown30) == 0x30, "");
+static_assert(offsetof(GfComEffectCaster::Param, unknownba) == 0xba, "");
 static_assert(sizeof(GfComEffectCaster::Param) == 0xc0, "");
 
 } // namespace gf

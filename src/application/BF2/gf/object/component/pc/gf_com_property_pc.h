@@ -3,6 +3,7 @@
 
 #include "gf/object/component/pc/gf_pc_property_field.h"
 #include "gf/object/component/property/gf_com_property.h"
+#include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/bitflag.h"
 #include "types.h"
@@ -109,7 +110,8 @@ public:
   s32 unknown120; // Inferred role: mode compared with 1 by StateFieldWaterDeadDive::enter; original member name unknown.
   u8 _124[0x160 - 0x124];
   mm::Vec3 unknown160; // Inferred role: position; original member name unknown.
-  u8 _170[0x1e0 - 0x170];
+  mm::Quat unknown170; // Inferred role: rotation; original member name unknown.
+  u8 _180[0x1e0 - 0x180];
   mm::Vec3 unknown1e0; // Inferred role: default input direction; original member name unknown.
   u8 _1f0[0x2b0 - 0x1f0];
   mm::Vec3 unknown2b0; // Inferred role: input Y axis; original member name unknown.
@@ -131,6 +133,7 @@ static_assert(offsetof(GfComPropertyPc, unknownc0) == 0xc0, "");
 static_assert(offsetof(GfComPropertyPc, unknown118) == 0x118, "");
 static_assert(offsetof(GfComPropertyPc, unknown120) == 0x120, "");
 static_assert(offsetof(GfComPropertyPc, unknown160) == 0x160, "");
+static_assert(offsetof(GfComPropertyPc, unknown170) == 0x170, "");
 static_assert(offsetof(GfComPropertyPc, unknown1e0) == 0x1e0, "");
 static_assert(offsetof(GfComPropertyPc, unknown2b0) == 0x2b0, "");
 static_assert(offsetof(GfComPropertyPc, unknown2d0) == 0x2d0, "");

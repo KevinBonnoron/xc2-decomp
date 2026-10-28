@@ -58,6 +58,15 @@ public:
   const mm::Quat &getRotation() const;
   void syncFrame();
   void openDebugWindow(ml::WinProc *window);
+
+  // Inferred helper: frame the components are bound to, the child frame when there is one; original name unknown.
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> &unknown001() {
+    mm::mtl::IntrusivePtr<fw::ReferenceFrame> *frame = &unknown10;
+    if (unknown18.get() != nullptr) {
+      frame = &unknown18;
+    }
+    return *frame;
+  }
   void changeLayer(u32 oldLayer, u32 newLayer) override;
   const mm::mtl::RTTI *getRTTI() const override;
 

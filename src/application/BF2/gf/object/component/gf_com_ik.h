@@ -9,6 +9,14 @@
 namespace fw {
 class IKGroundInterface;
 class MessageObject;
+class ParamAdapter;
+class RotateIkSolver;
+class SpineIkSolver;
+class LookAtIkSolver;
+class SphericalCoordinatesIkSolver;
+class SpineRotateIKSolver;
+class TransLocalIkSolver;
+class RotateLocalIkSolver;
 } // namespace fw
 
 namespace mm {
@@ -18,6 +26,18 @@ class RTTI;
 } // namespace mm
 
 namespace gf {
+
+enum IK_SOLVER_INDEX {
+  IK_SOLVER_INDEX_UNKNOWN_0,
+  IK_SOLVER_INDEX_UNKNOWN_1,
+  IK_SOLVER_INDEX_UNKNOWN_2,
+  IK_SOLVER_INDEX_UNKNOWN_3,
+  IK_SOLVER_INDEX_UNKNOWN_4,
+  IK_SOLVER_INDEX_UNKNOWN_5,
+  IK_SOLVER_INDEX_UNKNOWN_6,
+  IK_SOLVER_INDEX_UNKNOWN_7,
+  IK_SOLVER_INDEX_UNKNOWN_8,
+};
 
 // Evidence: component slot 3 (access offset 0x50 in GfObjFactory), IkResolver at 0x10 (add/removeIkResolver with this + 0x10), vtables and sizes from the constructor.
 class GfComIK : public GfComponent {
@@ -42,6 +62,13 @@ public:
   GfComIK();
   ~GfComIK() override;
   void cleanup();
+  fw::RotateIkSolver *createRotateBodyIK(const char *boneName);
+  fw::SpineIkSolver *createSpineIK(const fw::ParamAdapter &param, const char *boneName, const char *endBoneName);
+  fw::LookAtIkSolver *createLookAtIK(const fw::ParamAdapter &param, const char *boneName);
+  fw::SphericalCoordinatesIkSolver *createSphericalCoordinatesIkSolver(const fw::ParamAdapter &param, const char *boneName);
+  fw::SpineRotateIKSolver *createSpineRotateIkSolver(const fw::ParamAdapter &param, const char *boneName, const char *endBoneName);
+  fw::TransLocalIkSolver *createTransEyeIkSolver(u32 index, const char *boneName);
+  fw::RotateLocalIkSolver *createRotateEyeIkSolver(u32 index, const char *boneName);
   void changeLayer(u32 oldLayer, u32 newLayer) override;
   const mm::mtl::RTTI *getRTTI() const override;
 

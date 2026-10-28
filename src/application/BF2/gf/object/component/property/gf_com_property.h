@@ -176,6 +176,12 @@ struct MsgObjectAlpha : fw::Message {
   f32 alpha;
 };
 
+struct MsgGameChangeTarget : fw::Message {
+  GF_OBJ_HANDLE *unknown08; // Inferred role: target; original member name unknown.
+};
+
+static_assert(offsetof(MsgGameChangeTarget, unknown08) == 0x08, "");
+
 struct MsgObjectMaxHp : fw::Message {
   MsgObjectMaxHp(u32 maxHp) : fw::Message(0x1000034, 0x20), maxHp(maxHp) {}
 

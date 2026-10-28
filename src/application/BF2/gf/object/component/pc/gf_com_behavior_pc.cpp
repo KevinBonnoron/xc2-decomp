@@ -12,6 +12,7 @@
 #include "gf/object/component/pc/plugin/gf_pc_look_axis_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_lure_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_slide_plugin.h"
+#include "gf/object/component/pc/plugin/gf_pc_target_ik_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_terrain_damage_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_timer_plugin.h"
 #include "gf/object/component/pc/plugin/gf_pc_water_in_plugin.h"
@@ -83,6 +84,12 @@ SlidePlugin *SlidePlugin::create() {
   // __LINE__ must be 26 as in the original header: it is the line argument of operator new.
 #line 26 "gf/object/component/pc/plugin/gf_pc_slide_plugin.h"
   return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) SlidePlugin();
+}
+
+TargetIKPlugin *TargetIKPlugin::create() {
+  // __LINE__ must be 33 as in the original header: it is the line argument of operator new.
+#line 33 "gf/object/component/pc/plugin/gf_pc_target_ik_plugin.h"
+  return new (getAllocator(ALLOCATOR_DEFAULT), __FILE__, __LINE__, 8) TargetIKPlugin();
 }
 
 TerrainDamagePlugin *TerrainDamagePlugin::create() {
