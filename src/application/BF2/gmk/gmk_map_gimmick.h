@@ -21,6 +21,7 @@ class GmkMapGimmickGob;
 class GmkMapGimmick : public AGmkBase {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown02(5), unknown04(0), unknown06(false) {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched() const;
     void debugDraw(const AGmkBase &gmk) const;

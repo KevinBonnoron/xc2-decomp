@@ -21,6 +21,7 @@ class GmkClimbingGob;
 class GmkClimbing : public AGmkBase {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown02(3) {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched() const;
 

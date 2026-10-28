@@ -12,9 +12,10 @@ template <int N> struct int_to_type {
 
 namespace mtl_detail {
 
+// Value-initialization: the game zero-fills (memset) elements of class types whose default constructor is not user-provided.
 template <typename T> void construct_n(T *buffer, size_t count, int_to_type<0>) {
   for (size_t i = 0; i < count; i++) {
-    new (&buffer[i]) T;
+    new (&buffer[i]) T();
   }
 }
 
@@ -38,7 +39,7 @@ template <typename T> void destruct_n(T *, size_t, int_to_type<1>) {}
 
 } // namespace mtl_detail
 
-template <typename T> void construct_n(T *buffer, size_t count) { mtl_detail::construct_n(buffer, count, int_to_type<__has_trivial_constructor(T)>()); }
+template <typename T> void construct_n(T *buffer, size_t count) { mtl_detail::construct_n(buffer, count, int_to_type<__is_scalar(T)>()); }
 
 template <typename T> void copy_construct_n(const T *source, size_t count, T *destination) { mtl_detail::copy_construct_n(source, count, destination, int_to_type<__has_trivial_copy(T)>()); }
 

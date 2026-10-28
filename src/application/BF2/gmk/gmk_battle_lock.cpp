@@ -58,3 +58,7 @@ void GmkBattleLock::update(f32 deltaTime) {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkBattleLock::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkBattleLock::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkBattleLock::BdatInfo>::resize(size_t);

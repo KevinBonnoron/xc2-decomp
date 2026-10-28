@@ -26,6 +26,7 @@ class GmkRouteGob;
 class GmkMapObj : public AGmkBase {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown02(0), unknown04(), unknown0c() {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched(const mm::Vec3 &position) const;
     bool isDepopCondMatched(const mm::Vec3 &position) const;

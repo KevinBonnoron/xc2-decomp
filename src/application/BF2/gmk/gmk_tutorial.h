@@ -18,6 +18,7 @@ class GmkTutorialGob;
 class GmkTutorial : public AGmkBase, public mm::mtl::IntrusiveListNode<GmkTutorial> {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(0) {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 

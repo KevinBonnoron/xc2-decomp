@@ -23,6 +23,7 @@ class GmkTboxGob;
 class GmkTbox : public AGmkBase {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown02(false), unknown03(0), unknown04(0), unknown05(false), unknown08(), unknown0c() {}
     void create(u8 *bdat, int id, const AGmkBase &gmk);
     void dispose();
     bool isPopCondMatchedExceptDist() const;

@@ -20,3 +20,6 @@ const ResAction *findAction(const PadResEvent *event, const char *name) {
 
 template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::PadResEvent const>>::expand(size_t, size_t);
 template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::PadResEvent const>>::push_back(mm::mtl::IntrusivePtr<fw::PadResEvent const> const &);
+
+template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::PadResEvent const>>::extend(size_t, size_t, const mm::mtl::IntrusivePtr<fw::PadResEvent const> &);
+template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::PadResEvent const>>::resize(size_t, const mm::mtl::IntrusivePtr<fw::PadResEvent const> &);

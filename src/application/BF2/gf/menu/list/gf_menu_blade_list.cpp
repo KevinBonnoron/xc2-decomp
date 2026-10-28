@@ -176,3 +176,5 @@ void GfMenuBladeList::updateOwner() {
 }
 
 } // namespace gf
+
+template gf::MenuBladeInfo *mm::mtl::Vector<gf::MenuBladeInfo>::erase(gf::MenuBladeInfo *);

@@ -85,3 +85,7 @@ void GmkMapJump::endEvent() {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkMapJump::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkMapJump::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkMapJump::BdatInfo>::resize(size_t);

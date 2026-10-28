@@ -1,6 +1,8 @@
 #include "fw/fw_camera.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/intrusive_ptr.h" // IWYU pragma: keep
+#include "mm_mtl/vector.h"        // IWYU pragma: keep
 
 namespace mm {
 namespace mtl {
@@ -32,3 +34,7 @@ Camera::Camera(CAMERA_PRIO prio)
 }
 
 } // namespace fw
+
+template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::Camera>>::destroy();
+template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::Camera>>::expand(size_t, size_t);
+template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::Camera>>::push_back(const mm::mtl::IntrusivePtr<fw::Camera> &);

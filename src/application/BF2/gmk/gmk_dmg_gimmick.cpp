@@ -337,3 +337,18 @@ void GmkDmgPhantomManager::removeTargetInfo(gf::GF_OBJ_HANDLE *handle) {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkDmgEffect::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgEffect::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgEffect::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkDmgEffect>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgGimmick::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgPhantom::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgPhantom::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgPhantom::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkDmgSe::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgSe::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgSe::BdatInfo>::resize(size_t);
+
+template void mm::mtl::Vector<gmk::GmkDmgGimmick::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkDmgGimmick::BdatInfo>::resize(size_t);

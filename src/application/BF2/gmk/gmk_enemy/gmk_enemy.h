@@ -205,6 +205,7 @@ public:
 class GmkEnemy : public AGmkBase {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown02(false), unknown04(0), unknown06(0) {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
 
     u16 unknown00;  // Inferred role: target point name; original member name unknown.

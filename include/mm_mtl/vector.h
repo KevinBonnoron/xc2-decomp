@@ -34,6 +34,9 @@ public:
   T *end() { return begin() + m_size; }
 
 private:
+  // Inferred helper: allocation alignment of the element type, at least 8; original name unknown.
+  static size_t unknown001() { return alignof(T) < 8 ? 8 : alignof(T); }
+
   // __LINE__ must be 92 and 94 as in the original header: they are the line arguments of the asserts.
 #line 90
   void expand(size_t capacity, size_t alignment) {
@@ -81,7 +84,7 @@ private:
     copy_construct_n(begin(), oldSize, ptr);
     if (oldSize < size) {
       T *position = ptr + oldSize;
-      for (size_t count = size - oldSize; count != 0; count--, position++) {
+      for (size_t i = 0; i < size - oldSize; i++, position++) {
         if (position != nullptr) {
           new (position) T(value);
         }
@@ -131,14 +134,14 @@ public:
       return;
     }
 
-    m_alignment = 8;
+    m_alignment = unknown001();
     if (m_buffer == nullptr) {
-      m_buffer = static_cast<T *>(m_allocator->allocate(size * sizeof(T), 8));
+      m_buffer = static_cast<T *>(m_allocator->allocate(size * sizeof(T), unknown001()));
       m_capacity = size;
       construct_n(begin(), size);
       m_size += size;
     } else if (static_cast<long>(size - m_capacity) > 0) {
-      extend(size, 8);
+      extend(size, unknown001());
     } else {
       long count = size - m_size;
       if (count < 0) {
@@ -156,9 +159,9 @@ public:
       return;
     }
 
-    m_alignment = 8;
+    m_alignment = unknown001();
     if (m_buffer == nullptr) {
-      T *ptr = static_cast<T *>(m_allocator->allocate(size * sizeof(T), 8));
+      T *ptr = static_cast<T *>(m_allocator->allocate(size * sizeof(T), unknown001()));
       m_capacity = size;
       m_size = size;
       m_buffer = ptr;
@@ -170,7 +173,7 @@ public:
         }
       }
     } else if (static_cast<long>(size - m_capacity) > 0) {
-      extend(size, 8, value);
+      extend(size, unknown001(), value);
     } else {
       long count = size - m_size;
       if (count < 0) {

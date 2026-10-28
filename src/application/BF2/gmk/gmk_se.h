@@ -27,6 +27,7 @@ class GmkSeLinePointGobCustom;
 class GmkSe : public AGmkBase, public mm::mtl::IntrusiveListNode<GmkSe> {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown01(false), unknown02(0), unknown04(100), unknown05(0), unknown06(0), unknown08(100) {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched() const;
     fw::SoundPack *getSoundPack() const;

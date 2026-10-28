@@ -22,6 +22,7 @@ class GmkPreciousGob;
 class GmkPrecious : public AGmkBase, public mm::mtl::IntrusiveListNode<GmkPrecious> {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown02(0), unknown04(0) {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     void dispose();
     bool isPopCondMatched() const;

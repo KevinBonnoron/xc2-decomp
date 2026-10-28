@@ -25,6 +25,7 @@ class GmkRoutedFootPrintPointList;
 class GmkRoutedFootPrint : public AGmkBase {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(nullptr), unknown08(0) {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched() const;
 

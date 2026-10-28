@@ -222,3 +222,12 @@ void GmkRoutedMapObj::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HA
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkMapObj::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkMapObj>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedMapObj>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedMapObj>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedMapObj>::resize(size_t);
+
+template void mm::mtl::Vector<gmk::GmkMapObj::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkMapObj::BdatInfo>::resize(size_t);

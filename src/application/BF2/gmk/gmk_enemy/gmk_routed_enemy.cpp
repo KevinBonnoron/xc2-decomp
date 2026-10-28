@@ -163,3 +163,8 @@ GmkRouteNavi *GmkRoutedEnemy::findRouteNavi(gf::GF_OBJ_HANDLE *handle) const {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkRoutedEnemyPoint::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedEnemyPoint::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedEnemyPoint::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedEnemyPoint>::expand(size_t, size_t);

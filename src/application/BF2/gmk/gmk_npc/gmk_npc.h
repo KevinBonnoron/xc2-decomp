@@ -46,6 +46,7 @@ static_assert(sizeof(AGmkNpc) == 0x20, "");
 class GmkNpc : public AGmkBase, public AGmkNpc {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown02(0), unknown04(0), unknown20(), unknown28() {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCommonCondMatched(const AGmkBase &gmk) const;
     void debugDraw(const AGmkBase &gmk) const;

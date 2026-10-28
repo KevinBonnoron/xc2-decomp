@@ -49,6 +49,7 @@ public:
   };
 
   struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown02(0), unknown04(0.0f), unknown08(0), unknown09(0), unknown10(nullptr), unknown18(0), unknown19(0), unknown1a(0), unknown20(), unknown24() {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 
@@ -172,6 +173,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_DMG_SE;
 
+  GmkDmgSe() : unknown50(nullptr) {}
   ~GmkDmgSe() override { dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
   bool isValid() const override { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }

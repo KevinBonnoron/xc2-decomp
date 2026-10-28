@@ -126,3 +126,12 @@ void GmkSquadManager::update(f32 deltaTime) {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkSquadLeader::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSquadLeader::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSquadLeader::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkSquadLeader>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSquadMember::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSquadMember::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSquadMember::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkSquadMember>::expand(size_t, size_t);

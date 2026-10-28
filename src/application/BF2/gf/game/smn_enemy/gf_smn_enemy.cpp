@@ -1,4 +1,5 @@
 #include "gf/game/smn_enemy/gf_smn_enemy.h"
+#include "mm_mtl/vector.h"
 
 #include <algorithm>
 
@@ -36,3 +37,7 @@ void GfRelSmnEnemy::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objec
 } // namespace gf
 
 template mm::mtl::PtrSingleton<gf::GfSmnEnemyManager>::~PtrSingleton();
+
+template void mm::mtl::Vector<gf::GF_OBJ_HANDLE *>::expand(size_t, size_t);
+template gf::GfRelSmnEnemy **mm::mtl::Vector<gf::GfRelSmnEnemy *>::erase(gf::GfRelSmnEnemy **);
+template void mm::mtl::Vector<gf::GfRelSmnEnemy *>::expand(size_t, size_t);

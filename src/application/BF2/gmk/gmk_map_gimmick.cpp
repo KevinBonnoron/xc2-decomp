@@ -209,3 +209,9 @@ void GmkMapGimmickList::debugUpdateMmf() {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkMapGimmick::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkMapGimmick>::expand(size_t, size_t);
+
+template void mm::mtl::Vector<gmk::GmkMapGimmick::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkMapGimmick::BdatInfo>::resize(size_t);

@@ -155,3 +155,7 @@ int GmkTrigger::getBindedEnemyNum() const { return getData()->unknown14 - getDat
 int GmkTrigger::getBindedRoutedEnemyNum() const { return getData()->unknown1c - getData()->unknown18; }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkTrigger::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTrigger::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTrigger::BdatInfo>::resize(size_t);

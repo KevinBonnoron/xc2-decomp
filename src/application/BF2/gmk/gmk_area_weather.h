@@ -19,6 +19,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_AREA_WEATHER;
 
+  GmkAreaWeather() : unknown50(nullptr) {}
   ~GmkAreaWeather() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;

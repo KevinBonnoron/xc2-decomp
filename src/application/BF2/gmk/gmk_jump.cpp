@@ -226,3 +226,11 @@ void GmkJump::validateDisp() const {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkJump::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkJump>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkJump>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkJump>::resize(size_t);
+
+template void mm::mtl::Vector<gmk::GmkJump::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkJump::BdatInfo>::resize(size_t);

@@ -32,6 +32,9 @@ class GmkDoorGob;
 class GmkDoor : public AGmkBase, public IGmkPhantomEventListener, public fw::ColiUserData {
 public:
   struct BdatInfo {
+    BdatInfo()
+        : unknown00(0), unknown02(0), unknown03(0), unknown04(0), unknown06(0), unknown08(0), unknown0a(false), unknown0b(false), unknown0c(0), unknown0e(10), unknown10(nullptr), unknown18(0),
+          unknown19(false), unknown1a(false), unknown1c(0), unknown1e(10), unknown20(nullptr), unknown28(0), unknown2c(0.0f), unknown30(nullptr), unknown38(0), unknown39(false) {}
     bool isGfObjMustExist() const;
     bool isPhantomMustExist() const;
     bool isLoadSaveData() const;

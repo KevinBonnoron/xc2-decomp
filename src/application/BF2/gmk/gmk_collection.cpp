@@ -239,3 +239,11 @@ bool GmkCollection::canDepopGobInst() const {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkCollection::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkCollection>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkCollection>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkCollection>::resize(size_t);
+
+template void mm::mtl::Vector<gmk::GmkCollection::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkCollection::BdatInfo>::resize(size_t);

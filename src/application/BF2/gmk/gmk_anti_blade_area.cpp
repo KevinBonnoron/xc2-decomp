@@ -57,3 +57,7 @@ void GmkAntiBladeAreaManager::removeGmk(GmkAntiBladeArea *gmk) {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkAntiBladeArea::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkAntiBladeArea::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkAntiBladeArea::BdatInfo>::resize(size_t);

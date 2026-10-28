@@ -299,3 +299,7 @@ GmkType GmkMob::getGmkType() const { return GMK_TYPE; }
 void GmkMob::debugDraw() const { isValid(); }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkMob::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkMob::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkMob::BdatInfo>::resize(size_t);

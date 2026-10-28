@@ -184,3 +184,9 @@ void GmkWarp::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *ha
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkWarp::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkWarp>::expand(size_t, size_t);
+
+template void mm::mtl::Vector<gmk::GmkWarp::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkWarp::BdatInfo>::resize(size_t);

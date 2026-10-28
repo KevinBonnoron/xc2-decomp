@@ -18,6 +18,7 @@ class GmkLandmarkGob;
 class GmkLandmark : public AGmkBase, public IGmkPhantomEventListener, public mm::mtl::IntrusiveListNode<GmkLandmark> {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown02(0), unknown04(0), unknown06(false), unknown08(nullptr) {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 

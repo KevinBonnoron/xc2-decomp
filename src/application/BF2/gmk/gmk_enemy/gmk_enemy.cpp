@@ -390,3 +390,8 @@ void GmkEnemyList::debugUpdateMmf() {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkEnemy::BdatInfo>::expand(size_t, size_t);
+
+template void mm::mtl::Vector<gmk::GmkEnemy::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkEnemy::BdatInfo>::resize(size_t);

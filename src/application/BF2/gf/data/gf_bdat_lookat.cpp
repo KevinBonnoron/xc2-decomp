@@ -85,3 +85,6 @@ u16 GfBdatLookAt::getCharaType(u32 category, u32 refId) {
 } // namespace gf
 
 template mm::mtl::PtrSingleton<gf::GfBdatLookAt>::~PtrSingleton();
+
+template void mm::mtl::Vector<gf::GfBdatLookAt::CharactorInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gf::GfBdatLookAt::CharactorInfo>::resize(size_t);

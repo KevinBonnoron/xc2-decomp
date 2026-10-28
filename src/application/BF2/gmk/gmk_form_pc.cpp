@@ -52,3 +52,20 @@ template void GmkFormPcList::createGmk(void *);
 template void GmkFormPcEvList::createGmk(void *);
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::TGmkFormPc<(gmk::GmkType)24, gmk::TGmkFormPcnpc<(gmk::GmkType)25>>::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPc<(gmk::GmkType)24, gmk::TGmkFormPcnpc<(gmk::GmkType)25>>::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPc<(gmk::GmkType)24, gmk::TGmkFormPcnpc<(gmk::GmkType)25>>::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPc<(gmk::GmkType)24, gmk::TGmkFormPcnpc<(gmk::GmkType)25>>>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPc<(gmk::GmkType)26, gmk::TGmkFormPcnpc<(gmk::GmkType)27>>::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPc<(gmk::GmkType)26, gmk::TGmkFormPcnpc<(gmk::GmkType)27>>::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPc<(gmk::GmkType)26, gmk::TGmkFormPcnpc<(gmk::GmkType)27>>::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPc<(gmk::GmkType)26, gmk::TGmkFormPcnpc<(gmk::GmkType)27>>>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPcnpc<(gmk::GmkType)25>::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPcnpc<(gmk::GmkType)25>::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPcnpc<(gmk::GmkType)25>::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPcnpc<(gmk::GmkType)25>>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPcnpc<(gmk::GmkType)27>::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPcnpc<(gmk::GmkType)27>::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPcnpc<(gmk::GmkType)27>::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::TGmkFormPcnpc<(gmk::GmkType)27>>::expand(size_t, size_t);

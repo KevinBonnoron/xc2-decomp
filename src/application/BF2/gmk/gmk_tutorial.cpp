@@ -129,3 +129,8 @@ void GmkTutorialList::setBootedOthers(const GmkTutorial &gmk) const {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkTutorial::BdatInfo>::expand(size_t, size_t);
+
+template void mm::mtl::Vector<gmk::GmkTutorial::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTutorial::BdatInfo>::resize(size_t);

@@ -359,3 +359,14 @@ void GmkRoutePoint::dispose() { AGmkBase::dispose(); }
 void GmkRoutePoint::debugUpdateMmf() {}
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkRoute::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoute::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoute::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkRoute>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoute>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoute>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkRoutePoint::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutePoint::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutePoint::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkRoutePoint>::expand(size_t, size_t);

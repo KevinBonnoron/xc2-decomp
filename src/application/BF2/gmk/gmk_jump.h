@@ -21,6 +21,7 @@ class GmkJumpGobCustom;
 class GmkJump : public AGmkBase {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown02(0), unknown04(10) {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched() const;
     void debugDraw(const AGmkBase &gmk) const;

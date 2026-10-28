@@ -16,6 +16,7 @@ class AGmkBase;
 
 class ScenarioFlagCond {
 public:
+  ScenarioFlagCond() : unknown00(0), unknown02(0) {}
   ScenarioFlagCond(u16 min, u16 max) : unknown00(min), unknown02(max) {}
   ScenarioFlagCond(const CBdatWrapper &bdat, int id, const AGmkBase &gmk);
   ScenarioFlagCond(const CBdatWrapper &bdat, int id, const char *prefix);
@@ -30,6 +31,7 @@ static_assert(sizeof(ScenarioFlagCond) == 0x4, "");
 
 class QuestFlagCond {
 public:
+  QuestFlagCond() : unknown00(0), unknown02(0), unknown03(0) {}
   QuestFlagCond(u16 quest, u8 minState, u8 maxState) : unknown00(quest), unknown02(minState), unknown03(maxState) {}
   QuestFlagCond(const CBdatWrapper &bdat, int id, const AGmkBase &gmk);
   QuestFlagCond(const CBdatWrapper &bdat, int id, const char *prefix);
@@ -167,6 +169,7 @@ static_assert(offsetof(PopPosSafeCond, unknown20) == 0x20, "");
 
 class BootedGmkCond {
 public:
+  BootedGmkCond() : unknown00(0), unknown02(0) {}
   BootedGmkCond(u8 gimmickType, u16 gimmickId);
   void create(u8 gimmickType, u16 gimmickId);
 

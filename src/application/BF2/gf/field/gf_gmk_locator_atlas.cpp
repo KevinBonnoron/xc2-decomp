@@ -39,3 +39,7 @@ void GfGmkLocatorAtlas::update(f32 deltaTime) {
 }
 
 } // namespace gf
+
+template void mm::mtl::Vector<gf::GfGmkLocatorAtlas::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gf::GfGmkLocatorAtlas::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gf::GfGmkLocatorAtlas::BdatInfo>::resize(size_t);

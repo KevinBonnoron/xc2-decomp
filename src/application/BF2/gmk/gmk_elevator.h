@@ -33,6 +33,9 @@ public:
   };
 
   struct BdatInfo {
+    BdatInfo()
+        : unknown00(0), unknown02(10), unknown04(5), unknown06(0), unknown08(0), unknown0a(0), unknown0c(0), unknown0e(0), unknown10(0), unknown12(0), unknown14(0), unknown16(0), unknown18(0),
+          unknown1a(0), unknown1b(0), unknown1c(0), unknown20(2.0f), unknown24(0), unknown28(0.0f), unknown2c(0), unknown2e(0) {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
 
     u16 unknown00; // Inferred role: condition; original member name unknown.

@@ -367,3 +367,10 @@ void GmkSalvageList::debugUpdateMmf() { TGmkList::debugUpdateMmf(); }
 const AGmkBase *GmkSalvageLocatorList::getInst(u32 index) const { return &gmkInsts[index]; }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkSalvage::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSalvage::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSalvage::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkSalvageLocator::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSalvageLocator::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSalvageLocator::BdatInfo>::resize(size_t);

@@ -24,6 +24,7 @@ class GmkWarpGobCustom;
 class GmkWarp : public AGmkBase {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(0), unknown02(10), unknown08(), unknown10() {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatched(const mm::Vec3 &position) const;
     bool isPopCondCommonMatched() const;

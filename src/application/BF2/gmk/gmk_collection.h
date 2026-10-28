@@ -19,6 +19,7 @@ class GmkCollectionGob;
 class GmkCollection : public AGmkBase {
 public:
   struct BdatInfo {
+    BdatInfo() : unknown00(10), unknown02(0), unknown28{0.0f} {}
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isPopCondMatchedExceptDist() const;
     bool isPopCondMatched(const AGmkBase &gmk) const;

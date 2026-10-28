@@ -124,3 +124,11 @@ bool GmkEffect::canDepopInst() const {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkEffect::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkEffect::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkEffect::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkEffectLocator::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkEffectLocator::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkEffectLocator::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkEffectLocator>::expand(size_t, size_t);

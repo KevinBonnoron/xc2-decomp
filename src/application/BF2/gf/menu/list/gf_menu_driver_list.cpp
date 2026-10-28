@@ -17,3 +17,5 @@ GfMenuDriverList *GfMenuDriverList::create() {
 }
 
 } // namespace gf
+
+template gf::MenuDriverInfo *mm::mtl::Vector<gf::MenuDriverInfo>::erase(gf::MenuDriverInfo *);

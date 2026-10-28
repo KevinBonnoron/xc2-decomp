@@ -191,3 +191,5 @@ bool GmkBlade::canDepopGobInst() const {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkBlade::BdatInfo>::expand(size_t, size_t);

@@ -95,3 +95,9 @@ bool GmkClimbing::isPopCondMatched() const {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkClimbing::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkClimbing>::expand(size_t, size_t);
+
+template void mm::mtl::Vector<gmk::GmkClimbing::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkClimbing::BdatInfo>::resize(size_t);

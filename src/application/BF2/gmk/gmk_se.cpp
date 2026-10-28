@@ -375,3 +375,12 @@ bool GmkSeLine::canDepopInst() const {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkSe::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSeLinePoint::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSeLinePoint::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSeLinePoint::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkSeLinePoint>::expand(size_t, size_t);
+
+template void mm::mtl::Vector<gmk::GmkSe::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkSe::BdatInfo>::resize(size_t);

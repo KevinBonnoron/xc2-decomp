@@ -156,3 +156,16 @@ void GmkRoutedFootPrintPoint::dispose() {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkRoutedFootPrint::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedFootPrint>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedFootPrint>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedFootPrint>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedFootPrintPoint::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedFootPrintPoint::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedFootPrintPoint::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedFootPrintPoint>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedFootPrintPoint>::extend(size_t, size_t);
+
+template void mm::mtl::Vector<gmk::GmkRoutedFootPrint::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkRoutedFootPrint::BdatInfo>::resize(size_t);

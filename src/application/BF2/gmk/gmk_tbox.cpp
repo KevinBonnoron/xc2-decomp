@@ -193,3 +193,11 @@ void GmkTbox::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *ha
 void GmkTbox::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {}
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkTbox::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTbox>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTbox>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTbox>::resize(size_t);
+
+template void mm::mtl::Vector<gmk::GmkTbox::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkTbox::BdatInfo>::resize(size_t);

@@ -277,3 +277,5 @@ u32 GfMenuItemList::getSortRarity(const MenuItemInfo &info) {
 }
 
 } // namespace gf
+
+template gf::MenuItemInfo *mm::mtl::Vector<gf::MenuItemInfo>::erase(gf::MenuItemInfo *);

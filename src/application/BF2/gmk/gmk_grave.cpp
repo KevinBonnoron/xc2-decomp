@@ -142,3 +142,10 @@ void GmkGrave::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *h
 void GmkGrave::onPlayerAccessed(gf::GF_OBJ_HANDLE *handle) {}
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkGrave::BdatInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkGrave::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkGrave::BdatInfo>::resize(size_t);
+template void mm::mtl::Vector<gmk::GmkGrave>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkGrave>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkGrave>::resize(size_t);

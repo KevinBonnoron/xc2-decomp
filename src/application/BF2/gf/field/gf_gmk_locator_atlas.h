@@ -27,6 +27,8 @@ public:
   };
 
   struct BdatInfo {
+    BdatInfo() : unknown00(nullptr), unknown08(0) {}
+
     const char *unknown00; // Inferred role: level name; original member name unknown.
     u16 unknown08;         // Inferred role: level priority; original member name unknown.
   };

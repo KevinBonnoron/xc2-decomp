@@ -112,3 +112,6 @@ const mm::mtl::RTTI *IkFadeSolver::getRTTI() const { return &m_rtti; }
 template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>>::destroy();
 template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>>::expand(size_t, size_t);
 template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>>::push_back(mm::mtl::IntrusivePtr<fw::IkSolver> const &);
+
+template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>>::extend(size_t, size_t, const mm::mtl::IntrusivePtr<fw::IkSolver> &);
+template void mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>>::resize(size_t, const mm::mtl::IntrusivePtr<fw::IkSolver> &);

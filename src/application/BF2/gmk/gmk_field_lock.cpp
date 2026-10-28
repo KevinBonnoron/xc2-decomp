@@ -42,3 +42,8 @@ void GmkFieldLock::create(const CreateInfo &info) { AGmkBase::create(info); }
 GmkType GmkFieldLock::getGmkType() const { return GMK_TYPE; }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkFieldLock::BdatInfo>::expand(size_t, size_t);
+
+template void mm::mtl::Vector<gmk::GmkFieldLock::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkFieldLock::BdatInfo>::resize(size_t);

@@ -151,3 +151,8 @@ bool GmkNpc::isDepopCondMatched() const {
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkNpc::BdatInfo>::expand(size_t, size_t);
+
+template void mm::mtl::Vector<gmk::GmkNpc::BdatInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkNpc::BdatInfo>::resize(size_t);
