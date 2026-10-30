@@ -117,6 +117,20 @@ void WinView::setDisp(bool isDisp, bool isInvalidCurrent) {
   }
 }
 
+mm::Pnt<int> WinViewFrame::getFrame2ViewOffset() const {
+  mm::Pnt<int> offset(0, 0);
+  u32 frameFlags = m_info->unknown3bc;
+  if ((frameFlags & 1) && (m_info->unknown3b8 & 3) == 0) {
+    s16 width = unknown60;
+    offset.x = width;
+    offset.y = offset.x;
+    if (frameFlags & 2) {
+      offset.y = width + offset.x + 0x16;
+    }
+  }
+  return offset;
+}
+
 void WinView::deleteSplitView() {
   wkSetEventChild(static_cast<EVT>(0));
   unknown3bc &= ~0x38u;

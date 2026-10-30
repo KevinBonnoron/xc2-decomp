@@ -90,6 +90,14 @@ f32 DrPixlPostParm::getToonDirLightScale() const {
   return 1.0f;
 }
 
+void DrPixlPostParm::getRanDropLayerInfo(u32 layer, stRainDropLayerInfo &info) const {
+  info.unknown00 = unknown40c[layer];
+  info.unknown04 = unknown418[layer];
+  info.unknown08 = unknown424[layer];
+  info.unknown0c = unknown43c[layer];
+  info.unknown10 = unknown430[layer];
+}
+
 void DrPixlPostParm::OnCloseAttriMenu() { unknown10fc = true; }
 
 void DrPixlPostParm::resetScene() { unknown1105[DrMan::s_nDblStockIdx] = true; }

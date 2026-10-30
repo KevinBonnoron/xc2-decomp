@@ -42,9 +42,26 @@ enum RenderSpecMode {};
 struct DR_CAPCUBE_PARAM;
 
 struct DR_VIEW_PARAM {
-  u8 unknown00[0x38]; // Inferred role: view parameters; original member name unknown.
+  s32 unknown00;                         // Inferred role: view position x; original member name unknown.
+  s32 unknown04;                         // Inferred role: view position y; original member name unknown.
+  s32 unknown08;                         // Inferred role: render system id; original member name unknown.
+  bool unknown0c;                        // Role and original member name unknown.
+  bool unknown0d;                        // Role and original member name unknown.
+  bool unknown0e;                        // Role and original member name unknown.
+  s32 *unknown10;                        // Inferred role: view size source; original member name unknown.
+  bool *unknown18;                       // Role and original member name unknown.
+  f32 *unknown20;                        // Role and original member name unknown.
+  f32 *unknown28;                        // Role and original member name unknown.
+  grlib::CGLibTextureBuffer **unknown30; // Inferred role: render target source; original member name unknown.
 };
 
+static_assert(offsetof(DR_VIEW_PARAM, unknown08) == 0x08, "");
+static_assert(offsetof(DR_VIEW_PARAM, unknown0c) == 0x0c, "");
+static_assert(offsetof(DR_VIEW_PARAM, unknown10) == 0x10, "");
+static_assert(offsetof(DR_VIEW_PARAM, unknown18) == 0x18, "");
+static_assert(offsetof(DR_VIEW_PARAM, unknown20) == 0x20, "");
+static_assert(offsetof(DR_VIEW_PARAM, unknown28) == 0x28, "");
+static_assert(offsetof(DR_VIEW_PARAM, unknown30) == 0x30, "");
 static_assert(sizeof(DR_VIEW_PARAM) == 0x38, "");
 
 struct DR_CAPTURE_PARAM {
@@ -91,6 +108,7 @@ public:
   void end();
   int loopCnt();
   void apply(int loop);
+  void applyBegin(int loop);
   void applyEnd(int loop);
   void applyViewBegin();
   void render(int loop);
@@ -211,8 +229,8 @@ public:
   u8 unknown1c81[2];    // Inferred role: capture modes; original member name unknown.
   f32 unknown1c84;      // Inferred role: glb spd; original member name unknown.
   f32 unknown1c88;      // Inferred role: mdl spd; original member name unknown.
-  u8 _1c8c[0x1c90 - 0x1c8c];
-  f32 unknown1c90; // Inferred role: gamma; original member name unknown.
+  f32 unknown1c8c;      // Inferred role: model speed scaled by the global speed; original member name unknown.
+  f32 unknown1c90;      // Inferred role: gamma; original member name unknown.
   u8 _1c94[0x1c98 - 0x1c94];
   s32 unknown1c98; // Inferred role: view index; original member name unknown.
   u32 unknown1c9c; // Inferred role: view render skip; original member name unknown.
@@ -311,6 +329,7 @@ static_assert(offsetof(DrMan, unknown1c80) == 0x1c80, "");
 static_assert(offsetof(DrMan, unknown1c81) == 0x1c81, "");
 static_assert(offsetof(DrMan, unknown1c84) == 0x1c84, "");
 static_assert(offsetof(DrMan, unknown1c88) == 0x1c88, "");
+static_assert(offsetof(DrMan, unknown1c8c) == 0x1c8c, "");
 static_assert(offsetof(DrMan, unknown1c90) == 0x1c90, "");
 static_assert(offsetof(DrMan, unknown1c98) == 0x1c98, "");
 static_assert(offsetof(DrMan, unknown1c9c) == 0x1c9c, "");

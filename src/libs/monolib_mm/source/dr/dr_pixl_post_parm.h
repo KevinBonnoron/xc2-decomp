@@ -60,6 +60,14 @@ static_assert(sizeof(DrPixlPostDblParm) == 0x520, "");
 
 class DrPixlPostParm {
 public:
+  struct stRainDropLayerInfo {
+    f32 unknown00; // Role and original member name unknown.
+    f32 unknown04; // Role and original member name unknown.
+    f32 unknown08; // Role and original member name unknown.
+    f32 unknown0c; // Role and original member name unknown.
+    f32 unknown10; // Role and original member name unknown.
+  };
+
   bool isShwRaytrace() const;
   void calcReductionTransBuffer(int &width, int &height) const;
   void setDOF(bool dof);
@@ -121,6 +129,7 @@ public:
   bool getSSRWithTrans() const;
   bool getSSROn() const;
   void setGlassBrk(bool glassBrk, u32 type);
+  void getRanDropLayerInfo(u32 layer, stRainDropLayerInfo &info) const;
 
   static DrPixlPostParm *s_pIns;
 
@@ -236,7 +245,13 @@ public:
   f32 unknown37c; // Inferred role: shadow chache angle; original member name unknown.
   u8 _0380[0x03b8 - 0x0380];
   bool m_rainDropOn;
-  u8 _03b9[0x0460 - 0x03b9];
+  u8 _03b9[0x040c - 0x03b9];
+  f32 unknown40c[3]; // Inferred role: rain drop layer value; original member name unknown.
+  f32 unknown418[3]; // Inferred role: rain drop layer value; original member name unknown.
+  f32 unknown424[3]; // Inferred role: rain drop layer value; original member name unknown.
+  f32 unknown430[3]; // Inferred role: rain drop layer value; original member name unknown.
+  f32 unknown43c[3]; // Inferred role: rain drop layer value; original member name unknown.
+  u8 _0448[0x0460 - 0x0448];
   bool m_shwRaytrace;
   u8 _0461[0x0468 - 0x0461];
   f32 unknown468; // Inferred role: sky luminance weight; original member name unknown.
@@ -374,6 +389,11 @@ static_assert(offsetof(DrPixlPostParm, unknown320) == 0x0320, "");
 static_assert(offsetof(DrPixlPostParm, unknown360) == 0x0360, "");
 static_assert(offsetof(DrPixlPostParm, unknown37c) == 0x037c, "");
 static_assert(offsetof(DrPixlPostParm, m_rainDropOn) == 0x03b8, "");
+static_assert(offsetof(DrPixlPostParm, unknown40c) == 0x040c, "");
+static_assert(offsetof(DrPixlPostParm, unknown418) == 0x0418, "");
+static_assert(offsetof(DrPixlPostParm, unknown424) == 0x0424, "");
+static_assert(offsetof(DrPixlPostParm, unknown430) == 0x0430, "");
+static_assert(offsetof(DrPixlPostParm, unknown43c) == 0x043c, "");
 static_assert(offsetof(DrPixlPostParm, m_shwRaytrace) == 0x0460, "");
 static_assert(offsetof(DrPixlPostParm, unknown484) == 0x0484, "");
 static_assert(offsetof(DrPixlPostParm, unknown468) == 0x0468, "");
@@ -405,5 +425,6 @@ static_assert(offsetof(DrPixlPostParm, unknown10fc) == 0x10fc, "");
 static_assert(offsetof(DrPixlPostParm, unknown10fe) == 0x10fe, "");
 static_assert(offsetof(DrPixlPostParm, unknown1105) == 0x1105, "");
 static_assert(sizeof(DrPixlPostParm) == 0x1110, "");
+static_assert(sizeof(DrPixlPostParm::stRainDropLayerInfo) == 0x14, "");
 
 } // namespace ml

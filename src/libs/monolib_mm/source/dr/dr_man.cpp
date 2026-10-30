@@ -43,6 +43,11 @@ CriticalSection &DrMan::getCriticalSection() {
 
 int DrMan::loopCnt() { return 1; }
 
+void DrMan::applyBegin(int loop) {
+  unknown1c8c = unknown1c84 * unknown1c88;
+  unknown88->beginApply();
+}
+
 void DrMan::applyEnd(int loop) {}
 
 void DrMan::setSRGBMode(bool isSRGBMode) { s_bSRGBMode = isSRGBMode; }

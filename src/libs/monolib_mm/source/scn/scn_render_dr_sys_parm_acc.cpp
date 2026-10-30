@@ -8,6 +8,7 @@
 #include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_obj_motion_blur.h"
 #include "dr/dr_pixl_post_parm.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec3.h"
 #include "scn/scn_render_dr_sys.h"
 
@@ -536,6 +537,22 @@ void ScnRenderDrSysParmAcc::setGBuffDebugParam(GBuffDebugType type, f32 min, f32
     firstPostParm->unknown320[4].unknown04 = max;
     break;
   }
+}
+
+void ScnRenderDrSysParmAcc::createAddRenderView(ScnRenderDrViewCtrl *viewCtrl) {
+  DR_VIEW_PARAM param;
+  param.unknown00 = viewCtrl->unknown00.x;
+  param.unknown04 = viewCtrl->unknown00.y;
+  param.unknown08 = viewCtrl->unknown08 + 1;
+  param.unknown0c = viewCtrl->unknown1c;
+  param.unknown0d = viewCtrl->unknown28;
+  param.unknown0e = viewCtrl->unknown34;
+  param.unknown30 = &viewCtrl->unknown20;
+  param.unknown18 = &viewCtrl->unknown35;
+  param.unknown10 = &viewCtrl->unknown0c;
+  param.unknown20 = &viewCtrl->unknown2c;
+  param.unknown28 = &viewCtrl->unknown30;
+  unknown00->createAddRenderSystem(&param);
 }
 
 void ScnRenderDrSysParmAcc::deleteAddRenderView(ScnRenderDrViewCtrl *viewCtrl) { unknown00->deleteAddRenderSystem(viewCtrl->unknown08 + 1); }

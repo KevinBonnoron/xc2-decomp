@@ -14,12 +14,15 @@ public:
   public:
     void release();
 
-    u8 _0000[0x4540];
+    u8 _0000[0x0024];
+    u32 unknown24[4]; // Inferred role: npad ids of the pads; original member name unknown.
+    u8 _0034[0x4540 - 0x0034];
     s32 unknown4540; // Inferred role: pad index; original member name unknown.
     s32 unknown4544; // Inferred role: user select pad id; original member name unknown.
   };
 
   DevPadNx(const char *name, WorkObj *parent);
+  static void setUserSelectControllerID(u32 id);
   bool isLocalConnect(int padNo) const override;
   u32 getLocalStyle(int padNo) const override;
   int getLocalUserSelectPadID() const override;
@@ -35,6 +38,7 @@ public:
   mm::mtl::UniquePtr<Impl> unknown548; // Inferred role: implementation; original member name unknown.
 };
 
+static_assert(offsetof(DevPadNx::Impl, unknown24) == 0x0024, "");
 static_assert(offsetof(DevPadNx::Impl, unknown4540) == 0x4540, "");
 static_assert(offsetof(DevPadNx::Impl, unknown4544) == 0x4544, "");
 static_assert(offsetof(DevPadNx, unknown548) == 0x548, "");

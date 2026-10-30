@@ -89,18 +89,4 @@ static_assert(offsetof(WinView, unknown3b8) == 0x3b8, "");
 static_assert(offsetof(WinView, unknown3c0) == 0x3c0, "");
 static_assert(offsetof(WinView, unknown524) == 0x524, "");
 
-inline mm::Pnt<int> WinViewFrame::getFrame2ViewOffset() const {
-  mm::Pnt<int> offset(0, 0);
-  u32 frameFlags = m_info->unknown3bc;
-  if ((frameFlags & 1) && (m_info->unknown3b8 & 3) == 0) {
-    s16 width = unknown60;
-    offset.x = width;
-    offset.y = offset.x;
-    if (frameFlags & 2) {
-      offset.y = offset.x * 2 + 0x16;
-    }
-  }
-  return offset;
-}
-
 } // namespace ml
