@@ -11,6 +11,8 @@ public:
   void finalize() override;
   void update() override;
   static void lock(bool lock);
+  static void open(bool isLock);
+  static void close(bool isImmediate);
   static void attachComboRequest(GfMenuCallContext *context);
 };
 

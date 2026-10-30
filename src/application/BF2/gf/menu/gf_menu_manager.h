@@ -1,8 +1,10 @@
 #pragma once
+#include <stddef.h>
+
+#include "gf/event/gf_event.h"
 #include "mm_mtl/bitflag.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
-#include <stddef.h>
 
 namespace fw {
 struct UpdateInfo;
@@ -17,7 +19,12 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 struct GfSetupParam;
 struct MenuCommonWindowParam;
+struct QuestChangeParam;
+struct QuestCompleteChildParam;
 struct QuestCompleteParam;
+struct QuestOrderParam;
+struct QuestStateParam;
+struct QuestTaskParam;
 struct SDataOption;
 class GfMenuCallContext;
 
@@ -47,7 +54,16 @@ public:
   static bool isTargetChanged();
   static bool isAccessChanged();
   static u32 getCurCameraType();
+  void gevMapjump(GEV event, const MapjumpCallbackInfo &info);
+  void gevAccessTarget(GF_OBJ_HANDLE *handle);
+  void gevChangeTarget(GF_OBJ_HANDLE *handle);
   void gevCameraControl(u32 type);
+  void gevBattleStart();
+  void gevBattleEnd();
+  void gevPlayEvent(GEV event, u32 eventId);
+  void gevSalvageStateChange(u32 state);
+  void gevPlayerControl(GEV event);
+  void gevItemAdd(u32 item, int count);
   static bool isBattleState(u32 state);
   static void setBattleState(u32 state, bool isEnable);
   static bool isDispHud(int hud);
@@ -72,8 +88,16 @@ public:
   static bool isEnableQuestOpen();
   static REGION getRegion();
   static bool isRegionUS();
+  static bool isClearCheck();
   void postUpdate(const fw::UpdateInfo &info);
+  void qevOrderQuest(const QuestOrderParam &param);
   void qevCompleteQuest(const QuestCompleteParam &param);
+  void qevChangeTaskState(const QuestTaskParam &param);
+  void qevLoadTaskState(u32 count);
+  void qevCompleteChildQuest(const QuestCompleteChildParam &param);
+  void qevChangeQuestState(const QuestStateParam &param);
+  void qevChangeCurrentQuest(const QuestChangeParam &param);
+  void beginUpdate(const fw::UpdateInfo &info);
   static bool isOpenFullScreen();
   static bool isSwitchingFullScreen();
   static void changeHUDScene(u32 scene);

@@ -32,6 +32,7 @@ public:
 
   void updateDataNum(u32 type);
   static bool isInitialized();
+  static void refreshLocator(u32 type);
   static u32 getLocatorDataNum(u32 type);
 
   bool unknown08; // Inferred role: initialized; original member name unknown.

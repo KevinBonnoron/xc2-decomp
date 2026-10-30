@@ -2,30 +2,57 @@
 
 #include "bdat.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_option.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/data/gf_object_type.h"
 #include "gf/event/gf_event.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_scene.h"
+#include "gf/game/quest/gf_quest_id.h"
+#include "gf/game/quest/gf_quest_manager.h"
+#include "gf/game/quest/gf_quest_task_param.h"
+#include "gf/game/salvage/gf_game_salvage.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/gf_allocator.h"
+#include "gf/menu/adapter/gf_menu_adapter_manager.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_fade.h"
+#include "gf/menu/gf_menu_flag.h"
 #include "gf/menu/gf_menu_fullscreen.h"
 #include "gf/menu/gf_menu_hud.h"
+#include "gf/menu/gf_menu_location.h"
+#include "gf/menu/gf_menu_map_info.h"
 #include "gf/menu/gf_menu_minimap.h"
+#include "gf/menu/gf_menu_reference.h"
+#include "gf/menu/object/gf_menu_obj_action_window.h"
 #include "gf/menu/object/gf_menu_obj_blade_create.h"
+#include "gf/menu/object/gf_menu_obj_chain_attack.h"
 #include "gf/menu/object/gf_menu_obj_chapter_telop.h"
+#include "gf/menu/object/gf_menu_obj_combo_route.h"
 #include "gf/menu/object/gf_menu_obj_common_text.h"
+#include "gf/menu/object/gf_menu_obj_damage_buff.h"
+#include "gf/menu/object/gf_menu_obj_damage_value.h"
+#include "gf/menu/object/gf_menu_obj_drop_item.h"
 #include "gf/menu/object/gf_menu_obj_dummy_tutorial.h"
+#include "gf/menu/object/gf_menu_obj_enemy_status.h"
+#include "gf/menu/object/gf_menu_obj_environment_info.h"
+#include "gf/menu/object/gf_menu_obj_exp_get.h"
 #include "gf/menu/object/gf_menu_obj_main_root.h"
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
 #include "gf/menu/object/gf_menu_obj_option.h"
+#include "gf/menu/object/gf_menu_obj_party_gauge.h"
+#include "gf/menu/object/gf_menu_obj_party_status.h"
+#include "gf/menu/object/gf_menu_obj_party_status2.h"
+#include "gf/menu/object/gf_menu_obj_quest_log.h"
 #include "gf/menu/object/gf_menu_obj_save_load2.h"
 #include "gf/menu/object/gf_menu_obj_tutorial.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "layer/layer_acc_manager.h"
 #include "scn/scn_render_dr_sys_parm_acc.h"
+#include "ui/input/ui_input_manager.h"
 #include "ui/ui_manager.h"
 
 namespace gf {
@@ -72,9 +99,68 @@ bool isOpenCallMenu(GfMenuManager *manager, u32 menu) {
   return false;
 }
 
+// Inferred role: refresh the quest locators of the map; original name unknown.
+void unknown001() {
+  GfMenuLocation::refreshLocator(0);
+  GfMenuLocation::refreshLocator(1);
+  GfMenuLocation::refreshLocator(3);
+}
+
+// Inferred role: close the battle popups (damage, buff, drop, exp); original name unknown.
+void unknown002() {
+  GfMenuObjDamageValue::closeAll();
+  GfMenuObjDamageBuff::closeAll();
+  GfMenuObjDropItem::closeAll();
+  GfMenuObjExpGet::closeAll();
+}
+
 } // namespace
 
+void GfMenuManager::qevOrderQuest(const QuestOrderParam &) { unknown001(); }
+
 void GfMenuManager::qevCompleteQuest(const QuestCompleteParam &) {}
+
+void GfMenuManager::qevChangeTaskState(const QuestTaskParam &param) {
+  const QuestID &quest = param.unknown04;
+  if (quest.unknown00 == 0 && quest.unknown02 == 0) {
+    return;
+  }
+
+  GfMenuLocation::refreshLocator(0);
+  GfMenuLocation::refreshLocator(1);
+  if (param.unknown18 == TASK_STATE_UNKNOWN_1) {
+    GfMenuObjQuestLog::completeTask(param);
+    return;
+  }
+
+  if (GfGameScene::get() != nullptr && quest == GfGameScene::get()->getQuestIdForTaskLog()) {
+    GfMenuObjQuestLog::updateTask();
+  }
+}
+
+void GfMenuManager::qevLoadTaskState(u32 count) {
+  if (count != 0) {
+    unknown001();
+  }
+}
+
+void GfMenuManager::qevCompleteChildQuest(const QuestCompleteChildParam &param) {
+  const QuestID &quest = param.unknown04;
+  if (quest.unknown00 == 0 && quest.unknown02 == 0) {
+    return;
+  }
+
+  unknown001();
+}
+
+void GfMenuManager::qevChangeQuestState(const QuestStateParam &) {
+  GfMenuLocation::refreshLocator(0);
+  GfMenuLocation::refreshLocator(1);
+}
+
+void GfMenuManager::qevChangeCurrentQuest(const QuestChangeParam &) { unknown001(); }
+
+void GfMenuManager::beginUpdate(const fw::UpdateInfo &info) { GfMenuAdapterManager::postUpdateAfter(info); }
 
 void GfMenuManager::build(const GfSetupParam &param) {
   // __LINE__ must be 347 as in the original file: it is an argument of the allocation.
@@ -185,7 +271,157 @@ u32 GfMenuManager::getCurCameraType() {
   return 0;
 }
 
+void GfMenuManager::gevMapjump(GEV, const MapjumpCallbackInfo &) {
+  GfMenuObjComboRoute::close();
+  GfMenuObjPartyGauge::close();
+}
+
+void GfMenuManager::gevAccessTarget(GF_OBJ_HANDLE *handle) {
+  GfObjAcc acc(handle);
+  if (!acc.isValid()) {
+    GfMenuObjActionWindow::close();
+    if (unknown40c0 != INVALID_HANDLE) {
+      unknown40c9 = true;
+    }
+    unknown40c0 = INVALID_HANDLE;
+  } else {
+    GfMenuObjActionWindow::OpenParam param;
+    param.unknown00 = handle;
+    param.unknown08 = 4;
+    GfMenuObjActionWindow::open(param);
+    if (unknown40c0 != handle) {
+      unknown40c9 = true;
+    }
+    unknown40c0 = handle;
+  }
+}
+
+void GfMenuManager::gevChangeTarget(GF_OBJ_HANDLE *handle) {
+  GfObjAcc acc(handle);
+  if (!acc.isValid() || acc.getType() != OBJECT_TYPE_ENEMY) {
+    GfMenuReference::setPartyStatusLock(0, false);
+    GfMenuObjPartyStatus::close(false);
+    GfMenuObjEnemyStatus::close();
+  } else {
+    GfMenuObjEnemyStatus::OpenParam param;
+    param.unknown00 = handle;
+    GfMenuObjEnemyStatus::open(param);
+    GfMenuReference::setPartyStatusLock(0, true);
+    GfMenuObjPartyStatus::open(true);
+  }
+
+  if (unknown40b8 != handle) {
+    unknown40c8 = true;
+  }
+  unknown40b8 = handle;
+}
+
 void GfMenuManager::gevCameraControl(u32 type) { unknown40cc = type; }
+
+void GfMenuManager::gevBattleStart() {
+  GfMenuObjEnemyStatus::disp(true);
+  GfMenuObjComboRoute::disp(true);
+  GfMenuObjPartyGauge::disp(true);
+  setBattleState(0, true);
+}
+
+void GfMenuManager::gevBattleEnd() {
+  unknown40dc.clear();
+  GfMenuReference::setChainNum(0);
+  GfMenuObjComboRoute::close();
+  GfMenuObjPartyGauge::close();
+}
+
+void GfMenuManager::gevPlayEvent(GEV event, u32) {
+  if (GfMenuFullScreen::isOpen()) {
+    return;
+  }
+
+  switch (event) {
+  case GEV_EVENT_SEQUENCE_START:
+    unknown40dc.clear();
+    unknown40ca = false;
+    GfMenuObjPartyGauge::close();
+    GfMenuObjPartyStatus::close(true);
+    GfMenuObjComboRoute::close();
+    GfMenuObjChainAttack::closeResult();
+    break;
+  case GEV_EVENT_SEQUENCE_END:
+    if (ui::UIInputManager::get() != nullptr) {
+      ui::UIInputManager::get()->enable();
+    }
+    break;
+  case GEV_EVENT_START_FRAME:
+    unknown002();
+    GfMenuObjPartyGauge::close();
+    GfMenuObjChainAttack::closeResult();
+    // fallthrough
+  case GEV_EVENT_END:
+    GfMenuObjComboRoute::close();
+    GfMenuObjPartyStatus::close(true);
+    break;
+  default:
+    break;
+  }
+}
+
+void GfMenuManager::gevSalvageStateChange(u32 state) {
+  switch (state) {
+  case GfGameSalvage::STATE_ITEM_SELECT:
+    unknown40e4.set(1, false);
+    unknown40e4.set(2, false);
+    break;
+  case GfGameSalvage::STATE_SETUP_FADE_OUT:
+    GfMenuObjEnvironmentInfo::close();
+    break;
+  case GfGameSalvage::STATE_SETUP_FADE_IN:
+    unknown002();
+    break;
+  case GfGameSalvage::STATE_FINISH:
+    unknown40e4.set(1);
+    unknown40e4.set(2);
+    break;
+  default:
+    break;
+  }
+}
+
+void GfMenuManager::gevPlayerControl(GEV event) {
+  if (event == GEV_PLAYER_CONTROL_LOCK) {
+    GfMenuReference::clearPartyStatusLock();
+    unknown40e4.set(1, false);
+    unknown40e4.set(2, false);
+    unknown40e4.set(3, false);
+    unknown40ca = false;
+  } else if (event == GEV_PLAYER_CONTROL_FREE) {
+    GfMenuMapInfo::setCurrentMap(GfGameManager::getMapID());
+    unknown40e4.set(1);
+    if (!unknown40dc.test(0)) {
+      unknown40e4.set(3);
+    }
+
+    if (!unknown40dc.test(0) && !unknown40dc.test(1)) {
+      unknown40e4.set(2);
+    }
+
+    unknown40ca = true;
+    GfMenuObjPartyStatus2::disp(true);
+    if (ui::UIInputManager::get() != nullptr) {
+      ui::UIInputManager::get()->enable();
+    }
+  }
+}
+
+void GfMenuManager::gevItemAdd(u32 item, int count) {
+  if (count <= 0) {
+    return;
+  }
+
+  ItemType::Type type = GfDataItem::getItemType(item);
+  if (type >= ItemType::PC_WPN_CHIP && type <= ItemType::HANA_ASSIST) {
+    GfMenuFlag::set1(0x3a + type, 1);
+  }
+}
 
 bool GfMenuManager::isBattleState(u32 state) {
   GfMenuManager *manager = get();

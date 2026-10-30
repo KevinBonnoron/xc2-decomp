@@ -158,6 +158,7 @@ public:
   static mm::threading::CriticalSection &getCriticalSection();
   static ui::UIStr &getReferenceString(u16 index);
   static void setReferenceString(ui::UIStr &string, u16 index);
+  static void setPartyStatusLock(u32 index, bool isLock);
   static void clearPartyStatusLock();
 
   u8 _08[0x4ca18 - 0x08];

@@ -4,6 +4,10 @@
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
+namespace fw {
+struct UpdateInfo;
+}
+
 namespace gf {
 
 class GfMenuAdapter;
@@ -21,6 +25,7 @@ public:
   static void delActiveCategory(u32 category);
   void addAdapter(GfMenuAdapter *adapter, bool isUpdateAfter);
   void setAfterUpdate(GfMenuAdapter *adapter);
+  static void postUpdateAfter(const fw::UpdateInfo &info);
 
   u8 _08[0x98 - 0x08];
   u32 unknown98;  // Inferred role: mask of active categories; original member name unknown.

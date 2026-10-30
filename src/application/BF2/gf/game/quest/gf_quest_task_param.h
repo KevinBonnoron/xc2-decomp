@@ -20,6 +20,7 @@ enum {
 
 enum TASK_STATE {
   TASK_STATE_NONE,
+  TASK_STATE_UNKNOWN_1, // Inferred role: task completed; original name unknown.
 };
 
 enum QUEST_PARAM {

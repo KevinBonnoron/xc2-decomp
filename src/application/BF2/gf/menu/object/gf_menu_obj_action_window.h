@@ -13,6 +13,7 @@ public:
     u32 unknown08;            // Inferred role: pad key; original member name unknown.
   };
 
+  static void open(const OpenParam &param);
   static void openBattle(const OpenParam &param);
   static void close();
   static void closeBattle();

@@ -13,6 +13,7 @@ public:
   void initialize() override;
   void finalize() override;
   void update() override;
+  static void closeAll();
   struct OpenParam {
     OpenParam() : unknown04(0), unknown05(0), unknown08(0), unknown10(nullptr), unknown18(0), unknown1c(0) {}
 

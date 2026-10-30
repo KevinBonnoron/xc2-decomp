@@ -4,11 +4,13 @@ namespace gf {
 
 class GfMenuCallContext;
 struct QuestID;
+struct QuestTaskParam;
 
 class GfMenuObjQuestLog : public GfMenuObject {
 public:
   static void changeActiveQuest();
   static void updateTask();
+  static void completeTask(const QuestTaskParam &param);
   static void closeLog();
   static void openLog();
   bool seqLogNextEnd();
