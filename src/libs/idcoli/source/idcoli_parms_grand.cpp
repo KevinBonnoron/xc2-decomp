@@ -17,7 +17,7 @@ void IDColiPartsMoveGrand::setUserData(void *userData) { m_moveObj->unknown1b8 =
 
 void *IDColiPartsMoveGrand::getUserData() { return m_moveObj->unknown1b8; }
 
-u16 IDColiPartsMoveGrand::getID() const { return m_moveObj->unknown1a2; }
+u16 IDColiPartsMoveGrand::getID() const { return m_moveObj->unknown1a0.unknown02; }
 
 IDColiParmsGrand::IDColiParmsGrand(IDColiObj *object) : m_work(&static_cast<IDColiObjGrand *>(object)->unknown50) {}
 

@@ -4,6 +4,16 @@
 
 namespace idcoli {
 
+IDColiTreeTop::IDColiTreeTop() {
+  unknown160 = 0;
+  unknown00 = mm::Vec3(64.0f, 64.0f, 64.0f);
+  unknown10 = mm::Vec3(-64.0f, -64.0f, -64.0f);
+  unknown20 = mm::Vec3(64.0f, 64.0f, 64.0f);
+  unknown30 = mm::Vec3(-64.0f, -64.0f, -64.0f);
+  unknown164 = 0;
+  updateTree();
+}
+
 IDColiTreeTop::~IDColiTreeTop() {}
 
 void IDColiTreeTop::begin() {
@@ -13,6 +23,17 @@ void IDColiTreeTop::begin() {
   unknown00 = mm::Vec3(-1000000.0f, -1000000.0f, -1000000.0f);
   unknown10 = mm::Vec3(1000000.0f, 1000000.0f, 1000000.0f);
   unknown160 &= ~1;
+}
+
+void IDColiTreeTop::initCehckTree(int index, int level, int x, int z) {
+  unknown003 *cell = &unknown16b8[index];
+  f32 posX = unknown40[level].x * x;
+  f32 posZ = z * unknown40[level].z;
+  cell->unknown00 = unknown40[level].x + posX + unknowne0[level].x;
+  cell->unknown08 = posX - unknowne0[level].x;
+  cell->unknown04 = posZ + unknown40[level].z + unknowne0[level].z;
+  cell->unknown0c = posZ - unknowne0[level].z;
+  unknown130[index >> 6] |= static_cast<u64>(1) << (static_cast<s64>(index) & 63);
 }
 
 u32 IDColiTreeTop::getPart1By1(u32 value) {

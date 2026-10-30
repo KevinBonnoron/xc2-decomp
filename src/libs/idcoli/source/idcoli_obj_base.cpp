@@ -3,7 +3,6 @@
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "mtl/mem_manager.h"
-#include "types.h"
 
 namespace idcoli {
 
@@ -170,7 +169,7 @@ bool IDColiObjPhantom::SweepAndPruneUpdate() {
 
 void IDColiObjPhantom::consistentUpdate() { updateBaseTree(); }
 
-u32 IDColiObjPhantomCheck::testResultLine(IDColiResult &result, const IDColiInput &input) {
+bool IDColiObjPhantomCheck::testResultLine(IDColiResult &result, const IDColiInput &input) {
   if (!(result.unknowne8 & unknown2c) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiResult::s_CallLine[unknownc4](result, input, data);
@@ -178,7 +177,7 @@ u32 IDColiObjPhantomCheck::testResultLine(IDColiResult &result, const IDColiInpu
   return false;
 }
 
-u32 IDColiObjPhantomCheck::testResultRay(IDColiResult &result, const IDColiInput &input) {
+bool IDColiObjPhantomCheck::testResultRay(IDColiResult &result, const IDColiInput &input) {
   if (!(result.unknowne8 & unknown2c) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiResult::s_CallRay[unknownc4](result, input, data);
@@ -186,7 +185,7 @@ u32 IDColiObjPhantomCheck::testResultRay(IDColiResult &result, const IDColiInput
   return false;
 }
 
-u32 IDColiObjPhantomCheck::testResultSphere(IDColiResult &result, const IDColiInput &input) {
+bool IDColiObjPhantomCheck::testResultSphere(IDColiResult &result, const IDColiInput &input) {
   if (!(result.unknowne8 & unknown2c) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiResult::s_CallSphere[unknownc4](result, input, data);
@@ -194,7 +193,7 @@ u32 IDColiObjPhantomCheck::testResultSphere(IDColiResult &result, const IDColiIn
   return false;
 }
 
-u32 IDColiObjPhantomCheck::testResultCapsule(IDColiResult &result, const IDColiInput &input) {
+bool IDColiObjPhantomCheck::testResultCapsule(IDColiResult &result, const IDColiInput &input) {
   if (!(result.unknowne8 & unknown2c) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiResult::s_CallCapsule[unknownc4](result, input, data);
@@ -300,3 +299,10 @@ bool IDColiObjChar::SweepAndPruneUpdate() {
 void IDColiObjChar::consistentUpdate() { updateBaseTree(); }
 
 } // namespace idcoli
+
+// Same order as in the game executable.
+// clang-format off
+#include "idcoli_obj_char_check.cpp"
+#include "idcoli_obj_data.cpp"
+#include "idcoli_tree_top.cpp"
+// clang-format on

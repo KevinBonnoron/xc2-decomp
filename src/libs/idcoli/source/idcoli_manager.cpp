@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <string.h>
 
 #include "idcoli/idcoli.h"
 #include "idcoli/idcoli_mem_handle_allocator.h"
@@ -10,9 +11,32 @@
 
 namespace ml {
 class WinProc;
+class Scn;
 } // namespace ml
 
 namespace idcoli {
+
+bool IDColiManager::getGrandAABB(mm::Vec3 &max, mm::Vec3 &min) const {
+  max = mm::Vec3(-10000.0f, -10000.0f, -10000.0f);
+  min = mm::Vec3(10000.0f, 10000.0f, 10000.0f);
+  IDColiObj *object = unknown08[0].m_head;
+  if (object != nullptr) {
+    for (; object != nullptr; object = object->unknown10) {
+      static_cast<IDColiObjGrand *>(object)->getGrandAABB(max, min);
+    }
+
+    return true;
+  }
+
+  max = mm::Vec3(100.0f, 100.0f, 100.0f);
+  min = mm::Vec3(-100.0f, -100.0f, -100.0f);
+  return false;
+}
+
+ml::CriticalSection &IDColiManager::getCriticalSection() {
+  static ml::CriticalSection sect;
+  return sect;
+}
 
 IDColiMemHandleAllocator::IDColiMemHandleAllocator() {}
 
@@ -30,9 +54,20 @@ void IDColiMemHandleAllocator::deallocate(void *pointer) {
   }
 }
 
-ml::CriticalSection &IDColiManager::getCriticalSection() {
-  static ml::CriticalSection sect;
-  return sect;
+IDColiManager::IDColiManager(ml::Scn *scn, mtl::ALLOC_HANDLE handle, u32 size) {
+  unknownf4 = mtl::ALLOC_HANDLE();
+  unknownf4 = mtl::MemManager::create(handle, size, "Collision", false);
+  m_allocator.setMemHandle(unknownf4);
+  memset(unknown08, 0, sizeof(unknown08) + sizeof(unknown48) + sizeof(_c8));
+  s_nDebIdx = 0;
+  s_nStkIdx = 1;
+  unknownf0 = 0;
+  unknownd8[0] = nullptr;
+  unknownd8[1] = nullptr;
+  unknownd8[0] = new (unknownf4) IDColiTreeTop();
+  unknownd8[1] = new (unknownf4) IDColiTreeTop();
+  m_gblIdTbl = static_cast<u32 *>(mtl::MemManager::allocate(unknownf4, 0x400, 0x20, false, "no name", 0));
+  memset(m_gblIdTbl, 0, 0x400);
 }
 
 IDColiManager::~IDColiManager() {
@@ -53,6 +88,59 @@ IDColiManager::~IDColiManager() {
     mtl::MemManager::erase(unknownf4);
     unknownf4 = mtl::ALLOC_HANDLE();
   }
+}
+
+void IDColiManager::release() {
+  for (int i = 0; i < 2; i++) {
+    for (int j = 0; j < 4; j++) {
+      IDColiObj *object = unknown48[j][i].m_head;
+      while (object != nullptr) {
+        IDColiObj *next = object->unknown10;
+        delete object;
+        object = next;
+      }
+      unknown48[j][i].m_head = nullptr;
+      unknown48[j][i].m_tail = nullptr;
+    }
+  }
+
+  for (int i = 0; i < 4; i++) {
+    IDColiObj *object = unknown08[i].m_head;
+    while (object != nullptr) {
+      IDColiObj *next = object->unknown10;
+      delete object;
+      object = next;
+    }
+    unknown08[i].m_head = nullptr;
+    unknown08[i].m_tail = nullptr;
+  }
+}
+
+void IDColiManager::update() {
+  addDelUpdate();
+  for (int i = 0; i < 4; i++) {
+    updateList(unknown08[i]);
+  }
+}
+
+void IDColiManager::objUpdate() {
+  for (int i = 0; i < 4; i++) {
+    updateList(unknown08[i]);
+  }
+}
+
+void IDColiManager::consistentUpdate() {
+  unknownd8[0]->begin();
+  unknownd8[1]->begin();
+  updateConsistentList(unknown08[1]);
+  updateConsistentList(unknown08[2]);
+  unknownd8[0]->end();
+  unknownd8[1]->end();
+}
+
+void IDColiManager::tail() {
+  s_nDebIdx = s_nDebIdx == 0;
+  s_nStkIdx = s_nDebIdx == 0;
 }
 
 IDColiObj *IDColiManager::createColiGrand(const void *binary) {
@@ -82,62 +170,6 @@ IDColiObj *IDColiManager::createColiGrdChar() {
   IDColiObjGrdChar *object = new (unknownf4) IDColiObjGrdChar();
   unknown48[3][s_nStkIdx].unknown001(object);
   return object;
-}
-
-bool IDColiManager::getGrandAABB(mm::Vec3 &max, mm::Vec3 &min) const {
-  max = mm::Vec3(-10000.0f, -10000.0f, -10000.0f);
-  min = mm::Vec3(10000.0f, 10000.0f, 10000.0f);
-  IDColiObj *object = unknown08[0].m_head;
-  if (object != nullptr) {
-    for (; object != nullptr; object = object->unknown10) {
-      static_cast<IDColiObjGrand *>(object)->getGrandAABB(max, min);
-    }
-
-    return true;
-  }
-
-  max = mm::Vec3(100.0f, 100.0f, 100.0f);
-  min = mm::Vec3(-100.0f, -100.0f, -100.0f);
-  return false;
-}
-
-void IDColiManager::update() {
-  addDelUpdate();
-  for (int i = 0; i < 4; i++) {
-    updateList(unknown08[i]);
-  }
-}
-
-void IDColiManager::objUpdate() {
-  for (int i = 0; i < 4; i++) {
-    updateList(unknown08[i]);
-  }
-}
-
-void IDColiManager::release() {
-  for (int i = 0; i < 2; i++) {
-    for (int j = 0; j < 4; j++) {
-      IDColiObj *object = unknown48[j][i].m_head;
-      while (object != nullptr) {
-        IDColiObj *next = object->unknown10;
-        delete object;
-        object = next;
-      }
-      unknown48[j][i].m_head = nullptr;
-      unknown48[j][i].m_tail = nullptr;
-    }
-  }
-
-  for (int i = 0; i < 4; i++) {
-    IDColiObj *object = unknown08[i].m_head;
-    while (object != nullptr) {
-      IDColiObj *next = object->unknown10;
-      delete object;
-      object = next;
-    }
-    unknown08[i].m_head = nullptr;
-    unknown08[i].m_tail = nullptr;
-  }
 }
 
 void IDColiManager::addList(ColiLinkList<IDColiObj> &list, ColiLinkList<IDColiObj> &source, bool isSweep) {
@@ -182,20 +214,6 @@ void IDColiManager::addList(ColiLinkList<IDColiObj> &list, ColiLinkList<IDColiOb
 
   source.m_head = nullptr;
   source.m_tail = nullptr;
-}
-
-void IDColiManager::consistentUpdate() {
-  unknownd8[0]->begin();
-  unknownd8[1]->begin();
-  updateConsistentList(unknown08[1]);
-  updateConsistentList(unknown08[2]);
-  unknownd8[0]->end();
-  unknownd8[1]->end();
-}
-
-void IDColiManager::tail() {
-  s_nDebIdx = s_nDebIdx == 0;
-  s_nStkIdx = s_nDebIdx == 0;
 }
 
 IDColiObj *IDColiManager::getUseObject(ColiLinkList<IDColiObj> &list) {

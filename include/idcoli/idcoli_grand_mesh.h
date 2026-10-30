@@ -67,6 +67,12 @@ public:
     (this->*unknown70)(unknown08->unknown50, poli);
   }
 
+  // Inferred helper: distance scaled by the matrix of the moved instance; original name unknown.
+  f32 unknown090(f32 distance) const;
+
+  // Inferred helper: stores the position and the normal of a hit of a moved instance in world space as the front hit; original name unknown.
+  void unknown091(const IDColiCallArg &arg);
+
   wrkIDCmfWork *unknown00;                                                         // Inferred role: work; original member name unknown.
   IDColiResult *unknown08;                                                         // Inferred role: result; original member name unknown.
   const IDColiInput *unknown10;                                                    // Inferred role: input; original member name unknown.
