@@ -165,6 +165,16 @@ void DevGraph::cmdSuspendDisplayList(bool isSuspend, bool isFlush) { get()->cmdS
 
 void *DevGraph::cmdGetCurrentAdr() { return get()->cmdGetCurrentAdrSys(); }
 
+void *DevGraph::cmdAllocBuf(u32 size, u32 alignment) {
+  GraphQue *que = get()->unknown338;
+  u8 *buffer = que->unknown30 - size;
+  if (reinterpret_cast<size_t>(buffer) % alignment != 0) {
+    buffer -= reinterpret_cast<size_t>(buffer) % alignment;
+  }
+  que->unknown30 = buffer;
+  return buffer;
+}
+
 u32 DevGraph::cmdGetRemainSize() { return get()->cmdGetRemainSizeSys(); }
 
 void DevGraph::cmdExecDisplayList() {

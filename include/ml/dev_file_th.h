@@ -14,6 +14,9 @@
 
 namespace mm {
 union VAL64;
+namespace mtl {
+class IAllocator;
+} // namespace mtl
 } // namespace mm
 
 namespace ml {
@@ -24,7 +27,12 @@ class DevFileJob;
 class FileHandleTh;
 class IWorkEvent;
 
-enum CBM {};
+enum CBM : int {
+  CBM_UNKNOWN_2 = 2,
+  CBM_UNKNOWN_4 = 4,
+  CBM_UNKNOWN_5 = 5,
+  CBM_UNKNOWN_6 = 6,
+};
 enum MEDIA {};
 
 namespace dvfl_detail {
@@ -64,11 +72,12 @@ static_assert(offsetof(EventFileTh, unknown10) == 0x10, "");
 static_assert(offsetof(EventFileTh, unknown38) == 0x38, "");
 
 struct DevFileParamTh {
-  DevFileParamTh() : unknown00(nullptr), _08(), _10(0), unknown40(nullptr), unknown4c(0), unknown50(0), _54(0), _58(1), _5c(0), unknown60(nullptr), unknown68(10), _6c(true), _6d(false), _6e(false) {}
+  DevFileParamTh()
+      : unknown00(nullptr), _08(), _10(nullptr), unknown40(nullptr), unknown4c(0), unknown50(0), _54(0), _58(1), _5c(0), unknown60(nullptr), unknown68(10), _6c(true), _6d(false), _6e(false) {}
 
   const char *unknown00; // Inferred role: path; original member name unknown.
   mtl::ALLOC_HANDLE _08;
-  u64 _10;
+  mm::mtl::IAllocator *_10;
   mm::mtl::FixedVector<u64, 4> _18;
   void *unknown40; // Inferred role: buffer; original member name unknown.
   u32 unknown48;   // Inferred role: size; original member name unknown.

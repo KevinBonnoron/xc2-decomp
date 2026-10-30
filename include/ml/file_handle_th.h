@@ -7,6 +7,7 @@
 namespace ml {
 
 class IWorkEvent;
+enum CBM : int;
 
 class FileHandleTh {
 public:
@@ -14,6 +15,7 @@ public:
   bool setCurrentPtr(int offset);
   void setReadAdr(int size, void *buffer, int alignedSize);
   void setTime(u64 time);
+  bool call(CBM cbm);
 
   u8 _00[0x08];
   void *unknown08; // Inferred role: read buffer; original member name unknown.
@@ -27,7 +29,9 @@ public:
   u8 _38[0x60 - 0x38];
   IWorkEvent *unknown60; // Inferred role: event listener; original member name unknown.
   void *unknown68;       // Inferred role: event; original member name unknown.
-  u8 _70[0x94 - 0x70];
+  void **unknown70;      // Inferred role: loaded data output; original member name unknown.
+  s32 *unknown78;        // Inferred role: loaded size output; original member name unknown.
+  u8 _80[0x94 - 0x80];
   u32 unknown94; // Inferred role: state flags; original member name unknown.
   u8 unknown98;  // Inferred role: path start; original member name unknown.
   u8 _99[0x1c0 - 0x99];

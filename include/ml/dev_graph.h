@@ -23,6 +23,7 @@ namespace ml {
 class CriticalSection;
 class DevGraphCB;
 class DevGraphQue;
+class GraphQue;
 
 enum FONT_STYLE : int {
   FONT_STYLE_NORMAL = 0,
@@ -56,6 +57,7 @@ CriticalSection &getCriticalSection();
 class DevGraph : public DevBase, public mm::mtl::PtrSingleton<DevGraph> {
 public:
   ~DevGraph() override;
+  static void fontDraw(s16 x, s16 y, f32 scaleX, f32 scaleY, const char *text, const mm::Col4 *color, const mm::Col4 *backColor, bool isShadow);
   static f32 fontGetWidth(const char *text, FONT_STYLE style, f32 scale);
   static f32 fontGetHeight(FONT_STYLE style, f32 scale);
   static bool isIgnore();
@@ -82,6 +84,7 @@ public:
   static void cmdAddCreatedList(void *list, u32 size);
   static void cmdSuspendDisplayList(bool isSuspend, bool isFlush);
   static void *cmdGetCurrentAdr();
+  static void *cmdAllocBuf(u32 size, u32 alignment);
   static u32 cmdGetRemainSize();
   static void cmdExecDisplayList();
   static void cmdAddDisplayList(void *list, u32 size, u32 flags);
@@ -171,7 +174,8 @@ public:
   f32 unknown328;      // Inferred role: clear depth; original member name unknown.
   u8 _32c[0x330 - 0x32c];
   DevGraphQue *unknown330; // Inferred role: graph que; original member name unknown.
-  u8 _338[0x348 - 0x338];
+  GraphQue *unknown338;    // Inferred role: display list que; original member name unknown.
+  u8 _340[0x348 - 0x340];
   f32 unknown348; // Inferred role: frame spd; original member name unknown.
   u8 _34c[0x350 - 0x34c];
   void (*unknown350[4])(); // Inferred role: outer renders; original member name unknown.
@@ -184,6 +188,7 @@ static_assert(offsetof(DevGraph, unknown310) == 0x310, "");
 static_assert(offsetof(DevGraph, unknown314) == 0x314, "");
 static_assert(offsetof(DevGraph, unknown318) == 0x318, "");
 static_assert(offsetof(DevGraph, unknown330) == 0x330, "");
+static_assert(offsetof(DevGraph, unknown338) == 0x338, "");
 static_assert(offsetof(DevGraph, unknown348) == 0x348, "");
 static_assert(offsetof(DevGraph, unknown350) == 0x350, "");
 

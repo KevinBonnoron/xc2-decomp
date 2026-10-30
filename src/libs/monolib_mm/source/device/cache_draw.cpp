@@ -52,4 +52,24 @@ void CacheDraw::DRSPHERE_REAL::flush(DebDraw *draw) { draw->renderRealSphere(unk
 
 void CacheDraw::DRSPHERE_REAL_FILL::flush(DebDraw *draw) { draw->renderRealSphereFill(unknown0c, unknown10); }
 
+void CacheDraw::DTEX::flush(DebDraw *draw) { draw->setTex(unknown10); }
+
+void CacheDraw::DDOUBLESIDE::flush(DebDraw *draw) { draw->setDoubleSide(unknown0c); }
+
+void CacheDraw::DZCOMP::flush(DebDraw *draw) { draw->setZComp(unknown0c); }
+
+void CacheDraw::DZWRITE::flush(DebDraw *draw) { draw->setZWrite(unknown0c); }
+
+void CacheDraw::DALPHA::flush(DebDraw *draw) { draw->setAlpha(unknown0c); }
+
+void CacheDraw::DLINE_WIDTH::flush(DebDraw *draw) { draw->setLineWidth(unknown0c); }
+
+void CacheDraw::DALPHA_BLEND::flush(DebDraw *draw) { draw->setAlphaBlend(unknown0c); }
+
+void CacheDraw::DRTRI2D_FILL::flush(DebDraw *draw) {
+  draw->renderTriangleFill(mm::Vec3(unknown0c.x, unknown0c.y, 0.0f), mm::Vec3(unknown14.x, unknown14.y, 0.0f), mm::Vec3(unknown1c.x, unknown1c.y, 0.0f));
+}
+
+void CacheDraw::DRLINE_PNT::flush(DebDraw *draw) { draw->renderLine(unknown0c, unknown14); }
+
 } // namespace ml

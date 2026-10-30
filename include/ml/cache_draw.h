@@ -180,6 +180,55 @@ public:
     f32 unknown0c; // Inferred role: radius; original member name unknown.
     s32 unknown10; // Inferred role: division; original member name unknown.
   };
+
+  struct DTEX : unknown001 {
+    void flush(DebDraw *draw) override;
+    u32 unknown0c;                        // Inferred role: padding before the aligned pointer; original member name unknown.
+    grlib::CGLibTextureBuffer *unknown10; // Inferred role: texture; original member name unknown.
+  };
+
+  struct DDOUBLESIDE : unknown001 {
+    void flush(DebDraw *draw) override;
+    bool unknown0c; // Inferred role: enable; original member name unknown.
+  };
+
+  struct DZCOMP : unknown001 {
+    void flush(DebDraw *draw) override;
+    bool unknown0c; // Inferred role: enable; original member name unknown.
+  };
+
+  struct DZWRITE : unknown001 {
+    void flush(DebDraw *draw) override;
+    bool unknown0c; // Inferred role: enable; original member name unknown.
+  };
+
+  struct DALPHA : unknown001 {
+    void flush(DebDraw *draw) override;
+    f32 unknown0c; // Inferred role: alpha; original member name unknown.
+  };
+
+  struct DLINE_WIDTH : unknown001 {
+    void flush(DebDraw *draw) override;
+    u32 unknown0c; // Inferred role: width; original member name unknown.
+  };
+
+  struct DALPHA_BLEND : unknown001 {
+    void flush(DebDraw *draw) override;
+    bool unknown0c; // Inferred role: enable; original member name unknown.
+  };
+
+  struct DRTRI2D_FILL : unknown001 {
+    void flush(DebDraw *draw) override;
+    mm::Pnt<int> unknown0c; // Inferred role: first corner; original member name unknown.
+    mm::Pnt<int> unknown14; // Inferred role: second corner; original member name unknown.
+    mm::Pnt<int> unknown1c; // Inferred role: third corner; original member name unknown.
+  };
+
+  struct DRLINE_PNT : unknown001 {
+    void flush(DebDraw *draw) override;
+    mm::Pnt<int> unknown0c; // Inferred role: start; original member name unknown.
+    mm::Pnt<int> unknown14; // Inferred role: end; original member name unknown.
+  };
 #pragma pack(pop)
 
   bool setMatrix(const mm::Mat44 &matrix);
@@ -245,6 +294,8 @@ static_assert(offsetof(CacheDraw::DRCIRCLE_MAT, unknown4c) == 0x4c, "");
 static_assert(offsetof(CacheDraw::DRCIRCLE_MAT, unknown50) == 0x50, "");
 static_assert(offsetof(CacheDraw::DRSPHERE_REAL, unknown10) == 0x10, "");
 static_assert(offsetof(CacheDraw::DRCAPSULE, unknown14) == 0x14, "");
+static_assert(offsetof(CacheDraw::DTEX, unknown10) == 0x10, "");
+static_assert(offsetof(CacheDraw::DALPHA, unknown0c) == 0x0c, "");
 static_assert(offsetof(CacheDraw, unknown6054) == 0x6054, "");
 static_assert(offsetof(CacheDraw, unknown6070) == 0x6070, "");
 

@@ -109,11 +109,11 @@ bool DevFileTh::Impl::isInitialized() { return m_initialized; }
 
 namespace {
 
-typedef mm::mtl::FixedList<DevFileJobTh *, 640> unknown001;
+typedef mm::mtl::FixedList<DevFileJobTh *, 640> unknown003;
 
 // Inferred role: tells whether a job list holds a job of the file handle; original name unknown.
-bool unknown002(unknown001 &list, FileHandleTh *handle) {
-  for (unknown001::iterator it = list.begin(); it != list.end(); ++it) {
+bool unknown004(unknown003 &list, FileHandleTh *handle) {
+  for (unknown003::iterator it = list.begin(); it != list.end(); ++it) {
     if ((*it)->unknown10 == handle) {
       return true;
     }
@@ -126,7 +126,7 @@ bool unknown002(unknown001 &list, FileHandleTh *handle) {
 bool DevFileTh::Impl::isValidHandle(FileHandleTh *handle) {
   CS cs(unknown5a350);
   if (handle != nullptr) {
-    if (unknown002(unknown00000, handle) || unknown002(unknown02d20, handle) || unknown002(unknown05a40, handle)) {
+    if (unknown004(unknown00000, handle) || unknown004(unknown02d20, handle) || unknown004(unknown05a40, handle)) {
       return true;
     }
   }
@@ -137,7 +137,7 @@ void DevFileTh::Impl::cancelRequest(FileHandleTh *handle) {
   CS cs(unknown5a350);
   if (handle != nullptr) {
     bool found = false;
-    for (unknown001::iterator it = unknown00000.begin(); it != unknown00000.end(); ++it) {
+    for (unknown003::iterator it = unknown00000.begin(); it != unknown00000.end(); ++it) {
       if ((*it)->unknown10 == handle) {
         (*it)->unknown18 = true;
         found = true;
@@ -145,7 +145,7 @@ void DevFileTh::Impl::cancelRequest(FileHandleTh *handle) {
       }
     }
     if (!found) {
-      for (unknown001::iterator it = unknown02d20.begin(); it != unknown02d20.end(); ++it) {
+      for (unknown003::iterator it = unknown02d20.begin(); it != unknown02d20.end(); ++it) {
         if ((*it)->unknown10 == handle) {
           (*it)->unknown18 = true;
           found = true;
@@ -154,7 +154,7 @@ void DevFileTh::Impl::cancelRequest(FileHandleTh *handle) {
       }
     }
     if (!found) {
-      for (unknown001::iterator it = unknown05a40.begin(); it != unknown05a40.end(); ++it) {
+      for (unknown003::iterator it = unknown05a40.begin(); it != unknown05a40.end(); ++it) {
         if ((*it)->unknown10 == handle) {
           (*it)->unknown18 = true;
           break;

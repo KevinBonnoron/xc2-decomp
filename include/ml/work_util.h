@@ -23,7 +23,7 @@ public:
   static void dispTree(const WorkObj *work, int depth);
 
   template <typename T> static T *createWork(const char *name, WorkObj *parent, bool isFront) {
-    T *work = new (WorkRootState::getWorkMem()) T(name, parent);
+    T *work = new (getWorkMem()) T(name, parent);
     WorkRootState::entryWork(work, parent, isFront);
     return work;
   }

@@ -4,6 +4,7 @@
 #include "types.h"
 
 namespace ml {
+class DevFontLayer;
 enum FONT_STYLE : int;
 
 class FontLayer {
@@ -18,6 +19,7 @@ public:
 class DevFont : public FontLayer, public DevBase, public mm::mtl::PtrSingleton<DevFont> {
 public:
   static bool isInitialized();
+  static DevFontLayer *createLayer(const FontLayer *layer);
   static void fontLayerStyle(const FontLayer *layer, FONT_STYLE style);
   static void fontLayerZ(const FontLayer *layer, u32 z);
 };
