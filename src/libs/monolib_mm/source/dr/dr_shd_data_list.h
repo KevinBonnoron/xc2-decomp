@@ -114,9 +114,8 @@ public:
   grlib::CGLibVtxIndex unknown930;                                  // Inferred role: eff index; original member name unknown.
   grlib::CGLibVtxStmOut unknown958[2];                              // Inferred role: stm outs; original member name unknown.
   grlib::CGLibUniformArray<grlib::CGLibOneUniformBlock> unknown9a8; // Inferred role: alpha test uniforms; original member name unknown.
-  u8 _9b0[0x9d0 - 0x9b0];
-  DrResShdStreamOut *unknown9d0; // Inferred role: stm out objs; original member name unknown.
-  DrResShdObjMot *unknown9d8;    // Inferred role: object mot blur objs; original member name unknown.
+  DrResShdStreamOut *unknown9d0;                                    // Inferred role: stm out objs; original member name unknown.
+  DrResShdObjMot *unknown9d8;                                       // Inferred role: object mot blur objs; original member name unknown.
 };
 
 static_assert(offsetof(DrShdDataList, unknown08) == 0x008, "");

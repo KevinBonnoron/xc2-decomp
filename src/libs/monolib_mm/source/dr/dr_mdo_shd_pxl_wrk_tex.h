@@ -8,7 +8,6 @@ namespace ml {
 
 class MdoShdPxlWrkTex : public grlib::CGLibDepthTarget {
 public:
-  u8 _128[0x800 - 0x128];
   f32 unknown800; // Inferred role: shadow texture size; original member name unknown.
   s32 unknown804; // Inferred role: reference count; original member name unknown.
   s16 unknown808; // Inferred role: shadow type; original member name unknown.

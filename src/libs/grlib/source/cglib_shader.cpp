@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include "grlib/cglib_manager.h"
+#include "grlib/cglib_vtl_mem_pool.h"
 #include "nvn/nvn.h"
 
 namespace grlib {
@@ -69,19 +71,51 @@ void CGLibShader_plf::setImageHandle(u32 index, NVNcommandBuffer *cmdBuf, u64 ha
   }
 }
 
+bool CGLibSetupShader::createShader(CGLibShader *shader, const u8 *data, u32 offset, const u8 *control, CGLibVtlMemPool *pool) {
+  releaseShader(shader);
+  nvnProgramInitialize(&shader->unknown18, &CGLibManager::get()->unknown00);
+  const unknown029 *info = reinterpret_cast<const unknown029 *>(data);
+  shader->unknown14 = 0;
+  const CGLibShader::unknown005 *stages = reinterpret_cast<const CGLibShader::unknown005 *>(data + info->unknown18);
+  // Inferred role: stage 5 is compute (NVN compute stage bit 0x20), otherwise all graphics stage bits (0x1f).
+  u64 address = pool->unknown08;
+  shader->unknown14 = stages->unknown00 == 5 ? 0x20 : 0x1f;
+  NVNshaderData stageData[6];
+  int count = 0;
+  for (int i = 0; i < info->unknown1c; i++, stages++) {
+    stageData[i].control = control + stages->unknown0c;
+    stageData[i].data = address + offset + stages->unknown04;
+    count = info->unknown1c;
+  }
+  nvnProgramSetShaders(&shader->unknown18, count, stageData);
+  shader->unknown10 |= 1;
+  shader->m_data = data;
+  shader->unknown08 = info;
+  return true;
+}
+
+void CGLibSetupShader::releaseShader(CGLibShader *shader) {
+  if (shader->unknown10 & 1) {
+    shader->m_data = nullptr;
+    nvnProgramFinalize(&shader->unknown18);
+    shader->unknown10 &= ~5;
+  }
+}
+
+void CGLibShader::releaseShader() { CGLibSetupShader::releaseShader(this); }
+
 CGLibShader::CGLibShader() : unknown10(0) { m_data = nullptr; }
 
 CGLibShader::~CGLibShader() { releaseShader(); }
 
-void CGLibShader::releaseShader() {
-  if (unknown10 & 1) {
-    m_data = nullptr;
-    nvnProgramFinalize(&unknown18);
-    unknown10 &= ~5;
-  }
+void CGLibShader::createShader(const u8 *data, u32 offset, const u8 *control, CGLibVtlMemPool *pool, CGLibShderType type) {
+  releaseShader();
+  changeShaderSetMem(data, offset, control, pool);
 }
 
 void CGLibShader::changeShaderSetMem(const void *data) {}
+
+void CGLibShader::changeShaderSetMem(const u8 *data, u32 offset, const u8 *control, CGLibVtlMemPool *pool) { CGLibSetupShader::createShader(this, data, offset, control, pool); }
 
 int CGLibShader::getTextureLocation(const char *name) const {
   u32 num = unknown08->unknown38;
@@ -198,7 +232,5 @@ u32 CGLibShader::getStorageBufferValOfs(u32 index, const char *name) const {
   }
   return -1;
 }
-
-void CGLibSetupShader::releaseShader(CGLibShader *shader) { shader->releaseShader(); }
 
 } // namespace grlib

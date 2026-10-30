@@ -24,6 +24,7 @@ public:
 
   static void release_mempool(wrkRelease &work);
   static void release_textrue(wrkRelease &work);
+  static void release_sampler(wrkRelease &work);
   static void release_vertex(wrkRelease &work);
 
   static ReleaseFunc s_callRelease[4];

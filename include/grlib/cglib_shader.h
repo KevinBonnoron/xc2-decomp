@@ -6,6 +6,8 @@
 
 namespace grlib {
 
+class CGLibVtlMemPool;
+
 // Inferred role: shader block info; original type name unknown.
 struct unknown028 {
   u32 unknown00; // Inferred role: name ofs; original member name unknown.
@@ -21,7 +23,9 @@ static_assert(sizeof(unknown028) == 0x10, "");
 
 // Inferred role: shader info; original type name unknown.
 struct unknown029 {
-  u8 _00[0x20 - 0x00];
+  u8 _00[0x18 - 0x00];
+  s32 unknown18; // Inferred role: stage table ofs; original member name unknown.
+  u32 unknown1c; // Inferred role: stage num; original member name unknown.
   s16 unknown20; // Inferred role: uniform block num; original member name unknown.
   u16 unknown22; // Inferred role: uniform block max; original member name unknown.
   u32 unknown24; // Inferred role: uniform block ofs; original member name unknown.
@@ -42,6 +46,8 @@ struct unknown029 {
   u32 unknown5c; // Inferred role: block value ofs; original member name unknown.
 };
 
+static_assert(offsetof(unknown029, unknown18) == 0x18, "");
+static_assert(offsetof(unknown029, unknown1c) == 0x1c, "");
 static_assert(offsetof(unknown029, unknown20) == 0x20, "");
 static_assert(offsetof(unknown029, unknown34) == 0x34, "");
 static_assert(offsetof(unknown029, unknown38) == 0x38, "");
@@ -75,11 +81,18 @@ public:
 
 static_assert(offsetof(CGLibShader_plf, unknown08) == 0x08, "");
 
+// Values unknown: the type is only seen in the CGLibShader::createShader symbol, and its callers leave it unset.
+enum CGLibShderType {
+  CGLIB_SHDER_TYPE_UNKNOWN_0,
+};
+
 class CGLibShader : public CGLibShader_plf {
 public:
   CGLibShader();
   ~CGLibShader();
+  void createShader(const u8 *data, u32 offset, const u8 *control, CGLibVtlMemPool *pool, CGLibShderType type);
   void changeShaderSetMem(const void *data);
+  void changeShaderSetMem(const u8 *data, u32 offset, const u8 *control, CGLibVtlMemPool *pool);
   void releaseShader();
   int getTextureLocation(const char *name) const;
   int getImageLocation(const char *name) const;
@@ -96,6 +109,16 @@ public:
     u32 unknown04; // Inferred role: value ofs; original member name unknown.
   };
 
+  // Inferred role: shader stage entry; original type name unknown.
+  struct unknown005 {
+    u8 unknown00; // Inferred role: stage; original member name unknown.
+    u8 _01[0x04 - 0x01];
+    u32 unknown04; // Inferred role: code ofs; original member name unknown.
+    u8 _08[0x0c - 0x08];
+    u32 unknown0c; // Inferred role: control ofs; original member name unknown.
+    u8 _10[0x14 - 0x10];
+  };
+
   u32 unknown10;        // Inferred role: state flags; original member name unknown.
   u32 unknown14;        // Inferred role: shader stage mask; original member name unknown.
   NVNprogram unknown18; // Inferred role: program; original member name unknown.
@@ -108,9 +131,13 @@ static_assert(sizeof(CGLibShader) == 0xd8, "");
 static_assert(sizeof(CGLibShader_plf::unknown001) == 0x2, "");
 static_assert(sizeof(CGLibShader_plf::unknown002) == 0xc, "");
 static_assert(sizeof(CGLibShader::unknown003) == 0x8, "");
+static_assert(offsetof(CGLibShader::unknown005, unknown04) == 0x4, "");
+static_assert(offsetof(CGLibShader::unknown005, unknown0c) == 0xc, "");
+static_assert(sizeof(CGLibShader::unknown005) == 0x14, "");
 
 class CGLibSetupShader {
 public:
+  static bool createShader(CGLibShader *shader, const u8 *data, u32 offset, const u8 *control, CGLibVtlMemPool *pool);
   static void releaseShader(CGLibShader *shader);
 };
 

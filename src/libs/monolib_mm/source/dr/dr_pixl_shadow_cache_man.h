@@ -18,7 +18,6 @@ public:
   public:
     u8 _000[0x5940 - 0x000];
     grlib::CGLibDepthTarget unknown5940; // Inferred role: shadow direction depth target; original member name unknown.
-    u8 _5a68[0x6140 - 0x5a68];
   };
 
   static_assert(offsetof(SHCACHE_WORK_TBL, unknown5940) == 0x5940, "");
@@ -50,7 +49,7 @@ public:
   DrPixlMan *unknown08;            // Inferred role: pixl man; original member name unknown.
   SHCACHE_WORK_TBL unknown0010[4]; // Inferred role: shadow cache works; original member name unknown.
   grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> m_shadowDirUniform;
-  u8 _18518[0x187ac - 0x18518];
+  u8 _18538[0x187ac - 0x18538];
   s32 unknown187ac; // Inferred role: shadow cache update count; original member name unknown.
   u64 unknown187b0; // Inferred role: shadow cache select mask; original member name unknown.
 };

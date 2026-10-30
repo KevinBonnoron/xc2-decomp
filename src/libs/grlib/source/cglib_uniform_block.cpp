@@ -4,6 +4,7 @@
 #include "grlib/cglib_mem_handle.h"
 #include "grlib/cglib_one_uniform_block.h"
 #include "grlib/cglib_pipeline.h"
+#include "grlib/cglib_shader.h"
 #include "grlib/cglib_system_context.h"
 #include "grlib/cglib_tri_uniform_block.h"
 #include "grlib/cglib_uni_base_utility.h"
@@ -75,6 +76,26 @@ void *CGLibDblUniformBlock::getBuff() { return unknown00[CGLibManager::s_nDblNow
 
 void *CGLibDblUniformBlock::getOldBuff() { return unknown00[CGLibManager::s_nDblNowIdx == 0]; }
 
+void CGLibDblUniformBlock::setUniformBlock(u32 index) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setUniformBlock(index, context->unknown1070.unknown00, getGPUAdress(), m_size);
+}
+
+void CGLibDblUniformBlock::setStorageBuffer(u32 index) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setStorageBuffer(index, context->unknown1070.unknown00, getGPUAdress(), m_size);
+}
+
+void CGLibDblUniformBlock::setUniformBlock(u32 index, u32 offset, u32 size) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setUniformBlock(index, context->unknown1070.unknown00, getGPUAdress() + offset, size);
+}
+
+void CGLibDblUniformBlock::setStorageBuffer(u32 index, u32 offset, u32 size) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setStorageBuffer(index, context->unknown1070.unknown00, getGPUAdress() + offset, size);
+}
+
 void *CGLibDblUniformBlock::getMapping() { return unknown00[CGLibManager::s_nDblNowIdx]; }
 
 void CGLibDblUniformBlock::beginStreamOut(u32 offset) {
@@ -82,6 +103,14 @@ void CGLibDblUniformBlock::beginStreamOut(u32 offset) {
   nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, true);
   nvnCommandBufferBindTransformFeedbackBuffer(context->unknown1070.unknown00, 0, unknown18[CGLibManager::s_nDblNowIdx], offset);
   nvnCommandBufferBeginTransformFeedback(context->unknown1070.unknown00, unknown18[CGLibManager::s_nDblNowIdx]);
+}
+
+void CGLibDblUniformBlock::endStreamOut(u32 count, u32 stride) {
+  u32 size = count * stride;
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  nvnCommandBufferEndTransformFeedback(context->unknown1070.unknown00, unknown18[CGLibManager::s_nDblNowIdx] + size);
+  nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, false);
+  nvnCommandBufferBarrier(context->unknown1070.unknown00, 0x21);
 }
 
 CGLibOneUniformBlock::CGLibOneUniformBlock() : m_mapping(nullptr), unknown10(0) {}
@@ -129,6 +158,26 @@ void CGLibOneUniformBlock::updateData() { nn::os::FlushDataCache(m_mapping, m_si
 
 void CGLibOneUniformBlock::updateData(u32 offset, u32 size) { nn::os::FlushDataCache(static_cast<u8 *>(m_mapping) + offset, size); }
 
+void CGLibOneUniformBlock::setUniformBlock(u32 index) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setUniformBlock(index, context->unknown1070.unknown00, unknown10, m_size);
+}
+
+void CGLibOneUniformBlock::setStorageBuffer(u32 index) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setStorageBuffer(index, context->unknown1070.unknown00, unknown10, m_size);
+}
+
+void CGLibOneUniformBlock::setUniformBlock(u32 index, u32 offset, u32 size) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setUniformBlock(index, context->unknown1070.unknown00, unknown10 + offset, size);
+}
+
+void CGLibOneUniformBlock::setStorageBuffer(u32 index, u32 offset, u32 size) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setStorageBuffer(index, context->unknown1070.unknown00, unknown10 + offset, size);
+}
+
 void *CGLibOneUniformBlock::getMapping() { return m_mapping; }
 
 void CGLibOneUniformBlock::beginStreamOut(u32 offset) {
@@ -136,6 +185,14 @@ void CGLibOneUniformBlock::beginStreamOut(u32 offset) {
   nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, true);
   nvnCommandBufferBindTransformFeedbackBuffer(context->unknown1070.unknown00, 0, unknown10, offset);
   nvnCommandBufferBeginTransformFeedback(context->unknown1070.unknown00, unknown10);
+}
+
+void CGLibOneUniformBlock::endStreamOut(u32 count, u32 stride) {
+  u32 size = count * stride;
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  nvnCommandBufferEndTransformFeedback(context->unknown1070.unknown00, unknown10 + size);
+  nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, false);
+  nvnCommandBufferBarrier(context->unknown1070.unknown00, 0x21);
 }
 
 u64 CGLibTriUniformBlock_plf::getGPUAdress() const { return unknown20[CGLibManager::s_nTriNowIdx]; }
@@ -228,6 +285,35 @@ void *CGLibTriUniformBlock::getOldTriBuff() {
   return unknown00[index > 1 ? 0 : index + 1];
 }
 
+void CGLibTriUniformBlock::setUniformBlock(u32 index) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setUniformBlock(index, context->unknown1070.unknown00, getGPUAdress(), m_size);
+}
+
+void CGLibTriUniformBlock::setStorageBuffer(u32 index) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setStorageBuffer(index, context->unknown1070.unknown00, getGPUAdress(), m_size);
+}
+
+void CGLibTriUniformBlock::setUniformBlock(u32 index, u32 offset, u32 size) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setUniformBlock(index, context->unknown1070.unknown00, getGPUAdress() + offset, size);
+}
+
+void CGLibTriUniformBlock::setStorageBuffer(u32 index, u32 offset, u32 size) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setStorageBuffer(index, context->unknown1070.unknown00, getGPUAdress() + offset, size);
+}
+
+void CGLibTriUniformBlock::setOldUniformBlock(u32 index) {
+  int oldIndex = CGLibManager::s_nTriNowIdx - 1;
+  if (oldIndex < 0) {
+    oldIndex = 2;
+  }
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setUniformBlock(index, context->unknown1070.unknown00, unknown20[oldIndex], m_size);
+}
+
 void *CGLibTriUniformBlock::getMapping() { return unknown00[CGLibManager::s_nTriNowIdx]; }
 
 void CGLibTriUniformBlock::beginStreamOut(u32 offset) {
@@ -235,6 +321,14 @@ void CGLibTriUniformBlock::beginStreamOut(u32 offset) {
   nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, true);
   nvnCommandBufferBindTransformFeedbackBuffer(context->unknown1070.unknown00, 0, unknown20[CGLibManager::s_nTriNowIdx], offset);
   nvnCommandBufferBeginTransformFeedback(context->unknown1070.unknown00, unknown20[CGLibManager::s_nTriNowIdx]);
+}
+
+void CGLibTriUniformBlock::endStreamOut(u32 count, u32 stride) {
+  u32 size = count * stride;
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  nvnCommandBufferEndTransformFeedback(context->unknown1070.unknown00, unknown20[CGLibManager::s_nTriNowIdx] + size);
+  nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, false);
+  nvnCommandBufferBarrier(context->unknown1070.unknown00, 0x21);
 }
 
 CGLibEtcUniformBlock::~CGLibEtcUniformBlock() {}
@@ -255,6 +349,15 @@ void CGLibEtcUniformBlock::setMoveMem(u32 size) {
   }
 }
 
+void CGLibEtcUniformBlock::setUniformBlock(u32 index) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setUniformBlock(index, context->unknown1070.unknown00, unknown10, m_size);
+}
+
+void CGLibEtcUniformBlock::setStorageBuffer(u32 index) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070._98->setStorageBuffer(index, context->unknown1070.unknown00, unknown10, m_size);
+}
 void CGLibEtcUniformBlock::beginStreamOut(u32 offset) {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
   nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, true);
@@ -262,7 +365,19 @@ void CGLibEtcUniformBlock::beginStreamOut(u32 offset) {
   nvnCommandBufferBeginTransformFeedback(context->unknown1070.unknown00, unknown10);
 }
 
+void CGLibEtcUniformBlock::endStreamOut(u32 count, u32 stride) {
+  u32 size = count * stride;
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  nvnCommandBufferEndTransformFeedback(context->unknown1070.unknown00, unknown10 + size);
+  nvnCommandBufferSetRasterizerDiscard(context->unknown1070.unknown00, false);
+  nvnCommandBufferBarrier(context->unknown1070.unknown00, 0x21);
+}
+
 void CGLibUniformEtcUtility::setMoveMem() { unknown20.setMoveMem(m_size); }
+
+void CGLibUniformEtcUtility::setUniformBlock() { unknown20.setUniformBlock(unknown10); }
+
+void CGLibUniformEtcUtility::setStorageBuffer() { unknown20.setStorageBuffer(unknown10); }
 
 void CGLibUniBaseUtility::setMoveMem() {}
 

@@ -7,6 +7,7 @@
 #include "grlib/cglib_pipeline.h"
 #include "grlib/cglib_system_context.h"
 #include "nvn/nvn.h"
+#include "types.h"
 
 namespace grlib {
 
@@ -16,6 +17,8 @@ namespace {
 const u32 unknown004[5] = {2, 3, 4, 8, 15};
 
 } // namespace
+
+CGLibGpuCounter::CGLibGpuCounter() : _00(), unknown10(), unknown30(), unknown50(), unknownf0() {}
 
 void CGLibGpuCounter::begin() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();

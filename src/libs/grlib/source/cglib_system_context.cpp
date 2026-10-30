@@ -1,18 +1,23 @@
 #include "grlib/cglib_system_context.h"
 
+#include <string.h>
+
 #include "grlib/cglib_color_buffer.h"
 #include "grlib/cglib_depth_buffer.h"
+#include "grlib/cglib_depth_target.h"
+#include "grlib/cglib_device_vi.h"
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_mem_handle.h"
 #include "grlib/cglib_mem_pool.h"
 #include "grlib/cglib_release_obj.h"
+#include "grlib/cglib_render_target.h"
+#include "grlib/cglib_texture_buffer.h"
 #include "ml/critical_section.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 #include "nvn/nvn.h"
 
 namespace grlib {
-class CGLibBuffResSamObj;
 
 namespace context {
 
@@ -20,6 +25,10 @@ ml::CriticalSection &CGLibSystemContext::getCriticalSection() {
   static ml::CriticalSection s_criticalSection;
   return s_criticalSection;
 }
+
+CGLibSystemContext::CGLibSystemContext() : unknown2448(0), unknown2450(0), unknown2540(false) {}
+
+CGLibSystemContext::~CGLibSystemContext() { ; }
 
 void CGLibSystemContext::createMemPool(CGLibMemPool &memPool, mtl::ALLOC_HANDLE handle, u32 flags) {
   memPool.setupBuffer(reinterpret_cast<void *>(mtl::MemManager::getTopAdr(handle)), mtl::MemManager::getTotalSize(handle), flags);
@@ -52,6 +61,47 @@ void CGLibSystemContext::createUniformBuffer() {
   unknown2578 = static_cast<u32>(unknown10.cntOffset(0x80000, 0x1000));
 }
 
+bool CGLibSystemContext::cleanup() {
+  if (unknown2540) {
+    unknown2320.release();
+    for (int i = 0; i < 2; i++) {
+      unknown88[i].release();
+      unknown268[i].release();
+    }
+    unknown24d8.release();
+    unknown608.release();
+    unknown538.release();
+    unknown5a0.release();
+    unknowne38.release();
+    unknowne60.release();
+    unknownef8.release();
+    if (unknown2580 != nullptr) {
+      mtl::MemManager::deallocate(unknown2580, 0, false);
+      unknown2580 = nullptr;
+    }
+    for (int i = 0; i < 2; i++) {
+      if (unknown2588[i] != nullptr) {
+        mtl::MemManager::deallocate(unknown2588[i], 0, false);
+        unknown2588[i] = nullptr;
+      }
+    }
+    unknowneb8.release();
+    for (int i = 0; i < 5; i++) {
+      unknownf08[i].release();
+    }
+    unknown10.release();
+    unknown38.release();
+    unknown1110.release();
+    unknown2458.release();
+    unknown2478.release();
+    unknown2498.release();
+    unknown24b8.release();
+    unknowne90.release();
+    unknown2540 = false;
+  }
+  return true;
+}
+
 void CGLibSystemContext::end() {
   unknown24d8.end();
   unknown268[CGLibManager::s_nDblNowIdx].end();
@@ -59,10 +109,10 @@ void CGLibSystemContext::end() {
   unknown88[CGLibManager::s_nDblNowIdx].end();
   unknown1070.unknown00 = nullptr;
   unknown08 = nullptr;
-  unknown20d9 = false;
+  unknown1110.unknownfc9 = false;
 }
 
-void CGLibSystemContext::setMainFrameBuffer() { unknown1110[unknown20d4].setRenderTarget(*unknown18a0.unknown120); }
+void CGLibSystemContext::setMainFrameBuffer() { unknown1110.unknown000[unknown1110.unknownfc4].setRenderTarget(*unknown1110.unknown790.unknown120); }
 
 void CGLibSystemContext::releaseDelayMempool(NVNmemoryPool *pool, void *buffer) {
   ml::CS lock(getCriticalSection());
@@ -145,6 +195,103 @@ u64 CGLibSystemContext::getPixelResAreaGpuAddress(u32 offset) { return unknown25
 u32 CGLibSystemContext::getPixelResAreaOffset(u32 offset) { return unknown25a8 + offset; }
 
 } // namespace context
+
+CGLibDisplay::CGLibDisplay() {
+  unknownfc8 = false;
+  unknownfca = false;
+  unknownfc0 = 0;
+  unknownfb8 = 0;
+  unknownfbc = 0;
+  unknownfb0 = 0;
+  unknownfb4 = 0;
+  unknownfc4 = 1;
+  unknownfcb = true;
+  unknownfc9 = true;
+}
+
+CGLibDisplay::~CGLibDisplay() { release(); }
+
+void CGLibDisplay::setup(NVNdevice *device) {
+  unknownfc8 = true;
+  nvnSyncInitialize(&unknownfd0, device);
+  nvnSyncInitialize(&unknown1010, device);
+  nvnWindowBuilderSetDefaults(&unknown1050);
+  nvnWindowBuilderSetDevice(&unknown1050, device);
+  nvnWindowBuilderSetNativeWindow(&unknown1050, CGLibManager::get()->unknown5000.unknown00);
+  NVNtextureBuilder builder;
+  nvnTextureBuilderSetDevice(&builder, device);
+  nvnTextureBuilderSetDefaults(&builder);
+  nvnTextureBuilderSetTarget(&builder, NVN_TEXTURE_TARGET_2D);
+  nvnTextureBuilderSetFormat(&builder, NVN_FORMAT_RGBA8);
+  nvnTextureBuilderSetSize2D(&builder, 1280, 720);
+  unknownfb0 = nvnTextureBuilderGetStorageSize(&builder);
+  unknownfb8 = nvnTextureBuilderGetStorageAlignment(&builder);
+  nvnTextureBuilderSetDevice(&builder, device);
+  nvnTextureBuilderSetDefaults(&builder);
+  nvnTextureBuilderSetTarget(&builder, NVN_TEXTURE_TARGET_2D);
+  nvnTextureBuilderSetFormat(&builder, NVN_FORMAT_DEPTH24_STENCIL8);
+  nvnTextureBuilderSetSize2D(&builder, 1280, 720);
+  unknownfb4 = nvnTextureBuilderGetStorageSize(&builder);
+  unknownfbc = nvnTextureBuilderGetStorageAlignment(&builder);
+  resize(1280, 720);
+}
+
+void CGLibDisplay::release() {
+  if (unknownfc8) {
+    unknownfc8 = false;
+    nvnSyncFinalize(&unknownfd0);
+    nvnSyncFinalize(&unknown1010);
+    unknown000[0].releaseTexture();
+    unknown000[1].releaseTexture();
+    nvnWindowFinalize(&unknown1090);
+    unknownfca = false;
+  }
+}
+
+void CGLibDisplay::updateWindow(NVNqueue *queue) {}
+
+void CGLibDisplay::renderWindow(NVNqueue *queue) {
+  if (unknownfcb) {
+    nvnQueueFenceSync(queue, &unknownfd0, NVN_SYNC_CONDITION_ALL_GPU_COMMANDS_COMPLETE, 1);
+    nvnQueuePresentTexture(queue, &unknown1090, unknownfc0);
+  }
+  nvnWindowAcquireTexture(&unknown1090, &unknownfd0, &unknownfc0);
+  unknownfc4 = unknownfc0;
+}
+
+void CGLibDisplay::updateEnd(NVNqueue *queue) { unknownfc9 = false; }
+
+void CGLibDisplay::resize(u32 width, u32 height) {
+  if (unknownfca) {
+    nvnWindowFinalize(&unknown1090);
+  }
+  unknownfca = true;
+  unknown000[0].unknown70->unknown10 |= CGLibTextureBuffer::FLAG_UNKNOWN_2;
+  unknown000[1].unknown70->unknown10 |= CGLibTextureBuffer::FLAG_UNKNOWN_2;
+  unknown000[0].setTextureInfo(width, height, GRL_SURFACE_FORMAT_RGBA8, false, 0);
+  unknown000[1].setTextureInfo(width, height, GRL_SURFACE_FORMAT_RGBA8, false, 0);
+  unknown790.setTextureInfo(width, height, GRL_DEPTH_FORMAT_UNKNOWN_3, false, 0);
+  memset(unknown000[0].unknown70->m_buffer, 0, unknown000[0].unknown70->unknown30);
+  memset(unknown000[1].unknown70->m_buffer, 0, unknown000[1].unknown70->unknown30);
+  NVNtexture *textures[2] = {unknown000[0].unknown70->unknown18, unknown000[1].unknown70->unknown18};
+  nvnWindowBuilderSetTextures(&unknown1050, 2, textures);
+  nvnWindowInitialize(&unknown1090, &unknown1050);
+}
+
+void CGLibDisplay::updateSignaled() { unknownfcb = !unknownfc9; }
+
+void CGLibDisplay::swapChain(NVNqueue *queue) {
+  if (unknownfcb) {
+    nvnSyncWait(&unknownfd0, 0xffffffffffffffff);
+  }
+}
+
+void CGLibDisplay::fasteTargetClear() {}
+
+CGLibPipeline::CGLibPipeline() {}
+
+CGLibPipeline::~CGLibPipeline() {}
+
 } // namespace grlib
 
 template mm::mtl::PtrSingleton<grlib::context::CGLibSystemContext>::~PtrSingleton();

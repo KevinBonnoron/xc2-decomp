@@ -13,15 +13,7 @@ const mm::Col4 s_borderColors[] = {
 };
 } // namespace
 
-CGLibSampler::CGLibSampler() {
-  unknown00.unknown04.b = 1.0f;
-  unknown00.unknown04.a = 1.0f;
-  unknown00.m_value = 0;
-  unknown00.unknown04.r = 1.0f;
-  unknown00.unknown04.g = 1.0f;
-  unknown00.unknown14 = 0.0f;
-  unknown18 = nullptr;
-}
+CGLibSampler::CGLibSampler() : unknown18(nullptr) {}
 
 CGLibSampler::~CGLibSampler() { release(); }
 

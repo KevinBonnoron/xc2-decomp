@@ -34,14 +34,9 @@ struct CGLibVtxAttr {
   u32 unknown0c;        // Inferred role: buffer index; original member name unknown.
 };
 
-class CGLibVtxFetch {
+class CGLibVtxFetch_plf {
 public:
-  CGLibVtxFetch();
-  ~CGLibVtxFetch();
-  void release();
-  void createFetchObj(CGLibVtxAttr *attributes, int num);
-  void createMemFetchObj(void *memory, CGLibVtxAttr *attributes, int num);
-  static int calcFetchWorkSize(int num);
+  void setupFetchObj(const CGLibVtxAttr *attributes, int num);
 
   NVNvertexAttribState *unknown00; // Inferred role: attribute states; original member name unknown.
   u16 unknown08;                   // Inferred role: attribute num; original member name unknown.
@@ -49,6 +44,17 @@ public:
   u8 _0c[0x10 - 0x0c];
 };
 
+class CGLibVtxFetch : public CGLibVtxFetch_plf {
+public:
+  CGLibVtxFetch();
+  ~CGLibVtxFetch();
+  void release();
+  void createFetchObj(CGLibVtxAttr *attributes, int num);
+  int createMemFetchObj(void *memory, CGLibVtxAttr *attributes, int num);
+  static int calcFetchWorkSize(int num);
+};
+
 static_assert(offsetof(CGLibVtxFetch, unknown0a) == 0x0a, "");
+static_assert(sizeof(CGLibVtxFetch) == 0x10, "");
 
 } // namespace grlib

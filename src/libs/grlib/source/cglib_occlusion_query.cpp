@@ -19,4 +19,11 @@ void CGLibOcclusionQuery::release() {
 
 void CGLibOcclusionQuery::beginQuery() { nvnCommandBufferResetCounter(context::CGLibSystemContext::get()->unknown1070.unknown00, NVN_COUNTER_TYPE_SAMPLES_PASSED); }
 
+u32 CGLibOcclusionQuery::getQueryPixel() {
+  if (unknown10 & (1 << unknown13)) {
+    return *reinterpret_cast<u32 *>(unknown00 + static_cast<u32>(context::CGLibSystemContext::s_nvReportCounterSize * unknown12));
+  }
+  return 0;
+}
+
 } // namespace grlib

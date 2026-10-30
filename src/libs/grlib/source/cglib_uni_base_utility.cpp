@@ -92,11 +92,8 @@ void ShdMat44SetMat44Array(f32 *destination, const mm::Mat44 *source, int count)
 
 void ShdMat44TransposeMat34Array(f32 *destination, const mm::Mat44 *source, int count) {
   for (int i = 0; i < count; i++) {
-    for (int column = 0; column < 3; column++) {
-      for (int row = 0; row < 4; row++) {
-        destination[i * 12 + column * 4 + row] = source[i].rows[row][column];
-      }
-    }
+    const mm::Mat44 &matrix = source[i];
+    ShdMat44TransposeMat34(&destination[i * 12], matrix);
   }
 }
 
@@ -288,6 +285,12 @@ void CGLibUniBaseUtility::setMat44SetMat44Array(u32 offset, const mm::Mat44 *sou
   }
 }
 
+void CGLibUniBaseUtility::setMat44TransposeMat34Array(u32 offset, const mm::Mat44 *source, int count) {
+  if (offset != 0xffffffff) {
+    ShdMat44TransposeMat34Array(reinterpret_cast<f32 *>(getBuff() + offset), source, count);
+  }
+}
+
 void CGLibUniBaseUtility::setMat44TransposeMat44Array(u32 offset, const mm::Mat44 *source, int count) {
   if (offset != 0xffffffff) {
     ShdMat44TransposeMat44Array(reinterpret_cast<f32 *>(getBuff() + offset), source, count);
@@ -393,6 +396,16 @@ void CGLibUniBaseUtility::setUseStorageBuffer(u32 index) {
   m_size = getStorageBufferSize(getCurrentShader(unknown08), index);
   unknown18 = true;
   setMoveMem();
+}
+
+u8 *CGLibUniBaseUtility::getUniformBlockAdder(const char *name) {
+  u32 offset = getCurrentShader(unknown08)->getUniformBlockValOfs(unknown10, name);
+  return getBuff() + offset;
+}
+
+u8 *CGLibUniBaseUtility::getStorageBufferAdder(const char *name) {
+  u32 offset = getCurrentShader(unknown08)->getStorageBufferValOfs(unknown10, name);
+  return getBuff() + offset;
 }
 
 CGLibEtcUniformBlock::CGLibEtcUniformBlock() : m_size(0) { context::CGLibSystemContext::get()->getGlbUniformParam(m_buff, unknown10); }

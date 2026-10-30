@@ -105,6 +105,10 @@ public:
   enum Flag {
     FLAG_INITIALIZED = 1 << 0,
     FLAG_OWN_BUFFER = 1 << 1,
+    FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: display texture; original name unknown.
+    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: depth view of a depth stencil texture; original name unknown.
+    FLAG_UNKNOWN_4 = 1 << 4, // Inferred role: stencil view of a depth stencil texture; original name unknown.
+    FLAG_UNKNOWN_5 = 1 << 5, // Inferred role: linear texture; original name unknown.
   };
 
   void delayRelease();

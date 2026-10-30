@@ -24,7 +24,7 @@ public:
   void setID(int id);
   void depthClear();
 
-  u8 _128[0x808 - 0x128];
+  u8 _800[0x808 - 0x800];
   u32 unknown808; // Inferred role: flags; original member name unknown.
   u8 _80c[0x810 - 0x80c];
   mm::Mat44 unknown810; // Inferred role: shadow matrix; original member name unknown.

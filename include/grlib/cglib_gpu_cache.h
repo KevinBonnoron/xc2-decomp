@@ -27,6 +27,7 @@ public:
   static void setMemPoolBuffer(void *buffer, u32 size);
   static void releaseMemPoolMemHandle(mtl::ALLOC_HANDLE handle);
   static void releaseMemPoolBuffer(void *buffer);
+  static void checkMemList();
 };
 
 } // namespace grlib

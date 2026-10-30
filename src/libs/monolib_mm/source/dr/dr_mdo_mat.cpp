@@ -4,6 +4,9 @@
 
 #include "dr/dr_man.h"
 #include "dr/dr_res_mdo_mat.h"
+#include "grlib/cglib_dbl_uniform_block.h" // IWYU pragma: keep
+#include "grlib/cglib_one_uniform_block.h" // IWYU pragma: keep
+#include "grlib/cglib_tri_uniform_block.h" // IWYU pragma: keep
 #include "mm_math/mm_col4.h"
 
 namespace ml {
@@ -354,3 +357,8 @@ void DrMdoMat::matCall_ToonId(const MdsMatInfoHeader *header, int valueIndex, in
 void DrMdoMat::matCall_VolumeTest(const MdsMatInfoHeader *header, int valueIndex, int matIndex) {}
 
 } // namespace ml
+
+// The game instantiates these in this file, where the uniform block constructors and release() are out of line.
+template void grlib::CGLibUniformArray<grlib::CGLibOneUniformBlock>::setupArray(u32 count);
+template void grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock>::setupArray(u32 count);
+template void grlib::CGLibUniformArray<grlib::CGLibTriUniformBlock>::setupArray(u32 count);

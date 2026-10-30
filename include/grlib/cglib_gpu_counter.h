@@ -9,6 +9,7 @@ namespace grlib {
 
 class CGLibGpuCounter {
 public:
+  CGLibGpuCounter();
   void begin();
   void end();
   int getTimeStamp();

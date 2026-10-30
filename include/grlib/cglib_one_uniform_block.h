@@ -21,7 +21,11 @@ public:
   void updateData(u32 offset, u32 size);
   void *getMapping();
   void setUniformBlock(u32 index);
+  void setStorageBuffer(u32 index);
+  void setUniformBlock(u32 index, u32 offset, u32 size);
+  void setStorageBuffer(u32 index, u32 offset, u32 size);
   void beginStreamOut(u32 offset);
+  void endStreamOut(u32 count, u32 stride);
 
   void *m_mapping;
   u32 m_size;

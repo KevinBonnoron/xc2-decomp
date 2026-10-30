@@ -9,19 +9,16 @@
 #include "grlib/cglib_buff_texture.h"
 #include "grlib/cglib_cmd_buffer.h"
 #include "grlib/cglib_color_ctl.h"
-#include "grlib/cglib_dec_shader.h"
-#include "grlib/cglib_depth_target.h"
+#include "grlib/cglib_display.h"
 #include "grlib/cglib_gpu_time_stamp.h"
 #include "grlib/cglib_mem_pool.h"
 #include "grlib/cglib_mem_pool_adder.h"
 #include "grlib/cglib_mem_pool_list.h"
 #include "grlib/cglib_pipeline.h"
-#include "grlib/cglib_render_target.h"
-#include "grlib/cglib_sampler.h"
 #include "grlib/cglib_sampler_descriptor.h"
 #include "grlib/cglib_state.h"
 #include "grlib/cglib_tex_descriptor.h"
-#include "grlib/cglib_vtx_fetch.h"
+#include "grlib/cglib_util_obj.h"
 #include "mm_mtl/singleton.h"
 #include "types.h"
 
@@ -42,7 +39,6 @@ namespace grlib {
 class CGLibColorBuffer;
 class CGLibDepthBuffer;
 struct CGLibMemType;
-class CGLibBuffResSamObj;
 
 namespace context {
 
@@ -53,7 +49,10 @@ public:
   static int s_nvSamplerSize;
   static int s_nNnumReservedTextures;
   static int s_nNumReservedSamplers;
+  static int s_nLinerTextureStride;
 
+  CGLibSystemContext();
+  ~CGLibSystemContext();
   static ml::CriticalSection &getCriticalSection();
   void createMemPool(CGLibMemPool &memPool, mtl::ALLOC_HANDLE handle, u32 flags);
   bool isRelease();
@@ -77,9 +76,10 @@ public:
   void releaseDelayVertex(CGLibMemType &memType);
   void setPixelResidentArea(bool isEnable, u32 size);
 
-  CGLibCmdBuffer *unknown08;  // Inferred role: current command buffer; original member name unknown.
-  CGLibMemPoolList unknown10; // Inferred role: uniform mem pool list; original member name unknown.
-  u8 _0038[0x0088 - 0x0038];
+  CGLibCmdBuffer *unknown08;         // Inferred role: current command buffer; original member name unknown.
+  CGLibMemPoolList unknown10;        // Inferred role: uniform mem pool list; original member name unknown.
+  CGLibMemPoolList unknown38;        // Inferred role: second mem pool list, released by cleanup; original member name unknown.
+  CGLibMemPoolList unknown60;        // Inferred role: indirect draw count mem pool list; original member name unknown.
   CGLibCmdBuffer unknown88[2];       // Inferred role: control command buffers; original member name unknown.
   CGLibCmdBuffer unknown268[2];      // Inferred role: render command buffers; original member name unknown.
   CGLibCmdBuffer unknown448;         // Inferred role: extra command buffer; original member name unknown.
@@ -93,22 +93,17 @@ public:
   CGLibMemPoolAdder unknownef8;      // Inferred role: mem pool adder; original member name unknown.
   CGLibBuffMinUniform unknownf08[5]; // Inferred role: min uniform buffers by size class; original member name unknown.
   CGLibPipeline unknown1070;         // Inferred role: pipeline; original member name unknown.
-  CGLibRenderTarget unknown1110[2];  // Inferred role: main render targets; original member name unknown.
-  CGLibDepthTarget unknown18a0;      // Inferred role: main depth target; original member name unknown.
-  u8 _19c8[0x20d4 - 0x19c8];
-  s32 unknown20d4; // Inferred role: main render target index; original member name unknown.
-  u8 _20d8;
-  bool unknown20d9; // Inferred role: frame begun; original member name unknown.
-  u8 _20da[0x2320 - 0x20da];
-  CGLibDecShader unknown2320;    // Inferred role: dec shader; original member name unknown.
-  CGLibVtxFetch unknown2388[3];  // Inferred role: vtx fetches; original member name unknown.
-  CGLibSampler unknown23b8[5];   // Inferred role: util samplers; original member name unknown.
-  CGLibMemPool unknown2458;      // Inferred role: counter mem pool; original member name unknown.
-  CGLibMemPool unknown2478;      // Inferred role: pixel mem pool; original member name unknown.
-  CGLibMemPool unknown2498;      // Inferred role: vertex mem pool; original member name unknown.
-  CGLibMemPool unknown24b8;      // Inferred role: uniform mem pool; original member name unknown.
-  CGLibGpuTimeStamp unknown24d8; // Inferred role: gpu time stamp; original member name unknown.
-  u8 _2540[0x2548 - 0x2540];
+  CGLibDisplay unknown1110;          // Inferred role: display; original member name unknown.
+  CGLibUtilObj unknown2320;          // Inferred role: util objects (copy shader, fetches, samplers); original member name unknown.
+  u64 unknown2448;                   // Inferred role: cleared by the constructor; original member name unknown.
+  u64 unknown2450;                   // Inferred role: cleared by the constructor; original member name unknown.
+  CGLibMemPool unknown2458;          // Inferred role: counter mem pool; original member name unknown.
+  CGLibMemPool unknown2478;          // Inferred role: pixel mem pool; original member name unknown.
+  CGLibMemPool unknown2498;          // Inferred role: vertex mem pool; original member name unknown.
+  CGLibMemPool unknown24b8;          // Inferred role: uniform mem pool; original member name unknown.
+  CGLibGpuTimeStamp unknown24d8;     // Inferred role: gpu time stamp; original member name unknown.
+  bool unknown2540;                  // Inferred role: set up, checked by cleanup; original member name unknown.
+  u8 _2541[0x2548 - 0x2541];
   u64 unknown2548;      // Inferred role: glb uniform gpu address; original member name unknown.
   u8 *unknown2550;      // Inferred role: glb uniform buffer; original member name unknown.
   u64 unknown2558[2];   // Inferred role: glb uniform offsets by buffer index; original member name unknown.
@@ -131,6 +126,8 @@ public:
 
 static_assert(offsetof(CGLibSystemContext, unknown08) == 0x0008, "");
 static_assert(offsetof(CGLibSystemContext, unknown10) == 0x0010, "");
+static_assert(offsetof(CGLibSystemContext, unknown38) == 0x0038, "");
+static_assert(offsetof(CGLibSystemContext, unknown60) == 0x0060, "");
 static_assert(offsetof(CGLibSystemContext, unknown88) == 0x0088, "");
 static_assert(offsetof(CGLibSystemContext, unknown268) == 0x0268, "");
 static_assert(offsetof(CGLibSystemContext, unknown448) == 0x0448, "");
@@ -145,14 +142,12 @@ static_assert(offsetof(CGLibSystemContext, unknownef8) == 0x0ef8, "");
 static_assert(offsetof(CGLibSystemContext, unknownf08) == 0x0f08, "");
 static_assert(offsetof(CGLibSystemContext, unknown1070) == 0x1070, "");
 static_assert(offsetof(CGLibSystemContext, unknown1110) == 0x1110, "");
-static_assert(offsetof(CGLibSystemContext, unknown18a0) == 0x18a0, "");
-static_assert(offsetof(CGLibSystemContext, unknown20d4) == 0x20d4, "");
-static_assert(offsetof(CGLibSystemContext, unknown20d9) == 0x20d9, "");
 static_assert(offsetof(CGLibSystemContext, unknown2320) == 0x2320, "");
-static_assert(offsetof(CGLibSystemContext, unknown2388) == 0x2388, "");
-static_assert(offsetof(CGLibSystemContext, unknown23b8) == 0x23b8, "");
+static_assert(offsetof(CGLibSystemContext, unknown2448) == 0x2448, "");
+static_assert(offsetof(CGLibSystemContext, unknown2450) == 0x2450, "");
 static_assert(offsetof(CGLibSystemContext, unknown2458) == 0x2458, "");
 static_assert(offsetof(CGLibSystemContext, unknown24d8) == 0x24d8, "");
+static_assert(offsetof(CGLibSystemContext, unknown2540) == 0x2540, "");
 static_assert(offsetof(CGLibSystemContext, unknown2548) == 0x2548, "");
 static_assert(offsetof(CGLibSystemContext, unknown2558) == 0x2558, "");
 static_assert(offsetof(CGLibSystemContext, unknown2568) == 0x2568, "");

@@ -1,19 +1,44 @@
 #include "grlib/cglib_ctl_shader.h"
 
+#include "grlib/cglib_ctl_texture.h"
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_dec_shader.h"
 #include "grlib/cglib_dec_shd_ext_tbl.h"
 #include "grlib/cglib_etc_uniform_block.h"
+#include "grlib/cglib_manager.h"
 #include "grlib/cglib_one_uniform_block.h"
 #include "grlib/cglib_pipeline.h"
 #include "grlib/cglib_sampler.h"
+#include "grlib/cglib_sampler_descriptor.h"
 #include "grlib/cglib_shader.h"
 #include "grlib/cglib_system_context.h"
+#include "grlib/cglib_tex_descriptor.h"
 #include "grlib/cglib_tri_uniform_block.h"
+#include "grlib/cglib_util_obj.h"
 #include "grlib/cglib_vtx_fetch.h"
 #include "nvn/nvn.h"
 
 namespace grlib {
+class CGLibTextureBuffer;
+
+void CGLibCtlTexture::setTexture(const CGLibTextureBuffer &texture, const CGLibSampler &sampler, u32 location) {
+  if (location != 0xffffffff) {
+    context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+    int textureId = context->unknown538.setTexture(texture);
+    int samplerId = context->unknown5a0.setSampler(sampler);
+    NVNtextureHandle handle = nvnDeviceGetTextureHandle(&CGLibManager::get()->unknown00, textureId, samplerId);
+    context->unknown1070._98->setTextureHandle(location, context->unknown1070.unknown00, handle);
+  }
+}
+
+void CGLibCtlTexture::setUAVTexture(const CGLibTextureBuffer &texture, u32 location, u32 level, u32 layer) {
+  if (location != 0xffffffff) {
+    context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+    int imageId = context->unknown538.setImage(texture);
+    NVNimageHandle handle = nvnDeviceGetImageHandle(&CGLibManager::get()->unknown00, imageId);
+    context->unknown1070._98->setImageHandle(location, context->unknown1070.unknown00, handle);
+  }
+}
 
 void CGLibCtlShader::setShader(CGLibDecShader &shader, CGLibVtxFetch &fetch) {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
@@ -73,10 +98,10 @@ void CGLibCtlShader::setMemoryBarrier() { nvnCommandBufferBarrier(context::CGLib
 
 void CGLibCtlShader::setMemoryBarrierBit(u32 bits) { nvnCommandBufferBarrier(context::CGLibSystemContext::get()->unknown1070.unknown00, bits); }
 
-CGLibDecShader *CGLibCtlShader::getDecShader() { return &context::CGLibSystemContext::get()->unknown2320; }
+CGLibDecShader *CGLibCtlShader::getDecShader() { return &context::CGLibSystemContext::get()->unknown2320.unknown00; }
 
-CGLibVtxFetch *CGLibCtlShader::getVtxFetch(GrlUtilVertFetch type) { return &context::CGLibSystemContext::get()->unknown2388[type]; }
+CGLibVtxFetch *CGLibCtlShader::getVtxFetch(GrlUtilVertFetch type) { return &context::CGLibSystemContext::get()->unknown2320.unknown68[type]; }
 
-CGLibSampler *CGLibCtlShader::getSampler(GrlUtilSampler type) { return &context::CGLibSystemContext::get()->unknown23b8[type]; }
+CGLibSampler *CGLibCtlShader::getSampler(GrlUtilSampler type) { return &context::CGLibSystemContext::get()->unknown2320.unknown98[type]; }
 
 } // namespace grlib

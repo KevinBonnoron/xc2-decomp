@@ -15,6 +15,7 @@ namespace context {
 class CGLibSystemContext;
 } // namespace context
 class CGLibDblUniformBlock;
+class CGLibEtcUniformBlock;
 class CGLibOneUniformBlock;
 class CGLibTriUniformBlock;
 class CGLibVtxStmOut;
@@ -35,6 +36,14 @@ public:
   static void setInstanceVertex(CGLibVtxOneInstans &instance, int stride, int offset, int stream, u32 divisor);
   static void renderVertex(GrlPrimitiveType type, int count);
   static void renderInstanceVertex(GrlPrimitiveType type, int count, int instanceCount);
+  static void renderIndirectVertex(GrlPrimitiveType type, const CGLibOneUniformBlock &block, u32 offset);
+  static void renderIndirectVertex(GrlPrimitiveType type, const CGLibDblUniformBlock &block, u32 offset);
+  static void renderIndirectVertex(GrlPrimitiveType type, const CGLibTriUniformBlock &block, u32 offset);
+  static void renderIndirectVertex(GrlPrimitiveType type, const CGLibEtcUniformBlock &block, u32 offset);
+  static void renderMultiIndirectVertex(GrlPrimitiveType type, u32 drawCount, u32 stride, const CGLibOneUniformBlock &block, u32 offset);
+  static void renderMultiIndirectVertex(GrlPrimitiveType type, u32 drawCount, u32 stride, const CGLibDblUniformBlock &block, u32 offset);
+  static void renderMultiIndirectVertex(GrlPrimitiveType type, u32 drawCount, u32 stride, const CGLibTriUniformBlock &block, u32 offset);
+  static void renderMultiIndirectVertex(GrlPrimitiveType type, u32 drawCount, u32 stride, const CGLibEtcUniformBlock &block, u32 offset);
 
   // Inferred role: sets the stride and divisor of a vertex stream; original name unknown.
   static void unknown001(context::CGLibSystemContext *context, size_t stride, u32 divisor, int stream);

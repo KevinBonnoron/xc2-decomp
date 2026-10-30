@@ -11,6 +11,7 @@ class DrShdFetchObj;
 class DrShdFetchMan {
 public:
   DrShdFetchMan(DrMan *drMan);
+  void releaseFetchObj(DrShdFetchObj *obj);
 
   DrShdFetchObj *unknown00; // Inferred role: first fetch object; original member name unknown.
   DrShdFetchObj *unknown08; // Inferred role: last fetch object; original member name unknown.

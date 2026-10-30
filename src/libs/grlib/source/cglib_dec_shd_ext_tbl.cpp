@@ -21,4 +21,24 @@ void CGLibDecShdExtTbl::setObj(CGLibDecShader *shader) {
   unknown08 = 0;
 }
 
+void CGLibDecShdExtTbl::setDeclarationIdx(u32 offset, u32 index) {
+  const unknown001 *header = unknown00->unknown00;
+  if (offset == 0xffffffff || offset >= header->unknown08) {
+    return;
+  }
+  const unknown002 *declarations = reinterpret_cast<const unknown002 *>(reinterpret_cast<const u8 *>(header) + header->unknown0c);
+  unknown08 -= unknown10[offset] * declarations[offset].unknown04;
+  if (index < 2) {
+    unknown10[offset] = 0;
+    return;
+  }
+  if (index > declarations[offset].unknown00) {
+    unknown10[offset] = declarations[offset].unknown00 - 1;
+    unknown08 += unknown10[offset] * declarations[offset].unknown04;
+  } else {
+    unknown10[offset] = index - 1;
+    unknown08 += unknown10[offset] * declarations[offset].unknown04;
+  }
+}
+
 } // namespace grlib

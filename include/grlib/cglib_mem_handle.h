@@ -32,14 +32,34 @@ static_assert(sizeof(CGLibMemType) == 0x10, "");
 
 class CGLibMemHandle {
 public:
+  struct ArgMemInfo {
+    u32 unknown00; // Inferred role: first part of the default heap size; original member name unknown.
+    u32 unknown04; // Inferred role: pixel heap size; original member name unknown.
+    u32 unknown08; // Inferred role: vertex heap size; original member name unknown.
+    u32 unknown0c; // Inferred role: uniform heap size; original member name unknown.
+    u32 unknown10; // Inferred role: memory heap size; original member name unknown.
+    u32 unknown14; // Inferred role: fetch heap size; original member name unknown.
+    u32 unknown18; // Inferred role: shader heap size; original member name unknown.
+    u32 unknown1c; // Inferred role: counter heap size; original member name unknown.
+    u32 unknown20; // Inferred role: second part of the default heap size; original member name unknown.
+    u32 unknown24; // Inferred role: third part of the default heap size; original member name unknown.
+    u32 unknown28; // Inferred role: fourth part of the default heap size; original member name unknown.
+    u32 unknown2c; // Inferred role: fifth part of the default heap size; original member name unknown.
+    u32 unknown30; // Inferred role: sixth part of the default heap size; original member name unknown.
+  };
+
+  static mtl::ALLOC_HANDLE s_hTop;
   static mtl::ALLOC_HANDLE s_hDefHandle;
   static mtl::ALLOC_HANDLE s_hCntHandle;
   static mtl::ALLOC_HANDLE s_hPxlHandle;
   static mtl::ALLOC_HANDLE s_hVtxHandle;
   static mtl::ALLOC_HANDLE s_hUniHandle;
   static mtl::ALLOC_HANDLE s_hMemHandle;
+  static mtl::ALLOC_HANDLE s_hShdHandle;
+  static mtl::ALLOC_HANDLE s_hFchHandle;
 
   static ml::CriticalSection &getCriticalSection();
+  static void setup(const ArgMemInfo &info);
 
   static void setMemBuff(CGLibMemType &memType, void *buffer);
   static void allocVertex(CGLibMemType &memType, u32 size);
@@ -47,5 +67,9 @@ public:
   static void free(CGLibMemType &memType);
   static void release();
 };
+
+static_assert(offsetof(CGLibMemHandle::ArgMemInfo, unknown1c) == 0x1c, "");
+static_assert(offsetof(CGLibMemHandle::ArgMemInfo, unknown30) == 0x30, "");
+static_assert(sizeof(CGLibMemHandle::ArgMemInfo) == 0x34, "");
 
 } // namespace grlib

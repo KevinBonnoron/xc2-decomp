@@ -1,12 +1,16 @@
 #include <string.h>
 
 #include "grlib/cglib_ctl_vertex.h"
+#include "grlib/cglib_dbl_uniform_block.h"
+#include "grlib/cglib_etc_uniform_block.h"
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_mem_handle.h"
+#include "grlib/cglib_mem_pool_list.h"
 #include "grlib/cglib_one_uniform_block.h"
 #include "grlib/cglib_pipeline.h"
 #include "grlib/cglib_shader.h"
 #include "grlib/cglib_system_context.h"
+#include "grlib/cglib_tri_uniform_block.h"
 #include "grlib/cglib_vtl_mem_pool.h"
 #include "grlib/cglib_vtx_index.h"
 #include "grlib/cglib_vtx_instans.h"
@@ -91,6 +95,84 @@ void CGLibVtxIndex::drawIndirect(const CGLibOneUniformBlock &block, u32 offset) 
   nvnCommandBufferDrawElementsIndirect(context->unknown1070.unknown00, static_cast<NVNdrawPrimitive>(unknown08), static_cast<NVNindexType>(unknown04), unknown20, block.unknown10 + offset);
 }
 
+void CGLibVtxIndex::drawIndirect(const CGLibDblUniformBlock &block, u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070.updateVertex();
+  nvnCommandBufferDrawElementsIndirect(context->unknown1070.unknown00, static_cast<NVNdrawPrimitive>(unknown08), static_cast<NVNindexType>(unknown04), unknown20, block.getGPUAdress() + offset);
+}
+
+void CGLibVtxIndex::drawIndirect(const CGLibTriUniformBlock &block, u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070.updateVertex();
+  nvnCommandBufferDrawElementsIndirect(context->unknown1070.unknown00, static_cast<NVNdrawPrimitive>(unknown08), static_cast<NVNindexType>(unknown04), unknown20, block.getGPUAdress() + offset);
+}
+
+void CGLibVtxIndex::drawIndirect(const CGLibEtcUniformBlock &block, u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070.updateVertex();
+  nvnCommandBufferDrawElementsIndirect(context->unknown1070.unknown00, static_cast<NVNdrawPrimitive>(unknown08), static_cast<NVNindexType>(unknown04), unknown20, block.unknown10 + offset);
+}
+
+void CGLibVtxIndex::drawMultiIndirect(u32 drawCount, u32 stride, const CGLibOneUniformBlock &block, u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070.updateVertex();
+  u32 countOffset = context->unknown60.cntOffset(4, 4);
+  *reinterpret_cast<u32 *>(static_cast<u8 *>(context->unknown60.unknown18) + countOffset) = drawCount;
+  nvnCommandBufferMultiDrawElementsIndirectCount(context->unknown1070.unknown00,
+                                                 static_cast<NVNdrawPrimitive>(unknown08),
+                                                 static_cast<NVNindexType>(unknown04),
+                                                 unknown20,
+                                                 block.unknown10 + offset,
+                                                 nvnMemoryPoolGetBufferAddress(context->unknown60.m_memoryPool) + countOffset,
+                                                 drawCount,
+                                                 stride);
+}
+
+void CGLibVtxIndex::drawMultiIndirect(u32 drawCount, u32 stride, const CGLibDblUniformBlock &block, u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070.updateVertex();
+  u32 countOffset = context->unknown60.cntOffset(4, 4);
+  *reinterpret_cast<u32 *>(static_cast<u8 *>(context->unknown60.unknown18) + countOffset) = drawCount;
+  nvnCommandBufferMultiDrawElementsIndirectCount(context->unknown1070.unknown00,
+                                                 static_cast<NVNdrawPrimitive>(unknown08),
+                                                 static_cast<NVNindexType>(unknown04),
+                                                 unknown20,
+                                                 block.getGPUAdress() + offset,
+                                                 nvnMemoryPoolGetBufferAddress(context->unknown60.m_memoryPool) + countOffset,
+                                                 drawCount,
+                                                 stride);
+}
+
+void CGLibVtxIndex::drawMultiIndirect(u32 drawCount, u32 stride, const CGLibTriUniformBlock &block, u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070.updateVertex();
+  u32 countOffset = context->unknown60.cntOffset(4, 4);
+  *reinterpret_cast<u32 *>(static_cast<u8 *>(context->unknown60.unknown18) + countOffset) = drawCount;
+  nvnCommandBufferMultiDrawElementsIndirectCount(context->unknown1070.unknown00,
+                                                 static_cast<NVNdrawPrimitive>(unknown08),
+                                                 static_cast<NVNindexType>(unknown04),
+                                                 unknown20,
+                                                 block.getGPUAdress() + offset,
+                                                 nvnMemoryPoolGetBufferAddress(context->unknown60.m_memoryPool) + countOffset,
+                                                 drawCount,
+                                                 stride);
+}
+
+void CGLibVtxIndex::drawMultiIndirect(u32 drawCount, u32 stride, const CGLibEtcUniformBlock &block, u32 offset) {
+  context::CGLibSystemContext *context = context::CGLibSystemContext::get();
+  context->unknown1070.updateVertex();
+  u32 countOffset = context->unknown60.cntOffset(4, 4);
+  *reinterpret_cast<u32 *>(static_cast<u8 *>(context->unknown60.unknown18) + countOffset) = drawCount;
+  nvnCommandBufferMultiDrawElementsIndirectCount(context->unknown1070.unknown00,
+                                                 static_cast<NVNdrawPrimitive>(unknown08),
+                                                 static_cast<NVNindexType>(unknown04),
+                                                 unknown20,
+                                                 block.unknown10 + offset,
+                                                 nvnMemoryPoolGetBufferAddress(context->unknown60.m_memoryPool) + countOffset,
+                                                 drawCount,
+                                                 stride);
+}
+
 void CGLibVtxIndex::lock(void **buffer, u32 *size) {
   *buffer = unknown10.m_buffer;
   *size = getSize();
@@ -136,6 +218,8 @@ void CGLibVtxInstans::updateInstansBuff() {
 }
 
 void *CGLibVtxInstans::getNextInstansBuff() { return static_cast<u8 *>(unknown18.m_buffer) + (unknown08 + unknown10); }
+
+u64 CGLibVtxInstans_plf::getGPUAdress() { return unknown28 + CGLibManager::s_nDblNowIdx * unknown04; }
 
 CGLibVtxOneInstans::CGLibVtxOneInstans() {}
 

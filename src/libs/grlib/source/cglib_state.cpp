@@ -3,6 +3,7 @@
 #include "grlib/cglib_color_buffer.h"
 #include "grlib/cglib_depth_buffer.h"
 #include "grlib/cglib_depth_target.h"
+#include "grlib/cglib_display.h"
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_mem_handle.h"
 #include "grlib/cglib_mem_pool.h"
@@ -32,7 +33,7 @@ void CGLibSystemContext::setPixelResidentArea(bool isEnable, u32 size) {
 
 void CGLibState::setMainFrameBuffer() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  context->unknown1110[context->unknown20d4].setRenderTarget(*context->unknown18a0.unknown120);
+  context->unknown1110.unknown000[context->unknown1110.unknownfc4].setRenderTarget(*context->unknown1110.unknown790.unknown120);
 }
 
 void CGLibState::setupInitialize() {}
@@ -86,10 +87,10 @@ void CGLibState::endRegisterRenderTarget() {
 
 CGLibRenderTarget *CGLibState::getMainRenderTarget() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  return &context->unknown1110[context->unknown20d4];
+  return &context->unknown1110.unknown000[context->unknown1110.unknownfc4];
 }
 
-CGLibDepthTarget *CGLibState::getMainDepthTarget() { return &context::CGLibSystemContext::get()->unknown18a0; }
+CGLibDepthTarget *CGLibState::getMainDepthTarget() { return &context::CGLibSystemContext::get()->unknown1110.unknown790; }
 
 LibMainStateViewPort *CGLibState::getDefViewPort() { return &context::CGLibSystemContext::get()->unknown2630; }
 

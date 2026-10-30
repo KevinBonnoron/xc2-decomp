@@ -40,6 +40,15 @@ namespace grlib {
 class CGLibBuffResSamObj;
 
 struct CGLibWkrSamplerParams {
+  CGLibWkrSamplerParams() { unknown001(); }
+
+  // Inferred role: reset the params to their defaults; original name unknown.
+  void unknown001() {
+    m_value = 0;
+    unknown04.r = unknown04.g = unknown04.b = unknown04.a = 1.0f;
+    unknown14 = 0.0f;
+  }
+
   union {
     struct {
       u32 m_clampS : 4;
@@ -62,6 +71,9 @@ static_assert(offsetof(CGLibWkrSamplerParams, unknown14) == 0x14, "");
 
 class CGLibSampler {
 public:
+  static const f32 SAMPLER_LOD_MAX;
+  static const f32 SAMPLER_LOD_MIN;
+
   CGLibSampler();
   ~CGLibSampler();
   void release();

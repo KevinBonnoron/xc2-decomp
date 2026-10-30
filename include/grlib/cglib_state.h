@@ -9,6 +9,7 @@ class CGLibDepthTarget;
 class CGLibRenderTarget;
 
 struct LibMainStateViewPort {
+  LibMainStateViewPort() {}
   LibMainStateViewPort(f32 x, f32 y, f32 width, f32 height, f32 minDepth, f32 maxDepth) : unknown00(x), unknown04(y), unknown08(width), unknown0c(height), unknown10(minDepth), unknown14(maxDepth) {}
 
   f32 unknown00; // Inferred role: x; original member name unknown.

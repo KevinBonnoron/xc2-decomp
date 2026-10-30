@@ -56,15 +56,4 @@ void CGLibPipeline::begin() {
   unknown90 = 0;
 }
 
-void CGLibPipeline::updateVertex() {
-  if (unknown94) {
-    nvnCommandBufferBindVertexStreamState(unknown00, unknown90 + 1, unknown50);
-    unknown94 = false;
-  }
-}
-
-CGLibPipeline::CGLibPipeline() {}
-
-CGLibPipeline::~CGLibPipeline() {}
-
 } // namespace grlib

@@ -9,6 +9,9 @@ namespace grlib {
 
 class CGLibGpuTimeStamp {
 public:
+  CGLibGpuTimeStamp();
+  ~CGLibGpuTimeStamp();
+  void release();
   static void reset();
   void begin();
   void end();

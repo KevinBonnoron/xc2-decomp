@@ -127,3 +127,16 @@ void DrShdDataObj::setupComputeShader() { grlib::CGLibCtlShader::setComputeShade
 } // namespace ml
 
 template class grlib::CGLibShdListBase<ml::DrShdDataObj>;
+
+// clang-format off
+#include "dr_shd_fetch_man.cpp"
+#include "dr_shd_fetch_obj.cpp"
+#include "dr_shd_lgt_man.cpp"
+#include "dr_shd_lgt_obj.cpp"
+#include "dr_shd_lgt_tile_based_dr.cpp"
+#include "dr_shd_man.cpp"
+#include "dr_shd_mdo_man.cpp"
+#include "dr_shd_mdo_ext_tbl_obj.cpp"
+#include "dr_shd_mdo_dec_ext_tbl.cpp"
+#include "dr_shd_mdo_dec_res.cpp"
+// clang-format on

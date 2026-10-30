@@ -6,9 +6,11 @@
 #include "grlib/cglib_buff_min_uniform.h"
 #include "grlib/cglib_buff_occlusion.h"
 #include "grlib/cglib_buff_release_tbl.h"
+#include "grlib/cglib_buff_sampler_tbl.h"
 #include "grlib/cglib_buff_texture.h"
 #include "grlib/cglib_buffer.h"
 #include "grlib/cglib_cmd_buffer.h"
+#include "grlib/cglib_link_list.h"
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_mem_handle.h"
 #include "grlib/cglib_mem_pool.h"
@@ -17,20 +19,22 @@
 #include "grlib/cglib_parts_mem_pool.h"
 #include "grlib/cglib_pipeline.h"
 #include "grlib/cglib_release_obj.h"
+#include "grlib/cglib_sampler.h"
 #include "grlib/cglib_sampler_descriptor.h"
+#include "grlib/cglib_sampler_param.h"
 #include "grlib/cglib_system_context.h"
 #include "grlib/cglib_tex_descriptor.h"
 #include "grlib/cglib_texture_buffer.h"
 #include "grlib/cglib_vtl_mem_pool.h"
 #include "ml/critical_section.h"
+#include "ml/ml_mem.h"
+#include "mm_math/mm_col4.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 #include "nn/diag.h"
+#include "nn/os.h"
 #include "nvn/nvn.h"
 #include "types.h"
-
-struct NVNmemoryPool;
-struct NVNtexture;
 
 namespace grlib {
 
@@ -42,6 +46,69 @@ u8 *CGLibBuffMinUniform::allocBuffer() {
 ml::CriticalSection &CGLibMemHandle::getCriticalSection() {
   static ml::CriticalSection s_criticalSection;
   return s_criticalSection;
+}
+
+void CGLibMemHandle::setup(const ArgMemInfo &info) {
+  release();
+  u32 defSize = info.unknown00 + info.unknown20 + info.unknown24 + info.unknown28 + info.unknown2c + info.unknown30;
+  u32 topSize = defSize + info.unknown04 + info.unknown08 + info.unknown0c + info.unknown10 + info.unknown14 + info.unknown18 + 0x20000;
+  s_hTop = mtl::MemManager::create(ml::MlMem::getGraphicMem(), topSize, "GLIBTOP", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10000);
+  s_hCntHandle = mtl::MemManager::create(ml::MlMem::getGraphicMem(), info.unknown1c, "GLIBCNT", true, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
+  s_hDefHandle = mtl::MemManager::create(s_hTop, defSize, "GLIBDEF", true, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
+  s_hPxlHandle = mtl::MemManager::create(s_hTop, info.unknown04, "GLIBPXL", true, mtl::ALLOCATOR_TYPE_PROGRAM, 0x10000);
+  s_hVtxHandle = mtl::MemManager::create(s_hTop, info.unknown08, "GLIBVTX", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
+  s_hUniHandle = mtl::MemManager::create(s_hTop, info.unknown0c, "GLIBUNI", false, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
+  s_hMemHandle = mtl::MemManager::create(s_hTop, info.unknown10, "GLIBMEM", true, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
+  s_hFchHandle = mtl::MemManager::create(s_hTop, info.unknown14, "GLIBFET", true, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
+  s_hShdHandle = mtl::MemManager::create(s_hTop, info.unknown18, "GLIBSHD", true, mtl::ALLOCATOR_TYPE_PROGRAM, 0x1000);
+}
+
+void CGLibMemHandle::release() {
+  if (s_hDefHandle.isValid()) {
+    mtl::MemManager::erase(s_hDefHandle);
+    s_hDefHandle = mtl::ALLOC_HANDLE();
+  }
+  if (s_hPxlHandle.isValid()) {
+    mtl::MemManager::erase(s_hPxlHandle);
+    s_hPxlHandle = mtl::ALLOC_HANDLE();
+  }
+  if (s_hVtxHandle.isValid()) {
+    mtl::MemManager::erase(s_hVtxHandle);
+    s_hVtxHandle = mtl::ALLOC_HANDLE();
+  }
+  if (s_hUniHandle.isValid()) {
+    mtl::MemManager::erase(s_hUniHandle);
+    s_hUniHandle = mtl::ALLOC_HANDLE();
+  }
+  if (s_hMemHandle.isValid()) {
+    mtl::MemManager::erase(s_hMemHandle);
+    s_hMemHandle = mtl::ALLOC_HANDLE();
+  }
+  if (s_hFchHandle.isValid()) {
+    mtl::MemManager::erase(s_hFchHandle);
+    s_hFchHandle = mtl::ALLOC_HANDLE();
+  }
+  if (s_hShdHandle.isValid()) {
+    mtl::MemManager::erase(s_hShdHandle);
+    s_hShdHandle = mtl::ALLOC_HANDLE();
+  }
+  if (s_hCntHandle.isValid()) {
+    mtl::MemManager::erase(s_hCntHandle);
+    s_hCntHandle = mtl::ALLOC_HANDLE();
+  }
+  if (s_hTop.isValid()) {
+    mtl::MemManager::erase(s_hTop);
+    s_hTop = mtl::ALLOC_HANDLE();
+  }
+  // The original resets every handle again except s_hCntHandle.
+  s_hTop = mtl::ALLOC_HANDLE();
+  s_hDefHandle = mtl::ALLOC_HANDLE();
+  s_hPxlHandle = mtl::ALLOC_HANDLE();
+  s_hVtxHandle = mtl::ALLOC_HANDLE();
+  s_hUniHandle = mtl::ALLOC_HANDLE();
+  s_hMemHandle = mtl::ALLOC_HANDLE();
+  s_hFchHandle = mtl::ALLOC_HANDLE();
+  s_hShdHandle = mtl::ALLOC_HANDLE();
 }
 
 void CGLibMemHandle::setMemBuff(CGLibMemType &memType, void *buffer) {
@@ -91,6 +158,24 @@ void CGLibMemHandle::allocUniform(CGLibMemType &memType, u32 size) {
     memType.m_buffer = mtl::MemManager::allocate(s_hUniHandle, size, 0x100, false, "no name", 0);
     memType.unknown08 = CGLibMemType::TYPE_UNKNOWN_6;
   }
+}
+
+void CGLibMemHandle::free(CGLibMemType &memType) {
+  ml::CS lock(getCriticalSection());
+  if (memType.unknown08 == CGLibMemType::TYPE_EXTERNAL) {
+    memType.m_buffer = nullptr;
+    return;
+  }
+  if (memType.unknown08 == CGLibMemType::TYPE_UNKNOWN_6) {
+    if (memType.m_buffer != nullptr) {
+      mtl::MemManager::deallocate(memType.m_buffer, 0, false);
+      memType.m_buffer = nullptr;
+    }
+  } else {
+    context::CGLibSystemContext::get()->unknownf08[memType.unknown08].freeBuffer(memType.m_buffer);
+    memType.m_buffer = nullptr;
+  }
+  memType.unknown08 = CGLibMemType::TYPE_EXTERNAL;
 }
 
 void CGLibBuffFixAlloc::freeBuffer(void *buffer) {
@@ -155,6 +240,127 @@ u32 CGLibBuffFixAlloc::createBuff() {
   unknown24 = unknown18 >> 6;
   unknown14++;
   return id;
+}
+
+CGLibBuffResSamObj::CGLibBuffResSamObj() : unknown00(nullptr), unknown08(nullptr) {
+  unknown10.unknown001();
+  unknown90 = 0;
+  unknown92 = 0;
+}
+
+CGLibBuffResSamObj::~CGLibBuffResSamObj() { release(); }
+
+void CGLibBuffResSamObj::release() {
+  unknown10.unknown001();
+  unknown28.releaseParams();
+  unknown90 = 0;
+  unknown92 = 0;
+}
+
+void CGLibBuffResSamObj::create(const CGLibWkrSamplerParams &params, int index) {
+  unknown10 = params;
+  unknown92 = index;
+  unknown90 = 1;
+  unknown28.setupResource(params);
+}
+
+bool CGLibBuffResSamObj::isCheck(const CGLibWkrSamplerParams &params) {
+  if (params.m_value != unknown10.m_value) {
+    return false;
+  }
+  if (params.m_isBorder) {
+    if (params.unknown04.r != unknown10.unknown04.r) {
+      return false;
+    }
+    if (params.unknown04.g != unknown10.unknown04.g) {
+      return false;
+    }
+    if (params.unknown04.b != unknown10.unknown04.b) {
+      return false;
+    }
+    if (params.unknown04.a != unknown10.unknown04.a) {
+      return false;
+    }
+  }
+  return params.unknown14 == unknown10.unknown14;
+}
+
+CGLibBuffSamplerTbl::CGLibBuffSamplerTbl() : unknown00(), unknown08(), unknown0c(), unknown10(), unknown810(), unknown820() {}
+
+CGLibBuffSamplerTbl::~CGLibBuffSamplerTbl() { release(); }
+
+void CGLibBuffSamplerTbl::release() {
+  for (int i = 0; i < 0x80; i++) {
+    releaseObj(unknown10[i]);
+  }
+  releaseObj(unknown810);
+  releaseObj(unknown820);
+  if (unknown00 != nullptr) {
+    mtl::MemManager::deallocate(unknown00, 0, false);
+    unknown00 = nullptr;
+  }
+  unknown08 = 0;
+  unknown0c = 0;
+}
+
+void CGLibBuffSamplerTbl::releaseObj(CGLibLinkList<CGLibBuffResSamObj> &list) {
+  for (CGLibBuffResSamObj *obj = list.unknown00; obj != nullptr; obj = obj->unknown08) {
+    obj->release();
+  }
+  list.unknown00 = nullptr;
+  list.unknown08 = nullptr;
+}
+
+int CGLibBuffSamplerTbl::setup(void *buffer, u32 num) {
+  release();
+  u32 size = num * sizeof(CGLibBuffResSamObj);
+  CGLibBuffResSamObj *objs = static_cast<CGLibBuffResSamObj *>(buffer);
+  for (u32 i = 0; i < num; i++) {
+    CGLibBuffResSamObj *obj = new (&objs[i]) CGLibBuffResSamObj();
+    unknown810.unknown001(obj);
+  }
+  unknown08 = 0;
+  unknown0c = num;
+  return size;
+}
+
+CGLibBuffResSamObj *CGLibBuffSamplerTbl::allocSampler(const CGLibWkrSamplerParams &params) {
+  u32 index = params.m_clampS + params.m_clampT * 8 + params.m_magFilter * 64;
+  for (CGLibBuffResSamObj *obj = unknown10[index].unknown00; obj != nullptr; obj = obj->unknown08) {
+    if (obj->isCheck(params)) {
+      obj->unknown90++;
+      return obj;
+    }
+  }
+  CGLibBuffResSamObj *obj = unknown810.unknown00;
+  unknown810.unknown002(obj);
+  unknown10[index].unknown001(obj);
+  obj->create(params, index);
+  unknown08++;
+  return obj;
+}
+
+void CGLibBuffSamplerTbl::freeSampler(CGLibBuffResSamObj *&sampler) {
+  s16 count = sampler->unknown90;
+  count--;
+  if (count <= 0) {
+    sampler->unknown90 = 0;
+  } else {
+    sampler->unknown90 = count;
+  }
+  if (count <= 0) {
+    unknown10[sampler->unknown92].unknown002(sampler);
+    context::CGLibSystemContext::get()->releaseDelaySampler(sampler);
+    unknown820.unknown001(sampler);
+    unknown08--;
+  }
+  sampler = nullptr;
+}
+
+void CGLibBuffSamplerTbl::freeDelaySampler(CGLibBuffResSamObj *sampler) {
+  unknown820.unknown002(sampler);
+  sampler->release();
+  unknown810.unknown001(sampler);
 }
 
 void CGLibBuffTexture_plf::createPlf(u32 num, u8 *buffer) { unknown00 = buffer; }
@@ -266,6 +472,34 @@ void CGLibVtlMemPool::release() {
   unknown18 = 0;
 }
 
+void CGLibVtlMemPool::setupBuffer(void *buffer, u32 size) {
+  release();
+  m_size = size;
+  m_buffer = buffer;
+  unknown18 = 0;
+  CGLibMemPool *memPool = context::CGLibSystemContext::get()->unknownef8.getMemPool(buffer);
+  if (memPool != nullptr) {
+    nn::os::FlushDataCache(m_buffer, size);
+    unknown18 = static_cast<u8 *>(buffer) - static_cast<u8 *>(memPool->unknown18);
+    unknown00 = memPool->m_memoryPool;
+    unknown08 = nvnMemoryPoolGetBufferAddress(memPool->m_memoryPool) + unknown18;
+    unknown20 = false;
+  } else {
+    NVNdevice *device = &CGLibManager::get()->unknown00;
+    NVNmemoryPoolBuilder builder;
+    nvnMemoryPoolBuilderSetDefaults(&builder);
+    nvnMemoryPoolBuilderSetDevice(&builder, device);
+    nvnMemoryPoolBuilderSetFlags(&builder, 100);
+    nvnMemoryPoolBuilderSetStorage(&builder, buffer, size);
+    CGLibBuffMemPoolTbl &table = context::CGLibSystemContext::get()->unknowne90;
+    u32 id = table.allocID();
+    unknown00 = reinterpret_cast<NVNmemoryPool *>(table.m_buffer + table.unknown10 * id);
+    nvnMemoryPoolInitialize(unknown00, &builder);
+    unknown08 = nvnMemoryPoolGetBufferAddress(unknown00);
+    unknown20 = true;
+  }
+}
+
 void CGLibVtlMemPool::delayRelease() {
   if (unknown20) {
     context::CGLibSystemContext::get()->releaseDelayMempool(unknown00, nullptr);
@@ -305,6 +539,22 @@ void CGLibMemPool::setupHandle(mtl::ALLOC_HANDLE handle, u32 size, u32 flags) {
   release();
   unknown10 = mtl::MemManager::allocate(handle, size, 0x1000, false, "no name", 0);
   setupBuffer(unknown10, size + (-size & 0xfff), flags);
+}
+
+void CGLibMemPool::setupBuffer(void *buffer, u32 size, u32 flags) {
+  release();
+  unknown08 = size;
+  unknown18 = buffer;
+  NVNdevice *device = &CGLibManager::get()->unknown00;
+  NVNmemoryPoolBuilder builder;
+  nvnMemoryPoolBuilderSetDefaults(&builder);
+  nvnMemoryPoolBuilderSetDevice(&builder, device);
+  nvnMemoryPoolBuilderSetFlags(&builder, flags);
+  nvnMemoryPoolBuilderSetStorage(&builder, buffer, size);
+  CGLibBuffMemPoolTbl &table = context::CGLibSystemContext::get()->unknowne90;
+  u32 id = table.allocID();
+  m_memoryPool = reinterpret_cast<NVNmemoryPool *>(table.m_buffer + table.unknown10 * id);
+  nvnMemoryPoolInitialize(m_memoryPool, &builder);
 }
 
 CGLibMemPoolList::CGLibMemPoolList() : unknown20(0) {}
@@ -466,6 +716,8 @@ void CGLibReleaseObj_plf::release_textrue(wrkRelease &work) {
   }
 }
 
+void CGLibReleaseObj_plf::release_sampler(wrkRelease &work) { context::CGLibSystemContext::get()->unknown608.freeDelaySampler(static_cast<CGLibBuffResSamObj *>(work.unknown00)); }
+
 void CGLibReleaseObj_plf::release_vertex(wrkRelease &work) { CGLibMemHandle::free(reinterpret_cast<CGLibMemType &>(work)); }
 
 CGLibTexDescriptor::CGLibTexDescriptor() {}
@@ -519,35 +771,43 @@ CGLibSamplerDescriptor::CGLibSamplerDescriptor() {}
 CGLibSamplerDescriptor::~CGLibSamplerDescriptor() { release(); }
 
 void CGLibSamplerDescriptor::release() {
-  nvnSamplerPoolFinalize(&unknown48);
-  unknown28.release();
+  nvnSamplerPoolFinalize(&this->CGLibSamplerDescriptor_plf::unknown20);
+  unknown00.release();
   releaseTbl();
 }
 
 int CGLibSamplerDescriptor::setup(void *buffer, u32 num) {
   int size = context::CGLibSystemContext::s_nvSamplerSize * num;
-  unknown28.setupBuffer(buffer, size, 0x22);
-  nvnSamplerPoolInitialize(&unknown48, unknown28.m_memoryPool, 0, num);
+  unknown00.setupBuffer(buffer, size, 0x22);
+  nvnSamplerPoolInitialize(&this->CGLibSamplerDescriptor_plf::unknown20, unknown00.m_memoryPool, 0, num);
   return size;
 }
 
 int CGLibSamplerDescriptor::setup(mtl::ALLOC_HANDLE handle, u32 num) {
   int size = context::CGLibSystemContext::s_nvSamplerSize * num;
   u32 alignedSize = size + (-size & 0xfff);
-  unknown28.setupHandle(handle, alignedSize, 0x22);
-  nvnSamplerPoolInitialize(&unknown48, unknown28.m_memoryPool, 0, num);
+  unknown00.setupHandle(handle, alignedSize, 0x22);
+  nvnSamplerPoolInitialize(&this->CGLibSamplerDescriptor_plf::unknown20, unknown00.m_memoryPool, 0, num);
   return size;
 }
 
 int CGLibSamplerDescriptor::setup(CGLibMemPool &memPool, u32 offset, u32 num) {
   int size = context::CGLibSystemContext::s_nvSamplerSize * num;
-  nvnSamplerPoolInitialize(&unknown48, memPool.m_memoryPool, offset, num);
+  nvnSamplerPoolInitialize(&this->CGLibSamplerDescriptor_plf::unknown20, memPool.m_memoryPool, offset, num);
   return size;
 }
 
 void CGLibSamplerDescriptor::reset() {}
 
-void CGLibSamplerDescriptor::bind() { nvnCommandBufferSetSamplerPool(context::CGLibSystemContext::get()->unknown1070.unknown00, &unknown48); }
+void CGLibSamplerDescriptor::bind() { nvnCommandBufferSetSamplerPool(context::CGLibSystemContext::get()->unknown1070.unknown00, &this->CGLibSamplerDescriptor_plf::unknown20); }
+
+void CGLibSamplerDescriptor_plf::bindSampler(const CGLibSamplerParam &param, int samplerId) {
+  nvnSamplerPoolRegisterSampler(&unknown20, context::CGLibSystemContext::s_nNumReservedSamplers + samplerId, &param.unknown00);
+}
+
+int CGLibSamplerDescriptor_plf::setSampler(const CGLibSampler &sampler) { return context::CGLibSystemContext::s_nNumReservedSamplers + sampler.unknown18->unknown28.unknown64; }
+
+CGLibPartsMemPool::CGLibPartsMemPool() {}
 
 CGLibPartsMemPool::~CGLibPartsMemPool() { unknown10.release(); }
 
@@ -588,6 +848,22 @@ CGLibMemPool *CGLibMemPoolAdder::getMemPool(const void *address) {
 }
 
 void CGLibMemPoolAdder::addAdder(mtl::ALLOC_HANDLE handle) { addAdder(reinterpret_cast<void *>(mtl::MemManager::getTopAdr(handle)), mtl::MemManager::getTotalSize(handle)); }
+
+void CGLibMemPoolAdder::addAdder(void *buffer, u32 size) {
+  ml::CS lock(getCriticalSection());
+  CGLibPartsMemPool *pool = new (CGLibMemHandle::s_hMemHandle) CGLibPartsMemPool();
+  pool->addAdder(buffer, size);
+  if (unknown08 != nullptr) {
+    unknown08->unknown08 = pool;
+    pool->unknown00 = unknown08;
+    unknown08 = pool;
+  } else {
+    unknown00 = pool;
+    unknown08 = pool;
+    pool->unknown00 = nullptr;
+  }
+  pool->unknown08 = nullptr;
+}
 
 void CGLibMemPoolAdder::releaseAdder(mtl::ALLOC_HANDLE handle) { releaseAdder(reinterpret_cast<void *>(mtl::MemManager::getTopAdr(handle))); }
 

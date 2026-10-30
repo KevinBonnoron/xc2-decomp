@@ -24,6 +24,7 @@ public:
   void releaseTexture();
   void clearTexture(GrlCubeMapFace face, const mm::Col4 &color, GrlClaerMask mask);
   void clearIntTexture(GrlCubeMapFace face, const int *color, GrlClaerMask mask);
+  void setTextureInfo(f32 width, f32 height, GrlSurfaceFormat format, bool isResArea, u32 resArea);
   void setRegisterRenderTarget(GrlCubeMapFace face, GrlMrtType mrt);
   void setRenderTarget(GrlCubeMapFace face);
   void setRenderTarget(GrlCubeMapFace face, CGLibDepthBuffer &depthBuffer);

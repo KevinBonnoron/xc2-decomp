@@ -1,5 +1,6 @@
 #include "grlib/cglib_color_ctl.h"
 
+#include "grlib/cglib_display.h"
 #include "grlib/cglib_pipeline.h"
 #include "grlib/cglib_render_target.h"
 #include "grlib/cglib_system_context.h"
@@ -104,7 +105,7 @@ void CGLibColorCtl::setColorBufferOff() {
 
 void CGLibColorCtl::clearMainFrameBuffer(const mm::Col4 &color) {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();
-  context->unknown1110[context->unknown20d4].clearTexture(color, static_cast<GrlClaerMask>(0xf));
+  context->unknown1110.unknown000[context->unknown1110.unknownfc4].clearTexture(color, static_cast<GrlClaerMask>(0xf));
 }
 
 } // namespace grlib

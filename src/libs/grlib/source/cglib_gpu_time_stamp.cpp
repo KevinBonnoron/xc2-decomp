@@ -1,5 +1,8 @@
 #include "grlib/cglib_gpu_time_stamp.h"
 
+#include <string.h>
+
+#include "grlib/cglib_buff_fix_alloc.h"
 #include "grlib/cglib_buff_occlusion.h"
 #include "grlib/cglib_manager.h"
 #include "grlib/cglib_mem_pool.h"
@@ -8,6 +11,24 @@
 #include "nvn/nvn.h"
 
 namespace grlib {
+
+CGLibGpuTimeStamp::CGLibGpuTimeStamp() : unknown00(), unknown08(), unknown38() {}
+
+CGLibGpuTimeStamp::~CGLibGpuTimeStamp() { release(); }
+
+void CGLibGpuTimeStamp::release() {
+  CGLibBuffFixAlloc &alloc = context::CGLibSystemContext::get()->unknowne38;
+  for (int i = 0; i < 2; i++) {
+    if (unknown08[i].unknown00 != nullptr) {
+      alloc.freeID(unknown08[i].unknown08);
+    }
+    if (unknown38[i].unknown00 != nullptr) {
+      alloc.freeID(unknown38[i].unknown08);
+    }
+  }
+  memset(unknown08, 0, sizeof(unknown08));
+  memset(unknown38, 0, sizeof(unknown38));
+}
 
 void CGLibGpuTimeStamp::reset() {
   context::CGLibSystemContext *context = context::CGLibSystemContext::get();

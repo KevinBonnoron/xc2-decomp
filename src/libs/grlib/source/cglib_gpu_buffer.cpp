@@ -1,9 +1,11 @@
 #include "grlib/cglib_gpu_buffer.h"
 
+#include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_one_uniform_block.h"
 #include "grlib/cglib_pipeline.h"
 #include "grlib/cglib_system_context.h"
 #include "grlib/cglib_texture_buffer.h"
+#include "grlib/cglib_tri_uniform_block.h"
 #include "nvn/nvn.h"
 
 namespace grlib {
@@ -14,6 +16,14 @@ void CGLibGpuBuffer::copyBuffer(CGLibTextureBuffer &dst, CGLibTextureBuffer &src
 
 void CGLibGpuBuffer::copyBuffer(CGLibOneUniformBlock &dst, CGLibOneUniformBlock &src) {
   nvnCommandBufferCopyBufferToBuffer(context::CGLibSystemContext::get()->unknown1070.unknown00, src.unknown10, dst.unknown10, static_cast<int>(dst.m_size), 0);
+}
+
+void CGLibGpuBuffer::copyBuffer(CGLibDblUniformBlock &dst, CGLibDblUniformBlock &src) {
+  nvnCommandBufferCopyBufferToBuffer(context::CGLibSystemContext::get()->unknown1070.unknown00, src.getGPUAdress(), dst.getGPUAdress(), static_cast<int>(dst.m_size), 0);
+}
+
+void CGLibGpuBuffer::copyBuffer(CGLibTriUniformBlock &dst, CGLibTriUniformBlock &src) {
+  nvnCommandBufferCopyBufferToBuffer(context::CGLibSystemContext::get()->unknown1070.unknown00, src.getGPUAdress(), dst.getGPUAdress(), static_cast<int>(dst.m_size), 0);
 }
 
 } // namespace grlib

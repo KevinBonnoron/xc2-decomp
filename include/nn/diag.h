@@ -23,6 +23,13 @@
     }                                                                                                                                                                                                  \
   } while (0)
 
+#define NN_ASSERT(condition)                                                                                                                                                                           \
+  do {                                                                                                                                                                                                 \
+    if (!(condition)) {                                                                                                                                                                                \
+      ::nn::diag::detail::OnAssertionFailure(::nn::diag::ASSERTION_TYPE_UNKNOWN_2, "", "", "", 0);                                                                                                     \
+    }                                                                                                                                                                                                  \
+  } while (0)
+
 namespace nn {
 namespace detail {
 
@@ -65,10 +72,19 @@ static_assert(offsetof(LogMetaData, useDefaultLocaleCharset) == 0x28, "");
 static_assert(offsetof(LogMetaData, pAdditionalData) == 0x30, "");
 static_assert(sizeof(LogMetaData) == 0x40, "");
 
+// Provenance: AssertionType and OnAssertionFailure are the public SDK names, as declared in the open-ead nnheaders
+// project (https://github.com/open-ead/nnheaders, include/nn/diag.h), where the enumerators are not given; the
+// game calls _ZN2nn4diag6detail18OnAssertionFailureENS0_13AssertionTypeEPKcS4_S4_i (work/syms_base.txt) with 2 and
+// empty strings in grlib::CGLibDeviceVI::init (0x71007b33f0).
+enum AssertionType {
+  ASSERTION_TYPE_UNKNOWN_2 = 2,
+};
+
 namespace detail {
 
 void LogImpl(const LogMetaData &metaData, const char *format, ...);
 [[noreturn]] void AbortImpl(const char *condition, const char *functionName, const char *fileName, int lineNumber);
+void OnAssertionFailure(AssertionType type, const char *condition, const char *functionName, const char *fileName, int lineNumber);
 
 } // namespace detail
 } // namespace diag

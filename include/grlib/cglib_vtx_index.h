@@ -13,7 +13,10 @@ enum GrlIndexFormat {
 
 namespace grlib {
 
+class CGLibDblUniformBlock;
+class CGLibEtcUniformBlock;
 class CGLibOneUniformBlock;
+class CGLibTriUniformBlock;
 class CGLibVtlMemPool;
 
 class CGLibVtxIndex {
@@ -30,6 +33,13 @@ public:
   void drawInsIndex(int instanceCount);
   void drawInsIndex(int instanceCount, u32 count, u32 offset);
   void drawIndirect(const CGLibOneUniformBlock &block, u32 offset);
+  void drawIndirect(const CGLibDblUniformBlock &block, u32 offset);
+  void drawIndirect(const CGLibTriUniformBlock &block, u32 offset);
+  void drawIndirect(const CGLibEtcUniformBlock &block, u32 offset);
+  void drawMultiIndirect(u32 drawCount, u32 stride, const CGLibOneUniformBlock &block, u32 offset);
+  void drawMultiIndirect(u32 drawCount, u32 stride, const CGLibDblUniformBlock &block, u32 offset);
+  void drawMultiIndirect(u32 drawCount, u32 stride, const CGLibTriUniformBlock &block, u32 offset);
+  void drawMultiIndirect(u32 drawCount, u32 stride, const CGLibEtcUniformBlock &block, u32 offset);
   void lock(void **buffer, u32 *size);
   void unlock();
   void copyIndexBuff(const void *data);
