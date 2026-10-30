@@ -236,6 +236,35 @@ void Pose::syncModelSpace() {
   }
 }
 
+QsTransform &Pose::calcBoneModelSpace(u16 boneID) {
+  MM_ASSERT(testBoneFlag(boneID, BONE_MODEL_SPACE_DIRTY));
+  MM_ASSERT(!testBoneFlag(boneID, BONE_LOCAL_SPACE_DIRTY));
+  u16 firstBone = boneID;
+  while (testBoneFlag(firstBone, BONE_MODEL_SPACE_DIRTY)) {
+    u16 parentID = unknown18->unknown20[firstBone];
+    if (parentID == 0xffff) {
+      MM_ASSERT(!testBoneFlag(firstBone, BONE_LOCAL_SPACE_DIRTY));
+      unknown48[firstBone] = unknown20[firstBone];
+      unknown002(firstBone, BONE_MODEL_SPACE_DIRTY, false);
+      break;
+    }
+    unknown002(firstBone, BONE_UNKNOWN_2, true);
+    firstBone = parentID;
+  }
+  MM_ASSERT(!testBoneFlag(firstBone, BONE_MODEL_SPACE_DIRTY));
+  for (u16 i = firstBone + 1; i <= boneID; i++) {
+    if (testBoneFlag(i, BONE_UNKNOWN_2)) {
+      s16 parentID = unknown18->unknown003(i);
+      MM_ASSERT(!testBoneFlag(i, BONE_LOCAL_SPACE_DIRTY));
+      MM_ASSERT(!testBoneFlag(parentID, BONE_MODEL_SPACE_DIRTY));
+      TransformUtil::mul(unknown48[parentID], unknown20[i], &unknown48[i]);
+      unknown002(i, BONE_UNKNOWN_2, false);
+      unknown002(i, BONE_MODEL_SPACE_DIRTY, false);
+    }
+  }
+  return unknown48[boneID];
+}
+
 void Pose::validateBone() {
   u32 boneCount = unknown18->unknown30.size();
   for (u16 i = 0; i < boneCount; i++) {
