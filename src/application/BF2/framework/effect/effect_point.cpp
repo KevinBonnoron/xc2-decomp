@@ -1,12 +1,21 @@
 #include "framework/effect/effect_caster.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/delegate.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/hash.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
 
 namespace fw {
+
+EffectPoint::~EffectPoint() {
+  for (u32 i = 0; i < unknown10.size(); i++) {
+    unknown88(unknown10[i].unknown80.c_str());
+  }
+  unknown10.destroy();
+  unknown38.destroy();
+}
 
 int EffectPoint::getPointCount() const { return unknown10.size(); }
 

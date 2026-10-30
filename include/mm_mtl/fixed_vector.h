@@ -31,7 +31,7 @@ template <typename T, size_t N> class FixedVector {
   typedef typename FixedVectorUnit<alignof(T)>::type Unit;
 
 public:
-  FixedVector() : mSize(0) {}
+  FixedVector() : m_size(0) {}
   ~FixedVector() { clear(); }
 
   // __LINE__ must be 170, 181 and 227 as in the original header: they are the line arguments of the asserts.
@@ -49,28 +49,28 @@ public:
 
   T &front() { return *at(0); }
   const T &front() const { return *at(0); }
-  T &back() { return *at(mSize - 1); }
-  const T &back() const { return *at(mSize - 1); }
+  T &back() { return *at(m_size - 1); }
+  const T &back() const { return *at(m_size - 1); }
 
-  size_t size() const { return mSize; }
+  size_t size() const { return m_size; }
   size_t capacity() const { return N; }
-  bool empty() const { return mSize == 0; }
+  bool empty() const { return m_size == 0; }
   T *begin() { return reinterpret_cast<T *>(mBuffer); }
   const T *begin() const { return reinterpret_cast<const T *>(mBuffer); }
   T *end() { return begin() + size(); }
   const T *end() const { return begin() + size(); }
 
   void clear() {
-    while (mSize != 0) {
-      at(--mSize)->~T();
+    while (m_size != 0) {
+      at(--m_size)->~T();
     }
   }
 
   void push_back(const T &value) {
 #line 227
     MM_ASSERT(size() < capacity());
-    construct(at(mSize), value);
-    mSize++;
+    construct(at(m_size), value);
+    m_size++;
   }
 
   bool validate_iterator(const T *it) const { return begin() <= it && it <= end(); }
@@ -82,7 +82,7 @@ public:
       return it;
     }
     copy(it + 1, end(), it);
-    --mSize;
+    --m_size;
     destroy(end());
     return it;
   }
@@ -104,7 +104,7 @@ public:
     size_t newSize = last - first;
     MM_ASSERT(newSize <= N);
     copy_construct_n(first, newSize, begin());
-    mSize = newSize;
+    m_size = newSize;
   }
 
   T *at(size_t index) { return reinterpret_cast<T *>(&mBuffer[index * sizeof(T) / sizeof(Unit)]); }
@@ -135,7 +135,8 @@ private:
   }
 
   Unit mBuffer[sizeof(T) * N / sizeof(Unit)];
-  size_t mSize;
+  // Name from the assertion "m_size > size_type(0U)" of the original header (line 253).
+  size_t m_size;
 };
 
 } // namespace mtl

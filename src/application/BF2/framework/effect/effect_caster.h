@@ -2,11 +2,15 @@
 #include <stddef.h>
 
 #include "eflib/effect_callback.h"
+#include "framework/reference_frame.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/delegate.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/intrusive_list.h"
+#include "mm_mtl/intrusive_ptr.h"
+#include "mm_mtl/reference_object.h"
 #include "mm_mtl/vector.h"
 #include "types.h"
 
@@ -18,22 +22,26 @@ class IAllocator;
 
 namespace fw {
 
+class ModelObject;
 struct UpdateInfo;
 
-class EffectPoint {
+// Base class from the ctor (1.0.0: 0x7100178128; the u32 at 0x08 is zeroed before the vtable store), the vtable of two
+// destructor slots, and EffectCasterBase incrementing the u32 at 0x08 of the point it keeps. The members from 0x60 are
+// copied by the ctor from its EfpInitData argument, whose caller GfComEffectCaster binds the delegates.
+class EffectPoint : public mm::mtl::ReferenceObject {
 public:
-  // Inferred role: point; original type name unknown.
-  struct unknown003 {
-    mm::Mat44 unknown00; // Inferred role: offset matrix; original member name unknown.
-    mm::Vec3 unknown40;  // Inferred role: scale; original member name unknown.
-    u8 _50[0x58 - 0x50];
-    mm::mtl::FixStr<32> unknown58; // Inferred role: name; original member name unknown.
-    u32 unknown7c;                 // Inferred role: name hash; original member name unknown.
-    mm::mtl::FixStr<32> unknown80; // Inferred role: parent name; original member name unknown.
-    u8 _a4[0xa8 - 0xa4];
-    bool unknowna8; // Inferred role: dirty; original member name unknown.
+  struct Param {
+    mm::Mat44 unknown00;                             // Inferred role: offset matrix; original member name unknown.
+    mm::Vec3 unknown40;                              // Inferred role: scale; original member name unknown.
+    mm::mtl::IntrusivePtr<ReferenceFrame> unknown50; // Inferred role: parent reference frame; original member name unknown.
+    mm::mtl::FixStr<32> unknown58;                   // Inferred role: name; original member name unknown.
+    u32 unknown7c;                                   // Inferred role: name hash; original member name unknown.
+    mm::mtl::FixStr<32> unknown80;                   // Inferred role: parent name; original member name unknown.
+    s32 unknowna4;                                   // Inferred role: parent bone index; original member name unknown.
+    bool unknowna8;                                  // Inferred role: dirty; original member name unknown.
   };
 
+  ~EffectPoint() override;
   int getPointCount() const;
   int getPointIndex(const char *name) const;
   const char *getPointName(int index) const;
@@ -44,20 +52,30 @@ public:
   const char *getParentName(const char *name);
   mm::Mat44 getOffset(const char *name);
 
-  u8 _00[0x0c - 0x00];
-  u32 unknown0c;                         // Inferred role: layer; original member name unknown.
-  mm::mtl::Vector<unknown003> unknown10; // Inferred role: points; original member name unknown.
-  mm::mtl::Vector<mm::Mat44> unknown38;  // Inferred role: point transforms; original member name unknown.
+  u32 unknown0c;                        // Inferred role: layer; original member name unknown.
+  mm::mtl::Vector<Param> unknown10;     // Inferred role: points; original member name unknown.
+  mm::mtl::Vector<mm::Mat44> unknown38; // Inferred role: point transforms; original member name unknown.
+  ModelObject *unknown60;               // Inferred role: model; original member name unknown.
+  // Inferred role: returns the reference frame of a parent name; original member name unknown.
+  mm::mtl::Delegate<mm::mtl::IntrusivePtr<ReferenceFrame>(const char *)> unknown68;
+  // Inferred role: releases the reference frame of a parent name; original member name unknown.
+  mm::mtl::Delegate<void(const char *)> unknown88;
 };
 
-static_assert(sizeof(EffectPoint::unknown003) == 0xb0, "");
-static_assert(offsetof(EffectPoint::unknown003, unknown58) == 0x58, "");
-static_assert(offsetof(EffectPoint::unknown003, unknown7c) == 0x7c, "");
-static_assert(offsetof(EffectPoint::unknown003, unknown80) == 0x80, "");
-static_assert(offsetof(EffectPoint::unknown003, unknowna8) == 0xa8, "");
+static_assert(sizeof(EffectPoint::Param) == 0xb0, "");
+static_assert(offsetof(EffectPoint::Param, unknown50) == 0x50, "");
+static_assert(offsetof(EffectPoint::Param, unknown58) == 0x58, "");
+static_assert(offsetof(EffectPoint::Param, unknown7c) == 0x7c, "");
+static_assert(offsetof(EffectPoint::Param, unknown80) == 0x80, "");
+static_assert(offsetof(EffectPoint::Param, unknowna4) == 0xa4, "");
+static_assert(offsetof(EffectPoint::Param, unknowna8) == 0xa8, "");
 static_assert(offsetof(EffectPoint, unknown0c) == 0x0c, "");
 static_assert(offsetof(EffectPoint, unknown10) == 0x10, "");
 static_assert(offsetof(EffectPoint, unknown38) == 0x38, "");
+static_assert(offsetof(EffectPoint, unknown60) == 0x60, "");
+static_assert(offsetof(EffectPoint, unknown68) == 0x68, "");
+static_assert(offsetof(EffectPoint, unknown88) == 0x88, "");
+static_assert(sizeof(EffectPoint) == 0xa8, "");
 
 // Inferred role: effect bind data; original type name unknown.
 struct unknown065 {
