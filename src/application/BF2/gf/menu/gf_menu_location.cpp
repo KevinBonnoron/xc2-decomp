@@ -74,3 +74,5 @@ void GfMenuLocation::updateDataNum(u32 type) {
 } // namespace gf
 
 template mm::mtl::PtrSingleton<gf::GfMenuLocation>::~PtrSingleton();
+template void mm::mtl::Vector<gf::GfFieldLocator>::expand(size_t, size_t);
+template void mm::mtl::Vector<gf::GfFieldLocator>::push_back(const gf::GfFieldLocator &);

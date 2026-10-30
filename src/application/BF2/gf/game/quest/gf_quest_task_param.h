@@ -7,10 +7,12 @@ namespace gf {
 
 enum {
   TASK_TYPE_BATTLE = 1,
+  TASK_TYPE_UNKNOWN_2 = 2, // Inferred role: request item set (FLD_RequestItemSet); original name unknown.
   TASK_TYPE_COLLECT = 3,
   TASK_TYPE_USE = 4,
   TASK_TYPE_REACH = 5,
   TASK_TYPE_TALK = 6,
+  TASK_TYPE_UNKNOWN_7 = 7, // Inferred role: talk to a dummy group (FLD_QuestTalkDummyGroup); original name unknown.
   TASK_TYPE_GIMMICK = 8,
   TASK_TYPE_REQUEST_BLADE = 9,
   TASK_TYPE_CONDITION = 10,

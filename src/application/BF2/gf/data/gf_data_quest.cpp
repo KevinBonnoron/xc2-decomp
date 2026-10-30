@@ -23,11 +23,11 @@ enum {
 void GfDataQuest::registAchievementBlade(u32 achievement, u16 blade) { m_achieve2blade[achievement] = blade; }
 
 QuestID GfDataQuest::getListNextQuestA(QuestID quest) {
-  QuestID next = {0, 0};
   if (quest.empty()) {
-    return next;
+    return QuestID();
   }
 
+  QuestID next = {0, 0};
   u16 nextId = QuestListAcc::get()->getListNextQuestA(quest);
   if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
     next.unknown00 = nextId;
@@ -185,11 +185,11 @@ u32 GfDataQuest::getQuestCategory(QuestID quest) {
 }
 
 QuestID GfDataQuest::getListPRTQuestID(QuestID quest) {
-  QuestID parent = {0, 0};
   if (quest.empty()) {
-    return parent;
+    return QuestID();
   }
 
+  QuestID parent;
   u32 parentQuest = QuestListAcc::get()->getListPRTQuestID(quest);
   parent.unknown00 = parentQuest;
   parent.unknown02 = quest.unknown02;
@@ -217,11 +217,11 @@ u32 GfDataQuest::getListFlagCLD(QuestID quest) {
 }
 
 QuestID GfDataQuest::getListNextQuestB(QuestID quest) {
-  QuestID next = {0, 0};
   if (quest.empty()) {
-    return next;
+    return QuestID();
   }
 
+  QuestID next = {0, 0};
   u16 nextId = QuestListAcc::get()->getListNextQuestB(quest);
   if (nextId != QUEST_NEXT_NONE && nextId != QUEST_NEXT_NONE_ALTERNATE) {
     next.unknown00 = nextId;

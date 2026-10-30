@@ -8,6 +8,13 @@ constexpr u32 QUEST_ID_END = 30000;
 struct QuestID {
   bool empty() const;
   bool operator==(const QuestID &other) const { return unknown00 == other.unknown00 && unknown02 == other.unknown02; }
+  // User-provided: the game assigns a QuestID member as two halfwords (GfFieldLocator::createByQuest, Locator*::create)
+  // while copy construction stays a single word.
+  QuestID &operator=(const QuestID &other) {
+    unknown00 = other.unknown00;
+    unknown02 = other.unknown02;
+    return *this;
+  }
 
   u16 unknown00; // Inferred role: id; original member name unknown.
   u16 unknown02; // Inferred role: variant; original member name unknown.
