@@ -102,6 +102,30 @@ void GmkLandmark::endEvent() {
   }
 }
 
+GmkLandmarkManager::GmkLandmarkManager() : unknown20(nullptr) {}
+
+void GmkLandmarkManager::dispose() {
+  unknown20 = nullptr;
+  unknown08.clear();
+}
+
+void GmkLandmarkManager::addGmkLandmark(GmkLandmark *landmark) {
+  u8 category = landmark->getBdatInfo()->unknown02;
+  mm::mtl::IntrusiveList<GmkLandmark> &list = get()->unknown08;
+  bool isInserted = false;
+  for (mm::mtl::IntrusiveList<GmkLandmark>::iterator it = list.begin(); it != list.end(); ++it) {
+    if (it.get()->getBdatInfo()->unknown02 >= category) {
+      list.insert(it, landmark);
+      isInserted = true;
+      break;
+    }
+  }
+  if (!isInserted) {
+    list.push_back(landmark);
+  }
+  get()->unknown20 = get()->unknown08.begin().get();
+}
+
 void GmkLandmarkManager::removeGmkLandmark(GmkLandmark *landmark) {
   if (landmark == nullptr || get() == nullptr) {
     return;

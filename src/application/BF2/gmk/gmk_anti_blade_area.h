@@ -47,6 +47,8 @@ typedef TGmkList<GmkAntiBladeArea, GmkAntiBladeArea::BdatInfo, 0x414c4241, 2, Gm
 
 class GmkAntiBladeAreaManager : public mm::mtl::PtrSingleton<GmkAntiBladeAreaManager> {
 public:
+  ~GmkAntiBladeAreaManager() override { dispose(); }
+  void dispose();
   static void addGmk(GmkAntiBladeArea *gmk);
   static void removeGmk(GmkAntiBladeArea *gmk);
 

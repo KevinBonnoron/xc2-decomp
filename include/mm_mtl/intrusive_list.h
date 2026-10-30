@@ -121,9 +121,18 @@ public:
   iterator erase(iterator it) {
     MM_ASSERT(!empty());
     MM_ASSERT(it != end());
-    T *next = static_cast<T *>(it.get()->unknown00);
+    iterator next = it;
+    ++next;
     erase(it.get());
-    return iterator(next);
+    return next;
+  }
+
+  // Named after ptlib::IntrusiveList<T>::clear, a game symbol whose code is the same loop.
+  void clear() {
+    iterator it = begin();
+    while (it != end()) {
+      it = erase(it);
+    }
   }
 };
 

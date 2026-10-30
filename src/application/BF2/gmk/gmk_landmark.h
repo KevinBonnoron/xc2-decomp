@@ -65,6 +65,10 @@ typedef TGmkList<GmkLandmark, GmkLandmark::BdatInfo, 0x4b4d444c, 2, GmkLandmarkG
 
 class GmkLandmarkManager : public mm::mtl::PtrSingleton<GmkLandmarkManager> {
 public:
+  GmkLandmarkManager();
+  ~GmkLandmarkManager() override { dispose(); }
+  void dispose();
+  static void addGmkLandmark(GmkLandmark *landmark);
   static void removeGmkLandmark(GmkLandmark *landmark);
   const GmkLandmark *findFirstAddedGmkLandmarkByCategory(u8 category) const;
 

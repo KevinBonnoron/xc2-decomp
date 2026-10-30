@@ -56,6 +56,11 @@ void GmkAntiBladeAreaManager::removeGmk(GmkAntiBladeArea *gmk) {
   }
 }
 
+void GmkAntiBladeAreaManager::dispose() {
+  unknown20 = nullptr;
+  unknown08.clear();
+}
+
 } // namespace gmk
 
 template void mm::mtl::Vector<gmk::GmkAntiBladeArea::BdatInfo>::expand(size_t, size_t);
