@@ -1,12 +1,15 @@
 #pragma once
 #include <stddef.h>
 
+#include "framework/ik/ik_ground_interface.h"
 #include "framework/ik/ik_solver.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
 namespace mm {
+struct Vec3;
+
 namespace mtl {
 class RTTI;
 } // namespace mtl
@@ -16,7 +19,8 @@ namespace fw {
 
 class FootPlacementIKSolver;
 struct Transform;
-class IKGroundInterface;
+class ParamAdapter;
+struct UpdateInfo;
 
 class TwoCharaGroundSolver : public IkSolver {
 public:
@@ -24,10 +28,14 @@ public:
 
   TwoCharaGroundSolver();
   ~TwoCharaGroundSolver() override;
+  FootPlacementIKSolver *createFootPlacementIKMain(IKFootIndex index, ParamAdapter param, const char *footName, const char *kneeName, const char *hipName, bool isMirror);
+  FootPlacementIKSolver *createFootPlacementIKSub(IKFootIndex index, ParamAdapter param, const char *footName, const char *kneeName, const char *hipName, bool isMirror);
   void calcMainBodyTransform(Transform *result);
   void calcSubBodyTransform(Transform *result);
+  void doPlacementFoot(const UpdateInfo &info);
   void setEnablePlacement(bool enable);
   void solve(const UpdateInfo &info) override;
+  void setGroundAngle(const mm::Vec3 &angle);
   void overwriteRaycastUp(f32 distance);
   void resetRaycastUp();
   void overwriteRaycastDown(f32 distance);

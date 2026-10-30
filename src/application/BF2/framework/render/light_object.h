@@ -13,6 +13,13 @@ namespace fw {
 
 class LightObject : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<LightObject> {
 public:
+  struct LightSetup {
+    const void *unknown00; // Inferred role: light data; original member name unknown.
+    int unknown08;         // Inferred role: screen; original member name unknown.
+    u32 unknown0c;         // Inferred role: layer; original member name unknown.
+  };
+
+  static LightObject *create(const LightSetup &setup);
   LightObject();
   ~LightObject() override;
   void setup();

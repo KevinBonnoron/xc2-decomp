@@ -1,16 +1,17 @@
 #include "framework/ik/ik_foot_placement_solver.h"
 
-#include "framework/memory/allocator.h"
-#include "framework/memory/framework_memory.h"
-#include "framework/reflection.h"
-
 #include "anm/anm_foot_placement_ik_solver.h"
 #include "anm/anm_pose.h"
 #include "anm/anm_qs_transform.h"
 #include "framework/debug/debug_draw.h"
+#include "framework/memory/allocator.h"
+#include "framework/memory/framework_memory.h"
+#include "framework/reflection.h"
 #include "fw/fw_param_manager.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec4.h"
+#include "mm_mtl/intrusive_ptr.h"
+#include "mm_mtl/reference_object.h"
 
 namespace fw {
 
@@ -24,6 +25,20 @@ void FootPlacementIKSolver::Param::createReflection(Reflection *reflection, cons
 #line 29
   value->add(new (Allocator::getDebAllocator(), 16, __FILE__, __LINE__) ReflectionValueF32("plantedAnkleOffset", offsetof(Param, unknown08), 0.0f, 90.0f, 0.1f));
   reflection->setReflectionStruct(index, value);
+}
+
+FootPlacementIKSolver::FootPlacementIKSolver()
+    : unknown20(nullptr), unknown58(0xffff), unknown60(mm::Vec3::zero), unknowna0(0), unknownb0(mm::Quat::identity), unknownc0(mm::Quat::identity), unknownd0(nullptr) {}
+
+FootPlacementIKSolver *FootPlacementIKSolver::create(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKFootGroundInterface *ground) {
+#line 66
+  FootPlacementIKSolver *solver = new (Allocator::getProcAllocator(), 16, __FILE__, __LINE__) FootPlacementIKSolver();
+  solver->addRef();
+  if (!solver->createImpl(description, frame, pose, ground)) {
+    mm::mtl::safeRelease(solver);
+    return nullptr;
+  }
+  return solver;
 }
 
 FootPlacementIKSolver::~FootPlacementIKSolver() {

@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "framework/ik/ik_foot_placement_solver.h" // IWYU pragma: keep
+#include "framework/ik/ik_ground_interface.h"
 #include "framework/ik/ik_solver.h"
 #include "mm_math/mm_quat.h"
 #include "mm_mtl/fixed_vector.h"
@@ -15,14 +16,14 @@ class RTTI;
 } // namespace mm
 
 namespace fw {
-
-class IKGroundInterface;
+class ParamAdapter;
 
 class SlopeGroundSolver : public IkSolver {
 public:
   static mm::mtl::RTTI m_rtti;
 
   ~SlopeGroundSolver() override;
+  FootPlacementIKSolver *createFootPlacementIK(IKFootIndex index, ParamAdapter &param, const char *footName, const char *kneeName, const char *hipName, bool isMirror);
   void setEnablePlacement(bool enable);
   void solve(const UpdateInfo &info) override;
   const mm::mtl::RTTI *getRTTI() const override;
