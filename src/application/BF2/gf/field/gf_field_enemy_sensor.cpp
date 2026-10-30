@@ -2,11 +2,13 @@
 
 #include "gf/game/gf_game_manager.h"
 #include "gmk/gmk_manager.h"
+#include "mm_mtl/reference_object.h"
 
 namespace gf {
 
 GfFieldEnemySensor::GfFieldEnemySensor(const CreateInfo *info)
-    : unknown60(0), unknown61(false), unknown80(false), unknown90(0.0f), unknown94(0.0f), unknown98(false), unknown99(false), unknowna8(0.0f), unknownac(false), unknownf0(false) {
+    : unknown60(0), unknown61(false), unknown80(false), unknown88(nullptr), unknown90(0.0f), unknown94(0.0f), unknown98(false), unknown99(false), unknowna0(nullptr), unknowna8(0.0f), unknownac(false),
+      unknownf0(false) {
   if (info != nullptr) {
     create(*info);
   }
@@ -16,12 +18,12 @@ void GfFieldEnemySensor::dispose() {
   unknownf0 = false;
   unknownac = false;
   unknowna8 = 0.0f;
-  unknowna0.reset();
+  mm::mtl::safeRelease(unknowna0);
   unknown98 = false;
   unknown99 = false;
   unknown90 = 0.0f;
   unknown94 = 0.0f;
-  unknown88.reset();
+  mm::mtl::safeRelease(unknown88);
 }
 
 bool GfFieldEnemySensor::isPlayerEnter() const {
@@ -56,21 +58,21 @@ void GfFieldEnemySensor::createByGmkBattleLock() {
 }
 
 void GfFieldEnemySensor::enter(const EnterInfo &info) {
-  if (unknown88.get() == info.object) {
+  if (unknown88 == info.object) {
     unknown98 = true;
     return;
   }
-  if (unknowna0.get() == info.object) {
+  if (unknowna0 == info.object) {
     unknownac = true;
   }
 }
 
 void GfFieldEnemySensor::leave(const LeaveInfo &info) {
-  if (unknown88.get() == info.object) {
+  if (unknown88 == info.object) {
     unknown98 = false;
     return;
   }
-  if (unknowna0.get() == info.object) {
+  if (unknowna0 == info.object) {
     unknownac = false;
   }
 }

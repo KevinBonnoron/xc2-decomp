@@ -5,7 +5,6 @@
 #include "gmk/gmk_acc.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_quat.h"
-#include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
 namespace gf {
@@ -40,21 +39,21 @@ public:
   void enter(const EnterInfo &info) override;
   void leave(const LeaveInfo &info) override;
 
-  CreateInfo unknown10;                            // Inferred role: create info; original member name unknown.
-  u8 unknown60;                                    // Inferred role: Detects of BDAT_CHR_EN_ARRANGE, bit 0 for the sight and bit 1 for the radius; original member name unknown.
-  bool unknown61;                                  // Inferred role: UseSearchBone of BDAT_RSC_EN; original member name unknown.
-  mm::Quat unknown70;                              // Inferred role: rotation of the search bone; original member name unknown.
-  bool unknown80;                                  // Inferred role: owner is a genus link enemy; original member name unknown.
-  mm::mtl::IntrusivePtr<fw::ColiObject> unknown88; // Inferred role: sight collision; original member name unknown.
-  f32 unknown90;                                   // Inferred role: sight radius squared; original member name unknown.
-  f32 unknown94;                                   // Inferred role: cosine of the half sight angle; original member name unknown.
-  bool unknown98;                                  // Inferred role: player in the sight radius; original member name unknown.
-  bool unknown99;                                  // Inferred role: player in the sight angle; original member name unknown.
-  mm::mtl::IntrusivePtr<fw::ColiObject> unknowna0; // Inferred role: search radius collision; original member name unknown.
-  f32 unknowna8;                                   // Inferred role: search radius squared; original member name unknown.
-  bool unknownac;                                  // Inferred role: player in the search radius; original member name unknown.
-  gmk::GmkAcc unknownb0;                           // Inferred role: battle lock; original member name unknown.
-  bool unknownf0;                                  // Inferred role: player inside the battle lock shape; original member name unknown.
+  CreateInfo unknown10;      // Inferred role: create info; original member name unknown.
+  u8 unknown60;              // Inferred role: Detects of BDAT_CHR_EN_ARRANGE, bit 0 for the sight and bit 1 for the radius; original member name unknown.
+  bool unknown61;            // Inferred role: UseSearchBone of BDAT_RSC_EN; original member name unknown.
+  mm::Quat unknown70;        // Inferred role: rotation of the search bone; original member name unknown.
+  bool unknown80;            // Inferred role: owner is a genus link enemy; original member name unknown.
+  fw::ColiObject *unknown88; // Inferred role: sight collision; original member name unknown.
+  f32 unknown90;             // Inferred role: sight radius squared; original member name unknown.
+  f32 unknown94;             // Inferred role: cosine of the half sight angle; original member name unknown.
+  bool unknown98;            // Inferred role: player in the sight radius; original member name unknown.
+  bool unknown99;            // Inferred role: player in the sight angle; original member name unknown.
+  fw::ColiObject *unknowna0; // Inferred role: search radius collision; original member name unknown.
+  f32 unknowna8;             // Inferred role: search radius squared; original member name unknown.
+  bool unknownac;            // Inferred role: player in the search radius; original member name unknown.
+  gmk::GmkAcc unknownb0;     // Inferred role: battle lock; original member name unknown.
+  bool unknownf0;            // Inferred role: player inside the battle lock shape; original member name unknown.
 };
 
 static_assert(sizeof(GfFieldEnemySensor::CreateInfo) == 0x50, "");

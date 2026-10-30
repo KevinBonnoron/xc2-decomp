@@ -20,7 +20,7 @@ bool StateFieldAreaWalk::isCondMatch(const GfComBehaviorEnemy &behavior) {
     return false;
   }
 
-  return !(static_cast<gmk::GmkEnemy *>(gmkInst)->getData()->unknown00 <= behavior.unknown140.unknown18);
+  return !(static_cast<gmk::GmkEnemy *>(gmkInst)->getData()->unknown00 <= behavior.unknown140.unknown08.unknown10);
 }
 
 void StateFieldAreaWalk::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {

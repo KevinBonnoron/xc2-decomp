@@ -56,6 +56,7 @@ public:
     }
   }
 
+  void create(const CreateInfo &info);
   void dispose();
   void update(const UpdateInfo &info);
   bool isTimeOutCollide() const;

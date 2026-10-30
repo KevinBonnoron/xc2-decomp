@@ -24,7 +24,12 @@ public:
 #line 835
       MM_ASSERT(m_allocator);
       m_allocator->deallocate(m_buffer);
+      m_buffer = nullptr;
     }
+    m_allocator = nullptr;
+    m_front = 0;
+    m_capacity = 0;
+    m_size = 0;
   }
 
   void push_back(const T &value);

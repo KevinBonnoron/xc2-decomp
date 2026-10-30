@@ -38,9 +38,7 @@ public:
   explicit GmkAcc(const CreateInfo &info);
   explicit GmkAcc(const CreateInfoByBdatId &info);
   GmkAcc(const GmkAcc &other);
-  // The game's ~GmkAcc calls dispose() without inlining it and was emitted from a gf translation unit (D2 at 0x2da41c).
-  // Defining it here would emit it from the gmk unity build, where dispose() is inlined, so it stays declared only.
-  virtual ~GmkAcc();
+  virtual ~GmkAcc() { dispose(); }
 
   void create(const CreateInfo &info);
   void create(const CreateInfoByBdatId &info);

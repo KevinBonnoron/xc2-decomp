@@ -133,9 +133,11 @@ public:
     mm::Vec3 position; // Inferred role: position of the member; original member name unknown.
   };
 
-  GmkSquadNavi() : unknown10(nullptr), unknown18(gf::INVALID_HANDLE), unknown28(-1), unknown30(mm::Vec3::zero) {
+  GmkSquadNavi() : unknown10(nullptr), unknown18(gf::INVALID_HANDLE) {
     unknown20.x = 0.1f;
     unknown20.y = 1.0f;
+    unknown28 = -1;
+    unknown30 = mm::Vec3::zero;
   }
 
   ~GmkSquadNavi() { dispose(); }

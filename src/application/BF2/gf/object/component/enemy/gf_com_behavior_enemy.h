@@ -6,6 +6,7 @@
 #include "framework/object/updatable_object.h"
 #include "gf/field/gf_field_dmg.h"
 #include "gf/field/gf_field_exec_cmd_turn.h"
+#include "gf/field/gf_field_undulator.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
 #include "gf/object/component/enemy/gf_beh_field_owner.h"
 #include "gf/object/component/enemy/gf_behavior_enemy_field.h"
@@ -55,6 +56,8 @@ class GfComBehaviorEnemy : public GfComBehavior, public IGfBehFieldOwner {
 public:
   class Listener {
   public:
+    Listener() : unknown08(nullptr) {}
+
     virtual void onWkStandbyLogout();
 
     GfComBehaviorEnemy *unknown08; // Inferred role: owner; original member name unknown.
@@ -136,7 +139,7 @@ public:
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknown138; // Inferred role: search base bone frame; original member name unknown.
   GfBehaviorEnemyField unknown140;                      // Inferred role: field behavior; original member name unknown.
   TFieldExecCmdTurn<GfComAsm> unknown53f0;              // Inferred role: turn command; original member name unknown.
-  u8 unknown5460[0x54a0 - 0x5460];                      // Inferred role: GfFieldUndulator, not reconstructed; original member name unknown.
+  GfFieldUndulator unknown5460;                         // Inferred role: undulator; original member name unknown.
   GfFieldDmg unknown54a0;                               // Inferred role: field damage; original member name unknown.
   u8 _54c8[0x54d0 - 0x54c8];
   mm::Vec3 unknown54d0; // Inferred role: velocity; original member name unknown.

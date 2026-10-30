@@ -12,6 +12,7 @@
 #include "battle/character/character_parameter_battle.h"
 #include "bdat.h"
 #include "framework/coli/coli_object.h"
+#include "framework/memory/allocator.h"
 #include "framework/reference_frame.h"
 #include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
@@ -113,6 +114,21 @@ bool GfComBehaviorEnemy::recieveMessage(fw::MessageObject *sender, fw::Message &
   }
 
   return false;
+}
+
+GfComBehaviorEnemy::GfComBehaviorEnemy()
+    : unknowna0(fw::Allocator::getProcAllocator()), unknown128(true), unknown130(nullptr), unknown54a0(nullptr), unknown54e0(false), unknown54e1(false), unknown54e2(false), unknown54e3(false),
+      unknown54e4(false), unknown54e8(nullptr) {}
+
+GfComBehaviorEnemy::~GfComBehaviorEnemy() {
+  if (unknown54e0) {
+    unknown54e0 = false;
+    if (unknown140.unknownd0.unknownb0.isValid()) {
+      static_cast<const gmk::GmkBattleLock *>(unknown140.unknownd0.unknownb0.unknown38)->unknownc4--;
+    }
+  }
+
+  cleanup();
 }
 
 void GfComBehaviorEnemy::cleanup() {

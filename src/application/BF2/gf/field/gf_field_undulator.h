@@ -17,6 +17,11 @@ public:
   };
 
   struct BdatInfo {
+    ~BdatInfo() {
+      unknown00 = false;
+      unknown01 = false;
+    }
+
     void create(int id);
 
     bool unknown00; // Inferred role: UndX flag of BDAT_RSC_EN_UND; original member name unknown.
@@ -28,6 +33,8 @@ public:
     f32 unknown14;  // Inferred role: UndDeg scaled to radians; original member name unknown.
   };
 
+  GfFieldUndulator(const CreateInfo *info = nullptr);
+  ~GfFieldUndulator() { dispose(); }
   void create(const CreateInfo &info);
   void dispose();
 

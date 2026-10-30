@@ -6,6 +6,7 @@
 #include "gf/field/gf_field_move_speed.h"
 #include "gf/field/gf_field_pitch_roll_controller.h"
 #include "gf/object/component/enemy/gf_enemy_state_id.h"
+#include "gf/object/gf_obj_handle.h"
 #include "gf/param/enemy/gf_param_enemy.h"
 #include "gmk/gmk_squad.h"
 #include "mm_math/mm_vec3.h"
@@ -34,6 +35,8 @@ class GfComBehaviorEnemy;
 class GfBehaviorEnemyField {
 public:
   struct CreateInfo {
+    CreateInfo() : unknown00(nullptr), unknown08(INVALID_HANDLE), unknown10(1.0f), unknown14(2.0f), unknown18(0) {}
+
     IGfBehFieldOwner *unknown00; // Inferred role: owner; original member name unknown.
     GF_OBJ_HANDLE *unknown08;    // Inferred role: object; original member name unknown.
     f32 unknown10;               // Inferred role: radius; original member name unknown.
@@ -47,7 +50,9 @@ public:
     MOVE_SPEED_UNKNOWN_2 = 2,
   };
 
+  GfBehaviorEnemyField(const CreateInfo *info = nullptr);
   virtual ~GfBehaviorEnemyField() { dispose(); }
+  void create(const CreateInfo &info);
   void dispose();
 
   void update(f32 deltaTime);
@@ -58,6 +63,9 @@ public:
   fw::ColiMoveObject *getColiObject() const;
   void createSquadNavi();
   void createNaviMeshObj();
+  void createSensor();
+  // Inferred helper: disposes the sensor before it is created again; original name unknown.
+  void unknown002() { unknownd0.dispose(); }
   void disposeSquadNavi();
   void updateNaviMeshObj(f32 deltaTime);
   void disposeNaviMeshObj();
@@ -86,13 +94,8 @@ public:
     }
   }
 
-  IGfBehFieldOwner *unknown08; // Inferred role: owner; original member name unknown.
-  GF_OBJ_HANDLE *unknown10;    // Inferred role: object; original member name unknown.
-  f32 unknown18;               // Inferred role: radius; original member name unknown.
-  f32 unknown1c;               // Inferred role: height; original member name unknown.
-  u8 unknown20;                // Inferred role: move type; original member name unknown.
-  u8 _21[0x28 - 0x21];
-  u8 unknown28; // Inferred role: Dir_Per of BDAT_FLD_ENACT_MOVE; original member name unknown.
+  CreateInfo unknown08; // Inferred role: create info, copied as a whole by create; original member name unknown.
+  u8 unknown28;         // Inferred role: Dir_Per of BDAT_FLD_ENACT_MOVE; original member name unknown.
   u8 _29[0x2c - 0x29];
   f32 unknown2c;  // Inferred role: Dir_Line of BDAT_FLD_ENACT_MOVE in radians; original member name unknown.
   f32 unknown30;  // Inferred role: Dir_Curve of BDAT_FLD_ENACT_MOVE in radians; original member name unknown.
@@ -123,9 +126,9 @@ public:
   u8 _52aa[0x52b0 - 0x52aa];
 };
 
+static_assert(sizeof(GfBehaviorEnemyField::CreateInfo) == 0x20, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown08) == 0x08, "");
-static_assert(offsetof(GfBehaviorEnemyField, unknown10) == 0x10, "");
-static_assert(offsetof(GfBehaviorEnemyField, unknown20) == 0x20, "");
+static_assert(offsetof(GfBehaviorEnemyField, unknown28) == 0x28, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown30) == 0x30, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown36) == 0x36, "");
 static_assert(offsetof(GfBehaviorEnemyField, unknown38) == 0x38, "");
