@@ -16,27 +16,30 @@ Usage:
 <symbol> is either a mangled name or a demangled one, with or without its
 signature: gf::GfDataBlade::setHikariCurrent or 'gf::GfDataBlade::setHikariCurrent(bool)'.
 
+A function matches when its bytes, placed at the game address with every
+relocation resolved, equal the game's bytes. Only source locations may differ:
+the directory of a __FILE__ path, the __LINE__ passed to an assertion or to
+operator new, and the spaces of an assertion text. Data local to your file has
+no symbol in the game: read-only data must hold the game's bytes, writable data
+must be at one game address wherever the function uses it.
+
 A global function you define that the game has no symbol for is listed as NOT IN
 GAME, with the game functions of the same name: usually a wrong namespace or
 parameter type in its signature.
 
 Functions local to their source file (static, anonymous namespace) have no
-symbol in the game. A call to one of them reads <local> on both sides: in the
-game, a branch to an address outside every named function; in your object, a
-branch to a function it defines that is local or unknown to the game. Any local
-call compares equal to any other, and a full check then pairs each local
-function with its game address through the callers that match (the n-th local
-call on both sides reaches the same function) and checks it too. To diff one by
-hand, pass its game address and its name in your file (mangled, qualified or
-not), e.g.
+symbol in the game. A full check finds the game address of each one where the
+callers that match call it, and checks it too. To diff one by hand, pass its
+game address and its name in your file (mangled, qualified or not), e.g.
   check 0x710028c7ec src/application/BF2/gf/data/gf_data_obj.cpp unknown001
 The game side ends at the next named function or at the next address some bl
-calls, whichever comes first.
+calls, whichever comes first; your function is compared over its own size.
 """
 import bisect
 import difflib
 import glob
 import hashlib
+import multiprocessing
 import os
 import pickle
 import re
@@ -45,8 +48,10 @@ import subprocess
 import sys
 import tempfile
 import threading
-from concurrent.futures import ThreadPoolExecutor
+from collections import defaultdict, namedtuple
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from functools import lru_cache
+from types import SimpleNamespace
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TARGET_ELF = os.path.join(ROOT, "work", "main_100.elf")
@@ -77,22 +82,34 @@ CXXFLAGS = [
 ]
 INCLUDE_DIRS = [flag[2:] for flag in CXXFLAGS if flag.startswith("-I")]
 
-FUNC_HEADER = re.compile(r"^[0-9a-f]+ <(\S+)>:$")
-INSN = re.compile(r"^\s*[0-9a-f]+:\s+(.*)$")
-RELOC = re.compile(r"^\s*[0-9a-f]+:\s+(R_AARCH64_\w+)\s+(\S+)")
-BRANCH_TARGET = re.compile(r"0x[0-9a-f]+ <([^>+]+)(\+0x[0-9a-f]+)?>")
 SOURCE_PATH = re.compile(r".*[/\\]([^/\\]+\.(?:cpp|h|inl|c))")
 # Calls that receive __LINE__ (argument register) and an assertion text (x0): neither is game logic.
 SOURCE_LOCATION_CALLS = {
     "_ZN2mm9MMStdBase8mmAssertEPKcS2_j": (2, True),
     "_ZnwmPN2gf11GfAllocatorEPKcmi": (3, False),
 }
-# Complete and base constructors and destructors are aliases at the same address: compare them as one.
-STRUCTOR_VARIANT = re.compile(r"(<(?:got:)?_ZN\w*?[0-9][A-Za-z_][A-Za-z0-9_]*)(C|D)2(E)")
+# Bytes before a source-location call in which its __LINE__ and assertion text are set up.
+SOURCE_LOCATION_WINDOW = 64
+# Complete and base constructors and destructors are aliases at the same address: either name finds it.
+STRUCTOR = re.compile(r"(_ZN\w*?[0-9][A-Za-z_][A-Za-z0-9_]*)(C|D)([12])(E.*)")
 INCLUDE_CPP = re.compile(r'^#include "([^"]+\.cpp)"', re.M)
-LOCAL_CALL = re.compile(r"<local:([^>]+)>")
-MEM_OPERAND = re.compile(r"\[(\w+)(?:, #(-?0x[0-9a-f]+))?\]")
-SHT_NOBITS = 8
+# The last operand of a pc-relative instruction as llvm-mc prints it: an offset from the instruction.
+PC_RELATIVE_OPERAND = re.compile(r"#-?(?:0x[0-9a-f]+|\d+)$")
+SHT_SYMTAB, SHT_RELA, SHT_NOBITS = 2, 4, 8
+SHF_WRITE, SHF_EXECINSTR, SHF_MERGE, SHF_STRINGS = 0x1, 0x4, 0x10, 0x20
+STT_FUNC, STT_SECTION = 2, 3
+SHN_LORESERVE = 0xFF00
+# AArch64 relocations of code, by the instruction field they fill: the page of an address (adrp), its low 12 bits
+# scaled by the access size (add, ldr, str), or a branch offset of the given width.
+PAGE = ("page",)
+RELOCATION_FIELDS = {
+    275: PAGE, 276: PAGE, 311: PAGE,  # ADR_PREL_PG_HI21(_NC), ADR_GOT_PAGE
+    277: ("lo12", 0), 278: ("lo12", 0), 284: ("lo12", 1), 285: ("lo12", 2), 286: ("lo12", 3), 299: ("lo12", 4),
+    312: ("lo12", 3),  # ADD_ABS_LO12_NC, LDST8/16/32/64/128_ABS_LO12_NC, LD64_GOT_LO12_NC
+    279: ("branch", 14), 280: ("branch", 19), 282: ("branch", 26), 283: ("branch", 26),  # TSTBR14, CONDBR19, JUMP26, CALL26
+}
+GOT_RELOCATIONS = {311, 312}
+R_ABS64, R_ABS32, R_PREL64, R_PREL32 = 257, 258, 260, 261
 # The SDK runtime links __cxa_atexit (a no-op) and __dso_handle statically, without a symbol.
 UNNAMED_RUNTIME = {0x710000019C: "__cxa_atexit", 0x7101171000: "__dso_handle"}
 README_START = "<!-- progress -->"
@@ -115,7 +132,7 @@ def demangle(names):
 
 @lru_cache(maxsize=None)
 def tool_key():
-    """Anything that changes how sources compile or how disassembly is read invalidates every cache entry."""
+    """Anything that changes how sources compile or how functions are compared invalidates every cache entry."""
     digest = hashlib.sha1(open(os.path.abspath(__file__), "rb").read())
     digest.update("\0".join([os.environ.get("XC2_CXX", CXX), *CXXFLAGS]).encode())
     return digest.hexdigest()
@@ -175,274 +192,639 @@ def read_source(path):
     return open(path).read()
 
 
-class Image:
+Section = namedtuple("Section", "name type flags addr offset size link info align entsize")
+Symbol = namedtuple("Symbol", "name type shndx value size")
+
+
+class Elf:
     def __init__(self, path):
-        self.data = open(path, "rb").read()
-        shoff = struct.unpack_from("<Q", self.data, 0x28)[0]
-        shentsize, shnum, shstrndx = struct.unpack_from("<HHH", self.data, 0x3A)
-        headers = [struct.unpack_from("<IIQQQQIIQQ", self.data, shoff + i * shentsize) for i in range(shnum)]
+        self.data = data = open(path, "rb").read()
+        shoff = struct.unpack_from("<Q", data, 0x28)[0]
+        shentsize, shnum, shstrndx = struct.unpack_from("<HHH", data, 0x3A)
+        headers = [struct.unpack_from("<IIQQQQIIQQ", data, shoff + i * shentsize) for i in range(shnum)]
         names = headers[shstrndx][4]
-        self.sections = []
-        for name, typ, _, addr, offset, size, *_ in headers:
-            end = self.data.index(b"\0", names + name)
-            self.sections.append((self.data[names + name:end].decode(), typ, addr, offset, size))
+        self.sections = [Section(self.string(names + header[0]), *header[1:]) for header in headers]
 
-    def read(self, addr, size, section=None):
-        for name, typ, start, offset, length in self.sections:
-            if typ == SHT_NOBITS:
-                continue
-            base = start if section is None else 0
-            if (section is None and start or name == section) and base <= addr < base + length:
-                pos = offset + addr - base
-                return self.data[pos:offset + min(addr - base + size, length)]
-        return b""
-
-    def section_name(self, addr):
-        return next((name for name, _, start, _, length in self.sections if start and start <= addr < start + length), "")
+    def string(self, pos):
+        return self.data[pos:self.data.index(b"\0", pos)].decode()
 
 
-def writable(section):
-    return section.startswith((".data", ".bss"))
+class ObjectFile(Elf):
+    """A compiled object: its sections, symbols and relocations."""
+
+    def __init__(self, path):
+        super().__init__(path)
+        symtab = next(s for s in self.sections if s.type == SHT_SYMTAB)
+        strtab = self.sections[symtab.link].offset
+        self.symbols = [Symbol(self.string(strtab + name) if name else "", info & 0xF, shndx, value, size)
+                        for name, info, _, shndx, value, size
+                        in struct.iter_unpack("<IBBHQQ", self.data[symtab.offset:symtab.offset + symtab.size])]
+        self.functions = {}
+        self.function_at = {}
+        for symbol in self.symbols:
+            if symbol.type == STT_FUNC and 0 < symbol.shndx < SHN_LORESERVE:
+                self.functions.setdefault(symbol.name, symbol)
+                self.function_at.setdefault((symbol.shndx, symbol.value), symbol.name)
+        self.relocation_lists = {}
+        self.starts = None
+
+    def bytes(self, index, offset, size):
+        section = self.sections[index]
+        if section.type == SHT_NOBITS:
+            return bytes(size)
+        return self.data[section.offset + offset:section.offset + min(offset + size, section.size)]
+
+    def c_string(self, index, offset):
+        raw = self.bytes(index, offset, self.sections[index].size - offset)
+        end = raw.find(b"\0")
+        return raw if end < 0 else raw[:end]
+
+    def relocations(self, index):
+        """(offset, type, symbol index, addend) of every relocation applied to a section, sorted, with their offsets."""
+        if index not in self.relocation_lists:
+            found = sorted((offset, info & 0xFFFFFFFF, info >> 32, addend)
+                           for s in self.sections if s.type == SHT_RELA and s.info == index
+                           for offset, info, addend in struct.iter_unpack("<QQq", self.data[s.offset:s.offset + s.size]))
+            self.relocation_lists[index] = (found, [r[0] for r in found])
+        return self.relocation_lists[index]
+
+    def relocations_in(self, index, start, end):
+        found, offsets = self.relocations(index)
+        return found[bisect.bisect_left(offsets, start):bisect.bisect_left(offsets, end)]
+
+    def covering(self, index, offset):
+        found = None
+        for symbol in self.symbols:
+            if (symbol.shndx == index and symbol.type != STT_SECTION and symbol.size
+                    and symbol.value <= offset < symbol.value + symbol.size):
+                found = symbol
+        return found
+
+    def next_start(self, index, offset):
+        """Where anonymous data at offset ends: the next named object, or the next offset a relocation refers to."""
+        if self.starts is None:
+            starts = defaultdict(set)
+            for symbol in self.symbols:
+                if symbol.type != STT_SECTION and symbol.name and 0 < symbol.shndx < SHN_LORESERVE:
+                    starts[symbol.shndx].add(symbol.value)
+            for target in {s.info for s in self.sections if s.type == SHT_RELA}:
+                if not self.sections[target].name.startswith(".debug"):
+                    for _, _, symbol_index, addend in self.relocations(target)[0]:
+                        symbol = self.symbols[symbol_index]
+                        if 0 < symbol.shndx < SHN_LORESERVE:
+                            starts[symbol.shndx].add(symbol.value + addend)
+            self.starts = {index: sorted(offsets) for index, offsets in starts.items()}
+        starts = self.starts.get(index, [])
+        i = bisect.bisect_right(starts, offset)
+        return starts[i] if i < len(starts) else self.sections[index].size
 
 
-class TargetSymbols:
+class Game:
+    """The game executable: its bytes by address and its symbols."""
+
     def __init__(self):
+        self.image = Elf(TARGET_ELF)
         entries = []
         for line in defined_symbols(TARGET_ELF, sizes=True).splitlines():
             parts = line.split()
             if len(parts) == 4:
-                entries.append((int(parts[0], 16), int(parts[1], 16), parts[3]))
+                entries.append((int(parts[0], 16), int(parts[1], 16), parts[2], parts[3]))
         entries.sort()
-        self.starts = [e[0] for e in entries]
         self.entries = entries
-        self.exact = {}
-        for addr, _, name in entries:
-            self.exact.setdefault(addr, name)
-        self.exact.update(UNNAMED_RUNTIME)
-        self.stubs = dict(UNNAMED_RUNTIME)
+        self.starts = [e[0] for e in entries]
+        self.addresses = {}
+        self.functions = {}
+        for addr, size, kind, name in entries:
+            self.addresses.setdefault(name, []).append(addr)
+            if kind in "TtWw":
+                self.functions.setdefault(name, []).append((addr, size))
+        self.got_imports = {addr: name[len("__got_"):] for addr, _, _, name in entries if name.startswith("__got_")}
+        stubs, self.calls = cached(os.path.join(CACHE_DIR, "target.code"), target_key(), self.scan_code)
+        self.unnamed = {**UNNAMED_RUNTIME, **stubs}
+        for addr, name in self.unnamed.items():
+            self.addresses.setdefault(name, [addr])
 
-    def find_import_stubs(self, image):
-        """Name the PLT stubs (adrp x16; ldr x17, [x16, #off]; add x16; br x17) after the import they jump to."""
-        slots = {addr: name[len("__imp_"):] for addr, _, name in self.entries if name.startswith("__imp_")}
-        for name, typ, start, offset, length in image.sections:
-            if name != ".text":
-                continue
-            text = image.data[offset:offset + length]
-            for pos in range(0, len(text) - 12, 4):
-                adrp, ldr, add, br = struct.unpack_from("<IIII", text, pos)
-                if adrp & 0x9F00001F != 0x90000010 or ldr & 0xFFC003FF != 0xF9400211 or br != 0xD61F0220:
-                    continue
-                pc = start + pos
-                page = (pc & ~0xFFF) + (((((adrp >> 29) & 3) | (((adrp >> 5) & 0x7FFFF) << 2)) ^ 0x100000) - 0x100000 << 12)
-                slot = page + ((ldr >> 10) & 0xFFF) * 8
-                if slot in slots:
-                    self.stubs[pc] = slots[slot]
+    def scan_code(self):
+        """The import stubs (adrp x16; ldr x17, [x16, #slot]; add x16; br x17), named after the import they jump to,
+        and every address a bl calls."""
+        text = next(s for s in self.image.sections if s.name == ".text")
+        words = memoryview(self.image.data)[text.offset:text.offset + text.size].cast("I")
+        imports = {addr: name[len("__imp_"):] for addr, _, _, name in self.entries if name.startswith("__imp_")}
+        stubs, calls = {}, set()
+        for i, word in enumerate(words):
+            if word & 0xFC000000 == 0x94000000:
+                calls.add(text.addr + 4 * (i + signed(word & 0x3FFFFFF, 26)))
+            elif word == 0xD61F0220 and i >= 3:
+                adrp, ldr = words[i - 3], words[i - 2]
+                if adrp & 0x9F00001F == 0x90000010 and ldr & 0xFFC003FF == 0xF9400211:
+                    pc = text.addr + 4 * (i - 3)
+                    slot = get_field(adrp, PAGE, pc) + ((ldr >> 10) & 0xFFF) * 8
+                    if slot in imports:
+                        stubs[pc] = imports[slot]
+        return stubs, sorted(calls)
 
-    def unnamed_end(self, addr, image):
-        """End of the unnamed function at addr: the next symbol, or the next address some bl calls."""
-        if self.covering(addr):
-            return None
-        end = self.starts[bisect.bisect_right(self.starts, addr)]
-        for name, _, start, offset, length in image.sections:
-            if name != ".text" or not start <= addr < start + length:
-                continue
-            words = struct.unpack_from(f"<{length // 4}I", image.data, offset)
-            for index, word in enumerate(words):
-                if word & 0xFC000000 == 0x94000000:
-                    callee = start + index * 4 + (((word & 0x3FFFFFF) ^ 0x2000000) - 0x2000000) * 4
-                    if addr < callee < end:
-                        end = callee
-        return end
+    def read(self, addr, size):
+        for s in self.image.sections:
+            if s.addr and s.type != SHT_NOBITS and s.addr <= addr < s.addr + s.size:
+                pos = s.offset + addr - s.addr
+                return self.image.data[pos:s.offset + min(addr - s.addr + size, s.size)]
+        return b""
+
+    def c_string(self, addr):
+        raw = b""
+        while b"\0" not in raw:
+            chunk = self.read(addr + len(raw), 256)
+            if not chunk:
+                break
+            raw += chunk
+        return raw.split(b"\0")[0]
+
+    def pointer(self, addr):
+        raw = self.read(addr, 8)
+        return struct.unpack("<Q", raw)[0] if len(raw) == 8 else None
 
     def covering(self, addr):
         i = bisect.bisect_right(self.starts, addr) - 1
         if i < 0:
             return None
-        start, size, name = self.entries[i]
+        start, size, _, name = self.entries[i]
         if addr == start or addr < start + size:
             return name, addr - start
         return None
 
+    def name_at(self, addr):
+        if addr in self.unnamed:
+            return self.unnamed[addr]
+        found = self.covering(addr)
+        if found:
+            return found[0] + (f"+{found[1]:#x}" if found[1] else "")
+        return f"{addr:#x}"
 
-def data_label(raw):
-    end = raw.find(b"\0")
-    try:
-        text = raw[:end].decode("utf-8")
-    except UnicodeDecodeError:
-        return "data"
-    if end > 0 and text.replace("\t", " ").replace("\n", " ").isprintable():
-        source = SOURCE_PATH.fullmatch(text)
-        return f'"…/{source.group(1)}"' if source else '"' + text + '"'
-    return "data"
+    def symbol_addresses(self, name):
+        found = self.addresses.get(name)
+        structor = STRUCTOR.fullmatch(name) if found is None else None
+        if structor:
+            found = self.addresses.get(f"{structor[1]}{structor[2]}{3 - int(structor[3])}{structor[4]}")
+        return found or []
 
-
-def target_label(addr, load64, image, syms, scalar=False):
-    found = syms.covering(addr)
-    if found:
-        name, offset = found
-        if name.startswith("__got_"):
-            return "got:" + name[len("__got_"):]
-        return name + (f"+{offset:#x}" if offset else "")
-    if scalar:
-        return "data"
-    if load64:
-        pointer = image.read(addr, 8)
-        if len(pointer) == 8 and struct.unpack("<Q", pointer)[0] in syms.exact:
-            return "got:" + syms.exact[struct.unpack("<Q", pointer)[0]]
-    if writable(image.section_name(addr)):
-        return "data"
-    return data_label(image.read(addr, 1024))
+    def unnamed_end(self, addr):
+        """End of the unnamed function at addr: the next symbol, or the next address some bl calls."""
+        if self.covering(addr):
+            return None
+        end = self.starts[bisect.bisect_right(self.starts, addr)]
+        i = bisect.bisect_right(self.calls, addr)
+        return min(end, self.calls[i]) if i < len(self.calls) else end
 
 
-def object_label(rtype, target, image, scalar=False):
-    if "GOT" in rtype:
-        return "got:" + target
-    match = re.fullmatch(r"(.+?)([+-]0x[0-9a-f]+)?", target)
-    sym, addend = match.group(1), int(match.group(2) or "0", 16)
-    if writable(sym) or scalar and sym.startswith("."):
-        return "data"
-    if sym.startswith("."):
-        return data_label(image.read(addend, 1024, section=sym))
-    return sym + (f"+{addend:#x}" if addend else "")
+@lru_cache(maxsize=None)
+def target_game():
+    return Game()
 
 
-def is_scalar_load(text):
-    """A float or vector load reads a literal, never a string, even when its bytes look printable."""
-    op, _, args = text.partition("\t")
-    return op in ("ldr", "ldur", "ldp") and args[:1] in ("b", "h", "s", "d", "q")
+def signed(value, bits):
+    return (value ^ (1 << (bits - 1))) - (1 << (bits - 1))
 
 
-def with_label(text, label):
-    op, _, args = text.partition("\t")
-    if op in ("adrp", "adr"):
-        return f"{op}\t{args.split(',')[0]}, <{label}>"
-    if "[" in args:
-        return MEM_OPERAND.sub(lambda m: f"[{m.group(1)}, <{label}>]", text, count=1)
-    if op == "add":
-        return re.sub(r", #0x[0-9a-f]+$", lambda _: f", <{label}>", text)
-    return f"{op}\t<{label}>"
+def branch_bits(word):
+    """Width of the offset field of a pc-relative branch, else None."""
+    if word & 0x7C000000 == 0x14000000:  # b, bl
+        return 26
+    if word & 0xFF000010 == 0x54000000 or word & 0x7E000000 == 0x34000000:  # b.cond, cbz, cbnz
+        return 19
+    if word & 0x7E000000 == 0x36000000:  # tbz, tbnz
+        return 14
+    return None
 
 
-def objdump(path, symbols, relocs, local_functions=(), address=None):
-    """Disassemble symbols, or with address the unnamed game function there, keyed by hex address."""
-    image = Image(path)
-    syms = None if relocs else TargetSymbols()
-    if address is None:
-        selection = [f"--disassemble-symbols={s}" for s in symbols]
+def fits(word, field):
+    """The instruction has the field a relocation fills."""
+    if field is PAGE:
+        return word & 0x9F000000 == 0x90000000
+    if field[0] == "lo12":
+        return word & 0x7F800000 == 0x11000000 or word & 0x3B000000 == 0x39000000  # add, ldr/str immediate
+    return branch_bits(word) == field[1]
+
+
+def get_field(word, field, pc):
+    """The address an instruction field reaches from pc: a page, the low 12 bits, or a branch target."""
+    if field is PAGE:
+        return (pc & ~0xFFF) + (signed(((word >> 5) & 0x7FFFF) << 2 | (word >> 29) & 3, 21) << 12)
+    if field[0] == "lo12":
+        return ((word >> 10) & 0xFFF) << field[1]
+    bits = field[1]
+    shift = 0 if bits == 26 else 5
+    return pc + signed((word >> shift) & ((1 << bits) - 1), bits) * 4
+
+
+def set_field(word, field, value, pc):
+    if field is PAGE:
+        page = ((value & ~0xFFF) - (pc & ~0xFFF)) >> 12 & 0x1FFFFF
+        return word & ~0x60FFFFE0 | (page & 3) << 29 | (page >> 2) << 5
+    if field[0] == "lo12":
+        return word & ~0x3FFC00 | ((value & 0xFFF) >> field[1]) << 10
+    bits = field[1]
+    shift = 0 if bits == 26 else 5
+    mask = (1 << bits) - 1
+    return word & ~(mask << shift) | ((value - pc) >> 2 & mask) << shift
+
+
+def word_at(raw, offset):
+    return int.from_bytes(raw[offset:offset + 4], "little")
+
+
+def is_mov_immediate(word):
+    return word & 0x7F800000 in (0x52800000, 0x12800000) or word & 0x7F800000 == 0x32000000 and (word >> 5) & 31 == 31
+
+
+def reference(game, obj, symbol, addend, got):
+    """What a relocation reaches, as a key shared by every instruction that reaches it."""
+    if got:
+        return ("got", symbol.name)
+    if symbol.type != STT_SECTION and symbol.name and game.symbol_addresses(symbol.name):
+        return ("symbol", symbol.name, addend)
+    if 0 < symbol.shndx < SHN_LORESERVE:
+        return local_reference(game, obj, symbol.shndx, symbol.value + addend)
+    return ("missing", symbol.name, addend)
+
+
+def local_reference(game, obj, index, offset):
+    name = obj.function_at.get((index, offset))
+    if name and game.symbol_addresses(name):
+        return ("symbol", name, 0)
+    return ("local", index, offset)
+
+
+def describe(obj, key):
+    if key[0] == "local":
+        return obj.function_at.get(key[1:]) or f"{obj.sections[key[1]].name}+{key[2]:#x}"
+    if key[0] == "got":
+        return "got:" + key[1]
+    return key[1] + (f"+{key[2]:#x}" if key[2] else "")
+
+
+def string_label(raw):
+    text = raw.decode("utf-8", "backslashreplace")
+    path = SOURCE_PATH.fullmatch(text)
+    if path:
+        return f'"…/{path.group(1)}"'
+    return '"' + text.replace("\n", "\\n").replace("\t", "\\t") + '"'
+
+
+def literal_label(raw):
+    if len(raw) == 4:
+        return f"{struct.unpack('<f', raw)[0]:.9g} ({struct.unpack('<I', raw)[0]:#010x})"
+    if len(raw) == 8:
+        return f"{struct.unpack('<d', raw)[0]:.17g} ({struct.unpack('<Q', raw)[0]:#018x})"
+    return raw.hex()
+
+
+def same_source_file(mine, theirs):
+    """Two __FILE__ paths that differ only by their directory."""
+    paths = [SOURCE_PATH.fullmatch(raw.decode("latin1")) for raw in (mine, theirs)]
+    return all(paths) and paths[0].group(1) == paths[1].group(1)
+
+
+def compare_read_only(game, obj, index, offset, address, function, assert_text):
+    """Your read-only data at (index, offset) against the game's at address: (game label, your label, problem)."""
+    section = obj.sections[index]
+    if section.flags & SHF_STRINGS:
+        mine, theirs = obj.c_string(index, offset), game.c_string(address)
+        if mine == theirs or same_source_file(mine, theirs) or (
+                assert_text and mine.replace(b" ", b"") == theirs.replace(b" ", b"")):
+            return string_label(theirs), string_label(theirs), None
+        return (string_label(theirs), string_label(mine),
+                f"the string is {string_label(mine)}, the game's {string_label(theirs)}")
+    literal = bool(section.flags & SHF_MERGE and section.entsize)
+    if literal:
+        start, size = offset, section.entsize
     else:
-        end = syms.unnamed_end(address, image)
-        if end is None:
-            sys.exit(f"{address:#x} is inside {syms.covering(address)[0]}, check it by name")
-        selection = [f"--start-address={address:#x}", f"--stop-address={end:#x}"]
-    args = ["llvm-objdump", "-d", "--no-show-raw-insn", *selection, path]
-    if relocs:
-        args.insert(2, "-r")
-    if syms:
-        syms.find_import_stubs(image)
-    funcs = {}
-    lines = funcs.setdefault(f"{address:#x}", []) if address is not None else None
-    for line in run(args).splitlines():
-        header = FUNC_HEADER.match(line)
-        if header and address is None:
-            # Labels at the same address (constructor and destructor variants) share their instructions.
-            if lines is not None and not lines:
-                funcs[header.group(1)] = lines
+        symbol = obj.covering(index, offset)
+        start, size = (symbol.value, symbol.size) if symbol else (offset, obj.next_start(index, offset) - offset)
+    size = min(size, 0x10000)
+    base = address - (offset - start)
+    mine = bytearray(obj.bytes(index, start, size))
+    masked = set()
+    function_index, function_start, function_size, function_address = function
+    for r_offset, rtype, symbol_index, addend in obj.relocations_in(index, start, start + size):
+        at = r_offset - start
+        symbol = obj.symbols[symbol_index]
+        target = None
+        if symbol.shndx == function_index:
+            if function_start <= symbol.value + addend < function_start + function_size:  # jump table entry
+                target = function_address + symbol.value + addend - function_start
+        elif symbol.type != STT_SECTION and symbol.name:
+            found = game.symbol_addresses(symbol.name)
+            if len(found) == 1:
+                target = found[0] + addend
+        width = 8 if rtype in (R_ABS64, R_PREL64) else 4
+        if target is None or rtype not in (R_PREL32, R_ABS64, R_ABS32):
+            masked.update(range(at, at + width))
+        elif rtype == R_PREL32:
+            struct.pack_into("<i", mine, at, target - (base + at))
+        elif rtype == R_ABS64:
+            struct.pack_into("<Q", mine, at, target)
+        else:
+            struct.pack_into("<I", mine, at, target & 0xFFFFFFFF)
+    theirs = game.read(base, size)
+    labels = (literal_label(theirs), literal_label(bytes(mine))) if literal and len(theirs) == size else (None, None)
+    if len(theirs) != size:
+        return (*labels, f"{section.name}+{offset:#x} is at {base:#x} in the game, which holds no data")
+    differ = [i for i in range(size) if i not in masked and mine[i] != theirs[i]]
+    if not differ:
+        return labels[0], labels[0], None
+    if literal:
+        return (*labels, f"the literal at {address:#x} is {labels[1]}, the game's {labels[0]}")
+    i = differ[0]
+    return (*labels, f"the data at {base + i:#x} ({section.name}+{start + i:#x}) is {bytes(mine[i:i + 8]).hex()}, "
+                     f"the game's {theirs[i:i + 8].hex()}")
+
+
+def verify(game, obj, symbol, address, size=None):
+    """Place your function at the game address, resolve its relocations and compare its bytes with the game's.
+
+    size is the game function's size; None for a function the game has no symbol for, compared over your size
+    within the game span (up to the next symbol or bl target)."""
+    function = obj.functions[symbol]
+    index, start, length = function.shndx, function.value, function.size
+    ours = bytearray(obj.bytes(index, start, length))
+    problems = []
+    if size is None:
+        span = game.unnamed_end(address) - address
+        compared = min(length, span)
+        if length > span:
+            problems.append((span, f"the game's code at {address:#x} ends after {span // 4} instructions"))
+    else:
+        span = compared = size
+        if length != size:
+            problems.append((min(length, size), f"the game function has {size // 4} instructions, yours {length // 4}"))
+    theirs = game.read(address, span)
+    if len(theirs) < span:
+        problems.append((len(theirs), f"the game has no code at {address + len(theirs):#x}"))
+
+    sites = []  # (offset, field, key)
+    relocated = set()
+    for offset, rtype, symbol_index, addend in obj.relocations_in(index, start, start + length):
+        offset -= start
+        relocated.add(offset)
+        field = RELOCATION_FIELDS.get(rtype)
+        if field is None:
+            problems.append((offset, f"relocation type {rtype} in code"))
+        else:
+            sites.append((offset, field, reference(game, obj, obj.symbols[symbol_index], addend, rtype in GOT_RELOCATIONS)))
+    for offset in range(0, length, 4):
+        if offset in relocated:
+            continue
+        word = word_at(ours, offset)
+        bits = branch_bits(word)
+        if bits:
+            target = get_field(word, ("branch", bits), offset)
+            if not 0 <= target < length:  # a call the assembler resolved: a function of the same section
+                sites.append((offset, ("branch", bits), local_reference(game, obj, index, start + target)))
+        elif word & 0x1F000000 == 0x10000000 or word & 0x3B000000 == 0x18000000:
+            problems.append((offset, "adr or ldr literal without relocation"))
+
+    windows = [(max(0, offset - SOURCE_LOCATION_WINDOW), offset, *SOURCE_LOCATION_CALLS[key[1]])
+               for offset, field, key in sites if key[0] == "symbol" and key[1] in SOURCE_LOCATION_CALLS]
+    assert_texts = {key for offset, field, key in sites if field[0] != "branch" and word_at(ours, offset) & 31 == 0
+                    and any(text and low <= offset < call for low, call, _, text in windows)}
+
+    # The address the game uses for each key, from the game instructions at your relocation sites.
+    found = defaultdict(lambda: defaultdict(set))
+    first_site = {}
+    for offset, field, key in sites:
+        first_site.setdefault(key, offset)
+        if offset + 4 <= compared:
+            word = word_at(theirs, offset)
+            if fits(word, field):
+                found[key][field[0]].add(get_field(word, field, address + offset))
+    values, labels, calls = {}, {}, {}
+    for key, offset in first_site.items():
+        kinds = found.get(key, {})
+        theirs_value = None
+        if all(len(v) == 1 for v in kinds.values()):
+            one = {kind: min(v) for kind, v in kinds.items()}
+            if "branch" in one:
+                theirs_value = one["branch"] if len(one) == 1 else None
+            elif "page" in one and "lo12" in one:
+                theirs_value = one["page"] | one["lo12"]
+        if key[0] == "symbol":
+            candidates = game.symbol_addresses(key[1])
+            if theirs_value is not None and theirs_value - key[2] in candidates:
+                values[key] = theirs_value
             else:
-                lines = funcs.setdefault(header.group(1), [])
+                values[key] = candidates[0] + key[2]
+            labels[key] = (theirs_value is not None and game.name_at(theirs_value), game.name_at(values[key]))
+        elif key[0] == "missing":
+            problems.append((offset, f"yours refers to {key[1]}, which the game has no symbol for"))
+            labels[key] = (theirs_value is not None and game.name_at(theirs_value), key[1])
+        elif theirs_value is None:
             continue
-        if lines is None:
+        elif key[0] == "got":
+            values[key] = theirs_value
+            pointer = game.pointer(theirs_value)
+            held = game.got_imports.get(theirs_value) or (game.name_at(pointer) if pointer is not None else "nothing")
+            if key[1] and (game.got_imports.get(theirs_value) == key[1] or pointer in game.symbol_addresses(key[1])):
+                labels[key] = ("got:" + held, "got:" + held)
+            else:
+                labels[key] = ("got:" + held, "got:" + key[1])
+                problems.append((offset, f"yours loads the address of {key[1] or 'an unnamed symbol'}, the game {held}"))
+        else:
+            values[key] = theirs_value
+            section = obj.sections[key[1]]
+            if section.flags & SHF_EXECINSTR:
+                if game.covering(theirs_value):
+                    problems.append((offset, f"yours calls {describe(obj, key)}, local to your file, "
+                                             f"the game {game.name_at(theirs_value)}"))
+                elif key[1:] in obj.function_at:
+                    calls.setdefault(obj.function_at[key[1:]], theirs_value)
+            elif not section.flags & SHF_WRITE and section.type != SHT_NOBITS:
+                game_label, your_label, problem = compare_read_only(
+                    game, obj, key[1], key[2], theirs_value, (index, start, length, address), key in assert_texts)
+                labels[key] = (game_label, your_label)
+                if problem:
+                    problems.append((offset, problem))
+
+    for offset, field, key in sites:
+        if key in values:
+            ours[offset:offset + 4] = set_field(word_at(ours, offset), field, values[key], address + offset).to_bytes(4, "little")
+
+    diffs, lines = [], set()
+    end = min(compared, length, len(theirs))
+    if ours[:end] != theirs[:end]:
+        for offset in range(0, end, 4):
+            mine, game_word = word_at(ours, offset), word_at(theirs, offset)
+            if mine == game_word:
+                continue
+            if offset not in relocated and is_line_number(ours, offset, mine, game_word, windows):
+                lines.add(offset)
+            else:
+                diffs.append(offset)
+    differing = set(diffs)
+    for key, offset in first_site.items():
+        if key not in values and key[0] != "missing" and not any(o in differing for o, _, k in sites if k == key):
+            problems.append((offset, f"the game instructions give no single address for {describe(obj, key)}"))
+
+    our_labels, game_labels = {}, {}
+    for offset, field, key in sites:
+        game_label, your_label = labels.get(key, (None, None))
+        if field[0] == "branch":
+            if key not in values:
+                our_labels[offset] = f"<{describe(obj, key)}>"
             continue
-        reloc = RELOC.match(line)
-        if reloc and lines:
-            lines[-1] = with_label(lines[-1], object_label(reloc.group(1), reloc.group(2), image, is_scalar_load(lines[-1])))
-            continue
-        insn = INSN.match(line)
-        if insn:
-            lines.append(insn.group(1).split("//")[0].rstrip())
-    sizes = {} if relocs else {name: size for _, size, name in syms.entries}
-    for name, lines in funcs.items():
-        lines = list(lines)
-        if not relocs:
-            del lines[sizes.get(name, len(lines) * 4) // 4:]
-            resolve_pages(lines, image, syms)
-        funcs[name] = ignore_source_locations([STRUCTOR_VARIANT.sub(r"\1\g<2>1\3", label_branch(l, syms, local_functions))
-                                               for l in lines])
-    return funcs
+        if your_label:
+            our_labels[offset] = your_label
+        if game_label and offset + 4 <= len(theirs) and fits(word_at(theirs, offset), field):
+            game_labels[offset] = game_label
+    return SimpleNamespace(ok=not diffs and not problems, address=address, count=compared // 4,
+                           ours=bytes(ours), theirs=theirs, diffs=diffs, problems=sorted(problems), lines=lines,
+                           our_labels=our_labels, game_labels=game_labels, calls=calls)
 
 
-def is_branch(op):
-    return op in ("b", "bl", "cbz", "cbnz", "tbz", "tbnz") or op.startswith("b.")
+def is_line_number(ours, offset, mine, theirs, windows):
+    """Both words set the register a source-location call takes __LINE__ in, directly or through a register."""
+    if not (is_mov_immediate(mine) and is_mov_immediate(theirs) and mine & 0x8000001F == theirs & 0x8000001F):
+        return False
+    register = mine & 31
+    for low, call, line_register, _ in windows:
+        if low <= offset < call and register == line_register:
+            return True
+        for at in range(max(low, offset + 4), call, 4):  # mov wLine, wRegister
+            word = word_at(ours, at)
+            if word & 0x7FE0FFE0 == 0x2A0003E0 and word & 31 == line_register and (word >> 16) & 31 == register:
+                return True
+    return False
 
 
-def label_branch(text, syms, local_functions):
-    """Name a branch target; a function the game has no symbol for, or local to your file, is <local>."""
-    branch = is_branch(text.partition("\t")[0])
-
-    def target(match):
-        name = match.group(1)
-        if syms:
-            addr = int(match.group(0).split()[0], 16)
-            if addr in syms.stubs:
-                return f"<{syms.stubs[addr]}>"
-            if branch and not syms.covering(addr):
-                return f"<local:{addr:#x}>"
-        return f"<local:{name}>" if branch and name in local_functions else f"<{name}>"
-
-    return BRANCH_TARGET.sub(target, text)
+def verify_named(game, obj, symbol):
+    verdicts = []
+    for address, size in game.functions[symbol]:
+        verdict = verify(game, obj, symbol, address, size)
+        if verdict.ok:
+            return verdict
+        verdicts.append(verdict)
+    return verdicts[0]
 
 
-def ignore_source_locations(lines):
-    for i, text in enumerate(lines):
-        op, _, target = text.partition("\t")
-        if op not in ("bl", "b") or target.strip("<>") not in SOURCE_LOCATION_CALLS:
-            continue
-        line_reg, has_text = SOURCE_LOCATION_CALLS[target.strip("<>")]
-        for j in range(i - 1, max(i - 16, -1), -1):
-            prev_op, _, args = lines[j].partition("\t")
-            if prev_op in ("bl", "b", "br", "ret") or prev_op.startswith("b."):
-                break
-            regs = [a.strip() for a in args.split(",")]
-            if prev_op in ("mov", "orr") and regs[0] in (f"w{line_reg}", f"x{line_reg}") and regs[-1].startswith("#"):
-                lines[j] = f"mov\t{regs[0]}, <line>"
-            elif prev_op == "mov" and regs[0] in (f"w{line_reg}", f"x{line_reg}") and re.fullmatch(r"[wx]\d+", regs[1]):
-                hoisted = regs[1][1:]
-                for k in range(j - 1, -1, -1):
-                    hoisted_op, _, hoisted_args = lines[k].partition("\t")
-                    hoisted_regs = [a.strip() for a in hoisted_args.split(",")]
-                    if hoisted_op in ("mov", "orr") and hoisted_regs[0] in (f"w{hoisted}", f"x{hoisted}") and hoisted_regs[-1].startswith("#"):
-                        lines[k] = f"mov\t{hoisted_regs[0]}, <line>"
-                        break
-            elif has_text and prev_op in ("adrp", "add") and regs[0] == "x0" and '<"' in args:
-                lines[j] = re.sub(r'<"(.*)">', lambda m: '<"' + m.group(1).replace(" ", "") + '">', lines[j])
+def check_object(entry):
+    """(symbol, game address, match, instructions, local) of each function, then of the local functions the
+    matching ones call."""
+    path, symbols = entry
+    game = target_game()
+    obj = ObjectFile(path)
+    rows, calls = [], {}
+    for symbol in symbols:
+        verdict = verify_named(game, obj, symbol)
+        rows.append((symbol, verdict.address, verdict.ok, verdict.count, False))
+        if verdict.ok:
+            for name, address in verdict.calls.items():
+                calls.setdefault(name, address)
+    done = set()
+    while len(done) < len(calls):
+        for name in [n for n in calls if n not in done]:
+            done.add(name)
+            verdict = verify(game, obj, name, calls[name])
+            rows.append((name, calls[name], verdict.ok, verdict.count, True))
+            if verdict.ok:
+                for callee, address in verdict.calls.items():
+                    calls.setdefault(callee, address)
+    return rows
+
+
+def check_objects(entries):
+    """check_object for each (object, symbols), kept in the cache until the object or the game changes."""
+    keys = [(target_key(), current_digest(path), tuple(symbols)) for path, symbols in entries]
+    results = [load_cached(path + ".check", key) for (path, _), key in zip(entries, keys)]
+    todo = [i for i, rows in enumerate(results) if rows is None]
+    if todo:
+        target_game()  # read once, before the workers fork
+        with ProcessPoolExecutor(mp_context=multiprocessing.get_context("fork")) as pool:
+            for i, rows in zip(todo, pool.map(check_object, [entries[i] for i in todo], chunksize=4)):
+                save_cached(entries[i][0] + ".check", keys[i], rows)
+                results[i] = rows
+    return results
+
+
+def disassemble(word_lists):
+    """Instruction texts of each list of words, through one llvm-mc run."""
+    words = [word for words in word_lists for word in words]
+    proc = subprocess.run(["llvm-mc", "--disassemble", "-triple=aarch64", "-mattr=+crypto,+crc,+fp-armv8,+neon"],
+                          input="\n".join(" ".join(f"{b:#04x}" for b in struct.pack("<I", w)) for w in words),
+                          capture_output=True, text=True)
+    invalid = {int(n) - 1 for n in re.findall(r"<stdin>:(\d+):\d+: warning: invalid instruction encoding", proc.stderr)}
+    texts = iter(line.strip() for line in proc.stdout.splitlines() if line.strip() and not line.strip().startswith("."))
+    lines = [f".word\t{word:#010x}" if i in invalid else next(texts) for i, word in enumerate(words)]
+    out = []
+    for words in word_lists:
+        out.append(lines[:len(words)])
+        lines = lines[len(words):]
+    return out
+
+
+def render(game, texts, raw, verdict, labels):
+    """The instructions of one side, pc-relative operands written as the address they reach."""
+    start, end = verdict.address, verdict.address + len(raw)
+    lines = []
+    for i, text in enumerate(texts):
+        offset = i * 4
+        word = word_at(raw, offset)
+        pc = start + offset
+        label = labels.get(offset)
+        bits = branch_bits(word)
+        if bits:
+            if label is None:
+                target = get_field(word, ("branch", bits), pc)
+                label = f"+{target - start:#x}" if start <= target < end else f"<{game.name_at(target)}>"
+            text = PC_RELATIVE_OPERAND.sub(lambda _: label, text)
+        else:
+            if word & 0x9F000000 == 0x90000000:  # adrp
+                target = get_field(word, PAGE, pc)
+            elif word & 0x9F000000 == 0x10000000:  # adr
+                target = pc + signed(((word >> 5) & 0x7FFFF) << 2 | (word >> 29) & 3, 21)
+            elif word & 0x3B000000 == 0x18000000:  # ldr literal
+                target = pc + signed((word >> 5) & 0x7FFFF, 19) * 4
+            else:
+                target = None
+            if target is not None:
+                text = PC_RELATIVE_OPERAND.sub(lambda _: f"{target:#x}", text)
+            if label:
+                text += f" <{label}>"
+        if offset in verdict.lines:
+            text = re.sub(r"#[^,]*$", "<line>", text)
+        lines.append(text)
     return lines
 
 
-def resolve_pages(lines, image, syms):
-    pages = {}
-    labeled = set()
-    for i, text in enumerate(lines):
-        op, _, args = text.partition("\t")
-        regs = [a.strip() for a in args.split(",")]
-        if op == "adrp":
-            pages[regs[0]] = (i, int(regs[1].split()[0], 16))
-            continue
-        mem = MEM_OPERAND.search(args)
-        if mem and mem.group(1) in pages:
-            base, imm = mem.group(1), int(mem.group(2) or "0", 16)
-        elif op == "add" and len(regs) == 3 and regs[1] in pages and regs[2].startswith("#0x"):
-            base, imm = regs[1], int(regs[2][1:], 16)
-        else:
-            for r in regs[:1]:
-                pages.pop(r, None)
-            continue
-        adrp_index, page = pages[base]
-        label = target_label(page + imm, op == "ldr" and regs[0].startswith("x"), image, syms, is_scalar_load(text))
-        if adrp_index not in labeled:
-            lines[adrp_index] = with_label(lines[adrp_index], label)
-            labeled.add(adrp_index)
-        lines[i] = with_label(text, label)
-        if op != "str":
-            pages.pop(regs[0], None)
+def show(game, verdict):
+    """Print MATCH, or the side by side diff and where the bytes first differ."""
+    if verdict.ok:
+        print(paint(f"MATCH ({verdict.count} instructions)", "1;32"))
+        return True
+    texts = disassemble([[word_at(raw, o) for o in range(0, len(raw) - 3, 4)] for raw in (verdict.theirs, verdict.ours)])
+    target = render(game, texts[0], verdict.theirs, verdict, verdict.game_labels)
+    mine = render(game, texts[1], verdict.ours, verdict, verdict.our_labels)
+    print_diff(target, mine)
+    first = min([*verdict.diffs, *(offset for offset, _ in verdict.problems)])
+    print(paint(f"\nfirst difference at +{first:#x} ({verdict.address + first:#x})", "1"))
+    print(f"  target  {target[first // 4].expandtabs(8) if first // 4 < len(target) else '(end)'}")
+    print(f"  yours   {mine[first // 4].expandtabs(8) if first // 4 < len(mine) else '(end)'}")
+    for offset, problem in verdict.problems:
+        print(f"  +{offset:#x}: {problem}")
+    print(paint(f"\nNO MATCH: target {len(target)} instructions, yours {len(mine)}", "1;31"))
+    return False
+
+
+def print_diff(target, mine):
+    width = max(len(l.expandtabs(8)) for l in target + ["target"]) + 2
+    print(paint(f"{'target':<{width}}   yours", "1"))
+    for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(a=target, b=mine, autojunk=False).get_opcodes():
+        for k in range(max(i2 - i1, j2 - j1)):
+            left = (target[i1 + k] if i1 + k < i2 else "").expandtabs(8)
+            right = (mine[j1 + k] if j1 + k < j2 else "").expandtabs(8)
+            if tag == "equal":
+                print(f"{left:<{width}}   {right}")
+                continue
+            code = "33" if tag == "replace" and left and right else ("31" if left else "32")
+            print(f"{paint(f'{left:<{width}}', code)} {paint('|', code)} {paint(right, code)}")
 
 
 def target_symbols():
@@ -501,37 +883,9 @@ def compile_source(source, tmp, extra=()):
     return obj, None
 
 
-def target_disassembly(symbols=(), addresses=()):
-    """Game functions by symbol, and unnamed ones by hex address, read once and kept in the cache."""
-    path = os.path.join(CACHE_DIR, "target.dis")
-    known = load_cached(path, target_key()) or {}
-    missing = [s for s in symbols if s not in known]
-    if missing:
-        found = objdump(TARGET_ELF, missing, relocs=False)
-        known.update({s: found.get(s, []) for s in missing})
-    unnamed = [a for a in addresses if a not in known]
-    for address in unnamed:
-        known.update(objdump(TARGET_ELF, [], relocs=False, address=int(address, 16)))
-    if missing or unnamed:
-        save_cached(path, target_key(), known)
-    return {s: known[s] for s in [*symbols, *addresses]}
-
-
-def object_disassembly(obj, symbols, known):
-    key = (target_key(), current_digest(obj), tuple(symbols))
-    return cached(obj + ".dis", key,
-                  lambda: objdump(obj, symbols, relocs=True, local_functions=local_functions(obj, known)))
-
-
 def defined_functions(obj):
     out = defined_symbols(obj)
     return [parts[2] for parts in (l.split() for l in out.splitlines()) if len(parts) == 3 and parts[1] in "TtWw"]
-
-
-def local_functions(obj, known):
-    out = defined_symbols(obj)
-    return {parts[2] for parts in (l.split() for l in out.splitlines())
-            if len(parts) == 3 and (parts[1] == "t" or parts[1] in "TWw" and parts[2] not in known)}
 
 
 @lru_cache(maxsize=None)
@@ -630,36 +984,7 @@ def print_compile_errors(errors):
         print(err, file=sys.stderr)
 
 
-def comparable(lines):
-    """Any local function call compares equal to any other: each local function is checked on its own."""
-    return [LOCAL_CALL.sub("<local>", line) for line in lines]
-
-
-def local_callees(lines):
-    return [match.group(1) for line in lines for match in LOCAL_CALL.finditer(line)]
-
-
-def print_diff(target, mine):
-    target, mine = comparable(target), comparable(mine)
-    if mine == target:
-        print(paint(f"MATCH ({len(target)} instructions)", "1;32"))
-        return True
-    width = max(len(l.expandtabs(8)) for l in target + ["target"]) + 2
-    print(paint(f"{'target':<{width}}   yours", "1"))
-    for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(a=target, b=mine, autojunk=False).get_opcodes():
-        for k in range(max(i2 - i1, j2 - j1)):
-            left = (target[i1 + k] if i1 + k < i2 else "").expandtabs(8)
-            right = (mine[j1 + k] if j1 + k < j2 else "").expandtabs(8)
-            if tag == "equal":
-                print(f"{left:<{width}}   {right}")
-                continue
-            code = "33" if tag == "replace" and left and right else ("31" if left else "32")
-            print(f"{paint(f'{left:<{width}}', code)} {paint('|', code)} {paint(right, code)}")
-    print(paint(f"\nNO MATCH: target {len(target)} instructions, yours {len(mine)}", "1;31"))
-    return False
-
-
-def diff_one(symbol, source, extra, known):
+def diff_one(symbol, source, extra):
     with tempfile.TemporaryDirectory() as tmp:
         if source:
             obj, err = compile_source(source, tmp, extra)
@@ -680,104 +1005,80 @@ def diff_one(symbol, source, extra, known):
             if obj is None:
                 sys.exit(f"{demangle([symbol])[symbol]} is not defined in any file under src/" +
                          (" that compiles" if errors else ""))
-        mine = object_disassembly(obj, [symbol], known).get(symbol)
-    if not mine:
+    obj = ObjectFile(obj)
+    if symbol not in obj.functions:
         sys.exit(f"{symbol} not found in compiled object (check the mangled name with llvm-nm)")
-    target = target_disassembly([symbol])[symbol]
-    return print_diff(target, mine)
+    game = target_game()
+    return show(game, verify_named(game, obj, symbol))
 
 
-def diff_unnamed(address, source, name, extra, known):
+def diff_unnamed(address, source, name, extra):
     with tempfile.TemporaryDirectory() as tmp:
         obj, err = compile_source(source, tmp, extra)
         if err:
             sys.exit(err)
-        defined = defined_functions(obj)
-        demangled = demangle(defined)
-        matches = [f for f in defined if name in (f, demangled[f], demangled[f].split("(")[0],
-                                                  demangled[f].split("(")[0].split("::")[-1])]
-        if len(matches) != 1:
-            sys.exit(f"{len(matches)} functions named {name} in {source}" +
-                     "".join(f"\n  {demangled[m]}" for m in matches))
-        mine = object_disassembly(obj, matches, known)[matches[0]]
-    target = target_disassembly(addresses=[f"{address:#x}"])[f"{address:#x}"]
-    return print_diff(target, mine)
-
-
-def add_local_pairs(pairs, obj, source, target, mine):
-    """In a function that matches, the n-th local call of the game and of your object reach the same function."""
-    if comparable(target) != comparable(mine):
-        return
-    for address, name in zip(local_callees(target), local_callees(mine)):
-        pairs.setdefault((obj, name), (source, address))
-
-
-def check_local_functions(pairs, demangled, names):
-    """Compare each local function found through a matching caller, then the local functions it calls."""
-    rows = []
-    done = set()
-    while len(done) < len(pairs):
-        todo = [key for key in pairs if key not in done]
-        done.update(todo)
-        targets = target_disassembly(addresses=sorted({pairs[key][1] for key in todo}))
-        readable = demangle(sorted({name for _, name in todo}))
-        for obj, name in todo:
-            source, address = pairs[(obj, name)]
-            mine = object_disassembly(obj, [name], demangled).get(name, [])
-            key = f"local:{address}:{name}"
-            names[key] = f"{readable[name]} (local, {address})"
-            rows.append((key, os.path.relpath(source, ROOT), targets[address], mine))
-            add_local_pairs(pairs, obj, source, targets[address], mine)
-    return rows
+    defined = defined_functions(obj)
+    demangled = demangle(defined)
+    matches = [f for f in defined if name in (f, demangled[f], demangled[f].split("(")[0],
+                                              demangled[f].split("(")[0].split("::")[-1])]
+    if len(matches) != 1:
+        sys.exit(f"{len(matches)} functions named {name} in {source}" +
+                 "".join(f"\n  {demangled[m]}" for m in matches))
+    game = target_game()
+    if game.covering(address):
+        sys.exit(f"{address:#x} is inside {game.covering(address)[0]}, check it by name")
+    return show(game, verify(game, ObjectFile(obj), matches[0], address))
 
 
 def check_all(demangled, scope=None, verbose=True):
-    rows = []
     with tempfile.TemporaryDirectory() as tmp:
         with ThreadPoolExecutor(max_workers=2) as pool:
             pending_headers = pool.submit(compile_headers, tmp)
             objects, errors = compile_all(tmp)
             errors += pending_headers.result() + absolute_includes()
-        per_object = [(source, obj, [f for f in defined_functions(obj) if f in demangled and in_scope(demangled[f], scope)])
-                      for source, obj in objects]
-        all_funcs = [f for _, _, funcs in per_object for f in funcs]
-        unknown = unknown_functions(objects, demangled, scope)
-        missing = sorted({demangled[m] for m in demangled if in_scope(demangled[m], scope) and m not in all_funcs}) if scope else []
-        if not all_funcs and not scope:
-            sys.exit("no game function defined under src/")
-        with ThreadPoolExecutor() as pool:
-            pending_targets = pool.submit(target_disassembly, all_funcs)
-            disassembled = list(pool.map(
-                lambda entry: object_disassembly(entry[1], entry[2], demangled) if entry[2] else {}, per_object))
-            targets = pending_targets.result()
-        pairs = {}
-        for (source, obj, funcs), mine in zip(per_object, disassembled):
-            for f in funcs:
-                rows.append((f, os.path.relpath(defining_file(demangled[f], source), ROOT), targets.get(f, []), mine.get(f, [])))
-                add_local_pairs(pairs, obj, source, targets.get(f, []), mine.get(f, []))
-        names = dict(demangled)
-        rows += check_local_functions(pairs, demangled, names)
+    per_object = [(source, obj, [f for f in defined_functions(obj) if f in demangled and in_scope(demangled[f], scope)])
+                  for source, obj in objects]
+    per_object = [entry for entry in per_object if entry[2]]
+    unknown = unknown_functions(objects, demangled, scope)
+    all_funcs = {f for _, _, funcs in per_object for f in funcs}
+    missing = sorted({demangled[m] for m in demangled if in_scope(demangled[m], scope) and m not in all_funcs}) if scope else []
+    if not all_funcs and not scope:
+        sys.exit("no game function defined under src/")
+    rows = []
+    for (source, obj, _), found in zip(per_object, check_objects([(obj, funcs) for _, obj, funcs in per_object])):
+        for symbol, address, ok, count, local in found:
+            if local:
+                rows.append((f"local:{address:#x}:{symbol}", os.path.relpath(source, ROOT), ok, count, obj, symbol, address))
+            else:
+                rows.append((symbol, os.path.relpath(defining_file(demangled[symbol], source), ROOT), ok, count, obj, symbol, None))
+    names = dict(demangled)
+    locals_ = [row for row in rows if row[6] is not None]
+    readable = demangle(sorted({row[5] for row in locals_})) if locals_ else {}
+    for key, _, _, _, _, symbol, address in locals_:
+        names[key] = f"{readable[symbol]} (local, {address:#x})"
 
-    demangled = names
-    rows = [(f, source, comparable(target), comparable(mine)) for f, source, target, mine in rows]
-    rows.sort(key=lambda r: (r[2] != r[3], r[1], demangled[r[0]]))
-    mismatches = [r for r in rows if r[2] != r[3]]
-    width = max((len(n) for n in [demangled[f] for f, *_ in rows] + missing), default=0)
-    for f, source, target, mine in rows if verbose else mismatches:
-        status = paint("MATCH   ", "32") if target == mine else paint("NO MATCH", "31")
-        print(f"{status}  {demangled[f]:<{width}}  {len(target):>4} insns  {source}")
+    rows.sort(key=lambda r: (not r[2], r[1], names[r[0]]))
+    mismatches = [r for r in rows if not r[2]]
+    width = max((len(n) for n in [names[r[0]] for r in rows] + missing), default=0)
+    for key, source, ok, count, *_ in rows if verbose else mismatches:
+        status = paint("MATCH   ", "32") if ok else paint("NO MATCH", "31")
+        print(f"{status}  {names[key]:<{width}}  {count:>4} insns  {source}")
     for m in missing:
         print(f"{paint('TODO    ', '2')}  {m}")
 
     print_unknown_functions(unknown)
-    for f, source, target, mine in mismatches:
-        print(paint(f"\n=== {demangled[f]}  ({source})", "1"))
-        print_diff(target, mine)
+    if mismatches:
+        game = target_game()
+        files = {}
+        for key, source, _, _, obj, symbol, address in mismatches:
+            obj = files.get(obj) or files.setdefault(obj, ObjectFile(obj))
+            print(paint(f"\n=== {names[key]}  ({source})", "1"))
+            show(game, verify(game, obj, symbol, address) if address is not None else verify_named(game, obj, symbol))
     sys.stdout.flush()
     print_compile_errors(errors)
     failed = bool(errors or unknown)
     matched = len(rows) - len(mismatches)
-    local_count = sum(1 for f, *_ in rows if f.startswith("local:"))
+    local_count = len(locals_)
     summary = f"\n{matched}/{len(rows)} functions match"
     if local_count:
         summary += f" ({local_count} of them local)"
@@ -788,7 +1089,7 @@ def check_all(demangled, scope=None, verbose=True):
     if unknown:
         summary += f", {len(unknown)} not in the game"
     print(paint(summary, "1;32" if matched == len(rows) and not failed else "1;31"))
-    return matched == len(rows) and not failed, [f for f, _, target, mine in rows if target == mine and not f.startswith("local:")]
+    return matched == len(rows) and not failed, [r[0] for r in rows if r[2] and r[6] is None]
 
 
 def game_progress(matched):
@@ -842,9 +1143,9 @@ def main():
         if re.fullmatch(r"0x[0-9a-fA-F]+", name):
             if len(args) < 3:
                 sys.exit("usage: check <address> <source.cpp> <name> [flags...]")
-            ok = diff_unnamed(int(name, 16), args[1], args[2], args[3:], demangled)
+            ok = diff_unnamed(int(name, 16), args[1], args[2], args[3:])
         elif symbol:
-            ok = diff_one(symbol, args[1] if len(args) > 1 else None, args[2:], demangled)
+            ok = diff_one(symbol, args[1] if len(args) > 1 else None, args[2:])
         elif any(in_scope(d, name) for d in demangled.values()):
             ok, _ = check_all(demangled, name)
         else:
