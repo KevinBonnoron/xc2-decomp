@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 
+#include "event/frame_manager.h"
 #include "event/manager.h"
 #include "event/memory_manager.h"
 #include "gf/game/gf_game_party.h"
@@ -27,6 +28,30 @@ void ScheManager::destroy() {
     }
   }
   unknown18.clear();
+}
+
+void ScheManager::update() {
+  if (mm::mtl::Singleton<FrameManager>::getPtr()->frameInfo().unknown0c > 0.0f) {
+    for (Scheduler **it = unknown18.begin(); it != unknown18.end(); it++) {
+      (*it)->exec();
+    }
+  }
+  bool isErased;
+  do {
+    isErased = false;
+    for (Scheduler **it = unknown18.begin(); it != unknown18.end(); it++) {
+      if ((*it)->isPlay(Scheduler::ORDER_EVT2FLD)) {
+        continue;
+      }
+      if (*it != nullptr) {
+        delete *it;
+        *it = nullptr;
+      }
+      unknown18.erase(it);
+      isErased = true;
+      break;
+    }
+  } while (isErased);
 }
 
 bool ScheManager::isPlay(Scheduler::ORDER order, gf::GF_OBJ_HANDLE *handle) {

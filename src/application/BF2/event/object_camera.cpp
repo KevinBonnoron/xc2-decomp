@@ -1,10 +1,17 @@
 #include "event/object_camera.h"
 
 #include "event/cam_hands.h"
+#include "event/cam_manager.h"
 #include "event/cam_motion.h"
 #include "event/cam_obj.h"
+#include "mm_mtl/singleton.h"
 
 namespace event {
+
+ObjectCamera::~ObjectCamera() {
+  mm::mtl::Singleton<CamManager>::getPtr()->destroyCam(unknown68);
+  unknown68 = nullptr;
+}
 
 const char *ObjectCamera::getCutName() const { return m_cutName.c_str(); }
 

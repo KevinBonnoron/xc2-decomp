@@ -84,6 +84,26 @@ void LipsyncManager::setEvent(const char *name) {
   setFlag(FLAG_EVENT, unknown60 != nullptr);
 }
 
+bool LipsyncManager::setTarget(const char *name) {
+  if ((unknown10 & FLAG_EVENT) == 0) {
+    return false;
+  }
+  int size;
+  void *data = unknown60->searchCsv(name, size);
+  if (data == nullptr) {
+    unknown68 = "";
+    setFlag(FLAG_ACTIVE, false);
+    return false;
+  }
+  if (unknownf0 == nullptr) {
+    unknownf0 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) csvb::CCsvbData();
+  }
+  unknownf0->Load(mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), data, size);
+  unknown68 = name;
+  setFlag(FLAG_ACTIVE, true);
+  return true;
+}
+
 void LipsyncManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
   case MSG_TYPE_INIT:

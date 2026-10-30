@@ -1,11 +1,14 @@
 #include "event/memory_manager.h"
 
+#include <string.h>
+
+#include "event/manager.h"
 #include "framework/framework.h"
 #include "gf/game/event/gf_game_event.h"
 #include "grlib/cglib_gpu_cache.h"
+#include "mm_mtl/fixstr.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/mem_manager.h"
-#include <string.h>
 
 namespace event {
 
@@ -57,6 +60,37 @@ void MemoryManager::create() {
   unknown28 = heapMemory("EvMotstm", gf::GfGameEvent::getEventMem(), unknown38, mtl::ALLOCATOR_TYPE_RESOURCE);
   unknown18 = 0;
   grlib::CGLibGPUCache::setMemPoolMemHandle(unknown24);
+}
+
+void MemoryManager::login() {
+  bool isLarge = __builtin_strcmp(mm::mtl::PtrSingleton<Manager>::get()->unknown230.c_str(), "bf07380100") == 0;
+  if (unknown18 != isLarge) {
+    if (unknown24.isValid()) {
+      grlib::CGLibGPUCache::releaseMemPoolMemHandle(unknown24);
+    }
+    checkMemory(unknown28);
+    checkMemory(unknown24);
+    if (unknown28.isValid()) {
+      mtl::MemManager::erase(unknown28);
+      unknown28 = mtl::ALLOC_HANDLE();
+    }
+    if (unknown24.isValid()) {
+      mtl::MemManager::erase(unknown24);
+      unknown24 = mtl::ALLOC_HANDLE();
+    }
+    if (isLarge) {
+      m_resMemSize = 0xf00000;
+      unknown38 = 0xf00000;
+    } else {
+      m_resMemSize = 0x1600000;
+      unknown38 = 0x800000;
+    }
+    unknown24 = heapMemory("EvRes", gf::GfGameEvent::getEventMem(), m_resMemSize, mtl::ALLOCATOR_TYPE_RESOURCE);
+    unknown28 = heapMemory("EvMotstm", gf::GfGameEvent::getEventMem(), unknown38, mtl::ALLOCATOR_TYPE_RESOURCE);
+    unknown18 = isLarge;
+    grlib::CGLibGPUCache::setMemPoolMemHandle(unknown24);
+  }
+  clear();
 }
 
 char *MemoryManager::createTxtbuf(const char *text) {

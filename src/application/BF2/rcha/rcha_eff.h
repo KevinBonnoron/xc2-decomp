@@ -1,15 +1,13 @@
 #pragma once
+#include "rcha/rcha_node.h"
 #include "types.h"
 
 namespace mm {
 struct Col4;
 struct Vec3;
 } // namespace mm
-namespace mtl {
-class ALLOC_HANDLE;
-} // namespace mtl
 
-class RchaEff {
+class RchaEff : public RchaNode {
 public:
   RchaEff();
   virtual ~RchaEff();
@@ -24,11 +22,7 @@ public:
   bool isKill(f32 frame) const;
   void getSpeed(f32 &speed, f32 frame) const;
 
-  int getFrameCount() const { return unknown199c; }
-
 private:
-  u8 _8[0x199c - 0x8];
-  int unknown199c; // Inferred role: frame count; original member name unknown.
   u8 _19a0[0x19f8 - 0x19a0];
 };
 

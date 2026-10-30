@@ -21,6 +21,7 @@ namespace event {
 
 class Manager : public mm::mtl::PtrSingleton<Manager>, public ml::IWorkEvent, public ml::IWorkBackground {
   friend class ::gf::GfGameTalk;
+  friend class MemoryManager;
 
 public:
   static constexpr u32 MANAGER_COUNT = 64;

@@ -1,4 +1,5 @@
 #pragma once
+#include "arc/arc_data.h"
 #include "event/i_res_event.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
@@ -13,6 +14,7 @@ public:
   };
 
   LipsyncRes(const char *name);
+  void *searchCsv(const char *name, int &size);
   virtual ~LipsyncRes() {}
   const char *getName() const;
   bool isLoading() const;
@@ -21,7 +23,9 @@ public:
 private:
   u32 unknown08; // Inferred role: flags; original member name unknown.
   mm::mtl::FixStr<64> m_name;
-  u8 _50[0x68 - 0x50];
+  arc::CArcData unknown50; // Inferred role: lipsync archive; original member name unknown.
+  u32 unknown60;           // Inferred role: next file index to search; original member name unknown.
+  u8 _64[0x68 - 0x64];
 };
 
 static_assert(sizeof(LipsyncRes) == 0x68, "");

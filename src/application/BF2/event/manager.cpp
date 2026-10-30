@@ -1,5 +1,6 @@
 #include "event/manager.h"
 
+#include "event/cpu_manager.h"
 #include "event/debug_manager.h"
 #include "event/ui_manager.h"
 
@@ -109,6 +110,13 @@ void Manager::destroy() {
 }
 
 bool Manager::OnKeyDown(ml::EventView *view) { return false; }
+
+void Manager::bkgHomeMenu(bool isOpen) {
+  mm::mtl::Singleton<CpuManager>::getPtr()->pauseHome(true);
+  if (!isOpen) {
+    mm::mtl::Singleton<CpuManager>::getPtr()->pauseHome(false);
+  }
+}
 
 } // namespace event
 

@@ -97,6 +97,15 @@ bool DataManager::checkRadianTar(u32 axis) {
   return false;
 }
 
+void DataManager::setOffsetSrc(const mm::Vec3 &pos, f32 rotY, bool isKeep) {
+  unknown120->unknown50.setRotY(-rotY);
+  unknown120->unknown50.setTrans(mm::Vec3(-pos.x, -pos.y, -pos.z));
+  unknown120->unknownd0 = unknown120->unknown50 * unknown120->unknown90;
+  if (isKeep) {
+    unknown120->unknown120 = unknown120->unknownd0;
+  }
+}
+
 void DataManager::OnEventProc(MSG_TYPE type) {
   switch (type) {
   case MSG_TYPE_INIT:

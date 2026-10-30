@@ -73,6 +73,12 @@ void CamObj::changeActive(CamBase *cam) {
   }
 }
 
+CamObj::~CamObj() {
+  changeActive(nullptr);
+  unknownc78.update();
+  unknownc78.update();
+}
+
 void CamObj::start() {}
 
 void CamObj::end() {
